@@ -1,1 +1,1 @@
-# scGEAtoolbox
+# scGEAToolbox
