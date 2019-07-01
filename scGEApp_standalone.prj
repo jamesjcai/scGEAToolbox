@@ -1,0 +1,187 @@
+<deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
+  <configuration build-checksum="3624431572" file="C:\Users\jcai\Documents\GitHub\scGEApp\src\scGEApp_standalone.prj" location="C:\Users\jcai\Documents\GitHub\scGEApp\src" name="scGEApp_standalone" preferred-package-location="C:\Users\jcai\Documents\GitHub\scGEATool\scGEApp_standalone\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.standalone" target-name="Application Compiler">
+    <param.appname>scGEApp</param.appname>
+    <param.icon />
+    <param.icons />
+    <param.version>1.2</param.version>
+    <param.authnamewatermark>James Cai</param.authnamewatermark>
+    <param.email>jcai@tamu.edu</param.email>
+    <param.company>TAMU</param.company>
+    <param.summary>Matlab App for Single-cell Gene Expression Analysis</param.summary>
+    <param.description />
+    <param.screenshot>${PROJECT_ROOT}\splash.png</param.screenshot>
+    <param.guid />
+    <param.installpath.string>\TAMU\scGEApp\</param.installpath.string>
+    <param.installpath.combo>option.installpath.programfiles</param.installpath.combo>
+    <param.logo />
+    <param.install.notes />
+    <param.target.install.notes />
+    <param.intermediate>${PROJECT_ROOT}\scGEApp_standalone\for_testing</param.intermediate>
+    <param.files.only>${PROJECT_ROOT}\scGEApp_standalone\for_redistribution_files_only</param.files.only>
+    <param.output>${PROJECT_ROOT}\scGEApp_standalone\for_redistribution</param.output>
+    <param.logdir>${PROJECT_ROOT}\scGEApp_standalone</param.logdir>
+    <param.enable.clean.build>false</param.enable.clean.build>
+    <param.user.defined.mcr.options />
+    <param.target.type>subtarget.standalone</param.target.type>
+    <param.support.packages />
+    <param.web.mcr>false</param.web.mcr>
+    <param.package.mcr>true</param.package.mcr>
+    <param.no.mcr>false</param.no.mcr>
+    <param.web.mcr.name>MyAppInstaller_web</param.web.mcr.name>
+    <param.package.mcr.name>scGEAppInstaller_mcr</param.package.mcr.name>
+    <param.no.mcr.name>MyAppInstaller_app</param.no.mcr.name>
+    <param.windows.command.prompt>true</param.windows.command.prompt>
+    <param.create.log>false</param.create.log>
+    <param.log.file />
+    <param.native.matlab>false</param.native.matlab>
+    <param.checkbox>false</param.checkbox>
+    <param.example />
+    <param.help.text />
+    <unset>
+      <param.icon />
+      <param.icons />
+      <param.description />
+      <param.guid />
+      <param.installpath.string />
+      <param.installpath.combo />
+      <param.logo />
+      <param.install.notes />
+      <param.target.install.notes />
+      <param.intermediate />
+      <param.files.only />
+      <param.output />
+      <param.logdir />
+      <param.enable.clean.build />
+      <param.user.defined.mcr.options />
+      <param.target.type />
+      <param.support.packages />
+      <param.no.mcr />
+      <param.web.mcr.name />
+      <param.no.mcr.name />
+      <param.windows.command.prompt />
+      <param.create.log />
+      <param.log.file />
+      <param.native.matlab />
+      <param.checkbox />
+      <param.example />
+      <param.help.text />
+    </unset>
+    <fileset.main>
+      <file>${PROJECT_ROOT}\scGEApp.mlapp</file>
+    </fileset.main>
+    <fileset.resources>
+      <file>${PROJECT_ROOT}\cdgea.m</file>
+      <file>${PROJECT_ROOT}\demo_script1.html</file>
+      <file>${PROJECT_ROOT}\demo_script1.m</file>
+      <file>${PROJECT_ROOT}\demo_script1.mlx</file>
+      <file>${PROJECT_ROOT}\demo_script2.html</file>
+      <file>${PROJECT_ROOT}\demo_script2.m</file>
+      <file>${PROJECT_ROOT}\demo_script2.mlx</file>
+      <file>${PROJECT_ROOT}\demo_script3.html</file>
+      <file>${PROJECT_ROOT}\demo_script3.m</file>
+      <file>${PROJECT_ROOT}\demo_script3.mlx</file>
+      <file>${PROJECT_ROOT}\example_data</file>
+      <file>${PROJECT_ROOT}\functionSignatures.json</file>
+      <file>${PROJECT_ROOT}\LICENSE</file>
+      <file>${PROJECT_ROOT}\norm_deseq.m</file>
+      <file>${PROJECT_ROOT}\norm_libsize.m</file>
+      <file>${PROJECT_ROOT}\private</file>
+      <file>${PROJECT_ROOT}\README.md</file>
+      <file>${PROJECT_ROOT}\run_combat.m</file>
+      <file>${PROJECT_ROOT}\run_enrichr.m</file>
+      <file>${PROJECT_ROOT}\run_gorilla.m</file>
+      <file>${PROJECT_ROOT}\run_gsea.m</file>
+      <file>${PROJECT_ROOT}\run_hcp.m</file>
+      <file>${PROJECT_ROOT}\run_magic.m</file>
+      <file>${PROJECT_ROOT}\run_phate.m</file>
+      <file>${PROJECT_ROOT}\sc_cdr.m</file>
+      <file>${PROJECT_ROOT}\sc_diffuse.m</file>
+      <file>${PROJECT_ROOT}\sc_embed4w.m</file>
+      <file>${PROJECT_ROOT}\sc_filterc.m</file>
+      <file>${PROJECT_ROOT}\sc_filterg.m</file>
+      <file>${PROJECT_ROOT}\sc_hvg.m</file>
+      <file>${PROJECT_ROOT}\sc_mmread.m</file>
+      <file>${PROJECT_ROOT}\sc_norm.m</file>
+      <file>${PROJECT_ROOT}\sc_readfile.m</file>
+      <file>${PROJECT_ROOT}\sc_scatter.m</file>
+      <file>${PROJECT_ROOT}\sc_scatter3.m</file>
+      <file>${PROJECT_ROOT}\sc_scatter3x.m</file>
+      <file>${PROJECT_ROOT}\sc_selectg.m</file>
+      <file>${PROJECT_ROOT}\sc_splinefit.m</file>
+      <file>${PROJECT_ROOT}\sc_splinefit2.m</file>
+      <file>${PROJECT_ROOT}\sc_stat.m</file>
+      <file>${PROJECT_ROOT}\sc_stat2.m</file>
+      <file>${PROJECT_ROOT}\sc_stem3.m</file>
+      <file>${PROJECT_ROOT}\sc_tsne.m</file>
+      <file>${PROJECT_ROOT}\sc_veg.m</file>
+      <file>${PROJECT_ROOT}\sc_writefile.m</file>
+      <file>${PROJECT_ROOT}\scGEApp.mlapp</file>
+      <file>${PROJECT_ROOT}\splinefit.m</file>
+      <file>${PROJECT_ROOT}\thirdparty</file>
+      <file>${PROJECT_ROOT}\uifig_embeddingview.mlapp</file>
+      <file>${PROJECT_ROOT}\uifig_gseapreranked.mlapp</file>
+      <file>${PROJECT_ROOT}\uifig_splash.mlapp</file>
+      <file>${PROJECT_ROOT}\zip_redistribution.m</file>
+    </fileset.resources>
+    <fileset.package />
+    <fileset.depfun>
+      <file>${PROJECT_ROOT}\waiting.png</file>
+    </fileset.depfun>
+    <build-deliverables>
+      <file location="${PROJECT_ROOT}\scGEApp_standalone\for_testing" name="scGEApp.exe" optional="false">C:\Users\jcai\Documents\GitHub\scGEApp\src\scGEApp_standalone\for_testing\scGEApp.exe</file>
+      <file location="${PROJECT_ROOT}\scGEApp_standalone\for_testing" name="splash.png" optional="false">C:\Users\jcai\Documents\GitHub\scGEApp\src\scGEApp_standalone\for_testing\splash.png</file>
+      <file location="${PROJECT_ROOT}\scGEApp_standalone\for_testing" name="readme.txt" optional="true">C:\Users\jcai\Documents\GitHub\scGEApp\src\scGEApp_standalone\for_testing\readme.txt</file>
+    </build-deliverables>
+    <workflow />
+    <matlab>
+      <root>C:\Program Files\MATLAB\R2018b</root>
+      <toolboxes>
+        <toolbox name="matlabcoder" />
+        <toolbox name="embeddedcoder" />
+        <toolbox name="fixedpoint" />
+        <toolbox name="matlabhdlcoder" />
+        <toolbox name="neuralnetwork" />
+      </toolboxes>
+      <toolbox>
+        <matlabcoder>
+          <enabled>true</enabled>
+        </matlabcoder>
+      </toolbox>
+      <toolbox>
+        <embeddedcoder>
+          <enabled>true</enabled>
+        </embeddedcoder>
+      </toolbox>
+      <toolbox>
+        <fixedpoint>
+          <enabled>true</enabled>
+        </fixedpoint>
+      </toolbox>
+      <toolbox>
+        <matlabhdlcoder>
+          <enabled>true</enabled>
+        </matlabhdlcoder>
+      </toolbox>
+      <toolbox>
+        <neuralnetwork>
+          <enabled>true</enabled>
+        </neuralnetwork>
+      </toolbox>
+    </matlab>
+    <platform>
+      <unix>false</unix>
+      <mac>false</mac>
+      <windows>true</windows>
+      <win2k>false</win2k>
+      <winxp>false</winxp>
+      <vista>false</vista>
+      <linux>false</linux>
+      <solaris>false</solaris>
+      <osver>10.0</osver>
+      <os32>false</os32>
+      <os64>true</os64>
+      <arch>win64</arch>
+      <matlab>true</matlab>
+    </platform>
+  </configuration>
+</deployment-project>

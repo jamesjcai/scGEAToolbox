@@ -1,0 +1,128 @@
+{
+"sc_readfile":
+{
+	"inputs":
+	[
+		{"name":"filename", "kind":"required", "type":[["file=*.txt,*.csv,*.tsv,*.tab"], ["char"]]},
+		{"name":"type", "kind":"namevalue","type":["char", "choices={'tsv','mtx'}"]}
+	]
+},
+"sc_readtsvfile":
+{
+	"inputs":
+	[
+		{"name":"filename", "kind":"required", "type":[["file=*.tsv,*.csv,*.tab,*.txt"], ["char"]]}
+	]
+},
+"sc_mmread":
+{
+	"inputs":
+	[
+	{"name":"mtxfilename", "kind":"required", "type":[["file=*.mtx"], ["char"]]},
+        {"name":"genfilename", "kind":"required", "type":[["file=*.txt,*.csv"], ["char"]]}
+	]
+},
+"sc_splinefit":
+{
+	"inputs":
+	[
+		{"name":"X", "kind":"required", "type":"numeric"},
+        {"name":"genelist", "kind":"ordered", "type":["string"]},
+        {"name":"sortit", "kind":"ordered", "type":["logical"]}
+	]
+},
+"sc_splinefit2":
+{
+	"inputs":
+	[
+		{"name":"X", "kind":"required", "type":"numeric"},
+        {"name":"Y", "kind":"required", "type":"numeric"},
+        {"name":"genelistx", "kind":"required", "type":["string"]},
+        {"name":"genelisty", "kind":"ordered", "type":["string"]},
+        {"name":"sortit", "kind":"ordered", "type":["logical"]}
+	]
+},
+"sc_scatter3":
+{
+	"inputs":
+	[
+		{"name":"X", "kind":"required", "type":"numeric"},
+        {"name":"genelist", "kind":"required", "type":["string"]},
+        {"name":"dofit", "kind":"ordered", "type":["logical"]},
+        {"name":"showdata", "kind":"ordered", "type":["logical"]}
+	]
+},
+"sc_selectg":
+{
+	"inputs":
+	[
+		{"name":"X", "kind":"required", "type":"numeric"},
+        {"name":"genelist", "kind":"required", "type":["string"]}        
+	]
+},
+"sc_hvg":
+{
+	"inputs":
+	[
+	{"name":"X", "kind":"required", "type":"numeric"},
+        {"name":"genelist", "kind":"required", "type":["string"]},
+        {"name":"sortit", "kind":"ordered", "type":["logical"]},
+        {"name":"plotit", "kind":"ordered", "type":["logical"]},
+        {"name":"donorm", "kind":"ordered", "type":["logical"]}
+	]
+},
+"sc_norm":
+{
+	"inputs":
+	[		
+        {"name":"X", "kind":"required", "type":"numeric"},
+        {"name":"type", "kind":"namevalue","type":["char", "choices={'libsize','deseq'}"]}
+	]
+},
+"run_soptsc":
+{
+	"inputs":
+	[		
+        {"name":"X", "kind":"required", "type":[["double"], ["single"]]},
+
+        {"name":"k", "kind":"namevalue", "type":["numeric"],"purpose":"number of clusters"},
+        {"name":"donorm", "kind":"namevalue", "type":["logical", "scalar"]}
+	]
+},
+"sc_stat":
+{
+	"inputs":
+	[		
+        {"name":"X", "kind":"required", "type":"numeric"},
+        {"name":"genelist", "kind":"required", "type":["string"]},
+        {"name":"sortit", "kind":"ordered", "type":["logical"]},
+        {"name":"removeinf", "kind":"ordered", "type":["logical"]}
+	]
+},
+"run_gorilla":
+{
+	"inputs":
+	[		
+        {"name":"genelist", "kind":"required", "type":["string"]}
+	]
+},
+"sc_cluster":
+{
+	"inputs":
+	[		
+        {"name":"X", "kind":"required", "type":"numeric"},
+        {"name":"type", "kind":"namevalue", "type":"choices={'simlr', 'soptsc'}"}
+	]
+},
+"run_phate":
+{
+	"inputs":
+	[		
+        {"name":"X", "kind":"required", "type":"numeric"},
+        {"name":"ndim", "kind":"ordered", "type":"choices={2,3}"},
+        {"name":"bygene", "kind":"ordered", "type":["logical"]},
+        {"name":"plotit", "kind":"ordered", "type":["logical"]},
+        {"name":"genelist", "kind":"ordered", "type":["string"]}
+	]
+}
+}

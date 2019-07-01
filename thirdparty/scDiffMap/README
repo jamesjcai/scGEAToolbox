@@ -1,0 +1,34 @@
+
+single-cell diffusion map v0.1
+-------------------------------------------
+© Laleh Haghverdi
+Technical University of Munich, 2014
+===========================================
+
+DESCRIPTION
+
+This release of diffusion map analysis for
+single-cell qPCR and RNA-Seq experiments. The codes are written in Matlab. 
+
+HOW TO USE
+
+1) Download the Matlab files and the data files from:
+ https://www.helmholtz-muenchen.de/single-cell-diffusion-map
+
+
+2) Save your data as an n*G matrix in .mat format
+
+
+3)  Run the function diffusion_map_main.m on your data(or run the example script for demonstration) 
+
+CONTACT
+
+If you encounter problems with the implementations or have questions about single-cell diffusion maps, feel free to send me an email at: laleh.haghverdi@helmholtz-muenchen.de
+
+
+
+
+
+
+
+

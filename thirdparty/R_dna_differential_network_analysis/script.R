@@ -1,0 +1,5 @@
+library(dna)
+X <- read.csv("input.csv", header = FALSE)
+s=PCnet(X,ncom=3,rescale.data=TRUE,symmetrize.scores=FALSE,rescale.scores=FALSE)
+# print(round(s,4))
+write.csv(s, file = "output.csv")

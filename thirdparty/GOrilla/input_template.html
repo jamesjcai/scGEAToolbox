@@ -1,0 +1,146 @@
+<table align="center" border="0">
+<tr>
+<td><img border="0" src="http://cbl-gorilla.cs.technion.ac.il/pics/gorilla.gif" width="152" height="126" alt=""></td>
+<td align="center"><b><font size="8"><i>GO</i></font></b><i><font size="6">RILLA</font></i></td>
+<td><img border="0" src="http://cbl-gorilla.cs.technion.ac.il/pics/smallTree.jpg" width="184" height="157" alt=""></td>
+</tr>
+<tr>
+<td colspan="3"><font size="5"><i><b>G</b>ene <b>O</b>ntology en<b>RI</b>chment ana<b>L</b>ysis and visua<b>L</b>iz<b>A</b>tion tool</i></font></td>
+</tr>
+</table>
+<div style="border-bottom-style: solid; border-bottom-width: 1px; padding-bottom: 1px">
+<p dir="ltr"><b>GOrilla is a tool for identifying and visualizing enriched GO terms in
+ranked lists of genes.</b><br>
+It can be run in one of two modes:</p>
+<ol>
+<li>Searching for enriched GO terms that appear densely at the top of a ranked list of genes or </li>
+<li>Searching for enriched GO terms in a target list of genes
+compared to a background list of genes.</li>
+</ol>
+For further details see <a href="#ref">References</a>.<p></p>
+</div>
+<p align="center">
+<font size="4"><a href="http://cbl-gorilla.cs.technion.ac.il/example.html">Running
+example</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="http://cbl-gorilla.cs.technion.ac.il/help.html">Usage instructions</a>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="http://cbl-gorilla.cs.technion.ac.il/news.html">GOrilla News</a><font color="#FF0000" size="2"><strong> </strong></font>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="http://cbl-gorilla.cs.technion.ac.il/#ref">References</a>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="http://cbl-gorilla.cs.technion.ac.il/#contact">Contact</a>
+</font></p>
+
+<FORM name=gorilla action="http://cbl-gorilla.cs.technion.ac.il/servlet/GOrilla" enctype="multipart/form-data" method="post">
+<blockquote>
+<INPUT type=hidden value=gorilla name=application>
+<table border="0">
+<tr>
+<td>
+<h3><b><font color="#FF0000">Step 1:</font> <a href="help.html">Choose organism
+</a> </b>
+</h3>
+</td>
+</tr>
+<tr>
+<td>
+<SELECT size=1 name=species>
+<option value="ARABIDOPSIS_THALIANA">Arabidopsis thaliana</option>
+<option value="SACCHAROMYCES_CEREVISIAE">Saccharomyces cerevisiae</option>
+<option value="CAENORHABDITIS_ELEGANS">Caenorhabditis elegans</option>
+<option value="DROSOPHILA_MELANOGASTER">Drosophila melanogaster</option>
+<option value="DANIO_RERIO">Danio rerio (Zebrafish)</option>
+<option value="HOMO_SAPIENS" selected="selected">Homo sapiens</option>
+<option value="MUS_MUSCULUS">Mus musculus</option>
+<option value="RATTUS_NORVEGICUS">Rattus norvegicus</option>
+</SELECT>
+</td>
+</tr>
+</table>
+<table border="0">
+<tr>
+<td>
+<h3><b><font color="#FF0000">Step 2:</font> <a href="help.html">Choose running mode
+</a> </b>
+</h3>
+</td>
+</tr>
+<tr>
+<td><font size="5"><INPUT type=radio CHECKED value="mhg" name=run_mode onclick="changeMode()"></font>
+Single ranked list of genes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<font size="5"><INPUT type=radio value="hg" name=run_mode onclick="changeMode()"></font>
+Two unranked lists of genes (target and background lists)&nbsp;&nbsp;&nbsp;
+</td>
+</tr>
+</table>
+<table border="0" id="table3" width="530">
+<tr>
+<td>
+<h3><b><font color="#FF0000">Step 3:</font> <a href="help.html">Paste a ranked list of
+gene/protein names&nbsp;</a>&nbsp;&nbsp; </b>&nbsp;<b> </b></h3>
+Names should be separated by an &lt;ENTER&gt;. The preferred format is gene symbol. Other supported
+formats are: gene and protein RefSeq, Uniprot, Unigene and Ensembl.
+</td>
+</tr>
+<tr>
+<td><div id="target_title"> Target set: </div></td>
+<tr>
+<td>
+<TEXTAREA name=target_set rows=6 cols=63></TEXTAREA>
+</td>
+</tr>
+<tr><td>Or upload a file: <INPUT TYPE="FILE" NAME="target_file_name"></td></tr>
+<tr><td><br></td></tr>
+<tr>
+<td>		<div id="background_title"> Background set: </div>
+</tr>
+<tr>
+<td>		<TEXTAREA name=background_set rows=6 cols=63></TEXTAREA></td>
+</tr>
+<tr><td><div id="background_file_title">Or upload a file: </div>
+<span id="background_file_field"><INPUT TYPE="FILE" NAME="background_file_name"></span></td></tr>
+</table>
+<br>
+<table border="0" id="table4">
+<tr>
+<td>
+<h3><b><font color="#FF0000">Step 4:</font> <a href="help.html">Choose
+an ontology </a> </b></h3>
+</td>
+</tr>
+<tr>
+<td>
+<INPUT type=radio value=proc name=db>Process&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<INPUT type=radio value=func name=db>Function&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<INPUT type=radio value=comp name=db>Component&nbsp;&nbsp;&nbsp;
+<INPUT type=radio CHECKED value=all name=db>All &nbsp;&nbsp;&nbsp;
+</td>
+</tr>
+</table>
+</blockquote>
+<blockquote>
+<p dir="ltr"><font size="5">
+<INPUT type=submit value="Search Enriched GO terms" style="color: #008000; font-size: 14pt; font-weight: bold" name="run_gogo_button"></font></p>
+<br><INPUT type=reset value="Reset form">
+</blockquote>
+<HR>
+<p dir="ltr"><b><font size="5">&nbsp;Advanced parameters </font></b></p>
+<p>&nbsp;&nbsp;&nbsp; <a href="help.html">P-value threshold</a>:
+<SELECT size=1 name=pvalue_thresh>
+<option value="0.001" selected>10^-3</option>
+<option value="0.0001">10^-4</option>
+<option value="0.00001">10^-5</option>
+<option value="0.000001">10^-6</option>
+<option value="0.0000001">10^-7</option>
+<option value="0.00000001">10^-8</option>
+<option value="0.000000001">10^-9</option>
+<option value="0.0000000001">10^-10</option>
+<option value="0.00000000001">10^-11</option>
+</SELECT>&nbsp; </p>
+<p> &nbsp;&nbsp;&nbsp; Analysis name: <input type=text name=analysis_name>  (optional)</p>
+<p> &nbsp;&nbsp;&nbsp; E-mail address: <input type=email name=user_email>  (optional - enter an e-mail address if you would like to receive a link to your results)</p>
+<p> &nbsp;&nbsp;&nbsp; <INPUT type=checkbox name=output_excel> Output results in Microsoft Excel format</p>
+<p> &nbsp;&nbsp;&nbsp; <INPUT type=checkbox name=output_unresolved> Include unresolved and duplicate genes in output</p>
+<p> &nbsp;&nbsp;&nbsp; <INPUT type=checkbox name=output_revigo> Show output also in <a href="http://revigo.irb.hr/" target="_blank">REViGO</a></p>
+<div id="fast_mode_text">&nbsp;&nbsp;&nbsp; <INPUT type=checkbox CHECKED name=fast_mode> Run GOrilla in fast mode</div>
+</FORM>
