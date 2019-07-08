@@ -1,4 +1,4 @@
-function [cluster_labs,W,eigenvalues,H]=run_soptsc(X,varargin)
+function [C,W,eigenvalues,H]=run_soptsc(X,varargin)
 % run_soptsc - 
 %
 % REF: SoptSC: Similarity matrix optimization for clustering, lineage, and signaling inference
@@ -31,7 +31,6 @@ parse(p,X,varargin{:});
 donorm=p.Results.donorm;
 k=p.Results.k;
 
-
 pw1=fileparts(which(mfilename));
 pth=fullfile(pw1,'thirdparty/SoptSC');
 addpath(pth);
@@ -40,15 +39,9 @@ addpath(pth);
 pth=fullfile(pw1,'thirdparty/SoptSC/symnmf2');
 addpath(pth);
 
-
-
-
-
-return;
-
 if donorm
     [X]=sc_norm(X,'type','deseq');
-    X=log10(X+1);
+%    X=log10(X+1);
 end
 
 
@@ -66,7 +59,10 @@ end
 
 gene_selection = aa>=bb(No_sel_genes);
 X=X(gene_selection,:);
-[No_cluster,W,cluster_labs,eigenvalues,H] = SoptSC_Main(k,X);
+if isempty(k)
+    warning('Number of cluster, k, will be estimated.');
+end
+[No_cluster,W,C,eigenvalues,H] = SoptSC_Main(k,X);
 
 
 %{
@@ -82,3 +78,4 @@ gene_idxv = GC_htmp_DE(X,genelist,cluster_labs,10);
 figure; plot_marker(X,{'ACTB','SSR4','PPIB'},genelist,s);
 figure; boxplot_marker(X,genelist,{'ACTB','SSR4','PPIB'},C,6);
 %}
+

@@ -11,12 +11,13 @@ W = Network_Diffusion(W,max(ceil(size(X,1)/20),10));
 
 K1 = 2*(1 + Quality) - (2 + Quality_plus + Quality_minus);
 K2 = K1.*(NUMC+1)./(NUMC);
-subplot(1,2,1)
-plot(NUMC,K1,'b-s','LineWidth',4);
-title('Relative Quality')
-subplot(1,2,2)
-plot(NUMC,K2,'r-o','LineWidth',4);
-title('Adjusted Quality')
+
+% subplot(1,2,1)
+% plot(NUMC,K1,'b-s','LineWidth',4);
+% title('Relative Quality')
+% subplot(1,2,2)
+% plot(NUMC,K2,'r-o','LineWidth',4);
+% title('Adjusted Quality')
 
 end
 

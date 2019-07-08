@@ -1,5 +1,5 @@
 function [W]=fun_sim_matrix(X,varargin)
-
+% compute cell-to-cell similarity matrix
 p = inputParser;
 defaultType = 'simlr';
 validTypes = {'simlr','soptsc','magic'};

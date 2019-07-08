@@ -29,7 +29,20 @@ end
 
 X=Xsorted(1:500,:);
 % genelist=genelistsorted(1:500);
-[coeff,score]=pca(X');
+[~,score]=pca(X');
+
+
+tic; [idx]=knnsearch(score,score,'K',11,'distance','cosine'); toc;
+
+% http://mlwiki.org/index.php/SNN_Clustering
+
+
+%         Cluster the SNN graph using the Leiden algorithm.
+%         https://github.com/vtraag/leidenalg
+
+s=tsne(X','NumDimensions',ndim,'InitialY',score(:,1:ndim));
+
+
 
 
 

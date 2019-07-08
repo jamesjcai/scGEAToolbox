@@ -84,7 +84,6 @@
 	"inputs":
 	[		
         {"name":"X", "kind":"required", "type":[["double"], ["single"]]},
-
         {"name":"k", "kind":"namevalue", "type":["numeric"],"purpose":"number of clusters"},
         {"name":"donorm", "kind":"namevalue", "type":["logical", "scalar"]}
 	]
@@ -111,7 +110,19 @@
 	"inputs":
 	[		
         {"name":"X", "kind":"required", "type":"numeric"},
-        {"name":"type", "kind":"namevalue", "type":"choices={'simlr', 'soptsc'}"}
+        {"name":"type", "kind":"namevalue", "type":"choices={'simlr','soptsc','sc3'}"}
+	]
+},
+"sc_marker":
+{
+	"inputs":
+	[		
+        {"name":"X", "kind":"required", "type":"numeric"},
+        {"name":"genelist", "kind":"required", "type":["string"]},
+        {"name":"c", "kind":"required", "type":"numeric"},
+        {"name":"type", "kind":"namevalue", "type":"choices={'soptsc'}"},
+        {"name":"numofmarkers", "kind":"namevalue", "numofmarkers":"choices={'soptsc'}"},
+        {"name":"plotit", "kind":"namevalue", "type":["logical"]}
 	]
 },
 "run_phate":

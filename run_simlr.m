@@ -1,5 +1,5 @@
-function [cluster_labs,s]=run_simlr(X,k,donorm)
-% sc_cluster - 
+function [C,s]=run_simlr(X,k,donorm)
+% RUN_SIMLR - 
 %
 % REF: SoptSC: Similarity matrix optimization for clustering, lineage, and signaling inference
 % Input X: 
@@ -35,14 +35,11 @@ if isempty(k)
     [~,i]=min(K2);
     k=i+1;
 end
+[C,S,F,s,alpha] = SIMLR(X',k,10,0,0);
 
-[y, S, F, ydata,alpha] = SIMLR_pearson(X',k,10);
-
-cluster_labs=y;
-s=ydata;
-
+% [C, S, F, s,alpha] = SIMLR_pearson(X',k,10,0,0);
 %    figure;
 %    gscatter(ydata(:,1),ydata(:,2),y);
 % figure;
-% scatter(s(:,1),s(:,2),20,cluster_labs,'filled')
+% scatter(s(:,1),s(:,2),20,C,'filled')
 

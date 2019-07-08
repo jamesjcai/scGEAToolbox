@@ -1,4 +1,9 @@
-function gene_idxv = GC_htmp_DE(data,allgenes,cluster_labs,topn)
+function gene_idxv = GC_htmp_DE(data,allgenes,cluster_labs,topn,plotit)
+
+if nargin<5
+    plotit=false;
+end
+
 %% new data visualization
 No_clusterr = length(unique(cluster_labs));
 gene_idxv = [];
@@ -55,69 +60,69 @@ datav = data(gene_idxv,cluster_order);
 % colormap redbluecmap;
 % imagesc(datav);
 
-figure;
-idata = datav;
-kk = 2;
-center = mean(idata,kk);
-scale = std(idata, 0,kk);
-tscale = scale;
-%=Check for zeros and set them to 1 so not to scale them.
-scale(tscale == 0) = 1;
-%== Center and scale the data
-idata = bsxfun(@minus, idata, center);
-sdata = bsxfun(@rdivide, idata, scale);
-thresh = 3;
-colormap redbluecmap;
-clims = [-thresh thresh];
-imagesc(sdata,clims);
-set(gca,'xtick',[]);
-set(gca,'ytick',[]);
+if plotit    
+    figure;
+    idata = datav;
+    kk = 2;
+    center = mean(idata,kk);
+    scale = std(idata, 0,kk);
+    tscale = scale;
+    %=Check for zeros and set them to 1 so not to scale them.
+    scale(tscale == 0) = 1;
+    %== Center and scale the data
+    idata = bsxfun(@minus, idata, center);
+    sdata = bsxfun(@rdivide, idata, scale);
+    thresh = 3;
+    colormap redbluecmap;
+    clims = [-thresh thresh];
+    imagesc(sdata,clims);
+    set(gca,'xtick',[]);
+    set(gca,'ytick',[]);
 
 
 
 
+    lgd = cell(1,No_clusterr);
+    for i = 1:No_clusterr
+        if i<10
+            vv = 'CC';
+            vv(2:2) = num2str(i);
+            lgd{i} = vv;
+        else
+            vv = 'CCC';
+            vv(2:3) = num2str(i);
+            lgd{i} = vv;
+        end
+    end
+    No_cells_inC = [];
+    for i = 1:No_clusterr
+        No_cells_inC = [No_cells_inC; length(find(cluster_labs==i))];
+    end
+    xtkval = cumsum(No_cells_inC);
+    xtkval1 = zeros(size(xtkval));
+    for i = 1:No_clusterr
+        if i==1
+            xtkval1(i) = 0.5.*No_cells_inC(i);
+        else
+            xtkval1(i) = xtkval(i-1) + 0.5.*No_cells_inC(i);
+        end
+    end
 
+    if size(datav,1) < 200
+    yticks(1:size(datav,1));
+    yticklabels(allgenes(gene_idxv));
+    end
 
+    xticks(xtkval1);
+    xticklabels(lgd);
+    cb = colorbar;
+    ax = gca;
+    axpos = ax.Position;
+    cpos = cb.Position;
+    cpos(3) = 0.5*cpos(3);
+    cb.Position = cpos;
+    ax.Position = axpos;
 
-lgd = cell(1,No_clusterr);
-for i = 1:No_clusterr
-    if i<10
-        vv = 'CC';
-        vv(2:2) = num2str(i);
-        lgd{i} = vv;
-    else
-        vv = 'CCC';
-        vv(2:3) = num2str(i);
-        lgd{i} = vv;
     end
 end
-No_cells_inC = [];
-for i = 1:No_clusterr
-    No_cells_inC = [No_cells_inC; length(find(cluster_labs==i))];
-end
-xtkval = cumsum(No_cells_inC);
-xtkval1 = zeros(size(xtkval));
-for i = 1:No_clusterr
-    if i==1
-        xtkval1(i) = 0.5.*No_cells_inC(i);
-    else
-        xtkval1(i) = xtkval(i-1) + 0.5.*No_cells_inC(i);
-    end
-end
-
-if size(datav,1) < 200
-yticks(1:size(datav,1));
-yticklabels(allgenes(gene_idxv));
-end
-
-xticks(xtkval1);
-xticklabels(lgd);
-cb = colorbar;
-ax = gca;
-axpos = ax.Position;
-cpos = cb.Position;
-cpos(3) = 0.5*cpos(3);
-cb.Position = cpos;
-ax.Position = axpos;
-
 %print([folder '\HeatMap_Top' num2str(topn)],'-dpdf','-r300','-fillpage'); %'-dpdf',

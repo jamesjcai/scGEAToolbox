@@ -27,3 +27,4 @@ switch p.Results.type
     case 'mtx'
         [X,genelist]=sc_readmtxfile(filename);
 end
+end

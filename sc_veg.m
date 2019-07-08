@@ -131,7 +131,7 @@ if plotit
     % scatter(log(u(top100idx)),log(cv2(top100idx)),'x');
     % plot(log(u),log(cv2fit),'.','markersize',10);    
 
-  plot(log10(xSeq), ySeq,'.','markersize',10);
+  %plot(log10(xSeq), ySeq,'.','markersize',10);
   plot(log10(xSeq_all), ydataFit,'.','markersize',10);
     
     xlabel('Mean expression, log')
