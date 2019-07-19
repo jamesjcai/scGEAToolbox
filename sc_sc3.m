@@ -37,7 +37,7 @@ c=clusterensemble(cls,optimk);
 cd(oldpath);
 
 if plotit
-    clusion(Dis1,c);
+    clusion(Dis,c);
 end
 
 end
@@ -46,7 +46,7 @@ end
 
 function [cls]=get_clusterarray(Dis,optimk,drange)
     [Vs1]=pca(Dis);
-    [Vs2]=transform_Laplacian(Dis);
+    [Vs2]=transform_Laplacian(Dis,max(drange));
     cls=[];
     for j=1:length(drange)
         idx=kmeans(Vs1(:,1:drange(j)),optimk,'MaxIter',1e9,'emptyaction','singleton','replicate',5);
@@ -68,7 +68,7 @@ function drange=get_drange(X)
     end
 end
 
-function [Vs]=transform_Laplacian(Dis)
+function [V]=transform_Laplacian(Dis,k)
 
     A=exp(-Dis./max(Dis(:)));   % adjacency matrix
     xD=diag(sum(A).^-0.5);  % D=diag(sum(A)); % d(i) the degree of node i
@@ -78,7 +78,8 @@ function [Vs]=transform_Laplacian(Dis)
     % see https://people.orie.cornell.edu/dpw/orie6334/lecture7.pdf
     % see https://en.wikipedia.org/wiki/Laplacian_matrix#Symmetric_normalized_Laplacian_2
 
-    [V,D]=eig(L);
-    [~,ind] = sort(diag(D));    
-    Vs = V(:,ind);
+%     [V,D]=eig(L);
+%     [~,ind]=sort(diag(D));
+%     V = V(:,ind);
+      [V,~]=eigs(L,k,'smallestreal');
 end

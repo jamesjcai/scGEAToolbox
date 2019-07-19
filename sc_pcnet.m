@@ -14,8 +14,7 @@ for k=1:n
     y=X(:,k);
     Xi=X;
     Xi(:,k)=[];
-    
-    [coeff,~,~]=svds(Xi',ncom);
+    [~,~,coeff]=svds(Xi,ncom);    
     score=Xi*coeff;
     %[coeff,score]=pca(Xi);
     %coeff=coeff(:,1:ncom);

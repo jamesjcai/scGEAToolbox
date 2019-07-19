@@ -52,7 +52,7 @@ aa = max(coeff(:,1:No_Comps+1)');
 bb = sort(aa,'descend');
 No_features=2000;
 if size(X,1) <=1000
-    No_sel_genes = size(data1,1);
+    No_sel_genes = size(X,1);
 else
     No_sel_genes = min([No_features round(size(X,1))]);
 end

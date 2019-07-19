@@ -9,14 +9,14 @@ No_clusterr = length(unique(cluster_labs));
 gene_idxv = [];
 cluster_order = [];
 
-[No_gene,No_cell] = size(data);
+[No_gene] = size(data,1);
 % calculat mean of gene expression
 gene_mean = zeros(No_gene,No_clusterr);
 gene_DE_score = zeros(No_gene,No_clusterr);
 
 % gene_value_idx = zeros(No_gene,1);
 for i = 1:No_clusterr
-    gene_mean(:,i) = mean(data(:,find(cluster_labs==i))');
+    gene_mean(:,i) = mean(data(:,cluster_labs==i),2);
     cluster_order = [cluster_order;find(cluster_labs==i)];
 end
 [~,gene_value_idx] = max(gene_mean,[],2);
@@ -27,7 +27,6 @@ for i = 1:No_clusterr
 %     gene_DE_score(:,i) = mean(zz,2); % mean
     gene_DE_score(:,i) = sum(zz,2); % sum
 end
-
 
 % topn markers for each cluster based on DE score
 gclusters = [];
@@ -40,8 +39,6 @@ for i = 1:No_clusterr
     gclusters = [gclusters;i.*ones(topn,1)];
     gscore = [gscore;zzvalue(1:topn)];
 end
-
-
 
 GL500 = [gene_idxv gclusters gscore];
 T = array2table(GL500,'RowNames',allgenes(gene_idxv),'VariableNames',{'Gene_indx','Cluster','DE_Score'});

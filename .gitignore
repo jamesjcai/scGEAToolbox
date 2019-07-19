@@ -7,12 +7,9 @@
 # Compiled MEX binaries (all platforms)
 # *.mex*
 
-# Standalone exe
-src/scGEApp_standalone/
+# Simulink Code Generation
+scGEApp_standalone/
 
-
-
-src/thirdparty/GOrilla/input_page.html
-
+thirdparty/GOrilla/input_page.html
 
 input_page.html
