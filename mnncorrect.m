@@ -1,5 +1,6 @@
 
 % https://rdrr.io/bioc/scran/src/R/mnnCorrect.R
+% https://github.com/yycunc/SMNN/blob/master/R/SMNNcorrect.R
 
 x = 1:100;
 A = cos(2*pi*0.05*x+2*pi*rand) + 0.5*randn(1,100);
