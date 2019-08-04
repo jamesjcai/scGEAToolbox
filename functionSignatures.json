@@ -79,6 +79,14 @@
         {"name":"type", "kind":"namevalue","type":["char", "choices={'libsize','deseq'}"]}
 	]
 },
+"sc_transform":
+{
+	"inputs":
+	[		
+        {"name":"X", "kind":"required", "type":"numeric"},
+        {"name":"type", "kind":"namevalue","type":["char", "choices={'csndm'}"]}
+	]
+},
 "run_soptsc":
 {
 	"inputs":
