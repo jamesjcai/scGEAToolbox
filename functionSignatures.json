@@ -84,7 +84,7 @@
 	"inputs":
 	[		
         {"name":"X", "kind":"required", "type":"numeric"},
-        {"name":"type", "kind":"namevalue","type":["char", "choices={'csndm'}"]}
+        {"name":"type", "kind":"namevalue","type":["char", "choices={'csndm','bigscale'}"]}
 	]
 },
 "run_soptsc":
