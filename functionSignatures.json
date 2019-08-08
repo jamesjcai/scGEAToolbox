@@ -87,6 +87,14 @@
         {"name":"type", "kind":"namevalue","type":["char", "choices={'csndm','bigscale'}"]}
 	]
 },
+"sc_grnetwork":
+{
+	"inputs":
+	[		
+        {"name":"X", "kind":"required", "type":"numeric"},
+        {"name":"type", "kind":"namevalue","type":["char", "choices={'pcnetpar','genie3'}"]}
+	]
+},
 "run_soptsc":
 {
 	"inputs":

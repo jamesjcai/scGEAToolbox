@@ -2,7 +2,7 @@ function [X]=sc_transform(X,varargin)
 
 p = inputParser;
 defaultType = 'csndm';
-validTypes = {'csndm','bigscale'};
+validTypes = {'csndm','bigscale','sct'};
 checkType = @(x) any(validatestring(x,validTypes));
 
 addRequired(p,'X',@isnumeric);
@@ -19,4 +19,6 @@ switch p.Results.type
         addpath(pth);
         % model=1. Log(x), then each row (gene) normalized between [-5:5]
         [X]=transform_bigscale(X);
+    case 'sct'
+        % sc_sct
 end

@@ -1,5 +1,6 @@
 function [A]=sc_pcnet(X,ncom)
-
+% [A]=sc_pcnet(X,ncom)
+% ncom - number of components used (default=3)
 if nargin<2
    ncom=3;
 end

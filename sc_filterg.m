@@ -15,7 +15,7 @@ else
     i=u>=cutoff;
     if verbose
         fprintf('Discard genes with poor expression values (with less than %d reads among all cells).\n',...
-            cutoff); 
+            cutoff);
     end    
 end
 % We discard cells with poor gene expression values (more than 90% zeros in all cells)

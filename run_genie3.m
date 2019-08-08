@@ -1,10 +1,10 @@
-function [s,A,G]=run_genie3(X,genelist,donorm,plotit)
+function [A,s,G]=run_genie3(X,genelist,donorm,plotit)
 %RUN_GENIE3
 %
 % USAGE:
 % >>[X,genelist]=sc_readfile('example_data/GSM3044891_GeneExp.UMIs.10X1.txt');
 % >>[X,genelist]=sc_selectg(X,genelist,5,3);
-% >>figure; [s,A,G]=run_genie3(X(1:8,:),genelist(1:8),false,true);
+% >>figure; [A,s,G]=run_genie3(X(1:8,:),genelist(1:8),false,true);
 
 if nargin<1 || isempty(genelist) 
     genelist=string(1:size(X,1));
@@ -25,8 +25,9 @@ end
 data=X';
 
 A=GENIE3(data);
-s=get_link_list(A);
-
+if nargout>1
+    s=get_link_list(A);
+end
 %%
 if plotit || nargout>2
     G=digraph(s(:,1),s(:,2),s(:,3),genelist);
