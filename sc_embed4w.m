@@ -46,14 +46,16 @@ toc
 %     return;
 
 % PHATE 2D
-tic;
-Y_PHATE_2D = phate(data, 't', 20);
-toc;
+% tic;
+% Y_PHATE_2D = phate(data, 't', 20);
+% toc;
 
 % PHATE 3D
 tic;
 Y_PHATE_3D = phate(data, 't', 20, 'ndim', 3);
 toc;
+
+Y_PHATE_2D=Y_PHATE_3D(:,1:2);
 
 % tSNE -- slow!!!
 tic;
