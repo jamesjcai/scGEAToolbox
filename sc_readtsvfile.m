@@ -1,4 +1,7 @@
-function [X,genelist,celllist]=sc_readtsvfile(filename)
+function [X,genelist,celllist]=sc_readtsvfile(filename,genecolnum)
+if nargin<2
+    genecolnum=1;
+end
 if nargin<1
 [filename, pathname] = uigetfile( ...
        {'*.csv;*.tsv;*.tab;*.txt', 'Expression Matrix Files (*.csv, *.tsv, *.tab, *.txt)';
@@ -13,9 +16,9 @@ if exist(filename,'file') ~= 2
 end  
 %     try
 if nargout>2
-    [X,genelist,celllist]=i_read_exprmat(filename);
+    [X,genelist,celllist]=i_read_exprmat(filename,genecolnum);
 else
-    [X,genelist]=i_read_exprmat(filename);
+    [X,genelist]=i_read_exprmat(filename,genecolnum);
 end
 %     catch        
 %         fprintf('An Expression Matrix file looks like:\n');
