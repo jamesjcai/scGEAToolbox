@@ -14,5 +14,5 @@ switch methodid
            h=scatter3(x,y,z,10,c,'filled');
         end
     case 2
-        h=gscatter(x,y,c);
+        h=gscatter(x,y,c,[],[],10);
 end
