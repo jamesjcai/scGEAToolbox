@@ -3,7 +3,7 @@ if nargin<3
    txtpat="mt-";
 end
 idx=startsWith(genelist,txtpat,'IgnoreCase',true);
-% genelist(idx)
+genelist(idx)
 genelist=genelist(~idx);
 X=X(~idx,:);
 if nargout>3
