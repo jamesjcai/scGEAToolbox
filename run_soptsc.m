@@ -63,7 +63,7 @@ if isempty(k)
     warning('Number of cluster, k, will be estimated.');
 end
 [No_cluster,W,C,eigenvalues,H] = SoptSC_Main(k,X);
-
+C=C';
 
 %{
 sct=grpstats(s',C,@mean);

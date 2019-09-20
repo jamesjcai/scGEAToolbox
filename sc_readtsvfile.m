@@ -55,14 +55,17 @@ if nargin<3, verbose=true; end
 if verbose, fprintf('Reading %s ...... ',filename); end
 warning('off','MATLAB:table:ModifiedAndSavedVarnames');
 
-T=readtable(filename,'filetype','text');
-
+T=readtable(filename,'filetype','text','HeaderLines',1);
+% T=readtable(filename,'filetype','text');
 
 warning('on','MATLAB:table:ModifiedAndSavedVarnames');
 X=table2array(T(:,(1+genecolnum):end));
 genelist=string(table2array(T(:,1:genecolnum)));
 if nargout>2
-    sampleid=string(T.Properties.VariableNames(1+genecolnum:end)');
+    % sampleid=string(T.Properties.VariableNames(1+genecolnum:end)');
+     fid = fopen(filename);
+        sampleid = string(strsplit(fgetl(fid), '\t')');
+     fclose(fid);
 end
 if verbose, fprintf('done.\n'); end
 end

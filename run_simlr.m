@@ -36,6 +36,7 @@ if isempty(k)
     k=i+1;
 end
 [C,S,F,s,alpha] = SIMLR(X',k,10,0,0);
+C=C';
 
 % [C, S, F, s,alpha] = SIMLR_pearson(X',k,10,0,0);
 %    figure;

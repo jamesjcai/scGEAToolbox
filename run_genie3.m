@@ -6,11 +6,11 @@ function [A,s,G]=run_genie3(X,genelist,donorm,plotit)
 % >>[X,genelist]=sc_selectg(X,genelist,5,3);
 % >>figure; [A,s,G]=run_genie3(X(1:8,:),genelist(1:8),false,true);
 
-if nargin<1 || isempty(genelist) 
+if nargin<2 || isempty(genelist) 
     genelist=string(1:size(X,1));
 end
-if nargin<2, donorm=false; end
-if nargin<3, plotit=false; end
+if nargin<3, donorm=false; end
+if nargin<4, plotit=false; end
 
 pw1=fileparts(which(mfilename));
 pth=fullfile(pw1,'thirdparty/GENIE3');
@@ -25,11 +25,12 @@ end
 data=X';
 
 A=GENIE3(data);
-if nargout>1
+if nargout==2
     s=get_link_list(A);
 end
 %%
-if plotit || nargout>2
+if plotit || nargout==3
+    s=get_link_list(A);
     G=digraph(s(:,1),s(:,2),s(:,3),genelist);
 end
 if plotit

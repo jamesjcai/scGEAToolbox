@@ -42,7 +42,7 @@ figure; imagesc([X(1:100,1:500) Y(1:100,1:500)]); title('Log(x+1) Transformed');
 figure; imagesc([Xm(1:100,1:500) Ym(1:100,1:500)]); title('HCP Normalized'); colorbar; xline(500,'y-');
 
 %% Show data with ComBat batch correction
-[Xn,Yn]=run_combat(X,Y);
+[Xn,Yn]=run_combat2(X,Y);
 figure; imagesc([Xn(1:100,1:500) Yn(1:100,1:500)]); title('ComBat Corrected'); colorbar; xline(500,'y-');
 
 %% Show data subject to MAGIC imputation

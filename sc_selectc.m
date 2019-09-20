@@ -1,4 +1,4 @@
-function [X]=sc_selectc(X,cutoff)
+function [X,i]=sc_selectc(X,cutoff)
 if nargin<2, cutoff=1000; end
 libsz=sum(X);
 
