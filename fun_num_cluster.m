@@ -59,7 +59,7 @@ switch p.Results.type
         %end
     case 'sc3'
         %% estimate k
-        X=log2(X+1);
+        % X=log2(X+1);
         Dis=squareform(pdist(X'));
         A=exp(-Dis./max(Dis(:)));   % adjacency matrix
         xD=diag(sum(A).^-0.5);  % D=diag(sum(A)); % d(i) the degree of node i

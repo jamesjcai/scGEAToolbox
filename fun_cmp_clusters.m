@@ -11,10 +11,6 @@ addRequired(p,'true_labels',@isnumeric);
 addOptional(p,'type',defaultType,checkType)
 parse(p,true_labels,varargin{:})
 
-addRequired(p,'cluster_labels',@isnumeric);
-addOptional(p,'type',defaultType,checkType)
-parse(p,cluster_labels,varargin{:})
-
 
 pw1=fileparts(which(mfilename));
 switch p.Results.type

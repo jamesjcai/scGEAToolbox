@@ -66,9 +66,9 @@
 	[
 	{"name":"X", "kind":"required", "type":"numeric"},
         {"name":"genelist", "kind":"required", "type":["string"]},
-        {"name":"sortit", "kind":"ordered", "type":["logical"]},
-        {"name":"plotit", "kind":"ordered", "type":["logical"]},
-        {"name":"donorm", "kind":"ordered", "type":["logical"]}
+        {"name":"sortit", "kind":"namevalue", "type":["logical","scalar"],"purpose":"Option"},
+        {"name":"plotit", "kind":"namevalue", "type":["logical","scalar"],"purpose":"Option"},
+        {"name":"donorm", "kind":"namevalue", "type":["logical","scalar"],"purpose":"Option"}        
 	]
 },
 "sc_norm":
@@ -138,7 +138,7 @@
         {"name":"c", "kind":"required", "type":"numeric"},
         {"name":"type", "kind":"namevalue", "type":"choices={'soptsc'}"},
         {"name":"numofmarkers", "kind":"namevalue", "numofmarkers":"choices={'soptsc'}"},
-        {"name":"plotit", "kind":"namevalue", "type":["logical"]}
+        {"name":"plotit", "kind":"namevalue", "type":["logical","scalar"],"purpose":"Option"}
 	]
 },
 "run_phate":
@@ -147,9 +147,18 @@
 	[		
         {"name":"X", "kind":"required", "type":"numeric"},
         {"name":"ndim", "kind":"ordered", "type":"choices={2,3}"},
-        {"name":"bygene", "kind":"ordered", "type":["logical"]},
-        {"name":"plotit", "kind":"ordered", "type":["logical"]},
+        {"name":"bygene", "kind":"namevalue", "type":["logical","scalar"],"purpose":"Option"},
+        {"name":"plotit", "kind":"namevalue", "type":["logical","scalar"],"purpose":"Option"},
         {"name":"genelist", "kind":"ordered", "type":["string"]}
+	]
+},
+"sc_trajectory":
+{
+	"inputs":
+	[		
+        {"name":"X", "kind":"required", "type":"numeric"},
+        {"name":"type", "kind":"namevalue", "type":"choices={'splinefit','tscan'}"},
+        {"name":"plotit", "kind":"namevalue", "type":["logical","scalar"],"purpose":"Option"}
 	]
 }
 }

@@ -1,10 +1,10 @@
-%% Demonstration of Clustering Functions in scGEApp
+%% Demonstration of Clustering Functions in scGEAToolbox
 %% Load example data
 %%
 cdgea; % set working directory
 % load('example_data/example10xdata2.mat','X','genelist');
-[X,genelistx]=sc_readfile('example_data/GSM3204304_P_P_Expr_999cells.csv');
-[Y,genelisty]=sc_readfile('example_data/GSM3204305_P_N_Expr_999cells.csv');
+[X,genelistx]=sc_readfile('example_data/GSM3204304_P_P_Expr.csv');
+[Y,genelisty]=sc_readfile('example_data/GSM3204305_P_N_Expr.csv');
 [X,genelistx]=sc_selectg(X,genelistx,3,1);
 [Y,genelisty]=sc_selectg(Y,genelisty,3,1);
 
@@ -50,11 +50,11 @@ c1=sc_sc3(X,6);
 c2=run_simlr(X,6);
 c3=run_soptsc(X,'k',6);
 
-% Result of SC3 R
+% Result of SC3/R pacakge
 load example_data/sc3_results.txt
 c0=sc3_results;
 
-% Compare clustering results between SC3/R vs SC3, SIMILR and SoptSC
+%% Compare clustering results between SC3/R vs SC3, SIMILR and SoptSC
 Cal_NMI(c0,c1)
 Cal_NMI(c0,c2)
 Cal_NMI(c0,c3)

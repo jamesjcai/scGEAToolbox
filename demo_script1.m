@@ -1,9 +1,9 @@
-%% Demonstration of Filter, Normalization and Batch Correction of Data in scGEApp
+%% Demonstration of Filter, Normalization and Batch Correction of Data in scGEAToolbox
 %% Read scRNA-seq data, X and Y
 %
 cdgea; % set working directory
-[X,genelistx]=sc_readfile('example_data/GSM3204304_P_P_Expr_999cells.csv');
-[Y,genelisty]=sc_readfile('example_data/GSM3204305_P_N_Expr_999cells.csv');
+[X,genelistx]=sc_readfile('example_data/GSM3204304_P_P_Expr.csv');
+[Y,genelisty]=sc_readfile('example_data/GSM3204305_P_N_Expr.csv');
 
 %% Select genes with at least 3 cells having more than 5 reads per cell. 
 %
@@ -37,6 +37,11 @@ X=log(X+1);
 Y=log(Y+1);
 figure; imagesc([X(1:100,1:500) Y(1:100,1:500)]); title('Log(x+1) Transformed'); colorbar; xline(500,'y-');
 
+%% Show data subject to MAGIC imputation
+Xo=run_magic(X);
+Yo=run_magic(Y);
+figure; imagesc([Xo(1:100,1:500) Yo(1:100,1:500)]); title('MAGIC Imputated'); colorbar; xline(500,'y-');
+
 %% Show HCP normalized data
 [Xm,Ym]=run_hcp(X,Y);
 figure; imagesc([Xm(1:100,1:500) Ym(1:100,1:500)]); title('HCP Normalized'); colorbar; xline(500,'y-');
@@ -45,9 +50,14 @@ figure; imagesc([Xm(1:100,1:500) Ym(1:100,1:500)]); title('HCP Normalized'); col
 [Xn,Yn]=run_combat2(X,Y);
 figure; imagesc([Xn(1:100,1:500) Yn(1:100,1:500)]); title('ComBat Corrected'); colorbar; xline(500,'y-');
 
-%% Show data subject to MAGIC imputation
-Xo=run_magic(X);
-Yo=run_magic(Y);
-figure; imagesc([Xo(1:100,1:500) Yo(1:100,1:500)]); title('MAGIC Imputated'); colorbar; xline(500,'y-');
+%% Visulize cells before and after ComBat batch correction
+batchidx=[1*ones(size(X,2),1); 2*ones(size(Y,2),1)];
 
+figure;
+subplot(2,2,1)
+[s]=sc_tsne([X Y]);
+gscatter(s(:,1),s(:,2),batchidx,'','',5);
+subplot(2,2,2)
+[s]=sc_tsne([Xn Yn]);
+gscatter(s(:,1),s(:,2),batchidx,'','',5);
 %% The End

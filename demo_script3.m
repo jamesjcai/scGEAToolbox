@@ -1,9 +1,9 @@
-%% Demonstration of Visualization Functions in scGEApp
+%% Demonstration of Visualization Functions in scGEAToolbox
 %% Load and pre-process three data sets, X, Y and Z
 %%
 cdgea; % set working directory
-[X,genelistx]=sc_readfile('example_data/GSM3204304_P_P_Expr_999cells.csv');
-[Y,genelisty]=sc_readfile('example_data/GSM3204305_P_N_Expr_999cells.csv');
+[X,genelistx]=sc_readfile('example_data/GSM3204304_P_P_Expr.csv');
+[Y,genelisty]=sc_readfile('example_data/GSM3204305_P_N_Expr.csv');
 [Z,genelistz]=sc_readfile('example_data/GSM3044891_GeneExp.UMIs.10X1.txt');
 [X,genelistx]=sc_selectg(X,genelistx,3,1);
 [Y,genelisty]=sc_selectg(Y,genelisty,3,1);
@@ -35,7 +35,7 @@ gscatter(s(:,1),s(:,2),cellidx,'','',8);
 
 %% t-SNE
 %
-[s]=tsne([X Y Z]');
+[s]=sc_tsne([X Y Z],2,false,true);
 gscatter(s(:,1),s(:,2),cellidx,'','',8);
 
 %% Diffusion Map

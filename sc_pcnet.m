@@ -55,7 +55,14 @@ print(round(s,4))
 # data rescaled, and scores symmetrized and rescaled
 s2=PCnet(X1,ncom=3,rescale.data=TRUE,symmetrize.scores=FALSE,rescale.scores=FALSE)
 print(round(s2,4))
-
+library(dna)
+X=rbind(
+c(2.5,6.7,4.5,2.3,8.4,3.1),
+c(1.2,0.7,4.0,9.1,6.6,7.1),
+c(4.3,-1.2,7.5,3.8,1.0,9.3),
+c(9.5,7.6,5.4,2.3,1.1,0.2))
+s=PCnet(X,ncom=3,rescale.data=TRUE,symmetrize.scores=FALSE)
+print(round(s,4))
 
 %}
 

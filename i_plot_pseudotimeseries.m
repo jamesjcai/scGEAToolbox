@@ -25,6 +25,7 @@ end
 x=X(idx,i);
 
 
+
 co=[0    0.4470    0.7410
     0.8500    0.3250    0.0980
     0.9290    0.6940    0.1250
@@ -60,9 +61,13 @@ addpath(pth);
 % addpath('locfit/mex');
 % addpath('locfit/source');
 
+if size(t,2)~=1
+    t=t';
+end
+
 for k=1:size(x,1)
-    fitm1 = locfit(t',x(k,:)');    
-    plot(t,predict(fitm1,t'),'-','LineWidth',3);
+    fitm1 = locfit(t,x(k,:)');
+    plot(t,predict(fitm1,t),'-','LineWidth',3);
 end
 box on
 legend([glist glist],'location','eastoutside')

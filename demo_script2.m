@@ -1,4 +1,4 @@
-%% Demonstration of Feature Selection Functions in scGEApp
+%% Demonstration of Feature Selection Functions in scGEAToolbox
 %% HVG analysis with single data X
 %%
 cdgea; % set working directory
@@ -30,8 +30,8 @@ view([36.39 46.25])
 %% Analysis of differentially deviated (DD) genes using spline-fit feature selection with data X and Y
 %%
 % Read and pre-process two data sets, X and Y
-[X,genelistx]=sc_readfile('example_data/GSM3204304_P_P_Expr_999cells.csv');
-[Y,genelisty]=sc_readfile('example_data/GSM3204305_P_N_Expr_999cells.csv');
+[X,genelistx]=sc_readfile('example_data/GSM3204304_P_P_Expr.csv');
+[Y,genelisty]=sc_readfile('example_data/GSM3204305_P_N_Expr.csv');
 [X,genelistx]=sc_selectg(X,genelistx,3,1);
 [Y,genelisty]=sc_selectg(Y,genelisty,3,1);
 
