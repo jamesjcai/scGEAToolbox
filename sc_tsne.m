@@ -1,13 +1,3 @@
-% function s=sc_tsne(X,ndim,bygene,plotit,genelist,donorm,dolog1p)
-% %SC_TSNE
-% %
-% if nargin<2, ndim=2; end
-% if nargin<3, bygene=false; end   % when BYGENE=true, the matrix X will be transposed and the output will be tSNE for genes rather than cells.
-% if nargin<4, plotit=false; end
-% if nargin<5, genelist=[]; end
-% if nargin<6, donorm=true; end
-% if nargin<7, dolog1p=true; end
-
 function s=sc_tsne(X,ndim,plotit,donorm,dolog1p,bygene,genelist)
 
 if nargin<2, ndim=2; end

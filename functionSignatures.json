@@ -14,12 +14,20 @@
 		{"name":"filename", "kind":"required", "type":[["file=*.tsv,*.csv,*.tab,*.txt"], ["char"]]}
 	]
 },
+"sc_readmtxfile":
+{
+	"inputs":
+	[
+	{"name":"mtxfilename", "kind":"required", "type":[["file=*.mtx"], ["char"]]},
+	{"name":"genfilename", "kind":"required", "type":[["file=*.txt,*.csv"], ["char"]]}
+	]
+},
 "sc_mmread":
 {
 	"inputs":
 	[
 	{"name":"mtxfilename", "kind":"required", "type":[["file=*.mtx"], ["char"]]},
-        {"name":"genfilename", "kind":"required", "type":[["file=*.txt,*.csv"], ["char"]]}
+	{"name":"genfilename", "kind":"required", "type":[["file=*.txt,*.csv"], ["char"]]}
 	]
 },
 "sc_splinefit":
@@ -159,6 +167,24 @@
         {"name":"X", "kind":"required", "type":"numeric"},
         {"name":"type", "kind":"namevalue", "type":"choices={'splinefit','tscan'}"},
         {"name":"plotit", "kind":"namevalue", "type":["logical","scalar"],"purpose":"Option"}
+	]
+},
+"sc_pcnet":
+{
+	"inputs":
+	[		
+        {"name":"X", "kind":"required", "type":"numeric"},
+        {"name":"ncom", "kind":"ordered", "type":"numeric"},
+        {"name":"fastersvd", "kind":"ordered", "type":["logical","scalar"],"purpose":"Option"}
+	]
+},
+"sc_pcnetpar":
+{
+	"inputs":
+	[		
+        {"name":"X", "kind":"required", "type":"numeric"},
+        {"name":"ncom", "kind":"ordered", "type":"numeric"},
+        {"name":"fastersvd", "kind":"ordered", "type":["logical","scalar"],"purpose":"Option"}
 	]
 }
 }
