@@ -3,7 +3,7 @@
 {
 	"inputs":
 	[
-		{"name":"filename", "kind":"required", "type":[["file=*.txt,*.csv,*.tsv,*.tab"], ["char"]]},
+		{"name":"filename", "kind":"required", "type":[["file=*.txt,*.csv,*.tsv,*.tab,*.mtx"], ["char"]]},
 		{"name":"type", "kind":"namevalue","type":["char", "choices={'tsv','mtx'}"]}
 	]
 },

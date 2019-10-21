@@ -8,7 +8,7 @@ T=readtable(featurestxtfile,'ReadVariableNames',false,'filetype','text');
 genelist=string(T.Var1);
 if nargout>2
     T=readtable(barcodestxtfile,'ReadVariableNames',false,'filetype','text');
-    celllist=string(T.Var1);    
+    celllist=string(T.Var1);
 end
 X=full(X);
 assert(isequal(size(X,1),length(genelist)))

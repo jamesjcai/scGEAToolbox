@@ -25,6 +25,11 @@ switch p.Results.type
     case 'tsv'
         [X,genelist]=sc_readtsvfile(filename);
     case 'mtx'
-        [X,genelist]=sc_readmtxfile(filename);
+        featurestxtfile='features.tsv';
+        if exist(featurestxtfile,'file')         
+            [X,genelist]=sc_readmtxfile(filename,featurestxtfile);
+        else
+            error('Need file ''features.tsv''');
+        end
 end
 end

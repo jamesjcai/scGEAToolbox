@@ -12,9 +12,9 @@ switch methodid
     case 1
         if size(s,2)==3, z=s(:,3); end
         if size(s,2)==2
-           h=scatter(x,y,15,c,'filled');
+           h=scatter(x,y,5,c,'filled');
         elseif size(s,2)==3
-           h=scatter3(x,y,z,15,c,'filled');
+           h=scatter3(x,y,z,5,c,'filled');
         end
     case 2
         h=gscatter(x,y,c,[],[],10);
