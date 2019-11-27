@@ -4,7 +4,10 @@ scGEAToolbox - a Matlab toolbox for single-cell RNA-seq data analyses
 ## Introduction
 **Motivation**: Single-cell RNA sequencing (scRNA-seq) technology has revolutionized the way research is done in biomedical sciences. It provides an unprecedented level of resolution across individual cells for studying cell heterogeneity and gene expression variability. Analyzing scRNA-seq data is challenging though, due to the sparsity and high dimensionality of the data.  
 **Results**: I developed scGEAToolbox—a Matlab toolbox for scRNA-seq data analysis. It contains a comprehensive set of functions for data normalization, feature selection, batch correction, imputation, cell clustering, trajectory/pseudotime analysis, and network construction, which can be combined and integrated to building custom workflow. While most of the functions are implemented in native Matlab, wrapper functions are provided to allow users to call the “third-party” tools developed in Matlab or other languages. Furthermore, scGEAToolbox is equipped with sophisticated graphical user interfaces (GUIs) generated with App Designer, making it an easy-to-use application for quick data processing.  
-**Availability**: [https://github.com/jamesjcai/scGEAToolbox](https://github.com/jamesjcai/scGEAToolbox)  
+**Availability**: [https://github.com/jamesjcai/scGEAToolbox](https://github.com/jamesjcai/scGEAToolbox)
+
+[![View scGEAToolbox on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/72917-scgeatoolbox)  
+
 **Contact**: jcai@tamu.edu
 
 ## To get started immediately, check out demo scripts:
