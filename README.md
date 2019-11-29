@@ -36,4 +36,4 @@ If you have any questions or require assistance using scGEAToolbox, please conta
 
 ## Citation
 
-**Cai JJ*** (2019) scGEAToolbox: a Matlab toolbox for single-cell RNA sequencing data. *bioRxiv* 544163; doi: [https://doi.org/10.1101/544163](https://doi.org/10.1101/544163)
+**Cai JJ**. scGEAToolbox: a Matlab toolbox for single-cell RNA sequencing data analysis. *Bioinformatics*. 2019;btz830. [doi:10.1093/bioinformatics/btz830](https://doi.org/10.1093/bioinformatics/btz830)
