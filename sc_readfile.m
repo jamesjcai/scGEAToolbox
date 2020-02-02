@@ -14,7 +14,7 @@ end
 
 p = inputParser;
 defaultType = 'tsv';
-validTypes = {'tsv','mtx'};
+validTypes = {'tsv','mtx','h5'};
 checkType = @(x) any(validatestring(x,validTypes));
 
 % addRequired(p,'X',@isnumeric);
@@ -31,5 +31,7 @@ switch p.Results.type
         else
             error('Need file ''features.tsv''');
         end
+    case 'h5'
+        [X,genelist]=sc_readh5file(filename);
 end
 end
