@@ -9,3 +9,5 @@ X=X(~idx,:);
 if nargout>3
     idx=find(idx);
 end
+
+% find(contains(genelist,"ENSG00000198804"))  % MT-CO1

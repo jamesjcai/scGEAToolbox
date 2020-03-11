@@ -1,6 +1,6 @@
 function [X,genelist]=sc_qcfilter(X,genelist,lbsz,mtratio,zeroratio)
 
-if nargin<3, lbsz=20000; end
+if nargin<3, lbsz=1000; end
 if nargin<4, mtratio=0.1; end
 if nargin<5, zeroratio=0.05; end
 
