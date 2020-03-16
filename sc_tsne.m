@@ -62,7 +62,7 @@ if plotit
             title 'tSNE 3D'
 
     end
-    if ~isempty(genelist)
+    if bygene && ~isempty(genelist)
         dt = datacursormode;
         dt.UpdateFcn = {@i_myupdatefcn1,genelist};
     end    
