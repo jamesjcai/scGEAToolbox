@@ -1,11 +1,11 @@
-function [X,i]=sc_selectc(X,cutoff)
+function [X,keptidx]=sc_selectc(X,cutoff)
 if nargin<2, cutoff=1000; end
 libsz=sum(X);
 
 if cutoff>1.0
-    i=libsz>=cutoff;
+    keptidx=libsz>=cutoff;
 else
-    i=libsz>=quantile(libsz,cutoff);
+    keptidx=libsz>=quantile(libsz,cutoff);
 end
 
 % function [X]=sc_selectc(X,lwprct,upprct)
@@ -17,5 +17,5 @@ end
 %     i=libsz>=quantile(libsz,lwprct);
 % end
 
-X=X(:,i);
+X=X(:,keptidx);
 
