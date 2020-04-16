@@ -82,7 +82,7 @@ function pp = splinefit(varargin)
 %   2011-07-01  Robust fitting parameter added.
 
 % Check number of arguments
-narginchk(3,7);
+narginchk(3,8);
 
 % Check arguments
 [x,y,dim,breaks,n,periodic,beta,constr] = arguments(varargin{:});
@@ -93,7 +93,7 @@ pieces = base.pieces;
 A = ppval(base,x);
 
 % Bin data
-[junk,ibin] = histc(x,[-inf,breaks(2:end-1),inf]); %#ok
+[~,ibin] = histc(x,[-inf,breaks(2:end-1),inf]);
 
 % Sparse system matrix
 mx = numel(x);
@@ -233,7 +233,7 @@ if isscalar(varargin{3})
         % Interpolate breaks linearly from x-data
         dx = diff(x);
         ibreaks = linspace(1,mx,p+1);
-        [junk,ibin] = histc(ibreaks,[0,2:mx-1,mx+1]); %#ok
+        [~,ibin] = histc(ibreaks,[0,2:mx-1,mx+1]); 
         breaks = x(ibin) + dx(ibin).*(ibreaks-ibin);
     else
         breaks = x(1) + linspace(0,1,p+1);
@@ -481,7 +481,7 @@ xc = constr.xc;
 cc = constr.cc;
 
 % Bin data
-[junk,ibin] = histc(xc,[-inf,breaks(2:end-1),inf]); %#ok
+[~,ibin] = histc(xc,[-inf,breaks(2:end-1),inf]); 
 
 % Evaluate constraints
 nx = numel(xc);
@@ -528,7 +528,7 @@ if isempty(B2)
     Z2 = [];
 else
     % QR decomposition with column permutation
-    [Q,R,dummy] = qr(B2); %#ok
+    [Q,R,~] = qr(B2); 
     R = abs(R);
     jj = all(R < R(1)*tol, 2);
     Z2 = Q(:,jj)';

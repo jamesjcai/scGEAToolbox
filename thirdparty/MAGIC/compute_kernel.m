@@ -1,4 +1,4 @@
-function K = compute_alpha_kernel_sparse(data, varargin)
+function K = compute_kernel(data, varargin)
 % K = computer_alpha_kernel_sparse(data, varargin)
 % Computes sparse alpha-decay kernel
 % varargin: 
