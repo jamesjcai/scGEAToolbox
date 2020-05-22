@@ -15,7 +15,7 @@ while ~isequal(oldsz,newsz)
     [X,genelist]=sc_filterg(X,genelist,dropout);
     [X,keptidx]=sc_filterc(X);
     keptidxv{end+1}=keptidx;
-    [X,genelist]=sc_selectg(X,genelist);
+    [X,genelist]=sc_selectg(X,genelist,1,0.05);
     [X,keptidx]=sc_selectc(X,libsize);
     keptidxv{end+1}=keptidx;
     newsz=size(X);
