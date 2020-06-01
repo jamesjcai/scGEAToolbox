@@ -1,8 +1,8 @@
 function [X,genelist,keptidxv]=sc_qcfilter(X,genelist,libsize,mtratio,dropout)
 
-if nargin<3, libsize=1000; end
-if nargin<4, mtratio=0.1; end
 if nargin<5, dropout=0.01; end
+if nargin<4, mtratio=0.1; end
+if nargin<3, libsize=1000; end
 
 [X,keptidx]=sc_rmmtcells(X,genelist,mtratio);
 keptidxv{1}=keptidx;
