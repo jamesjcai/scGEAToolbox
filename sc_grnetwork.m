@@ -14,7 +14,7 @@ switch p.Results.type
     case 'pcnetpar'
         [A]=sc_pcnetpar(X);
     case 'pcnet'
-        [A]=sc_pcnetpar(X);
+        [A]=sc_pcnet(X);
     case 'genie3'
         [A]=run_genie3(X,[],true);
 end
