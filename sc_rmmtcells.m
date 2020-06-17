@@ -16,7 +16,7 @@ f_mtreads=lbsz_mt./lbsz;
 keptidx=f_mtreads<mtratio;
 if sum(~keptidx)>0
     X=X(:,keptidx);
-    if vebrose
+    if vebrose && ~issparse(X)
         fprintf('%d cells with >=%.2f mt-read ratio removed.\n',...
             sum(~keptidx),mtratio);
     end

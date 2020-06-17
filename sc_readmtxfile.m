@@ -19,7 +19,10 @@ if nargout>2 && ~isempty(barcodestxtfile)
     T=readtable(barcodestxtfile,'ReadVariableNames',false,'filetype','text');
     celllist=string(T.Var1);
 end
+try
 X=full(X);
+catch
+end
 assert(isequal(size(X,1),length(genelist)))
-assert(isequal(size(X,1),length(genelist)))
+
 
