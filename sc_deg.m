@@ -1,3 +1,47 @@
+function [T]=sc_deg(X,Y,genelist)
+% https://satijalab.org/seurat/v3.1/de_vignette.html
+% p_val : p_val (unadjusted)
+% avg_logFC : log fold-chage of the average expression between the two groups. Positive values indicate that the feature is more highly expressed in the first group.
+% pct.1 : The percentage of cells where the feature is detected in the first group
+% pct.2 : The percentage of cells where the feature is detected in the second group
+% p_val_adj : Adjusted p-value, based on bonferroni correction using all features in the dataset.
+  
+if argin<2, error("USAGE: sc_deg(X,Y)\n"); end
+if nargin<3, genelist=string(num2cell(1:size(X,1)))'; end
+
+ng=size(X,1);
+assert(isequal(ng,size(Y,1)));
+
+pValues=ones(ng,1);
+avglogFC=ones(ng,1);
+pct1=ones(ng,1);
+pct2=ones(ng,1);
+
+for k=1:ng
+    x=X(k,:);
+    y=Y(k,:);    
+    switch methodid
+        case 1
+            % “wilcox” : Wilcoxon rank sum test (default)
+            pValues(k)=ranksum(x,y);
+        case 2
+            [~,p]=ttest2(x,y);
+            pValues(k)=p;
+        otherwise
+            pValues(k)=ranksum(x,y);
+    end
+    avglogFC(k)=log2(mean(x)./mean(y));
+    pct1(k)=sum(x>0)./length(x);
+    pct2(k)=sum(y>0)./length(y);
+end
+
+pAdjusted = mafdr(pValues,'BHFDR',true);
+    sortid=(1:length(genelist))';
+    if size(genelist,2)>1, genelist=genelist'; end
+    T=table(sortid,genelist,pValues,avglogFC,pct1,pct2,pAdjusted);
+  % T=sortrows(T,'pAdjusted','descend');
+
+
 % Test for expression differences between two sets of cells
 %
 % Use the individual cell error models to test for differential expression between two groups of cells.
@@ -45,6 +89,8 @@
 % }
 %
 % @export
+
+%{
 scde.expression.difference <- function(models, counts, prior, groups = NULL, batch = NULL, n.randomizations = 150, n.cores = 10, batch.models = models, return.posteriors = FALSE, expectation=0, verbose = 0) {
     if(!all(rownames(models) %in% colnames(counts))) {
         stop("ERROR: provided count data does not cover all of the cells specified in the model matrix")
@@ -180,7 +226,5 @@ quick.distribution.summary <- function(s.bdiffp,expectation=0) {
     za <- sign(z)*qnorm(p.adjust(pnorm(abs(z), lower.tail = FALSE), method = "BH"), lower.tail = FALSE)
     data.frame(dq, "ce" = as.numeric(cq), "Z" = as.numeric(z), "cZ" = as.numeric(za))
 }
-
-
 https://raw.githubusercontent.com/hms-dbmi/scde/master/R/functions.R
-
+%}
