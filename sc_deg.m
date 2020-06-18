@@ -1,4 +1,4 @@
-function [T]=sc_deg(X,Y,genelist)
+function [T]=sc_deg(X,Y,genelist,methodid)
 % https://satijalab.org/seurat/v3.1/de_vignette.html
 % p_val : p_val (unadjusted)
 % avg_logFC : log fold-chage of the average expression between the two groups. Positive values indicate that the feature is more highly expressed in the first group.
@@ -6,8 +6,9 @@ function [T]=sc_deg(X,Y,genelist)
 % pct.2 : The percentage of cells where the feature is detected in the second group
 % p_val_adj : Adjusted p-value, based on bonferroni correction using all features in the dataset.
   
-if argin<2, error("USAGE: sc_deg(X,Y)\n"); end
+if nargin<2, error("USAGE: sc_deg(X,Y)\n"); end
 if nargin<3, genelist=string(num2cell(1:size(X,1)))'; end
+if nargin<4, methodid=1; end
 
 ng=size(X,1);
 assert(isequal(ng,size(Y,1)));
@@ -39,7 +40,7 @@ pAdjusted = mafdr(pValues,'BHFDR',true);
     sortid=(1:length(genelist))';
     if size(genelist,2)>1, genelist=genelist'; end
     T=table(sortid,genelist,pValues,avglogFC,pct1,pct2,pAdjusted);
-  % T=sortrows(T,'pAdjusted','descend');
+    T=sortrows(T,'pAdjusted','descend');
 
 
 % Test for expression differences between two sets of cells

@@ -15,6 +15,13 @@ parse(p,X,genelist,c,varargin{:})
 
 switch p.Results.type
     case 'soptsc'
+pw1=fileparts(which(mfilename));
+pth=fullfile(pw1,'thirdparty/SoptSC');
+addpath(pth);
+pth=fullfile(pw1,'thirdparty/SoptSC/NNDSVD');
+addpath(pth);
+pth=fullfile(pw1,'thirdparty/SoptSC/symnmf2');
+addpath(pth);        
         idx=GC_htmp_DE(X,genelist,c,...
             p.Results.numofmarkers,p.Results.plotit);
 end

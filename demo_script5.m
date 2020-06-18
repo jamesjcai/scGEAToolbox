@@ -1,5 +1,5 @@
 %% Demonstration of Pseudotime Analysis and Gene Network Functions in scGEAToolbox
-%% Load examle data set, X
+%% Load example data set, X
 %
 cdgea; % set working directory
 [X,genelist]=sc_readfile('example_data/GSM3044891_GeneExp.UMIs.10X1.txt');
