@@ -32,8 +32,10 @@ for i=1:k
     si=s(id==i,:);
     si=mean(si);
     if size(s,2)==3
-        text(si(:,1),si(:,2),si(:,3),sprintf('%d',i),'fontsize',20);
+        text(si(:,1),si(:,2),si(:,3),sprintf('%d',i),...
+            'fontsize',20,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');
     else
-        text(si(:,1),si(:,2),sprintf('%d',i),'fontsize',20);
+        text(si(:,1),si(:,2),sprintf('%d',i),...
+            'fontsize',20,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');
     end
 end
