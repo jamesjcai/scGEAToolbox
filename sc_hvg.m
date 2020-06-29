@@ -25,6 +25,7 @@ end
 
 if normit
     [X]=norm_deseq(X);
+    %[X]=norm_libsize(X);	
 end
 u=nanmean(X,2);
 cv2=nanvar(X,0,2)./u.^2;
