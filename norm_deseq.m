@@ -7,10 +7,10 @@ function [x,sf]=norm_deseq(x)
 % v1.10.1 [21]. In this function, ratios of zero were automatically removed
 % prior to calculation of the median in each library, to avoid obtaining a
 % size factor equal to zero        
-    x(x==0)=nan;
-    sf=nanmedian(x./nangeomean(x,2));
+    y=nan(size(x));
+    y(x>0)=x(x>0);
+    sf=nanmedian(y./nangeomean(y,2));
     x=x./sf;
-    x(isnan(x))=0;
 end
 
 

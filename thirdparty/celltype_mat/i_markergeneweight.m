@@ -1,4 +1,6 @@
-T=readtable('markerlist.txt','ReadVariableNames',false);
+T1=readtable('markerlist_panglaodb.txt','ReadVariableNames',false,'Delimiter','\t');
+T2=readtable('markerlist_custom.txt','ReadVariableNames',false,'Delimiter','\t');
+T=[T1;T2];
 s=string(T.Var2);
 S=[];
 for k=1:length(s)

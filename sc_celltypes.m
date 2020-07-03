@@ -7,7 +7,13 @@ oldpth=pwd;
 pw1=fileparts(which(mfilename));
 pth=fullfile(pw1,'thirdparty/celltype_mat');
 cd(pth);
-
+if issparse(X)
+    try
+        X=full(X);
+    catch
+        disp('Using sparse input--longer running time is expected.');
+    end
+end
 X=sc_norm(X,"type","deseq");
 genelist=upper(genelist);
 
@@ -15,7 +21,9 @@ Tw=readtable('markerweight.txt');
 wvalu=Tw.Var2;
 wgene=string(Tw.Var1);
 
-Tm=readtable('markerlist.txt','ReadVariableNames',false);
+T1=readtable('markerlist_panglaodb.txt','ReadVariableNames',false,'Delimiter','\t');
+T2=readtable('markerlist_custom.txt','ReadVariableNames',false,'Delimiter','\t');
+Tm=[T1;T2];
 celltypev=string(Tm.Var1);
 markergenev=string(Tm.Var2);
 NC=max(clusterid);
