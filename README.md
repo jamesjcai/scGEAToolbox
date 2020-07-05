@@ -10,6 +10,14 @@ scGEAToolbox - a Matlab toolbox for single-cell RNA-seq data analyses
 
 **Contact**: jcai@tamu.edu
 
+## Installation:
+
+```matlab
+disp('Install scGEAToolbox...')
+unzip('https://github.com/jamesjcai/scGEAToolbox/archive/master.zip');
+addpath('./scGEAToolbox-master');
+```
+
 ## To get started immediately, check out demo scripts:
 
 * [Demo script 1](http://htmlpreview.github.io/?https://github.com/jamesjcai/scGEAToolbox/blob/master/demo_script1.html)
