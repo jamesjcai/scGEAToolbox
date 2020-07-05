@@ -10,13 +10,22 @@ scGEAToolbox - a Matlab toolbox for single-cell RNA-seq data analyses
 
 **Contact**: jcai@tamu.edu
 
+## Install in MATLAB:
+
+```matlab
+disp('Install scGEAToolbox...')
+unzip('https://github.com/jamesjcai/scGEAToolbox/archive/master.zip');
+addpath('./scGEAToolbox-master');
+```
+
 ## To get started immediately, check out demo scripts:
 
-* [Demo script 1](http://htmlpreview.github.io/?https://github.com/jamesjcai/scGEAToolbox/blob/master/demo_script1.html)
-* [Demo script 2](http://htmlpreview.github.io/?https://github.com/jamesjcai/scGEAToolbox/blob/master/demo_script2.html)
-* [Demo script 3](http://htmlpreview.github.io/?https://github.com/jamesjcai/scGEAToolbox/blob/master/demo_script3.html)
-* [Demo script 4](http://htmlpreview.github.io/?https://github.com/jamesjcai/scGEAToolbox/blob/master/demo_script4.html)
-* [Demo script 5](http://htmlpreview.github.io/?https://github.com/jamesjcai/scGEAToolbox/blob/master/demo_script5.html)
+* [Demo script 1](http://htmlpreview.github.io/?https://github.com/jamesjcai/scGEAToolbox/blob/master/demo_script1.html) Filter, Normalization and Batch Correction of Data
+* [Demo script 2](http://htmlpreview.github.io/?https://github.com/jamesjcai/scGEAToolbox/blob/master/demo_script2.html) Feature Selection
+* [Demo script 3](http://htmlpreview.github.io/?https://github.com/jamesjcai/scGEAToolbox/blob/master/demo_script3.html) Visualization
+* [Demo script 4](http://htmlpreview.github.io/?https://github.com/jamesjcai/scGEAToolbox/blob/master/demo_script4.html) Clustering
+* [Demo script 5](http://htmlpreview.github.io/?https://github.com/jamesjcai/scGEAToolbox/blob/master/demo_script5.html) Pseudotime Analysis and Gene Network 
+* [Demo script 6](http://htmlpreview.github.io/?https://github.com/jamesjcai/scGEAToolbox/blob/master/demo_script6.html) DE Analysis and Marker Gene Identification
 
 ## GUI interface
 
