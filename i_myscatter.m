@@ -1,4 +1,5 @@
 function h=i_myscatter(s,c,methodid)
+
 if nargin<3, methodid=1; end
 if nargin<2, c='b'; end
 

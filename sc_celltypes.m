@@ -3,6 +3,7 @@ function [T]=sc_celltypes(X,genelist,clusterid)
 % https://academic.oup.com/database/article/doi/10.1093/database/baz046/5427041
 % REF: PanglaoDB: a web server for exploration of mouse and human single-cell RNA sequencing data
 
+if nargin<3, clusterid=ones(1,size(X,2)); end
 oldpth=pwd;
 pw1=fileparts(which(mfilename));
 pth=fullfile(pw1,'thirdparty/celltype_mat');

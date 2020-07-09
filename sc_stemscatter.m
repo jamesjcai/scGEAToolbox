@@ -4,8 +4,14 @@ if nargin<3
     y=randn(300,1);
     z=abs(randn(300,1));
 end
-stem3(x,y,z,'marker','none');
-hold on 
-% scatter(x,y,'.');
-i_myscatter([x y],z);
-hold off
+if isempty(z)
+    warndlg('No expression');
+    scatter(x,y,'.');
+else
+    stem3(x,y,z,'marker','none','color','m');
+    hold on 
+    i_myscatter([x y],z);
+    hold off
+end
+%[caz,cel]=view;
+view([-45,-45,400]);
