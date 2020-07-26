@@ -11,13 +11,14 @@ function RunRcode(RscriptFileName,Rpath)
 % Update:
 % Ver. 1.4  Dec-14-2017  support parallel computing (run several R codes simultaneously)
 % Weirong Chen   March-8-2015
-if nargin<2 || isempty(Rpath), Rpath=FindRpath;end
+if nargin<2 || isempty(Rpath), Rpath=FindRpath; end
 sep=filesep;
 [p,f,~]=fileparts(RscriptFileName);
 if isempty(p), p = pwd;end
 logFName=[p sep f '.R.log'];
 % commandline=['"' Rpath sep 'R.exe" CMD BATCH "' RscriptFileName '" "' logFName '"'];
-commandline=['"' Rpath sep 'Rscript.exe" "' RscriptFileName '"']
+commandline=['"' Rpath sep 'Rscript.exe" "' RscriptFileName '"'];
+fprintf('COMMANDLINE = %s\n',['"' Rpath sep 'Rscript.exe ' RscriptFileName '"']);
 [status,cmdout]=system(commandline,'-echo');
 end %RunRcode
 

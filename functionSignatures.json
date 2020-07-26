@@ -1,4 +1,13 @@
 {
+"sc_clustshow":
+{
+	"inputs":
+	[
+		{"name":"s", "kind":"required", "type":"numeric"},
+		{"name":"k", "kind":"required", "type":["numeric","choices=[3,6,9]"]},
+		{"name":"type", "kind":"namevalue","type":["char", "choices={'kmeans','kmedoids','dbscan','spectclust'}"]}
+	]
+},
 "sc_readfile":
 {
 	"inputs":
@@ -181,7 +190,7 @@
 	"inputs":
 	[		
         {"name":"X", "kind":"required", "type":"numeric"},
-        {"name":"ncom", "kind":"ordered", "type":"numeric"},
+        {"name":"ncom", "kind":"ordered", "type":"choices={3,5,7,9}"},
         {"name":"fastersvd", "kind":"ordered", "type":["logical","scalar"],"purpose":"Option"}
 	]
 },
@@ -190,7 +199,7 @@
 	"inputs":
 	[		
         {"name":"X", "kind":"required", "type":"numeric"},
-        {"name":"ncom", "kind":"ordered", "type":"numeric"},
+        {"name":"ncom", "kind":"ordered", "type":"choices={3,5,7,9}"},
         {"name":"fastersvd", "kind":"ordered", "type":["logical","scalar"],"purpose":"Option"}
 	]
 }

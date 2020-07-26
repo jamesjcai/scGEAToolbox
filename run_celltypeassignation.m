@@ -13,7 +13,7 @@ oldpth=pwd;
 pw1=fileparts(which(mfilename));
 pth=fullfile(pw1,'thirdparty/R_cellTypeAssignation');
 cd(pth);
-
+fprintf('CURRENTWDIR = "%s"\n',pth);
 if exist('output.txt','file')
     delete('output.txt');
 end

@@ -9,6 +9,7 @@ oldpth=pwd;
 pw1=fileparts(which(mfilename));
 pth=fullfile(pw1,'thirdparty/R_SCODE');
 cd(pth);
+fprintf('CURRENTWDIR = "%s"\n',pth);
 
 if size(t,2)==1
     t=[(1:length(t))' t];

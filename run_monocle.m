@@ -6,8 +6,8 @@ if nargin<2, plotit=false; end
 oldpth=pwd;
 pw1=fileparts(which(mfilename));
 pth=fullfile(pw1,'thirdparty/R_monocle');
-
 cd(pth);
+fprintf('CURRENTWDIR = "%s"\n',pth);
 if exist('output.csv','file')
     delete('output.csv');
 end

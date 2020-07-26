@@ -34,6 +34,7 @@ gmarkers=sc_pickmarkers(X,genelist,cluster_kmedoids,4);
 
 figure;
 for k=1:9
+    g=gmarkers(k);
     subplot(3,3,k)
     scatter3(s_tsne(:,1),s_tsne(:,2), s_tsne(:,3), 10,...
     log(1+X(genelist==gmarkers(k),:)), 'filled');

@@ -2,8 +2,8 @@ function [id]=sc_clustshow(s,k,varargin)
 
 if nargin<2, k=3; end
 p = inputParser;
-defaultType = 'spectralcluster';
-validTypes = {'spectralcluster','kmeans','kmedoids','dbscan'};
+defaultType = 'kmeans';
+validTypes = {'kmeans','kmedoids','dbscan','spectclust'};
 checkType = @(x) any(validatestring(x,validTypes));
 
 addRequired(p,'s',@isnumeric);
@@ -12,7 +12,7 @@ addOptional(p,'type',defaultType,checkType)
 parse(p,s,k,varargin{:})
 
 switch p.Results.type
-    case 'spectralcluster'
+    case {'spectralcluster','spectclust'}
         id=spectralcluster(s,k);
     case 'kmeans'
         id=kmeans(s,k);
