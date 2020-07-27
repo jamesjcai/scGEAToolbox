@@ -169,10 +169,10 @@
 {
 	"inputs":
 	[		
-        {"name":"X", "kind":"required", "type":"numeric"},
-        {"name":"ndim", "kind":"ordered", "type":"choices={2,3}"},
-        {"name":"bygene", "kind":"namevalue", "type":["logical","scalar"],"purpose":"Option"},
-        {"name":"plotit", "kind":"namevalue", "type":["logical","scalar"],"purpose":"Option"},
+        {"name":"X", "kind":"required", "type":["numeric"]},
+        {"name":"ndim", "kind":"ordered", "type":["numeric", "choices={2,3}"]},
+        {"name":"bygene", "kind":"ordered", "type":["logical"]},
+        {"name":"plotit", "kind":"ordered", "type":["logical"]},
         {"name":"genelist", "kind":"ordered", "type":["string"]}
 	]
 },
