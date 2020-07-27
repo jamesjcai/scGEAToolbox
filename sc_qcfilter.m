@@ -1,6 +1,6 @@
 function [X,genelist,keptidxv]=sc_qcfilter(X,genelist,libsize,mtratio,dropout,min_cells_nonzero)
 
-if nargin<6, min_cells_nonzero=0.05; end
+if nargin<6, min_cells_nonzero=0.01; end
 if nargin<5, dropout=0.01; end
 if nargin<4, mtratio=0.1; end
 if nargin<3, libsize=1000; end

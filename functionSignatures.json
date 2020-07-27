@@ -228,5 +228,13 @@
 {"name":"bygene", "kind":"ordered", "type":["logical","scalar"],"purpose":"bygene"},
         {"name":"genelist", "kind":"ordered", "type":["string"]}
 	]
+},
+"run_umap":
+{
+	"inputs":
+	[		
+        {"name":"X", "kind":"required", "type":["numeric"]},
+        {"name":"plotit", "kind":"ordered", "type":["logical","scalar"],"purpose":"plotit"}        
+	]
 }
 }
