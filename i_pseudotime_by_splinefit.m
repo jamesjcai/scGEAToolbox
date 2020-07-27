@@ -54,7 +54,7 @@ end
 
 % https://www.mathworks.com/matlabcentral/fileexchange/47042-pathdist
 
-% s=run_phate(X,3,false,true);
+% s=run_phate(X,3,true,false);
 % [t,xyz1]=i_pseudotime_by_splinefit(s,1);
 if plotit
  hold on

@@ -1,4 +1,4 @@
-function s=run_phate(X,ndim,bygene,plotit,genelist)
+function s=run_phate(X,ndim,plotit,bygene,genelist)
 %RUN_PHATE 
 %
 % PHATE is a data reduction method specifically designed for visualizing 
@@ -12,12 +12,12 @@ function s=run_phate(X,ndim,bygene,plotit,genelist)
 % >>[X,genelist]=sc_readfile('example_data/GSM3044891_GeneExp.UMIs.10X1.txt');
 % >>[X,genelist]=sc_selectg(X,genelist);
 % >>figure; s1=run_phate(X,3,true,true,genelist);  % view genes
-% >>figure; s2=run_phate(X,3,false,true);          % view cells
+% >>figure; s2=run_phate(X,3,true);          % view cells
 % >>figure; scatter3(s2(:,1),s2(:,2),s2(:,3),10,'filled'); % using output S
 
 if nargin<2, ndim=2; end
-if nargin<3, bygene=false; end
-if nargin<4, plotit=false; end
+if nargin<3, plotit=false; end
+if nargin<4, bygene=false; end
 if nargin<5, genelist=[]; end
 
 pw1=fileparts(which(mfilename));

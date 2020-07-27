@@ -10,7 +10,7 @@ cdgea; % set working directory
 
 %% Trajectory analysis using the PHATE+splinefit method
 %
-% s=run_phate(X,3,false,true);
+% s=run_phate(X,3,true);
 % [t,xyz1]=i_pseudotime_by_splinefit(s,1);
 % hold on
 % plot3(xyz1(:,1),xyz1(:,2),xyz1(:,3),'-r','linewidth',2);

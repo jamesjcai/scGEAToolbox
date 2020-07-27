@@ -1,7 +1,7 @@
 function s=sc_tsne(X,ndim,plotit,donorm,dolog1p,bygene,genelist)
 
 %see also: RUN_PHATE, RUN_UMAP
-% s_phate=run_phate(X,3,false,true);
+% s_phate=run_phate(X,3,true);
 % s_umap=run_umap(X,true);
 
 if nargin<2, ndim=2; end

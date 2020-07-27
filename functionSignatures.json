@@ -88,11 +88,12 @@
 {
 	"inputs":
 	[
-	{"name":"X", "kind":"required", "type":"numeric"},
+	{"name":"X", "kind":"required", "type":["numeric"]},
         {"name":"genelist", "kind":"required", "type":["string"]},
-        {"name":"sortit", "kind":"namevalue", "type":["logical","scalar"],"purpose":"Option"},
-        {"name":"plotit", "kind":"namevalue", "type":["logical","scalar"],"purpose":"Option"},
-        {"name":"donorm", "kind":"namevalue", "type":["logical","scalar"],"purpose":"Option"}        
+        {"name":"sortit", "kind":"ordered", "type":["logical","scalar"],"purpose":"sortit"},
+        {"name":"plotit", "kind":"ordered", "type":["logical","scalar"],"purpose":"plotit"},
+        {"name":"normit", "kind":"ordered", "type":["logical","scalar"],"purpose":"normit"},
+        {"name":"ignorehigh", "kind":"ordered", "type":["logical","scalar"],"purpose":"ignorehigh"}        
 	]
 },
 "sc_norm":
@@ -170,9 +171,9 @@
 	"inputs":
 	[		
         {"name":"X", "kind":"required", "type":["numeric"]},
-        {"name":"ndim", "kind":"ordered", "type":["numeric", "choices={2,3}"]},
-        {"name":"bygene", "kind":"ordered", "type":["logical"]},
-        {"name":"plotit", "kind":"ordered", "type":["logical"]},
+        {"name":"ndim", "kind":"ordered", "type":["numeric", "choices={2,3}"]},        
+        {"name":"plotit", "kind":"ordered", "type":["logical","scalar"],"purpose":"plotit"},
+        {"name":"bygene", "kind":"ordered", "type":["logical","scalar"],"purpose":"bygene"},
         {"name":"genelist", "kind":"ordered", "type":["string"]}
 	]
 },
@@ -200,7 +201,32 @@
 	[		
         {"name":"X", "kind":"required", "type":"numeric"},
         {"name":"ncom", "kind":"ordered", "type":"choices={3,5,7,9}"},
-        {"name":"fastersvd", "kind":"ordered", "type":["logical","scalar"],"purpose":"Option"}
+        {"name":"fastersvd", "kind":"ordered", "type":["logical","scalar"],"purpose":"fastersvd"}
+	]
+},
+"sc_qcfilter":
+{
+	"inputs":
+	[
+	{"name":"X", "kind":"required", "type":["numeric"]},
+    {"name":"genelist", "kind":"required", "type":["string"]},
+    {"name":"libsize", "kind":"ordered", "type":["numeric", "choices={1000,2000}"], "purpose":"libsize"},
+    {"name":"mtratio", "kind":"ordered", "type":["numeric", "choices={0.10,0.15}"], "purpose":"mtratio"},
+    {"name":"dropout", "kind":"ordered", "type":["numeric", "choices={0.01}"], "purpose":"dropout"},
+    {"name":"min_cells_nonzero", "kind":"ordered", "type":["numeric", "choices={0.05}"], "purpose":"min_cells_nonzero"}
+	]
+},
+"sc_tsne":
+{
+	"inputs":
+	[		
+        {"name":"X", "kind":"required", "type":["numeric"]},
+        {"name":"ndim", "kind":"ordered", "type":["numeric", "choices={2,3}"]},        
+{"name":"plotit", "kind":"ordered", "type":["logical","scalar"],"purpose":"plotit"},
+{"name":"donorm", "kind":"ordered", "type":["logical","scalar"],"purpose":"donorm"},
+{"name":"dolog1p", "kind":"ordered", "type":["logical","scalar"],"purpose":"dolog1p"},
+{"name":"bygene", "kind":"ordered", "type":["logical","scalar"],"purpose":"bygene"},
+        {"name":"genelist", "kind":"ordered", "type":["string"]}
 	]
 }
 }

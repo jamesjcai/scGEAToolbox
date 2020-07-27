@@ -12,7 +12,7 @@ function s=run_fitsne(X,ndim,plotit,donorm,dolog1p,bygene,genelist)
 % >>[X,genelist]=sc_readfile('example_data/GSM3044891_GeneExp.UMIs.10X1.txt');
 % >>[X,genelist]=sc_selectg(X,genelist);
 % >>figure; s1=run_phate(X,3,true,true,genelist);  % view genes
-% >>figure; s2=run_phate(X,3,false,true);          % view cells
+% >>figure; s2=run_phate(X,3,true,false);          % view cells
 % >>figure; scatter3(s2(:,1),s2(:,2),s2(:,3),10,'filled'); % using output S
 
 if nargin<2, ndim=2; end
