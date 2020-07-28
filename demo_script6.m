@@ -36,6 +36,6 @@ view([-31.03 77.60])
 
 %% Determine cell type for each cluster using marker genes (collected by PanglaoDB) 
 %
-Tct=sc_celltypes(X,genelist,cluster_kmedoids)
+Tct=sc_celltypecaller(X,genelist,cluster_kmedoids)
 
 %% The End

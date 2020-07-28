@@ -17,9 +17,9 @@ if nargin<2 || isempty(k)
     fprintf('k=%d\n',k);
 end
 
-if nargin<3
-    donorm=false;
-end
+% if nargin<3
+%     donorm=false;
+% end
 
 % if donorm
 %     % [X]=sc_norm(X);
