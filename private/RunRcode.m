@@ -16,14 +16,21 @@ sep=filesep;
 [p,f,~]=fileparts(RscriptFileName);
 if isempty(p), p = pwd;end
 logFName=[p sep f '.R.log'];
-% commandline=['"' Rpath sep 'R.exe" CMD BATCH "' RscriptFileName '" "' logFName '"'];
-commandline=['"' Rpath sep 'Rscript.exe" "' RscriptFileName '"'];
-fprintf('COMMANDLINE = %s\n',['"' Rpath sep 'Rscript.exe ' RscriptFileName '"']);
+
+if ispc
+    % commandline=['"' Rpath sep 'R.exe" CMD BATCH "' RscriptFileName '" "' logFName '"'];
+    commandline=['"' Rpath sep 'Rscript.exe" "' RscriptFileName '"'];
+    fprintf('COMMANDLINE = %s\n',['"' Rpath sep 'Rscript.exe ' RscriptFileName '"']);
+elseif isunix
+    commandline=[Rpath ' ' RscriptFileName];
+    fprintf('COMMANDLINE = %s\n',[Rpath ' ' RscriptFileName]);
+end
 [status,cmdout]=system(commandline,'-echo');
+
 end %RunRcode
 
 %% Required subfunctions: 
-function Rpath=FindRpath
+function Rpath=FindRpathXX
 % This function finds the path for the installed R (Project for Statistical Computing) in Windows environment.
 % Only works in Windows environments.
 % e.g.:
@@ -38,7 +45,7 @@ n=[a;b;c]; isfound=0;
      programPath=env{n(i),2};
      D=dir([programPath filesep 'R']);
      if ~isempty(D)
-         A={D.name}; B=find(cell2mat(cellfun(@(s) ~isempty(strfind(s,'R-')),A,'uniformoutput',0)),1);
+         A={D.name}; B=find(cell2mat(cellfun(@(s) contains(s,'R-'),A,'uniformoutput',0)),1);
          if ~isempty(B),  isfound=1;Rpath=[programPath sep 'R' sep A{B} sep 'bin'];break; end
      end%
  end

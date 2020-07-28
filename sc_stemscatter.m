@@ -15,4 +15,4 @@ else
     hold off
 end
 %[caz,cel]=view;
-view([-45,-45,400]);
+view([-45,-45,300]);
