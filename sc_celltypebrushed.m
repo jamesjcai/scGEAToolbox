@@ -1,4 +1,4 @@
-function [Tct]=sc_celltypebrushed(X,genelist,s,brushedData)
+function [Tct]=sc_celltypebrushed(X,genelist,s,brushedData,species)
 
 % USAGE:
 
@@ -6,6 +6,7 @@ function [Tct]=sc_celltypebrushed(X,genelist,s,brushedData)
 % figure; sc_cellscatter(s)
 % % get brushedData
 % [Tct]=sc_celltypesbrushed(X,genelist,s,brushedData)
+if nargin<5, species='human'; end
 
 if islogical(brushedData)
     i=brushedData;
@@ -13,4 +14,5 @@ else
     [~,i]=ismember(brushedData,s,'rows');
 end
 Xi=X(:,i);
-[Tct]=sc_celltypecaller(Xi,genelist);
+[Tct]=sc_celltypecaller(Xi,genelist,[],'species',species);
+

@@ -1,9 +1,21 @@
-function [T]=sc_celltypecaller(X,genelist,clusterid)
+function [T]=sc_celltypecaller(X,genelist,clusterid,varargin)
 
 % https://academic.oup.com/database/article/doi/10.1093/database/baz046/5427041
 % REF: PanglaoDB: a web server for exploration of mouse and human single-cell RNA sequencing data
 
-if nargin<3, clusterid=ones(1,size(X,2)); end
+if nargin<3 || isempty(clusterid)
+    clusterid=ones(1,size(X,2)); 
+end
+if min(size(clusterid))~=1 || ~isnumeric(clusterid)
+    error('CLUSTERID={vector|[]}');
+end
+
+   p = inputParser;
+   addOptional(p,'species',"human",@(x) (isstring(x)|ischar(x))&ismember(lower(string(x)),["human","mouse"]));
+   parse(p,varargin{:});
+   species=p.Results.species;
+   
+
 oldpth=pwd;
 pw1=fileparts(which(mfilename));
 pth=fullfile(pw1,'thirdparty/celltype_mat');
@@ -15,15 +27,23 @@ if issparse(X)
         disp('Using sparse input--longer running time is expected.');
     end
 end
+warning off
 X=sc_norm(X,"type","deseq");
+warning on
 genelist=upper(genelist);
 
 Tw=readtable('markerweight.txt');
 wvalu=Tw.Var2;
 wgene=string(Tw.Var1);
 
-T1=readtable('markerlist_panglaodb.txt','ReadVariableNames',false,'Delimiter','\t');
-T2=readtable('markerlist_custom.txt','ReadVariableNames',false,'Delimiter','\t');
+switch lower(species)
+    case 'human'
+        T1=readtable('markerlist_hs_panglaodb.txt','ReadVariableNames',false,'Delimiter','\t');
+        T2=readtable('markerlist_hs_custom.txt','ReadVariableNames',false,'Delimiter','\t');
+    case 'mouse'
+        T1=readtable('markerlist_mm_panglaodb.txt','ReadVariableNames',false,'Delimiter','\t');
+        T2=readtable('markerlist_mm_custom.txt','ReadVariableNames',false,'Delimiter','\t');      
+end
 Tm=[T1;T2];
 celltypev=string(Tm.Var1);
 markergenev=string(Tm.Var2);
