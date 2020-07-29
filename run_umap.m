@@ -10,24 +10,17 @@ pth=fullfile(pw1,'thirdparty/R_UMAP');
 cd(pth);
 fprintf('CURRENTWDIR = "%s"\n',pth);
 
-if exist('output.csv','file')
-    delete('output.csv');
-end
-%if ~exist('input.csv','file')
-    csvwrite('input.csv',X');
-%end
+if exist('output.csv','file'), delete('output.csv'); end
+csvwrite('input.csv',X');
+
 RunRcode('script.R');
 if exist('output.csv','file')
     s=csvread('output.csv',1,1);
 else
     s=[];
 end
-if exist('input.csv','file')
-    delete('input.csv');
-end
-if exist('output.csv','file')
-    delete('output.csv');
-end
+if exist('input.csv','file'), delete('input.csv'); end
+if exist('output.csv','file'), delete('output.csv'); end
 cd(oldpth);
 
 if plotit && ~isempty(s)

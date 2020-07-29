@@ -24,4 +24,7 @@ if exist('output.csv','file')
 else
     A=[];
 end
+if exist('input1.txt','file'), delete('input1.txt'); end
+if exist('input2.txt','file'), delete('input2.txt'); end
+if exist('output.csv','file'), delete('output.csv'); end
 cd(oldpth);
