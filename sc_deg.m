@@ -5,7 +5,9 @@ function [T]=sc_deg(X,Y,genelist,methodid)
 % pct.1 : The percentage of cells where the feature is detected in the first group
 % pct.2 : The percentage of cells where the feature is detected in the second group
 % p_val_adj : Adjusted p-value, based on bonferroni correction using all features in the dataset.
-  
+%
+% SEE ALSO: [T]=run_mast(X,Y,genelist);
+
 if nargin<2, error("USAGE: sc_deg(X,Y)\n"); end
 if nargin<3, genelist=string(num2cell(1:size(X,1)))'; end
 if nargin<4, methodid=1; end

@@ -1,4 +1,8 @@
 function [T]=run_celltypeassignation(rankdedgenelist,k)
+
+% A custom R code using fGSEA to assign cell type from given ranked list of
+% genes
+%
 % see also: sc_pickmarkers
 % Demo:
 %gx=sc_pickmarkers(X,genelist,cluster_id,2);

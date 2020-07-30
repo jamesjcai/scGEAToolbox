@@ -1,4 +1,4 @@
-function [A]=run_mast(X,Y,genelist)
+function [T]=run_mast(X,Y,genelist)
 if nargin<3
     genelist=(1:size(X,1))';
 end
@@ -18,11 +18,11 @@ writematrix(X,'input1.txt');
 writematrix(Y,'input2.txt');
 RunRcode('script.R');
 if exist('output.csv','file')
-    A=readtable('output.csv');
-    A.Var1=genelist(A.Var1);
-    A.Properties.VariableNames{'Var1'} = 'gene';
+    T=readtable('output.csv');
+    T.Var1=genelist(T.Var1);
+    T.Properties.VariableNames{'Var1'} = 'gene';
 else
-    A=[];
+    T=[];
 end
 if exist('input1.txt','file'), delete('input1.txt'); end
 if exist('input2.txt','file'), delete('input2.txt'); end
