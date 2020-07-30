@@ -14,7 +14,7 @@ hAx = axes('Parent',hFig);
 scatter3(hAx, s(:,1),s(:,2),s(:,3),10);
 
 hBr = brush(hFig);
-hBr.Enable='on';
+% hBr.Enable='on';
 hBr.ActionPostCallback = {@onBrushAction,X,genelist,s,species};
 end
 
