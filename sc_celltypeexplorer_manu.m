@@ -1,4 +1,4 @@
-function sc_celltypeexplorer(X,genelist,s,varargin)
+function sc_celltypeexplorer_manu(X,genelist,s,varargin)
 %load cleandata.mat
 %s=s_tsne;
 

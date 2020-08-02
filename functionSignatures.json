@@ -3,7 +3,7 @@
 {
 	"inputs":
 	[
-		{"name":"s", "kind":"required", "type":"numeric"},
+		{"name":"s", "kind":"required", "type":[["numeric", "size=:,3"],["numeric", "size=3,:"]]},
 		{"name":"k", "kind":"required", "type":["numeric","choices=[3,6,9]"]},
 		{"name":"type", "kind":"namevalue","type":["char", "choices={'kmeans','kmedoids','dbscan','spectclust'}"]}
 	]
@@ -221,11 +221,11 @@
 	"inputs":
 	[		
         {"name":"X", "kind":"required", "type":["numeric"]},
-        {"name":"ndim", "kind":"ordered", "type":["numeric", "choices={2,3}"]},        
-{"name":"plotit", "kind":"ordered", "type":["logical","scalar"],"purpose":"plotit"},
-{"name":"donorm", "kind":"ordered", "type":["logical","scalar"],"purpose":"donorm"},
-{"name":"dolog1p", "kind":"ordered", "type":["logical","scalar"],"purpose":"dolog1p"},
-{"name":"bygene", "kind":"ordered", "type":["logical","scalar"],"purpose":"bygene"},
+        {"name":"ndim", "kind":"ordered", "type":["numeric", "choices={2,3}", "size=1,1"]},        
+        {"name":"plotit", "kind":"ordered", "type":["logical","scalar"],"purpose":"plotit"},
+        {"name":"donorm", "kind":"ordered", "type":["logical","scalar"],"purpose":"donorm"},
+        {"name":"dolog1p", "kind":"ordered", "type":["logical","scalar"],"purpose":"dolog1p"},
+        {"name":"bygene", "kind":"ordered", "type":["logical","scalar"],"purpose":"bygene"},
         {"name":"genelist", "kind":"ordered", "type":["string"]}
 	]
 },
@@ -235,6 +235,55 @@
 	[		
         {"name":"X", "kind":"required", "type":["numeric"]},
         {"name":"plotit", "kind":"ordered", "type":["logical","scalar"],"purpose":"plotit"}        
+	]
+},
+"run_mast":
+    {
+        "inputs":
+        [
+            {"name":"X", "kind":"required", "type":[["double"], ["single"]]},
+            {"name":"Y", "kind":"required", "type":[["double"], ["single"]]},
+            {"name":"genelist", "kind":"positional", "type":["string"]}
+        ]
+    },
+"sc_celltypeexplorer":
+{
+	"inputs":
+	[
+        {"name":"X", "kind":"required", "type":["numeric"]},
+        {"name":"genelist", "kind":"required", "type":["string"]},
+        {"name":"s", "kind":"required", "type":[["numeric", "size=:,3"],["numeric", "size=3,:"]]},
+		{"name":"species", "kind":"namevalue","type":["char", "choices={'human','mouse'}"]}
+	]
+},
+"sc_celltypeexplorer_manu":
+{
+	"inputs":
+	[
+        {"name":"X", "kind":"required", "type":["numeric"]},
+        {"name":"genelist", "kind":"required", "type":["string"]},
+        {"name":"s", "kind":"required", "type":[["numeric", "size=:,3"],["numeric", "size=3,:"]]},
+		{"name":"species", "kind":"namevalue","type":["char", "choices={'human','mouse'}"]}
+	]
+},
+"sc_celltypeexplorer_auto":
+{
+	"inputs":
+	[
+        {"name":"X", "kind":"required", "type":["numeric"]},
+        {"name":"genelist", "kind":"required", "type":["string"]},
+        {"name":"s", "kind":"required", "type":[["numeric", "size=:,3"],["numeric", "size=3,:"]]},
+		{"name":"species", "kind":"namevalue","type":["char", "choices={'human','mouse'}"]}
+	]
+},
+"sc_scattermarker":
+{
+	"inputs":
+	[
+        {"name":"X", "kind":"required", "type":["numeric"]},
+        {"name":"genelist", "kind":"required", "type":["string","vector"]},
+        {"name":"g", "kind":"required", "type":["string","size=1,1"]},
+        {"name":"s", "kind":"required", "type":[["numeric", "size=:,3"],["numeric", "size=3,:"]]}		
 	]
 }
 }

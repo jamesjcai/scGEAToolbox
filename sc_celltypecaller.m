@@ -54,6 +54,7 @@ S=zeros(length(celltypev),NC);
 for j=1:length(celltypev)
     g=strsplit(markergenev(j),',');
     g=g(1:end-1);
+    g=unique(g);
     %[~,idx]=ismember(g,genelist);
     Z=zeros(NC,1); ng=zeros(NC,1);
     for i=1:length(g)

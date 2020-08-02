@@ -1,4 +1,14 @@
 function myboxplot(y,g,colorid)
+if length(y)~=length(g)
+    try
+            y1=[y;g];
+            g=[ones(size(y));2*ones(size(g))];            
+    catch
+            y1=[y,g];
+            g=[ones(size(y)),2*ones(size(g))];            
+    end
+    y=y1;
+end
 if nargin<3
     colorid=1;
 end

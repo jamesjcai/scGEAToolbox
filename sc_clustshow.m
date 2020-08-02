@@ -1,6 +1,8 @@
 function [id]=sc_clustshow(s,k,varargin)
 
-if nargin<2, k=3; end
+if min(size(s))>3, error('S is coordinates of dimensional reduction.'); end
+
+if nargin<2, k=6; end
 p = inputParser;
 defaultType = 'kmeans';
 validTypes = {'kmeans','kmedoids','dbscan','spectclust'};
