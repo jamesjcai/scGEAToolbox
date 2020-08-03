@@ -14,5 +14,6 @@ else
     [~,i]=ismember(brushedData,s,'rows');
 end
 Xi=X(:,i);
-[Tct]=sc_celltypecaller(Xi,genelist,[],'species',species);
+[Xi,gi]=sc_selectg(Xi,genelist);
+[Tct]=sc_celltypecaller(Xi,gi,[],'species',species);
 

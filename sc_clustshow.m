@@ -11,7 +11,9 @@ checkType = @(x) any(validatestring(x,validTypes));
 addRequired(p,'s',@isnumeric);
 addRequired(p,'k',@isnumeric);
 addOptional(p,'type',defaultType,checkType)
+addOptional(p,'plotit',true,@islogical)
 parse(p,s,k,varargin{:})
+plotit=p.Results.plotit;
 
 switch p.Results.type
     case {'spectralcluster','spectclust'}
@@ -24,6 +26,7 @@ switch p.Results.type
         warning('In development. Needs parameters');        
 end
 
+if plotit
 if size(s,2)==3
     scatter3(s(:,1),s(:,2),s(:,3),10,id);
 elseif size(s,2)==2
@@ -40,4 +43,5 @@ for i=1:k
         text(si(:,1),si(:,2),sprintf('%d',i),...
             'fontsize',20,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');
     end
+end
 end

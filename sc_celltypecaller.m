@@ -4,7 +4,7 @@ function [T]=sc_celltypecaller(X,genelist,clusterid,varargin)
 % REF: PanglaoDB: a web server for exploration of mouse and human single-cell RNA sequencing data
 
 if nargin<3 || isempty(clusterid)
-    clusterid=ones(1,size(X,2)); 
+    clusterid=ones(1,size(X,2));
 end
 if min(size(clusterid))~=1 || ~isnumeric(clusterid)
     error('CLUSTERID={vector|[]}');

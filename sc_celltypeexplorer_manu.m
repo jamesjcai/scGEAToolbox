@@ -9,7 +9,8 @@ function sc_celltypeexplorer_manu(X,genelist,s,varargin)
    
 global ctexplorer_celltypeid
 ctexplorer_celltypeid=0;
-hFig = figure;
+%hFig = figure('Name','Cell Type Explorer');
+hFig=gcf;
 hAx = axes('Parent',hFig);
 scatter3(hAx, s(:,1),s(:,2),s(:,3),10);
 
