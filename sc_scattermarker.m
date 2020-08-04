@@ -7,4 +7,5 @@ if isempty(z)
     warning('No expression.');
 else
     sc_stemscatter(x,y,z);
+    title(g)
 end
