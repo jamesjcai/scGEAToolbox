@@ -6,6 +6,11 @@ function sc_celltypeexplorer(X,genelist,s,varargin)
    addOptional(p,'species',"mouse",@(x) (isstring(x)|ischar(x))&ismember(lower(string(x)),["human","mouse"]));
    parse(p,varargin{:});
    species=p.Results.species;
+   if strcmpi(species,'mm')
+       species="mouse";
+   elseif strcmpi(species,'hs')
+       species="human";
+   end
    
 global ctexplorer_celltypeid
 ctexplorer_celltypeid=0;
@@ -28,7 +33,7 @@ global ctexplorer_celltypeid
 hLines = flipud(eventdata.Axes.Children);
 
     % Loop through each graphics object
-    for k = 1:numel(hLines)
+    for k = 1:1 %numel(hLines)
         % Check that the property is valid for that type of object
         % Also check if any points in that object are selected
         if isprop(hLines(k),'BrushData') && any(hLines(k).BrushData)

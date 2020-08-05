@@ -1,1 +1,7 @@
 Medullary thymic epithelial cells (mTECs)	AIRE,FEZF2,CD80,CD74,CD40,EPCAM,LY75,CCL25,CCL19,LTBR,
+Y-chromosome genes	Zfy1,Zfy2,Ube1y1,Kdm5d,Eif2s3y,Uty,Ddx3y,Usp9y,Sry,Rbmy,Rbm31y,Sly,Slxl-1,Ssty1,Ssty2,Srsy,Prssly,Teyorf1,
+Adipocyte stem cells (ASCs)	Pdgfra,Cd34,Ly6a,Pparg,Pdgfrb,Ptgs2,Anxa3,Pi16,Dpp4,Cd55,Plpp1,G0s2,Apoe,Steap4,Itgb1,Col15a1,Inmt,Hsd11b1,Pi16,Cd55,
+Proliferating/differentiating preadipocytes	Birc5,Cdca8,Top2a,Cebpa,Adig,Plin1,Scd1,
+Mesothelial-like cells	Dpp4,Ackr3,Smpd3,Msln,Krt8,Krt14,Wt1,
+Endothelial cells	Plvap,Flt1,Tie1,
+Smooth muscle cells (SMC)	Tagln,Acta2,Myh11,
