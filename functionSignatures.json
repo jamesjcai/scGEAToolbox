@@ -285,5 +285,16 @@
         {"name":"g", "kind":"required", "type":["string","size=1,1"]},
         {"name":"s", "kind":"required", "type":[["numeric", "size=:,3"],["numeric", "size=3,:"]]}		
 	]
+},
+"sc_celltypecaller":
+{
+	"inputs":
+	[
+        {"name":"X", "kind":"required", "type":["numeric"]},
+        {"name":"genelist", "kind":"required", "type":["string"]},
+        {"name":"clusterid", "kind":"required", "type":["numeric"]},
+		{"name":"species", "kind":"namevalue","type":["char", "choices={'human','mouse'}"]},
+        {"name":"organ", "kind":"namevalue","type":["char", "choices={'all','heart','immunesystem','brain','pancreas'}"]}
+	]
 }
 }

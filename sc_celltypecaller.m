@@ -12,13 +12,19 @@ end
 
    p = inputParser;
    addOptional(p,'species',"human",@(x) (isstring(x)|ischar(x))&ismember(lower(string(x)),["human","mouse"]));
+   addOptional(p,'organ',"all",@(x) (isstring(x)|ischar(x))&ismember(lower(string(x)),["all","heart"]));   
    parse(p,varargin{:});
    species=p.Results.species;
+   organ=p.Results.organ;
    
 
 oldpth=pwd;
 pw1=fileparts(which(mfilename));
-pth=fullfile(pw1,'thirdparty/celltype_mat');
+if strcmpi(organ,"all")
+    pth=fullfile(pw1,'thirdparty/celltype_mat');
+else
+    pth=fullfile(pw1,sprintf('thirdparty/celltype_mat/%s',organ));
+end
 cd(pth);
 if issparse(X)
     try
@@ -33,22 +39,33 @@ warning on
 genelist=upper(genelist);
 
 
-
 switch lower(species)
     case 'human'
         Tw=readtable('markerweight_hs.txt');
         T1=readtable('markerlist_hs_panglaodb.txt','ReadVariableNames',false,'Delimiter','\t');
-        T2=readtable('markerlist_hs_custom.txt','ReadVariableNames',false,'Delimiter','\t');
+        if exist('markerlist_hs_custom.txt','file')
+            T2=readtable('markerlist_hs_custom.txt','ReadVariableNames',false,'Delimiter','\t');
+        else
+            T2=[];
+        end
     case 'mouse'
         Tw=readtable('markerweight_mm.txt');
         T1=readtable('markerlist_mm_panglaodb.txt','ReadVariableNames',false,'Delimiter','\t');
-        T2=readtable('markerlist_mm_custom.txt','ReadVariableNames',false,'Delimiter','\t');      
+        if exist('markerlist_mm_custom.txt','file')
+            T2=readtable('markerlist_mm_custom.txt','ReadVariableNames',false,'Delimiter','\t');
+        else
+            T2=[];            
+        end
 end
 
 wvalu=Tw.Var2;
 wgene=string(Tw.Var1);
+if ~isempty(T2)
+    Tm=[T1;T2];
+else
+    Tm=T1;
+end
 
-Tm=[T1;T2];
 celltypev=string(Tm.Var1);
 markergenev=string(Tm.Var2);
 NC=max(clusterid);
