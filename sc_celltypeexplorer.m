@@ -4,8 +4,11 @@ function sc_celltypeexplorer(X,genelist,s,varargin)
 
    p = inputParser;
    addOptional(p,'species',"mouse",@(x) (isstring(x)|ischar(x))&ismember(lower(string(x)),["human","mouse"]));
+   addOptional(p,'organ',"all",@(x) (isstring(x)|ischar(x))&ismember(lower(string(x)),["all","heart","immunesystem","brain","pancreas"]));
    parse(p,varargin{:});
    species=p.Results.species;
+   organ=p.Results.organ;
+   
    if strcmpi(species,'mm')
        species="mouse";
    elseif strcmpi(species,'hs')
@@ -20,13 +23,13 @@ scatter3(hAx, s(:,1),s(:,2),s(:,3),10);
 
 hBr = brush(hFig);
 % hBr.Enable='on';
-hBr.ActionPostCallback = {@onBrushAction,X,genelist,s,species};
+hBr.ActionPostCallback = {@onBrushAction,X,genelist,s,species,organ};
 end
 
 
 % ref: https://www.mathworks.com/matlabcentral/answers/385226-how-to-use-the-data-brush-tool-to-automatically-save-selected-points-in-multiple-line-plots
 
-function onBrushAction(~,eventdata,X,genelist,s,species)
+function onBrushAction(~,eventdata,X,genelist,s,species,organ)
 global ctexplorer_celltypeid
 % Extract plotted graphics objects
 % Invert order because "Children" property is in reversed plotting order
@@ -40,7 +43,7 @@ hLines = flipud(eventdata.Axes.Children);
             % Output the selected data to the base workspace with assigned name
             ptsSelected = logical(hLines(k).BrushData.');
             % find(ptsSelected)
-            [Tct]=sc_celltypebrushed(X,genelist,s,ptsSelected,species);
+            [Tct]=sc_celltypebrushed(X,genelist,s,ptsSelected,species,organ);
             %data = [hLines(k).XData(ptsSelected).' ...
             %    hLines(k).YData(ptsSelected).'];
             %assignin('base',names{k},data)

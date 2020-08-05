@@ -54,7 +54,7 @@ switch lower(species)
         if exist('markerlist_mm_custom.txt','file')
             T2=readtable('markerlist_mm_custom.txt','ReadVariableNames',false,'Delimiter','\t');
         else
-            T2=[];            
+            T2=[];
         end
 end
 
@@ -103,6 +103,8 @@ for k=1:NC
     T=[T,table(celltypev(idx),c,'VariableNames',...
         {sprintf('C%d_Cell_Type',k),sprintf('C%d_CTA_Score',k)})];
 end
-T=T(1:10,:);
+if size(T,1)>10
+    T=T(1:10,:);
+end
 cd(oldpth);
 

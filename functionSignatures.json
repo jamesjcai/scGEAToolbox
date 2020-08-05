@@ -253,7 +253,8 @@
         {"name":"X", "kind":"required", "type":["numeric"]},
         {"name":"genelist", "kind":"required", "type":["string"]},
         {"name":"s", "kind":"required", "type":[["numeric", "size=:,3"],["numeric", "size=3,:"]]},
-		{"name":"species", "kind":"namevalue","type":["char", "choices={'human','mouse'}"]}
+		{"name":"species", "kind":"namevalue","type":["char", "choices={'human','mouse'}"]},
+        {"name":"organ", "kind":"namevalue","type":["char", "choices={'all','heart','immunesystem','brain','pancreas'}"]}
 	]
 },
 "sc_celltypeexplorer_manu":
@@ -263,7 +264,8 @@
         {"name":"X", "kind":"required", "type":["numeric"]},
         {"name":"genelist", "kind":"required", "type":["string"]},
         {"name":"s", "kind":"required", "type":[["numeric", "size=:,3"],["numeric", "size=3,:"]]},
-		{"name":"species", "kind":"namevalue","type":["char", "choices={'human','mouse'}"]}
+		{"name":"species", "kind":"namevalue","type":["char", "choices={'human','mouse'}"]},
+        {"name":"organ", "kind":"namevalue","type":["char", "choices={'all','heart','immunesystem','brain','pancreas'}"]}
 	]
 },
 "sc_celltypeexplorer_auto":
@@ -273,7 +275,8 @@
         {"name":"X", "kind":"required", "type":["numeric"]},
         {"name":"genelist", "kind":"required", "type":["string"]},
         {"name":"s", "kind":"required", "type":[["numeric", "size=:,3"],["numeric", "size=3,:"]]},
-		{"name":"species", "kind":"namevalue","type":["char", "choices={'human','mouse'}"]}
+		{"name":"species", "kind":"namevalue","type":["char", "choices={'human','mouse'}"]},
+        {"name":"organ", "kind":"namevalue","type":["char", "choices={'all','heart','immunesystem','brain','pancreas'}"]}
 	]
 },
 "sc_scattermarker":

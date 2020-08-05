@@ -8,11 +8,11 @@ T=T(i,:);
 organlist=string(T.organ);
 
 %%
-% organ="All";
+organ="All";
 % organ="Heart";
 % organ="Pancreas";
-organ="Brain";
-organ="Immune system";
+% organ="Brain";
+% organ="Immune system";
 
 % organ="Thymus"
 
