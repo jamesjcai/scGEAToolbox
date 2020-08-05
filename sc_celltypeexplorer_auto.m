@@ -2,8 +2,10 @@ function sc_celltypeexplorer_auto(X,genelist,s,varargin)
 
    p = inputParser;
    addOptional(p,'species',"mouse",@(x) (isstring(x)|ischar(x))&ismember(lower(string(x)),["human","mouse"]));
+   addOptional(p,'organ',"all",@(x) (isstring(x)|ischar(x))&ismember(lower(string(x)),["all","heart","immunesystem","brain","pancreas"]));
    parse(p,varargin{:});
    species=p.Results.species;
+   organ=p.Results.organ;
    
 c=sc_clustshow(s,6,'plotit',false);   
 rng(1234)
@@ -23,7 +25,7 @@ for i=1:k
     %[Tct]=sc_celltypebrushed(X,genelist,s,ptsSelected,species);    
     Xi=X(:,c==i);
     [Xi,gi]=sc_selectg(Xi,genelist);
-    [Tct]=sc_celltypecaller(Xi,gi,[],'species',species);
+    [Tct]=sc_celltypecaller(Xi,gi,[],'species',species,'organ',organ);
     si=s(c==i,:);
     si=mean(si);
     if size(s,2)==3
