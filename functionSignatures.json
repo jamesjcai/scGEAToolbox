@@ -285,7 +285,7 @@
 	[
         {"name":"X", "kind":"required", "type":["numeric"]},
         {"name":"genelist", "kind":"required", "type":["string","vector"]},
-        {"name":"g", "kind":"required", "type":["string","size=1,1"]},
+        {"name":"g", "kind":"required", "type":["char","choices={'gene'}"]},
         {"name":"s", "kind":"required", "type":[["numeric", "size=:,3"],["numeric", "size=3,:"]]}		
 	]
 },
