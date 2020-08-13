@@ -48,4 +48,9 @@ view([-31.03 77.60])
 %
 Tct=sc_celltypecaller(X,genelist,cluster_kmedoids,'species','mouse')
 
+%% Another demo with example data of mouse pancreatic islet cells
+%
+load celltypeexplorer_demo_data.mat
+sc_celltypeexplorer(X,genelist,s_tsne,"species","mouse");
+
 %% The End
