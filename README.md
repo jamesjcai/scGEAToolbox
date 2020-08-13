@@ -38,6 +38,9 @@ After installing the toolbox, the main GUI can be run by calling `scGEApp`.
 ![](https://github.com/jamesjcai/scGEAToolbox/blob/master/example_data/Fig_1.png?raw=true)  
 **Fig. 2. A software workflow built with scGEAToolbox for single-cell gene regulatory network (scGRN) analyses.** High-dimensional scRNA-seq data is filtered, normalized, and used as input for two paths. The first is a combination of (A) dimension-ality reduction and (B) trajectory/psedotime analysis to provide pseudotime-series data. The second is using network inference algorithms to generate (C) a global, coarse GRN structure. The integration of results from the two paths produces (D) pseudotime-series scGRNs, which can be further analyzed through regulatory modeling using parameter estimation algorithms to infer (E) a refined dynamic scGRN.
 
+## Interactive cell type annotation with scGEAToolbox (sc_celltype explorer)
+
+[![scGEAToolbox sc_celltypeexplorer - interactive cell type annotation](https://img.youtube.com/vi/HRQiXX3Jwpg/0.jpg)](https://youtu.be/HRQiXX3Jwpg)
 
 ## Help
 
