@@ -14,7 +14,7 @@ fprintf('CURRENTWDIR = "%s"\n',pth);
 if exist('output.csv','file')
     delete('output.csv');
 end
-sc_writefile('input.txt',X,genelist);
+sc_writefile('input.txt',X,upper(genelist));
 RunRcode('script.R');
 if exist('output.csv','file')
     T=readtable('output.csv','ReadVariableNames',false);
@@ -22,6 +22,6 @@ if exist('output.csv','file')
 else
     c=[];
 end
-if exist('input.txt','file'), delete('input.txt'); end
-if exist('output.csv','file'), delete('output.csv'); end
+%if exist('input.txt','file'), delete('input.txt'); end
+%if exist('output.csv','file'), delete('output.csv'); end
 cd(oldpth);

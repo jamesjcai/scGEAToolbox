@@ -6,7 +6,7 @@ library(scater)
 hpca.se <- HumanPrimaryCellAtlasData()
 
 # New dataset
-X <- read.csv('input.txt', sep = '\t', row.names = 1)
+X <- read.csv('input.txt', sep = '\t', row.names = 1, na.string=".")
 X <- SummarizedExperiment(list(counts = X))
 X <- logNormCounts(X)
 

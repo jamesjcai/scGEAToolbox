@@ -35,8 +35,8 @@ for i=1:k
             [Tct]=sc_celltypecaller(Xi,gi,[],'species',species,'organ',organ);
             ctxt=Tct.C1_Cell_Type{1};
         case 'singler'
-            ctxt=run_singler(Xi,gi);
-            ctxt=ctxt(mode(grp2idx(ctxt)));
+            cx=run_singler(Xi,gi);
+            ctxt=unique(cx(mode(grp2idx(cx),'all')==grp2idx(cx)));
     end    
     if size(s,2)==3
         text(si(:,1),si(:,2),si(:,3),sprintf('%s',ctxt),...

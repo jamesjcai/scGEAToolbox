@@ -56,12 +56,12 @@ hLines = flipud(eventdata.Axes.Children);
                     i=ptsSelected;
                     Xi=X(:,i);
                     [Xi,gi]=sc_selectg(Xi,genelist);
-                    c=run_singler(Xi,gi);
-                    Tct=tabulate(c);
+                    cx=run_singler(Xi,gi);
+                    Tct=tabulate(cx);
                     %ii=grp2idx(ctxt);
                     %mxii=mode(ii,'all');
                     %ctxt=ctxt(unique(ii(mxii)));
-                    ctxt=unique(c(mode(grp2idx(c),'all')==grp2idx(c)));
+                    ctxt=unique(cx(mode(grp2idx(cx),'all')==grp2idx(cx)));
                 end    
             
             %data = [hLines(k).XData(ptsSelected).' ...
