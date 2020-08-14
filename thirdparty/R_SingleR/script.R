@@ -4,6 +4,7 @@ library(scater)
 
 # Reference dataset
 hpca.se <- HumanPrimaryCellAtlasData()
+# ImmGenData BlueprintEncodeData MonacoImmuneData MouseRNAseqData NovershternHematopoieticData
 
 # New dataset
 X <- read.csv('input.txt', sep = '\t', row.names = 1, na.string=".")

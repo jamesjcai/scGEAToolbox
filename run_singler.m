@@ -1,7 +1,7 @@
-function [c]=run_singler(X,genelist)
-if nargin<2
-    genelist=(1:size(X,1))';
-end
+function [c]=run_singler(X,genelist,species)
+if nargin<3, species="human"; end
+if nargin<2, genelist=(1:size(X,1))'; end
+
 if isempty(FindRpath)
    error('Rscript.exe is not found.');
 end
@@ -15,7 +15,15 @@ if exist('output.csv','file')
     delete('output.csv');
 end
 sc_writefile('input.txt',X,upper(genelist));
-RunRcode('script.R');
+switch lower(species)
+    case "human"
+        disp("human")
+        RunRcode('script.R');
+    case "mouse"
+        RunRcode('script_mouse.R');
+        disp("mouse")
+end
+
 if exist('output.csv','file')
     T=readtable('output.csv','ReadVariableNames',false);
     c=string(T.Var1);
