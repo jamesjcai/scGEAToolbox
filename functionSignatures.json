@@ -88,7 +88,7 @@
 {
 	"inputs":
 	[
-	{"name":"X", "kind":"required", "type":["numeric"]},
+        {"name":"X", "kind":"required", "type":["numeric"]},
         {"name":"genelist", "kind":"required", "type":["string"]},
         {"name":"sortit", "kind":"ordered", "type":["logical","scalar"],"purpose":"sortit"},
         {"name":"plotit", "kind":"ordered", "type":["logical","scalar"],"purpose":"plotit"},

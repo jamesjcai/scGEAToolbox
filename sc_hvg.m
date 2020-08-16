@@ -42,6 +42,8 @@ df=m-1;
 
 % b=glmfit(xi,yi,'gamma','link','identity');
 % cv2fit=glmval(b,1./u,'identity');    % OR cv2fit=b(2)./u+b(1);
+if issparse(xi), xi=full(xi); end
+if issparse(yi), yi=full(yi); end
 mdl=fitglm(xi,yi,'linear','Distribution','gamma','link','identity');
 cv2fit=mdl.predict(1./u);
 b=mdl.Coefficients.Estimate;
