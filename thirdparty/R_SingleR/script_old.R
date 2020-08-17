@@ -1,3 +1,5 @@
+# https://nbisweden.github.io/excelerate-scRNAseq/session-celltypeid/celltypeid.html
+
 #setwd(getSrcDirectory()[1])
 #setwd("e:\\GitHub\\scGEAToolbox\\thirdparty\\R_SingleR")
 #if (!requireNamespace("BiocManager", quietly = TRUE))
