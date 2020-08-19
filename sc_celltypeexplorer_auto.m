@@ -1,10 +1,14 @@
 function sc_celltypeexplorer_auto(X,genelist,s,varargin)
 
    p = inputParser;
+   addRequired(p,'X',@isnumeric);
+   addRequired(p,'genelist',@isstring);
+   addRequired(p,'s',@isnumeric);
+   addOptional(p,'k',6,@(x) (x > 0) && isnumeric(x) && isscalar(x));
    addOptional(p,'species',"mouse",@(x) (isstring(x)|ischar(x))&ismember(lower(string(x)),["human","mouse"]));
    addOptional(p,'organ',"all",@(x) (isstring(x)|ischar(x))&ismember(lower(string(x)),["all","heart","immunesystem","brain","pancreas"]));
    addOptional(p,'method',"alona",@(x) (isstring(x)|ischar(x))&ismember(lower(string(x)),["alona","singler"]));
-   parse(p,varargin{:});
+   parse(p,X,genelist,s,varargin{:});
    species=p.Results.species;
    organ=p.Results.organ;
    method=p.Results.method;

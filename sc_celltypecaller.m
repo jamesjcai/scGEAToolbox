@@ -11,12 +11,14 @@ if min(size(clusterid))~=1 || ~isnumeric(clusterid)
 end
 
    p = inputParser;
+   addRequired(p,'X',@isnumeric);
+   addRequired(p,'genelist',@isstring);
+   addRequired(p,'clusterid',@isnumeric);   
    addOptional(p,'species',"human",@(x) (isstring(x)|ischar(x))&ismember(lower(string(x)),["human","mouse"]));
    addOptional(p,'organ',"all",@(x) (isstring(x)|ischar(x))&ismember(lower(string(x)),["all","heart","immunesystem","brain","pancreas"]));   
-   parse(p,varargin{:});
+   parse(p,X,genelist,clusterid,varargin{:});
    species=p.Results.species;
-   organ=p.Results.organ;
-   
+   organ=p.Results.organ;   
 
 oldpth=pwd;
 pw1=fileparts(which(mfilename));

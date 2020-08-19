@@ -51,8 +51,8 @@
 	"inputs":
 	[
 		{"name":"X", "kind":"required", "type":"numeric"},
-        {"name":"genelist", "kind":"ordered", "type":["string"]},
-        {"name":"sortit", "kind":"ordered", "type":["logical"]}
+        {"name":"genelist", "kind":"positional", "type":["string"]},
+        {"name":"sortit", "kind":"positional", "type":["logical","scalar"]}
 	]
 },
 "sc_splinefit2":
@@ -62,8 +62,8 @@
 		{"name":"X", "kind":"required", "type":"numeric"},
         {"name":"Y", "kind":"required", "type":"numeric"},
         {"name":"genelistx", "kind":"required", "type":["string"]},
-        {"name":"genelisty", "kind":"ordered", "type":["string"]},
-        {"name":"sortit", "kind":"ordered", "type":["logical"]}
+        {"name":"genelisty", "kind":"positional", "type":["string"]},
+        {"name":"sortit", "kind":"positional", "type":["logical","scalar"]}
 	]
 },
 "sc_scatter3":
@@ -72,8 +72,8 @@
 	[
 		{"name":"X", "kind":"required", "type":"numeric"},
         {"name":"genelist", "kind":"required", "type":["string"]},
-        {"name":"dofit", "kind":"ordered", "type":["logical"]},
-        {"name":"showdata", "kind":"ordered", "type":["logical"]}
+        {"name":"dofit", "kind":"positional", "type":["logical","scalar"]},
+        {"name":"showdata", "kind":"positional", "type":["logical","scalar"]}
 	]
 },
 "sc_selectg":
@@ -90,10 +90,10 @@
 	[
         {"name":"X", "kind":"required", "type":["numeric"]},
         {"name":"genelist", "kind":"required", "type":["string"]},
-        {"name":"sortit", "kind":"ordered", "type":["logical","scalar"],"purpose":"sortit"},
-        {"name":"plotit", "kind":"ordered", "type":["logical","scalar"],"purpose":"plotit"},
-        {"name":"normit", "kind":"ordered", "type":["logical","scalar"],"purpose":"normit"},
-        {"name":"ignorehigh", "kind":"ordered", "type":["logical","scalar"],"purpose":"ignorehigh"}        
+        {"name":"sortit", "kind":"positional", "type":["logical","scalar"],"purpose":"sortit"},
+        {"name":"plotit", "kind":"positional", "type":["logical","scalar"],"purpose":"plotit"},
+        {"name":"normit", "kind":"positional", "type":["logical","scalar"],"purpose":"normit"},
+        {"name":"ignorehigh", "kind":"positional", "type":["logical","scalar"],"purpose":"ignorehigh"}        
 	]
 },
 "sc_norm":
@@ -135,8 +135,8 @@
 	[		
         {"name":"X", "kind":"required", "type":"numeric"},
         {"name":"genelist", "kind":"required", "type":["string"]},
-        {"name":"sortit", "kind":"ordered", "type":["logical"]},
-        {"name":"removeinf", "kind":"ordered", "type":["logical"]}
+        {"name":"sortit", "kind":"positional", "type":["logical","scalar"]},
+        {"name":"removeinf", "kind":"positional", "type":["logical","scalar"]}
 	]
 },
 "run_gorilla":
@@ -171,10 +171,10 @@
 	"inputs":
 	[		
         {"name":"X", "kind":"required", "type":["numeric"]},
-        {"name":"ndim", "kind":"ordered", "type":["numeric", "choices={2,3}"]},        
-        {"name":"plotit", "kind":"ordered", "type":["logical","scalar"],"purpose":"plotit"},
-        {"name":"bygene", "kind":"ordered", "type":["logical","scalar"],"purpose":"bygene"},
-        {"name":"genelist", "kind":"ordered", "type":["string"]}
+        {"name":"ndim", "kind":"positional", "type":["numeric", "choices={2,3}"]},        
+        {"name":"plotit", "kind":"positional", "type":["logical","scalar"],"purpose":"plotit"},
+        {"name":"bygene", "kind":"positional", "type":["logical","scalar"],"purpose":"bygene"},
+        {"name":"genelist", "kind":"positional", "type":["string"]}
 	]
 },
 "sc_trajectory":
@@ -191,8 +191,8 @@
 	"inputs":
 	[		
         {"name":"X", "kind":"required", "type":"numeric"},
-        {"name":"ncom", "kind":"ordered", "type":"choices={3,5,7,9}"},
-        {"name":"fastersvd", "kind":"ordered", "type":["logical","scalar"],"purpose":"Option"}
+        {"name":"ncom", "kind":"positional", "type":"choices={3,5,7,9}"},
+        {"name":"fastersvd", "kind":"positional", "type":["logical","scalar"],"purpose":"Option"}
 	]
 },
 "sc_pcnetpar":
@@ -200,8 +200,8 @@
 	"inputs":
 	[		
         {"name":"X", "kind":"required", "type":"numeric"},
-        {"name":"ncom", "kind":"ordered", "type":"choices={3,5,7,9}"},
-        {"name":"fastersvd", "kind":"ordered", "type":["logical","scalar"],"purpose":"fastersvd"}
+        {"name":"ncom", "kind":"positional", "type":"choices={3,5,7,9}"},
+        {"name":"fastersvd", "kind":"positional", "type":["logical","scalar"],"purpose":"fastersvd"}
 	]
 },
 "sc_qcfilter":
@@ -210,10 +210,10 @@
 	[
 	{"name":"X", "kind":"required", "type":["numeric"]},
     {"name":"genelist", "kind":"required", "type":["string"]},
-    {"name":"libsize", "kind":"ordered", "type":["numeric", "choices={1000,2000}"], "purpose":"libsize"},
-    {"name":"mtratio", "kind":"ordered", "type":["numeric", "choices={0.10,0.15}"], "purpose":"mtratio"},
-    {"name":"dropout", "kind":"ordered", "type":["numeric", "choices={0.01}"], "purpose":"dropout"},
-    {"name":"min_cells_nonzero", "kind":"ordered", "type":["numeric", "choices={0.05}"], "purpose":"min_cells_nonzero"}
+    {"name":"libsize", "kind":"positional", "type":["numeric", "choices={1000,2000}"], "purpose":"libsize"},
+    {"name":"mtratio", "kind":"positional", "type":["numeric", "choices={0.10,0.15}"], "purpose":"mtratio"},
+    {"name":"dropout", "kind":"positional", "type":["numeric", "choices={0.01}"], "purpose":"dropout"},
+    {"name":"min_cells_nonzero", "kind":"positional", "type":["numeric", "choices={0.05}"], "purpose":"min_cells_nonzero"}
 	]
 },
 "sc_tsne":
@@ -221,12 +221,12 @@
 	"inputs":
 	[		
         {"name":"X", "kind":"required", "type":["numeric"]},
-        {"name":"ndim", "kind":"ordered", "type":["numeric", "choices={2,3}", "size=1,1"]},        
-        {"name":"plotit", "kind":"ordered", "type":["logical","scalar"],"purpose":"plotit"},
-        {"name":"donorm", "kind":"ordered", "type":["logical","scalar"],"purpose":"donorm"},
-        {"name":"dolog1p", "kind":"ordered", "type":["logical","scalar"],"purpose":"dolog1p"},
-        {"name":"bygene", "kind":"ordered", "type":["logical","scalar"],"purpose":"bygene"},
-        {"name":"genelist", "kind":"ordered", "type":["string"]}
+        {"name":"ndim", "kind":"positional", "type":["numeric", "choices={2,3}", "size=1,1"]},        
+        {"name":"plotit", "kind":"positional", "type":["logical","scalar"],"purpose":"plotit"},
+        {"name":"donorm", "kind":"positional", "type":["logical","scalar"],"purpose":"donorm"},
+        {"name":"dolog1p", "kind":"positional", "type":["logical","scalar"],"purpose":"dolog1p"},
+        {"name":"bygene", "kind":"positional", "type":["logical","scalar"],"purpose":"bygene"},
+        {"name":"genelist", "kind":"positional", "type":["string"]}
 	]
 },
 "run_umap":
@@ -234,7 +234,7 @@
 	"inputs":
 	[		
         {"name":"X", "kind":"required", "type":["numeric"]},
-        {"name":"plotit", "kind":"ordered", "type":["logical","scalar"],"purpose":"plotit"}        
+        {"name":"plotit", "kind":"positional", "type":["logical","scalar"],"purpose":"plotit"}        
 	]
 },
 "run_mast":
@@ -265,6 +265,7 @@
         {"name":"X", "kind":"required", "type":["numeric"]},
         {"name":"genelist", "kind":"required", "type":["string"]},
         {"name":"s", "kind":"required", "type":[["numeric", "size=:,3"],["numeric", "size=3,:"]]},
+        {"name":"k", "kind":"namevalue", "type":["numeric","choices=[3,6,9]"]},
 		{"name":"species", "kind":"namevalue","type":["char", "choices={'human','mouse'}"]},
         {"name":"organ", "kind":"namevalue","type":["char", "choices={'all','heart','immunesystem','brain','pancreas'}"]},
         {"name":"method", "kind":"namevalue","type":["char", "choices={'alona','singler'}"]}

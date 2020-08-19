@@ -8,8 +8,10 @@ defaultType = 'kmeans';
 validTypes = {'kmeans','kmedoids','dbscan','spectclust'};
 checkType = @(x) any(validatestring(x,validTypes));
 
+validationFcn = @(x) (x > 0) && isnumeric(x) && isscalar(x);
+
 addRequired(p,'s',@isnumeric);
-addRequired(p,'k',@isnumeric);
+addRequired(p,'k',validationFcn);
 addOptional(p,'type',defaultType,checkType)
 addOptional(p,'plotit',true,@islogical)
 parse(p,s,k,varargin{:})
