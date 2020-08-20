@@ -3,9 +3,10 @@
 {
 	"inputs":
 	[
-		{"name":"s", "kind":"required", "type":[["numeric", "size=:,3"],["numeric", "size=3,:"]]},
-		{"name":"k", "kind":"required", "type":["numeric","choices=[3,6,9]"]},
-		{"name":"type", "kind":"namevalue","type":["char", "choices={'kmeans','kmedoids','dbscan','spectclust'}"]}
+		{"name":"s","kind":"required","type":[["numeric","size=:,3"],["numeric","size=3,:"]]},
+		{"name":"k","kind":"required","type":["numeric","choices=[3,6,9]"]},
+		{"name":"type", "kind":"namevalue","type":["char", "choices={'kmeans','kmedoids','dbscan','spectclust'}"]},
+        {"name":"plotit", "kind":"namevalue", "type":["logical","scalar"]}
 	]
 },
 "sc_readfile":
@@ -252,7 +253,7 @@
 	[
         {"name":"X", "kind":"required", "type":["numeric"]},
         {"name":"genelist", "kind":"required", "type":["string"]},
-        {"name":"s", "kind":"required", "type":[["numeric", "size=:,3"],["numeric", "size=3,:"]]},
+        {"name":"s", "kind":"required", "type":[["numeric", "size=:,3"],["numeric", "size=3,:"],["numeric", "size=:,2"],["numeric", "size=2,:"]]},
 		{"name":"species", "kind":"namevalue","type":["char", "choices={'human','mouse'}"]},
         {"name":"organ", "kind":"namevalue","type":["char", "choices={'all','heart','immunesystem','brain','pancreas'}"]},
         {"name":"method", "kind":"namevalue","type":["char", "choices={'alona','singler'}"]}
@@ -264,7 +265,7 @@
 	[
         {"name":"X", "kind":"required", "type":["numeric"]},
         {"name":"genelist", "kind":"required", "type":["string"]},
-        {"name":"s", "kind":"required", "type":[["numeric", "size=:,3"],["numeric", "size=3,:"]]},
+        {"name":"s", "kind":"required", "type":[["numeric", "size=:,3"],["numeric", "size=3,:"],["numeric", "size=:,2"],["numeric", "size=2,:"]]},        
         {"name":"k", "kind":"namevalue", "type":["numeric","choices=[3,6,9]"]},
 		{"name":"species", "kind":"namevalue","type":["char", "choices={'human','mouse'}"]},
         {"name":"organ", "kind":"namevalue","type":["char", "choices={'all','heart','immunesystem','brain','pancreas'}"]},
@@ -277,8 +278,8 @@
 	[
         {"name":"X", "kind":"required", "type":["numeric"]},
         {"name":"genelist", "kind":"required", "type":["string","vector"]},
-        {"name":"g", "kind":"required", "type":["char","choices={'gene'}"]},
-        {"name":"s", "kind":"required", "type":[["numeric", "size=:,3"],["numeric", "size=3,:"]]}		
+        {"name":"g", "kind":"required", "type":["string","choices={'gene'}"]},
+        {"name":"s", "kind":"required", "type":[["numeric", "size=:,3"],["numeric", "size=3,:"],["numeric", "size=:,2"],["numeric", "size=2,:"]]}
 	]
 },
 "sc_celltypecaller":

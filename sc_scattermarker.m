@@ -6,7 +6,7 @@ function sc_scattermarker(X,genelist,g,s,methodid)
 % g=["AGER","SFTPC","SCGB3A2","TPPP3"];
 % sc_scattermarker(X,genelist,g,s);
 
-
+if isvector(s)||isscalar(s), error('S should be a matrix.'); end
 if nargin<5, methodid=1; end
 if iscell(g)
     for k=1:length(g)
@@ -19,16 +19,35 @@ elseif isstring(g) && ~isStringScalar(g)
 elseif isStringScalar(g) || ischar(g)
     if ismember(g,genelist)
         x=s(:,1);
-        y=s(:,2);            
+        y=s(:,2);
+        if min(size(s))==2
+            z=[];
+        else
+            z=s(:,3);
+        end
         figure;        
         switch methodid
             case 1
                 z=log2(1+X(genelist==g,:));
                 sc_stemscatter(x,y,z);
-            case 2
-                z=s(:,3);
+            case 2                
                 c=log2(1+X(genelist==g,:));
-                scatter3(x,y,z,10,c,'filled');
+                if isempty(z)
+                    scatter(x,y,10,c,'filled');
+                else
+                    scatter3(x,y,z,10,c,'filled');
+                end
+                colormap('default');
+            case 3                
+                c=log2(1+X(genelist==g,:));
+                if isempty(z)
+                    scatter(x,y,10,c,'filled');
+                else
+                    scatter3(x,y,z,10,c,'filled');
+                end                
+                a=colormap('autumn');
+                a(1,:)=[.8 .8 .8];
+                colormap(a);
         end
         title(g)
     else

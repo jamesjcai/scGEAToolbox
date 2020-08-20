@@ -1,4 +1,4 @@
-function sc_celltypeexplorer_auto(X,genelist,s,varargin)
+function [OUT]=sc_celltypeexplorer_auto(X,genelist,s,varargin)
 
    p = inputParser;
    addRequired(p,'X',@isnumeric);
@@ -9,14 +9,19 @@ function sc_celltypeexplorer_auto(X,genelist,s,varargin)
    addOptional(p,'organ',"all",@(x) (isstring(x)|ischar(x))&ismember(lower(string(x)),["all","heart","immunesystem","brain","pancreas"]));
    addOptional(p,'method',"alona",@(x) (isstring(x)|ischar(x))&ismember(lower(string(x)),["alona","singler"]));
    parse(p,X,genelist,s,varargin{:});
+   k=p.Results.k;
    species=p.Results.species;
    organ=p.Results.organ;
    method=p.Results.method;
    
-    c=sc_clustshow(s,6,'plotit',false);   
+    c=sc_clustshow(s,k,'plotit',false);
+    OUT.c=c;
+    OUT.X=cell(k,1);
+    OUT.type=cell(k,1);
+
     %rng(1234)
     %c=sc_clustshow(s,6,'type','kmedoids','plotit',false);
-    k=max(c);    
+    % K=max(c);    
     % figure;    
     if size(s,2)==3
         scatter3(s(:,1),s(:,2),s(:,3),10,c);
@@ -26,10 +31,11 @@ function sc_celltypeexplorer_auto(X,genelist,s,varargin)
     hold on
     %[T]=sc_celltypecaller(X,genelist,c);
 
-for i=1:k
+for i=1:max(c)
     %ptsSelected=s(c==i,:);
     %[Tct]=sc_celltypebrushed(X,genelist,s,ptsSelected,species);    
     Xi=X(:,c==i);
+    OUT.X{i}=Xi;
     [Xi,gi]=sc_selectg(Xi,genelist);    
     si=s(c==i,:);
     si=mean(si);
@@ -49,4 +55,5 @@ for i=1:k
         text(si(:,1),si(:,2),sprintf('%s',ctxt),...
             'fontsize',10,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');
     end
+    OUT.type{i}=ctxt;
 end

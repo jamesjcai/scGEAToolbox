@@ -1,9 +1,12 @@
+#dir <- dirname(parent.frame(2)$ofile)
+#setwd(dir)
 #BiocManager::install(c('SingleR', 'scater'))
 library(SingleR)
 library(scater)
 
 # Reference dataset
 refdata <- MouseRNAseqData()
+# refdata <-ImmGenData()
 # HumanPrimaryCellAtlasData ImmGenData BlueprintEncodeData MonacoImmuneData MouseRNAseqData NovershternHematopoieticData
 
 # New dataset
