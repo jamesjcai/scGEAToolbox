@@ -13,9 +13,9 @@ switch methodid
     case 1
         if size(s,2)==3, z=s(:,3); end
         if size(s,2)==2
-           h=scatter(x,y,5,c);
+           h=scatter(x,y,5,c,'filled');
         elseif size(s,2)==3
-           h=scatter3(x,y,z,5,c);
+           h=scatter3(x,y,z,5,c,'filled');
         end
     case 2
         h=gscatter(x,y,c,[],[],10);
@@ -23,4 +23,9 @@ end
 
 if isbinary
     colormap(lines(2));
+else
+    a=colormap('autumn');
+    a(1,:)=[.8 .8 .8];
+    colormap(a);
 end
+colorbar;

@@ -1,4 +1,4 @@
-function sc_scattermarker(X,genelist,g,s,methodid)
+function sc_scattermarker(X,genelist,g,s,methodid,sz)
 %SC_SCATTERMARKER(X,genelist,g,s,methodid)
 %
 % USAGE:
@@ -7,14 +7,15 @@ function sc_scattermarker(X,genelist,g,s,methodid)
 % sc_scattermarker(X,genelist,g,s);
 
 if isvector(s)||isscalar(s), error('S should be a matrix.'); end
+if nargin<6, sz=5; end
 if nargin<5, methodid=1; end
 if iscell(g)
     for k=1:length(g)
-        sc_scattermarker(X,genelist,g{k},s,methodid);
+        sc_scattermarker(X,genelist,g{k},s,methodid,sz);
     end
 elseif isstring(g) && ~isStringScalar(g)
     for k=1:length(g)
-        sc_scattermarker(X,genelist,g(k),s,methodid);
+        sc_scattermarker(X,genelist,g(k),s,methodid,sz);
     end
 elseif isStringScalar(g) || ischar(g)
     if ismember(g,genelist)
@@ -33,17 +34,17 @@ elseif isStringScalar(g) || ischar(g)
             case 2                
                 c=log2(1+X(genelist==g,:));
                 if isempty(z)
-                    scatter(x,y,10,c,'filled');
+                    scatter(x,y,sz,c,'filled');
                 else
-                    scatter3(x,y,z,10,c,'filled');
+                    scatter3(x,y,z,sz,c,'filled');
                 end
                 colormap('default');
             case 3                
                 c=log2(1+X(genelist==g,:));
                 if isempty(z)
-                    scatter(x,y,10,c,'filled');
+                    scatter(x,y,sz,c,'filled');
                 else
-                    scatter3(x,y,z,10,c,'filled');
+                    scatter3(x,y,z,sz,c,'filled');
                 end                
                 a=colormap('autumn');
                 a(1,:)=[.8 .8 .8];
