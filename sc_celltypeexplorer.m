@@ -1,4 +1,5 @@
 function sc_celltypeexplorer(X,genelist,s,varargin)
+
 %load cleandata.mat
 %s=s_tsne;
 
@@ -24,7 +25,11 @@ global ctexplorer_celltypeid
 ctexplorer_celltypeid=0;
 hFig = figure;
 hAx = axes('Parent',hFig);
-scatter3(hAx, s(:,1),s(:,2),s(:,3),10);
+if size(s,2)==3
+    scatter3(hAx, s(:,1),s(:,2),s(:,3),10);
+elseif size(s,2)==2
+    scatter(hAx,s(:,1),s(:,2),10);
+end
 
 hBr = brush(hFig);
 % hBr.Enable='on';
@@ -51,7 +56,7 @@ hLines = flipud(eventdata.Axes.Children);
             
                 switch lower(method)
                 case 'alona'
-                    %[Tct]=sc_celltypecaller(Xi,gi,[],'species',species,'organ',organ);
+                    %[Tct]=sc_celltypecaller(Xi,gi,[],'species',species,'organ',organ);                    
                     [Tct]=sc_celltypebrushed(X,genelist,s,ptsSelected,species,organ);
                     ctxt=Tct.C1_Cell_Type{1};
                 case 'singler'
@@ -71,11 +76,19 @@ hLines = flipud(eventdata.Axes.Children);
             %    hLines(k).YData(ptsSelected).'];
             %assignin('base',names{k},data)
             hold on
-            scatter3(s(ptsSelected,1),s(ptsSelected,2),s(ptsSelected,3),'x')
-            si=mean(s(ptsSelected,:));
-            ctxt=strrep(ctxt,'_','\_');
-            text(si(:,1),si(:,2),si(:,3),sprintf('%s',ctxt),...
-                 'fontsize',10,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');
+            ctxt=strrep(ctxt,'_','\_');            
+            switch size(s,2)
+                case 3
+                    scatter3(s(ptsSelected,1),s(ptsSelected,2),s(ptsSelected,3),'x');
+                    si=mean(s(ptsSelected,:));
+                    text(si(:,1),si(:,2),si(:,3),sprintf('%s',ctxt),...
+                         'fontsize',10,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');
+                case 2
+                    scatter(s(ptsSelected,1),s(ptsSelected,2),'x')                    
+                    si=mean(s(ptsSelected,:));
+                    text(si(:,1),si(:,2),sprintf('%s',ctxt),...
+                         'fontsize',10,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');
+            end
             hold off
             
             a=matlab.lang.makeValidName(ctxt);
