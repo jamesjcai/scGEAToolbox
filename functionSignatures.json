@@ -52,7 +52,7 @@
 	"inputs":
 	[
 		{"name":"X", "kind":"required", "type":"numeric"},
-        {"name":"genelist", "kind":"positional", "type":["string"]},
+        {"name":"genelist", "kind":"positional", "type":["string","vector"]},
         {"name":"sortit", "kind":"positional", "type":["logical","scalar"]}
 	]
 },
@@ -62,8 +62,8 @@
 	[
 		{"name":"X", "kind":"required", "type":"numeric"},
         {"name":"Y", "kind":"required", "type":"numeric"},
-        {"name":"genelistx", "kind":"required", "type":["string"]},
-        {"name":"genelisty", "kind":"positional", "type":["string"]},
+        {"name":"genelistx", "kind":"required", "type":["string","vector"]},
+        {"name":"genelisty", "kind":"positional", "type":["string","vector"]},
         {"name":"sortit", "kind":"positional", "type":["logical","scalar"]}
 	]
 },
@@ -72,7 +72,7 @@
 	"inputs":
 	[
 		{"name":"X", "kind":"required", "type":"numeric"},
-        {"name":"genelist", "kind":"required", "type":["string"]},
+        {"name":"genelist", "kind":"required", "type":["string","vector"]},
         {"name":"dofit", "kind":"positional", "type":["logical","scalar"]},
         {"name":"showdata", "kind":"positional", "type":["logical","scalar"]}
 	]
@@ -82,7 +82,7 @@
 	"inputs":
 	[
 		{"name":"X", "kind":"required", "type":"numeric"},
-        {"name":"genelist", "kind":"required", "type":["string"]}        
+        {"name":"genelist", "kind":"required", "type":["string","vector"]}
 	]
 },
 "sc_hvg":
@@ -90,7 +90,7 @@
 	"inputs":
 	[
         {"name":"X", "kind":"required", "type":["numeric"]},
-        {"name":"genelist", "kind":"required", "type":["string"]},
+        {"name":"genelist", "kind":"required", "type":["string","vector"]},
         {"name":"sortit", "kind":"positional", "type":["logical","scalar"],"purpose":"sortit"},
         {"name":"plotit", "kind":"positional", "type":["logical","scalar"],"purpose":"plotit"},
         {"name":"normit", "kind":"positional", "type":["logical","scalar"],"purpose":"normit"},
@@ -135,7 +135,7 @@
 	"inputs":
 	[		
         {"name":"X", "kind":"required", "type":"numeric"},
-        {"name":"genelist", "kind":"required", "type":["string"]},
+        {"name":"genelist", "kind":"required", "type":["string","vector"]},
         {"name":"sortit", "kind":"positional", "type":["logical","scalar"]},
         {"name":"removeinf", "kind":"positional", "type":["logical","scalar"]}
 	]
@@ -144,7 +144,7 @@
 {
 	"inputs":
 	[		
-        {"name":"genelist", "kind":"required", "type":["string"]}
+        {"name":"genelist", "kind":"required", "type":["string","vector"]}
 	]
 },
 "sc_cluster":
@@ -160,7 +160,7 @@
 	"inputs":
 	[		
         {"name":"X", "kind":"required", "type":"numeric"},
-        {"name":"genelist", "kind":"required", "type":["string"]},
+        {"name":"genelist", "kind":"required", "type":["string","vector"]},
         {"name":"c", "kind":"required", "type":"numeric"},
         {"name":"type", "kind":"namevalue", "type":"choices={'soptsc'}"},
         {"name":"numofmarkers", "kind":"namevalue", "numofmarkers":"choices={'soptsc'}"},
@@ -175,7 +175,7 @@
         {"name":"ndim", "kind":"positional", "type":["numeric", "choices={2,3}"]},        
         {"name":"plotit", "kind":"positional", "type":["logical","scalar"],"purpose":"plotit"},
         {"name":"bygene", "kind":"positional", "type":["logical","scalar"],"purpose":"bygene"},
-        {"name":"genelist", "kind":"positional", "type":["string"]}
+        {"name":"genelist", "kind":"positional", "type":["string","vector"]}
 	]
 },
 "sc_trajectory":
@@ -210,7 +210,7 @@
 	"inputs":
 	[
 	{"name":"X", "kind":"required", "type":["numeric"]},
-    {"name":"genelist", "kind":"required", "type":["string"]},
+    {"name":"genelist", "kind":"required", "type":["string","vector"]},
     {"name":"libsize", "kind":"positional", "type":["numeric", "choices={1000,2000}"], "purpose":"libsize"},
     {"name":"mtratio", "kind":"positional", "type":["numeric", "choices={0.10,0.15}"], "purpose":"mtratio"},
     {"name":"dropout", "kind":"positional", "type":["numeric", "choices={0.01}"], "purpose":"dropout"},
@@ -227,7 +227,7 @@
         {"name":"donorm", "kind":"positional", "type":["logical","scalar"],"purpose":"donorm"},
         {"name":"dolog1p", "kind":"positional", "type":["logical","scalar"],"purpose":"dolog1p"},
         {"name":"bygene", "kind":"positional", "type":["logical","scalar"],"purpose":"bygene"},
-        {"name":"genelist", "kind":"positional", "type":["string"]}
+        {"name":"genelist", "kind":"positional", "type":["string","vector"]}
 	]
 },
 "run_umap":
@@ -244,7 +244,7 @@
         [
             {"name":"X", "kind":"required", "type":[["double"], ["single"]]},
             {"name":"Y", "kind":"required", "type":[["double"], ["single"]]},
-            {"name":"genelist", "kind":"positional", "type":["string"]}
+            {"name":"genelist", "kind":"positional", "type":["string","vector"]}
         ]
     },
 "sc_celltypeexplorer":
@@ -252,7 +252,7 @@
 	"inputs":
 	[
         {"name":"X", "kind":"required", "type":["numeric"]},
-        {"name":"genelist", "kind":"required", "type":["string"]},
+        {"name":"genelist", "kind":"required", "type":["string","vector"]},
         {"name":"s", "kind":"required", "type":[["numeric", "size=:,3"],["numeric", "size=3,:"],["numeric", "size=:,2"],["numeric", "size=2,:"]]},
 		{"name":"species", "kind":"namevalue","type":["char", "choices={'human','mouse'}"]},
         {"name":"organ", "kind":"namevalue","type":["char", "choices={'all','heart','immunesystem','brain','pancreas'}"]},
@@ -264,7 +264,7 @@
 	"inputs":
 	[
         {"name":"X", "kind":"required", "type":["numeric"]},
-        {"name":"genelist", "kind":"required", "type":["string"]},
+        {"name":"genelist", "kind":"required", "type":["string","vector"]},
         {"name":"s", "kind":"required", "type":[["numeric", "size=:,3"],["numeric", "size=3,:"],["numeric", "size=:,2"],["numeric", "size=2,:"]]},        
         {"name":"k", "kind":"namevalue", "type":["numeric","choices=[3,6,9]"]},
 		{"name":"species", "kind":"namevalue","type":["char", "choices={'human','mouse'}"]},
@@ -277,7 +277,7 @@
 	"inputs":
 	[
         {"name":"X", "kind":"required", "type":["numeric"]},
-        {"name":"genelist", "kind":"required", "type":["string"]},
+        {"name":"genelist", "kind":"required", "type":["string","vector"]},
         {"name":"s", "kind":"required", "type":[["numeric", "size=:,3"],["numeric", "size=3,:"],["numeric", "size=:,2"],["numeric", "size=2,:"]]},
         {"name":"method", "kind":"namevalue","type":["char", "choices={'ttest','mast'}"]}
 	]
@@ -299,7 +299,7 @@
 	"inputs":
 	[
         {"name":"X", "kind":"required", "type":["numeric"]},
-        {"name":"genelist", "kind":"required", "type":["string"]},
+        {"name":"genelist", "kind":"required", "type":["string","vector"]},
         {"name":"clusterid", "kind":"required", "type":["numeric"]},
 		{"name":"species", "kind":"namevalue","type":["char", "choices={'human','mouse'}"]},
         {"name":"organ", "kind":"namevalue","type":["char", "choices={'all','heart','immunesystem','brain','pancreas'}"]}
