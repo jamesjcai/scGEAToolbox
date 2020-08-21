@@ -11,10 +11,12 @@ if nargin<6, sz=5; end
 if nargin<5, methodid=1; end
 if iscell(g)
     for k=1:length(g)
+        figure;
         sc_scattermarker(X,genelist,g{k},s,methodid,sz);
     end
 elseif isstring(g) && ~isStringScalar(g)
     for k=1:length(g)
+        figure;
         sc_scattermarker(X,genelist,g(k),s,methodid,sz);
     end
 elseif isStringScalar(g) || ischar(g)
@@ -25,8 +27,7 @@ elseif isStringScalar(g) || ischar(g)
             z=[];
         else
             z=s(:,3);
-        end
-        figure;        
+        end               
         switch methodid
             case 1
                 z=log2(1+X(genelist==g,:));

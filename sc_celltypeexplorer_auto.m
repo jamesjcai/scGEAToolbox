@@ -47,7 +47,8 @@ for i=1:max(c)
         case 'singler'
             cx=run_singler(Xi,gi,species);
             ctxt=unique(cx(mode(grp2idx(cx),'all')==grp2idx(cx)));
-    end    
+    end
+    ctxt=strrep(ctxt,'_','\_');
     if size(s,2)==3
         text(si(:,1),si(:,2),si(:,3),sprintf('%s',ctxt),...
             'fontsize',10,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');

@@ -73,6 +73,7 @@ hLines = flipud(eventdata.Axes.Children);
             hold on
             scatter3(s(ptsSelected,1),s(ptsSelected,2),s(ptsSelected,3),'x')
             si=mean(s(ptsSelected,:));
+            ctxt=strrep(ctxt,'_','\_');
             text(si(:,1),si(:,2),si(:,3),sprintf('%s',ctxt),...
                  'fontsize',10,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');
             hold off
