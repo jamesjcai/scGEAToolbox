@@ -279,10 +279,24 @@
         {"name":"X", "kind":"required", "type":["numeric"]},
         {"name":"genelist", "kind":"required", "type":["string","vector"]},
         {"name":"s", "kind":"required", "type":[["numeric", "size=:,3"],["numeric", "size=3,:"],["numeric", "size=:,2"],["numeric", "size=2,:"]]},
+        {"name":"numfig", "kind":"namevalue","type":["numeric","choices=[1,2,3]"]},
         {"name":"method", "kind":"namevalue","type":["char", "choices={'ttest','mast'}"]}
 	]
 },
 "sc_scattermarker":
+{
+	"inputs":
+	[
+        {"name":"X", "kind":"required", "type":["numeric"]},
+        {"name":"genelist", "kind":"required", "type":["string","vector"]},
+        {"name":"g", "kind":"required", "type":["string","choices={'gene'}"]},
+        {"name":"s", "kind":"required", "type":[["numeric", "size=:,3"],["numeric", "size=3,:"],["numeric", "size=:,2"],["numeric", "size=2,:"]]},
+        {"name":"methodid", "kind":"positional", "type":["scalar","choices=[1,2,3]"]},
+        {"name":"sz", "kind":"positional", "type":["scalar","choices=[5,10]"]}
+	]
+},
+
+"sc_markerscatter":
 {
 	"inputs":
 	[
