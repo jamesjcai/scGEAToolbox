@@ -28,16 +28,17 @@ defaultToolbar = findall(hFig,'Type','uitoolbar');
 pt = uipushtool(defaultToolbar);
 ptImage = rand(16,16,3);
 pt.CData = ptImage;
-pt.Tooltip = 'Change UI Figure Color';
-pt.ClickedCallback = @colorToolClicked;
+pt.Tooltip = 'Select a gene to show expression';
+pt.ClickedCallback = @showmkgene;
 
-function colorToolClicked(src,event)    
-    [indx,tf] = listdlg('PromptString',{'Select a gene:',...
-    '',''},'SelectionMode','single','ListString',genelist(1:100));
-    if tf==1        
+function showmkgene(src,event)
+    gsorted=sort(genelist);
+    [indx,tf] = listdlg('PromptString',{'Select a gene',...
+    '',''},'SelectionMode','single','ListString',gsorted);
+    if tf==1  
         [ax,bx]=view();
         figure;
-        sc_markerscatter(X,genelist,genelist(indx),s,3);
+        sc_markerscatter(X,genelist,gsorted(indx),s,3);
         view(ax,bx);  
     end
 end
