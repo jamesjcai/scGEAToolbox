@@ -64,14 +64,14 @@ addpath(pth);
 if size(t,2)~=1
     t=t';
 end
-
+Pk=[];
 for k=1:size(x,1)
     fitm1 = locfit(t,x(k,:)');
-    plot(t,predict(fitm1,t),'-','LineWidth',3);
+    Pk=[Pk plot(t,predict(fitm1,t),'-','LineWidth',3)];
 end
 box on
-legend([glist glist],'location','eastoutside')
-
+% legend([kglist glist],'location','eastoutside')
+legend(Pk,glist,'location','eastoutside')
 xlim([0 max(t)])
 
 

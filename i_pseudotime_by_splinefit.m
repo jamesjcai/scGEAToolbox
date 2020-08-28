@@ -45,7 +45,7 @@ xyz1 = ppval(pp1,s);
 % t=sqrt(sum((xyz1-xyz1(:,1)).^2));
 t=pdist2(xyz1',xyz1(:,1)')';
 [~, j_rev] = sort(j); 
-t = t(j_rev);
+t = t(j_rev)';
 
 xyz1 = xyz1';
 if size(xyz,2)==2
