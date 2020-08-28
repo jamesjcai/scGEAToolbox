@@ -48,6 +48,8 @@ end
 
 hBr = brush(hFig);
 % hBr.Enable='on';
+% hBr.Color = 'green';
+
 hBr.ActionPostCallback = {@onBrushAction,X,genelist,s,method,numfig};
 end
 
