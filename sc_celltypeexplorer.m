@@ -23,9 +23,9 @@ function sc_celltypeexplorer(X,genelist,s,varargin)
    
 global ctexplorer_celltypeid
 ctexplorer_celltypeid=0;
-hFig = figure;
+hFig = figure('Name','Cell Type Explorer');
 hAx = axes('Parent',hFig);
-if size(s,2)==3
+if size(s,2)>=3
     scatter3(hAx, s(:,1),s(:,2),s(:,3),10);
 elseif size(s,2)==2
     scatter(hAx,s(:,1),s(:,2),10);
@@ -34,6 +34,27 @@ end
 hBr = brush(hFig);
 % hBr.Enable='on';
 hBr.ActionPostCallback = {@onBrushAction,X,genelist,s,species,organ,method};
+
+tb = uitoolbar(hFig);
+tt = uitoggletool(tb);
+[img,map] = imread(fullfile(matlabroot,...
+            'toolbox','matlab','icons','tool_ellipse.gif'));
+ptImage = ind2rgb(img,map);
+tt.CData = ptImage;
+tt.Tooltip = 'Click and then brush/select cells';
+tt.ClickedCallback = @MenuSelected1;
+
+    function MenuSelected1(src,event)
+        state = src.State;        
+        if strcmp(state,'on')
+            hBr.Enable='on';
+            tt.CData = zeros(16,16,3);
+        else
+            hBr.Enable='off';
+            tt.CData = ptImage;
+        end
+        
+    end
 end
 
 
@@ -77,13 +98,12 @@ hLines = flipud(eventdata.Axes.Children);
             %assignin('base',names{k},data)
             hold on
             ctxt=strrep(ctxt,'_','\_');            
-            switch size(s,2)
-                case 3
+            if size(s,2)>=3
                     scatter3(s(ptsSelected,1),s(ptsSelected,2),s(ptsSelected,3),'x');
                     si=mean(s(ptsSelected,:));
                     text(si(:,1),si(:,2),si(:,3),sprintf('%s',ctxt),...
                          'fontsize',10,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');
-                case 2
+            elseif size(s,2)==2
                     scatter(s(ptsSelected,1),s(ptsSelected,2),'x')                    
                     si=mean(s(ptsSelected,:));
                     text(si(:,1),si(:,2),sprintf('%s',ctxt),...

@@ -15,18 +15,46 @@ function sc_markerexplorer(X,genelist,s,varargin)
   
 global mkexplorer_clustid
 mkexplorer_clustid=0;
-hFig = figure;
+hFig = figure('Name','Marker Gene Explorer');
 hAx = axes('Parent',hFig);
 
-if size(s,2)==3
+if size(s,2)>=3
     scatter3(hAx, s(:,1),s(:,2),s(:,3),10);
 elseif size(s,2)==2
     scatter(hAx, s(:,1),s(:,2),10);
 end
 
-defaultToolbar = findall(hFig,'Type','uitoolbar');
-pt = uipushtool(defaultToolbar);
-ptImage = rand(16,16,3);
+tb = uitoolbar(hFig);
+
+tt = uitoggletool(tb);
+[img,map] = imread(fullfile(matlabroot,...
+            'toolbox','matlab','icons','tool_ellipse.gif'));
+ptImage = ind2rgb(img,map);
+tt.CData = ptImage;
+tt.Tooltip = 'Click and then brush/select cells';
+tt.ClickedCallback = @MenuSelected1;
+
+    function MenuSelected1(src,event)
+        state = src.State;        
+        if strcmp(state,'on')
+            hBr.Enable='on';
+            tt.CData = zeros(16,16,3);
+        else
+            hBr.Enable='off';
+            tt.CData = ptImage;
+        end
+    end
+
+
+pt = uipushtool(tb,'Separator','off');
+[img,map] = imread(fullfile(matlabroot,...
+            'toolbox','matlab','icons','profiler.gif'));
+ptImage = ind2rgb(img,map);
+
+
+% defaultToolbar = findall(hFig,'Type','uitoolbar');
+% pt = uipushtool(defaultToolbar);
+% ptImage = rand(16,16,3);
 pt.CData = ptImage;
 pt.Tooltip = 'Select a gene to show expression';
 pt.ClickedCallback = @showmkgene;
@@ -49,7 +77,6 @@ end
 hBr = brush(hFig);
 % hBr.Enable='on';
 % hBr.Color = 'green';
-
 hBr.ActionPostCallback = {@onBrushAction,X,genelist,s,method,numfig};
 end
 

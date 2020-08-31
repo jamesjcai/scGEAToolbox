@@ -15,18 +15,23 @@ function sc_pseudotimeexplorer(X,genelist,s,varargin)
   
 global psexplorer_timeid
 psexplorer_timeid=1;
-hFig = figure;
+hFig = figure('Name','Pseudotime Explorer');
 hAx = axes('Parent',hFig);
 
-if size(s,2)==3
+if size(s,2)>=3
     scatter3(hAx, s(:,1),s(:,2),s(:,3),10);
 elseif size(s,2)==2
     scatter(hAx, s(:,1),s(:,2),10);
 end
 
-defaultToolbar = findall(hFig,'Type','uitoolbar');
-pt = uipushtool(defaultToolbar);
-ptImage = rand(16,16,3);
+%defaultToolbar = findall(hFig,'Type','uitoolbar');
+%pt = uipushtool(defaultToolbar);
+tb = uitoolbar(hFig);
+pt = uipushtool(tb,'Separator','off');
+[img,map] = imread(fullfile(matlabroot,...
+            'toolbox','matlab','icons','HDF_grid.gif'));
+ptImage = ind2rgb(img,map);
+
 pt.CData = ptImage;
 pt.Tooltip = 'Plot pseudotime trajectory';
 pt.ClickedCallback = @showmkgene;
@@ -34,7 +39,7 @@ pt.ClickedCallback = @showmkgene;
 function showmkgene(src,event)
     [t,xyz1]=i_pseudotime_by_splinefit(s,dim,false);
     hold on
-    if size(xyz1,2)==3
+    if size(xyz1,2)>=3
         plot3(xyz1(:,1),xyz1(:,2),xyz1(:,3),'-r','linewidth',2);
         text(xyz1(1,1),xyz1(1,2),xyz1(1,3),'Start',...
           'fontsize',10,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');
