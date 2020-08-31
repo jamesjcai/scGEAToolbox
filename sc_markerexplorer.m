@@ -25,7 +25,6 @@ elseif size(s,2)==2
 end
 
 tb = uitoolbar(hFig);
-
 tt = uitoggletool(tb);
 [img,map] = imread(fullfile(matlabroot,...
             'toolbox','matlab','icons','tool_ellipse.gif'));

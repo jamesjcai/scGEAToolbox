@@ -15,7 +15,7 @@ function s=run_phate(X,ndim,plotit,bygene,genelist)
 % >>figure; s2=run_phate(X,3,true);          % view cells
 % >>figure; scatter3(s2(:,1),s2(:,2),s2(:,3),10,'filled'); % using output S
 
-if nargin<2, ndim=2; end
+if nargin<2, ndim=3; end
 if nargin<3, plotit=false; end
 if nargin<4, bygene=false; end
 if nargin<5, genelist=[]; end

@@ -52,9 +52,9 @@ tt.ClickedCallback = @MenuSelected1;
         else
             hBr.Enable='off';
             tt.CData = ptImage;
-        end
-        
+        end        
     end
+
 end
 
 

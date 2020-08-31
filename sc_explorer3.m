@@ -1,12 +1,17 @@
-function hLink=sc_explorer3(s1)
+function hLink=sc_explorer3(s1,X,genelist)
+if nargin<3, genelist=[]; end
+if nargin<2, X=[]; end
+if size(s1,2)<5
+    s1=[s1,zeros(size(s1,1),5-size(s1,2))];
+end
 
-% sc_explorer2(s_tsne,s_umap)
+% sc_explorer3(s_tsne_5d)
 
 explorer2IDX=s1(:,3);
 assignin('base','explorer2IDX',explorer2IDX);
 
 
-figure;
+hFig=figure;
 %https://www.mathworks.com/matlabcentral/answers/153-if-i-have-two-plots-on-the-same-figure-window-how-do-i-use-the-brush-tool-to-highlight-one-data-poi
 %https://www.mathworks.com/matlabcentral/answers/385300-how-to-set-the-datasource-of-a-histogram-programmatically
 
@@ -53,4 +58,61 @@ hLD = linkdata('on');
 evalin('base','h=findobj(gcf,''type'',''axes'');');
 evalin('base','hlink = linkprop(h,{''CameraPosition'',''CameraUpVector''});');
 evalin('base','rotate3d on');
+hFig.Position(3)=hFig.Position(3)*2;
+
+
+if ~isempty(X)&& ~isempty(genelist)
+tb = uitoolbar(hFig);
+pt = uipushtool(tb,'Separator','off');
+[img,map] = imread(fullfile(matlabroot,...
+            'toolbox','matlab','icons','profiler.gif'));
+ptImage = ind2rgb(img,map);
+
+% defaultToolbar = findall(hFig,'Type','uitoolbar');
+% pt = uipushtool(defaultToolbar);
+% ptImage = rand(16,16,3);
+pt.CData = ptImage;
+pt.Tooltip = 'Select a gene to show expression';
+pt.ClickedCallback = @showmkgene;
+end
+
+function showmkgene(src,event)
+    gsorted=sort(genelist);
+    [indx,tf] = listdlg('PromptString',{'Select a gene',...
+    '',''},'SelectionMode','single','ListString',gsorted);
+    if tf==1  
+        [ax,bx]=view();
+        figure;
+        sc_markerscatter(X,genelist,gsorted(indx),s1,3);
+        view(ax,bx);  
+    end
+end
+
+
+tt = uitoggletool(tb,'State','on','Separator','on');
+[img,map] = imread(fullfile(matlabroot,...
+            'toolbox','matlab','icons','greencircleicon.gif'));
+ptImage = ind2rgb(img,map);
+tt.CData = ptImage;
+tt.Tooltip = 'Link panels';
+tt.ClickedCallback = @MenuSelected1;
+
+    function MenuSelected1(src,event)
+        state = src.State;        
+        if strcmp(state,'on')            
+            evalin('base','hlink.Enabled=''on''');
+            [img,map] = imread(fullfile(matlabroot,...
+                        'toolbox','matlab','icons','greencircleicon.gif'));
+            ptImage = ind2rgb(img,map);            
+            tt.CData = ptImage;
+        else            
+            [img,map] = imread(fullfile(matlabroot,...
+                        'toolbox','matlab','icons','tool_ellipse.gif'));
+            ptImage = ind2rgb(img,map);            
+            evalin('base','hlink.Enabled=''off''');
+            tt.CData = ptImage;
+        end        
+    end
+end
+
 
