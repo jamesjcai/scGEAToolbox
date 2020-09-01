@@ -5,7 +5,7 @@ function [X,genelist,idx]=sc_selectg(X,genelist,min_count,min_cells)
 if nargin<4, min_cells=10; end
 if nargin<3, min_count=1; end
 
-nc=sum(X>min_count,2);
+nc=sum(X>=min_count,2);
 if min_cells<1
     idx=nc>=min_cells*size(X,2);
 else

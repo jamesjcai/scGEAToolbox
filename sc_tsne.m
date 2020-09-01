@@ -33,7 +33,9 @@ data=data';
 if dolog1p
     data = log(data+1);
 end
-
+if issparse(data)
+    data=full(data);
+end
 s=tsne(data,'NumDimensions',ndim);
 
 %%

@@ -2,7 +2,7 @@ function [X,keptidx]=sc_rmmtcells(X,genelist,mtratio,txtpat,vebrose)
 
 if nargin<3, mtratio=0.1; end
 if nargin<4, txtpat="mt-"; end
-if nargin<5, vebrose=true; end
+if nargin<5, vebrose=false; end
 
 idx=startsWith(genelist,txtpat,'IgnoreCase',true);
 if sum(idx)>0 && vebrose
