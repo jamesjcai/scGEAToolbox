@@ -62,11 +62,11 @@ function showmkgene(src,event)
     gsorted=sort(genelist);
     [indx,tf] = listdlg('PromptString',{'Select a gene',...
     '',''},'SelectionMode','single','ListString',gsorted);
-    if tf==1  
-        [ax,bx]=view();
+    if tf==1
         figure;
-        sc_markerscatter(X,genelist,gsorted(indx),s,3);
-        view(ax,bx);  
+        sc_scattermarker(X,genelist,gsorted(indx),s,5);
+%       [ax,bx]=view(); sc_markerscatter(X,genelist,gsorted(indx),s,3);
+%       view(ax,bx);
     end
 end
 

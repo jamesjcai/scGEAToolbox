@@ -14,12 +14,16 @@ function sc_explorer(X,genelist,s,varargin)
   
 global mkexplorer_clustid
 mkexplorer_clustid=0;
-hFig = figure;
-hAx = axes('Parent',hFig);
 
-if size(s,2)>2
-    scatter3(hAx, s(:,1),s(:,2),s(:,3),10);
+if size(s,2)>=5
+    [hFig]=sc_explorer5d(s,X,genelist);    
+elseif size(s,2)==3
+    hFig = figure;
+    hAx = axes('Parent',hFig);
+    scatter3(hAx,s(:,1),s(:,2),s(:,3),10);
 elseif size(s,2)==2
+    hFig = figure;
+    hAx = axes('Parent',hFig);
     scatter(hAx, s(:,1),s(:,2),10);
 end
 

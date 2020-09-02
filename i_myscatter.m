@@ -28,4 +28,4 @@ else
     a(1,:)=[.8 .8 .8];
     colormap(a);
 end
-colorbar;
+% colorbar;

@@ -50,6 +50,38 @@ elseif isStringScalar(g) || ischar(g)
                 a=colormap('autumn');
                 a(1,:)=[.8 .8 .8];
                 colormap(a);
+            case 4
+               subplot(1,2,1)
+               sc_scattermarker(X,genelist,g,s,3,sz);
+               subplot(1,2,2)
+               sc_scattermarker(X,genelist,g,s,1,sz);
+               hFig=gcf;
+               hFig.Position(3)=hFig.Position(3)*2;
+            case 5
+               x=s(:,1); y=s(:,2); z=s(:,3);
+               explorer2IDX=y;
+               assignin('base','explorer2IDX',explorer2IDX);
+               c=log2(1+X(genelist==g,:));
+               
+               h1=subplot(1,2,1); 
+                scatter3(x,y,z,sz,c,'filled');
+                a=colormap('autumn');
+                a(1,:)=[.8 .8 .8];
+                colormap(a);
+                % h1.YDataSource='explorer2IDX';
+                title(g)
+               subplot(1,2,2)                
+                stem3(x,y,c,'marker','none','color','m');
+                hold on
+                scatter3(x,y,zeros(size(y)),5,c,'filled');                
+                % h2.YDataSource='explorer2IDX';
+                % hLD = linkdata('on');
+                evalin('base','h=findobj(gcf,''type'',''axes'');');
+                evalin('base','hlink = linkprop(h,{''CameraPosition'',''CameraUpVector''});');
+                evalin('base','rotate3d on');                
+                hFig=gcf;
+                hFig.Position(3)=hFig.Position(3)*2;
+                view(h1,3);
         end
         title(g)
     else
