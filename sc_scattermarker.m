@@ -58,7 +58,11 @@ elseif isStringScalar(g) || ischar(g)
                hFig=gcf;
                hFig.Position(3)=hFig.Position(3)*2;
             case 5
-               x=s(:,1); y=s(:,2); z=s(:,3);
+               if size(s,2)>=3
+                   x=s(:,1); y=s(:,2); z=s(:,3);
+               else
+                   x=s(:,1); y=s(:,2); z=zeros(size(x));
+               end
                explorer2IDX=y;
                assignin('base','explorer2IDX',explorer2IDX);
                c=log2(1+X(genelist==g,:));

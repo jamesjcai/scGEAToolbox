@@ -32,6 +32,7 @@ if any(isnan(X(:)))
 else
     u=mean(X,2);
     vx=var(X,0,2);
+    % vx=sum(abs(X-mean(X,2)).^2,2)./(size(X,2)-1);
     cv2=vx./u.^2;
 end
 

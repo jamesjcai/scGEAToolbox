@@ -1,38 +1,38 @@
-function [hFig]=sc_explorer5d(s5d,X,genelist)
-if nargin<3, genelist=[]; end
-if nargin<2, X=[]; end
+function [hFig]=sc_explorer5d(s5d)
+% if nargin<3, genelist=[]; end
+% if nargin<2, X=[]; end
 if size(s5d,2)<5
     s5d=[s5d,zeros(size(s5d,1),5-size(s5d,2))];
 end
 
 % sc_explorer3(s_tsne_5d)
 
-%explorer2IDX=s5d(:,3);
-%assignin('base','explorer2IDX',explorer2IDX);
+explorer2IDX=s5d(:,3);
+assignin('base','explorer2IDX',explorer2IDX);
 
 
-hFig=figure;
+hFig=figure();
 %https://www.mathworks.com/matlabcentral/answers/153-if-i-have-two-plots-on-the-same-figure-window-how-do-i-use-the-brush-tool-to-highlight-one-data-poi
 %https://www.mathworks.com/matlabcentral/answers/385300-how-to-set-the-datasource-of-a-histogram-programmatically
 
 subplot(1,2,1);
-scatter3(s5d(:,1),s5d(:,2),s5d(:,3),10);
+h1=scatter3(s5d(:,1),s5d(:,2),s5d(:,3),10);
 xlabel('dim 1')
 ylabel('dim 2')
 zlabel('dim 3')
 grid on
 box on
-%h1.ZDataSource='explorer2IDX';
+h1.ZDataSource='explorer2IDX';
 
 subplot(1,2,2);
-scatter3(s5d(:,3),s5d(:,4),s5d(:,5),10);
+h2=scatter3(s5d(:,3),s5d(:,4),s5d(:,5),10);
 xlabel('dim 3')
 ylabel('dim 4')
 zlabel('dim 5')
 grid on
 box on
-%h2.XDataSource='explorer2IDX';
-%hLD = linkdata('on');
+h2.XDataSource='explorer2IDX';
+hLD = linkdata('on');
 
 
 % figure
@@ -56,14 +56,15 @@ evalin('base','h=findobj(gcf,''type'',''axes'');');
 evalin('base','hlink = linkprop(h,{''CameraPosition'',''CameraUpVector''});');
 evalin('base','rotate3d on');
 hFig.Position(3)=hFig.Position(3)*2;
+end
 
+%{
 tb = uitoolbar(hFig);
 if ~isempty(X)&& ~isempty(genelist)
     pt = uipushtool(tb,'Separator','off');
     [img,map] = imread(fullfile(matlabroot,...
                 'toolbox','matlab','icons','profiler.gif'));
     ptImage = ind2rgb(img,map);
-
     % defaultToolbar = findall(hFig,'Type','uitoolbar');
     % pt = uipushtool(defaultToolbar);
     % ptImage = rand(16,16,3);
@@ -109,6 +110,5 @@ tt.ClickedCallback = @MenuSelected1;
             tt.CData = ptImage;
         end        
     end
-end
-
+%}
 

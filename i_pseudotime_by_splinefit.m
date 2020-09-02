@@ -7,7 +7,7 @@ if nargin<2
     dim=1;
 end
 
-if size(xyz,2)==3
+if size(xyz,2)>=3
     x=xyz(:,1);
     y=xyz(:,2);
     z=xyz(:,3);
