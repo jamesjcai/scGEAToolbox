@@ -19,19 +19,28 @@ if nargin<4, plotit=true; end
 if nargin<5, normit=true; end
 if nargin<6, ignorehigh=true; end
 
-if nargout>1
-    Xori=X;
-end
+if nargout>1, Xori=X; end
 
 if normit
     [X]=norm_deseq(X);
     %[X]=norm_libsize(X);	
 end
-u=nanmean(X,2);
-cv2=nanvar(X,0,2)./u.^2;
+if any(isnan(X(:)))
+    u=nanmean(X,2);
+    vx=nanvar(X,0,2);
+    cv2=vx./u.^2;
+else
+    u=mean(X,2);
+    vx=var(X,0,2);
+    cv2=vx./u.^2;
+end
 
-xi=1./u; 
-yi=cv2; 
+if issparse(u), u=full(u); end
+if issparse(vx), vx=full(vx); end
+if issparse(cv2), cv2=full(cv2); end
+
+xi=1./u;
+yi=cv2;
 
 if ignorehigh
     yi=yi(xi>0.1);
@@ -42,8 +51,8 @@ df=m-1;
 
 % b=glmfit(xi,yi,'gamma','link','identity');
 % cv2fit=glmval(b,1./u,'identity');    % OR cv2fit=b(2)./u+b(1);
-if issparse(xi), xi=full(xi); end
-if issparse(yi), yi=full(yi); end
+% if issparse(xi), xi=full(xi); end
+% if issparse(yi), yi=full(yi); end
 mdl=fitglm(xi,yi,'linear','Distribution','gamma','link','identity');
 cv2fit=mdl.predict(1./u);
 b=mdl.Coefficients.Estimate;
@@ -57,7 +66,7 @@ switch methodid
         minBiolDisp = 0.5.^2;
         cv2th = b(1) + minBiolDisp + b(1) * minBiolDisp;
         testDenom =(u*b(2) + u.^2*cv2th)/(1+cv2th/m);
-        fitratio=nanvar(X,0,2)./testDenom;
+        fitratio=vx./testDenom;
     case 2
         % this code follows https://github.com/MarioniLab/MNN2017/blob/a202f960f165816f22dec3b62ce1c7549b3ba8c1/Pancreas/findHighlyVariableGenes.R       
         % cv2fit=b(2)./u+b(1);
