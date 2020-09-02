@@ -3,7 +3,7 @@ if nargin<2, genelist=[]; end
 if nargin<3, cutoff=1; end
 if nargin<4, verbose=false; end
 
-if cutoff<1   % e.g., 0.9
+if cutoff<1.0   % e.g., 0.9
     if verbose
         fprintf('Discard genes with poor expression values (more than %d%% zeros in all cells).\n',...
             100*cutoff); 
