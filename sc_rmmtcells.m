@@ -1,10 +1,10 @@
-function [X,keptidx]=sc_rmmtcells(X,genelist,mtratio,txtpat,vebrose)
+function [X,keptidx]=sc_rmmtcells(X,genelist,mtratio,mtgenenamepat,vebrose)
 
 if nargin<3, mtratio=0.1; end
-if nargin<4, txtpat="mt-"; end
+if nargin<4, mtgenenamepat="mt-"; end
 if nargin<5, vebrose=false; end
 
-idx=startsWith(genelist,txtpat,'IgnoreCase',true);
+idx=startsWith(genelist,mtgenenamepat,'IgnoreCase',true);
 if sum(idx)>0
     if vebrose
     fprintf('%d mt-genes found.\n',sum(idx));
