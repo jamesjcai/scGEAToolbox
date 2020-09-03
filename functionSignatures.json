@@ -318,5 +318,18 @@
 		{"name":"species", "kind":"namevalue","type":["char", "choices={'human','mouse'}"]},
         {"name":"organ", "kind":"namevalue","type":["char", "choices={'all','heart','immunesystem','brain','pancreas'}"]}
 	]
+},
+"sc_qcfilter2":
+{
+	"inputs":
+	[
+        {"name":"X", "kind":"required", "type":["numeric"]},
+        {"name":"genelist", "kind":"required", "type":["string","vector"]},
+		{"name":"libsize", "kind":"namevalue","type":["scalar","choices=[1000,2000]"]},
+		{"name":"mtratio", "kind":"namevalue","type":["scalar","choices=[0.1,0.15]"]},
+        {"name":"dropout", "kind":"namevalue","type":["scalar","choices=[0.01,0.05]"]},
+        {"name":"min_cells_nonzero", "kind":"namevalue","type":["scalar","choices=[0.01,0.05]"]},
+        {"name":"removemtgenes", "kind":"namevalue", "type":["logical","scalar"]}
+	]
 }
 }
