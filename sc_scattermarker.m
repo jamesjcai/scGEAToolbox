@@ -73,7 +73,13 @@ elseif isStringScalar(g) || ischar(g)
                 a(1,:)=[.8 .8 .8];
                 colormap(a);
                 % h1.YDataSource='explorer2IDX';
-                title(g)
+                %title(g)
+                title(sprintf('%s\n(%s/%s = %g%% nonzero)',...
+                    g,...
+                    num2bankScalar(sum(c>0)),...
+                    num2bankScalar(numel(c)),...
+                    100*sum(c>0)./numel(c)));
+        
                subplot(1,2,2)                
                 stem3(x,y,c,'marker','none','color','m');
                 hold on
@@ -87,8 +93,30 @@ elseif isStringScalar(g) || ischar(g)
                 hFig.Position(3)=hFig.Position(3)*2;
                 view(h1,3);
         end
-        title(g)
+                title(sprintf('%s\n(%s/%s = %g%% nonzero)',...
+                    g,...
+                    num2bankScalar(sum(c>0)),...
+                    num2bankScalar(numel(c)),...
+                    100*sum(c>0)./numel(c)));
     else
         warning('%s no expression',g);
     end
+end
+end
+
+
+function [str]=num2bankScalar(num)
+% https://www.mathworks.com/matlabcentral/answers/96131-is-there-a-format-in-matlab-to-display-numbers-such-that-commas-are-automatically-inserted-into-the
+     num=floor(num*100)/100;
+     str = num2str(num);
+     k=find(str == '.', 1);
+     if(isempty(k))
+         % str=[str,'.00'];         
+     end
+     %FIN = min(length(str),find(str == '.')-1);
+     FIN = length(str);
+     for i = FIN-2:-3:2
+     str(i+1:end+1) = str(i:end);
+     str(i) = ',';
+     end
 end

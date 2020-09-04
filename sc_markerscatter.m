@@ -51,7 +51,7 @@ elseif isStringScalar(g) || ischar(g)
                 a(1,:)=[.8 .8 .8];
                 colormap(a);
         end
-        title(g)
+        title(sprintf('%s %f%%',g,100*sum(c>0)./numel(c)));
     else
         warning('%s no expression',g);
     end
