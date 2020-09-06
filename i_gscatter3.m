@@ -11,7 +11,7 @@ isbinary=logical(numel(unique(c))==2);
 
 switch methodid
     case 1
-        if size(s,2)==3, z=s(:,3); end
+        if size(s,2)>=3, z=s(:,3); end
         if size(s,2)==2
            h=scatter(x,y,10,c,'filled');
         elseif size(s,2)==3
