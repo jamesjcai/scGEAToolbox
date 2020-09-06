@@ -34,7 +34,7 @@ pt.CData = ptImage;
 pt.Tooltip = 'Cell Type Explorer...';
 pt.ClickedCallback = @MenuSelected1;
 
-pt2 = uipushtool(tb,'Separator','off');
+pt2 = uipushtool(tb,'Separator','on');
 [img,map] = imread(fullfile(matlabroot,...
             'toolbox','matlab','icons','HDF_object01.gif'));
         map(9,:)=[0 0 0];
@@ -67,19 +67,43 @@ mitem1.MenuSelectedFcn = @MenuSelected1;
 mitem2.MenuSelectedFcn = @MenuSelected2;
 mitem3.MenuSelectedFcn = @MenuSelected3;
  
-        cm = uicontextmenu(hFig);
-        m1 = uimenu(cm,'Text','Cell Type Explorer...');
-        m2 = uimenu(cm,'Text','Marker Gene Explorer...');
-        m3 = uimenu(cm,'Text','Pseudotime Explorer...');
-        % cm.ContextMenuOpeningFcn = @zzz;
-        hFig.ContextMenu = cm;        
-        m1.MenuSelectedFcn = @MenuSelected1;
-        m2.MenuSelectedFcn = @MenuSelected2;
-        m3.MenuSelectedFcn = @MenuSelected3;
+%         cm = uicontextmenu(hFig);
+%         m1 = uimenu(cm,'Text','Cell Type Explorer...');
+%         m2 = uimenu(cm,'Text','Marker Gene Explorer...');
+%         m3 = uimenu(cm,'Text','Pseudotime Explorer...');
+%         % cm.ContextMenuOpeningFcn = @zzz;
+%         hFig.ContextMenu = cm;        
+%         m1.MenuSelectedFcn = @MenuSelected1;
+%         m2.MenuSelectedFcn = @MenuSelected2;
+%         m3.MenuSelectedFcn = @MenuSelected3;
 
     function MenuSelected1(src,event)
-        sc_celltypeexplorer(X,genelist,s);
+        answer = questdlg('Which species?', ...
+            'Select Species', ...
+            'Mouse','Human','Mouse');
+        switch answer
+            case 'Human'
+                speciesx="human";
+            case 'Mouse'
+                speciesx="mouse";
+            otherwise
+                return;
+        end        
+        answer = questdlg('Which algorithm?', ...
+            'Select Method', ...
+            'Alona','SingleR','Alona');
+        switch answer
+            case 'Alona'
+                methodx="alona";
+            case 'SingleR'
+                methodx="singler";
+            otherwise
+                return;
+        end        
+        sc_celltypeexplorer(X,genelist,s,...
+            'species',speciesx,"method",methodx);
     end
+
     function MenuSelected2(src,event)
         sc_markerexplorer(X,genelist,s);
     end

@@ -13,7 +13,7 @@ function sc_celltypeexplorer(X,genelist,s,varargin)
    parse(p,X,genelist,s,varargin{:});
    species=p.Results.species;
    organ=p.Results.organ;
-   method=p.Results.method;
+   method=p.Results.method;   
    
    if strcmpi(species,'mm')
        species="mouse";
@@ -23,6 +23,8 @@ function sc_celltypeexplorer(X,genelist,s,varargin)
    
 global ctexplorer_celltypeid
 ctexplorer_celltypeid=0;
+titxt=sprintf('Cell Type Explorer\n[species: %s; method: %s]',...
+    species,method);
 hFig = figure('Name','Cell Type Explorer');
 hAx = axes('Parent',hFig);
 if size(s,2)>=3
@@ -30,7 +32,7 @@ if size(s,2)>=3
 elseif size(s,2)==2
     scatter(hAx,s(:,1),s(:,2),10);
 end
-
+title(titxt);
 
 % ===========================================
 %{
