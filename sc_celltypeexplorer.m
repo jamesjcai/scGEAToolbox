@@ -31,9 +31,74 @@ elseif size(s,2)==2
     scatter(hAx,s(:,1),s(:,2),10);
 end
 
-hBr = brush(hFig);
-% hBr.Enable='on';
-hBr.ActionPostCallback = {@onBrushAction,X,genelist,s,species,organ,method};
+
+% ===========================================
+%{
+bg = uibuttongroup(hFig, 'Visible','off',...
+                  'Units','pixels',...
+                  'Position',[5 5 70 72],...
+                  'SelectionChangedFcn',@bselection,...
+                  'title','Species');
+              
+% Create three radio buttons in the button group.
+r1 = uicontrol(bg,'Style',...
+                  'radiobutton',...
+                  'String','Mouse',...
+                  'Position',[5 25 70 25],...
+                  'HandleVisibility','off');
+              
+r2 = uicontrol(bg,'Style','radiobutton',...
+                  'String','Human',...
+                  'Position',[5 5 70 25],...
+                  'HandleVisibility','off');
+bg.Visible = 'on';
+
+    function bselection(source,event)
+       % disp(['Previous: ' event.OldValue.String]);
+       disp(['Current: ' event.NewValue.String]);
+       disp('------------------');
+       if strcmp(event.NewValue.String,"Mouse")
+           species="mouse";
+       else
+           species="human";
+       end
+    end
+
+%}
+% =============
+
+%{
+bg2 = uibuttongroup(hFig, 'Visible','off',...
+                  'Units','pixels',...
+                  'Position',[5 75 70 72],...
+                  'SelectionChangedFcn',@bselection2,...
+                  'title','Method');
+              
+r1x = uicontrol(bg2,'Style',...
+                  'radiobutton',...
+                  'String','Alona',...
+                  'Position',[5 25 70 25],...
+                  'HandleVisibility','off');
+              
+r2x = uicontrol(bg2,'Style','radiobutton',...
+                  'String','SingleR',...
+                  'Position',[5 5 70 25],...
+                  'HandleVisibility','off');
+bg2.Visible = 'on';
+
+    function bselection2(~,event2)
+       % disp(['Previous: ' event.OldValue.String]);
+       disp(['Current: ' event2.NewValue.String]);
+       disp('------------------');
+       if strcmp(event2.NewValue.String,"Alona")
+           method="alona";
+       else
+           method="singler";
+       end
+    end
+%}
+
+% ===========================================
 
 tb = uitoolbar(hFig);
 tt = uitoggletool(tb);
@@ -55,13 +120,20 @@ tt.ClickedCallback = @MenuSelected1;
         end        
     end
 
+
+hBr = brush(hFig);
+% hBr.Enable='on';
+
+hBr.ActionPostCallback = {@onBrushAction,X,genelist,s,...
+    species,organ,method};
+
 end
 
 
 % ref: https://www.mathworks.com/matlabcentral/answers/385226-how-to-use-the-data-brush-tool-to-automatically-save-selected-points-in-multiple-line-plots
 
 function onBrushAction(~,eventdata,X,genelist,s,species,organ,method)
-global ctexplorer_celltypeid
+%global ctexplorer_celltypeid
 % Extract plotted graphics objects
 % Invert order because "Children" property is in reversed plotting order
 hLines = flipud(eventdata.Axes.Children);
@@ -73,7 +145,8 @@ hLines = flipud(eventdata.Axes.Children);
         if isprop(hLines(k),'BrushData') && any(hLines(k).BrushData)
             % Output the selected data to the base workspace with assigned name
             ptsSelected = logical(hLines(k).BrushData.');
-            % find(ptsSelected)
+            % find(ptsSelected)           
+           
             
                 switch lower(method)
                 case 'alona'
@@ -82,6 +155,7 @@ hLines = flipud(eventdata.Axes.Children);
                     ctxt=Tct.C1_Cell_Type{1};
                 case 'singler'
                     % [~,i]=ismember(brushedData,s,'rows');
+                    disp('xxxx');
                     i=ptsSelected;
                     Xi=X(:,i);
                     [Xi,gi]=sc_selectg(Xi,genelist);
@@ -96,6 +170,7 @@ hLines = flipud(eventdata.Axes.Children);
             %data = [hLines(k).XData(ptsSelected).' ...
             %    hLines(k).YData(ptsSelected).'];
             %assignin('base',names{k},data)
+            
             hold on
             ctxt=strrep(ctxt,'_','\_');            
             if size(s,2)>=3
@@ -110,14 +185,13 @@ hLines = flipud(eventdata.Axes.Children);
                          'fontsize',10,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');
             end
             hold off
-            
-            a=matlab.lang.makeValidName(ctxt);
-            a=extractBefore(a,min([10 strlength(a)]));
-            ctexplorer_celltypeid=ctexplorer_celltypeid+1;
-            assignin('base',sprintf('ctexplorerX%d_%s',...
-                ctexplorer_celltypeid,a),X(:,ptsSelected));
-            assignin('base',sprintf('ctexplorerT%d_%s',...
-                ctexplorer_celltypeid,a),Tct);            
+%            ctexplorer_celltypeid=ctexplorer_celltypeid+1;            
+%             a=matlab.lang.makeValidName(ctxt);
+%             a=extractBefore(a,min([10 strlength(a)]));
+%             assignin('base',sprintf('ctexplorerX%d_%s',...
+%                 ctexplorer_celltypeid,a),X(:,ptsSelected));
+%             assignin('base',sprintf('ctexplorerT%d_%s',...
+%                 ctexplorer_celltypeid,a),Tct);            
         end
     end
 end
