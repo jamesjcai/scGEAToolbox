@@ -42,26 +42,23 @@ ptImage = ind2rgb(img,map);
 pt2.CData = ptImage;
 pt2.Tooltip = 'Delet selected cells';
 pt2.ClickedCallback = @deleteselectedcells;
+add_3dcamera(tb);
 
-function deleteselectedcells(~,~)
-    data = hs.BrushData;
-    ptsSelected=find(data);
-    X(:,ptsSelected)=[];
-    s(ptsSelected,:)=[];
-    [a,b]=view();
-    if size(s,2)>=3
-        hs=scatter3(hAx, s(:,1),s(:,2),s(:,3),10);
-    elseif size(s,2)==2
-        hs=scatter(hAx, s(:,1),s(:,2),10);
+    function deleteselectedcells(~,~)
+        data = hs.BrushData;
+        ptsSelected=find(data);
+        X(:,ptsSelected)=[];
+        s(ptsSelected,:)=[];
+        [a,b]=view();
+        if size(s,2)>=3
+            hs=scatter3(hAx, s(:,1),s(:,2),s(:,3),10);
+        elseif size(s,2)==2
+            hs=scatter(hAx, s(:,1),s(:,2),10);
+        end
+        view(a,b);
     end
-    view(a,b);
-    size(X)
-end
-
-
 
     function drawtrajectory(src,event)
-        size(X)
         [t,xyz1]=i_pseudotime_by_splinefit(s,dim,false);
         hold on
         if size(xyz1,2)>=3
@@ -88,6 +85,4 @@ end
         figure;
         i_plot_pseudotimeseries(log2(1+X),genelist,t,selectedg);
     end
-
-
 end

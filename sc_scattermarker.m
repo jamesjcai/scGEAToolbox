@@ -101,6 +101,7 @@ elseif isStringScalar(g) || ischar(g)
     else
         warning('%s no expression',g);
     end
+    add_3dcamera;
 end
 end
 

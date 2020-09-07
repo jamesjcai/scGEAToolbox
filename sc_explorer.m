@@ -77,6 +77,8 @@ mitem3.MenuSelectedFcn = @MenuSelected3;
 %         m2.MenuSelectedFcn = @MenuSelected2;
 %         m3.MenuSelectedFcn = @MenuSelected3;
 
+add_3dcamera;
+
     function MenuSelected1(src,event)
         answer = questdlg('Which species?', ...
             'Select Species', ...

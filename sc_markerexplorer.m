@@ -77,6 +77,8 @@ hBr = brush(hFig);
 % hBr.Enable='on';
 % hBr.Color = 'green';
 hBr.ActionPostCallback = {@onBrushAction,X,genelist,s,method,numfig};
+
+add_3dcamera(tb);
 end
 
 % ref: https://www.mathworks.com/matlabcentral/answers/385226-how-to-use-the-data-brush-tool-to-automatically-save-selected-points-in-multiple-line-plots
