@@ -1,7 +1,13 @@
 function add_3dcamera(tb)
 if nargin<1
 hFig=gcf;
-tb = uitoolbar(hFig);
+tb = findall(hFig,'Type','uitoolbar');
+if length(tb)==1
+    tb = uitoolbar(hFig);
+else
+    tb=tb(1);
+end
+
 end
 pt = uipushtool(tb,'Separator','on');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...

@@ -25,27 +25,33 @@ elseif size(s,2)==2
     scatter(hAx,s(:,1),s(:,2),10);
 end
 
-tb = findall(hFig,'Type','uitoolbar'); % tb = uitoolbar(hFig);
-pt = uipushtool(tb,'Separator','on');
-[img,map] = imread(fullfile(matlabroot,...
-            'toolbox','matlab','icons','HDF_object01.gif'));
+%tb = findall(hFig,'Type','uitoolbar'); 
+tb = uitoolbar(hFig);
+pt = uipushtool(tb,'Separator','off');
+[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+            'private','explorer1.gif'));
+% [img,map] = imread(fullfile(matlabroot,...
+%             'toolbox','matlab','icons','HDF_object01.gif'));
 ptImage = ind2rgb(img,map);
 pt.CData = ptImage;
 pt.Tooltip = 'Cell Type Explorer...';
 pt.ClickedCallback = @MenuSelected1;
 
 pt2 = uipushtool(tb,'Separator','on');
-[img,map] = imread(fullfile(matlabroot,...
-            'toolbox','matlab','icons','HDF_object01.gif'));
-        map(9,:)=[0 0 0];
+[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+            'private','explorer2.gif'));
+%[img,map] = imread(fullfile(matlabroot,...
+%            'toolbox','matlab','icons','HDF_object01.gif'));
 ptImage = ind2rgb(img,map);
 pt2.CData = ptImage;
 pt2.Tooltip = 'Marker Gene Explorer...';
 pt2.ClickedCallback = @MenuSelected2;
 
 pt3 = uipushtool(tb,'Separator','on');
-[img,map] = imread(fullfile(matlabroot,...
-            'toolbox','matlab','icons','HDF_object02.gif'));
+[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+            'private','explorer3.gif'));
+%[img,map] = imread(fullfile(matlabroot,...
+%            'toolbox','matlab','icons','HDF_object02.gif'));
 ptImage = ind2rgb(img,map);
 pt3.CData = ptImage;
 pt3.Tooltip = 'Pseudotime Explorer...';
