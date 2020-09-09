@@ -103,22 +103,24 @@ bg2.Visible = 'on';
 % ===========================================
 
 tb = uitoolbar(hFig);
-tt = uitoggletool(tb);
-[img,map] = imread(fullfile(matlabroot,...
-            'toolbox','matlab','icons','tool_ellipse.gif'));
+tt = uitoggletool(tb,'Separator','on');
+[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+            'private','brush.gif'));
+% [img,map] = imread(fullfile(matlabroot,...
+%             'toolbox','matlab','icons','tool_ellipse.gif'));
 ptImage = ind2rgb(img,map);
 tt.CData = ptImage;
 tt.Tooltip = 'Click and then brush/select cells';
 tt.ClickedCallback = @MenuSelected1;
 
-    function MenuSelected1(src,event)
+    function MenuSelected1(src,~)
         state = src.State;        
         if strcmp(state,'on')
             hBr.Enable='on';
-            tt.CData = zeros(16,16,3);
+            % tt.CData = ptImage; % zeros(16,16,3);
         else
             hBr.Enable='off';
-            tt.CData = ptImage;
+            % tt.CData = ptImage;
         end        
     end
 
