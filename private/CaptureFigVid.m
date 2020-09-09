@@ -62,7 +62,7 @@ ViewZ=ViewZ(:,1:2); %remove any extra columns
 end
 
 % Create video object 
-daObj=VideoWriter(FileName,'MPEG-4'); %my preferred format
+ daObj=VideoWriter(FileName,'MPEG-4'); %my preferred format
 % daObj=VideoWriter(FileName); %for default video format. 
 % MPEG-4 CANNOT BE USED ON UNIX MACHINES
 % set values: 

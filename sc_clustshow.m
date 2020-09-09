@@ -29,11 +29,12 @@ switch p.Results.type
 end
 
 if plotit
-if size(s,2)==3
-    scatter3(s(:,1),s(:,2),s(:,3),10,id);
-elseif size(s,2)==2
-    scatter(s(:,1),s(:,2),10,id);
-end
+% if size(s,2)==3
+%     scatter3(s(:,1),s(:,2),s(:,3),10,id);
+% elseif size(s,2)==2
+%     scatter(s(:,1),s(:,2),10,id);
+% end
+i_gscatter3(s,id);
 hold on
 for i=1:k    
     si=s(id==i,:);
