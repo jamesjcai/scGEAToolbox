@@ -12,13 +12,15 @@ function sc_explorer(X,genelist,s,varargin)
 switch type
     case "celltype"
         MenuSelected1;
-        return; 
+        return;
     case "marker"
         MenuSelected2;
-        return; 
+        return;
     case "pseudotime"
         MenuSelected3;
-        return; 
+        return;
+    otherwise
+        % return;
 end
 
 hFig = figure();

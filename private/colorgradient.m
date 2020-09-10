@@ -16,7 +16,7 @@ function [grad,im]=colorgradient(depth,c1,c2)
 % - im: a depth*20*3 RGB image that can be used to display the result.
 %
 % EXAMPLES:
-% grad=colorGradient([1 0 0],[0.5 0.8 1],128);
+% grad=colorgradient([1 0 0],[0.5 0.8 1],128);
 % surf(peaks)
 % colormap(grad);
 %
