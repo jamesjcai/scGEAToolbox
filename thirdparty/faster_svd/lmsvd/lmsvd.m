@@ -52,6 +52,10 @@ end
 
 % set parameters
 mainargin = nargin;
+tol=1e-8;
+maxit = 300;
+idisp = 0;
+
 set_param;
 
 % initialize
@@ -188,6 +192,10 @@ hrvs = zeros(maxit,r);
 kktc = zeros(maxit,1);
 disp_str = 'iter %3i: memo used %i, chg_rvr %8.4e\n';
 
+
+qtol=1e-8;
+rtol=1e-8;
+ptol=1e-8;
 % set tolerance for terminating criterion
 set_tolerance;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
