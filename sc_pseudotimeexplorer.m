@@ -44,6 +44,21 @@ pt2.Tooltip = 'Delet selected cells';
 pt2.ClickedCallback = @deleteselectedcells;
 add_3dcamera(tb);
 
+pt3 = uipushtool(tb,'Separator','on');
+[img,map] = imread(fullfile(matlabroot,...
+            'toolbox','matlab','icons','plotpicker-scatter.gif'));
+ptImage = ind2rgb(img,map);
+pt3.CData = ptImage;
+pt3.Tooltip = 'Select dimension';
+pt3.ClickedCallback = @selectdimension;
+
+    function selectdimension(~,~)
+        dim=dim+1;
+        if dim>3, dim=1; end
+        fprintf('Set dim=%d\n',dim);
+    end
+
+
     function deleteselectedcells(~,~)
         data = hs.BrushData;
         ptsSelected=find(data);
@@ -76,9 +91,10 @@ add_3dcamera(tb);
         end
         hold off
 
-        labels = {'Save pseudotime of T to variable named:'}; 
-        vars = {'psexplorer_timeid'}; 
-        values = {t};
+        labels = {'Save expression X to variable named:',...
+                  'Save pseudotime T to variable named:'}; 
+        vars = {'X_psexplorer','t_psexplorer'};
+        values = {X, t};
         msgfig=export2wsdlg(labels,vars,values);
         %         assignin('base',sprintf('psexplorerT%d',...
         %                  psexplorer_timeid),t);
@@ -93,7 +109,8 @@ add_3dcamera(tb);
                 [~,idxn]= mink(r,3);  % Select top 3 negatively correlated genes
                 selectedg=genelist([idxp idxn]);        
                 figure;
-                i_plot_pseudotimeseries(log2(1+X),genelist,t,selectedg);
+                i_plot_pseudotimeseries(log2(X+1),...
+                    genelist,t,selectedg);
             case 'No'
                 return;
         end

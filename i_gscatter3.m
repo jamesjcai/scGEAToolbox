@@ -33,7 +33,7 @@ else
     a(1,:)=[.8 .8 .8];
     colormap(a);
 end
-add_3dcamera;
+%add_3dcamera;
 end
 
 
