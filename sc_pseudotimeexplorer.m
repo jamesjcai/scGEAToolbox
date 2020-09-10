@@ -58,7 +58,7 @@ add_3dcamera(tb);
         view(a,b);
     end
 
-    function drawtrajectory(src,event)
+    function drawtrajectory(~,~)
         [t,xyz1]=i_pseudotime_by_splinefit(s,dim,false);
         hold on
         if size(xyz1,2)>=3
@@ -75,14 +75,29 @@ add_3dcamera(tb);
               'fontsize',10,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');        
         end
         hold off
-        assignin('base',sprintf('psexplorerT%d',...
-                 psexplorer_timeid),t);
-        r=corr(t,X','type','spearman'); % Calculate linear correlation between gene expression profile and T
-        [~,idxp]= maxk(r,4);  % Select top 4 positively correlated genes
-        [~,idxn]= mink(r,3);  % Select top 3 negatively correlated genes
-        selectedg=genelist([idxp idxn]);
-        % Plot expression profile of the 5 selected genes
-        figure;
-        i_plot_pseudotimeseries(log2(1+X),genelist,t,selectedg);
+
+        labels = {'Save pseudotime of T to variable named:'}; 
+        vars = {'psexplorer_timeid'}; 
+        values = {t};
+        msgfig=export2wsdlg(labels,vars,values);
+        %         assignin('base',sprintf('psexplorerT%d',...
+        %                  psexplorer_timeid),t);
+        uiwait(msgfig)
+        answer = questdlg('View expression of selected genes', ...
+            'Pseudotime Function', ...
+            'Yes','No','Yes');
+        switch answer
+            case 'Yes'
+                r=corr(t,X','type','spearman'); % Calculate linear correlation between gene expression profile and T
+                [~,idxp]= maxk(r,4);  % Select top 4 positively correlated genes
+                [~,idxn]= mink(r,3);  % Select top 3 negatively correlated genes
+                selectedg=genelist([idxp idxn]);        
+                figure;
+                i_plot_pseudotimeseries(log2(1+X),genelist,t,selectedg);
+            case 'No'
+                return;
+        end
+        
     end
+
 end
