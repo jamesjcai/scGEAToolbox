@@ -24,8 +24,8 @@ function camera3dmp4(~,~)
     warning off
     CaptureFigVid([-20,10;-110,10;-190,80;-290,10;-380,10],fname,OptionZ);
     warning on
-    %pause(1);
-    %winopen(tempdir);
+    pause(1);
+    winopen(tempdir);
     pause(1);
     vfile=sprintf('%s.mp4',fname);
     if exist(vfile,'file') 

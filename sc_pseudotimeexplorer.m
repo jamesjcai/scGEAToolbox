@@ -42,20 +42,26 @@ ptImage = ind2rgb(img,map);
 pt2.CData = ptImage;
 pt2.Tooltip = 'Delet selected cells';
 pt2.ClickedCallback = @deleteselectedcells;
-add_3dcamera(tb);
+
 
 pt3 = uipushtool(tb,'Separator','on');
 [img,map] = imread(fullfile(matlabroot,...
             'toolbox','matlab','icons','plotpicker-scatter.gif'));
+[img,map] = imread(fullfile(matlabroot,...
+            'toolbox','matlab','icons','plotpicker-stairs.gif'));
+
 ptImage = ind2rgb(img,map);
 pt3.CData = ptImage;
 pt3.Tooltip = 'Select dimension';
 pt3.ClickedCallback = @selectdimension;
 
+add_3dcamera(tb);
+
     function selectdimension(~,~)
         dim=dim+1;
         if dim>3, dim=1; end
-        fprintf('Set dim=%d\n',dim);
+        msgbox(sprintf('dim=%d\n',dim),...
+            'Set Dimension');        
     end
 
 
