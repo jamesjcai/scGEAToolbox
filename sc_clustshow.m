@@ -1,6 +1,6 @@
 function [id]=sc_clustshow(s,k,varargin)
 
-if min(size(s))>3, error('S is coordinates of dimensional reduction.'); end
+%if min(size(s))>3, error('S is coordinates of dimensional reduction.'); end
 
 if nargin<2, k=6; end
 p = inputParser;
@@ -34,6 +34,8 @@ if plotit
 % elseif size(s,2)==2
 %     scatter(s(:,1),s(:,2),10,id);
 % end
+disp('ok');
+pause
 i_gscatter3(s,id);
 hold on
 for i=1:k    

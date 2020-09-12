@@ -13,7 +13,6 @@ function [OUT]=sc_celltypeexplorer_auto(X,genelist,s,varargin)
    species=p.Results.species;
    organ=p.Results.organ;
    method=p.Results.method;
-   
     c=sc_clustshow(s,k,'plotit',false);
     OUT.c=c;
     OUT.X=cell(k,1);
@@ -23,7 +22,7 @@ function [OUT]=sc_celltypeexplorer_auto(X,genelist,s,varargin)
     %c=sc_clustshow(s,6,'type','kmedoids','plotit',false);
     % K=max(c);    
     % figure;    
-    if size(s,2)==3
+    if size(s,2)>=3
         scatter3(s(:,1),s(:,2),s(:,3),10,c);
     elseif size(s,2)==2
         scatter(s(:,1),s(:,2),10,c);
@@ -49,7 +48,7 @@ for i=1:max(c)
             ctxt=unique(cx(mode(grp2idx(cx),'all')==grp2idx(cx)));
     end
     ctxt=strrep(ctxt,'_','\_');
-    if size(s,2)==3
+    if size(s,2)>=3
         text(si(:,1),si(:,2),si(:,3),sprintf('%s',ctxt),...
             'fontsize',10,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');
     else
