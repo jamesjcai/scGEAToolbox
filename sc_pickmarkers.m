@@ -16,7 +16,7 @@ for k=1:K
         T=sortrows(T,'sortid','ascend');
         a=-log(T.pValues).*sign(T.avglogFC);
         A=[A a];
-    end    
+    end
 end
 [~,idx]=sort(sum(A,2));
 markerlist=genelist(idx);

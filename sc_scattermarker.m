@@ -73,12 +73,12 @@ elseif isStringScalar(g) || ischar(g)
                 a(1,:)=[.8 .8 .8];
                 colormap(a);
                 % h1.YDataSource='explorer2IDX';
-                %title(g)
-                title(sprintf('%s\n(%s/%s = %g%% nonzero)',...
-                    g,...
-                    num2bankScalar(sum(c>0)),...
-                    num2bankScalar(numel(c)),...
-                    100*sum(c>0)./numel(c)));
+                 title(g)
+%                 title(sprintf('%s\n(%s/%s = %g%% nonzero)',...
+%                     g,...
+%                     num2bankScalar(sum(c>0)),...
+%                     num2bankScalar(numel(c)),...
+%                     100*sum(c>0)./numel(c)));
         
                subplot(1,2,2)                
                 stem3(x,y,c,'marker','none','color','m');
@@ -98,6 +98,20 @@ elseif isStringScalar(g) || ischar(g)
                     num2bankScalar(sum(c>0)),...
                     num2bankScalar(numel(c)),...
                     100*sum(c>0)./numel(c)));
+   %pt = uipushtool(defaultToolbar);
+   hFig=gcf;
+tb = uitoolbar(hFig);
+pt = uipushtool(tb,'Separator','off');
+[img,map] = imread(fullfile(matlabroot,...
+            'toolbox','matlab','icons','plotpicker-plot.gif'));
+ptImage = ind2rgb(img,map);
+pt.CData = ptImage;
+pt.Tooltip = 'Colormapeditor';
+pt.ClickedCallback = @selectcolormapeditor;
+                
+
+                
+                
     else
         warning('%s no expression',g);
     end
@@ -105,6 +119,9 @@ elseif isStringScalar(g) || ischar(g)
 end
 end
 
+function selectcolormapeditor(~,~)
+colormapeditor;
+end
 
 function [str]=num2bankScalar(num)
 % https://www.mathworks.com/matlabcentral/answers/96131-is-there-a-format-in-matlab-to-display-numbers-such-that-commas-are-automatically-inserted-into-the

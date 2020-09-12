@@ -74,21 +74,42 @@ function showmkgene(~,~)
     end
 end
 
+
+pt3 = uipushtool(tb,'Separator','on');
+% [img,map] = imread(fullfile(matlabroot,...
+%             'toolbox','matlab','icons','plotpicker-scatter.gif'));
+[img,map] = imread(fullfile(matlabroot,...
+            'toolbox','matlab','icons','plotpicker-stairs.gif'));
+
+ptImage = ind2rgb(img,map);
+pt3.CData = ptImage;
+pt3.Tooltip = 'Set numfig';
+pt3.ClickedCallback = @selectnumfig;
+
+    function selectnumfig(~,~)
+        numfig=numfig+1;
+        if numfig>10, numfig=1; end
+        msgbox(sprintf('numfig=%d\n',numfig),...
+            'Set Number of Figures');        
+    end
+
+
 %h = uicontrol('Position',[5 5 150 30],'String','Calculate xdiff',...
 %              'Callback', @JCal);
 
 hBr = brush(hFig);
 % hBr.Enable='on';
 % hBr.Color = 'green';
-hBr.ActionPostCallback = {@onBrushAction,X,genelist,s,method,numfig};
+%hBr.ActionPostCallback = {@onBrushAction,X,genelist,s,method,numfig};
+hBr.ActionPostCallback = @onBrushAction;
 
 add_3dcamera(tb);
-end
+
 
 % ref: https://www.mathworks.com/matlabcentral/answers/385226-how-to-use-the-data-brush-tool-to-automatically-save-selected-points-in-multiple-line-plots
 
-function onBrushAction(~,eventdata,X,genelist,s,method,numfig)
-global mkexplorer_clustid
+function onBrushAction(~,eventdata)
+% global mkexplorer_clustid
 % Extract plotted graphics objects
 % Invert order because "Children" property is in reversed plotting order
 hLines = flipud(eventdata.Axes.Children);
@@ -123,5 +144,5 @@ hLines = flipud(eventdata.Axes.Children);
     end
 end
 
-
+end
 
