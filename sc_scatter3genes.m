@@ -1,4 +1,4 @@
-function sc_scatter3(X,genelist,dofit,showdata)
+function sc_scatter3genes(X,genelist,dofit,showdata)
 if nargin<2, genelist=[]; end
 if nargin<4, showdata=true; end
 if nargin<3, dofit=false; end

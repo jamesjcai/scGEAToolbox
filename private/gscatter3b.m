@@ -1,4 +1,4 @@
-function gscatter3b(x,y,z,group,clr,sym,siz,doleg,xnam,ynam,znam)
+function [h]=gscatter3b(x,y,z,group,clr,sym,siz,doleg,xnam,ynam,znam)
 %GSCATTER3B  3D Scatter plot with grouping variable
 %   gscatter3(x,y,z,group,clr,sym,siz,doleg,xnam,ynam,znam)   
 %   Designed to work in the exactly same fashion as statistics toolbox's

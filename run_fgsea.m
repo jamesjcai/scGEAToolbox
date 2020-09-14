@@ -10,7 +10,8 @@ pth=fullfile(pw1,'thirdparty/R_fgsea');
 cd(pth);
 fprintf('CURRENTWDIR = "%s"\n',pth);
 
-t=readtable('input_example.txt');
+t=readtable('input_template.txt');
+
 
 if exist('output.txt','file'), delete('output.txt'); end
 genelist=upper(genelist);
