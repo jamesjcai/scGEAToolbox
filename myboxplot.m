@@ -1,4 +1,5 @@
-function myboxplot(y,g,colorid)
+function myboxplot(y,g,colorid,ticktxt)
+if nargin<4, ticktxt=''; end
 if length(y)~=length(g)
     try
             y1=[y;g];
@@ -52,6 +53,9 @@ end
 
         box on
         hold off
+        if ~isempty(ticktxt)
+            set(gca,'XTickLabel',ticktxt);
+        end
         
         % http://stackoverflow.com/questions/21999451/how-to-get-the-values-of-the-outliers-and-their-coordinates-from-a-box-plot
 function [g]=i_add_jitter(g,A)
@@ -60,9 +64,10 @@ function [g]=i_add_jitter(g,A)
        i=g==gx(k);
        g(i)=i_add_j(g(i),A(i));
     end
-    end
+end
 
 end
+
 function [g]=i_add_j(g,A)        
     Q1 = quantile(A,0.25);
     Q3 = quantile(A,0.75);

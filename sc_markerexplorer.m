@@ -54,7 +54,6 @@ pt = uipushtool(tb,'Separator','on');
             'private','list.gif'));         
 ptImage = ind2rgb(img,map);
 
-
 % defaultToolbar = findall(hFig,'Type','uitoolbar');
 % pt = uipushtool(defaultToolbar);
 % ptImage = rand(16,16,3);

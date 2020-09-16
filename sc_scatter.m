@@ -56,14 +56,38 @@ pt2.CData = ptImage;
 pt2.Tooltip = 'Delet selected cells';
 pt2.ClickedCallback = @deleteselectedcells;
 
+
+pt3 = uipushtool(tb,'Separator','on');
+[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+            'private','list.gif'));         
+ptImage = ind2rgb(img,map);
+pt3.CData = ptImage;
+pt3.Tooltip = 'Select a gene to show expression';
+pt3.ClickedCallback = @showmkgene;
+
 add_3dcamera(tb);
 
-    function selectdimension(~,~)
-        dim=dim+1;
-        if dim>3, dim=1; end
-        msgbox(sprintf('dim=%d\n',dim),...
-            'Set Dimension');        
+
+
+
+function showmkgene(~,~)
+    gsorted=sort(genelist);
+    [indx,tf] = listdlg('PromptString',{'Select a gene',...
+    '',''},'SelectionMode','single','ListString',gsorted);
+    if tf==1        
+        if size(s,1)==size(X,2)
+        figure;
+        sc_scattermarker(X,genelist,gsorted(indx),s,5);
+%       [ax,bx]=view(); 
+%       sc_markerscatter(X,genelist,gsorted(indx),s,3);
+%       view(ax,bx);
+        else
+            errordlg('ERROR: size(s,1)!=size(X,2)')
+        end
     end
+end
+
+
 
 
     function deleteselectedcells(~,~)
