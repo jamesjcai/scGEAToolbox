@@ -97,24 +97,31 @@ add_3dcamera(tb);
 % =========================
 
 function Brush4Celltypes(~,~)
-            f = waitbar(0,'Please wait...');
-            pause(.5)
-            waitbar(.67,f,'Processing your data');
-            ptsSelected = logical(h.BrushData.');
-            if ~any(ptsSelected)
-                waitbar(1,f,'Finishing');
-                close(f)
-                warndlg("No cells are selected.");
-                return;
-            end
-            species="mouse";
-            organ="all";
-            [Tct]=local_celltypebrushed(X,genelist,s,ptsSelected,species,organ);
-            ctxt=Tct.C1_Cell_Type{1};            
-            [markerlist]=sc_pickmarkers(X,genelist,1+ptsSelected,2);
-            waitbar(1,f,'Finishing');
-            pause(1)
-            close(f)
+    ptsSelected = logical(h.BrushData.');
+    if ~any(ptsSelected)
+        warndlg("No cells are selected.");
+        return;
+    end
+
+    f = waitbar(0,'Please wait...');
+    pause(.5)
+    waitbar(.67,f,'Processing your data');
+
+
+        species="mouse";
+        organ="all";
+        [Tct]=local_celltypebrushed(X,genelist,s,ptsSelected,species,organ);
+        ctxt=Tct.C1_Cell_Type;            
+        waitbar(1,f,'Finishing');
+        pause(1)
+        close(f)
+        [indx,tf] = listdlg('PromptString',{'Select cell type',...
+        '',''},'SelectionMode','single','ListString',ctxt);
+        if tf==1 
+            ctxt=Tct.C1_Cell_Type{indx};
+        else
+            return;
+        end
             
             hold on
             ctxt=strrep(ctxt,'_','\_');            
@@ -180,9 +187,6 @@ function showmkgene(~,~)
     end
 end
 
-
-
-
 function ShowCellstats(~,~)
     [indx,tf] = listdlg('PromptString',{'Select statistics',...
     '',''},...    
@@ -220,7 +224,6 @@ function ShowCellstats(~,~)
         end
     end
 end
-
 
 function deleteselectedcells(~,~)
     data = h.BrushData;

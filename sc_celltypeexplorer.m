@@ -158,20 +158,28 @@ hLines = flipud(eventdata.Axes.Children);
                 case 'alona'
                     %[Tct]=sc_celltypecaller(Xi,gi,[],'species',species,'organ',organ);                    
                     [Tct]=local_celltypebrushed(X,genelist,s,ptsSelected,species,organ);
-                    ctxt=Tct.C1_Cell_Type{1};
+                    ctxt=Tct.C1_Cell_Type;
                 case 'singler'
                     % [~,i]=ismember(brushedData,s,'rows');
                     i=ptsSelected;
                     Xi=X(:,i);
                     [Xi,gi]=sc_selectg(Xi,genelist);
                     cx=run_singler(Xi,gi,species);
-                    Tct=tabulate(cx);
-                    %ii=grp2idx(ctxt);
-                    %mxii=mode(ii,'all');
-                    %ctxt=ctxt(unique(ii(mxii)));
-                    ctxt=unique(cx(mode(grp2idx(cx),'all')==grp2idx(cx)));
-                end    
-            
+                    ctxt=unique(cx);
+%                     Tct=tabulate(cx);
+%                     %ii=grp2idx(ctxt);
+%                     %mxii=mode(ii,'all');
+%                     %ctxt=ctxt(unique(ii(mxii)));
+%                     ctxt=unique(cx(mode(grp2idx(cx),'all')==grp2idx(cx)));
+                end            
+            [indx,tf] = listdlg('PromptString',{'Select cell type',...
+            '',''},'SelectionMode','single','ListString',ctxt);
+            if tf==1 
+                ctxt=ctxt{indx};
+            else
+                return;
+            end                
+                
             %data = [hLines(k).XData(ptsSelected).' ...
             %    hLines(k).YData(ptsSelected).'];
             %assignin('base',names{k},data)
