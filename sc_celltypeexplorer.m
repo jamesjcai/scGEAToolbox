@@ -161,7 +161,6 @@ hLines = flipud(eventdata.Axes.Children);
                     ctxt=Tct.C1_Cell_Type{1};
                 case 'singler'
                     % [~,i]=ismember(brushedData,s,'rows');
-                    disp('xxxx');
                     i=ptsSelected;
                     Xi=X(:,i);
                     [Xi,gi]=sc_selectg(Xi,genelist);

@@ -3,7 +3,7 @@ if isempty(FindRpath)
    error('Rscript.ext is not found.');
 end
 if nargin<2, plotit=false; end
-
+if issparse(X), X=full(X); end
 oldpth=pwd;
 pw1=fileparts(which(mfilename));
 pth=fullfile(pw1,'thirdparty/R_UMAP');
