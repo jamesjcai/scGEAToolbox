@@ -29,7 +29,7 @@ switch methodid
             h=gscatter3b(x,y,z,c);
         end
 end
-
+title(sprintf('%d x %d\n[genes x cells]',size(X,1),size(X,2)))
 if kc<=5
     colormap(lines(kc));
 else
@@ -193,20 +193,23 @@ function ShowCellstats(~,~)
         switch indx
             case 1
                 ci=sum(X);
+                ttxt="Library Size";
             case 2
                 i=startsWith(genelist,'mt-','IgnoreCase',true);
                 lbsz=sum(X,1);
                 lbsz_mt=sum(X(i,:),1);
                 ci=lbsz_mt./lbsz;
+                ttxt="mtDNA%";
         end
             
             [ax,bx]=view();
                 figure;
                 if size(s,2)==2
-                    scatter(s(:,1),s(:,2),[],ci,'filled');
+                    scatter(s(:,1),s(:,2),5,ci,'filled');
                 else
-                    scatter3(s(:,1),s(:,2),s(:,3),[],ci,'filled');
-                end        
+                    scatter3(s(:,1),s(:,2),s(:,3),5,ci,'filled');
+                end
+                title(ttxt);
                 axx=colormap('autumn');
                 % axx(1,:)=[.8 .8 .8];
                 colormap(axx);
