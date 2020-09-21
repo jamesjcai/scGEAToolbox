@@ -26,6 +26,7 @@ cellidx=[1*ones(size(X,2),1); 2*ones(size(Y,2),1)];
 %%
 C=sc_cluster([X Y],'type','simlr');
 
+% [C,s]=run_simlr(X,[]);  % auto-determine the number of clusters.
 %% Plot the clustering result
 %%
 s=sc_tsne([X Y],2,false,true,false);   % s=sc_tsne(X,ndim,plotit,donorm,dolog1p);

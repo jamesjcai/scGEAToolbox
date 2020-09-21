@@ -1,7 +1,9 @@
 function [C,s]=run_simlr(X,k,donorm)
 % RUN_SIMLR - 
 %
-% REF: SoptSC: Similarity matrix optimization for clustering, lineage, and signaling inference
+% REF: https://www.nature.com/articles/nmeth.4207
+% Visualization and analysis of single-cell RNA-seq data by kernel-based similarity learning
+%
 % Input X: 
 % 
 % USAGE:
@@ -27,7 +29,7 @@ end
 
 if donorm
     [X]=sc_norm(X,'type','deseq');
-    X=log10(X+1);
+    X=log2(X+1);
 end
 
 if isempty(k)

@@ -136,7 +136,7 @@ timeOurs = toc(t0);
 [~,center] = litekmeans(LF, c,'replicates',20);
 [~,center] = min(dist2(center,LF),[],2);
 y = litekmeans(F,c,'Start',center);
-ydata = tsne_p_bo(S);
+ydata = tsne_p_bo(S,[],3);
 end
 function thisP = umkl_bo(D,beta)
 if nargin<2
