@@ -1,4 +1,4 @@
-function [mappedX, costs, initialError] = fast_tsne(X, opts)
+function [mappedX, costs] = fast_tsne(X, opts)
 %FAST_TSNE Runs the C++ implementation of FMM t-SNE
 %
 %   mappedX = fast_tsne(X, opts, initial_data)
@@ -316,7 +316,7 @@ function [mappedX, costs, initialError] = fast_tsne(X, opts)
     %[flag, cmdout] = system(fullfile(tsne_path,'/fast_tsne'), '-echo');
     % cmd = sprintf('%s %s data.dat result.dat %d',fullfile(tsne_path,'/fast_tsne'), version_number, nthreads);
     cmd = sprintf('%s %s data.dat result.dat %d',fullfile(tsne_path,'\\FItSNE.exe'), version_number, nthreads)
-    disp('xx')
+    % disp('xx')
     
     [flag, cmdout] = system(cmd, '-echo');
     if(flag~=0)
