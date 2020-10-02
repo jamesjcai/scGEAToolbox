@@ -8,10 +8,16 @@ pw1=fileparts(which(mfilename));
 pth=fullfile(pw1,'thirdparty/R_monocle');
 cd(pth);
 fprintf('CURRENTWDIR = "%s"\n',pth);
+
+[~,cmdout]=RunRcode('require.R');
+if strfind(cmdout,'there is no package')>0
+    error(cmdout);
+end
+
 if exist('output.csv','file')
     delete('output.csv');
 end
-
+if issparse(X), X=full(X); end
 csvwrite('input.csv',X);
 % Rpath = 'C:\Program Files\R\R-3.6.0\bin';
 % RscriptFileName = 'Z:\Cailab\mouse_neurons\adult_P10_cortex_SRR6061129\monocleMatlab.R';

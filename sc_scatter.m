@@ -45,8 +45,8 @@ pt = uipushtool(tb,'Separator','off');
             'toolbox','matlab','icons','plotpicker-plot.gif'));
 ptImage = ind2rgb(img,map);
 pt.CData = ptImage;
-pt.Tooltip = 'Save X';
-pt.ClickedCallback = @saveX;
+pt.Tooltip = 'Export & save data';
+pt.ClickedCallback = @SaveX;
 
 
 pt2 = uipushtool(tb,'Separator','on');
@@ -54,8 +54,8 @@ pt2 = uipushtool(tb,'Separator','on');
             'toolbox','matlab','icons','plotpicker-scatter.gif'));
 ptImage = ind2rgb(img,map);
 pt2.CData = ptImage;
-pt2.Tooltip = 'Delet selected cells';
-pt2.ClickedCallback = @deleteselectedcells;
+pt2.Tooltip = 'Delete selected cells';
+pt2.ClickedCallback = @DeleteSelectedCells;
 
 
 pt3 = uipushtool(tb,'Separator','on');
@@ -71,7 +71,7 @@ pt3a = uipushtool(tb,'Separator','on');
             'private','list.gif'));         
 ptImage = ind2rgb(img,map);
 pt3a.CData = ptImage;
-pt3a.Tooltip = 'Show cell stats';
+pt3a.Tooltip = 'Show cell states';
 pt3a.ClickedCallback = @ShowCellstats;
 
 
@@ -80,7 +80,7 @@ pt4 = uipushtool(tb,'Separator','on');
             'toolbox','matlab','icons','plotpicker-stairs.gif'));
 ptImage = ind2rgb(img,map);
 pt4.CData = ptImage;
-pt4.Tooltip = 'Marker gene brush';
+pt4.Tooltip = 'Marker genes of brushed cells';
 pt4.ClickedCallback = @Brush4Markers;
 
 
@@ -88,7 +88,7 @@ pt5 = uipushtool(tb,'Separator','on');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
             'private','brush.gif'));ptImage = ind2rgb(img,map);
 pt5.CData = ptImage;
-pt5.Tooltip = 'Cell type brush';
+pt5.Tooltip = 'Cell types of brushed cells';
 pt5.ClickedCallback = @Brush4Celltypes;
 
 
@@ -97,17 +97,17 @@ add_3dcamera(tb);
 % =========================
 
 function Brush4Celltypes(~,~)
+    answer = questdlg('Label cell type of brushed cells?');
+    if ~strcmp(answer,'Yes'), return; end
     ptsSelected = logical(h.BrushData.');
     if ~any(ptsSelected)
         warndlg("No cells are selected.");
         return;
-    end
+    end    
 
     f = waitbar(0,'Please wait...');
     pause(.5)
     waitbar(.67,f,'Processing your data');
-
-
         species="mouse";
         organ="all";
         [Tct]=local_celltypebrushed(X,genelist,s,ptsSelected,species,organ);
@@ -140,16 +140,16 @@ function Brush4Celltypes(~,~)
 end 
 
 function Brush4Markers(~,~)
-            f = waitbar(0,'Please wait...');
+    answer = questdlg('Get marker genes of brushed cells?');
+    if ~strcmp(answer,'Yes'), return; end  
+    ptsSelected = logical(h.BrushData.');
+    if ~any(ptsSelected)
+        warndlg("No cells are selected.");
+        return;
+    end
+    f = waitbar(0,'Please wait...');
             pause(.5)
             waitbar(.67,f,'Processing your data');
-            ptsSelected = logical(h.BrushData.');
-            if ~any(ptsSelected)
-                waitbar(1,f,'Finishing');
-                close(f)
-                warndlg("No cells are selected.");
-                return;
-            end            
             [markerlist]=sc_pickmarkers(X,genelist,1+ptsSelected,2);
             waitbar(1,f,'Finishing');
             pause(1)
@@ -171,6 +171,8 @@ function Brush4Markers(~,~)
 end
 
 function showmkgene(~,~)
+    answer = questdlg('Select a gene to show expression?');
+    if ~strcmp(answer,'Yes'), return; end
     gsorted=sort(genelist);
     [indx,tf] = listdlg('PromptString',{'Select a gene',...
     '',''},'SelectionMode','single','ListString',gsorted);
@@ -188,10 +190,12 @@ function showmkgene(~,~)
 end
 
 function ShowCellstats(~,~)
+    answer = questdlg('Show cell states?');
+    if ~strcmp(answer,'Yes'), return; end    
     [indx,tf] = listdlg('PromptString',{'Select statistics',...
     '',''},...    
     'SelectionMode','single',...
-    'ListString',{'Library Size','Mt-reads Ratio'});
+    'ListString',{'Library Size','Mt-reads Ratio','Cell Cycle Phase'});
     if tf==1
         if size(s,1)==size(X,2)
         switch indx
@@ -204,6 +208,17 @@ function ShowCellstats(~,~)
                 lbsz_mt=sum(X(i,:),1);
                 ci=lbsz_mt./lbsz;
                 ttxt="mtDNA%";
+            case 3
+                % ttxt="Cell Cycle Phase";
+                f = waitbar(0,'Please wait...');
+                pause(.5)
+                waitbar(.67,f,'Processing your data');                
+                [cix]=run_cellcycle(X,genelist);
+                waitbar(1,f,'Finishing');
+                pause(1)
+                close(f)
+                [ci,tx]=grp2idx(cix);
+                ttxt=sprintf('%s|',string(tx));
         end
             
             [ax,bx]=view();
@@ -214,18 +229,34 @@ function ShowCellstats(~,~)
                     scatter3(s(:,1),s(:,2),s(:,3),5,ci,'filled');
                 end
                 title(ttxt);
-                axx=colormap('autumn');
-                % axx(1,:)=[.8 .8 .8];
-                colormap(axx);
+%               axx=colormap('autumn');
+%               % axx(1,:)=[.8 .8 .8];
+%               colormap(axx);
                 colorbar;
-            view(ax,bx);
+                view(ax,bx);
+                
+                if indx==3
+                    colormap(lines(3)); 
+                    pause(2);
+                    labels = {'Save cell cycle phase to variable named:'}; 
+                    vars = {'c_cell_cycle_phase'};
+                    values = {cix};
+                    msgfig=export2wsdlg(labels,vars,values);
+                end                
         else
             errordlg('ERROR: size(s,1)!=size(X,2)')
         end
     end
 end
 
-function deleteselectedcells(~,~)
+function DeleteSelectedCells(~,~)
+    answer = questdlg('Delete selected cells?');
+    if ~strcmp(answer,'Yes'), return; end 
+    ptsSelected = logical(h.BrushData.');
+    if ~any(ptsSelected)
+        warndlg("No cells are selected.");
+        return;
+    end    
     data = h.BrushData;
     ptsSelected=find(data);
     X(:,ptsSelected)=[];
@@ -240,7 +271,9 @@ function deleteselectedcells(~,~)
     view(a,b);
 end
 
-function saveX(~,~)
+function SaveX(~,~)
+    answer = questdlg('Export & save data?');
+    if ~strcmp(answer,'Yes'), return; end     
     labels = {'Save expression X to variable named:',...
               'Save group C to variable named:'}; 
     vars = {'X_scatter','c_scatter'};

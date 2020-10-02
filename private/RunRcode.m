@@ -1,4 +1,4 @@
-function RunRcode(RscriptFileName,Rpath)
+function [status,cmdout]=RunRcode(RscriptFileName,Rpath)
 % This function calls R to run R script (.r file) under Matlab, and returns 'runR.log' in the same folder with the input R script file.
 % This code only works in Windows environments. It might work in Mac by modifying 'FindRpath'. 
 % 'RscriptFileName' : path + filename of the R script to be run.

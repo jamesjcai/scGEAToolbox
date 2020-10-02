@@ -14,11 +14,13 @@ pt = uipushtool(tb,'Separator','on');
             'camera.gif'));
 ptImage = ind2rgb(img,map);
 pt.CData = ptImage;
-pt.Tooltip = 'Select a gene to show expression';
+pt.Tooltip = 'Make video snapshot';
 pt.ClickedCallback = @camera3dmp4;
 
 
 function camera3dmp4(~,~)
+    answer = questdlg('Make video snapshot?');
+    if ~strcmp(answer,'Yes'), return; end
     OptionZ.FrameRate=15;OptionZ.Duration=5.5;OptionZ.Periodic=true;
     fname=tempname;
     warning off
