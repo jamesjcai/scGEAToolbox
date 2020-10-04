@@ -86,7 +86,8 @@ pt4.ClickedCallback = @Brush4Markers;
 
 pt5 = uipushtool(tb,'Separator','on');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
-            'private','brush.gif'));ptImage = ind2rgb(img,map);
+            'private','brush.gif'));
+ptImage = ind2rgb(img,map);
 pt5.CData = ptImage;
 pt5.Tooltip = 'Cell types of brushed cells';
 pt5.ClickedCallback = @Brush4Celltypes;
@@ -103,18 +104,24 @@ function Brush4Celltypes(~,~)
     if ~any(ptsSelected)
         warndlg("No cells are selected.");
         return;
-    end    
-
+    end
+    answer = questdlg('Which species?','Select Species','Mouse','Human','Mouse');
+    if ~strcmp(answer,'Human')
+        species="human";
+    else
+        species="mouse";
+    end
+    organ="all";
+    
     f = waitbar(0,'Please wait...');
     pause(.5)
     waitbar(.67,f,'Processing your data');
-        species="mouse";
-        organ="all";
-        [Tct]=local_celltypebrushed(X,genelist,s,ptsSelected,species,organ);
-        ctxt=Tct.C1_Cell_Type;            
-        waitbar(1,f,'Finishing');
-        pause(1)
-        close(f)
+    [Tct]=local_celltypebrushed(X,genelist,s,ptsSelected,species,organ);
+    ctxt=Tct.C1_Cell_Type;            
+    waitbar(1,f,'Finishing');
+    pause(1);
+    close(f);
+    
         [indx,tf] = listdlg('PromptString',{'Select cell type',...
         '',''},'SelectionMode','single','ListString',ctxt);
         if tf==1 
@@ -232,7 +239,9 @@ function ShowCellstats(~,~)
 %               axx=colormap('autumn');
 %               % axx(1,:)=[.8 .8 .8];
 %               colormap(axx);
-                colorbar;
+                hc=colorbar;
+                hc.Label.String=ttxt;
+                % ylabel(hc,ttxt,'Rotation',270)
                 view(ax,bx);
                 
                 if indx==3

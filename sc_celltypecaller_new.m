@@ -1,4 +1,4 @@
-function [T]=sc_celltypecaller_old(X,genelist,clusterid,varargin)
+function [T]=sc_celltypecaller(X,genelist,clusterid,varargin)
 
 % https://academic.oup.com/database/article/doi/10.1093/database/baz046/5427041
 % REF: PanglaoDB: a web server for exploration of mouse and human single-cell RNA sequencing data
@@ -23,8 +23,9 @@ end
 oldpth=pwd;
 pw1=fileparts(which(mfilename));
 if strcmpi(organ,"all")
-    pth=fullfile(pw1,'thirdparty/celltype_mat');
+    pth=fullfile(pw1,'thirdparty/celltype_mat_new');
 else
+    error('not yet implemented.')
     pth=fullfile(pw1,sprintf('thirdparty/celltype_mat/%s',organ));
 end
 cd(pth);
@@ -38,13 +39,13 @@ end
 warning off
 X=sc_norm(X,"type","deseq");
 warning on
-genelist=upper(genelist);
+% genelist=upper(genelist);
 
 
 switch lower(species)
     case 'human'
         Tw=readtable('markerweight_hs.txt');
-        T1=readtable('markerlist_hs_panglaodb.txt','ReadVariableNames',false,'Delimiter','\t');
+        T1=readtable('markerlist_hs.txt','ReadVariableNames',false,'Delimiter','\t');
         if exist('markerlist_hs_custom.txt','file')
             T2=readtable('markerlist_hs_custom.txt','ReadVariableNames',false,'Delimiter','\t');
         else
@@ -52,7 +53,7 @@ switch lower(species)
         end
     case 'mouse'
         Tw=readtable('markerweight_mm.txt');
-        T1=readtable('markerlist_mm_panglaodb.txt','ReadVariableNames',false,'Delimiter','\t');
+        T1=readtable('markerlist_mm.txt','ReadVariableNames',false,'Delimiter','\t');
         if exist('markerlist_mm_custom.txt','file')
             T2=readtable('markerlist_mm_custom.txt','ReadVariableNames',false,'Delimiter','\t');
         else
@@ -103,7 +104,8 @@ T=table();
 for k=1:NC
     [c,idx]=sort(S(:,k),'descend');
     T=[T,table(celltypev(idx),c,'VariableNames',...
-        {sprintf('C%d_Cell_Type',k),sprintf('C%d_CTA_Score',k)})];
+        {sprintf('C%d_Cell_Type',k),...
+        sprintf('C%d_CTA_Score',k)})];
 end
 if size(T,1)>10
     T=T(1:10,:);
