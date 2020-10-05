@@ -1,4 +1,8 @@
-function add_3dcamera(tb)
+function add_3dcamera(tb,prefix)
+
+if nargin<2
+    prefix='';
+end
 if nargin<1
 hFig=gcf;
 tb = findall(hFig,'Type','uitoolbar');
@@ -23,6 +27,11 @@ function camera3dmp4(~,~)
     if ~strcmp(answer,'Yes'), return; end
     OptionZ.FrameRate=15;OptionZ.Duration=5.5;OptionZ.Periodic=true;
     fname=tempname;
+    if ~isempty(prefix)
+        [a1,b1]=fileparts(fname);
+        b1=sprintf('%s_%s',prefix,b1);
+        fname=fullfile(a1,b1);
+    end
     warning off
     CaptureFigVid([-20,10;-110,10;-190,80;-290,10;-380,10],fname,OptionZ);
     warning on

@@ -115,7 +115,7 @@ pt.ClickedCallback = @selectcolormapeditor;
     else
         warning('%s no expression',g);
     end
-    add_3dcamera;
+    add_3dcamera(tb,g);
 end
 end
 
