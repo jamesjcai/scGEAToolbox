@@ -1,7 +1,8 @@
-function [T]=sc_celltypecaller(X,genelist,clusterid,varargin)
+function [T]=sc_celltypecaller_new(X,genelist,clusterid,varargin)
 
-% https://academic.oup.com/database/article/doi/10.1093/database/baz046/5427041
-% REF: PanglaoDB: a web server for exploration of mouse and human single-cell RNA sequencing data
+% using clustermole database
+% https://cran.r-project.org/web/packages/clustermole/vignettes/clustermole-intro.html
+% REF: 
 
 if nargin<3 || isempty(clusterid)
     clusterid=ones(1,size(X,2));
@@ -26,7 +27,7 @@ if strcmpi(organ,"all")
     pth=fullfile(pw1,'thirdparty/celltype_mat_new');
 else
     error('not yet implemented.')
-    pth=fullfile(pw1,sprintf('thirdparty/celltype_mat/%s',organ));
+    % pth=fullfile(pw1,sprintf('thirdparty/celltype_mat/%s',organ));
 end
 cd(pth);
 if issparse(X)

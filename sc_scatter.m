@@ -96,7 +96,6 @@ pt5.ClickedCallback = @Brush4Celltypes;
 add_3dcamera(tb);
 
 % =========================
-
 function Brush4Celltypes(~,~)
     answer = questdlg('Label cell type of brushed cells?');
     if ~strcmp(answer,'Yes'), return; end
@@ -105,18 +104,27 @@ function Brush4Celltypes(~,~)
         warndlg("No cells are selected.");
         return;
     end
+    
     answer = questdlg('Which species?','Select Species','Mouse','Human','Mouse');
     if ~strcmp(answer,'Human')
-        species="human";
+        speciestag="human";
     else
-        species="mouse";
+        speciestag="mouse";
     end
-    organ="all";
+    organtag="all";
+    
+    answer = questdlg('Which marker database?','Select Database','PanglaoDB','clustermole','PanglaoDB');
+    if strcmpi(answer,'clustermole')
+        databasetag="clustermole";
+    else
+        databasetag="panglaodb";
+    end    
     
     f = waitbar(0,'Please wait...');
     pause(.5)
     waitbar(.67,f,'Processing your data');
-    [Tct]=local_celltypebrushed(X,genelist,s,ptsSelected,species,organ);
+    [Tct]=local_celltypebrushed(X,genelist,s,ptsSelected,...
+          speciestag,organtag,databasetag);
     ctxt=Tct.C1_Cell_Type;            
     waitbar(1,f,'Finishing');
     pause(1);
@@ -296,16 +304,12 @@ end
 
 
 
-function [Tct]=local_celltypebrushed(X,genelist,s,brushedData,species,organ)
+function [Tct]=local_celltypebrushed(X,genelist,s,...
+                brushedData,species,organ,database)
 
-% USAGE:
-
-% s=sc_tsne(X,3);
-% figure; sc_cellscatter(s)
-% % get brushedData
-% [Tct]=sc_celltypesbrushed(X,genelist,s,brushedData)
+if nargin<7, organ='panglaodb'; end
 if nargin<6, organ='all'; end
-if nargin<5, species='human'; end
+if nargin<5, species='mouse'; end
 
 if islogical(brushedData)
     i=brushedData;
@@ -314,7 +318,13 @@ else
 end
 Xi=X(:,i);
 [Xi,gi]=sc_selectg(Xi,genelist);
-[Tct]=sc_celltypecaller(Xi,gi,[],'species',species,'organ',organ);
+if strcmpi(database,'clustermole')
+    disp('Using clustermole marker database')
+    [Tct]=sc_celltypecaller_new(Xi,gi,[],'species',species);
+elseif strcmpi(database,'panglaodb')
+    disp('Using panglaodb marker database')
+    [Tct]=sc_celltypecaller(Xi,gi,[],'species',species,'organ',organ);
+end
 end
 
 
