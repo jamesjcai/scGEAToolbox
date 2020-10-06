@@ -6,7 +6,7 @@ if nargin<4, c=ones(size(s,1),1); end
 x=s(:,1);
 y=s(:,2);
 
-if iscell(c), c=grp2idx(c); end
+if iscell(c)||isstring(c), c=grp2idx(c); end
 kc=numel(unique(c));
 
 if size(s,2)>=3, z=s(:,3); end
