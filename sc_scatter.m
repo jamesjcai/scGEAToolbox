@@ -40,22 +40,9 @@ end
 % add_3dcamera;
 
 tb = uitoolbar(hFig);
-pt = uipushtool(tb,'Separator','off');
-[img,map] = imread(fullfile(matlabroot,...
-            'toolbox','matlab','icons','plotpicker-plot.gif'));
-ptImage = ind2rgb(img,map);
-pt.CData = ptImage;
-pt.Tooltip = 'Export & save data';
-pt.ClickedCallback = @SaveX;
 
 
-pt2 = uipushtool(tb,'Separator','on');
-[img,map] = imread(fullfile(matlabroot,...
-            'toolbox','matlab','icons','plotpicker-scatter.gif'));
-ptImage = ind2rgb(img,map);
-pt2.CData = ptImage;
-pt2.Tooltip = 'Delete selected cells';
-pt2.ClickedCallback = @DeleteSelectedCells;
+
 
 
 pt3 = uipushtool(tb,'Separator','on');
@@ -68,21 +55,11 @@ pt3.ClickedCallback = @showmkgene;
 
 pt3a = uipushtool(tb,'Separator','on');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
-            'private','list.gif'));         
+            'private','list2.gif'));         
 ptImage = ind2rgb(img,map);
 pt3a.CData = ptImage;
 pt3a.Tooltip = 'Show cell states';
 pt3a.ClickedCallback = @ShowCellstats;
-
-
-pt4 = uipushtool(tb,'Separator','on');
-[img,map] = imread(fullfile(matlabroot,...
-            'toolbox','matlab','icons','plotpicker-stairs.gif'));
-ptImage = ind2rgb(img,map);
-pt4.CData = ptImage;
-pt4.Tooltip = 'Marker genes of brushed cells';
-pt4.ClickedCallback = @Brush4Markers;
-
 
 pt5 = uipushtool(tb,'Separator','on');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
@@ -91,6 +68,41 @@ ptImage = ind2rgb(img,map);
 pt5.CData = ptImage;
 pt5.Tooltip = 'Cell types of brushed cells';
 pt5.ClickedCallback = @Brush4Celltypes;
+
+
+pt4 = uipushtool(tb,'Separator','on');
+% [img,map] = imread(fullfile(matlabroot,...
+%             'toolbox','matlab','icons','plotpicker-stairs.gif'));
+[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+            'private','label.gif'));
+ptImage = ind2rgb(img,map);
+pt4.CData = ptImage;
+pt4.Tooltip = 'Marker genes of brushed cells';
+pt4.ClickedCallback = @Brush4Markers;
+
+
+
+
+pt2 = uipushtool(tb,'Separator','on');
+%[img,map] = imread(fullfile(matlabroot,...
+%            'toolbox','matlab','icons','plotpicker-scatter.gif'));
+[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+            'private','removepoints.gif'));  
+ptImage = ind2rgb(img,map);
+pt2.CData = ptImage;
+pt2.Tooltip = 'Delete selected cells';
+pt2.ClickedCallback = @DeleteSelectedCells;
+
+pt = uipushtool(tb,'Separator','off');
+% [img,map] = imread(fullfile(matlabroot,...
+%             'toolbox','matlab','icons','plotpicker-plot.gif'));
+[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+            'private','export.gif'));         
+ptImage = ind2rgb(img,map);
+pt.CData = ptImage;
+pt.Tooltip = 'Export & save data';
+pt.ClickedCallback = @SaveX;
+
 
 
 add_3dcamera(tb);
