@@ -11,6 +11,7 @@ fprintf('CURRENTWDIR = "%s"\n',pth);
 
 [~,cmdout]=RunRcode('require.R');
 if strfind(cmdout,'there is no package')>0
+    cd(oldpth);
     error(cmdout);
 end
 

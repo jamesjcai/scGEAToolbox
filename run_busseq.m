@@ -1,4 +1,8 @@
 function [Y0,Y1]=run_busseq(X0,X1)
+% BUSseq (Batch Effects Correction with Unknown Subtypes for scRNA seq)
+% is an R tool to correct batch effects in single-cell RNA-seq data. 
+% The BUSseq algorithm can also cluster cell types, correct for 
+% overdispersion, cell-specific sequencing depth, and dropout events.
 
 % NCELLS=2000; NGENES=400;
 % X0=nbinrnd(20,0.98,NGENES,NCELLS);
@@ -18,6 +22,13 @@ pw1=fileparts(which(mfilename));
 pth=fullfile(pw1,'thirdparty/R_BUSseq');
 cd(pth);
 fprintf('CURRENTWDIR = "%s"\n',pth);
+
+[~,cmdout]=RunRcode('require.R');
+if strfind(cmdout,'there is no package')>0
+    cd(oldpth);
+    error(cmdout);
+end
+
 
 if exist('output0.csv','file'), delete('output0.csv'); end
 if exist('output1.csv','file'), delete('output1.csv'); end

@@ -10,6 +10,15 @@ pth=fullfile(pw1,'thirdparty/R_fgsea');
 cd(pth);
 fprintf('CURRENTWDIR = "%s"\n',pth);
 
+
+[~,cmdout]=RunRcode('require.R');
+if strfind(cmdout,'there is no package')>0
+    cd(oldpth);
+    error(cmdout);
+end
+
+
+
 t=readtable('input_template.txt');
 
 

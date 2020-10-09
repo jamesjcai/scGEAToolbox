@@ -5,7 +5,8 @@
 #  write.csv(s_umap, file = outputFile)
 #}
 #computeUmap(X = "input.csv", outputFile = "output.csv")
-setwd("E:\\GitHub\\scGEAToolbox\\thirdparty\\R_BUSseq")
+# setwd("E:\\GitHub\\scGEAToolbox\\thirdparty\\R_BUSseq")
+
 library(BUSseq)
 X0 <- as.matrix(read.csv("input0.csv", header = FALSE))
 X1 <- as.matrix(read.csv("input1.csv", header = FALSE))

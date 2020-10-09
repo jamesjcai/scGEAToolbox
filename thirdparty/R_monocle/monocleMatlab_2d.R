@@ -1,11 +1,9 @@
-require(monocle)
-
-computePseudoTime <- function(X, geneList, outputFile){
+computePseudoTime <- function(X, outputFile){
   cMatrix <- read.csv(X, header = FALSE)
-  rownames(cMatrix) <- readLines(geneList)[-1]
+  rownames(cMatrix) <- paste0("G", seq_len(nrow(cMatrix)))
   colnames(cMatrix) <- paste0("C", seq_len(ncol(cMatrix)))
   cMatrix <- cMatrix[rowSums(cMatrix) > 0,]
-#  require(monocle)
+  require(monocle)
   fd <- data.frame('gene_short_name' = rownames(cMatrix))
   rownames(fd) <- rownames(cMatrix)
   fd <- new("AnnotatedDataFrame", data = fd)
@@ -20,4 +18,4 @@ computePseudoTime <- function(X, geneList, outputFile){
   write.csv(pseudoTiveV, file = outputFile)
 }
 
-computePseudoTime(X = "X.csv", geneList = "genelist.txt", outputFile = "pt_X.csv")
+computePseudoTime(X = "input.csv", outputFile = "output.csv")

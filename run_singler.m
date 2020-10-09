@@ -11,6 +11,12 @@ pth=fullfile(pw1,'thirdparty/R_SingleR');
 cd(pth);
 fprintf('CURRENTWDIR = "%s"\n',pth);
 
+[~,cmdout]=RunRcode('require.R');
+if strfind(cmdout,'there is no package')>0
+    cd(oldpth);
+    error(cmdout);
+end
+
 if exist('output.csv','file')
     delete('output.csv');
 end
