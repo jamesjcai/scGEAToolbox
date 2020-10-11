@@ -5,7 +5,7 @@ function Rpath=FindRpath
 % Rpath=FindPathR
 % >> 'C:\Program Files\R\R-3.1.1\bin'
 if isunix
-    [a,b]=system('which R');
+    [a,b]=system('which Rscript');
     if a==0
     Rpath=deblank(b);
     else
