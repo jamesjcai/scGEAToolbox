@@ -174,6 +174,19 @@ function Brush4Markers(~,~)
         warndlg("No cells are selected.");
         return;
     end
+    
+    prompt = {'Enter number of panels {1,2..10}'};
+    dlgtitle = 'Panel of 9 Genes';
+    answer = inputdlg(prompt,dlgtitle,[1 40],{'1'});
+    if isempty(answer)
+        return;
+    else
+        numfig=str2double(answer{1});
+    end
+    if ~(numfig>0 && numfig<=10)
+        errordlg('Invalid number of figures');
+        return;
+    end    
     f = waitbar(0,'Please wait...');
             pause(.5)
             waitbar(.67,f,'Processing your data');
@@ -182,16 +195,19 @@ function Brush4Markers(~,~)
             pause(1)
             close(f)
             [ax,bx]=view();
-             numfig=1;
-             for kkk=1:numfig
-            figure;
-            for kk=1:min([9,length(markerlist)])
-                subplot(3,3,kk)
-                sc_markerscatter(X,genelist,...
-                    markerlist(kk+9*(kkk-1)),s,3);
-                view(ax,bx);   
+            % numfig=1;
+            for kkk=1:numfig
+                figure;
+                for kk=1:min([9,length(markerlist)])
+                    subplot(3,3,kk)
+                    sc_markerscatter(X,genelist,...
+                        markerlist(kk+9*(kkk-1)),s,3);
+                    view(ax,bx);   
+                end
             end
-            end
+    export2wsdlg({'Save marker list to variable named:'},...
+        {'g_markerlist'},{markerlist});
+    
 %             mkexplorer_clustid=mkexplorer_clustid+1;
 %             assignin('base',sprintf('mkexplorerL%d',...
 %                 mkexplorer_clustid),markerlist);
