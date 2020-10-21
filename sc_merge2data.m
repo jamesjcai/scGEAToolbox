@@ -3,11 +3,11 @@ if nargin<5, method='intersect'; end
 
 switch lower(method)
     case 'intersect'
-        [genelist,i,j]=intersect(genelist1,genelist2);
+        [genelist,i,j]=intersect(genelist1,genelist2,'stable');
         X1a=X1(i,:);
         X2a=X2(j,:);
     case 'union'
-        [genelist]=union(genelist1,genelist2);
+        [genelist]=union(genelist1,genelist2,'stable');
         [~,i]=ismember(genelist1,genelist);
         [~,j]=ismember(genelist2,genelist);
         X1a=zeros(length(genelist),size(X1,2));
