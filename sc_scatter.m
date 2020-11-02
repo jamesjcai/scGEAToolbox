@@ -81,8 +81,6 @@ pt4.Tooltip = 'Marker genes of brushed cells';
 pt4.ClickedCallback = @Brush4Markers;
 
 
-
-
 pt2 = uipushtool(tb,'Separator','on');
 %[img,map] = imread(fullfile(matlabroot,...
 %            'toolbox','matlab','icons','plotpicker-scatter.gif'));
@@ -320,9 +318,10 @@ function SaveX(~,~)
     answer = questdlg('Export & save data?');
     if ~strcmp(answer,'Yes'), return; end     
     labels = {'Save expression X to variable named:',...
+              'Save embedding S to variable named:',...
               'Save group C to variable named:'}; 
-    vars = {'X_scatter','c_scatter'};
-    values = {X, c};
+    vars = {'X_scatter','s_scatter','c_scatter'};
+    values = {X,s,c};
     msgfig=export2wsdlg(labels,vars,values);
     %         assignin('base',sprintf('psexplorerT%d',...
     %                  psexplorer_timeid),t);

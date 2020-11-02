@@ -1,4 +1,4 @@
-function [G]=sc_knngraph(s,k, method)
+function [G]=sc_knngraph(s,k,method)
 if nargin<3, method=1; end
 if nargin<2, k=4; end
 

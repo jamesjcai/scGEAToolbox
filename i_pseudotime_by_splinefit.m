@@ -1,11 +1,7 @@
 function [t,xyz1]=i_pseudotime_by_splinefit(xyz,dim,plotit)
-% s_selected=s_phate0g1(cell_i,:);
-if nargin<3
-    plotit=false;
-end
-if nargin<2
-    dim=1;
-end
+
+if nargin<3, plotit=false; end
+if nargin<2, dim=1; end
 
 if size(xyz,2)>=3
     x=xyz(:,1);
