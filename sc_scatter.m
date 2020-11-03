@@ -44,8 +44,7 @@ tb = uitoolbar(hFig);
 
 
 
-
-pt3 = uipushtool(tb,'Separator','on');
+pt3 = uipushtool(tb,'Separator','off');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
             'private','list.gif'));         
 ptImage = ind2rgb(img,map);
@@ -53,7 +52,7 @@ pt3.CData = ptImage;
 pt3.Tooltip = 'Select a gene to show expression';
 pt3.ClickedCallback = @showmkgene;
 
-pt3a = uipushtool(tb,'Separator','on');
+pt3a = uipushtool(tb,'Separator','off');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
             'private','list2.gif'));         
 ptImage = ind2rgb(img,map);
@@ -81,6 +80,15 @@ pt4.Tooltip = 'Marker genes of brushed cells';
 pt4.ClickedCallback = @Brush4Markers;
 
 
+pt5 = uipushtool(tb,'Separator','on');
+[img,map] = imread(fullfile(matlabroot,...
+            'toolbox','matlab','icons','plotpicker-plot.gif'));
+ptImage = ind2rgb(img,map);
+pt5.CData = ptImage;
+pt5.Tooltip = 'Plot pseudotime trajectory';
+pt5.ClickedCallback = @drawtrajectory;
+
+
 pt2 = uipushtool(tb,'Separator','on');
 %[img,map] = imread(fullfile(matlabroot,...
 %            'toolbox','matlab','icons','plotpicker-scatter.gif'));
@@ -101,9 +109,8 @@ pt.CData = ptImage;
 pt.Tooltip = 'Export & save data';
 pt.ClickedCallback = @SaveX;
 
-
-
 add_3dcamera(tb);
+
 
 % =========================
 function Brush4Celltypes(~,~)
@@ -326,6 +333,52 @@ function SaveX(~,~)
     %         assignin('base',sprintf('psexplorerT%d',...
     %                  psexplorer_timeid),t);
 end
+
+function drawtrajectory(~,~)
+        dim=1;
+        [t,xyz1]=i_pseudotime_by_splinefit(s,dim,false);
+        hold on
+        if size(xyz1,2)>=3
+            plot3(xyz1(:,1),xyz1(:,2),xyz1(:,3),'-r','linewidth',2);
+            text(xyz1(1,1),xyz1(1,2),xyz1(1,3),'Start',...
+              'fontsize',10,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');
+            text(xyz1(end,1),xyz1(end,2),xyz1(end,3),'End',...
+              'fontsize',10,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');      
+        elseif size(xyz1,2)==2
+            plot(xyz1(:,1),xyz1(:,2),'-r','linewidth',2);
+            text(xyz1(1,1),xyz1(1,2),'Start',...
+              'fontsize',10,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');
+            text(xyz1(end,1),xyz1(end,2),'End',...
+              'fontsize',10,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');        
+        end
+        hold off
+
+        labels = {'Save expression X to variable named:',...
+                  'Save pseudotime T to variable named:',...
+                  'Save embedding S to variable named:'}; 
+        vars = {'X_psexplorer','t_psexplorer','s_psexplorer'};
+        values = {X, t, s};
+        msgfig=export2wsdlg(labels,vars,values);
+        %         assignin('base',sprintf('psexplorerT%d',...
+        %                  psexplorer_timeid),t);
+        uiwait(msgfig)
+        answer = questdlg('View expression of selected genes', ...
+            'Pseudotime Function', ...
+            'Yes','No','Yes');
+        switch answer
+            case 'Yes'
+                r=corr(t,X','type','spearman'); % Calculate linear correlation between gene expression profile and T
+                [~,idxp]= maxk(r,4);  % Select top 4 positively correlated genes
+                [~,idxn]= mink(r,3);  % Select top 3 negatively correlated genes
+                selectedg=genelist([idxp idxn]);        
+                figure;
+                i_plot_pseudotimeseries(log2(X+1),...
+                    genelist,t,selectedg);
+            case 'No'
+                return;
+        end
+        
+    end
 
 end
 
