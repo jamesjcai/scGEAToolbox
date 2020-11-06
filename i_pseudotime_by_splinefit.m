@@ -1,5 +1,6 @@
-function [t,xyz1]=i_pseudotime_by_splinefit(xyz,dim,plotit)
+function [t,xyz1]=i_pseudotime_by_splinefit(xyz,dim,plotit,plotit2)
 
+if nargin<4, plotit2=false; end
 if nargin<3, plotit=false; end
 if nargin<2, dim=1; end
 
@@ -53,6 +54,9 @@ end
 % s=run_phate(X,3,true,false);
 % [t,xyz1]=i_pseudotime_by_splinefit(s,1);
 if plotit
+ if plotit2    
+    plot3(x,y,z,'.');
+ end
  hold on
  plot3(xyz1(:,1),xyz1(:,2),xyz1(:,3),'-r','linewidth',2);
 end

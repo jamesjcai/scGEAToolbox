@@ -27,13 +27,13 @@ switch eg
         cut_indices0 = [];
         mass = ones(1,n)./n;
         
-        lambda1 = .02;
+        lambda1 = .002;
         rho = .4;
         tol = 10^-6;
         
-        lambda2 = .5;
-        max_m = [];
-        max_avg_turn = 40;
+        lambda2 = .05;
+        max_m = 50;
+        max_avg_turn = 100;
         normalize_data = 1;
         pause_bool = 0;
         

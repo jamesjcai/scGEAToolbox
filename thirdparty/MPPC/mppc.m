@@ -1,5 +1,5 @@
 function [ y_new,cut_indices,I,iter ] = mppc( y0,cut_indices,x,mass,lambda1,lambda2,tol,rho0,...
-    max_m,max_avg_turn,normalize_data,pause_bool)
+    max_m,max_avg_turn,normalize_data,pause_bool,plotting)
 %MPPC the main function for the algorithm that finds local minimizers of
 %the MPPC functional, as introduced in 
 % Kirov, S. & Slep?ev, D., Multiple Penalized Principal Curves: Analysis 
@@ -62,7 +62,7 @@ MAX_INNER_ITER = 500; %maximum number of inner ADMM iterations
 r = 3; %param for modifySpacing
 cut_freq = 10; %frequency with which to check topology
 respace_freq = 5; %frequency with which to check parametrization
-plotting = 1; %plot if and only if = 1
+% plotting = 0; %plot if and only if = 1
 
 if isempty(tol), tol = 10^-3; end
 num_d = ceil(-log(tol)/log(10)); %number of decimals to display of energy

@@ -1,4 +1,7 @@
 function [t,s]=run_monocle(X,plotit)
+% Run Monocle pseudotime analysis
+%[t_mono,s_mono]=run_monocle(X,true);
+
 if isempty(FindRpath)
    error('Rscript.ext is not found.');
 end
