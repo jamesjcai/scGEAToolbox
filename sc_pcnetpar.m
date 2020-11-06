@@ -24,7 +24,7 @@ n=size(X,2);
 A=1-eye(n);
 B=A(:,1:end-1);
 
-parfor k=1:n
+parfor k=1:n    
     y=X(:,k);
     Xi=X;
     Xi(:,k)=[];    
