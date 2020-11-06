@@ -98,9 +98,10 @@ add_3dcamera(tb);
         hold off
 
         labels = {'Save expression X to variable named:',...
-                  'Save pseudotime T to variable named:'}; 
-        vars = {'X_psexplorer','t_psexplorer'};
-        values = {X, t};
+                  'Save pseudotime T to variable named:',...
+                  'Save embedding S to variable named:'}; 
+        vars = {'X_psexplorer','t_psexplorer','s_psexplorer'};
+        values = {X, t, s};
         msgfig=export2wsdlg(labels,vars,values);
         %         assignin('base',sprintf('psexplorerT%d',...
         %                  psexplorer_timeid),t);

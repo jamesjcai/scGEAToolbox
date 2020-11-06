@@ -32,6 +32,6 @@ if nargout>2 && ~isempty(barcodestxtfile)
     celllist=string(T.Var1);
 end
 
-assert(isequal(size(X,1),length(genelist)))
+%assert(isequal(size(X,1),length(genelist)))
 
 
