@@ -2,6 +2,7 @@ function sc_scatter(X,genelist,s,c,methodid)
 
 if nargin<5, methodid=1; end
 if nargin<4, c=ones(size(s,1),1); end
+cellidx=[1:size(X,2)]';
 
 x=s(:,1);
 y=s(:,2);
@@ -204,9 +205,9 @@ function Brush4Markers(~,~)
             for kkk=1:numfig
                 figure;
                 for kk=1:min([9,length(markerlist)])
-                    subplot(3,3,kk)
-                    sc_markerscatter(X,genelist,...
-                        markerlist(kk+9*(kkk-1)),s,3);
+                    subplot(3,3,kk)                    
+                    sc_scattermarker(X,genelist,s,...
+                        markerlist(kk+9*(kkk-1)),3,5,false);
                     view(ax,bx);   
                 end
             end
@@ -312,6 +313,8 @@ function DeleteSelectedCells(~,~)
     X(:,ptsSelected)=[];
     s(ptsSelected,:)=[];
     c(ptsSelected)=[];
+    cellidx(ptsSelected)=[];
+    
     [a,b]=view();
     if size(s,2)>=3
         h=scatter3(hAx, s(:,1),s(:,2),s(:,3),10);
@@ -326,9 +329,10 @@ function SaveX(~,~)
     if ~strcmp(answer,'Yes'), return; end     
     labels = {'Save expression X to variable named:',...
               'Save embedding S to variable named:',...
-              'Save group C to variable named:'}; 
-    vars = {'X_scatter','s_scatter','c_scatter'};
-    values = {X,s,c};
+              'Save group C to variable named:',...
+              'Save cell index CELLIDX to variable named:'}; 
+    vars = {'X_scatter','s_scatter','c_scatter','cellidx_scatter'};
+    values = {X,s,c,cellidx};
     msgfig=export2wsdlg(labels,vars,values);
     %         assignin('base',sprintf('psexplorerT%d',...
     %                  psexplorer_timeid),t);

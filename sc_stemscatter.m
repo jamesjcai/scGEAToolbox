@@ -11,7 +11,7 @@ else
     %scatter(x,y,5);
     stem3(x,y,z,'marker','none','color','m');
     hold on 
-    i_myscatter([x y],z);    
+    i_myscatter([x y],z);
     hold off
 end
 %[caz,cel]=view;

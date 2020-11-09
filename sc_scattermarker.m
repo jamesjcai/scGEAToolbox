@@ -1,12 +1,13 @@
-function sc_scattermarker(X,genelist,g,s,methodid,sz)
+function sc_scattermarker(X,genelist,s,g,methodid,sz,showcam)
 %SC_SCATTERMARKER(X,genelist,g,s,methodid)
 %
 % USAGE:
 % s=sc_tsne(X,3);
 % g=["AGER","SFTPC","SCGB3A2","TPPP3"];
 % sc_scattermarker(X,genelist,g,s);
-
+if nargin<4, error('sc_scattermarker(X,genelist,s,g)'); end
 if isvector(s)||isscalar(s), error('S should be a matrix.'); end
+if nargin<7, showcam=true; end
 if nargin<6, sz=5; end
 if nargin<5, methodid=1; end
 if iscell(g)
@@ -27,21 +28,20 @@ elseif isStringScalar(g) || ischar(g)
             z=[];
         else
             z=s(:,3);
-        end               
+        end
+        c=log2(1+X(genelist==g,:));
         switch methodid
             case 1
-                z=log2(1+X(genelist==g,:));
-                sc_stemscatter(x,y,z);
+                %sc_stemscatter(x,y,c);
+                i_stemscatter(x,y,z)
             case 2                
-                c=log2(1+X(genelist==g,:));
                 if isempty(z)
                     scatter(x,y,sz,c,'filled');
                 else
                     scatter3(x,y,z,sz,c,'filled');
                 end
                 colormap('default');
-            case 3                
-                c=log2(1+X(genelist==g,:));
+            case 3
                 if isempty(z)
                     scatter(x,y,sz,c,'filled');
                 else
@@ -52,9 +52,9 @@ elseif isStringScalar(g) || ischar(g)
                 colormap(a);
             case 4
                subplot(1,2,1)
-               sc_scattermarker(X,genelist,g,s,3,sz);
+               sc_scattermarker(X,genelist,g,s,3,sz,false);
                subplot(1,2,2)
-               sc_scattermarker(X,genelist,g,s,1,sz);
+               sc_scattermarker(X,genelist,g,s,1,sz,false);
                hFig=gcf;
                hFig.Position(3)=hFig.Position(3)*2;
             case 5
@@ -65,7 +65,7 @@ elseif isStringScalar(g) || ischar(g)
                end
                explorer2IDX=y;
                assignin('base','explorer2IDX',explorer2IDX);
-               c=log2(1+X(genelist==g,:));
+               % c=log2(1+X(genelist==g,:));
                
                h1=subplot(1,2,1); 
                 scatter3(x,y,z,sz,c,'filled');
@@ -98,24 +98,24 @@ elseif isStringScalar(g) || ischar(g)
                     num2bankScalar(sum(c>0)),...
                     num2bankScalar(numel(c)),...
                     100*sum(c>0)./numel(c)));
-   %pt = uipushtool(defaultToolbar);
-   hFig=gcf;
-tb = uitoolbar(hFig);
-pt = uipushtool(tb,'Separator','off');
-[img,map] = imread(fullfile(matlabroot,...
-            'toolbox','matlab','icons','plotpicker-plot.gif'));
-ptImage = ind2rgb(img,map);
-pt.CData = ptImage;
-pt.Tooltip = 'Colormapeditor';
-pt.ClickedCallback = @selectcolormapeditor;
-                
-
-                
-                
+                   %pt = uipushtool(defaultToolbar);
+      if showcam
+                hFig=gcf;
+                tb = uitoolbar(hFig);
+                pt = uipushtool(tb,'Separator','off');
+                [img,map] = imread(fullfile(matlabroot,...
+                            'toolbox','matlab','icons','plotpicker-plot.gif'));
+                ptImage = ind2rgb(img,map);
+                pt.CData = ptImage;
+                pt.Tooltip = 'Colormapeditor';
+                pt.ClickedCallback = @selectcolormapeditor;
+      end
     else
         warning('%s no expression',g);
     end
-    add_3dcamera(tb,g);
+    if showcam
+        add_3dcamera(tb,g);
+    end
 end
 end
 

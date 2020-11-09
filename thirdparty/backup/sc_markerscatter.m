@@ -1,4 +1,4 @@
-function sc_markerscatter(X,genelist,g,s,methodid,sz)
+function sc_markerscatter(X,genelist,s,g,methodid,sz)
 %SC_MARKERSCATTER(X,genelist,g,s,methodid)
 %
 % USAGE:
@@ -9,6 +9,7 @@ function sc_markerscatter(X,genelist,g,s,methodid,sz)
 if isvector(s)||isscalar(s), error('S should be a matrix.'); end
 if nargin<6, sz=5; end
 if nargin<5, methodid=1; end
+if nargin<4, error('sc_markerscatter(X,genelist,s,g)'); end
 if iscell(g)
     for k=1:length(g)
         figure;
@@ -27,13 +28,13 @@ elseif isStringScalar(g) || ischar(g)
             z=[];
         else
             z=s(:,3);
-        end               
+        end
+        c=log2(1+X(genelist==g,:));
+        
         switch methodid
-            case 1
-                z=log2(1+X(genelist==g,:));
-                sc_stemscatter(x,y,z);
+            case 1                
+                sc_stemscatter(x,y,c);
             case 2                
-                c=log2(1+X(genelist==g,:));
                 if isempty(z)
                     scatter(x,y,sz,c,'filled');
                 else
@@ -41,7 +42,6 @@ elseif isStringScalar(g) || ischar(g)
                 end
                 colormap('default');
             case 3                
-                c=log2(1+X(genelist==g,:));
                 if isempty(z)
                     scatter(x,y,sz,c,'filled');
                 else
@@ -51,7 +51,8 @@ elseif isStringScalar(g) || ischar(g)
                 a(1,:)=[.8 .8 .8];
                 colormap(a);
         end
-        title(sprintf('%s %f%%',g,100*sum(c>0)./numel(c)));
+        title(sprintf('%s [%.3f%% nonzero]',...
+              g,100*sum(c>0)./numel(c)));
     else
         warning('%s no expression',g);
     end

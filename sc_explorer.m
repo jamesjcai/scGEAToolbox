@@ -1,4 +1,8 @@
 function sc_explorer(X,genelist,s,varargin)
+% pw1=fileparts(which(mfilename));
+% pth=fullfile(pw1,'thirdparty/backup');
+% addpath(pth);
+
    p = inputParser;
    addRequired(p,'X',@isnumeric);
    addRequired(p,'genelist',@isstring);

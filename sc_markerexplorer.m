@@ -131,8 +131,8 @@ hLines = flipud(eventdata.Axes.Children);
             figure;
             for kk=1:min([9,length(markerlist)])
                 subplot(3,3,kk)
-                sc_markerscatter(X,genelist,...
-                    markerlist(kk+9*(kkk-1)),s,3);
+                sc_scattermarker(X,genelist,s,...
+                    markerlist(kk+9*(kkk-1)),3,3,false);
                 view(ax,bx);   
             end
             end
