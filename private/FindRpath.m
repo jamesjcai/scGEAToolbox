@@ -7,7 +7,7 @@ function Rpath=FindRpath
 if isunix
     [a,b]=system('which Rscript');
     if a==0
-    Rpath=deblank(b);
+        Rpath=deblank(b);
     else
         Rpath='';
     end
