@@ -57,7 +57,7 @@ function [ y_new,cut_indices,I,iter ] = mppc( y0,cut_indices,x,mass,lambda1,lamb
 % it does not decrease the energy. In the public version, it is given a
 % chance. 
 
-MAX_ITER = 1000; %maximum number of iterations
+MAX_ITER = 900; %maximum number of iterations
 MAX_INNER_ITER = 500; %maximum number of inner ADMM iterations
 r = 3; %param for modifySpacing
 cut_freq = 10; %frequency with which to check topology

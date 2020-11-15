@@ -1,6 +1,8 @@
-function [G]=sc_knngraph(s,k,method)
-if nargin<3, method=1; end
-if nargin<2, k=4; end
+function [G]=sc_knngraph(s,k,plotit,method)
+
+if nargin<4, method=1; end
+if nargin<3, plotit=false; end
+if nargin<2 || isempty(k), k=4; end
 
 switch method
     case 1
@@ -31,12 +33,14 @@ if nargout>0
     G=G-diag(diag(G));
 end
 
+if plotit
 hold on
 for i = 1 : size(Graph,2)
 for j = 1 : size(Graph,1)
      line(s([i,Graph(j,i)],1),...
           s([i,Graph(j,i)],2),...
           s([i,Graph(j,i)],3),'Color','red');   
+end
 end
 end
 

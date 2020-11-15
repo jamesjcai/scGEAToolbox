@@ -1,6 +1,6 @@
 function [t,xyz1]=i_pseudotime_by_princurve(s,plotit)
 
-if nargin<2, plotit=true; end
+if nargin<2, plotit=false; end
 
 pw1=fileparts(which(mfilename));
 pth=fullfile(pw1,'thirdparty/MPPC');
@@ -32,15 +32,16 @@ addpath(pth);
 
         tic;
         [yfinal,cut_indices,I,iters] = mppc(y0,cut_indices0,s,mass,lambda1,lambda2,tol,rho,...
-            max_m, max_avg_turn,normalize_data,pause_bool,true);
+            max_m, max_avg_turn,normalize_data,pause_bool,false);
         toc;
 
-        t=I;
+        t=(I+randn(size(I)))';
         xyz1=yfinal;
 
 
  if plotit
   hold on
-  plot3(xyz1(:,1),xyz1(:,2),xyz1(:,3),'.r','linewidth',2);
+  % plot3(xyz1(:,1),xyz1(:,2),xyz1(:,3),'.r','linewidth',2);
+  plot3(xyz1(1:end-1,1),xyz1(1:end-1,2),xyz1(1:end-1,3),'-r','linewidth',2);
  end
 end

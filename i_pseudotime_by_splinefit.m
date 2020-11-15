@@ -22,9 +22,17 @@ switch dim
     case 3
         [~,i]=max(z);        
 end
+%{
+G=graph(sc_knngraph(xyz,8));
+d=zeros(length(x),1);
+for k=1:length(x)
+    [~,dd]=shortestpath(G,i,k);
+    d(k)=dd;
+end
+%}
+d=pdist2(xyz,xyz(i,:));
 
-
-[~,j]=sort(pdist2(xyz,xyz(i,:)));
+[~,j]=sort(d);
 xyz=xyz(j,:)';
 
 x=x(j);
@@ -40,11 +48,14 @@ xyz1 = ppval(pp1,s);
 
 % t=sqrt(sum(xyz1.^2-xyz1(:,1).^2));
 % t=sqrt(sum((xyz1-xyz1(:,1)).^2));
-t=pdist2(xyz1',xyz1(:,1)')';
-[~, j_rev] = sort(j); 
-t = t(j_rev)';
 
-xyz1 = xyz1';
+xyz1=xyz1';
+% t=pdist2(xyz1,xyz1(1,:))';
+[~,t] = dsearchn(xyz1(1,:),xyz1);
+[~, j_rev] = sort(j); 
+t = t(j_rev);
+
+
 if size(xyz,2)==2
     xyz1=xyz1(:,1:2);
 end
@@ -58,7 +69,7 @@ if plotit
     plot3(x,y,z,'.');
  end
  hold on
- plot3(xyz1(:,1),xyz1(:,2),xyz1(:,3),'-r','linewidth',2);
+ plot3(xyz1(:,1),xyz1(:,2),xyz1(:,3),'-','linewidth',2);
 end
 end
 

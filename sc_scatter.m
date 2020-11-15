@@ -12,7 +12,7 @@ kc=numel(unique(c));
 
 if size(s,2)>=3, z=s(:,3); end
 
-hFig = figure('Name','Pseudotime Explorer');
+hFig = figure('Name','sc_scatter');
 hAx = axes('Parent',hFig);
 
 
@@ -41,9 +41,6 @@ end
 % add_3dcamera;
 
 tb = uitoolbar(hFig);
-
-
-
 
 pt3 = uipushtool(tb,'Separator','off');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
@@ -112,6 +109,9 @@ pt.ClickedCallback = @SaveX;
 
 add_3dcamera(tb);
 
+%warning off
+%WinOnTop(hFig,true);
+%warning on
 
 % =========================
 function Brush4Celltypes(~,~)
@@ -339,8 +339,15 @@ function SaveX(~,~)
 end
 
 function drawtrajectory(~,~)
+        answer = questdlg('Which method?','Select Algorithm',...
+            'splinefit (fast)','princurve (slow)',...
+            'splinefit (fast)');
+    if strcmp(answer,'splinefit (fast)')
         dim=1;
-        [t,xyz1]=i_pseudotime_by_splinefit(s,dim,false);
+        [t,xyz1]=i_pseudotime_by_splinefit(s,dim,false);    
+    else
+        [t,xyz1]=i_pseudotime_by_princurve(s,false);
+    end
         hold on
         if size(xyz1,2)>=3
             plot3(xyz1(:,1),xyz1(:,2),xyz1(:,3),'-r','linewidth',2);
