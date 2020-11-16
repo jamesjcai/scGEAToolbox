@@ -3,6 +3,9 @@ clc
 clear
 close all
 addpath(genpath(pwd))
+addpath('core\')
+addpath('examples\HiC_Network\');
+
 %%%load the example data. We only show the resolution 1K here.
 % If you want to play with resolution 5K, you just need to change 1000 to
 % 5000 when you do the loading as below

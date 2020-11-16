@@ -5,7 +5,7 @@ function [id]=sc_clustshow(s,k,varargin)
 if nargin<2, k=6; end
 p = inputParser;
 defaultType = 'kmeans';
-validTypes = {'kmeans','kmedoids','dbscan','spectclust'};
+validTypes = {'kmeans','kmedoids','dbscan','spectclust','snndpc'};
 checkType = @(x) any(validatestring(x,validTypes));
 
 validationFcn = @(x) (x > 0) && isnumeric(x) && isscalar(x);
@@ -25,7 +25,9 @@ switch p.Results.type
     case 'kmedoids'
         id=kmedoids(s,k);
     case 'dbscan'
-        warning('In development. Needs parameters');        
+        warning('In development. Needs parameters');
+    case 'snndpc'
+        id=sc_snndpc(s,k);
 end
 
 if plotit
