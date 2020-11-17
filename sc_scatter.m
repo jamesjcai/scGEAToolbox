@@ -356,7 +356,7 @@ function showmkgene(~,~)
     if tf==1        
         if size(s,1)==size(X,2)
         figure;
-        sc_scattermarker(X,genelist,gsorted(indx),s,5);
+        sc_scattermarker(X,genelist,s,gsorted(indx),5);
 %       [ax,bx]=view(); 
 %       sc_markerscatter(X,genelist,gsorted(indx),s,3);
 %       view(ax,bx);
