@@ -2,7 +2,7 @@ function sc_scatter(X,genelist,s,c,methodid)
 
 if nargin<5, methodid=1; end
 if nargin<4, c=ones(size(s,1),1); end
-cellidx=[1:size(X,2)]';
+cellidx=(1:size(X,2))';
 
 x=s(:,1);
 y=s(:,2);
@@ -14,8 +14,8 @@ if size(s,2)>=3, z=s(:,3); end
 
 hFig = figure('Name','sc_scatter');
 hAx = axes('Parent',hFig);
-
-
+[h]=i_gscatter3(s,c,methodid);
+%{
 switch methodid
     case 1
         if size(s,2)==2
@@ -30,18 +30,23 @@ switch methodid
             h=gscatter3b(x,y,z,c);
         end
 end
+%}
+
 title(sprintf('%d x %d\n[genes x cells]',size(X,1),size(X,2)))
-if kc<=5
+if kc<=15
     colormap(lines(kc));
 else
     a=colormap('autumn');
     a(1,:)=[.8 .8 .8];
     colormap(a);
 end
+
 % add_3dcamera;
 
-tb = uitoolbar(hFig);
+dt=datacursormode;
+dt.UpdateFcn = {@i_myupdatefcnx};
 
+tb = uitoolbar(hFig);
 pt3 = uipushtool(tb,'Separator','off');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
             'private','list.gif'));         
@@ -57,6 +62,36 @@ ptImage = ind2rgb(img,map);
 pt3a.CData = ptImage;
 pt3a.Tooltip = 'Show cell states';
 pt3a.ClickedCallback = @ShowCellstats;
+
+
+ptaddcluster = uipushtool(tb,'Separator','on');
+[img,map] = imread(fullfile(matlabroot,...
+             'toolbox','matlab','icons','plotpicker-stairs.gif'));
+ptImage = ind2rgb(img,map);
+ptaddcluster.CData = ptImage;
+ptaddcluster.Tooltip = 'Add brushed cells to a new cluster';
+ptaddcluster.ClickedCallback = @Brushed2Cluster;
+
+
+ptcluster = uipushtool(tb,'Separator','on');
+[img,map] = imread(fullfile(matlabroot,...
+             'toolbox','matlab','icons','plotpicker-stairs.gif'));
+ptImage = ind2rgb(img,map);
+ptcluster.CData = ptImage;
+ptcluster.Tooltip = 'Clustering cells';
+ptcluster.ClickedCallback = @ClusterCells;
+
+
+ptclustertype = uipushtool(tb,'Separator','on');
+[img,map] = imread(fullfile(matlabroot,...
+             'toolbox','matlab','icons','plotpicker-stairs.gif'));
+ptImage = ind2rgb(img,map);
+ptclustertype.CData = ptImage;
+ptclustertype.Tooltip = 'Cell types of clusters';
+ptclustertype.ClickedCallback = @CellTypeClusters;
+
+
+
 
 pt5 = uipushtool(tb,'Separator','on');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
@@ -78,13 +113,13 @@ pt4.Tooltip = 'Marker genes of brushed cells';
 pt4.ClickedCallback = @Brush4Markers;
 
 
-pt5 = uipushtool(tb,'Separator','on');
+ptpseudotime = uipushtool(tb,'Separator','on');
 [img,map] = imread(fullfile(matlabroot,...
             'toolbox','matlab','icons','plotpicker-plot.gif'));
 ptImage = ind2rgb(img,map);
-pt5.CData = ptImage;
-pt5.Tooltip = 'Plot pseudotime trajectory';
-pt5.ClickedCallback = @drawtrajectory;
+ptpseudotime.CData = ptImage;
+ptpseudotime.Tooltip = 'Plot pseudotime trajectory';
+ptpseudotime.ClickedCallback = @drawtrajectory;
 
 
 pt2 = uipushtool(tb,'Separator','on');
@@ -107,6 +142,16 @@ pt.CData = ptImage;
 pt.Tooltip = 'Export & save data';
 pt.ClickedCallback = @SaveX;
 
+
+pt5 = uipushtool(tb,'Separator','on');
+[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+            'private','brush.gif'));
+ptImage = ind2rgb(img,map);
+pt5.CData = ptImage;
+pt5.Tooltip = 'Refresh';
+pt5.ClickedCallback = @RefreshAll;
+
+
 add_3dcamera(tb);
 
 %warning off
@@ -114,6 +159,89 @@ add_3dcamera(tb);
 %warning on
 
 % =========================
+function RefreshAll(~,~)
+    hold off
+    h=i_gscatter3(s,c,methodid);
+end
+
+function CellTypeClusters(~,~)
+    answer = questdlg('Label cell type of clusters?');
+    if ~strcmp(answer,'Yes'), return; end
+    
+    answer = questdlg('Which species?','Select Species','Mouse','Human','Mouse');
+    if ~strcmp(answer,'Human')
+        speciestag="human";
+    else
+        speciestag="mouse";
+    end
+    organtag="all";
+    
+    answer = questdlg('Which marker database?','Select Database','PanglaoDB','clustermole','PanglaoDB');
+    if strcmpi(answer,'clustermole')
+        databasetag="clustermole";
+    else
+        databasetag="panglaodb";
+    end    
+    
+%     f = waitbar(0,'Please wait...');
+%     pause(.5)
+%     waitbar(.67,f,'Processing your data');
+    
+for i=1:max(c)    
+%     Xi=X(:,c==i);    
+%     [Xi,gi]=sc_selectg(Xi,genelist);    
+%     si=s(c==i,:);
+%     si=mean(si);
+    %[Tct]=sc_celltypecaller(Xi,gi,[],'species',species,'organ',organ);
+    %ctxt=Tct.C1_Cell_Type{1};    
+    ptsSelected=c==i;
+    [Tct]=local_celltypebrushed(X,genelist,s,ptsSelected,...
+          speciestag,organtag,databasetag);
+    ctxt=Tct.C1_Cell_Type;
+    
+%     waitbar(1,f,'Finishing');
+%     pause(1);
+%     close(f);
+    
+        [indx,tf] = listdlg('PromptString',{'Select cell type',...
+        '',''},'SelectionMode','single','ListString',ctxt);
+        if tf==1
+            ctxt=Tct.C1_Cell_Type{indx};
+        else
+            return;
+        end
+            
+            hold on
+            ctxt=strrep(ctxt,'_','\_');            
+            if size(s,2)>=3
+                    %scatter3(s(ptsSelected,1),s(ptsSelected,2),s(ptsSelected,3),'x');
+                    si=mean(s(ptsSelected,:));
+                    text(si(:,1),si(:,2),si(:,3),sprintf('%s',ctxt),...
+                         'fontsize',10,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');
+            elseif size(s,2)==2
+                    %scatter(s(ptsSelected,1),s(ptsSelected,2),'x')                    
+                    si=mean(s(ptsSelected,:));
+                    text(si(:,1),si(:,2),sprintf('%s',ctxt),...
+                         'fontsize',10,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');
+            end
+            hold off
+end
+end 
+
+function Brushed2Cluster(~,~)
+    answer = questdlg('Make a new cluster out of brushed cells?');
+    if ~strcmp(answer,'Yes'), return; end  
+    ptsSelected = logical(h.BrushData.');
+    if ~any(ptsSelected)
+        warndlg("No cells are selected.");
+        return;
+    end
+    c(ptsSelected)=max(c)+1;
+    [ax,bx]=view();
+    [h]=i_gscatter3(s,c,methodid);
+    view(ax,bx);   
+end
+
 function Brush4Celltypes(~,~)
     answer = questdlg('Label cell type of brushed cells?');
     if ~strcmp(answer,'Yes'), return; end
@@ -389,9 +517,67 @@ function drawtrajectory(~,~)
                 return;
         end
         
+end
+
+function ClusterCells(~,~)
+    answer = questdlg('Cluster cells?');
+    if ~strcmp(answer,'Yes'), return; end
+
+    answer = questdlg('Which method?','Select Algorithm',...
+        'kmeans','snndpc','kmeans');
+    if strcmpi(answer,'kmeans')
+        methodtag="kmeans";
+    else
+        methodtag="snndpc";
+    end 
+    
+    prompt = {'Enter number of cluster (K):'};
+    dlgtitle = 'Input';
+    dims = [1 35];
+    definput = {'10'};
+    answer = inputdlg(prompt,dlgtitle,dims,definput);
+    try
+        k=str2double(answer{1});
+    catch
+        return;
     end
+    hold off
+    c=sc_clustshow(s,k,'type',methodtag,'plotit',false);
+    i_gscatter3(s,c);
+    answer = questdlg('Label clusters?');
+    if strcmp(answer,'Yes')
+        i_labelclusters;
+    end    
+end
+
+function txt=i_myupdatefcnx(~,event_obj)
+    % pos = event_obj.Position;
+    idx = event_obj.DataIndex;
+    txt =sprintf('class=%d',c(idx));
+end
+
+function i_labelclusters
+    hold on
+    for i=1:max(c)
+        si=s(c==i,:);
+        si=mean(si);
+        if size(s,2)==3
+            text(si(:,1),si(:,2),si(:,3),sprintf('%d',i),...
+                'fontsize',20,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');
+        else
+            text(si(:,1),si(:,2),sprintf('%d',i),...
+                'fontsize',20,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');
+        end
+    end
+    hold off
+end
 
 end
+
+
+
+
+
 
 
 

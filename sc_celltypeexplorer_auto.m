@@ -4,16 +4,20 @@ function [OUT]=sc_celltypeexplorer_auto(X,genelist,s,varargin)
    addRequired(p,'X',@isnumeric);
    addRequired(p,'genelist',@isstring);
    addRequired(p,'s',@isnumeric);
+   
    addOptional(p,'k',6,@(x) (x > 0) && isnumeric(x) && isscalar(x));
    addOptional(p,'species',"mouse",@(x) (isstring(x)|ischar(x))&ismember(lower(string(x)),["human","mouse"]));
    addOptional(p,'organ',"all",@(x) (isstring(x)|ischar(x))&ismember(lower(string(x)),["all","heart","immunesystem","brain","pancreas"]));
-   addOptional(p,'method',"alona",@(x) (isstring(x)|ischar(x))&ismember(lower(string(x)),["alona","singler"]));
+   addOptional(p,'tmethod',"alona",@(x) (isstring(x)|ischar(x))&ismember(lower(string(x)),["alona","singler"]));
+   addOptional(p,'cmethod',"snndpc",@(x) (isstring(x)|ischar(x))&ismember(lower(string(x)),["snndpc","kmeans","kmedoids","dbscan","spectclust"]));
    parse(p,X,genelist,s,varargin{:});
    k=p.Results.k;
    species=p.Results.species;
    organ=p.Results.organ;
-   method=p.Results.method;
-    c=sc_clustshow(s,k,'plotit',false,'type','snndpc');
+   tmethod=p.Results.tmethod;
+   cmethod=p.Results.cmethod;
+    % cmethod='snndpc';
+    c=sc_clustshow(s,k,'plotit',false,'type',cmethod);
     OUT.c=c;
     OUT.X=cell(k,1);
     OUT.type=cell(k,1);
@@ -39,7 +43,7 @@ for i=1:max(c)
     si=s(c==i,:);
     si=mean(si);
     
-    switch lower(method)
+    switch lower(tmethod)
         case 'alona'
             [Tct]=sc_celltypecaller(Xi,gi,[],'species',species,'organ',organ);
             ctxt=Tct.C1_Cell_Type{1};

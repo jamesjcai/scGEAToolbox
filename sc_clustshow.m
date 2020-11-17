@@ -5,7 +5,9 @@ function [id]=sc_clustshow(s,k,varargin)
 if nargin<2, k=6; end
 p = inputParser;
 defaultType = 'kmeans';
-validTypes = {'kmeans','kmedoids','dbscan','spectclust','snndpc'};
+validTypes = {'kmeans','kmedoids','dbscan',...
+    'spectclust','snndpc'};
+% 
 checkType = @(x) any(validatestring(x,validTypes));
 
 validationFcn = @(x) (x > 0) && isnumeric(x) && isscalar(x);
@@ -36,11 +38,13 @@ if plotit
 % elseif size(s,2)==2
 %     scatter(s(:,1),s(:,2),10,id);
 % end
-disp('ok');
-pause
+
+% disp('ok');
+% pause
+
 i_gscatter3(s,id);
 hold on
-for i=1:k    
+for i=1:k
     si=s(id==i,:);
     si=mean(si);
     if size(s,2)==3
