@@ -6,8 +6,8 @@ cellidx=(1:size(X,2))';
 
 x=s(:,1);
 y=s(:,2);
-
-if iscell(c)||isstring(c), c=grp2idx(c); end
+cL=[];
+if iscell(c)||isstring(c), [c,cL]=grp2idx(c); end
 kc=numel(unique(c));
 
 if size(s,2)>=3, z=s(:,3); end
@@ -31,7 +31,6 @@ switch methodid
         end
 end
 %}
-
 title(sprintf('%d x %d\n[genes x cells]',size(X,1),size(X,2)))
 if kc<=20
     colormap(lines(kc));
@@ -40,11 +39,11 @@ else
     a(1,:)=[.8 .8 .8];
     colormap(a);
 end
-
 % add_3dcamera;
 
 dt=datacursormode;
 dt.UpdateFcn = {@i_myupdatefcnx};
+
 
 tb = uitoolbar(hFig);
 pt3 = uipushtool(tb,'Separator','off');
@@ -67,25 +66,26 @@ pt3a.ClickedCallback = @ShowCellStats;
 
 ptlabelclusters = uitoggletool(tb,'Separator','on');
 [img,map] = imread(fullfile(matlabroot,...
-             'toolbox','matlab','icons','plotpicker-contour.gif'));
-map(map(:,1)+map(:,2)+map(:,3)==3) = NaN;  % Convert white pixels => transparent background
+             'toolbox','matlab','icons','plotpicker-scatter.gif'));
+% map(map(:,1)+map(:,2)+map(:,3)==3) = NaN;  % Convert white pixels => transparent background
 ptImage = ind2rgb(img,map);
 ptlabelclusters.CData = ptImage;
 ptlabelclusters.Tooltip = 'Label clusters';
 ptlabelclusters.ClickedCallback = @LabelClusters;
 
+
 ptaddcluster = uipushtool(tb,'Separator','on');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
-            'private','plotpicker-comet.gif'));
+            'private','plotpicker-pzmap.gif'));
 ptImage = ind2rgb(img,map);
 ptaddcluster.CData = ptImage;
 ptaddcluster.Tooltip = 'Add brushed cells to a new cluster';
 ptaddcluster.ClickedCallback = @Brushed2Cluster;
 
 
-ptcluster = uipushtool(tb,'Separator','on');
-[img,map] = imread(fullfile(matlabroot,...
-             'toolbox','matlab','icons','plotpicker-stairs.gif'));
+ptcluster = uipushtool(tb,'Separator','off');
+[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+            'private','plotpicker-dendrogram.gif'));
 ptImage = ind2rgb(img,map);
 ptcluster.CData = ptImage;
 ptcluster.Tooltip = 'Clustering cells';
@@ -94,14 +94,11 @@ ptcluster.ClickedCallback = @ClusterCells;
 
 ptclustertype = uipushtool(tb,'Separator','on');
 [img,map] = imread(fullfile(matlabroot,...
-             'toolbox','matlab','icons','plotpicker-stairs.gif'));
+             'toolbox','matlab','icons','plotpicker-contour.gif'));
 ptImage = ind2rgb(img,map);
 ptclustertype.CData = ptImage;
 ptclustertype.Tooltip = 'Cell types of clusters';
 ptclustertype.ClickedCallback = @CellTypeClusters;
-
-
-
 
 pt5 = uipushtool(tb,'Separator','on');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
@@ -116,7 +113,7 @@ pt4 = uipushtool(tb,'Separator','on');
 % [img,map] = imread(fullfile(matlabroot,...
 %             'toolbox','matlab','icons','plotpicker-stairs.gif'));
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
-            'private','label.gif'));
+            'private','plotpicker-kagi.gif'));
 ptImage = ind2rgb(img,map);
 pt4.CData = ptImage;
 pt4.Tooltip = 'Marker genes of brushed cells';
@@ -124,8 +121,8 @@ pt4.ClickedCallback = @Brush4Markers;
 
 
 ptpseudotime = uipushtool(tb,'Separator','on');
-[img,map] = imread(fullfile(matlabroot,...
-            'toolbox','matlab','icons','plotpicker-plot.gif'));
+[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+            'private','plotpicker-comet.gif'));
 ptImage = ind2rgb(img,map);
 ptpseudotime.CData = ptImage;
 ptpseudotime.Tooltip = 'Plot pseudotime trajectory';
@@ -136,7 +133,7 @@ pt2 = uipushtool(tb,'Separator','on');
 %[img,map] = imread(fullfile(matlabroot,...
 %            'toolbox','matlab','icons','plotpicker-scatter.gif'));
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
-            'private','removepoints.gif'));  
+            'private','plotpicker-qqplot.gif'));  
 ptImage = ind2rgb(img,map);
 pt2.CData = ptImage;
 pt2.Tooltip = 'Delete selected cells';
@@ -155,7 +152,7 @@ pt.ClickedCallback = @SaveX;
 
 pt5 = uipushtool(tb,'Separator','on');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
-            'private','brush.gif'));
+            'private','plotpicker-geobubble.gif'));
 ptImage = ind2rgb(img,map);
 pt5.CData = ptImage;
 pt5.Tooltip = 'Refresh';
@@ -172,6 +169,10 @@ add_3dcamera(tb);
 function RefreshAll(~,~)
     hold off
     h=i_gscatter3(s,c,methodid);
+    title(sprintf('%d x %d\n[genes x cells]',size(X,1),size(X,2)))
+    ptlabelclusters.State='off';
+    tb.Visible='off';
+    tb.Visible='on';
 end
 
 function CellTypeClusters(~,~)
@@ -249,7 +250,8 @@ function Brushed2Cluster(~,~)
     c(ptsSelected)=max(c)+1;
     [ax,bx]=view();
     [h]=i_gscatter3(s,c,methodid);
-    view(ax,bx);   
+    title(sprintf('%d x %d\n[genes x cells]',size(X,1),size(X,2)))
+    view(ax,bx);
 end
 
 function Brush4Celltypes(~,~)
@@ -441,7 +443,7 @@ end
 function DeleteSelectedCells(~,~)
     answer = questdlg('Delete selected cells?');
     if ~strcmp(answer,'Yes'), return; end 
-    ptsSelected = logical(h.BrushData.');
+    ptsSelected = logical(h.BrushData.');    
     if ~any(ptsSelected)
         warndlg("No cells are selected.");
         return;
@@ -553,17 +555,12 @@ function ClusterCells(~,~)
     end
     hold off
     c=sc_clustshow(s,k,'type',methodtag,'plotit',false);
-    i_gscatter3(s,c);
+    h=i_gscatter3(s,c);
+    title(sprintf('%d x %d\n[genes x cells]',size(X,1),size(X,2)))
     answer = questdlg('Label clusters?');
     if strcmp(answer,'Yes')
         i_labelclusters;
     end    
-end
-
-function txt=i_myupdatefcnx(~,event_obj)
-    % pos = event_obj.Position;
-    idx = event_obj.DataIndex;
-    txt =sprintf('class=%d',c(idx));
 end
 
 function LabelClusters(src,~)
@@ -572,22 +569,39 @@ function LabelClusters(src,~)
             [ax,bx]=view();
             hold off
             h=i_gscatter3(s,c,methodid);
+            title(sprintf('%d x %d\n[genes x cells]',size(X,1),size(X,2)))
             view(ax,bx);
         else
             i_labelclusters;
         end
 end
 
+function [txt]=i_myupdatefcnx(~,event_obj)
+    % pos = event_obj.Position;
+    idx = event_obj.DataIndex;
+    txt =sprintf('class=%d',c(idx));
+end
+
 function i_labelclusters
+    stxtyes=false;
+    if ~isempty(cL)
+        answer = questdlg('Label with index or text?','Select Format','Index','Text','Text');
+        if strcmp(answer,'Text'), stxtyes=true; end
+    end    
     hold on
     for i=1:max(c)
         si=s(c==i,:);
-        si=mean(si);
+        si=mean(si);        
+        if stxtyes
+            stxt=sprintf('%s',cL{i});
+        else
+            stxt=sprintf('%d',i);
+        end
         if size(s,2)==3
-            text(si(:,1),si(:,2),si(:,3),sprintf('%d',i),...
+            text(si(:,1),si(:,2),si(:,3),stxt,...
                 'fontsize',20,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');
         else
-            text(si(:,1),si(:,2),sprintf('%d',i),...
+            text(si(:,1),si(:,2),stxt,...
                 'fontsize',20,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');
         end
     end
@@ -595,10 +609,6 @@ function i_labelclusters
 end
 
 end
-
-
-
-
 
 
 
@@ -625,5 +635,6 @@ elseif strcmpi(database,'panglaodb')
     [Tct]=sc_celltypecaller(Xi,gi,[],'species',species,'organ',organ);
 end
 end
+
 
 

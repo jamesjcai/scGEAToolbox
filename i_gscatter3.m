@@ -26,7 +26,7 @@ switch methodid
         end
 end
 
-if kc<=15
+if kc<=50
     colormap(lines(kc));
 else
     a=colormap('autumn');
