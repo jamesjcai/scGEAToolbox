@@ -1,6 +1,6 @@
-function [t,s]=run_garnett(X)
-% Run Monocle pseudotime analysis
-%[t_mono,s_mono]=run_monocle(X,true);
+function [c]=run_garnett(X)
+
+% https://cole-trapnell-lab.github.io/garnett/docs_m3/#installing-garnett
 
 if isempty(FindRpath)
     error('Rscript.exe is not found.');

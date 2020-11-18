@@ -33,7 +33,7 @@ end
 %}
 
 title(sprintf('%d x %d\n[genes x cells]',size(X,1),size(X,2)))
-if kc<=15
+if kc<=20
     colormap(lines(kc));
 else
     a=colormap('autumn');
@@ -53,7 +53,7 @@ pt3 = uipushtool(tb,'Separator','off');
 ptImage = ind2rgb(img,map);
 pt3.CData = ptImage;
 pt3.Tooltip = 'Select a gene to show expression';
-pt3.ClickedCallback = @showmkgene;
+pt3.ClickedCallback = @ShowMarkerGene;
 
 pt3a = uipushtool(tb,'Separator','off');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
@@ -61,12 +61,22 @@ pt3a = uipushtool(tb,'Separator','off');
 ptImage = ind2rgb(img,map);
 pt3a.CData = ptImage;
 pt3a.Tooltip = 'Show cell states';
-pt3a.ClickedCallback = @ShowCellstats;
+pt3a.ClickedCallback = @ShowCellStats;
 
+% ------------------
+
+ptlabelclusters = uitoggletool(tb,'Separator','on');
+[img,map] = imread(fullfile(matlabroot,...
+             'toolbox','matlab','icons','plotpicker-contour.gif'));
+map(map(:,1)+map(:,2)+map(:,3)==3) = NaN;  % Convert white pixels => transparent background
+ptImage = ind2rgb(img,map);
+ptlabelclusters.CData = ptImage;
+ptlabelclusters.Tooltip = 'Label clusters';
+ptlabelclusters.ClickedCallback = @LabelClusters;
 
 ptaddcluster = uipushtool(tb,'Separator','on');
-[img,map] = imread(fullfile(matlabroot,...
-             'toolbox','matlab','icons','plotpicker-stairs.gif'));
+[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+            'private','plotpicker-comet.gif'));
 ptImage = ind2rgb(img,map);
 ptaddcluster.CData = ptImage;
 ptaddcluster.Tooltip = 'Add brushed cells to a new cluster';
@@ -347,7 +357,7 @@ function Brush4Markers(~,~)
 %                 mkexplorer_clustid),markerlist);
 end
 
-function showmkgene(~,~)
+function ShowMarkerGene(~,~)
     answer = questdlg('Select a gene to show expression?');
     if ~strcmp(answer,'Yes'), return; end
     gsorted=sort(genelist);
@@ -366,7 +376,7 @@ function showmkgene(~,~)
     end
 end
 
-function ShowCellstats(~,~)
+function ShowCellStats(~,~)
     answer = questdlg('Show cell states?');
     if ~strcmp(answer,'Yes'), return; end    
     [indx,tf] = listdlg('PromptString',{'Select statistics',...
@@ -554,6 +564,18 @@ function txt=i_myupdatefcnx(~,event_obj)
     % pos = event_obj.Position;
     idx = event_obj.DataIndex;
     txt =sprintf('class=%d',c(idx));
+end
+
+function LabelClusters(src,~)
+        state = src.State;
+        if strcmp(state,'off')
+            [ax,bx]=view();
+            hold off
+            h=i_gscatter3(s,c,methodid);
+            view(ax,bx);
+        else
+            i_labelclusters;
+        end
 end
 
 function i_labelclusters
