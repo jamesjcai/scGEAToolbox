@@ -6,8 +6,8 @@ cellidx=(1:size(X,2))';
 
 x=s(:,1);
 y=s(:,2);
-cL=[];
-if iscell(c)||isstring(c), [c,cL]=grp2idx(c); end
+[c,cL]=grp2idx(c);
+% if iscell(c)||isstring(c), [c,cL]=grp2idx(c); end
 kc=numel(unique(c));
 
 if size(s,2)>=3, z=s(:,3); end
@@ -98,7 +98,7 @@ ptclustertype = uipushtool(tb,'Separator','on');
 ptImage = ind2rgb(img,map);
 ptclustertype.CData = ptImage;
 ptclustertype.Tooltip = 'Cell types of clusters';
-ptclustertype.ClickedCallback = @CellTypeClusters;
+ptclustertype.ClickedCallback = @DetermineCellTypeClusters;
 
 pt5 = uipushtool(tb,'Separator','on');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
@@ -126,7 +126,7 @@ ptpseudotime = uipushtool(tb,'Separator','on');
 ptImage = ind2rgb(img,map);
 ptpseudotime.CData = ptImage;
 ptpseudotime.Tooltip = 'Plot pseudotime trajectory';
-ptpseudotime.ClickedCallback = @drawtrajectory;
+ptpseudotime.ClickedCallback = @DrawTrajectory;
 
 
 pt2 = uipushtool(tb,'Separator','on');
@@ -158,8 +158,7 @@ pt5.CData = ptImage;
 pt5.Tooltip = 'Refresh';
 pt5.ClickedCallback = @RefreshAll;
 
-
-add_3dcamera(tb);
+add_3dcamera(tb,'AllCells');
 
 %warning off
 %WinOnTop(hFig,true);
@@ -175,7 +174,7 @@ function RefreshAll(~,~)
     tb.Visible='on';
 end
 
-function CellTypeClusters(~,~)
+function DetermineCellTypeClusters(~,~)
     answer = questdlg('Label cell type of clusters?');
     if ~strcmp(answer,'Yes'), return; end
     
@@ -204,12 +203,13 @@ for i=1:max(c)
 %     si=s(c==i,:);
 %     si=mean(si);
     %[Tct]=sc_celltypecaller(Xi,gi,[],'species',species,'organ',organ);
-    %ctxt=Tct.C1_Cell_Type{1};    
+    %ctxt=Tct.C1_Cell_Type{1};
+    
     ptsSelected=c==i;
     [Tct]=local_celltypebrushed(X,genelist,s,ptsSelected,...
           speciestag,organtag,databasetag);
     ctxt=Tct.C1_Cell_Type;
-    
+
 %     waitbar(1,f,'Finishing');
 %     pause(1);
 %     close(f);
@@ -221,8 +221,8 @@ for i=1:max(c)
         else
             return;
         end
-            
             hold on
+            cL{i}=ctxt;
             ctxt=strrep(ctxt,'_','\_');            
             if size(s,2)>=3
                     %scatter3(s(ptsSelected,1),s(ptsSelected,2),s(ptsSelected,3),'x');
@@ -237,6 +237,8 @@ for i=1:max(c)
             end
             hold off
 end
+    export2wsdlg({'Save cell type list to variable named:'},...
+        {'c_celltype'},{cL(c)});
 end 
 
 function Brushed2Cluster(~,~)
@@ -478,7 +480,7 @@ function SaveX(~,~)
     %                  psexplorer_timeid),t);
 end
 
-function drawtrajectory(~,~)
+function DrawTrajectory(~,~)
         answer = questdlg('Which method?','Select Algorithm',...
             'splinefit (fast)','princurve (slow)',...
             'splinefit (fast)');
@@ -553,8 +555,16 @@ function ClusterCells(~,~)
     catch
         return;
     end
+    
+    f = waitbar(0,'Please wait...');
+    pause(.5)
+    waitbar(.67,f,'Processing your data');    
     hold off
     c=sc_clustshow(s,k,'type',methodtag,'plotit',false);
+    [c,cL]=grp2idx(c);
+    waitbar(1,f,'Finishing');
+    pause(1);
+    close(f);
     h=i_gscatter3(s,c);
     title(sprintf('%d x %d\n[genes x cells]',size(X,1),size(X,2)))
     answer = questdlg('Label clusters?');
@@ -579,15 +589,33 @@ end
 function [txt]=i_myupdatefcnx(~,event_obj)
     % pos = event_obj.Position;
     idx = event_obj.DataIndex;
-    txt =sprintf('class=%d',c(idx));
+    if isempty(cL)
+        txt =sprintf('cluster=%d',c(idx));
+    else
+        txt =sprintf('cluster=%d, type=%s',c(idx),cL{c(idx)});
+    end
 end
 
 function i_labelclusters
     stxtyes=false;
     if ~isempty(cL)
         answer = questdlg('Label with index or text?','Select Format','Index','Text','Text');
-        if strcmp(answer,'Text'), stxtyes=true; end
-    end    
+        if strcmp(answer,'Text')
+            stxtyes=true; 
+        end
+    end
+    prompt = {'Enter font size (1-30):'};
+    dlgtitle = 'Input';
+    dims = [1 35];
+    definput = {'15'};
+    if stxtyes, definput = {'10'}; end
+    answer = inputdlg(prompt,dlgtitle,dims,definput);
+    try
+        fsz=round(str2double(answer{1}));
+    catch
+        return;
+    end
+    if ~(fsz>=1 && fsz<=30), return; end
     hold on
     for i=1:max(c)
         si=s(c==i,:);
@@ -599,13 +627,14 @@ function i_labelclusters
         end
         if size(s,2)==3
             text(si(:,1),si(:,2),si(:,3),stxt,...
-                'fontsize',20,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');
+                'fontsize',fsz,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');
         else
             text(si(:,1),si(:,2),stxt,...
-                'fontsize',20,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');
+                'fontsize',fsz,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');
         end
     end
     hold off
+    helpdlg(sprintf('%d clusters are labelled.',numel(cL)));
 end
 
 end
