@@ -15,23 +15,8 @@ if size(s,2)>=3, z=s(:,3); end
 hFig = figure('Name','sc_scatter');
 hAx = axes('Parent',hFig);
 [h]=i_gscatter3(s,c,methodid);
-%{
-switch methodid
-    case 1
-        if size(s,2)==2
-           h=scatter(hAx,x,y,10,c);
-        elseif size(s,2)>=3
-           h=scatter3(hAx,x,y,z,10,c);
-        end
-    case 2
-        if size(s,2)==2
-            h=gscatter(x,y,c,[],[],10);
-        elseif size(s,2)>=3
-            h=gscatter3b(x,y,z,c);
-        end
-end
-%}
 title(sprintf('%d x %d\n[genes x cells]',size(X,1),size(X,2)))
+
 if kc<=20
     colormap(lines(kc));
 else
@@ -657,13 +642,10 @@ end
 Xi=X(:,i);
 [Xi,gi]=sc_selectg(Xi,genelist);
 if strcmpi(database,'clustermole')
-    disp('Using clustermole marker database')
+    %disp('Using clustermole marker database')
     [Tct]=sc_celltypecaller_new(Xi,gi,[],'species',species);
 elseif strcmpi(database,'panglaodb')
-    disp('Using panglaodb marker database')
+    %disp('Using panglaodb marker database')
     [Tct]=sc_celltypecaller(Xi,gi,[],'species',species,'organ',organ);
 end
 end
-
-
-

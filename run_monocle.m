@@ -45,7 +45,8 @@ cd(oldpth);
 
 if plotit
     if ~isempty(s) && ~isempty(t)
-        i_myscatter(s,t);
+        % i_myscatter(s,t);
+        i_gscatter3(s,t);
     end
 end
 
