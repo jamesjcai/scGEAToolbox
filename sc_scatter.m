@@ -2,7 +2,8 @@ function sc_scatter(X,genelist,s,c,methodid)
 
 if nargin<5, methodid=1; end
 if nargin<4 || isempty(c), c=ones(size(s,1),1); end
-
+if nargin<3 || isempty(s), s=randn(size(X,2),3); end
+    
 cellidx=(1:size(X,2))';
 c_cell_cycle_phase=[];
 c_cell_type=[];
@@ -118,8 +119,6 @@ ptpseudotime.ClickedCallback = @DrawTrajectory;
 
 
 pt2 = uipushtool(tb,'Separator','on');
-%[img,map] = imread(fullfile(matlabroot,...
-%            'toolbox','matlab','icons','plotpicker-scatter.gif'));
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
             'private','plotpicker-qqplot.gif'));  
 ptImage = ind2rgb(img,map);
@@ -128,14 +127,21 @@ pt2.Tooltip = 'Delete selected cells';
 pt2.ClickedCallback = @DeleteSelectedCells;
 
 pt = uipushtool(tb,'Separator','off');
-% [img,map] = imread(fullfile(matlabroot,...
-%             'toolbox','matlab','icons','plotpicker-plot.gif'));
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
             'private','export.gif'));         
 ptImage = ind2rgb(img,map);
 pt.CData = ptImage;
 pt.Tooltip = 'Export & save data';
 pt.ClickedCallback = @SaveX;
+
+
+pt5 = uipushtool(tb,'Separator','on');
+[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+            'private','plotpicker-geobubble.gif'));
+ptImage = ind2rgb(img,map);
+pt5.CData = ptImage;
+pt5.Tooltip = 'Embedding';
+pt5.ClickedCallback = @EmbeddingAgain;
 
 
 pt5 = uipushtool(tb,'Separator','on');
@@ -164,11 +170,32 @@ function RefreshAll(~,~)
     colorbar off
 end
 
+function EmbeddingAgain(~,~)
+    answer = questdlg('Embedding cells?');
+    if ~strcmp(answer,'Yes'), return; end
+    answer = questdlg('Which method?','Select method','tSNE','Phate','UMAP','Phate');
+         f = waitbar(0,'Please wait...');
+     pause(.5)
+     waitbar(.67,f,'Processing your data');
+    if strcmp(answer,'tSNE')
+        s=sc_tsne(X,3,false);
+    elseif strcmp(answer,'Phate')
+        s=run_phate(X,3,false);
+    elseif strcmp(answer,'UMAP')
+        s=run_umap(X,false);
+    end
+        waitbar(1,f,'Finishing');
+    pause(1);
+    close(f);
+    RefreshAll;
+end
+
 function DetermineCellTypeClusters(~,~)
     answer = questdlg('Label cell type of clusters?');
     if ~strcmp(answer,'Yes'), return; end
     
     answer = questdlg('Which species?','Select Species','Mouse','Human','Mouse');
+
     if ~strcmp(answer,'Human')
         speciestag="human";
     else
@@ -439,12 +466,13 @@ function SelectCellsByClass(~,~)
             'Cell type','Cell Cycle Phase'});
     if tf==1
         if size(s,1)==size(X,2)
+        [ax,bx]=view();
         switch indx
             case 1
-                [indxx,tfx] = listdlg('PromptString',{'Select a gene',...
-                '',''},'SelectionMode','single','ListString',cL);
+                [indxx,tfx] = listdlg('PromptString',{'Select groups',...
+                '',''},'SelectionMode','multiple','ListString',cL);
                 if tfx==1
-                    i=c==indxx;
+                    i=ismember(c,indxx);
                     [ax,bx]=view();                
                     sc_scatter(X(:,i),genelist,s(i,:),c(i));
                     view(ax,bx);
@@ -452,13 +480,13 @@ function SelectCellsByClass(~,~)
             case 2
                 if ~isempty(c_cluster_id)
                     [ci,cLi]=grp2idx(c_cluster_id);
-                    [indxx,tfx] = listdlg('PromptString',{'Select a gene',...
-                    '',''},'SelectionMode','single','ListString',string(cLi));
+                    [indxx,tfx] = listdlg('PromptString',{'Select groups',...
+                    '',''},'SelectionMode','multiple','ListString',string(cLi));
                     if tfx==1
-                        i=ci==indxx;
-                        %[ax,bx]=view();                
+                        i=ismember(ci,indxx);
+                        [ax,bx]=view();                
                         sc_scatter(X(:,i),genelist,s(i,:),ci(i));
-                        %view(ax,bx);
+                        view(ax,bx);
                     end
                 else
                     errordlg('Undefined c_cluster_id')                    
@@ -466,13 +494,11 @@ function SelectCellsByClass(~,~)
             case 3                
                 if ~isempty(c_cell_type)
                     [ci,cLi]=grp2idx(c_cell_type);
-                    [indxx,tfx] = listdlg('PromptString',{'Select a gene',...
-                    '',''},'SelectionMode','single','ListString',string(cLi));
-                    if tfx==1
-                        i=ci==indxx;
-                        %[ax,bx]=view();                
-                        sc_scatter(X(:,i),genelist,s(i,:),ci(i));
-                        %view(ax,bx);
+                    [indxx,tfx] = listdlg('PromptString',{'Select groups',...
+                    '',''},'SelectionMode','multiple','ListString',string(cLi));
+                    if tfx==1                        
+                        i=ismember(ci,indxx);                        
+                        sc_scatter(X(:,i),genelist,s(i,:),ci(i));                        
                     else
                         errordlg('Undefined c_cell_type')
                     end
@@ -480,18 +506,17 @@ function SelectCellsByClass(~,~)
             case 4
                 if ~isempty(c_cell_cycle_phase)
                     [ci,cLi]=grp2idx(c_cell_cycle_phase);
-                    [indxx,tfx] = listdlg('PromptString',{'Select a gene',...
-                    '',''},'SelectionMode','single','ListString',string(cLi));
-                    if tfx==1
-                        i=ci==indxx;
-                        %[ax,bx]=view();                
-                        sc_scatter(X(:,i),genelist,s(i,:),ci(i));
-                        %view(ax,bx);
+                    [indxx,tfx] = listdlg('PromptString',{'Select groups',...
+                    '',''},'SelectionMode','multiple','ListString',string(cLi));
+                    if tfx==1                        
+                        i=ismember(ci,indxx);                                       
+                        sc_scatter(X(:,i),genelist,s(i,:),ci(i));                        
                     end
                 else
                     errordlg('Undefined c_cell_cycle_phase')
                 end
         end
+        view(ax,bx);
         else
             errordlg('ERROR: size(s,1)!=size(X,2)')
         end
