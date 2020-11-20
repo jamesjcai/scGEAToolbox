@@ -140,7 +140,7 @@ pt.ClickedCallback = @SaveX;
 
 pt5 = uipushtool(tb,'Separator','on');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
-            'private','plotpicker-geobubble.gif'));
+            'private','plotpicker-geobubble2.gif'));
 ptImage = ind2rgb(img,map);
 pt5.CData = ptImage;
 pt5.Tooltip = 'Refresh';
@@ -160,6 +160,8 @@ function RefreshAll(~,~)
     ptlabelclusters.State='off';
     tb.Visible='off';
     tb.Visible='on';
+    legend off
+    colorbar off
 end
 
 function DetermineCellTypeClusters(~,~)
@@ -404,11 +406,16 @@ function ShowCellStats(~,~)
                 ttxt=sprintf('%s|',string(tx));
         end
             [ax,bx]=view();
-            figure;            
-            i_gscatter3(s,c_cell_cycle_phase,2);
-            hc=colorbar;
-            hc.Label.String=ttxt;
+            delete(h);
+            if indx==3               
+                h=i_gscatter3(s,c_cell_cycle_phase,2);
+            else
+                h=i_gscatter3(s,ci);
+            end
             view(ax,bx);
+            title(sprintf('%d x %d\n[genes x cells]',size(X,1),size(X,2)));            
+            hc=colorbar;
+            hc.Label.String=ttxt;            
             if indx==3
                 colormap(lines(3)); 
                 pause(2);
