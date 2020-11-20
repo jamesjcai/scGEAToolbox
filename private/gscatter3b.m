@@ -13,7 +13,7 @@ function [h]=gscatter3b(x,y,z,group,clr,sym,siz,doleg,xnam,ynam,znam)
 cgroups = unique(group);
 cmap = lines(size(cgroups,1));
 % Input variables
-if (nargin < 5),  clr = lines(max(size(cgroups))); end
+if (nargin < 5) || isempty(clr),  clr = lines(max(size(cgroups))); end
 if (nargin < 6) || isempty(sym), sym = '.'; end
 if (nargin < 7),  siz = 10;           end
 if (nargin < 8),  doleg = 'on';        end

@@ -1,30 +1,25 @@
 function sc_scatter(X,genelist,s,c,methodid)
 
 if nargin<5, methodid=1; end
-if nargin<4, c=ones(size(s,1),1); end
-cellidx=(1:size(X,2))';
+if nargin<4 || isempty(c), c=ones(size(s,1),1); end
 
-x=s(:,1);
-y=s(:,2);
+cellidx=(1:size(X,2))';
+c_cell_cycle_phase=[];
+c_cell_type=[];
+c_cluster_id=[];
 [c,cL]=grp2idx(c);
-% if iscell(c)||isstring(c), [c,cL]=grp2idx(c); end
+c_custom_id=string(cL(c));
+
 kc=numel(unique(c));
 
-if size(s,2)>=3, z=s(:,3); end
+%x=s(:,1);
+%y=s(:,2);
+%if size(s,2)>=3, z=s(:,3); end
 
 hFig = figure('Name','sc_scatter');
 hAx = axes('Parent',hFig);
 [h]=i_gscatter3(s,c,methodid);
-title(sprintf('%d x %d\n[genes x cells]',size(X,1),size(X,2)))
-
-if kc<=20
-    colormap(lines(kc));
-else
-    a=colormap('autumn');
-    a(1,:)=[.8 .8 .8];
-    colormap(a);
-end
-% add_3dcamera;
+title(sprintf('%d x %d\n[genes x cells]',size(X,1),size(X,2)));
 
 dt=datacursormode;
 dt.UpdateFcn = {@i_myupdatefcnx};
@@ -46,6 +41,14 @@ ptImage = ind2rgb(img,map);
 pt3a.CData = ptImage;
 pt3a.Tooltip = 'Show cell states';
 pt3a.ClickedCallback = @ShowCellStats;
+
+pt3a = uipushtool(tb,'Separator','off');
+[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+            'private','plotpicker-pointfig.gif'));         
+ptImage = ind2rgb(img,map);
+pt3a.CData = ptImage;
+pt3a.Tooltip = 'Select cells by class';
+pt3a.ClickedCallback = @SelectCellsByClass;
 
 % ------------------
 
@@ -151,7 +154,7 @@ add_3dcamera(tb,'AllCells');
 
 % =========================
 function RefreshAll(~,~)
-    hold off
+    delete(h);
     h=i_gscatter3(s,c,methodid);
     title(sprintf('%d x %d\n[genes x cells]',size(X,1),size(X,2)))
     ptlabelclusters.State='off';
@@ -222,8 +225,9 @@ for i=1:max(c)
             end
             hold off
 end
-    export2wsdlg({'Save cell type list to variable named:'},...
-        {'c_celltype'},{cL(c)});
+c_cell_type=string(cL(c));
+export2wsdlg({'Save cell type list to variable named:'},...
+    {'c_celltype'},{c_cell_type});
 end 
 
 function Brushed2Cluster(~,~)
@@ -239,6 +243,7 @@ function Brushed2Cluster(~,~)
     [h]=i_gscatter3(s,c,methodid);
     title(sprintf('%d x %d\n[genes x cells]',size(X,1),size(X,2)))
     view(ax,bx);
+    [c,cL]=grp2idx(c);
 end
 
 function Brush4Celltypes(~,~)
@@ -264,7 +269,6 @@ function Brush4Celltypes(~,~)
     else
         databasetag="panglaodb";
     end    
-    
     f = waitbar(0,'Please wait...');
     pause(.5)
     waitbar(.67,f,'Processing your data');
@@ -296,7 +300,7 @@ function Brush4Celltypes(~,~)
                     text(si(:,1),si(:,2),sprintf('%s',ctxt),...
                          'fontsize',10,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');
             end
-            hold off       
+            hold off
 end 
 
 function Brush4Markers(~,~)
@@ -386,41 +390,101 @@ function ShowCellStats(~,~)
                 ttxt="mtDNA%";
             case 3
                 % ttxt="Cell Cycle Phase";
-                f = waitbar(0,'Please wait...');
-                pause(.5)
-                waitbar(.67,f,'Processing your data');                
-                [cix]=run_cellcycle(X,genelist);
-                waitbar(1,f,'Finishing');
-                pause(1)
-                close(f)
-                [ci,tx]=grp2idx(cix);
+                if isempty(c_cell_cycle_phase)
+                    f = waitbar(0,'Please wait...');
+                    pause(.5)
+                    waitbar(.67,f,'Processing your data');                
+                    [cix]=run_cellcycle(X,genelist);
+                    c_cell_cycle_phase=string(cix);
+                    waitbar(1,f,'Finishing');
+                    pause(1)
+                    close(f)
+                end
+                [~,tx]=grp2idx(c_cell_cycle_phase);
                 ttxt=sprintf('%s|',string(tx));
         end
-            
             [ax,bx]=view();
-                figure;
-                if size(s,2)==2
-                    scatter(s(:,1),s(:,2),5,ci,'filled');
-                else
-                    scatter3(s(:,1),s(:,2),s(:,3),5,ci,'filled');
+            figure;            
+            i_gscatter3(s,c_cell_cycle_phase,2);
+            hc=colorbar;
+            hc.Label.String=ttxt;
+            view(ax,bx);
+            if indx==3
+                colormap(lines(3)); 
+                pause(2);
+                labels = {'Save cell cycle phase to variable named:'}; 
+                vars = {'c_cell_cycle_phase'};
+                values = {c_cell_cycle_phase};
+                export2wsdlg(labels,vars,values);
+            end
+        else
+            errordlg('ERROR: size(s,1)!=size(X,2)')
+        end
+    end
+end
+
+function SelectCellsByClass(~,~)
+    answer = questdlg('Select cells by class?');
+    if ~strcmp(answer,'Yes'), return; end    
+    [indx,tf] = listdlg('PromptString',{'Select statistics','',''},...    
+    'SelectionMode','single','ListString',...
+     {'Custom input (C)','Cluster id',...
+            'Cell type','Cell Cycle Phase'});
+    if tf==1
+        if size(s,1)==size(X,2)
+        switch indx
+            case 1
+                [indxx,tfx] = listdlg('PromptString',{'Select a gene',...
+                '',''},'SelectionMode','single','ListString',cL);
+                if tfx==1
+                    i=c==indxx;
+                    [ax,bx]=view();                
+                    sc_scatter(X(:,i),genelist,s(i,:),c(i));
+                    view(ax,bx);
                 end
-                title(ttxt);
-%               axx=colormap('autumn');
-%               % axx(1,:)=[.8 .8 .8];
-%               colormap(axx);
-                hc=colorbar;
-                hc.Label.String=ttxt;
-                % ylabel(hc,ttxt,'Rotation',270)
-                view(ax,bx);
-                
-                if indx==3
-                    colormap(lines(3)); 
-                    pause(2);
-                    labels = {'Save cell cycle phase to variable named:'}; 
-                    vars = {'c_cell_cycle_phase'};
-                    values = {cix};
-                    msgfig=export2wsdlg(labels,vars,values);
-                end                
+            case 2
+                if ~isempty(c_cluster_id)
+                    [ci,cLi]=grp2idx(c_cluster_id);
+                    [indxx,tfx] = listdlg('PromptString',{'Select a gene',...
+                    '',''},'SelectionMode','single','ListString',string(cLi));
+                    if tfx==1
+                        i=ci==indxx;
+                        %[ax,bx]=view();                
+                        sc_scatter(X(:,i),genelist,s(i,:),ci(i));
+                        %view(ax,bx);
+                    end
+                else
+                    errordlg('Undefined c_cluster_id')                    
+                end
+            case 3                
+                if ~isempty(c_cell_type)
+                    [ci,cLi]=grp2idx(c_cell_type);
+                    [indxx,tfx] = listdlg('PromptString',{'Select a gene',...
+                    '',''},'SelectionMode','single','ListString',string(cLi));
+                    if tfx==1
+                        i=ci==indxx;
+                        %[ax,bx]=view();                
+                        sc_scatter(X(:,i),genelist,s(i,:),ci(i));
+                        %view(ax,bx);
+                    else
+                        errordlg('Undefined c_cell_type')
+                    end
+                end
+            case 4
+                if ~isempty(c_cell_cycle_phase)
+                    [ci,cLi]=grp2idx(c_cell_cycle_phase);
+                    [indxx,tfx] = listdlg('PromptString',{'Select a gene',...
+                    '',''},'SelectionMode','single','ListString',string(cLi));
+                    if tfx==1
+                        i=ci==indxx;
+                        %[ax,bx]=view();                
+                        sc_scatter(X(:,i),genelist,s(i,:),ci(i));
+                        %view(ax,bx);
+                    end
+                else
+                    errordlg('Undefined c_cell_cycle_phase')
+                end
+        end
         else
             errordlg('ERROR: size(s,1)!=size(X,2)')
         end
@@ -434,21 +498,23 @@ function DeleteSelectedCells(~,~)
     if ~any(ptsSelected)
         warndlg("No cells are selected.");
         return;
-    end    
+    end
     data = h.BrushData;
     ptsSelected=find(data);
     X(:,ptsSelected)=[];
     s(ptsSelected,:)=[];
-    c(ptsSelected)=[];
+    c(ptsSelected)=[];    
     cellidx(ptsSelected)=[];
-    
-    [a,b]=view();
-    if size(s,2)>=3
-        h=scatter3(hAx, s(:,1),s(:,2),s(:,3),10);
-    elseif size(s,2)==2
-        h=scatter(hAx, s(:,1),s(:,2),10);
+    if ~isempty(c_cell_cycle_phase)
+        c_cell_cycle_phase(ptsSelected)=[];
     end
-    view(a,b);
+    if ~isempty(c_cell_type)
+        c_cell_type(ptsSelected)=[];
+    end
+    [ax,bx]=view();
+    h=i_gscatter3(s,c);
+    title(sprintf('%d x %d\n[genes x cells]',size(X,1),size(X,2)));
+    view(ax,bx);
 end
 
 function SaveX(~,~)
@@ -545,8 +611,8 @@ function ClusterCells(~,~)
     pause(.5)
     waitbar(.67,f,'Processing your data');    
     hold off
-    c=sc_clustshow(s,k,'type',methodtag,'plotit',false);
-    [c,cL]=grp2idx(c);
+    c_cluster_id=sc_clustshow(s,k,'type',methodtag,'plotit',false);
+    [c,cL]=grp2idx(c_cluster_id);
     waitbar(1,f,'Finishing');
     pause(1);
     close(f);
@@ -555,7 +621,7 @@ function ClusterCells(~,~)
     answer = questdlg('Label clusters?');
     if strcmp(answer,'Yes')
         i_labelclusters;
-    end    
+    end
 end
 
 function LabelClusters(src,~)

@@ -20,18 +20,18 @@ switch methodid
         end
     case 2
         if size(s,2)==2
-            h=gscatter(x,y,c,[],[],10);
+            h=gscatter(x,y,c,[],[],5);
         elseif size(s,2)>=3
-            h=gscatter3b(x,y,z,c);
+            h=gscatter3b(x,y,z,c,[],[],5);
         end
 end
 
 if kc<=50
     colormap(lines(kc));
 else
-    a=colormap('autumn');
-    a(1,:)=[.8 .8 .8];
-    colormap(a);
+    cx=colormap('autumn');
+    cx(1,:)=[.8 .8 .8];
+    colormap(cx);
 end
 % add_3dcamera;
 end
