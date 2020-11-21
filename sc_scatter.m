@@ -133,6 +133,15 @@ pt4.ClickedCallback = @Brush4Markers;
 
 ptpseudotime = uipushtool(UitoolbarHandle,'Separator','on');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
+            'private','plotpicker-arxtimeseries.gif'));
+ptImage = ind2rgb(img,map);
+ptpseudotime.CData = ptImage;
+ptpseudotime.Tooltip = 'Run pseudotime analysis (Monocle)';
+ptpseudotime.ClickedCallback = @RunTrajectoryAnalysis;
+
+ptpseudotime = uipushtool(UitoolbarHandle,...
+    'Separator','off');
+[img,map] = imread(fullfile(fileparts(which(mfilename)),...
             'private','plotpicker-comet.gif'));
 ptImage = ind2rgb(img,map);
 ptpseudotime.CData = ptImage;
@@ -185,13 +194,15 @@ guidata( FigureHandle, handles ) ;
  
 set( FigureHandle, 'visible', 'on' ) ; 
 
-if nargout > 0 ; 
+if nargout > 0
     varargout{1} = FigureHandle ; 
 end
 
 % =========================
 function RefreshAll(~,~)
+    %cla(hAx);    
     delete(h);
+    pause(.5);
     h=i_gscatter3(s,c,methodid);
     title(sprintf('%d x %d\n[genes x cells]',size(X,1),size(X,2)))
     ptlabelclusters.State='off';
@@ -372,7 +383,7 @@ function Brush4Markers(~,~)
         return;
     end
     
-    prompt = {'Enter number of panels {1,2..10}'};
+    prompt = {'Enter number of panels (1-10)'};
     dlgtitle = 'Panel of 9 Genes';
     answer = inputdlg(prompt,dlgtitle,[1 40],{'1'});
     if isempty(answer)
@@ -652,6 +663,45 @@ function DrawTrajectory(~,~)
         
 end
 
+
+function RunTrajectoryAnalysis(~,~)
+    answer = questdlg('Run pseudotime analysis (Monocle)?');
+    if ~strcmp(answer,'Yes'), return; end
+    
+    f = waitbar(0,'Please wait...');
+    pause(.5)
+    waitbar(.67,f,'Processing your data');
+    [t_mono,s_mono]=run_monocle(X);         waitbar(1,f,'Finishing');
+    pause(1)
+    close(f)   
+    
+
+        answer = questdlg('View Monocle DDRTree?', ...
+            'Pseudotime View', ...
+            'Yes','No','Yes');
+        switch answer
+            case 'Yes'
+            [ax,bx]=view();
+            cla(hAx);
+            s=s_mono; c=t_mono;
+            h=i_gscatter3(s,c);
+            title(sprintf('%d x %d\n[genes x cells]',size(X,1),size(X,2)))
+            view(ax,bx);
+            colormap winter
+            hc=colorbar;
+            hc.Label.String='Pseudotime';            
+        end
+
+    labels = {'Save pseudotime T to variable named:',...
+              'Save embedding S to variable named:'}; 
+    vars = {'t_mono','s_mono'};
+    values = {t_mono, s_mono};
+    msgfig=export2wsdlg(labels,vars,values);
+    % uiwait(msgfig)        
+        
+end
+
+
 function ClusterCells(~,~)
     answer = questdlg('Cluster cells?');
     if ~strcmp(answer,'Yes'), return; end
@@ -694,9 +744,9 @@ end
 
 function LabelClusters(src,~)
         state = src.State;
-        if strcmp(state,'off')
+        if strcmp(state,'off')            
             [ax,bx]=view();
-            hold off
+            cla(hAx);
             h=i_gscatter3(s,c,methodid);
             title(sprintf('%d x %d\n[genes x cells]',size(X,1),size(X,2)))
             view(ax,bx);
@@ -718,7 +768,8 @@ end
 function i_labelclusters
     stxtyes=false;
     if ~isempty(cL)
-        answer = questdlg('Label with index or text?','Select Format','Index','Text','Text');
+        answer = questdlg(sprintf('Label %d groups with index or text?',numel(cL)),...
+            'Select Format','Index','Text','Text');
         if strcmp(answer,'Text')
             stxtyes=true; 
         end
@@ -753,7 +804,7 @@ function i_labelclusters
         end
     end
     hold off
-    helpdlg(sprintf('%d clusters are labelled.',numel(cL)));
+    % helpdlg(sprintf('%d clusters are labelled.',numel(cL)));
 end
 
 end
