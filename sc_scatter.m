@@ -4,7 +4,7 @@ if nargin<5, methodid=1; end
 if nargin<4 || isempty(c), c=ones(size(s,1),1); end
 if nargin<3 || isempty(s), s=randn(size(X,2),3); end
     
-cellidx=(1:size(X,2))';
+c_cell_idx=(1:size(X,2))';
 c_cell_cycle_phase=[];
 c_cell_type=[];
 c_cluster_id=[];
@@ -524,19 +524,24 @@ function SelectCellsByClass(~,~)
 end
 
 function DeleteSelectedCells(~,~)
-    answer = questdlg('Delete selected cells?');
-    if ~strcmp(answer,'Yes'), return; end 
     ptsSelected = logical(h.BrushData.');    
     if ~any(ptsSelected)
         warndlg("No cells are selected.");
         return;
+    end    
+    answer = questdlg('Delete cells?','',...
+       'Selected','Unselected','Cancel','Selected');
+    if strcmp(answer,'Cancel'), return; end 
+    if strcmp(answer,'Unselected')
+        ptsSelected=~ptsSelected; 
     end
-    data = h.BrushData;
-    ptsSelected=find(data);
+    answer2 = questdlg(sprintf('Delete %s cells?',...
+        lower(answer)));
+    if ~strcmp(answer2,'Yes'), return; end 
     X(:,ptsSelected)=[];
     s(ptsSelected,:)=[];
     c(ptsSelected)=[];    
-    cellidx(ptsSelected)=[];
+    c_cell_idx(ptsSelected)=[];
     if ~isempty(c_cell_cycle_phase)
         c_cell_cycle_phase(ptsSelected)=[];
     end
@@ -557,7 +562,7 @@ function SaveX(~,~)
               'Save group C to variable named:',...
               'Save cell index CELLIDX to variable named:'}; 
     vars = {'X_scatter','s_scatter','c_scatter','cellidx_scatter'};
-    values = {X,s,c,cellidx};
+    values = {X,s,c,c_cell_idx};
     msgfig=export2wsdlg(labels,vars,values);
     %         assignin('base',sprintf('psexplorerT%d',...
     %                  psexplorer_timeid),t);
