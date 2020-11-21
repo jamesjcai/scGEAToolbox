@@ -1,4 +1,4 @@
-function sc_scatter(X,genelist,s,c,methodid)
+function varargout = sc_scatter(X,genelist,s,c,methodid)
 
 if nargin<5, methodid=1; end
 if nargin<4 || isempty(c), c=ones(size(s,1),1); end
@@ -17,8 +17,24 @@ kc=numel(unique(c));
 %y=s(:,2);
 %if size(s,2)>=3, z=s(:,3); end
 
-hFig = figure('Name','sc_scatter');
-hAx = axes('Parent',hFig);
+
+% get the size of the screen . 
+set( 0,'Units','pixels' ) ; 
+RefScreenSize = get( 0,'ScreenSize' ) ; 
+ 
+ 
+% generate a new figure . 
+FigureHandle = figure('Name','sc_scatter');
+set( FigureHandle, 'Tag' , '' , ... 
+    'Units' , 'pixels' , ... 
+    'Visible' , 'off' , ... 
+    'PaperPosition' , [0.634517      6.34517      20.3046      15.2284] , ... 
+    'PaperSize' , [20.984      29.6774] , ... 
+    'Position' , [232  258  560  420] ) ; 
+movegui( FigureHandle, 'center' ) ; 
+
+
+hAx = axes('Parent',FigureHandle);
 [h]=i_gscatter3(s,c,methodid);
 title(sprintf('%d x %d\n[genes x cells]',size(X,1),size(X,2)));
 
@@ -26,8 +42,14 @@ dt=datacursormode;
 dt.UpdateFcn = {@i_myupdatefcnx};
 
 
-tb = uitoolbar(hFig);
-pt3 = uipushtool(tb,'Separator','off');
+% generate a uitoolbar . 
+UitoolbarHandle = uitoolbar( 'Parent', FigureHandle ) ; 
+set( UitoolbarHandle, 'Tag' , 'FigureToolBar' , ... 
+    'HandleVisibility' , 'off' , ... 
+    'Visible' , 'on' ) ; 
+
+% UitoolbarHandle = uitoolbar(FigureHandle);
+pt3 = uipushtool(UitoolbarHandle,'Separator','off');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
             'private','list.gif'));         
 ptImage = ind2rgb(img,map);
@@ -35,7 +57,7 @@ pt3.CData = ptImage;
 pt3.Tooltip = 'Select a gene to show expression';
 pt3.ClickedCallback = @ShowMarkerGene;
 
-pt3a = uipushtool(tb,'Separator','off');
+pt3a = uipushtool(UitoolbarHandle,'Separator','off');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
             'private','list2.gif'));         
 ptImage = ind2rgb(img,map);
@@ -43,7 +65,7 @@ pt3a.CData = ptImage;
 pt3a.Tooltip = 'Show cell states';
 pt3a.ClickedCallback = @ShowCellStats;
 
-pt3a = uipushtool(tb,'Separator','off');
+pt3a = uipushtool(UitoolbarHandle,'Separator','off');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
             'private','plotpicker-pointfig.gif'));         
 ptImage = ind2rgb(img,map);
@@ -53,7 +75,7 @@ pt3a.ClickedCallback = @SelectCellsByClass;
 
 % ------------------
 
-ptlabelclusters = uitoggletool(tb,'Separator','on');
+ptlabelclusters = uitoggletool(UitoolbarHandle,'Separator','on');
 [img,map] = imread(fullfile(matlabroot,...
              'toolbox','matlab','icons','plotpicker-scatter.gif'));
 % map(map(:,1)+map(:,2)+map(:,3)==3) = NaN;  % Convert white pixels => transparent background
@@ -63,7 +85,7 @@ ptlabelclusters.Tooltip = 'Label clusters';
 ptlabelclusters.ClickedCallback = @LabelClusters;
 
 
-ptaddcluster = uipushtool(tb,'Separator','on');
+ptaddcluster = uipushtool(UitoolbarHandle,'Separator','on');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
             'private','plotpicker-pzmap.gif'));
 ptImage = ind2rgb(img,map);
@@ -72,7 +94,7 @@ ptaddcluster.Tooltip = 'Add brushed cells to a new cluster';
 ptaddcluster.ClickedCallback = @Brushed2Cluster;
 
 
-ptcluster = uipushtool(tb,'Separator','off');
+ptcluster = uipushtool(UitoolbarHandle,'Separator','off');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
             'private','plotpicker-dendrogram.gif'));
 ptImage = ind2rgb(img,map);
@@ -81,7 +103,7 @@ ptcluster.Tooltip = 'Clustering cells';
 ptcluster.ClickedCallback = @ClusterCells;
 
 
-ptclustertype = uipushtool(tb,'Separator','on');
+ptclustertype = uipushtool(UitoolbarHandle,'Separator','on');
 [img,map] = imread(fullfile(matlabroot,...
              'toolbox','matlab','icons','plotpicker-contour.gif'));
 ptImage = ind2rgb(img,map);
@@ -89,7 +111,7 @@ ptclustertype.CData = ptImage;
 ptclustertype.Tooltip = 'Cell types of clusters';
 ptclustertype.ClickedCallback = @DetermineCellTypeClusters;
 
-pt5 = uipushtool(tb,'Separator','on');
+pt5 = uipushtool(UitoolbarHandle,'Separator','on');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
             'private','brush.gif'));
 ptImage = ind2rgb(img,map);
@@ -98,7 +120,7 @@ pt5.Tooltip = 'Cell types of brushed cells';
 pt5.ClickedCallback = @Brush4Celltypes;
 
 
-pt4 = uipushtool(tb,'Separator','on');
+pt4 = uipushtool(UitoolbarHandle,'Separator','on');
 % [img,map] = imread(fullfile(matlabroot,...
 %             'toolbox','matlab','icons','plotpicker-stairs.gif'));
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
@@ -109,7 +131,7 @@ pt4.Tooltip = 'Marker genes of brushed cells';
 pt4.ClickedCallback = @Brush4Markers;
 
 
-ptpseudotime = uipushtool(tb,'Separator','on');
+ptpseudotime = uipushtool(UitoolbarHandle,'Separator','on');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
             'private','plotpicker-comet.gif'));
 ptImage = ind2rgb(img,map);
@@ -118,7 +140,7 @@ ptpseudotime.Tooltip = 'Plot pseudotime trajectory';
 ptpseudotime.ClickedCallback = @DrawTrajectory;
 
 
-pt2 = uipushtool(tb,'Separator','on');
+pt2 = uipushtool(UitoolbarHandle,'Separator','on');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
             'private','plotpicker-qqplot.gif'));  
 ptImage = ind2rgb(img,map);
@@ -126,7 +148,7 @@ pt2.CData = ptImage;
 pt2.Tooltip = 'Delete selected cells';
 pt2.ClickedCallback = @DeleteSelectedCells;
 
-pt = uipushtool(tb,'Separator','off');
+pt = uipushtool(UitoolbarHandle,'Separator','off');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
             'private','export.gif'));         
 ptImage = ind2rgb(img,map);
@@ -135,7 +157,7 @@ pt.Tooltip = 'Export & save data';
 pt.ClickedCallback = @SaveX;
 
 
-pt5 = uipushtool(tb,'Separator','on');
+pt5 = uipushtool(UitoolbarHandle,'Separator','on');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
             'private','plotpicker-geobubble.gif'));
 ptImage = ind2rgb(img,map);
@@ -144,7 +166,7 @@ pt5.Tooltip = 'Embedding';
 pt5.ClickedCallback = @EmbeddingAgain;
 
 
-pt5 = uipushtool(tb,'Separator','on');
+pt5 = uipushtool(UitoolbarHandle,'Separator','on');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
             'private','plotpicker-geobubble2.gif'));
 ptImage = ind2rgb(img,map);
@@ -152,11 +174,20 @@ pt5.CData = ptImage;
 pt5.Tooltip = 'Refresh';
 pt5.ClickedCallback = @RefreshAll;
 
-add_3dcamera(tb,'AllCells');
+add_3dcamera(UitoolbarHandle,'AllCells');
 
 %warning off
 %WinOnTop(hFig,true);
 %warning on
+
+handles = guihandles( FigureHandle ) ; 
+guidata( FigureHandle, handles ) ; 
+ 
+set( FigureHandle, 'visible', 'on' ) ; 
+
+if nargout > 0 ; 
+    varargout{1} = FigureHandle ; 
+end
 
 % =========================
 function RefreshAll(~,~)
@@ -164,8 +195,8 @@ function RefreshAll(~,~)
     h=i_gscatter3(s,c,methodid);
     title(sprintf('%d x %d\n[genes x cells]',size(X,1),size(X,2)))
     ptlabelclusters.State='off';
-    tb.Visible='off';
-    tb.Visible='on';
+    UitoolbarHandle.Visible='off';
+    UitoolbarHandle.Visible='on';
     legend off
     colorbar off
 end
