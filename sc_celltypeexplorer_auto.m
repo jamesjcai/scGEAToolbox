@@ -17,13 +17,13 @@ function [OUT]=sc_celltypeexplorer_auto(X,genelist,s,varargin)
    tmethod=p.Results.tmethod;
    cmethod=p.Results.cmethod;
     % cmethod='snndpc';
-    c=sc_clustshow(s,k,'plotit',false,'type',cmethod);
+    c=sc_cluster_s(s,k,'plotit',false,'type',cmethod);
     OUT.c=c;
     OUT.X=cell(k,1);
     OUT.type=cell(k,1);
 
     %rng(1234)
-    %c=sc_clustshow(s,6,'type','kmedoids','plotit',false);
+    %c=sc_cluster_s(s,6,'type','kmedoids','plotit',false);
     % K=max(c);    
     % figure;    
     if size(s,2)>=3

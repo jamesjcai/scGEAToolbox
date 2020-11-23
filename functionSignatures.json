@@ -1,5 +1,5 @@
 {
-"sc_clustshow":
+"sc_cluster_s":
 {
 	"inputs":
 	[
@@ -147,11 +147,12 @@
         {"name":"genelist", "kind":"required", "type":["string","vector"]}
 	]
 },
-"sc_cluster":
+"sc_cluster_x":
 {
 	"inputs":
 	[		
         {"name":"X", "kind":"required", "type":"numeric"},
+        {"name":"k","kind":"required","type":["numeric","choices=[3,6,9]"]},
         {"name":"type", "kind":"namevalue", "type":"choices={'simlr','soptsc','sc3'}"}
 	]
 },

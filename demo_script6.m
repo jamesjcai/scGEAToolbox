@@ -18,7 +18,7 @@ openfig('example_data/markergeneident_demo.fig');
 %
 figure;
 rng(1234)
-cluster_kmedoids=sc_clustshow(s_tsne,6,'type','kmedoids');
+cluster_kmedoids=sc_cluster_s(s_tsne,6,'type','kmedoids');
 
 %% Identify marker genes for cluster #4 against other clusters
 %

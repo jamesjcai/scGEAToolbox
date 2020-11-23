@@ -731,7 +731,7 @@ function ClusterCells(~,~)
     pause(.5)
     waitbar(.67,f,'Processing your data');    
     hold off
-    c_cluster_id=sc_clustshow(s,k,'type',methodtag,'plotit',false);
+    c_cluster_id=sc_cluster_s(s,k,'type',methodtag,'plotit',false);
     [c,cL]=grp2idx(c_cluster_id);
     waitbar(1,f,'Finishing');
     pause(1);
