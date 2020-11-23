@@ -1,4 +1,6 @@
 function [X,genelist,celllist]=sc_read10xdir(selpath,coln)
+%Read files from a 10x Genomics cellranger output folder
+
 if nargin<2, coln=2; end
 if nargin<1, selpath = uigetdir; end
 fprintf('Processing %s...\n',selpath);

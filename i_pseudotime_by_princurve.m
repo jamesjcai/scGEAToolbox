@@ -1,4 +1,5 @@
 function [t,xyz1]=i_pseudotime_by_princurve(s,plotit)
+% adding pseudotime trajectory curve using princurve
 
 if nargin<2, plotit=false; end
 

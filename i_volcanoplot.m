@@ -1,4 +1,6 @@
 function i_volcanoplot(fc,pvals,genelist)
+%Vocano plot
+
 x=fc;
 y=-log10(pvals);
 [~,idx]=maxk(abs(y),30);

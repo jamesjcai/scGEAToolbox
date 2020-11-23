@@ -1,4 +1,5 @@
 function [G]=sc_knngraph(s,k,plotit,method)
+%Generate KNN group network from cell embeddings
 
 if nargin<4, method=1; end
 if nargin<3, plotit=false; end

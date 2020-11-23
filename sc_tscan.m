@@ -1,4 +1,5 @@
 function [t]=sc_tscan(X,varargin)
+%TSCAN - pseudotime analysis
 
 % ref: https://academic.oup.com/nar/article/44/13/e117/2457590
 % load example_data\example10xdata.mat

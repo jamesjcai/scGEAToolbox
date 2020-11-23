@@ -1,9 +1,10 @@
 function [Y0,Y1]=run_busseq(X0,X1)
 % BUSseq (Batch Effects Correction with Unknown Subtypes for scRNA seq)
-% is an R tool to correct batch effects in single-cell RNA-seq data. 
+
+% BUSseq is an R tool to correct batch effects in single-cell RNA-seq data. 
 % The BUSseq algorithm can also cluster cell types, correct for 
 % overdispersion, cell-specific sequencing depth, and dropout events.
-
+%
 % NCELLS=2000; NGENES=400;
 % X0=nbinrnd(20,0.98,NGENES,NCELLS);
 % X0=X0(:,sum(X0)>120);

@@ -1,4 +1,6 @@
 function sc_scattergenes(X,genelist,plottype,dofit)
+%Scatter plots for genes
+
 if nargin<2, genelist=[]; end
 if nargin<3, plottype='mean_cv'; end
 if nargin<4, dofit=false; end

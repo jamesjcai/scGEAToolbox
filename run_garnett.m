@@ -1,5 +1,6 @@
 function [c]=run_garnett(X)
-
+%Assigne cell type using Garnett/Monocle3 R package
+%
 % https://cole-trapnell-lab.github.io/garnett/docs_m3/#installing-garnett
 
 if isempty(FindRpath)

@@ -1,5 +1,6 @@
 function [T]=sc_celltypecaller_new(X,genelist,clusterid,varargin)
-
+%Assigne cell type using clustermole database
+%
 % using clustermole database
 % https://cran.r-project.org/web/packages/clustermole/vignettes/clustermole-intro.html
 % REF: 

@@ -1,4 +1,5 @@
 function [c]=run_cellcycle(X,genelist)
+%Run cell cycle analysis using R package Seurat
 
 if nargin<2, error("[c]=run_cellcycle(X,genelist)"); end
 

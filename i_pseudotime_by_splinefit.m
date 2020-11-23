@@ -1,4 +1,5 @@
 function [t,xyz1]=i_pseudotime_by_splinefit(xyz,dim,plotit,plotit2)
+% adding pseudotime trajectory curve using splinefit
 
 if nargin<4, plotit2=false; end
 if nargin<3, plotit=false; end

@@ -1,4 +1,6 @@
 function sc_explorer(X,genelist,s,varargin)
+%Single cell explorer
+%
 % pw1=fileparts(which(mfilename));
 % pth=fullfile(pw1,'thirdparty/backup');
 % addpath(pth);

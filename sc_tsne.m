@@ -1,4 +1,5 @@
 function s=sc_tsne(X,ndim,plotit,donorm,dolog1p,bygene,genelist)
+%tSNE embedding of cells
 
 %see also: RUN_PHATE, RUN_UMAP
 % s_phate=run_phate(X,3,true);
