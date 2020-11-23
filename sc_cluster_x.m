@@ -1,4 +1,4 @@
-function [c_clustid]=sc_cluster_x(X,varargin)
+function [c_clustid]=sc_cluster_x(X,k,varargin)
 
 p = inputParser;
 defaultType = 'simlr';
@@ -8,7 +8,7 @@ checkType = @(x) any(validatestring(x,validTypes));
 checkK = @(x) (x > 0) && isnumeric(x) && isscalar(x);
 
 addRequired(p,'X',@isnumeric);
-addRequired(p,'k',5,checkK);
+addRequired(p,'k',checkK);
 addOptional(p,'type',defaultType,checkType);
 
 parse(p,X,k,varargin{:})

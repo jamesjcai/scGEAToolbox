@@ -92,6 +92,7 @@ ptShowClu.CData = ptImage;
 ptShowClu.Tooltip = 'Show clusters individually';
 ptShowClu.ClickedCallback = @ShowClustersPop;
 
+% ------------------ clustering
 
 ptaddcluster = uipushtool(UitoolbarHandle,'Separator','on');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
@@ -101,23 +102,23 @@ ptaddcluster.CData = ptImage;
 ptaddcluster.Tooltip = 'Add brushed cells to a new cluster';
 ptaddcluster.ClickedCallback = @Brushed2Cluster;
 
-
 ptcluster = uipushtool(UitoolbarHandle,'Separator','off');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
             'private','plotpicker-dendrogram.gif'));
 ptImage = ind2rgb(img,map);
 ptcluster.CData = ptImage;
-ptcluster.Tooltip = 'Clustering cells';
-ptcluster.ClickedCallback = @ClusterCells;
+ptcluster.Tooltip = 'Clustering using using embedding S';
+ptcluster.ClickedCallback = @ClusterCellsS;
 
-
-ptclustertype = uipushtool(UitoolbarHandle,'Separator','on');
-[img,map] = imread(fullfile(matlabroot,...
-             'toolbox','matlab','icons','plotpicker-contour.gif'));
+ptcluster = uipushtool(UitoolbarHandle,'Separator','off');
+[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+            'private','plotpicker-gscatter.gif'));
 ptImage = ind2rgb(img,map);
-ptclustertype.CData = ptImage;
-ptclustertype.Tooltip = 'Cell types of clusters';
-ptclustertype.ClickedCallback = @DetermineCellTypeClusters;
+ptcluster.CData = ptImage;
+ptcluster.Tooltip = 'Clustering using expression matrix X';
+ptcluster.ClickedCallback = @ClusterCellsX;
+
+% -------------
 
 pt5 = uipushtool(UitoolbarHandle,'Separator','on');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
@@ -126,6 +127,15 @@ ptImage = ind2rgb(img,map);
 pt5.CData = ptImage;
 pt5.Tooltip = 'Cell types of brushed cells';
 pt5.ClickedCallback = @Brush4Celltypes;
+
+ptclustertype = uipushtool(UitoolbarHandle,'Separator','off');
+[img,map] = imread(fullfile(matlabroot,...
+             'toolbox','matlab','icons','plotpicker-contour.gif'));
+ptImage = ind2rgb(img,map);
+ptclustertype.CData = ptImage;
+ptclustertype.Tooltip = 'Cell types of clusters';
+ptclustertype.ClickedCallback = @DetermineCellTypeClusters;
+
 
 
 pt4 = uipushtool(UitoolbarHandle,'Separator','on');
@@ -183,7 +193,7 @@ pt5.Tooltip = 'Embedding';
 pt5.ClickedCallback = @EmbeddingAgain;
 
 
-pt5 = uipushtool(UitoolbarHandle,'Separator','on');
+pt5 = uipushtool(UitoolbarHandle,'Separator','off');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
             'private','plotpicker-geobubble2.gif'));
 ptImage = ind2rgb(img,map);
@@ -699,12 +709,11 @@ function RunTrajectoryAnalysis(~,~)
               'Save embedding S to variable named:'}; 
     vars = {'t_mono','s_mono'};
     values = {t_mono, s_mono};
-    msgfig=export2wsdlg(labels,vars,values);
-    % uiwait(msgfig)        
+    export2wsdlg(labels,vars,values);          
         
 end
 
-function ClusterCells(~,~)
+function ClusterCellsS(~,~)
     answer = questdlg('Cluster cells?');
     if ~strcmp(answer,'Yes'), return; end
 
@@ -738,6 +747,60 @@ function ClusterCells(~,~)
     close(f);
     h=i_gscatter3(s,c);
     title(sprintf('%d x %d\n[genes x cells]',size(X,1),size(X,2)))
+    answer = questdlg('Label clusters?');
+    if strcmp(answer,'Yes')
+        i_labelclusters;
+    end
+end
+
+function ClusterCellsX(~,~)
+    answer = questdlg('Cluster cells using X?');
+    if ~strcmp(answer,'Yes'), return; end
+    methodtagv={'simlr','soptsc','sc3','sinnlrr'};
+    [indx,tf] = listdlg('PromptString',{'Select clustering program',...
+    '',''},'SelectionMode','single',...
+    'ListString',methodtagv);
+    if tf==1
+        prompt = {'Enter number of cluster (K):'};
+        dlgtitle = 'Input';
+        dims = [1 35];
+        definput = {'10'};
+        answerk = inputdlg(prompt,dlgtitle,dims,definput);
+        try
+            k=str2double(answerk{1});
+        catch
+            return;
+        end
+        methodtag=methodtagv{indx};
+    else
+        retrun;
+    end
+    
+    f = waitbar(0,'Please wait...');
+    pause(.5)
+    waitbar(.67,f,'Processing your data');
+    try
+        [c_cluster_id]=sc_cluster_x(X,k,'type',methodtag);
+    catch ME
+        close(f);        
+        errordlg(sprintf('%s: %s',...
+            ME.identifier,ME.message);
+        return;
+    end
+    [c,cL]=grp2idx(c_cluster_id);
+    waitbar(1,f,'Finishing');
+    pause(1);
+    close(f);
+    % hold off
+    delete(h);
+    h=i_gscatter3(s,c);
+    title(sprintf('%d x %d\n[genes x cells]',size(X,1),size(X,2)))
+    
+    labels = {'Save clusterid C to variable named:'}; 
+    vars = {sprintf('c_clusterid_%s',methodtag)};
+    values = {c_cluster_id};
+    msgfig=export2wsdlg(labels,vars,values);
+    uiwait(msgfig);
     answer = questdlg('Label clusters?');
     if strcmp(answer,'Yes')
         i_labelclusters;
