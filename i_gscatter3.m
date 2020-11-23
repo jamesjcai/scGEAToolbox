@@ -1,5 +1,6 @@
-function [h]=i_gscatter3(s,c,methodid)
+function [h]=i_gscatter3(s,c,methodid,targetc)
 
+if nargin<4, targetc=1; end
 if nargin<3, methodid=1; end
 if nargin<2, c=ones(size(s,1),1); end
 
@@ -17,7 +18,14 @@ switch methodid
            h=scatter(x,y,10,c);
         elseif size(s,2)>=3
            h=scatter3(x,y,z,10,c);
-        end
+        end        
+    case 3
+        h=i_gscatter3(s,c,1);
+        h.MarkerEdgeAlpha=0;
+        hold on
+        i=c==targetc;
+        h=i_gscatter3(s(i,:),c(i),1);
+        hold off
     case 2
         if size(s,2)==2
             h=gscatter(x,y,c,[],[],5);

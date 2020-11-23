@@ -84,6 +84,14 @@ ptlabelclusters.CData = ptImage;
 ptlabelclusters.Tooltip = 'Label clusters';
 ptlabelclusters.ClickedCallback = @LabelClusters;
 
+ptShowClu = uipushtool(UitoolbarHandle,'Separator','off');
+[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+            'private','plotpicker-geoscatter.gif'));         
+ptImage = ind2rgb(img,map);
+ptShowClu.CData = ptImage;
+ptShowClu.Tooltip = 'Show clusters individually';
+ptShowClu.ClickedCallback = @ShowClustersPop;
+
 
 ptaddcluster = uipushtool(UitoolbarHandle,'Separator','on');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
@@ -202,7 +210,7 @@ end
 function RefreshAll(~,~)
     %cla(hAx);    
     delete(h);
-    pause(.5);
+    % pause(.5);
     h=i_gscatter3(s,c,methodid);
     title(sprintf('%d x %d\n[genes x cells]',size(X,1),size(X,2)))
     ptlabelclusters.State='off';
@@ -415,10 +423,6 @@ function Brush4Markers(~,~)
             end
     export2wsdlg({'Save marker list to variable named:'},...
         {'g_markerlist'},{markerlist});
-    
-%             mkexplorer_clustid=mkexplorer_clustid+1;
-%             assignin('base',sprintf('mkexplorerL%d',...
-%                 mkexplorer_clustid),markerlist);
 end
 
 function ShowMarkerGene(~,~)
@@ -605,7 +609,7 @@ function SaveX(~,~)
               'Save cell index CELLIDX to variable named:'}; 
     vars = {'X_scatter','s_scatter','c_scatter','cellidx_scatter'};
     values = {X,s,c,c_cell_idx};
-    msgfig=export2wsdlg(labels,vars,values);
+    export2wsdlg(labels,vars,values);
     %         assignin('base',sprintf('psexplorerT%d',...
     %                  psexplorer_timeid),t);
 end
@@ -663,7 +667,6 @@ function DrawTrajectory(~,~)
         
 end
 
-
 function RunTrajectoryAnalysis(~,~)
     answer = questdlg('Run pseudotime analysis (Monocle)?');
     if ~strcmp(answer,'Yes'), return; end
@@ -700,7 +703,6 @@ function RunTrajectoryAnalysis(~,~)
     % uiwait(msgfig)        
         
 end
-
 
 function ClusterCells(~,~)
     answer = questdlg('Cluster cells?');
@@ -753,6 +755,44 @@ function LabelClusters(src,~)
         else
             i_labelclusters;
         end
+end
+
+function ShowClustersPop(~,~)
+    answer = questdlg('Show clusters in new figures?');
+    if ~strcmp(answer,'Yes'), return; end
+    
+    cmv=1:max(c);
+    idxx=cmv;
+    [cmx]=countmember(cmv,c);
+    answer = questdlg('Sort by size of cell groups?');
+    if strcmpi(answer,'Yes')        
+        [~,idxx]=sort(cmx,'descend');
+    end 
+    figure;
+    for k=1:9
+        if k<=max(c)
+            subplot(3,3,k);
+            i_gscatter3(s,c,3,cmv(idxx(k)));
+            title(sprintf('%s\n[%d cells (%.2f%%)]',...
+                cL{idxx(k)},cmx(idxx(k)),100*cmx(idxx(k))/length(c)));
+        end
+    end
+    
+    if ceil(max(c)/9)==2
+        figure;
+        for k=1:9
+            kk=k+9;
+            if kk<=max(c)
+                subplot(3,3,k);
+                i_gscatter3(s,c,3,cmv(idxx(kk)));
+                title(sprintf('%s\n[%d cells (%.2f%%)]',...
+                    cL{idxx(kk)},cmx(idxx(kk)),100*cmx(idxx(kk))/length(c)));
+            end
+        end
+    end
+    if ceil(max(c)/9)>2
+        warndlg('Group(s) #18 and above are not displayed');
+    end
 end
 
 function [txt]=i_myupdatefcnx(~,event_obj)

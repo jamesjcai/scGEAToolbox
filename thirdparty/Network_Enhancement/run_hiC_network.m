@@ -10,8 +10,8 @@ addpath('examples\HiC_Network\');
 % If you want to play with resolution 5K, you just need to change 1000 to
 % 5000 when you do the loading as below
 
-HiC_raw_resolution1K = load('mat_16_1000.txt'); % raw HiC contact network with resolution 1K
-label_resolution1K = load('class_16_1000.txt'); % labels for each node in HiC network with resolution 1K
+HiC_raw_resolution1K = load('examples/HiC_Network/mat_16_1000.txt'); % raw HiC contact network with resolution 1K
+label_resolution1K = load('examples/HiC_Network/class_16_1000.txt'); % labels for each node in HiC network with resolution 1K
 
 %%%enhance the network
 HiC_NE=Network_Enhancement(HiC_raw_resolution1K);
