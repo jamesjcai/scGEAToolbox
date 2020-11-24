@@ -22,3 +22,5 @@ thirdparty/R_BUSseq/input0.csv
 thirdparty/R_SingleR/input.txt
 thirdparty/R_fgsea/input.txt
 thirdparty/R_fgsea/input.txt
+thirdparty/R_scTypeGSEA/counts.txt
+thirdparty/R_FindAllMarkers/counts.txt

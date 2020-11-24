@@ -1,19 +1,4 @@
 function s=run_fitsne(X,ndim,plotit,donorm,dolog1p,bygene,genelist)
-%RUN_PHATE 
-%
-% PHATE is a data reduction method specifically designed for visualizing 
-% **high** dimensional data in **low** dimensional spaces. Details on 
-% this package can be found here https://github.com/KrishnaswamyLab/PHATE. 
-% For help, visit https://krishnaswamylab.org/get-help. For a more in 
-% depth discussion of the mathematics underlying PHATE, see the bioRxiv 
-% paper here: https://www.biorxiv.org/content/early/2017/12/01/120378.
-%
-% USAGE:
-% >>[X,genelist]=sc_readfile('example_data/GSM3044891_GeneExp.UMIs.10X1.txt');
-% >>[X,genelist]=sc_selectg(X,genelist);
-% >>figure; s1=run_phate(X,3,true,true,genelist);  % view genes
-% >>figure; s2=run_phate(X,3,true,false);          % view cells
-% >>figure; scatter3(s2(:,1),s2(:,2),s2(:,3),10,'filled'); % using output S
 
 if nargin<2, ndim=2; end
 if nargin<3, plotit=false; end

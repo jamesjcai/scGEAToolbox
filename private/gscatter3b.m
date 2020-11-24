@@ -25,16 +25,17 @@ a = gca;
 hold(a,'on')
 % call GSCATTER and capture output argument (handles to lines)
 h = gscatter(x, y, group,clr,sym,siz,doleg,xnam,ynam);
-for i = 1:max(size(cgroups))
-        if iscell(cgroups) || ischar(cgroups)
-            gi = find(strcmp(group,cgroups(i)));
+
+for i = 2:length(cgroups)
+        if iscell(cgroups) || ischar(cgroups) || isstring(cgroups)
+            gi = strcmp(group,cgroups(i));
         else
-            gi = find(group == cgroups(i));
+            gi = group == cgroups(i);
         end
     
         set(h(i), 'ZData', z( gi ));
 end
-zlabel(a,znam);    
+zlabel(a,znam);
 view(3)
 box on
 grid on

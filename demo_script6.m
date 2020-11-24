@@ -30,7 +30,8 @@ figure;
 for k=1:9
     g=gmarkers(k);
     subplot(3,3,k)
-    sc_cellscatter(s_tsne,log2(1+X(genelist==g,:)));
+    grp=log2(1+X(genelist==g,:));
+    scatter3(s_tsne(:,1),s_tsne(:,2),s_tsne(:,3),10,grp,'filled');
     title(g)
 end
 subplot(3,3,1)
