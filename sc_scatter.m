@@ -418,17 +418,12 @@ function Brush4Markers(~,~)
     pause(1);
     close(f);
     [ax,bx]=view();
-    for kkk=1:numfig
-        figure;
-        for kk=1:min([9,length(markerlist)])
-            subplot(3,3,kk)
-            sc_scattermarker(X,genelist,s,...
-                markerlist(kk+9*(kkk-1)),3,5,false);
-            view(ax,bx);
-        end
-    end
+    i_markergenespanel(X,genelist,s,...
+        markerlist,numfig,9,ax,bx,...
+        'Marker Genes for Selected Cells');
+    pause(2);
     export2wsdlg({'Save marker list to variable named:'},...
-    {'g_markerlist'},{markerlist});
+            {'g_markerlist'},{markerlist});
 end
 
 function ShowMarkerGene(~,~)
@@ -452,7 +447,8 @@ function ShowCellStats(~,~)
     [indx,tf] = listdlg('PromptString',{'Select statistics',...
     '',''},...    
     'SelectionMode','single',...
-    'ListString',{'Library Size','Mt-reads Ratio','Cell Cycle Phase'});
+    'ListString',{'Library Size','Mt-reads Ratio',...
+    'Mt-genes Expression','Cell Cycle Phase'});
     if tf==1        
         switch indx
             case 1
@@ -464,7 +460,23 @@ function ShowCellStats(~,~)
                 lbsz_mt=sum(X(i,:),1);
                 ci=lbsz_mt./lbsz;
                 ttxt="mtDNA%";
-            case 3   % "Cell Cycle Phase";
+            case 3
+                idx=startsWith(genelist,'mt-','IgnoreCase',true);
+                n=sum(idx);
+                if n>0
+                    [ax,bx]=view();
+                    if n<=9
+                        i_markergenespanel(X,genelist,s,...
+                            genelist(idx),[],9,ax,bx,'Mt-genes');
+                    else
+                        i_markergenespanel(X,genelist,s,...
+                            genelist(idx),[],16,ax,bx,'Mt-genes');
+                    end
+                else
+                    warndlg('No mt-genes found');
+                end
+                return;
+            case 4   % "Cell Cycle Phase";
                 if isempty(c_cell_cycle_phase)
                     f = waitbar(0,'Please wait...');
                     pause(.5)
@@ -486,7 +498,7 @@ function ShowCellStats(~,~)
             title(sprintf('%d x %d\n[genes x cells]',size(X,1),size(X,2)));
             hc=colorbar;
             hc.Label.String=ttxt;
-            if indx==3
+            if indx==4
                 labels = {'Save cell cycle phase to variable named:'};
                 vars = {'c_cell_cycle_phase'};
                 values = {c_cell_cycle_phase};

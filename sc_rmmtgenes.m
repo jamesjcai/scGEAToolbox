@@ -11,11 +11,11 @@ genelist=genelist(~idx);
 X=X(~idx,:);
 if sum(idx)>0
    if vebrose
-   fprintf('%d mt-genes found and removed.\n',sum(idx));
+    fprintf('%d mt-genes found and removed.\n',sum(idx));
    end
 else
    if vebrose
-   fprintf('No mt-genes found or removed.\n',sum(idx));
+    fprintf('No mt-genes found or removed.\n',sum(idx));
    end
 end
 if nargout>3
