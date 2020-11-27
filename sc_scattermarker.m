@@ -93,12 +93,13 @@ elseif isStringScalar(g) || ischar(g)
                 hFig.Position(3)=hFig.Position(3)*2;
                 view(h1,3);
         end
-                title(sprintf('%s\n(%s/%s = %.3f%% nonzero)',...
+                tx=title(sprintf('%s\n(%s/%s = %.3f%% nonzero)',...
                     g,...
                     num2bankScalar(sum(c>0)),...
                     num2bankScalar(numel(c)),...
                     100*sum(c>0)./numel(c)));
                    %pt = uipushtool(defaultToolbar);
+                   % tx.ButtonDownFcn=@dispgname;
       if showcam
                 hFig=gcf;
                 tb = uitoolbar(hFig);
@@ -117,6 +118,9 @@ elseif isStringScalar(g) || ischar(g)
         add_3dcamera(tb,g);
     end
 end
+%     function dispgname(~,~)
+%         disp(g);
+%     end
 end
 
 function selectcolormapeditor(~,~)

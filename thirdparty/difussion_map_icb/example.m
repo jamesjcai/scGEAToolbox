@@ -7,7 +7,7 @@ genes=Features.genes;
 thr=Features.thr;
 L=Features.L;
 
-censoredornot=1; %=1 if you want censoring otherwise set it to 0
+censoredornot=0; %=1 if you want censoring otherwise set it to 0
 t=1;
 msteps=10;
 stepsize=0.2;
