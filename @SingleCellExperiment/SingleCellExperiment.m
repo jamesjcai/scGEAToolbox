@@ -1,65 +1,84 @@
 classdef SingleCellExperiment
    properties
       X double {mustBeNumeric, mustBeFinite}
-      genelist 
-      drmethod {mustBeMember(drmethod,{'tsne','umap','phate'})} = 'tsne'
-      s (:,3)
+      g string
+      s (:,3) {mustBeNumeric, mustBeFinite}
       c
-      
-      c_cell_cycle_phase
-      c_cell_type
+      c_cell_cycle_phase_tx
+      c_cell_type_tx
       c_cluster_id
+      c_batch_id
+      c_cell_id
+      % drmethod {mustBeMember(drmethod,{'tsne','umap','phate'})} = 'tsne'
    end
-      properties (Dependent)
-      c_cell_idx
-   end 
+
    methods
-    function obj = SingleCellExperiment(X,genelist,s,c)
-        if nargin == 1
-            obj.X = X;
-            obj.genelist=string((1:size(X,1))');
-            obj.s=randn(size(X,2),3);
-            obj.c=ones(size(X,2),1);
-        elseif nargin==2
-            obj.X = X;
-            obj.genelist=genelist;
-            obj.s=randn(size(X,2),3);
-            obj.c=ones(size(X,2),1);
-        elseif nargin==3
-            obj.X = X;
-            obj.genelist=genelist;
-            obj.s=s;
-            obj.c=ones(size(X,2),1);
-        elseif nargin==4
-            obj.X = X;
-            obj.genelist=genelist;
-            obj.s=s;
-            obj.c=c;
-        end        
+    function obj = SingleCellExperiment(X,g,s,c)
+        if nargin<1, error('xxx'); end
+        if nargin<2, g=string(transpose(1:size(X,1))); end
+        if nargin<3, s=randn(size(X,2),3); end
+        if nargin<4, c=ones(size(X,2),1); end
+        obj.X = X;
+        obj.g=g;
+        obj.s=s;
+        obj.c=c;
+        obj.c_cell_id=transpose(1:size(X,2));
     end
     
-      function r = libsz(obj)
-         r = sum([obj.X]);
-      end
-      function r = norm(obj)
-         r = sc_norm(obj.X);
-      end
-      
-      function c_cell_idx=get.c_cell_idx(obj)
-          c_cell_idx=1:size(obj.X,2);
-      end
-   function obj = set.c_cell_idx(obj,~)
-      fprintf('%s%d\n','c_cell_idx is: ',obj.c_cell_idx(1:5))
-      error('You cannot set the c_cell_idx property');
-   end      
+    function r = libsz(obj)
+     r = sum([obj.X]);
+    end
+    function r = norm(obj)
+     r = sc_norm(obj.X);
+    end
+    
+    function r=numcells(obj)
+        r=size(obj.X,2);
+    end
+    
+    function r=numgenes(obj)
+        r=size(obj.X,1);
+    end
 
-   function disp(td)
-      fprintf(1,...
-         '%d genes x %d cells\n',...
-         size(td.X,1),size(td.X,2));
+    function obj = removecells(obj,i)
+    obj.X(:,i)=[];
+    obj.s(i,:)=[];
+    obj.c(i)=[];    
+    if ~isempty(obj.c_cell_cycle_phase_tx)
+        obj.c_cell_cycle_phase_tx(i)=[];
+    end
+    if ~isempty(obj.c_cell_type_tx)
+        obj.c_cell_type_tx(i)=[];
+    end
+    if ~isempty(obj.c_cluster_id)
+        obj.c_cluster_id(i)=[];
+    end
+    if ~isempty(obj.c_batch_id)
+        obj.c_batch_id(i)=[];
+    end
+    if ~isempty(obj.c_cell_id)
+        obj.c_cell_id(i)=[];
+    end
+    end
+    
+   function obj = set.c(obj,cx)
+      if length(cx)~=numcells(obj)         
+         error('You cannot set the Modulus property');
+      else
+         obj.c=cx;
+      end
+   end 
+   function r=title(obj)
+       r=sprintf('%d x %d\n[genes x cells]',...
+           size(obj.X,1),size(obj.X,2));
    end
+% function disp(td)
+%   fprintf(1,...
+%      'SingleCellExperiment: %d genes x %d cells\n',...
+%      numgenes(td),numcells(td));
+% end
    
-   end
+end
 % https://www.mathworks.com/help/matlab/matlab_oop/example-representing-structured-data.html   
 end
 
