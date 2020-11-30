@@ -41,24 +41,28 @@ classdef SingleCellExperiment
     end
 
     function obj = removecells(obj,i)
-    obj.X(:,i)=[];
-    obj.s(i,:)=[];
-    obj.c(i)=[];    
-    if ~isempty(obj.c_cell_cycle_phase_tx)
-        obj.c_cell_cycle_phase_tx(i)=[];
+        obj.X(:,i)=[];
+        obj.s(i,:)=[];
+        obj.c(i)=[];    
+        if ~isempty(obj.c_cell_cycle_phase_tx)
+            obj.c_cell_cycle_phase_tx(i)=[];
+        end
+        if ~isempty(obj.c_cell_type_tx)
+            obj.c_cell_type_tx(i)=[];
+        end
+        if ~isempty(obj.c_cluster_id)
+            obj.c_cluster_id(i)=[];
+        end
+        if ~isempty(obj.c_batch_id)
+            obj.c_batch_id(i)=[];
+        end
+        if ~isempty(obj.c_cell_id)
+            obj.c_cell_id(i)=[];
+        end
     end
-    if ~isempty(obj.c_cell_type_tx)
-        obj.c_cell_type_tx(i)=[];
-    end
-    if ~isempty(obj.c_cluster_id)
-        obj.c_cluster_id(i)=[];
-    end
-    if ~isempty(obj.c_batch_id)
-        obj.c_batch_id(i)=[];
-    end
-    if ~isempty(obj.c_cell_id)
-        obj.c_cell_id(i)=[];
-    end
+
+    function obj = selectcells(obj,i)
+        obj = removecells(obj,~i);
     end
     
    function obj = set.c(obj,cx)

@@ -1,4 +1,4 @@
-function varargout = sc_scatter(X,genelist,s,c,methodid)
+function sc_scatter(X,genelist,s,c,methodid)
 
 if isa(X,'SingleCellExperiment')
     % matlab.lang.OnOffSwitchState.on
@@ -14,6 +14,9 @@ if nargin<3 || isempty(s), s=randn(size(X,2),3); end
 if nargin<2 || isempty(genelist), genelist=string((1:size(X,1))'); end
 
 sce=SingleCellExperiment(X,genelist,s,c);
+sc_scatter_sce(sce);
+
+return;
 
 if length(genelist)~=size(X,1)
     error('ERROR: length(genelist)!=size(X,1)')

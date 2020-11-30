@@ -480,15 +480,24 @@ end
 
 function SelectCellsByClass(~,~)
     answer = questdlg('Select cells by class?');
-    if ~strcmp(answer,'Yes'), return; end    
+    if ~strcmp(answer,'Yes'), return; end
+    listitems={'Custom input (C)'};
+    if ~isempty(sce.c_cluster_id)
+        listitems=[listitems,'Cluster ID'];
+    end
+    if ~isempty(sce.c_cell_type_tx)
+        listitems=[listitems,'Cell Type'];
+    end
+    if ~isempty(sce.c_cell_cycle_phase_tx)
+        listitems=[listitems,'Cell Cycle Phase'];
+    end    
+    
     [indx,tf] = listdlg('PromptString',{'Select statistics','',''},...    
-    'SelectionMode','single','ListString',...
-     {'Custom input (C)','Cluster ID',...
-            'Cell Type','Cell Cycle Phase'});
+    'SelectionMode','single','ListString',listitems);
     if tf==1        
         [ax,bx]=view();
-        switch indx
-            case 1
+        switch listitems{indx}
+            case 'Custom input (C)'
                 [indxx,tfx] = listdlg('PromptString',{'Select groups',...
                 '',''},'SelectionMode','multiple','ListString',cL);
                 if tfx==1
@@ -497,7 +506,7 @@ function SelectCellsByClass(~,~)
                     sc_scatter_sce(SingleCellExperiment(sce.X(:,i),sce.g,sce.s(i,:),cL(c(i))));
                     view(ax,bx);
                 end
-            case 2
+            case 'Cluster ID'
                 if ~isempty(sce.c_cluster_id)
                     [ci,cLi]=grp2idx(sce.c_cluster_id);
                     [indxx,tfx] = listdlg('PromptString',{'Select groups',...
@@ -512,7 +521,7 @@ function SelectCellsByClass(~,~)
                     errordlg('Class type undefined');
                     return;
                 end
-            case 3                
+            case 'Cell Type'             
                 if ~isempty(sce.c_cell_type_tx)
                     [ci,cLi]=grp2idx(sce.c_cell_type_tx);
                     [indxx,tfx] = listdlg('PromptString',{'Select groups',...
@@ -526,7 +535,7 @@ function SelectCellsByClass(~,~)
                     errordlg('Class type undefined');
                     return;
                 end
-            case 4
+            case 'Cell Cycle Phase'
                 if ~isempty(sce.c_cell_cycle_phase_tx)
                     [ci,cLi]=grp2idx(c_cell_cycle_phase_tx);
                     [indxx,tfx] = listdlg('PromptString',{'Select groups',...
