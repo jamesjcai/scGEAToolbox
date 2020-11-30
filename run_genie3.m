@@ -1,5 +1,5 @@
 function [A,s,G]=run_genie3(X,genelist,donorm,plotit)
-%RUN_GENIE3
+%GENIE3: GEne Network Inference with Ensemble of trees
 %
 % USAGE:
 % >>[X,genelist]=sc_readfile('example_data/GSM3044891_GeneExp.UMIs.10X1.txt');

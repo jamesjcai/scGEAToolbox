@@ -18,7 +18,7 @@ if iscell(g)
 elseif isstring(g) && ~isStringScalar(g)
     for k=1:length(g)
         figure;
-        sc_scattermarker(X,genelist,g(k),s,methodid,sz);
+        sc_scattermarker(X,genelist,s,g(k),methodid,sz);
     end
 elseif isStringScalar(g) || ischar(g)
     if ismember(g,genelist)
@@ -32,8 +32,8 @@ elseif isStringScalar(g) || ischar(g)
         c=log2(1+X(genelist==g,:));
         switch methodid
             case 1
-                %sc_stemscatter(x,y,c);
-                i_stemscatter(x,y,z)
+                sc_stemscatter(x,y,c);
+                % i_stemscatter(x,y,z)
             case 2                
                 if isempty(z)
                     scatter(x,y,sz,c,'filled');
@@ -52,9 +52,9 @@ elseif isStringScalar(g) || ischar(g)
                 colormap(a);
             case 4
                subplot(1,2,1)
-               sc_scattermarker(X,genelist,g,s,3,sz,false);
+               sc_scattermarker(X,genelist,s,g,3,sz,false);
                subplot(1,2,2)
-               sc_scattermarker(X,genelist,g,s,1,sz,false);
+               sc_scattermarker(X,genelist,s,g,1,sz,false);
                hFig=gcf;
                hFig.Position(3)=hFig.Position(3)*2;
             case 5

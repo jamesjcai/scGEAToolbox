@@ -1,9 +1,9 @@
 classdef SingleCellExperiment
    properties
-      X double {mustBeNumeric, mustBeFinite}
-      g string
-      s (:,3) {mustBeNumeric, mustBeFinite}
-      c
+      X double {mustBeNumeric, mustBeFinite} % counts
+      g string                               % genelist
+      s double {mustBeNumeric, mustBeFinite} % cell.embeddings
+      c                                      % cell group/class id
       c_cell_cycle_phase_tx
       c_cell_type_tx
       c_cluster_id
@@ -72,6 +72,7 @@ classdef SingleCellExperiment
        r=sprintf('%d x %d\n[genes x cells]',...
            size(obj.X,1),size(obj.X,2));
    end
+   
 % function disp(td)
 %   fprintf(1,...
 %      'SingleCellExperiment: %d genes x %d cells\n',...

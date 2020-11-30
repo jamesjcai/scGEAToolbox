@@ -1,4 +1,6 @@
 function [s]=run_glmpca(X)
+%generalized principal component analysis (GLM-PCA)
+%
 if isempty(FindRpath)
    error('Rscript.exe is not found.');
 end
@@ -19,7 +21,7 @@ if exist('output.csv','file')
     delete('output.csv');
 end
 %if ~exist('input.csv','file')
-    csvwrite('input.csv',X);
+    csvwrite('input.csv',transpose(X));
 %end
 RunRcode('script.R');
 if exist('output.csv','file')
