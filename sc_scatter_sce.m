@@ -481,6 +481,7 @@ end
 function SelectCellsByClass(~,~)
     answer = questdlg('Select cells by class?');
     if ~strcmp(answer,'Yes'), return; end
+    
     listitems={'Custom input (C)'};
     if ~isempty(sce.c_cluster_id)
         listitems=[listitems,'Cluster ID'];
@@ -497,77 +498,29 @@ function SelectCellsByClass(~,~)
     
     [indx,tf] = listdlg('PromptString',{'Select statistics','',''},...    
     'SelectionMode','single','ListString',listitems);
-    if tf==1        
-        [ax,bx]=view();
-        switch listitems{indx}
-            case 'Custom input (C)'
-                [indxx,tfx] = listdlg('PromptString',{'Select groups',...
-                '',''},'SelectionMode','multiple','ListString',cL);
-                if tfx==1
-                    i=ismember(c,indxx);
-                    [ax,bx]=view();                
-                    sc_scatter_sce(SingleCellExperiment(sce.X(:,i),sce.g,sce.s(i,:),cL(c(i))));
-                    view(ax,bx);
-                end
-            case 'Batch ID'
-                if ~isempty(sce.c_batch_id)
-                    [ci,cLi]=grp2idx(sce.c_batch_id);
-                    [indxx,tfx] = listdlg('PromptString',{'Select groups',...
-                    '',''},'SelectionMode','multiple','ListString',string(cLi));
-                    if tfx==1
-                        i=ismember(ci,indxx);
-                        [ax,bx]=view();
-                        sc_scatter_sce(SingleCellExperiment(sce.X(:,i),sce.g,sce.s(i,:),cLi(ci(i))));
-                        view(ax,bx);
-                    end
-                else
-                    errordlg('sce.c_batch_id undefined');
-                    return;
-                end
-            case 'Cluster ID'
-                if ~isempty(sce.c_cluster_id)
-                    [ci,cLi]=grp2idx(sce.c_cluster_id);
-                    [indxx,tfx] = listdlg('PromptString',{'Select groups',...
-                    '',''},'SelectionMode','multiple','ListString',string(cLi));
-                    if tfx==1
-                        i=ismember(ci,indxx);
-                        [ax,bx]=view();
-                        sc_scatter_sce(SingleCellExperiment(sce.X(:,i),sce.g,sce.s(i,:),cLi(ci(i))));
-                        view(ax,bx);
-                    end
-                else                    
-                    errordlg('Class type undefined');
-                    return;
-                end
-            case 'Cell Type'             
-                if ~isempty(sce.c_cell_type_tx)
-                    [ci,cLi]=grp2idx(sce.c_cell_type_tx);
-                    [indxx,tfx] = listdlg('PromptString',{'Select groups',...
-                    '',''},'SelectionMode','multiple','ListString',string(cLi));
-                    if tfx==1                        
-                        i=ismember(ci,indxx);                        
-                        sc_scatter_sce(SingleCellExperiment(sce.X(:,i),sce.g,sce.s(i,:),cLi(ci(i))));
-                        view(ax,bx);
-                    end
-                else
-                    errordlg('Class type undefined');
-                    return;
-                end
-            case 'Cell Cycle Phase'
-                if ~isempty(sce.c_cell_cycle_phase_tx)
-                    [ci,cLi]=grp2idx(sce.c_cell_cycle_phase_tx);
-                    [indxx,tfx] = listdlg('PromptString',{'Select groups',...
-                    '',''},'SelectionMode','multiple','ListString',string(cLi));
-                    if tfx==1                        
-                        i=ismember(ci,indxx);                                       
-                        sc_scatter_sce(SingleCellExperiment(sce.X(:,i),sce.g,sce.s(i,:),cLi(ci(i))));
-                    end
-                else
-                    errordlg('Class type undefined');
-                    return;
-                end
-        end
+    if tf~=1, return; end
+    switch listitems{indx}
+        case 'Custom input (C)'
+            ci=c; ciL=cL;
+        case 'Batch ID'
+            [ci,cLi]=grp2idx(sce.c_batch_id);
+        case 'Cluster ID'
+            [ci,cLi]=grp2idx(sce.c_cluster_id);
+        case 'Cell Type'
+            [ci,cLi]=grp2idx(sce.c_cell_type_tx);
+        case 'Cell Cycle Phase'
+            [ci,cLi]=grp2idx(sce.c_cell_cycle_phase_tx);
     end
+    [indxx,tfx] = listdlg('PromptString',{'Select groups',...
+    '',''},'SelectionMode','multiple','ListString',string(cLi));
+    if tfx==1
+        i=ismember(ci,indxx);
+        [ax,bx]=view();
+        scex=selectcells(sce,i);        
+        scex.c=cLi(ci(i));
+        sc_scatter_sce(scex);
+        view(ax,bx);
+    end    
 end
 
 function DeleteSelectedCells(~,~)
