@@ -490,7 +490,10 @@ function SelectCellsByClass(~,~)
     end
     if ~isempty(sce.c_cell_cycle_phase_tx)
         listitems=[listitems,'Cell Cycle Phase'];
-    end    
+    end
+    if ~isempty(sce.c_batch_id)
+        listitems=[listitems,'Batch ID'];
+    end
     
     [indx,tf] = listdlg('PromptString',{'Select statistics','',''},...    
     'SelectionMode','single','ListString',listitems);
@@ -505,6 +508,21 @@ function SelectCellsByClass(~,~)
                     [ax,bx]=view();                
                     sc_scatter_sce(SingleCellExperiment(sce.X(:,i),sce.g,sce.s(i,:),cL(c(i))));
                     view(ax,bx);
+                end
+            case 'Batch ID'
+                if ~isempty(sce.c_batch_id)
+                    [ci,cLi]=grp2idx(sce.c_batch_id);
+                    [indxx,tfx] = listdlg('PromptString',{'Select groups',...
+                    '',''},'SelectionMode','multiple','ListString',string(cLi));
+                    if tfx==1
+                        i=ismember(ci,indxx);
+                        [ax,bx]=view();
+                        sc_scatter_sce(SingleCellExperiment(sce.X(:,i),sce.g,sce.s(i,:),cLi(ci(i))));
+                        view(ax,bx);
+                    end
+                else
+                    errordlg('sce.c_batch_id undefined');
+                    return;
                 end
             case 'Cluster ID'
                 if ~isempty(sce.c_cluster_id)
@@ -537,7 +555,7 @@ function SelectCellsByClass(~,~)
                 end
             case 'Cell Cycle Phase'
                 if ~isempty(sce.c_cell_cycle_phase_tx)
-                    [ci,cLi]=grp2idx(c_cell_cycle_phase_tx);
+                    [ci,cLi]=grp2idx(sce.c_cell_cycle_phase_tx);
                     [indxx,tfx] = listdlg('PromptString',{'Select groups',...
                     '',''},'SelectionMode','multiple','ListString',string(cLi));
                     if tfx==1                        
