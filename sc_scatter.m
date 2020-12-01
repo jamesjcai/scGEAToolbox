@@ -58,7 +58,7 @@ set( UitoolbarHandle, 'Tag' , 'FigureToolBar' , ...
 % UitoolbarHandle = uitoolbar(FigureHandle);
 pt3 = uipushtool(UitoolbarHandle,'Separator','off');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
-            'private','list.gif'));         
+            'resources','list.gif'));         
 ptImage = ind2rgb(img,map);
 pt3.CData = ptImage;
 pt3.Tooltip = 'Select a gene to show expression';
@@ -66,7 +66,7 @@ pt3.ClickedCallback = @ShowMarkerGene;
 
 pt3a = uipushtool(UitoolbarHandle,'Separator','off');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
-            'private','list2.gif'));         
+            'resources','list2.gif'));         
 ptImage = ind2rgb(img,map);
 pt3a.CData = ptImage;
 pt3a.Tooltip = 'Show cell states';
@@ -74,7 +74,7 @@ pt3a.ClickedCallback = @ShowCellStats;
 
 pt3a = uipushtool(UitoolbarHandle,'Separator','off');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
-            'private','plotpicker-pointfig.gif'));         
+            'resources','plotpicker-pointfig.gif'));         
 ptImage = ind2rgb(img,map);
 pt3a.CData = ptImage;
 pt3a.Tooltip = 'Select cells by class';
@@ -93,7 +93,7 @@ ptlabelclusters.ClickedCallback = @LabelClusters;
 
 ptShowClu = uipushtool(UitoolbarHandle,'Separator','off');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
-            'private','plotpicker-geoscatter.gif'));         
+            'resources','plotpicker-geoscatter.gif'));         
 ptImage = ind2rgb(img,map);
 ptShowClu.CData = ptImage;
 ptShowClu.Tooltip = 'Show clusters individually';
@@ -103,7 +103,7 @@ ptShowClu.ClickedCallback = @ShowClustersPop;
 
 ptaddcluster = uipushtool(UitoolbarHandle,'Separator','on');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
-            'private','plotpicker-pzmap.gif'));
+            'resources','plotpicker-pzmap.gif'));
 ptImage = ind2rgb(img,map);
 ptaddcluster.CData = ptImage;
 ptaddcluster.Tooltip = 'Add brushed cells to a new cluster';
@@ -111,7 +111,7 @@ ptaddcluster.ClickedCallback = @Brushed2Cluster;
 
 ptcluster = uipushtool(UitoolbarHandle,'Separator','off');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
-            'private','plotpicker-dendrogram.gif'));
+            'resources','plotpicker-dendrogram.gif'));
 ptImage = ind2rgb(img,map);
 ptcluster.CData = ptImage;
 ptcluster.Tooltip = 'Clustering using using embedding S';
@@ -119,7 +119,7 @@ ptcluster.ClickedCallback = @ClusterCellsS;
 
 ptcluster = uipushtool(UitoolbarHandle,'Separator','off');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
-            'private','plotpicker-gscatter.gif'));
+            'resources','plotpicker-gscatter.gif'));
 ptImage = ind2rgb(img,map);
 ptcluster.CData = ptImage;
 ptcluster.Tooltip = 'Clustering using expression matrix X';
@@ -129,7 +129,7 @@ ptcluster.ClickedCallback = @ClusterCellsX;
 
 pt5 = uipushtool(UitoolbarHandle,'Separator','on');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
-            'private','brush.gif'));
+            'resources','brush.gif'));
 ptImage = ind2rgb(img,map);
 pt5.CData = ptImage;
 pt5.Tooltip = 'Cell types of brushed cells';
@@ -148,7 +148,7 @@ pt4 = uipushtool(UitoolbarHandle,'Separator','on');
 % [img,map] = imread(fullfile(matlabroot,...
 %             'toolbox','matlab','icons','plotpicker-stairs.gif'));
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
-            'private','plotpicker-kagi.gif'));
+            'resources','plotpicker-kagi.gif'));
 ptImage = ind2rgb(img,map);
 pt4.CData = ptImage;
 pt4.Tooltip = 'Marker genes of brushed cells';
@@ -157,7 +157,7 @@ pt4.ClickedCallback = @Brush4Markers;
 
 ptpseudotime = uipushtool(UitoolbarHandle,'Separator','on');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
-            'private','plotpicker-arxtimeseries.gif'));
+            'resources','plotpicker-arxtimeseries.gif'));
 ptImage = ind2rgb(img,map);
 ptpseudotime.CData = ptImage;
 ptpseudotime.Tooltip = 'Run pseudotime analysis (Monocle)';
@@ -166,7 +166,7 @@ ptpseudotime.ClickedCallback = @RunTrajectoryAnalysis;
 ptpseudotime = uipushtool(UitoolbarHandle,...
     'Separator','off');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
-            'private','plotpicker-comet.gif'));
+            'resources','plotpicker-comet.gif'));
 ptImage = ind2rgb(img,map);
 ptpseudotime.CData = ptImage;
 ptpseudotime.Tooltip = 'Plot pseudotime trajectory';
@@ -175,7 +175,7 @@ ptpseudotime.ClickedCallback = @DrawTrajectory;
 
 pt2 = uipushtool(UitoolbarHandle,'Separator','on');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
-            'private','plotpicker-qqplot.gif'));  
+            'resources','plotpicker-qqplot.gif'));  
 ptImage = ind2rgb(img,map);
 pt2.CData = ptImage;
 pt2.Tooltip = 'Delete selected cells';
@@ -183,7 +183,7 @@ pt2.ClickedCallback = @DeleteSelectedCells;
 
 pt = uipushtool(UitoolbarHandle,'Separator','off');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
-            'private','export.gif'));         
+            'resources','export.gif'));         
 ptImage = ind2rgb(img,map);
 pt.CData = ptImage;
 pt.Tooltip = 'Export & save data';
@@ -192,7 +192,7 @@ pt.ClickedCallback = @SaveX;
 
 pt5 = uipushtool(UitoolbarHandle,'Separator','on');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
-            'private','plotpicker-geobubble.gif'));
+            'resources','plotpicker-geobubble.gif'));
 ptImage = ind2rgb(img,map);
 pt5.CData = ptImage;
 pt5.Tooltip = 'Embedding';
@@ -201,7 +201,7 @@ pt5.ClickedCallback = @EmbeddingAgain;
 
 pt5 = uipushtool(UitoolbarHandle,'Separator','off');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
-            'private','plotpicker-geobubble2.gif'));
+            'resources','plotpicker-geobubble2.gif'));
 ptImage = ind2rgb(img,map);
 pt5.CData = ptImage;
 pt5.Tooltip = 'Refresh';
