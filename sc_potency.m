@@ -8,16 +8,17 @@ function [r]=sc_potency(X,genelist)
 genelist=upper(genelist);
 ppinetfile='Z:\Cailab\CCC_utilities\STRING\stringdb.mat';
 load(ppinetfile,'G');
-[~,i,j]=intersect(G.Nodes,genelist,"stable");
-
-X=X(j,:);
-genelist=genelist(j);
-G=subgraph(G,i);
+GNodes=string(table2array(G.Nodes));
+Gdegree=G.degree;
 X=log2(X+1.1);
-[~,idx]=ismember(genelist,G.Nodes);
+
+[y,idx]=ismember(GNodes,genelist);
+idx=idx(y);
 % genelist=genelist(idx);
+d=Gdegree(idx);
 X=X(idx,:);
-r=corr(X,G.degree);  % Correlation of Connectome And Transcriptome
+
+r=corr(X,d);  % Correlation of Connectome And Transcriptome
 
 
 

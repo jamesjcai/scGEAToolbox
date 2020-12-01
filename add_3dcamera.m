@@ -15,7 +15,7 @@ end
 end
 pt = uipushtool(tb,'Separator','on');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
-            'camera.gif'));
+            'resources','camera.gif'));
 ptImage = ind2rgb(img,map);
 pt.CData = ptImage;
 pt.Tooltip = 'Make video snapshot';
