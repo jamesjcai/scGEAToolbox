@@ -9,24 +9,25 @@ classdef SingleCellExperiment
       c_cluster_id
       c_batch_id
       c_cell_id
-      list_cell_properties cell
-      list_gene_properties cell
+      list_cell_attributes cell  % e.g., attributes = {'size',[4,6,2]};
+      list_gene_attributes cell  % e.g., attributes = {'size',[4,6,2]};
+      table_attributes table
       % drmethod {mustBeMember(drmethod,{'tsne','umap','phate'})} = 'tsne'
    end
 
    methods
     function obj = SingleCellExperiment(X,g,s,c)
-        if nargin<1, error('xxx'); end
-        if nargin<2, g=string(transpose(1:size(X,1))); end
-        if nargin<3, s=randn(size(X,2),3); end
-        if nargin<4, c=ones(size(X,2),1); end
+        if nargin<1, X=[]; end
+        if nargin<2 || isempty(g), g=string(transpose(1:size(X,1))); end
+        if nargin<3 || isempty(s), s=randn(size(X,2),3); end
+        if nargin<4 || isempty(c), c=ones(size(X,2),1); end
         obj.X = X;
         obj.g=g;
         obj.s=s;
         obj.c=c;
         obj.c_cell_id=transpose(1:size(X,2));
     end
-    
+
     function r = libsz(obj)
      r = sum([obj.X]);
     end
@@ -36,13 +37,12 @@ classdef SingleCellExperiment
     
     function r=numcells(obj)
         r=size(obj.X,2);
-    end
-    
+    end    
     function r=numgenes(obj)
         r=size(obj.X,1);
     end
 
-    function obj = removecells(obj,i)
+    function obj = rmcells(obj,i)
         obj.X(:,i)=[];
         obj.s(i,:)=[];
         obj.c(i)=[];    
@@ -64,7 +64,7 @@ classdef SingleCellExperiment
     end
 
     function obj = selectcells(obj,i)
-        obj = removecells(obj,~i);
+        obj = rmcells(obj,~i);
     end
     
    function obj = set.c(obj,cx)

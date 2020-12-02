@@ -1,4 +1,4 @@
-function sc_stemscatter(x,y,z)
+function i_stemscatter(x,y,z)
 if nargin<3
     x=randn(300,1);
     y=randn(300,1);

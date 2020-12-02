@@ -148,7 +148,7 @@ if plotit
     title('Main path in MST')
     
     subplot(2,2,1)
-    i_myscatter(X(:,1:3),clusterid);
+    i_gscatter3(X(:,1:3),clusterid);
     hold on
     for k=1:clunum
         plot3(clucenter(k,1),clucenter(k,2),clucenter(k,3),'+','markersize',20)

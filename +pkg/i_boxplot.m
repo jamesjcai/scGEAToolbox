@@ -1,4 +1,4 @@
-function myboxplot(y,g,colorid,ticktxt)
+function i_boxplot(y,g,colorid,ticktxt)
 if nargin<4, ticktxt=''; end
 if length(y)~=length(g)
     try

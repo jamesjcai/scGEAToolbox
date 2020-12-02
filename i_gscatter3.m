@@ -34,7 +34,7 @@ switch methodid
         h=i_gscatter3(s(i,:),c(i),1);
         hold off        
 end
-
+box on;
 if kc<=50
     colormap(lines(kc));
 else

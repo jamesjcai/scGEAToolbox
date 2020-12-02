@@ -30,7 +30,7 @@ if exist('output.csv','file'), delete('output.csv'); end
 cd(oldpth);
 
 if plotit && ~isempty(s)
-    i_myscatter(s);
+    i_gscatter3(s);
     xlabel('UMAP 1')
     ylabel('UMAP 2')
 end

@@ -32,8 +32,7 @@ elseif isStringScalar(g) || ischar(g)
         c=log2(1+X(genelist==g,:));
         switch methodid
             case 1
-                sc_stemscatter(x,y,c);
-                % i_stemscatter(x,y,z)
+                i_stemscatter(x,y,c);                
             case 2                
                 if isempty(z)
                     scatter(x,y,sz,c,'filled');

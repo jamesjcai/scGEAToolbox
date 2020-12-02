@@ -1,10 +1,9 @@
 function varargout = sc_scatter_sce(sce,varargin)
 
+import pkg.*
 p = inputParser;
-
-defaultType = 'kmeans';
-validTypes = {'kmeans','kmedoids','dbscan'};
-checkType = @(x) any(validatestring(x,validTypes));
+% validTypes = {'kmeans','kmedoids','dbscan'};
+% checkType = @(x) any(validatestring(x,validTypes));
 checkC = @(x) size(sce.X,2)==length(x);
 addRequired(p,'sce',@(x) isa(x,'SingleCellExperiment'));
 addOptional(p,'c',sce.c,checkC);
@@ -171,12 +170,10 @@ pt.Tooltip = 'Export & save data';
 pt.ClickedCallback = @SaveX;
 
 
-
 pt5 = uipushtool(UitoolbarHandle,'Separator','on');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
             'resources','plotpicker-compass.gif'));  % plotpicker-pie
- %map(map(:,1)+map(:,2)+map(:,3)==3) = NaN;  % Convert white pixels => transparent background
-       
+%map(map(:,1)+map(:,2)+map(:,3)==3) = NaN;  % Convert white pixels => transparent background
 ptImage = ind2rgb(img,map);
 pt5.CData = ptImage;
 pt5.Tooltip = 'Colormap';
@@ -189,7 +186,6 @@ ptImage = ind2rgb(img,map);
 pt5.CData = ptImage;
 pt5.Tooltip = 'Embedding';
 pt5.ClickedCallback = @EmbeddingAgain;
-
 
 pt5 = uipushtool(UitoolbarHandle,'Separator','off');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
@@ -221,13 +217,6 @@ function RefreshAll(~,~)
     UitoolbarHandle.Visible='on';
     legend off
     colorbar off
-end
-
-function PickColormap(~,~)
-    cx=colormap('autumn');
-    cx(1,:)=[.8 .8 .8];
-    co={cx,'default','summer','jet','copper','winter'};
-    colormap(co{randi(length(co))});
 end
 
 function EmbeddingAgain(~,~)
@@ -437,8 +426,8 @@ function ShowCellStats(~,~)
     
     listitems={'Library Size','Mt-reads Ratio',...
         'Mt-genes Expression','Cell Cycle Phase'};
-    for k=1:2:length(sce.list_cell_properties)
-        listitems=[listitems,sce.list_cell_properties{k}];
+    for k=1:2:length(sce.list_cell_attributes)
+        listitems=[listitems,sce.list_cell_attributes{k}];
     end
     [indx,tf] = listdlg('PromptString',{'Select statistics',...
     '',''},'SelectionMode','single','ListString',listitems);
@@ -487,11 +476,10 @@ function ShowCellStats(~,~)
                 
                 end              
                 [ci,tx]=grp2idx(sce.c_cell_cycle_phase_tx);
-                ttxt=sprintf('%s|',string(tx));
-                
+                ttxt=sprintf('%s|',string(tx));                
             otherwise % other properties
-                ttxt=sce.list_cell_properties{indx-4};
-                ci=sce.list_cell_properties{indx-4+1};
+                ttxt=sce.list_cell_attributes{indx-4};
+                ci=sce.list_cell_attributes{indx-4+1};
         end
             [ax,bx]=view();
             delete(h);            
@@ -546,7 +534,7 @@ function SelectCellsByClass(~,~)
     if tfx==1
         i=ismember(ci,indxx);
         [ax,bx]=view();
-        scex=selectcells(sce,i);        
+        scex=selectcells(sce,i);
         scex.c=cLi(ci(i));
         sc_scatter_sce(scex);
         view(ax,bx);
@@ -568,17 +556,7 @@ function DeleteSelectedCells(~,~)
     answer2 = questdlg(sprintf('Delete %s cells?',...
         lower(answer)));
     if ~strcmp(answer2,'Yes'), return; end
-    sce=removecells(sce,ptsSelected);
-%     sce.X(:,ptsSelected)=[];
-%     sce.s(ptsSelected,:)=[];
-%     sce.c(ptsSelected)=[];    
-%     sce.c_cell_id(ptsSelected)=[];
-%     if ~isempty(sce.c_cell_cycle_phase_tx)
-%         sce.c_cell_cycle_phase_tx(ptsSelected)=[];
-%     end
-%     if ~isempty(sce.c_cell_type_tx)
-%         sce.c_cell_type_tx(ptsSelected)=[];
-%     end
+    sce=rmcells(sce,ptsSelected);
     [c,cL]=grp2idx(sce.c);
     [ax,bx]=view();
     h=i_gscatter3(sce.s,c);
@@ -886,28 +864,4 @@ function i_labelclusters
     % helpdlg(sprintf('%d clusters are labelled.',numel(cL)));
 end
 
-end
-
-
-function [Tct]=local_celltypebrushed(X,genelist,s,...
-                brushedData,species,organ,database)
-
-if nargin<7, organ='panglaodb'; end
-if nargin<6, organ='all'; end
-if nargin<5, species='mouse'; end
-
-if islogical(brushedData)
-    i=brushedData;
-else
-    [~,i]=ismember(brushedData,s,'rows');
-end
-Xi=X(:,i);
-[Xi,gi]=sc_selectg(Xi,genelist);
-if strcmpi(database,'clustermole')
-    %disp('Using clustermole marker database')
-    [Tct]=sc_celltypecaller_new(Xi,gi,[],'species',species);
-elseif strcmpi(database,'panglaodb')
-    %disp('Using panglaodb marker database')
-    [Tct]=sc_celltypecaller(Xi,gi,[],'species',species,'organ',organ);
-end
 end
