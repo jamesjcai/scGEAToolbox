@@ -9,6 +9,8 @@ classdef SingleCellExperiment
       c_cluster_id
       c_batch_id
       c_cell_id
+      list_cell_properties cell
+      list_gene_properties cell
       % drmethod {mustBeMember(drmethod,{'tsne','umap','phate'})} = 'tsne'
    end
 

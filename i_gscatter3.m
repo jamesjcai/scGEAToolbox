@@ -18,14 +18,7 @@ switch methodid
            h=scatter(x,y,10,c);
         elseif size(s,2)>=3
            h=scatter3(x,y,z,10,c);
-        end        
-    case 3
-        h=i_gscatter3(s,c,1);
-        h.MarkerEdgeAlpha=0;
-        hold on
-        i=c==targetc;
-        h=i_gscatter3(s(i,:),c(i),1);
-        hold off
+        end
     case 2
         if size(s,2)==2
             h=gscatter(x,y,c,[],[],5);
@@ -33,14 +26,22 @@ switch methodid
             h=gscatter3b(x,y,z,c,[],[],5);
         end
         box off
+    case 3
+        h=i_gscatter3(s,c,1);
+        h.MarkerEdgeAlpha=0;
+        hold on
+        i=c==targetc;
+        h=i_gscatter3(s(i,:),c(i),1);
+        hold off        
 end
 
 if kc<=50
     colormap(lines(kc));
 else
-    cx=colormap('autumn');
-    cx(1,:)=[.8 .8 .8];
-    colormap(cx);
+%     cx=colormap('autumn');
+%     cx(1,:)=[.8 .8 .8];
+%     colormap(cx);
+    colormap default
 end
 
 end

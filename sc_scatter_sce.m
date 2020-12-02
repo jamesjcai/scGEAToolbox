@@ -5,12 +5,13 @@ p = inputParser;
 defaultType = 'kmeans';
 validTypes = {'kmeans','kmedoids','dbscan'};
 checkType = @(x) any(validatestring(x,validTypes));
+checkC = @(x) size(sce.X,2)==length(x);
 addRequired(p,'sce',@(x) isa(x,'SingleCellExperiment'));
-addOptional(p,'type',defaultType,checkType)
-addOptional(p,'plotit',true,@islogical)
-addOptional(p,'methodid',1,@isnumeric)
-parse(p,sce,varargin{:})
-type=p.Results.type;
+addOptional(p,'c',sce.c,checkC);
+addOptional(p,'plotit',true,@islogical);
+addOptional(p,'methodid',1,@isnumeric);
+parse(p,sce,varargin{:});
+cin=p.Results.c;
 plotit=p.Results.plotit;
 methodid=p.Results.plotit;
 
@@ -18,7 +19,7 @@ if ~isa(sce,'SingleCellExperiment')
     error('requires sce=SingleCellExperiment();');
 end
 
-[c,cL]=grp2idx(sce.c);
+[c,cL]=grp2idx(cin);
 
 FigureHandle = figure('Name','sc_scatter_sce','visible','off');
 movegui( FigureHandle, 'center' ) ; 
@@ -170,7 +171,18 @@ pt.Tooltip = 'Export & save data';
 pt.ClickedCallback = @SaveX;
 
 
+
 pt5 = uipushtool(UitoolbarHandle,'Separator','on');
+[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+            'resources','plotpicker-compass.gif'));  % plotpicker-pie
+ %map(map(:,1)+map(:,2)+map(:,3)==3) = NaN;  % Convert white pixels => transparent background
+       
+ptImage = ind2rgb(img,map);
+pt5.CData = ptImage;
+pt5.Tooltip = 'Colormap';
+pt5.ClickedCallback = @PickColormap;
+
+pt5 = uipushtool(UitoolbarHandle,'Separator','off');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
             'resources','plotpicker-geobubble.gif'));
 ptImage = ind2rgb(img,map);
@@ -209,6 +221,13 @@ function RefreshAll(~,~)
     UitoolbarHandle.Visible='on';
     legend off
     colorbar off
+end
+
+function PickColormap(~,~)
+    cx=colormap('autumn');
+    cx(1,:)=[.8 .8 .8];
+    co={cx,'default','summer','jet','copper','winter'};
+    colormap(co{randi(length(co))});
 end
 
 function EmbeddingAgain(~,~)
@@ -414,12 +433,15 @@ end
 
 function ShowCellStats(~,~)
     answer = questdlg('Show cell states?');
-    if ~strcmp(answer,'Yes'), return; end    
+    if ~strcmp(answer,'Yes'), return; end
+    
+    listitems={'Library Size','Mt-reads Ratio',...
+        'Mt-genes Expression','Cell Cycle Phase'};
+    for k=1:2:length(sce.list_cell_properties)
+        listitems=[listitems,sce.list_cell_properties{k}];
+    end
     [indx,tf] = listdlg('PromptString',{'Select statistics',...
-    '',''},...    
-    'SelectionMode','single',...
-    'ListString',{'Library Size','Mt-reads Ratio',...
-    'Mt-genes Expression','Cell Cycle Phase'});
+    '',''},'SelectionMode','single','ListString',listitems);
     if tf==1        
         switch indx
             case 1
@@ -456,25 +478,33 @@ function ShowCellStats(~,~)
                     sce.c_cell_cycle_phase_tx=string(cix);
                     waitbar(1,f,'Finishing');
                     pause(1);
-                    close(f);                    
-                end                
-                [ci,tx]=grp2idx(sce.c_cell_cycle_phase_tx);
-                ttxt=sprintf('%s|',string(tx));
-        end
-            [ax,bx]=view();
-            delete(h);            
-            h=i_gscatter3(sce.s,ci);
-            if indx==3, legend(tx); end
-            view(ax,bx);
-            title(sce.title);
-            hc=colorbar;
-            hc.Label.String=ttxt;
-            if indx==4
+                    close(f);
+                    
                 labels = {'Save cell cycle phase to variable named:'};
                 vars = {'c_cell_cycle_phase_tx'};
                 values = {sce.c_cell_cycle_phase_tx};
                 export2wsdlg(labels,vars,values);
+                
+                end              
+                [ci,tx]=grp2idx(sce.c_cell_cycle_phase_tx);
+                ttxt=sprintf('%s|',string(tx));
+                
+            otherwise % other properties
+                ttxt=sce.list_cell_properties{indx-4};
+                ci=sce.list_cell_properties{indx-4+1};
+        end
+            [ax,bx]=view();
+            delete(h);            
+            h=i_gscatter3(sce.s,ci,1);
+            view(ax,bx);
+            title(sce.title);
+            if indx==4
+                hc=colorbar;
+                hc.Label.String=ttxt;
+            else
+                colorbar off
             end
+            colormap default
     end
 end
 
@@ -501,7 +531,7 @@ function SelectCellsByClass(~,~)
     if tf~=1, return; end
     switch listitems{indx}
         case 'Custom input (C)'
-            ci=c; ciL=cL;
+            ci=c; cLi=cL;
         case 'Batch ID'
             [ci,cLi]=grp2idx(sce.c_batch_id);
         case 'Cluster ID'
@@ -843,6 +873,7 @@ function i_labelclusters
         else
             stxt=sprintf('%d',i);
         end
+        stxt=strrep(stxt,'_','\_');
         if size(sce.s,2)==3
             text(si(:,1),si(:,2),si(:,3),stxt,...
                 'fontsize',fsz,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');
