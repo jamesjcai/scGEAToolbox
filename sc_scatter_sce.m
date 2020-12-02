@@ -170,22 +170,36 @@ pt.Tooltip = 'Export & save data';
 pt.ClickedCallback = @SaveX;
 
 
-pt5 = uipushtool(UitoolbarHandle,'Separator','on');
-[img,map] = imread(fullfile(fileparts(which(mfilename)),...
-            'resources','plotpicker-compass.gif'));  % plotpicker-pie
-%map(map(:,1)+map(:,2)+map(:,3)==3) = NaN;  % Convert white pixels => transparent background
-ptImage = ind2rgb(img,map);
-pt5.CData = ptImage;
-pt5.Tooltip = 'Colormap';
-pt5.ClickedCallback = @PickColormap;
 
-pt5 = uipushtool(UitoolbarHandle,'Separator','off');
+
+pt5 = uipushtool(UitoolbarHandle,'Separator','on');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
             'resources','plotpicker-geobubble.gif'));
 ptImage = ind2rgb(img,map);
 pt5.CData = ptImage;
 pt5.Tooltip = 'Embedding';
 pt5.ClickedCallback = @EmbeddingAgain;
+
+
+pt5 = uipushtool(UitoolbarHandle,'Separator','off');
+[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+            'resources','plotpicker-image.gif'));  % plotpicker-pie
+%map(map(:,1)+map(:,2)+map(:,3)==3) = NaN;  % Convert white pixels => transparent background
+ptImage = ind2rgb(img,map);
+pt5.CData = ptImage;
+pt5.Tooltip = 'Switch 2D/3D';
+pt5.ClickedCallback = @Switch2D3D;
+
+
+
+pt5 = uipushtool(UitoolbarHandle,'Separator','on');
+[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+            'resources','plotpicker-compass.gif'));  % plotpicker-pie
+%map(map(:,1)+map(:,2)+map(:,3)==3) = NaN;  % Convert white pixels => transparent background
+ptImage = ind2rgb(img,map);
+pt5.CData = ptImage;
+pt5.Tooltip = 'Switch color maps';
+pt5.ClickedCallback = {@PickColormap,length(cL)};
 
 pt5 = uipushtool(UitoolbarHandle,'Separator','off');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
@@ -194,6 +208,7 @@ ptImage = ind2rgb(img,map);
 pt5.CData = ptImage;
 pt5.Tooltip = 'Refresh';
 pt5.ClickedCallback = @RefreshAll;
+
 
 add_3dcamera(UitoolbarHandle,'AllCells');
 
@@ -243,6 +258,14 @@ function RefreshAll(~,~)
     UitoolbarHandle.Visible='on';
     legend off
     colorbar off
+    end
+end
+
+function Switch2D3D(~,~)
+    if randi(2)==1
+        h=i_gscatter3(sce.s(:,1:2),c,methodid);
+    else
+        h=i_gscatter3(sce.s,c,methodid);
     end
 end
 
