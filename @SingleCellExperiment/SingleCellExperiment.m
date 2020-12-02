@@ -37,12 +37,20 @@ classdef SingleCellExperiment
     
     function r=numcells(obj)
         r=size(obj.X,2);
-    end    
+    end
+    
     function r=numgenes(obj)
         r=size(obj.X,1);
     end
+    
+    function obj = estimatepotency(obj)
+        idx=input('Species: 1=human,2=mouse >>');
+        r=sc_potency(obj.X,obj.g,idx);
+        obj.list_cell_attributes=[obj.list_cell_attributes,...
+            {'cell_potency',r}];
+    end
 
-    function obj = rmcells(obj,i)
+function obj = rmcells(obj,i)
         obj.X(:,i)=[];
         obj.s(i,:)=[];
         obj.c(i)=[];    
@@ -61,8 +69,11 @@ classdef SingleCellExperiment
         if ~isempty(obj.c_cell_id)
             obj.c_cell_id(i)=[];
         end
-    end
-
+        for k=2:2:length(obj.list_cell_attributes)
+            obj.list_cell_attributes{k}(i)=[];
+        end
+    end    
+    
     function obj = selectcells(obj,i)
         obj = rmcells(obj,~i);
     end

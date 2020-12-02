@@ -208,7 +208,33 @@ end
 
 % =========================
 function RefreshAll(~,~)
-    %cla(hAx);    
+    answer = questdlg('Use current C?');
+    if strcmp(answer,'No')
+        listitems={'c'};
+        if ~isempty(sce.c_cluster_id), listitems=[listitems,'c_cluster_id']; end
+        if ~isempty(sce.c_cell_type_tx), listitems=[listitems,'c_cell_type_tx']; end
+        if ~isempty(sce.c_cell_cycle_phase_tx), listitems=[listitems,'c_cell_cycle_phase_tx']; end
+        if ~isempty(sce.c_batch_id), listitems=[listitems,'c_batch_id']; end
+    [indx,tf] = listdlg('PromptString',{'Select statistics',...
+    '',''},'SelectionMode','single','ListString',listitems);
+    if tf==1        
+        switch listitems{indx}
+            case 'c_cluster_id'
+                cc=sce.c_cluster_id;
+            case 'c_cell_type_tx'
+                cc=sce.c_cell_type_tx;
+            case 'c_cell_cycle_phase_tx'
+                cc=sce.c_cell_cycle_phase_tx;
+            case 'c_batch_id'
+                cc=sce.c_batch_id;
+            otherwise
+                cc=[];
+        end
+        if ~isempty(cc)
+            [c,cL]=grp2idx(cc);
+        end
+    end
+    %cla(hAx);
     delete(h);
     h=i_gscatter3(sce.s,c,methodid);
     title(sce.title)
@@ -217,6 +243,7 @@ function RefreshAll(~,~)
     UitoolbarHandle.Visible='on';
     legend off
     colorbar off
+    end
 end
 
 function EmbeddingAgain(~,~)
@@ -479,7 +506,7 @@ function ShowCellStats(~,~)
                 ttxt=sprintf('%s|',string(tx));                
             otherwise % other properties
                 ttxt=sce.list_cell_attributes{indx-4};
-                ci=sce.list_cell_attributes{indx-4+1};
+                ci=sce.list_cell_attributes{indx-4+1};                
         end
             [ax,bx]=view();
             delete(h);            
