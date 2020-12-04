@@ -50,53 +50,76 @@ classdef SingleCellExperiment
             {'cell_potency',r}];
     end
 
-function obj = rmcells(obj,i)
-        obj.X(:,i)=[];
-        obj.s(i,:)=[];
-        obj.c(i)=[];    
-        if ~isempty(obj.c_cell_cycle_phase_tx)
-            obj.c_cell_cycle_phase_tx(i)=[];
-        end
-        if ~isempty(obj.c_cell_type_tx)
-            obj.c_cell_type_tx(i)=[];
-        end
-        if ~isempty(obj.c_cluster_id)
-            obj.c_cluster_id(i)=[];
-        end
-        if ~isempty(obj.c_batch_id)
-            obj.c_batch_id(i)=[];
-        end
-        if ~isempty(obj.c_cell_id)
-            obj.c_cell_id(i)=[];
-        end
-        for k=2:2:length(obj.list_cell_attributes)
-            obj.list_cell_attributes{k}(i)=[];
-        end
-    end    
-    
+    function obj = removecells(obj,i)
+            obj.X(:,i)=[];
+            obj.s(i,:)=[];
+            obj.c(i)=[];    
+            if ~isempty(obj.c_cell_cycle_phase_tx)
+                obj.c_cell_cycle_phase_tx(i)=[];
+            end
+            if ~isempty(obj.c_cell_type_tx)
+                obj.c_cell_type_tx(i)=[];
+            end
+            if ~isempty(obj.c_cluster_id)
+                obj.c_cluster_id(i)=[];
+            end
+            if ~isempty(obj.c_batch_id)
+                obj.c_batch_id(i)=[];
+            end
+            if ~isempty(obj.c_cell_id)
+                obj.c_cell_id(i)=[];
+            end
+            for k=2:2:length(obj.list_cell_attributes)
+                obj.list_cell_attributes{k}(i)=[];
+            end
+        end    
+
     function obj = selectcells(obj,i)
-        obj = rmcells(obj,~i);
+        if islogical(i) && length(i)==obj.numcells
+            ix=i;
+        else
+            ix=true(obj.numcells,1);
+            ix(i)=false;            
+        end
+        obj = removecells(obj,~ix);
     end
-    
-   function obj = set.c(obj,cx)
+
+    function obj = set.c(obj,cx)
       if length(cx)~=numcells(obj)         
          error('You cannot set the Modulus property');
       else
          obj.c=cx;
       end
-   end 
-   function r=title(obj)
+    end
+
+    function r=title(obj)
        r=sprintf('%d x %d\n[genes x cells]',...
            size(obj.X,1),size(obj.X,2));
-   end
+    end
+    
+    function obj = qcfilter(obj)
+        [~,~,keptidxv]=sc_qcfilter(obj.X,obj.g);
+        for k=1:length(keptidxv)
+            obj = selectcells(obj,keptidxv{k});
+        end
+    end
+    
+    function obj = selectgenes(obj,min_countnum,min_cellnum)
+        if nargin<2, min_countnum=1; end
+        if nargin<3, min_cellnum=0.05; end
+        [X,g]=sc_selectg(obj.X,obj.g,min_countnum,min_cellnum);
+        obj.X=X;
+        obj.g=g;
+    end
    
 % function disp(td)
 %   fprintf(1,...
 %      'SingleCellExperiment: %d genes x %d cells\n',...
 %      numgenes(td),numcells(td));
-% end
-   
-end
+% end 
+   end
+
 % https://www.mathworks.com/help/matlab/matlab_oop/example-representing-structured-data.html   
 end
+
 
