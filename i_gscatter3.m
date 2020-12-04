@@ -16,6 +16,7 @@ switch methodid
     case 1
         if size(s,2)==2
            h=scatter(x,y,10,c);
+           box on
         elseif size(s,2)>=3
            h=scatter3(x,y,z,10,c);
         end
@@ -34,7 +35,7 @@ switch methodid
         h=i_gscatter3(s(i,:),c(i),1);
         hold off        
 end
-box on;
+
 if kc<=50
     colormap(lines(kc));
 else
@@ -43,6 +44,7 @@ else
 %     colormap(cx);
     colormap default
 end
+grid on
 
 end
 

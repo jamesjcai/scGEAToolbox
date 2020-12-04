@@ -24,9 +24,11 @@ writematrix(X,'input1.txt');
 writematrix(Y,'input2.txt');
 RunRcode('script.R');
 if exist('output.csv','file')
+    warning off
     T=readtable('output.csv');
     T.Var1=genelist(T.Var1);
     T.Properties.VariableNames{'Var1'} = 'gene';
+    warning on
 else
     T=[];
 end

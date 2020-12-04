@@ -134,6 +134,16 @@ pt4.CData = ptImage;
 pt4.Tooltip = 'Marker genes of brushed cells';
 pt4.ClickedCallback = @Brush4Markers;
 
+pt4 = uipushtool(UitoolbarHandle,'Separator','off');
+% [img,map] = imread(fullfile(matlabroot,...
+%             'toolbox','matlab','icons','plotpicker-stairs.gif'));
+[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+            'resources','plotpicker-boxplot.gif'));
+ptImage = ind2rgb(img,map);
+pt4.CData = ptImage;
+pt4.Tooltip = 'Compare 2 groups (DE analysis)';
+pt4.ClickedCallback = @DEGene2Groups;
+
 
 ptpseudotime = uipushtool(UitoolbarHandle,'Separator','on');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
@@ -249,23 +259,58 @@ function RefreshAll(~,~)
             [c,cL]=grp2idx(cc);
         end
     end
-    %cla(hAx);
-    delete(h);
+    end
+    % cla(hAx);
+    % delete(h);
     h=i_gscatter3(sce.s,c,methodid);
     title(sce.title)
     ptlabelclusters.State='off';
     UitoolbarHandle.Visible='off';
     UitoolbarHandle.Visible='on';
     legend off
-    colorbar off
-    end
+    colorbar off    
 end
 
 function Switch2D3D(~,~)
-    if randi(2)==1
-        h=i_gscatter3(sce.s(:,1:2),c,methodid);
-    else
+    oldcmp=colormap();
+    if isempty(h.ZData)
         h=i_gscatter3(sce.s,c,methodid);
+    else
+        h=i_gscatter3(sce.s(:,1:2),c,methodid);
+    end
+    colormap(oldcmp);
+    title(sce.title)
+end
+
+function DEGene2Groups(~,~)
+    answer = questdlg('Compare two batch groups (DE gene analysis)?');
+    if ~strcmp(answer,'Yes'), return; end
+    if isempty(sce.c_batch_id)
+        warndlg("sce.c_batch_id is empty");
+        return;
+    end
+    
+    f = waitbar(0,'Please wait...');
+    pause(.5); waitbar(.67,f,'Processing your data');
+    T=run_mast(sce.X(:,sce.c_batch_id==1),...
+            sce.X(:,sce.c_batch_id==2),sce.g);
+    waitbar(1,f,'Finishing');
+    pause(1); close(f);    
+    labels = {'Save DE results T to variable named:'}; 
+    vars = {'T'}; values = {T};
+    msgfig=export2wsdlg(labels,vars,values);
+    uiwait(msgfig);
+    answer = questdlg('Violin plots?');
+    if strcmp(answer,'Yes')
+        figure;
+        for k=1:16
+            subplot(4,4,k)
+            i=sce.g==T.gene(k);
+            pkg.i_violinplot(log2(1+sce.X(i,:)),...
+                sce.c_batch_id);
+            title(T.gene(k));
+            ylabel('log2(UMI+1)')
+        end
     end
 end
 
@@ -274,8 +319,7 @@ function EmbeddingAgain(~,~)
     if ~strcmp(answer,'Yes'), return; end
     answer = questdlg('Which method?','Select method','tSNE','Phate','UMAP','Phate');
     f = waitbar(0,'Please wait...');
-    pause(.5)
-    waitbar(.67,f,'Processing your data');
+    pause(.5); waitbar(.67,f,'Processing your data');
     if strcmp(answer,'tSNE')
         sce.s=sc_tsne(sce.X,3,false);
     elseif strcmp(answer,'Phate')
@@ -284,8 +328,7 @@ function EmbeddingAgain(~,~)
         sce.s=run_umap(sce.X,false);
     end
     waitbar(1,f,'Finishing');
-    pause(1);
-    close(f);
+    pause(1); close(f);
     RefreshAll;
 end
 
@@ -475,7 +518,8 @@ function ShowCellStats(~,~)
     if ~strcmp(answer,'Yes'), return; end
     
     listitems={'Library Size','Mt-reads Ratio',...
-        'Mt-genes Expression','Cell Cycle Phase'};
+        'Mt-genes Expression','Cell Cycle Phase',...
+        'Cell Type','Cluster ID','Batch ID'};
     for k=1:2:length(sce.list_cell_attributes)
         listitems=[listitems,sce.list_cell_attributes{k}];
     end
@@ -526,23 +570,33 @@ function ShowCellStats(~,~)
                 
                 end              
                 [ci,tx]=grp2idx(sce.c_cell_cycle_phase_tx);
-                ttxt=sprintf('%s|',string(tx));                
+                ttxt=sprintf('%s|',string(tx));
+            case 5 % cell type
+                [ci]=grp2idx(sce.c_cell_type_tx);
+            case 6 % cluster id                
+                ci=sce.c_cluster_id;
+            case 7 % batch id
+                ci=sce.c_batch_id;
             otherwise % other properties
-                ttxt=sce.list_cell_attributes{indx-4};
-                ci=sce.list_cell_attributes{indx-4+1};                
+                ttxt=sce.list_cell_attributes{indx-7};
+                ci=sce.list_cell_attributes{indx-7+1};
         end
-            [ax,bx]=view();
-            delete(h);            
-            h=i_gscatter3(sce.s,ci,1);
+        sces=sce.s;
+        if isempty(h.ZData)
+            sces=sce.s(:,1:2);
+        end
+            [ax,bx]=view();            
+            h=i_gscatter3(sces,ci,1);
             view(ax,bx);
             title(sce.title);
+            
             if indx==4
                 hc=colorbar;
                 hc.Label.String=ttxt;
             else
                 colorbar off
             end
-            colormap default
+           % colormap default
     end
 end
 
@@ -588,7 +642,7 @@ function SelectCellsByClass(~,~)
         scex.c=cLi(ci(i));
         sc_scatter_sce(scex);
         view(ax,bx);
-    end    
+    end
 end
 
 function DeleteSelectedCells(~,~)
@@ -812,10 +866,14 @@ end
 
 function LabelClusters(src,~)
         state = src.State;
-        if strcmp(state,'off')            
+        if strcmp(state,'off')
             [ax,bx]=view();
-            cla(hAx);
-            h=i_gscatter3(sce.s,c,methodid);
+            % cla(hAx);
+            if ~isempty(h.ZData)
+                h=i_gscatter3(sce.s,c,methodid);
+            else
+                h=i_gscatter3(sce.s(:,1:2),c,methodid);
+            end
             title(sce.title)
             view(ax,bx);
         else
@@ -833,12 +891,14 @@ function ShowClustersPop(~,~)
     answer = questdlg('Sort by size of cell groups?');
     if strcmpi(answer,'Yes')        
         [~,idxx]=sort(cmx,'descend');
-    end 
+    end
+    sces=sce.s;
+    if isempty(h.ZData), sces=sce.s(:,1:2); end
     figure;
     for k=1:9
         if k<=max(c)
             subplot(3,3,k);
-            i_gscatter3(sce.s,c,3,cmv(idxx(k)));
+            i_gscatter3(sces,c,3,cmv(idxx(k)));
             title(sprintf('%s\n[%d cells (%.2f%%)]',...
                 cL{idxx(k)},cmx(idxx(k)),100*cmx(idxx(k))/length(c)));
         end
@@ -850,7 +910,7 @@ function ShowClustersPop(~,~)
             kk=k+9;
             if kk<=max(c)
                 subplot(3,3,k);
-                i_gscatter3(sce.s,c,3,cmv(idxx(kk)));
+                i_gscatter3(sces,c,3,cmv(idxx(kk)));
                 title(sprintf('%s\n[%d cells (%.2f%%)]',...
                     cL{idxx(kk)},cmx(idxx(kk)),100*cmx(idxx(kk))/length(c)));
             end
@@ -902,12 +962,14 @@ function i_labelclusters
             stxt=sprintf('%d',i);
         end
         stxt=strrep(stxt,'_','\_');
-        if size(sce.s,2)==3
+        if ~isempty(h.ZData)    % size(sce.s,2)==3
             text(si(:,1),si(:,2),si(:,3),stxt,...
-                'fontsize',fsz,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');
+                'fontsize',fsz,'FontWeight','bold',...
+                'BackgroundColor','w','EdgeColor','k');
         else
             text(si(:,1),si(:,2),stxt,...
-                'fontsize',fsz,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');
+                'fontsize',fsz,'FontWeight','bold',...
+                'BackgroundColor','w','EdgeColor','k');
         end
     end
     hold off
