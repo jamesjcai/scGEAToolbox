@@ -29,7 +29,7 @@ tt = uitoggletool(tb,'Separator','on');
 % [img,map] = imread(fullfile(matlabroot,...
 %             'toolbox','matlab','icons','tool_ellipse.gif'));
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
-            'private','brush.gif'));        
+            'resources','brush.gif'));        
 ptImage = ind2rgb(img,map);
 tt.CData = ptImage;
 tt.Tooltip = 'Click and then brush/select cells';
@@ -51,7 +51,7 @@ pt = uipushtool(tb,'Separator','on');
 % [img,map] = imread(fullfile(matlabroot,...
 %             'toolbox','matlab','icons','profiler.gif'));
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
-            'private','list.gif'));         
+            'resources','list.gif'));         
 ptImage = ind2rgb(img,map);
 
 % defaultToolbar = findall(hFig,'Type','uitoolbar');

@@ -44,7 +44,7 @@ end
 tb = uitoolbar(hFig);
 pt = uipushtool(tb,'Separator','off');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
-            'private','explorer1.gif'));
+            'resources','explorer1.gif'));
 ptImage = ind2rgb(img,map);
 pt.CData = ptImage;
 pt.Tooltip = 'Cell Type Explorer...';
@@ -52,7 +52,7 @@ pt.ClickedCallback = @MenuSelected1;
 
 pt2 = uipushtool(tb,'Separator','on');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
-            'private','explorer2.gif'));
+            'resources','explorer2.gif'));
 ptImage = ind2rgb(img,map);
 pt2.CData = ptImage;
 pt2.Tooltip = 'Marker Gene Explorer...';
@@ -60,7 +60,7 @@ pt2.ClickedCallback = @MenuSelected2;
 
 pt3 = uipushtool(tb,'Separator','on');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
-            'private','explorer3.gif'));
+            'resources','explorer3.gif'));
 ptImage = ind2rgb(img,map);
 pt3.CData = ptImage;
 pt3.Tooltip = 'Pseudotime Explorer...';
