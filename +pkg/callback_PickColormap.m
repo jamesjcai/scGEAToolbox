@@ -1,4 +1,4 @@
-function PickColormap(~,~,kc)
+function callback_PickColormap(~,~,kc)
     cx=colormap('autumn');
     cx(1,:)=[.8 .8 .8];
     a=lines(kc);

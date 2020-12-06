@@ -16,7 +16,7 @@ switch methodid
     case 1
         if size(s,2)==2
            h=scatter(x,y,10,c);
-           box on
+           % box on
         elseif size(s,2)>=3
            h=scatter3(x,y,z,10,c);
         end

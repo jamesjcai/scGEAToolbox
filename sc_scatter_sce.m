@@ -30,10 +30,19 @@ title(sce.title);
 dt=datacursormode;
 dt.UpdateFcn = {@i_myupdatefcnx};
 
+% defaultToolbar = findall(FigureHandle, 'tag','FigureToolBar');  % get the figure's toolbar handle
+defaultToolbar = findall(FigureHandle,'Type','uitoolbar');
+% UitoolbarHandle2 = uitoolbar( 'Parent', FigureHandle ) ; 
+% set( UitoolbarHandle2, 'Tag' , 'FigureToolBar2' , ... 
+%     'HandleVisibility' , 'on' , ... 
+%     'Visible' , 'on' ) ; 
+
 UitoolbarHandle = uitoolbar( 'Parent', FigureHandle ) ; 
 set( UitoolbarHandle, 'Tag' , 'FigureToolBar' , ... 
     'HandleVisibility' , 'off' , ... 
     'Visible' , 'on' ) ; 
+
+
 
 % UitoolbarHandle = uitoolbar(FigureHandle);
 pt3 = uipushtool(UitoolbarHandle,'Separator','off');
@@ -124,7 +133,7 @@ ptclustertype.Tooltip = 'Cell types of clusters';
 ptclustertype.ClickedCallback = @DetermineCellTypeClusters;
 
 
-pt4 = uipushtool(UitoolbarHandle,'Separator','on');
+pt4 = uipushtool(UitoolbarHandle,'Separator','off');
 % [img,map] = imread(fullfile(matlabroot,...
 %             'toolbox','matlab','icons','plotpicker-stairs.gif'));
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
@@ -134,7 +143,28 @@ pt4.CData = ptImage;
 pt4.Tooltip = 'Marker genes of brushed cells';
 pt4.ClickedCallback = @Brush4Markers;
 
-pt4 = uipushtool(UitoolbarHandle,'Separator','off');
+
+
+
+ptpseudotime = uipushtool(defaultToolbar,'Separator','on');
+[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+            'resources','plotpicker-arxtimeseries.gif'));
+ptImage = ind2rgb(img,map);
+ptpseudotime.CData = ptImage;
+ptpseudotime.Tooltip = 'Run pseudotime analysis (Monocle)';
+ptpseudotime.ClickedCallback = @RunTrajectoryAnalysis;
+
+ptpseudotime = uipushtool(defaultToolbar,...
+    'Separator','off');
+[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+            'resources','plotpicker-comet.gif'));
+ptImage = ind2rgb(img,map);
+ptpseudotime.CData = ptImage;
+ptpseudotime.Tooltip = 'Plot pseudotime trajectory';
+ptpseudotime.ClickedCallback = @DrawTrajectory;
+
+
+pt4 = uipushtool(defaultToolbar,'Separator','on');
 % [img,map] = imread(fullfile(matlabroot,...
 %             'toolbox','matlab','icons','plotpicker-stairs.gif'));
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
@@ -144,23 +174,14 @@ pt4.CData = ptImage;
 pt4.Tooltip = 'Compare 2 groups (DE analysis)';
 pt4.ClickedCallback = @DEGene2Groups;
 
-
-ptpseudotime = uipushtool(UitoolbarHandle,'Separator','on');
-[img,map] = imread(fullfile(fileparts(which(mfilename)),...
-            'resources','plotpicker-arxtimeseries.gif'));
-ptImage = ind2rgb(img,map);
-ptpseudotime.CData = ptImage;
-ptpseudotime.Tooltip = 'Run pseudotime analysis (Monocle)';
-ptpseudotime.ClickedCallback = @RunTrajectoryAnalysis;
-
-ptpseudotime = uipushtool(UitoolbarHandle,...
+ptpseudotime = uipushtool(defaultToolbar,...
     'Separator','off');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
-            'resources','plotpicker-comet.gif'));
+            'resources','plotpicker-andrewsplot.gif'));
 ptImage = ind2rgb(img,map);
 ptpseudotime.CData = ptImage;
-ptpseudotime.Tooltip = 'Plot pseudotime trajectory';
-ptpseudotime.ClickedCallback = @DrawTrajectory;
+ptpseudotime.Tooltip = 'Function enrichment of HVG genes';
+ptpseudotime.ClickedCallback = {@callback_GSEA_HVGs,sce.X,sce.g};
 
 
 pt2 = uipushtool(UitoolbarHandle,'Separator','on');
@@ -178,8 +199,6 @@ ptImage = ind2rgb(img,map);
 pt.CData = ptImage;
 pt.Tooltip = 'Export & save data';
 pt.ClickedCallback = @SaveX;
-
-
 
 
 pt5 = uipushtool(UitoolbarHandle,'Separator','on');
@@ -209,7 +228,7 @@ pt5 = uipushtool(UitoolbarHandle,'Separator','on');
 ptImage = ind2rgb(img,map);
 pt5.CData = ptImage;
 pt5.Tooltip = 'Switch color maps';
-pt5.ClickedCallback = {@PickColormap,length(cL)};
+pt5.ClickedCallback = {@callback_PickColormap,length(cL)};
 
 pt5 = uipushtool(UitoolbarHandle,'Separator','off');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
@@ -220,7 +239,7 @@ pt5.Tooltip = 'Refresh';
 pt5.ClickedCallback = @RefreshAll;
 
 
-add_3dcamera(UitoolbarHandle,'AllCells');
+add_3dcamera(defaultToolbar,'AllCells');
 
 handles = guihandles( FigureHandle ) ; 
 guidata( FigureHandle, handles ) ; 

@@ -16,13 +16,15 @@ if strfind(cmdout,'there is no package')>0
     cd(oldpth);
     error(cmdout);
 end
-
+if exist('output.txt','file'), delete('output.txt'); end
 
 
 t=readtable('input_template.txt');
+N=size(t,1);
+if length(genelist)>N
+    genelist=genelist(1:N);
+end
 
-
-if exist('output.txt','file'), delete('output.txt'); end
 genelist=upper(genelist);
 a=-log(1-rand(length(genelist),1));
 sortid=(1:length(genelist))';

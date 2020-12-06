@@ -4,14 +4,12 @@ if nargin<3
 end
 if nargin<4, vebrose=true; end
 idx=startsWith(genelist,mtgenenamepat,'IgnoreCase',true);
-if vebrose
-    genelist(idx);
-end
-genelist=genelist(~idx);
-X=X(~idx,:);
 if sum(idx)>0
+    genelist=genelist(~idx);
+    X=X(~idx,:);
    if vebrose
-    fprintf('%d mt-genes found and removed.\n',sum(idx));
+       genelist(idx);
+       fprintf('%d mt-genes found and removed.\n',sum(idx));
    end
 else
    if vebrose

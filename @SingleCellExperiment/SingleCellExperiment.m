@@ -14,6 +14,11 @@ classdef SingleCellExperiment
       table_attributes table
       % drmethod {mustBeMember(drmethod,{'tsne','umap','phate'})} = 'tsne'
    end
+   
+   properties (Dependent)
+      NumCells
+      NumGenes
+   end 
 
    methods
     function obj = SingleCellExperiment(X,g,s,c)
@@ -28,13 +33,24 @@ classdef SingleCellExperiment
         obj.c_cell_id=transpose(1:size(X,2));
     end
 
-    function r = libsz(obj)
-     r = sum([obj.X]);
-    end
-    function r = norm(obj)
-     r = sc_norm(obj.X);
-    end
-    
+   function m = get.NumCells(obj)      
+      m = size(obj.X,2); 
+   end
+   
+   function obj = set.NumCells(obj,~)
+      fprintf('%s%d\n','NumCells is: ',obj.NumCells)
+      error('You cannot set NumCells property'); 
+   end
+   
+   function m = get.NumGenes(obj)   
+      m = size(obj.X,1); 
+   end
+   
+   function obj = set.NumGenes(obj,~)
+      fprintf('%s%d\n','NumGenes is: ',obj.NumGenes)
+      error('You cannot set NumGenes property'); 
+   end
+ 
     function r=numcells(obj)
         r=size(obj.X,2);
     end
@@ -75,20 +91,20 @@ classdef SingleCellExperiment
         end    
 
     function obj = selectcells(obj,i)
-        if islogical(i) && length(i)==obj.numcells
+        if islogical(i) && length(i)==obj.NumCells
             ix=i;
         else
-            ix=true(obj.numcells,1);
+            ix=true(obj.NumCells,1);
             ix(i)=false;            
         end
         obj = removecells(obj,~ix);
     end
 
-    function obj = set.c(obj,cx)
-      if length(cx)~=numcells(obj)         
-         error('You cannot set the Modulus property');
+    function obj = set.c(obj,tmpc)
+      if length(tmpc)~=numcells(obj)         
+         error('length(c)~=numcells(sce)');
       else
-         obj.c=cx;
+         obj.c=tmpc;
       end
     end
 
@@ -107,11 +123,27 @@ classdef SingleCellExperiment
     function obj = selectgenes(obj,min_countnum,min_cellnum)
         if nargin<2, min_countnum=1; end
         if nargin<3, min_cellnum=0.05; end
-        [X,g]=sc_selectg(obj.X,obj.g,min_countnum,min_cellnum);
-        obj.X=X;
-        obj.g=g;
+        [tmpX,tmpg]=sc_selectg(obj.X,obj.g,min_countnum,min_cellnum);
+        obj.X=tmpX;
+        obj.g=tmpg;
     end
-   
+    
+    function obj = rmmtgenes(obj)
+        [tmpX,tmpg,idx]=sc_rmmtgenes(obj.X,obj.g,'mt-',true);
+        if sum(idx)>0
+            obj.X=tmpX;
+            obj.g=tmpg;
+        end
+    end
+    
+    function obj = rmribosomalgenes(obj)
+        ribog=i_get_ribosomalgenes;
+        [i]=~ismember(upper(obj.g),ribog);
+        obj.X=obj.X(i,:);
+        obj.g=obj.g(i);
+    end
+
+    
 % function disp(td)
 %   fprintf(1,...
 %      'SingleCellExperiment: %d genes x %d cells\n',...

@@ -1,4 +1,4 @@
-function [g]=get_ribosomalgenes
+function [g]=i_get_ribosomalgenes
 %Get ribosomal genes
 
 options = weboptions('Timeout',21);

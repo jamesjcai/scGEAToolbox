@@ -83,6 +83,8 @@ residualcv2=log(fitratio);   % log(cv2)-log(cv2fit);
 
 T=table(genelist,u,cv2,residualcv2,fitratio,pval,fdr);
 T.Properties.VariableNames(1)={'genes'};
+i=~isnan(cv2);
+T=T(i,:);
 if sortit
     [T,idx]=sortrows(T,'fitratio','descend');    
     if nargout>1
@@ -99,6 +101,7 @@ end
 
 if plotit
     % [~,top100idx]=maxk(fitratio,100);
+    figure;
     scatter(log(u),log(cv2));
     hold on
     % scatter(log(u(top100idx)),log(cv2(top100idx)),'x');
