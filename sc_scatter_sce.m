@@ -221,14 +221,14 @@ pt5.ClickedCallback = @Switch2D3D;
 
 
 
-pt5 = uipushtool(UitoolbarHandle,'Separator','on');
+pt5pickcolr = uipushtool(UitoolbarHandle,'Separator','on');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
             'resources','plotpicker-compass.gif'));  % plotpicker-pie
 %map(map(:,1)+map(:,2)+map(:,3)==3) = NaN;  % Convert white pixels => transparent background
 ptImage = ind2rgb(img,map);
-pt5.CData = ptImage;
-pt5.Tooltip = 'Switch color maps';
-pt5.ClickedCallback = {@callback_PickColormap,length(cL)};
+pt5pickcolr.CData = ptImage;
+pt5pickcolr.Tooltip = 'Switch color maps';
+pt5pickcolr.ClickedCallback = @callback_PickColormap;
 
 pt5 = uipushtool(UitoolbarHandle,'Separator','off');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
@@ -577,16 +577,12 @@ function ShowCellStats(~,~)
                     pause(.5)
                     waitbar(.67,f,'Processing your data');                
                     [cix]=run_cellcycle(X,genelist);
-                    sce.c_cell_cycle_phase_tx=string(cix);
-                    waitbar(1,f,'Finishing');
-                    pause(1);
-                    close(f);
-                    
+                    sce.c_cell_cycle_phase_tx=cix;
+                    waitbar(1,f,'Finishing'); pause(1); close(f);                    
                 labels = {'Save cell cycle phase to variable named:'};
                 vars = {'c_cell_cycle_phase_tx'};
                 values = {sce.c_cell_cycle_phase_tx};
-                export2wsdlg(labels,vars,values);
-                
+                export2wsdlg(labels,vars,values);                
                 end              
                 [ci,tx]=grp2idx(sce.c_cell_cycle_phase_tx);
                 ttxt=sprintf('%s|',string(tx));
@@ -604,7 +600,7 @@ function ShowCellStats(~,~)
         if isempty(h.ZData)
             sces=sce.s(:,1:2);
         end
-            [ax,bx]=view();            
+            [ax,bx]=view();     
             h=i_gscatter3(sces,ci,1);
             view(ax,bx);
             title(sce.title);

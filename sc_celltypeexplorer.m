@@ -105,7 +105,7 @@ bg2.Visible = 'on';
 tb = uitoolbar(hFig);
 tt = uitoggletool(tb,'Separator','on');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
-            'private','brush.gif'));
+            'resources','brush.gif'));
 % [img,map] = imread(fullfile(matlabroot,...
 %             'toolbox','matlab','icons','tool_ellipse.gif'));
 ptImage = ind2rgb(img,map);

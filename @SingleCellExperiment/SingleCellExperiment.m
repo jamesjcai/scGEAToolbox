@@ -60,12 +60,27 @@ classdef SingleCellExperiment
     end
     
     function obj = estimatepotency(obj)
-        idx=input('Species: 1=human,2=mouse >>');
-        r=sc_potency(obj.X,obj.g,idx);
-        obj.list_cell_attributes=[obj.list_cell_attributes,...
-            {'cell_potency',r}];
+        if sum(strcmp('cell_potency',obj.list_cell_attributes))==0;
+            idx=input('Species: 1=human,2=mouse >>');
+            r=sc_potency(obj.X,obj.g,idx);
+            obj.list_cell_attributes=[obj.list_cell_attributes,...
+                {'cell_potency',r}];
+            disp('cell_potency added.');
+        else
+            disp('cell_potency existed.');
+        end
     end
 
+    function obj = estimatecellcycle(obj,forced)
+        if nargin<2, forced=false; end
+        if isempty(obj.c_cell_cycle_phase_tx) || forced
+            obj.c_cell_cycle_phase_tx=run_cellcycle(obj.X,obj.g);
+            disp('c_cell_cycle_phase_tx added.');
+        else
+            disp('c_cell_cycle_phase_tx existed.');
+        end
+    end
+    
     function obj = removecells(obj,i)
             obj.X(:,i)=[];
             obj.s(i,:)=[];
