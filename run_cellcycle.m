@@ -1,5 +1,7 @@
 function [c]=run_cellcycle(X,genelist)
 %Run cell cycle analysis using R package Seurat
+%Seurat implements the method proposed by Tirosh et al.39 to score cells based on the averaged normalized expression of known markers of G1/S and G2/M.
+%https://science.sciencemag.org/content/352/6282/189
 
 if nargin<2, error("[c]=run_cellcycle(X,genelist)"); end
 

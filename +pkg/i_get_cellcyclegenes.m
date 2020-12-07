@@ -1,5 +1,6 @@
-function [g]=get_cellcyclegenes
+function [g]=i_get_cellcyclegenes
 %Get cell-cycle genes
+%https://science.sciencemag.org/content/352/6282/189
 
 % https://www.frontiersin.org/articles/10.3389/fgene.2017.00001/full
 s1="CDK2, MKI67, RB1, E2F1, HIST1H2AE, CCNB1, CCNB1, CBX3, ND1, MKI67, GAPDH, CCNB1, CCNB2";
