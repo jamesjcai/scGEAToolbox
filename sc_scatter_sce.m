@@ -80,6 +80,24 @@ ptlabelclusters.CData = ptImage;
 ptlabelclusters.Tooltip = 'Label clusters';
 ptlabelclusters.ClickedCallback = @LabelClusters;
 
+% ------------------ clustering
+
+ptaddcluster = uipushtool(UitoolbarHandle,'Separator','off');
+[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+            'resources','plotpicker-glyplot-face.gif'));
+ptImage = ind2rgb(img,map);
+ptaddcluster.CData = ptImage;
+ptaddcluster.Tooltip = 'Add brushed cells to a new cluster';
+ptaddcluster.ClickedCallback = @Brushed2Cluster;
+
+ptmergecluster = uipushtool(UitoolbarHandle,'Separator','off');
+[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+            'resources','plotpicker-pzmap.gif'));
+ptImage = ind2rgb(img,map);
+ptmergecluster.CData = ptImage;
+ptmergecluster.Tooltip = 'Merge brushed cells to same cluster';
+ptmergecluster.ClickedCallback = @Brushed2MergeClusters;
+
 ptShowClu = uipushtool(UitoolbarHandle,'Separator','off');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
             'resources','plotpicker-geoscatter.gif'));         
@@ -88,17 +106,8 @@ ptShowClu.CData = ptImage;
 ptShowClu.Tooltip = 'Show clusters individually';
 ptShowClu.ClickedCallback = @ShowClustersPop;
 
-% ------------------ clustering
 
-ptaddcluster = uipushtool(UitoolbarHandle,'Separator','on');
-[img,map] = imread(fullfile(fileparts(which(mfilename)),...
-            'resources','plotpicker-pzmap.gif'));
-ptImage = ind2rgb(img,map);
-ptaddcluster.CData = ptImage;
-ptaddcluster.Tooltip = 'Add brushed cells to a new cluster';
-ptaddcluster.ClickedCallback = @Brushed2Cluster;
-
-ptcluster = uipushtool(UitoolbarHandle,'Separator','off');
+ptcluster = uipushtool(UitoolbarHandle,'Separator','on');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
             'resources','plotpicker-dendrogram.gif'));
 ptImage = ind2rgb(img,map);
@@ -123,6 +132,7 @@ ptImage = ind2rgb(img,map);
 pt5.CData = ptImage;
 pt5.Tooltip = 'Cell types of brushed cells';
 pt5.ClickedCallback = @Brush4Celltypes;
+
 
 ptclustertype = uipushtool(UitoolbarHandle,'Separator','off');
 [img,map] = imread(fullfile(matlabroot,...
@@ -252,42 +262,24 @@ end
 
 % =========================
 function RefreshAll(~,~)
-    answer = questdlg('Use current C?');
-    if strcmp(answer,'No')
-        listitems={'c'};
-        if ~isempty(sce.c_cluster_id), listitems=[listitems,'c_cluster_id']; end
-        if ~isempty(sce.c_cell_type_tx), listitems=[listitems,'c_cell_type_tx']; end
-        if ~isempty(sce.c_cell_cycle_phase_tx), listitems=[listitems,'c_cell_cycle_phase_tx']; end
-        if ~isempty(sce.c_batch_id), listitems=[listitems,'c_batch_id']; end
-    [indx,tf] = listdlg('PromptString',{'Select statistics',...
-    '',''},'SelectionMode','single','ListString',listitems);
-    if tf==1        
-        switch listitems{indx}
-            case 'c_cluster_id'
-                cc=sce.c_cluster_id;
-            case 'c_cell_type_tx'
-                cc=sce.c_cell_type_tx;
-            case 'c_cell_cycle_phase_tx'
-                cc=sce.c_cell_cycle_phase_tx;
-            case 'c_batch_id'
-                cc=sce.c_batch_id;
-            otherwise
-                cc=[];
-        end
-        if ~isempty(cc)
-            [c,cL]=grp2idx(cc);
-        end
+    if ~isempty(h.ZData)
+        [ax,bx]=view();
+        h=i_gscatter3(sce.s,c,methodid);
+        view(ax,bx);
+    else
+        h=i_gscatter3(sce.s(:,1:2),c,methodid);
     end
-    end
-    % cla(hAx);
-    % delete(h);
-    h=i_gscatter3(sce.s,c,methodid);
     title(sce.title)
+    
+%    h=i_gscatter3(sce.s,c,methodid);
+%    title(sce.title)
+    
     ptlabelclusters.State='off';
     UitoolbarHandle.Visible='off';
     UitoolbarHandle.Visible='on';
-    legend off
-    colorbar off    
+    
+    %legend off
+    %colorbar off    
 end
 
 function Switch2D3D(~,~)
@@ -370,9 +362,9 @@ function DetermineCellTypeClusters(~,~)
         databasetag="panglaodb";
     end    
     
-for i=1:max(c)    
+for i=1:max(c) 
     ptsSelected=c==i;
-    [Tct]=local_celltypebrushed(X,genelist,s,ptsSelected,...
+    [Tct]=local_celltypebrushed(sce.X,sce.g,sce.s,ptsSelected,...
           speciestag,organtag,databasetag);
     ctxt=Tct.C1_Cell_Type;
     
@@ -417,7 +409,50 @@ function Brushed2Cluster(~,~)
     [h]=i_gscatter3(sce.s,c,methodid);
     title(sce.title)
     view(ax,bx);
+    answer = questdlg('Update sce.c_cluster_id?');
+    if strcmp(answer,'Yes')
+        sce.c_cluster_id=c;
+    else
+        return;
+    end     
 end
+
+function Brushed2MergeClusters(~,~)
+    answer = questdlg('Merge brushed cells into one cluster?');
+    if ~strcmp(answer,'Yes'), return; end  
+    ptsSelected = logical(h.BrushData.');
+    if ~any(ptsSelected)
+        warndlg("No cells are brushed");
+        return;
+    end
+    c_members=unique(c(ptsSelected));
+    if numel(c_members)==1
+        warndlg("All brushed cells are in one cluster");
+        return;
+    else
+        [indx,tf] = listdlg('PromptString',{'Select target cluster',...
+        '',''},'SelectionMode','single','ListString',string(c_members));
+        if tf==1
+            c_target=c_members(indx);
+        else
+            return;
+        end
+    end    
+    c(ismember(c,c_members))=c_target;
+    [c,cL]=grp2idx(c);
+    sce.c=c;
+    [ax,bx]=view();
+    [h]=i_gscatter3(sce.s,c,methodid);
+    title(sce.title)
+    view(ax,bx);
+    answer = questdlg('Update sce.c_cluster_id?');
+    if strcmp(answer,'Yes')
+        sce.c_cluster_id=c;
+    else
+        return;
+    end     
+end
+
 
 function Brush4Celltypes(~,~)
     answer = questdlg('Label cell type of brushed cells?');
@@ -526,9 +561,6 @@ function ShowMarkerGene(~,~)
     if tf==1        
         figure;
         sc_scattermarker(sce.X,sce.g,sce.s,gsorted(indx),5);
-%       [ax,bx]=view(); 
-%       sc_markerscatter(X,genelist,gsorted(indx),s,3);
-%       view(ax,bx);
     end
 end
 
@@ -576,7 +608,7 @@ function ShowCellStats(~,~)
                     f = waitbar(0,'Please wait...');
                     pause(.5)
                     waitbar(.67,f,'Processing your data');                
-                    [cix]=run_cellcycle(X,genelist);
+                    [cix]=run_cellcycle(sce.X,sce.g);
                     sce.c_cell_cycle_phase_tx=cix;
                     waitbar(1,f,'Finishing'); pause(1); close(f);                    
                 labels = {'Save cell cycle phase to variable named:'};
@@ -588,13 +620,17 @@ function ShowCellStats(~,~)
                 ttxt=sprintf('%s|',string(tx));
             case 5 % cell type
                 [ci]=grp2idx(sce.c_cell_type_tx);
-            case 6 % cluster id                
+            case 6 % cluster id              
                 ci=sce.c_cluster_id;
             case 7 % batch id
                 ci=sce.c_batch_id;
             otherwise % other properties
                 ttxt=sce.list_cell_attributes{indx-7};
                 ci=sce.list_cell_attributes{indx-7+1};
+        end
+        if isempty(ci)
+            errordlg("Undefined classification");
+            return;
         end
         sces=sce.s;
         if isempty(h.ZData)
@@ -882,17 +918,53 @@ end
 function LabelClusters(src,~)
         state = src.State;
         if strcmp(state,'off')
-            [ax,bx]=view();
-            % cla(hAx);
-            if ~isempty(h.ZData)
-                h=i_gscatter3(sce.s,c,methodid);
-            else
-                h=i_gscatter3(sce.s(:,1:2),c,methodid);
-            end
-            title(sce.title)
-            view(ax,bx);
+            RefreshAll;
         else
-            i_labelclusters;
+            answer = questdlg('Change current class type?');
+            if strcmp(answer,'No')
+                set(src,'State','off');
+            elseif strcmp(answer,'Yes')                
+                listitems={'c'};
+                if ~isempty(sce.c_cluster_id), listitems=[listitems,'c_cluster_id']; end
+                if ~isempty(sce.c_cell_type_tx), listitems=[listitems,'c_cell_type_tx']; end
+                if ~isempty(sce.c_cell_cycle_phase_tx), listitems=[listitems,'c_cell_cycle_phase_tx']; end
+                if ~isempty(sce.c_batch_id), listitems=[listitems,'c_batch_id']; end
+                [indx,tf] = listdlg('PromptString',{'Select statistics',...
+                '',''},'SelectionMode','single','ListString',listitems);
+                if tf==1   
+                    switch listitems{indx}
+                        case 'c_cluster_id'
+                            cc=sce.c_cluster_id;
+                        case 'c_cell_type_tx'
+                            cc=sce.c_cell_type_tx;
+                        case 'c_cell_cycle_phase_tx'
+                            cc=sce.c_cell_cycle_phase_tx;
+                        case 'c_batch_id'
+                            cc=sce.c_batch_id;
+                        otherwise
+                            cc=[];
+                    end
+                    if ~isempty(cc)                        
+                        [c,cL]=grp2idx(cc);
+                        set(src,'State','off');
+                        RefreshAll;
+                    end                    
+                else
+                    set(src,'State','off');
+                    RefreshAll;
+                    return;
+                end
+            else
+                set(src,'State','off');
+                RefreshAll;
+                return;
+            end
+            if i_labelclusters
+                set(src,'State','on');
+            else                
+                set(src,'State','off');
+                RefreshAll;
+            end
         end
 end
 
@@ -946,13 +1018,17 @@ function [txt]=i_myupdatefcnx(~,event_obj)
     end
 end
 
-function i_labelclusters
-    stxtyes=false;
+function [isdone]=i_labelclusters
+    isdone=false;
     if ~isempty(cL)
         answer = questdlg(sprintf('Label %d groups with index or text?',numel(cL)),...
             'Select Format','Index','Text','Text');
         if strcmp(answer,'Text')
-            stxtyes=true; 
+            stxtyes=true;
+        elseif strcmp(answer,'Index')
+            stxtyes=false;
+        else
+            return;
         end
     end
     prompt = {'Enter font size (1-30):'};
@@ -970,7 +1046,7 @@ function i_labelclusters
     hold on
     for i=1:max(c)
         si=sce.s(c==i,:);
-        si=mean(si);        
+        si=mean(si,1);        
         if stxtyes
             stxt=sprintf('%s',cL{i});
         else
@@ -989,6 +1065,7 @@ function i_labelclusters
     end
     hold off
     % helpdlg(sprintf('%d clusters are labelled.',numel(cL)));
+    isdone=true;
 end
 
 end
