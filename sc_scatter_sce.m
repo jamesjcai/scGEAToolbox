@@ -283,13 +283,13 @@ function RefreshAll(~,~)
 end
 
 function Switch2D3D(~,~)
-    oldcmp=colormap();
+    %oldcmp=colormap();
     if isempty(h.ZData)
         h=i_gscatter3(sce.s,c,methodid);
     else
         h=i_gscatter3(sce.s(:,1:2),c,methodid);
     end
-    colormap(oldcmp);
+    %colormap(oldcmp);
     title(sce.title)
 end
 
@@ -300,11 +300,24 @@ function DEGene2Groups(~,~)
         warndlg("sce.c_batch_id is empty");
         return;
     end
-    
+    answer = questdlg('Which method?','Select Method','Wilcoxon rank-sum test','MAST','Wilcoxon rank-sum test');
+    if strcmpi(answer,'Wilcoxon rank-sum test')
+        methodtag="ranksum";
+    elseif strcmpi(answer,'MAST')
+        methodtag="mast";
+    else
+        return;
+    end
     f = waitbar(0,'Please wait...');
     pause(.5); waitbar(.67,f,'Processing your data');
-    T=run_mast(sce.X(:,sce.c_batch_id==1),...
-            sce.X(:,sce.c_batch_id==2),sce.g);
+    switch methodtag
+        case 'ranksum'
+            T=sc_deg(sce.X(:,sce.c_batch_id==1),...
+                    sce.X(:,sce.c_batch_id==2),sce.g);
+        case 'mast'
+            T=run_mast(sce.X(:,sce.c_batch_id==1),...
+                    sce.X(:,sce.c_batch_id==2),sce.g);
+    end
     waitbar(1,f,'Finishing');
     pause(1); close(f);    
     labels = {'Save DE results T to variable named:'}; 
@@ -639,15 +652,17 @@ function ShowCellStats(~,~)
             [ax,bx]=view();     
             h=i_gscatter3(sces,ci,1);
             view(ax,bx);
-            title(sce.title);
-            
+            title(sce.title);            
             if indx==4
                 hc=colorbar;
                 hc.Label.String=ttxt;
             else
                 colorbar off
             end
-           % colormap default
+    answer = questdlg('Update sce.c?');
+    if strcmp(answer,'Yes')
+       [c,cL]=grp2idx(ci);
+    end
     end
 end
 
@@ -722,9 +737,12 @@ end
 function SaveX(~,~)
     answer = questdlg('Export & save data?');
     if ~strcmp(answer,'Yes'), return; end     
-    labels = {'Save SCE to variable named:'}; 
-    vars = {'sce'};
-    values = {sce};
+    labels = {'Save SCE to variable named:',...
+        'Save SCE.X to variable named:',...
+        'Save SCE.g to variable named:',...
+        'Save SCE.S to variable named:'}; 
+    vars = {'sce','X','genelist','s'};
+    values = {sce,sce.X,sce.g,sce.s};
     export2wsdlg(labels,vars,values);
 end
 

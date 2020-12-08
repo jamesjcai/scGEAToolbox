@@ -6,7 +6,7 @@ function sc_markerexplorer(X,genelist,s,varargin)
    addRequired(p,'X',@isnumeric);
    addRequired(p,'genelist',@isstring);
    addRequired(p,'s',@isnumeric);
-   addOptional(p,'method',"ttest",@(x) (isstring(x)|ischar(x))&ismember(lower(string(x)),["ttest","mast"]));
+   addOptional(p,'method',"ranksum",@(x) (isstring(x)|ischar(x))&ismember(lower(string(x)),["ranksum","mast"]));
    addOptional(p,'numfig',1,@isnumeric);
    parse(p,X,genelist,s,varargin{:});
    method=p.Results.method;
@@ -33,9 +33,9 @@ tt = uitoggletool(tb,'Separator','on');
 ptImage = ind2rgb(img,map);
 tt.CData = ptImage;
 tt.Tooltip = 'Click and then brush/select cells';
-tt.ClickedCallback = @MenuSelected1;
+tt.ClickedCallback = @BrushSwitcher;
 
-    function MenuSelected1(src,~)
+    function BrushSwitcher(src,~)
         state = src.State;        
         if strcmp(state,'on')
             hBr.Enable='on';
@@ -123,7 +123,7 @@ hLines = flipud(eventdata.Axes.Children);
             switch method
                 case 'mast'
                     [markerlist]=sc_pickmarkers2(X,genelist,1+ptsSelected,2);
-                case 'ttest'
+                case 'ranksum'
                     [markerlist]=sc_pickmarkers(X,genelist,1+ptsSelected,2);
             end
             [ax,bx]=view();

@@ -15,10 +15,10 @@ if nargin<4, methodid=1; end
 ng=size(X,1);
 assert(isequal(ng,size(Y,1)));
 
-pValues=ones(ng,1);
-avglogFC=ones(ng,1);
-pct1=ones(ng,1);
-pct2=ones(ng,1);
+p_val=ones(ng,1);
+avg_logFC=ones(ng,1);
+pct_1=ones(ng,1);
+pct_2=ones(ng,1);
 
 for k=1:ng
     x=X(k,:);
@@ -26,23 +26,29 @@ for k=1:ng
     switch methodid
         case 1
             % “wilcox” : Wilcoxon rank sum test (default)
-            pValues(k)=ranksum(x,y);
+            p_val(k)=ranksum(x,y);
         case 2
             [~,p]=ttest2(x,y);
-            pValues(k)=p;
+            p_val(k)=p;
         otherwise
-            pValues(k)=ranksum(x,y);
+            p_val(k)=ranksum(x,y);
     end
-    avglogFC(k)=log2(mean(x)./mean(y));
-    pct1(k)=sum(x>0)./length(x);
-    pct2(k)=sum(y>0)./length(y);
+    avg_logFC(k)=log2(mean(x)./mean(y));
+    pct_1(k)=sum(x>0)./length(x);
+    pct_2(k)=sum(y>0)./length(y);
 end
 
-pAdjusted = mafdr(pValues,'BHFDR',true);
-    sortid=(1:length(genelist))';
-    if size(genelist,2)>1, genelist=genelist'; end
-    T=table(sortid,genelist,pValues,avglogFC,pct1,pct2,pAdjusted);
-    T=sortrows(T,'pAdjusted','descend');
+    p_val_adj = mafdr(p_val,'BHFDR',true);
+
+%     sortid=(1:length(genelist))';
+    if size(genelist,2)>1 
+        gene=genelist';
+    else
+        gene=genelist;
+    end
+    T=table(gene,p_val,avg_logFC,pct_1,pct_2,p_val_adj);
+    T=T(~isnan(p_val),:);
+    T=sortrows(T,'p_val_adj','ascend');
 
 
 % Test for expression differences between two sets of cells

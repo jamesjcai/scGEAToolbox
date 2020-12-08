@@ -13,8 +13,8 @@ for k=1:K
     if k~=id
         x0=X(:,idv==k);
         T=sc_deg(x0,x1,genelist,1);
-        T=sortrows(T,'sortid','ascend');
-        a=-log(T.pValues).*sign(T.avglogFC);
+        %T=sortrows(T,'sortid','ascend');
+        a=-log(T.p_val).*sign(T.avg_logFC);
         A=[A a];
     end
 end
