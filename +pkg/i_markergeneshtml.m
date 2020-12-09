@@ -41,7 +41,7 @@ htmlstr="";
     end
     fprintf(fid,'%s',htmlstr);
     fclose(fid);
-    pause(2);
-    winopen(dirtxt);
+    pause(1);
+    % winopen(dirtxt);
     web(fname,'-browser');
 end
