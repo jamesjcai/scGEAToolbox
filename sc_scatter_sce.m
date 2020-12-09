@@ -20,8 +20,10 @@ end
 
 [c,cL]=grp2idx(cin);
 
-FigureHandle = figure('Name','sc_scatter_sce','visible','off');
-movegui( FigureHandle, 'center' ) ; 
+FigureHandle = figure('Name','sc_scatter_sce',...
+'position',round(1.5*[0 0 560 420]),...    
+'visible','off');
+movegui(FigureHandle,'center');
 
 hAx = axes('Parent',FigureHandle);
 [h]=i_gscatter3(sce.s,c,methodid);
@@ -308,8 +310,7 @@ function DEGene2Groups(~,~)
     else
         return;
     end
-    f = waitbar(0,'Please wait...');
-    pause(.5); waitbar(.67,f,'Processing your data');
+    fw=pkg.gui_waitbar;
     switch methodtag
         case 'ranksum'
             T=sc_deg(sce.X(:,sce.c_batch_id==1),...
@@ -318,8 +319,7 @@ function DEGene2Groups(~,~)
             T=run_mast(sce.X(:,sce.c_batch_id==1),...
                     sce.X(:,sce.c_batch_id==2),sce.g);
     end
-    waitbar(1,f,'Finishing');
-    pause(1); close(f);    
+    pkg.gui_waitbar(fw);
     labels = {'Save DE results T to variable named:'}; 
     vars = {'T'}; values = {T};
     msgfig=export2wsdlg(labels,vars,values);
@@ -342,8 +342,7 @@ function EmbeddingAgain(~,~)
     answer = questdlg('Embedding cells?');
     if ~strcmp(answer,'Yes'), return; end
     answer = questdlg('Which method?','Select method','tSNE','Phate','UMAP','Phate');
-    f = waitbar(0,'Please wait...');
-    pause(.5); waitbar(.67,f,'Processing your data');
+    fw=pkg.gui_waitbar;
     if strcmp(answer,'tSNE')
         sce.s=sc_tsne(sce.X,3,false);
     elseif strcmp(answer,'Phate')
@@ -351,8 +350,7 @@ function EmbeddingAgain(~,~)
     elseif strcmp(answer,'UMAP')
         sce.s=run_umap(sce.X,false);
     end
-    waitbar(1,f,'Finishing');
-    pause(1); close(f);
+    pkg.gui_waitbar(fw);
     RefreshAll;
 end
 
@@ -490,16 +488,12 @@ function Brush4Celltypes(~,~)
     else
         databasetag="panglaodb";
     end    
-    f = waitbar(0,'Please wait...');
-    pause(.5)
-    waitbar(.67,f,'Processing your data');
+    fw=pkg.gui_waitbar;
     [Tct]=local_celltypebrushed(sce.X,sce.g,sce.s,ptsSelected,...
           speciestag,organtag,databasetag);
     ctxt=Tct.C1_Cell_Type;            
-    waitbar(1,f,'Finishing');
-    pause(1);
-    close(f);
-    
+    pkg.gui_waitbar(fw);
+   
         [indx,tf] = listdlg('PromptString',{'Select cell type',...
         '',''},'SelectionMode','single','ListString',ctxt);
         if tf==1 
@@ -525,44 +519,63 @@ function Brush4Celltypes(~,~)
 end
 
 function Brush4Markers(~,~)
-    answer = questdlg('Get marker genes of brushed cells?');
-    if ~strcmp(answer,'Yes'), return; end  
     ptsSelected = logical(h.BrushData.');
     if ~any(ptsSelected)
         warndlg("No cells are selected.");
         return;
     end
-    prompt = {'Enter number of panels (1-10)'};
-    dlgtitle = 'Panel of 9 Genes';
-    answer = inputdlg(prompt,dlgtitle,[1 40],{'1'});
-    if isempty(answer)
-        return; 
+    if isscalar(unique(c))
+        methodtag=1;
     else
-        try
-            numfig=str2double(answer{1});
-        catch ME
-            errordlg(ME.message);
+        answer = questdlg('Select brushed cell class?');
+        if strcmp(answer,'Yes')
+            if isscalar(unique(c(ptsSelected)))
+                methodtag=2;
+            else
+                errordlg('More than one class brushed');
+                return;
+            end
+        elseif strcmp(answer,'No')
+            methodtag=1;
+        else
             return;
         end
     end
-    if ~(numfig>0 && numfig<=10)
-        errordlg('Invalid number of figures');
-        return;
+    fw=pkg.gui_waitbar;
+    switch methodtag
+        case 1
+            [markerlist]=sc_pickmarkers(sce.X,sce.g,1+ptsSelected,2);
+        case 2
+            [markerlist]=sc_pickmarkers(sce.X,sce.g,c,unique(c(ptsSelected)));
     end
-    f = waitbar(0,'Please wait...');
-    pause(.5)
-    waitbar(.67,f,'Processing your data');
-    [markerlist]=sc_pickmarkers(sce.X,sce.g,1+ptsSelected,2);
-    waitbar(1,f,'Finishing');
-    pause(1);
-    close(f);
-    [ax,bx]=view();
-    i_markergenespanel(sce.X,sce.g,sce.s,...
-        markerlist,numfig,9,ax,bx,...
-        'Marker Genes for Selected Cells');
-    pause(2);
-    export2wsdlg({'Save marker list to variable named:'},...
-            {'g_markerlist'},{markerlist});
+    pkg.gui_waitbar(fw);
+    [numfig]=gui_inputdlg;
+
+    answer = questdlg('What type?', ...
+	'Plot Type', ...
+	'Heatmap','Violin plot','Both','Heatmap');
+    switch answer
+        case 'Violin plot'
+            pkg.i_markergenesviolin(sce.X,sce.g,sce.c,...
+             markerlist,numfig,4,...
+            'Marker Genes for Selected Cells');
+        case 'Heatmap'
+            [ax,bx]=view();
+            pkg.i_markergenespanel(sce.X,sce.g,sce.s,...
+                 markerlist,numfig,9,ax,bx,...
+                'Marker Genes for Selected Cells');
+        case 'Both'
+            pkg.i_markergenesviolin(sce.X,sce.g,sce.c,...
+             markerlist,numfig,4,...
+            'Marker Genes for Selected Cells');
+            [ax,bx]=view();
+            pkg.i_markergenespanel(sce.X,sce.g,sce.s,...
+                 markerlist,numfig,9,ax,bx,...
+                'Marker Genes for Selected Cells');        
+    end
+%     pause(2);
+%     export2wsdlg({'Save marker list to variable named:'},...
+%             {'g_markerlist'},{markerlist});
 end
 
 function ShowMarkerGene(~,~)
@@ -618,21 +631,15 @@ function ShowCellStats(~,~)
                 return;
             case 4   % "Cell Cycle Phase";
                 if isempty(sce.c_cell_cycle_phase_tx)
-                    f = waitbar(0,'Please wait...');
-                    pause(.5)
-                    waitbar(.67,f,'Processing your data');                
+                    fw=pkg.gui_waitbar;               
                     [cix]=run_cellcycle(sce.X,sce.g);
                     sce.c_cell_cycle_phase_tx=cix;
-                    waitbar(1,f,'Finishing'); pause(1); close(f);                    
-                labels = {'Save cell cycle phase to variable named:'};
-                vars = {'c_cell_cycle_phase_tx'};
-                values = {sce.c_cell_cycle_phase_tx};
-                export2wsdlg(labels,vars,values);                
-                end              
+                    pkg.gui_waitbar(fw);                    
+                end                
                 [ci,tx]=grp2idx(sce.c_cell_cycle_phase_tx);
                 ttxt=sprintf('%s|',string(tx));
             case 5 % cell type
-                [ci]=grp2idx(sce.c_cell_type_tx);
+                ci=sce.c_cell_type_tx;
             case 6 % cluster id              
                 ci=sce.c_cluster_id;
             case 7 % batch id
@@ -803,14 +810,9 @@ function RunTrajectoryAnalysis(~,~)
     answer = questdlg('Run pseudotime analysis (Monocle)?');
     if ~strcmp(answer,'Yes'), return; end
     
-    f = waitbar(0,'Please wait...');
-    pause(.5)
-    waitbar(.67,f,'Processing your data');
+    fw=pkg.gui_waitbar;
     [t_mono,s_mono]=run_monocle(sce.X);
-    waitbar(1,f,'Finishing');
-    pause(1)
-    close(f)
-    
+    pkg.gui_waitbar(fw);
 
         answer = questdlg('View Monocle DDRTree?', ...
             'Pseudotime View', ...
@@ -858,15 +860,11 @@ function ClusterCellsS(~,~)
     catch
         return;
     end    
-    f = waitbar(0,'Please wait...');
-    pause(.5)
-    waitbar(.67,f,'Processing your data');    
+    fw=pkg.gui_waitbar;  
     hold off
     sce.c_cluster_id=sc_cluster_s(sce.s,k,'type',methodtag,'plotit',false);
     [c,cL]=grp2idx(sce.c_cluster_id);
-    waitbar(1,f,'Finishing');
-    pause(1);
-    close(f);
+    pkg.gui_waitbar(fw);
     [ax,bx]=view();
     sce.c=c;
     h=i_gscatter3(sce.s,c);
@@ -901,9 +899,7 @@ function ClusterCellsX(~,~)
         retrun;
     end
     
-    f = waitbar(0,'Please wait...');
-    pause(.5)
-    waitbar(.67,f,'Processing your data');
+    fw=pkg.gui_waitbar;
     try
         [sce.c_cluster_id]=sc_cluster_x(sce.X,k,'type',methodtag);
     catch ME
@@ -914,9 +910,7 @@ function ClusterCellsX(~,~)
     end
     [c,cL]=grp2idx(sce.c_cluster_id);
     sce.c=c;
-    waitbar(1,f,'Finishing');
-    pause(1);
-    close(f);
+    pkg.gui_waitbar(fw);
     % hold off
     delete(h);
     h=i_gscatter3(sce.s,c);
