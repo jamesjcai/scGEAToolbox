@@ -1,8 +1,8 @@
 function [numfig]=gui_inputdlg
 
-    prompt = {'Enter number of panels (1-10)'};
-    dlgtitle = 'Panel of 9 Genes';
-    answer = inputdlg(prompt,dlgtitle,[1 40],{'1'});
+    prompt = {'Enter number of genes (1-50)'};
+    dlgtitle = ' ';
+    answer = inputdlg(prompt,dlgtitle,[1 50],{'10'});
     if isempty(answer)
         return; 
     else
@@ -13,7 +13,7 @@ function [numfig]=gui_inputdlg
             return;
         end
     end
-    if ~(numfig>0 && numfig<=10)
+    if ~(numfig>0 && numfig<=50)
         errordlg('Invalid number of figures');
         return;
     end

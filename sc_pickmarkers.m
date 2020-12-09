@@ -9,21 +9,25 @@ function [markerlist,A]=sc_pickmarkers(X,genelist,idv,id)
 K=max(idv);
 x1=X(:,idv==id);
 A=[];
+
+totn=sum(idv~=id);
 for k=1:K
     if k~=id
-        fprintf('Comparing class %d with class %d (out of %d)\n',...
-            id,k,K);
+        fprintf('Comparing selected group (#%d) with group #%d (out of %d)\n',...
+                 id,k,K-1);
         x0=X(:,idv==k);
         T=i_sc_deg(x0,x1,genelist);
         %a=-log(T.p_val).*sign(T.avg_logFC);
-        a=T.z_val;
-        A=[A a];        
+        w=sum(idv==k)./totn;   % weight by number of cells
+        a=w*T.z_val;
+        A=[A a];
     end
 end
 % [~,idx]=sort(sum(A,2));
 %A(isnan(A))=0;
 %[~,idx]=sort(vecnorm(A,2,2),'descend');  % NaN messed up 
-[~,idx]=sort(-vecnorm(A,2,2));  % NaN is ignored
+%[~,idx]=sort(-vecnorm(A,2,2));  % NaN is ignored
+[~,idx]=sort(nansum(A,2));
 markerlist=genelist(idx);
 end
 

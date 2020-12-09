@@ -519,6 +519,7 @@ function Brush4Celltypes(~,~)
 end
 
 function Brush4Markers(~,~)
+    [ax,bx]=view();
     ptsSelected = logical(h.BrushData.');
     if ~any(ptsSelected)
         warndlg("No cells are selected.");
@@ -527,12 +528,12 @@ function Brush4Markers(~,~)
     if isscalar(unique(c))
         methodtag=1;
     else
-        answer = questdlg('Select brushed cell class?');
+        answer = questdlg('Select brushed cell group?');
         if strcmp(answer,'Yes')
             if isscalar(unique(c(ptsSelected)))
                 methodtag=2;
             else
-                errordlg('More than one class brushed');
+                errordlg('More than one group of brushed cells');
                 return;
             end
         elseif strcmp(answer,'No')
@@ -544,35 +545,16 @@ function Brush4Markers(~,~)
     fw=pkg.gui_waitbar;
     switch methodtag
         case 1
-            [markerlist]=sc_pickmarkers(sce.X,sce.g,1+ptsSelected,2);
+            [markerlist,A]=sc_pickmarkers(sce.X,sce.g,1+ptsSelected,2);
         case 2
-            [markerlist]=sc_pickmarkers(sce.X,sce.g,c,unique(c(ptsSelected)));
+            [markerlist,A]=sc_pickmarkers(sce.X,sce.g,c,unique(c(ptsSelected)));
     end
     pkg.gui_waitbar(fw);
+    assignin('base','A',A);
     [numfig]=gui_inputdlg;
-
-    answer = questdlg('What type?', ...
-	'Plot Type', ...
-	'Heatmap','Violin plot','Both','Heatmap');
-    switch answer
-        case 'Violin plot'
-            pkg.i_markergenesviolin(sce.X,sce.g,sce.c,...
-             markerlist,numfig,4,...
-            'Marker Genes for Selected Cells');
-        case 'Heatmap'
-            [ax,bx]=view();
-            pkg.i_markergenespanel(sce.X,sce.g,sce.s,...
-                 markerlist,numfig,9,ax,bx,...
-                'Marker Genes for Selected Cells');
-        case 'Both'
-            pkg.i_markergenesviolin(sce.X,sce.g,sce.c,...
-             markerlist,numfig,4,...
-            'Marker Genes for Selected Cells');
-            [ax,bx]=view();
-            pkg.i_markergenespanel(sce.X,sce.g,sce.s,...
-                 markerlist,numfig,9,ax,bx,...
-                'Marker Genes for Selected Cells');        
-    end
+    fw=pkg.gui_waitbar;    
+    pkg.i_markergeneshtml(sce,markerlist,numfig,[ax bx]);
+    pkg.gui_waitbar(fw);
 %     pause(2);
 %     export2wsdlg({'Save marker list to variable named:'},...
 %             {'g_markerlist'},{markerlist});
