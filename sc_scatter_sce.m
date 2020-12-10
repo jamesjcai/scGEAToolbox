@@ -4,20 +4,20 @@ import pkg.*
 p = inputParser;
 % validTypes = {'kmeans','kmedoids','dbscan'};
 % checkType = @(x) any(validatestring(x,validTypes));
-checkC = @(x) size(sce.X,2)==length(x);
+checkC = @(x) isempty(x) | size(sce.X,2)==length(x);
 addRequired(p,'sce',@(x) isa(x,'SingleCellExperiment'));
-addOptional(p,'c',sce.c,checkC);
-addOptional(p,'plotit',true,@islogical);
+addOptional(p,'c',[],checkC);
 addOptional(p,'methodid',1,@isnumeric);
 parse(p,sce,varargin{:});
 cin=p.Results.c;
-plotit=p.Results.plotit;
 methodid=p.Results.plotit;
 
 if ~isa(sce,'SingleCellExperiment')
     error('requires sce=SingleCellExperiment();');
 end
-
+if isempty(cin)
+    cin=ones(size(sce.X,2),1);
+end
 [c,cL]=grp2idx(cin);
 
 FigureHandle = figure('Name','sc_scatter_sce',...
