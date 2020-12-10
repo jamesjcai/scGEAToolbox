@@ -6,6 +6,7 @@ function [markerlist,A]=sc_pickmarkers(X,genelist,idv,id)
 % Demo:
 %gx=sc_pickmarkers(X,genelist,cluster_id,2);
 %run_celltypeassignation(gx)
+X=sc_transform(X);
 K=max(idv);
 x1=X(:,idv==id);
 A=[];
@@ -18,8 +19,11 @@ for k=1:K
         x0=X(:,idv==k);
         T=i_sc_deg(x0,x1,genelist);
         %a=-log(T.p_val).*sign(T.avg_logFC);
-        w=sum(idv==k)./totn;   % weight by number of cells
-        a=w*T.z_val;
+        
+        %w=sum(idv==k)./totn;   % weight by number of cells
+        %a=w*T.z_val;
+        a=T.z_val;
+        
         A=[A a];
     end
 end

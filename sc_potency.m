@@ -4,6 +4,9 @@ function [r]=sc_potency(X,genelist,speciesid)
 %such as marker expression or timepoint.
 % CCAT (Correlation of Connectome And Transcriptome)
 %https://github.com/aet21/SCENT
+%
+%see also: sc_cytotrace
+
 if nargin<3, speciesid=1; end
 
 genelist=upper(genelist);
