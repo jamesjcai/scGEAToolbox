@@ -6,11 +6,11 @@ p = inputParser;
 % checkType = @(x) any(validatestring(x,validTypes));
 checkC = @(x) isempty(x) | size(sce.X,2)==length(x);
 addRequired(p,'sce',@(x) isa(x,'SingleCellExperiment'));
-addOptional(p,'c',[],checkC);
+addOptional(p,'c',sce.c,checkC);
 addOptional(p,'methodid',1,@isnumeric);
 parse(p,sce,varargin{:});
 cin=p.Results.c;
-methodid=p.Results.plotit;
+methodid=p.Results.methodid;
 
 if ~isa(sce,'SingleCellExperiment')
     error('requires sce=SingleCellExperiment();');
