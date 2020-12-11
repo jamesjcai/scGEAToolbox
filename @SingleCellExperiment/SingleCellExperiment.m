@@ -152,10 +152,12 @@ classdef SingleCellExperiment
     end
     
     function obj = rmribosomalgenes(obj)
-        ribog=i_get_ribosomalgenes;
-        [i]=~ismember(upper(obj.g),ribog);
-        obj.X=obj.X(i,:);
-        obj.g=obj.g(i);
+        ribog=pkg.i_get_ribosomalgenes;
+        [i]=ismember(upper(obj.g),ribog);        
+        obj.X=obj.X(~i,:);
+        obj.g=obj.g(~i);
+        fprintf('%d ribosomal genes found and removed.\n',...
+            sum(i));
     end
 
     

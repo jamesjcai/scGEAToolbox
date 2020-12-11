@@ -8,10 +8,14 @@ function [markerlist,A]=sc_pickmarkers(X,genelist,idv,id)
 %run_celltypeassignation(gx)
 X=sc_transform(X);
 K=max(idv);
-x1=X(:,idv==id);
-A=[];
+idx=idv==id;
 
-totn=sum(idv~=id);
+x1=X(:,idx);
+x0=X(:,~idx);
+% A=[];
+T=i_sc_deg(x0,x1,genelist);
+A=T.z_val;
+totn=sum(~idx);
 for k=1:K
     if k~=id
         fprintf('Comparing selected group (#%d) with group #%d (out of %d)\n',...
@@ -20,10 +24,9 @@ for k=1:K
         T=i_sc_deg(x0,x1,genelist);
         %a=-log(T.p_val).*sign(T.avg_logFC);
         
-        %w=sum(idv==k)./totn;   % weight by number of cells
-        %a=w*T.z_val;
-        a=T.z_val;
-        
+        w=sum(idv==k)./totn;   % weight by number of cells
+        a=w*T.z_val;
+               
         A=[A a];
     end
 end

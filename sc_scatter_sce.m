@@ -550,10 +550,11 @@ function Brush4Markers(~,~)
             [markerlist,A]=sc_pickmarkers(sce.X,sce.g,c,unique(c(ptsSelected)));
     end
     pkg.gui_waitbar(fw);
-    assignin('base','A',A);
-    [numfig]=gui_inputdlg;
-    fw=pkg.gui_waitbar;    
-    pkg.i_markergeneshtml(sce,markerlist,numfig,[ax bx]);
+    % assignin('base','A',A);
+    [numfig]=pkg.gui_inputdlg;
+    fw=pkg.gui_waitbar;
+    htmlfilename=cL{unique(c(ptsSelected))};
+    pkg.i_markergeneshtml(sce,markerlist,numfig,[ax bx],htmlfilename);
     pkg.gui_waitbar(fw);
 %     pause(2);
 %     export2wsdlg({'Save marker list to variable named:'},...
