@@ -10,10 +10,11 @@ a(1,:)=[.8 .8 .8];
 fname=[tempname,'.html'];
 fid=fopen(fname,'w');
 htmlstr="";
+
     for k=1:numfig
         k
         targeetg=markerlist(k);
-        h=figure('Visible','off');
+        h=figure('Visible','off','Position',[1700 540 560 300]);
 %         sc_scattermarker(sce.X,sce.g,sce.s,...
 %             markerlist(k),3,5,false);        
         z=log2(1+sce.X(sce.g==targeetg,:));
@@ -26,6 +27,7 @@ htmlstr="";
         colormap(h,a);
         title(targeetg)
         if ~isempty(axbx), view(axbx(1),axbx(2)); end
+        
         %imgfname1=sprintf('heatmap_%s.png',targeetg);
         %saveas(h,sprintf('%s%s',dirtxt,imgfname1));
         %close(h);
@@ -45,7 +47,7 @@ xn=matlab.lang.makeValidName(cL{i(1)});
         
         imgfname=sprintf('%s.png',targeetg);
         
-        targetdir=sprintf('G:\\My Drive\\Ahr differentiation potency\\marker_candidates\\%s',xn);
+        targetdir=sprintf('G:\\My Drive\\Ahr differentiation potency\\marker_gene_cadidates\\%s\\',xn);
         if ~exist(targetdir,'dir')
             mkdir(targetdir);
         end
