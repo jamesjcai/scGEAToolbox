@@ -11,6 +11,7 @@ addOptional(p,'methodid',1,@isnumeric);
 parse(p,sce,varargin{:});
 cin=p.Results.c;
 methodid=p.Results.methodid;
+ax=[]; bx=[];
 
 if ~isa(sce,'SingleCellExperiment')
     error('requires sce=SingleCellExperiment();');
@@ -288,11 +289,21 @@ function Switch2D3D(~,~)
     %oldcmp=colormap();
     if isempty(h.ZData)
         h=i_gscatter3(sce.s,c,methodid);
+        if ~isempty(ax) && ~isempty(bx)
+            view(ax,bx);
+        end
     else
+    answer = questdlg('Rotate points?');
+    if strcmp(answer,'Yes')
         h=i_gscatter3(sce.s(:,1:2),c,methodid);
+    else
+        [ax,bx]=view();
+        sx=pkg.i_3d2d(sce.s,ax,bx);
+        h=i_gscatter3(sx(:,1:2),c,methodid);
     end
     %colormap(oldcmp);
     title(sce.title)
+    end
 end
 
 function DEGene2Groups(~,~)
@@ -913,7 +924,9 @@ end
 function LabelClusters(src,~)
         state = src.State;
         if strcmp(state,'off')
-            RefreshAll;
+            % RefreshAll;
+            dtp = findobj(h,'Type','datatip');
+            delete(dtp);
         else
             answer = questdlg('Change current class type?');
             if strcmp(answer,'No')
@@ -946,7 +959,7 @@ function LabelClusters(src,~)
                     end                    
                 else
                     set(src,'State','off');
-                    RefreshAll;
+                    %RefreshAll;
                     return;
                 end
             else
@@ -958,7 +971,7 @@ function LabelClusters(src,~)
                 set(src,'State','on');
             else                
                 set(src,'State','off');
-                RefreshAll;
+                % RefreshAll;
             end
         end
 end
@@ -1019,48 +1032,22 @@ function [isdone]=i_labelclusters
         answer = questdlg(sprintf('Label %d groups with index or text?',numel(cL)),...
             'Select Format','Index','Text','Text');
         if strcmp(answer,'Text')
-            stxtyes=true;
+            stxtyes=cL(c);
         elseif strcmp(answer,'Index')
-            stxtyes=false;
+            stxtyes=c;
         else
             return;
         end
-    end
-    prompt = {'Enter font size (1-30):'};
-    dlgtitle = 'Input';
-    dims = [1 35];
-    definput = {'15'};
-    if stxtyes, definput = {'10'}; end
-    answer = inputdlg(prompt,dlgtitle,dims,definput);
-    try
-        fsz=round(str2double(answer{1}));
-    catch
-        return;
-    end
-    if ~(fsz>=1 && fsz<=30), return; end
-    hold on
-    for i=1:max(c)
-        si=sce.s(c==i,:);
-        si=mean(si,1);        
-        if stxtyes
-            stxt=sprintf('%s',cL{i});
-        else
-            stxt=sprintf('%d',i);
+        row = dataTipTextRow('',stxtyes);
+        h.DataTipTemplate.DataTipRows = row;
+        for i=1:max(c)
+            idx=find(c==i);
+            siv=sce.s(idx,:);
+            si=mean(siv,1);
+            [k]=dsearchn(siv,si);
+            dtp=datatip(h,'DataIndex',idx(k));            
         end
-        stxt=strrep(stxt,'_','\_');
-        if ~isempty(h.ZData)    % size(sce.s,2)==3
-            text(si(:,1),si(:,2),si(:,3),stxt,...
-                'fontsize',fsz,'FontWeight','bold',...
-                'BackgroundColor','w','EdgeColor','k');
-        else
-            text(si(:,1),si(:,2),stxt,...
-                'fontsize',fsz,'FontWeight','bold',...
-                'BackgroundColor','w','EdgeColor','k');
-        end
+        isdone=true;
     end
-    hold off
-    % helpdlg(sprintf('%d clusters are labelled.',numel(cL)));
-    isdone=true;
 end
-
 end
