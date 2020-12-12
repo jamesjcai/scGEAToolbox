@@ -254,14 +254,16 @@ pt5.ClickedCallback = @RefreshAll;
 
 add_3dcamera(defaultToolbar,'AllCells');
 
-handles = guihandles( FigureHandle ) ; 
-guidata( FigureHandle, handles ) ; 
+% handles = guihandles( FigureHandle ) ; 
+% guidata( FigureHandle, handles ) ; 
  
 set( FigureHandle, 'visible', 'on' ) ; 
 
 if nargout > 0
     varargout{1} = FigureHandle ; 
 end
+
+
 
 % =========================
 function RefreshAll(~,~)
@@ -293,8 +295,10 @@ function Switch2D3D(~,~)
             view(ax,bx);
         end
     else
-    answer = questdlg('Rotate points?');
-    if strcmp(answer,'Yes')
+    answer = questdlg('Which view to be used to project cells?','',...
+        'Current View','Default View','Cancel','Current View');
+    if strcmp(answer,'Cancel'), return; end
+    if strcmp(answer,'Default View')
         h=i_gscatter3(sce.s(:,1:2),c,methodid);
     else
         [ax,bx]=view();
