@@ -1,9 +1,12 @@
 function i_violinplot_groupordered(d,c)
 import pkg.Violin
 import pkg.violinplot
-if isstring(c)
-    c=strrep(c,'_',' ');
+
+if ~isstring(c)
+    c=string(c);
 end
+
+c=strrep(c,'_',' ');
 [~,cL]=grp2idx(c);
 [~,i]=sort(grpstats(d,c,@median),'descend');
 violinplot(d,c,'GroupOrder',cL(i),...
