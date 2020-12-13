@@ -1,4 +1,5 @@
 function gui_qcfilter(X,genelist)
+% https://www.mathworks.com/matlabcentral/answers/143306-how-to-move-a-plotted-line-vertically-with-mouse-in-a-gui
 
 figure; 
 nGenes=sum(X>0);
