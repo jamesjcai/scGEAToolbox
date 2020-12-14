@@ -196,7 +196,6 @@ ptpseudotime.CData = ptImage;
 ptpseudotime.Tooltip = 'Function enrichment of HVG genes';
 ptpseudotime.ClickedCallback = {@callback_GSEA_HVGs,sce.X,sce.g};
 
-
 pt2 = uipushtool(UitoolbarHandle,'Separator','on');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
             'resources','plotpicker-qqplot.gif'));  
