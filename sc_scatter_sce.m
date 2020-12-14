@@ -747,7 +747,15 @@ function SaveX(~,~)
         'Save SCE.S to variable named:'}; 
     vars = {'sce','X','genelist','s'};
     values = {sce,sce.X,sce.g,sce.s};
-    export2wsdlg(labels,vars,values);
+    export2wsdlg(labels,vars,values,...
+        'Save Data to Workspace',...
+        logical([1 0 0 0]),{@smhelp});
+         
+    function smhelp
+        helpdlg({'Select one or both check boxes.',...
+                 'Change the variable names, if desired,',...
+                 'and then click OK.'});
+    end
 end
 
 function DrawTrajectory(~,~)

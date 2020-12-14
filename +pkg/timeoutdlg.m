@@ -11,7 +11,7 @@ function varargout = timeoutdlg(dlg, delay, varargin)
 %                                {'Enter matrix size:','Enter colormap name:'}, ...
 %                                'Input for peaks function', 1, {'20','hsv'})
 % Setup a timer to close the dialog in a moment
-f1 = findall(0, 'Type', 'figures');
+f1 = findall(0, 'Type', 'figure');
 t = timer('TimerFcn', {@closeit f1}, 'StartDelay', delay);
 start(t);
 % Call the dialog
