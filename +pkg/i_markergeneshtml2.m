@@ -11,6 +11,7 @@ fname=[tempname,'.html'];
 fid=fopen(fname,'w');
 htmlstr="";
 
+sx=pkg.i_3d2d(sce.s,axbx(1),axbx(2));
     for k=1:numfig
         k
         targeetg=markerlist(k);
@@ -19,14 +20,15 @@ htmlstr="";
 %             markerlist(k),3,5,false);        
         z=log2(1+sce.X(sce.g==targeetg,:));
         subplot(1,2,1)
-                scatter(sce.s(:,1),sce.s(:,2),...
-                1,z,'filled');
+                
+           % scatter(sce.s(:,1),sce.s(:,2),1,z,'filled');
+           scatter(sx(:,1),sx(:,2),1,z,'filled');
             box on
 %         scatter3(sce.s(:,1),sce.s(:,2),sce.s(:,3),...
 %                 5,z,'filled');
         colormap(h,a);
         title(targeetg)
-        if ~isempty(axbx), view(axbx(1),axbx(2)); end
+        %if ~isempty(axbx), view(axbx(1),axbx(2)); end
         
         %imgfname1=sprintf('heatmap_%s.png',targeetg);
         %saveas(h,sprintf('%s%s',dirtxt,imgfname1));
@@ -40,14 +42,14 @@ htmlstr="";
 xn=matlab.lang.makeValidName(cL{i(1)});
  
         pkg.i_violinplot_groupordered(z,sce.c);
-        ylabel('log2(1+UMI)');
+        ylabel('log2(UMI+1)');
         title(targeetg);
         xtickangle(-45);
         %suptitle(h,targeetg);
         
         imgfname=sprintf('%s.png',targeetg);
         
-        targetdir=sprintf('G:\\My Drive\\Ahr differentiation potency\\marker_gene_cadidates\\%s\\',xn);
+        targetdir=sprintf('G:\\My Drive\\Ahr differentiation potency\\marker_gene_candidates_enterocytes\\%s\\',xn);
         if ~exist(targetdir,'dir')
             mkdir(targetdir);
         end

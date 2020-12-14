@@ -91,7 +91,7 @@ ptaddcluster = uipushtool(UitoolbarHandle,'Separator','off');
 ptImage = ind2rgb(img,map);
 ptaddcluster.CData = ptImage;
 ptaddcluster.Tooltip = 'Add brushed cells to a new cluster';
-ptaddcluster.ClickedCallback = @Brushed2Cluster;
+ptaddcluster.ClickedCallback = @Brushed2NewCluster;
 
 ptmergecluster = uipushtool(UitoolbarHandle,'Separator','off');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
@@ -419,7 +419,7 @@ export2wsdlg({'Save cell type list to variable named:'},...
     {'c_celltype'},{sce.c_cell_type_tx});
 end
 
-function Brushed2Cluster(~,~)
+function Brushed2NewCluster(~,~)
     answer = questdlg('Make a new cluster out of brushed cells?');
     if ~strcmp(answer,'Yes'), return; end  
     ptsSelected = logical(h.BrushData.');
@@ -434,6 +434,7 @@ function Brushed2Cluster(~,~)
     [h]=i_gscatter3(sce.s,c,methodid);
     title(sce.title)
     view(ax,bx);
+    i_labelclusters(true);
     answer = questdlg('Update sce.c_cluster_id?');
     if strcmp(answer,'Yes')
         sce.c_cluster_id=c;
@@ -470,6 +471,7 @@ function Brushed2MergeClusters(~,~)
     [h]=i_gscatter3(sce.s,c,methodid);
     title(sce.title)
     view(ax,bx);
+    i_labelclusters(true);
     answer = questdlg('Update sce.c_cluster_id?');
     if strcmp(answer,'Yes')
         sce.c_cluster_id=c;
@@ -1037,18 +1039,23 @@ function [txt]=i_myupdatefcnx(~,event_obj)
     end
 end
 
-function [isdone]=i_labelclusters
+function [isdone]=i_labelclusters(notasking)
+    if nargin<1, notasking=false; end
     isdone=false;
     if ~isempty(cL)
-        answer = questdlg(sprintf('Label %d groups with index or text?',numel(cL)),...
-            'Select Format','Index','Text','Text');
-        if strcmp(answer,'Text')
-            stxtyes=cL(c);
-        elseif strcmp(answer,'Index')
+        if notasking
             stxtyes=c;
         else
-            return;
-        end
+            answer = questdlg(sprintf('Label %d groups with index or text?',numel(cL)),...
+                'Select Format','Index','Text','Text');
+            if strcmp(answer,'Text')
+                stxtyes=cL(c);
+            elseif strcmp(answer,'Index')
+                stxtyes=c;
+            else
+                return;
+            end            
+        end        
         row = dataTipTextRow('',stxtyes);
         h.DataTipTemplate.DataTipRows = row;
         for i=1:max(c)
