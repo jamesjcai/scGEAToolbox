@@ -1088,7 +1088,11 @@ function [isdone]=i_labelclusters(notasking)
             else
                 return;
             end            
-        end        
+        end
+        
+        dtp = findobj(h,'Type','datatip');
+        delete(dtp);
+            
         row = dataTipTextRow('',stxtyes);
         h.DataTipTemplate.DataTipRows = row;
         for i=1:max(c)
