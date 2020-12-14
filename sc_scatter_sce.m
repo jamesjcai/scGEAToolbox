@@ -157,7 +157,17 @@ pt4.Tooltip = 'Marker genes of brushed cells';
 pt4.ClickedCallback = @Brush4Markers;
 
 
+pt4 = uipushtool(UitoolbarHandle,'Separator','off');
+% [img,map] = imread(fullfile(matlabroot,...
+%             'toolbox','matlab','icons','plotpicker-stairs.gif'));
+[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+            'resources','plotpicker-scatterhist.gif'));
+ptImage = ind2rgb(img,map);
+pt4.CData = ptImage;
+pt4.Tooltip = 'Rename cell type';
+pt4.ClickedCallback = @RenameCellType;
 
+% --------------------------
 
 ptpseudotime = uipushtool(defaultToolbar,'Separator','on');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
@@ -307,6 +317,29 @@ function Switch2D3D(~,~)
     %colormap(oldcmp);
     title(sce.title)
     end
+end
+
+function RenameCellType(~,~)
+    if isempty(sce.c_cell_type_tx)
+        errordlg('sce.c_cell_type_tx undefined');
+        return;
+    end
+    answer = questdlg('Rename a cell type?');
+    if ~strcmp(answer,'Yes'), return; end
+    [ci,cLi]=grp2idx(sce.c_cell_type_tx);
+    [indxx,tfx] = listdlg('PromptString',{'Select a cell type',...
+    '',''},'SelectionMode','single','ListString',string(cLi));
+    if tfx==1
+        i=ismember(ci,indxx);
+        newctype=inputdlg('New cell type','Rename',[1 50],cLi(ci(i)));
+        if ~isempty(newctype)
+            cLi(ci(i))=newctype;
+            sce.c_cell_type_tx=cLi(ci);
+            [c,cL]=grp2idx(sce.c_cell_type_tx);
+            i_labelclusters(false);
+        end
+    end
+    
 end
 
 function DEGene2Groups(~,~)
