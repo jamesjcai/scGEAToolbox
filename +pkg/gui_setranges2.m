@@ -1,4 +1,4 @@
-function [idx,xr,yr]=gui_setranges(x,y,xr,yr)
+function [idx,xr,yr]=gui_setranges2(x,y,xr,yr)
 % https://www.mathworks.com/matlabcentral/answers/143306-how-to-move-a-plotted-line-vertically-with-mouse-in-a-gui
 if nargin<1, x=randn(300,1); end
 if nargin<2, y=randn(300,1); end

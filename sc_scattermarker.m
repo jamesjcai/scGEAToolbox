@@ -29,7 +29,8 @@ elseif isStringScalar(targeetg) || ischar(targeetg)
         else
             z=s(:,3);
         end
-        c=log2(1+X(genelist==targeetg,:));
+%        c=log2(1+X(genelist==targeetg,:));
+        c=X(genelist==targeetg,:);
         switch methodid
             case 1
                 i_stemscatter(x,y,c);                
@@ -102,6 +103,16 @@ elseif isStringScalar(targeetg) || ischar(targeetg)
       if showcam
                 hFig=gcf;
                 tb = uitoolbar(hFig);
+                
+                pt5pickcolr = uipushtool(tb,'Separator','off');
+                [img,map] = imread(fullfile(fileparts(which(mfilename)),...
+                            'resources','plotpicker-compass.gif'));  % plotpicker-pie
+                %map(map(:,1)+map(:,2)+map(:,3)==3) = NaN;  % Convert white pixels => transparent background
+                ptImage = ind2rgb(img,map);
+                pt5pickcolr.CData = ptImage;
+                pt5pickcolr.Tooltip = 'Switch color maps';
+                pt5pickcolr.ClickedCallback = @pkg.callback_PickColormap;
+
                 pt = uipushtool(tb,'Separator','off');
                 [img,map] = imread(fullfile(matlabroot,...
                             'toolbox','matlab','icons','plotpicker-plot.gif'));
