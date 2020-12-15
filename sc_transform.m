@@ -20,11 +20,10 @@ switch p.Results.type
         s=sqrt(u+(u.^2)./100);
         X=(X-u)./s;
         n=size(X,2);
-  %clip to sqrt(n);
-%         sn=sqrt(n);
-%         X(X>sn)=sn;
-%         X(X<-sn)=-sn;
-        
+        % clip to sqrt(n);
+        sn=sqrt(n);
+        X(X>sn)=sn;
+        X(X<-sn)=-sn;        
     case 'glmpca'
         
     case 'normalization_sqrt'
