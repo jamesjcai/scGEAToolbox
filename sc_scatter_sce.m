@@ -16,10 +16,15 @@ ax=[]; bx=[];
 if ~isa(sce,'SingleCellExperiment')
     error('requires sce=SingleCellExperiment();');
 end
-if isempty(cin)
-    cin=ones(size(sce.X,2),1);
+
+if ~isempty(cin)
+    [c,cL]=grp2idx(cin);
+    sce.c=c;
+else
+    if isempty(sce.c)
+        sce.c=ones(size(sce.X,2),1);
+    end
 end
-[c,cL]=grp2idx(cin);
 
 FigureHandle = figure('Name','sc_scatter_sce',...
 'position',round(1.5*[0 0 560 420]),...    
@@ -689,9 +694,9 @@ function ShowCellStats(~,~)
             sces=sce.s(:,1:2);
         end
             [ax,bx]=view();     
-            h=i_gscatter3(sces,ci,1);
+            h=i_gscatter3(sces,ci,1);            
             view(ax,bx);
-            title(sce.title);            
+            title(sce.title);
             if indx==4
                 hc=colorbar;
                 hc.Label.String=ttxt;
@@ -700,7 +705,8 @@ function ShowCellStats(~,~)
             end
     answer = questdlg('Update sce.c?');
     if strcmp(answer,'Yes')
-       [c,cL]=grp2idx(ci);
+       %[c,cL]=grp2idx(ci);
+       sce.c=ci;
     end
     end
 end
