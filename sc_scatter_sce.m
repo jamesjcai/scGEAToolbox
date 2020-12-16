@@ -10,6 +10,7 @@ addOptional(p,'c',sce.c,checkC);
 addOptional(p,'methodid',1,@isnumeric);
 parse(p,sce,varargin{:});
 cin=p.Results.c;
+
 methodid=p.Results.methodid;
 ax=[]; bx=[];
 
@@ -20,10 +21,9 @@ end
 if ~isempty(cin)
     [c,cL]=grp2idx(cin);
     sce.c=c;
-else
-    if isempty(sce.c)
-        sce.c=ones(size(sce.X,2),1);
-    end
+else    
+    sce.c=ones(size(sce.X,2),1);
+    [c,cL]=grp2idx(sce.c);
 end
 
 FigureHandle = figure('Name','sc_scatter_sce',...
@@ -179,6 +179,14 @@ ptpseudotime = uipushtool(defaultToolbar,'Separator','on');
             'resources','plotpicker-arxtimeseries.gif'));
 ptImage = ind2rgb(img,map);
 ptpseudotime.CData = ptImage;
+ptpseudotime.Tooltip = 'Compare Differentiation Potency';
+ptpseudotime.ClickedCallback = @ComparePotency;
+
+ptpseudotime = uipushtool(defaultToolbar,'Separator','on');
+[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+            'resources','plotpicker-arxtimeseries.gif'));
+ptImage = ind2rgb(img,map);
+ptpseudotime.CData = ptImage;
 ptpseudotime.Tooltip = 'Run pseudotime analysis (Monocle)';
 ptpseudotime.ClickedCallback = @RunTrajectoryAnalysis;
 
@@ -301,27 +309,51 @@ function RefreshAll(~,~)
     %colorbar off    
 end
 
+function ComparePotency(~,~)
+    if ~isempty(sce.list_cell_attributes{2}) && ~isempty(sce.c_cell_type_tx)
+        x=sce.list_cell_attributes{2};
+        y=sce.c_cell_type_tx;
+    figure;
+    pkg.i_violinplot_groupordered(x,y);
+    if ~isempty(sce.c_batch_id)
+        figure;
+        h1=subplot(1,2,1);
+        i=sce.c_batch_id==1;
+        pkg.i_violinplot_groupordered(x(i),y(i));
+        [aabb]=ylim();
+        h2=subplot(1,2,2);
+        i=sce.c_batch_id==2;
+        pkg.i_violinplot_groupordered(x(i),y(i));
+        [ccdd]=ylim();
+        ylim(h1,[min(aabb(1),ccdd(1)) max(aabb(2),ccdd(2))]);
+        ylim(h2,[min(aabb(1),ccdd(1)) max(aabb(2),ccdd(2))]);
+    end
+    end
+end
+
 function Switch2D3D(~,~)
     %oldcmp=colormap();
     if isempty(h.ZData)
         h=i_gscatter3(sce.s,c,methodid);
-        if ~isempty(ax) && ~isempty(bx)
+        if ~isempty(ax) && ~isempty(bx) && ~any([ax bx]==0)
             view(ax,bx);
+        else
+            view(3);
         end
     else
+        [ax,bx]=view();
     answer = questdlg('Which view to be used to project cells?','',...
         'Current View','Default View','Cancel','Current View');
     if strcmp(answer,'Cancel'), return; end
     if strcmp(answer,'Default View')
         h=i_gscatter3(sce.s(:,1:2),c,methodid);
     else
-        [ax,bx]=view();
         sx=pkg.i_3d2d(sce.s,ax,bx);
         h=i_gscatter3(sx(:,1:2),c,methodid);
     end
-    %colormap(oldcmp);
-    title(sce.title)
+    %colormap(oldcmp);    
     end
+    title(sce.title)
 end
 
 function RenameCellType(~,~)
@@ -616,14 +648,17 @@ function Brush4Markers(~,~)
 end
 
 function ShowMarkerGene(~,~)
+    [axx,bxx]=view();
+    if any([axx,bxx]==0), axx=ax; bxx=bx; end
     answer = questdlg('Select a gene to show expression?');
     if ~strcmp(answer,'Yes'), return; end
     gsorted=sort(sce.g);
     [indx,tf] = listdlg('PromptString',{'Select a gene',...
     '',''},'SelectionMode','single','ListString',gsorted);
-    if tf==1        
+    if tf==1     
         figure;
-        sc_scattermarker(sce.X,sce.g,sce.s,gsorted(indx),5);
+        [h1]=sc_scattermarker(sce.X,sce.g,sce.s,gsorted(indx),5);
+        view(h1,axx,bxx);
     end
 end
 
@@ -1007,7 +1042,7 @@ function LabelClusters(src,~)
                     if ~isempty(cc)                        
                         [c,cL]=grp2idx(cc);
                         set(src,'State','off');
-                        RefreshAll;
+                        %RefreshAll;
                     end                    
                 else
                     set(src,'State','off');

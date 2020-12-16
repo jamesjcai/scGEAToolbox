@@ -1,10 +1,11 @@
-function sc_scattermarker(X,genelist,s,targeetg,methodid,sz,showcam)
+function [h1,h2]=sc_scattermarker(X,genelist,s,targeetg,methodid,sz,showcam)
 %SC_SCATTERMARKER(X,genelist,g,s,methodid)
 %
 % USAGE:
 % s=sc_tsne(X,3);
 % g=["AGER","SFTPC","SCGB3A2","TPPP3"];
 % sc_scattermarker(X,genelist,s,genelist(1));
+h1=[]; h2=[];
 if nargin<4, error('sc_scattermarker(X,genelist,s,g)'); end
 if isvector(s)||isscalar(s), error('S should be a matrix.'); end
 if nargin<7, showcam=true; end
@@ -80,7 +81,7 @@ elseif isStringScalar(targeetg) || ischar(targeetg)
 %                     num2bankScalar(numel(c)),...
 %                     100*sum(c>0)./numel(c)));
         
-               subplot(1,2,2)                
+               h2=subplot(1,2,2);             
                 stem3(x,y,c,'marker','none','color','m');
                 hold on
                 scatter3(x,y,zeros(size(y)),5,c,'filled');                
