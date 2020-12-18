@@ -437,15 +437,26 @@ function EmbeddingAgain(~,~)
     %if ~strcmp(answer,'Yes'), return; end
     answer = questdlg('Which method?','Select method','tSNE','UMAP','PHATE','tSNE');
     fw=pkg.gui_waitbar;
+    new_c=[];
     if strcmp(answer,'tSNE')
         sce.s=sc_tsne(sce.X,3,false);
     elseif strcmp(answer,'UMAP')
-        sce.s=run_umap(sce.X,2,false,false);
+        [sce.s,new_c]=run_umap(sce.X,3,false,false);
     elseif strcmp(answer,'PHATE')
         sce.s=run_phate(sce.X,3,false);       
     end
-    pkg.gui_waitbar(fw);
+    pkg.gui_waitbar(fw);    
     RefreshAll;
+    if ~isempty(new_c)        
+        [c,cL]=grp2idx(new_c);
+        answer = questdlg('Update sce.c_cluster_id?');
+        if strcmp(answer,'Yes')
+            sce.c_cluster_id=c;
+        else
+            return;
+        end
+        RefreshAll;
+    end
 end
 
 function DetermineCellTypeClusters(~,~)
