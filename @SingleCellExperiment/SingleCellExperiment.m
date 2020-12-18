@@ -3,12 +3,13 @@ classdef SingleCellExperiment
       X double {mustBeNumeric, mustBeFinite} % counts
       g string                               % genelist
       s double {mustBeNumeric, mustBeFinite} % cell.embeddings
-      c                                      % cell group/class id
-      c_cell_cycle_phase_tx
-      c_cell_type_tx
-      c_cluster_id
-      c_batch_id
-      c_cell_id
+      c                                      % current group/class id
+      c_cell_cycle_phase_tx                  % DO NOT USE
+      c_cell_cycle_tx                        % cell cycle string
+      c_cell_type_tx                         % cell type string
+      c_cluster_id                           % clustering result
+      c_batch_id                             % batch id
+      c_cell_id                              % barcode
       list_cell_attributes cell  % e.g., attributes = {'size',[4,6,2]};
       list_gene_attributes cell  % e.g., attributes = {'size',[4,6,2]};
       table_attributes table
@@ -21,7 +22,7 @@ classdef SingleCellExperiment
    end 
 
    methods
-    function obj = SingleCellExperiment(X,g,s,c)
+   function obj = SingleCellExperiment(X,g,s,c)
         if nargin<1, X=[]; end
         if nargin<2 || isempty(g), g=string(transpose(1:size(X,1))); end
         if nargin<3 || isempty(s), s=randn(size(X,2),3); end
@@ -33,7 +34,7 @@ classdef SingleCellExperiment
         obj.c_cell_id=transpose(1:size(X,2));
     end
 
-   function m = get.NumCells(obj)      
+   function m = get.NumCells(obj)
       m = size(obj.X,2); 
    end
    
@@ -123,7 +124,7 @@ classdef SingleCellExperiment
       end
     end
 
-    function r=title(obj)
+    function r = title(obj)
        r=sprintf('%d x %d\n[genes x cells]',...
            size(obj.X,1),size(obj.X,2));
     end
@@ -160,7 +161,10 @@ classdef SingleCellExperiment
             sum(i));
     end
 
-    
+    function c_check( self )
+        assert( ~isempty( self.c ),...
+            'Must train hierarchical model first!' );
+    end    
 % function disp(td)
 %   fprintf(1,...
 %      'SingleCellExperiment: %d genes x %d cells\n',...

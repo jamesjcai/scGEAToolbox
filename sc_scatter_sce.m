@@ -1,30 +1,33 @@
 function varargout = sc_scatter_sce(sce,varargin)
 
-import pkg.*
-p = inputParser;
-% validTypes = {'kmeans','kmedoids','dbscan'};
-% checkType = @(x) any(validatestring(x,validTypes));
-checkC = @(x) isempty(x) | size(sce.X,2)==length(x);
-addRequired(p,'sce',@(x) isa(x,'SingleCellExperiment'));
-addOptional(p,'c',sce.c,checkC);
-addOptional(p,'methodid',1,@isnumeric);
-parse(p,sce,varargin{:});
-cin=p.Results.c;
-
-methodid=p.Results.methodid;
-ax=[]; bx=[];
-
+if nargin<1, error('Usage: sc_scatter_sce(sce)'); end
 if ~isa(sce,'SingleCellExperiment')
     error('requires sce=SingleCellExperiment();');
 end
 
-if ~isempty(cin)
-    [c,cL]=grp2idx(cin);
-    sce.c=c;
-else    
+import pkg.*
+p = inputParser;
+% validTypes = {'kmeans','kmedoids','dbscan'};
+% checkType = @(x) any(validatestring(x,validTypes));
+checkCS = @(x) isempty(x) | size(sce.X,2)==length(x);
+addRequired(p,'sce',@(x) isa(x,'SingleCellExperiment'));
+addOptional(p,'c',sce.c,checkCS);
+addOptional(p,'s',[],checkCS);
+addOptional(p,'methodid',1,@isnumeric);
+parse(p,sce,varargin{:});
+cin=p.Results.c;
+sin=p.Results.s;
+methodid=p.Results.methodid;
+ax=[]; bx=[];
+
+if isempty(cin)
     sce.c=ones(size(sce.X,2),1);
-    [c,cL]=grp2idx(sce.c);
+else
+    sce.c=cin;
 end
+if ~isempty(sin), sce.s=sin; end
+
+[c,cL]=grp2idx(sce.c);
 
 FigureHandle = figure('Name','sc_scatter_sce',...
 'position',round(1.5*[0 0 560 420]),...    
@@ -176,7 +179,7 @@ pt4.ClickedCallback = @RenameCellType;
 
 ptpseudotime = uipushtool(defaultToolbar,'Separator','on');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
-            'resources','plotpicker-arxtimeseries.gif'));
+            'resources','plotpicker-priceandvol.gif'));
 ptImage = ind2rgb(img,map);
 ptpseudotime.CData = ptImage;
 ptpseudotime.Tooltip = 'Compare Differentiation Potency';
@@ -650,8 +653,8 @@ end
 function ShowMarkerGene(~,~)
     [axx,bxx]=view();
     if any([axx,bxx]==0), axx=ax; bxx=bx; end
-    answer = questdlg('Select a gene to show expression?');
-    if ~strcmp(answer,'Yes'), return; end
+%     answer = questdlg('Select a gene to show expression?');
+%     if ~strcmp(answer,'Yes'), return; end
     gsorted=sort(sce.g);
     [indx,tf] = listdlg('PromptString',{'Select a gene',...
     '',''},'SelectionMode','single','ListString',gsorted);
@@ -663,8 +666,8 @@ function ShowMarkerGene(~,~)
 end
 
 function ShowCellStats(~,~)
-    answer = questdlg('Show cell states?');
-    if ~strcmp(answer,'Yes'), return; end
+%     answer = questdlg('Show cell states?');
+%     if ~strcmp(answer,'Yes'), return; end
     
     listitems={'Library Size','Mt-reads Ratio',...
         'Mt-genes Expression','Cell Cycle Phase',...
@@ -702,13 +705,13 @@ function ShowCellStats(~,~)
                 end
                 return;
             case 4   % "Cell Cycle Phase";
-                if isempty(sce.c_cell_cycle_phase_tx)
+                if isempty(sce.c_cell_cycle_tx)
                     fw=pkg.gui_waitbar;               
                     [cix]=run_cellcycle(sce.X,sce.g);
-                    sce.c_cell_cycle_phase_tx=cix;
+                    sce.c_cell_cycle_tx=cix;
                     pkg.gui_waitbar(fw);                    
                 end                
-                [ci,tx]=grp2idx(sce.c_cell_cycle_phase_tx);
+                [ci,tx]=grp2idx(sce.c_cell_cycle_tx);
                 ttxt=sprintf('%s|',string(tx));
             case 5 % cell type
                 ci=sce.c_cell_type_tx;
@@ -757,7 +760,7 @@ function SelectCellsByClass(~,~)
     if ~isempty(sce.c_cell_type_tx)
         listitems=[listitems,'Cell Type'];
     end
-    if ~isempty(sce.c_cell_cycle_phase_tx)
+    if ~isempty(sce.c_cell_cycle_tx)
         listitems=[listitems,'Cell Cycle Phase'];
     end
     if ~isempty(sce.c_batch_id)
@@ -777,7 +780,7 @@ function SelectCellsByClass(~,~)
         case 'Cell Type'
             [ci,cLi]=grp2idx(sce.c_cell_type_tx);
         case 'Cell Cycle Phase'
-            [ci,cLi]=grp2idx(sce.c_cell_cycle_phase_tx);
+            [ci,cLi]=grp2idx(sce.c_cell_cycle_tx);
     end
     [indxx,tfx] = listdlg('PromptString',{'Select groups',...
     '',''},'SelectionMode','multiple','ListString',string(cLi));
@@ -1011,7 +1014,6 @@ end
 function LabelClusters(src,~)
         state = src.State;
         if strcmp(state,'off')
-            % RefreshAll;
             dtp = findobj(h,'Type','datatip');
             delete(dtp);
         else
@@ -1022,7 +1024,7 @@ function LabelClusters(src,~)
                 listitems={'c'};
                 if ~isempty(sce.c_cluster_id), listitems=[listitems,'c_cluster_id']; end
                 if ~isempty(sce.c_cell_type_tx), listitems=[listitems,'c_cell_type_tx']; end
-                if ~isempty(sce.c_cell_cycle_phase_tx), listitems=[listitems,'c_cell_cycle_phase_tx']; end
+                if ~isempty(sce.c_cell_cycle_tx), listitems=[listitems,'c_cell_cycle_tx']; end
                 if ~isempty(sce.c_batch_id), listitems=[listitems,'c_batch_id']; end
                 [indx,tf] = listdlg('PromptString',{'Select statistics',...
                 '',''},'SelectionMode','single','ListString',listitems);
@@ -1032,8 +1034,8 @@ function LabelClusters(src,~)
                             cc=sce.c_cluster_id;
                         case 'c_cell_type_tx'
                             cc=sce.c_cell_type_tx;
-                        case 'c_cell_cycle_phase_tx'
-                            cc=sce.c_cell_cycle_phase_tx;
+                        case 'c_cell_cycle_tx'
+                            cc=sce.c_cell_cycle_tx;
                         case 'c_batch_id'
                             cc=sce.c_batch_id;
                         otherwise
@@ -1042,23 +1044,20 @@ function LabelClusters(src,~)
                     if ~isempty(cc)                        
                         [c,cL]=grp2idx(cc);
                         set(src,'State','off');
-                        %RefreshAll;
                     end                    
                 else
                     set(src,'State','off');
-                    %RefreshAll;
                     return;
                 end
             else
                 set(src,'State','off');
-                RefreshAll;
+                % RefreshAll;
                 return;
             end
             if i_labelclusters
                 set(src,'State','on');
             else                
                 set(src,'State','off');
-                % RefreshAll;
             end
         end
 end
@@ -1106,11 +1105,7 @@ end
 function [txt]=i_myupdatefcnx(~,event_obj)
     % pos = event_obj.Position;
     idx = event_obj.DataIndex;
-    if isempty(cL)
-        txt =sprintf('cluster=%d',c(idx));
-    else
-        txt =sprintf('cluster=%d, type=%s',c(idx),cL{c(idx)});
-    end
+    txt=cL(c(idx));
 end
 
 function [isdone]=i_labelclusters(notasking)
