@@ -4,7 +4,6 @@ classdef SingleCellExperiment
       g string                               % genelist
       s double {mustBeNumeric, mustBeFinite} % cell.embeddings
       c                                      % current group/class id
-      c_cell_cycle_phase_tx                  % DO NOT USE
       c_cell_cycle_tx                        % cell cycle string
       c_cell_type_tx                         % cell type string
       c_cluster_id                           % clustering result
@@ -74,11 +73,11 @@ classdef SingleCellExperiment
 
     function obj = estimatecellcycle(obj,forced)
         if nargin<2, forced=false; end
-        if isempty(obj.c_cell_cycle_phase_tx) || forced
-            obj.c_cell_cycle_phase_tx=run_cellcycle(obj.X,obj.g);
-            disp('c_cell_cycle_phase_tx added.');
+        if isempty(obj.c_cell_cycle_tx) || forced
+            obj.c_cell_cycle_tx=run_cellcycle(obj.X,obj.g);
+            disp('c_cell_cycle_tx added.');
         else
-            disp('c_cell_cycle_phase_tx existed.');
+            disp('c_cell_cycle_tx existed.');
         end
     end
     
@@ -86,8 +85,8 @@ classdef SingleCellExperiment
             obj.X(:,i)=[];
             obj.s(i,:)=[];
             obj.c(i)=[];    
-            if ~isempty(obj.c_cell_cycle_phase_tx)
-                obj.c_cell_cycle_phase_tx(i)=[];
+            if ~isempty(obj.c_cell_cycle_tx)
+                obj.c_cell_cycle_tx(i)=[];
             end
             if ~isempty(obj.c_cell_type_tx)
                 obj.c_cell_type_tx(i)=[];
@@ -162,15 +161,16 @@ classdef SingleCellExperiment
     end
 
     function c_check( self )
-        assert( ~isempty( self.c ),...
-            'Must train hierarchical model first!' );
-    end    
-% function disp(td)
-%   fprintf(1,...
-%      'SingleCellExperiment: %d genes x %d cells\n',...
-%      numgenes(td),numcells(td));
-% end 
-   end
+        assert(~isempty( self.c ),'Must be defined!');
+    end
+    
+    % function disp(td)
+    %   fprintf(1,...
+    %      'SingleCellExperiment: %d genes x %d cells\n',...
+    %      numgenes(td),numcells(td));
+    % end 
+    
+   end  
 
 % https://www.mathworks.com/help/matlab/matlab_oop/example-representing-structured-data.html   
 end

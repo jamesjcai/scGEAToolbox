@@ -1,11 +1,25 @@
-function callback_PickColormap(~,~)
+function callback_PickColormap(~,~,pw1,n)
+    if nargin<4, n=21; end
+    if nargin<3, pw1=[]; end
+    if ~isempty(pw1)
+        pth=fullfile(pw1,'thirdparty/cbrewer');
+        addpath(pth);
+        CT=cbrewer('seq','Blues',n);
+    end
+
     cx=colormap('autumn');
     cx(1,:)=[.8 .8 .8];
     %a=lines(kc);
     %b=a(randperm(size(a,1)),:);
     mycmap=pkg.i_mycolormap;
     co={cx,'lines','default','summer',...
-        'jet','copper','winter','hsv',mycmap};
+        'jet','copper','winter','hsv',...
+        mycmap,CT,...
+        cbrewer('div','Spectral',n),...
+        cbrewer('div','RdBu',n),...
+        cbrewer('seq','PuBuGn',n),...
+        cbrewer('qual','Set1',n),...
+        cbrewer('qual','Dark2',n)};
 %     co={cx,a,b,'default',summer(kc),...
 %         jet(kc),copper(kc),winter(kc)};
     colormap(co{randi(length(co))});

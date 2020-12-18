@@ -266,7 +266,8 @@ pt5pickcolr = uipushtool(UitoolbarHandle,'Separator','on');
 ptImage = ind2rgb(img,map);
 pt5pickcolr.CData = ptImage;
 pt5pickcolr.Tooltip = 'Switch color maps';
-pt5pickcolr.ClickedCallback = @callback_PickColormap;
+pw1=fileparts(which(mfilename));
+pt5pickcolr.ClickedCallback = {@callback_PickColormap,pw1};
 
 pt5 = uipushtool(UitoolbarHandle,'Separator','off');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
@@ -433,8 +434,8 @@ function DEGene2Groups(~,~)
 end
 
 function EmbeddingAgain(~,~)
-    %answer = questdlg('Embedding cells?');
-    %if ~strcmp(answer,'Yes'), return; end
+    answer = questdlg('Embedding cells?');
+    if ~strcmp(answer,'Yes'), return; end
     answer = questdlg('Which method?','Select method','tSNE','UMAP','PHATE','tSNE');
     fw=pkg.gui_waitbar;
     new_c=[];
@@ -443,7 +444,9 @@ function EmbeddingAgain(~,~)
     elseif strcmp(answer,'UMAP')
         [sce.s,new_c]=run_umap(sce.X,3,false,false);
     elseif strcmp(answer,'PHATE')
-        sce.s=run_phate(sce.X,3,false);       
+        sce.s=run_phate(sce.X,3,false);
+    else
+        return;
     end
     pkg.gui_waitbar(fw);    
     RefreshAll;
