@@ -1,36 +1,40 @@
-function [s]=run_umap(X,plotit)
-if isempty(FindRpath)
-   error('Rscript.ext is not found.');
-end
-if nargin<2, plotit=false; end
-if issparse(X), X=full(X); end
-oldpth=pwd;
+function [s,c]=run_umap(X,ndim,plotit,verbose)
+
+%   addpath /Users/Stephen/umap
+%   addpath /Users/Stephen/util
+%   javaaddpath('/Users/Stephen/umap/umap.jar');
+
+
+if nargin<4, verbose=false; end
+if nargin<3, plotit=false; end
+if nargin<2, ndim=2; end
+
 pw1=fileparts(which(mfilename));
-pth=fullfile(pw1,'thirdparty/R_UMAP');
-cd(pth);
-fprintf('CURRENTWDIR = "%s"\n',pth);
-[~,cmdout]=RunRcode('require.R');
+pth1=fullfile(pw1,'thirdparty/umapFileExchange/umap');
+pth2=fullfile(pw1,'thirdparty/umapFileExchange/util');
+pth3=fullfile(pw1,'thirdparty/umapFileExchange/umap/umap.jar');
+addpath(pth1);
+addpath(pth2);
+javaaddpath(pth3);
 
-if strfind(cmdout,'there is no package')>0
-    cd(oldpth);
-    error(cmdout);
-end
+data=transpose(sc_transform(X));
 
-if exist('output.csv','file'), delete('output.csv'); end
-csvwrite('input.csv',X');
-
-RunRcode('script.R');
-if exist('output.csv','file')
-    s=csvread('output.csv',1,1);
+if nargout>1
+    if verbose
+        [s,~,c]=run_umap_main(data,'n_components',ndim);
+    else
+        [s,~,c]=run_umap_main(data,'n_components',ndim,'verbose','none');
+    end
 else
-    s=[];
+    if verbose
+        [s]=run_umap_main(data,'n_components',ndim);
+    else
+        [s]=run_umap_main(data,'n_components',ndim,'verbose','none');
+    end    
 end
-if exist('input.csv','file'), delete('input.csv'); end
-if exist('output.csv','file'), delete('output.csv'); end
-cd(oldpth);
 
 if plotit && ~isempty(s)
-    i_gscatter3(s);
+    i_gscatter3(s,c);
     xlabel('UMAP 1')
     ylabel('UMAP 2')
 end

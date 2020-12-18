@@ -292,12 +292,16 @@ end
 
 % =========================
 function RefreshAll(~,~)
-    if ~isempty(h.ZData)
-        [ax,bx]=view();
-        h=i_gscatter3(sce.s,c,methodid);
-        view(ax,bx);
+    if size(sce.s,2)>2
+        if ~isempty(h.ZData)
+            %[ax,bx]=view();
+            h=i_gscatter3(sce.s,c,methodid);
+            %view(ax,bx);
+        else
+            h=i_gscatter3(sce.s(:,1:2),c,methodid);
+        end       
     else
-        h=i_gscatter3(sce.s(:,1:2),c,methodid);
+        h=i_gscatter3(sce.s(:,1:2),c,methodid);        
     end
     title(sce.title)
     
@@ -336,25 +340,28 @@ end
 
 function Switch2D3D(~,~)
     %oldcmp=colormap();
-    if isempty(h.ZData)
+    if isempty(h.ZData)   % current 2 D
+        if ~(size(sce.s,2)>2)
+            helpdlg('Canno swith to 3-D. SCE.S is 2-D');
+            return;
+        end        
         h=i_gscatter3(sce.s,c,methodid);
         if ~isempty(ax) && ~isempty(bx) && ~any([ax bx]==0)
             view(ax,bx);
         else
             view(3);
-        end
-    else
+        end        
+    else                 % current 3D do following
         [ax,bx]=view();
-    answer = questdlg('Which view to be used to project cells?','',...
-        'Current View','Default View','Cancel','Current View');
-    if strcmp(answer,'Cancel'), return; end
-    if strcmp(answer,'Default View')
-        h=i_gscatter3(sce.s(:,1:2),c,methodid);
-    else
-        sx=pkg.i_3d2d(sce.s,ax,bx);
-        h=i_gscatter3(sx(:,1:2),c,methodid);
-    end
-    %colormap(oldcmp);    
+        answer = questdlg('Which view to be used to project cells?','',...
+            'Current View','Default View','Cancel','Current View');
+        if strcmp(answer,'Cancel'), return; end
+        if strcmp(answer,'Default View')
+            h=i_gscatter3(sce.s(:,1:2),c,methodid);
+        else
+            sx=pkg.i_3d2d(sce.s,ax,bx);
+            h=i_gscatter3(sx(:,1:2),c,methodid);
+        end    
     end
     title(sce.title)
 end
@@ -426,16 +433,16 @@ function DEGene2Groups(~,~)
 end
 
 function EmbeddingAgain(~,~)
-    answer = questdlg('Embedding cells?');
-    if ~strcmp(answer,'Yes'), return; end
-    answer = questdlg('Which method?','Select method','tSNE','Phate','UMAP','Phate');
+    %answer = questdlg('Embedding cells?');
+    %if ~strcmp(answer,'Yes'), return; end
+    answer = questdlg('Which method?','Select method','tSNE','UMAP','PHATE','tSNE');
     fw=pkg.gui_waitbar;
     if strcmp(answer,'tSNE')
         sce.s=sc_tsne(sce.X,3,false);
-    elseif strcmp(answer,'Phate')
-        sce.s=run_phate(sce.X,3,false);
     elseif strcmp(answer,'UMAP')
-        sce.s=run_umap(sce.X,false);
+        sce.s=run_umap(sce.X,2,false,false);
+    elseif strcmp(answer,'PHATE')
+        sce.s=run_phate(sce.X,3,false);       
     end
     pkg.gui_waitbar(fw);
     RefreshAll;
@@ -1051,7 +1058,6 @@ function LabelClusters(src,~)
                 end
             else
                 set(src,'State','off');
-                % RefreshAll;
                 return;
             end
             if i_labelclusters

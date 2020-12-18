@@ -9,7 +9,7 @@ if isa(X,'SingleCellExperiment')
     c=sce.c;
 end
 if nargin<5, methodid=1; end
-if nargin<4 || isempty(c), c=ones(size(s,1),1); end
+if nargin<4 || isempty(c), c=ones(size(X,2),1); end
 if nargin<3 || isempty(s), s=randn(size(X,2),3); end
 if nargin<2 || isempty(genelist), genelist=string((1:size(X,1))'); end
 
