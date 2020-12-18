@@ -4,7 +4,7 @@ function callback_PickColormap(~,~)
     %a=lines(kc);
     %b=a(randperm(size(a,1)),:);
     co={cx,'autumn','lines','default','summer',...
-        'jet','copper','winter'};
+        'jet','copper','winter','hsv'};
     
 %     co={cx,a,b,'default',summer(kc),...
 %         jet(kc),copper(kc),winter(kc)};
