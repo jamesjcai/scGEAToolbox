@@ -5,7 +5,9 @@ if nargin<3, numfig=20; end
 
 numfig=min([numfig length(markerlist)]);
 dirtxt=tempdir;
-a=colormap('autumn');
+dirtxt='./';
+
+a=autumn();
 a(1,:)=[.8 .8 .8];
 
 if isempty(nametag)
@@ -37,7 +39,7 @@ htmlstr="";
         
         h=figure('Visible','off');
         pkg.i_violinplot_groupordered(c,sce.c);
-        ylabel('log2(1+UMI)');
+        ylabel('log2(UMI+1)');
         title(targeetg)
         xtickangle(-45);
         imgfname2=sprintf('violin_%s.png',targeetg);

@@ -257,17 +257,28 @@ pt5.CData = ptImage;
 pt5.Tooltip = 'Switch 2D/3D';
 pt5.ClickedCallback = @Switch2D3D;
 
+pt5pickmk = uipushtool(UitoolbarHandle,'Separator','on');
+[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+            'resources','plotpicker-rose.gif'));  % plotpicker-pie
+%map(map(:,1)+map(:,2)+map(:,3)==3) = NaN;  % Convert white pixels => transparent background
+ptImage = ind2rgb(img,map);
+pt5pickmk.CData = ptImage;
+pt5pickmk.Tooltip = 'Switch scatter plot marker type';
+pw1=fileparts(which(mfilename));
+pt5pickmk.ClickedCallback = {@callback_PickMarker,h};
 
 
-pt5pickcolr = uipushtool(UitoolbarHandle,'Separator','on');
+pt5pickcl = uipushtool(UitoolbarHandle,'Separator','off');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
             'resources','plotpicker-compass.gif'));  % plotpicker-pie
 %map(map(:,1)+map(:,2)+map(:,3)==3) = NaN;  % Convert white pixels => transparent background
 ptImage = ind2rgb(img,map);
-pt5pickcolr.CData = ptImage;
-pt5pickcolr.Tooltip = 'Switch color maps';
+pt5pickcl.CData = ptImage;
+pt5pickcl.Tooltip = 'Switch color maps';
 pw1=fileparts(which(mfilename));
-pt5pickcolr.ClickedCallback = {@callback_PickColormap,pw1};
+pt5pickcl.ClickedCallback = {@callback_PickColormap,...
+                      fileparts(which(mfilename)),...
+                      numel(unique(c))};
 
 pt5 = uipushtool(UitoolbarHandle,'Separator','off');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
@@ -300,21 +311,20 @@ function RefreshAll(~,~)
             %view(ax,bx);
         else
             h=i_gscatter3(sce.s(:,1:2),c,methodid);
-        end       
+        end
     else
         h=i_gscatter3(sce.s(:,1:2),c,methodid);        
     end
     title(sce.title)
-    
-%    h=i_gscatter3(sce.s,c,methodid);
-%    title(sce.title)
-    
+    pt5pickmk.ClickedCallback = {@callback_PickMarker,h};
+    pt5pickcl.ClickedCallback = {@callback_PickColormap,...
+                          fileparts(which(mfilename)),...
+                          numel(unique(c))};    
     ptlabelclusters.State='off';
-    UitoolbarHandle.Visible='off';
-    UitoolbarHandle.Visible='on';
+    %UitoolbarHandle.Visible='off';
+    %UitoolbarHandle.Visible='on';
+    %colorbar off  
     
-    %legend off
-    %colorbar off    
 end
 
 function ComparePotency(~,~)
@@ -698,7 +708,7 @@ function ShowCellStats(~,~)
     end
     [indx,tf] = listdlg('PromptString',{'Select statistics',...
     '',''},'SelectionMode','single','ListString',listitems);
-    if tf==1        
+    if tf~=1, return; end        
         switch indx
             case 1
                 ci=sum(sce.X);
@@ -752,22 +762,23 @@ function ShowCellStats(~,~)
         if isempty(h.ZData)
             sces=sce.s(:,1:2);
         end
-            [ax,bx]=view();     
-            h=i_gscatter3(sces,ci,1);            
-            view(ax,bx);
-            title(sce.title);
+        c=ci;
+        RefreshAll;
+%             [ax,bx]=view();     
+%             h=i_gscatter3(sces,ci,1);            
+%             view(ax,bx);
+%             title(sce.title);
             if indx==4
                 hc=colorbar;
                 hc.Label.String=ttxt;
             else
                 colorbar off
             end
-    answer = questdlg('Update sce.c?');
-    if strcmp(answer,'Yes')
-       %[c,cL]=grp2idx(ci);
-       sce.c=ci;
-    end
-    end
+%     answer = questdlg('Update sce.c?');
+%     if strcmp(answer,'Yes')
+%        %[c,cL]=grp2idx(ci);
+%        sce.c=ci;
+%     end
 end
 
 function SelectCellsByClass(~,~)
