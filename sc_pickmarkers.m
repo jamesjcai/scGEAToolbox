@@ -26,6 +26,7 @@ for k=1:K
         
         w=sum(idv==k)./totn;   % weight by number of cells
         a=w*T.z_val;
+        a=T.z_val;
                
         A=[A a];
     end
@@ -48,7 +49,7 @@ avg_logFC=ones(ng,1);
 pct_1=ones(ng,1);
 pct_2=ones(ng,1);
 z_val=ones(ng,1);
-for k=1:ng
+parfor k=1:ng
     x=X(k,:);
     y=Y(k,:);
     [xp,~,xt]=ranksum(x,y);
