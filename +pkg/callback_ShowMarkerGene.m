@@ -1,4 +1,6 @@
-function callback_ShowMarkerGene(src,event)    
+function callback_ShowMarkerGene(src,~)
+    FigureHandle=src.Parent.Parent;
+    sce=guidata(FigureHandle);
     [axx,bxx]=view();
     if any([axx,bxx]==0), axx=ax; bxx=bx; end
     gsorted=sort(sce.g);
@@ -9,4 +11,4 @@ function callback_ShowMarkerGene(src,event)
         [h1]=sc_scattermarker(sce.X,sce.g,sce.s,gsorted(indx),5);
         view(h1,axx,bxx);
     end
-    
+end

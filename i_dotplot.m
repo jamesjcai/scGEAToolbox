@@ -1,4 +1,4 @@
-function sc_dotplot(X0,X1,genelist,tgene,uselog)
+function i_dotplot(X0,X1,genelist,tgene,uselog)
 
 if nargin<5
     uselog=false;

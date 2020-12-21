@@ -62,7 +62,7 @@ pt3 = uipushtool(UitoolbarHandle,'Separator','off');
 ptImage = ind2rgb(img,map);
 pt3.CData = ptImage;
 pt3.Tooltip = 'Select a gene to show expression';
-pt3.ClickedCallback = @ShowMarkerGene;
+pt3.ClickedCallback = @callback_ShowMarkerGene;
 
 pt3a = uipushtool(UitoolbarHandle,'Separator','off');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
@@ -179,7 +179,7 @@ pt4mrkheat = uipushtool(UitoolbarHandle,'Separator','off');
 % [img,map] = imread(fullfile(matlabroot,...
 %             'toolbox','matlab','icons','plotpicker-stairs.gif'));
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
-            'resources','plotpicker-kagi.gif'));
+            'resources','plotpicker-plotmatrix.gif'));
 ptImage = ind2rgb(img,map);
 pt4mrkheat.CData = ptImage;
 pt4mrkheat.Tooltip = 'Marker gene heatmap';
@@ -247,7 +247,7 @@ pt = uipushtool(UitoolbarHandle,'Separator','off');
 ptImage = ind2rgb(img,map);
 pt.CData = ptImage;
 pt.Tooltip = 'Export & save data';
-pt.ClickedCallback = @SaveX;
+pt.ClickedCallback = @callback_SaveX;
 
 
 pt5 = uipushtool(UitoolbarHandle,'Separator','on');
@@ -275,7 +275,6 @@ pt5pickmk = uipushtool(UitoolbarHandle,'Separator','on');
 ptImage = ind2rgb(img,map);
 pt5pickmk.CData = ptImage;
 pt5pickmk.Tooltip = 'Switch scatter plot marker type';
-pw1=fileparts(which(mfilename));
 pt5pickmk.ClickedCallback = {@callback_PickPlotMarker,h};
 
 
@@ -286,10 +285,8 @@ pt5pickcl = uipushtool(UitoolbarHandle,'Separator','off');
 ptImage = ind2rgb(img,map);
 pt5pickcl.CData = ptImage;
 pt5pickcl.Tooltip = 'Switch color maps';
-pw1=fileparts(which(mfilename));
 pt5pickcl.ClickedCallback = {@callback_PickColorMap,...
-                      fileparts(which(mfilename)),...
-                      numel(unique(c))};
+                              numel(unique(c))};
 
 pt5 = uipushtool(UitoolbarHandle,'Separator','off');
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
@@ -306,6 +303,7 @@ add_3dcamera(defaultToolbar,'AllCells');
 % guidata( FigureHandle, handles ) ; 
  
 set( FigureHandle, 'visible', 'on' ) ; 
+guidata(FigureHandle,sce);
 
 if nargout > 0
     varargout{1} = FigureHandle ; 
@@ -329,14 +327,11 @@ function RefreshAll(~,~)
     title(sce.title)
     pt5pickmk.ClickedCallback = {@callback_PickPlotMarker,h};
     pt5pickcl.ClickedCallback = {@callback_PickColorMap,...
-                          fileparts(which(mfilename)),...
-                          numel(unique(c))}; 
+                                  numel(unique(c))};
     guidata(pt4mrkheat,sce);
     ptlabelclusters.State='off';
     %UitoolbarHandle.Visible='off';
-    %UitoolbarHandle.Visible='on';
-    %colorbar off  
-    
+    %UitoolbarHandle.Visible='on';    
 end
 
 function ComparePotency(~,~)
@@ -373,7 +368,7 @@ function Switch2D3D(~,~)
             view(ax,bx);
         else
             view(3);
-        end        
+        end
     else                 % current 3D do following
         [ax,bx]=view();
         answer = questdlg('Which view to be used to project cells?','',...
@@ -597,7 +592,6 @@ function Brushed2MergeClusters(~,~)
     end     
 end
 
-
 function Brush4Celltypes(~,~)
     answer = questdlg('Label cell type of brushed cells?');
     if ~strcmp(answer,'Yes'), return; end
@@ -694,25 +688,8 @@ function Brush4Markers(~,~)
 %             {'g_markerlist'},{markerlist});
 end
 
-function ShowMarkerGene(~,~)
-    [axx,bxx]=view();
-    if any([axx,bxx]==0), axx=ax; bxx=bx; end
-%     answer = questdlg('Select a gene to show expression?');
-%     if ~strcmp(answer,'Yes'), return; end
-    gsorted=sort(sce.g);
-    [indx,tf] = listdlg('PromptString',{'Select a gene',...
-    '',''},'SelectionMode','single','ListString',gsorted);
-    if tf==1     
-        figure;
-        [h1]=sc_scattermarker(sce.X,sce.g,sce.s,gsorted(indx),5);
-        view(h1,axx,bxx);
-    end
-end
-
 function ShowCellStats(~,~)
-%     answer = questdlg('Show cell states?');
-%     if ~strcmp(answer,'Yes'), return; end
-    
+
     listitems={'Library Size','Mt-reads Ratio',...
         'Mt-genes Expression','Cell Cycle Phase',...
         'Cell Type','Cluster ID','Batch ID'};
@@ -865,26 +842,6 @@ function DeleteSelectedCells(~,~)
     guidata(pt4mrkheat,sce);
 end
 
-function SaveX(~,~)
-    answer = questdlg('Export & save data?');
-    if ~strcmp(answer,'Yes'), return; end     
-    labels = {'Save SCE to variable named:',...
-        'Save SCE.X to variable named:',...
-        'Save SCE.g to variable named:',...
-        'Save SCE.S to variable named:'}; 
-    vars = {'sce','X','genelist','s'};
-    values = {sce,sce.X,sce.g,sce.s};
-    export2wsdlg(labels,vars,values,...
-        'Save Data to Workspace',...
-        logical([1 0 0 0]),{@smhelp});
-         
-    function smhelp
-        helpdlg({'Select one or both check boxes.',...
-                 'Change the variable names, if desired,',...
-                 'and then click OK.'});
-    end
-end
-
 function DrawTrajectory(~,~)
         answer = questdlg('Which method?','Select Algorithm',...
             'splinefit (fast)','princurve (slow)',...
@@ -1007,6 +964,7 @@ function ClusterCellsS(~,~)
         i_labelclusters;
     end
     guidata(pt4mrkheat,sce);
+    pt5pickmk.ClickedCallback = {@callback_PickPlotMarker,h};
 end
 
 function ClusterCellsX(~,~)

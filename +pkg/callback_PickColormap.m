@@ -1,13 +1,13 @@
-function callback_PickColorMap(~,~,pw1,n)
-    if nargin<4, n=21; end
-    if nargin<3, pw1=[]; end
+function callback_PickColorMap(~,~,n)
+    if nargin<3, n=21; end
     % disp(sprintf('Using %d colors',n));
-    if n<3, n=3; end
-    if ~isempty(pw1)
-        pth=fullfile(pw1,'thirdparty/cbrewer');
-        addpath(pth);
-        CT=cbrewer('seq','Blues',n);
-    end
+    n=max([n 3]);    
+    folder=fileparts(mfilename('fullpath'));
+    a=strfind(folder,filesep);
+    folder=extractBefore(folder,a(end)+1);
+    wrkpth=fullfile(folder,'thirdparty','cbrewer');
+    addpath(wrkpth);
+    CT=cbrewer('seq','Blues',n);
 
     cx=autumn(n);
     cx(1,:)=[.8 .8 .8];

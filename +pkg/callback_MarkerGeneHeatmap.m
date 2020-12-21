@@ -1,97 +1,106 @@
 function callback_MarkerGeneHeatmap(src,~)
-sce=guidata(src);
-[c,cL]=grp2idx(sce.c_cell_type_tx);
-X=[]; sz=[]; cc=[];
-for k=1:length(cL)
-    i=c==k;
-    X=[X sce.X(:,i)];
-    sz=[sz sum(i)];
-    cc=[cc; c(i)];
-end
 
-M=cell(numel(cL),2);
-for k=1:numel(cL)
-    [markerlist]=sc_pickmarkers(sce.X,sce.g,c,k);
-    cLk=matlab.lang.makeValidName(cL{k});
-    M{k,1}=cLk;
-    M{k,2}=markerlist(1:50);    
-end
+    FigureHandle=src.Parent.Parent;
+    sce=guidata(FigureHandle);
+    if isempty(sce.c_cell_type_tx)
+        errordlg('sce.c_cell_type_tx is empty');
+        return;
+    end
+    [c,cL]=grp2idx(sce.c_cell_type_tx);
+    if numel(cL)==1
+        helpdlg('Only one cell type')
+        return; 
+    end
+
+    fw=pkg.gui_waitbar;
+    M=cell(numel(cL),2);
+    for k=1:numel(cL)
+        [markerlist]=sc_pickmarkers(sce.X,sce.g,c,k);
+        cLk=matlab.lang.makeValidName(cL{k});
+        M{k,1}=cLk;
+        M{k,2}=markerlist;
+    end
+    pkg.gui_waitbar(fw);    
+    
+% ==============    
+    
+    
+    X=[]; szcl=[]; idcl=[];
+    for k=1:length(cL)
+        i=c==k;
+        X=[X sce.X(:,i)];
+        szcl=[szcl sum(i)];
+        idcl=[idcl; c(i)];
+    end
+    X=sc_norm(X);
+    X=log2(X+1);
 
 % =========== 
-
-subi=1:10:size(X,2);
+Y=[]; idgn=[]; szgn=[];
+% subi=1:10:size(X,2);
+MX=[];
 for k=1:numel(cL)
-    markerlist=M{k,2};
-    cLk=M{k,1};
+    markerlist=M{k,2}(1:10);
+    MX=[MX; markerlist];
+    % cLk=M{k,1};
     [~,idx_g]=ismember(upper(markerlist),upper(sce.g));
-    xx=X(idx_g,subi);
-    ccc=cc(subi);
+    Y=[Y; X(idx_g,:)];
+    idgn=[idgn; k*ones(length(markerlist),1)];
+    szgn=[szgn length(markerlist)];
+end
+
+
+    Y=zscore(Y,0,2);
+    qx=quantile(Y(:),0.90);
+    Y(Y>qx)=qx;
+    qx=quantile(Y(:),0.10);
+    Y(Y<qx)=qx;
     
-    M=[m_ncsc; m_csc; m_tac; m_ec; m_eec; m_goblet; m_dcs; m_tuft];
-% M=unique(M,'stable');
-[~,idx_g]=ismember(upper(M),upper(g));
-X=Xori(idx_g,:);
-
-X=sc_norm(X);
-X=log2(X+1);
-
-
-y=[];
-c=[];
-sz=[length(m_ncsc) length(m_csc) length(m_tac) length(m_ec) length(m_eec) length(m_goblet) length(m_dcs) length(m_tuft)];
-i=sce.c_cell_type_tx=="Noncycling SC";
-y=[y X(:,i)]; c=[c ones(1,sum(i))];
-i=sce.c_cell_type_tx=="Cycling SC";
-y=[y X(:,i)]; c=[c 2*ones(1,sum(i))];
-i=sce.c_cell_type_tx=="TA";
-y=[y X(:,i)]; c=[c 3*ones(1,sum(i))];
-i=sce.c_cell_type_tx=="EC";
-y=[y X(:,i)]; c=[c 4*ones(1,sum(i))];
-i=sce.c_cell_type_tx=="EEC";
-y=[y X(:,i)]; c=[c 5*ones(1,sum(i))];
-i=sce.c_cell_type_tx=="Goblet (type 1)" | sce.c_cell_type_tx=="Goblet (type 2)";
-y=[y X(:,i)]; c=[c 6*ones(1,sum(i))];
-i=sce.c_cell_type_tx=="DCS (type 1)" | sce.c_cell_type_tx=="DCS (type 2)";
-y=[y X(:,i)]; c=[c 7*ones(1,sum(i))];
-i=sce.c_cell_type_tx=="Tuft cell";
-y=[y X(:,i)]; c=[c 8*ones(1,sum(i))];
-
-
-
-i=1:20:size(y,2);
-cc=c(i);
-xx=y(:,i);
-
 figure;
-% xx=quantilenorm(xx')';
-    xx=zscore(xx,0,2);
-    qx=quantile(xx(:),0.90);
-    xx(xx>qx)=qx;
-    qx=quantile(xx(:),0.10);
-    xx(xx<qx)=qx;    
-    imagesc(xx);
-
-% figure;
-% pkg.heatmap(xx, M,...
-%     'ShowAllTicks', true);
-% set(gca,'YTick',1:size(xx,1));
-
-% axis xy
-szc=cumsum(sz);
-for k=1:max(cc)-1
-    xline(sum(cc<k+1)+0.5,'r-');
+imagesc(Y);
+szc=cumsum(szgn);
+for k=1:max(idcl)-1
+    xline(sum(idcl<k+1)+0.5,'r-');
     yline(szc(k)+0.5,'r-');
 end
-% a=colormap('autumn');
-% a(1,:)=[.8 .8 .8];
-% colormap(a);
-set(gca,'YTick',1:size(xx,1));
-
-set(gca,'XTick',[])
-% set(gca,'YTick',[])
-set(gca,'YTickLabel',M);
+set(gca,'YTick',1:size(Y,1));
+a=[]; b=[];
+for k=1:max(idcl)
+    a=[a sum(idcl<=k)];
+    b=[b round(sum(idcl==k)./2)];
+end
+set(gca,'XTick',a-b);
+set(gca,'XTickLabel',M(:,1));
+set(gca,'XTickLabelRotation',315);
+set(gca,'YTickLabel',MX);
 set(gca,'TickLength',[0 0])
+pause(3)
+        labels = {'Save marker gene map M to variable named:'}; 
+        vars = {'M'};
+        values = {M};
+        export2wsdlg(labels,vars,values);
 
+end
+
+%{
+    FigureHandle=gcf;
+    hAx = axes('Parent',FigureHandle);
+    UitoolbarHandle = uitoolbar('Parent',FigureHandle ) ; 
+    pt3 = uipushtool(UitoolbarHandle,'Separator','off');
+    pt3.Tooltip = 'Select a gene to show expression';
+    [img,map] = imread(fullfile(matlabroot,...
+                'toolbox','matlab','icons','greencircleicon.gif'));
+    ptImage = ind2rgb(img,map);
+    pt3.CData = ptImage;
+    pt3.ClickedCallback = {@i_saveM,M};
+
+    function i_saveM(~,~,M)    
+        labels = {'Save marker gene map M to variable named:'}; 
+        vars = {'M'};
+        values = {M};
+        export2wsdlg(labels,vars,values);
+    end
+%}
 
 %{    
     
@@ -142,5 +151,3 @@ end
 end
 
 %}
-
-end

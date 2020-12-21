@@ -1,6 +1,10 @@
-function callback_ShowCellStats(src,event,sce,h)    
+function callback_ShowCellStats(src,event)
+
     answer = questdlg('Show cell states?');
     if ~strcmp(answer,'Yes'), return; end    
+    
+    FigureHandle=src.Parent.Parent;
+    sce=guidata(FigureHandle);
     
     listitems={'Library Size','Mt-reads Ratio',...
         'Mt-genes Expression','Cell Cycle Phase'};
