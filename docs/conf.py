@@ -33,7 +33,7 @@ author = 'James Cai'
 # ones.
 extensions = [
     ...
-    "sphinx_rtd_theme",
+    "sphinx_rtd_theme"
 ]
 
 
