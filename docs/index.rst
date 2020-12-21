@@ -10,21 +10,8 @@ Welcome to scGEAToolbox's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-.. toctree::
-   :maxdepth: 1
-   :hidden:
-   :caption: Getting started
-   
-   /builds
-   /badges
 
-   /support
-   /faq   
-
-
-========================================================
-scGEAToolbox: Matlab toolbox for scRNA-seq data analysis
-========================================================
+scGEAToolbox is a Matlab toolbox for scRNA-seq data analysis.
 
 .. include:: ../README.rst
 
@@ -92,4 +79,15 @@ Implementation notes
   itself; this is just so we can inject dynamic metadata (like scGEAToolbox's own
   version number) into template contexts. It doesn't add any additional
   directives or the like, at least not yet.
+
+.. toctree::
+   :maxdepth: 1
+   :hidden:
+   :caption: Getting started
+   
+   /builds
+   /Advanced features of Read the Docs
+   /Project background
+   /support
+   /faq   
 
