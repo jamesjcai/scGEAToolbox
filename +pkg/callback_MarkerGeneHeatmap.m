@@ -4,11 +4,22 @@ function callback_MarkerGeneHeatmap(src,~)
 
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
-    if isempty(sce.c_cell_type_tx)
-        errordlg('sce.c_cell_type_tx is empty');
-        return;
+    
+    if isempty(sce.c_cell_type_tx) 
+        if isempty(sce.c_cluster_id)
+            errordlg('sce.c_cell_type_tx is empty.');
+            return;        
+        else
+            answer = questdlg('sce.c_cell_type_tx is empty.\nUse sce.c_cluster_id?');
+            if ~strcmp(answer,'Yes'), return; end
+            cell_type_v=sce.c_cluster_id;                   
+        end
+    else    
+        cell_type_v=sce.c_cell_type_tx;
     end
-    [c,cL]=grp2idx(sce.c_cell_type_tx);
+    
+    
+    [c,cL]=grp2idx(cell_type_v);
     if numel(cL)==1
         helpdlg('Only one cell type')
         return; 
@@ -61,10 +72,13 @@ Y(Y<qx)=qx;
 Z=[];
 for k=1:numel(cL)
     y=Y(idgn==k,:);
+    
     z=[];
     for kk=1:numel(cL)
         z=[z mean(y(:,idcl==kk),2)];
-    end
+    end    
+    z1=grpstats(transpose(y),idcl,@(x)mean(x,1))';
+    assert(isequal(z,z1));
     Z=[Z; z];
 end
   
@@ -191,5 +205,4 @@ end
     set(gca,'YTickLabel',markerlist);
     title(strrep(cLk,'_','\_'));
 end
-
 %}
