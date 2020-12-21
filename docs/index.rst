@@ -7,7 +7,7 @@ Welcome to scGEAToolbox's documentation!
 ========================================
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 3
    :caption: Contents:
 
 
@@ -80,7 +80,7 @@ Implementation notes
   directives or the like, at least not yet.
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: Advanced Features
    
    /builds
