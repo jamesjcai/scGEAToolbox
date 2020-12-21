@@ -10,13 +10,17 @@ Welcome to scGEAToolbox's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+.. toctree::
+   :maxdepth: 1
+   :hidden:
+   :caption: Getting started
+   
+   /builds
+   /badges
 
-Indices and tables
-==================
+   /support
+   /faq   
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
 
 ========================================================
 scGEAToolbox: Matlab toolbox for scRNA-seq data analysis
@@ -37,6 +41,34 @@ Features
   components; header/link/etc color control; etc;
 * Improved documentation for all customizations (pre-existing & new).
 
+Step-by-step Guides
+-------------------
+
+These guides will help walk you through specific use cases
+related to Read the Docs itself, documentation tools like Sphinx and MkDocs
+and how to write successful documentation.
+
+Advanced features of Read the Docs
+----------------------------------
+
+Read the Docs offers many advanced features and options.
+Learn more about these integrations and how you can get the most
+out of your documentation and Read the Docs.
+
+First steps
+-----------
+
+Are you new to software documentation
+or are you looking to use your existing docs with Read the Docs?
+Learn about documentation authoring tools such as Sphinx and MkDocs
+to help you create fantastic documentation for your project.
+
+* **Getting started**:
+  :doc:`With Sphinx </intro/getting-started-with-sphinx>` |
+  :doc:`With MkDocs </intro/getting-started-with-mkdocs>` |
+  :doc:`Feature Overview </features>` |
+  :doc:`/choosing-a-site`
+  
 
 Project background
 ==================
@@ -61,9 +93,3 @@ Implementation notes
   version number) into template contexts. It doesn't add any additional
   directives or the like, at least not yet.
 
-
-.. toctree::
-    :hidden:
-    :glob:
-
-    *
