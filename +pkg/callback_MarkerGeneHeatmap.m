@@ -1,4 +1,6 @@
 function callback_MarkerGeneHeatmap(src,~)
+    answer = questdlg('Generate marker gene heatmap?');
+    if ~strcmp(answer,'Yes'), return; end  
 
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
@@ -24,7 +26,6 @@ function callback_MarkerGeneHeatmap(src,~)
     
 % ==============    
     
-    
     X=[]; szcl=[]; idcl=[];
     for k=1:length(cL)
         i=c==k;
@@ -36,13 +37,12 @@ function callback_MarkerGeneHeatmap(src,~)
     X=log2(X+1);
 
 % =========== 
-Y=[]; idgn=[]; szgn=[];
+Y=[]; idgn=[]; szgn=[]; Z=[];
 % subi=1:10:size(X,2);
 MX=[];
 for k=1:numel(cL)
     markerlist=M{k,2}(1:10);
-    MX=[MX; markerlist];
-    % cLk=M{k,1};
+    MX=[MX; markerlist];    
     [~,idx_g]=ismember(upper(markerlist),upper(sce.g));
     Y=[Y; X(idx_g,:)];
     idgn=[idgn; k*ones(length(markerlist),1)];
@@ -50,13 +50,25 @@ for k=1:numel(cL)
 end
 
 
-    Y=zscore(Y,0,2);
-    qx=quantile(Y(:),0.90);
-    Y(Y>qx)=qx;
-    qx=quantile(Y(:),0.10);
-    Y(Y<qx)=qx;
+Y=zscore(Y,0,2);
+qx=quantile(Y(:),0.90);
+Y(Y>qx)=qx;
+qx=quantile(Y(:),0.10);
+Y(Y<qx)=qx;
     
-figure;
+    
+
+Z=[];
+for k=1:numel(cL)
+    y=Y(idgn==k,:);
+    z=[];
+    for kk=1:numel(cL)
+        z=[z mean(y(:,idcl==kk),2)];
+    end
+    Z=[Z; z];
+end
+  
+f1=figure;
 imagesc(Y);
 szc=cumsum(szgn);
 for k=1:max(idcl)-1
@@ -70,17 +82,47 @@ for k=1:max(idcl)
     b=[b round(sum(idcl==k)./2)];
 end
 set(gca,'XTick',a-b);
-set(gca,'XTickLabel',M(:,1));
-set(gca,'XTickLabelRotation',315);
+set(gca,'XTickLabel',strrep(M(:,1),'_','\_'));
+set(gca,'XTickLabelRotation',45);
+set(gca,'YTick',1:length(MX));
 set(gca,'YTickLabel',MX);
 set(gca,'TickLength',[0 0])
-pause(3)
+% pause(3)
+
+f2=figure;
+imagesc(Z);
+set(gca,'XTick',1:numel(cL));
+set(gca,'XTickLabel',strrep(M(:,1),'_','\_'));
+set(gca,'XTickLabelRotation',45);
+set(gca,'YTick',1:length(MX));
+set(gca,'YTickLabel',MX);
+set(gca,'TickLength',[0 0])
+
+tb1=uitoolbar(f1);
+pt1 = uipushtool(tb1,'Separator','off');
+pt1.Tooltip = 'Save marker gene map';
+[img,map] = imread(fullfile(matlabroot,...
+            'toolbox','matlab','icons','greencircleicon.gif'));
+ptImage = ind2rgb(img,map);
+pt1.CData = ptImage;
+pt1.ClickedCallback = {@i_saveM,M};
+
+tb2=uitoolbar(f2);
+pt2 = uipushtool(tb2,'Separator','off');
+pt2.Tooltip = 'Save marker gene map';
+pt2.CData = ptImage;
+pt2.ClickedCallback = {@i_saveM,M};
+
+    function i_saveM(~,~,M)    
         labels = {'Save marker gene map M to variable named:'}; 
         vars = {'M'};
         values = {M};
         export2wsdlg(labels,vars,values);
+    end    
 
 end
+
+
 
 %{
     FigureHandle=gcf;
