@@ -158,6 +158,16 @@ pt4 = uipushtool(UitoolbarHandle,'Separator','off');
 % [img,map] = imread(fullfile(matlabroot,...
 %             'toolbox','matlab','icons','plotpicker-stairs.gif'));
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
+            'resources','plotpicker-scatterhist.gif'));
+ptImage = ind2rgb(img,map);
+pt4.CData = ptImage;
+pt4.Tooltip = 'Rename cell type';
+pt4.ClickedCallback = @RenameCellType;
+
+pt4 = uipushtool(UitoolbarHandle,'Separator','off');
+% [img,map] = imread(fullfile(matlabroot,...
+%             'toolbox','matlab','icons','plotpicker-stairs.gif'));
+[img,map] = imread(fullfile(fileparts(which(mfilename)),...
             'resources','plotpicker-kagi.gif'));
 ptImage = ind2rgb(img,map);
 pt4.CData = ptImage;
@@ -165,15 +175,16 @@ pt4.Tooltip = 'Marker genes of brushed cells';
 pt4.ClickedCallback = @Brush4Markers;
 
 
-pt4 = uipushtool(UitoolbarHandle,'Separator','off');
+pt4mrkheat = uipushtool(UitoolbarHandle,'Separator','off');
 % [img,map] = imread(fullfile(matlabroot,...
 %             'toolbox','matlab','icons','plotpicker-stairs.gif'));
 [img,map] = imread(fullfile(fileparts(which(mfilename)),...
-            'resources','plotpicker-scatterhist.gif'));
+            'resources','plotpicker-kagi.gif'));
 ptImage = ind2rgb(img,map);
-pt4.CData = ptImage;
-pt4.Tooltip = 'Rename cell type';
-pt4.ClickedCallback = @RenameCellType;
+pt4mrkheat.CData = ptImage;
+pt4mrkheat.Tooltip = 'Marker gene heatmap';
+pt4mrkheat.ClickedCallback = @callback_MarkerGeneHeatmap;
+guidata(pt4mrkheat,sce);
 
 % --------------------------
 
@@ -265,7 +276,7 @@ ptImage = ind2rgb(img,map);
 pt5pickmk.CData = ptImage;
 pt5pickmk.Tooltip = 'Switch scatter plot marker type';
 pw1=fileparts(which(mfilename));
-pt5pickmk.ClickedCallback = {@callback_PickMarker,h};
+pt5pickmk.ClickedCallback = {@callback_PickPlotMarker,h};
 
 
 pt5pickcl = uipushtool(UitoolbarHandle,'Separator','off');
@@ -276,7 +287,7 @@ ptImage = ind2rgb(img,map);
 pt5pickcl.CData = ptImage;
 pt5pickcl.Tooltip = 'Switch color maps';
 pw1=fileparts(which(mfilename));
-pt5pickcl.ClickedCallback = {@callback_PickColormap,...
+pt5pickcl.ClickedCallback = {@callback_PickColorMap,...
                       fileparts(which(mfilename)),...
                       numel(unique(c))};
 
@@ -316,10 +327,11 @@ function RefreshAll(~,~)
         h=i_gscatter3(sce.s(:,1:2),c,methodid);        
     end
     title(sce.title)
-    pt5pickmk.ClickedCallback = {@callback_PickMarker,h};
-    pt5pickcl.ClickedCallback = {@callback_PickColormap,...
+    pt5pickmk.ClickedCallback = {@callback_PickPlotMarker,h};
+    pt5pickcl.ClickedCallback = {@callback_PickColorMap,...
                           fileparts(which(mfilename)),...
-                          numel(unique(c))};    
+                          numel(unique(c))}; 
+    guidata(pt4mrkheat,sce);
     ptlabelclusters.State='off';
     %UitoolbarHandle.Visible='off';
     %UitoolbarHandle.Visible='on';
@@ -397,7 +409,7 @@ function RenameCellType(~,~)
             i_labelclusters(false);
         end
     end
-    
+    guidata(pt4mrkheat,sce);
 end
 
 function DEGene2Groups(~,~)
@@ -521,6 +533,7 @@ end
 sce.c_cell_type_tx=string(cL(c));
 export2wsdlg({'Save cell type list to variable named:'},...
     {'c_celltype'},{sce.c_cell_type_tx});
+guidata(pt4mrkheat,sce);
 end
 
 function Brushed2NewCluster(~,~)
@@ -736,11 +749,13 @@ function ShowCellStats(~,~)
                 end
                 return;
             case 4   % "Cell Cycle Phase";
-                if isempty(sce.c_cell_cycle_tx)
-                    fw=pkg.gui_waitbar;               
-                    [cix]=run_cellcycle(sce.X,sce.g);
+                if isempty(sce.c_cell_cycle_tx)   
+                 answer = questdlg('Estimate cell cycle using R/seurat?');
+                 if ~strcmp(answer,'Yes'), return; end                    
+                    fw=pkg.gui_waitbar;
+                    [cix]=run.SeuratCellCycle(sce.X,sce.g);
                     sce.c_cell_cycle_tx=cix;
-                    pkg.gui_waitbar(fw);                    
+                    pkg.gui_waitbar(fw);             
                 end                
                 [ci,tx]=grp2idx(sce.c_cell_cycle_tx);
                 ttxt=sprintf('%s|',string(tx));
@@ -847,6 +862,7 @@ function DeleteSelectedCells(~,~)
     h=i_gscatter3(sce.s,c);
     title(sce.title);
     view(ax,bx);
+    guidata(pt4mrkheat,sce);
 end
 
 function SaveX(~,~)
@@ -990,6 +1006,7 @@ function ClusterCellsS(~,~)
     if strcmp(answer,'Yes')
         i_labelclusters;
     end
+    guidata(pt4mrkheat,sce);
 end
 
 function ClusterCellsX(~,~)

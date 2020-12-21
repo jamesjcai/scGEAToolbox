@@ -1,4 +1,4 @@
-function callback_PickMarker(~,~,h)
+function callback_PickPlotMarker(~,~,h)
     if h.Marker=='.'
         h.Marker='o';
         h.SizeData=10;

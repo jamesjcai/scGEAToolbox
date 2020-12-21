@@ -1,4 +1,4 @@
-function callback_PickColormap(~,~,pw1,n)
+function callback_PickColorMap(~,~,pw1,n)
     if nargin<4, n=21; end
     if nargin<3, pw1=[]; end
     % disp(sprintf('Using %d colors',n));
