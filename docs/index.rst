@@ -7,7 +7,7 @@ Welcome to scGEAToolbox's documentation!
 ========================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Contents:
 
 
@@ -15,8 +15,8 @@ scGEAToolbox is a Matlab toolbox for scRNA-seq data analysis.
 
 .. include:: ../README.rst
 
-Features
-========
+Getting Started
+===============
 
 * Easy ability to install/use as a Matlab toolbox (tip o' the hat to 
   `James Cai's scGEAToolbox <https://github.com/jamesjcai/scGEAToolbox>`_ for
@@ -28,15 +28,8 @@ Features
   components; header/link/etc color control; etc;
 * Improved documentation for all customizations (pre-existing & new).
 
-Step-by-step Guides
--------------------
-
-These guides will help walk you through specific use cases
-related to Read the Docs itself, documentation tools like Sphinx and MkDocs
-and how to write successful documentation.
-
-Advanced features of Read the Docs
-----------------------------------
+Quick demos
+-----------
 
 Read the Docs offers many advanced features and options.
 Learn more about these integrations and how you can get the most
@@ -50,13 +43,19 @@ or are you looking to use your existing docs with Read the Docs?
 Learn about documentation authoring tools such as Sphinx and MkDocs
 to help you create fantastic documentation for your project.
 
-* **Getting started**:
+Step-by-step Guides
+-------------------
+
+These guides will help walk you through specific use cases
+related to Read the Docs itself, documentation tools like Sphinx and MkDocs
+and how to write successful documentation.
+
+* **Weighted List**:
   :doc:`With Sphinx </intro/getting-started-with-sphinx>` |
   :doc:`With MkDocs </intro/getting-started-with-mkdocs>` |
   :doc:`Feature Overview </features>` |
   :doc:`/choosing-a-site`
   
-
 Project background
 ==================
 
@@ -82,8 +81,7 @@ Implementation notes
 
 .. toctree::
    :maxdepth: 1
-   :hidden:
-   :caption: Getting started
+   :caption: Advanced Features
    
    /builds
    /Advanced features of Read the Docs
