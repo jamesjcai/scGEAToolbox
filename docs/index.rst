@@ -11,7 +11,6 @@ Welcome to scGEAToolbox's documentation!
    :caption: Contents:
 
 
-
 Indices and tables
 ==================
 
@@ -19,17 +18,17 @@ Indices and tables
 * :ref:`modindex`
 * :ref:`search`
 
-=========================
-Alabaster: a Sphinx theme
-=========================
+========================================================
+scGEAToolbox: Matlab toolbox for scRNA-seq data analysis
+========================================================
 
 .. include:: ../README.rst
 
 Features
 ========
 
-* Easy ability to install/use as a Python package (tip o' the hat to `Dave &
-  Eric's sphinx_rtd_theme <https://github.com/snide/sphinx_rtd_theme>`_ for
+* Easy ability to install/use as a Matlab toolbox (tip o' the hat to 
+  `James Cai's scGEAToolbox <https://github.com/jamesjcai/scGEAToolbox>`_ for
   showing the way);
 * Style tweaks compared to the source themes, such as better code-block
   alignment, Github button placement, page source link moved to footer,
@@ -42,9 +41,9 @@ Features
 Project background
 ==================
 
-Alabaster is a modified (with permission) version of `Kenneth Reitz's
+scGEAToolbox is a modified (with permission) version of `Kenneth Reitz's
 <http://kennethreitz.org>`_ `"krTheme" Sphinx theme 
-<https://github.com/kennethreitz/kr-sphinx-themes>`_ (it's the one used 
+<https://github.com/jamesjcai/scGEAToolbox>`_ (it's the one used 
 in his `Requests <http://python-requests.org>`_ project). Kenneth's 
 theme was itself originally based on Armin Ronacher's `Flask
 <http://flask.pocoo.org/>`_ theme. Many thanks to both for their hard work.
@@ -54,11 +53,11 @@ Implementation notes
 ====================
 
 * `Fabric #419 <https://github.com/fabric/fabric/issues/419>`_ contains a lot of
-  general exposition & thoughts as I developed Alabaster, specifically with a
+  general exposition & thoughts as I developed scGEAToolbox, specifically with a
   mind towards using it on two nearly identical 'sister' sites (single-version
   www 'info' site & versioned API docs site).
-* Alabaster includes/requires a tiny Sphinx extension on top of the theme
-  itself; this is just so we can inject dynamic metadata (like Alabaster's own
+* scGEAToolbox includes/requires a tiny Sphinx extension on top of the theme
+  itself; this is just so we can inject dynamic metadata (like scGEAToolbox's own
   version number) into template contexts. It doesn't add any additional
   directives or the like, at least not yet.
 
