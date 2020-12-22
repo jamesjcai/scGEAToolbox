@@ -184,7 +184,7 @@ ptImage = ind2rgb(img,map);
 pt4mrkheat.CData = ptImage;
 pt4mrkheat.Tooltip = 'Marker gene heatmap';
 pt4mrkheat.ClickedCallback = @callback_MarkerGeneHeatmap;
-guidata(pt4mrkheat,sce);
+
 
 % --------------------------
 
@@ -275,7 +275,7 @@ pt5pickmk = uipushtool(UitoolbarHandle,'Separator','on');
 ptImage = ind2rgb(img,map);
 pt5pickmk.CData = ptImage;
 pt5pickmk.Tooltip = 'Switch scatter plot marker type';
-pt5pickmk.ClickedCallback = {@callback_PickPlotMarker,h};
+pt5pickmk.ClickedCallback = @callback_PickPlotMarker;
 
 
 pt5pickcl = uipushtool(UitoolbarHandle,'Separator','off');
@@ -325,10 +325,10 @@ function RefreshAll(~,~)
         h=i_gscatter3(sce.s(:,1:2),c,methodid);        
     end
     title(sce.title)
-    pt5pickmk.ClickedCallback = {@callback_PickPlotMarker,h};
     pt5pickcl.ClickedCallback = {@callback_PickColorMap,...
                                   numel(unique(c))};
-    guidata(pt4mrkheat,sce);
+    
+    guidata(FigureHandle,sce);
     ptlabelclusters.State='off';
     %UitoolbarHandle.Visible='off';
     %UitoolbarHandle.Visible='on';    
@@ -404,7 +404,8 @@ function RenameCellType(~,~)
             i_labelclusters(false);
         end
     end
-    guidata(pt4mrkheat,sce);
+    
+    guidata(FigureHandle,sce);
 end
 
 function DEGene2Groups(~,~)
@@ -413,6 +414,10 @@ function DEGene2Groups(~,~)
     if isempty(sce.c_batch_id)
         warndlg("sce.c_batch_id is empty");
         return;
+    end
+    if numel(unique(sce.c_batch_id))==1
+        warndlg("sce.c_batch_id is empty");
+        return;        
     end
     answer = questdlg('Which method?','Select Method','Wilcoxon rank-sum test','MAST','Wilcoxon rank-sum test');
     if strcmpi(answer,'Wilcoxon rank-sum test')
@@ -477,6 +482,7 @@ function EmbeddingAgain(~,~)
         end
         RefreshAll;
     end
+    guidata(FigureHandle,sce);
 end
 
 function DetermineCellTypeClusters(~,~)
@@ -500,7 +506,8 @@ function DetermineCellTypeClusters(~,~)
     
 for i=1:max(c) 
     ptsSelected=c==i;
-    [Tct]=local_celltypebrushed(sce.X,sce.g,sce.s,ptsSelected,...
+    [Tct]=local_celltypebrushed(sce.X,sce.g,...
+          sce.s,ptsSelected,...
           speciestag,organtag,databasetag);
     ctxt=Tct.C1_Cell_Type;
     
@@ -512,8 +519,9 @@ for i=1:max(c)
         return;
     end
     hold on
+    ctxt=sprintf('%s_{%d}',ctxt,i);
     cL{i}=ctxt;
-    ctxt=strrep(ctxt,'_','\_');            
+    % ctxt=strrep(ctxt,'_','\_');            
     if size(sce.s,2)>=3
             si=mean(sce.s(ptsSelected,:));
             text(si(:,1),si(:,2),si(:,3),sprintf('%s',ctxt),...
@@ -528,7 +536,8 @@ end
 sce.c_cell_type_tx=string(cL(c));
 export2wsdlg({'Save cell type list to variable named:'},...
     {'c_celltype'},{sce.c_cell_type_tx});
-guidata(pt4mrkheat,sce);
+
+guidata(FigureHandle,sce);
 end
 
 function Brushed2NewCluster(~,~)
@@ -552,7 +561,8 @@ function Brushed2NewCluster(~,~)
         sce.c_cluster_id=c;
     else
         return;
-    end     
+    end
+    guidata(FigureHandle,sce);
 end
 
 function Brushed2MergeClusters(~,~)
@@ -589,7 +599,8 @@ function Brushed2MergeClusters(~,~)
         sce.c_cluster_id=c;
     else
         return;
-    end     
+    end
+    guidata(FigureHandle,sce);
 end
 
 function Brush4Celltypes(~,~)
@@ -754,23 +765,26 @@ function ShowCellStats(~,~)
         if isempty(h.ZData)
             sces=sce.s(:,1:2);
         end
-        c=ci;
-        RefreshAll;
-%             [ax,bx]=view();     
-%             h=i_gscatter3(sces,ci,1);            
-%             view(ax,bx);
-%             title(sce.title);
+        % RefreshAll;
+             [ax,bx]=view();     
+             h=i_gscatter3(sces,ci,1);
+             view(ax,bx);
+             title(sce.title);
             if indx==4
                 hc=colorbar;
                 hc.Label.String=ttxt;
             else
                 colorbar off
             end
+            [c,cL]=grp2idx(ci);
+            sce.c=ci;
+
 %     answer = questdlg('Update sce.c?');
 %     if strcmp(answer,'Yes')
-%        %[c,cL]=grp2idx(ci);
-%        sce.c=ci;
+%         [c,cL]=grp2idx(ci);
+%         sce.c=ci;
 %     end
+      guidata(FigureHandle,sce);
 end
 
 function SelectCellsByClass(~,~)
@@ -839,7 +853,8 @@ function DeleteSelectedCells(~,~)
     h=i_gscatter3(sce.s,c);
     title(sce.title);
     view(ax,bx);
-    guidata(pt4mrkheat,sce);
+    
+    guidata(FigureHandle,sce);
 end
 
 function DrawTrajectory(~,~)
@@ -963,8 +978,8 @@ function ClusterCellsS(~,~)
     if strcmp(answer,'Yes')
         i_labelclusters;
     end
-    guidata(pt4mrkheat,sce);
-    pt5pickmk.ClickedCallback = {@callback_PickPlotMarker,h};
+    
+    guidata(FigureHandle,sce);
 end
 
 function ClusterCellsX(~,~)
@@ -1016,6 +1031,7 @@ function ClusterCellsX(~,~)
     if strcmp(answer,'Yes')
         i_labelclusters;
     end
+    guidata(FigureHandle,sce);
 end
 
 function LabelClusters(src,~)

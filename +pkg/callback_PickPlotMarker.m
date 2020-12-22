@@ -1,5 +1,6 @@
-function callback_PickPlotMarker(src,~,h)    
-    % h=gca;
+function callback_PickPlotMarker(src,~)    
+    ah=findobj(src.Parent.Parent,'type','Axes');
+    h=findobj(ah.Children,'type','Scatter');
     if h.Marker=='.'
         h.Marker='o';
         h.SizeData=10;

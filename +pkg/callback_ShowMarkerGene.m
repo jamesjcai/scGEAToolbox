@@ -2,7 +2,7 @@ function callback_ShowMarkerGene(src,~)
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
     [axx,bxx]=view();
-    if any([axx,bxx]==0), axx=ax; bxx=bx; end
+    % if any([axx,bxx]==0), axx=ax; bxx=bx; end
     gsorted=sort(sce.g);
     [indx,tf] = listdlg('PromptString',{'Select a gene',...
     '',''},'SelectionMode','single','ListString',gsorted);

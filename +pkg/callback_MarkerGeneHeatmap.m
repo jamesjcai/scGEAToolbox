@@ -5,17 +5,27 @@ function callback_MarkerGeneHeatmap(src,~)
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
     
+    
     if isempty(sce.c_cell_type_tx) 
         if isempty(sce.c_cluster_id)
             errordlg('sce.c_cell_type_tx is empty.');
             return;        
         else
-            answer = questdlg('sce.c_cell_type_tx is empty.\nUse sce.c_cluster_id?');
+            answer = questdlg('sce.c_cell_type_tx is empty. Use sce.c_cluster_id?');
             if ~strcmp(answer,'Yes'), return; end
             cell_type_v=sce.c_cluster_id;                   
         end
-    else    
-        cell_type_v=sce.c_cell_type_tx;
+    else
+        if ~isempty(sce.c_cluster_id)
+            answer = questdlg('Use sce.c_cluster_id?');
+            if strcmp(answer,'Yes')
+                cell_type_v=sce.c_cluster_id;                   
+            elseif strcmp(answer,'No')
+                cell_type_v=sce.c_cell_type_tx;
+            else
+                return; 
+            end
+        end
     end
     
     
@@ -24,6 +34,8 @@ function callback_MarkerGeneHeatmap(src,~)
         helpdlg('Only one cell type')
         return; 
     end
+    
+    
 
     fw=pkg.gui_waitbar;
     M=cell(numel(cL),2);

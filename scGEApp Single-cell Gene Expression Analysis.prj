@@ -1,9 +1,9 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="1996752156" file="C:\Users\jcai\Documents\GitHub\scGEATool\scGEApp Single-cell Gene Expression Analysis.prj" location="C:\Users\jcai\Documents\GitHub\scGEATool" name="scGEApp Single-cell Gene Expression Analysis" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="1996752156" file="E:\GitHub\scGEAToolbox\scGEApp Single-cell Gene Expression Analysis.prj" location="E:\GitHub\scGEAToolbox" name="scGEApp Single-cell Gene Expression Analysis" target="target.mlapps" target-name="Package App">
     <param.appname>scGEApp Single-cell Gene Expression Analysis</param.appname>
-    <param.authnamewatermark>James Cai</param.authnamewatermark>
-    <param.email>jcai@tamu.edu</param.email>
-    <param.company>Texas A&amp;M University</param.company>
+    <param.authnamewatermark />
+    <param.email />
+    <param.company />
     <param.icon />
     <param.icons />
     <param.summary>Matlab App for Single-cell Gene Expression Analysis</param.summary>
@@ -22,14 +22,14 @@ Cite As: James Cai (2019). scGEApp: a Matlab app for scRNA-seq analysis (https:/
       <item>19</item>
     </param.products.id>
     <param.products.version>
-      <item>9.5</item>
-      <item>3.5.8</item>
-      <item>11.4</item>
+      <item>9.8</item>
+      <item>3.5.11</item>
+      <item>11.7</item>
     </param.products.version>
     <param.platforms>
       <item>win64</item>
     </param.platforms>
-    <param.output>C:\Users\jcai\Documents\GitHub</param.output>
+    <param.output>C:\Users\jcai</param.output>
     <param.guid>8ef78f85-24bd-4c9e-99e4-7cd4bc509f9c</param.guid>
     <unset>
       <param.authnamewatermark />
@@ -186,14 +186,15 @@ Cite As: James Cai (2019). scGEApp: a Matlab app for scRNA-seq analysis (https:/
     </fileset.resources>
     <fileset.package />
     <build-deliverables>
-      <file location="C:\Users\jcai\Documents" name="GitHub" optional="false">C:\Users\jcai\Documents\GitHub</file>
+      <file location="C:\Users" name="jcai" optional="false">C:\Users\jcai</file>
     </build-deliverables>
     <workflow />
     <matlab>
-      <root>C:\Program Files\MATLAB\R2018b</root>
+      <root>C:\Program Files\MATLAB\R2020a</root>
       <toolboxes>
         <toolbox name="matlabcoder" />
         <toolbox name="embeddedcoder" />
+        <toolbox name="gpucoder" />
         <toolbox name="fixedpoint" />
         <toolbox name="matlabhdlcoder" />
         <toolbox name="neuralnetwork" />
@@ -207,6 +208,11 @@ Cite As: James Cai (2019). scGEApp: a Matlab app for scRNA-seq analysis (https:/
         <embeddedcoder>
           <enabled>true</enabled>
         </embeddedcoder>
+      </toolbox>
+      <toolbox>
+        <gpucoder>
+          <enabled>true</enabled>
+        </gpucoder>
       </toolbox>
       <toolbox>
         <fixedpoint>
