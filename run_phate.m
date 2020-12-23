@@ -20,7 +20,7 @@ if nargin<3, plotit=false; end
 if nargin<4, bygene=false; end
 if nargin<5, genelist=[]; end
 
-pw1=fileparts(which(mfilename));
+pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'thirdparty/PHATE');
 addpath(pth);
 

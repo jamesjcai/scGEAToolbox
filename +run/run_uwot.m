@@ -7,7 +7,7 @@ end
 if nargin<2, plotit=false; end
 if issparse(X), X=full(X); end
 oldpth=pwd;
-pw1=fileparts(which(mfilename));
+pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'thirdparty/R_uwot');
 cd(pth);
 fprintf('CURRENTWDIR = "%s"\n',pth);

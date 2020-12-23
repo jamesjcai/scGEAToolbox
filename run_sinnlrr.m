@@ -8,7 +8,7 @@ function [C]=run_sinnlrr(X,k)
 % figure;
 % scatter(s(:,1),s(:,2),20,C,'filled')
 
-pw1=fileparts(which(mfilename));
+pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'thirdparty/SinNLRR');
 addpath(pth);
 

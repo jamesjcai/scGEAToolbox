@@ -5,7 +5,7 @@ end
 if nargin<2, rmribo=false; end
 
 oldpth=pwd;
-pw1=fileparts(which(mfilename));
+pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'thirdparty/R_fgsea');
 cd(pth);
 fprintf('CURRENTWDIR = "%s"\n',pth);

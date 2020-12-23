@@ -2,7 +2,7 @@ function [X,M]=run_mcimpute(X,donorm)
 
 if nargin<2, donorm=true; end
 
-pw1=fileparts(which(mfilename));
+pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'thirdparty/McImpute');
 addpath(pth);
 

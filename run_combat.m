@@ -1,6 +1,6 @@
 function [X,Y]=run_combat(X,Y)
 warning('run_combat is not recommended. Use run_combat2 instead.')
-pw1=fileparts(which(mfilename));
+pw1=fileparts(mfilename('fullpath'));
 addpath(fullfile(pw1,'thirdparty/ComBat'));
 % addpath('thirdparty/ComBat/');
 n1=size(X,2);

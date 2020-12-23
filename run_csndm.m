@@ -1,5 +1,5 @@
 function ndm=run_csndm(X)
-pw1=fileparts(which(mfilename));
+pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'thirdparty/CSN_transform');
 addpath(pth);
 

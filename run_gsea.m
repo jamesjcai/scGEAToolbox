@@ -6,7 +6,7 @@ if nargin<4, perm_nb=1000; end
 if nargin<5, dbfile='msigdb_v62_c5.mat'; end
 if nargin<6, sort_type='ascend'; end
 
-pw1=fileparts(which(mfilename));
+pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'thirdparty/GSEA');
 addpath(pth);
 

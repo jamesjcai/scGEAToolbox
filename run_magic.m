@@ -2,7 +2,7 @@ function X=run_magic(X,donorm)
 
 if nargin<2, donorm=true; end
 
-pw1=fileparts(which(mfilename));
+pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'thirdparty/MAGIC');
 addpath(pth);
 

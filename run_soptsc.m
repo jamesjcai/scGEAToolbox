@@ -31,7 +31,7 @@ parse(p,X,varargin{:});
 donorm=p.Results.donorm;
 k=p.Results.k;
 
-pw1=fileparts(which(mfilename));
+pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'thirdparty/SoptSC');
 addpath(pth);
 pth=fullfile(pw1,'thirdparty/SoptSC/NNDSVD');

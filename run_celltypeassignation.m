@@ -14,7 +14,7 @@ if isempty(FindRpath)
 end
 
 oldpth=pwd;
-pw1=fileparts(which(mfilename));
+pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'thirdparty/R_cellTypeAssignation');
 cd(pth);
 fprintf('CURRENTWDIR = "%s"\n',pth);

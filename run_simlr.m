@@ -13,7 +13,7 @@ function [C,s]=run_simlr(X,k,donorm)
 % figure;
 % scatter(s(:,1),s(:,2),20,C,'filled')
 
-pw1=fileparts(which(mfilename));
+pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'thirdparty/SIMLR');
 addpath(pth);
 pth=fullfile(pw1,'thirdparty/SIMLR/src');

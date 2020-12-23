@@ -6,7 +6,7 @@ function run_enrichr(genelist,genenum)
 if nargin<1, genelist=[]; end
 if nargin<2, genenum=1000; end
 
-pw1=fileparts(which(mfilename));
+pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'thirdparty/Enrichr');
 addpath(pth);
 

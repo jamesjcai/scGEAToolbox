@@ -3,7 +3,7 @@ function [X,Y]=run_hcp(X,Y)
 % HCP (Mostafavi et al. 2013)
 % doi: 10.1371/journal.pone.0068141
 
-pw1=fileparts(which(mfilename));
+pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'thirdparty/HCP_hidden_covariates_with_prior');
 addpath(pth);
 

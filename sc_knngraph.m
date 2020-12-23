@@ -10,7 +10,7 @@ switch method
         [mIdx] = knnsearch(s,s,'K',k+1);
         Graph=mIdx';
     case 2
-        pw1=fileparts(which(mfilename));
+        pw1=fileparts(mfilename('fullpath'));
         pth=fullfile(pw1,'thirdparty/k-NN-code');
         addpath(pth);
         kneighbors=k; % number of neighbors in kNN

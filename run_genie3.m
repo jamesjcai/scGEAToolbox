@@ -12,7 +12,7 @@ end
 if nargin<3, donorm=false; end
 if nargin<4, plotit=false; end
 
-pw1=fileparts(which(mfilename));
+pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'thirdparty/GENIE3');
 addpath(pth);
 pth=fullfile(pw1,'thirdparty/GENIE3/RT');

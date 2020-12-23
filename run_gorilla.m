@@ -10,7 +10,7 @@ function run_gorilla(genelist)
 % see also: RUN_ENRICHR
 if nargin<1, genelist=[]; end
 
-pw1=fileparts(which(mfilename));
+pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'thirdparty/GOrilla');
 addpath(pth);
 

@@ -8,7 +8,7 @@ if nargin<6, bygene=false; end   % when BYGENE=true, the matrix X will be transp
 if nargin<7, genelist=[]; end
 
 
-pw1=fileparts(which(mfilename));
+pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'thirdparty/FIt-SNE');
 addpath(pth);
 
