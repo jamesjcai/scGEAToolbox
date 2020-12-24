@@ -1,21 +1,11 @@
-function [s]=run_fgsea(genelist,rmribo)
-if isempty(FindRpath)
-   error('Rscript.ext is not found.');
-end
-if nargin<2, rmribo=false; end
+function [s]=fgsea(genelist,rmribo)
 
-oldpth=pwd;
-pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'thirdparty/R_fgsea');
-cd(pth);
-fprintf('CURRENTWDIR = "%s"\n',pth);
+if nargin<2, rmribo=true; end
+oldpth=pwd();
+[isok,msg]=commoncheck_R('R_fgsea');
+if ~isok, error(msg); end
 
 
-[~,cmdout]=RunRcode('require.R');
-if strfind(cmdout,'there is no package')>0
-    cd(oldpth);
-    error(cmdout);
-end
 if exist('output.txt','file'), delete('output.txt'); end
 
 
