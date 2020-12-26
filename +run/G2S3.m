@@ -1,4 +1,4 @@
-function X=run_g2s3(X)
+function [X]=G2S3(X)
 % G2S3: a gene graph-based imputation method
 
 pw1=fileparts(mfilename('fullpath'));

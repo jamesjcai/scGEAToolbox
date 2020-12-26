@@ -1,4 +1,4 @@
-function [h1,h2]=sc_scattermarker(X,genelist,s,targeetg,methodid,sz,showcam)
+function [h1,h2]=sc_scattermarker(X,genelist,s,targetg,methodid,sz,showcam)
 %SC_SCATTERMARKER(X,genelist,g,s,methodid)
 %
 % USAGE:
@@ -11,18 +11,18 @@ if isvector(s)||isscalar(s), error('S should be a matrix.'); end
 if nargin<7, showcam=true; end
 if nargin<6, sz=5; end
 if nargin<5, methodid=1; end
-if iscell(targeetg)
-    for k=1:length(targeetg)
+if iscell(targetg)
+    for k=1:length(targetg)
         figure;
-        sc_scattermarker(X,genelist,targeetg{k},s,methodid,sz);
+        sc_scattermarker(X,genelist,s,targetg{k},methodid,sz);
     end
-elseif isstring(targeetg) && ~isStringScalar(targeetg)
-    for k=1:length(targeetg)
+elseif isstring(targetg) && ~isStringScalar(targetg)
+    for k=1:length(targetg)
         figure;
-        sc_scattermarker(X,genelist,s,targeetg(k),methodid,sz);
+        sc_scattermarker(X,genelist,s,targetg(k),methodid,sz);
     end
-elseif isStringScalar(targeetg) || ischar(targeetg)
-    if ismember(targeetg,genelist)
+elseif isStringScalar(targetg) || ischar(targetg)
+    if ismember(targetg,genelist)
         x=s(:,1);
         y=s(:,2);
         if min(size(s))==2
@@ -30,12 +30,12 @@ elseif isStringScalar(targeetg) || ischar(targeetg)
         else
             z=s(:,3);
         end
-%        c=log2(1+X(genelist==targeetg,:));
-        c=X(genelist==targeetg,:);
+%        c=log2(1+X(genelist==targetg,:));
+        c=X(genelist==targetg,:);
         switch methodid
             case 1
                 i_stemscatter(x,y,c);                
-            case 2                
+            case 2      
                 if isempty(z)
                     scatter(x,y,sz,c,'filled');
                 else
@@ -53,9 +53,9 @@ elseif isStringScalar(targeetg) || ischar(targeetg)
                 colormap(a);
             case 4
                subplot(1,2,1)
-               sc_scattermarker(X,genelist,s,targeetg,3,sz,false);
+               sc_scattermarker(X,genelist,s,targetg,3,sz,false);
                subplot(1,2,2)
-               sc_scattermarker(X,genelist,s,targeetg,1,sz,false);
+               sc_scattermarker(X,genelist,s,targetg,1,sz,false);
                hFig=gcf;
                hFig.Position(3)=hFig.Position(3)*2;
             case 5
@@ -74,7 +74,7 @@ elseif isStringScalar(targeetg) || ischar(targeetg)
                 a(1,:)=[.8 .8 .8];
                 colormap(a);
                 % h1.YDataSource='explorer2IDX';
-                 title(targeetg)
+                 title(targetg)
 %                 title(sprintf('%s\n(%s/%s = %g%% nonzero)',...
 %                     g,...
 %                     num2bankScalar(sum(c>0)),...
@@ -95,7 +95,7 @@ elseif isStringScalar(targeetg) || ischar(targeetg)
                 view(h1,3);
         end
                 tx=title(sprintf('%s\n(%s/%s = %.3f%% nonzero)',...
-                    targeetg,...
+                    targetg,...
                     num2bankScalar(sum(c>0)),...
                     num2bankScalar(numel(c)),...
                     100*sum(c>0)./numel(c)));
@@ -123,10 +123,10 @@ elseif isStringScalar(targeetg) || ischar(targeetg)
                 pt.ClickedCallback = @selectcolormapeditor;
       end
     else
-        warning('%s no expression',targeetg);
+        warning('%s no expression',targetg);
     end
     if showcam
-        add_3dcamera(tb,targeetg);
+        add_3dcamera(tb,targetg);
     end
 end
 %     function dispgname(~,~)

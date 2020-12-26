@@ -1,4 +1,4 @@
-function wn=dn(w,type);
+function wn=NE_dn(w,type)
 w = w*length(w);
 w = double(w);
 D=sum(abs(w),2)+eps;

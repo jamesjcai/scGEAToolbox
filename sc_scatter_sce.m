@@ -433,7 +433,7 @@ function DEGene2Groups(~,~)
             T=sc_deg(sce.X(:,sce.c_batch_id==1),...
                     sce.X(:,sce.c_batch_id==2),sce.g);
         case 'mast'
-            T=run_mast(sce.X(:,sce.c_batch_id==1),...
+            T=run.MAST(sce.X(:,sce.c_batch_id==1),...
                     sce.X(:,sce.c_batch_id==2),sce.g);
     end
     pkg.gui_waitbar(fw);
@@ -915,7 +915,7 @@ function RunTrajectoryAnalysis(~,~)
     if ~strcmp(answer,'Yes'), return; end
     
     fw=pkg.gui_waitbar;
-    [t_mono,s_mono]=run_monocle(sce.X);
+    [t_mono,s_mono]=run.monocle(sce.X);
     pkg.gui_waitbar(fw);
 
         answer = questdlg('View Monocle DDRTree?', ...

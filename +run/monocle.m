@@ -1,23 +1,12 @@
-function [t,s]=run_monocle(X,plotit)
+function [t,s]=monocle(X,plotit)
 % Run Monocle pseudotime analysis
 
 %[t_mono,s_mono]=run_monocle(X,true);
 
-if isempty(FindRpath)
-   error('Rscript.ext is not found.');
-end
 if nargin<2, plotit=false; end
-oldpth=pwd;
-pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'thirdparty/R_monocle');
-cd(pth);
-fprintf('CURRENTWDIR = "%s"\n',pth);
-
-[~,cmdout]=RunRcode('require.R');
-if strfind(cmdout,'there is no package')>0
-    cd(oldpth);
-    error(cmdout);
-end
+oldpth=pwd();
+[isok,msg]=commoncheck_R('R_monocle');
+if ~isok, error(msg); end
 
 if exist('output.csv','file')
     delete('output.csv');
