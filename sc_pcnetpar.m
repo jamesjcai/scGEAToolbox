@@ -1,12 +1,14 @@
-function [A]=sc_pcnetpar(X,ncom,fastersvd)
+function [A]=sc_pcnetpar(X,ncom,fastersvd,dozscore)
 % [A]=sc_pcnetpar(X,ncom)
 % ncom - number of components used (default=3)
 % ref: https://rdrr.io/cran/dna/man/PCnet.html
 % https://github.com/cran/dna/blob/master/src/rpcnet.c
 % https://rdrr.io/cran/dna/f/inst/doc/Introduction.pdf
 
-if nargin<2, ncom=3; end
+if nargin<4, dozscore=true; end
 if nargin<3, fastersvd=false; end
+if nargin<2, ncom=3; end
+
 opts.maxit=150;
 
 if fastersvd
@@ -18,7 +20,9 @@ end
 
 % [X]=sc_norm(X);
 X=X';
-X=zscore(X);
+if dozscore
+    X=zscore(X);
+end
 
 n=size(X,2);
 A=1-eye(n);
@@ -42,4 +46,5 @@ parfor k=1:n
 end
 for k=1:n
    A(k,A(k,:)==1)=B(k,:); 
+end
 end
