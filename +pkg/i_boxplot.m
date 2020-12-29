@@ -28,23 +28,25 @@ end
          c='k';
  end
         %defaultc=get(gca,'ColorOrder');
-        defaultc=get(groot,'DefaultAxesColorOrder');
-        c=defaultc(colorid,:);
-        %plot(1+g+0.1*(rand(size(g))-0.5),y,'o','linesmooth','off','color',c)
-        %plot(1+g+0.1*(rand(size(g))-0.5),y,'o','color',c)
+        
+        %defaultc=get(groot,'DefaultAxesColorOrder');
+        %c=defaultc(colorid,:);
+        % %plot(1+g+0.1*(rand(size(g))-0.5),y,'o','linesmooth','off','color',c)
+        % %plot(1+g+0.1*(rand(size(g))-0.5),y,'o','color',c)
         
         %hold on
-        g=double(g);
-        h2=boxplot(y,g,'colors','k');
+        %g=double(g);
+        [c,cL]=grp2idx(g);
+        h2=boxplot(y,c,'colors','k');
         set(h2(6,:),'color','k','linewidth',3);
         
         hold on
         % plot(g+1+randn(size(g))*0.025,d2,'o','color','k');
         %pp1=plot(1+g+0.1*(rand(size(g))-0.5),y,'o','color',c);
         %pp1=scatter(1+g+0.1*(rand(size(g))-0.5),y);
-        [g]=i_add_jitter(g,y);
+        [c]=i_add_jitter(c,y);
         %pp1=scatter(1+g+0.025*(randn(size(g))),y);
-        pp1=scatter(g,y);
+        pp1=scatter(c,y);
           %pp1.MarkerFaceColor=c;
         pp1.MarkerEdgeColor='k';
           %pp1.MarkerFaceAlpha=0.3;
@@ -55,6 +57,8 @@ end
         hold off
         if ~isempty(ticktxt)
             set(gca,'XTickLabel',ticktxt);
+        else
+            set(gca,'XTickLabel',cL);
         end
         
         % http://stackoverflow.com/questions/21999451/how-to-get-the-values-of-the-outliers-and-their-coordinates-from-a-box-plot

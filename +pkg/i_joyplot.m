@@ -1,8 +1,8 @@
-function i_joyplot(D,scalek)
+function i_joyplot(D,scalek,ticktxt)
 
 % James Cai (jcai@tamu.edu)
 % (c) Aug 2017
-
+    if nargin<3, ticktxt=''; end
     if nargin<2 || isempty(scalek), scalek=0.3; end
     D=D./max(D(:));
     [n,p]=size(D);
@@ -11,10 +11,13 @@ function i_joyplot(D,scalek)
         %plot(1:p,scalek*(k-1)*ones(1,p)+D(k,:),'k-');
         i_joy2(D,k,p,scalek)
     end    
-    set(gca, 'YTick', []);
-    ylim([0 (n*scalek)+(1-scalek)]);
-    xlim([1 p]);
-    axis off
+    set(gca, 'YTick', 0:scalek:(n-1)*scalek);
+    if ~isempty(ticktxt)
+       set(gca,'YTickLabel',ticktxt);
+    end
+    %ylim([0 (n*scalek)+(1-scalek)]);
+    %xlim([1 p]);
+    %axis off
 end
 
 function i_joy2(D,k,p,scalek)
