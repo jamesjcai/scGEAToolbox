@@ -464,7 +464,7 @@ function EmbeddingAgain(~,~)
     if strcmp(answer,'tSNE')
         sce.s=sc_tsne(sce.X,3,false);
     elseif strcmp(answer,'UMAP')
-        [sce.s,new_c]=run_umap(sce.X,3,false,false);
+        [sce.s,new_c]=run.UMAP(sce.X,3,false,false);
     elseif strcmp(answer,'PHATE')
         sce.s=run_phate(sce.X,3,false);
     else
@@ -753,9 +753,9 @@ function ShowCellStats(~,~)
                 ci=sce.c_cluster_id;
             case 7 % batch id
                 ci=sce.c_batch_id;
-            otherwise % other properties
-                ttxt=sce.list_cell_attributes{indx-7};
-                ci=sce.list_cell_attributes{indx-7+1};
+            otherwise % other properties                
+                ttxt=sce.list_cell_attributes{2*(indx-7)-1};
+                ci=sce.list_cell_attributes{2*(indx-7)};
         end
         if isempty(ci)
             errordlg("Undefined classification");
@@ -784,6 +784,7 @@ function ShowCellStats(~,~)
 %         [c,cL]=grp2idx(ci);
 %         sce.c=ci;
 %     end
+
       guidata(FigureHandle,sce);
 end
 
@@ -882,16 +883,36 @@ function DrawTrajectory(~,~)
               'fontsize',10,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');        
         end
         hold off
+        
+        answerx = questdlg('Save/Update pseudotime T in SCE', ...
+            'Save Pseudotime', ...
+            'Yes','No','Yes');
+        switch answerx
+            case 'Yes'
+                tag=sprintf('%s pseudotime',answer);
+                % iscellstr(sce.list_cell_attributes(1:2:end))
+                i=find(contains(sce.list_cell_attributes(1:2:end),tag));
+                if ~isempty(i)                    
+                    sce.list_cell_attributes{i+1}=t;
+                    fprintf('%s is updated.\n',tag);
+                else
+                    sce.list_cell_attributes{end+1}=tag;
+                    sce.list_cell_attributes{end+1}=t;
+                    fprintf('%s is saved.\n',tag);
+                end
+            guidata(FigureHandle,sce);
+        end
+        
+%         labels = {'Save expression X to variable named:',...
+%                   'Save pseudotime T to variable named:',...
+%                   'Save embedding S to variable named:'}; 
+%         vars = {'X_psexplorer','t_psexplorer','s_psexplorer'};
+%         values = {sce.X, t, sce.s};
+%         msgfig=export2wsdlg(labels,vars,values);
+%         %         assignin('base',sprintf('psexplorerT%d',...
+%         %                  psexplorer_timeid),t);
+%         uiwait(msgfig)
 
-        labels = {'Save expression X to variable named:',...
-                  'Save pseudotime T to variable named:',...
-                  'Save embedding S to variable named:'}; 
-        vars = {'X_psexplorer','t_psexplorer','s_psexplorer'};
-        values = {sce.X, t, sce.s};
-        msgfig=export2wsdlg(labels,vars,values);
-        %         assignin('base',sprintf('psexplorerT%d',...
-        %                  psexplorer_timeid),t);
-        uiwait(msgfig)
         answer = questdlg('View expression of selected genes', ...
             'Pseudotime Function', ...
             'Yes','No','Yes');

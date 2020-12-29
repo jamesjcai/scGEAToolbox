@@ -1,4 +1,4 @@
-function run_gorilla(genelist)
+function GOrilla(genelist)
 % Run GOrilla
 % GOrilla is a tool for identifying and visualizing enriched GO terms in ranked lists of genes
 % 
@@ -41,4 +41,4 @@ fclose(fid);
 pause(1)
 web(outfile,'-browser');
 pause(1)
-
+end

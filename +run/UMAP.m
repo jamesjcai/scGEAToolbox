@@ -1,4 +1,4 @@
-function [s,c]=run_umap(X,ndim,plotit,verbose)
+function [s,c]=UMAP(X,ndim,plotit,verbose)
 
 %   addpath /Users/Stephen/umap
 %   addpath /Users/Stephen/util
