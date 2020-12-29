@@ -1,7 +1,7 @@
 function callback_PickColorMap(~,~,n)
     if nargin<3, n=21; end
     % disp(sprintf('Using %d colors',n));
-    n=max([n 3]);    
+    n=max([n 3]);
     folder=fileparts(mfilename('fullpath'));
     a=strfind(folder,filesep);
     folder=extractBefore(folder,a(end)+1);

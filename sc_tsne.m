@@ -61,16 +61,16 @@ if plotit
             xlabel 'tSNE1'
             ylabel 'tSNE2'
             title 'tSNE'
-        case 3            
+        otherwise            
             scatter3(s(:,1), s(:,2), s(:,3), 10, C, 'filled');
             xlabel 'tSNE1'
             ylabel 'tSNE2'
             zlabel 'tSNE3'
             title 'tSNE 3D'
-
     end
     if bygene && ~isempty(genelist)
         dt = datacursormode;
         dt.UpdateFcn = {@i_myupdatefcn1,genelist};
     end    
+end
 end

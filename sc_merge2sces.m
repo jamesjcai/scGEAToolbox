@@ -27,4 +27,5 @@ if ~isempty(sce1.list_cell_attributes) && ~isempty(sce2.list_cell_attributes)
         end
     end
 end
+end
 

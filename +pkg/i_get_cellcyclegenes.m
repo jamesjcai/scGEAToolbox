@@ -1,5 +1,21 @@
-function [g]=i_get_cellcyclegenes
+function [g,sgenes,g2mgenes]=i_get_cellcyclegenes
 %Get cell-cycle genes
+
+% https://satijalab.org/seurat/v2.4/cell_cycle_vignette.html
+% Also read in a list of cell cycle markers, from Tirosh et al, 2015
+%cc.genes <- readLines(con = "~/Downloads/seurat_resources/regev_lab_cell_cycle_genes.txt")
+
+folder=fileparts(mfilename('fullpath'));
+a=strfind(folder,filesep);
+folder=extractBefore(folder,a(end)+1);
+wrkpth=fullfile(folder,'resources',filesep);
+fname=[wrkpth 'regev_lab_cell_cycle_genes.txt'];
+g=string(readcell(fname));
+
+sgenes=g(1:43);
+g2mgenes=g(44:97);
+
+return;
 %https://science.sciencemag.org/content/352/6282/189
 
 % https://www.frontiersin.org/articles/10.3389/fgene.2017.00001/full
@@ -15,7 +31,7 @@ options = weboptions('Timeout',21);
 fname=tempname;
 websave(fname,'https://raw.githubusercontent.com/hbc/tinyatlas/master/cell_cycle/Homo_sapiens.csv',options);
 % t=readtable('a.txt','PreserveVariableNames',true);
-warning off 
+warning off
 t=readtable(fname,'Range','A:B');
 warning on
 g=string(t.ApprovedSymbol);
