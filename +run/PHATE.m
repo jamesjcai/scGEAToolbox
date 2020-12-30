@@ -1,4 +1,4 @@
-function s=run_phate(X,ndim,plotit,bygene,genelist)
+function s=PHATE(X,ndim,plotit,bygene,genelist)
 %RUN_PHATE 
 %
 % PHATE is a data reduction method specifically designed for visualizing 

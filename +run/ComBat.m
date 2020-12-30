@@ -1,7 +1,7 @@
-function [X,Y]=run_combat2(X,Y)
+function [X,Y]=ComBat(X,Y)
 pw1=fileparts(mfilename('fullpath'));
 addpath(fullfile(pw1,'thirdparty/ComBat'));
-% addpath('thirdparty/ComBat/');
+
 n1=size(X,2);
 n2=size(Y,2);
 batch=[ones(1,n1) 2*ones(1,n2)];

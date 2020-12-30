@@ -1,4 +1,4 @@
-function X=run_magic(X,donorm)
+function X=MAGIC(X,donorm)
 
 if nargin<2, donorm=true; end
 

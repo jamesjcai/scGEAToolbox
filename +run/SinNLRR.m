@@ -1,4 +1,4 @@
-function [C]=run_sinnlrr(X,k)
+function [C]=SinNLRR(X,k)
 % SinNLRR - 
 %
 % USAGE:
@@ -26,6 +26,6 @@ end
 %     % X=log10(X+1);
 %     X=X./vecnorm(X);
 % end
-[C] = SinNLRR(X,k);
+[C] = SinNLRRori(X,k);
 
 

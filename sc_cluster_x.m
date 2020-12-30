@@ -27,7 +27,7 @@ switch p.Results.type
         [c_clustid]=sc_sc3(X,k);
     case 'sinnlrr'
         % disp('To specify k, use RUN_SINNLRR(X,k).');
-        [c_clustid]=run_sinnlrr(X,k);
+        [c_clustid]=run.SinNLRR(X,k);
     case 'alona'
         warning('In development.');
         % [C]=sc_alona(X);

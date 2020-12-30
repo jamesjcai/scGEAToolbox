@@ -1,4 +1,4 @@
-function [X,Y]=run_hcp(X,Y)
+function [X,Y]=HCP(X,Y)
 % Run HCP (Hidden Covariates with Prior) to normalize RNA-seq data
 % HCP (Mostafavi et al. 2013)
 % doi: 10.1371/journal.pone.0068141

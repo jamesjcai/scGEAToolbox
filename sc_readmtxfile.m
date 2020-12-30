@@ -6,7 +6,7 @@ if nargin<2, featurestxtfile=[]; end
 if exist(matrixmtxfile,'file') ~= 2
     error(message('FileNotFound'));        
 end
-X=mmread(matrixmtxfile);
+X=pkg.mmread(matrixmtxfile);
 try
     X=full(X);
 catch

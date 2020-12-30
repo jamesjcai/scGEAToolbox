@@ -466,7 +466,7 @@ function EmbeddingAgain(~,~)
     elseif strcmp(answer,'UMAP')
         [sce.s,new_c]=run.UMAP(sce.X,3,false,false);
     elseif strcmp(answer,'PHATE')
-        sce.s=run_phate(sce.X,3,false);
+        sce.s=run.PHATE(sce.X,3,false);
     else
         return;
     end

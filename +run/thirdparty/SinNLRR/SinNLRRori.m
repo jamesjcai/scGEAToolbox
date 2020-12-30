@@ -6,7 +6,7 @@
 % [X,] = FilterGenesZero(in_X);
 % [n,m]=size(X);
 % X = normalize(X');
-function [grps] = SinNLRR(X,k)
+function [grps] = SinNLRRori(X,k)
 
 
 % [n,m]=size(X);
