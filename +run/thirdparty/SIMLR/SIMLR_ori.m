@@ -1,4 +1,4 @@
-function [y, S, F, ydata,alphaK,timeOurs,converge,LF] = SIMLR(X, c, k, ifimpute,normalize)
+function [y, S, F, ydata,alphaK,timeOurs,converge,LF] = SIMLR_ori(X, c, k, ifimpute,normalize)
 
 %%%
 if nargin==2

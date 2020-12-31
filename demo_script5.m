@@ -83,7 +83,7 @@ p.NodeColor = 'r';
 %
 X20=X(1:20,:);
 genelist20=genelist(1:20);
-A=run_genie3(X20);
+A=run.GENIE3(X20);
 
 % Plot constructed network
 %

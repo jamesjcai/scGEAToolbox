@@ -1,4 +1,4 @@
-function VIM = GENIE3(expr_matrix,input_idx,tree_method,K,ntrees)
+function VIM = GENIE3_ori(expr_matrix,input_idx,tree_method,K,ntrees)
 %Computation of tree-based weights for all putative edges.
 %
 %VIM = GENIE3(expr_matrix) learns p tree models from expr_matrix, where p 

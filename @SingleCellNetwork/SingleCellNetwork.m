@@ -57,5 +57,3 @@ classdef SingleCellNetwork
    end  
 
 end
-
-

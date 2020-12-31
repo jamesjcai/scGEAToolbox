@@ -26,7 +26,7 @@ cellidx=[1*ones(size(X,2),1); 2*ones(size(Y,2),1)];
 %%
 C=sc_cluster_x([X Y],'type','simlr');
 
-% [C,s]=run_simlr(X,[]);  % auto-determine the number of clusters.
+% [C,s]=run.SIMLR(X,[]);  % auto-determine the number of clusters.
 %% Plot the clustering result
 %%
 s=sc_tsne([X Y],2,false,true,false);   % s=sc_tsne(X,ndim,plotit,donorm,dolog1p);
@@ -48,8 +48,8 @@ rng(235); showlegend=true;
 
 s=sc_tsne(X,2);
 c1=sc_sc3(X,6);
-c2=run_simlr(X,6);
-c3=run_soptsc(X,'k',6);
+c2=run.SIMLR(X,6);
+c3=run.SoptSC(X,'k',6);
 
 % Result of SC3/R pacakge
 load example_data/sc3_results.txt

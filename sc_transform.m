@@ -31,13 +31,13 @@ switch p.Results.type
     case 'Hafemeister & Satija 2019'
         % https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1874-1
     case 'csndm'
-        [X]=run_csndm(X);
-    case 'bigscale'
-        pw1=fileparts(which(mfilename));
-        pth=fullfile(pw1,'thirdparty/bigSCale');
-        addpath(pth);
-        % model=1. Log(x), then each row (gene) normalized between [-5:5]
-        [X]=transform_bigscale(X);
+        [X]=run.CSN_transform(X);
+%     case 'bigscale'
+%         pw1=fileparts(which(mfilename));
+%         pth=fullfile(pw1,'thirdparty/bigSCale');
+%         addpath(pth);
+%         % model=1. Log(x), then each row (gene) normalized between [-5:5]
+%         [X]=transform_bigscale(X);
     case 'sct'
         % sc_sct
 end

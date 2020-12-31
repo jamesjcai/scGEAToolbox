@@ -1,4 +1,4 @@
-function [C,W,eigenvalues,H]=run_soptsc(X,varargin)
+function [C,W,eigenvalues,H]=SoptSC(X,varargin)
 % run_soptsc - 
 %
 % REF: SoptSC: Similarity matrix optimization for clustering, lineage, and signaling inference

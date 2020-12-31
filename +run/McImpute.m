@@ -1,4 +1,4 @@
-function [X,M]=run_mcimpute(X,donorm)
+function [X,M]=McImpute(X,donorm)
 
 if nargin<2, donorm=true; end
 

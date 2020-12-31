@@ -1,4 +1,4 @@
-function [Tp,Tn]=run_gsea(genelist,generank,showplot,perm_nb,dbfile,sort_type)
+function [Tp,Tn]=GSEA(genelist,generank,showplot,perm_nb,dbfile,sort_type)
 
 if nargin<2, generank=1:length(genelist); end
 if nargin<3, showplot=false; end

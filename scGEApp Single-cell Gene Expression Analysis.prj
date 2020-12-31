@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="1996752156" file="E:\GitHub\scGEAToolbox\scGEApp Single-cell Gene Expression Analysis.prj" location="E:\GitHub\scGEAToolbox" name="scGEApp Single-cell Gene Expression Analysis" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="4171253824" file="E:\GitHub\scGEAToolbox\scGEApp Single-cell Gene Expression Analysis.prj" location="E:\GitHub\scGEAToolbox" name="scGEApp Single-cell Gene Expression Analysis" target="target.mlapps" target-name="Package App">
     <param.appname>scGEApp Single-cell Gene Expression Analysis</param.appname>
     <param.authnamewatermark />
     <param.email />
@@ -9,8 +9,8 @@
     <param.summary>Matlab App for Single-cell Gene Expression Analysis</param.summary>
     <param.description>scGEApp contains a newly developed algorithm for the feature selection with single-cell RNA-seq (scRNA-seq) data. The method is nonparametric and is based on 3D spline fit. 
 Cite As: James Cai (2019). scGEApp: a Matlab app for scRNA-seq analysis (https://www.github.com/jamesjcai/scGEApp), GitHub.</param.description>
-    <param.screenshot>${PROJECT_ROOT}\splash.png</param.screenshot>
-    <param.version>1.2.9</param.version>
+    <param.screenshot />
+    <param.version>1.3.0</param.version>
     <param.products.name>
       <item>MATLAB</item>
       <item>Curve Fitting Toolbox</item>
@@ -26,10 +26,8 @@ Cite As: James Cai (2019). scGEApp: a Matlab app for scRNA-seq analysis (https:/
       <item>3.5.11</item>
       <item>11.7</item>
     </param.products.version>
-    <param.platforms>
-      <item>win64</item>
-    </param.platforms>
-    <param.output>C:\Users\jcai</param.output>
+    <param.platforms />
+    <param.output>C:\Users\jcai.AUTH\Documents\MATLAB\New folder</param.output>
     <param.guid>8ef78f85-24bd-4c9e-99e4-7cd4bc509f9c</param.guid>
     <unset>
       <param.authnamewatermark />
@@ -37,156 +35,80 @@ Cite As: James Cai (2019). scGEApp: a Matlab app for scRNA-seq analysis (https:/
       <param.company />
       <param.icon />
       <param.icons />
+      <param.screenshot />
+      <param.platforms />
     </unset>
     <fileset.main>
       <file>${PROJECT_ROOT}\scGEApp.mlapp</file>
     </fileset.main>
     <fileset.depfun>
+      <file>${PROJECT_ROOT}\+gui\i_gscatter3.m</file>
+      <file>${PROJECT_ROOT}\+pkg\mmread.m</file>
+      <file>${PROJECT_ROOT}\+run\ComBat.m</file>
+      <file>${PROJECT_ROOT}\+run\G2S3.m</file>
+      <file>${PROJECT_ROOT}\+run\GENIE3.m</file>
+      <file>${PROJECT_ROOT}\+run\GOrilla.m</file>
+      <file>${PROJECT_ROOT}\+run\GSEA.m</file>
+      <file>${PROJECT_ROOT}\+run\HCP.m</file>
+      <file>${PROJECT_ROOT}\+run\MAGIC.m</file>
+      <file>${PROJECT_ROOT}\+run\McImpute.m</file>
+      <file>${PROJECT_ROOT}\+run\PHATE.m</file>
+      <file>${PROJECT_ROOT}\+run\SIMLR.m</file>
+      <file>${PROJECT_ROOT}\+run\SoptSC.m</file>
+      <file>${PROJECT_ROOT}\cdgea.m</file>
+      <file>${PROJECT_ROOT}\fun_num_clusters.m</file>
+      <file>${PROJECT_ROOT}\i_plot_pseudotimeseries.m</file>
+      <file>${PROJECT_ROOT}\i_pseudotime_by_splinefit.m</file>
+      <file>${PROJECT_ROOT}\norm_deseq.m</file>
+      <file>${PROJECT_ROOT}\norm_libsize.m</file>
       <file>${PROJECT_ROOT}\private\fdr_bh.m</file>
-      <file>${PROJECT_ROOT}\private\fLOESS.m</file>
-      <file>${PROJECT_ROOT}\private\hartigansdiptest.m</file>
       <file>${PROJECT_ROOT}\private\i_myupdatefcn1.m</file>
       <file>${PROJECT_ROOT}\private\i_myupdatefcn3.m</file>
       <file>${PROJECT_ROOT}\private\i_myupdatefcnx.m</file>
       <file>${PROJECT_ROOT}\private\isnormalized.m</file>
-      <file>${PROJECT_ROOT}\private\mmread.m</file>
       <file>${PROJECT_ROOT}\private\nangeomean.m</file>
+      <file>${PROJECT_ROOT}\private\nanmedian.m</file>
       <file>${PROJECT_ROOT}\private\scatter_mean_vs_cv.m</file>
       <file>${PROJECT_ROOT}\private\scatter_mean_vs_dropr.m</file>
       <file>${PROJECT_ROOT}\private\scatter_meanlg_vs_varlg.m</file>
-      <file>${PROJECT_ROOT}\run_combat2.m</file>
-      <file>${PROJECT_ROOT}\sc_alona.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\ComBat\aprior.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\ComBat\bprior.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\ComBat\combat.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\ComBat\itSol.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\ComBat\postmean.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\ComBat\postvar.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\FIt-SNE\fast_tsne.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\GENIE3\GENIE3.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\GENIE3\GENIE3_single.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\GENIE3\get_link_list.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\GENIE3\RT\init_extra_trees.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\GENIE3\RT\init_rf.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\GENIE3\RT\rtenslearn_c.mexw64</file>
-      <file>${PROJECT_ROOT}\thirdparty\GSEA\default_GSEA_opts.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\GSEA\ES_perm_test.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\GSEA\intersect_fast.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\GSEA\MrGSEAPreranked.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\GSEA\msigdb_v62_c5.mat</file>
-      <file>${PROJECT_ROOT}\thirdparty\GSEA\plot_classic.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\GSEA\RandPermFast.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\HCP_hidden_covariates_with_prior\hidden_covariates_model.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\HCP_hidden_covariates_with_prior\standardize.m</file>
+      <file>${PROJECT_ROOT}\sc_diffuse.m</file>
+      <file>${PROJECT_ROOT}\sc_embed4w.m</file>
+      <file>${PROJECT_ROOT}\sc_filterc.m</file>
+      <file>${PROJECT_ROOT}\sc_filterg.m</file>
+      <file>${PROJECT_ROOT}\sc_genestat.m</file>
+      <file>${PROJECT_ROOT}\sc_hvg.m</file>
+      <file>${PROJECT_ROOT}\sc_norm.m</file>
+      <file>${PROJECT_ROOT}\sc_pcnet.m</file>
+      <file>${PROJECT_ROOT}\sc_pcnetpar.m</file>
+      <file>${PROJECT_ROOT}\sc_readfile.m</file>
+      <file>${PROJECT_ROOT}\sc_readh5file.m</file>
+      <file>${PROJECT_ROOT}\sc_readmtxfile.m</file>
+      <file>${PROJECT_ROOT}\sc_readtsvfile.m</file>
+      <file>${PROJECT_ROOT}\sc_sc3.m</file>
+      <file>${PROJECT_ROOT}\sc_scatter3genes.m</file>
+      <file>${PROJECT_ROOT}\sc_scatter3x.m</file>
+      <file>${PROJECT_ROOT}\sc_scattergenes.m</file>
+      <file>${PROJECT_ROOT}\sc_selectg.m</file>
+      <file>${PROJECT_ROOT}\sc_splinefit.m</file>
+      <file>${PROJECT_ROOT}\sc_splinefit2.m</file>
+      <file>${PROJECT_ROOT}\sc_stem3.m</file>
+      <file>${PROJECT_ROOT}\sc_trajectory.m</file>
+      <file>${PROJECT_ROOT}\sc_tscan.m</file>
+      <file>${PROJECT_ROOT}\sc_tsne.m</file>
+      <file>${PROJECT_ROOT}\sc_veg.m</file>
+      <file>${PROJECT_ROOT}\splinefit.m</file>
+      <file>${PROJECT_ROOT}\thirdparty\faster_svd\lmsvd\lmsvd.m</file>
       <file>${PROJECT_ROOT}\thirdparty\locfit\m\locfit.m</file>
       <file>${PROJECT_ROOT}\thirdparty\locfit\m\predict.m</file>
       <file>${PROJECT_ROOT}\thirdparty\locfit\Source\mexlf.mexw64</file>
       <file>${PROJECT_ROOT}\thirdparty\locfit\Source\mexpp.mexw64</file>
-      <file>${PROJECT_ROOT}\thirdparty\MAGIC\compute_kernel.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\MAGIC\compute_optimal_t.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\MAGIC\randPCA.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\MAGIC\run_magic_original.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\MAGIC\svdpca.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\MAGIC\svdpca_sparse.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\McImpute\checkDimensions.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\McImpute\IST_MC.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\McImpute\opRestriction.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\Network_Enhancement\core\dominateset.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\Network_Enhancement\core\NE_dn.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\Network_Enhancement\core\TransitionFields.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\PHATE\compute_alpha_kernel_sparse.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\PHATE\compute_kernel_sparse.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\PHATE\knee_pt.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\PHATE\phate.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\PHATE\randmds.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\PHATE\vne_optimal_t.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\SIMLR\dist2_pearson.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\SIMLR\Estimate_Number_of_Clusters_SIMLR.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\SIMLR\Hbeta.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\SIMLR\Network_Diffusion.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\SIMLR\SIMLR_pearson.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\SIMLR\src\Cal_NMI.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\SIMLR\src\dist2.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\SIMLR\src\eig1.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\SIMLR\src\Kbeta.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\SIMLR\src\Kbeta.mexw64</file>
-      <file>${PROJECT_ROOT}\thirdparty\SIMLR\src\L2_distance_1.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\SIMLR\src\litekmeans.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\SIMLR\src\projsplx_c.mexw64</file>
-      <file>${PROJECT_ROOT}\thirdparty\SIMLR\tsne_p_bo.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\SoptSC\consen.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\SoptSC\Num_cluster.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\SoptSC\pca1.m</file>
-      <file>${PROJECT_ROOT}\thirdparty\SoptSC\SimilarityM.m</file>
       <file>${PROJECT_ROOT}\uifig_embeddingview.mlapp</file>
       <file>${PROJECT_ROOT}\uifig_gseapreranked.mlapp</file>
     </fileset.depfun>
-    <fileset.resources>
-      <file>${PROJECT_ROOT}\cdgea.m</file>
-      <file>${PROJECT_ROOT}\demo_script1.html</file>
-      <file>${PROJECT_ROOT}\demo_script1.m</file>
-      <file>${PROJECT_ROOT}\demo_script2.html</file>
-      <file>${PROJECT_ROOT}\demo_script2.m</file>
-      <file>${PROJECT_ROOT}\demo_script3.html</file>
-      <file>${PROJECT_ROOT}\demo_script3.m</file>
-      <file>${PROJECT_ROOT}\demo_script4.m</file>
-      <file>${PROJECT_ROOT}\example_data</file>
-      <file>${PROJECT_ROOT}\fun_cmp_cluster.m</file>
-      <file>${PROJECT_ROOT}\fun_num_cluster.m</file>
-      <file>${PROJECT_ROOT}\fun_sim_matrix.m</file>
-      <file>${PROJECT_ROOT}\i_get_hsmm_tf.m</file>
-      <file>${PROJECT_ROOT}\i_myscatter.m</file>
-      <file>${PROJECT_ROOT}\i_plot_pseudotimeseries.m</file>
-      <file>${PROJECT_ROOT}\i_pseudotime_by_splinefit.m</file>
-      <file>${PROJECT_ROOT}\mmread.m</file>
-      <file>${PROJECT_ROOT}\norm_bigscale.m</file>
-      <file>${PROJECT_ROOT}\norm_deseq.m</file>
-      <file>${PROJECT_ROOT}\norm_libsize.m</file>
-      <file>${PROJECT_ROOT}\run_combat.m</file>
-      <file>${PROJECT_ROOT}\run_enrichr.m</file>
-      <file>${PROJECT_ROOT}\run_fitsne.m</file>
-      <file>${PROJECT_ROOT}\run_genie3.m</file>
-      <file>${PROJECT_ROOT}\run_gorilla.m</file>
-      <file>${PROJECT_ROOT}\run_gsea.m</file>
-      <file>${PROJECT_ROOT}\run_hcp.m</file>
-      <file>${PROJECT_ROOT}\run_magic.m</file>
-      <file>${PROJECT_ROOT}\run_mcimpute.m</file>
-      <file>${PROJECT_ROOT}\run_phate.m</file>
-      <file>${PROJECT_ROOT}\run_simlr.m</file>
-      <file>${PROJECT_ROOT}\run_soptsc.m</file>
-      <file>${PROJECT_ROOT}\sc_cdr.m</file>
-      <file>${PROJECT_ROOT}\sc_cluster.m</file>
-      <file>${PROJECT_ROOT}\sc_diffuse.m</file>
-      <file>${PROJECT_ROOT}\sc_diptest.m</file>
-      <file>${PROJECT_ROOT}\sc_embed4w.m</file>
-      <file>${PROJECT_ROOT}\sc_filterc.m</file>
-      <file>${PROJECT_ROOT}\sc_filterg.m</file>
-      <file>${PROJECT_ROOT}\sc_hvg.m</file>
-      <file>${PROJECT_ROOT}\sc_lcod.m</file>
-      <file>${PROJECT_ROOT}\sc_mmread.m</file>
-      <file>${PROJECT_ROOT}\sc_norm.m</file>
-      <file>${PROJECT_ROOT}\sc_pcnet.m</file>
-      <file>${PROJECT_ROOT}\sc_readfile.m</file>
-      <file>${PROJECT_ROOT}\sc_readmtxfile.m</file>
-      <file>${PROJECT_ROOT}\sc_readtsvfile.m</file>
-      <file>${PROJECT_ROOT}\sc_rmmtgenes.m</file>
-      <file>${PROJECT_ROOT}\sc_scatter.m</file>
-      <file>${PROJECT_ROOT}\sc_scatter3.m</file>
-      <file>${PROJECT_ROOT}\sc_scatter3x.m</file>
-      <file>${PROJECT_ROOT}\sc_selectg.m</file>
-      <file>${PROJECT_ROOT}\sc_splinefit.m</file>
-      <file>${PROJECT_ROOT}\sc_splinefit2.m</file>
-      <file>${PROJECT_ROOT}\sc_stat.m</file>
-      <file>${PROJECT_ROOT}\sc_stat2.m</file>
-      <file>${PROJECT_ROOT}\sc_stem3.m</file>
-      <file>${PROJECT_ROOT}\sc_tsne.m</file>
-      <file>${PROJECT_ROOT}\sc_veg.m</file>
-      <file>${PROJECT_ROOT}\sc_writefile.m</file>
-      <file>${PROJECT_ROOT}\splinefit.m</file>
-    </fileset.resources>
+    <fileset.resources />
     <fileset.package />
     <build-deliverables>
-      <file location="C:\Users" name="jcai" optional="false">C:\Users\jcai</file>
+      <file location="C:\Users\jcai.AUTH\Documents\MATLAB" name="New folder" optional="false">C:\Users\jcai.AUTH\Documents\MATLAB\New folder</file>
     </build-deliverables>
     <workflow />
     <matlab>

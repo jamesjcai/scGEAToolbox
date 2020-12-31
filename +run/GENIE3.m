@@ -1,4 +1,4 @@
-function [A,s,G]=run_genie3(X,genelist,donorm,plotit)
+function [A,s,G]=GENIE3(X,genelist,donorm,plotit)
 %GENIE3: GEne Network Inference with Ensemble of trees
 %
 % USAGE:
@@ -24,7 +24,7 @@ end
 % GENIE3 takes data (rows: cell, columns: genes)
 data=X';
 
-A=GENIE3(data);
+A=GENIE3_ori(data);
 if nargout==2
     s=get_link_list(A);
 end

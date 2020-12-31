@@ -1,4 +1,4 @@
-function [C,s]=run_simlr(X,k,donorm)
+function [C,s]=SIMLR(X,k,donorm)
 % RUN_SIMLR - 
 %
 % REF: https://www.nature.com/articles/nmeth.4207
@@ -37,7 +37,7 @@ if isempty(k)
     [~,i]=min(K2);
     k=i+1;
 end
-[C,S,F,s,alpha] = SIMLR(X',k,10,0,0);
+[C,S,F,s,alpha] = SIMLR_ori(X',k,10,0,0);
 C=C';
 
 % [C, S, F, s,alpha] = SIMLR_pearson(X',k,10,0,0);

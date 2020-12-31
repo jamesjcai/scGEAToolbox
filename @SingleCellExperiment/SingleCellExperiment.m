@@ -11,8 +11,8 @@ classdef SingleCellExperiment
       c_cell_id                              % barcode
       list_cell_attributes cell  % e.g., attributes = {'size',[4,6,2]};
       list_gene_attributes cell  % e.g., attributes = {'size',[4,6,2]};
+      list_cell_embeddings cell
       table_attributes table
-      % drmethod {mustBeMember(drmethod,{'tsne','umap','phate'})} = 'tsne'
    end
    
    properties (Dependent)
