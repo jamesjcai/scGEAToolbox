@@ -53,11 +53,11 @@ set( UitoolbarHandle, 'Tag' , 'FigureToolBar' , ...
     'HandleVisibility' , 'off' , ... 
     'Visible' , 'on' ) ; 
 
-
+mfolder=fileparts(mfilename('fullpath'));
 
 % UitoolbarHandle = uitoolbar(FigureHandle);
 pt3 = uipushtool(UitoolbarHandle,'Separator','off');
-[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+[img,map] = imread(fullfile(mfolder,...
             'resources','list.gif'));         
 ptImage = ind2rgb(img,map);
 pt3.CData = ptImage;
@@ -65,7 +65,7 @@ pt3.Tooltip = 'Select a gene to show expression';
 pt3.ClickedCallback = @callback_ShowMarkerGene;
 
 pt3a = uipushtool(UitoolbarHandle,'Separator','off');
-[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+[img,map] = imread(fullfile(mfolder,...
             'resources','list2.gif'));         
 ptImage = ind2rgb(img,map);
 pt3a.CData = ptImage;
@@ -73,7 +73,7 @@ pt3a.Tooltip = 'Show cell states';
 pt3a.ClickedCallback = @ShowCellStats;
 
 pt3a = uipushtool(UitoolbarHandle,'Separator','off');
-[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+[img,map] = imread(fullfile(mfolder,...
             'resources','plotpicker-pointfig.gif'));         
 ptImage = ind2rgb(img,map);
 pt3a.CData = ptImage;
@@ -94,7 +94,7 @@ ptlabelclusters.ClickedCallback = @LabelClusters;
 % ------------------ clustering
 
 ptaddcluster = uipushtool(UitoolbarHandle,'Separator','off');
-[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+[img,map] = imread(fullfile(mfolder,...
             'resources','plotpicker-glyplot-face.gif'));
 ptImage = ind2rgb(img,map);
 ptaddcluster.CData = ptImage;
@@ -102,7 +102,7 @@ ptaddcluster.Tooltip = 'Add brushed cells to a new cluster';
 ptaddcluster.ClickedCallback = @Brushed2NewCluster;
 
 ptmergecluster = uipushtool(UitoolbarHandle,'Separator','off');
-[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+[img,map] = imread(fullfile(mfolder,...
             'resources','plotpicker-pzmap.gif'));
 ptImage = ind2rgb(img,map);
 ptmergecluster.CData = ptImage;
@@ -110,7 +110,7 @@ ptmergecluster.Tooltip = 'Merge brushed cells to same cluster';
 ptmergecluster.ClickedCallback = @Brushed2MergeClusters;
 
 ptShowClu = uipushtool(UitoolbarHandle,'Separator','off');
-[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+[img,map] = imread(fullfile(mfolder,...
             'resources','plotpicker-geoscatter.gif'));         
 ptImage = ind2rgb(img,map);
 ptShowClu.CData = ptImage;
@@ -119,7 +119,7 @@ ptShowClu.ClickedCallback = @ShowClustersPop;
 
 
 ptcluster = uipushtool(UitoolbarHandle,'Separator','on');
-[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+[img,map] = imread(fullfile(mfolder,...
             'resources','plotpicker-dendrogram.gif'));
 ptImage = ind2rgb(img,map);
 ptcluster.CData = ptImage;
@@ -127,7 +127,7 @@ ptcluster.Tooltip = 'Clustering using using embedding S';
 ptcluster.ClickedCallback = @ClusterCellsS;
 
 ptcluster = uipushtool(UitoolbarHandle,'Separator','off');
-[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+[img,map] = imread(fullfile(mfolder,...
             'resources','plotpicker-gscatter.gif'));
 ptImage = ind2rgb(img,map);
 ptcluster.CData = ptImage;
@@ -137,7 +137,7 @@ ptcluster.ClickedCallback = @ClusterCellsX;
 % -------------
 
 pt5 = uipushtool(UitoolbarHandle,'Separator','on');
-[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+[img,map] = imread(fullfile(mfolder,...
             'resources','brush.gif'));
 ptImage = ind2rgb(img,map);
 pt5.CData = ptImage;
@@ -157,7 +157,7 @@ ptclustertype.ClickedCallback = @DetermineCellTypeClusters;
 pt4 = uipushtool(UitoolbarHandle,'Separator','off');
 % [img,map] = imread(fullfile(matlabroot,...
 %             'toolbox','matlab','icons','plotpicker-stairs.gif'));
-[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+[img,map] = imread(fullfile(mfolder,...
             'resources','plotpicker-scatterhist.gif'));
 ptImage = ind2rgb(img,map);
 pt4.CData = ptImage;
@@ -167,7 +167,7 @@ pt4.ClickedCallback = @RenameCellType;
 pt4 = uipushtool(UitoolbarHandle,'Separator','off');
 % [img,map] = imread(fullfile(matlabroot,...
 %             'toolbox','matlab','icons','plotpicker-stairs.gif'));
-[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+[img,map] = imread(fullfile(mfolder,...
             'resources','plotpicker-kagi.gif'));
 ptImage = ind2rgb(img,map);
 pt4.CData = ptImage;
@@ -178,7 +178,7 @@ pt4.ClickedCallback = @Brush4Markers;
 pt4mrkheat = uipushtool(UitoolbarHandle,'Separator','off');
 % [img,map] = imread(fullfile(matlabroot,...
 %             'toolbox','matlab','icons','plotpicker-stairs.gif'));
-[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+[img,map] = imread(fullfile(mfolder,...
             'resources','plotpicker-plotmatrix.gif'));
 ptImage = ind2rgb(img,map);
 pt4mrkheat.CData = ptImage;
@@ -189,7 +189,7 @@ pt4mrkheat.ClickedCallback = @callback_MarkerGeneHeatmap;
 % --------------------------
 
 ptpseudotime = uipushtool(defaultToolbar,'Separator','on');
-[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+[img,map] = imread(fullfile(mfolder,...
             'resources','plotpicker-priceandvol.gif'));
 ptImage = ind2rgb(img,map);
 ptpseudotime.CData = ptImage;
@@ -197,7 +197,7 @@ ptpseudotime.Tooltip = 'Compare Differentiation Potency';
 ptpseudotime.ClickedCallback = @ComparePotency;
 
 ptpseudotime = uipushtool(defaultToolbar,'Separator','on');
-[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+[img,map] = imread(fullfile(mfolder,...
             'resources','plotpicker-arxtimeseries.gif'));
 ptImage = ind2rgb(img,map);
 ptpseudotime.CData = ptImage;
@@ -206,7 +206,7 @@ ptpseudotime.ClickedCallback = @RunTrajectoryAnalysis;
 
 ptpseudotime = uipushtool(defaultToolbar,...
     'Separator','off');
-[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+[img,map] = imread(fullfile(mfolder,...
             'resources','plotpicker-comet.gif'));
 ptImage = ind2rgb(img,map);
 ptpseudotime.CData = ptImage;
@@ -215,9 +215,7 @@ ptpseudotime.ClickedCallback = @DrawTrajectory;
 
 
 pt4 = uipushtool(defaultToolbar,'Separator','on');
-% [img,map] = imread(fullfile(matlabroot,...
-%             'toolbox','matlab','icons','plotpicker-stairs.gif'));
-[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+[img,map] = imread(fullfile(mfolder,...
             'resources','plotpicker-boxplot.gif'));
 ptImage = ind2rgb(img,map);
 pt4.CData = ptImage;
@@ -225,8 +223,8 @@ pt4.Tooltip = 'Compare 2 groups (DE analysis)';
 pt4.ClickedCallback = @DEGene2Groups;
 
 ptpseudotime = uipushtool(defaultToolbar,...
-    'Separator','off');
-[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+               'Separator','off');
+[img,map] = imread(fullfile(mfolder,...
             'resources','plotpicker-andrewsplot.gif'));
 ptImage = ind2rgb(img,map);
 ptpseudotime.CData = ptImage;
@@ -234,7 +232,7 @@ ptpseudotime.Tooltip = 'Function enrichment of HVG genes';
 ptpseudotime.ClickedCallback = {@callback_GSEA_HVGs,sce.X,sce.g};
 
 pt2 = uipushtool(UitoolbarHandle,'Separator','on');
-[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+[img,map] = imread(fullfile(mfolder,...
             'resources','plotpicker-qqplot.gif'));  
 ptImage = ind2rgb(img,map);
 pt2.CData = ptImage;
@@ -242,8 +240,7 @@ pt2.Tooltip = 'Delete selected cells';
 pt2.ClickedCallback = @DeleteSelectedCells;
 
 pt = uipushtool(UitoolbarHandle,'Separator','off');
-[img,map] = imread(fullfile(fileparts(which(mfilename)),...
-            'resources','export.gif'));         
+[img,map] = imread(fullfile(mfolder,'resources','export.gif'));         
 ptImage = ind2rgb(img,map);
 pt.CData = ptImage;
 pt.Tooltip = 'Export & save data';
@@ -251,7 +248,7 @@ pt.ClickedCallback = @callback_SaveX;
 
 
 pt5 = uipushtool(UitoolbarHandle,'Separator','on');
-[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+[img,map] = imread(fullfile(mfolder,...
             'resources','plotpicker-geobubble.gif'));
 ptImage = ind2rgb(img,map);
 pt5.CData = ptImage;
@@ -260,7 +257,7 @@ pt5.ClickedCallback = @EmbeddingAgain;
 
 
 pt5 = uipushtool(UitoolbarHandle,'Separator','off');
-[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+[img,map] = imread(fullfile(mfolder,...
             'resources','plotpicker-image.gif'));  % plotpicker-pie
 %map(map(:,1)+map(:,2)+map(:,3)==3) = NaN;  % Convert white pixels => transparent background
 ptImage = ind2rgb(img,map);
@@ -269,19 +266,16 @@ pt5.Tooltip = 'Switch 2D/3D';
 pt5.ClickedCallback = @Switch2D3D;
 
 pt5pickmk = uipushtool(UitoolbarHandle,'Separator','on');
-[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+[img,map] = imread(fullfile(mfolder,...
             'resources','plotpicker-rose.gif'));  % plotpicker-pie
-%map(map(:,1)+map(:,2)+map(:,3)==3) = NaN;  % Convert white pixels => transparent background
 ptImage = ind2rgb(img,map);
 pt5pickmk.CData = ptImage;
 pt5pickmk.Tooltip = 'Switch scatter plot marker type';
 pt5pickmk.ClickedCallback = @callback_PickPlotMarker;
 
-
 pt5pickcl = uipushtool(UitoolbarHandle,'Separator','off');
-[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+[img,map] = imread(fullfile(mfolder,...
             'resources','plotpicker-compass.gif'));  % plotpicker-pie
-%map(map(:,1)+map(:,2)+map(:,3)==3) = NaN;  % Convert white pixels => transparent background
 ptImage = ind2rgb(img,map);
 pt5pickcl.CData = ptImage;
 pt5pickcl.Tooltip = 'Switch color maps';
@@ -289,13 +283,12 @@ pt5pickcl.ClickedCallback = {@callback_PickColorMap,...
                               numel(unique(c))};
 
 pt5 = uipushtool(UitoolbarHandle,'Separator','off');
-[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+[img,map] = imread(fullfile(mfolder,...
             'resources','plotpicker-geobubble2.gif'));
 ptImage = ind2rgb(img,map);
 pt5.CData = ptImage;
 pt5.Tooltip = 'Refresh';
 pt5.ClickedCallback = @RefreshAll;
-
 
 gui.add_3dcamera(defaultToolbar,'AllCells');
 
@@ -306,7 +299,7 @@ set( FigureHandle, 'visible', 'on' ) ;
 guidata(FigureHandle,sce);
 
 if nargout > 0
-    varargout{1} = FigureHandle ; 
+    varargout{1} = FigureHandle; 
 end
 
 
@@ -335,6 +328,10 @@ function RefreshAll(~,~)
 end
 
 function ComparePotency(~,~)
+    if isempty(sce.list_cell_attributes)
+        warndlg('No data sce.list_cell_attributes')
+        return;
+    end
     if ~isempty(sce.list_cell_attributes{2}) && ~isempty(sce.c_cell_type_tx)
         x=sce.list_cell_attributes{2};
         y=sce.c_cell_type_tx;

@@ -14,8 +14,11 @@ end
 
 end
 pt = uipushtool(tb,'Separator','on');
-[img,map] = imread(fullfile(fileparts(which(mfilename)),...
-            'resources','camera.gif'));
+    folder=fileparts(mfilename('fullpath'));
+    a=strfind(folder,filesep);
+    folder=extractBefore(folder,a(end)+1);
+    wrkpth=fullfile(folder,'resources','camera.gif');
+[img,map] = imread(wrkpth);
 ptImage = ind2rgb(img,map);
 pt.CData = ptImage;
 pt.Tooltip = 'Make video snapshot';
