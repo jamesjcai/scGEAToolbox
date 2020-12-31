@@ -33,7 +33,7 @@ switch p.Results.type
 end
 
 if plotit
-    i_gscatter3(s,c_clustid);
+    gui.i_gscatter3(s,c_clustid);
     hold on
     for i=1:k
         si=s(c_clustid==i,:);

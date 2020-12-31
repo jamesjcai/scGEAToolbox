@@ -1,5 +1,5 @@
 function [pw1,pw0]=cdgea(isconfirmed)
-%CDGEA - Changes to GEAToolbox directory
+%CDGEA Changes to GEAToolbox directory
 
 if nargin < 1
     isconfirmed=true;

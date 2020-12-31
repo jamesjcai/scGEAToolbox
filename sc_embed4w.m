@@ -65,7 +65,7 @@ toc
 %% plot combined
 if plotit
     if bygene
-        [lgu, dropr, lgcv] = sc_stat(X, [], false);
+        [lgu, dropr, lgcv] = sc_genestat(X, [], false);
         switch colorby
             case 'mean'
                 C=lgu;

@@ -42,7 +42,7 @@ s=tsne(data,'NumDimensions',ndim);
 %%
 if plotit
     if bygene
-        [lgu, dropr, lgcv] = sc_stat(X, [], false);
+        [lgu, dropr, lgcv] = sc_genestat(X, [], false);
         colorby='mean';
         switch colorby
             case 'mean'

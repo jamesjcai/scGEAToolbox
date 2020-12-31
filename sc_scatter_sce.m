@@ -35,7 +35,7 @@ FigureHandle = figure('Name','sc_scatter_sce',...
 movegui(FigureHandle,'center');
 
 hAx = axes('Parent',FigureHandle);
-[h]=i_gscatter3(sce.s,c,methodid);
+[h]=gui.i_gscatter3(sce.s,c,methodid);
 title(sce.title);
 
 dt=datacursormode;
@@ -297,7 +297,7 @@ pt5.Tooltip = 'Refresh';
 pt5.ClickedCallback = @RefreshAll;
 
 
-add_3dcamera(defaultToolbar,'AllCells');
+gui.add_3dcamera(defaultToolbar,'AllCells');
 
 % handles = guihandles( FigureHandle ) ; 
 % guidata( FigureHandle, handles ) ; 
@@ -316,13 +316,13 @@ function RefreshAll(~,~)
     if size(sce.s,2)>2
         if ~isempty(h.ZData)
             %[ax,bx]=view();
-            h=i_gscatter3(sce.s,c,methodid);
+            h=gui.i_gscatter3(sce.s,c,methodid);
             %view(ax,bx);
         else
-            h=i_gscatter3(sce.s(:,1:2),c,methodid);
+            h=gui.i_gscatter3(sce.s(:,1:2),c,methodid);
         end
     else
-        h=i_gscatter3(sce.s(:,1:2),c,methodid);        
+        h=gui.i_gscatter3(sce.s(:,1:2),c,methodid);        
     end
     title(sce.title)
     pt5pickcl.ClickedCallback = {@callback_PickColorMap,...
@@ -363,7 +363,7 @@ function Switch2D3D(~,~)
             helpdlg('Canno swith to 3-D. SCE.S is 2-D');
             return;
         end        
-        h=i_gscatter3(sce.s,c,methodid);
+        h=gui.i_gscatter3(sce.s,c,methodid);
         if ~isempty(ax) && ~isempty(bx) && ~any([ax bx]==0)
             view(ax,bx);
         else
@@ -375,10 +375,10 @@ function Switch2D3D(~,~)
             'Current View','Default View','Cancel','Current View');
         if strcmp(answer,'Cancel'), return; end
         if strcmp(answer,'Default View')
-            h=i_gscatter3(sce.s(:,1:2),c,methodid);
+            h=gui.i_gscatter3(sce.s(:,1:2),c,methodid);
         else
             sx=pkg.i_3d2d(sce.s,ax,bx);
-            h=i_gscatter3(sx(:,1:2),c,methodid);
+            h=gui.i_gscatter3(sx(:,1:2),c,methodid);
         end    
     end
     title(sce.title)
@@ -459,18 +459,28 @@ function EmbeddingAgain(~,~)
     answer = questdlg('Embedding cells?');
     if ~strcmp(answer,'Yes'), return; end
     answer = questdlg('Which method?','Select method','tSNE','UMAP','PHATE','tSNE');
+    
+    ndim=questdlg('2D or 3D?','','2D','3D','3D');
+        if strcmp(ndim,'3D')
+            ndim=3;
+        elseif strcmp(ndim,'2D')
+            ndim=2;
+        else
+            return;
+        end
+    
     fw=pkg.gui_waitbar;
     new_c=[];
     if strcmp(answer,'tSNE')
-        sce.s=sc_tsne(sce.X,3,false);
+        [sce.s]=sc_tsne(sce.X,ndim,false);
     elseif strcmp(answer,'UMAP')
-        [sce.s,new_c]=run.UMAP(sce.X,3,false,false);
+        [sce.s,new_c]=run.UMAP(sce.X,ndim,false,false);
     elseif strcmp(answer,'PHATE')
-        sce.s=run.PHATE(sce.X,3,false);
+        [sce.s]=run.PHATE(sce.X,ndim,false);
     else
         return;
     end
-    pkg.gui_waitbar(fw);    
+    pkg.gui_waitbar(fw);
     RefreshAll;
     if ~isempty(new_c)        
         [c,cL]=grp2idx(new_c);
@@ -552,7 +562,7 @@ function Brushed2NewCluster(~,~)
     [c,cL]=grp2idx(c);
     sce.c=c;
     [ax,bx]=view();
-    [h]=i_gscatter3(sce.s,c,methodid);
+    [h]=gui.i_gscatter3(sce.s,c,methodid);
     title(sce.title)
     view(ax,bx);
     i_labelclusters(true);
@@ -590,7 +600,7 @@ function Brushed2MergeClusters(~,~)
     [c,cL]=grp2idx(c);
     sce.c=c;
     [ax,bx]=view();
-    [h]=i_gscatter3(sce.s,c,methodid);
+    [h]=gui.i_gscatter3(sce.s,c,methodid);
     title(sce.title)
     view(ax,bx);
     i_labelclusters(true);
@@ -767,7 +777,7 @@ function ShowCellStats(~,~)
         end
         % RefreshAll;
              [ax,bx]=view();     
-             h=i_gscatter3(sces,ci,1);
+             h=gui.i_gscatter3(sces,ci,1);
              view(ax,bx);
              title(sce.title);
             if indx==4
@@ -851,7 +861,7 @@ function DeleteSelectedCells(~,~)
     sce=rmcells(sce,ptsSelected);
     [c,cL]=grp2idx(sce.c);
     [ax,bx]=view();
-    h=i_gscatter3(sce.s,c);
+    h=gui.i_gscatter3(sce.s,c);
     title(sce.title);
     view(ax,bx);
     
@@ -948,7 +958,7 @@ function RunTrajectoryAnalysis(~,~)
             cla(hAx);
             sce.s=s_mono; sce.c=t_mono;
             [c,cL]=grp2idx(sce.c);
-            h=i_gscatter3(sce.s,c);
+            h=gui.i_gscatter3(sce.s,c);
             title(sce.title)
             view(ax,bx);
             hc=colorbar;
@@ -992,7 +1002,7 @@ function ClusterCellsS(~,~)
     pkg.gui_waitbar(fw);
     [ax,bx]=view();
     sce.c=c;
-    h=i_gscatter3(sce.s,c);
+    h=gui.i_gscatter3(sce.s,c);
     view(ax,bx);
     title(sce.title)
     answer = questdlg('Label clusters?');
@@ -1040,7 +1050,7 @@ function ClusterCellsX(~,~)
     pkg.gui_waitbar(fw);
     % hold off
     delete(h);
-    h=i_gscatter3(sce.s,c);
+    h=gui.i_gscatter3(sce.s,c);
     title(sce.title)
     
     labels = {'Save clusterid C to variable named:'}; 
@@ -1122,7 +1132,7 @@ function ShowClustersPop(~,~)
     for k=1:9
         if k<=max(c)
             subplot(3,3,k);
-            i_gscatter3(sces,c,3,cmv(idxx(k)));
+            gui.i_gscatter3(sces,c,3,cmv(idxx(k)));
             title(sprintf('%s\n[%d cells (%.2f%%)]',...
                 cL{idxx(k)},cmx(idxx(k)),100*cmx(idxx(k))/length(c)));
         end
@@ -1134,7 +1144,7 @@ function ShowClustersPop(~,~)
             kk=k+9;
             if kk<=max(c)
                 subplot(3,3,k);
-                i_gscatter3(sces,c,3,cmv(idxx(kk)));
+                gui.i_gscatter3(sces,c,3,cmv(idxx(kk)));
                 title(sprintf('%s\n[%d cells (%.2f%%)]',...
                     cL{idxx(kk)},cmx(idxx(kk)),100*cmx(idxx(kk))/length(c)));
             end

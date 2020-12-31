@@ -5,7 +5,7 @@ function sc_scatter3genes(X,genelist,dofit,showdata)
 if nargin<2, genelist=[]; end
 if nargin<4, showdata=true; end
 if nargin<3, dofit=false; end
-[lgu,dropr,lgcv,genelist]=sc_stat(X,genelist);
+[lgu,dropr,lgcv,genelist]=sc_genestat(X,genelist);
 x=lgu;
 y=dropr;
 z=lgcv;

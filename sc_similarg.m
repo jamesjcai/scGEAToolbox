@@ -1,4 +1,5 @@
 function [idx]=sc_similarg(X,genelist,targetgene,k,isgene)
+%KNN network of genes for identifying similar genes
 if nargin<5, isgene=true; end
 if nargin<4, k=5; end
 if nargin<3

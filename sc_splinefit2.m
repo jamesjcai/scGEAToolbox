@@ -1,4 +1,5 @@
 function [T]=sc_splinefit2(X,Y,genelistx,genelisty,sortid)
+%Compare genes' expression profiles with spline fit regression
 if nargin<3, error('X,Y,GENELIST are required.'); end
 if nargin<4, genelisty=genelistx; end
 if nargin<5, sortid=true; end

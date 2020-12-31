@@ -126,7 +126,7 @@ elseif isStringScalar(targetg) || ischar(targetg)
         warning('%s no expression',targetg);
     end
     if showcam
-        add_3dcamera(tb,targetg);
+        gui.add_3dcamera(tb,targetg);
     end
 end
 %     function dispgname(~,~)
