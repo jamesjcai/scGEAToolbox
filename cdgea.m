@@ -1,11 +1,11 @@
 function [pw1,pw0]=cdgea(isconfirmed)
-%CDGEA Changes to GEAToolbox directory
+%CDGEA Changes to scGEAToolbox directory
 
 if nargin < 1
     isconfirmed=true;
 end
 pw0=pwd;
-pw1=fileparts(which(mfilename));
+pw1=fileparts(mfilename('fullpath'));
 if ~strcmp(pw0,pw1) && ~isconfirmed
     [selectedButton]=uigetpref('scGEApp',... % Group
            'cdgea_ask',...                               % Preference

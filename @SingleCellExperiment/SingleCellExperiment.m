@@ -21,6 +21,7 @@ classdef SingleCellExperiment
    end 
 
    methods
+   % output = myFunc(obj,arg1,arg2)
    function obj = SingleCellExperiment(X,g,s,c)
         if nargin<1, X=[]; end
         if nargin<2 || isempty(g), g=string(transpose(1:size(X,1))); end
@@ -59,27 +60,9 @@ classdef SingleCellExperiment
         r=size(obj.X,1);
     end
     
-    function obj = estimatepotency(obj)
-        if sum(strcmp('cell_potency',obj.list_cell_attributes))==0;
-            idx=input('Species: 1=human,2=mouse >>');
-            r=sc_potency(obj.X,obj.g,idx);
-            obj.list_cell_attributes=[obj.list_cell_attributes,...
-                {'cell_potency',r}];
-            disp('cell_potency added.');
-        else
-            disp('cell_potency existed.');
-        end
-    end
+    obj = estimatepotency(obj)
 
-    function obj = estimatecellcycle(obj,forced)
-        if nargin<2, forced=false; end
-        if isempty(obj.c_cell_cycle_tx) || forced
-            obj.c_cell_cycle_tx=run.SeuratCellCycle(obj.X,obj.g);
-            disp('c_cell_cycle_tx added.');
-        else
-            disp('c_cell_cycle_tx existed.');
-        end
-    end
+    obj = estimatecellcycle(obj,forced)
     
     function obj = removecells(obj,i)
             obj.X(:,i)=[];

@@ -47,7 +47,7 @@ rng(235); showlegend=true;
 % rng(113); showlegend=true;
 
 s=sc_tsne(X,2);
-c1=sc_sc3(X,6);
+c1=run.SC3(X,6);
 c2=run.SIMLR(X,6);
 c3=run.SoptSC(X,'k',6);
 

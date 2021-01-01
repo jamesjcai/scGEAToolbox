@@ -2,6 +2,7 @@ classdef SingleCellEmbedding
    properties       
       s                               % 
       name {mustBeMember(name,{'tSNE','UMAP','PHATE','Unnamed'})} = 'Unnamed'
+      method EmbeddingMethods
    end   
    properties (Dependent)
       NumDimensions

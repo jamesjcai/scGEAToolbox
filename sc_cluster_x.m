@@ -24,7 +24,7 @@ switch p.Results.type
         [c_clustid]=run.SoptSC(X,'k',k,'donorm',true);
     case 'sc3'
         %disp('To specify k, use SC_SC3(X,k).');
-        [c_clustid]=sc_sc3(X,k);
+        [c_clustid]=run.SC3(X,k);
     case 'sinnlrr'
         % disp('To specify k, use RUN_SINNLRR(X,k).');
         [c_clustid]=run.SinNLRR(X,k);
