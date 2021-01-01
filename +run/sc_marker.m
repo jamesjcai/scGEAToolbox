@@ -15,7 +15,7 @@ parse(p,X,genelist,c,varargin{:})
 
 switch p.Results.type
     case 'soptsc'
-pw1=fileparts(which(mfilename));
+pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'thirdparty/SoptSC');
 addpath(pth);
 pth=fullfile(pw1,'thirdparty/SoptSC/NNDSVD');

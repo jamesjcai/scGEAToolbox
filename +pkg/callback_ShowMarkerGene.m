@@ -8,7 +8,8 @@ function callback_ShowMarkerGene(src,~)
     '',''},'SelectionMode','single','ListString',gsorted);
     if tf==1     
         figure;
-        [h1]=sc_scattermarker(sce.X,sce.g,sce.s,gsorted(indx),5);
+        [h1]=sc_scattermarker(sce.X,sce.g,...
+               sce.s,gsorted(indx),5);
         view(h1,axx,bxx);
     end
 end

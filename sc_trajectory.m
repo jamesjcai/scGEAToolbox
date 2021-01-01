@@ -16,7 +16,7 @@ switch p.Results.type
         s=run.PHATE(X,3,plotit,false);
         [t]=i_pseudotime_by_splinefit(s,1,plotit);
     case 'tscan'
-        t=sc_tscan(X,'plotit',true);        
+        t=run.TSCAN(X,'plotit',true);        
 end
 if size(t,2)~=1, t=t'; end
 end

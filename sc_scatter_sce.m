@@ -30,8 +30,8 @@ if ~isempty(sin), sce.s=sin; end
 [c,cL]=grp2idx(sce.c);
 
 FigureHandle = figure('Name','sc_scatter_sce',...
-'position',round(1.5*[0 0 560 420]),...    
-'visible','off');
+        'position',round(1.5*[0 0 560 420]),...    
+        'visible','off');
 movegui(FigureHandle,'center');
 
 hAx = axes('Parent',FigureHandle);
