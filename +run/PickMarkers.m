@@ -16,7 +16,7 @@ gene_DE_score = zeros(No_gene,numC);
 
 % gene_value_idx = zeros(No_gene,1);
 for i = 1:numC
-    gene_mean(:,i) = mean(X(:,c==i),2);
+    % gene_mean(:,i) = mean(X(:,c==i),2);
     cluster_order = [cluster_order;find(c==i)];
 end
 gene_mean=grpstats(X',c,@mean)';

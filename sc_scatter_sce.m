@@ -62,7 +62,7 @@ pt3 = uipushtool(UitoolbarHandle,'Separator','off');
 ptImage = ind2rgb(img,map);
 pt3.CData = ptImage;
 pt3.Tooltip = 'Select a gene to show expression';
-pt3.ClickedCallback = @callback_ShowMarkerGene;
+pt3.ClickedCallback = @callback_ShowGeneExpr;
 
 pt3a = uipushtool(UitoolbarHandle,'Separator','off');
 [img,map] = imread(fullfile(mfolder,...
