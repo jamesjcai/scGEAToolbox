@@ -13,7 +13,7 @@ if sum(idx)>0
    end
 else
    if vebrose
-    fprintf('No mt-genes found or removed.\n',sum(idx));
+    fprintf('No mt-genes found or removed.\n');
    end
 end
 if nargout>3

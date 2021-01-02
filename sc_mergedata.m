@@ -1,4 +1,4 @@
-function [X,genelist,c]=sc_merge2data(X1,X2,genelist1,genelist2,method)
+function [X,genelist,c]=sc_mergedata(X1,X2,genelist1,genelist2,method)
 if nargin<5, method='intersect'; end
 
 switch lower(method)

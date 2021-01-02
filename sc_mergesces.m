@@ -34,10 +34,12 @@ if ~isempty(sce1.c_cell_id) && ~isempty(sce2.c_cell_id)
     sce.c_cell_id=[sce1.c_cell_id; sce2.c_cell_id];
 end
 if ~isempty(sce1.list_cell_attributes) && ~isempty(sce2.list_cell_attributes)
-    for k=1:2:min([length(sce1.list_cell_attributes) length(sce2.list_cell_attributes)]) 
-    	if strcmp(sce1.list_cell_attributes{k},sce2.list_cell_attributes{k})
+    for k=1:2:min([length(sce1.list_cell_attributes) length(sce2.list_cell_attributes)])
+        if strcmp(sce1.list_cell_attributes{k},...
+                sce2.list_cell_attributes{k})
             sce.list_cell_attributes{k}=sce1.list_cell_attributes{k};
-            sce.list_cell_attributes{k+1}=[sce1.list_cell_attributes{k+1}; sce2.list_cell_attributes{k+1}];
+            sce.list_cell_attributes{k+1}=[sce1.list_cell_attributes{k+1};...
+                sce2.list_cell_attributes{k+1}];
         end
     end
 end

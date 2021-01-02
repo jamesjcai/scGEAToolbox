@@ -1,6 +1,6 @@
 function i_plot_pseudotimeseries(X,genelist,t,genes)
 if nargin<4
-    genes=string({'AICDA','BACH2','BCL6','IRF4','PAX5','PRDM1','REL','RELA'});
+    genes=string(['AICDA','BACH2','BCL6','IRF4','PAX5','PRDM1','REL','RELA']);
 end
 [t,i]=sort(t);
 n=length(genes);

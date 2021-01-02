@@ -19,7 +19,7 @@ if ~isempty(Y)
     for k=1:numgene
         z=Y(k,:);
         x=k*ones(size(z));
-        y=nz+[1:length(z)];
+        y=nz+(1:length(z));
         bigX=[bigX;x]; bigY=[bigY;y]; bigZ=[bigZ;z];
     end                    
     hold on

@@ -46,7 +46,7 @@ for k=1:K
         
         w=sum(idv==k)./totn;   % weight by number of cells
         a=w*T.z_val;
-        a=T.z_val;
+        % a=T.z_val;
                
         A=[A a];
     end
