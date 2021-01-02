@@ -1,5 +1,5 @@
 classdef SingleCellEmbedding
-   properties       
+   properties     
       s                               % 
       name {mustBeMember(name,{'tSNE','UMAP','PHATE','Unnamed'})} = 'Unnamed'
       method EmbeddingMethods

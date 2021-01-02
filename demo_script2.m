@@ -62,7 +62,7 @@ T2.genes(1:50)
 %% Run GSEAPreranked App with genes ranked with DD
 %%
 addpath('thirdparty/GSEA');
-a=uifig_gseapreranked;
+a=gui.uifig_gseapreranked;
 a.load_datatable(T2);
 
 %% Click gene set names in GSEA result table to show GSEA plots

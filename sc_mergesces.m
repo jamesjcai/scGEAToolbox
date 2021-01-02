@@ -1,7 +1,21 @@
-function [sce]=sc_merge2sces(sce1,sce2,method)
+function [sce]=sc_mergesces(sces,method)
+
+if nargin<2, method='intersect'; end
+if ~iscell(sces), error('SCES is not a cell array'); end
+sce=sces{1};
+c=ones(sce.NumCells,1);
+for k=2:length(sces)
+    c=[c; k*ones(sces{k}.NumCells,1)];
+    [sce]=i_merge2sces(sce,sces{k},method);
+end
+sce.c_batch_id=c;
+end
+
+
+function [sce]=i_merge2sces(sce1,sce2,method)
 
 if nargin<3, method='intersect'; end
-[X,g,c]=sc_merge2data(sce1.X,sce2.X,...
+[X,g,c]=sc_mergedata(sce1.X,sce2.X,...
             sce1.g,sce2.g,method);
 sce=SingleCellExperiment(X,g);
 sce.c=[sce1.c; sce2.c];

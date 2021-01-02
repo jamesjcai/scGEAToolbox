@@ -39,7 +39,7 @@ gscatter(s(:,1),s(:,2),cellidx,'','',8);
 gscatter(s(:,1),s(:,2),cellidx,'','',8);
 
 %% Diffusion Map
-[s]=sc_diffuse([X Y Z]);
+[s]=run.sc_diffuse([X Y Z]);
 gscatter(s(:,1),s(:,2),cellidx,'','',8);
 
 %% Scatter plots
@@ -55,7 +55,7 @@ sc_scattergenes(X,genelistx,'mean_dropr');
 %% 3D scatter plot with spline fit
 %
 figure;
-sc_scattergenes3(X,genelistx,true,true);
+sc_scatter3genes(X,genelistx,true,true);
 
 %% Feature selection and show top 50 differentially deviated (DD) genes
 %

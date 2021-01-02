@@ -24,7 +24,7 @@ Y=Y(i2,:); genelisty=genelist;
 cellidx=[1*ones(size(X,2),1); 2*ones(size(Y,2),1)];
 %% Cluster cells using SIMLR
 %%
-C=sc_cluster_x([X Y],'type','simlr');
+C=sc_cluster_x([X Y],5,'type','simlr');
 
 % [C,s]=run.SIMLR(X,[]);  % auto-determine the number of clusters.
 %% Plot the clustering result

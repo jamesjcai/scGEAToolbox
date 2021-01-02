@@ -131,7 +131,7 @@ hBr = brush(hFig);
 hBr.ActionPostCallback = {@onBrushAction,X,genelist,s,...
     species,organ,method};
 
-add_3dcamera(tb);
+gui.add_3dcamera(tb);
 
 end
 

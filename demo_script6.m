@@ -6,10 +6,10 @@ load example_data/markergeneident_demo X genelist s_tsne
 % note: s_tsne is the precomputed tSNE embedding
 %% Automatically cluster cells and explore cell type
 figure;
-sc_celltypeexplorer_auto(X,genelist,s_tsne,"species","mouse")
+gui.sc_celltypeexplorer_auto(X,genelist,s_tsne,"species","mouse");
 %% Show result of manually brushing cells and exploring cell type
 % To generate the figure:
-% (1) run sc_celltypeexplorer_manu(X,genelist,s_tsne,"species","mouse")
+% (1) run gui.sc_celltypeexplorer(X,genelist,s_tsne,"species","mouse")
 % (2) brush and select cell cluster
 figure;
 openfig('example_data/markergeneident_demo.fig');
@@ -22,8 +22,8 @@ cluster_kmedoids=sc_cluster_s(s_tsne,6,'type','kmedoids');
 
 %% Identify marker genes for cluster #4 against other clusters
 %
-gmarkers=sc_pickmarkers(X,genelist,cluster_kmedoids,4);
-
+gmarkers=sc_pickmarkers(X,genelist,cluster_kmedoids,9);
+gmarkers=gmarkers{4};
 %% Show expression level of top 9 marker genes
 %
 figure;
@@ -40,7 +40,7 @@ view([-25 90])
 %
 figure;
 g=gmarkers(1);
-sc_scattermarker(X,genelist,g,s_tsne);
+sc_scattermarker(X,genelist,s_tsne,g);
 % sc_stemscatter(s_tsne(:,1), s_tsne(:,2), log2(1+X(genelist==g,:)));
 title(g)
 view([-31.03 77.60])
@@ -51,7 +51,12 @@ Tct=sc_celltypecaller(X,genelist,cluster_kmedoids,'species','mouse')
 
 %% Another demo with example data of mouse pancreatic islet cells
 %
-load celltypeexplorer_demo_data.mat
-sc_celltypeexplorer(X,genelist,s_tsne,"species","mouse");
+load example_data/celltypeexplorer_demo_data.mat
+gui.sc_celltypeexplorer(X,genelist,s_tsne,"species","mouse");
+pause(3)
+
+%% Use the SC_SCATTER interactive tool
+%
+sc_scatter(X,genelist,s_tsne)
 
 %% The End

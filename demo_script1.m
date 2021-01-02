@@ -38,16 +38,16 @@ Y=log(Y+1);
 figure; imagesc([X(1:100,1:500) Y(1:100,1:500)]); title('Log(x+1) Transformed'); colorbar; xline(500,'y-');
 
 %% Show data subject to MAGIC imputation
-Xo=run_magic(X);
-Yo=run_magic(Y);
+Xo=run.MAGIC(X);
+Yo=run.MAGIC(Y);
 figure; imagesc([Xo(1:100,1:500) Yo(1:100,1:500)]); title('MAGIC Imputated'); colorbar; xline(500,'y-');
 
 %% Show HCP normalized data
-[Xm,Ym]=run_hcp(X,Y);
+[Xm,Ym]=run.HCP(X,Y);
 figure; imagesc([Xm(1:100,1:500) Ym(1:100,1:500)]); title('HCP Normalized'); colorbar; xline(500,'y-');
 
 %% Show data with ComBat batch correction
-[Xn,Yn]=run_combat2(X,Y);
+[Xn,Yn]=run.ComBat(X,Y);
 figure; imagesc([Xn(1:100,1:500) Yn(1:100,1:500)]); title('ComBat Corrected'); colorbar; xline(500,'y-');
 
 %% Visulize cells before and after ComBat batch correction

@@ -1,3 +1,4 @@
+clc;
 disp('% 1/5 - Change current directory >>cdgea;')
 fprintf('Press any key to continue...')
 pause
@@ -41,3 +42,6 @@ f=sc_scatter_sce(sce);
 f.Position(1)=f.Position(1)+50;
 f.Position(2)=f.Position(2)-50;
 fprintf('...DONE.\n\n');
+
+pause(3)
+gui.sc_multiembeddings
