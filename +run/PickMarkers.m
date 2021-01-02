@@ -1,37 +1,39 @@
-function gene_idxv = GC_htmp_DE(X,genelist,...
-                             cluster_labs,topn,plotit)
+function [gene_idxv,T] = PickMarkers(X,genelist,c,topn,plotit)
+%PICKMARKERS - adapted from GC_htmp_DE.m 
 
 if nargin<5, plotit=false; end
 if nargin<4, topn=10; end
 
 %% new data visualization
-No_clusterr = length(unique(cluster_labs));
+numC = length(unique(c));
 gene_idxv = [];
 cluster_order = [];
 
 [No_gene] = size(X,1);
 % calculat mean of gene expression
-gene_mean = zeros(No_gene,No_clusterr);
-gene_DE_score = zeros(No_gene,No_clusterr);
+gene_mean = zeros(No_gene,numC);
+gene_DE_score = zeros(No_gene,numC);
 
 % gene_value_idx = zeros(No_gene,1);
-for i = 1:No_clusterr
-    gene_mean(:,i) = mean(X(:,cluster_labs==i),2);
-    cluster_order = [cluster_order;find(cluster_labs==i)];
+for i = 1:numC
+    gene_mean(:,i) = mean(X(:,c==i),2);
+    cluster_order = [cluster_order;find(c==i)];
 end
+gene_mean=grpstats(X',c,@mean)';
+assert(isequal(grpstats(X',c,@mean)',gene_mean))
+
 [~,gene_value_idx] = max(gene_mean,[],2);
 
 % compute DE-score for each gene
-for i = 1:No_clusterr
-    zz = abs(gene_mean(:,i).*ones(1,No_clusterr) - gene_mean);
-%     gene_DE_score(:,i) = mean(zz,2); % mean
+for i = 1:numC
+    zz = abs(gene_mean(:,i)-gene_mean);
     gene_DE_score(:,i) = sum(zz,2); % sum
 end
 
 % topn markers for each cluster based on DE score
 gclusters = [];
 gscore = [];
-for i = 1:No_clusterr
+for i = 1:numC
     zz_idx = find(gene_value_idx == i);
     zz_DEscore = gene_DE_score(zz_idx,i);
     [zzvalue,zz1] = sort(zz_DEscore,'descend');
@@ -41,26 +43,13 @@ for i = 1:No_clusterr
 end
 
 GL500 = [gene_idxv gclusters gscore];
-T = array2table(GL500,'RowNames',genelist(gene_idxv),'VariableNames',{'Gene_indx','Cluster','DE_Score'});
-
-%writetable(T,[folder '/DE_Genes' num2str(topn) '.csv'],'WriteRowNames',true,'WriteVariableNames',true,'Delimiter',',');  
-
-% for i = 1:No_clusterr
-%     zz_DEscore = gene_DE_score(:,i);
-%     [~,zz1] = sort(zz_DEscore,'descend');
-%     gene_idxv = [gene_idxv; zz1(1:topn)];
-% end
-
-
-datav = X(gene_idxv,cluster_order);
-
-% datav = data_reduce1(Gene_labels_topnr(OGI,1),CGI);
-% colormap redbluecmap;
-% imagesc(datav);
+T = array2table(GL500,'RowNames',...
+    genelist(gene_idxv),'VariableNames',...
+    {'Gene_indx','Cluster','DE_Score'});
 
 if plotit    
     figure;
-    idata = datav;
+    idata = X(gene_idxv,cluster_order);
     kk = 2;
     center = mean(idata,kk);
     scale = std(idata, 0,kk);
@@ -77,11 +66,8 @@ if plotit
     set(gca,'xtick',[]);
     set(gca,'ytick',[]);
 
-
-
-
-    lgd = cell(1,No_clusterr);
-    for i = 1:No_clusterr
+    lgd = cell(1,numC);
+    for i = 1:numC
         if i<10
             vv = 'CC';
             vv(2:2) = num2str(i);
@@ -93,12 +79,12 @@ if plotit
         end
     end
     No_cells_inC = [];
-    for i = 1:No_clusterr
-        No_cells_inC = [No_cells_inC; length(find(cluster_labs==i))];
+    for i = 1:numC
+        No_cells_inC = [No_cells_inC; length(find(c==i))];
     end
     xtkval = cumsum(No_cells_inC);
     xtkval1 = zeros(size(xtkval));
-    for i = 1:No_clusterr
+    for i = 1:numC
         if i==1
             xtkval1(i) = 0.5.*No_cells_inC(i);
         else
@@ -106,8 +92,8 @@ if plotit
         end
     end
 
-    if size(datav,1) < 200
-    yticks(1:size(datav,1));
+    if size(idata,1) < 200
+    yticks(1:size(idata,1));
     yticklabels(genelist(gene_idxv));
     end
 

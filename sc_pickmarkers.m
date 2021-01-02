@@ -1,4 +1,24 @@
-function [markerlist,A]=sc_pickmarkers(X,genelist,idv,id)
+function [markerlist]=sc_pickmarkers(X,genelist,c,topn,methodid)
+if nargin<5, methodid=1; end
+if nargin<4, topn=10; end
+assert(isequal(grp2idx(c),c));
+markerlist=cell(max(c),1);
+
+switch methodid
+    case 1
+       [idxv] = run.PickMarkers(X,genelist,c,topn);
+       for k=1:max(c)
+            markerlist{k}=genelist(idxv(1+(k-1)*topn:k*topn));
+       end
+    case 2
+        for k=1:max(c)
+            a=i_pickmarkers(X,genelist,c,k);
+            markerlist{k}=a(1:topn);
+        end
+end
+end
+
+function [markerlist,A]=i_pickmarkers(X,genelist,idv,id)
 
 % IDV - cluster ids of cells
 % ID  - the id of the cluster, for which marker genes are being identified.

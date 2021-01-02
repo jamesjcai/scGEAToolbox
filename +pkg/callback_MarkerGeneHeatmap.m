@@ -39,11 +39,11 @@ function callback_MarkerGeneHeatmap(src,~)
 
     fw=pkg.gui_waitbar;
     M=cell(numel(cL),2);
-    for k=1:numel(cL)
-        [markerlist]=sc_pickmarkers(sce.X,sce.g,c,k);
+    [markerlist]=sc_pickmarkers(sce.X,sce.g,c,10);
+    for k=1:numel(cL)        
         cLk=matlab.lang.makeValidName(cL{k});
         M{k,1}=cLk;
-        M{k,2}=markerlist;
+        M{k,2}=markerlist{k};
     end
     pkg.gui_waitbar(fw);    
     
@@ -89,7 +89,7 @@ for k=1:numel(cL)
     for kk=1:numel(cL)
         z=[z mean(y(:,idcl==kk),2)];
     end    
-    z1=grpstats(transpose(y),idcl,@(x)mean(x,1))';
+    z1=grpstats(y.',idcl,@mean)';
     assert(isequal(z,z1));
     Z=[Z; z];
 end
@@ -123,6 +123,8 @@ set(gca,'XTickLabelRotation',45);
 set(gca,'YTick',1:length(MX));
 set(gca,'YTickLabel',MX);
 set(gca,'TickLength',[0 0])
+f2.Position(1)=f2.Position(1)+200;
+f2.Position(2)=f2.Position(2)-200;
 
 tb1=uitoolbar(f1);
 pt1 = uipushtool(tb1,'Separator','off');
