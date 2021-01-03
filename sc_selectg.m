@@ -1,4 +1,5 @@
 function [X,genelist,idx]=sc_selectg(X,genelist,min_count,min_cells)
+%Select genes by expression levels
 %
 % https://www.nature.com/articles/s41592-018-0254-1
 % 11,308 genes with at least 2 cells having more than 4 unique molecular identifier (UMI) reads per cell. 

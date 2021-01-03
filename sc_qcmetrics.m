@@ -1,4 +1,5 @@
 function [nmad]=sc_qcmetrics(X)
+%QC metrics
 
 %{
 https://alona.panglaodb.se/add.html

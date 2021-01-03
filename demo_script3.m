@@ -44,18 +44,18 @@ gscatter(s(:,1),s(:,2),cellidx,'','',8);
 
 %% Scatter plots
 figure;
-sc_scattergenes(X,genelistx,'mean_cv');
+gui.sc_scattergenes(X,genelistx,'mean_cv');
 
 figure;
-sc_scattergenes(X,genelistx,'meanlg_varlg');
+gui.sc_scattergenes(X,genelistx,'meanlg_varlg');
 
 figure;
-sc_scattergenes(X,genelistx,'mean_dropr');
+gui.sc_scattergenes(X,genelistx,'mean_dropr');
 
 %% 3D scatter plot with spline fit
 %
 figure;
-sc_scatter3genes(X,genelistx,true,true);
+gui.sc_scatter3genes(X,genelistx,true,true);
 
 %% Feature selection and show top 50 differentially deviated (DD) genes
 %

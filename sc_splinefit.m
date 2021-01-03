@@ -1,5 +1,5 @@
 function [T,xyz1]=sc_splinefit(X,genelist,sortit,removenan)
-%SC_SPLINEFIT - identify genes with a profile deviated from normal
+%SC_SPLINEFIT identify genes with a profile deviated from normal
 %
 % USAGE:
 % >> [X,genelist]=sc_readfile('example_data/GSM3044891_GeneExp.UMIs.10X1.txt');
