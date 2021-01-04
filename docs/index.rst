@@ -13,7 +13,8 @@ Welcome to scGEAToolbox's documentation!
 
 scGEAToolbox is a Matlab toolbox for scRNA-seq data analysis.
 
-include:: ../README.rst
+include:: README.rst
+
 
 Getting Started
 ===============
