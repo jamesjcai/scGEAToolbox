@@ -1,4 +1,4 @@
-function run_enrichr(genelist,genenum)
+function Enrichr(genelist,genenum)
 % Run Enrichr
 %
 % see also: RUN_GORILLA

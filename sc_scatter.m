@@ -1,4 +1,10 @@
 function sc_scatter(X,genelist,s,c)
+%SC_SCATTER Scatter plot of cell embedding.
+%   SC_SCATTER(X,genelist,s,c) displays circles at the locations specified
+%   by s, coordinate of cell embedding, which is an n-by-p matrix 
+%   specifying coordinates for each cell. 
+%   
+%   See also SC_SCATTER_SCE.
 
 if isa(X,'SingleCellExperiment')
     sc_scatter_sce(X);

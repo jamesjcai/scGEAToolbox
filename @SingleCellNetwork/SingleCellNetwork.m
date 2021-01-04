@@ -10,6 +10,10 @@ classdef SingleCellNetwork
    end 
 
    methods
+   
+   s=katz_score(obj,A,b)
+   s=katz_centrality(obj,a,b)
+   
    function obj = SingleCellNetwork(A,g)
         if nargin<1, A=[]; end
         if nargin<2 || isempty(g), g=string(transpose(1:size(A,1))); end
@@ -28,7 +32,7 @@ classdef SingleCellNetwork
    function m = get.NumGenes(obj)   
       m = size(obj.G.Nodes,1); 
    end
-   
+
    function obj = set.NumGenes(obj,~)
       fprintf('%s%d\n','NumGenes is: ',obj.NumGenes)
       error('You cannot set NumGenes property'); 

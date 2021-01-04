@@ -1,21 +1,10 @@
-function [c]=run_singler(X,genelist,species)
+function [c]=SingleR(X,genelist,species)
 if nargin<3, species="human"; end
 if nargin<2, genelist=(1:size(X,1))'; end
 
-if isempty(FindRpath)
-   error('Rscript.exe is not found.');
-end
-oldpth=pwd;
-pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'thirdparty/R_SingleR');
-cd(pth);
-fprintf('CURRENTWDIR = "%s"\n',pth);
-
-[~,cmdout]=RunRcode('require.R');
-if strfind(cmdout,'there is no package')>0
-    cd(oldpth);
-    error(cmdout);
-end
+oldpth=pwd();
+[isok,msg]=commoncheck_R('R_SingleR');
+if ~isok, error(msg); end
 
 if exist('output.csv','file')
     delete('output.csv');
