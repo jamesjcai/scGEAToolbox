@@ -6,6 +6,8 @@ if ~isa(sce,'SingleCellExperiment')
 end
 
 import pkg.*
+import gui.*
+
 p = inputParser;
 % validTypes = {'kmeans','kmedoids','dbscan'};
 % checkType = @(x) any(validatestring(x,validTypes));
@@ -293,9 +295,9 @@ pt5.ClickedCallback = @RefreshAll;
 gui.add_3dcamera(defaultToolbar,'AllCells');
 
 % handles = guihandles( FigureHandle ) ; 
-% guidata( FigureHandle, handles ) ; 
- 
-set( FigureHandle, 'visible', 'on' ) ; 
+% guidata( FigureHandle, handles ) ;
+
+set(FigureHandle,'visible','on'); 
 guidata(FigureHandle,sce);
 
 if nargout > 0

@@ -3,7 +3,7 @@ if nargin<1
     pw1=fileparts(mfilename('fullpath'));
     load(fullfile(pw1,'doubleS.mat'),'s1','s2');
 end
-f0=figure;
+f0=figure('Visible',false);
 g1=subplot(1,2,1);
 h1=scatter3(s1(:,1),s1(:,2),s1(:,3),5);
 title('tSNE')
@@ -25,6 +25,8 @@ f0.Position(3)=f0.Position(3)*2;
 
 hBr=brush(f0);
 hBr.ActionPostCallback = {@onBrushAction,h1,h2};
+movegui(f0,'center');
+set(f0,'Visible',true);
 end
 
 function onBrushAction(~,event,h1,h2)

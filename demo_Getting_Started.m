@@ -1,47 +1,47 @@
-clc;
-disp('% 1/5 - Change current directory >>cdgea;')
-fprintf('Press any key to continue...')
-pause
+echo off
+clc
+echo on
+%% DEMO_GETTING_STARTED   Demonstration of SC_SCATTER Application.
+%              James J. Cai.
+
+% The scGEAToolbox contains SC_SCATTER Application for exploratory 
+% single-cell RNA-seq (scRNA-seq) data analysis. For this demonstration
+% you will need to view both the command window and figure windows.
+
+%% === (1/5) Change current directory ===
+
 cdgea;
-fprintf('...DONE.\n');
-pause(2)
-clc
 
-disp('% 2/5 - Load example data 1')
-disp('>>load example_data/testXgs.mat X g s')
-disp('% X=expression matrix; g=gene list; s=embedding') 
-fprintf('Press any key to continue...')
-pause
+pause  % Press any key to continue...
+
+%% === (2/5) Load example data sets ===
+
 load example_data/testXgs.mat X g s
-fprintf('...DONE.\n\n');
-pause(2)
-clc
+% X - gene-by-cell expression matrix
+% g - gene list
+% s - coordinates of cell embedding
 
-disp('% 3/5 - Load example data 2')
-disp('>>load example_data/testSce.mat sce')
-disp('% sce=class SingleCellExperiment') 
-fprintf('Press any key to continue...')
-pause
-load example_data/testSce sce
-fprintf('...DONE.\n');
-pause(2)
-clc
+load example_data/testSce.mat sce
+% sce - SingleCellExperiment object/class
 
-disp('% 4/5 - Run SC_SCATTER program >>sc_scatter(X,g,s);')
-disp('% 5/5 - Run SC_SCATTER_SCE program >>sc_scatter_sce(sce);')
+pause  % Press any key to continue...
 
-fprintf('Press any key to continue...')
-pause
+%% === (3/5) Run SC_SCATTER ===
+
 sc_scatter(X,g,s);
-%fprintf('...DONE.\n\n');
 
+pause  % Press any key to continue...
 
-%fprintf('Press any key to continue...')
-pause(3)
-f=sc_scatter_sce(sce);
-f.Position(1)=f.Position(1)+50;
-f.Position(2)=f.Position(2)-50;
-fprintf('...DONE.\n\n');
+%% === (4/5) Run SC_SCATTER_SCE ===
 
-pause(3)
+sc_scatter_sce(sce);
+
+pause  % Press any key to continue...
+
+%% === (5/5) Example of multidimensional view ===
+
 gui.sc_multiembeddings
+
+%% End of DEMO_GETTING_STARTED
+echo off
+ 
