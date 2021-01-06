@@ -90,6 +90,7 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-   README
    case_studies
+   case_studies2
+   README
 
