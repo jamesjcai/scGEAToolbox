@@ -281,7 +281,7 @@ pt5pickcl = uipushtool(UitoolbarHandle,'Separator','off');
 ptImage = ind2rgb(img,map);
 pt5pickcl.CData = ptImage;
 pt5pickcl.Tooltip = 'Switch color maps';
-pt5pickcl.ClickedCallback = {@callback_PickColorMap,...
+pt5pickcl.ClickedCallback = {@gui.callback_PickColorMap,...
                               numel(unique(c))};
 
 pt5 = uipushtool(UitoolbarHandle,'Separator','off');
@@ -320,7 +320,7 @@ function RefreshAll(~,~)
         h=gui.i_gscatter3(sce.s(:,1:2),c,methodid);        
     end
     title(sce.title)
-    pt5pickcl.ClickedCallback = {@callback_PickColorMap,...
+    pt5pickcl.ClickedCallback = {@gui.callback_PickColorMap,...
                                   numel(unique(c))};
     
     guidata(FigureHandle,sce);
@@ -426,7 +426,7 @@ function DEGene2Groups(~,~)
     else
         return;
     end
-    fw=pkg.gui_waitbar;
+    fw=gui.gui_waitbar;
     switch methodtag
         case 'ranksum'
             T=sc_deg(sce.X(:,sce.c_batch_id==1),...
@@ -435,7 +435,7 @@ function DEGene2Groups(~,~)
             T=run.MAST(sce.X(:,sce.c_batch_id==1),...
                     sce.X(:,sce.c_batch_id==2),sce.g);
     end
-    pkg.gui_waitbar(fw);
+    gui.gui_waitbar(fw);
     labels = {'Save DE results T to variable named:'}; 
     vars = {'T'}; values = {T};
     msgfig=export2wsdlg(labels,vars,values);
@@ -468,7 +468,7 @@ function EmbeddingAgain(~,~)
             return;
         end
     
-    fw=pkg.gui_waitbar;
+    fw=gui.gui_waitbar;
     new_c=[];
     if strcmp(answer,'tSNE')
         [sce.s]=sc_tsne(sce.X,ndim,false);
@@ -479,7 +479,7 @@ function EmbeddingAgain(~,~)
     else
         return;
     end
-    pkg.gui_waitbar(fw);
+    gui.gui_waitbar(fw);
     RefreshAll;
     if ~isempty(new_c)        
         [c,cL]=grp2idx(new_c);
@@ -635,11 +635,11 @@ function Brush4Celltypes(~,~)
     else
         databasetag="panglaodb";
     end    
-    fw=pkg.gui_waitbar;
+    fw=gui.gui_waitbar;
     [Tct]=local_celltypebrushed(sce.X,sce.g,sce.s,ptsSelected,...
           speciestag,organtag,databasetag);
     ctxt=Tct.C1_Cell_Type;            
-    pkg.gui_waitbar(fw);
+    gui.gui_waitbar(fw);
    
         [indx,tf] = listdlg('PromptString',{'Select cell type',...
         '',''},'SelectionMode','single','ListString',ctxt);
@@ -689,20 +689,20 @@ function Brush4Markers(~,~)
             return;
         end
     end
-    fw=pkg.gui_waitbar;
+    fw=gui.gui_waitbar;
     switch methodtag
         case 1
             [markerlist,A]=sc_pickmarkers(sce.X,sce.g,1+ptsSelected,2);
         case 2
             [markerlist,A]=sc_pickmarkers(sce.X,sce.g,c,unique(c(ptsSelected)));
     end
-    pkg.gui_waitbar(fw);
+    gui.gui_waitbar(fw);
     % assignin('base','A',A);
-    [numfig]=pkg.gui_inputdlg;
-    fw=pkg.gui_waitbar;
+    [numfig]=gui.gui_inputdlg;
+    fw=gui.gui_waitbar;
     htmlfilename=cL{unique(c(ptsSelected))};
     pkg.i_markergeneshtml(sce,markerlist,numfig,[ax bx],htmlfilename);
-    pkg.gui_waitbar(fw);
+    gui.gui_waitbar(fw);
 %     pause(2);
 %     export2wsdlg({'Save marker list to variable named:'},...
 %             {'g_markerlist'},{markerlist});
@@ -749,10 +749,10 @@ function ShowCellStats(~,~)
                 if isempty(sce.c_cell_cycle_tx)   
                  answer = questdlg('Estimate cell cycle using R/seurat?');
                  if ~strcmp(answer,'Yes'), return; end                    
-                    fw=pkg.gui_waitbar;
+                    fw=gui.gui_waitbar;
                     [cix]=run.SeuratCellCycle(sce.X,sce.g);
                     sce.c_cell_cycle_tx=cix;
-                    pkg.gui_waitbar(fw);             
+                    gui.gui_waitbar(fw);             
                 end                
                 [ci,tx]=grp2idx(sce.c_cell_cycle_tx);
                 ttxt=sprintf('%s|',string(tx));
@@ -857,7 +857,7 @@ function DeleteSelectedCells(~,~)
     answer2 = questdlg(sprintf('Delete %s cells?',...
         lower(answer)));
     if ~strcmp(answer2,'Yes'), return; end
-    sce=rmcells(sce,ptsSelected);
+    sce=removecells(sce,ptsSelected);
     [c,cL]=grp2idx(sce.c);
     [ax,bx]=view();
     h=gui.i_gscatter3(sce.s,c);
@@ -944,9 +944,9 @@ function RunTrajectoryAnalysis(~,~)
     answer = questdlg('Run pseudotime analysis (Monocle)?');
     if ~strcmp(answer,'Yes'), return; end
     
-    fw=pkg.gui_waitbar;
+    fw=gui.gui_waitbar;
     [t_mono,s_mono]=run.monocle(sce.X);
-    pkg.gui_waitbar(fw);
+    gui.gui_waitbar(fw);
 
         answer = questdlg('View Monocle DDRTree?', ...
             'Pseudotime View', ...
@@ -994,11 +994,11 @@ function ClusterCellsS(~,~)
     catch
         return;
     end    
-    fw=pkg.gui_waitbar;  
+    fw=gui.gui_waitbar;  
     hold off
     sce.c_cluster_id=sc_cluster_s(sce.s,k,'type',methodtag,'plotit',false);
     [c,cL]=grp2idx(sce.c_cluster_id);
-    pkg.gui_waitbar(fw);
+    gui.gui_waitbar(fw);
     [ax,bx]=view();
     sce.c=c;
     h=gui.i_gscatter3(sce.s,c);
@@ -1035,7 +1035,7 @@ function ClusterCellsX(~,~)
         retrun;
     end
     
-    fw=pkg.gui_waitbar;
+    fw=gui.gui_waitbar;
     try
         [sce.c_cluster_id]=sc_cluster_x(sce.X,k,'type',methodtag);
     catch ME
@@ -1046,7 +1046,7 @@ function ClusterCellsX(~,~)
     end
     [c,cL]=grp2idx(sce.c_cluster_id);
     sce.c=c;
-    pkg.gui_waitbar(fw);
+    gui.gui_waitbar(fw);
     % hold off
     delete(h);
     h=gui.i_gscatter3(sce.s,c);
