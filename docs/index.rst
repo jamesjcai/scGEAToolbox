@@ -6,14 +6,7 @@
 Welcome to scGEAToolbox's documentation!
 ========================================
 
-.. toctree::
-   :maxdepth: 3
-   :caption: Contents:
-
-
 scGEAToolbox is a Matlab toolbox for scRNA-seq data analysis.
-
-.. include:: ./README.rst
 
 #### Official Websites and Social Networks
 
@@ -91,13 +84,13 @@ Implementation notes
   version number) into template contexts. It doesn't add any additional
   directives or the like, at least not yet.
 
+Contents:
+=========
+
 .. toctree::
    :maxdepth: 2
-   :caption: Advanced Features
-   
-   /builds
-   /Advanced features of Read the Docs
-   /Project background
-   /support
-   /faq   
+
+   getting_started
+   case_studies
+   readme
 

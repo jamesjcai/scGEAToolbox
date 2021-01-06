@@ -1,4 +1,12 @@
-#### Official Websites and Social Networks
+.. _readme:
+
+README
+------
+
+The area of a circle is :math:`A_\text{c} = (\pi/4) d^2`.
+
+Official Websites and Social Networks
+=====================================
 
 Please, visit the official website [![View scGEAToolbox on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/72917-scgeatoolbox) of scGEAToolbox for further information. 
 
