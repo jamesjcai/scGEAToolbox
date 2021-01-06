@@ -1,9 +1,10 @@
 .. _README:
 
-README2
--------
+README
+------
 
-#### Official Websites and Social Networks
+Official Websites and Social Networks
+=====================================
 
 Please, visit the official website [![View scGEAToolbox on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/72917-scgeatoolbox) of scGEAToolbox for further information. 
 
