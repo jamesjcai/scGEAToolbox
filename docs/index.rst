@@ -93,5 +93,5 @@ Contents:
    getting_started
    case_studies
    case_studies2
-   README
+   readme
 
