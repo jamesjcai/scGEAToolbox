@@ -1,4 +1,4 @@
-.. _README:
+.. _readme:
 
 README
 ------
