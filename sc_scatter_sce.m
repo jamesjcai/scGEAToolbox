@@ -125,7 +125,7 @@ ptcluster = uipushtool(UitoolbarHandle,'Separator','on');
             'resources','plotpicker-dendrogram.gif'));
 ptImage = ind2rgb(img,map);
 ptcluster.CData = ptImage;
-ptcluster.Tooltip = 'Clustering using using embedding S';
+ptcluster.Tooltip = 'Clustering using embedding S';
 ptcluster.ClickedCallback = @ClusterCellsS;
 
 ptcluster = uipushtool(UitoolbarHandle,'Separator','off');
