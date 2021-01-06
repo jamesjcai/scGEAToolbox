@@ -17,7 +17,7 @@ scGEAToolbox YouTube Channel
          <div style="position: relative; padding-bottom: 10px; height: 0; overflow: hidden; max-width: 100%; height: auto;">
 
 
-         <iframe width="560" height="315" src="https://youtube.com/playlist?list=PLekWsTmNpdrHNznPesjE7dWxx7iMrucTo"></iframe>
+         <iframe width="560" height="315" src="https://youtube.com/playlist?list=PLekWsTmNpdrHNznPesjE7dWxx7iMrucTo" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
          </div>
 
 We recently presented.
