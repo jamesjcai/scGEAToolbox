@@ -21,40 +21,34 @@
 %' weightedZISpearman(x,y,w)
 %'
 %' @export
+%{
+cd E:\RStudio
+x=readmatrix('xx.csv'); x=x(:,2);
+y=readmatrix('yy.csv'); y=y(:,2);
+w=readmatrix('ww.csv'); w=w(:,2);
+r=-0.07823878;
+%}
 
-weightedZISpearman <- function(x, y, w = 1) {
+function [rho_star]=weightedZISpearman(x,y,w)
+if nargin<3, w=1.0; end
+if any(x<0|y<0), error('x and/or y values have negative values'); end
+if (length(x)~=length(y)), error('x and y should have the same length'); end
+if (length(w)==1), w=w*ones(size(x)); end
 
-  % needs the original values, not the ranks
-
-  if (any(x < 0 | y < 0)) {
-    stop("x and/or y values have negative values")
-  }
-  if (length(x) != length(y)) {
-    stop("x and y should have the same length")
-  }
-  if (length(w) == 1) {
-    w <- rep(w, length(x))
-  }
-
-  posx = x > 0
-  posy = y > 0
-  pospos = posx & posy
-
-  p_11 = sum(w * pospos)/sum(w)
-  p_00 = sum(w * (!posx & !posy))/sum(w)
-  p_01 = sum(w * (!posx & posy))/sum(w)
-  p_10 = sum(w * (posx & !posy))/sum(w)
-  rho_11 = weightedSpearman(x = x[pospos], y = y[pospos], w = w[pospos])
-  rho_star = p_11 * (p_01 + p_11) * (p_10 + p_11) * rho_11 +
-    3*(p_00 * p_11 - p_10 * p_01)
-
-  if (is.na(rho_star)) {
-    print("Zero inflated Spearman correlation is undefined,
-          returning Spearman correlation")
-    rho = weightedSpearman(x = x, y = y, w = w)
-    return(rho)
-  }
-
-  return(rho_star)
-}
+    i=x>0;
+    j=y>0;
+    k=i&j;
+    
+    p_11=sum(w.*k)/sum(w);
+    p_00=sum(w.*(~i&~j))/sum(w);
+    p_01= sum(w.*(~i&j))/sum(w);
+    p_10= sum(w.*(i&~j))/sum(w);
+    rho_11= pkg.weightedSpearman(x(k),y(k),w(k));
+    rho_star= p_11*(p_01+p_11)*(p_10+p_11)*rho_11+...
+              3*(p_00*p_11-p_10*p_01);
+    if isnan(rho_star)
+        % warning("Zero inflated Spearman correlation is undefined, returning Spearman correlation");
+        rho_star=pkg.weightedSpearman(x,y,w);
+    end
+end
 

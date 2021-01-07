@@ -495,22 +495,27 @@ function EmbeddingAgain(~,~)
 end
 
 function DetermineCellTypeClusters(~,~)
-    answer = questdlg('Label cell type of clusters?');
-    if ~strcmp(answer,'Yes'), return; end    
+    answer = questdlg('Assign cell type identity to clusters?');
+    if ~strcmp(answer,'Yes'), return; end
+    
     answer = questdlg('Which species?','Select Species','Mouse','Human','Mouse');
 
-    if ~strcmp(answer,'Human')
+    if strcmp(answer,'Human')
         speciestag="human";
-    else
+    elseif strcmp(answer,'Mouse')
         speciestag="mouse";
+    else
+        return;
     end
     organtag="all";
     
     answer = questdlg('Which marker database?','Select Database','PanglaoDB','clustermole','PanglaoDB');
     if strcmpi(answer,'clustermole')
         databasetag="clustermole";
-    else
+    elseif strcmpi(answer,'panglaodb')
         databasetag="panglaodb";
+    else
+        return;
     end    
     
 for i=1:max(c) 
