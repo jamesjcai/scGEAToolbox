@@ -19,7 +19,7 @@ javaaddpath(pth3);
 
 data=transpose(sc_transform(X));
 
-if nargout>1
+if nargout>1 || plotit
     if verbose
         [s,~,c]=run_umap_main(data,'n_components',ndim);
     else
@@ -34,7 +34,7 @@ else
 end
 
 if plotit && ~isempty(s)
-    i_gscatter3(s,c);
+    gui.i_gscatter3(s,c);
     xlabel('UMAP 1')
     ylabel('UMAP 2')
 end

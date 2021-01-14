@@ -2,8 +2,8 @@ function s=sc_tsne(X,ndim,plotit,donorm,dolog1p,bygene,genelist)
 %tSNE embedding of cells
 
 %see also: RUN_PHATE, RUN_UMAP
-% s_phate=run_phate(X,3,true);
-% s_umap=run_umap(X,true);
+% s_phate=run.PHATE(X,3,true);
+% s_umap=run.UMAP(X,3);
 
 if nargin<2, ndim=3; end
 if nargin<3, plotit=false; end
