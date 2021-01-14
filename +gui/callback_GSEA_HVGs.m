@@ -12,9 +12,9 @@ function callback_GSEA_HVGs(~,~,X,g)
         return;
     end 
     
-    fw=pkg.gui_waitbar;
+    fw=gui.gui_waitbar;
     tr=run_fgsea(t.genes);
-    pkg.gui_waitbar(fw);
+    gui.gui_waitbar(fw);
     msgfig2=export2wsdlg({'Save GSEA table to variable named:'},...
         {'Tr'},{tr});
     % uiwait(msgfig)
@@ -25,9 +25,9 @@ function callback_GSEA_HVGs(~,~,X,g)
         return;
     end
     
-    fw=pkg.gui_waitbar;
+    fw=gui.gui_waitbar;
     e_fgseanet(tr);
-    pkg.gui_waitbar(fw);
+    gui.gui_waitbar(fw);
     
             a=helpdlg({'Done!'});
              uiwait(a)

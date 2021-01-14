@@ -2,10 +2,11 @@ function i_markergeneshtml(sce,markerlist,numfig,axbx,nametag)
 if nargin<5, nametag=''; end
 if nargin<4, axbx=[]; end
 if nargin<3, numfig=20; end
+markerlist=markerlist{1};
 
 numfig=min([numfig length(markerlist)]);
 dirtxt=tempdir;
-dirtxt='./';
+% dirtxt='./';
 
 a=autumn();
 a(1,:)=[.8 .8 .8];
@@ -24,7 +25,7 @@ htmlstr="";
         targeetg=markerlist(k);
         h=figure('Visible','off');
 %         sc_scattermarker(sce.X,sce.g,sce.s,...
-%             markerlist(k),3,5,false);        
+%             markerlist(k),3,5,false); 
         c=log2(1+sce.X(sce.g==targeetg,:));
         scatter3(sce.s(:,1),sce.s(:,2),sce.s(:,3),...
                 5,c,'filled');

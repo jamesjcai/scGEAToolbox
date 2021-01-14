@@ -697,9 +697,9 @@ function Brush4Markers(~,~)
     fw=gui.gui_waitbar;
     switch methodtag
         case 1
-            [markerlist,A]=sc_pickmarkers(sce.X,sce.g,1+ptsSelected,2);
+            [markerlist]=sc_pickmarkers(sce.X,sce.g,1+ptsSelected,2);
         case 2
-            [markerlist,A]=sc_pickmarkers(sce.X,sce.g,c,unique(c(ptsSelected)));
+            [markerlist]=sc_pickmarkers(sce.X,sce.g,c,unique(c(ptsSelected)));
     end
     gui.gui_waitbar(fw);
     % assignin('base','A',A);
