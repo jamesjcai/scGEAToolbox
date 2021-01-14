@@ -4,6 +4,23 @@ Case Studies and Tutorials
 --------------------------
 sc_scatter_sce was developed to visualize high-dimensional biological data (e.g. genome-wide expression data), but it can also generally be applied to any high-dimensional data. Below are links to several case studies and examples using sc_scatter_sce to explore high-dimensional data. All examples are below are publically available through GitHub.
 
+Process 10x Genomics raw data
+=============================
+In the 10x Genomics folder, there are three files, namely, matrix.mtx, features.tsv and barcodes.tsv. Here is the best practice of raw data processing.
+
+.. code-block:: matlab
+    :linenos:
+
+[X,genelist,barcodelist]=sc_readmtxfile('matrix.mtx','features.tsv','barcodes.tsv',2);
+[X,genelist]=sc_qcfilter(X,genelist);
+[X,genelist]=sc_selectg(X,genelist,1,0.05);
+[Xnorm]=sc_norm(X,'type','deseq');
+[~,Xhvg]=sc_hvg(Xnorm,genelist,false);
+tic
+s_tsne=sc_tsne(Xhvg(1:2000,:),3,false,false);
+toc
+sc_scatter(X,genelist,s_tsne)
+
 Label cell type interactively
 =============================
 .. raw:: html
