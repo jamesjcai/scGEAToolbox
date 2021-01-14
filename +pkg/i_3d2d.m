@@ -1,5 +1,5 @@
 function [s2]=i_3d2d(s3,ax,bx)
-
+s3=s3(:,1:3);
 A = viewmtx(ax,bx);
 x4d = [s3,ones(size(s3,1),1)]';
 x2d = A*x4d;
