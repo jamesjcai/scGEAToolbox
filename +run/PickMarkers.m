@@ -19,6 +19,9 @@ for i = 1:numC
     % gene_mean(:,i) = mean(X(:,c==i),2);
     cluster_order = [cluster_order;find(c==i)];
 end
+if issparse(X)
+    X=full(X);
+end
 gene_mean=grpstats(X',c,@mean)';
 assert(isequal(grpstats(X',c,@mean)',gene_mean))
 

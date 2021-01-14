@@ -1,4 +1,5 @@
 function callback_MarkerGeneHeatmap(src,~)
+
     answer = questdlg('Generate marker gene heatmap?');
     if ~strcmp(answer,'Yes'), return; end  
 
@@ -37,7 +38,7 @@ function callback_MarkerGeneHeatmap(src,~)
     
     
 
-    fw=pkg.gui_waitbar;
+    fw=gui.gui_waitbar;
     M=cell(numel(cL),2);
     [markerlist]=sc_pickmarkers(sce.X,sce.g,c,10);
     for k=1:numel(cL)        
@@ -45,7 +46,7 @@ function callback_MarkerGeneHeatmap(src,~)
         M{k,1}=cLk;
         M{k,2}=markerlist{k};
     end
-    pkg.gui_waitbar(fw);    
+    gui.gui_waitbar(fw);    
     
 % ==============    
     
