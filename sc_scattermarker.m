@@ -32,6 +32,9 @@ elseif isStringScalar(targetg) || ischar(targetg)
         end
 %        c=log2(1+X(genelist==targetg,:));
         c=X(genelist==targetg,:);
+        if issparse(c)
+            c=full(c);
+        end
         switch methodid
             case 1
                 i_stemscatter(x,y,c);                
