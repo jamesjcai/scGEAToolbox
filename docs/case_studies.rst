@@ -8,7 +8,7 @@ Process 10x Genomics raw data
 =============================
 In the 10x Genomics folder, there are three files, namely, matrix.mtx, features.tsv and barcodes.tsv. Here is the best practice of raw data processing.
 
-.. code-block:: matlab
+.. code-block::
     :linenos:
 
   [X,genelist,barcodelist]=sc_readmtxfile('matrix.mtx','features.tsv','barcodes.tsv',2);
