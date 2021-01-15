@@ -7,7 +7,7 @@ Qick installation
 -----------------
 Run the following code in `MATLAB`:
 
-.. codeblock::
+.. code-block::
 
   tic
   disp('Installing scGEAToolbox...')
@@ -21,7 +21,7 @@ Run the following code in `MATLAB`:
 Run DEMO_GETTING_STARTED
 ------------------------
 
-.. codeblock::
+.. code-block::
 
  demo_Getting_Started
 
@@ -30,12 +30,11 @@ Using SC_SCATTER
 ----------------
 For a quick exploratry data analysis using `SC_SCATTER` function
 
-.. codeblock::
+.. code-block::
 
   cdgea;
   load example_data\testXgs.mat
   sc_scatter(X,s,g)
 
 If everything goes right, you will see the figure like this:
-
 
