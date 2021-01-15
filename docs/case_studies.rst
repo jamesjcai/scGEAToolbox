@@ -18,6 +18,11 @@ In the 10x Genomics folder, there are three files, namely, matrix.mtx, features.
   [s_tsne]=sc_tsne(Xhvg(1:2000,:),3,false,false);
   sc_scatter(X,genelist,s_tsne)
 
+Overview of `SC_SCATTER`
+-----------------------
+
+|Overview of sc_scatter|
+
 Label cell type interactively
 -----------------------------
 .. raw:: html
@@ -29,4 +34,8 @@ Label cell type interactively
 
 We used :ref:`clustergrammer2`, the plotting library `bqplot`_, the Jupyter dashboard library `voila`_, and the Jupyter notebook hosting service `Binder`_ to build an interactive data exploration dashboard for `Visium`_ data from the mouse brain from `10X Genomics`_ (try dashboard: `Visium-Clustergrammer2 Dashboard`_, code: `https://github.com/ismms-himc/visium-clustergrammer2`_). This dashboard generates linked views of spatial tissue data and high-dimensional gene expression data - see GitHub repo `https://github.com/ismms-himc/visium-clustergrammer2`_ for more information.
 
+
+.. |Overview of sc_scatter| image:: https://pbs.twimg.com/media/ErAPaabW4AEwAvf?format=png&name=large
+   :target: https://youtu.be/6IYl35dTwGw
+   
 
