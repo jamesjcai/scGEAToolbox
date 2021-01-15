@@ -31,9 +31,9 @@ author = 'James Cai'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinx_rtd_theme', 'sphinxcontrib.matlab', 'sphinx.ext.autodoc']
+extensions = ['sphinx_rtd_theme']
 
-# https://github.com/sphinx-contrib/matlabdomain
+# https://github.com/sphinx-contrib/matlabdomain  'sphinxcontrib.matlab', 'sphinx.ext.autodoc'
 
 
 # Add any paths that contain templates here, relative to this directory.
