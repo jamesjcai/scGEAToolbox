@@ -192,11 +192,20 @@ pt4mrkheat.ClickedCallback = @callback_MarkerGeneHeatmap;
 
 ptpseudotime = uipushtool(defaultToolbar,'Separator','on');
 [img,map] = imread(fullfile(mfolder,...
-            'resources','plotpicker-priceandvol.gif'));
+            'resources','plotpicker-candle.gif'));
 ptImage = ind2rgb(img,map);
 ptpseudotime.CData = ptImage;
 ptpseudotime.Tooltip = 'Compare Differentiation Potency';
 ptpseudotime.ClickedCallback = @ComparePotency;
+
+ptpseudotime = uipushtool(defaultToolbar,'Separator','off');
+[img,map] = imread(fullfile(mfolder,...
+            'resources','plotpicker-priceandvol.gif'));
+ptImage = ind2rgb(img,map);
+ptpseudotime.CData = ptImage;
+ptpseudotime.Tooltip = 'Compare Gene Expression between Classes';
+ptpseudotime.ClickedCallback = @CompareGeneExpressionBtwClasses;
+
 
 ptpseudotime = uipushtool(defaultToolbar,'Separator','on');
 [img,map] = imread(fullfile(mfolder,...
@@ -352,6 +361,34 @@ function ComparePotency(~,~)
         ylim(h1,[min(aabb(1),ccdd(1)) max(aabb(2),ccdd(2))]);
         ylim(h2,[min(aabb(1),ccdd(1)) max(aabb(2),ccdd(2))]);
     end
+    end
+end
+
+function CompareGeneExpressionBtwClasses(~,~)
+    gsorted=sort(sce.g);
+    [indx,tf] = listdlg('PromptString',{'Select a gene',...
+    '',''},'SelectionMode','single','ListString',gsorted);
+    if tf==1
+        idx=sce.g==gsorted(indx);
+        answer = questdlg('Which category?','',...
+            'Cluster ID','Cell Type','Cell Cycle','Cluster ID');
+        if strcmp(answer,'Cluster ID')
+            thisc=sce.c_cluster_id;
+        elseif strcmp(answer,'Cell Type')
+            thisc=sce.c_cell_type_tx;
+        elseif strcmp(answer,'Cell Cycle')
+            thisc=sce.c_cell_cycle_tx;
+        else
+            return;
+        end
+        if isempty(thisc)
+            errordlg('Undefined');
+        else
+            Xt=sc_transform(sce.X);        
+            figure;
+            pkg.violinplot(Xt(idx,:),thisc);
+            ylabel(sce.g(idx));
+        end
     end
 end
 
