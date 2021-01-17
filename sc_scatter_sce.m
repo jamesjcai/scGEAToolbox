@@ -196,15 +196,7 @@ ptpseudotime = uipushtool(defaultToolbar,'Separator','on');
 ptImage = ind2rgb(img,map);
 ptpseudotime.CData = ptImage;
 ptpseudotime.Tooltip = 'Compare Differentiation Potency';
-ptpseudotime.ClickedCallback = @ComparePotency;
-
-ptpseudotime = uipushtool(defaultToolbar,'Separator','off');
-[img,map] = imread(fullfile(mfolder,...
-            'resources','plotpicker-priceandvol.gif'));
-ptImage = ind2rgb(img,map);
-ptpseudotime.CData = ptImage;
-ptpseudotime.Tooltip = 'Compare Gene Expression between Classes';
-ptpseudotime.ClickedCallback = @CompareGeneExpressionBtwClasses;
+ptpseudotime.ClickedCallback = @gui.callback_ComparePotency;
 
 
 ptpseudotime = uipushtool(defaultToolbar,'Separator','on');
@@ -224,8 +216,15 @@ ptpseudotime.CData = ptImage;
 ptpseudotime.Tooltip = 'Plot pseudotime trajectory';
 ptpseudotime.ClickedCallback = @DrawTrajectory;
 
+ptpseudotime = uipushtool(defaultToolbar,'Separator','on');
+[img,map] = imread(fullfile(mfolder,...
+            'resources','plotpicker-priceandvol.gif'));
+ptImage = ind2rgb(img,map);
+ptpseudotime.CData = ptImage;
+ptpseudotime.Tooltip = 'Compare Gene Expression between Classes';
+ptpseudotime.ClickedCallback = @gui.callback_CompareGeneBtwCls;
 
-pt4 = uipushtool(defaultToolbar,'Separator','on');
+pt4 = uipushtool(defaultToolbar,'Separator','off');
 [img,map] = imread(fullfile(mfolder,...
             'resources','plotpicker-boxplot.gif'));
 ptImage = ind2rgb(img,map);
@@ -338,60 +337,6 @@ function RefreshAll(~,~)
     %UitoolbarHandle.Visible='on';    
 end
 
-function ComparePotency(~,~)
-    if isempty(sce.list_cell_attributes)
-        warndlg('No data sce.list_cell_attributes')
-        return;
-    end
-    if ~isempty(sce.list_cell_attributes{2}) && ~isempty(sce.c_cell_type_tx)
-        x=sce.list_cell_attributes{2};
-        y=sce.c_cell_type_tx;
-    figure;
-    pkg.i_violinplot_groupordered(x,y);
-    if ~isempty(sce.c_batch_id)
-        figure;
-        h1=subplot(1,2,1);
-        i=sce.c_batch_id==1;
-        pkg.i_violinplot_groupordered(x(i),y(i));
-        [aabb]=ylim();
-        h2=subplot(1,2,2);
-        i=sce.c_batch_id==2;
-        pkg.i_violinplot_groupordered(x(i),y(i));
-        [ccdd]=ylim();
-        ylim(h1,[min(aabb(1),ccdd(1)) max(aabb(2),ccdd(2))]);
-        ylim(h2,[min(aabb(1),ccdd(1)) max(aabb(2),ccdd(2))]);
-    end
-    end
-end
-
-function CompareGeneExpressionBtwClasses(~,~)
-    gsorted=sort(sce.g);
-    [indx,tf] = listdlg('PromptString',{'Select a gene',...
-    '',''},'SelectionMode','single','ListString',gsorted);
-    if tf==1
-        idx=sce.g==gsorted(indx);
-        answer = questdlg('Which category?','',...
-            'Cluster ID','Cell Type','Cell Cycle','Cluster ID');
-        if strcmp(answer,'Cluster ID')
-            thisc=sce.c_cluster_id;
-        elseif strcmp(answer,'Cell Type')
-            thisc=sce.c_cell_type_tx;
-        elseif strcmp(answer,'Cell Cycle')
-            thisc=sce.c_cell_cycle_tx;
-        else
-            return;
-        end
-        if isempty(thisc)
-            errordlg('Undefined');
-        else
-            Xt=sc_transform(sce.X);        
-            figure;
-            pkg.violinplot(Xt(idx,:),thisc);
-            ylabel(sce.g(idx));
-        end
-    end
-end
-
 function Switch2D3D(~,~)
     %oldcmp=colormap();
     if isempty(h.ZData)   % current 2 D
@@ -439,8 +384,7 @@ function RenameCellType(~,~)
             [c,cL]=grp2idx(sce.c_cell_type_tx);
             i_labelclusters(false);
         end
-    end
-    
+    end    
     guidata(FigureHandle,sce);
 end
 

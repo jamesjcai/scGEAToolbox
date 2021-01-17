@@ -34,7 +34,11 @@ For a quick exploratry data analysis using `SC_SCATTER` function
 
   cdgea;
   load example_data\testXgs.mat
-  sc_scatter(X,s,g)
+  sc_scatter(X,g,s)
 
 If everything goes right, you will see the figure like this:
+|gui|
+
+.. |gui| image:: https://raw.githubusercontent.com/jamesjcai/scGEAToolbox/master/resources/sc_scatter.png
+   :target: https://twitter.com/hashtag/scGEAToolbox?src=hashtag_click
 
