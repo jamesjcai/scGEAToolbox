@@ -42,7 +42,7 @@ function callback_CompareGeneBtwCls(src,~)
         if isempty(thisc)
             errordlg('Undefined');
         else
-            Xt=sc_transform(sce.X);        
+            [Xt]=gui.gui_transformx(X);      
             f = figure('visible','off');
             y=Xt(idx,:);
             subplot(1,2,1)
