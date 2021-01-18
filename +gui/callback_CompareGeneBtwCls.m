@@ -27,13 +27,13 @@ function callback_CompareGeneBtwCls(src,~)
     '',''},'SelectionMode','single','ListString',listitems);
     if tf2==1        
         switch indx2
-            case 1
+            case 1 % cluster id
                 thisc=sce.c_cluster_id;
-            case 2
+            case 2 % batch id
                 thisc=sce.c_batch_id;
-            case 3
+            case 3 % cell type
                 thisc=sce.c_cell_type_tx;                
-            case 4
+            case 4 % cell cycle
                 thisc=sce.c_cell_cycle_tx;
         end
     else
