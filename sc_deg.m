@@ -26,6 +26,7 @@ for k=1:ng
     switch methodid
         case 1
             % “wilcox” : Wilcoxon rank sum test (default)
+            % also called Mann–Whitney U test
             p_val(k)=ranksum(x,y);
         case 2
             [~,p]=ttest2(x,y);
