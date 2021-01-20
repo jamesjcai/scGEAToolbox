@@ -3,9 +3,17 @@ function callback_PickPlotMarker(src,~)
     h=findobj(ah.Children,'type','Scatter');
     if h.Marker=='.'
         h.Marker='o';
-        h.SizeData=10;
+        if rand>0.5
+            h.SizeData=20;
+        else
+            h.SizeData=10;
+        end
     else
         h.Marker='.';
-        h.SizeData=20;
+        if rand>0.5
+            h.SizeData=20;
+        else
+            h.SizeData=10;
+        end
     end
 end

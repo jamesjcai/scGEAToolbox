@@ -42,9 +42,9 @@ function callback_CompareGeneBtwCls(src,~)
         if isempty(thisc)
             errordlg('Undefined');
         else
-            [Xt]=gui.gui_transformx(X);      
+            [Xt]=gui.gui_transformx(sce.X);      
             f = figure('visible','off');
-            y=Xt(idx,:);
+            y=full(Xt(idx,:));
             subplot(1,2,1)
             pkg.violinplot(y,thisc);
             ylabel(sce.g(idx));

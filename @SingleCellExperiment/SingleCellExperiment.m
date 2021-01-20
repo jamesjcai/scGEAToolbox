@@ -61,8 +61,8 @@ classdef SingleCellExperiment
     end
     
     obj = estimatepotency(obj)
-
     obj = estimatecellcycle(obj,forced)
+    obj = embedcells(obj,methodid,forced)
     
     function obj = removecells(obj,i)
             obj.X(:,i)=[];
