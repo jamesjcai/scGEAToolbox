@@ -17,7 +17,11 @@ disp('Install scGEAToolbox...')
 unzip('https://github.com/jamesjcai/scGEAToolbox/archive/master.zip');
 addpath('./scGEAToolbox-master');
 ```
+## Read Documentation
 
+[scGEAToolbox Documentation](https://scgeatoolbox.readthedocs.io/)
+
+<!---
 ## To get started immediately, check out demo scripts:
 
 * [Demo script 1](http://htmlpreview.github.io/?https://github.com/jamesjcai/scGEAToolbox/blob/master/demo_script1.html) Filter, Normalization and Batch Correction of Data
@@ -41,6 +45,7 @@ After installing the toolbox, the main GUI can be run by calling `scGEApp`.
 ## Interactive cell type annotation with scGEAToolbox (sc_celltype explorer)
 
 [![scGEAToolbox sc_celltypeexplorer - interactive cell type annotation](https://img.youtube.com/vi/HRQiXX3Jwpg/0.jpg)](https://youtu.be/HRQiXX3Jwpg)
+-->
 
 ## Help
 
