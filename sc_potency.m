@@ -14,12 +14,12 @@ pw1=fileparts(mfilename('fullpath'));
 % pth=fullfile(pw1,'resources/STRING');
 dbfile1=fullfile(pw1,'resources','STRING','stringdb_human.mat');
 dbfile2=fullfile(pw1,'resources','STRING','stringdb_human.mat');
-if ~isexist(dbfile1,'file')
+if ~exist(dbfile1,'file')
     disp('Downloading ...... stringdb_human.mat')
     url = 'https://github.com/jamesjcai/jamesjcai.github.io/raw/master/data/stringdb_human.mat';
     outfilename = websave(dbfile1,url);
 end
-if ~isexist(dbfile2,'file')
+if ~exist(dbfile2,'file')
     disp('Downloading ...... stringdb_mouse.mat')
     url = 'https://github.com/jamesjcai/jamesjcai.github.io/raw/master/data/stringdb_mouse.mat';    
     outfilename = websave(dbfile2,url);    
