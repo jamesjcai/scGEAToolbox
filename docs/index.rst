@@ -33,3 +33,4 @@ of scGEAToolbox <https://scgeatoolbox.readthedocs.io/>`__, with posts about appl
 
    getting_started
    case_studies
+   license
