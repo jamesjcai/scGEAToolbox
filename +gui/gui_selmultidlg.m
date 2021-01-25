@@ -31,7 +31,7 @@ h_list2 = uicontrol('style','list','max',length(genelist),...
         if ~isempty(h_list.String)
         h_list2.String=...
             unique([h_list2.String; h_list.String(h_list.Value)]);        
-        h_list.String=setxor(h_list2.String,genelist);
+        h_list.String=setxor(genelist,h_list2.String,'stable');
         
             set(h_list,'Value',1);
         end
@@ -44,6 +44,6 @@ h_list2 = uicontrol('style','list','max',length(genelist),...
             h_list2.String(h_list2.Value)=[];        
             set(h_list2,'Value',1);
         end        
-        h_list.String=setxor(h_list2.String,genelist);
+        h_list.String=setxor(genelist,h_list2.String,'stable');
     end
 end
