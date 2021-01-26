@@ -121,7 +121,7 @@ title(sprintf('%s\n(%s/%s = %.3f%% nonzero)',...
                 ptImage = ind2rgb(img,map);
                 pt5pickcolr.CData = ptImage;
                 pt5pickcolr.Tooltip = 'Switch color maps';
-                pt5pickcolr.ClickedCallback = @pkg.callback_PickColormap;
+                pt5pickcolr.ClickedCallback = @gui.callback_PickColormap;
 
                 pt = uipushtool(tb,'Separator','off');
                 [img,map] = imread(fullfile(matlabroot,...
