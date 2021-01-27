@@ -24,13 +24,21 @@ switch answer
             %movegui(f,'center');
         end
     case 'Multiple'
-        %[idx]=gui.gui_selmultidlg;
-        %if isempty(idx)
-        %    helpdlg('No gene selected.');
-        %else
-            %
-        %end
-        helpdlg('Function is under development.');
+        [idx]=gui.gui_selmultidlg(gsorted);
+        if isempty(idx)
+            helpdlg('No gene selected.');
+        else
+        [~,i]=ismember(gsorted(idx),sce.g);
+        g=sprintf("%s+",gsorted(idx));
+        x=sum(sce.X(i,:),1);
+            f = figure('visible','off');
+            [h1]=sc_scattermarker(x,g,sce.s,g,5);
+            title(g);
+            view(h1,axx,bxx);
+            movegui(f,'center');
+            set(f,'visible','on');                  
+        end
+        % helpdlg('Function is under development.');
     case 'Cancel'
         helpdlg('Action cancelled.');
 end

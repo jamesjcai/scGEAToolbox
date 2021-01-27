@@ -89,9 +89,9 @@ for k=1:numel(cL)
     z=[];
     for kk=1:numel(cL)
         z=[z mean(y(:,idcl==kk),2)];
-    end    
-    z1=grpstats(y.',idcl,@mean)';
-    assert(isequal(z,z1));
+    end
+    %z1=grpstats(y.',idcl,@mean)';
+    %assert(isequal(z,z1));
     Z=[Z; z];
 end
   

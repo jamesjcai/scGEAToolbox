@@ -25,6 +25,8 @@ h_list = uicontrol('style','list','max',length(genelist),...
 h_list2 = uicontrol('style','list','max',length(genelist),...
    'min',1,'Position',[360 20 170 360],...
    'string',[]);
+drawnow();
+uiwait();  % add this to the end
 
     function plotButtonPushed(src,event,genelist)
         if ~isempty(h_list.String)
@@ -48,6 +50,7 @@ h_list2 = uicontrol('style','list','max',length(genelist),...
 
     function doneButtonPushed(src,event,genelist)
         [~,idx]=ismember(h_list2.String,genelist);
-        close(f);
+        uiresume();
+        closereq();
     end
 end
