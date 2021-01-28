@@ -10,14 +10,22 @@ if nargin<3, plotit=false; end
 if nargin<2, ndim=2; end
 
 pw1=fileparts(mfilename('fullpath'));
-pth1=fullfile(pw1,'thirdparty/umapFileExchange/umap');
-pth2=fullfile(pw1,'thirdparty/umapFileExchange/util');
-pth3=fullfile(pw1,'thirdparty/umapFileExchange/umap/umap.jar');
+pth1=fullfile(pw1,'thirdparty','umapFileExchange','umap');
+pth2=fullfile(pw1,'thirdparty','umapFileExchange','util');
+pth3=fullfile(pw1,'thirdparty','umapFileExchange','umap','umap.jar');
 addpath(pth1);
 addpath(pth2);
 javaaddpath(pth3);
 
+pth=fullfile(pw1,'+run','thirdparty','PHATE');
+addpath(pth);
+
 data=transpose(sc_transform(X));
+
+ncells=size(data,1);
+if ncells>10000
+	data = svdpca(data, 100, 'random');
+end
 
 if nargout>1 || plotit
     if verbose
@@ -38,3 +46,5 @@ if plotit && ~isempty(s)
     xlabel('UMAP 1')
     ylabel('UMAP 2')
 end
+end
+
