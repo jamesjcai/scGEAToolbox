@@ -39,6 +39,17 @@ For a quick exploratry data analysis using `SC_SCATTER` function
 If everything goes right, you will see the figure like this:
 |gui|
 
+Making SCE
+----------
+`scGEAToolbox` defines a Single-cell Experiment (SCE) class in order to store scRNA-seq data and variables. To make an SCE class, you need two variables: X and g, which are for gene expression matrix and gene list, respectively. 
+
+.. code-block::
+
+  cdgea;
+  load example_data\testXgs.mat
+  sce=SingleCellExperiment(X,g);
+  sc_scatter_sce(sce)
+  
 .. |gui| image:: https://raw.githubusercontent.com/jamesjcai/scGEAToolbox/master/resources/sc_scatter.png
    :target: https://twitter.com/hashtag/scGEAToolbox?src=hashtag_click
 
