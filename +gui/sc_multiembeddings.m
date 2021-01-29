@@ -1,15 +1,32 @@
-function sc_multiembeddings(s1,s2)
+function [f0]=sc_multiembeddings(s1,s2,ttl1,ttl2)
+if nargin<4, ttl2=""; end
+if nargin<3, ttl1=""; end
 if nargin<1
     pw1=fileparts(mfilename('fullpath'));
     load(fullfile(pw1,'doubleS.mat'),'s1','s2');
+    ttl1='tSNE';
+    ttl2='UMAP';
 end
 f0=figure('Visible',false);
 g1=subplot(1,2,1);
-h1=scatter3(s1(:,1),s1(:,2),s1(:,3),5);
-title('tSNE')
+if size(s1,2)==2
+    h1=scatter(s1(:,1),s1(:,2));
+else
+    h1=scatter3(s1(:,1),s1(:,2),s1(:,3),5);
+end
+if ~isempty(ttl1)
+    title(ttl1)
+end
+
 g2=subplot(1,2,2);
-h2=scatter3(s2(:,1),s2(:,2),s2(:,3),5);
-title('UMAP')
+if size(s1,2)==2
+    h2=scatter(s2(:,1),s2(:,2));
+else
+    h2=scatter3(s2(:,1),s2(:,2),s2(:,3),5);
+end
+if ~isempty(ttl2)
+    title(ttl2)
+end
 % g3=subplot(2,2,3);
 % h3=scatter3(s2(:,1),s2(:,2),s2(:,3),5);
 
