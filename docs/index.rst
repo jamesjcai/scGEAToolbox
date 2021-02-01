@@ -30,7 +30,7 @@ of scGEAToolbox <https://scgeatoolbox.readthedocs.io/>`__, with posts about appl
 
 .. toctree::
    :maxdepth: 2
-   :caption: Main Document
+   :caption: Main Documents
 
    getting_started
    case_studies
