@@ -37,7 +37,7 @@ of scGEAToolbox <https://scgeatoolbox.readthedocs.io/>`__, with posts about appl
 
 .. toctree::
    :maxdepth: 2
-   :caption: Appendix
+   :caption: Appendices
    
    publications
    license
