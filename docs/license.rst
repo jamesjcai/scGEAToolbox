@@ -1,8 +1,8 @@
 .. _license:
 
-=================
-License Agreement
-=================
+=====================
+A2: License Agreement
+=====================
 
 MIT License
 
