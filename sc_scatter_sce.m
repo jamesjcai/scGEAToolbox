@@ -196,7 +196,7 @@ ptpseudotime = uipushtool(defaultToolbar,'Separator','on');
 ptImage = ind2rgb(img,map);
 ptpseudotime.CData = ptImage;
 ptpseudotime.Tooltip = 'Compare Differentiation Potency';
-ptpseudotime.ClickedCallback = @gui.callback_ComparePotency;
+ptpseudotime.ClickedCallback = @callback_ComparePotency;
 
 
 ptpseudotime = uipushtool(defaultToolbar,'Separator','on');

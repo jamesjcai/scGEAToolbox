@@ -5,6 +5,8 @@ function [h1,h2]=sc_scattermarker(X,genelist,s,targetg,methodid,sz,showcam)
 % s=sc_tsne(X,3);
 % g=["AGER","SFTPC","SCGB3A2","TPPP3"];
 % sc_scattermarker(X,genelist,s,genelist(1));
+
+import gui.*
 h1=[]; h2=[];
 if nargin<4, error('sc_scattermarker(X,genelist,s,g)'); end
 if isvector(s)||isscalar(s), error('S should be a matrix.'); end
@@ -121,7 +123,7 @@ title(sprintf('%s\n(%s/%s = %.3f%% nonzero)',...
                 ptImage = ind2rgb(img,map);
                 pt5pickcolr.CData = ptImage;
                 pt5pickcolr.Tooltip = 'Switch color maps';
-                pt5pickcolr.ClickedCallback = @gui.callback_PickColormap;
+                pt5pickcolr.ClickedCallback = @callback_PickColormap;
 
                 pt = uipushtool(tb,'Separator','off');
                 [img,map] = imread(fullfile(matlabroot,...

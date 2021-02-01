@@ -23,7 +23,7 @@ switch p.Results.type
         fprintf('The NMI value is %f\n', score);
     case 'ari'
         % ----
-        pth=fullfile(pw1,'thirdparty/SinNLRR');
+        pth=fullfile(pw1,'+run','thirdparty','SinNLRR');
         addpath(pth);
         [AR,RI,MI,HI]=Cal_ARI(true_labels, cluster_labels);
         score=AR;

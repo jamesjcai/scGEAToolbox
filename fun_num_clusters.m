@@ -12,19 +12,19 @@ parse(p,X,varargin{:})
 pw1=fileparts(which(mfilename));
 switch p.Results.type
     case 'simlr'        
-        pth=fullfile(pw1,'thirdparty/SIMLR');
+        pth=fullfile(pw1,'+run','thirdparty','SIMLR');
         addpath(pth);
-        pth=fullfile(pw1,'thirdparty/SIMLR/src');
+        pth=fullfile(pw1,'+run','thirdparty','SIMLR','src');
         addpath(pth);
         [K1, K2] = Estimate_Number_of_Clusters_SIMLR(X',2:10);
         [~,i]=min(K2);
         optimk=i+1;
     case 'soptsc'        
-        pth=fullfile(pw1,'thirdparty/SoptSC');
+        pth=fullfile(pw1,'+run','thirdparty','SoptSC');
         addpath(pth);
-        pth=fullfile(pw1,'thirdparty/SoptSC/NNDSVD');
+        pth=fullfile(pw1,'+run','thirdparty','SoptSC','NNDSVD');
         addpath(pth);
-        pth=fullfile(pw1,'thirdparty/SoptSC/symnmf2');
+        pth=fullfile(pw1,'+run','thirdparty','SoptSC','symnmf2');
         addpath(pth);
         
         realdata = X;
@@ -70,7 +70,7 @@ switch p.Results.type
         % see https://en.wikipedia.org/wiki/Laplacian_matrix#Symmetric_normalized_Laplacian_2
 
         [V,D]=eig(L);
-        [d,ind] = sort(diag(D));
+        [~,ind] = sort(diag(D));
         Ds = D(ind,ind);
         Vs = V(:,ind);
 
