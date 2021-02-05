@@ -6,8 +6,9 @@ import pkg.violinplot
 % end
 % [~,cL]=grp2idx(c);
 % [~,i]=sort(grpstats(d,c,@median),'descend');
+if issparse(d), d=full(d); end
 violinplot(d,c,...
-    'ShowData',false,... % 'ViolinColor',[1 1 1],...
+    'ShowData',false,'ViolinColor',[1 1 1],...
     'EdgeColor',[0 0 0]);
 %xtickangle(-45);
 box on

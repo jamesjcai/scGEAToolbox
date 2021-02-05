@@ -1,6 +1,9 @@
 function callback_PickPlotMarker(src,~)    
     ah=findobj(src.Parent.Parent,'type','Axes');
-    h=findobj(ah.Children,'type','Scatter');
+    ha=findobj(ah.Children,'type','Scatter');
+    
+    for k=1:length(ha)
+    h=ha(k);
     if h.Marker=='.'
         h.Marker='o';
         if rand>0.5
@@ -15,5 +18,6 @@ function callback_PickPlotMarker(src,~)
         else
             h.SizeData=10;
         end
+    end
     end
 end

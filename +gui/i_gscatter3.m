@@ -21,6 +21,13 @@ switch methodid
            % box on
         elseif size(s,2)>=3
            h=scatter3(x,y,z,10,c);
+%            i=c==1;
+%            h=scatter3(x(i),y(i),z(i),10);
+%            hold on
+%            for k=2:max(c)
+%                i=c==k;
+%                scatter3(x(i),y(i),z(i),10);
+%            end
         end
     case 2
         if size(s,2)==2

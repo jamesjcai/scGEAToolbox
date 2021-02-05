@@ -43,11 +43,16 @@ if issparse(data)
 end
 
 ncells=size(data,1);
-if ncells>10000
-	data = svdpca(data, 100, 'random');
-end
 
+%if ncells>10000
+%	data = svdpca(data, 100, 'random');
+%end
+
+if ncells>5000
+s=tsne(data,'NumDimensions',ndim,'Algorithm','barneshut','NumPCAComponents',100);
+else
 s=tsne(data,'NumDimensions',ndim);
+end
 
 %%
 if plotit

@@ -14,7 +14,8 @@ lh4=yline(yr(2),'r-');
 idx=true(length(x),1);
 guidata(fh,[x y]);
 
-
+set(fh,'WindowButtonDownFcn', @mouseDownCallback);
+ 
 
 function mouseDownCallback(figHandle,varargin)
 
