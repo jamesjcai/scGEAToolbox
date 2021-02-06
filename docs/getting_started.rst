@@ -3,6 +3,8 @@
 Getting Started with `SC_SCATTER`
 ================================
 
+This section shows how to quickly install `scGEAToolbox` and run `SC_SCATTER`--an interactive, explorary analysis tool for scRNA-seq data.
+
 Qick installation
 -----------------
 Run the following code in `MATLAB`:
