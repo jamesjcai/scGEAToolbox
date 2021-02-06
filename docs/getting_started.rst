@@ -1,7 +1,7 @@
 .. _getting_started:
 
-Getting Started
-===============
+Getting Started with `SC_SCATTER`
+================================
 
 Qick installation
 -----------------
@@ -26,8 +26,8 @@ Run DEMO_GETTING_STARTED
  demo_Getting_Started
 
 
-Using SC_SCATTER
-----------------
+Using `SC_SCATTER`
+------------------
 For a quick exploratry data analysis using `SC_SCATTER` function
 
 .. code-block::
