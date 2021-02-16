@@ -1,0 +1,13 @@
+function obj = makeattributestable(obj,forced)
+    if nargin<2, forced=false; end
+    if isempty(obj.table_attributes) || forced
+        obj.table_attributes=table(obj.c_cell_id,...
+            obj.c_cluster_id,...
+            obj.c_cell_type_tx,...
+            obj.c_batch_id,...
+            obj.c_cell_cycle_tx);
+        disp('table_attributes made.');
+    else
+        disp('table_attributes existed.');
+    end
+end
