@@ -230,7 +230,7 @@ pt4 = uipushtool(defaultToolbar,'Separator','off');
 ptImage = ind2rgb(img,map);
 pt4.CData = ptImage;
 pt4.Tooltip = 'Compare 2 groups (DE analysis)';
-pt4.ClickedCallback = @DEGene2Groups;
+pt4.ClickedCallback = @callback_DEGene2Groups;
 
 ptpseudotime = uipushtool(defaultToolbar,...
                'Separator','off');
@@ -388,52 +388,52 @@ function RenameCellType(~,~)
     guidata(FigureHandle,sce);
 end
 
-function DEGene2Groups(~,~)
-    answer = questdlg('Compare two batch groups (DE gene analysis)?');
-    if ~strcmp(answer,'Yes'), return; end
-    if isempty(sce.c_batch_id)
-        warndlg("sce.c_batch_id is empty");
-        return;
-    end
-    if numel(unique(sce.c_batch_id))==1
-        warndlg("sce.c_batch_id is empty");
-        return;        
-    end
-    answer = questdlg('Which method?','Select Method','Wilcoxon rank-sum test','MAST','Wilcoxon rank-sum test');
-    if strcmpi(answer,'Wilcoxon rank-sum test')
-        methodtag="ranksum";
-    elseif strcmpi(answer,'MAST')
-        methodtag="mast";
-    else
-        return;
-    end
-    fw=gui.gui_waitbar;
-    switch methodtag
-        case 'ranksum'
-            T=sc_deg(sce.X(:,sce.c_batch_id==1),...
-                    sce.X(:,sce.c_batch_id==2),sce.g);
-        case 'mast'
-            T=run.MAST(sce.X(:,sce.c_batch_id==1),...
-                    sce.X(:,sce.c_batch_id==2),sce.g);
-    end
-    gui.gui_waitbar(fw);
-    labels = {'Save DE results T to variable named:'}; 
-    vars = {'T'}; values = {T};
-    msgfig=export2wsdlg(labels,vars,values);
-    uiwait(msgfig);
-    answer = questdlg('Violin plots?');
-    if strcmp(answer,'Yes')
-        figure;
-        for k=1:16
-            subplot(4,4,k)
-            i=sce.g==T.gene(k);
-            pkg.i_violinplot(log2(1+sce.X(i,:)),...
-                sce.c_batch_id);
-            title(T.gene(k));
-            ylabel('log2(UMI+1)')
-        end
-    end
-end
+% function DEGene2Groups(~,~)
+%     answer = questdlg('Compare two batch groups (DE gene analysis)?');
+%     if ~strcmp(answer,'Yes'), return; end
+%     if isempty(sce.c_batch_id)
+%         warndlg("sce.c_batch_id is empty");
+%         return;
+%     end
+%     if numel(unique(sce.c_batch_id))==1
+%         warndlg("sce.c_batch_id is empty");
+%         return;        
+%     end
+%     answer = questdlg('Which method?','Select Method','Wilcoxon rank-sum test','MAST','Wilcoxon rank-sum test');
+%     if strcmpi(answer,'Wilcoxon rank-sum test')
+%         methodtag="ranksum";
+%     elseif strcmpi(answer,'MAST')
+%         methodtag="mast";
+%     else
+%         return;
+%     end
+%     fw=gui.gui_waitbar;
+%     switch methodtag
+%         case 'ranksum'
+%             T=sc_deg(sce.X(:,sce.c_batch_id==1),...
+%                     sce.X(:,sce.c_batch_id==2),sce.g);
+%         case 'mast'
+%             T=run.MAST(sce.X(:,sce.c_batch_id==1),...
+%                     sce.X(:,sce.c_batch_id==2),sce.g);
+%     end
+%     gui.gui_waitbar(fw);
+%     labels = {'Save DE results T to variable named:'}; 
+%     vars = {'T'}; values = {T};
+%     msgfig=export2wsdlg(labels,vars,values);
+%     uiwait(msgfig);
+%     answer = questdlg('Violin plots?');
+%     if strcmp(answer,'Yes')
+%         figure;
+%         for k=1:16
+%             subplot(4,4,k)
+%             i=sce.g==T.gene(k);
+%             pkg.i_violinplot(log2(1+sce.X(i,:)),...
+%                 sce.c_batch_id);
+%             title(T.gene(k));
+%             ylabel('log2(UMI+1)')
+%         end
+%     end
+% end
 
 function EmbeddingAgain(~,~)
     answer = questdlg('Embedding cells?');

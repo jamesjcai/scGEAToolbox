@@ -1,4 +1,4 @@
-function callback_ShowCellStats(src,event)
+function callback_ShowCellStats(src,~)
 
     answer = questdlg('Show cell states?');
     if ~strcmp(answer,'Yes'), return; end    
