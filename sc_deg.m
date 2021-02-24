@@ -55,6 +55,7 @@ end
     T=T(~isnan(p_val),:);
     T=sortrows(T,'p_val_adj','ascend');
 
+end
 
 % Test for expression differences between two sets of cells
 %
@@ -467,7 +468,3 @@ if strcmpi(report,'yes'),
     end
 end
 end
-
-
-
-
