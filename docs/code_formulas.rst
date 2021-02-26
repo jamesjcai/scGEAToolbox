@@ -3,6 +3,25 @@ Code Formulas
 
 Example codes for common tasks.
 
+Import files downloaded from GEO 
+--------------------------------
+
+.. code-block::
+
+  mtxf='GSM3535276_AXLN1_matrix.mtx';
+  genf='GSM3535276_AXLN1_genes.tsv';
+  bcdf='GSM3535276_AXLN1_barcodes.tsv';
+  [X,genelist,barcodelist]=sc_readmtxfile(mtxf, genf,bcdf,2);
+
+If the barcodees.tsv is not available, then use the following
+
+.. code-block::
+
+  mtxf='GSM3535276_AXLN1_matrix.mtx';
+  genf='GSM3535276_AXLN1_genes.tsv';
+  [X,genelist,barcodelist]=sc_readmtxfile(mtxf,genf,[],2);
+
+
 Process 10x Genomics raw data
 -----------------------------
 In the 10x Genomics folder, there are three files, namely, matrix.mtx, features.tsv and barcodes.tsv. Here is the best practice of raw data processing.
