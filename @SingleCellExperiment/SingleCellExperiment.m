@@ -60,9 +60,10 @@ classdef SingleCellExperiment
         r=size(obj.X,1);
     end
     
-    obj = estimatepotency(obj)
+    obj = estimatepotency(obj,speciesid,forced)
     obj = estimatecellcycle(obj,forced)
     obj = embedcells(obj,methodid,forced)
+    obj = clustercells(obj,k,methodid,forced)
     
     function obj = removecells(obj,i)
             obj.X(:,i)=[];

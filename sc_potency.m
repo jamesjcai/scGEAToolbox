@@ -8,7 +8,9 @@ function [r]=sc_potency(X,genelist,speciesid)
 %see also: sc_cytotrace
 
 if nargin<3, speciesid=1; end
-
+if ~ismember(speciesid,[1 2])
+    error('Invalid SPECIESID');
+end
 
 pw1=fileparts(mfilename('fullpath'));
 % pth=fullfile(pw1,'resources/STRING');
