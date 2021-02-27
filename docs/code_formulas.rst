@@ -11,7 +11,7 @@ Import files downloaded from GEO
   mtxf='GSM3535276_AXLN1_matrix.mtx';
   genf='GSM3535276_AXLN1_genes.tsv';
   bcdf='GSM3535276_AXLN1_barcodes.tsv';
-  [X,genelist,barcodelist]=sc_readmtxfile(mtxf, genf,bcdf,2);
+  [X,genelist,barcodelist]=sc_readmtxfile(mtxf,genf,bcdf,2);
 
 If the barcodees.tsv is not available, then use the following
 
@@ -22,8 +22,8 @@ If the barcodees.tsv is not available, then use the following
   [X,genelist,barcodelist]=sc_readmtxfile(mtxf,genf,[],2);
 
 
-Process 10x Genomics raw data
------------------------------
+Process 10x Genomics expression matrix
+--------------------------------------
 In the 10x Genomics folder, there are three files, namely, matrix.mtx, features.tsv and barcodes.tsv. Here is the best practice of raw data processing.
 
 .. code-block::
@@ -36,6 +36,7 @@ In the 10x Genomics folder, there are three files, namely, matrix.mtx, features.
 
 t-SNE using top 2000 highly varible genes (HVGs)
 ------------------------------------------------
+
 .. code-block::
   
   [Xnorm]=sc_norm(X,'type','deseq');
@@ -60,3 +61,4 @@ A complete pipeline of raw data processing
   id=sc_cluster_s(s_tsne,10);
   sce.c_cluster_id=id;
   sc_scatter_sce(sce)
+
