@@ -1,0 +1,109 @@
+<form id="enrich" action="https://maayanlab.cloud/Enrichr/enrich" method="post" enctype="multipart/form-data">
+            <h2>Input data</h2>
+            <table id="data-input" border=0>
+                <tr id="genes">
+                    <td id="file-input-td" width=40%>
+                        <div id="instructions">
+                            <p>Choose an input file to upload. Either in BED format or a
+                                list of genes. For a quantitative set, add a comma and the
+                                level of membership of that gene. The membership level is a
+                                number between 0.0 and 1.0 to represent a weight for each gene,
+                                where the weight of 0.0 will completely discard the gene from
+                                the enrichment analysis and the weight of 1.0 is the maximum.</p>
+                            <p>
+                                Try an example <a href="#" id="insertBedExample-link"
+                                                  onclick="return insertBedExample();">BED file</a>.
+                            </p>
+                        </div>
+                        <input type="hidden" name="useExample" id="useExample"
+                               value="false"> <input type="file" name="file"
+                                                     id="file-chooser" onchange="testForBed();"/>
+                        <div id="bed-parameters" style="display: none;">
+                            <table id="bed-parameters-table">
+                                <tr>
+                                    <td>
+                                        <p>Select parameters for bed file to gene list
+                                            conversion.</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><label for="species-chooser">Species:</label> <select
+                                            name="species" id="species-chooser">
+                                        <option value="human_hg18">Human hg18</option>
+                                        <option value="human_hg19">Human hg19</option>
+                                        <option value="human_hg38">Human hg38</option>
+                                        <option value="mouse_mm9">Mouse mm9</option>
+                                        <option value="mouse_mm10">Mouse mm10</option>
+                                    </select></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="bed-max-genes">Max number of
+                                        genes:</label> <select name="maxGenes" id="bed-max-genes">
+                                        <option value="2000">2000</option>
+                                        <option value="1000" selected="selected">1000</option>
+                                        <option value="500">500</option>
+                                    </select></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+                    <td id="textbox">
+                        <p>
+                            Paste a list of valid Entrez gene symbols on each row in the text-box below. </p> 
+<textarea name=list rows=10 id=text-area cols=63></textarea>
+                        <div id="gene-count">
+                            <!-- <span id="gene-found">0</span> of <span id="gene-count">0</span> genes found in the Enrichr database -->
+                            <span id="gene-count">0</span> gene(s) entered
+                        </div>
+                    </td>
+                </tr>
+                <tr id="description">
+                    <td colspan="2">
+                        <div>
+                            <p>Enter a brief description for the list in case you want
+                                to share it. (Optional)</p>
+                            <input type="text" id="listDesc" name="description" maxlength="200"
+                                   placeholder="In order to enable others to search your list please enter a brief description of it."/>
+                        </div>
+                        <div class="next-step">
+                            <input type="hidden" name="validate" value="true"/>
+                            <button id="proceed-button">Submit</button>
+                        </div>
+                    </td>
+                </tr>
+                <tr id="contrib-button">
+                    <td>
+                        <p>
+                            <input type="checkbox" id="contCheck"> Contribute
+                        </p>
+                    </td>
+                </tr>
+            </table>
+            <div class="clear"></div>
+            <div id="citation">
+                Please acknowledge Enrichr in your publications by citing the
+                following references: <br/> <a
+                    href="http://www.ncbi.nlm.nih.gov/pubmed/23586463"
+                    id='pubmedCitation-link' target="_blank">Chen EY, Tan CM, Kou
+                Y, Duan Q, Wang Z, Meirelles GV, Clark NR, Ma&#39;ayan A. Enrichr:
+                interactive and collaborative HTML5 gene list enrichment analysis
+                tool. <i>BMC Bioinformatics. 2013;128(14)</i>.
+            </a> <br/>
+                <br/> <a href="https://www.ncbi.nlm.nih.gov/pubmed/27141961"
+                         id='pubmedCitation-link' target="_blank"> Kuleshov MV, Jones
+                MR, Rouillard AD, Fernandez NF, Duan Q, Wang Z, Koplev S, Jenkins
+                SL, Jagodnik KM, Lachmann A, McDermott MG, Monteiro CD, Gundersen
+                GW, Ma&#39;ayan A. Enrichr: a comprehensive gene set enrichment
+                analysis web server 2016 update. <i>Nucleic Acids Research.
+                    2016; <a href=http://doi.org/10.1093/nar/gkw377>gkw377</a>
+                </i>.
+            </a>
+
+            </div>
+            <!-- 				<div class="next-step">
+                <input type="hidden" name="validate" value="true" /> <input
+                    type="image" src="images/navigate-up-icon.png" width="64"
+                    height="64" title="Upload File" />
+            </div> -->
+            <div class="clear"></div>
+        </form>
