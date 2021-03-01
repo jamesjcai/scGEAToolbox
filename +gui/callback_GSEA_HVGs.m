@@ -1,7 +1,9 @@
-function callback_GSEA_HVGs(~,~,X,g)
+function callback_GSEA_HVGs(src,~)
     answer = questdlg('Identify HVGs and then perform GSEA function enrichment analysis?');
     if ~strcmp(answer,'Yes'), return; end 
-    t=sc_hvg(X,g);
+    FigureHandle=src.Parent.Parent;
+    sce=guidata(FigureHandle);    
+    t=sc_hvg(sce.X,sce.g);
     msgfig1=export2wsdlg({'Save HVG table to variable named:'},...
         {'T'},{t});
     % uiwait(msgfig)

@@ -239,7 +239,18 @@ ptpseudotime = uipushtool(defaultToolbar,...
 ptImage = ind2rgb(img,map);
 ptpseudotime.CData = ptImage;
 ptpseudotime.Tooltip = 'Function enrichment of HVG genes';
-ptpseudotime.ClickedCallback = {@callback_GSEA_HVGs,sce.X,sce.g};
+ptpseudotime.ClickedCallback = @callback_GSEA_HVGs;
+
+
+ptnetwork = uipushtool(defaultToolbar,...
+               'Separator','off');
+[img,map] = imread(fullfile(mfolder,...
+            'resources','noun_Network_691907.gif'));
+ptImage = ind2rgb(img,map);
+ptnetwork.CData = ptImage;
+ptnetwork.Tooltip = 'Build gene regulatory network';
+ptnetwork.ClickedCallback = @callback_BuildGeneNetwork;
+
 
 pt2 = uipushtool(UitoolbarHandle,'Separator','on');
 [img,map] = imread(fullfile(mfolder,...
