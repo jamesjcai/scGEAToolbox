@@ -21,6 +21,7 @@ hs.fig.Visible = 'on';
                   'Layout',...
                   'Callback',@ChageLayout,...
                   'Tag','button');
+              
        hs.btn2 = uicontrol(hs.fig,'String',...
                   'Weight',...
                   'Callback',@ChageWeight,...
@@ -36,7 +37,7 @@ hs.fig.Visible = 'on';
                   'Callback',@ChageDirected,...
                   'Tag','button');   
        hs.btn5 = uicontrol(hs.fig,'String',...
-                  'FontSize',...
+                  'Font Size',...
                   'Callback',@ChageFontSize,...
                   'Tag','button');   
               
@@ -69,11 +70,21 @@ hs.fig.Visible = 'on';
    end
 
    function ChageCutoff(hObject,event)
-        list = {'0.60','0.65','0.70','0.75','0.80','0.85','0.90','0.95'};
+        list = {'0.00 (show all edges)',...
+            '0.30','0.35','0.40','0.45',...
+            '0.50','0.55','0.60',...
+            '0.65','0.70','0.75','0.80','0.85',...
+            '0.90','0.95 (show 5% of edges)'};
         [indx,tf] = listdlg('ListString',list,...
-            'SelectionMode','single','ListSize',[160,200]);
+            'SelectionMode','single','ListSize',[160,230]);
         if tf
-            cutoff=str2double(list(indx));
+            if indx==1
+                cutoff=0;
+            elseif indx==length(list)
+                cutoff=0.95;
+            else
+                cutoff=str2double(list(indx));
+            end
             [G,p]=drawnetwork(A,g,cutoff);
         end
    end
@@ -128,11 +139,11 @@ hs.fig.Visible = 'on';
         end
         p=plot(hs.ax,G);
         layout(p,'force');
-        if issymmetric(G.adjacency)
-            G.Nodes.NodeColors = degree(G);
-        else
+        if isa(G,'digraph')
             G.Nodes.NodeColors = outdegree(G)-indegree(G);
-        end        
+        else
+            G.Nodes.NodeColors = degree(G);            
+        end
         p.NodeCData = G.Nodes.NodeColors;
         n=size(G.Edges,1);
         cc=repmat([0 0.4470 0.7410],n,1);

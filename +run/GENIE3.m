@@ -22,7 +22,7 @@ if donorm
    X=sc_norm(X,'type','libsize');
 end
 % GENIE3 takes data (rows: cell, columns: genes)
-data=X';
+data=full(X.');
 
 A=GENIE3_ori(data);
 if nargout==2
