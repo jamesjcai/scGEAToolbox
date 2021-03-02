@@ -28,7 +28,7 @@ Dis=1-corr(X,'type','p');
 [cls3]=get_clusterarray(Dis,optimk,drange);
 
 oldpath=pwd;
-pw1=fileparts(which(mfilename));
+pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'thirdparty/ClusterPack');
 addpath(pth);
 cd(pth);

@@ -1012,7 +1012,7 @@ end
 function ClusterCellsX(~,~)
     answer = questdlg('Cluster cells using X?');
     if ~strcmp(answer,'Yes'), return; end
-    methodtagv={'simlr','soptsc','sc3','sinnlrr'};
+    methodtagv={'simlr','soptsc','sc3','sinnlrr','specter'};
     [indx,tf] = listdlg('PromptString',{'Select clustering program',...
     '',''},'SelectionMode','single',...
     'ListString',methodtagv);
@@ -1036,7 +1036,7 @@ function ClusterCellsX(~,~)
     try
         [sce.c_cluster_id]=sc_cluster_x(sce.X,k,'type',methodtag);
     catch ME
-        close(f);        
+        gui.gui_waitbar(fw);        
         errordlg(sprintf('%s: %s',...
             ME.identifier,ME.message));
         return;

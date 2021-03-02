@@ -2,7 +2,7 @@ function [c_clustid]=sc_cluster_x(X,k,varargin)
 
 p = inputParser;
 defaultType = 'simlr';
-validTypes = {'simlr','soptsc','sc3','sinnlrr'};
+validTypes = {'simlr','soptsc','sc3','sinnlrr','specter'};
 checkType = @(x) any(validatestring(x,validTypes));
 
 checkK = @(x) (x > 0) && isnumeric(x) && isscalar(x);
@@ -28,6 +28,8 @@ switch p.Results.type
     case 'sinnlrr'
         % disp('To specify k, use RUN_SINNLRR(X,k).');
         [c_clustid]=run.SinNLRR(X,k);
+    case 'specter'
+        [c_clustid]=run.Specter(X,k);
     case 'alona'
         warning('In development.');
         % [C]=sc_alona(X);
