@@ -12,7 +12,7 @@ addOptional(p,'type',defaultType,checkType)
 parse(p,true_labels,varargin{:})
 
 
-pw1=fileparts(which(mfilename));
+pw1=fileparts(mfilename('fullpath'));
 switch p.Results.type
     case 'nmi'        
         pth=fullfile(pw1,'thirdparty/SIMLR');
@@ -34,4 +34,5 @@ switch p.Results.type
     case 'jaccard'
         % ----
 
+end
 end

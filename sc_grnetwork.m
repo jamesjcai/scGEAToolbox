@@ -18,3 +18,4 @@ switch p.Results.type
     case 'genie3'
         [A]=run.GENIE3(X,[],true);
 end
+end

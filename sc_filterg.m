@@ -23,3 +23,4 @@ end
 X=X(i,:);
 if ~isempty(genelist), genelist=genelist(i,:); end
 if verbose, fprintf('%d genes removed.\n',sum(~i)); end
+end

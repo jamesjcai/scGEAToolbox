@@ -7,8 +7,8 @@ function [c]=sc_snndpc(s,cluK,knnK)
 if nargin<3, knnK=4; end
 if nargin<2, cluK=10; end
 
-pw1=fileparts(which(mfilename));
-pth=fullfile(pw1,'thirdparty/SNNDPC');
+pw1=fileparts(mfilename('fullpath'));
+pth=fullfile(pw1,'thirdparty','SNNDPC');
 addpath(pth);
 x=SnnDpc(s,ones(size(s,1),1),knnK,'AutoPick',cluK);
 c=x.cluster;

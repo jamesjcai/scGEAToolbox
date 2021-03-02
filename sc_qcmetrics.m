@@ -19,4 +19,4 @@ pct = sum(X>0,2)./nc;       % 1%
 reads_per_cell=sum(X,2)';   % reads per cell 
 nmad=mad(log(sum(X,2))-log(sum(X>0,2)),1);
 
-
+end

@@ -3,7 +3,7 @@ function [t,xyz1]=i_pseudotime_by_princurve(s,plotit)
 
 if nargin<2, plotit=false; end
 
-pw1=fileparts(which(mfilename));
+pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'thirdparty/MPPC');
 addpath(pth);
 

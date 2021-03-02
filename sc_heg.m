@@ -37,11 +37,11 @@ lgxdata=log10(xdata);
 
 
 pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'thirdparty/locfit/m');
+pth=fullfile(pw1,'thirdparty','locfit','m');
 addpath(pth);
-pth=fullfile(pw1,'thirdparty/locfit/mex');
+pth=fullfile(pw1,'thirdparty','locfit','mex');
 addpath(pth);
-pth=fullfile(pw1,'thirdparty/locfit/source');
+pth=fullfile(pw1,'thirdparty','locfit','source');
 addpath(pth);
 
 %xi=ydata;
@@ -62,7 +62,9 @@ figure;
 scatter(ydata,lgxdata)
 hold on
 scatter(ydata,fit_lgxdata)
-return;
+
+end
+
 %{
 u=nanmean(X,2);
 cv2=nanvar(X,0,2)./u.^2;

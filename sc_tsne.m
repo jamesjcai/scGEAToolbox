@@ -89,5 +89,3 @@ if plotit
     end    
 end
 end
-
-

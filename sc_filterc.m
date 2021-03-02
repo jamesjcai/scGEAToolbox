@@ -5,6 +5,4 @@ if nargin<3, verbose=false; end
 keptidx=s>=cutoff;
 X=X(:,keptidx);
 if verbose, fprintf('%d samples (cells) removed.\n',sum(~keptidx)); end
-
-
-
+end

@@ -42,6 +42,4 @@ genelist=deblank(string(g));
 %     genelist(k)=string(g(k).data);
 % end
 
-
-
-
+end

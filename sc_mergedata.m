@@ -17,3 +17,4 @@ switch lower(method)
 end
         X=[X1a X2a];
         c=1+[zeros(size(X1,2),1); ones(size(X2,2),1)];
+end

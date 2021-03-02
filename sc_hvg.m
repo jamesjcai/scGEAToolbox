@@ -135,3 +135,4 @@ end
 % from a moving median (Kolodziejczyk et al., 2015) or another statistic 
 % derived from variance is used, e.g. the squared coefficient of variation
 % (Brennecke et al. (2013)).
+end

@@ -24,7 +24,7 @@ xdata=u(~isnan(ydata));
 ydata=ydata(~isnan(ydata));
 lgxdata=log10(xdata);
 
-pw1=fileparts(which(mfilename));
+pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'thirdparty/locfit/m');
 addpath(pth);
 pth=fullfile(pw1,'thirdparty/locfit/mex');
@@ -143,3 +143,4 @@ if plotit
     hold off
 end
 
+end

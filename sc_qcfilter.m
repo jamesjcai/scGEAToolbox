@@ -25,3 +25,4 @@ while ~isequal(oldsz,newsz)
     newsz=size(X);
     c=c+1;
 end
+end

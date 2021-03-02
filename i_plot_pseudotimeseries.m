@@ -47,7 +47,7 @@ end
 xlabel('Pseudotime')
 ylabel('Expression')
 
-pw1=fileparts(which(mfilename));
+pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'thirdparty/locfit/m');
 addpath(pth);
 pth=fullfile(pw1,'thirdparty/locfit/mex');
@@ -74,4 +74,4 @@ box on
 legend(Pk,glist,'location','eastoutside')
 xlim([0 max(t)])
 
-
+end

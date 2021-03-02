@@ -10,7 +10,7 @@ if nargin<3, fastersvd=false; end
 opts.maxit=150;
 
 if fastersvd    
-    pw1=fileparts(which(mfilename));
+	pw1=fileparts(mfilename('fullpath'));
     pth=fullfile(pw1,'thirdparty/faster_svd/lmsvd');
     addpath(pth);
 end
@@ -37,7 +37,7 @@ for k=1:n
     Beta=sum(y.*score);
     A(k,A(k,:)==1)=coeff*Beta';
 end
-
+end
 
 %{
 

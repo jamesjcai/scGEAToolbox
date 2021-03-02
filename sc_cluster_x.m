@@ -34,3 +34,4 @@ switch p.Results.type
         warning('In development.');
         % [C]=sc_alona(X);
 end
+end

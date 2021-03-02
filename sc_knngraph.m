@@ -15,7 +15,7 @@ switch method
         Graph=mIdx';
     case 2
         pw1=fileparts(mfilename('fullpath'));
-        pth=fullfile(pw1,'thirdparty/k-NN-code');
+        pth=fullfile(pw1,'thirdparty','k-NN-code');
         addpath(pth);
         kneighbors=k; % number of neighbors in kNN
         S=s';

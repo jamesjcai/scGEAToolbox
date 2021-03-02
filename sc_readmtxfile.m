@@ -34,4 +34,4 @@ end
 
 %assert(isequal(size(X,1),length(genelist)))
 
-
+end

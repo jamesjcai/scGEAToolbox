@@ -19,3 +19,4 @@ switch p.Results.type
     case 'deseq'
         [X]=norm_deseq(X);
 end
+end
