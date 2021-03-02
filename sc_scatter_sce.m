@@ -509,8 +509,9 @@ function DetermineCellTypeClusters(~,~)
         databasetag="panglaodb";
     else
         return;
-    end    
-    
+    end
+    dtp = findobj(h,'Type','datatip');
+    delete(dtp);    
 for i=1:max(c) 
     ptsSelected=c==i;
     [Tct]=local_celltypebrushed(sce.X,sce.g,...
@@ -527,16 +528,23 @@ for i=1:max(c)
     end
     hold on
     ctxt=sprintf('%s_{%d}',ctxt,i);
-    cL{i}=ctxt;
-    % ctxt=strrep(ctxt,'_','\_');            
-    if size(sce.s,2)>=3
-            si=mean(sce.s(ptsSelected,:));
-            text(si(:,1),si(:,2),si(:,3),sprintf('%s',ctxt),...
-                 'fontsize',10,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');
-    elseif size(sce.s,2)==2
-            si=mean(sce.s(ptsSelected,:));
-            text(si(:,1),si(:,2),sprintf('%s',ctxt),...
-                 'fontsize',10,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');
+    cL{i}=ctxt;    
+    % ctxt=strrep(ctxt,'_','\_');    
+
+    row = dataTipTextRow('',cL(c));
+    h.DataTipTemplate.DataTipRows = row;
+    if size(sce.s,2)>=2
+            siv=sce.s(ptsSelected,:);
+            si=mean(siv,1);
+            idx=find(ptsSelected);
+            [k]=dsearchn(siv,si);
+            dtp=datatip(h,'DataIndex',idx(k));
+            %text(si(:,1),si(:,2),si(:,3),sprintf('%s',ctxt),...
+            %     'fontsize',10,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');
+%     elseif size(sce.s,2)==2
+%             si=mean(sce.s(ptsSelected,:));
+%             text(si(:,1),si(:,2),sprintf('%s',ctxt),...
+%                  'fontsize',10,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');
     end
     hold off
 end
@@ -1186,7 +1194,7 @@ function [isdone]=i_labelclusters(notasking)
             siv=sce.s(idx,:);
             si=mean(siv,1);
             [k]=dsearchn(siv,si);
-            dtp=datatip(h,'DataIndex',idx(k));            
+            dtp=datatip(h,'DataIndex',idx(k));
         end
         isdone=true;
     end
