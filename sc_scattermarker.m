@@ -92,7 +92,7 @@ title(sprintf('%s\n(%s/%s = %.3f%% nonzero)',...
 %                     num2bankScalar(numel(c)),...
 %                     100*sum(c>0)./numel(c)));
         
-               h2=subplot(1,2,2);             
+               h2=subplot(1,2,2);
                 stem3(x,y,c,'marker','none','color','m');
                 hold on
                 scatter3(x,y,zeros(size(y)),5,c,'filled');                
