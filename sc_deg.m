@@ -2,6 +2,7 @@ function [T]=sc_deg(X,Y,genelist,methodid)
 % https://satijalab.org/seurat/v3.1/de_vignette.html
 % p_val : p_val (unadjusted)
 % avg_logFC : log fold-chage of the average expression between the two groups. Positive values indicate that the feature is more highly expressed in the first group.
+% abs_logFC
 % pct.1 : The percentage of cells where the feature is detected in the first group
 % pct.2 : The percentage of cells where the feature is detected in the second group
 % p_val_adj : Adjusted p-value, based on bonferroni correction using all features in the dataset.
@@ -51,10 +52,11 @@ end
     else
         gene=genelist;
     end
-    T=table(gene,p_val,avg_logFC,pct_1,pct_2,p_val_adj);
+    abs_logFC=abs(avg_logFC);
+    T=table(gene,p_val,avg_logFC,abs_logFC,pct_1,pct_2,p_val_adj);
     T=T(~isnan(p_val),:);
+    T=sortrows(T,'abs_logFC','descend');
     T=sortrows(T,'p_val_adj','ascend');
-
 end
 
 % Test for expression differences between two sets of cells

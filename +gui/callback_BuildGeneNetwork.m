@@ -8,15 +8,13 @@ switch answer
     case 'Cancel'
         return;
     case 'Paste'
-        a=gui.gui_inputgenelist;
-        a=deblank(a);
-        if length(a)>=2
-            [y,i]=ismember(a,sce.g);
+        n=length(sce.g);
+        tg=gui.gui_inputgenelist(sce.g(randi(n,10,1)));        
+        if length(tg)>=2
+            [y,i]=ismember(tg,sce.g);
             i=i(y);
-            g=a(y);
-            if length(i)>=2
-            sprintf("%s ",sce.g(i))
-            else
+            glist=tg(y);
+            if length(glist)<2
                 warndlg('Need at leaset 2 genes');
                 return;
             end
@@ -30,22 +28,22 @@ switch answer
         if length(idx)<2
             warndlg('Need at least 2 genes');
             return;
-        else            
-            [~,i]=ismember(gsorted(idx),sce.g);
-            sprintf("%s ",gsorted(idx))
-            g=gsorted(idx);
+        else
+            glist=gsorted(idx);
             %g='Dhfr, Lmbr1, Reck, Rnf168, Rpl26, Snrnp27, Tmem160'
             %g=["Tcf7","Lef1","Bcl6","Ctla4","Lag3","Pdcd1"];
-            %[~,i]=ismember(g,sce.g);
         end
 end
+            [y,i]=ismember(glist,sce.g);
+            if ~all(y), error('xxx'); end
+            fprintf("%s\n",glist)
             fw=gui.gui_waitbar;    
             x=sce.X(i,:);
             A=sc_pcnet(x);
 %             B=e_transf(A,0.6);            
 %             G=digraph(B,gsorted(idx),'omitselfloops');
             gui.gui_waitbar(fw);            
-            sc_grnview(A,g);
+            sc_grnview(A,glist);
 end
 
 

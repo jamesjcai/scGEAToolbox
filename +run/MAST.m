@@ -18,6 +18,11 @@ if exist('output.csv','file')
     T=readtable('output.csv');
     T.Var1=genelist(T.Var1);
     T.Properties.VariableNames{'Var1'} = 'gene';
+    abs_logFC=abs(T.avg_logFC);
+    T = addvars(T,abs_logFC,'After','avg_logFC');
+    T=sortrows(T,'abs_logFC','descend');
+    T=sortrows(T,'p_val_adj','ascend');
+    
     warning on
 else
     T=[];
