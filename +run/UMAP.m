@@ -17,13 +17,13 @@ addpath(pth1);
 addpath(pth2);
 javaaddpath(pth3);
 
-pth=fullfile(pw1,'+run','thirdparty','PHATE');
-addpath(pth);
 
 data=transpose(sc_transform(X));
 
 ncells=size(data,1);
 if ncells>10000
+    pth=fullfile(pw1,'thirdparty','PHATE');
+    addpath(pth);
 	data = svdpca(data, 100, 'random');
 end
 
