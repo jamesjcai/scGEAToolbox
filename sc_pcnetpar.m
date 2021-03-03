@@ -28,16 +28,16 @@ n=size(X,2);
 A=1-eye(n);
 B=A(:,1:end-1);
 
-parfor k=1:n    
+parfor k=1:n
     y=X(:,k);
     Xi=X;
-    Xi(:,k)=[];    
+    Xi(:,k)=[];
     if fastersvd
-        warning off
-        [~,~,coeff]=lmsvd(Xi,ncom,opts);
-        warning on
+       warning off
+       [~,~,coeff]=lmsvd(Xi,ncom,opts);
+       warning on
     else
-        [~,~,coeff]=svds(Xi,ncom);
+       [~,~,coeff]=svds(Xi,ncom);
     end    
     score=Xi*coeff;
     score=(score./(vecnorm(score).^2));

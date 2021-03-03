@@ -19,6 +19,7 @@ switch p.Results.type
         u=(sum(X,2)*sum(X,1))./sum(X(:));
         s=sqrt(u+(u.^2)./100);
         X=(X-u)./s;
+        X(isnan(X))=0;
         n=size(X,2);
         % clip to sqrt(n);
         sn=sqrt(n);
