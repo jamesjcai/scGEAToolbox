@@ -19,7 +19,7 @@ If the barcodees.tsv is not available, then use the following
 
   mtxf='GSM3535276_AXLN1_matrix.mtx';
   genf='GSM3535276_AXLN1_genes.tsv';
-  [X,genelist,barcodelist]=sc_readmtxfile(mtxf,genf,[],2);
+  [X,genelist]=sc_readmtxfile(mtxf,genf,[],2);
 
 
 Process 10x Genomics expression matrix
