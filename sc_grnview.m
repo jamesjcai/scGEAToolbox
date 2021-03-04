@@ -1,13 +1,13 @@
-function [hs]=sc_grnview(A,g,alpha)
+function [hs]=sc_grnview(A,g,cutoff)
 
-if nargin<3, alpha=0.75; end
+if nargin<3, cutoff=0.75; end
 n=size(A,1);
 if n>200, error('Smaller network is expected'); end
 if nargin<2, g=string(1:n); end
 
 % Add the UI components
 hs = addcomponents;
-[G,p]=drawnetwork(A,g,alpha);   
+[G,p]=drawnetwork(A,g,cutoff);   
 % Make figure visible after adding components
 hs.fig.Visible = 'on';
    
@@ -35,10 +35,14 @@ hs.fig.Visible = 'on';
        hs.btn4 = uicontrol(hs.fig,'String',...
                   'Directed',...
                   'Callback',@ChageDirected,...
-                  'Tag','button');   
+                  'Tag','button'); 
        hs.btn5 = uicontrol(hs.fig,'String',...
                   'Font Size',...
                   'Callback',@ChageFontSize,...
+                  'Tag','button');   
+       hs.btn6 = uicontrol(hs.fig,'String',...
+                  'Save Adj',...
+                  'Callback',@SaveAdj,...
                   'Tag','button');   
               
        hs.ax = axes('Parent',hs.fig,...
@@ -85,16 +89,22 @@ hs.fig.Visible = 'on';
             else
                 cutoff=str2double(list(indx));
             end
-            [G,p]=drawnetwork(A,g,cutoff);
+            if isa(G,'graph')
+                [G,p]=drawnetwork(A,g,cutoff);
+            else
+                [G,p]=drawnetwork(0.5*(A+A.'),g,cutoff);
+            end
         end
    end
 
    function ChageDirected(hObject,event)
-        if issymmetric(G.adjacency)            
-            [G,p]=drawnetwork(A,g,0.65);
+        x=p.XData; y=p.YData; z=p.ZData;
+        if isa(G,'graph')
+            [G,p]=drawnetwork(A,g,cutoff);
         else
-            [G,p]=drawnetwork(0.5*(A+A.'),g,0.65);
+            [G,p]=drawnetwork(0.5*(A+A.'),g,cutoff);
         end
+        p.XData=x; p.YData=y; p.ZData=z;
    end
 
    function ChageFontSize(hObject,event)
@@ -105,8 +115,16 @@ hs.fig.Visible = 'on';
        end
    end
 
-   function resizeui(hObject,event)
-           
+   function SaveAdj(hObject,event)
+     labels = {'Save adjacency matrix A to variable named:',...
+               'Save graph G to variable named:',...
+               'Save genelist g to variable named:'}; 
+     vars = {'A','G','g'}; values = {A,G,g};
+     msgfig=export2wsdlg(labels,vars,values);
+     uiwait(msgfig);
+   end
+
+   function resizeui(hObject,event)           
        % Get figure width and height
        figwidth = hs.fig.Position(3);
        figheight = hs.fig.Position(4);
@@ -121,6 +139,7 @@ hs.fig.Visible = 'on';
        hs.btn3.Position = [bleftedge bbottomedge-80 bwidth bheight];
        hs.btn4.Position = [bleftedge bbottomedge-120 bwidth bheight];
        hs.btn5.Position = [bleftedge bbottomedge-160 bwidth bheight];
+       hs.btn6.Position = [bleftedge bbottomedge-200 bwidth bheight];
        
        % Set axes position
        axheight = .85*figheight;

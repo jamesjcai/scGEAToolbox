@@ -9,7 +9,7 @@ switch answer
         return;
     case 'Paste'
         n=length(sce.g);
-        tg=gui.gui_inputgenelist(sce.g(randi(n,10,1)));        
+        tg=gui.gui_inputgenelist(sce.g(randperm(n,20)));        
         if length(tg)>=2
             [y,i]=ismember(tg,sce.g);
             i=i(y);
