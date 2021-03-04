@@ -149,8 +149,8 @@ hs.fig.Visible = 'on';
        hs.ax.Position = [axleftedge axbottomedge axwidth axheight];
    end
 
-    function [G,p]=drawnetwork(A,g,alpha)
-        B=e_transf(A,alpha);
+    function [G,p]=drawnetwork(A,g,cutoff)
+        B=e_transf(A,cutoff);
         if issymmetric(B)
             G=graph(B,g,'omitselfloops');    
         else
