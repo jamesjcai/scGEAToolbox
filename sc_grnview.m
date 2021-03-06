@@ -1,9 +1,14 @@
 function [hs]=sc_grnview(A,g,cutoff)
 
 if nargin<3, cutoff=0.75; end
+if nargin<2, g=[]; end
+if isa(A,'digraph')||isa(A,'graph')
+    g=string(A.Nodes.Name);
+    A=adjacency(A,'weighted');
+end
 n=size(A,1);
 if n>200, error('Smaller network is expected'); end
-if nargin<2, g=string(1:n); end
+if isempty(g), g=string(1:n); end
 
 % Add the UI components
 hs = addcomponents;
@@ -19,26 +24,26 @@ hs.fig.Visible = 'on';
               
        hs.btn = uicontrol(hs.fig,'String',...
                   'Layout',...
-                  'Callback',@ChageLayout,...
+                  'Callback',@ChangeLayout,...
                   'Tag','button');
               
        hs.btn2 = uicontrol(hs.fig,'String',...
                   'Weight',...
-                  'Callback',@ChageWeight,...
+                  'Callback',@ChangeWeight,...
                   'Tag','button');   
               
        hs.btn3 = uicontrol(hs.fig,'String',...
                   'Cutoff',...
-                  'Callback',@ChageCutoff,...
+                  'Callback',@ChangeCutoff,...
                   'Tag','button');   
               
        hs.btn4 = uicontrol(hs.fig,'String',...
                   'Directed',...
-                  'Callback',@ChageDirected,...
+                  'Callback',@ChangeDirected,...
                   'Tag','button'); 
        hs.btn5 = uicontrol(hs.fig,'String',...
                   'Font Size',...
-                  'Callback',@ChageFontSize,...
+                  'Callback',@ChangeFontSize,...
                   'Tag','button');   
        hs.btn6 = uicontrol(hs.fig,'String',...
                   'Save Adj',...
@@ -50,7 +55,7 @@ hs.fig.Visible = 'on';
                   'Tag','ax');
    end
 
-   function ChageLayout(hObject,event)
+   function ChangeLayout(hObject,event)
        %plot(hs.ax,theta,y);
        a=["layered","subspace","force","circle","force3","subspace3"];       
        i=randi(length(a));       
@@ -62,7 +67,7 @@ hs.fig.Visible = 'on';
        end
    end
 
-   function ChageWeight(hObject,event)
+   function ChangeWeight(hObject,event)
        if length(unique(p.LineWidth))>1
         p.LineWidth = p.LineWidth./p.LineWidth;
        else
@@ -73,7 +78,7 @@ hs.fig.Visible = 'on';
        end
    end
 
-   function ChageCutoff(hObject,event)
+   function ChangeCutoff(hObject,event)
         list = {'0.00 (show all edges)',...
             '0.30','0.35','0.40','0.45',...
             '0.50','0.55','0.60',...
@@ -89,15 +94,17 @@ hs.fig.Visible = 'on';
             else
                 cutoff=str2double(list(indx));
             end
-            if isa(G,'graph')
+            x=p.XData; y=p.YData; z=p.ZData;
+            if isa(G,'idgraph')
                 [G,p]=drawnetwork(A,g,cutoff);
             else
                 [G,p]=drawnetwork(0.5*(A+A.'),g,cutoff);
             end
+            p.XData=x; p.YData=y; p.ZData=z;
         end
    end
 
-   function ChageDirected(hObject,event)
+   function ChangeDirected(hObject,event)
         x=p.XData; y=p.YData; z=p.ZData;
         if isa(G,'graph')
             [G,p]=drawnetwork(A,g,cutoff);
@@ -107,7 +114,7 @@ hs.fig.Visible = 'on';
         p.XData=x; p.YData=y; p.ZData=z;
    end
 
-   function ChageFontSize(hObject,event)
+   function ChangeFontSize(hObject,event)
        if p.NodeFontSize>=20
            p.NodeFontSize=7;
        else

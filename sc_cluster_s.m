@@ -6,7 +6,7 @@ if nargin<2, k=6; end
 p = inputParser;
 defaultType = 'kmeans';
 validTypes = {'kmeans','kmedoids','dbscan',...
-    'spectclust','snndpc'};
+    'spectclust','snndpc','mbkmeans'};
 % 
 checkType = @(x) any(validatestring(x,validTypes));
 
@@ -30,6 +30,8 @@ switch p.Results.type
         warning('In development. Needs parameters');
     case 'snndpc'
         c_clustid=sc_snndpc(s,k);
+    case 'mbkmeans'
+        [~,~,c_clustid]=pkg.mbkmeans(s,k);
 end
 
 if plotit
