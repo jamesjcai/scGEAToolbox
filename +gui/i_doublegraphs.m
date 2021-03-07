@@ -178,13 +178,27 @@ hFig.Position(3)=hFig.Position(3)*2.2;
     end
 
    function AnimateCutoff(hObject,event)
-        listc = 0.05:0.05:0.95; 
-        for k=1:length(listc)
+        listc = 0.05:0.05:0.95;
+        % pkg.progressbar
+        f = waitbar(0,'Cutoff = 0.05','Name','Edge Pruning...',...
+            'CreateCancelBtn','setappdata(gcbf,''canceling'',1)');
+        setappdata(f,'canceling',0);        
+
+        m=length(listc);
+        for k=1:m
+            if getappdata(f,'canceling')
+                break
+            end
+            
             cutoff=listc(k);
+            %pkg.progressbar(k/m) % Update progress bar
+            waitbar(k/m,f,sprintf('Cutoff = %g',cutoff));
             p1=i_replotg(p1,G1,h1,cutoff);
             p2=i_replotg(p2,G2,h2,cutoff);
-            pause(3);
+            pause(1);
         end
+        %close(f)
+        delete(f)
    end
 
    function [p,G]=i_replotg(p,G,h,cutoff) 
