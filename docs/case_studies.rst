@@ -69,12 +69,9 @@ From GEO database, we obtain the FTP links to the data files we need. Here we us
   <td bgcolor="#DEEBDC"><a href="ftp://ftp.ncbi.nlm.nih.gov/geo/samples/GSM3535nnn/GSM3535276/suppl/GSM3535276%5FAXLN1%5Fmatrix%2Emtx%2Egz">(ftp)</a><a href="/geo/download/?acc=GSM3535276&amp;format=file&amp;file=GSM3535276%5FAXLN1%5Fmatrix%2Emtx%2Egz">(http)</a></td>
   <td bgcolor="#DEEBDC">MTX</td>
   </tr>
-  <tr><td><a href="/Traces/study/?acc=SRX5197633">SRA Run Selector</a></td></tr>
-  <tr><td class="message">Raw data are available in SRA</td></tr>
-  <tr><td class="message">Processed data provided as supplementary file</td></tr>
   </table>
 
-We can use `gunzip` function directly download and unzip the files
+We can use `gunzip` function directly download and unzip the files.
 
 .. code-block:: matlab
 
