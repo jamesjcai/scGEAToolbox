@@ -45,11 +45,11 @@ Label cell type interactively with SC_SCATTER_SCE
 Download data files from GEO
 ----------------------------
 
-From GEO database, we obtain the FTP links to the data files we need. 
+From GEO database, we obtain the FTP links to the data files we need. Here we use a data set from sample GSM3535276 as an example ( https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM3535276). The sample is human AXLN1 lymphatic endothelial cells.
 
 .. raw:: html
 
-  <br><table cellpadding="2" cellspacing="2" width="600"><tr bgcolor="#eeeeee" valign="top"><td align="middle" bgcolor="#CCCCCC"><strong>Supplementary file</strong></td>
+  <table cellpadding="2" cellspacing="2" width="600"><tr bgcolor="#eeeeee" valign="top"><td align="middle" bgcolor="#CCCCCC"><strong>Supplementary file</strong></td>
   <td align="middle" bgcolor="#CCCCCC"><strong>Size</strong></td>
   <td align="middle" bgcolor="#CCCCCC"><strong>Download</strong></td>
   <td align="middle" bgcolor="#CCCCCC"><strong>File type/resource</strong></td>
@@ -69,7 +69,7 @@ From GEO database, we obtain the FTP links to the data files we need.
   <td bgcolor="#DEEBDC"><a href="ftp://ftp.ncbi.nlm.nih.gov/geo/samples/GSM3535nnn/GSM3535276/suppl/GSM3535276%5FAXLN1%5Fmatrix%2Emtx%2Egz">(ftp)</a><a href="/geo/download/?acc=GSM3535276&amp;format=file&amp;file=GSM3535276%5FAXLN1%5Fmatrix%2Emtx%2Egz">(http)</a></td>
   <td bgcolor="#DEEBDC">MTX</td>
   </tr>
-  <tr><td><a href="/Traces/study/?acc=SRX5197633">SRA Run Selector</a><a href="javascript:RPopUpWindow_Set(geoaxema_srarun,260,120,'','','#E1EAE6','','#538AA9','MessageBox2');" onmouseout="RPopUpWindow_Stop()"><img alt="Help" height="11" src="/coreweb/images/long_help4.gif" style="border: none" width="19"></a></td></tr>
+  <tr><td><a href="/Traces/study/?acc=SRX5197633">SRA Run Selector</a></td></tr>
   <tr><td class="message">Raw data are available in SRA</td></tr>
   <tr><td class="message">Processed data provided as supplementary file</td></tr>
   </table>
