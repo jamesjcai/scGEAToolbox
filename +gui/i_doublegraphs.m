@@ -11,6 +11,9 @@ assert(isequal(G1.Nodes.Name,G2.Nodes.Name));
 import gui.*
 %%
 
+mfolder=fileparts(mfilename('fullpath'));
+
+
 b=2;
 hFig=figure;
 h1=subplot(1,2,1);
@@ -25,7 +28,12 @@ p2.YData=p1.YData;
 
 tb = uitoolbar(hFig);
 pt = uipushtool(tb,'Separator','off');
-ptImage = rand(16,16,3);
+% ptImage = rand(16,16,3);
+[img,map] = imread(fullfile(mfolder,...
+            '../resources','noun_font_size_591141.gif'));
+ptImage = ind2rgb(img,map);
+
+
 pt.CData = ptImage;
 pt.Tooltip = 'ChangeFontSize';
 pt.ClickedCallback = @ChangeFontSize;
@@ -55,12 +63,40 @@ pt.Tooltip = 'ChangeCutoff';
 pt.ClickedCallback = @ChangeCutoff;
 
 pt = uipushtool(tb,'Separator','off');
-ptImage = rand(16,16,3);
+
+[img,map] = imread(fullfile(mfolder,'../resources','noun_Pruners_2469297.gif'));         
+ptImage = ind2rgb(img,map);
 pt.CData = ptImage;
 pt.Tooltip = 'AnimateCutoff';
 pt.ClickedCallback = @AnimateCutoff;
 
+pt = uipushtool(tb,'Separator','off');
+[img,map] = imread(fullfile(mfolder,'../resources','export.gif'));         
+ptImage = ind2rgb(img,map);
+pt.CData = ptImage;
+pt.Tooltip = 'Export & save data';
+pt.ClickedCallback = @SaveAdj;
+
 hFig.Position(3)=hFig.Position(3)*2.2;
+
+
+   function SaveAdj(hObject,event)
+     labels = {'Save adjacency matrix A1 to variable named:',...
+               'Save adjacency matrix A2 to variable named:',...
+               'Save graph G1 to variable named:',...
+               'Save graph G2 to variable named:',... 
+               'Save genelist g1 to variable named:',...
+               'Save genelist g2 to variable named:'}; 
+           A1=adjacency(G1,'weighted');
+           A2=adjacency(G2,'weighted');
+           g1=string(G1.Nodes.Name);
+           g2=string(G2.Nodes.Name);
+     vars = {'A1','A2','G1','G2','g1','g2'};...
+     values = {A1,A2,G1,G2,g1,g2};
+     msgfig=export2wsdlg(labels,vars,values);
+     uiwait(msgfig);
+   end
+
                 
    function ChangeFontSize(hObject,event)
        i_changefontsize(p1);
@@ -90,7 +126,7 @@ hFig.Position(3)=hFig.Position(3)*2.2;
    end
 
    function ChangeLayout(hObject,event)
-       a=["layered","subspace","force","circle"];       
+       a=["auto","layered","subspace","force","circle"];       
        i=randi(length(a));
        p1.layout(a(i));
        p2.layout(a(i));

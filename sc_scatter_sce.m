@@ -253,6 +253,17 @@ ptnetwork.Tooltip = 'Build gene regulatory network';
 ptnetwork.ClickedCallback = @callback_BuildGeneNetwork;
 
 
+ptnetwork = uipushtool(defaultToolbar,'Separator','off');
+[img,map] = imread(fullfile(mfolder,...
+            'resources','noun_Deep_Learning_2424485.gif'));
+ptImage = ind2rgb(img,map);
+ptnetwork.CData = ptImage;
+ptnetwork.Tooltip = 'Compare two scGRNs';
+ptnetwork.ClickedCallback = @callback_CompareGeneNetwork;
+
+
+
+
 pt2 = uipushtool(UitoolbarHandle,'Separator','on');
 [img,map] = imread(fullfile(mfolder,...
             'resources','plotpicker-qqplot.gif'));  

@@ -1,6 +1,11 @@
-function callback_BuildGeneNetwork(src,~)
+function callback_CompareGeneNetwork(src,~)
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
+    
+    [i1,i2]=gui.i_select2grps(sce);
+    if isscalar(i1) || isscalar(i2) 
+        if i1==0 || i2==0, return; end
+    end
     
     [glist]=gui.i_selectngenes(sce);
     if isempty(glist), return; end
@@ -9,8 +14,11 @@ function callback_BuildGeneNetwork(src,~)
     if ~all(y), error('xxx'); end
     fprintf("%s\n",glist)
     fw=gui.gui_waitbar;    
-    x=sce.X(i,:);
-    A=sc_pcnet(x);
+    x1=sce.X(i,i1);
+    x2=sce.X(i,i2);
+    A1=sc_pcnet(x1);
+    A2=sc_pcnet(x2);
+    
     gui.gui_waitbar(fw);            
-    sc_grnview(A,glist);
+    sc_grnview2(A1,A2,glist);
 end
