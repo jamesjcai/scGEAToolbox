@@ -71,6 +71,7 @@ From GEO database, we obtain the FTP links to the data files we need. Here we us
   </tr>
   </table>
 
+
 We can use `gunzip` function directly download and unzip the files.
 
 .. code-block:: matlab
@@ -91,5 +92,5 @@ We can then use the code below to import data into `MATLAB`.
 
 
 .. |Overview of sc_scatter| image:: https://pbs.twimg.com/media/ErAPaabW4AEwAvf?format=png&name=large
-   :target: https://youtu.be/6IYl35dTwGw
-   
+   :target: https://pbs.twimg.com/media/ErAPaabW4AEwAvf?format=png&name=large
+  
