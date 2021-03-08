@@ -91,6 +91,6 @@ We can then use the code below to import data into `MATLAB`.
 
 
 
-.. |Overview of sc_scatter| image:: https://pbs.twimg.com/media/ErAPaabW4AEwAvf?format=png&name=large
-   :target: https://pbs.twimg.com/media/ErAPaabW4AEwAvf?format=png&name=large
+.. |Overview of sc_scatter| image:: https://github.com/jamesjcai/scGEAToolbox/raw/master/resources/Tooltips.png
+   :target: https://github.com/jamesjcai/scGEAToolbox/raw/master/resources/Tooltips.png
   
