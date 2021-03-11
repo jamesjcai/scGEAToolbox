@@ -32,39 +32,56 @@ pt = uipushtool(tb,'Separator','off');
 [img,map] = imread(fullfile(mfolder,...
             '../resources','noun_font_size_591141.gif'));
 ptImage = ind2rgb(img,map);
-
-
 pt.CData = ptImage;
 pt.Tooltip = 'ChangeFontSize';
 pt.ClickedCallback = @ChangeFontSize;
 
+
+
+
+
 pt = uipushtool(tb,'Separator','off');
-ptImage = rand(16,16,3);
+
+
+
+[img,map] = imread(fullfile(mfolder,...
+            '../resources','noun_Weight_2243621.gif'));
+ptImage = ind2rgb(img,map);
+
 pt.CData = ptImage;
 pt.Tooltip = 'ChangeWeight';
 pt.ClickedCallback = @ChangeWeight;
 
 pt = uipushtool(tb,'Separator','off');
-ptImage = rand(16,16,3);
+[img,map] = imread(fullfile(mfolder,...
+            '../resources','noun_Layout_792775.gif'));
+ptImage = ind2rgb(img,map);
 pt.CData = ptImage;
 pt.Tooltip = 'ChangeLayout';
 pt.ClickedCallback = @ChangeLayout;
 
 pt = uipushtool(tb,'Separator','off');
-ptImage = rand(16,16,3);
+[img,map] = imread(fullfile(mfolder,...
+            '../resources','noun_directional arrows_3497928.gif'));
+ptImage = ind2rgb(img,map);
 pt.CData = ptImage;
 pt.Tooltip = 'ChangeDirected';
 pt.ClickedCallback = @ChangeDirected;
 
 pt = uipushtool(tb,'Separator','off');
-ptImage = rand(16,16,3);
+
+[img,map] = imread(fullfile(mfolder,'../resources','noun_Pruners_2469297.gif'));         
+ptImage = ind2rgb(img,map);
+
+
+
 pt.CData = ptImage;
 pt.Tooltip = 'ChangeCutoff';
 pt.ClickedCallback = @ChangeCutoff;
 
 pt = uipushtool(tb,'Separator','off');
 
-[img,map] = imread(fullfile(mfolder,'../resources','noun_Pruners_2469297.gif'));         
+[img,map] = imread(fullfile(mfolder,'../resources','noun_trim_3665385.gif'));         
 ptImage = ind2rgb(img,map);
 pt.CData = ptImage;
 pt.Tooltip = 'AnimateCutoff';
