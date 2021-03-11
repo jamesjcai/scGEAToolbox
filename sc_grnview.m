@@ -1,5 +1,16 @@
-function [hs]=sc_grnview(A,g,cutoff)
+function sc_grnview(A,genelist)
+    if isa(A,'digraph')||isa(A,'graph')
+        G=A;
+    else
+        if nargin<2
+            genelist=string((1:size(A,1))');
+        end
+        G=pkg.makegraph(A,genelist);
+    end
+    gui.i_singlegraph(G);
+end
 
+%{
 if nargin<3, cutoff=0.75; end
 if nargin<2, g=[]; end
 if isa(A,'digraph')||isa(A,'graph')
@@ -199,3 +210,4 @@ elseif numel(dim)==3
     end
 end
 end
+%}

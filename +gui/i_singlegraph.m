@@ -1,32 +1,23 @@
-function i_doublegraphs(G1,G2)
+function i_singlegraph(G1)
 if nargin<2
     G1=WattsStrogatz(100,5,0.15);
-    G2=WattsStrogatz(100,5,0.15);
     G1.Nodes.Name = string((1:100)');
-    G2.Nodes.Name = string((1:100)');
     G1.Edges.Weight=rand(size(G1.Edges,1),1)*2;
-    G2.Edges.Weight=rand(size(G2.Edges,1),1)*2;
 end
-assert(isequal(G1.Nodes.Name,G2.Nodes.Name));
 import gui.*
 %%
 
 mfolder=fileparts(mfilename('fullpath'));
+
 load(fullfile(mfolder,...
        '../resources','tfome_tfgenes.mat'),'tfgenes');
+
 
 w=2;
 l=1;
 hFig=figure;
-h1=subplot(1,2,1);
-% p1=plot(G1);
+h1=axes(hFig);
 [p1]=drawnetwork(G1,h1);
-
-h2=subplot(1,2,2);
-% p2=plot(G2);
-[p2]=drawnetwork(G2,h2);
-p2.XData=p1.XData;
-p2.YData=p1.YData;
 
 tb = uitoolbar(hFig);
 pt = uipushtool(tb,'Separator','off');
@@ -96,22 +87,17 @@ pt.CData = ptImage;
 pt.Tooltip = 'Export & save data';
 pt.ClickedCallback = @SaveAdj;
 
-hFig.Position(3)=hFig.Position(3)*2.2;
+% hFig.Position(3)=hFig.Position(3)*2.2;
 
 
    function SaveAdj(hObject,event)
      labels = {'Save adjacency matrix A1 to variable named:',...
-               'Save adjacency matrix A2 to variable named:',...
                'Save graph G1 to variable named:',...
-               'Save graph G2 to variable named:',... 
-               'Save genelist g1 to variable named:',...
-               'Save genelist g2 to variable named:'}; 
+               'Save genelist g1 to variable named:'};
            A1=adjacency(G1,'weighted');
-           A2=adjacency(G2,'weighted');
            g1=string(G1.Nodes.Name);
-           g2=string(G2.Nodes.Name);
-     vars = {'A1','A2','G1','G2','g1','g2'};...
-     values = {A1,A2,G1,G2,g1,g2};
+     vars = {'A1','G1','g1'};...
+     values = {A1,G1,g1};
      msgfig=export2wsdlg(labels,vars,values);
      uiwait(msgfig);
    end
@@ -119,7 +105,7 @@ hFig.Position(3)=hFig.Position(3)*2.2;
                 
    function ChangeFontSize(hObject,event)
        i_changefontsize(p1);
-       i_changefontsize(p2);
+       %i_changefontsize(p2);
        function i_changefontsize(p)
            if p.NodeFontSize>=20
                p.NodeFontSize=7;
@@ -134,10 +120,9 @@ hFig.Position(3)=hFig.Position(3)*2.2;
        %w=a(randi(length(a),1));
        w=w+1;
        if w>10, w=2; end
-       i_changeweight(p1,G1,w);
-       i_changeweight(p2,G2,w);
-       function i_changeweight(p,G,b)
-
+       i_changeweight(p1,w);
+       %i_changeweight(p2,G2,w);
+       function i_changeweight(p,b)
             %G.Edges.LWidths = abs(b*G.Edges.Weight/max(abs(G.Edges.Weight)));
             %p.LineWidth = G.Edges.LWidths;
             p.LineWidth=abs(b*p.LineWidth/max(abs(p.LineWidth)));
@@ -149,16 +134,16 @@ hFig.Position(3)=hFig.Position(3)*2.2;
        l=l+1;
        if l>5, l=1; end
        p1.layout(a(l));
-       p2.layout(a(l));
-       p2.XData=p1.XData;
-       p2.YData=p1.YData;
-       p1.XData=p2.XData;
-       p1.YData=p2.YData;
+       %p2.layout(a(l));
+       %p2.XData=p1.XData;
+       %p2.YData=p1.YData;
+       %p1.XData=p2.XData;
+       %p1.YData=p2.YData;
    end
 
    function ChangeDirected(hObject,event)
        [p1,G1]=i_changedirected(p1,G1,h1);
-       [p2,G2]=i_changedirected(p2,G2,h2);
+       %[p2,G2]=i_changedirected(p2,G2,h2);
        function [p,G]=i_changedirected(p,G,h) 
         x=p.XData; y=p.YData;
         if isa(G,'digraph')
@@ -188,26 +173,28 @@ hFig.Position(3)=hFig.Position(3)*2.2;
                 cutoff=str2double(list(indx));
             end
             [p1]=i_replotg(p1,G1,h1,cutoff);
-            [p2]=i_replotg(p2,G2,h2,cutoff);
+            %[p2]=i_replotg(p2,G2,h2,cutoff);
         end
        
    end
 
 
     function [p]=drawnetwork(G,h)
-        p=plot(h,G);
-        layout(p,'force');
+        p=plot(h,G,'layout','circle');
+        %layout(p,'circle');
         if isa(G,'digraph')
             G.Nodes.NodeColors = outdegree(G)-indegree(G);
         else
             G.Nodes.NodeColors = degree(G);            
         end
         p.NodeCData = G.Nodes.NodeColors;
-        n=size(G.Edges,1);
-        cc=repmat([0 0.4470 0.7410],n,1);
+        
+        cc=repmat([0 0.4470 0.7410],G.numedges,1);
         cc(G.Edges.Weight<0,:)=repmat([0.8500, 0.3250, 0.0980],...
                sum(G.Edges.Weight<0),1);
-        p.EdgeColor=cc;
+        p.EdgeColor=cc;        
+%         p.EdgeCData=ones(G.numedges,1);
+%         p.EdgeCData(G.Edges.Weight<0)=2;      
         
         i=ismember(string(upper(G.Nodes.Name)),tfgenes);
         if any(i)
@@ -219,13 +206,9 @@ hFig.Position(3)=hFig.Position(3)*2.2;
         p.NodeFontSize=2*p.NodeFontSize;
         title(h,'scGRN');
         
-%            if length(unique(p.LineWidth))==1
-%             p.LineWidth = p.LineWidth./p.LineWidth;
-%            else
-%                disp('do this')
-            G.Edges.LWidths = abs(w*G.Edges.Weight/max(G.Edges.Weight));
-            p.LineWidth = G.Edges.LWidths;
-%           end
+        G.Edges.LWidths = abs(w*G.Edges.Weight/max(G.Edges.Weight));
+        p.LineWidth = G.Edges.LWidths;
+
         
     end
 
@@ -246,7 +229,7 @@ hFig.Position(3)=hFig.Position(3)*2.2;
             %pkg.progressbar(k/m) % Update progress bar
             waitbar(k/m,f,sprintf('Cutoff = %g',cutoff));
             p1=i_replotg(p1,G1,h1,cutoff);
-            p2=i_replotg(p2,G2,h2,cutoff);
+            %p2=i_replotg(p2,G2,h2,cutoff);
             pause(1);
         end
         %close(f)

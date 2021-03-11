@@ -10,6 +10,7 @@ function callback_BuildGeneNetwork(src,~)
     fprintf("%s\n",glist)
     fw=gui.gui_waitbar;    
     x=sce.X(i,:);
+    x=sc_transform(x);
     A=sc_pcnet(x);
     gui.gui_waitbar(fw);            
     sc_grnview(A,glist);
