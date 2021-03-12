@@ -4,6 +4,17 @@ function Rpath=FindRpath
 % e.g.:
 % Rpath=FindPathR
 % >> 'C:\Program Files\R\R-3.1.1\bin'
+
+mfolder=fileparts(mfilename('fullpath'));
+rpathf=fullfile(mfolder,...
+       '../../resources','Rpath.txt');
+if exist(rpathf,'file')
+fid = fopen(rpathf);
+Rpath = fgetl(fid);
+fclose(fid);
+return;
+end
+
 if isunix
     [a,b]=system('which Rscript');
     if a==0
