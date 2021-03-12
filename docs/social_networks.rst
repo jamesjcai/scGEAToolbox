@@ -24,12 +24,12 @@ Label cell type interactively with `SC_SCATTER`
          </div>
 
 Slack Channel
--------------  
+=============
 Visit the dedicated `Slack Channel <https://join.slack.com/t/scgeatoolbox/shared_invite/zt-6zl1893a-S4WQKH3XPb_q68r0ejoMEA>`__
 if you have questions or to report bugs.
 
 Twitter Hashtag
----------------  
+===============
 If you create amazing visualizations using `scGEAToolbox` and you want to tweet them, remember to include the `#scGEAToolbox <https://twitter.com/hashtag/scGEAToolbox?src=hashtag_click>`__ hashtag: we will be happy to retweet.
   
   
