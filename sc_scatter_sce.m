@@ -1049,7 +1049,7 @@ function ClusterCellsX(~,~)
         end
         methodtag=methodtagv{indx};
     else
-        retrun;
+        return;
     end
     
     fw=gui.gui_waitbar;
