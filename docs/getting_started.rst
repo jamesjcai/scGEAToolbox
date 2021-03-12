@@ -3,7 +3,7 @@
 Getting Started
 ===============
 
-Run DEMO_GETTING_STARTED
+Run `DEMO_GETTING_STARTED`
 ------------------------
 
 .. code-block::
@@ -11,8 +11,8 @@ Run DEMO_GETTING_STARTED
  demo_Getting_Started
 
 
-Using `SC_SCATTER`
-------------------
+Using `SC_SCATTER` to explore
+-----------------------------
 For a quick exploratry data analysis using `SC_SCATTER` function
 
 .. code-block::
@@ -24,9 +24,9 @@ For a quick exploratry data analysis using `SC_SCATTER` function
 If everything goes right, you will see the figure like this:
 |gui|
 
-Making SCE
-----------
-`scGEAToolbox` defines a Single-cell Experiment (SCE) class in order to store scRNA-seq data and variables. To make an SCE class, you need two variables: X and g, which are for gene expression matrix and gene list, respectively. 
+Making scRNA-seq data into `SCE`
+--------------------------------
+`scGEAToolbox` defines a Single-cell Experiment (SCE) class in order to store scRNA-seq data and variables. To make an SCE class, you need two variables: :math:`X` and :math:`g`, which are gene expression matrix and gene list, respectively. 
 
 .. code-block::
 
