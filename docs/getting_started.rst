@@ -1,24 +1,7 @@
 .. _getting_started:
 
-Getting Started with `SC_SCATTER`
-================================
-
-This section shows how to quickly install `scGEAToolbox` and run `SC_SCATTER`--an interactive, explorary analysis tool for scRNA-seq data.
-
-Qick installation
------------------
-Run the following code in `MATLAB`:
-
-.. code-block::
-
-  tic
-  disp('Installing scGEAToolbox...')
-  unzip('https://github.com/jamesjcai/scGEAToolbox/archive/master.zip');
-  addpath('./scGEAToolbox-master');
-  toc
-  if exist('cdgea.m','file')
-      disp('scGEAToolbox installed!')
-  end
+Getting Started
+===============
 
 Run DEMO_GETTING_STARTED
 ------------------------
