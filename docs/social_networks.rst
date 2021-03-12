@@ -1,6 +1,3 @@
-Social Networks
-===============
-
 Youtube Playlist
 ----------------
 You might also want to take a look at scGEAToolbox in action: see the `Youtube
