@@ -32,6 +32,7 @@ of scGEAToolbox <https://scgeatoolbox.readthedocs.io/>`__, with posts about appl
    :maxdepth: 2
    :caption: Main Documents
 
+   quick_installation
    getting_started
    code_formulas
    case_studies
