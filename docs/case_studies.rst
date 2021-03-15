@@ -77,6 +77,7 @@ Import Seurat RData
 For example, we are trying to read files from `https://www.synapse.org/#!Synapse:syn22855256 <https://www.synapse.org/#!Synapse:syn22855256>`_. They are described as `pbmc_discovery_v1.RData` and `pbmc_replication_v1.RData` are Seurat objects containing the gene expression raw counts and log normalized data, the phenotype Label ("CI" for MCI, "C" for control) and the inferred cell identity of the discovery and replication cohort, respectively. 
 
 .. code-block:: r
+  
   load('pbmc_discovery_v1.RData')
   library(Seurate)
   library(Matrix)
@@ -88,6 +89,7 @@ For example, we are trying to read files from `https://www.synapse.org/#!Synapse
 After exporting Seurate object data into the three files, you can then use MATLAB to read the files:
   
 .. code-block:: matlab
+
   [X,genelist,barcodelist]=sc_readmtxfile('matrix.mtx','features.tsv','barcodes.tsv',2);
 
 
