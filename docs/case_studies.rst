@@ -78,7 +78,7 @@ For example, we are trying to read files from `https://www.synapse.org/#!Synapse
 
 .. code-block:: r
 
-  library(Seurate)
+  library(Seurat)
   library(Matrix)
   load('pbmc_discovery_v1.RData')
   countMatrix <- pbmc_discovery@assays$RNA@counts
