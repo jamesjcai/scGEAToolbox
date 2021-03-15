@@ -90,7 +90,7 @@ After exporting Seurate object data into the three files, you can then use MATLA
   
 .. code-block:: matlab
 
-  [X,genelist,barcodelist]=sc_readmtxfile('matrix.mtx','features.tsv','barcodes.tsv',2);
+  [X,genelist,barcodelist]=sc_readmtxfile('matrix.mtx','features.tsv','barcodes.tsv',1);
 
 
 
