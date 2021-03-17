@@ -60,5 +60,5 @@ A complete pipeline of raw data processing
   sce=sce.estimatecellcycle;
   id=sc_cluster_s(s_tsne,10);
   sce.c_cluster_id=id;
-  sc_scatter_sce(sce)
+  sc_scatter(sce)
 
