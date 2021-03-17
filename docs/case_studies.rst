@@ -45,7 +45,8 @@ We can then use the code below to import data into `MATLAB`.
 
 .. code-block:: matlab
 
-  [X,genelist,barcodelist]=sc_readmtxfile('matrix.mtx','features.tsv','barcodes.tsv',2);
+  [X,genelist,barcodelist]=sc_readmtxfile('GSM3535276_AXLN1_matrix.mtx','GSM3535276_AXLN1_genes.tsv',...
+                          'GSM3535276_AXLN1_barcodes.tsv',2);
   [X,genelist]=sc_qcfilter(X,genelist);
   [X,genelist]=sc_selectg(X,genelist,1,0.05);
   sc_scatter(X,genelist)
