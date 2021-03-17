@@ -33,7 +33,7 @@ Making scRNA-seq data into `SCE`
   cdgea;
   load example_data\testXgs.mat
   sce=SingleCellExperiment(X,g);
-  sc_scatter_sce(sce)
+  sc_scatter(sce)
   
 .. |gui| image:: https://raw.githubusercontent.com/jamesjcai/scGEAToolbox/master/resources/sc_scatter.png
    :target: https://twitter.com/hashtag/scGEAToolbox?src=hashtag_click
