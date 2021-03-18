@@ -32,15 +32,15 @@ sc_scatter(X,g,s);
 
 pause  % Press any key to continue...
 
-%% === (4/5) Run SC_SCATTER_SCE ===
+%% === (4/5) Run SC_SCATTER with SCE object ===
 
-sc_scatter_sce(sce);
+sc_scatter(sce);
 
 pause  % Press any key to continue...
 
 %% === (5/5) Example of multidimensional view ===
 
-gui.sc_multiembeddings
+gui.sc_multiembeddings;
 
 %% End of DEMO_GETTING_STARTED
 echo off
