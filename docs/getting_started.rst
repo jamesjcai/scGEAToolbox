@@ -36,5 +36,6 @@ Making scRNA-seq data into `SCE`
   sc_scatter(sce)
   
 .. |gui| image:: https://raw.githubusercontent.com/jamesjcai/scGEAToolbox/master/resources/sc_scatter.png
-   :target: https://twitter.com/hashtag/scGEAToolbox?src=hashtag_click
+   :width: 250
+   :target: https://raw.githubusercontent.com/jamesjcai/scGEAToolbox/master/resources/sc_scatter.png
 
