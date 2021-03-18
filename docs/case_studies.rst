@@ -67,12 +67,6 @@ In the 10x Genomics folder, there are three files, namely, matrix.mtx, features.
   [s_tsne]=sc_tsne(Xhvg(1:2000,:),3,false,false);
   sc_scatter(X,genelist,s_tsne)
 
-Overview of `SC_SCATTER`
------------------------
-`SC_SCATTER` can be used to visualize `SCE` class/object. Below are links to several case studies and examples using sc_scatter_sce to explore high-dimensional data. All examples are below are publically available through GitHub.
-
-|Overview of sc_scatter|
-
 Import Seurat RData
 -------------------
 For example, we are trying to read files from `https://www.synapse.org/#!Synapse:syn22855256 <https://www.synapse.org/#!Synapse:syn22855256>`_. They are described as `pbmc_discovery_v1.RData` and `pbmc_replication_v1.RData` are Seurat objects containing the gene expression raw counts and log normalized data, the phenotype Label ("CI" for MCI, "C" for control) and the inferred cell identity of the discovery and replication cohort, respectively. 
@@ -99,7 +93,4 @@ After exporting Seurate object data into the three files, you can then use MATLA
   c=string(T.Label);
   sce.c_batch_id=c;
   sc_scatter(sce)
-  
-.. |Overview of sc_scatter| image:: https://github.com/jamesjcai/scGEAToolbox/raw/master/resources/Tooltips.png
-   :target: https://github.com/jamesjcai/scGEAToolbox/raw/master/resources/Tooltips.png
-  
+
