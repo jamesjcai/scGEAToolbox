@@ -52,8 +52,7 @@ We can then use the code below to import data into `MATLAB`.
   sc_scatter(X,genelist)
 
 
-
-Process 10x Genomics raw data
+Process downloaded data files
 -----------------------------
 In the 10x Genomics folder, there are three files, namely, matrix.mtx, features.tsv and barcodes.tsv. Here is the best practice of raw data processing.
 
@@ -94,3 +93,16 @@ After exporting Seurate object data into the three files, you can then use MATLA
   sce.c_batch_id=c;
   sc_scatter(sce)
 
+Visualize data in 6D
+--------------------
+
+.. code-block:: matlab
+
+  cdgea;
+  load example_data\example10xdata.mat
+  % s=sc_tsne(X,6,false,true);
+  s=s_tsne6;    % using pre-computed 6-d embedding S_TSNE6
+  gui.sc_multiembeddings(s(:,1:3),s(:,4:6));
+  
+  
+  
