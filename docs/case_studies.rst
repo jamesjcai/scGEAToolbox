@@ -109,5 +109,6 @@ Here is what you should get
 |sixdview|
 
 .. |sixdview| image:: https://github.com/jamesjcai/scGEAToolbox/raw/master/resources/six_d.png
+   :width: 200
    :target: https://github.com/jamesjcai/scGEAToolbox/raw/master/resources/six_d.png
   
