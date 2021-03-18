@@ -93,6 +93,30 @@ After exporting Seurate object data into the three files, you can then use MATLA
   sce.c_batch_id=c;
   sc_scatter(sce)
 
+Import data from a TSV/Excel file
+---------------------------------
+If your scRNA-seq data is in Excel file, save it as TSV or CSV a file with the format like this:
+
+.. code-block:: text
+
+  genes	X1	X2	X3	X4	X5	X6	X7	X8	X9
+  NOC2L	1	1	2	3	3	2	0	1	3	
+  HES4	50	15	19	50	8	87	23	25	29
+  ISG15	279	312	425	180	406	408	335	403	398
+  AGRN	3	4	9	5	2	3	8	8	9	
+  SDF4	2	2	4	0	5	0	4	2	5	
+  B3GALT6	2	1	0	0	1	0	1	1	0	
+  UBE2J2	1	2	3	1	1	1	6	3	4	
+  SCNN1D	0	1	0	0	0	0	0	0	0	
+  ACAP3	1	3	1	0	1	0	0	1	0
+
+Then you can use function `sc_readtsvfile` to import the data. Here is an example:
+
+.. code-block:: matlab
+
+  cdgea;
+  [X,genelist]=sc_readtsvfile('example_data\GSM3204304_P_P_Expr.csv');
+
 Visualize data in 6D
 --------------------
 
@@ -104,10 +128,11 @@ Visualize data in 6D
   s=s_tsne6;    % using pre-computed 6-d embedding S_TSNE6
   gui.sc_multiembeddings(s(:,1:3),s(:,4:6));
   
-Here is what you should get
+Here is what you should get:
   
 |sixdview|
 
 .. |sixdview| image:: https://github.com/jamesjcai/scGEAToolbox/raw/master/resources/six_d.png
+   :width: 250
    :target: https://github.com/jamesjcai/scGEAToolbox/raw/master/resources/six_d.png
   
