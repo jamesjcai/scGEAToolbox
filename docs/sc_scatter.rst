@@ -1,5 +1,5 @@
-sc_scatter
-==========
+`sc_scatter`
+============
 
 Overview of `SC_SCATTER`
 -----------------------
