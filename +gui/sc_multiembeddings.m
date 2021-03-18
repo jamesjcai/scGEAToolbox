@@ -1,4 +1,4 @@
-function [f0]=sc_multiembeddings(s1,s2,ttl1,ttl2)
+function sc_multiembeddings(s1,s2,ttl1,ttl2)
 if nargin<4, ttl2=""; end
 if nargin<3, ttl1=""; end
 if nargin<1
@@ -8,7 +8,7 @@ if nargin<1
     ttl2='UMAP';
 end
 f0=figure('Visible',false);
-g1=subplot(1,2,1);
+subplot(1,2,1);
 if size(s1,2)==2
     h1=scatter(s1(:,1),s1(:,2));
 else
@@ -18,7 +18,7 @@ if ~isempty(ttl1)
     title(ttl1)
 end
 
-g2=subplot(1,2,2);
+subplot(1,2,2);
 if size(s1,2)==2
     h2=scatter(s2(:,1),s2(:,2));
 else
