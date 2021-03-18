@@ -104,5 +104,10 @@ Visualize data in 6D
   s=s_tsne6;    % using pre-computed 6-d embedding S_TSNE6
   gui.sc_multiembeddings(s(:,1:3),s(:,4:6));
   
+Here is what you should get
   
+|sixdview|
+
+.. |sixdview| image:: https://github.com/jamesjcai/scGEAToolbox/raw/master/resources/six_d.png
+   :target: https://github.com/jamesjcai/scGEAToolbox/raw/master/resources/six_d.png
   
