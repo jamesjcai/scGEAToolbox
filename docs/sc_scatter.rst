@@ -1,4 +1,4 @@
-`sc_scatter`
+`SC_SCATTER`
 ============
 
 Overview of `SC_SCATTER`
