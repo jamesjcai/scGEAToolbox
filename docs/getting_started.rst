@@ -22,6 +22,7 @@ For a quick exploratry data analysis using `SC_SCATTER` function
   sc_scatter(X,g,s)
 
 If everything goes right, you will see the figure like this:
+
 |gui|
 
 Making scRNA-seq data into `SCE`
@@ -32,7 +33,7 @@ Making scRNA-seq data into `SCE`
 
   cdgea;
   load example_data\testXgs.mat
-  sce=SingleCellExperiment(X,g);
+  sce=SingleCellExperiment(X,g,s);
   sc_scatter(sce)
   
 .. |gui| image:: https://raw.githubusercontent.com/jamesjcai/scGEAToolbox/master/resources/sc_scatter.png
