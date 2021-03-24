@@ -50,15 +50,15 @@ A complete pipeline of raw data processing
 .. code-block::
 
   [X,genelist,barcodelist]=sc_readmtxfile('matrix.mtx','features.tsv','barcodes.tsv',2);
-  [X,genelist]=sc_qcfilter(X,genelist);
-  [X,genelist]=sc_selectg(X,genelist,1,0.05);
-  [Xnorm]=sc_norm(X,'type','deseq');
-  [~,Xhvg]=sc_hvg(Xnorm,genelist,true);
-  [s_tsne]=sc_tsne(Xhvg(1:2000,:),3,false,false);
-  sce=SingleCellExperiment(X,genelist,s_tsne);
-  sce=sce.estimatepotency(2);
-  sce=sce.estimatecellcycle;
-  id=sc_cluster_s(s_tsne,10);
-  sce.c_cluster_id=id;
-  sc_scatter(sce)
+  [X,genelist]=sc_qcfilter(X,genelist);         % basic QC
+  [X,genelist]=sc_selectg(X,genelist,1,0.05);   % select genes expressed in at least 5% of cells
+  [Xnorm]=sc_norm(X,'type','deseq');            % normalize using DeSeq method
+  [T,Xhvg]=sc_hvg(Xnorm,genelist,true);         % identify highly variable genes (HVGs) 
+  [s_tsne]=sc_tsne(Xhvg(1:2000,:),3,false,false);   % using expression of top 2000 HVGs to t-SNE for cells
+  sce=SingleCellExperiment(X,genelist,s_tsne);      % make SCE class
+  sce=sce.estimatepotency(2);                   % estimate differentiation potency (1-human; 2-mouse)
+  % sce=sce.estimatecellcycle;                  % estimate cell cycle phase. Need R/Seurat to be installed.
+  id=sc_cluster_s(s_tsne,10);                   % clustering on the t-SNE coordinates using k-means
+  sce.c_cluster_id=id;                          % assigning cluster Ids to SCE class
+  sc_scatter(sce)                               % visualize cells  
 
