@@ -3,8 +3,9 @@ Code Formulas
 
 Example codes for common tasks.
 
-Import files downloaded from GEO 
---------------------------------
+Import 10x Genomics files
+-------------------------
+In the 10x Genomics folder, there are three files, namely, matrix.mtx, features.tsv (or genes.tsv) and barcodes.tsv. Here is how to import them:
 
 .. code-block::
 
@@ -22,9 +23,9 @@ If the barcodees.tsv is not available, then use the following
   [X,genelist]=sc_readmtxfile(mtxf,genf,[],2);
 
 
-Process 10x Genomics expression matrix
---------------------------------------
-In the 10x Genomics folder, there are three files, namely, matrix.mtx, features.tsv and barcodes.tsv. Here is the best practice of raw data processing.
+Process expression matrix, `X` and gene list, `genelist`
+-------------------------------------------------------
+Here is an example of raw data processing.
 
 .. code-block::
   
@@ -34,8 +35,8 @@ In the 10x Genomics folder, there are three files, namely, matrix.mtx, features.
   [s_tsne]=sc_tsne(X,3,false,false);
   sc_scatter(X,genelist,s_tsne)
 
-t-SNE using top 2000 highly varible genes (HVGs)
-------------------------------------------------
+t-SNE embedding of cells using highly varible genes (HVGs)
+----------------------------------------------------------
 
 .. code-block::
   
