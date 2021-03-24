@@ -3,8 +3,8 @@
 Case Studies and Tutorials
 ==========================
 
-Download data files from GEO
-----------------------------
+Download 10x Genomics data files from GEO
+-----------------------------------------
 
 From GEO database, we obtain the FTP links to the data files we need. Here we use a data set from sample GSM3535276 as an example ( https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM3535276). The sample is human AXLN1 lymphatic endothelial cells.
 
@@ -52,8 +52,8 @@ We can then use the code below to import data into `MATLAB`.
   sc_scatter(X,genelist)
 
 
-Process downloaded data files
------------------------------
+Process downloaded 10x Genomics data files
+------------------------------------------
 In the 10x Genomics folder, there are three files, namely, matrix.mtx, features.tsv and barcodes.tsv. Here is the best practice of raw data processing.
 
 .. code-block::
@@ -65,6 +65,41 @@ In the 10x Genomics folder, there are three files, namely, matrix.mtx, features.
   [~,Xhvg]=sc_hvg(Xnorm,genelist,true);
   [s_tsne]=sc_tsne(Xhvg(1:2000,:),3,false,false);
   sc_scatter(X,genelist,s_tsne)
+
+
+Download Drop-seq data files from GEO
+-------------------------------------
+
+From GEO database, we obtain the FTP links to the data files we need. Here we use a data set from sample GSM3036814 as an example (https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM3036814). The sample is mouse lung cells.
+
+.. raw:: html
+
+  <table cellpadding="2" cellspacing="2" width="600"><tr bgcolor="#eeeeee" valign="top"><td align="middle" bgcolor="#CCCCCC"><strong>Supplementary file</strong></td>
+  <td align="middle" bgcolor="#CCCCCC"><strong>Size</strong></td>
+  <td align="middle" bgcolor="#CCCCCC"><strong>Download</strong></td>
+  <td align="middle" bgcolor="#CCCCCC"><strong>File type/resource</strong></td>
+  </tr>
+  <tr valign="top"><td bgcolor="#DEEBDC">GSM3036814_Control_6_Mouse_lung_digital_gene_expression_6000.dge.txt.gz</td>
+  <td bgcolor="#DEEBDC" title="1797463">1.7 Mb</td>
+  <td bgcolor="#DEEBDC"><a href="ftp://ftp.ncbi.nlm.nih.gov/geo/samples/GSM3036nnn/GSM3036814/suppl/GSM3036814%5FControl%5F6%5FMouse%5Flung%5Fdigital%5Fgene%5Fexpression%5F6000%2Edge%2Etxt%2Egz">(ftp)</a><a href="/geo/download/?acc=GSM3036814&amp;format=file&amp;file=GSM3036814%5FControl%5F6%5FMouse%5Flung%5Fdigital%5Fgene%5Fexpression%5F6000%2Edge%2Etxt%2Egz">(http)</a></td>
+  <td bgcolor="#DEEBDC">TXT</td>
+  </tr>
+  </table>
+  
+We can use `gunzip` function directly download and unzip the files.
+
+.. code-block:: matlab
+
+  gunzip('https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM3036nnn/GSM3036814/suppl/GSM3036814_Control_6_Mouse_lung_digital_gene_expression_6000.dge.txt.gz')
+  
+We can then use the code below to import data into `MATLAB`.
+
+.. code-block:: matlab
+
+  [X,genelist]=sc_readtsvfile('GSM3036814_Control_6_Mouse_lung_digital_gene_expression_6000.dge.txt');
+  [X,genelist]=sc_qcfilter(X,genelist);
+  [X,genelist]=sc_selectg(X,genelist,1,0.05);
+  sc_scatter(X,genelist)
 
 Import Seurat RData
 -------------------
