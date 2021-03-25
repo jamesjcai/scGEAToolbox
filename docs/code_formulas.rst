@@ -7,7 +7,7 @@ Import 10x Genomics files
 -------------------------
 In the 10x Genomics folder, there are three files, namely, matrix.mtx, features.tsv (or genes.tsv) and barcodes.tsv. Here is how to import them:
 
-.. code-block::
+.. code-block:: matlab
 
   mtxf='GSM3535276_AXLN1_matrix.mtx';
   genf='GSM3535276_AXLN1_genes.tsv';
@@ -16,7 +16,7 @@ In the 10x Genomics folder, there are three files, namely, matrix.mtx, features.
 
 If the barcodees.tsv is not available, then use the following
 
-.. code-block::
+.. code-block:: matlab
 
   mtxf='GSM3535276_AXLN1_matrix.mtx';
   genf='GSM3535276_AXLN1_genes.tsv';
@@ -27,7 +27,7 @@ Process expression matrix, `X` and gene list, `genelist`
 -------------------------------------------------------
 Here is an example of raw data processing.
 
-.. code-block::
+.. code-block:: matlab
   
   [X,genelist,barcodelist]=sc_readmtxfile('matrix.mtx','features.tsv','barcodes.tsv',2);
   [X,genelist]=sc_qcfilter(X,genelist);
@@ -38,7 +38,7 @@ Here is an example of raw data processing.
 t-SNE embedding of cells using highly varible genes (HVGs)
 ----------------------------------------------------------
 
-.. code-block::
+.. code-block:: matlab
   
   [Xnorm]=sc_norm(X,'type','deseq');
   [~,Xhvg]=sc_hvg(Xnorm,genelist,true);
@@ -48,7 +48,7 @@ t-SNE embedding of cells using highly varible genes (HVGs)
 A complete pipeline of raw data processing
 ------------------------------------------
 
-.. code-block::
+.. code-block:: matlab
 
   [X,genelist,barcodelist]=sc_readmtxfile('matrix.mtx','features.tsv','barcodes.tsv',2);
   [X,genelist]=sc_qcfilter(X,genelist);         % basic QC
