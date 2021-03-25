@@ -17,12 +17,12 @@ pw1=fileparts(mfilename('fullpath'));
 dbfile1=fullfile(pw1,'resources','STRING','stringdb_human.mat');
 dbfile2=fullfile(pw1,'resources','STRING','stringdb_human.mat');
 if ~exist(dbfile1,'file')
-    disp('Downloading ...... stringdb_human.mat')
+    %disp('Downloading ...... stringdb_human.mat')
     url = 'https://github.com/jamesjcai/jamesjcai.github.io/raw/master/data/stringdb_human.mat';
     outfilename = websave(dbfile1,url);
 end
 if ~exist(dbfile2,'file')
-    disp('Downloading ...... stringdb_mouse.mat')
+    %disp('Downloading ...... stringdb_mouse.mat')
     url = 'https://github.com/jamesjcai/jamesjcai.github.io/raw/master/data/stringdb_mouse.mat';    
     outfilename = websave(dbfile2,url);    
 end
@@ -30,8 +30,10 @@ end
 genelist=upper(genelist);
 if speciesid==1
     ppinetfile=dbfile1; % 'Z:\Cailab\CCC_utilities\STRING\stringdb_human.mat';
+    disp('Using ...... stringdb_human.mat')
 else
     ppinetfile=dbfile2; % 'Z:\Cailab\CCC_utilities\STRING\stringdb_mouse.mat';
+    disp('Using ...... stringdb_mouse.mat')
 end
 load(ppinetfile,'G');
 G.Edges.Weight=double(G.Edges.Weight>0);

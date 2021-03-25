@@ -15,7 +15,7 @@ if nargin<2 || isempty(genelist)
     genelist=strcat("G",string(1:size(X,1)))';
 end
 if nargin<3, sortit=true; end
-if nargin<4, plotit=true; end
+if nargin<4, plotit=false; end
 if nargin<5, normit=true; end
 if nargin<6, ignorehigh=true; end
 

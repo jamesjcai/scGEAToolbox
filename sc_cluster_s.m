@@ -15,7 +15,7 @@ checkK = @(x) (x > 0) && isnumeric(x) && isscalar(x);
 addRequired(p,'s',@isnumeric);
 addRequired(p,'k',checkK);
 addOptional(p,'type',defaultType,checkType)
-addOptional(p,'plotit',true,@islogical)
+addOptional(p,'plotit',false,@islogical)
 parse(p,s,k,varargin{:})
 plotit=p.Results.plotit;
 
