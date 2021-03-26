@@ -759,7 +759,8 @@ end
 function ShowCellStats(~,~)
 
     listitems={'Library Size','Mt-reads Ratio',...
-        'Mt-genes Expression','Cell Cycle Phase',...
+        'Mt-genes Expression','HgB-genes Expression',...
+        'Cell Cycle Phase',...
         'Cell Type','Cluster ID','Batch ID'};
     for k=1:2:length(sce.list_cell_attributes)
         listitems=[listitems,sce.list_cell_attributes{k}];
@@ -797,7 +798,18 @@ function ShowCellStats(~,~)
                     warndlg('No mt-genes found');
                 end
                 return;
-            case 4   % "Cell Cycle Phase";
+            case 4 % HgB-genes
+                idx=startsWith(sce.g,'hba-','IgnoreCase',true)|startsWith(sce.g,'hbb-','IgnoreCase',true);
+                if any(idx)
+                    ttxt=sprintf("%s+",sce.g(idx));
+                    ci=sum(sce.X(idx,:),1);
+                    pkg.i_stem3scatter(sce.s(:,1),sce.s(:,2),ci,ttxt);
+                else
+                    warndlg('No HgB-genes found');                    
+                end
+                return;
+                % xxx
+            case 5   % "Cell Cycle Phase";
                 if isempty(sce.c_cell_cycle_tx)   
                  answer = questdlg('Estimate cell cycle using R/seurat?');
                  if ~strcmp(answer,'Yes'), return; end                    
@@ -808,15 +820,15 @@ function ShowCellStats(~,~)
                 end                
                 [ci,tx]=grp2idx(sce.c_cell_cycle_tx);
                 ttxt=sprintf('%s|',string(tx));
-            case 5 % cell type
+            case 6 % cell type
                 ci=sce.c_cell_type_tx;
-            case 6 % cluster id              
+            case 7 % cluster id              
                 ci=sce.c_cluster_id;
-            case 7 % batch id
+            case 8 % batch id
                 ci=sce.c_batch_id;
             otherwise % other properties                
-                ttxt=sce.list_cell_attributes{2*(indx-7)-1};
-                ci=sce.list_cell_attributes{2*(indx-7)};
+                ttxt=sce.list_cell_attributes{2*(indx-8)-1};
+                ci=sce.list_cell_attributes{2*(indx-8)};
         end
         if isempty(ci)
             errordlg("Undefined classification");
