@@ -55,11 +55,11 @@ A complete pipeline of raw data processing
   [X,genelist]=sc_selectg(X,genelist,1,0.05);   % select genes expressed in at least 5% of cells
   [Xnorm]=sc_norm(X,'type','deseq');            % normalize using DeSeq method
   [T,Xhvg]=sc_hvg(Xnorm,genelist,true);         % identify highly variable genes (HVGs) 
-  [s_tsne]=sc_tsne(Xhvg(1:2000,:),3,false,false);   % using expression of top 2000 HVGs to t-SNE for cells
+  [s_tsne]=sc_tsne(Xhvg(1:2000,:),3,false,false);   % using expression of top 2000 HVGs for tSNE
   sce=SingleCellExperiment(X,genelist,s_tsne);      % make SCE class
   sce=sce.estimatepotency(2);                   % estimate differentiation potency (1-human; 2-mouse)
-  % sce=sce.estimatecellcycle;                  % estimate cell cycle phase. Need R/Seurat to be installed.
-  id=sc_cluster_s(s_tsne,10);                   % clustering on the t-SNE coordinates using k-means
+  % sce=sce.estimatecellcycle;                  % estimate cell cycle phase using R/Seurat
+  id=sc_cluster_s(s_tsne,10);                   % clustering on tSNE coordinates using k-means
   sce.c_cluster_id=id;                          % assigning cluster Ids to SCE class
   sc_scatter(sce)                               % visualize cells  
 
@@ -72,7 +72,7 @@ Merge two data sets (WT and KO)
   sce_wt=sce;
   load KO/clean_data.mat sce
   sce_ko=sce;
-  sce=sc_mergesces({sce_wt,sce_ko},'union');    % use parameter 'union' or 'intersect' to merge gene lists
+  sce=sc_mergesces({sce_wt,sce_ko},'union');    % use parameter 'union' or 'intersect' to merge genes
   sce.c=sce.c_batch_id;
   sc_scatter(sce)                               % blue - WT and red - KO  
   
