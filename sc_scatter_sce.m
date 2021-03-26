@@ -85,7 +85,7 @@ pt3a.ClickedCallback = @SelectCellsByClass;
 
 pt3a = uipushtool(UitoolbarHandle,'Separator','off');
 [img,map] = imread(fullfile(mfolder,...
-            'resources','setrange.gif'));         
+            'resources','plotpicker-effects.gif'));         
 ptImage = ind2rgb(img,map);
 pt3a.CData = ptImage;
 pt3a.Tooltip = 'Cell QC';
