@@ -1,9 +1,11 @@
-function [idx,xr,yr]=gui_setranges(x,y,xr,yr)
+function [idx,xr,yr]=gui_setranges(x,y,xr,yr,txtx,txty)
 % https://www.mathworks.com/matlabcentral/answers/143306-how-to-move-a-plotted-line-vertically-with-mouse-in-a-gui
 if nargin<1, x=randn(300,1); end
 if nargin<2, y=randn(300,1); end
 if nargin<3, xr=[.3 .7]; end
 if nargin<4, yr=[.3 .7]; end
+if nargin<5, txtx=''; end
+if nargin<6, txty=''; end
 
 fh=figure();
 sh=scatter(x,y);
@@ -13,9 +15,10 @@ lh3=yline(yr(1),'r-');
 lh4=yline(yr(2),'r-');
 idx=true(length(x),1);
 guidata(fh,[x y]);
-
+xlabel(txtx);
+ylabel(txty);
 set(fh,'WindowButtonDownFcn', @mouseDownCallback);
- 
+waitfor(fh);
 
 function mouseDownCallback(figHandle,varargin)
 
@@ -53,7 +56,9 @@ function mouseDownCallback(figHandle,varargin)
             
             % b=findall(axes1.Children,'type','ConstantLine');
             % b(1).InterceptAxis
-    if min(abs(xx-axes1.XLim)) < min(abs(yy-axes1.YLim)) 
+            
+    if min(abs((xx-axes1.XLim)./diff(axes1.XLim))) < ...
+       min(abs((yy-axes1.YLim)./diff(axes1.YLim))) 
             if abs(xx-lh1.Value) < abs(xx-lh2.Value)
                 if ~isempty(lh1), delete(lh1); end
                 lh1=xline(xx,'r-');

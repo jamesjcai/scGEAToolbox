@@ -83,6 +83,15 @@ pt3a.CData = ptImage;
 pt3a.Tooltip = 'Select cells by class';
 pt3a.ClickedCallback = @SelectCellsByClass;
 
+pt3a = uipushtool(UitoolbarHandle,'Separator','off');
+[img,map] = imread(fullfile(mfolder,...
+            'resources','setrange.gif'));         
+ptImage = ind2rgb(img,map);
+pt3a.CData = ptImage;
+pt3a.Tooltip = 'Cell QC';
+pt3a.ClickedCallback = @SelectCellsByQC;
+
+
 % ------------------
 
 ptlabelclusters = uitoggletool(UitoolbarHandle,'Separator','on');
@@ -335,7 +344,27 @@ if nargout > 0
     varargout{1} = FigureHandle; 
 end
 
+function SelectCellsByQC(~,~)
+    % xxxx
+i=startsWith(sce.g,'mt-','IgnoreCase',true);
+if ~any(i), warndlg('No mt genes'); return; end
+lbsz=sum(sce.X,1);
+lbsz_mt=sum(sce.X(i,:),1);
+cj=lbsz_mt./lbsz;
+ttxtj="mtDNA%";
 
+ci=sum(sce.X);
+ttxti="Library Size";
+a=maxk(ci,10);
+idx=gui.gui_setranges2(ci',cj',[0 a(end)],...
+        [0 0.1],ttxti,ttxtj);
+    answer = questdlg(sprintf('Remove %d cells?',sum(~idx)));
+    if strcmpi(answer,'Yes')
+        sce=sce.removecells(~idx);
+        [c,cL]=grp2idx(sce.c);
+        RefreshAll;
+    end
+end
 
 % =========================
 function RefreshAll(~,~)
@@ -740,12 +769,16 @@ function ShowCellStats(~,~)
             case 1
                 ci=sum(sce.X);
                 ttxt="Library Size";
+                pkg.i_stem3scatter(sce.s(:,1),sce.s(:,2),ci,ttxt);
+                return;
             case 2
                 i=startsWith(sce.g,'mt-','IgnoreCase',true);
                 lbsz=sum(sce.X,1);
                 lbsz_mt=sum(sce.X(i,:),1);
                 ci=lbsz_mt./lbsz;
                 ttxt="mtDNA%";
+                pkg.i_stem3scatter(sce.s(:,1),sce.s(:,2),ci,ttxt);
+                return;
             case 3
                 idx=startsWith(sce.g,'mt-','IgnoreCase',true);
                 n=sum(idx);

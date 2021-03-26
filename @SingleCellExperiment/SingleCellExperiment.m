@@ -68,7 +68,7 @@ classdef SingleCellExperiment
     function obj = removecells(obj,i)
             obj.X(:,i)=[];
             obj.s(i,:)=[];
-            obj.c(i)=[];    
+            obj.c(i)=[];
             if ~isempty(obj.c_cell_cycle_tx)
                 obj.c_cell_cycle_tx(i)=[];
             end

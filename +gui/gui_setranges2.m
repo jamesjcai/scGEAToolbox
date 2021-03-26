@@ -1,20 +1,24 @@
-function [idx,xr,yr]=gui_setranges2(x,y,xr,yr)
+function [idx,xr,yr]=gui_setranges2(x,y,xr,yr,txtx,txty)
 % https://www.mathworks.com/matlabcentral/answers/143306-how-to-move-a-plotted-line-vertically-with-mouse-in-a-gui
 if nargin<1, x=randn(300,1); end
 if nargin<2, y=randn(300,1); end
 if nargin<3, xr=[.3 .7]; end
 if nargin<4, yr=[.3 .7]; end
+if nargin<5, txtx=''; end
+if nargin<6, txty=''; end
 
 fh=figure();
 sh=scatter(x,y);
-lh1=xline(xr(1),'r-');
+lh1=xline(xr(1),'k:');
 lh2=xline(xr(2),'r-');
-lh3=yline(yr(1),'r-');
+lh3=yline(yr(1),'k:');
 lh4=yline(yr(2),'r-');
 idx=true(length(x),1);
 guidata(fh,[x y]);
-
-
+xlabel(txtx);
+ylabel(txty);
+set(fh,'WindowButtonDownFcn', @mouseDownCallback);
+waitfor(fh);
 
 function mouseDownCallback(figHandle,varargin)
 
@@ -52,10 +56,13 @@ function mouseDownCallback(figHandle,varargin)
             
             % b=findall(axes1.Children,'type','ConstantLine');
             % b(1).InterceptAxis
-    if min(abs(xx-axes1.XLim)) < min(abs(yy-axes1.YLim)) 
+            
+    if min(abs((xx-axes1.XLim)./diff(axes1.XLim))) < ...
+       min(abs((yy-axes1.YLim)./diff(axes1.YLim))) 
             if abs(xx-lh1.Value) < abs(xx-lh2.Value)
                 if ~isempty(lh1), delete(lh1); end
-                lh1=xline(xx,'r-');
+                %lh1=xline(xx,'r-');
+                lh1=xline(0,'k:');
             else
                 if ~isempty(lh2), delete(lh2); end
                 lh2=xline(xx,'r-');
@@ -63,7 +70,8 @@ function mouseDownCallback(figHandle,varargin)
     else
             if abs(yy-lh3.Value) < abs(yy-lh4.Value)
                 if ~isempty(lh3), delete(lh3); end
-                lh3=yline(yy,'r-');
+                %lh3=yline(yy,'r-');
+                lh3=yline(0,'k:');
             else
                 if ~isempty(lh4), delete(lh4); end
                 lh4=yline(yy,'r-');
@@ -74,8 +82,9 @@ function mouseDownCallback(figHandle,varargin)
     idx=i&j;
     xr=[lh1.Value lh2.Value];
     yr=[lh3.Value lh4.Value];
-    axes1.Title.String=sprintf('%d out of %d (%.2f%%)',...
-        sum(i&j),length(i),100*sum(idx)./length(i));
+    axes1.Title.String=sprintf('Inclusion: %d out of %d (%.2f%%)\nExclusion: %d out of %d (%.2f%%)',...
+        sum(i&j),length(i),100*sum(idx)./length(i),...
+        length(i)-sum(i&j),length(i),100*(length(i)-sum(idx))./length(i));
     end
 end
 
