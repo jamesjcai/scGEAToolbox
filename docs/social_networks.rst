@@ -20,7 +20,7 @@ Label cell type interactively with `SC_SCATTER`
 
          <div style="position: relative; padding-bottom: 10px; height: 0; overflow: hidden; max-width: 100%; height: auto;">
 
-         <iframe width="560" height="315" src="https://www.youtube.com/embed/HRQiXX3Jwpg" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+         <iframe width="300" height="200" src="https://www.youtube.com/embed/HRQiXX3Jwpg" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
          </div>
 
 Slack Channel
