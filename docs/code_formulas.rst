@@ -67,6 +67,7 @@ Merge two data sets (WT and KO)
 -------------------------------
 
 .. code-block:: matlab
+
   load WT/clean_data.mat sce
   sce_wt=sce;
   load KO/clean_data.mat sce
@@ -75,12 +76,4 @@ Merge two data sets (WT and KO)
   sce.c=sce.c_batch_id;
   sc_scatter(sce)                               % blue - WT and red - KO  
   
-
-  
-  
-  
-  
-  
-  
-
-
+You may want to re-compute tSNE coordinates after the merging.
