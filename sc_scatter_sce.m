@@ -345,7 +345,7 @@ if nargout > 0
 end
 
 function SelectCellsByQC(~,~)
-    % xxxx
+    
 i=startsWith(sce.g,'mt-','IgnoreCase',true);
 if ~any(i), warndlg('No mt genes'); return; end
 lbsz=sum(sce.X,1);
@@ -358,11 +358,13 @@ ttxti="Library Size";
 a=maxk(ci,10);
 idx=gui.gui_setranges2(ci',cj',[0 a(end)],...
         [0 0.1],ttxti,ttxtj);
-    answer = questdlg(sprintf('Remove %d cells?',sum(~idx)));
-    if strcmpi(answer,'Yes')
-        sce=sce.removecells(~idx);
-        [c,cL]=grp2idx(sce.c);
-        RefreshAll;
+    if any(~idx)
+        answer = questdlg(sprintf('Remove %d cells?',sum(~idx)));
+        if strcmpi(answer,'Yes')
+            sce=sce.removecells(~idx);
+            [c,cL]=grp2idx(sce.c);
+            RefreshAll;
+        end
     end
 end
 
