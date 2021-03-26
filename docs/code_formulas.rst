@@ -63,3 +63,24 @@ A complete pipeline of raw data processing
   sce.c_cluster_id=id;                          % assigning cluster Ids to SCE class
   sc_scatter(sce)                               % visualize cells  
 
+Merge two data sets (WT and KO)
+-------------------------------
+
+.. code-block:: matlab
+  load WT/clean_data.mat sce
+  sce_wt=sce;
+  load KO/clean_data.mat sce
+  sce_ko=sce;
+  sce=sc_mergesces({sce_wt,sce_ko},'union');    % use parameter 'union' or 'intersect' to merge gene lists
+  sce.c=sce.c_batch_id;
+  sc_scatter(sce)                               % blue - WT and red - KO  
+  
+
+  
+  
+  
+  
+  
+  
+
+
