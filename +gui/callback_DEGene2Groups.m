@@ -3,7 +3,7 @@ function callback_DEGene2Groups(src,~)
     sce=guidata(FigureHandle);    
 
     [i1,i2]=gui.i_select2grps(sce);
-    if i1==0 || i2==0, return; end
+    if length(i1)==1 || length(i2)==1, return; end
 
     answer = questdlg('Which method?',...
         'Select Method','Wilcoxon rank-sum test',...
