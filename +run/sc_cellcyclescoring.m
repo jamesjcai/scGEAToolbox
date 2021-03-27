@@ -8,14 +8,21 @@ g=upper(genelist);
 [~,idx2]=intersect(g,g2mgenes);
 i1=randsample(length(g),length(idx1));
 i2=randsample(length(g),length(idx2));
+i3=randsample(length(g),length(idx2));
 
 %%
 score_s=zeros(size(X,2),1);
 score_g=zeros(size(X,2),1);
+score_null=zeros(size(X,2),1);
 tic
 for k=1:size(X,2)
     x=X(:,k);
     score_s(k)=mean(x(idx1))-mean(x(i1));
     score_g(k)=mean(x(idx2))-mean(x(i2));
+    score_null(k)=mean(x(i3))-mean(x(i2));
 end
 toc
+
+C=[score_null,score_s,score_g];
+[~,I]=max(C,[],2);   
+
