@@ -17,7 +17,8 @@ if isempty(featurestxtfile)
     celllist=[];
     return;
 end
-T=readtable(featurestxtfile,'ReadVariableNames',false,'filetype','text');
+T=readtable(featurestxtfile,'ReadVariableNames',false,...
+    'filetype','text','Delimiter',{'comma','space','tab','semi','bar'});
 if coln==1
     genelist=string(T.Var1);
 elseif coln==2
