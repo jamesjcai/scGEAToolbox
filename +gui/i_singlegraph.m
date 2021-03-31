@@ -1,5 +1,5 @@
 function i_singlegraph(G1)
-if nargin<2
+if nargin<1
     G1=WattsStrogatz(100,5,0.15);
     G1.Nodes.Name = string((1:100)');
     G1.Edges.Weight=rand(size(G1.Edges,1),1)*2;
@@ -21,7 +21,6 @@ h1=axes(hFig);
 
 tb = uitoolbar(hFig);
 pt = uipushtool(tb,'Separator','off');
-% ptImage = rand(16,16,3);
 [img,map] = imread(fullfile(mfolder,...
             '../resources','noun_font_size_591141.gif'));
 ptImage = ind2rgb(img,map);
@@ -180,8 +179,8 @@ pt.ClickedCallback = @SaveAdj;
 
 
     function [p]=drawnetwork(G,h)
-        p=plot(h,G,'layout','circle');
-        %layout(p,'circle');
+        p=plot(h,G);
+        %layout(p,'force');        
         if isa(G,'digraph')
             G.Nodes.NodeColors = outdegree(G)-indegree(G);
         else

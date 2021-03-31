@@ -196,7 +196,7 @@ hFig.Position(3)=hFig.Position(3)*2.2;
 
     function [p]=drawnetwork(G,h)
         p=plot(h,G);
-        layout(p,'force');
+        %layout(p,'force');        
         if isa(G,'digraph')
             G.Nodes.NodeColors = outdegree(G)-indegree(G);
         else
