@@ -811,12 +811,13 @@ function ShowCellStats(~,~)
                 % xxx
             case 5   % "Cell Cycle Phase";
                 if isempty(sce.c_cell_cycle_tx)   
-                 answer = questdlg('Estimate cell cycle using R/seurat?');
-                 if ~strcmp(answer,'Yes'), return; end                    
-                    fw=gui.gui_waitbar;
-                    [cix]=run.SeuratCellCycle(sce.X,sce.g);
-                    sce.c_cell_cycle_tx=cix;
-                    gui.gui_waitbar(fw);             
+%                  answer = questdlg('Estimate cell cycle using R/seurat?');
+%                  if ~strcmp(answer,'Yes'), return; end                    
+%                     fw=gui.gui_waitbar;
+%                     [cix]=run.SeuratCellCycle(sce.X,sce.g);
+%                     sce.c_cell_cycle_tx=cix;
+%                     gui.gui_waitbar(fw);             
+                    sce=sce.estimatecellcycle;
                 end                
                 [ci,tx]=grp2idx(sce.c_cell_cycle_tx);
                 ttxt=sprintf('%s|',string(tx));
@@ -843,7 +844,7 @@ function ShowCellStats(~,~)
              h=gui.i_gscatter3(sces,ci,1);
              view(ax,bx);
              title(sce.title);
-            if indx==4
+            if indx==5
                 hc=colorbar;
                 hc.Label.String=ttxt;
             else

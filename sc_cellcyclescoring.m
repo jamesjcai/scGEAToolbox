@@ -7,6 +7,8 @@ function [ScoreV]=sc_cellcyclescoring(X,genelist)
 % # Basically we need to compare genes against random genes in a matched
 % # interval of expression.
 
+% [ScoreV]=run.SeuratCellCycle(X,genelist);
+
 X=sc_norm(X);
 X=zscore(X);
 X(X>10)=10;   % https://github.com/satijalab/seurat/issues/1166
