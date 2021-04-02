@@ -58,7 +58,7 @@ A complete pipeline of raw data processing
   [s_tsne]=sc_tsne(Xhvg(1:2000,:),3,false,false);   % using expression of top 2000 HVGs for tSNE
   sce=SingleCellExperiment(X,genelist,s_tsne);      % make SCE class
   sce=sce.estimatepotency(2);                   % estimate differentiation potency (1-human; 2-mouse)
-  % sce=sce.estimatecellcycle;                  % estimate cell cycle phase using R/Seurat
+  sce=sce.estimatecellcycle;                    % estimate cell cycle phase
   id=sc_cluster_s(s_tsne,10);                   % clustering on tSNE coordinates using k-means
   sce.c_cluster_id=id;                          % assigning cluster Ids to SCE class
   sc_scatter(sce)                               % visualize cells  
