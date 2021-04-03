@@ -1,4 +1,4 @@
-function [X,genelist]=sc_readh5file(h5filename)
+function [X,genelist]=sc_readhdf5file(filenm)
 
 % https://www.mathworks.com/help/matlab/hdf5-files.html
 % http://scipy-lectures.org/advanced/scipy_sparse/csc_matrix.html
@@ -7,26 +7,26 @@ function [X,genelist]=sc_readh5file(h5filename)
 % https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM3489183
 % h5file='GSM3489183_IPF_01_filtered_gene_bc_matrices_h5.h5';
 if nargin<1
-[h5filename, pathname] = uigetfile( ...
+[filenm, pathname] = uigetfile( ...
        {'*.h5;*.hdf5', 'HDF5 Files (*.h5)';
         '*.*',  'All Files (*.*)'}, ...
         'Pick a HDF5 file');
-	if isequal(h5filename,0), X=[]; genelist=[]; return; end
-	h5filename=fullfile(pathname,h5filename);
+	if isequal(filenm,0), X=[]; genelist=[]; return; end
+	filenm=fullfile(pathname,filenm);
 end
-if exist(h5filename,'file') ~= 2
+if exist(filenm,'file') ~= 2
     error(message('FileNotFound'));        
 end
 
 % h5disp(h5file);
-hinfo=h5info(h5filename);
+hinfo=h5info(filenm);
 
 % if strcmp(a.Groups(1).Datasets(2).Name,'data')
-data=h5read(h5filename,[hinfo.Groups(1).Name,'/data']);
-indices=h5read(h5filename,[hinfo.Groups(1).Name,'/indices']);
-indptr=h5read(h5filename,[hinfo.Groups(1).Name,'/indptr']);
-g=h5read(h5filename,[hinfo.Groups(1).Name,'/gene_names']);
-shape=h5read(h5filename,[hinfo.Groups(1).Name,'/shape']);
+data=h5read(filenm,[hinfo.Groups(1).Name,'/data']);
+indices=h5read(filenm,[hinfo.Groups(1).Name,'/indices']);
+indptr=h5read(filenm,[hinfo.Groups(1).Name,'/indptr']);
+g=h5read(filenm,[hinfo.Groups(1).Name,'/gene_names']);
+shape=h5read(filenm,[hinfo.Groups(1).Name,'/shape']);
 
 X=zeros(shape(1),shape(2));
 for k=1:length(indptr)-1
