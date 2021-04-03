@@ -1,4 +1,4 @@
-function [ScoreV]=sc_cellcyclescoring(X,genelist)
+function [ScoreV,T]=sc_cellcyclescoring(X,genelist)
 % https://rdrr.io/cran/Seurat/src/R/utilities.R
 % https://satijalab.org/seurat/v2.4/cell_cycle_vignette.html
 % https://github.com/theislab/scanpy/blob/5db49c2612622b84b6379922204e0ba453d80ca2/scanpy/tools/_score_genes.py
@@ -37,14 +37,17 @@ score_s=sparse_nanmean(X(idx1,:))-sparse_nanmean(X(i1,:));
 score_g=sparse_nanmean(X(idx2,:))-sparse_nanmean(X(i2,:));
 
 ScoreV=string(repmat('G1',size(X,2),1));
-
-C=[score_s',score_g'];
+score_S=score_s';
+score_G2M=score_g';
+C=[score_S,score_G2M];
 [~,I]=max(C,[],2);
 Cx=C>0;
 i=sum(Cx,2)>0;
 ScoreV(i&I==1)="S";
 ScoreV(i&I==2)="G2M";
-
+if nargout>1
+    T=table(score_S,score_G2M,ScoreV);
+end
 % (score_s>score_g)&(sum(Cx,2)==2);  %'S'
 % (score_s<score_g)&(sum(Cx,2)==2);  %'G2M'
 % (Cx(:,1)>0)&(Cx(:,2)==0);          %'S'
