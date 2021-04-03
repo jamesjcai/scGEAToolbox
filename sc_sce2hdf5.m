@@ -1,5 +1,12 @@
 function [status]=sc_sce2hdf5(sce,filename)
 
+% import h5py
+% f = h5py.File("file.h5ad", "r")
+% list(f.keys())
+% f["sce"].visititems(print)
+% f["sce/X"][()]
+
+
 status=0;
 if nargin < 2
     [filen, pathn] = uiputfile( ...
