@@ -18,7 +18,23 @@ guidata(fh,[x y]);
 xlabel(txtx);
 ylabel(txty);
 set(fh,'WindowButtonDownFcn', @mouseDownCallback);
+
+% ButtonH=uicontrol('Parent',fh,'Style','pushbutton',...
+%     'String','Done','Units','normalized','Position',[0.0 0.5 0.4 0.2],'Visible','on');
+
+       btn = uicontrol(fh,'String',...
+                  'Done',...
+                  'Units','normalized',...
+                  'Position',[0.45 0.0 0.2 0.07],...
+                  'Callback', @ff,...
+                  'Tag','button');           
 waitfor(fh);
+
+
+    function ff(figHandle,varargin)
+        % delete(fh);
+        closereq;
+    end
 
 function mouseDownCallback(figHandle,varargin)
 

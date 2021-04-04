@@ -1,4 +1,4 @@
-function sc_grnview(A,g,alpha)
+function sc_grnview_old(A,g,alpha)
 if nargin<3, alpha=0.75; end
 n=size(A,1);
 if n>200, error('Smaller network is expected'); end
