@@ -6,19 +6,23 @@ if nargin<2, featurestxtfile=[]; end
 if exist(matrixmtxfile,'file') ~= 2
     error(message('FileNotFound'));        
 end
+tic
+fprintf('Reading mtx file %s...',matrixmtxfile);
 X=pkg.mmread(matrixmtxfile);
 try
     X=full(X);
 catch
 
 end
+fprintf('...done.\n');
 if isempty(featurestxtfile)
     genelist=[];
     celllist=[];
     return;
 end
+fprintf('Reading tsv file %s...',featurestxtfile);
 T=readtable(featurestxtfile,'ReadVariableNames',false,...
-    'filetype','text','Delimiter',{'comma','space','tab','semi','bar'});
+    'filetype','text','Delimiter',{'\t',',',' ',';','|'});
 if coln==1
     genelist=string(T.Var1);
 elseif coln==2
@@ -28,11 +32,13 @@ elseif coln==2
         genelist=string(T.Var1);
     end
 end
+fprintf('...done.\n');
 if nargout>2 && ~isempty(barcodestxtfile)
+    fprintf('Reading tsv file %s...',barcodestxtfile);
     T=readtable(barcodestxtfile,'ReadVariableNames',false,'filetype','text');
     celllist=string(T.Var1);
+    fprintf('...done.\n');
 end
-
 %assert(isequal(size(X,1),length(genelist)))
-
+toc
 end
