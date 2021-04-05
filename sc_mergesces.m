@@ -25,7 +25,8 @@ if ~isempty(sce1.c_cell_cycle_tx) && ~isempty(sce2.c_cell_cycle_tx)
     sce.c_cell_cycle_tx=[sce1.c_cell_cycle_tx; sce2.c_cell_cycle_tx];
 end
 if ~isempty(sce1.c_cell_type_tx) && ~isempty(sce2.c_cell_type_tx)
-    sce.c_cell_type_tx=[sce1.c_cell_type_tx; sce2.c_cell_type_tx];
+    sce.c_cell_type_tx=[i_remove_affix(sce1.c_cell_type_tx);...
+        i_remove_affix(sce2.c_cell_type_tx)];
 end
 if ~isempty(sce1.c_cluster_id) && ~isempty(sce2.c_cluster_id)    
     sce.c_cluster_id=[sce1.c_cluster_id; sce2.c_cluster_id];
@@ -41,6 +42,16 @@ if ~isempty(sce1.list_cell_attributes) && ~isempty(sce2.list_cell_attributes)
             sce.list_cell_attributes{k+1}=[sce1.list_cell_attributes{k+1};...
                 sce2.list_cell_attributes{k+1}];
         end
+    end
+end
+end
+
+function b=i_remove_affix(a)
+b=a;
+for k=1:length(a)
+    idx=strfind(a(k),'_{');
+    if idx>0
+        b(k)=extractBefore(a(k),idx);
     end
 end
 end

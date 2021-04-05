@@ -1161,7 +1161,8 @@ function LabelClusters(src,~)
                         otherwise
                             cc=[];
                     end
-                    if ~isempty(cc)                        
+                    if ~isempty(cc)
+                        % disp('Reset C')
                         [c,cL]=grp2idx(cc);
                         set(src,'State','off');
                     end                    
@@ -1173,12 +1174,13 @@ function LabelClusters(src,~)
                 set(src,'State','off');
                 return;
             end
+            RefreshAll;
             if i_labelclusters
                 set(src,'State','on');
             else                
                 set(src,'State','off');
             end
-        end
+        end        
 end
 
 function ShowClustersPop(~,~)
