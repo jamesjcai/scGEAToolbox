@@ -39,15 +39,23 @@ function callback_Brush4Markers(src,~)
     switch methodtag
         case 1
             [markerlist]=sc_pickmarkers(sce.X,sce.g,1+ptsSelected,2);
+            sce.c=1+ptsSelected;
+            markerlist=markerlist{2};
         case 2
-            [markerlist]=sc_pickmarkers(sce.X,sce.g,c,unique(c(ptsSelected)));
+            ptsSelected=c==unique(c(ptsSelected));
+            % h.BrushData=double(ptsSelected);
+            %[markerlist]=sc_pickmarkers(sce.X,sce.g,c,unique(c(ptsSelected)));
+            [markerlist]=sc_pickmarkers(sce.X,sce.g,1+ptsSelected,2);
+            sce.c=1+ptsSelected;
+            markerlist=markerlist{2};            
     end
     gui.gui_waitbar(fw);
     % assignin('base','A',A);
     [numfig]=gui.gui_inputdlg;
     fw=gui.gui_waitbar;
     htmlfilename=cL{unique(c(ptsSelected))};
-    pkg.i_markergeneshtml(sce,markerlist,numfig,[ax bx],htmlfilename);
+    pkg.i_markergeneshtml(sce,markerlist,numfig,...
+               [ax bx],htmlfilename,ptsSelected);
     gui.gui_waitbar(fw);
 %     pause(2);
 %     export2wsdlg({'Save marker list to variable named:'},...

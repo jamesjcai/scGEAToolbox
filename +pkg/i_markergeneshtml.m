@@ -1,8 +1,9 @@
-function i_markergeneshtml(sce,markerlist,numfig,axbx,nametag)
+function i_markergeneshtml(sce,markerlist,numfig,axbx,nametag,pselected)
+if nargin<6, pselected=[]; end
 if nargin<5, nametag=''; end
 if nargin<4, axbx=[]; end
 if nargin<3, numfig=20; end
-markerlist=markerlist{1};
+% markerlist=markerlist{1};
 
 numfig=min([numfig length(markerlist)]);
 dirtxt=tempdir;
@@ -29,7 +30,13 @@ htmlstr="";
         c=log2(1+sce.X(sce.g==targeetg,:));
         scatter3(sce.s(:,1),sce.s(:,2),sce.s(:,3),...
                 5,c,'filled');
+        if ~isempty(pselected)    
+            hold on
+            scatter3(sce.s(pselected,1),sce.s(pselected,2),...
+                sce.s(pselected,3),10,[.5 .5 .5]);
+        end        
         colormap(h,a);
+        colorbar;
         title(targeetg)
         if ~isempty(axbx)
             view(axbx(1),axbx(2));
@@ -39,7 +46,7 @@ htmlstr="";
         close(h);
         
         h=figure('Visible','off');
-        pkg.i_violinplot_groupordered(c,sce.c);
+        pkg.i_violinplot_groupordered(c,sce.c,["1","2"]);
         ylabel('log2(UMI+1)');
         title(targeetg)
         xtickangle(-45);
