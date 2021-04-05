@@ -29,3 +29,6 @@ resources/STRING/stringdb_human.mat
 resources/STRING/stringdb_mouse.mat
 resources/Rpath.txt
 resources/Thumbs.db
++run/thirdparty/R_MAST/input1.txt
++run/thirdparty/R_MAST/input2.txt
++run/thirdparty/R_MAST/output.csv
