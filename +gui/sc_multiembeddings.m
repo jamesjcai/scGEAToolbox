@@ -1,4 +1,4 @@
-function f0=sc_multiembeddings(s1,s2,ttl1,ttl2)
+function [f0]=sc_multiembeddings(s1,s2,ttl1,ttl2)
 if nargin<4, ttl2=""; end
 if nargin<3, ttl1=""; end
 if nargin<1
@@ -11,6 +11,8 @@ f0=figure('Visible',false);
 subplot(1,2,1);
 if size(s1,2)==2
     h1=scatter(s1(:,1),s1(:,2));
+%     xline(0,'r')
+%     yline(0,'r')
 else
     h1=scatter3(s1(:,1),s1(:,2),s1(:,3),5);
 end
@@ -21,8 +23,11 @@ end
 subplot(1,2,2);
 if size(s1,2)==2
     h2=scatter(s2(:,1),s2(:,2));
+%     xline(0,'r')
+%     yline(0,'r')
 else
     h2=scatter3(s2(:,1),s2(:,2),s2(:,3),5);
+    
 end
 if ~isempty(ttl2)
     title(ttl2)
