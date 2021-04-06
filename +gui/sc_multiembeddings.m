@@ -1,4 +1,4 @@
-function sc_multiembeddings(s1,s2,ttl1,ttl2)
+function f0=sc_multiembeddings(s1,s2,ttl1,ttl2)
 if nargin<4, ttl2=""; end
 if nargin<3, ttl1=""; end
 if nargin<1
