@@ -23,8 +23,8 @@ Please, visit the official website |View scGEAToolbox on File Exchange| of scGEA
 
    quick_installation
    getting_started
-   code_formulas
    sc_scatter
+   code_formulas   
    case_studies
 
 .. toctree::
