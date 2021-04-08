@@ -8,7 +8,8 @@ switch methodid
     case 1
        [idxv] = run.PickMarkers(X,genelist,c,topn);
        for k=1:max(c)
-            markerlist{k}=genelist(idxv(1+(k-1)*topn:k*topn));
+            idx=idxv(1+(k-1)*topn:k*topn);            
+            markerlist{k}=genelist(idx(~isnan(idx)));
        end
     case 2
         for k=1:max(c)

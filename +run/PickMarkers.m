@@ -33,22 +33,42 @@ for i = 1:numC
     gene_DE_score(:,i) = sum(zz,2); % sum
 end
 
+%%
 % topn markers for each cluster based on DE score
 gclusters = [];
 gscore = [];
+gene_idxv=nan(numC*topn,1);
+gclusters=nan(numC*topn,1);
+gscore=nan(numC*topn,1);
 for i = 1:numC
     zz_idx = find(gene_value_idx == i);
     zz_DEscore = gene_DE_score(zz_idx,i);
     [zzvalue,zz1] = sort(zz_DEscore,'descend');
-    gene_idxv = [gene_idxv; zz_idx(zz1(1:topn))];
-    gclusters = [gclusters;i.*ones(topn,1)];
-    gscore = [gscore;zzvalue(1:topn)];
+    
+    mtopn=min([length(zz1) topn]);
+    ts=(i-1)*topn+1;
+    idx=ts:(ts+mtopn-1);
+    gene_idxv(idx)=zz_idx(zz1(1:mtopn));
+    gclusters(idx)=i.*ones(mtopn,1);
+    gscore(idx)=zzvalue(1:mtopn);
 end
 
+%%
+if any(isnan(gene_idxv))
+    genelistplus=[genelist; "---"];
+    gene_idxvplus=gene_idxv;
+    gene_idxvplus(isnan(gene_idxv))=1+length(genelist);
+else
+    genelistplus=genelist;
+    gene_idxvplus=gene_idxv;
+end
+
+
 GL500 = [gene_idxv gclusters gscore];
-T = array2table(GL500,'RowNames',...
-    genelist(gene_idxv),'VariableNames',...
+T = array2table(GL500,'VariableNames',...
     {'Gene_indx','Cluster','DE_Score'});
+T = addvars(T,genelistplus(gene_idxvplus),...
+    'NewVariableNames','Gene_Name','Before','Gene_indx');
 
 if plotit    
     figure;

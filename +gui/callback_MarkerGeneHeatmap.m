@@ -1,7 +1,15 @@
 function callback_MarkerGeneHeatmap(src,~)
 
-    answer = questdlg('Generate marker gene heatmap?');
-    if ~strcmp(answer,'Yes'), return; end  
+    answer = questdlg('Generate marker gene heatmap',...
+        'Select Method','Method 1 (fast)','Method 2 (slow)','Method 1 (fast)');
+    switch answer
+        case 'Method 1 (fast)'
+            methodid=1;
+        case 'Method 2 (slow)'
+            methodid=2;
+        otherwise
+            return;
+    end
 
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
@@ -17,30 +25,38 @@ function callback_MarkerGeneHeatmap(src,~)
             cell_type_v=sce.c_cluster_id;                   
         end
     else
-        if ~isempty(sce.c_cluster_id)
-            answer = questdlg('Use sce.c_cluster_id?');
-            if strcmp(answer,'Yes')
-                cell_type_v=sce.c_cluster_id;                   
-            elseif strcmp(answer,'No')
+        answer = questdlg('Use sce.c_cell_type_tx?');
+        switch answer
+            case 'Yes'
                 cell_type_v=sce.c_cell_type_tx;
-            else
-                return; 
-            end
+            case 'No'
+                if ~isempty(sce.c_cluster_id)
+                    answer2 = questdlg('Use sce.c_cluster_id?');
+                    if strcmp(answer2,'Yes')
+                        cell_type_v=sce.c_cluster_id;                   
+                    elseif strcmp(answer2,'No')
+                        helpdlg('Action cancelled')
+                        return;
+                    else
+                        return; 
+                    end
+                end
+            otherwise
+                return;
         end
     end
     
     
     [c,cL]=grp2idx(cell_type_v);
     if numel(cL)==1
-        helpdlg('Only one cell type')
+        helpdlg('Only one cell type or cluster')
         return; 
-    end
-    
+    end    
     
 
     fw=gui.gui_waitbar;
     M=cell(numel(cL),2);
-    [markerlist]=sc_pickmarkers(sce.X,sce.g,c,10);
+    [markerlist]=sc_pickmarkers(sce.X,sce.g,c,10,methodid);
     for k=1:numel(cL)        
         cLk=matlab.lang.makeValidName(cL{k});
         M{k,1}=cLk;
@@ -64,8 +80,8 @@ function callback_MarkerGeneHeatmap(src,~)
 Y=[]; idgn=[]; szgn=[]; Z=[];
 % subi=1:10:size(X,2);
 MX=[];
-for k=1:numel(cL)
-    markerlist=M{k,2}(1:10);
+for k=1:numel(cL)    
+    markerlist=M{k,2}(1:end);
     MX=[MX; markerlist];    
     [~,idx_g]=ismember(upper(markerlist),upper(sce.g));
     Y=[Y; X(idx_g,:)];
@@ -94,7 +110,9 @@ for k=1:numel(cL)
     %assert(isequal(z,z1));
     Z=[Z; z];
 end
-  
+
+
+
 f1=figure;
 imagesc(Y);
 szc=cumsum(szgn);
@@ -114,18 +132,6 @@ set(gca,'XTickLabelRotation',45);
 set(gca,'YTick',1:length(MX));
 set(gca,'YTickLabel',MX);
 set(gca,'TickLength',[0 0])
-% pause(3)
-
-f2=figure;
-imagesc(Z);
-set(gca,'XTick',1:numel(cL));
-set(gca,'XTickLabel',strrep(M(:,1),'_','\_'));
-set(gca,'XTickLabelRotation',45);
-set(gca,'YTick',1:length(MX));
-set(gca,'YTickLabel',MX);
-set(gca,'TickLength',[0 0])
-f2.Position(1)=f2.Position(1)+200;
-f2.Position(2)=f2.Position(2)-200;
 
 tb1=uitoolbar(f1);
 pt1 = uipushtool(tb1,'Separator','off');
@@ -136,11 +142,54 @@ ptImage = ind2rgb(img,map);
 pt1.CData = ptImage;
 pt1.ClickedCallback = {@i_saveM,M};
 
-tb2=uitoolbar(f2);
-pt2 = uipushtool(tb2,'Separator','off');
-pt2.Tooltip = 'Save marker gene map';
-pt2.CData = ptImage;
-pt2.ClickedCallback = {@i_saveM,M};
+pt1 = uipushtool(tb1,'Separator','off');
+pt1.Tooltip = 'Summary map';
+[img,map] = imread(fullfile(matlabroot,...
+            'toolbox','matlab','icons','HDF_object02.gif'));
+ptImage = ind2rgb(img,map);
+pt1.CData = ptImage;
+pt1.ClickedCallback = @i_summarymap;
+
+pt1 = uipushtool(tb1,'Separator','off');
+pt1.Tooltip = 'Summary map, transposed';
+[img,map] = imread(fullfile(matlabroot,...
+            'toolbox','matlab','icons','HDF_object01.gif'));
+ptImage = ind2rgb(img,map);
+pt1.CData = ptImage;
+pt1.ClickedCallback = @i_summarymapT;
+
+
+% tb2=uitoolbar(f2);
+% pt2 = uipushtool(tb2,'Separator','off');
+% pt2.Tooltip = 'Save marker gene map';
+% pt2.CData = ptImage;
+% pt2.ClickedCallback = {@i_saveM,M};
+
+    function i_summarymap(~,~)
+        f2=figure;
+        imagesc(Z);
+        set(gca,'XTick',1:numel(cL));
+        set(gca,'XTickLabel',strrep(M(:,1),'_','\_'));
+        set(gca,'XTickLabelRotation',45);
+        set(gca,'YTick',1:length(MX));
+        set(gca,'YTickLabel',MX);
+        set(gca,'TickLength',[0 0])
+        f2.Position(1)=f2.Position(1)+200;
+        f2.Position(2)=f2.Position(2)-200;
+    end
+
+    function i_summarymapT(~,~)
+        f2=figure;
+        imagesc(Z');
+        set(gca,'YTick',1:numel(cL));
+        set(gca,'YTickLabel',strrep(M(:,1),'_','\_'));
+        set(gca,'XTickLabelRotation',45);
+        set(gca,'XTick',1:length(MX));
+        set(gca,'XTickLabel',MX);
+        set(gca,'TickLength',[0 0])
+        f2.Position(1)=f2.Position(1)+200;
+        f2.Position(2)=f2.Position(2)-200;
+    end
 
     function i_saveM(~,~,M)    
         labels = {'Save marker gene map M to variable named:'}; 
