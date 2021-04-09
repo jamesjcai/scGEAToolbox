@@ -62,7 +62,7 @@ A=T.z_val;
 totn=sum(~idx);
 for k=1:K
     if k~=id
-        fprintf('Comparing selected group (#%d) with group #%d (out of %d)\n',...
+        fprintf('Comparing group #%d with group #%d (out of %d)\n',...
                  id,k,K-1);
         x0=X(:,idv==k);
         T=i_sc_deg(x0,x1,genelist);
