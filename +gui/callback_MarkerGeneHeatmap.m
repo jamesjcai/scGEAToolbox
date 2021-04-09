@@ -1,11 +1,14 @@
 function callback_MarkerGeneHeatmap(src,~)
 
     answer = questdlg('Generate marker gene heatmap',...
-        'Select Method','Method 1 (fast)','Method 2 (slow)','Method 1 (fast)');
+        'Select Method','Method 1 (fast)','Method 2 (slower)',...
+        'Method 3 (slowest)','Method 1 (fast)');
     switch answer
         case 'Method 1 (fast)'
             methodid=1;
-        case 'Method 2 (slow)'
+        case 'Method 2 (slower)'
+            methodid=3;
+        case 'Method 3 (slowest)'
             methodid=2;
         otherwise
             return;
@@ -159,11 +162,6 @@ pt1.CData = ptImage;
 pt1.ClickedCallback = @i_summarymapT;
 
 
-% tb2=uitoolbar(f2);
-% pt2 = uipushtool(tb2,'Separator','off');
-% pt2.Tooltip = 'Save marker gene map';
-% pt2.CData = ptImage;
-% pt2.ClickedCallback = {@i_saveM,M};
 
     function i_summarymap(~,~)
         f2=figure;

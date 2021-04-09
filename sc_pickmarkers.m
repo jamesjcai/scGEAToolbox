@@ -4,23 +4,46 @@ if nargin<4, topn=10; end
 assert(isequal(grp2idx(c),c));
 markerlist=cell(max(c),1);
 
-switch methodid
-    case 1
-       [idxv] = run.PickMarkers(X,genelist,c,topn);
-       for k=1:max(c)
-            idx=idxv(1+(k-1)*topn:k*topn);            
-            markerlist{k}=genelist(idx(~isnan(idx)));
-       end
-    case 2
-        for k=1:max(c)
-            a=i_pickmarkers(X,genelist,c,k);
-            markerlist{k}=a(1:topn);
-        end
+    switch methodid
+        case 1
+           [idxv] = run.PickMarkers(X,genelist,c,topn);
+           for k=1:max(c)
+                idx=idxv(1+(k-1)*topn:k*topn);            
+                markerlist{k}=genelist(idx(~isnan(idx)));
+           end
+        case 2
+            for k=1:max(c)
+                a=i_pickmarkers(X,genelist,c,k);
+                markerlist{k}=a(1:topn);
+            end
+        case 3            
+            for k=1:max(c)
+                fprintf('Processing cell group ... %d of %d\n',k,max(c));
+                markerlist{k}=i_pickmarkerslasso(X,genelist,c,k,topn);                
+            end
+    end
 end
+
+function [markerlist]=i_pickmarkerslasso(X,genelist,idv,id,topn)
+    idx=idv==id;
+    y=double(idx);
+    [B]=lasso(X',y,'DFmax',topn*3,'MaxIter',1e3);
+    [~,ix]=min(abs(sum(B>0)-topn));
+    b=B(:,ix);
+    idx=b>0;
+    if ~any(idx)
+        warning('No marker gene found')
+        markerlist=[];
+        return;
+    else
+        markerlist=genelist(idx);
+        [~,jx]=sort(b(idx),'descend');
+        markerlist=markerlist(jx);
+    end
 end
+
 
 function [markerlist,A]=i_pickmarkers(X,genelist,idv,id)
-
 % IDV - cluster ids of cells
 % ID  - the id of the cluster, for which marker genes are being identified.
 % see also: run_celltypeassignation
