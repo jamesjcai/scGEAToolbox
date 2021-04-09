@@ -28,36 +28,64 @@ htmlstr="";
 %         sc_scattermarker(sce.X,sce.g,sce.s,...
 %             markerlist(k),3,5,false); 
         c=log2(1+sce.X(sce.g==targeetg,:));
-        scatter3(sce.s(:,1),sce.s(:,2),sce.s(:,3),...
-                5,c,'filled');
-        if ~isempty(pselected)    
-            hold on
-            scatter3(sce.s(pselected,1),sce.s(pselected,2),...
-                sce.s(pselected,3),10,[.5 .5 .5]);
-        end        
-        colormap(h,a);
-        colorbar;
-        title(targeetg)
-        if ~isempty(axbx)
-            view(axbx(1),axbx(2));
-        end
+        
+        x=sce.s(:,1);
+        y=sce.s(:,2);
+        z=sce.s(:,3);
+        
+        %subplot(2,2,1)
+            scatter3(x,y,z,5,c,'filled');
+            if ~isempty(pselected)    
+                hold on
+                scatter3(sce.s(pselected,1),sce.s(pselected,2),...
+                    sce.s(pselected,3),10,[.5 .5 .5]);
+            end        
+            colormap(h,a);
+            colorbar;
+            title(targeetg)
+            if ~isempty(axbx)
+                view(axbx(1),axbx(2));
+            end
+        
+        %subplot(2,2,2);
+        h2=figure('Visible','off');
+%             stem3(x,y,c,'marker','none','color','m');
+%             hold on
+%             scatter3(x,y,zeros(size(y)),5,c,'filled');                
+            scatter3(x,y,z,5,c,'filled');
+            colormap(h2,a);
+            colorbar;
+            title(targeetg)
+            if ~isempty(axbx)
+                view(axbx(1),axbx(2));
+            end
+
+        
+        
         imgfname1=sprintf('heatmap_%s.png',targeetg);
         saveas(h,sprintf('%s%s',dirtxt,imgfname1));
         close(h);
+        
+        imgfname2=sprintf('heatmap2%s.png',targeetg);
+        saveas(h2,sprintf('%s%s',dirtxt,imgfname2));
+        close(h2);
         
         h=figure('Visible','off');
         pkg.i_violinplot_groupordered(c,sce.c,["1","2"]);
         ylabel('log2(UMI+1)');
         title(targeetg)
         xtickangle(-45);
-        imgfname2=sprintf('violin_%s.png',targeetg);
-        saveas(h,sprintf('%s%s',dirtxt,imgfname2));
+        imgfname3=sprintf('violin_%s.png',targeetg);
+        saveas(h,sprintf('%s%s',dirtxt,imgfname3));
         close(h);
         
-        aax=sprintf('<center><table>\n<tr>\n<th><img src="%s"></th>\n<th><img src="%s"></th>\n</tr>\n</table></center>\n',...
-            imgfname1,imgfname2);
+        aax=sprintf('<center><table>\n<tr>\n<th><img src="%s" height=250></th>\n<th><img src="%s" height=250></th>\n<th><img src="%s" height=250></th>\n</tr>\n</table></center>\n',...
+            imgfname2,imgfname1,imgfname3);
         htmlstr=sprintf('%s\n%s',htmlstr,aax);
     end
+    fprintf(fid,'<pre>\n');
+    fprintf(fid,'%s, ',markerlist);
+    fprintf(fid,'</pre>\n');
     fprintf(fid,'%s',htmlstr);
     fclose(fid);
     pause(1);

@@ -1,11 +1,11 @@
 function [numfig]=gui_inputdlg
-    numfig=30;
+    numfig=10;
     prompt = {'Enter number of genes (1-50):'};
     dlgtitle = 'Number of marker genes';
     % answer = inputdlg(prompt,dlgtitle,[1 50],{'10'});
     
 [answer] = timeoutDlg(@inputdlg,10,...
-            prompt,dlgtitle,[1 50],{'30'});
+            prompt,dlgtitle,[1 50],{'10'});
 if iscell(answer)
     answer=answer{1};
 end

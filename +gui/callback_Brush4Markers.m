@@ -1,4 +1,9 @@
-function callback_Brush4Markers(src,~)
+function callback_Brush4Markers(src,event)
+    if exist('lasso','file')
+        % disp('using LASSO')
+        gui.callback_Brush4MarkersLASSO(src,event);
+        return;
+    end
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);    
     assert(isequal(FigureHandle.Children, FigureHandle.findobj('type','Axes')))

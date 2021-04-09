@@ -74,8 +74,11 @@ else
     if nargin<2 || isempty(genelist)
         genelist=string((1:size(X,1))');
     end
-
+    try
     sce=SingleCellExperiment(X,genelist,s,c);
+    catch
+        return;
+    end
     sc_scatter_sce(sce);
 end
 end
