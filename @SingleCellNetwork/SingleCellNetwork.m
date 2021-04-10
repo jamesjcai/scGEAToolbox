@@ -1,6 +1,6 @@
 classdef SingleCellNetwork
    properties
-      G                               % counts
+      G                % digraph
    end
    
    properties (Dependent)
