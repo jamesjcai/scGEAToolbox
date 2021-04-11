@@ -1,5 +1,6 @@
 function callback_SaveX(src,~)
-answer = questdlg('Export & save data to:','','Workspace','MAT file','Cancel','Workspace');
+answer = questdlg('Export & save data to:','',...
+    'Workspace','MAT file','Seurat/RDS file','Workspace');
         FigureHandle=src.Parent.Parent;
         sce=guidata(FigureHandle);
 switch answer
@@ -15,11 +16,18 @@ switch answer
             logical([1 0 0 0]),{@smhelp});
     case 'MAT file'
         [filen, pathn] = uiputfile( ...
-           {'*.mat','*.*'},'Save as');
-
+           {'*.mat';'*.*'},'Save as');
         filename=[pathn,filen];
         if ~(filename), return; end
-        save(filename,'sce');        
+        save(filename,'sce');
+    case 'Seurat/RDS file'        
+        [filen, pathn] = uiputfile( ...
+           {'*.rds';'*.*'},'Save as');
+        filename=[pathn,filen];
+        if ~(filename), return; end
+        fw=gui.gui_waitbar;
+        [status]=sc_sce2rds(sce,filename);
+        gui.gui_waitbar(fw);
     otherwise
         return;
 end
