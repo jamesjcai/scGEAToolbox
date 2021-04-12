@@ -508,8 +508,9 @@ function DetermineCellTypeClusters(~,~)
         return;
     end
     dtp = findobj(h,'Type','datatip');
-    delete(dtp);    
-for i=1:max(c) 
+    delete(dtp);
+cLdisp=cL;    
+for i=1:max(c)
     ptsSelected=c==i;
     [Tct]=local_celltypebrushed(sce.X,sce.g,...
           sce.s,ptsSelected,...
@@ -524,11 +525,14 @@ for i=1:max(c)
         return;
     end
     hold on
+    ctxtdisp=strrep(ctxt,'_','\_');
+    ctxtdisp=sprintf('%s_{%d}',ctxtdisp,i);
+    cLdisp{i}=ctxtdisp;
+    
     ctxt=sprintf('%s_{%d}',ctxt,i);
     cL{i}=ctxt;    
-    % ctxt=strrep(ctxt,'_','\_');    
 
-    row = dataTipTextRow('',cL(c));
+    row = dataTipTextRow('',cLdisp(c));
     h.DataTipTemplate.DataTipRows = row;
     if size(sce.s,2)>=2
             siv=sce.s(ptsSelected,:);
