@@ -786,7 +786,7 @@ function SelectCellsByClass(~,~)
     answer = questdlg('Select cells by class?');
     if ~strcmp(answer,'Yes'), return; end
     
-    listitems={'Custom input (C)'};
+    listitems={'Custom Input (C)'};
     if ~isempty(sce.c_cluster_id)
         listitems=[listitems,'Cluster ID'];
     end
@@ -804,7 +804,7 @@ function SelectCellsByClass(~,~)
     'SelectionMode','single','ListString',listitems);
     if tf~=1, return; end
     switch listitems{indx}
-        case 'Custom input (C)'
+        case 'Custom Input (C)'
             ci=c; cLi=cL;
         case 'Batch ID'
             [ci,cLi]=grp2idx(sce.c_batch_id);
@@ -1059,22 +1059,22 @@ function LabelClusters(src,~)
             if strcmp(answer,'No')
                 set(src,'State','off');
             elseif strcmp(answer,'Yes')                
-                listitems={'c'};
-                if ~isempty(sce.c_cluster_id), listitems=[listitems,'c_cluster_id']; end
-                if ~isempty(sce.c_cell_type_tx), listitems=[listitems,'c_cell_type_tx']; end
-                if ~isempty(sce.c_cell_cycle_tx), listitems=[listitems,'c_cell_cycle_tx']; end
-                if ~isempty(sce.c_batch_id), listitems=[listitems,'c_batch_id']; end
+                listitems={'Custom Input (C)'};
+                if ~isempty(sce.c_cluster_id), listitems=[listitems,'Cluster ID']; end
+                if ~isempty(sce.c_cell_type_tx), listitems=[listitems,'Cell Type']; end
+                if ~isempty(sce.c_cell_cycle_tx), listitems=[listitems,'Cell Cycle Phase']; end
+                if ~isempty(sce.c_batch_id), listitems=[listitems,'Batch ID']; end
                 [indx,tf] = listdlg('PromptString',{'Select statistics',...
                 '',''},'SelectionMode','single','ListString',listitems);
                 if tf==1   
                     switch listitems{indx}
-                        case 'c_cluster_id'
+                        case 'Cluster ID'
                             cc=sce.c_cluster_id;
-                        case 'c_cell_type_tx'
+                        case 'Cell Type'
                             cc=sce.c_cell_type_tx;
-                        case 'c_cell_cycle_tx'
+                        case 'Cell Cycle Phase'
                             cc=sce.c_cell_cycle_tx;
-                        case 'c_batch_id'
+                        case 'Batch ID'
                             cc=sce.c_batch_id;
                         otherwise
                             cc=[];

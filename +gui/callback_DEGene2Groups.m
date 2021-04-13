@@ -30,6 +30,10 @@ function callback_DEGene2Groups(src,~)
     vars = {'T'}; values = {T};
     msgfig=export2wsdlg(labels,vars,values);
     uiwait(msgfig);
+    
+    %Tf=run.fgsea(T.gene);
+    %pkg.e_fgseanet(Tf);
+    
     answer = questdlg('Violin plots (top 16 DE genes)?');
     if strcmp(answer,'Yes')
         figure;

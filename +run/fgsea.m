@@ -26,7 +26,7 @@ t=t(1:length(genelist),:);
 t.genelist=T.genelist;
 T=t;
 if rmribo
-    [gribo]=get_ribosomalgenes;
+    [gribo]=pkg.i_get_ribosomalgenes;
     i=~ismember(T.genelist,gribo);
     T=T(i,:);
 end
