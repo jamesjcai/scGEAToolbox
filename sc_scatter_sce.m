@@ -992,8 +992,7 @@ function ClusterCellsS(~,~)
     answer = questdlg('Label clusters?');
     if strcmp(answer,'Yes')
         i_labelclusters;
-    end
-    
+    end    
     guidata(FigureHandle,sce);
 end
 

@@ -6,20 +6,20 @@ function callback_GSEA_HVGs(src,~)
     t=sc_hvg(sce.X,sce.g);
     msgfig1=export2wsdlg({'Save HVG table to variable named:'},...
         {'T'},{t});
-    % uiwait(msgfig)
+    uiwait(msgfig1)
     
-    answer=pkg.timeoutdlg(@(x){questdlg('GSEA analysis?')},15);
+    answer=pkg.timeoutdlg(@(x){questdlg('R/fgeas analysis?')},15);
     % answer = questdlg('GSEA analysis?');
     if strcmp(answer,'No')||strcmp(answer,'Cancel')
         return;
     end 
     
     fw=gui.gui_waitbar;
-    tr=run_fgsea(t.genes);
+    tr=run.fgsea(t.genes);
     gui.gui_waitbar(fw);
     msgfig2=export2wsdlg({'Save GSEA table to variable named:'},...
         {'Tr'},{tr});
-    % uiwait(msgfig)
+    % uiwait(msgfig2)
     
     
     answer=pkg.timeoutdlg(@(x){questdlg('GSEA term network analysis?')},15);
@@ -31,6 +31,6 @@ function callback_GSEA_HVGs(src,~)
     e_fgseanet(tr);
     gui.gui_waitbar(fw);
     
-            a=helpdlg({'Done!'});
-             uiwait(a)
+    a=helpdlg({'Done!'});
+    uiwait(a)
 end
