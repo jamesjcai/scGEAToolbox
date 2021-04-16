@@ -20,9 +20,12 @@ while ~isequal(oldsz,newsz)
     [X,keptidx]=sc_filterc(X);
     keptidxv{end+1}=keptidx;
     [X,genelist]=sc_selectg(X,genelist,1,min_cells_nonzero);
+    [X,genelist]=sc_rmdugenes(X,genelist);
     [X,keptidx]=sc_selectc(X,libsize);
     keptidxv{end+1}=keptidx;
     newsz=size(X);
     c=c+1;
 end
 end
+
+

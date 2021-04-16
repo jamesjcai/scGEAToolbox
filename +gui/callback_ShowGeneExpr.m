@@ -25,12 +25,33 @@ switch answer
         end
     case 'Multiple'
         [idx]=gui.gui_selmultidlg(gsorted);
-        if isempty(idx)
+        if isempty(idx), return; end
+        if isscalar(idx) && idx==0
             helpdlg('No gene selected.');
+            return;
         else
         [~,i]=ismember(gsorted(idx),sce.g);
-        g=sprintf("%s+",gsorted(idx));
         x=sum(sce.X(i,:),1);
+        if length(i)==1
+           g=sce.g(i);
+        elseif length(i)>1
+            answer2=questdlg('Union or Intersection','','Union','Intersection','Union');
+            switch answer2
+                case 'Union'                
+                    g=sprintf("%s | ",gsorted(idx)); 
+                case 'Intersection'
+                    g=sprintf("%s & ",gsorted(idx));                
+                    ix=sum(sce.X(i,:)>0,1)==length(i);
+                    if ~any(ix)
+                        helpdlg('No cells expressing all selected genes.');
+                        return;
+                    end
+                    x=x.*ix;
+                otherwise
+                    return;
+            end
+                g=extractBefore(g,strlength(g)-3);
+        end
             f = figure('visible','off');
             [h1]=sc_scattermarker(x,g,sce.s,g,5);
             title(g);
@@ -38,7 +59,6 @@ switch answer
             movegui(f,'center');
             set(f,'visible','on');                  
         end
-        % helpdlg('Function is under development.');
     case 'Cancel'
         helpdlg('Action cancelled.');
 end

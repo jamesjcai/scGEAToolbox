@@ -1,1 +1,3 @@
-library(uwot)
+if (!requireNamespace("uwot", quietly = TRUE)){
+    install.packages("uwot")
+}

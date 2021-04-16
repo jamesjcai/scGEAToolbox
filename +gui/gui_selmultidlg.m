@@ -9,7 +9,7 @@ f = figure;
 % ax = axes(f);
 % ax.Units = 'pixels';
 % ax.Position = [75 75 325 280]
-
+movegui(f,'center');
 c = uicontrol('style','pushbutton','Position',[220 180 100 30],...
     'String','>','Callback', {@plotButtonPushed,genelist});
 c = uicontrol('style','pushbutton','Position',[220 215 100 30],...

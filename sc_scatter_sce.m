@@ -445,19 +445,19 @@ end
 
 
 function EmbeddingAgain(~,~)
-    answer = questdlg('Embedding cells?');
-    if ~strcmp(answer,'Yes'), return; end
-    answer = questdlg('Which method?','Select method','tSNE','UMAP','PHATE','tSNE');
+%     answer = questdlg('Embedding cells?');
+%     if ~strcmp(answer,'Yes'), return; end
+    answer = questdlg('Which embedding method?','Select method','tSNE','UMAP','PHATE','tSNE');
     
-    ndim=questdlg('2D or 3D?','','2D','3D','3D');
-        if strcmp(ndim,'3D')
-            ndim=3;
-        elseif strcmp(ndim,'2D')
-            ndim=2;
-        else
-            return;
-        end
-    
+%     ndim=questdlg('2D or 3D?','','2D','3D','3D');
+%         if strcmp(ndim,'3D')
+%             ndim=3;
+%         elseif strcmp(ndim,'2D')
+%             ndim=2;
+%         else
+%             return;
+%         end
+    ndim=3;
     fw=gui.gui_waitbar;
     new_c=[];
     if strcmp(answer,'tSNE')
@@ -471,7 +471,7 @@ function EmbeddingAgain(~,~)
     end
     gui.gui_waitbar(fw);
     RefreshAll;
-    if ~isempty(new_c)        
+    if ~isempty(new_c)
         [c,cL]=grp2idx(new_c);
         answer = questdlg('Update sce.c_cluster_id?');
         if strcmp(answer,'Yes')
