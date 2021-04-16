@@ -19,7 +19,8 @@ genelist=upper(genelist);
 a=-log(1-rand(length(genelist),1));
 sortid=(1:length(genelist))';
 % a=12+randn(length(genelist),1);
-drdist=sort(a,'descend');
+% drdist=sort(a,'descend');
+
 drdist=t.drdist(1:length(genelist));
 T=table(sortid,genelist,drdist);
 t=t(1:length(genelist),:);
