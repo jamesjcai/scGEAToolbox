@@ -9,5 +9,7 @@ elseif strcmp(f.Tag,'TMWWaitbar')
     toc;
     waitbar(1,f,'Finishing');
     pause(1);
-    close(f);    
+    if isvalid(f)
+        close(f);
+    end
 end

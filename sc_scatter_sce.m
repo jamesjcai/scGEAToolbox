@@ -448,7 +448,6 @@ function EmbeddingAgain(~,~)
 %     answer = questdlg('Embedding cells?');
 %     if ~strcmp(answer,'Yes'), return; end
     answer = questdlg('Which embedding method?','Select method','tSNE','UMAP','PHATE','tSNE');
-    
 %     ndim=questdlg('2D or 3D?','','2D','3D','3D');
 %         if strcmp(ndim,'3D')
 %             ndim=3;
@@ -457,30 +456,49 @@ function EmbeddingAgain(~,~)
 %         else
 %             return;
 %         end
-    ndim=3;
-    fw=gui.gui_waitbar;
-    new_c=[];
-    if strcmp(answer,'tSNE')
-        [sce.s]=sc_tsne(sce.X,ndim,false);
-    elseif strcmp(answer,'UMAP')
-        [sce.s,new_c]=run.UMAP(sce.X,ndim,false,false);
-    elseif strcmp(answer,'PHATE')
-        [sce.s]=run.PHATE(sce.X,ndim,false);
+
+    if ismember(answer,{'tSNE','UMAP','PHATE'})
+        fw=gui.gui_waitbar;            
+        sce=sce.embedcells(answer,true);
+        gui.gui_waitbar(fw);
     else
         return;
     end
-    gui.gui_waitbar(fw);
+    
+    % new_c=[];    
+    %  ndim=3;
+%     switch answer
+%         case 'tSNE'
+%             fw=gui.gui_waitbar;
+%             %[sce.s]=sc_tsne(sce.X,ndim,false,true);
+%             sce=sce.embedcells(1,true);
+%             gui.gui_waitbar(fw);
+%         case 'UMAP'
+%             fw=gui.gui_waitbar;
+%             warning off
+%             %[sce.s]=run.UMAP(sce.X,ndim,false,false);
+%             sce=sce.embedcells(2,true);
+%             warning on
+%             gui.gui_waitbar(fw);
+%         case 'PHATE'
+%             fw=gui.gui_waitbar;
+%             %[sce.s]=run.PHATE(sce.X,ndim,false);
+%             sce=sce.embedcells(3,true);
+%             gui.gui_waitbar(fw);
+%         otherwise            
+%             return;
+%     end
     RefreshAll;
-    if ~isempty(new_c)
-        [c,cL]=grp2idx(new_c);
-        answer = questdlg('Update sce.c_cluster_id?');
-        if strcmp(answer,'Yes')
-            sce.c_cluster_id=c;
-        else
-            return;
-        end
-        RefreshAll;
-    end
+%     if ~isempty(new_c)
+%         [c,cL]=grp2idx(new_c);
+%         answer = questdlg('Update sce.c_cluster_id?');
+%         if strcmp(answer,'Yes')
+%             sce.c_cluster_id=c;
+%         else
+%             return;
+%         end
+%         RefreshAll;
+%     end
     guidata(FigureHandle,sce);
 end
 
@@ -499,14 +517,15 @@ function DetermineCellTypeClusters(~,~)
     end
     organtag="all";
     
-    answer = questdlg('Which marker database?','Select Database','PanglaoDB','clustermole','PanglaoDB');
-    if strcmpi(answer,'clustermole')
-        databasetag="clustermole";
-    elseif strcmpi(answer,'panglaodb')
+%     answer = questdlg('Which marker database?','Select Database','PanglaoDB','clustermole','PanglaoDB');
+%     if strcmpi(answer,'clustermole')
+%         databasetag="clustermole";
+%     elseif strcmpi(answer,'panglaodb')
+%        databasetag="panglaodb";
+%     else
+%         return;
+%     end
         databasetag="panglaodb";
-    else
-        return;
-    end
     dtp = findobj(h,'Type','datatip');
     delete(dtp);
 cLdisp=cL;    
@@ -637,14 +656,14 @@ function Brush4Celltypes(~,~)
         otherwise
             return;
     end
-    organtag="all";
-    
-    answer = questdlg('Which marker database?','Select Database','PanglaoDB','clustermole','PanglaoDB');
-    if strcmpi(answer,'clustermole')
-        databasetag="clustermole";
-    else
-        databasetag="panglaodb";
-    end    
+    organtag="all";    
+%     answer = questdlg('Which marker database?','Select Database','PanglaoDB','clustermole','PanglaoDB');
+%     if strcmpi(answer,'clustermole')
+%         databasetag="clustermole";
+%     else
+%         databasetag="panglaodb";
+%     end
+    databasetag="panglaodb";
     fw=gui.gui_waitbar;
     [Tct]=local_celltypebrushed(sce.X,sce.g,sce.s,ptsSelected,...
           speciestag,organtag,databasetag);

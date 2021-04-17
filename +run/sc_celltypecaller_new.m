@@ -23,7 +23,8 @@ end
    organ=p.Results.organ;   
 
 oldpth=pwd;
-pw1=fileparts(which(mfilename));
+%pw1=fileparts(which(mfilename));
+pw1=fileparts(mfilename('fullpath'));
 if strcmpi(organ,"all")
     pth=fullfile(pw1,'thirdparty/celltype_mat_new');
 else
