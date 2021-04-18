@@ -2,6 +2,7 @@ function sc_explorer(X,genelist,s,varargin)
 %Single cell explorer
 %
 % pw1=fileparts(which(mfilename));
+% pw1=fileparts(mfilename('fullpath'));
 % pth=fullfile(pw1,'thirdparty/backup');
 % addpath(pth);
 
@@ -43,24 +44,24 @@ end
 %tb = findall(hFig,'Type','uitoolbar'); 
 tb = uitoolbar(hFig);
 pt = uipushtool(tb,'Separator','off');
-[img,map] = imread(fullfile(fileparts(which(mfilename)),...
-            'resources','explorer1.gif'));
+[img,map] = imread(fileparts(mfilename('fullpath')),...
+            'resources','explorer1.gif');
 ptImage = ind2rgb(img,map);
 pt.CData = ptImage;
 pt.Tooltip = 'Cell Type Explorer...';
 pt.ClickedCallback = @MenuSelected1;
 
 pt2 = uipushtool(tb,'Separator','on');
-[img,map] = imread(fullfile(fileparts(which(mfilename)),...
-            'resources','explorer2.gif'));
+[img,map] = imread(fileparts(mfilename('fullpath')),...
+            'resources','explorer2.gif');
 ptImage = ind2rgb(img,map);
 pt2.CData = ptImage;
 pt2.Tooltip = 'Marker Gene Explorer...';
 pt2.ClickedCallback = @MenuSelected2;
 
 pt3 = uipushtool(tb,'Separator','on');
-[img,map] = imread(fullfile(fileparts(which(mfilename)),...
-            'resources','explorer3.gif'));
+[img,map] = imread(fileparts(mfilename('fullpath')),...
+            'resources','explorer3.gif');
 ptImage = ind2rgb(img,map);
 pt3.CData = ptImage;
 pt3.Tooltip = 'Pseudotime Explorer...';
@@ -113,7 +114,7 @@ add_3dcamera;
             otherwise
                 return;
         end        
-        sc_celltypeexplorer(X,genelist,s,...
+        gui.sc_celltypeexplorer(X,genelist,s,...
             'species',speciesx,"method",methodx);
     end
 

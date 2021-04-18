@@ -4,8 +4,8 @@ if nargin<3, plotit=true; end
 if nargin<4, genelist=[]; end
 if nargin<5, colorby='mean'; end
 
-pw1=fileparts(which(mfilename));
-pth=fullfile(pw1,'thirdparty/PHATE');
+pw1=fileparts(mfilename('fullpath'));
+pth=fullfile(pw1,'../+run/thirdparty/PHATE');
 addpath(pth);
 
 if bygene

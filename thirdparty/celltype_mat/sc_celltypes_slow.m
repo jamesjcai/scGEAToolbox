@@ -4,7 +4,8 @@ function [T]=sc_celltypes_slow(X,genelist,clusterid)
 % REF: PanglaoDB: a web server for exploration of mouse and human single-cell RNA sequencing data
 
 oldpth=pwd;
-pw1=fileparts(which(mfilename));
+% pw1=fileparts(which(mfilename));
+pw1 = fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'thirdparty/celltype_mat');
 cd(pth);
 

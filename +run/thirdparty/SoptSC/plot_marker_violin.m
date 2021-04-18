@@ -1,6 +1,6 @@
 function plot_marker_violin(data,allgenes,Marker,cluster_label,No_cluster)
 
-pw1=fileparts(which(mfilename));
+pw1 = fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'vinlinplot');
 addpath(pth);
 

@@ -1,4 +1,4 @@
-pw1=fileparts(which(mfilename));
+pw1 = fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'PFA_pattern_fusion_analysis');
 addpath(pth);
 

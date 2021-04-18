@@ -9,7 +9,8 @@ addRequired(p,'X',@isnumeric);
 addOptional(p,'type',defaultType,checkType)
 parse(p,X,varargin{:})
 
-pw1=fileparts(which(mfilename));
+% pw1=fileparts(which(mfilename));
+pw1 = fileparts(mfilename('fullpath'));
 switch p.Results.type
     case 'simlr'        
         pth=fullfile(pw1,'thirdparty/SIMLR');

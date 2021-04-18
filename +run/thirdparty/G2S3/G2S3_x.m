@@ -1,7 +1,7 @@
 function [data_impute, W] = G2S3_x(data,varargin)
 
 pw0=pwd;
-pw1=fileparts(which(mfilename));
+pw1 = fileparts(mfilename('fullpath'));
 cd(pw1);
 
 addpath("gaimc\graphs");
@@ -122,7 +122,8 @@ switch self
   case 0
     W = W;
     disp('only use neighbor')
-  end
+end
+  
 
 W(W<0) = 0;
 
@@ -136,7 +137,7 @@ if normalize ==1
   data_impute = bsxfun(@rdivide, data_impute, sum(data_impute,2))*mean(sum(data_impute,2));
   disp('normalized by library size')
 else
-  data_impute = data_impute;
+  %data_impute = data_impute;
   disp('unormalized')
 end
 
