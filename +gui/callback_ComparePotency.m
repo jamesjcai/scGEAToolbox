@@ -2,8 +2,13 @@ function callback_ComparePotency(src,~)
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);   
     if isempty(sce.list_cell_attributes)
-        warndlg('No data sce.list_cell_attributes')
-        return;
+        answer = questdlg('Compute each cell''s differentiation potency?');
+        switch answer
+            case 'Yes'
+                sce=sce.estimatepotency;
+            otherwise
+                return;
+        end
     end
     if ~isempty(sce.list_cell_attributes{2}) && ~isempty(sce.c_cell_type_tx)
         x=sce.list_cell_attributes{2};

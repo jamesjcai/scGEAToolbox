@@ -2,8 +2,19 @@
         if nargin<3, forced=false; end
         if nargin<2, speciesid=[]; end
         if forced || sum(strcmp('cell_potency',obj.list_cell_attributes))==0
-            if isempty(speciesid)
-                speciesid=input('Species: 1=human,2=mouse >>');
+            if isempty(speciesid)               
+                % speciesid=input('Species: 1=human,2=mouse >>');
+                answer = questdlg('Which species?','Select Species','Mouse','Human','Mouse');
+
+                if strcmp(answer,'Human')
+                    speciesid=1;
+                elseif strcmp(answer,'Mouse')
+                    speciesid=2;
+                else
+                    return;
+                end
+                
+                
             end
             r=sc_potency(obj.X,obj.g,speciesid);
             obj.list_cell_attributes=[obj.list_cell_attributes,...
