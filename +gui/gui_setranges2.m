@@ -26,16 +26,35 @@ set(fh,'WindowButtonDownFcn', @mouseDownCallback);
                   'Done',...
                   'Units','normalized',...
                   'Position',[0.45 0.0 0.2 0.07],...
-                  'Callback', @ff,...
+                  'Callback', @i_CloseFig,...
+                  'Tag','button');
+              
+       btn = uicontrol(fh,'String',...
+                  'Set Cutoffs...',...
+                  'Units','normalized',...
+                  'Position',[0.15 0.0 0.2 0.07],...
+                  'Callback', @i_CloseFig,...
                   'Tag','button');           
-waitfor(fh);
+
+              
+              waitfor(fh);
 
 
-    function ff(figHandle,varargin)
-        % delete(fh);
-        closereq;
+function i_CloseFig(figHandle,varargin)
+    % delete(fh);
+    closereq;
+end
+
+    function i_SetValues(figHandle,varargin)
+            prompt = {'Enter name:','Enter birth year:'};
+            answer = inputdlg(prompt);
+            try
+                a1 = str2double(answer{1});
+                a2 = str2double(answer{2});
+            catch
+                
+            end            
     end
-
 function mouseDownCallback(figHandle,varargin)
 
     % get the handles structure
