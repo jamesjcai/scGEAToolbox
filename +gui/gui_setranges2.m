@@ -1,9 +1,9 @@
 function [idx,xr,yr]=gui_setranges2(x,y,xr,yr,txtx,txty)
 % https://www.mathworks.com/matlabcentral/answers/143306-how-to-move-a-plotted-line-vertically-with-mouse-in-a-gui
 if nargin<1, x=randn(300,1); end
-if nargin<2, y=randn(300,1); end
-if nargin<3, xr=[.3 .7]; end
-if nargin<4, yr=[.3 .7]; end
+if nargin<2, y=randn(300,1)*1000; end
+if nargin<3, xr=[-.8 .8]; end
+if nargin<4, yr=[-.8 .8]*1000; end
 if nargin<5, txtx=''; end
 if nargin<6, txty=''; end
 
@@ -25,15 +25,15 @@ set(fh,'WindowButtonDownFcn', @mouseDownCallback);
        btn = uicontrol(fh,'String',...
                   'Done',...
                   'Units','normalized',...
-                  'Position',[0.45 0.0 0.2 0.07],...
+                  'Position',[0.45 0.0 0.2 0.056],...
                   'Callback', @i_CloseFig,...
                   'Tag','button');
               
        btn = uicontrol(fh,'String',...
                   'Set Cutoffs...',...
                   'Units','normalized',...
-                  'Position',[0.15 0.0 0.2 0.07],...
-                  'Callback', @i_CloseFig,...
+                  'Position',[0.20 0.0 0.2 0.056],...
+                  'Callback', @i_SetValues,...
                   'Tag','button');           
 
               
@@ -46,15 +46,36 @@ function i_CloseFig(figHandle,varargin)
 end
 
     function i_SetValues(figHandle,varargin)
-            prompt = {'Enter name:','Enter birth year:'};
-            answer = inputdlg(prompt);
+            prompt = {'Library size cutoff:','Mt-ratio cutoff:'};
+            answer = inputdlg(prompt,"",[1 35],...
+                     {num2str(xr(2)),num2str(yr(2))});
+            if isempty(answer), return; end
             try
                 a1 = str2double(answer{1});
                 a2 = str2double(answer{2});
-            catch
+                xr(2)=a1;
+                yr(2)=a2;
+                if ~isempty(lh2), delete(lh2); end
+                lh2=xline(xr(2),'r-');
+                if ~isempty(lh4), delete(lh4); end
+                lh4=yline(yr(2),'r-');
                 
+                % xydata = guidata(fh);
+                axes1 = get(fh,'CurrentAxes');
+    i=(x>lh1.Value) & (x<lh2.Value);
+    j=(y>lh3.Value) & (y<lh4.Value);
+    idx=i&j;
+    xr=[lh1.Value lh2.Value];
+    yr=[lh3.Value lh4.Value];
+    axes1.Title.String=sprintf('Inclusion: %d out of %d (%.2f%%)\nExclusion: %d out of %d (%.2f%%)',...
+        sum(i&j),length(i),100*sum(idx)./length(i),...
+        length(i)-sum(i&j),length(i),100*(length(i)-sum(idx))./length(i));
+            catch
+                errordlg('Wrong inputs')
+                return;
             end            
     end
+
 function mouseDownCallback(figHandle,varargin)
 
     % get the handles structure
