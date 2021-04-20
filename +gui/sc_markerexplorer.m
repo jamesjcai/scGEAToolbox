@@ -102,7 +102,7 @@ hBr = brush(hFig);
 %hBr.ActionPostCallback = {@onBrushAction,X,genelist,s,method,numfig};
 hBr.ActionPostCallback = @onBrushAction;
 
-add_3dcamera(tb);
+gui.add_3dcamera(tb);
 
 
 % ref: https://www.mathworks.com/matlabcentral/answers/385226-how-to-use-the-data-brush-tool-to-automatically-save-selected-points-in-multiple-line-plots

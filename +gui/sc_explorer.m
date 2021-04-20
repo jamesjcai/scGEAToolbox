@@ -119,10 +119,10 @@ add_3dcamera;
     end
 
     function MenuSelected2(src,event)
-        sc_markerexplorer(X,genelist,s);
+        gui.sc_markerexplorer(X,genelist,s);
     end
     function MenuSelected3(src,event)
-        sc_pseudotimeexplorer(X,genelist,s);
+        gui.sc_pseudotimeexplorer(X,genelist,s);
     end
 
 end

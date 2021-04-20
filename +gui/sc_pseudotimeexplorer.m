@@ -55,7 +55,7 @@ pt3.CData = ptImage;
 pt3.Tooltip = 'Select dimension';
 pt3.ClickedCallback = @selectdimension;
 
-add_3dcamera(tb);
+gui.add_3dcamera(tb);
 
     function selectdimension(~,~)
         dim=dim+1;
