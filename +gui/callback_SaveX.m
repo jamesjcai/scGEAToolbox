@@ -19,7 +19,9 @@ switch answer
            {'*.mat';'*.*'},'Save as');
         filename=[pathn,filen];
         if ~(filename), return; end
-        save(filename,'sce');
+        fw=gui.gui_waitbar;
+        save(filename,'sce','-v7.3');
+        gui.gui_waitbar(fw);        
     case 'Seurat/RDS file'        
         [filen, pathn] = uiputfile( ...
            {'*.rds';'*.*'},'Save as');
@@ -30,8 +32,7 @@ switch answer
         gui.gui_waitbar(fw);
     otherwise
         return;
-end
-         
+end         
     function smhelp
         helpdlg({'Select one or both check boxes.',...
                  'Change the variable names, if desired,',...

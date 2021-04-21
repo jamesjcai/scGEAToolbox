@@ -121,7 +121,7 @@ classdef SingleCellExperiment
     
     function obj = selectgenes(obj,min_countnum,min_cellnum)
         if nargin<2, min_countnum=1; end
-        if nargin<3, min_cellnum=0.05; end
+        if nargin<3, min_cellnum=0.01; end
         [tmpX,tmpg]=sc_selectg(obj.X,obj.g,min_countnum,min_cellnum);
         obj.X=tmpX;
         obj.g=tmpg;
