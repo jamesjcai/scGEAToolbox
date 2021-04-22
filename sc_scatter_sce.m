@@ -342,7 +342,7 @@ set(FigureHandle,'visible','on');
 guidata(FigureHandle,sce);
 
 if nargout > 0
-    varargout{1} = FigureHandle; 
+    varargout{1} = FigureHandle;
 end
 
 function SelectCellsByQC(~,~)
@@ -696,17 +696,21 @@ end
 
 
 function ShowCellStats(~,~)
-
+    %FigureHandle=src.Parent.Parent;
+    sce=guidata(FigureHandle);
     listitems={'Library Size','Mt-reads Ratio',...
         'Mt-genes Expression','HgB-genes Expression',...
         'Cell Cycle Phase',...
         'Cell Type','Cluster ID','Batch ID'};
+    %if ~ismember('cell potency',sce.list_cell_attributes)
+    %    listitems{end+1}='Cell Potency';        
+    %end
     for k=1:2:length(sce.list_cell_attributes)
         listitems=[listitems,sce.list_cell_attributes{k}];
     end
     [indx,tf] = listdlg('PromptString',{'Select statistics',...
     '',''},'SelectionMode','single','ListString',listitems);
-    if tf~=1, return; end        
+    if tf~=1, return; end
         switch indx
             case 1
                 ci=sum(sce.X);
@@ -766,7 +770,7 @@ function ShowCellStats(~,~)
                 ci=sce.c_cluster_id;
             case 8 % batch id
                 ci=sce.c_batch_id;
-            otherwise % other properties                
+            otherwise   % other properties
                 ttxt=sce.list_cell_attributes{2*(indx-8)-1};
                 ci=sce.list_cell_attributes{2*(indx-8)};
         end
