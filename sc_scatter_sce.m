@@ -458,8 +458,13 @@ function EmbeddingAgain(~,~)
 %         end
 
     if ismember(answer,{'tSNE','UMAP','PHATE'})
-        fw=gui.gui_waitbar;            
-        sce=sce.embedcells(answer,true);
+        fw=gui.gui_waitbar;
+        try
+            sce=sce.embedcells(answer,true);
+        catch ME
+            errordlg(ME.message)
+            rethrow(ME)
+        end
         gui.gui_waitbar(fw);
     else
         return;
