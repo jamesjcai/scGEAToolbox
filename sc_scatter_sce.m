@@ -759,19 +759,15 @@ function ShowCellStats(~,~)
                 % xxx
             case 5   % "Cell Cycle Phase";
                 if isempty(sce.c_cell_cycle_tx)   
-%                  answer = questdlg('Estimate cell cycle using R/seurat?');
-%                  if ~strcmp(answer,'Yes'), return; end                    
-%                     fw=gui.gui_waitbar;
-%                     [cix]=run.SeuratCellCycle(sce.X,sce.g);
-%                     sce.c_cell_cycle_tx=cix;
-%                     gui.gui_waitbar(fw);             
+                    fw=gui.gui_waitbar;
                     sce=sce.estimatecellcycle;
-                end                
+                    gui.gui_waitbar(fw);
+                end
                 [ci,tx]=grp2idx(sce.c_cell_cycle_tx);
                 ttxt=sprintf('%s|',string(tx));
             case 6 % cell type
                 ci=sce.c_cell_type_tx;
-            case 7 % cluster id              
+            case 7 % cluster id
                 ci=sce.c_cluster_id;
             case 8 % batch id
                 ci=sce.c_batch_id;
@@ -788,7 +784,7 @@ function ShowCellStats(~,~)
             sces=sce.s(:,1:2);
         end
         % RefreshAll;
-             [ax,bx]=view();     
+             [ax,bx]=view();
              h=gui.i_gscatter3(sces,ci,1);
              view(ax,bx);
              title(sce.title);
@@ -800,14 +796,7 @@ function ShowCellStats(~,~)
             end
             [c,cL]=grp2idx(ci);
             sce.c=ci;
-
-%     answer = questdlg('Update sce.c?');
-%     if strcmp(answer,'Yes')
-%         [c,cL]=grp2idx(ci);
-%         sce.c=ci;
-%     end
-
-      guidata(FigureHandle,sce);
+    guidata(FigureHandle,sce);
 end
 
 function SelectCellsByClass(~,~)

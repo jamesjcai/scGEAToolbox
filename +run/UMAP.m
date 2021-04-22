@@ -7,7 +7,7 @@ function [s,c]=UMAP(X,ndim,plotit,verbose)
 
 if nargin<4, verbose=false; end
 if nargin<3, plotit=false; end
-if nargin<2, ndim=2; end
+if nargin<2, ndim=3; end
 
 pw1=fileparts(mfilename('fullpath'));
 pth1=fullfile(pw1,'thirdparty','umapFileExchange','umap');

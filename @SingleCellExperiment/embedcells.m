@@ -6,9 +6,9 @@ function obj = embedcells(obj,methodid,forced)
             case {1,'tSNE'}
                 obj.s=sc_tsne(obj.X,3,false,true);
             case {2, 'UMAP'}
-                obj.s=run.UMAP(obj.X,3);
+                obj.s=sc_umap(obj.X,3);
             case {3, 'PHATE'}
-                obj.s=run.PHATE(obj.X,3);
+                obj.s=sc_phate(obj.X,3);
         end        
         disp('SCE.S added');
     else

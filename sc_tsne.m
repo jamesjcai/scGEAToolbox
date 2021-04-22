@@ -12,6 +12,7 @@ if nargin<5, dolog1p=false; end
 if nargin<6, bygene=false; end   % when BYGENE=true, the matrix X will be transposed and the output will be tSNE for genes rather than cells.
 if nargin<7, genelist=[]; end
 
+
 pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'+run','thirdparty','PHATE');
 addpath(pth);
@@ -39,14 +40,14 @@ if dolog1p
     data = log(data+1);
 end
 if issparse(data)
-    data=full(data);
+   data=full(data);
 end
 
 ncells=size(data,1);
 
-%if ncells>10000
-%	data = svdpca(data, 100, 'random');
-%end
+if ncells>10000
+	data = svdpca(data, 100, 'random');
+end
 
 if ncells>5000
 s=tsne(data,'NumDimensions',ndim,'Algorithm','barneshut','NumPCAComponents',100);
