@@ -34,16 +34,22 @@ function callback_DEGene2Groups(src,~)
     %Tf=run.fgsea(T.gene);
     %pkg.e_fgseanet(Tf);
     
-    answer = questdlg('Violin plots (top 16 DE genes)?');
+%     answer = questdlg('Violin plots (top 16 DE genes)?');
+%     if strcmp(answer,'Yes')
+%         figure;
+%         for k=1:16
+%             subplot(4,4,k)
+%             i=sce.g==T.gene(k);
+%             pkg.i_violinplot(log2(1+sce.X(i,:)),...
+%                 sce.c_batch_id);
+%             title(T.gene(k));
+%             ylabel('log2(UMI+1)')
+%         end
+%     end
+
+    answer = questdlg('volcano plot?');
     if strcmp(answer,'Yes')
         figure;
-        for k=1:16
-            subplot(4,4,k)
-            i=sce.g==T.gene(k);
-            pkg.i_violinplot(log2(1+sce.X(i,:)),...
-                sce.c_batch_id);
-            title(T.gene(k));
-            ylabel('log2(UMI+1)')
-        end
-    end   
+        gui.gui_volcanoplot(T);
+    end
 end

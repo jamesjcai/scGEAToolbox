@@ -1071,43 +1071,32 @@ function LabelClusters(src,~)
             dtp = findobj(h,'Type','datatip');
             delete(dtp);
         else
-            answer = questdlg('Change current class type?');
-            if strcmp(answer,'No')
-                set(src,'State','off');
-            elseif strcmp(answer,'Yes')                
-                listitems={'Custom Input (C)'};
+          
+                listitems={'Current Class Type'};
                 if ~isempty(sce.c_cluster_id), listitems=[listitems,'Cluster ID']; end
                 if ~isempty(sce.c_cell_type_tx), listitems=[listitems,'Cell Type']; end
                 if ~isempty(sce.c_cell_cycle_tx), listitems=[listitems,'Cell Cycle Phase']; end
                 if ~isempty(sce.c_batch_id), listitems=[listitems,'Batch ID']; end
                 [indx,tf] = listdlg('PromptString',{'Select statistics',...
-                '',''},'SelectionMode','single','ListString',listitems);
-                if tf==1   
-                    switch listitems{indx}
-                        case 'Cluster ID'
-                            cc=sce.c_cluster_id;
-                        case 'Cell Type'
-                            cc=sce.c_cell_type_tx;
-                        case 'Cell Cycle Phase'
-                            cc=sce.c_cell_cycle_tx;
-                        case 'Batch ID'
-                            cc=sce.c_batch_id;
-                        otherwise
-                            cc=[];
-                    end
-                    if ~isempty(cc)
-                        % disp('Reset C')
-                        [c,cL]=grp2idx(cc);
-                        set(src,'State','off');
-                    end                    
-                else
-                    set(src,'State','off');
-                    return;
+                    '',''},'SelectionMode','single','ListString',listitems);
+                if tf~=1, set(src,'State','off'); return; end
+                switch listitems{indx}
+                    case 'Cluster ID'
+                        cc=sce.c_cluster_id;
+                    case 'Cell Type'
+                        cc=sce.c_cell_type_tx;
+                    case 'Cell Cycle Phase'
+                        cc=sce.c_cell_cycle_tx;
+                    case 'Batch ID'
+                        cc=sce.c_batch_id;
+                    otherwise
+                        cc=[];
                 end
-            else
-                set(src,'State','off');
-                return;
-            end
+                if ~isempty(cc)
+                    [c,cL]=grp2idx(cc);
+                    set(src,'State','off');
+                end
+            
             RefreshAll;
             if i_labelclusters
                 set(src,'State','on');
