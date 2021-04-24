@@ -47,7 +47,7 @@ function callback_DEGene2Groups(src,~)
 %         end
 %     end
 
-    answer = questdlg('volcano plot?');
+    answer = questdlg('Volcano plot?');
     if strcmp(answer,'Yes')
         figure;
         gui.gui_volcanoplot(T);
