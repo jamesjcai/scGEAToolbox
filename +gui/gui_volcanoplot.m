@@ -1,9 +1,10 @@
 function gui_volcanoplot(T)
+
 x=T.avg_logFC;
 y=-log10(T.p_val_adj);
 y(y>100)=100;
 %isok=T.pct_1>0.01|T.pct_2>0.01;
-isok=abs(T.pct_2-T.pct_1)>0.015;
+isok=abs(T.pct_2-T.pct_1)>0.15;
 genelist=T.gene;
 
 % figure;
@@ -13,14 +14,17 @@ isx=sign(x);
 x(ix)=capv;
 x=isx.*abs(x);
 
+scatter(x,y,[],isok);
+colormap lines(2)
+% hold on
+% scatter(x(~isok),y(~isok),'bo')
+% 
+% glist=genelist(~isok);
+% glist=[glist;genelist(isok)];
 
-scatter(x(isok),y(isok))
-hold on
-scatter(x(~isok),y(~isok),'xk')
-
-glist=genelist(isok);
-glist=[glist;genelist(~isok)];
 % scatter(x,y)
+glist=genelist;
+
 ylabel('-log10(adj p-value)')
 xlabel('log2(FC)')
 yline(-log10(0.01),'r')
