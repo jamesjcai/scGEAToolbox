@@ -65,7 +65,6 @@ function callback_MarkerGeneHeatmap(src,~)
         M{k,1}=cLk;
         M{k,2}=markerlist{k};
     end
-    gui.gui_waitbar(fw);    
     
 % ==============    
     
@@ -115,6 +114,7 @@ for k=1:numel(cL)
 end
 
 
+    gui.gui_waitbar(fw);
 
 f1=figure;
 imagesc(Y);
@@ -160,6 +160,9 @@ pt1.Tooltip = 'Summary map, transposed';
 ptImage = ind2rgb(img,map);
 pt1.CData = ptImage;
 pt1.ClickedCallback = @i_summarymapT;
+
+
+
 
 
 

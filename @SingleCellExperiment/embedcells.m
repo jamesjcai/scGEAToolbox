@@ -13,6 +13,6 @@ function obj = embedcells(obj,methodid,forced)
         disp('SCE.S added');
     else
         disp('SCE.S existed.')
-        disp('Use `sce=sce.embedcells(1,true)` to overwirte.');
+        disp('Use `sce=sce.embedcells(''tSNE'',true)` to overwirte.');
     end
 end

@@ -26,9 +26,9 @@ function callback_DEGene2Groups(src,~)
                     sce.X(:,i2),sce.g);
     end
     gui.gui_waitbar(fw);
-    isok=abs(T.pct_2-T.pct_1)>0.15;
-    Tup=T(T.avg_logFC<0 & isok,:);
-    Tdn=T(T.avg_logFC>0 & isok,:);
+    isok=abs(T.pct_2-T.pct_1)>0.05 | abs(T.avg_logFC)>1.2;
+    Tup=T(T.avg_logFC>0 & isok,:);
+    Tdn=T(T.avg_logFC<0 & isok,:);
     labels = {'Save DE results (all genes) to variable named:',...
         'Save DE results (selected up-regulated) to variable named:',...
         'Save DE results (selected down-regulated) to variable named:'}; 

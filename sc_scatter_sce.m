@@ -370,12 +370,13 @@ idx=gui.gui_setranges2(ci',cj',[0 a(end)],...
 end
 
 % =========================
-function RefreshAll(~,~)
+function RefreshAll(~,~,keepview)
+    if nargin<3, keepview=false; end
     if size(sce.s,2)>2
         if ~isempty(h.ZData)
-            %[ax,bx]=view();
+            if keepview, [ax,bx]=view(); end
             h=gui.i_gscatter3(sce.s,c,methodid);
-            %view(ax,bx);
+            if keepview, view(ax,bx); end
         else
             h=gui.i_gscatter3(sce.s(:,1:2),c,methodid);
         end
@@ -391,6 +392,7 @@ function RefreshAll(~,~)
     %UitoolbarHandle.Visible='off';
     %UitoolbarHandle.Visible='on';    
 end
+
 
 function Switch2D3D(~,~)
     %oldcmp=colormap();
@@ -445,18 +447,7 @@ end
 
 
 function EmbeddingAgain(~,~)
-%     answer = questdlg('Embedding cells?');
-%     if ~strcmp(answer,'Yes'), return; end
     answer = questdlg('Which embedding method?','Select method','tSNE','UMAP','PHATE','tSNE');
-%     ndim=questdlg('2D or 3D?','','2D','3D','3D');
-%         if strcmp(ndim,'3D')
-%             ndim=3;
-%         elseif strcmp(ndim,'2D')
-%             ndim=2;
-%         else
-%             return;
-%         end
-
     if ismember(answer,{'tSNE','UMAP','PHATE'})
         fw=gui.gui_waitbar;
         try
@@ -469,41 +460,7 @@ function EmbeddingAgain(~,~)
     else
         return;
     end
-    
-    % new_c=[];    
-    %  ndim=3;
-%     switch answer
-%         case 'tSNE'
-%             fw=gui.gui_waitbar;
-%             %[sce.s]=sc_tsne(sce.X,ndim,false,true);
-%             sce=sce.embedcells(1,true);
-%             gui.gui_waitbar(fw);
-%         case 'UMAP'
-%             fw=gui.gui_waitbar;
-%             warning off
-%             %[sce.s]=run.UMAP(sce.X,ndim,false,false);
-%             sce=sce.embedcells(2,true);
-%             warning on
-%             gui.gui_waitbar(fw);
-%         case 'PHATE'
-%             fw=gui.gui_waitbar;
-%             %[sce.s]=run.PHATE(sce.X,ndim,false);
-%             sce=sce.embedcells(3,true);
-%             gui.gui_waitbar(fw);
-%         otherwise            
-%             return;
-%     end
     RefreshAll;
-%     if ~isempty(new_c)
-%         [c,cL]=grp2idx(new_c);
-%         answer = questdlg('Update sce.c_cluster_id?');
-%         if strcmp(answer,'Yes')
-%             sce.c_cluster_id=c;
-%         else
-%             return;
-%         end
-%         RefreshAll;
-%     end
     guidata(FigureHandle,sce);
 end
 
@@ -521,7 +478,6 @@ function DetermineCellTypeClusters(~,~)
         return;
     end
     organtag="all";
-    
 %     answer = questdlg('Which marker database?','Select Database','PanglaoDB','clustermole','PanglaoDB');
 %     if strcmpi(answer,'clustermole')
 %         databasetag="clustermole";
@@ -1094,10 +1050,8 @@ function LabelClusters(src,~)
                 end
                 if ~isempty(cc)
                     [c,cL]=grp2idx(cc);
-                    set(src,'State','off');
-                end
-            
-            RefreshAll;
+                end            
+            RefreshAll(src,1,true);
             if i_labelclusters
                 set(src,'State','on');
             else                

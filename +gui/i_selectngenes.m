@@ -2,17 +2,22 @@ function [glist] = i_selectngenes(sce)
 
 % internal function used by callback_BuildGeneNetwork
 glist=[];
-gsorted=sort(sce.g);
+if isa(sce,'SingleCellExperiment')
+    gsorted=sort(sce.g);
+elseif isstring(sce)
+    genelist=sce;
+    gsorted=sort(genelist);
+end
 answer = questdlg('Paste or select genes?',...
 	'Build scGRN','Paste','Select','Cancel','Paste');
 switch answer
     case 'Cancel'
         return;
     case 'Paste'
-        n=length(sce.g);
-        tg=gui.gui_inputgenelist(sce.g(randperm(n,20)));        
+        n=length(gsorted);
+        tg=gui.gui_inputgenelist(gsorted(randperm(n,20)));        
         if length(tg)>=2
-            [y,i]=ismember(tg,sce.g);
+            [y,i]=ismember(tg,gsorted);
             i=i(y);
             glist=tg(y);
             if length(glist)<2
