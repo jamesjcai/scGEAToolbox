@@ -1,10 +1,14 @@
-function gui_volcanoplot(T)
+function gui_volcanoplot(T,isok)
+
+if nargin<2
+    isok=(abs(T.pct_2-T.pct_1)>0.05 | abs(T.avg_logFC)>1.0)&T.p_val_adj<0.01;
+end
 
 x=T.avg_logFC;
 y=-log10(T.p_val_adj);
 y(y>100)=100;
 %isok=T.pct_1>0.01|T.pct_2>0.01;
-isok=abs(T.pct_2-T.pct_1)>0.15;
+%isok=abs(T.pct_2-T.pct_1)>0.05;
 genelist=T.gene;
 
 % figure;

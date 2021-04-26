@@ -679,12 +679,17 @@ function ShowCellStats(~,~)
                 pkg.i_stem3scatter(sce.s(:,1),sce.s(:,2),ci,ttxt);
                 return;
             case 2
+                fw=gui.gui_waitbar;
                 i=startsWith(sce.g,'mt-','IgnoreCase',true);
                 lbsz=sum(sce.X,1);
                 lbsz_mt=sum(sce.X(i,:),1);
                 ci=lbsz_mt./lbsz;
                 ttxt="mtDNA%";
                 pkg.i_stem3scatter(sce.s(:,1),sce.s(:,2),ci,ttxt);
+                view(2);
+                colorbar;
+                pause(1)
+                gui.gui_waitbar(fw);
                 return;
             case 3
                 idx=startsWith(sce.g,'mt-','IgnoreCase',true);
