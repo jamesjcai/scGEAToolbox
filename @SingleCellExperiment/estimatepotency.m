@@ -13,8 +13,12 @@
                 else
                     return;
                 end
-                
-                
+            elseif ischar(speciesid)
+                [y,idx]=ismember(lower(speciesid),{'human','mouse'});
+                if y, speciesid=idx; end
+            elseif isstring(speciesid)
+                [y,idx]=ismember(lower(speciesid),["human","mouse"]);
+                if y, speciesid=idx; end
             end
             r=sc_potency(obj.X,obj.g,speciesid);
             obj.list_cell_attributes=[obj.list_cell_attributes,...
