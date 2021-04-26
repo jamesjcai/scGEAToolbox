@@ -45,8 +45,8 @@ t-SNE embedding of cells using highly varible genes (HVGs)
   [s_tsne]=sc_tsne(Xhvg(1:2000,:),3,false,false);
   sc_scatter(X,genelist,s_tsne)
   
-A complete pipeline of raw data processing
-------------------------------------------
+An example pipeline for raw data processing
+-------------------------------------------
 
 .. code-block:: matlab
 
@@ -62,6 +62,22 @@ A complete pipeline of raw data processing
   id=sc_cluster_s(s_tsne,10);                   % clustering on tSNE coordinates using k-means
   sce.c_cluster_id=id;                          % assigning cluster Ids to SCE class
   sc_scatter(sce)                               % visualize cells  
+
+An example pipeline for processing 10x data folder
+--------------------------------------------------
+Assuming the .m file containing the following code is in the folder ./filtered_feature_bc_matrix. In this folder, three files: matrix.mtx.gz, features.tsv.gz, and barcodes.tsv.gz, are present.
+
+.. code-block:: matlab
+
+  [X,genelist,celllist]=sc_read10xdir(pwd);
+  sce=SingleCellExperiment(X,genelist);
+  sce.c_cell_id=celllist;
+  sce=sce.qcfilter;
+  sce=sce.estimatecellcycle;
+  sce=sce.estimatepotency("mouse");
+  sce=sce.embedcells('tSNE',true);
+  save clean_data sce -v7.3
+  sc_scatter(sce)
 
 Merge two data sets (WT and KO)
 -------------------------------
