@@ -1,8 +1,8 @@
-species='hs';
+species='mm';
 T1=readtable(sprintf('markerlist_%s_panglaodb.txt',species),'ReadVariableNames',false,'Delimiter','\t');
 T2=readtable(sprintf('markerlist_%s_custom.txt',species),'ReadVariableNames',false,'Delimiter','\t');
 T=[T1;T2];
-s=string(T.Var2);
+s=upper(string(T.Var2));
 S=[];
 for k=1:length(s)
     a=strsplit(s(k),',');
