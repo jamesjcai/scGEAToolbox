@@ -716,8 +716,7 @@ function ShowCellStats(~,~)
                 else
                     warndlg('No HgB-genes found');                    
                 end
-                return;
-                % xxx
+                return;                
             case 5   % "Cell Cycle Phase";
                 if isempty(sce.c_cell_cycle_tx)   
                     fw=gui.gui_waitbar;
@@ -744,20 +743,57 @@ function ShowCellStats(~,~)
         if isempty(h.ZData)
             sces=sce.s(:,1:2);
         end
-        % RefreshAll;
-             [ax,bx]=view();
-             h=gui.i_gscatter3(sces,ci,1);
-             view(ax,bx);
-             title(sce.title);
-            if indx==5
-                hc=colorbar;
-                hc.Label.String=ttxt;
-            else
-                colorbar off
-            end
-            [c,cL]=grp2idx(ci);
-            sce.c=ci;
+
+     [ax,bx]=view();
+     h=gui.i_gscatter3(sces,ci,1);
+     view(ax,bx);
+     title(sce.title);
+     
+    if indx==5
+        hc=colorbar;
+        hc.Label.String=ttxt;
+    else
+        colorbar off
+    end
+    [c,cL]=grp2idx(ci);
+    sce.c=ci;
     guidata(FigureHandle,sce);
+
+    if indx==5
+        answer=questdlg('Compare G1/S/G2M ratios between classes?');
+        if ~isequal(answer,'Yes'), return; end  
+        
+        listitems={'Cluster ID','Batch ID',...
+                   'Cell Type'};
+        [indx2,tf2] = listdlg('PromptString',...
+            {'Select statistics','',''},...
+             'SelectionMode','single',...
+             'ListString',listitems);
+        if tf2==1
+            switch indx2
+                case 1 % cluster id
+                    thisc=sce.c_cluster_id;
+                case 2 % batch id
+                    thisc=sce.c_batch_id;
+                case 3 % cell type
+                    thisc=sce.c_cell_type_tx;                
+            end
+        else
+            return;
+        end
+        if isempty(thisc)
+            errordlg("Undefined classification");
+            return;
+        end        
+        try
+            [A,~,~,l]=crosstab(sce.c_cell_cycle_tx,thisc);
+            B=A./sum(A);
+            figure; bar(B','stacked');
+            ylabel(sprintf('%s|',string(l(1:3,1))));
+        catch ME
+            rethrow(ME)
+        end
+    end
 end
 
 function SelectCellsByClass(~,~)
