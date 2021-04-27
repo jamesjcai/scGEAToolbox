@@ -19,8 +19,19 @@ function callback_ComparePotency(src,~)
         warndlg('Check SCE.LIST_CELL_ATTRIBUTES(1:2)')
         return;
     end
+    [thisc,clabel]=gui.i_select1class(sce);
+    if isempty(thisc)   % || numel(unique(thisc))==1
+        errordlg('Undefined');    
+        return;
+    end
+    x=sce.list_cell_attributes{idx+1};    
+    figure;
+    pkg.i_violinplot_groupordered(x,thisc);
+    xlabel(clabel)
+    
     
     % answer = questdlg('Compute each cell''s differentiation potency?');
+    %{
     if ~isempty(sce.list_cell_attributes{idx+1}) && ~isempty(sce.c_cell_type_tx)
         x=sce.list_cell_attributes{idx+1};
         y=sce.c_cell_type_tx;
@@ -36,6 +47,7 @@ function callback_ComparePotency(src,~)
         pkg.i_violinplot_groupordered(x,y);
         xlabel('Batch ID')
     end
+    %}
         
 %  %       try
 %             x=sce.list_cell_attributes{idx+1};
