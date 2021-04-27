@@ -345,28 +345,31 @@ if nargout > 0
     varargout{1} = FigureHandle;
 end
 
-function SelectCellsByQC(~,~)
-    
-i=startsWith(sce.g,'mt-','IgnoreCase',true);
-if ~any(i), warndlg('No mt genes'); return; end
-lbsz=sum(sce.X,1);
-lbsz_mt=sum(sce.X(i,:),1);
-cj=lbsz_mt./lbsz;
-ttxtj="mtDNA%";
-
-ci=sum(sce.X);
-ttxti="Library Size";
-a=maxk(ci,10);
-idx=gui.gui_setranges2(ci',cj',[0 a(end)],...
-        [0 0.1],ttxti,ttxtj);
-    if any(~idx)
-        answer = questdlg(sprintf('Remove %d cells?',sum(~idx)));
-        if strcmpi(answer,'Yes')
-            sce=sce.removecells(~idx);
-            [c,cL]=grp2idx(sce.c);
-            RefreshAll;
-        end
-    end
+function SelectCellsByQC(src,~)
+   callback_SelectCellsGenesByQC(src);   
+% i=startsWith(sce.g,'mt-','IgnoreCase',true);
+% if ~any(i), warndlg('No mt genes'); return; end
+% lbsz=sum(sce.X,1);
+% lbsz_mt=sum(sce.X(i,:),1);
+% cj=lbsz_mt./lbsz;
+% ttxtj="mtDNA%";
+% 
+% ci=sum(sce.X);
+% ttxti="Library Size";
+% a=maxk(ci,10);
+% idx=gui.gui_setranges2(ci',cj',[0 a(end)],...
+%         [0 0.1],ttxti,ttxtj);
+%     if any(~idx)
+%         answer = questdlg(sprintf('Remove %d cells?',sum(~idx)));
+%         if strcmpi(answer,'Yes')
+%             sce=sce.removecells(~idx);
+%             [c,cL]=grp2idx(sce.c);
+%             RefreshAll;
+%         end
+%     end  % xxx
+    sce=guidata(FigureHandle);
+    [c,cL]=grp2idx(sce.c);
+    RefreshAll;
 end
 
 % =========================
