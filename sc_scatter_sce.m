@@ -82,7 +82,7 @@ pt3a = uipushtool(UitoolbarHandle,'Separator','off');
 ptImage = ind2rgb(img,map);
 pt3a.CData = ptImage;
 pt3a.Tooltip = 'Select cells by class';
-pt3a.ClickedCallback = @SelectCellsByClass;
+pt3a.ClickedCallback = @callback_SelectCellsByClass;
 
 pt3a = uipushtool(UitoolbarHandle,'Separator','off');
 [img,map] = imread(fullfile(mfolder,...
@@ -799,52 +799,6 @@ function ShowCellStats(~,~)
     end
 end
 
-function SelectCellsByClass(~,~)
-    answer = questdlg('Select cells by class?');
-    if ~strcmp(answer,'Yes'), return; end
-    
-    listitems={'Custom Input (C)'};
-    if ~isempty(sce.c_cluster_id)
-        listitems=[listitems,'Cluster ID'];
-    end
-    if ~isempty(sce.c_cell_type_tx)
-        listitems=[listitems,'Cell Type'];
-    end
-    if ~isempty(sce.c_cell_cycle_tx)
-        listitems=[listitems,'Cell Cycle Phase'];
-    end
-    if ~isempty(sce.c_batch_id)
-        listitems=[listitems,'Batch ID'];
-    end
-    
-    [indx,tf] = listdlg('PromptString',{'Select statistics','',''},...    
-    'SelectionMode','single','ListString',listitems);
-    if tf~=1, return; end
-    switch listitems{indx}
-        case 'Custom Input (C)'
-            ci=c; cLi=cL;
-        case 'Batch ID'
-            [ci,cLi]=grp2idx(sce.c_batch_id);
-        case 'Cluster ID'
-            [ci,cLi]=grp2idx(sce.c_cluster_id);
-        case 'Cell Type'
-            [ci,cLi]=grp2idx(sce.c_cell_type_tx);
-        case 'Cell Cycle Phase'
-            [ci,cLi]=grp2idx(sce.c_cell_cycle_tx);
-    end
-    [indxx,tfx] = listdlg('PromptString',{'Select groups',...
-    '',''},'SelectionMode','multiple','ListString',string(cLi));
-    if tfx==1        
-        fw=gui.gui_waitbar;
-        idx=ismember(ci,indxx);
-        [ax,bx]=view();
-        scex=selectcells(sce,idx);
-        scex.c=cLi(ci(idx));
-        sc_scatter_sce(scex);
-        view(ax,bx);
-        gui.gui_waitbar(fw);        
-    end
-end
 
 function DeleteSelectedCells(~,~)
     ptsSelected = logical(h.BrushData.');    
