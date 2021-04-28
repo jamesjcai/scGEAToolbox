@@ -89,7 +89,7 @@ pt3a = uipushtool(UitoolbarHandle,'Separator','off');
             'resources','plotpicker-effects.gif'));         
 ptImage = ind2rgb(img,map);
 pt3a.CData = ptImage;
-pt3a.Tooltip = 'Cell QC';
+pt3a.Tooltip = 'Filter genes and cells';
 pt3a.ClickedCallback = @SelectCellsByQC;
 
 
@@ -680,6 +680,7 @@ function ShowCellStats(~,~)
                 ci=sum(sce.X);
                 ttxt="Library Size";
                 pkg.i_stem3scatter(sce.s(:,1),sce.s(:,2),ci,ttxt);
+                view(2);
                 return;
             case 2
                 fw=gui.gui_waitbar;

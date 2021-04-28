@@ -26,16 +26,8 @@ function callback_DEGene2Groups(src,~)
                     sce.X(:,i2),sce.g);
     end
     gui.gui_waitbar(fw);
-    isok=(abs(T.pct_2-T.pct_1)>0.05 | abs(T.avg_logFC)>1.0)&T.p_val_adj<0.01;
-    Tup=T(T.avg_logFC>0 & isok,:);
-    Tdn=T(T.avg_logFC<0 & isok,:);
+    [Tup,Tdn]=pkg.e_processDETable(T);
     
-Tup = sortrows(Tup,'abs_logFC','descend');
-Tup = sortrows(Tup,'p_val_adj','ascend');
-
-Tdn = sortrows(Tdn,'abs_logFC','descend');
-Tdn = sortrows(Tdn,'p_val_adj','ascend');
-
     labels = {'Save DE results (all genes) to variable named:',...
         'Save DE results (selected up-regulated) to variable named:',...
         'Save DE results (selected down-regulated) to variable named:'}; 
@@ -70,9 +62,10 @@ Tdn = sortrows(Tdn,'p_val_adj','ascend');
 %         end
 %     end
 
-    answer = questdlg('Volcano plot?');
-    if strcmp(answer,'Yes')
-        figure;
-        gui.gui_volcanoplot(T,isok);
-    end
+%     answer = questdlg('Volcano plot?');
+%     if strcmp(answer,'Yes')
+%         figure;
+%         gui.gui_volcanoplot(T,isok);
+%     end
+    
 end

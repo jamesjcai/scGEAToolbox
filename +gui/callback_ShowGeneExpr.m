@@ -60,6 +60,7 @@ switch answer
             set(f,'visible','on');                  
         end
     case 'Cancel'
-        helpdlg('Action cancelled.');
+        % helpdlg('Action cancelled.');
+        return;
 end
 end
