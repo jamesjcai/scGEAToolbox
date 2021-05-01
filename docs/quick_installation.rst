@@ -3,7 +3,7 @@ Quick installation
 
 Run the following code in `MATLAB`:
 
-.. code-block::
+.. code-block:: matlab
 
   tic
   disp('Installing scGEAToolbox...')
