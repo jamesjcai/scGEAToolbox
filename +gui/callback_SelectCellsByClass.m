@@ -2,6 +2,7 @@ function callback_SelectCellsByClass(src,~)
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
     thisc=gui.i_select1class(sce);
+    if isempty(thisc), return; end
     [ci,cLi]=grp2idx(thisc);
 
     [indxx,tfx] = listdlg('PromptString',{'Select groups',...
