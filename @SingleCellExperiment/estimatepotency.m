@@ -19,6 +19,10 @@
             elseif isstring(speciesid)
                 [y,idx]=ismember(lower(speciesid),["human","mouse"]);
                 if y, speciesid=idx; end
+            elseif isnumeric(speciesid)
+                if ~ismember(speciesid,[1 2])
+                    error('SPECIESID should be 1 (human) or 2 (mouse)');
+                end
             end
             r=sc_potency(obj.X,obj.g,speciesid);
             obj.list_cell_attributes=[obj.list_cell_attributes,...

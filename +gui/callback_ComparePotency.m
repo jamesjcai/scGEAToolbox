@@ -5,8 +5,11 @@ function callback_ComparePotency(src,~)
         answer = questdlg('Compute cell differentiation potency (cell_potency))?');
         switch answer
             case 'Yes'
+                answer2=questdlg('Which species?','Select Species','Mouse','Human','Mouse');
+                [y,specisid]=ismember(lower(answer2),{'human','mouse'});
+                if ~y, return; end
                 fw=gui.gui_waitbar;
-                sce=sce.estimatepotency;
+                sce=sce.estimatepotency(specisid);
                 guidata(FigureHandle,sce);
                 gui.gui_waitbar(fw); 
             otherwise

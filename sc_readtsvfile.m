@@ -17,6 +17,13 @@ end
 %     try
 if nargout>2
     [X,genelist,celllist]=i_read_exprmat(filename,genecolnum);
+    if size(X,2)~=length(celllist)
+        celllist=strrep(celllist,'"','');
+        celllist(strlength(celllist)==0)=[];
+    end
+    if size(X,2)~=length(celllist)
+        warning('LENGTH(BARCODELIST) is not equal to SIZE(X,2)')
+    end
 else
     [X,genelist]=i_read_exprmat(filename,genecolnum);
 end
@@ -64,7 +71,7 @@ genelist=string(table2array(T(:,1:genecolnum)));
 if nargout>2
     % sampleid=string(T.Properties.VariableNames(1+genecolnum:end)');
      fid = fopen(filename);
-        sampleid = string(strsplit(fgetl(fid), '\t')');
+        sampleid = string(strsplit(fgetl(fid), {'\t',','})');
      fclose(fid);
 end
 if verbose, fprintf('done.\n'); end

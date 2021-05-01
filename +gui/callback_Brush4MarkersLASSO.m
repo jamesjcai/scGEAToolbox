@@ -40,8 +40,12 @@ function callback_Brush4MarkersLASSO(src,~)
     [numfig]=gui.gui_inputdlg;
     fw=gui.gui_waitbar;
     y=double(ptsSelected);
-    sce.c=1+ptsSelected;       
-    [B]=lasso(sce.X',y,'DFmax',numfig*3,'MaxIter',1e3);
+    sce.c=1+ptsSelected;
+    X=sce.X';
+    if issparse(X) 
+        X=full(X); 
+    end
+    [B]=lasso(X,y,'DFmax',numfig*3,'MaxIter',1e3);
     % assignin('base','A',A);
     [~,ix]=min(abs(sum(B>0)-numfig));
     b=B(:,ix);

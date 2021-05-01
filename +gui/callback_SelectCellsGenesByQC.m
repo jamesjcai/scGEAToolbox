@@ -10,7 +10,9 @@ function callback_SelectCellsGenesByQC(src)
     if tf~=1, return; end
         switch indx
             case 1
+                fw=gui.gui_waitbar;
                 sce=sce.qcfilter;
+                gui.gui_waitbar(fw);
             case 2
                 answer=inputdlg('Expressed in less than % of cells','Remove Genes',[1 40],{'5'});
                 if isempty(answer), return; end
@@ -31,8 +33,10 @@ function callback_SelectCellsGenesByQC(src)
                 lbsz=sum(sce.X,1);
                 lbsz_mt=sum(sce.X(i,:),1);
                 cj=lbsz_mt./lbsz;
+                if issparse(cj), cj=full(cj); end
                 ttxtj="mtDNA%";
                 ci=sum(sce.X);
+                if issparse(ci), ci=full(ci); end
                 ttxti="Library Size";
                 a=maxk(ci,10);
                 idx=gui.gui_setranges2(ci',cj',[0 a(end)],...
