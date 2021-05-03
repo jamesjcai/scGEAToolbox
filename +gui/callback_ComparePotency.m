@@ -9,9 +9,16 @@ function callback_ComparePotency(src,~)
                 [y,specisid]=ismember(lower(answer2),{'human','mouse'});
                 if ~y, return; end
                 fw=gui.gui_waitbar;
+                try
                 sce=sce.estimatepotency(specisid);
                 guidata(FigureHandle,sce);
-                gui.gui_waitbar(fw); 
+                gui.gui_waitbar(fw);
+                catch ME
+                    gui.gui_waitbar(fw);
+                    errordlg(ME.message)
+                    %rethrow(ME)
+                end
+                
             otherwise
                 return;
         end

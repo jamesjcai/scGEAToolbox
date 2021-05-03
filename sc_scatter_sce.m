@@ -533,9 +533,8 @@ for i=1:max(c)
     hold off
 end
 sce.c_cell_type_tx=string(cL(c));
-export2wsdlg({'Save cell type list to variable named:'},...
-    {'c_celltype'},{sce.c_cell_type_tx});
-
+helpdlg('Cell type list saved in SCE.C_CELL_TYPE.TX',...
+        'Cell Type Saved');
 guidata(FigureHandle,sce);
 end
 
@@ -555,12 +554,7 @@ function Brushed2NewCluster(~,~)
     title(sce.title)
     view(ax,bx);
     i_labelclusters(true);
-    answer = questdlg('Update sce.c_cluster_id?');
-    if strcmp(answer,'Yes')
-        sce.c_cluster_id=c;
-    else
-        return;
-    end
+    sce.c_cluster_id=c;
     guidata(FigureHandle,sce);
 end
 
@@ -593,12 +587,7 @@ function Brushed2MergeClusters(~,~)
     title(sce.title)
     view(ax,bx);
     i_labelclusters(true);
-    answer = questdlg('Update sce.c_cluster_id?');
-    if strcmp(answer,'Yes')
-        sce.c_cluster_id=c;
-    else
-        return;
-    end
+    sce.c_cluster_id=c;
     guidata(FigureHandle,sce);
 end
 

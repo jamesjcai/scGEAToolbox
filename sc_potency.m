@@ -42,6 +42,9 @@ Gdegree=G.degree;
 X=log2(X+1.1);
 
 [~,i,j]=intersect(genelist,GNodes);
+if isempty(i)
+    error(sprintf('No gene is found in STRING PPI data base.\nCheck gene names.'));
+end
 d=Gdegree(j);
 X=X(i,:);
 r=corr(X,d);  % Correlation of Connectome And Transcriptome

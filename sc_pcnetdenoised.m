@@ -12,7 +12,7 @@ function A=sc_pcnetdenoised(X,varargin)
    addOptional(p,'tdmethod',"CP",@(x) (isstring(x)|ischar(x))&ismember(upper(string(x)),["CP","TUCKER"]));
    addOptional(p,'nsubsmpl',10,@(x) fix(x)==x & x>0);
    addOptional(p,'csubsmpl',500,@(x) fix(x)==x & x>0);
-   addOptional(p,'savegrn',true,@islogical);
+   addOptional(p,'savegrn',false,@islogical);
    parse(p,varargin{:});
    tdmethod=p.Results.tdmethod;
    nsubsmpl=p.Results.nsubsmpl;
@@ -53,7 +53,7 @@ function A=sc_pcnetdenoised(X,varargin)
     toc
     if savegrn
         tstr=matlab.lang.makeValidName(datestr(datetime));
-        save(sprintf('A_%s',tstr),'A','genelist','-v7.3');
+        save(sprintf('A_%s',tstr),'A','-v7.3');
     end
     tic
 end
