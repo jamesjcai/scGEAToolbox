@@ -620,7 +620,7 @@ function Brush4Celltypes(~,~)
         otherwise
             return;
     end
-    organtag="all";    
+    organtag="all";
 %     answer = questdlg('Which marker database?','Select Database','PanglaoDB','clustermole','PanglaoDB');
 %     if strcmpi(answer,'clustermole')
 %         databasetag="clustermole";

@@ -20,7 +20,7 @@ function callback_Brush4MarkersLASSO(src,~)
     if isscalar(unique(c))
         methodtag=1;
     else
-        answer = questdlg('Select brushed cell group?');
+        answer = questdlg(sprintf('Select brushed cells'' group?\nYES to select brushed cells'' group\nNO to select brushed cells only'));
         switch answer
             case 'Yes'
                 uptsSelected=unique(c(ptsSelected));
