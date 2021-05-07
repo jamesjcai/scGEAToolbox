@@ -1104,16 +1104,16 @@ function [isdone]=i_labelclusters(notasking)
             stxtyes=c;
         else
             answer = questdlg(sprintf('Label %d groups with index or text?',numel(cL)),...
-                'Select Format','Index','Text','Text');
-            if strcmp(answer,'Text')
-                stxtyes=cL(c);
-            elseif strcmp(answer,'Index')
-                stxtyes=c;
-            else
-                return;
-            end            
-        end
-        
+                'Select Format','Index','Text','Cancel','Text');
+            switch answer
+                case 'Text'
+                    stxtyes=cL(c);
+                case 'Index'
+                    stxtyes=c;
+                otherwise
+                    return;
+            end
+        end        
         dtp = findobj(h,'Type','datatip');
         delete(dtp);
             
