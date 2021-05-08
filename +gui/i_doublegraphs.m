@@ -256,7 +256,7 @@ hFig.Position(3)=hFig.Position(3)*2.2;
    function [p,G]=i_replotg(p,G,h,cutoff) 
     x=p.XData; y=p.YData;
     A=adjacency(G,'weighted');
-    A=e_transf(A,cutoff);
+    A=e_filtadjc(A,cutoff);
     if issymmetric(A)
         G=graph(A,G.Nodes.Name);
     else
