@@ -489,7 +489,7 @@ function DetermineCellTypeClusters(~,~)
 %     else
 %         return;
 %     end
-        databasetag="panglaodb";
+    databasetag="panglaodb";
     dtp = findobj(h,'Type','datatip');
     delete(dtp);
 cLdisp=cL;    
@@ -513,7 +513,7 @@ for i=1:max(c)
     cLdisp{i}=ctxtdisp;
     
     ctxt=sprintf('%s_{%d}',ctxt,i);
-    cL{i}=ctxt;    
+    cL{i}=ctxt;
 
     row = dataTipTextRow('',cLdisp(c));
     h.DataTipTemplate.DataTipRows = row;
@@ -525,10 +525,10 @@ for i=1:max(c)
             dtp=datatip(h,'DataIndex',idx(k));
             %text(si(:,1),si(:,2),si(:,3),sprintf('%s',ctxt),...
             %     'fontsize',10,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');
-%     elseif size(sce.s,2)==2
-%             si=mean(sce.s(ptsSelected,:));
-%             text(si(:,1),si(:,2),sprintf('%s',ctxt),...
-%                  'fontsize',10,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');
+            %     elseif size(sce.s,2)==2
+            %             si=mean(sce.s(ptsSelected,:));
+            %             text(si(:,1),si(:,2),sprintf('%s',ctxt),...
+            %                  'fontsize',10,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');
     end
     hold off
 end

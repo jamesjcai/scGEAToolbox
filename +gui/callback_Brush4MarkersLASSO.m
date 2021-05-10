@@ -45,7 +45,13 @@ function callback_Brush4MarkersLASSO(src,~)
     if issparse(X) 
         X=full(X); 
     end
-    [B]=lasso(X,y,'DFmax',numfig*3,'MaxIter',1e3);
+    try
+        [B]=lasso(X,y,'DFmax',numfig*3,'MaxIter',1e3);
+    catch ME
+        gui.gui_waitbar(fw);
+        errordlg(ME.message);
+        rethrow(ME);
+    end
     % assignin('base','A',A);
     [~,ix]=min(abs(sum(B>0)-numfig));
     b=B(:,ix);
