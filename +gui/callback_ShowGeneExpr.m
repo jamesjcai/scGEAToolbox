@@ -35,11 +35,11 @@ switch answer
         if length(i)==1
            g=sce.g(i);
         elseif length(i)>1
-            answer2=questdlg('Union or Intersection','','Union','Intersection','Union');
+            answer2=questdlg('Union (OR) or Intersection (AND)','','Union (OR)','Intersection (AND)','Intersection (AND)');
             switch answer2
-                case 'Union'                
+                case 'Union (OR)'
                     g=sprintf("%s | ",gsorted(idx)); 
-                case 'Intersection'
+                case 'Intersection (AND)'
                     g=sprintf("%s & ",gsorted(idx));                
                     ix=sum(sce.X(i,:)>0,1)==length(i);
                     if ~any(ix)
@@ -49,8 +49,8 @@ switch answer
                     x=x.*ix;
                 otherwise
                     return;
-            end
-                g=extractBefore(g,strlength(g)-3);
+            end            
+            g=extractBefore(g,strlength(g)-2);
         end
             f = figure('visible','off');
             [h1]=sc_scattermarker(x,g,sce.s,g,5);
