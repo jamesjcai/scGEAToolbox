@@ -1,5 +1,7 @@
 function [X,genelist,celllist]=sc_read10xdir(selpath,coln)
 %Read files from a 10x Genomics cellranger output folder
+%[X,genelist,celllist]=sc_read10xdir(selpath,coln);
+%[X,genelist,celllist]=sc_read10xdir(pwd(),2);
 
 if nargin<2, coln=2; end
 if nargin<1, selpath = uigetdir; end
@@ -15,17 +17,42 @@ if ~exist(mmfname,'file')
         gunzip(zmmfname);
     end
 end
+
+ftdone=false;
 ftfname=fullfile(selpath,'features.tsv');
 zftfname=fullfile(selpath,'features.tsv.gz');
 if ~exist(ftfname,'file')
     if ~exist(zftfname,'file')
-        error('No features.tsv file.');
+        % error('No features.tsv file.');
     else
         [~,nametxt]=fileparts(zftfname);
         fprintf('Unzipping %s.gz...\n',nametxt);
         gunzip(zftfname);
+        ftdone=true;
     end
+else
+    ftdone=true;
 end
+
+if ~ftdone
+
+ftfname=fullfile(selpath,'genes.tsv');
+zftfname=fullfile(selpath,'genes.tsv.gz');
+if ~exist(ftfname,'file')
+    if ~exist(zftfname,'file')
+        % error('No features.tsv file.');
+    else
+        [~,nametxt]=fileparts(zftfname);
+        fprintf('Unzipping %s.gz...\n',nametxt);
+        gunzip(zftfname);
+        ftdone=true;
+    end
+else
+    ftdone=true;
+end
+    
+end
+
 
 bcfname=fullfile(selpath,'barcodes.tsv');
 zbcfname=fullfile(selpath,'barcodes.tsv.gz');

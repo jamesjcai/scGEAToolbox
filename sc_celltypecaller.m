@@ -83,8 +83,9 @@ for j=1:length(celltypev)
     for i=1:length(g)
         if any(g(i)==wgene) && any(g(i)==genelist)
             wi=wvalu(g(i)==wgene);
-            for k=1:NC                    
-                z=mean(X(g(i)==genelist,clusterid==k));
+            for k=1:NC
+                z=X(g(i)==genelist,clusterid==k);
+                z=mean(z(:));                
                 Z(k)=Z(k)+z*wi;
                 ng(k)=ng(k)+1;
             end          

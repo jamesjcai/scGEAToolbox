@@ -31,7 +31,7 @@ if ~isempty(sin), sce.s=sin; end
 
 [c,cL]=grp2idx(sce.c);
 
-FigureHandle = figure('Name','sc_scatter_sce',...
+FigureHandle = figure('Name','SC_SCATTER',...
         'position',round(1.5*[0 0 560 420]),...    
         'visible','off');
 movegui(FigureHandle,'center');
@@ -341,9 +341,31 @@ gui.add_3dcamera(defaultToolbar,'AllCells');
 set(FigureHandle,'visible','on'); 
 guidata(FigureHandle,sce);
 
+set(FigureHandle,'CloseRequestFcn',@closeRequest);
+
 if nargout > 0
     varargout{1} = FigureHandle;
 end
+
+
+% ------------------------
+% Callback Functions
+% ------------------------
+
+function closeRequest(hObject,~)
+ButtonName = questdlg('Close SC_SCATTER?', ...
+                         '', ...
+                         'Yes','No','No');
+switch ButtonName
+    case 'Yes'
+        delete(hObject);
+    case 'No'
+        return;
+end
+end
+
+
+
 
 function SelectCellsByQC(src,~)
    callback_SelectCellsGenesByQC(src);   
