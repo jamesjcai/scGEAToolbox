@@ -118,7 +118,7 @@
 	"inputs":
 	[		
         {"name":"X", "kind":"required", "type":"numeric"},
-        {"name":"type", "kind":"namevalue","type":["char", "choices={'pcnetpar','genie3'}"]}
+        {"name":"type", "kind":"namevalue","type":["char", "choices={'pcnet','pcnetpar','pcnetdenoised','genie3'}"]}
 	]
 },
 "run_soptsc":
