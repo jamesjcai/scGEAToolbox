@@ -478,8 +478,10 @@ function EmbeddingAgain(~,~)
         try
             sce=sce.embedcells(answer,true);
         catch ME
+            gui.gui_waitbar(fw);
             errordlg(ME.message)
-            rethrow(ME)
+            % rethrow(ME)
+            return;
         end
         gui.gui_waitbar(fw);
     else
@@ -555,8 +557,8 @@ for i=1:max(c)
     hold off
 end
 sce.c_cell_type_tx=string(cL(c));
-helpdlg('Cell type list saved in SCE.C_CELL_TYPE.TX',...
-        'Cell Type Saved');
+% helpdlg('Cell type list saved in SCE.C_CELL_TYPE.TX',...
+%         'Cell Type Saved');
 guidata(FigureHandle,sce);
 end
 

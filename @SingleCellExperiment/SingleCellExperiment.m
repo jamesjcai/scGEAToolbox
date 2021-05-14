@@ -127,6 +127,24 @@ classdef SingleCellExperiment
         obj.g=tmpg;
     end
     
+    function obj = selectkeepgenes(obj,min_countnum,min_cellnum)
+        if nargin<2, min_countnum=1; end
+        if nargin<3, min_cellnum=0.01; end        
+        nc=sum(obj.X>=min_countnum,2);
+        if min_cellnum<1
+            idxkeep1=nc>=min_cellnum*size(obj.X,2);
+        else
+            idxkeep1=nc>=min_cellnum;
+        end
+        idxkeep2=true(size(idxkeep1));
+        k=sum(~idxkeep1);
+        [~,idx2]=mink(mean(obj.X,2),k);
+        idxkeep2(idx2)=false;
+        idxkeep=idxkeep1|idxkeep2;
+        obj.X=obj.X(idxkeep,:);
+        obj.g=obj.g(idxkeep);
+    end
+    
     function obj = rmmtgenes(obj)
         [tmpX,tmpg,idx]=sc_rmmtgenes(obj.X,obj.g,'mt-',true);
         if sum(idx)>0
