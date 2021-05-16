@@ -234,7 +234,7 @@ hFig.Position(3)=hFig.Position(3)*2.2;
         % pkg.progressbar
         f = waitbar(0,'Cutoff = 0.05','Name','Edge Pruning...',...
             'CreateCancelBtn','setappdata(gcbf,''canceling'',1)');
-        setappdata(f,'canceling',0);        
+        setappdata(f,'canceling',0);   
 
         m=length(listc);
         for k=1:m
@@ -247,7 +247,7 @@ hFig.Position(3)=hFig.Position(3)*2.2;
             waitbar(k/m,f,sprintf('Cutoff = %g',cutoff));
             p1=i_replotg(p1,G1,h1,cutoff);
             p2=i_replotg(p2,G2,h2,cutoff);
-            pause(1);
+            pause(2);
         end
         %close(f)
         delete(f)
