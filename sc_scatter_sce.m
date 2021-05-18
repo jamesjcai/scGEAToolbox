@@ -341,7 +341,7 @@ gui.add_3dcamera(defaultToolbar,'AllCells');
 set(FigureHandle,'visible','on'); 
 guidata(FigureHandle,sce);
 
-set(FigureHandle,'CloseRequestFcn',@closeRequest);
+% set(FigureHandle,'CloseRequestFcn',@closeRequest);
 
 if nargout > 0
     varargout{1} = FigureHandle;
@@ -352,17 +352,17 @@ end
 % Callback Functions
 % ------------------------
 
-function closeRequest(hObject,~)
-ButtonName = questdlg('Close SC_SCATTER?', ...
-                         '', ...
-                         'Yes','No','No');
-switch ButtonName
-    case 'Yes'
-        delete(hObject);
-    case 'No'
-        return;
-end
-end
+% function closeRequest(hObject,~)
+% ButtonName = questdlg('Close SC_SCATTER?', ...
+%                          '', ...
+%                          'Yes','No','No');
+% switch ButtonName
+%     case 'Yes'
+%         delete(hObject);
+%     case 'No'
+%         return;
+% end
+% end
 
 
 
@@ -1041,37 +1041,38 @@ function LabelClusters(src,~)
             dtp = findobj(h,'Type','datatip');
             delete(dtp);
         else
-          
-                listitems={'Current Class Type'};
-                if ~isempty(sce.c_cluster_id), listitems=[listitems,'Cluster ID']; end
-                if ~isempty(sce.c_cell_type_tx), listitems=[listitems,'Cell Type']; end
-                if ~isempty(sce.c_cell_cycle_tx), listitems=[listitems,'Cell Cycle Phase']; end
-                if ~isempty(sce.c_batch_id), listitems=[listitems,'Batch ID']; end
-                [indx,tf] = listdlg('PromptString',{'Select statistics',...
-                    '',''},'SelectionMode','single','ListString',listitems);
-                if tf~=1, set(src,'State','off'); return; end
-                switch listitems{indx}
-                    case 'Cluster ID'
-                        cc=sce.c_cluster_id;
-                    case 'Cell Type'
-                        cc=sce.c_cell_type_tx;
-                    case 'Cell Cycle Phase'
-                        cc=sce.c_cell_cycle_tx;
-                    case 'Batch ID'
-                        cc=sce.c_batch_id;
-                    otherwise
-                        cc=[];
-                end
-                if ~isempty(cc)
-                    [c,cL]=grp2idx(cc);
-                end            
+            listitems={'Current Class Type'};
+            if ~isempty(sce.c_cluster_id), listitems=[listitems,'Cluster ID']; end
+            if ~isempty(sce.c_cell_type_tx), listitems=[listitems,'Cell Type']; end
+            if ~isempty(sce.c_cell_cycle_tx), listitems=[listitems,'Cell Cycle Phase']; end
+            if ~isempty(sce.c_batch_id), listitems=[listitems,'Batch ID']; end
+            [indx,tf] = listdlg('PromptString',{'Select statistics',...
+                '',''},'SelectionMode','single','ListString',listitems);
+            if tf~=1, set(src,'State','off'); return; end
+            switch listitems{indx}
+                case 'Cluster ID'
+                    cc=sce.c_cluster_id;
+                case 'Cell Type'
+                    cc=sce.c_cell_type_tx;
+                case 'Cell Cycle Phase'
+                    cc=sce.c_cell_cycle_tx;
+                case 'Batch ID'
+                    cc=sce.c_batch_id;
+                otherwise
+                    cc=[];
+            end
+            if ~isempty(cc)
+                [c,cL]=grp2idx(cc);
+                sce.c=c;
+            end 
             RefreshAll(src,1,true);
             if i_labelclusters
                 set(src,'State','on');
             else                
                 set(src,'State','off');
             end
-        end        
+            guidata(FigureHandle,sce);
+        end
 end
 
 function ShowClustersPop(~,~)
