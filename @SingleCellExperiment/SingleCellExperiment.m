@@ -113,10 +113,14 @@ classdef SingleCellExperiment
     end
     
     function obj = qcfilter(obj)
-        [~,~,keptidxv]=sc_qcfilter(obj.X,obj.g);
+        [~,keptg,keptidxv]=sc_qcfilter(obj.X,obj.g);
         for k=1:length(keptidxv)
             obj = selectcells(obj,keptidxv{k});
         end
+        [y]=ismember(obj.g,keptg);
+        obj.X=obj.X(y,:);
+        obj.g=obj.g(y);
+        [obj.X,obj.g]=sc_rmdugenes(obj.X,obj.g);
     end
     
     function obj = selectgenes(obj,min_countnum,min_cellnum)
