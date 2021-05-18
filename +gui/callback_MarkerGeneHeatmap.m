@@ -7,9 +7,9 @@ function callback_MarkerGeneHeatmap(src,~)
         case 'Method 1 (fast)'
             methodid=1;
         case 'Method 2 (slower)'
-            methodid=3;
-        case 'Method 3 (slowest)'
             methodid=2;
+        case 'Method 3 (slowest)'
+            methodid=3;
         otherwise
             return;
     end
@@ -21,7 +21,7 @@ function callback_MarkerGeneHeatmap(src,~)
     if isempty(sce.c_cell_type_tx) 
         if isempty(sce.c_cluster_id)
             errordlg('sce.c_cell_type_tx is empty.');
-            return;        
+            return;
         else
             answer = questdlg('sce.c_cell_type_tx is empty. Use sce.c_cluster_id?');
             if ~strcmp(answer,'Yes'), return; end
