@@ -395,8 +395,16 @@ function SelectCellsByQC(src,~)
 end
 
 % =========================
-function RefreshAll(~,~,keepview)
+function RefreshAll(src,~,keepview)
     if nargin<3, keepview=false; end
+    if keepview
+        ah=findobj(src.Parent.Parent,'type','Axes');
+        ha=findobj(ah.Children,'type','Scatter');
+        ha1=ha(1);
+        oldMarker=ha1.Marker;
+        oldSizeData=ha1.SizeData;
+        oldColorMap=colormap;
+    end
     if size(sce.s,2)>2
         if ~isempty(h.ZData)
             if keepview, [ax,bx]=view(); end
@@ -408,6 +416,13 @@ function RefreshAll(~,~,keepview)
     else
         h=gui.i_gscatter3(sce.s(:,1:2),c,methodid);        
     end
+    if keepview
+        h.Marker=oldMarker;
+        h.SizeData=oldSizeData;
+        colormap(oldColorMap);
+    else
+        colormap lines
+    end
     title(sce.title)
     pt5pickcl.ClickedCallback = {@gui.callback_PickColorMap,...
                                   numel(unique(c))};
@@ -415,7 +430,7 @@ function RefreshAll(~,~,keepview)
     guidata(FigureHandle,sce);
     ptlabelclusters.State='off';
     %UitoolbarHandle.Visible='off';
-    %UitoolbarHandle.Visible='on';    
+    %UitoolbarHandle.Visible='on';  
 end
 
 
