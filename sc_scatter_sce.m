@@ -298,6 +298,13 @@ pt5.CData = ptImage;
 pt5.Tooltip = 'Embedding';
 pt5.ClickedCallback = @EmbeddingAgain;
 
+pt5 = uipushtool(UitoolbarHandle,'Separator','off');
+[img,map] = imread(fullfile(mfolder,...
+            'resources','plotpicker-geoscatter.gif'));
+ptImage = ind2rgb(img,map);
+pt5.CData = ptImage;
+pt5.Tooltip = 'Multi-embedding view';
+pt5.ClickedCallback = @gui.callback_MultiEmbeddings;
 
 pt5 = uipushtool(UitoolbarHandle,'Separator','off');
 [img,map] = imread(fullfile(mfolder,...
@@ -333,11 +340,17 @@ pt5.CData = ptImage;
 pt5.Tooltip = 'Refresh';
 pt5.ClickedCallback = @RefreshAll;
 
+
+
+
+
 gui.add_3dcamera(defaultToolbar,'AllCells');
+
+
+
 
 % handles = guihandles( FigureHandle ) ; 
 % guidata( FigureHandle, handles ) ;
-
 set(FigureHandle,'visible','on'); 
 guidata(FigureHandle,sce);
 
@@ -368,42 +381,23 @@ end
 
 
 function SelectCellsByQC(src,~)
-   callback_SelectCellsGenesByQC(src);   
-% i=startsWith(sce.g,'mt-','IgnoreCase',true);
-% if ~any(i), warndlg('No mt genes'); return; end
-% lbsz=sum(sce.X,1);
-% lbsz_mt=sum(sce.X(i,:),1);
-% cj=lbsz_mt./lbsz;
-% ttxtj="mtDNA%";
-% 
-% ci=sum(sce.X);
-% ttxti="Library Size";
-% a=maxk(ci,10);
-% idx=gui.gui_setranges2(ci',cj',[0 a(end)],...
-%         [0 0.1],ttxti,ttxtj);
-%     if any(~idx)
-%         answer = questdlg(sprintf('Remove %d cells?',sum(~idx)));
-%         if strcmpi(answer,'Yes')
-%             sce=sce.removecells(~idx);
-%             [c,cL]=grp2idx(sce.c);
-%             RefreshAll;
-%         end
-%     end  % xxx
-    sce=guidata(FigureHandle);
-    [c,cL]=grp2idx(sce.c);
-    RefreshAll;
+   callback_SelectCellsGenesByQC(src);
+   sce=guidata(FigureHandle);
+   [c,cL]=grp2idx(sce.c);
+   RefreshAll(src,1,true);
 end
 
 % =========================
 function RefreshAll(src,~,keepview)
     if nargin<3, keepview=false; end
     if keepview
-        ah=findobj(src.Parent.Parent,'type','Axes');
-        ha=findobj(ah.Children,'type','Scatter');
-        ha1=ha(1);
-        oldMarker=ha1.Marker;
-        oldSizeData=ha1.SizeData;
-        oldColorMap=colormap;
+        [para]=i_getoldsettings(src);
+%         ah=findobj(src.Parent.Parent,'type','Axes');
+%         ha=findobj(ah.Children,'type','Scatter');
+%         ha1=ha(1);
+%         oldMarker=ha1.Marker;
+%         oldSizeData=ha1.SizeData;
+%         oldColorMap=colormap;
     end
     if size(sce.s,2)>2
         if ~isempty(h.ZData)
@@ -417,25 +411,23 @@ function RefreshAll(src,~,keepview)
         h=gui.i_gscatter3(sce.s(:,1:2),c,methodid);        
     end
     if keepview
-        h.Marker=oldMarker;
-        h.SizeData=oldSizeData;
-        colormap(oldColorMap);
+        h.Marker=para.oldMarker;
+        h.SizeData=para.oldSizeData;
+        colormap(para.oldColorMap);
     else
         colormap lines
     end
     title(sce.title)
     pt5pickcl.ClickedCallback = {@gui.callback_PickColorMap,...
-                                  numel(unique(c))};
-    
+                                  numel(unique(c))};    
     guidata(FigureHandle,sce);
     ptlabelclusters.State='off';
     %UitoolbarHandle.Visible='off';
     %UitoolbarHandle.Visible='on';  
 end
 
-
-function Switch2D3D(~,~)
-    %oldcmp=colormap();
+function Switch2D3D(src,~)
+    [para]=i_getoldsettings(src);
     if isempty(h.ZData)   % current 2 D
         if ~(size(sce.s,2)>2)
             helpdlg('Canno swith to 3-D. SCE.S is 2-D');
@@ -457,9 +449,12 @@ function Switch2D3D(~,~)
         else
             sx=pkg.i_3d2d(sce.s,ax,bx);
             h=gui.i_gscatter3(sx(:,1:2),c,methodid);
-        end    
-    end
+        end
+    end    
     title(sce.title)
+    h.Marker=para.oldMarker;
+    h.SizeData=para.oldSizeData;
+    colormap(para.oldColorMap);
 end
 
 function RenameCellType(~,~)
@@ -486,12 +481,22 @@ function RenameCellType(~,~)
 end
 
 
-function EmbeddingAgain(~,~)
+function EmbeddingAgain(src,~)
     answer = questdlg('Which embedding method?','Select method','tSNE','UMAP','PHATE','tSNE');
-    if ismember(answer,{'tSNE','UMAP','PHATE'})
+    if ~ismember(answer,{'tSNE','UMAP','PHATE'}), return; end
+    if isempty(sce.struct_cell_embeddings)
+        sce.struct_cell_embeddings=struct('tsne',[],'umap',[],'phate',[]);
+    end
+    answer=lower(answer);
+    usingold=false;
+    if ~isempty(sce.struct_cell_embeddings.(answer))
+        sce.s=sce.struct_cell_embeddings.(answer);
+        usingold=true;
+    end
+    if ~usingold
         fw=gui.gui_waitbar;
         try
-            sce=sce.embedcells(answer,true);
+            sce=sce.embedcells(lower(answer),true);
         catch ME
             gui.gui_waitbar(fw);
             errordlg(ME.message)
@@ -499,10 +504,8 @@ function EmbeddingAgain(~,~)
             return;
         end
         gui.gui_waitbar(fw);
-    else
-        return;
     end
-    RefreshAll;
+    RefreshAll(src,1,true);
     guidata(FigureHandle,sce);
 end
 
@@ -572,8 +575,6 @@ for i=1:max(c)
     hold off
 end
 sce.c_cell_type_tx=string(cL(c));
-% helpdlg('Cell type list saved in SCE.C_CELL_TYPE.TX',...
-%         'Cell Type Saved');
 guidata(FigureHandle,sce);
 end
 
@@ -638,7 +639,6 @@ function Brush4Celltypes(~,~)
         warndlg("No cells are selected.");
         return;
     end
-    
     answer = questdlg('Which species?','Select Species','Mouse','Human','Mouse');
     switch answer
         case 'Human'    
@@ -648,17 +648,9 @@ function Brush4Celltypes(~,~)
         otherwise
             return;
     end
-    organtag="all";
-%     answer = questdlg('Which marker database?','Select Database','PanglaoDB','clustermole','PanglaoDB');
-%     if strcmpi(answer,'clustermole')
-%         databasetag="clustermole";
-%     else
-%         databasetag="panglaodb";
-%     end
-    databasetag="panglaodb";
     fw=gui.gui_waitbar;
     [Tct]=local_celltypebrushed(sce.X,sce.g,sce.s,ptsSelected,...
-          speciestag,organtag,databasetag);
+          speciestag,"all","panglaodb");
     ctxt=Tct.C1_Cell_Type;            
     gui.gui_waitbar(fw);
    
@@ -1090,7 +1082,7 @@ function LabelClusters(src,~)
         end
 end
 
-function ShowClustersPop(~,~)
+function ShowClustersPop(src,~)
     answer = questdlg('Show clusters in new figures?');
     if ~strcmp(answer,'Yes'), return; end
     
@@ -1103,7 +1095,9 @@ function ShowClustersPop(~,~)
     end
     sces=sce.s;
     if isempty(h.ZData), sces=sce.s(:,1:2); end
-    figure;
+    
+    [para]=i_getoldsettings(src);
+    figure;    
     for k=1:9
         if k<=max(c)
             subplot(3,3,k);
@@ -1111,10 +1105,11 @@ function ShowClustersPop(~,~)
             title(sprintf('%s\n[%d cells (%.2f%%)]',...
                 cL{idxx(k)},cmx(idxx(k)),100*cmx(idxx(k))/length(c)));
         end
+        colormap(para.oldColorMap);
     end
     
     if ceil(max(c)/9)==2
-        figure;
+        figure;        
         for k=1:9
             kk=k+9;
             if kk<=max(c)
@@ -1124,6 +1119,7 @@ function ShowClustersPop(~,~)
                     cL{idxx(kk)},cmx(idxx(kk)),100*cmx(idxx(kk))/length(c)));
             end
         end
+        colormap(para.oldColorMap);
     end
     if ceil(max(c)/9)>2
         warndlg('Group(s) #18 and above are not displayed');
@@ -1169,4 +1165,17 @@ function [isdone]=i_labelclusters(notasking)
         isdone=true;
     end
 end
+
+function [para]=i_getoldsettings(src)
+    ah=findobj(src.Parent.Parent,'type','Axes');
+    ha=findobj(ah.Children,'type','Scatter');
+    ha1=ha(1);
+    oldMarker=ha1.Marker;
+    oldSizeData=ha1.SizeData;
+    oldColorMap=colormap;
+    para.oldMarker=oldMarker;
+    para.oldSizeData=oldSizeData;
+    para.oldColorMap=oldColorMap;
+end
+
 end

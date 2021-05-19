@@ -11,7 +11,7 @@ classdef SingleCellExperiment
       c_cell_id                              % barcode
       list_cell_attributes cell  % e.g., attributes = {'size',[4,6,2]};
       list_gene_attributes cell  % e.g., attributes = {'size',[4,6,2]};
-      list_cell_embeddings cell
+      struct_cell_embeddings=struct('tsne',[],'umap',[],'phate',[])
       table_attributes table
    end
    
@@ -32,6 +32,7 @@ classdef SingleCellExperiment
         obj.s=s;
         obj.c=c;
         obj.c_cell_id=transpose(1:size(X,2));
+        % obj.struct_cell_embeddings=struct('tsne',[],'umap',[],'phate',[]);
     end
 
    function m = get.NumCells(obj)

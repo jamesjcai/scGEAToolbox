@@ -47,12 +47,12 @@ end
 end
 
 function b=i_remove_affix(a)
-b=a;
-for k=1:length(a)
-    idx=strfind(a(k),'_{');
-    if idx>0
-        b(k)=extractBefore(a(k),idx);
+    b=a;
+    for k=1:length(a)
+        idx=strfind(a(k),'_{');
+        if idx>0
+            b(k)=extractBefore(a(k),idx);
+        end
     end
-end
 end
 
