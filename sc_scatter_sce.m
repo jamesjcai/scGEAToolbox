@@ -347,8 +347,6 @@ pt5.ClickedCallback = @RefreshAll;
 gui.add_3dcamera(defaultToolbar,'AllCells');
 
 
-
-
 % handles = guihandles( FigureHandle ) ; 
 % guidata( FigureHandle, handles ) ;
 set(FigureHandle,'visible','on'); 
@@ -388,16 +386,12 @@ function SelectCellsByQC(src,~)
 end
 
 % =========================
-function RefreshAll(src,~,keepview)
+function RefreshAll(src,~,keepview,keepcolr)
+    if nargin<4, keepcolr=false; end
     if nargin<3, keepview=false; end
-    if keepview
+    
+    if keepview || keepcolr
         [para]=i_getoldsettings(src);
-%         ah=findobj(src.Parent.Parent,'type','Axes');
-%         ha=findobj(ah.Children,'type','Scatter');
-%         ha1=ha(1);
-%         oldMarker=ha1.Marker;
-%         oldSizeData=ha1.SizeData;
-%         oldColorMap=colormap;
     end
     if size(sce.s,2)>2
         if ~isempty(h.ZData)
@@ -413,9 +407,16 @@ function RefreshAll(src,~,keepview)
     if keepview
         h.Marker=para.oldMarker;
         h.SizeData=para.oldSizeData;
+    end
+    if keepcolr
         colormap(para.oldColorMap);
     else
-        colormap(lines(256))
+        kc=numel(unique(sce.c));
+        if kc<=50
+            colormap(lines(kc));
+        else
+            colormap default
+        end
     end
     title(sce.title)
     pt5pickcl.ClickedCallback = {@gui.callback_PickColorMap,...
@@ -1079,6 +1080,7 @@ function LabelClusters(src,~)
                 set(src,'State','off');
             end
             guidata(FigureHandle,sce);
+            % colormap(lines(min([256 numel(unique(sce.c))])));
         end
 end
 
