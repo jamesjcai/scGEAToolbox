@@ -300,7 +300,7 @@ pt5.ClickedCallback = @EmbeddingAgain;
 
 pt5 = uipushtool(UitoolbarHandle,'Separator','off');
 [img,map] = imread(fullfile(mfolder,...
-            'resources','plotpicker-geoscatter.gif'));
+            'resources','multiscale.gif'));
 ptImage = ind2rgb(img,map);
 pt5.CData = ptImage;
 pt5.Tooltip = 'Multi-embedding view';
@@ -415,7 +415,7 @@ function RefreshAll(src,~,keepview)
         h.SizeData=para.oldSizeData;
         colormap(para.oldColorMap);
     else
-        colormap lines
+        colormap(lines(256))
     end
     title(sce.title)
     pt5pickcl.ClickedCallback = {@gui.callback_PickColorMap,...
@@ -432,7 +432,7 @@ function Switch2D3D(src,~)
         if ~(size(sce.s,2)>2)
             helpdlg('Canno swith to 3-D. SCE.S is 2-D');
             return;
-        end        
+        end
         h=gui.i_gscatter3(sce.s,c,methodid);
         if ~isempty(ax) && ~isempty(bx) && ~any([ax bx]==0)
             view(ax,bx);
