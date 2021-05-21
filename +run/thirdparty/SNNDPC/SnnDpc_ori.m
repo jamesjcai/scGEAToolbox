@@ -1,4 +1,4 @@
-function [result]=SnnDpc(data,answer,K,varargin)
+function [result]=SnnDpc_ori(data,answer,K,varargin)
 %
 
 %Parse arguments

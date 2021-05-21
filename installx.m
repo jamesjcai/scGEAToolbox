@@ -9,7 +9,7 @@ disp('Installing scGEAToolbox...')
 unzip('https://github.com/jamesjcai/scGEAToolbox/archive/master.zip');
 addpath('./scGEAToolbox-master');
 toc
-
+savepath;
 if exist('cdgea.m','file')
     disp('scGEAToolbox installed!')
 end

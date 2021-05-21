@@ -1,4 +1,4 @@
-function [c]=sc_snndpc(s,cluK,knnK)
+function [c]=SnnDpc(s,cluK,knnK)
 %Clustering cell embeddings using SNNDPC - a SNN clustering algorithm
 %
 % http://mlwiki.org/index.php/SNN_Clustering#SSN_Clustering_Algorithm
@@ -6,6 +6,11 @@ function [c]=sc_snndpc(s,cluK,knnK)
 
 if nargin<3, knnK=4; end
 if nargin<2, cluK=10; end
-c=run.SnnDpc(s,cluK,knnK);
+
+pw1=fileparts(mfilename('fullpath'));
+pth=fullfile(pw1,'thirdparty','SNNDPC');
+addpath(pth);
+x=SnnDpc_ori(s,ones(size(s,1),1),knnK,'AutoPick',cluK);
+c=x.cluster;
 
 end
