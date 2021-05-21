@@ -491,8 +491,19 @@ function EmbeddingAgain(src,~)
     answer=lower(answer);
     usingold=false;
     if ~isempty(sce.struct_cell_embeddings.(answer))
-        sce.s=sce.struct_cell_embeddings.(answer);
-        usingold=true;
+
+        answer1 = questdlg(sprintf('Using existing %s embedding?',upper(answer)),...
+            '', ...
+            'Yes, use existing','No, re-compute','Cancel','Yes, use existing');
+        switch answer1
+            case 'Yes, use existing'
+                sce.s=sce.struct_cell_embeddings.(answer);
+                usingold=true;
+            case 'No, re-compute'
+                usingold=false;
+            case 'Cancel'
+                return;
+        end
     end
     if ~usingold
         fw=gui.gui_waitbar;
