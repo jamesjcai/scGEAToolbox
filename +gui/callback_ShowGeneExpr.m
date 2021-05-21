@@ -12,16 +12,11 @@ answer = questdlg('Show expression of single or mulitple genes?',...
 switch answer
     case 'Single'
         [indx,tf] = listdlg('PromptString',{'Select a gene',...
-        '',''},'SelectionMode','single','ListString',gsorted);
+        '',''},'SelectionMode','multiple','ListString',gsorted);
         if tf==1
-            f = figure('visible','off');
-            %f=figure;
-            [h1]=sc_scattermarker(sce.X,sce.g,...
-                   sce.s,gsorted(indx),5);
-            view(h1,axx,bxx);
-            movegui(f,'center');
-            set(f,'visible','on');        
-            %movegui(f,'center');
+            for k=1:length(indx)
+                i_show(sce,gsorted(indx(k)),axx,bxx);
+            end
         end
     case 'Multiple'
         [idx]=gui.gui_selmultidlg(gsorted);
@@ -63,4 +58,14 @@ switch answer
         % helpdlg('Action cancelled.');
         return;
 end
+
+end
+
+function i_show(sce,g,axx,bxx)
+        f = figure('visible','off');
+        [h1]=sc_scattermarker(sce.X,sce.g,...
+               sce.s,g,5);
+        view(h1,axx,bxx);
+        movegui(f,'center');
+        set(f,'visible','on');
 end

@@ -63,7 +63,7 @@ elseif isStringScalar(targetg) || ischar(targetg)
                sc_scattermarker(X,genelist,s,targetg,1,sz,false);
                hFig=gcf;
                hFig.Position(3)=hFig.Position(3)*2;
-            case 5
+            case 5          % ============ 5
                if size(s,2)>=3
                    x=s(:,1); y=s(:,2); z=s(:,3);
                else
@@ -77,10 +77,15 @@ elseif isStringScalar(targetg) || ischar(targetg)
                 scatter3(x,y,z,sz,c,'filled');
                 a=colormap('autumn');
                 a(1,:)=[.8 .8 .8];
+                if numel(unique(c))==1
+                    for kk=1:size(a,1)
+                        a(kk,:)=[.8 .8 .8];
+                    end
+                end
                 colormap(a);
                 % h1.YDataSource='explorer2IDX';
                 % title(targetg)
-title(sprintf('%s\n(%s/%s = %.3f%% nonzero)',...
+                title(sprintf('%s\n(%s/%s = %.3f%% nonzero)',...
                     targetg,...
                     num2bankScalar(sum(c>0)),...
                     num2bankScalar(numel(c)),...
