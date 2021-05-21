@@ -4,7 +4,7 @@ function [X]=gui_transformx(X)
         disp('Using simulated X.');
     end
     
-    answer = questdlg('Transform X?');
+    answer = questdlg('Normalize, transform or impute X?');
     if strcmp(answer,'Yes')
         % 
     elseif strcmp(answer,'No')
@@ -16,21 +16,35 @@ function [X]=gui_transformx(X)
         error('Wrong option');        
     end
     
-    listitems={'Library Size','Pearson Residuals',...
-        'MAGIC'};
-    [indx,tf] = listdlg('PromptString',{'Select Transformation Method',...
-    '',''},'SelectionMode','single','ListString',listitems);
-    if tf==1        
+    listitems={'(1) Library Size Normalization',...
+        '(2) Log10(x+1) Transformation',...
+        '(1)+(2)',...
+        'Pearson Residual Transformation',...
+        'MAGIC Imputation'};
+    [indx,tf] = listdlg('PromptString',{'Select Method',...
+        '',''},'SelectionMode','single','ListString',listitems,'ListSize',[200 300]);
+    if tf==1
+        fw=gui.gui_waitbar;
+        try
         switch indx
             case 1
                 X=sc_norm(X);
             case 2
-                X=sc_transform(X);
+                X=log10(X+1);
             case 3
+                X=sc_norm(X);
+                X=log10(X+1);
+            case 4
+                X=sc_transform(X);
+            case 5
                 X=run.MAGIC(X,true);
         end
-    else
-        return;
+        catch ME
+            gui.gui_waitbar(fw);
+            errordlg(ME.message)
+            rethrow(ME)
+        end
+        gui.gui_waitbar(fw);
     end
 end
 

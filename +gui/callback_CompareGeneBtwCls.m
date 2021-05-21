@@ -45,18 +45,22 @@ function callback_CompareGeneBtwCls(src,~)
             [Xt]=gui.gui_transformx(sce.X);      
             f = figure('visible','off');
             y=full(Xt(idx,:));
-            subplot(1,2,1)
-            pkg.violinplot(y,thisc);
-            ylabel(sce.g(idx));
-            subplot(1,2,2); 
-            hold on
-            [a,b]=grp2idx(thisc);
-            for kkx=1:max(a)
-                cdfplot(y(a==kkx));
-            end
-            legend(b);
-            f.Position(3)=round(f.Position(3)*1.5);           
-            f.Position(4)=round(f.Position(4)*0.7);
+            
+%             subplot(1,2,1)
+            pkg.i_violinplot(y,thisc);
+            title(sce.g(idx));
+            ylabel('Expression Level')
+            
+%             subplot(1,2,2); 
+%             hold on
+%             [a,b]=grp2idx(thisc);
+%             for kkx=1:max(a)
+%                 cdfplot(y(a==kkx));
+%             end
+%             legend(b);
+            
+%             f.Position(3)=round(f.Position(3)*1.5);           
+%             f.Position(4)=round(f.Position(4)*0.7);
             movegui(f,'center');
             set(f,'visible','on');
         end

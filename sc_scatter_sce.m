@@ -411,7 +411,7 @@ function RefreshAll(src,~,keepview,keepcolr)
     if keepcolr
         colormap(para.oldColorMap);
     else
-        kc=numel(unique(sce.c));
+        kc=numel(unique(c));
         if kc<=50
             colormap(lines(kc));
         else
@@ -1083,8 +1083,8 @@ function LabelClusters(src,~)
             if ~isempty(cc)
                 [c,cL]=grp2idx(cc);
                 sce.c=c;
-            end 
-            RefreshAll(src,1,true);
+            end
+            RefreshAll(src,1,true,false);
             if i_labelclusters
                 set(src,'State','on');
             else                
