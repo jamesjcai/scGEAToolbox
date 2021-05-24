@@ -13,6 +13,7 @@ classdef SingleCellNetwork
    
    s=katz_score(obj,A,b)
    s=katz_centrality(obj,a,b)
+   obj=filtadjc(obj,q)   
    
    function obj = SingleCellNetwork(A,g)
         if nargin<1, A=[]; end
@@ -57,7 +58,7 @@ classdef SingleCellNetwork
         if ~issparse(obj.A)
             obj.A=sparse(obj.A);
         end
-    end  
-   end  
-
+    end
+    
+   end
 end
