@@ -661,7 +661,7 @@ function Brush4Celltypes(~,~)
             return;
     end
     fw=gui.gui_waitbar;
-    [Tct]=local_celltypebrushed(sce.X,sce.g,sce.s,ptsSelected,...
+    [Tct]=pkg.local_celltypebrushed(sce.X,sce.g,sce.s,ptsSelected,...
           speciestag,"all","panglaodb");
     ctxt=Tct.C1_Cell_Type;            
     gui.gui_waitbar(fw);

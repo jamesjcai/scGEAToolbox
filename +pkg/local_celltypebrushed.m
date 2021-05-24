@@ -17,6 +17,6 @@ if strcmpi(database,'clustermole')
     [Tct]=run.sc_celltypecaller_new(Xi,gi,[],'species',species);
 elseif strcmpi(database,'panglaodb')
     %disp('Using panglaodb marker database')
-    [Tct]=sc_celltypecaller(Xi,gi,[],'species',species,'organ',organ);
+    [Tct]=run.alona(Xi,gi,[],'species',species,'organ',organ);
 end
 end

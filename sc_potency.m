@@ -30,10 +30,10 @@ end
 genelist=upper(genelist);
 if speciesid==1
     ppinetfile=dbfile1; % 'Z:\Cailab\CCC_utilities\STRING\stringdb_human.mat';
-    disp('Using ...... stringdb_human.mat')
+    disp('Using resources/stringdb_human.mat')
 else
     ppinetfile=dbfile2; % 'Z:\Cailab\CCC_utilities\STRING\stringdb_mouse.mat';
-    disp('Using ...... stringdb_mouse.mat')
+    disp('Using resources/stringdb_mouse.mat')
 end
 load(ppinetfile,'G');
 G.Edges.Weight=double(G.Edges.Weight>0);
