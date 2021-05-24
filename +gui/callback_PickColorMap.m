@@ -5,7 +5,7 @@ function callback_PickColorMap(~,~,n)
     folder=fileparts(mfilename('fullpath'));
     a=strfind(folder,filesep);
     folder=extractBefore(folder,a(end)+1);
-    wrkpth=fullfile(folder,'thirdparty','cbrewer');
+    wrkpth=fullfile(folder,'+run','thirdparty','cbrewer');
     addpath(wrkpth);
     CT=cbrewer('seq','Blues',n);
 
