@@ -9,10 +9,11 @@ addRequired(p,'X',@isnumeric);
 addOptional(p,'type',defaultType,checkType)
 parse(p,X,varargin{:})
 
-if (max(sum(X))-min(sum(X)))<0.1
+sx=sum(X);
+if (max(sx)-min(sx))<0.01
     warning('Input X may have already been normalized.');
 end
-    
+
 switch p.Results.type
     case 'libsize'
         [X]=norm_libsize(X);

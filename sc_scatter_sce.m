@@ -1115,8 +1115,9 @@ function ShowClustersPop(src,~)
         if k<=max(c)
             subplot(3,3,k);
             gui.i_gscatter3(sces,c,3,cmv(idxx(k)));
-            title(sprintf('%s\n[%d cells (%.2f%%)]',...
-                cL{idxx(k)},cmx(idxx(k)),100*cmx(idxx(k))/length(c)));
+            title(sprintf('%s\n%d cells (%.2f%%)',...
+                cL{idxx(k)},cmx(idxx(k)),...
+                100*cmx(idxx(k))/length(c)));
         end
         colormap(para.oldColorMap);
     end
@@ -1128,8 +1129,9 @@ function ShowClustersPop(src,~)
             if kk<=max(c)
                 subplot(3,3,k);
                 gui.i_gscatter3(sces,c,3,cmv(idxx(kk)));
-                title(sprintf('%s\n[%d cells (%.2f%%)]',...
-                    cL{idxx(kk)},cmx(idxx(kk)),100*cmx(idxx(kk))/length(c)));
+                title(sprintf('%s\n%d cells (%.2f%%)',...
+                    cL{idxx(kk)},cmx(idxx(kk)),...
+                    100*cmx(idxx(kk))/length(c)));
             end
         end
         colormap(para.oldColorMap);

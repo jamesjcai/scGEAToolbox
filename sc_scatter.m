@@ -9,9 +9,31 @@ function sc_scatter(X,genelist,s,c)
 if nargin<1
    ButtonName = questdlg('Select Input Data Type', ...
                          'SC_SCATTER', ...
-                         '10x Genomics mtx','TSV/CSV txt','10x Genomics mtx');
+                         'SCE Data .mat', ...
+                         '10x Genomics .mtx',...
+                         'TSV/CSV .txt','SCE Data .mat');
    switch ButtonName
-       case '10x Genomics mtx'
+       case 'SCE Data .mat'
+        [fname, pathname] = uigetfile( ...
+           {'*.mat', 'MAT-files (*.mat)';
+            '*.*',  'All Files (*.*)'}, ...
+            'Pick a MAT-file');
+        if ~(fname), return; end        
+        scefile=fullfile(pathname,fname);
+        try
+            fw=gui.gui_waitbar;
+            load(scefile,'sce')
+        catch ME
+            %rethrow(ME);
+            gui.gui_waitbar(fw);
+            errordlg(ME.message)
+            % rethrow(ME)
+            return;
+        end
+        gui.gui_waitbar(fw);
+        sc_scatter_sce(sce);
+        return;
+       case '10x Genomics .mtx'
         [fname, pathname] = uigetfile( ...
            {'*.mtx', 'MTX Format Files (*.mtx)';
             '*.*',  'All Files (*.*)'}, ...
@@ -75,7 +97,7 @@ else
         genelist=string((1:size(X,1))');
     end
     try
-    sce=SingleCellExperiment(X,genelist,s,c);
+        sce=SingleCellExperiment(X,genelist,s,c);
     catch
         return;
     end
