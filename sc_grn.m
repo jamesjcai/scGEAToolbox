@@ -1,4 +1,5 @@
-function [A]=sc_grnetwork(X,varargin)
+function [A]=sc_grn(X,varargin)
+% construct single-cell gene regulatory network (scGRN)
 
 p = inputParser;
 defaultType = 'pcnetpar';

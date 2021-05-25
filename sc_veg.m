@@ -24,12 +24,20 @@ xdata=u(~isnan(ydata));
 ydata=ydata(~isnan(ydata));
 lgxdata=log10(xdata);
 
+% pw1=fileparts(mfilename('fullpath'));
+% pth=fullfile(pw1,'thirdparty/locfit/m');
+% addpath(pth);
+% pth=fullfile(pw1,'thirdparty/locfit/mex');
+% addpath(pth);
+% pth=fullfile(pw1,'thirdparty/locfit/source');
+% addpath(pth);
+
 pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'thirdparty/locfit/m');
+pth=fullfile(pw1,'+run','thirdparty','locfit','m');
 addpath(pth);
-pth=fullfile(pw1,'thirdparty/locfit/mex');
+pth=fullfile(pw1,'+run','thirdparty','locfit','mex');
 addpath(pth);
-pth=fullfile(pw1,'thirdparty/locfit/source');
+pth=fullfile(pw1,'+run','thirdparty','locfit','source');
 addpath(pth);
 
 fitm = locfit(lgxdata,ydata);
