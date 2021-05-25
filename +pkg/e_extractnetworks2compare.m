@@ -11,7 +11,12 @@ genelist=genelist(:);
 
 outglist=glist(y);
 
-if any(~y), warning('There are genes in GLIST not found in GENELIST'); end
+if any(~y)
+    warning('There are genes in GLIST not found in GENELIST');
+    fprintf('%s ',glist(~y));
+    fprintf('\n');
+end
+
 assert(isequal(genelist(idxv(y)),outglist))
 
 
