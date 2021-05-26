@@ -1003,16 +1003,16 @@ function ClusterCellsS(src,~)
 end
 
 function k=i_inputk
-    prompt = {'Enter number of cluster, K (2..50):'};
-    dlgtitle = 'Input';
-    dims = [1 35];
+    prompt = {'Enter number of clusters K=(2..50):'};
+    dlgtitle = 'Input K';
+    dims = [1 45];
     definput = {'10'};
     answer = inputdlg(prompt,dlgtitle,dims,definput);
     if isempty(answer), return; end
     k=round(str2double(cell2mat(answer)));
 end
 
-function ClusterCellsX(~,~)
+function ClusterCellsX(src,~)
     answer = questdlg('Cluster cells using X?');
     if ~strcmp(answer,'Yes'), return; end
     methodtagv={'simlr','soptsc','sc3','sinnlrr','specter'};
