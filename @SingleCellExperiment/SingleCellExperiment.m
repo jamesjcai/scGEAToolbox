@@ -66,7 +66,7 @@ classdef SingleCellExperiment
     
     obj = estimatepotency(obj,speciesid,forced)
     obj = estimatecellcycle(obj,forced)
-    obj = embedcells(obj,methodid,forced)
+    obj = embedcells(obj,methodid,forced,usehvgs)
     obj = clustercells(obj,k,methodid,forced)
     
     function obj = removecells(obj,i)

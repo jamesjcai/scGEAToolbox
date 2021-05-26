@@ -1,28 +1,27 @@
-function obj = embedcells(obj,methodid,forced,usehvg)
-    if nargin<4, usehvg=true; end
-    if nargin<3, forced=false; end
-    if nargin<2, methodid=1; end
+function obj = embedcells(obj,methodtag,forced,usehvgs)
+    if nargin<4 || isempty(usehvgs), usehvgs=true; end
+    if nargin<3 || isempty(forced), forced=false; end
+    if nargin<2, methodtag='tsne'; end
     if isempty(obj.s) || forced
-        if isstring(methodid) || ischar(methodid)
-            methodid=lower(methodid);
+        if isstring(methodtag) || ischar(methodtag)
+            methodtag=lower(methodtag);
         end
-        if usehvg
+        if usehvgs
+            % disp('Identifying HVGs')
             [~,X]=sc_hvg(obj.X,obj.g,true,false);
-            X=X(1:min([size(X,1),2500]),:);
+            X=X(1:min([size(X,1),2000]),:);
         else
             X=obj.X;
         end
-        switch methodid
-            case {1,'tsne'}
-                obj.s=sc_tsne(X,3,false,true);
-                obj.struct_cell_embeddings.tsne=obj.s;
-            case {2,'umap'}
-                obj.s=sc_umap(X,3);
-                obj.struct_cell_embeddings.umap=obj.s;
-            case {3,'phate'}
+        switch methodtag
+            case 'tsne'
+                obj.s=sc_tsne(X,3,false,true);                
+            case 'umap'
+                obj.s=sc_umap(X,3);                
+            case 'phate'
                 obj.s=sc_phate(X,3);
-                obj.struct_cell_embeddings.phate=obj.s;
         end
+        obj.struct_cell_embeddings.(methodtag)=obj.s;
         disp('SCE.S added');
     else
         disp('SCE.S existed.')

@@ -189,8 +189,6 @@ pt4.ClickedCallback = @callback_Brush4Markers;
 
 
 pt4mrkheat = uipushtool(UitoolbarHandle,'Separator','off');
-% [img,map] = imread(fullfile(matlabroot,...
-%             'toolbox','matlab','icons','plotpicker-stairs.gif'));
 [img,map] = imread(fullfile(mfolder,...
             'resources','plotpicker-plotmatrix.gif'));
 ptImage = ind2rgb(img,map);
@@ -340,10 +338,6 @@ pt5.CData = ptImage;
 pt5.Tooltip = 'Refresh';
 pt5.ClickedCallback = @RefreshAll;
 
-
-
-
-
 gui.add_3dcamera(defaultToolbar,'AllCells');
 
 
@@ -424,7 +418,7 @@ function RefreshAll(src,~,keepview,keepcolr)
     guidata(FigureHandle,sce);
     ptlabelclusters.State='off';
     %UitoolbarHandle.Visible='off';
-    %UitoolbarHandle.Visible='on';  
+    %UitoolbarHandle.Visible='on';
 end
 
 function Switch2D3D(src,~)
@@ -443,15 +437,17 @@ function Switch2D3D(src,~)
     else                 % current 3D do following
         [ax,bx]=view();
         answer = questdlg('Which view to be used to project cells?','',...
-            'Current View','Default View','Cancel','Current View');
-        if strcmp(answer,'Cancel'), return; end
-        if strcmp(answer,'Default View')
-            h=gui.i_gscatter3(sce.s(:,1:2),c,methodid);
-        else
-            sx=pkg.i_3d2d(sce.s,ax,bx);
-            h=gui.i_gscatter3(sx(:,1:2),c,methodid);
+            'Default View','Current View','Cancel','Default View');
+        switch answer
+            case 'Default View'
+                h=gui.i_gscatter3(sce.s(:,1:2),c,methodid);
+            case 'Current View'
+                sx=pkg.i_3d2d(sce.s,ax,bx);
+                h=gui.i_gscatter3(sx(:,1:2),c,methodid);
+            case {'Cancel',''}
+                return;
         end
-    end    
+    end
     title(sce.title)
     h.Marker=para.oldMarker;
     h.SizeData=para.oldSizeData;
@@ -488,36 +484,46 @@ function EmbeddingAgain(src,~)
     if isempty(sce.struct_cell_embeddings)
         sce.struct_cell_embeddings=struct('tsne',[],'umap',[],'phate',[]);
     end
-    answer=lower(answer);
+    methodtag=lower(answer);
     usingold=false;
-    if ~isempty(sce.struct_cell_embeddings.(answer))
-
-        answer1 = questdlg(sprintf('Using existing %s embedding?',upper(answer)),...
-            '', ...
-            'Yes, use existing','No, re-compute','Cancel','Yes, use existing');
+    if ~isempty(sce.struct_cell_embeddings.(methodtag))
+        answer1 = questdlg(sprintf('Use existing %s embedding or re-compute new embedding?',...
+            upper(methodtag)),'', ...
+            'Use existing','Re-compute','Cancel','Use existing');
         switch answer1
-            case 'Yes, use existing'
-                sce.s=sce.struct_cell_embeddings.(answer);
+            case 'Use existing'
+                sce.s=sce.struct_cell_embeddings.(methodtag);
                 usingold=true;
-            case 'No, re-compute'
+            case 'Re-compute'
                 usingold=false;
-            case 'Cancel'
+            case {'Cancel',''}
                 return;
         end
     end
     if ~usingold
+        answer2 = questdlg(sprintf('Use highly variable genes (HVGs, n=2000) or use all genes (n=%d)?',sce.NumGenes),...
+            '',...
+            'Top 2000 HVGs','All Genes','Cancel','Top 2000 HVGs');
+        switch answer2
+            case 'All Genes'
+                usehvgs=false;                
+            case 'Top 2000 HVGs'
+                usehvgs=true;
+            case {'Cancel',''}
+                return;
+        end
         fw=gui.gui_waitbar;
         try
-            sce=sce.embedcells(lower(answer),true);
+            forced=true;            
+            sce=sce.embedcells(methodtag,forced,usehvgs);
         catch ME
             gui.gui_waitbar(fw);
             errordlg(ME.message)
-            % rethrow(ME)
             return;
         end
         gui.gui_waitbar(fw);
     end
-    RefreshAll(src,1,true);
+    RefreshAll(src,1,true,false);
     guidata(FigureHandle,sce);
 end
 
@@ -535,14 +541,6 @@ function DetermineCellTypeClusters(~,~)
         return;
     end
     organtag="all";
-%     answer = questdlg('Which marker database?','Select Database','PanglaoDB','clustermole','PanglaoDB');
-%     if strcmpi(answer,'clustermole')
-%         databasetag="clustermole";
-%     elseif strcmpi(answer,'panglaodb')
-%        databasetag="panglaodb";
-%     else
-%         return;
-%     end
     databasetag="panglaodb";
     dtp = findobj(h,'Type','datatip');
     delete(dtp);
@@ -576,7 +574,7 @@ for i=1:max(c)
             si=mean(siv,1);
             idx=find(ptsSelected);
             [k]=dsearchn(siv,si);
-            dtp=datatip(h,'DataIndex',idx(k));
+            datatip(h,'DataIndex',idx(k));
             %text(si(:,1),si(:,2),si(:,3),sprintf('%s',ctxt),...
             %     'fontsize',10,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');
             %     elseif size(sce.s,2)==2
@@ -902,17 +900,6 @@ function DrawTrajectory(~,~)
                 end
             guidata(FigureHandle,sce);
         end
-        
-%         labels = {'Save expression X to variable named:',...
-%                   'Save pseudotime T to variable named:',...
-%                   'Save embedding S to variable named:'}; 
-%         vars = {'X_psexplorer','t_psexplorer','s_psexplorer'};
-%         values = {sce.X, t, sce.s};
-%         msgfig=export2wsdlg(labels,vars,values);
-%         %         assignin('base',sprintf('psexplorerT%d',...
-%         %                  psexplorer_timeid),t);
-%         uiwait(msgfig)
-
         answer = questdlg('View expression of selected genes', ...
             'Pseudotime Function', ...
             'Yes','No','Yes');
@@ -959,8 +946,7 @@ function RunTrajectoryAnalysis(~,~)
               'Save embedding S to variable named:'}; 
     vars = {'t_mono','s_mono'};
     values = {t_mono, s_mono};
-    export2wsdlg(labels,vars,values);          
-        
+    export2wsdlg(labels,vars,values);
 end
 
 function ClusterCellsS(src,~)
@@ -976,31 +962,7 @@ function ClusterCellsS(src,~)
     else
         return;
     end
-%     k=i_inputk;
-%     if isnan(k) || k<2 || k>50
-%         uiwait(errordlg('Invalid K'));
-%         return;
-%     end
     i_reclustercells(src,methodtag);
-    
-%     fw=gui.gui_waitbar;  
-%     sce.c_cluster_id=sc_cluster_s(sce.s,k,'type',methodtag,'plotit',false);
-%     [c,cL]=grp2idx(sce.c_cluster_id);
-%     sce.c=c;
-%     gui.gui_waitbar(fw);
-%     hold off
-%     RefreshAll(src,[],true,true);
-    
-%     return;
-%     [ax,bx]=view();
-%     sce.c=c;
-%     h=gui.i_gscatter3(sce.s,c);
-%     view(ax,bx);
-%     title(sce.title)
-%     answer = questdlg('Label clusters?');
-%     if strcmp(answer,'Yes')
-%         i_labelclusters;
-%     end
     guidata(FigureHandle,sce);
 end
 
@@ -1047,13 +1009,11 @@ function i_reclustercells(src,methodtag)
         end
     end
     if ~usingold
-        
         k=i_inputk;
         if isnan(k) || k<2 || k>50
             uiwait(errordlg('Invalid K'));
             return;
-        end        
-        
+        end
     fw=gui.gui_waitbar;
     try
         %[sce.c_cluster_id]=sc_cluster_x(sce.X,k,'type',methodtag);
@@ -1066,8 +1026,7 @@ function i_reclustercells(src,methodtag)
     gui.gui_waitbar(fw);
     end
     [c,cL]=grp2idx(sce.c_cluster_id);
-    sce.c=c;
-    % hold off
+    sce.c=c;    
     RefreshAll(src,[],true,false);
     guidata(FigureHandle,sce);
 end
@@ -1194,7 +1153,7 @@ function [isdone]=i_labelclusters(notasking)
             siv=sce.s(idx,:);
             si=mean(siv,1);
             [k]=dsearchn(siv,si);
-            dtp=datatip(h,'DataIndex',idx(k));
+            datatip(h,'DataIndex',idx(k));
         end
         isdone=true;
     end
