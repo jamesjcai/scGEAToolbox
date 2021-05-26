@@ -1,8 +1,8 @@
 function [c_clustid]=sc_cluster_x(X,k,varargin)
 
 p = inputParser;
-defaultType = 'simlr';
-validTypes = {'simlr','soptsc','sc3','sinnlrr','specter'};
+defaultType = 'sc3';
+validTypes = {'sc3','simlr','soptsc','sinnlrr','specter'};
 checkType = @(x) any(validatestring(x,validTypes));
 
 checkK = @(x) (x > 0) && isnumeric(x) && isscalar(x);

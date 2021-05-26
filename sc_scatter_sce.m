@@ -976,18 +976,20 @@ function ClusterCellsS(src,~)
     else
         return;
     end
-    k=i_inputk;
-    if isnan(k) || k<2 || k>50
-        uiwait(errordlg('Invalid K'));
-        return;
-    end
-    fw=gui.gui_waitbar;  
-    sce.c_cluster_id=sc_cluster_s(sce.s,k,'type',methodtag,'plotit',false);
-    [c,cL]=grp2idx(sce.c_cluster_id);
-    sce.c=c;
-    gui.gui_waitbar(fw);
-    hold off
-    RefreshAll(src,[],true,true);
+%     k=i_inputk;
+%     if isnan(k) || k<2 || k>50
+%         uiwait(errordlg('Invalid K'));
+%         return;
+%     end
+    i_reclustercells(src,methodtag);
+    
+%     fw=gui.gui_waitbar;  
+%     sce.c_cluster_id=sc_cluster_s(sce.s,k,'type',methodtag,'plotit',false);
+%     [c,cL]=grp2idx(sce.c_cluster_id);
+%     sce.c=c;
+%     gui.gui_waitbar(fw);
+%     hold off
+%     RefreshAll(src,[],true,true);
     
 %     return;
 %     [ax,bx]=view();
@@ -1015,49 +1017,61 @@ end
 function ClusterCellsX(src,~)
     answer = questdlg('Cluster cells using X?');
     if ~strcmp(answer,'Yes'), return; end
-    methodtagv={'simlr','soptsc','sc3','sinnlrr','specter'};
+    methodtagv={'sc3','simlr','soptsc','sinnlrr','specter'};
     [indx,tf] = listdlg('PromptString',{'Select clustering program',...
     '',''},'SelectionMode','single',...
     'ListString',methodtagv);
     if tf==1
-        k=i_inputk;
-        if isnan(k) || k<2 || k>50
-            uiwait(errordlg('Invalid K'));
-            return;
-        end
         methodtag=methodtagv{indx};
     else
         return;
     end
+    i_reclustercells(src,methodtag);
+end
+
+function i_reclustercells(src,methodtag)
+    methodtag=lower(methodtag);
+    usingold=false;
+    if ~isempty(sce.struct_cell_clusterings.(methodtag))
+        answer1 = questdlg(sprintf('Using existing %s clustering?',upper(methodtag)),...
+            '', ...
+            'Yes, use existing','No, re-compute','Cancel','Yes, use existing');
+        switch answer1
+            case 'Yes, use existing'
+                sce.c_cluster_id=sce.struct_cell_clusterings.(methodtag);                
+                usingold=true;
+            case 'No, re-compute'
+                usingold=false;
+            case 'Cancel'
+                return;
+        end
+    end
+    if ~usingold
+        
+        k=i_inputk;
+        if isnan(k) || k<2 || k>50
+            uiwait(errordlg('Invalid K'));
+            return;
+        end        
+        
     fw=gui.gui_waitbar;
     try
-        [sce.c_cluster_id]=sc_cluster_x(sce.X,k,'type',methodtag);
+        %[sce.c_cluster_id]=sc_cluster_x(sce.X,k,'type',methodtag);
+        sce=sce.clustercells(k,methodtag,true);
     catch ME
-        gui.gui_waitbar(fw);        
+        gui.gui_waitbar(fw);
         errordlg(ME.message);
         return;
     end
+    gui.gui_waitbar(fw);
+    end
     [c,cL]=grp2idx(sce.c_cluster_id);
     sce.c=c;
-    gui.gui_waitbar(fw);
-    hold off
-    RefreshAll(src,[],true,true);
     % hold off
-    % delete(h);
-%     h=gui.i_gscatter3(sce.s,c);
-%     title(sce.title)
-%     
-%     labels = {'Save clusterid C to variable named:'}; 
-%     vars = {sprintf('c_clusterid_%s',methodtag)};
-%     values = {sce.c_cluster_id};
-%     msgfig=export2wsdlg(labels,vars,values);
-%     uiwait(msgfig);
-%     answer = questdlg('Label clusters?');
-%     if strcmp(answer,'Yes')
-%         i_labelclusters;
-%     end
+    RefreshAll(src,[],true,false);
     guidata(FigureHandle,sce);
 end
+
 
 function LabelClusters(src,~)
         state = src.State;

@@ -12,6 +12,9 @@ classdef SingleCellExperiment
       list_cell_attributes cell  % e.g., attributes = {'size',[4,6,2]};
       list_gene_attributes cell  % e.g., attributes = {'size',[4,6,2]};
       struct_cell_embeddings=struct('tsne',[],'umap',[],'phate',[])
+      struct_cell_clusterings=struct('kmeans',[],'snndpc',[],...
+                                      'sc3',[],'simlr',[],'soptsc',[],...
+                                      'sinnlrr',[],'specter',[])
       table_attributes table
    end
    
