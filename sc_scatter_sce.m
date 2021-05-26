@@ -963,7 +963,7 @@ function RunTrajectoryAnalysis(~,~)
         
 end
 
-function ClusterCellsS(~,~)
+function ClusterCellsS(src,~)
     answer = questdlg('Cluster cells?');
     if ~strcmp(answer,'Yes'), return; end
 
@@ -971,35 +971,45 @@ function ClusterCellsS(~,~)
         'kmeans','snndpc','kmeans');
     if strcmpi(answer,'kmeans')
         methodtag="kmeans";
-    else
+    elseif strcmpi(answer,'snndpc')
         methodtag="snndpc";
-    end 
+    else
+        return;
+    end
+    k=i_inputk;
+    if isnan(k) || k<2 || k>50
+        uiwait(errordlg('Invalid K'));
+        return;
+    end
+    fw=gui.gui_waitbar;  
+    sce.c_cluster_id=sc_cluster_s(sce.s,k,'type',methodtag,'plotit',false);
+    [c,cL]=grp2idx(sce.c_cluster_id);
+    sce.c=c;
+    gui.gui_waitbar(fw);
+    hold off
+    RefreshAll(src,[],true,true);
     
-    prompt = {'Enter number of cluster (K):'};
+%     return;
+%     [ax,bx]=view();
+%     sce.c=c;
+%     h=gui.i_gscatter3(sce.s,c);
+%     view(ax,bx);
+%     title(sce.title)
+%     answer = questdlg('Label clusters?');
+%     if strcmp(answer,'Yes')
+%         i_labelclusters;
+%     end
+    guidata(FigureHandle,sce);
+end
+
+function k=i_inputk
+    prompt = {'Enter number of cluster, K (2..50):'};
     dlgtitle = 'Input';
     dims = [1 35];
     definput = {'10'};
     answer = inputdlg(prompt,dlgtitle,dims,definput);
-    try
-        k=str2double(answer{1});
-    catch
-        return;
-    end    
-    fw=gui.gui_waitbar;  
-    hold off
-    sce.c_cluster_id=sc_cluster_s(sce.s,k,'type',methodtag,'plotit',false);
-    [c,cL]=grp2idx(sce.c_cluster_id);
-    gui.gui_waitbar(fw);
-    [ax,bx]=view();
-    sce.c=c;
-    h=gui.i_gscatter3(sce.s,c);
-    view(ax,bx);
-    title(sce.title)
-    answer = questdlg('Label clusters?');
-    if strcmp(answer,'Yes')
-        i_labelclusters;
-    end    
-    guidata(FigureHandle,sce);
+    if isempty(answer), return; end
+    k=round(str2double(cell2mat(answer)));
 end
 
 function ClusterCellsX(~,~)
@@ -1010,47 +1020,42 @@ function ClusterCellsX(~,~)
     '',''},'SelectionMode','single',...
     'ListString',methodtagv);
     if tf==1
-        prompt = {'Enter number of cluster (K):'};
-        dlgtitle = 'Input';
-        dims = [1 35];
-        definput = {'10'};
-        answerk = inputdlg(prompt,dlgtitle,dims,definput);
-        try
-            k=str2double(answerk{1});
-        catch
+        k=i_inputk;
+        if isnan(k) || k<2 || k>50
+            uiwait(errordlg('Invalid K'));
             return;
         end
         methodtag=methodtagv{indx};
     else
         return;
     end
-    
     fw=gui.gui_waitbar;
     try
         [sce.c_cluster_id]=sc_cluster_x(sce.X,k,'type',methodtag);
     catch ME
         gui.gui_waitbar(fw);        
-        errordlg(sprintf('%s: %s',...
-            ME.identifier,ME.message));
+        errordlg(ME.message);
         return;
     end
     [c,cL]=grp2idx(sce.c_cluster_id);
     sce.c=c;
     gui.gui_waitbar(fw);
+    hold off
+    RefreshAll(src,[],true,true);
     % hold off
-    delete(h);
-    h=gui.i_gscatter3(sce.s,c);
-    title(sce.title)
-    
-    labels = {'Save clusterid C to variable named:'}; 
-    vars = {sprintf('c_clusterid_%s',methodtag)};
-    values = {sce.c_cluster_id};
-    msgfig=export2wsdlg(labels,vars,values);
-    uiwait(msgfig);
-    answer = questdlg('Label clusters?');
-    if strcmp(answer,'Yes')
-        i_labelclusters;
-    end
+    % delete(h);
+%     h=gui.i_gscatter3(sce.s,c);
+%     title(sce.title)
+%     
+%     labels = {'Save clusterid C to variable named:'}; 
+%     vars = {sprintf('c_clusterid_%s',methodtag)};
+%     values = {sce.c_cluster_id};
+%     msgfig=export2wsdlg(labels,vars,values);
+%     uiwait(msgfig);
+%     answer = questdlg('Label clusters?');
+%     if strcmp(answer,'Yes')
+%         i_labelclusters;
+%     end
     guidata(FigureHandle,sce);
 end
 
