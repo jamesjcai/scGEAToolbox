@@ -2,6 +2,9 @@ function obj = embedcells(obj,methodtag,forced,usehvgs)
     if nargin<4 || isempty(usehvgs), usehvgs=true; end
     if nargin<3 || isempty(forced), forced=false; end
     if nargin<2, methodtag='tsne'; end
+    
+    % validTypes = {'tsne','umap','phate'};
+    % checkType = @(x) any(validatestring(x,validTypes));
     if isempty(obj.s) || forced
         if isstring(methodtag) || ischar(methodtag)
             methodtag=lower(methodtag);

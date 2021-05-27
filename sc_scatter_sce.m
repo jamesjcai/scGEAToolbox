@@ -11,8 +11,6 @@ function varargout = sc_scatter_sce(sce, varargin)
     import gui.*
 
     p = inputParser;
-    % validTypes = {'kmeans','kmedoids','dbscan'};
-    % checkType = @(x) any(validatestring(x,validTypes));
     checkCS = @(x) isempty(x) | size(sce.X, 2) == length(x);
     addRequired(p, 'sce', @(x) isa(x, 'SingleCellExperiment'));
     addOptional(p, 'c', sce.c, checkCS);
