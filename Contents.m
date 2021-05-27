@@ -9,7 +9,7 @@
 %   demo_script4              - Demonstration of Clustering Functions in scGEAToolbox
 %   demo_script5              - Demonstration of Pseudotime Analysis and Gene Network Functions in scGEAToolbox
 %   demo_script6              - Demonstration of DE Analysis and Marker Gene Identification Functions in scGEAToolbox
-%   EmbeddingMethods          - 
+
 %   fun_cmp_clusters          - https://academic.oup.com/bib/advance-article/doi/10.1093/bib/bby076/5077112
 %   fun_num_clusters          - 
 %   i_plot_pseudotimeseries   - 
@@ -24,7 +24,7 @@
 %   sc_filterc                - 
 %   sc_filterg                - 
 %   sc_genestat               - 
-%   sc_grnetwork              - 
+
 %   sc_heg                    - HEGs - highly expressed genes
 %   sc_hvg                    - HVGs selection - This method uses the CV^2 on normalized count data to 
 %   sc_knngraph               - Generate KNN group network from cell embeddings
@@ -40,16 +40,16 @@
 %   sc_qcmetrics              - QC metrics
 %   sc_read10xdir             - Read files from a 10x Genomics cellranger output folder
 %   sc_readfile               - 
-%   sc_readh5file             - https://www.mathworks.com/help/matlab/hdf5-files.html
+
 %   sc_readmtxfile            - 
 %   sc_readtsvfile            - 
 %   sc_rmmtcells              - 
 %   sc_rmmtgenes              - 
 %   sc_scatter                - 
-%   sc_scatter3genes          - Scatter3 plot for genes
-%   sc_scatter3x              - 
+
+
 %   sc_scatter_sce            - 
-%   sc_scattergenes           - Scatter plots for genes
+
 %   sc_scattermarker          - SC_SCATTERMARKER(X,genelist,g,s,methodid)
 %   sc_selectc                - 
 %   sc_selectg                - Select genes by expression levels
@@ -64,5 +64,24 @@
 %   sc_veg                    - 
 %   sc_writefile              - 
 %   SingleCellEmbedding       - 
+
+
+%   sparse_nanmean            - 
+%   e_filtadjc                - A - adjacency matrix
+%   i_scrollablefig           - 
+%   infox                     - 
+%   installx                  - 
+%   sc_cellcyclescoring       - https://rdrr.io/cran/Seurat/src/R/utilities.R
+%   sc_grn                    - construct single-cell gene regulatory network (scGRN)
+%   sc_grnview                - 
+%   sc_grnview2               - 
+%   sc_pcnetdenoised          - A=sc_pcnetdenoised(X);
+%   sc_phate                  - UMAP embedding of cells
+%   sc_readhdf5file           - https://www.mathworks.com/help/matlab/hdf5-files.html
+%   sc_rmdugenes              - remove genes with duplicate name
+%   sc_sce2hdf5               - import h5py
+%   sc_sce2rds                - 
+%   sc_tenifoldnet            - 
+%   sc_umap                   - UMAP embedding of cells
 
 

@@ -3,7 +3,7 @@
 %
 cdgea; % set working directory
 load example_data/markergeneident_demo X genelist s_tsne
-% note: s_tsne is the precomputed tSNE embedding
+% s_tsne is precomputed tSNE embedding
 %% Automatically cluster cells and explore cell type
 figure;
 gui.sc_celltypeexplorer_auto(X,genelist,s_tsne,"species","mouse");

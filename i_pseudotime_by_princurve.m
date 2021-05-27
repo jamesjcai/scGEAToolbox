@@ -4,7 +4,7 @@ function [t,xyz1]=i_pseudotime_by_princurve(s,plotit)
 if nargin<2, plotit=false; end
 
 pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'thirdparty/MPPC');
+pth=fullfile(pw1,'+run','thirdparty','MPPC');
 addpath(pth);
 
 
@@ -31,10 +31,10 @@ addpath(pth);
         pause_bool = 0;
         
 
-        tic;
+        %tic;
         [yfinal,cut_indices,I,iters] = mppc(y0,cut_indices0,s,mass,lambda1,lambda2,tol,rho,...
             max_m, max_avg_turn,normalize_data,pause_bool,false);
-        toc;
+        %toc;
 
         t=(I+randn(size(I)))';
         xyz1=yfinal;

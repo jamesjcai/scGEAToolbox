@@ -1,190 +1,206 @@
-function [h1,h2]=sc_scattermarker(X,genelist,s,targetg,methodid,sz,showcam)
-%SC_SCATTERMARKER(X,genelist,g,s,methodid)
-%
-% USAGE:
-% s=sc_tsne(X,3);
-% g=["AGER","SFTPC","SCGB3A2","TPPP3"];
-% sc_scattermarker(X,genelist,s,genelist(1));
+function [h1, h2] = sc_scattermarker(X, genelist, ...
+                                     s, targetg, methodid, sz, showcam)
+    % SC_SCATTERMARKER(X,genelist,g,s,methodid)
+    %
+    % USAGE:
+    % s=sc_tsne(X,3);
+    % g=["AGER","SFTPC","SCGB3A2","TPPP3"];
+    % sc_scattermarker(X,genelist,s,genelist(1));
 
-import gui.*
-h1=[]; h2=[];
-if nargin<4, error('sc_scattermarker(X,genelist,s,g)'); end
-if isvector(s)||isscalar(s), error('S should be a matrix.'); end
-if nargin<7, showcam=true; end
-if nargin<6, sz=5; end
-if nargin<5, methodid=1; end
-if iscell(targetg)
-    for k=1:length(targetg)
-        figure;
-        sc_scattermarker(X,genelist,s,targetg{k},methodid,sz);
+    import gui.*
+    h1 = [];
+    h2 = [];
+    if nargin < 4
+        error('sc_scattermarker(X,genelist,s,g)');
     end
-elseif isstring(targetg) && ~isStringScalar(targetg)
-    for k=1:length(targetg)
-        figure;
-        sc_scattermarker(X,genelist,s,targetg(k),methodid,sz);
+    if isvector(s) || isscalar(s)
+        error('S should be a matrix.');
     end
-elseif isStringScalar(targetg) || ischar(targetg)
-    if ismember(targetg,genelist)
-        x=s(:,1);
-        y=s(:,2);
-        if min(size(s))==2
-            z=[];
-        else
-            z=s(:,3);
+    if nargin < 7
+        showcam = true;
+    end
+    if nargin < 6
+        sz = 5;
+    end
+    if nargin < 5
+        methodid = 1;
+    end
+    if iscell(targetg)
+        for k = 1:length(targetg)
+            figure;
+            sc_scattermarker(X, genelist, s, targetg{k}, methodid, sz);
         end
-%        c=log2(1+X(genelist==targetg,:));
-        c=X(genelist==targetg,:);
-        if issparse(c)
-            c=full(c);
+    elseif isstring(targetg) && ~isStringScalar(targetg)
+        for k = 1:length(targetg)
+            figure;
+            sc_scattermarker(X, genelist, s, targetg(k), methodid, sz);
         end
-        switch methodid
-            case 1
-                i_stemscatter(x,y,c);                
-            case 2      
-                if isempty(z)
-                    scatter(x,y,sz,c,'filled');
-                else
-                    scatter3(x,y,z,sz,c,'filled');
-                end
-                colormap('default');
-            case 3
-                if isempty(z)
-                    scatter(x,y,sz,c,'filled');
-                else
-                    scatter3(x,y,z,sz,c,'filled');
-                end                
-                a=colormap('autumn');
-                a(1,:)=[.8 .8 .8];
-                colormap(a);
-            case 4
-               subplot(1,2,1)
-               sc_scattermarker(X,genelist,s,targetg,3,sz,false);
-               subplot(1,2,2)
-               sc_scattermarker(X,genelist,s,targetg,1,sz,false);
-               hFig=gcf;
-               hFig.Position(3)=hFig.Position(3)*2;
-            case 5          % ============ 5
-               if size(s,2)>=3
-                   x=s(:,1); y=s(:,2); z=s(:,3);
-               else
-                   x=s(:,1); y=s(:,2); z=zeros(size(x));
-               end
-               explorer2IDX=y;
-               assignin('base','explorer2IDX',explorer2IDX);
-               % c=log2(1+X(genelist==g,:));
-               
-               h1=subplot(1,2,1); 
-                scatter3(x,y,z,sz,c,'filled');
-                a=colormap('autumn');
-                a(1,:)=[.8 .8 .8];
-                if numel(unique(c))==1
-                    for kk=1:size(a,1)
-                        a(kk,:)=[.8 .8 .8];
+    elseif isStringScalar(targetg) || ischar(targetg)
+        if ismember(targetg, genelist)
+            x = s(:, 1);
+            y = s(:, 2);
+            if min(size(s)) == 2
+                z = [];
+            else
+                z = s(:, 3);
+            end
+            %        c=log2(1+X(genelist==targetg,:));
+            c = X(genelist == targetg, :);
+            if issparse(c)
+                c = full(c);
+            end
+            switch methodid
+                case 1
+                    i_stemscatter(x, y, c);
+                case 2
+                    if isempty(z)
+                        scatter(x, y, sz, c, 'filled');
+                    else
+                        scatter3(x, y, z, sz, c, 'filled');
                     end
-                end
-                colormap(a);
-                % h1.YDataSource='explorer2IDX';
-                % title(targetg)
-                title(sprintf('%s\n(%s/%s = %.3f%% nonzero)',...
-                    targetg,...
-                    num2bankScalar(sum(c>0)),...
-                    num2bankScalar(numel(c)),...
-                    100*sum(c>0)./numel(c)));
-                
-%                 title(sprintf('%s\n(%s/%s = %g%% nonzero)',...
-%                     g,...
-%                     num2bankScalar(sum(c>0)),...
-%                     num2bankScalar(numel(c)),...
-%                     100*sum(c>0)./numel(c)));
-        
-               h2=subplot(1,2,2);
-                stem3(x,y,c,'marker','none','color','m');
-                hold on
-                scatter3(x,y,zeros(size(y)),5,c,'filled');                
-                % h2.YDataSource='explorer2IDX';
-                % hLD = linkdata('on');
-                evalin('base','h=findobj(gcf,''type'',''axes'');');
-                evalin('base','hlink = linkprop(h,{''CameraPosition'',''CameraUpVector''});');
-                evalin('base','rotate3d on');                
-                hFig=gcf;
-                hFig.Position(3)=hFig.Position(3)*2.2;
-                view(h1,3);
-        end
-                tx=title(sprintf('%s\n(%s/%s = %.3f%% nonzero)',...
-                    targetg,...
-                    num2bankScalar(sum(c>0)),...
-                    num2bankScalar(numel(c)),...
-                    100*sum(c>0)./numel(c)));
-                   %pt = uipushtool(defaultToolbar);
-                   % tx.ButtonDownFcn=@dispgname;
-      if showcam
-                hFig=gcf;
+                    colormap('default');
+                case 3
+                    if isempty(z)
+                        scatter(x, y, sz, c, 'filled');
+                    else
+                        scatter3(x, y, z, sz, c, 'filled');
+                    end
+                    a = colormap('autumn');
+                    a(1, :) = [.8 .8 .8];
+                    colormap(a);
+                case 4
+                    subplot(1, 2, 1);
+                    sc_scattermarker(X, genelist, s, targetg, 3, sz, false);
+                    subplot(1, 2, 2);
+                    sc_scattermarker(X, genelist, s, targetg, 1, sz, false);
+                    hFig = gcf;
+                    hFig.Position(3) = hFig.Position(3) * 2;
+                case 5          % ============ 5
+                    if size(s, 2) >= 3
+                        x = s(:, 1);
+                        y = s(:, 2);
+                        z = s(:, 3);
+                    else
+                        x = s(:, 1);
+                        y = s(:, 2);
+                        z = zeros(size(x));
+                    end
+                    explorer2IDX = y;
+                    assignin('base', 'explorer2IDX', explorer2IDX);
+                    % c=log2(1+X(genelist==g,:));
+
+                    h1 = subplot(1, 2, 1);
+                    scatter3(x, y, z, sz, c, 'filled');
+                    a = colormap('autumn');
+                    a(1, :) = [.8 .8 .8];
+                    if numel(unique(c)) == 1
+                        for kk = 1:size(a, 1)
+                            a(kk, :) = [.8 .8 .8];
+                        end
+                    end
+                    colormap(a);
+                    % h1.YDataSource='explorer2IDX';
+                    % title(targetg)
+                    title(sprintf('%s\n(%s/%s = %.3f%% nonzero)', ...
+                                  targetg, ...
+                                  num2bankScalar(sum(c > 0)), ...
+                                  num2bankScalar(numel(c)), ...
+                                  100 * sum(c > 0) ./ numel(c)));
+
+                    %                 title(sprintf('%s\n(%s/%s = %g%% nonzero)',...
+                    %                     g,...
+                    %                     num2bankScalar(sum(c>0)),...
+                    %                     num2bankScalar(numel(c)),...
+                    %                     100*sum(c>0)./numel(c)));
+
+                    h2 = subplot(1, 2, 2);
+                    stem3(x, y, c, 'marker', 'none', 'color', 'm');
+                    hold on;
+                    scatter3(x, y, zeros(size(y)), 5, c, 'filled');
+                    % h2.YDataSource='explorer2IDX';
+                    % hLD = linkdata('on');
+                    evalin('base', 'h=findobj(gcf,''type'',''axes'');');
+                    evalin('base', 'hlink = linkprop(h,{''CameraPosition'',''CameraUpVector''});');
+                    evalin('base', 'rotate3d on');
+                    hFig = gcf;
+                    hFig.Position(3) = hFig.Position(3) * 2.2;
+                    view(h1, 3);
+            end
+            tx = title(sprintf('%s\n(%s/%s = %.3f%% nonzero)', ...
+                               targetg, ...
+                               num2bankScalar(sum(c > 0)), ...
+                               num2bankScalar(numel(c)), ...
+                               100 * sum(c > 0) ./ numel(c)));
+            % pt = uipushtool(defaultToolbar);
+            % tx.ButtonDownFcn=@dispgname;
+            if showcam
+                hFig = gcf;
                 tb = uitoolbar(hFig);
-                
-                pt5pickcolr = uipushtool(tb,'Separator','off');				
-                [img,map] = imread(fullfile(fileparts(mfilename('fullpath')),...
-                            'resources','plotpicker-compass.gif'));  % plotpicker-pie
-                %map(map(:,1)+map(:,2)+map(:,3)==3) = NaN;  % Convert white pixels => transparent background
-                ptImage = ind2rgb(img,map);
+
+                pt5pickcolr = uipushtool(tb, 'Separator', 'off');
+                [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
+                                             'resources', 'plotpicker-compass.gif'));  % plotpicker-pie
+                % map(map(:,1)+map(:,2)+map(:,3)==3) = NaN;  % Convert white pixels => transparent background
+                ptImage = ind2rgb(img, map);
                 pt5pickcolr.CData = ptImage;
                 pt5pickcolr.Tooltip = 'Switch color maps';
-                pt5pickcolr.ClickedCallback = {@callback_PickColorMap,2};
+                pt5pickcolr.ClickedCallback = {@callback_PickColorMap, 2};
 
-                pt = uipushtool(tb,'Separator','off');
-                [img,map] = imread(fullfile(matlabroot,...
-                            'toolbox','matlab','icons','plotpicker-plot.gif'));
-                ptImage = ind2rgb(img,map);
+                pt = uipushtool(tb, 'Separator', 'off');
+                [img, map] = imread(fullfile(matlabroot, ...
+                                             'toolbox', 'matlab', 'icons', 'plotpicker-plot.gif'));
+                ptImage = ind2rgb(img, map);
                 pt.CData = ptImage;
                 pt.Tooltip = 'Colormapeditor';
                 pt.ClickedCallback = @selectcolormapeditor;
-      end
+            end
+        else
+            warning('%s no expression', targetg);
+        end
+        if showcam
+            gui.add_3dcamera(tb, targetg);
+        end
+    end
+    %     function dispgname(~,~)
+    %         disp(g);
+    %     end
+end
+
+function selectcolormapeditor(~, ~)
+    colormapeditor;
+end
+
+function [str] = num2bankScalar(num)
+    % https://www.mathworks.com/matlabcentral/answers/96131-is-there-a-format-in-matlab-to-display-numbers-such-that-commas-are-automatically-inserted-into-the
+    num = floor(num * 100) / 100;
+    str = num2str(num);
+    k = find(str == '.', 1);
+    if isempty(k)
+        % str=[str,'.00'];
+    end
+    % FIN = min(length(str),find(str == '.')-1);
+    FIN = length(str);
+    for i = FIN - 2:-3:2
+        str(i + 1:end + 1) = str(i:end);
+        str(i) = ',';
+    end
+end
+
+function i_stemscatter(x, y, z)
+    if nargin < 3
+        x = randn(300, 1);
+        y = randn(300, 1);
+        z = abs(randn(300, 1));
+    end
+    if isempty(z)
+        warndlg('No expression');
+        scatter(x, y, '.');
     else
-        warning('%s no expression',targetg);
+        stem3(x, y, z, 'marker', 'none', 'color', 'm');
+        hold on;
+        scatter(x, y, 10, z, 'filled');
+        hold off;
     end
-    if showcam
-        gui.add_3dcamera(tb,targetg);
-    end
-end
-%     function dispgname(~,~)
-%         disp(g);
-%     end
-end
-
-function selectcolormapeditor(~,~)
-colormapeditor;
-end
-
-function [str]=num2bankScalar(num)
-% https://www.mathworks.com/matlabcentral/answers/96131-is-there-a-format-in-matlab-to-display-numbers-such-that-commas-are-automatically-inserted-into-the
-     num=floor(num*100)/100;
-     str = num2str(num);
-     k=find(str == '.', 1);
-     if(isempty(k))
-         % str=[str,'.00'];         
-     end
-     %FIN = min(length(str),find(str == '.')-1);
-     FIN = length(str);
-     for i = FIN-2:-3:2
-     str(i+1:end+1) = str(i:end);
-     str(i) = ',';
-     end
-end
-
-function i_stemscatter(x,y,z)
-if nargin<3
-    x=randn(300,1);
-    y=randn(300,1);
-    z=abs(randn(300,1));
-end
-if isempty(z)
-    warndlg('No expression');
-    scatter(x,y,'.');
-else
-    stem3(x,y,z,'marker','none','color','m');
-    hold on 
-    scatter(x,y,10,z,'filled');
-    hold off
-end
-%[caz,cel]=view;
-%view([-45,-45,300]);
+    % [caz,cel]=view;
+    % view([-45,-45,300]);
 end

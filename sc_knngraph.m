@@ -15,19 +15,19 @@ switch method
         Graph=mIdx';
     case 2
         pw1=fileparts(mfilename('fullpath'));
-        pth=fullfile(pw1,'thirdparty','k-NN-code');
+        pth=fullfile(pw1,'+run','thirdparty','k-NN-code');
         addpath(pth);
         kneighbors=k; % number of neighbors in kNN
         S=s';
         [dim,N] = size(S);
         rrw = S(:);
-        [kNNgraphlength, Graph] = kNNgraphmex(rrw, N, dim, kneighbors, 1);
+        [~, Graph] = kNNgraphmex(rrw, N, dim, kneighbors, 1);
         Graph = reshape(Graph, kneighbors+1, N );
 end
 
 if nargout>0
     N=size(s,1);
-    A=sparse(N,N);
+    A=zeros(N,N);
     for i = 1 : size(Graph,2)
     for j = 1 : size(Graph,1)   % k+1
          A(i,Graph(j,i))=1;
@@ -36,6 +36,7 @@ if nargout>0
     end
     % G=0.5*(G+G');
     A=A-diag(diag(A));
+    A=sparse(A);
 end
 
 if plotit

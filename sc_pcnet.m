@@ -11,7 +11,7 @@ opts.maxit=150;
 
 if fastersvd    
 	pw1=fileparts(mfilename('fullpath'));
-    pth=fullfile(pw1,'thirdparty/faster_svd/lmsvd');
+    pth=fullfile(pw1,'+run','thirdparty','faster_svd','lmsvd');
     addpath(pth);
 end
 

@@ -9,7 +9,7 @@ s = uicontrol('Style','Slider','Parent',1,...
     'Units','normalized','Position',[0 0 1 .025],...
     'Value',1,'Callback',{@slider_callback1,panel2});
 
-function slider_callback1(src,eventdata,arg1)
+function slider_callback1(src,~,arg1)
 val = get(src,'Value');
 set(arg1,'Position',[0 -val 1 2])
 end
