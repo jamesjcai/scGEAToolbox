@@ -42,10 +42,10 @@ function callback_Brush4MarkersLASSO(src,~)
     y=double(ptsSelected);
     sce.c=1+ptsSelected;
     X=sce.X';
-    if issparse(X) 
-        X=full(X); 
-    end
     try
+        if issparse(X) 
+            X=full(X); 
+        end
         [B]=lasso(X,y,'DFmax',numfig*3,'MaxIter',1e3);
     catch ME
         gui.gui_waitbar(fw);

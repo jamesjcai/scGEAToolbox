@@ -6,13 +6,12 @@ function callback_ShowGeneExpr(src,~)
     gsorted=sort(sce.g);
     
 answer = questdlg('Show expression of single or mulitple genes?',...
-	'Single/Multiple Genes',...
-	'Single','Multiple','Cancel','Single');
+    'Single/Multiple Genes','Single','Multiple','Cancel','Single');
 
 switch answer
     case 'Single'
-        [indx,tf] = listdlg('PromptString',{'Select a gene',...
-        '',''},'SelectionMode','multiple','ListString',gsorted);
+        [indx,tf] = listdlg('PromptString',{'Select a gene','',''},...
+            'SelectionMode','multiple','ListString',gsorted);
         if tf==1
             for k=1:length(indx)
                 i_show(sce,gsorted(indx(k)),axx,bxx);
@@ -35,7 +34,7 @@ switch answer
                 case 'Union (OR)'
                     g=sprintf("%s | ",gsorted(idx)); 
                 case 'Intersection (AND)'
-                    g=sprintf("%s & ",gsorted(idx));                
+                    g=sprintf("%s & ",gsorted(idx));
                     ix=sum(sce.X(i,:)>0,1)==length(i);
                     if ~any(ix)
                         helpdlg('No cells expressing all selected genes.');
@@ -44,10 +43,10 @@ switch answer
                     x=x.*ix;
                 otherwise
                     return;
-            end            
+            end
             g=extractBefore(g,strlength(g)-2);
         end
-            f = figure('visible','off');
+            f=figure('visible','off');
             [h1]=sc_scattermarker(x,g,sce.s,g,5);
             title(g);
             view(h1,axx,bxx);
@@ -63,8 +62,7 @@ end
 
 function i_show(sce,g,axx,bxx)
         f = figure('visible','off');
-        [h1]=sc_scattermarker(sce.X,sce.g,...
-               sce.s,g,5);
+        [h1]=sc_scattermarker(sce.X,sce.g,sce.s,g,5);
         view(h1,axx,bxx);
         movegui(f,'center');
         set(f,'visible','on');

@@ -328,6 +328,12 @@ function varargout = sc_scatter_sce(sce, varargin)
     pt5.ClickedCallback = @RefreshAll;
 
     gui.add_3dcamera(defaultToolbar, 'AllCells');
+    
+       
+
+    m = uimenu(FigureHandle,'Text','Experimental');
+    mitem = uimenu(m,'Text','Harmony','Callback',@HarmonyPy);
+    
 
     % handles = guihandles( FigureHandle ) ;
     % guidata( FigureHandle, handles ) ;
@@ -357,11 +363,26 @@ function varargout = sc_scatter_sce(sce, varargin)
     % end
 
     function SelectCellsByQC(src, ~)
-        callback_SelectCellsGenesByQC(src);
+        gui.callback_SelectCellsGenesByQC(src);
         sce = guidata(FigureHandle);
         [c, cL] = grp2idx(sce.c);
         RefreshAll(src, 1, true);
     end
+
+    function HarmonyPy(src, ~)
+        callback_Harmonypy(src);
+        sce = guidata(FigureHandle);
+        [c, cL] = grp2idx(sce.c);
+        RefreshAll(src, 1, true, false);
+        ButtonName = questdlg('Update Saved Embedding?', ...
+                                 '', ...
+                                 'tSNE','UMAP','PHATE','tSNE');
+        methodtag=lower(ButtonName);
+        if ismember(methodtag,{'tsne','umap','phate'})
+            sce.struct_cell_embeddings.(methodtag)=sce.s;
+        end
+    end
+
 
     % =========================
     function RefreshAll(src, ~, keepview, keepcolr)

@@ -17,17 +17,14 @@ writetable(table(batchidx),'input2.csv','QuoteStrings',true);
 % end
 % fclose(fid);
 % pyenv('Version','d:\\Miniconda3\\envs\\harmonypy\\python.exe')
-
-pyenv('Version','d:\\Miniconda3\\envs\\harmonypy\\python.exe');
 x=pyenv;
 cmdlinestr=sprintf('"%s" "%s%sscript.py"',x.Executable,wrkpth,filesep);
 disp(cmdlinestr)
 system(cmdlinestr);
-
 if exist('output.csv','file')
     s=readmatrix('output.csv');
 else    
-    s=[];
+    % s=[];
 end
 if exist('input1.csv','file'), delete('input1.csv'); end
 if exist('input2.csv','file'), delete('input2.csv'); end
