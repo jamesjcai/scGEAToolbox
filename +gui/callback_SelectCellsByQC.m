@@ -1,4 +1,4 @@
-function callback_SelectCellsGenesByQC(src)
+function callback_SelectCellsByQC(src)
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);    
     listitems={'SC_QCFILTER (Basic QC)',...

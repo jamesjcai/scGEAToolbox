@@ -332,8 +332,9 @@ function varargout = sc_scatter_sce(sce, varargin)
        
 
     m = uimenu(FigureHandle,'Text','Experimental');
-    mitem = uimenu(m,'Text','Harmony','Callback',@HarmonyPy);
-    
+    mitem = uimenu(m,'Text','Remove batch effect using Harmony...','Callback',@HarmonyPy);
+    mitem = uimenu(m,'Text','Extract cells by marker(+/-) expression...',...
+                   'Callback',@callback_SelectCellsByMarker);
 
     % handles = guihandles( FigureHandle ) ;
     % guidata( FigureHandle, handles ) ;
@@ -363,7 +364,7 @@ function varargout = sc_scatter_sce(sce, varargin)
     % end
 
     function SelectCellsByQC(src, ~)
-        gui.callback_SelectCellsGenesByQC(src);
+        gui.callback_SelectCellsByQC(src);
         sce = guidata(FigureHandle);
         [c, cL] = grp2idx(sce.c);
         RefreshAll(src, 1, true);
