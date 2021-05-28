@@ -35,7 +35,7 @@ end
 fprintf('...done.\n');
 if nargout>2 && ~isempty(barcodestxtfile)
     fprintf('Reading tsv file %s...',barcodestxtfile);
-    T=readtable('barcodes.tsv','FileType','text','Delimiter','\n','ReadVariableNames',false);
+    T=readtable(barcodestxtfile,'FileType','text','Delimiter','\n','ReadVariableNames',false);
     celllist=string(T.Var1);
     fprintf('...done.\n');
 end
