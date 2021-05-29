@@ -13,7 +13,7 @@ X=sc_norm(X);
 X=zscore(X);
 X(X>10)=10;   % https://github.com/satijalab/seurat/issues/1166
 
-exprv=sparse_nanmean(X,2);
+exprv=pkg.sparse_nanmean(X,2);
 
 nbins=25;
 rng default
@@ -33,8 +33,8 @@ i2=i_randsmplbin(idx2,bin);
 
 %%
 
-score_s=sparse_nanmean(X(idx1,:))-sparse_nanmean(X(i1,:));
-score_g=sparse_nanmean(X(idx2,:))-sparse_nanmean(X(i2,:));
+score_s=pkg.sparse_nanmean(X(idx1,:))-pkg.sparse_nanmean(X(i1,:));
+score_g=pkg.sparse_nanmean(X(idx2,:))-pkg.sparse_nanmean(X(i2,:));
 
 ScoreV=string(repmat('G1',size(X,2),1));
 score_S=score_s';
@@ -55,15 +55,15 @@ end
 end
 
 
-function y=sparse_nanmean(X,dim)
-    if nargin<2, dim=1; end
-    if dim~=1, X=X'; end
-    Z=isnan(X)|(X==0);
-    z=sum(~Z);
-    y=sum(X,'omitnan');
-    y=y./z;
-    if dim~=1, y=y'; end
-end
+% function y=sparse_nanmean(X,dim)
+%     if nargin<2, dim=1; end
+%     if dim~=1, X=X'; end
+%     Z=isnan(X)|(X==0);
+%     z=sum(~Z);
+%     y=sum(X,'omitnan');
+%     y=y./z;
+%     if dim~=1, y=y'; end
+% end
 
 function i=i_randsmplbin(idx,bin)
     i=[];
