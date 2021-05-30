@@ -3,7 +3,7 @@ function [done]=callback_Harmonypy(src,~)
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
     if numel(unique(sce.c_batch_id))<2
-        warndlg('No batch effect');
+        warndlg('No batch effect (SCE.C_BATCH_ID is empty)');
         return;
     end
     x=pyenv;
