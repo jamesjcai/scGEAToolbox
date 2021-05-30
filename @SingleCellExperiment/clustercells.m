@@ -8,10 +8,11 @@ function obj = clustercells(obj,k,methodid,forced)
     if isempty(obj.c_cluster_id) || forced
         switch methodid
             case {'kmeans','snndpc'}
-                obj.c_cluster_id=sc_cluster_s(obj.s,k,'type',methodid);                
+                id=sc_cluster_s(obj.s,k,'type',methodid);                               
             case {'sc3','simlr','soptsc','sinnlrr','specter'}
-                obj.c_cluster_id=sc_cluster_x(obj.X,k,'type',methodid);                
+                id=sc_cluster_x(obj.X,k,'type',methodid);
         end
+        obj.c_cluster_id=id(:);
         obj.struct_cell_clusterings.(methodid)=obj.c_cluster_id;
         disp('C_CLUSTER_ID added.');
     else

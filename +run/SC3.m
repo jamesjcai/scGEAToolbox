@@ -34,6 +34,7 @@ addpath(pth);
 cd(pth);
 cls=[cls1;cls2;cls3];
 c=clusterensemble(cls,optimk);
+c=c(:);
 cd(oldpath);
 
 if plotit

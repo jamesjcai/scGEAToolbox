@@ -2,7 +2,7 @@ function [X]=sc_transform(X,varargin)
 
 p = inputParser;
 defaultType = 'pearsonresiduals';
-validTypes = {'pearsonresiduals','csndm','bigscale','sct'};
+validTypes = {'pearsonresiduals','csndm','bigscale','sct','Freeman-Tukey'};
 checkType = @(x) any(validatestring(x,validTypes));
 
 addRequired(p,'X',@isnumeric);
@@ -40,5 +40,12 @@ switch p.Results.type
 %         [X]=transform_bigscale(X);
     case 'sct'
         % sc_sct
+    case 'Freeman-Tukey'
+        % https://github.com/flo-compbio/monet/blob/master/monet/util/expression.py
+        % Applies the Freeman-Tukey transformation to stabilize variance."
+        % https://www.biorxiv.org/content/10.1101/2020.06.08.140673v2.full
+        % https://www.nature.com/articles/nmeth.2930
+        X=sc_norm(X,'type','deseq');
+        X=sqrt(X)+sqrt(X+1);        
 end
 end
