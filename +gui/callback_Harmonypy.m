@@ -46,10 +46,10 @@ function [done]=i_setpyenv
         done=false;
         [file,path] = uigetfile('python.exe');
         if isequal(file,0)
-           disp('User selected Cancel');
+           %disp('User selected Cancel');
            return;
         else
-           disp(['User selected ', fullfile(path,file)]);
+           disp(['User selected: ', fullfile(path,file)]);
            pyenv('Version',fullfile(path,file));
            done=true;
         end
