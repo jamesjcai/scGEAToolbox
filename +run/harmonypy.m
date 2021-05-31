@@ -8,8 +8,10 @@ cd(wrkpth);
 
 if exist('output.csv','file'), delete('output.csv'); end
 writematrix(s,'input1.csv');
+disp('input1.csv written')
 batchidx=matlab.lang.makeValidName(string(batchid));
 writetable(table(batchidx),'input2.csv','QuoteStrings',true);
+disp('input2.csv written')
 % fid=fopen('input2.csv','w');
 % fprintf(fid,'"batchid"\n');
 % for k=1:length(batchid)
@@ -20,15 +22,16 @@ writetable(table(batchidx),'input2.csv','QuoteStrings',true);
 x=pyenv;
 cmdlinestr=sprintf('"%s" "%s%sscript.py"',x.Executable,wrkpth,filesep);
 disp(cmdlinestr)
-system(cmdlinestr);
+[status]=system(cmdlinestr)
+pause(3)
 if exist('output.csv','file')
     s=readmatrix('output.csv');
 else    
     % s=[];
 end
-if exist('input1.csv','file'), delete('input1.csv'); end
-if exist('input2.csv','file'), delete('input2.csv'); end
-if exist('output.csv','file'), delete('output.csv'); end
+%if exist('input1.csv','file'), delete('input1.csv'); end
+%if exist('input2.csv','file'), delete('input2.csv'); end
+%if exist('output.csv','file'), delete('output.csv'); end
 cd(oldpth);
 end
 

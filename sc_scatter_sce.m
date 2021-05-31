@@ -1011,6 +1011,7 @@ function varargout = sc_scatter_sce(sce, varargin)
         definput = {'10'};
         answer = inputdlg(prompt, dlgtitle, dims, definput);
         if isempty(answer)
+            k=[];
             return
         end
         k = round(str2double(cell2mat(answer)));
@@ -1052,6 +1053,7 @@ function varargout = sc_scatter_sce(sce, varargin)
         end
         if ~usingold
             k = i_inputk;
+            if isempty(k), return; end
             if isnan(k) || k < 2 || k > 50
                 uiwait(errordlg('Invalid K'));
                 return

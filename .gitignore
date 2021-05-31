@@ -30,3 +30,5 @@ resources/Thumbs.db
 +run/thirdparty/R_MAST/input2.txt
 +run/thirdparty/R_MAST/output.csv
 +run/thirdparty/R_fgsea/input.txt
++run/thirdparty/harmony/input1.csv
++run/thirdparty/harmony/input2.csv

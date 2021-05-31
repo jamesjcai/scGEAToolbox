@@ -22,7 +22,13 @@ function [done]=callback_Harmonypy(src,~)
         end
         fw=gui.gui_waitbar;
         try
-            sce.s=run.harmonypy(sce.s,sce.c_batch_id);
+            s=run.harmonypy(sce.s,sce.c_batch_id);
+            if isempty(s) || isequal(sce.s,s)
+                gui.gui_waitbar(fw);
+                errordlg("Harmonypy Running Error");
+                return;
+            end
+            sce.s=s;
         catch ME
             gui.gui_waitbar(fw);
             errordlg(ME.message);
