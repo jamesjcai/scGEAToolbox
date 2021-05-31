@@ -6,7 +6,7 @@ if nargin<4, verbose=false; end
 if cutoff<1.0   % e.g., 0.9
     if verbose
         fprintf('Discard genes with poor expression values (more than %d%% zeros in all cells).\n',...
-            100*cutoff); 
+            100*cutoff);
     end
     r=sum(X~=0,2)./size(X,2);
     i=r>=cutoff;

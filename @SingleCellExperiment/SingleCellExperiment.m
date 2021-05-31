@@ -68,6 +68,7 @@ classdef SingleCellExperiment
     obj = estimatecellcycle(obj,forced)
     obj = embedcells(obj,methodid,forced,usehvgs)
     obj = clustercells(obj,k,methodid,forced)
+    obj = assigncelltype(obj,speciesid)
     
     function obj = removecells(obj,i)
             obj.X(:,i)=[];

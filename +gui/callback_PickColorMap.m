@@ -1,4 +1,5 @@
-function callback_PickColorMap(~,~,n)
+function callback_PickColorMap(~,~,n,showzero)
+    if nargin<4, showzero=false; end
     if nargin<3, n=21; end
     % disp(sprintf('Using %d colors',n));
     n=max([n 3]);
@@ -25,4 +26,9 @@ function callback_PickColorMap(~,~,n)
 %     co={cx,a,b,'default',summer(kc),...
 %         jet(kc),copper(kc),winter(kc)};
     colormap(co{randi(length(co))});
+    if showzero
+        cm=colormap;
+        cm(1, :) = [.8 .8 .8];
+        colormap(cm);
+    end
 end

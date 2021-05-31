@@ -144,15 +144,17 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
                 ptImage = ind2rgb(img, map);
                 pt5pickcolr.CData = ptImage;
                 pt5pickcolr.Tooltip = 'Switch color maps';
-                pt5pickcolr.ClickedCallback = {@callback_PickColorMap, 2};
+                % pt5pickcolr.ClickedCallback = @callback_PickColorMap;
+                a=min([numel(unique(c)),256]);
+                pt5pickcolr.ClickedCallback = {@callback_PickColorMap, a, true};
 
-                pt = uipushtool(tb, 'Separator', 'off');
-                [img, map] = imread(fullfile(matlabroot, ...
-                                             'toolbox', 'matlab', 'icons', 'plotpicker-plot.gif'));
-                ptImage = ind2rgb(img, map);
-                pt.CData = ptImage;
-                pt.Tooltip = 'Colormapeditor';
-                pt.ClickedCallback = @selectcolormapeditor;
+%                 pt = uipushtool(tb, 'Separator', 'off');
+%                 [img, map] = imread(fullfile(matlabroot, ...
+%                                              'toolbox', 'matlab', 'icons', 'plotpicker-plot.gif'));
+%                 ptImage = ind2rgb(img, map);
+%                 pt.CData = ptImage;
+%                 pt.Tooltip = 'Colormapeditor';
+%                 pt.ClickedCallback = @selectcolormapeditor;
             end
         else
             warning('%s no expression', targetg);
@@ -167,7 +169,7 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
 end
 
 function selectcolormapeditor(~, ~)
-    colormapeditor;
+    % colormapeditor;
 end
 
 function [str] = num2bankScalar(num)
