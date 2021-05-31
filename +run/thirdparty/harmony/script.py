@@ -12,7 +12,9 @@ from scipy.stats.stats import pearsonr
 import harmonypy as hm
 
 meta_data = pd.read_csv("input2.csv")
-data_mat = pd.read_csv("input1.csv", header=None)
+# data_mat = pd.read_csv("input1.csv", header=None)
+data_mat = pd.read_csv("input1.csv")
+
 data_mat = np.array(data_mat)
 vars_use = ['batchidx']
 ho = hm.run_harmony(data_mat, meta_data, vars_use)
