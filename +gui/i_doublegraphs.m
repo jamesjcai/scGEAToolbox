@@ -15,7 +15,7 @@ mfolder=fileparts(mfilename('fullpath'));
 load(fullfile(mfolder,...
        '../resources','tfome_tfgenes.mat'),'tfgenes');
 
-w=2;
+w=8;
 l=1;
 hFig=figure;
 h1=subplot(1,2,1);
@@ -253,7 +253,8 @@ hFig.Position(3)=hFig.Position(3)*2.2;
         delete(f)
    end
 
-   function [p,G]=i_replotg(p,G,h,cutoff) 
+   function [p,G]=i_replotg(p,G,h,cutoff)
+       a=h.Title.String;
     x=p.XData; y=p.YData;
     A=adjacency(G,'weighted');
     A=e_filtadjc(A,cutoff);
@@ -265,6 +266,7 @@ hFig.Position(3)=hFig.Position(3)*2.2;
     % p=plot(h,G);
     [p]=drawnetwork(G,h);
     p.XData=x; p.YData=y;
+    title(a)
    end
 
 

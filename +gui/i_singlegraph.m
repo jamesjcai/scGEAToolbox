@@ -13,7 +13,7 @@ load(fullfile(mfolder,...
        '../resources','tfome_tfgenes.mat'),'tfgenes');
 
 
-w=2;
+w=8;
 l=1;
 hFig=figure;
 h1=axes(hFig);
@@ -236,6 +236,7 @@ pt.ClickedCallback = @SaveAdj;
    end
 
    function [p,G]=i_replotg(p,G,h,cutoff) 
+    a=h.Title.String;
     x=p.XData; y=p.YData;
     A=adjacency(G,'weighted');
     A=e_filtadjc(A,cutoff);
@@ -247,6 +248,8 @@ pt.ClickedCallback = @SaveAdj;
     % p=plot(h,G);
     [p]=drawnetwork(G,h);
     p.XData=x; p.YData=y;
+    % h=gca;
+    title(a)
    end
 
 

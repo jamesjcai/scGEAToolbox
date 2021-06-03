@@ -335,6 +335,8 @@ function varargout = sc_scatter_sce(sce, varargin)
     mitem = uimenu(m,'Text','Remove batch effect using Harmony...','Callback',@HarmonyPy);
     mitem = uimenu(m,'Text','Extract cells by marker(+/-) expression...',...
                    'Callback',@callback_SelectCellsByMarker);
+    mitem = uimenu(m,'Text','Ligand-receptor mediated intercellular crosstalk...',...
+                   'Callback',@callback_DetectIntercellularCrosstalk);
 
     % handles = guihandles( FigureHandle ) ;
     % guidata( FigureHandle, handles ) ;
