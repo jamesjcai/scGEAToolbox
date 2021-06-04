@@ -1210,6 +1210,7 @@ function varargout = sc_scatter_sce(sce, varargin)
 
             row = dataTipTextRow('', stxtyes);
             h.DataTipTemplate.DataTipRows = row;
+            % h.DataTipTemplate.FontSize = 5;
             for i = 1:max(c)
                 idx = find(c == i);
                 siv = sce.s(idx, :);

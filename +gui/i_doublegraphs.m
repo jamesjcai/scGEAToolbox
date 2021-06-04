@@ -39,13 +39,7 @@ pt.Tooltip = 'ChangeFontSize';
 pt.ClickedCallback = @ChangeFontSize;
 
 
-
-
-
 pt = uipushtool(tb,'Separator','off');
-
-
-
 [img,map] = imread(fullfile(mfolder,...
             '../resources','noun_Weight_2243621.gif'));
 ptImage = ind2rgb(img,map);
@@ -74,8 +68,6 @@ pt = uipushtool(tb,'Separator','off');
 
 [img,map] = imread(fullfile(mfolder,'../resources','noun_Pruners_2469297.gif'));         
 ptImage = ind2rgb(img,map);
-
-
 
 pt.CData = ptImage;
 pt.Tooltip = 'ChangeCutoff';
@@ -137,7 +129,6 @@ hFig.Position(3)=hFig.Position(3)*2.2;
        i_changeweight(p1,G1,w);
        i_changeweight(p2,G2,w);
        function i_changeweight(p,G,b)
-
             %G.Edges.LWidths = abs(b*G.Edges.Weight/max(abs(G.Edges.Weight)));
             %p.LineWidth = G.Edges.LWidths;
             p.LineWidth=abs(b*p.LineWidth/max(abs(p.LineWidth)));
@@ -193,7 +184,6 @@ hFig.Position(3)=hFig.Position(3)*2.2;
        
    end
 
-
     function [p]=drawnetwork(G,h)
         p=plot(h,G);
         %layout(p,'force');        
@@ -208,25 +198,24 @@ hFig.Position(3)=hFig.Position(3)*2.2;
         cc(G.Edges.Weight<0,:)=repmat([0.8500, 0.3250, 0.0980],...
                sum(G.Edges.Weight<0),1);
         p.EdgeColor=cc;
-        
+
         i=ismember(string(upper(G.Nodes.Name)),tfgenes);
         if any(i)
             cc=repmat([0 0 0],G.numnodes,1);
             cc(i,:)=repmat([1 0 0],sum(i),1);
             p.NodeLabelColor=cc;
         end
-        
         p.NodeFontSize=2*p.NodeFontSize;
         title(h,'scGRN');
-        
-%            if length(unique(p.LineWidth))==1
-%             p.LineWidth = p.LineWidth./p.LineWidth;
-%            else
-%                disp('do this')
+
+    %            if length(unique(p.LineWidth))==1
+    %             p.LineWidth = p.LineWidth./p.LineWidth;
+    %            else
+    %                disp('do this')
             G.Edges.LWidths = abs(w*G.Edges.Weight/max(G.Edges.Weight));
             p.LineWidth = G.Edges.LWidths;
-%           end
-        
+    %           end
+
     end
 
    function AnimateCutoff(hObject,event)

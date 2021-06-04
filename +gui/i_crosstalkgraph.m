@@ -8,7 +8,7 @@ if nargin<2, k=1; end
     
     a=ligand_mat(k,:);
     b=receptor_mat(k,:);
-    m=(a'*b).*((a>0)'*(b>0));    
+    m=(a'*b).*((a>0)'*(b>0));
     m=m./sum(m(m>0));
     sc_grnview(m,cL)
     title(sprintf('%s (ligand) -> %s (receptor)',...

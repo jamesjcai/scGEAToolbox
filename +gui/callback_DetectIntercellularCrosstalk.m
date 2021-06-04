@@ -21,6 +21,6 @@ function callback_DetectIntercellularCrosstalk(src,~)
               'Save OUT to variable named:'};
     vars = {'T', 'OUT'};
     values = {Tok, OUT};
-    export2wsdlg(labels, vars, values);
-    disp('To get more crosstalk network, run gui.i_crosstalkgraph(OUT,k)')
+    waitfor(export2wsdlg(labels, vars, values));
+    disp('Run gui.i_crosstalkgraph(OUT,k) to plot crosstalk graph for ligand-receptor pair k.')
 end
