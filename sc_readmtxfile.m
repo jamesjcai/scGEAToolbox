@@ -1,5 +1,5 @@
 function [X,genelist,celllist]=sc_readmtxfile(matrixmtxfile,featurestxtfile,barcodestxtfile,coln)
-if nargin<4, coln=1; end
+if nargin<4, coln=2; end
 if nargin<2, featurestxtfile=[]; end
 
 %[X,genelist,celllist]=sc_readmtxfile('matrix.mtx','features.tsv','barcodes.tsv')

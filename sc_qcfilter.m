@@ -3,7 +3,7 @@ function [X,genelist,keptidxv]=sc_qcfilter(X,genelist,libsize,mtratio,dropout,mi
 if nargin<7, removemtgenes=false; end
 if nargin<6 || isempty(min_cells_nonzero), min_cells_nonzero=0.005; end
 if nargin<5 || isempty(dropout), dropout=1; end
-if nargin<4 || isempty(mtratio), mtratio=0.1; end
+if nargin<4 || isempty(mtratio), mtratio=0.15; end
 if nargin<3 || isempty(libsize), libsize=1000; end
 
 [X,keptidx]=sc_rmmtcells(X,genelist,mtratio);
