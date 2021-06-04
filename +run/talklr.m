@@ -10,6 +10,7 @@ if isa(X, 'SingleCellExperiment')
 end
 X=full(X);
 [cx,cL]=grp2idx(c);
+n=numel(cL);
 
 pw=fileparts(mfilename('fullpath'));
 dbfile=fullfile(pw,'..','resources','Ligand_Receptor.mat');
@@ -18,16 +19,24 @@ T=T(:,2:6);
 
 g=upper(g);
 
-X=sc_transform(X);
-%X=sc_norm(X);
-Xm=grpstats(X',cx,@mean)';
-%T=[table(g) array2table(Xm)];
-%T.Properties.VariableNames=[{'genes'};cL];
+methodid=1;
+switch methodid
+    case 1
+        X=sc_transform(X);
+        %X=sc_norm(X);
+        Xm=grpstats(X',cx,@mean)';
+        cutoff=1;
+    case 2
+        Xm=zeros(numel(g),n);
+        for k=1:n
+            [t]=sc_hvg(X(:,cx==k),g,false);
+            [y,id]=ismember(g,t.genes);
+            Xm(y,k)=table2array(t(id(y),4));
+        end
+        cutoff=0;
+end
 
-cutoff=1;
 idx=sum(Xm>cutoff,2)>0;
-
-% T=T(idx,:);
 Xm=Xm(idx,:);
 g=g(idx);
 
@@ -48,14 +57,15 @@ assert(all(y2))
 %ligandok=ligandok(idx1);
 %receptorok=receptorok(idx2);
 
-ligand_mat=Xm(idx1,:)+1;
-receptor_mat=Xm(idx2,:)+1;
+ligand_mat=Xm(idx1,:);
+receptor_mat=Xm(idx2,:);
 % t1.Properties.VariableNames={'a','b','c'};
 % t2.Properties.VariableNames={'d','e','f'};
 % Tx=[table(ligandok,receptorok),t1,t2];
 
 %%
-[n]=size(ligand_mat,2);
+[n2]=size(ligand_mat,2);
+assert(n==n2);
 
 a1=ligand_mat(:,1).*receptor_mat;
 a2=ligand_mat(:,2).*receptor_mat;
@@ -83,13 +93,6 @@ OUT.receptorok=receptorok;
 OUT.KL=KL;
 
 for k=1:min([5 size(ligand_mat,1)])
-%     a=ligand_mat(k,:);
-%     b=receptor_mat(k,:);
-%     m=(a'*b).*((a>0)'*(b>0));
-%     % m=ligand_mat(1,:)'*receptor_mat(1,:);
-%     m=m./sum(m(m>0));
-%     sc_grnview(m,cL)
-%     title(sprintf('%s (ligand) -> %s (receptor)',...
-%         ligandok(k),receptorok(k)));
-gui.i_crosstalkgraph(OUT,k);
+    gui.i_crosstalkgraph(OUT,k);
+end
 end

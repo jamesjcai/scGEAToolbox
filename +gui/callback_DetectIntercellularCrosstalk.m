@@ -1,11 +1,14 @@
 function callback_DetectIntercellularCrosstalk(src,~)
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
-    
+    if isempty(sce.c_cell_type_tx) || numel(unique(sce.c_cell_type_tx))<2
+        warndlg('Cell type is undefined (SCE.C_CELL_TYPE_TX is empty)');
+        return;
+    end    
     [c,cL]=grp2idx(sce.c_cell_type_tx);    
     [idx]=gui.gui_selmultidlg(cL);    
     if isempty(idx), return; end
-    if length(idx)<2
+    if numel(idx)<2
         warndlg('Need at least 2 cell types');
         return;
     end
