@@ -373,7 +373,7 @@ function varargout = sc_scatter_sce(sce, varargin)
     end
 
     function HarmonyPy(src, ~)
-        if callback_Harmonypy(src)
+        if gui.callback_Harmonypy(src)
             sce = guidata(FigureHandle);
             [c, cL] = grp2idx(sce.c);
             RefreshAll(src, 1, true, false);
