@@ -10,8 +10,8 @@ Run the following code in `MATLAB`:
   unzip('https://github.com/jamesjcai/scGEAToolbox/archive/master.zip');
   addpath('./scGEAToolbox-master');  
   toc
-  if exist('cdgea.m','file')
+  if exist('sc_scatter.m','file')
       disp('scGEAToolbox installed!')
   end
-  savepath;
+  savepath(fullfile(userpath,'pathdef.m'));
   
