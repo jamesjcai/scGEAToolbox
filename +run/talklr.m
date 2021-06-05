@@ -1,4 +1,4 @@
-function [Tok,OUT]=talklr(X,g,c)
+function [OUT]=talklr(X,g,c)
 
 % https://doi.org/10.1101/2020.02.01.930602
 
@@ -25,15 +25,6 @@ OUT.ligandok=OUT.ligandok(idx);
 OUT.receptorok=OUT.receptorok(idx);
 % assert(isequal(size(ligand_mat,1),length(ligandok)))
 OUT.KL=KL(idx);
+OUT.T=Tok;
 
-%OUT.cL=cL;
-%OUT.ligand_mat=ligand_mat;
-%OUT.receptor_mat=receptor_mat;
-%OUT.ligandok=ligandok;
-%OUT.receptorok=receptorok;
-%OUT.KL=KL;
-
-for k=1:min([5 size(OUT.ligand_mat,1)])
-    gui.i_crosstalkgraph(OUT,k);
-end
 end

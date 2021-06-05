@@ -21,7 +21,7 @@ switch methodid
         X=sc_transform(X);
         % X=sc_norm(X);
         % Xm=grpstats(X',cx,@mean)';
-        Xm=i_grpmean(X,cx);
+        [Xm]=i_grpmean(X,cx);
         cutoff=1;
     case 2
         Xm=zeros(numel(g),n);
