@@ -203,12 +203,10 @@ pt.ClickedCallback = @SaveAdj;
         end
         
         p.NodeFontSize=2*p.NodeFontSize;
-        title(h,'scGRN');
+        % title(h,'scGRN');
         
         G.Edges.LWidths = abs(w*G.Edges.Weight/max(G.Edges.Weight));
         p.LineWidth = G.Edges.LWidths;
-
-        
     end
 
    function AnimateCutoff(hObject,event)
@@ -227,7 +225,11 @@ pt.ClickedCallback = @SaveAdj;
             cutoff=listc(k);
             %pkg.progressbar(k/m) % Update progress bar
             waitbar(k/m,f,sprintf('Cutoff = %g',cutoff));
-            p1=i_replotg(p1,G1,h1,cutoff);
+            try
+                p1=i_replotg(p1,G1,h1,cutoff);
+            catch ME
+                                
+            end
             %p2=i_replotg(p2,G2,h2,cutoff);
             pause(1);
         end
