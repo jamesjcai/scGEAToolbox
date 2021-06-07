@@ -19,10 +19,29 @@ function [done]=callback_Harmonypy(src,~)
                 if ~i_setpyenv, return; end                    
             case {'Cancel',''}
                 return;
+            otherwise
+                return;
         end
+
+        answer = questdlg('Using MATLAB engine for Python or Calling Python script?', ...
+            'Engine Interface', ...
+            'Use MATLAB Engine for Python','Call Python Script',...
+            'Cancel','Use MATLAB Engine for Python');
+        switch answer
+            case 'Use MATLAB Engine for Python'
+                usepylib=true;
+            case 'Call Python Script'
+                usepylib=false;                
+            case {'Cancel',''}
+                return;
+            otherwise
+                return;
+        end        
+        
+        
         fw=gui.gui_waitbar;
         try
-            s=run.harmonypy(sce.s,sce.c_batch_id);
+            s=run.harmonypy(sce.s,sce.c_batch_id,usepylib);
             if isempty(s) || isequal(sce.s,s)
                 gui.gui_waitbar(fw);
                 errordlg("Harmonypy Running Error");
@@ -44,7 +63,11 @@ end
 function [done]=i_setpyenv
         % selpath = uigetdir;
         done=false;
-        [file,path] = uigetfile('python.exe');
+        if ispc
+            [file,path] = uigetfile('python.exe','Select Python Interpreter');
+        else
+            [file,path] = uigetfile('python','Select Python Interpreter');
+        end
         if isequal(file,0)
            %disp('User selected Cancel');
            return;

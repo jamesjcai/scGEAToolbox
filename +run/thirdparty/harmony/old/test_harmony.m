@@ -28,16 +28,23 @@ colormap(lines(phi_n))
 data=readtable("pcs.csv");
 s=table2array(data);
 
-Z_cos=s./max(s);
-Z_cos=Z_cos./vecnorm(Z_cos);
+Z_cos=s./max(s,[],2);
+Z_cos=Z_cos./vecnorm(Z_cos,2,2);
+
+Z_corr=s;
+Z_orig=s;
+
 
 N=size(s,1);
 K=min([round(N/30) 100]);
+B=size(phi,1);  % # number of batch variables
+d=size(Z_cos,2);
 
-[idx,C,sumd]=kmeans(Z_cos',K);
+[idx,C,sumd]=kmeans(Z_cos,K,'MaxIter',10);
+
 Y=C';
-Y=Y./vecnorm(Y);
-dist_mat=2*(1-Y'*Z_cos);
+Y=Y./vecnorm(Y,2,2);
+dist_mat=2*(1-Y'*Z_cos');
 sigmav=0.1*ones(K,1);
 
 R = -dist_mat;
@@ -45,8 +52,10 @@ R = R ./ sigmav;
 R=R-max(R);
 R=exp(R);
 R = R ./sum(R);
-
 E=sum(R,2)*Pr_b';
+O=R*phi';
+E=sum(R,2)*Pr_b';
+
 % O=R'*phi;
 % https://github.com/slowkow/harmonypy/blob/master/harmonypy/harmony.py
 
