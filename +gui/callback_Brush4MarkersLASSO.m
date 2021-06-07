@@ -1,9 +1,11 @@
 function callback_Brush4MarkersLASSO(src,~)
     FigureHandle=src.Parent.Parent;
-    sce=guidata(FigureHandle);    
-    assert(isequal(FigureHandle.Children, FigureHandle.findobj('type','Axes')))
+    sce=guidata(FigureHandle);
+%     assert(isequal(FigureHandle.Children,...
+%         FigureHandle.findobj('type','Axes')))
     
-    axesh=FigureHandle.Children(1);    
+    % axesh=FigureHandle.Children(1)
+    axesh=FigureHandle.findobj('type','Axes');
     [ax,bx]=view(axesh);    
     assert(isequal(axesh.findobj('type','Scatter'),...
         FigureHandle.findobj('type','Scatter')))    
