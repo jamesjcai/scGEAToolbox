@@ -366,10 +366,11 @@ end
 % end
 
     function SelectCellsByQC(src, ~)
-        gui.callback_SelectCellsByQC(src);
-        sce = guidata(FigureHandle);
-        [c, cL] = grp2idx(sce.c);
-        RefreshAll(src, 1, true);
+        if gui.callback_SelectCellsByQC(src)
+            sce = guidata(FigureHandle);
+            [c, cL] = grp2idx(sce.c);
+            RefreshAll(src, 1, true);
+        end
     end
 
     function HarmonyPy(src, ~)

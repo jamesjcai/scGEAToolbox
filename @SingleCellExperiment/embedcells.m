@@ -16,6 +16,7 @@ function obj = embedcells(obj,methodtag,forced,usehvgs)
         else
             X=obj.X;
         end
+        
         switch methodtag
             case 'tsne'
                 obj.s=sc_tsne(X,3,false,true);                

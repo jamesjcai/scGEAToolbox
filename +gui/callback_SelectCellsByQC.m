@@ -1,15 +1,18 @@
-function callback_SelectCellsByQC(src)
+function [requirerefresh]=callback_SelectCellsByQC(src)
+    requirerefresh=true;
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);    
     listitems={'SC_QCFILTER (Basic QC)',...
+        'Visualize QC metrics as a violin plot',...
         'Remove Genes by Expression',...
         'Remove Mt-genes',...
-        'Select & remove genes',...
-        'Remove Cells by Mt-reads Ratio & Library Size'};
+        'Select & remove genes',...        
+        'Remove Cells by Mt-reads Ratio & Library Size',...
+        'Remove Cells by Number of Detected Genes & Library Size'};
         %    'Remove Cells by Dropout Rate & Expression Mean'};
     [indx,tf] = listdlg('PromptString',{'Select Filter',...
-    '',''},'SelectionMode','single',...
-    'ListString',listitems,'ListSize',[200 300]);
+                '',''},'SelectionMode','single',...
+                'ListString',listitems,'ListSize',[250 300]);
     if tf~=1, return; end
         switch indx
             case 1
@@ -17,6 +20,10 @@ function callback_SelectCellsByQC(src)
                 sce=sce.qcfilter;
                 gui.gui_waitbar(fw);
             case 2
+                gui.sc_qcviolin(sce.X,sce.g,[],'showdata',false);
+                requirerefresh=false;
+                return;                
+            case 3
                 answer=inputdlg('Expressed in less than % of cells','Remove Genes',[1 40],{'5'});
                 if isempty(answer), return; end
                 if iscell(answer)
@@ -25,9 +32,9 @@ function callback_SelectCellsByQC(src)
                         sce=sce.selectkeepgenes(1,a/100);
                     end
                 end
-            case 3
+            case 4
                 sce=sce.rmmtgenes;
-            case 4           % remove selected genes
+            case 5          % remove selected genes
                 gsorted=sort(sce.g);
                 [idx]=gui.gui_selmultidlg(gsorted);
                 if isempty(idx), return; end
@@ -44,7 +51,7 @@ function callback_SelectCellsByQC(src)
                         return;
                     end
                 end
-            case 5
+            case 6
                 i=startsWith(sce.g,'mt-','IgnoreCase',true);
                 if ~any(i) 
                     disp('No mt genes found.');
@@ -52,21 +59,39 @@ function callback_SelectCellsByQC(src)
                 end
                 lbsz=sum(sce.X,1);
                 lbsz_mt=sum(sce.X(i,:),1);
-                cj=lbsz_mt./lbsz;
+                cj=100*(lbsz_mt./lbsz);
                 if issparse(cj), cj=full(cj); end
                 ttxtj="mtDNA%";
+                
                 ci=sum(sce.X);
                 if issparse(ci), ci=full(ci); end
                 ttxti="Library Size";
-                a=maxk(ci,10);
+                a=maxk(ci,10);                
                 idx=gui.gui_setranges2(ci',cj',[0 a(end)],...
-                        [0 0.1],ttxti,ttxtj);
+                        [0 15],ttxti,ttxtj);
                 if any(~idx)
                     answer = questdlg(sprintf('Remove %d cells?',sum(~idx)));
                     if strcmpi(answer,'Yes')
                         sce=sce.removecells(~idx);                        
                     end
                 end
+            case 7
+                cj=sum(sce.X>0,1);                
+                if issparse(cj), cj=full(cj); end
+                ttxtj="Number of Detected Genes";
+                ci=sum(sce.X,1);
+                if issparse(ci), ci=full(ci); end
+                ttxti="Library Size";
+                a=maxk(ci,10);
+                b=maxk(cj,10);
+                idx=gui.gui_setranges2(ci',cj',[0 a(end)],...
+                        [0 b(end)],ttxti,ttxtj);
+                if any(~idx)
+                    answer = questdlg(sprintf('Remove %d cells?',sum(~idx)));
+                    if strcmpi(answer,'Yes')
+                        sce=sce.removecells(~idx);                        
+                    end
+                end                
         end
     guidata(FigureHandle,sce);
 end

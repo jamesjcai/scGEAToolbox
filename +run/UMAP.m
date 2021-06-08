@@ -19,12 +19,13 @@ javaaddpath(pth3);
 
 
 data=transpose(sc_transform(X));
+% data=transpose(sc_norm(X));
 
 ncells=size(data,1);
-if ncells>10000
+if ncells>500
     pth=fullfile(pw1,'thirdparty','PHATE');
     addpath(pth);
-	data = svdpca(data, 100, 'random');
+	data = svdpca(data, 50, 'random');
 end
 
 if nargout>1 || plotit

@@ -45,14 +45,14 @@ end
 
 ncells=size(data,1);
 
-if ncells>10000
-	data = svdpca(data, 100, 'random');
+if ncells>500
+	data = svdpca(data, 50, 'random');
 end
 
 if ncells>5000
-s=tsne(data,'NumDimensions',ndim,'Algorithm','barneshut','NumPCAComponents',100);
+    s=tsne(data,'NumDimensions',ndim,'Algorithm','barneshut','NumPCAComponents',100);
 else
-s=tsne(data,'NumDimensions',ndim);
+    s=tsne(data,'NumDimensions',ndim);
 end
 
 %%
