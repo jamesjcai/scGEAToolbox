@@ -50,7 +50,7 @@ if ncells>500
 end
 
 if ncells>5000
-    s=tsne(data,'NumDimensions',ndim,'Algorithm','barneshut','NumPCAComponents',100);
+    s=tsne(data,'NumDimensions',ndim,'Algorithm','barneshut','NumPCAComponents',50);
 else
     s=tsne(data,'NumDimensions',ndim);
 end
