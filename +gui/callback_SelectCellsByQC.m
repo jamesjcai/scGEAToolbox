@@ -20,7 +20,7 @@ function [requirerefresh]=callback_SelectCellsByQC(src)
                 sce=sce.qcfilter;
                 gui.gui_waitbar(fw);
             case 2
-                gui.sc_qcviolin(sce.X,sce.g,[],'showdata',false);
+                gui.sc_qcviolin(sce.X,sce.g);
                 requirerefresh=false;
                 return;                
             case 3
