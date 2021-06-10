@@ -24,7 +24,7 @@ end
 if isbinary
     colormap(lines(2));
 else
-    a=colormap('autumn');
+    a=autumn;
     a(1,:)=[.8 .8 .8];
     colormap(a);
 end

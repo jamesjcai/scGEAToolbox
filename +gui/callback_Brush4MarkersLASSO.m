@@ -20,21 +20,21 @@ function callback_Brush4MarkersLASSO(src,~)
         
     [c,cL]=grp2idx(sce.c);
     if isscalar(unique(c))
-        methodtag=1;
+        % methodtag=1;
     else
         answer = questdlg(sprintf('Select brushed cells'' group?\nYES to select brushed cells'' group\nNO to select brushed cells only'));
         switch answer
             case 'Yes'
                 uptsSelected=unique(c(ptsSelected));
                 if isscalar(uptsSelected)
-                    methodtag=2;   % whole group
+                    % methodtag=2;   % whole group
                     ptsSelected=c==uptsSelected;
                 else
                     errordlg('More than one group of brushed cells');
                     return;
                 end
             case 'No'
-                methodtag=1;       % only selected cells 
+                % methodtag=1;       % only selected cells 
             otherwise
                 return;
         end

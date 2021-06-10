@@ -15,21 +15,25 @@ switch answer
             'Save Data to Workspace',...
             logical([1 0 0 0]),{@smhelp});
     case 'MAT file'
-        [filen, pathn] = uiputfile( ...
-           {'*.mat';'*.*'},'Save as');
-        filename=[pathn,filen];
-        if ~(filename), return; end
-        fw=gui.gui_waitbar;
-        save(filename,'sce','-v7.3');
-        gui.gui_waitbar(fw);        
-    case 'Seurat/RDS file'        
-        [filen, pathn] = uiputfile( ...
-           {'*.rds';'*.*'},'Save as');
-        filename=[pathn,filen];
-        if ~(filename), return; end
-        fw=gui.gui_waitbar;
-        [status]=sc_sce2rds(sce,filename);
-        gui.gui_waitbar(fw);
+        [file, path] = uiputfile({'*.mat';'*.*'},'Save as');
+        if isequal(file,0) || isequal(path,0)
+           return;
+        else
+           filename=fullfile(path,file);
+           fw=gui.gui_waitbar;
+           save(filename,'sce','-v7.3');
+           gui.gui_waitbar(fw);           
+        end
+    case 'Seurat/RDS file'
+        [file, path] = uiputfile({'*.rds';'*.*'},'Save as');
+        if isequal(file,0) || isequal(path,0)
+           return;
+        else
+           filename=fullfile(path,file);
+           fw=gui.gui_waitbar;
+           sc_sce2rds(sce,filename);
+           gui.gui_waitbar(fw);           
+        end
     otherwise
         return;
 end         

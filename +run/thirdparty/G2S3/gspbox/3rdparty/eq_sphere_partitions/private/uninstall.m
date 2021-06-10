@@ -66,7 +66,7 @@ for i = 1:length(INS_DIRS)
     if ~casesen
         dirname = lower(dirname);
     end
-    if ~isempty(strfind(p,[dirname pathsep]));
+    if contains(p,[dirname pathsep])
         rmpath(dirname);
         removed_any = true;
     end

@@ -72,6 +72,6 @@ while max(conn==0)
    end
 end
 
-end
 %text(Fpn(:,1),Fpn(:,2),num2str(conn))
+end
 

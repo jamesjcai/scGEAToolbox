@@ -8,7 +8,7 @@ if nargin<5, txtx=''; end
 if nargin<6, txty=''; end
 
 fh=figure();
-sh=scatter(x,y);
+scatter(x,y);
 lh1=xline(xr(1),'r-');
 lh2=xline(xr(2),'r-');
 lh3=yline(yr(1),'r-');

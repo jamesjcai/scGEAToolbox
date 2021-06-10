@@ -2,8 +2,8 @@ function sc_scatter3x(X,Y,genelist,dofit,showdata)
 if nargin<3, genelist=[]; end
 if nargin<5, showdata=true; end
 if nargin<4, dofit=false; end
-[lgu1,dropr1,lgcv1,genelistx]=sc_genestat(X,genelist,false);
-[lgu2,dropr2,lgcv2,genelisty]=sc_genestat(Y,genelist,false);
+[lgu1,dropr1,lgcv1,~]=sc_genestat(X,genelist,false);
+[lgu2,dropr2,lgcv2,~]=sc_genestat(Y,genelist,false);
 
 if showdata
     scatter3(lgu1,dropr1,lgcv1); % 'MarkerEdgeAlpha',.8);
@@ -30,3 +30,4 @@ end
 xlabel('Mean, log');
 ylabel('Dropout rate (% of zeros)');
 zlabel('CV, log');
+end

@@ -2,7 +2,7 @@ function [X,idx]=gui_qcfilter(X,genelist)
 % https://www.mathworks.com/matlabcentral/answers/143306-how-to-move-a-plotted-line-vertically-with-mouse-in-a-gui
 
 nGenes=sum(X>0)';
-nUMIs=sum(X)';
+%nUMIs=sum(X)';
 mtratio=sc_mtratio(X,genelist);
 xr=[300 5000];
 yr=[0.025 0.1];
@@ -11,7 +11,7 @@ x=nGenes;
 y=mtratio;
 
 fh=figure();
-sh=scatter(x,y);
+scatter(x,y);
 xlim([min([xr(1)*0.9 min(x)*0.9]) max([xr(2)*1.1 max(x)*1.1])]);
 ylim([min([yr(1)*0.9 min(y)*0.9]) max([yr(2)*1.1 max(y)*1.1])]);
 lh1=xline(xr(1),'r-');
@@ -33,31 +33,31 @@ X=X(:,idx);
         'Save IDX to variable named:'}; 
     vars = {'X','idx'};
     values = {X, idx};
-    ex=export2wsdlg(labels,vars,values,...
+    export2wsdlg(labels,vars,values,...
         'Save Data to Workspace',...
         logical([1 0]));
     % uiwait(ex)
-return;
 
-figure; 
-subplot(2,2,1)
-scatter(nGenes,mtratio);
-xlabel('nGenes'); ylabel('pMito');
-xline(300,'r-'); xline(5000,'r-');
-yline(0.025,'r-'); yline(0.1,'r-');
-
-subplot(2,2,2)
-scatter(nUMIs,mtratio);
-xlabel('nUMI'); ylabel('pMito');
-xline(400,'r-'); xline(30000,'r-');
-yline(0.025,'r-'); yline(0.1,'r-');
-
-
-subplot(2,2,3)
-scatter(nGenes,nUMIs);
-xlabel('nGenes'); ylabel('nUMI');
-xline(300,'r-'); xline(5000,'r-');
-yline(400,'r-'); yline(30000,'r-');
+    
+% figure; 
+% subplot(2,2,1)
+% scatter(nGenes,mtratio);
+% xlabel('nGenes'); ylabel('pMito');
+% xline(300,'r-'); xline(5000,'r-');
+% yline(0.025,'r-'); yline(0.1,'r-');
+% 
+% subplot(2,2,2)
+% scatter(nUMIs,mtratio);
+% xlabel('nUMI'); ylabel('pMito');
+% xline(400,'r-'); xline(30000,'r-');
+% yline(0.025,'r-'); yline(0.1,'r-');
+% 
+% 
+% subplot(2,2,3)
+% scatter(nGenes,nUMIs);
+% xlabel('nGenes'); ylabel('nUMI');
+% xline(300,'r-'); xline(5000,'r-');
+% yline(400,'r-'); yline(30000,'r-');
 
 % https://github.com/prabhakarlab/RCAv2
 

@@ -120,10 +120,10 @@ S = S(1:r,1:r);
     function [U,S,V] = get_svd(X,Y)
         method = 2;
         switch method
-            case 1;
+            case 1
                 [V,S,W] = svd(Y,0);
                 U = X*W;
-            case 2;
+            case 2
                 [V,R] = qr(Y,0);
                 [W,S,Z] = svd(R');
                 U = X*W; V = V*Z;
@@ -226,7 +226,7 @@ for iter = 1:maxit
         kkt = AY(:,end-r+1:end) - SX(:,end-r+1:end)*diag(rvr);
         kktcheck = sqrt((kkt.^2)'*ones(m,1));
         kktcheck = max(kktcheck)/max(tol,rvr(end));
-        if kktcheck < ptol;  break;  end
+        if kktcheck < ptol,  break;  end
         kktc(iter) = kktcheck;
     else
         if iter == 1; kktc(iter) = inf; else kktc(iter) = kktc(iter-1); end
@@ -251,7 +251,7 @@ for iter = 1:maxit
         %portion = csum/csum(end);
         %L = find(portion > .999,1)
         L = sum(sdT > 5e-8,1);
-        if L < .95*Lm; %disp([L Lm])
+        if L < .95*Lm %disp([L Lm])
             Lm = L;
             Icut = idx(1:Lm);
             Py = Py(:,Icut);

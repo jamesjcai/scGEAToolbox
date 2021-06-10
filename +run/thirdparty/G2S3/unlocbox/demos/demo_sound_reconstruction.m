@@ -100,7 +100,7 @@ sound_part=sound_original(1:length_sig);
 
 % In oder to write the depleted sound somewhere
 if writefile
-    wavwrite(sound_part,Fs,'original.wav');
+    audiowrite(sound_part,Fs,'original.wav'); 
 end
 
 Mask = rand(size(sound_part))>0.3;
@@ -109,7 +109,7 @@ Mask = rand(size(sound_part))>0.3;
 sound_depleted = Mask.*sound_part;
 sound_depleted(logical(1-Mask)) = randn(sum(1-Mask(:)),1)*mean(abs(sound_part(:)))/5;
 if writefile
-    wavwrite(sound_depleted,Fs,'depleted.wav');
+    audiowrite(sound_depleted,Fs,'depleted.wav');
 end
 
 %% Setting proximal operators
@@ -176,7 +176,7 @@ fprintf('The SNR of the recovered (FB) signal is %g dB \n',snr_fin);
 
 % In order to write the restored sound somewhere
 if writefile
-    wavwrite(sol,Fs,'restored.wav');
+    audiowrite(sol,Fs,'restored.wav');
 end
 %%
 dr=90;

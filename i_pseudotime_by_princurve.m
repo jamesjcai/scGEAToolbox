@@ -12,7 +12,7 @@ addpath(pth);
         mass = 1/n*ones(1,n);
         y0 = []; cut_indices0 = [];
         % y0=i_pseudotime_by_splinefit(s);
-        crit_dens = .075;
+%        crit_dens = .075;
 %        lambda1 = .006;
 %        lambda2 = 4/3*sqrt(lambda1/crit_dens);
 
@@ -32,7 +32,7 @@ addpath(pth);
         
 
         %tic;
-        [yfinal,cut_indices,I,iters] = mppc(y0,cut_indices0,s,mass,lambda1,lambda2,tol,rho,...
+        [yfinal,~,I,~] = mppc(y0,cut_indices0,s,mass,lambda1,lambda2,tol,rho,...
             max_m, max_avg_turn,normalize_data,pause_bool,false);
         %toc;
 

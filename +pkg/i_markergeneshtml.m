@@ -9,7 +9,7 @@ numfig=min([numfig length(markerlist)]);
 dirtxt=tempdir;
 % dirtxt='./';
 
-a=autumn();
+a=autumn;
 a(1,:)=[.8 .8 .8];
 
 if isempty(nametag)

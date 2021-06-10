@@ -4,7 +4,7 @@ if nargin<3, numfig=20; end
 
 numfig=min([numfig length(markerlist)]);
 dirtxt=tempdir;
-a=colormap('autumn');
+a=autumn;
 a(1,:)=[.8 .8 .8];
 
 fname=[tempname,'.html'];

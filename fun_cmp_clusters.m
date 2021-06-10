@@ -25,7 +25,7 @@ switch p.Results.type
         % ----
         pth=fullfile(pw1,'+run','thirdparty','SinNLRR');
         addpath(pth);
-        [AR,RI,MI,HI]=Cal_ARI(true_labels, cluster_labels);
+        [AR,~,~,~]=Cal_ARI(true_labels, cluster_labels);
         score=AR;
         fprintf('The ARI value is %f\n', score);
         

@@ -48,7 +48,7 @@ colorbar
 set(gca,'YTick',0:length(tgene))
 set(gca,'YTickLabel',txgene)
 set(gca,'XTickLabel',{'','WT','','KO',''})
-colormap(flipud(bone))
+colormap(flipud(bone));
 box on
 grid on
 hFig=gcf;

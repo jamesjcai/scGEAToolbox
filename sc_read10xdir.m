@@ -1,4 +1,4 @@
-function [X,genelist,celllist]=sc_read10xdir(selpath,coln)
+function [X,genelist,celllist,ftdone]=sc_read10xdir(selpath,coln)
 %Read files from a 10x Genomics cellranger output folder
 %[X,genelist,celllist]=sc_read10xdir(selpath,coln);
 %[X,genelist,celllist]=sc_read10xdir(pwd(),2);

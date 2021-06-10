@@ -54,13 +54,13 @@ if strcmp(t.Running, 'on')
        stop(t);
 end
 delete(t);
-    function closeit(src, event, f1)
-    %disp('Time out!');
-    disp('Using defult value = 30');
-    f2 = findall(0, 'Type', 'figure');
-    fnew = setdiff(f2, f1);
-    if ishandle(fnew)
-          close(fnew);
-    end
+    function closeit(~, ~, f1)
+        %disp('Time out!');
+        disp('Using defult value = 30');
+        f2 = findall(0, 'Type', 'figure');
+        fnew = setdiff(f2, f1);
+        if ishandle(fnew)
+              close(fnew);
+        end
     end
 end

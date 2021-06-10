@@ -17,8 +17,8 @@ function callback_GSEA_HVGs(src,~)
     fw=gui.gui_waitbar;
     tr=run.fgsea(t.genes);
     gui.gui_waitbar(fw);
-    msgfig2=export2wsdlg({'Save GSEA table to variable named:'},...
-        {'Tr'},{tr});
+    
+    export2wsdlg({'Save GSEA table to variable named:'},{'Tr'},{tr});
     % uiwait(msgfig2)
     
     

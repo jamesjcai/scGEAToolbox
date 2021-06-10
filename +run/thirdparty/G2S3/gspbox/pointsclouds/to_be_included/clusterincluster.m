@@ -25,7 +25,7 @@ function data = clusterincluster(N, r1, r2, w1, w2, arms)
     N2 = N-N1;
     
     phi1 = rand(N1,1) * 2 * pi;
-    dist1 = r1 + randint(N1,1,3)/3 * r1 * w1;
+    dist1 = r1 + randi(N1,1,3)/3 * r1 * w1;
     d1 = [dist1 .* cos(phi1) dist1 .* sin(phi1) zeros(N1,1)];
 
     perarm = round(N2/arms);
@@ -64,4 +64,3 @@ end
 %     and D. K. Hammond. GSPBOX: A toolbox for signal processing on graphs.
 %     ArXiv e-prints, Aug. 2014.
 % http://arxiv.org/abs/1408.5781
-end
