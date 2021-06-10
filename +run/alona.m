@@ -4,6 +4,12 @@ function [T]=alona(X,genelist,clusterid,varargin)
 % https://academic.oup.com/database/article/doi/10.1093/database/baz046/5427041
 % REF: PanglaoDB: a web server for exploration of mouse and human single-cell RNA sequencing data
 
+if isempty(X) || isempty(genelist)
+    k=1;
+    T=table("Unknown",0,'VariableNames',...
+        {sprintf('C%d_Cell_Type',k),sprintf('C%d_CTA_Score',k)});
+    return;
+end
 if nargin<3 || isempty(clusterid)
     clusterid=ones(1,size(X,2));
 end
@@ -112,5 +118,4 @@ if size(T,1)>10
     T=T(1:10,:);
 end
 cd(oldpth);
-
 end

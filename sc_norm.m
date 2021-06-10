@@ -10,7 +10,7 @@ addOptional(p,'type',defaultType,checkType)
 parse(p,X,varargin{:})
 
 sx=sum(X);
-if (max(sx)-min(sx))<0.01
+if (max(sx)-min(sx))<0.001
     warning('Input X may have already been normalized.');
 end
 

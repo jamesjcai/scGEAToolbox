@@ -11,7 +11,8 @@ else
     [~,i]=ismember(brushedData,s,'rows');
 end
 Xi=X(:,i);
-[Xi,gi]=sc_selectg(Xi,genelist);
+gi=genelist;
+%[Xi,gi]=sc_selectg(Xi,genelist);
 if strcmpi(database,'clustermole')
     %disp('Using clustermole marker database')
     [Tct]=run.sc_celltypecaller_new(Xi,gi,[],'species',species);
