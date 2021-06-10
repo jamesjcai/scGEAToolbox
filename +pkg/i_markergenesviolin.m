@@ -66,7 +66,7 @@ if ~isempty(f)
     p=get(f,'pos');
     set(f,'units',u)
     % if moving won't push too far, move; else leave in default location
-    if p(1)+50+hp(3) <= ss(3) & p(2) >= 5
+    if p(1)+50+hp(3) <= ss(3) && p(2) >= 5
         u=get(h,'units');
         ss = get(0,'screensize');
         set(h,'units','pixels')

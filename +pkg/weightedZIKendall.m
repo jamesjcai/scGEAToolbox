@@ -20,11 +20,11 @@
 
 weightedZIKendall <- function(x, y, w = 1) {
 
-  if (any(x < 0 | y < 0)) stop("x and/or y values have negative values")
+  if (any(x < 0 | y < 0)), stop("x and/or y values have negative values"); end
 
-  if (length(x) != length(y)) stop("x and y should have the same length")
+  if (length(x) ~= length(y)), stop("x and y should have the same length"); end
 
-  if (length(w) == 1) w <- rep(w, length(x))
+  if (length(w) == 1), w <- rep(w, length(x)); end
 
   posx = x > 0
   posy = y > 0

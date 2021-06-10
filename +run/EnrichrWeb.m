@@ -13,7 +13,9 @@ res = webwrite(uri,'body','hello','field2','world');
 
 %%
 
+%{
 https://github.com/wjawaid/enrichR/blob/master/R/functions.R
 
         temp <- POST(url=paste0(getOption("enrichR.base.address"), "enrich"),
                      body=list(list=paste(genes, collapse="\n")))
+%}

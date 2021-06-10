@@ -48,7 +48,7 @@ end
 [coeff, ~, pca_eigvalue] = pca(X');
 [~,No_Comps] = max(abs(pca_eigvalue(2:end-1) - pca_eigvalue(3:end)));
 
-aa = max(coeff(:,1:No_Comps+1)');
+aa = max(coeff(:,1:No_Comps+1),[],2);
 bb = sort(aa,'descend');
 No_features=2000;
 if size(X,1) <=1000
@@ -62,7 +62,7 @@ X=X(gene_selection,:);
 if isempty(k)
     warning('Number of cluster, k, will be estimated.');
 end
-[No_cluster,W,C,eigenvalues,H] = SoptSC_Main(k,X);
+[~,W,C,eigenvalues,H] = SoptSC_Main(k,X);
 C=C';
 
 %{

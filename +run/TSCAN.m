@@ -11,20 +11,12 @@ p = inputParser;
 addRequired(p,'X',@isnumeric);
 addOptional(p,'do_geneculst',true,@islogical);
 addOptional(p,'do_reduce',true,@islogical);
-addOptional(p,'plotit',false,@islogical);
+addOptional(p,'plotit',true,@islogical);
 parse(p,X,varargin{:})
 
 do_geneculst=p.Results.do_geneculst;
 do_reduce=p.Results.do_reduce;
 plotit=p.Results.plotit;
-
-
-
-do_geneculst=true;
-do_reduce=true;
-plotit=true;
-
-
 
 if do_geneculst
     % in order to alleviate the effect of drop-out events (20) on 

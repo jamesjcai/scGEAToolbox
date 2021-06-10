@@ -587,8 +587,8 @@ if ~isempty(axInfo)
     catch %#ok<CTCH>
         val = num2str(axInfo.mat(pos(2), pos(1)));
     end
-    if isempty(axInfo.xlab), i = int2str(pos(1)); else i = axInfo.xlab{pos(1)}; end
-    if isempty(axInfo.ylab), j = int2str(pos(2)); else j = axInfo.ylab{pos(2)}; end
+    if isempty(axInfo.xlab), i = int2str(pos(1)); else, i = axInfo.xlab{pos(1)}; end
+    if isempty(axInfo.ylab), j = int2str(pos(2)); else, j = axInfo.ylab{pos(2)}; end
     output_txt = sprintf('X: %s\nY: %s\nVal: %s', i, j, val);
     
 else
@@ -774,7 +774,7 @@ if zeroInd <= 1 % Just green
     b = interp1([1 clevels], [1 0], 1:clevels);
     g = interp1([1 clevels], [1 1], 1:clevels);
     r = interp1([1 clevels], [1 0], 1:clevels);
-elseif zeroInd >= clevels, % Just red
+elseif zeroInd >= clevels    % Just red
     b = interp1([1 clevels], [0 1], 1:clevels);
     g = interp1([1 clevels], [0 1], 1:clevels);
     r = interp1([1 clevels], [1 1], 1:clevels);

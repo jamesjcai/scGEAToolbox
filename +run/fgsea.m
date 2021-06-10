@@ -16,7 +16,7 @@ if length(genelist)>N
 end
 
 genelist=upper(genelist);
-a=-log(1-rand(length(genelist),1));
+%a=-log(1-rand(length(genelist),1));
 sortid=(1:length(genelist))';
 % a=12+randn(length(genelist),1);
 % drdist=sort(a,'descend');

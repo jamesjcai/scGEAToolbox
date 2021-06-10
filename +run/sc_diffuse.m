@@ -32,7 +32,7 @@ function [X, eigenvals, psi, phi] = diffuse(D,eps_val,neigen,t)
 %
 %  Ann B Lee, March 2009. Last modified, JWR: 3/23/2009
 
-if (nargin<3) neigen=[]; end % if neigen not defined by user
+if (nargin<3), neigen=[]; end % if neigen not defined by user
 
 n=size(D,1);
 K = exp(-D.^2/(4*eps_val)); %or equivalently, K=exp(-(D/sigmaK).^2); 
@@ -41,11 +41,11 @@ A=K./(v*v');   % symmetric graph Laplacian
 threshold=5E-6; 
 A=sparse(A.*double(A>threshold));  % make matrix sparse to speed up calcs  
 if (isempty(neigen))
-  [U,S,V]=svds(A,51);  % eigendecomposition of symmetric matrix
+  [U,S,~]=svds(A,51);  % eigendecomposition of symmetric matrix
   psi=U./(U(:,1)*ones(1,51)); % right eigenv of Markov matrix
   phi=U.*(U(:,1)*ones(1,51)); % left eigenv of Markov matrix
 else
-  [U,S,V]=svds(A,neigen+1);  % eigendecomposition of symmetric matrix
+  [U,S,~]=svds(A,neigen+1);  % eigendecomposition of symmetric matrix
   psi=U./(U(:,1)*ones(1,neigen+1)); % right eigenv of Markov matrix
   phi=U.*(U(:,1)*ones(1,neigen+1)); % left eigenv of Markov matrix
 end

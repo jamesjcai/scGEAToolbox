@@ -45,7 +45,7 @@ if plotit
         p.Marker = 's';
         p.NodeColor = 'r';
     catch ME
-        warning('Error in plotting.');
+        warning(ME.message);
     end
 end
 end

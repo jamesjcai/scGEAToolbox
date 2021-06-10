@@ -33,11 +33,11 @@ if donorm
 end
 
 if isempty(k)
-    [K1, K2] = Estimate_Number_of_Clusters_SIMLR(X',2:10);
+    [~, K2] = Estimate_Number_of_Clusters_SIMLR(X',2:10);
     [~,i]=min(K2);
     k=i+1;
 end
-[C,S,F,s,alpha] = SIMLR_ori(X',k,10,0,0);
+[C,~,~,s,~] = SIMLR_ori(X',k,10,0,0);
 C=C';
 
 % [C, S, F, s,alpha] = SIMLR_pearson(X',k,10,0,0);
