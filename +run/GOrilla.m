@@ -11,7 +11,7 @@ function GOrilla(genelist)
 if nargin<1, genelist=[]; end
 
 pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'thirdparty/GOrilla');
+pth=fullfile(pw1,'thirdparty','GOrilla');
 addpath(pth);
 
 infile=fullfile(pth,'input_template.html');

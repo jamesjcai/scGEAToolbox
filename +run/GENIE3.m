@@ -13,9 +13,9 @@ if nargin<3, donorm=false; end
 if nargin<4, plotit=false; end
 
 pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'thirdparty/GENIE3');
+pth=fullfile(pw1,'thirdparty','GENIE3');
 addpath(pth);
-pth=fullfile(pw1,'thirdparty/GENIE3/RT');
+pth=fullfile(pw1,'thirdparty','GENIE3','RT');
 addpath(pth);
 
 if donorm   
@@ -47,4 +47,5 @@ if plotit
     catch ME
         warning('Error in plotting.');
     end
+end
 end

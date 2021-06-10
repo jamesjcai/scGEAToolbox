@@ -4,7 +4,7 @@ function [X,Y]=HCP(X,Y)
 % doi: 10.1371/journal.pone.0068141
 
 pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'thirdparty/HCP_hidden_covariates_with_prior');
+pth=fullfile(pw1,'thirdparty','HCP_hidden_covariates_with_prior');
 addpath(pth);
 
 n1=size(X,2);
@@ -30,3 +30,4 @@ Res=(XYn-Z*B)';
 
 X=Res(:,1:n1);
 Y=Res(:,n1+1:end);
+end

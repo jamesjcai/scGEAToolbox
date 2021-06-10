@@ -1,6 +1,6 @@
 function [X,Y]=ComBat(X,Y)
 pw1=fileparts(mfilename('fullpath'));
-addpath(fullfile(pw1,'thirdparty/ComBat'));
+addpath(fullfile(pw1,'thirdparty','ComBat'));
 
 n1=size(X,2);
 n2=size(Y,2);
@@ -13,3 +13,4 @@ normxy=combat([X Y],batch,mod);
 
 X=normxy(:,1:n1);
 Y=normxy(:,n1+1:end);
+end

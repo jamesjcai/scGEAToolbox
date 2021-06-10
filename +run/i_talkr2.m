@@ -6,7 +6,6 @@ if isa(X,'SingleCellExperiment')
     X=X.X;
 end
 [b]=grp2idx(b);
-% X=full(X);
 [cx,cL]=grp2idx(c);
 n=numel(cL);
 

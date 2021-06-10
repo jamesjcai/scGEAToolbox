@@ -15,7 +15,7 @@ end
 
 oldpth=pwd;
 pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'thirdparty/R_cellTypeAssignation');
+pth=fullfile(pw1,'thirdparty','R_cellTypeAssignation');
 cd(pth);
 fprintf('CURRENTWDIR = "%s"\n',pth);
 
@@ -48,3 +48,4 @@ if exist('output.txt','file')
     delete('output.txt');
 end
 cd(oldpth);
+end

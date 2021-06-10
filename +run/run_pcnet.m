@@ -7,7 +7,7 @@ end
 
 oldpth=pwd;
 pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'thirdparty/R_dna_differential_network_analysis');
+pth=fullfile(pw1,'thirdparty','R_dna_differential_network_analysis');
 cd(pth);
 fprintf('CURRENTWDIR = "%s"\n',pth);
 
@@ -16,11 +16,11 @@ if exist('output.csv','file')
 end
 
 %if ~exist('input.csv','file')
-    csvwrite('input.csv',X);
+    writematrix(X,'input.csv');
 %end
 RunRcode('script.R');
 if exist('output.csv','file')
-    A=csvread('output.csv',1,1);
+    A=readmatrix('output.csv');
     %G=digraph(A);    
 else
     A=[];
@@ -36,3 +36,4 @@ cd(oldpth);
 %         plot(G);
 %     end
 % end
+end

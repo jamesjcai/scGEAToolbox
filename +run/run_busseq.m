@@ -20,7 +20,7 @@ end
 
 oldpth=pwd;
 pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'thirdparty/R_BUSseq');
+pth=fullfile(pw1,'thirdparty','R_BUSseq');
 cd(pth);
 fprintf('CURRENTWDIR = "%s"\n',pth);
 
@@ -33,8 +33,8 @@ end
 
 if exist('output0.csv','file'), delete('output0.csv'); end
 if exist('output1.csv','file'), delete('output1.csv'); end
-csvwrite('input0.csv',X0);
-csvwrite('input1.csv',X1);
+writematrix(X0,'input0.csv');
+writematrix(X1,'input1.csv');
 for i = 1:50
     textwaitbar(i, 100, 'This may take a few minutes. Please wait');
     pause(0.01);
@@ -45,8 +45,8 @@ for i = 51:100
     pause(0.01);
 end
 if exist('output0.csv','file')
-    Y0=csvread('output0.csv',1,1);
-    Y1=csvread('output1.csv',1,1);
+    Y0=readmatrix('output0.csv');
+    Y1=readmatrix('output1.csv');
 else
     Y0=[];
     Y1=[];

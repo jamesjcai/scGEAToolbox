@@ -47,13 +47,13 @@ narginchk(1,Inf);
 
 % Get Filename
 if ~ischar(filename) && ~(isstring(filename) && isscalar(filename))
-    error(message('MATLAB:csvread:FileNameMustBeString')); 
+    error(message('MATLAB:FileNameMustBeString')); 
 end
 filename = char(filename);
 
 % Make sure file exists
 if exist(filename,'file') ~= 2 
-    error(message('MATLAB:csvread:FileNotFound'));
+    error(message('MATLAB:FileNotFound'));
 end
 
 

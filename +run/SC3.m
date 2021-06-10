@@ -29,7 +29,7 @@ Dis=1-corr(X,'type','p');
 
 oldpath=pwd;
 pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'thirdparty/ClusterPack');
+pth=fullfile(pw1,'thirdparty','ClusterPack');
 addpath(pth);
 cd(pth);
 cls=[cls1;cls2;cls3];

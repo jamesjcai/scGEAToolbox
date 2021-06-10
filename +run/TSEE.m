@@ -8,7 +8,7 @@ if nargin<3, dim=2; end
 assert(size(X,2)==length(t))
 
 pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'thirdparty/TSEE');
+pth=fullfile(pw1,'thirdparty','TSEE');
 addpath(pth);
 
 X=sc_transform(X);
@@ -49,5 +49,3 @@ l = 10;
 s=X;
 
 end
-
-

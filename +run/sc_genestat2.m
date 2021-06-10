@@ -11,3 +11,4 @@ warning('%d lowly-expressed genes removed.',sum(i));
 T(i,:)=[];
 %[xyz,i]=sortrows([lgu dropr lgcv],[1 2 3]);
 
+end

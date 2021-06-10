@@ -26,10 +26,9 @@ oldpth=pwd;
 %pw1=fileparts(which(mfilename));
 pw1=fileparts(mfilename('fullpath'));
 if strcmpi(organ,"all")
-    pth=fullfile(pw1,'thirdparty/celltype_mat_new');
+    pth=fullfile(pw1,'thirdparty','celltype_mat_new');
 else
     error('not yet implemented.')
-    % pth=fullfile(pw1,sprintf('thirdparty/celltype_mat/%s',organ));
 end
 cd(pth);
 if issparse(X)
@@ -115,3 +114,4 @@ if size(T,1)>10
 end
 cd(oldpth);
 
+end

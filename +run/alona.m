@@ -24,9 +24,9 @@ end
 oldpth=pwd;
 pw1=fileparts(mfilename('fullpath'));
 if strcmpi(organ,"all")
-    pth=fullfile(pw1,'thirdparty/alona_panglaodb');
+    pth=fullfile(pw1,'thirdparty','alona_panglaodb');
 else
-    pth=fullfile(pw1,sprintf('thirdparty/alona_panglaodb/%s',organ));
+    pth=fullfile(pw1,'thirdparty','alona_panglaodb',sprintf('%s',organ));
 end
 cd(pth);
 if issparse(X)

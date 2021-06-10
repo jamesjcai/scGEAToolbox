@@ -9,7 +9,7 @@ if nargin<7, genelist=[]; end
 
 
 pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'thirdparty/FIt-SNE');
+pth=fullfile(pw1,'thirdparty','FIt-SNE');
 addpath(pth);
 
 if donorm

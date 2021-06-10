@@ -3,7 +3,7 @@ function X=MAGIC(X,donorm)
 if nargin<2, donorm=true; end
 
 pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'thirdparty/MAGIC');
+pth=fullfile(pw1,'thirdparty','MAGIC');
 addpath(pth);
 
 % gene_names=cellstr(gl123);  MAGIC needs [cells x genes]
@@ -28,4 +28,4 @@ X=X';
 M = pc_imputed * U';    % project
 X=M';
 
-
+end

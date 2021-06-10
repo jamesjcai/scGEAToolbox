@@ -11,14 +11,13 @@ if ~isok, error(msg); end
 if exist('output.csv','file')
     delete('output.csv');
 end
-if issparse(X), X=full(X); end
-csvwrite('input.csv',X);
+writematrix(X,'input.csv');
 % Rpath = 'C:\Program Files\R\R-3.6.0\bin';
 % RscriptFileName = 'Z:\Cailab\mouse_neurons\adult_P10_cortex_SRR6061129\monocleMatlab.R';
 % RunRcode('monocleMatlab_3d.R');
 RunRcode('script.R');
 if exist('output.csv','file')
-    dat = csvread('output.csv',1,1);
+    dat=readread('output.csv');
     t=dat(:,1);
     s=dat(:,2:end);
 else
@@ -40,5 +39,4 @@ if plotit
     end
 end
 
-
-
+end

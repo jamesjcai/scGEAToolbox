@@ -32,11 +32,11 @@ donorm=p.Results.donorm;
 k=p.Results.k;
 
 pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'thirdparty/SoptSC');
+pth=fullfile(pw1,'thirdparty','SoptSC');
 addpath(pth);
-pth=fullfile(pw1,'thirdparty/SoptSC/NNDSVD');
+pth=fullfile(pw1,'thirdparty','SoptSC','NNDSVD');
 addpath(pth);
-pth=fullfile(pw1,'thirdparty/SoptSC/symnmf2');
+pth=fullfile(pw1,'thirdparty','SoptSC','symnmf2');
 addpath(pth);
 
 if donorm
@@ -79,3 +79,4 @@ figure; plot_marker(X,{'ACTB','SSR4','PPIB'},genelist,s);
 figure; boxplot_marker(X,genelist,{'ACTB','SSR4','PPIB'},C,6);
 %}
 
+end

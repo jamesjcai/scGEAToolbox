@@ -8,7 +8,7 @@ if isempty(FindRpath)
 end
 oldpth=pwd;
 pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'thirdparty/R_scTypeGSEA');
+pth=fullfile(pw1,'thirdparty','R_scTypeGSEA');
 cd(pth);
 fprintf('CURRENTWDIR = "%s"\n',pth);
 
@@ -38,3 +38,4 @@ if exist('clusterid.txt','file'), delete('clusterid.txt'); end
 if exist('genelist.txt','file'), delete('genelist.txt'); end
 if exist('output.txt','file'), delete('output.txt'); end  
 cd(oldpth);
+end

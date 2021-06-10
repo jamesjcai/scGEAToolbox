@@ -3,7 +3,7 @@ function [X,M]=McImpute(X,donorm)
 if nargin<2, donorm=true; end
 
 pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'thirdparty/McImpute');
+pth=fullfile(pw1,'thirdparty','McImpute');
 addpath(pth);
 
 if ~isnormalized(X) && ~donorm
@@ -33,3 +33,4 @@ M=round(raw_data);
 
 X=normed_data';
 
+end

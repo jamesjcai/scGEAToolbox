@@ -6,7 +6,7 @@ if isempty(FindRpath)
 end
 oldpth=pwd;
 pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'thirdparty/R_glmpca');
+pth=fullfile(pw1,'thirdparty','R_glmpca');
 cd(pth);
 fprintf('CURRENTWDIR = "%s"\n',pth);
 
@@ -21,11 +21,11 @@ if exist('output.csv','file')
     delete('output.csv');
 end
 %if ~exist('input.csv','file')
-    csvwrite('input.csv',transpose(X));
+    writematrix(transpose(X),'input.csv');
 %end
 RunRcode('script.R');
 if exist('output.csv','file')
-    s=csvread('output.csv',1,1);
+    s=readmatrix('output.csv');
 else
     s=[];
 end
@@ -36,3 +36,4 @@ if exist('output.csv','file')
     delete('output.csv');
 end
 cd(oldpth);
+end

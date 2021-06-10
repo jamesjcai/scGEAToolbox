@@ -21,7 +21,7 @@ if nargin<4, bygene=false; end
 if nargin<5, genelist=[]; end
 
 pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'thirdparty/PHATE');
+pth=fullfile(pw1,'thirdparty','PHATE');
 addpath(pth);
 
 % gene_names=cellstr(gl123);  
@@ -94,4 +94,5 @@ if plotit
         dt = datacursormode;
         dt.UpdateFcn = {@i_myupdatefcn1,genelist};
     end    
+end
 end

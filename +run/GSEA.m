@@ -7,7 +7,7 @@ if nargin<5, dbfile='msigdb_v62_c5.mat'; end
 if nargin<6, sort_type='ascend'; end
 
 pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'thirdparty/GSEA');
+pth=fullfile(pw1,'thirdparty','GSEA');
 addpath(pth);
 
 % set options
@@ -46,3 +46,4 @@ Tn.GSETNAME=GeneSetName(Tn.GSID);
 Tn=movevars(Tn,'GSETNAME','before','GSID');
 
 
+end

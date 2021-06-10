@@ -14,9 +14,9 @@ function [C,s]=SIMLR(X,k,donorm)
 % scatter(s(:,1),s(:,2),20,C,'filled')
 
 pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'thirdparty/SIMLR');
+pth=fullfile(pw1,'thirdparty','SIMLR');
 addpath(pth);
-pth=fullfile(pw1,'thirdparty/SIMLR/src');
+pth=fullfile(pw1,'thirdparty','SIMLR','src');
 addpath(pth);
 
 if nargin<2
@@ -46,3 +46,4 @@ C=C';
 % figure;
 % scatter(s(:,1),s(:,2),20,C,'filled')
 
+end

@@ -24,6 +24,5 @@ mingamma = 0.1; % minimum gaussian bandwidth (default: 0.1), best value in range
 %% We have developed two version of Specter. Let Specter to decide the algorithm
 c = eval_auto_Specter(data, n_clusters, ensemble_size, mingamma);
 
-
 end
 

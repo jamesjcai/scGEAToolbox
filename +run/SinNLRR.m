@@ -9,7 +9,7 @@ function [C]=SinNLRR(X,k)
 % scatter(s(:,1),s(:,2),20,C,'filled')
 
 pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'thirdparty/SinNLRR');
+pth=fullfile(pw1,'thirdparty','SinNLRR');
 addpath(pth);
 
 if nargin<2 || isempty(k)
@@ -29,3 +29,4 @@ end
 [C] = SinNLRRori(X,k);
 
 
+end
