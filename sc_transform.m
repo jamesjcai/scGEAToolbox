@@ -46,6 +46,6 @@ switch p.Results.type
         % https://www.biorxiv.org/content/10.1101/2020.06.08.140673v2.full
         % https://www.nature.com/articles/nmeth.2930
         X=sc_norm(X,'type','deseq');
-        X=sqrt(X)+sqrt(X+1);        
+        X=sqrt(X)+sqrt(X+1);
 end
 end
