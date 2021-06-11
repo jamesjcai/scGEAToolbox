@@ -4,10 +4,11 @@ pw0=pwd;
 pw1 = fileparts(mfilename('fullpath'));
 cd(pw1);
 
-addpath("gaimc\graphs");
+addpath(fullfile('gaimc','graphs'));
 addpath("gaimc");
-run("gspbox\gsp_start.m");
-run("unlocbox\init_unlocbox.m");
+run(fullfile('gspbox','gsp_start.m'));
+run(fullfile('unlocbox','init_unlocbox.m'));
+
 % Graph of smooth gene network signal inputed genes.
 % 
 % data format: cell(row) * genes(columns) array
@@ -146,4 +147,5 @@ if scale ==1
   data_impute = data_impute.*sum(data);
 end
 cd(pw0);
+
 end
