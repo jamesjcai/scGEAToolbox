@@ -15,9 +15,9 @@ parse(p,true_labels,varargin{:})
 pw1=fileparts(mfilename('fullpath'));
 switch p.Results.type
     case 'nmi'        
-        pth=fullfile(pw1,'thirdparty/SIMLR');
+        pth=fullfile(pw1,'thirdparty','SIMLR');
         addpath(pth);
-        pth=fullfile(pw1,'thirdparty/SIMLR/src');
+        pth=fullfile(pw1,'thirdparty','SIMLR','src');
         addpath(pth);
         score = Cal_NMI(true_labels, cluster_labels);
         fprintf('The NMI value is %f\n', score);
