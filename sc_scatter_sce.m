@@ -366,10 +366,15 @@ end
 % end
 
     function SelectCellsByQC(src, ~)
-        if gui.callback_SelectCellsByQC(src)
+        [requirerefresh,highlightindex]=gui.callback_SelectCellsByQC(src);
+        if requirerefresh
             sce = guidata(FigureHandle);
             [c, cL] = grp2idx(sce.c);
-            RefreshAll(src, 1, true);
+            RefreshAll(src, 1, true);            
+        end
+        if ~isempty(highlightindex)
+            h.BrushData=highlightindex;
+            % set(h,'BrushData',highlightindex');
         end
     end
 
