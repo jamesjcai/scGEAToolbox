@@ -22,7 +22,6 @@ genelist=upper(genelist);
 
 if ~isempty(drdistin) && length(genelist)==length(drdistin)
     drdist=drdistin;
-    T=table(sortid,genelist,drdist);
 else
     v=readmatrix('value_template_pos.txt');
     N=min([length(v) length(genelist)]);

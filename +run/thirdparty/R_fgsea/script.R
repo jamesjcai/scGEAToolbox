@@ -1,8 +1,8 @@
 #setwd("C:\\Users\\jcai.AUTH\\Documents\\GitHub\\scGEAToolbox\\+run\\thirdparty\\R_fgsea")
 MS <- read.csv('input.txt', row.names = 1)
-#BC <- MASS::boxcox(MS$drdist~1,plotit=FALSE)
-#Z <- MS$drdist^abs(BC$x[which.max(BC$y)])
-Z <- MS$drdist
+BC <- MASS::boxcox(MS$drdist~1,plotit=FALSE)
+Z <- MS$drdist^abs(BC$x[which.max(BC$y)])
+#Z <- MS$drdist
 names(Z) <- MS$genelist
 
 library(fgsea)
