@@ -3,7 +3,7 @@ if nargin<3, usepylib=false; end
 if nargin<2, error('[s]=run.harmonypy(s,batchid)'); end
 oldpth=pwd();
 pw1=fileparts(mfilename('fullpath'));
-wrkpth=fullfile(pw1,'thirdparty','harmony');
+wrkpth=fullfile(pw1,'thirdparty','harmonypy');
 cd(wrkpth);
 
 if exist('output.csv','file'), delete('output.csv'); end
@@ -25,6 +25,7 @@ if usepylib
     sout=np2mat(ho.Z_corr.T);
 else    
     x=pyenv;
+    pkg.i_add_conda_python_path;
     cmdlinestr=sprintf('"%s" "%s%sscript.py"',x.Executable,wrkpth,filesep);
     disp(cmdlinestr)
     [status]=system(cmdlinestr);

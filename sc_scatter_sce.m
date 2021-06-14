@@ -332,11 +332,13 @@ gui.add_3dcamera(defaultToolbar, 'AllCells');
 
 
 m = uimenu(FigureHandle,'Text','Experimental');
-mitem = uimenu(m,'Text','Remove batch effect using Harmony...','Callback',@HarmonyPy);
-mitem = uimenu(m,'Text','Extract cells by marker(+/-) expression...',...
+uimenu(m,'Text','Remove batch effect using Harmony...','Callback',@HarmonyPy);
+uimenu(m,'Text','Extract cells by marker(+/-) expression...',...
     'Callback',@callback_SelectCellsByMarker);
-mitem = uimenu(m,'Text','Ligand-receptor mediated intercellular crosstalk...',...
+uimenu(m,'Text','Ligand-receptor mediated intercellular crosstalk...',...
     'Callback',@callback_DetectIntercellularCrosstalk);
+uimenu(m,'Text','Doublet Detection (python)...',...
+    'Callback',@DoubletDetection);
 
 % handles = guihandles( FigureHandle ) ;
 % guidata( FigureHandle, handles ) ;
@@ -393,6 +395,18 @@ end
         end
     end
 
+
+    function DoubletDetection(src, ~)
+        [isDoublet,done]=gui.callback_DoubletDetection(src);
+        if done && any(isDoublet)
+            sce = guidata(FigureHandle);
+            sce.c=isDoublet;
+            %[c, cL] = grp2idx(sce.c);
+            RefreshAll(src, 1, true, false);
+        elseif done && ~any(isDoublet)
+            helpdlg('No doublet found.');
+        end
+    end
 
 % =========================
     function RefreshAll(src, ~, keepview, keepcolr)
