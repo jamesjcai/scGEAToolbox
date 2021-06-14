@@ -1,6 +1,8 @@
+#setwd("C:\\Users\\jcai.AUTH\\Documents\\GitHub\\scGEAToolbox\\+run\\thirdparty\\R_fgsea")
 MS <- read.csv('input.txt', row.names = 1)
-BC <- MASS::boxcox(MS$drdist~1,plotit=FALSE)
-Z <- MS$drdist^abs(BC$x[which.max(BC$y)])
+#BC <- MASS::boxcox(MS$drdist~1,plotit=FALSE)
+#Z <- MS$drdist^abs(BC$x[which.max(BC$y)])
+Z <- MS$drdist
 names(Z) <- MS$genelist
 
 library(fgsea)
@@ -24,6 +26,7 @@ eGOBP <- eGOBP[eGOBP$ES > 0 & eGOBP$padj < 0.05,]
 eREACTOME <- eREACTOME[eREACTOME$ES > 0 & eREACTOME$padj < 0.05,]
 
 E <- do.call(rbind.data.frame, list(eKEGG, eBIOP, eGOBP, eREACTOME))
+
 E$leadingEdge <- unlist(lapply(E$leadingEdge, function(X){paste0(X, collapse = ';')}))
 E <- E[order(E$padj, decreasing = FALSE),]
 write.csv(E, 'output.txt')
