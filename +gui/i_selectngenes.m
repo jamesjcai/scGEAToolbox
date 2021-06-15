@@ -15,10 +15,10 @@ switch answer
         return;
     case 'Paste'
         n=length(gsorted);
-        tg=gui.gui_inputgenelist(gsorted(randperm(n,20)));        
+        tg=gui.i_inputgenelist(gsorted(randperm(n,20)));        
         if length(tg)>=2
-            [y,i]=ismember(tg,gsorted);
-            i=i(y);
+            [y]=ismember(tg,gsorted);
+            % i=i(y);
             glist=tg(y);
             if length(glist)<2
                 warndlg('Need at leaset 2 genes');
@@ -29,7 +29,7 @@ switch answer
             return;
         end
     case 'Select'
-        [idx]=gui.gui_selmultidlg(gsorted);
+        [idx]=gui.i_selmultidlg(gsorted);
         if isempty(idx), return; end
         if length(idx)<2
             warndlg('Need at least 2 genes');

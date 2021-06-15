@@ -397,15 +397,22 @@ end
 
 
     function DoubletDetection(src, ~)
-        [isDoublet,done]=gui.callback_DoubletDetection(src);
+        
+        [isDoublet,doubletscore,done]=gui.callback_DoubletDetection(src);
+        sce.list_cell_attributes=[sce.list_cell_attributes,...
+                {'doublet_score',doubletscore}];
+        guidata(FigureHandle,sce);
         if done && any(isDoublet)
-            sce = guidata(FigureHandle);
-            sce.c=isDoublet;
+            %sce = guidata(FigureHandle);
+            %sce.c=isDoublet;
             %[c, cL] = grp2idx(sce.c);
-            RefreshAll(src, 1, true, false);
+            %RefreshAll(src, 1, true, false);
         elseif done && ~any(isDoublet)
-            helpdlg('No doublet found.');
+            %helpdlg('No doublet found.');
+            %sce.c=doubletscore;
+            %RefreshAll(src, 1, true, false);
         end
+        i_showstate(doubletscore);
     end
 
 % =========================
@@ -818,6 +825,8 @@ end
                 ttxt = sce.list_cell_attributes{2 * (indx - 8) - 1};
                 ci = sce.list_cell_attributes{2 * (indx - 8)};
         end
+        
+% ------ move to i_showstate        
         if isempty(ci)
             errordlg("Undefined classification");
             return
@@ -825,13 +834,13 @@ end
         sces = sce.s;
         if isempty(h.ZData)
             sces = sce.s(:, 1:2);
-        end
-        
+        end        
         [ax, bx] = view();
         h = gui.i_gscatter3(sces, ci, 1);
         view(ax, bx);
         title(sce.title);
-        
+% -------- move to i_showstate
+
         if indx == 5
             hc = colorbar;
             hc.Label.String = ttxt;
@@ -880,6 +889,21 @@ end
                 rethrow(ME);
             end
         end
+    end
+
+    function i_showstate(ci)
+        if isempty(ci)
+            errordlg("Undefined classification");
+            return
+        end
+        sces = sce.s;
+        if isempty(h.ZData)
+            sces = sce.s(:, 1:2);
+        end        
+        [ax, bx] = view();
+        h = gui.i_gscatter3(sces, ci, 1);
+        view(ax, bx);
+        title(sce.title);        
     end
 
     function DeleteSelectedCells(~, ~)
@@ -1001,7 +1025,7 @@ end
         end
         
         labels = {'Save pseudotime T to variable named:', ...
-            'Save embedding S to variable named:'};
+            'Save S to variable named:'};
         vars = {'t_mono', 's_mono'};
         values = {t_mono, s_mono};
         export2wsdlg(labels, vars, values);

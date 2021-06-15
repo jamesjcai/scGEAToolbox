@@ -42,7 +42,7 @@ function callback_CompareGeneBtwCls(src,~)
         if isempty(thisc)
             errordlg('Undefined');
         else
-            [Xt]=gui.gui_transformx(sce.X);      
+            [Xt]=gui.i_transformx(sce.X);      
             f = figure('visible','off');
             y=full(Xt(idx,:));
             

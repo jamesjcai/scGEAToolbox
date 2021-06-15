@@ -3,7 +3,7 @@
 % function.
 % 
 % Copyright The MathWorks, Inc. 2014
-
+import pkg.*
 %% Load Data for Visualization
 % Import data set to visualize. The data set contains a matrix of
 % electricity price differences between locations in New England.
@@ -12,32 +12,32 @@ load heatmapData
 %% Simple Heatmap
 % Generate heatmap only with no labels
 clf
-heatmap(spreads_small);
+pkg.heatmap(spreads_small);
 
 %% Axes Ticks & Labels
 % The heatmap above can be made a lot more useful with labels on the
 % columns and rows. We can do this with two more inputs for x and y labels.
 % The labels can be numeric or cell arrays of strings
 clf
-heatmap(spreads_small, 1:15, labels_small);
+pkg.heatmap(spreads_small, 1:15, labels_small);
 
 %%
 % Labels on the x-axis can be rotated to prevent overlap 
 clf
-heatmap(spreads_small, labels_small, labels_small, [], 'TickAngle', 45);
+pkg.heatmap(spreads_small, labels_small, labels_small, [], 'TickAngle', 45);
 
 %%
 % By default, for larger heatmaps, not all ticks are shown. This can be
 % forced with the _ShowAllTicks_ option. 
 clf
-heatmap(spreads_small, labels_small, labels_small, [], 'TickAngle', 45,...
+pkg.heatmap(spreads_small, labels_small, labels_small, [], 'TickAngle', 45,...
         'ShowAllTicks', true);
 
 %%
 % The font size of the ticks can also be controlled with the _TickFontSize_
 % option. This can help when trying to fit many tick labels on a heatmap.
 clf
-heatmap(spreads, labels, labels, [], 'TickAngle', 45,...
+pkg.heatmap(spreads, labels, labels, [], 'TickAngle', 45,...
         'ShowAllTicks', true, 'TickFontSize', 6);
 
 %% Heatmap Text Labels
@@ -50,7 +50,7 @@ heatmap(spreads, labels, labels, [], 'TickAngle', 45,...
 % Turn on text labels with a format $xx.xx. See the documentation of
 % _sprintf_ for more information on format strings
 clf
-heatmap(spreads_small, labels_small, labels_small, '$%0.2f', 'TickAngle', 45);
+pkg.heatmap(spreads_small, labels_small, labels_small, '$%0.2f', 'TickAngle', 45);
 
 %%
 % A completely different matrix of data can be shown as text labels on top

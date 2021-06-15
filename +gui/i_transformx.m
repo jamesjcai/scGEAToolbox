@@ -1,4 +1,4 @@
-function [X]=gui_transformx(X)
+function [X]=i_transformx(X)
     if nargin<1
         X=nbinrnd(20,0.98,1000,200);
         disp('Using simulated X.');

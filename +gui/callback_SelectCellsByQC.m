@@ -17,7 +17,8 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
     if tf~=1, return; end
     switch indx
         case 1   % basic QC
-            fw=gui.gui_waitbar;
+            fw=gui.
+            waitbar;
             sce=sce.qcfilter;
             gui.gui_waitbar(fw);
         case 2   % view QC metrics violin
@@ -38,7 +39,7 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
             sce=sce.rmmtgenes;
         case 5          % remove selected genes
             gsorted=sort(sce.g);
-            [idx]=gui.gui_selmultidlg(gsorted);
+            [idx]=gui.i_selmultidlg(gsorted);
             if isempty(idx), return; end
             if isscalar(idx) && idx==0
                 helpdlg('No gene selected.');
@@ -69,7 +70,7 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
             if issparse(ci), ci=full(ci); end
             ttxti="Library Size";
             a=maxk(ci,10);                
-            idx=gui.gui_setranges2(ci',cj',[0 a(end)],...
+            idx=gui.i_setranges2(ci',cj',[0 a(end)],...
                     [0 15],ttxti,ttxtj);
         case 7
             cj=sum(sce.X>0,1);                
@@ -80,7 +81,7 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
             ttxti="Library Size";
             a=maxk(ci,10);
             b=maxk(cj,10);
-            idx=gui.gui_setranges2(ci',cj',[0 a(end)],...
+            idx=gui.i_setranges2(ci',cj',[0 a(end)],...
                     [0 b(end)],ttxti,ttxtj);
     end
     if ismember(indx,[6 7])
@@ -117,7 +118,7 @@ end
 %                 ttxti="Dropout Rate";
 %                 ttxtj="-log2(Expression Mean+0.1)";
 %                 a=maxk(rdrop,10);
-%                 idx=gui.gui_setranges2(rdrop(:),rmean(:),[0 a(end)],...
+%                 idx=gui.i_setranges2(rdrop(:),rmean(:),[0 a(end)],...
 %                         [0 max(rmean)],ttxti,ttxtj);
 %                 if any(~idx)
 %                     answer = questdlg(sprintf('Remove %d cells?',sum(~idx)));

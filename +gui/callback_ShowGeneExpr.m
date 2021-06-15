@@ -18,7 +18,7 @@ switch answer
             end
         end
     case 'Multiple'
-        [idx]=gui.gui_selmultidlg(gsorted);
+        [idx]=gui.i_selmultidlg(gsorted);
         if isempty(idx), return; end
         if isscalar(idx) && idx==0
             helpdlg('No gene selected.');

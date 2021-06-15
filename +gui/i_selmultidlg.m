@@ -1,4 +1,4 @@
-function [idx]=gui_selmultidlg(genelist)
+function [idx]=i_selmultidlg(genelist)
 idx=[];
 txt_cell_array = {'line1';'line2';'line3';'line4';'line5'};
 if nargin<1, genelist=txt_cell_array; end

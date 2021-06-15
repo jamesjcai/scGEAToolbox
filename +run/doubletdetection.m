@@ -1,4 +1,4 @@
-function [isDoublet]=doubletdetection(X)
+function [isDoublet,doubletscore]=doubletdetection(X)
 
 oldpth=pwd();
 pw1=fileparts(mfilename('fullpath'));
@@ -19,9 +19,11 @@ disp(cmdlinestr)
 
 if status==0 && exist('output.txt','file')
     T=readtable('output.txt',"ReadVariableNames",false);
-    isDoublet=string(T.Var1)=="True";    
+    isDoublet=string(T.Var1)=="True"; 
+    doubletscore=readmatrix('output2.txt');
 else
     isDoublet=[];
+    doubletscore=[];
 end
 
 if exist('input.txt','file'), delete('input.txt'); end

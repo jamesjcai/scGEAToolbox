@@ -1,4 +1,4 @@
-function [isDoublet,done]=callback_DoubletDetection(src,~)
+function [isDoublet,doubletscore,done]=callback_DoubletDetection(src,~)
     done=false;
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
@@ -23,7 +23,7 @@ function [isDoublet,done]=callback_DoubletDetection(src,~)
         
         fw=gui.gui_waitbar;
         try
-            [isDoublet]=run.doubletdetection(sce.X);
+            [isDoublet,doubletscore]=run.doubletdetection(sce.X);
             if isempty(isDoublet)
                 gui.gui_waitbar(fw);
                 errordlg("doubletdetection Running Error");

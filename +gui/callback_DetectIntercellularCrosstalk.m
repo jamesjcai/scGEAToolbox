@@ -6,7 +6,7 @@ function callback_DetectIntercellularCrosstalk(src,~)
         return;
     end
     [c,cL]=grp2idx(sce.c_cell_type_tx);    
-    [idx]=gui.gui_selmultidlg(cL);    
+    [idx]=gui.i_selmultidlg(cL);    
     if isempty(idx), return; end
     if numel(idx)<2
         warndlg('Need at least 2 cell types');
