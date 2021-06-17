@@ -332,13 +332,15 @@ gui.add_3dcamera(defaultToolbar, 'AllCells');
 
 
 m = uimenu(FigureHandle,'Text','Experimental');
-uimenu(m,'Text','Remove batch effect using Harmony...','Callback',@HarmonyPy);
+uimenu(m,'Text','Remove batch effect using Harmony (python required)...','Callback',@HarmonyPy);
 uimenu(m,'Text','Extract cells by marker(+/-) expression...',...
     'Callback',@callback_SelectCellsByMarker);
 uimenu(m,'Text','Ligand-receptor mediated intercellular crosstalk...',...
     'Callback',@callback_DetectIntercellularCrosstalk);
-uimenu(m,'Text','Doublet Detection (python)...',...
+uimenu(m,'Text','Doublet Detection (python required)...',...
     'Callback',@DoubletDetection);
+uimenu(m,'Text','Gene Expression Statistics...',...
+    'Callback',@callback_CalculateGeneStats);
 
 % handles = guihandles( FigureHandle ) ;
 % guidata( FigureHandle, handles ) ;
