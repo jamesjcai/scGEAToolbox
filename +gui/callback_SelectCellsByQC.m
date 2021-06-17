@@ -17,7 +17,7 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
     if tf~=1, return; end
     switch indx
         case 1   % basic QC
-            fw=gui.
+            fw=gui.gui_waitbar;
             waitbar;
             sce=sce.qcfilter;
             gui.gui_waitbar(fw);
