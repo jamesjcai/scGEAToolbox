@@ -1,4 +1,4 @@
-function [s]=run_glmpca(X)
+function [s]=glmpca(X)
 %generalized principal component analysis (GLM-PCA)
 %
 if isempty(FindRpath)

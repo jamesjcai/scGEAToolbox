@@ -1,4 +1,4 @@
-function s=run_fitsne(X,ndim,plotit,donorm,dolog1p,bygene,genelist)
+function s=fitsne(X,ndim,plotit,donorm,dolog1p,bygene,genelist)
 
 if nargin<2, ndim=2; end
 if nargin<3, plotit=false; end

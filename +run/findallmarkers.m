@@ -1,4 +1,4 @@
-function [M,c,cL]=run_findallmarkers(X,genelist,c)
+function [M,c,cL]=findallmarkers(X,genelist,c)
 %run R_FindAllMarkers
 
 [c,cL]=grp2idx(c);

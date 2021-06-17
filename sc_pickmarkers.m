@@ -49,10 +49,10 @@ end
 function [markerlist,A]=i_pickmarkers(X,genelist,idv,id)
 % IDV - cluster ids of cells
 % ID  - the id of the cluster, for which marker genes are being identified.
-% see also: run_celltypeassignation
+% see also: run.celltypeassignation
 % Demo:
 %gx=sc_pickmarkers(X,genelist,cluster_id,2);
-%run_celltypeassignation(gx)
+%run.celltypeassignation(gx)
 X=sc_transform(X);
 K=max(idv);
 idx=idv==id;

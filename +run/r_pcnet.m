@@ -1,31 +1,22 @@
-function [A]=run_scode(X,t)
+function [A]=r_pcnet(X)
 
 % if nargin<2, plotit=false; end
 if isempty(FindRpath)
-   error('Rscript.ext is not found.');
+   error('Rscript.ext is not found. Use native matlab function SC_PCNET.m instead.');
 end
 
 oldpth=pwd;
 pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'thirdparty','R_SCODE');
+pth=fullfile(pw1,'thirdparty','R_dna_differential_network_analysis');
 cd(pth);
 fprintf('CURRENTWDIR = "%s"\n',pth);
 
-[~,cmdout]=RunRcode('require.R');
-if strfind(cmdout,'there is no package')>0
-    cd(oldpth);
-    error(cmdout);
-end
-
-
-
-if size(t,2)==1
-    t=[(1:length(t))' t];
+if exist('output.csv','file')
+    delete('output.csv');
 end
 
 %if ~exist('input.csv','file')
-writematrix(X,'input1.txt');
-writematrix(t,'input2.txt');
+    writematrix(X,'input.csv');
 %end
 RunRcode('script.R');
 if exist('output.csv','file')
@@ -35,7 +26,9 @@ else
     A=[];
     %G=[];
 end
-
+if exist('input.csv','file')
+    delete('input.csv');
+end
 cd(oldpth);
 
 % if plotit

@@ -1,4 +1,4 @@
-function [ct]=run_sctypegsea(X,genelist,c,species,organ)
+function [ct]=r_sctypegsea(X,genelist,c,species,organ)
 %run scTypeGSEA
 if nargin<4, species="Mouse"; end
 if nargin<5, organ="Epithelium"; end

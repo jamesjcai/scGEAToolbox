@@ -1,4 +1,4 @@
-function [Y0,Y1]=run_busseq(X0,X1)
+function [Y0,Y1]=busseq(X0,X1)
 % BUSseq (Batch Effects Correction with Unknown Subtypes for scRNA seq)
 
 % BUSseq is an R tool to correct batch effects in single-cell RNA-seq data. 
@@ -12,8 +12,8 @@ function [Y0,Y1]=run_busseq(X0,X1)
 % X1=X1(:,sum(X1)>120);
 
 
-if nargin<2, error('USAGE: [Y0,Y1]=run_busseq(X0,X1)'); end
-if nargout<2, error('USAGE: [Y0,Y1]=run_busseq(X0,X1)'); end
+if nargin<2, error('USAGE: [Y0,Y1]=run.busseq(X0,X1)'); end
+if nargout<2, error('USAGE: [Y0,Y1]=run.busseq(X0,X1)'); end
 if isempty(FindRpath)
    error('Rscript.ext is not found.');
 end
