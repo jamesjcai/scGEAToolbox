@@ -17,8 +17,7 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
     if tf~=1, return; end
     switch indx
         case 1   % basic QC
-            fw=gui.gui_waitbar;
-            waitbar;
+            fw=gui.gui_waitbar;            
             sce=sce.qcfilter;
             gui.gui_waitbar(fw);
         case 2   % view QC metrics violin
