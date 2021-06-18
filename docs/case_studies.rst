@@ -37,34 +37,28 @@ We can use `gunzip` function directly download and unzip the files.
 
 .. code-block:: matlab
 
-  gunzip('https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM3535nnn/GSM3535276/suppl/GSM3535276_AXLN1_barcodes.tsv.gz')
-  gunzip('https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM3535nnn/GSM3535276/suppl/GSM3535276_AXLN1_genes.tsv.gz');
   gunzip('https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM3535nnn/GSM3535276/suppl/GSM3535276_AXLN1_matrix.mtx.gz');
+  gunzip('https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM3535nnn/GSM3535276/suppl/GSM3535276_AXLN1_genes.tsv.gz');
 
 We can then use the code below to import data into `MATLAB`.
 
 .. code-block:: matlab
 
-  [X,genelist,barcodelist]=sc_readmtxfile('GSM3535276_AXLN1_matrix.mtx','GSM3535276_AXLN1_genes.tsv',...
-                          'GSM3535276_AXLN1_barcodes.tsv',2);
-  [X,genelist]=sc_qcfilter(X,genelist);
-  [X,genelist]=sc_selectg(X,genelist,1,0.05);
-  sc_scatter(X,genelist)
+  [X,g]=sc_readmtxfile('GSM3535276_AXLN1_matrix.mtx','GSM3535276_AXLN1_genes.tsv');
+  sc_scatter(X,g)
 
 
 Process downloaded 10x Genomics data files
 ------------------------------------------
-In the 10x Genomics folder, there are three files, namely, matrix.mtx, features.tsv and barcodes.tsv. Here is the best practice of raw data processing.
+In a 10x Genomics data folder, there should be matrix.mtx and genes.tsv. Here is the commandline code for raw data processing.
 
 .. code-block::
   
-  [X,genelist,barcodelist]=sc_readmtxfile('matrix.mtx','features.tsv','barcodes.tsv',2);
-  [X,genelist]=sc_qcfilter(X,genelist);
-  [X,genelist]=sc_selectg(X,genelist,1,0.05);
-  [Xnorm]=sc_norm(X,'type','deseq');
-  [~,Xhvg]=sc_hvg(Xnorm,genelist,true);
-  [s_tsne]=sc_tsne(Xhvg(1:2000,:),3,false,false);
-  sc_scatter(X,genelist,s_tsne)
+  [X,g]=sc_readmtxfile('matrix.mtx','genes.tsv');
+  [X,g]=sc_qcfilter(X,g);
+  [X,g]=sc_selectg(X,g,1,0.05);
+  [s]=sc_tsne(X);
+  sc_scatter(X,g,s)
 
 
 Download Drop-seq data files from GEO
@@ -96,10 +90,11 @@ We can then use the code below to import data into `MATLAB`.
 
 .. code-block:: matlab
 
-  [X,genelist]=sc_readtsvfile('GSM3036814_Control_6_Mouse_lung_digital_gene_expression_6000.dge.txt');
-  [X,genelist]=sc_qcfilter(X,genelist);
-  [X,genelist]=sc_selectg(X,genelist,1,0.05);
-  sc_scatter(X,genelist)
+  [X,g]=sc_readtsvfile('GSM3036814_Control_6_Mouse_lung_digital_gene_expression_6000.dge.txt');
+  [X,g]=sc_qcfilter(X,g);
+  [X,g]=sc_selectg(X,g,1,0.05);
+  [s]=sc_tsne(X);
+  sc_scatter(X,g,s)
 
 Import Seurat RData
 -------------------
@@ -150,7 +145,7 @@ Then you can use function `sc_readtsvfile` to import the data. Here is an exampl
 .. code-block:: matlab
 
   cdgea;
-  [X,genelist]=sc_readtsvfile('example_data\GSM3204304_P_P_Expr.csv');
+  [X,g]=sc_readtsvfile('example_data\GSM3204304_P_P_Expr.csv');
 
 Visualize data in 6D
 --------------------
