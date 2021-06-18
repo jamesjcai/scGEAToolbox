@@ -405,16 +405,30 @@ end
                 {'doublet_score',doubletscore}];
         guidata(FigureHandle,sce);
         if done && any(isDoublet)
+            answer=questdlg(sprintf('Delete detected doublets (n=%d)?',...
+                sum(isDoublet)),...
+                '','Yes','No, show scores','Cancel','Yes');
+            switch answer
+                case 'Yes'
+                    i_deletecells(isDoublet);
+                case 'No'
+                    i_showstate(doubletscore);
+                    return;
+                case 'Cancel'
+                    return;
+                otherwise
+                    retrun;
+            end
             %sce = guidata(FigureHandle);
             %sce.c=isDoublet;
             %[c, cL] = grp2idx(sce.c);
             %RefreshAll(src, 1, true, false);
         elseif done && ~any(isDoublet)
-            %helpdlg('No doublet found.');
+            helpdlg('No doublet found.');
             %sce.c=doubletscore;
             %RefreshAll(src, 1, true, false);
         end
-        i_showstate(doubletscore);
+
     end
 
 % =========================
@@ -927,14 +941,17 @@ end
         if ~strcmp(answer2, 'Yes')
             return
         end
+        i_deletecells(ptsSelected);
+        guidata(FigureHandle, sce);
+    end
+
+    function i_deletecells(ptsSelected)
         sce = sce.removecells(ptsSelected);
         [c, cL] = grp2idx(sce.c);
         [ax, bx] = view();
         h = gui.i_gscatter3(sce.s, c);
         title(sce.title);
         view(ax, bx);
-        
-        guidata(FigureHandle, sce);
     end
 
     function DrawTrajectory(~, ~)

@@ -1,5 +1,7 @@
 function [isDoublet,doubletscore,done]=callback_DoubletDetection(src,~)
     done=false;
+    isDoublet=[];
+    doubletscore=[];
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
 
@@ -20,15 +22,33 @@ function [isDoublet,doubletscore,done]=callback_DoubletDetection(src,~)
                 return;
         end
 
+answer=questdlg('Which method?','',...
+    'scrublet','doubletdetection','scrublet');
+switch answer
+    case 'scrublet'
+        methodid=1;
+    case 'doubletdetection'
+        methodid=2;
+    otherwise
+        methodid=0;
+        return;
+end
         
         fw=gui.gui_waitbar;
         try
+            switch methodid
+                case 1
+            [isDoublet,doubletscore]=run.scrublet(sce.X);
+                case 2
             [isDoublet,doubletscore]=run.doubletdetection(sce.X);
+                otherwise
+                    return;
+            end
             if isempty(isDoublet)
                 gui.gui_waitbar(fw);
                 errordlg("doubletdetection Running Error");
                 return;
-            end            
+            end
         catch ME
             gui.gui_waitbar(fw);
             errordlg(ME.message);
@@ -58,3 +78,4 @@ function [done]=i_setpyenv
            done=true;
         end
 end
+

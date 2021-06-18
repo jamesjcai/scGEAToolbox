@@ -26,8 +26,8 @@ else
     doubletscore=[];
 end
 
-if exist('input.txt','file'), delete('input.txt'); end
-if exist('output.txt','file'), delete('output.txt'); end
+%if exist('input.txt','file'), delete('input.txt'); end
+%if exist('output.txt','file'), delete('output.txt'); end
 cd(oldpth);
 end
 

@@ -43,16 +43,19 @@ function sc_scatter(X, genelist, s, c)
                 if ~(fname)
                     return
                 end
+                prefixstr=extractBefore(fname,max([strfind(fname,'matrix'),1]));                
                 matrixmtxfile = fullfile(pathname, fname);
-                featurestxtfile = fullfile(pathname, 'features.tsv');
+                
+                
+                featurestxtfile = fullfile(pathname, sprintf('%sfeatures.tsv',prefixstr));
                 if ~exist(featurestxtfile, 'file')
-                    featurestxtfile = fullfile(pathname, 'genes.tsv');
+                    featurestxtfile = fullfile(pathname, sprintf('%sgenes.tsv',prefixstr));
                 end
                 if ~exist(featurestxtfile, 'file')
-                    featurestxtfile = fullfile(pathname, 'features.txt');
+                    featurestxtfile = fullfile(pathname, sprintf('%sfeatures.txt',prefixstr));
                 end
                 if ~exist(featurestxtfile, 'file')
-                    featurestxtfile = fullfile(pathname, 'genes.txt');
+                    featurestxtfile = fullfile(pathname, sprintf('%sgenes.txt',prefixstr));
                 end
                 if ~exist(featurestxtfile, 'file')
                     answer = questdlg('Pick features.tsv file?');
@@ -70,6 +73,16 @@ function sc_scatter(X, genelist, s, c)
                         otherwise
                             return
                     end
+                else
+                    answer = questdlg(sprintf('Use %s?',featurestxtfile),...
+                        'Pick features/genes.tsv file');
+                    switch answer
+                        case 'Yes'
+                        case 'No'
+                            return;
+                        otherwise
+                            return;
+                    end
                 end
                 [X, genelist] = sc_readmtxfile(matrixmtxfile, featurestxtfile, [], 2);
             case 'TSV/CSV txt'
@@ -85,14 +98,14 @@ function sc_scatter(X, genelist, s, c)
             otherwise
                 return
         end
-        answer = questdlg('Perform basic QC?');
-        switch answer
-            case 'Yes'
-                [X, genelist] = sc_qcfilter(X, genelist);
-            case 'No'
-            case 'Cancel'
-                return
-        end
+%         answer = questdlg('Perform basic QC?');
+%         switch answer
+%             case 'Yes'
+%                 [X, genelist] = sc_qcfilter(X, genelist);
+%             case 'No'
+%             case 'Cancel'
+%                 return
+%         end
         sc_scatter(X, genelist);
     else
         if isa(X, 'SingleCellExperiment')
