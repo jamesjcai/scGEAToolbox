@@ -428,16 +428,22 @@ end
         if done && any(isDoublet)
             answer=questdlg(sprintf('Delete detected doublets (n=%d)?',...
                 sum(isDoublet)),...
-                '','Yes','No, show scores','Cancel','Yes');
+                '','Yes','No, show doublets','No, show scores','Yes');
             switch answer
                 case 'Yes'
                     i_deletecells(isDoublet);
                     helpdlg('Doublets deleted.');
+                case 'No, show doublets'
+                    % i_showstate(doubletscore);
+                    ttxt = "Doublets";
+                    pkg.i_stem3scatter(sce.s(:, 1), sce.s(:, 2), isDoublet, ttxt);
+                    view(3);
+                    
                 case 'No, show scores'
-                    i_showstate(doubletscore);
-                    return;
-                case 'Cancel'
-                    return;
+                    % i_showstate(doubletscore);
+                    ttxt = "Doublet Score";
+                    pkg.i_stem3scatter(sce.s(:, 1), sce.s(:, 2), doubletscore, ttxt);
+                    view(3);
                 otherwise
                     return;
             end
@@ -791,9 +797,10 @@ end
         % if ~ismember('cell potency',sce.list_cell_attributes)
         %    listitems{end+1}='Cell Potency';
         % end
-        for k = 1:2:length(sce.list_cell_attributes)
-            listitems = [listitems, sce.list_cell_attributes{k}];
-        end
+        %for k = 1:2:length(sce.list_cell_attributes)
+        %    listitems = [listitems, sce.list_cell_attributes{k}];
+        %end
+        listitems=[listitems, sce.list_cell_attributes(1:2:end)];
         [indx, tf] = listdlg('PromptString', {'Select statistics', ...
             '', ''}, 'SelectionMode', 'single', 'ListString', listitems);
         if tf ~= 1
