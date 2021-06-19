@@ -30,7 +30,6 @@ switch answer
     case 'doubletdetection'
         methodid=2;
     otherwise
-        methodid=0;
         return;
 end
         
@@ -38,9 +37,9 @@ end
         try
             switch methodid
                 case 1
-            [isDoublet,doubletscore]=run.scrublet(sce.X);
+                    [isDoublet,doubletscore]=run.scrublet(sce.X);
                 case 2
-            [isDoublet,doubletscore]=run.doubletdetection(sce.X);
+                    [isDoublet,doubletscore]=run.doubletdetection(sce.X);
                 otherwise
                     return;
             end
@@ -54,7 +53,7 @@ end
             errordlg(ME.message);
             rethrow(ME);
         end 
-            gui.gui_waitbar(fw);        
+        gui.gui_waitbar(fw);        
     end
    guidata(FigureHandle,sce);
    done=true;

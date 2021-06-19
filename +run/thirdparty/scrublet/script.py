@@ -8,7 +8,7 @@ import pandas as pd
 import scrublet as scr
 
 counts=pd.read_csv("input.txt").values
-scrub = scr.Scrublet(counts)
+scrub = scr.Scrublet(counts.T)
 doublet_scores, predicted_doublets = scrub.scrub_doublets()
 
 pd.DataFrame(predicted_doublets).to_csv('output1.txt',index=False,header=False)

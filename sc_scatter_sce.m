@@ -39,6 +39,15 @@ FigureHandle = figure('Name', 'SC_SCATTER', ...
     'visible', 'off');
 movegui(FigureHandle, 'center');
 
+set(findall(FigureHandle,'ToolTipString','Link/Unlink Plot'),'Visible','Off')
+set(findall(FigureHandle,'ToolTipString','Edit Plot'),'Visible','Off')
+set(findall(FigureHandle,'ToolTipString','Open Property Inspector'),'Visible','Off')
+
+
+%a=findall(FigureHandle,'ToolTipString','New Figure');
+%a.ClickedCallback = @__;
+
+
 hAx = axes('Parent', FigureHandle);
 [h] = gui.i_gscatter3(sce.s, c, methodid);
 title(sce.title);
@@ -194,6 +203,14 @@ pt4mrkheat.Tooltip = 'Marker gene heatmap';
 pt4mrkheat.ClickedCallback = @callback_MarkerGeneHeatmap;
 
 % --------------------------
+
+
+
+ptpseudotime = uipushtool(defaultToolbar, 'Separator', 'off');
+[img, map] = imread(fullfile(mfolder, ...
+    'resources', 'IMG00107.GIF'));
+ptImage = ind2rgb(img, map);
+ptpseudotime.CData = ptImage;
 
 ptpseudotime = uipushtool(defaultToolbar, 'Separator', 'on');
 [img, map] = imread(fullfile(mfolder, ...
@@ -411,20 +428,21 @@ end
             switch answer
                 case 'Yes'
                     i_deletecells(isDoublet);
-                case 'No'
+                    helpdlg('Doublets deleted.');
+                case 'No, show scores'
                     i_showstate(doubletscore);
                     return;
                 case 'Cancel'
                     return;
                 otherwise
-                    retrun;
+                    return;
             end
             %sce = guidata(FigureHandle);
             %sce.c=isDoublet;
             %[c, cL] = grp2idx(sce.c);
             %RefreshAll(src, 1, true, false);
         elseif done && ~any(isDoublet)
-            helpdlg('No doublet found.');
+            helpdlg('No doublet detected.');
             %sce.c=doubletscore;
             %RefreshAll(src, 1, true, false);
         end
