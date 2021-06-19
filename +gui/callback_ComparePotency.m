@@ -1,8 +1,17 @@
 function callback_ComparePotency(src,~)
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
-    if isempty(sce.list_cell_attributes)
-        answer = questdlg('Compute cell differentiation potency (cell_potency))?');
+    [a]=contains(sce.list_cell_attributes(1:2:end),'cell_potency');
+    if any(a)
+                answer2 = questdlg(sprintf('CELL_POTENCY has been computed.\nCompare it across cell classes?'));
+                switch answer2
+                    case 'Yes'
+                    otherwise
+                        return;
+                end
+        
+    else
+        answer = questdlg('Compute cell differentiation potency (CELL_POTENCY))?');
         switch answer
             case 'Yes'
                 answer2=questdlg('Which species?','Select Species','Mouse','Human','Mouse');
@@ -18,7 +27,12 @@ function callback_ComparePotency(src,~)
                     errordlg(ME.message)
                     %rethrow(ME)
                 end
-                
+                answer2 = questdlg(sprintf('CELL_POTENCY is computed.\nContinue to compare it across cell classes?'));
+                switch answer2
+                    case 'Yes'
+                    otherwise
+                        return;
+                end
             otherwise
                 return;
         end

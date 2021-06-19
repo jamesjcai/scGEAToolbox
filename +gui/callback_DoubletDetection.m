@@ -43,7 +43,7 @@ end
                 otherwise
                     return;
             end
-            if isempty(isDoublet)
+            if isempty(isDoublet)||isempty(doubletscore)
                 gui.gui_waitbar(fw);
                 errordlg("doubletdetection Running Error");
                 return;
@@ -53,7 +53,7 @@ end
             errordlg(ME.message);
             rethrow(ME);
         end 
-        gui.gui_waitbar(fw);        
+        gui.gui_waitbar(fw);
     end
    guidata(FigureHandle,sce);
    done=true;
