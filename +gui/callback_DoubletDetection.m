@@ -1,7 +1,9 @@
-function [isDoublet,doubletscore,done]=callback_DoubletDetection(src,~)
+function [isDoublet,doubletscore,methodtag,done]=callback_DoubletDetection(src,~)
     done=false;
     isDoublet=[];
     doubletscore=[];
+    methodtag=[];
+    
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
 
@@ -15,30 +17,22 @@ function [isDoublet,doubletscore,done]=callback_DoubletDetection(src,~)
         switch answer
             case 'Use this'
             case 'Use another'
-                if ~i_setpyenv, return; end                    
+                if ~gui.i_setpyenv, return; end                    
             case {'Cancel',''}
                 return;
             otherwise
                 return;
         end
 
-answer=questdlg('Which method?','',...
+methodtag=questdlg('Which method?','',...
     'scrublet','doubletdetection','scrublet');
-switch answer
-    case 'scrublet'
-        methodid=1;
-    case 'doubletdetection'
-        methodid=2;
-    otherwise
-        return;
-end
         
         fw=gui.gui_waitbar;
         try
-            switch methodid
-                case 1
+            switch methodtag
+                case 'scrublet'
                     [isDoublet,doubletscore]=run.scrublet(sce.X);
-                case 2
+                case 'doubletdetection'
                     [isDoublet,doubletscore]=run.doubletdetection(sce.X);
                 otherwise
                     return;
@@ -58,23 +52,3 @@ end
    guidata(FigureHandle,sce);
    done=true;
 end
-
-
-function [done]=i_setpyenv
-        % selpath = uigetdir;
-        done=false;
-        if ispc
-            [file,path] = uigetfile('python.exe','Select Python Interpreter');
-        else
-            [file,path] = uigetfile('python','Select Python Interpreter');
-        end
-        if isequal(file,0)
-           %disp('User selected Cancel');
-           return;
-        else
-           disp(['User selected: ', fullfile(path,file)]);
-           pyenv('Version',fullfile(path,file));
-           done=true;
-        end
-end
-

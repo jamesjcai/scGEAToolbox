@@ -417,13 +417,19 @@ end
 
     function DoubletDetection(src, ~)
         
-        [isDoublet,doubletscore,done]=gui.callback_DoubletDetection(src);
+        [isDoublet,doubletscore,methodtag,done]=gui.callback_DoubletDetection(src);
         if done && sce.NumCells==length(doubletscore)
-            [a]=contains(sce.list_cell_attributes(1:2:end),'doublet_score');
-            atag=sprintf('doublet_score (%d)',sum(a)+1);
-            sce.list_cell_attributes=[sce.list_cell_attributes,...
+            atag=sprintf('doublet_score (%s)',methodtag);
+            [y,idx]=ismember(atag,sce.list_cell_attributes(1:2:end));
+            if y
+                sce.list_cell_attributes{(idx-1)*2+2}=doubletscore;
+            else
+                sce.list_cell_attributes=[sce.list_cell_attributes,...
                     {atag,doubletscore}];
-        end
+            end
+            %[a]=contains(sce.list_cell_attributes(1:2:end),'doublet_score');
+            %atag=sprintf('doublet_score (%d)',sum(a)+1);
+       end
         guidata(FigureHandle,sce);
         if done && any(isDoublet)
             answer=questdlg(sprintf('Delete detected doublets (n=%d)?',...
