@@ -38,7 +38,7 @@ switch lower(p.Results.type)
     case 'Hafemeister & Satija 2019'
         % https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1874-1
     case 'csndm'
-        [X]=run.CSN_transform(X);
+        [X]=run.csndm_trans(X);
 %     case 'bigscale'
 %         pth=fullfile(pw1,'thirdparty/bigSCale');
 %         addpath(pth);

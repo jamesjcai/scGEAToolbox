@@ -1,5 +1,7 @@
 function [A]=sc_grn(X,varargin)
-% construct single-cell gene regulatory network (scGRN)
+% Construct a single-cell gene regulatory network (scGRN)
+%
+% see also: SC_SSNET (single-sample network)
 
 p = inputParser;
 defaultType = 'pcnetpar';
@@ -14,11 +16,11 @@ parse(p,X,varargin{:})
 switch p.Results.type
     case 'pcnet'
         [A]=sc_pcnet(X);
-    case 'pcnetpar'
+    case 'pcnetpar'             % parallel version 
         [A]=sc_pcnetpar(X);
-    case 'pcnetdenoised'
+    case 'pcnetdenoised'        % slow
         [A]=sc_pcnetdenoised(X);
-    case 'genie3'
+    case 'genie3'               % slow
         [A]=run.GENIE3(X,[],true);
 end
 end
