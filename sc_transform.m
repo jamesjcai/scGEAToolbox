@@ -1,8 +1,8 @@
 function [X]=sc_transform(X,varargin)
 
 p = inputParser;
-defaultType = 'pearsonresiduals';
-validTypes = {'pearsonresiduals','csndm','bigscale','sct','Freeman-Tukey'};
+defaultType = 'PearsonResiduals';
+validTypes = {'PearsonResiduals','kNNSmoothing','FreemanTukey','csndm','sct'};
 checkType = @(x) any(validatestring(x,validTypes));
 
 addRequired(p,'X',@isnumeric);
@@ -10,7 +10,7 @@ addOptional(p,'type',defaultType,checkType)
 parse(p,X,varargin{:})
 
    
-switch p.Results.type
+switch lower(p.Results.type)
     case 'pearsonresiduals'
         % analytic Pearson residuals
         % https://doi.org/10.1101/2020.12.01.405886
@@ -24,7 +24,13 @@ switch p.Results.type
         % clip to sqrt(n);
         sn=sqrt(n);
         X(X>sn)=sn;
-        X(X<-sn)=-sn;        
+        X(X<-sn)=-sn;       
+    case 'knnsmoothing'
+        % K-nearest neighbor smoothing for high-throughput single-cell RNA-Seq data
+        % https://doi.org/10.1101/217737
+        % 
+        X=knn_smooth(X,5,10);
+        
     case 'glmpca'
         
     case 'normalization_sqrt'
@@ -40,7 +46,7 @@ switch p.Results.type
 %         [X]=transform_bigscale(X);
     case 'sct'
         % sc_sct
-    case 'Freeman-Tukey'
+    case 'freemantukey'
         % https://github.com/flo-compbio/monet/blob/master/monet/util/expression.py
         % Applies the Freeman-Tukey transformation to stabilize variance."
         % https://www.biorxiv.org/content/10.1101/2020.06.08.140673v2.full

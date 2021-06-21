@@ -16,13 +16,17 @@ function [X]=i_transformx(X)
         error('Wrong option');        
     end
     
-    listitems={'(1) Library Size Normalization',...
-        '(2) Log10(x+1) Transformation',...
-        '(1)+(2)',...
-        'Pearson Residual Transformation',...
-        'MAGIC Imputation'};
+    listitems={'(a): Library Size Normalization',...
+        '(b): Log2(x+1) Transformation',...
+        '(c): (a) and (b)',...
+        '(d): DeSeq Normalization',...
+        '(e): Pearson Residuals Transformation',...
+        '(f): kNN Smoothing Transformation',...
+        '(g): Freeman-Tukey Transformation',...
+        '(h): MAGIC Imputation'};
     [indx,tf] = listdlg('PromptString',{'Select Method',...
-        '',''},'SelectionMode','single','ListString',listitems,'ListSize',[200 300]);
+        '',''},'SelectionMode','single',...
+        'ListString',listitems,'ListSize',[200 300]);
     if tf==1
         fw=gui.gui_waitbar;
         try
@@ -30,13 +34,19 @@ function [X]=i_transformx(X)
             case 1
                 X=sc_norm(X);
             case 2
-                X=log10(X+1);
+                X=log2(X+1);
             case 3
                 X=sc_norm(X);
-                X=log10(X+1);
+                X=log2(X+1);
             case 4
-                X=sc_transform(X);
+                X=sc_norm(X,'type','deseq');              
             case 5
+                X=sc_transform(X,'type','PearsonResiduals');
+            case 6
+                X=sc_transform(X,'type','kNNSmoothing');
+            case 7
+                X=sc_transform(X,'type','FreemanTukey');
+            case 8
                 X=run.MAGIC(X,true);
         end
         catch ME
