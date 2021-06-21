@@ -29,6 +29,7 @@ for k=1:n
         [~,~,coeff]=lmsvd(Xi,ncom,opts);
     else
         [~,~,coeff]=svds(Xi,ncom);
+        %[~,~,coeff]=rsvd(Xi,ncom);
     end
     score=Xi*coeff;
     % [coeff,score]=pca(Xi);
