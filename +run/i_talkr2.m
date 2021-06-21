@@ -10,16 +10,16 @@ end
 n=numel(cL);
 
 pw=fileparts(mfilename('fullpath'));
-dbfile=fullfile(pw,'..','resources','Ligand_Receptor.mat');
+dbfile=fullfile(pw,'..','resources','Ligand_Receptor2.mat');
 load(dbfile,'ligand','receptor','T');
-T=T(:,2:6);
+% T=T(:,2:6);
 
 g=upper(g);
 
 methodid=1;
 switch methodid
     case 1
-        X=sc_transform(X);
+        X=sc_transform(X,'type','kNNSmoothing');
         %X=sc_norm(X);
         Xm1=i_grpmean(X(:,b==1),cx(b==1));
         Xm2=i_grpmean(X(:,b==2),cx(b==2));
@@ -71,23 +71,35 @@ receptor_mat2=Xm2(idx2,:);
 % Tx=[table(ligandok,receptorok),t1,t2];
 
 %%
-[n1]=size(ligand_mat1,2);
-[n2]=size(ligand_mat2,2);
+[p1,n1]=size(ligand_mat1);
+[p2,n2]=size(ligand_mat2);
 assert(n1==n2);
 
 
-a1=ligand_mat1(:,1).*receptor_mat1;
-a2=ligand_mat1(:,2).*receptor_mat1;
-a3=ligand_mat1(:,3).*receptor_mat1;
-M1=[a1 a2 a3];
+M1=zeros(p1,n1.^2);
+for k=1:n1
+    M1(:,(n1*(k-1)+1):n1*k)=ligand_mat1(:,k).*receptor_mat1;
+end
 M1=M1./sum(M1,2);
 
+%a1=ligand_mat1(:,1).*receptor_mat1;
+%a2=ligand_mat1(:,2).*receptor_mat1;
+%a3=ligand_mat1(:,3).*receptor_mat1;
+%M1=[a1 a2 a3];
+%M1=M1./sum(M1,2);
 
-a1=ligand_mat2(:,1).*receptor_mat2;
-a2=ligand_mat2(:,2).*receptor_mat2;
-a3=ligand_mat2(:,3).*receptor_mat2;
-M2=[a1 a2 a3];
+
+M2=zeros(p2,n2.^2);
+for k=1:n2
+    M2(:,(n2*(k-1)+1):n2*k)=ligand_mat2(:,k).*receptor_mat2;
+end
 M2=M2./sum(M2,2);
+
+%a1=ligand_mat2(:,1).*receptor_mat2;
+%a2=ligand_mat2(:,2).*receptor_mat2;
+%a3=ligand_mat2(:,3).*receptor_mat2;
+%M2=[a1 a2 a3];
+%M2=M2./sum(M2,2);
 
 
 OUT1.cL=cL;

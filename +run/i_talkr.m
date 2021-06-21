@@ -9,9 +9,9 @@ end
 n=numel(cL);
 
 pw=fileparts(mfilename('fullpath'));
-dbfile=fullfile(pw,'..','resources','Ligand_Receptor.mat');
+dbfile=fullfile(pw,'..','resources','Ligand_Receptor2.mat');
 load(dbfile,'ligand','receptor','T');
-T=T(:,2:6);
+%T=T(:,2:6);
 
 g=upper(g);
 
@@ -61,14 +61,28 @@ receptor_mat=Xm(idx2,:);
 % Tx=[table(ligandok,receptorok),t1,t2];
 
 %%
-[n2]=size(ligand_mat,2);
+[p,n2]=size(ligand_mat);
 assert(n==n2);
 
-a1=ligand_mat(:,1).*receptor_mat;
-a2=ligand_mat(:,2).*receptor_mat;
-a3=ligand_mat(:,3).*receptor_mat;
-M=[a1 a2 a3];
+
+M=zeros(p,n.^2);
+for k=1:n
+    M(:,(n*(k-1)+1):n*k)=ligand_mat(:,k).*receptor_mat;
+end
 M=M./sum(M,2);
+%M=M.*log2(M*(n^2));
+%M(isnan(M))=0;
+
+%M=zeros(size(ligand_mat,1),n^2);
+%M=[];
+%for k=1:n
+%    M=[M ligand_mat(:,k).*receptor_mat];
+%end
+% a2=ligand_mat(:,2).*receptor_mat;
+% a3=ligand_mat(:,3).*receptor_mat;
+% M=[a1 a2 a3];
+%M=M./sum(M,2);
+%size(M)
 
 OUT.cL=cL;
 OUT.ligand_mat=ligand_mat;

@@ -2,11 +2,23 @@ function callback_DetectIntercellularCrosstalk(src,~)
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
     if isempty(sce.c_cell_type_tx) || numel(unique(sce.c_cell_type_tx))<2
-        warndlg('Cell type is undefined (SCE.C_CELL_TYPE_TX is empty)');
-        return;
+        if ~isempty(sce.c_cluster_id) && numel(unique(sce.c_cluster_id))>1
+            answer = questdlg(sprintf('Cell type (C_CELL_TYPE_TX) is undefined.\nWould you like to use cluster id (C_CLUSTER_ID) to define cell groups?'));
+            switch answer
+                case 'Yes'
+                    sce.c_cell_type_tx=strcat('Goup', string(sce.c_cluster_id));
+                otherwise
+                    return;
+            end
+        else
+            warndlg('Cell type is undefined (SCE.C_CELL_TYPE_TX is empty)');
+            return;
+        end
     end
-    [c,cL]=grp2idx(sce.c_cell_type_tx);    
-    [idx]=gui.i_selmultidlg(cL);    
+    
+    
+    [c,cL]=grp2idx(sce.c_cell_type_tx);
+    [idx]=gui.i_selmultidlg(cL);
     if isempty(idx), return; end
     if numel(idx)<2
         warndlg('Need at least 2 cell types');
@@ -18,6 +30,11 @@ function callback_DetectIntercellularCrosstalk(src,~)
     [OUT]=run.talklr(sce);
     gui.gui_waitbar(fw);    
     
+    n=length(OUT.ligandok);
+    if n==0
+        warndlg('Not detected.');
+    end
+    
     labels = {'Save OUT to variable named:'};
     vars = {'OUT'};
     values = {OUT};
@@ -28,7 +45,7 @@ function callback_DetectIntercellularCrosstalk(src,~)
     end
 
 
-    n=length(OUT.ligandok);
+
     listitems=cell(n,1);
     for k=1:n
         listitems{k}=sprintf('%s -> %s (KL = %.2f)',...
