@@ -7,7 +7,9 @@ function [OUT1,OUT2,Tok]=talklr2(sce)
     [M1,M2,OUT1,OUT2]=ii_talkr2(sce.X,sce.g,sce.c_cell_type_tx,b);
     M=M2.*log2(M2./M1);
     M(isnan(M))=0;
+    M(isinf(M))=0;
     KL=real(sum(M,2));
+    
     Tok=[OUT1.Tok, table(KL)];
     [Tok,idx]=sortrows(Tok,'KL','descend');
 
@@ -24,8 +26,9 @@ function [OUT1,OUT2,Tok]=talklr2(sce)
     OUT2.Tok=OUT2.Tok(idx,:);
 
     %%
-    for k=1:min([3 size(OUT1.ligand_mat,1)])    
+    for k=1:min([3 size(OUT1.ligand_mat,1)])        
         gui.i_crosstalkgraph2(OUT1,OUT2,k)
+        pause(1)
     end
     disp('To see more results, try gui.i_crosstalkgraph2(OUT1,OUT2,k)')
     

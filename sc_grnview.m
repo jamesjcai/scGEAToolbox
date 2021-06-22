@@ -1,13 +1,13 @@
-function sc_grnview(A,genelist)
+function sc_grnview(A,nodenames,figname)
     if isa(A,'digraph')||isa(A,'graph')
         G=A;
     else
         if nargin<2
-            genelist=string((1:size(A,1))');
+            nodenames=string((1:size(A,1))');
         end
-        G=pkg.makegraph(A,genelist);
+        G=pkg.makegraph(A,nodenames);
     end
-    gui.i_singlegraph(G);
+    gui.i_singlegraph(G,figname);
 end
 
 %{

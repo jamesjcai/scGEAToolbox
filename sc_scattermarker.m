@@ -19,7 +19,7 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
     if nargin < 7
         showcam = true;
     end
-    if nargin < 6
+    if nargin < 6 || isempty(sz)
         sz = 5;
     end
     if nargin < 5
@@ -51,26 +51,19 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
             end
             switch methodid
                 case 1
-                    i_stemscatter(x, y, c);
+                    within_stemscatter(x, y, c);                    
                 case 2
                     if isempty(z)
                         scatter(x, y, sz, c, 'filled');
                     else
                         scatter3(x, y, z, sz, c, 'filled');
-                    end
-                    colormap('default');
+                    end                    
                 case 3
-                    if isempty(z)
-                        scatter(x, y, sz, c, 'filled');
-                    else
-                        scatter3(x, y, z, sz, c, 'filled');
-                    end
-                    a = colormap('autumn');
-                    a(1, :) = [.8 .8 .8];
-                    colormap(a);
+
+                    
                 case 4
                     subplot(1, 2, 1);
-                    sc_scattermarker(X, genelist, s, targetg, 3, sz, false);
+                    sc_scattermarker(X, genelist, s, targetg, 2, sz, false);
                     subplot(1, 2, 2);
                     sc_scattermarker(X, genelist, s, targetg, 1, sz, false);
                     hFig = gcf;
@@ -85,20 +78,24 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
                         y = s(:, 2);
                         z = zeros(size(x));
                     end
-                    explorer2IDX = y;
-                    assignin('base', 'explorer2IDX', explorer2IDX);
-                    % c=log2(1+X(genelist==g,:));
+                   % explorer2IDX = y;
+                   % assignin('base', 'explorer2IDX', explorer2IDX);
+                   
+                   % c=log2(1+X(genelist==g,:));
 
                     h1 = subplot(1, 2, 1);
                     scatter3(x, y, z, sz, c, 'filled');
-                    a = colormap('autumn');
-                    a(1, :) = [.8 .8 .8];
-                    if numel(unique(c)) == 1
-                        for kk = 1:size(a, 1)
-                            a(kk, :) = [.8 .8 .8];
-                        end
-                    end
-                    colormap(a);
+                    
+%                     a = colormap('autumn');
+%                     a(1, :) = [.8 .8 .8];
+%                     if numel(unique(c)) == 1
+%                         for kk = 1:size(a, 1)
+%                             a(kk, :) = [.8 .8 .8];
+%                         end
+%                     end
+%                     colormap(a);
+                    
+                    
                     % h1.YDataSource='explorer2IDX';
                     % title(targetg)
                     title(sprintf('%s\n(%s/%s = %.3f%% nonzero)', ...
@@ -126,7 +123,9 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
                     hFig.Position(3) = hFig.Position(3) * 2.2;
                     view(h1, 3);
             end
-            tx = title(sprintf('%s\n(%s/%s = %.3f%% nonzero)', ...
+            gui.i_setautumncolor(c);
+            
+            title(sprintf('%s\n(%s/%s = %.3f%% nonzero)', ...
                                targetg, ...
                                num2bankScalar(sum(c > 0)), ...
                                num2bankScalar(numel(c)), ...
@@ -148,13 +147,15 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
                 a=min([numel(unique(c)),256]);
                 pt5pickcolr.ClickedCallback = {@callback_PickColorMap, a, true};
 
-%                 pt = uipushtool(tb, 'Separator', 'off');
-%                 [img, map] = imread(fullfile(matlabroot, ...
-%                                              'toolbox', 'matlab', 'icons', 'plotpicker-plot.gif'));
-%                 ptImage = ind2rgb(img, map);
-%                 pt.CData = ptImage;
-%                 pt.Tooltip = 'Colormapeditor';
-%                 pt.ClickedCallback = @selectcolormapeditor;
+                pt = uipushtool(tb, 'Separator', 'off');
+                [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
+                                             'resources', 'plottypectl-rlocusplot.gif'));  % plotpicker-pie
+                
+                ptImage = ind2rgb(img, map);
+                pt.CData = ptImage;
+                pt.Tooltip = 'Link subplots';
+                pt.ClickedCallback = @gui.i_linksubplots;
+
             end
         else
             warning('%s no expression', targetg);
@@ -163,10 +164,30 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
             gui.add_3dcamera(tb, targetg);
         end
     end
-    %     function dispgname(~,~)
-    %         disp(g);
-    %     end
+
+    
 end
+
+
+% function callback_linksubplots(~,~)
+%     evalin('base', 'h=findobj(gcf,''type'',''axes'');');
+%     evalin('base', 'hlink = linkprop(h,{''CameraPosition'',''CameraUpVector''});');
+%     evalin('base', 'rotate3d on');        
+% end
+
+
+
+% function i_setautumncolor(c)
+%     a = colormap('autumn');
+%     a(1, :) = [.8 .8 .8];
+%     if numel(unique(c)) == 1
+%         for kk = 1:size(a, 1)
+%             a(kk, :) = [.8 .8 .8];
+%         end
+%     end
+%     colormap(a);
+% end
+
 
 function selectcolormapeditor(~, ~)
     % colormapeditor;
@@ -188,7 +209,7 @@ function [str] = num2bankScalar(num)
     end
 end
 
-function i_stemscatter(x, y, z)
+function within_stemscatter(x, y, z)
     if nargin < 3
         x = randn(300, 1);
         y = randn(300, 1);

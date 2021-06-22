@@ -1,4 +1,5 @@
-function i_singlegraph(G1)
+function i_singlegraph(G1,figname)
+if nargin<2, figname=''; end
 if nargin<1
     G1=WattsStrogatz(100,5,0.15);
     G1.Nodes.Name = string((1:100)');
@@ -15,7 +16,9 @@ load(fullfile(mfolder,...
 
 w=8;
 l=1;
-hFig=figure;
+
+hFig=figure('name',figname,'Visible','off');
+movegui(hFig, 'center');
 h1=axes(hFig);
 [p1]=drawnetwork(G1,h1);
 
@@ -86,7 +89,19 @@ pt.CData = ptImage;
 pt.Tooltip = 'Export & save data';
 pt.ClickedCallback = @SaveAdj;
 
-% hFig.Position(3)=hFig.Position(3)*2.2;
+
+% if exist('suptitle.m','file')   
+%    hFig.Position(3)=hFig.Position(3)*1.8;
+%    suptitle(figname);   
+% else
+%     hFig.Position(3)=hFig.Position(3)*2.2;
+% end
+
+set(hFig, 'visible','on');
+title(figname);
+
+
+
 
 
    function SaveAdj(hObject,event)

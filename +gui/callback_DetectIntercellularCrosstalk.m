@@ -58,17 +58,42 @@ function callback_DetectIntercellularCrosstalk(src,~)
          'ListSize',[210,300]);
     if tf2==1
         for kk=1:length(indx2)
-                [y,idx]=ismember(upper(OUT.ligandok(kk)),upper(sce.g));
-                if y
-                    figure;
-                    sc_scattermarker(sce.X,sce.g,sce.s,sce.g(idx),5);
-                end                
-                [y,idx]=ismember(upper(OUT.receptorok(kk)),upper(sce.g));
-                if y
-                    figure;
-                    sc_scattermarker(sce.X,sce.g,sce.s,sce.g(idx),5);
+%                 [y,idx]=ismember(upper(OUT.ligandok(kk)),upper(sce.g));
+%                 if y
+%                     figure;
+%                     sc_scattermarker(sce.X,sce.g,sce.s,sce.g(idx),5);
+%                 end                
+%                 [y,idx]=ismember(upper(OUT.receptorok(kk)),upper(sce.g));
+%                 if y
+%                     figure;
+%                     sc_scattermarker(sce.X,sce.g,sce.s,sce.g(idx),5);
+%                 end
+
+                [y1,idx1]=ismember(upper(OUT.ligandok(kk)),upper(sce.g));
+                [y2,idx2]=ismember(upper(OUT.receptorok(kk)),upper(sce.g));
+                if y1 && y2
+                    hFig=figure;
+                    subplot(1,2,1)
+                    sc_scattermarker(sce.X,sce.g,sce.s,sce.g(idx1),1,[],false); title(sce.g(idx1));
+                    subplot(1,2,2)
+                    sc_scattermarker(sce.X,sce.g,sce.s,sce.g(idx2),1,[],false); title(sce.g(idx2));
+                    hFig.Position(3) = hFig.Position(3) * 2.2;
+                tb = uitoolbar(hFig);
+
+                pt5pickcolr = uipushtool(tb, 'Separator', 'off');
+                [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
+                                             '../','resources', 'plottypectl-rlocusplot.gif'));  % plotpicker-pie
+                % map(map(:,1)+map(:,2)+map(:,3)==3) = NaN;  % Convert white pixels => transparent background
+                ptImage = ind2rgb(img, map);
+                pt5pickcolr.CData = ptImage;
+                pt5pickcolr.Tooltip = 'Link subplots';
+                pt5pickcolr.ClickedCallback = @gui.i_linksubplots;                    
                 end
                 gui.i_crosstalkgraph(OUT,kk);
         end
-    end    
+    end
+    
 end
+
+
+
