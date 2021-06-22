@@ -5,9 +5,11 @@ if nargin<3, k=1; end
     cL1=OUT1.cL;
     cL2=OUT2.cL;
     assert(isequal(cL1,cL2))
-    sc_grnview2(m1,m2,cL1)
-    title(sprintf('%s (ligand) -> %s (receptor)',...
-        OUT1.ligandok(k),OUT1.receptorok(k)));
+    
+    figname=sprintf('%s (ligand) -> %s (receptor)',...
+        OUT1.ligandok(k),OUT1.receptorok(k));
+    sc_grnview2(m1,m2,cL1,figname);
+    % title(figname);
 end
 
 

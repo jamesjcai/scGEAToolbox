@@ -1,4 +1,5 @@
-function i_doublegraphs(G1,G2)
+function [hFig]=i_doublegraphs(G1,G2,figname)
+if nargin<3, figname=''; end
 if nargin<2
     G1=WattsStrogatz(100,5,0.15);
     G2=WattsStrogatz(100,5,0.15);
@@ -17,13 +18,14 @@ load(fullfile(mfolder,...
 
 w=8;
 l=1;
-hFig=figure;
+hFig=figure('name',figname,'Visible','off');
+movegui(hFig, 'center');
+
+
 h1=subplot(1,2,1);
-% p1=plot(G1);
 [p1]=drawnetwork(G1,h1);
 
 h2=subplot(1,2,2);
-% p2=plot(G2);
 [p2]=drawnetwork(G2,h2);
 p2.XData=p1.XData;
 p2.YData=p1.YData;
@@ -88,7 +90,13 @@ pt.CData = ptImage;
 pt.Tooltip = 'Export & save data';
 pt.ClickedCallback = @SaveAdj;
 
-hFig.Position(3)=hFig.Position(3)*2.2;
+if exist('suptitle.m','file')   
+   hFig.Position(3)=hFig.Position(3)*1.8;
+   suptitle(figname);   
+else
+    hFig.Position(3)=hFig.Position(3)*2.2;
+end
+set(hFig, 'visible','on');
 
 
    function SaveAdj(hObject,event)
@@ -126,9 +134,9 @@ hFig.Position(3)=hFig.Position(3)*2.2;
        %w=a(randi(length(a),1));
        w=w+1;
        if w>10, w=2; end
-       i_changeweight(p1,G1,w);
-       i_changeweight(p2,G2,w);
-       function i_changeweight(p,G,b)
+       i_changeweight(p1,w);
+       i_changeweight(p2,w);
+       function i_changeweight(p,b)
             %G.Edges.LWidths = abs(b*G.Edges.Weight/max(abs(G.Edges.Weight)));
             %p.LineWidth = G.Edges.LWidths;
             p.LineWidth=abs(b*p.LineWidth/max(abs(p.LineWidth)));
@@ -148,9 +156,14 @@ hFig.Position(3)=hFig.Position(3)*2.2;
    end
 
    function ChangeDirected(hObject,event)
+        a1=h1.Title.String;
+        a2=h2.Title.String;
        [p1,G1]=i_changedirected(p1,G1,h1);
        [p2,G2]=i_changedirected(p2,G2,h2);
-       function [p,G]=i_changedirected(p,G,h) 
+       h1.Title.String=a1;
+       h2.Title.String=a2;       
+       
+       function [p,G]=i_changedirected(p,G,h)
         x=p.XData; y=p.YData;
         if isa(G,'digraph')
             A=adjacency(G,'weighted');
@@ -163,6 +176,8 @@ hFig.Position(3)=hFig.Position(3)*2.2;
    end
 
    function ChangeCutoff(hObject,event)
+        a1=h1.Title.String;
+        a2=h2.Title.String;
         list = {'0.00 (show all edges)',...
             '0.30','0.35','0.40','0.45',...
             '0.50','0.55','0.60',...
@@ -181,7 +196,8 @@ hFig.Position(3)=hFig.Position(3)*2.2;
             [p1]=i_replotg(p1,G1,h1,cutoff);
             [p2]=i_replotg(p2,G2,h2,cutoff);
         end
-       
+       h1.Title.String=a1;
+       h2.Title.String=a2;
    end
 
     function [p]=drawnetwork(G,h)
@@ -206,7 +222,7 @@ hFig.Position(3)=hFig.Position(3)*2.2;
             p.NodeLabelColor=cc;
         end
         p.NodeFontSize=2*p.NodeFontSize;
-        title(h,'scGRN');
+        %title(h,'scGRN');
 
     %            if length(unique(p.LineWidth))==1
     %             p.LineWidth = p.LineWidth./p.LineWidth;
@@ -223,7 +239,7 @@ hFig.Position(3)=hFig.Position(3)*2.2;
         % pkg.progressbar
         f = waitbar(0,'Cutoff = 0.05','Name','Edge Pruning...',...
             'CreateCancelBtn','setappdata(gcbf,''canceling'',1)');
-        setappdata(f,'canceling',0);   
+        setappdata(f,'canceling',0);
 
         m=length(listc);
         for k=1:m
@@ -243,19 +259,18 @@ hFig.Position(3)=hFig.Position(3)*2.2;
    end
 
    function [p,G]=i_replotg(p,G,h,cutoff)
-       a=h.Title.String;
-    x=p.XData; y=p.YData;
-    A=adjacency(G,'weighted');
-    A=e_filtadjc(A,cutoff);
-    if issymmetric(A)
-        G=graph(A,G.Nodes.Name);
-    else
-        G=digraph(A,G.Nodes.Name);
-    end
-    % p=plot(h,G);
-    [p]=drawnetwork(G,h);
-    p.XData=x; p.YData=y;
-    title(a)
+        a=h.Title.String;
+        x=p.XData; y=p.YData;
+        A=adjacency(G,'weighted');
+        A=e_filtadjc(A,cutoff);
+        if issymmetric(A)
+            G=graph(A,G.Nodes.Name);
+        else
+            G=digraph(A,G.Nodes.Name);
+        end
+        [p]=drawnetwork(G,h);
+        p.XData=x; p.YData=y;
+        h.Title.String=a;
    end
 
 
