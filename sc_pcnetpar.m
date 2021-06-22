@@ -6,7 +6,7 @@ function [A]=sc_pcnetpar(X,ncom,fastersvd,dozscore)
 % https://rdrr.io/cran/dna/f/inst/doc/Introduction.pdf
 
 if nargin<4, dozscore=true; end
-if nargin<3, fastersvd=false; end
+if nargin<3, fastersvd=true; end
 if nargin<2, ncom=3; end
 
 opts.maxit=150;
@@ -14,7 +14,7 @@ opts.maxit=150;
 if fastersvd
     opts.maxit=150;
     pw1=fileparts(mfilename('fullpath'));
-    pth=fullfile(pw1,'thirdparty','faster_svd','lmsvd');
+    pth=fullfile(pw1,'+run','thirdparty','faster_svd','lmsvd');
     addpath(pth);
 end
 
@@ -33,11 +33,13 @@ parfor k=1:n
     Xi=X;
     Xi(:,k)=[];
     if fastersvd
+       disp('Using fastsvd.')
        warning off
        [~,~,coeff]=lmsvd(Xi,ncom,opts);
        warning on
     else
        [~,~,coeff]=svds(Xi,ncom);
+       %[~,~,coeff]=rsvd(Xi,ncom);
     end    
     score=Xi*coeff;
     score=(score./(vecnorm(score).^2));

@@ -29,7 +29,8 @@ for k=1:n
         [~,~,coeff]=lmsvd(Xi,ncom,opts);
     else
         [~,~,coeff]=svds(Xi,ncom);
-        %[~,~,coeff]=rsvd(Xi,ncom);
+        % https://www.mathworks.com/matlabcentral/fileexchange/47835-randomized-singular-value-decomposition
+        %[~,~,coeff]=rsvd(Xi,ncom);   % not recommanded
     end
     score=Xi*coeff;
     % [coeff,score]=pca(Xi);
