@@ -1,7 +1,9 @@
-function [c,cls]=SC3(X,k,plotit)
+function [c,cls]=SC3(X,k,plotit,donorm,dolog1)
 % SC3 - consensus clustering of single-cell RNA-seq data
 % Ref: https://www.nature.com/articles/nmeth.4236
 
+if nargin<5, dolog1=true; end
+if nargin<4, donorm=true; end
 if nargin<3
     plotit=false;
 end
@@ -13,8 +15,9 @@ else
     optimk=k;
 end
 
-[X]=sc_norm(X);
-X=log2(X+1);
+if donorm, [X]=sc_norm(X); end
+if dolog1, [X]=log(X+1); end
+
 
 drange=get_drange(X);
 

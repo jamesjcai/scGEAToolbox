@@ -10,8 +10,15 @@ checkK = @(x) (x > 0) && isnumeric(x) && isscalar(x);
 addRequired(p,'X',@isnumeric);
 addRequired(p,'k',checkK);
 addOptional(p,'type',defaultType,checkType);
+addOptional(p,'usehvgs',true);
 
 parse(p,X,k,varargin{:})
+
+if p.Results.usehvgs
+    disp('Using 2000 HVGs.')
+    [~,X]=sc_hvg(X,[],true,false);
+    X=X(1:min([size(X,1),2000]),:);
+end
 
 switch p.Results.type
     case 'simlr'
