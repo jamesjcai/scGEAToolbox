@@ -17,8 +17,9 @@ addpath(pth1);
 addpath(pth2);
 javaaddpath(pth3);
 
+data=transpose(X);
 
-data=transpose(sc_transform(X));
+% data=transpose(sc_transform(X));
 % data=transpose(sc_norm(X));
 
 ncells=size(data,1);

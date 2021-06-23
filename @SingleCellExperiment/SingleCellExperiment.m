@@ -30,6 +30,10 @@ classdef SingleCellExperiment
         if nargin<2 || isempty(g), g=string(transpose(1:size(X,1))); end
         if nargin<3 || isempty(s), s=randn(size(X,2),3); end
         if nargin<4 || isempty(c), c=ones(size(X,2),1); end
+        assert(size(X,2)==size(s,1))
+        if ~(size(s,2)>2)
+            s=[s zeros(size(X,2),1)];
+        end
         obj.X = X;
         obj.g=g;
         obj.s=s;
