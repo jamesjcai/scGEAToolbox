@@ -1,5 +1,8 @@
 function [score]=sc_cellscore(X,genelist,tgsPos,tgsNeg,nbin,ctrl)
-
+% Compute cell scores from a list of feature genes
+%
+% tgsPos - positive features (negative target marker genes)
+% tgsNeg - negative features (negative target marker genes)
 
 if nargin<6, ctrl=5; end
 if nargin<5, nbin=25; end
