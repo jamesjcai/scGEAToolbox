@@ -1,6 +1,6 @@
 % Reading same input file
-[X, genelist] = sc_readmtxfile('pbmc_small.mtx', 'genelist_pbmc_small.txt');
-
+%[X, genelist] = sc_readmtxfile('pbmc_small.mtx', 'genelist_pbmc_small.txt');
+[X,genelist]=sc_readtsvfile('input.txt');
 features = [
     "CD79B",
     "CD79A";
@@ -18,6 +18,10 @@ features = [
     "CD9";
     "CD247"];
 
+[~,sgenes,g2mgenes]=pkg.i_get_cellcyclegenes;
+features=sgenes;
+
+%%
 % Normalizing data by default in Seurat = log1p(libsize * 1e4)
 X = log(((X./nansum(X)) * 1e4) + 1);
 
@@ -58,9 +62,9 @@ ctrl_use = unique(ctrl_use);
 
 % Averaging expression
 ctrl_score = mean(X(matches(genelist, ctrl_use),:),1);
-features_score = mean(X(matches(genelist, features),:),1)
+features_score = mean(X(matches(genelist, features),:),1);
 
 % Scoring
 score = features_score - ctrl_score;
 
-csvwrite('out.csv', score)
+csvwrite('out.csv', score')
