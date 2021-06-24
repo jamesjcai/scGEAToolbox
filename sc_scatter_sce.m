@@ -349,7 +349,8 @@ gui.add_3dcamera(defaultToolbar, 'AllCells');
 
 
 m = uimenu(FigureHandle,'Text','Experimental');
-uimenu(m,'Text','Remove batch effect using Harmony (python required)...','Callback',@HarmonyPy);
+uimenu(m,'Text','Remove batch effect using Harmony (python required)...',...
+    'Callback',@HarmonyPy);
 uimenu(m,'Text','Extract cells by marker(+/-) expression...',...
     'Callback',@callback_SelectCellsByMarker);
 uimenu(m,'Text','Ligand-receptor mediated intercellular crosstalk...',...
@@ -860,8 +861,22 @@ end
                 return
             case 5   % "Cell Cycle Phase";
                 if isempty(sce.c_cell_cycle_tx)
+                    
+                answer = questdlg('Use R/Seurat or Matlab version?', ...
+                    'Select Implementation', ...
+                    'R/Seurat','Matlab','Cancel','R/Seurat');
+                     switch answer
+                         case 'R/Seurat'
+                             mid=2;
+                         case 'Matlab'
+                             mid=1;
+                         case 'Cancel'
+                             return;
+                         otherwise
+                             return;
+                     end
                     fw = gui.gui_waitbar;
-                    sce = sce.estimatecellcycle;
+                    sce = sce.estimatecellcycle(true,mid);
                     gui.gui_waitbar(fw);
                 end
                 [ci, tx] = grp2idx(sce.c_cell_cycle_tx);

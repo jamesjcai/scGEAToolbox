@@ -47,7 +47,7 @@ view([-31.03 77.60])
 
 %% Determine cell type for each cluster using marker genes (collected by PanglaoDB) 
 %
-Tct=sc_celltypecaller(X,genelist,cluster_kmedoids,'species','mouse')
+Tct=run.alona(X,genelist,cluster_kmedoids,'species','mouse')
 
 %% Another demo with example data of mouse pancreatic islet cells
 %

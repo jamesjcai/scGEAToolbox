@@ -5,7 +5,7 @@ function [r] = sc_potency(X, genelist, speciesid)
 % CCAT (Correlation of Connectome And Transcriptome)
 %https://github.com/aet21/SCENT
 %
-%see also: sc_cytotrace
+%see also: run.cytotrace
 
 if nargin < 3, speciesid = 1; end
     if ~ ismember(speciesid, [1 2])

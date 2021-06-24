@@ -39,7 +39,7 @@ gscatter(s(:,1),s(:,2),cellidx,'','',8);
 gscatter(s(:,1),s(:,2),cellidx,'','',8);
 
 %% Diffusion Map
-[s]=run.sc_diffuse([X Y Z]);
+[s]=run.diffuse([X Y Z]);
 gscatter(s(:,1),s(:,2),cellidx,'','',8);
 
 %% Scatter plots

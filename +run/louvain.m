@@ -1,4 +1,4 @@
-function [c]=sc_louvain(A)
+function [c]=louvain(A)
 %Louvain clustering algorithm with adjacency matrix A
 
 pw1=fileparts(mfilename('fullpath'));

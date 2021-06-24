@@ -1,4 +1,4 @@
-function [C,eigenvals]=sc_diffuse(X,plotit)
+function [C,eigenvals]=diffuse(X,plotit)
 %Outputs:
 %  C          --- non-trivial diffusion coords. (entered column-wise)  
 %  eigenvals  --- eigenvalues of Markov matrix
