@@ -32,8 +32,7 @@ function [OUT]=sc_celltypeexplorer_auto(X,genelist,s,varargin)
         scatter(s(:,1),s(:,2),10,c);
     end
     hold on
-    %[T]=sc_celltypecaller(X,genelist,c);
-
+    
 for i=1:max(c)
     %ptsSelected=s(c==i,:);
     %[Tct]=sc_celltypebrushed(X,genelist,s,ptsSelected,species);    

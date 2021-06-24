@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="4171253824" file="E:\GitHub\scGEAToolbox\scGEApp Single-cell Gene Expression Analysis.prj" location="E:\GitHub\scGEAToolbox" name="scGEApp Single-cell Gene Expression Analysis" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="4171253824" file="C:\Users\jcai.AUTH\Documents\GitHub\scGEAToolbox\+gui\scGEApp Single-cell Gene Expression Analysis.prj" location="C:\Users\jcai.AUTH\Documents\GitHub\scGEAToolbox\+gui" name="scGEApp Single-cell Gene Expression Analysis" target="target.mlapps" target-name="Package App">
     <param.appname>scGEApp Single-cell Gene Expression Analysis</param.appname>
     <param.authnamewatermark />
     <param.email />
@@ -22,12 +22,12 @@ Cite As: James Cai (2019). scGEApp: a Matlab app for scRNA-seq analysis (https:/
       <item>19</item>
     </param.products.id>
     <param.products.version>
-      <item>9.8</item>
-      <item>3.5.11</item>
-      <item>11.7</item>
+      <item>9.9</item>
+      <item>3.5.12</item>
+      <item>12.0</item>
     </param.products.version>
     <param.platforms />
-    <param.output>C:\Users\jcai.AUTH\Documents\MATLAB\New folder</param.output>
+    <param.output>C:\Users\jcai.AUTH\Documents\MATLAB</param.output>
     <param.guid>8ef78f85-24bd-4c9e-99e4-7cd4bc509f9c</param.guid>
     <unset>
       <param.authnamewatermark />
@@ -108,11 +108,11 @@ Cite As: James Cai (2019). scGEApp: a Matlab app for scRNA-seq analysis (https:/
     <fileset.resources />
     <fileset.package />
     <build-deliverables>
-      <file location="C:\Users\jcai.AUTH\Documents\MATLAB" name="New folder" optional="false">C:\Users\jcai.AUTH\Documents\MATLAB\New folder</file>
+      <file location="C:\Users\jcai.AUTH\Documents" name="MATLAB" optional="false">C:\Users\jcai.AUTH\Documents\MATLAB</file>
     </build-deliverables>
     <workflow />
     <matlab>
-      <root>C:\Program Files\MATLAB\R2020a</root>
+      <root>C:\Program Files\MATLAB\R2020B</root>
       <toolboxes>
         <toolbox name="matlabcoder" />
         <toolbox name="embeddedcoder" />

@@ -10,7 +10,8 @@ function [ScoreV,T]=sc_cellcyclescoring(X,genelist)
 % [ScoreV]=run.SeuratCellCycle(X,genelist);
 
 X=sc_norm(X);
-X=zscore(X);
+X=log(X+1.0);
+X=zscore(X,[],1);
 X(X>10)=10;   % https://github.com/satijalab/seurat/issues/1166
 
 exprv=pkg.sparse_nanmean(X,2);
@@ -25,8 +26,8 @@ g=upper(genelist);
 [~,idx1]=intersect(g,sgenes);
 [~,idx2]=intersect(g,g2mgenes);
 
-i1=i_randsmplbin(idx1,bin);
-i2=i_randsmplbin(idx2,bin);
+i1=pkg.i_randsmplbin(idx1,bin);
+i2=pkg.i_randsmplbin(idx2,bin);
 
 %i1=randsample(length(g),length(idx1));
 %i2=randsample(length(g),length(idx2));
@@ -54,23 +55,3 @@ end
 % (Cx(:,1)==0)&(Cx(:,2)>0);          %'G2M'
 end
 
-
-% function y=sparse_nanmean(X,dim)
-%     if nargin<2, dim=1; end
-%     if dim~=1, X=X'; end
-%     Z=isnan(X)|(X==0);
-%     z=sum(~Z);
-%     y=sum(X,'omitnan');
-%     y=y./z;
-%     if dim~=1, y=y'; end
-% end
-
-function i=i_randsmplbin(idx,bin)
-    i=[];
-    binpool=bin(idx);
-    ubinpool=unique(binpool);
-    for k=1:length(ubinpool)
-        tmpi=binpool==ubinpool(k);
-        i=[i; randsample(find(bin==ubinpool(k)),sum(tmpi))];
-    end
-end

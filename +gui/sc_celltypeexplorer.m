@@ -34,73 +34,6 @@ elseif size(s,2)==2
 end
 title(titxt);
 
-% ===========================================
-%{
-bg = uibuttongroup(hFig, 'Visible','off',...
-                  'Units','pixels',...
-                  'Position',[5 5 70 72],...
-                  'SelectionChangedFcn',@bselection,...
-                  'title','Species');
-              
-% Create three radio buttons in the button group.
-r1 = uicontrol(bg,'Style',...
-                  'radiobutton',...
-                  'String','Mouse',...
-                  'Position',[5 25 70 25],...
-                  'HandleVisibility','off');
-              
-r2 = uicontrol(bg,'Style','radiobutton',...
-                  'String','Human',...
-                  'Position',[5 5 70 25],...
-                  'HandleVisibility','off');
-bg.Visible = 'on';
-
-    function bselection(source,event)
-       % disp(['Previous: ' event.OldValue.String]);
-       disp(['Current: ' event.NewValue.String]);
-       disp('------------------');
-       if strcmp(event.NewValue.String,"Mouse")
-           species="mouse";
-       else
-           species="human";
-       end
-    end
-
-%}
-% =============
-
-%{
-bg2 = uibuttongroup(hFig, 'Visible','off',...
-                  'Units','pixels',...
-                  'Position',[5 75 70 72],...
-                  'SelectionChangedFcn',@bselection2,...
-                  'title','Method');
-              
-r1x = uicontrol(bg2,'Style',...
-                  'radiobutton',...
-                  'String','Alona',...
-                  'Position',[5 25 70 25],...
-                  'HandleVisibility','off');
-              
-r2x = uicontrol(bg2,'Style','radiobutton',...
-                  'String','SingleR',...
-                  'Position',[5 5 70 25],...
-                  'HandleVisibility','off');
-bg2.Visible = 'on';
-
-    function bselection2(~,event2)
-       % disp(['Previous: ' event.OldValue.String]);
-       disp(['Current: ' event2.NewValue.String]);
-       disp('------------------');
-       if strcmp(event2.NewValue.String,"Alona")
-           method="alona";
-       else
-           method="singler";
-       end
-    end
-%}
-
-% ===========================================
 
 tb = uitoolbar(hFig);
 tt = uitoggletool(tb,'Separator','on');
@@ -156,8 +89,7 @@ hLines = flipud(eventdata.Axes.Children);
             
                 switch lower(method)
                 case 'alona'
-                    %[Tct]=sc_celltypecaller(Xi,gi,[],'species',species,'organ',organ);                    
-                    [Tct]=local_celltypebrushed(X,genelist,s,ptsSelected,species,organ);
+                    [Tct]=pkg.local_celltypebrushed(X,genelist,s,ptsSelected,species,organ);
                     ctxt=Tct.C1_Cell_Type;
                 case 'singler'
                     % [~,i]=ismember(brushedData,s,'rows');

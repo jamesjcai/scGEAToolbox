@@ -15,7 +15,7 @@ gi=genelist;
 %[Xi,gi]=sc_selectg(Xi,genelist);
 if strcmpi(database,'clustermole')
     %disp('Using clustermole marker database')
-    [Tct]=run.sc_celltypecaller_new(Xi,gi,[],'species',species);
+    [Tct]=run.celltypecaller(Xi,gi,[],'species',species);
 elseif strcmpi(database,'panglaodb')
     %disp('Using panglaodb marker database')
     [Tct]=run.alona(Xi,gi,[],'species',species,'organ',organ);

@@ -1,4 +1,4 @@
-% function [s]=sc_cytotrace(X,genelist)
+% function [s]=cytotrace(X,genelist)
 % %see also: sc_potency
 % 
 % % @title cytoTRACE
