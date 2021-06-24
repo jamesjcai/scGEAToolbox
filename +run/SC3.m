@@ -56,7 +56,7 @@ function [cls]=get_clusterarray(Dis,optimk,drange)
     cls=[];
 	textprogressbar('Calculating cluster array: ');
     for j=1:length(drange)
-		textprogressbar(j);
+		textprogressbar(100*(j./length(drange)));
         idx=kmeans(Vs1(:,1:drange(j)),optimk,'MaxIter',1e9,'emptyaction','singleton','replicate',5);
         cls=[cls; idx'];
         idx=kmeans(Vs2(:,1:drange(j)),optimk,'MaxIter',1e9,'emptyaction','singleton','replicate',5);
@@ -145,10 +145,10 @@ persistent strCR;           %   Carriage return pesistent variable
 strPercentageLength = 10;   %   Length of percentage string (must be >5)
 strDotsMaximum      = 10;   %   The total number of dots in a progress bar
 %% Main 
-if isempty(strCR) && ~ischar(c),
+if isempty(strCR) && ~ischar(c)
     % Progress bar must be initialized with a string
     error('The text progress must be initialized with a string');
-elseif isempty(strCR) && ischar(c),
+elseif isempty(strCR) && ischar(c)
     % Progress bar - initialization
     fprintf('%s',c);
     strCR = -1;
@@ -166,7 +166,7 @@ elseif isnumeric(c)
     strOut = [percentageOut dotOut];
     
     % Print it on the screen
-    if strCR == -1,
+    if strCR == -1
         % Don't do carriage return during first run
         fprintf(strOut);
     else
