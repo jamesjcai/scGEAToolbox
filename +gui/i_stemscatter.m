@@ -1,0 +1,10 @@
+function i_stemscatter(s,c) 
+
+c(c<0)=0;
+x=s(:,1);
+y=s(:,2);
+stem3(x, y, c, 'marker', 'none', 'color', 'm');
+hold on;
+scatter3(x, y, zeros(size(y)), 5, c, 'filled');
+gui.i_setautumncolor(c);
+

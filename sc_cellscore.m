@@ -1,4 +1,4 @@
-function [cs]=sc_cellscore(X,genelist,tgs,nbins,ctrl)
+function [cs]=sc_cellscore(X,genelist,tgsPos,tgsNeg,nbins,ctrl)
 % Create cell scores from a list of genes
 %     genes : `list`
 %         A list of genes to compute scores from.
@@ -11,9 +11,15 @@ function [cs]=sc_cellscore(X,genelist,tgs,nbins,ctrl)
 % Line 657
 % https://github.com/oscar-franzen/adobo/blob/master/adobo/dr.py
 
-if nargin<5, ctrl=100; end
-if nargin<4, nbins=25; end
-if nargin<3, [~,tgs]=pkg.i_get_cellcyclegenes; end
+if nargin<6, ctrl=100; end
+if nargin<5, nbins=25; end
+if nargin<4
+    tgsNeg=["IL2","TNF"];
+end
+if nargin<3
+    %[~,tgs]=pkg.i_get_cellcyclegenes;
+    tgsPos=["CD44","LY6C","KLRG1","CTLA","ICOS","LAG3"];
+end
 
 X=sc_norm(X);
 X=log(X+1.0);
@@ -23,13 +29,19 @@ X(X>10)=10;   % https://github.com/satijalab/seurat/issues/1166
 exprv=pkg.sparse_nanmean(X,2);
 
 rng default
-[bin]=discretize(log(10+exprv),nbins);
+[bin]=discretize(log(1+exprv),nbins);
 
-g=upper(genelist);
-[~,idx]=intersect(g,tgs);
-i=pkg.i_randsmplbin(idx,bin);
+[~,idxpos]=intersect(upper(genelist),upper(tgsPos));
+[~,idxneg]=intersect(upper(genelist),upper(tgsNeg));
 
-cs=pkg.sparse_nanmean(X(idx,:))-pkg.sparse_nanmean(X(i,:));
+ipos=pkg.i_randsmplbin(idxpos,bin);
+ineg=pkg.i_randsmplbin(idxneg,bin);
+
+x=pkg.sparse_nanmean(X(idxpos,:));
+cs1=x-pkg.sparse_nanmean(X(ipos,:));
+cs2=pkg.sparse_nanmean(X(ineg,:))-x;
+
+cs=cs1;
 
 end
 
