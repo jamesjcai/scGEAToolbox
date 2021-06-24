@@ -96,7 +96,7 @@ for i = 1:M
         %H=((sol1(2)-log(beta_hat(d-1,kneighbors)))/(1-sol1(1)))*log2(exp(1)); % express in terms of bits
         Hvec(i) = (dvec(i)/gamma)*(sol1(2)-log(beta_hat(round(dvec(i))-1,kneighbors)))*log2(exp(1)); % express in terms of bits
     else
-        display(['Beta(m = ',num2str(dvec(i)),', k = ',num2str(kneighbors),') not available for entropy estimation'])
+        disp(['Beta(m = ',num2str(dvec(i)),', k = ',num2str(kneighbors),') not available for entropy estimation'])
         Hvec(i) = -10;
     end
     

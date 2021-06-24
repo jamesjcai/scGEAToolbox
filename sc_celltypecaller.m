@@ -1,4 +1,4 @@
-function [T]=sc_celltypecaller
+function sc_celltypecaller
 % (X,genelist,clusterid,varargin)
 %SC_CELLTYPECALLER https://academic.oup.com/database/article/doi/10.1093/database/baz046/5427041
 % https://academic.oup.com/database/article/doi/10.1093/database/baz046/5427041
