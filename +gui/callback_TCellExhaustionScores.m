@@ -15,4 +15,8 @@ function callback_TCellExhaustionScores(src,~)
     gui.i_stemscatter(sce.s,cs);
     zlabel('Exhaustion Score')
     title('T Cell Exhaustion Score')
+            labels = {'Save values to variable named:'}; 
+        vars = {'TCellExhaustionScores'};
+        values = {cs};
+        export2wsdlg(labels,vars,values);
 end
