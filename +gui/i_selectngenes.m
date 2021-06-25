@@ -1,4 +1,6 @@
-function [glist] = i_selectngenes(sce)
+function [glist] = i_selectngenes(sce,predefinedlist)
+
+if nargin<2, predefinedlist=[]; end
 
 % internal function used by callback_BuildGeneNetwork
 glist=[];
@@ -8,28 +10,37 @@ elseif isstring(sce)
     genelist=sce;
     gsorted=sort(genelist);
 end
+
+if ~isempty(predefinedlist)
+    predefinedlist=gsorted(matches(gsorted,predefinedlist,'IgnoreCase',true));
+end
+
 answer = questdlg('Paste or select genes?',...
-	'Build scGRN','Paste','Select','Cancel','Paste');
+	'','Paste','Select','Cancel','Paste');
 switch answer
     case 'Cancel'
         return;
     case 'Paste'
         n=length(gsorted);
-        tg=gui.i_inputgenelist(gsorted(randperm(n,20)));        
+        if isempty(predefinedlist)
+            tg=gui.i_inputgenelist(gsorted(randperm(n,20)));
+        else
+            tg=gui.i_inputgenelist(predefinedlist);
+        end
         if length(tg)>=2
             [y]=ismember(tg,gsorted);
             % i=i(y);
             glist=tg(y);
-            if length(glist)<2
-                warndlg('Need at leaset 2 genes');
-                return;
-            end
+%             if length(glist)<2
+%                 warndlg('Need at leaset 2 genes');
+%                 return;
+%             end
         else
-            warndlg('Need at least 2 genes');
+%             warndlg('Need at least 2 genes');
             return;
         end
     case 'Select'
-        [idx]=gui.i_selmultidlg(gsorted);
+        [idx]=gui.i_selmultidlg(gsorted,predefinedlist);
         if isempty(idx), return; end
         if length(idx)<2
             warndlg('Need at least 2 genes');
@@ -40,4 +51,5 @@ switch answer
             %g=["Tcf7","Lef1","Bcl6","Ctla4","Lag3","Pdcd1"];
         end
 end
+
 end

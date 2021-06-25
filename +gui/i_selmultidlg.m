@@ -1,10 +1,23 @@
-function [idx]=i_selmultidlg(genelist)
+function [idx]=i_selmultidlg(genelist,predefinedlist)
 idx=[];
+if nargin<2, predefinedlist=[]; end
 txt_cell_array = {'line1';'line2';'line3';'line4';'line5'};
 if nargin<1, genelist=txt_cell_array; end
 if ~iscell(genelist)
     genelist=cellstr(genelist);
 end
+if ~isempty(predefinedlist) 
+    if ~iscell(predefinedlist)
+        predefinedlist=cellstr(predefinedlist);
+    end
+    predefinedlist=genelist(matches(genelist,predefinedlist,'IgnoreCase',true));
+end
+if ~isempty(predefinedlist)
+    inlist=setxor(genelist,predefinedlist,'stable');
+else
+    inlist=genelist;
+end
+
 f = figure('Visible','off');
 % ax = axes(f);
 % ax.Units = 'pixels';
@@ -20,11 +33,11 @@ c = uicontrol('style','pushbutton','Position',[220 125 100 30],...
 
 h_list = uicontrol('style','list','max',length(genelist),...
    'min',1,'Position',[20 20 170 360],...
-   'string',genelist);
+   'string',inlist);
 
 h_list2 = uicontrol('style','list','max',length(genelist),...
    'min',1,'Position',[360 20 170 360],...
-   'string',[]);
+   'string',predefinedlist);
 set(f,'Visible','on')
 drawnow();
 uiwait();  % add this to the end
