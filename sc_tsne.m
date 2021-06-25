@@ -12,43 +12,21 @@ if nargin<5, dolog1p=true; end
 if nargin<6, bygene=false; end   % when BYGENE=true, the matrix X will be transposed and the output will be tSNE for genes rather than cells.
 if nargin<7, genelist=[]; end
 
-
 pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'+run','thirdparty','PHATE');
 addpath(pth);
 
-if donorm
-    if bygene   
-       data=sc_norm(X','type','libsize');
-    else
-       data=sc_norm(X,'type','libsize');
-    end
-else
-    if bygene
-       data=X';
-    else
-       data=X;
-    end
-end
+if bygene, X=X.'; end
+if donorm, X=sc_norm(X); end
+if dolog1p, X=log(X+1); end
+if issparse(X), X=full(X); end
+ncells=size(X,2);
 
 % The following transpose is necessary to make the input dim right.
-data=data';
-
-% sqrt transform
-% data = sqrt(data);
-if dolog1p
-    data = log(data+1);
-end
-if issparse(data)
-   data=full(data);
-end
-
-ncells=size(data,1);
-
+data=X.';
 if ncells>500
 	data = svdpca(data, 50, 'random');
 end
-
 if ncells>5000
     s=tsne(data,'NumDimensions',ndim,'Algorithm','barneshut','NumPCAComponents',50);
 else
@@ -89,4 +67,5 @@ if plotit
         dt.UpdateFcn = {@i_myupdatefcn1,genelist};
     end    
 end
+
 end

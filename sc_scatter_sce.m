@@ -612,12 +612,22 @@ end
                 case 'Top 2000 HVGs'
                     usehvgs = true;
                 case {'Cancel', ''}
-                    return
+                    return;
             end
+            answer3 = questdlg('3D or 2D?','',...
+                    '3D','2D','3D');
+                switch answer3
+                    case '3D'
+                        ndim=3;
+                    case '2D'
+                        ndim=2;
+                    otherwise
+                        return;
+                end
             fw = gui.gui_waitbar;
             try
                 forced = true;
-                sce = sce.embedcells(methodtag, forced, usehvgs);
+                sce = sce.embedcells(methodtag, forced, usehvgs, ndim);
             catch ME
                 gui.gui_waitbar(fw);
                 errordlg(ME.message);

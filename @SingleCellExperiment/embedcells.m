@@ -1,4 +1,5 @@
-function obj = embedcells(obj,methodtag,forced,usehvgs)
+function obj = embedcells(obj,methodtag,forced,usehvgs,ndim)
+    if nargin<5, ndim=3; end
     if nargin<4 || isempty(usehvgs), usehvgs=true; end
     if nargin<3 || isempty(forced), forced=false; end
     if nargin<2, methodtag='tsne'; end
@@ -19,11 +20,11 @@ function obj = embedcells(obj,methodtag,forced,usehvgs)
         
         switch methodtag
             case 'tsne'
-                obj.s=sc_tsne(X,3,false,true);                
+                obj.s=sc_tsne(X,ndim,false,true);                
             case 'umap'
-                obj.s=sc_umap(X,3);                
+                obj.s=sc_umap(X,ndim);                
             case 'phate'
-                obj.s=sc_phate(X,3);
+                obj.s=sc_phate(X,ndim);
         end
         obj.struct_cell_embeddings.(methodtag)=obj.s;
         disp('SCE.S added');
