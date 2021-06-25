@@ -1,4 +1,5 @@
 function sc_grnview(A,nodenames,figname)
+%GRN network viewer
     if isa(A,'digraph')||isa(A,'graph')
         G=A;
     else

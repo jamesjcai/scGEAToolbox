@@ -1,4 +1,5 @@
 function [T] = sc_deg(X, Y, genelist, methodid)
+%DEG analysis using Mann–Whitney U test
     % https://satijalab.org/seurat/v3.1/de_vignette.html
     % p_val : p_val (unadjusted)
     % avg_logFC : log fold-chage of the average expression between the two groups. Positive values indicate that the feature is more highly expressed in the first group.

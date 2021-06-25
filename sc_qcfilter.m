@@ -1,5 +1,5 @@
 function [X,genelist,keptidxv]=sc_qcfilter(X,genelist,libsize,mtratio,dropout,min_cells_nonzero,removemtgenes)
-
+%Basic QC filter
 if nargin<7, removemtgenes=false; end
 if nargin<6 || isempty(min_cells_nonzero), min_cells_nonzero=0.005; end
 if nargin<5 || isempty(dropout), dropout=1; end

@@ -1,4 +1,6 @@
 function A=e_filtadjc(A,q)
+%Filter adjacnecy matrix A with cutoff Q
+%
 % A - adjacency matrix
 if nargin<2, q=0.95; end
 dim=size(A);

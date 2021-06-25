@@ -1,4 +1,5 @@
 function [T,Xsorted,genelistsorted]=sc_hvg(X,genelist,sortit,plotit,normit,ignorehigh)
+% Identify HVGs
 % HVGs selection - This method uses the CV^2 on normalized count data to 
 % analyze biological variation. 
 %

@@ -1,4 +1,5 @@
 function [x,sf]=norm_deseq(x)
+%DESeq normalization
 % For DESeq normalization, the geometric mean for each gene was computed 
 % after removing all zeroes. This is necessary to avoid a situation where 
 % a majority of genes have geometric means of zero, such that the majority

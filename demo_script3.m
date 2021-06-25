@@ -1,4 +1,4 @@
-%% Demonstration of Visualization Functions in scGEAToolbox
+%% Demonstration of Visualization Functions
 %% Load and pre-process three data sets, X, Y and Z
 %%
 cdgea; % set working directory

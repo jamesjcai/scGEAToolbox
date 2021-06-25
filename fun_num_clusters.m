@@ -1,5 +1,5 @@
 function [optimk]=fun_num_clusters(X,varargin)
-
+%Estimate number of clusters
 p = inputParser;
 defaultType = 'simlr';
 validTypes = {'simlr','soptsc','sc3'};

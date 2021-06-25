@@ -1,4 +1,6 @@
 function [A]=sc_pcnet(X,ncom,fastersvd)
+%Construct network using PC regression
+%
 % [A]=sc_pcnet(X,ncom)      % X = expression matrix of genes x cells
 % ncom - number of components used (default=3)
 % ref: https://rdrr.io/cran/dna/man/PCnet.html

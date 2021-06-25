@@ -1,5 +1,5 @@
 function [X,genelist]=sc_readhdf5file(filenm)
-
+%Read HDF5 file
 % https://www.mathworks.com/help/matlab/hdf5-files.html
 % http://scipy-lectures.org/advanced/scipy_sparse/csc_matrix.html
 % https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/advanced/h5_matrices

@@ -1,5 +1,5 @@
 function [A]=sc_grn(X,varargin)
-% Construct a single-cell gene regulatory network (scGRN)
+%SC_GRN construct single-cell gene regulatory network (scGRN)
 %
 % see also: SC_SSNET (single-sample network)
 

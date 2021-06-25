@@ -1,4 +1,5 @@
 function [X,genelist,celllist]=sc_readtsvfile(filename,genecolnum)
+%Read TSV/TXT file
 if nargin<2
     genecolnum=1;
 end

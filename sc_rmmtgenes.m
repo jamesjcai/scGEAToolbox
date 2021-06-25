@@ -1,4 +1,5 @@
 function [X,genelist,idx]=sc_rmmtgenes(X,genelist,mtgenenamepat,vebrose)
+%Remove mt-genes
 if nargin<3
    mtgenenamepat="mt-";
 end

@@ -1,4 +1,5 @@
 function [ScoreV,T]=sc_cellcyclescoring_old(X,genelist)
+% Old function will be removed
 % https://rdrr.io/cran/Seurat/src/R/utilities.R
 % https://satijalab.org/seurat/v2.4/cell_cycle_vignette.html
 % https://github.com/theislab/scanpy/blob/5db49c2612622b84b6379922204e0ba453d80ca2/scanpy/tools/_score_genes.py

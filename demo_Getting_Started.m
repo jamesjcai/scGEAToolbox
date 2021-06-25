@@ -1,3 +1,4 @@
+% Learn to use SC_SCATTER
 echo off
 clc
 echo on

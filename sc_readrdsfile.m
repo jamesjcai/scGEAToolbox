@@ -1,5 +1,5 @@
 function [sce]=sc_readrdsfile(filename)
-
+%Read Seurat/RDS file
 sce=[];
 if nargin<1
     [fname, pathname] = uigetfile( ...

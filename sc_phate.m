@@ -1,5 +1,5 @@
 function s=sc_phate(X,ndim)
-%UMAP embedding of cells
+%PHATE embedding of cells
 % s=sc_phate(X,3);
 
 %see also: SC_TSNT, SC_UMAP

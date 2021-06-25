@@ -1,4 +1,4 @@
-%% Demonstration of Clustering Functions in scGEAToolbox
+%% Demonstration of Clustering Functions
 %% Load example data
 %%
 cdgea; % set working directory

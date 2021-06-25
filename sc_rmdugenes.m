@@ -1,5 +1,5 @@
 function [X,genelist]=sc_rmdugenes(X,genelist)
-% remove genes with duplicate name
+% Remove genes with duplicate name
 
 [~, w] = unique( genelist, 'stable' );
 duplicate_indices = setdiff( 1:numel(genelist), w );

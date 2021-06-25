@@ -1,4 +1,4 @@
-%% Demonstration of Feature Selection Functions in scGEAToolbox
+%% Demonstration of Feature Selection Functions
 %% HVG analysis with single data X
 %%
 cdgea; % set working directory

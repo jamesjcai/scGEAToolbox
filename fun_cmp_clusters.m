@@ -1,5 +1,5 @@
 function [score]=fun_cmp_clusters(true_labels,cluster_labels,varargin)
-
+%Compare two clusters
 % https://academic.oup.com/bib/advance-article/doi/10.1093/bib/bby076/5077112
 
 p = inputParser;

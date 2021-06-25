@@ -1,4 +1,5 @@
 function A=sc_pcnetdenoised(X,varargin)
+%Construct network using scTenifoldNet (accurate, robust, but slow)
 % A=sc_pcnetdenoised(X);
 %
 % X is gene x cell matrix
