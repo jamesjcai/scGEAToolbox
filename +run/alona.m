@@ -30,9 +30,9 @@ end
 oldpth=pwd;
 pw1=fileparts(mfilename('fullpath'));
 if strcmpi(organ,"all")
-    pth=fullfile(pw1,'thirdparty','alona_panglaodb');
+    pth=fullfile(pw1,'thirdparty','alona_panglaodb2021');
 else
-    pth=fullfile(pw1,'thirdparty','alona_panglaodb',sprintf('%s',organ));
+    pth=fullfile(pw1,'thirdparty','alona_panglaodb2021',sprintf('%s',organ));
 end
 cd(pth);
 if issparse(X)
@@ -46,8 +46,8 @@ end
 % X=sc_norm(X,"type","deseq");
 % warning on
 X=sc_norm(X);
+X=log(X+1);
 genelist=upper(genelist);
-
 
 switch lower(species)
     case 'human'
@@ -93,10 +93,10 @@ for j=1:length(celltypev)
             wi=wvalu(g(i)==wgene);
             for k=1:NC
                 z=X(g(i)==genelist,clusterid==k);
-                z=mean(z(:));                
+                z=mean(z(:));
                 Z(k)=Z(k)+z*wi;
                 ng(k)=ng(k)+1;
-            end          
+            end
         end
     end
     for k=1:NC
