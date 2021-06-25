@@ -24,11 +24,11 @@ tgsPos=upper(tgsPos);
 tgsNeg=upper(tgsNeg);
 
 % Normalizing data by default in Seurat = log1p(libsize * 1e4)
-X = log(((X./nansum(X)) * 1e4) + 1);
+%X = log(((X./nansum(X)) * 1e4) + 1);
+X=sc_norm(X);
+X=log(X+1);
 
-% Set seed
-rng(1);
-
+rng default
 % Initial stats
 cluster_lenght = size(X, 1);
 data_avg = mean(X, 2);
