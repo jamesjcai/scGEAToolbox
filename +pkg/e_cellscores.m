@@ -8,3 +8,4 @@ switch type
         error('Undefined')
 end
 [score]=sc_cellscore(X,genelist,tgsPos,tgsNeg);
+end
