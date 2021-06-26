@@ -10,8 +10,12 @@ data.statistics{10}.libraryName
 url = strcat(base_address,"enrich");
 uri = matlab.net.URI(url);
 res = webwrite(uri,'body','hello','field2','world');
-
+res=urlreadpost(uri,'body','hello','field2','world');
 %%
+%url='http://amp.pharm.mssm.edu/Enrichr/addList'
+gstr = 'PHF14\nRBM3\nMSL1\nPHF21A\nARL10'
+input = struct('list', gstr);
+response = webwrite(url, input)
 
 %{
 https://github.com/wjawaid/enrichR/blob/master/R/functions.R
