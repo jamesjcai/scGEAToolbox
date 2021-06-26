@@ -14,6 +14,7 @@ if nargin<3, sortit=true; end
 
 if donorm
     [X]=sc_norm(X,'type','libsize');
+	disp('Library-size normalization...done.')
 end
 u=nanmean(X,2);
 cv=nanstd(X,0,2)./u;

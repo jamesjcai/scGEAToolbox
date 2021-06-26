@@ -17,20 +17,30 @@ pth=fullfile(pw1,'+run','thirdparty','PHATE');
 addpath(pth);
 
 if bygene, X=X.'; end
-if donorm, X=sc_norm(X); end
-if dolog1p, X=log(X+1); end
+if donorm
+    X=sc_norm(X);
+    disp('Library-size normalization...done.')
+end
+if dolog1p
+    X=log(X+1); 
+    disp('Log(x+1) transformation...done.')
+end
 if issparse(X), X=full(X); end
 ncells=size(X,2);
 
 % The following transpose is necessary to make the input dim right.
 data=X.';
+%if ncells>500
+%	data = svdpca(data, 50, 'random');
+%end
 if ncells>500
-	data = svdpca(data, 50, 'random');
-end
-if ncells>5000
-    s=tsne(data,'NumDimensions',ndim,'Algorithm','barneshut','NumPCAComponents',50);
+    s=tsne(data,'NumDimensions',ndim,...
+        'Algorithm','barneshut','NumPCAComponents',50,...
+        'Standardize',true);
 else
-    s=tsne(data,'NumDimensions',ndim);
+    s=tsne(data,'NumDimensions',ndim,...
+        'Algorithm','exact','NumPCAComponents',0,...
+        'Standardize',true);
 end
 
 %%

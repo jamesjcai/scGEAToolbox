@@ -11,7 +11,13 @@ if nargin<3, donorm=true; end
 if nargin<2, ndim=3; end
 % if ~issparse(X), X=sparse(X); end
 
-if donorm, X=sc_norm(X,'type','libsize'); end
-if dolog1p, X = log(X+1); end
+if donorm, 
+	X=sc_norm(X,'type','libsize'); 
+	disp('Library-size normalization...done.')
+end
+if dolog1p
+	X = log(X+1); 
+	disp('Log(x+1) transformation...done.')
+end
 s=run.UMAP(X,ndim);
 end

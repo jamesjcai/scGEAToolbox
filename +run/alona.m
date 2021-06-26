@@ -46,6 +46,7 @@ end
 % X=sc_norm(X,"type","deseq");
 % warning on
 X=sc_norm(X);
+disp('Library-size normalization...done.')
 X=log(X+1);
 genelist=upper(genelist);
 

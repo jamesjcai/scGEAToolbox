@@ -18,6 +18,7 @@ if bygene
 else
    data=sc_norm(X,'type','libsize');
 end
+disp('Library-size normalization...done.')
 end
 
 % % The following transpose is necessary to make the input dim right.
@@ -27,6 +28,7 @@ data=data';
 % data = sqrt(data);
 if dolog1p
     data = log(data+1);
+	disp('Log(x+1) transformation...done.')
 end
 
 opts.no_dims=ndim;
