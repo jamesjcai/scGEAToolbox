@@ -89,7 +89,10 @@ S=zeros(length(celltypev),NC);
 
 for j=1:length(celltypev)
     g=strsplit(markergenev(j),',');
-    g=g(1:end-1);
+    g=strtrim(g);
+    if strlength(g(end))==0
+        g=g(1:end-1);
+    end
     g=upper(unique(g));
     %[~,idx]=ismember(g,genelist);
     Z=zeros(NC,1); ng=zeros(NC,1);

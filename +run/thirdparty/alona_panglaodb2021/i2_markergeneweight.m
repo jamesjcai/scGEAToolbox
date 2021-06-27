@@ -1,17 +1,25 @@
 species='hs';
 T1=readtable(sprintf('markerlist_%s_panglaodb.txt',species),'ReadVariableNames',false,'Delimiter','\t');
 T2=readtable(sprintf('markerlist_%s_custom.txt',species),'ReadVariableNames',false,'Delimiter','\t');
+% T3 and T4 downloaded from Enrichr
 T3=readtable('Descartes_Cell_Types_and_Tissue_2021.txt','ReadVariableNames',false,'Delimiter','\t');
+%T4=readtable('CellMarker_Augmented_2021.txt','ReadVariableNames',false,'Delimiter','\t');
 
-tmpT=readtable('CellMarkerAugmented2021.txt');
-switch species
-    case 'hs'
-        tmpT=tmpT(tmpT.speciesType=="Human",:);
-    case 'mm'
-        tmpT=tmpT(tmpT.speciesType=="Mouse",:);
-end
-T4=table(tmpT.cellName,tmpT.geneSymbol);
-T=[T1;T2;T3;T4];
+% tmpT=readtable('CellMarkerAugmented2021_ori.txt');
+% switch species
+%     case 'hs'
+%         tmpT=tmpT(tmpT.speciesType=="Human",:);
+%     case 'mm'
+%         tmpT=tmpT(tmpT.speciesType=="Mouse",:);
+% end
+% T5=table(tmpT.cellName,tmpT.geneSymbol);
+
+ switch species
+     case 'hs'
+        T=[T1;T2;T3];
+     case 'mm'
+         T=[T1;T2];
+ end
 T.Var1=i_makeuniquename(T.Var1);
 writetable(T,sprintf('markerlist_%s.txt',species),...
     'WriteVariableNames',false,'Delimiter','\t');
@@ -21,7 +29,10 @@ s=upper(string(T.Var2));
 S=[];
 for k=1:length(s)
     a=strsplit(s(k),',');
-    a=strtrim(a(1:end-1));
+    a=strtrim(a);
+    if strlength(a(end))==0
+        a=a(1:end-1);
+    end
     S=[S,a];
 end
 %%
