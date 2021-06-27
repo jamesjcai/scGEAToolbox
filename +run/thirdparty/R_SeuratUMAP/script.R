@@ -1,23 +1,36 @@
 library(Seurat)
 library(Matrix)
 
-countMatrix <- read.table('input.txt', sep = '\t', stringsAsFactors = FALSE)
-geneList <- make.unique(countMatrix[,1])[-1]
-bcList <- countMatrix[1,][-1]
-countMatrix <- Matrix(as.matrix(countMatrix[-1,-1]))
-rownames(countMatrix) <- geneList
-colnames(countMatrix) <- bcList
-countMatrix <- CreateSeuratObject(countMatrix)
-countMatrix <- NormalizeData(countMatrix)
-countMatrix <- FindVariableFeatures(countMatrix, selection.method = "vst", nfeatures = 2000)
+A <- read.table('input.txt', sep = '\t', stringsAsFactors = FALSE)
+geneList <- make.unique(A[,1])[-1]
+bcList <- A[1,][-1]
+A <- Matrix(as.matrix(A[-1,-1]))
+rownames(A) <- geneList
+colnames(A) <- bcList
+A <- CreateSeuratObject(A)
 
-all.genes <- rownames(countMatrix)
-countMatrix <- ScaleData(countMatrix, features = all.genes)
-countMatrix <- RunPCA(countMatrix, features = VariableFeatures(object = countMatrix))
-#countMatrix <- RunUMAP(countMatrix, reduction = "pca", dims = 1:20)
-# countMatrix <- RunUMAP(countMatrix, dims = 1:10, n.components = 3L)
-countMatrix <- RunUMAP(countMatrix, dims = 1:10)
-write.csv(countMatrix@reductions$umap@cell.embeddings, file = 'output.csv')
-#countMatrix <- CellCycleScoring(countMatrix, s.features = cc.genes.updated.2019$s.genes, g2m.features = cc.genes.updated.2019$g2m.genes)
-#countMatrix <- data.frame(S=countMatrix$S.Score, G2M=countMatrix$G2M.Score, Phase = countMatrix$Phase)
-#write.csv(countMatrix, file = 'output.csv')
+A <- NormalizeData(A)
+A <- FindVariableFeatures(A,nfeatures = 2000)
+A <- ScaleData(A)
+A <- RunPCA(A)
+A <- RunUMAP(A,dims = 1:50)
+write.csv(A@reductions$umap@cell.embeddings, file = 'output.csv')
+
+
+
+A <- NormalizeData(A)
+A <- FindVariableFeatures(A, selection.method = "vst", nfeatures = 2000)
+
+all.genes <- rownames(A)
+A <- ScaleData(A, features = all.genes)
+A <- RunPCA(A, features = VariableFeatures(object = A))
+#A <- RunUMAP(A, reduction = "pca", dims = 1:20)
+# A <- RunUMAP(A, dims = 1:10, n.components = 3L)
+A <- RunUMAP(A, dims = 1:10)
+write.csv(A@reductions$umap@cell.embeddings, file = 'output.csv')
+#A <- CellCycleScoring(A, s.features = cc.genes.updated.2019$s.genes, g2m.features = cc.genes.updated.2019$g2m.genes)
+#A <- data.frame(S=A$S.Score, G2M=A$G2M.Score, Phase = A$Phase)
+#write.csv(A, file = 'output.csv')
+
+
+

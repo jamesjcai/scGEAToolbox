@@ -307,8 +307,8 @@ pt5 = uipushtool(UitoolbarHandle, 'Separator', 'off');
     'resources', 'multiscale.gif'));
 ptImage = ind2rgb(img, map);
 pt5.CData = ptImage;
-pt5.Tooltip = 'Multi-embedding view';
-pt5.ClickedCallback = @gui.callback_MultiEmbeddings;
+pt5.Tooltip = 'Run Seurat/R Workflow (R required)';
+pt5.ClickedCallback = @RunSeuratWorkflow;
 
 pt5 = uipushtool(UitoolbarHandle, 'Separator', 'off');
 [img, map] = imread(fullfile(mfolder, ...
@@ -349,6 +349,8 @@ gui.add_3dcamera(defaultToolbar, 'AllCells');
 
 
 m = uimenu(FigureHandle,'Text','Experimental');
+uimenu(m,'Text','Multi-embedding view...',...
+    'Callback',@gui.callback_MultiEmbeddings);
 uimenu(m,'Text','Remove batch effect using Harmony (python required)...',...
     'Callback',@HarmonyPy);
 uimenu(m,'Text','Extract cells by marker(+/-) expression...',...
@@ -402,6 +404,14 @@ end
             h.BrushData=highlightindex;
             % set(h,'BrushData',highlightindex');
         end
+    end
+
+    function RunSeuratWorkflow(src,~)
+       answer = questdlg('Run Seurat standard worflow?');
+       if ~strcmp(answer, 'Yes'), return; end
+       [sce]=run.SeuratWorkflow(sce);
+       [c, cL] = grp2idx(sce.c);
+       RefreshAll(src, 1, true, false);
     end
 
     function HarmonyPy(src, ~)

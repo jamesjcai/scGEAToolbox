@@ -2,8 +2,8 @@ classdef SingleCellExperiment
    properties
       X double {mustBeNumeric, mustBeFinite} % counts
       g string                               % genelist
-      s double {mustBeNumeric, mustBeFinite} % cell.embeddings
-      c                                      % current group/class id
+      s double {mustBeNumeric, mustBeFinite} % cell embeddings
+      c                                      % current/active group/class id
       c_cell_cycle_tx                        % cell cycle string
       c_cell_type_tx                         % cell type string
       c_cluster_id                           % clustering result
@@ -14,7 +14,8 @@ classdef SingleCellExperiment
       struct_cell_embeddings=struct('tsne',[],'umap',[],'phate',[])
       struct_cell_clusterings=struct('kmeans',[],'snndpc',[],...
                                       'sc3',[],'simlr',[],'soptsc',[],...
-                                      'sinnlrr',[],'specter',[])
+                                      'sinnlrr',[],'specter',[],...
+                                      'seurat',[])
       table_attributes table
    end
    
