@@ -494,19 +494,18 @@ end
         if keepview || keepcolr
             [para] = i_getoldsettings(src);
         end
-        if size(sce.s, 2) > 2
-            if ~isempty(h.ZData)
-                if keepview
-                    [ax, bx] = view();
-                end
-                h = gui.i_gscatter3(sce.s, c, methodid);
-                if keepview
-                    view(ax, bx);
-                end
-            else
-                h = gui.i_gscatter3(sce.s(:, 1:2), c, methodid);
+        % [c, cL] = grp2idx(sce.c);
+        if size(sce.s, 2) > 2 && ~isempty(h.ZData)
+            if keepview
+                [ax, bx] = view();
             end
-        else
+            h = gui.i_gscatter3(sce.s, c, methodid);
+            if keepview
+                view(ax, bx);
+            end
+        else   % otherwise 2D
+            size(c)
+            size(sce.s)
             h = gui.i_gscatter3(sce.s(:, 1:2), c, methodid);
         end
         if keepview
@@ -1018,7 +1017,6 @@ end
             return
         end
         i_deletecells(ptsSelected);
-        guidata(FigureHandle, sce);
     end
 
     function i_deletecells(ptsSelected)

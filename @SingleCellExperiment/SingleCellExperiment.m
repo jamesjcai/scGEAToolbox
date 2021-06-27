@@ -97,7 +97,23 @@ classdef SingleCellExperiment
             for k=2:2:length(obj.list_cell_attributes)
                 obj.list_cell_attributes{k}(i)=[];
             end
-        end    
+            
+            a=fields(obj.struct_cell_embeddings);
+            for k=1:length(a)
+                if ~isempty(obj.struct_cell_embeddings.(a{k}))
+                    size(i)
+                    size(obj.struct_cell_embeddings.(a{k}))
+                    obj.struct_cell_embeddings.(a{k})(i,:)=[];
+                end
+            end
+            
+            a=fields(obj.struct_cell_clusterings);
+            for k=1:length(a)
+                if ~isempty(obj.struct_cell_clusterings.(a{k}))
+                     obj.struct_cell_clusterings.(a{k})(i)=[];
+                end
+            end            
+        end
 
     function obj = selectcells(obj,i)
         if islogical(i) && length(i)==obj.NumCells
