@@ -409,8 +409,10 @@ end
     function RunSeuratWorkflow(src,~)
        answer = questdlg('Run Seurat standard worflow?');
        if ~strcmp(answer, 'Yes'), return; end
+	   fw = gui.gui_waitbar;
        [sce]=run.SeuratWorkflow(sce);
        [c, cL] = grp2idx(sce.c);
+	   gui.gui_waitbar(fw);
        RefreshAll(src, 1, true, false);
     end
 
