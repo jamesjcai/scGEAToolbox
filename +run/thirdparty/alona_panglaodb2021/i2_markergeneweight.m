@@ -1,4 +1,4 @@
-species='mm';
+species='hs';
 T1=readtable(sprintf('markerlist_%s_panglaodb.txt',species),'ReadVariableNames',false,'Delimiter','\t');
 T2=readtable(sprintf('markerlist_%s_custom.txt',species),'ReadVariableNames',false,'Delimiter','\t');
 T3=readtable('Descartes_Cell_Types_and_Tissue_2021.txt','ReadVariableNames',false,'Delimiter','\t');
@@ -12,9 +12,9 @@ switch species
 end
 T4=table(tmpT.cellName,tmpT.geneSymbol);
 T=[T1;T2;T3;T4];
-
-%writetable(T,sprintf('markerlist_%s.txt',species),...
-%    'WriteVariableNames',false,'Delimiter','\t');
+T.Var1=i_makeuniquename(T.Var1);
+writetable(T,sprintf('markerlist_%s.txt',species),...
+    'WriteVariableNames',false,'Delimiter','\t');
 
 %%
 s=upper(string(T.Var2));
