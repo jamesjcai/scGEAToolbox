@@ -53,17 +53,17 @@ genelist=upper(genelist);
 switch lower(species)
     case 'human'
         Tw=readtable('markerweight_hs.txt');
-        T1=readtable('markerlist_hs_panglaodb.txt','ReadVariableNames',false,'Delimiter','\t');
-        if exist('markerlist_hs_custom.txt','file')
-            T2=readtable('markerlist_hs_custom.txt','ReadVariableNames',false,'Delimiter','\t');
+        T1=readtable('markerlist_hs.txt','ReadVariableNames',false,'Delimiter','\t');
+        if exist('xxmarkerlist_hs_custom.txt','file')
+            T2=readtable('xxmarkerlist_hs_custom.txt','ReadVariableNames',false,'Delimiter','\t');
         else
             T2=[];
         end
     case 'mouse'
         Tw=readtable('markerweight_mm.txt');
-        T1=readtable('markerlist_mm_panglaodb.txt','ReadVariableNames',false,'Delimiter','\t');
-        if exist('markerlist_mm_custom.txt','file')
-            T2=readtable('markerlist_mm_custom.txt','ReadVariableNames',false,'Delimiter','\t');
+        T1=readtable('markerlist_mm.txt','ReadVariableNames',false,'Delimiter','\t');
+        if exist('xxmarkerlist_mm_custom.txt','file')
+            T2=readtable('xxmarkerlist_mm_custom.txt','ReadVariableNames',false,'Delimiter','\t');
         else
             T2=[];
         end
@@ -76,6 +76,10 @@ if ~isempty(T2)
 else
     Tm=T1;
 end
+
+%celltypev=string(Tm.Var1);
+%[celltypev,idx]=unique(celltypev);
+%Tm=Tm(idx,:);
 
 celltypev=string(Tm.Var1);
 markergenev=string(Tm.Var2);
