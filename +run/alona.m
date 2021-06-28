@@ -45,37 +45,52 @@ end
 % warning off
 % X=sc_norm(X,"type","deseq");
 % warning on
-X=sc_norm(X);
-% disp('Library-size normalization...done.')
-X=log(X+1);
 genelist=upper(genelist);
-
 switch lower(species)
     case 'human'
-        Tw=readtable('markerweight_hs.txt');
-        T1=readtable('markerlist_hs.txt','ReadVariableNames',false,'Delimiter','\t');
-        if exist('xxmarkerlist_hs_custom.txt','file')
-            T2=readtable('xxmarkerlist_hs_custom.txt','ReadVariableNames',false,'Delimiter','\t');
-        else
-            T2=[];
-        end
+        stag='hs';
     case 'mouse'
-        Tw=readtable('markerweight_mm.txt');
-        T1=readtable('markerlist_mm.txt','ReadVariableNames',false,'Delimiter','\t');
-        if exist('xxmarkerlist_mm_custom.txt','file')
-            T2=readtable('xxmarkerlist_mm_custom.txt','ReadVariableNames',false,'Delimiter','\t');
-        else
-            T2=[];
-        end
+        stag='mm';
+end
+markerfile=sprintf('marker_%s.mat',stag);
+if exist(markerfile,'file')
+    load(markerfile,'Tw','Tm');
+else
+    % disp('Preparing marker.mat...');
+    Tw=readtable(sprintf('markerweight_%s.txt',stag));
+    Tm=readtable(sprintf('markerlist_%s.txt',stag),...
+        'ReadVariableNames',false,'Delimiter','\t');
+    save(markerfile,'Tw','Tm');
 end
 
+% switch lower(species)
+%     case 'human'
+%         Tw=readtable('markerweight_hs.txt');
+%         Tm=readtable('markerlist_hs.txt','ReadVariableNames',false,'Delimiter','\t');
+%         if exist('xxmarkerlist_hs_custom.txt','file')
+%             T2=readtable('xxmarkerlist_hs_custom.txt','ReadVariableNames',false,'Delimiter','\t');
+%             Tm=[Tm;T2];
+%         end
+%     case 'mouse'
+%         
+%         Tw=readtable('markerweight_mm.txt');
+%         Tm=readtable('markerlist_mm.txt','ReadVariableNames',false,'Delimiter','\t');
+%         if exist('xxmarkerlist_mm_custom.txt','file')
+%             T2=readtable('xxmarkerlist_mm_custom.txt','ReadVariableNames',false,'Delimiter','\t');
+%             Tm=[Tm;T2];
+%         end
+% end
+
 wvalu=Tw.Var2;
-wgene=string(Tw.Var1);
-if ~isempty(T2)
-    Tm=[T1;T2];
-else
-    Tm=T1;
-end
+wgene=string(upper(Tw.Var1));
+
+[validG,idx1,idx2]=intersect(genelist,wgene);
+genelist=genelist(idx1);
+X=sc_norm(X(idx1,:));
+X=log(X+1);
+
+wvalu=wvalu(idx2);
+wgene=wgene(idx2);
 
 %celltypev=string(Tm.Var1);
 %[celltypev,idx]=unique(celltypev);
@@ -94,18 +109,24 @@ for j=1:length(celltypev)
         g=g(1:end-1);
     end
     g=upper(unique(g));
+    y=matches(g,genelist);
+    if ~any(y), continue; end
+    g=g(y);
     %[~,idx]=ismember(g,genelist);
     Z=zeros(NC,1); ng=zeros(NC,1);
     for i=1:length(g)
-        if any(g(i)==wgene) && any(g(i)==genelist)
+        % if any(g(i)==wgene) && any(g(i)==genelist)
+        gidx=g(i)==genelist;
+        %if any(gidx)            
+        % if matches(g(i),validG)
             wi=wvalu(g(i)==wgene);
             for k=1:NC
-                z=X(g(i)==genelist,clusterid==k);
+                z=X(gidx,clusterid==k);
                 z=mean(z(:));
                 Z(k)=Z(k)+z*wi;
                 ng(k)=ng(k)+1;
             end
-        end
+        %end
     end
     for k=1:NC
         if ng(k)>0
