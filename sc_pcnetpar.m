@@ -18,7 +18,7 @@ if fastersvd
     addpath(pth);
 end
 
-% [X]=sc_norm(X);
+% X is supposed to be LogNormalized, i.e., [X]=log(1+sc_norm(X));
 X=X';
 if dozscore
     X=zscore(X);

@@ -1,14 +1,17 @@
-function [A]=sc_pcnet(X,ncom,fastersvd)
+function [A]=sc_pcnet(X,ncom,fastersvd,dozscore)
 %Construct network using PC regression
 %
-% [A]=sc_pcnet(X,ncom)      % X = expression matrix of genes x cells
+% [X]=log(1+sc_norm(X));     % pcnet input should be LogNormalized
+% [A]=sc_pcnet(X,ncom);      % X = expression matrix of genes x cells
 % ncom - number of components used (default=3)
 % ref: https://rdrr.io/cran/dna/man/PCnet.html
 % https://github.com/cran/dna/blob/master/src/rpcnet.c
 % https://rdrr.io/cran/dna/f/inst/doc/Introduction.pdf
 
-if nargin<2, ncom=3; end
+if nargin<4, dozscore=true; end
 if nargin<3, fastersvd=false; end
+if nargin<2, ncom=3; end
+
 opts.maxit=150;
 
 if fastersvd    
@@ -17,10 +20,16 @@ if fastersvd
     addpath(pth);
 end
 
+% LogNormalize: Feature counts for each cell are divided by
+% the total counts for that cell and multiplied by the 
+% scale.factor. This is then natural-log transformed using log1p.
+% https://satijalab.org/seurat/reference/normalizedata
 %[X]=sc_norm(X);
-X=X';
-X=zscore(X);
 
+X=X.';
+if dozscore
+    X=zscore(X);
+end
 n=size(X,2);
 A=1-eye(n);
 for k=1:n
