@@ -21,19 +21,24 @@ sce=SingleCellExperiment(X,g);
 sce.c=[sce1.c; sce2.c];
 sce.s=[sce1.s; sce2.s];
 sce.c_batch_id=c;
+
 if ~isempty(sce1.c_cell_cycle_tx) && ~isempty(sce2.c_cell_cycle_tx)
     sce.c_cell_cycle_tx=[sce1.c_cell_cycle_tx; sce2.c_cell_cycle_tx];
 end
+
 if ~isempty(sce1.c_cell_type_tx) && ~isempty(sce2.c_cell_type_tx)
     sce.c_cell_type_tx=[i_remove_affix(sce1.c_cell_type_tx);...
         i_remove_affix(sce2.c_cell_type_tx)];
 end
+
 if ~isempty(sce1.c_cluster_id) && ~isempty(sce2.c_cluster_id)    
     sce.c_cluster_id=[sce1.c_cluster_id; sce2.c_cluster_id];
 end
+
 if ~isempty(sce1.c_cell_id) && ~isempty(sce2.c_cell_id)
     sce.c_cell_id=[sce1.c_cell_id; sce2.c_cell_id];
 end
+
 if ~isempty(sce1.list_cell_attributes) && ~isempty(sce2.list_cell_attributes)
     for k=1:2:min([length(sce1.list_cell_attributes) length(sce2.list_cell_attributes)])
         if strcmp(sce1.list_cell_attributes{k},...
@@ -44,7 +49,28 @@ if ~isempty(sce1.list_cell_attributes) && ~isempty(sce2.list_cell_attributes)
         end
     end
 end
+
+a=fields(sce.struct_cell_clusterings);
+for k=1:length(a)
+    c1=sce1.struct_cell_clusterings.(a{k});
+    c2=sce2.struct_cell_clusterings.(a{k});
+    if ~isempty(c1) && ~isempty(c2)
+        sce.struct_cell_clusterings.(a{k})=[c1;c2];
+    end
 end
+
+a=fields(sce.struct_cell_embeddings);
+for k=1:length(a)
+    c1=sce1.struct_cell_embeddings.(a{k});
+    c2=sce2.struct_cell_embeddings.(a{k});
+    if ~isempty(c1) && ~isempty(c2)
+        sce.struct_cell_embeddings.(a{k})=[c1;c2];
+    end
+end
+
+
+end
+
 
 function b=i_remove_affix(a)
     b=a;
