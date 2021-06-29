@@ -101,8 +101,6 @@ classdef SingleCellExperiment
             a=fields(obj.struct_cell_embeddings);
             for k=1:length(a)
                 if ~isempty(obj.struct_cell_embeddings.(a{k}))
-                    size(i)
-                    size(obj.struct_cell_embeddings.(a{k}))
                     obj.struct_cell_embeddings.(a{k})(i,:)=[];
                 end
             end
@@ -119,14 +117,14 @@ classdef SingleCellExperiment
         if islogical(i) && length(i)==obj.NumCells
             ix=i;
         else
-            ix=true(obj.NumCells,1);
-            ix(i)=false;            
+            ix=false(obj.NumCells,1);
+            ix(i)=true;
         end
         obj = removecells(obj,~ix);
     end
 
     function obj = set.c(obj,tmpc)
-      if length(tmpc)~=numcells(obj)         
+      if length(tmpc)~=numcells(obj)
          error('length(c)~=numcells(sce)');
       else
          obj.c=tmpc;

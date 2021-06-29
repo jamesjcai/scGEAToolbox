@@ -138,7 +138,7 @@ ptShowClu = uipushtool(UitoolbarHandle, 'Separator', 'off');
 ptImage = ind2rgb(img, map);
 ptShowClu.CData = ptImage;
 ptShowClu.Tooltip = 'Show clusters individually';
-ptShowClu.ClickedCallback = @ShowClustersPop;
+ptShowClu.ClickedCallback = @gui.callback_ShowClustersPop;
 
 ptcluster = uipushtool(UitoolbarHandle, 'Separator', 'on');
 [img, map] = imread(fullfile(mfolder, ...
@@ -312,8 +312,8 @@ pt5.ClickedCallback = @RunSeuratWorkflow;
 
 pt5 = uipushtool(UitoolbarHandle, 'Separator', 'off');
 [img, map] = imread(fullfile(mfolder, ...
-    'resources', 'plotpicker-image.gif'));  % plotpicker-pie
-% map(map(:,1)+map(:,2)+map(:,3)==3) = NaN;  % Convert white pixels => transparent background
+    'resources', 'plotpicker-image.gif'));      % plotpicker-pie
+% map(map(:,1)+map(:,2)+map(:,3)==3) = NaN;     % Convert white pixels => transparent background
 ptImage = ind2rgb(img, map);
 pt5.CData = ptImage;
 pt5.Tooltip = 'Switch 2D/3D';
@@ -504,8 +504,6 @@ end
                 view(ax, bx);
             end
         else   % otherwise 2D
-            size(c)
-            size(sce.s)
             h = gui.i_gscatter3(sce.s(:, 1:2), c, methodid);
         end
         if keepview
@@ -536,7 +534,7 @@ end
         if isempty(h.ZData)   % current 2 D
             if ~(size(sce.s, 2) > 2)
                 helpdlg('Canno swith to 3-D. SCE.S is 2-D');
-                return
+                return;
             end
             h = gui.i_gscatter3(sce.s, c, methodid);
             if ~isempty(ax) && ~isempty(bx) && ~any([ax bx] == 0)
@@ -547,16 +545,19 @@ end
         else                 % current 3D do following
             [ax, bx] = view();
             answer = questdlg('Which view to be used to project cells?', '', ...
-                'Default View', 'Current View', 'Cancel', 'Default View');
+                'X-Y Plane', 'Sreen/Camera', 'PCA-rotated', 'X-Y Plane');
             switch answer
-                case 'Default View'
-                    h = gui.i_gscatter3(sce.s(:, 1:2), c, methodid);
-                case 'Current View'
+                case 'X-Y Plane'
+                    sx=sce.s;
+                case 'Sreen/Camera'
                     sx = pkg.i_3d2d(sce.s, ax, bx);
-                    h = gui.i_gscatter3(sx(:, 1:2), c, methodid);
-                case {'Cancel', ''}
-                    return
+                case {'PCA-rotated'}
+                    [~,sx]=pca(sce.s);
+                otherwise
+                    return;
             end
+            h = gui.i_gscatter3(sx(:, 1:2), c, methodid);
+            sce.s=sx;
         end
         title(sce.title);
         h.Marker = para.oldMarker;
@@ -1266,60 +1267,60 @@ end
         end
     end
 
-    function ShowClustersPop(src, ~)
-        answer = questdlg('Show clusters in new figures?');
-        if ~strcmp(answer, 'Yes')
-            return
-        end
-        
-        cmv = 1:max(c);
-        idxx = cmv;
-        [cmx] = countmember(cmv, c);
-        answer = questdlg('Sort by size of cell groups?');
-        if strcmpi(answer, 'Yes')
-            [~, idxx] = sort(cmx, 'descend');
-        end
-        sces = sce.s;
-        if isempty(h.ZData)
-            sces = sce.s(:, 1:2);
-        end
-        
-        [para] = i_getoldsettings(src);
-        figure;
-        for k = 1:9
-            if k <= max(c)
-                subplot(3, 3, k);
-                gui.i_gscatter3(sces, c, 3, cmv(idxx(k)));
-                title(sprintf('%s\n%d cells (%.2f%%)', ...
-                    cL{idxx(k)}, cmx(idxx(k)), ...
-                    100 * cmx(idxx(k)) / length(c)));
-            end
-            colormap(para.oldColorMap);
-        end
-        
-        if ceil(max(c) / 9) == 2
-            figure;
-            for k = 1:9
-                kk = k + 9;
-                if kk <= max(c)
-                    subplot(3, 3, k);
-                    gui.i_gscatter3(sces, c, 3, cmv(idxx(kk)));
-                    title(sprintf('%s\n%d cells (%.2f%%)', ...
-                        cL{idxx(kk)}, cmx(idxx(kk)), ...
-                        100 * cmx(idxx(kk)) / length(c)));
-                end
-            end
-            colormap(para.oldColorMap);
-        end
-        if ceil(max(c) / 9) > 2
-            warndlg('Group(s) #18 and above are not displayed');
-        end
-    end
+%     function ShowClustersPop(src, ~)
+%         answer = questdlg('Show clusters in new figures?');
+%         if ~strcmp(answer, 'Yes')
+%             return
+%         end
+%         
+%         cmv = 1:max(c);
+%         idxx = cmv;
+%         [cmx] = countmember(cmv, c);
+%         answer = questdlg('Sort by size of cell groups?');
+%         if strcmpi(answer, 'Yes')
+%             [~, idxx] = sort(cmx, 'descend');
+%         end
+%         sces = sce.s;
+%         if isempty(h.ZData)
+%             sces = sce.s(:, 1:2);
+%         end
+%         
+%         [para] = i_getoldsettings(src);
+%         figure;
+%         for k = 1:9
+%             if k <= max(c)
+%                 subplot(3, 3, k);
+%                 gui.i_gscatter3(sces, c, 3, cmv(idxx(k)));
+%                 title(sprintf('%s\n%d cells (%.2f%%)', ...
+%                     cL{idxx(k)}, cmx(idxx(k)), ...
+%                     100 * cmx(idxx(k)) / length(c)));
+%             end
+%             colormap(para.oldColorMap);
+%         end
+%         
+%         if ceil(max(c) / 9) == 2
+%             figure;
+%             for k = 1:9
+%                 kk = k + 9;
+%                 if kk <= max(c)
+%                     subplot(3, 3, k);
+%                     gui.i_gscatter3(sces, c, 3, cmv(idxx(kk)));
+%                     title(sprintf('%s\n%d cells (%.2f%%)', ...
+%                         cL{idxx(kk)}, cmx(idxx(kk)), ...
+%                         100 * cmx(idxx(kk)) / length(c)));
+%                 end
+%             end
+%             colormap(para.oldColorMap);
+%         end
+%         if ceil(max(c) / 9) > 2
+%             warndlg('Group(s) #18 and above are not displayed');
+%         end
+%     end
 
     function [txt] = i_myupdatefcnx(~, event_obj)
         % pos = event_obj.Position;
         idx = event_obj.DataIndex;
-        txt = cL(c(idx));
+        txt = cL(c(idx));        
     end
 
     function [isdone] = i_labelclusters(notasking)

@@ -13,8 +13,10 @@ function callback_CalculateCellScores(src,~)
     gui.i_stemscatter(sce.s,cs);
     zlabel('Score Value')
     title('Cell Score')
-            labels = {'Save score values to variable named:'}; 
-        vars = {'CellScores'};
-        values = {cs};
-        export2wsdlg(labels,vars,values);
+    labels = {'Save score values to variable named:'}; 
+    vars = {'CellScores'};
+    values = {cs};
+    export2wsdlg(labels,vars,values);
 end
+
+
