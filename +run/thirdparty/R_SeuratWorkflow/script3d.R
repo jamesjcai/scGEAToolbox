@@ -18,8 +18,8 @@ pbmc <- CreateSeuratObject(counts = pbmc.counts)
 pbmc <- SCTransform(pbmc)
 
 pbmc <- RunPCA(object = pbmc)
-pbmc <- RunTSNE(object = pbmc, dims = 1:30)
-pbmc <- RunUMAP(object = pbmc, dims = 1:30)
+pbmc <- RunTSNE(object = pbmc, dims = 1:30, dim.embed = 3)
+pbmc <- RunUMAP(object = pbmc, dims = 1:30, n.components = 3L)
 pbmc <- FindNeighbors(object = pbmc, dims = 1:30)
 pbmc <- FindClusters(object = pbmc)
 

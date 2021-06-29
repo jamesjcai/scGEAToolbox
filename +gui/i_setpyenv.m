@@ -1,6 +1,32 @@
 function [done]=i_setpyenv
         % selpath = uigetdir;
-        done=false;
+           
+    x=pyenv;
+    if isempty(x.Executable)
+        [done]=ix_setpyenv;
+    else
+        [done]=false;
+        answer = questdlg(sprintf('%s',x.Executable), ...
+            'Python Executable', ...
+            'Use this','Use another','Cancel','Use this');        
+        switch answer
+            case 'Use this'
+            case 'Use another'
+                if ~ix_setpyenv, return; end                    
+            case {'Cancel',''}
+                return;
+            otherwise
+                return;
+        end
+        [done]=true;
+    end    
+end
+
+
+function [done]=ix_setpyenv
+        % selpath = uigetdir;
+        done=false;        
+        
         if ispc
             [file,path] = uigetfile('python.exe','Select Python Interpreter');
         else

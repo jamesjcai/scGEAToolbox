@@ -64,6 +64,6 @@ T=sortrows(T,size(T,2),'descend');
 [~,idx1]=ismember(table2array(T(:,1)),genelistx);
 [~,idx2]=ismember(table2array(T(:,1)),genelisty);
 figure;
-sc_stem3(X(idx1,:),Y(idx2,:),genelistx(idx1),50);           
+gui.sc_stem3(X(idx1,:),Y(idx2,:),genelistx(idx1),50);           
 
 %% The End

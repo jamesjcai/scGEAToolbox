@@ -7,22 +7,7 @@ function [isDoublet,doubletscore,methodtag,done]=callback_DoubletDetection(src,~
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
 
-    x=pyenv;
-    if isempty(x.Executable)
-        i_setpyenv
-    else
-        answer = questdlg(sprintf('%s',x.Executable), ...
-            'Python Executable', ...
-            'Use this','Use another','Cancel','Use this');        
-        switch answer
-            case 'Use this'
-            case 'Use another'
-                if ~gui.i_setpyenv, return; end                    
-            case {'Cancel',''}
-                return;
-            otherwise
-                return;
-        end
+if ~gui.i_setpyenv, return; end
 
 methodtag=questdlg('Which method?','',...
     'scrublet','doubletdetection','scrublet');
@@ -47,8 +32,7 @@ methodtag=questdlg('Which method?','',...
             errordlg(ME.message);
             rethrow(ME);
         end 
-        gui.gui_waitbar(fw);
-    end
+        gui.gui_waitbar(fw);    
    guidata(FigureHandle,sce);
    done=true;
 end

@@ -6,22 +6,27 @@ function [done]=callback_Harmonypy(src,~)
         warndlg('No batch effect (SCE.C_BATCH_ID is empty)');
         return;
     end
-    x=pyenv;
-    if isempty(x.Executable)
-        i_setpyenv
-    else
-        answer = questdlg(sprintf('%s',x.Executable), ...
-            'Python Executable', ...
-            'Use this','Use another','Cancel','Use this');        
-        switch answer
-            case 'Use this'
-            case 'Use another'
-                if ~gui.i_setpyenv, return; end                    
-            case {'Cancel',''}
-                return;
-            otherwise
-                return;
-        end
+    
+if ~gui.i_setpyenv
+    return; 
+end
+
+%     x=pyenv;
+%     if isempty(x.Executable)
+%         i_setpyenv
+%     else
+%         answer = questdlg(sprintf('%s',x.Executable), ...
+%             'Python Executable', ...
+%             'Use this','Use another','Cancel','Use this');        
+%         switch answer
+%             case 'Use this'
+%             case 'Use another'
+%                 if ~gui.i_setpyenv, return; end                    
+%             case {'Cancel',''}
+%                 return;
+%             otherwise
+%                 return;
+%         end
 
         answer = questdlg('Using MATLAB engine for Python or Calling Python script?', ...
             'Engine Interface', ...
@@ -53,8 +58,8 @@ function [done]=callback_Harmonypy(src,~)
             errordlg(ME.message);
             rethrow(ME);
         end 
-            gui.gui_waitbar(fw);        
-    end
+            gui.gui_waitbar(fw);
+    
    guidata(FigureHandle,sce);
    done=true;
 end

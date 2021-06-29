@@ -55,6 +55,10 @@ title(sce.title);
 dt = datacursormode;
 dt.UpdateFcn = {@i_myupdatefcnx};
 
+
+
+
+
 % defaultToolbar = findall(FigureHandle, 'tag','FigureToolBar');  % get the figure's toolbar handle
 defaultToolbar = findall(FigureHandle, 'Type', 'uitoolbar');
 
@@ -208,9 +212,29 @@ pt4mrkheat.ClickedCallback = @callback_MarkerGeneHeatmap;
 
 ptpseudotime = uipushtool(defaultToolbar, 'Separator', 'off');
 [img, map] = imread(fullfile(mfolder, ...
-    'resources', 'IMG00107.GIF'));
+    'resources', 'IMG00107.GIF'));    % white space
 ptImage = ind2rgb(img, map);
 ptpseudotime.CData = ptImage;
+
+
+
+ptpseudotime = uipushtool(defaultToolbar, 'Separator', 'on');
+[img, map] = imread(fullfile(mfolder, ...
+    'resources', 'IMG00074.GIF'));
+ptImage = ind2rgb(img, map);
+ptpseudotime.CData = ptImage;
+ptpseudotime.Tooltip = 'Check R environment';
+ptpseudotime.ClickedCallback = @gui.i_setrenv;
+
+ptpseudotime = uipushtool(defaultToolbar, 'Separator', 'off');
+[img, map] = imread(fullfile(mfolder, ...
+    'resources', 'IMG00067.GIF'));
+ptImage = ind2rgb(img, map);
+ptpseudotime.CData = ptImage;
+ptpseudotime.Tooltip = 'Run Seurat/R Workflow (R required)';
+ptpseudotime.ClickedCallback = @RunSeuratWorkflow;
+
+
 
 ptpseudotime = uipushtool(defaultToolbar, 'Separator', 'on');
 [img, map] = imread(fullfile(mfolder, ...
@@ -302,13 +326,14 @@ pt5.CData = ptImage;
 pt5.Tooltip = 'Embedding';
 pt5.ClickedCallback = @EmbeddingAgain;
 
-pt5 = uipushtool(UitoolbarHandle, 'Separator', 'off');
-[img, map] = imread(fullfile(mfolder, ...
-    'resources', 'multiscale.gif'));
-ptImage = ind2rgb(img, map);
-pt5.CData = ptImage;
-pt5.Tooltip = 'Run Seurat/R Workflow (R required)';
-pt5.ClickedCallback = @RunSeuratWorkflow;
+% run(fullfile(mfolder,'+gui','add_toolbar.m'))
+% pt5 = uipushtool(UitoolbarHandle, 'Separator', 'off');
+% [img, map] = imread(fullfile(mfolder, ...
+%     'resources', 'multiscale.gif'));
+% ptImage = ind2rgb(img, map);
+% pt5.CData = ptImage;
+% pt5.Tooltip = 'Run Seurat/R Workflow (R required)';
+% pt5.ClickedCallback = @RunSeuratWorkflow;
 
 pt5 = uipushtool(UitoolbarHandle, 'Separator', 'off');
 [img, map] = imread(fullfile(mfolder, ...
@@ -409,8 +434,12 @@ end
     function RunSeuratWorkflow(src,~)
        answer = questdlg('Run Seurat standard worflow?');
        if ~strcmp(answer, 'Yes'), return; end
+
+       [ndim]=gui.i_choose2d3d;
+       if isempty(ndim), return; end       
+       
 	   fw = gui.gui_waitbar;
-       [sce]=run.SeuratWorkflow(sce);
+       [sce]=run.SeuratWorkflow(sce,ndim);
        [c, cL] = grp2idx(sce.c);
 	   gui.gui_waitbar(fw);
        RefreshAll(src, 1, true, false);
@@ -626,16 +655,18 @@ end
                 case {'Cancel', ''}
                     return;
             end
-            answer3 = questdlg('3D or 2D?','',...
-                    '3D','2D','3D');
-                switch answer3
-                    case '3D'
-                        ndim=3;
-                    case '2D'
-                        ndim=2;
-                    otherwise
-                        return;
-                end
+%             answer3 = questdlg('3D or 2D?','',...
+%                     '3D','2D','3D');
+%                 switch answer3
+%                     case '3D'
+%                         ndim=3;
+%                     case '2D'
+%                         ndim=2;
+%                     otherwise
+%                         return;
+%                 end
+            [ndim]=gui.i_choose2d3d;
+            if isempty(ndim), return; end
             fw = gui.gui_waitbar;
             try
                 forced = true;
