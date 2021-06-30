@@ -1,5 +1,10 @@
 function [X]=sc_transform(X,varargin)
 
+% https://www.biorxiv.org/content/10.1101/2021.06.24.449781v1.full
+% acosh transformation based on the delta method
+% shifted logarithm (log(x + c)) with a pseudo-count c, so that it approximates the acosh transformation
+% randomized quantile and Pearson residuals
+
 p = inputParser;
 defaultType = 'PearsonResiduals';
 validTypes = {'PearsonResiduals','kNNSmoothing','FreemanTukey','csndm','sct'};
