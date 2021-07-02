@@ -10,6 +10,7 @@ function callback_CalculateCellScores(src,~)
         return;
     end
     
+    posg
     cs=sc_cellscore(sce.X,sce.g,posg);
     
     figure;
