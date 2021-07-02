@@ -384,14 +384,18 @@ uimenu(m,'Text','Ligand-receptor mediated intercellular crosstalk...',...
     'Callback',@callback_DetectIntercellularCrosstalk);
 uimenu(m,'Text','Doublet Detection (python required)...',...
     'Callback',@DoubletDetection);
+
+uimenu(m,'Text','Merge Subclusters of Same Cell Type...',...
+    'Callback',@MergeSubCellTypes);
+
 uimenu(m,'Text','Calculate Gene Expression Statistics...',...
     'Callback',@callback_CalculateGeneStats);
 uimenu(m,'Text','Calculate Cell Scores from List of Feature Genes...',...
     'Callback',@callback_CalculateCellScores);
-uimenu(m,'Text','T Cell Exhaustion Scores...',...
-    'Callback',@callback_TCellExhaustionScores);
 uimenu(m,'Text','Calculate Cell Scores from Cell Type Markers...',...
     'Callback',@callback_CellTypeMarkerScores);
+uimenu(m,'Text','T Cell Exhaustion Scores...',...
+    'Callback',@callback_TCellExhaustionScores);
 
 % handles = guihandles( FigureHandle ) ;
 % guidata( FigureHandle, handles ) ;
@@ -511,6 +515,20 @@ end
             %RefreshAll(src, 1, true, false);
         end
 
+    end
+
+    function MergeSubCellTypes(src,~)
+        if isempty(sce.c_cell_type_tx), return; end
+        % [sce]=pkg.i_mergeSubCellNames(sce);        
+        newtx=erase(sce.c_cell_type_tx,"_{"+digitsPattern+"}");
+        if isequal(sce.c_cell_type_tx,newtx)
+            helpdlg("No sub-clusters are merged");
+        else
+            [c,cL]=grp2idx(sce.c_cell_type_tx);
+            sce.c = c;
+            RefreshAll(src, 1, true, false);
+            i_labelclusters;
+        end
     end
 
 % =========================
