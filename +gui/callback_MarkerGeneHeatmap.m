@@ -162,34 +162,43 @@ pt1.CData = ptImage;
 pt1.ClickedCallback = @i_summarymapT;
 
 
-
-
-
-
     function i_summarymap(~,~)
         f2=figure;
-        imagesc(Z);
-        set(gca,'XTick',1:numel(cL));
-        set(gca,'XTickLabel',strrep(M(:,1),'_','\_'));
-        set(gca,'XTickLabelRotation',45);
-        set(gca,'YTick',1:length(MX));
-        set(gca,'YTickLabel',MX);
-        set(gca,'TickLength',[0 0])
-        f2.Position(1)=f2.Position(1)+200;
-        f2.Position(2)=f2.Position(2)-200;
+%         imagesc(Z);
+%         set(gca,'XTick',1:numel(cL));
+%         set(gca,'XTickLabel',strrep(M(:,1),'_','\_'));
+%         set(gca,'XTickLabelRotation',45);
+%         set(gca,'YTick',1:length(MX));
+%         set(gca,'YTickLabel',MX);
+%         set(gca,'TickLength',[0 0])
+%         f2.Position(1)=f2.Position(1)+200;
+%         f2.Position(2)=f2.Position(2)-200;
+        h=heatmap(cL,MX,Z);
+        h.Title = 'Marker Gene Heatmap';
+        h.XLabel = 'Cell Type';
+        h.YLabel = 'Marker Gene';
+        h.Colormap = parula;
+        h.GridVisible = 'off';
     end
 
     function i_summarymapT(~,~)
-        f2=figure;
-        imagesc(Z');
-        set(gca,'YTick',1:numel(cL));
-        set(gca,'YTickLabel',strrep(M(:,1),'_','\_'));
-        set(gca,'XTickLabelRotation',45);
-        set(gca,'XTick',1:length(MX));
-        set(gca,'XTickLabel',MX);
-        set(gca,'TickLength',[0 0])
-        f2.Position(1)=f2.Position(1)+200;
-        f2.Position(2)=f2.Position(2)-200;
+         f2=figure;
+%         imagesc(Z');
+%         set(gca,'YTick',1:numel(cL));
+%         set(gca,'YTickLabel',strrep(M(:,1),'_','\_'));
+%         set(gca,'XTickLabelRotation',45);
+%         set(gca,'XTick',1:length(MX));
+%         set(gca,'XTickLabel',MX);
+%         set(gca,'TickLength',[0 0])
+%         f2.Position(1)=f2.Position(1)+200;
+%         f2.Position(2)=f2.Position(2)-200;
+        h=heatmap(MX,cL,Z.');
+        h.Title = 'Marker Gene Heatmap';
+        h.YLabel = 'Cell Type';
+        h.XLabel = 'Marker Gene';
+        h.Colormap = parula;
+        h.GridVisible = 'off';
+
     end
 
     function i_saveM(~,~,M)    
