@@ -58,8 +58,8 @@ function callback_MarkerGeneHeatmap(src,~)
     
 
     fw=gui.gui_waitbar;
-    M=cell(numel(cL),2);
     [markerlist]=sc_pickmarkers(sce.X,sce.g,c,10,methodid);
+    M=cell(numel(cL),2);
     for k=1:numel(cL)        
         cLk=matlab.lang.makeValidName(cL{k});
         M{k,1}=cLk;
@@ -76,7 +76,7 @@ function callback_MarkerGeneHeatmap(src,~)
         idcl=[idcl; c(i)];
     end
     X=sc_norm(X);
-    X=log2(X+1);
+    X=log(X+1);
 
 % =========== 
 Y=[]; idgn=[]; szgn=[]; Z=[];

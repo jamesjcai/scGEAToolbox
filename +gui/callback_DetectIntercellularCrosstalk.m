@@ -82,7 +82,7 @@ function callback_DetectIntercellularCrosstalk(src,~)
 
                 pt5pickcolr = uipushtool(tb, 'Separator', 'off');
                 [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
-                                             '../','resources', 'plottypectl-rlocusplot.gif'));  % plotpicker-pie
+                                             '../','resources', 'fvtool_fdalinkbutton.gif'));  % plotpicker-pie
                 % map(map(:,1)+map(:,2)+map(:,3)==3) = NaN;  % Convert white pixels => transparent background
                 ptImage = ind2rgb(img, map);
                 pt5pickcolr.CData = ptImage;

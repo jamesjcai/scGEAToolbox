@@ -1,4 +1,4 @@
-function [c]=SeuratCellCycle(X,genelist)
+function [c,T]=SeuratCellCycle(X,genelist)
 %Run cell cycle analysis using R package Seurat
 %Seurat implements the method proposed by Tirosh et al.39 to score cells based on the averaged normalized expression of known markers of G1/S and G2/M.
 %https://science.sciencemag.org/content/352/6282/189
@@ -18,7 +18,7 @@ if exist('output.csv','file')
     T=readtable('output.csv','ReadVariableNames',true);
     c=string(T.Phase);
 else
-    c=[];
+    c=[]; T=[];
 end
 if exist('input.txt','file'), delete('input.txt'); end
 if exist('output.csv','file'), delete('output.csv'); end

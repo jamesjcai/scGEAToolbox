@@ -13,33 +13,36 @@ if nargin<3
     tgsPos=["CD44","LY6C","KLRG1","CTLA","ICOS","LAG3"];
 end
 
-if ~any(matches(genelist, tgsPos,'IgnoreCase',true))
+%genelist=upper(genelist);
+%tgsPos=upper(tgsPos);
+%tgsNeg=upper(tgsNeg);
+
+idx=matches(genelist, tgsPos, 'IgnoreCase',true);
+if ~any(idx)
     score=NaN(size(X,2),1);
     warning('No feature genes found in GENELIST.');
     return;
 end
 
-genelist=upper(genelist);
-tgsPos=upper(tgsPos);
-tgsNeg=upper(tgsNeg);
+
 
 % Normalizing data by default in Seurat = log1p(libsize * 1e4)
 %X = log(((X./nansum(X)) * 1e4) + 1);
 X=sc_norm(X);
-disp('Library-size normalization...done.')
+%disp('Library-size normalization...done.')
 X=log(X+1);
-disp('Log(x+1) transformation...done.')
+%disp('Log(x+1) transformation...done.')
 
 rng default
 % Initial stats
 cluster_lenght = size(X, 1);
 data_avg = mean(X, 2);
-[~, sort_avg] = sort(data_avg);
+[~, I] = sort(data_avg);
 
 % Sorting data
-data_avg = data_avg(sort_avg);
-genelist = genelist(sort_avg);
-X = X(sort_avg, :);
+data_avg = data_avg(I);
+gsorted = genelist(I);
+Xsorted = X(I, :);
 
 % Assigning bins by expression
 assigned_bin = diag(zeros(cluster_lenght));
@@ -51,8 +54,9 @@ for i = 1:nbin
 end
 
 % Selecting bins of same expression
-selected_bins = unique(assigned_bin(matches(genelist, tgsPos,'IgnoreCase',true)));
-samebin_genes = genelist(ismember(assigned_bin, selected_bins));
+idx=matches(gsorted, tgsPos,'IgnoreCase',true);
+selected_bins = unique(assigned_bin(idx));
+samebin_genes = gsorted(ismember(assigned_bin, selected_bins));
 ctrl_use = [];
 for i = 1:length(tgsPos)
     ctrl_use = [ctrl_use; ...
@@ -61,8 +65,8 @@ end
 ctrl_use = unique(ctrl_use);
 
 % Averaging expression
-ctrl_score = mean(X(matches(genelist, ctrl_use,'IgnoreCase',true),:),1);
-features_score = mean(X(matches(genelist, tgsPos,'IgnoreCase',true),:),1);
+ctrl_score = mean(Xsorted(matches(gsorted, ctrl_use,'IgnoreCase',true),:),1);
+features_score = mean(Xsorted(idx,:),1);
 
 % Scoring
 score = transpose(features_score - ctrl_score);
