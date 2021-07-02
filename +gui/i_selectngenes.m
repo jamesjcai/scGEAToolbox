@@ -28,7 +28,8 @@ switch answer
             tg=gui.i_inputgenelist(predefinedlist);
         end
         if length(tg)>=2
-            [y]=ismember(tg,gsorted);
+            
+            [y]=ismember(upper(tg),upper(gsorted));
             % i=i(y);
             glist=tg(y);
 %             if length(glist)<2

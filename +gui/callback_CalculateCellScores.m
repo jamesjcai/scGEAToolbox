@@ -6,9 +6,12 @@ function callback_CalculateCellScores(src,~)
     posgcandidates=["PDCD1","HNF1A","HAVCR2","KLRG1","CD44","LY6C","CTLA","ICOS","LAG3"];
     [posg]=gui.i_selectngenes(sce.g,posgcandidates);
     if isempty(posg)
+        disp('xxx')
         return;
     end
+    
     cs=sc_cellscore(sce.X,sce.g,posg);
+    
     figure;
     gui.i_stemscatter(sce.s,cs);
     zlabel('Score Value')
