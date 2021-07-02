@@ -7,6 +7,9 @@ switch type
         tgsNeg="";
     case "T_Cell_Cytotoxicity"
         
+    case "Macrophage_Polarization_Index"
+        tgsPos="";
+        tgsNeg="";
     otherwise
         error('Undefined')
 end
