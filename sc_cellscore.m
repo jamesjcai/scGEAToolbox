@@ -3,6 +3,10 @@ function [score]=sc_cellscore(X,genelist,tgsPos,tgsNeg,nbin,ctrl)
 %
 % tgsPos - positive features (negative target marker genes)
 % tgsNeg - negative features (negative target marker genes)
+%
+% see also: PKG.E_CELLSCORES
+%
+% ref: AddModuleScore - https://github.com/satijalab/seurat/blob/master/R/utilities.R
 
 if nargin<6, ctrl=5; end
 if nargin<5, nbin=25; end
@@ -11,6 +15,12 @@ if nargin<4 || isempty(tgsNeg)
 end
 if nargin<3
     tgsPos=["CD44","LY6C","KLRG1","CTLA","ICOS","LAG3"];
+end
+
+if ~any(matches(genelist, tgsPos,'IgnoreCase',true))
+    score=NaN(size(X,2),1);
+    warning('No feature genes found in GENELIST.');
+    return;
 end
 
 %genelist=upper(genelist);

@@ -1,15 +1,31 @@
 function [score]=e_cellscores(X,genelist,type)
 if nargin<3, type="T_Cell_Exhaustion"; end
+
+% https://carmonalab.github.io/UCell/UCell_vignette_TILstates.html#unsupervised-clustering
+tgsNeg="";
+
 switch type
     case "T_Cell_Exhaustion"
         tgsPos=["CD69","PDCD1","TGFB1","CTLA4","SPN","LAG3"];
         %tgsPos=["CD44","LY6C","KLRG1","CTLA","ICOS","LAG3"];
-        tgsNeg="";
     case "T_Cell_Cytotoxicity"
-        
+    
     case "Macrophage_Polarization_Index"
         tgsPos=["TGFB1"];
         tgsNeg=["Retnla"];
+    
+	case "Fetal_epithelial_progenitor"
+        tgsPos=["BEX3","STMN1","SOX4","LDHB","SKP1","SNRPE","ID3","SRP9","GSTP1","SRP14"];
+    case "Macrophage"
+        tgsPos=["CTSB","C1QB","LAPTM5","TYROBP","PSAP","C1QA","HLA-DRA","CTSD","NPC2","FCER1G"]; 
+    case "B_cell_Plasmocyte"
+        tgsPos=["JCHAIN","IGHA1","SSR4","MZB1","IGKC","IGHA2","HERPUD1","DERL3","SEC11C","FKBP11"];
+    case "Fibroblast"
+        tgsPos=["C1S","TIMP2","COL6A3","SEMA3C","MMP2","GSN","IGFBP6","MFAP4","COL6A1","PLAC9"];
+    case "Fasciculata_cell"
+        tgsPos=["PEBP1","STAR","RARRES2", "CLU","CYP21A2","CYP17A1","AKR1B1","NOV","TPD52L1", "EPHX1"];
+    case "T_cell"
+        tgsPos=["CD3D","CD3E","CD3G","CD4","CD2","CD7","TRAC","TRBC1","LAT"];        
     otherwise
         error('Undefined')
 end
