@@ -8,8 +8,8 @@ switch type
     case "T_Cell_Cytotoxicity"
         
     case "Macrophage_Polarization_Index"
-        tgsPos="";
-        tgsNeg="";
+        tgsPos=["TGFB1"];
+        tgsNeg=["Retnla"];
     otherwise
         error('Undefined')
 end
