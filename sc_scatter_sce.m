@@ -163,8 +163,7 @@ ptcluster.ClickedCallback = @ClusterCellsX;
 % -------------
 
 pt5 = uipushtool(UitoolbarHandle, 'Separator', 'on');
-[img, map] = imread(fullfile(mfolder, ...
-    'resources', 'brush.gif'));
+[img, map] = imread(fullfile(mfolder, 'resources', 'brush.gif'));
 ptImage = ind2rgb(img, map);
 pt5.CData = ptImage;
 pt5.Tooltip = 'Cell types of brushed cells';
@@ -177,6 +176,15 @@ ptImage = ind2rgb(img, map);
 ptclustertype.CData = ptImage;
 ptclustertype.Tooltip = 'Cell types of clusters';
 ptclustertype.ClickedCallback = @DetermineCellTypeClusters;
+
+ptclustertype = uipushtool(UitoolbarHandle, 'Separator', 'off');
+[img, map] = imread(fullfile(mfolder, 'resources', 'cellscore.gif'));
+ptImage = ind2rgb(img, map);
+ptclustertype.CData = ptImage;
+ptclustertype.Tooltip = 'Calculate Cell Scores from Cell Type Markers';
+ptclustertype.ClickedCallback = @callback_CellTypeMarkerScores;
+
+
 
 pt4 = uipushtool(UitoolbarHandle, 'Separator', 'off');
 % [img,map] = imread(fullfile(matlabroot,...
@@ -205,6 +213,13 @@ ptImage = ind2rgb(img, map);
 pt4mrkheat.CData = ptImage;
 pt4mrkheat.Tooltip = 'Marker gene heatmap';
 pt4mrkheat.ClickedCallback = @callback_MarkerGeneHeatmap;
+
+ptclustertype = uipushtool(UitoolbarHandle, 'Separator', 'off');
+[img, map] = imread(fullfile(mfolder, 'resources', 'cellscore2.gif'));
+ptImage = ind2rgb(img, map);
+ptclustertype.CData = ptImage;
+ptclustertype.Tooltip = 'Calculate Cell Scores from List of Feature Genes';
+ptclustertype.ClickedCallback = @callback_CalculateCellScores;
 
 % --------------------------
 
@@ -390,16 +405,15 @@ uimenu(m,'Text','Merge Subclusters of Same Cell Type...',...
 
 uimenu(m,'Text','Calculate Gene Expression Statistics...',...
     'Callback',@callback_CalculateGeneStats);
-mm=uimenu(m,'Text','Calculate Cell Scores');
+%mm=uimenu(m,'Text','Calculate Cell Scores');
 
-
-uimenu(mm,'Text','Calculate Cell Scores from List of Feature Genes...',...
-    'Callback',@callback_CalculateCellScores);
-uimenu(mm,'Text','Calculate Cell Scores from Cell Type Markers...',...
-    'Callback',@callback_CellTypeMarkerScores);
-uimenu(mm,'Text','T Cell Exhaustion Scores...',...
+% uimenu(mm,'Text','Calculate Cell Scores from List of Feature Genes...',...
+%     'Callback',@callback_CalculateCellScores);
+% uimenu(mm,'Text','Calculate Cell Scores from Cell Type Markers...',...
+%     'Callback',@callback_CellTypeMarkerScores);
+uimenu(m,'Text','T Cell Exhaustion Scores...',...
     'Callback',@callback_TCellExhaustionScores);
-uimenu(mm,'Text','Macrophage Polarization Index...',...
+uimenu(m,'Text','Macrophage Polarization Index...',...
     'Callback',@callback_MacrophagePolarizationIndex);
 
 % handles = guihandles( FigureHandle ) ;

@@ -1,6 +1,26 @@
-function [score]=e_cellscores(X,genelist,type)
-if nargin<3, type="T_Cell_Exhaustion"; end
+function [score,T]=e_cellscores(X,genelist,type)
 
+pw1=fileparts(mfilename('fullpath'));
+cellscoresfile=fullfile(pw1,'cellscores.txt');
+T=readtable(cellscoresfile,'Delimiter','\t',...
+    'ReadVariableNames',true);
+T=sortrows(T,"ScoreType");
+
+if ischar(type) || isstring(type)
+    idx=find(matches(T.ScoreType,type,'IgnoreCase',true));
+elseif isnumeric(type)
+    idx=type;
+end
+if ~(idx<=size(T,1) && idx>0 && idx == floor(idx))
+    score=[];
+    return;
+end
+
+tgsPos=strsplit(string(T.PositiveMarkers(idx)),',');
+tgsNeg=strsplit(string(T.NegativeMarkers(idx)),',');
+
+%{
+if nargin<3, type="T_Cell_Exhaustion"; end
 % https://carmonalab.github.io/UCell/UCell_vignette_TILstates.html#unsupervised-clustering
 tgsNeg="";
 
@@ -29,5 +49,6 @@ switch type
     otherwise
         error('Undefined')
 end
+%}
 [score]=sc_cellscore(X,genelist,tgsPos,tgsNeg);
 end
