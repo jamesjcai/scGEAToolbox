@@ -670,26 +670,15 @@ end
         end
         if ~usingold
             answer2 = questdlg(sprintf('Use highly variable genes (HVGs, n=2000) or use all genes (n=%d)?', sce.NumGenes), ...
-                '', ...
-                'Top 2000 HVGs', 'All Genes', 'Cancel', 'Top 2000 HVGs');
+                '', '2000 HVGs', 'All Genes', 'Cancel', '2000 HVGs');
             switch answer2
                 case 'All Genes'
                     usehvgs = false;
-                case 'Top 2000 HVGs'
+                case '2000 HVGs'
                     usehvgs = true;
                 case {'Cancel', ''}
                     return;
             end
-%             answer3 = questdlg('3D or 2D?','',...
-%                     '3D','2D','3D');
-%                 switch answer3
-%                     case '3D'
-%                         ndim=3;
-%                     case '2D'
-%                         ndim=2;
-%                     otherwise
-%                         return;
-%                 end
             [ndim]=gui.i_choose2d3d;
             if isempty(ndim), return; end
             fw = gui.gui_waitbar;
