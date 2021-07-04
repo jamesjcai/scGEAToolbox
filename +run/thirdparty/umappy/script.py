@@ -9,6 +9,6 @@ import pandas as pd
 import umap as um
 
 data_mat = pd.read_csv("input.csv")
-embedding= um.UMAP().fit_transform(data_mat)
+embedding= um.UMAP(densmap=True).fit_transform(data_mat)
 res = pd.DataFrame(embedding)
 res.to_csv("output.csv", sep = "\t", index = False, header=False)

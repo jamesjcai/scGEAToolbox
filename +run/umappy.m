@@ -8,6 +8,8 @@ cd(wrkpth);
 
 if exist('input.csv','file'), delete('input.csv'); end
 if exist('output.csv','file'), delete('output.csv'); end
+X=sc_norm(X);
+X=log(X+1);
 %writematrix(X,'input1.csv');
 writetable(array2table(X'),'input.csv');
 
@@ -19,7 +21,7 @@ if usepylib
     data_mat = pd.read_csv("input.csv");
     embedding = um.UMAP().fit_transform(data_mat);
     sout=np2mat(embedding);
-else    
+else
     x=pyenv;
     pkg.i_add_conda_python_path;
     cmdlinestr=sprintf('"%s" "%s%sscript.py"',x.Executable,wrkpth,filesep);
