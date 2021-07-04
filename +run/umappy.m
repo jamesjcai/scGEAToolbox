@@ -6,12 +6,12 @@ pw1=fileparts(mfilename('fullpath'));
 wrkpth=fullfile(pw1,'thirdparty','umappy');
 cd(wrkpth);
 
-if exist('input.csv','file'), delete('input.csv'); end
-if exist('output.csv','file'), delete('output.csv'); end
+if exist('./input.csv','file'), delete('./input.csv'); end
+if exist('./output.csv','file'), delete('./output.csv'); end
 X=sc_norm(X);
 X=log(X+1);
-%writematrix(X,'input1.csv');
-writetable(array2table(X'),'input.csv');
+writematrix(X.','input.csv');
+% writetable(array2table(X'),'input.csv','WriteVariableNames',false);
 
 % pyenv('Version','d:\\Miniconda3\\envs\\harmonypy\\python.exe')
 
@@ -33,8 +33,8 @@ else
         sout=[];
     end
 end
-if exist('input.csv','file'), delete('input.csv'); end
-if exist('output.csv','file'), delete('output.csv'); end
+if exist('./input.csv','file'), delete('./input.csv'); end
+if exist('./output.csv','file'), delete('./output.csv'); end
 cd(oldpth);
 end
 

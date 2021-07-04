@@ -529,6 +529,7 @@ end
         if isequal(sce.c_cell_type_tx,newtx)
             helpdlg("No sub-clusters are merged");
         else
+            sce.c_cell_type_tx=newtx;
             [c,cL]=grp2idx(sce.c_cell_type_tx);
             sce.c = c;
             RefreshAll(src, 1, true, false);
