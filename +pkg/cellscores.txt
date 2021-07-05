@@ -1,9 +1,9 @@
 ScoreType	PositiveMarkers	NegativeMarkers	Reference
 T_Cell_Exhaustion	CD69,PDCD1,TGFB1,CTLA4,SPN,LAG3		https://doi.org/10.1172/jci.insight.126453
 Mature macrophage	CD45,Adgre1,Lyz2		https://doi.org/10.1172/jci.insight.126453
-M1 macrophage	Nos2,CD86,Tnf	Chil3,Arg1,RETNLB,Mgl2	https://doi.org/10.1172/jci.insight.126453
-M2 macrophage	Chil3,Arg1,RETNLB,Mgl2	Nos2,CD86,Tnf	https://doi.org/10.1172/jci.insight.126453
-M0 macrophage (unstimulated)	Ptprc,Adgre1,Lyz2		https://doi.org/10.1172/jci.insight.126453
+M1 macrophage	Nos2,CD86,Tnf,Oasl2,Cd274,Zbp1,Ly6e,Tspo,Sepw1,Irgm1,Gbp5,Psmb9,Ccl5,Ly6a	Chil3,Arg1,RETNLB,Mgl2,Mcf2l,Smap2,Cd300ld,Csf2rb,Vwf,Timp2,Il6st,Igf1,Tmem26,Arg1,Ptprc,Adgre1,Lyz2,Igfbp4,Maf,Wwp1,Pcp4l1,Rgs10,Sepp1,C5ar1,Hpgds,Dpep2,Bmyc,Clec12a	https://doi.org/10.1172/jci.insight.126453
+M2 macrophage	Chil3,Arg1,RETNLB,Mgl2,Mcf2l,Smap2,Cd300ld,Csf2rb,Vwf,Timp2,Il6st,Igf1,Tmem26,Arg1	Nos2,CD86,Tnf,Oasl2,Cd274,Zbp1,Ly6e,Tspo,Sepw1,Irgm1,Gbp5,Psmb9,Ccl5,Ly6a,Ptprc,Adgre1,Lyz2,Igfbp4,Maf,Wwp1,Pcp4l1,Rgs10,Sepp1,C5ar1,Hpgds,Dpep2,Bmyc,Clec12a	https://doi.org/10.1172/jci.insight.126453
+M0 macrophage (unstimulated)	Ptprc,Adgre1,Lyz2,Igfbp4,Maf,Wwp1,Pcp4l1,Rgs10,Sepp1,C5ar1,Hpgds,Dpep2,Bmyc,Clec12a	Nos2,CD86,Tnf,Oasl2,Cd274,Zbp1,Ly6e,Tspo,Sepw1,Irgm1,Gbp5,Psmb9,Ccl5,Ly6a,Chil3,Arg1,RETNLB,Mgl2,Mcf2l,Smap2,Cd300ld,Csf2rb,Vwf,Timp2,Il6st,Igf1,Tmem26,Arg1	https://doi.org/10.1172/jci.insight.126453
 Terminal maturation macrophage	Csf1r,Cebpb,Cd274,Itga4		https://doi.org/10.1172/jci.insight.126453
 Fetal_epithelial_progenitor	BEX3,STMN1,SOX4,LDHB,SKP1,SNRPE,ID3,SRP9,GSTP1,SRP14		https://carmonalab.github.io/UCell/UCell_vignette_TILstates.html#score-general-cell-type-signatures-using-ucell
 Macrophage	CTSB,C1QB,LAPTM5,TYROBP,PSAP,C1QA,HLA-DRA,CTSD,NPC2,FCER1G		https://carmonalab.github.io/UCell/UCell_vignette_TILstates.html#score-general-cell-type-signatures-using-ucell
@@ -11,4 +11,3 @@ B_cell_Plasmocyte	JCHAIN,IGHA1,SSR4,MZB1,IGKC,IGHA2,HERPUD1,DERL3,SEC11C,FKBP11	
 Fibroblast	C1S,TIMP2,COL6A3,SEMA3C,MMP2,GSN,IGFBP6,MFAP4,COL6A1,PLAC9		https://carmonalab.github.io/UCell/UCell_vignette_TILstates.html#score-general-cell-type-signatures-using-ucell
 Fasciculata_cell	PEBP1,STAR,RARRES2, CLU,CYP21A2,CYP17A1,AKR1B1,NOV,TPD52L1,EPHX1		https://carmonalab.github.io/UCell/UCell_vignette_TILstates.html#score-general-cell-type-signatures-using-ucell
 T_cell	CD3D,CD3E,CD3G,CD4,CD2,CD7,TRAC,TRBC1,LAT		https://carmonalab.github.io/UCell/UCell_vignette_TILstates.html#score-general-cell-type-signatures-using-ucell
-

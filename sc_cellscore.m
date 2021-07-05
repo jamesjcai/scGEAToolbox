@@ -27,14 +27,6 @@ end
 %tgsPos=upper(tgsPos);
 %tgsNeg=upper(tgsNeg);
 
-idx=matches(genelist, tgsPos, 'IgnoreCase',true);
-if ~any(idx)
-    score=NaN(size(X,2),1);
-    warning('No feature genes found in GENELIST.');
-    return;
-end
-
-
 
 % Normalizing data by default in Seurat = log1p(libsize * 1e4)
 %X = log(((X./nansum(X)) * 1e4) + 1);
@@ -42,6 +34,29 @@ X=sc_norm(X);
 %disp('Library-size normalization...done.')
 X=log(X+1);
 %disp('Log(x+1) transformation...done.')
+
+
+
+%idx=matches(genelist, tgsPos, 'IgnoreCase',true);
+% if ~any(idx)
+%     score=NaN(size(X,2),1);
+%     warning('No feature genes found in GENELIST.');
+%     return;
+% end
+
+[score]=i_calculate_score(X,genelist,tgsPos,1,nbin,ctrl);
+if ~isempty(tgsNeg) && any(strlength(tgsNeg)>0)
+    [s]=i_calculate_score(X,genelist,tgsNeg,-1,nbin,ctrl);
+    score=score+s;
+end
+end
+
+
+
+function [score]=i_calculate_score(X,genelist,tgs,directtag,nbin,ctrl)
+if nargin<6, ctrl=5; end
+if nargin<5, nbin=25; end
+if nargin<4, directtag=1; end
 
 rng default
 % Initial stats
@@ -64,11 +79,11 @@ for i = 1:nbin
 end
 
 % Selecting bins of same expression
-idx=matches(gsorted, tgsPos,'IgnoreCase',true);
+idx=matches(gsorted, tgs,'IgnoreCase',true);
 selected_bins = unique(assigned_bin(idx));
 samebin_genes = gsorted(ismember(assigned_bin, selected_bins));
 ctrl_use = [];
-for i = 1:length(tgsPos)
+for i = 1:length(tgs)
     ctrl_use = [ctrl_use; ...
         randsample(samebin_genes, ctrl)];
 end
@@ -79,5 +94,9 @@ ctrl_score = mean(Xsorted(matches(gsorted, ctrl_use,'IgnoreCase',true),:),1);
 features_score = mean(Xsorted(idx,:),1);
 
 % Scoring
-score = transpose(features_score - ctrl_score);
+if directtag>0
+    score = transpose(features_score - ctrl_score);
+else
+    score = transpose(ctrl_score - features_score);
+end
 end

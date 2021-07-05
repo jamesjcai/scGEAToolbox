@@ -1,4 +1,7 @@
-function [score,T]=e_cellscores(X,genelist,type)
+function [score,T]=e_cellscores(X,genelist,typeid)
+if nargin<3, typeid=0; end
+if nargin<2, genelist=[]; end
+if nargin<1, X=[]; end
 
 pw1=fileparts(mfilename('fullpath'));
 cellscoresfile=fullfile(pw1,'cellscores.txt');
@@ -6,18 +9,18 @@ T=readtable(cellscoresfile,'Delimiter','\t',...
     'ReadVariableNames',true);
 T=sortrows(T,"ScoreType");
 
-if ischar(type) || isstring(type)
-    idx=find(matches(T.ScoreType,type,'IgnoreCase',true));
-elseif isnumeric(type)
-    idx=type;
+if ischar(typeid) || isstring(typeid)
+    idx=find(matches(T.ScoreType,typeid,'IgnoreCase',true));
+elseif isnumeric(typeid)
+    idx=typeid;
 end
 if ~(idx<=size(T,1) && idx>0 && idx == floor(idx))
     score=[];
     return;
 end
 
-tgsPos=strsplit(string(T.PositiveMarkers(idx)),',');
-tgsNeg=strsplit(string(T.NegativeMarkers(idx)),',');
+tgsPos=unique(strsplit(string(T.PositiveMarkers(idx)),','));
+tgsNeg=unique(strsplit(string(T.NegativeMarkers(idx)),','));
 
 %{
 if nargin<3, type="T_Cell_Exhaustion"; end
