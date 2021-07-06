@@ -448,7 +448,7 @@ end
         if requirerefresh
             sce = guidata(FigureHandle);
             [c, cL] = grp2idx(sce.c);
-            RefreshAll(src, 1, true);            
+            RefreshAll(src, 1, true);
         end
         if ~isempty(highlightindex)
             h.BrushData=highlightindex;
@@ -878,6 +878,7 @@ end
                 'fontsize', 10, 'FontWeight', 'bold', 'BackgroundColor', 'w', 'EdgeColor', 'k');
         end
         hold off;
+        
     end
 
     function ShowCellStats(~, ~)
@@ -1078,6 +1079,7 @@ end
             return
         end
         i_deletecells(ptsSelected);
+        guidata(FigureHandle,sce);
     end
 
     function i_deletecells(ptsSelected)
@@ -1204,18 +1206,18 @@ end
         guidata(FigureHandle, sce);
     end
 
-    function k = i_inputk
-        prompt = {'Enter number of clusters K=(2..50):'};
-        dlgtitle = 'Input K';
-        dims = [1 45];
-        definput = {'10'};
-        answer = inputdlg(prompt, dlgtitle, dims, definput);
-        if isempty(answer)
-            k=[];
-            return
-        end
-        k = round(str2double(cell2mat(answer)));
-    end
+%     function k = i_inputk
+%         prompt = {'Enter number of clusters K=(2..50):'};
+%         dlgtitle = 'Input K';
+%         dims = [1 45];
+%         definput = {'10'};
+%         answer = inputdlg(prompt, dlgtitle, dims, definput);
+%         if isempty(answer)
+%             k=[];
+%             return
+%         end
+%         k = round(str2double(cell2mat(answer)));
+%     end
 
     function ClusterCellsX(src, ~)
         answer = questdlg('Cluster cells using X?');
@@ -1232,6 +1234,7 @@ end
             return
         end
         i_reclustercells(src, methodtag);
+        guidata(FigureHandle, sce);
     end
 
     function i_reclustercells(src, methodtag)
@@ -1252,7 +1255,7 @@ end
             end
         end
         if ~usingold
-            k = i_inputk;
+            k = gui.i_inputnumk;
             if isempty(k), return; end
             if isnan(k) || k < 2 || k > 50
                 uiwait(errordlg('Invalid K'));
