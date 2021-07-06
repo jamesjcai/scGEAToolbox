@@ -27,6 +27,12 @@ if ~isempty(sce1.c_cell_cycle_tx) && ~isempty(sce2.c_cell_cycle_tx)
 end
 
 if ~isempty(sce1.c_cell_type_tx) && ~isempty(sce2.c_cell_type_tx)
+    if ~isstring(sce1.c_cell_type_tx)
+        sce1.c_cell_type_tx=string(sce1.c_cell_type_tx);
+    end
+    if ~isstring(sce2.c_cell_type_tx)
+        sce2.c_cell_type_tx=string(sce2.c_cell_type_tx);
+    end    
     sce.c_cell_type_tx=[i_remove_affix(sce1.c_cell_type_tx);...
         i_remove_affix(sce2.c_cell_type_tx)];
 end
