@@ -1,3 +1,4 @@
+function [hs_tfgenes,mm_tfgenes]=i_get_hsmm_tfs
 warning off
 websave('Homo_sapiens_TF.txt','http://bioinfo.life.hust.edu.cn/static/AnimalTFDB3/download/Homo_sapiens_TF');
 t=readtable('Homo_sapiens_TF.txt');
@@ -10,3 +11,4 @@ mm_tfgenes=string(t.Symbol);
 %delete('Mus_musculus_TF.txt');
 warning on
 clear t
+end
