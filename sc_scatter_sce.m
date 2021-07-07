@@ -399,11 +399,8 @@ uimenu(m,'Text','Ligand-receptor mediated intercellular crosstalk...',...
     'Callback',@callback_DetectIntercellularCrosstalk);
 uimenu(m,'Text','Doublet Detection (python required)...',...
     'Callback',@DoubletDetection);
-
-uimenu(m,'Text','Removes ambient RNA contamination (R/decontX required)...',...
-    'Callback',@DecontX);
-
-
+% uimenu(m,'Text','Remove ambient RNA contamination (R/decontX required)...',...
+%     'Callback',@DecontX);
 
 uimenu(m,'Text','Merge Subclusters of Same Cell Type...',...
     'Callback',@MergeSubCellTypes);
@@ -450,14 +447,13 @@ end
 
     function SelectCellsByQC(src, ~)
         [requirerefresh,highlightindex]=gui.callback_SelectCellsByQC(src);
-        if requirerefresh
-            sce = guidata(FigureHandle);
+        sce = guidata(FigureHandle);
+        if requirerefresh            
             [c, cL] = grp2idx(sce.c);
             RefreshAll(src, 1, true);
         end
         if ~isempty(highlightindex)
-            h.BrushData=highlightindex;
-            % set(h,'BrushData',highlightindex');
+            h.BrushData=highlightindex;            
         end
     end
 
@@ -475,13 +471,13 @@ end
        RefreshAll(src, 1, true, false);
     end
 
-    function DecontX(~,~)
-        fw = gui.gui_waitbar;
-        [X]=run.decontX(sce);
-        sce.X=X;
-        gui.gui_waitbar(fw);
-        guidata(FigureHandle, sce);
-    end
+%     function DecontX(~,~)
+%         fw = gui.gui_waitbar;
+%         [X]=run.decontX(sce);
+%         sce.X=X;
+%         gui.gui_waitbar(fw);
+%         guidata(FigureHandle, sce);
+%     end
 
     function HarmonyPy(src, ~)
         if gui.callback_Harmonypy(src)

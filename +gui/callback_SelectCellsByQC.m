@@ -2,14 +2,17 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
     requirerefresh=true;
     highlightindex=[];
     FigureHandle=src.Parent.Parent;
-    sce=guidata(FigureHandle);    
+    sce=guidata(FigureHandle);
     listitems={'SC_QCFILTER (Basic QC)',...
-        'Visualize QC metrics as a violin plot',...
+        'QC metrics in violin plot',...
         'Remove Genes by Expression',...
         'Remove Mt-genes',...
-        'Select & remove genes',...        
-        'Remove Cells by Mt-reads Ratio & Library Size',...
-        'Remove Cells by Number of Detected Genes & Library Size'};
+        'Select & remove genes',... 
+        '------------------------------------------------',...
+        'Library Size vs. Mt-reads Ratio',...
+        'Library Size vs. Number of Detected Genes',...
+        '------------- Experimental Options -------------',...
+        'Remove ambient RNA contamination (R required)'};
         %    'Remove Cells by Dropout Rate & Expression Mean'};
     [indx,tf] = listdlg('PromptString',{'Select Filter',...
                 '',''},'SelectionMode','single',...
@@ -53,7 +56,10 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
                     return;
                 end
             end
-        case 6      % mt-ratio vs. library size
+        case 6
+            requirerefresh=false;
+            return;
+        case 7      % mt-ratio vs. library size
             i=startsWith(sce.g,'mt-','IgnoreCase',true);
             if ~any(i) 
                 disp('No mt genes found.');
@@ -71,7 +77,7 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
             a=maxk(ci,10);                
             idx=gui.i_setranges2(ci',cj',[0 a(end)],...
                     [0 15],ttxti,ttxtj);
-        case 7
+        case 8
             cj=sum(sce.X>0,1);                
             if issparse(cj), cj=full(cj); end
             ttxtj="Number of Detected Genes";
@@ -82,8 +88,25 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
             b=maxk(cj,10);
             idx=gui.i_setranges2(ci',cj',[0 a(end)],...
                     [0 b(end)],ttxti,ttxtj);
+        case 9
+            requirerefresh=false;
+            return;
+        case 10
+            fw = gui.gui_waitbar;
+            [Xdecon,contamination]=run.decontX(sce);
+            sce.X=Xdecon;
+            guidata(FigureHandle,sce);
+            gui.gui_waitbar(fw);
+            figure;
+            gui.i_stemscatter(sce.s,contamination);
+            zlabel('Contamination rate')
+            title('Ambient RNA contamination')
+            pause(1)
+            helpdlg('Contamination removed.')
+            requirerefresh=false;
+            return;
     end
-    if ismember(indx,[6 7])
+    if ismember(indx,[7 8])
         if any(~idx)
             answer = questdlg(sprintf('Remove or highlight %d cells?',sum(~idx)),...
                 '','Remove','Highlight','Cancel','Remove');

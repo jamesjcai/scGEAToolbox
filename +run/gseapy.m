@@ -25,12 +25,7 @@ writetable(T,'input.txt','WriteVariableNames',false);
 % https://gseapy.readthedocs.io/en/latest/gseapy_example.html
 gsetname='KEGG_2019_Human';
 
-    gp.prerank(pyargs('rnk',rnk,...
-        'gene_sets',py.str(gsetname),...
-        'outdir',py.str(gsetname),...
-        'no_plot',py.True));
-    s=readtable(fullfile(gsetname,'gseapy.prerank.gene_sets.report.csv'));
-    s=s(s.fdr<0.05,:);
+
     
 
 if usepylib    
@@ -41,6 +36,12 @@ if usepylib
     % vars_use = py.list({py.str('KEGG_2016')});
     
     % s=np2mat(ho.Z_corr.T);
+    gp.prerank(pyargs('rnk',rnk,...
+        'gene_sets',py.str(gsetname),...
+        'outdir',py.str(gsetname),...
+        'no_plot',py.True));
+    s=readtable(fullfile(gsetname,'gseapy.prerank.gene_sets.report.csv'));
+    s=s(s.fdr<0.05,:);    
 else    
     x=pyenv;
     cmdlinestr=sprintf('"%s" "%s%sscript.py"',x.Executable,wrkpth,filesep);

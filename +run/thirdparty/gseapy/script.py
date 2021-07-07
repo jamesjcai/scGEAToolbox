@@ -3,7 +3,7 @@ abspath = os.path.abspath(__file__)
 dname = os.path.dirname(abspath)
 os.chdir(dname)
 #os.chdir("C:\\Users\\jcai.AUTH\\Documents\\GitHub\\scGEAToolbox\\+run\\thirdparty\\gseapy")
-#os.chdir("U:\\GitHub\\scGEAToolbox\\+run\\thirdparty\\gseapy")
+os.chdir("U:\\GitHub\\scGEAToolbox\\+run\\thirdparty\\gseapy")
 import pandas as pd
 import gseapy as gp
 import matplotlib.pyplot as plt
