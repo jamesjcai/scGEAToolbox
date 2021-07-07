@@ -45,35 +45,46 @@ if ~isempty(sce1.c_cell_id) && ~isempty(sce2.c_cell_id)
     sce.c_cell_id=[sce1.c_cell_id; sce2.c_cell_id];
 end
 
-if ~isempty(sce1.list_cell_attributes) && ~isempty(sce2.list_cell_attributes)
-    for k=1:2:min([length(sce1.list_cell_attributes) length(sce2.list_cell_attributes)])
-        if strcmp(sce1.list_cell_attributes{k},...
-                sce2.list_cell_attributes{k})
-            sce.list_cell_attributes{k}=sce1.list_cell_attributes{k};
-            sce.list_cell_attributes{k+1}=[sce1.list_cell_attributes{k+1};...
-                sce2.list_cell_attributes{k+1}];
+try
+    if ~isempty(sce1.list_cell_attributes) && ~isempty(sce2.list_cell_attributes)
+        for k=1:2:min([length(sce1.list_cell_attributes) length(sce2.list_cell_attributes)])
+            if strcmp(sce1.list_cell_attributes{k},...
+                    sce2.list_cell_attributes{k})
+                sce.list_cell_attributes{k}=sce1.list_cell_attributes{k};
+                sce.list_cell_attributes{k+1}=[sce1.list_cell_attributes{k+1};...
+                    sce2.list_cell_attributes{k+1}];
+            end
         end
     end
+catch
+    warning('SCE.LIST_CELL_ATTRIBUTES not merged.')
 end
 
-a=fields(sce.struct_cell_clusterings);
-for k=1:length(a)
-    c1=sce1.struct_cell_clusterings.(a{k});
-    c2=sce2.struct_cell_clusterings.(a{k});
-    if ~isempty(c1) && ~isempty(c2)
-        sce.struct_cell_clusterings.(a{k})=[c1;c2];
+try 
+    a=fields(sce.struct_cell_clusterings);
+    for k=1:length(a)
+        c1=sce1.struct_cell_clusterings.(a{k});
+        c2=sce2.struct_cell_clusterings.(a{k});
+        if ~isempty(c1) && ~isempty(c2)
+            sce.struct_cell_clusterings.(a{k})=[c1;c2];
+        end
     end
+catch
+    warning('SCE.STRUCT_CELL_CLUSTERINGS not merged.')
 end
 
-a=fields(sce.struct_cell_embeddings);
-for k=1:length(a)
-    c1=sce1.struct_cell_embeddings.(a{k});
-    c2=sce2.struct_cell_embeddings.(a{k});
-    if ~isempty(c1) && ~isempty(c2)
-        sce.struct_cell_embeddings.(a{k})=[c1;c2];
+try
+    a=fields(sce.struct_cell_embeddings);
+    for k=1:length(a)
+        c1=sce1.struct_cell_embeddings.(a{k});
+        c2=sce2.struct_cell_embeddings.(a{k});
+        if ~isempty(c1) && ~isempty(c2)
+            sce.struct_cell_embeddings.(a{k})=[c1;c2];
+        end
     end
+catch
+    warning('SCE.STRUCT_CELL_EMBEDDINGS not merged.')
 end
-
 
 end
 
