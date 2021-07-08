@@ -20,10 +20,11 @@ switch species
     case 'Customize Score'
         ttxt='Customized Score';
         % Pd1=pdcd1 tim3=HAVCR2, tcf1=HNF1A  https://www.nature.com/articles/s41577-019-0221-9    
-        posgcandidates=["PDCD1","HNF1A","HAVCR2","KLRG1","CD44","LY6C","CTLA","ICOS","LAG3"];
+        % posgcandidates=["PDCD1","HNF1A","HAVCR2","KLRG1","CD44","LY6C","CTLA","ICOS","LAG3"];
+        posgcandidates=sce.g(randi(length(sce.g),10,1));
         [posg]=gui.i_selectngenes(sce.g,posgcandidates);
         if isempty(posg)
-            disp('xxx')
+            helpdlg('No feature genes selected.')
             return;
         end
         posg

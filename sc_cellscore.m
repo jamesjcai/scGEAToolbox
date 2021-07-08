@@ -10,16 +10,17 @@ function [score]=sc_cellscore(X,genelist,tgsPos,tgsNeg,nbin,ctrl)
 
 if nargin<6, ctrl=5; end
 if nargin<5, nbin=25; end
-if nargin<4 || isempty(tgsNeg)
-    tgsNeg=["IL2","TNF"];
+if nargin<4
+    tgsNeg=[];
 end
-if nargin<3
-    tgsPos=["CD44","LY6C","KLRG1","CTLA","ICOS","LAG3"];
+if nargin<3 || isempty(tgsPos)
+    error('USAGE: >>[score]=sc_cellscore(X,genelist,tgsPos);')
+    % tgsPos=["CD44","LY6C","KLRG1","CTLA","ICOS","LAG3"];
 end
 
 if ~any(matches(genelist, tgsPos,'IgnoreCase',true))
     score=NaN(size(X,2),1);
-    warning('No feature genes found in GENELIST.');
+    warning('No feature genes found in GENELIST. NaN scores returned');
     return;
 end
 
@@ -47,7 +48,7 @@ X=log(X+1);
 [score]=i_calculate_score(X,genelist,tgsPos,1,nbin,ctrl);
 if ~isempty(tgsNeg) && any(strlength(tgsNeg)>0)
     [s]=i_calculate_score(X,genelist,tgsNeg,-1,nbin,ctrl);
-    score=score+s;
+    score=score+s;    % add scores from negative markers (greater values for non-target cells)
 end
 end
 
