@@ -7,11 +7,11 @@ function callback_DEGene2Groups(src,~)
 
     answer = questdlg('Which method?',...
         'Select Method','Wilcoxon rank-sum test',...
-        'MAST','Wilcoxon rank-sum test');
+        'MAST (R required)','Wilcoxon rank-sum test');
     
     if strcmpi(answer,'Wilcoxon rank-sum test')
         methodtag="ranksum";
-    elseif strcmpi(answer,'MAST')
+    elseif strcmpi(answer,'MAST (R required)')
         methodtag="mast";
     else
         return;
@@ -26,28 +26,36 @@ function callback_DEGene2Groups(src,~)
                     sce.X(:,i2),sce.g);
     end
     gui.gui_waitbar(fw);
+    gui.i_exporttable(T,true);
+
+    answer = questdlg('Save up- and down-regulated genes for enrichment analysis?');
+    
+    if strcmp(answer,'Yes')
     [Tup,Tdn]=pkg.e_processDETable(T);
-    
-    labels = {'Save DE results (all genes) to variable named:',...
-        'Save DE results (selected up-regulated) to variable named:',...
+    labels = {'Save DE results (selected up-regulated) to variable named:',...
         'Save DE results (selected down-regulated) to variable named:'}; 
-    vars = {'T','Tup','Tdn'}; values = {T,Tup,Tdn};
-    msgfig=export2wsdlg(labels,vars,values);
-    uiwait(msgfig);
-    
-    answer = questdlg('Run Enrichr with top 200 up-regulated DE genes?');
-    if strcmp(answer,'Yes')
-        run.Enrichr(Tup.gene(1:min(numel(Tup.gene),200)))
+    vars = {'Tup','Tdn'}; values = {Tup,Tdn};
+    [~,tf]=export2wsdlg(labels,vars,values);
+    if tf==1
+        disp('To run enrichment analysis, type:')
+        disp('run.Enrichr(Tup.gene(1:200))')
+        disp('run.Enrichr(Tdn.gene(1:200))')
     end
-    pause(3);
-    answer = questdlg('Run Enrichr with top 200 down-regulated DE genes?');
-    if strcmp(answer,'Yes')
-        run.Enrichr(Tdn.gene(1:min(numel(Tdn.gene),200)))
     end
-    pause(3);
     
-    %Tf=run.fgsea(T.gene);
-    %pkg.e_fgseanet(Tf);
+%     answer = questdlg('Run Enrichr with top 200 up-regulated DE genes?');
+%     if strcmp(answer,'Yes')
+%         run.Enrichr(Tup.gene(1:min(numel(Tup.gene),200)))
+%     end
+%     pause(3);
+%     answer = questdlg('Run Enrichr with top 200 down-regulated DE genes?');
+%     if strcmp(answer,'Yes')
+%         run.Enrichr(Tdn.gene(1:min(numel(Tdn.gene),200)))
+%     end
+%     pause(3);
+%     
+%     %Tf=run.fgsea(T.gene);
+%     %pkg.e_fgseanet(Tf);
     
 %     answer = questdlg('Violin plots (top 16 DE genes)?');
 %     if strcmp(answer,'Yes')
