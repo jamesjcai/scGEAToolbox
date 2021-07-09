@@ -19,11 +19,9 @@ function callback_DEGene2Groups(src,~)
     fw=gui.gui_waitbar;
     switch methodtag
         case 'ranksum'
-            T=sc_deg(sce.X(:,i1),...
-                    sce.X(:,i2),sce.g);
+            T=sc_deg(sce.X(:,i1),sce.X(:,i2),sce.g);
         case 'mast'
-            T=run.MAST(sce.X(:,i1),...
-                    sce.X(:,i2),sce.g);
+            T=run.MAST(sce.X(:,i1),sce.X(:,i2),sce.g);
     end
     gui.gui_waitbar(fw);
     gui.i_exporttable(T,true);

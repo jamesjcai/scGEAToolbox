@@ -56,6 +56,14 @@
         {"name":"sortit", "kind":"positional", "type":["logical","scalar"]}
 	]
 },
+"sc_mergesces":
+{
+	"inputs":
+	[
+		{"name":"sces", "kind":"required", "type":"cell"},
+        {"name":"method", "kind":"positional", "type":["string","char"]}        
+	]
+},
 "sc_splinefit2":
 {
 	"inputs":
@@ -113,15 +121,15 @@
         {"name":"type", "kind":"namevalue","type":["char", "choices={'PearsonResiduals','kNNSmoothing','FreemanTukey'}"]}
 	]
 },
-"sc_grnetwork":
+"sc_transform":
 {
 	"inputs":
 	[		
         {"name":"X", "kind":"required", "type":"numeric"},
-        {"name":"type", "kind":"namevalue","type":["char", "choices={'pcnet','pcnetpar','pcnetdenoised','genie3'}"]}
+        {"name":"type", "kind":"namevalue","type":["char", "choices={'PearsonResiduals','kNNSmoothing','FreemanTukey'}"]}
 	]
 },
-"run_soptsc":
+"run.SoptSC":
 {
 	"inputs":
 	[		
@@ -140,7 +148,7 @@
         {"name":"removeinf", "kind":"positional", "type":["logical","scalar"]}
 	]
 },
-"run_gorilla":
+"run.GOrilla":
 {
 	"inputs":
 	[		
@@ -168,7 +176,7 @@
         {"name":"plotit", "kind":"namevalue", "type":["logical","scalar"],"purpose":"Option"}
 	]
 },
-"run_phate":
+"run.PHATE":
 {
 	"inputs":
 	[		
@@ -231,7 +239,7 @@
         {"name":"genelist", "kind":"positional", "type":["string","vector"]}
 	]
 },
-"run_umap":
+"run.UMAP":
 {
 	"inputs":
 	[		
@@ -239,7 +247,7 @@
         {"name":"plotit", "kind":"positional", "type":["logical","scalar"],"purpose":"plotit"}        
 	]
 },
-"run_mast":
+"run.MAST":
     {
         "inputs":
         [

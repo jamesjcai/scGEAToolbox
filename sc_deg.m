@@ -10,15 +10,9 @@ function [T] = sc_deg(X, Y, genelist, methodid)
     %
     % SEE ALSO: [T]=run.MAST(X,Y,genelist);
 
-    if nargin < 2
-        error("USAGE: sc_deg(X,Y)\n");
-    end
-    if nargin < 3
-        genelist = string(num2cell(1:size(X, 1)))';
-    end
-    if nargin < 4
-        methodid = 1;
-    end
+    if nargin < 2, error("USAGE: sc_deg(X,Y)\n"); end
+    if nargin < 3, genelist = string(1:size(X,1))'; end
+    if nargin < 4, methodid = 1; end
 
     ng = size(X, 1);
     assert(isequal(ng, size(Y, 1)));
@@ -27,7 +21,10 @@ function [T] = sc_deg(X, Y, genelist, methodid)
     avg_log2FC = ones(ng, 1);
     pct_1 = ones(ng, 1);
     pct_2 = ones(ng, 1);
-
+    
+    nx=size(X,2);
+    ny=size(Y,2);
+    
     for k = 1:ng
         x = X(k, :);
         y = Y(k, :);
@@ -40,11 +37,11 @@ function [T] = sc_deg(X, Y, genelist, methodid)
                 [~, p] = ttest2(x, y);
                 p_val(k) = p;
             otherwise
-                p_val(k) = ranksum(x, y);
+                error('Unknown option')
         end
         avg_log2FC(k) = log2(mean(x) ./ mean(y));
-        pct_1(k) = sum(x > 0) ./ length(x);
-        pct_2(k) = sum(y > 0) ./ length(y);
+        pct_1(k) = sum(x > 0) ./ nx;
+        pct_2(k) = sum(y > 0) ./ ny;
     end
 
     if exist('mafdr.m', 'file')
@@ -61,8 +58,7 @@ function [T] = sc_deg(X, Y, genelist, methodid)
     end
     abs_log2FC = abs(avg_log2FC);
     T = table(gene, p_val, avg_log2FC, abs_log2FC, pct_1, pct_2, p_val_adj);
-    T = T(~isnan(p_val), :);
-
+    % T = T(~isnan(p_val), :);
     %    T=sortrows(T,'p_val_adj','ascend');
     %    T=sortrows(T,'abs_logFC','descend');
     [T] = pkg.e_sorttable(T);
