@@ -1,4 +1,4 @@
-function [score]=UCell(X,genelist)
+function [score]=UCell(X,genelist,tgsPos)
 %UCell: Robust and scalable single-cell gene signature scoring
 %UCell is an R package for calculating gene signatures
 %in single-cell datasets. UCell scores, based on the 
@@ -11,20 +11,29 @@ function [score]=UCell(X,genelist)
 %directly interact with Seurat objects.
 % https://github.com/carmonalab/UCell
 
+genelist=upper(genelist);
+tgsPos=upper(tgsPos);
+if ~iscellstr(genelist) && isstring(genelist)
+    genelist=cellstr(genelist);
+end
+if ~iscellstr(tgsPos) && isstring(tgsPos)
+    tgsPos=cellstr(tgsPos);
+end
 oldpth=pwd();
 [isok,msg]=commoncheck_R('R_UCell');
 if ~isok, error(msg); end
-if exist('input.txt','file'), delete('input.txt'); end
+if exist('input.mat','file'), delete('input.mat'); end
 if exist('output.csv','file'), delete('output.csv'); end
-sc_writefile('input.txt',X,upper(genelist));
+
+save('input.mat','X','genelist','tgsPos');
 RunRcode('script.R');
 if exist('output.csv','file')
     T=readtable('output.csv','ReadVariableNames',true);
-    score=T.Tcell_exhaustion_UCell;
+    score=T.scoretype_UCell;
 else
     score=[];
 end
-if exist('input.txt','file'), delete('input.txt'); end
+%if exist('input.txt','file'), delete('input.txt'); end
 if exist('output.csv','file'), delete('output.csv'); end
 cd(oldpth);
 end

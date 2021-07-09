@@ -4,7 +4,7 @@ function [score]=sc_cellscore(X,genelist,tgsPos,tgsNeg,nbin,ctrl)
 % tgsPos - positive features (negative target marker genes)
 % tgsNeg - negative features (negative target marker genes)
 %
-% see also: PKG.E_CELLSCORES
+% see also: PKG.E_CELLSCORES, RUN.UCELL 
 %
 % ref: AddModuleScore - https://github.com/satijalab/seurat/blob/master/R/utilities.R
 
@@ -55,49 +55,49 @@ end
 
 
 function [score]=i_calculate_score(X,genelist,tgs,directtag,nbin,ctrl)
-if nargin<6, ctrl=5; end
-if nargin<5, nbin=25; end
-if nargin<4, directtag=1; end
+    if nargin<6, ctrl=5; end
+    if nargin<5, nbin=25; end
+    if nargin<4, directtag=1; end
 
-rng default
-% Initial stats
-cluster_lenght = size(X, 1);
-data_avg = mean(X, 2);
-[~, I] = sort(data_avg);
+    rng default
+    % Initial stats
+    cluster_lenght = size(X, 1);
+    data_avg = mean(X, 2);
+    [~, I] = sort(data_avg);
 
-% Sorting data
-data_avg = data_avg(I);
-gsorted = genelist(I);
-Xsorted = X(I, :);
+    % Sorting data
+    data_avg = data_avg(I);
+    gsorted = genelist(I);
+    Xsorted = X(I, :);
 
-% Assigning bins by expression
-assigned_bin = diag(zeros(cluster_lenght));
-bin_size = cluster_lenght/nbin;
-for i = 1:nbin
-    bin_match = data_avg <= data_avg(round(bin_size * i));
-    pos_avail = (assigned_bin == 0);
-    assigned_bin(pos_avail & bin_match) = i;
-end
+    % Assigning bins by expression
+    assigned_bin = diag(zeros(cluster_lenght));
+    bin_size = cluster_lenght/nbin;
+    for i = 1:nbin
+        bin_match = data_avg <= data_avg(round(bin_size * i));
+        pos_avail = (assigned_bin == 0);
+        assigned_bin(pos_avail & bin_match) = i;
+    end
 
-% Selecting bins of same expression
-idx=matches(gsorted, tgs,'IgnoreCase',true);
-selected_bins = unique(assigned_bin(idx));
-samebin_genes = gsorted(ismember(assigned_bin, selected_bins));
-ctrl_use = [];
-for i = 1:length(tgs)
-    ctrl_use = [ctrl_use; ...
-        randsample(samebin_genes, ctrl)];
-end
-ctrl_use = unique(ctrl_use);
+    % Selecting bins of same expression
+    idx=matches(gsorted, tgs,'IgnoreCase',true);
+    selected_bins = unique(assigned_bin(idx));
+    samebin_genes = gsorted(ismember(assigned_bin, selected_bins));
+    ctrl_use = [];
+    for i = 1:length(tgs)
+        ctrl_use = [ctrl_use; ...
+            randsample(samebin_genes, ctrl)];
+    end
+    ctrl_use = unique(ctrl_use);
 
-% Averaging expression
-ctrl_score = mean(Xsorted(matches(gsorted, ctrl_use,'IgnoreCase',true),:),1);
-features_score = mean(Xsorted(idx,:),1);
+    % Averaging expression
+    ctrl_score = mean(Xsorted(matches(gsorted, ctrl_use,'IgnoreCase',true),:),1);
+    features_score = mean(Xsorted(idx,:),1);
 
-% Scoring
-if directtag>0
-    score = transpose(features_score - ctrl_score);
-else
-    score = transpose(ctrl_score - features_score);
-end
+    % Scoring
+    if directtag>0
+        score = transpose(features_score - ctrl_score);
+    else
+        score = transpose(ctrl_score - features_score);
+    end
 end
