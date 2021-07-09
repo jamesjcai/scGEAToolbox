@@ -33,7 +33,7 @@ if exist('output.csv','file')
 else
     score=[];
 end
-%if exist('input.txt','file'), delete('input.txt'); end
+if exist('input.mat','file'), delete('input.mat'); end
 if exist('output.csv','file'), delete('output.csv'); end
 cd(oldpth);
 end
