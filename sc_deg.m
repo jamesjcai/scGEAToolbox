@@ -24,7 +24,7 @@ function [T] = sc_deg(X, Y, genelist, methodid)
     assert(isequal(ng, size(Y, 1)));
 
     p_val = ones(ng, 1);
-    avg_logFC = ones(ng, 1);
+    avg_log2FC = ones(ng, 1);
     pct_1 = ones(ng, 1);
     pct_2 = ones(ng, 1);
 
@@ -42,7 +42,7 @@ function [T] = sc_deg(X, Y, genelist, methodid)
             otherwise
                 p_val(k) = ranksum(x, y);
         end
-        avg_logFC(k) = log2(mean(x) ./ mean(y));
+        avg_log2FC(k) = log2(mean(x) ./ mean(y));
         pct_1(k) = sum(x > 0) ./ length(x);
         pct_2(k) = sum(y > 0) ./ length(y);
     end
@@ -59,8 +59,8 @@ function [T] = sc_deg(X, Y, genelist, methodid)
     else
         gene = genelist;
     end
-    abs_logFC = abs(avg_logFC);
-    T = table(gene, p_val, avg_logFC, abs_logFC, pct_1, pct_2, p_val_adj);
+    abs_log2FC = abs(avg_log2FC);
+    T = table(gene, p_val, avg_log2FC, abs_log2FC, pct_1, pct_2, p_val_adj);
     T = T(~isnan(p_val), :);
 
     %    T=sortrows(T,'p_val_adj','ascend');
