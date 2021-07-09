@@ -58,10 +58,10 @@ function [T] = sc_deg(X, Y, genelist, methodid)
     end
     abs_log2FC = abs(avg_log2FC);
     T = table(gene, p_val, avg_log2FC, abs_log2FC, pct_1, pct_2, p_val_adj);
-    % T = T(~isnan(p_val), :);
+    %    T = T(~isnan(p_val), :);
     %    T=sortrows(T,'p_val_adj','ascend');
     %    T=sortrows(T,'abs_logFC','descend');
-    [T] = pkg.e_sorttable(T);
+    % [T] = pkg.e_sorttable(T);
 end
 
 % Test for expression differences between two sets of cells
