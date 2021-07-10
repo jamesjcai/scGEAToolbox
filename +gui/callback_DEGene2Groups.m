@@ -13,6 +13,10 @@ function callback_DEGene2Groups(src,~)
         methodtag="ranksum";
     elseif strcmpi(answer,'MAST (R required)')
         methodtag="mast";
+        if isempty(pkg.FindRpath)
+            warndlg('This function requires R environment.')
+            return;
+        end
     else
         return;
     end

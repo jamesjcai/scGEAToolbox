@@ -6,7 +6,9 @@ oldpth=pwd();
 [isok,msg]=commoncheck_R('R_MAST');
 if ~isok, error(msg); end
 
-if exist('output.csv','file'), delete('output.csv'); end
+if exist(['.' filesep 'output.csv'],'file')
+    delete ['.' filesep 'output.csv']
+end
 
 save('input.mat','X','Y');
 %writematrix(X,'input1.txt');
@@ -26,7 +28,7 @@ else
     T=[];
 end
 %if exist('input1.txt','file'), delete('input1.txt'); end
-%if exist('input2.txt','file'), delete('input2.txt'); end
-%if exist('output.csv','file'), delete('output.csv'); end
+if exist('./input.mat','file'), delete('./input.mat'); end
+if exist('./output.csv','file'), delete('./output.csv'); end
 cd(oldpth);
 end

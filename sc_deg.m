@@ -25,6 +25,9 @@ function [T] = sc_deg(X, Y, genelist, methodid)
     nx=size(X,2);
     ny=size(Y,2);
     
+    X=log(1+sc_norm(X));
+    Y=log(1+sc_norm(Y));
+    
     for k = 1:ng
         x = X(k, :);
         y = Y(k, :);
