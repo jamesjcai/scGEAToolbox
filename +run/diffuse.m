@@ -6,13 +6,13 @@ if nargin<2, plotit=false; end
 D=squareform(pdist(X','cosine'));
 % pw1=fileparts(which(mfilename));
 % addpath(fullfile(pw1,'thirdparty\DiffusionMap\'));
-[C, eigenvals] = diffuse(D,0.05,10);
+[C, eigenvals] = i_diffuse(D,0.05,10);
 if plotit
     scatter(C(:,1),C(:,2));
 end
 end
 
-function [X, eigenvals, psi, phi] = diffuse(D,eps_val,neigen,t)
+function [X, eigenvals, psi, phi] = i_diffuse(D,eps_val,neigen,t)
 % DIFFUSE --- eigendecomposition for diffusion maps
 % function [X, eigenvals, psi, phi] = diffuse(D,eps_val,neigen,t)
 %

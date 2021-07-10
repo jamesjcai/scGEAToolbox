@@ -37,7 +37,7 @@ if rmribo
     T=T(i,:);
 end
 writetable(T,'input.txt');
-RunRcode('script.R');
+pkg.RunRcode('script.R');
 pause(1);
 if exist('output.txt','file')
     s=readtable('output.txt',"Delimiter",',');

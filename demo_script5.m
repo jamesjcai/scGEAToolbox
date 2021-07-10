@@ -2,7 +2,7 @@
 %% Load example data set, X
 %
 cdgea; % set working directory
-[X,genelist]=sc_readfile('example_data/GSM3044891_GeneExp.UMIs.10X1.txt');
+[X,genelist]=sc_readfile('example_data/GSM3204304_P_P_Expr.csv');
 
 %% Select genes with at least 3 cells having more than 5 reads per cell. 
 %

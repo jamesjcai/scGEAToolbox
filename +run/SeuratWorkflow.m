@@ -20,9 +20,9 @@ if exist('umapoutput.csv','file'), delete('umapoutput.csv'); end
 if exist('activeidentoutput.csv','file'), delete('activeidentoutput.csv'); end
 sc_writefile('input.txt',sce.X,sce.g);
 if ndim==3
-    RunRcode('script3d.R');
+    pkg.RunRcode('script3d.R');
 else    
-    RunRcode('script.R');
+    pkg.RunRcode('script.R');
 end
 if exist('tsneoutput.csv','file')
     T=readtable('tsneoutput.csv','ReadVariableNames',true);

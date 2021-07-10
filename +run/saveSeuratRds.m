@@ -6,7 +6,7 @@ function [status]=saveSeuratRds(sce,filename)
     if ~isok, error(msg); end
     if exist('output.Rds','file'), delete('output.Rds'); end
     sc_writefile('input.txt',sce.X,sce.g);
-    RunRcode('script.R');
+    pkg.RunRcode('script.R');
     [status]=copyfile('output.Rds',filename,'f');
     if exist('input.txt','file'), delete('input.txt'); end
     if exist('output.Rds','file'), delete('output.Rds'); end

@@ -1,8 +1,8 @@
 function [A]=r_pcnet(X)
 
 % if nargin<2, plotit=false; end
-if isempty(FindRpath)
-   error('Rscript.ext is not found. Use native matlab function SC_PCNET.m instead.');
+if isempty(pkg.FindRpath)
+   error('Rscript.exe is not found. Use native matlab function SC_PCNET.m instead.');
 end
 
 oldpth=pwd;
@@ -18,7 +18,7 @@ end
 %if ~exist('input.csv','file')
     writematrix(X,'input.csv');
 %end
-RunRcode('script.R');
+pkg.RunRcode('script.R');
 if exist('output.csv','file')
     A=readmatrix('output.csv');
     %G=digraph(A);    

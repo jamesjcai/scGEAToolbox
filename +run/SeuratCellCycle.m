@@ -11,7 +11,7 @@ if exist('output.csv','file')
     delete('output.csv');
 end
 sc_writefile('input.txt',X,upper(genelist));
-RunRcode('script.R');
+pkg.RunRcode('script.R');
 
 
 if exist('output.csv','file')

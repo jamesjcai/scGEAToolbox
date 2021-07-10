@@ -40,7 +40,7 @@ scatter(s(:,1),s(:,2),20,cellidx,'filled')
 %% Using SC3 example data yan.csv
 
 [X,genelist]=sc_readtsvfile('example_data/yan.csv');
-t=readtable('example_data\yan_celltype.txt');
+t=readtable('example_data/yan_celltype.txt');
 celltypelist=string(t.cell_type1);
 rng(235); showlegend=true;
 % rng(111); showlegend=false;

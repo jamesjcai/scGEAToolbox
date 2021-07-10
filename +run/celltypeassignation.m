@@ -19,7 +19,7 @@ pth=fullfile(pw1,'thirdparty','R_cellTypeAssignation');
 cd(pth);
 fprintf('CURRENTWDIR = "%s"\n',pth);
 
-[~,cmdout]=RunRcode('require.R');
+[~,cmdout]=pkg.RunRcode('require.R');
 if strfind(cmdout,'there is no package')>0
     cd(oldpth);
     error(cmdout);
@@ -34,7 +34,7 @@ end
     % txtwrite('input.txt',rankdedgenelist);
     writetable(table(rankdedgenelist),'input.txt','WriteVariableNames',false);
 %end
-RunRcode('script.R');
+pkg.RunRcode('script.R');
 if exist('output.txt','file')
     T=readtable('output.txt');
 else

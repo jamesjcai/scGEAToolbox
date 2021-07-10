@@ -11,7 +11,7 @@ function [sce]=readSeuratRds(filename)
     if exist('batchid.csv','file'), delete('batchid.csv'); end
     
     writematrix(filename,'input.txt');
-    RunRcode('script.R');
+    pkg.RunRcode('script.R');
     if exist('X.csv','file')
         t=readtable('X.csv');
         g=string(t.Var1);

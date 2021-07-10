@@ -26,7 +26,7 @@ if exist('input.mat','file'), delete('input.mat'); end
 if exist('output.csv','file'), delete('output.csv'); end
 
 save('input.mat','X','genelist','tgsPos');
-RunRcode('script.R');
+pkg.RunRcode('script.R');
 if exist('output.csv','file')
     T=readtable('output.csv','ReadVariableNames',true);
     score=T.scoretype_UCell;

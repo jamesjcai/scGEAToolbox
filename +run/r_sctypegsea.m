@@ -3,7 +3,7 @@ function [ct]=r_sctypegsea(X,genelist,c,species,organ)
 if nargin<4, species="Mouse"; end
 if nargin<5, organ="Epithelium"; end
 [c]=grp2idx(c);
-if isempty(FindRpath)
+if isempty(pkg.FindRpath)
    error('Rscript.exe is not found.');
 end
 oldpth=pwd;
@@ -12,7 +12,7 @@ pth=fullfile(pw1,'thirdparty','R_scTypeGSEA');
 cd(pth);
 fprintf('CURRENTWDIR = "%s"\n',pth);
 
-[~,cmdout]=RunRcode('require.R');
+[~,cmdout]=pkg.RunRcode('require.R');
 if strfind(cmdout,'there is no package')>0
     cd(oldpth);
     error(cmdout);
@@ -26,7 +26,7 @@ writematrix(X,'counts.txt');
 writematrix(c,'clusterid.txt');
 writematrix(genelist,'genelist.txt');
 
-RunRcode('script.R');
+pkg.RunRcode('script.R');
 if exist('output.txt','file')    
     T=readtable('output.txt','Delimiter','\t','ReadVariableNames',false);
     ct=string(T.Var1);

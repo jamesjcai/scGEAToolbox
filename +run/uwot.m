@@ -7,7 +7,7 @@ if ~isok, error(msg); end
 if exist('output.csv','file'), delete('output.csv'); end
 writematrix(transpose(X),'input.csv');
 
-RunRcode('script.R');
+pkg.RunRcode('script.R');
 if exist('output.csv','file')
     s=readmatrix('output.csv');
 else

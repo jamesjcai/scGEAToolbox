@@ -58,6 +58,6 @@ subplot(2,2,1)
 [s]=sc_tsne([X Y]);
 gscatter(s(:,1),s(:,2),batchidx,'','',5);
 subplot(2,2,2)
-[s]=sc_tsne([Xn Yn]);
+[s]=sc_tsne([Xn Yn],2,false,false);
 gscatter(s(:,1),s(:,2),batchidx,'','',5);
 %% The End

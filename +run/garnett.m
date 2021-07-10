@@ -12,7 +12,7 @@ pth=fullfile(pw1,'thirdparty','R_Garnett');
 cd(pth);
 fprintf('CURRENTWDIR = "%s"\n',pth);
 
-[~,cmdout]=RunRcode('require.R');
+[~,cmdout]=pkg.RunRcode('require.R');
 if strfind(cmdout,'there is no package')>0
     cd(oldpth);
     error(cmdout);
@@ -24,8 +24,8 @@ end
 writematrix(X,'input.csv');
 % Rpath = 'C:\Program Files\R\R-3.6.0\bin';
 % RscriptFileName = 'Z:\Cailab\mouse_neurons\adult_P10_cortex_SRR6061129\monocleMatlab.R';
-% RunRcode('monocleMatlab_3d.R');
-RunRcode('script.R');
+% pkg.RunRcode('monocleMatlab_3d.R');
+pkg.RunRcode('script.R');
 if exist('output.csv','file')
     dat = readmatrix('output.csv');
     t=dat(:,1);

@@ -62,6 +62,7 @@ end
 Pk=[];
 for k=1:size(x,1)
     fitm1 = locfit(t,x(k,:)');
+    % predict(fitm1,t)
     Pk=[Pk plot(t,predict(fitm1,t),'-','LineWidth',3)];
 end
 box on

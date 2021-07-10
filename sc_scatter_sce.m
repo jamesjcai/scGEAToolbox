@@ -399,8 +399,8 @@ uimenu(m,'Text','Ligand-receptor mediated intercellular crosstalk...',...
     'Callback',@callback_DetectIntercellularCrosstalk);
 uimenu(m,'Text','Doublet Detection (python required)...',...
     'Callback',@DoubletDetection);
-% uimenu(m,'Text','Remove ambient RNA contamination (R/decontX required)...',...
-%     'Callback',@DecontX);
+uimenu(m,'Text','Remove ambient RNA contamination (R/decontX required)...',...
+    'Callback',@DecontX);
 
 uimenu(m,'Text','Merge Subclusters of Same Cell Type...',...
     'Callback',@MergeSubCellTypes);
@@ -471,13 +471,19 @@ end
        RefreshAll(src, 1, true, false);
     end
 
-%     function DecontX(~,~)
-%         fw = gui.gui_waitbar;
-%         [X]=run.decontX(sce);
-%         sce.X=X;
-%         gui.gui_waitbar(fw);
-%         guidata(FigureHandle, sce);
-%     end
+    function DecontX(~,~)
+        fw = gui.gui_waitbar;
+        [Xdecon,contamination]=run.decontX(sce);
+        sce.X=Xdecon;
+        guidata(FigureHandle,sce);
+        gui.gui_waitbar(fw);
+        figure;
+        gui.i_stemscatter(sce.s,contamination);
+        zlabel('Contamination rate')
+        title('Ambient RNA contamination')
+        pause(1)
+        helpdlg('Contamination removed.')        
+    end
 
     function HarmonyPy(src, ~)
         if gui.callback_Harmonypy(src)

@@ -11,7 +11,7 @@ pth=fullfile(pw1,'thirdparty','R_SCODE');
 cd(pth);
 fprintf('CURRENTWDIR = "%s"\n',pth);
 
-[~,cmdout]=RunRcode('require.R');
+[~,cmdout]=pkg.RunRcode('require.R');
 if strfind(cmdout,'there is no package')>0
     cd(oldpth);
     error(cmdout);
@@ -27,7 +27,7 @@ end
 writematrix(X,'input1.txt');
 writematrix(t,'input2.txt');
 %end
-RunRcode('script.R');
+pkg.RunRcode('script.R');
 if exist('output.csv','file')
     A=readmatrix('output.csv');
     %G=digraph(A);    

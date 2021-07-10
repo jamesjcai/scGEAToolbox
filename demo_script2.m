@@ -2,7 +2,7 @@
 %% HVG analysis with single data X
 %%
 cdgea; % set working directory
-[X,genelist]=sc_readfile('example_data/GSM3044891_GeneExp.UMIs.10X1.txt');   
+[X,genelist]=sc_readfile('example_data/GSM3204304_P_P_Expr.csv');   
 [X,genelist]=sc_selectg(X,genelist,3,1);
 % Normalize data with DESeq method
 Xn=sc_norm(X,'type','deseq');
@@ -13,7 +13,7 @@ HVGenes=T.genes(T.fdr<0.05)
 
 %% Spline-fit feature selection with single data X
 %%
-[X,genelist]=sc_readfile('example_data/GSM3044891_GeneExp.UMIs.10X1.txt');   
+[X,genelist]=sc_readfile('example_data/GSM3204304_P_P_Expr.csv');   
 [X,genelist]=sc_selectg(X,genelist,3,1);
 
 sortit=true;

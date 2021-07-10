@@ -24,7 +24,7 @@ pth=fullfile(pw1,'thirdparty','R_BUSseq');
 cd(pth);
 fprintf('CURRENTWDIR = "%s"\n',pth);
 
-[~,cmdout]=RunRcode('require.R');
+[~,cmdout]=pkg.RunRcode('require.R');
 if strfind(cmdout,'there is no package')>0
     cd(oldpth);
     error(cmdout);
@@ -39,7 +39,7 @@ for i = 1:50
     textwaitbar(i, 100, 'This may take a few minutes. Please wait');
     pause(0.01);
 end
-RunRcode('script.R');
+pkg.RunRcode('script.R');
 for i = 51:100
     textwaitbar(i, 100, 'This may take a few minutes. Please wait');
     pause(0.01);

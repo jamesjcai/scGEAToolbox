@@ -13,7 +13,7 @@ end
 save('input.mat','X','Y');
 %writematrix(X,'input1.txt');
 %writematrix(Y,'input2.txt');
-RunRcode('script.R');
+pkg.RunRcode('script.R');
 if exist('output.csv','file')
     warning off
     T=readtable('output.csv');
