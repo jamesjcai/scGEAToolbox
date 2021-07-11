@@ -1,7 +1,19 @@
 function [sce]=sc_mergesces(sces,method)
+%Merges two SCE objects
+%Usage: [sce]=sc_mergesces({sce1,sce2},'intersect');
+%See also: SC_MERGEDATA
 
 if nargin<2, method='intersect'; end
-if ~iscell(sces), error('SCES is not a cell array'); end
+validMethods = ["intersect","union"];
+method = validatestring(method,validMethods);
+if ~iscell(sces), error('SCES is not a cell array.'); end
+if length(sces)<2, error('At least two SCE required.'); end
+for k=1:length(sces)
+    if ~isa(sces{k},'SingleCellExperiment')
+        error('sces{%d} is not a SingleCellExperiment object.',k);
+    end
+end
+
 sce=sces{1};
 c=ones(sce.NumCells,1);
 for k=2:length(sces)
