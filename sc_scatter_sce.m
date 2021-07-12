@@ -474,16 +474,24 @@ end
     function DecontX(~,~)
         fw = gui.gui_waitbar;
         [Xdecon,contamination]=run.decontX(sce);
-        sce.X=Xdecon;
-        guidata(FigureHandle,sce);
         gui.gui_waitbar(fw);
-        figure;
+        tmpf_decontx=figure;
         gui.i_stemscatter(sce.s,contamination);
+        % zlim([0 1]);
         zlabel('Contamination rate')
         title('Ambient RNA contamination')
-        pause(1)
-        helpdlg('Contamination removed.')        
+        answer=questdlg("Remove contamination?");
+        switch answer
+            case 'Yes'
+                sce.X=round(Xdecon);
+                guidata(FigureHandle,sce);
+%                 if strcmp(get(tmpf_decontx,'type'),'figure')
+%                     close(tmpf_decontx);
+%                 end
+                helpdlg('Contamination removed.')
+       end
     end
+
 
     function HarmonyPy(src, ~)
         if gui.callback_Harmonypy(src)
@@ -502,55 +510,73 @@ end
     end
 
 
-    function DoubletDetection(src, ~)
-        
+    function DoubletDetection(src, ~)        
         [isDoublet,doubletscore,methodtag,done]=gui.callback_DoubletDetection(src);
-        if done && sce.NumCells==length(doubletscore)
-            atag=sprintf('doublet_score (%s)',methodtag);
-            [y,idx]=ismember(atag,sce.list_cell_attributes(1:2:end));
-            if y
-                sce.list_cell_attributes{(idx-1)*2+2}=doubletscore;
-            else
-                sce.list_cell_attributes=[sce.list_cell_attributes,...
-                    {atag,doubletscore}];
-            end
-            %[a]=contains(sce.list_cell_attributes(1:2:end),'doublet_score');
-            %atag=sprintf('doublet_score (%d)',sum(a)+1);
-       end
-        guidata(FigureHandle,sce);
-        if done && any(isDoublet)
-            answer=questdlg(sprintf('Delete detected doublets (n=%d)?',...
-                sum(isDoublet)),...
-                '','Yes','No, show doublets','No, show scores','Yes');
-            switch answer
-                case 'Yes'
-                    i_deletecells(isDoublet);
-                    helpdlg('Doublets deleted.');
-                case 'No, show doublets'
-                    % i_showstate(doubletscore);
-                    ttxt = "Doublets";
-                    pkg.i_stem3scatter(sce.s(:, 1), sce.s(:, 2), isDoublet, ttxt);
-                    view(3);
-                    
-                case 'No, show scores'
-                    % i_showstate(doubletscore);
-                    ttxt = "Doublet Score";
-                    pkg.i_stem3scatter(sce.s(:, 1), sce.s(:, 2), doubletscore, ttxt);
-                    view(3);
-                otherwise
-                    return;
-            end
-            %sce = guidata(FigureHandle);
-            %sce.c=isDoublet;
-            %[c, cL] = grp2idx(sce.c);
-            %RefreshAll(src, 1, true, false);
-        elseif done && ~any(isDoublet)
+        if done && ~any(isDoublet)
             helpdlg('No doublet detected.');
-            %sce.c=doubletscore;
-            %RefreshAll(src, 1, true, false);
+            return;
         end
-        guidata(FigureHandle, sce);
+        if done && any(isDoublet) && sce.NumCells==length(doubletscore)
+            tmpf_doubletdetection=figure;
+            gui.i_stemscatter(sce.s,doubletscore);
+            zlabel('Doublet Score')
+            title(sprintf('Doublet Detection (%s)',methodtag))
+            answer=questdlg(sprintf("Remove %d doublets?",sum(isDoublet)));
+                switch answer
+                    case 'Yes'
+                        % close(tmpf_doubletdetection);
+                        i_deletecells(isDoublet);
+                        guidata(FigureHandle,sce);
+                        helpdlg('Doublets deleted.');
+                end
+        end
     end
+        
+%             atag=sprintf('doublet_score (%s)',methodtag);
+%             [y,idx]=ismember(atag,sce.list_cell_attributes(1:2:end));
+%             if y
+%                 sce.list_cell_attributes{(idx-1)*2+2}=doubletscore;
+%             else
+%                 sce.list_cell_attributes=[sce.list_cell_attributes,...
+%                     {atag,doubletscore}];
+%             end
+%             %[a]=contains(sce.list_cell_attributes(1:2:end),'doublet_score');
+%             %atag=sprintf('doublet_score (%d)',sum(a)+1);
+%        end
+%         guidata(FigureHandle,sce);
+%         if done && any(isDoublet)
+%             answer=questdlg(sprintf('Delete detected doublets (n=%d)?',...
+%                 sum(isDoublet)),...
+%                 '','Yes','No, show doublets','No, show scores','Yes');
+%             switch answer
+%                 case 'Yes'
+%                     i_deletecells(isDoublet);
+%                     helpdlg('Doublets deleted.');
+%                 case 'No, show doublets'
+%                     % i_showstate(doubletscore);
+%                     ttxt = "Doublets";
+%                     pkg.i_stem3scatter(sce.s(:, 1), sce.s(:, 2), isDoublet, ttxt);
+%                     view(3);
+%                     
+%                 case 'No, show scores'
+%                     % i_showstate(doubletscore);
+%                     ttxt = "Doublet Score";
+%                     pkg.i_stem3scatter(sce.s(:, 1), sce.s(:, 2), doubletscore, ttxt);
+%                     view(3);
+%                 otherwise
+%                     return;
+%             end
+%             %sce = guidata(FigureHandle);
+%             %sce.c=isDoublet;
+%             %[c, cL] = grp2idx(sce.c);
+%             %RefreshAll(src, 1, true, false);
+%         elseif done && ~any(isDoublet)
+%             helpdlg('No doublet detected.');
+%             %sce.c=doubletscore;
+%             %RefreshAll(src, 1, true, false);
+%         end
+%         guidata(FigureHandle, sce);
+%     end
 
     function MergeSubCellTypes(src,~)
         if isempty(sce.c_cell_type_tx), return; end
@@ -570,25 +596,16 @@ end
 
 % =========================
     function RefreshAll(src, ~, keepview, keepcolr)
-        if nargin < 4
-            keepcolr = false;
-        end
-        if nargin < 3
-            keepview = false;
-        end
-        
+        if nargin < 4, keepcolr = false; end
+        if nargin < 3, keepview = false; end        
         if keepview || keepcolr
             [para] = i_getoldsettings(src);
         end
         % [c, cL] = grp2idx(sce.c);
         if size(sce.s, 2) > 2 && ~isempty(h.ZData)
-            if keepview
-                [ax, bx] = view();
-            end
+            if keepview, [ax, bx] = view(); end
             h = gui.i_gscatter3(sce.s, c, methodid);
-            if keepview
-                view(ax, bx);
-            end
+            if keepview, view(ax, bx); end
         else   % otherwise 2D
             h = gui.i_gscatter3(sce.s(:, 1:2), c, methodid);
         end

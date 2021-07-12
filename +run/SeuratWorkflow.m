@@ -14,37 +14,59 @@ end
 oldpth=pwd();
 [isok,msg]=commoncheck_R('R_SeuratWorkflow');
 if ~isok, error(msg); end
-if exist('input.txt','file'), delete('input.txt'); end
-if exist('tsneoutput.csv','file'), delete('tsneoutput.csv'); end
-if exist('umapoutput.csv','file'), delete('umapoutput.csv'); end
-if exist('activeidentoutput.csv','file'), delete('activeidentoutput.csv'); end
-sc_writefile('input.txt',sce.X,sce.g);
+if exist('output.mat.tmp','file'), delete('output.mat.tmp'); end
+%if exist('tsneoutput.csv','file'), delete('tsneoutput.csv'); end
+%if exist('umapoutput.csv','file'), delete('umapoutput.csv'); end
+%if exist('activeidentoutput.csv','file'), delete('activeidentoutput.csv'); end
+%sc_writefile('input.txt',sce.X,sce.g);
+if exist('./input.mat','file'), delete('./input.mat'); end
+if exist('./output.mat','file'), delete('./output.mat'); end
+
+X=sce.X;
+genelist=sce.g;
+if ~iscellstr(genelist) && isstring(genelist)
+    genelist=cellstr(genelist);
+end
+save('input.mat','X','genelist','-v6');
+
 if ndim==3
     pkg.RunRcode('script3d.R');
 else    
     pkg.RunRcode('script.R');
 end
-if exist('tsneoutput.csv','file')
-    T=readtable('tsneoutput.csv','ReadVariableNames',true);
-    s=table2array(T(:,2:end));
-    sce.struct_cell_embeddings.tsne=s;
-    sce.s=s;
+%if exist('tsneoutput.csv','file')
+%    T=readtable('tsneoutput.csv','ReadVariableNames',true);
+%    s=table2array(T(:,2:end));
+%    sce.struct_cell_embeddings.tsne=s;
+%    sce.s=s;
+%end
+%if exist('umapoutput.csv','file')
+%    T=readtable('umapoutput.csv','ReadVariableNames',true);
+%    s=table2array(T(:,2:end));
+%    sce.struct_cell_embeddings.umap=s;
+%end
+%if exist('activeidentoutput.csv','file')
+%    T=readtable('activeidentoutput.csv','ReadVariableNames',true);
+%    c=table2array(T(:,2:end));
+%    sce.c_cluster_id=c;
+%    sce.struct_cell_clusterings.seurat=c;
+%    sce.c=c;
+%end
+if exist('output.mat','file')
+    load output.mat s_tsne s_umap c_ident
+    
+    sce.c_cluster_id=c_ident;
+    sce.struct_cell_clusterings.seurat=c_ident;
+    sce.c=c_ident;
+    sce.struct_cell_embeddings.umap=s_umap;
+    sce.struct_cell_embeddings.tsne=s_tsne;
+    sce.s=s_tsne;
 end
-if exist('umapoutput.csv','file')
-    T=readtable('umapoutput.csv','ReadVariableNames',true);
-    s=table2array(T(:,2:end));
-    sce.struct_cell_embeddings.umap=s;
-end
-if exist('activeidentoutput.csv','file')
-    T=readtable('activeidentoutput.csv','ReadVariableNames',true);
-    c=table2array(T(:,2:end));
-    sce.c_cluster_id=c;
-    sce.struct_cell_clusterings.seurat=c;
-    sce.c=c;
-end
-if exist('input.txt','file'), delete('input.txt'); end
-if exist('tsneoutput.csv','file'), delete('tsneoutput.csv'); end
-if exist('umapoutput.csv','file'), delete('umapoutput.csv'); end
-if exist('activeidentoutput.csv','file'), delete('activeidentoutput.csv'); end
+if exist('./input.mat','file'), delete('./input.mat'); end
+if exist('./output.mat','file'), delete('./output.mat'); end
+
+%if exist('tsneoutput.csv','file'), delete('tsneoutput.csv'); end
+%if exist('umapoutput.csv','file'), delete('umapoutput.csv'); end
+%if exist('activeidentoutput.csv','file'), delete('activeidentoutput.csv'); end
 cd(oldpth);
 end
