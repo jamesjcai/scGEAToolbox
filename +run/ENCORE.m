@@ -1,4 +1,5 @@
 function ENCORE(X,genelist)
+error('under development');
 if nargin<1, X=rand(4,5); end
 if nargin<2, genelist=string((1:4)'); end
 
