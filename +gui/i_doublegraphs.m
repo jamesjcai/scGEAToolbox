@@ -18,9 +18,9 @@ load(fullfile(mfolder,...
 
 w=8;
 l=1;
-hFig=figure('name',figname,'Visible','off');
-movegui(hFig, 'center');
-
+hFig=figure('name',figname,'Visible','on');
+set(0,'CurrentFigure',hFig)
+% movegui(hFig, 'center');
 
 h1=subplot(1,2,1);
 [p1]=drawnetwork(G1,h1);

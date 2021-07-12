@@ -18,7 +18,7 @@ function callback_CompareGeneNetwork(src,~)
     x2=sce.X(i,i2);
     A1=sc_pcnet(x1);
     A2=sc_pcnet(x2);
-    
-    gui.gui_waitbar(fw);            
+    gui.gui_waitbar(fw);
+    pause(1)
     sc_grnview2(A1,A2,glist);
 end
