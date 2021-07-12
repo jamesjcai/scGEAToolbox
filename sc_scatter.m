@@ -85,7 +85,7 @@ function sc_scatter(X, genelist, s, c)
                     end
                 end
                 [X, genelist] = sc_readmtxfile(matrixmtxfile, featurestxtfile, [], 2);
-            case 'TSV/CSV txt'
+            case 'TSV/CSV .txt'
                 [fname, pathname] = uigetfile( ...
                                               {'*.tsv;*.csv;*.txt', 'TSV/CSV Format Files (*.tsc, *.csv, *.txt)'
                                                '*.*',  'All Files (*.*)'}, ...
