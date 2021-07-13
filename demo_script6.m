@@ -11,14 +11,13 @@ gui.sc_celltypeexplorer_auto(X,genelist,s_tsne,"species","mouse");
 % To generate the figure:
 % (1) run gui.sc_celltypeexplorer(X,genelist,s_tsne,"species","mouse")
 % (2) brush and select cell cluster
-figure;
 openfig('example_data/markergeneident_demo.fig');
 
 %% Group cells into clusters (k=6)
 %
 figure;
 rng(1234)
-cluster_kmedoids=sc_cluster_s(s_tsne,6,'type','kmedoids');
+cluster_kmedoids=sc_cluster_s(s_tsne,6,'type','kmedoids','plotit',true);
 
 %% Identify marker genes for cluster #4 against other clusters
 %
@@ -39,7 +38,7 @@ view([-25 90])
 %% Show expression level of the top marker gene
 %
 figure;
-g=gmarkers(1);
+g=gmarkers(5);
 sc_scattermarker(X,genelist,s_tsne,g);
 % sc_stemscatter(s_tsne(:,1), s_tsne(:,2), log2(1+X(genelist==g,:)));
 title(g)
