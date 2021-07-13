@@ -1,7 +1,7 @@
 function [Tct]=local_celltypebrushed(X,genelist,s,...
                 brushedData,species,organ,database)
 
-if nargin<7, organ='panglaodb'; end
+if nargin<7, database='panglaodb'; end
 if nargin<6, organ='all'; end
 if nargin<5, species='mouse'; end
 
@@ -18,6 +18,6 @@ if strcmpi(database,'clustermole')
     [Tct]=run.celltypecaller(Xi,gi,[],'species',species);
 elseif strcmpi(database,'panglaodb')
     %disp('Using panglaodb marker database')
-    [Tct]=run.alona(Xi,gi,[],'species',species,'organ',organ);
+    [Tct]=run.alona(Xi,gi,[],'species',species,'organ',organ,'bestonly',true);
 end
 end
