@@ -1,5 +1,5 @@
 function [X,contamination]=decontX(X)
-%Run decontX 
+%Run decontX decontamination
 %
 % see also: soupX
 % https://cran.r-project.org/web/packages/SoupX/vignettes/pbmcTutorial.html
