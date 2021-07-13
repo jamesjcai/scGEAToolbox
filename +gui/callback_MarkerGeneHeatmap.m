@@ -116,7 +116,10 @@ end
 
     gui.gui_waitbar(fw);
 
+    
 f1=figure;
+
+% ======= customized heatmap - start
 imagesc(Y);
 szc=cumsum(szgn);
 for k=1:max(idcl)-1
@@ -124,10 +127,10 @@ for k=1:max(idcl)-1
     yline(szc(k)+0.5,'r-');
 end
 set(gca,'YTick',1:size(Y,1));
-a=[]; b=[];
+a=zeros(1,max(idcl)); b=zeros(1,max(idcl));
 for k=1:max(idcl)
-    a=[a sum(idcl<=k)];
-    b=[b round(sum(idcl==k)./2)];
+    a(k)=sum(idcl<=k);
+    b(k)=round(sum(idcl==k)./2);
 end
 set(gca,'XTick',a-b);
 set(gca,'XTickLabel',strrep(M(:,1),'_','\_'));
@@ -135,6 +138,8 @@ set(gca,'XTickLabelRotation',45);
 set(gca,'YTick',1:length(MX));
 set(gca,'YTickLabel',MX);
 set(gca,'TickLength',[0 0])
+% ======= customized heatmap - end
+
 
 tb1=uitoolbar(f1);
 pt1 = uipushtool(tb1,'Separator','off');
@@ -163,16 +168,7 @@ pt1.ClickedCallback = @i_summarymapT;
 
 
     function i_summarymap(~,~)
-        f2=figure;
-%         imagesc(Z);
-%         set(gca,'XTick',1:numel(cL));
-%         set(gca,'XTickLabel',strrep(M(:,1),'_','\_'));
-%         set(gca,'XTickLabelRotation',45);
-%         set(gca,'YTick',1:length(MX));
-%         set(gca,'YTickLabel',MX);
-%         set(gca,'TickLength',[0 0])
-%         f2.Position(1)=f2.Position(1)+200;
-%         f2.Position(2)=f2.Position(2)-200;
+        figure;
         h=heatmap(cL,MX,Z);
         h.Title = 'Marker Gene Heatmap';
         h.XLabel = 'Cell Type';
@@ -182,7 +178,7 @@ pt1.ClickedCallback = @i_summarymapT;
     end
 
     function i_summarymapT(~,~)
-         f2=figure;
+         figure;
 %         imagesc(Z');
 %         set(gca,'YTick',1:numel(cL));
 %         set(gca,'YTickLabel',strrep(M(:,1),'_','\_'));
@@ -198,7 +194,6 @@ pt1.ClickedCallback = @i_summarymapT;
         h.XLabel = 'Marker Gene';
         h.Colormap = parula;
         h.GridVisible = 'off';
-
     end
 
     function i_saveM(~,~,M)    
@@ -210,73 +205,3 @@ pt1.ClickedCallback = @i_summarymapT;
 
 end
 
-
-
-%{
-    FigureHandle=gcf;
-    hAx = axes('Parent',FigureHandle);
-    UitoolbarHandle = uitoolbar('Parent',FigureHandle ) ; 
-    pt3 = uipushtool(UitoolbarHandle,'Separator','off');
-    pt3.Tooltip = 'Select a gene to show expression';
-    [img,map] = imread(fullfile(matlabroot,...
-                'toolbox','matlab','icons','greencircleicon.gif'));
-    ptImage = ind2rgb(img,map);
-    pt3.CData = ptImage;
-    pt3.ClickedCallback = {@i_saveM,M};
-
-    function i_saveM(~,~,M)    
-        labels = {'Save marker gene map M to variable named:'}; 
-        vars = {'M'};
-        values = {M};
-        export2wsdlg(labels,vars,values);
-    end
-%}
-
-%{    
-    
-    FigureHandle=figure;
-    hAx = axes('Parent',FigureHandle);
-    UitoolbarHandle = uitoolbar( 'Parent', FigureHandle ) ; 
-    pt3 = uipushtool(UitoolbarHandle,'Separator','off');
-    pt3.Tooltip = 'Select a gene to show expression';
-    
-    cLk=matlab.lang.makeValidName(cL{k});
-    pt3.ClickedCallback = {@callback_PickMarkerGene,...
-        markerlist,cLk};
-[img,map] = imread(fullfile(matlabroot,...
-            'toolbox','matlab','icons','greencircleicon.gif'));
-ptImage = ind2rgb(img,map);
-
-pt3.CData = ptImage;
-    
-    xxx=zscore(xx,0,2);
-    qx=quantile(xxx(:),0.90);
-    xxx(xxx>qx)=qx;
-
-    %qx=quantile(xx(:),0.95);
-    %xx(xx>qx)=qx;
-%{    
-xxk=xx;
-try
-for ix=1:size(xx,2)
-    thisc=xx(ix,:);    
-    [~,thisidx]=sort(thisc);
-    thisa=ksdensity(thisc,"NumPoints",size(xx,2));
-    thisc(thisidx)=thisa;
-    xxk(ix,:)=thisc;
-end
-catch ME
-    disp(ME)
-end
-%}    
-    imagesc(xxx)
-    
-    for kk=1:max(ccc)-1
-        xline(sum(ccc<kk+1)+0.5,'w-');
-        % yline(szc(kk)+0.5,'w-');
-    end
-    set(gca,'YTick',1:size(xx,1));
-    set(gca,'YTickLabel',markerlist);
-    title(strrep(cLk,'_','\_'));
-end
-%}

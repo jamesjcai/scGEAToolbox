@@ -3,7 +3,7 @@
 % function.
 % 
 % Copyright The MathWorks, Inc. 2014
-import pkg.*
+
 %% Load Data for Visualization
 % Import data set to visualize. The data set contains a matrix of
 % electricity price differences between locations in New England.
@@ -12,32 +12,32 @@ load heatmapData
 %% Simple Heatmap
 % Generate heatmap only with no labels
 clf
-pkg.heatmap(spreads_small);
+gui.heatmap(spreads_small);
 
 %% Axes Ticks & Labels
 % The heatmap above can be made a lot more useful with labels on the
 % columns and rows. We can do this with two more inputs for x and y labels.
 % The labels can be numeric or cell arrays of strings
 clf
-pkg.heatmap(spreads_small, 1:15, labels_small);
+gui.heatmap(spreads_small, 1:15, labels_small);
 
 %%
 % Labels on the x-axis can be rotated to prevent overlap 
 clf
-pkg.heatmap(spreads_small, labels_small, labels_small, [], 'TickAngle', 45);
+gui.heatmap(spreads_small, labels_small, labels_small, [], 'TickAngle', 45);
 
 %%
 % By default, for larger heatmaps, not all ticks are shown. This can be
 % forced with the _ShowAllTicks_ option. 
 clf
-pkg.heatmap(spreads_small, labels_small, labels_small, [], 'TickAngle', 45,...
+gui.heatmap(spreads_small, labels_small, labels_small, [], 'TickAngle', 45,...
         'ShowAllTicks', true);
 
 %%
 % The font size of the ticks can also be controlled with the _TickFontSize_
 % option. This can help when trying to fit many tick labels on a heatmap.
 clf
-pkg.heatmap(spreads, labels, labels, [], 'TickAngle', 45,...
+gui.heatmap(spreads, labels, labels, [], 'TickAngle', 45,...
         'ShowAllTicks', true, 'TickFontSize', 6);
 
 %% Heatmap Text Labels
@@ -50,7 +50,7 @@ pkg.heatmap(spreads, labels, labels, [], 'TickAngle', 45,...
 % Turn on text labels with a format $xx.xx. See the documentation of
 % _sprintf_ for more information on format strings
 clf
-pkg.heatmap(spreads_small, labels_small, labels_small, '$%0.2f', 'TickAngle', 45);
+gui.heatmap(spreads_small, labels_small, labels_small, '$%0.2f', 'TickAngle', 45);
 
 %%
 % A completely different matrix of data can be shown as text labels on top
@@ -60,7 +60,7 @@ pkg.heatmap(spreads_small, labels_small, labels_small, '$%0.2f', 'TickAngle', 45
 clabel = arrayfun(@(x){sprintf('%0.2f',x)}, c_small); 
 
 clf
-heatmap(spreads_small, labels_small, labels_small, clabel, 'TickAngle', 45);
+gui.heatmap(spreads_small, labels_small, labels_small, clabel, 'TickAngle', 45);
 
 %% 
 % Properties of text labels include _FontSize_ and _TextColor_. _TextColor_
@@ -68,7 +68,7 @@ heatmap(spreads_small, labels_small, labels_small, clabel, 'TickAngle', 45);
 % automatically be chosen for each label to contrast with the color on the
 % image.
 clf
-heatmap(spreads_small, labels_small, labels_small, '$%0.2f', ...
+gui.heatmap(spreads_small, labels_small, labels_small, '$%0.2f', ...
         'TickAngle', 45, 'FontSize', 6, 'TextColor', 'w');
 
 %% Zoom, Pan & Data Cursors
@@ -85,7 +85,7 @@ heatmap(spreads_small, labels_small, labels_small, '$%0.2f', ...
 
 clf
 
-heatmap(spreads);
+gui.heatmap(spreads);
 snapnow
 
 colormap cool
@@ -99,14 +99,14 @@ snapnow
 % with the _Colormap_ option
 
 clf
-heatmap(spreads_small, [], [], '%0.2f', 'Colormap', 'money', ...
+gui.heatmap(spreads_small, [], [], '%0.2f', 'Colormap', 'money', ...
         'Colorbar', true);
 
 %% 
 % The option _ColorLevels_ lets you increase or decrease the number of
 % distinct colors in the colormap.
 clf
-heatmap(spreads_small, [], [], '%0.2f', 'Colormap', 'money',...
+gui.heatmap(spreads_small, [], [], '%0.2f', 'Colormap', 'money',...
         'Colorbar', true, 'ColorLevels', 5);
 
 %%
@@ -115,11 +115,11 @@ heatmap(spreads_small, [], [], '%0.2f', 'Colormap', 'money',...
 % will highlight the variation in the small values in your dataset.
 
 clf
-heatmap(spreads_small, [], [], '%0.2f', 'TextColor', 'w', ...
+gui.heatmap(spreads_small, [], [], '%0.2f', 'TextColor', 'w', ...
         'Colormap', 'copper', 'Colorbar', true);
 snapnow
 
-heatmap(spreads_small, [], [], '%0.2f', 'TextColor', 'w', ...
+gui.heatmap(spreads_small, [], [], '%0.2f', 'TextColor', 'w', ...
         'Colormap', 'copper', 'Colorbar', true, 'UseLogColormap', true);
 
 %% Multiple Heatmaps on a Figure
@@ -129,12 +129,12 @@ heatmap(spreads_small, [], [], '%0.2f', 'TextColor', 'w', ...
 % make each heatmap use a different colormap.
 clf
 subplot(2,1,1);
-heatmap(spreads_small, [], [], '%0.2f', 'Colormap', 'money', ...
+gui.heatmap(spreads_small, [], [], '%0.2f', 'Colormap', 'money', ...
         'UseFigureColormap', false, 'Colorbar', true);
 title('Money Colormap');
     
 subplot(2,1,2);
-heatmap(spreads_small, [], [], '%0.2f', 'Colormap', 'copper', ...
+gui.heatmap(spreads_small, [], [], '%0.2f', 'Colormap', 'copper', ...
         'UseFigureColormap', false, 'Colorbar', true, 'TextColor', 'w');
 title('Copper Colormap');
 
@@ -157,10 +157,10 @@ y = x/2;
 y([58 59 65 66]) = y([58 59 65 66])*2; 
 
 clf
-heatmap(x,[],[],'%0.2f','ColorMap', @cool, 'Colorbar',true);
+gui.heatmap(x,[],[],'%0.2f','ColorMap', @cool, 'Colorbar',true);
 snapnow; 
 
-heatmap(y,[],[],'%0.2f','ColorMap', @cool, 'Colorbar',true);
+gui.heatmap(y,[],[],'%0.2f','ColorMap', @cool, 'Colorbar',true);
 %%
 % These two plots show the same heatmaps with consistent color levels. The
 % mincolorvalue and maxcolorvalue have been set to the minimum and maximum
@@ -168,11 +168,11 @@ heatmap(y,[],[],'%0.2f','ColorMap', @cool, 'Colorbar',true);
 mincolor = min([x(:);y(:)]);
 maxcolor = max([x(:);y(:)]);
 
-heatmap(x,[],[],'%0.2f','ColorMap', @cool, 'Colorbar',true, ...
+gui.heatmap(x,[],[],'%0.2f','ColorMap', @cool, 'Colorbar',true, ...
     'MinColorValue', mincolor, 'MaxColorValue', maxcolor);
 snapnow
 
-heatmap(y,[],[],'%0.2f','ColorMap', @cool, 'Colorbar',true, ...
+gui.heatmap(y,[],[],'%0.2f','ColorMap', @cool, 'Colorbar',true, ...
     'MinColorValue', mincolor, 'MaxColorValue', maxcolor);
 
 %% Missing Values
@@ -183,7 +183,7 @@ heatmap(y,[],[],'%0.2f','ColorMap', @cool, 'Colorbar',true, ...
 % other elements that contain low values
 
 close(gcf); clf
-heatmap(c,[],[],[],'ColorMap', @cool, 'NaNColor', [0 0 0], 'colorbar', true);
+gui.heatmap(c,[],[],[],'ColorMap', @cool, 'NaNColor', [0 0 0], 'colorbar', true);
 
 %% Colorbar
 % As seen above, a colorbar can be added to the figure using the _Colorbar_
@@ -192,20 +192,20 @@ heatmap(c,[],[],[],'ColorMap', @cool, 'NaNColor', [0 0 0], 'colorbar', true);
 % on the colorbar in the image below.
 
 clf
-heatmap(spreads, [], [], '$%0.2f', 'Colormap', 'money', ...
+gui.heatmap(spreads, [], [], '$%0.2f', 'Colormap', 'money', ...
         'FontSize', 2, 'Colorbar', true);
 
 %%
 % The value for the colorbar option can either be a simple true or
 % false in which case the default colorbar will be drawn, or it can include
 % a cell array of property-value pairs for the colorbar command. 
-heatmap(spreads, [], [], '$%0.2f', 'Colormap', 'money', ...
+gui.heatmap(spreads, [], [], '$%0.2f', 'Colormap', 'money', ...
         'FontSize', 2, 'Colorbar', {'SouthOutside'});
 
 %% Grid Lines
 % Grid lines can be added with a _GridLines_ option which is a line
 % specification like ':' for a dotted line
 clf
-heatmap(spreads_small, labels_small, labels_small, '%0.2f', ...
+gui.heatmap(spreads_small, labels_small, labels_small, '%0.2f', ...
         'TickAngle', 45, 'GridLines', ':');
 
