@@ -13,5 +13,5 @@ Run the following code in `MATLAB`:
   if exist('sc_scatter.m','file')
       disp('scGEAToolbox installed!')
   end
-  savepath(fullfile(userpath,'pathdef.m'));
-  
+  savepath;
+  % savepath(fullfile(userpath,'pathdef.m'));  
