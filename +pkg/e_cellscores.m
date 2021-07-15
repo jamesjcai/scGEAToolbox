@@ -25,6 +25,9 @@ end
 
 tgsPos=unique(strsplit(string(T.PositiveMarkers(idx)),','));
 tgsNeg=unique(strsplit(string(T.NegativeMarkers(idx)),','));
+if ~isempty(tgsNeg)
+    tgsNeg=setdiff(tgsNeg,tgsPos);
+end
 
 %{
 if nargin<3, type="T_Cell_Exhaustion"; end
