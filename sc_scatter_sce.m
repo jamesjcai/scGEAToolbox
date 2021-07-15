@@ -59,8 +59,9 @@ dt.UpdateFcn = {@i_myupdatefcnx};
 
 
 
-% defaultToolbar = findall(FigureHandle, 'tag','FigureToolBar');  % get the figure's toolbar handle
-defaultToolbar = findall(FigureHandle, 'Type', 'uitoolbar');
+
+defaultToolbar = findall(FigureHandle, 'tag','FigureToolBar');  % get the figure's toolbar handle
+%defaultToolbar = findall(FigureHandle, 'Type', 'uitoolbar');
 
 % UitoolbarHandle2 = uitoolbar( 'Parent', FigureHandle ) ;
 % set( UitoolbarHandle2, 'Tag' , 'FigureToolBar2' , ...

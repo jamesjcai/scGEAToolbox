@@ -89,8 +89,6 @@
       <file>${PROJECT_ROOT}\+gui</file>
       <file>${PROJECT_ROOT}\+pkg</file>
       <file>${PROJECT_ROOT}\+run</file>
-      <file>${PROJECT_ROOT}\.git</file>
-      <file>${PROJECT_ROOT}\.gitignore</file>
       <file>${PROJECT_ROOT}\@SingleCellExperiment</file>
       <file>${PROJECT_ROOT}\@SingleCellNetwork</file>
       <file>${PROJECT_ROOT}\cdgea.m</file>
