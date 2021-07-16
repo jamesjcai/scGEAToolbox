@@ -9,16 +9,18 @@ function [isDoublet,doubletscore,methodtag,done]=callback_DoubletDetection(src,~
 
 if ~gui.i_setpyenv, return; end
 
-methodtag=questdlg('Which method?','',...
-    'scrublet','doubletdetection','scrublet');
+methodtag='scrublet';
+
+% methodtag=questdlg('Which method?','',...
+%     'scrublet','doubletdetection','scrublet');
         
         fw=gui.gui_waitbar;
         try
             switch methodtag
                 case 'scrublet'
                     [isDoublet,doubletscore]=run.scrublet(sce.X);
-                case 'doubletdetection'
-                    [isDoublet,doubletscore]=run.doubletdetection(sce.X);
+%                 case 'doubletdetection'
+%                     [isDoublet,doubletscore]=run.doubletdetection(sce.X);
                 otherwise
                     return;
             end

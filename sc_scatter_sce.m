@@ -398,9 +398,9 @@ uimenu(m,'Text','Extract cells by marker(+/-) expression...',...
     'Callback',@callback_SelectCellsByMarker);
 uimenu(m,'Text','Ligand-receptor mediated intercellular crosstalk...',...
     'Callback',@callback_DetectIntercellularCrosstalk);
-uimenu(m,'Text','Doublet Detection (python required)...',...
+uimenu(m,'Text','Detect Doublets (Python/Scrublet required)...',...
     'Callback',@DoubletDetection);
-uimenu(m,'Text','Remove ambient RNA contamination (R/decontX required)...',...
+uimenu(m,'Text','Detect ambient RNA contamination (R/decontX required)...',...
     'Callback',@DecontX);
 
 uimenu(m,'Text','Merge Subclusters of Same Cell Type...',...
@@ -412,12 +412,14 @@ uimenu(m,'Text','Calculate Gene Expression Statistics...',...
 
 % uimenu(mm,'Text','Calculate Cell Scores from List of Feature Genes...',...
 %     'Callback',@callback_CalculateCellScores);
-% uimenu(mm,'Text','Calculate Cell Scores from Cell Type Markers...',...
-%     'Callback',@callback_CellTypeMarkerScores);
 uimenu(m,'Text','T Cell Exhaustion Scores...',...
     'Callback',@callback_TCellExhaustionScores);
-uimenu(m,'Text','Macrophage Polarization Index...',...
-    'Callback',@callback_MacrophagePolarizationIndex);
+% uimenu(m,'Text','Macrophage Polarization Index...',...
+%     'Callback',@callback_MacrophagePolarizationIndex);
+uimenu(m,'Text','GEO Accession to SCE...',...
+     'Callback',@GEOAccessionToSCE);
+
+
 
 % handles = guihandles( FigureHandle ) ;
 % guidata( FigureHandle, handles ) ;
@@ -445,6 +447,25 @@ end
 %         return;
 % end
 % end
+
+    function GEOAccessionToSCE(src,~)        
+        acc=inputdlg({'GEO accession:'},'',[1 40],{'GSM3308545'});
+        if ~isempty(acc)
+        acc=acc{1};
+        if strlength(acc)>4 && ~isempty(regexp(acc,'G.+','once'))
+            try                
+                fw=gui.gui_waitbar;                
+                sce=pkg.e_readgeomtx(acc);
+                [c,cL]=grp2idx(sce.c);
+                gui.gui_waitbar(fw);
+                RefreshAll(src, 1, false, false);
+                guidata(FigureHandle, sce);
+            catch ME
+                errordlg(ME.message);
+            end
+        end
+        end
+    end
 
     function SelectCellsByQC(src, ~)
         [requirerefresh,highlightindex]=gui.callback_SelectCellsByQC(src);
@@ -525,9 +546,12 @@ end
             answer=questdlg(sprintf("Remove %d doublets?",sum(isDoublet)));
                 switch answer
                     case 'Yes'
-                        % close(tmpf_doubletdetection);
-                        i_deletecells(isDoublet);
+                        close(tmpf_doubletdetection);
+                        % i_deletecells(isDoublet);
+                        sce = sce.removecells(isDoublet);
                         guidata(FigureHandle,sce);
+                        [c, cL] = grp2idx(sce.c);
+                        RefreshAll(src, 1, true, false);
                         helpdlg('Doublets deleted.');
                 end
         end
@@ -603,10 +627,15 @@ end
             [para] = i_getoldsettings(src);
         end
         % [c, cL] = grp2idx(sce.c);
+%         exist('h')
+%         h
+%         pause
         if size(sce.s, 2) > 2 && ~isempty(h.ZData)
+            
             if keepview, [ax, bx] = view(); end
             h = gui.i_gscatter3(sce.s, c, methodid);
             if keepview, view(ax, bx); end
+            
         else   % otherwise 2D
             h = gui.i_gscatter3(sce.s(:, 1:2), c, methodid);
         end
@@ -1117,14 +1146,14 @@ end
         guidata(FigureHandle,sce);
     end
 
-    function i_deletecells(ptsSelected)
-        sce = sce.removecells(ptsSelected);
-        [c, cL] = grp2idx(sce.c);
-        [ax, bx] = view();
-        h = gui.i_gscatter3(sce.s, c);
-        title(sce.title);
-        view(ax, bx);
-    end
+%     function i_deletecells(ptsSelected)
+%         sce = sce.removecells(ptsSelected);
+%         [c, cL] = grp2idx(sce.c);
+%         [ax, bx] = view();
+%         h = gui.i_gscatter3(sce.s, c);
+%         title(sce.title);
+%         view(ax, bx);
+%     end
 
     function DrawTrajectory(~, ~)
         answer = questdlg('Which method?', 'Select Algorithm', ...
