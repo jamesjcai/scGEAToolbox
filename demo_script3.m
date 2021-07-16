@@ -2,10 +2,9 @@
 %% Load and pre-process three data sets, X, Y and Z
 %%
 cdgea; % set working directory
-load('example_data/example10xdata2.mat','X','genelist');
-Z=X; genelistz=genelist;
 [X,genelistx]=sc_readfile('example_data/GSM3204304_P_P_Expr.csv');
 [Y,genelisty]=sc_readfile('example_data/GSM3204305_P_N_Expr.csv');
+[Z,genelistz]=sc_readfile('example_data/GSM3044891_GeneExp.UMIs.10X1.txt');
 [X,genelistx]=sc_selectg(X,genelistx,3,1);
 [Y,genelisty]=sc_selectg(Y,genelisty,3,1);
 [Z,genelistz]=sc_selectg(Z,genelistz,3,1);
@@ -65,6 +64,6 @@ T=sortrows(T,size(T,2),'descend');
 [~,idx1]=ismember(table2array(T(:,1)),genelistx);
 [~,idx2]=ismember(table2array(T(:,1)),genelisty);
 figure;
-gui.sc_stem3(X(idx1,:),Y(idx2,:),genelistx(idx1),50);           
+sc_stem3(X(idx1,:),Y(idx2,:),genelistx(idx1),50);           
 
 %% The End

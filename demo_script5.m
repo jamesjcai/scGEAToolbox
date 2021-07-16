@@ -2,7 +2,7 @@
 %% Load example data set, X
 %
 cdgea; % set working directory
-[X,genelist]=sc_readfile('example_data/GSM3204304_P_P_Expr.csv');
+[X,genelist]=sc_readfile('example_data/GSM3044891_GeneExp.UMIs.10X1.txt');
 
 %% Select genes with at least 3 cells having more than 5 reads per cell. 
 %
@@ -28,9 +28,11 @@ r=corr(t,X','type','spearman'); % Calculate linear correlation between gene expr
 selectedg=genelist([idxp idxn]);
 
 % Plot expression profile of the 5 selected genes
-figure;
-i_plot_pseudotimeseries(log(1+X),genelist,t,selectedg)
-
+try
+    figure;
+    i_plot_pseudotimeseries(log(1+X),genelist,t,selectedg)
+catch
+end
 % % Nonlinear correlation  
 %
 % r=zeros(size(X,1),1);
