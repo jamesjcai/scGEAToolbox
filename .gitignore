@@ -9,6 +9,7 @@
 
 # Simulink Code Generation
 scGEApp_standalone/
+example_data/
 
 thirdparty/GOrilla/input_page.html
 
