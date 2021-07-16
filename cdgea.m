@@ -23,3 +23,11 @@ if ~strcmp(pw0,pw1) && ~isconfirmed
 else
     cd(pw1);
 end
+if ~exist(fullfile(pw1,'example_data/'),'dir')
+    try
+    unzip('https://github.com/jamesjcai/jamesjcai.github.io/raw/master/data/example_data.zip');
+    catch
+        warning('Cannot download and unzip example_data.zip');
+    end
+end
+end
