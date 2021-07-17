@@ -397,25 +397,20 @@ uimenu(m,'Text','Remove batch effect using Harmony (python required)...',...
 uimenu(m,'Text','Extract cells by marker(+/-) expression...',...
     'Callback',@callback_SelectCellsByMarker);
 uimenu(m,'Text','Ligand-receptor mediated intercellular crosstalk...',...
-    'Callback',@callback_DetectIntercellularCrosstalk);
+    'Callback',@callback_DetectCellularCrosstalk);
 uimenu(m,'Text','Detect Doublets (Python/Scrublet required)...',...
     'Callback',@DoubletDetection);
 uimenu(m,'Text','Detect ambient RNA contamination (R/decontX required)...',...
     'Callback',@DecontX);
-
 uimenu(m,'Text','Merge Subclusters of Same Cell Type...',...
     'Callback',@MergeSubCellTypes);
-
 uimenu(m,'Text','Calculate Gene Expression Statistics...',...
     'Callback',@callback_CalculateGeneStats);
 %mm=uimenu(m,'Text','Calculate Cell Scores');
-
 % uimenu(mm,'Text','Calculate Cell Scores from List of Feature Genes...',...
 %     'Callback',@callback_CalculateCellScores);
 uimenu(m,'Text','T Cell Exhaustion Scores...',...
     'Callback',@callback_TCellExhaustionScores);
-% uimenu(m,'Text','Macrophage Polarization Index...',...
-%     'Callback',@callback_MacrophagePolarizationIndex);
 uimenu(m,'Text','GEO Accession to SCE...',...
      'Callback',@GEOAccessionToSCE);
 
@@ -945,7 +940,7 @@ end
         
     end
 
-    function ShowCellStats(~, ~)
+    function ShowCellStats(src, ~)
         % FigureHandle=src.Parent.Parent;
         sce = guidata(FigureHandle);
         listitems = {'Library Size', 'Mt-reads Ratio', ...
@@ -978,22 +973,22 @@ end
                 lbsz_mt = sum(sce.X(i, :), 1);
                 ci = lbsz_mt ./ lbsz;
                 ttxt = "mtDNA%";
-                pkg.i_stem3scatter(sce.s(:, 1), sce.s(:, 2), ci, ttxt);
-                view(2);
-                colorbar;
-                pause(1);
                 gui.gui_waitbar(fw);
-                return
+                figure;
+                gui.i_stemscatter(sce.s,ci);
+                zlabel(ttxt);
+                title('Mt-reads Ratio');
+                return;
             case 3
                 idx = startsWith(sce.g, 'mt-', 'IgnoreCase', true);
                 n = sum(idx);
                 if n > 0
                     [ax, bx] = view();
                     if n <= 9
-                        i_markergenespanel(sce.X, sce.g, sce.s, ...
+                        gui.i_markergenespanel(sce.X, sce.g, sce.s, ...
                             sce.g(idx), [], 9, ax, bx, 'Mt-genes');
                     else
-                        i_markergenespanel(sce.X, sce.g, sce.s, ...
+                        gui.i_markergenespanel(sce.X, sce.g, sce.s, ...
                             sce.g(idx), [], 16, ax, bx, 'Mt-genes');
                     end
                 else
@@ -1005,29 +1000,16 @@ end
                 if any(idx)
                     ttxt = sprintf("%s+", sce.g(idx));
                     ci = sum(sce.X(idx, :), 1);
-                    pkg.i_stem3scatter(sce.s(:, 1), sce.s(:, 2), ci, ttxt);
+                    gui.i_stemscatter(sce.s,ci);
+                    title(ttxt);
                 else
                     warndlg('No HgB-genes found');
                 end
-                return
+                return;
             case 5   % "Cell Cycle Phase";
-                if isempty(sce.c_cell_cycle_tx)
-                    
-                answer = questdlg('Use R/Seurat or Matlab version?', ...
-                    'Select Implementation', ...
-                    'R/Seurat','Matlab','Cancel','R/Seurat');
-                     switch answer
-                         case 'R/Seurat'
-                             mid=2;
-                         case 'Matlab'
-                             mid=1;
-                         case 'Cancel'
-                             return;
-                         otherwise
-                             return;
-                     end
+                if isempty(sce.c_cell_cycle_tx)                    
                     fw = gui.gui_waitbar;
-                    sce = sce.estimatecellcycle(true,mid);
+                    sce = sce.estimatecellcycle(true,1);
                     gui.gui_waitbar(fw);
                 end
                 [ci, tx] = grp2idx(sce.c_cell_cycle_tx);
@@ -1042,86 +1024,42 @@ end
                 ttxt = sce.list_cell_attributes{2 * (indx - 8) - 1};
                 ci = sce.list_cell_attributes{2 * (indx - 8)};
         end
-        
-% ------ move to i_showstate        
         if isempty(ci)
             errordlg("Undefined classification");
-            return
+            return;
         end
-        sces = sce.s;
-        if isempty(h.ZData)
-            sces = sce.s(:, 1:2);
-        end        
-        [ax, bx] = view();
-        h = gui.i_gscatter3(sces, ci, 1);
-        view(ax, bx);
-        title(sce.title);
+        [c,cL]=grp2idx(ci);
+        RefreshAll(src, 1, true, false);
+        guidata(FigureHandle, sce);
+    end
+
+%         sces = sce.s;
+%         if isempty(h.ZData)
+%             sces = sce.s(:, 1:2);
+%         end        
+%         [ax, bx] = view();
+%         h = gui.i_gscatter3(sces, ci, 1);
+%         view(ax, bx);
+%         title(sce.title);
+        
 % -------- move to i_showstate
 
-        if indx == 5
-            hc = colorbar;
-            hc.Label.String = ttxt;
-        else
-            colorbar off;
-        end
-        [c, cL] = grp2idx(ci);
-        sce.c = ci;
-        guidata(FigureHandle, sce);
-        
-        if indx == 5
-            answer = questdlg('Compare G1/S/G2M ratios between classes?');
-            if ~isequal(answer, 'Yes')
-                return
-            end
-            
-            listitems = {'Cluster ID', 'Batch ID', ...
-                'Cell Type'};
-            [indx2, tf2] = listdlg('PromptString', ...
-                {'Select statistics', '', ''}, ...
-                'SelectionMode', 'single', ...
-                'ListString', listitems);
-            if tf2 == 1
-                switch indx2
-                    case 1 % cluster id
-                        thisc = sce.c_cluster_id;
-                    case 2 % batch id
-                        thisc = sce.c_batch_id;
-                    case 3 % cell type
-                        thisc = sce.c_cell_type_tx;
-                end
-            else
-                return
-            end
-            if isempty(thisc)
-                errordlg("Undefined classification");
-                return
-            end
-            try
-                [A, ~, ~, l] = crosstab(sce.c_cell_cycle_tx, thisc);
-                B = A ./ sum(A);
-                figure;
-                bar(B', 'stacked');
-                ylabel(sprintf('%s|', string(l(1:3, 1))));
-            catch ME
-                rethrow(ME);
-            end
-        end
-    end
 
-    function i_showstate(ci)
-        if isempty(ci)
-            errordlg("Undefined classification");
-            return
-        end
-        sces = sce.s;
-        if isempty(h.ZData)
-            sces = sce.s(:, 1:2);
-        end        
-        [ax, bx] = view();
-        h = gui.i_gscatter3(sces, ci, 1);
-        view(ax, bx);
-        title(sce.title);        
-    end
+
+%     function i_showstate(ci)
+%         if isempty(ci)
+%             errordlg("Undefined classification");
+%             return
+%         end
+%         sces = sce.s;
+%         if isempty(h.ZData)
+%             sces = sce.s(:, 1:2);
+%         end        
+%         [ax, bx] = view();
+%         h = gui.i_gscatter3(sces, ci, 1);
+%         view(ax, bx);
+%         title(sce.title);        
+%     end
 
     function DeleteSelectedCells(~, ~)
         ptsSelected = logical(h.BrushData.');

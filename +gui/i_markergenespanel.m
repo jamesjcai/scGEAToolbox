@@ -21,7 +21,7 @@ for kkk=1:numfig
             subplot(3,3,kk)
         end
         sc_scattermarker(X,genelist,s,...
-            markerlist(kk+N*(kkk-1)),3,5,false);
+            markerlist(kk+N*(kkk-1)),2,5,false);
         if ~isempty(ax) && ~isempty(bx)
             view(ax,bx);
         end

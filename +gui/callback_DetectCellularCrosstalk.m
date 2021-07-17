@@ -1,4 +1,4 @@
-function callback_DetectIntercellularCrosstalk(src,~)
+function callback_DetectCellularCrosstalk(src,~)
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
     if isempty(sce.c_cell_type_tx) || numel(unique(sce.c_cell_type_tx))<2

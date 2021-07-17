@@ -57,7 +57,7 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
                         scatter(x, y, sz, c, 'filled');
                     else
                         scatter3(x, y, z, sz, c, 'filled');
-                    end                    
+                    end
                 case 3
 
                     
