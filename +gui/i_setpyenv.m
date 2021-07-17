@@ -1,6 +1,6 @@
 function [done]=i_setpyenv
         % selpath = uigetdir;
-           
+%see also: I_SETRENV    
     x=pyenv;
     if isempty(x.Executable)
         [done]=ix_setpyenv;
