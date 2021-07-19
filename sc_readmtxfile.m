@@ -7,7 +7,7 @@ if nargin<2, featurestxtfile=[]; end
 if exist(matrixmtxfile,'file') ~= 2
     error(message('FileNotFound'));        
 end
-tic
+%tic
 fprintf('Reading mtx file %s...',matrixmtxfile);
 X=pkg.mmread(matrixmtxfile);
 try
@@ -41,5 +41,5 @@ if nargout>2 && ~isempty(barcodestxtfile)
     fprintf('...done.\n');
 end
 %assert(isequal(size(X,1),length(genelist)))
-toc
+%toc
 end

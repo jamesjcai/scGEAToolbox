@@ -7,13 +7,24 @@ function sc_scatter(X, genelist, s, c)
     %   See also SC_SCATTER_SCE.
 
     if nargin < 1
-        ButtonName = questdlg('Select Input Data Type', ...
-                              'SC_SCATTER', ...
-                              'SCE Data .mat', ...
-                              '10x Genomics .mtx', ...
-                              'TSV/CSV .txt', 'SCE Data .mat');
+        list={'SCE Data File (*.mat)...','10x Genomics File (*.mtx)...',...
+              'TSV/CSV File (*.txt)...','10x Genomics Folder...',...
+              'GEO Accession Number...'};
+        [indx,tf] = listdlg('ListString',list,...
+            'SelectionMode','single',...
+            'PromptString',{'Select an input type:'},...
+            'ListSize',[210,120],...
+            'Name','SC_SCATTER');
+        if tf~=1, return; end
+        ButtonName=list{indx};
+        
+%         ButtonName = questdlg('Select Input Data Type', ...
+%                               'SC_SCATTER', ...
+%                               'SCE Data .mat', ...
+%                               '10x Genomics .mtx', ...
+%                               'TSV/CSV .txt', 'SCE Data .mat');
         switch ButtonName
-            case 'SCE Data .mat'
+            case 'SCE Data File (*.mat)...'
                 [fname, pathname] = uigetfile( ...
                                               {'*.mat', 'MAT-files (*.mat)'
                                                '*.*',  'All Files (*.*)'}, ...
@@ -26,23 +37,18 @@ function sc_scatter(X, genelist, s, c)
                     fw = gui.gui_waitbar;
                     load(scefile, 'sce');
                 catch ME
-                    % rethrow(ME);
                     gui.gui_waitbar(fw);
                     errordlg(ME.message);
-                    % rethrow(ME)
-                    return
+                    return;
                 end
                 gui.gui_waitbar(fw);
-                sc_scatter_sce(sce);
-                return
-            case '10x Genomics .mtx'
+
+            case '10x Genomics File (*.mtx)...'
                 [fname, pathname] = uigetfile( ...
                                               {'*.mtx', 'MTX Format Files (*.mtx)'
                                                '*.*',  'All Files (*.*)'}, ...
                                               'Pick a mtx format file');
-                if ~(fname)
-                    return
-                end
+                if ~(fname), return; end
                 prefixstr=extractBefore(fname,max([strfind(fname,'matrix'),1]));                
                 matrixmtxfile = fullfile(pathname, fname);
                 
@@ -67,11 +73,11 @@ function sc_scatter(X, genelist, s, c)
                                                              '*.*',  'All Files (*.*)'}, ...
                                                             'Pick features.tsv file');
                             if ~(fname2)
-                                return
+                                return;
                             end
                             featurestxtfile = fullfile(pathname2, fname2);
                         otherwise
-                            return
+                            return;
                     end
                 else
                     answer = questdlg(sprintf('Use %s?',featurestxtfile),...
@@ -85,7 +91,8 @@ function sc_scatter(X, genelist, s, c)
                     end
                 end
                 [X, genelist] = sc_readmtxfile(matrixmtxfile, featurestxtfile, [], 2);
-            case 'TSV/CSV .txt'
+                sce = SingleCellExperiment(X, genelist);
+            case 'TSV/CSV File (*.txt)...'
                 [fname, pathname] = uigetfile( ...
                                               {'*.tsv;*.csv;*.txt', 'TSV/CSV Format Files (*.tsc, *.csv, *.txt)'
                                                '*.*',  'All Files (*.*)'}, ...
@@ -95,22 +102,45 @@ function sc_scatter(X, genelist, s, c)
                 end
                 filename = fullfile(pathname, fname);
                 [X, genelist] = sc_readtsvfile(filename);
+                sce = SingleCellExperiment(X, genelist);
+            case '10x Genomics Folder...'
+                selpath = uigetdir;
+                if selpath==0, return; end
+                try
+                    fw = gui.gui_waitbar;
+                    [X,genelist,~,ftdone]=sc_read10xdir(selpath);
+                    gui.gui_waitbar(fw);
+                catch ME
+                    gui.gui_waitbar(fw);
+                    errordlg(ME.message);
+                    return;
+                end
+                if ~ftdone, errordlg('Input Error'); return; end
+                sce = SingleCellExperiment(X, genelist);
+            case 'GEO Accession Number...'
+                acc=inputdlg({'Input number (e.g., GSM3308545):'},...
+                    'GEO Accession',[1 40],{'GSM3308545'});
+                if isempty(acc), return; end
+                acc=acc{1};
+                if strlength(acc)>4 && ~isempty(regexp(acc,'G.+','once'))
+                    try                
+                        fw=gui.gui_waitbar;                
+                        sce=pkg.e_readgeomtx(acc);
+                        gui.gui_waitbar(fw);
+                    catch ME
+                        gui.gui_waitbar(fw);
+                        errordlg(ME.message);
+                        return;
+                    end
+                end
             otherwise
-                return
+                return;
         end
-%         answer = questdlg('Perform basic QC?');
-%         switch answer
-%             case 'Yes'
-%                 [X, genelist] = sc_qcfilter(X, genelist);
-%             case 'No'
-%             case 'Cancel'
-%                 return
-%         end
-        sc_scatter(X, genelist);
+
     else
         if isa(X, 'SingleCellExperiment')
             sc_scatter_sce(X);
-            return
+            return;
         end
         if nargin < 4 || isempty(c)
             c = ones(size(X, 2), 1);
@@ -121,11 +151,13 @@ function sc_scatter(X, genelist, s, c)
         if nargin < 2 || isempty(genelist)
             genelist = string((1:size(X, 1))');
         end
-        %try
-            sce = SingleCellExperiment(X, genelist, s, c);
-        %catch
-        %    return;
-        %end
+        sce = SingleCellExperiment(X, genelist, s, c);
+    end
+    
+    try
         sc_scatter_sce(sce);
+    catch ME
+        disp(ME.identifier);
+        errordlg(ME.message);
     end
 end

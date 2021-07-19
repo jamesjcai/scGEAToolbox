@@ -443,7 +443,7 @@ end
 % end
 % end
 
-    function GEOAccessionToSCE(src,~)        
+    function GEOAccessionToSCE(src,~)
         acc=inputdlg({'GEO accession:'},'',[1 40],{'GSM3308545'});
         if ~isempty(acc)
         acc=acc{1};
