@@ -450,7 +450,7 @@ end
         if strlength(acc)>4 && ~isempty(regexp(acc,'G.+','once'))
             try                
                 fw=gui.gui_waitbar;                
-                sce=pkg.e_readgeomtx(acc);
+                [sce]=sc_readgeoaccession(acc);
                 [c,cL]=grp2idx(sce.c);
                 gui.gui_waitbar(fw);
                 RefreshAll(src, 1, false, false);
