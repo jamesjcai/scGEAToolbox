@@ -2,7 +2,8 @@ function [C,s]=SIMLR(X,k,donorm)
 % RUN_SIMLR - 
 %
 % REF: https://www.nature.com/articles/nmeth.4207
-% Visualization and analysis of single-cell RNA-seq data by kernel-based similarity learning
+% Visualization and analysis of single-cell RNA-seq data 
+% by kernel-based similarity learning
 %
 % Input X: 
 % 

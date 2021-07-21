@@ -6,7 +6,7 @@ pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'thirdparty','McImpute');
 addpath(pth);
 
-if ~isnormalized(X) && ~donorm
+if ~donorm
     warning('Normalized X as input is recommended.');
 end
 
