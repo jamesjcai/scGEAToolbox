@@ -3,8 +3,8 @@ function [s]=RJcluster(X)
 oldpth=pwd();
 [isok,msg]=commoncheck_R('R_RJcluster');
 if ~isok, error(msg); end
-if exist('input.csv','file'), delete('input.csv'); end
-if exist('output.csv','file'), delete('output.csv'); end
+if exist('./input.csv','file'), delete('./input.csv'); end
+if exist('./output.csv','file'), delete('./output.csv'); end
 
 
 [X]=sc_norm(X);
@@ -19,7 +19,7 @@ if exist('output.csv','file')
 else
     s=[];
 end
-%if exist('input.csv','file'), delete('input.csv'); end
-%if exist('output.csv','file'), delete('output.csv'); end
+if exist('./input.csv','file'), delete('./input.csv'); end
+if exist('./output.csv','file'), delete('./output.csv'); end
 cd(oldpth);
 end
