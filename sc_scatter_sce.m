@@ -550,53 +550,8 @@ end
                         helpdlg('Doublets deleted.');
                 end
         end
-    end
-        
-%             atag=sprintf('doublet_score (%s)',methodtag);
-%             [y,idx]=ismember(atag,sce.list_cell_attributes(1:2:end));
-%             if y
-%                 sce.list_cell_attributes{(idx-1)*2+2}=doubletscore;
-%             else
-%                 sce.list_cell_attributes=[sce.list_cell_attributes,...
-%                     {atag,doubletscore}];
-%             end
-%             %[a]=contains(sce.list_cell_attributes(1:2:end),'doublet_score');
-%             %atag=sprintf('doublet_score (%d)',sum(a)+1);
-%        end
-%         guidata(FigureHandle,sce);
-%         if done && any(isDoublet)
-%             answer=questdlg(sprintf('Delete detected doublets (n=%d)?',...
-%                 sum(isDoublet)),...
-%                 '','Yes','No, show doublets','No, show scores','Yes');
-%             switch answer
-%                 case 'Yes'
-%                     i_deletecells(isDoublet);
-%                     helpdlg('Doublets deleted.');
-%                 case 'No, show doublets'
-%                     % i_showstate(doubletscore);
-%                     ttxt = "Doublets";
-%                     pkg.i_stem3scatter(sce.s(:, 1), sce.s(:, 2), isDoublet, ttxt);
-%                     view(3);
-%                     
-%                 case 'No, show scores'
-%                     % i_showstate(doubletscore);
-%                     ttxt = "Doublet Score";
-%                     pkg.i_stem3scatter(sce.s(:, 1), sce.s(:, 2), doubletscore, ttxt);
-%                     view(3);
-%                 otherwise
-%                     return;
-%             end
-%             %sce = guidata(FigureHandle);
-%             %sce.c=isDoublet;
-%             %[c, cL] = grp2idx(sce.c);
-%             %RefreshAll(src, 1, true, false);
-%         elseif done && ~any(isDoublet)
-%             helpdlg('No doublet detected.');
-%             %sce.c=doubletscore;
-%             %RefreshAll(src, 1, true, false);
-%         end
-%         guidata(FigureHandle, sce);
-%     end
+    end        
+
 
     function MergeSubCellTypes(src,~)
         if isempty(sce.c_cell_type_tx), return; end
@@ -963,9 +918,10 @@ end
             case 1
                 ci = sum(sce.X);
                 ttxt = "Library Size";
-                pkg.i_stem3scatter(sce.s(:, 1), sce.s(:, 2), ci, ttxt);
-                view(2);
-                return
+                figure;
+                gui.i_stemscatter(sce.s,ci);
+                zlabel(ttxt);                
+                return;
             case 2
                 fw = gui.gui_waitbar;
                 i = startsWith(sce.g, 'mt-', 'IgnoreCase', true);
