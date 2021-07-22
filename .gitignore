@@ -36,3 +36,4 @@ resources/Thumbs.db
 +run/thirdparty/harmony/output.csv
 +run/thirdparty/R_decontX/output.mat
 +run/thirdparty/R_decontX/input.mat
++run/thirdparty/R_RJcluster/input.csv

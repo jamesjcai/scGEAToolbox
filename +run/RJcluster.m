@@ -5,6 +5,11 @@ oldpth=pwd();
 if ~isok, error(msg); end
 if exist('input.csv','file'), delete('input.csv'); end
 if exist('output.csv','file'), delete('output.csv'); end
+
+
+[X]=sc_norm(X);
+[X]=log(X+1);
+
 writematrix(X','input.csv');
 
 pkg.RunRcode('script.R');
