@@ -33,7 +33,7 @@ parfor k=1:n
     Xi=X;
     Xi(:,k)=[];
     if fastersvd
-       disp('Using fastsvd.')
+       % disp('Using fastsvd.')
        warning off
        [~,~,coeff]=lmsvd(Xi,ncom,opts);
        warning on
