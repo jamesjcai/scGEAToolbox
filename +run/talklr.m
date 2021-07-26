@@ -1,5 +1,12 @@
 function [OUT]=talklr(X,g,c)
-
+%TALKLR - uncovers ligand-receptor mediated intercellular crosstalk
+%
+% Usage: [OUT]=run.talklr(X,g,c)
+% X - gene-by-cell expression matrix
+% g - list of genes (string array)
+% c - index of cell types
+%
+% This function implements the method of Yuliang Wang (2020)
 % https://doi.org/10.1101/2020.02.01.930602
 
 if nargin<2, g=[]; c=[]; end
