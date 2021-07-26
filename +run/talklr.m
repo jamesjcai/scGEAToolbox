@@ -4,7 +4,7 @@ function [OUT]=talklr(X,g,c)
 % Usage: [OUT]=run.talklr(X,g,c)
 % X - gene-by-cell expression matrix
 % g - list of genes (string array)
-% c - index of cell types
+% c - cell type (grouping variable)
 %
 % This function implements the method of Yuliang Wang (2020)
 % https://doi.org/10.1101/2020.02.01.930602
@@ -55,13 +55,13 @@ function [M,OUT]=ii_talkr(X,g,c)
 
     g=upper(g);
 
+    
     methodid=1;
     switch methodid
         case 1
+            X=sc_norm(X);
+            X=log(X+1);
             X=sc_transform(X,'type','kNNSmoothing');
-            % X=sc_transform(X)
-            % X=sc_norm(X);
-            % Xm=grpstats(X',cx,@mean)';
             [Xm]=i_grpmean(X,cx);
             cutoff=1.0;
         case 2
