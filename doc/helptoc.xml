@@ -3,7 +3,7 @@
 <toc version="2.0">
 <!-- First tocitem specifies top level in Help browser Contents pane -->
 <!-- This can be a roadmap page, as shown below, or a content page -->
-    <tocitem target="mytoolbox_product_page.html">MyToolbox Toolbox
+    <tocitem target="mytoolbox_product_page.html">scGEAToolbox
         <!-- Nest tocitems to create hierarchical entries in  Contents-->
         <!-- To include icons, use the following syntax for tocitems: -->
         <!-- <tocitem target="foo.html" image="HelpIcon.NAME"> -->
@@ -15,7 +15,7 @@
         <!-- matlabroot/toolbox/matlab/icons -->
         <!-- A Getting Started Guide usually comes first -->
         <tocitem target="mytbx_gs_top.html" image="HelpIcon.GETTING_STARTED">
-            Getting Started with the MyToolbox Toolbox
+            Getting Started with the scGEAToolbox
             <tocitem target="mytbx_reqts_example.html">System Requirements
             </tocitem>
             <tocitem target="mytbx_features_example.html">Features
@@ -28,12 +28,12 @@
         </tocitem>
         <!-- User Guide comes next -->
         <tocitem target="mytbx_ug_intro.html" 
-            image="HelpIcon.USER_GUIDE">MyToolbox User Guide
-            <tocitem target="mytbx_ch_1.html">Setting Up MyToolbox
+            image="HelpIcon.USER_GUIDE">scGEAToolbox User Guide
+            <tocitem target="mytbx_ch_1.html">Setting Up scGEAToolbox
             </tocitem>
             <tocitem target="mytbx_ch_2.html">Processing Data
             </tocitem>
-            <tocitem target="mytbx_ch_3.html">Verifying MyToolbox outputs 
+            <tocitem target="mytbx_ch_3.html">Verifying scGEAToolbox outputs 
                 <tocitem target="mytbx_ch_3a.html">Handling Test Failures
                 </tocitem>
             </tocitem>
@@ -63,12 +63,12 @@
         </tocitem>
         <!-- Optional List of Examples, with hyperlinks to examples in other files -->
         <tocitem target="mytbx_example.html" 
-                 image="HelpIcon.HelpIcon.EXAMPLES">Mytoolbox Examples
+                 image="HelpIcon.HelpIcon.EXAMPLES">scGEAToolbox Examples
         </tocitem>
         <!-- Optional link or links to your or other Web sites -->
-        <tocitem target="http://www.mathworks.com" 
+        <tocitem target="https://scgeatoolbox.readthedocs.io/en/latest/" 
                  image="$toolbox/matlab/icons/webicon.gif">
-        MyToolbox Web Site (Example only: goes to mathworks.com)
+        scGEAToolbox ReadTheDocs Web Site
         </tocitem>
     </tocitem>
 </toc>

@@ -1,5 +1,5 @@
 function [pw1,pw0]=cdgea(isconfirmed)
-%CDGEA Changes to scGEAToolbox directory
+%CDGEA - change working directory to the scGEAToolbox folder
 
 if nargin < 1
     isconfirmed=true;
