@@ -1,0 +1,765 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Demonstration of Clustering Functions</title><meta name="generator" content="MATLAB 9.9"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2021-07-26"><meta name="DC.source" content="demo_script4.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Demonstration of Clustering Functions</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Load example data</a></li><li><a href="#3">Intersection of common genes in X, Y and Z</a></li><li><a href="#5">Label cells</a></li><li><a href="#6">Cluster cells using SIMLR</a></li><li><a href="#8">Plot the clustering result</a></li><li><a href="#11">Using SC3 example data yan.csv</a></li><li><a href="#12">Compare clustering results between SC3/R vs SC3, SIMILR and SoptSC</a></li><li><a href="#13">The End</a></li></ul></div><h2 id="1">Load example data</h2><pre class="codeinput">cdgea; <span class="comment">% set working directory</span>
+<span class="comment">% load('example_data/example10xdata2.mat','X','genelist');</span>
+[X,genelistx]=sc_readfile(<span class="string">'example_data/GSM3204304_P_P_Expr.csv'</span>);
+[Y,genelisty]=sc_readfile(<span class="string">'example_data/GSM3204305_P_N_Expr.csv'</span>);
+[X,genelistx]=sc_selectg(X,genelistx,3,1);
+[Y,genelisty]=sc_selectg(Y,genelisty,3,1);
+</pre><pre class="codeoutput">Reading example_data/GSM3204304_P_P_Expr.csv ...... done.
+Reading example_data/GSM3204305_P_N_Expr.csv ...... done.
+</pre><h2 id="3">Intersection of common genes in X, Y and Z</h2><pre class="codeinput">[genelist]=intersect(genelistx,genelisty,<span class="string">'stable'</span>);
+<span class="comment">% Remove genes encoded in the mitochondrial genome</span>
+i=startsWith(genelist,<span class="string">'MT-'</span>);
+genelist(i)=[];
+[~,i1]=ismember(genelist,genelistx);
+[~,i2]=ismember(genelist,genelisty);
+X=X(i1,:); genelistx=genelist;
+Y=Y(i2,:); genelisty=genelist;
+</pre><h2 id="5">Label cells</h2><pre class="codeinput">cellidx=[1*ones(size(X,2),1); 2*ones(size(Y,2),1)];
+</pre><h2 id="6">Cluster cells using SIMLR</h2><pre class="codeinput">C=sc_cluster_x([X Y],5,<span class="string">'type'</span>,<span class="string">'simlr'</span>);
+
+<span class="comment">% [C,s]=run.SIMLR(X,[]);  % auto-determine the number of clusters.</span>
+</pre><pre class="codeoutput">Using 2000 HVGs.
+Iteration 10: error is 1.552
+Iteration 20: error is 1.579
+Iteration 30: error is 1.1003
+Iteration 40: error is 0.75989
+Iteration 50: error is 0.67713
+Iteration 60: error is 0.62268
+Iteration 70: error is 0.58345
+Iteration 80: error is 0.55342
+Iteration 90: error is 0.5304
+Iteration 100: error is 0.51173
+Iteration 110: error is 0.49631
+Iteration 120: error is 0.48301
+Iteration 130: error is 0.47165
+Iteration 140: error is 0.4618
+Iteration 150: error is 0.45318
+Iteration 160: error is 0.44533
+Iteration 170: error is 0.43847
+Iteration 180: error is 0.4323
+Iteration 190: error is 0.42671
+Iteration 200: error is 0.42161
+Iteration 210: error is 0.41695
+Iteration 220: error is 0.41266
+Iteration 230: error is 0.4087
+Iteration 240: error is 0.40503
+Iteration 250: error is 0.40165
+Iteration 260: error is 0.39835
+Iteration 270: error is 0.39525
+Iteration 280: error is 0.39237
+Iteration 290: error is 0.38968
+Iteration 300: error is 0.38713
+Iteration 310: error is 0.38474
+Iteration 320: error is 0.38253
+Iteration 330: error is 0.38035
+Iteration 340: error is 0.37833
+Iteration 350: error is 0.37642
+Iteration 360: error is 0.37458
+Iteration 370: error is 0.37284
+Iteration 380: error is 0.37118
+Iteration 390: error is 0.3696
+Iteration 400: error is 0.36809
+Iteration 410: error is 0.36664
+Iteration 420: error is 0.36526
+Iteration 430: error is 0.36393
+Iteration 440: error is 0.36265
+Iteration 450: error is 0.36143
+Iteration 460: error is 0.36025
+Iteration 470: error is 0.35911
+Iteration 480: error is 0.35802
+Iteration 490: error is 0.35698
+Iteration 500: error is 0.35595
+Iteration 510: error is 0.35497
+Iteration 520: error is 0.35402
+Iteration 530: error is 0.35309
+Iteration 540: error is 0.3522
+Iteration 550: error is 0.35134
+Iteration 560: error is 0.35051
+Iteration 570: error is 0.3497
+Iteration 580: error is 0.34892
+Iteration 590: error is 0.34816
+Iteration 600: error is 0.34742
+Iteration 610: error is 0.3467
+Iteration 620: error is 0.346
+Iteration 630: error is 0.34532
+Iteration 640: error is 0.34466
+Iteration 650: error is 0.34401
+Iteration 660: error is 0.34338
+Iteration 670: error is 0.34277
+Iteration 680: error is 0.34217
+Iteration 690: error is 0.34158
+Iteration 700: error is 0.34101
+Iteration 710: error is 0.34046
+Iteration 720: error is 0.33992
+Iteration 730: error is 0.33938
+Iteration 740: error is 0.33886
+Iteration 750: error is 0.33836
+Iteration 760: error is 0.33786
+Iteration 770: error is 0.33738
+Iteration 780: error is 0.3369
+Iteration 790: error is 0.33643
+Iteration 800: error is 0.33598
+Iteration 810: error is 0.33553
+Iteration 820: error is 0.33509
+Iteration 830: error is 0.33467
+Iteration 840: error is 0.33425
+Iteration 850: error is 0.33384
+Iteration 860: error is 0.33343
+Iteration 870: error is 0.33304
+Iteration 880: error is 0.33265
+Iteration 890: error is 0.33227
+Iteration 900: error is 0.3319
+Iteration 910: error is 0.33153
+Iteration 920: error is 0.33117
+Iteration 930: error is 0.33082
+Iteration 940: error is 0.33047
+Iteration 950: error is 0.33013
+Iteration 960: error is 0.32979
+Iteration 970: error is 0.32946
+Iteration 980: error is 0.32914
+Iteration 990: error is 0.32882
+Iteration 1000: error is 0.3285
+Iteration 10: error is 46.5654
+Iteration 20: error is 45.2149
+Iteration 30: error is 42.4463
+Iteration 40: error is 42.1627
+Iteration 50: error is 42.016
+Iteration 60: error is 41.9123
+Iteration 70: error is 41.8105
+Iteration 80: error is 41.7208
+Iteration 90: error is 41.6812
+Iteration 100: error is 1.4897
+Iteration 110: error is 1.1319
+Iteration 120: error is 0.89176
+Iteration 130: error is 0.77947
+Iteration 140: error is 0.70905
+Iteration 150: error is 0.66315
+Iteration 160: error is 0.62961
+Iteration 170: error is 0.60402
+Iteration 180: error is 0.5837
+Iteration 190: error is 0.56715
+Iteration 200: error is 0.55332
+Iteration 210: error is 0.54159
+Iteration 220: error is 0.53153
+Iteration 230: error is 0.52263
+Iteration 240: error is 0.51486
+Iteration 250: error is 0.50797
+Iteration 260: error is 0.50153
+Iteration 270: error is 0.49568
+Iteration 280: error is 0.49044
+Iteration 290: error is 0.48558
+Iteration 300: error is 0.48119
+Iteration 310: error is 0.47716
+Iteration 320: error is 0.47343
+Iteration 330: error is 0.47
+Iteration 340: error is 0.4668
+Iteration 350: error is 0.46382
+Iteration 360: error is 0.46102
+Iteration 370: error is 0.45842
+Iteration 380: error is 0.45596
+Iteration 390: error is 0.45365
+Iteration 400: error is 0.45145
+Iteration 410: error is 0.4494
+Iteration 420: error is 0.44744
+Iteration 430: error is 0.44559
+Iteration 440: error is 0.44383
+Iteration 450: error is 0.44216
+Iteration 460: error is 0.44056
+Iteration 470: error is 0.43904
+Iteration 480: error is 0.43758
+Iteration 490: error is 0.43619
+Iteration 500: error is 0.43486
+Iteration 510: error is 0.43357
+Iteration 520: error is 0.43234
+Iteration 530: error is 0.43116
+Iteration 540: error is 0.43002
+Iteration 550: error is 0.42893
+Iteration 560: error is 0.42788
+Iteration 570: error is 0.42686
+Iteration 580: error is 0.42587
+Iteration 590: error is 0.42492
+Iteration 600: error is 0.42401
+Iteration 610: error is 0.42312
+Iteration 620: error is 0.42226
+Iteration 630: error is 0.42143
+Iteration 640: error is 0.42062
+Iteration 650: error is 0.41984
+Iteration 660: error is 0.41907
+Iteration 670: error is 0.41834
+Iteration 680: error is 0.41761
+Iteration 690: error is 0.41688
+Iteration 700: error is 0.41619
+Iteration 710: error is 0.41552
+Iteration 720: error is 0.41487
+Iteration 730: error is 0.41425
+Iteration 740: error is 0.41364
+Iteration 750: error is 0.41304
+Iteration 760: error is 0.41247
+Iteration 770: error is 0.4119
+Iteration 780: error is 0.41135
+Iteration 790: error is 0.41081
+Iteration 800: error is 0.41028
+Iteration 810: error is 0.40977
+Iteration 820: error is 0.40927
+Iteration 830: error is 0.40878
+Iteration 840: error is 0.4083
+Iteration 850: error is 0.40783
+Iteration 860: error is 0.40737
+Iteration 870: error is 0.40692
+Iteration 880: error is 0.40648
+Iteration 890: error is 0.40605
+Iteration 900: error is 0.40563
+Iteration 910: error is 0.40522
+Iteration 920: error is 0.40481
+Iteration 930: error is 0.40442
+Iteration 940: error is 0.40403
+Iteration 950: error is 0.40365
+Iteration 960: error is 0.40327
+Iteration 970: error is 0.4029
+Iteration 980: error is 0.40254
+Iteration 990: error is 0.40219
+Iteration 1000: error is 0.40184
+</pre><h2 id="8">Plot the clustering result</h2><pre class="codeinput">s=sc_tsne([X Y],2,false,true,false);   <span class="comment">% s=sc_tsne(X,ndim,plotit,donorm,dolog1p);</span>
+</pre><pre class="codeoutput">Library-size normalization...done.
+</pre><pre class="codeinput">figure;
+scatter(s(:,1),s(:,2),20,C,<span class="string">'filled'</span>)
+
+figure;
+scatter(s(:,1),s(:,2),20,cellidx,<span class="string">'filled'</span>)
+</pre><img vspace="5" hspace="5" src="demo_script4_01.png" alt=""> <img vspace="5" hspace="5" src="demo_script4_02.png" alt=""> <h2 id="11">Using SC3 example data yan.csv</h2><pre class="codeinput">[X,genelist]=sc_readtsvfile(<span class="string">'example_data/yan.csv'</span>);
+t=readtable(<span class="string">'example_data\yan_celltype.txt'</span>);
+celltypelist=string(t.cell_type1);
+rng(235); showlegend=true;
+<span class="comment">% rng(111); showlegend=false;</span>
+<span class="comment">% rng(113); showlegend=true;</span>
+
+s=sc_tsne(X,2);
+c1=run.SC3(X,6);
+c2=run.SIMLR(X,6);
+c3=run.SoptSC(X,<span class="string">'k'</span>,6);
+
+<span class="comment">% Result of SC3/R pacakge</span>
+load <span class="string">example_data/sc3_results.txt</span>
+c0=sc3_results;
+</pre><pre class="codeoutput">Reading example_data/yan.csv ...... done.
+Library-size normalization...done.
+Log(x+1) transformation...done.
+Processing Euclidean distance matrix... 1/3
+Calculating cluster array: 100%    [..........]done
+Processing Spearman distance matrix... 2/3
+Calculating cluster array: 100%    [..........]done
+Processing Pearson distance matrix... 3/3
+Calculating cluster array: 100%    [..........]done
+CLUSTER ENSEMBLES using CSPA
+wgraph: writing graph0
+ 
+C:\Users\jcai.AUTH\Documents\GitHub\scGEAToolbox\+run\thirdparty\ClusterPack&gt;pmetis graph0 6  
+********************************************************************** 
+  METIS 3.0   Copyright 1997, Regents of the University of Minnesota 
+ 
+Graph Information --------------------------------------------------- 
+  Name: graph0, #Vertices: 90, #Edges: 1347, #Parts: 6 
+ 
+Recursive Partitioning... ------------------------------------------- 
+  6-way Edge-Cut: 18003630, Balance:  1.07 
+ 
+Timing Information -------------------------------------------------- 
+  I/O:          		   0.002 
+  Partitioning: 		   0.000   (PMETIS time) 
+  Total:        		   0.002 
+********************************************************************** 
+sgraph: partgraph1000.bat completed - loading graph0.part.6
+clusterensemble: cspa at 0.80911
+CLUSTER ENSEMBLES using HGPA
+wgraph: writing graph2
+wgraph: 90 vertices and 108 non-zero hyperedges
+ 
+C:\Users\jcai.AUTH\Documents\GitHub\scGEAToolbox\+run\thirdparty\ClusterPack&gt;shmetis graph2 6 5  
+******************************************************************************* 
+ HMETIS 1.5.3  Copyright 1998, Regents of the University of Minnesota 
+ 
+HyperGraph Information ----------------------------------------------------- 
+ Name: graph2, #Vtxs:    90, #Hedges:   108, #Parts: 6, UBfactor: 0.05 
+ Options: HFC, FM, Reconst-False, V-cycles @ End, No Fixed Vertices 
+ 
+Recursive Partitioning... -------------------------------------------------- 
+ 
+  Bisecting a hgraph of size [vertices=90, hedges=108, balance=0.50] 
+    The mincut for this bisection = 8888832, (average = 22061587.2) (balance = 0.49) 
+ 
+  Bisecting a hgraph of size [vertices=46, hedges=62, balance=0.33] 
+    The mincut for this bisection = 6913536, (average = 12382636.8) (balance = 0.35) 
+ 
+  Bisecting a hgraph of size [vertices=30, hedges=43, balance=0.50] 
+    The mincut for this bisection = 17345568, (average = 20283820.8) (balance = 0.47) 
+ 
+  Bisecting a hgraph of size [vertices=44, hedges=37, balance=0.33] 
+    The mincut for this bisection = 0, (average = 13629542.4) (balance = 0.32) 
+ 
+  Bisecting a hgraph of size [vertices=30, hedges=24, balance=0.50] 
+    The mincut for this bisection = 27962784, (average = 28259078.4) (balance = 0.47) 
+ 
+ -------------------------------------------------------------------------- 
+  Summary for the 6-way partition: 
+                Hyperedge Cut:  61110720		(minimize) 
+      Sum of External Degrees: 123147360		(minimize) 
+                  Scaled Cost: 1.82e+004		(minimize) 
+                   Absorption:    104.16		(maximize) 
+ 
+      Partition Sizes &amp; External Degrees: 
+	    16[13333248]     14[19814688]     16[25185024]     14[6049344]     14[29320800]  
+	    16[29444256]  
+ 
+Timing Information --------------------------------------------------------- 
+  Partitioning Time:		   0.048sec 
+           I/O Time:		   0.002sec 
+******************************************************************************* 
+sgraph: partgraph0010.bat completed - loading graph2.part.6
+clusterensemble: hgpa at 0.81082
+CLUSTER ENSEMBLES using MCLA
+mcla: preparing graph for meta-clustering
+wgraph: writing graph1
+ 
+C:\Users\jcai.AUTH\Documents\GitHub\scGEAToolbox\+run\thirdparty\ClusterPack&gt;pmetis graph1 6  
+********************************************************************** 
+  METIS 3.0   Copyright 1997, Regents of the University of Minnesota 
+ 
+Graph Information --------------------------------------------------- 
+  Name: graph1, #Vertices: 108, #Edges: 1265, #Parts: 6 
+ 
+Recursive Partitioning... ------------------------------------------- 
+  6-way Edge-Cut: 11108415, Balance:  1.09 
+ 
+Timing Information -------------------------------------------------- 
+  I/O:          		   0.000 
+  Partitioning: 		   0.001   (PMETIS time) 
+  Total:        		   0.001 
+********************************************************************** 
+sgraph: partgraph0100.bat completed - loading graph1.part.6
+clbtocl: delivering 6 clusters
+clbtocl: average posterior prob is 0.77844
+clusterensemble: mcla at 0.87619
+Iteration 10: error is 0.20269
+Iteration 20: error is 1.1962
+Iteration 30: error is 0.3915
+Iteration 40: error is 0.36186
+Iteration 50: error is 0.14111
+Iteration 60: error is 0.20866
+Iteration 70: error is 0.31278
+Iteration 80: error is 0.14176
+Iteration 90: error is 0.11234
+Iteration 100: error is 0.073413
+Iteration 110: error is 0.13072
+Iteration 120: error is 0.53456
+Iteration 130: error is 0.2568
+Iteration 140: error is 0.10969
+Iteration 150: error is 0.073281
+Iteration 160: error is 0.37556
+Iteration 170: error is 0.17161
+Iteration 180: error is 0.11536
+Iteration 190: error is 0.14743
+Iteration 200: error is 0.23815
+Iteration 210: error is 0.10582
+Iteration 220: error is 0.061579
+Iteration 230: error is 0.063938
+Iteration 240: error is 0.080663
+Iteration 250: error is 0.11577
+Iteration 260: error is 0.053586
+Iteration 270: error is 0.061569
+Iteration 280: error is 0.04209
+Iteration 290: error is 0.054477
+Iteration 300: error is 0.048278
+Iteration 310: error is 0.0336
+Iteration 320: error is 0.046457
+Iteration 330: error is 0.12829
+Iteration 340: error is 0.064901
+Iteration 350: error is 0.045288
+Iteration 360: error is 0.18377
+Iteration 370: error is 0.11163
+Iteration 380: error is 0.13851
+Iteration 390: error is 0.1892
+Iteration 400: error is 0.10328
+Iteration 410: error is 0.075147
+Iteration 420: error is 0.039825
+Iteration 430: error is 0.038122
+Iteration 440: error is 0.048209
+Iteration 450: error is 0.11526
+Iteration 460: error is 0.045214
+Iteration 470: error is 0.045917
+Iteration 480: error is 0.060555
+Iteration 490: error is 0.089474
+Iteration 500: error is 0.036269
+Iteration 510: error is 0.071982
+Iteration 520: error is 0.061738
+Iteration 530: error is 0.056265
+Iteration 540: error is 0.10134
+Iteration 550: error is 0.058139
+Iteration 560: error is 0.17026
+Iteration 570: error is 0.063187
+Iteration 580: error is 0.084682
+Iteration 590: error is 0.051288
+Iteration 600: error is 0.090812
+Iteration 610: error is 0.066193
+Iteration 620: error is 0.039787
+Iteration 630: error is 0.14133
+Iteration 640: error is 0.049727
+Iteration 650: error is 0.48739
+Iteration 660: error is 0.10045
+Iteration 670: error is 0.080084
+Iteration 680: error is 0.17982
+Iteration 690: error is 0.042515
+Iteration 700: error is 0.034718
+Iteration 710: error is 0.067713
+Iteration 720: error is 0.074749
+Iteration 730: error is 0.26054
+Iteration 740: error is 0.15416
+Iteration 750: error is 0.13836
+Iteration 760: error is 0.060298
+Iteration 770: error is 0.201
+Iteration 780: error is 0.08968
+Iteration 790: error is 0.05318
+Iteration 800: error is 0.29432
+Iteration 810: error is 0.042558
+Iteration 820: error is 0.031385
+Iteration 830: error is 0.055844
+Iteration 840: error is 0.071395
+Iteration 850: error is 0.12677
+Iteration 860: error is 0.044034
+Iteration 870: error is 0.045051
+Iteration 880: error is 0.4517
+Iteration 890: error is 0.10988
+Iteration 900: error is 0.047674
+Iteration 910: error is 0.40285
+Iteration 920: error is 0.088967
+Iteration 930: error is 0.05128
+Iteration 940: error is 0.12651
+Iteration 950: error is 0.060078
+Iteration 960: error is 0.034956
+Iteration 970: error is 0.031111
+Iteration 980: error is 0.03217
+Iteration 990: error is 0.02042
+Iteration 1000: error is 0.11595
+Iteration 10: error is 30.9735
+Iteration 20: error is 29.7227
+Iteration 30: error is 27.5409
+Iteration 40: error is 30.3161
+Iteration 50: error is 26.3449
+Iteration 60: error is 26.7922
+Iteration 70: error is 28.074
+Iteration 80: error is 28.5962
+Iteration 90: error is 27.6471
+Iteration 100: error is 1.2394
+Iteration 110: error is 0.38135
+Iteration 120: error is 0.26432
+Iteration 130: error is 0.24171
+Iteration 140: error is 0.16648
+Iteration 150: error is 0.1236
+Iteration 160: error is 0.13884
+Iteration 170: error is 0.099952
+Iteration 180: error is 0.08618
+Iteration 190: error is 0.15823
+Iteration 200: error is 0.14212
+Iteration 210: error is 0.11923
+Iteration 220: error is 0.14214
+Iteration 230: error is 0.16185
+Iteration 240: error is 0.13198
+Iteration 250: error is 0.12122
+Iteration 260: error is 0.33065
+Iteration 270: error is 0.16456
+Iteration 280: error is 0.12755
+Iteration 290: error is 0.13108
+Iteration 300: error is 0.22252
+Iteration 310: error is 0.12156
+Iteration 320: error is 0.097842
+Iteration 330: error is 0.091442
+Iteration 340: error is 0.1193
+Iteration 350: error is 0.16441
+Iteration 360: error is 0.11899
+Iteration 370: error is 0.13865
+Iteration 380: error is 0.10096
+Iteration 390: error is 0.18721
+Iteration 400: error is 0.20653
+Iteration 410: error is 0.13656
+Iteration 420: error is 0.25708
+Iteration 430: error is 0.10121
+Iteration 440: error is 0.16116
+Iteration 450: error is 0.11205
+Iteration 460: error is 0.13855
+Iteration 470: error is 0.15998
+Iteration 480: error is 0.19271
+Iteration 490: error is 0.16143
+Iteration 500: error is 0.20927
+Iteration 510: error is 0.12208
+Iteration 520: error is 0.16736
+Iteration 530: error is 0.10301
+Iteration 540: error is 0.17492
+Iteration 550: error is 0.09876
+Iteration 560: error is 0.16785
+Iteration 570: error is 0.13048
+Iteration 580: error is 0.15214
+Iteration 590: error is 0.12154
+Iteration 600: error is 0.15333
+Iteration 610: error is 0.12453
+Iteration 620: error is 0.12407
+Iteration 630: error is 0.13917
+Iteration 640: error is 0.17902
+Iteration 650: error is 0.19754
+Iteration 660: error is 0.11298
+Iteration 670: error is 0.2067
+Iteration 680: error is 0.1908
+Iteration 690: error is 0.15082
+Iteration 700: error is 0.2127
+Iteration 710: error is 0.1368
+Iteration 720: error is 0.21686
+Iteration 730: error is 0.50002
+Iteration 740: error is 0.46606
+Iteration 750: error is 0.31682
+Iteration 760: error is 0.35705
+Iteration 770: error is 0.43625
+Iteration 780: error is 0.29928
+Iteration 790: error is 0.28326
+Iteration 800: error is 0.33174
+Iteration 810: error is 0.30576
+Iteration 820: error is 0.35057
+Iteration 830: error is 0.36735
+Iteration 840: error is 0.46615
+Iteration 850: error is 0.37037
+Iteration 860: error is 0.35262
+Iteration 870: error is 0.34828
+Iteration 880: error is 0.25742
+Iteration 890: error is 0.31025
+Iteration 900: error is 0.27327
+Iteration 910: error is 0.25442
+Iteration 920: error is 0.27813
+Iteration 930: error is 0.32082
+Iteration 940: error is 0.31854
+Iteration 950: error is 0.26481
+Iteration 960: error is 0.32317
+Iteration 970: error is 0.23218
+Iteration 980: error is 0.30555
+Iteration 990: error is 0.2735
+Iteration 1000: error is 0.25214
+Iter  Err
+1, 6.867832
+2, 5.876795
+3, 5.042887
+4, 4.362326
+5, 3.807127
+6, 3.351183
+7, 2.973775
+8, 2.658954
+9, 0.711817
+10, 0.112101
+11, 0.103572
+12, 0.098797
+13, 0.093055
+14, 0.087015
+15, 0.081145
+16, 0.075632
+17, 0.070527
+18, 0.062194
+19, 0.050105
+20, 0.034833
+21, 0.017597
+22, 0.019880
+</pre><h2 id="12">Compare clustering results between SC3/R vs SC3, SIMILR and SoptSC</h2><pre class="codeinput">Cal_NMI(c0,c1)
+Cal_NMI(c0,c2)
+Cal_NMI(c0,c3)
+
+
+fh=figure;
+subplot(2,2,1)
+gscatter(s(:,1),s(:,2),celltypelist)
+<span class="keyword">if</span> showlegend, legend(<span class="string">'Location'</span>,<span class="string">'northwest'</span>); <span class="keyword">else</span>, legend <span class="string">off</span>; <span class="keyword">end</span>
+title(<span class="string">'Cell type (''Biological Turth'')'</span>)
+
+subplot(2,2,2)
+gscatter(s(:,1),s(:,2),c1)
+<span class="keyword">if</span> showlegend, legend(<span class="string">'Location'</span>,<span class="string">'northwest'</span>); <span class="keyword">else</span>, legend <span class="string">off</span>; <span class="keyword">end</span>
+title(<span class="string">'SC3'</span>)
+
+subplot(2,2,3)
+gscatter(s(:,1),s(:,2),c2)
+<span class="keyword">if</span> showlegend, legend(<span class="string">'Location'</span>,<span class="string">'northwest'</span>); <span class="keyword">else</span>, legend <span class="string">off</span>; <span class="keyword">end</span>
+title(<span class="string">'SIMLR'</span>)
+
+subplot(2,2,4)
+gscatter(s(:,1),s(:,2),c3)
+<span class="keyword">if</span> showlegend, legend(<span class="string">'Location'</span>,<span class="string">'northwest'</span>); <span class="keyword">else</span>, legend <span class="string">off</span>; <span class="keyword">end</span>
+title(<span class="string">'SoptSC'</span>)
+fh.Position=[fh.Position(1) fh.Position(2)-100 fh.Position(3)+100 fh.Position(4)+100];
+</pre><pre class="codeoutput">
+ans =
+
+    0.9398
+
+
+ans =
+
+    0.8200
+
+
+ans =
+
+    0.5464
+
+</pre><img vspace="5" hspace="5" src="demo_script4_03.png" alt=""> <h2 id="13">The End</h2><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2020b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Demonstration of Clustering Functions
+%% Load example data
+%%
+cdgea; % set working directory
+% load('example_data/example10xdata2.mat','X','genelist');
+[X,genelistx]=sc_readfile('example_data/GSM3204304_P_P_Expr.csv');
+[Y,genelisty]=sc_readfile('example_data/GSM3204305_P_N_Expr.csv');
+[X,genelistx]=sc_selectg(X,genelistx,3,1);
+[Y,genelisty]=sc_selectg(Y,genelisty,3,1);
+
+%% Intersection of common genes in X, Y and Z
+%%
+[genelist]=intersect(genelistx,genelisty,'stable');
+% Remove genes encoded in the mitochondrial genome
+i=startsWith(genelist,'MT-');
+genelist(i)=[];
+[~,i1]=ismember(genelist,genelistx);
+[~,i2]=ismember(genelist,genelisty);
+X=X(i1,:); genelistx=genelist;
+Y=Y(i2,:); genelisty=genelist;
+
+%% Label cells
+%
+cellidx=[1*ones(size(X,2),1); 2*ones(size(Y,2),1)];
+%% Cluster cells using SIMLR
+%%
+C=sc_cluster_x([X Y],5,'type','simlr');
+
+% [C,s]=run.SIMLR(X,[]);  % auto-determine the number of clusters.
+%% Plot the clustering result
+%%
+s=sc_tsne([X Y],2,false,true,false);   % s=sc_tsne(X,ndim,plotit,donorm,dolog1p);
+%%
+figure;
+scatter(s(:,1),s(:,2),20,C,'filled')
+
+figure;
+scatter(s(:,1),s(:,2),20,cellidx,'filled')
+
+%% Using SC3 example data yan.csv
+
+[X,genelist]=sc_readtsvfile('example_data/yan.csv');
+t=readtable('example_data\yan_celltype.txt');
+celltypelist=string(t.cell_type1);
+rng(235); showlegend=true;
+% rng(111); showlegend=false;
+% rng(113); showlegend=true;
+
+s=sc_tsne(X,2);
+c1=run.SC3(X,6);
+c2=run.SIMLR(X,6);
+c3=run.SoptSC(X,'k',6);
+
+% Result of SC3/R pacakge
+load example_data/sc3_results.txt
+c0=sc3_results;
+
+%% Compare clustering results between SC3/R vs SC3, SIMILR and SoptSC
+Cal_NMI(c0,c1)
+Cal_NMI(c0,c2)
+Cal_NMI(c0,c3)
+
+
+fh=figure; 
+subplot(2,2,1)
+gscatter(s(:,1),s(:,2),celltypelist)
+if showlegend, legend('Location','northwest'); else, legend off; end
+title('Cell type (''Biological Turth'')')
+
+subplot(2,2,2)
+gscatter(s(:,1),s(:,2),c1)
+if showlegend, legend('Location','northwest'); else, legend off; end
+title('SC3')
+
+subplot(2,2,3)
+gscatter(s(:,1),s(:,2),c2)
+if showlegend, legend('Location','northwest'); else, legend off; end
+title('SIMLR')
+
+subplot(2,2,4)
+gscatter(s(:,1),s(:,2),c3)
+if showlegend, legend('Location','northwest'); else, legend off; end
+title('SoptSC')
+fh.Position=[fh.Position(1) fh.Position(2)-100 fh.Position(3)+100 fh.Position(4)+100];
+
+
+%% The End
+##### SOURCE END #####
+--></body></html>

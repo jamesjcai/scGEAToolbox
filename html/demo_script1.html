@@ -1,0 +1,238 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Demonstration of Filter, Normalization and Batch Correction of Data</title><meta name="generator" content="MATLAB 9.9"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2021-07-26"><meta name="DC.source" content="demo_script1.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Demonstration of Filter, Normalization and Batch Correction of Data</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Read scRNA-seq data, X and Y</a></li><li><a href="#2">Select genes with at least 3 cells having more than 5 reads per cell.</a></li><li><a href="#3">Obtain gene intersection of X and Y</a></li><li><a href="#4">Show raw data</a></li><li><a href="#5">Show DESeq normalized data</a></li><li><a href="#6">Show library-size normalized data</a></li><li><a href="#7">Log(x+1) transformed normalized data</a></li><li><a href="#8">Show data subject to MAGIC imputation</a></li><li><a href="#9">Show HCP normalized data</a></li><li><a href="#10">Show data with ComBat batch correction</a></li><li><a href="#11">Visulize cells before and after ComBat batch correction</a></li><li><a href="#12">The End</a></li></ul></div><h2 id="1">Read scRNA-seq data, X and Y</h2><pre class="codeinput">cdgea; <span class="comment">% set working directory</span>
+[X,genelistx]=sc_readfile(<span class="string">'example_data/GSM3204304_P_P_Expr.csv'</span>);
+[Y,genelisty]=sc_readfile(<span class="string">'example_data/GSM3204305_P_N_Expr.csv'</span>);
+</pre><pre class="codeoutput">Reading example_data/GSM3204304_P_P_Expr.csv ...... done.
+Reading example_data/GSM3204305_P_N_Expr.csv ...... done.
+</pre><h2 id="2">Select genes with at least 3 cells having more than 5 reads per cell.</h2><pre class="codeinput">[X,genelistx]=sc_selectg(X,genelistx,5,3);
+[Y,genelisty]=sc_selectg(Y,genelisty,5,3);
+</pre><h2 id="3">Obtain gene intersection of X and Y</h2><pre class="codeinput">[genelist,i,j]=intersect(genelistx,genelisty,<span class="string">'stable'</span>);
+X=X(i,:);
+Y=Y(j,:);
+<span class="comment">% libsizex=sum(X);</span>
+<span class="comment">% libsizey=sum(Y);</span>
+<span class="comment">% X=X(:,libsizex&gt;quantile(libsizex,0.3)&amp;libsizex&lt;quantile(libsizex,0.95));</span>
+<span class="comment">% Y=Y(:,libsizey&gt;quantile(libsizey,0.3)&amp;libsizey&lt;quantile(libsizey,0.95));</span>
+clearvars <span class="string">-except</span> <span class="string">X</span> <span class="string">Y</span> <span class="string">genelist</span>
+</pre><h2 id="4">Show raw data</h2><pre class="codeinput">figure; imagesc([X(1:100,1:500) Y(1:100,1:500)]); title(<span class="string">'Raw Counts'</span>); colorbar; xline(500,<span class="string">'y-'</span>);
+</pre><img vspace="5" hspace="5" src="demo_script1_01.png" alt=""> <h2 id="5">Show DESeq normalized data</h2><pre class="codeinput">[Xs]=sc_norm(X,<span class="string">'type'</span>,<span class="string">'deseq'</span>);
+[Ys]=sc_norm(Y,<span class="string">'type'</span>,<span class="string">'deseq'</span>);
+figure; imagesc([Xs(1:100,1:500) Ys(1:100,1:500)]); title(<span class="string">'DESeq Normalized'</span>); colorbar; xline(500,<span class="string">'y-'</span>);
+</pre><img vspace="5" hspace="5" src="demo_script1_02.png" alt=""> <h2 id="6">Show library-size normalized data</h2><pre class="codeinput">[X]=sc_norm(X,<span class="string">'type'</span>,<span class="string">'libsize'</span>);
+[Y]=sc_norm(Y,<span class="string">'type'</span>,<span class="string">'libsize'</span>);
+figure; imagesc([X(1:100,1:500) Y(1:100,1:500)]); title(<span class="string">'Library Size Normalized'</span>); colorbar; xline(500,<span class="string">'y-'</span>);
+</pre><img vspace="5" hspace="5" src="demo_script1_03.png" alt=""> <h2 id="7">Log(x+1) transformed normalized data</h2><pre class="codeinput">X=log(X+1);
+Y=log(Y+1);
+figure; imagesc([X(1:100,1:500) Y(1:100,1:500)]); title(<span class="string">'Log(x+1) Transformed'</span>); colorbar; xline(500,<span class="string">'y-'</span>);
+</pre><img vspace="5" hspace="5" src="demo_script1_04.png" alt=""> <h2 id="8">Show data subject to MAGIC imputation</h2><pre class="codeinput">Xo=run.MAGIC(X);
+Yo=run.MAGIC(Y);
+figure; imagesc([Xo(1:100,1:500) Yo(1:100,1:500)]); title(<span class="string">'MAGIC Imputated'</span>); colorbar; xline(500,<span class="string">'y-'</span>);
+</pre><pre class="codeoutput">doing PCA
+computing kernel
+Computing alpha decay kernel:
+Number of samples = 835
+First iteration: k = 300
+Number of samples below the threshold from 1st iter: 817
+Using radius based search for the rest
+   Symmetrize affinities
+   Done computing kernel
+imputing using optimal t
+t = 1
+t = 2
+t = 3
+t = 4
+t = 5
+t = 6
+t = 7
+t = 8
+t = 9
+optimal t = 9
+done.
+doing PCA
+computing kernel
+Computing alpha decay kernel:
+Number of samples = 644
+First iteration: k = 300
+Number of samples below the threshold from 1st iter: 635
+Using radius based search for the rest
+   Symmetrize affinities
+   Done computing kernel
+imputing using optimal t
+t = 1
+t = 2
+t = 3
+t = 4
+t = 5
+t = 6
+t = 7
+t = 8
+t = 9
+t = 10
+optimal t = 10
+done.
+</pre><img vspace="5" hspace="5" src="demo_script1_05.png" alt=""> <h2 id="9">Show HCP normalized data</h2><pre class="codeinput">[Xm,Ym]=run.HCP(X,Y);
+figure; imagesc([Xm(1:100,1:500) Ym(1:100,1:500)]); title(<span class="string">'HCP Normalized'</span>); colorbar; xline(500,<span class="string">'y-'</span>);
+</pre><img vspace="5" hspace="5" src="demo_script1_06.png" alt=""> <h2 id="10">Show data with ComBat batch correction</h2><pre class="codeinput">[Xn,Yn]=run.ComBat(X,Y);
+figure; imagesc([Xn(1:100,1:500) Yn(1:100,1:500)]); title(<span class="string">'ComBat Corrected'</span>); colorbar; xline(500,<span class="string">'y-'</span>);
+</pre><pre class="codeoutput">[combat] Found 2 batches
+[combat] Adjusting for 0 covariate(s) of covariate level(s)
+[combat] Standardizing Data across features
+[combat] Fitting L/S model and finding priors
+[combat] Finding parametric adjustments
+[combat] Adjusting the Data
+</pre><img vspace="5" hspace="5" src="demo_script1_07.png" alt=""> <h2 id="11">Visulize cells before and after ComBat batch correction</h2><pre class="codeinput">batchidx=[1*ones(size(X,2),1); 2*ones(size(Y,2),1)];
+
+figure;
+subplot(2,2,1)
+[s]=sc_tsne([X Y]);
+gscatter(s(:,1),s(:,2),batchidx,<span class="string">''</span>,<span class="string">''</span>,5);
+subplot(2,2,2)
+[s]=sc_tsne([Xn Yn]);
+gscatter(s(:,1),s(:,2),batchidx,<span class="string">''</span>,<span class="string">''</span>,5);
+</pre><pre class="codeoutput">Library-size normalization...done.
+Log(x+1) transformation...done.
+Library-size normalization...done.
+Log(x+1) transformation...done.
+</pre><pre class="codeoutput error">Error using tsne (line 182)
+The value of X must not be complex.
+
+Error in sc_tsne (line 37)
+    s=tsne(data,'NumDimensions',ndim,...
+
+Error in demo_script1 (line 61)
+[s]=sc_tsne([Xn Yn]);
+</pre><h2 id="12">The End</h2><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2020b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Demonstration of Filter, Normalization and Batch Correction of Data
+%% Read scRNA-seq data, X and Y
+%
+cdgea; % set working directory
+[X,genelistx]=sc_readfile('example_data/GSM3204304_P_P_Expr.csv');
+[Y,genelisty]=sc_readfile('example_data/GSM3204305_P_N_Expr.csv');
+
+%% Select genes with at least 3 cells having more than 5 reads per cell. 
+%
+[X,genelistx]=sc_selectg(X,genelistx,5,3);
+[Y,genelisty]=sc_selectg(Y,genelisty,5,3);
+
+%% Obtain gene intersection of X and Y
+[genelist,i,j]=intersect(genelistx,genelisty,'stable');
+X=X(i,:);
+Y=Y(j,:);
+% libsizex=sum(X);
+% libsizey=sum(Y);
+% X=X(:,libsizex>quantile(libsizex,0.3)&libsizex<quantile(libsizex,0.95));
+% Y=Y(:,libsizey>quantile(libsizey,0.3)&libsizey<quantile(libsizey,0.95));
+clearvars -except X Y genelist
+%% Show raw data
+figure; imagesc([X(1:100,1:500) Y(1:100,1:500)]); title('Raw Counts'); colorbar; xline(500,'y-');
+
+%% Show DESeq normalized data
+[Xs]=sc_norm(X,'type','deseq');
+[Ys]=sc_norm(Y,'type','deseq');
+figure; imagesc([Xs(1:100,1:500) Ys(1:100,1:500)]); title('DESeq Normalized'); colorbar; xline(500,'y-');
+
+%% Show library-size normalized data
+[X]=sc_norm(X,'type','libsize');
+[Y]=sc_norm(Y,'type','libsize');
+figure; imagesc([X(1:100,1:500) Y(1:100,1:500)]); title('Library Size Normalized'); colorbar; xline(500,'y-');
+
+%% Log(x+1) transformed normalized data
+X=log(X+1);
+Y=log(Y+1);
+figure; imagesc([X(1:100,1:500) Y(1:100,1:500)]); title('Log(x+1) Transformed'); colorbar; xline(500,'y-');
+
+%% Show data subject to MAGIC imputation
+Xo=run.MAGIC(X);
+Yo=run.MAGIC(Y);
+figure; imagesc([Xo(1:100,1:500) Yo(1:100,1:500)]); title('MAGIC Imputated'); colorbar; xline(500,'y-');
+
+%% Show HCP normalized data
+[Xm,Ym]=run.HCP(X,Y);
+figure; imagesc([Xm(1:100,1:500) Ym(1:100,1:500)]); title('HCP Normalized'); colorbar; xline(500,'y-');
+
+%% Show data with ComBat batch correction
+[Xn,Yn]=run.ComBat(X,Y);
+figure; imagesc([Xn(1:100,1:500) Yn(1:100,1:500)]); title('ComBat Corrected'); colorbar; xline(500,'y-');
+
+%% Visulize cells before and after ComBat batch correction
+batchidx=[1*ones(size(X,2),1); 2*ones(size(Y,2),1)];
+
+figure;
+subplot(2,2,1)
+[s]=sc_tsne([X Y]);
+gscatter(s(:,1),s(:,2),batchidx,'','',5);
+subplot(2,2,2)
+[s]=sc_tsne([Xn Yn]);
+gscatter(s(:,1),s(:,2),batchidx,'','',5);
+%% The End
+##### SOURCE END #####
+--></body></html>

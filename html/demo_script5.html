@@ -1,0 +1,325 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Demonstration of Pseudotime Analysis and Gene Network Functions</title><meta name="generator" content="MATLAB 9.9"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2021-07-26"><meta name="DC.source" content="demo_script5.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Demonstration of Pseudotime Analysis and Gene Network Functions</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Load example data set, X</a></li><li><a href="#2">Select genes with at least 3 cells having more than 5 reads per cell.</a></li><li><a href="#3">Trajectory analysis using the PHATE+splinefit method</a></li><li><a href="#4">Plot gene expression profile of cells ordered according to their pseudotime T.</a></li><li><a href="#5">Trajectory analysis using TSCAN</a></li><li><a href="#6">Construct single-cell gene regulatory network (scGRN)</a></li><li><a href="#7">Using principal component regression (PCNet) method</a></li><li><a href="#8">Using GENIE3 method</a></li><li><a href="#9">The End</a></li></ul></div><h2 id="1">Load example data set, X</h2><pre class="codeinput">cdgea; <span class="comment">% set working directory</span>
+[X,genelist]=sc_readfile(<span class="string">'example_data/GSM3044891_GeneExp.UMIs.10X1.txt'</span>);
+</pre><pre class="codeoutput">Reading example_data/GSM3044891_GeneExp.UMIs.10X1.txt ...... done.
+</pre><h2 id="2">Select genes with at least 3 cells having more than 5 reads per cell.</h2><pre class="codeinput">[X,genelist]=sc_selectg(X,genelist,5,3);
+</pre><h2 id="3">Trajectory analysis using the PHATE+splinefit method</h2><p>s=run_phate(X,3,true); [t,xyz1]=i_pseudotime_by_splinefit(s,1); hold on plot3(xyz1(:,1),xyz1(:,2),xyz1(:,3),'-r','linewidth',2);</p><pre class="codeinput"><span class="comment">% Calculte pseudotime T</span>
+figure;
+t=sc_trajectory(X,<span class="string">"type"</span>,<span class="string">"splinefit"</span>,<span class="string">"plotit"</span>,true);
+</pre><pre class="codeoutput">Doing PCA
+PCA using random SVD
+PCA took 0.26911 seconds
+using alpha decaying kernel
+Computing alpha decay kernel:
+Number of samples = 1567
+First iteration: k = 100
+Number of samples below the threshold from 1st iter: 1566
+Using radius based search for the rest
+   Symmetrize affinities
+   Done computing kernel
+Computing kernel took 0.083559 seconds
+Make kernel row stochastic
+Running PHATE without landmarking
+Diffusing operator
+Diffusion took 9.7851 seconds
+Computing potential distances
+using -log(P) potential distance
+Computing potential distance took 0.53922 seconds
+Doing classical MDS
+CMDS took 0.023078 seconds
+Doing metric MDS:
+
+                     Stress          Norm of         Norm of     Line Search
+   Iteration       Criterion        Gradient           Step       Iterations
+  ---------------------------------------------------------------------------
+           0        0.999522     0.000282023
+           1        0.148816     0.000168591          2447.9              12
+           2        0.115937      0.00018191         363.837               9
+           3       0.0737291     0.000141493         379.342              10
+           4       0.0604121     8.66234e-05         134.655              10
+           5        0.054538     6.24838e-05         108.907              16
+           6       0.0514969     4.04333e-05           92.67               9
+           7       0.0504693     3.11087e-05         47.3096              18
+           8       0.0496663     2.11093e-05         47.4086              12
+           9       0.0492983     1.63325e-05         31.8452              14
+          10       0.0491243     1.16795e-05         20.8319              27
+          11       0.0490121     8.99103e-06         18.6061              15
+          12       0.0489315     7.85705e-06         17.2886              15
+          13       0.0488676     7.04324e-06         17.4518              13
+          14         0.04883     5.88304e-06          12.455              13
+          15       0.0487963     4.95203e-06         13.3543              18
+          16       0.0487702     4.78966e-06         12.7936              12
+          17       0.0487469     4.04121e-06         11.5444              12
+          18       0.0487311      3.9257e-06         8.30831              16
+          19       0.0487178     3.17517e-06         8.72657              15
+          20       0.0487078     2.47081e-06         7.44948              21
+          21       0.0487018     1.94495e-06         5.32097              14
+          22       0.0486985     1.28111e-06         3.83038              10
+          23       0.0486971     9.51081e-07         2.32991              21
+          24       0.0486964     7.38112e-07         1.89225              10
+          25       0.0486959     5.43906e-07         1.45018              20
+          26       0.0486955     4.94437e-07         1.34116              20
+          27       0.0486953      4.4092e-07         1.49772              21
+          28       0.0486951      3.9543e-07         1.40943              15
+          29       0.0486949     3.98216e-07         1.36613              11
+          30       0.0486947     3.74025e-07         1.57275              21
+          31       0.0486945     4.24814e-07         1.99629              17
+          32       0.0486943     4.37115e-07         2.63099              16
+          33       0.0486941     4.38984e-07         2.61138              16
+          34       0.0486939     3.85258e-07         2.26451              16
+          35       0.0486938     2.88461e-07         1.33634              13
+          36       0.0486937     2.07201e-07        0.742012              20
+          37       0.0486937     1.42661e-07        0.430715              18
+Iterations terminated:  Relative change in criterion less than OPTIONS.TolFun.
+37 iterations, Final stress criterion = 0.0486937
+MMDS took 17.221 seconds
+Done.
+Total time 27.921 seconds
+</pre><img vspace="5" hspace="5" src="demo_script5_01.png" alt=""> <h2 id="4">Plot gene expression profile of cells ordered according to their pseudotime T.</h2><pre class="codeinput">r=corr(t,X',<span class="string">'type'</span>,<span class="string">'spearman'</span>); <span class="comment">% Calculate linear correlation between gene expression profile and T</span>
+[~,idxp]= maxk(r,4);  <span class="comment">% Select top 4 positively correlated genes</span>
+[~,idxn]= mink(r,3);  <span class="comment">% Select top 3 negatively correlated genes</span>
+selectedg=genelist([idxp idxn]);
+
+<span class="comment">% Plot expression profile of the 5 selected genes</span>
+<span class="keyword">try</span>
+    figure;
+    i_plot_pseudotimeseries(log(1+X),genelist,t,selectedg)
+<span class="keyword">catch</span>
+<span class="keyword">end</span>
+<span class="comment">% % Nonlinear correlation</span>
+<span class="comment">%</span>
+<span class="comment">% r=zeros(size(X,1),1);</span>
+<span class="comment">% for k=1:size(X,1)</span>
+<span class="comment">%     k</span>
+<span class="comment">%     r(k)=distcorr(t,double(X(k,:))');</span>
+<span class="comment">% end</span>
+<span class="comment">% [~,idxp]= maxk(r,3);</span>
+<span class="comment">% [~,idxn]= mink(r,2);</span>
+<span class="comment">% selectedg=genelist([idxp; idxn]);</span>
+<span class="comment">% figure;</span>
+<span class="comment">% i_plot_pseudotimeseries(log(1+X),genelist,t,selectedg)</span>
+</pre><img vspace="5" hspace="5" src="demo_script5_02.png" alt=""> <h2 id="5">Trajectory analysis using TSCAN</h2><p>Calculte pseudotime T</p><pre class="codeinput">figure;
+t=sc_trajectory(X,<span class="string">"type"</span>,<span class="string">"tscan"</span>,<span class="string">"plotit"</span>,true);
+
+r=corr(t,X',<span class="string">'type'</span>,<span class="string">'spearman'</span>); <span class="comment">% Calculate linear correlation between gene expression profile and T</span>
+[~,idxp]= maxk(r,4);  <span class="comment">% Select top 4 positively correlated genes</span>
+[~,idxn]= mink(r,3);  <span class="comment">% Select top 3 negatively correlated genes</span>
+selectedg=genelist([idxp idxn]);
+
+<span class="comment">% Plot expression profile of the 5 selected genes</span>
+figure;
+i_plot_pseudotimeseries(log(1+X),genelist,t,selectedg)
+</pre><pre class="codeoutput">Warning: Failed to converge in 100 iterations for gmdistribution with 8
+components 
+</pre><pre class="codeoutput error">Error using predict (line 85)
+No valid system or dataset was specified.
+
+Error in i_plot_pseudotimeseries (line 66)
+    Pk=[Pk plot(t,predict(fitm1,t),'-','LineWidth',3)];
+
+Error in demo_script5 (line 62)
+i_plot_pseudotimeseries(log(1+X),genelist,t,selectedg)
+</pre><h2 id="6">Construct single-cell gene regulatory network (scGRN)</h2><h2 id="7">Using principal component regression (PCNet) method</h2><pre class="codeinput">X50=X(1:50,:);
+genelist50=genelist(1:50);
+A=sc_pcnet(X50);
+
+<span class="comment">% Plot constructed network</span>
+<span class="comment">%</span>
+A=A.*(abs(A)&gt;quantile(abs(A(:)),0.9));
+G=digraph(A,genelist50);
+LWidths=abs(5*G.Edges.Weight/max(G.Edges.Weight));
+LWidths(LWidths==0)=1e-5;
+figure;
+plot(G,<span class="string">'LineWidth'</span>,LWidths);
+p.MarkerSize = 7;
+p.Marker = <span class="string">'s'</span>;
+p.NodeColor = <span class="string">'r'</span>;
+</pre><h2 id="8">Using GENIE3 method</h2><pre class="codeinput">X20=X(1:20,:);
+genelist20=genelist(1:20);
+A=run.GENIE3(X20);
+
+<span class="comment">% Plot constructed network</span>
+<span class="comment">%</span>
+A=A.*(abs(A)&gt;quantile(abs(A(:)),0.9));
+G=digraph(A,genelist20);
+LWidths=abs(5*G.Edges.Weight/max(G.Edges.Weight));
+LWidths(LWidths==0)=1e-5;
+figure;
+plot(G,<span class="string">'LineWidth'</span>,LWidths);
+p.MarkerSize = 7;
+p.Marker = <span class="string">'s'</span>;
+p.NodeColor = <span class="string">'r'</span>;
+</pre><h2 id="9">The End</h2><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2020b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Demonstration of Pseudotime Analysis and Gene Network Functions
+%% Load example data set, X
+%
+cdgea; % set working directory
+[X,genelist]=sc_readfile('example_data/GSM3044891_GeneExp.UMIs.10X1.txt');
+
+%% Select genes with at least 3 cells having more than 5 reads per cell. 
+%
+[X,genelist]=sc_selectg(X,genelist,5,3);
+
+%% Trajectory analysis using the PHATE+splinefit method
+%
+% s=run_phate(X,3,true);
+% [t,xyz1]=i_pseudotime_by_splinefit(s,1);
+% hold on
+% plot3(xyz1(:,1),xyz1(:,2),xyz1(:,3),'-r','linewidth',2);
+
+% Calculte pseudotime T
+figure;
+t=sc_trajectory(X,"type","splinefit","plotit",true);
+
+%% Plot gene expression profile of cells ordered according to their pseudotime T.
+%
+
+r=corr(t,X','type','spearman'); % Calculate linear correlation between gene expression profile and T
+[~,idxp]= maxk(r,4);  % Select top 4 positively correlated genes
+[~,idxn]= mink(r,3);  % Select top 3 negatively correlated genes
+selectedg=genelist([idxp idxn]);
+
+% Plot expression profile of the 5 selected genes
+try
+    figure;
+    i_plot_pseudotimeseries(log(1+X),genelist,t,selectedg)
+catch
+end
+% % Nonlinear correlation  
+%
+% r=zeros(size(X,1),1);
+% for k=1:size(X,1)
+%     k
+%     r(k)=distcorr(t,double(X(k,:))');
+% end
+% [~,idxp]= maxk(r,3);
+% [~,idxn]= mink(r,2);
+% selectedg=genelist([idxp; idxn]);
+% figure;
+% i_plot_pseudotimeseries(log(1+X),genelist,t,selectedg)
+
+%% Trajectory analysis using TSCAN
+%
+% Calculte pseudotime T
+figure;
+t=sc_trajectory(X,"type","tscan","plotit",true);
+
+r=corr(t,X','type','spearman'); % Calculate linear correlation between gene expression profile and T
+[~,idxp]= maxk(r,4);  % Select top 4 positively correlated genes
+[~,idxn]= mink(r,3);  % Select top 3 negatively correlated genes
+selectedg=genelist([idxp idxn]);
+
+% Plot expression profile of the 5 selected genes
+figure;
+i_plot_pseudotimeseries(log(1+X),genelist,t,selectedg)
+
+%% Construct single-cell gene regulatory network (scGRN)
+
+%% Using principal component regression (PCNet) method
+%
+X50=X(1:50,:);
+genelist50=genelist(1:50);
+A=sc_pcnet(X50);
+
+% Plot constructed network
+%
+A=A.*(abs(A)>quantile(abs(A(:)),0.9));
+G=digraph(A,genelist50);
+LWidths=abs(5*G.Edges.Weight/max(G.Edges.Weight));
+LWidths(LWidths==0)=1e-5;
+figure;
+plot(G,'LineWidth',LWidths);
+p.MarkerSize = 7;
+p.Marker = 's';
+p.NodeColor = 'r';
+
+%% Using GENIE3 method
+%
+X20=X(1:20,:);
+genelist20=genelist(1:20);
+A=run.GENIE3(X20);
+
+% Plot constructed network
+%
+A=A.*(abs(A)>quantile(abs(A(:)),0.9));
+G=digraph(A,genelist20);
+LWidths=abs(5*G.Edges.Weight/max(G.Edges.Weight));
+LWidths(LWidths==0)=1e-5;
+figure;
+plot(G,'LineWidth',LWidths);
+p.MarkerSize = 7;
+p.Marker = 's';
+p.NodeColor = 'r';
+
+%% The End
+##### SOURCE END #####
+--></body></html>

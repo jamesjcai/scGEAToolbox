@@ -1,0 +1,185 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Demonstration of DE Analysis and Marker Gene Identification Functions</title><meta name="generator" content="MATLAB 9.9"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2021-07-26"><meta name="DC.source" content="demo_script6.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Demonstration of DE Analysis and Marker Gene Identification Functions</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Load example data set, X</a></li><li><a href="#2">Automatically cluster cells and explore cell type</a></li><li><a href="#3">Show result of manually brushing cells and exploring cell type</a></li><li><a href="#4">Group cells into clusters (k=6)</a></li><li><a href="#5">Identify marker genes for cluster #4 against other clusters</a></li><li><a href="#6">Show expression level of top 9 marker genes</a></li><li><a href="#7">Show expression level of the top marker gene</a></li><li><a href="#8">Determine cell type for each cluster using marker genes (collected by PanglaoDB)</a></li><li><a href="#9">Another demo with example data of mouse pancreatic islet cells</a></li><li><a href="#10">Use the SC_SCATTER interactive tool</a></li><li><a href="#11">The End</a></li></ul></div><h2 id="1">Load example data set, X</h2><pre class="codeinput">cdgea; <span class="comment">% set working directory</span>
+load <span class="string">example_data/markergeneident_demo</span> <span class="string">X</span> <span class="string">genelist</span> <span class="string">s_tsne</span>
+<span class="comment">% s_tsne is precomputed tSNE embedding</span>
+</pre><h2 id="2">Automatically cluster cells and explore cell type</h2><pre class="codeinput">figure;
+gui.sc_celltypeexplorer_auto(X,genelist,s_tsne,<span class="string">"species"</span>,<span class="string">"mouse"</span>);
+</pre><img vspace="5" hspace="5" src="demo_script6_01.png" alt=""> <h2 id="3">Show result of manually brushing cells and exploring cell type</h2><p>To generate the figure: (1) run gui.sc_celltypeexplorer(X,genelist,s_tsne,"species","mouse") (2) brush and select cell cluster</p><pre class="codeinput">openfig(<span class="string">'example_data/markergeneident_demo.fig'</span>);
+</pre><img vspace="5" hspace="5" src="demo_script6_02.png" alt=""> <h2 id="4">Group cells into clusters (k=6)</h2><pre class="codeinput">figure;
+rng(1234)
+cluster_kmedoids=sc_cluster_s(s_tsne,6,<span class="string">'type'</span>,<span class="string">'kmedoids'</span>,<span class="string">'plotit'</span>,true);
+</pre><img vspace="5" hspace="5" src="demo_script6_03.png" alt=""> <h2 id="5">Identify marker genes for cluster #4 against other clusters</h2><pre class="codeinput">gmarkers=sc_pickmarkers(X,genelist,cluster_kmedoids,9);
+gmarkers=gmarkers{4};
+</pre><h2 id="6">Show expression level of top 9 marker genes</h2><pre class="codeinput">figure;
+<span class="keyword">for</span> k=1:9
+    g=gmarkers(k);
+    subplot(3,3,k)
+    grp=log2(1+X(genelist==g,:));
+    scatter3(s_tsne(:,1),s_tsne(:,2),s_tsne(:,3),10,grp,<span class="string">'filled'</span>);
+    title(g)
+<span class="keyword">end</span>
+subplot(3,3,1)
+view([-25 90])
+</pre><img vspace="5" hspace="5" src="demo_script6_04.png" alt=""> <h2 id="7">Show expression level of the top marker gene</h2><pre class="codeinput">figure;
+g=gmarkers(5);
+sc_scattermarker(X,genelist,s_tsne,g);
+<span class="comment">% sc_stemscatter(s_tsne(:,1), s_tsne(:,2), log2(1+X(genelist==g,:)));</span>
+title(g)
+view([-31.03 77.60])
+</pre><img vspace="5" hspace="5" src="demo_script6_05.png" alt=""> <h2 id="8">Determine cell type for each cluster using marker genes (collected by PanglaoDB)</h2><pre class="codeinput">Tct=run.alona(X,genelist,cluster_kmedoids,<span class="string">'species'</span>,<span class="string">'mouse'</span>)
+</pre><pre class="codeoutput">
+Tct =
+
+  10&times;12 table
+
+       C1_Cell_Type        C1_CTA_Score            C2_Cell_Type             C2_CTA_Score            C3_Cell_Type             C3_CTA_Score            C4_Cell_Type             C4_CTA_Score                     C5_Cell_Type                     C5_CTA_Score            C6_Cell_Type             C6_CTA_Score
+    ___________________    ____________    _____________________________    ____________    _____________________________    ____________    _____________________________    ____________    ______________________________________________    ____________    _____________________________    ____________
+
+    "T cells"                 25.188       "Fibroblasts"                       88.299       "Fibroblasts"                       88.342       "Fibroblasts"                       77.078       "T memory cells"                                     44.293       "Fibroblasts"                       59.348   
+    "T memory cells"          23.175       "Fibroblasts (PMID:32769974)"       67.194       "Fibroblasts (PMID:32769974)"       68.503       "Fibroblasts (PMID:32769974)"       54.375       "T cells"                                             43.82       "Mesothelial cells"                 41.495   
+    "Platelets"               22.526       "Pancreatic stellate cells"         34.225       "Pancreatic stellate cells"         36.193       "Pancreatic stellate cells"         35.912       "Gamma delta T cells"                                32.525       "Fibroblasts (PMID:32769974)"       40.548   
+    "Macrophages"             22.123       "Endothelial cells"                 34.057       "Endothelial cells"                 35.282       "Hepatic stellate cells"            35.555       "Platelets"                                          21.479       "Endothelial cells"                 37.047   
+    "B cells"                 20.961       "Hepatic stellate cells"            30.407       "Hepatic stellate cells"            33.812       "Endothelial cells"                 33.324       "B cells"                                            21.258       "Hepatic stellate cells"            31.271   
+    "Microfold cells"         20.505       "Adipocytes"                        28.859       "Adipocytes"                        30.918       "Adipocytes"                        29.342       "Embryonic stem cells"                               17.231       "Pancreatic stellate cells"         28.543   
+    "Dendritic cells"         20.137       "Endothelial cells (aorta)"          24.69       "M&uuml;ller cells"                      25.445       "M&uuml;ller cells"                       25.71       "NK cells"                                           16.814       "M&uuml;ller cells"                      26.981   
+    "Fibroblasts"             19.785       "M&uuml;ller cells"                      24.325       "Endothelial cells (aorta)"         24.184       "Pericytes"                         23.664       "Hematopoietic stem cells"                           15.778       "Platelets"                         22.351   
+    "Endothelial cells"       19.578       "Pericytes"                         23.549       "Pericytes"                         23.601       "Adipocyte stem cells (ASCs)"       19.103       "Erythroid-like and erythroid precursor cells"       15.609       "Podocytes"                         22.117   
+    "Monocytes"               19.537       "Mesothelial cells"                 22.833       "Mesothelial cells"                 21.869       "Stromal cells"                     18.654       "Neurons"                                            15.561       "Adipocytes"                        21.112   
+
+</pre><h2 id="9">Another demo with example data of mouse pancreatic islet cells</h2><pre class="codeinput">load <span class="string">example_data/celltypeexplorer_demo_data.mat</span>
+gui.sc_celltypeexplorer(X,genelist,s_tsne,<span class="string">"species"</span>,<span class="string">"mouse"</span>);
+pause(3)
+</pre><img vspace="5" hspace="5" src="demo_script6_06.png" alt=""> <h2 id="10">Use the SC_SCATTER interactive tool</h2><pre class="codeinput">sc_scatter(X,genelist,s_tsne)
+</pre><img vspace="5" hspace="5" src="demo_script6_07.png" alt=""> <h2 id="11">The End</h2><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2020b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Demonstration of DE Analysis and Marker Gene Identification Functions
+%% Load example data set, X
+%
+cdgea; % set working directory
+load example_data/markergeneident_demo X genelist s_tsne
+% s_tsne is precomputed tSNE embedding
+%% Automatically cluster cells and explore cell type
+figure;
+gui.sc_celltypeexplorer_auto(X,genelist,s_tsne,"species","mouse");
+%% Show result of manually brushing cells and exploring cell type
+% To generate the figure:
+% (1) run gui.sc_celltypeexplorer(X,genelist,s_tsne,"species","mouse")
+% (2) brush and select cell cluster
+openfig('example_data/markergeneident_demo.fig');
+
+%% Group cells into clusters (k=6)
+%
+figure;
+rng(1234)
+cluster_kmedoids=sc_cluster_s(s_tsne,6,'type','kmedoids','plotit',true);
+
+%% Identify marker genes for cluster #4 against other clusters
+%
+gmarkers=sc_pickmarkers(X,genelist,cluster_kmedoids,9);
+gmarkers=gmarkers{4};
+%% Show expression level of top 9 marker genes
+%
+figure;
+for k=1:9
+    g=gmarkers(k);
+    subplot(3,3,k)
+    grp=log2(1+X(genelist==g,:));
+    scatter3(s_tsne(:,1),s_tsne(:,2),s_tsne(:,3),10,grp,'filled');
+    title(g)
+end
+subplot(3,3,1)
+view([-25 90])
+%% Show expression level of the top marker gene
+%
+figure;
+g=gmarkers(5);
+sc_scattermarker(X,genelist,s_tsne,g);
+% sc_stemscatter(s_tsne(:,1), s_tsne(:,2), log2(1+X(genelist==g,:)));
+title(g)
+view([-31.03 77.60])
+
+%% Determine cell type for each cluster using marker genes (collected by PanglaoDB) 
+%
+Tct=run.alona(X,genelist,cluster_kmedoids,'species','mouse')
+
+%% Another demo with example data of mouse pancreatic islet cells
+%
+load example_data/celltypeexplorer_demo_data.mat
+gui.sc_celltypeexplorer(X,genelist,s_tsne,"species","mouse");
+pause(3)
+
+%% Use the SC_SCATTER interactive tool
+%
+sc_scatter(X,genelist,s_tsne)
+
+%% The End
+##### SOURCE END #####
+--></body></html>
