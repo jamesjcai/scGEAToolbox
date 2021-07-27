@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.toolbox" plugin-version="1.0">
-  <configuration file="C:\Users\jcai.AUTH\Documents\GitHub\scGEAToolbox\scGEAToolbox.prj" location="C:\Users\jcai.AUTH\Documents\GitHub\scGEAToolbox" name="scGEAToolbox" target="target.toolbox" target-name="Package Toolbox">
+  <configuration build-checksum="2726291497" file="C:\Users\jcai.AUTH\Documents\GitHub\scGEAToolbox\scGEAToolbox.prj" location="C:\Users\jcai.AUTH\Documents\GitHub\scGEAToolbox" name="scGEAToolbox" target="target.toolbox" target-name="Package Toolbox">
     <param.appname>scGEAToolbox</param.appname>
     <param.authnamewatermark>James Cai</param.authnamewatermark>
     <param.email>jcai@tamu.edu</param.email>
@@ -109,7 +109,9 @@ example_data/*</param.exclude.filters>
 &lt;/examples&gt;</param.examples>
     <param.demosxml />
     <param.apps />
-    <param.registered.apps />
+    <param.registered.apps>
+      <file>${PROJECT_ROOT}\scGEAscatter.mlapp</file>
+    </param.registered.apps>
     <param.docs>${PROJECT_ROOT}\info.xml</param.docs>
     <param.getting.started.guide>${PROJECT_ROOT}\doc\GettingStarted.mlx</param.getting.started.guide>
     <param.matlabpath.excludes />
@@ -143,7 +145,6 @@ example_data/*</param.exclude.filters>
       <param.exclude.pcodedmfiles />
       <param.demosxml />
       <param.apps />
-      <param.registered.apps />
       <param.matlabpath.excludes />
       <param.javaclasspath.excludes />
       <param.exported.on.package />
@@ -184,6 +185,7 @@ example_data/*</param.exclude.filters>
       <file>${PROJECT_ROOT}\demo_script5.m</file>
       <file>${PROJECT_ROOT}\demo_script6.m</file>
       <file>${PROJECT_ROOT}\demos.xml</file>
+      <file>${PROJECT_ROOT}\DesktopToolset.xml</file>
       <file>${PROJECT_ROOT}\doc</file>
       <file>${PROJECT_ROOT}\docs</file>
       <file>${PROJECT_ROOT}\e_filtadjc.m</file>
@@ -264,6 +266,7 @@ example_data/*</param.exclude.filters>
       <file>${PROJECT_ROOT}\sc_umap.m</file>
       <file>${PROJECT_ROOT}\sc_veg.m</file>
       <file>${PROJECT_ROOT}\sc_writefile.m</file>
+      <file>${PROJECT_ROOT}\scGEAscatter.mlapp</file>
     </fileset.rootfiles>
     <fileset.depfun.included />
     <fileset.depfun.excluded />
