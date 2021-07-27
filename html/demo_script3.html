@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Demonstration of Visualization Functions</title><meta name="generator" content="MATLAB 9.9"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2021-07-26"><meta name="DC.source" content="demo_script3.m"><style type="text/css">
+      --><title>Demonstration of Visualization Functions</title><meta name="generator" content="MATLAB 9.9"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2021-07-27"><meta name="DC.source" content="demo_script3.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -114,12 +114,8 @@ T=sortrows(T,size(T,2),<span class="string">'descend'</span>);
 [~,idx1]=ismember(table2array(T(:,1)),genelistx);
 [~,idx2]=ismember(table2array(T(:,1)),genelisty);
 figure;
-sc_stem3(X(idx1,:),Y(idx2,:),genelistx(idx1),50);
-</pre><pre class="codeoutput error">Undefined function 'sc_stem3' for input arguments of type 'string'.
-
-Error in demo_script3 (line 67)
-sc_stem3(X(idx1,:),Y(idx2,:),genelistx(idx1),50);           
-</pre><h2 id="12">The End</h2><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2020b</a><br></p></div><!--
+gui.sc_stem3(X(idx1,:),Y(idx2,:),genelistx(idx1),50);
+</pre><img vspace="5" hspace="5" src="demo_script3_08.png" alt=""> <h2 id="12">The End</h2><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2020b</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %% Demonstration of Visualization Functions
 %% Load and pre-process three data sets, X, Y and Z
@@ -187,7 +183,7 @@ T=sortrows(T,size(T,2),'descend');
 [~,idx1]=ismember(table2array(T(:,1)),genelistx);
 [~,idx2]=ismember(table2array(T(:,1)),genelisty);
 figure;
-sc_stem3(X(idx1,:),Y(idx2,:),genelistx(idx1),50);           
+gui.sc_stem3(X(idx1,:),Y(idx2,:),genelistx(idx1),50);           
 
 %% The End
 ##### SOURCE END #####

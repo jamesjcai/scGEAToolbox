@@ -4,7 +4,7 @@
    <type>toolbox</type>
    <icon>HelpIcon.DEMOS</icon>
    <website/>
-   <description/>
+   <description>scRNAseq data analysis toolbox</description>
    <demosection>
       <label>scGEAToolbox</label>
       <demoitem>

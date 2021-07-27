@@ -1,12 +1,12 @@
 <deployment-project plugin="plugin.toolbox" plugin-version="1.0">
-  <configuration build-checksum="2726291497" file="C:\Users\jcai.AUTH\Documents\GitHub\scGEAToolbox\scGEAToolbox.prj" location="C:\Users\jcai.AUTH\Documents\GitHub\scGEAToolbox" name="scGEAToolbox" target="target.toolbox" target-name="Package Toolbox">
+  <configuration build-checksum="3136440651" file="C:\Users\jcai.AUTH\Documents\GitHub\scGEAToolbox\scGEAToolbox.prj" location="C:\Users\jcai.AUTH\Documents\GitHub\scGEAToolbox" name="scGEAToolbox" target="target.toolbox" target-name="Package Toolbox">
     <param.appname>scGEAToolbox</param.appname>
     <param.authnamewatermark>James Cai</param.authnamewatermark>
     <param.email>jcai@tamu.edu</param.email>
     <param.company>Texas A&amp;M University</param.company>
-    <param.summary />
-    <param.description />
-    <param.screenshot />
+    <param.summary>Single-cell Gene Expression Analysis Toolbox</param.summary>
+    <param.description>scRNAseq data analysis toolbox</param.description>
+    <param.screenshot>${PROJECT_ROOT}\resources\sc_scatter.png</param.screenshot>
     <param.version>21.7.28</param.version>
     <param.output>${PROJECT_ROOT}\scGEAToolbox.mltbx</param.output>
     <param.products.name>
@@ -39,9 +39,14 @@
 % All files matching a pattern in all subfolders of the toolbox folder:
 % **/*.bak
 %
+**/.git
+**/.github
 .git/*
 .github/*
-example_data/*</param.exclude.filters>
+example_data/*
+resources/STRING/stringdb_human.mat
+resources/STRING/stringdb_mouse.mat
+.gitignore</param.exclude.filters>
     <param.exclude.pcodedmfiles>true</param.exclude.pcodedmfiles>
     <param.examples>&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;examples&gt;
@@ -77,6 +82,7 @@ example_data/*</param.exclude.filters>
          &lt;file type="image"&gt;/html/demo_script3_05.png&lt;/file&gt;
          &lt;file type="image"&gt;/html/demo_script3_06.png&lt;/file&gt;
          &lt;file type="image"&gt;/html/demo_script3_07.png&lt;/file&gt;
+         &lt;file type="image"&gt;/html/demo_script3_08.png&lt;/file&gt;
       &lt;/example&gt;
       &lt;example name="demo_script4" type="html"&gt;
          &lt;file type="source"&gt;/html/demo_script4.html&lt;/file&gt;
@@ -137,9 +143,6 @@ example_data/*</param.exclude.filters>
       <param.authnamewatermark />
       <param.email />
       <param.company />
-      <param.summary />
-      <param.description />
-      <param.screenshot />
       <param.output />
       <param.platforms />
       <param.exclude.pcodedmfiles />
@@ -171,9 +174,6 @@ example_data/*</param.exclude.filters>
       <file>${PROJECT_ROOT}\+gui</file>
       <file>${PROJECT_ROOT}\+pkg</file>
       <file>${PROJECT_ROOT}\+run</file>
-      <file>${PROJECT_ROOT}\.git</file>
-      <file>${PROJECT_ROOT}\.github</file>
-      <file>${PROJECT_ROOT}\.gitignore</file>
       <file>${PROJECT_ROOT}\@SingleCellExperiment</file>
       <file>${PROJECT_ROOT}\@SingleCellNetwork</file>
       <file>${PROJECT_ROOT}\cdgea.m</file>
