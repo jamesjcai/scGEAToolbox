@@ -1152,10 +1152,10 @@ end
         end
         
         answer = questdlg('Which method?', 'Select Algorithm', ...
-            'kmeans', 'snndpc', 'kmeans');
-        if strcmpi(answer, 'kmeans')
+            'kmeans 🐇', 'snndpc 🐢', 'kmeans 🐇');
+        if strcmpi(answer, 'kmeans 🐇')
             methodtag = "kmeans";
-        elseif strcmpi(answer, 'snndpc')
+        elseif strcmpi(answer, 'snndpc 🐢')
             methodtag = "snndpc";
         else
             return
@@ -1182,14 +1182,17 @@ end
         if ~strcmp(answer, 'Yes')
             return
         end
-        methodtagv = {'sc3', 'simlr', 'soptsc', 'sinnlrr', 'specter'};
+        methodtagvx = {'specter (31 secs) 🐇','sc3 (77 secs) 🐇',...
+             'simlr (400 secs) 🐢',...
+             'soptsc (1,182 secs) 🐢🐢', 'sinnlrr (8,307 secs) 🐢🐢🐢', };
+        methodtagv = {'specter','sc3','simlr', 'soptsc', 'sinnlrr'};
         [indx, tf] = listdlg('PromptString', {'Select clustering program', ...
             '', ''}, 'SelectionMode', 'single', ...
-            'ListString', methodtagv);
+            'ListString', methodtagvx);
         if tf == 1
             methodtag = methodtagv{indx};
         else
-            return
+            return;
         end
         i_reclustercells(src, methodtag);
         guidata(FigureHandle, sce);

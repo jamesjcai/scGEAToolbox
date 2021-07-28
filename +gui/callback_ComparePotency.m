@@ -48,7 +48,7 @@ function callback_ComparePotency(src,~)
         errordlg('Undefined');    
         return;
     end
-    x=sce.list_cell_attributes{idx+1};    
+    x=sce.list_cell_attributes{idx+1};
     figure;
     pkg.i_violinplot_groupordered(x,thisc);
     xlabel(clabel)

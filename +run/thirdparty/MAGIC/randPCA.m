@@ -157,7 +157,7 @@ end
 %
 % Retrieve the dimensions of A.
 %
-[m n] = size(A);
+[m, n] = size(A);
 
 %
 % Check the remaining input arguments.
@@ -235,7 +235,7 @@ if(m >= n)
   end
 
   if(~isreal(A))
-    H = A*( (2*rand(n,l)-ones(n,l)) + i*(2*rand(n,l)-ones(n,l)) );
+    H = A*( (2*rand(n,l)-ones(n,l)) + 1i*(2*rand(n,l)-ones(n,l)) );
   end
 
   %rand('twister',rand('twister'));
@@ -263,9 +263,9 @@ if(m >= n)
 % Form a matrix Q whose columns constitute an orthonormal basis
 % for the columns of F.
 %
-  [Q,R,E] = qr(F,0);
+  [Q,~,~] = qr(F,0);
 
-  clear F R E;
+  clear F;
 
 %
 % SVD Q'*A to obtain approximations to the singular values
@@ -301,7 +301,7 @@ if(m < n)
   end
 
   if(~isreal(A))
-    H = (( (2*rand(l,m)-ones(l,m)) + i*(2*rand(l,m)-ones(l,m)) )*A)';
+    H = (( (2*rand(l,m)-ones(l,m)) + 1i*(2*rand(l,m)-ones(l,m)) )*A)';
   end
 
   %rand('twister',rand('twister'));
@@ -329,9 +329,9 @@ if(m < n)
 % Form a matrix Q whose columns constitute an orthonormal basis
 % for the columns of F.
 %
-  [Q,R,E] = qr(F,0);
+  [Q,~,~] = qr(F,0);
 
-  clear F R E;
+  clear F;
 
 %
 % SVD A*Q to obtain approximations to the singular values
