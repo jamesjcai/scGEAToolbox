@@ -1,4 +1,4 @@
-%% Demonstration of Visualization Functions
+%% Demo 3 - Visualization Functions
 %% Load and pre-process three data sets, X, Y and Z
 %%
 cdgea; % set working directory

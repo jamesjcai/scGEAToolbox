@@ -1,4 +1,4 @@
-%% Demonstration of Clustering Functions
+%% Demo 4 - Clustering Functions
 %% Load example data
 %%
 cdgea; % set working directory

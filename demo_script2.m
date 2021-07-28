@@ -1,4 +1,4 @@
-%% Demonstration of Feature Selection Functions
+%% Demo 2 - Feature Selection Functions
 %% HVG analysis with single data X
 %%
 cdgea; % set working directory
@@ -9,7 +9,8 @@ Xn=sc_norm(X,'type','deseq');
 [T]=sc_hvg(Xn,genelist,true,true);
 
 % Highly variable genes (HVGenes), FDR<0.05
-HVGenes=T.genes(T.fdr<0.05)
+HVGenes=T.genes(T.fdr<0.05);
+disp(HVGenes(1:10))
 
 %% Spline-fit feature selection with single data X
 %%
@@ -18,8 +19,8 @@ HVGenes=T.genes(T.fdr<0.05)
 
 sortit=true;
 [T1]=sc_splinefit(X,genelist,sortit);
-% Top 50 featured genes with highest deviation (D) values 
-T1.genes(1:50)
+% Top 10 featured genes with highest deviation (D) values 
+T1.genes(1:10)
 dofit=true;
 showdata=true;
 % Show data points and the spline-fit curve
@@ -56,7 +57,7 @@ view([-6.39 36.70])
 % value for each gene.
 [T2]=sc_splinefit2(X,Y,genelistx,genelisty,true);
 
-%% Top 50 genes with highest DD value.
-T2.genes(1:50)
+%% Top 10 genes with highest DD value.
+T2.genes(1:10)
 
 %% The End

@@ -75,7 +75,7 @@ function ydata = tsne_p_bo(P, labels, no_dims)
         % Print out progress
         if ~rem(iter, 10)
             cost = const - sum(P(:) .* log(Q(:)));
-            disp(['Iteration ' num2str(iter) ': error is ' num2str(cost)]);
+            % disp(['Iteration ' num2str(iter) ': error is ' num2str(cost)]);
         end
         
         % Display scatter plot (maximally first three dimensions)

@@ -1,4 +1,4 @@
-%% Demonstration of Pseudotime Analysis and Gene Network Functions
+%% Demo 5 - Pseudotime Analysis and Gene Network Functions
 %% Load example data set, X
 %
 cdgea; % set working directory

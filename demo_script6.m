@@ -1,4 +1,4 @@
-%% Demonstration of DE Analysis and Marker Gene Identification Functions
+%% Demo 6 - DE Analysis and Marker Gene Identification Functions
 %% Load example data set, X
 %
 cdgea; % set working directory

@@ -1,4 +1,4 @@
-%% Demonstration of Filter, Normalization and Batch Correction of Data
+%% Demo 1 - Filter, Normalization and Batch Correction of Data
 %% Read scRNA-seq data, X and Y
 %
 cdgea; % set working directory
