@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Demonstration of Visualization Functions</title><meta name="generator" content="MATLAB 9.9"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2021-07-27"><meta name="DC.source" content="demo_script3.m"><style type="text/css">
+      --><title>demo_script3</title><meta name="generator" content="MATLAB 9.10"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2021-07-29"><meta name="DC.source" content="demo_script3.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -67,17 +67,14 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>Demonstration of Visualization Functions</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Load and pre-process three data sets, X, Y and Z</a></li><li><a href="#3">Intersection of common genes in X, Y and Z</a></li><li><a href="#5">Label cells</a></li><li><a href="#6">PCA</a></li><li><a href="#7">t-SNE</a></li><li><a href="#8">Diffusion Map</a></li><li><a href="#9">Scatter plots</a></li><li><a href="#10">3D scatter plot with spline fit</a></li><li><a href="#11">Feature selection and show top 50 differentially deviated (DD) genes</a></li><li><a href="#12">The End</a></li></ul></div><h2 id="1">Load and pre-process three data sets, X, Y and Z</h2><pre class="codeinput">cdgea; <span class="comment">% set working directory</span>
+  </style></head><body><div class="content"><pre class="codeinput">cdgea; <span class="comment">% set working directory</span>
 [X,genelistx]=sc_readfile(<span class="string">'example_data/GSM3204304_P_P_Expr.csv'</span>);
 [Y,genelisty]=sc_readfile(<span class="string">'example_data/GSM3204305_P_N_Expr.csv'</span>);
 [Z,genelistz]=sc_readfile(<span class="string">'example_data/GSM3044891_GeneExp.UMIs.10X1.txt'</span>);
 [X,genelistx]=sc_selectg(X,genelistx,3,1);
 [Y,genelisty]=sc_selectg(Y,genelisty,3,1);
 [Z,genelistz]=sc_selectg(Z,genelistz,3,1);
-</pre><pre class="codeoutput">Reading example_data/GSM3204304_P_P_Expr.csv ...... done.
-Reading example_data/GSM3204305_P_N_Expr.csv ...... done.
-Reading example_data/GSM3044891_GeneExp.UMIs.10X1.txt ...... done.
-</pre><h2 id="3">Intersection of common genes in X, Y and Z</h2><pre class="codeinput">[genelist]=intersect(intersect(genelistx,genelisty,<span class="string">'stable'</span>),genelistz,<span class="string">'stable'</span>);
+[genelist]=intersect(intersect(genelistx,genelisty,<span class="string">'stable'</span>),genelistz,<span class="string">'stable'</span>);
 <span class="comment">% Remove genes encoded in the mitochondrial genome</span>
 i=startsWith(genelist,<span class="string">'MT-'</span>);
 genelist(i)=[];
@@ -90,16 +87,14 @@ Z=Z(i3,:); genelistz=genelist;
 <span class="comment">% [X]=sc_norm(X,'type','deseq');</span>
 <span class="comment">% [Y]=sc_norm(Y,'type','deseq');</span>
 <span class="comment">% [Z]=sc_norm(Z,'type','deseq');</span>
-</pre><h2 id="5">Label cells</h2><pre class="codeinput">cellidx=[1*ones(size(X,2),1); 2*ones(size(Y,2),1); 3*ones(size(Z,2),1)];
-</pre><h2 id="6">PCA</h2><pre class="codeinput">[~,s]=pca([X Y Z]');
+cellidx=[1*ones(size(X,2),1); 2*ones(size(Y,2),1); 3*ones(size(Z,2),1)];
+[~,s]=pca([X Y Z]');
 gscatter(s(:,1),s(:,2),cellidx,<span class="string">''</span>,<span class="string">''</span>,8);
-</pre><img vspace="5" hspace="5" src="demo_script3_01.png" alt=""> <h2 id="7">t-SNE</h2><pre class="codeinput">[s]=sc_tsne([X Y Z],2,false,true);
+[s]=sc_tsne([X Y Z],2,false,true);
 gscatter(s(:,1),s(:,2),cellidx,<span class="string">''</span>,<span class="string">''</span>,8);
-</pre><pre class="codeoutput">Library-size normalization...done.
-Log(x+1) transformation...done.
-</pre><img vspace="5" hspace="5" src="demo_script3_02.png" alt=""> <h2 id="8">Diffusion Map</h2><pre class="codeinput">[s]=run.diffuse([X Y Z]);
+[s]=run.diffuse([X Y Z]);
 gscatter(s(:,1),s(:,2),cellidx,<span class="string">''</span>,<span class="string">''</span>,8);
-</pre><img vspace="5" hspace="5" src="demo_script3_03.png" alt=""> <h2 id="9">Scatter plots</h2><pre class="codeinput">figure;
+figure;
 gui.sc_scattergenes(X,genelistx,<span class="string">'mean_cv'</span>);
 
 figure;
@@ -107,19 +102,21 @@ gui.sc_scattergenes(X,genelistx,<span class="string">'meanlg_varlg'</span>);
 
 figure;
 gui.sc_scattergenes(X,genelistx,<span class="string">'mean_dropr'</span>);
-</pre><img vspace="5" hspace="5" src="demo_script3_04.png" alt=""> <img vspace="5" hspace="5" src="demo_script3_05.png" alt=""> <img vspace="5" hspace="5" src="demo_script3_06.png" alt=""> <h2 id="10">3D scatter plot with spline fit</h2><pre class="codeinput">figure;
+figure;
 gui.sc_scatter3genes(X,genelistx,true,true);
-</pre><img vspace="5" hspace="5" src="demo_script3_07.png" alt=""> <h2 id="11">Feature selection and show top 50 differentially deviated (DD) genes</h2><pre class="codeinput">T=sc_splinefit2(X,Y,genelistx,genelisty);
+T=sc_splinefit2(X,Y,genelistx,genelisty);
 T=sortrows(T,size(T,2),<span class="string">'descend'</span>);
 [~,idx1]=ismember(table2array(T(:,1)),genelistx);
 [~,idx2]=ismember(table2array(T(:,1)),genelisty);
 figure;
 gui.sc_stem3(X(idx1,:),Y(idx2,:),genelistx(idx1),50);
-</pre><img vspace="5" hspace="5" src="demo_script3_08.png" alt=""> <h2 id="12">The End</h2><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2020b</a><br></p></div><!--
+</pre><pre class="codeoutput">Reading example_data/GSM3204304_P_P_Expr.csv ...... done.
+Reading example_data/GSM3204305_P_N_Expr.csv ...... done.
+Reading example_data/GSM3044891_GeneExp.UMIs.10X1.txt ...... done.
+Library-size normalization...done.
+Log(x+1) transformation...done.
+</pre><img vspace="5" hspace="5" src="demo_script3_01.png" alt=""> <img vspace="5" hspace="5" src="demo_script3_02.png" alt=""> <img vspace="5" hspace="5" src="demo_script3_03.png" alt=""> <img vspace="5" hspace="5" src="demo_script3_04.png" alt=""> <img vspace="5" hspace="5" src="demo_script3_05.png" alt=""> <img vspace="5" hspace="5" src="demo_script3_06.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2021a</a><br></p></div><!--
 ##### SOURCE BEGIN #####
-%% Demonstration of Visualization Functions
-%% Load and pre-process three data sets, X, Y and Z
-%%
 cdgea; % set working directory
 [X,genelistx]=sc_readfile('example_data/GSM3204304_P_P_Expr.csv');
 [Y,genelisty]=sc_readfile('example_data/GSM3204305_P_N_Expr.csv');
@@ -127,9 +124,6 @@ cdgea; % set working directory
 [X,genelistx]=sc_selectg(X,genelistx,3,1);
 [Y,genelisty]=sc_selectg(Y,genelisty,3,1);
 [Z,genelistz]=sc_selectg(Z,genelistz,3,1);
-
-%% Intersection of common genes in X, Y and Z
-%%
 [genelist]=intersect(intersect(genelistx,genelisty,'stable'),genelistz,'stable');
 % Remove genes encoded in the mitochondrial genome
 i=startsWith(genelist,'MT-');
@@ -143,25 +137,13 @@ Z=Z(i3,:); genelistz=genelist;
 % [X]=sc_norm(X,'type','deseq');
 % [Y]=sc_norm(Y,'type','deseq');
 % [Z]=sc_norm(Z,'type','deseq');
-%% Label cells
-%
 cellidx=[1*ones(size(X,2),1); 2*ones(size(Y,2),1); 3*ones(size(Z,2),1)];
-
-%% PCA
-%
 [~,s]=pca([X Y Z]');
 gscatter(s(:,1),s(:,2),cellidx,'','',8);
-
-%% t-SNE
-%
 [s]=sc_tsne([X Y Z],2,false,true);
 gscatter(s(:,1),s(:,2),cellidx,'','',8);
-
-%% Diffusion Map
 [s]=run.diffuse([X Y Z]);
 gscatter(s(:,1),s(:,2),cellidx,'','',8);
-
-%% Scatter plots
 figure;
 gui.sc_scattergenes(X,genelistx,'mean_cv');
 
@@ -170,21 +152,13 @@ gui.sc_scattergenes(X,genelistx,'meanlg_varlg');
 
 figure;
 gui.sc_scattergenes(X,genelistx,'mean_dropr');
-
-%% 3D scatter plot with spline fit
-%
 figure;
 gui.sc_scatter3genes(X,genelistx,true,true);
-
-%% Feature selection and show top 50 differentially deviated (DD) genes
-%
 T=sc_splinefit2(X,Y,genelistx,genelisty);
 T=sortrows(T,size(T,2),'descend');
 [~,idx1]=ismember(table2array(T(:,1)),genelistx);
 [~,idx2]=ismember(table2array(T(:,1)),genelisty);
 figure;
-gui.sc_stem3(X(idx1,:),Y(idx2,:),genelistx(idx1),50);           
-
-%% The End
+gui.sc_stem3(X(idx1,:),Y(idx2,:),genelistx(idx1),50);
 ##### SOURCE END #####
 --></body></html>

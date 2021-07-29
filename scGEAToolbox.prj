@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.toolbox" plugin-version="1.0">
-  <configuration build-checksum="3136440651" file="C:\Users\jcai.AUTH\Documents\GitHub\scGEAToolbox\scGEAToolbox.prj" location="C:\Users\jcai.AUTH\Documents\GitHub\scGEAToolbox" name="scGEAToolbox" target="target.toolbox" target-name="Package Toolbox">
+  <configuration build-checksum="3136440651" file="U:\GitHub\scGEAToolbox\scGEAToolbox.prj" location="U:\GitHub\scGEAToolbox" name="scGEAToolbox" target="target.toolbox" target-name="Package Toolbox">
     <param.appname>scGEAToolbox</param.appname>
     <param.authnamewatermark>James Cai</param.authnamewatermark>
     <param.email>jcai@tamu.edu</param.email>
@@ -7,7 +7,7 @@
     <param.summary>Single-cell Gene Expression Analysis Toolbox</param.summary>
     <param.description>scRNAseq data analysis toolbox</param.description>
     <param.screenshot>${PROJECT_ROOT}\resources\sc_scatter.png</param.screenshot>
-    <param.version>21.7.28</param.version>
+    <param.version>21.7.29</param.version>
     <param.output>${PROJECT_ROOT}\scGEAToolbox.mltbx</param.output>
     <param.products.name>
       <item>Statistics and Machine Learning Toolbox</item>
@@ -16,7 +16,7 @@
       <item>19</item>
     </param.products.id>
     <param.products.version>
-      <item>12.0</item>
+      <item>12.1</item>
     </param.products.version>
     <param.platforms />
     <param.guid>6597c9c8-34b6-4fe4-a150-99bf81bbb77f</param.guid>
@@ -122,7 +122,7 @@ resources/STRING/stringdb_mouse.mat
     <param.getting.started.guide>${PROJECT_ROOT}\doc\GettingStarted.mlx</param.getting.started.guide>
     <param.matlabpath.excludes />
     <param.javaclasspath.excludes />
-    <param.exported.on.package>false</param.exported.on.package>
+    <param.exported.on.package>true</param.exported.on.package>
     <param.required.addons />
     <param.matlab.project.id />
     <param.matlab.project.name />
@@ -150,7 +150,6 @@ resources/STRING/stringdb_mouse.mat
       <param.apps />
       <param.matlabpath.excludes />
       <param.javaclasspath.excludes />
-      <param.exported.on.package />
       <param.required.addons />
       <param.matlab.project.id />
       <param.matlab.project.name />
@@ -179,13 +178,18 @@ resources/STRING/stringdb_mouse.mat
       <file>${PROJECT_ROOT}\cdgea.m</file>
       <file>${PROJECT_ROOT}\demo_Getting_Started.m</file>
       <file>${PROJECT_ROOT}\demo_script1.m</file>
+      <file>${PROJECT_ROOT}\demo_script1.mlx</file>
       <file>${PROJECT_ROOT}\demo_script2.m</file>
+      <file>${PROJECT_ROOT}\demo_script2.mlx</file>
       <file>${PROJECT_ROOT}\demo_script3.m</file>
+      <file>${PROJECT_ROOT}\demo_script3.mlx</file>
       <file>${PROJECT_ROOT}\demo_script4.m</file>
+      <file>${PROJECT_ROOT}\demo_script4.mlx</file>
       <file>${PROJECT_ROOT}\demo_script5.m</file>
+      <file>${PROJECT_ROOT}\demo_script5.mlx</file>
       <file>${PROJECT_ROOT}\demo_script6.m</file>
+      <file>${PROJECT_ROOT}\demo_script6.mlx</file>
       <file>${PROJECT_ROOT}\demos.xml</file>
-      <file>${PROJECT_ROOT}\DesktopToolset.xml</file>
       <file>${PROJECT_ROOT}\doc</file>
       <file>${PROJECT_ROOT}\docs</file>
       <file>${PROJECT_ROOT}\e_filtadjc.m</file>
@@ -212,6 +216,7 @@ resources/STRING/stringdb_mouse.mat
       <file>${PROJECT_ROOT}\sc_cellscore_ucell.m</file>
       <file>${PROJECT_ROOT}\sc_celltypecaller.m</file>
       <file>${PROJECT_ROOT}\sc_cluster_s.m</file>
+      <file>${PROJECT_ROOT}\sc_cluster_x.asv</file>
       <file>${PROJECT_ROOT}\sc_cluster_x.m</file>
       <file>${PROJECT_ROOT}\sc_deg.m</file>
       <file>${PROJECT_ROOT}\sc_filterc.m</file>
@@ -272,28 +277,21 @@ resources/STRING/stringdb_mouse.mat
     <fileset.depfun.excluded />
     <fileset.package />
     <build-deliverables>
-      <file location="${PROJECT_ROOT}" name="scGEAToolbox.mltbx" optional="false">C:\Users\jcai.AUTH\Documents\GitHub\scGEAToolbox\scGEAToolbox.mltbx</file>
+      <file location="${PROJECT_ROOT}" name="scGEAToolbox.mltbx" optional="false">U:\GitHub\scGEAToolbox\scGEAToolbox.mltbx</file>
     </build-deliverables>
     <workflow />
     <matlab>
-      <root>C:\Program Files\MATLAB\R2020B</root>
+      <root>C:\Program Files\MATLAB\R2021a</root>
       <toolboxes>
         <toolbox name="matlabcoder" />
-        <toolbox name="embeddedcoder" />
         <toolbox name="gpucoder" />
         <toolbox name="fixedpoint" />
-        <toolbox name="matlabhdlcoder" />
         <toolbox name="neuralnetwork" />
       </toolboxes>
       <toolbox>
         <matlabcoder>
           <enabled>true</enabled>
         </matlabcoder>
-      </toolbox>
-      <toolbox>
-        <embeddedcoder>
-          <enabled>true</enabled>
-        </embeddedcoder>
       </toolbox>
       <toolbox>
         <gpucoder>
@@ -304,11 +302,6 @@ resources/STRING/stringdb_mouse.mat
         <fixedpoint>
           <enabled>true</enabled>
         </fixedpoint>
-      </toolbox>
-      <toolbox>
-        <matlabhdlcoder>
-          <enabled>true</enabled>
-        </matlabhdlcoder>
       </toolbox>
       <toolbox>
         <neuralnetwork>

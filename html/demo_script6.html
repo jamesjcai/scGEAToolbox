@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Demonstration of DE Analysis and Marker Gene Identification Functions</title><meta name="generator" content="MATLAB 9.9"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2021-07-27"><meta name="DC.source" content="demo_script6.m"><style type="text/css">
+      --><title>demo_script6</title><meta name="generator" content="MATLAB 9.10"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2021-07-29"><meta name="DC.source" content="demo_script6.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -67,18 +67,18 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>Demonstration of DE Analysis and Marker Gene Identification Functions</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Load example data set, X</a></li><li><a href="#2">Automatically cluster cells and explore cell type</a></li><li><a href="#3">Show result of manually brushing cells and exploring cell type</a></li><li><a href="#4">Group cells into clusters (k=6)</a></li><li><a href="#5">Identify marker genes for cluster #4 against other clusters</a></li><li><a href="#6">Show expression level of top 9 marker genes</a></li><li><a href="#7">Show expression level of the top marker gene</a></li><li><a href="#8">Determine cell type for each cluster using marker genes (collected by PanglaoDB)</a></li><li><a href="#9">Another demo with example data of mouse pancreatic islet cells</a></li><li><a href="#10">Use the SC_SCATTER interactive tool</a></li><li><a href="#11">The End</a></li></ul></div><h2 id="1">Load example data set, X</h2><pre class="codeinput">cdgea; <span class="comment">% set working directory</span>
+  </style></head><body><div class="content"><pre class="codeinput">cdgea; <span class="comment">% set working directory</span>
 load <span class="string">example_data/markergeneident_demo</span> <span class="string">X</span> <span class="string">genelist</span> <span class="string">s_tsne</span>
 <span class="comment">% s_tsne is precomputed tSNE embedding</span>
-</pre><h2 id="2">Automatically cluster cells and explore cell type</h2><pre class="codeinput">figure;
+figure;
 gui.sc_celltypeexplorer_auto(X,genelist,s_tsne,<span class="string">"species"</span>,<span class="string">"mouse"</span>);
-</pre><img vspace="5" hspace="5" src="demo_script6_01.png" alt=""> <h2 id="3">Show result of manually brushing cells and exploring cell type</h2><p>To generate the figure: (1) run gui.sc_celltypeexplorer(X,genelist,s_tsne,"species","mouse") (2) brush and select cell cluster</p><pre class="codeinput">openfig(<span class="string">'example_data/markergeneident_demo.fig'</span>);
-</pre><img vspace="5" hspace="5" src="demo_script6_02.png" alt=""> <h2 id="4">Group cells into clusters (k=6)</h2><pre class="codeinput">figure;
+openfig(<span class="string">'example_data/markergeneident_demo.fig'</span>);
+figure;
 rng(1234)
 cluster_kmedoids=sc_cluster_s(s_tsne,6,<span class="string">'type'</span>,<span class="string">'kmedoids'</span>,<span class="string">'plotit'</span>,true);
-</pre><img vspace="5" hspace="5" src="demo_script6_03.png" alt=""> <h2 id="5">Identify marker genes for cluster #4 against other clusters</h2><pre class="codeinput">gmarkers=sc_pickmarkers(X,genelist,cluster_kmedoids,9);
+gmarkers=sc_pickmarkers(X,genelist,cluster_kmedoids,9);
 gmarkers=gmarkers{4};
-</pre><h2 id="6">Show expression level of top 9 marker genes</h2><pre class="codeinput">figure;
+figure;
 <span class="keyword">for</span> k=1:9
     g=gmarkers(k);
     subplot(3,3,k)
@@ -88,14 +88,19 @@ gmarkers=gmarkers{4};
 <span class="keyword">end</span>
 subplot(3,3,1)
 view([-25 90])
-</pre><img vspace="5" hspace="5" src="demo_script6_04.png" alt=""> <h2 id="7">Show expression level of the top marker gene</h2><pre class="codeinput">figure;
+figure;
 g=gmarkers(5);
 sc_scattermarker(X,genelist,s_tsne,g);
 <span class="comment">% sc_stemscatter(s_tsne(:,1), s_tsne(:,2), log2(1+X(genelist==g,:)));</span>
 title(g)
 view([-31.03 77.60])
-</pre><img vspace="5" hspace="5" src="demo_script6_05.png" alt=""> <h2 id="8">Determine cell type for each cluster using marker genes (collected by PanglaoDB)</h2><pre class="codeinput">Tct=run.alona(X,genelist,cluster_kmedoids,<span class="string">'species'</span>,<span class="string">'mouse'</span>)
-</pre><pre class="codeoutput">
+Tct=run.alona(X,genelist,cluster_kmedoids,<span class="string">'species'</span>,<span class="string">'mouse'</span>)
+load <span class="string">example_data/celltypeexplorer_demo_data.mat</span>
+gui.sc_celltypeexplorer(X,genelist,s_tsne,<span class="string">"species"</span>,<span class="string">"mouse"</span>);
+pause(3)
+</pre><pre class="codeoutput">Warning: Unable to obtain a change notification handle for
+U:\GitHub\scGEAToolbox\+run\thirdparty\alona_panglaodb2021. 
+
 Tct =
 
   10&times;12 table
@@ -114,39 +119,19 @@ Tct =
     "Endothelial cells"       19.578       "Pericytes"                         23.549       "Pericytes"                         23.601       "Adipocyte stem cells (ASCs)"       19.103       "Erythroid-like and erythroid precursor cells"       15.609       "Podocytes"                         22.117   
     "Monocytes"               19.537       "Mesothelial cells"                 22.833       "Mesothelial cells"                 21.869       "Stromal cells"                     18.654       "Neurons"                                            15.561       "Adipocytes"                        21.112   
 
-</pre><h2 id="9">Another demo with example data of mouse pancreatic islet cells</h2><pre class="codeinput">load <span class="string">example_data/celltypeexplorer_demo_data.mat</span>
-gui.sc_celltypeexplorer(X,genelist,s_tsne,<span class="string">"species"</span>,<span class="string">"mouse"</span>);
-pause(3)
-</pre><img vspace="5" hspace="5" src="demo_script6_06.png" alt=""> <h2 id="10">Use the SC_SCATTER interactive tool</h2><pre class="codeinput">sc_scatter(X,genelist,s_tsne)
-</pre><img vspace="5" hspace="5" src="demo_script6_07.png" alt=""> <h2 id="11">The End</h2><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2020b</a><br></p></div><!--
+</pre><img vspace="5" hspace="5" src="demo_script6_01.png" alt=""> <img vspace="5" hspace="5" src="demo_script6_02.png" alt=""> <img vspace="5" hspace="5" src="demo_script6_03.png" alt=""> <img vspace="5" hspace="5" src="demo_script6_04.png" alt=""> <img vspace="5" hspace="5" src="demo_script6_05.png" alt=""> <img vspace="5" hspace="5" src="demo_script6_06.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2021a</a><br></p></div><!--
 ##### SOURCE BEGIN #####
-%% Demonstration of DE Analysis and Marker Gene Identification Functions
-%% Load example data set, X
-%
 cdgea; % set working directory
 load example_data/markergeneident_demo X genelist s_tsne
 % s_tsne is precomputed tSNE embedding
-%% Automatically cluster cells and explore cell type
 figure;
 gui.sc_celltypeexplorer_auto(X,genelist,s_tsne,"species","mouse");
-%% Show result of manually brushing cells and exploring cell type
-% To generate the figure:
-% (1) run gui.sc_celltypeexplorer(X,genelist,s_tsne,"species","mouse")
-% (2) brush and select cell cluster
 openfig('example_data/markergeneident_demo.fig');
-
-%% Group cells into clusters (k=6)
-%
 figure;
 rng(1234)
 cluster_kmedoids=sc_cluster_s(s_tsne,6,'type','kmedoids','plotit',true);
-
-%% Identify marker genes for cluster #4 against other clusters
-%
 gmarkers=sc_pickmarkers(X,genelist,cluster_kmedoids,9);
 gmarkers=gmarkers{4};
-%% Show expression level of top 9 marker genes
-%
 figure;
 for k=1:9
     g=gmarkers(k);
@@ -157,29 +142,15 @@ for k=1:9
 end
 subplot(3,3,1)
 view([-25 90])
-%% Show expression level of the top marker gene
-%
 figure;
 g=gmarkers(5);
 sc_scattermarker(X,genelist,s_tsne,g);
 % sc_stemscatter(s_tsne(:,1), s_tsne(:,2), log2(1+X(genelist==g,:)));
 title(g)
 view([-31.03 77.60])
-
-%% Determine cell type for each cluster using marker genes (collected by PanglaoDB) 
-%
 Tct=run.alona(X,genelist,cluster_kmedoids,'species','mouse')
-
-%% Another demo with example data of mouse pancreatic islet cells
-%
 load example_data/celltypeexplorer_demo_data.mat
 gui.sc_celltypeexplorer(X,genelist,s_tsne,"species","mouse");
 pause(3)
-
-%% Use the SC_SCATTER interactive tool
-%
-sc_scatter(X,genelist,s_tsne)
-
-%% The End
 ##### SOURCE END #####
 --></body></html>
