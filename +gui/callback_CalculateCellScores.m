@@ -2,10 +2,10 @@ function callback_CalculateCellScores(src,~)
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
 
-    species=questdlg('Use predefined score type or select genes?',...
-        'Select Score Type','Select Predefined Score',...
-        'Customize Score','Select Predefined Score');
-switch species
+    actiontype=questdlg('Select a predefined score or define a new score?',...
+        'Select/Define Score','Select Predefined Score',...
+        'Define New Score','Select Predefined Score');
+switch actiontype
     case 'Select Predefined Score'
         [~,T]=pkg.e_cellscores(sce.X,sce.g,0);
 
@@ -19,7 +19,7 @@ switch species
         ttxt=T.ScoreType(indx);
         gui.gui_waitbar(fw);
         
-    case 'Customize Score'
+    case 'Define New Score'
         ttxt='Customized Score';
         % Pd1=pdcd1 tim3=HAVCR2, tcf1=HNF1A  https://www.nature.com/articles/s41577-019-0221-9    
         % posgcandidates=["PDCD1","HNF1A","HAVCR2","KLRG1","CD44","LY6C","CTLA","ICOS","LAG3"];
