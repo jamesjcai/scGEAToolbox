@@ -58,9 +58,11 @@ r=corr(t,X','type','spearman'); % Calculate linear correlation between gene expr
 selectedg=genelist([idxp idxn]);
 
 % Plot expression profile of the 5 selected genes
+try
 figure;
 i_plot_pseudotimeseries(log(1+X),genelist,t,selectedg)
-
+catch
+end
 %% Construct single-cell gene regulatory network (scGRN)
 
 %% Using principal component regression (PCNet) method

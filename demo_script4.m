@@ -43,8 +43,6 @@ scatter(s(:,1),s(:,2),20,cellidx,'filled')
 t=readtable('example_data\yan_celltype.txt');
 celltypelist=string(t.cell_type1);
 rng(235); showlegend=true;
-% rng(111); showlegend=false;
-% rng(113); showlegend=true;
 
 s=sc_tsne(X,2);
 c1=run.SC3(X,6);

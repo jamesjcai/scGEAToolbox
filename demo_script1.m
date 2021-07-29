@@ -55,9 +55,9 @@ batchidx=[1*ones(size(X,2),1); 2*ones(size(Y,2),1)];
 
 figure;
 subplot(2,2,1)
-[s]=sc_tsne([X Y]);
+[s]=sc_tsne([X Y],2,false,false,false);
 gscatter(s(:,1),s(:,2),batchidx,'','',5);
 subplot(2,2,2)
-[s]=sc_tsne([Xn Yn]);
+[s]=sc_tsne([Xn Yn],2,false,false,false);
 gscatter(s(:,1),s(:,2),batchidx,'','',5);
 %% The End
