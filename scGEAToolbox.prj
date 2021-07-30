@@ -193,7 +193,6 @@ resources/STRING/stringdb_mouse.mat
       <file>${PROJECT_ROOT}\demo_script6.m</file>
       <file>${PROJECT_ROOT}\demo_script6.mlx</file>
       <file>${PROJECT_ROOT}\demos.xml</file>
-      <file>${PROJECT_ROOT}\DesktopToolset.xml</file>
       <file>${PROJECT_ROOT}\doc</file>
       <file>${PROJECT_ROOT}\docs</file>
       <file>${PROJECT_ROOT}\e_filtadjc.m</file>
