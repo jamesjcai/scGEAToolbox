@@ -23,8 +23,8 @@ switch actiontype
         ttxt='Customized Score';
         % Pd1=pdcd1 tim3=HAVCR2, tcf1=HNF1A  https://www.nature.com/articles/s41577-019-0221-9    
         % posgcandidates=["PDCD1","HNF1A","HAVCR2","KLRG1","CD44","LY6C","CTLA","ICOS","LAG3"];
-        posgcandidates=sce.g(randi(length(sce.g),10,1));
-        [posg]=gui.i_selectngenes(sce.g,posgcandidates);
+        %posgcandidates=sce.g(randi(length(sce.g),10,1));
+        [posg]=gui.i_selectngenes(sce.g);
         if isempty(posg)
             helpdlg('No feature genes selected.')
             return;
@@ -43,7 +43,7 @@ end
     title(strrep(ttxt,'_','\_'))
     
     
-    answer2 = questdlg(sprintf('CELL_SCORE has been computed.\nCompare it across cell classes?'));
+    answer2 = questdlg(sprintf('Score has been computed.\nCompare the score across cell classes?'),'Continue?');
     switch answer2
         case 'Yes'
     

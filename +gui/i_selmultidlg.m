@@ -8,9 +8,9 @@ if ~iscell(genelist)
 end
 if ~isempty(predefinedlist) 
     if ~iscell(predefinedlist)
-        predefinedlist=cellstr(predefinedlist);
+        %predefinedlist=cellstr(predefinedlist);
     end
-    predefinedlist=genelist(matches(genelist,predefinedlist,'IgnoreCase',true));
+    %predefinedlist=genelist(matches(genelist,predefinedlist,'IgnoreCase',true));
 end
 if ~isempty(predefinedlist)
     inlist=setxor(genelist,predefinedlist,'stable');

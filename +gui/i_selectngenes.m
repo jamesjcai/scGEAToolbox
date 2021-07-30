@@ -15,8 +15,8 @@ if ~isempty(predefinedlist)
     predefinedlist=gsorted(matches(gsorted,predefinedlist,'IgnoreCase',true));
 end
 
-answer = questdlg('Paste or select genes?',...
-	'','Paste','Select','Cancel','Paste');
+answer = questdlg('Select genes from list or paste gene names?',...
+	'Select/Paste Genes','Select','Paste','Cancel','Select');
 switch answer
     case 'Cancel'
         return;
