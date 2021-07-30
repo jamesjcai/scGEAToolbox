@@ -1,0 +1,10 @@
+# setwd("U:\\GitHub\\scGEAToolbox\\+run\\thirdparty\\R_UCell")
+suppressMessages(library(R.matlab))
+suppressMessages(library(UCell))
+mat<-readMat("input.mat")
+pbmc.counts<-mat$X
+rownames(pbmc.counts) <- make.unique(unlist(mat$genelist))
+markers <- list()
+markers$scoretype <- unlist(mat$tgsPos)
+scores <- ScoreSignatures_UCell(pbmc.counts, features=markers)
+write.csv(scores,file="output.csv")

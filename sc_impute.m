@@ -5,7 +5,7 @@ function [X]=sc_impute(X,varargin)
 
 p = inputParser;
 defaultType = 'MAGIC';
-validTypes = {'MAGIC','McImpute'};
+validTypes = {'MAGIC','McImpute','SAVER'};
 checkType = @(x) any(validatestring(x,validTypes));
 
 addRequired(p,'X',@isnumeric);
@@ -18,5 +18,7 @@ switch lower(p.Results.type)
         [X]=run.MAGIC(X,true);
     case 'McImpute'
         [X]=run.McImpute(X,true);
+    case 'SAVER'
+        [X]=run.SAVER(X);
 end
 end

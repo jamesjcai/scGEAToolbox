@@ -4,6 +4,7 @@ if nargin<3, mtratio=0.1; end
 if nargin<4, mtgenenamepat="mt-"; end
 if nargin<5, vebrose=false; end
 
+assert(size(X,1)==length(genelist))
 idx=startsWith(genelist,mtgenenamepat,'IgnoreCase',true);
 if sum(idx)>0
     if vebrose

@@ -9,6 +9,14 @@
         {"name":"plotit", "kind":"namevalue", "type":["logical","scalar"]}
 	]
 },
+"sc_impute":
+{
+	"inputs":
+	[
+		{"name":"X", "kind":"required", "type":"numeric"},
+		{"name":"type", "kind":"namevalue","type":["char", "choices={'MAGIC','McImpute','SAVER'}"]}
+	]
+},
 "sc_readfile":
 {
 	"inputs":
