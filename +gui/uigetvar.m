@@ -54,8 +54,27 @@ if ~isempty(variableclass)
   par.varlist(k) = [];
 end
 
-% set up the uigetvar gui ...
 
+% set up the uigetvar gui ...
+if isempty(par.varlist)
+   errordlg('No variable SCE in Workspace.'); 
+else
+   [indx,tf] = listdlg('ListString',{par.varlist.name},...
+        'SelectionMode','single');
+    if tf~=1
+        par.variable = [];
+        par.varname = '';
+    else
+        val = get(par.vars,'value');
+        val = val(1);
+        
+        % we need to return the variable name as well
+        % as the contents
+        par.varname = par.varlist(val).name;
+        par.variable = evalin('base',par.varname);
+    end
+end
+return;
 % open up a figure window
 par.fig = figure('Color',[0.8 0.8 0.8], ...
   'Units','normalized', ...

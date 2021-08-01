@@ -30,7 +30,8 @@ switch actiontype
             return;
         end
         fw=gui.gui_waitbar;
-        posg
+        ttxt=sprintf('Customized Score\n%s',sprintf('%s+',posg));
+        
         cs=sc_cellscore(sce.X,sce.g,posg);
         gui.gui_waitbar(fw);
     otherwise
