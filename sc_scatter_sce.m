@@ -409,10 +409,12 @@ uimenu(m,'Text','Calculate Gene Expression Statistics...',...
 %mm=uimenu(m,'Text','Calculate Cell Scores');
 % uimenu(mm,'Text','Calculate Cell Scores from List of Feature Genes...',...
 %     'Callback',@callback_CalculateCellScores);
-uimenu(m,'Text','T Cell Exhaustion Scores...',...
+uimenu(m,'Text','T Cell Exhaustion Score...',...
     'Callback',@callback_TCellExhaustionScores);
 uimenu(m,'Text','GEO Accession to SCE...',...
      'Callback',@GEOAccessionToSCE);
+uimenu(m,'Text','MELD Perturbation Score...',...
+    'Callback',@callback_MELDPerturbationScore); 
 
 
 
@@ -1040,14 +1042,14 @@ end
         guidata(FigureHandle,sce);
     end
 
-%     function i_deletecells(ptsSelected)
-%         sce = sce.removecells(ptsSelected);
-%         [c, cL] = grp2idx(sce.c);
-%         [ax, bx] = view();
-%         h = gui.i_gscatter3(sce.s, c);
-%         title(sce.title);
-%         view(ax, bx);
-%     end
+    function i_deletecells(ptsSelected)
+        sce = sce.removecells(ptsSelected);
+        [c, cL] = grp2idx(sce.c);
+        [ax, bx] = view();
+        h = gui.i_gscatter3(sce.s, c);
+        title(sce.title);
+        view(ax, bx);
+    end
 
     function DrawTrajectory(~, ~)
         answer = questdlg('Which method?', 'Select Algorithm', ...

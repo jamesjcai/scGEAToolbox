@@ -1,8 +1,9 @@
 function callback_TCellExhaustionScores(src,~)
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
-
+    fw=gui.gui_waitbar;
     cs=pkg.e_cellscores(sce.X,sce.g,"T_Cell_Exhaustion");
+    gui.gui_waitbar(fw);
     figure;
     gui.i_stemscatter(sce.s,cs);
     zlabel('Score Value')
