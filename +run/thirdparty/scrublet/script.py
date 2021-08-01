@@ -7,7 +7,7 @@ os.chdir(dname)
 import pandas as pd
 import scrublet as scr
 
-counts=pd.read_csv("input.txt").values
+counts=pd.read_csv("input.txt",header=None).values
 scrub = scr.Scrublet(counts.T)
 doublet_scores, predicted_doublets = scrub.scrub_doublets()
 
