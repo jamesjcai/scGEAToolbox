@@ -6,6 +6,10 @@ function sc_scatter(X, genelist, s, c)
     %
     %   See also SC_SCATTER_SCE.
 
+if usejava('jvm') && ~feature('ShowFigureWindows')
+    error('MATLAB is in a text mode. This function requires a GUI-mode.');
+end
+
     if nargin < 1
         list={'SCE Data File (*.mat)...',...
               '10x Genomics File (*.mtx)...',...

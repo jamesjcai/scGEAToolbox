@@ -1,5 +1,8 @@
 function varargout = sc_scatter_sce(sce, varargin)
 
+if usejava('jvm') && ~feature('ShowFigureWindows')
+    error('MATLAB is in a text mode. This function requires a GUI-mode.');
+end
 if nargin < 1
     error('Usage: sc_scatter_sce(sce)');
 end
