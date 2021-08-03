@@ -2,12 +2,12 @@ function [isDoublet,doubletscore]=scrublet(X)
 
 oldpth=pwd();
 pw1=fileparts(mfilename('fullpath'));
-wrkpth=fullfile(pw1,'thirdparty','scrublet');
+wrkpth=fullfile(pw1,'thirdparty','py_scrublet');
 cd(wrkpth);
 
-if exist('input.txt','file'), delete('input.txt'); end
-if exist('output1.txt','file'), delete('output1.txt'); end
-if exist('output2.txt','file'), delete('output2.txt'); end
+if exist('./input.txt','file'), delete('./input.txt'); end
+if exist('./output1.txt','file'), delete('./output1.txt'); end
+if exist('./output2.txt','file'), delete('./output2.txt'); end
 
 writematrix(X,'input.txt');
 
@@ -26,9 +26,9 @@ else
     doubletscore=[];
 end
 
-if exist('input.txt','file'), delete('input.txt'); end
-if exist('output1.txt','file'), delete('output1.txt'); end
-if exist('output2.txt','file'), delete('output2.txt'); end
+if exist('./input.txt','file'), delete('./input.txt'); end
+if exist('./output1.txt','file'), delete('./output1.txt'); end
+if exist('./output2.txt','file'), delete('./output2.txt'); end
 cd(oldpth);
 end
 

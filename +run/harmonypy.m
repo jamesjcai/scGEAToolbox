@@ -3,10 +3,10 @@ if nargin<3, usepylib=false; end
 if nargin<2, error('[s]=run.harmonypy(s,batchid)'); end
 oldpth=pwd();
 pw1=fileparts(mfilename('fullpath'));
-wrkpth=fullfile(pw1,'thirdparty','harmonypy');
+wrkpth=fullfile(pw1,'thirdparty','py_harmonypy');
 cd(wrkpth);
 
-if exist('output.csv','file'), delete('output.csv'); end
+if exist('./output.csv','file'), delete('./output.csv'); end
 %writematrix(s,'input1.csv');
 writetable(array2table(s),'input1.csv');
 batchidx=matlab.lang.makeValidName(string(batchid));
@@ -35,9 +35,9 @@ else
         sout=[];
     end
 end
-if exist('input1.csv','file'), delete('input1.csv'); end
-if exist('input2.csv','file'), delete('input2.csv'); end
-if exist('output.csv','file'), delete('output.csv'); end
+if exist('./input1.csv','file'), delete('./input1.csv'); end
+if exist('./input2.csv','file'), delete('./input2.csv'); end
+if exist('./output.csv','file'), delete('./output.csv'); end
 cd(oldpth);
 end
 

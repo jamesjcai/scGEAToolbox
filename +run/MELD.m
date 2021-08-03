@@ -6,11 +6,11 @@ function [sample_likelihoods,T]=MELD(X,batchid,usematinput)
 if nargin<3, usematinput=true; end
 if nargin<2
     %batchid=string([true(ceil(size(X,2)/2),1); false(floor(size(X,2)/2),1)]);
-    error('USAGE: score=MELD(X,batchid)');
+    error('USAGE: score=run.MELD(X,batchid)');
 end
 oldpth=pwd();
 pw1=fileparts(mfilename('fullpath'));
-wrkpth=fullfile(pw1,'thirdparty','MELD');
+wrkpth=fullfile(pw1,'thirdparty','py_MELD');
 cd(wrkpth);
 
 if exist('./batchid.txt','file'), delete('./batchid.txt'); end

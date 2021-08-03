@@ -4,11 +4,11 @@ if nargin<3, usepylib=true; end
 if nargin<2, drdistin=[]; end
 oldpth=pwd();
 pw1=fileparts(mfilename('fullpath'));
-wrkpth=fullfile(pw1,'thirdparty','gseapy');
+wrkpth=fullfile(pw1,'thirdparty','py_gseapy');
 cd(wrkpth);
 
-if exist('input.txt','file'), delete('input.txt'); end
-if exist('output.txt','file'), delete('output.txt'); end
+if exist('./input.txt','file'), delete('./input.txt'); end
+if exist('./output.txt','file'), delete('./output.txt'); end
 
 
 genelist=upper(genelist);
@@ -53,7 +53,7 @@ else
         s=[];
     end    
 end
-%if exist('input.txt','file'), delete('input.txt'); end
-%if exist('output.txt','file'), delete('output.txt'); end
+if exist('./input.txt','file'), delete('./input.txt'); end
+if exist('./output.txt','file'), delete('./output.txt'); end
 cd(oldpth);
 end

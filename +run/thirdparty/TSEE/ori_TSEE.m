@@ -1,4 +1,4 @@
-function [s]=TSEE(X,t)
+function [s]=ori_TSEE(X,t)
 
 % https://bmcgenomics.biomedcentral.com/articles/10.1186/s12864-019-5477-8
 % TSEE: an elastic embedding method to visualize the dynamic gene 

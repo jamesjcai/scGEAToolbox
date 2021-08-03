@@ -5,12 +5,12 @@ function [isDoublet,doubletscore]=doubletdetection(X)
     
 oldpth=pwd();
 pw1=fileparts(mfilename('fullpath'));
-wrkpth=fullfile(pw1,'thirdparty','doubletdetection');
+wrkpth=fullfile(pw1,'thirdparty','py_doubletdetection');
 cd(wrkpth);
 
-if exist('input.txt','file'), delete('input.txt'); end
-if exist('output1.txt','file'), delete('output1.txt'); end
-if exist('output2.txt','file'), delete('output2.txt'); end
+if exist('./input.txt','file'), delete('./input.txt'); end
+if exist('./output1.txt','file'), delete('./output1.txt'); end
+if exist('./output2.txt','file'), delete('./output2.txt'); end
 
 
 writematrix(X,'input.txt');
@@ -28,9 +28,9 @@ if status==0 && exist('output1.txt','file')
     doubletscore=readmatrix('output2.txt');
 end
 
-if exist('input.txt','file'), delete('input.txt'); end
-if exist('output1.txt','file'), delete('output1.txt'); end
-if exist('output2.txt','file'), delete('output2.txt'); end
+if exist('./input.txt','file'), delete('./input.txt'); end
+if exist('./output1.txt','file'), delete('./output1.txt'); end
+if exist('./output2.txt','file'), delete('./output2.txt'); end
 cd(oldpth);
 end
 
