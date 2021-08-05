@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.toolbox" plugin-version="1.0">
-  <configuration build-checksum="3136440651" file="U:\GitHub\scGEAToolbox\scGEAToolbox.prj" location="U:\GitHub\scGEAToolbox" name="scGEAToolbox" target="target.toolbox" target-name="Package Toolbox">
+  <configuration build-checksum="2783938160" file="U:\GitHub\scGEAToolbox\scGEAToolbox.prj" location="U:\GitHub\scGEAToolbox" name="scGEAToolbox" target="target.toolbox" target-name="Package Toolbox">
     <param.appname>scGEAToolbox</param.appname>
     <param.authnamewatermark>James Cai</param.authnamewatermark>
     <param.email>jcai@tamu.edu</param.email>
@@ -7,17 +7,11 @@
     <param.summary>Single-cell Gene Expression Analysis Toolbox</param.summary>
     <param.description>scRNAseq data analysis toolbox</param.description>
     <param.screenshot>${PROJECT_ROOT}\resources\sc_scatter.png</param.screenshot>
-    <param.version>21.8.1</param.version>
+    <param.version>21.8.4</param.version>
     <param.output>${PROJECT_ROOT}\scGEAToolbox.mltbx</param.output>
-    <param.products.name>
-      <item>Statistics and Machine Learning Toolbox</item>
-    </param.products.name>
-    <param.products.id>
-      <item>19</item>
-    </param.products.id>
-    <param.products.version>
-      <item>12.1</item>
-    </param.products.version>
+    <param.products.name />
+    <param.products.id />
+    <param.products.version />
     <param.platforms />
     <param.guid>6597c9c8-34b6-4fe4-a150-99bf81bbb77f</param.guid>
     <param.exclude.filters>% List files contained in your toolbox folder that you would like to exclude
@@ -46,75 +40,13 @@
 **/example_data
 resources/STRING/stringdb_human.mat
 resources/STRING/stringdb_mouse.mat
-.gitignore</param.exclude.filters>
+.gitignore
+**/.Rhistory
+sc_tenifoldnet.m
+sc_pcnetdenoised.m
+**/html</param.exclude.filters>
     <param.exclude.pcodedmfiles>true</param.exclude.pcodedmfiles>
-    <param.examples>&lt;?xml version="1.0" encoding="utf-8"?&gt;
-&lt;examples&gt;
-   &lt;exampleCategory name="scGEAToolbox"&gt;
-      &lt;example name="demo_script1" type="html"&gt;
-         &lt;file type="source"&gt;/html/demo_script1.html&lt;/file&gt;
-         &lt;file type="main"&gt;/demo_script1.m&lt;/file&gt;
-         &lt;file type="thumbnail"&gt;/html/demo_script1.png&lt;/file&gt;
-         &lt;file type="image"&gt;/html/demo_script1_01.png&lt;/file&gt;
-         &lt;file type="image"&gt;/html/demo_script1_02.png&lt;/file&gt;
-         &lt;file type="image"&gt;/html/demo_script1_03.png&lt;/file&gt;
-         &lt;file type="image"&gt;/html/demo_script1_04.png&lt;/file&gt;
-         &lt;file type="image"&gt;/html/demo_script1_05.png&lt;/file&gt;
-         &lt;file type="image"&gt;/html/demo_script1_06.png&lt;/file&gt;
-         &lt;file type="image"&gt;/html/demo_script1_07.png&lt;/file&gt;
-         &lt;file type="image"&gt;/html/demo_script1_08.png&lt;/file&gt;
-      &lt;/example&gt;
-      &lt;example name="demo_script2" type="html"&gt;
-         &lt;file type="source"&gt;/html/demo_script2.html&lt;/file&gt;
-         &lt;file type="main"&gt;/demo_script2.m&lt;/file&gt;
-         &lt;file type="thumbnail"&gt;/html/demo_script2.png&lt;/file&gt;
-         &lt;file type="image"&gt;/html/demo_script2_01.png&lt;/file&gt;
-         &lt;file type="image"&gt;/html/demo_script2_02.png&lt;/file&gt;
-         &lt;file type="image"&gt;/html/demo_script2_03.png&lt;/file&gt;
-      &lt;/example&gt;
-      &lt;example name="demo_script3" type="html"&gt;
-         &lt;file type="source"&gt;/html/demo_script3.html&lt;/file&gt;
-         &lt;file type="main"&gt;/demo_script3.m&lt;/file&gt;
-         &lt;file type="thumbnail"&gt;/html/demo_script3.png&lt;/file&gt;
-         &lt;file type="image"&gt;/html/demo_script3_01.png&lt;/file&gt;
-         &lt;file type="image"&gt;/html/demo_script3_02.png&lt;/file&gt;
-         &lt;file type="image"&gt;/html/demo_script3_03.png&lt;/file&gt;
-         &lt;file type="image"&gt;/html/demo_script3_04.png&lt;/file&gt;
-         &lt;file type="image"&gt;/html/demo_script3_05.png&lt;/file&gt;
-         &lt;file type="image"&gt;/html/demo_script3_06.png&lt;/file&gt;
-      &lt;/example&gt;
-      &lt;example name="demo_script4" type="html"&gt;
-         &lt;file type="source"&gt;/html/demo_script4.html&lt;/file&gt;
-         &lt;file type="main"&gt;/demo_script4.m&lt;/file&gt;
-         &lt;file type="thumbnail"&gt;/html/demo_script4.png&lt;/file&gt;
-         &lt;file type="image"&gt;/html/demo_script4_01.png&lt;/file&gt;
-         &lt;file type="image"&gt;/html/demo_script4_02.png&lt;/file&gt;
-         &lt;file type="image"&gt;/html/demo_script4_03.png&lt;/file&gt;
-      &lt;/example&gt;
-      &lt;example name="demo_script5" type="html"&gt;
-         &lt;file type="source"&gt;/html/demo_script5.html&lt;/file&gt;
-         &lt;file type="main"&gt;/demo_script5.m&lt;/file&gt;
-         &lt;file type="thumbnail"&gt;/html/demo_script5.png&lt;/file&gt;
-         &lt;file type="image"&gt;/html/demo_script5_01.png&lt;/file&gt;
-         &lt;file type="image"&gt;/html/demo_script5_02.png&lt;/file&gt;
-         &lt;file type="image"&gt;/html/demo_script5_03.png&lt;/file&gt;
-         &lt;file type="image"&gt;/html/demo_script5_04.png&lt;/file&gt;
-         &lt;file type="image"&gt;/html/demo_script5_05.png&lt;/file&gt;
-         &lt;file type="image"&gt;/html/demo_script5_06.png&lt;/file&gt;
-      &lt;/example&gt;
-      &lt;example name="demo_script6" type="html"&gt;
-         &lt;file type="source"&gt;/html/demo_script6.html&lt;/file&gt;
-         &lt;file type="main"&gt;/demo_script6.m&lt;/file&gt;
-         &lt;file type="thumbnail"&gt;/html/demo_script6.png&lt;/file&gt;
-         &lt;file type="image"&gt;/html/demo_script6_01.png&lt;/file&gt;
-         &lt;file type="image"&gt;/html/demo_script6_02.png&lt;/file&gt;
-         &lt;file type="image"&gt;/html/demo_script6_03.png&lt;/file&gt;
-         &lt;file type="image"&gt;/html/demo_script6_04.png&lt;/file&gt;
-         &lt;file type="image"&gt;/html/demo_script6_05.png&lt;/file&gt;
-         &lt;file type="image"&gt;/html/demo_script6_06.png&lt;/file&gt;
-      &lt;/example&gt;
-   &lt;/exampleCategory&gt;
-&lt;/examples&gt;</param.examples>
+    <param.examples />
     <param.demosxml />
     <param.apps />
     <param.registered.apps>
@@ -146,8 +78,12 @@ resources/STRING/stringdb_mouse.mat
       <param.email />
       <param.company />
       <param.output />
+      <param.products.name />
+      <param.products.id />
+      <param.products.version />
       <param.platforms />
       <param.exclude.pcodedmfiles />
+      <param.examples />
       <param.demosxml />
       <param.apps />
       <param.matlabpath.excludes />
@@ -193,12 +129,12 @@ resources/STRING/stringdb_mouse.mat
       <file>${PROJECT_ROOT}\demo_script6.m</file>
       <file>${PROJECT_ROOT}\demo_script6.mlx</file>
       <file>${PROJECT_ROOT}\demos.xml</file>
+      <file>${PROJECT_ROOT}\DesktopToolset.xml</file>
       <file>${PROJECT_ROOT}\doc</file>
       <file>${PROJECT_ROOT}\docs</file>
       <file>${PROJECT_ROOT}\e_filtadjc.m</file>
       <file>${PROJECT_ROOT}\fun_cmp_clusters.m</file>
       <file>${PROJECT_ROOT}\fun_num_clusters.m</file>
-      <file>${PROJECT_ROOT}\html</file>
       <file>${PROJECT_ROOT}\i_plot_pseudotimeseries.m</file>
       <file>${PROJECT_ROOT}\i_pseudotime_by_princurve.m</file>
       <file>${PROJECT_ROOT}\i_pseudotime_by_splinefit.m</file>
@@ -237,7 +173,6 @@ resources/STRING/stringdb_mouse.mat
       <file>${PROJECT_ROOT}\sc_mtratio.m</file>
       <file>${PROJECT_ROOT}\sc_norm.m</file>
       <file>${PROJECT_ROOT}\sc_pcnet.m</file>
-      <file>${PROJECT_ROOT}\sc_pcnetdenoised.m</file>
       <file>${PROJECT_ROOT}\sc_pcnetpar.m</file>
       <file>${PROJECT_ROOT}\sc_phate.m</file>
       <file>${PROJECT_ROOT}\sc_pickmarkers.m</file>
@@ -266,7 +201,6 @@ resources/STRING/stringdb_mouse.mat
       <file>${PROJECT_ROOT}\sc_splinefit.m</file>
       <file>${PROJECT_ROOT}\sc_splinefit2.m</file>
       <file>${PROJECT_ROOT}\sc_ssnet.m</file>
-      <file>${PROJECT_ROOT}\sc_tenifoldnet.m</file>
       <file>${PROJECT_ROOT}\sc_trajectory.m</file>
       <file>${PROJECT_ROOT}\sc_transform.m</file>
       <file>${PROJECT_ROOT}\sc_tsne.m</file>

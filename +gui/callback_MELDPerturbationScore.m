@@ -26,10 +26,13 @@ function callback_MELDPerturbationScore(src,~)
         end 
             gui.gui_waitbar(fw);
 
-        figure;
+        FigureHandle=figure;
         gui.i_gscatter3(sce.s,score(:,2));
+        colorbar
+        defaultToolbar = findall(FigureHandle, 'tag','FigureToolBar');  % get the figure's toolbar handle
+        gui.add_3dcamera(defaultToolbar, 'MELD_Scores');
         
-        labels = {'Save score values to variable named:'}; 
+        labels = {'Save score values to variable named:','Save score table to variable named:'};
         vars = {'MELDScores','MELDTable'};
         values = {score,T};
         export2wsdlg(labels,vars,values);

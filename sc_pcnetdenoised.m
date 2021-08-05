@@ -4,6 +4,11 @@ function A=sc_pcnetdenoised(X,varargin)
 %
 % X is gene x cell matrix
 % 
+
+if exist('sctenifoldnet','file')~=2
+    error('Requires sctenifoldnet.m');
+end
+
     if nargin<1
         error(sprintf('USAGE: A=sc_pcnetdenoised(X);\n       A=sc_pcnetdenoised(X,''smplmethod'',''Jackknife'');'));
     end
