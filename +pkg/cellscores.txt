@@ -1,5 +1,5 @@
 ScoreType	PositiveMarkers	NegativeMarkers	Reference
-T_Cell_Exhaustion	CD69,PDCD1,TGFB1,CTLA4,SPN,LAG3		https://doi.org/10.1172/jci.insight.126453
+T_Cell_Exhaustion	CD69,PDCD1,TGFB1,CTLA4,SPN,LAG3,EOMES,CXCR6,CD160,CD244,IL10,TIM3		Source: Alaina Dougall/Summer Training
 Li (2019) Mature macrophage	CD45,Adgre1,Lyz2		https://doi.org/10.1172/jci.insight.126453
 Li (2019) M1 macrophage	Nos2,CD86,Tnf,Oasl2,Cd274,Zbp1,Ly6e,Tspo,Sepw1,Irgm1,Gbp5,Psmb9,Ccl5,Ly6a,Gbp2,Irf7,Isg15,Igtp,Gbp4,Fam26f	Chil3,Arg1,RETNLB,Mgl2,Mcf2l,Smap2,Cd300ld,Csf2rb,Vwf,Timp2,Il6st,Igf1,Tmem26,Arg1,Igfbp4,Maf,Wwp1,Pcp4l1,Rgs10,Sepp1,C5ar1,Hpgds,Dpep2,Bmyc,Clec12a	https://doi.org/10.1172/jci.insight.126453
 Li (2019) M2 macrophage	Chil3,Arg1,RETNLB,Mgl2,Mcf2l,Smap2,Cd300ld,Csf2rb,Vwf,Timp2,Il6st,Igf1,Tmem26,Arg1	Nos2,CD86,Tnf,Oasl2,Cd274,Zbp1,Ly6e,Tspo,Sepw1,Irgm1,Gbp5,Psmb9,Ccl5,Ly6a,Igfbp4,Maf,Wwp1,Pcp4l1,Sepp1,C5ar1,Hpgds,Dpep2,Bmyc,Clec12a,Gbp2,Irf7,Isg15,Igtp,Gbp4,Fam26f	https://doi.org/10.1172/jci.insight.126453

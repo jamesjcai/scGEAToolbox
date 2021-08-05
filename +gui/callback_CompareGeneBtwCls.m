@@ -11,7 +11,12 @@ function callback_CompareGeneBtwCls(src,~)
     '',''},'SelectionMode','single','ListString',gsorted);
     if tf==1
         idx=sce.g==gsorted(indx);
-        [Xt]=gui.i_transformx(sce.X);      
+        try
+            [Xt]=gui.i_transformx(sce.X);
+        catch ME
+            errordlg(ME.message);
+            return;
+        end
         f = figure('visible','off');
         y=full(Xt(idx,:));
         pkg.i_violinplot(y,thisc);
