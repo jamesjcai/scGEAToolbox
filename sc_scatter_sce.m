@@ -269,7 +269,7 @@ ptpseudotime = uipushtool(defaultToolbar, 'Separator', 'on');
 ptImage = ind2rgb(img, map);
 ptpseudotime.CData = ptImage;
 ptpseudotime.Tooltip = 'Run pseudotime analysis (Monocle)';
-ptpseudotime.ClickedCallback = @RunTrajectoryAnalysis;
+ptpseudotime.ClickedCallback = @callback_TrajectoryAnalysis;
 
 ptpseudotime = uipushtool(defaultToolbar, ...
     'Separator', 'off');

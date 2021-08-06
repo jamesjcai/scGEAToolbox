@@ -1,5 +1,8 @@
-computePseudoTime <- function(X, outputFile){
-  cMatrix <- read.csv(X, header = FALSE)
+computePseudoTime <- function(infile, outputFile){
+  require(R.matlab)
+  mat<-readMat(infile)
+  cMatrix <-as.matrix(mat$X)
+  # cMatrix <- read.csv(infile, header = FALSE)
   rownames(cMatrix) <- paste0("G", seq_len(nrow(cMatrix)))
   colnames(cMatrix) <- paste0("C", seq_len(ncol(cMatrix)))
   cMatrix <- cMatrix[rowSums(cMatrix) > 0,]
@@ -18,4 +21,5 @@ computePseudoTime <- function(X, outputFile){
   write.csv(pseudoTiveV, file = outputFile)
 }
 
-computePseudoTime(X = "input.csv", outputFile = "output.csv")
+computePseudoTime(infile = "input.mat", outputFile = "output.csv")
+# computePseudoTime(X = "input.csv", outputFile = "output.csv")
