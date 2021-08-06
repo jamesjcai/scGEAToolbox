@@ -13,3 +13,4 @@ savepath;
 if exist('cdgea.m','file')
     disp('scGEAToolbox installed!')
 end
+% webread('https://api.github.com/repos/jamesjcai/scgeatoolbox')
