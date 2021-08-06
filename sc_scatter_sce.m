@@ -1116,39 +1116,39 @@ end
         
     end
 
-    function RunTrajectoryAnalysis(~, ~)
-        answer = questdlg('Run pseudotime analysis (Monocle)?');
-        if ~strcmp(answer, 'Yes')
-            return
-        end
-        
-        fw = gui.gui_waitbar;
-        [t_mono, s_mono] = run.monocle(sce.X);
-        gui.gui_waitbar(fw);
-        
-        answer = questdlg('View Monocle DDRTree?', ...
-            'Pseudotime View', ...
-            'Yes', 'No', 'Yes');
-        switch answer
-            case 'Yes'
-                [ax, bx] = view();
-                cla(hAx);
-                sce.s = s_mono;
-                sce.c = t_mono;
-                [c, cL] = grp2idx(sce.c);
-                h = gui.i_gscatter3(sce.s, c);
-                title(sce.title);
-                view(ax, bx);
-                hc = colorbar;
-                hc.Label.String = 'Pseudotime';
-        end
-        
-        labels = {'Save pseudotime T to variable named:', ...
-            'Save S to variable named:'};
-        vars = {'t_mono', 's_mono'};
-        values = {t_mono, s_mono};
-        export2wsdlg(labels, vars, values);
-    end
+%     function RunTrajectoryAnalysis(~, ~)
+%         answer = questdlg('Run pseudotime analysis (Monocle)?');
+%         if ~strcmp(answer, 'Yes')
+%             return
+%         end
+%         
+%         fw = gui.gui_waitbar;
+%         [t_mono, s_mono] = run.monocle(sce.X);
+%         gui.gui_waitbar(fw);
+%         
+%         answer = questdlg('View Monocle DDRTree?', ...
+%             'Pseudotime View', ...
+%             'Yes', 'No', 'Yes');
+%         switch answer
+%             case 'Yes'
+%                 [ax, bx] = view();
+%                 cla(hAx);
+%                 sce.s = s_mono;
+%                 sce.c = t_mono;
+%                 [c, cL] = grp2idx(sce.c);
+%                 h = gui.i_gscatter3(sce.s, c);
+%                 title(sce.title);
+%                 view(ax, bx);
+%                 hc = colorbar;
+%                 hc.Label.String = 'Pseudotime';
+%         end
+%         
+%         labels = {'Save pseudotime T to variable named:', ...
+%             'Save S to variable named:'};
+%         vars = {'t_mono', 's_mono'};
+%         values = {t_mono, s_mono};
+%         export2wsdlg(labels, vars, values);
+%     end
 
     function ClusterCellsS(src, ~)
         answer = questdlg('Cluster cells?');
