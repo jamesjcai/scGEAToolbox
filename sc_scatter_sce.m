@@ -52,8 +52,8 @@ set(findall(FigureHandle,'ToolTipString','Open Property Inspector'),'Visible','O
 
 
 hAx = axes('Parent', FigureHandle);
-[h] = gui.i_gscatter3(sce.s, c, methodid);
-title(sce.title);
+[h] = gui.i_gscatter3(sce.s, c, methodid,1,hAx);
+title(hAx,sce.title);
 
 dt = datacursormode;
 dt.UpdateFcn = {@i_myupdatefcnx};
@@ -497,7 +497,7 @@ end
         fw = gui.gui_waitbar;
         [Xdecon,contamination]=run.decontX(sce);
         gui.gui_waitbar(fw);
-        tmpf_decontx=figure;
+        figure;
         gui.i_stemscatter(sce.s,contamination);
         % zlim([0 1]);
         zlabel('Contamination rate')
@@ -507,9 +507,6 @@ end
             case 'Yes'
                 sce.X=round(Xdecon);
                 guidata(FigureHandle,sce);
-%                 if strcmp(get(tmpf_decontx,'type'),'figure')
-%                     close(tmpf_decontx);
-%                 end
                 helpdlg('Contamination removed.')
        end
     end
@@ -588,11 +585,11 @@ end
         if size(sce.s, 2) > 2 && ~isempty(h.ZData)
             
             if keepview, [ax, bx] = view(); end
-            h = gui.i_gscatter3(sce.s, c, methodid);
+            h = gui.i_gscatter3(sce.s, c, methodid, hAx);
             if keepview, view(ax, bx); end
             
         else   % otherwise 2D
-            h = gui.i_gscatter3(sce.s(:, 1:2), c, methodid);
+            h = gui.i_gscatter3(sce.s(:, 1:2), c, methodid, hAx);
         end
         if keepview
             h.Marker = para.oldMarker;
@@ -624,7 +621,7 @@ end
                 helpdlg('Canno swith to 3-D. SCE.S is 2-D');
                 return;
             end
-            h = gui.i_gscatter3(sce.s, c, methodid);
+            h = gui.i_gscatter3(sce.s, c, methodid, hAx);
             if ~isempty(ax) && ~isempty(bx) && ~any([ax bx] == 0)
                 view(ax, bx);
             else
@@ -644,7 +641,7 @@ end
                 otherwise
                     return;
             end
-            h = gui.i_gscatter3(sx(:, 1:2), c, methodid);
+            h = gui.i_gscatter3(sx(:, 1:2), c, methodid, hAx);
             sce.s=sx;
         end
         title(sce.title);
@@ -807,7 +804,7 @@ end
         [c, cL] = grp2idx(c);
         sce.c = c;
         [ax, bx] = view();
-        [h] = gui.i_gscatter3(sce.s, c, methodid);
+        [h] = gui.i_gscatter3(sce.s, c, methodid, hAx);
         title(sce.title);
         view(ax, bx);
         i_labelclusters(true);
@@ -842,7 +839,7 @@ end
         [c, cL] = grp2idx(c);
         sce.c = c;
         [ax, bx] = view();
-        [h] = gui.i_gscatter3(sce.s, c, methodid);
+        [h] = gui.i_gscatter3(sce.s, c, methodid, hAx);
         title(sce.title);
         view(ax, bx);
         i_labelclusters(true);
