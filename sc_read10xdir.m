@@ -82,6 +82,7 @@ if exist(bcfname,'file')
     [X,genelist,celllist]=sc_readmtxfile(mmfname,ftfname,bcfname,coln);
 else
     [X,genelist]=sc_readmtxfile(mmfname,ftfname,[],coln);
+    celllist=[];
 end
 fprintf('done.\n');
 if exist(zmmfname,'file') && exist(mmfname,'file')

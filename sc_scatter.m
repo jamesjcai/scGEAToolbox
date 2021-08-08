@@ -17,6 +17,7 @@ end
               'Seurat/Rds File (*.rds)...',...
               '----------------------------------',...
               '10x Genomics Folder...',...
+              'Links to 10x Genomics Files...',... 
               'GEO Accession Number...'};
         [indx,tf] = listdlg('ListString',list,...
             'SelectionMode','single',...
@@ -147,7 +148,14 @@ end
                         return;
                     end
                 end
-            otherwise
+            case 'Links to 10x Genomics Files...'
+                [X,genelist,~,ftdone]=gui.i_inputgeolinks;
+                if isempty(X) || isempty(genelist) || ~ftdone
+                    % errordlg('Input Error');
+                    return;
+                end
+                sce = SingleCellExperiment(X, genelist);                
+            otherwise                
                 return;
         end
 
