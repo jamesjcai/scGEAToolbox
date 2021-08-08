@@ -39,7 +39,7 @@ function callback_Brush4MarkersLASSO(src,~)
                 return;
         end
     end    
-    [numfig]=gui.i_inputdlg;
+    [numfig]=gui.i_inputnumg;
     fw=gui.gui_waitbar;
     y=double(ptsSelected);
     sce.c=1+ptsSelected;

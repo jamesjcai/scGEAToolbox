@@ -1,4 +1,4 @@
-function [numfig]=i_inputdlg
+function [numfig]=i_inputnumg
     numfig=10;
     prompt = {'Enter number of genes (1-50):'};
     dlgtitle = 'Number of marker genes';

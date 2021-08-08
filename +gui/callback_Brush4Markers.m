@@ -57,7 +57,7 @@ function callback_Brush4Markers(src,event)
     end
     gui.gui_waitbar(fw);
     % assignin('base','A',A);
-    [numfig]=gui.i_inputdlg;
+    [numfig]=gui.i_inputnumg;
     fw=gui.gui_waitbar;
     htmlfilename=cL{unique(c(ptsSelected))};
     pkg.i_markergeneshtml(sce,markerlist,numfig,...
