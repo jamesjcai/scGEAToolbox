@@ -1,5 +1,4 @@
-setwd("C:\\Users\\jcai.AUTH\\Documents\\GitHub\\scGEAToolbox\\+run\\thirdparty\\R_Revelio")
-# C:\Users\jcai.AUTH\Documents\GitHub\scGEAToolbox\+run\thirdparty
+# setwd("C:\\Users\\jcai.AUTH\\Documents\\GitHub\\scGEAToolbox\\+run\\thirdparty\\R_Revelio")
 library(Revelio)
 library(R.matlab)
 
@@ -9,13 +8,18 @@ pbmc.counts <- mat$X
 rownames(pbmc.counts) <- make.unique(unlist(mat$genelist))
 
 
-# revelioTestData_rawDataMatrix   
+# revelioTestData_rawDataMatrix   pbmc.counts
 
 myData <- createRevelioObject(rawData = pbmc.counts,
                               cyclicGenes = revelioTestData_cyclicGenes)
+
 myData <- getCellCyclePhaseAssignInformation(dataList = myData)
-myData <- getPCAData(dataList = myData)
-myData <- getOptimalRotation(dataList = myData)
+#myData <- getPCAData(dataList = myData)
+#myData <- getOptimalRotation(dataList = myData)
+
+myData <- getPCAData(dataList = myData, boolPlotResults = TRUE)
+myData <- getOptimalRotation(dataList = myData, boolPlotResults = TRUE)
+
 normalizedDataWithoutCCEffects <- removeCCEffects(dataList = myData)
 
 
@@ -23,8 +27,10 @@ normalizedDataWithoutCCEffects <- removeCCEffects(dataList = myData)
 #X=res$decontXcounts
 #contamination=res$contamination
 # ccPhase=myData@cellInfo$ccPhase
-# writeMat("output.mat", X=as.matrix(normalizedDataWithoutCCEffects))
+dcdata=as.matrix(myData@transformedData$dc$data[c('DC1','DC2'),])
+writeMat("output.mat", dc=dcdata)
 # write.table(as.matrix(X),file="output.csv", sep=",",col.names=FALSE,row.names = FALSE)
-
-write.table(myData@cellInfo$ccPhase,file="output1.csv", sep=",",col.names=FALSE,row.names = FALSE)
-write.table(myData@cellInfo$cellID,file="output2.csv", sep=",",col.names=FALSE,row.names = FALSE)
+a<-myData@cellInfo$ccPhase
+b<-myData@cellInfo$cellID
+write.table(list(a,b),file="output.csv", sep=",",col.names=FALSE,row.names = FALSE)
+# write.table(,file="output2.csv", sep=",",col.names=FALSE,row.names = FALSE)
