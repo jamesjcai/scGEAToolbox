@@ -17,10 +17,10 @@ myData <- getCellCyclePhaseAssignInformation(dataList = myData)
 #myData <- getPCAData(dataList = myData)
 #myData <- getOptimalRotation(dataList = myData)
 
-myData <- getPCAData(dataList = myData, boolPlotResults = TRUE)
-myData <- getOptimalRotation(dataList = myData, boolPlotResults = TRUE)
+myData <- getPCAData(dataList = myData, boolPlotResults = FALSE)
+myData <- getOptimalRotation(dataList = myData, boolPlotResults = FALSE)
 
-normalizedDataWithoutCCEffects <- removeCCEffects(dataList = myData)
+# normalizedDataWithoutCCEffects <- removeCCEffects(dataList = myData)
 
 
 #res <- decontX(x = sc)
