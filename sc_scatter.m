@@ -1,10 +1,10 @@
 function sc_scatter(X, genelist, s, c)
-    % SC_SCATTER
-    %   SC_SCATTER(X,genelist,s,c) displays circles at the locations specified
-    %   by s, coordinate of cell embedding, which is an n-by-p matrix
-    %   specifying coordinates for each cell.
-    %
-    %   See also SC_SCATTER_SCE.
+% SC_SCATTER
+%   SC_SCATTER(X,genelist,s,c) displays circles at the locations specified
+%   by s, coordinate of cell embedding, which is an n-by-p matrix
+%   specifying coordinates for each cell.
+%
+%   See also SC_SCATTER_SCE.
 
 if usejava('jvm') && ~feature('ShowFigureWindows')
     error('MATLAB is in a text mode. This function requires a GUI-mode.');
@@ -149,16 +149,18 @@ end
                     end
                 end
             case 'Links to 10x Genomics Files...'
-                [X,genelist,~,ftdone]=gui.i_inputgeolinks;
+                [X,genelist,celllist,ftdone]=gui.i_inputgeolinks;
                 if isempty(X) || isempty(genelist) || ~ftdone
                     % errordlg('Input Error');
                     return;
                 end
-                sce = SingleCellExperiment(X, genelist);                
-            otherwise                
+                sce = SingleCellExperiment(X, genelist);
+                if ~isempty(celllist) && length(celllist)==sce.NumCells
+                    sce.c_cell_id=celllist;
+                end
+            otherwise
                 return;
         end
-
     else
         if isa(X, 'SingleCellExperiment')
             sc_scatter_sce(X);
