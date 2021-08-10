@@ -5,7 +5,7 @@ function [c,T]=SeuratCellCycle(X,genelist)
 if nargin<2, error("[c]=run.SeuratCellCycle(X,genelist)"); end
 oldpth=pwd();
 [isok,msg]=commoncheck_R('R_SeuratCellCycle');
-if ~isok, error(msg); end
+if ~isok, error(msg); c=[]; T=[]; return; end
 
 if exist('output.csv','file')
     delete('output.csv');

@@ -4,7 +4,7 @@ if nargin<2, genelist=(1:size(X,1))'; end
 
 oldpth=pwd();
 [isok,msg]=commoncheck_R('R_SingleR');
-if ~isok, error(msg); end
+if ~isok, error(msg); c=[]; return; end
 
 if exist('output.csv','file')
     delete('output.csv');

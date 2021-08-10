@@ -11,6 +11,10 @@ function [score]=UCell(X,genelist,tgsPos)
 %directly interact with Seurat objects.
 % https://github.com/carmonalab/UCell
 
+
+[isok,msg]=commoncheck_R('R_UCell');
+if ~isok, error(msg); score=[]; return;end
+
 genelist=upper(genelist);
 tgsPos=upper(tgsPos);
 if ~iscellstr(genelist) && isstring(genelist)
@@ -20,8 +24,7 @@ if ~iscellstr(tgsPos) && isstring(tgsPos)
     tgsPos=cellstr(tgsPos);
 end
 oldpth=pwd();
-[isok,msg]=commoncheck_R('R_UCell');
-if ~isok, error(msg); end
+
 if exist('input.mat','file'), delete('input.mat'); end
 if exist('output.csv','file'), delete('output.csv'); end
 

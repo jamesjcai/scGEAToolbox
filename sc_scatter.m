@@ -15,9 +15,10 @@ end
               '10x Genomics File (*.mtx)...',...
               'TSV/CSV File (*.txt)...',...
               'Seurat/Rds File (*.rds)...',...
-              '----------------------------------',...
               '10x Genomics Folder...',...
-              'Links to 10x Genomics Files...',... 
+              '----------------------------------',...              
+              'Link to GEO MTX File...',... 
+              'Link to GEO TXT File...',... 
               'GEO Accession Number...'};
         [indx,tf] = listdlg('ListString',list,...
             'SelectionMode','single',...
@@ -148,7 +149,7 @@ end
                         return;
                     end
                 end
-            case 'Links to 10x Genomics Files...'
+            case 'Link to GEO MTX File...'
                 [X,genelist,celllist,ftdone]=gui.i_inputgeolinks;
                 if isempty(X) || isempty(genelist) || ~ftdone
                     % errordlg('Input Error');
@@ -158,6 +159,21 @@ end
                 if ~isempty(celllist) && length(celllist)==sce.NumCells
                     sce.c_cell_id=celllist;
                 end
+            case 'Link to GEO TXT File...'
+                    prompt = {'Enter link to counts.txt.gz or counts.csv.gz:'};
+                    dlgtitle = 'Input Download Links';
+                    dims = [1 100];
+                    definput = {'https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM5350nnn/GSM5350808/suppl/GSM5350808_Fibroblast_young_1wk_Saline_counts.csv.gz'};
+                    answer = inputdlg(prompt,dlgtitle,dims,definput);
+                    if isempty(answer), return; end                    
+                    if ~isempty(answer{1})
+                        tmpd=tempdir;
+                        files=gunzip(answer{1},tmpd);
+                        f=files{1};
+                        if isempty(f), error('f1'); end
+                        [X,genelist]=sc_readtsvfile(f);
+                        sce = SingleCellExperiment(X, genelist);
+                    end    
             otherwise
                 return;
         end

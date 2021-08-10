@@ -4,7 +4,8 @@ function [sce]=readSeuratRds(filename)
     if nargin<1, error('run.readSeuratRds(filename)'); end
     oldpth=pwd();
     [isok,msg]=commoncheck_R('R_SeuratReadRds');
-    if ~isok, error(msg); end
+    if ~isok, error(msg); sce=[]; return; end
+    
     if exist('./inputrdsfile.txt','file'), delete('./inputrdsfile.txt'); end
     if exist('./output.mat','file'), delete('./output.mat'); end
     if exist('./g.csv','file'), delete('./g.csv'); end

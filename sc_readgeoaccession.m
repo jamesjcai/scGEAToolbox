@@ -24,10 +24,16 @@ switch length(c)
         [X,g]=sc_readmtxfile(f1,f2);
     case 1
         c1=c(contains(c,'txt'));
-        if isempty(c1), error('C1'); end
-        f1=i_setupfile(c1);
-        if isempty(f1), error('f1'); end
-        [X,g]=sc_readtsvfile(f1);
+        if isempty(c1)
+            c1=c(contains(c,'csv'));
+            if isempty(c1)
+                error('C1');
+            end
+        end
+            f1=i_setupfile(c1);
+            if isempty(f1), error('f1'); end
+            [X,g]=sc_readtsvfile(f1);
+        
 end
 sce=SingleCellExperiment(X,g);
 end
@@ -40,7 +46,7 @@ function f=i_setupfile(c)
         x=string(textscan(x,'<a href="ftp://%s'));
         x=append("https://", extractBefore(x,strlength(x)-5));
         x=urldecode(x);
-        disp(sprintf('Downloading %s',x))
+        fprintf('Downloading %s\n',x)
         files=gunzip(x,tmpd);
         f=files{1};
     catch

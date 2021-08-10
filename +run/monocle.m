@@ -6,7 +6,7 @@ function [t,s]=monocle(X)
 
 oldpth=pwd();
 [isok,msg]=commoncheck_R('R_monocle');
-if ~isok, error(msg); end
+if ~isok, error(msg); t=[]; s=[]; return; end
 
 if exist('./output.csv','file'), delete('./output.csv'); end
 save('input.mat','X','-v7');

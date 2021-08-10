@@ -3,6 +3,9 @@ function [sce]=SeuratWorkflow(X,genelist)
 %Seurat implements the method proposed by Tirosh et al.39 to score cells based on the averaged normalized expression of known markers of G1/S and G2/M.
 %https://science.sciencemag.org/content/352/6282/189
 
+[isok,msg]=commoncheck_R('R_SeuratWorkflow');
+if ~isok, error(msg); sce=[]; return; end
+
 if isa(X,'SingleCellExperiment') && isnumeric(genelist)
     sce=X;
     ndim=genelist;
@@ -12,8 +15,7 @@ else
     ndim=2;
 end
 oldpth=pwd();
-[isok,msg]=commoncheck_R('R_SeuratWorkflow');
-if ~isok, error(msg); end
+
 if exist('output.mat.tmp','file'), delete('output.mat.tmp'); end
 %if exist('tsneoutput.csv','file'), delete('tsneoutput.csv'); end
 %if exist('umapoutput.csv','file'), delete('umapoutput.csv'); end

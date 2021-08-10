@@ -4,6 +4,9 @@ function [dc,T]=Revelio(X)
 % see also: 
 % https://github.com/danielschw188/Revelio
 isdebug=false;
+[isok,msg]=commoncheck_R('R_Revelio');
+if ~isok, error(msg); return; end
+
 if isa(X,'SingleCellExperiment')
     genelist=upper(X.g);
     X=X.X;
@@ -13,8 +16,7 @@ if ~iscellstr(genelist) && isstring(genelist)
 end
 
 oldpth=pwd();
-[isok,msg]=commoncheck_R('R_Revelio');
-if ~isok, error(msg); end
+
 if ~isdebug
     if exist('./input.mat','file'), delete('./input.mat'); end
     if exist('./output.mat','file'), delete('./output.mat'); end

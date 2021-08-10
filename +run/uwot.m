@@ -2,7 +2,7 @@ function [s]=uwot(X)
 %UWOT - R pacakge for UMAP
 oldpth=pwd();
 [isok,msg]=commoncheck_R('R_uwot');
-if ~isok, error(msg); end
+if ~isok, error(msg); s=[]; return; end
 
 if exist('output.csv','file'), delete('output.csv'); end
 writematrix(transpose(X),'input.csv');

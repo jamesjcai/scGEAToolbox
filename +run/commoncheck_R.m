@@ -7,8 +7,8 @@ if isempty(pkg.FindRpath)
    return;
 end
 folder=fileparts(mfilename('fullpath'));
-a=strfind(folder,filesep);
-folder=extractBefore(folder,a(end)+1);
+%a=strfind(folder,filesep);
+%folder=extractBefore(folder,a(end)+1);
 wrkpth=fullfile(folder,'thirdparty',rscriptdir);
 cd(wrkpth);
 fprintf('CURRENTWDIR = "%s"\n',wrkpth);

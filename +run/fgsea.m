@@ -4,7 +4,7 @@ if nargin<3, drdistin=[]; end
 if nargin<2, rmribo=true; end
 oldpth=pwd();
 [isok,msg]=commoncheck_R('R_fgsea');
-if ~isok, error(msg); end
+if ~isok, error(msg); s=[]; return; end
 
 if exist('input.txt','file'), delete('input.txt'); end
 if exist('output.txt','file'), delete('output.txt'); end

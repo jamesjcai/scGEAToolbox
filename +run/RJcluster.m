@@ -2,7 +2,7 @@ function [s]=RJcluster(X)
 %RJcluster - R pacakge
 oldpth=pwd();
 [isok,msg]=commoncheck_R('R_RJcluster');
-if ~isok, error(msg); end
+if ~isok, error(msg); s=[]; return; end
 if exist('./input.csv','file'), delete('./input.csv'); end
 if exist('./output.csv','file'), delete('./output.csv'); end
 

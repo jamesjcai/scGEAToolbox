@@ -3,7 +3,7 @@ function [status]=saveSeuratRds(sce,filename)
     if nargin<2, error('run.saveSeuratRds(sce,filename)'); end
     oldpth=pwd();
     [isok,msg]=commoncheck_R('R_SeuratSaveRds');
-    if ~isok, error(msg); end
+    if ~isok, error(msg); return; end
     if exist('output.Rds','file'), delete('output.Rds'); end
     sc_writefile('input.txt',sce.X,sce.g);
     pkg.RunRcode('script.R');
