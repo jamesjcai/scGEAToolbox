@@ -1,7 +1,10 @@
-function callback_scTenifoldNet(src,~)
+function callback_scTenifoldNet2(src,~)
 
     if exist('sctenifoldnet','file')~=2
         errordlg('scTenifoldNet is not installed.');
+        disp('To install scTenifoldNet, type:')
+        disp('unzip(''https://github.com/cailab-tamu/scTenifoldNet/archive/master.zip'');');
+        disp('addpath(''./scTenifoldNet-master/MATLAB'');');
         return;
     end
     FigureHandle=src.Parent.Parent;
@@ -12,7 +15,7 @@ function callback_scTenifoldNet(src,~)
 
     answer=questdlg('This analysis may take several hours. Continue?');
     if ~strcmpi(answer,'Yes'), return; end
-    savegrn=false;
+
     answer=questdlg('Save constructed networks (to current folder)?');
     switch answer
         case 'Yes'
