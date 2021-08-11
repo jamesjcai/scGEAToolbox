@@ -1,4 +1,6 @@
 function [idx]=i_selmultidlg(genelist,predefinedlist)
+%gui.i_selmultidlg
+% This function is called by gui.i_selectngenes
 idx=[];
 if nargin<2, predefinedlist=[]; end
 txt_cell_array = {'line1';'line2';'line3';'line4';'line5'};
