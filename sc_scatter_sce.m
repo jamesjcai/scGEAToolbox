@@ -392,7 +392,19 @@ gui.add_3dcamera(defaultToolbar, 'AllCells');
 
 
 
-m = uimenu(FigureHandle,'Text','Experimental');
+m = uimenu(FigureHandle,'Text','E&xperimental');
+m.Accelerator = 'x';
+
+m2 = uimenu(m,'Text','scTenifold');
+uimenu(m2,'Text','scTenifoldNet (beta) 🐢🐢🐢 ...',...
+    'Callback',@callback_scTenifoldNet);
+uimenu(m2,'Text','scTenifoldKnk (under development)',...
+    'Callback',@callback_scTenifoldNet);
+uimenu(m2,'Text','scTenifoldXct (under development)',...
+    'Callback',@callback_scTenifoldNet);
+uimenu(m2,'Text','scTenifoldDev (under development)');
+
+
 uimenu(m,'Text','Multi-embedding view...',...
     'Callback',@gui.callback_MultiEmbeddings);
 uimenu(m,'Text','Remove batch effect using Harmony (python required)...',...
@@ -419,8 +431,7 @@ uimenu(m,'Text','GEO Accession to SCE...',...
 uimenu(m,'Text','MELD Perturbation Score...',...
     'Callback',@callback_MELDPerturbationScore); 
 uimenu(m,'Text','Library Size of Cell Cycle Phases...',...
-    'Callback',@callback_CellCycleLibrarySize); 
-
+    'Callback',@callback_CellCycleLibrarySize);
 
 
 % handles = guihandles( FigureHandle ) ;

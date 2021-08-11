@@ -46,7 +46,7 @@ function i_CloseFig(figHandle,varargin)
 end
 
     function i_SetValues(figHandle,varargin)
-            prompt = {'Library size cutoff:','Mt-ratio cutoff:'};
+            prompt = {'X-variable cutoff:','Y-variable cutoff:'};
             answer = inputdlg(prompt,"",[1 35],...
                      {num2str(xr(2)),num2str(yr(2))});
             if isempty(answer), return; end

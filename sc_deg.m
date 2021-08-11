@@ -1,4 +1,4 @@
-function [T] = sc_deg(X, Y, genelist, methodid)
+function [T,Tup,Tdn] = sc_deg(X, Y, genelist, methodid)
 %DEG analysis using Mann–Whitney U test
     % https://satijalab.org/seurat/v3.1/de_vignette.html
     % p_val : p_val (unadjusted)
@@ -65,6 +65,9 @@ function [T] = sc_deg(X, Y, genelist, methodid)
     %    T=sortrows(T,'p_val_adj','ascend');
     %    T=sortrows(T,'abs_logFC','descend');
     % [T] = pkg.e_sorttable(T);
+    if nargout>1
+        [Tup,Tdn]=pkg.e_processDETable(T);
+    end
 end
 
 % Test for expression differences between two sets of cells

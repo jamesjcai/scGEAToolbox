@@ -10,7 +10,8 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
         'Select & remove genes',... 
         '------------------------------------------------',...
         'Library Size vs. Mt-reads Ratio',...
-        'Library Size vs. Number of Detected Genes'};
+        'Library Size vs. Number of Genes',...
+        'Reads in Abundant lncRNAs vs. Number of Genes'};
 %        '------------- Experimental Options -------------',...
 %        'Remove ambient RNA contamination (R required)'};
 
@@ -57,6 +58,7 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
                 end
             end
         case 6
+            % -----------
             requirerefresh=false;
             return;
         case 7      % mt-ratio vs. library size
@@ -78,7 +80,7 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
             idx=gui.i_setranges2(ci',cj',[0 a(end)],...
                     [0 15],ttxti,ttxtj);
         case 8
-            cj=sum(sce.X>0,1);                
+            cj=sum(sce.X>0,1);
             if issparse(cj), cj=full(cj); end
             ttxtj="Number of Detected Genes";
             ci=sum(sce.X,1);
@@ -89,9 +91,31 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
             idx=gui.i_setranges2(ci',cj',[0 a(end)],...
                     [0 b(end)],ttxti,ttxtj);
         case 9
+            % remove cells with a high fraction of nuclear lncRNA transcripts 
+            % (Malat1, Meg3 and Kcnq10t1)
+            % https://www.frontiersin.org/articles/10.3389/fncel.2020.00065/full#h3
+            cj=sum(sce.X>0,1);
+            if issparse(cj), cj=full(cj); end
+            ttxtj="Number of Detected Genes";
+                       
+            idx=matches(upper(sce.g),upper({'Malat1', 'Meg3', 'Kcnq1ot1'}));
+            if ~any(idx) 
+                disp('{Malat1,Meg3,Kcnq1ot1} not found.');
+                return;
+            end
+            ci=sum(sce.X(idx,:),1);            
+            if issparse(ci), ci=full(ci); end
+            ttxti="Reads in lncRNAs (Malat1,Meg3,Kcnq1ot1)";
+            
+            a=maxk(ci,10);
+            b=maxk(cj,10);
+            idx=gui.i_setranges2(ci',cj',[0 a(end)],...
+                    [0 b(end)],ttxti,ttxtj);
+        case 10
+            % ----------
             requirerefresh=false;
             return;
-        case 10
+        case 11
             fw = gui.gui_waitbar;
             [Xdecon,contamination]=run.decontX(sce);
             sce.X=Xdecon;
