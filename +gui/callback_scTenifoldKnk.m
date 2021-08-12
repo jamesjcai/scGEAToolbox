@@ -10,9 +10,12 @@ function callback_scTenifoldKnk(src,~)
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
     
-    a=evalin('base','whos');    
+    a=evalin('base','whos');
+    b=struct2cell(a);
+    %valididx=ismember(b(4,:),'double');
+    %a=a(valididx);
     [indx,tf]=listdlg('PromptString',{'Select network varialbe:'},...
-        'liststring',a.name,'SelectionMode','single');
+        'liststring',b(1,:),'SelectionMode','single');
     if tf==1
         A = evalin('base',a(indx).name);
     else
@@ -23,10 +26,10 @@ function callback_scTenifoldKnk(src,~)
     if m~=n || n~=length(sce.g), errordlg('Not a valid network.'); return; end    
     
     gsorted=sort(sce.g);
-    [indx,tf] = listdlg('PromptString',{'Select the KO gene:'},...
+    [indx2,tf] = listdlg('PromptString',{'Select the KO gene:'},...
         'SelectionMode','single','ListString',gsorted);
     if tf==1
-        [~,idx]=ismember(gsorted(indx),sce.g);
+        [~,idx]=ismember(gsorted(indx2),sce.g);
     else
         return;
     end
@@ -44,5 +47,5 @@ function callback_scTenifoldKnk(src,~)
         return;
     end
     gui.gui_waitbar(fw);
-    gui.i_exporttable(T);
+    % gui.i_exporttable(T);
 end
