@@ -1,18 +1,19 @@
 function callback_scTenifoldKnk(src,~)
-    if exist('sctenifoldnet','file')~=2
-        errordlg('scTenifoldNet is not installed.');
-        disp('To install scTenifoldNet, type:')
-        disp('unzip(''https://github.com/cailab-tamu/scTenifoldNet/archive/master.zip'');');
-        disp('addpath(''./scTenifoldNet-master/MATLAB'');');
-        return;
-    end
-    if exist('sctenifoldknk','file')~=2
-        errordlg('scTenifoldKnk is not installed.');
-        disp('To install scTenifoldKnk, type:')
-        disp('unzip(''https://github.com/cailab-tamu/scTenifoldKnk/archive/master.zip'');');
-        disp('addpath(''./scTenifoldKnk-master/MATLAB'');');
-        return;
-    end
+    import ten.*
+%     if exist('sctenifoldnet','file')~=2
+%         errordlg('scTenifoldNet is not installed.');
+%         disp('To install scTenifoldNet, type:')
+%         disp('unzip(''https://github.com/cailab-tamu/scTenifoldNet/archive/master.zip'');');
+%         disp('addpath(''./scTenifoldNet-master/MATLAB'');');
+%         return;
+%     end
+%     if exist('sctenifoldknk','file')~=2
+%         errordlg('scTenifoldKnk is not installed.');
+%         disp('To install scTenifoldKnk, type:')
+%         disp('unzip(''https://github.com/cailab-tamu/scTenifoldKnk/archive/master.zip'');');
+%         disp('addpath(''./scTenifoldKnk-master/MATLAB'');');
+%         return;
+%     end
     
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
@@ -38,6 +39,12 @@ function callback_scTenifoldKnk(src,~)
                 return; 
             end            
         case 'Reconstruct'
+            try
+                ten.check_tensor_toolbox;
+            catch ME        
+                errordlg(ME.message);
+                return;
+            end            
             A0=[];
         otherwise
             return;
@@ -53,24 +60,27 @@ function callback_scTenifoldKnk(src,~)
     end
     
     if isempty(A0)
-        answer=questdlg(sprintf('Constructing network and then knocking out gene #%d (%s). Continue?',...
+        answer=questdlg(sprintf('Ready to construct network and then knock out gene #%d (%s). Continue?',...
                idx,sce.g(idx)));
     else
-        answer=questdlg(sprintf('Knocking out gene #%d (%s) in network (workspace variable %s). Continue?',...
+        answer=questdlg(sprintf('Ready to knock out gene #%d (%s) from network (%s). Continue?',...
                idx,sce.g(idx),a(indx).name));
     end
+    
     if ~strcmpi(answer,'Yes'), return; end
     
     fw = gui.gui_waitbar;
     try
         if isempty(A0)
-            T=sctenifoldknk(sce.X,sce.g,idx,'sorttable',true);
+            [T,A0]=sctenifoldknk(sce.X,sce.g,idx,'sorttable',true);
             % T=sortrows(T,'pAdjusted','ascend');
+            isreconstructed=true;
         else            
             A1=A0;
             A1(idx,:)=0;
             [aln0,aln1]=i_ma(A0,A1);
             T=i_dr(aln0,aln1,sce.g,true);
+            isreconstructed=false;
         end
     catch ME
         gui.gui_waitbar(fw);
@@ -78,5 +88,13 @@ function callback_scTenifoldKnk(src,~)
         return;
     end
     gui.gui_waitbar(fw);
+    
+    if isreconstructed
+        labels = {'Save network to variable named:'}; 
+        vars = {'A0'};
+        values = {A0};        
+        waitfor(export2wsdlg(labels,vars,values));
+    end
+    
     gui.i_exporttable(T);
 end

@@ -1,11 +1,19 @@
 function callback_scTenifoldNet1(src,events)
-    if exist('sctenifoldnet','file')~=2
-        errordlg('scTenifoldNet is not installed.');
-        disp('To install scTenifoldNet, type:')
-        disp('unzip(''https://github.com/cailab-tamu/scTenifoldNet/archive/master.zip'');');
-        disp('addpath(''./scTenifoldNet-master/MATLAB'');');
+    import ten.*
+    try
+        ten.check_tensor_toolbox;
+    catch ME
+        errordlg(ME.message);
         return;
     end
+    
+%     if exist('sctenifoldnet','file')~=2
+%         errordlg('scTenifoldNet is not installed.');
+%         disp('To install scTenifoldNet, type:')
+%         disp('unzip(''https://github.com/cailab-tamu/scTenifoldNet/archive/master.zip'');');
+%         disp('addpath(''./scTenifoldNet-master/MATLAB'');');
+%         return;
+%     end
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
 
@@ -27,7 +35,7 @@ function callback_scTenifoldNet1(src,events)
     if ~strcmpi(answer,'Yes'), return; end
     fw = gui.gui_waitbar;
     try
-        [A]=sc_pcnetdenoised(sce.X,'savegrn',false);
+        [A]=ten.sc_pcnetdenoised(sce.X,'savegrn',false);
     catch ME
         gui.gui_waitbar(fw);
         errordlg(ME.message);
