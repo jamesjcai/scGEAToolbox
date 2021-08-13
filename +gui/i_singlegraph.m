@@ -6,6 +6,7 @@ if nargin<1
     G1.Edges.Weight=rand(size(G1.Edges,1),1)*2;
 end
 import gui.*
+import ten.*
 %%
 
 mfolder=fileparts(mfilename('fullpath'));
@@ -256,7 +257,7 @@ title(figname);
     a=h.Title.String;
     x=p.XData; y=p.YData;
     A=adjacency(G,'weighted');
-    A=e_filtadjc(A,cutoff);
+    A=ten.e_filtadjc(A,cutoff);
     if issymmetric(A)
         G=graph(A,G.Nodes.Name);
     else

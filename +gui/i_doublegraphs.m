@@ -10,6 +10,7 @@ if nargin<2
 end
 assert(isequal(G1.Nodes.Name,G2.Nodes.Name));
 import gui.*
+import ten.*
 %%
 
 mfolder=fileparts(mfilename('fullpath'));
@@ -262,7 +263,7 @@ set(hFig, 'visible','on');
         a=h.Title.String;
         x=p.XData; y=p.YData;
         A=adjacency(G,'weighted');
-        A=e_filtadjc(A,cutoff);
+        A=ten.e_filtadjc(A,cutoff);
         if issymmetric(A)
             G=graph(A,G.Nodes.Name);
         else

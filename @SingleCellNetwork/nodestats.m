@@ -1,10 +1,11 @@
 function [T,X]=nodestats(obj)
 %Katz score is a potential link between nodes i and j i
 %ref: http://www.cs.sandia.gov/~dmdunla/publications/DuKoAc10.pdf
+import ten.*
 A0=obj.A;
 A0sym=0.5*(A0+A0');
-A0sym=e_filtadjc(A0sym);
-A0=e_filtadjc(A0);
+A0sym=ten.e_filtadjc(A0sym);
+A0=ten.e_filtadjc(A0);
 G0=digraph(A0,genelist,'omitselfloops');
 G0x=graph(A0sym,genelist,'omitselfloops');
 

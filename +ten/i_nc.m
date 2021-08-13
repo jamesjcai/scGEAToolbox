@@ -3,6 +3,7 @@ function  [XM]=i_nc(X,nsubsmpl,ncom,csubsmpl,usebootstrp)
 %
 % input: X -  n (genes/features) x m (cells/samples) matrix
 % output XM - k multi-layer network array (n x n x k)
+import ten.*
 
 if nargin<5, usebootstrp=false; end  % using m-out-of-n bootstrap (false by default)
                                      % using jackknife (by default)
@@ -27,7 +28,7 @@ if nargin<2, nsubsmpl=10; end        % number of subsamples
             Xrep=Xrep(:,1:csubsmpl);
         end        
         A=sc_pcnetpar(Xrep,ncom,true);
-        XM(:,:,k)=e_filtadjc(A,0.95,false);
+        XM(:,:,k)=ten.e_filtadjc(A,0.95,false);
         %a=max(abs(A(:)));
         %XM(:,:,k)=A./a;
     end

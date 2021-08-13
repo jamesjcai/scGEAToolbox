@@ -1,3 +1,6 @@
+import ten.*
+check_tensor_toolbox;
+
 NCELLS=2000;
 NGENES=400;
 
