@@ -45,11 +45,11 @@ xn=matlab.lang.makeValidName(cL{i(1)});
         ylabel('log2(UMI+1)');
         title(targeetg);
         xtickangle(-45);
-        %suptitle(h,targeetg);
+        %sgtitle(h,targeetg);
         
         imgfname=sprintf('%s.png',targeetg);
         
-        targetdir=sprintf('G:\\My Drive\\Ahr differentiation potency\\marker_gene_candidates_enterocytes\\%s\\',xn);
+        targetdir=sprintf('marker_gene_candidates_enterocytes\\%s\\',xn);
         if ~exist(targetdir,'dir')
             mkdir(targetdir);
         end

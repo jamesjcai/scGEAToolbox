@@ -27,7 +27,10 @@ switch length(c)
         if isempty(c1)
             c1=c(contains(c,'csv'));
             if isempty(c1)
-                error('C1');
+                c1=c(contains(c,'tsv'));
+                if isempty(c1)
+                    error('C1');
+                end
             end
         end
             f1=i_setupfile(c1);

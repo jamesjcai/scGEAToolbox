@@ -27,7 +27,7 @@ for kkk=1:numfig
         end
     end
     if ~isempty(sptltxt)
-        suptitle(sptltxt);
+        sgtitle(sptltxt);
     end
 end
 end
