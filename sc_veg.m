@@ -7,6 +7,8 @@ function [T,mdl]=sc_veg(X,genelist,sortit,plotit,donorm)
 % >> [X,genelist]=sc_readfile('example_data/GSM3044891_GeneExp.UMIs.10X1.txt');
 % >> [X]=sc_norm(X,'type','libsize');
 % >> [T]=sc_veg(X,genelist,true,true,false);
+%
+% See also: SC_SPLINEFIT, SC_HVG
 
 if nargin<5, donorm=false; end
 if nargin<4, plotit=false; end

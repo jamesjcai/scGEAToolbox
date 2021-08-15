@@ -9,7 +9,8 @@ function [T,Xsorted,genelistsorted]=sc_hvg(X,genelist,sortit,plotit,normit,ignor
 % USAGE:
 % >> [X,genelist]=sc_readfile('example_data/GSM3044891_GeneExp.UMIs.10X1.txt');
 % >> [T]=sc_hvg(X,genelist);
-
+%
+% See also: SC_SPLINEFIT, SC_VEG
 
 if nargin<2 || isempty(genelist)
     genelist=strcat("G",string(1:size(X,1)))';
