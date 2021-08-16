@@ -1,0 +1,241 @@
+HGNC ID	Approved symbol	Approved name	Status	Locus type	Previous symbols	Alias symbols	Chromosome	NCBI Gene ID	Ensembl gene ID	Vega gene ID	Group ID	Group name
+HGNC:10298	RPL10	ribosomal protein L10	Approved	gene with protein product		NOV, QM, DXS648E, DXS648, FLJ23544, L10	Xq28	6134	ENSG00000147403	OTTHUMG00000033189	729	L ribosomal proteins
+HGNC:10299	RPL10A	ribosomal protein L10a	Approved	gene with protein product	NEDD6	Csa-19, L10A	6p21.31	4736	ENSG00000198755	OTTHUMG00000014566	729	L ribosomal proteins
+HGNC:17976	RPL10L	ribosomal protein L10 like	Approved	gene with protein product			14q21.2	140801	ENSG00000165496	OTTHUMG00000157869	729	L ribosomal proteins
+HGNC:10301	RPL11	ribosomal protein L11	Approved	gene with protein product		L11, uL5	1p36.11	6135	ENSG00000142676	OTTHUMG00000002926	729	L ribosomal proteins
+HGNC:10302	RPL12	ribosomal protein L12	Approved	gene with protein product		L12	9q33.3	6136	ENSG00000197958	OTTHUMG00000020704	729	L ribosomal proteins
+HGNC:10303	RPL13	ribosomal protein L13	Approved	gene with protein product		D16S444E, BBC1, L13	16q24.3	6137	ENSG00000167526	OTTHUMG00000133770	729	L ribosomal proteins
+HGNC:10304	RPL13A	ribosomal protein L13a	Approved	gene with protein product	TSTA1	L13A	19q13.33	23521	ENSG00000142541	OTTHUMG00000134289	729	L ribosomal proteins
+HGNC:10305	RPL14	ribosomal protein L14	Approved	gene with protein product		L14, hRL14, RL14, CTG-B33	3p22.1	9045	ENSG00000188846	OTTHUMG00000156046	729	L ribosomal proteins
+HGNC:10306	RPL15	ribosomal protein L15	Approved	gene with protein product		RPL10, RPLY10, RPYL10, EC45, L15	3p24.2	6138	ENSG00000174748	OTTHUMG00000130485	729	L ribosomal proteins
+HGNC:10307	RPL17	ribosomal protein L17	Approved	gene with protein product		rpL23, L17	18q21.1	6139	ENSG00000265681	OTTHUMG00000179680	729	L ribosomal proteins
+HGNC:10310	RPL18	ribosomal protein L18	Approved	gene with protein product		L18	19q13.33	6141	ENSG00000063177	OTTHUMG00000169760	729	L ribosomal proteins
+HGNC:10311	RPL18A	ribosomal protein L18a	Approved	gene with protein product		L18A	19p13.11	6142	ENSG00000105640	OTTHUMG00000183445	729	L ribosomal proteins
+HGNC:10312	RPL19	ribosomal protein L19	Approved	gene with protein product		FLJ27452, MGC71997, DKFZp779D216, L19	17q12	6143	ENSG00000108298	OTTHUMG00000178979	729	L ribosomal proteins
+HGNC:10313	RPL21	ribosomal protein L21	Approved	gene with protein product		L21, FLJ27458, MGC71252, MGC104274, MGC104275, DKFZp686C06101	13q12.2	6144	ENSG00000122026	OTTHUMG00000016630	729	L ribosomal proteins
+HGNC:10315	RPL22	ribosomal protein L22	Approved	gene with protein product		EAP, L22	1p36.31	6146	ENSG00000116251	OTTHUMG00000000953	729	L ribosomal proteins
+HGNC:27610	RPL22L1	ribosomal protein L22 like 1	Approved	gene with protein product			3q26.2	200916	ENSG00000163584	OTTHUMG00000158957	729	L ribosomal proteins
+HGNC:10316	RPL23	ribosomal protein L23	Approved	gene with protein product		rpL17, L23	17q12	9349	ENSG00000125691	OTTHUMG00000133118	729	L ribosomal proteins
+HGNC:10317	RPL23A	ribosomal protein L23a	Approved	gene with protein product		L23A	17q11.2	6147	ENSG00000198242	OTTHUMG00000132684	729	L ribosomal proteins
+HGNC:10325	RPL24	ribosomal protein L24	Approved	gene with protein product		L24	3q12.3	6152	ENSG00000114391	OTTHUMG00000159146	729	L ribosomal proteins
+HGNC:10327	RPL26	ribosomal protein L26	Approved	gene with protein product		L26	17p13.1	6154	ENSG00000161970	OTTHUMG00000108191	729	L ribosomal proteins
+HGNC:17050	RPL26L1	ribosomal protein L26 like 1	Approved	gene with protein product	RPL26P1		5q35.1	51121	ENSG00000037241	OTTHUMG00000130517	729	L ribosomal proteins
+HGNC:10328	RPL27	ribosomal protein L27	Approved	gene with protein product		L27	17q21.31	6155	ENSG00000131469	OTTHUMG00000180660	729	L ribosomal proteins
+HGNC:10329	RPL27A	ribosomal protein L27a	Approved	gene with protein product		L27A	11p15.4	6157	ENSG00000166441	OTTHUMG00000165834	729	L ribosomal proteins
+HGNC:10330	RPL28	ribosomal protein L28	Approved	gene with protein product		FLJ43307, L28	19q13.42	6158	ENSG00000108107	OTTHUMG00000171991	729	L ribosomal proteins
+HGNC:10331	RPL29	ribosomal protein L29	Approved	gene with protein product	RPL29P10	HIP, HUMRPL29, L29	3p21.2	6159	ENSG00000162244	OTTHUMG00000155262	729	L ribosomal proteins
+HGNC:10332	RPL3	ribosomal protein L3	Approved	gene with protein product		L3	22q13.1	6122	ENSG00000100316	OTTHUMG00000151079	729	L ribosomal proteins
+HGNC:10333	RPL30	ribosomal protein L30	Approved	gene with protein product		L30	8q22.2	6156	ENSG00000156482	OTTHUMG00000164796	729	L ribosomal proteins
+HGNC:10334	RPL31	ribosomal protein L31	Approved	gene with protein product		L31	2q11.2	6160	ENSG00000071082	OTTHUMG00000130687	729	L ribosomal proteins
+HGNC:10336	RPL32	ribosomal protein L32	Approved	gene with protein product		L32	3p25.2	6161	ENSG00000144713	OTTHUMG00000129804	729	L ribosomal proteins
+HGNC:10340	RPL34	ribosomal protein L34	Approved	gene with protein product		L34	4q25	6164	ENSG00000109475	OTTHUMG00000131839	729	L ribosomal proteins
+HGNC:10344	RPL35	ribosomal protein L35	Approved	gene with protein product		L35	9q33.3	11224	ENSG00000136942	OTTHUMG00000020659	729	L ribosomal proteins
+HGNC:10345	RPL35A	ribosomal protein L35a	Approved	gene with protein product		L35A, eL33, GIG33	3q29	6165	ENSG00000182899	OTTHUMG00000155386	729	L ribosomal proteins
+HGNC:13631	RPL36	ribosomal protein L36	Approved	gene with protein product		DKFZp566B023, L36	19p13.3	25873	ENSG00000130255	OTTHUMG00000178585	729	L ribosomal proteins
+HGNC:10359	RPL36A	ribosomal protein L36a	Approved	gene with protein product	RPL44	L36A	Xq22.1	6173	ENSG00000241343	OTTHUMG00000022027	729	L ribosomal proteins
+HGNC:10346	RPL36AL	ribosomal protein L36a like	Approved	gene with protein product	RPL36A		14q21.3	6166	ENSG00000165502	OTTHUMG00000152330	729	L ribosomal proteins
+HGNC:10347	RPL37	ribosomal protein L37	Approved	gene with protein product		L37	5p13.1	6167	ENSG00000145592	OTTHUMG00000094774	729	L ribosomal proteins
+HGNC:10348	RPL37A	ribosomal protein L37a	Approved	gene with protein product		L37A	2q35	6168	ENSG00000197756	OTTHUMG00000133052	729	L ribosomal proteins
+HGNC:10349	RPL38	ribosomal protein L38	Approved	gene with protein product		L38	17q25.1	6169	ENSG00000172809	OTTHUMG00000166016	729	L ribosomal proteins
+HGNC:10350	RPL39	ribosomal protein L39	Approved	gene with protein product	RPL39P42	L39	Xq24	6170	ENSG00000198918	OTTHUMG00000022278	729	L ribosomal proteins
+HGNC:17094	RPL39L	ribosomal protein L39 like	Approved	gene with protein product	RPL39L1		3q27.3	116832	ENSG00000163923	OTTHUMG00000156465	729	L ribosomal proteins
+HGNC:10351	RPL3L	ribosomal protein L3 like	Approved	gene with protein product			16p13.3	6123	ENSG00000140986	OTTHUMG00000128685	729	L ribosomal proteins
+HGNC:10353	RPL4	ribosomal protein L4	Approved	gene with protein product		L4	15q22.31	6124	ENSG00000174444	OTTHUMG00000133193	729	L ribosomal proteins
+HGNC:12458	UBA52	ubiquitin A-52 residue ribosomal protein fusion product 1	Approved	gene with protein product		RPL40, CEP52, HUBCEP52, MGC57125, MGC126879, MGC126881, L40	19p13.1-p12	7311	ENSG00000221983	OTTHUMG00000183110	729	L ribosomal proteins
+HGNC:10354	RPL41	ribosomal protein L41	Approved	gene with protein product		L41	12q13	6171	ENSG00000229117	OTTHUMG00000170183	729	L ribosomal proteins
+HGNC:10360	RPL5	ribosomal protein L5	Approved	gene with protein product		L5, PPP1R135, uL18	1p22.1	6125	ENSG00000122406	OTTHUMG00000010899	729	L ribosomal proteins
+HGNC:10362	RPL6	ribosomal protein L6	Approved	gene with protein product	TXREB1	TAXREB107, L6	12q24.13	6128	ENSG00000089009	OTTHUMG00000169685	729	L ribosomal proteins
+HGNC:10363	RPL7	ribosomal protein L7	Approved	gene with protein product		humL7-1, L7	8q21.11	6129	ENSG00000147604	OTTHUMG00000134312	729	L ribosomal proteins
+HGNC:10364	RPL7A	ribosomal protein L7a	Approved	gene with protein product		SURF3, TRUP, L7A	9q34.2	6130	ENSG00000148303	OTTHUMG00000020864	729	L ribosomal proteins
+HGNC:21370	RPL7L1	ribosomal protein L7 like 1	Approved	gene with protein product		dJ475N16.4	6p21.1	285855	ENSG00000146223	OTTHUMG00000014710	729	L ribosomal proteins
+HGNC:10368	RPL8	ribosomal protein L8	Approved	gene with protein product		L8	8q24.3	6132	ENSG00000161016	OTTHUMG00000165249	729	L ribosomal proteins
+HGNC:10369	RPL9	ribosomal protein L9	Approved	gene with protein product		L9	4p14	6133	ENSG00000163682	OTTHUMG00000099367	729	L ribosomal proteins
+HGNC:10371	RPLP0	ribosomal protein lateral stalk subunit P0	Approved	gene with protein product		PRLP0, P0, L10E, RPP0, LP0	12q24.23	6175	ENSG00000089157	OTTHUMG00000169317	729	L ribosomal proteins
+HGNC:10372	RPLP1	ribosomal protein lateral stalk subunit P1	Approved	gene with protein product		LP1	15q23	6176	ENSG00000137818	OTTHUMG00000172087	729	L ribosomal proteins
+HGNC:10377	RPLP2	ribosomal protein lateral stalk subunit P2	Approved	gene with protein product	D11S2243E	P2, RPP2, MGC71408, LP2	11p15.5	6181	ENSG00000177600	OTTHUMG00000133317	729	L ribosomal proteins
+HGNC:14275	MRPL1	mitochondrial ribosomal protein L1	Approved	gene with protein product		BM022	4q21.1	65008	ENSG00000169288	OTTHUMG00000130200	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:14055	MRPL10	mitochondrial ribosomal protein L10	Approved	gene with protein product		RPML8, MRP-L8, L10MT, MRP-L10, MRPL8, MGC17973	17q21.32	124995	ENSG00000159111	OTTHUMG00000156302	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:14042	MRPL11	mitochondrial ribosomal protein L11	Approved	gene with protein product			11q13.2	65003	ENSG00000174547	OTTHUMG00000167097	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:10378	MRPL12	mitochondrial ribosomal protein L12	Approved	gene with protein product	RPML12	MRPL7/L12, MRPL7	17q25.3	6182	ENSG00000262814	OTTHUMG00000178171	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:14278	MRPL13	mitochondrial ribosomal protein L13	Approved	gene with protein product		L13, RPL13, L13mt, RPML13, L13A	8q24.12	28998	ENSG00000172172	OTTHUMG00000165039	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:14279	MRPL14	mitochondrial ribosomal protein L14	Approved	gene with protein product		RPML32, MRP-L32	6p21.1	64928	ENSG00000180992	OTTHUMG00000014756	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:14054	MRPL15	mitochondrial ribosomal protein L15	Approved	gene with protein product		RPML7, MRP-L7, HSPC145, L15mt, MRP-L15	8q11.23	29088	ENSG00000137547	OTTHUMG00000164315	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:14476	MRPL16	mitochondrial ribosomal protein L16	Approved	gene with protein product		FLJ20484, PNAS-111	11q12.1	54948	ENSG00000166902	OTTHUMG00000167410	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:14053	MRPL17	mitochondrial ribosomal protein L17	Approved	gene with protein product		RPML26, MRP-L26	11p15.4	63875	ENSG00000158042	OTTHUMG00000165505	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:14477	MRPL18	mitochondrial ribosomal protein L18	Approved	gene with protein product		HSPC071	6q25.3	29074	ENSG00000112110	OTTHUMG00000015942	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:14052	MRPL19	mitochondrial ribosomal protein L19	Approved	gene with protein product		MRP-L15, RPML15, KIAA0104, RLX1	2p12	9801	ENSG00000115364	OTTHUMG00000129990	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:14056	MRPL2	mitochondrial ribosomal protein L2	Approved	gene with protein product		MRP-L14, RPML14, CGI-22	6p21.1	51069	ENSG00000112651	OTTHUMG00000014719	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:14478	MRPL20	mitochondrial ribosomal protein L20	Approved	gene with protein product		FLJ10024	1p36.33	55052	ENSG00000242485	OTTHUMG00000002916	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:14479	MRPL21	mitochondrial ribosomal protein L21	Approved	gene with protein product			11q13.3	219927	ENSG00000197345	OTTHUMG00000167893	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:14480	MRPL22	mitochondrial ribosomal protein L22	Approved	gene with protein product		MRP-L25, RPML25, HSPC158	5q33.2	29093	ENSG00000082515	OTTHUMG00000130190	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:10322	MRPL23	mitochondrial ribosomal protein L23	Approved	gene with protein product	RPL23L	L23MRP	11p15.5	6150	ENSG00000214026	OTTHUMG00000012476	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:14037	MRPL24	mitochondrial ribosomal protein L24	Approved	gene with protein product		MRP-L18	1q23.1	79590	ENSG00000143314	OTTHUMG00000041296	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:14483	MRPL27	mitochondrial ribosomal protein L27	Approved	gene with protein product			17q21.33	51264	ENSG00000108826	OTTHUMG00000162062	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:14484	MRPL28	mitochondrial ribosomal protein L28	Approved	gene with protein product	MAAT1	p15	16p13.3	10573	ENSG00000086504	OTTHUMG00000047994	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:10379	MRPL3	mitochondrial ribosomal protein L3	Approved	gene with protein product	RPML3	MRL3	3q22.1	11222	ENSG00000114686	OTTHUMG00000159607	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:14036	MRPL30	mitochondrial ribosomal protein L30	Approved	gene with protein product		MRP-L28, RPML28	2q11.2	51263	ENSG00000185414	OTTHUMG00000130642	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:14035	MRPL32	mitochondrial ribosomal protein L32	Approved	gene with protein product		HSPC283, L32mt, MRP-L32, bMRP-59b	7p14.1	64983	ENSG00000106591	OTTHUMG00000155180	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:14487	MRPL33	mitochondrial ribosomal protein L33	Approved	gene with protein product	C2orf1	RPL33L	2p23.2	9553	ENSG00000243147	OTTHUMG00000097795	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:14488	MRPL34	mitochondrial ribosomal protein L34	Approved	gene with protein product		L34mt, MGC2633, MGC24974	19p13.11	64981	ENSG00000130312	OTTHUMG00000182764	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:14489	MRPL35	mitochondrial ribosomal protein L35	Approved	gene with protein product			2p11.2	51318	ENSG00000132313	OTTHUMG00000037385	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:14490	MRPL36	mitochondrial ribosomal protein L36	Approved	gene with protein product		RPMJ, L36mt, PRPL36, MRP-L36	5p15.33	64979	ENSG00000171421	OTTHUMG00000090373	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:14034	MRPL37	mitochondrial ribosomal protein L37	Approved	gene with protein product		RPML2, MRP-L2	1p32.3	51253	ENSG00000116221	OTTHUMG00000008118	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:14033	MRPL38	mitochondrial ribosomal protein L38	Approved	gene with protein product		RPML3, MRP-L3, HSPC262, MGC4810	17q25.1	64978	ENSG00000204316	OTTHUMG00000152977	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:14027	MRPL39	mitochondrial ribosomal protein L39	Approved	gene with protein product		RPML5, MRP-L5, MGC104174, PRED66, PRED22, C21orf92, L39mt, MSTP003, MGC3400, FLJ20451	21q21.3	54148	ENSG00000154719	OTTHUMG00000078371	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:14276	MRPL4	mitochondrial ribosomal protein L4	Approved	gene with protein product		CGI-28	19p13.2	51073	ENSG00000105364	OTTHUMG00000180400	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:14491	MRPL40	mitochondrial ribosomal protein L40	Approved	gene with protein product	NLVCF	MRP-L22	22q11.21	64976	ENSG00000185608	OTTHUMG00000150136	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:14492	MRPL41	mitochondrial ribosomal protein L41	Approved	gene with protein product		MRP-L27, RPML27, BMRP, PIG3, MRPL27	9q34.3	64975	ENSG00000182154	OTTHUMG00000020987	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:14493	MRPL42	mitochondrial ribosomal protein L42	Approved	gene with protein product		MRPS32, MRP-L31, RPML31, PTD007, HSPC204, MRPL31	12q22	28977	ENSG00000198015	OTTHUMG00000170157	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:14517	MRPL43	mitochondrial ribosomal protein L43	Approved	gene with protein product		bMRP36a	10q24.31	84545	ENSG00000055950	OTTHUMG00000018920	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:16650	MRPL44	mitochondrial ribosomal protein L44	Approved	gene with protein product		FLJ12701, FLJ13990	2q36.1	65080	ENSG00000135900	OTTHUMG00000133164	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:16651	MRPL45	mitochondrial ribosomal protein L45	Approved	gene with protein product		MGC11321	17q12	84311	ENSG00000278845	OTTHUMG00000188489	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:1192	MRPL46	mitochondrial ribosomal protein L46	Approved	gene with protein product	C15orf4	LIECG2, P2ECSL	15q25.3	26589	ENSG00000259494	OTTHUMG00000148683	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:16652	MRPL47	mitochondrial ribosomal protein L47	Approved	gene with protein product		CGI-204, NCM1	3q26.33	57129	ENSG00000136522	OTTHUMG00000157784	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:16653	MRPL48	mitochondrial ribosomal protein L48	Approved	gene with protein product		CGI-118	11q13.4	51642	ENSG00000175581	OTTHUMG00000168048	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:1176	MRPL49	mitochondrial ribosomal protein L49	Approved	gene with protein product	C11orf4	NOF, NOF1, L49mt	11q13.1	740	ENSG00000149792	OTTHUMG00000165608	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:16654	MRPL50	mitochondrial ribosomal protein L50	Approved	gene with protein product		FLJ20493, MRP-L50	9q31.1	54534	ENSG00000136897	OTTHUMG00000020384	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:14044	MRPL51	mitochondrial ribosomal protein L51	Approved	gene with protein product	MRP64	CDA09, HSPC241, bMRP64	12p13.31	51258	ENSG00000111639	OTTHUMG00000168512	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:16655	MRPL52	mitochondrial ribosomal protein L52	Approved	gene with protein product			14q11.2	122704	ENSG00000172590	OTTHUMG00000028703	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:16684	MRPL53	mitochondrial ribosomal protein L53	Approved	gene with protein product			2p13.1	116540	ENSG00000204822	OTTHUMG00000129961	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:16685	MRPL54	mitochondrial ribosomal protein L54	Approved	gene with protein product			19p13.3	116541	ENSG00000183617	OTTHUMG00000180873	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:16686	MRPL55	mitochondrial ribosomal protein L55	Approved	gene with protein product			1q42.13	128308	ENSG00000162910	OTTHUMG00000037965	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:14514	MRPL57	mitochondrial ribosomal protein L57	Approved	gene with protein product	MRP63		13q12.11	78988	ENSG00000173141	OTTHUMG00000016532	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:5359	MRPL58	mitochondrial ribosomal protein L58	Approved	gene with protein product	ICT1	DS-1	17q25.1	3396	ENSG00000167862	OTTHUMG00000179218	1994	Large subunit mitochondrial ribosomal proteins
+HGNC:14275	MRPL1	mitochondrial ribosomal protein L1	Approved	gene with protein product		BM022	4q21.1	65008	ENSG00000169288	OTTHUMG00000130200	646	Mitochondrial ribosomal proteins
+HGNC:14055	MRPL10	mitochondrial ribosomal protein L10	Approved	gene with protein product		RPML8, MRP-L8, L10MT, MRP-L10, MRPL8, MGC17973	17q21.32	124995	ENSG00000159111	OTTHUMG00000156302	646	Mitochondrial ribosomal proteins
+HGNC:14042	MRPL11	mitochondrial ribosomal protein L11	Approved	gene with protein product			11q13.2	65003	ENSG00000174547	OTTHUMG00000167097	646	Mitochondrial ribosomal proteins
+HGNC:10378	MRPL12	mitochondrial ribosomal protein L12	Approved	gene with protein product	RPML12	MRPL7/L12, MRPL7	17q25.3	6182	ENSG00000262814	OTTHUMG00000178171	646	Mitochondrial ribosomal proteins
+HGNC:14278	MRPL13	mitochondrial ribosomal protein L13	Approved	gene with protein product		L13, RPL13, L13mt, RPML13, L13A	8q24.12	28998	ENSG00000172172	OTTHUMG00000165039	646	Mitochondrial ribosomal proteins
+HGNC:14279	MRPL14	mitochondrial ribosomal protein L14	Approved	gene with protein product		RPML32, MRP-L32	6p21.1	64928	ENSG00000180992	OTTHUMG00000014756	646	Mitochondrial ribosomal proteins
+HGNC:14054	MRPL15	mitochondrial ribosomal protein L15	Approved	gene with protein product		RPML7, MRP-L7, HSPC145, L15mt, MRP-L15	8q11.23	29088	ENSG00000137547	OTTHUMG00000164315	646	Mitochondrial ribosomal proteins
+HGNC:14476	MRPL16	mitochondrial ribosomal protein L16	Approved	gene with protein product		FLJ20484, PNAS-111	11q12.1	54948	ENSG00000166902	OTTHUMG00000167410	646	Mitochondrial ribosomal proteins
+HGNC:14053	MRPL17	mitochondrial ribosomal protein L17	Approved	gene with protein product		RPML26, MRP-L26	11p15.4	63875	ENSG00000158042	OTTHUMG00000165505	646	Mitochondrial ribosomal proteins
+HGNC:14477	MRPL18	mitochondrial ribosomal protein L18	Approved	gene with protein product		HSPC071	6q25.3	29074	ENSG00000112110	OTTHUMG00000015942	646	Mitochondrial ribosomal proteins
+HGNC:14052	MRPL19	mitochondrial ribosomal protein L19	Approved	gene with protein product		MRP-L15, RPML15, KIAA0104, RLX1	2p12	9801	ENSG00000115364	OTTHUMG00000129990	646	Mitochondrial ribosomal proteins
+HGNC:14056	MRPL2	mitochondrial ribosomal protein L2	Approved	gene with protein product		MRP-L14, RPML14, CGI-22	6p21.1	51069	ENSG00000112651	OTTHUMG00000014719	646	Mitochondrial ribosomal proteins
+HGNC:14478	MRPL20	mitochondrial ribosomal protein L20	Approved	gene with protein product		FLJ10024	1p36.33	55052	ENSG00000242485	OTTHUMG00000002916	646	Mitochondrial ribosomal proteins
+HGNC:14479	MRPL21	mitochondrial ribosomal protein L21	Approved	gene with protein product			11q13.3	219927	ENSG00000197345	OTTHUMG00000167893	646	Mitochondrial ribosomal proteins
+HGNC:14480	MRPL22	mitochondrial ribosomal protein L22	Approved	gene with protein product		MRP-L25, RPML25, HSPC158	5q33.2	29093	ENSG00000082515	OTTHUMG00000130190	646	Mitochondrial ribosomal proteins
+HGNC:10322	MRPL23	mitochondrial ribosomal protein L23	Approved	gene with protein product	RPL23L	L23MRP	11p15.5	6150	ENSG00000214026	OTTHUMG00000012476	646	Mitochondrial ribosomal proteins
+HGNC:14037	MRPL24	mitochondrial ribosomal protein L24	Approved	gene with protein product		MRP-L18	1q23.1	79590	ENSG00000143314	OTTHUMG00000041296	646	Mitochondrial ribosomal proteins
+HGNC:14483	MRPL27	mitochondrial ribosomal protein L27	Approved	gene with protein product			17q21.33	51264	ENSG00000108826	OTTHUMG00000162062	646	Mitochondrial ribosomal proteins
+HGNC:14484	MRPL28	mitochondrial ribosomal protein L28	Approved	gene with protein product	MAAT1	p15	16p13.3	10573	ENSG00000086504	OTTHUMG00000047994	646	Mitochondrial ribosomal proteins
+HGNC:10379	MRPL3	mitochondrial ribosomal protein L3	Approved	gene with protein product	RPML3	MRL3	3q22.1	11222	ENSG00000114686	OTTHUMG00000159607	646	Mitochondrial ribosomal proteins
+HGNC:14036	MRPL30	mitochondrial ribosomal protein L30	Approved	gene with protein product		MRP-L28, RPML28	2q11.2	51263	ENSG00000185414	OTTHUMG00000130642	646	Mitochondrial ribosomal proteins
+HGNC:14035	MRPL32	mitochondrial ribosomal protein L32	Approved	gene with protein product		HSPC283, L32mt, MRP-L32, bMRP-59b	7p14.1	64983	ENSG00000106591	OTTHUMG00000155180	646	Mitochondrial ribosomal proteins
+HGNC:14487	MRPL33	mitochondrial ribosomal protein L33	Approved	gene with protein product	C2orf1	RPL33L	2p23.2	9553	ENSG00000243147	OTTHUMG00000097795	646	Mitochondrial ribosomal proteins
+HGNC:14488	MRPL34	mitochondrial ribosomal protein L34	Approved	gene with protein product		L34mt, MGC2633, MGC24974	19p13.11	64981	ENSG00000130312	OTTHUMG00000182764	646	Mitochondrial ribosomal proteins
+HGNC:14489	MRPL35	mitochondrial ribosomal protein L35	Approved	gene with protein product			2p11.2	51318	ENSG00000132313	OTTHUMG00000037385	646	Mitochondrial ribosomal proteins
+HGNC:14490	MRPL36	mitochondrial ribosomal protein L36	Approved	gene with protein product		RPMJ, L36mt, PRPL36, MRP-L36	5p15.33	64979	ENSG00000171421	OTTHUMG00000090373	646	Mitochondrial ribosomal proteins
+HGNC:14034	MRPL37	mitochondrial ribosomal protein L37	Approved	gene with protein product		RPML2, MRP-L2	1p32.3	51253	ENSG00000116221	OTTHUMG00000008118	646	Mitochondrial ribosomal proteins
+HGNC:14033	MRPL38	mitochondrial ribosomal protein L38	Approved	gene with protein product		RPML3, MRP-L3, HSPC262, MGC4810	17q25.1	64978	ENSG00000204316	OTTHUMG00000152977	646	Mitochondrial ribosomal proteins
+HGNC:14027	MRPL39	mitochondrial ribosomal protein L39	Approved	gene with protein product		RPML5, MRP-L5, MGC104174, PRED66, PRED22, C21orf92, L39mt, MSTP003, MGC3400, FLJ20451	21q21.3	54148	ENSG00000154719	OTTHUMG00000078371	646	Mitochondrial ribosomal proteins
+HGNC:14276	MRPL4	mitochondrial ribosomal protein L4	Approved	gene with protein product		CGI-28	19p13.2	51073	ENSG00000105364	OTTHUMG00000180400	646	Mitochondrial ribosomal proteins
+HGNC:14491	MRPL40	mitochondrial ribosomal protein L40	Approved	gene with protein product	NLVCF	MRP-L22	22q11.21	64976	ENSG00000185608	OTTHUMG00000150136	646	Mitochondrial ribosomal proteins
+HGNC:14492	MRPL41	mitochondrial ribosomal protein L41	Approved	gene with protein product		MRP-L27, RPML27, BMRP, PIG3, MRPL27	9q34.3	64975	ENSG00000182154	OTTHUMG00000020987	646	Mitochondrial ribosomal proteins
+HGNC:14493	MRPL42	mitochondrial ribosomal protein L42	Approved	gene with protein product		MRPS32, MRP-L31, RPML31, PTD007, HSPC204, MRPL31	12q22	28977	ENSG00000198015	OTTHUMG00000170157	646	Mitochondrial ribosomal proteins
+HGNC:14517	MRPL43	mitochondrial ribosomal protein L43	Approved	gene with protein product		bMRP36a	10q24.31	84545	ENSG00000055950	OTTHUMG00000018920	646	Mitochondrial ribosomal proteins
+HGNC:16650	MRPL44	mitochondrial ribosomal protein L44	Approved	gene with protein product		FLJ12701, FLJ13990	2q36.1	65080	ENSG00000135900	OTTHUMG00000133164	646	Mitochondrial ribosomal proteins
+HGNC:16651	MRPL45	mitochondrial ribosomal protein L45	Approved	gene with protein product		MGC11321	17q12	84311	ENSG00000278845	OTTHUMG00000188489	646	Mitochondrial ribosomal proteins
+HGNC:1192	MRPL46	mitochondrial ribosomal protein L46	Approved	gene with protein product	C15orf4	LIECG2, P2ECSL	15q25.3	26589	ENSG00000259494	OTTHUMG00000148683	646	Mitochondrial ribosomal proteins
+HGNC:16652	MRPL47	mitochondrial ribosomal protein L47	Approved	gene with protein product		CGI-204, NCM1	3q26.33	57129	ENSG00000136522	OTTHUMG00000157784	646	Mitochondrial ribosomal proteins
+HGNC:16653	MRPL48	mitochondrial ribosomal protein L48	Approved	gene with protein product		CGI-118	11q13.4	51642	ENSG00000175581	OTTHUMG00000168048	646	Mitochondrial ribosomal proteins
+HGNC:1176	MRPL49	mitochondrial ribosomal protein L49	Approved	gene with protein product	C11orf4	NOF, NOF1, L49mt	11q13.1	740	ENSG00000149792	OTTHUMG00000165608	646	Mitochondrial ribosomal proteins
+HGNC:16654	MRPL50	mitochondrial ribosomal protein L50	Approved	gene with protein product		FLJ20493, MRP-L50	9q31.1	54534	ENSG00000136897	OTTHUMG00000020384	646	Mitochondrial ribosomal proteins
+HGNC:14044	MRPL51	mitochondrial ribosomal protein L51	Approved	gene with protein product	MRP64	CDA09, HSPC241, bMRP64	12p13.31	51258	ENSG00000111639	OTTHUMG00000168512	646	Mitochondrial ribosomal proteins
+HGNC:16655	MRPL52	mitochondrial ribosomal protein L52	Approved	gene with protein product			14q11.2	122704	ENSG00000172590	OTTHUMG00000028703	646	Mitochondrial ribosomal proteins
+HGNC:16684	MRPL53	mitochondrial ribosomal protein L53	Approved	gene with protein product			2p13.1	116540	ENSG00000204822	OTTHUMG00000129961	646	Mitochondrial ribosomal proteins
+HGNC:16685	MRPL54	mitochondrial ribosomal protein L54	Approved	gene with protein product			19p13.3	116541	ENSG00000183617	OTTHUMG00000180873	646	Mitochondrial ribosomal proteins
+HGNC:16686	MRPL55	mitochondrial ribosomal protein L55	Approved	gene with protein product			1q42.13	128308	ENSG00000162910	OTTHUMG00000037965	646	Mitochondrial ribosomal proteins
+HGNC:14514	MRPL57	mitochondrial ribosomal protein L57	Approved	gene with protein product	MRP63		13q12.11	78988	ENSG00000173141	OTTHUMG00000016532	646	Mitochondrial ribosomal proteins
+HGNC:14277	MRPL9	mitochondrial ribosomal protein L9	Approved	gene with protein product			1q21.3	65005	ENSG00000143436	OTTHUMG00000013063	646	Mitochondrial ribosomal proteins
+HGNC:14502	MRPS10	mitochondrial ribosomal protein S10	Approved	gene with protein product		FLJ10567	6p21.1	55173	ENSG00000048544	OTTHUMG00000014694	646	Mitochondrial ribosomal proteins
+HGNC:14050	MRPS11	mitochondrial ribosomal protein S11	Approved	gene with protein product		FLJ23406, HCC-2, FLJ22512	15q25.3	64963	ENSG00000181991	OTTHUMG00000148678	646	Mitochondrial ribosomal proteins
+HGNC:10380	MRPS12	mitochondrial ribosomal protein S12	Approved	gene with protein product	RPMS12	RPS12, RPSM12	19q13.2	6183	ENSG00000128626	OTTHUMG00000182692	646	Mitochondrial ribosomal proteins
+HGNC:14049	MRPS14	mitochondrial ribosomal protein S14	Approved	gene with protein product		HSMRPS14	1q25.1	63931	ENSG00000120333	OTTHUMG00000034878	646	Mitochondrial ribosomal proteins
+HGNC:14504	MRPS15	mitochondrial ribosomal protein S15	Approved	gene with protein product		FLJ11564	1p34.3	64960	ENSG00000116898	OTTHUMG00000008042	646	Mitochondrial ribosomal proteins
+HGNC:14048	MRPS16	mitochondrial ribosomal protein S16	Approved	gene with protein product		CGI-132	10q22.2	51021	ENSG00000182180	OTTHUMG00000018454	646	Mitochondrial ribosomal proteins
+HGNC:14047	MRPS17	mitochondrial ribosomal protein S17	Approved	gene with protein product		HSPC011, RPMS17, MRP-S17	7p11.2	51373	ENSG00000239789	OTTHUMG00000023153	646	Mitochondrial ribosomal proteins
+HGNC:14515	MRPS18A	mitochondrial ribosomal protein S18A	Approved	gene with protein product		FLJ10548, MRPS18-3	6p21.1	55168	ENSG00000096080	OTTHUMG00000014750	646	Mitochondrial ribosomal proteins
+HGNC:14516	MRPS18B	mitochondrial ribosomal protein S18B	Approved	gene with protein product		MRPS18-2, PTD017, C6orf14, HSPC183	6p21.33	28973	ENSG00000204568	OTTHUMG00000031268	646	Mitochondrial ribosomal proteins
+HGNC:16633	MRPS18C	mitochondrial ribosomal protein S18C	Approved	gene with protein product		MRPS18-1, CGI-134, FLJ11146, FLJ22967	4q21.23	51023	ENSG00000163319	OTTHUMG00000130430	646	Mitochondrial ribosomal proteins
+HGNC:14495	MRPS2	mitochondrial ribosomal protein S2	Approved	gene with protein product		CGI-91	9q34.3	51116	ENSG00000122140	OTTHUMG00000020910	646	Mitochondrial ribosomal proteins
+HGNC:14046	MRPS21	mitochondrial ribosomal protein S21	Approved	gene with protein product			1q21.2	54460	ENSG00000266472	OTTHUMG00000012544	646	Mitochondrial ribosomal proteins
+HGNC:14508	MRPS22	mitochondrial ribosomal protein S22	Approved	gene with protein product		MRP-S22, GK002, C3orf5, GIBT	3q23	56945	ENSG00000175110	OTTHUMG00000159910	646	Mitochondrial ribosomal proteins
+HGNC:14509	MRPS23	mitochondrial ribosomal protein S23	Approved	gene with protein product		MRP-S23, CGI-138, HSPC329	17q22	51649	ENSG00000181610	OTTHUMG00000178774	646	Mitochondrial ribosomal proteins
+HGNC:14510	MRPS24	mitochondrial ribosomal protein S24	Approved	gene with protein product		MRP-S24, HSPC335	7p13	64951	ENSG00000062582	OTTHUMG00000023175	646	Mitochondrial ribosomal proteins
+HGNC:14511	MRPS25	mitochondrial ribosomal protein S25	Approved	gene with protein product		MRP-S25, FLJ00023, DKFZp313H0817, RPMS25	3p25.1	64432	ENSG00000131368	OTTHUMG00000129836	646	Mitochondrial ribosomal proteins
+HGNC:14045	MRPS26	mitochondrial ribosomal protein S26	Approved	gene with protein product	C20orf193	MRP-S13, MRP-S26, RPMS13, dJ534B8.3	20p13	64949	ENSG00000125901	OTTHUMG00000031721	646	Mitochondrial ribosomal proteins
+HGNC:14512	MRPS27	mitochondrial ribosomal protein S27	Approved	gene with protein product		KIAA0264	5q13.2	23107	ENSG00000113048	OTTHUMG00000100951	646	Mitochondrial ribosomal proteins
+HGNC:14513	MRPS28	mitochondrial ribosomal protein S28	Approved	gene with protein product		MRP-S28, HSPC007, MRPS35	8q21.13	28957	ENSG00000147586	OTTHUMG00000164642	646	Mitochondrial ribosomal proteins
+HGNC:2673	DAP3	death associated protein 3	Approved	gene with protein product		MRPS29, DAP-3, MRP-S29, bMRP-10, MGC126058, MGC126059, DKFZp686G12159	1q22	7818	ENSG00000132676	OTTHUMG00000035439	646	Mitochondrial ribosomal proteins
+HGNC:8769	MRPS30	mitochondrial ribosomal protein S30	Approved	gene with protein product	PDCD9	PAP	5p12	10884	ENSG00000112996	OTTHUMG00000096967	646	Mitochondrial ribosomal proteins
+HGNC:16632	MRPS31	mitochondrial ribosomal protein S31	Approved	gene with protein product		IMOGN38	13q14.11	10240	ENSG00000102738	OTTHUMG00000016777	646	Mitochondrial ribosomal proteins
+HGNC:16634	MRPS33	mitochondrial ribosomal protein S33	Approved	gene with protein product		CGI-139	7q34	51650	ENSG00000090263	OTTHUMG00000157456	646	Mitochondrial ribosomal proteins
+HGNC:16618	MRPS34	mitochondrial ribosomal protein S34	Approved	gene with protein product		MRP-S12, MGC2616	16p13.3	65993	ENSG00000074071	OTTHUMG00000128636	646	Mitochondrial ribosomal proteins
+HGNC:16635	MRPS35	mitochondrial ribosomal protein S35	Approved	gene with protein product		MRPS28, MDS023	12p11.22	60488	ENSG00000061794	OTTHUMG00000169215	646	Mitochondrial ribosomal proteins
+HGNC:16631	MRPS36	mitochondrial ribosomal protein S36	Approved	gene with protein product		DC47, MRP-S36	5q13.2	92259	ENSG00000134056	OTTHUMG00000162443	646	Mitochondrial ribosomal proteins
+HGNC:14498	MRPS5	mitochondrial ribosomal protein S5	Approved	gene with protein product		MRP-S5, S5mt	2q11.1	64969	ENSG00000144029	OTTHUMG00000130394	646	Mitochondrial ribosomal proteins
+HGNC:14051	MRPS6	mitochondrial ribosomal protein S6	Approved	gene with protein product	C21orf101	MRP-S6, RPMS6	21q22.11	64968	ENSG00000243927	OTTHUMG00000065820	646	Mitochondrial ribosomal proteins
+HGNC:14499	MRPS7	mitochondrial ribosomal protein S7	Approved	gene with protein product		MRP-S, RP-S7, RPMS7	17q25.1	51081	ENSG00000125445	OTTHUMG00000179484	646	Mitochondrial ribosomal proteins
+HGNC:14501	MRPS9	mitochondrial ribosomal protein S9	Approved	gene with protein product		RPMS9, MRP-S9, S9mt	2q12.1	64965	ENSG00000135972	OTTHUMG00000130807	646	Mitochondrial ribosomal proteins
+HGNC:10383	RPS10	ribosomal protein S10	Approved	gene with protein product		MGC88819, S10	6p21.31	6204	ENSG00000124614	OTTHUMG00000014546	728	S ribosomal proteins
+HGNC:10384	RPS11	ribosomal protein S11	Approved	gene with protein product		S11	19q13.3	6205	ENSG00000142534	OTTHUMG00000183156	728	S ribosomal proteins
+HGNC:10385	RPS12	ribosomal protein S12	Approved	gene with protein product		S12	6q23.2	6206	ENSG00000112306	OTTHUMG00000015593	728	S ribosomal proteins
+HGNC:10386	RPS13	ribosomal protein S13	Approved	gene with protein product		S13	11p15.1	6207	ENSG00000110700	OTTHUMG00000165988	728	S ribosomal proteins
+HGNC:10387	RPS14	ribosomal protein S14	Approved	gene with protein product		EMTB, S14	5q33.1	6208	ENSG00000164587	OTTHUMG00000130080	728	S ribosomal proteins
+HGNC:10388	RPS15	ribosomal protein S15	Approved	gene with protein product		RIG, MGC111130, S15	19p13.3	6209	ENSG00000115268	OTTHUMG00000140099	728	S ribosomal proteins
+HGNC:10389	RPS15A	ribosomal protein S15a	Approved	gene with protein product		S15A	16p12.3	6210	ENSG00000134419	OTTHUMG00000131365	728	S ribosomal proteins
+HGNC:10396	RPS16	ribosomal protein S16	Approved	gene with protein product		S16	19q13.2	6217	ENSG00000105193	OTTHUMG00000182972	728	S ribosomal proteins
+HGNC:10397	RPS17	ribosomal protein S17	Approved	gene with protein product	RPS17L	RPS17L1, RPS17L2, MGC72007, S17	15q25.2	6218	ENSG00000182774	OTTHUMG00000147355	728	S ribosomal proteins
+HGNC:10401	RPS18	ribosomal protein S18	Approved	gene with protein product	D6S218E	KE3, KE-3, HKE3, S18	6p21.32	6222	ENSG00000231500	OTTHUMG00000031053	728	S ribosomal proteins
+HGNC:10402	RPS19	ribosomal protein S19	Approved	gene with protein product	LOH19CR1	S19, eS19, DBA	19q13.2	6223	ENSG00000105372	OTTHUMG00000182676	728	S ribosomal proteins
+HGNC:10404	RPS2	ribosomal protein S2	Approved	gene with protein product		LLREP3, S2	16p13.3	6187	ENSG00000140988	OTTHUMG00000128708	728	S ribosomal proteins
+HGNC:10405	RPS20	ribosomal protein S20	Approved	gene with protein product		S20, uS10	8q12.1	6224	ENSG00000008988	OTTHUMG00000164297	728	S ribosomal proteins
+HGNC:10409	RPS21	ribosomal protein S21	Approved	gene with protein product		S21	20q13.33	6227	ENSG00000171858	OTTHUMG00000032915	728	S ribosomal proteins
+HGNC:10410	RPS23	ribosomal protein S23	Approved	gene with protein product		S23, uS12	5q14.2	6228	ENSG00000186468	OTTHUMG00000162557	728	S ribosomal proteins
+HGNC:10411	RPS24	ribosomal protein S24	Approved	gene with protein product		S24, eS24	10q22.3	6229	ENSG00000138326	OTTHUMG00000018549	728	S ribosomal proteins
+HGNC:10413	RPS25	ribosomal protein S25	Approved	gene with protein product		S25	11q23.3	6230	ENSG00000118181	OTTHUMG00000166350	728	S ribosomal proteins
+HGNC:10414	RPS26	ribosomal protein S26	Approved	gene with protein product		S26, eS26	12q13.2	6231	ENSG00000197728	OTTHUMG00000170139	728	S ribosomal proteins
+HGNC:10416	RPS27	ribosomal protein S27	Approved	gene with protein product		MPS-1, MPS1, S27	1q21.3	6232	ENSG00000177954	OTTHUMG00000036591	728	S ribosomal proteins
+HGNC:10417	RPS27A	ribosomal protein S27a	Approved	gene with protein product		UBCEP80, Uba80, S27A	2p16.1	6233	ENSG00000143947	OTTHUMG00000151919	728	S ribosomal proteins
+HGNC:18476	RPS27L	ribosomal protein S27 like	Approved	gene with protein product			15q22.2	51065	ENSG00000185088	OTTHUMG00000155301	728	S ribosomal proteins
+HGNC:10418	RPS28	ribosomal protein S28	Approved	gene with protein product		S28, eS28	19p13.2	6234	ENSG00000233927	OTTHUMG00000182460	728	S ribosomal proteins
+HGNC:10419	RPS29	ribosomal protein S29	Approved	gene with protein product		S29, uS14	14q21.3	6235	ENSG00000213741	OTTHUMG00000140272	728	S ribosomal proteins
+HGNC:10420	RPS3	ribosomal protein S3	Approved	gene with protein product		FLJ26283, FLJ27450, MGC87870, S3	11q13.4	6188	ENSG00000149273	OTTHUMG00000165448	728	S ribosomal proteins
+HGNC:3597	FAU	FAU ubiquitin like and ribosomal protein S30 fusion	Approved	gene with protein product		RPS30, FLJ22986, Fub1, Fubi, MNSFbeta, asr1, S30	11q13.1	2197	ENSG00000149806	OTTHUMG00000165606	728	S ribosomal proteins
+HGNC:10421	RPS3A	ribosomal protein S3A	Approved	gene with protein product	MFTL	S3A	4q31.3	6189	ENSG00000145425	OTTHUMG00000161445	728	S ribosomal proteins
+HGNC:10424	RPS4X	ribosomal protein S4 X-linked	Approved	gene with protein product		DXS306, CCG2, SCAR, SCR10, FLJ40595, RPS4, S4	Xq13.1	6191	ENSG00000198034	OTTHUMG00000021813	728	S ribosomal proteins
+HGNC:10425	RPS4Y1	ribosomal protein S4 Y-linked 1	Approved	gene with protein product	RPS4Y	MGC5070, MGC119100, S4	Yp11.2	6192	ENSG00000129824	OTTHUMG00000036152	728	S ribosomal proteins
+HGNC:18501	RPS4Y2	ribosomal protein S4 Y-linked 2	Approved	gene with protein product	RPS4Y2P		Yq11.223	140032	ENSG00000280969	OTTHUMG00000036540	728	S ribosomal proteins
+HGNC:10426	RPS5	ribosomal protein S5	Approved	gene with protein product		S5	19q13.43	6193	ENSG00000083845	OTTHUMG00000183530	728	S ribosomal proteins
+HGNC:10429	RPS6	ribosomal protein S6	Approved	gene with protein product		S6	9p22.1	6194	ENSG00000137154	OTTHUMG00000019642	728	S ribosomal proteins
+HGNC:10440	RPS7	ribosomal protein S7	Approved	gene with protein product		S7, eS7	2p25.3	6201	ENSG00000171863	OTTHUMG00000090305	728	S ribosomal proteins
+HGNC:10441	RPS8	ribosomal protein S8	Approved	gene with protein product		S8	1p34.1	6202	ENSG00000142937	OTTHUMG00000008494	728	S ribosomal proteins
+HGNC:10442	RPS9	ribosomal protein S9	Approved	gene with protein product		S9	19q13.42	6203	ENSG00000170889	OTTHUMG00000066618	728	S ribosomal proteins
+HGNC:6502	RPSA	ribosomal protein SA	Approved	gene with protein product	LAMR1	LRP, 37LRP, p40, SA	3p22.1	3921	ENSG00000168028	OTTHUMG00000131296	728	S ribosomal proteins
+HGNC:14502	MRPS10	mitochondrial ribosomal protein S10	Approved	gene with protein product		FLJ10567	6p21.1	55173	ENSG00000048544	OTTHUMG00000014694	1996	Small subunit mitochondrial ribosomal proteins
+HGNC:14050	MRPS11	mitochondrial ribosomal protein S11	Approved	gene with protein product		FLJ23406, HCC-2, FLJ22512	15q25.3	64963	ENSG00000181991	OTTHUMG00000148678	1996	Small subunit mitochondrial ribosomal proteins
+HGNC:10380	MRPS12	mitochondrial ribosomal protein S12	Approved	gene with protein product	RPMS12	RPS12, RPSM12	19q13.2	6183	ENSG00000128626	OTTHUMG00000182692	1996	Small subunit mitochondrial ribosomal proteins
+HGNC:14049	MRPS14	mitochondrial ribosomal protein S14	Approved	gene with protein product		HSMRPS14	1q25.1	63931	ENSG00000120333	OTTHUMG00000034878	1996	Small subunit mitochondrial ribosomal proteins
+HGNC:14504	MRPS15	mitochondrial ribosomal protein S15	Approved	gene with protein product		FLJ11564	1p34.3	64960	ENSG00000116898	OTTHUMG00000008042	1996	Small subunit mitochondrial ribosomal proteins
+HGNC:14048	MRPS16	mitochondrial ribosomal protein S16	Approved	gene with protein product		CGI-132	10q22.2	51021	ENSG00000182180	OTTHUMG00000018454	1996	Small subunit mitochondrial ribosomal proteins
+HGNC:14047	MRPS17	mitochondrial ribosomal protein S17	Approved	gene with protein product		HSPC011, RPMS17, MRP-S17	7p11.2	51373	ENSG00000239789	OTTHUMG00000023153	1996	Small subunit mitochondrial ribosomal proteins
+HGNC:14515	MRPS18A	mitochondrial ribosomal protein S18A	Approved	gene with protein product		FLJ10548, MRPS18-3	6p21.1	55168	ENSG00000096080	OTTHUMG00000014750	1996	Small subunit mitochondrial ribosomal proteins
+HGNC:14516	MRPS18B	mitochondrial ribosomal protein S18B	Approved	gene with protein product		MRPS18-2, PTD017, C6orf14, HSPC183	6p21.33	28973	ENSG00000204568	OTTHUMG00000031268	1996	Small subunit mitochondrial ribosomal proteins
+HGNC:16633	MRPS18C	mitochondrial ribosomal protein S18C	Approved	gene with protein product		MRPS18-1, CGI-134, FLJ11146, FLJ22967	4q21.23	51023	ENSG00000163319	OTTHUMG00000130430	1996	Small subunit mitochondrial ribosomal proteins
+HGNC:14495	MRPS2	mitochondrial ribosomal protein S2	Approved	gene with protein product		CGI-91	9q34.3	51116	ENSG00000122140	OTTHUMG00000020910	1996	Small subunit mitochondrial ribosomal proteins
+HGNC:14046	MRPS21	mitochondrial ribosomal protein S21	Approved	gene with protein product			1q21.2	54460	ENSG00000266472	OTTHUMG00000012544	1996	Small subunit mitochondrial ribosomal proteins
+HGNC:14508	MRPS22	mitochondrial ribosomal protein S22	Approved	gene with protein product		MRP-S22, GK002, C3orf5, GIBT	3q23	56945	ENSG00000175110	OTTHUMG00000159910	1996	Small subunit mitochondrial ribosomal proteins
+HGNC:14509	MRPS23	mitochondrial ribosomal protein S23	Approved	gene with protein product		MRP-S23, CGI-138, HSPC329	17q22	51649	ENSG00000181610	OTTHUMG00000178774	1996	Small subunit mitochondrial ribosomal proteins
+HGNC:14510	MRPS24	mitochondrial ribosomal protein S24	Approved	gene with protein product		MRP-S24, HSPC335	7p13	64951	ENSG00000062582	OTTHUMG00000023175	1996	Small subunit mitochondrial ribosomal proteins
+HGNC:14511	MRPS25	mitochondrial ribosomal protein S25	Approved	gene with protein product		MRP-S25, FLJ00023, DKFZp313H0817, RPMS25	3p25.1	64432	ENSG00000131368	OTTHUMG00000129836	1996	Small subunit mitochondrial ribosomal proteins
+HGNC:14045	MRPS26	mitochondrial ribosomal protein S26	Approved	gene with protein product	C20orf193	MRP-S13, MRP-S26, RPMS13, dJ534B8.3	20p13	64949	ENSG00000125901	OTTHUMG00000031721	1996	Small subunit mitochondrial ribosomal proteins
+HGNC:14512	MRPS27	mitochondrial ribosomal protein S27	Approved	gene with protein product		KIAA0264	5q13.2	23107	ENSG00000113048	OTTHUMG00000100951	1996	Small subunit mitochondrial ribosomal proteins
+HGNC:14513	MRPS28	mitochondrial ribosomal protein S28	Approved	gene with protein product		MRP-S28, HSPC007, MRPS35	8q21.13	28957	ENSG00000147586	OTTHUMG00000164642	1996	Small subunit mitochondrial ribosomal proteins
+HGNC:8769	MRPS30	mitochondrial ribosomal protein S30	Approved	gene with protein product	PDCD9	PAP	5p12	10884	ENSG00000112996	OTTHUMG00000096967	1996	Small subunit mitochondrial ribosomal proteins
+HGNC:16632	MRPS31	mitochondrial ribosomal protein S31	Approved	gene with protein product		IMOGN38	13q14.11	10240	ENSG00000102738	OTTHUMG00000016777	1996	Small subunit mitochondrial ribosomal proteins
+HGNC:16634	MRPS33	mitochondrial ribosomal protein S33	Approved	gene with protein product		CGI-139	7q34	51650	ENSG00000090263	OTTHUMG00000157456	1996	Small subunit mitochondrial ribosomal proteins
+HGNC:16618	MRPS34	mitochondrial ribosomal protein S34	Approved	gene with protein product		MRP-S12, MGC2616	16p13.3	65993	ENSG00000074071	OTTHUMG00000128636	1996	Small subunit mitochondrial ribosomal proteins
+HGNC:16635	MRPS35	mitochondrial ribosomal protein S35	Approved	gene with protein product		MRPS28, MDS023	12p11.22	60488	ENSG00000061794	OTTHUMG00000169215	1996	Small subunit mitochondrial ribosomal proteins
+HGNC:16631	MRPS36	mitochondrial ribosomal protein S36	Approved	gene with protein product		DC47, MRP-S36	5q13.2	92259	ENSG00000134056	OTTHUMG00000162443	1996	Small subunit mitochondrial ribosomal proteins

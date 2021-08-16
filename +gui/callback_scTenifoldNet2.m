@@ -1,5 +1,6 @@
 function callback_scTenifoldNet2(src,~)
     import ten.*
+    import pkg.*
     try
         ten.check_tensor_toolbox;
     catch ME
@@ -44,5 +45,19 @@ function callback_scTenifoldNet2(src,~)
     gui.gui_waitbar(fw);
     figure;
     e_mkqqplot(T);    
-    gui.i_exporttable(T,true);
+    gui.i_exporttable(T,true);    
+    answer=questdlg('Run GSEA analysis?');
+    if strcmp(answer,'Yes')
+        try
+            Tr=ten.e_fgsearun(T);
+        catch ME
+            errordlg(ME.message);
+            return;
+        end
+        gui.i_exporttable(Tr,true);
+        answer2=questdlg('Group GSEA hits?');
+        if strcmp(answer2,'Yes')
+            ten.e_fgseanet(Tr);
+        end
+    end
 end

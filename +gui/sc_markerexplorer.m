@@ -12,7 +12,8 @@ function sc_markerexplorer(X,genelist,s,varargin)
    method=p.Results.method;
    numfig=p.Results.numfig;
    
-  
+mfolder = fileparts(mfilename('fullpath'));
+
 global mkexplorer_clustid
 mkexplorer_clustid=0;
 hFig = figure('Name','Marker Gene Explorer');
@@ -28,7 +29,7 @@ tb = uitoolbar(hFig);
 tt = uitoggletool(tb,'Separator','on');
 % [img,map] = imread(fullfile(matlabroot,...
 %             'toolbox','matlab','icons','tool_ellipse.gif'));
-[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+[img,map] = imread(fullfile(mfolder,...
             'resources','brush.gif'));        
 ptImage = ind2rgb(img,map);
 tt.CData = ptImage;
@@ -50,7 +51,7 @@ tt.ClickedCallback = @BrushSwitcher;
 pt = uipushtool(tb,'Separator','on');
 % [img,map] = imread(fullfile(matlabroot,...
 %             'toolbox','matlab','icons','profiler.gif'));
-[img,map] = imread(fullfile(fileparts(which(mfilename)),...
+[img,map] = imread(fullfile(mfolder,...
             'resources','list.gif'));         
 ptImage = ind2rgb(img,map);
 
