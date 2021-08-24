@@ -5,7 +5,7 @@ function callback_BuildGeneNetwork(src,~)
     [glist]=gui.i_selectngenes(sce);
     if isempty(glist), return; end
 
-    [y,i]=ismember(glist,sce.g);
+    [y,i]=ismember(upper(glist),upper(sce.g));
     if ~all(y), error('xxx'); end    
     fprintf("%s\n",glist)
     fw=gui.gui_waitbar;

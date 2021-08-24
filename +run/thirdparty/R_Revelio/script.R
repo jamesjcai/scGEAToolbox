@@ -1,4 +1,5 @@
-# setwd("C:\\Users\\jcai.AUTH\\Documents\\GitHub\\scGEAToolbox\\+run\\thirdparty\\R_Revelio")
+#setwd("C:\\Users\\jcai.AUTH\\Documents\\GitHub\\scGEAToolbox\\+run\\thirdparty\\R_Revelio")
+#setwd("u:\\GitHub\\scGEAToolbox\\+run\\thirdparty\\R_Revelio")
 library(Revelio)
 library(R.matlab)
 
