@@ -22,16 +22,32 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
     if tf~=1, return; end
     switch indx
         case 1   % basic QC
-            answer=questdlg({'Library Size > 1000','mtRNA Ratio < 10%',...
-                               'Gene''s min_cells_nonzero > 5%'});
-            if ~strcmp(answer,'Yes'), return; end
-            fw=gui.gui_waitbar;            
-            sce=sce.qcfilter;
-            gui.gui_waitbar(fw);        
-            
+            %answer=questdlg({'Library Size > 1000','mtDNA Ratio < 10%',...
+            %                   'Gene''s min_cells_nonzero > 5%'});
+            prompt = {'Library size:','mtDNA ratio:',...
+                      'Gene''s min_nonzero_cells (5% or 50):'};
+            dlgtitle = 'Input';
+            dims = [1 35];
+            definput = {'1000','0.10','0.05'};
+            answer = inputdlg(prompt,dlgtitle,dims,definput);
+            if isempty(answer), return; end
+            try
+                libsize=str2double(answer{1});
+                mtratio=str2double(answer{2});
+                min_cells_nonzero=str2double(answer{3});
+                assert((libsize>100)&&(libsize<100000));
+                assert((mtratio>=0) && (mtratio<=1));
+                assert((min_cells_nonzero>=0 && min_cells_nonzero<=1)||(min_cells_nonzero>1 && min_cells_nonzero<sce.NumCells));
+            catch
+                requirerefresh=false;
+                errordlg('Invalid input(s).');
+                return;
+            end
+            fw=gui.gui_waitbar;
+            sce=sce.qcfilter(libsize,mtratio,min_cells_nonzero);
+            gui.gui_waitbar(fw);
         %    [Xmajor,Xminor,gmajor,gminor]=pkg.e_makeshadowmat(sce.X,sce.g);
-        %    [X1,g1]=pkg.e_shadowmatqc(Xmajor,Xminor,gmajor,gminor);
-            
+        %    [X1,g1]=pkg.e_shadowmatqc(Xmajor,Xminor,gmajor,gminor);            
         case 2   % view QC metrics violin
             gui.sc_qcviolin(sce.X,sce.g);
             requirerefresh=false;

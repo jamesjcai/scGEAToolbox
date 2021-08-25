@@ -136,8 +136,12 @@ classdef SingleCellExperiment
            size(obj.X,1),size(obj.X,2));
     end
     
-    function obj = qcfilter(obj)
-        [~,keptg,keptidxv]=sc_qcfilter(obj.X,obj.g);
+    function obj = qcfilter(obj,libsize,mtratio,min_cells_nonzero)
+        if nargin<4 || isempty(min_cells_nonzero), min_cells_nonzero=0.05; end
+        if nargin<3 || isempty(mtratio), mtratio=0.10; end
+        if nargin<2 || isempty(libsize), libsize=1000; end        
+        [~,keptg,keptidxv]=sc_qcfilter(obj.X,obj.g,libsize,mtratio,1,...
+                                       min_cells_nonzero);
         for k=1:length(keptidxv)
             obj = selectcells(obj,keptidxv{k});
         end
