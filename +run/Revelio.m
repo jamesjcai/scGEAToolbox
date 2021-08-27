@@ -4,6 +4,8 @@ function [dc,T]=Revelio(X,genelist)
 % see also: 
 % https://github.com/danielschw188/Revelio
 isdebug=false;
+
+oldpth=pwd();
 [isok,msg]=commoncheck_R('R_Revelio');
 if ~isok, error(msg); return; end
 
@@ -15,7 +17,7 @@ if ~iscellstr(genelist) && isstring(genelist)
     genelist=cellstr(upper(genelist));
 end
 
-oldpth=pwd();
+
 
 if ~isdebug
     if exist('./input.mat','file'), delete('./input.mat'); end

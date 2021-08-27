@@ -137,7 +137,7 @@ end
                 acc=inputdlg({'Input number (e.g., GSM3308545):'},...
                     'GEO Accession',[1 40],{'GSM3308545'});
                 if isempty(acc), return; end
-                acc=acc{1};
+                acc=deblank(acc{1});
                 if strlength(acc)>4 && ~isempty(regexp(acc,'G.+','once'))
                     try                
                         fw=gui.gui_waitbar;                
