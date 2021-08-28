@@ -24,10 +24,10 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
         case 1   % basic QC
             %answer=questdlg({'Library Size > 1000','mtDNA Ratio < 10%',...
             %                   'Gene''s min_cells_nonzero > 5%'});
-            prompt = {'Library size:','mtDNA ratio:',...
-                      'Gene''s min_nonzero_cells (5% or 50):'};
-            dlgtitle = 'Input';
-            dims = [1 35];
+            prompt = {'Library size (e.g., 500 or 1000):','mtDNA ratio (e.g., 15% or 10%):',...
+                      'Gene''s min_nonzero_cells (e.g., 1% or 5%, 10 or 50):'};
+            dlgtitle = 'QC cutoff';
+            dims = [1 55];
             definput = {'1000','0.10','0.05'};
             answer = inputdlg(prompt,dlgtitle,dims,definput);
             if isempty(answer), return; end
