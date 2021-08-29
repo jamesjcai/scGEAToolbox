@@ -4,11 +4,11 @@ function callback_MarkerGeneHeatmap(src,~)
         'Select Method','Method 1 (fast)','Method 2 (slower)',...
         'Method 3 (slowest)','Method 1 (fast)');
     switch answer
-        case 'Method 1 (fast)'
+        case 'Method 1 (🐇)'
             methodid=1;
-        case 'Method 2 (slower)'
+        case 'Method 2 (🐢)'
             methodid=2;
-        case 'Method 3 (slowest)'
+        case 'Method 3 (🐢🐢)'
             methodid=3;
         otherwise
             return;

@@ -1080,13 +1080,16 @@ end
 
     function DrawTrajectory(~, ~)
         answer = questdlg('Which method?', 'Select Algorithm', ...
-            'splinefit (fast)', 'princurve (slow)', ...
-            'splinefit (fast)');
-        if strcmp(answer, 'splinefit (fast)')
+            'splinefit (🐇)', 'princurve (🐢)', ...
+            'splinefit (🐇)');
+        if strcmp(answer, 'splinefit (🐇)')
             dim = 1;
             [t, xyz1] = i_pseudotime_by_splinefit(sce.s, dim, false);
-        else
+        elseif strcmp(answer, 'princurve (🐢)')
             [t, xyz1] = i_pseudotime_by_princurve(sce.s, false);
+        else
+            errordlg('Invalid Option.');
+            return;
         end
         hold on;
         if size(xyz1, 2) >= 3
