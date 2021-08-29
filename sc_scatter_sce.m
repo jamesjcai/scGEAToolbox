@@ -446,6 +446,10 @@ uimenu(m,'Text','Library Size of Cell Cycle Phases...',...
 
 uimenu(m,'Text','Close All Other Figures...',...
     'Callback',@callback_CloseAllOthers);
+uimenu(m,'Text','Cross Tabulation...',...
+    'Callback',@callback_CrossTabulation);
+
+
 
 
 % handles = guihandles( FigureHandle ) ;
