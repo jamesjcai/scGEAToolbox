@@ -3,13 +3,15 @@ function callback_ShowGeneExpr(src,~)
     sce=guidata(FigureHandle);
     [axx,bxx]=view();
     % if any([axx,bxx]==0), axx=ax; bxx=bx; end
-    gsorted=sort(sce.g);
+    % gsorted=sort(sce.g);
     
 answer = questdlg('Show expression of single or mulitple genes?',...
     'Single/Multiple Genes','Single','Multiple','Cancel','Single');
 
 switch answer
-    case 'Single'
+    case 'Single'        
+        [gsorted]=i_sortg(sce);
+        if isempty(gsorted), return; end
         [indx,tf] = listdlg('PromptString',{'Select a gene or select multiple genes to display individually','',''},...
             'SelectionMode','multiple','ListString',gsorted);
         if tf==1
@@ -18,6 +20,8 @@ switch answer
             end
         end
     case 'Multiple'
+        [gsorted]=i_sortg(sce);
+        if isempty(gsorted), return; end
         [idx]=gui.i_selmultidlg(gsorted);
         if isempty(idx), return; end
         if isscalar(idx) && idx==0
@@ -66,4 +70,25 @@ function i_show(sce,g,axx,bxx)
         view(h1,axx,bxx);
         movegui(f,'center');
         set(f,'visible','on');
+end
+
+
+function [gsorted]=i_sortg(sce)
+        gsorted=[];
+        answer2 = questdlg('How to sort gene names?','Sort by',...
+            'Alphabetic','Expression Mean','Dropoff Rate','Alphabetic');
+        switch answer2
+            case 'Alphabetic'
+                gsorted=sort(sce.g);
+            case 'Expression Mean'
+                [T]=sc_genestats(sce.X,sce.g);
+                [~,idx]=sort(T.Dropout_rate);
+                gsorted=sce.g(idx);                
+            case 'Dropoff Rate'
+                [T]=sc_genestats(sce.X,sce.g);
+                [~,idx]=sort(T.Dropout_rate);
+                gsorted=sce.g(idx);
+            otherwise
+                return;
+        end
 end
