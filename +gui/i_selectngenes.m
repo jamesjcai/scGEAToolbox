@@ -12,6 +12,7 @@ elseif isstring(sce)
     gsorted=sort(genelist);
 end
 
+
 if ~isempty(predefinedlist)
     predefinedlist=gsorted(matches(gsorted,predefinedlist,'IgnoreCase',true));
 end
@@ -42,6 +43,12 @@ switch answer
             return;
         end
     case 'Select'
+
+        if isa(sce,'SingleCellExperiment')
+            [gsorted]=gui.i_sortgenenames(sce);
+            if isempty(gsorted), return; end
+        end        
+        
         [idx]=gui.i_selmultidlg(gsorted,predefinedlist);
         if isempty(idx), return; end
         %if length(idx)<2

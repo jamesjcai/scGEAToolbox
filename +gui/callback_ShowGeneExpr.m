@@ -10,7 +10,7 @@ answer = questdlg('Show expression of single or mulitple genes?',...
 
 switch answer
     case 'Single'        
-        [gsorted]=i_sortg(sce);
+        [gsorted]=gui.i_sortgenenames(sce);
         if isempty(gsorted), return; end
         [indx,tf] = listdlg('PromptString',{'Select a gene or select multiple genes to display individually','',''},...
             'SelectionMode','multiple','ListString',gsorted);
@@ -20,7 +20,7 @@ switch answer
             end
         end
     case 'Multiple'
-        [gsorted]=i_sortg(sce);
+        [gsorted]=gui.i_sortgenenames(sce);
         if isempty(gsorted), return; end
         [idx]=gui.i_selmultidlg(gsorted);
         if isempty(idx), return; end
@@ -73,22 +73,22 @@ function i_show(sce,g,axx,bxx)
 end
 
 
-function [gsorted]=i_sortg(sce)
-        gsorted=[];
-        answer2 = questdlg('How to sort gene names?','Sort by',...
-            'Alphabetic','Expression Mean','Dropoff Rate','Alphabetic');
-        switch answer2
-            case 'Alphabetic'
-                gsorted=sort(sce.g);
-            case 'Expression Mean'
-                [T]=sc_genestats(sce.X,sce.g);
-                [~,idx]=sort(T.Dropout_rate);
-                gsorted=sce.g(idx);                
-            case 'Dropoff Rate'
-                [T]=sc_genestats(sce.X,sce.g);
-                [~,idx]=sort(T.Dropout_rate);
-                gsorted=sce.g(idx);
-            otherwise
-                return;
-        end
-end
+% function [gsorted]=i_sortg(sce)
+%         gsorted=[];
+%         answer2 = questdlg('How to sort gene names?','Sort by',...
+%             'Alphabetic','Expression Mean','Dropoff Rate','Alphabetic');
+%         switch answer2
+%             case 'Alphabetic'
+%                 gsorted=sort(sce.g);
+%             case 'Expression Mean'
+%                 [T]=sc_genestats(sce.X,sce.g);
+%                 [~,idx]=sort(T.Dropout_rate);
+%                 gsorted=sce.g(idx);                
+%             case 'Dropoff Rate'
+%                 [T]=sc_genestats(sce.X,sce.g);
+%                 [~,idx]=sort(T.Dropout_rate);
+%                 gsorted=sce.g(idx);
+%             otherwise
+%                 return;
+%         end
+% end
