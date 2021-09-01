@@ -19,6 +19,7 @@ labelsy=labelsy(~cellfun('isempty',labelsy));
 figure;
 subplot(211)
 bar(T,'stacked')
+xticks(1:length(labelsx));
 xticklabels(labelsx);
 xlabel(c1txt)
 ylabel('# of cells')
@@ -26,14 +27,18 @@ ylabel('# of cells')
 %legend(cL);
 lgd=legend(labelsy,'Location','bestoutside');
 title(lgd,c2txt)
+
 subplot(212)
 bar(T./sum(T,2),'stacked')
 xlabel(c1txt)
 ylabel('% of cells')
 % title(c2txt); 
+xticks(1:length(labelsx));
 xticklabels(labelsx);
-lgd=legend(labelsy,'Location','bestoutside');
-title(lgd,c2txt);
+ylim([0 1]);
+%lgd=legend(labelsy,'Location','bestoutside');
+%title(lgd,c2txt);
+
 
     labels = {'Save Cross-table to variable named:'};
     vars = {'TCrosstab'};
