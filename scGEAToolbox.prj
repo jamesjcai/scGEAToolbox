@@ -7,7 +7,7 @@
     <param.summary>Single-cell Gene Expression Analysis Toolbox</param.summary>
     <param.description>scRNAseq data analysis toolbox</param.description>
     <param.screenshot>${PROJECT_ROOT}\resources\sc_scatter.png</param.screenshot>
-    <param.version>21.9.2</param.version>
+    <param.version>21.9.3</param.version>
     <param.output>${PROJECT_ROOT}\scGEAToolbox.mltbx</param.output>
     <param.products.name />
     <param.products.id />
@@ -125,7 +125,6 @@ sc_pcnetdenoised.m
       <file>${PROJECT_ROOT}\demo_script4.mlx</file>
       <file>${PROJECT_ROOT}\demo_script5.mlx</file>
       <file>${PROJECT_ROOT}\demo_script6.mlx</file>
-      <file>${PROJECT_ROOT}\DesktopToolset.xml</file>
       <file>${PROJECT_ROOT}\doc</file>
       <file>${PROJECT_ROOT}\fun_cmp_clusters.m</file>
       <file>${PROJECT_ROOT}\fun_num_clusters.m</file>
