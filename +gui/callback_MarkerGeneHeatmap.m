@@ -1,8 +1,8 @@
 function callback_MarkerGeneHeatmap(src,~)
 
     answer = questdlg('Generate marker gene heatmap',...
-        'Select Method','Method 1 (fast)','Method 2 (slower)',...
-        'Method 3 (slowest)','Method 1 (fast)');
+        'Select Method','Method 1 (🐇)','Method 2 (🐢)',...
+        'Method 3 (🐢🐢)','Method 1 (🐇)');
     switch answer
         case 'Method 1 (🐇)'
             methodid=1;
