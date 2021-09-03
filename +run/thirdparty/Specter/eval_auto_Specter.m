@@ -7,7 +7,7 @@ function cls = eval_auto_Specter(fea, n_clusters, ensemble_size, mingamma)
 % Output:
     % cls: clusters of cells
     
-    [m, n] = size(fea);
+    [m, ~] = size(fea);
     if m < 20000
         cls = eval_exact_Specter(fea, n_clusters, ensemble_size, mingamma);
     else        

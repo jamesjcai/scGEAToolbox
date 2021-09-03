@@ -9,9 +9,10 @@ function cls = eval_exact_Specter(fea, n_clusters, ensemble_size, mingamma)
     % cls: clusters of cells.
     
     % matlab seed
-    rand ("state", 1000000);
-    rand('seed', 1089); 
-    [m, n] = size(fea);
+    % rand ("state", 1000000);
+    % rand('seed', 1089); 
+    rng(1089);
+    [m, ~] = size(fea);
     % apply pre-processing
     params.mode =0;
     params.HV = 1; % use highly variable genes selection: 1: yes, 0: no

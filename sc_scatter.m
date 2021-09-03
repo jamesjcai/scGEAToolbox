@@ -12,7 +12,7 @@ end
 
     if nargin < 1
         list={'SCE Data File (*.mat)...',...
-              '10x Genomics File (*.mtx)...',...
+              'Matrix/MTX File (*.mtx)...',...
               'TSV/CSV File (*.txt)...',...
               'Seurat/Rds File (*.rds)...',...
               '10x Genomics Folder...',...
@@ -53,7 +53,7 @@ end
                 end
                 gui.gui_waitbar(fw);
 
-            case '10x Genomics File (*.mtx)...'
+            case 'Matrix/MTX File (*.mtx)...'
                 [fname, pathname] = uigetfile( ...
                                               {'*.mtx', 'MTX Format Files (*.mtx)'
                                                '*.*',  'All Files (*.*)'}, ...
@@ -87,6 +87,7 @@ end
                             end
                             featurestxtfile = fullfile(pathname2, fname2);
                         otherwise
+                            helpdlg('Action Cancelled.','');
                             return;
                     end
                 else
@@ -95,8 +96,10 @@ end
                     switch answer
                         case 'Yes'
                         case 'No'
+                            helpdlg('Action Cancelled.','');
                             return;
                         otherwise
+                            helpdlg('Action Cancelled.','');
                             return;
                     end
                 end

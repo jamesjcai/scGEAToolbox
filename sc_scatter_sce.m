@@ -985,7 +985,11 @@ end
                 end
                 return
             case 4 % HgB-genes
-                idx = startsWith(sce.g, 'hba-', 'IgnoreCase', true) | startsWith(sce.g, 'hbb-', 'IgnoreCase', true);
+                idx1 = startsWith(sce.g, 'Hba-', 'IgnoreCase', true);
+                idx2 = startsWith(sce.g, 'Hbb-', 'IgnoreCase', true);
+                idx3= strcmpi(sce.g,"Alas2");
+                idx=idx1|idx2|idx3;
+                
                 if any(idx)
                     ttxt = sprintf("%s+", sce.g(idx));
                     ci = sum(sce.X(idx, :), 1);
