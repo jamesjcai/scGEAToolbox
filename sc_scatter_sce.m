@@ -499,11 +499,17 @@ end
     end
 
     function SelectCellsByQC(src, ~)
+        oldn=sce.NumCells;
+        oldm=sce.NumGenes;
         [requirerefresh,highlightindex]=gui.callback_SelectCellsByQC(src);
         sce = guidata(FigureHandle);
         if requirerefresh            
             [c, cL] = grp2idx(sce.c);
             RefreshAll(src, 1, true);
+            newn=sce.NumCells;
+            newm=sce.NumGenes;
+            msgbox(sprintf('%d cells removed; %d genes removed.',...
+                oldn-newn,oldm-newm));
         end
         if ~isempty(highlightindex)
             h.BrushData=highlightindex;            

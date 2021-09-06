@@ -13,7 +13,7 @@ switch answer
         [gsorted]=gui.i_sortgenenames(sce);
         if isempty(gsorted), return; end
         [indx,tf] = listdlg('PromptString',{'Select a gene or select multiple genes to display individually','',''},...
-            'SelectionMode','multiple','ListString',gsorted);
+            'SelectionMode','single','ListString',gsorted);
         if tf==1
             for k=1:length(indx)
                 i_show(sce,gsorted(indx(k)),axx,bxx);
@@ -33,7 +33,11 @@ switch answer
         if length(i)==1
            g=sce.g(i);
         elseif length(i)>1
-            answer2=questdlg('Union (OR) or Intersection (AND)','','Union (OR)','Intersection (AND)','Intersection (AND)');
+            answer2=questdlg('Union (OR) or Intersection (AND)',...
+                '','Intersection (AND)',...
+                'Union (OR)',...
+                'Individual',...
+                'Intersection (AND)');
             switch answer2
                 case 'Union (OR)'
                     g=sprintf("%s | ",gsorted(idx)); 
@@ -45,6 +49,10 @@ switch answer
                         return;
                     end
                     x=x.*ix;
+                case 'Individual'
+                    for k=1:length(idx)
+                        i_show(sce,gsorted(idx(k)),axx,bxx);
+                    end                    
                 otherwise
                     return;
             end

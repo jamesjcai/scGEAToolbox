@@ -22,13 +22,26 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
     if tf~=1, return; end
     switch indx
         case 1   % basic QC
-            %answer=questdlg({'Library Size > 1000','mtDNA Ratio < 10%',...
-            %                   'Gene''s min_cells_nonzero > 5%'});
+%             answer=questdlg({'Library Size > 1000','mtDNA Ratio < 10%',...
+%                                'Gene''s min_cells_nonzero > 5%'});
+            
+            answer3=questdlg('Relaxed or Strigent?',...
+                'Cutoff Settings','Relaxed (keep more cells/genes)',...
+                'Strigent (remove more cells/genes)','Relaxed (keep more cells/genes)');
+            switch answer3
+                case 'Relaxed (keep more cells/genes)'
+                    definput = {'500','0.15','0.01'};
+                case 'Strigent (remove more cells/genes)'
+                    definput = {'1000','0.10','0.05'};
+                otherwise
+                    requirerefresh=false;
+                    return;
+            end                    
+                    
             prompt = {'Library size (e.g., 500 or 1000):','mtDNA ratio (e.g., 15% or 10%):',...
                       'Gene''s min_nonzero_cells (e.g., 1% or 5%, 10 or 50):'};
             dlgtitle = 'QC cutoff';
             dims = [1 55];
-            definput = {'1000','0.10','0.05'};
             answer = inputdlg(prompt,dlgtitle,dims,definput);
             if isempty(answer), return; end
             try
