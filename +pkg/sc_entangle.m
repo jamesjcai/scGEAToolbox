@@ -1,7 +1,8 @@
-function sc_entangle(sce,targetg,allowselect)
+function [idx]=sc_entangle(sce,targetg,allowselect)
 
 % USAGE: pkg.sc_entangle(sce,["Fgfr1","Frs2","Smad4"])
 %
+%see also: sc_booleanstate
 
     if nargin<3, allowselect=false; end
     if nargin<2
