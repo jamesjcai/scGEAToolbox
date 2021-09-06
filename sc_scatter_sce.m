@@ -941,7 +941,8 @@ end
         %for k = 1:2:length(sce.list_cell_attributes)
         %    listitems = [listitems, sce.list_cell_attributes{k}];
         %end
-        listitems=[listitems, sce.list_cell_attributes(1:2:end)];
+        listitems=[listitems,...
+            sce.list_cell_attributes(1:2:end)];
         [indx, tf] = listdlg('PromptString', {'Select statistics', ...
             '', ''}, 'SelectionMode', 'single', 'ListString', listitems);
         if tf ~= 1

@@ -12,7 +12,7 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
         '------------------------------------------------',...
         'Library Size vs. Mt-reads Ratio',...
         'Library Size vs. Number of Genes',...
-        'Reads in Abundant lncRNAs vs. Number of Genes'};
+        'Abundant lncRNAs vs. Number of Genes'};
 %        '------------- Experimental Options -------------',...
 %        'Remove ambient RNA contamination (R required)'};
 
@@ -114,7 +114,7 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
             b=maxk(cj,10);
             idx=gui.i_setranges2(ci',cj',[0 a(end)],...
                     [0 b(end)],ttxti,ttxtj);
-        case 9
+        case 9    % 'Abundant lncRNAs vs. Number of Genes'
             % remove cells with a high fraction of nuclear lncRNA transcripts 
             % (Malat1, Meg3 and Kcnq10t1)
             % https://www.frontiersin.org/articles/10.3389/fncel.2020.00065/full#h3
@@ -154,7 +154,7 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
             requirerefresh=false;
             return;
     end
-    if ismember(indx,[7 8])
+    if ismember(indx,[7 8 9])
         if any(~idx)
             answer = questdlg(sprintf('Remove or highlight %d cells?',sum(~idx)),...
                 '','Remove','Highlight','Cancel','Remove');

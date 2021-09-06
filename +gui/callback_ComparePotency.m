@@ -20,6 +20,13 @@ function callback_ComparePotency(src,~)
                 fw=gui.gui_waitbar;
                 try
                 sce=sce.estimatepotency(specisid);
+                
+                [y,idx]=ismember({'cell_potency'},sce.list_cell_attributes(1:2:end));
+                if y
+                    c=sce.list_cell_attributes{idx+1};
+                    figure;
+                    gui.i_gscatter3(sce.s, c);
+                end
                 guidata(FigureHandle,sce);
                 gui.gui_waitbar(fw);
                 catch ME
