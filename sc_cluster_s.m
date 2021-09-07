@@ -1,4 +1,7 @@
 function [c_clustid]=sc_cluster_s(s,k,varargin)
+%sc_cluster_s - cluster cells using cell embeding s
+%
+%see also: sc_cluster_x
 
 %if min(size(s))>3, error('S is coordinates of dimensional reduction.'); end
 

@@ -9,7 +9,7 @@ function sc_scatter(X, genelist, s, c)
 if usejava('jvm') && ~feature('ShowFigureWindows')
     error('MATLAB is in a text mode. This function requires a GUI-mode.');
 end
-
+promotesave=true;
     if nargin < 1
         list={'SCE Data File (*.mat)...',...
               'Matrix/MTX File (*.mtx)...',...
@@ -38,6 +38,7 @@ end
 %                               'TSV/CSV .txt', 'SCE Data .mat');
         switch ButtonName
             case 'SCE Data File (*.mat)...'
+                promotesave=false;
                 [fname, pathname] = uigetfile( ...
                                               {'*.mat', 'MAT-files (*.mat)'
                                                '*.*',  'All Files (*.*)'}, ...
@@ -181,6 +182,7 @@ end
                         sce = SingleCellExperiment(X, genelist);
                     end
             case 'Load Example Data...'
+                promotesave=false;
                 pw1=fileparts(mfilename('fullpath'));
                 fprintf('Loading SCE Data File example_data/testSce.mat...');
                 tic;
@@ -213,5 +215,12 @@ end
     catch ME
         disp(ME.identifier);
         errordlg(ME.message);
+    end
+    if promotesave
+        labels = {'Save SCE to variable named:'}; 
+        vars = {'sce'};
+        values = {sce};
+        export2wsdlg(labels,vars,values,...
+            'Save Data to Workspace');
     end
 end

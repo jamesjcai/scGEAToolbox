@@ -6,12 +6,12 @@ function callback_DEGene2Groups(src,~)
     if length(i1)==1 || length(i2)==1, return; end
 
     answer = questdlg('Which method?',...
-        'Select Method','Wilcoxon rank-sum test',...
-        'MAST (R required)','Wilcoxon rank-sum test');
+        'Select Method','Wilcoxon rank-sum test 🐇',...
+        'MAST (R required) 🐢','Wilcoxon rank-sum test 🐇');
     
-    if strcmpi(answer,'Wilcoxon rank-sum test')
+    if strcmpi(answer,'Wilcoxon rank-sum test 🐇')
         methodtag="ranksum";
-    elseif strcmpi(answer,'MAST (R required)')
+    elseif strcmpi(answer,'MAST (R required) 🐢')
         methodtag="mast";
         if isempty(pkg.FindRpath)
             warndlg('This function requires R environment.')

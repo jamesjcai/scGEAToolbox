@@ -1,4 +1,7 @@
 function [c_clustid]=sc_cluster_x(X,k,varargin)
+%sc_cluster_x - cluster cells using UMI matrix X
+%
+%see also: sc_cluster_s
 
 p = inputParser;
 defaultType = 'sc3';
