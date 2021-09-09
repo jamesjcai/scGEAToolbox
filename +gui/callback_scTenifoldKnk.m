@@ -26,7 +26,7 @@ function callback_scTenifoldKnk(src,~)
             b=struct2cell(a);
             %valididx=ismember(b(4,:),'double');
             %a=a(valididx);
-            [indx,tf]=listdlg('PromptString',{'Select network varialbe:'},...
+            [indx,tf]=listdlg('PromptString',{'Select network variable:'},...
                 'liststring',b(1,:),'SelectionMode','single');
             if tf==1
                 A0 = evalin('base',a(indx).name);
@@ -36,8 +36,8 @@ function callback_scTenifoldKnk(src,~)
             [m,n]=size(A0);
             if m~=n || n~=length(sce.g)
                 errordlg('Not a valid network.'); 
-                return; 
-            end            
+                return;
+            end    
         case 'Reconstruct'
             try
                 ten.check_tensor_toolbox;
@@ -75,11 +75,12 @@ function callback_scTenifoldKnk(src,~)
             [T,A0]=sctenifoldknk(sce.X,sce.g,idx,'sorttable',true);
             % T=sortrows(T,'pAdjusted','ascend');
             isreconstructed=true;
-        else            
-            A1=A0;
-            A1(idx,:)=0;
-            [aln0,aln1]=i_ma(A0,A1);
-            T=i_dr(aln0,aln1,sce.g,true);
+        else
+            [T]=i_knk(A0,idx,sce.g);
+            %A1=A0;
+            %A1(idx,:)=0;
+            %[aln0,aln1]=i_ma(A0,A1);
+            %T=i_dr(aln0,aln1,sce.g,true);
             isreconstructed=false;
         end
     catch ME
