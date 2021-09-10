@@ -17,8 +17,8 @@ end
 if ~(ischar(selpath) && exist(selpath,'dir')==7)
     return;
 end
-%if exist('./input.txt','file'), delete('./input.txt'); end
-%if exist('./output.h5','file'), delete('./output.h5'); end
+if exist('./input.txt','file'), delete('./input.txt'); end
+if exist('./output.h5','file'), delete('./output.h5'); end
 
 writematrix(selpath,'input.txt');
 pkg.RunRcode('script.R');
@@ -32,8 +32,8 @@ if exist('./output.h5','file')
         return;
     end
 end
-%if exist('./input.txt','file'), delete('./input.txt'); end
-%if exist('./output.h5','file'), delete('./output.h5'); end
+if exist('./input.txt','file'), delete('./input.txt'); end
+if exist('./output.h5','file'), delete('./output.h5'); end
 cd(oldpth);
 end
 

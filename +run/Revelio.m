@@ -3,8 +3,8 @@ function [dc,T]=Revelio(X,genelist)
 %
 % see also: 
 % https://github.com/danielschw188/Revelio
-isdebug=false;
 
+isdebug=false;
 oldpth=pwd();
 [isok,msg]=commoncheck_R('R_Revelio');
 if ~isok, error(msg); return; end

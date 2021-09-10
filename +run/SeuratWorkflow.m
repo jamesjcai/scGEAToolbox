@@ -3,8 +3,10 @@ function [sce]=SeuratWorkflow(X,genelist)
 %Seurat implements the method proposed by Tirosh et al.39 to score cells based on the averaged normalized expression of known markers of G1/S and G2/M.
 %https://science.sciencemag.org/content/352/6282/189
 
+isdebug=false;
 oldpth=pwd();
 [isok,msg]=commoncheck_R('R_SeuratWorkflow');
+
 if ~isok, error(msg); sce=[]; return; end
 
 if isa(X,'SingleCellExperiment') && isnumeric(genelist)
@@ -22,9 +24,10 @@ if exist('output.mat.tmp','file'), delete('output.mat.tmp'); end
 %if exist('umapoutput.csv','file'), delete('umapoutput.csv'); end
 %if exist('activeidentoutput.csv','file'), delete('activeidentoutput.csv'); end
 %sc_writefile('input.txt',sce.X,sce.g);
-if exist('./input.mat','file'), delete('./input.mat'); end
-if exist('./output.mat','file'), delete('./output.mat'); end
-
+if ~isdebug
+	if exist('./input.mat','file'), delete('./input.mat'); end
+	if exist('./output.mat','file'), delete('./output.mat'); end
+end
 X=sce.X;
 genelist=sce.g;
 if ~iscellstr(genelist) && isstring(genelist)
@@ -65,9 +68,10 @@ if exist('output.mat','file')
     sce.struct_cell_embeddings.tsne=s_tsne;
     sce.s=s_tsne;
 end
-if exist('./input.mat','file'), delete('./input.mat'); end
-if exist('./output.mat','file'), delete('./output.mat'); end
-
+if ~isdebug
+	if exist('./input.mat','file'), delete('./input.mat'); end
+	if exist('./output.mat','file'), delete('./output.mat'); end
+end
 %if exist('tsneoutput.csv','file'), delete('tsneoutput.csv'); end
 %if exist('umapoutput.csv','file'), delete('umapoutput.csv'); end
 %if exist('activeidentoutput.csv','file'), delete('activeidentoutput.csv'); end

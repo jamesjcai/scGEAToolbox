@@ -2,9 +2,11 @@ function [T]=MAST(X,Y,genelist)
 
 if nargin<3, genelist=(1:size(X,1))'; end
 
+isdebug=false;
 oldpth=pwd();
 [isok,msg]=commoncheck_R('R_MAST');
 if ~isok, error(msg); T=[]; return; end
+
 
 if exist(['.' filesep 'output.csv'],'file')
     delete ['.' filesep 'output.csv']
@@ -27,8 +29,9 @@ if exist('output.csv','file')
 else
     T=[];
 end
-%if exist('input1.txt','file'), delete('input1.txt'); end
-if exist('./input.mat','file'), delete('./input.mat'); end
-if exist('./output.csv','file'), delete('./output.csv'); end
+if ~isdebug
+	if exist('./input.mat','file'), delete('./input.mat'); end
+	if exist('./output.csv','file'), delete('./output.csv'); end
+end
 cd(oldpth);
 end
