@@ -1,7 +1,9 @@
 function callback_SelectCellsByMarker(src,~)
     FigureHandle=src.Parent.Parent;
-    sce=guidata(FigureHandle);
-    gsorted=sort(sce.g);
+    sce=guidata(FigureHandle);    
+    % gsorted=sort(sce.g);
+    [gsorted]=gui.i_sortgenenames(sce);
+    if isempty(gsorted), return; end
     [indx,tf] = listdlg('PromptString',{'Select a gene','',''},...
                 'SelectionMode','single','ListString',gsorted);
     if tf==1
@@ -15,7 +17,9 @@ function callback_SelectCellsByMarker(src,~)
         elseif strcmp(answer,sprintf('%s-',tg))
             idx=c==0;
         elseif strcmp(answer,'Cancel')
-           return; 
+           return;
+        else
+            return;
         end
         fw=gui.gui_waitbar;
         scex=selectcells(sce,idx);        

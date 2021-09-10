@@ -1,15 +1,15 @@
 function [gsorted]=i_sortgenenames(sce)
         gsorted=[];
-        answer2 = questdlg('How to sort gene names?','Sort by',...
-            'Alphabetic','Expression Mean','Dropoff Rate','Alphabetic');
+        answer2 = questdlg('How to sort genes?','Sort Genes',...
+            'Alphabetic','Average Expression','% of Nonzero Cells','Alphabetic');
         switch answer2
             case 'Alphabetic'
                 gsorted=sort(sce.g);
-            case 'Expression Mean'
+            case 'Average Expression'
                 [T]=sc_genestats(sce.X,sce.g);
                 [~,idx]=sort(T.Dropout_rate);
                 gsorted=sce.g(idx);                
-            case 'Dropoff Rate'
+            case '% of Nonzero Cells'
                 [T]=sc_genestats(sce.X,sce.g);
                 [~,idx]=sort(T.Dropout_rate);
                 gsorted=sce.g(idx);

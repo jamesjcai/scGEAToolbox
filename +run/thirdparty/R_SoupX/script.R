@@ -1,0 +1,15 @@
+#setwd("U:\\GitHub\\scGEAToolbox\\+run\\thirdparty\\R_SoupX")
+library(rhdf5)
+library(SoupX)
+
+fileName <- 'input.txt'
+path <- readChar(fileName, file.info(fileName)$size)
+path <- trimws(path)
+print(path)
+sc = load10X(path)
+sc = autoEstCont(sc,doPlot=FALSE)
+out = adjustCounts(sc)
+X=ceiling(out)
+#writeMat("output.mat",matVersion="5", X = X)
+#write.table(as.matrix(X),file="output.csv", sep=",",col.names=FALSE,row.names = FALSE)
+h5write(as.matrix(X),"output.h5","X")

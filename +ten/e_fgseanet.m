@@ -2,8 +2,8 @@ function [OUT]=e_fgseanet(Tf,varargin)
 % Merge similar gene sets (Jaccard index > cutoff) in fGSEA report
 
    p = inputParser;
-   addOptional(p,'JaccardCutoff',0.5,@(x) x>0 & x<1)
-   addOptional(p,'PlotNetwork',false,@islogical);
+   addOptional(p,'JaccardCutoff',0.6,@(x) x>0 & x<1)
+   addOptional(p,'PlotNetwork',true,@islogical);
    addOptional(p,'ShowNotepad',true,@islogical);      
    parse(p,varargin{:});
    jaccardcutoff=p.Results.JaccardCutoff;
