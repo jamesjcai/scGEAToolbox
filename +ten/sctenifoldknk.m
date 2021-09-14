@@ -52,13 +52,13 @@ import ten.*
     if exist('@tensor/tensor.m','file')~=2
         error('Need Tensor Toolbox for MATLAB (https://www.tensortoolbox.org/)');
     end
-    if exist('i_td1.m','file')~=2
-        error('Need i_td1.m in the scTendifoldNet https://github.com/cailab-tamu/scTenifoldNet/tree/master/MATLAB');
-    end    
+%    if exist('ten.i_td1.m','file')~=2
+%        error('Need i_td1.m in the scTendifoldNet https://github.com/cailab-tamu/scTenifoldNet/tree/master/MATLAB');
+%    end    
     
-    if exist('sc_pcnet.m','file')~=2
-        error('Need sc_pcnet.m in the scGEAToolbox https://github.com/jamesjcai/scGEAToolbox');
-    end    
+%    if exist('sc_pcnet.m','file')~=2
+%        error('Need sc_pcnet.m in the scGEAToolbox https://github.com/jamesjcai/scGEAToolbox');
+%    end    
     
     X=sc_norm(X,"type","libsize");    
     

@@ -72,7 +72,7 @@ function callback_scTenifoldKnk(src,~)
     fw = gui.gui_waitbar;
     try
         if isempty(A0)
-            [T,A0]=sctenifoldknk(sce.X,sce.g,idx,'sorttable',true);
+            [T,A0]=ten.sctenifoldknk(sce.X,sce.g,idx,'sorttable',true);
             % T=sortrows(T,'pAdjusted','ascend');
             isreconstructed=true;
         else
@@ -98,4 +98,10 @@ function callback_scTenifoldKnk(src,~)
     end
     
     gui.i_exporttable(T);
+    disp('Downstream Analysis Options:');
+    disp('===============================');
+    disp('run.Enrichr(T.genelist(1:200));');
+    disp('Tf=ten.e_fgsearun(T);');
+    disp('Tn=e_fgseanet(Tf);');
+    disp('===============================');
 end
