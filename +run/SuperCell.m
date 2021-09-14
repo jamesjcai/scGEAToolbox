@@ -1,6 +1,9 @@
-function [X2]=SuperCell(X)
+function [X2]=SuperCell(X,gammavalue,kvalue)
 % SuperCell  - gene expression recovery for single-cell RNA sequencing
 % https://github.com/GfellerLab/SuperCell
+
+if nargin<3, kvalue=5; end        % number of nearest neighbors to build kNN network
+if nargin<2, gammavalue=5; end    % number of cells merge (grianing level)
 
 isdebug=false;
 oldpth=pwd();
@@ -11,7 +14,7 @@ if ~isdebug
 	if exist('input.mat','file'), delete('input.mat'); end
 	if exist('output.mat','file'), delete('output.mat'); end
 end
-save('input.mat','X');
+save('input.mat','X','gammavalue','kvalue');
 pkg.RunRcode('script.R');
 if exist('output.mat','file')
     load('output.mat','X2');
