@@ -102,6 +102,6 @@ function callback_scTenifoldKnk(src,~)
     disp('===============================');
     disp('run.Enrichr(T.genelist(1:200));');
     disp('Tf=ten.e_fgsearun(T);');
-    disp('Tn=e_fgseanet(Tf);');
+    disp('Tn=ten.e_fgseanet(Tf);');
     disp('===============================');
 end
