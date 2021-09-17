@@ -7,7 +7,7 @@ function callback_CrossTabulation(src,~)
     [thisc2,c2txt]=gui.i_select1class(sce);
     if isempty(thisc2), return; end
     uiwait(helpdlg(sprintf('Second grouping varible (%s) selected.',c2txt)));
-    if strcmp(c1txt,c2txt), return; end
+    % if strcmp(c1txt,c2txt), return; end
     
 answer = questdlg('Sort by?', ...
 	'Sorted Variable', ...
