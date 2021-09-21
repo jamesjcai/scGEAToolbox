@@ -11,7 +11,7 @@ mmfname=fullfile(selpath,'matrix.mtx');
 zmmfname=fullfile(selpath,'matrix.mtx.gz');
 if ~exist(mmfname,'file')
     if ~exist(zmmfname,'file')
-        error('No matrix file.');
+        error('[sc_read10xdir] No matrix.mtx file.');
     else
         [~,nametxt]=fileparts(zmmfname);
         fprintf('Unzipping %s.gz...\n',nametxt);

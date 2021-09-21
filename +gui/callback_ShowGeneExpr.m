@@ -34,10 +34,10 @@ switch answer
            g=sce.g(i);
         elseif length(i)>1
             answer2=questdlg('Union (OR) or Intersection (AND)',...
-                '','Intersection (AND)',...
-                'Union (OR)',...
-                'Individual',...
-                'Intersection (AND)');
+                '','Individually',...
+                'Intersection (AND)',...
+                'Union (OR)',...                
+                'Individually');
             switch answer2
                 case 'Union (OR)'
                     g=sprintf("%s | ",gsorted(idx)); 
@@ -49,10 +49,11 @@ switch answer
                         return;
                     end
                     x=x.*ix;
-                case 'Individual'
+                case 'Individually'
                     for k=1:length(idx)
                         i_show(sce,gsorted(idx(k)),axx,bxx);
-                    end                    
+                    end
+                    return;
                 otherwise
                     return;
             end

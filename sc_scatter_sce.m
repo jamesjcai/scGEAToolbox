@@ -457,7 +457,7 @@ uimenu(m,'Text','Cross Tabulation...',...
 set(FigureHandle, 'visible', 'on');
 guidata(FigureHandle, sce);
 
-% set(FigureHandle,'CloseRequestFcn',@closeRequest);
+set(FigureHandle,'CloseRequestFcn',@closeRequest);
 
 if nargout > 0
     varargout{1} = FigureHandle;
@@ -467,17 +467,29 @@ end
 % Callback Functions
 % ------------------------
 
-% function closeRequest(hObject,~)
-% ButtonName = questdlg('Close SC_SCATTER?', ...
-%                          '', ...
-%                          'Yes','No','No');
-% switch ButtonName
-%     case 'Yes'
-%         delete(hObject);
-%     case 'No'
-%         return;
-% end
-% end
+function closeRequest(hObject,~)
+ButtonName = questdlg('Save SCE before closing SC_SCATTER?');
+switch ButtonName
+    case 'Yes'
+        labels = {'Save SCE to variable named:'}; 
+        vars = {'sce'};
+        sce = guidata(FigureHandle);
+        values = {sce};
+        [~,tf]=export2wsdlg(labels,vars,values,...
+                     'Save Data to Workspace');
+        if tf
+            delete(hObject);
+        else
+            return;
+        end
+    case 'Cancel'
+        return;
+    case 'No'
+        delete(hObject);
+    otherwise
+        return;
+end
+end
 
     function GEOAccessionToSCE(src,~)
         acc=inputdlg({'GEO accession:'},'',[1 40],{'GSM3308545'});
