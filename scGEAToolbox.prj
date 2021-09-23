@@ -7,7 +7,7 @@
     <param.summary>Single-cell Gene Expression Analysis Toolbox</param.summary>
     <param.description>scRNAseq data analysis toolbox</param.description>
     <param.screenshot>${PROJECT_ROOT}\resources\sc_scatter.png</param.screenshot>
-    <param.version>21.9.7</param.version>
+    <param.version>21.9.23</param.version>
     <param.output>${PROJECT_ROOT}\scGEAToolbox.mltbx</param.output>
     <param.products.name />
     <param.products.id />
@@ -180,6 +180,7 @@ sc_pcnetdenoised.m
       <file>${PROJECT_ROOT}\sc_rmmtcells.m</file>
       <file>${PROJECT_ROOT}\sc_rmmtgenes.m</file>
       <file>${PROJECT_ROOT}\sc_scatter.m</file>
+      <file>${PROJECT_ROOT}\sc_scatter_sce.asv</file>
       <file>${PROJECT_ROOT}\sc_scatter_sce.m</file>
       <file>${PROJECT_ROOT}\sc_scattermarker.m</file>
       <file>${PROJECT_ROOT}\sc_sce2hdf5.m</file>
