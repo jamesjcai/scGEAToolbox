@@ -11,12 +11,17 @@ suppressMessages(require(R.matlab))
 filename<-readLines("inputrdsfile.txt")
 A<-readRDS(filename)
 
-writeMat("output.mat",X=A@assays$RNA@counts)
-# write.csv(A@assays$RNA@counts, file = 'X.csv')
+tryCatch(
+{writeMat("output.mat",X=A@assays$RNA@counts)},
+error = function(msg){
+	# write.csv(A@assays$RNA@counts, file = 'X.csv', col.names=F)  #
+	write.table(A@assays$RNA@counts, file = 'X.csv', sep=",", col.names=FALSE, row.names=FALSE)
+	}
+	
+)
 write.csv(rownames(A@assays$RNA),file='g.csv')
 #write.csv(A@reductions$umap@cell.embeddings, file = 'umap.csv')
 #write.csv(A$orig.ident, file = 'batchid.csv');
-
 
 #geneList <- make.unique(countMatrix[,1])[-1]
 #bcList <- countMatrix[1,][-1]

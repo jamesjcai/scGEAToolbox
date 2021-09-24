@@ -8,16 +8,25 @@ function [sce]=readSeuratRds(filename)
     
     if exist('./inputrdsfile.txt','file'), delete('./inputrdsfile.txt'); end
     if exist('./output.mat','file'), delete('./output.mat'); end
+    if exist('./output.mat.tmp','file'), delete('./output.mat.tmp'); end
     if exist('./g.csv','file'), delete('./g.csv'); end
+    if exist('./X.csv','file'), delete('./X.csv'); end    
     
     writematrix(filename,'inputrdsfile.txt');
     pkg.RunRcode('script.R');
+    
 if exist('g.csv','file') && exist('output.mat','file')
     t=readtable('g.csv');
     g=string(t.x);
     load output.mat X
     sce=SingleCellExperiment(X,g);
+elseif exist('g.csv','file') && exist('X.csv','file')
+    t=readtable('g.csv');
+    g=string(t.x);
+    X=readmatrix('X.csv');    
+    sce=SingleCellExperiment(X,g);    
 end
+
     
 %     if exist('X.csv','file')
 %         t=readtable('X.csv');
@@ -41,6 +50,8 @@ end
 %     if exist('batchid.csv','file'), delete('batchid.csv'); end 
     if exist('./inputrdsfile.txt','file'), delete('./inputrdsfile.txt'); end
     if exist('./output.mat','file'), delete('./output.mat'); end
+    if exist('./output.mat.tmp','file'), delete('./output.mat.tmp'); end    
     if exist('./g.csv','file'), delete('./g.csv'); end
+    if exist('./X.csv','file'), delete('./X.csv'); end
     cd(oldpth);
 end

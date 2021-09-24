@@ -126,7 +126,9 @@ promotesave=true;
                                               'Pick a rds format file');
                 if ~(fname), return; end
                 filename = fullfile(pathname, fname);
-                [sce] = sc_readrdsfile(filename);                
+                fw = gui.gui_waitbar;
+                [sce] = sc_readrdsfile(filename);
+                gui.gui_waitbar(fw);                
             case '10x Genomics Folder...'
                 selpath = uigetdir;
                 if selpath==0, return; end
@@ -224,7 +226,7 @@ promotesave=true;
         end
         sce = SingleCellExperiment(X, genelist, s, c);
     end
-    
+    if isempty(sce), return; end
     try
         sc_scatter_sce(sce);
     catch ME
