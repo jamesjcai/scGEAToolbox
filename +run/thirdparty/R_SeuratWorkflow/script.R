@@ -9,19 +9,28 @@ suppressMessages(library(R.matlab))
 #rownames(pbmc.counts) <- geneList
 #colnames(pbmc.counts) <- bcList
 
-mat<-readMat("input.mat")
-pbmc.counts<-Matrix(mat$X)
-rownames(pbmc.counts) <- make.unique(unlist(mat$genelist))
-colnames(pbmc.counts) <- paste0(colnames(pbmc.counts), 1:ncol(pbmc.counts))
 
+if (file.exists("input.mat")){
+    mat<-readMat("input.mat")
+    pbmc.counts<-Matrix(mat$X)
+    rownames(pbmc.counts) <- make.unique(unlist(mat$genelist))
+    colnames(pbmc.counts) <- paste0(colnames(pbmc.counts), 1:ncol(pbmc.counts))
+    # https://satijalab.org/seurat/articles/essential_commands.html
+    pbmc <- CreateSeuratObject(counts = pbmc.counts)
+} else {
+    countMatrix <- read.table('input.txt', sep = '\t', stringsAsFactors = FALSE)
+    geneList <- make.unique(countMatrix[,1])[-1]
+    bcList <- countMatrix[1,][-1]
+    countMatrix <- Matrix(as.matrix(countMatrix[-1,-1]))
+    rownames(countMatrix) <- geneList
+    colnames(countMatrix) <- bcList
+    pbmc <- CreateSeuratObject(countMatrix)
+}
 
-# https://satijalab.org/seurat/articles/essential_commands.html
-pbmc <- CreateSeuratObject(counts = pbmc.counts)
 
 #Apply sctransform normalization
 #Note that this single command replaces NormalizeData, ScaleData, and FindVariableFeatures.
 #https://satijalab.org/seurat/archive/v3.0/sctransform_vignette.html
-
 pbmc <- SCTransform(pbmc)
 
 pbmc <- RunPCA(object = pbmc)

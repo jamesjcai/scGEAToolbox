@@ -134,7 +134,7 @@ promotesave=true;
                 if selpath==0, return; end
                 try
                     fw = gui.gui_waitbar;
-                    [X,genelist,~,ftdone]=sc_read10xdir(selpath);
+                    [X,genelist,~,ftdone]=sc_read10xdir2(selpath);
                     gui.gui_waitbar(fw);
                 catch ME
                     gui.gui_waitbar(fw);
@@ -175,10 +175,17 @@ promotesave=true;
                     dims = [1 100];
                     definput = {'https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM5350nnn/GSM5350808/suppl/GSM5350808_Fibroblast_young_1wk_Saline_counts.csv.gz'};
                     answer = inputdlg(prompt,dlgtitle,dims,definput);
-                    if isempty(answer), return; end                    
+                    if isempty(answer), return; end
                     if ~isempty(answer{1})
                         tmpd=tempdir;
-                        files=gunzip(answer{1},tmpd);
+                        if strcmpi(answer{1}(end-2:end),'.gz')
+                            files=gunzip(answer{1},tmpd);
+                        % elseif strcmpi(answer{1}(end-2:end),'zip')
+                        %    files=unzip(answer{1},tmpd);
+                        else
+                            errordlg('File format is not supported.');
+                            return;
+                        end
                         f=files{1};
                         if isempty(f), error('f1'); end
                         [X,genelist]=sc_readtsvfile(f);

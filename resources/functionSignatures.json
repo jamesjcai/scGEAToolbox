@@ -126,7 +126,7 @@
 	"inputs":
 	[		
         {"name":"X", "kind":"required", "type":"numeric"},
-        {"name":"type", "kind":"namevalue","type":["char", "choices={'PearsonResiduals','kNNSmoothing','FreemanTukey'}"]}
+        {"name":"type", "kind":"namevalue","type":["char", "choices={'PearsonResiduals','kNNSmoothing','FreemanTukey','SCT'}"]}
 	]
 },
 "sc_transform":

@@ -1,4 +1,4 @@
-function [X,genelist,celllist,ftdone]=sc_read10xdir(selpath,coln)
+function [X,genelist,celllist,ftdone]=sc_read10xdir2(selpath,coln)
 %Read 10x folder
 %Read files from a 10x Genomics cellranger output folder
 %[X,genelist,celllist]=sc_read10xdir(selpath,coln);
@@ -7,16 +7,18 @@ function [X,genelist,celllist,ftdone]=sc_read10xdir(selpath,coln)
 if nargin<2, coln=2; end
 if nargin<1, selpath = uigetdir; end
 fprintf('Processing %s...\n',selpath);
-mmfname=fullfile(selpath,'matrix.mtx');
-zmmfname=fullfile(selpath,'matrix.mtx.gz');
+[~,aff]=i_guessmtxfile(selpath);
+aff
+if ~isempty(aff)
+    mmfname=fullfile(selpath,sprintf('%smatrix.mtx',aff));
+    zmmfname=fullfile(selpath,sprintf('%smatrix.mtx.gz',aff));
+else
+    mmfname=fullfile(selpath,'matrix.mtx');
+    zmmfname=fullfile(selpath,'matrix.mtx.gz');
+end
 if ~exist(mmfname,'file')
-    if ~exist(zmmfname,'file')
-        error('[sc_read10xdir] No matrix.mtx file.');
-%         [out,aff]=i_guessmtxfile(selpath);
-%         if isempty(out)
-%         else
-%             gunzip(out);
-%         end       
+    if ~exist(zmmfname,'file')         
+         error('[sc_read10xdir] No matrix.mtx file.');
     else
         [~,nametxt]=fileparts(zmmfname);
         fprintf('Unzipping %s.gz...\n',nametxt);
@@ -25,8 +27,13 @@ if ~exist(mmfname,'file')
 end
 
 ftdone=false;
-ftfname=fullfile(selpath,'features.tsv');
-zftfname=fullfile(selpath,'features.tsv.gz');
+if ~isempty(aff)
+    ftfname=fullfile(selpath,sprintf('%sfeatures.tsv',aff));
+    zftfname=fullfile(selpath,sprintf('%sfeatures.tsv.gz',aff));
+else
+    ftfname=fullfile(selpath,'features.tsv');
+    zftfname=fullfile(selpath,'features.tsv.gz');
+end
 if ~exist(ftfname,'file')
     if ~exist(zftfname,'file')
         error('No features.tsv file.');            
@@ -41,12 +48,16 @@ else
 end
 
 if ~ftdone
-
-ftfname=fullfile(selpath,'genes.tsv');
-zftfname=fullfile(selpath,'genes.tsv.gz');
+if ~isempty(aff)
+    ftfname=fullfile(selpath,sprintf('%sgenes.tsv',aff));
+    zftfname=fullfile(selpath,sprintf('%sgenes.tsv.gz',aff));
+else    
+    ftfname=fullfile(selpath,'genes.tsv');
+    zftfname=fullfile(selpath,'genes.tsv.gz');
+end
 if ~exist(ftfname,'file')
     if ~exist(zftfname,'file')
-        % error('No features.tsv file.');
+        error('No features.tsv file.');
     else
         [~,nametxt]=fileparts(zftfname);
         fprintf('Unzipping %s.gz...\n',nametxt);
@@ -55,19 +66,22 @@ if ~exist(ftfname,'file')
     end
 else
     ftdone=true;
-end
-    
+end    
 end
 
-
-bcfname=fullfile(selpath,'barcodes.tsv');
-zbcfname=fullfile(selpath,'barcodes.tsv.gz');
+if ~isempty(aff)
+    bcfname=fullfile(selpath,sprintf('%sbarcodes.tsv',aff));
+    zbcfname=fullfile(selpath,sprintf('%sbarcodes.tsv.gz',aff));
+else
+    bcfname=fullfile(selpath,'barcodes.tsv');
+    zbcfname=fullfile(selpath,'barcodes.tsv.gz');
+end
 if ~exist(bcfname,'file')
     if ~exist(zbcfname,'file')
         warning('No barcodes.tsv file.');
     else
         [~,nametxt]=fileparts(zbcfname);
-        fprintf('Unzipping %s.gz...\n',nametxt);        
+        fprintf('Unzipping %s.gz...\n',nametxt);
         gunzip(zbcfname);
     end
 end
@@ -75,12 +89,8 @@ end
 
 
 
-if ~exist(mmfname,'file')
-    error('No matrix file');
-end
-if ~exist(ftfname,'file')
-    error('No feature file');
-end
+if ~exist(mmfname,'file'), error('No matrix file'); end
+if ~exist(ftfname,'file'), error('No feature file'); end
 
 fprintf('Reading matrix file...');
 if exist(bcfname,'file')    
@@ -92,6 +102,12 @@ end
 fprintf('done.\n');
 if exist(zmmfname,'file') && exist(mmfname,'file')
     delete(mmfname);
+end
+if exist(zftfname,'file') && exist(ftfname,'file')
+    delete(ftfname);
+end
+if exist(zbcfname,'file') && exist(bcfname,'file')
+    delete(bcfname);
 end
 end
 

@@ -1,7 +1,4 @@
 function [sce]=SeuratWorkflow(X,genelist)
-%Run cell cycle analysis using R package Seurat
-%Seurat implements the method proposed by Tirosh et al.39 to score cells based on the averaged normalized expression of known markers of G1/S and G2/M.
-%https://science.sciencemag.org/content/352/6282/189
 
 isdebug=false;
 oldpth=pwd();
@@ -13,7 +10,7 @@ if isa(X,'SingleCellExperiment') && isnumeric(genelist)
     sce=X;
     ndim=genelist;
 else
-    if nargin<2, error("[c]=run.SeuratCellCycle(X,genelist)"); end
+    if nargin<2, error("[sce]=run.SeuratWorkflow(X,genelist)"); end
     sce=SingleCellExperiment(X,genelist);
     ndim=2;
 end
@@ -27,13 +24,24 @@ if exist('output.mat.tmp','file'), delete('output.mat.tmp'); end
 if ~isdebug
 	if exist('./input.mat','file'), delete('./input.mat'); end
 	if exist('./output.mat','file'), delete('./output.mat'); end
+    if exist('./input.txt','file'), delete('./input.txt'); end
 end
+
 X=sce.X;
 genelist=sce.g;
 if ~iscellstr(genelist) && isstring(genelist)
     genelist=cellstr(genelist);
 end
+lastwarn('');
 save('input.mat','X','genelist','-v6');
+
+[warnMsg, warnId] = lastwarn;
+if ~isempty(warnMsg)    
+    disp(warnId)
+	if exist('./input.mat','file'), delete('./input.mat'); end
+    disp('Writing data into input.txt...')
+    sc_writefile('input.txt',sce.X,sce.g);
+end
 
 if ndim==3
     pkg.RunRcode('script3d.R');
@@ -71,6 +79,7 @@ end
 if ~isdebug
 	if exist('./input.mat','file'), delete('./input.mat'); end
 	if exist('./output.mat','file'), delete('./output.mat'); end
+    if exist('./input.txt','file'), delete('./input.txt'); end
 end
 %if exist('tsneoutput.csv','file'), delete('tsneoutput.csv'); end
 %if exist('umapoutput.csv','file'), delete('umapoutput.csv'); end

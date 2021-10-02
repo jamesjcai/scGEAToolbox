@@ -7,7 +7,8 @@ function [X]=sc_transform(X,varargin)
 
 p = inputParser;
 defaultType = 'PearsonResiduals';
-validTypes = {'PearsonResiduals','kNNSmoothing','FreemanTukey','csndm','sct'};
+validTypes = {'PearsonResiduals','kNNSmoothing',...
+              'FreemanTukey','csndm','SCT'};
 checkType = @(x) any(validatestring(x,validTypes));
 
 addRequired(p,'X',@isnumeric);
@@ -51,6 +52,7 @@ switch lower(p.Results.type)
 %         [X]=transform_bigscale(X);
     case 'sct'
         % sc_sct
+        [X]=run.SeuratSctransform(X,string(1:size(X,1)));
     case 'freemantukey'
         % https://github.com/flo-compbio/monet/blob/master/monet/util/expression.py
         % Applies the Freeman-Tukey transformation to stabilize variance."
