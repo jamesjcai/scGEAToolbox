@@ -16,7 +16,7 @@ else
 end
 
 
-if exist('output.mat.tmp','file'), delete('output.mat.tmp'); end
+if exist('./output.mat.tmp','file'), delete('./output.mat.tmp'); end
 %if exist('tsneoutput.csv','file'), delete('tsneoutput.csv'); end
 %if exist('umapoutput.csv','file'), delete('umapoutput.csv'); end
 %if exist('activeidentoutput.csv','file'), delete('activeidentoutput.csv'); end

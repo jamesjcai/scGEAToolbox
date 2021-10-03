@@ -10,11 +10,19 @@ oldpth=pwd();
 [isok,msg]=commoncheck_R('R_SuperCell');
 if ~isok, error(msg); X2=[]; return; end
 
+if exist('./output.mat.tmp','file'), delete('./output.mat.tmp'); end
+
 if ~isdebug
-	if exist('input.mat','file'), delete('input.mat'); end
-	if exist('output.mat','file'), delete('output.mat'); end
+	if exist('./input.mat','file'), delete('./input.mat'); end
+	if exist('./output.mat','file'), delete('./output.mat'); end
 end
-save('input.mat','X','gammavalue','kvalue');
+lastwarn('');
+save('input.mat','X','gammavalue','kvalue','-v6');
+[warnMsg, warnId] = lastwarn;
+if ~isempty(warnMsg)    
+    disp(warnId)
+    error(warnId);
+end
 pkg.RunRcode('script.R');
 if exist('output.mat','file')
     load('output.mat','X2');

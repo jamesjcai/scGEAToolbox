@@ -41,3 +41,4 @@ resources/Thumbs.db
 scGEAToolbox.mltbx
 +run/thirdparty/R_monocle/input.mat
 +run/thirdparty/R_monocle/output.csv
++run/thirdparty/R_SeuratWorkflow/input.txt

@@ -5,14 +5,16 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
     sce=guidata(FigureHandle);
     % 'SC_QCFILTER (QC Preserves Lowly-expressed Cells/Genes)',...
     listitems={'SC_QCFILTER (Basic QC for Cells/Genes)',...        
-        'QC metrics in violin plot',...
         'Remove Genes by Expression',...
+        'Remove Genes by Name',...
         'Remove Mt-genes',...
-        'Select & remove genes',...        
         '------------------------------------------------',...
         'Library Size vs. Mt-reads Ratio',...
         'Library Size vs. Number of Genes',...
-        'Abundant lncRNAs vs. Number of Genes'};
+        'Abundant lncRNAs vs. Number of Genes',...
+        '------------------------------------------------',...
+        'QC Metrics in Violin Plots'};
+    
 %        '------------- Experimental Options -------------',...
 %        'Remove ambient RNA contamination (R required)'};
 
@@ -61,23 +63,20 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
             gui.gui_waitbar(fw);
         %    [Xmajor,Xminor,gmajor,gminor]=pkg.e_makeshadowmat(sce.X,sce.g);
         %    [X1,g1]=pkg.e_shadowmatqc(Xmajor,Xminor,gmajor,gminor);            
-        case 2   % view QC metrics violin
-            gui.sc_qcviolin(sce.X,sce.g);
-            requirerefresh=false;
-            return;            
-        case 3     % remove genes
+ 
+        case 2     % remove genes by expression
             answer=inputdlg('Expressed in less than % of cells',...
                 'Remove Genes',[1 40],{'5'});
             if isempty(answer), return; end
             if iscell(answer)
                 a=str2double(answer{1});
                 if a>0 && a<100
+                    fw = gui.gui_waitbar; 
                     sce=sce.selectkeepgenes(1,a/100);
+                    gui.gui_waitbar(fw);
                 end
             end
-        case 4        % remove mt-genes
-            sce=sce.rmmtgenes;
-        case 5          % remove selected genes
+        case 3          % remove selected genes
             gsorted=sort(sce.g);
             [idx]=gui.i_selmultidlg(gsorted);
             if isempty(idx), return; end
@@ -87,18 +86,22 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
             else
                 [~,i]=ismember(gsorted(idx),sce.g);
                 answer1 = questdlg('Remove selected genes?');
-                if strcmpi(answer1,'Yes')        
+                if strcmpi(answer1,'Yes')   
+            	    fw = gui.gui_waitbar;                    
                     sce.g(i)=[];
                     sce.X(i,:)=[];
+                    gui.gui_waitbar(fw);
                 else
                     return;
                 end
             end
-        case 6
+        case 4        % remove mt-genes
+            sce=sce.rmmtgenes;            
+        case 5
             % -----------
             requirerefresh=false;
             return;
-        case 7      % mt-ratio vs. library size
+        case 6      % mt-ratio vs. library size
             i=startsWith(sce.g,'mt-','IgnoreCase',true);
             if ~any(i) 
                 disp('No mt genes found.');
@@ -116,7 +119,7 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
             a=maxk(ci,10);                
             idx=gui.i_setranges2(ci',cj',[0 a(end)],...
                     [0 15],ttxti,ttxtj);
-        case 8
+        case 7
             cj=sum(sce.X>0,1);
             if issparse(cj), cj=full(cj); end
             ttxtj="Number of Detected Genes";
@@ -127,7 +130,7 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
             b=maxk(cj,10);
             idx=gui.i_setranges2(ci',cj',[0 a(end)],...
                     [0 b(end)],ttxti,ttxtj);
-        case 9    % 'Abundant lncRNAs vs. Number of Genes'
+        case 8    % 'Abundant lncRNAs vs. Number of Genes'
             % remove cells with a high fraction of nuclear lncRNA transcripts 
             % (Malat1, Meg3 and Kcnq10t1)
             % https://www.frontiersin.org/articles/10.3389/fncel.2020.00065/full#h3
@@ -148,26 +151,34 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
             b=maxk(cj,10);
             idx=gui.i_setranges2(ci',cj',[0 a(end)],...
                     [0 b(end)],ttxti,ttxtj);
-        case 10
+        case 9
             % ----------
             requirerefresh=false;
             return;
-        case 11
-            fw = gui.gui_waitbar;
-            [Xdecon,contamination]=run.decontX(sce);
-            sce.X=Xdecon;
-            guidata(FigureHandle,sce);
-            gui.gui_waitbar(fw);
-            figure;
-            gui.i_stemscatter(sce.s,contamination);
-            zlabel('Contamination rate')
-            title('Ambient RNA contamination')
-            pause(1)
-            helpdlg('Contamination removed.')
+        case 10   % view QC metrics violin
+            gui.sc_qcviolin(sce.X,sce.g);
+            requirerefresh=false;
+            return;         
+%         case 11
+%             fw = gui.gui_waitbar;
+%             [Xdecon,contamination]=run.decontX(sce);
+%             sce.X=Xdecon;
+%             guidata(FigureHandle,sce);
+%             gui.gui_waitbar(fw);
+%             figure;
+%             gui.i_stemscatter(sce.s,contamination);
+%             zlabel('Contamination rate')
+%             title('Ambient RNA contamination')
+%             pause(1)
+%             helpdlg('Contamination removed.')
+%             requirerefresh=false;
+%             return;
+        otherwise
             requirerefresh=false;
             return;
     end
-    if ismember(indx,[7 8 9])
+    
+    if ismember(indx,[6 7 8])
         if any(~idx)
             answer = questdlg(sprintf('Remove or highlight %d cells?',sum(~idx)),...
                 '','Remove','Highlight','Cancel','Remove');
@@ -187,25 +198,3 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
     guidata(FigureHandle,sce);
 end
                 
-%             case 6
-%                 i=startsWith(sce.g,'mt-','IgnoreCase',true);
-%                 if ~any(i) 
-%                     disp('No mt genes found.');
-%                     return;
-%                 end
-%                 rdrop=sum(sce.X==0,2)./size(sce.X,2);
-%                 rmean=-log2(mean(sce.X,2)+0.1);
-%                 if issparse(rmean), rmean=full(rmean); end
-%                 if issparse(rdrop), rdrop=full(rdrop); end
-%                 
-%                 ttxti="Dropout Rate";
-%                 ttxtj="-log2(Expression Mean+0.1)";
-%                 a=maxk(rdrop,10);
-%                 idx=gui.i_setranges2(rdrop(:),rmean(:),[0 a(end)],...
-%                         [0 max(rmean)],ttxti,ttxtj);
-%                 if any(~idx)
-%                     answer = questdlg(sprintf('Remove %d cells?',sum(~idx)));
-%                     if strcmpi(answer,'Yes')
-%                         sce=sce.removecells(~idx);                        
-%                     end
-%                 end                
