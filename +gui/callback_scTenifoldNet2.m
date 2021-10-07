@@ -21,31 +21,34 @@ function callback_scTenifoldNet2(src,~)
     [i1,i2]=gui.i_select2grps(sce);
     if length(i1)==1 || length(i2)==1, return; end
 
+    [nsubsmpl,csubsmpl,savegrn]=gui.i_tenifoldnetpara;
+    if isempty(nsubsmpl)||isempty(csubsmpl)||isempty(savegrn), return; end
+    if csubsmpl>=min([size(sce.X(:,i1),2),size(sce.X(:,i2),2)])
+        errordlg('csubsmpl should be smaller than sce.NumCells.');
+        return;
+    end
+    
     answer=questdlg('This analysis may take several hours. Continue?');
     if ~strcmpi(answer,'Yes'), return; end
-
-    answer=questdlg('Save constructed networks (to current folder)?');
-    switch answer
-        case 'Yes'
-            savegrn=true;
-        case 'No'
-            savegrn=false;
-        otherwise
-            return;
-    end    
+    
     fw = gui.gui_waitbar;
     try
+        fprintf('\n');
+        disp('[T]=ten.sctenifoldnet(X1,X2,g,''nsubsmpl'',10,''csubsmpl'',500,''savegrn'',true);')            
     [T]=ten.sctenifoldnet(sce.X(:,i1),sce.X(:,i2),sce.g,...
-                    'nsubsmpl',10,'savegrn',savegrn);
+           'nsubsmpl',nsubsmpl,'csubsmpl',csubsmpl,'savegrn',savegrn);
     catch ME
         gui.gui_waitbar(fw);
         errordlg(ME.message);
         return;
     end
+    tstr=matlab.lang.makeValidName(datestr(datetime));
+    save(sprintf('T_DRgenes_%s',tstr),'T');
+    fprintf('The result has been saved in T_DRgenes_%s.mat\n',tstr);    
     gui.gui_waitbar(fw);
     figure;
-    e_mkqqplot(T);    
-    gui.i_exporttable(T,true);    
+    e_mkqqplot(T);
+    gui.i_exporttable(T,true,'T_DRgenes');   
     answer=questdlg('Run GSEA analysis?');
     if strcmp(answer,'Yes')
         try
@@ -54,7 +57,7 @@ function callback_scTenifoldNet2(src,~)
             errordlg(ME.message);
             return;
         end
-        gui.i_exporttable(Tr,true);
+        gui.i_exporttable(Tr,true,'T_GSEAres');
         answer2=questdlg('Group GSEA hits?');
         if strcmp(answer2,'Yes')
             ten.e_fgseanet(Tr);

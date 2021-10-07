@@ -1,4 +1,5 @@
-function i_exporttable(T,needwait)
+function i_exporttable(T,needwait,TName)
+if nargin<3, TName='T'; end
 if nargin<2, needwait=false; end
     
 answer = questdlg('Export & save data to:','',...
@@ -6,8 +7,8 @@ answer = questdlg('Export & save data to:','',...
 	
 switch answer
     case 'Workspace'
-        labels = {'Save T to variable named:'}; 
-        vars = {'T'};
+        labels = {'Save to variable named:'}; 
+        vars = {TName};
         values = {T};
         if needwait
             waitfor(export2wsdlg(labels,vars,values));
