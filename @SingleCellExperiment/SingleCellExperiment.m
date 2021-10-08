@@ -110,7 +110,8 @@ classdef SingleCellExperiment
                 if ~isempty(obj.struct_cell_clusterings.(a{k}))
                      obj.struct_cell_clusterings.(a{k})(i)=[];
                 end
-            end            
+            end
+            % obj.NumCells=size(obj.X,2);
         end
 
     function obj = selectcells(obj,i)
@@ -119,6 +120,7 @@ classdef SingleCellExperiment
         else
             ix=false(obj.NumCells,1);
             ix(i)=true;
+            disp('make logical idx');
         end
         obj = removecells(obj,~ix);
     end

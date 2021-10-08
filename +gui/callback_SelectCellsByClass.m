@@ -12,7 +12,8 @@ function callback_SelectCellsByClass(src,~)
         fw=gui.gui_waitbar;
         idx=ismember(ci,indxx);
         scex=selectcells(sce,idx);
-        scex.c=cLi(ci(idx));
+        % scex.c=cLi(ci(idx));
+        scex.c=ci(idx);
         sc_scatter_sce(scex);
         view(ax,bx);
         gui.gui_waitbar(fw);
