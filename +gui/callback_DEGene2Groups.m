@@ -28,6 +28,14 @@ function callback_DEGene2Groups(src,~)
             T=run.MAST(sce.X(:,i1),sce.X(:,i2),sce.g);
     end
     gui.gui_waitbar(fw);
+try
+    T = sortrows(T,'p_val_adj','ascend');
+    T = sortrows(T,'pct_1','ascend');
+    T = sortrows(T,'pct_2','descend');
+    T = sortrows(T,'avg_log2FC','ascend');
+catch ME
+    warning(ME.message);
+end
     gui.i_exporttable(T,true);
 
     answer = questdlg('Save up- and down-regulated genes for enrichment analysis?');

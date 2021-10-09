@@ -35,6 +35,16 @@ switch answer
            return;
         else
            filename=fullfile(path,file);
+           
+           variables=T.Properties.VariableNames;
+           for k=1:length(variables)
+               xx=T.(variables{k});
+               if isnumeric(xx) && any(isinf(xx))
+                   xx(isinf(xx)&xx>0)=1e99;
+                   xx(isinf(xx)&xx<0)=-1e99;
+                   T.(variables{k})=xx;
+               end
+           end
 		   writetable(T,filename,'FileType','spreadsheet');
            pause(1)
            if needwait

@@ -8,7 +8,7 @@ function callback_CompareGeneBtwCls(src,~)
         return;
     end
     
-a={'Library Size','Gene Expression','Predefined Cell Score'};
+a={'Gene Expression','Library Size','Predefined Cell Score'};
 [indx1,tf1]=listdlg('PromptString',...
     'Select a metric for comparison.',...
     'SelectionMode','single','ListString',a);
