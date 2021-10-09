@@ -22,8 +22,8 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
                 '',''},'SelectionMode','single',...
                 'ListString',listitems,'ListSize',[250 300]);
     if tf~=1, return; end
-    switch indx
-        case 1   % basic QC
+    switch listitems{indx}
+        case 'SC_QCFILTER (Basic QC for Cells/Genes)'   % basic QC
 %             answer=questdlg({'Library Size > 1000','mtDNA Ratio < 10%',...
 %                                'Gene''s min_cells_nonzero > 5%'});
             
@@ -64,7 +64,7 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
         %    [Xmajor,Xminor,gmajor,gminor]=pkg.e_makeshadowmat(sce.X,sce.g);
         %    [X1,g1]=pkg.e_shadowmatqc(Xmajor,Xminor,gmajor,gminor);            
  
-        case 2     % remove genes by expression
+        case 'Remove Genes by Expression'     % remove genes by expression
             answer=inputdlg('Expressed in less than % of cells',...
                 'Remove Genes',[1 40],{'5'});
             if isempty(answer), return; end
@@ -76,7 +76,7 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
                     gui.gui_waitbar(fw);
                 end
             end
-        case 3          % remove selected genes
+        case 'Remove Genes by Name'        % remove selected genes
             gsorted=sort(sce.g);
             [idx]=gui.i_selmultidlg(gsorted);
             if isempty(idx), return; end
@@ -95,13 +95,12 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
                     return;
                 end
             end
-        case 4        % remove mt-genes
+        case 'Remove Mt-genes'        % remove mt-genes
             sce=sce.rmmtgenes;            
-        case 5
-            % -----------
+        case '------------------------------------------------'
             requirerefresh=false;
             return;
-        case 6      % mt-ratio vs. library size
+        case 'Library Size vs. Mt-reads Ratio'      % mt-ratio vs. library size
             i=startsWith(sce.g,'mt-','IgnoreCase',true);
             if ~any(i) 
                 disp('No mt genes found.');
@@ -119,7 +118,7 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
             a=maxk(ci,10);                
             idx=gui.i_setranges2(ci',cj',[0 a(end)],...
                     [0 15],ttxti,ttxtj);
-        case 7
+        case 'Library Size vs. Number of Genes'
             cj=sum(sce.X>0,1);
             if issparse(cj), cj=full(cj); end
             ttxtj="Number of Detected Genes";
@@ -130,7 +129,7 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
             b=maxk(cj,10);
             idx=gui.i_setranges2(ci',cj',[0 a(end)],...
                     [0 b(end)],ttxti,ttxtj);
-        case 8    % 'Abundant lncRNAs vs. Number of Genes'
+        case 'Abundant lncRNAs vs. Number of Genes'    % 'Abundant lncRNAs vs. Number of Genes'
             % remove cells with a high fraction of nuclear lncRNA transcripts 
             % (Malat1, Meg3 and Kcnq10t1)
             % https://www.frontiersin.org/articles/10.3389/fncel.2020.00065/full#h3
@@ -151,11 +150,7 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
             b=maxk(cj,10);
             idx=gui.i_setranges2(ci',cj',[0 a(end)],...
                     [0 b(end)],ttxti,ttxtj);
-        case 9
-            % ----------
-            requirerefresh=false;
-            return;
-        case 10   % view QC metrics violin
+        case 'QC Metrics in Violin Plots'   % view QC metrics violin
             gui.sc_qcviolin(sce.X,sce.g);
             requirerefresh=false;
             return;         
