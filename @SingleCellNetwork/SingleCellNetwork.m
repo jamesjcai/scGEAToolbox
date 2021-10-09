@@ -39,8 +39,21 @@ classdef SingleCellNetwork
       error('You cannot set NumGenes property'); 
    end
  
-    function p = plot(obj)
-        p=plot(obj.G);
+    function p = plot(obj,allgenes)
+        if nargin<2, allgenes=false; end
+        if allgenes
+            p=plot(obj.G);
+        else
+            rid=randperm(obj.NumGenes);
+            xg=subgraph(obj.G,rid(1:100));
+            [bin,binsize] = conncomp(xg,'Type','weak');            
+            idx = binsize(bin) == max(binsize);
+            SG = subgraph(xg, idx);
+            %p=plotweighted(SG);
+            LWidths = 5*SG.Edges.Weight/max(SG.Edges.Weight);
+            p=plot(SG,'LineWidth',abs(LWidths));            
+            title('Random Subnetwork')
+        end
     end
     
     function p = plotweighted(obj)
