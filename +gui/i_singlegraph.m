@@ -217,9 +217,22 @@ title(figname);
             cc(i,:)=repmat([1 0 0],sum(i),1);
             p.NodeLabelColor=cc;
         end
-        
+        % aaa=2*p.NodeFontSize;
         p.NodeFontSize=2*p.NodeFontSize;
-        % title(h,'scGRN');
+        %title(h,sprintf('%d nodes',G.numnodes));
+
+        % https://www.mathworks.com/matlabcentral/answers/296070-change-label-font-in-graph-plots
+        %{
+        nl = p.NodeLabel;
+        p.NodeLabel = '';
+        xd = get(p, 'XData');
+        yd = get(p, 'YData');
+        text(xd, yd, nl, 'FontSize',aaa,...
+            'FontWeight','bold',...
+            'HorizontalAlignment','left', ...
+            'VerticalAlignment','middle',...
+            'BackgroundColor','w');
+        %}
         
         G.Edges.LWidths = abs(w*G.Edges.Weight/max(G.Edges.Weight));
         p.LineWidth = G.Edges.LWidths;

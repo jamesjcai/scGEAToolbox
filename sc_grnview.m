@@ -9,6 +9,9 @@ if nargin<3, figname=''; end
         end
         G=pkg.makegraph(A,nodenames);
     end
+if nargin<3
+    figname=sprintf('%d nodes',G.numnodes);
+end
     gui.i_singlegraph(G,figname);
 end
 
