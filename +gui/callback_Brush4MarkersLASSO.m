@@ -64,17 +64,25 @@ function callback_Brush4MarkersLASSO(src,~)
         errordlg('No marker gene found')
         return;
     else
-        fw=gui.gui_waitbar;
-        markerlist=sce.g(idx);
-        [~,jx]=sort(b(idx),'descend');
-        markerlist=markerlist(jx);
+%         fw=gui.gui_waitbar;
+         markerlist=sce.g(idx);
+         [~,jx]=sort(b(idx),'descend');
+         markerlist=markerlist(jx);
+%         htmlfilename=cL{unique(c(ptsSelected))};
+%         pkg.i_markergeneshtml(sce,markerlist,numfig,...
+%                    [ax bx],htmlfilename,ptsSelected);
+%         gui.gui_waitbar(fw);
         
+        for kk=1:length(markerlist)
+            f=figure;
+            [h1]=sc_scattermarker(sce.X,sce.g,sce.s,...
+                 markerlist(end-(kk-1)),5);
+            view(h1,ax,bx);
+            P = get(f,'Position');
+            set(f,'Position',[P(1)-20*kk P(2)-20*kk P(3) P(4)]);
+        end
 
-        
-        htmlfilename=cL{unique(c(ptsSelected))};
-        pkg.i_markergeneshtml(sce,markerlist,numfig,...
-                   [ax bx],htmlfilename,ptsSelected);
-        gui.gui_waitbar(fw);        
+       
     end
         fprintf('%d marker genes: ',length(markerlist));
         fprintf('%s ',markerlist)
