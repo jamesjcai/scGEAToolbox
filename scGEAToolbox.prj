@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.toolbox" plugin-version="1.0">
-  <configuration build-checksum="2783938160" file="U:\GitHub\scGEAToolbox\scGEAToolbox.prj" location="U:\GitHub\scGEAToolbox" name="scGEAToolbox" target="target.toolbox" target-name="Package Toolbox">
+  <configuration build-checksum="3927047212" file="U:\GitHub\scGEAToolbox\scGEAToolbox.prj" location="U:\GitHub\scGEAToolbox" name="scGEAToolbox" target="target.toolbox" target-name="Package Toolbox">
     <param.appname>scGEAToolbox</param.appname>
     <param.authnamewatermark>James Cai</param.authnamewatermark>
     <param.email>jcai@tamu.edu</param.email>
@@ -7,7 +7,7 @@
     <param.summary>Single-cell Gene Expression Analysis Toolbox</param.summary>
     <param.description>scRNAseq data analysis toolbox</param.description>
     <param.screenshot>${PROJECT_ROOT}\resources\sc_scatter.png</param.screenshot>
-    <param.version>21.9.30</param.version>
+    <param.version>21.10.17</param.version>
     <param.output>${PROJECT_ROOT}\scGEAToolbox.mltbx</param.output>
     <param.products.name />
     <param.products.id />
@@ -45,8 +45,7 @@ resources/STRING/stringdb_mouse.mat
 sc_tenifoldnet.m
 sc_pcnetdenoised.m
 **/html
-**/docs
-**/@SingleCellNetwork</param.exclude.filters>
+**/docs</param.exclude.filters>
     <param.exclude.pcodedmfiles>true</param.exclude.pcodedmfiles>
     <param.examples />
     <param.demosxml />
@@ -117,6 +116,7 @@ sc_pcnetdenoised.m
       <file>${PROJECT_ROOT}\+run</file>
       <file>${PROJECT_ROOT}\+ten</file>
       <file>${PROJECT_ROOT}\@SingleCellExperiment</file>
+      <file>${PROJECT_ROOT}\@SingleCellNetwork</file>
       <file>${PROJECT_ROOT}\cdgea.m</file>
       <file>${PROJECT_ROOT}\demo_Getting_Started.m</file>
       <file>${PROJECT_ROOT}\demo_script1.mlx</file>
@@ -170,6 +170,7 @@ sc_pcnetdenoised.m
       <file>${PROJECT_ROOT}\sc_qcfilter.m</file>
       <file>${PROJECT_ROOT}\sc_qcmetrics.m</file>
       <file>${PROJECT_ROOT}\sc_read10xdir.m</file>
+      <file>${PROJECT_ROOT}\sc_read10xdir2.m</file>
       <file>${PROJECT_ROOT}\sc_readfile.m</file>
       <file>${PROJECT_ROOT}\sc_readgeoaccession.m</file>
       <file>${PROJECT_ROOT}\sc_readhdf5file.m</file>
