@@ -180,8 +180,8 @@ promotesave=true;
                         tmpd=tempdir;
                         if strcmpi(answer{1}(end-2:end),'.gz')
                             files=gunzip(answer{1},tmpd);
-                        % elseif strcmpi(answer{1}(end-2:end),'zip')
-                        %    files=unzip(answer{1},tmpd);
+                        elseif strcmpi(answer{1}(end-3:end),'.zip')
+                            files=unzip(answer{1},tmpd);
                         else
                             errordlg('File format is not supported.');
                             return;
