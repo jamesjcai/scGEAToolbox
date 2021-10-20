@@ -179,15 +179,18 @@ promotesave=true;
                     if ~isempty(answer{1})
                         tmpd=tempdir;
                         if strcmpi(answer{1}(end-2:end),'.gz')
+                            fprintf('gunzip(''%s'',''%s'');\n',answer{1},tmpd);
                             files=gunzip(answer{1},tmpd);
                         elseif strcmpi(answer{1}(end-3:end),'.zip')
+                            fprintf('unzip(''%s'',''%s'');\n',answer{1},tmpd);
                             files=unzip(answer{1},tmpd);
                         else
                             errordlg('File format is not supported.');
                             return;
                         end
-                        f=files{1};
+                        f=files{1};                        
                         if isempty(f), error('f1'); end
+                        fprintf('[X,genelist]=sc_readtsvfile(''%s'');\n',f);
                         [X,genelist]=sc_readtsvfile(f);
                         sce = SingleCellExperiment(X, genelist);
                     end
