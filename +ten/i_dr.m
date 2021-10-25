@@ -6,7 +6,13 @@ function [T]=i_dr(aln0,aln1,genelist,dosort)
     drdist=drdist./norm(drdist);
     FC=drdist./mean(drdist);
     pValues=chi2cdf(FC,1,'upper');
-    pAdjusted = mafdr(pValues,'BHFDR',true);
+    
+    
+    if exist('mafdr.m', 'file')        
+        pAdjusted = mafdr(pValues,'BHFDR',true);
+    else
+        [~, ~, ~, pAdjusted] = fdr_bh(pValues);
+    end    
     if size(genelist,1)==1, genelist=genelist'; end
     sortid=(1:length(genelist))';
     if size(genelist,2)>1, genelist=genelist'; end

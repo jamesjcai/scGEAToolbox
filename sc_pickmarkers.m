@@ -106,7 +106,12 @@ parfor k=1:ng
     pct_1(k)=sum(x>0)./length(x);
     pct_2(k)=sum(y>0)./length(y);
 end
-    p_val_adj = mafdr(p_val,'BHFDR',true);
+
+    if exist('mafdr.m', 'file')
+        p_val_adj = mafdr(p_val,'BHFDR',true);        
+    else
+        [~, ~, ~, p_val_adj] = fdr_bh(p_val);
+    end
     sortid=(1:length(genelist))';
     if size(genelist,2)>1 
         gene=genelist';
