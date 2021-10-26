@@ -36,14 +36,15 @@ else
 end
 if ~exist(ftfname,'file')
     if ~exist(zftfname,'file')
-        error('No features.tsv file.');            
+        % error('No features.tsv file.');
+        ftdone=false;
     else
         [~,nametxt]=fileparts(zftfname);
         fprintf('Unzipping %s.gz...\n',nametxt);
         gunzip(zftfname);
         ftdone=true;
     end
-else
+else   % ftfname exisiting
     ftdone=true;
 end
 
@@ -57,7 +58,7 @@ else
 end
 if ~exist(ftfname,'file')
     if ~exist(zftfname,'file')
-        error('No features.tsv file.');
+        error('No genes/features.tsv file.');
     else
         [~,nametxt]=fileparts(zftfname);
         fprintf('Unzipping %s.gz...\n',nametxt);
