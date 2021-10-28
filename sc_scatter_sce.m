@@ -801,7 +801,11 @@ end
             [Tct] = pkg.local_celltypebrushed(sce.X, sce.g, ...
                 sce.s, ptsSelected, ...
                 speciestag, organtag, databasetag);
-            ctxt = Tct.C1_Cell_Type;
+            if isempty(Tct)
+                ctxt={'Unknown'};
+            else
+                ctxt = Tct.C1_Cell_Type;
+            end
             
             [indx, tf] = listdlg('PromptString', {'Select cell type', ...
                 '', ''}, 'SelectionMode', 'single', 'ListString', ctxt);

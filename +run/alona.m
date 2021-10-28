@@ -88,6 +88,7 @@ wvalu=Tw.Var2;
 wgene=string(upper(Tw.Var1));
 
 [validG,idx1,idx2]=intersect(genelist,wgene);
+
 genelist=genelist(idx1);
 X=sc_norm(X(idx1,:));
 X=log(X+1);
@@ -143,8 +144,13 @@ T=table();
 % t=table(celltypev);
 for k=1:NC
     [c,idx]=sort(S(:,k),'descend');
-    T=[T,table(celltypev(idx),c,'VariableNames',...
-        {sprintf('C%d_Cell_Type',k),sprintf('C%d_CTA_Score',k)})];
+    if ~isempty(validG)
+        T=[T,table(celltypev(idx),c,'VariableNames',...
+            {sprintf('C%d_Cell_Type',k),sprintf('C%d_CTA_Score',k)})];
+    else
+        T=[T,table("Unknown",0,'VariableNames',...
+            {sprintf('C%d_Cell_Type',k),sprintf('C%d_CTA_Score',k)})];        
+    end
 end
 if size(T,1)>10
     T=T(1:10,:);
