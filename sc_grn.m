@@ -19,7 +19,7 @@ switch p.Results.type
     case 'pcnetpar'             % parallel version 
         [A]=sc_pcnetpar(X);
     case 'pcnetdenoised'        % slow
-        [A]=sc_pcnetdenoised(X);
+        [A]=ten.sc_pcnetdenoised(X);
     case 'genie3'               % slow
         [A]=run.GENIE3(X,[],true);
 end

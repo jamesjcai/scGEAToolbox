@@ -272,19 +272,23 @@ set(hFig, 'visible','on');
         delete(f)
    end
 
-   function [p,G]=i_replotg(p,G,h,cutoff)
-        a=h.Title.String;
-        x=p.XData; y=p.YData;
-        A=adjacency(G,'weighted');
-        A=ten.e_filtadjc(A,cutoff);
-        if issymmetric(A)
-            G=graph(A,G.Nodes.Name);
-        else
-            G=digraph(A,G.Nodes.Name);
+   function [p,G]=i_replotg(p,G,h,cutoff)       
+        if ismember('Weight',G.Edges.Properties.VariableNames)            
+            if length(unique(G.Edges.Weight))>1                
+                a=h.Title.String;
+                x=p.XData; y=p.YData;        
+                A=adjacency(G,'weighted');
+                A=ten.e_filtadjc(A,cutoff);
+                if issymmetric(A)
+                    G=graph(A,G.Nodes.Name);
+                else
+                    G=digraph(A,G.Nodes.Name);
+                end
+                [p]=drawnetwork(G,h);
+                p.XData=x; p.YData=y;
+                h.Title.String=a;
+            end
         end
-        [p]=drawnetwork(G,h);
-        p.XData=x; p.YData=y;
-        h.Title.String=a;
    end
 
 

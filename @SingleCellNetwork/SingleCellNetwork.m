@@ -41,6 +41,10 @@ classdef SingleCellNetwork
       fprintf('%s%d\n','NumGenes is: ',obj.NumGenes)
       error('You cannot set NumGenes property'); 
    end
+   
+   function grnview(obj)
+      sc_grnview(obj.A,obj.g);
+   end
  
     function p = plot(obj,allgenes)
         if nargin<2 && obj.NumGenes<=500 

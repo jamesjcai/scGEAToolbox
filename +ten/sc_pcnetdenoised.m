@@ -21,12 +21,14 @@ import ten.*
    addOptional(p,'nsubsmpl',10,@(x) fix(x)==x & x>0);
    addOptional(p,'csubsmpl',500,@(x) fix(x)==x & x>0);
    addOptional(p,'savegrn',false,@islogical);
+   addOptional(p,'donorm',true,@islogical);
    parse(p,varargin{:});
    tdmethod=p.Results.tdmethod;
    nsubsmpl=p.Results.nsubsmpl;
    csubsmpl=p.Results.csubsmpl;
    smplmethod=p.Results.smplmethod;
    savegrn=p.Results.savegrn;
+   donorm=p.Results.donorm;
    
    switch upper(tdmethod)
        case "CP"
@@ -49,9 +51,12 @@ import ten.*
         error('Need sc_pcnetpar.m in scGEAToolbox https://github.com/jamesjcai/scGEAToolbox');
     end
     
+    if donorm
+        X=sc_norm(X,"type","libsize");
+        X=log(1+X);
+        %X=sc_transform(X);
+    end
     
-    X=sc_norm(X,"type","libsize");
-    %X=sc_transform(X);
     %tic
     [XM]=ten.i_nc(X,nsubsmpl,3,csubsmpl,usebootstrp);
     %toc
