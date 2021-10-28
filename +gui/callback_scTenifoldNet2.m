@@ -34,8 +34,9 @@ function callback_scTenifoldNet2(src,~)
     fw = gui.gui_waitbar;
     try
         fprintf('\n');
-        disp('[T]=ten.sctenifoldnet(X1,X2,g,''nsubsmpl'',10,''csubsmpl'',500,''savegrn'',true);')            
-    [T]=ten.sctenifoldnet(sce.X(:,i1),sce.X(:,i2),sce.g,...
+        disp('[T]=ten.sctenifoldnet(X1,X2,g,''nsubsmpl'',10,''csubsmpl'',500,''savegrn'',true);')
+        disp('[T]=ten.sctenifoldnet(sce.X(:,idx1),sce.X(:,idx2),sce.g,''nsubsmpl'',10,''csubsmpl'',500,''savegrn'',true);')
+        [T]=ten.sctenifoldnet(sce.X(:,i1),sce.X(:,i2),sce.g,...
            'nsubsmpl',nsubsmpl,'csubsmpl',csubsmpl,'savegrn',savegrn);
     catch ME
         gui.gui_waitbar(fw);

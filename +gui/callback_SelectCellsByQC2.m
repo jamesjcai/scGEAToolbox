@@ -1,4 +1,4 @@
-function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
+function [requirerefresh,highlightindex]=callback_SelectCellsByQC2(src)
     requirerefresh=true;
     highlightindex=[];
     FigureHandle=src.Parent.Parent;
@@ -57,12 +57,13 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
                 requirerefresh=false;
                 errordlg('Invalid input(s).');
                 return;
-            end
+            end            
+            [whitelist]=i_selectwhitelist(sce);            
             fw=gui.gui_waitbar;
-            sce=sce.qcfilter(libsize,mtratio,min_cells_nonzero);
+            sce=sce.qcfilterwhitelist(libsize,mtratio,min_cells_nonzero,whitelist);
             gui.gui_waitbar(fw);
         %   [Xmajor,Xminor,gmajor,gminor]=pkg.e_makeshadowmat(sce.X,sce.g);
-        %   [X1,g1]=pkg.e_shadowmatqc(Xmajor,Xminor,gmajor,gminor);            
+        %   [X1,g1]=pkg.e_shadowmatqc(Xmajor,Xminor,gmajor,gminor);
  
         case 'Remove Genes by Expression'     % remove genes by expression
             answer=inputdlg('Expressed in less than % of cells',...
@@ -193,3 +194,24 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
     guidata(FigureHandle,sce);
 end
                 
+
+
+function [whitelist]=i_selectwhitelist(sce)
+    whitelist=[];        
+    answer = questdlg('Select whitelist genes?');
+    switch answer
+        case 'Yes'
+            [gsorted]=gui.i_sortgenenames(sce);
+            if isempty(gsorted), return; end
+            [idx]=gui.i_selmultidlg(gsorted);
+            if isempty(idx), return; end
+            if isscalar(idx) && idx==0, return; end
+            whitelist=gsorted(idx);
+        case 'No'
+            return;
+        case 'Cancel'
+            return;
+        otherwise
+            return;
+    end
+end

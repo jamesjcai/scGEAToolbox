@@ -74,6 +74,7 @@ classdef SingleCellExperiment
     obj = embedcells(obj,methodid,forced,usehvgs,ndim)
     obj = clustercells(obj,k,methodid,forced)
     obj = assigncelltype(obj,speciesid)
+    obj = qcfilterwhitelist(obj,libsize,mtratio,min_cells_nonzero,whitelist)
     
     function obj = removecells(obj,i)
             obj.X(:,i)=[];
@@ -140,8 +141,12 @@ classdef SingleCellExperiment
     
     function obj = qcfilter(obj,libsize,mtratio,min_cells_nonzero)
         if nargin<4 || isempty(min_cells_nonzero), min_cells_nonzero=0.01; end
-        if nargin<3 || isempty(mtratio), mtratio=0.10; end
-        if nargin<2 || isempty(libsize), libsize=1000; end        
+        if nargin<3 || isempty(mtratio), mtratio=0.15; end
+        if nargin<2 || isempty(libsize), libsize=500; end
+        %        case 'Relaxed (keep more cells/genes)'
+        %            definput = {'500','0.15','0.01'};
+        %        case 'Strigent (remove more cells/genes)'
+        %            definput = {'1000','0.10','0.05'};        
         [~,keptg,keptidxv]=sc_qcfilter(obj.X,obj.g,libsize,mtratio,1,...
                                        min_cells_nonzero);
         for k=1:length(keptidxv)

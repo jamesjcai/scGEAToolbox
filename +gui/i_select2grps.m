@@ -22,9 +22,9 @@ i1=0; i2=0;
 % end 
 
 
-[thisc,clabel]=gui.i_select1class(sce);
+[thisc,~]=gui.i_select1class(sce);
 if isempty(thisc)
-    errordlg('Undefined');
+    %errordlg('Undefined');
     return;
 end
 if numel(unique(thisc))==1
