@@ -24,8 +24,9 @@ function callback_scTenifoldNet1(src,events)
         case 'Cancel'
             return;
         case 'All Cells'
+            
         case 'Select Cells...'
-            gui.callback_SelectCellsByClass(src,events);            
+            gui.callback_SelectCellsByClass(src,events);
             return;
         otherwise
             return;
@@ -42,6 +43,10 @@ function callback_scTenifoldNet1(src,events)
         return;
     end
     gui.gui_waitbar(fw);
+    
+    % tstr=matlab.lang.makeValidName(datestr(datetime));
+    % save(sprintf('A_%s',tstr),'A','g','-v7.3');
+    
         labels = {'Save network to variable named:',...
             'Save sce.g to variable named:'}; 
         vars = {'A','g'};
