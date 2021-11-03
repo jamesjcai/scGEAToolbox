@@ -54,7 +54,7 @@ answer=questdlg('Use existing networks or reconstruct networks?',...
             [aln0,aln1]=i_ma(A0sym,A1sym);
             disp('Differential regulation (DR) detection...')
             T=i_dr(aln0,aln1,glist);
-            gui.gui_waitbar(fw);    
+            gui.gui_waitbar(fw);
             
         case 'Reconstruct'
             [i1,i2]=gui.i_select2grps(sce);
@@ -82,7 +82,7 @@ answer=questdlg('Use existing networks or reconstruct networks?',...
                 errordlg(ME.message);
                 return;
             end
-
+            gui.gui_waitbar(fw);
         otherwise
             return;
     end
@@ -109,6 +109,4 @@ answer=questdlg('Use existing networks or reconstruct networks?',...
             ten.e_fgseanet(Tr);
         end
     end
-    
-    
 end
