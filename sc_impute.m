@@ -13,7 +13,7 @@ addOptional(p,'type',defaultType,checkType)
 parse(p,X,varargin{:})
 
    
-switch lower(p.Results.type)
+switch upper(p.Results.type)
     case 'MAGIC'
         [X]=run.MAGIC(X,true);
     case 'McImpute'
