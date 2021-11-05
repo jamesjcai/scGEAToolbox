@@ -69,26 +69,62 @@ function callback_scTenifoldKnk(src,~)
     
     if ~strcmpi(answer,'Yes'), return; end
     
-    fw = gui.gui_waitbar;
-    try
+
+    
         if isempty(A0)
-            [T,A0]=ten.sctenifoldknk(sce.X,sce.g,idx,'sorttable',true);
-            % T=sortrows(T,'pAdjusted','ascend');
+            try
+                fw = gui.gui_waitbar;
+                [T,A0]=ten.sctenifoldknk(sce.X,sce.g,idx,'sorttable',true);
+                % T=sortrows(T,'pAdjusted','ascend');
+                gui.gui_waitbar(fw);
+             catch ME
+                gui.gui_waitbar(fw);
+                errordlg(ME.message);
+                return;
+            end
             isreconstructed=true;
         else
-            [T]=i_knk(A0,idx,sce.g);
+            doit=false;
+            if sum(A0(idx,:)~=0)==0
+                s=sprintf('KO gene (%s) has no link or too few links (n<50) with other genes.',...
+                          sce.g(idx));
+                warndlg(s);
+                return;
+            elseif sum(A0(idx,:)~=0)<50
+                s=sprintf('KO gene (%s) has too few links (n=%d) with other genes. Continue?',...
+                          sce.g(idx),sum(A0(idx,:)~=0));
+                answer11 = questdlg(s);
+                switch answer11
+                    case 'Yes'
+                        doit=true;                        
+                    case 'No'
+                        return;
+                    case 'Cancel'
+                        return;
+                    otherwise
+                        return;
+                end                               
+            else
+                doit=true;                
+            end
+            
+            if doit
+                try
+                    fw = gui.gui_waitbar;
+                    [T]=i_knk(A0,idx,sce.g);
+                    gui.gui_waitbar(fw);
+                catch ME
+                    gui.gui_waitbar(fw);
+                    errordlg(ME.message);
+                    return;
+                end
+            end
             %A1=A0;
             %A1(idx,:)=0;
             %[aln0,aln1]=i_ma(A0,A1);
             %T=i_dr(aln0,aln1,sce.g,true);
             isreconstructed=false;
-        end
-    catch ME
-        gui.gui_waitbar(fw);
-        errordlg(ME.message);
-        return;
-    end
-    gui.gui_waitbar(fw);
+        end    
     
     if isreconstructed
         labels = {'Save network to variable named:'}; 
