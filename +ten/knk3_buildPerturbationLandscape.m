@@ -19,7 +19,7 @@ tmpmat=tempname;
             [t]=ten.knk2_knockoutTargetGene(A,genelist,genelist(k),false);
             F(:,k)=t.drdist;
         end
-        if mod(k,2)==0
+        if mod(k,100)==0
             tmpF=F;
             fprintf('Saving temporary result (tmpF) to %s.mat\n',tmpmat);
             save(tmpmat,'tmpF','genelist');
