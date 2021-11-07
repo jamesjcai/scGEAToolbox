@@ -66,6 +66,8 @@ function callback_scTenifoldKnkN(src,~)
     if isempty(A0)
         try
             fw = gui.gui_waitbar;
+            fprintf('\nCommand line: [A0]=sc_pcnetdenoised(sce.X);\n');
+            fprintf('\nCommand line: [F]=ten.knk3_buildPerturbationLandscape(A0,sce.g);\n');
             [A0]=sc_pcnetdenoised(sce.X);
             [F]=ten.knk3_buildPerturbationLandscape(A0,sce.g);
             gui.gui_waitbar(fw);
@@ -77,8 +79,10 @@ function callback_scTenifoldKnkN(src,~)
         isreconstructed=true;
     else
         try
-            fw = gui.gui_waitbar;                    
+            fw = gui.gui_waitbar;
+            fprintf('\nCommand line: [F]=ten.knk3_buildPerturbationLandscape(A,g);\n');
             [F]=ten.knk3_buildPerturbationLandscape(A0,sce.g);
+            
             gui.gui_waitbar(fw);
         catch ME
             gui.gui_waitbar(fw);

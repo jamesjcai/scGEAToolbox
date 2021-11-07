@@ -1,13 +1,31 @@
-function [F]=knk3_buildPerturbationLandscape(A,genelist)
-    import ten.*
+function [F]=knk3_buildPerturbationLandscape(A,genelist,oldF,a,b)
+if nargin<5, b=size(A,1); end
+if nargin<4, a=1; end
+if nargin<3, oldF=[]; end
+import ten.*
 n=length(genelist);
 assert(n==size(A,1));
-F=zeros(n,n);
-    fprintf('\n');
-    for k=1:n
-        fprintf('Knocking out %s ... gene %d of %d\n',...
-            genelist(k),k,n);
-        [t]=ten.knk2_knockoutTargetGene(A,genelist,genelist(k),false);
-        F(:,k)=t.drdist;
+if ~isempty(oldF)
+    F=oldF;
+else
+    F=zeros(n,n);
+end
+tmpmat=tempname;
+    fprintf('Temporary result (tmpF) will be saved in %s.mat\n',tmpmat);
+    a=min([a n]); b=min([b n]);
+    for k=a:b
+        fprintf('%s ... gene %d of %d\n',genelist(k),k,n);
+        if all(F(:,k)==0)
+            [t]=ten.knk2_knockoutTargetGene(A,genelist,genelist(k),false);
+            F(:,k)=t.drdist;
+        end
+        if mod(k,2)==0
+            tmpF=F;
+            fprintf('Saving temporary result (tmpF) to %s.mat\n',tmpmat);
+            save(tmpmat,'tmpF','genelist');
+        end
     end
+    tmpF=F;
+    fprintf('Saving temporary result (tmpF) to %s.mat\n',tmpmat);  
+    save(tmpmat,'tmpF','genelist');
 end
