@@ -20,12 +20,18 @@ tmpmat=tempname;
             F(:,k)=t.drdist;
         end
         if mod(k,100)==0
-            tmpF=F;
-            fprintf('Saving temporary result (tmpF) to %s.mat\n',tmpmat);
-            save(tmpmat,'tmpF','genelist');
+            try
+                tmpF=F;
+                fprintf('Saving temporary result (tmpF) to %s.mat\n',tmpmat);
+                save(tmpmat,'tmpF','genelist');
+            catch
+            end
         end
     end
-    tmpF=F;
-    fprintf('Saving temporary result (tmpF) to %s.mat\n',tmpmat);  
-    save(tmpmat,'tmpF','genelist');
+    try
+        tmpF=F;
+        fprintf('Saving temporary result (tmpF) to %s.mat\n',tmpmat);  
+        save(tmpmat,'tmpF','genelist');
+    catch
+    end
 end
