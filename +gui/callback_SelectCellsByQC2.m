@@ -198,7 +198,8 @@ end
 
 function [whitelist]=i_selectwhitelist(sce)
     whitelist=[];        
-    answer = questdlg('Select whitelist genes?');
+    answer = questdlg('Genes in whitelist will not be removed. Select whitelist genes?',...
+                'Whitelist Genes','Yes','No','Cancel','No');
     switch answer
         case 'Yes'
             [gsorted]=gui.i_sortgenenames(sce);

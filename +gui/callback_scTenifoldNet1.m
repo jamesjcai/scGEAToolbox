@@ -34,16 +34,24 @@ function callback_scTenifoldNet1(src,events)
    
     answer=questdlg('This analysis may take several hours. Continue?');
     if ~strcmpi(answer,'Yes'), return; end
+    tmpmat=tempname;
     fw = gui.gui_waitbar;
-    try
+    try 
+        disp('>> [A]=ten.sc_pcnetdenoised(sce.X,''savegrn'',false);');
         [A]=ten.sc_pcnetdenoised(sce.X,'savegrn',false);
     catch ME
         gui.gui_waitbar(fw);
         errordlg(ME.message);
         return;
-    end
+    end    
     gui.gui_waitbar(fw);
-    
+    try
+        g=sce.g;
+        fprintf('Saving network (A) to %s.mat\n',tmpmat);
+        save(tmpmat,'A','g');
+    catch ME
+        % disp(ME)
+    end
     % tstr=matlab.lang.makeValidName(datestr(datetime));
     % save(sprintf('A_%s',tstr),'A','g','-v7.3');
     

@@ -1094,18 +1094,19 @@ end
         end
         answer = questdlg('Delete cells?', '', ...
             'Selected', 'Unselected', 'Cancel', 'Selected');
-        if strcmp(answer, 'Cancel')
-            return
+        if strcmp(answer, 'Unselected')            
+            i_deletecells(~ptsSelected);
+        elseif strcmp(answer, 'Selected')            
+            i_deletecells(ptsSelected);
+        else
+            return;
         end
-        if strcmp(answer, 'Unselected')
-            ptsSelected = ~ptsSelected;
-        end
-        answer2 = questdlg(sprintf('Delete %s cells?', ...
-            lower(answer)));
-        if ~strcmp(answer2, 'Yes')
-            return
-        end
-        i_deletecells(ptsSelected);
+%         answer2 = questdlg(sprintf('Delete %s cells?', ...
+%             lower(answer)));
+%         if ~strcmp(answer2, 'Yes')
+%             return
+%         end
+%        i_deletecells(ptsSelected);
         guidata(FigureHandle,sce);
     end
 
