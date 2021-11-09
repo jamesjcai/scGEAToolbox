@@ -111,7 +111,8 @@ function callback_scTenifoldKnk1(src,~)
             if doit
                 try
                     fw = gui.gui_waitbar;
-                    [T]=i_knk(A0,idx,sce.g);
+                    disp('>> [T]=ten.i_knk(A0,targetgene,genelist,true);')
+                    [T]=ten.i_knk(A0,idx,sce.g);
                     gui.gui_waitbar(fw);
                 catch ME
                     gui.gui_waitbar(fw);

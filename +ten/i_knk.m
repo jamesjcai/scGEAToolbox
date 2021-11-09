@@ -1,5 +1,8 @@
-function [T]=i_knk(A0,idx,genelist)
+function [T]=i_knk(A0,idx,genelist,dosort)
 
+%see also: ten.knk2_knockoutTargetGene
+
+    if nargin<4, dosort=true; end
     if ischar(idx)||isstring(idx)
         [~,idx]=ismember(idx,genelist);
     end
@@ -16,13 +19,13 @@ function [T]=i_knk(A0,idx,genelist)
     
     a=A0(idx,:); b=A1(idx,:);
     yn = abs(a - b) <= eps(max(abs(a), abs(b)));
-    yn = all(yn);  % scalar logical output
+    yn = all(yn);     % scalar logical output
     
     if yn
         drdist=nan(length(genelist),1);
         T=table(drdist);
     else
         [aln0,aln1]=i_ma(A0,A1);
-        T=i_dr(aln0,aln1,genelist,true);
+        T=i_dr(aln0,aln1,genelist,dosort);
     end
 end

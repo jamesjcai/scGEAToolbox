@@ -1,6 +1,8 @@
-function [T]=knk2_knockoutTargetGene(A,genelist,targetgene,dosort)
+function [T]=knk2_knockoutTargetGene(A,targetgene,genelist,dosort)
+
+%see also: ten.i_knk
     import ten.*
-    if nargin<4, dosort=false; end        
+    if nargin<4, dosort=true; end
     idx=find(genelist==targetgene,1);
     if isempty(idx)
         error("TARGETGENE is not found in GENELIST");

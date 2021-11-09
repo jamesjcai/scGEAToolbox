@@ -215,12 +215,20 @@ promotesave=true;
                 end
                 promotesave=false;
             case 'Load Example Data...'
+                answerstruced=questdlg('Load processed or raw data?',...
+                    '','Processed','Raw','Cancel','Processed');
+                if ~(strcmp(answerstruced,'Processed')||strcmp(answerstruced,'Raw'))
+                    return;
+                end
                 promotesave=false;
                 pw1=fileparts(mfilename('fullpath'));
                 fprintf('Loading SCE Data File example_data/testSce.mat...');
                 tic;
                 file1=fullfile(pw1,'example_data','testSce.mat');
                 load(file1,'sce');
+                if strcmp(answerstruced,'Raw')
+                    sce=SingleCellExperiment(sce.X,sce.g);
+                end           
                 fprintf('Done.\n');
                 toc;
             otherwise
