@@ -9,6 +9,6 @@ function [T]=knk2_knockoutTargetGene(A,targetgene,genelist,dosort)
     end
     A1=A;
     A1(idx,:)=0;
-    [aln0,aln1]=ten.i_ma(A,A1);    
+    [aln0,aln1]=ten.i_ma(A,A1);
     T=i_dr(aln0,aln1,genelist,dosort);
 end

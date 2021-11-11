@@ -17,8 +17,12 @@ tmpmat=tempname;
     for k=a:b
         fprintf('%s ... gene %d of %d\n',genelist(k),k,n);
         if all(F(:,k)==0)
-            [t]=ten.knk2_knockoutTargetGene(A,genelist(k),genelist,false);
-            F(:,k)=t.drdist;
+            try
+                [t]=ten.knk2_knockoutTargetGene(A,genelist(k),genelist,false);
+                F(:,k)=t.drdist;
+            catch
+                disp(genelist(k))
+            end
         end
         if savetmp
         if mod(k,100)==0
