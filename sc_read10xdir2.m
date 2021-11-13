@@ -8,7 +8,7 @@ if nargin<2, coln=2; end
 if nargin<1, selpath = uigetdir; end
 fprintf('Processing %s...\n',selpath);
 [~,aff]=i_guessmtxfile(selpath);
-aff
+% aff
 if ~isempty(aff)
     mmfname=fullfile(selpath,sprintf('%smatrix.mtx',aff));
     zmmfname=fullfile(selpath,sprintf('%smatrix.mtx.gz',aff));

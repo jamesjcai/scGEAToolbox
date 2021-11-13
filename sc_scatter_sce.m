@@ -1025,6 +1025,7 @@ end
                 if any(idx)
                     ttxt = sprintf("%s+", sce.g(idx));
                     ci = sum(sce.X(idx, :), 1);
+                    figure;
                     gui.i_stemscatter(sce.s,ci);
                     title(ttxt);
                 else

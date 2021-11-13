@@ -1,22 +1,22 @@
-function [f0]=sc_multigroupings(sce,ttl1,ttl2)
-if nargin<3, ttl2=""; end
-if nargin<2, ttl1=""; end
+function [f0]=sc_multigroupings(sce,thisc1,thisc2,ttl1,ttl2)
+if nargin<5, ttl2=""; end
+if nargin<4, ttl1=""; end
 
-if isempty(sce.c_cluster_id) || size(sce.s,1)~=length(sce.c_cluster_id)
-    return; 
-end
-if isempty(sce.c_batch_id)  || size(sce.s,1)~=length(sce.c_batch_id)
-    return;
-end
+% if isempty(sce.c_cluster_id) || size(sce.s,1)~=length(sce.c_cluster_id)
+%     return; 
+% end
+% if isempty(sce.c_batch_id)  || size(sce.s,1)~=length(sce.c_batch_id)
+%     return;
+% end
 
 f0=figure('Visible',false);
 
 subplot(1,2,1);
-h1=gui.i_gscatter3(sce.s, sce.c_cluster_id,1,1);
+h1=gui.i_gscatter3(sce.s, thisc1,1,1);
 if ~isempty(ttl1), title(ttl1); end
 
 subplot(1,2,2);
-h2=gui.i_gscatter3(sce.s, sce.c_cluster_id,1,1);
+h2=gui.i_gscatter3(sce.s, thisc2,1,1);
 if ~isempty(ttl2), title(ttl2); end
 
 evalin('base','h=findobj(gcf,''type'',''axes'');');

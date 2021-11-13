@@ -18,14 +18,15 @@ if exist(filenm,'file') ~= 2
     error(message('FileNotFound'));        
 end
 
-% h5disp(h5file);
 hinfo=h5info(filenm);
+h5disp(filenm,'/matrix','min');
 
 % if strcmp(a.Groups(1).Datasets(2).Name,'data')
 data=h5read(filenm,[hinfo.Groups(1).Name,'/data']);
 indices=h5read(filenm,[hinfo.Groups(1).Name,'/indices']);
 indptr=h5read(filenm,[hinfo.Groups(1).Name,'/indptr']);
-g=h5read(filenm,[hinfo.Groups(1).Name,'/gene_names']);
+% g=h5read(filenm,[hinfo.Groups.Groups(1).Name,'/gene_names']);
+g=h5read(filenm,[hinfo.Groups.Groups(1).Name,'/name']);
 shape=h5read(filenm,[hinfo.Groups(1).Name,'/shape']);
 
 X=zeros(shape(1),shape(2));

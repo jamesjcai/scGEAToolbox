@@ -16,6 +16,7 @@ classdef SingleCellNetwork
    obj=filtadjc(obj,q)   
    T=virtualknockout(obj,gid)
    [scnout]=subnetwork(obj,gid)
+   [scnout]=subnetwork_neighbors(obj,targetg,siz)
 
    
    function obj = SingleCellNetwork(A,g)
