@@ -106,15 +106,32 @@ title(figname);
 
 
    function SaveAdj(hObject,event)
+       
+    answer = questdlg('Export & save network to:','',...
+                    'Workspace','File','Workspace');
+    switch answer
+    case 'Workspace'           
+       
      labels = {'Save adjacency matrix A1 to variable named:',...
                'Save graph G1 to variable named:',...
                'Save genelist g1 to variable named:'};
-           A1=adjacency(G1,'weighted');
-           g1=string(G1.Nodes.Name);
-     vars = {'A1','G1','g1'};...
-     values = {A1,G1,g1};
-     msgfig=export2wsdlg(labels,vars,values);
-     uiwait(msgfig);
+               A1=adjacency(G1,'weighted');
+               g1=string(G1.Nodes.Name);
+             vars = {'A1','G1','g1'};...
+             values = {A1,G1,g1};
+             msgfig=export2wsdlg(labels,vars,values);
+             uiwait(msgfig);
+        case 'File'
+            [file, path] = uiputfile({'*.txt';'*.*'},'Save as');
+            if isequal(file,0) || isequal(path,0)
+               return;
+            else
+               filename=fullfile(path,file);
+               pkg.m2cyto(G1,filename);
+            end
+        otherwise
+            return;
+    end
    end
 
                 

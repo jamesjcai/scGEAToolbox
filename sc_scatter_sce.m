@@ -521,7 +521,7 @@ end
     function SelectCellsByQC(src, ~)
         oldn=sce.NumCells;
         oldm=sce.NumGenes;
-        [requirerefresh,highlightindex]=gui.callback_SelectCellsByQC2(src);
+        [requirerefresh,highlightindex]=gui.callback_SelectCellsByQC(src);
         sce = guidata(FigureHandle);
         if requirerefresh            
             [c, cL] = grp2idx(sce.c);
