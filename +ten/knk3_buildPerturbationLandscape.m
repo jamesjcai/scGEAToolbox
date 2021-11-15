@@ -18,8 +18,10 @@ tmpmat=tempname;
         fprintf('%s ... gene %d of %d\n',genelist(k),k,n);
         if all(F(:,k)==0)
             try
+               tic
                 [t]=ten.knk2_knockoutTargetGene(A,genelist(k),genelist,false);
                 F(:,k)=t.drdist;
+                toc
             catch
                 disp(genelist(k))
             end
