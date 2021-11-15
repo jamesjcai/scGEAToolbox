@@ -34,9 +34,8 @@ end
 
 function [CSN] = spcc_method(data,i)
 %construct sample specific network
-
-mean_a=mean(data,2);
-std_a=std(data,0,2);
+    mean_a=mean(data,2);
+    std_a=std(data,0,2);
     v=data(:,i);
     x=(v-mean_a)./std_a;
     x(isnan(x))=0;
@@ -50,10 +49,6 @@ std_a=std(data,0,2);
     x(abs(x)<threshold)=0;
     x(x~=0)=1;
     CSN=x;
-
-
-
-
 end
 
 
@@ -68,17 +63,17 @@ function [ index_R,p ] = SSN( sample,ref )
 % sample=new_T(:,1);
 % ref=new_N;
 
-[R,P]=corrcoef(ref');
+[R,~]=corrcoef(ref');
 final_R0=R;
 final_R0(isnan(final_R0))=0;
 
 NEW_data=[ref sample];
-[R1,P1]=corrcoef(NEW_data');
+[R1,~]=corrcoef(NEW_data');
 final_R1=R1;
 final_R1(isnan(final_R1))=0;
 
 index_R=final_R1-final_R0;
-[m,n]=size(ref);
+[n]=size(ref,2);
 Z=index_R./((1-final_R0.^2)/(n-1));
 Z(Z==inf)=max(max(Z));
 Z(Z==-inf)=-max(max(Z));
@@ -110,8 +105,4 @@ v0=data;
     x(x~=0)=1;
   
     CSN=x;
-
-
-
-
 end
