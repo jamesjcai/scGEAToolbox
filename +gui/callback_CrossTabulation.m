@@ -1,21 +1,29 @@
 function callback_CrossTabulation(src,~)
     FigureHandle=src.Parent.Parent;    
     sce=guidata(FigureHandle);  
-    [thisc1,c1txt]=gui.i_select1class(sce);
-    if isempty(thisc1), return; end
-    uiwait(helpdlg(sprintf('First grouping varible (%s) selected.',c1txt)));
-    [thisc2,c2txt]=gui.i_select1class(sce);
-    if isempty(thisc2), return; end
-    uiwait(helpdlg(sprintf('Second grouping varible (%s) selected.',c2txt)));
-    % if strcmp(c1txt,c2txt), return; end
     
+    [thisc1,clable1,thisc2,clable2]=gui.i_select2class(sce);
+     if isempty(thisc1) || isempty(thisc2)
+         return;
+     end
+    
+     %{
+    [thisc1,clable1]=gui.i_select1class(sce);
+    if isempty(thisc1), return; end
+    uiwait(helpdlg(sprintf('First grouping varible (%s) selected.',clable1)));
+    [thisc2,clable2]=gui.i_select1class(sce);
+    if isempty(thisc2), return; end
+    uiwait(helpdlg(sprintf('Second grouping varible (%s) selected.',clable2)));
+    % if strcmp(clable1,clable2), return; end
+    %}
+     
 answer = questdlg('Sort by?', ...
 	'Sorted Variable', ...
-	c1txt,c2txt,'No sort','No sort');
+	clable1,clable2,'No sort','No sort');
 switch answer
-    case c1txt
+    case clable1
         [thisc1,thisc2]=i_sortc(thisc1,thisc2);
-    case c2txt
+    case clable2
         [thisc2,thisc1]=i_sortc(thisc2,thisc1);
     case 'No sort'
     otherwise
@@ -35,23 +43,23 @@ subplot(211)
 bar(T,'stacked')
 xticks(1:length(labelsx));
 xticklabels(labelsx);
-xlabel(c1txt)
+xlabel(clable1)
 ylabel('# of cells')
 %[~,cL]=grp2idx(thisc2);
 %legend(cL);
 % lgd=legend({'see below'},'Location','bestoutside');
-% title(lgd,c2txt)
+% title(lgd,clable2)
 
 subplot(212)
 bar(T./sum(T,2),'stacked')
-xlabel(c1txt)
+xlabel(clable1)
 ylabel('% of cells')
-% title(c2txt); 
+% title(clable2); 
 xticks(1:length(labelsx));
 xticklabels(labelsx);
 ylim([0 1]);
 lgd=legend(labelsy,'Location','bestoutside');
-title(lgd,c2txt);
+title(lgd,clable2);
 
 
     labels = {'Save Cross-table to variable named:'};
