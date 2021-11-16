@@ -17,17 +17,22 @@ thisc2=[]; clable2='';
         listitems=[listitems,'Batch ID'];
     end
     
-
-
+n=length(listitems);
+if n<3
+    errordlg('Need at least two grouping variables (e.g., BATCH_ID, CLUSTER_ID, or CELL_TYPE_TXT)');
+    return;
+end
 
 % listitems={'Current Class (C)','Cluster ID','Batch ID',...
 %            'Cell Type','Cell Cycle Phase'};
 [indx2,tf2] = listdlg('PromptString',...
-    {'Select TWO Classes'},...
-     'SelectionMode','multiple','ListString',listitems);
+    {'Select two grouping varible:'},...
+     'SelectionMode','multiple',...
+     'ListString',listitems,...
+     'InitialValue',[n-1 n]);
 if tf2==1
     if length(indx2)~=2
-        warndlg('Please select 2 grouping varibles.');
+        warndlg('Please select 2 grouping variables.');
         return;
     end
     [thisc1,clable1]=i_getidx(indx2(1));

@@ -33,9 +33,16 @@ if numel(unique(thisc))==1
 end
 
 [ci,cLi]=grp2idx(thisc);
-[indxx,tfx] = listdlg('PromptString',{'Select two groups',...
-'',''},'SelectionMode','multiple','ListString',string(cLi),...
-'InitialValue',[1 2]);
+listitems=string(cLi);
+n=length(listitems);
+if n<2
+    errordlg('Need at least two groups.');
+    return;
+end
+[indxx,tfx] = listdlg('PromptString',{'Select two groups:'},...
+    'SelectionMode','multiple',...
+    'ListString',listitems,...
+    'InitialValue',[n-1 n]);
 if tfx==1
     if numel(indxx)~=2
         errordlg('Please select 2 groups');

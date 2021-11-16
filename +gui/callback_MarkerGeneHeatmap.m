@@ -1,23 +1,11 @@
 function callback_MarkerGeneHeatmap(src,~)
 
-    answer = questdlg('Generate marker gene heatmap',...
-        'Select Method','Method 1 (🐇)','Method 2 (🐢)',...
-        'Method 3 (🐢🐢)','Method 1 (🐇)');
-    switch answer
-        case 'Method 1 (🐇)'
-            methodid=1;
-        case 'Method 2 (🐢)'
-            methodid=2;
-        case 'Method 3 (🐢🐢)'
-            methodid=3;
-        otherwise
-            return;
-    end
+
 
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
     
-    
+%{    
     if isempty(sce.c_cell_type_tx) 
         if isempty(sce.c_cluster_id)
             errordlg('sce.c_cell_type_tx is empty.');
@@ -48,15 +36,35 @@ function callback_MarkerGeneHeatmap(src,~)
                 return;
         end
     end
-    
-    
-    [c,cL]=grp2idx(cell_type_v);
+%}
+
+    [thisc,~]=gui.i_select1class(sce);
+    if isempty(thisc)
+        % errordlg('Undefined');
+        return;
+    end
+
+    [c,cL]=grp2idx(thisc);
     if numel(cL)==1
-        helpdlg('Only one cell type or cluster')
+        errordlg('Only one cell type or cluster')
         return; 
     end    
     
 
+    answer = questdlg('Generate marker gene heatmap',...
+        'Select Method','Method 1 (🐇)','Method 2 (🐢)',...
+        'Method 3 (🐢🐢)','Method 1 (🐇)');
+    switch answer
+        case 'Method 1 (🐇)'
+            methodid=1;
+        case 'Method 2 (🐢)'
+            methodid=2;
+        case 'Method 3 (🐢🐢)'
+            methodid=3;
+        otherwise
+            return;
+    end    
+    
     fw=gui.gui_waitbar;
     [markerlist]=sc_pickmarkers(sce.X,sce.g,c,10,methodid);
     M=cell(numel(cL),2);

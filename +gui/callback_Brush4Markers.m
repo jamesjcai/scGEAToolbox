@@ -1,6 +1,6 @@
 function callback_Brush4Markers(src,event)
     if exist('lasso','file')
-        % disp('using LASSO')
+        disp('using LASSO')
         gui.callback_Brush4MarkersLASSO(src,event);
         return;
     end
