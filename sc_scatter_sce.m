@@ -25,6 +25,7 @@ sin = p.Results.s;
 methodid = p.Results.methodid;
 ax = [];
 bx = [];
+tmpcelltypev=cell(sce.NumCells,1);
 
 if isempty(cin)
     sce.c = ones(size(sce.X, 2), 1);
@@ -820,7 +821,7 @@ end
             if tf == 1
                 ctxt = Tct.C1_Cell_Type{indx};
             else
-                return
+                return;
             end
             hold on;
             ctxtdisp = strrep(ctxt, '_', '\_');
@@ -925,7 +926,7 @@ end
             case 'Mouse'
                 speciestag = "mouse";
             otherwise
-                return
+                return;
         end
         fw = gui.gui_waitbar;
         [Tct] = pkg.local_celltypebrushed(sce.X, sce.g, sce.s, ptsSelected, ...
@@ -938,24 +939,41 @@ end
         if tf == 1
             ctxt = Tct.C1_Cell_Type{indx};
         else
-            return
+            return;
         end
-        
-        hold on;
         ctxt = strrep(ctxt, '_', '\_');
+        delete(findall(FigureHandle,'Type','hggroup'));
+        if ~exist('tmpcelltypev','var')
+            tmpcelltypev=cell(sce.NumCells,1);
+        end
+        siv=sce.s(ptsSelected, :);
+        si=mean(sce.s(ptsSelected, :));
+        [k] = dsearchn(siv, si);
+        idx = find(ptsSelected);
+        tmpcelltypev{idx(k)}=ctxt;
+        row = dataTipTextRow('', tmpcelltypev);
+        h.DataTipTemplate.DataTipRows = row;        
+        datatip(h, 'DataIndex', idx(k));
+        
+        % return;
+        %{
+        hold on;
         if size(sce.s, 2) >= 3
-            scatter3(sce.s(ptsSelected, 1), sce.s(ptsSelected, 2), sce.s(ptsSelected, 3), 'x');
+            %scatter3(sce.s(ptsSelected, 1), sce.s(ptsSelected, 2),...
+            %    sce.s(ptsSelected, 3), 'x');
             si = mean(sce.s(ptsSelected, :));
             text(si(:, 1), si(:, 2), si(:, 3), sprintf('%s', ctxt), ...
-                'fontsize', 10, 'FontWeight', 'bold', 'BackgroundColor', 'w', 'EdgeColor', 'k');
+                'fontsize', 10, 'FontWeight', 'bold', 'BackgroundColor',...
+                'w', 'EdgeColor', 'k');
         elseif size(sce.s, 2) == 2
-            scatter(sce.s(ptsSelected, 1), sce.s(ptsSelected, 2), 'x');
+            % scatter(sce.s(ptsSelected, 1), sce.s(ptsSelected, 2), 'x');
             si = mean(sce.s(ptsSelected, :));
             text(si(:, 1), si(:, 2), sprintf('%s', ctxt), ...
-                'fontsize', 10, 'FontWeight', 'bold', 'BackgroundColor', 'w', 'EdgeColor', 'k');
+                'fontsize', 10, 'FontWeight', 'bold',...
+                'BackgroundColor', 'w', 'EdgeColor', 'k');
         end
         hold off;
-        
+        %}
     end
 
     function ShowCellStats(src, ~)
