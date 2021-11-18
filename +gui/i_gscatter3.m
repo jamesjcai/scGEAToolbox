@@ -55,7 +55,7 @@ end
 
 if kc<=50 && kc>0
     colormap(lines(kc));
-else    
+else
 %     cx=colormap('autumn');
 %     cx(1,:)=[.8 .8 .8];
 %     colormap(cx);

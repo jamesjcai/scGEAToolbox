@@ -1309,10 +1309,6 @@ end
         if ~usingold
             k = gui.i_inputnumk;
             if isempty(k), return; end
-            if isnan(k) || k < 2 || k > 50
-                uiwait(errordlg('Invalid K'));
-                return
-            end
             fw = gui.gui_waitbar;
             try
                 % [sce.c_cluster_id]=sc_cluster_x(sce.X,k,'type',methodtag);

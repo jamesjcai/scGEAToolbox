@@ -184,6 +184,7 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
                 case 'Highlight'              
                     highlightindex=zeros(1,length(idx));
                     highlightindex(~idx)=1;
+                    requirerefresh=false;
                 case 'Cancel'
                     return;
                 otherwise
