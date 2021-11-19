@@ -5,22 +5,23 @@ if nargin<4, ttl1=""; end
 c1=cx1.c; 
 cL1=cx1.cL;
 
-c2=cx2.c; 
+c2=cx2.c;
 cL2=cx2.cL;
 
 f0=figure('Visible',false);
 
 ax1=subplot(1,2,1);
 h1=gui.i_gscatter3(sce.s,c1,1,1);
-if ~isempty(ttl1), title(ttl1); end
+if ~isempty(ttl1), title(ax1,ttl1); end
 dt = datacursormode(f0);
 dt.UpdateFcn = {@i_myupdatefcnx12};
 
 ax2=subplot(1,2,2);
 h2=gui.i_gscatter3(sce.s, c2,1,1);
-if ~isempty(ttl2), title(ttl2); end
+if ~isempty(ttl2), title(ax2,ttl2); end
 dt = datacursormode(f0);
 dt.UpdateFcn = {@i_myupdatefcnx12};
+sgtitle(sce.title);
 
 kc1=numel(unique(c1));
 if kc1<=50 && kc1>0
@@ -52,7 +53,6 @@ tb = uitoolbar(f0);
 pt = uipushtool(tb, 'Separator', 'off');
 [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
                              '..','resources', 'plottypectl-rlocusplot.gif'));  % plotpicker-pie
-
 ptImage = ind2rgb(img, map);
 pt.CData = ptImage;
 pt.Tooltip = 'Link subplots';
