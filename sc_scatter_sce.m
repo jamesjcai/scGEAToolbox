@@ -618,7 +618,7 @@ end
         % [sce]=pkg.i_mergeSubCellNames(sce);        
         newtx=erase(sce.c_cell_type_tx,"_{"+digitsPattern+"}");
         if isequal(sce.c_cell_type_tx,newtx)
-            helpdlg("No sub-clusters are merged");
+            helpdlg("No sub-clusters are merged.");
         else
             sce.c_cell_type_tx=newtx;
             [c,cL]=grp2idx(sce.c_cell_type_tx);
@@ -785,26 +785,35 @@ end
         guidata(FigureHandle, sce);
     end
 
-    function DetermineCellTypeClusters(~, ~)
-        answer = questdlg('Assign cell type identity to clusters?');
-        if ~strcmp(answer, 'Yes')
-            return
+    function DetermineCellTypeClusters(src, ~)
+        answer = questdlg('Assign cell types to clusters automatically?',...
+            '','Yes, automatically','No, manually',...
+            'Cancel','Yes, automatically');
+        switch answer
+            case 'Yes, automatically'
+                manuallyselect=false;
+            case 'No, manually'
+                manuallyselect=true;
+            otherwise
+                return;
         end
         
         answer = questdlg('Which species?', 'Select Species', 'Mouse', 'Human', 'Mouse');
-        
-        if strcmp(answer, 'Human')
-            speciestag = "human";
-        elseif strcmp(answer, 'Mouse')
-            speciestag = "mouse";
-        else
-            return
+        switch answer
+            case 'Human'
+                speciestag = "human";
+            case 'Mouse'
+                speciestag = "mouse";
+            otherwise
+                return;
         end
+        
         organtag = "all";
         databasetag = "panglaodb";
-        dtp = findobj(h, 'Type', 'datatip');
+        dtp = findobj(h,'Type','datatip');
         delete(dtp);
         cLdisp = cL;
+        if ~manuallyselect, fw=gui.gui_waitbar; end
         for i = 1:max(c)
             ptsSelected = c == i;
             [Tct] = pkg.local_celltypebrushed(sce.X, sce.g, ...
@@ -814,15 +823,20 @@ end
                 ctxt={'Unknown'};
             else
                 ctxt = Tct.C1_Cell_Type;
+            end            
+            
+            if manuallyselect
+                [indx, tf] = listdlg('PromptString', {'Select cell type', ...
+                    '', ''}, 'SelectionMode', 'single', 'ListString', ctxt);
+                if tf == 1
+                    ctxt = Tct.C1_Cell_Type{indx};
+                else
+                    return;
+                end
+            else
+                ctxt = Tct.C1_Cell_Type{1};
             end
             
-            [indx, tf] = listdlg('PromptString', {'Select cell type', ...
-                '', ''}, 'SelectionMode', 'single', 'ListString', ctxt);
-            if tf == 1
-                ctxt = Tct.C1_Cell_Type{indx};
-            else
-                return;
-            end
             hold on;
             ctxtdisp = strrep(ctxt, '_', '\_');
             ctxtdisp = sprintf('%s_{%d}', ctxtdisp, i);
@@ -848,7 +862,18 @@ end
             end
             hold off;
         end
+        if ~manuallyselect
+            gui.gui_waitbar(fw);
+        end
         sce.c_cell_type_tx = string(cL(c));
+        
+        answer = questdlg('Merge subclusters of same cell type?');
+        switch answer
+            case 'Yes'
+                MergeSubCellTypes(src);
+            case 'No'
+            otherwise                
+        end
         guidata(FigureHandle, sce);
     end
 
