@@ -150,12 +150,18 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
                 pt = uipushtool(tb, 'Separator', 'off');
                 [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
                                              'resources', 'plottypectl-rlocusplot.gif'));  % plotpicker-pie
-                
                 ptImage = ind2rgb(img, map);
                 pt.CData = ptImage;
                 pt.Tooltip = 'Link subplots';
                 pt.ClickedCallback = @gui.i_linksubplots;
 
+                pt = uipushtool(tb, 'Separator', 'on');
+                [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
+                                             'resources', 'fvtool_fdalinkbutton.gif'));  % plotpicker-pie
+                ptImage = ind2rgb(img, map);
+                pt.CData = ptImage;
+                pt.Tooltip = 'GeneCards';
+                pt.ClickedCallback = {@i_genecards,targetg};              
             end
         else
             warning('%s no expression', targetg);
@@ -168,6 +174,9 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
     
 end
 
+function i_genecards(~,~,g)
+web(sprintf('https://www.genecards.org/cgi-bin/carddisp.pl?gene=%s',g));
+end
 
 % function callback_linksubplots(~,~)
 %     evalin('base', 'h=findobj(gcf,''type'',''axes'');');
