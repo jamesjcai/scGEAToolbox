@@ -19,15 +19,28 @@ if exist(filenm,'file') ~= 2
 end
 
 hinfo=h5info(filenm);
-h5disp(filenm,'/matrix','min');
+% h5disp(filenm,'/matrix','min');
 
 % if strcmp(a.Groups(1).Datasets(2).Name,'data')
 data=h5read(filenm,[hinfo.Groups(1).Name,'/data']);
 indices=h5read(filenm,[hinfo.Groups(1).Name,'/indices']);
 indptr=h5read(filenm,[hinfo.Groups(1).Name,'/indptr']);
-% g=h5read(filenm,[hinfo.Groups.Groups(1).Name,'/gene_names']);
-g=h5read(filenm,[hinfo.Groups.Groups(1).Name,'/name']);
 shape=h5read(filenm,[hinfo.Groups(1).Name,'/shape']);
+
+try
+g=h5read(filenm,[hinfo.Groups.Groups(1).Name,'/gene_names']);
+catch
+    try
+        g=h5read(filenm,[hinfo.Groups.Groups(1).Name,'/name']);
+    catch
+        try
+            g=h5read(filenm,[hinfo.Groups(1).Name,'/gene_names']);
+        catch
+            error('gene_names not found.');
+        end
+    end
+end
+
 
 X=zeros(shape(1),shape(2));
 for k=1:length(indptr)-1
