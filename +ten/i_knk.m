@@ -26,6 +26,6 @@ function [T]=i_knk(A0,idx,genelist,dosort)
         T=table(drdist);
     else
         [aln0,aln1]=i_ma(A0,A1);
-        T=i_dr(aln0,aln1,genelist,dosort);
+        T=ten.i_dr(aln0,aln1,genelist,dosort);
     end
 end
