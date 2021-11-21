@@ -323,6 +323,22 @@ ptnetwork.CData = ptImage;
 ptnetwork.Tooltip = 'Compare two scGRNs';
 ptnetwork.ClickedCallback = @callback_CompareGeneNetwork;
 
+
+ptpseudotime = uipushtool(defaultToolbar, 'Separator', 'on');
+[img, map] = imread(fullfile(mfolder, ...
+    'resources', 'IMG00107.GIF'));    % white space
+ptImage = ind2rgb(img, map);
+ptpseudotime.CData = ptImage;
+
+ptnetwork = uipushtool(defaultToolbar, 'Separator', 'off');
+[img, map] = imread(fullfile(mfolder, ...
+    'resources', 'noun_Pruners_2469297.gif'));
+ptImage = ind2rgb(img, map);
+ptnetwork.CData = ptImage;
+ptnetwork.Tooltip = 'Close All Other Figures';
+ptnetwork.ClickedCallback = @callback_CloseAllOthers;
+
+
 pt2 = uipushtool(UitoolbarHandle, 'Separator', 'on');
 [img, map] = imread(fullfile(mfolder, ...
     'resources', 'plotpicker-qqplot.gif'));
@@ -433,9 +449,7 @@ uimenu(m,'Text','Batch Integration (Harmony/Python required)...',...
     'Callback',@HarmonyPy);
 uimenu(m,'Text','Detect Doublets (Scrublet/Python required)...',...
     'Callback',@DoubletDetection);
-uimenu(m,'Text','Import Data Using GEO Accession...',...
-    'Separator','on',...
-    'Callback',@GEOAccessionToSCE);
+
 uimenu(m,'Text','Ligand-Receptor Mediated Intercellular Crosstalk...',...
         'Separator','on',...
     'Callback',@callback_DetectCellularCrosstalk);
@@ -453,13 +467,9 @@ uimenu(m,'Text','Library Size of Cell Cycle Phases...',...
 uimenu(m,'Text','T Cell Exhaustion Score...',...
     'Callback',@callback_TCellExhaustionScores);
 
-uimenu(m,'Text','Close All Other Figures...',...
+uimenu(m,'Text','Import Data Using GEO Accession...',...
     'Separator','on',...
-    'Callback',@callback_CloseAllOthers);
-
-
-
-
+    'Callback',@GEOAccessionToSCE);
 
 % handles = guihandles( FigureHandle ) ;
 % guidata( FigureHandle, handles ) ;
@@ -502,6 +512,7 @@ end
 
     function GEOAccessionToSCE(src,~)
         acc=inputdlg({'GEO accession:'},'',[1 40],{'GSM3308545'});
+        % [acc]=gui.i_inputgenelist(["GSM3308545","GSM3308546","GSM3308547"]);
         if ~isempty(acc)
         acc=acc{1};
         if strlength(acc)>4 && ~isempty(regexp(acc,'G.+','once'))
