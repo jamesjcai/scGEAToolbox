@@ -16,7 +16,7 @@ switch answer
             'SelectionMode','single','ListString',gsorted);
         if tf==1
             for k=1:length(indx)
-                i_show(sce,gsorted(indx(k)),axx,bxx);
+                gui.i_cascadefig(sce,gsorted(indx(k)),axx,bxx,k);
             end
         end
     case 'Multiple'

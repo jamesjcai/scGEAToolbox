@@ -76,13 +76,6 @@ function callback_Brush4MarkersLASSO(src,~)
         
         for kk=1:length(markerlist)
             gui.i_cascadefig(sce,markerlist(end-(kk-1)),ax,bx,kk);
-            
-%             f=figure;
-%             [h1]=sc_scattermarker(sce.X,sce.g,sce.s,...
-%                  markerlist(end-(kk-1)),5);
-%             view(h1,ax,bx);
-%             P = get(f,'Position');
-%             set(f,'Position',[P(1)-20*kk P(2)-20*kk P(3) P(4)]);
         end
 
        
