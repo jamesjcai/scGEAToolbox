@@ -98,10 +98,10 @@ import ten.*
     A1sym=0.5*(A1+A1');
     tic
     disp('Manifold alignment')
-    [aln0,aln1]=i_ma(A0sym,A1sym);
+    [aln0,aln1]=ten.i_ma(A0sym,A1sym);
     toc
     
-    T=i_dr(aln0,aln1,genelist);
+    T=ten.i_dr(aln0,aln1,genelist);
     
     if doqqplot
         figure;

@@ -13,6 +13,7 @@ promotesave=true;
     if nargin < 1
         list={'SCE Data File (*.mat)...',...
               'Matrix/MTX File (*.mtx)...',...
+              'H5/HDF5 File (*.h5)...',...
               'TSV/CSV File (*.txt)...',...
               'Seurat/Rds File (*.rds)...',...
               '10x Genomics Folder...',...
@@ -110,6 +111,18 @@ promotesave=true;
                 end
                 [X, genelist] = sc_readmtxfile(matrixmtxfile, featurestxtfile, [], 2);
                 sce = SingleCellExperiment(X, genelist);
+            case 'H5/HDF5 File (*.h5)...'
+                try
+                    [X, genelist] = sc_readhdf5file;
+                    if ~isempty(X)
+                        sce = SingleCellExperiment(X, genelist);
+                    else
+                        return;
+                    end
+                catch ME
+                    errordlg(ME.message);
+                    return;
+                end                
             case 'TSV/CSV File (*.txt)...'
                 [fname, pathname] = uigetfile( ...
                                               {'*.tsv;*.csv;*.txt', 'TSV/CSV Format Files (*.tsc, *.csv, *.txt)'
