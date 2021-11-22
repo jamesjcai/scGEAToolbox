@@ -51,7 +51,8 @@ switch answer
                     x=x.*ix;
                 case 'Individually'
                     for k=1:length(idx)
-                        i_show(sce,gsorted(idx(k)),axx,bxx);
+                        gui.i_cascadefig(sce,gsorted(idx(k)),axx,bxx,k);
+                        % i_showcascade(sce,gsorted(idx(k)),axx,bxx,k);
                     end
                     return;
                 otherwise
@@ -73,13 +74,16 @@ end
 
 end
 
-function i_show(sce,g,axx,bxx)
-        f = figure('visible','off');
-        [h1]=sc_scattermarker(sce.X,sce.g,sce.s,g,5);
-        view(h1,axx,bxx);
-        movegui(f,'center');
-        set(f,'visible','on');
-end
+% function i_showcascade(sce,g,axx,bxx,k)
+%         f = figure('visible','off');
+%         [h1]=sc_scattermarker(sce.X,sce.g,sce.s,g,5);
+%         view(h1,axx,bxx);
+%         % movegui(f,'center');        
+%         P = get(f,'Position');
+%         set(f,'Position',[P(1)-20*k P(2)-20*k P(3) P(4)]);
+%         set(f,'visible','on');
+% end                       
+
 
 
 % function [gsorted]=i_sortg(sce)

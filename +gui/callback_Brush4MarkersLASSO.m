@@ -40,6 +40,7 @@ function callback_Brush4MarkersLASSO(src,~)
         end
     end    
     [numfig]=gui.i_inputnumg;
+    if isempty(numfig), return; end
     fw=gui.gui_waitbar;
     y=double(ptsSelected);
     sce.c=1+ptsSelected;
@@ -74,12 +75,14 @@ function callback_Brush4MarkersLASSO(src,~)
 %         gui.gui_waitbar(fw);
         
         for kk=1:length(markerlist)
-            f=figure;
-            [h1]=sc_scattermarker(sce.X,sce.g,sce.s,...
-                 markerlist(end-(kk-1)),5);
-            view(h1,ax,bx);
-            P = get(f,'Position');
-            set(f,'Position',[P(1)-20*kk P(2)-20*kk P(3) P(4)]);
+            gui.i_cascadefig(sce,markerlist(end-(kk-1)),ax,bx,kk);
+            
+%             f=figure;
+%             [h1]=sc_scattermarker(sce.X,sce.g,sce.s,...
+%                  markerlist(end-(kk-1)),5);
+%             view(h1,ax,bx);
+%             P = get(f,'Position');
+%             set(f,'Position',[P(1)-20*kk P(2)-20*kk P(3) P(4)]);
         end
 
        

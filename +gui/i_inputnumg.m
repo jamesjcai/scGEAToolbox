@@ -1,5 +1,5 @@
 function [numfig]=i_inputnumg
-    numfig=10;
+    numfig=[];
     prompt = {'Enter number of genes (1-50):'};
     dlgtitle = 'Number of marker genes';
     % answer = inputdlg(prompt,dlgtitle,[1 50],{'10'});

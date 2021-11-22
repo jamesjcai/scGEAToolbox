@@ -1,11 +1,17 @@
 #setwd("u:\\GitHub\\scGEAToolbox\\+run\\thirdparty\\R_MAST")
 suppressMessages(library(MAST))
 suppressMessages(library(Seurat))
-suppressMessages(library(R.matlab))
+suppressMessages(library(rhdf5))
 
-mat<-readMat('input.mat')
-X<-as.matrix(mat$X)
-Y<-as.matrix(mat$Y)
+#mat<-readMat('input.mat')
+#X<-as.matrix(mat$X)
+#Y<-as.matrix(mat$Y)
+
+X <- h5read(file = "input.mat", name = "/X")
+Y <- h5read(file = "input.mat", name = "/Y")
+
+X<-as.matrix(X)
+Y<-as.matrix(Y)
 
 #X <- as.matrix(read.table("input1.txt", sep=","))
 #Y <- as.matrix(read.table("input2.txt", sep=","))

@@ -7,5 +7,5 @@ BiocManager::install("celda")
 }
 
 if (!requireNamespace("rhdf5", quietly = TRUE)){
-BiocManager::install("celda")
+BiocManager::install("rhdf5")
 }
