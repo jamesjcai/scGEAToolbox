@@ -1,4 +1,6 @@
 function [c]=SingleR(X,genelist,species)
+
+isdebug=false;
 if nargin<3, species="human"; end
 if nargin<2, genelist=(1:size(X,1))'; end
 
@@ -6,9 +8,11 @@ oldpth=pwd();
 [isok,msg]=commoncheck_R('R_SingleR');
 if ~isok, error(msg); c=[]; return; end
 
-if exist('output.csv','file')
-    delete('output.csv');
+if ~isdebug
+if exist('./output.csv','file'), delete('./output.csv'); end
+if exist('./input.txt','file'), delete('./input.txt'); end
 end
+
 sc_writefile('input.txt',X,upper(genelist));
 switch lower(species)
     case "human"
@@ -25,7 +29,9 @@ if exist('output.csv','file')
 else
     c=[];
 end
-%if exist('input.txt','file'), delete('input.txt'); end
-%if exist('output.csv','file'), delete('output.csv'); end
+if ~isdebug
+if exist('./output.csv','file'), delete('./output.csv'); end
+if exist('./input.txt','file'), delete('./input.txt'); end
+end
 cd(oldpth);
 end

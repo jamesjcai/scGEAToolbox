@@ -28,7 +28,9 @@ pt.ClickedCallback = @camera3dmp4;
 function camera3dmp4(~,~)
     answer = questdlg('Make video snapshot?');
     if ~strcmp(answer,'Yes'), return; end
-    OptionZ.FrameRate=15;OptionZ.Duration=5.5;OptionZ.Periodic=true;
+    OptionZ.FrameRate=15;
+    OptionZ.Duration=5.5;
+    OptionZ.Periodic=true;
     fname=tempname;
     if ~isempty(prefix)
         [a1,b1]=fileparts(fname);

@@ -1,9 +1,10 @@
 #BiocManager::install(c('SingleR', 'scater'))
 library(SingleR)
 library(scater)
+library(celldex)
 
 # Reference dataset
-hpca.se <- HumanPrimaryCellAtlasData()
+hpca.se <- celldex::HumanPrimaryCellAtlasData()
 # ImmGenData BlueprintEncodeData MonacoImmuneData MouseRNAseqData NovershternHematopoieticData
 
 # New dataset
