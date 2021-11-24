@@ -1,6 +1,7 @@
 # setwd("U:\\GitHub\\scGEAToolbox\\+run\\thirdparty\\R_SAVER")
-suppressMessages(library(R.matlab))
 suppressMessages(library(SAVER))
+
+suppressMessages(library(R.matlab))
 mat<-readMat("input.mat")
 X<-mat$X
 
