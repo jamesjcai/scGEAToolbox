@@ -8,6 +8,8 @@
 # setwd("E:\\GitHub\\scGEAToolbox\\thirdparty\\R_BUSseq")
 
 library(BUSseq)
+library(rhdf5)
+
 X0 <- as.matrix(read.csv("input0.csv", header = FALSE))
 X1 <- as.matrix(read.csv("input1.csv", header = FALSE))
 CountData<-list(X0,X1)

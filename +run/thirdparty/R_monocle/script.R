@@ -1,7 +1,10 @@
 computePseudoTime <- function(infile, outputFile){
-  require(R.matlab)
-  mat<-readMat(infile)
-  cMatrix <-as.matrix(mat$X)
+   require(rhdf5) 
+   X <- h5read(file = "input.mat", name = "/X")
+   cMatrix <-as.matrix(X)  
+  #require(R.matlab)
+  #mat<-readMat(infile)
+  # cMatrix <-as.matrix(mat$X)
   # cMatrix <- read.csv(infile, header = FALSE)
   rownames(cMatrix) <- paste0("G", seq_len(nrow(cMatrix)))
   colnames(cMatrix) <- paste0("C", seq_len(ncol(cMatrix)))
