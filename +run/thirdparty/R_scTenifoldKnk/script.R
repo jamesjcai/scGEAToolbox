@@ -1,5 +1,5 @@
 setwd('U:\\GitHub\\scGEAToolbox\\+run\\thirdparty\\R_scTenifoldKnk')
-library("rhdf5")
+library(rhdf5)
 library(scTenifoldKnk)
 
 X <- h5read(file = "input.h5", name = "/X")
@@ -11,4 +11,5 @@ rownames(X) <- g
 colnames(X) <- paste0("C", seq_len(ncol(X)))
 
 KO_res <- scTenifoldKnk(X, gKO=targetg, qc_minLSize = 0, nc_nNet = 2)
-save(KO_res, file = 'output.RData')
+#save(KO_res, file = 'output.RData')
+write.csv(KO_res$diffRegulation,'output.txt')

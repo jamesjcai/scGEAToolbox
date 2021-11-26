@@ -1,5 +1,5 @@
-function [res]=r_sctenifoldknk(sce,targetg)
-res=[];
+function [T]=r_sctenifoldknk(sce,targetg)
+T=[];
 if nargin<2
     error('Need two input variables.');
 end
@@ -14,8 +14,7 @@ if ~isa(sce,'SingleCellExperiment')
 end
 
 if ~isdebug
-	if exist('./input.h5','file'), delete('./input.h5'); end
-	if exist('./output.h5','file'), delete('./output.h5'); end
+	if exist('./output.txt','file'), delete('./output.txt'); end
 end
 if exist('./input.h5','file'), delete('./input.h5'); end
 
@@ -26,12 +25,12 @@ h5write('input.h5', '/g', sce.g);
 h5create('input.h5', '/targetg', size(targetg),'Datatype','string');
 h5write('input.h5', '/targetg', targetg);
 pkg.RunRcode('script.R');
-if exist('./output.h5','file')
-% --------
+if exist('./output.txt','file')
+T=readtable('output.txt');
 end
 if ~isdebug
 	if exist('./input.h5','file'), delete('./input.h5'); end
-	if exist('./output.h5','file'), delete('./output.h5'); end
+	if exist('./output.txt','file'), delete('./output.txt'); end
 end
 cd(oldpth);
 end
