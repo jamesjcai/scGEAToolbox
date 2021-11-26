@@ -1,4 +1,4 @@
-setwd('U:\\GitHub\\scGEAToolbox\\+run\\thirdparty\\R_scTenifoldKnk')
+#setwd('U:\\GitHub\\scGEAToolbox\\+run\\thirdparty\\R_scTenifoldKnk')
 library(rhdf5)
 library(scTenifoldKnk)
 
