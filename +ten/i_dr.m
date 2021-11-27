@@ -7,7 +7,6 @@ function [T]=i_dr(aln0,aln1,genelist,dosort)
     FC=drdist./mean(drdist);
     pValues=chi2cdf(FC,1,'upper');
     
-    
     if exist('mafdr.m', 'file')        
         pAdjusted = mafdr(pValues,'BHFDR',true);
     else
@@ -21,6 +20,3 @@ function [T]=i_dr(aln0,aln1,genelist,dosort)
         T = sortrows(T,'drdist','descend');
     end
 end
-
-
-

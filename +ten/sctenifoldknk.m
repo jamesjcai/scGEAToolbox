@@ -55,12 +55,12 @@ import ten.*
 %    if exist('ten.i_td1.m','file')~=2
 %        error('Need i_td1.m in the scTendifoldNet https://github.com/cailab-tamu/scTenifoldNet/tree/master/MATLAB');
 %    end    
-    
 %    if exist('sc_pcnet.m','file')~=2
 %        error('Need sc_pcnet.m in the scGEAToolbox https://github.com/jamesjcai/scGEAToolbox');
-%    end    
-    
-    X=sc_norm(X,"type","libsize");    
+%    end
+
+    X=sc_norm(X,"type","libsize");
+    X=log(X+1);
     
     [XM]=i_nc(X,nsubsmpl,3,csubsmpl,usebootstrp);
     [A0]=i_td1(XM,tdmethod);

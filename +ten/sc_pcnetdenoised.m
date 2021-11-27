@@ -12,7 +12,7 @@ function [A]=sc_pcnetdenoised(X,varargin)
 import ten.*
 
     if nargin<1
-        error(sprintf('USAGE: A=sc_pcnetdenoised(X);\n       A=sc_pcnetdenoised(X,''smplmethod'',''Jackknife'');'));
+        error(sprintf('USAGE: A=ten.sc_pcnetdenoised(X);\n       A=sc_pcnetdenoised(X,''smplmethod'',''Jackknife'');'));
     end
     
    p = inputParser;

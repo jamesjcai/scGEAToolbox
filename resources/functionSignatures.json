@@ -213,6 +213,44 @@
         {"name":"fastersvd", "kind":"positional", "type":["logical","scalar"],"purpose":"Option"}
 	]
 },
+"ten.sc_pcnetdenoised":
+{
+	"inputs":
+	[		
+        {"name":"X", "kind":"required", "type":"numeric"},
+        {"name":"nsubsmpl", "kind":"namevalue", "type":["numeric","choices=[10]"]},
+        {"name":"csubsmpl", "kind":"namevalue", "type":["numeric","choices=[500]"]},
+        {"name":"savegrn", "kind":"namevalue", "type":["logical","scalar"]},
+        {"name":"donorm", "kind":"namevalue", "type":["logical","scalar"]}		
+	]
+},
+"ten.sctenifoldknk":
+{
+	"inputs":
+	[		
+        {"name":"X", "kind":"required", "type":"numeric"},
+        {"name":"genelist", "kind":"required", "type":["string","vector"]},
+        {"name":"kogene", "kind":"required", "type":["string","vector"]},
+        {"name":"nsubsmpl", "kind":"namevalue", "type":["numeric","choices=[10]"]},
+        {"name":"csubsmpl", "kind":"namevalue", "type":["numeric","choices=[500]"]},
+        {"name":"savegrn", "kind":"namevalue", "type":["logical","scalar"]},
+        {"name":"sorttable", "kind":"namevalue", "type":["logical","scalar"]}		
+	]
+},
+"ten.sctenifoldnet":
+{
+	"inputs":
+	[		
+        {"name":"X0", "kind":"required", "type":"numeric"},
+        {"name":"X1", "kind":"required", "type":"numeric"},
+        {"name":"genelist", "kind":"required", "type":["string","vector"]},
+        {"name":"nsubsmpl", "kind":"namevalue", "type":["numeric","choices=[10]"]},
+        {"name":"csubsmpl", "kind":"namevalue", "type":["numeric","choices=[500]"]},
+        {"name":"savegrn", "kind":"namevalue", "type":["logical","scalar"]},
+        {"name":"donorm", "kind":"namevalue", "type":["logical","scalar"]},
+        {"name":"qqplot", "kind":"namevalue", "type":["logical","scalar"]}		
+	]
+},
 "sc_pcnetpar":
 {
 	"inputs":

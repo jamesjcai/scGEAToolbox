@@ -5,7 +5,7 @@ if nargin<2
 end
 assert(ismember(targetg,sce.g));
 
-isdebug=true;
+isdebug=false;
 oldpth=pwd();
 [isok,msg]=commoncheck_R('R_scTenifoldKnk');
 if ~isok, error(msg); end
