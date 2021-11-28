@@ -26,10 +26,17 @@ fprintf(fid,'%s\n',a(1:idx-1));
 fprintf(fid,'<textarea name=list rows=10 id=text-area cols=63>');
 n=min([length(genelist) genenum-1]);
 if ~isempty(genelist)
-    fprintf(fid,'%s\n',genelist(1));    
-    for k=2:n
-        fprintf(fid,'%s\n',genelist(k));
-    end
+    if isstring(genelist)
+        fprintf(fid,'%s\n',genelist(1));
+        for k=2:n
+            fprintf(fid,'%s\n',genelist(k));
+        end
+    elseif iscell(genelist)
+        fprintf(fid,'%s\n',genelist{1});
+        for k=2:n
+            fprintf(fid,'%s\n',genelist{k});
+        end
+    end        
 end
 fprintf(fid,'</textarea>\n');
 

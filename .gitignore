@@ -43,3 +43,7 @@ scGEAToolbox.mltbx
 +run/thirdparty/R_monocle/output.csv
 +run/thirdparty/R_SeuratWorkflow/input.txt
 +run/thirdparty/R_scTenifoldKnk/input.h5
++run/thirdparty/R_scTenifoldKnk/output.RData
++run/thirdparty/R_scTenifoldKnk/output.txt
++run/thirdparty/R_scTenifoldKnk/alnman.mat
++run/thirdparty/R_scTenifoldKnk/WTKOnet.mat
