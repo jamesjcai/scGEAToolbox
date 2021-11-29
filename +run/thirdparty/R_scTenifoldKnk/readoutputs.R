@@ -1,0 +1,6 @@
+setwd('C:\\Users\\jcai.AUTH\\Documents\\GitHub\\scGEAToolbox\\+run\\thirdparty\\R_scTenifoldKnk')
+load("output.RData")
+ls()
+library(R.matlab)
+writeMat("WTKOnet.mat", A0 = KO_res$tensorNetworks$WT, A1=KO_res$tensorNetworks$KO)
+writeMat("alnman.mat", aln = KO_res$manifoldAlignment)
