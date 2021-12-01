@@ -17,7 +17,7 @@ sc_writefile('input.txt',X,upper(genelist));
 switch lower(species)
     case "human"
         disp("human")
-        pkg.RunRcode('script.R');
+        pkg.RunRcode('script_human.R');
     case "mouse"
         pkg.RunRcode('script_mouse.R');
         disp("mouse")

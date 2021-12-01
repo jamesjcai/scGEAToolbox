@@ -5,7 +5,8 @@ library(celldex)
 
 # Reference dataset
 hpca.se <- celldex::HumanPrimaryCellAtlasData()
-# ImmGenData BlueprintEncodeData MonacoImmuneData MouseRNAseqData NovershternHematopoieticData
+# ImmGenData BlueprintEncodeData MonacoImmuneData 
+# MouseRNAseqData NovershternHematopoieticData
 
 # New dataset
 X <- read.csv('input.txt', sep = '\t', row.names = 1, na.string=".")

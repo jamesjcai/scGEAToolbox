@@ -440,6 +440,9 @@ uimenu(m,'Text','Cross Tabulation...',...
 uimenu(m,'Text','Detect Ambient RNA Contamination (decontX/R required)...',...
 'Separator','on',...        
     'Callback',@DecontX);
+
+uimenu(m,'Text','SingleR Cell Type Annotation (SingleR/R required)...',...
+    'Callback',@callback_SingleRCellType);
 uimenu(m,'Text','Revelio Cell Cycle Analysis (Revelio/R required)...',...
     'Callback',@callback_RevelioCellCycle);
 uimenu(m,'Text','MELD Perturbation Score (MELD/Python required)...',...
@@ -642,6 +645,7 @@ end
 
 % =========================
     function RefreshAll(src, ~, keepview, keepcolr)
+        sce = guidata(FigureHandle);
         if nargin < 4, keepcolr = false; end
         if nargin < 3, keepview = false; end        
         if keepview || keepcolr
@@ -677,13 +681,14 @@ end
         title(sce.title);
         pt5pickcl.ClickedCallback = {@callback_PickColorMap, ...
             numel(unique(c))};
-        guidata(FigureHandle, sce);
         ptlabelclusters.State = 'off';
         % UitoolbarHandle.Visible='off';
         % UitoolbarHandle.Visible='on';
+        guidata(FigureHandle, sce);
     end
 
     function Switch2D3D(src, ~)
+        sce = guidata(FigureHandle);
         [para] = i_getoldsettings(src);
         if isempty(h.ZData)   % current 2 D
             if ~(size(sce.s, 2) > 2)
@@ -720,6 +725,7 @@ end
     end
 
     function RenameCellType(~, ~)
+        sce = guidata(FigureHandle);
         if isempty(sce.c_cell_type_tx)
             errordlg('sce.c_cell_type_tx undefined');
             return
@@ -729,8 +735,10 @@ end
             return
         end
         [ci, cLi] = grp2idx(sce.c_cell_type_tx);
-        [indxx, tfx] = listdlg('PromptString', {'Select a cell type', ...
-            '', ''}, 'SelectionMode', 'single', 'ListString', string(cLi));
+        [indxx, tfx] = listdlg('PromptString',...
+            {'Select cell type'},...
+            'SelectionMode', 'single',...
+            'ListString', string(cLi));
         if tfx == 1
             i = ismember(ci, indxx);
             newctype = inputdlg('New cell type', 'Rename', [1 50], cLi(ci(i)));
@@ -745,6 +753,7 @@ end
     end
 
     function EmbeddingAgain(src, ~)
+        sce = guidata(FigureHandle);
         answer = questdlg('Which embedding method?', 'Select method', 'tSNE', 'UMAP', 'PHATE', 'tSNE');
         if ~ismember(answer, {'tSNE', 'UMAP', 'PHATE'})
             return
@@ -797,6 +806,7 @@ end
     end
 
     function DetermineCellTypeClusters(src, ~)
+        sce = guidata(FigureHandle);
         answer = questdlg('Assign cell types to clusters automatically?',...
             '','Yes, automatically','No, manually',...
             'Cancel','Yes, automatically');
@@ -808,17 +818,8 @@ end
             otherwise
                 return;
         end
-        
-        answer = questdlg('Which species?', 'Select Species', 'Mouse', 'Human', 'Mouse');
-        switch answer
-            case 'Human'
-                speciestag = "human";
-            case 'Mouse'
-                speciestag = "mouse";
-            otherwise
-                return;
-        end
-        
+        speciestag = gui.i_selectspecies;
+        if isempty(speciestag), return; end        
         organtag = "all";
         databasetag = "panglaodb";
         dtp = findobj(h,'Type','datatip');
@@ -837,8 +838,8 @@ end
             end            
             
             if manuallyselect
-                [indx, tf] = listdlg('PromptString', {'Select cell type', ...
-                    '', ''}, 'SelectionMode', 'single', 'ListString', ctxt);
+                [indx, tf] = listdlg('PromptString', {'Select cell type'},...
+                    'SelectionMode', 'single', 'ListString', ctxt);
                 if tf == 1
                     ctxt = Tct.C1_Cell_Type{indx};
                 else
@@ -889,6 +890,7 @@ end
     end
 
     function Brushed2NewCluster(~, ~)
+        sce = guidata(FigureHandle);
         answer = questdlg('Make a new cluster out of brushed cells?');
         if ~strcmp(answer, 'Yes')
             return
@@ -911,6 +913,7 @@ end
     end
 
     function Brushed2MergeClusters(~, ~)
+        sce = guidata(FigureHandle);
         answer = questdlg('Merge brushed cells into one cluster?');
         if ~strcmp(answer, 'Yes')
             return
@@ -925,8 +928,8 @@ end
             warndlg("All brushed cells are in one cluster");
             return
         else
-            [indx, tf] = listdlg('PromptString', {'Select target cluster', ...
-                '', ''}, 'SelectionMode', 'single', 'ListString', string(c_members));
+            [indx, tf] = listdlg('PromptString',...
+                {'Select target cluster'}, 'SelectionMode', 'single', 'ListString', string(c_members));
             if tf == 1
                 c_target = c_members(indx);
             else
@@ -946,6 +949,7 @@ end
     end
 
     function Brush4Celltypes(~, ~)
+        sce = guidata(FigureHandle);
         answer = questdlg('Label cell type of brushed cells?');
         if ~strcmp(answer, 'Yes')
             return
@@ -955,23 +959,16 @@ end
             warndlg("No cells are selected.");
             return
         end
-        answer = questdlg('Which species?', 'Select Species', 'Mouse', 'Human', 'Mouse');
-        switch answer
-            case 'Human'
-                speciestag = "human";
-            case 'Mouse'
-                speciestag = "mouse";
-            otherwise
-                return;
-        end
+        speciestag = gui.i_selectspecies;
+        if isempty(speciestag), return; end  
         fw = gui.gui_waitbar;
         [Tct] = pkg.local_celltypebrushed(sce.X, sce.g, sce.s, ptsSelected, ...
             speciestag, "all", "panglaodb");
         ctxt = Tct.C1_Cell_Type;
         gui.gui_waitbar(fw);
         
-        [indx, tf] = listdlg('PromptString', {'Select cell type', ...
-            '', ''}, 'SelectionMode', 'single', 'ListString', ctxt);
+        [indx, tf] = listdlg('PromptString',...
+            {'Select cell type'}, 'SelectionMode', 'single', 'ListString', ctxt);
         if tf == 1
             ctxt = Tct.C1_Cell_Type{indx};
         else
@@ -1027,8 +1024,9 @@ end
         %end
         listitems=[listitems,...
             sce.list_cell_attributes(1:2:end)];
-        [indx, tf] = listdlg('PromptString', {'Select statistics', ...
-            '', ''}, 'SelectionMode', 'single', 'ListString', listitems);
+        [indx, tf] = listdlg('PromptString',...
+            {'Select statistics'},...
+            'SelectionMode', 'single', 'ListString', listitems);
         if tf ~= 1
             return
         end
@@ -1313,8 +1311,9 @@ end
              'simlr (400 secs) 🐢',...
              'soptsc (1,182 secs) 🐢🐢', 'sinnlrr (8,307 secs) 🐢🐢🐢', };
         methodtagv = {'specter','sc3','simlr', 'soptsc', 'sinnlrr'};
-        [indx, tf] = listdlg('PromptString', {'Select clustering program', ...
-            '', ''}, 'SelectionMode', 'single', ...
+        [indx, tf] = listdlg('PromptString',...
+            {'Select clustering program'},...
+            'SelectionMode', 'single', ...
             'ListString', methodtagvx);
         if tf == 1
             methodtag = methodtagv{indx};
@@ -1363,6 +1362,7 @@ end
     end
 
     function LabelClusters(src, ~)
+        sce=guidata(FigureHandle);
         state = src.State;
         if strcmp(state, 'off')
             dtp = findobj(h, 'Type', 'datatip');
@@ -1381,8 +1381,9 @@ end
             if ~isempty(sce.c_batch_id)
                 listitems = [listitems, 'Batch ID'];
             end
-            [indx, tf] = listdlg('PromptString', {'Select statistics', ...
-                '', ''}, 'SelectionMode', 'single', 'ListString', listitems);
+            [indx, tf] = listdlg('PromptString',...
+                {'Select statistics'}, 'SelectionMode',...
+                'single', 'ListString', listitems);
             if tf ~= 1
                 set(src, 'State', 'off');
                 return
