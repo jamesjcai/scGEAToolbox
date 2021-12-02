@@ -802,7 +802,6 @@ end
     end
 
     function DetermineCellTypeClusters(src, ~)
-        sce = guidata(FigureHandle);
         answer = questdlg('Assign cell types to clusters automatically?',...
             '','Yes, automatically','No, manually',...
             'Cancel','Yes, automatically');
@@ -886,7 +885,6 @@ end
     end
 
     function Brushed2NewCluster(~, ~)
-        sce = guidata(FigureHandle);
         answer = questdlg('Make a new cluster out of brushed cells?');
         if ~strcmp(answer, 'Yes')
             return
@@ -909,7 +907,6 @@ end
     end
 
     function Brushed2MergeClusters(~, ~)
-        sce = guidata(FigureHandle);
         answer = questdlg('Merge brushed cells into one cluster?');
         if ~strcmp(answer, 'Yes')
             return
@@ -945,7 +942,6 @@ end
     end
 
     function Brush4Celltypes(~, ~)
-        sce = guidata(FigureHandle);
         answer = questdlg('Label cell type of brushed cells?');
         if ~strcmp(answer, 'Yes')
             return
@@ -1358,7 +1354,6 @@ end
     end
 
     function LabelClusters(src, ~)
-        sce=guidata(FigureHandle);
         state = src.State;
         if strcmp(state, 'off')
             dtp = findobj(h, 'Type', 'datatip');
