@@ -645,7 +645,6 @@ end
 
 % =========================
     function RefreshAll(src, ~, keepview, keepcolr)
-        sce = guidata(FigureHandle);
         if nargin < 4, keepcolr = false; end
         if nargin < 3, keepview = false; end        
         if keepview || keepcolr
@@ -688,7 +687,6 @@ end
     end
 
     function Switch2D3D(src, ~)
-        sce = guidata(FigureHandle);
         [para] = i_getoldsettings(src);
         if isempty(h.ZData)   % current 2 D
             if ~(size(sce.s, 2) > 2)
@@ -725,7 +723,6 @@ end
     end
 
     function RenameCellType(~, ~)
-        sce = guidata(FigureHandle);
         if isempty(sce.c_cell_type_tx)
             errordlg('sce.c_cell_type_tx undefined');
             return
@@ -753,7 +750,6 @@ end
     end
 
     function EmbeddingAgain(src, ~)
-        sce = guidata(FigureHandle);
         answer = questdlg('Which embedding method?', 'Select method', 'tSNE', 'UMAP', 'PHATE', 'tSNE');
         if ~ismember(answer, {'tSNE', 'UMAP', 'PHATE'})
             return
