@@ -264,6 +264,10 @@ promotesave=true;
         sce = SingleCellExperiment(X, genelist, s, c);
     end
     if isempty(sce), return; end
+    if length(sce.g)~=length(unique(sce.g))
+        disp('Construct unique gene names from input gene list.')
+        sce.g=matlab.lang.makeUniqueStrings(sce.g);
+    end
     try
         sc_scatter_sce(sce);
     catch ME
