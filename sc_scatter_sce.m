@@ -528,10 +528,11 @@ end
                 fw=gui.gui_waitbar;                
                 [sce]=sc_readgeoaccession(acc);
                 [c,cL]=grp2idx(sce.c);
-                gui.gui_waitbar(fw);
-                RefreshAll(src, 1, false, false);
+                gui.gui_waitbar(fw);                
                 guidata(FigureHandle, sce);
+                RefreshAll(src, 1, false, false);
             catch ME
+                gui.gui_waitbar(fw);
                 errordlg(ME.message);
             end
         end
@@ -540,12 +541,12 @@ end
     
     
     function MergeSCEs(src, ~)
-        [requirerefresh]=gui.callback_MergeSCEs(src);        
+        [requirerefresh,s]=gui.callback_MergeSCEs(src);        
         if requirerefresh
             sce = guidata(FigureHandle);
             [c, cL] = grp2idx(sce.c_batch_id);
             RefreshAll(src, 1, true);
-            msgbox(sprintf('%d SCEs merged.',max(c)));
+            msgbox(sprintf('SCEs (%s) merged.',s));
         end
     end
 
@@ -766,7 +767,8 @@ end
     end
 
     function EmbeddingAgain(src, ~)
-        answer = questdlg('Which embedding method?', 'Select method', 'tSNE', 'UMAP', 'PHATE', 'tSNE');
+        answer = questdlg('Which embedding method?', 'Select method',...
+                          'tSNE', 'UMAP', 'PHATE', 'tSNE');
         if ~ismember(answer, {'tSNE', 'UMAP', 'PHATE'})
             return
         end
@@ -836,8 +838,9 @@ end
         dtp = findobj(h,'Type','datatip');
         delete(dtp);
         cLdisp = cL;
-        if ~manuallyselect, fw=gui.gui_waitbar; end
+        if ~manuallyselect, fw=gui.gui_waitbar_adv; end
         for i = 1:max(c)
+            gui.gui_waitbar_adv(fw,i/max(c));
             ptsSelected = c == i;
             [Tct] = pkg.local_celltypebrushed(sce.X, sce.g, ...
                 sce.s, ptsSelected, ...
@@ -846,7 +849,7 @@ end
                 ctxt={'Unknown'};
             else
                 ctxt = Tct.C1_Cell_Type;
-            end            
+            end
             
             if manuallyselect
                 [indx, tf] = listdlg('PromptString', {'Select cell type'},...
@@ -886,7 +889,7 @@ end
             hold off;
         end
         if ~manuallyselect
-            gui.gui_waitbar(fw);
+            gui.gui_waitbar_adv(fw);
         end
         sce.c_cell_type_tx = string(cL(c));
         
