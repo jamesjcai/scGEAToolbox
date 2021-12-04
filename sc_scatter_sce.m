@@ -4,7 +4,9 @@ if usejava('jvm') && ~feature('ShowFigureWindows')
     error('MATLAB is in a text mode. This function requires a GUI-mode.');
 end
 if nargin < 1
-    error('Usage: sc_scatter_sce(sce)');
+    % error('Usage: sc_scatter_sce(sce)');
+    sc_scatter;
+    return;
 end
 if ~isa(sce, 'SingleCellExperiment')
     error('requires sce=SingleCellExperiment();');
@@ -470,10 +472,13 @@ uimenu(m,'Text','Library Size of Cell Cycle Phases...',...
 uimenu(m,'Text','T Cell Exhaustion Score...',...
     'Callback',@callback_TCellExhaustionScores);
 
+
+
 uimenu(m,'Text','Import Data Using GEO Accession...',...
     'Separator','on',...
     'Callback',@GEOAccessionToSCE);
-
+uimenu(m,'Text','Merge SCEs...',...    
+    'Callback',@MergeSCEs);
 % handles = guihandles( FigureHandle ) ;
 % guidata( FigureHandle, handles ) ;
 set(FigureHandle, 'visible', 'on');
@@ -530,6 +535,17 @@ end
                 errordlg(ME.message);
             end
         end
+        end
+    end
+    
+    
+    function MergeSCEs(src, ~)
+        [requirerefresh]=gui.callback_MergeSCEs(src);        
+        if requirerefresh
+            sce = guidata(FigureHandle);
+            [c, cL] = grp2idx(sce.c_batch_id);
+            RefreshAll(src, 1, true);
+            msgbox(sprintf('%d SCEs merged.',max(c)));
         end
     end
 

@@ -1,7 +1,8 @@
-function [T]=i_knk(A0,idx,genelist,dosort)
+function [T]=i_knk(A0,idx,genelist,dosort,lambdav)
 
 %see also: ten.knk2_knockoutTargetGene
 
+    if nargin<5, lambdav=0; end
     if nargin<4, dosort=true; end
     if ischar(idx)||isstring(idx)
         [~,idx]=ismember(idx,genelist);
@@ -14,6 +15,14 @@ function [T]=i_knk(A0,idx,genelist,dosort)
         return;
     end
     import ten.*
+
+    if lambdav~=0
+        S=A0.*(abs(A0)>abs(A0.'));
+        A0=(1-lambdav)*A0+lambdav*S;
+    end
+    A0=A0-diag(diag(A0));
+    A0=A0.';
+    
     A1=A0;
     A1(idx,:)=0;
     
