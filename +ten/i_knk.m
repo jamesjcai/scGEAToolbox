@@ -34,7 +34,7 @@ function [T]=i_knk(A0,idx,genelist,dosort,lambdav)
         drdist=nan(length(genelist),1);
         T=table(drdist);
     else
-        [aln0,aln1]=i_ma(A0,A1);
+        [aln0,aln1]=ten.i_ma(A0,A1,2);
         T=ten.i_dr(aln0,aln1,genelist,dosort);
     end
 end

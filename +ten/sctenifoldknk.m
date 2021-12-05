@@ -17,7 +17,7 @@ import ten.*
     end
    p = inputParser;
    addOptional(p,'sorttable',false,@islogical);
-   addOptional(p,'smplmethod',"Jackknife",@(x) (isstring(x)|ischar(x))&ismember(lower(string(x)),["jackknife","bootstrap"]));
+   addOptional(p,'smplmethod',"bootstrap",@(x) (isstring(x)|ischar(x))&ismember(lower(string(x)),["jackknife","bootstrap"]));
    addOptional(p,'tdmethod',"CP",@(x) (isstring(x)|ischar(x))&ismember(upper(string(x)),["CP","TUCKER"]));
    addOptional(p,'nsubsmpl',10,@(x) fix(x)==x & x>0);
    addOptional(p,'csubsmpl',500,@(x) fix(x)==x & x>0);

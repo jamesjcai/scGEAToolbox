@@ -5,7 +5,7 @@ function  [XM]=i_nc(X,nsubsmpl,ncom,csubsmpl,usebootstrp)
 % output XM - k multi-layer network array (n x n x k)
 import ten.*
 
-if nargin<5, usebootstrp=false; end  % using m-out-of-n bootstrap (false by default)
+if nargin<5, usebootstrp=true; end  % using m-out-of-n bootstrap (false by default)
                                      % using jackknife (by default)
 if nargin<4, csubsmpl=500; end       % number of cells in subsamples                                     
 if nargin<3, ncom=3; end             % number of components for PC regression
@@ -26,9 +26,9 @@ if nargin<2, nsubsmpl=10; end        % number of subsamples
         else           % jackknife
             Xrep=X(:,randperm(n0));
             Xrep=Xrep(:,1:csubsmpl);
-        end        
+        end
         A=sc_pcnetpar(Xrep,ncom,true);
-        XM(:,:,k)=ten.e_filtadjc(A,0.95,false);
+        XM(:,:,k)=ten.e_filtadjc(A,0.90,false);
         %a=max(abs(A(:)));
         %XM(:,:,k)=A./a;
     end
