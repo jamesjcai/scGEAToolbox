@@ -1378,6 +1378,8 @@ end
             dtp = findobj(h, 'Type', 'datatip');
             delete(dtp);
         else
+            [thisc,clable]=i_select1class(sce);
+            %{
             listitems = {'Current Class Type'};
             if ~isempty(sce.c_cluster_id)
                 listitems = [listitems, 'Cluster ID'];
@@ -1410,17 +1412,18 @@ end
                 otherwise
                     cc = [];
             end
-            if ~isempty(cc)
-                [c, cL] = grp2idx(cc);
+            %}
+            if ~isempty(thisc)
+                [c, cL] = grp2idx(thisc);
                 sce.c = c;
-            end
-            RefreshAll(src, 1, true, false);
-            if i_labelclusters
-                set(src, 'State', 'on');
-            else
-                set(src, 'State', 'off');
-            end
-            guidata(FigureHandle, sce);
+                RefreshAll(src, 1, true, false);
+                if i_labelclusters
+                    set(src, 'State', 'on');
+                else
+                    set(src, 'State', 'off');
+                end
+                guidata(FigureHandle, sce);
+            end        
             % colormap(lines(min([256 numel(unique(sce.c))])));
         end
     end

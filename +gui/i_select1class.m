@@ -16,6 +16,7 @@ clable='';
     if ~isempty(sce.c_batch_id)
         listitems=[listitems,'Batch ID'];
     end
+    listitems=[listitems,'Customized C...'];
     
 
 
@@ -38,7 +39,9 @@ if tf2==1
             thisc=sce.c_cell_type_tx;                
         case 'Cell Cycle Phase' % cell cycle
             thisc=sce.c_cell_cycle_tx;
-    end    
+        case 'Customized C...'
+            thisc=sce.c_cell_cycle_tx;
+    end
 end
 
 % if isempty(thisc)
