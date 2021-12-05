@@ -47,8 +47,6 @@ import ten.*
         error('Length of genelist should be the same as the number of rows of X0 or X1.');
     end
 
-
-
     if exist('@tensor/tensor.m','file')~=2
         error('Need Tensor Toolbox for MATLAB (https://www.tensortoolbox.org/)');
     end
@@ -68,8 +66,9 @@ import ten.*
         tstr=matlab.lang.makeValidName(datestr(datetime));
         save(sprintf('A0_%s',tstr),'A0','genelist','-v7.3');        
     end
-    A1=A0;
-    A1(idx,:)=0;
-    [aln0,aln1]=i_ma(A0,A1);
-    T=i_dr(aln0,aln1,genelist,dosort);
+%     A1=A0;
+%     A1(idx,:)=0;
+%     [aln0,aln1]=i_ma(A0,A1);
+%     T=i_dr(aln0,aln1,genelist,dosort);
+    T=ten.i_knk(A0,idx,genelist,dosort);
 end

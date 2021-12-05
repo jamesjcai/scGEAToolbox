@@ -21,7 +21,6 @@ function [T]=i_knk(A0,idx,genelist,dosort,lambdav)
         A0=(1-lambdav)*A0+lambdav*S;
     end
     A0=A0-diag(diag(A0));
-    % A0=A0.';
     
     A1=A0;
     A1(idx,:)=0;
