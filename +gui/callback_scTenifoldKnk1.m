@@ -1,20 +1,5 @@
 function callback_scTenifoldKnk1(src,~)
     import ten.*
-%     if exist('sctenifoldnet','file')~=2
-%         errordlg('scTenifoldNet is not installed.');
-%         disp('To install scTenifoldNet, type:')
-%         disp('unzip(''https://github.com/cailab-tamu/scTenifoldNet/archive/master.zip'');');
-%         disp('addpath(''./scTenifoldNet-master/MATLAB'');');
-%         return;
-%     end
-%     if exist('sctenifoldknk','file')~=2
-%         errordlg('scTenifoldKnk is not installed.');
-%         disp('To install scTenifoldKnk, type:')
-%         disp('unzip(''https://github.com/cailab-tamu/scTenifoldKnk/archive/master.zip'');');
-%         disp('addpath(''./scTenifoldKnk-master/MATLAB'');');
-%         return;
-%     end
-    
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
 
@@ -24,20 +9,32 @@ function callback_scTenifoldKnk1(src,~)
         case 'Use existing'
             a=evalin('base','whos');
             b=struct2cell(a);
-            %valididx=ismember(b(4,:),'double');
-            %a=a(valididx);
-            [indx,tf]=listdlg('PromptString',{'Select network variable:'},...
-                'liststring',b(1,:),'SelectionMode','single');
-            if tf==1
-                A0 = evalin('base',a(indx).name);
-            else
-                return;
+            valididx=false(length(a),1);
+            for k=1:length(a)
+                if max(a(k).size)==sce.NumGenes && min(a(k).size)==sce.NumGenes
+                    valididx(k)=true;
+                end
             end
-            [m,n]=size(A0);
-            if m~=n || n~=length(sce.g)
-                errordlg('Not a valid network.'); 
+            if ~any(valididx)
+                warndlg('Workspace contains no network varible.');
                 return;
-            end    
+            else
+                %valididx=ismember(b(4,:),'double');
+                a=a(valididx);
+                b=b(:,valididx);
+                [indx,tf]=listdlg('PromptString',{'Select network variable:'},...
+                    'liststring',b(1,:),'SelectionMode','single');
+                if tf==1
+                    A0 = evalin('base',a(indx).name);
+                else
+                    return;
+                end
+                [m,n]=size(A0);
+                if m~=n || n~=length(sce.g)
+                    errordlg('Not a valid network.'); 
+                    return;
+                end
+            end
         case 'Reconstruct'
             try
                 ten.check_tensor_toolbox;
@@ -46,6 +43,7 @@ function callback_scTenifoldKnk1(src,~)
                 return;
             end            
             A0=[];
+            uiwait(helpdlg("Network will be constructed. Now select the gene to be knocked out..."));
         otherwise
             return;
     end
@@ -74,8 +72,7 @@ function callback_scTenifoldKnk1(src,~)
         if isempty(A0)
             try
                 fw = gui.gui_waitbar;
-                [T,A0]=ten.sctenifoldknk(sce.X,sce.g,idx,'sorttable',true);
-                % T=sortrows(T,'pAdjusted','ascend');
+                [T,A0]=ten.sctenifoldknk(sce.X,sce.g,idx,'sorttable',true);                
                 gui.gui_waitbar(fw);
              catch ME
                 gui.gui_waitbar(fw);
@@ -112,7 +109,7 @@ function callback_scTenifoldKnk1(src,~)
                 try
                     fw = gui.gui_waitbar;
                     disp('>> [T]=ten.i_knk(A0,targetgene,genelist,true);')
-                    [T]=ten.i_knk(A0,idx,sce.g);
+                    [T]=ten.i_knk(A0,idx,sce.g,true);
                     gui.gui_waitbar(fw);
                 catch ME
                     gui.gui_waitbar(fw);
