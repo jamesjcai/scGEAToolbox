@@ -1378,49 +1378,19 @@ end
             dtp = findobj(h, 'Type', 'datatip');
             delete(dtp);
         else
-            [thisc,clable]=i_select1class(sce);
-            %{
-            listitems = {'Current Class Type'};
-            if ~isempty(sce.c_cluster_id)
-                listitems = [listitems, 'Cluster ID'];
-            end
-            if ~isempty(sce.c_cell_type_tx)
-                listitems = [listitems, 'Cell Type'];
-            end
-            if ~isempty(sce.c_cell_cycle_tx)
-                listitems = [listitems, 'Cell Cycle Phase'];
-            end
-            if ~isempty(sce.c_batch_id)
-                listitems = [listitems, 'Batch ID'];
-            end
-            [indx, tf] = listdlg('PromptString',...
-                {'Select statistics'}, 'SelectionMode',...
-                'single', 'ListString', listitems);
-            if tf ~= 1
-                set(src, 'State', 'off');
-                return
-            end
-            switch listitems{indx}
-                case 'Cluster ID'
-                    cc = sce.c_cluster_id;
-                case 'Cell Type'
-                    cc = sce.c_cell_type_tx;
-                case 'Cell Cycle Phase'
-                    cc = sce.c_cell_cycle_tx;
-                case 'Batch ID'
-                    cc = sce.c_batch_id;
-                otherwise
-                    cc = [];
-            end
-            %}
+            [thisc,~]=i_select1class(sce);
             if ~isempty(thisc)
-                [c, cL] = grp2idx(thisc);
+                [c,cL] = grp2idx(thisc);
                 sce.c = c;
-                RefreshAll(src, 1, true, false);
-                if i_labelclusters
-                    set(src, 'State', 'on');
+                RefreshAll(src, 1, true, false);                
+                if max(c)<=200
+                    if i_labelclusters
+                        set(src, 'State', 'on');
+                    else
+                        set(src, 'State', 'off');
+                    end
                 else
-                    set(src, 'State', 'off');
+                    warndlg('Labels are not showing. Too many categories (n>200).');
                 end
                 guidata(FigureHandle, sce);
             end        
@@ -1485,9 +1455,7 @@ end
     end
 
     function [isdone] = i_labelclusters(notasking)
-        if nargin < 1
-            notasking = false;
-        end
+        if nargin < 1, notasking = false; end
         isdone = false;
         if ~isempty(cL)
             if notasking

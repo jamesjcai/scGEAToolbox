@@ -16,9 +16,20 @@ clable='';
     if ~isempty(sce.c_batch_id)
         listitems=[listitems,'Batch ID'];
     end
-    listitems=[listitems,'Customized C...'];
     
-
+    a=evalin('base','whos');
+    b=struct2cell(a);
+    v=false(length(a),1);
+    for k=1:length(a)
+        if max(a(k).size)==sce.NumCells && min(a(k).size)==1
+            v(k)=true;
+        end
+    end
+    if any(v)
+        a=a(v);
+        b=b(:,v);
+        listitems=[listitems,'Customized C...'];
+    end
 
 
 % listitems={'Current Class (C)','Cluster ID','Batch ID',...
@@ -40,10 +51,31 @@ if tf2==1
         case 'Cell Cycle Phase' % cell cycle
             thisc=sce.c_cell_cycle_tx;
         case 'Customized C...'
-            thisc=sce.c_cell_cycle_tx;
+            thisc=i_pickvariable;
     end
 end
 
+
+function [c]=i_pickvariable
+    c=[];
+%     a=evalin('base','whos');
+%     b=struct2cell(a);
+%     v=false(length(a),1);
+%     for k=1:length(a)
+%         if max(a(k).size)==sce.NumCells && min(a(k).size)==1
+%             v(k)=true;
+%         end
+%     end
+%     if any(v)
+        %valididx=ismember(b(4,:),'double');
+        %a=a(valididx);
+        [indx,tf]=listdlg('PromptString',{'Select network variable:'},...
+            'liststring',b(1,:),'SelectionMode','single');
+        if tf==1
+            c = evalin('base',a(indx).name);
+        end
+%    end
+end
 % if isempty(thisc)
 %     errordlg('Undefined');    
 %     return;
@@ -53,3 +85,4 @@ end
 %     return;
 % end
 end
+
