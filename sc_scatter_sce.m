@@ -469,6 +469,10 @@ uimenu(m,'Text','Calculate Gene Expression Statistics...',...
 %     'Callback',@callback_CalculateCellScores);
 uimenu(m,'Text','Library Size of Cell Cycle Phases...',...
     'Callback',@callback_CellCycleLibrarySize);
+uimenu(m,'Text','Show HgB-genes Expression...',...
+    'Callback',@callback_ShowHgBGeneExpression);
+uimenu(m,'Text','Show Mt-genes Expression...',...
+    'Callback',@callback_ShowMtGeneExpression);
 uimenu(m,'Text','T Cell Exhaustion Score...',...
     'Callback',@callback_TCellExhaustionScores);
 
@@ -998,8 +1002,8 @@ end
         row = dataTipTextRow('', tmpcelltypev);
         h.DataTipTemplate.DataTipRows = row;        
         datatip(h, 'DataIndex', idx(k));
+    end
         
-        % return;
         %{
         hold on;
         if size(sce.s, 2) >= 3
@@ -1018,11 +1022,36 @@ end
         end
         hold off;
         %}
-    end
+    
 
     function ShowCellStats(src, ~)
+        sce = guidata(FigureHandle);
+        [thisc,clable]=gui.i_select1state(sce);
+        if isempty(thisc)
+            errordlg("Undefined classification");
+            return;
+        end
+        [c,cL]=grp2idx(thisc);
+        sce.c=c;
+        RefreshAll(src, 1, true, false);               
+        n=max(c);
+        if n<40
+            f=0.5*(n-1)./n;
+            f=1+f.*(1:2:2*n);        
+            cb=colorbar('Ticks',f,'TickLabels',cellstr(cL));
+        else
+            cb=colorbar;
+        end
+        cb.Label.String = clable;
+        % helpdlg(clable)
+        guidata(FigureHandle, sce);
+    end
+
+%{
+    function ShowCellStatsX(src, ~)
         % FigureHandle=src.Parent.Parent;
         sce = guidata(FigureHandle);
+        
         listitems = {'Library Size', 'Mt-reads Ratio', ...
             'Mt-genes Expression', 'HgB-genes Expression', ...
             'Cell Cycle Phase', ...
@@ -1131,7 +1160,7 @@ end
 %         title(sce.title);
         
 % -------- move to i_showstate
-
+%}
 
 
 %     function i_showstate(ci)
@@ -1378,7 +1407,8 @@ end
             dtp = findobj(h, 'Type', 'datatip');
             delete(dtp);
         else
-            [thisc,~]=i_select1class(sce);
+            sce=guidata(FigureHandle);
+            [thisc,~]=gui.i_select1class(sce);
             if ~isempty(thisc)
                 [c,cL] = grp2idx(thisc);
                 sce.c = c;

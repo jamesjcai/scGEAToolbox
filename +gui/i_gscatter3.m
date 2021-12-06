@@ -50,7 +50,7 @@ switch methodid
         hold on
         i=c==targetc;
         h=gui.i_gscatter3(s(i,:),c(i),1);
-        hold off        
+        hold off
 end
 
 if kc<=50 && kc>0
