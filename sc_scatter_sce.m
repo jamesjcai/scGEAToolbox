@@ -253,15 +253,17 @@ ptpseudotime.ClickedCallback = @gui.i_setrenv;
 %}
 
 
+% white space
 ptpseudotime = uipushtool(defaultToolbar, 'Separator', 'off');
-[img, map] = imread(fullfile(mfolder, ...
-    'resources', 'IMG00107.GIF'));    % white space
+[img, map] = imread(fullfile(mfolder,'resources','IMG00107.GIF'));
 ptImage = ind2rgb(img, map);
 ptpseudotime.CData = ptImage;
+ptpseudotime.Tooltip = 'New SC_SCATTER';
+ptpseudotime.ClickedCallback = @call_scscatter;
 
 
-ptclustertype = uipushtool(defaultToolbar, 'Separator', 'on');
-[img, map] = imread(fullfile(mfolder, 'resources', 'cellscore2.gif'));
+ptclustertype = uipushtool(defaultToolbar,'Separator', 'on');
+[img, map] = imread(fullfile(mfolder,'resources','cellscore2.gif'));
 ptImage = ind2rgb(img, map);
 ptclustertype.CData = ptImage;
 ptclustertype.Tooltip = 'Calculate Cell Scores from List of Feature Genes';
@@ -532,6 +534,13 @@ end
 % Callback Functions
 % ------------------------
 
+function call_scscatter(~,~)    
+    sc_scatter;
+    % P = get(FigureHandle,'Position');
+    % k=1;
+    % set(FigureHandle,'Position',[P(1)-30*k P(2)-30*k P(3) P(4)]);
+end
+
 function closeRequest(hObject,~)
 ButtonName = questdlg('Save SCE before closing SC_SCATTER?');
 switch ButtonName
@@ -641,7 +650,6 @@ end
                 helpdlg('Contamination removed.')
        end
     end
-
 
     function HarmonyPy(src, ~)
         if gui.callback_Harmonypy(src)
