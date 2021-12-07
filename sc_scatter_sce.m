@@ -96,8 +96,9 @@ pt3a = uipushtool(UitoolbarHandle, 'Separator', 'off');
 ptImage = ind2rgb(img, map);
 pt3a.CData = ptImage;
 pt3a.Tooltip = 'Show cell states';
-pt3a.ClickedCallback = @ShowCellStats;
+pt3a.ClickedCallback = @ShowCellStates;
 
+%{
 pt3a = uipushtool(UitoolbarHandle, 'Separator', 'off');
 [img, map] = imread(fullfile(mfolder, ...
     'resources', 'plotpicker-pointfig.gif'));
@@ -105,6 +106,7 @@ ptImage = ind2rgb(img, map);
 pt3a.CData = ptImage;
 pt3a.Tooltip = 'Select cells by class';
 pt3a.ClickedCallback = @callback_SelectCellsByClass;
+%}
 
 pt3a = uipushtool(UitoolbarHandle, 'Separator', 'off');
 [img, map] = imread(fullfile(mfolder, ...
@@ -143,6 +145,7 @@ ptmergecluster.CData = ptImage;
 ptmergecluster.Tooltip = 'Merge brushed cells to same cluster';
 ptmergecluster.ClickedCallback = @Brushed2MergeClusters;
 
+%{
 ptShowClu = uipushtool(UitoolbarHandle, 'Separator', 'off');
 [img, map] = imread(fullfile(mfolder, ...
     'resources', 'plotpicker-geoscatter.gif'));
@@ -150,6 +153,7 @@ ptImage = ind2rgb(img, map);
 ptShowClu.CData = ptImage;
 ptShowClu.Tooltip = 'Show clusters individually';
 ptShowClu.ClickedCallback = @gui.callback_ShowClustersPop;
+%}
 
 ptcluster = uipushtool(UitoolbarHandle, 'Separator', 'on');
 [img, map] = imread(fullfile(mfolder, ...
@@ -169,14 +173,9 @@ ptcluster.ClickedCallback = @ClusterCellsX;
 
 % -------------
 
-pt5 = uipushtool(UitoolbarHandle, 'Separator', 'on');
-[img, map] = imread(fullfile(mfolder, 'resources', 'brush.gif'));
-ptImage = ind2rgb(img, map);
-pt5.CData = ptImage;
-pt5.Tooltip = 'Cell types of brushed cells';
-pt5.ClickedCallback = @Brush4Celltypes;
 
-ptclustertype = uipushtool(UitoolbarHandle, 'Separator', 'off');
+
+ptclustertype = uipushtool(UitoolbarHandle, 'Separator', 'on');
 [img, map] = imread(fullfile(matlabroot, ...
     'toolbox', 'matlab', 'icons', 'plotpicker-contour.gif'));
 ptImage = ind2rgb(img, map);
@@ -184,14 +183,12 @@ ptclustertype.CData = ptImage;
 ptclustertype.Tooltip = 'Cell types of clusters';
 ptclustertype.ClickedCallback = @DetermineCellTypeClusters;
 
-ptclustertype = uipushtool(UitoolbarHandle, 'Separator', 'off');
-[img, map] = imread(fullfile(mfolder, 'resources', 'cellscore.gif'));
+pt5 = uipushtool(UitoolbarHandle, 'Separator', 'off');
+[img, map] = imread(fullfile(mfolder, 'resources', 'brush.gif'));
 ptImage = ind2rgb(img, map);
-ptclustertype.CData = ptImage;
-ptclustertype.Tooltip = 'Calculate Cell Scores from Cell Type Markers';
-ptclustertype.ClickedCallback = @callback_CellTypeMarkerScores;
-
-
+pt5.CData = ptImage;
+pt5.Tooltip = 'Cell types of brushed cells';
+pt5.ClickedCallback = @Brush4Celltypes;
 
 pt4 = uipushtool(UitoolbarHandle, 'Separator', 'off');
 % [img,map] = imread(fullfile(matlabroot,...
@@ -203,7 +200,23 @@ pt4.CData = ptImage;
 pt4.Tooltip = 'Rename cell type';
 pt4.ClickedCallback = @RenameCellType;
 
-pt4 = uipushtool(UitoolbarHandle, 'Separator', 'off');
+ptclustertype = uipushtool(UitoolbarHandle, 'Separator', 'off');
+[img, map] = imread(fullfile(mfolder, 'resources', 'cellscore.gif'));
+ptImage = ind2rgb(img, map);
+ptclustertype.CData = ptImage;
+ptclustertype.Tooltip = 'Calculate Cell Scores from Cell Type Markers';
+ptclustertype.ClickedCallback = @callback_CellTypeMarkerScores;
+
+ptpseudotime = uipushtool(UitoolbarHandle, 'Separator', 'off');
+[img, map] = imread(fullfile(mfolder, ...
+    'resources', 'IMG00067.GIF'));
+ptImage = ind2rgb(img, map);
+ptpseudotime.CData = ptImage;
+ptpseudotime.Tooltip = 'Stem scatter plot';
+ptpseudotime.ClickedCallback = @ShowCellStemScatter;
+
+
+pt4 = uipushtool(UitoolbarHandle, 'Separator', 'on');
 % [img,map] = imread(fullfile(matlabroot,...
 %             'toolbox','matlab','icons','plotpicker-stairs.gif'));
 [img, map] = imread(fullfile(mfolder, ...
@@ -221,15 +234,23 @@ pt4mrkheat.CData = ptImage;
 pt4mrkheat.Tooltip = 'Marker gene heatmap';
 pt4mrkheat.ClickedCallback = @callback_MarkerGeneHeatmap;
 
-ptclustertype = uipushtool(UitoolbarHandle, 'Separator', 'off');
-[img, map] = imread(fullfile(mfolder, 'resources', 'cellscore2.gif'));
-ptImage = ind2rgb(img, map);
-ptclustertype.CData = ptImage;
-ptclustertype.Tooltip = 'Calculate Cell Scores from List of Feature Genes';
-ptclustertype.ClickedCallback = @callback_CalculateCellScores;
+
+
 
 % --------------------------
 
+
+
+
+%{
+ptpseudotime = uipushtool(defaultToolbar, 'Separator', 'on');
+[img, map] = imread(fullfile(mfolder, ...
+    'resources', 'IMG00074.GIF'));
+ptImage = ind2rgb(img, map);
+ptpseudotime.CData = ptImage;
+ptpseudotime.Tooltip = 'Check R environment';
+ptpseudotime.ClickedCallback = @gui.i_setrenv;
+%}
 
 
 ptpseudotime = uipushtool(defaultToolbar, 'Separator', 'off');
@@ -239,26 +260,14 @@ ptImage = ind2rgb(img, map);
 ptpseudotime.CData = ptImage;
 
 
-
-ptpseudotime = uipushtool(defaultToolbar, 'Separator', 'on');
-[img, map] = imread(fullfile(mfolder, ...
-    'resources', 'IMG00074.GIF'));
+ptclustertype = uipushtool(defaultToolbar, 'Separator', 'on');
+[img, map] = imread(fullfile(mfolder, 'resources', 'cellscore2.gif'));
 ptImage = ind2rgb(img, map);
-ptpseudotime.CData = ptImage;
-ptpseudotime.Tooltip = 'Check R environment';
-ptpseudotime.ClickedCallback = @gui.i_setrenv;
+ptclustertype.CData = ptImage;
+ptclustertype.Tooltip = 'Calculate Cell Scores from List of Feature Genes';
+ptclustertype.ClickedCallback = @callback_CalculateCellScores;
 
 ptpseudotime = uipushtool(defaultToolbar, 'Separator', 'off');
-[img, map] = imread(fullfile(mfolder, ...
-    'resources', 'IMG00067.GIF'));
-ptImage = ind2rgb(img, map);
-ptpseudotime.CData = ptImage;
-ptpseudotime.Tooltip = 'Run Seurat/R Workflow (R required)';
-ptpseudotime.ClickedCallback = @RunSeuratWorkflow;
-
-
-
-ptpseudotime = uipushtool(defaultToolbar, 'Separator', 'on');
 [img, map] = imread(fullfile(mfolder, ...
     'resources', 'plotpicker-candle.gif'));
 ptImage = ind2rgb(img, map);
@@ -308,40 +317,46 @@ ptpseudotime.CData = ptImage;
 ptpseudotime.Tooltip = 'Function enrichment of HVG genes';
 ptpseudotime.ClickedCallback = @callback_GSEA_HVGs;
 
-ptnetwork = uipushtool(defaultToolbar, ...
-    'Separator', 'off');
-[img, map] = imread(fullfile(mfolder, ...
-    'resources', 'noun_Network_691907.gif'));
+ptnetwork = uipushtool(defaultToolbar,'Separator', 'off');
+[img, map] = imread(fullfile(mfolder,'resources', 'noun_Network_691907.gif'));
 ptImage = ind2rgb(img, map);
 ptnetwork.CData = ptImage;
 ptnetwork.Tooltip = 'Build gene regulatory network';
 ptnetwork.ClickedCallback = @callback_BuildGeneNetwork;
 
 ptnetwork = uipushtool(defaultToolbar, 'Separator', 'off');
-[img, map] = imread(fullfile(mfolder, ...
-    'resources', 'noun_Deep_Learning_2424485.gif'));
+[img, map] = imread(fullfile(mfolder,'resources', 'noun_Deep_Learning_2424485.gif'));
 ptImage = ind2rgb(img, map);
 ptnetwork.CData = ptImage;
 ptnetwork.Tooltip = 'Compare two scGRNs';
 ptnetwork.ClickedCallback = @callback_CompareGeneNetwork;
 
 
-ptpseudotime = uipushtool(defaultToolbar, 'Separator', 'on');
+% white space
+% ptpseudotime = uipushtool(defaultToolbar, 'Separator', 'on');
+% [img, map] = imread(fullfile(mfolder,'resources', 'IMG00107.GIF'));  
+% ptImage = ind2rgb(img, map);
+% ptpseudotime.CData = ptImage;
+
+ptShowClu = uipushtool(UitoolbarHandle, 'Separator', 'on');
 [img, map] = imread(fullfile(mfolder, ...
-    'resources', 'IMG00107.GIF'));    % white space
+    'resources', 'plotpicker-geoscatter.gif'));
 ptImage = ind2rgb(img, map);
-ptpseudotime.CData = ptImage;
+ptShowClu.CData = ptImage;
+ptShowClu.Tooltip = 'Show clusters individually';
+ptShowClu.ClickedCallback = @gui.callback_ShowClustersPop;
 
-ptnetwork = uipushtool(defaultToolbar, 'Separator', 'off');
+
+pt3a = uipushtool(UitoolbarHandle, 'Separator', 'off');
 [img, map] = imread(fullfile(mfolder, ...
-    'resources', 'noun_Pruners_2469297.gif'));
+    'resources', 'plotpicker-pointfig.gif'));
 ptImage = ind2rgb(img, map);
-ptnetwork.CData = ptImage;
-ptnetwork.Tooltip = 'Close All Other Figures';
-ptnetwork.ClickedCallback = @callback_CloseAllOthers;
+pt3a.CData = ptImage;
+pt3a.Tooltip = 'Select cells by class';
+pt3a.ClickedCallback = @callback_SelectCellsByClass;
 
 
-pt2 = uipushtool(UitoolbarHandle, 'Separator', 'on');
+pt2 = uipushtool(UitoolbarHandle, 'Separator', 'off');
 [img, map] = imread(fullfile(mfolder, ...
     'resources', 'plotpicker-qqplot.gif'));
 ptImage = ind2rgb(img, map);
@@ -382,7 +397,15 @@ pt5.CData = ptImage;
 pt5.Tooltip = 'Switch 2D/3D';
 pt5.ClickedCallback = @Switch2D3D;
 
-pt5pickmk = uipushtool(UitoolbarHandle, 'Separator', 'on');
+ptnetwork = uipushtool(UitoolbarHandle, 'Separator', 'on');
+[img, map] = imread(fullfile(mfolder, ...
+    'resources', 'noun_Pruners_2469297.gif'));
+ptImage = ind2rgb(img, map);
+ptnetwork.CData = ptImage;
+ptnetwork.Tooltip = 'Close All Other Figures';
+ptnetwork.ClickedCallback = @callback_CloseAllOthers;
+
+pt5pickmk = uipushtool(UitoolbarHandle, 'Separator', 'off');
 [img, map] = imread(fullfile(mfolder, ...
     'resources', 'plotpicker-rose.gif'));  % plotpicker-pie
 ptImage = ind2rgb(img, map);
@@ -410,6 +433,34 @@ pt5.ClickedCallback = @RefreshAll;
 gui.add_3dcamera(defaultToolbar, 'AllCells');
 
 
+m_ext = uimenu(FigureHandle,'Text','Exte&rnal');
+m_ext.Accelerator = 'r';
+uimenu(m_ext,'Text','Check R Environment',...
+    'Callback',@gui.i_setrenv);
+uimenu(m_ext,'Text','Check Python Environment',...
+    'Callback',@gui.i_setpyenv);
+uimenu(m_ext,'Text','Detect Ambient RNA Contamination (decontX/R required)...',...
+'Separator','on',...        
+    'Callback',@DecontX);
+
+uimenu(m_ext,'Text','SingleR Cell Type Annotation (SingleR/R required)...',...
+    'Callback',@callback_SingleRCellType);
+uimenu(m_ext,'Text','Revelio Cell Cycle Analysis (Revelio/R required)...',...
+    'Callback',@callback_RevelioCellCycle);
+uimenu(m_ext,'Text','Run Seurat/R Workflow (Seurat/R required)...',...
+    'Callback',@RunSeuratWorkflow);
+
+uimenu(m_ext,'Text','MELD Perturbation Score (MELD/Python required)...',...
+    'Separator','on',...  
+    'Callback',@callback_MELDPerturbationScore); 
+uimenu(m_ext,'Text','Batch Integration (Harmony/Python required)...',...
+    'Callback',@HarmonyPy);
+uimenu(m_ext,'Text','Detect Doublets (Scrublet/Python required)...',...
+    'Callback',@DoubletDetection);
+
+
+
+
 
 m = uimenu(FigureHandle,'Text','E&xperimental');
 m.Accelerator = 'x';
@@ -418,19 +469,10 @@ uimenu(m2,'Text','scTenifoldNet Construction 🐢🐢 ...',...
     'Callback',@callback_scTenifoldNet1);
 uimenu(m2,'Text','scTenifoldNet Comparison 🐢🐢🐢 ...',...
     'Callback',@callback_scTenifoldNet2);
-% uimenu(m2,'Text','---------------------------------------');
 uimenu(m2,'Text','scTenifoldKnk (Virtual KO) Single Gene 🐢 ...',...
-'Separator','on',...    
-'Callback',@callback_scTenifoldKnk1);
-% uimenu(m2,'Text','---------------------------------------');
+'Separator','on','Callback',@callback_scTenifoldKnk1);
 uimenu(m2,'Text','scTenifoldKnk (Virtual KO) All Genes 🐢🐢🐢 ...',...
     'Callback',@callback_scTenifoldKnkN);
-
-% uimenu(m2,'Text','scTenifoldKnk',...
-%     'Callback',@callback_scTenifoldNet);
-% uimenu(m2,'Text','scTenifoldXct',...
-%     'Callback',@callback_scTenifoldNet);
-% uimenu(m2,'Text','scTenifoldDev');
 
 uimenu(m,'Text','Multi-embedding View...',...
     'Separator','on',...
@@ -439,21 +481,7 @@ uimenu(m,'Text','Multi-grouping View...',...
     'Callback',@gui.callback_MultiGroupingViewer);
 uimenu(m,'Text','Cross Tabulation...',...
     'Callback',@callback_CrossTabulation);
-uimenu(m,'Text','Detect Ambient RNA Contamination (decontX/R required)...',...
-'Separator','on',...        
-    'Callback',@DecontX);
 
-uimenu(m,'Text','SingleR Cell Type Annotation (SingleR/R required)...',...
-    'Callback',@callback_SingleRCellType);
-uimenu(m,'Text','Revelio Cell Cycle Analysis (Revelio/R required)...',...
-    'Callback',@callback_RevelioCellCycle);
-uimenu(m,'Text','MELD Perturbation Score (MELD/Python required)...',...
-    'Separator','on',...  
-    'Callback',@callback_MELDPerturbationScore); 
-uimenu(m,'Text','Batch Integration (Harmony/Python required)...',...
-    'Callback',@HarmonyPy);
-uimenu(m,'Text','Detect Doublets (Scrublet/Python required)...',...
-    'Callback',@DoubletDetection);
 
 uimenu(m,'Text','Ligand-Receptor Mediated Intercellular Crosstalk...',...
         'Separator','on',...
@@ -477,14 +505,20 @@ uimenu(m,'Text','T Cell Exhaustion Score...',...
     'Callback',@callback_TCellExhaustionScores);
 
 
-
 uimenu(m,'Text','Import Data Using GEO Accession...',...
     'Separator','on',...
     'Callback',@GEOAccessionToSCE);
-uimenu(m,'Text','Merge SCEs...',...    
+
+uimenu(m,'Text','Merge SCEs in Workspace...',...    
     'Callback',@MergeSCEs);
+
+% uimenu(m,'Text','Check for Updates...',...    
+%    'Callback',@callback_CheckUpdates);
+
+
 % handles = guihandles( FigureHandle ) ;
 % guidata( FigureHandle, handles ) ;
+
 set(FigureHandle, 'visible', 'on');
 guidata(FigureHandle, sce);
 
@@ -523,6 +557,10 @@ end
 end
 
     function GEOAccessionToSCE(src,~)
+
+        answer = questdlg('Current SCE will be replaced. Continue?');
+        if ~strcmp(answer, 'Yes'), return; end
+    
         acc=inputdlg({'GEO accession:'},'',[1 40],{'GSM3308545'});
         % [acc]=gui.i_inputgenelist(["GSM3308545","GSM3308546","GSM3308547"]);
         if ~isempty(acc)
@@ -546,7 +584,7 @@ end
     
     function MergeSCEs(src, ~)
         [requirerefresh,s]=gui.callback_MergeSCEs(src);        
-        if requirerefresh
+        if requirerefresh && ~isempty(s)
             sce = guidata(FigureHandle);
             [c, cL] = grp2idx(sce.c_batch_id);
             RefreshAll(src, 1, true);
@@ -1023,12 +1061,21 @@ end
         hold off;
         %}
     
-
-    function ShowCellStats(src, ~)
+    function ShowCellStemScatter(~, ~)
         sce = guidata(FigureHandle);
         [thisc,clable]=gui.i_select1state(sce);
+        if isempty(thisc), return; end        
+        figure;
+        gui.i_stemscatter(sce.s,grp2idx(thisc));
+        zlabel(clable)
+        % title('')
+    end
+
+    function ShowCellStates(src, ~)
+        sce=guidata(FigureHandle);
+        [thisc,clable]=gui.i_select1state(sce);
         if isempty(thisc)
-            errordlg("Undefined classification");
+            % errordlg("Undefined classification");
             return;
         end
         [c,cL]=grp2idx(thisc);
@@ -1044,7 +1091,7 @@ end
         end
         cb.Label.String = clable;
         % helpdlg(clable)
-        guidata(FigureHandle, sce);
+        % guidata(FigureHandle, sce);
     end
 
 %{

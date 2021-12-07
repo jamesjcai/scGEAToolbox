@@ -1,7 +1,7 @@
 function [thisc,clable,listitems]=i_select1state(sce)
 
-thisc=[];
-clable='';
+    thisc=[];
+    clable='';
 
     baselistitems = {'Library Size', 'Mt-reads Ratio', ...
         'Cell Cycle Phase', ...

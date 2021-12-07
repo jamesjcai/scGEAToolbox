@@ -52,12 +52,11 @@ function callback_ComparePotency(src,~)
     end
     [thisc,clabel]=gui.i_select1class(sce);
     if isempty(thisc)   % || numel(unique(thisc))==1
-        errordlg('Undefined');    
+        errordlg('Undefined');
         return;
     end
     x=sce.list_cell_attributes{idx+1};
     figure;
     pkg.i_violinplot_groupordered(x,thisc);
-    xlabel(clabel)
-    
+    xlabel(clabel)    
 end

@@ -1,18 +1,25 @@
 function [requirerefresh,s]=callback_MergeSCEs(src)
     requirerefresh=false;
-    answer = questdlg('Current SCE will be replaced. Continue?');
-    if ~strcmp(answer, 'Yes'), return; end    
-    FigureHandle=src.Parent.Parent;
-    %sce=guidata(FigureHandle);
+    s='';
     a=evalin('base','whos');
     b=struct2cell(a);
     valididx=ismember(b(4,:),'SingleCellExperiment');
-    if sum(valididx)<2
-        warndlg('Need at least two SCE variables in workspace.');
+    if sum(valididx)<1
+        warndlg('No SCE variables in Workspace.');
+        return;        
+    elseif sum(valididx)<2
+        warndlg('Need at least two SCEs in Workspace.');
         return;
     end
+    
     b=b(:,valididx);
     a=a(valididx);
+
+    answer = questdlg('Current SCE will be replaced. Continue?');
+    if ~strcmp(answer, 'Yes'), return; end
+    FigureHandle=src.Parent.Parent;
+    %sce=guidata(FigureHandle);
+    
     [indx,tf]=listdlg('PromptString',{'Select SCEs:'},...
         'liststring',b(1,:),'SelectionMode','multiple');
     if tf==1

@@ -42,8 +42,6 @@ resources/STRING/stringdb_human.mat
 resources/STRING/stringdb_mouse.mat
 .gitignore
 **/.Rhistory
-sc_tenifoldnet.m
-sc_pcnetdenoised.m
 **/html
 **/docs</param.exclude.filters>
     <param.exclude.pcodedmfiles>true</param.exclude.pcodedmfiles>
@@ -193,6 +191,7 @@ sc_pcnetdenoised.m
       <file>${PROJECT_ROOT}\sc_splinefit.m</file>
       <file>${PROJECT_ROOT}\sc_splinefit2.m</file>
       <file>${PROJECT_ROOT}\sc_ssnet.m</file>
+      <file>${PROJECT_ROOT}\sc_tenifoldnet.m</file>
       <file>${PROJECT_ROOT}\sc_trajectory.m</file>
       <file>${PROJECT_ROOT}\sc_transform.m</file>
       <file>${PROJECT_ROOT}\sc_tsne.m</file>
