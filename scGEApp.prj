@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="1618211359" file="U:\GitHub\scGEAToolbox\scGEApp.prj" location="U:\GitHub\scGEAToolbox" name="scGEApp" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="1618211359" file="C:\Users\jcai.AUTH\Documents\GitHub\scGEAToolbox\scGEApp.prj" location="C:\Users\jcai.AUTH\Documents\GitHub\scGEAToolbox" name="scGEApp" target="target.mlapps" target-name="Package App">
     <param.appname>scGEApp</param.appname>
     <param.authnamewatermark>James Cai</param.authnamewatermark>
     <param.email>jcai@tamu.edu</param.email>
@@ -19,8 +19,8 @@
       <item>19</item>
     </param.products.id>
     <param.products.version>
-      <item>9.10</item>
-      <item>12.1</item>
+      <item>9.9</item>
+      <item>12.0</item>
     </param.products.version>
     <param.platforms />
     <param.output>C:\Users</param.output>
@@ -40,165 +40,6 @@
       <file>${PROJECT_ROOT}\sc_scatter.m</file>
     </fileset.main>
     <fileset.depfun>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\arrange.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\datadisp.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\disp.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\display.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\double.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\end.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\extract.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\fixsigns.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\full.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\innerprod.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\isequal.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\isscalar.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\issymmetric.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\ktensor.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\mask.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\minus.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\mtimes.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\mttkrp.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\ncomponents.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\ndims.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\norm.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\normalize.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\nvecs.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\permute.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\plus.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\redistribute.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\score.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\size.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\subsasgn.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\subsref.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\symmetrize.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\times.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\tocell.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\tovec.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\ttm.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\ttv.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\uminus.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\update.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\uplus.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\viz.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@sptenmat\aatx.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@sptenmat\disp.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@sptenmat\display.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@sptenmat\double.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@sptenmat\end.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@sptenmat\full.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@sptenmat\nnz.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@sptenmat\norm.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@sptenmat\size.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@sptenmat\sptenmat.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@sptenmat\subsasgn.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@sptenmat\subsref.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@sptenmat\tsize.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@sptenmat\uminus.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@sptenmat\uplus.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tenmat\ctranspose.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tenmat\disp.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tenmat\display.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tenmat\double.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tenmat\end.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tenmat\minus.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tenmat\mtimes.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tenmat\norm.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tenmat\plus.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tenmat\size.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tenmat\subsasgn.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tenmat\subsref.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tenmat\tenmat.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tenmat\tsize.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tenmat\uminus.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tenmat\uplus.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\and.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\collapse.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\contract.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\disp.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\display.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\double.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\end.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\eq.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\exp.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\find.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\full.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\ge.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\gt.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\innerprod.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\isequal.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\isscalar.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\issymmetric.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\ldivide.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\le.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\lt.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\mask.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\minus.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\mldivide.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\mrdivide.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\mtimes.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\mttkrp.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\mttkrps.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\ndims.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\ne.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\nnz.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\norm.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\not.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\nvecs.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\or.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\permute.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\plus.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\power.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\rdivide.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\reshape.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\scale.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\size.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\squeeze.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\subsasgn.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\subsref.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\symmetrize.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\tenfun.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\tensor.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\times.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\transpose.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\ttm.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\ttsv.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\ttt.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\ttv.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\uminus.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\uplus.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\xor.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\disp.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\display.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\double.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\end.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\full.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\innerprod.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\isequal.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\isscalar.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\mtimes.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\mttkrp.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\ndims.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\norm.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\nvecs.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\permute.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\size.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\subsasgn.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\subsref.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\ttensor.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\ttm.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\ttv.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\uminus.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\uplus.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\cp_als.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\khatrirao.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\tenzeros.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\tt_dimscheck.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\tt_ind2sub.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\tt_matrix2cellstr.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\tt_size2str.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\tt_sub2ind.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\tt_subsubsref.m</file>
-      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\tucker_als.m</file>
       <file>${PROJECT_ROOT}\+gui\add_3dcamera.m</file>
       <file>${PROJECT_ROOT}\+gui\callback_Brush4Markers.m</file>
       <file>${PROJECT_ROOT}\+gui\callback_Brush4MarkersLASSO.m</file>
@@ -383,6 +224,165 @@
       <file>${PROJECT_ROOT}\sc_tsne.m</file>
       <file>${PROJECT_ROOT}\sc_umap.m</file>
       <file>${PROJECT_ROOT}\sc_writefile.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\arrange.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\datadisp.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\disp.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\display.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\double.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\end.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\extract.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\fixsigns.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\full.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\innerprod.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\isequal.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\isscalar.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\issymmetric.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\ktensor.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\mask.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\minus.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\mtimes.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\mttkrp.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\ncomponents.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\ndims.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\norm.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\normalize.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\nvecs.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\permute.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\plus.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\redistribute.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\score.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\size.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\subsasgn.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\subsref.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\symmetrize.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\times.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\tocell.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\tovec.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\ttm.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\ttv.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\uminus.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\update.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\uplus.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\viz.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@sptenmat\aatx.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@sptenmat\disp.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@sptenmat\display.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@sptenmat\double.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@sptenmat\end.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@sptenmat\full.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@sptenmat\nnz.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@sptenmat\norm.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@sptenmat\size.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@sptenmat\sptenmat.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@sptenmat\subsasgn.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@sptenmat\subsref.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@sptenmat\tsize.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@sptenmat\uminus.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@sptenmat\uplus.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tenmat\ctranspose.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tenmat\disp.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tenmat\display.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tenmat\double.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tenmat\end.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tenmat\minus.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tenmat\mtimes.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tenmat\norm.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tenmat\plus.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tenmat\size.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tenmat\subsasgn.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tenmat\subsref.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tenmat\tenmat.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tenmat\tsize.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tenmat\uminus.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tenmat\uplus.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\and.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\collapse.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\contract.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\disp.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\display.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\double.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\end.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\eq.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\exp.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\find.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\full.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\ge.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\gt.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\innerprod.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\isequal.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\isscalar.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\issymmetric.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\ldivide.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\le.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\lt.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\mask.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\minus.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\mldivide.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\mrdivide.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\mtimes.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\mttkrp.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\mttkrps.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\ndims.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\ne.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\nnz.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\norm.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\not.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\nvecs.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\or.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\permute.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\plus.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\power.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\rdivide.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\reshape.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\scale.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\size.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\squeeze.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\subsasgn.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\subsref.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\symmetrize.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\tenfun.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\tensor.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\times.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\transpose.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\ttm.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\ttsv.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\ttt.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\ttv.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\uminus.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\uplus.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@tensor\xor.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\disp.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\display.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\double.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\end.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\full.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\innerprod.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\isequal.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\isscalar.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\mtimes.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\mttkrp.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\ndims.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\norm.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\nvecs.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\permute.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\size.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\subsasgn.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\subsref.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\ttensor.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\ttm.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\ttv.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\uminus.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ttensor\uplus.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\cp_als.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\khatrirao.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\tenzeros.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\tt_dimscheck.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\tt_ind2sub.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\tt_matrix2cellstr.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\tt_size2str.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\tt_sub2ind.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\tt_subsubsref.m</file>
+      <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\tucker_als.m</file>
     </fileset.depfun>
     <fileset.resources />
     <fileset.package />
@@ -391,17 +391,24 @@
     </build-deliverables>
     <workflow />
     <matlab>
-      <root>C:\Program Files\MATLAB\R2021a</root>
+      <root>C:\Program Files\MATLAB\R2020B</root>
       <toolboxes>
         <toolbox name="matlabcoder" />
+        <toolbox name="embeddedcoder" />
         <toolbox name="gpucoder" />
         <toolbox name="fixedpoint" />
+        <toolbox name="matlabhdlcoder" />
         <toolbox name="neuralnetwork" />
       </toolboxes>
       <toolbox>
         <matlabcoder>
           <enabled>true</enabled>
         </matlabcoder>
+      </toolbox>
+      <toolbox>
+        <embeddedcoder>
+          <enabled>true</enabled>
+        </embeddedcoder>
       </toolbox>
       <toolbox>
         <gpucoder>
@@ -412,6 +419,11 @@
         <fixedpoint>
           <enabled>true</enabled>
         </fixedpoint>
+      </toolbox>
+      <toolbox>
+        <matlabhdlcoder>
+          <enabled>true</enabled>
+        </matlabhdlcoder>
       </toolbox>
       <toolbox>
         <neuralnetwork>
