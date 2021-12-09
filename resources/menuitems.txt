@@ -1,24 +1,25 @@
-callback_ShowGeneExpr	list.gif	Select a gene to show expression
-ShowCellStates	list2.gif	Select a gene to show expression
-SelectCellsByQC	plotpicker-effects.gif	Filter genes and cells
-LabelClusters	plotpicker-scatter.gif	Label clusters
-Brushed2NewCluster	plotpicker-glyplot-face.gif	Add brushed cells to a new cluster
-Brushed2MergeClusters	plotpicker-pzmap.gif	Merge brushed cells to same cluster
-ClusterCellsS	plotpicker-dendrogram.gif	Clustering using embedding S
-ClusterCellsX	plotpicker-gscatter.gif	Clustering using expression matrix X
-DetermineCellTypeClusters	plotpicker-contour.gif	Cell types of clusters
-Brush4Celltypes	brush.gif	Cell types of brushed cells
-RenameCellType	plotpicker-scatterhist.gif	Rename cell type
-callback_CellTypeMarkerScores	cellscore.gif	Calculate Cell Scores from Cell Type Markers
-ShowCellStemScatter	IMG00067.GIF	Stem scatter plot
-callback_Brush4Markers	plotpicker-kagi.gif	Marker genes of brushed cells
-callback_MarkerGeneHeatmap	plotpicker-plotmatrix.gif	Marker gene heatmap
-callback_ShowClustersPop	plotpicker-geoscatter.gif	Show clusters individually
-callback_SelectCellsByClass	plotpicker-pointfig.gif	Select cells by class
-DeleteSelectedCells	plotpicker-qqplot.gif	Delete selected cells
-callback_SaveX	export.gif	Export & save data
-EmbeddingAgain	plotpicker-geobubble.gif	Embedding (tSNE, UMP, PHATE)
-Switch2D3D	plotpicker-image.gif	Switch 2D/3D
-callback_CloseAllOthers	noun_Pruners_2469297.gif	Close All Other Figures
-callback_PickPlotMarker	plotpicker-rose.gif	Switch scatter plot marker type
-RefreshAll	plotpicker-geobubble2.gif	Refresh
+1	0	callback_ShowGeneExpr	list.gif	Select a gene to show expression
+1	0	ShowCellStates	list2.gif	Select a gene to show expression
+1	1	SelectCellsByQC	plotpicker-effects.gif	Filter genes and cells
+1	0	LabelClusters	plotpicker-scatter.gif	Label clusters
+1	0	Brushed2NewCluster	plotpicker-glyplot-face.gif	Add brushed cells to a new cluster
+1	0	Brushed2MergeClusters	plotpicker-pzmap.gif	Merge brushed cells to same cluster
+1	1	ClusterCellsS	plotpicker-dendrogram.gif	Clustering using embedding S
+1	0	ClusterCellsX	plotpicker-gscatter.gif	Clustering using expression matrix X
+1	0	DetermineCellTypeClusters	plotpicker-contour.gif	Cell types of clusters
+1	0	Brush4Celltypes	brush.gif	Cell types of brushed cells
+1	0	RenameCellType	plotpicker-scatterhist.gif	Rename cell type
+1	0	callback_CellTypeMarkerScores	cellscore.gif	Calculate Cell Scores from Cell Type Markers
+1	0	ShowCellStemScatter	IMG00067.GIF	Stem scatter plot
+1	0	callback_Brush4Markers	plotpicker-kagi.gif	Marker genes of brushed cells
+1	0	callback_MarkerGeneHeatmap	plotpicker-plotmatrix.gif	Marker gene heatmap
+1	0	callback_ShowClustersPop	plotpicker-geoscatter.gif	Show clusters individually
+1	0	callback_SelectCellsByClass	plotpicker-pointfig.gif	Select cells by class
+1	0	DeleteSelectedCells	plotpicker-qqplot.gif	Delete selected cells
+1	0	callback_SaveX	export.gif	Export & save data
+1	0	EmbeddingAgain	plotpicker-geobubble.gif	Embedding (tSNE, UMP, PHATE)
+1	0	Switch2D3D	plotpicker-image.gif	Switch 2D/3D
+1	1	callback_CloseAllOthers	noun_Pruners_2469297.gif	Close All Other Figures
+1	0	callback_PickPlotMarker	plotpicker-rose.gif	Switch scatter plot marker type
+1	0	callback_PickColorMap2	plotpicker-compass.gif	Switch color maps
+1	0	RefreshAll	plotpicker-geobubble2.gif	Refresh

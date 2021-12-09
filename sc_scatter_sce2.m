@@ -70,13 +70,15 @@ set(UitoolbarHandle, 'Tag', 'FigureToolBar', ...
 mfolder = fileparts(mfilename('fullpath'));
 
 
-    function i_addbutton(aa,bb,cc)
+    function i_addbutton(xx,yy,aa,bb,cc)
         if ischar(aa)
             aa=str2func(aa);
         end
-        pt3 = uipushtool(UitoolbarHandle, 'Separator', 'off');
-        [img, map] = imread(fullfile(mfolder, ...
-            'resources', bb));
+        if yy==1, septag='on'; else septag='off'; end
+        if xx==1
+            pt3 = uipushtool(UitoolbarHandle, 'Separator', septag);
+        end
+        [img, map] = imread(fullfile(mfolder, 'resources', bb));
         ptImage = ind2rgb(img, map);
         pt3.CData = ptImage;
         pt3.Tooltip = cc;
@@ -85,6 +87,34 @@ mfolder = fileparts(mfilename('fullpath'));
     end
 
 
+i_addbutton(1,0,"callback_ShowGeneExpr","list.gif","Select a gene to show expression")
+i_addbutton(1,0,"ShowCellStates","list2.gif","Select a gene to show expression")
+i_addbutton(1,1,"SelectCellsByQC","plotpicker-effects.gif","Filter genes and cells")
+i_addbutton(1,0,"LabelClusters","plotpicker-scatter.gif","Label clusters")
+i_addbutton(1,0,"Brushed2NewCluster","plotpicker-glyplot-face.gif","Add brushed cells to a new cluster")
+i_addbutton(1,0,"Brushed2MergeClusters","plotpicker-pzmap.gif","Merge brushed cells to same cluster")
+i_addbutton(1,1,"ClusterCellsS","plotpicker-dendrogram.gif","Clustering using embedding S")
+i_addbutton(1,0,"ClusterCellsX","plotpicker-gscatter.gif","Clustering using expression matrix X")
+i_addbutton(1,0,"DetermineCellTypeClusters","plotpicker-contour.gif","Cell types of clusters")
+i_addbutton(1,0,"Brush4Celltypes","brush.gif","Cell types of brushed cells")
+i_addbutton(1,0,"RenameCellType","plotpicker-scatterhist.gif","Rename cell type")
+i_addbutton(1,0,"callback_CellTypeMarkerScores","cellscore.gif","Calculate Cell Scores from Cell Type Markers")
+i_addbutton(1,0,"ShowCellStemScatter","IMG00067.GIF","Stem scatter plot")
+i_addbutton(1,0,"callback_Brush4Markers","plotpicker-kagi.gif","Marker genes of brushed cells")
+i_addbutton(1,0,"callback_MarkerGeneHeatmap","plotpicker-plotmatrix.gif","Marker gene heatmap")
+i_addbutton(1,0,"callback_ShowClustersPop","plotpicker-geoscatter.gif","Show clusters individually")
+i_addbutton(1,0,"callback_SelectCellsByClass","plotpicker-pointfig.gif","Select cells by class")
+i_addbutton(1,0,"DeleteSelectedCells","plotpicker-qqplot.gif","Delete selected cells")
+i_addbutton(1,0,"callback_SaveX","export.gif","Export & save data")
+i_addbutton(1,0,"EmbeddingAgain","plotpicker-geobubble.gif","Embedding (tSNE, UMP, PHATE)")
+i_addbutton(1,0,"Switch2D3D","plotpicker-image.gif","Switch 2D/3D")
+i_addbutton(1,1,"callback_CloseAllOthers","noun_Pruners_2469297.gif","Close All Other Figures")
+i_addbutton(1,0,"callback_PickPlotMarker","plotpicker-rose.gif","Switch scatter plot marker type")
+i_addbutton(1,0,"callback_PickColorMap2","plotpicker-compass.gif","Switch color maps")
+i_addbutton(1,0,"RefreshAll","plotpicker-geobubble2.gif","Refresh")
+
+
+%{
 
 fid=fopen(fullfile(mfolder,'resources','menuitems.txt'),'r');
 a=textscan(fid,'%s','Delimiter','\n');
@@ -104,6 +134,7 @@ for kx=3:22
     cx=strsplit(b{kx},'\t');
     i_addbutton(cx{1},cx{2},cx{3});
 end
+%}
 
 % ptlabelclusters = uitoggletool(UitoolbarHandle, 'Separator', 'on');
 % [img, map] = imread(fullfile(matlabroot, ...
@@ -114,13 +145,14 @@ end
 % ptlabelclusters.Tooltip = 'Label clusters';
 % ptlabelclusters.ClickedCallback = @LabelClusters;
 
+%{
 pt5pickcl = uipushtool(UitoolbarHandle, 'Separator', 'off');
 [img, map] = imread(fullfile(mfolder, ...
     'resources', 'plotpicker-compass.gif'));  % plotpicker-pie
 ptImage = ind2rgb(img, map);
 pt5pickcl.CData = ptImage;
 pt5pickcl.Tooltip = 'Switch color maps';
-pt5pickcl.ClickedCallback = {@gui.callback_PickColorMap, ...
+pt5pickcl.ClickedCallback = {@gui.callback_PickColorMap2, ...
     numel(unique(c))};
 
 for kx=23:23
@@ -128,7 +160,7 @@ for kx=23:23
     i_addbutton(cx{1},cx{2},cx{3});
 end
 
-
+%}
 
 
 %{
