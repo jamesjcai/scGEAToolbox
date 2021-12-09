@@ -1,8 +1,6 @@
-function callback_PickColorMap2(src,~,showzero)
-    FigureHandle=src.Parent.Parent;
-    sce=guidata(FigureHandle);
-    if nargin<3, showzero=false; end
-    n=numel(unique(sce.c));
+function callback_PickColorMap_OLD(~,~,n,showzero)
+    if nargin<4, showzero=false; end
+    if nargin<3, n=21; end
     % disp(sprintf('Using %d colors',n));
     n=max([n 3]);
     folder=fileparts(mfilename('fullpath'));

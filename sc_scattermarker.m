@@ -135,7 +135,7 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
             if showcam
                 hFig = gcf;
                 tb = uitoolbar(hFig);
-
+  %{
                 pt5pickcolr = uipushtool(tb, 'Separator', 'off');
                 [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
                                              'resources', 'plotpicker-compass.gif'));  % plotpicker-pie
@@ -146,7 +146,7 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
                 % pt5pickcolr.ClickedCallback = @callback_PickColorMap;
                 a=min([numel(unique(c)),256]);
                 pt5pickcolr.ClickedCallback = {@callback_PickColorMap, a, true};
-
+  %}
                 pt = uipushtool(tb, 'Separator', 'off');
                 [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
                                              'resources', 'plottypectl-rlocusplot.gif'));  % plotpicker-pie
