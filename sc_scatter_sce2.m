@@ -1,4 +1,4 @@
-function varargout = sc_scatter_sce(sce, varargin)
+function varargout = sc_scatter_sce2(sce, varargin)
 
 if usejava('jvm') && ~feature('ShowFigureWindows')
     error('MATLAB is in a text mode. This function requires a GUI-mode.');
@@ -49,10 +49,8 @@ set(findall(FigureHandle,'ToolTipString','Link/Unlink Plot'),'Visible','Off')
 set(findall(FigureHandle,'ToolTipString','Edit Plot'),'Visible','Off')
 set(findall(FigureHandle,'ToolTipString','Open Property Inspector'),'Visible','Off')
 
-
 %a=findall(FigureHandle,'ToolTipString','New Figure');
 %a.ClickedCallback = @__;
-
 
 hAx = axes('Parent', FigureHandle);
 [h] = gui.i_gscatter3(sce.s, c, methodid,1,hAx);
@@ -63,24 +61,77 @@ dt.UpdateFcn = {@i_myupdatefcnx};
 
 
 
-
-
-
 defaultToolbar = findall(FigureHandle, 'tag','FigureToolBar');  % get the figure's toolbar handle
-%defaultToolbar = findall(FigureHandle, 'Type', 'uitoolbar');
-
-% UitoolbarHandle2 = uitoolbar( 'Parent', FigureHandle ) ;
-% set( UitoolbarHandle2, 'Tag' , 'FigureToolBar2' , ...
-%     'HandleVisibility' , 'on' , ...
-%     'Visible' , 'on' ) ;
 
 UitoolbarHandle = uitoolbar('Parent', FigureHandle);
 set(UitoolbarHandle, 'Tag', 'FigureToolBar', ...
-    'HandleVisibility', 'off', ...
-    'Visible', 'on');
+    'HandleVisibility', 'off', 'Visible', 'on');
 
 mfolder = fileparts(mfilename('fullpath'));
 
+
+    function i_addbutton(aa,bb,cc)
+        if ischar(aa)
+            aa=str2func(aa);
+        end
+        pt3 = uipushtool(UitoolbarHandle, 'Separator', 'off');
+        [img, map] = imread(fullfile(mfolder, ...
+            'resources', bb));
+        ptImage = ind2rgb(img, map);
+        pt3.CData = ptImage;
+        pt3.Tooltip = cc;
+        pt3.ClickedCallback = aa;
+        
+    end
+
+
+
+fid=fopen(fullfile(mfolder,'resources','menuitems.txt'),'r');
+a=textscan(fid,'%s','Delimiter','\n');
+fclose(fid);
+b=a{1};
+
+for kx=1:1
+    cx=strsplit(b{kx},'\t');
+    i_addbutton(cx{1},cx{2},cx{3});
+end
+for kx=2:2
+    cx=strsplit(b{kx},'\t');
+    i_addbutton(@ShowCellStates,cx{2},cx{3});
+end
+
+for kx=3:22
+    cx=strsplit(b{kx},'\t');
+    i_addbutton(cx{1},cx{2},cx{3});
+end
+
+% ptlabelclusters = uitoggletool(UitoolbarHandle, 'Separator', 'on');
+% [img, map] = imread(fullfile(matlabroot, ...
+%     'toolbox', 'matlab', 'icons', 'plotpicker-scatter.gif'));
+% % map(map(:,1)+map(:,2)+map(:,3)==3) = NaN;  % Convert white pixels => transparent background
+% ptImage = ind2rgb(img, map);
+% ptlabelclusters.CData = ptImage;
+% ptlabelclusters.Tooltip = 'Label clusters';
+% ptlabelclusters.ClickedCallback = @LabelClusters;
+
+pt5pickcl = uipushtool(UitoolbarHandle, 'Separator', 'off');
+[img, map] = imread(fullfile(mfolder, ...
+    'resources', 'plotpicker-compass.gif'));  % plotpicker-pie
+ptImage = ind2rgb(img, map);
+pt5pickcl.CData = ptImage;
+pt5pickcl.Tooltip = 'Switch color maps';
+pt5pickcl.ClickedCallback = {@gui.callback_PickColorMap, ...
+    numel(unique(c))};
+
+for kx=23:23
+    cx=strsplit(b{kx},'\t');
+    i_addbutton(cx{1},cx{2},cx{3});
+end
+
+
+
+
+%{
 % UitoolbarHandle = uitoolbar(FigureHandle);
 pt3 = uipushtool(UitoolbarHandle, 'Separator', 'off');
 [img, map] = imread(fullfile(mfolder, ...
@@ -98,7 +149,7 @@ pt3a.CData = ptImage;
 pt3a.Tooltip = 'Show cell states';
 pt3a.ClickedCallback = @ShowCellStates;
 
-%{
+
 pt3a = uipushtool(UitoolbarHandle, 'Separator', 'off');
 [img, map] = imread(fullfile(mfolder, ...
     'resources', 'plotpicker-pointfig.gif'));
@@ -106,7 +157,6 @@ ptImage = ind2rgb(img, map);
 pt3a.CData = ptImage;
 pt3a.Tooltip = 'Select cells by class';
 pt3a.ClickedCallback = @callback_SelectCellsByClass;
-%}
 
 pt3a = uipushtool(UitoolbarHandle, 'Separator', 'off');
 [img, map] = imread(fullfile(mfolder, ...
@@ -116,19 +166,20 @@ pt3a.CData = ptImage;
 pt3a.Tooltip = 'Filter genes and cells';
 pt3a.ClickedCallback = @SelectCellsByQC;
 
+%}
+
+
 % ------------------
 
-ptlabelclusters = uitoggletool(UitoolbarHandle, 'Separator', 'on');
-[img, map] = imread(fullfile(matlabroot, ...
-    'toolbox', 'matlab', 'icons', 'plotpicker-scatter.gif'));
-% map(map(:,1)+map(:,2)+map(:,3)==3) = NaN;  % Convert white pixels => transparent background
-ptImage = ind2rgb(img, map);
-ptlabelclusters.CData = ptImage;
-ptlabelclusters.Tooltip = 'Label clusters';
-ptlabelclusters.ClickedCallback = @LabelClusters;
+
 
 % ------------------ clustering
 
+%i_addbutton(@Brushed2NewCluster,...
+%    'plotpicker-glyplot-face.gif',...
+%    'Add brushed cells to a new cluster');
+
+%{
 ptaddcluster = uipushtool(UitoolbarHandle, 'Separator', 'off');
 [img, map] = imread(fullfile(mfolder, ...
     'resources', 'plotpicker-glyplot-face.gif'));
@@ -137,6 +188,7 @@ ptaddcluster.CData = ptImage;
 ptaddcluster.Tooltip = 'Add brushed cells to a new cluster';
 ptaddcluster.ClickedCallback = @Brushed2NewCluster;
 
+
 ptmergecluster = uipushtool(UitoolbarHandle, 'Separator', 'off');
 [img, map] = imread(fullfile(mfolder, ...
     'resources', 'plotpicker-pzmap.gif'));
@@ -144,6 +196,7 @@ ptImage = ind2rgb(img, map);
 ptmergecluster.CData = ptImage;
 ptmergecluster.Tooltip = 'Merge brushed cells to same cluster';
 ptmergecluster.ClickedCallback = @Brushed2MergeClusters;
+%}
 
 %{
 ptShowClu = uipushtool(UitoolbarHandle, 'Separator', 'off');
@@ -153,7 +206,7 @@ ptImage = ind2rgb(img, map);
 ptShowClu.CData = ptImage;
 ptShowClu.Tooltip = 'Show clusters individually';
 ptShowClu.ClickedCallback = @gui.callback_ShowClustersPop;
-%}
+
 
 ptcluster = uipushtool(UitoolbarHandle, 'Separator', 'on');
 [img, map] = imread(fullfile(mfolder, ...
@@ -171,7 +224,7 @@ ptcluster.CData = ptImage;
 ptcluster.Tooltip = 'Clustering using expression matrix X';
 ptcluster.ClickedCallback = @ClusterCellsX;
 
-% -------------
+% ------------- 
 
 
 
@@ -182,6 +235,7 @@ ptImage = ind2rgb(img, map);
 ptclustertype.CData = ptImage;
 ptclustertype.Tooltip = 'Cell types of clusters';
 ptclustertype.ClickedCallback = @DetermineCellTypeClusters;
+
 
 pt5 = uipushtool(UitoolbarHandle, 'Separator', 'off');
 [img, map] = imread(fullfile(mfolder, 'resources', 'brush.gif'));
@@ -233,7 +287,7 @@ ptImage = ind2rgb(img, map);
 pt4mrkheat.CData = ptImage;
 pt4mrkheat.Tooltip = 'Marker gene heatmap';
 pt4mrkheat.ClickedCallback = @callback_MarkerGeneHeatmap;
-
+%}
 
 
 
@@ -340,6 +394,7 @@ ptnetwork.ClickedCallback = @callback_CompareGeneNetwork;
 % ptImage = ind2rgb(img, map);
 % ptpseudotime.CData = ptImage;
 
+%{
 ptShowClu = uipushtool(UitoolbarHandle, 'Separator', 'on');
 [img, map] = imread(fullfile(mfolder, ...
     'resources', 'plotpicker-geoscatter.gif'));
@@ -366,6 +421,8 @@ pt2.CData = ptImage;
 pt2.Tooltip = 'Delete selected cells';
 pt2.ClickedCallback = @DeleteSelectedCells;
 
+
+
 pt = uipushtool(UitoolbarHandle, 'Separator', 'off');
 [img, map] = imread(fullfile(mfolder, 'resources', 'export.gif'));
 ptImage = ind2rgb(img, map);
@@ -380,6 +437,7 @@ ptImage = ind2rgb(img, map);
 pt5.CData = ptImage;
 pt5.Tooltip = 'Embedding';
 pt5.ClickedCallback = @EmbeddingAgain;
+
 
 % run(fullfile(mfolder,'+gui','add_toolbar.m'))
 % pt5 = uipushtool(UitoolbarHandle, 'Separator', 'off');
@@ -399,6 +457,7 @@ pt5.CData = ptImage;
 pt5.Tooltip = 'Switch 2D/3D';
 pt5.ClickedCallback = @Switch2D3D;
 
+
 ptnetwork = uipushtool(UitoolbarHandle, 'Separator', 'on');
 [img, map] = imread(fullfile(mfolder, ...
     'resources', 'noun_Pruners_2469297.gif'));
@@ -414,16 +473,11 @@ ptImage = ind2rgb(img, map);
 pt5pickmk.CData = ptImage;
 pt5pickmk.Tooltip = 'Switch scatter plot marker type';
 pt5pickmk.ClickedCallback = @callback_PickPlotMarker;
+%}
 
-pt5pickcl = uipushtool(UitoolbarHandle, 'Separator', 'off');
-[img, map] = imread(fullfile(mfolder, ...
-    'resources', 'plotpicker-compass.gif'));  % plotpicker-pie
-ptImage = ind2rgb(img, map);
-pt5pickcl.CData = ptImage;
-pt5pickcl.Tooltip = 'Switch color maps';
-pt5pickcl.ClickedCallback = {@gui.callback_PickColorMap, ...
-    numel(unique(c))};
 
+
+%{
 pt5 = uipushtool(UitoolbarHandle, 'Separator', 'off');
 [img, map] = imread(fullfile(mfolder, ...
     'resources', 'plotpicker-geobubble2.gif'));
@@ -431,6 +485,7 @@ ptImage = ind2rgb(img, map);
 pt5.CData = ptImage;
 pt5.Tooltip = 'Refresh';
 pt5.ClickedCallback = @RefreshAll;
+%}
 
 gui.add_3dcamera(defaultToolbar, 'AllCells');
 
@@ -747,7 +802,7 @@ end
         title(sce.title);
         pt5pickcl.ClickedCallback = {@callback_PickColorMap, ...
             numel(unique(c))};
-        ptlabelclusters.State = 'off';
+        % ptlabelclusters.State = 'off';
         % UitoolbarHandle.Visible='off';
         % UitoolbarHandle.Visible='on';
         guidata(FigureHandle, sce);
@@ -769,7 +824,7 @@ end
         else                 % current 3D do following
             [ax, bx] = view();
             answer = questdlg('Which view to be used to project cells?', '', ...
-                'X-Y Plane', 'Sreen/Camera', 'PCA-rotated', 'X-Y Plane');
+                'X-Y Plane', 'Screen/Camera', 'PCA-rotated', 'X-Y Plane');
             switch answer
                 case 'X-Y Plane'
                     sx=sce.s;
