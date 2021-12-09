@@ -1,5 +1,5 @@
 function [glist] = i_selectngenes(sce,predefinedlist)
-%
+
 % This function uses i_selectngenes
 if nargin<2, predefinedlist=[]; end
 
