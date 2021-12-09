@@ -50,7 +50,7 @@ switch answer
         end        
         
         [idx]=gui.i_selmultidlg(gsorted,predefinedlist);
-        if isempty(idx), return; end
+        if isempty(idx) || idx==0, return; end
         %if length(idx)<2
         %    warndlg('Need at least 2 genes');
         %    return;
@@ -59,6 +59,8 @@ switch answer
             %g='Dhfr, Lmbr1, Reck, Rnf168, Rpl26, Snrnp27, Tmem160'
             %g=["Tcf7","Lef1","Bcl6","Ctla4","Lag3","Pdcd1"];
         %end
+    otherwise
+        return;
 end
 
 end

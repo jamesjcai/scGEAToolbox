@@ -69,458 +69,76 @@ set(UitoolbarHandle, 'Tag', 'FigureToolBar', ...
 
 mfolder = fileparts(mfilename('fullpath'));
 
-
     function i_addbutton(xx,yy,aa,bb,cc)
-        if ischar(aa)
+        if ischar(aa) || isstring(aa)
             aa=str2func(aa);
         end
-        if yy==1, septag='on'; else septag='off'; end
-        if xx==1
-            pt3 = uipushtool(UitoolbarHandle, 'Separator', septag);
+        if yy==1
+            septag='on'; 
+        else
+            septag='off'; 
         end
+        if xx==1
+            barhandle=UitoolbarHandle;
+        else
+            barhandle=defaultToolbar;
+        end
+        pt3 = uipushtool(barhandle, 'Separator', septag);
         [img, map] = imread(fullfile(mfolder, 'resources', bb));
         ptImage = ind2rgb(img, map);
         pt3.CData = ptImage;
         pt3.Tooltip = cc;
         pt3.ClickedCallback = aa;
-        
     end
 
+i_addbutton(1,0,@callback_ShowGeneExpr,"list.gif","Select a gene to show expression")
+i_addbutton(1,0,@ShowCellStates,"list2.gif","Select a gene to show expression")
+i_addbutton(1,0,@SelectCellsByQC,"plotpicker-effects.gif","Filter genes and cells")
 
-i_addbutton(1,0,"callback_ShowGeneExpr","list.gif","Select a gene to show expression")
-i_addbutton(1,0,"ShowCellStates","list2.gif","Select a gene to show expression")
-i_addbutton(1,1,"SelectCellsByQC","plotpicker-effects.gif","Filter genes and cells")
-i_addbutton(1,0,"LabelClusters","plotpicker-scatter.gif","Label clusters")
-i_addbutton(1,0,"Brushed2NewCluster","plotpicker-glyplot-face.gif","Add brushed cells to a new cluster")
-i_addbutton(1,0,"Brushed2MergeClusters","plotpicker-pzmap.gif","Merge brushed cells to same cluster")
-i_addbutton(1,1,"ClusterCellsS","plotpicker-dendrogram.gif","Clustering using embedding S")
-i_addbutton(1,0,"ClusterCellsX","plotpicker-gscatter.gif","Clustering using expression matrix X")
-i_addbutton(1,0,"DetermineCellTypeClusters","plotpicker-contour.gif","Cell types of clusters")
-i_addbutton(1,0,"Brush4Celltypes","brush.gif","Cell types of brushed cells")
-i_addbutton(1,0,"RenameCellType","plotpicker-scatterhist.gif","Rename cell type")
-i_addbutton(1,0,"callback_CellTypeMarkerScores","cellscore.gif","Calculate Cell Scores from Cell Type Markers")
-i_addbutton(1,0,"ShowCellStemScatter","IMG00067.GIF","Stem scatter plot")
-i_addbutton(1,0,"callback_Brush4Markers","plotpicker-kagi.gif","Marker genes of brushed cells")
-i_addbutton(1,0,"callback_MarkerGeneHeatmap","plotpicker-plotmatrix.gif","Marker gene heatmap")
-i_addbutton(1,0,"callback_ShowClustersPop","plotpicker-geoscatter.gif","Show clusters individually")
-i_addbutton(1,0,"callback_SelectCellsByClass","plotpicker-pointfig.gif","Select cells by class")
-i_addbutton(1,0,"DeleteSelectedCells","plotpicker-qqplot.gif","Delete selected cells")
-i_addbutton(1,0,"callback_SaveX","export.gif","Export & save data")
-i_addbutton(1,0,"EmbeddingAgain","plotpicker-geobubble.gif","Embedding (tSNE, UMP, PHATE)")
-i_addbutton(1,0,"Switch2D3D","plotpicker-image.gif","Switch 2D/3D")
-i_addbutton(1,1,"callback_CloseAllOthers","noun_Pruners_2469297.gif","Close All Other Figures")
-i_addbutton(1,0,"callback_PickPlotMarker","plotpicker-rose.gif","Switch scatter plot marker type")
-i_addbutton(1,0,"callback_PickColorMap2","plotpicker-compass.gif","Switch color maps")
-i_addbutton(1,0,"RefreshAll","plotpicker-geobubble2.gif","Refresh")
-
-
-%{
-
-fid=fopen(fullfile(mfolder,'resources','menuitems.txt'),'r');
-a=textscan(fid,'%s','Delimiter','\n');
-fclose(fid);
-b=a{1};
-
-for kx=1:1
-    cx=strsplit(b{kx},'\t');
-    i_addbutton(cx{1},cx{2},cx{3});
-end
-for kx=2:2
-    cx=strsplit(b{kx},'\t');
-    i_addbutton(@ShowCellStates,cx{2},cx{3});
-end
-
-for kx=3:22
-    cx=strsplit(b{kx},'\t');
-    i_addbutton(cx{1},cx{2},cx{3});
-end
-%}
-
-% ptlabelclusters = uitoggletool(UitoolbarHandle, 'Separator', 'on');
-% [img, map] = imread(fullfile(matlabroot, ...
-%     'toolbox', 'matlab', 'icons', 'plotpicker-scatter.gif'));
-% % map(map(:,1)+map(:,2)+map(:,3)==3) = NaN;  % Convert white pixels => transparent background
-% ptImage = ind2rgb(img, map);
-% ptlabelclusters.CData = ptImage;
-% ptlabelclusters.Tooltip = 'Label clusters';
-% ptlabelclusters.ClickedCallback = @LabelClusters;
-
-%{
-pt5pickcl = uipushtool(UitoolbarHandle, 'Separator', 'off');
-[img, map] = imread(fullfile(mfolder, ...
-    'resources', 'plotpicker-compass.gif'));  % plotpicker-pie
-ptImage = ind2rgb(img, map);
-pt5pickcl.CData = ptImage;
-pt5pickcl.Tooltip = 'Switch color maps';
-pt5pickcl.ClickedCallback = {@gui.callback_PickColorMap2, ...
-    numel(unique(c))};
-
-for kx=23:23
-    cx=strsplit(b{kx},'\t');
-    i_addbutton(cx{1},cx{2},cx{3});
-end
-
-%}
-
-
-%{
-% UitoolbarHandle = uitoolbar(FigureHandle);
-pt3 = uipushtool(UitoolbarHandle, 'Separator', 'off');
-[img, map] = imread(fullfile(mfolder, ...
-    'resources', 'list.gif'));
-ptImage = ind2rgb(img, map);
-pt3.CData = ptImage;
-pt3.Tooltip = 'Select a gene to show expression';
-pt3.ClickedCallback = @callback_ShowGeneExpr;
-
-pt3a = uipushtool(UitoolbarHandle, 'Separator', 'off');
-[img, map] = imread(fullfile(mfolder, ...
-    'resources', 'list2.gif'));
-ptImage = ind2rgb(img, map);
-pt3a.CData = ptImage;
-pt3a.Tooltip = 'Show cell states';
-pt3a.ClickedCallback = @ShowCellStates;
-
-
-pt3a = uipushtool(UitoolbarHandle, 'Separator', 'off');
-[img, map] = imread(fullfile(mfolder, ...
-    'resources', 'plotpicker-pointfig.gif'));
-ptImage = ind2rgb(img, map);
-pt3a.CData = ptImage;
-pt3a.Tooltip = 'Select cells by class';
-pt3a.ClickedCallback = @callback_SelectCellsByClass;
-
-pt3a = uipushtool(UitoolbarHandle, 'Separator', 'off');
-[img, map] = imread(fullfile(mfolder, ...
-    'resources', 'plotpicker-effects.gif'));
-ptImage = ind2rgb(img, map);
-pt3a.CData = ptImage;
-pt3a.Tooltip = 'Filter genes and cells';
-pt3a.ClickedCallback = @SelectCellsByQC;
-
-%}
-
-
-% ------------------
-
-
-
-% ------------------ clustering
-
-%i_addbutton(@Brushed2NewCluster,...
-%    'plotpicker-glyplot-face.gif',...
-%    'Add brushed cells to a new cluster');
-
-%{
-ptaddcluster = uipushtool(UitoolbarHandle, 'Separator', 'off');
-[img, map] = imread(fullfile(mfolder, ...
-    'resources', 'plotpicker-glyplot-face.gif'));
-ptImage = ind2rgb(img, map);
-ptaddcluster.CData = ptImage;
-ptaddcluster.Tooltip = 'Add brushed cells to a new cluster';
-ptaddcluster.ClickedCallback = @Brushed2NewCluster;
-
-
-ptmergecluster = uipushtool(UitoolbarHandle, 'Separator', 'off');
-[img, map] = imread(fullfile(mfolder, ...
-    'resources', 'plotpicker-pzmap.gif'));
-ptImage = ind2rgb(img, map);
-ptmergecluster.CData = ptImage;
-ptmergecluster.Tooltip = 'Merge brushed cells to same cluster';
-ptmergecluster.ClickedCallback = @Brushed2MergeClusters;
-%}
-
-%{
-ptShowClu = uipushtool(UitoolbarHandle, 'Separator', 'off');
-[img, map] = imread(fullfile(mfolder, ...
-    'resources', 'plotpicker-geoscatter.gif'));
-ptImage = ind2rgb(img, map);
-ptShowClu.CData = ptImage;
-ptShowClu.Tooltip = 'Show clusters individually';
-ptShowClu.ClickedCallback = @gui.callback_ShowClustersPop;
-
-
-ptcluster = uipushtool(UitoolbarHandle, 'Separator', 'on');
-[img, map] = imread(fullfile(mfolder, ...
-    'resources', 'plotpicker-dendrogram.gif'));
-ptImage = ind2rgb(img, map);
-ptcluster.CData = ptImage;
-ptcluster.Tooltip = 'Clustering using embedding S';
-ptcluster.ClickedCallback = @ClusterCellsS;
-
-ptcluster = uipushtool(UitoolbarHandle, 'Separator', 'off');
-[img, map] = imread(fullfile(mfolder, ...
-    'resources', 'plotpicker-gscatter.gif'));
-ptImage = ind2rgb(img, map);
-ptcluster.CData = ptImage;
-ptcluster.Tooltip = 'Clustering using expression matrix X';
-ptcluster.ClickedCallback = @ClusterCellsX;
-
-% ------------- 
-
-
-
-ptclustertype = uipushtool(UitoolbarHandle, 'Separator', 'on');
+%i_addbutton(1,1,@LabelClusters,"plotpicker-scatter.gif","Label clusters")
+ptlabelclusters = uitoggletool(UitoolbarHandle, 'Separator', 'on');
 [img, map] = imread(fullfile(matlabroot, ...
-    'toolbox', 'matlab', 'icons', 'plotpicker-contour.gif'));
+    'toolbox', 'matlab', 'icons', 'plotpicker-scatter.gif'));
+% map(map(:,1)+map(:,2)+map(:,3)==3) = NaN;  % Convert white pixels => transparent background
 ptImage = ind2rgb(img, map);
-ptclustertype.CData = ptImage;
-ptclustertype.Tooltip = 'Cell types of clusters';
-ptclustertype.ClickedCallback = @DetermineCellTypeClusters;
+ptlabelclusters.CData = ptImage;
+ptlabelclusters.Tooltip = 'Label clusters';
+ptlabelclusters.ClickedCallback = @LabelClusters;
 
+i_addbutton(1,0,@Brushed2NewCluster,"plotpicker-glyplot-face.gif","Add brushed cells to a new cluster")
+i_addbutton(1,0,@Brushed2MergeClusters,"plotpicker-pzmap.gif","Merge brushed cells to same cluster")
+i_addbutton(1,1,@ClusterCellsS,"plotpicker-dendrogram.gif","Clustering using embedding S")
+i_addbutton(1,0,@ClusterCellsX,"plotpicker-gscatter.gif","Clustering using expression matrix X")
+i_addbutton(1,1,@DetermineCellTypeClusters,"plotpicker-contour.gif","Cell types of clusters")
+i_addbutton(1,0,@Brush4Celltypes,"brush.gif","Cell types of brushed cells")
+i_addbutton(1,0,@RenameCellType,"plotpicker-scatterhist.gif","Rename cell type")
+i_addbutton(1,0,@callback_CellTypeMarkerScores,"cellscore.gif","Calculate Cell Scores from Cell Type Markers")
+i_addbutton(1,0,@ShowCellStemScatter,"IMG00067.GIF","Stem scatter plot")
+i_addbutton(1,1,@callback_Brush4Markers,"plotpicker-kagi.gif","Marker genes of brushed cells")
+i_addbutton(1,0,@callback_MarkerGeneHeatmap,"plotpicker-plotmatrix.gif","Marker gene heatmap")
+i_addbutton(1,1,@callback_ShowClustersPop,"plotpicker-geoscatter.gif","Show clusters individually")
+i_addbutton(1,0,@callback_SelectCellsByClass,"plotpicker-pointfig.gif","Select cells by class")
+i_addbutton(1,0,@DeleteSelectedCells,"plotpicker-qqplot.gif","Delete selected cells")
+i_addbutton(1,0,@callback_SaveX,"export.gif","Export & save data")
+i_addbutton(1,0,@EmbeddingAgain,"plotpicker-geobubble.gif","Embedding (tSNE, UMP, PHATE)")
+i_addbutton(1,0,@Switch2D3D,"plotpicker-image.gif","Switch 2D/3D")
+i_addbutton(1,1,@callback_CloseAllOthers,"noun_Pruners_2469297.gif","Close All Other Figures")
+i_addbutton(1,0,@callback_PickPlotMarker,"plotpicker-rose.gif","Switch scatter plot marker type")
+i_addbutton(1,0,@callback_PickColorMap2,"plotpicker-compass.gif","Switch color maps")
+i_addbutton(1,0,@RefreshAll,"plotpicker-geobubble2.gif","Refresh")
 
-pt5 = uipushtool(UitoolbarHandle, 'Separator', 'off');
-[img, map] = imread(fullfile(mfolder, 'resources', 'brush.gif'));
-ptImage = ind2rgb(img, map);
-pt5.CData = ptImage;
-pt5.Tooltip = 'Cell types of brushed cells';
-pt5.ClickedCallback = @Brush4Celltypes;
-
-pt4 = uipushtool(UitoolbarHandle, 'Separator', 'off');
-% [img,map] = imread(fullfile(matlabroot,...
-%             'toolbox','matlab','icons','plotpicker-stairs.gif'));
-[img, map] = imread(fullfile(mfolder, ...
-    'resources', 'plotpicker-scatterhist.gif'));
-ptImage = ind2rgb(img, map);
-pt4.CData = ptImage;
-pt4.Tooltip = 'Rename cell type';
-pt4.ClickedCallback = @RenameCellType;
-
-ptclustertype = uipushtool(UitoolbarHandle, 'Separator', 'off');
-[img, map] = imread(fullfile(mfolder, 'resources', 'cellscore.gif'));
-ptImage = ind2rgb(img, map);
-ptclustertype.CData = ptImage;
-ptclustertype.Tooltip = 'Calculate Cell Scores from Cell Type Markers';
-ptclustertype.ClickedCallback = @callback_CellTypeMarkerScores;
-
-ptpseudotime = uipushtool(UitoolbarHandle, 'Separator', 'off');
-[img, map] = imread(fullfile(mfolder, ...
-    'resources', 'IMG00067.GIF'));
-ptImage = ind2rgb(img, map);
-ptpseudotime.CData = ptImage;
-ptpseudotime.Tooltip = 'Stem scatter plot';
-ptpseudotime.ClickedCallback = @ShowCellStemScatter;
-
-
-pt4 = uipushtool(UitoolbarHandle, 'Separator', 'on');
-% [img,map] = imread(fullfile(matlabroot,...
-%             'toolbox','matlab','icons','plotpicker-stairs.gif'));
-[img, map] = imread(fullfile(mfolder, ...
-    'resources', 'plotpicker-kagi.gif'));
-ptImage = ind2rgb(img, map);
-pt4.CData = ptImage;
-pt4.Tooltip = 'Marker genes of brushed cells';
-pt4.ClickedCallback = @callback_Brush4Markers;
-
-pt4mrkheat = uipushtool(UitoolbarHandle, 'Separator', 'off');
-[img, map] = imread(fullfile(mfolder, ...
-    'resources', 'plotpicker-plotmatrix.gif'));
-ptImage = ind2rgb(img, map);
-pt4mrkheat.CData = ptImage;
-pt4mrkheat.Tooltip = 'Marker gene heatmap';
-pt4mrkheat.ClickedCallback = @callback_MarkerGeneHeatmap;
-%}
-
-
-
-% --------------------------
-
-
-
-
-%{
-ptpseudotime = uipushtool(defaultToolbar, 'Separator', 'on');
-[img, map] = imread(fullfile(mfolder, ...
-    'resources', 'IMG00074.GIF'));
-ptImage = ind2rgb(img, map);
-ptpseudotime.CData = ptImage;
-ptpseudotime.Tooltip = 'Check R environment';
-ptpseudotime.ClickedCallback = @gui.i_setrenv;
-%}
-
-
-% white space
-ptpseudotime = uipushtool(defaultToolbar, 'Separator', 'off');
-[img, map] = imread(fullfile(mfolder,'resources','IMG00107.GIF'));
-ptImage = ind2rgb(img, map);
-ptpseudotime.CData = ptImage;
-ptpseudotime.Tooltip = 'New SC_SCATTER';
-ptpseudotime.ClickedCallback = @call_scscatter;
-
-
-ptclustertype = uipushtool(defaultToolbar,'Separator', 'on');
-[img, map] = imread(fullfile(mfolder,'resources','cellscore2.gif'));
-ptImage = ind2rgb(img, map);
-ptclustertype.CData = ptImage;
-ptclustertype.Tooltip = 'Calculate Cell Scores from List of Feature Genes';
-ptclustertype.ClickedCallback = @callback_CalculateCellScores;
-
-ptpseudotime = uipushtool(defaultToolbar, 'Separator', 'off');
-[img, map] = imread(fullfile(mfolder, ...
-    'resources', 'plotpicker-candle.gif'));
-ptImage = ind2rgb(img, map);
-ptpseudotime.CData = ptImage;
-ptpseudotime.Tooltip = 'Compare Differentiation Potency';
-ptpseudotime.ClickedCallback = @callback_ComparePotency;
-
-ptpseudotime = uipushtool(defaultToolbar, 'Separator', 'on');
-[img, map] = imread(fullfile(mfolder, ...
-    'resources', 'plotpicker-arxtimeseries.gif'));
-ptImage = ind2rgb(img, map);
-ptpseudotime.CData = ptImage;
-ptpseudotime.Tooltip = 'Run pseudotime analysis (Monocle)';
-ptpseudotime.ClickedCallback = @callback_TrajectoryAnalysis;
-
-ptpseudotime = uipushtool(defaultToolbar, ...
-    'Separator', 'off');
-[img, map] = imread(fullfile(mfolder, ...
-    'resources', 'plotpicker-comet.gif'));
-ptImage = ind2rgb(img, map);
-ptpseudotime.CData = ptImage;
-ptpseudotime.Tooltip = 'Plot pseudotime trajectory';
-ptpseudotime.ClickedCallback = @DrawTrajectory;
-
-ptpseudotime = uipushtool(defaultToolbar, 'Separator', 'on');
-[img, map] = imread(fullfile(mfolder, ...
-    'resources', 'plotpicker-priceandvol.gif'));
-ptImage = ind2rgb(img, map);
-ptpseudotime.CData = ptImage;
-ptpseudotime.Tooltip = 'Compare Gene Expression between Classes';
-ptpseudotime.ClickedCallback = @callback_CompareGeneBtwCls;
-
-pt4 = uipushtool(defaultToolbar, 'Separator', 'off');
-[img, map] = imread(fullfile(mfolder, ...
-    'resources', 'plotpicker-boxplot.gif'));
-ptImage = ind2rgb(img, map);
-pt4.CData = ptImage;
-pt4.Tooltip = 'Compare 2 groups (DE analysis)';
-pt4.ClickedCallback = @callback_DEGene2Groups;
-
-ptpseudotime = uipushtool(defaultToolbar, ...
-    'Separator', 'off');
-[img, map] = imread(fullfile(mfolder, ...
-    'resources', 'plotpicker-andrewsplot.gif'));
-ptImage = ind2rgb(img, map);
-ptpseudotime.CData = ptImage;
-ptpseudotime.Tooltip = 'Function enrichment of HVG genes';
-ptpseudotime.ClickedCallback = @callback_GSEA_HVGs;
-
-ptnetwork = uipushtool(defaultToolbar,'Separator', 'off');
-[img, map] = imread(fullfile(mfolder,'resources', 'noun_Network_691907.gif'));
-ptImage = ind2rgb(img, map);
-ptnetwork.CData = ptImage;
-ptnetwork.Tooltip = 'Build gene regulatory network';
-ptnetwork.ClickedCallback = @callback_BuildGeneNetwork;
-
-ptnetwork = uipushtool(defaultToolbar, 'Separator', 'off');
-[img, map] = imread(fullfile(mfolder,'resources', 'noun_Deep_Learning_2424485.gif'));
-ptImage = ind2rgb(img, map);
-ptnetwork.CData = ptImage;
-ptnetwork.Tooltip = 'Compare two scGRNs';
-ptnetwork.ClickedCallback = @callback_CompareGeneNetwork;
-
-
-% white space
-% ptpseudotime = uipushtool(defaultToolbar, 'Separator', 'on');
-% [img, map] = imread(fullfile(mfolder,'resources', 'IMG00107.GIF'));  
-% ptImage = ind2rgb(img, map);
-% ptpseudotime.CData = ptImage;
-
-%{
-ptShowClu = uipushtool(UitoolbarHandle, 'Separator', 'on');
-[img, map] = imread(fullfile(mfolder, ...
-    'resources', 'plotpicker-geoscatter.gif'));
-ptImage = ind2rgb(img, map);
-ptShowClu.CData = ptImage;
-ptShowClu.Tooltip = 'Show clusters individually';
-ptShowClu.ClickedCallback = @gui.callback_ShowClustersPop;
-
-
-pt3a = uipushtool(UitoolbarHandle, 'Separator', 'off');
-[img, map] = imread(fullfile(mfolder, ...
-    'resources', 'plotpicker-pointfig.gif'));
-ptImage = ind2rgb(img, map);
-pt3a.CData = ptImage;
-pt3a.Tooltip = 'Select cells by class';
-pt3a.ClickedCallback = @callback_SelectCellsByClass;
-
-
-pt2 = uipushtool(UitoolbarHandle, 'Separator', 'off');
-[img, map] = imread(fullfile(mfolder, ...
-    'resources', 'plotpicker-qqplot.gif'));
-ptImage = ind2rgb(img, map);
-pt2.CData = ptImage;
-pt2.Tooltip = 'Delete selected cells';
-pt2.ClickedCallback = @DeleteSelectedCells;
-
-
-
-pt = uipushtool(UitoolbarHandle, 'Separator', 'off');
-[img, map] = imread(fullfile(mfolder, 'resources', 'export.gif'));
-ptImage = ind2rgb(img, map);
-pt.CData = ptImage;
-pt.Tooltip = 'Export & save data';
-pt.ClickedCallback = @callback_SaveX;
-
-pt5 = uipushtool(UitoolbarHandle, 'Separator', 'on');
-[img, map] = imread(fullfile(mfolder, ...
-    'resources', 'plotpicker-geobubble.gif'));
-ptImage = ind2rgb(img, map);
-pt5.CData = ptImage;
-pt5.Tooltip = 'Embedding';
-pt5.ClickedCallback = @EmbeddingAgain;
-
-
-% run(fullfile(mfolder,'+gui','add_toolbar.m'))
-% pt5 = uipushtool(UitoolbarHandle, 'Separator', 'off');
-% [img, map] = imread(fullfile(mfolder, ...
-%     'resources', 'multiscale.gif'));
-% ptImage = ind2rgb(img, map);
-% pt5.CData = ptImage;
-% pt5.Tooltip = 'Run Seurat/R Workflow (R required)';
-% pt5.ClickedCallback = @RunSeuratWorkflow;
-
-pt5 = uipushtool(UitoolbarHandle, 'Separator', 'off');
-[img, map] = imread(fullfile(mfolder, ...
-    'resources', 'plotpicker-image.gif'));      % plotpicker-pie
-% map(map(:,1)+map(:,2)+map(:,3)==3) = NaN;     % Convert white pixels => transparent background
-ptImage = ind2rgb(img, map);
-pt5.CData = ptImage;
-pt5.Tooltip = 'Switch 2D/3D';
-pt5.ClickedCallback = @Switch2D3D;
-
-
-ptnetwork = uipushtool(UitoolbarHandle, 'Separator', 'on');
-[img, map] = imread(fullfile(mfolder, ...
-    'resources', 'noun_Pruners_2469297.gif'));
-ptImage = ind2rgb(img, map);
-ptnetwork.CData = ptImage;
-ptnetwork.Tooltip = 'Close All Other Figures';
-ptnetwork.ClickedCallback = @callback_CloseAllOthers;
-
-pt5pickmk = uipushtool(UitoolbarHandle, 'Separator', 'off');
-[img, map] = imread(fullfile(mfolder, ...
-    'resources', 'plotpicker-rose.gif'));  % plotpicker-pie
-ptImage = ind2rgb(img, map);
-pt5pickmk.CData = ptImage;
-pt5pickmk.Tooltip = 'Switch scatter plot marker type';
-pt5pickmk.ClickedCallback = @callback_PickPlotMarker;
-%}
-
-
-
-%{
-pt5 = uipushtool(UitoolbarHandle, 'Separator', 'off');
-[img, map] = imread(fullfile(mfolder, ...
-    'resources', 'plotpicker-geobubble2.gif'));
-ptImage = ind2rgb(img, map);
-pt5.CData = ptImage;
-pt5.Tooltip = 'Refresh';
-pt5.ClickedCallback = @RefreshAll;
-%}
+i_addbutton(2,0,@call_scscatter,"IMG00107.GIF","New SC_SCATTER")
+i_addbutton(2,0,@callback_CalculateCellScores,"cellscore2.gif","Calculate Cell Scores from List of Feature Genes")
+i_addbutton(2,0,@callback_ComparePotency,"plotpicker-candle.gif","Compare Differentiation Potency");
+i_addbutton(2,1,@callback_TrajectoryAnalysis,"plotpicker-arxtimeseries.gif","Run pseudotime analysis (Monocle)");
+i_addbutton(2,0,@callback_TrajectoryAnalysis,"plotpicker-comet.gif","Plot pseudotime trajectory");
+i_addbutton(2,1,@callback_CompareGeneBtwCls,"plotpicker-priceandvol.gif","Compare Gene Expression between Classes");
+i_addbutton(2,0,@callback_DEGene2Groups,"plotpicker-boxplot.gif","Compare 2 groups (DE analysis)");
+i_addbutton(2,0,@callback_GSEA_HVGs,"plotpicker-andrewsplot.gif","Function enrichment of HVG genes");
+i_addbutton(2,0,@callback_BuildGeneNetwork,"noun_Network_691907.gif","Build gene regulatory network");
+i_addbutton(2,0,@callback_CompareGeneNetwork,"noun_Deep_Learning_2424485.gif","Compare two scGRNs");
 
 gui.add_3dcamera(defaultToolbar, 'AllCells');
-
 
 m_ext = uimenu(FigureHandle,'Text','Exte&rnal');
 m_ext.Accelerator = 'r';
@@ -529,16 +147,14 @@ uimenu(m_ext,'Text','Check R Environment',...
 uimenu(m_ext,'Text','Check Python Environment',...
     'Callback',@gui.i_setpyenv);
 uimenu(m_ext,'Text','Detect Ambient RNA Contamination (decontX/R required)...',...
-'Separator','on',...        
+    'Separator','on',...        
     'Callback',@DecontX);
-
 uimenu(m_ext,'Text','SingleR Cell Type Annotation (SingleR/R required)...',...
     'Callback',@callback_SingleRCellType);
 uimenu(m_ext,'Text','Revelio Cell Cycle Analysis (Revelio/R required)...',...
     'Callback',@callback_RevelioCellCycle);
 uimenu(m_ext,'Text','Run Seurat/R Workflow (Seurat/R required)...',...
     'Callback',@RunSeuratWorkflow);
-
 uimenu(m_ext,'Text','MELD Perturbation Score (MELD/Python required)...',...
     'Separator','on',...  
     'Callback',@callback_MELDPerturbationScore); 
@@ -546,68 +162,52 @@ uimenu(m_ext,'Text','Batch Integration (Harmony/Python required)...',...
     'Callback',@HarmonyPy);
 uimenu(m_ext,'Text','Detect Doublets (Scrublet/Python required)...',...
     'Callback',@DoubletDetection);
-
-
-
-
-
-m = uimenu(FigureHandle,'Text','E&xperimental');
-m.Accelerator = 'x';
-m2 = uimenu(m,'Text','sc&Tenifold Suite','Accelerator','T');
-uimenu(m2,'Text','scTenifoldNet Construction 🐢🐢 ...',...
+m_exp = uimenu(FigureHandle,'Text','E&xperimental');
+m_exp.Accelerator = 'x';
+m_exp2 = uimenu(m_exp,'Text','sc&Tenifold Suite','Accelerator','T');
+uimenu(m_exp2,'Text','scTenifoldNet Construction 🐢🐢 ...',...
     'Callback',@callback_scTenifoldNet1);
-uimenu(m2,'Text','scTenifoldNet Comparison 🐢🐢🐢 ...',...
+uimenu(m_exp2,'Text','scTenifoldNet Comparison 🐢🐢🐢 ...',...
     'Callback',@callback_scTenifoldNet2);
-uimenu(m2,'Text','scTenifoldKnk (Virtual KO) Single Gene 🐢 ...',...
-'Separator','on','Callback',@callback_scTenifoldKnk1);
-uimenu(m2,'Text','scTenifoldKnk (Virtual KO) All Genes 🐢🐢🐢 ...',...
+uimenu(m_exp2,'Text','scTenifoldKnk (Virtual KO) Single Gene 🐢 ...',...
+    'Separator','on',...
+    'Callback',@callback_scTenifoldKnk1);
+uimenu(m_exp2,'Text','scTenifoldKnk (Virtual KO) All Genes 🐢🐢🐢 ...',...
     'Callback',@callback_scTenifoldKnkN);
-
-uimenu(m,'Text','Multi-embedding View...',...
+uimenu(m_exp,'Text','Multi-embedding View...',...
     'Separator','on',...
     'Callback',@gui.callback_MultiEmbeddingViewer);
-uimenu(m,'Text','Multi-grouping View...',...    
+uimenu(m_exp,'Text','Multi-grouping View...',...    
     'Callback',@gui.callback_MultiGroupingViewer);
-uimenu(m,'Text','Cross Tabulation...',...
+uimenu(m_exp,'Text','Cross Tabulation...',...
     'Callback',@callback_CrossTabulation);
-
-
-uimenu(m,'Text','Ligand-Receptor Mediated Intercellular Crosstalk...',...
-        'Separator','on',...
+uimenu(m_exp,'Text','Ligand-Receptor Mediated Intercellular Crosstalk...',...
+    'Separator','on',...
     'Callback',@callback_DetectCellularCrosstalk);
-uimenu(m,'Text','Extract Cells by Marker(+/-) Expression...',...
+uimenu(m_exp,'Text','Extract Cells by Marker(+/-) Expression...',...
     'Callback',@callback_SelectCellsByMarker);
-uimenu(m,'Text','Merge Subclusters of Same Cell Type...',...
+uimenu(m_exp,'Text','Merge Subclusters of Same Cell Type...',...
     'Callback',@MergeSubCellTypes);
-uimenu(m,'Text','Calculate Gene Expression Statistics...',...
+uimenu(m_exp,'Text','Calculate Gene Expression Statistics...',...
     'Callback',@callback_CalculateGeneStats);
-%mm=uimenu(m,'Text','Calculate Cell Scores');
-% uimenu(mm,'Text','Calculate Cell Scores from List of Feature Genes...',...
-%     'Callback',@callback_CalculateCellScores);
-uimenu(m,'Text','Library Size of Cell Cycle Phases...',...
+uimenu(m_exp,'Text','Library Size of Cell Cycle Phases...',...
     'Callback',@callback_CellCycleLibrarySize);
-uimenu(m,'Text','Show HgB-genes Expression...',...
+uimenu(m_exp,'Text','Show HgB-genes Expression...',...
     'Callback',@callback_ShowHgBGeneExpression);
-uimenu(m,'Text','Show Mt-genes Expression...',...
+uimenu(m_exp,'Text','Show Mt-genes Expression...',...
     'Callback',@callback_ShowMtGeneExpression);
-uimenu(m,'Text','T Cell Exhaustion Score...',...
+uimenu(m_exp,'Text','T Cell Exhaustion Score...',...
     'Callback',@callback_TCellExhaustionScores);
-
-
-uimenu(m,'Text','Import Data Using GEO Accession...',...
+uimenu(m_exp,'Text','Import Data Using GEO Accession...',...
     'Separator','on',...
     'Callback',@GEOAccessionToSCE);
-
-uimenu(m,'Text','Merge SCEs in Workspace...',...    
+uimenu(m_exp,'Text','Merge SCEs in Workspace...',...    
     'Callback',@MergeSCEs);
-
-uimenu(m,'Text','Check for Updates...',...    
+uimenu(m_exp,'Text','Check for Updates...',...    
     'Callback',@callback_CheckUpdates);
-
 
 % handles = guihandles( FigureHandle ) ;
 % guidata( FigureHandle, handles ) ;
-
 set(FigureHandle, 'visible', 'on');
 guidata(FigureHandle, sce);
 
@@ -616,6 +216,7 @@ set(FigureHandle,'CloseRequestFcn',@closeRequest);
 if nargout > 0
     varargout{1} = FigureHandle;
 end
+
 
 % ------------------------
 % Callback Functions
@@ -693,13 +294,13 @@ end
         oldm=sce.NumGenes;
         [requirerefresh,highlightindex]=gui.callback_SelectCellsByQC(src);
         sce = guidata(FigureHandle);
-        if requirerefresh            
+        if requirerefresh 
             [c, cL] = grp2idx(sce.c);
             RefreshAll(src, 1, true);
             newn=sce.NumCells;
             newm=sce.NumGenes;
-            msgbox(sprintf('%d cells removed; %d genes removed.',...
-                oldn-newn,oldm-newm));
+            helpdlg(sprintf('%d cells removed; %d genes removed.',...
+                oldn-newn,oldm-newm),'');
         end
         if ~isempty(highlightindex)
             h.BrushData=highlightindex;            
@@ -832,8 +433,8 @@ end
             end
         end
         title(sce.title);
-        pt5pickcl.ClickedCallback = {@callback_PickColorMap, ...
-            numel(unique(c))};
+%         pt5pickcl.ClickedCallback = {@callback_PickColorMap, ...
+%             numel(unique(c))};
         % ptlabelclusters.State = 'off';
         % UitoolbarHandle.Visible='off';
         % UitoolbarHandle.Visible='on';

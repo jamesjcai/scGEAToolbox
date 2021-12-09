@@ -21,7 +21,10 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
     [indx,tf] = listdlg('PromptString',{'Select Filter',...
                 '',''},'SelectionMode','single',...
                 'ListString',listitems,'ListSize',[250 300]);
-    if tf~=1, return; end
+    if tf~=1
+        requirerefresh=false;
+        return;
+    end
     switch listitems{indx}
         case 'SC_QCFILTER (Basic QC for Cells/Genes)'   % basic QC
 %             answer=questdlg({'Library Size > 1000','mtDNA Ratio < 10%',...
@@ -58,7 +61,11 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
                 errordlg('Invalid input(s).');
                 return;
             end            
-            [whitelist]=i_selectwhitelist(sce);            
+            [whitelist]=i_selectwhitelist(sce);
+            if whitelist==0
+                requirerefresh=false;
+                return;
+            end
             fw=gui.gui_waitbar;
             sce=sce.qcfilterwhitelist(libsize,mtratio,min_cells_nonzero,whitelist);
             gui.gui_waitbar(fw);
@@ -212,8 +219,10 @@ function [whitelist]=i_selectwhitelist(sce)
         case 'No'
             return;
         case 'Cancel'
+            whitelist=0;
             return;
         otherwise
+            whitelist=0;
             return;
     end
 end
