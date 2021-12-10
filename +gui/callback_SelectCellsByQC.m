@@ -89,7 +89,7 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
             [idx]=gui.i_selmultidlg(gsorted);
             if isempty(idx), return; end
             if isscalar(idx) && idx==0
-                helpdlg('No gene selected.');
+                helpdlg('No gene selected.','');
                 return;
             else
                 [~,i]=ismember(gsorted(idx),sce.g);
