@@ -24,9 +24,9 @@ switch answer
 		   writetable(T,filename,'Delimiter','\t');
            pause(1)
            if needwait
-                waitfor(helpdlg(sprintf('Result has been saved in %s',filename)));
+                waitfor(helpdlg(sprintf('Result has been saved in %s',filename),''));
            else
-               helpdlg(sprintf('Result has been saved in %s',filename))
+               helpdlg(sprintf('Result has been saved in %s',filename),'')
            end
         end
     case 'Excel file'
@@ -48,9 +48,9 @@ switch answer
 		   writetable(T,filename,'FileType','spreadsheet');
            pause(1)
            if needwait
-                waitfor(helpdlg(sprintf('Result has been saved in %s',filename)));
+                waitfor(helpdlg(sprintf('Result has been saved in %s',filename),''));
            else
-               helpdlg(sprintf('Result has been saved in %s',filename))
+               helpdlg(sprintf('Result has been saved in %s',filename),'')
            end
         end
     otherwise
