@@ -233,7 +233,7 @@ promotesave=true;
                 if ~(strcmp(answerstruced,'Processed')||strcmp(answerstruced,'Raw'))
                     return;
                 end
-                promotesave=false;
+                % promotesave=false;
                 pw1=fileparts(mfilename('fullpath'));
                 fprintf('Loading SCE Data File example_data/testSce.mat...');
                 tic;
