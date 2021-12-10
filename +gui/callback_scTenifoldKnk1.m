@@ -43,7 +43,7 @@ function callback_scTenifoldKnk1(src,~)
                 return;
             end            
             A0=[];
-            uiwait(helpdlg("Network will be constructed. Now select the gene to be knocked out..."));
+            uiwait(helpdlg("Network will be constructed. Now select the gene to be knocked out...",''));
         otherwise
             return;
     end
