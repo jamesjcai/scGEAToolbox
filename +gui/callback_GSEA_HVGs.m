@@ -31,5 +31,5 @@ function callback_GSEA_HVGs(src,~)
     pkg.e_fgseanet(tr);
     gui.gui_waitbar(fw);    
     
-    uiwait(helpdlg('Done!'.''))
+    uiwait(helpdlg('Done!',''))
 end
