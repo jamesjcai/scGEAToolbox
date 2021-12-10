@@ -28,7 +28,12 @@ classdef SingleCellExperiment
    % output = myFunc(obj,arg1,arg2)
    function obj = SingleCellExperiment(X,g,s,c)
         if nargin<1, X=[]; end
-        if nargin<2 || isempty(g), g=string(transpose(1:size(X,1))); end
+        if nargin<2 || isempty(g)
+            g=string(transpose(1:size(X,1))); 
+            for k=1:size(X,1)
+                g(k)=sprintf("g%s",g(k));
+            end
+        end
         if nargin<3 || isempty(s), s=randn(size(X,2),3); end
         if nargin<4 || isempty(c), c=ones(size(X,2),1); end
         assert(size(X,2)==size(s,1))

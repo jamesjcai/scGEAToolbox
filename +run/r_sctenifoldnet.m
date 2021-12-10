@@ -24,7 +24,9 @@ end
 if isdebug, return; end
 pkg.RunRcode('script.R');
 if exist('./output.txt','file')
+    warning('off','MATLAB:table:ModifiedAndSavedVarnames');
     T=readtable('output.txt');
+    warning('on','MATLAB:table:ModifiedAndSavedVarnames');
 end
 if ~isdebug
 	if exist('./input1.rds','file'), delete('./input1.rds'); end
