@@ -32,7 +32,8 @@ switch answer
            filename=fullfile(path,file);
            fw=gui.gui_waitbar;
            sc_sce2rds(sce,filename);
-           gui.gui_waitbar(fw);           
+           gui.gui_waitbar(fw);
+           disp("A<-readRDS(""input.rds"")")
         end
     otherwise
         return;

@@ -1,6 +1,6 @@
 suppressMessages(library(Seurat))
 suppressMessages(library(Matrix))
-suppressMessages(require(R.matlab))
+# suppressMessages(require(R.matlab))
 
 #setwd('U:\\GitHub\\scGEAToolbox\\+run\\thirdparty\\R_SeuratReadRds')
 #setwd("C:\\Users\\jcai.AUTH\\Documents\\GitHub\\scGEAToolbox\\+run\\thirdparty\\R_SeuratReadRds")
