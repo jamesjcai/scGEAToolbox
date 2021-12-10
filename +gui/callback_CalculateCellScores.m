@@ -26,7 +26,7 @@ switch actiontype
         %posgcandidates=sce.g(randi(length(sce.g),10,1));
         [posg]=gui.i_selectngenes(sce.g);
         if isempty(posg)
-            helpdlg('No feature genes selected.')
+            helpdlg('No feature genes selected.','')
             return;
         end
         fw=gui.gui_waitbar;
