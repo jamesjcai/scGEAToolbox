@@ -25,7 +25,7 @@ switch answer
         [idx]=gui.i_selmultidlg(gsorted);
         if isempty(idx), return; end
         if isscalar(idx) && idx==0
-            helpdlg('No gene selected.');
+            helpdlg('No gene selected.','');
             return;
         else
         [~,i]=ismember(gsorted(idx),sce.g);
@@ -45,7 +45,7 @@ switch answer
                     g=sprintf("%s & ",gsorted(idx));
                     ix=sum(sce.X(i,:)>0,1)==length(i);
                     if ~any(ix)
-                        helpdlg('No cells expressing all selected genes.');
+                        helpdlg('No cells expressing all selected genes.','');
                         return;
                     end
                     x=x.*ix;
@@ -68,7 +68,7 @@ switch answer
             set(f,'visible','on');                  
         end
     case 'Cancel'
-        % helpdlg('Action cancelled.');
+        % helpdlg('Action cancelled.','');
         return;
 end
 
