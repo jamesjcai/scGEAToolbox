@@ -359,7 +359,7 @@ end
     function DoubletDetection(src, ~)        
         [isDoublet,doubletscore,methodtag,done]=gui.callback_DoubletDetection(src);
         if done && ~any(isDoublet)
-            helpdlg('No doublet detected.');
+            helpdlg('No doublet detected.','');
             return;
         end
         if done && any(isDoublet) && sce.NumCells==length(doubletscore)
@@ -376,7 +376,7 @@ end
                         guidata(FigureHandle,sce);
                         [c, cL] = grp2idx(sce.c);
                         RefreshAll(src, 1, true, false);
-                        helpdlg('Doublets deleted.');
+                        helpdlg('Doublets deleted.','');
                 end
         end
     end        
@@ -445,7 +445,7 @@ end
         [para] = i_getoldsettings(src);
         if isempty(h.ZData)   % current 2 D
             if ~(size(sce.s, 2) > 2)
-                helpdlg('Canno swith to 3-D. SCE.S is 2-D');
+                helpdlg('Canno swith to 3-D. SCE.S is 2-D','');
                 return;
             end
             h = gui.i_gscatter3(sce.s, c, methodid, hAx);
