@@ -22,10 +22,12 @@ classdef SingleCellNetwork
    function obj = SingleCellNetwork(A,g)
         if nargin<1, A=[]; end
         if nargin<2 || isempty(g)
-            g=string(transpose(1:size(A,1)));
-            for k=1:size(X,1)
-                g(k)=sprintf("g%s",g(k));
-            end
+            g=textscan(sprintf('g%d,',1:size(A,1)),'%s','delimiter',',');
+            g=string(g{1});
+            %g=string(transpose(1:size(A,1)));
+            %for k=1:size(A,1)
+            %    g(k)=sprintf("g%s",g(k));
+            %end
         end
         g = matlab.lang.makeUniqueStrings(g);
         obj.G = digraph(A,g,'omitselfloops');
