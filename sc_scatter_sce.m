@@ -69,27 +69,6 @@ set(UitoolbarHandle, 'Tag', 'FigureToolBar', ...
 
 mfolder = fileparts(mfilename('fullpath'));
 
-    function i_addbutton(xx,yy,aa,bb,cc)
-        if ischar(aa) || isstring(aa)
-            aa=str2func(aa);
-        end
-        if yy==1
-            septag='on'; 
-        else
-            septag='off'; 
-        end
-        if xx==1
-            barhandle=UitoolbarHandle;
-        else
-            barhandle=defaultToolbar;
-        end
-        pt3 = uipushtool(barhandle, 'Separator', septag);
-        [img, map] = imread(fullfile(mfolder, 'resources', bb));
-        ptImage = ind2rgb(img, map);
-        pt3.CData = ptImage;
-        pt3.Tooltip = cc;
-        pt3.ClickedCallback = aa;
-    end
 
 i_addbutton(1,0,@callback_ShowGeneExpr,"list.gif","Select a gene to show expression")
 i_addbutton(1,0,@ShowCellStates,"list2.gif","Select a gene to show expression")
@@ -218,49 +197,71 @@ if nargout > 0
 end
 
 
+function i_addbutton(xx,yy,aa,bb,cc)
+    if ischar(aa) || isstring(aa)
+        aa=str2func(aa);
+    end
+    if yy==1
+        septag='on'; 
+    else
+        septag='off'; 
+    end
+    if xx==1
+        barhandle=UitoolbarHandle;
+    else
+        barhandle=defaultToolbar;
+    end
+    pt3 = uipushtool(barhandle, 'Separator', septag);
+    [img, map] = imread(fullfile(mfolder, 'resources', bb));
+    ptImage = ind2rgb(img, map);
+    pt3.CData = ptImage;
+    pt3.Tooltip = cc;
+    pt3.ClickedCallback = aa;
+end
+
+
 % ------------------------
 % Callback Functions
 % ------------------------
 
-function call_scscatter(~,~)    
-    sc_scatter;
-    % P = get(FigureHandle,'Position');
-    % k=1;
-    % set(FigureHandle,'Position',[P(1)-30*k P(2)-30*k P(3) P(4)]);
-end
+    function call_scscatter(~,~)    
+        sc_scatter;
+        % P = get(FigureHandle,'Position');
+        % k=1;
+        % set(FigureHandle,'Position',[P(1)-30*k P(2)-30*k P(3) P(4)]);
+    end
 
-function closeRequest(hObject,~)
-ButtonName = questdlg('Save SCE before closing SC_SCATTER?');
-switch ButtonName
-    case 'Yes'
-        labels = {'Save SCE to variable named:'}; 
-        vars = {'sce'};
-        sce = guidata(FigureHandle);
-        values = {sce};
-        [~,tf]=export2wsdlg(labels,vars,values,...
-                     'Save Data to Workspace');
-        if tf
-            delete(hObject);
-        else
-            return;
+    function closeRequest(hObject,~)
+        ButtonName = questdlg('Save SCE before closing SC_SCATTER?');
+        switch ButtonName
+            case 'Yes'
+                labels = {'Save SCE to variable named:'}; 
+                vars = {'sce'};
+                sce = guidata(FigureHandle);
+                values = {sce};
+                [~,tf]=export2wsdlg(labels,vars,values,...
+                             'Save Data to Workspace');
+                if tf
+                    delete(hObject);
+                else
+                    return;
+                end
+            case 'Cancel'
+                return;
+            case 'No'
+                delete(hObject);
+            otherwise
+                return;
         end
-    case 'Cancel'
-        return;
-    case 'No'
-        delete(hObject);
-    otherwise
-        return;
-end
-end
+    end
 
     function GEOAccessionToSCE(src,~)
-
         answer = questdlg('Current SCE will be replaced. Continue?');
         if ~strcmp(answer, 'Yes'), return; end
     
         acc=inputdlg({'GEO accession:'},'',[1 40],{'GSM3308545'});
         % [acc]=gui.i_inputgenelist(["GSM3308545","GSM3308546","GSM3308547"]);
-        if ~isempty(acc)
+        if isempty(acc), return; end
         acc=acc{1};
         if strlength(acc)>4 && ~isempty(regexp(acc,'G.+','once'))
             try                
@@ -274,8 +275,7 @@ end
                 gui.gui_waitbar(fw);
                 errordlg(ME.message);
             end
-        end
-        end
+        end        
     end
     
     
@@ -310,10 +310,8 @@ end
     function RunSeuratWorkflow(src,~)
        answer = questdlg('Run Seurat standard worflow?');
        if ~strcmp(answer, 'Yes'), return; end
-
        [ndim]=gui.i_choose2d3d;
        if isempty(ndim), return; end       
-       
 	   fw = gui.gui_waitbar;
        [sce]=run.SeuratWorkflow(sce,ndim);
        [c, cL] = grp2idx(sce.c);
@@ -344,8 +342,7 @@ end
             sce = guidata(FigureHandle);
             [c, cL] = grp2idx(sce.c);
             RefreshAll(src, 1, true, false);
-            ButtonName = questdlg('Update Saved Embedding?', ...
-                '', ...
+            ButtonName = questdlg('Update Saved Embedding?','', ...
                 'tSNE','UMAP','PHATE','tSNE');
             methodtag=lower(ButtonName);
             if ismember(methodtag,{'tsne','umap','phate'})
@@ -405,16 +402,10 @@ end
         if keepview || keepcolr
             [para] = i_getoldsettings(src);
         end
-        % [c, cL] = grp2idx(sce.c);
-%         exist('h')
-%         h
-%         pause
         if size(sce.s, 2) > 2 && ~isempty(h.ZData)
-            
             if keepview, [ax, bx] = view(); end
             h = gui.i_gscatter3(sce.s, c, methodid, hAx);
             if keepview, view(ax, bx); end
-            
         else   % otherwise 2D
             h = gui.i_gscatter3(sce.s(:, 1:2), c, methodid, hAx);
         end
@@ -433,8 +424,6 @@ end
             end
         end
         title(sce.title);
-%         pt5pickcl.ClickedCallback = {@callback_PickColorMap, ...
-%             numel(unique(c))};
         % ptlabelclusters.State = 'off';
         % UitoolbarHandle.Visible='off';
         % UitoolbarHandle.Visible='on';
@@ -483,9 +472,7 @@ end
             return
         end
         answer = questdlg('Rename a cell type?');
-        if ~strcmp(answer, 'Yes')
-            return
-        end
+        if ~strcmp(answer, 'Yes'), return; end
         [ci, cLi] = grp2idx(sce.c_cell_type_tx);
         [indxx, tfx] = listdlg('PromptString',...
             {'Select cell type'},...
@@ -507,9 +494,7 @@ end
     function EmbeddingAgain(src, ~)
         answer = questdlg('Which embedding method?', 'Select method',...
                           'tSNE', 'UMAP', 'PHATE', 'tSNE');
-        if ~ismember(answer, {'tSNE', 'UMAP', 'PHATE'})
-            return
-        end
+        if ~ismember(answer, {'tSNE', 'UMAP', 'PHATE'}), return; end
         if isempty(sce.struct_cell_embeddings)
             sce.struct_cell_embeddings = struct('tsne', [], 'umap', [], 'phate', []);
         end
@@ -586,17 +571,14 @@ end
             if isempty(Tct)
                 ctxt={'Unknown'};
             else
-                ctxt = Tct.C1_Cell_Type;
+                ctxt=Tct.C1_Cell_Type;
             end
             
             if manuallyselect
                 [indx, tf] = listdlg('PromptString', {'Select cell type'},...
                     'SelectionMode', 'single', 'ListString', ctxt);
-                if tf == 1
-                    ctxt = Tct.C1_Cell_Type{indx};
-                else
-                    return;
-                end
+                if tf ~= 1, return; end
+                ctxt = Tct.C1_Cell_Type{indx};
             else
                 ctxt = Tct.C1_Cell_Type{1};
             end
@@ -626,18 +608,11 @@ end
             end
             hold off;
         end
-        if ~manuallyselect
-            gui.gui_waitbar_adv(fw);
-        end
+        if ~manuallyselect, gui.gui_waitbar_adv(fw); end
         sce.c_cell_type_tx = string(cL(c));
         
         answer = questdlg('Merge subclusters of same cell type?');
-        switch answer
-            case 'Yes'
-                MergeSubCellTypes(src);
-            case 'No'
-            otherwise                
-        end
+        if strcmp(answer, 'Yes'), MergeSubCellTypes(src); end
         guidata(FigureHandle, sce);
     end
 
@@ -790,137 +765,6 @@ end
         % guidata(FigureHandle, sce);
     end
 
-%{
-    function ShowCellStatsX(src, ~)
-        % FigureHandle=src.Parent.Parent;
-        sce = guidata(FigureHandle);
-        
-        listitems = {'Library Size', 'Mt-reads Ratio', ...
-            'Mt-genes Expression', 'HgB-genes Expression', ...
-            'Cell Cycle Phase', ...
-            'Cell Type', 'Cluster ID', 'Batch ID'};
-        % if ~ismember('cell potency',sce.list_cell_attributes)
-        %    listitems{end+1}='Cell Potency';
-        % end
-        %for k = 1:2:length(sce.list_cell_attributes)
-        %    listitems = [listitems, sce.list_cell_attributes{k}];
-        %end
-        listitems=[listitems,...
-            sce.list_cell_attributes(1:2:end)];
-        [indx, tf] = listdlg('PromptString',...
-            {'Select statistics'},...
-            'SelectionMode', 'single', 'ListString', listitems);
-        if tf ~= 1
-            return
-        end
-        switch indx
-            case 1
-                ci = sum(sce.X);
-                ttxt = "Library Size";
-                figure;
-                gui.i_stemscatter(sce.s,ci);
-                zlabel(ttxt);                
-                return;
-            case 2
-                fw = gui.gui_waitbar;
-                i = startsWith(sce.g, 'mt-', 'IgnoreCase', true);
-                lbsz = sum(sce.X, 1);
-                lbsz_mt = sum(sce.X(i, :), 1);
-                ci = lbsz_mt ./ lbsz;
-                ttxt = "mtDNA%";
-                gui.gui_waitbar(fw);
-                figure;
-                gui.i_stemscatter(sce.s,ci);
-                zlabel(ttxt);
-                title('Mt-reads Ratio');
-                return;
-            case 3
-                idx = startsWith(sce.g, 'mt-', 'IgnoreCase', true);
-                n = sum(idx);
-                if n > 0
-                    [ax, bx] = view();
-                    if n <= 9
-                        gui.i_markergenespanel(sce.X, sce.g, sce.s, ...
-                            sce.g(idx), [], 9, ax, bx, 'Mt-genes');
-                    else
-                        gui.i_markergenespanel(sce.X, sce.g, sce.s, ...
-                            sce.g(idx), [], 16, ax, bx, 'Mt-genes');
-                    end
-                else
-                    warndlg('No mt-genes found');
-                end
-                return
-            case 4 % HgB-genes
-                idx1 = startsWith(sce.g, 'Hba-', 'IgnoreCase', true);
-                idx2 = startsWith(sce.g, 'Hbb-', 'IgnoreCase', true);
-                idx3= strcmpi(sce.g,"Alas2");
-                idx=idx1|idx2|idx3;
-                
-                if any(idx)
-                    ttxt = sprintf("%s+", sce.g(idx));
-                    ci = sum(sce.X(idx, :), 1);
-                    figure;
-                    gui.i_stemscatter(sce.s,ci);
-                    title(ttxt);
-                else
-                    warndlg('No HgB-genes found');
-                end
-                return;
-            case 5   % "Cell Cycle Phase";
-                if isempty(sce.c_cell_cycle_tx)                    
-                    fw = gui.gui_waitbar;
-                    sce = sce.estimatecellcycle(true,1);
-                    gui.gui_waitbar(fw);
-                end
-                [ci, tx] = grp2idx(sce.c_cell_cycle_tx);
-                ttxt = sprintf('%s|', string(tx));
-            case 6 % cell type
-                ci = sce.c_cell_type_tx;
-            case 7 % cluster id
-                ci = sce.c_cluster_id;
-            case 8 % batch id
-                ci = sce.c_batch_id;
-            otherwise   % other properties
-                ttxt = sce.list_cell_attributes{2 * (indx - 8) - 1};
-                ci = sce.list_cell_attributes{2 * (indx - 8)};
-        end
-        if isempty(ci)
-            errordlg("Undefined classification");
-            return;
-        end
-        [c,cL]=grp2idx(ci);
-        RefreshAll(src, 1, true, false);
-        guidata(FigureHandle, sce);
-    end
-
-%         sces = sce.s;
-%         if isempty(h.ZData)
-%             sces = sce.s(:, 1:2);
-%         end        
-%         [ax, bx] = view();
-%         h = gui.i_gscatter3(sces, ci, 1);
-%         view(ax, bx);
-%         title(sce.title);
-        
-% -------- move to i_showstate
-%}
-
-
-%     function i_showstate(ci)
-%         if isempty(ci)
-%             errordlg("Undefined classification");
-%             return
-%         end
-%         sces = sce.s;
-%         if isempty(h.ZData)
-%             sces = sce.s(:, 1:2);
-%         end        
-%         [ax, bx] = view();
-%         h = gui.i_gscatter3(sces, ci, 1);
-%         view(ax, bx);
-%         title(sce.title);        
-%     end
-
     function DeleteSelectedCells(~, ~)
         ptsSelected = logical(h.BrushData.');
         if ~any(ptsSelected)
@@ -936,12 +780,6 @@ end
         else
             return;
         end
-%         answer2 = questdlg(sprintf('Delete %s cells?', ...
-%             lower(answer)));
-%         if ~strcmp(answer2, 'Yes')
-%             return
-%         end
-%        i_deletecells(ptsSelected);
         guidata(FigureHandle,sce);
     end
 
@@ -1019,46 +857,9 @@ end
         
     end
 
-%     function RunTrajectoryAnalysis(~, ~)
-%         answer = questdlg('Run pseudotime analysis (Monocle)?');
-%         if ~strcmp(answer, 'Yes')
-%             return
-%         end
-%         
-%         fw = gui.gui_waitbar;
-%         [t_mono, s_mono] = run.monocle(sce.X);
-%         gui.gui_waitbar(fw);
-%         
-%         answer = questdlg('View Monocle DDRTree?', ...
-%             'Pseudotime View', ...
-%             'Yes', 'No', 'Yes');
-%         switch answer
-%             case 'Yes'
-%                 [ax, bx] = view();
-%                 cla(hAx);
-%                 sce.s = s_mono;
-%                 sce.c = t_mono;
-%                 [c, cL] = grp2idx(sce.c);
-%                 h = gui.i_gscatter3(sce.s, c);
-%                 title(sce.title);
-%                 view(ax, bx);
-%                 hc = colorbar;
-%                 hc.Label.String = 'Pseudotime';
-%         end
-%         
-%         labels = {'Save pseudotime T to variable named:', ...
-%             'Save S to variable named:'};
-%         vars = {'t_mono', 's_mono'};
-%         values = {t_mono, s_mono};
-%         export2wsdlg(labels, vars, values);
-%     end
-
     function ClusterCellsS(src, ~)
         answer = questdlg('Cluster cells?');
-        if ~strcmp(answer, 'Yes')
-            return
-        end
-        
+        if ~strcmp(answer, 'Yes'), return; end        
         answer = questdlg('Which method?', 'Select Algorithm', ...
             'kmeans 🐇', 'snndpc 🐢', 'kmeans 🐇');
         if strcmpi(answer, 'kmeans 🐇')
@@ -1066,24 +867,11 @@ end
         elseif strcmpi(answer, 'snndpc 🐢')
             methodtag = "snndpc";
         else
-            return
+            return;
         end
         i_reclustercells(src, methodtag);
         guidata(FigureHandle, sce);
     end
-
-%     function k = i_inputk
-%         prompt = {'Enter number of clusters K=(2..50):'};
-%         dlgtitle = 'Input K';
-%         dims = [1 45];
-%         definput = {'10'};
-%         answer = inputdlg(prompt, dlgtitle, dims, definput);
-%         if isempty(answer)
-%             k=[];
-%             return
-%         end
-%         k = round(str2double(cell2mat(answer)));
-%     end
 
     function ClusterCellsX(src, ~)
         answer = questdlg('Cluster cells using X?');
@@ -1170,56 +958,6 @@ end
             % colormap(lines(min([256 numel(unique(sce.c))])));
         end
     end
-
-%     function ShowClustersPop(src, ~)
-%         answer = questdlg('Show clusters in new figures?');
-%         if ~strcmp(answer, 'Yes')
-%             return
-%         end
-%         
-%         cmv = 1:max(c);
-%         idxx = cmv;
-%         [cmx] = countmember(cmv, c);
-%         answer = questdlg('Sort by size of cell groups?');
-%         if strcmpi(answer, 'Yes')
-%             [~, idxx] = sort(cmx, 'descend');
-%         end
-%         sces = sce.s;
-%         if isempty(h.ZData)
-%             sces = sce.s(:, 1:2);
-%         end
-%         
-%         [para] = i_getoldsettings(src);
-%         figure;
-%         for k = 1:9
-%             if k <= max(c)
-%                 subplot(3, 3, k);
-%                 gui.i_gscatter3(sces, c, 3, cmv(idxx(k)));
-%                 title(sprintf('%s\n%d cells (%.2f%%)', ...
-%                     cL{idxx(k)}, cmx(idxx(k)), ...
-%                     100 * cmx(idxx(k)) / length(c)));
-%             end
-%             colormap(para.oldColorMap);
-%         end
-%         
-%         if ceil(max(c) / 9) == 2
-%             figure;
-%             for k = 1:9
-%                 kk = k + 9;
-%                 if kk <= max(c)
-%                     subplot(3, 3, k);
-%                     gui.i_gscatter3(sces, c, 3, cmv(idxx(kk)));
-%                     title(sprintf('%s\n%d cells (%.2f%%)', ...
-%                         cL{idxx(kk)}, cmx(idxx(kk)), ...
-%                         100 * cmx(idxx(kk)) / length(c)));
-%                 end
-%             end
-%             colormap(para.oldColorMap);
-%         end
-%         if ceil(max(c) / 9) > 2
-%             warndlg('Group(s) #18 and above are not displayed');
-%         end
-%     end
 
     function [txt] = i_myupdatefcnx(~, event_obj)
         % pos = event_obj.Position;

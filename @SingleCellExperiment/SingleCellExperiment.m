@@ -28,14 +28,7 @@ classdef SingleCellExperiment
    % output = myFunc(obj,arg1,arg2)
    function obj = SingleCellExperiment(X,g,s,c)
         if nargin<1, X=[]; end
-        if nargin<2 || isempty(g)
-            g=textscan(sprintf('g%d,',1:size(X,1)),'%s','delimiter',',');
-            g=string(g{1});
-            %g=string(transpose(1:size(X,1))); 
-            %for k=1:size(X,1)
-            %    g(k)=sprintf("g%s",g(k));
-            %end
-        end
+        if nargin<2 || isempty(g), g=pkg.i_num2strcell(size(X,1),"g"); end
         if nargin<3 || isempty(s), s=randn(size(X,2),3); end
         if nargin<4 || isempty(c), c=ones(size(X,2),1); end
         assert(size(X,2)==size(s,1))
@@ -47,6 +40,11 @@ classdef SingleCellExperiment
         obj.s=s;
         obj.c=c;
         obj.c_cell_id=transpose(1:size(X,2));
+        obj.c_batch_id=ones(size(X,2),1);
+        obj.c_cluster_id=ones(size(X,2),1);
+        obj.c_cell_cycle_tx=repmat("undetermined",size(X,2),1);
+        obj.c_cell_type_tx=repmat("undetermined",size(X,2),1);       
+        
         % obj.struct_cell_embeddings=struct('tsne',[],'umap',[],'phate',[]);
     end
 
