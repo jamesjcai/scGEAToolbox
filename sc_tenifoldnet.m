@@ -5,11 +5,13 @@ function [T,Tf,OUT]=sc_tenifoldnet(X0,X1,genelist)
 %
 % X0 and X1 are two gene-by-cell matrices
 
+import ten.*
+
 if exist('sctenifoldnet','file')~=2
     error('Requires sctenifoldnet.m');
 end
 
-[T,A0,A1]=sctenifoldnet(X0,X1,genelist);
+[T,A0,A1]=ten.sctenifoldnet(X0,X1,genelist);
 glist=T.genelist(T.pAdjusted<0.05);
 run.Enrichr(glist);
 
