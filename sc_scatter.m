@@ -142,7 +142,7 @@ promotesave=true;
                 fw = gui.gui_waitbar;
                 [sce] = sc_readrdsfile(filename);
                 gui.gui_waitbar(fw);                
-            case '10x Genomics Folder...'
+            case '10x Genomics ''outs'' Folder...'
                 selpath = uigetdir;
                 if selpath==0, return; end
                 try
