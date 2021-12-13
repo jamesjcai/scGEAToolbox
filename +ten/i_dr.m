@@ -10,7 +10,7 @@ function [T]=i_dr(aln0,aln1,genelist,dosort)
     if exist('mafdr.m', 'file')        
         pAdjusted = mafdr(pValues,'BHFDR',true);
     else
-        [~, ~, ~, pAdjusted] = fdr_bh(pValues);
+        [~, ~, ~, pAdjusted] = pkg.fdr_bh(pValues);
     end    
     if size(genelist,1)==1, genelist=genelist'; end
     sortid=(1:length(genelist))';

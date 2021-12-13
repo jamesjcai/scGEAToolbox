@@ -80,7 +80,7 @@ pval=chi2cdf(fitratio*df,df,'upper');
 residualcv2=log(fitratio);   % log(cv2)-log(cv2fit);
 
 % fdr=mafdr(pval,'BHFDR',true);
-[~,~,~,fdr]=fdr_bh(pval);
+[~,~,~,fdr]=pkg.fdr_bh(pval);
 
 T=table(genelist,u,cv2,residualcv2,fitratio,pval,fdr);
 T.Properties.VariableNames(1)={'genes'};

@@ -27,8 +27,7 @@ for k=1:n
     % pval(k)=p;
     dip(k)=d;
 end
-% [~,~,~,fdr]=fdr_bh(pval);
-
+% [~,~,~,fdr]=pkg.fdr_bh(pval);
 % T=table(genelist,u,cv,dip,pval,fdr);
 T=table(genelist,u,cv,dip);
 T.Properties.VariableNames(1)={'genes'};

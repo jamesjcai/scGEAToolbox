@@ -38,7 +38,7 @@ dx=d(d<=quantile(d,0.9));
 
 distFit = fitdist([-dx;dx],'Normal');
 pval=normcdf(d,0,distFit.sigma,'upper');
-[~,~,~,fdr]=fdr_bh(pval);
+[~,~,~,fdr]=pkg.fdr_bh(pval);
 
 if ~isempty(genes)
    T=table(genes,lgu,dropr,lgcv,d,pval,fdr);   

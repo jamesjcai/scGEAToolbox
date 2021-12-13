@@ -50,7 +50,7 @@ function [T,Tup,Tdn] = sc_deg(X, Y, genelist, methodid)
     if exist('mafdr.m', 'file')
         p_val_adj = mafdr(p_val, 'BHFDR', true);
     else
-        [~, ~, ~, p_val_adj] = fdr_bh(p_val);
+        [~, ~, ~, p_val_adj] = pkg.fdr_bh(p_val);
     end
 
     %   sortid=(1:length(genelist))';

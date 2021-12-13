@@ -38,7 +38,7 @@ res_yi=yi-yi_smoothed;
 distFit = fitdist(res_yi,'Normal');
 pval=normcdf(yi,distFit.mu,distFit.sigma,'upper');
 
-[~,~,~,fdr]=fdr_bh(pval);
+[~,~,~,fdr]=pkg.fdr_bh(pval);
 
 %%
 residual_sd=res_yi;

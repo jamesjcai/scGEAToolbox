@@ -126,7 +126,7 @@ tmpDist = [dist2(dist2 <= 0); abs(dist2(dist2 < 0))] + distMid;
 distFit = fitdist(tmpDist,'Normal');
 pval=normcdf(cvDist,distFit.mu,distFit.sigma,'upper');
 
-[~,~,~,fdr]=fdr_bh(pval);
+[~,~,~,fdr]=pkg.fdr_bh(pval);
 
 residualcv=cvDist;
 T=table(genelist,u,cv,residualcv,pval,fdr);
