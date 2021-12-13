@@ -1,7 +1,8 @@
-function [thisc,clable,listitems]=i_select1state(sce)
+function [thisc,clable,listitems,newpickclable]=i_select1state(sce)
 
     thisc=[];
     clable='';
+    newpickclable='';
 
     baselistitems = {'Library Size', 'Mt-reads Ratio', ...
         'Cell Cycle Phase', ...
@@ -56,7 +57,7 @@ if tf2==1
 %             clable = sprintf('%s (%s)',clable,ttxt);
             thisc=sce.c_cell_cycle_tx;
         case 'Customized C...'
-            thisc=i_pickvariable;
+            [thisc,newpickclable]=i_pickvariable;
         otherwise   % other properties
             nx=length(baselistitems);
             clable = sce.list_cell_attributes{2 * (indx2 - nx) - 1};
@@ -65,8 +66,8 @@ if tf2==1
 end
 
 
-function [c]=i_pickvariable
-    c=[];
+function [c,x]=i_pickvariable
+    c=[]; x='';
 %     a=evalin('base','whos');
 %     b=struct2cell(a);
 %     v=false(length(a),1);
@@ -82,6 +83,7 @@ function [c]=i_pickvariable
             'liststring',b(1,:),'SelectionMode','single');
         if tf==1
             c = evalin('base',a(indx).name);
+            x = a(indx).name;
         end
 %    end
 end

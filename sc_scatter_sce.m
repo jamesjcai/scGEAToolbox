@@ -400,7 +400,7 @@ end
         if nargin < 4, keepcolr = false; end
         if nargin < 3, keepview = false; end        
         if keepview || keepcolr
-            [para] = i_getoldsettings(src);
+            [para] = gui.i_getoldsettings(src);
         end
         if size(sce.s, 2) > 2 && ~isempty(h.ZData)
             if keepview, [ax, bx] = view(); end
@@ -431,7 +431,7 @@ end
     end
 
     function Switch2D3D(src, ~)
-        [para] = i_getoldsettings(src);
+        [para] = gui.i_getoldsettings(src);
         if isempty(h.ZData)   % current 2 D
             if ~(size(sce.s, 2) > 2)
                 helpdlg('Canno swith to 3-D. SCE.S is 2-D','');
@@ -744,14 +744,16 @@ end
 
     function ShowCellStates(src, ~)
         sce=guidata(FigureHandle);
-        [thisc,clable]=gui.i_select1state(sce);
-        if isempty(thisc)
-            % errordlg("Undefined classification");
-            return;
+        [thisc,clable,~,newpickclable]=gui.i_select1state(sce);
+        if isempty(thisc), return; end
+        if strcmp(clable,'Customized C...')
+            clable=gui.i_renamec(clable,sce,newpickclable);
+            sce.list_cell_attributes=[sce.list_cell_attributes,clable];
+            sce.list_cell_attributes=[sce.list_cell_attributes,thisc];
         end
         [c,cL]=grp2idx(thisc);
         sce.c=c;
-        RefreshAll(src, 1, true, false);               
+        RefreshAll(src, 1, true, false);            
         n=max(c);
         if n<40
             f=0.5*(n-1)./n;
@@ -1000,16 +1002,16 @@ end
         end
     end
 
-    function [para] = i_getoldsettings(src)
-        ah = findobj(src.Parent.Parent, 'type', 'Axes');
-        ha = findobj(ah.Children, 'type', 'Scatter');
-        ha1 = ha(1);
-        oldMarker = ha1.Marker;
-        oldSizeData = ha1.SizeData;
-        oldColorMap = colormap;
-        para.oldMarker = oldMarker;
-        para.oldSizeData = oldSizeData;
-        para.oldColorMap = oldColorMap;
-    end
+%     function [para] = i_getoldsettings(src)
+%         ah = findobj(src.Parent.Parent, 'type', 'Axes');
+%         ha = findobj(ah.Children, 'type', 'Scatter');
+%         ha1 = ha(1);
+%         oldMarker = ha1.Marker;
+%         oldSizeData = ha1.SizeData;
+%         oldColorMap = colormap;
+%         para.oldMarker = oldMarker;
+%         para.oldSizeData = oldSizeData;
+%         para.oldColorMap = oldColorMap;
+%     end
 
 end

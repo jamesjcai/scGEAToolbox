@@ -22,7 +22,7 @@ promotesave=true;
               'Link to GEO txt.gz File...',... 
               'GEO Accession Number...',...
               '----------------------------------',...
-              'Open Workspace Variable SCE...',...
+              'Load SCE Variable from Workspace...',...
               'Load Example Data...'};
 
           [indx,tf] = listdlg('ListString',list,...
@@ -213,11 +213,14 @@ promotesave=true;
                         [X,genelist]=sc_readtsvfile(f);
                         sce = SingleCellExperiment(X, genelist);
                     end
-            case 'Open Workspace Variable SCE...'
+            case 'Load SCE Variable from Workspace...'
                 a=evalin('base','whos');
                 b=struct2cell(a);
                 valididx=ismember(b(4,:),'SingleCellExperiment');
-                if isempty(valididx), return; end
+                if isempty(valididx)
+                    helpdlg('No SCE in the Workspace.','');
+                    return; 
+                end
                 a=a(valididx);
                 [indx,tf]=listdlg('PromptString',{'Select SCE variable:'},...
                     'liststring',b(1,valididx),'SelectionMode','single');
@@ -233,7 +236,7 @@ promotesave=true;
                 if ~(strcmp(answerstruced,'Processed')||strcmp(answerstruced,'Raw'))
                     return;
                 end
-                % promotesave=false;
+                promotesave=false;
                 pw1=fileparts(mfilename('fullpath'));
                 fprintf('Loading SCE Data File example_data/testSce.mat...');
                 tic;
