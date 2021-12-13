@@ -1,4 +1,4 @@
-function [needupdate]=i_vercheck
+function [needupdate,v1,v2]=i_vercheck
 needupdate=false;
 olddir=pwd();
 cdgea;
