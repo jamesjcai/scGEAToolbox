@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="1930487580" file="C:\Users\jcai.AUTH\Documents\GitHub\scGEAToolbox\scGEApp.prj" location="C:\Users\jcai.AUTH\Documents\GitHub\scGEAToolbox" name="scGEApp" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="1930487580" file="U:\GitHub\scGEAToolbox\scGEApp.prj" location="U:\GitHub\scGEAToolbox" name="scGEApp" target="target.mlapps" target-name="Package App">
     <param.appname>scGEApp</param.appname>
     <param.authnamewatermark>James Cai</param.authnamewatermark>
     <param.email>jcai@tamu.edu</param.email>
@@ -19,8 +19,8 @@
       <item>19</item>
     </param.products.id>
     <param.products.version>
-      <item>9.9</item>
-      <item>12.0</item>
+      <item>9.10</item>
+      <item>12.1</item>
     </param.products.version>
     <param.platforms>
       <item>glnxa64</item>
@@ -28,7 +28,7 @@
       <item>win32</item>
       <item>maci64</item>
     </param.platforms>
-    <param.output>C:\Users\jcai.AUTH\Downloads</param.output>
+    <param.output>C:\Users</param.output>
     <param.guid>2525969a-79a6-4e1d-87b0-3922ba9e2d7a</param.guid>
     <unset>
       <param.authnamewatermark />
@@ -43,77 +43,6 @@
       <file>${PROJECT_ROOT}\scGEAscatter.mlapp</file>
     </fileset.main>
     <fileset.depfun>
-      <file>${PROJECT_ROOT}\@SingleCellExperiment\assigncelltype.m</file>
-      <file>${PROJECT_ROOT}\@SingleCellExperiment\clustercells.m</file>
-      <file>${PROJECT_ROOT}\@SingleCellExperiment\embedcells.m</file>
-      <file>${PROJECT_ROOT}\@SingleCellExperiment\estimatecellcycle.m</file>
-      <file>${PROJECT_ROOT}\@SingleCellExperiment\estimatepotency.m</file>
-      <file>${PROJECT_ROOT}\@SingleCellExperiment\makeattributestable.m</file>
-      <file>${PROJECT_ROOT}\@SingleCellExperiment\qcfilterwhitelist.m</file>
-      <file>${PROJECT_ROOT}\@SingleCellExperiment\SingleCellExperiment.m</file>
-      <file>${PROJECT_ROOT}\cdgea.m</file>
-      <file>${PROJECT_ROOT}\fun_num_clusters.m</file>
-      <file>${PROJECT_ROOT}\i_plot_pseudotimeseries.m</file>
-      <file>${PROJECT_ROOT}\i_pseudotime_by_princurve.m</file>
-      <file>${PROJECT_ROOT}\i_pseudotime_by_splinefit.m</file>
-      <file>${PROJECT_ROOT}\norm_deseq.m</file>
-      <file>${PROJECT_ROOT}\norm_libsize.m</file>
-      <file>${PROJECT_ROOT}\private\i_myupdatefcn1.m</file>
-      <file>${PROJECT_ROOT}\private\i_myupdatefcn3.m</file>
-      <file>${PROJECT_ROOT}\private\knn_smooth.m</file>
-      <file>${PROJECT_ROOT}\private\nangeomean.m</file>
-      <file>${PROJECT_ROOT}\private\nanmedian.m</file>
-      <file>${PROJECT_ROOT}\private\rsvd.m</file>
-      <file>${PROJECT_ROOT}\private\splinefit.m</file>
-      <file>${PROJECT_ROOT}\sc_cellcyclescoring.m</file>
-      <file>${PROJECT_ROOT}\sc_cellscore.m</file>
-      <file>${PROJECT_ROOT}\sc_celltypecaller.m</file>
-      <file>${PROJECT_ROOT}\sc_cluster_s.m</file>
-      <file>${PROJECT_ROOT}\sc_cluster_x.m</file>
-      <file>${PROJECT_ROOT}\sc_deg.m</file>
-      <file>${PROJECT_ROOT}\sc_filterc.m</file>
-      <file>${PROJECT_ROOT}\sc_filterg.m</file>
-      <file>${PROJECT_ROOT}\sc_genestat.m</file>
-      <file>${PROJECT_ROOT}\sc_genestats.m</file>
-      <file>${PROJECT_ROOT}\sc_grnview.m</file>
-      <file>${PROJECT_ROOT}\sc_grnview2.m</file>
-      <file>${PROJECT_ROOT}\sc_hvg.m</file>
-      <file>${PROJECT_ROOT}\sc_mergedata.m</file>
-      <file>${PROJECT_ROOT}\sc_mergesces.m</file>
-      <file>${PROJECT_ROOT}\sc_mtratio.m</file>
-      <file>${PROJECT_ROOT}\sc_norm.m</file>
-      <file>${PROJECT_ROOT}\sc_pcnet.m</file>
-      <file>${PROJECT_ROOT}\sc_pcnetpar.m</file>
-      <file>${PROJECT_ROOT}\sc_phate.m</file>
-      <file>${PROJECT_ROOT}\sc_pickmarkers.m</file>
-      <file>${PROJECT_ROOT}\sc_potency.m</file>
-      <file>${PROJECT_ROOT}\sc_qcfilter.m</file>
-      <file>${PROJECT_ROOT}\sc_read10xdir.m</file>
-      <file>${PROJECT_ROOT}\sc_read10xdir2.m</file>
-      <file>${PROJECT_ROOT}\sc_readfile.m</file>
-      <file>${PROJECT_ROOT}\sc_readgeoaccession.m</file>
-      <file>${PROJECT_ROOT}\sc_readhdf5file.m</file>
-      <file>${PROJECT_ROOT}\sc_readmtxfile.m</file>
-      <file>${PROJECT_ROOT}\sc_readrdsfile.m</file>
-      <file>${PROJECT_ROOT}\sc_readtsvfile.m</file>
-      <file>${PROJECT_ROOT}\sc_rmdugenes.m</file>
-      <file>${PROJECT_ROOT}\sc_rmmtcells.m</file>
-      <file>${PROJECT_ROOT}\sc_rmmtgenes.m</file>
-      <file>${PROJECT_ROOT}\sc_scatter.m</file>
-      <file>${PROJECT_ROOT}\sc_scatter_sce.m</file>
-      <file>${PROJECT_ROOT}\sc_scattermarker.m</file>
-      <file>${PROJECT_ROOT}\sc_sce2rds.m</file>
-      <file>${PROJECT_ROOT}\sc_selectc.m</file>
-      <file>${PROJECT_ROOT}\sc_selectg.m</file>
-      <file>${PROJECT_ROOT}\sc_snndpc.m</file>
-      <file>${PROJECT_ROOT}\sc_splinefit.m</file>
-      <file>${PROJECT_ROOT}\sc_splinefit2.m</file>
-      <file>${PROJECT_ROOT}\sc_trajectory.m</file>
-      <file>${PROJECT_ROOT}\sc_transform.m</file>
-      <file>${PROJECT_ROOT}\sc_tsne.m</file>
-      <file>${PROJECT_ROOT}\sc_umap.m</file>
-      <file>${PROJECT_ROOT}\sc_veg.m</file>
-      <file>${PROJECT_ROOT}\sc_writefile.m</file>
       <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\arrange.m</file>
       <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\datadisp.m</file>
       <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\@ktensor\disp.m</file>
@@ -273,6 +202,77 @@
       <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\tt_sub2ind.m</file>
       <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\tt_subsubsref.m</file>
       <file>C:\Users\jcai.AUTH\Documents\GitHub\scTenifoldNet\MATLAB\thirdparty\tensor_toolbox\tucker_als.m</file>
+      <file>${PROJECT_ROOT}\@SingleCellExperiment\assigncelltype.m</file>
+      <file>${PROJECT_ROOT}\@SingleCellExperiment\clustercells.m</file>
+      <file>${PROJECT_ROOT}\@SingleCellExperiment\embedcells.m</file>
+      <file>${PROJECT_ROOT}\@SingleCellExperiment\estimatecellcycle.m</file>
+      <file>${PROJECT_ROOT}\@SingleCellExperiment\estimatepotency.m</file>
+      <file>${PROJECT_ROOT}\@SingleCellExperiment\makeattributestable.m</file>
+      <file>${PROJECT_ROOT}\@SingleCellExperiment\qcfilterwhitelist.m</file>
+      <file>${PROJECT_ROOT}\@SingleCellExperiment\SingleCellExperiment.m</file>
+      <file>${PROJECT_ROOT}\cdgea.m</file>
+      <file>${PROJECT_ROOT}\fun_num_clusters.m</file>
+      <file>${PROJECT_ROOT}\i_plot_pseudotimeseries.m</file>
+      <file>${PROJECT_ROOT}\i_pseudotime_by_princurve.m</file>
+      <file>${PROJECT_ROOT}\i_pseudotime_by_splinefit.m</file>
+      <file>${PROJECT_ROOT}\norm_deseq.m</file>
+      <file>${PROJECT_ROOT}\norm_libsize.m</file>
+      <file>${PROJECT_ROOT}\private\i_myupdatefcn1.m</file>
+      <file>${PROJECT_ROOT}\private\i_myupdatefcn3.m</file>
+      <file>${PROJECT_ROOT}\private\knn_smooth.m</file>
+      <file>${PROJECT_ROOT}\private\nangeomean.m</file>
+      <file>${PROJECT_ROOT}\private\nanmedian.m</file>
+      <file>${PROJECT_ROOT}\private\rsvd.m</file>
+      <file>${PROJECT_ROOT}\private\splinefit.m</file>
+      <file>${PROJECT_ROOT}\sc_cellcyclescoring.m</file>
+      <file>${PROJECT_ROOT}\sc_cellscore.m</file>
+      <file>${PROJECT_ROOT}\sc_celltypecaller.m</file>
+      <file>${PROJECT_ROOT}\sc_cluster_s.m</file>
+      <file>${PROJECT_ROOT}\sc_cluster_x.m</file>
+      <file>${PROJECT_ROOT}\sc_deg.m</file>
+      <file>${PROJECT_ROOT}\sc_filterc.m</file>
+      <file>${PROJECT_ROOT}\sc_filterg.m</file>
+      <file>${PROJECT_ROOT}\sc_genestat.m</file>
+      <file>${PROJECT_ROOT}\sc_genestats.m</file>
+      <file>${PROJECT_ROOT}\sc_grnview.m</file>
+      <file>${PROJECT_ROOT}\sc_grnview2.m</file>
+      <file>${PROJECT_ROOT}\sc_hvg.m</file>
+      <file>${PROJECT_ROOT}\sc_mergedata.m</file>
+      <file>${PROJECT_ROOT}\sc_mergesces.m</file>
+      <file>${PROJECT_ROOT}\sc_mtratio.m</file>
+      <file>${PROJECT_ROOT}\sc_norm.m</file>
+      <file>${PROJECT_ROOT}\sc_pcnet.m</file>
+      <file>${PROJECT_ROOT}\sc_pcnetpar.m</file>
+      <file>${PROJECT_ROOT}\sc_phate.m</file>
+      <file>${PROJECT_ROOT}\sc_pickmarkers.m</file>
+      <file>${PROJECT_ROOT}\sc_potency.m</file>
+      <file>${PROJECT_ROOT}\sc_qcfilter.m</file>
+      <file>${PROJECT_ROOT}\sc_read10xdir.m</file>
+      <file>${PROJECT_ROOT}\sc_read10xdir2.m</file>
+      <file>${PROJECT_ROOT}\sc_readfile.m</file>
+      <file>${PROJECT_ROOT}\sc_readgeoaccession.m</file>
+      <file>${PROJECT_ROOT}\sc_readhdf5file.m</file>
+      <file>${PROJECT_ROOT}\sc_readmtxfile.m</file>
+      <file>${PROJECT_ROOT}\sc_readrdsfile.m</file>
+      <file>${PROJECT_ROOT}\sc_readtsvfile.m</file>
+      <file>${PROJECT_ROOT}\sc_rmdugenes.m</file>
+      <file>${PROJECT_ROOT}\sc_rmmtcells.m</file>
+      <file>${PROJECT_ROOT}\sc_rmmtgenes.m</file>
+      <file>${PROJECT_ROOT}\sc_scatter.m</file>
+      <file>${PROJECT_ROOT}\sc_scatter_sce.m</file>
+      <file>${PROJECT_ROOT}\sc_scattermarker.m</file>
+      <file>${PROJECT_ROOT}\sc_sce2rds.m</file>
+      <file>${PROJECT_ROOT}\sc_selectc.m</file>
+      <file>${PROJECT_ROOT}\sc_selectg.m</file>
+      <file>${PROJECT_ROOT}\sc_snndpc.m</file>
+      <file>${PROJECT_ROOT}\sc_splinefit.m</file>
+      <file>${PROJECT_ROOT}\sc_splinefit2.m</file>
+      <file>${PROJECT_ROOT}\sc_trajectory.m</file>
+      <file>${PROJECT_ROOT}\sc_transform.m</file>
+      <file>${PROJECT_ROOT}\sc_tsne.m</file>
+      <file>${PROJECT_ROOT}\sc_umap.m</file>
+      <file>${PROJECT_ROOT}\sc_veg.m</file>
+      <file>${PROJECT_ROOT}\sc_writefile.m</file>
     </fileset.depfun>
     <fileset.resources>
       <file>${PROJECT_ROOT}\+gui</file>
@@ -284,28 +284,21 @@
     </fileset.resources>
     <fileset.package />
     <build-deliverables>
-      <file location="C:\Users\jcai.AUTH" name="Downloads" optional="false">C:\Users\jcai.AUTH\Downloads</file>
+      <file location="C:\" name="Users" optional="false">C:\Users</file>
     </build-deliverables>
     <workflow />
     <matlab>
-      <root>C:\Program Files\MATLAB\R2020B</root>
+      <root>C:\Program Files\MATLAB\R2021a</root>
       <toolboxes>
         <toolbox name="matlabcoder" />
-        <toolbox name="embeddedcoder" />
         <toolbox name="gpucoder" />
         <toolbox name="fixedpoint" />
-        <toolbox name="matlabhdlcoder" />
         <toolbox name="neuralnetwork" />
       </toolboxes>
       <toolbox>
         <matlabcoder>
           <enabled>true</enabled>
         </matlabcoder>
-      </toolbox>
-      <toolbox>
-        <embeddedcoder>
-          <enabled>true</enabled>
-        </embeddedcoder>
       </toolbox>
       <toolbox>
         <gpucoder>
@@ -316,11 +309,6 @@
         <fixedpoint>
           <enabled>true</enabled>
         </fixedpoint>
-      </toolbox>
-      <toolbox>
-        <matlabhdlcoder>
-          <enabled>true</enabled>
-        </matlabhdlcoder>
       </toolbox>
       <toolbox>
         <neuralnetwork>
