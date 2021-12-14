@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.toolbox" plugin-version="1.0">
-  <configuration build-checksum="2589273682" file="C:\Users\jcai.AUTH\Documents\GitHub\scGEAToolbox\scGEAToolbox.prj" location="C:\Users\jcai.AUTH\Documents\GitHub\scGEAToolbox" name="scGEAToolbox" target="target.toolbox" target-name="Package Toolbox">
+  <configuration build-checksum="2589273682" file="U:\GitHub\scGEAToolbox\scGEAToolbox.prj" location="U:\GitHub\scGEAToolbox" name="scGEAToolbox" target="target.toolbox" target-name="Package Toolbox">
     <param.appname>scGEAToolbox</param.appname>
     <param.authnamewatermark>James Cai</param.authnamewatermark>
     <param.email>jcai@tamu.edu</param.email>
@@ -123,7 +123,6 @@ resources/STRING/stringdb_mouse.mat
       <file>${PROJECT_ROOT}\demo_script4.mlx</file>
       <file>${PROJECT_ROOT}\demo_script5.mlx</file>
       <file>${PROJECT_ROOT}\demo_script6.mlx</file>
-      <file>${PROJECT_ROOT}\DesktopToolset.xml</file>
       <file>${PROJECT_ROOT}\doc</file>
       <file>${PROJECT_ROOT}\fun_cmp_clusters.m</file>
       <file>${PROJECT_ROOT}\fun_num_clusters.m</file>
@@ -168,7 +167,6 @@ resources/STRING/stringdb_mouse.mat
       <file>${PROJECT_ROOT}\sc_qcfilter.m</file>
       <file>${PROJECT_ROOT}\sc_qcmetrics.m</file>
       <file>${PROJECT_ROOT}\sc_read10xdir.m</file>
-      <file>${PROJECT_ROOT}\sc_read10xdir2.m</file>
       <file>${PROJECT_ROOT}\sc_readfile.m</file>
       <file>${PROJECT_ROOT}\sc_readgeoaccession.m</file>
       <file>${PROJECT_ROOT}\sc_readhdf5file.m</file>
@@ -203,28 +201,21 @@ resources/STRING/stringdb_mouse.mat
     <fileset.depfun.excluded />
     <fileset.package />
     <build-deliverables>
-      <file location="${PROJECT_ROOT}" name="scGEAToolbox.mltbx" optional="false">C:\Users\jcai.AUTH\Documents\GitHub\scGEAToolbox\scGEAToolbox.mltbx</file>
+      <file location="${PROJECT_ROOT}" name="scGEAToolbox.mltbx" optional="false">U:\GitHub\scGEAToolbox\scGEAToolbox.mltbx</file>
     </build-deliverables>
     <workflow />
     <matlab>
-      <root>C:\Program Files\MATLAB\R2020B</root>
+      <root>C:\Program Files\MATLAB\R2021a</root>
       <toolboxes>
         <toolbox name="matlabcoder" />
-        <toolbox name="embeddedcoder" />
         <toolbox name="gpucoder" />
         <toolbox name="fixedpoint" />
-        <toolbox name="matlabhdlcoder" />
         <toolbox name="neuralnetwork" />
       </toolboxes>
       <toolbox>
         <matlabcoder>
           <enabled>true</enabled>
         </matlabcoder>
-      </toolbox>
-      <toolbox>
-        <embeddedcoder>
-          <enabled>true</enabled>
-        </embeddedcoder>
       </toolbox>
       <toolbox>
         <gpucoder>
@@ -235,11 +226,6 @@ resources/STRING/stringdb_mouse.mat
         <fixedpoint>
           <enabled>true</enabled>
         </fixedpoint>
-      </toolbox>
-      <toolbox>
-        <matlabhdlcoder>
-          <enabled>true</enabled>
-        </matlabhdlcoder>
       </toolbox>
       <toolbox>
         <neuralnetwork>

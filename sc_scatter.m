@@ -109,8 +109,23 @@ promotesave=true;
                             return;
                     end
                 end
-                [X, genelist] = sc_readmtxfile(matrixmtxfile, featurestxtfile, [], 2);
-                sce = SingleCellExperiment(X, genelist);
+                
+
+                barcodestxtfile = fullfile(pathname, sprintf('%sbarcodes.tsv',prefixstr));
+                if ~exist(barcodestxtfile, 'file')
+                    barcodestxtfile = fullfile(pathname, sprintf('%sbarcodes.txt',prefixstr));
+                end
+                if ~exist(barcodestxtfile, 'file')
+                    [X, genelist] = sc_readmtxfile(matrixmtxfile, featurestxtfile, [], 2);
+                    sce = SingleCellExperiment(X, genelist);
+                else
+                    [X, genelist, celllist] = sc_readmtxfile(matrixmtxfile, featurestxtfile, barcodestxtfile, 2);
+                    sce = SingleCellExperiment(X, genelist);
+                    if ~isempty(celllist) && length(celllist)==sce.NumCells
+                        sce.c_cell_id=celllist;
+                    end
+                end
+                
             case 'H5/HDF5 File (*.h5)...'
                 try
                     [X, genelist] = sc_readhdf5file;
@@ -147,7 +162,7 @@ promotesave=true;
                 if selpath==0, return; end
                 try
                     fw = gui.gui_waitbar;
-                    [X,genelist,~,ftdone]=sc_read10xdir2(selpath);
+                    [X,genelist,celllist,ftdone]=sc_read10xdir(selpath);
                     gui.gui_waitbar(fw);
                 catch ME
                     gui.gui_waitbar(fw);
@@ -155,7 +170,10 @@ promotesave=true;
                     return;
                 end
                 if ~ftdone, errordlg('Input Error'); return; end
-                sce = SingleCellExperiment(X, genelist);
+                sce = SingleCellExperiment(X,genelist);
+                if ~isempty(celllist) && length(celllist)==sce.NumCells
+                    sce.c_cell_id=celllist;
+                end
             case 'GEO Accession Number...'
                 acc=inputdlg({'Input number (e.g., GSM3308545):'},...
                     'GEO Accession',[1 40],{'GSM3308545'});
