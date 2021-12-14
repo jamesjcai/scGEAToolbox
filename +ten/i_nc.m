@@ -28,6 +28,10 @@ if nargin<2, nsubsmpl=10; end        % number of subsamples
             Xrep=Xrep(:,1:csubsmpl);
         end
         A=sc_pcnetpar(Xrep,ncom,true);
+
+%         tstr=matlab.lang.makeValidName(datestr(datetime));
+%         save(sprintf('A_%s',tstr),'A','-v7.3');
+        
         XM(:,:,k)=ten.e_filtadjc(A,0.90,false);
         %a=max(abs(A(:)));
         %XM(:,:,k)=A./a;
