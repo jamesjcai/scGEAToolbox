@@ -187,8 +187,10 @@ uimenu(m_exp,'Text','Check for Updates...',...
 
 % handles = guihandles( FigureHandle ) ;
 % guidata( FigureHandle, handles ) ;
+
 set(FigureHandle, 'visible', 'on');
 guidata(FigureHandle, sce);
+setappdata(FigureHandle,'cL',cL);
 
 set(FigureHandle,'CloseRequestFcn',@closeRequest);
 
@@ -944,6 +946,7 @@ end
             [thisc,~]=gui.i_select1class(sce);
             if ~isempty(thisc)
                 [c,cL] = grp2idx(thisc);
+                
                 sce.c = c;
                 RefreshAll(src, 1, true, false);                
                 if max(c)<=200
@@ -956,6 +959,7 @@ end
                     set(src, 'State', 'off');
                     warndlg('Labels are not showing. Too many categories (n>200).');                    
                 end
+                setappdata(FigureHandle,'cL',cL);
                 guidata(FigureHandle, sce);
             end        
             % colormap(lines(min([256 numel(unique(sce.c))])));
