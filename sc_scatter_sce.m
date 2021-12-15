@@ -571,7 +571,7 @@ end
             if isempty(Tct)
                 ctxt={'Unknown'};
             else
-                ctxt=Tct.C1_Cell_Type;
+                ctxt=Tct.C1_Cell_Type{1};
             end
             
             if manuallyselect
@@ -953,7 +953,8 @@ end
                         set(src, 'State', 'off');
                     end
                 else
-                    warndlg('Labels are not showing. Too many categories (n>200).');
+                    set(src, 'State', 'off');
+                    warndlg('Labels are not showing. Too many categories (n>200).');                    
                 end
                 guidata(FigureHandle, sce);
             end        
@@ -974,6 +975,10 @@ end
             if notasking
                 stxtyes = c;
             else
+                [~,cLx]=grp2idx(c); 
+                if isequal(cL,cLx)
+                    stxtyes = c;
+                else
                 answer = questdlg(sprintf('Label %d groups with index or text?', numel(cL)), ...
                     'Select Format', 'Index', 'Text', 'Cancel', 'Text');
                 switch answer
@@ -982,7 +987,8 @@ end
                     case 'Index'
                         stxtyes = c;
                     otherwise
-                        return
+                        return;
+                end
                 end
             end
             dtp = findobj(h, 'Type', 'datatip');
