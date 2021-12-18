@@ -156,7 +156,11 @@ promotesave=true;
                 filename = fullfile(pathname, fname);
                 fw = gui.gui_waitbar;
                 [sce] = sc_readrdsfile(filename);
-                gui.gui_waitbar(fw);                
+                gui.gui_waitbar(fw);
+                if isempty(sce)
+                    errordlg('File Import Failure.');
+                    return; 
+                end
             case '10x Genomics ''outs'' Folder...'
                 selpath = uigetdir;
                 if selpath==0, return; end

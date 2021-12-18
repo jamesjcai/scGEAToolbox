@@ -8,7 +8,8 @@ if nargin<2, genelist=[]; end
 if nargin<1, X=[]; end
 
 pw1=fileparts(mfilename('fullpath'));
-cellscoresfile=fullfile(pw1,'cellscores.txt');
+cellscoresfile=fullfile(pw1,'..','resources','cellscores.txt');
+
 T=readtable(cellscoresfile,'Delimiter','\t',...
     'ReadVariableNames',true);
 T=sortrows(T,"ScoreType");
