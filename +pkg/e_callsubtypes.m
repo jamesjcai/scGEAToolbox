@@ -1,4 +1,4 @@
-function [sce2]=e_callsubtypes(sce,targettype)
+function [sce]=e_callsubtypes(sce,targettype)
 if nargin<2, targettype="T cells"; end
 c_cell_type_tx=erase(sce.c_cell_type_tx,"_{"+digitsPattern+"}");
 sce2=[];
@@ -14,13 +14,32 @@ if length(unique(sce2.c_cluster_id))==1
 else
     id=sce2.c_cluster_id;
 end
-    [T]=run.alona(sce2.X,sce2.g,id);
+[id]=grp2idx(id);
+[T]=run.alona(sce2.X,sce2.g,id);
+    
+posg1=["Cd3d","Cd3e","Cd3g","Cd8a","Cd8a1"]; 
+negg1=["Gzma","Gzmb","Pdcd1","Ctla4"];
+posg2=["Cd3d","Cd3e","Cd3g","Cd4","Il2ra","Foxp3"];
+negg2=[];
+posg3=["Cd3d","Cd3e","Cd3g","Cd8a","Cd8a1","Gzma","Gzmb","Pdcd1","Ctla4"];
+negg3=[];
 
-
-
+cs1=sc_cellscore(sce2.X,sce2.g,posg1,negg1);
+cs2=sc_cellscore(sce2.X,sce2.g,posg2,negg2);
+cs3=sc_cellscore(sce2.X,sce2.g,posg3,negg3);
+cstype=["T\_CD8","Treg","Tex\_CD8"].';
+[~,idx] = max([cs1,cs2,cs3],[],2);
+a=cstype(idx);
 % CD8+ T_CD8 Cd3d, cd3e, cd3g, Cd8a Cd8a1
 % CD4+ regulatory Treg Cd3d, cd3e, cd3g, cd4 Il2ra, Foxp3
 % CD4+ T_CD4 Cd3d, cd3e, cd3g, cd4
 % CD8+ exhausted Tex_CD8   Cd3d, cd3e, cd3g, Cd8a cd8b1 Gzma Gzmb Gzmk Pdcd1 Ctla4
 % Double negative T_DN Cd3d cd3e Cd3g Il17a Pdcd1
+[c,cL]=grp2idx(a);
+cL=cL(grpstats(c,id,@mode));
+annolabels=cL(id);
+%annolabels=strrep(annolabels,"_","\_");
+sce.c_cell_type_tx(ismember(c_cell_type_tx,targettype))=annolabels;
+
+
 

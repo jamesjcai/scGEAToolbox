@@ -50,7 +50,8 @@ switch answer
         end        
         
         [idx]=gui.i_selmultidlg(gsorted,predefinedlist);
-        if isempty(idx) || idx==0, return; end
+        if isempty(idx), return; end
+        if idx==0, return; end
         %if length(idx)<2
         %    warndlg('Need at least 2 genes');
         %    return;
