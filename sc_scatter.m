@@ -185,17 +185,18 @@ promotesave=true;
                 acc=deblank(acc{1});
                 if strlength(acc)>4 && ~isempty(regexp(acc,'G.+','once'))
                     if length(strsplit(acc,{',',';',' '}))>1
-                        disp('Please use: pkg.pipeline_multisamplesmerge');
-                        return;
-                    end
-                    try
-                        fw=gui.gui_waitbar;                
-                        [sce]=sc_readgeoaccession(acc);
-                        gui.gui_waitbar(fw);
-                    catch ME
-                        gui.gui_waitbar(fw);
-                        errordlg(ME.message);
-                        return;
+                        accv=strsplit(acc,{',',';',' '});
+                        [sce]=pkg.pipeline_multisamplesmerge(accv);
+                    else    
+                        try
+                            fw=gui.gui_waitbar;                
+                            [sce]=sc_readgeoaccession(acc);
+                            gui.gui_waitbar(fw);
+                        catch ME
+                            gui.gui_waitbar(fw);
+                            errordlg(ME.message);
+                            return;
+                        end
                     end
                 end
             case 'Link to GEO mtx.gz File...'
