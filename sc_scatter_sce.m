@@ -614,9 +614,16 @@ end
         end
         if ~manuallyselect, gui.gui_waitbar_adv(fw); end
         sce.c_cell_type_tx = string(cL(c));
-        
-        answer = questdlg('Merge subclusters of same cell type?');
-        if strcmp(answer, 'Yes'), MergeSubCellTypes(src); end
+        nx=length(unique(sce.c_cell_type_tx));
+        if nx>1
+            newtx=erase(sce.c_cell_type_tx,"_{"+digitsPattern+"}");
+            if length(unique(newtx))~=nx
+                answer = questdlg('Merge subclusters of same cell type?');
+                if strcmp(answer, 'Yes')
+                    MergeSubCellTypes(src);
+                end
+            end
+        end
         guidata(FigureHandle, sce);
     end
 
