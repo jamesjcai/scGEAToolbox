@@ -32,10 +32,11 @@ else
 end
 if guiwaitbar, gui.gui_waitbar_adv(fw); end
 
-answerstruced=questdlg('Process SCE data?','');
+answerstruced=questdlg('Process merged SCE data (tSNE, clustering, and cell type annotation)?',...
+    '','Yes','Skip','Yes');
 if strcmp(answerstruced,'Yes')
-    [speciestag] = i_selectspecies;
-    if isempty(speciestag)
+    [speciestag] = gui.i_selectspecies;
+    if ~isempty(speciestag)
         sce = sce.embedcells('tsne', true, true, 3);
         k=round(sce.NumCells/100);
         sce = sce.clustercells(k, 'kmeans', true);

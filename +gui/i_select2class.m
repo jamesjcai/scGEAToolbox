@@ -4,18 +4,18 @@ thisc1=[]; clable1='';
 thisc2=[]; clable2='';
 
     listitems={'Current Class (C)'};
-    if ~isempty(sce.c_cluster_id)
-        listitems=[listitems,'Cluster ID'];
+    i_additem(sce.c_cluster_id, 'Cluster ID');
+    i_additem(sce.c_cell_cycle_tx, 'Cell Cycle Phase');
+    i_additem(sce.c_cell_type_tx, 'Cell Type');
+    i_additem(sce.c_batch_id, 'Batch ID');
+    
+    function i_additem(itemv,itemn)
+    if ~isempty(itemv)&&length(unique(itemv))>1
+        listitems=[listitems,itemn];
     end
-    if ~isempty(sce.c_cell_type_tx)
-        listitems=[listitems,'Cell Type'];
     end
-    if ~isempty(sce.c_cell_cycle_tx)
-        listitems=[listitems,'Cell Cycle Phase'];
-    end
-    if ~isempty(sce.c_batch_id)
-        listitems=[listitems,'Batch ID'];
-    end
+        
+        
     
     
 n=length(listitems);
