@@ -565,7 +565,9 @@ end
         cLdisp = cL;
         if ~manuallyselect, fw=gui.gui_waitbar_adv; end
         for i = 1:max(c)
-            gui.gui_waitbar_adv(fw,i/max(c));
+            if ~manuallyselect
+                gui.gui_waitbar_adv(fw,i/max(c));
+            end
             ptsSelected = c == i;
             [Tct] = pkg.local_celltypebrushed(sce.X, sce.g, ...
                 sce.s, ptsSelected, ...

@@ -51,6 +51,7 @@ end
 genelist=upper(genelist);
 switch lower(species)
     case 'human'
+        % stag='hsHPA';
         stag='hs';
     case 'mouse'
         stag='mm';

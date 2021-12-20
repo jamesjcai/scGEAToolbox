@@ -1,4 +1,6 @@
 function [new]=i_makeuniquename(orig)
+
+% consider matlab.lang.makeUniqueStrings :)
 new = orig;
 uniqStr = unique(orig);
 for ii = 1:length(uniqStr)
