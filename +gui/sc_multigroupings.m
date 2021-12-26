@@ -57,7 +57,19 @@ ptImage = ind2rgb(img, map);
 pt.CData = ptImage;
 pt.Tooltip = 'Link subplots';
 pt.ClickedCallback = @gui.i_linksubplots;
-                
+
+pt = uipushtool(tb, 'Separator', 'off');
+%[img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
+%                             '..','resources', 'plottypectl-rlocusplot.gif'));  % plotpicker-pie
+[img, map] = imread(fullfile(matlabroot, ...
+    'toolbox', 'matlab', 'icons', 'plotpicker-scatter.gif'));
+                         
+ptImage = ind2rgb(img, map);
+pt.CData = ptImage;
+pt.Tooltip = 'Show cluster lables';
+pt.ClickedCallback = @i_showclustlabel;
+
+
 gui.add_3dcamera(tb);
 movegui(f0,'center');
 set(f0,'Visible',true);
@@ -72,6 +84,35 @@ function [txt] = i_myupdatefcnx12(Target, event_obj)
         txt = cL2(c2(idx));
     end
 end
+
+    function i_showclustlabel(~,~)
+        dtp1 = findobj(h1,'Type','datatip'); 
+        dtp2 = findobj(h2,'Type','datatip'); 
+        if ~isempty(dtp1) ||  ~isempty(dtp2)
+            delete(dtp1);
+            delete(dtp2);
+            return;
+        end
+        h1.DataTipTemplate.DataTipRows = dataTipTextRow('',cL1(c1));
+            for i = 1:max(c1)
+                idx = find(c1 == i);
+                siv = sce.s(idx, :);
+                si = mean(siv, 1);
+                [k] = dsearchn(siv, si);
+                datatip(h1, 'DataIndex', idx(k));
+            end        
+        
+        h2.DataTipTemplate.DataTipRows = dataTipTextRow('',cL2(c2));
+            for i = 1:max(c2)
+                idx = find(c2 == i);
+                siv = sce.s(idx, :);
+                si = mean(siv, 1);
+                [k] = dsearchn(siv, si);
+                datatip(h2, 'DataIndex', idx(k));
+            end        
+        
+    end
+
 
 end
 

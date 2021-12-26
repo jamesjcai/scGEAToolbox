@@ -581,7 +581,7 @@ end
             if manuallyselect
                 [indx, tf] = listdlg('PromptString', {'Select cell type'},...
                     'SelectionMode', 'single', 'ListString', ctxt);
-                if tf ~= 1, return; end
+            if tf ~= 1, return; end
                 ctxt = Tct.C1_Cell_Type{indx};
             else
                 ctxt = Tct.C1_Cell_Type{1};
