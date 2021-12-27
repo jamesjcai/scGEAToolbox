@@ -419,10 +419,13 @@ end
             colormap(para.oldColorMap);
         else
             kc = numel(unique(c));
-            if kc <= 50
+            if kc <= 7 && kc>0
                 colormap(lines(kc));
+            elseif kc>7 && kc<=12
+                colormap(gui.linspecer(kc,'qualitative'));
             else
-                colormap default;
+                %colormap default;
+                colormap(gui.linspecer(kc,'sequential'));
             end
         end
         title(sce.title);

@@ -17,15 +17,19 @@ function callback_CrossTabulation(src,~)
     % if strcmp(clable1,clable2), return; end
     %}
      
-answer = questdlg('Sort by?', ...
+answer = questdlg('Show groups by?', ...
 	'Sorted Variable', ...
-	clable1,clable2,'No sort','No sort');
+	clable1,clable2,clable1);
 switch answer
     case clable1
         [thisc1,thisc2]=i_sortc(thisc1,thisc2);
+        clabel=clable1;
+        llabel=clable2;
     case clable2
-        [thisc2,thisc1]=i_sortc(thisc2,thisc1);
-    case 'No sort'
+        [thisc1,thisc2]=i_sortc(thisc2,thisc1);
+        clabel=clable2;
+        llabel=clable1;
+    % case 'No sort'
     otherwise
         return;
 end
@@ -38,12 +42,20 @@ labelsx=labelsx(~cellfun('isempty',labelsx));
 labelsy=labelsxy(:,2);
 labelsy=labelsy(~cellfun('isempty',labelsy));
 
-figure;
+
+f0=figure('Visible',false);
+
 subplot(211)
-bar(T,'stacked')
+y=T;
+b=bar(y,'stacked','FaceColor',"flat");
+%colormap(prism(size(y,2)));
+colormap(turbo);
+for k = 1:size(y,2)
+    b(k).CData = k;
+end
 xticks(1:length(labelsx));
 xticklabels(labelsx);
-xlabel(clable1)
+xlabel(clabel)
 ylabel('# of cells')
 %[~,cL]=grp2idx(thisc2);
 %legend(cL);
@@ -51,21 +63,42 @@ ylabel('# of cells')
 % title(lgd,clable2)
 
 subplot(212)
-bar(T./sum(T,2),'stacked')
-xlabel(clable1)
+y=T./sum(T,2);
+b=bar(y,'stacked','FaceColor',"flat");
+%colormap(prism(size(y,2)));
+colormap(turbo);
+for k = 1:size(y,2)
+    b(k).CData = k;
+end
+xlabel(clabel)
 ylabel('% of cells')
 % title(clable2); 
 xticks(1:length(labelsx));
 xticklabels(labelsx);
 ylim([0 1]);
 lgd=legend(labelsy,'Location','bestoutside');
-title(lgd,clable2);
+title(lgd,llabel);
 
 
-    labels = {'Save Cross-table to variable named:'};
-    vars = {'TCrosstab'};
-    values = {T};
-    export2wsdlg(labels,vars,values);
+tb = uitoolbar(f0);
+
+pt = uipushtool(tb, 'Separator', 'off');
+[img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
+                      '..','resources', 'export.gif'));
+ptImage = ind2rgb(img, map);
+pt.CData = ptImage;
+pt.Tooltip = 'Save cross-table';
+pt.ClickedCallback = @i_saveCrossTable;
+
+movegui(f0,'center');
+set(f0,'Visible',true);
+
+    function i_saveCrossTable(~,~)
+        labels = {'Save Cross-table to variable named:'};
+        vars = {'TCrosstab'};
+        values = {T};
+        export2wsdlg(labels,vars,values);
+    end
 end
 
 function [thisc1,thisc2]=i_sortc(thisc1,thisc2)

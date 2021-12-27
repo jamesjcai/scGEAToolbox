@@ -53,14 +53,27 @@ switch methodid
         hold off
 end
 
-if kc<=50 && kc>0
+if kc <= 7 && kc>0
     colormap(lines(kc));
+elseif kc>7 && kc<=12
+    colormap(gui.linspecer(kc,'qualitative'));    
 else
-%     cx=colormap('autumn');
-%     cx(1,:)=[.8 .8 .8];
-%     colormap(cx);
-    colormap default
+    %colormap default;
+    colormap(gui.linspecer(kc,'sequential'));
+    % colormap(gui.distinguishable_colors(kc));
+    % colormap(pkg.i_mycolormap(kc));
 end
+
+% if kc<=7 && kc>0
+%     colormap(lines(kc));    
+% else
+% %     cx=colormap('autumn');
+% %     cx(1,:)=[.8 .8 .8];
+% %     colormap(cx);
+%     % colormap default
+%     colormap(gui.linspecer(kc));
+% % https://www.mathworks.com/help/matlab/ref/colormap.html
+% end
 grid on
 
 end
