@@ -99,7 +99,7 @@ i_addbutton(1,1,@callback_ShowClustersPop,"plotpicker-geoscatter.gif","Show clus
 i_addbutton(1,0,@callback_SelectCellsByClass,"plotpicker-pointfig.gif","Select cells by class")
 i_addbutton(1,0,@DeleteSelectedCells,"plotpicker-qqplot.gif","Delete selected cells")
 i_addbutton(1,0,@callback_SaveX,"export.gif","Export & save data")
-i_addbutton(1,0,@EmbeddingAgain,"plotpicker-geobubble.gif","Embedding (tSNE, UMP, PHATE)")
+i_addbutton(1,1,@EmbeddingAgain,"plotpicker-geobubble.gif","Embedding (tSNE, UMP, PHATE)")
 i_addbutton(1,0,@Switch2D3D,"plotpicker-image.gif","Switch 2D/3D")
 i_addbutton(1,1,@callback_CloseAllOthers,"noun_Pruners_2469297.gif","Close All Other Figures")
 i_addbutton(1,0,@callback_PickPlotMarker,"plotpicker-rose.gif","Switch scatter plot marker type")
