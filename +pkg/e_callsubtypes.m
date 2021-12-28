@@ -1,7 +1,12 @@
-function [sce]=e_callsubtypes(sce,targettype)
+function [sce]=e_callsubtypes(sce,targettype,k)
+
 if nargin<2, targettype="T cells"; end
+if nargin<3, k=5; end
+% ref: https://www.biocompare.com/Editorial-Articles/569888-A-Guide-to-T-Cell-Markers/
+% ref: https://www.cellsignal.com/pathways/immune-cell-markers-human
+
 c_cell_type_tx=erase(sce.c_cell_type_tx,"_{"+digitsPattern+"}");
-sce2=[];
+
 if ~ismember(targettype,c_cell_type_tx)
     warning('Target cell type not found.');
     return;
@@ -10,12 +15,13 @@ end
 sce2=removecells(sce,~ismember(c_cell_type_tx,targettype));
 
 if length(unique(sce2.c_cluster_id))==1
-    id=sc_cluster_s(sce2.s,5);
+    id=sc_cluster_s(sce2.s,k);
 else
     id=sce2.c_cluster_id;
 end
 [id]=grp2idx(id);
-[T]=run.alona(sce2.X,sce2.g,id);
+
+% [T]=run.alona(sce2.X,sce2.g,id);
     
 posg1=["Cd3d","Cd3e","Cd3g","Cd8a","Cd8a1"]; 
 negg1=["Gzma","Gzmb","Pdcd1","Ctla4"];

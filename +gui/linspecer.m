@@ -86,7 +86,7 @@ if ~isempty(varargin)>0 % you set a parameter?
                 warning('qualitiative is not possible for greater than 12 items, please reconsider');
             else
                 if N>9
-                    warning(['Default may be nicer for ' num2str(N) ' for clearer colors use: whitebg(''black''); ']);
+               %     warning(['Default may be nicer for ' num2str(N) ' for clearer colors use: whitebg(''black''); ']);
                 end
             end
             qualFlag = 1;
