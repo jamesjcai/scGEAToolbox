@@ -1,12 +1,12 @@
 function callback_CheckUpdates(~,~)
-[needupdate]=pkg.i_vercheck;
+[needupdate,v1,v2]=pkg.i_vercheck;
 % Check for updates.
 if needupdate
-    answer = questdlg('There is a new version of scGEAToolbox. Learn how to install?');
+    answer = questdlg(sprintf('There is a new version of scGEAToolbox (%s vs. %s). Learn how to install?',v2,v1));
     if strcmp(answer,'Yes')
         web('https://scgeatoolbox.readthedocs.io/en/latest/quick_installation.html');
     end
 else
-    helpdlg('scGEAToolbox is up to date.','')
+    helpdlg(sprintf('scGEAToolbox (%s) is up to date.',v1),'');
 end
 end
