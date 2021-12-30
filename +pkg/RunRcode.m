@@ -23,6 +23,10 @@ sep=filesep;
 % if isempty(p), p = pwd; end
 % logFName=[p sep f '.R.log'];
 
+if iscell(Rpath)
+    Rpath=Rpath{end};    
+end
+
 if ispc
     % commandline=['"' Rpath sep 'R.exe" CMD BATCH "' RscriptFileName '" "' logFName '"'];
     commandline=['"' Rpath sep 'Rscript.exe" "' RscriptFileName '"'];

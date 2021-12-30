@@ -31,12 +31,24 @@ b=FindWhich(env(:,1),'ProgramW6432');
 c=FindWhich(env(:,1),'ProgramFiles(x86)');
 n=[a;b;c]; isfound=0;
  for i=1:length(n)
-     programPath=env{n(i),2};
+     programPath=env{n(i),2};     
      D=dir([programPath filesep 'R']);
-     if ~isempty(D)
-         A={D.name}; B=find(cell2mat(cellfun(@(s) contains(s,'R-'),A,'uniformoutput',0)),1);
-         if ~isempty(B),  isfound=1;Rpath=[programPath sep 'R' sep A{B} sep 'bin'];break; end
-     end%
+     if ~isempty(D)         
+         A={D.name}; 
+         B=find(cell2mat(cellfun(@(s) contains(s,'R-'),A,'uniformoutput',0))); %,1)
+         if ~isempty(B)
+             isfound=1;
+             if length(B)==1
+                 Rpath=[programPath sep 'R' sep A{B} sep 'bin'];
+             else
+                 Rpath=cell(length(B),1);
+                 for k=1:length(B)
+                    Rpath{k}=[programPath sep 'R' sep A{B(k)} sep 'bin'];
+                 end
+             end
+             break; 
+         end
+     end
  end
 if isfound==0,  Rpath=[]; end
 end % end of FindRpath

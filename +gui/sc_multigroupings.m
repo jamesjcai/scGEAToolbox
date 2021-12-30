@@ -23,22 +23,42 @@ dt = datacursormode(f0);
 dt.UpdateFcn = {@i_myupdatefcnx12};
 sgtitle(sce.title);
 
-kc1=numel(unique(c1));
-if kc1<=50 && kc1>0
-    colormap(ax1,lines(kc1));    
-else
-    colormap(ax1,'default');
-end
 
+
+kc1=numel(unique(c1));
+if kc1 <= 7 && kc1>0
+    colormap(ax1,lines(kc1));
+elseif kc1>7 && kc1<=12
+    colormap(ax1,gui.linspecer(kc1,'qualitative'));    
+else
+    colormap(ax1,gui.linspecer(kc1,'sequential'));
+end
 
 kc2=numel(unique(c2));
-if kc2<=50 && kc2>0
-    colormap(ax2,lines(kc2));    
+if kc2 <= 7 && kc2>0
+    colormap(ax2,lines(kc2));
+elseif kc2>7 && kc2<=12
+    colormap(ax2,gui.linspecer(kc2,'qualitative'));    
 else
-    colormap(ax2,'default');
+    colormap(ax2,gui.linspecer(kc2,'sequential'));
 end
 
-colormap(ax1,lines(kc1));  
+% kc1=numel(unique(c1));
+% if kc1<=50 && kc1>0
+%     colormap(ax1,lines(kc1));    
+% else
+%     colormap(ax1,'default');
+% end
+% 
+% 
+% kc2=numel(unique(c2));
+% if kc2<=50 && kc2>0
+%     colormap(ax2,lines(kc2));    
+% else
+%     colormap(ax2,'default');
+% end
+% colormap(ax1,lines(kc1));
+
 evalin('base','h=findobj(gcf,''type'',''axes'');');
 evalin('base','hlink = linkprop(h,{''CameraPosition'',''CameraUpVector''});');
 rotate3d(f0,'on');
