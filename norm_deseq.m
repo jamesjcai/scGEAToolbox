@@ -15,29 +15,43 @@ function [x,sf]=norm_deseq(x)
 end
 
 
-function y = nanmedian(x,dim)
-%NANMEDIAN Median value, ignoring NaNs.
-%   M = NANMEDIAN(X) returns the sample median of X, treating NaNs as
-%   missing values.  For vector input, M is the median value of the non-NaN
-%   elements in X.  For matrix input, M is a row vector containing the
-%   median value of non-NaN elements in each column.  For N-D arrays,
-%   NANMEDIAN operates along the first non-singleton dimension.
-%
-%   NANMEDIAN(X,'all') is the median value of all the elements of X.
-%
-%   NANMEDIAN(X,DIM) takes the median along the dimension DIM of X.
-%
-%   NANMEDIAN(X,VECDIM) finds the median values of the elements of X based 
-%   on the dimensions specified in the vector VECDIM.
-%
-%   See also MEDIAN, NANMEAN, NANSTD, NANVAR, NANMIN, NANMAX, NANSUM.
+%NANGEOMEAN Geometric mean, ignoring NaNs.
+%   M = NANGEOMEAN(X) returns the geometric mean of X, treating NaNs as
+%   missing values. If X is a vector, M is the n-th root of the product of
+%   the non-NaN elements. If X is a matrix, M is a vector of the geometric
+%   mean of each column. For N-D arrays, NANGEOMEAN operates along the
+%   first non-singleton dimension.
+%   
+%   M = NANGEOMEAN(X, DIM) takes the geometric mean along dimension DIM.
+%   
+%   See also NANMEAN, GEOMEAN.
 
-%   Copyright 1993-2018 The MathWorks, Inc.
+function m = nangeomean(x, dim)
 
-
-if nargin == 1
-    y = prctile(x, 50);
-else
-    y = prctile(x, 50,dim);
+% Default inputs
+if nargin<2
+    dim = find(size(x) ~= 1, 1);
+    if isempty(dim), dim = 1; end
 end
+
+% Input sanitisation
+if any(x(:) < 0)
+    error(message('nangeomean:BadData'))
 end
+
+% Find NaNs and set them to one
+nans = isnan(x);
+x(nans) = 1;
+
+% Count up non-NaNs.
+n = sum(~nans,dim);
+n(n==0) = NaN; % prevent divideByZero warnings
+
+% Geometric mean is equivalent to the exponent of the mean in logspace
+m = exp(sum(log(x),dim)./n);
+% Note:
+%   Since log(1)==0, the NaNs do not contribute to the sum.
+%   Since n is the count of only non-NaN elements, the denominator is
+%   correct.
+end
+
