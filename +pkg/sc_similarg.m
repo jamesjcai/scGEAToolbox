@@ -14,8 +14,8 @@ else
 end
 if ~(targetidx>0), idx=0; return; end
 if isgene
-    u=nanmean(X,2);
-    cv2=nanvar(X,0,2)./u.^2;
+    u=mean(X,2,'omitnan');
+    cv2=var(X,0,2,'omitnan')./u.^2;
     A=[u cv2];
     idx=knnsearch(A,A(targetidx,:),'K',k+1,...
         'Distance','Euclidean');
