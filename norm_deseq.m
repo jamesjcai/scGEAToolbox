@@ -10,7 +10,7 @@ function [x,sf]=norm_deseq(x)
 % size factor equal to zero        
     y=nan(size(x));
     y(x>0)=x(x>0);
-    sf=nanmedian(y./nangeomean(y,2));
+    sf=median(y./nangeomean(y,2),'omitnan');
     x=x./sf;
 end
 
