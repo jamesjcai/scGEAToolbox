@@ -2,8 +2,8 @@ function scatter_mean_vs_cv(X,genelist,dofit)
 if nargin<2, genelist=[]; end
 if nargin<3, dofit=false; end
 
-u=nanmean(X,2);
-cv=nanstd(X,[],2)./u;
+u=mean(X,2,'omitnan');
+cv=std(X,[],2,'omitnan')./u;
 
 loglog(u,cv,'o');
 grid on
