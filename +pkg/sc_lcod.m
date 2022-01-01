@@ -21,8 +21,8 @@ if nargin<3, sortit=true; end
 if donorm
     [X]=norm_libsize(X);
 end
-u=nanmean(X,2);
-sd=nanstd(X,0,2);
+u=mean(X,2,'omitnan');
+sd=std(X,0,2,'omitnan');
 
 
 xi=log2(u);
