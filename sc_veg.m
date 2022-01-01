@@ -18,8 +18,8 @@ if donorm
     [X]=sc_norm(X,'type','libsize');
 	disp('Library-size normalization...done.')
 end
-u=nanmean(X,2);
-cv=nanstd(X,0,2)./u;
+u=mean(X,2,'omitnan');
+cv=std(X,0,2,'omitnan')./u;
 
 m=size(X,1);
 ydata=log10(cv);
