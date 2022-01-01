@@ -8,8 +8,8 @@ else
 end
 
 dropr=1-sum(X>0,2)./size(X,2);
-u=nanmean(X,2);
-cv=nanstd(X,[],2)./u;
+u=mean(X,2,'omitnan');
+cv=std(X,[],2,'omitnan')./u;
 T=table(genelist,u,cv,dropr);
 T.Properties.VariableNames={'Gene','Mean','CV','Dropout_rate'};
 % gui.i_viewtable(T);
