@@ -27,8 +27,8 @@ if normit
     %[X]=norm_libsize(X);	
 end
 if any(isnan(X(:)))
-    u=nanmean(X,2);
-    vx=nanvar(X,0,2);
+    u=mean(X,2,'omitnan');
+    vx=var(X,0,2,'omitnan');
     cv2=vx./u.^2;
 else
     u=mean(X,2);

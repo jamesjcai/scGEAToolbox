@@ -6,18 +6,9 @@ function callback_PickPlotMarker(src,~)
     h=ha(k);
     if h.Marker=='.'
         h.Marker='o';
-        if rand>0.5
-            h.SizeData=20;
-        else
-            h.SizeData=10;
-        end
     else
         h.Marker='.';
-        if rand>0.5
-            h.SizeData=20;
-        else
-            h.SizeData=10;
-        end
     end
+    h.SizeData=10*randi(10);
     end
 end

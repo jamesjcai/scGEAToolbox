@@ -8,13 +8,15 @@ a=webread(url);
 b=strsplit(a,'\n');
 c=string(b(contains(b,acc)))';
 c=c(contains(c,'ftp'));
-if length(c)~=3 && length(c)~=1
+
+if ~(length(c)==1 || length(c)>=3) 
     disp(url)
     error('Unknown error.');
 end
 
-switch length(c)
-    case 3
+if length(c)>=3
+%switch length(c)
+%    case 3
         c1=c(contains(c,'mtx'));
         if isempty(c1), error('MTX file not found.'); end
         f1=i_setupfile(c1);
@@ -26,7 +28,7 @@ switch length(c)
         f2=i_setupfile(c2);
         if isempty(f2), error('GENES/FEATURES file name not processed.'); end
         [X,g]=sc_readmtxfile(f1,f2);
-    case 1
+elseif length(c)==1
         txtnotfound=false;
         c1=c(contains(c,'txt'));
         if isempty(c1)
@@ -50,10 +52,18 @@ switch length(c)
             end
             f1=i_setupfile2(c1);
             [X,g]=sc_readhdf5file(f1);
-        end
-        
+        end 
 end
-sce=SingleCellExperiment(X,g);
+if length(g)==size(X,1)
+    sce=SingleCellExperiment(X,g);
+elseif length(g)==size(X,2)
+    disp('X is transposed.');
+    sce=SingleCellExperiment(X.',g);
+else
+    warning('size(sce.X,1)~=length(sce.g)');
+    sce=SingleCellExperiment(X,g);
+end
+        
 
 
 % function i_tryh5(c)

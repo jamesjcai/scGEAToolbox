@@ -44,6 +44,8 @@ FigureHandle = figure('Name', 'SC_SCATTER', ...
     'position', round(1.5 * [0 0 560 420]), ...
     'visible', 'off');
 movegui(FigureHandle, 'center');
+% b = uipanel(FigureHandle,'Title','B','BackgroundColor','cyan');
+% b.Position = [0.18 0.40 0.30 0.35];
 
 set(findall(FigureHandle,'ToolTipString','Link/Unlink Plot'),'Visible','Off')
 set(findall(FigureHandle,'ToolTipString','Edit Plot'),'Visible','Off')

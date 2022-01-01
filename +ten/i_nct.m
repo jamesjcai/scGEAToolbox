@@ -17,20 +17,23 @@ assert(length(ptime)==m)
 assert(max(t)==m)
 X=X(:,t);
 if m<csubsmpl*1.5, error('Too few cells.'); end
-r=round(m/nsubsmpl);
+
+r=round(m/nsubsmpl);    % r = step length
 winsize=max([r,csubsmpl]);
 startptx=1:r:m;
-while startptx(end)+winsize>m && r>1
-    r=r-1;
-    winsize=max([r,csubsmpl]);
-    startptx=1:r:m;
-    startptx=startptx(1:10);
-end
+c=0;
+    while startptx(end)+winsize>m && r>1
+        c=c+1;
+        r=r-1;
+        winsize=max([r,csubsmpl]);
+        startptx=1:r:m;
+        startptx=startptx(1:nsubsmpl);
+    end
 
     XM=zeros(n,n,nsubsmpl);
     for k=1:nsubsmpl
         fprintf('network...%d of %d\n',k,nsubsmpl);
-        Xrep=X(:,startptx(k):startptx(k)+winsize);
+        Xrep=X(:,startptx(k):startptx(k)+winsize-1);
         Xrep=sc_norm(Xrep,'type','libsize');
         Xrep=log(Xrep+1);
         A=sc_pcnetpar(Xrep,ncom,true);

@@ -93,7 +93,7 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
                 return;
             else
                 [~,i]=ismember(gsorted(idx),sce.g);
-                answer1 = questdlg('Remove selected genes?');
+                answer1 = questdlg(sprintf('Remove %d selected genes?',length(i)));
                 if strcmpi(answer1,'Yes')   
             	    fw = gui.gui_waitbar;                    
                     sce.g(i)=[];

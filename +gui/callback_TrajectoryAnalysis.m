@@ -8,7 +8,16 @@ function callback_TrajectoryAnalysis(src,~)
     sce=guidata(FigureHandle);
     fw=gui.gui_waitbar;
     [t_mono, s_mono] = run.monocle(sce.X);
-    cs=pkg.e_cellscores(sce.X,sce.g,"T_Cell_Exhaustion");
+    % cs=pkg.e_cellscores(sce.X,sce.g,"T_Cell_Exhaustion");
+                [y,idx]=ismember({'monocle_pseudotime'},...
+                    sce.list_cell_attributes(1:2:end));
+                if y   
+                    sce.list_cell_attributes{idx+1}=t_mono;
+                else
+                    sce.list_cell_attributes=[sce.list_cell_attributes,...
+                        {'monocle_pseudotime',t_mono}];
+                end    
+    guidata(FigureHandle,sce);
     gui.gui_waitbar(fw);
 
     
