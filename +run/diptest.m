@@ -15,8 +15,8 @@ function [T]=sc_diptest(X,genelist,sortit,donorm)
 if nargin<4, donorm=false; end
 if nargin<3, sortit=true; end
 if donorm, [X]=sc_norm(X,'type','libsize'); end
-u=nanmean(X,2);
-cv=nanstd(X,0,2)./u;
+u=mean(X,2,'omitnan');
+cv=std(X,0,2,'omitnan')./u;
 
 n=size(X,1);
 %pval=zeros(n,1);
