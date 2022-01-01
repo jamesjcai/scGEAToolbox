@@ -5,8 +5,8 @@ if nargin<3, sortit=true; end
 if nargin<2, genelist=[]; end
 
 dropr=1-sum(X>0,2)./size(X,2);
-u=nanmean(X,2);
-cv=nanstd(X,[],2)./u;
+u=mean(X,2,'omitnan');
+cv=std(X,[],2,'omitnan')./u;
 lgu=log(u);
 lgcv=log(cv);
 genes=genelist;
