@@ -4,8 +4,8 @@ if nargin<3, dofit=false; end
 
 Xn=log(X);
 Xn(isnan(Xn)|isinf(Xn))=nan;
-u=nanmean(Xn,2);
-v=nanvar(Xn,[],2);
+u=mean(Xn,2,'omitnan');
+v=var(Xn,[],2,'omitnan');
 scatter(u,v);
 
 if dofit
