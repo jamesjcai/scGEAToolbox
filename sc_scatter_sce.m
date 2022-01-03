@@ -424,10 +424,12 @@ end
             if kc <= 7 && kc>0
                 colormap(lines(kc));
             elseif kc>7 && kc<=12
-                colormap(gui.linspecer(kc,'qualitative'));
+                colormap(turbo(kc));
+                %colormap(gui.linspecer(kc,'qualitative'));
             else
+                colormap(turbo(kc));
                 %colormap default;
-                colormap(gui.linspecer(kc,'sequential'));
+                %colormap(gui.linspecer(kc,'sequential'));
             end
         end
         title(sce.title);

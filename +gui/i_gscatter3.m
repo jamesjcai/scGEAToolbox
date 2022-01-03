@@ -56,12 +56,17 @@ end
 if kc <= 7 && kc>0
     colormap(lines(kc));
 elseif kc>7 && kc<=12
-    colormap(gui.linspecer(kc,'qualitative'));    
+%    colormap(gui.linspecer(kc,'qualitative'));    
+%    colormap default;
+     colormap(turbo(kc));
 else
-    %colormap default;
-    colormap(gui.linspecer(kc,'sequential'));
+    colormap(turbo(kc));
+    % colormap(gui.linspecer(kc,'sequential'));
     % colormap(gui.distinguishable_colors(kc));
     % colormap(pkg.i_mycolormap(kc));
+    %
+    % see also: sc_scatter_sce;
+    % see also: gui.sc_multigroupings
 end
 
 % if kc<=7 && kc>0

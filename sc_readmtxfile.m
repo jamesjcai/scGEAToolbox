@@ -29,6 +29,9 @@ if coln==1
 elseif coln==2
     try
         genelist=string(T.Var2);
+        if sum(strlength(genelist)==0)>0.85*length(genelist)
+            genelist=string(T.Var1);
+        end
     catch
         genelist=string(T.Var1);
     end

@@ -29,18 +29,22 @@ kc1=numel(unique(c1));
 if kc1 <= 7 && kc1>0
     colormap(ax1,lines(kc1));
 elseif kc1>7 && kc1<=12
-    colormap(ax1,gui.linspecer(kc1,'qualitative'));    
+    colormap(ax1,turbo(kc1));
+    %colormap(ax1,gui.linspecer(kc1,'qualitative'));    
 else
-    colormap(ax1,gui.linspecer(kc1,'sequential'));
+    colormap(ax1,turbo(kc1));
+    %colormap(ax1,gui.linspecer(kc1,'sequential'));
 end
 
 kc2=numel(unique(c2));
 if kc2 <= 7 && kc2>0
     colormap(ax2,lines(kc2));
 elseif kc2>7 && kc2<=12
-    colormap(ax2,gui.linspecer(kc2,'qualitative'));    
+    colormap(ax2,turbo(kc2));
+    %colormap(ax2,gui.linspecer(kc2,'qualitative'));    
 else
-    colormap(ax2,gui.linspecer(kc2,'sequential'));
+    colormap(ax2,turbo(kc2));
+    %colormap(ax2,gui.linspecer(kc2,'sequential'));
 end
 
 % kc1=numel(unique(c1));

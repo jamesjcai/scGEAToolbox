@@ -22,20 +22,27 @@ answer = questdlg('Show groups by?', ...
 	clable1,clable2,clable1);
 switch answer
     case clable1
-        [thisc1,thisc2]=i_sortc(thisc1,thisc2);
+        %[thisc1,thisc2]=i_sortc(thisc1,thisc2);
+        thiscA=thisc1;
+        thiscB=thisc2;
         clabel=clable1;
         llabel=clable2;
     case clable2
-        [thisc1,thisc2]=i_sortc(thisc2,thisc1);
+        %[thisc1,thisc2]=i_sortc(thisc2,thisc1);
+        thiscA=thisc2;
+        thiscB=thisc1;       
         clabel=clable2;
         llabel=clable1;
     % case 'No sort'
     otherwise
         return;
 end
-    
-    [T,~,~,labelsxy]=crosstab(thisc1,thisc2);
+t=table(thiscA,thiscB);
+t=sortrows(t,[1,2]);
+thiscA=t.thiscA;
+thiscB=t.thiscB;
 
+[T,~,~,labelsxy]=crosstab(thiscA,thiscB);
 
 labelsx=labelsxy(:,1);
 labelsx=labelsx(~cellfun('isempty',labelsx));
@@ -61,6 +68,8 @@ ylabel('# of cells')
 %legend(cL);
 % lgd=legend({'see below'},'Location','bestoutside');
 % title(lgd,clable2)
+% lgd=legend(labelsy,'Location','bestoutside');
+% title(lgd,llabel);
 
 subplot(212)
 y=T./sum(T,2);
@@ -101,15 +110,15 @@ set(f0,'Visible',true);
     end
 end
 
-function [thisc1,thisc2]=i_sortc(thisc1,thisc2)
-        [~,idx]=unique(thisc1);
-        thisc1a=thisc1(idx);
-        thisc1b=thisc1;
-        thisc1b(idx)=[];
-        thisc1=[thisc1a; thisc1b];
-
-        thisc2a=thisc2(idx);
-        thisc2b=thisc2;
-        thisc2b(idx)=[];
-        thisc2=[thisc2a; thisc2b];
-end
+% function [thisc1,thisc2]=i_sortc(thisc1,thisc2)
+%         [~,idx]=unique(thisc1);
+%         thisc1a=thisc1(idx);
+%         thisc1b=thisc1;
+%         thisc1b(idx)=[];
+%         thisc1=[thisc1a; thisc1b];
+% 
+%         thisc2a=thisc2(idx);
+%         thisc2b=thisc2;
+%         thisc2b(idx)=[];
+%         thisc2=[thisc2a; thisc2b];
+% end

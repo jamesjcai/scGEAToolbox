@@ -240,8 +240,9 @@ promotesave=true;
                         end                        
                         if isempty(f), error('f1'); end
                         fprintf('[X,genelist]=sc_readtsvfile(''%s'');\n',f);
-                        [X,genelist]=sc_readtsvfile(f);
+                        [X,genelist,celllist]=sc_readtsvfile(f);
                         sce = SingleCellExperiment(X, genelist);
+                        sce.c_cell_id=celllist;
                     end
             case 'Load SCE Variable from Workspace...'
                 a=evalin('base','whos');
