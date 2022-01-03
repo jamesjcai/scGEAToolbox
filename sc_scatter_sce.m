@@ -73,7 +73,7 @@ mfolder = fileparts(mfilename('fullpath'));
 
 
 i_addbutton(1,0,@callback_ShowGeneExpr,"list.gif","Select a gene to show expression")
-i_addbutton(1,0,@ShowCellStates,"list2.gif","Select a gene to show expression")
+i_addbutton(1,0,@ShowCellStates,"list2.gif","Show cell state")
 i_addbutton(1,0,@SelectCellsByQC,"plotpicker-effects.gif","Filter genes and cells")
 
 %i_addbutton(1,1,@LabelClusters,"plotpicker-scatter.gif","Label clusters")

@@ -47,7 +47,7 @@ if tf2==1
         case 'Cell Type' % cell type
             thisc=sce.c_cell_type_tx;                
         case 'Cell Cycle Phase' % cell cycle
-            if isempty(sce.c_cell_cycle_tx)                    
+            if isempty(sce.c_cell_cycle_tx) || all(strcmp(unique(sce.c_cell_cycle_tx),"undetermined"))
                 fw = gui.gui_waitbar;
                 sce = sce.estimatecellcycle(true,1);
                 gui.gui_waitbar(fw);

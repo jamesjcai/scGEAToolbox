@@ -30,11 +30,16 @@ negg2=[];
 posg3=["Cd3d","Cd3e","Cd3g","Cd8a","Cd8a1","Gzma","Gzmb","Pdcd1","Ctla4"];
 negg3=[];
 
+posg4=["Cd3g"];
+negg4=["Cd4","Cd8a"];
+
+
 cs1=sc_cellscore(sce2.X,sce2.g,posg1,negg1);
 cs2=sc_cellscore(sce2.X,sce2.g,posg2,negg2);
 cs3=sc_cellscore(sce2.X,sce2.g,posg3,negg3);
-cstype=["T\_CD8","Treg","Tex\_CD8"].';
-[~,idx] = max([cs1,cs2,cs3],[],2);
+cs4=sc_cellscore(sce2.X,sce2.g,posg4,negg4);
+cstype=["T\_CD8","Treg","Tex\_CD8","Double\_negative_Treg"].';
+[~,idx] = max([cs1,cs2,cs3,cs4],[],2);
 a=cstype(idx);
 % CD8+ T_CD8 Cd3d, cd3e, cd3g, Cd8a Cd8a1
 % CD4+ regulatory Treg Cd3d, cd3e, cd3g, cd4 Il2ra, Foxp3
