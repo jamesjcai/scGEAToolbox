@@ -20,15 +20,21 @@ switch answer
             end
         end
     case 'Multiple'
-        [gsorted]=gui.i_sortgenenames(sce);
-        if isempty(gsorted), return; end
-        [idx]=gui.i_selmultidlg(gsorted);
-        if isempty(idx), return; end
-        if isscalar(idx) && idx==0
+        [glist]=gui.i_selectngenes(sce);
+        if isempty(glist)
             helpdlg('No gene selected.','');
             return;
+        %[gsorted]=gui.i_sortgenenames(sce);
+        %if isempty(gsorted), return; end
+        %[idx]=gui.i_selmultidlg(gsorted);
+        %if isempty(idx), return; end
+        %if isscalar(idx) && idx==0
+        %   helpdlg('No gene selected.','');
+        %    return;
         else
-        [~,i]=ismember(gsorted(idx),sce.g);
+            [y,i]=ismember(upper(glist),upper(sce.g));
+            if ~all(y), error('xxx'); end  
+        %[~,i]=ismember(gsorted(idx),sce.g);
         x=sum(sce.X(i,:),1);
         if length(i)==1
            g=sce.g(i);
@@ -40,9 +46,9 @@ switch answer
                 'Individually');
             switch answer2
                 case 'Union (OR)'
-                    g=sprintf("%s | ",gsorted(idx)); 
+                    g=sprintf("%s | ",glist); 
                 case 'Intersection (AND)'
-                    g=sprintf("%s & ",gsorted(idx));
+                    g=sprintf("%s & ",glist);
                     ix=sum(sce.X(i,:)>0,1)==length(i);
                     if ~any(ix)
                         helpdlg('No cells expressing all selected genes.','');
@@ -50,8 +56,8 @@ switch answer
                     end
                     x=x.*ix;
                 case 'Individually'
-                    for k=1:length(idx)
-                        gui.i_cascadefig(sce,gsorted(idx(k)),axx,bxx,k);
+                    for k=1:length(glist)
+                        gui.i_cascadefig(sce,glist(k),axx,bxx,k);
                         % i_showcascade(sce,gsorted(idx(k)),axx,bxx,k);
                     end
                     return;
