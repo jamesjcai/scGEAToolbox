@@ -789,7 +789,7 @@ end
         ptsSelected = logical(h.BrushData.');
         if ~any(ptsSelected)
             warndlg("No cells are selected.");
-            return
+            return;
         end
         answer = questdlg('Delete cells?', '', ...
             'Selected', 'Unselected', 'Cancel', 'Selected');
@@ -804,7 +804,16 @@ end
     end
 
     function i_deletecells(ptsSelected)
+        needprogressbar=false;
+        if sce.NumCells>8000, needprogressbar=true; end
+        if needprogressbar
+            fw = gui.gui_waitbar;
+        end
         sce = sce.removecells(ptsSelected);
+        if needprogressbar  % xxx
+            gui.gui_waitbar(fw);
+        end
+        
         [c, cL] = grp2idx(sce.c);
         [ax, bx] = view();
         h = gui.i_gscatter3(sce.s, c);

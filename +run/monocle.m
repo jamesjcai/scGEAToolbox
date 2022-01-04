@@ -8,7 +8,7 @@ oldpth=pwd();
 if ~isok, error(msg); t=[]; s=[]; return; end
 
 if ~isdebug
-if exist('./imput.mat','file'), delete('./imput.mat'); end
+if exist('./input.mat','file'), delete('./input.mat'); end
 if exist('./output.csv','file'), delete('./output.csv'); end
 end
 
@@ -29,7 +29,7 @@ end
 
 
 if ~isdebug
-if exist('./imput.mat','file'), delete('./imput.mat'); end
+if exist('./input.mat','file'), delete('./input.mat'); end
 if exist('./output.csv','file'), delete('./output.csv'); end
 end
 cd(oldpth);
