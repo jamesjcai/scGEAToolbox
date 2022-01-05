@@ -1,8 +1,8 @@
 function [sce]=sc_readgeoaccession(acc)
 
-if length(strsplit(acc,{',',';',' '}))>1
-    
-end
+% if length(strsplit(acc,{',',';',' '}))>1    
+% end
+
 url=sprintf('https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=%s',acc);
 a=webread(url);
 b=strsplit(a,'\n');

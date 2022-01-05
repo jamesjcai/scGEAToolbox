@@ -12,7 +12,7 @@ end
 accv=string(accv);
 SCEV=cell(length(accv),1);
 if guiwaitbar
-    fw=gui.gui_waitbar_adv; 
+    fw=gui.gui_waitbar_adv;
     gui.gui_waitbar_adv(fw,0.15);
 end
 for k=1:length(accv)

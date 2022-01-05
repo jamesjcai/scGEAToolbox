@@ -21,12 +21,16 @@ if donorm
     X=sc_norm(X);
     disp('Library-size normalization...done.')
 end
+
+X(isnan(X))=0;     % empty cells will be retained to keep spots
+
 if dolog1p
     X=log(X+1);
     disp('Log(x+1) transformation...done.')
 end
+
 if issparse(X), X=full(X); end
-[ngenes,ncells]=size(X);
+[ngenes]=size(X,1);
 
 % The following transpose is necessary to make the input dim right.
 data=X.';

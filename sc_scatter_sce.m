@@ -55,6 +55,7 @@ set(findall(FigureHandle,'ToolTipString','Open Property Inspector'),'Visible','O
 %a.ClickedCallback = @__;
 
 hAx = axes('Parent', FigureHandle);
+
 [h] = gui.i_gscatter3(sce.s, c, methodid,1,hAx);
 title(hAx,sce.title);
 
