@@ -52,14 +52,14 @@ function callback_MarkerGeneHeatmap(src,~)
     
 
     answer = questdlg('Generate marker gene heatmap',...
-        'Select Method','Method 1 (🐇)','Method 2 (🐢)',...
-        'Method 3 (🐢🐢)','Method 1 (🐇)');
+        'Select Method','Method 1 (DE 🐇)','Method 2 (scGeneFit 🐢)',...
+        'Method 3 (LASSO 🐢🐢)','Method 1 (DE 🐇)');
     switch answer
-        case 'Method 1 (🐇)'
+        case 'Method 1 (DE 🐇)'
             methodid=1;
-        case 'Method 2 (🐢)'
+        case 'Method 2 (scGeneFit 🐢)'
             methodid=2;
-        case 'Method 3 (🐢🐢)'
+        case 'Method 3 (LASSO 🐢🐢)'
             methodid=3;
         otherwise
             return;
@@ -141,7 +141,8 @@ for k=1:max(idcl)
     b(k)=round(sum(idcl==k)./2);
 end
 set(gca,'XTick',a-b);
-set(gca,'XTickLabel',strrep(M(:,1),'_','\_'));
+% set(gca,'XTickLabel',strrep(M(:,1),'_','\_'));
+set(gca,'XTickLabel',M(:,1));
 set(gca,'XTickLabelRotation',45);
 set(gca,'YTick',1:length(MX));
 set(gca,'YTickLabel',MX);
