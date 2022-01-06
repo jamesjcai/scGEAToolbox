@@ -12,7 +12,7 @@ import ten.*
     
    p = inputParser;
    addOptional(p,'qqplot',false,@islogical);
-   addOptional(p,'smplmethod',"Jackknife",@(x) (isstring(x)|ischar(x))&ismember(lower(string(x)),["jackknife","bootstrap"]));
+   addOptional(p,'smplmethod',"Bootstrap",@(x) (isstring(x)|ischar(x))&ismember(lower(string(x)),["jackknife","bootstrap"]));
    addOptional(p,'tdmethod',"CP",@(x) (isstring(x)|ischar(x))&ismember(upper(string(x)),["CP","TUCKER"]));
    addOptional(p,'nsubsmpl',10,@(x) fix(x)==x & x>0);
    addOptional(p,'csubsmpl',500,@(x) fix(x)==x & x>0);
@@ -55,8 +55,9 @@ import ten.*
     
     X0=sc_norm(X0,"type","libsize");
     X1=sc_norm(X1,"type","libsize");
-    X0=log(X0+1);
-    X1=log(X1+1);
+    %X0=log(X0+1);
+    %X1=log(X1+1);
+    
     %X0=sc_transform(X0);
     %X1=sc_transform(X1);
     
@@ -69,7 +70,7 @@ import ten.*
     tic
     disp('Tensor decomposition')
     [A0]=i_td1(XM,tdmethod);
-    [A0]=e_filtadjc(A0);
+    [A0]=e_filtadjc(A0,0.95);
     toc
     if savegrn
         tic
@@ -85,7 +86,7 @@ import ten.*
     tic
     disp('Tensor decomposition')
     A1=i_td1(XM,tdmethod);
-    A1=e_filtadjc(A1);
+    A1=e_filtadjc(A1,0.95);
     toc
     if savegrn
         tic

@@ -4,7 +4,7 @@ function [A]=e_filtadjc(A,q,makesparse)
 % A - adjacency matrix
 
 if nargin<3, makesparse=true; end
-if nargin<2, q=0.90; end
+if nargin<2, q=0.95; end
 dim=size(A);
 if numel(dim)==2
     a=mean(maxk(abs(A(:)),10));     % top 10 average
