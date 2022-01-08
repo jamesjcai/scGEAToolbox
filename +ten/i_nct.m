@@ -4,6 +4,7 @@ function [XM]=i_nct(X,ptime,nsubsmpl,ncom,csubsmpl,savegrn)
 % input: X -  n (genes/features) x m (cells/samples) matrix
 % input: ptime - m x 1 vector with pseudotime of cells
 % output XM - k multi-layer network array (n x n x k)
+import ten.*
 
 if nargin<6, savegrn=true; end
 if nargin<5, csubsmpl=500; end       % number of cells in subsamples                                     
@@ -44,6 +45,6 @@ c=0;
             end
             save(sprintf('A%d_%s',k,b),'A');
         end        
-        XM(:,:,k)=e_transf(A);        
+        XM(:,:,k)=ten.e_transf(A);        
     end
 end

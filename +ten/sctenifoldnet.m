@@ -95,8 +95,8 @@ import ten.*
         toc
     end
     
-    A0sym=0.5*(A0+A0');
-    A1sym=0.5*(A1+A1');
+    A0sym=0.5*(A0+A0.');
+    A1sym=0.5*(A1+A1.');
     tic
     disp('Manifold alignment')
     [aln0,aln1]=ten.i_ma(A0sym,A1sym);
