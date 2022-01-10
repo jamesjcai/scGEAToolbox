@@ -36,7 +36,7 @@ end
 
 % Input sanitisation
 if any(x(:) < 0)
-    error(message('nangeomean:BadData'))
+    error('nangeomean:BadData','Bad input data.')
 end
 
 % Find NaNs and set them to one

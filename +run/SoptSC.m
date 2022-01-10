@@ -19,7 +19,7 @@ function [C,W,eigenvalues,H]=SoptSC(X,varargin)
 
 
 if nargin < 1
-    error(message('scgea:run_soptsc:TooFewInputs'));
+    error('scgea:run_soptsc:TooFewInputs','TooFewInputs');
 end
 
 p = inputParser;

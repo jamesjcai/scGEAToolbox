@@ -13,7 +13,7 @@ if nargin<1
 end
 
 if exist(filename,'file') ~= 2
-    error(message('FileNotFound'));        
+    error('FileNotFound');
 end  
 %     try
 if nargout>2
@@ -48,13 +48,13 @@ narginchk(1,Inf);
 
 % Get Filename
 if ~ischar(filename) && ~(isstring(filename) && isscalar(filename))
-    error(message('MATLAB:FileNameMustBeString')); 
+    error('FileNameMustBeString');
 end
 filename = char(filename);
 
 % Make sure file exists
 if exist(filename,'file') ~= 2 
-    error(message('MATLAB:FileNotFound'));
+    error('FileNotFound');
 end
 
 

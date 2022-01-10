@@ -9,7 +9,7 @@ if nargin<1
 end
 
 if exist(filename,'file') ~= 2
-    error(message('FileNotFound'));        
+    error('FileNotFound');        
 end
 
 p = inputParser;

@@ -15,7 +15,7 @@ if nargin<1
 	filenm=fullfile(pathname,filenm);
 end
 if exist(filenm,'file') ~= 2
-    error(message('FileNotFound'));        
+    error('FileNotFound');
 end
 
 hinfo=h5info(filenm);
