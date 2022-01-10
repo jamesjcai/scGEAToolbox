@@ -44,7 +44,7 @@ c=0;
                 b=b(1:10);
             end
             save(sprintf('A%d_%s',k,b),'A');
-        end        
-        XM(:,:,k)=ten.e_transf(A);        
+        end
+        XM(:,:,k)=ten.e_filtadjc(A,0.95,false);
     end
 end
