@@ -11,6 +11,9 @@ suppressMessages(library(Matrix))
 filename<-readLines("inputrdsfile.txt")
 A<-readRDS(filename)
 
+# counts_matrix = GetAssayData(seurat_obj, slot="counts")
+# see: https://github.com/broadinstitute/inferCNV/wiki/infercnv-10x
+
 tryCatch(
 {writeMat("output.mat",X=A@assays$RNA@counts)},
 error = function(msg){

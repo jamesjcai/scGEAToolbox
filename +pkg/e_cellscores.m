@@ -12,7 +12,7 @@ cellscoresfile=fullfile(pw1,'..','resources','cellscores.txt');
 
 T=readtable(cellscoresfile,'Delimiter','\t',...
     'ReadVariableNames',true);
-T=sortrows(T,"ScoreType");
+%T=sortrows(T,"ScoreType");
 
 if ischar(typeid) || isstring(typeid)
     idx=find(matches(T.ScoreType,typeid,'IgnoreCase',true));
