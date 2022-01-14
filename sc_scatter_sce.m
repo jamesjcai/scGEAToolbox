@@ -422,16 +422,7 @@ end
             colormap(para.oldColorMap);
         else
             kc = numel(unique(c));
-            if kc <= 7 && kc>0
-                colormap(lines(kc));
-            elseif kc>7 && kc<=12
-                colormap(turbo(kc));
-                %colormap(gui.linspecer(kc,'qualitative'));
-            else
-                colormap(turbo(kc));
-                %colormap default;
-                %colormap(gui.linspecer(kc,'sequential'));
-            end
+            colormap(pkg.i_mycolorlines(kc));
         end
         title(sce.title);
         % ptlabelclusters.State = 'off';
