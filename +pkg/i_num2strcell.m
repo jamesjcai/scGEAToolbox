@@ -6,3 +6,5 @@ function [gs,gc]=i_num2strcell(d,prefix)
     gc=gc{1};
     gs=string(gc);
 end
+
+% string(strsplit(sprintf('a%d,',1:5),','))
