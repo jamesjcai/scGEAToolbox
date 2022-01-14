@@ -1,8 +1,10 @@
-function obj = qcfilterwhitelist(obj,libsize,mtratio,min_cells_nonzero,whitelist)
-    if nargin<5, whitelist=[]; end
+function obj = qcfilterwhitelist(obj,libszcutoff,mtratio,...
+    min_cells_nonzero,gnnumcutoff,whitelist)
+    if nargin<6, whitelist=[]; end
+    if nargin<5 || isempty(gnnumcutoff), gnnumcutoff=200; end
     if nargin<4 || isempty(min_cells_nonzero), min_cells_nonzero=0.01; end
     if nargin<3 || isempty(mtratio), mtratio=0.15; end
-    if nargin<2 || isempty(libsize), libsize=500; end
+    if nargin<2 || isempty(libszcutoff), libszcutoff=500; end
     
     if ~isempty(whitelist)
         assert(all(ismember(whitelist,obj.g)));
@@ -10,8 +12,8 @@ function obj = qcfilterwhitelist(obj,libsize,mtratio,min_cells_nonzero,whitelist
         Xresv=obj.X(idxx,:);
     end
     
-    [~,keptg,keptidxv]=sc_qcfilter(obj.X,obj.g,libsize,mtratio,1,...
-                                   min_cells_nonzero);
+    [~,keptg,keptidxv]=sc_qcfilter(obj.X,obj.g,libszcutoff,mtratio,...
+                                   min_cells_nonzero,gnnumcutoff);
     for k=1:length(keptidxv)
         obj = selectcells(obj,keptidxv{k});
     end

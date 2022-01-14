@@ -79,53 +79,53 @@ classdef SingleCellExperiment
     obj = embedcells(obj,methodid,forced,usehvgs,ndim)
     obj = clustercells(obj,k,methodid,forced)
     obj = assigncelltype(obj,speciesid)
-    obj = qcfilterwhitelist(obj,libsize,mtratio,min_cells_nonzero,whitelist)
+    obj = qcfilterwhitelist(obj,libszcutoff,mtratio,min_cells_nonzero,gnnumcutoff,whitelist)
     
-    function obj = removecells(obj,i)
-            obj.X(:,i)=[];
-            obj.s(i,:)=[];
-            obj.c(i)=[];
+    function obj = removecells(obj,idx)
+            obj.X(:,idx)=[];
+            obj.s(idx,:)=[];
+            obj.c(idx)=[];
             if ~isempty(obj.c_cell_cycle_tx)
-                obj.c_cell_cycle_tx(i)=[];
+                obj.c_cell_cycle_tx(idx)=[];
             end
             if ~isempty(obj.c_cell_type_tx)
-                obj.c_cell_type_tx(i)=[];
+                obj.c_cell_type_tx(idx)=[];
             end
             if ~isempty(obj.c_cluster_id)
-                obj.c_cluster_id(i)=[];
+                obj.c_cluster_id(idx)=[];
             end
             if ~isempty(obj.c_batch_id)
-                obj.c_batch_id(i)=[];
+                obj.c_batch_id(idx)=[];
             end
             if ~isempty(obj.c_cell_id)
-                obj.c_cell_id(i)=[];
+                obj.c_cell_id(idx)=[];
             end
             for k=2:2:length(obj.list_cell_attributes)
-                obj.list_cell_attributes{k}(i)=[];
+                obj.list_cell_attributes{k}(idx)=[];
             end
             
             a=fields(obj.struct_cell_embeddings);
             for k=1:length(a)
                 if ~isempty(obj.struct_cell_embeddings.(a{k}))
-                    obj.struct_cell_embeddings.(a{k})(i,:)=[];
+                    obj.struct_cell_embeddings.(a{k})(idx,:)=[];
                 end
             end
             
             a=fields(obj.struct_cell_clusterings);
             for k=1:length(a)
                 if ~isempty(obj.struct_cell_clusterings.(a{k}))
-                     obj.struct_cell_clusterings.(a{k})(i)=[];
+                     obj.struct_cell_clusterings.(a{k})(idx)=[];
                 end
             end
             % obj.NumCells=size(obj.X,2);
         end
 
-    function obj = selectcells(obj,i)
-        if islogical(i) && length(i)==obj.NumCells
-            ix=i;
+    function obj = selectcells(obj,idx)
+        if islogical(idx) && length(idx)==obj.NumCells
+            ix=idx;
         else
             ix=false(obj.NumCells,1);
-            ix(i)=true;
+            ix(idx)=true;
             disp('make logical idx');
         end
         obj = removecells(obj,~ix);
@@ -152,7 +152,7 @@ classdef SingleCellExperiment
         %            definput = {'500','0.15','0.01'};
         %        case 'Strigent (remove more cells/genes)'
         %            definput = {'1000','0.10','0.05'};        
-        [~,keptg,keptidxv]=sc_qcfilter(obj.X,obj.g,libsize,mtratio,1,...
+        [~,keptg,keptidxv]=sc_qcfilter(obj.X,obj.g,libsize,mtratio,...
                                        min_cells_nonzero);
         for k=1:length(keptidxv)
             obj = selectcells(obj,keptidxv{k});
@@ -163,10 +163,10 @@ classdef SingleCellExperiment
         [obj.X,obj.g]=sc_rmdugenes(obj.X,obj.g);
     end
     
-    function obj = selectgenes(obj,min_countnum,min_cellnum)
-        if nargin<2, min_countnum=1; end
-        if nargin<3, min_cellnum=0.01; end
-        [tmpX,tmpg]=sc_selectg(obj.X,obj.g,min_countnum,min_cellnum);
+    function obj = selectgenes(obj,min_cellnum,nonzero_cutoff)
+        if nargin<3, nonzero_cutoff=1; end
+        if nargin<2, min_cellnum=0.01; end
+        [tmpX,tmpg]=sc_selectg(obj.X,obj.g,min_cellnum,nonzero_cutoff);
         obj.X=tmpX;
         obj.g=tmpg;
     end

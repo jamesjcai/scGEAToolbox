@@ -298,7 +298,6 @@
     {"name":"genelist", "kind":"required", "type":["string","vector"]},
     {"name":"libsize", "kind":"positional", "type":["numeric", "choices={1000,2000}"], "purpose":"libsize"},
     {"name":"mtratio", "kind":"positional", "type":["numeric", "choices={0.10,0.15}"], "purpose":"mtratio"},
-    {"name":"dropout", "kind":"positional", "type":["numeric", "choices={0.01}"], "purpose":"dropout"},
     {"name":"min_cells_nonzero", "kind":"positional", "type":["numeric", "choices={0.05}"], "purpose":"min_cells_nonzero"}
 	]
 },

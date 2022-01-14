@@ -18,8 +18,7 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
 %        '------------- Experimental Options -------------',...
 %        'Remove ambient RNA contamination (R required)'};
 
-    [indx,tf] = listdlg('PromptString',{'Select Filter',...
-                '',''},'SelectionMode','single',...
+    [indx,tf] = listdlg('PromptString',{'Select Filter'},'SelectionMode','single',...
                 'ListString',listitems,'ListSize',[250 300]);
     if tf~=1
         requirerefresh=false;
@@ -35,39 +34,47 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
                 'Strigent (remove more cells/genes)','Relaxed (keep more cells/genes)');
             switch answer3
                 case 'Relaxed (keep more cells/genes)'
-                    definput = {'500','0.15','0.01'};
+                    definput = {'500','0.15','0.01','200'};
                 case 'Strigent (remove more cells/genes)'
-                    definput = {'1000','0.10','0.05'};
+                    definput = {'1000','0.10','0.05','500'};
                 otherwise
                     requirerefresh=false;
                     return;
             end        
                     
-            prompt = {'Library size (e.g., 500 or 1000):','mtDNA ratio (e.g., 15% or 10%):',...
-                      'Gene''s min_nonzero_cells (e.g., 0.01 or 0.05, 10 or 50):'};
-            dlgtitle = 'QC cutoff';
-            dims = [1 55];
+            prompt = {'Library size (e.g., 500 or 1000):',...
+                      'mtDNA ratio (e.g., 15% or 10%):',...
+                      'Gene''s min_nonzero_cells (e.g., 0.01 or 0.05, 10 or 50):',...
+                      'Number of genes (e.g., 200 or 500):'};
+            dlgtitle = 'QC Cutoffs';
+            dims = [1 65];
             answer = inputdlg(prompt,dlgtitle,dims,definput);
-            if isempty(answer), return; end
+            if isempty(answer)
+                requirerefresh=false;
+                return; 
+            end
             try
                 libsize=str2double(answer{1});
                 mtratio=str2double(answer{2});
                 min_cells_nonzero=str2double(answer{3});
-                assert((libsize>100)&&(libsize<100000));
+                numgenes=str2double(answer{4});
+                assert((libsize>100)&&(libsize<100000));                
                 assert((mtratio>=0) && (mtratio<=1));
                 assert((min_cells_nonzero>=0 && min_cells_nonzero<=1)||(min_cells_nonzero>1 && min_cells_nonzero<sce.NumCells));
+                assert((numgenes>1)&&(numgenes<5000));
             catch
                 requirerefresh=false;
                 errordlg('Invalid input(s).');
                 return;
-            end            
+            end
             [whitelist]=i_selectwhitelist(sce);
             if whitelist==0
                 requirerefresh=false;
                 return;
             end
             fw=gui.gui_waitbar;
-            sce=sce.qcfilterwhitelist(libsize,mtratio,min_cells_nonzero,whitelist);
+            sce=sce.qcfilterwhitelist(libsize,mtratio,...
+                min_cells_nonzero,numgenes,whitelist);
             gui.gui_waitbar(fw);
         %   [Xmajor,Xminor,gmajor,gminor]=pkg.e_makeshadowmat(sce.X,sce.g);
         %   [X1,g1]=pkg.e_shadowmatqc(Xmajor,Xminor,gmajor,gminor);
@@ -159,9 +166,9 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
             idx=gui.i_setranges2(ci',cj',[0 a(end)],...
                     [0 b(end)],ttxti,ttxtj);
         case 'QC Metrics in Violin Plots'   % view QC metrics violin
-            gui.sc_qcviolin(sce.X,sce.g);
+            gui.i_qcviolin(sce.X,sce.g);
             requirerefresh=false;
-            return;         
+            return;
 %         case 11
 %             fw = gui.gui_waitbar;
 %             [Xdecon,contamination]=run.decontX(sce);

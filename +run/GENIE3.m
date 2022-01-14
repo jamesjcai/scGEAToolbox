@@ -3,7 +3,7 @@ function [A,s,G]=GENIE3(X,genelist,donorm,plotit)
 %
 % USAGE:
 % >>[X,genelist]=sc_readfile('example_data/GSM3044891_GeneExp.UMIs.10X1.txt');
-% >>[X,genelist]=sc_selectg(X,genelist,5,3);
+% >>[X,genelist]=sc_selectg(X,genelist,3,5);
 % >>figure; [A,s,G]=run_genie3(X(1:8,:),genelist(1:8),false,true);
 
 if nargin<2 || isempty(genelist) 

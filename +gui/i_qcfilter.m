@@ -1,7 +1,7 @@
 function [X,idx]=i_qcfilter(X,genelist)
 % https://www.mathworks.com/matlabcentral/answers/143306-how-to-move-a-plotted-line-vertically-with-mouse-in-a-gui
 
-nGenes=sum(X>0)';
+nGenes=sum(X>0,1)';
 %nUMIs=sum(X)';
 mtratio=sc_mtratio(X,genelist);
 xr=[300 5000];

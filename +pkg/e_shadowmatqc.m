@@ -3,11 +3,11 @@ function [X,g]=e_shadowmatqc(Xmajor,Xminor,gmajor,gminor)
 %    [Xmajor,Xminor,gmajor,gminor]=pkg.e_makeshadowmat(sce.X,sce.g);
 %    [X1,g1]=pkg.e_shadowmatqc(Xmajor,Xminor,gmajor,gminor);
 min_cells_nonzero=20;
-dropout=1;
+% dropout=1;
 mtratio=1;
 libsize=500;
 
-[X0,g0,keptidxv]=sc_qcfilter(Xmajor,gmajor,libsize,mtratio,dropout,min_cells_nonzero);
+[X0,g0,keptidxv]=sc_qcfilter(Xmajor,gmajor,libsize,mtratio,min_cells_nonzero);
 
 X1=Xminor;
 g1=gminor;

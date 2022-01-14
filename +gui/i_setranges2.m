@@ -9,6 +9,7 @@ if nargin<6, txty=''; end
 
 fh=figure();
 scatter(x,y);
+box on
 lh1=xline(xr(1),'k:');
 lh2=xline(xr(2),'r-');
 lh3=yline(yr(1),'k:');

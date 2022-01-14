@@ -1,11 +1,13 @@
-function [X,keptidx]=sc_selectc(X,cutoff)
-if nargin<2, cutoff=1000; end
-libsz=sum(X);
+function [X,keptidx]=sc_selectc(X,libszcutoff,gnnumcutoff)
+if nargin<3, gnnumcutoff=500; end
+if nargin<2, libszcutoff=1000; end
+libsz=sum(X,1);
+gnnum=sum(X>0,1);
 
-if cutoff>1.0
-    keptidx=libsz>=cutoff;
+if libszcutoff>1.0
+    keptidx = (libsz>=libszcutoff) & (gnnum>=gnnumcutoff);
 else
-    keptidx=libsz>=quantile(libsz,cutoff);
+    keptidx = (libsz>=quantile(libsz,libszcutoff)) & (gnnum>=gnnumcutoff);
 end
 
 % function [X]=sc_selectc(X,lwprct,upprct)

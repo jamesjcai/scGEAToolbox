@@ -1,16 +1,18 @@
-function [X,genelist,idx]=sc_selectg(X,genelist,min_count,min_cells)
+function [X,genelist,idx]=sc_selectg(X,genelist,...
+                 min_cells_nonzero,nonzero_cutoff)
 %Select genes by expression levels
 %
 % https://www.nature.com/articles/s41592-018-0254-1
-% 11,308 genes with at least 2 cells having more than 4 unique molecular identifier (UMI) reads per cell. 
-if nargin<4, min_cells=10; end
-if nargin<3, min_count=1; end
+% 11,308 genes with at least 2 cells having more than 
+% 4 unique molecular identifier (UMI) reads per cell.
+if nargin<4, nonzero_cutoff=1; end
+if nargin<3, min_cells_nonzero=10; end
 
-nc=sum(X>=min_count,2);
-if min_cells<1
-    idx=nc>=min_cells*size(X,2);
+nc=sum(X>=nonzero_cutoff,2);
+if min_cells_nonzero<1
+    idx=nc>=min_cells_nonzero*size(X,2);
 else
-    idx=nc>=min_cells;
+    idx=nc>=min_cells_nonzero;
 end
 
 X=X(idx,:);

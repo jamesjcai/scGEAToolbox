@@ -10,7 +10,7 @@ if cutoff<1.0   % e.g., 0.9
     end
     r=sum(X~=0,2)./size(X,2);
     i=r>=cutoff;
-else 
+else
     [u]=sum(X,2);
     i=u>=cutoff;
     if verbose
