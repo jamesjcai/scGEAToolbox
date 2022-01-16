@@ -2,7 +2,12 @@ function [A]=sc_snngraph(s)
 %Generates Shared Nearest Neighbor (SNN) graph from embedding
 %
 % https://satijalab.org/seurat/v3.0/pbmc3k_tutorial.html
-% As in PhenoGraph, we first construct a KNN graph based on the euclidean distance in PCA space, and refine the edge weights between any two cells based on the shared overlap in their local neighborhoods (Jaccard similarity). This step is performed using the FindNeighbors function, and takes as input the previously defined dimensionality of the dataset (first 10 PCs).
+% As in PhenoGraph, we first construct a KNN graph based on the euclidean 
+% distance in PCA space, and refine the edge weights between any two cells 
+% based on the shared overlap in their local neighborhoods (Jaccard 
+% similarity). This step is performed using the FindNeighbors function, and
+% takes as input the previously defined dimensionality of the dataset 
+% (first 10 PCs).
 %
 % https://github.com/liurui39660/SNNDPC/tree/MatlabImplementation/src/m
 %{
