@@ -1,4 +1,4 @@
-function [idx,xr,yr]=i_setranges2(x,y,xr,yr,txtx,txty)
+function [idx,xr,yr]=i_setranges3(x,y,xr,yr,txtx,txty)
 % https://www.mathworks.com/matlabcentral/answers/143306-how-to-move-a-plotted-line-vertically-with-mouse-in-a-gui
 if nargin<1, x=randn(300,1); end
 if nargin<2, y=randn(300,1)*1000; end
@@ -7,9 +7,12 @@ if nargin<4, yr=[-.8 .8]*1000; end
 if nargin<5, txtx=''; end
 if nargin<6, txty=''; end
 
-fh=figure();
+fh=figure;
 scatter(x,y);
 box on
+ax=gca;
+set(ax, 'OuterPosition', [0, 0.1, 1, 0.9]); % [xLeft, yBottom, width, height]
+
 lh1=xline(xr(1),'k:');
 lh2=xline(xr(2),'r-');
 lh3=yline(yr(1),'k:');
@@ -23,17 +26,17 @@ set(fh,'WindowButtonDownFcn', @mouseDownCallback);
 % ButtonH=uicontrol('Parent',fh,'Style','pushbutton',...
 %     'String','Done','Units','normalized','Position',[0.0 0.5 0.4 0.2],'Visible','on');
 
-       uicontrol(fh,'String',...
-                  'Done',...
+       ab=uicontrol(fh,'String',...
+                  'Cancel',...
                   'Units','normalized',...
-                  'Position',[0.45 0.0 0.2 0.056],...
+                  'Position',[0.65 0.02 0.2 0.056],...
                   'Callback', @i_CloseFig,...
                   'Tag','button');
               
        uicontrol(fh,'String',...
                   'Set Cutoffs...',...
                   'Units','normalized',...
-                  'Position',[0.20 0.0 0.2 0.056],...
+                  'Position',[0.20 0.02 0.2 0.056],...
                   'Callback', @i_SetValues,...
                   'Tag','button');           
 
@@ -74,7 +77,8 @@ end
             catch
                 errordlg('Wrong inputs')
                 return;
-            end            
+            end
+            set(ab,"String","Done")
     end
 
 function mouseDownCallback(figHandle,varargin)
@@ -142,7 +146,10 @@ function mouseDownCallback(figHandle,varargin)
     axes1.Title.String=sprintf('Inclusion: %d out of %d (%.2f%%)\nExclusion: %d out of %d (%.2f%%)',...
         sum(i&j),length(i),100*sum(idx)./length(i),...
         length(i)-sum(i&j),length(i),100*(length(i)-sum(idx))./length(i));
+    set(ab,"String","Done")
+
     end
+
 end
 
 end

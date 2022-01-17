@@ -99,12 +99,12 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
                 helpdlg('No gene selected.','');
                 return;
             else
-                [~,i]=ismember(gsorted(idx),sce.g);
-                answer1 = questdlg(sprintf('Remove %d selected genes?',length(i)));
+                [~,idx]=ismember(gsorted(idx),sce.g);
+                answer1 = questdlg(sprintf('Remove %d selected genes?',length(idx)));
                 if strcmpi(answer1,'Yes')   
             	    fw = gui.gui_waitbar;                    
-                    sce.g(i)=[];
-                    sce.X(i,:)=[];
+                    sce.g(idx)=[];
+                    sce.X(idx,:)=[];
                     gui.gui_waitbar(fw);
                 else
                     return;
@@ -116,13 +116,13 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
             requirerefresh=false;
             return;
         case 'Library Size vs. Mt-reads Ratio'      % mt-ratio vs. library size
-            i=startsWith(sce.g,'mt-','IgnoreCase',true);
-            if ~any(i) 
+            idx=startsWith(sce.g,'mt-','IgnoreCase',true);
+            if ~any(idx) 
                 disp('No mt genes found.');
                 return;
             end
             lbsz=sum(sce.X,1);
-            lbsz_mt=sum(sce.X(i,:),1);
+            lbsz_mt=sum(sce.X(idx,:),1);
             cj=100*(lbsz_mt./lbsz);
             if issparse(cj), cj=full(cj); end
             ttxtj="mtDNA%";
@@ -131,7 +131,7 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
             if issparse(ci), ci=full(ci); end
             ttxti="Library Size";
             a=maxk(ci,10);                
-            idx=gui.i_setranges2(ci',cj',[0 a(end)],...
+            idx=gui.i_setranges3(ci',cj',[0 a(end)],...
                     [0 15],ttxti,ttxtj);
         case 'Library Size vs. Number of Genes'
             cj=sum(sce.X>0,1);
@@ -142,7 +142,7 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
             ttxti="Library Size";
             a=maxk(ci,10);
             b=maxk(cj,10);
-            idx=gui.i_setranges2(ci',cj',[0 a(end)],...
+            idx=gui.i_setranges3(ci',cj',[0 a(end)],...
                     [0 b(end)],ttxti,ttxtj);
         case 'Abundant lncRNAs vs. Number of Genes'    % 'Abundant lncRNAs vs. Number of Genes'
             % remove cells with a high fraction of nuclear lncRNA transcripts 
@@ -163,7 +163,7 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
             
             a=maxk(ci,10);
             b=maxk(cj,10);
-            idx=gui.i_setranges2(ci',cj',[0 a(end)],...
+            idx=gui.i_setranges3(ci',cj',[0 a(end)],...
                     [0 b(end)],ttxti,ttxtj);
         case 'QC Metrics in Violin Plots'   % view QC metrics violin
             gui.i_qcviolin(sce.X,sce.g);
