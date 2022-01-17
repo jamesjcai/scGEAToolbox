@@ -46,14 +46,18 @@ for k=1:n
     score=Xi*coeff;
     % [coeff,score]=pca(Xi);
     % coeff=coeff(:,1:ncom);
-    score=(score./(vecnorm(score).^2));    
+    score=(score./(vecnorm(score).^2));
     Beta=sum(y.*score);
     A(k,A(k,:)==1)=coeff*Beta';
 end
 end
 
-%{
+% [PCALoadings,PCAScores] = pca(Xi,"NumComponents",ncom);
+% betaPCR = regress(y-mean(y), PCAScores(:,1:2));
+% https://www.mathworks.com/help/stats/partial-least-squares-regression-and-principal-components-regression.html?prodcode=ST&language=en
+% https://blogs.sas.com/content/iml/2017/10/25/principal-component-regression-drawbacks.html
 
+%{
 library(dna)
 
 X1=rbind(
