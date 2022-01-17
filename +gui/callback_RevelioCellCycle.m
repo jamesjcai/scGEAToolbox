@@ -17,7 +17,7 @@ function callback_RevelioCellCycle(src,~)
         end 
             gui.gui_waitbar(fw);
 
-        FigureHandle=figure;
+        figure;
         gscatter(dc(:,1),dc(:,2),T.Var1);        
         %defaultToolbar = findall(FigureHandle, 'tag','FigureToolBar');  % get the figure's toolbar handle
         %gui.add_3dcamera(defaultToolbar, 'RevelioDc');

@@ -6,6 +6,11 @@ if isempty(pkg.FindRpath)
    msg=('Rscript.exe is not found');
    return;
 end
+%answer=questdlg('This command will check for necessary R package(s) and install them. Continue?');
+%if ~strcmp(answer,'Yes')
+%    msg=('Action cancelled.');
+%    return;
+%end
 folder=fileparts(mfilename('fullpath'));
 a=strfind(folder,filesep);
 folder=extractBefore(folder,a(end)+1);

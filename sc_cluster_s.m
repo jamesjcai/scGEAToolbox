@@ -3,7 +3,8 @@ function [c_clustid]=sc_cluster_s(s,k,varargin)
 %
 %see also: sc_cluster_x
 
-%if min(size(s))>3, error('S is coordinates of dimensional reduction.'); end
+%if min(size(s))>3, error('S is coordinates of dimensional 
+%reduction.'); end
 
 if nargin<2, k=6; end
 p = inputParser;
@@ -45,10 +46,12 @@ if plotit
         si=mean(si);
         if size(s,2)==3
             text(si(:,1),si(:,2),si(:,3),sprintf('%d',i),...
-                'fontsize',20,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');
+                'fontsize',20,'FontWeight','bold','BackgroundColor',...
+                'w','EdgeColor','k');
         else
             text(si(:,1),si(:,2),sprintf('%d',i),...
-                'fontsize',20,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');
+                'fontsize',20,'FontWeight','bold','BackgroundColor',...
+                'w','EdgeColor','k');
         end
     end
 end

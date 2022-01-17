@@ -318,15 +318,26 @@ end
        [ndim]=gui.i_choose2d3d;
        if isempty(ndim), return; end       
 	   fw = gui.gui_waitbar;
-       [sce]=run.SeuratWorkflow(sce,ndim);
-       [c, cL] = grp2idx(sce.c);
+       try
+           [sce]=run.SeuratWorkflow(sce,ndim);
+           [c, cL] = grp2idx(sce.c);
+       catch
+       	   gui.gui_waitbar(fw);
+           return;
+       end
 	   gui.gui_waitbar(fw);
        RefreshAll(src, 1, true, false);
     end
 
     function DecontX(~,~)
         fw = gui.gui_waitbar;
+        try
         [Xdecon,contamination]=run.decontX(sce);
+        catch
+            gui.gui_waitbar(fw);
+            errordlg('Runtime error.')
+            return;
+        end
         gui.gui_waitbar(fw);
         figure;
         gui.i_stemscatter(sce.s,contamination);
@@ -664,7 +675,8 @@ end
             return
         else
             [indx, tf] = listdlg('PromptString',...
-                {'Select target cluster'}, 'SelectionMode', 'single', 'ListString', string(c_members));
+                {'Select target cluster'}, 'SelectionMode',...
+                'single', 'ListString', string(c_members));
             if tf == 1
                 c_target = c_members(indx);
             else
@@ -696,7 +708,8 @@ end
         speciestag = gui.i_selectspecies;
         if isempty(speciestag), return; end  
         fw = gui.gui_waitbar;
-        [Tct] = pkg.local_celltypebrushed(sce.X, sce.g, sce.s, ptsSelected, ...
+        [Tct] = pkg.local_celltypebrushed(sce.X, sce.g, sce.s,...
+            ptsSelected, ...
             speciestag, "all", "panglaodb");
         ctxt = Tct.C1_Cell_Type;
         gui.gui_waitbar(fw);
@@ -920,9 +933,10 @@ end
         methodtag = lower(methodtag);
         usingold = false;
         if ~isempty(sce.struct_cell_clusterings.(methodtag))
-            answer1 = questdlg(sprintf('Using existing %s clustering?', upper(methodtag)), ...
-                '', ...
-                'Yes, use existing', 'No, re-compute', 'Cancel', 'Yes, use existing');
+            answer1 = questdlg(sprintf('Using existing %s clustering?',...
+                upper(methodtag)), '', ...
+                'Yes, use existing', 'No, re-compute',...
+                'Cancel', 'Yes, use existing');
             switch answer1
                 case 'Yes, use existing'
                     sce.c_cluster_id = sce.struct_cell_clusterings.(methodtag);
