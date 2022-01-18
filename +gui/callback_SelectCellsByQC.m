@@ -189,7 +189,7 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
     end
     
     if ismember(indx,[6 7 8])
-        if any(~idx)
+        if ~isempty(idx) && any(~idx)
             answer = questdlg(sprintf('Remove or highlight %d cells?',sum(~idx)),...
                 '','Remove','Highlight','Cancel','Remove');
             switch answer
@@ -204,6 +204,9 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
                 otherwise
                     return;
             end
+        else
+            requirerefresh=false;
+            return;
         end
     end
     guidata(FigureHandle,sce);
