@@ -76,7 +76,7 @@ function [idxx,xr,yr]=i_setranges3(x,y,xr,yr,txtx,txty)
                 xydata = guidata(figHandle);
                 if ~isempty(h2), delete(h2); end
                 h2=scatter(ax,xydata(~idx,1),xydata(~idx,2),'xr');
-                set(ax,'ActivePositionProperty','OuterPosition');
+                %set(ax,'ActivePositionProperty','OuterPosition');
             catch
                 errordlg('Wrong inputs')
                 return;
@@ -167,7 +167,7 @@ function [idxx,xr,yr]=i_setranges3(x,y,xr,yr,txtx,txty)
             hold(ax,'on')
             if ~isempty(h2), delete(h2); end
             h2=scatter(ax,xydata(~idx,1),xydata(~idx,2),'xr');
-            set(ax,'ActivePositionProperty','OuterPosition');
+            %set(ax,'ActivePositionProperty','OuterPosition');
         end
     end
 
