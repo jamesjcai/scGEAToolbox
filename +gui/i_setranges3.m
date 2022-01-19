@@ -8,7 +8,7 @@ function [idxx,xr,yr]=i_setranges3(x,y,xr,yr,txtx,txty)
     if nargin<5, txtx=''; end
     if nargin<6, txty=''; end
     
-    fh=figure;
+    fh=figure('Resize','on');
     scatter(x,y);
     h2=[];
     box on
@@ -39,8 +39,11 @@ function [idxx,xr,yr]=i_setranges3(x,y,xr,yr,txtx,txty)
               'Position',[0.20 0.02 0.2 0.056],...
               'Callback', @i_SetValues,...
               'Tag','button');
+
+   
    waitfor(fh);
 
+   
     function i_CloseFig(~,varargin)
         idxx=idx;
         % delete(fh);
@@ -77,6 +80,7 @@ function [idxx,xr,yr]=i_setranges3(x,y,xr,yr,txtx,txty)
                 if ~isempty(h2), delete(h2); end
                 h2=scatter(ax,xydata(~idx,1),xydata(~idx,2),'xr');
                 %set(ax,'ActivePositionProperty','OuterPosition');
+                set(fh,'Resize','off')
             catch
                 errordlg('Wrong inputs')
                 return;
@@ -168,7 +172,8 @@ function [idxx,xr,yr]=i_setranges3(x,y,xr,yr,txtx,txty)
             if ~isempty(h2), delete(h2); end
             h2=scatter(ax,xydata(~idx,1),xydata(~idx,2),'xr');
             %set(ax,'ActivePositionProperty','OuterPosition');
+            set(fh,'Resize','off')
         end
     end
-
+    
 end    % end of function
