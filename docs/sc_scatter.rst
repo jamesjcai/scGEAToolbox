@@ -7,8 +7,8 @@ Overview of `SCGEATOOL`
 
 |Overview of scgeatool|
 
-.. |Overview of scgeatool| image:: https://github.com/jamesjcai/scGEAToolbox/raw/master/resources/Tooltips.png
-   :target: https://github.com/jamesjcai/scGEAToolbox/raw/master/resources/Tooltips.png
+.. |Overview of scgeatool| image:: https://github.com/jamesjcai/scGEAToolbox/raw/main/resources/Tooltips.png
+   :target: https://github.com/jamesjcai/scGEAToolbox/raw/main/resources/Tooltips.png
   
 Using `SCGEATOOL` to explore
 -----------------------------
@@ -35,7 +35,7 @@ Making scRNA-seq data into `SCE`
   sce=SingleCellExperiment(X,g,s);
   scgeatool(sce)
   
-.. |gui| image:: https://raw.githubusercontent.com/jamesjcai/scGEAToolbox/master/resources/sc_scatter.png
+.. |gui| image:: https://raw.githubusercontent.com/jamesjcai/scGEAToolbox/main/resources/sc_scatter.png
    :width: 250
-   :target: https://raw.githubusercontent.com/jamesjcai/scGEAToolbox/master/resources/sc_scatter.png
+   :target: https://raw.githubusercontent.com/jamesjcai/scGEAToolbox/main/resources/sc_scatter.png
 
