@@ -45,7 +45,7 @@ We can then use the code below to import data into `MATLAB`.
 .. code-block:: matlab
 
   [X,g]=sc_readmtxfile('GSM3535276_AXLN1_matrix.mtx','GSM3535276_AXLN1_genes.tsv');
-  sc_scatter(X,g)
+  scgeatool(X,g)
 
 
 Process downloaded 10x Genomics data files
@@ -58,7 +58,7 @@ In a 10x Genomics data folder, there should be matrix.mtx and genes.tsv. Here is
   [X,g]=sc_qcfilter(X,g);
   [X,g]=sc_selectg(X,g,1,0.05);
   [s]=sc_tsne(X);
-  sc_scatter(X,g,s)
+  scgeatool(X,g,s)
 
 
 Download Drop-seq data files from GEO
@@ -94,7 +94,7 @@ We can then use the code below to import data into `MATLAB`.
   [X,g]=sc_qcfilter(X,g);
   [X,g]=sc_selectg(X,g,1,0.05);
   [s]=sc_tsne(X);
-  sc_scatter(X,g,s)
+  scgeatool(X,g,s)
 
 Import Seurat RData
 -------------------
@@ -121,7 +121,7 @@ After exporting Seurate object data into the three files, you can then use MATLA
   T=readtable('metadata.csv')
   c=string(T.Label);
   sce.c_batch_id=c;
-  sc_scatter(sce)
+  scgeatool(sce)
 
 Import data from a TSV/Excel file
 ---------------------------------
@@ -162,7 +162,7 @@ Here is what you should get:
   
 |sixdview|
 
-.. |sixdview| image:: https://github.com/jamesjcai/scGEAToolbox/raw/master/resources/six_d.png
+.. |sixdview| image:: https://github.com/jamesjcai/scGEAToolbox/raw/main/resources/six_d.png
    :width: 250
-   :target: https://github.com/jamesjcai/scGEAToolbox/raw/master/resources/six_d.png
+   :target: https://github.com/jamesjcai/scGEAToolbox/raw/main/resources/six_d.png
   

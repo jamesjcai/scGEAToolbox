@@ -23,7 +23,7 @@ Please, visit the official website |View scGEAToolbox on File Exchange| of scGEA
 
    quick_installation
    getting_started
-   sc_scatter
+   scgeatool
    code_formulas   
    case_studies
 

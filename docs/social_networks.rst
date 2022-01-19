@@ -4,7 +4,7 @@ Youtube Playlist
 You might also want to take a look at scGEAToolbox in action: see the `Youtube
 playlist <https://youtube.com/playlist?list=PLekWsTmNpdrHNznPesjE7dWxx7iMrucTo>`__
 
-Using `SC_SCATTER` to explore scRNA-seq data stored as `SCE` class
+Using `SCGEATOOL` to explore scRNA-seq data stored as `SCE` class
 ------------------------------------------------------------------
 .. raw:: html
 
@@ -14,7 +14,7 @@ Using `SC_SCATTER` to explore scRNA-seq data stored as `SCE` class
          </div>
 
 
-Label cell type interactively with `SC_SCATTER`
+Label cell type interactively with `SCGEATOOL`
 -----------------------------------------------
 .. raw:: html
 

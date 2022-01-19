@@ -33,7 +33,7 @@ Here is an example of raw data processing.
   [X,g]=sc_qcfilter(X,g);
   [X,g]=sc_selectg(X,g,1,0.05);
   [s]=sc_tsne(X);
-  sc_scatter(X,g,s)
+  scgeatool(X,g,s)
 
 t-SNE embedding of cells using highly varible genes (HVGs)
 ----------------------------------------------------------
@@ -42,7 +42,7 @@ t-SNE embedding of cells using highly varible genes (HVGs)
   
   [~,Xhvg]=sc_hvg(X,g);
   [s]=sc_tsne(Xhvg(1:2000,:));
-  sc_scatter(X,g,s)
+  scgeatool(X,g,s)
   
 An example pipeline for raw data processing
 -------------------------------------------
@@ -59,7 +59,7 @@ An example pipeline for raw data processing
   sce=sce.estimatecellcycle;                % estimate cell cycle phase
   id=sc_cluster_s(s,10);                    % clustering on tSNE coordinates using k-means
   sce.c_cluster_id=id;                      % assigning cluster Ids to SCE class
-  sc_scatter(sce)                           % visualize cells  
+  scgeatool(sce)                            % visualize cells  
 
 An example pipeline for processing 10x data folder
 --------------------------------------------------
@@ -75,7 +75,7 @@ Assuming the .m file containing the following code is in the folder ./filtered_f
   sce=sce.estimatepotency("mouse");
   sce=sce.embedcells('tSNE',true);
   save clean_data sce -v7.3
-  sc_scatter(sce)
+  scgeatool(sce)
 
 Merge two data sets (WT and KO)
 -------------------------------
@@ -88,6 +88,6 @@ Merge two data sets (WT and KO)
   sce_ko=sce;
   sce=sc_mergesces({sce_wt,sce_ko},'union');    % use parameter 'union' or 'intersect' to merge genes
   sce.c=sce.c_batch_id;
-  sc_scatter(sce)                               % blue - WT and red - KO  
+  scgeatool(sce)                                % blue - WT and red - KO  
   
 You may want to re-compute tSNE coordinates after merging.

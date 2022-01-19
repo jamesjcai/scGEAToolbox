@@ -3,7 +3,7 @@
 
 Overview of `SCGEATOOL`
 ----------------------
-`SCGEATOOL` can be used to visualize `SCE` class/object. Below are links to several case studies and examples using sc_scatter_sce to explore high-dimensional data. All examples are below are publically available through GitHub.
+`SCGEATOOL` can be used to visualize `SCE` class/object. Below are links to several case studies and examples using scgeatool_sce to explore high-dimensional data. All examples are below are publically available through GitHub.
 
 |Overview of scgeatool|
 
@@ -35,7 +35,7 @@ Making scRNA-seq data into `SCE`
   sce=SingleCellExperiment(X,g,s);
   scgeatool(sce)
   
-.. |gui| image:: https://raw.githubusercontent.com/jamesjcai/scGEAToolbox/main/resources/sc_scatter.png
+.. |gui| image:: https://raw.githubusercontent.com/jamesjcai/scGEAToolbox/main/resources/scgeatool.png
    :width: 250
-   :target: https://raw.githubusercontent.com/jamesjcai/scGEAToolbox/main/resources/sc_scatter.png
+   :target: https://raw.githubusercontent.com/jamesjcai/scGEAToolbox/main/resources/scgeatool.png
 
