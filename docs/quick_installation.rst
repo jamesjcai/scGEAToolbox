@@ -7,10 +7,10 @@ Run the following code in `MATLAB`:
 
   tic
   disp('Installing scGEAToolbox...')
-  unzip('https://github.com/jamesjcai/scGEAToolbox/archive/master.zip');
-  addpath('./scGEAToolbox-master');  
+  unzip('https://github.com/jamesjcai/scGEAToolbox/archive/main.zip');
+  addpath('./scGEAToolbox-main');  
   toc
-  if exist('sc_scatter.m','file')
+  if exist('scgeatool.m','file')
       disp('scGEAToolbox installed!')
   end
   savepath;
