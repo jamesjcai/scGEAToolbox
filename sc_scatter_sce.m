@@ -40,7 +40,7 @@ end
 
 [c, cL] = grp2idx(sce.c);
 
-FigureHandle = figure('Name', 'SC_SCATTER', ...
+FigureHandle = figure('Name', 'scGEATool - Single-cell Gene Expression Analysis Tool', ...
     'position', round(1.5 * [0 0 560 420]), ...
     'visible', 'off');
 movegui(FigureHandle, 'center');
@@ -202,27 +202,28 @@ if nargout > 0
 end
 
 
-function i_addbutton(xx,yy,aa,bb,cc)
-    if ischar(aa) || isstring(aa)
-        aa=str2func(aa);
+
+    function i_addbutton(toolbarHdl,sepTag,callbackFnc,imgFil,tooltipTxt)
+        if ischar(callbackFnc) || isstring(callbackFnc)
+            callbackFnc=str2func(callbackFnc);
+        end
+        if sepTag==1
+            septag='on';
+        else
+            septag='off';
+        end
+        if toolbarHdl==1
+            barhandle=UitoolbarHandle;
+        else
+            barhandle=defaultToolbar;
+        end
+        pt = uipushtool(barhandle, 'Separator', septag);
+        [img, map] = imread(fullfile(mfolder, 'resources', imgFil));
+        ptImage = ind2rgb(img, map);
+        pt.CData = ptImage;
+        pt.Tooltip = tooltipTxt;
+        pt.ClickedCallback = callbackFnc;
     end
-    if yy==1
-        septag='on'; 
-    else
-        septag='off'; 
-    end
-    if xx==1
-        barhandle=UitoolbarHandle;
-    else
-        barhandle=defaultToolbar;
-    end
-    pt3 = uipushtool(barhandle, 'Separator', septag);
-    [img, map] = imread(fullfile(mfolder, 'resources', bb));
-    ptImage = ind2rgb(img, map);
-    pt3.CData = ptImage;
-    pt3.Tooltip = cc;
-    pt3.ClickedCallback = aa;
-end
 
 
 % ------------------------
@@ -237,7 +238,7 @@ end
     end
 
     function closeRequest(hObject,~)
-        ButtonName = questdlg('Save SCE before closing SC_SCATTER?');
+        ButtonName = questdlg('Save SCE before closing SCGEATOOL?');
         switch ButtonName
             case 'Yes'
                 labels = {'Save SCE to variable named:'}; 
