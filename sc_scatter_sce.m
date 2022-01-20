@@ -697,15 +697,17 @@ end
     end
 
     function Brush4Celltypes(~, ~)
-        answer = questdlg('Label cell type of brushed cells?');
-        if ~strcmp(answer, 'Yes')
-            return
-        end
         ptsSelected = logical(h.BrushData.');
         if ~any(ptsSelected)
             warndlg("No cells are selected.");
-            return
+            return;
         end
+
+        answer = questdlg('Labels are not saved. Continue?');
+        if ~strcmp(answer, 'Yes')
+            return;
+        end
+
         speciestag = gui.i_selectspecies;
         if isempty(speciestag), return; end  
         fw = gui.gui_waitbar;
@@ -794,12 +796,19 @@ end
     function DeleteSelectedCells(~, ~)
         ptsSelected = logical(h.BrushData.');
         if ~any(ptsSelected)
-            warndlg("No cells are selected.");
-            return;
+            answer = questdlg('No brushed cells. Select cells by class?');
+            if ~strcmp(answer, 'Yes'), return; end            
+            [thisc,~]=gui.i_select1class(sce);
+            if isempty(thisc), return; end
+            [ci,cLi]=grp2idx(thisc);
+            [indxx,tfx] = listdlg('PromptString',{'Select groups'},...
+                'SelectionMode','multiple','ListString',string(cLi));
+            if tfx~=1, return; end
+            ptsSelected=ismember(ci,indxx);
         end
-        answer = questdlg('Delete cells?', '', ...
-            'Selected', 'Unselected', 'Cancel', 'Selected');
-        if strcmp(answer, 'Unselected')            
+        answer = questdlg('Delete cells?','','Selected', 'Unselected',...
+                          'Cancel', 'Selected');
+        if strcmp(answer, 'Unselected')
             i_deletecells(~ptsSelected);
         elseif strcmp(answer, 'Selected')            
             i_deletecells(ptsSelected);
@@ -816,7 +825,7 @@ end
             fw = gui.gui_waitbar;
         end
         sce = sce.removecells(ptsSelected);
-        if needprogressbar  % xxx
+        if needprogressbar
             gui.gui_waitbar(fw);
         end
         
