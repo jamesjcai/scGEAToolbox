@@ -15,10 +15,10 @@ function [idxx,xr,yr]=i_setranges3(x,y,xr,yr,txtx,txty)
     ax=get(fh, 'CurrentAxes');   % ax=gca;
     set(ax,'OuterPosition', [0, 0.1, 1, 0.9]); % [xLeft, yBottom, width, height]
     set(ax,'ActivePositionProperty','OuterPosition');
-    lh1=xline(xr(1),'k:');
-    lh2=xline(xr(2),'r-');
-    lh3=yline(yr(1),'k:');
-    lh4=yline(yr(2),'r-');
+    lh1=xline(xr(1),'g-','LineWidth',1);
+    lh2=xline(xr(2),'r-','LineWidth',1);
+    lh3=yline(yr(1),'g-','LineWidth',1);
+    lh4=yline(yr(2),'r-','LineWidth',1);
     idx=true(length(x),1);
     guidata(fh,[x y]);
     xlabel(txtx);
@@ -51,19 +51,29 @@ function [idxx,xr,yr]=i_setranges3(x,y,xr,yr,txtx,txty)
     end
 
     function i_SetValues(figHandle,varargin)
-            prompt = {'X-variable cutoff:','Y-variable cutoff:'};
+            prompt = {'X-variable cutoff (lower bound):', 'X-variable cutoff (upper bound):', ...
+                'Y-variable cutoff (lower bound):', 'Y-variable cutoff (upper bound):'};
             answer = inputdlg(prompt,"",[1 35],...
-                     {num2str(xr(2)),num2str(yr(2))});
+                     {num2str(xr(1)),num2str(xr(2)),...
+                      num2str(yr(1)),num2str(yr(2))});
             if isempty(answer), return; end
             try
                 a1 = str2double(answer{1});
                 a2 = str2double(answer{2});
-                xr(2)=a1;
-                yr(2)=a2;
+                b1 = str2double(answer{3});
+                b2 = str2double(answer{4});
+                xr(1)=a1;
+                xr(2)=a2;
+                yr(1)=b1;
+                yr(2)=b2;
+                if ~isempty(lh1), delete(lh1); end
+                lh1=xline(xr(1),'g-','LineWidth',1);                
                 if ~isempty(lh2), delete(lh2); end
-                lh2=xline(xr(2),'r-');
+                lh2=xline(xr(2),'r-','LineWidth',1);
+                if ~isempty(lh3), delete(lh3); end
+                lh3=yline(yr(1),'g-','LineWidth',1);                
                 if ~isempty(lh4), delete(lh4); end
-                lh4=yline(yr(2),'r-');
+                lh4=yline(yr(2),'r-','LineWidth',1);
                                
                 
                 ia=(x>lh1.Value) & (x<lh2.Value);
@@ -141,19 +151,19 @@ function [idxx,xr,yr]=i_setranges3(x,y,xr,yr,txtx,txty)
                     if abs(xx-lh1.Value) < abs(xx-lh2.Value)
                         if ~isempty(lh1), delete(lh1); end
                         %lh1=xline(xx,'r-');
-                        lh1=xline(0,'k:');
+                        lh1=xline(0,'g-','LineWidth',1);
                     else
                         if ~isempty(lh2), delete(lh2); end
-                        lh2=xline(xx,'r-');
+                        lh2=xline(xx,'r-','LineWidth',1);
                     end
             else
                     if abs(yy-lh3.Value) < abs(yy-lh4.Value)
                         if ~isempty(lh3), delete(lh3); end
                         %lh3=yline(yy,'r-');
-                        lh3=yline(0,'k:');
+                        lh3=yline(0,'g-','LineWidth',1);
                     else
                         if ~isempty(lh4), delete(lh4); end
-                        lh4=yline(yy,'r-');
+                        lh4=yline(yy,'r-','LineWidth',1);
                     end
             end
             ia=(xydata(:,1)>lh1.Value) & (xydata(:,1)<lh2.Value);
