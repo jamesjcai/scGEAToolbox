@@ -1,10 +1,14 @@
-function scgeatool(X, genelist, s, c)
-% SC_SCATTER
-%   SC_SCATTER(X,genelist,s,c) displays circles at the locations specified
-%   by s, coordinate of cell embedding, which is an n-by-p matrix
-%   specifying coordinates for each cell.
+function scgeatool(X, g, s, c)
+% SCGEATOOL   Open Single-cell Gene Expression Analysis Tool.
 %
-%   See also SC_SCATTER_SCE.
+%   SCGEATOOL opens Single-cell Gene Expression Analysis Tool.
+%
+%   SCGEATOOL( X, g ) .... X is gene-by-cell expression matrix; g is a 
+%   string array.
+%
+%   SCGEATOOL( X, g, s ) .... s is 3-d or 2-d embedding of cells
+%
+%   SCGEATOOL( X, g, s, c ) .... c is category labels of cells
 
 if usejava('jvm') && ~feature('ShowFigureWindows')
     error('MATLAB is in a text mode. This function requires a GUI-mode.');
@@ -116,11 +120,11 @@ promotesave=true;
                     barcodestxtfile = fullfile(pathname, sprintf('%sbarcodes.txt',prefixstr));
                 end
                 if ~exist(barcodestxtfile, 'file')
-                    [X, genelist] = sc_readmtxfile(matrixmtxfile, featurestxtfile, [], 2);
-                    sce = SingleCellExperiment(X, genelist);
+                    [X, g] = sc_readmtxfile(matrixmtxfile, featurestxtfile, [], 2);
+                    sce = SingleCellExperiment(X, g);
                 else
-                    [X, genelist, celllist] = sc_readmtxfile(matrixmtxfile, featurestxtfile, barcodestxtfile, 2);
-                    sce = SingleCellExperiment(X, genelist);
+                    [X, g, celllist] = sc_readmtxfile(matrixmtxfile, featurestxtfile, barcodestxtfile, 2);
+                    sce = SingleCellExperiment(X, g);
                     if ~isempty(celllist) && length(celllist)==sce.NumCells
                         sce.c_cell_id=celllist;
                     end
@@ -128,9 +132,9 @@ promotesave=true;
                 
             case 'H5/HDF5 File (*.h5)...'
                 try
-                    [X, genelist] = sc_readhdf5file;
+                    [X, g] = sc_readhdf5file;
                     if ~isempty(X)
-                        sce = SingleCellExperiment(X, genelist);
+                        sce = SingleCellExperiment(X, g);
                     else
                         return;
                     end
@@ -145,8 +149,8 @@ promotesave=true;
                                               'Pick a tsv/csv/txt format file');
                 if ~(fname), return; end
                 filename = fullfile(pathname, fname);
-                [X, genelist] = sc_readtsvfile(filename);
-                sce = SingleCellExperiment(X, genelist);
+                [X, g] = sc_readtsvfile(filename);
+                sce = SingleCellExperiment(X, g);
             case 'Seurat/Rds File (*.rds)...'
                 [fname, pathname] = uigetfile( ...
                                               {'*.rds', 'Seurat/Rds Format Files (*.rds)'
@@ -166,7 +170,7 @@ promotesave=true;
                 if selpath==0, return; end
                 try
                     fw = gui.gui_waitbar;
-                    [X,genelist,celllist,ftdone]=sc_read10xdir(selpath);
+                    [X,g,celllist,ftdone]=sc_read10xdir(selpath);
                     gui.gui_waitbar(fw);
                 catch ME
                     gui.gui_waitbar(fw);
@@ -174,7 +178,7 @@ promotesave=true;
                     return;
                 end
                 if ~ftdone, errordlg('Input Error'); return; end
-                sce = SingleCellExperiment(X,genelist);
+                sce = SingleCellExperiment(X,g);
                 if ~isempty(celllist) && length(celllist)==sce.NumCells
                     sce.c_cell_id=celllist;
                 end
@@ -203,12 +207,12 @@ promotesave=true;
                     end
                 end
             case 'Link to GEO mtx.gz File...'
-                [X,genelist,celllist,ftdone]=gui.i_inputgeolinks;
-                if isempty(X) || isempty(genelist) || ~ftdone
+                [X,g,celllist,ftdone]=gui.i_inputgeolinks;
+                if isempty(X) || isempty(g) || ~ftdone
                     % errordlg('Input Error');
                     return;
                 end
-                sce = SingleCellExperiment(X, genelist);
+                sce = SingleCellExperiment(X, g);
                 if ~isempty(celllist) && length(celllist)==sce.NumCells
                     sce.c_cell_id=celllist;
                 end
@@ -240,8 +244,8 @@ promotesave=true;
                         end                        
                         if isempty(f), error('f1'); end
                         fprintf('[X,genelist]=sc_readtsvfile(''%s'');\n',f);
-                        [X,genelist,celllist]=sc_readtsvfile(f);
-                        sce = SingleCellExperiment(X, genelist);
+                        [X,g,celllist]=sc_readtsvfile(f);
+                        sce = SingleCellExperiment(X, g);
                         sce.c_cell_id=celllist;
                     end
             case 'Load SCE Variable from Workspace...'
@@ -301,10 +305,10 @@ promotesave=true;
         if nargin < 3 || isempty(s)
             s = randn(size(X, 2), 3);
         end
-        if nargin < 2 || isempty(genelist)
-            genelist = string((1:size(X, 1))');
+        if nargin < 2 || isempty(g)
+            g = string((1:size(X, 1))');
         end
-        sce = SingleCellExperiment(X, genelist, s, c);
+        sce = SingleCellExperiment(X, g, s, c);
     end
     if isempty(sce), return; end
     if length(sce.g)~=length(unique(sce.g))
