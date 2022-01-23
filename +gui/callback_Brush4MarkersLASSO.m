@@ -1,7 +1,7 @@
 function callback_Brush4MarkersLASSO(src,~)
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
-%     assert(isequal(FigureHandle.Children,...
+%   assert(isequal(FigureHandle.Children,...
 %         FigureHandle.findobj('type','Axes')))
     
     % axesh=FigureHandle.Children(1)
@@ -17,28 +17,31 @@ function callback_Brush4MarkersLASSO(src,~)
         return;
     end
     assignin('base','ptsSelected',ptsSelected);
-        
-    [c,cL]=grp2idx(sce.c);
-    if isscalar(unique(c))
-        % methodtag=1;
-    else
-        answer = questdlg(sprintf('Select brushed cells'' group?\nYES to select brushed cells'' group\nNO to select brushed cells only'));
-        switch answer
-            case 'Yes'
-                uptsSelected=unique(c(ptsSelected));
-                if isscalar(uptsSelected)
-                    % methodtag=2;   % whole group
-                    ptsSelected=c==uptsSelected;
-                else
-                    errordlg('More than one group of brushed cells');
-                    return;
-                end
-            case 'No'
-                % methodtag=1;       % only selected cells 
-            otherwise
-                return;
-        end
-    end    
+    [ptsSelected,letdoit]=gui.i_expandbrushed(ptsSelected,sce);
+    if ~letdoit, return; end
+%     [c,cL]=grp2idx(sce.c);
+%     if isscalar(unique(c))
+%         % methodtag=1;
+%     else
+%         answer = questdlg(sprintf('Select brushed cells'' group?\nYES to select brushed cells'' group\nNO to select brushed cells only'));
+%         switch answer
+%             case 'Yes'
+%                 uptsSelected=unique(c(ptsSelected));
+%                 if isscalar(uptsSelected)
+%                     % methodtag=2;   % whole group
+%                     ptsSelected=c==uptsSelected;
+%                 else
+%                     errordlg('More than one group of brushed cells');
+%                     return;
+%                 end
+%             case 'No'
+%                 % methodtag=1;       % only selected cells 
+%             otherwise
+%                 return;
+%         end
+%     end
+
+
     [numfig]=gui.i_inputnumg;
     if isempty(numfig), return; end
     fw=gui.gui_waitbar;

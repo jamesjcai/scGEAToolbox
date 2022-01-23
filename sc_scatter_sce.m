@@ -796,16 +796,23 @@ end
     function DeleteSelectedCells(~, ~)
         ptsSelected = logical(h.BrushData.');
         if ~any(ptsSelected)
-            answer = questdlg('No brushed cells. Select cells by class?');
-            if ~strcmp(answer, 'Yes'), return; end            
-            [thisc,~]=gui.i_select1class(sce);
-            if isempty(thisc), return; end
-            [ci,cLi]=grp2idx(thisc);
-            [indxx,tfx] = listdlg('PromptString',{'Select groups'},...
-                'SelectionMode','multiple','ListString',string(cLi));
-            if tfx~=1, return; end
-            ptsSelected=ismember(ci,indxx);
+            warndlg("No cells are selected.");
+            return;
         end
+        [ptsSelected,letdoit]=gui.i_expandbrushed(ptsSelected,sce);
+        if ~letdoit, return; end
+        
+%         if ~any(ptsSelected)
+%             answer = questdlg('No brushed cells. Select cells by class?');
+%             if ~strcmp(answer, 'Yes'), return; end            
+%             [thisc,~]=gui.i_select1class(sce);
+%             if isempty(thisc), return; end
+%             [ci,cLi]=grp2idx(thisc);
+%             [indxx,tfx] = listdlg('PromptString',{'Select groups'},...
+%                 'SelectionMode','multiple','ListString',string(cLi));
+%             if tfx~=1, return; end
+%             ptsSelected=ismember(ci,indxx);
+%         end
         answer = questdlg('Delete cells?','','Selected', 'Unselected',...
                           'Cancel', 'Selected');
         if strcmp(answer, 'Unselected')

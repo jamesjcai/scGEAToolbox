@@ -14,3 +14,7 @@ if exist('cdgea.m','file')
     disp('scGEAToolbox installed!')
 end
 % webread('https://api.github.com/repos/jamesjcai/scgeatoolbox')
+
+%rootSettings = matlab.internal.getSettingsRoot;
+%addonFolder  = rootSettings.matlab.addons.InstallationFolder.ActiveValue;
+%executableFolder = fullfile(addonFolder,'Apps',name_of_your_app);
