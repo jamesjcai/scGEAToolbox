@@ -113,7 +113,7 @@ i_addbutton(2,0,@call_scscatter,"IMG00107.GIF","New SC_SCATTER")
 i_addbutton(2,0,@callback_CalculateCellScores,"cellscore2.gif","Calculate Cell Scores from List of Feature Genes")
 i_addbutton(2,0,@callback_ComparePotency,"plotpicker-candle.gif","Compare Differentiation Potency");
 i_addbutton(2,1,@callback_TrajectoryAnalysis,"plotpicker-arxtimeseries.gif","Run pseudotime analysis (Monocle)");
-i_addbutton(2,0,@callback_TrajectoryAnalysis,"plotpicker-comet.gif","Plot pseudotime trajectory");
+i_addbutton(2,0,@DrawTrajectory,"plotpicker-comet.gif","Plot pseudotime trajectory");
 i_addbutton(2,1,@callback_CompareGeneBtwCls,"plotpicker-priceandvol.gif","Compare Gene Expression between Classes");
 i_addbutton(2,0,@callback_DEGene2Groups,"plotpicker-boxplot.gif","Compare 2 groups (DE analysis)");
 i_addbutton(2,0,@callback_GSEA_HVGs,"plotpicker-andrewsplot.gif","Function enrichment of HVG genes");
@@ -463,8 +463,8 @@ end
             switch answer
                 case 'X-Y Plane'
                     sx=sce.s;
-                case 'Sreen/Camera'
-                    sx = pkg.i_3d2d(sce.s, ax, bx);
+                case 'Screen/Camera'
+                    sx = pkg.i_3d2d(sce.s, ax, bx);                   
                 case {'PCA-rotated'}
                     [~,sx]=pca(sce.s);
                 otherwise
@@ -779,7 +779,7 @@ end
         end
         [c,cL]=grp2idx(thisc);
         sce.c=c;
-        RefreshAll(src, 1, true, false);            
+        RefreshAll(src, 1, true, false);
         n=max(c);
         if n<40
             f=0.5*(n-1)./n;
@@ -793,7 +793,7 @@ end
         % guidata(FigureHandle, sce);
     end
 
-    function DeleteSelectedCells(~, ~)
+    function DeleteSelectedCells(src, ~)
         ptsSelected = logical(h.BrushData.');
         if ~any(ptsSelected)
             warndlg("No cells are selected.");
@@ -816,16 +816,16 @@ end
         answer = questdlg('Delete cells?','','Selected', 'Unselected',...
                           'Cancel', 'Selected');
         if strcmp(answer, 'Unselected')
-            i_deletecells(~ptsSelected);
+            i_deletecells(src,~ptsSelected);
         elseif strcmp(answer, 'Selected')            
-            i_deletecells(ptsSelected);
+            i_deletecells(src,ptsSelected);
         else
             return;
         end
         guidata(FigureHandle,sce);
     end
 
-    function i_deletecells(ptsSelected)
+    function i_deletecells(src,ptsSelected)
         needprogressbar=false;
         if sce.NumCells>8000, needprogressbar=true; end
         if needprogressbar
@@ -835,12 +835,14 @@ end
         if needprogressbar
             gui.gui_waitbar(fw);
         end
-        
         [c, cL] = grp2idx(sce.c);
-        [ax, bx] = view();
-        h = gui.i_gscatter3(sce.s, c);
-        title(sce.title);
-        view(ax, bx);
+        RefreshAll(src,1,true,true);
+%        [c, cL] = grp2idx(sce.c);
+%        [ax, bx] = view();
+%        h = gui.i_gscatter3(sce.s, c);
+%        title(sce.title);
+%        view(ax, bx);
+
     end
 
     function DrawTrajectory(~, ~)

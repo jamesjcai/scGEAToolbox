@@ -30,4 +30,11 @@ if ~exist(fullfile(pw1,'example_data/'),'dir')
         warning('Cannot download and unzip example_data.zip');
     end
 end
+if ~exist(fullfile(pw1,'resources/'),'dir')
+    try
+    unzip('https://github.com/jamesjcai/jamesjcai.github.io/raw/master/data/resources.zip');
+    catch
+        warning('Cannot download and unzip resources.zip');
+    end
+end
 end
