@@ -37,4 +37,5 @@ if ~exist(fullfile(pw1,'resources/'),'dir')
         warning('Cannot download and unzip resources.zip');
     end
 end
+% exist(fullfile(pw1,'+run/thirdparty/'),'dir')
 end

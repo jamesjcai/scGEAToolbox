@@ -109,11 +109,13 @@ i_addbutton(1,0,@callback_PickPlotMarker,"plotpicker-rose.gif","Switch scatter p
 i_addbutton(1,0,@callback_PickColorMap,"plotpicker-compass.gif","Switch color maps")
 i_addbutton(1,0,@RefreshAll,"plotpicker-geobubble2.gif","Refresh")
 
-i_addbutton(2,0,@call_scscatter,"IMG00107.GIF","New SC_SCATTER")
+i_addbutton(2,0,@call_scgeatool,"IMG00107.GIF"," ")
 i_addbutton(2,0,@callback_CalculateCellScores,"cellscore2.gif","Calculate Cell Scores from List of Feature Genes")
 i_addbutton(2,0,@callback_ComparePotency,"plotpicker-candle.gif","Compare Differentiation Potency");
-i_addbutton(2,1,@callback_TrajectoryAnalysis,"plotpicker-arxtimeseries.gif","Run pseudotime analysis (Monocle)");
-i_addbutton(2,0,@DrawTrajectory,"plotpicker-comet.gif","Plot pseudotime trajectory");
+
+i_addbutton(2,1,@callback_MultiGroupingViewer,"plotpicker-arxtimeseries.gif","Multi-grouping View...");
+i_addbutton(2,0,@callback_CrossTabulation,"plotpicker-comet.gif","Cross Tabulation");
+
 i_addbutton(2,1,@callback_CompareGeneBtwCls,"plotpicker-priceandvol.gif","Compare Gene Expression between Classes");
 i_addbutton(2,0,@callback_DEGene2Groups,"plotpicker-boxplot.gif","Compare 2 groups (DE analysis)");
 i_addbutton(2,0,@callback_GSEA_HVGs,"plotpicker-andrewsplot.gif","Function enrichment of HVG genes");
@@ -121,6 +123,16 @@ i_addbutton(2,0,@callback_BuildGeneNetwork,"noun_Network_691907.gif","Build gene
 i_addbutton(2,0,@callback_CompareGeneNetwork,"noun_Deep_Learning_2424485.gif","Compare two scGRNs");
 
 gui.add_3dcamera(defaultToolbar, 'AllCells');
+
+m_vie = uimenu(FigureHandle,'Text','Multiv&iew');
+m_vie.Accelerator = 'i';
+
+uimenu(m_vie,'Text','Multi-embedding View...',...
+    'Callback',@gui.callback_MultiEmbeddingViewer);
+uimenu(m_vie,'Text','Multi-grouping View...',...    
+    'Callback',@gui.callback_MultiGroupingViewer);
+uimenu(m_vie,'Text','Cross Tabulation...',...
+    'Callback',@callback_CrossTabulation);
 
 m_ext = uimenu(FigureHandle,'Text','Exte&rnal');
 m_ext.Accelerator = 'r';
@@ -156,13 +168,13 @@ uimenu(m_exp2,'Text','scTenifoldKnk (Virtual KO) Single Gene 🐢 ...',...
     'Callback',@callback_scTenifoldKnk1);
 uimenu(m_exp2,'Text','scTenifoldKnk (Virtual KO) All Genes 🐢🐢🐢 ...',...
     'Callback',@callback_scTenifoldKnkN);
-uimenu(m_exp,'Text','Multi-embedding View...',...
+
+uimenu(m_exp,'Text','Run pseudotime analysis (Monocle)...',...
     'Separator','on',...
-    'Callback',@gui.callback_MultiEmbeddingViewer);
-uimenu(m_exp,'Text','Multi-grouping View...',...    
-    'Callback',@gui.callback_MultiGroupingViewer);
-uimenu(m_exp,'Text','Cross Tabulation...',...
-    'Callback',@callback_CrossTabulation);
+    'Callback',@callback_TrajectoryAnalysis);
+uimenu(m_exp,'Text','Plot pseudotime trajectory...',...
+    'Callback',@DrawTrajectory);
+
 uimenu(m_exp,'Text','Ligand-Receptor Mediated Intercellular Crosstalk...',...
     'Separator','on',...
     'Callback',@callback_DetectCellularCrosstalk);
@@ -230,8 +242,8 @@ end
 % Callback Functions
 % ------------------------
 
-    function call_scscatter(~,~)    
-        sc_scatter;
+    function call_scgeatool(~,~)    
+        % scgeatool;
         % P = get(FigureHandle,'Position');
         % k=1;
         % set(FigureHandle,'Position',[P(1)-30*k P(2)-30*k P(3) P(4)]);
