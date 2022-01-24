@@ -1,0 +1,9 @@
+Medullary thymic epithelial cells (mTECs)	AIRE,FEZF2,CD80,CD74,CD40,EPCAM,LY75,CCL25,CCL19,LTBR,
+Y-chromosome genes	Zfy1,Zfy2,Ube1y1,Kdm5d,Eif2s3y,Uty,Ddx3y,Usp9y,Sry,Rbmy,Rbm31y,Sly,Slxl-1,Ssty1,Ssty2,Srsy,Prssly,Teyorf1,
+Adipocyte stem cells (ASCs)	Pdgfra,Cd34,Ly6a,Pparg,Pdgfrb,Ptgs2,Anxa3,Pi16,Dpp4,Cd55,Plpp1,G0s2,Apoe,Steap4,Itgb1,Col15a1,Inmt,Hsd11b1,Pi16,Cd55,
+Proliferating/differentiating preadipocytes	Birc5,Cdca8,Top2a,Cebpa,Adig,Plin1,Scd1,
+Mesothelial-like cells	Dpp4,Ackr3,Smpd3,Msln,Krt8,Krt14,Wt1,
+Endothelial cells (?)	Plvap,Flt1,Tie1,
+Smooth muscle cells (SMC)	Tagln,Acta2,Myh11,
+Mural cells (PMID:32769974)	Rgs5,Kcnj8,Des,Ppplr12b,Lmodl,Mgst3,Rgs4,Pcp4I1,Stom,Cox4i2,Myl9,Pkig,Tpm2,Gja4,Tinagll,Ppp1cb,Bcam,Uba2,Arhgef17,Mrvil,Mob2,Sorbs2,Cnn1,Esam,Mcam,Tagln,Cspg4,Rasl12,Rbpms2,Tpm1,Ppplr12a,Itga7,Atplb2,Slpr3,Mef2c,Sncg,Ptp4a3,Myh11,Mylk,Filip1l,Notch3,Rcan2,Epas1,Cystm1,Rasgrp2,Acta2,Flna
+Fibroblasts (PMID:32769974)	Nav1,Dpt,Hsd11b1,Cd34,Celf2,Entpd2,Col5a1,Gsn,Slc43a3,S100a16,S100a10,Olfml3,Lparl,Htra3,Ugdh,Pdgfra,ENSMUSG00000107314,Medag,Col1a2,Fbln2,Mfap5,Mgstl,Lspl,Mmp2,Dpepl,Loxl1,Pcolce2,Bicc1,Dcn,Lum,Gfpt2,Adamts2,Mfap4,Serpinf1,Col1a1,Abca8a,Rnase4,Scara5,Ly6a,Fblnl,Igfbp6,Heg1,Ccdc80,Pi16,C3,
