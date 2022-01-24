@@ -10,6 +10,10 @@ function scgeatool(X, g, s, c)
 %
 %   SCGEATOOL( X, g, s, c ) .... c is category labels of cells
 
+olddir=pwd();
+cdgea;
+cd(olddir);
+
 if usejava('jvm') && ~feature('ShowFigureWindows')
     error('MATLAB is in a text mode. This function requires a GUI-mode.');
 end
@@ -49,9 +53,7 @@ promotesave=true;
                                               {'*.mat', 'MAT-files (*.mat)'
                                                '*.*',  'All Files (*.*)'}, ...
                                               'Pick a MAT-file');
-                if ~(fname)
-                    return
-                end
+                if ~(fname), return; end
                 scefile = fullfile(pathname, fname);
                 try
                     fw = gui.gui_waitbar;
@@ -275,13 +277,13 @@ promotesave=true;
                 pw1=fileparts(mfilename('fullpath'));
                 fprintf('Loading SCE Data File example_data/testSce.mat...');
                 tic;
-                if ~exist(fullfile(pw1,'example_data/'),'dir')
-                    olddir=pwd();
-                    cdgea;
-                    cd(olddir);
-                end
+%                 if ~exist(fullfile(pw1,'example_data/'),'dir')
+%                     olddir=pwd();
+%                     cdgea;
+%                     cd(olddir);
+%                 end
                 file1=fullfile(pw1,'example_data','testSce.mat');
-                if ~exist(file1,"file"), 
+                if ~exist(file1,"file")
                     errordlg("Example data file does not exist.");
                     return;
                 end

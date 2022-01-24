@@ -6,6 +6,9 @@ if nargin < 1
 end
 pw0=pwd;
 pw1=fileparts(mfilename('fullpath'));
+
+
+
 if ~strcmp(pw0,pw1) && ~isconfirmed
     [selectedButton]=uigetpref('scGEApp',... % Group
            'cdgea_ask',...                               % Preference
@@ -25,17 +28,27 @@ else
 end
 if ~exist(fullfile(pw1,'example_data/'),'dir')
     try
-    unzip('https://github.com/jamesjcai/jamesjcai.github.io/raw/master/data/example_data.zip');
-    catch
-        warning('Cannot download and unzip example_data.zip');
+        unzip('https://github.com/jamesjcai/jamesjcai.github.io/raw/master/data/example_data.zip');
+    catch ME
+        warndlg(ME.message);
+        warning(ME.message);
     end
 end
 if ~exist(fullfile(pw1,'resources/'),'dir')
     try
     unzip('https://github.com/jamesjcai/jamesjcai.github.io/raw/master/data/resources.zip');
-    catch
-        warning('Cannot download and unzip resources.zip');
+    catch ME
+        warndlg(ME.message);
+        warning(ME.message);
     end
 end
-% exist(fullfile(pw1,'+run/thirdparty/'),'dir')
+if ~exist(fullfile(pw1,'+run','thirdparty/'),'dir')
+    try
+    unzip('https://github.com/jamesjcai/jamesjcai.github.io/raw/master/data/thirdparty.zip');
+    movefile(fullfile(pw1,'thirdparty/'),fullfile(pw1,'+run','thirdparty/'));
+    catch ME
+        warndlg(ME.message);
+        warning(ME.message);
+    end
+end
 end

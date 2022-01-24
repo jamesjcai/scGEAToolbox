@@ -1,4 +1,5 @@
 %pw1=fileparts(mfilename('fullpath'));
+%{
 pw1=cdgea;
 wrkpth=fullfile(pw1,'+run','thirdparty','cbrewer');
 addpath(wrkpth);
@@ -9,10 +10,10 @@ wrkpth=fullfile(pw1,'+run','thirdparty','umapFileExchange','util'); addpath(wrkp
 wrkpth=fullfile(pw1,'+run','thirdparty','R_SeuratWorkflow'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','R_MAST'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','alona_panglaodb2021'); addpath(wrkpth);
-
+%}
 %%
 compiler.build.standaloneWindowsApplication('scgeatool.m',...
-'ExecutableName','scgeatool')
+    'ExecutableName','scgeatool','Verbose','On');
 
 % C:\Users\jcai\AppData\Local\Temp\jcai\mcrCache9.11
 
