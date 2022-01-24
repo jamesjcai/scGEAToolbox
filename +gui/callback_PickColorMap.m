@@ -45,7 +45,7 @@ switch answer
         mb=helpdlg(sprintf('Using colormap: %s',cn{indx}),'');
         
     case 'No'
-        [indx,tf] = listdlg('PromptString',{'Select a colormap','',''},...
+        [indx,tf] = listdlg('PromptString',{'Select a colormap'},...
             'SelectionMode','single','ListString',cn);
         if tf==1
             colormap(co{indx});
