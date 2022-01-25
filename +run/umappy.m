@@ -3,7 +3,7 @@ if nargin<2, usepylib=false; end
 if nargin<1, error('[s]=run.umappy(X,true)'); end
 oldpth=pwd();
 pw1=fileparts(mfilename('fullpath'));
-wrkpth=fullfile(pw1,'thirdparty','py_umappy');
+wrkpth=fullfile(pw1,'external','py_umappy');
 cd(wrkpth);
 
 if exist('./input.csv','file'), delete('./input.csv'); end

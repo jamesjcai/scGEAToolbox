@@ -5,7 +5,7 @@ function [isDoublet,doubletscore]=doubletdetection(X)
     
 oldpth=pwd();
 pw1=fileparts(mfilename('fullpath'));
-wrkpth=fullfile(pw1,'thirdparty','py_doubletdetection');
+wrkpth=fullfile(pw1,'external','py_doubletdetection');
 cd(wrkpth);
 
 if exist('./input.txt','file'), delete('./input.txt'); end

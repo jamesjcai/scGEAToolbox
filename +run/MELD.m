@@ -12,7 +12,7 @@ if nargin<2
 end
 oldpth=pwd();
 pw1=fileparts(mfilename('fullpath'));
-wrkpth=fullfile(pw1,'thirdparty','py_MELD');
+wrkpth=fullfile(pw1,'external','py_MELD');
 cd(wrkpth);
 if ~isdebug
 if exist('./batchid.txt','file'), delete('./batchid.txt'); end

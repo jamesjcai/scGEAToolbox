@@ -27,7 +27,8 @@ else
     cd(pw1);
 end
 
-if ~exist(fullfile(pw1,'example_data/'),'dir') || ~exist(fullfile(pw1,'resources/'),'dir')
+if ~exist(fullfile(pw1,'example_data/'),'dir') || ~exist(fullfile(pw1,'resources/'),'dir') ||...
+        ~exist(fullfile(pw1,'+run','external/'),'dir')
     f = waitbar(0.33,'Initializing scgeatool on the first run...');
     if ~exist(fullfile(pw1,'example_data/'),'dir')
         try
@@ -46,15 +47,16 @@ if ~exist(fullfile(pw1,'example_data/'),'dir') || ~exist(fullfile(pw1,'resources
             warning(ME.message);
         end
     end
-    % if ~exist(fullfile(pw1,'+run','thirdparty/'),'dir')
-    %     try
-    %     unzip('https://github.com/jamesjcai/jamesjcai.github.io/raw/master/data/thirdparty.zip');
-    %     movefile(fullfile(pw1,'thirdparty/'),fullfile(pw1,'+run','thirdparty/'));
-    %     catch ME
-    %         warndlg(ME.message);
-    %         warning(ME.message);
-    %     end
-    % end
+    waitbar(0.85,f,'Initializing scgeatool on the first run...');
+    if ~exist(fullfile(pw1,'+run','external/'),'dir')
+        try
+        unzip('https://github.com/jamesjcai/jamesjcai.github.io/raw/master/data/external.zip');
+        movefile(fullfile(pw1,'external/'),fullfile(pw1,'+run','external/'));
+        catch ME
+            warndlg(ME.message);
+            warning(ME.message);
+        end
+    end
     pause(0.5);
     waitbar(1,f,'Finishing');
     pause(1);

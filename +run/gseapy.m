@@ -4,7 +4,7 @@ if nargin<3, usepylib=true; end
 if nargin<2, drdistin=[]; end
 oldpth=pwd();
 pw1=fileparts(mfilename('fullpath'));
-wrkpth=fullfile(pw1,'thirdparty','py_gseapy');
+wrkpth=fullfile(pw1,'external','py_gseapy');
 cd(wrkpth);
 
 if exist('./input.txt','file'), delete('./input.txt'); end

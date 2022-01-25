@@ -2,7 +2,7 @@ function [isDoublet,doubletscore]=scrublet(X)
 
 oldpth=pwd();
 pw1=fileparts(mfilename('fullpath'));
-wrkpth=fullfile(pw1,'thirdparty','py_scrublet');
+wrkpth=fullfile(pw1,'external','py_scrublet');
 cd(wrkpth);
 
 if exist('./input.txt','file'), delete('./input.txt'); end

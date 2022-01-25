@@ -3,7 +3,7 @@ if nargin<3, usepylib=false; end
 if nargin<2, error('[s]=run.harmonypy(s,batchid)'); end
 oldpth=pwd();
 pw1=fileparts(mfilename('fullpath'));
-wrkpth=fullfile(pw1,'thirdparty','py_harmonypy');
+wrkpth=fullfile(pw1,'external','py_harmonypy');
 cd(wrkpth);
 
 if exist('./output.csv','file'), delete('./output.csv'); end
