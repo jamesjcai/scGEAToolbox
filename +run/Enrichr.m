@@ -7,9 +7,7 @@ if nargin<1, genelist=[]; end
 if nargin<2, genenum=1000; end
 
 pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'thirdparty','Enrichr');
-addpath(pth);
-
+pth=fullfile(pw1,'external','Enrichr');
 infile=fullfile(pth,'input_template.html');
 outfile=fullfile(pth,'input_page.html');
 
