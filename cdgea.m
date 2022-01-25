@@ -33,31 +33,31 @@ if ~exist(fullfile(pw1,'example_data/'),'dir') || ~exist(fullfile(pw1,'resources
         try
             unzip('https://github.com/jamesjcai/jamesjcai.github.io/raw/master/data/example_data.zip');
         catch ME
-            close(f);
             warndlg(ME.message);
             warning(ME.message);
         end
     end
-    f = waitbar(0.66,'Initializing scgeatool on the first run...');
+    waitbar(0.66,f,'Initializing scgeatool on the first run...');
     if ~exist(fullfile(pw1,'resources/'),'dir')
         try
             unzip('https://github.com/jamesjcai/jamesjcai.github.io/raw/master/data/resources.zip');
         catch ME
-            close(f);
             warndlg(ME.message);
             warning(ME.message);
         end
     end
+    % if ~exist(fullfile(pw1,'+run','thirdparty/'),'dir')
+    %     try
+    %     unzip('https://github.com/jamesjcai/jamesjcai.github.io/raw/master/data/thirdparty.zip');
+    %     movefile(fullfile(pw1,'thirdparty/'),fullfile(pw1,'+run','thirdparty/'));
+    %     catch ME
+    %         warndlg(ME.message);
+    %         warning(ME.message);
+    %     end
+    % end
+    pause(0.5);
     waitbar(1,f,'Finishing');
-    close(f);
+    pause(1);
+    if isvalid(f), close(f); end
 end
-% if ~exist(fullfile(pw1,'+run','thirdparty/'),'dir')
-%     try
-%     unzip('https://github.com/jamesjcai/jamesjcai.github.io/raw/master/data/thirdparty.zip');
-%     movefile(fullfile(pw1,'thirdparty/'),fullfile(pw1,'+run','thirdparty/'));
-%     catch ME
-%         warndlg(ME.message);
-%         warning(ME.message);
-%     end
-% end
 end

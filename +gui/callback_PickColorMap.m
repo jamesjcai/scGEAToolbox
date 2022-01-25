@@ -1,4 +1,5 @@
 function callback_PickColorMap(src,~,showzero)
+
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
     if nargin<3, showzero=false; end
@@ -9,7 +10,9 @@ function callback_PickColorMap(src,~,showzero)
     a=strfind(folder,filesep);
     folder=extractBefore(folder,a(end)+1);
     wrkpth=fullfile(folder,'+run','thirdparty','cbrewer');
-    addpath(wrkpth);
+    if ~(ismcc || isdeployed)
+        addpath(wrkpth);
+    end
     CT=cbrewer('seq','Blues',n);
 
     cx=autumn(n);
@@ -61,4 +64,6 @@ end
         cm(1, :) = [.8 .8 .8];
         colormap(cm);
     end
+
+
 end

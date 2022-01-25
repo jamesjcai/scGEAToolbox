@@ -1,5 +1,0 @@
-library(clustermole)
-a<-clustermole_markers(species = "hs")
-write.csv(a,file="aaa.csv")
-b<-clustermole_markers(species = "mm")
-write.csv(b,file="bbb.csv")

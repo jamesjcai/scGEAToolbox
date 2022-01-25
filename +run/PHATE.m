@@ -22,8 +22,9 @@ if nargin<5, genelist=[]; end
 
 pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'thirdparty','PHATE');
-addpath(pth);
-
+if ~(ismcc || isdeployed)
+    addpath(pth);
+end
 % gene_names=cellstr(gl123);  
 % PHATE on data (rows: samples, columns: features)
 % data=X';

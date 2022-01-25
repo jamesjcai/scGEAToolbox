@@ -1,16 +1,17 @@
 %pw1=fileparts(mfilename('fullpath'));
-%{
+
 pw1=cdgea;
-wrkpth=fullfile(pw1,'+run','thirdparty','cbrewer');
-addpath(wrkpth);
-wrkpth=fullfile(pw1,'+run','thirdparty','PHATE');
-addpath(wrkpth);
+wrkpth=fullfile(pw1,'+run','thirdparty','cbrewer'); addpath(wrkpth);
+wrkpth=fullfile(pw1,'+run','thirdparty','PHATE'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','umapFileExchange','umap'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','umapFileExchange','util'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','R_SeuratWorkflow'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','R_MAST'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','alona_panglaodb2021'); addpath(wrkpth);
-%}
+wrkpth=fullfile(pw1,'+run','thirdparty','SIMLR'); addpath(wrkpth);
+wrkpth=fullfile(pw1,'+run','thirdparty','SIMLR','src'); addpath(wrkpth);
+
+savepath;
 %%
 compiler.build.standaloneWindowsApplication('scgeatool.m',...
     'ExecutableName','scgeatool','Verbose','On');

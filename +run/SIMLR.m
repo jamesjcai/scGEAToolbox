@@ -16,9 +16,13 @@ function [C,s]=SIMLR(X,k,donorm)
 
 pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'thirdparty','SIMLR');
-addpath(pth);
+if ~(ismcc || isdeployed)
+    addpath(pth);
+end
 pth=fullfile(pw1,'thirdparty','SIMLR','src');
-addpath(pth);
+if ~(ismcc || isdeployed)
+    addpath(pth);
+end
 
 if nargin<2
     k=[];

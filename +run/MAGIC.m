@@ -4,8 +4,9 @@ if nargin<2, donorm=true; end
 
 pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'thirdparty','MAGIC');
-addpath(pth);
-
+if ~(ismcc || isdeployed)
+    addpath(pth);
+end
 % gene_names=cellstr(gl123);  MAGIC needs [cells x genes]
 % data=X';
 
