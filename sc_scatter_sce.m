@@ -283,7 +283,7 @@ end
         acc=acc{1};
         if strlength(acc)>4 && ~isempty(regexp(acc,'G.+','once'))
             try                
-                fw=gui.gui_waitbar;                
+                fw=gui.gui_waitbar;
                 [sce]=sc_readgeoaccession(acc);
                 [c,cL]=grp2idx(sce.c);
                 gui.gui_waitbar(fw);                

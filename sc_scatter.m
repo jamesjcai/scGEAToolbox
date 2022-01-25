@@ -7,8 +7,6 @@ function sc_scatter
 
 % Make an "error-dialog-like" dialog that can launch scgeatool if desired.
 
-
-
 dlgWidth = 300;
 dlgHeight = 150;
 

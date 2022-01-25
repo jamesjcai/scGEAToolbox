@@ -26,29 +26,38 @@ if ~strcmp(pw0,pw1) && ~isconfirmed
 else
     cd(pw1);
 end
-if ~exist(fullfile(pw1,'example_data/'),'dir')
-    try
-        unzip('https://github.com/jamesjcai/jamesjcai.github.io/raw/master/data/example_data.zip');
-    catch ME
-        warndlg(ME.message);
-        warning(ME.message);
+
+if ~exist(fullfile(pw1,'example_data/'),'dir') || ~exist(fullfile(pw1,'resources/'),'dir')
+    f = waitbar(0.33,'Initializing scgeatool on the first run...');
+    if ~exist(fullfile(pw1,'example_data/'),'dir')
+        try
+            unzip('https://github.com/jamesjcai/jamesjcai.github.io/raw/master/data/example_data.zip');
+        catch ME
+            close(f);
+            warndlg(ME.message);
+            warning(ME.message);
+        end
     end
-end
-if ~exist(fullfile(pw1,'resources/'),'dir')
-    try
-    unzip('https://github.com/jamesjcai/jamesjcai.github.io/raw/master/data/resources.zip');
-    catch ME
-        warndlg(ME.message);
-        warning(ME.message);
+    f = waitbar(0.66,'Initializing scgeatool on the first run...');
+    if ~exist(fullfile(pw1,'resources/'),'dir')
+        try
+            unzip('https://github.com/jamesjcai/jamesjcai.github.io/raw/master/data/resources.zip');
+        catch ME
+            close(f);
+            warndlg(ME.message);
+            warning(ME.message);
+        end
     end
+    waitbar(1,f,'Finishing');
+    close(f);
 end
-if ~exist(fullfile(pw1,'+run','thirdparty/'),'dir')
-    try
-    unzip('https://github.com/jamesjcai/jamesjcai.github.io/raw/master/data/thirdparty.zip');
-    movefile(fullfile(pw1,'thirdparty/'),fullfile(pw1,'+run','thirdparty/'));
-    catch ME
-        warndlg(ME.message);
-        warning(ME.message);
-    end
-end
+% if ~exist(fullfile(pw1,'+run','thirdparty/'),'dir')
+%     try
+%     unzip('https://github.com/jamesjcai/jamesjcai.github.io/raw/master/data/thirdparty.zip');
+%     movefile(fullfile(pw1,'thirdparty/'),fullfile(pw1,'+run','thirdparty/'));
+%     catch ME
+%         warndlg(ME.message);
+%         warning(ME.message);
+%     end
+% end
 end
