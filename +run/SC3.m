@@ -35,7 +35,7 @@ Dis=1-corr(X,'type','p');
 oldpath=pwd;
 pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'thirdparty','ClusterPack');
-addpath(pth);
+if ~(ismcc || isdeployed), addpath(pth); end
 cd(pth);
 cls=[cls1;cls2;cls3];
 c=clusterensemble(cls,optimk);

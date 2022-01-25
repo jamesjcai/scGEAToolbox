@@ -17,7 +17,7 @@ opts.maxit=150;
 if fastersvd    
 	pw1=fileparts(mfilename('fullpath'));
     pth=fullfile(pw1,'+run','thirdparty','faster_svd','lmsvd');
-    addpath(pth);
+    if ~(ismcc || isdeployed), addpath(pth); end
 end
 
 % LogNormalize: Feature counts for each cell are divided by

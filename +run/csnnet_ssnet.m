@@ -6,6 +6,6 @@ function A=csnnet_ssnet(X,idx)
     if nargin<2, idx=1; end
     pw1=fileparts(mfilename('fullpath'));
     pth=fullfile(pw1,'thirdparty','CSN_transform');
-    addpath(pth);
+    if ~(ismcc || isdeployed), addpath(pth); end
     A=csnet(X,idx);
  end

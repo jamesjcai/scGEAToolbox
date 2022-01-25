@@ -16,15 +16,15 @@ pw1=fileparts(mfilename('fullpath'));
 switch p.Results.type
     case 'nmi'        
         pth=fullfile(pw1,'thirdparty','SIMLR');
-        addpath(pth);
+        if ~(ismcc || isdeployed), addpath(pth); end
         pth=fullfile(pw1,'thirdparty','SIMLR','src');
-        addpath(pth);
+        if ~(ismcc || isdeployed), addpath(pth); end
         score = Cal_NMI(true_labels, cluster_labels);
         fprintf('The NMI value is %f\n', score);
     case 'ari'
         % ----
         pth=fullfile(pw1,'+run','thirdparty','SinNLRR');
-        addpath(pth);
+        if ~(ismcc || isdeployed), addpath(pth); end
         [AR,~,~,~]=Cal_ARI(true_labels, cluster_labels);
         score=AR;
         fprintf('The ARI value is %f\n', score);

@@ -1,6 +1,8 @@
 function [X,Y]=ComBat(X,Y)
 pw1=fileparts(mfilename('fullpath'));
-addpath(fullfile(pw1,'thirdparty','ComBat'));
+if ~(ismcc || isdeployed)
+    addpath(fullfile(pw1,'thirdparty','ComBat'));
+end
 
 n1=size(X,2);
 n2=size(Y,2);

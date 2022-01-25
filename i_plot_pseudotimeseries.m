@@ -50,11 +50,11 @@ ylabel('Expression')
 
 pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'+run','thirdparty','locfit','m');
-addpath(pth);
+if ~(ismcc || isdeployed), addpath(pth); end
 pth=fullfile(pw1,'+run','thirdparty','locfit','mex');
-addpath(pth);
+if ~(ismcc || isdeployed), addpath(pth); end
 pth=fullfile(pw1,'+run','thirdparty','locfit','source');
-addpath(pth);
+if ~(ismcc || isdeployed), addpath(pth); end
 
 if size(t,2)~=1
     t=t';

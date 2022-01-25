@@ -14,7 +14,7 @@ if nargin<7, genelist=[]; end
 
 pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'+run','thirdparty','PHATE');
-addpath(pth);
+if ~(ismcc || isdeployed), addpath(pth); end
 
 if bygene, X=X.'; end
 if donorm

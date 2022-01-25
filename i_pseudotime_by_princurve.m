@@ -5,7 +5,7 @@ if nargin<2, plotit=false; end
 
 pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'+run','thirdparty','MPPC');
-addpath(pth);
+if ~(ismcc || isdeployed), addpath(pth); end
 
 
         n=size(s,1);

@@ -9,7 +9,7 @@ assert(size(X,2)==length(t))
 
 pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'thirdparty','TSEE');
-addpath(pth);
+if ~(ismcc || isdeployed), addpath(pth); end
 
 X=sc_transform(X);
 

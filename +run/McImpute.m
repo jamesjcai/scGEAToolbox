@@ -4,7 +4,7 @@ if nargin<2, donorm=true; end
 
 pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'thirdparty','McImpute');
-addpath(pth);
+if ~(ismcc || isdeployed), addpath(pth); end
 
 if ~donorm
     warning('Normalized X as input is recommended.');

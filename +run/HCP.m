@@ -5,7 +5,7 @@ function [X,Y]=HCP(X,Y)
 
 pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'thirdparty','HCP_hidden_covariates_with_prior');
-addpath(pth);
+if ~(ismcc || isdeployed), addpath(pth); end
 
 n1=size(X,2);
 n2=size(Y,2);

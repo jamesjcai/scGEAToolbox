@@ -6,7 +6,7 @@ function X=csndm_trans(X)
 
     pw1=fileparts(mfilename('fullpath'));
     pth=fullfile(pw1,'thirdparty','CSN_transform');
-    addpath(pth);
+    if ~(ismcc || isdeployed), addpath(pth); end
     % G=csnet(X(:,1:10));
     % csnedge(X(1,:),X(2,:));
     X=csndm(X);

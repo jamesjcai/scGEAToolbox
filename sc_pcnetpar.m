@@ -15,7 +15,7 @@ if fastersvd
     opts.maxit=150;
     pw1=fileparts(mfilename('fullpath'));
     pth=fullfile(pw1,'+run','thirdparty','faster_svd','lmsvd');
-    addpath(pth);
+    if ~(ismcc || isdeployed), addpath(pth); end
 end
 
 % X is supposed to be LogNormalized, i.e., [X]=log(1+sc_norm(X));

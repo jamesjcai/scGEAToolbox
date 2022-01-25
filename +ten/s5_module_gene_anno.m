@@ -50,8 +50,9 @@ writetable(Tres,'res_v','filetype','spreadsheet');
 
 
 %%
-
-addpath('..\thirdparty\goanalysis')
+if ~(ismcc || isdeployed)
+    addpath('..\thirdparty\goanalysis');
+end
 n=size(A0,1);
 for k=1:max(C)
 idx=find(C==k);

@@ -14,9 +14,9 @@ if nargin<4, plotit=false; end
 
 pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'thirdparty','GENIE3');
-addpath(pth);
+if ~(ismcc || isdeployed), addpath(pth); end
 pth=fullfile(pw1,'thirdparty','GENIE3','RT');
-addpath(pth);
+if ~(ismcc || isdeployed), addpath(pth); end
 
 if donorm   
    X=sc_norm(X,'type','libsize');

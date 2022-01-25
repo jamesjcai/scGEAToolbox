@@ -6,7 +6,7 @@ if nargin<5, colorby='mean'; end
 
 pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'../+run/thirdparty/PHATE');
-addpath(pth);
+if ~(ismcc || isdeployed), addpath(pth); end
 
 if bygene
    data=sc_norm(X','type','libsize');
