@@ -9,7 +9,9 @@ if nargin<2, cluK=10; end
 
 pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'thirdparty','SNNDPC');
-addpath(pth);
+if ~(ismcc || isdeployed)
+    addpath(pth);
+end
 x=SnnDpc_ori(s,ones(size(s,1),1),knnK,'AutoPick',cluK);
 c=x.cluster;
 

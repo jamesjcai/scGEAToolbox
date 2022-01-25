@@ -9,7 +9,9 @@ if nargin<4
 end
 pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'thirdparty','scGeneFit');
+if ~(ismcc || isdeployed)
 addpath(pth);
+end
 opt.samples_fraction=0.15;
 opt.constraints_neighbors=3;
 opt.hinge_scale=7;

@@ -31,6 +31,7 @@ parse(p,X,varargin{:});
 donorm=p.Results.donorm;
 k=p.Results.k;
 
+if ~(ismcc || isdeployed)
 pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'thirdparty','SoptSC');
 addpath(pth);
@@ -38,6 +39,7 @@ pth=fullfile(pw1,'thirdparty','SoptSC','NNDSVD');
 addpath(pth);
 pth=fullfile(pw1,'thirdparty','SoptSC','symnmf2');
 addpath(pth);
+end
 
 if donorm
     [X]=sc_norm(X,'type','deseq');

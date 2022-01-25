@@ -902,7 +902,9 @@ classdef UmapUtil < handle
             pth=fileparts(mfilename('fullpath'));
             pPth=fileparts(pth);
             utilPath=fullfile(pPth, 'util');
+			if ~(ismcc || isdeployed)
             addpath(utilPath);
+			end
             FileBasics.AddNonConflictingPaths({pth, utilPath});
             if nargin>0
                 if length(varargin)==1 && isstruct(varargin{1}) ...

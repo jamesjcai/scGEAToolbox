@@ -10,8 +10,9 @@ function [C]=SinNLRR(X,k)
 
 pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'thirdparty','SinNLRR');
-addpath(pth);
-
+if ~(ismcc || isdeployed)
+    addpath(pth);
+end
 if nargin<2 || isempty(k)
     k=fun_num_cluster(X);
     fprintf('k=%d\n',k);

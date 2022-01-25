@@ -19,8 +19,9 @@ initial_alpha=1 ;
 negative_sample_rate=5 ;
 verbose=false;
 
-
+if ~(ismcc || isdeployed)
 addpath('../util');
+end
 initJava
 pu=PopUp('Running UMAP ...', 'center', 'foobar', false);
 nTh=edu.stanford.facs.swing.Umap.EPOCH_REPORTS;

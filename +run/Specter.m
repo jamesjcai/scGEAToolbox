@@ -2,16 +2,17 @@ function [c]=Specter(X,k)
 
 if nargin<2, k=5; end
 
-pw1=fileparts(mfilename('fullpath'));
-pth0=fullfile(pw1,'thirdparty','Specter');
-pth1=fullfile(pw1,'thirdparty','Specter','dimred');
-pth2=fullfile(pw1,'thirdparty','Specter','LSC');
-pth3=fullfile(pw1,'thirdparty','Specter','utils');
-addpath(pth0);
-addpath(pth1);
-addpath(pth2);
-addpath(pth3);
-
+if ~(ismcc || isdeployed)
+    pw1=fileparts(mfilename('fullpath'));
+    pth0=fullfile(pw1,'thirdparty','Specter');
+    pth1=fullfile(pw1,'thirdparty','Specter','dimred');
+    pth2=fullfile(pw1,'thirdparty','Specter','LSC');
+    pth3=fullfile(pw1,'thirdparty','Specter','utils');
+    addpath(pth0);
+    addpath(pth1);
+    addpath(pth2);
+    addpath(pth3);
+end
 data=transpose(sc_transform(X));
 
 %% choose parameters for algorithm
