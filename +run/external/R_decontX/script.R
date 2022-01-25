@@ -1,4 +1,4 @@
-setwd("U:\\GitHub\\scGEAToolbox\\+run\\thirdparty\\R_decontX")
+# setwd("U:\\GitHub\\scGEAToolbox\\+run\\thirdparty\\R_decontX")
 library(celda)
 library(rhdf5)
 # library(R.matlab)

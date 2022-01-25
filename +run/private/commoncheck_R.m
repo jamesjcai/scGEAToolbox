@@ -1,5 +1,6 @@
-function [ok,msg]=commoncheck_R(rscriptdir)
+function [ok,msg]=commoncheck_R(rscriptdir,externalfolder)
 
+if nargin<2, externalfolder='external'; end
 ok=false; msg=[];
 
 if isempty(pkg.FindRpath)
@@ -14,7 +15,7 @@ end
 folder=fileparts(mfilename('fullpath'));
 a=strfind(folder,filesep);
 folder=extractBefore(folder,a(end)+1);
-wrkpth=fullfile(folder,'thirdparty',rscriptdir);
+wrkpth=fullfile(folder,externalfolder,rscriptdir);
 cd(wrkpth);
 fprintf('CURRENTWDIR = "%s"\n',wrkpth);
 [~,cmdout]=pkg.RunRcode('require.R');
