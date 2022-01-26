@@ -251,27 +251,29 @@ end
 
     function closeRequest(hObject,~)
         if ~(ismcc || isdeployed)
-        ButtonName = questdlg('Save SCE before closing SCGEATOOL?');
-        switch ButtonName
-            case 'Yes'
-                labels = {'Save SCE to variable named:'}; 
-                vars = {'sce'};
-                sce = guidata(FigureHandle);
-                values = {sce};
-                [~,tf]=export2wsdlg(labels,vars,values,...
-                             'Save Data to Workspace');
-                if tf
-                    delete(hObject);
-                else
+            ButtonName = questdlg('Save SCE before closing SCGEATOOL?');
+            switch ButtonName
+                case 'Yes'
+                    labels = {'Save SCE to variable named:'}; 
+                    vars = {'sce'};
+                    sce = guidata(FigureHandle);
+                    values = {sce};
+                    [~,tf]=export2wsdlg(labels,vars,values,...
+                                 'Save Data to Workspace');
+                    if tf
+                        delete(hObject);
+                    else
+                        return;
+                    end
+                case 'Cancel'
                     return;
-                end
-            case 'Cancel'
-                return;
-            case 'No'
-                delete(hObject);
-            otherwise
-                return;
-        end
+                case 'No'
+                    delete(hObject);
+                otherwise
+                    return;
+            end
+        else
+            delete(hObject);
         end
     end
 

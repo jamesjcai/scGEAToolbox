@@ -21,11 +21,16 @@ wrkpth=fullfile(pw1,'+run','thirdparty','SinNLRR'); addpath(wrkpth);
 
 %savepath;
 %%
+a=getenv('USERPROFILE');
+b=getenv('username');
+outdir=sprintf('%s\\Desktop\\scgeatoolstandaloneApplication',a);
+if ~exist(outdir,"dir"), makedir(outdir); end
+
 compiler.build.standaloneWindowsApplication('scgeatool.m',...
-    'ExecutableName','scgeatool','Verbose','On');
+    'ExecutableName','scgeatool','Verbose','On',...
+    'OutputDir',outdir);
+%%
+winopen(sprintf('%s\\AppData\\Local\\Temp\\%s\\mcrCache9.11\\',a,b));
+winopen(outdir);
 
-% C:\Users\jcai\AppData\Local\Temp\jcai\mcrCache9.11
 
-%rootSettings = matlab.internal.getSettingsRoot;
-%addonFolder  = rootSettings.matlab.addons.InstallationFolder.ActiveValue;
-%executableFolder = fullfile(addonFolder,'Apps',name_of_your_app);
