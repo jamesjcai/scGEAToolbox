@@ -21,13 +21,14 @@ promotesave=true;
     if nargin < 1
         list={'SCE Data File (*.mat)...',...
               'Matrix/MTX File (*.mtx)...',...
+              'TXT/TSV/CSV File (*.txt)...',...
               'H5/HDF5 File (*.h5)...',...
-              'TSV/CSV File (*.txt)...',...
               'Seurat/Rds File (*.rds)...',...
               '10x Genomics ''outs'' Folder...',...
               '----------------------------------',...              
               'Link to GEO mtx.gz File...',... 
               'Link to GEO txt.gz File...',... 
+              'Link to GEO h5 File...',... 
               'GEO Accession Number(s)...',...
               '----------------------------------',...
               'Load SCE Variable from Workspace...',...
@@ -144,7 +145,7 @@ promotesave=true;
                     errordlg(ME.message);
                     return;
                 end                
-            case 'TSV/CSV File (*.txt)...'
+            case 'TXT/TSV/CSV File (*.txt)...'
                 [fname, pathname] = uigetfile( ...
                                               {'*.tsv;*.csv;*.txt', 'TSV/CSV Format Files (*.tsc, *.csv, *.txt)'
                                                '*.*',  'All Files (*.*)'}, ...
@@ -245,11 +246,31 @@ promotesave=true;
                             f=files;
                         end                        
                         if isempty(f), error('f1'); end
-                        fprintf('[X,genelist]=sc_readtsvfile(''%s'');\n',f);
+                        fprintf('[X,g]=sc_readtsvfile(''%s'');\n',f);
                         [X,g,celllist]=sc_readtsvfile(f);
                         sce = SingleCellExperiment(X, g);
                         sce.c_cell_id=celllist;
                     end
+            case 'Link to GEO h5 File...'
+                    prompt = {'Enter link to .h5 file:'};
+                    dlgtitle = 'Input Download Links';
+                    dims = [1 100];
+                    definput = {'https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM4666nnn/GSM4666986/suppl/GSM4666986_BL41_filtered_feature_bc_matrix.h5'};
+                    answer = inputdlg(prompt,dlgtitle,dims,definput);
+                    if isempty(answer), return; end
+                    if ~isempty(answer{1})
+                        files=websave(tempname,answer{1});
+                        if iscell(files)
+                            f=files{1};
+                        else
+                            f=files;
+                        end                        
+                        if isempty(f), error('f1'); end
+                        fprintf('[X,g]=sc_readhdf5file(''%s'');\n',f);
+                        [X,g]=sc_readhdf5file(f);
+                        sce = SingleCellExperiment(X, g);
+                    end
+
             case 'Load SCE Variable from Workspace...'
                 a=evalin('base','whos');
                 b=struct2cell(a);
