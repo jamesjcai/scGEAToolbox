@@ -32,8 +32,13 @@ function callback_MELDPerturbationScore(src,~)
         defaultToolbar = findall(FigureHandle, 'tag','FigureToolBar');  % get the figure's toolbar handle
         gui.add_3dcamera(defaultToolbar, 'MELD_Scores');
         
-        labels = {'Save score values to variable named:','Save score table to variable named:'};
-        vars = {'MELDScores','MELDTable'};
-        values = {score,T};
-        export2wsdlg(labels,vars,values);
+        if ~(ismcc || isdeployed)
+            labels = {'Save score values to variable named:','Save score table to variable named:'};
+            vars = {'MELDScores','MELDTable'};
+            values = {score,T};
+            export2wsdlg(labels,vars,values);
+        else
+            gui.i_exporttable(T,false,'MELDTable');
+        end
+
 end

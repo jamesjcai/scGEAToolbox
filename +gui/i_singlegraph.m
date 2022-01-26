@@ -106,12 +106,20 @@ title(figname);
 
 
    function SaveAdj(hObject,event)
-       
-    answer = questdlg('Export & save network to:','',...
-                    'Workspace','File','Workspace');
+    if ~(ismcc || isdeployed)
+        answer = questdlg('Export & save network to:','',...
+                        'Workspace','File','Workspace');
+    else
+        a=questdlg('Export & save network to file?');
+        if strcmp(a,'Yes')
+            answer='File';
+        else
+            return;
+        end
+    end
+
     switch answer
-    case 'Workspace'           
-       
+    case 'Workspace'       
      labels = {'Save adjacency matrix A1 to variable named:',...
                'Save graph G1 to variable named:',...
                'Save genelist g1 to variable named:'};

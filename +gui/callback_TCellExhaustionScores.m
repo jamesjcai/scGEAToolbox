@@ -8,8 +8,14 @@ function callback_TCellExhaustionScores(src,~)
     gui.i_stemscatter(sce.s,cs);
     zlabel('Score Value')
     title('T Cell Exhaustion Score')
-            labels = {'Save score values to variable named:'}; 
-        vars = {'TCellExhaustionScores'};
-        values = {cs};
-        export2wsdlg(labels,vars,values);
+    gui.i_exporttable(cs,false,'TCellExhaustionScores');
+
+%     if ~(ismcc || isdeployed)
+%         labels = {'Save score values to variable named:'}; 
+%         vars = {'TCellExhaustionScores'};
+%         values = {cs};
+%         export2wsdlg(labels,vars,values);
+%     else
+%         gui.i_exporttable(cs,false,'TCellExhaustionScores');
+%     end
 end

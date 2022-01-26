@@ -38,10 +38,13 @@ function callback_DetectCellularCrosstalk(src,~)
     labels = {'Save OUT to variable named:'};
     vars = {'OUT'};
     values = {OUT};
-    [f,ft]=export2wsdlg(labels, vars, values);
-    waitfor(f);
-    if ft
-        disp('Run gui.i_crosstalkgraph(OUT,k) to plot crosstalk graph for ligand-receptor pair k.')
+
+    if ~(ismcc || isdeployed)
+        [f,ft]=export2wsdlg(labels, vars, values);
+        waitfor(f);
+        if ft
+            disp('Run gui.i_crosstalkgraph(OUT,k) to plot crosstalk graph for ligand-receptor pair k.')
+        end
     end
 
 

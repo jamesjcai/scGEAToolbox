@@ -46,7 +46,7 @@ function callback_MarkerGeneHeatmap(src,~)
 
     [c,cL]=grp2idx(thisc);
     if numel(cL)==1
-        errordlg('Only one cell type or cluster')
+        errordlg('Only one cell type or cluster.');
         return; 
     end    
     
@@ -205,11 +205,15 @@ pt1.ClickedCallback = @i_summarymapT;
         h.GridVisible = 'off';
     end
 
-    function i_saveM(~,~,M)    
-        labels = {'Save marker gene map M to variable named:'}; 
-        vars = {'M'};
-        values = {M};
-        export2wsdlg(labels,vars,values);
+    function i_saveM(~,~,M)
+        if ~(ismcc || isdeployed)
+            labels = {'Save marker gene map M to variable named:'}; 
+            vars = {'M'};
+            values = {M};
+            export2wsdlg(labels,vars,values);
+        else
+            errordlg('This function is not available for standalone application.');
+        end
     end    
 
 end

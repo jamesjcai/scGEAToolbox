@@ -101,6 +101,7 @@ set(hFig, 'visible','on');
 
 
    function SaveAdj(hObject,event)
+       if ~(ismcc || isdeployed)
      labels = {'Save adjacency matrix A1 to variable named:',...
                'Save adjacency matrix A2 to variable named:',...
                'Save graph G1 to variable named:',...
@@ -115,6 +116,9 @@ set(hFig, 'visible','on');
      values = {A1,A2,G1,G2,g1,g2};
      msgfig=export2wsdlg(labels,vars,values);
      uiwait(msgfig);
+       else
+           errordlg('This function is not available for standalone application.');
+       end
    end
 
                 

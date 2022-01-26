@@ -345,10 +345,11 @@ promotesave=true;
         errordlg(ME.message);
     end
     if promotesave
-        labels = {'Save SCE to variable named:'}; 
-        vars = {'sce'};
-        values = {sce};
-        export2wsdlg(labels,vars,values,...
-            'Save Data to Workspace');
+        if ~(ismcc || isdeployed)
+            labels = {'Save SCE to variable named:'}; 
+            vars = {'sce'};
+            values = {sce};
+            export2wsdlg(labels,vars,values,'Save Data to Workspace');
+        end
     end
 end

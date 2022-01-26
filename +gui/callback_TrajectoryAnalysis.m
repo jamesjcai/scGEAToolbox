@@ -27,13 +27,17 @@ function callback_TrajectoryAnalysis(src,~)
     end    
     guidata(FigureHandle,sce);
     
-    
-    labels = {'Save pseudotime T to variable named:', ...
-        'Save S to variable named:'};
-    vars = {'t_mono', 's_mono'};
-    values = {t_mono, s_mono};
-    msgfig=export2wsdlg(labels, vars, values);
-    uiwait(msgfig)
+    if ~(ismcc || isdeployed)    
+        labels = {'Save pseudotime T to variable named:', ...
+            'Save S to variable named:'};
+        vars = {'t_mono', 's_mono'};
+        values = {t_mono, s_mono};
+        msgfig=export2wsdlg(labels, vars, values);
+        uiwait(msgfig)
+    else
+        gui.i_exporttable(table(t_mono),true,'t_mono');
+    end
+
     answer = questdlg('View Monocle DDRTree?', ...
         'Pseudotime View', ...
         'Yes', 'No', 'Yes');

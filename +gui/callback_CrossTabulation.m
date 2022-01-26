@@ -103,11 +103,16 @@ movegui(f0,'center');
 set(f0,'Visible',true);
 
     function i_saveCrossTable(~,~)
-        
-        labels = {'Save Cross-table to variable named:'};
-        vars = {'TCrosstab'};
-        values = {T};
-        export2wsdlg(labels,vars,values);
+        gui.i_exporttable(T,false,'TCrosstab');
+
+%         if ~(ismcc || isdeployed)
+%             labels = {'Save Cross-table to variable named:'};
+%             vars = {'TCrosstab'};
+%             values = {T};
+%             export2wsdlg(labels,vars,values);
+%         else
+%             gui.i_exporttable(T,false,'TCrosstab');
+%         end
     end
 end
 

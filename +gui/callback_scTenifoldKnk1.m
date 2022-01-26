@@ -124,12 +124,14 @@ function callback_scTenifoldKnk1(src,~)
             isreconstructed=false;
         end    
     
-    if isreconstructed
-        labels = {'Save network to variable named:'}; 
-        vars = {'A0'};
-        values = {A0};        
-        waitfor(export2wsdlg(labels,vars,values));
-    end
+        if ~(ismcc || isdeployed)
+            if isreconstructed        
+                labels = {'Save network to variable named:'}; 
+                vars = {'A0'};
+                values = {A0};
+                waitfor(export2wsdlg(labels,vars,values));
+            end
+        end
     
     gui.i_exporttable(T);
     disp('Downstream Analysis Options:');

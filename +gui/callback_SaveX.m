@@ -1,8 +1,16 @@
 function callback_SaveX(src,~)
-answer = questdlg('Export & save data to:','',...
-    'Workspace','MAT file','Seurat/RDS file','Workspace');
-        FigureHandle=src.Parent.Parent;
-        sce=guidata(FigureHandle);
+
+FigureHandle=src.Parent.Parent;
+sce=guidata(FigureHandle);
+
+if ~(ismcc || isdeployed)
+    answer = questdlg('Export & save data to:','',...
+        'Workspace','MAT file','Seurat/RDS file','Workspace');
+else
+    answer = questdlg('Export & save data to:','',...
+        'MAT file','Seurat/RDS file','MAT file');
+end
+
 switch answer
     case 'Workspace'
         labels = {'Save SCE to variable named:',...

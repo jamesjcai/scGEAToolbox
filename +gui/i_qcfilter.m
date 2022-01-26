@@ -29,6 +29,7 @@ title(sprintf('%d out of %d (%.2f%%)',...
 uiwait(fh);
 X=X(:,idx);
 
+if ~(ismcc || isdeployed)
     labels = {'Save X to variable named:',...
         'Save IDX to variable named:'}; 
     vars = {'X','idx'};
@@ -37,7 +38,7 @@ X=X(:,idx);
         'Save Data to Workspace',...
         logical([1 0]));
     % uiwait(ex)
-
+end
     
 % figure; 
 % subplot(2,2,1)

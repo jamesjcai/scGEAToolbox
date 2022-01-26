@@ -54,10 +54,11 @@ function callback_scTenifoldNet1(src,events)
     end
     % tstr=matlab.lang.makeValidName(datestr(datetime));
     % save(sprintf('A_%s',tstr),'A','g','-v7.3');
-    
+    if ~(ismcc || isdeployed)
         labels = {'Save network to variable named:',...
             'Save sce.g to variable named:'}; 
         vars = {'A','g'};
         values = {A,sce.g};
         export2wsdlg(labels,vars,values);
+    end
 end

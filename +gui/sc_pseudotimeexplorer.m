@@ -102,10 +102,12 @@ gui.add_3dcamera(tb);
                   'Save embedding S to variable named:'}; 
         vars = {'X_psexplorer','t_psexplorer','s_psexplorer'};
         values = {X, t, s};
-        msgfig=export2wsdlg(labels,vars,values);
-        %         assignin('base',sprintf('psexplorerT%d',...
-        %                  psexplorer_timeid),t);
-        uiwait(msgfig)
+        if ~(ismcc || isdeployed)
+            msgfig=export2wsdlg(labels,vars,values);
+            %         assignin('base',sprintf('psexplorerT%d',...
+            %                  psexplorer_timeid),t);
+            uiwait(msgfig)
+        end
         answer = questdlg('View expression of selected genes', ...
             'Pseudotime Function', ...
             'Yes','No','Yes');

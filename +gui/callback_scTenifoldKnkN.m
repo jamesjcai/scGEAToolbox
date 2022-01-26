@@ -14,6 +14,11 @@ function callback_scTenifoldKnkN(src,~)
 %         disp('addpath(''./scTenifoldKnk-master/MATLAB'');');
 %         return;
 %     end
+
+    if (ismcc || isdeployed)
+        errordlg('This function is not for standalone application.');
+        return;
+    end
     
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
@@ -105,4 +110,5 @@ function callback_scTenifoldKnkN(src,~)
         values = {F,sce.g};
     end
     waitfor(export2wsdlg(labels,vars,values));
+
 end

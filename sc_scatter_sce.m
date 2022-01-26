@@ -250,6 +250,7 @@ end
     end
 
     function closeRequest(hObject,~)
+        if ~(ismcc || isdeployed)
         ButtonName = questdlg('Save SCE before closing SCGEATOOL?');
         switch ButtonName
             case 'Yes'
@@ -270,6 +271,7 @@ end
                 delete(hObject);
             otherwise
                 return;
+        end
         end
     end
 

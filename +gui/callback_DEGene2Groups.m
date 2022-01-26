@@ -38,19 +38,20 @@ catch ME
 end
     gui.i_exporttable(T,true);
 
-    answer = questdlg('Save up- and down-regulated genes for enrichment analysis?');
-    
-    if strcmp(answer,'Yes')
-    [Tup,Tdn]=pkg.e_processDETable(T);
-    labels = {'Save DE results (selected up-regulated) to variable named:',...
-        'Save DE results (selected down-regulated) to variable named:'}; 
-    vars = {'Tup','Tdn'}; values = {Tup,Tdn};
-    [~,tf]=export2wsdlg(labels,vars,values);
-    if tf==1
-        disp('To run enrichment analysis, type:')
-        disp('run.Enrichr(Tup.gene(1:200))')
-        disp('run.Enrichr(Tdn.gene(1:200))')
-    end
+    if ~(ismcc || isdeployed)  
+        answer = questdlg('Save up- and down-regulated genes for enrichment analysis?');
+        if strcmp(answer,'Yes')
+            [Tup,Tdn]=pkg.e_processDETable(T);
+            labels = {'Save DE results (selected up-regulated) to variable named:',...
+                'Save DE results (selected down-regulated) to variable named:'}; 
+            vars = {'Tup','Tdn'}; values = {Tup,Tdn};
+            [~,tf]=export2wsdlg(labels,vars,values);
+            if tf==1
+                disp('To run enrichment analysis, type:')
+                disp('run.Enrichr(Tup.gene(1:200))')
+                disp('run.Enrichr(Tdn.gene(1:200))')
+            end
+        end
     end
     
 %     answer = questdlg('Run Enrichr with top 200 up-regulated DE genes?');

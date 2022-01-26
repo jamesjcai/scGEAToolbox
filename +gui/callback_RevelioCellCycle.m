@@ -22,8 +22,12 @@ function callback_RevelioCellCycle(src,~)
         %defaultToolbar = findall(FigureHandle, 'tag','FigureToolBar');  % get the figure's toolbar handle
         %gui.add_3dcamera(defaultToolbar, 'RevelioDc');
         
+    if ~(ismcc || isdeployed)
         labels = {'Save score values to variable named:','Save score table to variable named:'};
         vars = {'RevelioDc','RevelioTable'};
         values = {dc,T};
         export2wsdlg(labels,vars,values);
+    else
+        gui.i_exporttable(T,false,'RevelioTable');
+    end
 end
