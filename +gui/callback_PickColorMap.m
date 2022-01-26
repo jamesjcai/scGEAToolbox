@@ -45,7 +45,7 @@ switch answer
     case 'Yes'
         indx=randi(length(co));
         colormap(co{indx});
-        mb=helpdlg(sprintf('Using colormap: %s',cn{indx}),'');
+        % mb=helpdlg(sprintf('Using colormap: %s',cn{indx}),'');
         
     case 'No'
         [indx,tf] = listdlg('PromptString',{'Select a colormap'},...

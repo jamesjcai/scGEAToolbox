@@ -4,8 +4,6 @@ pw1=cdgea;
 wrkpth=fullfile(pw1,'+run','thirdparty','cbrewer'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','PHATE'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','umapFileExchange'); addpath(wrkpth);
-wrkpth=fullfile(pw1,'+run','thirdparty','R_SeuratWorkflow'); addpath(wrkpth);
-wrkpth=fullfile(pw1,'+run','thirdparty','R_MAST'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','alona_panglaodb2021'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','SIMLR'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','SIMLR','src'); addpath(wrkpth);
@@ -21,7 +19,7 @@ wrkpth=fullfile(pw1,'+run','thirdparty','SoptSC','symnmf2'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','SNNDPC'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','SinNLRR'); addpath(wrkpth);
 
-savepath;
+%savepath;
 %%
 compiler.build.standaloneWindowsApplication('scgeatool.m',...
     'ExecutableName','scgeatool','Verbose','On');
