@@ -39,9 +39,9 @@ switch methodid
 %            end        
     case 2
         if size(s,2)==2
-            h=gscatter(x,y,c,[],[],5);
+            h=gscatter(x,y,c,[],[],5,'off');
         elseif size(s,2)>=3
-            h=gscatter3b(x,y,z,c,[],[],5);
+            h=gscatter3b(x,y,z,c,[],[],5,'off');
         end
         box off
     case 3
