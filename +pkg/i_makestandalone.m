@@ -26,11 +26,30 @@ b=getenv('username');
 outdir=sprintf('%s\\Desktop\\scgeatoolstandaloneApplication',a);
 if ~exist(outdir,"dir"), makedir(outdir); end
 
+%%
+ c=dir('resources/*.gif');
+ d=strings(length(c),1);
+ for k=1:length(c)
+     d(k)=string(fullfile(c(k).folder,c(k).name));
+ end
+    d=[d;fullfile(pw1, 'resources', 'STRING', 'stringdb_human.mat')];
+    d=[d;fullfile(pw1, 'resources', 'STRING', 'stringdb_mouse.mat')];
+    d=[d;fullfile(pw1, 'resources', 'tfome_tfgenes.mat')];
+    d=[d;fullfile(pw1, 'resources', 'regev_lab_cell_cycle_genes.txt')];
+    d=[d;fullfile(pw1, 'resources', 'cellscores.txt')];
+    d=[d;fullfile(pw1, 'resources', 'Ligand_Receptor.mat')];
+    d=[d;fullfile(pw1, 'resources', 'Ligand_Receptor2.mat')];
+    d=[d;fullfile(pw1, 'example_data', 'testSce.mat')];
+    d=[d;fullfile(pw1, 'example_data', 'testXgs.mat')];
+
+%%
 compiler.build.standaloneWindowsApplication('scgeatool.m',...
     'ExecutableName','scgeatool','Verbose','On',...
-    'OutputDir',outdir);
+    'OutputDir',outdir,'AdditionalFiles',d);
 %%
 winopen(sprintf('%s\\AppData\\Local\\Temp\\%s\\mcrCache9.11\\',a,b));
 winopen(outdir);
+
+
 
 

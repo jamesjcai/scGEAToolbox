@@ -1,0 +1,451 @@
+<deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
+  <configuration build-checksum="180818915" file="U:\GitHub\scGEAToolbox\scgeatool.prj" location="U:\GitHub\scGEAToolbox" name="scgeatool" preferred-package-location="C:\Users\jcai\Desktop\scgeatool\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.standalone" target-name="Application Compiler">
+    <param.appname>scgeatool</param.appname>
+    <param.icon />
+    <param.icons />
+    <param.version>1.0</param.version>
+    <param.authnamewatermark />
+    <param.email />
+    <param.company />
+    <param.summary />
+    <param.description />
+    <param.screenshot />
+    <param.guid />
+    <param.installpath.string>\scgeatool\</param.installpath.string>
+    <param.installpath.combo>option.installpath.programfiles</param.installpath.combo>
+    <param.logo />
+    <param.install.notes />
+    <param.target.install.notes />
+    <param.intermediate>C:\Users\jcai\Desktop\scgeatool\for_testing</param.intermediate>
+    <param.files.only>C:\Users\jcai\Desktop\scgeatool\for_redistribution_files_only</param.files.only>
+    <param.output>C:\Users\jcai\Desktop\scgeatool\for_redistribution</param.output>
+    <param.logdir>C:\Users\jcai\Desktop\scgeatool</param.logdir>
+    <param.enable.clean.build>false</param.enable.clean.build>
+    <param.user.defined.mcr.options />
+    <param.target.type>subtarget.standalone</param.target.type>
+    <param.support.packages />
+    <param.web.mcr>true</param.web.mcr>
+    <param.package.mcr>false</param.package.mcr>
+    <param.no.mcr>false</param.no.mcr>
+    <param.web.mcr.name>MyAppInstaller_web</param.web.mcr.name>
+    <param.package.mcr.name>MyAppInstaller_mcr</param.package.mcr.name>
+    <param.no.mcr.name>MyAppInstaller_app</param.no.mcr.name>
+    <param.windows.command.prompt>true</param.windows.command.prompt>
+    <param.create.log>false</param.create.log>
+    <param.log.file />
+    <param.native.matlab>false</param.native.matlab>
+    <param.checkbox>false</param.checkbox>
+    <param.example />
+    <param.help.text>Syntax 
+	 scgeatool -? 
+	 scgeatool X g s c 
+ Input Arguments 
+	 -?  print help on how to use the application 
+	 X g s c  input arguments</param.help.text>
+    <unset>
+      <param.icon />
+      <param.icons />
+      <param.version />
+      <param.authnamewatermark />
+      <param.email />
+      <param.company />
+      <param.summary />
+      <param.description />
+      <param.screenshot />
+      <param.guid />
+      <param.installpath.string />
+      <param.installpath.combo />
+      <param.logo />
+      <param.install.notes />
+      <param.target.install.notes />
+      <param.enable.clean.build />
+      <param.user.defined.mcr.options />
+      <param.target.type />
+      <param.support.packages />
+      <param.web.mcr />
+      <param.package.mcr />
+      <param.no.mcr />
+      <param.web.mcr.name />
+      <param.package.mcr.name />
+      <param.no.mcr.name />
+      <param.windows.command.prompt />
+      <param.create.log />
+      <param.log.file />
+      <param.native.matlab />
+      <param.checkbox />
+      <param.example />
+    </unset>
+    <fileset.main>
+      <file>${PROJECT_ROOT}\scgeatool.m</file>
+    </fileset.main>
+    <fileset.resources>
+      <file>${PROJECT_ROOT}\example_data\testSce.mat</file>
+      <file>${PROJECT_ROOT}\example_data\testXgs.mat</file>
+      <file>${PROJECT_ROOT}\resources\brush.gif</file>
+      <file>${PROJECT_ROOT}\resources\camera.gif</file>
+      <file>${PROJECT_ROOT}\resources\cellscore.gif</file>
+      <file>${PROJECT_ROOT}\resources\cellscore2.gif</file>
+      <file>${PROJECT_ROOT}\resources\cellscores.txt</file>
+      <file>${PROJECT_ROOT}\resources\dattut12.gif</file>
+      <file>${PROJECT_ROOT}\resources\explorer1.gif</file>
+      <file>${PROJECT_ROOT}\resources\explorer2.gif</file>
+      <file>${PROJECT_ROOT}\resources\export.gif</file>
+      <file>${PROJECT_ROOT}\resources\functionSignatures.json</file>
+      <file>${PROJECT_ROOT}\resources\fvtool_fdalinkbutton.gif</file>
+      <file>${PROJECT_ROOT}\resources\grip_bg.gif</file>
+      <file>${PROJECT_ROOT}\resources\HDF_object01.gif</file>
+      <file>${PROJECT_ROOT}\resources\HDF_object02.gif</file>
+      <file>${PROJECT_ROOT}\resources\HDF_object03.gif</file>
+      <file>${PROJECT_ROOT}\resources\HDF_point.gif</file>
+      <file>${PROJECT_ROOT}\resources\IMG00067.GIF</file>
+      <file>${PROJECT_ROOT}\resources\IMG00074.GIF</file>
+      <file>${PROJECT_ROOT}\resources\IMG00107.GIF</file>
+      <file>${PROJECT_ROOT}\resources\label.gif</file>
+      <file>${PROJECT_ROOT}\resources\Ligand_Receptor.mat</file>
+      <file>${PROJECT_ROOT}\resources\Ligand_Receptor2.mat</file>
+      <file>${PROJECT_ROOT}\resources\list.gif</file>
+      <file>${PROJECT_ROOT}\resources\list2.gif</file>
+      <file>${PROJECT_ROOT}\resources\Macosko_cell_cycle_genes.txt</file>
+      <file>${PROJECT_ROOT}\resources\multiscale.gif</file>
+      <file>${PROJECT_ROOT}\resources\noun_Deep_Learning_2424485.gif</file>
+      <file>${PROJECT_ROOT}\resources\noun_directional arrows_3497928.gif</file>
+      <file>${PROJECT_ROOT}\resources\noun_font_size_591141.gif</file>
+      <file>${PROJECT_ROOT}\resources\noun_Layout_792775.gif</file>
+      <file>${PROJECT_ROOT}\resources\noun_Network_691907.gif</file>
+      <file>${PROJECT_ROOT}\resources\noun_Pruners_2469297.gif</file>
+      <file>${PROJECT_ROOT}\resources\noun_trim_3665385.gif</file>
+      <file>${PROJECT_ROOT}\resources\noun_Weight_2243621.gif</file>
+      <file>${PROJECT_ROOT}\resources\optim25.gif</file>
+      <file>${PROJECT_ROOT}\resources\plotpicker-andrewsplot.gif</file>
+      <file>${PROJECT_ROOT}\resources\plotpicker-arxtimeseries.gif</file>
+      <file>${PROJECT_ROOT}\resources\plotpicker-boxplot.gif</file>
+      <file>${PROJECT_ROOT}\resources\plotpicker-candle.gif</file>
+      <file>${PROJECT_ROOT}\resources\plotpicker-comet.gif</file>
+      <file>${PROJECT_ROOT}\resources\plotpicker-compass.gif</file>
+      <file>${PROJECT_ROOT}\resources\plotpicker-contour.gif</file>
+      <file>${PROJECT_ROOT}\resources\plotpicker-cra.gif</file>
+      <file>${PROJECT_ROOT}\resources\plotpicker-dendrogram.gif</file>
+      <file>${PROJECT_ROOT}\resources\plotpicker-effects.gif</file>
+      <file>${PROJECT_ROOT}\resources\plotpicker-errorbar.gif</file>
+      <file>${PROJECT_ROOT}\resources\plotpicker-geobubble.gif</file>
+      <file>${PROJECT_ROOT}\resources\plotpicker-geobubble2.gif</file>
+      <file>${PROJECT_ROOT}\resources\plotpicker-geoscatter.gif</file>
+      <file>${PROJECT_ROOT}\resources\plotpicker-glyplot-face.gif</file>
+      <file>${PROJECT_ROOT}\resources\plotpicker-graphplot.gif</file>
+      <file>${PROJECT_ROOT}\resources\plotpicker-gscatter.gif</file>
+      <file>${PROJECT_ROOT}\resources\plotpicker-histfit.gif</file>
+      <file>${PROJECT_ROOT}\resources\plotpicker-image.gif</file>
+      <file>${PROJECT_ROOT}\resources\plotpicker-kagi.gif</file>
+      <file>${PROJECT_ROOT}\resources\plotpicker-pie.gif</file>
+      <file>${PROJECT_ROOT}\resources\plotpicker-plotmatrix.gif</file>
+      <file>${PROJECT_ROOT}\resources\plotpicker-pointfig.gif</file>
+      <file>${PROJECT_ROOT}\resources\plotpicker-priceandvol.gif</file>
+      <file>${PROJECT_ROOT}\resources\plotpicker-pzmap.gif</file>
+      <file>${PROJECT_ROOT}\resources\plotpicker-pzmapband.gif</file>
+      <file>${PROJECT_ROOT}\resources\plotpicker-qqplot.gif</file>
+      <file>${PROJECT_ROOT}\resources\plotpicker-renko.gif</file>
+      <file>${PROJECT_ROOT}\resources\plotpicker-rose.gif</file>
+      <file>${PROJECT_ROOT}\resources\plotpicker-scatter.gif</file>
+      <file>${PROJECT_ROOT}\resources\plotpicker-scatterhist.gif</file>
+      <file>${PROJECT_ROOT}\resources\plotpicker-spy.gif</file>
+      <file>${PROJECT_ROOT}\resources\plotpicker_noisepsd.gif</file>
+      <file>${PROJECT_ROOT}\resources\plottypectl-rlocusplot.gif</file>
+      <file>${PROJECT_ROOT}\resources\readMacosko_cell_cycle_genes.m</file>
+      <file>${PROJECT_ROOT}\resources\regev_lab_cell_cycle_genes.txt</file>
+      <file>${PROJECT_ROOT}\resources\removepoints.gif</file>
+      <file>${PROJECT_ROOT}\resources\sc_scatter.png</file>
+      <file>${PROJECT_ROOT}\resources\scaledIcon6106938337968745985.gif</file>
+      <file>${PROJECT_ROOT}\resources\setrange.gif</file>
+      <file>${PROJECT_ROOT}\resources\six_d.png</file>
+      <file>${PROJECT_ROOT}\resources\splash.png</file>
+      <file>${PROJECT_ROOT}\resources\STRING</file>
+      <file>${PROJECT_ROOT}\resources\tfome_tfgenes.mat</file>
+      <file>${PROJECT_ROOT}\resources\tool_ellipse.gif</file>
+    </fileset.resources>
+    <fileset.package />
+    <fileset.depfun>
+      <file>${PROJECT_ROOT}\+gui\add_3dcamera.m</file>
+      <file>${PROJECT_ROOT}\+gui\callback_Brush4Markers.m</file>
+      <file>${PROJECT_ROOT}\+gui\callback_Brush4MarkersLASSO.m</file>
+      <file>${PROJECT_ROOT}\+gui\callback_BuildGeneNetwork.m</file>
+      <file>${PROJECT_ROOT}\+gui\callback_CalculateCellScores.m</file>
+      <file>${PROJECT_ROOT}\+gui\callback_CalculateGeneStats.m</file>
+      <file>${PROJECT_ROOT}\+gui\callback_CellCycleLibrarySize.m</file>
+      <file>${PROJECT_ROOT}\+gui\callback_CellTypeMarkerScores.m</file>
+      <file>${PROJECT_ROOT}\+gui\callback_CheckUpdates.m</file>
+      <file>${PROJECT_ROOT}\+gui\callback_CloseAllOthers.m</file>
+      <file>${PROJECT_ROOT}\+gui\callback_CompareGeneBtwCls.m</file>
+      <file>${PROJECT_ROOT}\+gui\callback_CompareGeneNetwork.m</file>
+      <file>${PROJECT_ROOT}\+gui\callback_ComparePotency.m</file>
+      <file>${PROJECT_ROOT}\+gui\callback_CrossTabulation.m</file>
+      <file>${PROJECT_ROOT}\+gui\callback_DEGene2Groups.m</file>
+      <file>${PROJECT_ROOT}\+gui\callback_DetectCellularCrosstalk.m</file>
+      <file>${PROJECT_ROOT}\+gui\callback_DoubletDetection.m</file>
+      <file>${PROJECT_ROOT}\+gui\callback_GSEA_HVGs.m</file>
+      <file>${PROJECT_ROOT}\+gui\callback_Harmonypy.m</file>
+      <file>${PROJECT_ROOT}\+gui\callback_MarkerGeneHeatmap.m</file>
+      <file>${PROJECT_ROOT}\+gui\callback_MELDPerturbationScore.m</file>
+      <file>${PROJECT_ROOT}\+gui\callback_MergeSCEs.m</file>
+      <file>${PROJECT_ROOT}\+gui\callback_MultiEmbeddingViewer.m</file>
+      <file>${PROJECT_ROOT}\+gui\callback_MultiGroupingViewer.m</file>
+      <file>${PROJECT_ROOT}\+gui\callback_PickColorMap.m</file>
+      <file>${PROJECT_ROOT}\+gui\callback_PickPlotMarker.m</file>
+      <file>${PROJECT_ROOT}\+gui\callback_RevelioCellCycle.m</file>
+      <file>${PROJECT_ROOT}\+gui\callback_SaveX.m</file>
+      <file>${PROJECT_ROOT}\+gui\callback_scTenifoldKnk1.m</file>
+      <file>${PROJECT_ROOT}\+gui\callback_scTenifoldKnkN.m</file>
+      <file>${PROJECT_ROOT}\+gui\callback_scTenifoldNet1.m</file>
+      <file>${PROJECT_ROOT}\+gui\callback_scTenifoldNet2.m</file>
+      <file>${PROJECT_ROOT}\+gui\callback_SelectCellsByClass.m</file>
+      <file>${PROJECT_ROOT}\+gui\callback_SelectCellsByMarker.m</file>
+      <file>${PROJECT_ROOT}\+gui\callback_SelectCellsByQC.m</file>
+      <file>${PROJECT_ROOT}\+gui\callback_ShowClustersPop.m</file>
+      <file>${PROJECT_ROOT}\+gui\callback_ShowGeneExpr.m</file>
+      <file>${PROJECT_ROOT}\+gui\callback_ShowHgBGeneExpression.m</file>
+      <file>${PROJECT_ROOT}\+gui\callback_ShowMtGeneExpression.m</file>
+      <file>${PROJECT_ROOT}\+gui\callback_SingleRCellType.m</file>
+      <file>${PROJECT_ROOT}\+gui\callback_TCellExhaustionScores.m</file>
+      <file>${PROJECT_ROOT}\+gui\callback_TrajectoryAnalysis.m</file>
+      <file>${PROJECT_ROOT}\+gui\CaptureFigVid.m</file>
+      <file>${PROJECT_ROOT}\+gui\gui_waitbar.m</file>
+      <file>${PROJECT_ROOT}\+gui\gui_waitbar_adv.m</file>
+      <file>${PROJECT_ROOT}\+gui\i_cascadefig.m</file>
+      <file>${PROJECT_ROOT}\+gui\i_choose2d3d.m</file>
+      <file>${PROJECT_ROOT}\+gui\i_crosstalkgraph.m</file>
+      <file>${PROJECT_ROOT}\+gui\i_doublegraphs2.m</file>
+      <file>${PROJECT_ROOT}\+gui\i_expandbrushed.m</file>
+      <file>${PROJECT_ROOT}\+gui\i_exporttable.m</file>
+      <file>${PROJECT_ROOT}\+gui\i_getoldsettings.m</file>
+      <file>${PROJECT_ROOT}\+gui\i_gscatter3.m</file>
+      <file>${PROJECT_ROOT}\+gui\i_inputgenelist.m</file>
+      <file>${PROJECT_ROOT}\+gui\i_inputgeolinks.m</file>
+      <file>${PROJECT_ROOT}\+gui\i_inputnumg.m</file>
+      <file>${PROJECT_ROOT}\+gui\i_inputnumk.m</file>
+      <file>${PROJECT_ROOT}\+gui\i_linksubplots.m</file>
+      <file>${PROJECT_ROOT}\+gui\i_markergenespanel.m</file>
+      <file>${PROJECT_ROOT}\+gui\i_qcviolin.m</file>
+      <file>${PROJECT_ROOT}\+gui\i_renamec.m</file>
+      <file>${PROJECT_ROOT}\+gui\i_select1class.m</file>
+      <file>${PROJECT_ROOT}\+gui\i_select1state.m</file>
+      <file>${PROJECT_ROOT}\+gui\i_select2class.m</file>
+      <file>${PROJECT_ROOT}\+gui\i_select2grps.m</file>
+      <file>${PROJECT_ROOT}\+gui\i_selectngenes.m</file>
+      <file>${PROJECT_ROOT}\+gui\i_selectspecies.m</file>
+      <file>${PROJECT_ROOT}\+gui\i_selmultidlg.m</file>
+      <file>${PROJECT_ROOT}\+gui\i_setautumncolor.m</file>
+      <file>${PROJECT_ROOT}\+gui\i_setpyenv.m</file>
+      <file>${PROJECT_ROOT}\+gui\i_setranges3.m</file>
+      <file>${PROJECT_ROOT}\+gui\i_setrenv.m</file>
+      <file>${PROJECT_ROOT}\+gui\i_singlegraph.m</file>
+      <file>${PROJECT_ROOT}\+gui\i_sortgenenames.m</file>
+      <file>${PROJECT_ROOT}\+gui\i_stemscatter.m</file>
+      <file>${PROJECT_ROOT}\+gui\i_tenifoldnetpara.m</file>
+      <file>${PROJECT_ROOT}\+gui\i_transformx.m</file>
+      <file>${PROJECT_ROOT}\+gui\linspecer.m</file>
+      <file>${PROJECT_ROOT}\+gui\private\countmember.m</file>
+      <file>${PROJECT_ROOT}\+gui\sc_multiembeddings.m</file>
+      <file>${PROJECT_ROOT}\+gui\sc_multigroupings.m</file>
+      <file>${PROJECT_ROOT}\+pkg\e_cellscores.m</file>
+      <file>${PROJECT_ROOT}\+pkg\e_celltypes2allclust.m</file>
+      <file>${PROJECT_ROOT}\+pkg\e_fgseanet.m</file>
+      <file>${PROJECT_ROOT}\+pkg\e_processDETable.m</file>
+      <file>${PROJECT_ROOT}\+pkg\fdr_bh.m</file>
+      <file>${PROJECT_ROOT}\+pkg\FindRpath.m</file>
+      <file>${PROJECT_ROOT}\+pkg\i_3d2d.m</file>
+      <file>${PROJECT_ROOT}\+pkg\i_add_conda_python_path.m</file>
+      <file>${PROJECT_ROOT}\+pkg\i_get_cellcyclegenes.m</file>
+      <file>${PROJECT_ROOT}\+pkg\i_get_ribosomalgenes.m</file>
+      <file>${PROJECT_ROOT}\+pkg\i_markergeneshtml.m</file>
+      <file>${PROJECT_ROOT}\+pkg\i_mergeSubCellNames.m</file>
+      <file>${PROJECT_ROOT}\+pkg\i_mycolorlines.m</file>
+      <file>${PROJECT_ROOT}\+pkg\i_mycolormap.m</file>
+      <file>${PROJECT_ROOT}\+pkg\i_num2strcell.m</file>
+      <file>${PROJECT_ROOT}\+pkg\i_vercheck.m</file>
+      <file>${PROJECT_ROOT}\+pkg\i_violinplot.m</file>
+      <file>${PROJECT_ROOT}\+pkg\i_violinplot_groupordered.m</file>
+      <file>${PROJECT_ROOT}\+pkg\local_celltypebrushed.m</file>
+      <file>${PROJECT_ROOT}\+pkg\m2cyto.m</file>
+      <file>${PROJECT_ROOT}\+pkg\makegraph.m</file>
+      <file>${PROJECT_ROOT}\+pkg\mbkmeans.m</file>
+      <file>${PROJECT_ROOT}\+pkg\mmread.m</file>
+      <file>${PROJECT_ROOT}\+pkg\pipeline_multisamplesmerge.m</file>
+      <file>${PROJECT_ROOT}\+pkg\RunRcode.m</file>
+      <file>${PROJECT_ROOT}\+pkg\timeoutdlg.m</file>
+      <file>${PROJECT_ROOT}\+pkg\urldecoding.m</file>
+      <file>${PROJECT_ROOT}\+pkg\Violin.m</file>
+      <file>${PROJECT_ROOT}\+pkg\violinplot.m</file>
+      <file>${PROJECT_ROOT}\+run\alona.m</file>
+      <file>${PROJECT_ROOT}\+run\celltypecaller.m</file>
+      <file>${PROJECT_ROOT}\+run\csndm_trans.m</file>
+      <file>${PROJECT_ROOT}\+run\decontX.m</file>
+      <file>${PROJECT_ROOT}\+run\fgsea.m</file>
+      <file>${PROJECT_ROOT}\+run\harmonypy.m</file>
+      <file>${PROJECT_ROOT}\+run\MAGIC.m</file>
+      <file>${PROJECT_ROOT}\+run\MAST.m</file>
+      <file>${PROJECT_ROOT}\+run\MELD.m</file>
+      <file>${PROJECT_ROOT}\+run\monocle.m</file>
+      <file>${PROJECT_ROOT}\+run\PHATE.m</file>
+      <file>${PROJECT_ROOT}\+run\PickMarkers.m</file>
+      <file>${PROJECT_ROOT}\+run\private\commoncheck_R.m</file>
+      <file>${PROJECT_ROOT}\+run\private\i_grpmean.m</file>
+      <file>${PROJECT_ROOT}\+run\readSeuratRds.m</file>
+      <file>${PROJECT_ROOT}\+run\Revelio.m</file>
+      <file>${PROJECT_ROOT}\+run\saveSeuratRds.m</file>
+      <file>${PROJECT_ROOT}\+run\SC3.m</file>
+      <file>${PROJECT_ROOT}\+run\scGeneFit.m</file>
+      <file>${PROJECT_ROOT}\+run\scrublet.m</file>
+      <file>${PROJECT_ROOT}\+run\SeuratCellCycle.m</file>
+      <file>${PROJECT_ROOT}\+run\SeuratSctransform.m</file>
+      <file>${PROJECT_ROOT}\+run\SeuratWorkflow.m</file>
+      <file>${PROJECT_ROOT}\+run\SIMLR.m</file>
+      <file>${PROJECT_ROOT}\+run\SingleR.m</file>
+      <file>${PROJECT_ROOT}\+run\SinNLRR.m</file>
+      <file>${PROJECT_ROOT}\+run\SnnDpc.m</file>
+      <file>${PROJECT_ROOT}\+run\SoptSC.m</file>
+      <file>${PROJECT_ROOT}\+run\Specter.m</file>
+      <file>${PROJECT_ROOT}\+run\talklr.m</file>
+      <file>${PROJECT_ROOT}\+run\UMAP.m</file>
+      <file>${PROJECT_ROOT}\+ten\check_tensor_toolbox.m</file>
+      <file>${PROJECT_ROOT}\+ten\do_td_cp.m</file>
+      <file>${PROJECT_ROOT}\+ten\do_td_tucker.m</file>
+      <file>${PROJECT_ROOT}\+ten\e_fgseanet.m</file>
+      <file>${PROJECT_ROOT}\+ten\e_fgsearun.m</file>
+      <file>${PROJECT_ROOT}\+ten\e_filtadjc.m</file>
+      <file>${PROJECT_ROOT}\+ten\e_mkqqplot.m</file>
+      <file>${PROJECT_ROOT}\+ten\i_dr.m</file>
+      <file>${PROJECT_ROOT}\+ten\i_knk.m</file>
+      <file>${PROJECT_ROOT}\+ten\i_ma.m</file>
+      <file>${PROJECT_ROOT}\+ten\i_nc.m</file>
+      <file>${PROJECT_ROOT}\+ten\i_td1.m</file>
+      <file>${PROJECT_ROOT}\+ten\knk2_knockoutTargetGene.m</file>
+      <file>${PROJECT_ROOT}\+ten\knk3_buildPerturbationLandscape.m</file>
+      <file>${PROJECT_ROOT}\+ten\sc_pcnetdenoised.m</file>
+      <file>${PROJECT_ROOT}\+ten\sctenifoldknk.m</file>
+      <file>${PROJECT_ROOT}\+ten\sctenifoldnet.m</file>
+      <file>${PROJECT_ROOT}\@SingleCellExperiment\assigncelltype.m</file>
+      <file>${PROJECT_ROOT}\@SingleCellExperiment\clustercells.m</file>
+      <file>${PROJECT_ROOT}\@SingleCellExperiment\embedcells.m</file>
+      <file>${PROJECT_ROOT}\@SingleCellExperiment\estimatecellcycle.m</file>
+      <file>${PROJECT_ROOT}\@SingleCellExperiment\estimatepotency.m</file>
+      <file>${PROJECT_ROOT}\@SingleCellExperiment\makeattributestable.m</file>
+      <file>${PROJECT_ROOT}\@SingleCellExperiment\qcfilterwhitelist.m</file>
+      <file>${PROJECT_ROOT}\@SingleCellExperiment\SingleCellExperiment.m</file>
+      <file>${PROJECT_ROOT}\cdgea.m</file>
+      <file>${PROJECT_ROOT}\fun_num_clusters.m</file>
+      <file>${PROJECT_ROOT}\i_plot_pseudotimeseries.m</file>
+      <file>${PROJECT_ROOT}\i_pseudotime_by_princurve.m</file>
+      <file>${PROJECT_ROOT}\i_pseudotime_by_splinefit.m</file>
+      <file>${PROJECT_ROOT}\info.xml</file>
+      <file>${PROJECT_ROOT}\norm_deseq.m</file>
+      <file>${PROJECT_ROOT}\norm_libsize.m</file>
+      <file>${PROJECT_ROOT}\private\i_myupdatefcn1.m</file>
+      <file>${PROJECT_ROOT}\private\i_myupdatefcn3.m</file>
+      <file>${PROJECT_ROOT}\private\knn_smooth.m</file>
+      <file>${PROJECT_ROOT}\private\rsvd.m</file>
+      <file>${PROJECT_ROOT}\private\splinefit.m</file>
+      <file>${PROJECT_ROOT}\sc_cellcyclescoring.m</file>
+      <file>${PROJECT_ROOT}\sc_cellscore.m</file>
+      <file>${PROJECT_ROOT}\sc_cluster_s.m</file>
+      <file>${PROJECT_ROOT}\sc_cluster_x.m</file>
+      <file>${PROJECT_ROOT}\sc_deg.m</file>
+      <file>${PROJECT_ROOT}\sc_filterc.m</file>
+      <file>${PROJECT_ROOT}\sc_filterg.m</file>
+      <file>${PROJECT_ROOT}\sc_genestat.m</file>
+      <file>${PROJECT_ROOT}\sc_genestats.m</file>
+      <file>${PROJECT_ROOT}\sc_grnview.m</file>
+      <file>${PROJECT_ROOT}\sc_grnview2.m</file>
+      <file>${PROJECT_ROOT}\sc_hvg.m</file>
+      <file>${PROJECT_ROOT}\sc_mergedata.m</file>
+      <file>${PROJECT_ROOT}\sc_mergesces.m</file>
+      <file>${PROJECT_ROOT}\sc_norm.m</file>
+      <file>${PROJECT_ROOT}\sc_pcnet.m</file>
+      <file>${PROJECT_ROOT}\sc_pcnetpar.m</file>
+      <file>${PROJECT_ROOT}\sc_phate.m</file>
+      <file>${PROJECT_ROOT}\sc_pickmarkers.m</file>
+      <file>${PROJECT_ROOT}\sc_potency.m</file>
+      <file>${PROJECT_ROOT}\sc_qcfilter.m</file>
+      <file>${PROJECT_ROOT}\sc_read10xdir.m</file>
+      <file>${PROJECT_ROOT}\sc_readgeoaccession.m</file>
+      <file>${PROJECT_ROOT}\sc_readhdf5file.m</file>
+      <file>${PROJECT_ROOT}\sc_readmtxfile.m</file>
+      <file>${PROJECT_ROOT}\sc_readrdsfile.m</file>
+      <file>${PROJECT_ROOT}\sc_readtsvfile.m</file>
+      <file>${PROJECT_ROOT}\sc_rmdugenes.m</file>
+      <file>${PROJECT_ROOT}\sc_rmmtcells.m</file>
+      <file>${PROJECT_ROOT}\sc_rmmtgenes.m</file>
+      <file>${PROJECT_ROOT}\sc_scatter.m</file>
+      <file>${PROJECT_ROOT}\sc_scatter_sce.m</file>
+      <file>${PROJECT_ROOT}\sc_scattermarker.m</file>
+      <file>${PROJECT_ROOT}\sc_sce2rds.m</file>
+      <file>${PROJECT_ROOT}\sc_selectc.m</file>
+      <file>${PROJECT_ROOT}\sc_selectg.m</file>
+      <file>${PROJECT_ROOT}\sc_snndpc.m</file>
+      <file>${PROJECT_ROOT}\sc_transform.m</file>
+      <file>${PROJECT_ROOT}\sc_tsne.m</file>
+      <file>${PROJECT_ROOT}\sc_umap.m</file>
+      <file>${PROJECT_ROOT}\sc_writefile.m</file>
+    </fileset.depfun>
+    <build-deliverables>
+      <file location="C:\Users\jcai\Desktop\scgeatool\for_testing" name="scgeatool.exe" optional="false">C:\Users\jcai\Desktop\scgeatool\for_testing\scgeatool.exe</file>
+      <file location="C:\Users\jcai\Desktop\scgeatool\for_testing" name="readme.txt" optional="true">C:\Users\jcai\Desktop\scgeatool\for_testing\readme.txt</file>
+      <file location="C:\Users\jcai\Desktop\scgeatool\for_testing" name="splash.png" optional="false">C:\Users\jcai\Desktop\scgeatool\for_testing\splash.png</file>
+    </build-deliverables>
+    <workflow />
+    <matlab>
+      <root>C:\Program Files\MATLAB\R2021B</root>
+      <toolboxes>
+        <toolbox name="matlabcoder" />
+        <toolbox name="embeddedcoder" />
+        <toolbox name="gpucoder" />
+        <toolbox name="fixedpoint" />
+        <toolbox name="matlabhdlcoder" />
+        <toolbox name="neuralnetwork" />
+      </toolboxes>
+      <toolbox>
+        <matlabcoder>
+          <enabled>true</enabled>
+        </matlabcoder>
+      </toolbox>
+      <toolbox>
+        <embeddedcoder>
+          <enabled>true</enabled>
+        </embeddedcoder>
+      </toolbox>
+      <toolbox>
+        <gpucoder>
+          <enabled>true</enabled>
+        </gpucoder>
+      </toolbox>
+      <toolbox>
+        <fixedpoint>
+          <enabled>true</enabled>
+        </fixedpoint>
+      </toolbox>
+      <toolbox>
+        <matlabhdlcoder>
+          <enabled>true</enabled>
+        </matlabhdlcoder>
+      </toolbox>
+      <toolbox>
+        <neuralnetwork>
+          <enabled>true</enabled>
+        </neuralnetwork>
+      </toolbox>
+    </matlab>
+    <platform>
+      <unix>false</unix>
+      <mac>false</mac>
+      <windows>true</windows>
+      <win2k>false</win2k>
+      <winxp>false</winxp>
+      <vista>false</vista>
+      <linux>false</linux>
+      <solaris>false</solaris>
+      <osver>10.0</osver>
+      <os32>false</os32>
+      <os64>true</os64>
+      <arch>win64</arch>
+      <matlab>true</matlab>
+    </platform>
+  </configuration>
+</deployment-project>

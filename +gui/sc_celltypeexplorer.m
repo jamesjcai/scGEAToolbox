@@ -37,10 +37,10 @@ title(titxt);
 
 tb = uitoolbar(hFig);
 tt = uitoggletool(tb,'Separator','on');
-%[img,map] = imread(fileparts(mfilename('fullpath')),...
-%            'resources','brush.gif');
- [img,map] = imread(fullfile(matlabroot,...
-             'toolbox','matlab','icons','tool_ellipse.gif'));
+[img,map] = imread(fullfile(fileparts(mfilename('fullpath')),...
+            '..','resources','tool_ellipse.gif'));
+%  [img,map] = imread(fullfile(matlabroot,...
+%              'toolbox','matlab','icons','tool_ellipse.gif'));
 ptImage = ind2rgb(img,map);
 tt.CData = ptImage;
 tt.Tooltip = 'Click and then brush/select cells';

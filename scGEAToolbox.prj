@@ -1,9 +1,9 @@
 <deployment-project plugin="plugin.toolbox" plugin-version="1.0">
-  <configuration build-checksum="2589273682" file="C:\Users\jcai\Documents\GitHub\scGEAToolbox\scGEAToolbox.prj" location="C:\Users\jcai\Documents\GitHub\scGEAToolbox" name="scGEAToolbox" target="target.toolbox" target-name="Package Toolbox">
+  <configuration build-checksum="2589273682" file="U:\GitHub\scGEAToolbox\scGEAToolbox.prj" location="U:\GitHub\scGEAToolbox" name="scGEAToolbox" target="target.toolbox" target-name="Package Toolbox">
     <param.appname>scGEAToolbox</param.appname>
-    <param.authnamewatermark />
-    <param.email />
-    <param.company />
+    <param.authnamewatermark>James Cai</param.authnamewatermark>
+    <param.email>jcai@tamu.edu</param.email>
+    <param.company>Texas A&amp;M University</param.company>
     <param.summary>Single-cell Gene Expression Analysis Toolbox</param.summary>
     <param.description>scRNAseq data analysis toolbox</param.description>
     <param.screenshot>${PROJECT_ROOT}\resources\sc_scatter.png</param.screenshot>
@@ -128,14 +128,12 @@ resources/STRING/stringdb_mouse.mat
       <file>${PROJECT_ROOT}\doc</file>
       <file>${PROJECT_ROOT}\fun_cmp_clusters.m</file>
       <file>${PROJECT_ROOT}\fun_num_clusters.m</file>
-      <file>${PROJECT_ROOT}\i_makestandalone.m</file>
       <file>${PROJECT_ROOT}\i_plot_pseudotimeseries.m</file>
       <file>${PROJECT_ROOT}\i_pseudotime_by_princurve.m</file>
       <file>${PROJECT_ROOT}\i_pseudotime_by_splinefit.m</file>
       <file>${PROJECT_ROOT}\info.xml</file>
       <file>${PROJECT_ROOT}\installx.m</file>
       <file>${PROJECT_ROOT}\LICENSE</file>
-      <file>${PROJECT_ROOT}\mcrCache9.11 - Shortcut.lnk</file>
       <file>${PROJECT_ROOT}\norm_deseq.m</file>
       <file>${PROJECT_ROOT}\norm_libsize.m</file>
       <file>${PROJECT_ROOT}\private</file>
@@ -200,13 +198,14 @@ resources/STRING/stringdb_mouse.mat
       <file>${PROJECT_ROOT}\sc_veg.m</file>
       <file>${PROJECT_ROOT}\sc_writefile.m</file>
       <file>${PROJECT_ROOT}\scGEAscatter.mlapp</file>
+      <file>${PROJECT_ROOT}\scgeatool</file>
       <file>${PROJECT_ROOT}\scgeatool.m</file>
     </fileset.rootfiles>
     <fileset.depfun.included />
     <fileset.depfun.excluded />
     <fileset.package />
     <build-deliverables>
-      <file location="${PROJECT_ROOT}" name="scGEAToolbox.mltbx" optional="false">C:\Users\jcai\Documents\GitHub\scGEAToolbox\scGEAToolbox.mltbx</file>
+      <file location="${PROJECT_ROOT}" name="scGEAToolbox.mltbx" optional="false">U:\GitHub\scGEAToolbox\scGEAToolbox.mltbx</file>
     </build-deliverables>
     <workflow />
     <matlab>
