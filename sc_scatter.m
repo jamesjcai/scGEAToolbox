@@ -1,4 +1,4 @@
-function sc_scatter
+function sc_scatter(varargin)
 %SC_SCATTER Single-cell Gene Expression Analysis Toolbox Graphical User Interface.
 %
 % sc_scatter has been removed. Use scgeatool instead.
