@@ -19,7 +19,7 @@ thisc2=[]; clable2='';
     
     
 n=length(listitems);
-if n<3
+if n<2
     errordlg('Need at least two grouping variables (e.g., BATCH_ID, CLUSTER_ID, or CELL_TYPE_TXT)');
     return;
 end

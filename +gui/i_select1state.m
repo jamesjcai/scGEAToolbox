@@ -45,7 +45,7 @@ if tf2==1
         case 'Batch ID' % batch id
             thisc=sce.c_batch_id;
         case 'Cell Type' % cell type
-            thisc=sce.c_cell_type_tx;                
+            thisc=sce.c_cell_type_tx;
         case 'Cell Cycle Phase' % cell cycle
             if isempty(sce.c_cell_cycle_tx) || all(strcmp(unique(sce.c_cell_cycle_tx),"undetermined"))
                 fw = gui.gui_waitbar;
