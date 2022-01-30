@@ -14,7 +14,7 @@
         <!-- Icon images used for these entries are also stored in -->
         <!-- matlabroot/toolbox/matlab/icons -->
         <!-- A Getting Started Guide usually comes first -->
-        <tocitem target="mytbx_gs_top.html" image="HelpIcon.GETTING_STARTED">
+        <tocitem target="https://scgeatoolbox.readthedocs.io/en/latest/getting_started.html" image="HelpIcon.GETTING_STARTED">
             Getting Started with the scGEAToolbox
             <tocitem target="mytbx_reqts_example.html">System Requirements
             </tocitem>
