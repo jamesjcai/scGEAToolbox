@@ -1,17 +1,23 @@
 <deployment-project plugin="plugin.toolbox" plugin-version="1.0">
-  <configuration build-checksum="2589273682" file="C:\Users\jcai\Documents\GitHub\scGEAToolbox\scGEAToolbox.prj" location="C:\Users\jcai\Documents\GitHub\scGEAToolbox" name="scGEAToolbox" target="target.toolbox" target-name="Package Toolbox">
+  <configuration build-checksum="2535997833" file="C:\Users\jcai\Documents\GitHub\scGEAToolbox\scGEAToolbox.prj" location="C:\Users\jcai\Documents\GitHub\scGEAToolbox" name="scGEAToolbox" target="target.toolbox" target-name="Package Toolbox">
     <param.appname>scGEAToolbox</param.appname>
-    <param.authnamewatermark />
-    <param.email />
-    <param.company />
+    <param.authnamewatermark>James Cai</param.authnamewatermark>
+    <param.email>jcai@tamu.edu</param.email>
+    <param.company>Texas A&amp;M University</param.company>
     <param.summary>Single-cell Gene Expression Analysis Toolbox</param.summary>
     <param.description>scRNAseq data analysis toolbox</param.description>
     <param.screenshot>${PROJECT_ROOT}\resources\sc_scatter.png</param.screenshot>
-    <param.version>22.1.30</param.version>
+    <param.version>22.1.31</param.version>
     <param.output>${PROJECT_ROOT}\scGEAToolbox.mltbx</param.output>
-    <param.products.name />
-    <param.products.id />
-    <param.products.version />
+    <param.products.name>
+      <item>Statistics and Machine Learning Toolbox</item>
+    </param.products.name>
+    <param.products.id>
+      <item>19</item>
+    </param.products.id>
+    <param.products.version>
+      <item>12.2</item>
+    </param.products.version>
     <param.platforms />
     <param.guid>6597c9c8-34b6-4fe4-a150-99bf81bbb77f</param.guid>
     <param.exclude.filters>% List files contained in your toolbox folder that you would like to exclude
@@ -80,9 +86,6 @@ resources/STRING/stringdb_mouse.mat
       <param.email />
       <param.company />
       <param.output />
-      <param.products.name />
-      <param.products.id />
-      <param.products.version />
       <param.platforms />
       <param.exclude.pcodedmfiles />
       <param.examples />
