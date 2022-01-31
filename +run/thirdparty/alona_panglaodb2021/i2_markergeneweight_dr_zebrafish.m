@@ -23,6 +23,7 @@ T1=readtable(sprintf('markerlist_%s_davidhala.txt',species),'ReadVariableNames',
          T=[T1;T2];
  end
 T.Var1=i_makeuniquename(T.Var1);
+T.Var2=upper(T.Var2);
 writetable(T,sprintf('markerlist_%s.txt',species),...
     'WriteVariableNames',false,'Delimiter','\t');
 
