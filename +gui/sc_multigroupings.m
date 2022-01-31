@@ -84,6 +84,7 @@ end
             delete(dtp2);
             return;
         end
+        if max(c1)<50
         h1.DataTipTemplate.DataTipRows = dataTipTextRow('',cL1(c1));
             for i = 1:max(c1)
                 idx = find(c1 == i);
@@ -91,8 +92,10 @@ end
                 si = mean(siv, 1);
                 [k] = dsearchn(siv, si);
                 datatip(h1, 'DataIndex', idx(k));
-            end        
+            end
+        end
         
+        if max(c2)<50
         h2.DataTipTemplate.DataTipRows = dataTipTextRow('',cL2(c2));
             for i = 1:max(c2)
                 idx = find(c2 == i);
@@ -100,7 +103,8 @@ end
                 si = mean(siv, 1);
                 [k] = dsearchn(siv, si);
                 datatip(h2, 'DataIndex', idx(k));
-            end        
+            end
+        end
         
     end
 

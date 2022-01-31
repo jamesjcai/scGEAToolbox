@@ -9,7 +9,7 @@ answer = questdlg('Show expression of single or mulitple genes?',...
     'Single/Multiple Genes','Single','Multiple','Cancel','Single');
 
 switch answer
-    case 'Single'        
+    case 'Single'
         [gsorted]=gui.i_sortgenenames(sce);
         if isempty(gsorted), return; end
         [indx,tf] = listdlg('PromptString',{'Select a gene or select multiple genes to display individually','',''},...

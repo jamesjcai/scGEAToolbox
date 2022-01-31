@@ -14,57 +14,9 @@
         <!-- Icon images used for these entries are also stored in -->
         <!-- matlabroot/toolbox/matlab/icons -->
         <!-- A Getting Started Guide usually comes first -->
-        <tocitem target="mytbx_gs_top.html" image="HelpIcon.GETTING_STARTED">
+        <tocitem target="https://scgeatoolbox.readthedocs.io/en/latest/getting_started.html" image="HelpIcon.GETTING_STARTED">
             Getting Started with the scGEAToolbox
-            <tocitem target="mytbx_reqts_example.html">System Requirements
-            </tocitem>
-            <tocitem target="mytbx_features_example.html">Features
-                <!-- 2nd and lower TOC levels usually have anchor IDs -->
-                <tocitem target="mytbx_feature1_example.htm#10187">Feature 1
-                </tocitem>
-                <tocitem target="mytbx_feature2_example.htm#10193">Feature 2
-                </tocitem>
-            </tocitem>
         </tocitem>
         <!-- User Guide comes next -->
-        <tocitem target="mytbx_ug_intro.html" 
-            image="HelpIcon.USER_GUIDE">scGEAToolbox User Guide
-            <tocitem target="https://scgeatoolbox.readthedocs.io/en/latest/quick_installation.html">Setting Up scGEAToolbox
-            </tocitem>
-            <tocitem target="https://scgeatoolbox.readthedocs.io/en/latest/code_formulas.html">Processing Data
-            </tocitem>
-        </tocitem>
-        <!-- Function reference next -->
-        <!-- First item is page describing function categories, if any -->
-        <tocitem target="helpfuncbycat.html" 
-                 image="HelpIcon.FUNCTION">Function Reference
-            <!-- First category, with link to anchor in above page -->
-            <tocitem target="helpfuncbycat.html#1">First Category
-                <!-- Inside category, list its functions alphabetically -->
-                <tocitem target="function_1.html">function_1</tocitem>
-                <tocitem target="function_2.html">function_2</tocitem>
-                <!-- ... -->
-            </tocitem>
-            <!-- Second category, with link to anchor in above page -->
-            <tocitem target="helpfuncbycat.html#2">Second Category
-                <!-- Inside category, list its functions alphabetically -->
-                <tocitem target="function_3.html">function_3</tocitem>
-                <tocitem target="function_4.html">function_4</tocitem>
-                <!-- ... -->
-             </tocitem>
-            <!-- Third category, with link to anchor in above page -->
-            <tocitem target="helpfuncbycat.html#3">Third category 
-                <!-- ... -->
-            </tocitem>
-        </tocitem>
-        <!-- Optional List of Examples, with hyperlinks to examples in other files -->
-        <tocitem target="mytbx_example.html" 
-                 image="HelpIcon.HelpIcon.EXAMPLES">scGEAToolbox Examples
-        </tocitem>
-        <!-- Optional link or links to your or other Web sites -->
-        <tocitem target="https://scgeatoolbox.readthedocs.io/en/latest/" 
-                 image="$toolbox/matlab/icons/webicon.gif">
-        scGEAToolbox ReadTheDocs Web Site
-        </tocitem>
     </tocitem>
 </toc>

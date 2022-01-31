@@ -58,10 +58,10 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
                 mtratio=str2double(answer{2});
                 min_cells_nonzero=str2double(answer{3});
                 numgenes=str2double(answer{4});
-                assert((libsize>100)&&(libsize<100000));                
-                assert((mtratio>=0) && (mtratio<=1));
+                assert((libsize>0)&&(libsize<intmax));                
+                assert((mtratio>=0.0) && (mtratio<=1.0));
                 assert((min_cells_nonzero>=0 && min_cells_nonzero<=1)||(min_cells_nonzero>1 && min_cells_nonzero<sce.NumCells));
-                assert((numgenes>1)&&(numgenes<5000));
+                assert((numgenes>0)&&(numgenes<intmax));
             catch
                 requirerefresh=false;
                 errordlg('Invalid input(s).');
@@ -80,14 +80,14 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
         %   [X1,g1]=pkg.e_shadowmatqc(Xmajor,Xminor,gmajor,gminor);
  
         case 'Remove Genes by Expression'     % remove genes by expression
-            answer=inputdlg('Expressed in less than % of cells',...
-                'Remove Genes',[1 40],{'5'});
+            answer=inputdlg('Expressed in less than % of cells (e.g., 0.05=5%) or # of cells (e.g., 10).',...
+                'Remove Genes',[1 85],{'0.05'});
             if isempty(answer), return; end
             if iscell(answer)
                 a=str2double(answer{1});
-                if a>0 && a<100
+                if a>0 && a<intmax
                     fw = gui.gui_waitbar; 
-                    sce=sce.selectkeepgenes(1,a/100);
+                    sce=sce.selectkeepgenes(1,a);
                     gui.gui_waitbar(fw);
                 end
             end
