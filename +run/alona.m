@@ -21,7 +21,7 @@ end
    addRequired(p,'X',@isnumeric);
    addRequired(p,'genelist',@isstring);
    addRequired(p,'clusterid',@isnumeric);   
-   addOptional(p,'species',"human",@(x) (isstring(x)|ischar(x))&ismember(lower(string(x)),["human","mouse"]));
+   addOptional(p,'species',"human",@(x) (isstring(x)|ischar(x))&ismember(lower(string(x)),["human","mouse","zebrafish"]));
    addOptional(p,'organ',"all",@(x) (isstring(x)|ischar(x))&ismember(lower(string(x)),["all","heart","immunesystem","brain","pancreas"]));
    addOptional(p,'bestonly',false,@islogical);
    parse(p,X,genelist,clusterid,varargin{:});
@@ -55,6 +55,8 @@ switch lower(species)
         stag='hs';
     case 'mouse'
         stag='mm';
+    case 'zebrafish'
+        stag='dr';
 end
 markerfile=sprintf('marker_%s.mat',stag);
 if exist(markerfile,'file')
