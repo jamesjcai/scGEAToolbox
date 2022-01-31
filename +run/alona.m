@@ -55,6 +55,8 @@ switch lower(species)
         stag='hs';
     case 'mouse'
         stag='mm';
+    case 'zebrafish'
+        stag='dr';
 end
 markerfile=sprintf('marker_%s.mat',stag);
 if exist(markerfile,'file')

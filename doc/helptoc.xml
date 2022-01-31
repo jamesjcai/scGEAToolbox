@@ -64,7 +64,7 @@
         <!-- Optional link or links to your or other Web sites -->
         <tocitem target="https://scgeatoolbox.readthedocs.io/en/latest/" 
                  image="$toolbox/matlab/icons/webicon.gif">
-        scGEAToolbox ReadTheDocs Web Site
+        scGEAToolbox ReadTheDocs Website
         </tocitem>
     </tocitem>
 </toc>
