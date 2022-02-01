@@ -25,7 +25,7 @@ classdef SingleCellExperiment
    end 
 
    methods
-   % output = myFunc(obj,arg1,arg2)
+
    function obj = SingleCellExperiment(X,g,s,c)
         if nargin<1, X=[]; end
         if nargin<2 || isempty(g), g=pkg.i_num2strcell(size(X,1),"g"); end
@@ -43,8 +43,7 @@ classdef SingleCellExperiment
         obj.c_batch_id=ones(size(X,2),1);
         obj.c_cluster_id=ones(size(X,2),1);
         obj.c_cell_cycle_tx=repmat("undetermined",size(X,2),1);
-        obj.c_cell_type_tx=repmat("undetermined",size(X,2),1);       
-        
+        obj.c_cell_type_tx=repmat("undetermined",size(X,2),1);        
         % obj.struct_cell_embeddings=struct('tsne',[],'umap',[],'phate',[]);
     end
 
