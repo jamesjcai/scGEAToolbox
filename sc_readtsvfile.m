@@ -24,6 +24,11 @@ if nargout>2
     end
     if size(X,2)~=length(celllist)
         warning('LENGTH(BARCODELIST) is not equal to SIZE(X,2)')
+        if size(X,2)-length(celllist)==-1
+            celllist(1:5)
+            celllist=celllist(2:end);
+            warning('Correction was made.');
+        end
     end
 else
     [X,genelist]=i_read_exprmat(filename,genecolnum);
