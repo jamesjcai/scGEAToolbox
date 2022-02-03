@@ -11,7 +11,7 @@ if nargin<3, donorm=true; end
 if nargin<2, ndim=3; end
 % if ~issparse(X), X=sparse(X); end
 
-if donorm, 
+if donorm
 	X=sc_norm(X,'type','libsize'); 
 	disp('Library-size normalization...done.')
 end

@@ -1,25 +1,24 @@
-function sc_scatter3genes(X,genelist,dofit,showdata)
+function sc_scatter3genes(X,g,dofit,showdata)
 %Scatter3 plot for genes
-%
 
-if nargin<2, genelist=[]; end
 if nargin<4, showdata=true; end
-if nargin<3, dofit=false; end
-[lgu,dropr,lgcv,genelist]=sc_genestat(X,genelist);
+if nargin<3, dofit=true; end
+if nargin<2, g=[]; end
+[lgu,dropr,lgcv,g]=sc_genestat(X,g);
 x=lgu;
 y=dropr;
 z=lgcv;
 if showdata
-    scatter3(x,y,z); % 'MarkerEdgeAlpha',.5);
-    if ~isempty(genelist)
+    scatter3(x,y,z);  % 'filled','MarkerFaceAlpha',.5);
+    if ~isempty(g)
         dt = datacursormode;
-        dt.UpdateFcn = {@i_myupdatefcn1,genelist};
+        dt.UpdateFcn = {@i_myupdatefcn1,g};
     end
 end
 % [xData, yData, zData] = prepareSurfaceData(x,y,z);
 % xyz=[xData yData zData]';
 if dofit
-    [~,xyz1]=sc_splinefit(X,genelist);
+    [~,xyz1]=sc_splinefit(X,g);
 %     xyz=[x y z]';
 %     % xyz=sortrows([x y z],[1 2])';
 %     pieces = 15;

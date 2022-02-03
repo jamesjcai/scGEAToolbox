@@ -1,4 +1,6 @@
 function [X,keptidx]=sc_selectc(X,libszcutoff,gnnumcutoff)
+% Select cells by library size and number of genes
+
 if nargin<3, gnnumcutoff=500; end
 if nargin<2, libszcutoff=1000; end
 libsz=sum(X,1);

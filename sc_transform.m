@@ -7,7 +7,7 @@ function [X]=sc_transform(X,varargin)
 
 p = inputParser;
 defaultType = 'PearsonResiduals';
-validTypes = {'PearsonResiduals','kNNSmoothing',...
+validTypes = {'PearsonResiduals','kNNSmoothing','SCTransform',...
               'FreemanTukey','csndm','SCT'};
 checkType = @(x) any(validatestring(x,validTypes));
 
@@ -41,8 +41,11 @@ switch lower(p.Results.type)
         
     case 'normalization_sqrt'
         % https://twitter.com/hippopedoid/status/1337028817219620864?s=20        
-    case 'Hafemeister & Satija 2019'
+    case 'sctransform'
+        % sctransform: Variance Stabilizing Transformations for Single Cell UMI Data
+        % Hafemeister & Satija 2019
         % https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1874-1
+        [X]=run.SeuratSctransform(X);
     case 'csndm'
         [X]=run.csndm_trans(X);
 %     case 'bigscale'

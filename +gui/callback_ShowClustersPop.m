@@ -1,16 +1,15 @@
 function callback_ShowClustersPop(src, ~)
     answer = questdlg('Show clusters in new figures?');
-    if ~strcmp(answer, 'Yes')
-        return
-    end
-FigureHandle=src.Parent.Parent;
-sce=guidata(FigureHandle);
+    if ~strcmp(answer, 'Yes'), return; end
 
-[c,cL]=grp2idx(sce.c);
-cLa=getappdata(FigureHandle,'cL');
-if ~isempty(cLa)
-    cL=cLa;
-end
+    FigureHandle=src.Parent.Parent;
+    sce=guidata(FigureHandle);
+    
+    [c,cL]=grp2idx(sce.c);
+    cLa=getappdata(FigureHandle,'cL');
+    if ~isempty(cLa)
+        cL=cLa;
+    end
 
     cmv = 1:max(c);
     idxx = cmv;
