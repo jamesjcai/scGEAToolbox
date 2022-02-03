@@ -23,19 +23,23 @@ end
    addRequired(p,'clusterid',@isnumeric);   
    addOptional(p,'species',"human",@(x) (isstring(x)|ischar(x))&ismember(lower(string(x)),["human","mouse","zebrafish"]));
    addOptional(p,'organ',"all",@(x) (isstring(x)|ischar(x))&ismember(lower(string(x)),["all","heart","immunesystem","brain","pancreas"]));
+   addOptional(p,'subtype',"all",@(x) (isstring(x)|ischar(x))&ismember(lower(string(x)),["all","tcells","neurons"]));   
    addOptional(p,'bestonly',false,@islogical);
    parse(p,X,genelist,clusterid,varargin{:});
    species=p.Results.species;
-   organ=p.Results.organ;
-   bestonly=p.Results.bestonly;
+   % organ=p.Results.organ;
+   subtype=p.Results.subtype;
+   % bestonly=p.Results.bestonly;
 
 
 oldpth=pwd;
 pw1=fileparts(mfilename('fullpath'));
-if strcmpi(organ,"all")
+
+if strcmpi(subtype,"all")
     pth=fullfile(pw1,'thirdparty','alona_panglaodb2021');
 else
-    pth=fullfile(pw1,'thirdparty','alona_panglaodb2021',sprintf('%s',organ));
+    % pth=fullfile(pw1,'thirdparty','alona_subtypes',sprintf('%s',organ));
+    pth=fullfile(pw1,'thirdparty','alona_subtypes');
 end
 cd(pth);
 if issparse(X)
@@ -58,16 +62,30 @@ switch lower(species)
     case 'zebrafish'
         stag='dr';
 end
-markerfile=sprintf('marker_%s.mat',stag);
-if exist(markerfile,'file')
-    load(markerfile,'Tw','Tm');
+if strcmp(subtype,'all')    
+    markerfile=sprintf('marker_%s.mat',stag);
+    if exist(markerfile,'file')
+        load(markerfile,'Tw','Tm');
+    else
+        % disp('Preparing marker.mat...');
+        Tw=readtable(sprintf('markerweight_%s.txt',stag));
+        Tm=readtable(sprintf('markerlist_%s.txt',stag),...
+            'ReadVariableNames',false,'Delimiter','\t');
+        save(markerfile,'Tw','Tm');
+    end
 else
-    % disp('Preparing marker.mat...');
-    Tw=readtable(sprintf('markerweight_%s.txt',stag));
-    Tm=readtable(sprintf('markerlist_%s.txt',stag),...
-        'ReadVariableNames',false,'Delimiter','\t');
-    save(markerfile,'Tw','Tm');
+    markerfile=sprintf('marker_%s_%s.mat',stag,subtype);
+    if exist(markerfile,'file')
+        load(markerfile,'Tw','Tm');
+    else
+        % disp('Preparing marker.mat...');
+        Tw=readtable(sprintf('markerweight_%s_%s.txt',stag,subtype));
+        Tm=readtable(sprintf('markerlist_%s_%s.txt',stag,subtype),...
+            'ReadVariableNames',false,'Delimiter','\t');
+        save(markerfile,'Tw','Tm');
+    end    
 end
+    
 
 % switch lower(species)
 %     case 'human'
