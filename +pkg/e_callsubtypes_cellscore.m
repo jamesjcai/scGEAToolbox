@@ -1,4 +1,4 @@
-function [sce]=e_callsubtypes(sce,targettype,k)
+function [sce]=e_callsubtypes_cellscore(sce,targettype,k)
 
 if nargin<2, targettype="T cells"; end
 if nargin<3, k=5; end

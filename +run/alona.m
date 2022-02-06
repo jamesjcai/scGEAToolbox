@@ -36,7 +36,7 @@ oldpth=pwd;
 pw1=fileparts(mfilename('fullpath'));
 
 if strcmpi(subtype,"all")
-    pth=fullfile(pw1,'thirdparty','alona_panglaodb2021');
+    pth=fullfile(pw1,'thirdparty','alona_panglaodb');
 else
     % pth=fullfile(pw1,'thirdparty','alona_subtypes',sprintf('%s',organ));
     pth=fullfile(pw1,'thirdparty','alona_subtypes');

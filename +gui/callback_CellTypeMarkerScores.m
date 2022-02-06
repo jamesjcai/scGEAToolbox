@@ -15,7 +15,7 @@ end
 
 oldpth=pwd;
 pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'..','+run','thirdparty','alona_panglaodb2021');
+pth=fullfile(pw1,'..','+run','thirdparty','alona_panglaodb');
 cd(pth);
 
 
