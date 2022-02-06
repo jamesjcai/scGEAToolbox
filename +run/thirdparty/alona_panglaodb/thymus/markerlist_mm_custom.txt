@@ -1,2 +1,0 @@
-Medullary thymic epithelial cells (mTECs)	AIRE,FEZF2,CD80,CD74,CD40,EPCAM,LY75,CCL25,CCL19,LTBR,
-

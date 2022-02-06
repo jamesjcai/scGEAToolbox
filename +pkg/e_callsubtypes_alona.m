@@ -28,6 +28,8 @@ switch targettype
         targettag='tcells';
     case 'Neurons'
         targettag='neurons';
+    case 'Fibroblasts'
+        targettag='fibroblasts';
 end
 
 for k=1:max(clusterid)
