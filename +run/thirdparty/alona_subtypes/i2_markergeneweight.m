@@ -1,7 +1,14 @@
 species='hs';
 ctype='neurons';
-ctype='tcells';
+% ctype='tcells';
 T=readtable(sprintf('markerlist_%s_%s.txt',species,ctype),'ReadVariableNames',false,'Delimiter','\t');
+
+customf=sprintf('markerlist_%s_%s_custom.txt',species,ctype);
+if exist(customf,'file')
+    T2=readtable(customf,'ReadVariableNames',false,'Delimiter','\t');
+    T=[T;T2];
+end
+
 % T.Var1=i_makeuniquename(T.Var1);
 % writetable(T,sprintf('markerlist_%s.txt',species),...
 %     'WriteVariableNames',false,'Delimiter','\t');
