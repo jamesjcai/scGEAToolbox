@@ -36,14 +36,14 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
                 case 'Relaxed (keep more cells/genes)'
                     definput = {'500','0.15','0.01','200'};
                 case 'Strigent (remove more cells/genes)'
-                    definput = {'1000','0.10','0.05','500'};
+                    definput = {'1000','0.15','10','500'};
                 otherwise
                     requirerefresh=false;
                     return;
             end        
                     
             prompt = {'Library size (e.g., 500 or 1000):',...
-                      'mtDNA ratio (e.g., 15% or 10%):',...
+                      'mtDNA ratio (e.g., 0.15=15% or 0.10=10%):',...
                       'Gene''s min_nonzero_cells (e.g., 0.01 or 0.05, 10 or 50):',...
                       'Number of genes (e.g., 200 or 500):'};
             dlgtitle = 'QC Cutoffs';
