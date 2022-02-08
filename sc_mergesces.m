@@ -30,8 +30,13 @@ if nargin<3, method='intersect'; end
 [X,g,c]=sc_mergedata(sce1.X,sce2.X,...
             sce1.g,sce2.g,method);
 sce=SingleCellExperiment(X,g);
+sce.metadata=[sce1.metadata; sce2.metadata];
 sce.c=[sce1.c; sce2.c];
-sce.s=[sce1.s; sce2.s];
+try
+    sce.s=[sce1.s; sce2.s];
+catch
+    sce.s=randn(size(X,2),3);
+end
 sce.c_batch_id=c;
 
 if ~isempty(sce1.c_cell_cycle_tx) && ~isempty(sce2.c_cell_cycle_tx)

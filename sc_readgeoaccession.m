@@ -64,7 +64,8 @@ else
     sce=SingleCellExperiment(X,g);
 end
         
-
+metainfo=sprintf("Source: %s",acc);
+sce=sce.appendmetainfo(metainfo);
 
 % function i_tryh5(c)
 %     c1=c(contains(c,'tsv'));

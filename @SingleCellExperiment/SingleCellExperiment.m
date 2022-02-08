@@ -11,14 +11,17 @@ classdef SingleCellExperiment
       c_cell_id                              % barcode
       list_cell_attributes cell  % e.g., attributes = {'size',[4,6,2]};
       list_gene_attributes cell  % e.g., attributes = {'size',[4,6,2]};
+      metadata string
       struct_cell_embeddings=struct('tsne',[],'umap',[],'phate',[])
       struct_cell_clusterings=struct('kmeans',[],'snndpc',[],...
                                       'sc3',[],'simlr',[],'soptsc',[],...
                                       'sinnlrr',[],'specter',[],...
                                       'seurat',[])
-      table_attributes table
+      table_attributes table      
    end
    
+   % inputdlg('Sample Info:','Meta data',[10 50],{char(b.')})
+
    properties (Dependent)
       NumCells
       NumGenes
@@ -43,7 +46,8 @@ classdef SingleCellExperiment
         obj.c_batch_id=ones(size(X,2),1);
         obj.c_cluster_id=ones(size(X,2),1);
         obj.c_cell_cycle_tx=repmat("undetermined",size(X,2),1);
-        obj.c_cell_type_tx=repmat("undetermined",size(X,2),1);        
+        obj.c_cell_type_tx=repmat("undetermined",size(X,2),1);
+        obj.metadata=string(sprintf('Created: %s',datetime()));
         % obj.struct_cell_embeddings=struct('tsne',[],'umap',[],'phate',[]);
     end
 
@@ -203,6 +207,13 @@ classdef SingleCellExperiment
         obj.g=obj.g(~i);
         fprintf('%d ribosomal genes found and removed.\n',...
             sum(i));
+    end
+
+    function obj = appendmetainfo(obj,infostr)
+        if ~isstring(infostr)
+            infostr=string(infostr);
+        end
+        obj.metadata = [obj.metadata; infostr];
     end
 
     function c_check( self )

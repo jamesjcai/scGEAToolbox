@@ -1,4 +1,4 @@
-function [X,genelist,celllist,ftdone]=i_inputgeolinks
+function [X,genelist,celllist,ftdone,answer1]=i_inputgeolinks
 
     X=[]; genelist=[]; ftdone=[]; celllist=[];
     

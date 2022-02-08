@@ -14,5 +14,6 @@ end
 
 if ~exist(filename, 'file'), return; end
 [sce]=run.readSeuratRds(filename);
-
+metainfo=sprintf("Source: %s",filename);
+sce=sce.appendmetainfo(metainfo);
 end

@@ -128,6 +128,8 @@ promotesave=false;
                 else
                     [X, g, celllist] = sc_readmtxfile(matrixmtxfile, featurestxtfile, barcodestxtfile, 2);
                     sce = SingleCellExperiment(X, g);
+                    metainfo=sprintf("Source: %s",matrixmtxfile);
+                    sce=sce.appendmetainfo(metainfo);
                     if ~isempty(celllist) && length(celllist)==sce.NumCells
                         sce.c_cell_id=celllist;
                     end
@@ -135,9 +137,11 @@ promotesave=false;
                 
             case 'H5/HDF5 File (*.h5)...'
                 try
-                    [X, g] = sc_readhdf5file;
+                    [X, g, filename] = sc_readhdf5file;
                     if ~isempty(X)
                         sce = SingleCellExperiment(X, g);
+                        metainfo=sprintf("Source: %s",filename);
+                        sce=sce.appendmetainfo(metainfo);
                     else
                         return;
                     end
@@ -154,6 +158,8 @@ promotesave=false;
                 filename = fullfile(pathname, fname);
                 [X, g] = sc_readtsvfile(filename);
                 sce = SingleCellExperiment(X, g);
+                metainfo=sprintf("Source: %s",filename);
+                sce=sce.appendmetainfo(metainfo);
             case 'Seurat/Rds File (*.rds)...'
                 [fname, pathname] = uigetfile( ...
                                               {'*.rds', 'Seurat/Rds Format Files (*.rds)'
@@ -163,6 +169,8 @@ promotesave=false;
                 filename = fullfile(pathname, fname);
                 fw = gui.gui_waitbar;
                 [sce] = sc_readrdsfile(filename);
+%                 metainfo=sprintf("Source: %s",filename);
+%                 sce=sce.appendmetainfo(metainfo);
                 gui.gui_waitbar(fw);
                 if isempty(sce)
                     errordlg('File Import Failure.');
@@ -182,6 +190,8 @@ promotesave=false;
                 end
                 if ~ftdone, errordlg('Input Error'); return; end
                 sce = SingleCellExperiment(X,g);
+                metainfo=sprintf("Source: %s",selpath);
+                sce=sce.appendmetainfo(metainfo);
                 if ~isempty(celllist) && length(celllist)==sce.NumCells
                     sce.c_cell_id=celllist;
                 end
@@ -208,14 +218,18 @@ promotesave=false;
                             return;
                         end
                     end
+%                     metainfo=sprintf("Source: %s",acc);
+%                     sce=sce.appendmetainfo(metainfo);
                 end
             case 'Link to GEO mtx.gz File...'
-                [X,g,celllist,ftdone]=gui.i_inputgeolinks;
+                [X,g,celllist,ftdone,answer1]=gui.i_inputgeolinks;
                 if isempty(X) || isempty(g) || ~ftdone
                     % errordlg('Input Error');
                     return;
                 end
                 sce = SingleCellExperiment(X, g);
+                metainfo=sprintf("Source: %s",answer1);
+                sce=sce.appendmetainfo(metainfo);
                 if ~isempty(celllist) && length(celllist)==sce.NumCells
                     sce.c_cell_id=celllist;
                 end
@@ -226,7 +240,7 @@ promotesave=false;
                     definput = {'https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM5350nnn/GSM5350808/suppl/GSM5350808_Fibroblast_young_1wk_Saline_counts.csv.gz'};
                     answer = inputdlg(prompt,dlgtitle,dims,definput);
                     if isempty(answer), return; end
-                    if ~isempty(answer{1})
+                    if ~isempty(answer{1})                        
                         tmpd=tempdir;
                         if strcmpi(answer{1}(end-2:end),'.gz')
                             fprintf('gunzip(''%s'',''%s'');\n',answer{1},tmpd);
@@ -250,6 +264,8 @@ promotesave=false;
                         [X,g,celllist]=sc_readtsvfile(f);
                         sce = SingleCellExperiment(X, g);
                         sce.c_cell_id=celllist;
+                        metainfo=sprintf("Source: %s",answer{1});
+                        sce=sce.appendmetainfo(metainfo);
                     end
             case 'Link to GEO h5 File...'
                     prompt = {'Enter link to .h5 file:'};
@@ -258,7 +274,7 @@ promotesave=false;
                     definput = {'https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM4666nnn/GSM4666986/suppl/GSM4666986_BL41_filtered_feature_bc_matrix.h5'};
                     answer = inputdlg(prompt,dlgtitle,dims,definput);
                     if isempty(answer), return; end
-                    if ~isempty(answer{1})
+                    if ~isempty(answer{1})                        
                         files=websave(tempname,answer{1});
                         if iscell(files)
                             f=files{1};
@@ -269,6 +285,8 @@ promotesave=false;
                         fprintf('[X,g]=sc_readhdf5file(''%s'');\n',f);
                         [X,g]=sc_readhdf5file(f);
                         sce = SingleCellExperiment(X, g);
+                        metainfo=sprintf("Source: %s",answer{1});
+                        sce = sce.appendmetainfo(metainfo);
                     end
 
             case 'Load SCE Variable from Workspace...'
