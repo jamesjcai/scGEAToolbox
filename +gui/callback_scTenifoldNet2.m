@@ -20,7 +20,7 @@ function callback_scTenifoldNet2(src,~)
     
 
 answer=questdlg('Use existing networks or reconstruct networks?',...
-        'Input Networks','Use existing','Reconstruct','Use existing');
+        'Input Networks','Use existing','Construct','Use existing');
     switch answer
         case 'Use existing'
             a=evalin('base','whos');
@@ -56,7 +56,7 @@ answer=questdlg('Use existing networks or reconstruct networks?',...
             T=i_dr(aln0,aln1,glist);
             gui.gui_waitbar(fw);
             
-        case 'Reconstruct'
+        case 'Construct'
             [i1,i2]=gui.i_select2grps(sce);
             if length(i1)==1 || length(i2)==1, return; end
 
@@ -73,7 +73,7 @@ answer=questdlg('Use existing networks or reconstruct networks?',...
             fw = gui.gui_waitbar;
             try
                 fprintf('\n');
-                disp('[T]=ten.sctenifoldnet(X1,X2,g,''nsubsmpl'',10,''csubsmpl'',500,''savegrn'',true);')
+                % disp('[T]=ten.sctenifoldnet(X1,X2,g,''nsubsmpl'',10,''csubsmpl'',500,''savegrn'',true);')
                 disp('[T]=ten.sctenifoldnet(sce.X(:,idx1),sce.X(:,idx2),sce.g,''nsubsmpl'',10,''csubsmpl'',500,''savegrn'',true);')
                 [T]=ten.sctenifoldnet(sce.X(:,i1),sce.X(:,i2),sce.g,...
                    'nsubsmpl',nsubsmpl,'csubsmpl',csubsmpl,'savegrn',savegrn);

@@ -1,10 +1,11 @@
-function [s]=e_fgsearun(T,rmribo,dbfile)
+function [s]=e_fgsearun(T,rmribo)
 % Run fast GSEA (fGSEA) analysis in R
+    if nargin<2, rmribo=true; end    
+    [s]=run.fgsea(T.genelist,rmribo);
+end
 
-    if nargin<2, rmribo=true; end
+%{    
     if nargin<3, dbfile='all'; end   % bp mf
-    import pkg.*
-
     if isempty(FindRpath)
        error('Rscript.exe is not found.');
     end
@@ -14,7 +15,7 @@ function [s]=e_fgsearun(T,rmribo,dbfile)
     folder = fileparts(mfilename('fullpath'));
     a=strfind(folder,filesep);
     folder=extractBefore(folder,a(end)+1);
-    pth=fullfile(folder,'+run','thirdparty','R_fgsea');
+    pth=fullfile(folder,'+run','external','R_fgsea');
     cd(pth);
     fprintf('CURRENTWDIR = "%s"\n',pth);
 
@@ -60,4 +61,4 @@ function [s]=e_fgsearun(T,rmribo,dbfile)
     if exist('input.txt','file'), delete('input.txt'); end
     if exist('output.txt','file'), delete('output.txt'); end
     cd(oldpth);
-end
+%}

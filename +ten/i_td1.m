@@ -13,9 +13,6 @@ switch methodid
     case 2
         Xhat0=ten.do_td_tucker(XM0);    
 end
-A0=mean(Xhat0,3);
+% A0=mean(Xhat0,3);
+A0=median(Xhat0,3);
 end
-
-
-
-
