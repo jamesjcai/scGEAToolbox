@@ -34,9 +34,9 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
                 'Strigent (remove more cells/genes)','Relaxed (keep more cells/genes)');
             switch answer3
                 case 'Relaxed (keep more cells/genes)'
-                    definput = {'500','0.15','0.01','200'};
+                    definput = {'500','0.20','10','200'};
                 case 'Strigent (remove more cells/genes)'
-                    definput = {'1000','0.15','10','500'};
+                    definput = {'1000','0.15','15','500'};
                 otherwise
                     requirerefresh=false;
                     return;
