@@ -802,7 +802,7 @@ end
             sce.list_cell_attributes=[sce.list_cell_attributes,clable];
             sce.list_cell_attributes=[sce.list_cell_attributes,thisc];
         end
-        [c,cL]=grp2idx(thisc);
+        [c,cL]=grp2idx(thisc);        
         sce.c=c;
         RefreshAll(src, 1, true, false);
         n=max(c);
