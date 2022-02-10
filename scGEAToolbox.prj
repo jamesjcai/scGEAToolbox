@@ -7,7 +7,7 @@
     <param.summary>Single-cell Gene Expression Analysis Toolbox</param.summary>
     <param.description>scRNAseq data analysis toolbox</param.description>
     <param.screenshot>${PROJECT_ROOT}\resources\sc_scatter.png</param.screenshot>
-    <param.version>22.1.31</param.version>
+    <param.version>22.2.9</param.version>
     <param.output>${PROJECT_ROOT}\scGEAToolbox.mltbx</param.output>
     <param.products.name>
       <item>Statistics and Machine Learning Toolbox</item>
@@ -43,7 +43,7 @@
 **/.github
 .git/*
 .github/*
-**/example_data
+% **/example_data
 resources/STRING/stringdb_human.mat
 resources/STRING/stringdb_mouse.mat
 .gitignore
@@ -129,6 +129,7 @@ resources/STRING/stringdb_mouse.mat
       <file>${PROJECT_ROOT}\demo_script6.mlx</file>
       <file>${PROJECT_ROOT}\DesktopToolset.xml</file>
       <file>${PROJECT_ROOT}\doc</file>
+      <file>${PROJECT_ROOT}\example_data</file>
       <file>${PROJECT_ROOT}\fun_cmp_clusters.m</file>
       <file>${PROJECT_ROOT}\fun_num_clusters.m</file>
       <file>${PROJECT_ROOT}\i_plot_pseudotimeseries.m</file>
@@ -182,6 +183,7 @@ resources/STRING/stringdb_mouse.mat
       <file>${PROJECT_ROOT}\sc_rmmtcells.m</file>
       <file>${PROJECT_ROOT}\sc_rmmtgenes.m</file>
       <file>${PROJECT_ROOT}\sc_scatter.m</file>
+      <file>${PROJECT_ROOT}\sc_scatter3genes.m</file>
       <file>${PROJECT_ROOT}\sc_scatter_sce.m</file>
       <file>${PROJECT_ROOT}\sc_scattermarker.m</file>
       <file>${PROJECT_ROOT}\sc_sce2hdf5.m</file>
