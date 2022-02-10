@@ -12,7 +12,8 @@ function [T]=i_dr(aln0,aln1,genelist,dosort)
     else
         [~, ~, ~, pAdjusted] = pkg.fdr_bh(pValues);
     end    
-    if size(genelist,1)==1, genelist=genelist'; end
+    % if size(genelist,1)==1, genelist=genelist'; end
+    genelist=genelist(:);
     sortid=(1:length(genelist))';
     if size(genelist,2)>1, genelist=genelist'; end
     T=table(sortid,genelist,drdist,FC,pValues,pAdjusted);

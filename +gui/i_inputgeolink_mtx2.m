@@ -1,4 +1,4 @@
-function [X,genelist,celllist,ftdone]=i_inputgeolinks2
+function [X,genelist,celllist,ftdone]=i_inputgeolink_mtx2
 
 FigWidth=175;
 FigHeight=100;

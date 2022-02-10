@@ -13,6 +13,13 @@ switch methodid
     case 2
         Xhat0=ten.do_td_tucker(XM0);    
 end
-% A0=mean(Xhat0,3);
-A0=median(Xhat0,3);
+
+A0=mean(Xhat0,3);
+% M=true(size(A0));
+% for k=1:size(Xhat0,3)
+%     [A]=ten.e_filtadjc(Xhat0(:,:,k),0.75);
+%     M=M & (A~=0);
+% end
+% A0=A0.*M;
+
 end

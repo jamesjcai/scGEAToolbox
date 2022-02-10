@@ -8,7 +8,6 @@ pw0=pwd;
 pw1=fileparts(mfilename('fullpath'));
 
 
-
 if ~strcmp(pw0,pw1) && ~isconfirmed
     [selectedButton]=uigetpref('scGEApp',... % Group
            'cdgea_ask',...                               % Preference

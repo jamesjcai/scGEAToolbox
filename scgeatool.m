@@ -221,10 +221,13 @@ promotesave=false;
 %                     metainfo=sprintf("Source: %s",acc);
 %                     sce=sce.appendmetainfo(metainfo);
                 end
-            case 'Link to GEO mtx.gz File...'
-                [X,g,celllist,ftdone,answer1]=gui.i_inputgeolinks;
+            case {'Link to GEO mtx.gz File...','Link to GEO txt.gz File...'} 
+                if contains(ButtonName,'mtx')
+                    [X,g,celllist,ftdone,answer1]=gui.i_inputgeolink_mtx;
+                else
+                    [X,g,celllist,ftdone,answer1]=gui.i_inputgeolink_txt;
+                end
                 if isempty(X) || isempty(g) || ~ftdone
-                    % errordlg('Input Error');
                     return;
                 end
                 sce = SingleCellExperiment(X, g);
@@ -233,62 +236,27 @@ promotesave=false;
                 if ~isempty(celllist) && length(celllist)==sce.NumCells
                     sce.c_cell_id=celllist;
                 end
-            case 'Link to GEO txt.gz File...'
-                    prompt = {'Enter link to counts.txt.gz or counts.csv.gz:'};
-                    dlgtitle = 'Input Download Links';
-                    dims = [1 100];
-                    definput = {'https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM5350nnn/GSM5350808/suppl/GSM5350808_Fibroblast_young_1wk_Saline_counts.csv.gz'};
-                    answer = inputdlg(prompt,dlgtitle,dims,definput);
-                    if isempty(answer), return; end
-                    if ~isempty(answer{1})                        
-                        tmpd=tempdir;
-                        if strcmpi(answer{1}(end-2:end),'.gz')
-                            fprintf('gunzip(''%s'',''%s'');\n',answer{1},tmpd);
-                            files=gunzip(answer{1},tmpd);
-                        elseif strcmpi(answer{1}(end-3:end),'.zip')
-                            fprintf('unzip(''%s'',''%s'');\n',answer{1},tmpd);
-                            files=unzip(answer{1},tmpd);
-                        elseif strcmpi(answer{1}(end-3:end),'.csv')
-                            files=websave(tempname,answer{1});
-                        else
-                            errordlg('File format is not supported.');
-                            return;
-                        end
-                        if iscell(files)
-                            f=files{1};
-                        else
-                            f=files;
-                        end                        
-                        if isempty(f), error('f1'); end
-                        fprintf('[X,g]=sc_readtsvfile(''%s'');\n',f);
-                        [X,g,celllist]=sc_readtsvfile(f);
-                        sce = SingleCellExperiment(X, g);
-                        sce.c_cell_id=celllist;
-                        metainfo=sprintf("Source: %s",answer{1});
-                        sce=sce.appendmetainfo(metainfo);
-                    end
             case 'Link to GEO h5 File...'
-                    prompt = {'Enter link to .h5 file:'};
-                    dlgtitle = 'Input Download Links';
-                    dims = [1 100];
-                    definput = {'https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM4666nnn/GSM4666986/suppl/GSM4666986_BL41_filtered_feature_bc_matrix.h5'};
-                    answer = inputdlg(prompt,dlgtitle,dims,definput);
-                    if isempty(answer), return; end
-                    if ~isempty(answer{1})                        
-                        files=websave(tempname,answer{1});
-                        if iscell(files)
-                            f=files{1};
-                        else
-                            f=files;
-                        end                        
-                        if isempty(f), error('f1'); end
-                        fprintf('[X,g]=sc_readhdf5file(''%s'');\n',f);
-                        [X,g]=sc_readhdf5file(f);
-                        sce = SingleCellExperiment(X, g);
-                        metainfo=sprintf("Source: %s",answer{1});
-                        sce = sce.appendmetainfo(metainfo);
-                    end
-
+                prompt = {'Enter link to .h5 file:'};
+                dlgtitle = 'Input Download Links';
+                dims = [1 100];
+                definput = {'https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM4666nnn/GSM4666986/suppl/GSM4666986_BL41_filtered_feature_bc_matrix.h5'};
+                answer = inputdlg(prompt,dlgtitle,dims,definput);
+                if isempty(answer), return; end
+                if ~isempty(answer{1})                        
+                    files=websave(tempname,answer{1});
+                    if iscell(files)
+                        f=files{1};
+                    else
+                        f=files;
+                    end                        
+                    if isempty(f), error('f1'); end
+                    fprintf('[X,g]=sc_readhdf5file(''%s'');\n',f);
+                    [X,g]=sc_readhdf5file(f);
+                    sce = SingleCellExperiment(X, g);
+                    metainfo=sprintf("Source: %s",answer{1});
+                    sce = sce.appendmetainfo(metainfo);
+                end
             case 'Load SCE Variable from Workspace...'
                 a=evalin('base','whos');
                 b=struct2cell(a);
@@ -316,11 +284,6 @@ promotesave=false;
                 pw1=fileparts(mfilename('fullpath'));
                 fprintf('Loading SCE Data File example_data/testSce.mat...');
                 tic;
-%                 if ~exist(fullfile(pw1,'example_data/'),'dir')
-%                     olddir=pwd();
-%                     cdgea;
-%                     cd(olddir);
-%                 end
                 file1=fullfile(pw1,'example_data','testSce.mat');
                 if ~exist(file1,"file")
                     errordlg("Example data file does not exist.");

@@ -1,6 +1,6 @@
-function [X,genelist,celllist,ftdone,answer1]=i_inputgeolinks
+function [X,genelist,celllist,ftdone,answer1]=i_inputgeolink_mtx
 
-    X=[]; genelist=[]; ftdone=[]; celllist=[];
+    X=[]; genelist=[]; celllist=[]; ftdone=false; answer1=[];
     
     prompt = {'Enter link to matrix.mtx.gz:',...
         'Enter link to genes.tsv.gz:',...

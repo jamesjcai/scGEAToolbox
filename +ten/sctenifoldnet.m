@@ -70,7 +70,7 @@ import ten.*
     tic
     disp('Tensor decomposition')
     [A0]=i_td1(XM,tdmethod);
-    [A0]=e_filtadjc(A0,0.95);
+    %[A0]=e_filtadjc(A0,0.95);
     toc
     if savegrn
         tic
@@ -86,7 +86,7 @@ import ten.*
     tic
     disp('Tensor decomposition')
     A1=i_td1(XM,tdmethod);
-    A1=e_filtadjc(A1,0.95);
+    %A1=e_filtadjc(A1,0.95);
     toc
     if savegrn
         tic
