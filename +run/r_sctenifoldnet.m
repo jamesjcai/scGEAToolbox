@@ -5,7 +5,7 @@ if ~isa(sce1,'SingleCellExperiment') || ~isa(sce2,'SingleCellExperiment')
 end
 T=[];
 assert(isequal(sce1.g,sce2.g))
-isdebug=false;
+isdebug=true;
 oldpth=pwd();
 [isok,msg]=commoncheck_R('R_scTenifoldNet');
 if ~isok, error(msg); end
@@ -21,7 +21,10 @@ sc_sce2rds(sce2,fullfile(pwd(), 'input2.rds'));
 if ~isdebug
 	if exist('./output.txt','file'), delete('./output.txt'); end
 end
-if isdebug, return; end
+if isdebug
+    if ispc, winopen(cd); end
+    return;
+end
 pkg.RunRcode('script.R');
 if exist('./output.txt','file')
     warning('off','MATLAB:table:ModifiedAndSavedVarnames');
