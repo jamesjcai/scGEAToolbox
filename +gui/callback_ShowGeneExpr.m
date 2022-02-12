@@ -33,7 +33,7 @@ switch answer
         %    return;
         else
             [y,i]=ismember(upper(glist),upper(sce.g));
-            if ~all(y), error('xxx'); end  
+       if ~all(y), error('Unspecific running error.'); end
         %[~,i]=ismember(gsorted(idx),sce.g);
         x=sum(sce.X(i,:),1);
         if length(i)==1
