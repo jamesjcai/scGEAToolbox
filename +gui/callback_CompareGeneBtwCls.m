@@ -1,4 +1,7 @@
 function callback_CompareGeneBtwCls(src,~)
+    answer = questdlg('Violin plot to show gene expression or other measurements among different cell groups?','');
+    if ~strcmp(answer,'Yes'), return; end    
+
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
 
@@ -14,6 +17,7 @@ a={'Gene Expression','Library Size','Predefined Cell Score'};
     'SelectionMode','single','ListString',a);
 if tf1~=1, return; end
 
+try
 switch a{indx1}
     case 'Library Size'
         y=sum(sce.X);
@@ -25,12 +29,7 @@ switch a{indx1}
                     'ListString',gsorted);
         if tf~=1, return; end
         idx=sce.g==gsorted(indx);
-        try
-            [Xt]=gui.i_transformx(sce.X);
-        catch ME
-            errordlg(ME.message);
-            return;
-        end
+        [Xt]=gui.i_transformx(sce.X);
         y=full(Xt(idx,:));
         ttxt=sce.g(idx);
     case 'Predefined Cell Score'
@@ -50,7 +49,12 @@ end
         f = figure('visible','off');
         pkg.i_violinplot(y,thisc);
         title(strrep(ttxt,'_','\_'));
-        ylabel('Expression Level');
+        ylabel(a{indx1});
         movegui(f,'center');
-        set(f,'visible','on');    
+        set(f,'visible','on');
+
+catch ME
+    errordlg(ME.message);
 end
+end
+
