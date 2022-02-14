@@ -1,6 +1,7 @@
 %pw1=fileparts(mfilename('fullpath'));
 
 pw1=cdgea;
+wrkpth=fullfile(pw1,'+run','thirdparty','tensor_toolbox'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','cbrewer'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','PHATE'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','umapFileExchange'); addpath(wrkpth);
