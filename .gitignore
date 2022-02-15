@@ -50,3 +50,5 @@ scGEAToolbox.mltbx
 +run/thirdparty/R_scTenifoldNet/input1.rds
 +run/thirdparty/R_scTenifoldNet/input2.rds
 scgeatoolstandaloneApplication/
++run/external/stringdb/stringdb_human.mat
++run/external/stringdb/stringdb_mouse.mat

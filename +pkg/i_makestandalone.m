@@ -34,8 +34,8 @@ if ~exist(outdir,"dir"), mkdir(outdir); end
  for k=1:length(c)
      d(k)=string(fullfile(c(k).folder,c(k).name));
  end
-    d=[d;fullfile(pw1, 'resources', 'STRING', 'stringdb_human.mat')];
-    d=[d;fullfile(pw1, 'resources', 'STRING', 'stringdb_mouse.mat')];
+%    d=[d;fullfile(pw1, 'resources', 'STRING', 'stringdb_human.mat')];
+%    d=[d;fullfile(pw1, 'resources', 'STRING', 'stringdb_mouse.mat')];
     d=[d;fullfile(pw1, 'resources', 'tfome_tfgenes.mat')];
     d=[d;fullfile(pw1, 'resources', 'regev_lab_cell_cycle_genes.txt')];
     d=[d;fullfile(pw1, 'resources', 'cellscores.txt')];

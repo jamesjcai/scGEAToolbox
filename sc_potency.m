@@ -13,16 +13,25 @@ if nargin < 3, speciesid = 1; end
     end
  
     pw1 = fileparts(mfilename('fullpath'));
-    % pth=fullfile(pw1,'resources/STRING');
-    dbfile1 = fullfile(pw1, 'resources', 'STRING', 'stringdb_human.mat');
-    dbfile2 = fullfile(pw1, 'resources', 'STRING', 'stringdb_mouse.mat');
+    
+%    dbfile1 = fullfile(pw1, 'resources', 'STRING', 'stringdb_human.mat');
+%    dbfile2 = fullfile(pw1, 'resources', 'STRING', 'stringdb_mouse.mat');
+    dbfile1 = fullfile(pw1, '+run', 'external', 'stringdb', 'stringdb_human.mat');
+    dbfile2 = fullfile(pw1, '+run', 'external', 'stringdb', 'stringdb_mouse.mat');
+
     if ~ exist(dbfile1, 'file')
+        if ~exist(fileparts(dbfile1),'dir')
+            mkdir(fileparts(dbfile1));
+        end
         %disp('Downloading ...... stringdb_human.mat')
         url = 'https://github.com/jamesjcai/jamesjcai.github.io/raw/master/data/stringdb_human.mat';
         % outfilename =
         websave(dbfile1, url);
     end
     if ~ exist(dbfile2, 'file')
+        if ~exist(fileparts(dbfile2),'dir')
+            mkdir(fileparts(dbfile2));
+        end        
         %disp('Downloading ...... stringdb_mouse.mat')
         url = 'https://github.com/jamesjcai/jamesjcai.github.io/raw/master/data/stringdb_mouse.mat';
         %outfilename =
@@ -32,10 +41,10 @@ if nargin < 3, speciesid = 1; end
     genelist = upper(genelist);
     if speciesid == 1
         ppinetfile = dbfile1; % 'Z:\Cailab\CCC_utilities\STRING\stringdb_human.mat';
-        disp('Using resources/stringdb_human.mat')
+        disp('Using stringdb_human.mat')
     else
         ppinetfile = dbfile2; % 'Z:\Cailab\CCC_utilities\STRING\stringdb_mouse.mat';
-        disp('Using resources/stringdb_mouse.mat')
+        disp('Using stringdb_mouse.mat')
     end
     load(ppinetfile, 'G');
     G.Edges.Weight = double(G.Edges.Weight > 0);
@@ -49,6 +58,5 @@ if nargin < 3, speciesid = 1; end
     end
     d = Gdegree(j);
     X = X(i, :);
-    r = corr(X, d); % Correlation of Connectome And Transcriptome
- 
+    r = corr(X, d); % Correlation of Connectome And Transcriptome 
 end
