@@ -26,7 +26,7 @@ wrkpth=fullfile(pw1,'+run','thirdparty','SinNLRR'); addpath(wrkpth);
 a=getenv('USERPROFILE');
 b=getenv('username');
 outdir=sprintf('%s\\Desktop\\scgeatoolstandaloneApplication',a);
-if ~exist(outdir,"dir"), makedir(outdir); end
+if ~exist(outdir,"dir"), mkdir(outdir); end
 
 %%
  c=dir('resources/*.gif');
@@ -49,9 +49,11 @@ compiler.build.standaloneWindowsApplication('scgeatool.m',...
     'ExecutableName','scgeatool','Verbose','On',...
     'OutputDir',outdir,'AdditionalFiles',d);
 %%
+try
 winopen(sprintf('%s\\AppData\\Local\\Temp\\%s\\mcrCache9.11\\',a,b));
 winopen(outdir);
-
+catch
+end
 
 
 
