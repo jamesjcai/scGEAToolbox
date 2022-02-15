@@ -17,7 +17,7 @@ function callback_scTenifoldNet1(src,events)
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
 
-    answer=questdlg('Construct GRN for selected cells?',...
+    answer=questdlg('Construct gene regulatory network (GRN) for all cells or selected cells?',...
         '','All Cells','Select Cells...','Cancel',...
         'All Cells');
     switch answer
@@ -50,7 +50,7 @@ function callback_scTenifoldNet1(src,events)
         fprintf('Saving network (A) to %s.mat\n',tmpmat);
         save(tmpmat,'A','g');
     catch ME
-        % disp(ME)
+        disp(ME);
     end
     % tstr=matlab.lang.makeValidName(datestr(datetime));
     % save(sprintf('A_%s',tstr),'A','g','-v7.3');

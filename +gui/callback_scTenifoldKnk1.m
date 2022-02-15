@@ -3,8 +3,8 @@ function callback_scTenifoldKnk1(src,~)
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
 
-    answer=questdlg('Use existing network or reconstruct network?',...
-        'Input Network','Use existing','Reconstruct','Use existing');
+answer=questdlg('Construct network de novo or use existing network in Workspace?',...
+        'Input Network','Construct de novo','Use existing','Construct de novo');    
     switch answer
         case 'Use existing'
             a=evalin('base','whos');
@@ -35,7 +35,7 @@ function callback_scTenifoldKnk1(src,~)
                     return;
                 end
             end
-        case 'Reconstruct'
+        case 'Construct de novo'
             try
                 ten.check_tensor_toolbox;
             catch ME        

@@ -19,8 +19,8 @@ function callback_scTenifoldNet2(src,~)
     sce=guidata(FigureHandle);
     
 
-answer=questdlg('Use existing networks or reconstruct networks?',...
-        'Input Networks','Use existing','Construct','Use existing');
+answer=questdlg('Construct networks de novo or use existing networks in Workspace?',...
+        'Input Networks','Construct de novo','Use existing','Construct de novo');
     switch answer
         case 'Use existing'
             a=evalin('base','whos');
@@ -56,7 +56,7 @@ answer=questdlg('Use existing networks or reconstruct networks?',...
             T=i_dr(aln0,aln1,glist);
             gui.gui_waitbar(fw);
             
-        case 'Construct'
+        case 'Construct de novo'
             [i1,i2]=gui.i_select2grps(sce);
             if length(i1)==1 || length(i2)==1, return; end
 
