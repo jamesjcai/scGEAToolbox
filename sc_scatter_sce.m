@@ -327,7 +327,7 @@ end
                 oldn-newn,oldm-newm),'');
         end
         if ~isempty(highlightindex)
-            h.BrushData=highlightindex;            
+            h.BrushData=highlightindex;
         end
     end
 
@@ -630,7 +630,7 @@ end
                 siv = sce.s(ptsSelected, :);
                 si = mean(siv, 1);
                 idx = find(ptsSelected);
-                [k] = dsearchn(siv, si);
+                [k] = dsearchn(siv, si);    % Nearest point search
                 datatip(h, 'DataIndex', idx(k));
                 % text(si(:,1),si(:,2),si(:,3),sprintf('%s',ctxt),...
                 %     'fontsize',10,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');
