@@ -31,9 +31,12 @@ switch answer
         end
         if length(tg)>=2
             
-            [y]=ismember(upper(tg),upper(gsorted));
+            [y,ix]=ismember(upper(tg),upper(gsorted));
             % i=i(y);
-            glist=tg(y);
+            %glist=tg(y);
+            
+            glist=gsorted(ix(y));
+
 %             if length(glist)<2
 %                 warndlg('Need at leaset 2 genes');
 %                 return;
