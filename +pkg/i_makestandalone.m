@@ -1,6 +1,7 @@
 %pw1=fileparts(mfilename('fullpath'));
 
 pw1=cdgea;
+wrkpth=fullfile(pw1,'tensor_toolbox'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','cbrewer'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','PHATE'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','umapFileExchange'); addpath(wrkpth);
@@ -25,7 +26,7 @@ wrkpth=fullfile(pw1,'+run','thirdparty','SinNLRR'); addpath(wrkpth);
 a=getenv('USERPROFILE');
 b=getenv('username');
 outdir=sprintf('%s\\Desktop\\scgeatoolstandaloneApplication',a);
-if ~exist(outdir,"dir"), makedir(outdir); end
+if ~exist(outdir,"dir"), mkdir(outdir); end
 
 %%
  c=dir('resources/*.gif');
@@ -33,8 +34,8 @@ if ~exist(outdir,"dir"), makedir(outdir); end
  for k=1:length(c)
      d(k)=string(fullfile(c(k).folder,c(k).name));
  end
-    d=[d;fullfile(pw1, 'resources', 'STRING', 'stringdb_human.mat')];
-    d=[d;fullfile(pw1, 'resources', 'STRING', 'stringdb_mouse.mat')];
+%    d=[d;fullfile(pw1, 'resources', 'STRING', 'stringdb_human.mat')];
+%    d=[d;fullfile(pw1, 'resources', 'STRING', 'stringdb_mouse.mat')];
     d=[d;fullfile(pw1, 'resources', 'tfome_tfgenes.mat')];
     d=[d;fullfile(pw1, 'resources', 'regev_lab_cell_cycle_genes.txt')];
     d=[d;fullfile(pw1, 'resources', 'cellscores.txt')];
@@ -48,9 +49,11 @@ compiler.build.standaloneWindowsApplication('scgeatool.m',...
     'ExecutableName','scgeatool','Verbose','On',...
     'OutputDir',outdir,'AdditionalFiles',d);
 %%
+try
 winopen(sprintf('%s\\AppData\\Local\\Temp\\%s\\mcrCache9.11\\',a,b));
 winopen(outdir);
-
+catch
+end
 
 
 

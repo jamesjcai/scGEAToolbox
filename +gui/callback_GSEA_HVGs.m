@@ -1,8 +1,17 @@
 function callback_GSEA_HVGs(src,~)
     answer = questdlg('Identify HVGs and then perform GSEA function enrichment analysis?');
     if ~strcmp(answer,'Yes'), return; end 
+    
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
+  
+    answer = questdlg('Which method?',...
+        'Select Method','Brennecke et al. (2013)',...
+        'Mean-CV-Dropout Method','Brennecke et al. (2013)');
+
+    switch answer
+        case 'Brennecke et al. (2013)'
+
     t=sc_hvg(sce.X,sce.g);
     
     if ~(ismcc || isdeployed)
@@ -39,4 +48,10 @@ function callback_GSEA_HVGs(src,~)
     gui.gui_waitbar(fw);
     
     uiwait(helpdlg('Done!',''));
+
+        case 'Mean-CV-Dropout Method'
+            sc_scatter3genes(sce.X,sce.g);
+        otherwise
+            return;
+    end
 end

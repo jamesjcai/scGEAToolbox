@@ -1,9 +1,10 @@
-function k = i_inputnumk
+function k = i_inputnumk(defaultk)
+    if nargin<1, defaultk=10; end
     k=[];
-    prompt = {'Enter number of clusters K=(2..100):'};
-    dlgtitle = 'Input K';
+    prompt = {'Enter number of k = (2..100):'};
+    dlgtitle = 'Input k';
     dims = [1 45];
-    definput = {'10'};
+    definput = {sprintf('%d',defaultk)};
     answer = inputdlg(prompt, dlgtitle, dims, definput);
     if isempty(answer), return; end
     k = round(str2double(cell2mat(answer)));

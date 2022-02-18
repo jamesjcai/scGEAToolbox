@@ -32,8 +32,10 @@ switch answer
         %   helpdlg('No gene selected.','');
         %    return;
         else
-            [y,i]=ismember(upper(glist),upper(sce.g));
+           [y,i]=ismember(upper(glist),upper(sce.g));
            if ~all(y), error('Unspecific running error.'); end
+           glist=sce.g(i);
+           
         %[~,i]=ismember(gsorted(idx),sce.g);
         x=sum(sce.X(i,:),1);
         if length(i)==1

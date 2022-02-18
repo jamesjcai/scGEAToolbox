@@ -1,6 +1,8 @@
 function i_cascadefig(sce,g,axx,bxx,k)
         f = figure('visible','off');
-        [h1]=sc_scattermarker(sce.X,sce.g,sce.s,g,5);
+
+        [h1]=sc_scattermarker(sce.X,sce.g,...
+                     sce.s,g,5);
         view(h1,axx,bxx);
         % movegui(f,'center');        
         P = get(f,'Position');

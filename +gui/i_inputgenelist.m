@@ -17,6 +17,20 @@ try
     glist=strrep(glist,'"','');
     glist=strip(glist,'both','"');
     glist=strtrim(glist);
+
+    spset={' ',',',':',';'};
+    i=contains(glist,spset);
+    if any(i)
+        g1=glist(~i);
+        g2=glist(i);
+        g3=[];
+        for k=1:length(g2)
+            gx=strsplit(g2(k),spset);
+            g3=[g3;gx.'];
+        end
+        glist=[g1;g3];
+        glist=strtrim(glist);
+    end
 catch ME
     errordlg(ME.message);
     return;
