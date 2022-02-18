@@ -1,17 +1,15 @@
-function add_3dcamera(tb,prefix)
+function add_3dcamera(tb,prefix,flatview)
 
-if nargin<2
-    prefix='';
-end
+if nargin<3, flatview=false; end
+if nargin<2, prefix=''; end
 if nargin<1
-hFig=gcf;
-tb = findall(hFig,'Type','uitoolbar');
-if length(tb)==1
-    tb = uitoolbar(hFig);
-else
-    tb=tb(1);
-end
-
+    hFig=gcf;
+    tb = findall(hFig,'Type','uitoolbar');
+    if length(tb)==1
+        tb = uitoolbar(hFig);
+    else
+        tb=tb(1);
+    end
 end
 pt = uipushtool(tb,'Separator','on');
     folder=fileparts(mfilename('fullpath'));
@@ -38,7 +36,13 @@ function camera3dmp4(~,~)
         fname=fullfile(a1,b1);
     end
     warning off
-    gui.CaptureFigVid([-20,10;-110,10;-190,80;-290,10;-380,10],fname,OptionZ);
+    
+    if flatview
+        gui.CaptureFigVid([-20,50;-110,65;-190,80;-290,60;-380,40],fname,OptionZ);
+    else
+        gui.CaptureFigVid([-20,10;-110,10;-190,80;-290,10;-380,10],fname,OptionZ);
+    end
+
     warning on
     pause(1);
     winopen(tempdir);
