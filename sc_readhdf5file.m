@@ -1,4 +1,5 @@
-function [X,genelist,filenm]=sc_readhdf5file(filenm)
+function [X,genelist,filenm,barcodes]=sc_readhdf5file(filenm)
+barcodes=[];
 %Read HDF5 file
 % https://www.mathworks.com/help/matlab/hdf5-files.html
 % http://scipy-lectures.org/advanced/scipy_sparse/csc_matrix.html
@@ -41,6 +42,10 @@ catch
     end
 end
 
+try
+barcodes=h5read(filenm,[hinfo.Groups.Groups(1).Name,'/barcodes']);
+catch
+end
 
 X=zeros(shape(1),shape(2));
 for k=1:length(indptr)-1
