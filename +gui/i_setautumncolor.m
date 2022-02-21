@@ -1,4 +1,5 @@
 function i_setautumncolor(c,cmapname)
+
 if nargin<2, cmapname='autumn'; end
     a = colormap(cmapname);
     a(1, :) = [.8 .8 .8];
