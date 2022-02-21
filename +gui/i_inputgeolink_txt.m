@@ -28,8 +28,7 @@ if ~isempty(answer1)
         elseif strcmpi(answer1(end-3:end),'.csv')
             files=websave(tempname,answer1);
         else
-            errordlg('File format is not supported.');
-            return;
+            error('File format is not supported.');
         end
         if iscell(files)
             f=files{1};
@@ -39,15 +38,14 @@ if ~isempty(answer1)
         f=strrep(f,'?','_');   
     
         if isempty(f) || ~exist(f,'file') 
-            errordlg('File format is not supported.');
-            return;
+            error('File format is not supported.');
         end
     
         fprintf('[X,g]=sc_readtsvfile(''%s'');\n',f);
         [X,genelist,celllist]=sc_readtsvfile(f);
         ftdone=true;
-    catch ME            
-        gui.gui_waitbar(fw);
+    catch ME
+        gui.gui_waitbar(fw,true);
         errordlg(ME.message);
         return;
     end

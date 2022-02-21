@@ -60,7 +60,7 @@ promotesave=false;
                     fw = gui.gui_waitbar;
                     load(scefile, 'sce');
                 catch ME
-                    gui.gui_waitbar(fw);
+                    gui.gui_waitbar(fw,true);
                     errordlg(ME.message);
                     return;
                 end
@@ -173,11 +173,13 @@ promotesave=false;
                 fw = gui.gui_waitbar;
                 [sce] = sc_readrdsfile(filename);
 %                 metainfo=sprintf("Source: %s",filename);
-%                 sce=sce.appendmetainfo(metainfo);
-                gui.gui_waitbar(fw);
+%                 sce=sce.appendmetainfo(metainfo);                
                 if isempty(sce)
+                    gui.gui_waitbar(fw,true);
                     errordlg('File Import Failure.');
-                    return; 
+                    return;
+                else
+                    gui.gui_waitbar(fw);
                 end
             case '10x Genomics ''outs'' Folder...'
                 selpath = uigetdir;
@@ -187,7 +189,7 @@ promotesave=false;
                     [X,g,celllist,ftdone]=sc_read10xdir(selpath);
                     gui.gui_waitbar(fw);
                 catch ME
-                    gui.gui_waitbar(fw);
+                    gui.gui_waitbar(fw,true);
                     errordlg(ME.message);
                     return;
                 end

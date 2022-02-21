@@ -38,7 +38,7 @@ function [X,genelist,celllist,ftdone,answer1]=i_inputgeolink_mtx
         [X,genelist,celllist,ftdone]=sc_read10xdir(a);
         catch ME
             cd(pw1);
-            gui.gui_waitbar(fw);
+            gui.gui_waitbar(fw,true);
             errordlg(ME.message);
             return;
         end

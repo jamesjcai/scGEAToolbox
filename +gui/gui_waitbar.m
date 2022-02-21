@@ -1,4 +1,6 @@
-function [f]=gui_waitbar(f)
+function [f]=gui_waitbar(f,witherror)
+
+if nargin<2, witherror=false; end
 if nargin<1 || isempty(f)
     f = waitbar(0,'Please wait...');
     pause(.5)
@@ -8,11 +10,11 @@ if nargin<1 || isempty(f)
     tic;
     return;
 elseif isvalid(f) && strcmp(f.Tag,'TMWWaitbar')
-    toc;    
-    waitbar(1,f,'Finishing');
-    pause(1);
-    % fprintf('.......................done.\n');
-    if isvalid(f)
-        close(f);
+    if ~witherror
+        toc;
+        waitbar(1,f,'Finishing');
+        pause(1);
+        % fprintf('.......................done.\n');
     end
+    if isvalid(f), close(f); end
 end
