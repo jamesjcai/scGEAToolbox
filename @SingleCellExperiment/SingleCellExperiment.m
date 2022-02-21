@@ -148,13 +148,13 @@ classdef SingleCellExperiment
     end
     
     function obj = qcfilter(obj,libsize,mtratio,min_cells_nonzero)
-        if nargin<4 || isempty(min_cells_nonzero), min_cells_nonzero=0.01; end
+        if nargin<4 || isempty(min_cells_nonzero), min_cells_nonzero=15; end
         if nargin<3 || isempty(mtratio), mtratio=0.15; end
-        if nargin<2 || isempty(libsize), libsize=500; end
+        if nargin<2 || isempty(libsize), libsize=1000; end
         %        case 'Relaxed (keep more cells/genes)'
-        %            definput = {'500','0.15','0.01'};
-        %        case 'Strigent (remove more cells/genes)'
-        %            definput = {'1000','0.10','0.05'};        
+        %            definput = {'500','0.20','10'};
+        %        case 'Strigent (keep less cells/genes)'
+        %            definput = {'1000','0.15','15'};
         [~,keptg,keptidxv]=sc_qcfilter(obj.X,obj.g,libsize,mtratio,...
                                        min_cells_nonzero);
         for k=1:length(keptidxv)
