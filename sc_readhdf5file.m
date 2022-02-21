@@ -1,5 +1,4 @@
-function [X,genelist,filenm,barcodes]=sc_readhdf5file(filenm)
-barcodes=[];
+function [X,genelist,barcodes,filenm]=sc_readhdf5file(filenm)
 %Read HDF5 file
 % https://www.mathworks.com/help/matlab/hdf5-files.html
 % http://scipy-lectures.org/advanced/scipy_sparse/csc_matrix.html
@@ -7,6 +6,8 @@ barcodes=[];
 
 % https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM3489183
 % h5file='GSM3489183_IPF_01_filtered_gene_bc_matrices_h5.h5';
+
+barcodes=[];
 if nargin<1
 [filenm, pathname] = uigetfile( ...
        {'*.h5;*.hdf5', 'HDF5 Files (*.h5)';
@@ -37,14 +38,19 @@ catch
         try
             g=h5read(filenm,[hinfo.Groups(1).Name,'/gene_names']);
         catch
-            error('gene_names not found.');
+            error('GENE_NAMES not found.');
         end
     end
 end
 
 try
-barcodes=h5read(filenm,[hinfo.Groups.Groups(1).Name,'/barcodes']);
+    barcodes=h5read(filenm,[hinfo.Groups.Groups(1).Name,'/barcodes']);
 catch
+        try
+            barcodes=h5read(filenm,[hinfo.Groups(1).Name,'/barcodes']);
+        catch
+            warning('BARCODES not found.');
+        end
 end
 
 X=zeros(shape(1),shape(2));
