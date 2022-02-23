@@ -68,7 +68,7 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
                 return;
             end
             [whitelist]=i_selectwhitelist(sce);
-            if whitelist==0
+            if isnumeric(whitelist) && whitelist==0
                 requirerefresh=false;
                 return;
             end
@@ -227,6 +227,7 @@ function [whitelist]=i_selectwhitelist(sce)
             if isscalar(idx) && idx==0, return; end
             whitelist=gsorted(idx);
         case 'No'
+            whitelist=[];
             return;
         case 'Cancel'
             whitelist=0;

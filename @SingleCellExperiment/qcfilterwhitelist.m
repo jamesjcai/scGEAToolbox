@@ -2,9 +2,9 @@ function obj = qcfilterwhitelist(obj,libszcutoff,mtratio,...
     min_cells_nonzero,gnnumcutoff,whitelist)
     if nargin<6, whitelist=[]; end
     if nargin<5 || isempty(gnnumcutoff), gnnumcutoff=200; end
-    if nargin<4 || isempty(min_cells_nonzero), min_cells_nonzero=0.01; end
+    if nargin<4 || isempty(min_cells_nonzero), min_cells_nonzero=15; end
     if nargin<3 || isempty(mtratio), mtratio=0.15; end
-    if nargin<2 || isempty(libszcutoff), libszcutoff=500; end
+    if nargin<2 || isempty(libszcutoff), libszcutoff=1000; end
     
     if ~isempty(whitelist)
         assert(all(ismember(whitelist,obj.g)));
@@ -26,7 +26,7 @@ function obj = qcfilterwhitelist(obj,libszcutoff,mtratio,...
             Xresv = Xresv(:,keptidxv{k});
         end
         obj.X=[obj.X; Xresv];
-        obj.g=[obj.g; whitelist];
+        obj.g=[obj.g; whitelist(:)];
     end    
 
 end

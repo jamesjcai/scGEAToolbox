@@ -87,6 +87,12 @@ function f=i_setupfile(c)
         fprintf('Downloading %s\n',x)
         files=gunzip(x,tmpd);
         f=files{1};
+        if strcmpi(f(end-3:end),'.tar')
+            f=untar(f,tmpd);
+            if length(f)>1
+                f=[];
+            end
+        end
     catch ME
         disp(ME.message)
         f=[];

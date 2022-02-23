@@ -22,8 +22,8 @@ fid = fopen(fname,'w');
 %if nargin == 3, 
   [i2,j2,att] = find(link_attrib);
   fprintf(fid,'Source\tTarget\tWeight\n');
-  for i = 1:nnz(A)
-    fprintf(fid,'%s\t%s\t%f\n',ndname(ii(i)),ndname(jj(i)),att(i));  
+  for ik = 1:length(att) % nnz(A)
+    fprintf(fid,'%s\t%s\t%f\n',ndname(ii(ik)),ndname(jj(ik)),att(ik));  
 %     fprintf(fid,[num2str(ii(i)) ' ' num2str(jj(i)) ' ' num2str(val(i)) ' ' ...
 %                  num2str(att(i)) '\n']);
   end
