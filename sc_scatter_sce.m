@@ -999,7 +999,7 @@ end
                 % [sce.c_cluster_id]=sc_cluster_x(sce.X,k,'type',methodtag);
                 sce = sce.clustercells(k, methodtag, true);
             catch ME
-                gui.gui_waitbar(fw);
+                gui.gui_waitbar(fw,true);
                 errordlg(ME.message);
                 return
             end
