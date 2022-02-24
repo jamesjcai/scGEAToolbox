@@ -100,7 +100,7 @@ try
         end
     end
 catch
-    warning('SCE.STRUCT_CELL_EMBEDDINGS not merged.')
+    % warning('SCE.STRUCT_CELL_EMBEDDINGS not merged.')
 end
 
 end

@@ -1,5 +1,10 @@
-function [X,genelist,c]=sc_mergedata(X1,X2,genelist1,genelist2,method)
+function [X,genelist,c]=sc_mergedata(X1,X2,genelist1,genelist2,method,ignorecase)
+if nargin<6, ignorecase=true; end
 if nargin<5, method='intersect'; end
+if ignorecase
+    genelist1=upper(genelist1);
+    genelist2=upper(genelist2);
+end
 
 switch lower(method)
     case 'intersect'
