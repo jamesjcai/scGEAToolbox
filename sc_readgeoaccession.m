@@ -42,6 +42,7 @@ elseif length(c)==1
             end
         end
         if ~txtnotfound
+            disp("Found TXT/CSV/TSV file.");
             f1=i_setupfile(c1);
             if isempty(f1), error('TXT/CSV/TSV file name not processed.'); end
             [X,g]=sc_readtsvfile(f1);
@@ -50,9 +51,10 @@ elseif length(c)==1
             if isempty(c1)
                 error('File not found.');
             end
+            disp("Found H5 file.");
             f1=i_setupfile2(c1);
             [X,g]=sc_readhdf5file(f1);
-        end 
+        end
 end
 if length(g)==size(X,1)
     sce=SingleCellExperiment(X,g);
