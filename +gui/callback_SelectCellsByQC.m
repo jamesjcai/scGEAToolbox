@@ -68,9 +68,11 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
                 return;
             end
             [whitelist]=i_selectwhitelist(sce);
-            if isnumeric(whitelist) && whitelist==0
-                requirerefresh=false;
-                return;
+            if isnumeric(whitelist) 
+                if whitelist==0
+                    requirerefresh=false;
+                    return;
+                end
             end
             fw=gui.gui_waitbar;
             sce=sce.qcfilterwhitelist(libsize,mtratio,...
