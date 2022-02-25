@@ -197,8 +197,10 @@ uimenu(m_exp,'Text','Import Data Using GEO Accession...',...
     'Callback',@GEOAccessionToSCE);
 uimenu(m_exp,'Text','Merge SCEs in Workspace...',...    
     'Callback',@MergeSCEs);
-uimenu(m_exp,'Text','View Metadata...',...    
-    'Callback',@callback_ViewMetaData);
+uimenu(m_exp,'Text','Save as SVG...','Callback',{@i_savefig,1});
+uimenu(m_exp,'Text','Export Graphics...','Callback',{@i_savefig,2});
+uimenu(m_exp,'Text','View Metadata...','Callback',@callback_ViewMetaData);
+
 uimenu(m_exp,'Text','Check for Updates...',...    
     'Callback',@callback_CheckUpdates);
 
@@ -216,6 +218,22 @@ if nargout > 0
 end
 
 
+    function i_savefig(~,~,tag)        
+        if tag==1
+            filter = {'*.svg'};
+            [filename,filepath] = uiputfile(filter);
+            if ischar(filename)
+                saveas(FigureHandle,[filepath filename],'svg');
+            end
+        elseif tag==2
+            % axx=gca;
+            filter = {'*.jpg';'*.png';'*.tif';'*.pdf';'*.eps'};
+            [filename,filepath] = uiputfile(filter);
+            if ischar(filename)
+                exportgraphics(FigureHandle,[filepath filename]);
+            end
+        end
+    end
 
     function i_addbutton(toolbarHdl,sepTag,callbackFnc,imgFil,tooltipTxt)
         if ischar(callbackFnc) || isstring(callbackFnc)
