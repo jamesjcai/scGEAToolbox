@@ -1,9 +1,9 @@
 <deployment-project plugin="plugin.toolbox" plugin-version="1.0">
   <configuration build-checksum="3889589680" file="C:\Users\jcai\Documents\GitHub\scGEAToolbox\scGEAToolbox.prj" location="C:\Users\jcai\Documents\GitHub\scGEAToolbox" name="scGEAToolbox" target="target.toolbox" target-name="Package Toolbox">
     <param.appname>scGEAToolbox</param.appname>
-    <param.authnamewatermark />
-    <param.email />
-    <param.company />
+    <param.authnamewatermark>James Cai</param.authnamewatermark>
+    <param.email>jcai@tamu.edu</param.email>
+    <param.company>Texas A&amp;M University</param.company>
     <param.summary>Single-cell Gene Expression Analysis Toolbox</param.summary>
     <param.description>scRNAseq data analysis toolbox</param.description>
     <param.screenshot>${PROJECT_ROOT}\resources\sc_scatter.png</param.screenshot>
@@ -82,9 +82,6 @@ resources/STRING/stringdb_mouse.mat
     <param.additional.sw.mac.url />
     <param.additional.sw.linux.url />
     <unset>
-      <param.authnamewatermark />
-      <param.email />
-      <param.company />
       <param.output />
       <param.platforms />
       <param.exclude.pcodedmfiles />
