@@ -57,5 +57,7 @@ winopen(outdir);
 catch
 end
 
-
-
+cd(outdir);
+cd ..
+zippedfiles = zip('SCGEATOOL_StandaloneApplication.zip','SCGEATOOL_StandaloneApplication');
+movefile('SCGEATOOL_StandaloneApplication.zip','scgeatool.github.io\SCGEATOOL_StandaloneApplication.zip')
