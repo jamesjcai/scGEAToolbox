@@ -23,9 +23,11 @@ wrkpth=fullfile(pw1,'+run','thirdparty','SinNLRR'); addpath(wrkpth);
 
 %savepath;
 %%
-a=getenv('USERPROFILE');
-b=getenv('username');
-outdir=sprintf('%s\\Desktop\\scgeatoolstandaloneApplication',a);
+outdir = fullfile(pw1, '..','SCGEATOOL_StandaloneApplication');
+%
+%a=getenv('USERPROFILE');
+%b=getenv('username');
+%outdir=sprintf('%s\\Desktop\\scgeatoolstandaloneApplication',a);
 if ~exist(outdir,"dir"), mkdir(outdir); end
 
 %%
@@ -55,5 +57,7 @@ winopen(outdir);
 catch
 end
 
-
-
+cd(outdir);
+cd ..
+zippedfiles = zip('SCGEATOOL_StandaloneApplication.zip','SCGEATOOL_StandaloneApplication');
+movefile('SCGEATOOL_StandaloneApplication.zip','scgeatool.github.io\SCGEATOOL_StandaloneApplication.zip')
