@@ -23,9 +23,11 @@ wrkpth=fullfile(pw1,'+run','thirdparty','SinNLRR'); addpath(wrkpth);
 
 %savepath;
 %%
-a=getenv('USERPROFILE');
-b=getenv('username');
-outdir=sprintf('%s\\Desktop\\scgeatoolstandaloneApplication',a);
+outdir = fullfile(pw1, '..','SCGEATOOL_StandaloneApplication');
+%
+%a=getenv('USERPROFILE');
+%b=getenv('username');
+%outdir=sprintf('%s\\Desktop\\scgeatoolstandaloneApplication',a);
 if ~exist(outdir,"dir"), mkdir(outdir); end
 
 %%
