@@ -195,8 +195,12 @@ uimenu(m_exp,'Text','T Cell Exhaustion Score...',...
 uimenu(m_exp,'Text','Import Data Using GEO Accession...',...
     'Separator','on',...
     'Callback',@GEOAccessionToSCE);
+
 uimenu(m_exp,'Text','Merge SCEs in Workspace...',...    
-    'Callback',@MergeSCEs);
+    'Callback',{@MergeSCEs,1});
+
+uimenu(m_exp,'Text','Merge SCE Data Files...',...
+    'Callback',{@MergeSCEs,2});
 uimenu(m_exp,'Text','Save as SVG...','Callback',{@i_savefig,1});
 uimenu(m_exp,'Text','Export Graphics...','Callback',{@i_savefig,2});
 uimenu(m_exp,'Text','View Metadata...','Callback',@callback_ViewMetaData);
@@ -321,8 +325,8 @@ end
     end
     
     
-    function MergeSCEs(src, ~)
-        [requirerefresh,s]=gui.callback_MergeSCEs(src);        
+    function MergeSCEs(src, ~, sourcetag)
+        [requirerefresh,s]=gui.callback_MergeSCEs(src,sourcetag);
         if requirerefresh && ~isempty(s)
             sce = guidata(FigureHandle);
             [c, cL] = grp2idx(sce.c_batch_id);
@@ -598,8 +602,10 @@ end
         switch answer
             case 'Yes, automatically'
                 manuallyselect=false;
+                bestonly=true;
             case 'No, manually'
                 manuallyselect=true;
+                bestonly=false;
             otherwise
                 return;
         end
@@ -618,11 +624,11 @@ end
             ptsSelected = c == i;
             [Tct] = pkg.local_celltypebrushed(sce.X, sce.g, ...
                 sce.s, ptsSelected, ...
-                speciestag, organtag, databasetag);
+                speciestag, organtag, databasetag, bestonly);
             if isempty(Tct)
                 ctxt={'Unknown'};
             else
-                ctxt=Tct.C1_Cell_Type{1};
+                ctxt=Tct.C1_Cell_Type;
             end
             
             if manuallyselect

@@ -24,12 +24,12 @@ end
    addOptional(p,'species',"human",@(x) (isstring(x)|ischar(x))&ismember(lower(string(x)),["human","mouse","zebrafish"]));
    addOptional(p,'organ',"all",@(x) (isstring(x)|ischar(x))&ismember(lower(string(x)),["all","heart","immunesystem","brain","pancreas"]));
    addOptional(p,'subtype',"all",@(x) (isstring(x)|ischar(x))&ismember(lower(string(x)),["all","tcells","neurons"]));   
-   addOptional(p,'bestonly',false,@islogical);
+   addOptional(p,'bestonly',true,@islogical);
    parse(p,X,genelist,clusterid,varargin{:});
    species=p.Results.species;
    % organ=p.Results.organ;
    subtype=p.Results.subtype;
-   % bestonly=p.Results.bestonly;
+   bestonly=p.Results.bestonly;
 
 
 oldpth=pwd;
@@ -175,6 +175,9 @@ for k=1:NC
 end
 if size(T,1)>10
     T=T(1:10,:);
+end
+if bestonly && size(T,1)>1
+    T=T(1,:);
 end
 cd(oldpth);
 end

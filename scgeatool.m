@@ -51,10 +51,11 @@ promotesave=false;
             case 'SCE Data File (*.mat)...'
                 promotesave=false;
                 [fname, pathname] = uigetfile( ...
-                                              {'*.mat', 'MAT-files (*.mat)'
+                                              {'*.mat', 'SCE Data Files (*.mat)'
                                                '*.*',  'All Files (*.*)'}, ...
-                                              'Pick a MAT-file');
-                if ~(fname), return; end
+                                              'Pick a SCE Data File');
+                % if ~(fname), return; end
+                if isequal(fname,0), return; end
                 scefile = fullfile(pathname, fname);
                 try
                     fw = gui.gui_waitbar;
@@ -71,7 +72,7 @@ promotesave=false;
                                               {'*.mtx', 'MTX Format Files (*.mtx)'
                                                '*.*',  'All Files (*.*)'}, ...
                                               'Pick a mtx format file');
-                if ~(fname), return; end
+                if isequal(fname,0), return; end
                 prefixstr=extractBefore(fname,max([strfind(fname,'matrix'),1]));                
                 matrixmtxfile = fullfile(pathname, fname);
                 
@@ -157,7 +158,7 @@ promotesave=false;
                                               {'*.tsv;*.csv;*.txt', 'TSV/CSV Format Files (*.tsc, *.csv, *.txt)'
                                                '*.*',  'All Files (*.*)'}, ...
                                               'Pick a tsv/csv/txt format file');
-                if ~(fname), return; end
+                if isequal(fname,0), return; end
                 filename = fullfile(pathname, fname);
                 [X, g] = sc_readtsvfile(filename);
                 sce = SingleCellExperiment(X, g);
@@ -168,7 +169,7 @@ promotesave=false;
                                               {'*.rds', 'Seurat/Rds Format Files (*.rds)'
                                                '*.*',  'All Files (*.*)'}, ...
                                               'Pick a rds format file');
-                if ~(fname), return; end
+                if isequal(fname,0), return; end
                 filename = fullfile(pathname, fname);
                 fw = gui.gui_waitbar;
                 [sce] = sc_readrdsfile(filename);
