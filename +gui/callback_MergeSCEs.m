@@ -36,7 +36,7 @@ switch sourcetag
                               'Intersect', 'Union', 'Intersect');
             if ~ismember(answer, {'Union', 'Intersect'}), return; end
             methodtag = lower(answer);
-            
+            try
             insce=cell(1,length(indx));
             s="";
             for k=1:length(indx)
@@ -48,6 +48,10 @@ switch sourcetag
             sce=sc_mergesces(insce,methodtag);
             guidata(FigureHandle,sce);
             requirerefresh=true;
+            catch ME
+                errordlg(ME.message);
+                return;
+            end
         else
             return;
         end
@@ -66,7 +70,8 @@ switch sourcetag
                               'Intersect', 'Union', 'Intersect');
             if ~ismember(answer, {'Union', 'Intersect'}), return; end
             methodtag = lower(answer);
-
+        
+        try
         scelist=cell(length(fname));
         s="";
         for k=1:length(fname)
@@ -75,10 +80,15 @@ switch sourcetag
             scelist{k}=sce;
             s=sprintf('%s, %s',s,fname{k});
         end
-
+        s=s(2:end);
         sce=sc_mergesces(scelist,methodtag);
         guidata(FigureHandle,sce);
         requirerefresh=true;
+        catch ME
+            errordlg(ME.message);
+            return;
+        end
+
 end  % end of sourcetag  
 
 end  % end of function

@@ -14,6 +14,8 @@ if ~(length(c)==1 || length(c)>=3)
     error('Unknown error.');
 end
 
+barcodes=[];
+
 if length(c)>=3
 %switch length(c)
 %    case 3
@@ -27,7 +29,19 @@ if length(c)>=3
         if isempty(c2), error('GENES/FEATURES file not found.'); end
         f2=i_setupfile(c2);
         if isempty(f2), error('GENES/FEATURES file name not processed.'); end
-        [X,g]=sc_readmtxfile(f1,f2);
+
+        c3=c(contains(c,'barcodes'));
+        f3=[];
+        if isempty(c3)
+            warning('BARCODES file not found.'); 
+        else
+            f3=i_setupfile(c3);
+        end
+        if isempty(f2)
+            [X,g]=sc_readmtxfile(f1,f2);
+        else
+            [X,g,barcodes]=sc_readmtxfile(f1,f2,f3);
+        end
 elseif length(c)==1
         txtnotfound=false;
         c1=c(contains(c,'txt'));
@@ -56,6 +70,7 @@ elseif length(c)==1
             [X,g]=sc_readhdf5file(f1);
         end
 end
+
 if length(g)==size(X,1)
     sce=SingleCellExperiment(X,g);
 elseif length(g)==size(X,2)
@@ -72,6 +87,10 @@ sce=sce.appendmetainfo(metainfo);
 % function i_tryh5(c)
 %     c1=c(contains(c,'tsv'));
 % end
+
+if ~isempty(barcodes)
+    sce.c_cell_id=barcodes;
+end
 
 end
 
