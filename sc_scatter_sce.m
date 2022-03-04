@@ -331,7 +331,7 @@ end
             sce = guidata(FigureHandle);
             [c, cL] = grp2idx(sce.c_batch_id);
             RefreshAll(src, 1, true);
-            msgbox(sprintf('SCEs (%s) merged.',s));
+            msgbox(sprintf('%s SCEs merged.', upper(s)));
         end
     end
 

@@ -1,6 +1,10 @@
 function [requirerefresh,s]=callback_MergeSCEs(src,sourcetag)
     requirerefresh=false;    
     s="";
+    answer = questdlg('Current SCE will be replaced. Continue?');
+    if ~strcmp(answer, 'Yes'), return; end
+    FigureHandle=src.Parent.Parent;
+
 switch sourcetag
     case 1
         a=evalin('base','whos');
@@ -17,9 +21,7 @@ switch sourcetag
         b=b(:,valididx);
         a=a(valididx);
     
-        answer = questdlg('Current SCE will be replaced. Continue?');
-        if ~strcmp(answer, 'Yes'), return; end
-        FigureHandle=src.Parent.Parent;
+
         %sce=guidata(FigureHandle);
         
         [indx,tf]=listdlg('PromptString',{'Select SCEs:'},...
@@ -55,8 +57,8 @@ switch sourcetag
         [fname, pathname]=uigetfile({'*.mat', 'SCE Data Files (*.mat)'
                       '*.*',  'All Files (*.*)'},...
                       'Select SCE Data Files','MultiSelect','on');
-        if isequal(fname,0), return; end
-        if length(fname)<2
+        if isequal(fname,0), return; end        
+        if ~iscell(fname)
             errordlg("This function needs at least two SCE data files."); 
             return;
         end
@@ -71,7 +73,7 @@ switch sourcetag
             scefile = fullfile(pathname, fname{k});
             load(scefile,'sce');
             scelist{k}=sce;
-            s=sprintf('%s,%s',s,fname{k});
+            s=sprintf('%s, %s',s,fname{k});
         end
 
         sce=sc_mergesces(scelist,methodtag);
