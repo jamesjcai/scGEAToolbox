@@ -54,3 +54,4 @@ scgeatoolstandaloneApplication/
 +run/external/stringdb/stringdb_mouse.mat
 +run/external/R_SeuratReadRds/inputrdsfile.txt
 +run/external/R_SeuratReadRds/X.csv
++run/external/R_SeuratReadRds/g.csv
