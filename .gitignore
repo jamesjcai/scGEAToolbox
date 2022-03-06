@@ -52,3 +52,5 @@ scGEAToolbox.mltbx
 scgeatoolstandaloneApplication/
 +run/external/stringdb/stringdb_human.mat
 +run/external/stringdb/stringdb_mouse.mat
++run/external/R_SeuratReadRds/inputrdsfile.txt
++run/external/R_SeuratReadRds/X.csv
