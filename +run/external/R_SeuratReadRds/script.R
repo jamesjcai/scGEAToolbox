@@ -20,7 +20,6 @@ error = function(msg){
 	# write.csv(A@assays$RNA@counts, file = 'X.csv', col.names=F)  #
 	write.table(A@assays$RNA@counts, file = 'X.csv', sep=",", col.names=FALSE, row.names=FALSE)
 	}
-	
 )
 write.csv(rownames(A@assays$RNA),file='g.csv')
 #write.csv(A@reductions$umap@cell.embeddings, file = 'umap.csv')
@@ -40,3 +39,22 @@ write.csv(rownames(A@assays$RNA),file='g.csv')
 #countMatrix <- data.frame(S=countMatrix$S.Score, G2M=countMatrix$G2M.Score, Phase = countMatrix$Phase)
 #write.csv(countMatrix, file = 'output.csv')
 
+tryCatch(
+    {
+         write.csv(rownames(A@meta.data), file='barcodes.csv') 
+    },
+    error = function(e){ 
+        # (Optional)
+        # Do this if an error is caught...
+    }
+)
+
+tryCatch(
+    {
+         write.csv(A@reductions$umap@cell.embeddings, file = 'umap.csv')
+    },
+    error = function(e){ 
+        # (Optional)
+        # Do this if an error is caught...
+    }
+)
