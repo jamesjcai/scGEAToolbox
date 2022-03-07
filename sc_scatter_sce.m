@@ -196,27 +196,48 @@ i_addmenu(m_exp,0,@callback_SelectCellsByMarker,'Extract Cells by Marker(+/-) Ex
 
 uimenu(m_exp,'Text','Merge Subclusters of Same Cell Type...',...
     'Callback',@MergeSubCellTypes);
-uimenu(m_exp,'Text','Calculate Gene Expression Statistics...',...
-    'Callback',@callback_CalculateGeneStats);
-uimenu(m_exp,'Text','Library Size of Cell Cycle Phases...',...
-    'Callback',@callback_CellCycleLibrarySize);
-uimenu(m_exp,'Text','Show HgB-genes Expression...',...
-    'Callback',@callback_ShowHgBGeneExpression);
-uimenu(m_exp,'Text','Show Mt-genes Expression...',...
-    'Callback',@callback_ShowMtGeneExpression);
-uimenu(m_exp,'Text','T Cell Exhaustion Score...',...
-    'Callback',@callback_TCellExhaustionScores);
-uimenu(m_exp,'Text','Import Data Using GEO Accession...',...
-    'Separator','on',...
-    'Callback',@GEOAccessionToSCE);
+i_addmenu(m_exp,0,@AnnotateSubGroup,'Annotate Cell Subgroups...');
 
-uimenu(m_exp,'Text','Merge SCEs in Workspace...',...    
-    'Callback',{@MergeSCEs,1});
+%uimenu(m_exp,'Text','Calculate Gene Expression Statistics...',...
+%    'Callback',@callback_CalculateGeneStats);
+%uimenu(m_exp,'Text','Library Size of Cell Cycle Phases...',...
+%    'Callback',@callback_CellCycleLibrarySize);
 
-uimenu(m_exp,'Text','Merge SCE Data Files...',...
-    'Callback',{@MergeSCEs,2});
-uimenu(m_exp,'Text','Save as SVG...','Callback',{@i_savefig,1});
-uimenu(m_exp,'Text','Export Graphics...','Callback',{@i_savefig,2});
+i_addmenu(m_exp,1,@callback_CalculateGeneStats,'Calculate Gene Expression Statistics...');
+
+i_addmenu(m_exp,0,@callback_CellCycleLibrarySize,'Library Size of Cell Cycle Phases...');
+
+%uimenu(m_exp,'Text','Show HgB-genes Expression...',...
+%    'Callback',@callback_ShowHgBGeneExpression);
+i_addmenu(m_exp,0,@callback_ShowHgBGeneExpression,'Show HgB-genes Expression...');
+
+%uimenu(m_exp,'Text','Show Mt-genes Expression...',...
+%    'Callback',@callback_ShowMtGeneExpression);
+i_addmenu(m_exp,0,@callback_ShowMtGeneExpression,'Show Mt-genes Expression...');
+
+%uimenu(m_exp,'Text','T Cell Exhaustion Score...',...
+%    'Callback',@callback_TCellExhaustionScores);
+i_addmenu(m_exp,0,@callback_TCellExhaustionScores,'T Cell Exhaustion Score...');
+i_addmenu(m_exp,1,@GEOAccessionToSCE,'Import Data Using GEO Accession...');
+%uimenu(m_exp,'Text','Import Data Using GEO Accession...',...
+%    'Separator','on',...
+%    'Callback',@GEOAccessionToSCE);
+
+%uimenu(m_exp,'Text','Merge SCEs in Workspace...',...    
+%    'Callback',{@MergeSCEs,1});
+
+i_addmenu(m_exp,0,{@MergeSCEs,1},'Merge SCEs in Workspace...');
+i_addmenu(m_exp,0,{@MergeSCEs,2},'Merge SCE Data Files...');
+
+%uimenu(m_exp,'Text','Merge SCE Data Files...',...
+%    'Callback',{@MergeSCEs,2});
+%uimenu(m_exp,'Text','Export Graphics as SVG File...','Callback',{@i_savefig,1});
+%uimenu(m_exp,'Text','Export Graphics as Image File...','Callback',{@i_savefig,2});
+
+
+i_addmenu(m_exp,0,{@i_savefig,1},'Save as SVG File...');
+i_addmenu(m_exp,0,{@i_savefig,2},'Export Graphics...');
+
 uimenu(m_exp,'Text','View Metadata...','Callback',@callback_ViewMetaData);
 
 uimenu(m_exp,'Text','Check for Updates...',...    
@@ -256,7 +277,7 @@ end
     function i_addmenu(menuHdl,sepTag,callbackFnc,tooltipTxt)
         if ischar(callbackFnc) || isstring(callbackFnc)
             callbackFnc=str2func(callbackFnc);
-        end        
+        end
         if sepTag==1
             septag='on';
         else
@@ -373,8 +394,13 @@ end
     end
 
     function AnnotateSubGroup(src, ~)
-        [requirerefresh,highlightindex]=gui.callback_AnnotateSubGroup(src);
-        
+        [requirerefresh,highlightindex,newclassidenty]=gui.callback_AnnotateSubGroup(src);
+        if requirerefresh && ~isempty(newclassidenty)
+            disp('OK');
+            sce.c(highlightindex)=sce.c(highlightindex)+newclassidenty./10;
+            [c, cL] = grp2idx(sce.c);
+            RefreshAll(src, 1, true);
+        end
     end
 
     function SelectCellsByQC(src, ~)

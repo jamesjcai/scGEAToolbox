@@ -1,7 +1,9 @@
-function [requirerefresh,highlightindex]=callback_AnnotateSubGroup(src,~)
+function [requirerefresh,highlightindex,newclassidenty]=callback_AnnotateSubGroup(src,~)
 
+mfolder = fileparts(mfilename('fullpath'));
 requirerefresh=false;
 highlightindex=[];
+newclassidenty=[];
 
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
@@ -15,28 +17,67 @@ highlightindex=[];
         [ax,bx]=view();
         idx=ismember(ci,indxx);
 
-        answer = questdlg('Select or unselect?','','Select', 'Unselect',...
-                          'Cancel', 'Select');
-        if strcmp(answer, 'Select')
-              % do nothing
-        elseif strcmp(answer, 'Unselect')            
-            idx=~idx;
-        else
-            return;
-        end        
-        fw=gui.gui_waitbar;
+%         answer = questdlg('Select or unselect?','','Select', 'Unselect',...
+%                           'Cancel', 'Select');
+%         if strcmp(answer, 'Select')
+%               % do nothing
+%         elseif strcmp(answer, 'Unselect')            
+%             idx=~idx;
+%         else
+%             return;
+%         end
 
+        fw=gui.gui_waitbar;
         scex=selectcells(sce,idx);
         % scex.c=cLi(ci(idx));
-        scex.c=ci(idx);
+        scex.c=ci(idx);        
 
-        gui.i_gscatter3(scex.s,scex.c);
-
-        % sc_scatter_sce(scex);
-        view(ax,bx);
         gui.gui_waitbar(fw);
-        highlightindex=idx;
-        requirerefresh=true;
+
+        hFigure=figure();
+        %set(f,'WindowStyle','modal');
+        %set(hFigure, 'MenuBar', 'none');
+        %set(hFigure, 'ToolBar', 'none');
+
+
+        UitoolbarHandle = uitoolbar('Parent', hFigure);
+% set(UitoolbarHandle, 'Tag', 'FigureToolBar', ...
+%     'HandleVisibility', 'off', 'Visible', 'on');
+
+        pt = uipushtool(UitoolbarHandle, 'Separator', 'off');
+        [img, map] = imread(fullfile(mfolder,'..', 'resources', 'list.gif'));
+        ptImage = ind2rgb(img, map);
+        pt.CData = ptImage;
+        pt.Tooltip = 'Cluster Cells';
+        pt.ClickedCallback = @clustercells;
+
+        pt = uipushtool(UitoolbarHandle, 'Separator', 'off');
+        [img, map] = imread(fullfile(mfolder,'..', 'resources', 'list2.gif'));
+        ptImage = ind2rgb(img, map);
+        pt.CData = ptImage;
+        pt.Tooltip = 'Close Window and Return';
+        pt.ClickedCallback = @returnbackparent;
+        
+        h=gui.i_gscatter3(scex.s,scex.c);
+        view(ax,bx);
+        
+        waitfor(hFigure);
+        
     end
-    
+
+    function clustercells(~,~)
+        newclassidenty=run.SC3(scex.X,5);
+        delete(h);
+        h=gui.i_gscatter3(scex.s,newclassidenty);
+        view(ax,bx);
+    end
+
+    function returnbackparent(~,~)
+        if ~isempty(newclassidenty)
+            requirerefresh=true;
+        end
+        highlightindex=idx;        
+        close(hFigure);        
+    end
+
 end

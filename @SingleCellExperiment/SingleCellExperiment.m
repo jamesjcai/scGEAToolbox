@@ -129,7 +129,7 @@ classdef SingleCellExperiment
         else
             ix=false(obj.NumCells,1);
             ix(idx)=true;
-            disp('make logical idx');
+            disp('Make logical idx');
         end
         obj = removecells(obj,~ix);
     end
