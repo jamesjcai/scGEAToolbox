@@ -372,6 +372,11 @@ end
         end
     end
 
+    function AnnotateSubGroup(src, ~)
+        [requirerefresh,highlightindex]=gui.callback_AnnotateSubGroup(src);
+        
+    end
+
     function SelectCellsByQC(src, ~)
         oldn=sce.NumCells;
         oldm=sce.NumGenes;
