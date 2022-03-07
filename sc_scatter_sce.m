@@ -98,7 +98,7 @@ i_addbutton(1,0,@callback_CellTypeMarkerScores,"cellscore.gif","Calculate Cell S
 i_addbutton(1,0,@ShowCellStemScatter,"IMG00067.GIF","Stem scatter plot")
 i_addbutton(1,1,@callback_Brush4Markers,"plotpicker-kagi.gif","Marker genes of brushed cells")
 i_addbutton(1,0,@callback_MarkerGeneHeatmap,"plotpicker-plotmatrix.gif","Marker gene heatmap")
-i_addbutton(1,1,@callback_ShowClustersPop,"plotpicker-geoscatter.gif","Show clusters individually")
+i_addbutton(1,1,@callback_ShowClustersPop,"plotpicker-geoscatter.gif","Show cell clusters/groups individually")
 i_addbutton(1,0,@callback_SelectCellsByClass,"plotpicker-pointfig.gif","Select cells by class")
 i_addbutton(1,0,@DeleteSelectedCells,"plotpicker-qqplot.gif","Delete selected cells")
 i_addbutton(1,0,@callback_SaveX,"export.gif","Export & save data")
@@ -113,8 +113,8 @@ i_addbutton(2,0,@call_scgeatool,"IMG00107.GIF"," ")
 i_addbutton(2,0,@callback_CalculateCellScores,"cellscore2.gif","Calculate Cell Scores from List of Feature Genes")
 i_addbutton(2,0,@callback_ComparePotency,"plotpicker-candle.gif","Compare Differentiation Potency");
 
-i_addbutton(2,1,@callback_MultiGroupingViewer,"plotpicker-arxtimeseries.gif","Multi-grouping View...");
-i_addbutton(2,0,@callback_CrossTabulation,"plotpicker-comet.gif","Cross Tabulation");
+i_addbutton(2,1,@gui.callback_MultiGroupingViewer,"plotpicker-arxtimeseries.gif","Multi-grouping View...");
+i_addbutton(2,0,@gui.callback_CrossTabulation,"plotpicker-comet.gif","Cross Tabulation");
 
 i_addbutton(2,1,@callback_CompareGeneBtwCls,"plotpicker-priceandvol.gif","Compare Gene Expression between Classes");
 i_addbutton(2,0,@callback_DEGene2Groups,"plotpicker-boxplot.gif","Compare 2 groups (DE analysis)");
@@ -127,22 +127,30 @@ gui.add_3dcamera(defaultToolbar, 'AllCells');
 m_vie = uimenu(FigureHandle,'Text','Multiv&iew');
 m_vie.Accelerator = 'i';
 
-uimenu(m_vie,'Text','Multi-embedding View...',...
-    'Callback',@gui.callback_MultiEmbeddingViewer);
-uimenu(m_vie,'Text','Multi-grouping View...',...    
-    'Callback',@gui.callback_MultiGroupingViewer);
-uimenu(m_vie,'Text','Cross Tabulation...',...
-    'Callback',@callback_CrossTabulation);
+i_addmenu(m_vie,0,@gui.callback_MultiEmbeddingViewer,'Multi-embedding View...');
+i_addmenu(m_vie,0,@gui.callback_MultiGroupingViewer,'Multi-grouping View...');
+i_addmenu(m_vie,0,@gui.callback_CrossTabulation,'Cross Tabulation...');
+%uimenu(m_vie,'Text','Multi-embedding View...',...
+%    'Callback',@gui.callback_MultiEmbeddingViewer);
+%uimenu(m_vie,'Text','Multi-grouping View...',...    
+%    'Callback',@gui.callback_MultiGroupingViewer);
+%uimenu(m_vie,'Text','Cross Tabulation...',...
+%    'Callback',@callback_CrossTabulation);
 
 m_ext = uimenu(FigureHandle,'Text','Exte&rnal');
 m_ext.Accelerator = 'r';
-uimenu(m_ext,'Text','Check R Environment',...
-    'Callback',@gui.i_setrenv);
-uimenu(m_ext,'Text','Check Python Environment',...
-    'Callback',@gui.i_setpyenv);
-uimenu(m_ext,'Text','Detect Ambient RNA Contamination (decontX/R required)...',...
-    'Separator','on',...        
-    'Callback',@DecontX);
+i_addmenu(m_ext,0,@gui.i_setrenv,'Check R Environment');
+i_addmenu(m_ext,0,@gui.i_setpyenv,'Check Python Environment');
+
+%uimenu(m_ext,'Text','Check R Environment',...
+%    'Callback',@gui.i_setrenv);
+%uimenu(m_ext,'Text','Check Python Environment',...
+%    'Callback',@gui.i_setpyenv);
+i_addmenu(m_ext,1,@DecontX,'Detect Ambient RNA Contamination (decontX/R required)...');
+
+%uimenu(m_ext,'Text','Detect Ambient RNA Contamination (decontX/R required)...',...
+%    'Separator','on',...        
+%    'Callback',@DecontX);
 uimenu(m_ext,'Text','SingleR Cell Type Annotation (SingleR/R required)...',...
     'Callback',@callback_SingleRCellType);
 uimenu(m_ext,'Text','Revelio Cell Cycle Analysis (Revelio/R required)...',...
@@ -166,8 +174,8 @@ uimenu(m_exp2,'Text','scTenifoldNet Comparison 🐢🐢🐢 ...',...
 uimenu(m_exp2,'Text','scTenifoldKnk (Virtual KO) Single Gene 🐢 ...',...
     'Separator','on',...
     'Callback',@callback_scTenifoldKnk1);
-uimenu(m_exp2,'Text','scTenifoldKnk (Virtual KO) All Genes 🐢🐢🐢 ...',...
-    'Callback',@callback_scTenifoldKnkN);
+%uimenu(m_exp2,'Text','scTenifoldKnk (Virtual KO) All Genes 🐢🐢🐢 ...',...
+%    'Callback',@callback_scTenifoldKnkN);
 
 uimenu(m_exp,'Text','Run pseudotime analysis (Monocle)...',...
     'Separator','on',...
@@ -237,6 +245,20 @@ end
                 exportgraphics(FigureHandle,[filepath filename]);
             end
         end
+    end
+
+    function i_addmenu(menuHdl,sepTag,callbackFnc,tooltipTxt)
+        if ischar(callbackFnc) || isstring(callbackFnc)
+            callbackFnc=str2func(callbackFnc);
+        end        
+        if sepTag==1
+            septag='on';
+        else
+            septag='off';
+        end
+        uimenu(menuHdl,'Text',tooltipTxt,...
+            'Separator',septag,...
+            'Callback',callbackFnc);
     end
 
     function i_addbutton(toolbarHdl,sepTag,callbackFnc,imgFil,tooltipTxt)
