@@ -275,9 +275,18 @@ end
 
     function closeRequest(hObject,~)
         if ~(ismcc || isdeployed)
+%             group ='scgeatool';
+%             pref = 'savedatabeforeclosing';
+%             title = 'Closing SCGEATOOL';
+%             quest = {'Do you want to save SCE data before closing?'
+%                      ''
+%                      'If you do not save the data, all changes will be lost'};
+%             pbtns = {'Yes','No','Cancel'};
+%             [pval,tf] = uigetpref(group,pref,title,quest,pbtns);
             ButtonName = questdlg('Save SCE before closing SCGEATOOL?');
-            switch ButtonName
-                case 'Yes'
+            
+            switch lower(ButtonName)
+                case 'yes'
                     labels = {'Save SCE to variable named:'}; 
                     vars = {'sce'};
                     sce = guidata(FigureHandle);
@@ -289,9 +298,9 @@ end
                     else
                         return;
                     end
-                case 'Cancel'
+                case 'cancel'
                     return;
-                case 'No'
+                case 'no'
                     delete(hObject);
                 otherwise
                     return;
