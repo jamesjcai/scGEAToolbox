@@ -182,21 +182,13 @@ i_addmenu(m_exp,1,@callback_TrajectoryAnalysis,'Run pseudotime analysis (Monocle
 %    'Callback',@callback_TrajectoryAnalysis);
 
 i_addmenu(m_exp,0,@DrawTrajectory,'Plot pseudotime trajectory...');
-%uimenu(m_exp,'Text','Plot pseudotime trajectory...',...
-%    'Callback',@DrawTrajectory);
-
 i_addmenu(m_exp,1,@callback_DetectCellularCrosstalk,'Ligand-Receptor Mediated Intercellular Crosstalk...');
-%uimenu(m_exp,'Text','Ligand-Receptor Mediated Intercellular Crosstalk...',...
-%    'Separator','on',...
-%    'Callback',@callback_DetectCellularCrosstalk);
-
 i_addmenu(m_exp,0,@callback_SelectCellsByMarker,'Extract Cells by Marker(+/-) Expression...');
-%uimenu(m_exp,'Text','Extract Cells by Marker(+/-) Expression...',...
-%    'Callback',@callback_SelectCellsByMarker);
 
 uimenu(m_exp,'Text','Merge Subclusters of Same Cell Type...',...
     'Callback',@MergeSubCellTypes);
 i_addmenu(m_exp,0,@AnnotateSubGroup,'Annotate Cell Subgroups...');
+i_addmenu(m_exp,0,@gui.callback_CellHeatMap,'Cell Heatmap...');
 
 %uimenu(m_exp,'Text','Calculate Gene Expression Statistics...',...
 %    'Callback',@callback_CalculateGeneStats);
@@ -509,7 +501,7 @@ end
         % [sce]=pkg.i_mergeSubCellNames(sce);        
         newtx=erase(sce.c_cell_type_tx,"_{"+digitsPattern+"}");
         if isequal(sce.c_cell_type_tx,newtx)
-            helpdlg("No sub-clusters are merged.");
+            helpdlg("No sub-clusters are meraged.");
         else
             sce.c_cell_type_tx=newtx;
             [c,cL]=grp2idx(sce.c_cell_type_tx);
