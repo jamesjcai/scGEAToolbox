@@ -83,6 +83,7 @@ classdef SingleCellExperiment
     obj = clustercells(obj,k,methodid,forced)
     obj = assigncelltype(obj,speciesid)
     obj = qcfilterwhitelist(obj,libszcutoff,mtratio,min_cells_nonzero,gnnumcutoff,whitelist)
+    obj = sortcells(obj,idx);
     
     function obj = removecells(obj,idx)
             obj.X(:,idx)=[];

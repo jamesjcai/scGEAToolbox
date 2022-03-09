@@ -16,33 +16,66 @@ function callback_CellHeatMap(src,~)
 
 
 hFigure=figure;
-        UitoolbarHandle = uitoolbar('Parent', hFigure);
+UitoolbarHandle = uitoolbar('Parent', hFigure);
+pkg.i_addbutton2fig(UitoolbarHandle,'off',@i_changec,'list.gif','Sort cells...');
+pkg.i_addbutton2fig(UitoolbarHandle,'off',@i_changeg,'list.gif','Sort genes...');
 
-pkg.i_addbutton2fig(UitoolbarHandle)
-[~,idx]=sort(sce.c);
-X=sce.X(:,idx);
+X=sce.X;
+g=sce.g;
 
-imagesc(log10(1+log10(1+X(1:1000,:))));
-xlabel("Genes")
-ylabel("Cells")
+h=imagesc(log10(1+log10(1+X)));
+xlabel("Cells");
+ylabel("Genes");
 
+
+mfolder = fileparts(mfilename('fullpath'));
+
+    function i_changeg(~,~)
+        answer=questdlg('Sort genes by?','','Chromosomal Position','Others','Chromosomal Position');
+        switch answer
+            case 'Chromosomal Position'
+                warning off
+                T=readtable(fullfile(mfolder,'..', 'doc', 'genelist.txt'));
+                warning on
+                %c=T.Chromosome_scaffoldName;
+                [y,idx]=ismember(g,string(T.GeneName));
+                [~,idx]=sort(idx(y));
+            case 'Others'
+                [gsorted]=gui.i_sortgenenames(sce);
+                [~,idx]=ismember(gsorted,g);
+        end
+        g=g(idx);
+        X=X(idx,:);
+        sce.X=X;
+        sce.g=g;
+        i_redrawh;
+    end
 
     function i_changec(~,~)
-            [thisc,clable,~,newpickclable]=gui.i_select1state(sce);
-    
-    if strcmp(clable,'Cell Cycle Phase')
-        if length(unique(thisc))>1
-            sce.c_cell_cycle_tx=thisc;
+        [thisc,clable,~,newpickclable]=gui.i_select1state(sce);
+        if strcmp(clable,'Cell Cycle Phase')
+            if length(unique(thisc))>1
+                sce.c_cell_cycle_tx=thisc;
+            end
         end
-    end
-    if isempty(thisc), return; end
-        if strcmp(clable,'Customized C...')
-            clable=gui.i_renamec(clable,sce,newpickclable);
-            sce.list_cell_attributes=[sce.list_cell_attributes,clable];
-            sce.list_cell_attributes=[sce.list_cell_attributes,thisc];
-        end
-        [c,cL]=grp2idx(thisc);        
-        sce.c=c;
+        if isempty(thisc), return; end
+            if strcmp(clable,'Customized C...')
+                clable=gui.i_renamec(clable,sce,newpickclable);
+                sce.list_cell_attributes=[sce.list_cell_attributes,clable];
+                sce.list_cell_attributes=[sce.list_cell_attributes,thisc];
+            end
+            [c,~]=grp2idx(thisc);            
+            [~,idx]=sort(c);
+            X=sce.X;
+            X=X(:,idx);
+            sce=sce.sortcells(idx);
+            i_redrawh;
     end
 
-end
+    function i_redrawh
+        delete(h);
+        h=imagesc(log10(1+log10(1+X)));
+        ylabel("Genes");
+        xlabel("Cells");
+    end
+end  
