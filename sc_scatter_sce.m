@@ -79,8 +79,9 @@ i_addbutton(1,0,@SelectCellsByQC,"plotpicker-effects.gif","Filter genes and cell
 
 %i_addbutton(1,1,@LabelClusters,"plotpicker-scatter.gif","Label clusters")
 ptlabelclusters = uitoggletool(UitoolbarHandle, 'Separator', 'on');
-[img, map] = imread(fullfile(matlabroot, ...
-    'toolbox', 'matlab', 'icons', 'plotpicker-scatter.gif'));
+[img, map] = imread(fullfile(mfolder, 'resources', 'plotpicker-scatter.gif'));
+%[img, map] = imread(fullfile(matlabroot, ...
+%    'toolbox', 'matlab', 'icons', 'plotpicker-scatter.gif'));
 % map(map(:,1)+map(:,2)+map(:,3)==3) = NaN;  % Convert white pixels => transparent background
 ptImage = ind2rgb(img, map);
 ptlabelclusters.CData = ptImage;
