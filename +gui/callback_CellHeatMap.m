@@ -2,19 +2,6 @@ function callback_CellHeatMap(src,~)
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
 
-
-% species=questdlg('Which species?','Select Species','Mouse','Human','Mouse');
-% switch lower(species)
-%     case 'human'
-%         stag='hs';
-%     case 'mouse'
-%         stag='mm';
-%     otherwise
-%         return;
-% end
-
-
-
 hFigure=figure;
 UitoolbarHandle = uitoolbar('Parent', hFigure);
 pkg.i_addbutton2fig(UitoolbarHandle,'off',@i_changec,'list.gif','Sort cells...');
@@ -23,7 +10,7 @@ pkg.i_addbutton2fig(UitoolbarHandle,'off',@i_changeg,'list.gif','Sort genes...')
 X=sce.X;
 g=sce.g;
 
-h=imagesc(log10(1+log10(1+X)));
+h=imagesc(10*(log10(1+10*log10(1+X))));
 xlabel("Cells");
 ylabel("Genes");
 
@@ -34,11 +21,22 @@ mfolder = fileparts(mfilename('fullpath'));
         answer=questdlg('Sort genes by?','','Chromosomal Position','Others','Chromosomal Position');
         switch answer
             case 'Chromosomal Position'
+
+                species=questdlg('Which species?','Select Species','Mouse','Human','Mouse');
+                switch lower(species)
+                    case 'human'
+                        stag='genelist_human.txt';
+                    case 'mouse'
+                        stag='genelist_mouse.txt';
+                    otherwise
+                        return;
+                end
+
                 warning off
-                T=readtable(fullfile(mfolder,'..', 'doc', 'genelist.txt'));
+                T=readtable(fullfile(mfolder,'..', 'resources', stag));
                 warning on
                 %c=T.Chromosome_scaffoldName;
-                [y,idx]=ismember(g,string(T.GeneName));
+                [y,idx]=ismember(upper(g),upper(string(T.GeneName)));
                 [~,idx]=sort(idx(y));
             case 'Others'
                 [gsorted]=gui.i_sortgenenames(sce);
@@ -74,7 +72,7 @@ mfolder = fileparts(mfilename('fullpath'));
 
     function i_redrawh
         delete(h);
-        h=imagesc(log10(1+log10(1+X)));
+        h=imagesc(10*(log10(1+10*log10(1+X))));
         ylabel("Genes");
         xlabel("Cells");
     end
