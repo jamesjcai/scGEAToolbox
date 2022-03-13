@@ -6,13 +6,35 @@ function callback_CellHeatMap(src,~)
     UitoolbarHandle = uitoolbar('Parent', hFigure);
     pkg.i_addbutton2fig(UitoolbarHandle,'off',@i_changec,'HDF_object01.gif','Sort cells...');
     pkg.i_addbutton2fig(UitoolbarHandle,'off',@i_changeg,'HDF_object02.gif','Sort genes...');
+    pkg.i_addbutton2fig(UitoolbarHandle,'on',@i_switchc,'HDF_object03.gif','Switch on/off separator lines');
     
     X=sce.X;
     g=sce.g;
     h=[];
+    cellc=[];
+    genec=[]; genecL=[];
+    ctag=false;
+    xl=[];
+
     i_redrawh;
     
     mfolder = fileparts(mfilename('fullpath'));
+
+    function i_switchc(~,~)
+       ctag=~ctag;
+
+       if ctag && ~isempty(genec) 
+           x=find(diff(genec));
+           % newtx=genecL{x};
+           %newtx=genvarname(genecL{x});
+           %newtx=erase(genecL{x},"_{"+digitsPattern+"}");
+           xl=xline(x+0.5,'w-');
+       else
+           if exist('xl','var') && ~isempty(xl)
+            delete(xl);
+           end
+       end
+    end
 
     function i_changeg(~,~)
         answer=questdlg('Sort genes by?','','Chromosomal Position','Others','Chromosomal Position');
@@ -60,11 +82,13 @@ function callback_CellHeatMap(src,~)
                 sce.list_cell_attributes=[sce.list_cell_attributes,clable];
                 sce.list_cell_attributes=[sce.list_cell_attributes,thisc];
             end
-            [c,~]=grp2idx(thisc);            
+            [c,cL]=grp2idx(thisc);            
             [~,idx]=sort(c);
             X=sce.X;
             X=X(:,idx);
             sce=sce.sortcells(idx);
+            genec=c(idx);
+            genecL=cL(genec);
             i_redrawh;
     end
 
@@ -85,6 +109,9 @@ function callback_CellHeatMap(src,~)
         % pos = event_obj.Position;
         idx = event_obj.DataIndex;
         [row,col] = ind2sub([sce.NumGenes sce.NumCells],idx);
-        txt = g(row);      
+        txt = g(row);
+        if ~isempty(genecL)
+            txt=sprintf('%s %s',txt,genecL{col});
+        end
     end
 end  
