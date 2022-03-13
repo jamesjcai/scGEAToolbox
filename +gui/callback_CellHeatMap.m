@@ -111,7 +111,7 @@ function callback_CellHeatMap(src,~)
         [row,col] = ind2sub([sce.NumGenes sce.NumCells],idx);
         txt = g(row);
         if ~isempty(genecL)
-            txt=sprintf('%s %s',txt,genecL{col});
+            txt=sprintf('%s | %s',txt,genecL{col});
         end
     end
 end  
