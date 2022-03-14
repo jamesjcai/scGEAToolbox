@@ -365,7 +365,7 @@ end
                 fw=gui.gui_waitbar;
                 [sce]=sc_readgeoaccession(acc);
                 [c,cL]=grp2idx(sce.c);
-                gui.gui_waitbar(fw);                
+                gui.gui_waitbar(fw);            
                 guidata(FigureHandle, sce);
                 RefreshAll(src, 1, false, false);
             catch ME
@@ -393,6 +393,11 @@ end
             sce.c(highlightindex)=sce.c(highlightindex)+newclassidenty./10;
             [c, cL] = grp2idx(sce.c);
             RefreshAll(src, 1, true);
+            answer=questdlg('Save current classes to SCE.C_CLUSTER_ID?');
+            if strcmp(answer,'Yes')
+                sce.c_cluster_id=c;
+                guidata(FigureHandle,sce);
+            end
         end
     end
 

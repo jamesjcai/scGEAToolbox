@@ -30,8 +30,7 @@ newclassidenty=[];
         fw=gui.gui_waitbar;
         scex=selectcells(sce,idx);
         % scex.c=cLi(ci(idx));
-        scex.c=ci(idx);        
-
+        scex.c=ci(idx);
         gui.gui_waitbar(fw);
 
         hFigure=figure();
@@ -66,10 +65,20 @@ newclassidenty=[];
     end
 
     function clustercells(~,~)
-        newclassidenty=run.SC3(scex.X,5);
+        k=gui.i_inputnumk(5);
+        try
+        if ~isempty(k)
+            fw2=gui.gui_waitbar;
+            newclassidenty=run.SC3(scex.X,k);
+            gui.gui_waitbar(fw2);
+        end
         delete(h);
         h=gui.i_gscatter3(scex.s,newclassidenty);
         view(ax,bx);
+        catch ME
+            gui.gui_waitbar(fw2);
+            errordlg(ME.message);
+        end
     end
 
     function returnbackparent(~,~)
