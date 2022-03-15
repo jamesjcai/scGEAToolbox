@@ -1029,10 +1029,10 @@ end
         answer = questdlg('Cluster cells?');
         if ~strcmp(answer, 'Yes'), return; end        
         answer = questdlg('Which method?', 'Select Algorithm', ...
-            'kmeans 🐇', 'snndpc 🐢', 'kmeans 🐇');
-        if strcmpi(answer, 'kmeans 🐇')
+            'K-means 🐇', 'SnnDpc 🐢', 'K-means 🐇');
+        if strcmpi(answer, 'K-means 🐇')
             methodtag = "kmeans";
-        elseif strcmpi(answer, 'snndpc 🐢')
+        elseif strcmpi(answer, 'SnnDpc 🐢')
             methodtag = "snndpc";
         else
             return;
