@@ -20,6 +20,7 @@ wrkpth=fullfile(pw1,'+run','thirdparty','SoptSC','NNDSVD'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','SoptSC','symnmf2'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','SNNDPC'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','SinNLRR'); addpath(wrkpth);
+wrkpth=fullfile(pw1,'+run','thirdparty','ClusterPack'); addpath(wrkpth);
 
 %savepath;
 %%
