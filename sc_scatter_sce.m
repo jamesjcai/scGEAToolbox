@@ -61,20 +61,15 @@ set(findall(FigureHandle,'ToolTipString','Open Property Inspector'),'Visible','O
 %a.ClickedCallback = @__;
 %a=findall(f,'tag','figMenuFile');
 
-a=findall(FigureHandle,'tag','figMenuUpdateFileNew');
-delete(a);
-
-a=findall(FigureHandle,'tag','figMenuOpen');
+% https://undocumentedmatlab.com/articles/customizing-standard-figure-toolbar-menubar
+a=findall(FigureHandle,'tag','figMenuUpdateFileNew'); delete(a);
+a=findall(FigureHandle,'tag','figMenuOpen'); 
 a.MenuSelectedFcn='scgeatool';
-
-a=findall(FigureHandle,'tag','figMenuFileSaveAs');
-delete(a);
-
-a=findall(FigureHandle,'tag','figMenuFileSave');
+a=findall(FigureHandle,'tag','figMenuFileSaveAs'); delete(a);
+a=findall(FigureHandle,'tag','figMenuFileSave'); 
 a.MenuSelectedFcn=@callback_SaveX;
+a=findall(FigureHandle,'tag','figMenuGenerateCode'); delete(a);
 
-a=findall(FigureHandle,'tag','figMenuGenerateCode');
-delete(a);
 a=findall(FigureHandle,'tag','figMenuFileImportData');
 a.Text='Import Data Using GEO Accession...';
 a.MenuSelectedFcn=@GEOAccessionToSCE;
@@ -87,7 +82,6 @@ title(hAx,sce.title);
 
 dt = datacursormode;
 dt.UpdateFcn = {@i_myupdatefcnx};
-
 
 
 defaultToolbar = findall(FigureHandle, 'tag','FigureToolBar');  % get the figure's toolbar handle
