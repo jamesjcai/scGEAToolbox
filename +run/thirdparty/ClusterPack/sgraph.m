@@ -12,10 +12,10 @@ end
 resultname = [dataname '.part.' num2str(k)];
 
 lastchar = str2num(dataname(length(dataname)));
-if (isempty(lastchar)),
+if (isempty(lastchar))
   disp('sgraph: file does not comply to name convention');
   lastchar = 0;
-end;
+end
 fid = fopen(scriptfile,'w');
 if (lastchar<2)
    fprintf(fid,'%s\n',['pmetis ' dataname ' ' num2str(k)]);
@@ -30,7 +30,7 @@ system(scriptfile);
 delete(scriptfile);
 
 fid = fopen(resultname,'r');
-if (fid == -1),
+if (fid == -1)
   disp('sgraph: partitioning not successful due to external error');
   fid = fopen(dataname);
   if (fid == -1)

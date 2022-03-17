@@ -7,9 +7,9 @@
 
 function s = simxjac(a,b)
 
-if ~exist('b')
+if ~exist('b','var')
   b = a;
-end;
+end
 
 n = size(a,1);
 m = size(b,1);
@@ -17,7 +17,7 @@ d = size(a,2);
 if (d~=size(b,2))
   disp('simxjac: data dimensions do not match');
   return;
-end;
+end
 
 temp = a *1* b'; 
 asquared = sum((a.^2),2); 

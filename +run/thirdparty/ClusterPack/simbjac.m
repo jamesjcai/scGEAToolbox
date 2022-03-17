@@ -7,9 +7,9 @@
 
 function s = simbjac(a,b)
 
-if ~exist('b')
+if ~exist('b','var')
   b = a;
-end;
+end
 
 s = simxjac(a>0,b>0);
 

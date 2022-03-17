@@ -9,7 +9,7 @@ function cl = cspa(cls,k)
 
 disp('CLUSTER ENSEMBLES using CSPA');
 
-if ~exist('k')
+if ~exist('k','var')
  k = max(max(cls));
 end
 

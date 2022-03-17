@@ -15,6 +15,7 @@ end
 
 disp('mcla: preparing graph for meta-clustering');
 clb = clstoclbs(cls);
+if false, simbjac(1); end
 cl_lab = clcgraph(clb,k,'simbjac');
 for i=1:max(cl_lab)
    matched_clusters = find(cl_lab==i);

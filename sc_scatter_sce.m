@@ -40,9 +40,15 @@ end
 
 [c, cL] = grp2idx(sce.c);
 
-FigureHandle = figure('Name', 'scGEATool :: Single-cell Gene Expression Analysis Tool', ...
+if ~(ismcc || isdeployed)
+    tagx='on';
+else
+    tagx='off';
+end
+
+FigureHandle = figure('Name', 'SCGEATOOL :: Single-Cell Gene Expression Analysis Tool', ...
     'position', round(1.25 * [0 0 560 420]), ...
-    'visible', 'off');
+    'visible', 'off', 'NumberTitle',tagx);
 movegui(FigureHandle, 'center');
 % b = uipanel(FigureHandle,'Title','B','BackgroundColor','cyan');
 % b.Position = [0.18 0.40 0.30 0.35];
@@ -1047,17 +1053,10 @@ end
             return
         end
         
-        if ~(ismcc || isdeployed)
         methodtagvx = {'specter (31 secs) 🐇','sc3 (77 secs) 🐇',...
              'simlr (400 secs) 🐢',...
              'soptsc (1,182 secs) 🐢🐢', 'sinnlrr (8,307 secs) 🐢🐢🐢', };
         methodtagv = {'specter','sc3','simlr', 'soptsc', 'sinnlrr'};
-        else
-        methodtagvx = {'specter (31 secs) 🐇',...
-             'simlr (400 secs) 🐢',...
-             'soptsc (1,182 secs) 🐢🐢', 'sinnlrr (8,307 secs) 🐢🐢🐢', };
-        methodtagv = {'specter','simlr', 'soptsc', 'sinnlrr'};
-        end
         [indx, tf] = listdlg('PromptString',...
             {'Select clustering program'},...
             'SelectionMode', 'single', ...
@@ -1066,6 +1065,12 @@ end
             methodtag = methodtagv{indx};
         else
             return;
+        end
+        if (ismcc || isdeployed)
+            if strcmp(methodtag,'sc3')
+                warndlg('SC3 is not working in standalone application.');
+                return;
+            end
         end
         i_reclustercells(src, methodtag);
         guidata(FigureHandle, sce);

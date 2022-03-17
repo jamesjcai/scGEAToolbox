@@ -26,8 +26,6 @@ wrkpth=fullfile(pw1,'+run','thirdparty','ClusterPack'); addpath(wrkpth);
 %%
 outdir = fullfile(pw1, '..','SCGEATOOL_StandaloneApplication');
 %
-%a=getenv('USERPROFILE');
-%b=getenv('username');
 %outdir=sprintf('%s\\Desktop\\scgeatoolstandaloneApplication',a);
 if ~exist(outdir,"dir"), mkdir(outdir); end
 
@@ -53,11 +51,14 @@ compiler.build.standaloneWindowsApplication('scgeatool.m',...
     'OutputDir',outdir,'AdditionalFiles',d);
 %%
 try
+a=getenv('USERPROFILE');
+b=getenv('username');
+    
 winopen(sprintf('%s\\AppData\\Local\\Temp\\%s\\mcrCache9.11\\',a,b));
 winopen(outdir);
 catch
 end
-
+%%
 cd(outdir);
 cd ..
 zippedfiles = zip('SCGEATOOL_StandaloneApplication.zip','SCGEATOOL_StandaloneApplication');

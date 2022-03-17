@@ -32,6 +32,13 @@
 
 function cl = clusterensemble(cls,k)
 
+if false
+    cls = [1 1 1 2 2 3 3; 2 2 2 3 3 1 1; 1 1 2 2 3 3 3;1 2 NaN 1 2 NaN NaN];
+    cl=mcla(cls,2);
+    cl=hgpa(cls,2);
+    cl=cspa(cls,2);
+end
+
 if ~exist('cls','var')
     disp('clusterensemble-warning: no arguments - displaying illustrative example:');
     cls = [1 1 1 2 2 3 3; 2 2 2 3 3 1 1; 1 1 2 2 3 3 3;1 2 NaN 1 2 NaN NaN]

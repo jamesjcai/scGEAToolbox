@@ -28,7 +28,7 @@ end
 
 if ~exist(fullfile(pw1,'example_data/'),'dir') || ~exist(fullfile(pw1,'resources/'),'dir') ||...
         ~exist(fullfile(pw1,'+run','external/'),'dir')
-    f = waitbar(0.33,'Initializing scgeatool on the first run...');
+    f = waitbar(0.33,'Initializing SCGEATOOL on the first run...');
     if ~exist(fullfile(pw1,'example_data/'),'dir')
         try
             unzip('https://github.com/jamesjcai/jamesjcai.github.io/raw/master/data/example_data.zip');
@@ -37,7 +37,7 @@ if ~exist(fullfile(pw1,'example_data/'),'dir') || ~exist(fullfile(pw1,'resources
             warning(ME.message);
         end
     end
-    waitbar(0.66,f,'Initializing scgeatool on the first run...');
+    waitbar(0.66,f,'Initializing SCGEATOOL on the first run...');
     if ~exist(fullfile(pw1,'resources/'),'dir')
         try
         unzip('https://github.com/jamesjcai/jamesjcai.github.io/raw/master/data/resources.zip');
@@ -46,7 +46,7 @@ if ~exist(fullfile(pw1,'example_data/'),'dir') || ~exist(fullfile(pw1,'resources
             warning(ME.message);
         end
     end
-    waitbar(0.85,f,'Initializing scgeatool on the first run...');
+    waitbar(0.85,f,'Initializing SCGEATOOL on the first run...');
     if ~exist(fullfile(pw1,'+run','external/'),'dir')
         try
         unzip('https://github.com/jamesjcai/jamesjcai.github.io/raw/master/data/external.zip');
