@@ -5,7 +5,7 @@ if usejava('jvm') && ~feature('ShowFigureWindows')
 end
 if nargin < 1
     % error('Usage: sc_scatter_sce(sce)');
-    sc_scatter;
+    scgeatool;
     return;
 end
 if ~isa(sce, 'SingleCellExperiment')
@@ -59,6 +59,26 @@ set(findall(FigureHandle,'ToolTipString','Open Property Inspector'),'Visible','O
 
 %a=findall(FigureHandle,'ToolTipString','New Figure');
 %a.ClickedCallback = @__;
+%a=findall(f,'tag','figMenuFile');
+
+a=findall(FigureHandle,'tag','figMenuUpdateFileNew');
+delete(a);
+
+a=findall(FigureHandle,'tag','figMenuOpen');
+a.MenuSelectedFcn='scgeatool';
+
+a=findall(FigureHandle,'tag','figMenuFileSaveAs');
+delete(a);
+
+a=findall(FigureHandle,'tag','figMenuFileSave');
+a.MenuSelectedFcn=@callback_SaveX;
+
+a=findall(FigureHandle,'tag','figMenuGenerateCode');
+delete(a);
+a=findall(FigureHandle,'tag','figMenuFileImportData');
+a.Text='Import Data Using GEO Accession...';
+a.MenuSelectedFcn=@GEOAccessionToSCE;
+
 
 hAx = axes('Parent', FigureHandle);
 

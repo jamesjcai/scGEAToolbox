@@ -318,7 +318,11 @@ promotesave=false;
         if nargin < 2 || isempty(g)
             g = string((1:size(X, 1))');
         end
+        try
         sce = SingleCellExperiment(X, g, s, c);
+        catch
+            scgeatool;
+        end
     end
     if isempty(sce), return; end
     if length(sce.g)~=length(unique(sce.g))
