@@ -44,6 +44,9 @@ if ~exist(outdir,"dir"), mkdir(outdir); end
     d=[d;fullfile(pw1, 'resources', 'Ligand_Receptor2.mat')];
     d=[d;fullfile(pw1, 'example_data', 'testSce.mat')];
     d=[d;fullfile(pw1, 'example_data', 'testXgs.mat')];
+    d2=string(pkg.dirPlus(fullfile(pw1,'+run','external')));
+    d2=d2(~contains(d2,"stringdb\stringdb_"));
+    d=[d;d2];
 
 %%
 compiler.build.standaloneWindowsApplication('scgeatool.m',...
