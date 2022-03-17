@@ -32,7 +32,7 @@
 
 function cl = clusterensemble(cls,k)
 
-if ~exist('cls')
+if ~exist('cls','var')
     disp('clusterensemble-warning: no arguments - displaying illustrative example:');
     cls = [1 1 1 2 2 3 3; 2 2 2 3 3 1 1; 1 1 2 2 3 3 3;1 2 NaN 1 2 NaN NaN]
     disp('clusterensemble-advice: type "help clusterensemble" for information about usage');
@@ -48,7 +48,7 @@ end
 
 for i = 1:length(workfcts)
    workfct = workfcts{i};
-   if ~exist('k')
+   if ~exist('k','var')
       cl(i,:) = feval(workfct,cls);
    else
       cl(i,:) = feval(workfct,cls,k);
