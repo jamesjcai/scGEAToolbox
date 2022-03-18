@@ -210,51 +210,22 @@ uimenu(m_exp,'Text','Merge Subclusters of Same Cell Type...',...
     'Callback',@MergeSubCellTypes);
 i_addmenu(m_exp,0,@AnnotateSubGroup,'Annotate Cell Subgroups...');
 i_addmenu(m_exp,0,@gui.callback_CellHeatMap,'Cell Heatmap...');
-
-%uimenu(m_exp,'Text','Calculate Gene Expression Statistics...',...
-%    'Callback',@callback_CalculateGeneStats);
-%uimenu(m_exp,'Text','Library Size of Cell Cycle Phases...',...
-%    'Callback',@callback_CellCycleLibrarySize);
-
 i_addmenu(m_exp,1,@callback_CalculateGeneStats,'Calculate Gene Expression Statistics...');
-
 i_addmenu(m_exp,0,@callback_CellCycleLibrarySize,'Library Size of Cell Cycle Phases...');
-
-%uimenu(m_exp,'Text','Show HgB-genes Expression...',...
-%    'Callback',@callback_ShowHgBGeneExpression);
 i_addmenu(m_exp,0,@callback_ShowHgBGeneExpression,'Show HgB-genes Expression...');
-
-%uimenu(m_exp,'Text','Show Mt-genes Expression...',...
-%    'Callback',@callback_ShowMtGeneExpression);
 i_addmenu(m_exp,0,@callback_ShowMtGeneExpression,'Show Mt-genes Expression...');
-
-%uimenu(m_exp,'Text','T Cell Exhaustion Score...',...
-%    'Callback',@callback_TCellExhaustionScores);
 i_addmenu(m_exp,0,@callback_TCellExhaustionScores,'T Cell Exhaustion Score...');
 i_addmenu(m_exp,1,@GEOAccessionToSCE,'Import Data Using GEO Accession...');
-%uimenu(m_exp,'Text','Import Data Using GEO Accession...',...
-%    'Separator','on',...
-%    'Callback',@GEOAccessionToSCE);
-
-%uimenu(m_exp,'Text','Merge SCEs in Workspace...',...    
-%    'Callback',{@MergeSCEs,1});
-
 i_addmenu(m_exp,0,{@MergeSCEs,1},'Merge SCEs in Workspace...');
 i_addmenu(m_exp,0,{@MergeSCEs,2},'Merge SCE Data Files...');
-
-%uimenu(m_exp,'Text','Merge SCE Data Files...',...
-%    'Callback',{@MergeSCEs,2});
-%uimenu(m_exp,'Text','Export Graphics as SVG File...','Callback',{@i_savefig,1});
-%uimenu(m_exp,'Text','Export Graphics as Image File...','Callback',{@i_savefig,2});
-
-
 i_addmenu(m_exp,0,{@i_savefig,1},'Save as SVG File...');
 i_addmenu(m_exp,0,{@i_savefig,2},'Export Graphics...');
+i_addmenu(m_exp,0,@callback_ViewMetaData,'View Metadata...');
+i_addmenu(m_exp,0,@callback_CheckUpdates,'Check for Updates...');
 
-uimenu(m_exp,'Text','View Metadata...','Callback',@callback_ViewMetaData);
-
-uimenu(m_exp,'Text','Check for Updates...',...    
-    'Callback',@callback_CheckUpdates);
+%uimenu(m_exp,'Text','View Metadata...','Callback',@callback_ViewMetaData);
+%uimenu(m_exp,'Text','Check for Updates...',...    
+%    'Callback',@callback_CheckUpdates);
 
 % handles = guihandles( FigureHandle ) ;
 % guidata( FigureHandle, handles ) ;
@@ -349,6 +320,7 @@ end
             
             switch lower(ButtonName)
                 case 'yes'
+                    % tf=callback_SaveX(hObject,a);
                     labels = {'Save SCE to variable named:'}; 
                     vars = {'sce'};
                     sce = guidata(FigureHandle);
@@ -655,13 +627,13 @@ end
         end
         if ~usingold
             answer2 = questdlg(sprintf('Use highly variable genes (HVGs, n=2000) or use all genes (n=%d)?', sce.NumGenes), ...
-                '', '2000 HVGs', 'All Genes', 'Cancel', '2000 HVGs');
+                '', '2000 HVGs 🐇', 'All Genes 🐢', 'Cancel', '2000 HVGs 🐇');
             switch answer2
-                case 'All Genes'
+                case 'All Genes 🐢'
                     usehvgs = false;
-                case '2000 HVGs'
+                case '2000 HVGs 🐇'
                     usehvgs = true;
-                case {'Cancel', ''}
+                otherwise
                     return;
             end
             [ndim]=gui.i_choose2d3d;

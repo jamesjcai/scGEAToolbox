@@ -1,4 +1,6 @@
-function callback_SaveX(src,~)
+function [OKPressed]=callback_SaveX(src,~)
+
+OKPressed=false;
 
 FigureHandle=src.Parent.Parent;
 sce=guidata(FigureHandle);
@@ -21,7 +23,7 @@ switch answer
             'Save SCE.S to variable named:'}; 
         vars = {'sce','X','g','s'};
         values = {sce,sce.X,sce.g,sce.s};
-        export2wsdlg(labels,vars,values,...
+        [~,OKPressed]=export2wsdlg(labels,vars,values,...
             'Save Data to Workspace',...
             logical([1 0 0 0]),{@smhelp});
     case 'MAT file'
@@ -32,7 +34,8 @@ switch answer
            filename=fullfile(path,file);
            fw=gui.gui_waitbar;
            save(filename,'sce','-v7.3');
-           gui.gui_waitbar(fw);           
+           gui.gui_waitbar(fw);
+           OKPressed=true;
         end
     case 'Seurat/RDS file'
         [file, path] = uiputfile({'*.rds';'*.*'},'Save as');
@@ -43,7 +46,8 @@ switch answer
            fw=gui.gui_waitbar;
            sc_sce2rds(sce,filename);
            gui.gui_waitbar(fw);
-           disp("A<-readRDS(""input.rds"")")
+           disp("A<-readRDS(""input.rds"")");
+           OKPressed=true;
         end
     otherwise
         return;
