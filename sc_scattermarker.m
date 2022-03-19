@@ -161,7 +161,15 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
                 ptImage = ind2rgb(img, map);
                 pt.CData = ptImage;
                 pt.Tooltip = 'GeneCards';
-                pt.ClickedCallback = {@i_genecards,targetg};              
+                pt.ClickedCallback = {@i_genecards,targetg};
+
+                pt = uipushtool(tb, 'Separator', 'on');
+                [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
+                                             'resources', 'plotpicker-compass.gif'));  % plotpicker-pie
+                ptImage = ind2rgb(img, map);
+                pt.CData = ptImage;
+                pt.Tooltip = 'Pick new color map';
+                pt.ClickedCallback = {@i_PickColorMap,c};                
             end
         else
             warning('%s no expression', targetg);
@@ -176,6 +184,16 @@ end
 
 function i_genecards(~,~,g)
 web(sprintf('https://www.genecards.org/cgi-bin/carddisp.pl?gene=%s',g));
+end
+
+function i_PickColorMap(~,~,c)
+list = {'parula','turbo','hsv','hot','cool','spring','summer','autumn',...
+        'winter','jet'};
+[indx,tf] = listdlg('ListString',list,'SelectionMode','single',...
+                    'PromptString','Select a colormap:');
+if tf==1
+    gui.i_setautumncolor(c,list{indx});
+end
 end
 
 % function callback_linksubplots(~,~)
