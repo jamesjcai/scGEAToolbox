@@ -84,18 +84,9 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
                    % c=log2(1+X(genelist==g,:));
 
                     h1 = subplot(1, 2, 1);
-                    scatter3(x, y, z, sz, c, 'filled');
+                    s1=scatter3(x, y, z, sz, c, 'filled');
                     
-%                     a = colormap('autumn');
-%                     a(1, :) = [.8 .8 .8];
-%                     if numel(unique(c)) == 1
-%                         for kk = 1:size(a, 1)
-%                             a(kk, :) = [.8 .8 .8];
-%                         end
-%                     end
-%                     colormap(a);
-                    
-                    
+                    %[axx,bxx]=view(h1);
                     % h1.YDataSource='explorer2IDX';
                     % title(targetg)
                     title(sprintf('%s\n(%s/%s = %.2f%% nonzero)', ...
@@ -111,11 +102,14 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
                     %                     100*sum(c>0)./numel(c)));
 
                     h2 = subplot(1, 2, 2);
-                    stem3(x, y, c, 'marker', 'none', 'color', 'm');
+                    s2=stem3(x, y, c, 'marker', 'none', 'color', 'm');
                     hold on;
                     scatter3(x, y, zeros(size(y)), 5, c, 'filled');
+                    %[ayy,byy]=view(h2);
+                    
                     % h2.YDataSource='explorer2IDX';
                     % hLD = linkdata('on');
+                    
                     evalin('base', 'h=findobj(gcf,''type'',''axes'');');
                     evalin('base', 'hlink = linkprop(h,{''CameraPosition'',''CameraUpVector''});');
                     evalin('base', 'rotate3d on');
@@ -124,6 +118,7 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
                     view(h1, 3);
             end
             gui.i_setautumncolor(c);
+            ori_c=c;
             
             title(sprintf('%s\n(%s/%s = %.2f%% nonzero)', ...
                                targetg, ...
@@ -169,14 +164,57 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
                 ptImage = ind2rgb(img, map);
                 pt.CData = ptImage;
                 pt.Tooltip = 'Pick new color map';
-                pt.ClickedCallback = {@i_PickColorMap,c};                
+                pt.ClickedCallback = {@i_PickColorMap,c};
+                
+
+                pt = uipushtool(tb, 'Separator', 'off');
+                [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
+                                             'resources', 'IMG00074.GIF'));  % plotpicker-pie
+                ptImage = ind2rgb(img, map);
+                pt.CData = ptImage;
+                pt.Tooltip = 'Rescale expression level [log2(x+1)]';
+                pt.ClickedCallback = @i_RescaleExpr;
+
+
+
+                pt = uipushtool(tb, 'Separator', 'off');
+                [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
+                                             'resources', 'plotpicker-geobubble2.gif'));  % plotpicker-pie
+                ptImage = ind2rgb(img, map);
+                pt.CData = ptImage;
+                pt.Tooltip = 'Reset expression level';
+                pt.ClickedCallback = @i_ResetExpr;
+                
+
             end
         else
             warning('%s no expression', targetg);
         end
+
+
         if showcam
             gui.add_3dcamera(tb, targetg);
         end
+    end
+
+    function i_RescaleExpr(~,~)
+        c=log2(1+c);
+        delete(s2);
+        s2=stem3(h2,x, y, c, 'marker', 'none', 'color', 'm');
+        %view(h2,ayy,byy);
+        delete(s1);
+        s1=scatter3(h1,x, y, z, sz, c, 'filled');
+        %view(h1,axx,bxx);
+    end
+
+    function i_ResetExpr(~,~)
+        c=ori_c;
+        delete(s2);
+        s2=stem3(h2,x, y, c, 'marker', 'none', 'color', 'm');
+        %view(h2,ayy,byy);
+        delete(s1);
+        s1=scatter3(h1,x, y, z, sz, c, 'filled');
+        %view(h1,axx,bxx);
     end
 
     
@@ -186,14 +224,16 @@ function i_genecards(~,~,g)
 web(sprintf('https://www.genecards.org/cgi-bin/carddisp.pl?gene=%s',g));
 end
 
+
+
 function i_PickColorMap(~,~,c)
-list = {'parula','turbo','hsv','hot','cool','spring','summer','autumn',...
-        'winter','jet'};
-[indx,tf] = listdlg('ListString',list,'SelectionMode','single',...
-                    'PromptString','Select a colormap:');
-if tf==1
-    gui.i_setautumncolor(c,list{indx});
-end
+    list = {'parula','turbo','hsv','hot','cool','spring','summer','autumn',...
+            'winter','jet'};
+    [indx,tf] = listdlg('ListString',list,'SelectionMode','single',...
+                        'PromptString','Select a colormap:');
+    if tf==1
+        gui.i_setautumncolor(c,list{indx});
+    end
 end
 
 % function callback_linksubplots(~,~)
