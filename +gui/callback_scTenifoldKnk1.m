@@ -48,14 +48,20 @@ answer=questdlg('Construct network de novo or use existing network in Workspace?
             return;
     end
     
-    gsorted=sort(sce.g);
-    [indx2,tf] = listdlg('PromptString',{'Select the KO gene:'},...
-        'SelectionMode','single','ListString',gsorted);
-    if tf==1
-        [~,idx]=ismember(gsorted(indx2),sce.g);
-    else
-        return;
-    end
+        [gsorted]=gui.i_sortgenenames(sce);
+        if isempty(gsorted), return; end
+        [indx2,tf] = listdlg('PromptString',{'Select the KO gene'},...
+            'SelectionMode','single','ListString',gsorted);
+        if tf==1
+            [~,idx]=ismember(gsorted(indx2),sce.g);
+        else
+            return;
+        end
+
+
+
+
+
     
     if isempty(A0)
         answer=questdlg(sprintf('Ready to construct network and then knock out gene #%d (%s). Continue?',...
