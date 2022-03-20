@@ -1,6 +1,6 @@
 classdef SingleCellExperiment
    properties
-      X double {mustBeNumeric, mustBeFinite, mustBeNonNan} % counts
+      X double % {mustBeNumeric, mustBeFinite, mustBeNonNan} % counts
       g string                               % genelist
       s double {mustBeNumeric, mustBeFinite} % cell embeddings
       c                                      % current/active group/class id

@@ -40,7 +40,9 @@ nx=length(baselistitems);
 
 n=length(listitems);
 if n<2
-    errordlg('Need at least two grouping variables (e.g., BATCH_ID, CLUSTER_ID, or CELL_TYPE_TXT)');
+    warndlg(['This function requires at least two ' ...
+        'grouping variables (e.g., BATCH_ID, ' ...
+        'CLUSTER_ID, or CELL_TYPE_TXT).']);
     return;
 end
 
