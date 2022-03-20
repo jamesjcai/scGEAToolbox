@@ -72,8 +72,9 @@ switch answer
             [h1]=sc_scattermarker(x,g,sce.s,g,5);
             title(g);
             view(h1,axx,bxx);
+            
             movegui(f,'center');
-            set(f,'visible','on');                  
+            set(f,'visible','on');  
         end
     case 'Cancel'
         % helpdlg('Action cancelled.','');

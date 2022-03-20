@@ -86,7 +86,6 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
                     h1 = subplot(1, 2, 1);
                     s1=scatter3(x, y, z, sz, c, 'filled');
                     
-                    %[axx,bxx]=view(h1);
                     % h1.YDataSource='explorer2IDX';
                     % title(targetg)
                     title(sprintf('%s\n(%s/%s = %.2f%% nonzero)', ...
@@ -116,6 +115,9 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
                     hFig = gcf;
                     hFig.Position(3) = hFig.Position(3) * 2.2;
                     view(h1, 3);
+                    [axx,bxx]=view(h1);
+                    [ayy,byy]=view(h2);
+                    
             end
             gui.i_setautumncolor(c);
             ori_c=c;
