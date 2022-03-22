@@ -43,14 +43,14 @@ answer=questdlg('Construct network de novo or use existing network in Workspace?
                 return;
             end            
             A0=[];
-            uiwait(helpdlg("Network will be constructed. Now select the gene to be knocked out...",''));
+            uiwait(helpdlg("Network will be constructed. Now, select a KO gene.",''));
         otherwise
             return;
     end
-    
-        [gsorted]=gui.i_sortgenenames(sce);
+        gsorted=sort(sce.g);
+        %[gsorted]=gui.i_sortgenenames(sce);
         if isempty(gsorted), return; end
-        [indx2,tf] = listdlg('PromptString',{'Select the KO gene'},...
+        [indx2,tf] = listdlg('PromptString',{'Select a KO gene'},...
             'SelectionMode','single','ListString',gsorted);
         if tf==1
             [~,idx]=ismember(gsorted(indx2),sce.g);
@@ -78,7 +78,8 @@ answer=questdlg('Construct network de novo or use existing network in Workspace?
         if isempty(A0)
             try
                 fw = gui.gui_waitbar;
-                [T,A0]=ten.sctenifoldknk(sce.X,sce.g,idx,'sorttable',true);                
+                [T,A0]=ten.sctenifoldknk(sce.X,sce.g,idx,...
+                          'sorttable',true,'nsubsmpl',10);                
                 gui.gui_waitbar(fw);
              catch ME
                 gui.gui_waitbar(fw);
