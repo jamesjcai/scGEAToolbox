@@ -89,10 +89,7 @@ defaultToolbar = findall(FigureHandle, 'tag','FigureToolBar');  % get the figure
 UitoolbarHandle = uitoolbar('Parent', FigureHandle);
 set(UitoolbarHandle, 'Tag', 'FigureToolBar', ...
     'HandleVisibility', 'off', 'Visible', 'on');
-
 mfolder = fileparts(mfilename('fullpath'));
-
-
 i_addbutton(1,0,@callback_ShowGeneExpr,"list.gif","Select a gene to show expression")
 i_addbutton(1,0,@ShowCellStates,"list2.gif","Show cell state")
 i_addbutton(1,0,@SelectCellsByQC,"plotpicker-effects.gif","Filter genes and cells")
@@ -100,9 +97,6 @@ i_addbutton(1,0,@SelectCellsByQC,"plotpicker-effects.gif","Filter genes and cell
 %i_addbutton(1,1,@LabelClusters,"plotpicker-scatter.gif","Label clusters")
 ptlabelclusters = uitoggletool(UitoolbarHandle, 'Separator', 'on');
 [img, map] = imread(fullfile(mfolder, 'resources', 'plotpicker-scatter.gif'));
-%[img, map] = imread(fullfile(matlabroot, ...
-%    'toolbox', 'matlab', 'icons', 'plotpicker-scatter.gif'));
-% map(map(:,1)+map(:,2)+map(:,3)==3) = NaN;  % Convert white pixels => transparent background
 ptImage = ind2rgb(img, map);
 ptlabelclusters.CData = ptImage;
 ptlabelclusters.Tooltip = 'Label clusters';
@@ -129,47 +123,27 @@ i_addbutton(1,1,@callback_CloseAllOthers,"noun_Pruners_2469297.gif","Close All O
 i_addbutton(1,0,@callback_PickPlotMarker,"plotpicker-rose.gif","Switch scatter plot marker type")
 i_addbutton(1,0,@callback_PickColorMap,"plotpicker-compass.gif","Pick new color map")
 i_addbutton(1,0,@RefreshAll,"plotpicker-geobubble2.gif","Refresh")
-
 i_addbutton(2,0,@call_scgeatool,"IMG00107.GIF"," ")
 i_addbutton(2,0,@callback_CalculateCellScores,"cellscore2.gif","Calculate Cell Scores from List of Feature Genes")
 i_addbutton(2,0,@callback_ComparePotency,"plotpicker-candle.gif","Compare Differentiation Potency");
-
 i_addbutton(2,1,@gui.callback_MultiGroupingViewer,"plotpicker-arxtimeseries.gif","Multi-grouping View...");
 i_addbutton(2,0,@gui.callback_CrossTabulation,"plotpicker-comet.gif","Cross Tabulation");
-
 i_addbutton(2,1,@callback_CompareGeneBtwCls,"plotpicker-priceandvol.gif","Compare Gene Expression between Classes");
 i_addbutton(2,0,@callback_DEGene2Groups,"plotpicker-boxplot.gif","Compare 2 groups (DE analysis)");
 i_addbutton(2,0,@callback_GSEA_HVGs,"plotpicker-andrewsplot.gif","Function enrichment of HVG genes");
 i_addbutton(2,0,@callback_BuildGeneNetwork,"noun_Network_691907.gif","Build gene regulatory network");
 i_addbutton(2,0,@callback_CompareGeneNetwork,"noun_Deep_Learning_2424485.gif","Compare two scGRNs");
-
 gui.add_3dcamera(defaultToolbar, 'AllCells');
 
-m_vie = uimenu(FigureHandle,'Text','Multiv&iew');
-m_vie.Accelerator = 'i';
+m_vie = uimenu(FigureHandle,'Text','Multiv&iew','Accelerator','i');
 i_addmenu(m_vie,0,@gui.callback_MultiEmbeddingViewer,'Multi-embedding View...');
 i_addmenu(m_vie,0,@gui.callback_MultiGroupingViewer,'Multi-grouping View...');
 i_addmenu(m_vie,0,@gui.callback_CrossTabulation,'Cross Tabulation...');
-%uimenu(m_vie,'Text','Multi-embedding View...',...
-%    'Callback',@gui.callback_MultiEmbeddingViewer);
-%uimenu(m_vie,'Text','Multi-grouping View...',...    
-%    'Callback',@gui.callback_MultiGroupingViewer);
-%uimenu(m_vie,'Text','Cross Tabulation...',...
-%    'Callback',@callback_CrossTabulation);
 
-m_ext = uimenu(FigureHandle,'Text','Exte&rnal');
-m_ext.Accelerator = 'r';
+m_ext = uimenu(FigureHandle,'Text','Exte&rnal','Accelerator','r');
 i_addmenu(m_ext,0,@gui.i_setrenv,'Check R Environment');
 i_addmenu(m_ext,0,@gui.i_setpyenv,'Check Python Environment');
 i_addmenu(m_ext,1,@DecontX,'Detect Ambient RNA Contamination (decontX/R required)...');
-
-%uimenu(m_ext,'Text','Check R Environment',...
-%    'Callback',@gui.i_setrenv);
-%uimenu(m_ext,'Text','Check Python Environment',...
-%    'Callback',@gui.i_setpyenv);
-%uimenu(m_ext,'Text','Detect Ambient RNA Contamination (decontX/R required)...',...
-%    'Separator','on',...        
-%    'Callback',@DecontX);
 i_addmenu(m_ext,0,@callback_SingleRCellType,'SingleR Cell Type Annotation (SingleR/R required)...');
 i_addmenu(m_ext,0,@callback_RevelioCellCycle,'Revelio Cell Cycle Analysis (Revelio/R required)...');
 i_addmenu(m_ext,0,@RunSeuratWorkflow,'Run Seurat/R Workflow (Seurat/R required)...');
@@ -177,37 +151,16 @@ i_addmenu(m_ext,0,@callback_MELDPerturbationScore,'MELD Perturbation Score (MELD
 i_addmenu(m_ext,0,@HarmonyPy,'Batch Integration (Harmony/Python required)...');
 i_addmenu(m_ext,0,@DoubletDetection,'Detect Doublets (Scrublet/Python required)...');
 
-m_exp = uimenu(FigureHandle,'Text','E&xperimental');
-m_exp.Accelerator = 'x';
+m_exp = uimenu(FigureHandle,'Text','E&xperimental','Accelerator','x');
 m_exp2 = uimenu(m_exp,'Text','sc&Tenifold Suite','Accelerator','T');
-
 i_addmenu(m_exp2,0,@callback_scTenifoldNet1,'scTenifoldNet Construction 🐢🐢 ...');
-
-%uimenu(m_exp2,'Text','scTenifoldNet Construction 🐢🐢 ...',...
-%    'Callback',@callback_scTenifoldNet1);
 i_addmenu(m_exp2,0,@callback_scTenifoldNet2,'scTenifoldNet Comparison 🐢🐢🐢 ...');
-%uimenu(m_exp2,'Text','scTenifoldNet Comparison 🐢🐢🐢 ...',...
-%    'Callback',@callback_scTenifoldNet2);
-
 i_addmenu(m_exp2,1,@callback_scTenifoldKnk1,'scTenifoldKnk (Virtual KO) Single Gene 🐢 ...');
-%uimenu(m_exp2,'Text','scTenifoldKnk (Virtual KO) Single Gene 🐢 ...',...
-%    'Separator','on',...
-%    'Callback',@callback_scTenifoldKnk1);
-
-%uimenu(m_exp2,'Text','scTenifoldKnk (Virtual KO) All Genes 🐢🐢🐢 ...',...
-%    'Callback',@callback_scTenifoldKnkN);
-
 i_addmenu(m_exp,1,@callback_TrajectoryAnalysis,'Run pseudotime analysis (Monocle)...');
-%uimenu(m_exp,'Text','Run pseudotime analysis (Monocle)...',...
-%    'Separator','on',...
-%    'Callback',@callback_TrajectoryAnalysis);
-
 i_addmenu(m_exp,0,@DrawTrajectory,'Plot pseudotime trajectory...');
 i_addmenu(m_exp,1,@callback_DetectCellularCrosstalk,'Ligand-Receptor Mediated Intercellular Crosstalk...');
 i_addmenu(m_exp,0,@callback_SelectCellsByMarker,'Extract Cells by Marker(+/-) Expression...');
-
-uimenu(m_exp,'Text','Merge Subclusters of Same Cell Type...',...
-    'Callback',@MergeSubCellTypes);
+i_addmenu(m_exp,0,@MergeSubCellTypes,'Merge Subclusters of Same Cell Type');
 i_addmenu(m_exp,0,@AnnotateSubGroup,'Annotate Cell Subgroups...');
 i_addmenu(m_exp,0,@gui.callback_CellHeatMap,'Cell Heatmap...');
 i_addmenu(m_exp,1,@callback_CalculateGeneStats,'Calculate Gene Expression Statistics...');
@@ -222,10 +175,6 @@ i_addmenu(m_exp,0,{@i_savefig,1},'Save as SVG File...');
 i_addmenu(m_exp,0,{@i_savefig,2},'Export Graphics...');
 i_addmenu(m_exp,0,@callback_ViewMetaData,'View Metadata...');
 i_addmenu(m_exp,0,@callback_CheckUpdates,'Check for Updates...');
-
-%uimenu(m_exp,'Text','View Metadata...','Callback',@callback_ViewMetaData);
-%uimenu(m_exp,'Text','Check for Updates...',...    
-%    'Callback',@callback_CheckUpdates);
 
 % handles = guihandles( FigureHandle ) ;
 % guidata( FigureHandle, handles ) ;
