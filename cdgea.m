@@ -26,6 +26,7 @@ else
     cd(pw1);
 end
 
+if ~(ismcc || isdeployed)
 if ~exist(fullfile(pw1,'example_data/'),'dir') || ~exist(fullfile(pw1,'resources/'),'dir') ||...
         ~exist(fullfile(pw1,'+run','external/'),'dir')
     f = waitbar(0.33,'Initializing SCGEATOOL on the first run...');
@@ -69,6 +70,7 @@ if ~exist(fullfile(pw1,'example_data/'),'dir') || ~exist(fullfile(pw1,'resources
     waitbar(1,f,'Finishing');
     pause(1);
     if isvalid(f), close(f); end
+end
 end
 
 end
