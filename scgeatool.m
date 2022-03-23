@@ -14,6 +14,13 @@ olddir=pwd();
 cdgea;
 cd(olddir);
 
+if ~(ismcc || isdeployed)
+if ~exist('grp2idx.m','file')
+    errordlg('Statistics and Machine Learning Toolbox is required.');
+    return;
+end
+end
+
 if usejava('jvm') && ~feature('ShowFigureWindows')
     error('MATLAB is in a text mode. This function requires a GUI-mode.');
 end
