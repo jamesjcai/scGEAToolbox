@@ -7,7 +7,7 @@
     <param.summary>Single-cell Gene Expression Analysis Toolbox</param.summary>
     <param.description>scRNAseq data analysis toolbox</param.description>
     <param.screenshot />
-    <param.version>22.3.16</param.version>
+    <param.version>22.3.24</param.version>
     <param.output>${PROJECT_ROOT}\scGEAToolbox.mltbx</param.output>
     <param.products.name>
       <item>Statistics and Machine Learning Toolbox</item>
@@ -128,6 +128,7 @@ resources/STRING/stringdb_mouse.mat
       <file>${PROJECT_ROOT}\demo_script4.mlx</file>
       <file>${PROJECT_ROOT}\demo_script5.mlx</file>
       <file>${PROJECT_ROOT}\demo_script6.mlx</file>
+      <file>${PROJECT_ROOT}\DesktopToolset.xml</file>
       <file>${PROJECT_ROOT}\doc</file>
       <file>${PROJECT_ROOT}\example_data</file>
       <file>${PROJECT_ROOT}\fun_cmp_clusters.m</file>
