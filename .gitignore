@@ -7,51 +7,40 @@
 # Compiled MEX binaries (all platforms)
 # *.mex*
 
-# Simulink Code Generation
-scGEApp_standalone/
-example_data/
-
 thirdparty/GOrilla/input_page.html
 
 input_page.html
 SyncToy_*
 input_page.html
 
-thirdparty/R_BUSseq/MCMC_sampling/
-thirdparty/R_BUSseq/input0.csv
-thirdparty/R_SingleR/input.txt
-thirdparty/R_scTypeGSEA/counts.txt
-thirdparty/R_FindAllMarkers/counts.txt
 +gui/scscatter.mlapp
 resources/STRING/stringdb_human.mat
 resources/STRING/stringdb_mouse.mat
 resources/Rpath.txt
 resources/Thumbs.db
-+run/thirdparty/R_MAST/input1.txt
-+run/thirdparty/R_MAST/input2.txt
-+run/thirdparty/R_MAST/output.csv
-+run/thirdparty/R_fgsea/input.txt
-+run/thirdparty/harmony/input1.csv
-+run/thirdparty/harmony/input2.csv
-+run/thirdparty/harmony/output.csv
-+run/thirdparty/R_decontX/output.mat
-+run/thirdparty/R_decontX/input.mat
-+run/thirdparty/R_RJcluster/input.csv
-+run/thirdparty/R_RJcluster/output.csv
++run/external/R_MAST/input1.txt
++run/external/R_MAST/input2.txt
++run/external/R_MAST/output.csv
++run/external/R_fgsea/input.txt
++run/external/py_harmony/input1.csv
++run/external/py_harmony/input2.csv
++run/external/py_harmony/output.csv
++run/external/R_decontX/output.mat
++run/external/R_decontX/input.mat
++run/external/R_RJcluster/input.csv
++run/external/R_RJcluster/output.csv
 scGEAToolbox.mltbx
-+run/thirdparty/R_monocle/input.mat
-+run/thirdparty/R_monocle/output.csv
-+run/thirdparty/R_SeuratWorkflow/input.txt
-+run/thirdparty/R_scTenifoldKnk/input.h5
-+run/thirdparty/R_scTenifoldKnk/output.RData
-+run/thirdparty/R_scTenifoldKnk/output.txt
-+run/thirdparty/R_scTenifoldKnk/alnman.mat
-+run/thirdparty/R_scTenifoldKnk/WTKOnet.mat
-+run/thirdparty/R_scTenifoldNet/input1.rds
-+run/thirdparty/R_scTenifoldNet/input2.rds
++run/external/R_monocle/input.mat
++run/external/R_monocle/output.csv
++run/external/R_SeuratWorkflow/input.txt
++run/external/R_scTenifoldKnk/input.h5
++run/external/R_scTenifoldKnk/output.RData
++run/external/R_scTenifoldKnk/output.txt
++run/external/R_scTenifoldKnk/alnman.mat
++run/external/R_scTenifoldKnk/WTKOnet.mat
++run/external/R_scTenifoldNet/input1.rds
++run/external/R_scTenifoldNet/input2.rds
 scgeatoolstandaloneApplication/
-+run/external/stringdb/stringdb_human.mat
-+run/external/stringdb/stringdb_mouse.mat
 +run/external/R_SeuratReadRds/inputrdsfile.txt
 +run/external/R_SeuratReadRds/X.csv
 +run/external/R_SeuratReadRds/g.csv
