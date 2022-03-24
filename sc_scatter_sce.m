@@ -171,13 +171,14 @@ i_addmenu(m_exp,0,@callback_TCellExhaustionScores,'T Cell Exhaustion Score...');
 i_addmenu(m_exp,1,@GEOAccessionToSCE,'Import Data Using GEO Accession...');
 i_addmenu(m_exp,0,{@MergeSCEs,1},'Merge SCEs in Workspace...');
 i_addmenu(m_exp,0,{@MergeSCEs,2},'Merge SCE Data Files...');
-i_addmenu(m_exp,0,{@i_savefig,1},'Save as SVG File...');
+i_addmenu(m_exp,0,{@i_savefig,1},'Save Figure as SVG File...');
 i_addmenu(m_exp,0,{@i_savefig,2},'Export Graphics...');
 i_addmenu(m_exp,0,@callback_ViewMetaData,'View Metadata...');
+i_addmenu(m_exp,1,{@(~,~) web('https://scgeatool.github.io/')},'Visit SCGEATOOL-Standalone Website...');
 i_addmenu(m_exp,0,@callback_CheckUpdates,'Check for Updates...');
 
-% handles = guihandles( FigureHandle ) ;
-% guidata( FigureHandle, handles ) ;
+% handles = guihandles( FigureHandle );
+% guidata( FigureHandle, handles );
 
 set(FigureHandle, 'visible', 'on');
 guidata(FigureHandle, sce);
