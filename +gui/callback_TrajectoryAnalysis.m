@@ -7,10 +7,15 @@ function callback_TrajectoryAnalysis(src,~)
             case 'Yes'
 
             case 'Review R Script'
-                [isok,msg]=commoncheck_R('R_monocle');
-                read
-                    a=inputdlg('Review Script:','R Code',[10 50],{char(sce.metadata)});
-                    return;
+                folder=fileparts(mfilename('fullpath'));
+                scriptfile=fullfile(folder,'..','+run','external', ...
+                    'R_monocle','script.R')
+                t=fileread(scriptfile);
+                %LF=char(10); 
+                CR=char(13);  %  carriage return character equivalent to char(13) or sprintf('\r').
+                t=strrep(t,[CR newline],newline);
+                inputdlg('Review Script:','R Code',[10 90],{t});
+                return;
             otherwise
                 return;
         end
