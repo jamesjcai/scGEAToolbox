@@ -1,7 +1,18 @@
 function callback_TrajectoryAnalysis(src,~)
-        answer = questdlg('Run pseudotime analysis (Monocle)?');
-        if ~strcmp(answer, 'Yes')
-            return
+        answer = questdlg('Run pseudotime analysis (Monocle)?','', ...
+            'Yes','Review R Script','Cancel','Yes');
+        switch answer
+            case 'Cancel'
+                return;
+            case 'Yes'
+
+            case 'Review R Script'
+                [isok,msg]=commoncheck_R('R_monocle');
+                read
+                    a=inputdlg('Review Script:','R Code',[10 50],{char(sce.metadata)});
+                    return;
+            otherwise
+                return;
         end
 
     FigureHandle=src.Parent.Parent;
