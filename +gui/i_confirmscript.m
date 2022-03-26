@@ -5,8 +5,8 @@ if nargin<1, qtxt='Run pseudotime analysis (Monocle)?'; end
 if nargin<2, stxt='R_monocle'; end
 if nargin<3, langtag='R'; end
 
-switch langtag
-    case 'R'
+switch lower(langtag)
+    case 'r'
         scriptfile='script.R';
     case 'python'
         scriptfile='script.py';
@@ -15,13 +15,13 @@ switch langtag
 end
 
         answer = questdlg(qtxt,'', ...
-            'Yes','Review R Script','Cancel','Yes');
+            'Yes','Review Script','Cancel','Yes');
         switch answer
             case 'Cancel'
                 return;
             case 'Yes'
                 t=true;
-             case 'Review R Script'
+             case 'Review Script'
                 folder=fileparts(mfilename('fullpath'));
                 scriptfile=fullfile(folder,'..','+run','external', ...
                     stxt,scriptfile);

@@ -1,4 +1,9 @@
 function callback_SingleRCellType(src,~)
+
+[ok]=gui.i_confirmscript('Run SingleR Cell Type Annotation (SingleR)?', ...
+    'R_SingleR','r');
+if ~ok, return; end
+
 % ----
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);

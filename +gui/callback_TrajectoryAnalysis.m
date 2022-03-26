@@ -1,24 +1,7 @@
 function callback_TrajectoryAnalysis(src,~)
-        answer = questdlg('Run pseudotime analysis (Monocle)?','', ...
-            'Yes','Review R Script','Cancel','Yes');
-        switch answer
-            case 'Cancel'
-                return;
-            case 'Yes'
-
-            case 'Review R Script'
-                folder=fileparts(mfilename('fullpath'));
-                scriptfile=fullfile(folder,'..','+run','external', ...
-                    'R_monocle','script.R')
-                t=fileread(scriptfile);
-                %LF=char(10); 
-                CR=char(13);  %  carriage return character equivalent to char(13) or sprintf('\r').
-                t=strrep(t,[CR newline],newline);
-                inputdlg('Review Script:','R Code',[10 90],{t});
-                return;
-            otherwise
-                return;
-        end
+    [ok]=gui.i_confirmscript('Run Pseudotime Analysis (Monocle)?', ...
+        'R_monocle','r');
+    if ~ok, return; end
 
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);

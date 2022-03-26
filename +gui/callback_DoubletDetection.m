@@ -1,8 +1,13 @@
 function [isDoublet,doubletscore,methodtag,done]=callback_DoubletDetection(src,~)
+
     done=false;
     isDoublet=[];
     doubletscore=[];
     methodtag=[];
+
+[ok]=gui.i_confirmscript('Run Detect Doublets (Scrublet)?', ...
+    'py_scrublet','python');
+if ~ok, return; end
     
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);

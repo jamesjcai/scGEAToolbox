@@ -1,5 +1,10 @@
 function [done]=callback_Harmonypy(src,~)
     done=false;
+
+[ok]=gui.i_confirmscript('Run Batch Integration (Harmony)?', ...
+    'py_harmonypy','python');
+if ~ok, return; end
+
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
     if numel(unique(sce.c_batch_id))<2

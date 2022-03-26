@@ -147,7 +147,8 @@ i_addmenu(m_ext,1,@DecontX,'Detect Ambient RNA Contamination (decontX/R required
 i_addmenu(m_ext,0,@callback_SingleRCellType,'SingleR Cell Type Annotation (SingleR/R required)...');
 i_addmenu(m_ext,0,@callback_RevelioCellCycle,'Revelio Cell Cycle Analysis (Revelio/R required)...');
 i_addmenu(m_ext,0,@RunSeuratWorkflow,'Run Seurat/R Workflow (Seurat/R required)...');
-i_addmenu(m_ext,0,@callback_MELDPerturbationScore,'MELD Perturbation Score (MELD/Python required)...');
+i_addmenu(m_ext,0,@callback_TrajectoryAnalysis,'Pseudotime Analysis (Monocle/R required)...');
+i_addmenu(m_ext,1,@callback_MELDPerturbationScore,'MELD Perturbation Score (MELD/Python required)...');
 i_addmenu(m_ext,0,@HarmonyPy,'Batch Integration (Harmony/Python required)...');
 i_addmenu(m_ext,0,@DoubletDetection,'Detect Doublets (Scrublet/Python required)...');
 
@@ -156,12 +157,12 @@ m_exp2 = uimenu(m_exp,'Text','sc&Tenifold Suite','Accelerator','T');
 i_addmenu(m_exp2,0,@callback_scTenifoldNet1,'scTenifoldNet Construction 🐢🐢 ...');
 i_addmenu(m_exp2,0,@callback_scTenifoldNet2,'scTenifoldNet Comparison 🐢🐢🐢 ...');
 i_addmenu(m_exp2,1,@callback_scTenifoldKnk1,'scTenifoldKnk (Virtual KO) Single Gene 🐢 ...');
-i_addmenu(m_exp,1,@callback_TrajectoryAnalysis,'Run pseudotime analysis (Monocle)...');
-i_addmenu(m_exp,0,@DrawTrajectory,'Plot pseudotime trajectory...');
+
 i_addmenu(m_exp,1,@callback_DetectCellularCrosstalk,'Ligand-Receptor Mediated Intercellular Crosstalk...');
 i_addmenu(m_exp,0,@callback_SelectCellsByMarker,'Extract Cells by Marker(+/-) Expression...');
 i_addmenu(m_exp,0,@MergeSubCellTypes,'Merge Subclusters of Same Cell Type');
 i_addmenu(m_exp,0,@AnnotateSubGroup,'Annotate Cell Subgroups...');
+i_addmenu(m_exp,0,@DrawTrajectory,'Plot Cell Trajectory...');
 i_addmenu(m_exp,0,@gui.callback_CellHeatMap,'Cell Heatmap...');
 i_addmenu(m_exp,1,@callback_CalculateGeneStats,'Calculate Gene Expression Statistics...');
 i_addmenu(m_exp,0,@callback_CellCycleLibrarySize,'Library Size of Cell Cycle Phases...');
@@ -362,8 +363,10 @@ end
     end
 
     function RunSeuratWorkflow(src,~)
-       answer = questdlg('Run Seurat standard worflow?');
-       if ~strcmp(answer, 'Yes'), return; end
+       [ok]=gui.i_confirmscript('Run Seurat/R Workflow (Seurat)?', ...
+            'R_SeuratWorkflow','r');
+        if ~ok, return; end
+       
        [ndim]=gui.i_choose2d3d;
        if isempty(ndim), return; end       
 	   fw = gui.gui_waitbar;
@@ -379,6 +382,9 @@ end
     end
 
     function DecontX(~,~)
+        [ok]=gui.i_confirmscript('Detect Ambient RNA Contamination (decontX)', ...
+            'R_decontX','r');
+        if ~ok, return; end
         fw = gui.gui_waitbar;
         try
         [Xdecon,contamination]=run.decontX(sce);
@@ -403,6 +409,7 @@ end
     end
 
     function HarmonyPy(src, ~)
+        
         if gui.callback_Harmonypy(src)
             sce = guidata(FigureHandle);
             [c, cL] = grp2idx(sce.c);

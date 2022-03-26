@@ -1,4 +1,8 @@
 function callback_MELDPerturbationScore(src,~)
+[ok]=gui.i_confirmscript('Run MELD Perturbation Score (MELD)?', ...
+    'py_MELD','python');
+if ~ok, return; end
+
     FigureHandle=src.Parent.Parent;    
     sce=guidata(FigureHandle);
     if numel(unique(sce.c_batch_id))<2
