@@ -7,6 +7,8 @@ function callback_ShowClustersPop(src, ~)
     [thisc,~]=gui.i_select1class(sce);
     if isempty(thisc), return; end
 
+    try
+
     [c,cL]=grp2idx(thisc);
     cLa=getappdata(FigureHandle,'cL');
     if ~isempty(cLa)
@@ -49,5 +51,8 @@ function callback_ShowClustersPop(src, ~)
         set(f,'Position',[P(1)-20*nf P(2)-20*nf P(3) P(4)]);
         set(f,'visible','on');
         drawnow;
+    end
+    catch ME
+        errordlg(ME.message);
     end
 end

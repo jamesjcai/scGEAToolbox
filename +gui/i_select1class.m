@@ -5,16 +5,24 @@ clable='';
 
     listitems={'Current Class (C)'};
     if ~isempty(sce.c_cluster_id)
-        listitems=[listitems,'Cluster ID'];
+        if numel(unique(sce.c_cluster_id))>1
+            listitems=[listitems,'Cluster ID'];
+        end
     end
     if ~isempty(sce.c_cell_type_tx)
-        listitems=[listitems,'Cell Type'];
+        if numel(unique(sce.c_cell_type_tx))>1
+            listitems=[listitems,'Cell Type'];
+        end
     end
     if ~isempty(sce.c_cell_cycle_tx)
-        listitems=[listitems,'Cell Cycle Phase'];
+        if numel(unique(sce.c_cell_cycle_tx))>1
+            listitems=[listitems,'Cell Cycle Phase'];
+        end
     end
     if ~isempty(sce.c_batch_id)
-        listitems=[listitems,'Batch ID'];
+        if numel(unique(sce.c_batch_id))>1
+            listitems=[listitems,'Batch ID'];
+        end
     end
     
     a=evalin('base','whos');
@@ -30,7 +38,6 @@ clable='';
         b=b(:,v);
         listitems=[listitems,'Customized C...'];
     end
-
 
 % listitems={'Current Class (C)','Cluster ID','Batch ID',...
 %            'Cell Type','Cell Cycle Phase'};
