@@ -68,10 +68,10 @@ end
 %end
 if exist('output.mat','file')
     load output.mat s_tsne s_umap c_ident
-    
-    sce.c_cluster_id=c_ident;
+    [c,~]=grp2idx(c_ident);
+    sce.c_cluster_id=c;
     sce.struct_cell_clusterings.seurat=c_ident;
-    sce.c=c_ident;
+    sce.c=c;
     sce.struct_cell_embeddings.umap=s_umap;
     sce.struct_cell_embeddings.tsne=s_tsne;
     sce.s=s_tsne;

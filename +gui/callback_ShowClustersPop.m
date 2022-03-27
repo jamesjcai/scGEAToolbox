@@ -11,7 +11,7 @@ function callback_ShowClustersPop(src, ~)
 
     [c,cL]=grp2idx(thisc);
     cLa=getappdata(FigureHandle,'cL');
-    if ~isempty(cLa)
+    if ~isempty(cLa) && length(cL)==length(cLa)
         cL=cLa;
     end
 

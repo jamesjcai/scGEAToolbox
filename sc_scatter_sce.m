@@ -79,6 +79,8 @@ hAx = axes('Parent', FigureHandle);
 
 [h] = gui.i_gscatter3(sce.s, c, methodid,1,hAx);
 title(hAx,sce.title);
+kc = numel(unique(c));
+colormap(pkg.i_mycolorlines(kc));
 
 dt = datacursormode;
 dt.UpdateFcn = {@i_myupdatefcnx};
