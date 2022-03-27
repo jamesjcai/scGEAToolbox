@@ -1,11 +1,13 @@
 function callback_ShowClustersPop(src, ~)
-    answer = questdlg('Show clusters in new figures?');
+    answer = questdlg('Select a grouping variable and show cell groups in new figures individually?');
     if ~strcmp(answer, 'Yes'), return; end
 
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
-    
-    [c,cL]=grp2idx(sce.c);
+    [thisc,~]=gui.i_select1class(sce);
+    if isempty(thisc), return; end
+
+    [c,cL]=grp2idx(thisc);
     cLa=getappdata(FigureHandle,'cL');
     if ~isempty(cLa)
         cL=cLa;
@@ -32,7 +34,7 @@ function callback_ShowClustersPop(src, ~)
     numfig=ceil(totaln/9);
     for nf=1:numfig
         f=figure('visible','off');
-        for k = 1:9            
+        for k = 1:9        
             kk=(nf-1)*9+k;
             if kk<=totaln
                 subplot(3, 3, k);
@@ -49,5 +51,3 @@ function callback_ShowClustersPop(src, ~)
         drawnow;
     end
 end
-
-
