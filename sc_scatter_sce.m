@@ -185,7 +185,7 @@ i_addmenu(m_exp,0,@callback_CheckUpdates,'Check for Updates...');
 
 set(FigureHandle, 'visible', 'on');
 guidata(FigureHandle, sce);
-setappdata(FigureHandle,'cL',cL);
+% setappdata(FigureHandle,'cL',cL);
 
 set(FigureHandle,'CloseRequestFcn',@closeRequest);
 

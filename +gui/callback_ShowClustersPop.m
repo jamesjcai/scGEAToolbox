@@ -10,10 +10,10 @@ function callback_ShowClustersPop(src, ~)
     try
 
     [c,cL]=grp2idx(thisc);
-    cLa=getappdata(FigureHandle,'cL');
-    if ~isempty(cLa) && length(cL)==length(cLa)
-        cL=cLa;
-    end
+    %cLa=getappdata(FigureHandle,'cL');
+    %if ~isempty(cLa) && length(cL)==length(cLa)
+    %    cL=cLa;
+    %end
 
     cmv = 1:max(c);
     idxx = cmv;
