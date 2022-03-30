@@ -16,17 +16,19 @@ if showdata
         'HandleVisibility', 'off', 'Visible', 'on');
 
     ptlabelclusters = uipushtool(UitoolbarHandle);
-    [img, map] = imread(fullfile(matlabroot, ...
-        'toolbox', 'matlab', 'icons', 'plotpicker-scatter.gif'));
+    [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
+                             '..','resources', 'export.gif'));
+
     ptImage = ind2rgb(img, map);
     ptlabelclusters.CData = ptImage;
-    ptlabelclusters.Tooltip = 'Label clusters';
+    ptlabelclusters.Tooltip = 'Export HVG gene names';
     ptlabelclusters.ClickedCallback = @ExportGeneNames;
 
 
     ptlabelclusters = uipushtool(UitoolbarHandle);
-    [img, map] = imread(fullfile(matlabroot, ...
-        'toolbox', 'matlab', 'icons', 'plotpicker-scatter.gif'));
+    [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
+                             '..','resources', 'plotpicker-qqplot.gif'));
+   
     ptImage = ind2rgb(img, map);
     ptlabelclusters.CData = ptImage;
     ptlabelclusters.Tooltip = 'Label clusters';
@@ -93,4 +95,12 @@ function ExportGeneNames(~,~)
         export2wsdlg(labels,vars,values,...
                      'Save Data to Workspace');
 end
+end
+
+function txt = i_myupdatefcn1(~,event_obj,g)
+% Customizes text of data tips
+% pos = event_obj.Position;
+idx = event_obj.DataIndex;
+% i_plotsiglegene(idx,g);
+txt = {g(idx)};
 end

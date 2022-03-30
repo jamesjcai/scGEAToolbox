@@ -6,8 +6,10 @@ function callback_GSEA_HVGs(src,~)
     sce=guidata(FigureHandle);
   
     answer = questdlg('Which method?',...
-        'Select Method','Brennecke et al. (2013)',...
-        'Mean-CV-Dropout Method','Brennecke et al. (2013)');
+        'Select Method', ...
+        'Splinefit Method',...
+        'Brennecke et al. (2013)',...
+        'Splinefit Method');
 
     switch answer
         case 'Brennecke et al. (2013)'
@@ -49,8 +51,8 @@ function callback_GSEA_HVGs(src,~)
     
     uiwait(helpdlg('Done!',''));
 
-        case 'Mean-CV-Dropout Method'
-            sc_scatter3genes(sce.X,sce.g);
+        case 'Splinefit Method'
+            gui.sc_scatter3genes(sce.X,sce.g);
         otherwise
             return;
     end
