@@ -1,11 +1,17 @@
 function [done]=i_setpyenv(~,~)
         % selpath = uigetdir;
-%see also: I_SETRENV    
-    x=pyenv;
-    if isempty(x.Executable)
-        [done]=ix_setpyenv;
-    else
+%see also: I_SETRENV
         [done]=false;
+
+    x=pyenv;
+    if strlength(x.Executable)==0
+        answer=questdlg('Python environment has not been set up. Locate python.exe?');
+        if strcmp('Yes',answer)
+            [done]=ix_setpyenv;
+        else
+            return;
+        end
+    else
         answer = questdlg(sprintf('%s',x.Executable), ...
             'Python Executable', ...
             'Use this','Use another','Cancel','Use this');        
@@ -18,8 +24,11 @@ function [done]=i_setpyenv(~,~)
             otherwise
                 return;
         end
-        [done]=true;
-    end    
+    end
+        if ~done
+            warndlg('Python environment is not set.','');
+        end
+    
 end
 
 

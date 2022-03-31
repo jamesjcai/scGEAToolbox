@@ -5,15 +5,13 @@ OKPressed=false;
 FigureHandle=src.Parent.Parent;
 sce=guidata(FigureHandle);
 
-if ~(ismcc || isdeployed)
+%if ~(ismcc || isdeployed)
     answer = questdlg('Export & save data to:','',...
         'Workspace','MAT file','Seurat/RDS file','Workspace');
-else
+%else
 %    answer = questdlg('Export & save data to:','',...
 %        'MAT file','Seurat/RDS file','MAT file');
-    answer = questdlg('Export & save data to:','',...
-        'Workspace','MAT file','Seurat/RDS file','Workspace');
-end
+%end
 
 switch answer
     case 'Workspace'
