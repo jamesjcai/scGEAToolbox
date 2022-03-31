@@ -12,7 +12,7 @@ if ~ok, return; end
     catch ME
         gui.gui_waitbar(fw);
         errordlg(ME.message);
-        retrun;
+        return;
     end
     gui.gui_waitbar(fw);
     if ~isempty(X)
