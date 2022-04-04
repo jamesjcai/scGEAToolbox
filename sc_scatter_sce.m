@@ -165,6 +165,7 @@ i_addmenu(m_exp,1,@callback_DetectCellularCrosstalk,'Ligand-Receptor Mediated In
 i_addmenu(m_exp,0,@callback_SelectCellsByMarker,'Extract Cells by Marker(+/-) Expression...');
 i_addmenu(m_exp,0,@MergeSubCellTypes,'Merge Subclusters of Same Cell Type');
 i_addmenu(m_exp,0,@AnnotateSubGroup,'Annotate Cell Subgroups...');
+i_addmenu(m_exp,0,@DrawKNNNetwork,'Plot Cell kNN Network...');
 i_addmenu(m_exp,0,@DrawTrajectory,'Plot Cell Trajectory...');
 i_addmenu(m_exp,0,@gui.callback_CellHeatMap,'Cell Heatmap...');
 i_addmenu(m_exp,1,@callback_CalculateGeneStats,'Calculate Gene Expression Statistics...');
@@ -918,6 +919,13 @@ end
 
     end
 
+    function DrawKNNNetwork(~,~)
+        fw = gui.gui_waitbar;
+        set(0, 'CurrentFigure', FigureHandle);
+        sc_knngraph(sce.s,[],true);
+        gui.gui_waitbar(fw);
+    end
+
     function DrawTrajectory(~, ~)
         answer = questdlg('Which method?', 'Select Algorithm', ...
             'splinefit (🐇)', 'princurve (🐢)', ...
@@ -974,9 +982,17 @@ end
                 [~, idxp] = maxk(r, 4);  % Select top 4 positively correlated genes
                 [~, idxn] = mink(r, 3);  % Select top 3 negatively correlated genes
                 selectedg = sce.g([idxp idxn]);
-                figure;
-                i_plot_pseudotimeseries(log2(sce.X + 1), ...
-                    sce.g, t, selectedg);
+                try
+                    psf1=figure();
+                    i_plot_pseudotimeseries(log2(sce.X + 1), ...
+                        sce.g, t, selectedg);
+                catch ME
+                    if exist('psf1','var') && ishandle(psf1)
+                        close(psf1);
+                    end
+                    errordlg(ME.message);
+                end
+
             case 'No'
                 return
         end

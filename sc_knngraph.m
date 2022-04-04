@@ -48,6 +48,7 @@ if plotit
               s([i,Graph(j,i)],3),'Color','red');   
     end
     end
+    hold off
 end
 
 end
