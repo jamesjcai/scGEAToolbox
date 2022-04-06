@@ -88,11 +88,13 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
                     
                     % h1.YDataSource='explorer2IDX';
                     % title(targetg)
-                    title(sprintf('%s\n(%s/%s = %.2f%% nonzero)', ...
+                    
+                    titxt=sprintf('%s\n(%s/%s = %.2f%% nonzero)', ...
                                   targetg, ...
                                   num2bankScalar(sum(c > 0)), ...
                                   num2bankScalar(numel(c)), ...
-                                  100 * sum(c > 0) ./ numel(c)));
+                                  100 * sum(c > 0) ./ numel(c));
+                    title(titxt);
 
                     %                 title(sprintf('%s\n(%s/%s = %g%% nonzero)',...
                     %                     g,...
@@ -116,15 +118,15 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
                     hFig.Position(3) = hFig.Position(3) * 2.2;
                     view(h1, 3);                    
             end
-            a=getpref('scgeatoolbox','prefcolormapname','autumn')
+            a=getpref('scgeatoolbox','prefcolormapname','autumn');
             gui.i_setautumncolor(c,a);
             ori_c=c;
-            
-            title(sprintf('%s\n(%s/%s = %.2f%% nonzero)', ...
-                               targetg, ...
-                               num2bankScalar(sum(c > 0)), ...
-                               num2bankScalar(numel(c)), ...
-                               100 * sum(c > 0) ./ numel(c)));
+            title(titxt);
+%             title(sprintf('%s\n(%s/%s = %.2f%% nonzero)', ...
+%                                targetg, ...
+%                                num2bankScalar(sum(c > 0)), ...
+%                                num2bankScalar(numel(c)), ...
+%                                100 * sum(c > 0) ./ numel(c)));
             % pt = uipushtool(defaultToolbar);
             % tx.ButtonDownFcn=@dispgname;
             if showcam
@@ -203,19 +205,23 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
         delete(s2);
         s2=stem3(h2,x, y, c, 'marker', 'none', 'color', 'm');
         view(h2,ax,bx);
+        title(h2,titxt);
         
         [ax,bx]=view(h1);
         delete(s1);
         s1=scatter3(h1,x, y, z, sz, c, 'filled');
         view(h1,ax,bx);
         colorbar(h1);
+        title(h1,titxt);
     end
 
     function i_ResetExpr(~,~)
         c=ori_c;
         delete(s2);
         s2=stem3(h2,x, y, c, 'marker', 'none', 'color', 'm');
+        
         %view(h2,ayy,byy);
+
         delete(s1);
         s1=scatter3(h1,x, y, z, sz, c, 'filled');
         %view(h1,axx,bxx);
@@ -231,12 +237,18 @@ end
 
 
 function i_PickColorMap(~,~,c)
-    list = {'parula','turbo','hsv','hot','cool','spring','summer','autumn',...
+    list = {'parula','turbo','hsv','hot','cool','spring',...
+            'summer','autumn (default)',...
             'winter','jet'};
     [indx,tf] = listdlg('ListString',list,'SelectionMode','single',...
                         'PromptString','Select a colormap:');
     if tf==1
-        gui.i_setautumncolor(c,list{indx});        
+        a=list{indx};
+        if strcmp(a,'autumn (default)')
+            a='autumn';
+        end
+        gui.i_setautumncolor(c,a);
+        setpref('scgeatoolbox','prefcolormapname',a);        
     end
 end
 
