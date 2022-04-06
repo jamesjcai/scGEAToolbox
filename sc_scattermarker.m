@@ -114,12 +114,10 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
                     evalin('base', 'rotate3d on');
                     hFig = gcf;
                     hFig.Position(3) = hFig.Position(3) * 2.2;
-                    view(h1, 3);
-                    [axx,bxx]=view(h1);
-                    [ayy,byy]=view(h2);
-                    
+                    view(h1, 3);                    
             end
-            gui.i_setautumncolor(c);
+            a=getpref('scgeatoolbox','prefcolormapname','autumn')
+            gui.i_setautumncolor(c,a);
             ori_c=c;
             
             title(sprintf('%s\n(%s/%s = %.2f%% nonzero)', ...
@@ -201,12 +199,16 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
 
     function i_RescaleExpr(~,~)
         c=log2(1+c);
+        [ax,bx]=view(h2);
         delete(s2);
         s2=stem3(h2,x, y, c, 'marker', 'none', 'color', 'm');
-        %view(h2,ayy,byy);
+        view(h2,ax,bx);
+        
+        [ax,bx]=view(h1);
         delete(s1);
         s1=scatter3(h1,x, y, z, sz, c, 'filled');
-        %view(h1,axx,bxx);
+        view(h1,ax,bx);
+        colorbar(h1);
     end
 
     function i_ResetExpr(~,~)
@@ -234,7 +236,7 @@ function i_PickColorMap(~,~,c)
     [indx,tf] = listdlg('ListString',list,'SelectionMode','single',...
                         'PromptString','Select a colormap:');
     if tf==1
-        gui.i_setautumncolor(c,list{indx});
+        gui.i_setautumncolor(c,list{indx});        
     end
 end
 
