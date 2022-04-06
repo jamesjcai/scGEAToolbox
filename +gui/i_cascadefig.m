@@ -1,4 +1,6 @@
 function i_cascadefig(sce,g,axx,bxx,k)
+
+if nargin<5, k=1; end
         f = figure('visible','off');
 
         [h1]=sc_scattermarker(sce.X,sce.g,...
