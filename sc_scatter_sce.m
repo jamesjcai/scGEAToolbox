@@ -165,9 +165,13 @@ i_addmenu(m_exp,1,@callback_DetectCellularCrosstalk,'Ligand-Receptor Mediated In
 i_addmenu(m_exp,0,@callback_SelectCellsByMarker,'Extract Cells by Marker(+/-) Expression...');
 i_addmenu(m_exp,0,@MergeSubCellTypes,'Merge Subclusters of Same Cell Type');
 i_addmenu(m_exp,0,@AnnotateSubGroup,'Annotate Cell Subgroups...');
+
+
 i_addmenu(m_exp,0,@DrawKNNNetwork,'Plot Cell kNN Network...');
 i_addmenu(m_exp,0,@DrawTrajectory,'Plot Cell Trajectory...');
 i_addmenu(m_exp,0,@gui.callback_CellHeatMap,'Cell Heatmap...');
+i_addmenu(m_exp,0,@callback_DrawDotplot,'Dot Plot...');
+
 i_addmenu(m_exp,1,@callback_CalculateGeneStats,'Calculate Gene Expression Statistics...');
 i_addmenu(m_exp,0,@callback_CellCycleLibrarySize,'Library Size of Cell Cycle Phases...');
 i_addmenu(m_exp,0,@callback_ShowHgBGeneExpression,'Show HgB-genes Expression...');

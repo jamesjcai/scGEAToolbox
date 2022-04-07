@@ -1,53 +1,56 @@
-function i_dotplot(X0,X1,genelist,tgene,uselog)
+%function i_dotplot(X0,X1,genelist,tgene,uselog)
+function i_dotplot(X,g,c,cL,tgene,uselog)
 
-if nargin<5
-    uselog=false;
+if nargin<6, uselog=false; end
+[yes]=ismember(tgene,g);
+if ~any(yes), return; end
+z=length(tgene)-sum(yes);
+if z>0
+    fprintf('%d gene(s) not in the list are excluded.\n',z); 
 end
-
-[i]=ismember(tgene,genelist);
-if ~any(i), return; end
-z=length(tgene)-sum(i);
-if z>0, fprintf('%d gene(s) not in the list are excluded.\n',z); end
-tgene=tgene(i);
+tgene=tgene(yes);
 
 % tgene=string(T.gene(1:10));
-y=(1:length(tgene))';
-x=[-ones(size(y));ones(size(y))]./2;
-y=[y;y];
+%idx=(1:length(tgene))';
+%x=[-ones(size(idx)); ones(size(idx))]./2;
+%y=repmat(idx,length(cL),1);
 
-sz=ones(size(y));
-c=ones(size(y));
-for k=1:length(tgene)    
-    a0=X0(genelist==tgene(k),:);
-    a1=X1(genelist==tgene(k),:);
-    sz(k)=sum(a0~=0)./length(a0);
-    sz(k+length(tgene)-1)=sum(a1~=0)./length(a1);
-    c(k)=mean(a0);
-    c(k+length(tgene)-1)=mean(a1);
+l=ones(length(tgene)*length(cL),1);
+sz=l; vl=l;
+x=l; y=l;
+ct=0;
+for k=1:length(tgene)
+    for kk=1:length(cL)
+        ct=ct+1;
+        x(ct)=kk; y(ct)=k;
+        a0=X(g==tgene(k),c==kk);
+        sz(ct)=sum(a0~=0)./length(a0);
+        vl(ct)=mean(a0);
+    end
 end
 
- %c=linspace(1,10,length(x));
- %c=zscore(c);
- %c=c+min(c);
+
 if uselog
-    c=log2(1+c);
+    vl=log2(vl+1);
 end
-txgene=[" ";tgene];
+txgene=[" "; tgene];
 
 % figure;
 %sz=randi(100,1,length(x));
 %scatter([-.5 .5],[-1 -1],[1 500],'k','filled');
 %hold on
-
-scatter(x,y,500*sz,c,'filled');
+sz=sz+0.001;
+vl=vl+0.001;
+scatter(x,y,500*sz,vl,'filled');
 hold on
 scatter(x,y,500*sz,'k');
-xlim([-1 1]);
-ylim([0 length(txgene)]);
+xlim([0.5 length(cL)+0.5]);
+ylim([0.5 length(txgene)-0.5]);
 colorbar
 set(gca,'YTick',0:length(tgene))
 set(gca,'YTickLabel',txgene)
-set(gca,'XTickLabel',{'','WT','','KO',''})
+set(gca,'XTick',0:length(cL))
+set(gca,'XTickLabel',[{''};cL(:);{''}])
 colormap(flipud(bone));
 box on
 grid on
