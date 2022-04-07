@@ -1,5 +1,5 @@
 %function i_dotplot(X0,X1,genelist,tgene,uselog)
-function i_dotplot(X,g,c,cL,tgene,uselog)
+function [hFig]=i_dotplot(X,g,c,cL,tgene,uselog)
 
 if nargin<6, uselog=false; end
 [yes]=ismember(tgene,g);
@@ -39,11 +39,15 @@ txgene=[" "; tgene];
 %sz=randi(100,1,length(x));
 %scatter([-.5 .5],[-1 -1],[1 500],'k','filled');
 %hold on
+hFig=figure;
+
+
 sz=sz+0.001;
 vl=vl+0.001;
 scatter(x,y,500*sz,vl,'filled');
 hold on
 scatter(x,y,500*sz,'k');
+
 xlim([0.5 length(cL)+0.5]);
 ylim([0.5 length(txgene)-0.5]);
 colorbar
@@ -54,5 +58,14 @@ set(gca,'XTickLabel',[{''};cL(:);{''}])
 colormap(flipud(bone));
 box on
 grid on
-hFig=gcf;
+% hFig=gcf;
 hFig.Position(3)=hFig.Position(3)*0.7;
+
+tb = uitoolbar('Parent', hFig);
+pkg.i_addbutton2fig(tb,'on',{@gui.i_pickcolormap,c},'plotpicker-compass.gif','Pick new color map...');
+pkg.i_addbutton2fig(tb,'on',@i_resetcolor,'plotpicker-geobubble2.gif','Reset color map');
+
+    function i_resetcolor(~,~)
+        colormap(flipud(bone));
+    end
+end

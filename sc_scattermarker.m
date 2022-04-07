@@ -144,48 +144,58 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
                 a=min([numel(unique(c)),256]);
                 pt5pickcolr.ClickedCallback = {@callback_PickColorMap, a, true};
   %}
-                pt = uipushtool(tb, 'Separator', 'off');
-                [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
-                                             'resources', 'plottypectl-rlocusplot.gif'));  % plotpicker-pie
-                ptImage = ind2rgb(img, map);
-                pt.CData = ptImage;
-                pt.Tooltip = 'Link subplots';
-                pt.ClickedCallback = @gui.i_linksubplots;
 
-                pt = uipushtool(tb, 'Separator', 'on');
-                [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
-                                             'resources', 'fvtool_fdalinkbutton.gif'));  % plotpicker-pie
-                ptImage = ind2rgb(img, map);
-                pt.CData = ptImage;
-                pt.Tooltip = 'GeneCards';
-                pt.ClickedCallback = {@i_genecards,targetg};
+                pkg.i_addbutton2fig(tb,'off',@gui.i_linksubplots,'plottypectl-rlocusplot.gif','Link subplots');
 
-                pt = uipushtool(tb, 'Separator', 'on');
-                [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
-                                             'resources', 'plotpicker-compass.gif'));  % plotpicker-pie
-                ptImage = ind2rgb(img, map);
-                pt.CData = ptImage;
-                pt.Tooltip = 'Pick new color map';
-                pt.ClickedCallback = {@i_PickColorMap,c};
-                
+%                 pt = uipushtool(tb, 'Separator', 'off');
+%                 [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
+%                                              'resources', 'plottypectl-rlocusplot.gif'));  % plotpicker-pie
+%                 ptImage = ind2rgb(img, map);
+%                 pt.CData = ptImage;
+%                 pt.Tooltip = 'Link subplots';
+%                 pt.ClickedCallback = @gui.i_linksubplots;
 
-                pt = uipushtool(tb, 'Separator', 'off');
-                [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
-                                             'resources', 'IMG00074.GIF'));  % plotpicker-pie
-                ptImage = ind2rgb(img, map);
-                pt.CData = ptImage;
-                pt.Tooltip = 'Rescale expression level [log2(x+1)]';
-                pt.ClickedCallback = @i_RescaleExpr;
+                pkg.i_addbutton2fig(tb,'on',{@i_genecards,targetg},'fvtool_fdalinkbutton.gif','GeneCards...');
 
 
+%                 pt = uipushtool(tb, 'Separator', 'on');
+%                 [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
+%                                              'resources', 'fvtool_fdalinkbutton.gif'));  % plotpicker-pie
+%                 ptImage = ind2rgb(img, map);
+%                 pt.CData = ptImage;
+%                 pt.Tooltip = 'GeneCards';
+%                 pt.ClickedCallback = {@i_genecards,targetg};
 
-                pt = uipushtool(tb, 'Separator', 'off');
-                [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
-                                             'resources', 'plotpicker-geobubble2.gif'));  % plotpicker-pie
-                ptImage = ind2rgb(img, map);
-                pt.CData = ptImage;
-                pt.Tooltip = 'Reset expression level';
-                pt.ClickedCallback = @i_ResetExpr;
+pkg.i_addbutton2fig(tb,'on',{@i_PickColorMap,c},'plotpicker-compass.gif','Pick new color map...');
+
+%                 pt = uipushtool(tb, 'Separator', 'on');
+%                 [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
+%                                              'resources', 'plotpicker-compass.gif'));  % plotpicker-pie
+%                 ptImage = ind2rgb(img, map);
+%                 pt.CData = ptImage;
+%                 pt.Tooltip = 'Pick new color map';
+%                 pt.ClickedCallback = {@i_PickColorMap,c};
+%                 
+
+pkg.i_addbutton2fig(tb,'off',@i_RescaleExpr,'IMG00074.GIF','Rescale expression level [log2(x+1)]');
+
+%                 pt = uipushtool(tb, 'Separator', 'off');
+%                 [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
+%                                              'resources', 'IMG00074.GIF'));  % plotpicker-pie
+%                 ptImage = ind2rgb(img, map);
+%                 pt.CData = ptImage;
+%                 pt.Tooltip = 'Rescale expression level [log2(x+1)]';
+%                 pt.ClickedCallback = @i_RescaleExpr;
+
+pkg.i_addbutton2fig(tb,'off',@i_ResetExpr,'plotpicker-geobubble2','Reset expression level');
+
+%                 pt = uipushtool(tb, 'Separator', 'off');
+%                 [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
+%                                              'resources', 'plotpicker-geobubble2.gif'));  % plotpicker-pie
+%                 ptImage = ind2rgb(img, map);
+%                 pt.CData = ptImage;
+%                 pt.Tooltip = 'Reset expression level';
+%                 pt.ClickedCallback = @i_ResetExpr;
                 
 
             end

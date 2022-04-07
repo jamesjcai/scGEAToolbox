@@ -4,39 +4,6 @@ function callback_MarkerGeneHeatmap(src,~)
 
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
-    
-%{    
-    if isempty(sce.c_cell_type_tx) 
-        if isempty(sce.c_cluster_id)
-            errordlg('sce.c_cell_type_tx is empty.');
-            return;
-        else
-            answer = questdlg('sce.c_cell_type_tx is empty. Use sce.c_cluster_id?');
-            if ~strcmp(answer,'Yes'), return; end
-            cell_type_v=sce.c_cluster_id;                   
-        end
-    else
-        answer = questdlg('Use sce.c_cell_type_tx?');
-        switch answer
-            case 'Yes'
-                cell_type_v=sce.c_cell_type_tx;
-            case 'No'
-                if ~isempty(sce.c_cluster_id)
-                    answer2 = questdlg('Use sce.c_cluster_id?');
-                    if strcmp(answer2,'Yes')
-                        cell_type_v=sce.c_cluster_id;                   
-                    elseif strcmp(answer2,'No')
-                        helpdlg('Action cancelled')
-                        return;
-                    else
-                        return; 
-                    end
-                end
-            otherwise
-                return;
-        end
-    end
-%}
 
     [thisc,~]=gui.i_select1class(sce);
     if isempty(thisc)
@@ -49,7 +16,6 @@ function callback_MarkerGeneHeatmap(src,~)
         errordlg('Only one cell type or cluster.');
         return; 
     end    
-    
 
     answer = questdlg('Generate marker gene heatmap',...
         'Select Method','Method 1 (DE 🐇)','Method 2 (scGeneFit 🐢)',...
@@ -151,30 +117,47 @@ set(gca,'TickLength',[0 0])
 
 
 tb1=uitoolbar(f1);
-pt1 = uipushtool(tb1,'Separator','off');
-pt1.Tooltip = 'Save marker gene map';
-[img,map] = imread(fullfile(matlabroot,...
-            'toolbox','matlab','icons','greencircleicon.gif'));
-ptImage = ind2rgb(img,map);
-pt1.CData = ptImage;
-pt1.ClickedCallback = {@i_saveM,M};
 
-pt1 = uipushtool(tb1,'Separator','off');
-pt1.Tooltip = 'Summary map';
-[img,map] = imread(fullfile(matlabroot,...
-            'toolbox','matlab','icons','HDF_object02.gif'));
-ptImage = ind2rgb(img,map);
-pt1.CData = ptImage;
-pt1.ClickedCallback = @i_summarymap;
+pkg.i_addbutton2fig(tb1,'off',{@i_saveM,M},'greencircleicon.gif','Save marker gene map...');
+pkg.i_addbutton2fig(tb1,'off',@i_summarymap,'HDF_object01.gif','Summary map...');
+pkg.i_addbutton2fig(tb1,'off',@i_summarymapT,'HDF_object02.gif','Summary map, transposed...');
+pkg.i_addbutton2fig(tb1,'off',@i_dotplotx,'HDF_object03.gif','Dot plot...');
 
-pt1 = uipushtool(tb1,'Separator','off');
-pt1.Tooltip = 'Summary map, transposed';
-[img,map] = imread(fullfile(matlabroot,...
-            'toolbox','matlab','icons','HDF_object01.gif'));
-ptImage = ind2rgb(img,map);
-pt1.CData = ptImage;
-pt1.ClickedCallback = @i_summarymapT;
 
+% pt1 = uipushtool(tb1,'Separator','off');
+% pt1.Tooltip = 'Save marker gene map';
+% [img,map] = imread(fullfile(matlabroot,...
+%             'toolbox','matlab','icons','greencircleicon.gif'));
+% ptImage = ind2rgb(img,map);
+% pt1.CData = ptImage;
+% pt1.ClickedCallback = {@i_saveM,M};
+% 
+% pt1 = uipushtool(tb1,'Separator','off');
+% pt1.Tooltip = 'Summary map';
+% [img,map] = imread(fullfile(matlabroot,...
+%             'toolbox','matlab','icons','HDF_object02.gif'));
+% ptImage = ind2rgb(img,map);
+% pt1.CData = ptImage;
+% pt1.ClickedCallback = @i_summarymap;
+% 
+% pt1 = uipushtool(tb1,'Separator','off');
+% pt1.Tooltip = 'Summary map, transposed';
+% [img,map] = imread(fullfile(matlabroot,...
+%             'toolbox','matlab','icons','HDF_object01.gif'));
+% ptImage = ind2rgb(img,map);
+% pt1.CData = ptImage;
+% pt1.ClickedCallback = @i_summarymapT;
+
+    function i_dotplotx(~,~)
+        try            
+            f=gui.i_dotplot(sce.X,sce.g,c,cL,MX);
+        catch ME
+            if exist('f','var') && ishandle(f)
+                close(f);
+            end
+            errordlg(ME.message);
+        end
+    end
 
     function i_summarymap(~,~)
         figure;
@@ -187,16 +170,7 @@ pt1.ClickedCallback = @i_summarymapT;
     end
 
     function i_summarymapT(~,~)
-         figure;
-%         imagesc(Z');
-%         set(gca,'YTick',1:numel(cL));
-%         set(gca,'YTickLabel',strrep(M(:,1),'_','\_'));
-%         set(gca,'XTickLabelRotation',45);
-%         set(gca,'XTick',1:length(MX));
-%         set(gca,'XTickLabel',MX);
-%         set(gca,'TickLength',[0 0])
-%         f2.Position(1)=f2.Position(1)+200;
-%         f2.Position(2)=f2.Position(2)-200;
+        figure;
         h=heatmap(MX,cL,Z.');
         h.Title = 'Marker Gene Heatmap';
         h.YLabel = 'Group';
