@@ -7,8 +7,15 @@ function [X,genelist,celllist,ftdone]=sc_read10xdir(selpath,coln)
 if nargin<2, coln=2; end
 if nargin<1, selpath = uigetdir; end
 fprintf('Processing %s...\n',selpath);
-[~,aff]=i_guessmtxfile(selpath);
-% aff
+[out,aff]=i_guessmtxfile(selpath);
+if isempty(out)
+    selpath=fullfile(selpath,'filtered_feature_bc_matrix');    
+    [out,aff]=i_guessmtxfile(selpath);
+    if ~isempty(out)
+        disp('Found folder ''filtered_feature_bc_matrix''');
+    end
+end
+
 if ~isempty(aff)
     mmfname=fullfile(selpath,sprintf('%smatrix.mtx',aff));
     zmmfname=fullfile(selpath,sprintf('%smatrix.mtx.gz',aff));
