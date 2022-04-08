@@ -187,7 +187,7 @@ pkg.i_addbutton2fig(tb,'off',@i_RescaleExpr,'IMG00074.GIF','Rescale expression l
 %                 pt.Tooltip = 'Rescale expression level [log2(x+1)]';
 %                 pt.ClickedCallback = @i_RescaleExpr;
 
-pkg.i_addbutton2fig(tb,'off',@i_ResetExpr,'plotpicker-geobubble2','Reset expression level');
+pkg.i_addbutton2fig(tb,'off',@i_ResetExpr,'plotpicker-geobubble2.gif','Reset expression level');
 
 %                 pt = uipushtool(tb, 'Separator', 'off');
 %                 [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
