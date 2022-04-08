@@ -44,3 +44,4 @@ scgeatoolstandaloneApplication/
 +run/external/R_SeuratReadRds/inputrdsfile.txt
 +run/external/R_SeuratReadRds/X.csv
 +run/external/R_SeuratReadRds/g.csv
++run/external/R_SeuratSctransform/input.mat
