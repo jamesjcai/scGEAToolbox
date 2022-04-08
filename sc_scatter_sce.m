@@ -246,8 +246,12 @@ end
             barhandle=defaultToolbar;
         end
         pt = uipushtool(barhandle, 'Separator', septag);
-        [img, map] = imread(fullfile(mfolder, 'resources', imgFil));
-        ptImage = ind2rgb(img, map);
+        try   
+            [img, map] = imread(fullfile(mfolder, 'resources', imgFil));
+            ptImage = ind2rgb(img, map);            
+        catch
+            ptImage = rand(16,16,3);
+        end
         pt.CData = ptImage;
         pt.Tooltip = tooltipTxt;
         pt.ClickedCallback = callbackFnc;
