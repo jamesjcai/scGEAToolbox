@@ -25,6 +25,9 @@ function obj = qcfilterwhitelist(obj,libszcutoff,mtratio,...
         for k=1:length(keptidxv)
             Xresv = Xresv(:,keptidxv{k});
         end
+        [~,idxx]=ismember(whitelist,obj.g);
+        obj.X(idxx,:)=[];
+        obj.g(idxx)=[];
         obj.X=[obj.X; Xresv];
         obj.g=[obj.g; whitelist(:)];
     end    
