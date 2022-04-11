@@ -21,21 +21,24 @@ addRequired(p, 'sce', @(x) isa(x, 'SingleCellExperiment'));
 addOptional(p, 'c', sce.c, checkCS);
 addOptional(p, 's', [], checkCS);
 addOptional(p, 'methodid', 1, @isnumeric);
+addOptional(p, 'callinghandle', []);
 parse(p, sce, varargin{:});
-cin = p.Results.c;
-sin = p.Results.s;
+callinghandle = p.Results.callinghandle;
+
+c_in = p.Results.c;
+s_in = p.Results.s;
 methodid = p.Results.methodid;
 ax = [];
 bx = [];
 tmpcelltypev=cell(sce.NumCells,1);
 
-if isempty(cin)
+if isempty(c_in)
     sce.c = ones(size(sce.X, 2), 1);
 else
-    sce.c = cin;
+    sce.c = c_in;
 end
-if ~isempty(sin)
-    sce.s = sin;
+if ~isempty(s_in)
+    sce.s = s_in;
 end
 
 [c, cL] = grp2idx(sce.c);
@@ -284,16 +287,22 @@ end
             switch lower(ButtonName)
                 case 'yes'
                     % tf=callback_SaveX(hObject,a);
-                    labels = {'Save SCE to variable named:'}; 
-                    vars = {'sce'};
-                    sce = guidata(FigureHandle);
-                    values = {sce};
-                    [~,tf]=export2wsdlg(labels,vars,values,...
-                                 'Save Data to Workspace');
-                    if tf
+                    if ~isempty(callinghandle)
+                        guidata(callinghandle,sce);
                         delete(hObject);
+                        helpdlg('SCE updated.');
                     else
-                        return;
+                        labels = {'Save SCE to variable named:'}; 
+                        vars = {'sce'};
+                        sce = guidata(FigureHandle);
+                        values = {sce};
+                        [~,tf]=export2wsdlg(labels,vars,values,...
+                                     'Save Data to Workspace');
+                        if tf
+                            delete(hObject);
+                        else
+                            return;
+                        end
                     end
                 case 'cancel'
                     return;

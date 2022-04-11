@@ -1,6 +1,7 @@
-function i_setautumncolor(c,cmapname)
+function [a]=i_setautumncolor(c,cmapname)
 
 if nargin<2, cmapname='autumn'; end
+    colormap default
     a = colormap(cmapname);
     a(1, :) = [.8 .8 .8];
     if numel(unique(c)) == 1
