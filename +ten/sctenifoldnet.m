@@ -52,12 +52,13 @@ import ten.*
         error('Need sc_pcnet.m in scGEAToolbox https://github.com/jamesjcai/scGEAToolbox');
     end    
     
-    
-    X0=sc_norm(X0,"type","libsize");
-    X1=sc_norm(X1,"type","libsize");
+    validg=~ismember(upper(genelist),upper(pkg.i_get_ribosomalgenes));
+    genelist=genelist(validg);
+    X0=sc_norm(X0(validg,:),"type","libsize");
+    X1=sc_norm(X1(validg,:),"type","libsize");
     %X0=log(X0+1);
     %X1=log(X1+1);
-    
+        
     %X0=sc_transform(X0);
     %X1=sc_transform(X1);
     
