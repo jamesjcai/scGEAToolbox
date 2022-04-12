@@ -1,4 +1,4 @@
-function i_exporttable(T,needwait,TName)
+function [answer]=i_exporttable(T,needwait,TName)
 if nargin<3, TName='T'; end
 if nargin<2, needwait=false; end
     
@@ -61,7 +61,7 @@ switch answer
        filename=fullfile(path,file);
        %fw=gui.gui_waitbar;
        save(filename,'T');
-       %gui.gui_waitbar(fw);        
+       %gui.gui_waitbar(fw);
     otherwise
         return;
 end

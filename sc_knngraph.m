@@ -42,16 +42,19 @@ end
 if plotit
     hold on
     for i = 1 : size(Graph,2)
-    for j = 1 : size(Graph,1)
-        if size(s,2)>3
-         line(s([i,Graph(j,i)],1),...
-              s([i,Graph(j,i)],2),...
-              s([i,Graph(j,i)],3),'Color','red');   
-        else
-         line(s([i,Graph(j,i)],1),...
-              s([i,Graph(j,i)],2),'Color','red');
-        end            
-    end
+        for j = 1 : size(Graph,1)
+            % if i~=Graph(j,i)
+            if A(i,Graph(j,i))>0
+            if size(s,2)>3
+             line(s([i,Graph(j,i)],1),...
+                  s([i,Graph(j,i)],2),...
+                  s([i,Graph(j,i)],3),'Color','red');   
+            else
+             line(s([i,Graph(j,i)],1),...
+                  s([i,Graph(j,i)],2),'Color','red');
+            end
+            end
+        end
     end
     hold off
 end
