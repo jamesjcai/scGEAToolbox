@@ -947,9 +947,12 @@ end
     end
 
     function DrawKNNNetwork(~,~)
+        k=gui.i_inputnumk(3);
+        if isempty(k), return; end
         fw = gui.gui_waitbar;
         set(0, 'CurrentFigure', FigureHandle);
-        sc_knngraph(sce.s,[],true);
+        figure;
+        sc_knngraph(sce.s,k,true);
         gui.gui_waitbar(fw);
     end
 
