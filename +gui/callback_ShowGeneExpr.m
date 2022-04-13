@@ -12,7 +12,7 @@ switch answer
     case 'Single'
         [gsorted]=gui.i_sortgenenames(sce);
         if isempty(gsorted), return; end
-        [indx,tf] = listdlg('PromptString',{'Select a gene or select multiple genes to display individually','',''},...
+        [indx,tf] = listdlg('PromptString',{'Select a gene:','',''},...
             'SelectionMode','single','ListString',gsorted);
         if tf==1
             for k=1:length(indx)

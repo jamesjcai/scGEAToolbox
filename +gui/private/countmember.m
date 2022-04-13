@@ -54,3 +54,4 @@ else
     % re-order according to A, and reshape
     COUNT = reshape(N(posJ),size(A)) ;
 end
+end
