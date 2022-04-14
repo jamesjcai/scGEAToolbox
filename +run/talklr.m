@@ -62,7 +62,7 @@ function [M,OUT]=ii_talkr(X,g,c)
             X=sc_norm(X);
             X=log(X+1);
             X=sc_transform(X,'type','kNNSmoothing');
-            [Xm]=i_grpmean(X,cx);
+            [Xm]=pkg.i_grpmean(X,cx);
             cutoff=1.0;
         case 2
             Xm=zeros(numel(g),n);
