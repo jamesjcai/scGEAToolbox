@@ -1,6 +1,8 @@
-function callback_CalculateCellScores(src,~)
-    FigureHandle=src.Parent.Parent;
-    sce=guidata(FigureHandle);
+function callback_CalculateCellScores(src,~,sce)
+    if nargin<3
+        FigureHandle=src.Parent.Parent;
+        sce=guidata(FigureHandle);
+    end
 
     actiontype=questdlg('Select a predefined score or define a new score?',...
         'Select/Define Score','Select Predefined Score',...
@@ -33,7 +35,7 @@ switch actiontype
         a=sprintf('%s+',posg);
         a=a(1:min([length(a),50]));
         ttxt=sprintf('%s\n%s',ttxt,a);
-        
+        posg
         cs=sc_cellscore(sce.X,sce.g,posg);
         gui.gui_waitbar(fw);
     otherwise

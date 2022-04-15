@@ -62,4 +62,5 @@ switch type
 end
 %}
 [score]=sc_cellscore(X,genelist,tgsPos,tgsNeg);
+tgsPos
 end
