@@ -62,5 +62,13 @@ switch type
 end
 %}
 [score]=sc_cellscore(X,genelist,tgsPos,tgsNeg);
-tgsPos
+
+
+posg=sort(tgsPos);
+fprintf('\n=============\n%s\n-------------\n','Marker Genes');
+for k=1:length(posg)
+    fprintf('%s\n',posg(k));
+end
+fprintf('=============\n');
+
 end

@@ -1,9 +1,10 @@
-function callback_CellTypeMarkerScores(src,~)
-    FigureHandle=src.Parent.Parent;
-    sce=guidata(FigureHandle);
+function [cs,ctselected]=callback_CellTypeMarkerScores(src,~,sce)
+    if nargin<3
+        FigureHandle=src.Parent.Parent;
+        sce=guidata(FigureHandle);
+    end
 
-
-    species=questdlg('Which species?','Select Species','Mouse','Human','Mouse');
+species=questdlg('Which species?','Select Species','Human','Mouse','Mouse');
 switch lower(species)
     case 'human'
         stag='hs';
@@ -37,7 +38,8 @@ listitems=sort(ctlist);
      'SelectionMode','single','ListString',listitems,'ListSize',[220,300]);
 if ~tf==1, return; end
 ctselected=listitems(indx);
-idx=find(matches(ctlist,ctselected));
+% idx=find(matches(ctlist,ctselected));
+idx=matches(ctlist,ctselected);
 ctmarkers=Tm.Var2{idx};
 
 posg=string(strsplit(ctmarkers,','));
@@ -50,8 +52,11 @@ for k=1:length(posg)
     fprintf('%s\n',posg(k));
 end
 fprintf('=============\n');
-figure;
-gui.i_stemscatter(sce.s,cs);
-zlabel('Score Value')
-title(ctselected)
+
+    if nargout==0
+        figure;
+        gui.i_stemscatter(sce.s,cs);
+        zlabel('Score Value')
+        title(ctselected)
+    end
 end
