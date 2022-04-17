@@ -1,4 +1,4 @@
-function [T,xyz1]=sc_splinefit(X,genelist,sortit,removenan)
+function [T,xyz1]=sc_splinefit(X,genelist,sortit,plotit,removenan)
 %SC_SPLINEFIT identify genes with a profile deviated from normal
 %
 % USAGE:
@@ -11,11 +11,12 @@ function [T,xyz1]=sc_splinefit(X,genelist,sortit,removenan)
 %     genelist=strcat("gene_",genelist);
 % end
 
-if nargin<4, removenan=true; end
+if nargin<5, removenan=true; end
+if nargin<4, plotit=false; end
 if nargin<3, sortit=true; end
 if nargin<2, genelist=string(1:size(X,1)); end
 
-[lgu,dropr,lgcv,genes]=sc_genestat(X,genelist,sortit,removenan);
+[lgu,dropr,lgcv,genes,Xout]=sc_genestat(X,genelist,sortit,removenan);
 
 [~,i]=max(lgcv);
 xyz=[lgu dropr lgcv];
@@ -28,7 +29,8 @@ lgcv=lgcv(j);
 
 %xyz=[lgu dropr lgcv]';
 
-s = cumsum([0;sqrt(diff(lgu(:)).^2 + diff(dropr(:)).^2 + diff(lgcv(:)).^2)]);
+s = cumsum([0;sqrt(diff(lgu(:)).^2 + diff(dropr(:)).^2 ...
+    + diff(lgcv(:)).^2)]);
 pp1 = splinefit(s,xyz,15,0.75);
 xyz1 = ppval(pp1,s);
 
@@ -51,5 +53,21 @@ if sortit, T=sortrows(T,'d','descend'); end
 
 if length(genes)~=length(genelist)
     warning('Output GENES are less than input GENES (some GENES are removed).');
+end
+
+if plotit
+    figure;    
+    scatter3(xyz(1,:),xyz(2,:),xyz(3,:));  % 'filled','MarkerFaceAlpha',.5);
+    hold on
+    plot3(xyz1(1,:),xyz1(2,:),xyz1(3,:),'-','linewidth',4);
+    xlabel('Mean, log');
+    ylabel('Dropout rate (% of zeros)');
+    zlabel('CV, log');
+    if ~isempty(genes)
+        dt=datacursormode;
+        dt.UpdateFcn = {@i_myupdatefcn3,genes,Xout};
+    end
+    hold off
+end
 end
 

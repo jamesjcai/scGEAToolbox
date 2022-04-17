@@ -9,7 +9,9 @@ idx = event_obj.DataIndex;
 txt = {g(idx)};
 persistent myupdatefcn3fig
 if isempty(myupdatefcn3fig) || ~isvalid(myupdatefcn3fig)
-    myupdatefcn3fig=figure('Position',[400 400 560 320]);
+    myupdatefcn3fig=figure;
+    p=myupdatefcn3fig.Position;
+    myupdatefcn3fig.Position=[p(1:3) 320];
     % myupdatefcn3fig.ToolBar='none';
     % myupdatefcn3fig.MenuBar='none';
 end

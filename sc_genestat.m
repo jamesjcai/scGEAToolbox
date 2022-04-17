@@ -1,4 +1,4 @@
-function [lgu,dropr,lgcv,genes]=sc_genestat(X,genelist,sortit,removeinf)
+function [lgu,dropr,lgcv,genes,X]=sc_genestat(X,genelist,sortit,removeinf)
 
 if nargin<4, removeinf=true; end
 if nargin<3, sortit=true; end
@@ -22,7 +22,10 @@ if removeinf
     lgu(i)=[];
     lgcv(i)=[];
     dropr(i)=[];
-    if ~isempty(genelist), genes(i)=[]; end
+    if ~isempty(genelist) 
+        genes(i)=[];
+        X(i,:)=[];
+    end
     if length(genes)~=length(genelist)
         warning('Output GENES are less than input GENES (some GENES are removed).');
     end
