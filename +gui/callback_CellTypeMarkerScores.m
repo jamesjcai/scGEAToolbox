@@ -3,7 +3,8 @@ function [cs,ctselected]=callback_CellTypeMarkerScores(src,~,sce)
         FigureHandle=src.Parent.Parent;
         sce=guidata(FigureHandle);
     end
-
+cs=[];
+ctselected=[];
 species=questdlg('Which species?','Select Species','Human','Mouse','Mouse');
 switch lower(species)
     case 'human'
