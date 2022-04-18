@@ -76,7 +76,7 @@ function [c]=i_pickvariable
 %     if any(v)
         %valididx=ismember(b(4,:),'double');
         %a=a(valididx);
-        [indx,tf]=listdlg('PromptString',{'Select network variable:'},...
+        [indx,tf]=listdlg('PromptString',{'Select variable:'},...
             'liststring',b(1,:),'SelectionMode','single');
         if tf==1
             c = evalin('base',a(indx).name);
