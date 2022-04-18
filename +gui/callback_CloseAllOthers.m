@@ -7,7 +7,10 @@ if y && length(all_figs)>1
    if ~strcmp(answer,'Yes'), return; end
    for k=1:length(all_figs)
        if k~=idx
-           close(all_figs(k));
+           try
+            close(all_figs(k));
+           catch
+           end
        end
    end
 end
