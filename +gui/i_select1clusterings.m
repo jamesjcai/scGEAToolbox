@@ -26,14 +26,15 @@ end
     end
 
 listitems(1)=[];
-if isempty(listitems), return; end
+if isempty(listitems)
+    helpdlg('No clustering variable is available.','');
+    return;
+end
 
 [indx2,tf2] = listdlg('PromptString',...
     {'Select clustering variable:'},...
      'SelectionMode','single','ListString',listitems);
 if tf2==1
-
-
     clable=listitems{indx2};
     switch clable
         case 'Customized C...'
@@ -42,7 +43,6 @@ if tf2==1
             thisc=sce.struct_cell_clusterings.(clable);
     end
 end
-
 
     function [c]=i_pickvariable
         c=[];
