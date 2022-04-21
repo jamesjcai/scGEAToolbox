@@ -1,6 +1,12 @@
-function callback_Brush4MarkersLASSO(src,~)
-    FigureHandle=src.Parent.Parent;
-    sce=guidata(FigureHandle);
+function callback_Brush4MarkersLASSO(src,~,sce)
+        FigureHandle=src.Parent.Parent;
+
+    if nargin<3
+        sce=guidata(FigureHandle);
+    end
+
+%    FigureHandle=src.Parent.Parent;
+%    sce=guidata(FigureHandle);
 %   assert(isequal(FigureHandle.Children,...
 %         FigureHandle.findobj('type','Axes')))
     
@@ -9,7 +15,9 @@ function callback_Brush4MarkersLASSO(src,~)
     [ax,bx]=view(axesh);    
     assert(isequal(axesh.findobj('type','Scatter'),...
         FigureHandle.findobj('type','Scatter')))    
-    h=axesh.Children(1);
+    %axesh.Children(1)
+    %isequal(axesh.findobj('type','Scatter'),axesh.Children(2))
+    h=axesh.findobj('type','Scatter');
     ptsSelected = logical(h.BrushData.');    
     
     if ~any(ptsSelected)
