@@ -1,9 +1,10 @@
-function callback_MarkerGeneHeatmap(src,~)
-
+function callback_MarkerGeneHeatmap(src,~,sce)
+    if nargin<3
 
 
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
+    end
 
     [thisc,~]=gui.i_select1class(sce);
     if isempty(thisc)
