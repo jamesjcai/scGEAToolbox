@@ -25,7 +25,7 @@ switch answer
     case 'Paste'
         n=length(gsorted);
         if isempty(predefinedlist)
-            tg=gui.i_inputgenelist(gsorted(randperm(n,20)));
+            tg=gui.i_inputgenelist(gsorted(randperm(n,min([20 length(gsorted)]))));
         else
             tg=gui.i_inputgenelist(predefinedlist);
         end
