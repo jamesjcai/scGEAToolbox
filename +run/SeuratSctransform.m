@@ -15,6 +15,7 @@ if ~isdebug
 	if exist('./input.mat','file'), delete('./input.mat'); end
 	if exist('./output.mat','file'), delete('./output.mat'); end
     if exist('./input.txt','file'), delete('./input.txt'); end
+    if exist('./output.txt','file'), delete('./output.txt'); end    
 end
 
 if ~iscellstr(genelist) && isstring(genelist)
@@ -34,11 +35,14 @@ pkg.RunRcode('script.R');
 
 if exist('output.mat','file')
     load output.mat X2
+elseif exist('output.txt','file')
+    X2=readmatrix('output.txt');
 end
 if ~isdebug
 	if exist('./input.mat','file'), delete('./input.mat'); end
 	if exist('./output.mat','file'), delete('./output.mat'); end
     if exist('./input.txt','file'), delete('./input.txt'); end
+    if exist('./output.txt','file'), delete('./output.txt'); end
 end
 cd(oldpth);
 end
