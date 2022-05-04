@@ -1,4 +1,5 @@
-function [glist]=i_inputgenelist(glist0)
+function [glist]=i_inputgenelist(glist0,allowspace)
+if nargin<2, allowspace=false; end
     if nargin<1
         glist0=["Gene1";"Gene2";"Gene3";...
             "Gene4";"Gene5";"Gene6";...
@@ -6,8 +7,8 @@ function [glist]=i_inputgenelist(glist0)
     end
     s=sprintf('%s\n',glist0);
     s=s(1:end-1);
-    prompt = {'Paste Gene List:'};
-    dlgtitle = 'Input Genes';    
+    prompt = {'Paste List:'};
+    dlgtitle = 'Input List';
 [answer] = inputdlg(prompt,dlgtitle,[20 40],{s});
 glist=[];
 if isempty(answer), return; end
@@ -17,8 +18,12 @@ try
     glist=strrep(glist,'"','');
     glist=strip(glist,'both','"');
     glist=strtrim(glist);
-
-    spset={' ',',',':',';'};
+    
+    if allowspace
+        spset={',',':',';'};
+    else
+        spset={' ',',',':',';'};
+    end
     i=contains(glist,spset);
     if any(i)
         g1=glist(~i);

@@ -1,5 +1,5 @@
 function callback_CompareGeneBtwCls(src,~)
-    answer = questdlg('Violin plot to show gene expression or other measurements among different cell groups?','');
+    answer = questdlg('Generate violinplots to show differences between cell groups?','');
     if ~strcmp(answer,'Yes'), return; end    
 
     FigureHandle=src.Parent.Parent;
@@ -23,15 +23,33 @@ switch a{indx1}
         y=sum(sce.X);
         ttxt='Library Size';
     case 'Gene Expression'
-        gsorted=sort(sce.g);
-        [indx,tf] = listdlg('PromptString',{'Select a gene',...
-                    '',''},'SelectionMode','single',...
-                    'ListString',gsorted);
-        if tf~=1, return; end
-        idx=sce.g==gsorted(indx);
+%         gsorted=sort(sce.g);
+%         [indx,tf] = listdlg('PromptString',{'Select a gene',...
+%                     '',''},'SelectionMode','single',...
+%                     'ListString',gsorted);
+%         if tf~=1, return; end
+
+        [glist]=gui.i_selectngenes(sce);
+        if isempty(glist)
+            helpdlg('No gene selected.','');
+            return;
+        end
         [Xt]=gui.i_transformx(sce.X);
-        y=full(Xt(idx,:));
-        ttxt=sce.g(idx);
+        
+        for k=1:length(glist)
+            [~,idx]=ismember(glist(k),sce.g);
+            y=full(Xt(idx,:));
+            ttxt=sce.g(idx);
+            f = figure('visible','off');
+            pkg.i_violinplot(y,thisc);
+            title(strrep(ttxt,'_','\_'));
+            ylabel(a{indx1});        
+            P = get(f,'Position');
+            set(f,'Position',[P(1)-20*k P(2)-20*k P(3) P(4)]);
+            set(f,'visible','on');
+            drawnow;
+        end
+        return;
     case 'Predefined Cell Score'
         [~,T]=pkg.e_cellscores(sce.X,sce.g,0);
         listitems=T.ScoreType;

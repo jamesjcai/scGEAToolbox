@@ -71,7 +71,16 @@ hFig.Position(3)=hFig.Position(3)*0.7;
 
 tb = uitoolbar('Parent', hFig);
 pkg.i_addbutton2fig(tb,'on',{@gui.i_pickcolormap,c},'plotpicker-compass.gif','Pick new color map...');
+pkg.i_addbutton2fig(tb,'on',@i_renamecat,'xplotpicker-compass.gif','Rename groups...');
 pkg.i_addbutton2fig(tb,'on',@i_resetcolor,'plotpicker-geobubble2.gif','Reset color map');
+
+    function i_renamecat(~,~)
+        tg=gui.i_inputgenelist(string(cL),true);
+        if length(tg)==length(cL)
+            set(gca,'XTick',0:length(cL));
+            set(gca,'XTickLabel',[{''};tg(:);{''}])
+        end
+    end
 
     function i_resetcolor(~,~)
         colormap(flipud(bone));
@@ -80,4 +89,5 @@ pkg.i_addbutton2fig(tb,'on',@i_resetcolor,'plotpicker-geobubble2.gif','Reset col
             xlim([0.5 length(cL)+0.5]);
         end
     end
+
 end
