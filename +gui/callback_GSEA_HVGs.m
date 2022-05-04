@@ -6,20 +6,18 @@ function callback_GSEA_HVGs(src,~)
     sce=guidata(FigureHandle);
   
     answer = questdlg('Which method?',...
-        'Select Method', ...
-        'Splinefit Method',...
+        'Select Method', ...        
         'Brennecke et al. (2013)',...
-        'Splinefit Method');
+        'Splinefit Method',...
+        'Brennecke et al. (2013)');
 
     switch answer
         case 'Brennecke et al. (2013)'
-
             t=sc_hvg(sce.X,sce.g);
-            
             if ~(ismcc || isdeployed)
                 msgfig1=export2wsdlg({'Save HVG table to variable named:'},{'T'},{t});
                 uiwait(msgfig1)
-            else    
+            else
                 gui.i_exporttable(t,true,'T');
             end
         

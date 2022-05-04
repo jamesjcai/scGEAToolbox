@@ -168,7 +168,7 @@ i_addmenu(m_exp,1,@callback_DetectCellularCrosstalk,'Ligand-Receptor Mediated In
 i_addmenu(m_exp,0,@callback_SelectCellsByMarker,'Extract Cells by Marker(+/-) Expression...');
 i_addmenu(m_exp,0,@MergeSubCellTypes,'Merge Subclusters of Same Cell Type');
 i_addmenu(m_exp,0,@AnnotateSubGroup,'Annotate Cell Subgroups...');
-
+i_addmenu(m_exp,0,@WorkonSelectedGenes,'Work on Selected Genes...');
 
 i_addmenu(m_exp,0,@DrawKNNNetwork,'Plot Cell kNN Network...');
 i_addmenu(m_exp,0,@DrawTrajectory,'Plot Cell Trajectory...');
@@ -363,6 +363,33 @@ end
                 guidata(FigureHandle,sce);
             end
         end
+    end
+
+    function WorkonSelectedGenes(src,~)
+        answer=questdlg('This function helps you select whitelist genes and HVGs to work on. Continue?');
+        if ~strcmp(answer,'Yes'), return; end
+        [glist]=gui.i_selectngenes(sce);
+        answer=questdlg('Select Top 2,000 HVGs?','');
+        switch answer
+            case 'Yes'
+                T=sc_hvg(sce.X,sce.g,true);
+                glist=[glist; T.genes(1:min([2000, sce.NumGenes]))];                
+            otherwise
+        end
+        glist=unique(glist);
+        if ~isempty(glist)
+            [y,idx]=ismember(glist,sce.g);
+            if ~all(y), error('Runtime error.'); end
+            answer2=questdlg(sprintf('Working on %d selected genes (all other genes will be excluded)?', ...
+                length(idx)),'');
+            if strcmp(answer2,'Yes')
+                sce.g=sce.g(idx);
+                sce.X=sce.X(idx,:);
+                RefreshAll(src, 1, true);
+            else
+                helpdlg('Action canceled.');
+            end
+        end               
     end
 
     function SelectCellsByQC(src, ~)
