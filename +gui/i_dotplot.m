@@ -48,7 +48,15 @@ scatter(x,y,500*sz,vl,'filled');
 hold on
 scatter(x,y,500*sz,'k');
 
-xlim([0.5 length(cL)+0.5]);
+af{1}=scatter(max(x)+1,1,500*1,'k');
+af{2}=text(max(x)+1.4,1,'100%','BackgroundColor','none');
+af{3}=scatter(max(x)+1,1.5,500*0.5,'k');
+af{4}=text(max(x)+1.4,1.5,'50%','BackgroundColor','none');
+af{5}=scatter(max(x)+1,2,500*0.1,'k');
+af{6}=text(max(x)+1.4,2,'10%','BackgroundColor','none');
+
+
+xlim([0.5 length(cL)+2.5]);
 ylim([0.5 length(txgene)-0.5]);
 colorbar
 set(gca,'YTick',0:length(tgene))
@@ -67,5 +75,9 @@ pkg.i_addbutton2fig(tb,'on',@i_resetcolor,'plotpicker-geobubble2.gif','Reset col
 
     function i_resetcolor(~,~)
         colormap(flipud(bone));
+        for k=1:6
+            delete(af{k});
+            xlim([0.5 length(cL)+0.5]);
+        end
     end
 end

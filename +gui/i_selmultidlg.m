@@ -33,7 +33,7 @@ c = uicontrol('style','pushbutton','Position',[220 125 100 30],...
     'String','Done','Callback', {@doneButtonPushed,genelist});
 
 
-h_list = uicontrol('style','list','max',length(genelist),...
+h_list1 = uicontrol('style','list','max',length(genelist),...
    'min',1,'Position',[20 20 170 360],...
    'string',inlist);
 
@@ -44,27 +44,27 @@ set(f,'Visible','on')
 drawnow();
 uiwait();  % add this to the end
 
-    function plotButtonPushed(src,event,genelist)
-        if ~isempty(h_list.String)
+    function plotButtonPushed(~,~,genelist)
+        if ~isempty(h_list1.String)
         h_list2.String=...
-            unique([h_list2.String; h_list.String(h_list.Value)]);        
-        h_list.String=setxor(genelist,h_list2.String,'stable');
-        
-            set(h_list,'Value',1);
+            unique([h_list2.String; ...
+                h_list1.String(h_list1.Value)],'stable');
+            h_list1.String=setxor(genelist,h_list2.String,'stable');        
+            set(h_list1,'Value',1);
         end
     end
 
-    function plotButtonPushed2(src,event,genelist)
+    function plotButtonPushed2(~,~,genelist)
         % https://www.mathworks.com/matlabcentral/answers/92064-why-do-i-receive-a-warning-when-i-repopulate-my-listbox-uicontrol-in-matlab
         % set(h_list2,'Value',1);
         if ~isempty(h_list2.String)
             h_list2.String(h_list2.Value)=[];        
             set(h_list2,'Value',1);
         end        
-        h_list.String=setxor(genelist,h_list2.String,'stable');
+        h_list1.String=setxor(genelist,h_list2.String,'stable');
     end
 
-    function doneButtonPushed(src,event,genelist)
+    function doneButtonPushed(~,~,genelist)
         [~,idx]=ismember(h_list2.String,genelist);
         uiresume();
         closereq();
