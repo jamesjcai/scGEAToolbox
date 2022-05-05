@@ -23,7 +23,17 @@ function callback_TrajectoryAnalysis(src,~)
     else
         sce.list_cell_attributes=[sce.list_cell_attributes,...
             {'monocle_pseudotime',t_mono}];
-    end    
+    end
+
+    [y,idx]=ismember({'monocle_embedding'},...
+        sce.list_cell_attributes(1:2:end));
+    if y   
+        sce.list_cell_attributes{idx+1}=s_mono;
+    else
+        sce.list_cell_attributes=[sce.list_cell_attributes,...
+            {'monocle_embedding',s_mono}];
+    end
+    
     guidata(FigureHandle,sce);
     
     if ~(ismcc || isdeployed)    

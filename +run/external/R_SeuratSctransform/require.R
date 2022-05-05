@@ -7,6 +7,6 @@ if (!requireNamespace("Matrix", quietly = TRUE)){
 if (!requireNamespace("Seurat", quietly = TRUE)){
     install.packages("Seurat", repo="http://cran.rstudio.com/")
 }
-if (!requireNamespace("R.matlab", quietly = TRUE)){
-    install.packages("R.matlab", repo="http://cran.rstudio.com/")
+if (!requireNamespace("rhdf5", quietly = TRUE)){
+    install.packages("rhdf5", repo="http://cran.rstudio.com/")
 }

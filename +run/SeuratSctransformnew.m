@@ -1,11 +1,17 @@
-function [X]=SeuratSctransform(X,genelist)
+function [X]=SeuratSctransformnew(X,genelist)
 
 isdebug=false;
 oldpth=pwd();
 [isok,msg]=commoncheck_R('R_SeuratSctransform');
 if ~isok, error(msg); return; end
-tmpfilelist={'input.mat','output.h5','input.txt','output.txt','g.txt'};
+tmpfilelist={'input.mat','output.mat', ...
+                      'input.txt','output.txt','g.txt'};
+
+pkg.i_deletefiles('output.mat.tmp');
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+% if ~iscellstr(genelist) && isstring(genelist)
+%     genelist=cellstr(genelist);
+% end
 lastwarn('')
 save('input.mat','X','-v7.3');
 writematrix(genelist,'g.txt');
