@@ -6,18 +6,11 @@ oldpth=pwd();
 
 if ~isok, error(msg); X2=[]; return; end
 
-if exist('output.mat.tmp','file'), delete('output.mat.tmp'); end
-%if exist('tsneoutput.csv','file'), delete('tsneoutput.csv'); end
-%if exist('umapoutput.csv','file'), delete('umapoutput.csv'); end
-%if exist('activeidentoutput.csv','file'), delete('activeidentoutput.csv'); end
-%sc_writefile('input.txt',sce.X,sce.g);
+pkg.i_deletefiles('output.mat.tmp');
 if ~isdebug
-	if exist('./input.mat','file'), delete('./input.mat'); end
-	if exist('./output.mat','file'), delete('./output.mat'); end
-    if exist('./input.txt','file'), delete('./input.txt'); end
-    if exist('./output.txt','file'), delete('./output.txt'); end    
+    pkg.i_deletefiles('input.mat','output.mat', ...
+                      'input.txt','output.txt');
 end
-
 if ~iscellstr(genelist) && isstring(genelist)
     genelist=cellstr(genelist);
 end
@@ -39,10 +32,8 @@ elseif exist('output.txt','file')
     X2=readmatrix('output.txt');
 end
 if ~isdebug
-	if exist('./input.mat','file'), delete('./input.mat'); end
-	if exist('./output.mat','file'), delete('./output.mat'); end
-    if exist('./input.txt','file'), delete('./input.txt'); end
-    if exist('./output.txt','file'), delete('./output.txt'); end
+    pkg.i_deletefiles('input.mat','output.mat', ...
+                      'input.txt','output.txt');
 end
 cd(oldpth);
 end
