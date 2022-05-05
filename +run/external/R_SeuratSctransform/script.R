@@ -2,8 +2,11 @@ suppressMessages(library(Seurat))
 suppressMessages(library(Matrix))
 suppressMessages(library(R.matlab))
 suppressMessages(library(sctransform))
+library(rhdf5)
+
+
 # setwd("U:\\GitHub\\scGEAToolbox\\+run\\external\\R_SeuratSctransform")
-       
+setwd("C:\\Users\\jcai\\Documents\\GitHub\\scGEAToolbox\\+run\\external\\R_SeuratSctransform")       
 if (file.exists("input.mat")){
     mat<-readMat("input.mat")
     pbmc.counts<-Matrix(mat$X)
@@ -36,9 +39,11 @@ pbmc <- SCTransform(pbmc)
 
 X2<-as.matrix(pbmc@assays$SCT@counts)
 
+library(rhdf5)
 
 tryCatch({
-writeMat("output.mat",X2=X2)
+# writeMat("output.mat",X2=X2)
+h5write(as.matrix(X2),"output.h5","X2")
 },
 error = function(err){
 write.table(X2,file="output.txt",row.names=FALSE,col.names = FALSE) # drops the rownames
