@@ -49,6 +49,8 @@ else
 end
 % 'variablenames',{'Genes','Log10_Mean','Dropout_Rate','Log10_CV','Deviation_3DFeature'});
 
+T.d(T.dropr>(1-0.05))=0;      % ignore genes with dropout rate > 0.95
+disp('NOTE: Genes with dropout rate > 0.95 are excluded.');
 if sortit, T=sortrows(T,'d','descend'); end
 
 if length(genes)~=length(genelist)

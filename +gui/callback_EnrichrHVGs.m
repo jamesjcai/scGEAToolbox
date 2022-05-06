@@ -1,16 +1,13 @@
 function callback_EnrichrHVGs(src,~)
-    answer = questdlg('Identify HVGs and then perform function enrichment analysis?');
+    answer = questdlg('Identify HVGs and perform function enrichment analysis?');
     if ~strcmp(answer,'Yes'), return; end 
     
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
   
-    answer = questdlg('Which method?',...
-        'Select Method', ...        
-        'Brennecke et al. (2013)',...
-        'Splinefit Method',...
+    answer = questdlg('Which method?','Select Method', ...        
+        'Brennecke et al. (2013)','Splinefit Method',...
         'Brennecke et al. (2013)');
-
     switch answer
         case 'Brennecke et al. (2013)'
             fw = gui.gui_waitbar;
@@ -25,10 +22,10 @@ function callback_EnrichrHVGs(src,~)
             end
         
             
-            answer=pkg.timeoutdlg(@(x){questdlg('Which analysis?','', ...
-                'Enrichr','GOrilla','Enrichr+GOrilla','Enrichr+GOrilla')},15);
-            if isempty(answer), return; end
-            switch answer
+            answer1=pkg.timeoutdlg(@(x){questdlg('Which functional enrichment analysis do you want to use?','Analysis Method', ...
+                'Enrichr','GOrilla','Enrichr+GOrilla','Enrichr')},15);
+            if isempty(answer1), return; end
+            switch answer1
                 case 'Enrichr'
                     run.Enrichr(t.genes,500);
                 case 'GOrilla'
@@ -50,8 +47,7 @@ function callback_EnrichrHVGs(src,~)
 %                 % uiwait(msgfig2)
 %             else    
 %                 gui.i_exporttable(tr,false,'Tr');
-%             end
-            
+%             end            
 %            answer=pkg.timeoutdlg(@(x){questdlg('GSEA term network analysis?')},15);
 %            if strcmp(answer,'No')||strcmp(answer,'Cancel')
 %                return;
@@ -60,6 +56,7 @@ function callback_EnrichrHVGs(src,~)
 %            pkg.e_fgseanet(tr);
 %            gui.gui_waitbar(fw);
 %            uiwait(helpdlg('Done!',''));
+
         case 'Splinefit Method'
             fw = gui.gui_waitbar;
             gui.sc_scatter3genes(sce.X,sce.g);

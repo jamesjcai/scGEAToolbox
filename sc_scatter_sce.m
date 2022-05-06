@@ -171,8 +171,8 @@ i_addmenu(m_exp,0,@MergeSubCellTypes,'Merge Subclusters of Same Cell Type');
 
 i_addmenu(m_exp,0,@AnnotateSubGroup,'Annotate Cell Subgroups...');
 
-i_addmenu(m_exp,1,@WorkonSelectedCells,'Randomly Select 50% Cells to Work on...');
-i_addmenu(m_exp,0,@WorkonSelectedGenes,'Selected HVGs to Work on...');
+i_addmenu(m_exp,1,@WorkonSelectedGenes,'Select 2000 HVGs to Work on...');
+i_addmenu(m_exp,0,@WorkonSelectedCells,'Select 50% Cells to Work on...');
 
 i_addmenu(m_exp,1,@DrawKNNNetwork,'Plot Cell kNN Network...');
 i_addmenu(m_exp,0,@DrawTrajectory,'Plot Cell Trajectory...');
@@ -374,13 +374,23 @@ end
         if ~strcmp(answer,'Yes'), return; end
         k = gui.i_inputnumk(2000,10,sce.NumGenes);
         if isempty(k), return; end
+        answer = questdlg('Which method?','Select Method', ...        
+            'Brennecke et al. (2013)','Splinefit Method',...
+            'Brennecke et al. (2013)');
         fw = gui.gui_waitbar;
-        T=sc_hvg(sce.X,sce.g,true);
+        switch answer
+            case 'Brennecke et al. (2013)'            
+                T=sc_hvg(sce.X,sce.g);
+            case 'Splinefit Method'
+                T=sc_splinefit(sce.X,sce.g);
+            otherwise
+                return;
+        end
         glist=T.genes(1:min([k, sce.NumGenes]));
         % [glist]=gui.i_selectngenes(sce);
         % glist=unique(glist);
         [y,idx]=ismember(glist,sce.g);
-        if ~all(y), error('Runtime error.'); end
+        if ~all(y), errordlg('Runtime error.'); return; end
         sce.g=sce.g(idx);
         sce.X=sce.X(idx,:);
         gui.gui_waitbar(fw);
@@ -388,10 +398,10 @@ end
     end
 
     function WorkonSelectedCells(src,~)
-        answer=questdlg('This functions randomly samples 50% of cells. Continue?');
+        answer=questdlg('This function randomly samples 50% of cells. Continue?');
         if ~strcmp(answer,'Yes'), return; end
         fw=gui.gui_waitbar;
-        idx=randperm(sce.NumCells);        
+        idx=randperm(sce.NumCells);
         sce=sce.removecells(idx(1:round(length(idx)/2)));
         c=sce.c;
         gui.gui_waitbar(fw);

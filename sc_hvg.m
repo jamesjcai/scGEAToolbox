@@ -98,7 +98,8 @@ T.Properties.VariableNames(1)={'genes'};
 i=~isnan(cv2);
 T=T(i,:);
 if sortit
-    T.fitratio(T.dropr>(1-0.05))=0;
+    T.fitratio(T.dropr>(1-0.05))=0;     % ignore genes with dropout rate > 0.95
+    disp('NOTE: Genes with dropout rate > 0.95 are excluded.');
     [T,idx]=sortrows(T,'fitratio','descend');    
     if nargout>1
         Xsorted=Xori(idx,:);        
