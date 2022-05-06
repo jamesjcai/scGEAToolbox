@@ -164,10 +164,13 @@ i_addmenu(m_exp2,0,@callback_scTenifoldNet1,'scTenifoldNet Construction 🐢🐢
 i_addmenu(m_exp2,0,@callback_scTenifoldNet2,'scTenifoldNet Comparison 🐢🐢🐢 ...');
 i_addmenu(m_exp2,1,@callback_scTenifoldKnk1,'scTenifoldKnk (Virtual KO) Single Gene 🐢 ...');
 
-i_addmenu(m_exp,1,@callback_DetectCellularCrosstalk,'Ligand-Receptor Mediated Intercellular Crosstalk...');
+i_addmenu(m_exp,1,@callback_ShowPseudoTimeGenes,'Show Genes with Expression Varies with Pseudotime...');
+i_addmenu(m_exp,0,@callback_DetectCellularCrosstalk,'Ligand-Receptor Mediated Intercellular Crosstalk...');
 i_addmenu(m_exp,0,@callback_SelectCellsByMarker,'Extract Cells by Marker(+/-) Expression...');
 i_addmenu(m_exp,0,@MergeSubCellTypes,'Merge Subclusters of Same Cell Type');
+
 i_addmenu(m_exp,0,@AnnotateSubGroup,'Annotate Cell Subgroups...');
+
 i_addmenu(m_exp,1,@WorkonSelectedCells,'Randomly Select 50% Cells to Work on...');
 i_addmenu(m_exp,0,@WorkonSelectedGenes,'Selected HVGs to Work on...');
 

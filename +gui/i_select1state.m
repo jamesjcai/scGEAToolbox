@@ -1,6 +1,8 @@
-function [thisc,clable,listitems,newpickclable]=i_select1state(sce,nobaseline)
+function [thisc,clable,listitems,newpickclable]=i_select1state(sce,nobaseline,nocustome)
 
     if nargin<2, nobaseline=false; end
+    if nargin<3, nocustome=false; end
+
     thisc=[];
     clable='';
     newpickclable='';
@@ -16,7 +18,7 @@ function [thisc,clable,listitems,newpickclable]=i_select1state(sce,nobaseline)
     end
     listitems=listitems(~cellfun(@isempty,listitems));
     
-    if ~nobaseline
+    if ~nocustome
         a=evalin('base','whos');
         b=struct2cell(a);
         v=false(length(a),1);
