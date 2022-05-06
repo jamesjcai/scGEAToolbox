@@ -15,25 +15,11 @@ if showdata
     set(UitoolbarHandle, 'Tag', 'FigureToolBar', ...
         'HandleVisibility', 'off', 'Visible', 'on');
 
-    ptlabelclusters = uipushtool(UitoolbarHandle);
-    [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
-                             '..','resources', 'export.gif'));
+    
 
-    ptImage = ind2rgb(img, map);
-    ptlabelclusters.CData = ptImage;
-    ptlabelclusters.Tooltip = 'Export HVG gene names';
-    ptlabelclusters.ClickedCallback = @ExportGeneNames;
-
-
-    ptlabelclusters = uipushtool(UitoolbarHandle);
-    [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
-                             '..','resources', 'plotpicker-qqplot.gif'));
-   
-    ptImage = ind2rgb(img, map);
-    ptlabelclusters.CData = ptImage;
-    ptlabelclusters.Tooltip = 'Label clusters';
-    ptlabelclusters.ClickedCallback = @HighlightGenes;
-
+    pkg.i_addbutton2fig(UitoolbarHandle,'off',@HighlightGenes,'plotpicker-qqplot.gif','Highlight top HVGs');
+    pkg.i_addbutton2fig(UitoolbarHandle,'off',@ExportGeneNames,'export.gif','Export HVG gene names...');
+    pkg.i_addbutton2fig(UitoolbarHandle,'off',@EnrichrHVGs,'plotpicker-andrewsplot.gif','Enrichment analysis...');
 
     h=scatter3(hAx,x,y,z);  % 'filled','MarkerFaceAlpha',.5);
     if ~isempty(g)
@@ -71,7 +57,7 @@ zlabel('CV, log');
 
    function HighlightGenes(~,~)
         %h.MarkerIndices=idx20;
-        k=gui.i_inputnumk(50);
+        k=gui.i_inputnumk(200,10,2000);
         if isempty(k), return; end
         idx=zeros(1,length(hvgidx));
         idx(hvgidx(1:k))=1;
@@ -80,21 +66,47 @@ zlabel('CV, log');
         %h2=scatter3(x(idx20),y(idx20),z(idx20),'rx');  % 'filled','MarkerFaceAlpha',.5);
     end
 
-function ExportGeneNames(~,~)
-        
-        ptsSelected = logical(h.BrushData.');
-        if ~any(ptsSelected)
-            warndlg("No gene is selected.");
-            return;
-        end
-        fprintf('%d genes are selected.\n',sum(ptsSelected));
+    function ExportGeneNames(~,~)        
+            ptsSelected = logical(h.BrushData.');
+            if ~any(ptsSelected)
+                warndlg("No gene is selected.");
+                return;
+            end
+            fprintf('%d genes are selected.\n',sum(ptsSelected));
+    
+            labels = {'Save gene names to variable:'}; 
+            vars = {'g'};
+            values = {g(ptsSelected)};
+            export2wsdlg(labels,vars,values,...
+                         'Save Data to Workspace');
+    end
 
-        labels = {'Save gene names to variable:'}; 
-        vars = {'g'};
-        values = {g(ptsSelected)};
-        export2wsdlg(labels,vars,values,...
-                     'Save Data to Workspace');
-end
+    function EnrichrHVGs(~,~)        
+            ptsSelected = logical(h.BrushData.');
+            if ~any(ptsSelected)
+                warndlg("No gene is selected.");
+                return;
+            end
+            fprintf('%d genes are selected.\n',sum(ptsSelected));
+            
+            tgenes=g(ptsSelected);
+            answer=pkg.timeoutdlg(@(x){questdlg('Which analysis?','', ...
+                'Enrichr','GOrilla','Enrichr+GOrilla','Enrichr+GOrilla')},15);
+            if isempty(answer), return; end
+            switch answer
+                case 'Enrichr'
+                    run.Enrichr(tgenes);
+                case 'GOrilla'
+                    run.GOrilla(tgenes);
+                case 'Enrichr+GOrilla'
+                    run.Enrichr(tgenes);
+                    run.GOrilla(tgenes);
+                otherwise
+                    return;
+            end            
+
+    end
+
 end
 
 function txt = i_myupdatefcn1(~,event_obj,g)
