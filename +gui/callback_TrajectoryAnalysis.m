@@ -6,7 +6,13 @@ function callback_TrajectoryAnalysis(src,~)
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
     fw=gui.gui_waitbar;
-    [t_mono, s_mono] = run.monocle(sce.X);
+    try
+        [t_mono, s_mono] = run.monocle(sce.X);
+    catch ME
+        gui.gui_waitbar(fw,true);
+        errordlg(ME.message);
+        return;
+    end
     gui.gui_waitbar(fw);
     if isempty(t_mono) || isempty(s_mono)
         errordlg('MONOCLE running time error.');

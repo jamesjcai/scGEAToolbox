@@ -7,12 +7,18 @@ if isempty(thisc), return; end
 if ~isempty(newpickclable), clable=newpickclable; end
 
 fw=gui.gui_waitbar;
-Xi=sc_impute(sce.X,'type','MAGIC');
-[r,pval]=corr(thisc,Xi');
-[~,~,~,fdr]=pkg.fdr_bh(pval);
-T=table(sce.g,r',pval',fdr');
-T.Properties.VariableNames={'genes','r','pval','fdr'};
-[T,idx]=sortrows(T,'r','descend');
+try
+    Xi=sc_impute(sce.X,'type','MAGIC');
+    [r,pval]=corr(thisc,Xi');
+    [~,~,~,fdr]=pkg.fdr_bh(pval);
+    T=table(sce.g,r',pval',fdr');
+    T.Properties.VariableNames={'genes','r','pval','fdr'};
+    [T,idx]=sortrows(T,'r','descend');
+catch ME
+    gui.gui_waitbar(fw,true);    
+    errordlg(ME.message);
+    return;
+end
 gui.gui_waitbar(fw,true);
 if ~(ismcc || isdeployed)
     labels = {'Save correlation table to variable named:'};
