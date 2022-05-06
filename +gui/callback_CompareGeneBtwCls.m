@@ -11,7 +11,7 @@ function callback_CompareGeneBtwCls(src,~)
         return;
     end
     
-a={'Gene Expression','Library Size','Predefined Cell Score'};
+a={'Gene Expression','Library Size','Predefined Cell Score','Cell Attributes'};
 [indx1,tf1]=listdlg('PromptString',...
     'Select a metric for comparison.',...
     'SelectionMode','single','ListString',a);
@@ -61,7 +61,17 @@ switch a{indx1}
         fw=gui.gui_waitbar;
         [y]=pkg.e_cellscores(sce.X,sce.g,indx2);
         ttxt=T.ScoreType(indx2);
-        gui.gui_waitbar(fw);        
+        gui.gui_waitbar(fw);
+    case 'Cell Attributes'
+        [y,clable,~,newpickclable]=gui.i_select1state(sce,true);
+        if isempty(y), return; end
+        if ~isempty(newpickclable)
+            ttxt=newpickclable;
+        else
+            ttxt=clable;
+        end
+    otherwise
+        return;        
 end
 
         f = figure('visible','off');

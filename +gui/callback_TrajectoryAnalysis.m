@@ -24,15 +24,7 @@ function callback_TrajectoryAnalysis(src,~)
         sce.list_cell_attributes=[sce.list_cell_attributes,...
             {'monocle_pseudotime',t_mono}];
     end
-
-    [y,idx]=ismember({'monocle_embedding'},...
-        sce.list_cell_attributes(1:2:end));
-    if y   
-        sce.list_cell_attributes{idx+1}=s_mono;
-    else
-        sce.list_cell_attributes=[sce.list_cell_attributes,...
-            {'monocle_embedding',s_mono}];
-    end
+    sce.struct_cell_embeddings.('monocle')=s_mono;
     
     guidata(FigureHandle,sce);
     
