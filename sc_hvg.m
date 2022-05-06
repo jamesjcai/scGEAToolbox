@@ -1,4 +1,5 @@
-function [T,Xsorted,genelistsorted]=sc_hvg(X,genelist,sortit,plotit,normit,ignorehigh)
+function [T,Xsorted,genelistsorted]=sc_hvg(X,genelist,sortit,plotit, ...
+    normit,ignorehigh,ignorelow)
 % Identify HVGs
 % HVGs selection - This method uses the CV^2 on normalized count data to 
 % analyze biological variation. 
@@ -19,9 +20,12 @@ if nargin<3, sortit=true; end
 if nargin<4, plotit=false; end
 if nargin<5, normit=true; end
 if nargin<6, ignorehigh=true; end
+if nargin<7, ignorelow=true; end
 
 if nargout>1, Xori=X; end
 
+
+dropr=1-sum(X>0,2)./size(X,2);
 if normit
     [X]=norm_deseq(X);
     %[X]=norm_libsize(X);	
@@ -44,10 +48,16 @@ if issparse(cv2), cv2=full(cv2); end
 xi=1./u;
 yi=cv2;
 
-if ignorehigh
-    yi=yi(xi>0.1);
-    xi=xi(xi>0.1);
+if ignorelow
+    xi=xi(dropr<0.95);
+    yi=yi(dropr<0.95);
 end
+if ignorehigh
+    a=1./quantile(u,0.95);
+    yi=yi(xi>a);
+    xi=xi(xi>a);
+end
+
 m=size(X,2);
 df=m-1;
 
@@ -82,11 +92,13 @@ residualcv2=log(fitratio);   % log(cv2)-log(cv2fit);
 % fdr=mafdr(pval,'BHFDR',true);
 [~,~,~,fdr]=pkg.fdr_bh(pval);
 
-T=table(genelist,u,cv2,residualcv2,fitratio,pval,fdr);
+T=table(genelist,u,cv2,residualcv2,dropr,fitratio,pval,fdr);
+
 T.Properties.VariableNames(1)={'genes'};
 i=~isnan(cv2);
 T=T(i,:);
 if sortit
+    T.fitratio(T.dropr>(1-0.05))=0;
     [T,idx]=sortrows(T,'fitratio','descend');    
     if nargout>1
         Xsorted=Xori(idx,:);        

@@ -168,9 +168,10 @@ i_addmenu(m_exp,1,@callback_DetectCellularCrosstalk,'Ligand-Receptor Mediated In
 i_addmenu(m_exp,0,@callback_SelectCellsByMarker,'Extract Cells by Marker(+/-) Expression...');
 i_addmenu(m_exp,0,@MergeSubCellTypes,'Merge Subclusters of Same Cell Type');
 i_addmenu(m_exp,0,@AnnotateSubGroup,'Annotate Cell Subgroups...');
-i_addmenu(m_exp,0,@WorkonSelectedGenes,'Work on Selected Genes...');
+i_addmenu(m_exp,1,@WorkonSelectedCells,'Randomly Select 50% Cells to Work on...');
+i_addmenu(m_exp,0,@WorkonSelectedGenes,'Selected HVGs to Work on...');
 
-i_addmenu(m_exp,0,@DrawKNNNetwork,'Plot Cell kNN Network...');
+i_addmenu(m_exp,1,@DrawKNNNetwork,'Plot Cell kNN Network...');
 i_addmenu(m_exp,0,@DrawTrajectory,'Plot Cell Trajectory...');
 i_addmenu(m_exp,0,@gui.callback_CellHeatMap,'Cell Heatmap...');
 i_addmenu(m_exp,0,@callback_DrawDotplot,'Dot Plot...');
@@ -366,30 +367,32 @@ end
     end
 
     function WorkonSelectedGenes(src,~)
-        answer=questdlg('This function helps you select whitelist genes and HVGs to work on. Continue?');
+        answer=questdlg('Input the number of HVGs. Continue?');
         if ~strcmp(answer,'Yes'), return; end
-        [glist]=gui.i_selectngenes(sce);
-        answer=questdlg('Select Top 2,000 HVGs?','');
-        switch answer
-            case 'Yes'
-                T=sc_hvg(sce.X,sce.g,true);
-                glist=[glist; T.genes(1:min([2000, sce.NumGenes]))];                
-            otherwise
-        end
-        glist=unique(glist);
-        if ~isempty(glist)
-            [y,idx]=ismember(glist,sce.g);
-            if ~all(y), error('Runtime error.'); end
-            answer2=questdlg(sprintf('Working on %d selected genes (all other genes will be excluded)?', ...
-                length(idx)),'');
-            if strcmp(answer2,'Yes')
-                sce.g=sce.g(idx);
-                sce.X=sce.X(idx,:);
-                RefreshAll(src, 1, true);
-            else
-                helpdlg('Action canceled.');
-            end
-        end               
+        k = gui.i_inputnumk(2000,10,sce.NumGenes);
+        if isempty(k), return; end
+        fw = gui.gui_waitbar;
+        T=sc_hvg(sce.X,sce.g,true);
+        glist=T.genes(1:min([k, sce.NumGenes]));
+        % [glist]=gui.i_selectngenes(sce);
+        % glist=unique(glist);
+        [y,idx]=ismember(glist,sce.g);
+        if ~all(y), error('Runtime error.'); end
+        sce.g=sce.g(idx);
+        sce.X=sce.X(idx,:);
+        gui.gui_waitbar(fw);
+        RefreshAll(src, 1, true);
+    end
+
+    function WorkonSelectedCells(src,~)
+        answer=questdlg('This functions randomly samples 50% of cells. Continue?');
+        if ~strcmp(answer,'Yes'), return; end
+        fw=gui.gui_waitbar;
+        idx=randperm(sce.NumCells);        
+        sce=sce.removecells(idx(1:round(length(idx)/2)));
+        c=sce.c;
+        gui.gui_waitbar(fw);
+        RefreshAll(src, 1, true);
     end
 
     function SelectCellsByQC(src, ~)
@@ -1116,7 +1119,7 @@ end
                 case 'No, re-compute'
                     usingold = false;
                 case 'Cancel'
-                    return
+                    return;
             end
         end
         if ~usingold
