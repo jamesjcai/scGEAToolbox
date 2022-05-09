@@ -2,6 +2,8 @@
 #setwd("u:\\GitHub\\scGEAToolbox\\+run\\thirdparty\\R_Revelio")
 library(Revelio)
 library(R.matlab)
+library(rhdf5)
+
 
 #sc <- read.table('input.csv', sep = ',', stringsAsFactors = FALSE)
 mat <-readMat('input.mat')
