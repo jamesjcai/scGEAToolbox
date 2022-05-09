@@ -1,6 +1,6 @@
 function [status]=saveSeuratRds(sce,filename)
     [status]=0;
-    isdebug=true;
+    isdebug=false;
     if nargin<2, error('run.saveSeuratRds(sce,filename)'); end
     oldpth=pwd();
     [isok,msg]=commoncheck_R('R_SeuratSaveRds');
