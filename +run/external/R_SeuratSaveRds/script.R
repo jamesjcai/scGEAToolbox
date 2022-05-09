@@ -1,12 +1,18 @@
 library(Seurat)
 library(Matrix)
+library(rhdf5)
 
-countMatrix <- read.table('input.txt', sep = '\t', stringsAsFactors = FALSE)
-geneList <- make.unique(countMatrix[,1])[-1]
-bcList <- countMatrix[1,][-1]
-countMatrix <- Matrix(as.matrix(countMatrix[-1,-1]))
-rownames(countMatrix) <- geneList
-colnames(countMatrix) <- bcList
+X <- h5read(file = "input.h5", name = "/X")
+g <- h5read(file = "input.h5", name = "/g")
+
+#countMatrix <- read.table('input.txt', sep = '\t', stringsAsFactors = FALSE)
+#geneList <- make.unique(countMatrix[,1])[-1]
+#bcList <- countMatrix[1,][-1]
+
+countMatrix <- Matrix(as.matrix(X))
+rownames(countMatrix) <- g
+colnames(countMatrix) <- paste0("C", seq_len(ncol(countMatrix)))
+
 countMatrix <- CreateSeuratObject(countMatrix)
 sce <- NormalizeData(countMatrix)
 saveRDS(sce, file = "output.Rds")
