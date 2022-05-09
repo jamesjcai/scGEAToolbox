@@ -1,3 +1,13 @@
+library(rhdf5)
+library(monocle3)
+X <- h5read(file = "input.h5", name = "/X")
+cMatrix <-as.matrix(X)  
+rownames(cMatrix) <- paste0("G", seq_len(nrow(cMatrix)))
+colnames(cMatrix) <- paste0("C", seq_len(ncol(cMatrix)))
+# cMatrix <- cMatrix[rowSums(cMatrix) > 0,]
+
+
+
 computePseudoTime <- function(infile, outputFile){
    require(rhdf5) 
    X <- h5read(file = "input.mat", name = "/X")
@@ -24,5 +34,5 @@ computePseudoTime <- function(infile, outputFile){
   write.csv(pseudoTiveV, file = outputFile)
 }
 
-computePseudoTime(infile = "input.mat", outputFile = "output.csv")
+# computePseudoTime(infile = "input.mat", outputFile = "output.csv")
 # computePseudoTime(X = "input.csv", outputFile = "output.csv")

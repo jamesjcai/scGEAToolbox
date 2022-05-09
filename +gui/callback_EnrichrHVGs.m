@@ -21,21 +21,22 @@ function callback_EnrichrHVGs(src,~)
                 gui.i_exporttable(t,true,'T');
             end
         
-            
-            answer1=pkg.timeoutdlg(@(x){questdlg('Which functional enrichment analysis do you want to use?','Analysis Method', ...
-                'Enrichr','GOrilla','Enrichr+GOrilla','Enrichr')},15);
-            if isempty(answer1), return; end
-            switch answer1
-                case 'Enrichr'
-                    run.Enrichr(t.genes,500);
-                case 'GOrilla'
-                    run.GOrilla(t.genes(1:500));
-                case 'Enrichr+GOrilla'
-                    run.Enrichr(t.genes,500);
-                    run.GOrilla(t.genes(1:500));
-                otherwise
-                    return;
-            end
+            gui.i_enrichtest(t.genes);
+
+%             answer1=pkg.timeoutdlg(@(x){questdlg('Which functional enrichment analysis do you want to use?','Analysis Method', ...
+%                 'Enrichr','GOrilla','Enrichr+GOrilla','Enrichr')},15);
+%             if isempty(answer1), return; end
+%             switch answer1
+%                 case 'Enrichr'
+%                     run.Enrichr(t.genes,500);
+%                 case 'GOrilla'
+%                     run.GOrilla(t.genes(1:500));
+%                 case 'Enrichr+GOrilla'
+%                     run.Enrichr(t.genes,500);
+%                     run.GOrilla(t.genes(1:500));
+%                 otherwise
+%                     return;
+%             end
             
             
 %             fw=gui.gui_waitbar;

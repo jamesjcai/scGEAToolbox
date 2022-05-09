@@ -21,21 +21,28 @@ function callback_DEGene2Groups(src,~)
         return;
     end
     fw=gui.gui_waitbar;
-    switch methodtag
-        case 'ranksum'
-            T=sc_deg(sce.X(:,i1),sce.X(:,i2),sce.g);
-        case 'mast'
-            T=run.MAST(sce.X(:,i1),sce.X(:,i2),sce.g);
+    try
+        switch methodtag
+            case 'ranksum'
+                T=sc_deg(sce.X(:,i1),sce.X(:,i2),sce.g);
+            case 'mast'
+                T=run.MAST(sce.X(:,i1),sce.X(:,i2),sce.g);
+        end
+    catch ME
+        gui.gui_waitbar(fw,true);
+        errordlg(ME.message);
+        return;
     end
     gui.gui_waitbar(fw);
-try
-    T = sortrows(T,'p_val_adj','ascend');
-    T = sortrows(T,'pct_1','ascend');
-    T = sortrows(T,'pct_2','descend');
-    T = sortrows(T,'avg_log2FC','ascend');
-catch ME
-    warning(ME.message);
-end
+
+    try
+        T = sortrows(T,'p_val_adj','ascend');
+        T = sortrows(T,'pct_1','ascend');
+        T = sortrows(T,'pct_2','descend');
+        T = sortrows(T,'avg_log2FC','ascend');
+    catch ME
+        warning(ME.message);
+    end
     gui.i_exporttable(T,true);
 
     if ~(ismcc || isdeployed)  
@@ -54,15 +61,16 @@ end
         end
     end
     
-%     answer = questdlg('Run Enrichr with top 200 up-regulated DE genes?');
-%     if strcmp(answer,'Yes')
-%         run.Enrichr(Tup.gene(1:min(numel(Tup.gene),200)))
-%     end
-%     pause(3);
-%     answer = questdlg('Run Enrichr with top 200 down-regulated DE genes?');
-%     if strcmp(answer,'Yes')
-%         run.Enrichr(Tdn.gene(1:min(numel(Tdn.gene),200)))
-%     end
+    answer = questdlg('Run enrichment analysis with top 200 up-regulated DE genes?');
+    if strcmp(answer,'Yes')
+        gui.i_enrichtest(Tup.gene(1:min(numel(Tup.gene),200)));
+    end
+    pause(3);
+    answer = questdlg('Run enrichment analysis with top 200 down-regulated DE genes?');
+    if strcmp(answer,'Yes')
+        gui.i_enrichtest(Tdn.gene(1:min(numel(Tdn.gene),200)));
+    end
+
 %     pause(3);
 %     
 %     %Tf=run.fgsea(T.gene);
