@@ -14,47 +14,47 @@ function [Y0,Y1]=busseq(X0,X1)
 
 if nargin<2, error('USAGE: [Y0,Y1]=run.busseq(X0,X1)'); end
 if nargout<2, error('USAGE: [Y0,Y1]=run.busseq(X0,X1)'); end
-if isempty(FindRpath)
-   error('Rscript.ext is not found.');
-end
+Y0=[]; Y1=[];
 
-oldpth=pwd;
-pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'thirdparty','R_BUSseq');
-cd(pth);
-fprintf('CURRENTWDIR = "%s"\n',pth);
-
-[~,cmdout]=pkg.RunRcode('require.R');
-if strfind(cmdout,'there is no package')>0
-    cd(oldpth);
-    error(cmdout);
-end
+isdebug=true;
+oldpth=pwd();
+[isok,msg]=commoncheck_R('R_BUSseq');
+if ~isok, error(msg); end
 
 
-if exist('output0.csv','file'), delete('output0.csv'); end
-if exist('output1.csv','file'), delete('output1.csv'); end
+
+tmpfilelist={'input.h5','output.h5'};
+if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+
+h5create('input.h5', '/X0', size(X0));
+h5write('input.h5', '/X0', X0);
+h5create('input.h5', '/X1', size(X1));
+h5write('input.h5', '/X1', X1);
+
 writematrix(X0,'input0.csv');
 writematrix(X1,'input1.csv');
-for i = 1:50
-    textwaitbar(i, 100, 'This may take a few minutes. Please wait');
-    pause(0.01);
+% for i = 1:50
+%     textwaitbar(i, 100, 'This may take a few minutes. Please wait');
+%     pause(0.01);
+% end
+pkg.RunRcode('Copy_of_script.R');
+% for i = 51:100
+%     textwaitbar(i, 100, 'This may take a few minutes. Please wait');
+%     pause(0.01);
+% end
+if exist('output.h5','file')
+    %Y0=readmatrix('output0.csv');
+    %Y1=readmatrix('output1.csv');
+    Y0=h5read("output.h5",'/Y0');
+    Y1=h5read("output.h5",'/Y1');
 end
-pkg.RunRcode('script.R');
-for i = 51:100
-    textwaitbar(i, 100, 'This may take a few minutes. Please wait');
-    pause(0.01);
-end
-if exist('output0.csv','file')
-    Y0=readmatrix('output0.csv');
-    Y1=readmatrix('output1.csv');
-else
-    Y0=[];
-    Y1=[];
-end
-if exist('input0.csv','file'), delete('input0.csv'); end
-if exist('output0.csv','file'), delete('output0.csv'); end
-if exist('input1.csv','file'), delete('input1.csv'); end
-if exist('output1.csv','file'), delete('output1.csv'); end
+% if exist('input0.csv','file'), delete('input0.csv'); end
+% if exist('output0.csv','file'), delete('output0.csv'); end
+% if exist('input1.csv','file'), delete('input1.csv'); end
+% if exist('output1.csv','file'), delete('output1.csv'); end
+tmpfilelist={'input.h5','output.h5'};
+if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+
 cd(oldpth);
 
 end

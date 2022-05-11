@@ -1,8 +1,8 @@
 # setwd("U:\\GitHub\\scGEAToolbox\\+run\\thirdparty\\R_decontX")
 library(celda)
 library(rhdf5)
-# library(R.matlab)
 
+#library(R.matlab)
 #sc <- read.table('input.csv', sep = ',', stringsAsFactors = FALSE)
 #inputd <-readMat('input6.mat')
 #sc2 <- inputd$X
