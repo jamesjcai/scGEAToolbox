@@ -2,7 +2,7 @@ function [T]=MAST(X,Y,genelist)
 
 if nargin<3, genelist=(1:size(X,1))'; end
 T=[];
-isdebug=true;
+isdebug=false;
 oldpth=pwd();
 [isok,msg]=commoncheck_R('R_MAST');
 if ~isok, error(msg); end
