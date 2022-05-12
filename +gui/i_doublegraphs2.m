@@ -237,7 +237,7 @@ set(hFig, 'visible','on');
         if any(i)
             cc=repmat([0 0 0],G.numnodes,1);
             cc(i,:)=repmat([1 0 0],sum(i),1);
-            p.NodeLabelColor=cc;
+            % p.NodeLabelColor=cc;
         end
         p.NodeFontSize=2*p.NodeFontSize;
         %title(h,'scGRN');
