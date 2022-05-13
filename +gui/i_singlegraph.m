@@ -24,79 +24,13 @@ h1=axes(hFig);
 [p1]=drawnetwork(G1,h1);
 
 tb = uitoolbar(hFig);
-pt = uipushtool(tb,'Separator','off');
-[img,map] = imread(fullfile(mfolder,...
-            '../resources','noun_font_size_591141.gif'));
-ptImage = ind2rgb(img,map);
-pt.CData = ptImage;
-pt.Tooltip = 'ChangeFontSize';
-pt.ClickedCallback = @ChangeFontSize;
-
-
-
-
-
-pt = uipushtool(tb,'Separator','off');
-
-
-
-[img,map] = imread(fullfile(mfolder,...
-            '../resources','noun_Weight_2243621.gif'));
-ptImage = ind2rgb(img,map);
-
-pt.CData = ptImage;
-pt.Tooltip = 'ChangeWeight';
-pt.ClickedCallback = @ChangeWeight;
-
-pt = uipushtool(tb,'Separator','off');
-[img,map] = imread(fullfile(mfolder,...
-            '../resources','noun_Layout_792775.gif'));
-ptImage = ind2rgb(img,map);
-pt.CData = ptImage;
-pt.Tooltip = 'ChangeLayout';
-pt.ClickedCallback = @ChangeLayout;
-
-pt = uipushtool(tb,'Separator','off');
-[img,map] = imread(fullfile(mfolder,...
-            '../resources','noun_directional arrows_3497928.gif'));
-ptImage = ind2rgb(img,map);
-pt.CData = ptImage;
-pt.Tooltip = 'ChangeDirected';
-pt.ClickedCallback = @ChangeDirected;
-
-pt = uipushtool(tb,'Separator','off');
-
-[img,map] = imread(fullfile(mfolder,'../resources','noun_Pruners_2469297.gif'));         
-ptImage = ind2rgb(img,map);
-
-
-
-pt.CData = ptImage;
-pt.Tooltip = 'ChangeCutoff';
-pt.ClickedCallback = @ChangeCutoff;
-
-pt = uipushtool(tb,'Separator','off');
-
-[img,map] = imread(fullfile(mfolder,'../resources','noun_trim_3665385.gif'));         
-ptImage = ind2rgb(img,map);
-pt.CData = ptImage;
-pt.Tooltip = 'AnimateCutoff';
-pt.ClickedCallback = @AnimateCutoff;
-
-pt = uipushtool(tb,'Separator','off');
-[img,map] = imread(fullfile(mfolder,'../resources','export.gif'));         
-ptImage = ind2rgb(img,map);
-pt.CData = ptImage;
-pt.Tooltip = 'Export & save data';
-pt.ClickedCallback = @SaveAdj;
-
-
-% if exist('suptitle.m','file')   
-%    hFig.Position(3)=hFig.Position(3)*1.8;
-%    suptitle(figname);   
-% else
-%     hFig.Position(3)=hFig.Position(3)*2.2;
-% end
+pkg.i_addbutton2fig(tb,'off',@ChangeFontSize,'noun_font_size_591141.gif','ChangeFontSize');
+pkg.i_addbutton2fig(tb,'off',@ChangeWeight,'noun_Weight_2243621.gif','ChangeWeight');
+pkg.i_addbutton2fig(tb,'off',@ChangeLayout,'noun_Layout_792775.gif','ChangeLayout');
+pkg.i_addbutton2fig(tb,'off',@ChangeDirected,'noun_directional arrows_3497928.gif','ChangeDirected');
+pkg.i_addbutton2fig(tb,'off',@ChangeCutoff,'noun_Pruners_2469297.gif','ChangeCutoff');
+pkg.i_addbutton2fig(tb,'off',@AnimateCutoff,'noun_trim_3665385.gif','AnimateCutoff');
+pkg.i_addbutton2fig(tb,'off',@SaveAdj,'export.gif','Export & save data');
 
 set(hFig, 'visible','on');
 title(figname);
@@ -105,7 +39,7 @@ title(figname);
 
 
 
-   function SaveAdj(hObject,event)
+   function SaveAdj(~,~)
     if ~(ismcc || isdeployed)
         answer = questdlg('Export & save network to:','',...
                         'Workspace','File','Workspace');
@@ -143,7 +77,7 @@ title(figname);
    end
 
                 
-   function ChangeFontSize(hObject,event)
+   function ChangeFontSize(~,~)
        i_changefontsize(p1);
        %i_changefontsize(p2);
        function i_changefontsize(p)
@@ -155,7 +89,7 @@ title(figname);
        end
    end
 
-   function ChangeWeight(hObject,event)
+   function ChangeWeight(~,~)
        %a=3:10;
        %w=a(randi(length(a),1));
        w=w+1;
@@ -169,7 +103,7 @@ title(figname);
        end
    end
 
-   function ChangeLayout(hObject,event)
+   function ChangeLayout(~,~)
        a=["auto","layered","subspace","force","circle"];       
        l=l+1;
        if l>5, l=1; end
@@ -186,7 +120,7 @@ title(figname);
        %p1.YData=p2.YData;
    end
 
-   function ChangeDirected(hObject,event)
+   function ChangeDirected(~,~)
        [p1,G1]=i_changedirected(p1,G1,h1);
        %[p2,G2]=i_changedirected(p2,G2,h2);
        function [p,G]=i_changedirected(p,G,h) 
@@ -201,7 +135,7 @@ title(figname);
        end
    end
 
-   function ChangeCutoff(hObject,event)
+   function ChangeCutoff(~,~)
         list = {'0.00 (show all edges)',...
             '0.30','0.35','0.40','0.45',...
             '0.50','0.55','0.60',...
@@ -269,7 +203,7 @@ title(figname);
         p.LineWidth = G.Edges.LWidths;
     end
 
-   function AnimateCutoff(hObject,event)
+   function AnimateCutoff(~,~)
         listc = 0.05:0.05:0.95;
         % pkg.progressbar
         f = waitbar(0,'Cutoff = 0.05','Name','Edge Pruning...',...
