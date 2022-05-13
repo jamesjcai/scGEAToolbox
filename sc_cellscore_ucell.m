@@ -21,8 +21,6 @@ genelist=upper(genelist);
 tgsPos=upper(tgsPos);
 tgsNeg=upper(tgsNeg);
 
-%Normalizing data by default in Seurat = log1p(libsize * 1e4)
-%X = log(((X./nansum(X)) * 1e4) + 1);
 X=sc_norm(X);
 disp('Library-size normalization...done.')
 X=log(X+1);

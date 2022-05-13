@@ -87,7 +87,7 @@ end
 %A(isnan(A))=0;
 %[~,idx]=sort(vecnorm(A,2,2),'descend');  % NaN messed up 
 %[~,idx]=sort(-vecnorm(A,2,2));  % NaN is ignored
-[~,idx]=sort(nansum(A,2));
+[~,idx]=sort(sum(A,2,'omitnan'));
 markerlist=genelist(idx);
 end
 

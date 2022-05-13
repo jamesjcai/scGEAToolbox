@@ -1,5 +1,6 @@
 function [X]=sc_norm(X,varargin)
 
+
 p = inputParser;
 defaultType = 'libsize';
 validTypes = {'libsize','deseq'};
