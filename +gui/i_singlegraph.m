@@ -27,15 +27,14 @@ tb = uitoolbar(hFig);
 pkg.i_addbutton2fig(tb,'off',@ChangeFontSize,'noun_font_size_591141.gif','ChangeFontSize');
 pkg.i_addbutton2fig(tb,'off',@ChangeWeight,'noun_Weight_2243621.gif','ChangeWeight');
 pkg.i_addbutton2fig(tb,'off',@ChangeLayout,'noun_Layout_792775.gif','ChangeLayout');
-pkg.i_addbutton2fig(tb,'off',@ChangeDirected,'noun_directional arrows_3497928.gif','ChangeDirected');
+pkg.i_addbutton2fig(tb,'off',@ChangeDirected,'noun_directional_arrows_3497928.gif','ChangeDirected');
 pkg.i_addbutton2fig(tb,'off',@ChangeCutoff,'noun_Pruners_2469297.gif','ChangeCutoff');
 pkg.i_addbutton2fig(tb,'off',@AnimateCutoff,'noun_trim_3665385.gif','AnimateCutoff');
 pkg.i_addbutton2fig(tb,'off',@SaveAdj,'export.gif','Export & save data');
 
+
 set(hFig, 'visible','on');
 title(figname);
-
-
 
 
 
@@ -171,9 +170,9 @@ title(figname);
         cc=repmat([0 0.4470 0.7410],G.numedges,1);
         cc(G.Edges.Weight<0,:)=repmat([0.8500, 0.3250, 0.0980],...
                sum(G.Edges.Weight<0),1);
-        p.EdgeColor=cc;        
-%         p.EdgeCData=ones(G.numedges,1);
-%         p.EdgeCData(G.Edges.Weight<0)=2;      
+        p.EdgeColor=cc;
+%       p.EdgeCData=ones(G.numedges,1);
+%       p.EdgeCData(G.Edges.Weight<0)=2;      
         
         i=ismember(string(upper(G.Nodes.Name)),tfgenes);
         if any(i)
@@ -183,11 +182,10 @@ title(figname);
         end
         
         p.NodeFontSize=2*p.NodeFontSize;
-        %title(h,sprintf('%d nodes',G.numnodes));
 
+        %title(h,sprintf('%d nodes',G.numnodes));
         % https://www.mathworks.com/matlabcentral/answers/296070-change-label-font-in-graph-plots
-        %{
-        
+        %{        
         nl = p.NodeLabel;
         p.NodeLabel = '';
         xd = get(p, 'XData');
@@ -247,8 +245,6 @@ title(figname);
     % h=gca;
     title(a)
    end
-
-
 
 end
 

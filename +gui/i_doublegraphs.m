@@ -1,4 +1,4 @@
-function [hFig]=i_doublegraphs(G1,G2,figname)
+function [hFig]=i_doublegraphs2(G1,G2,figname)
 if nargin<3, figname=''; end
 if nargin<2
     G1=WattsStrogatz(100,5,0.15);
@@ -23,73 +23,28 @@ hFig=figure('name',figname,'Visible','on');
 set(0,'CurrentFigure',hFig)
 % movegui(hFig, 'center');
 
-h1=subplot(1,2,1);
+tiledlayout(1,2,'TileSpacing','compact',...
+            'Padding','compact')
+h1=nexttile;
+%h1=subplot(1,2,1);
 [p1]=drawnetwork(G1,h1);
 
-h2=subplot(1,2,2);
+%h2=subplot(1,2,2);
+h2=nexttile;
 [p2]=drawnetwork(G2,h2);
 p2.XData=p1.XData;
 p2.YData=p1.YData;
 
 tb = uitoolbar(hFig);
-pt = uipushtool(tb,'Separator','off');
-% ptImage = rand(16,16,3);
-[img,map] = imread(fullfile(mfolder,...
-            '../resources','noun_font_size_591141.gif'));
-ptImage = ind2rgb(img,map);
-pt.CData = ptImage;
-pt.Tooltip = 'ChangeFontSize';
-pt.ClickedCallback = @ChangeFontSize;
 
+pkg.i_addbutton2fig(tb,'off',@ChangeFontSize,'noun_font_size_591141.gif','ChangeFontSize');
+pkg.i_addbutton2fig(tb,'off',@ChangeWeight,'noun_Weight_2243621.gif','ChangeWeight');
+pkg.i_addbutton2fig(tb,'off',@ChangeLayout,'noun_Layout_792775.gif','ChangeLayout');
+pkg.i_addbutton2fig(tb,'off',@ChangeDirected,'noun_directional_arrows_3497928.gif','ChangeDirected');
+pkg.i_addbutton2fig(tb,'off',@ChangeCutoff,'noun_Pruners_2469297.gif','ChangeCutoff');
+pkg.i_addbutton2fig(tb,'off',@AnimateCutoff,'noun_trim_3665385.gif','AnimateCutoff');
+pkg.i_addbutton2fig(tb,'off',@SaveAdj,'export.gif','Export & save data');
 
-pt = uipushtool(tb,'Separator','off');
-[img,map] = imread(fullfile(mfolder,...
-            '../resources','noun_Weight_2243621.gif'));
-ptImage = ind2rgb(img,map);
-
-pt.CData = ptImage;
-pt.Tooltip = 'ChangeWeight';
-pt.ClickedCallback = @ChangeWeight;
-
-pt = uipushtool(tb,'Separator','off');
-[img,map] = imread(fullfile(mfolder,...
-            '../resources','noun_Layout_792775.gif'));
-ptImage = ind2rgb(img,map);
-pt.CData = ptImage;
-pt.Tooltip = 'ChangeLayout';
-pt.ClickedCallback = @ChangeLayout;
-
-pt = uipushtool(tb,'Separator','off');
-[img,map] = imread(fullfile(mfolder,...
-            '../resources','noun_directional arrows_3497928.gif'));
-ptImage = ind2rgb(img,map);
-pt.CData = ptImage;
-pt.Tooltip = 'ChangeDirected';
-pt.ClickedCallback = @ChangeDirected;
-
-pt = uipushtool(tb,'Separator','off');
-
-[img,map] = imread(fullfile(mfolder,'../resources','noun_Pruners_2469297.gif'));         
-ptImage = ind2rgb(img,map);
-
-pt.CData = ptImage;
-pt.Tooltip = 'ChangeCutoff';
-pt.ClickedCallback = @ChangeCutoff;
-
-pt = uipushtool(tb,'Separator','off');
-
-[img,map] = imread(fullfile(mfolder,'../resources','noun_trim_3665385.gif'));         
-ptImage = ind2rgb(img,map);
-pt.CData = ptImage;
-pt.Tooltip = 'AnimateCutoff';
-pt.ClickedCallback = @AnimateCutoff;
-
-pt = uipushtool(tb,'Separator','off');
-[img,map] = imread(fullfile(mfolder,'../resources','export.gif'));         
-ptImage = ind2rgb(img,map);
-pt.CData = ptImage;
-pt.Tooltip = 'Export & save data';
-pt.ClickedCallback = @SaveAdj;
 
 if exist('suptitle.m','file')   
    hFig.Position(3)=hFig.Position(3)*1.8;
@@ -100,29 +55,29 @@ end
 set(hFig, 'visible','on');
 
 
-   function SaveAdj(hObject,event)
+   function SaveAdj(~,~)
        if ~(ismcc || isdeployed)
-     labels = {'Save adjacency matrix A1 to variable named:',...
-               'Save adjacency matrix A2 to variable named:',...
-               'Save graph G1 to variable named:',...
-               'Save graph G2 to variable named:',... 
-               'Save genelist g1 to variable named:',...
-               'Save genelist g2 to variable named:'}; 
-           A1=adjacency(G1,'weighted');
-           A2=adjacency(G2,'weighted');
-           g1=string(G1.Nodes.Name);
-           g2=string(G2.Nodes.Name);
-     vars = {'A1','A2','G1','G2','g1','g2'};...
-     values = {A1,A2,G1,G2,g1,g2};
-     msgfig=export2wsdlg(labels,vars,values);
-     uiwait(msgfig);
+            labels = {'Save adjacency matrix A1 to variable named:',...
+                   'Save adjacency matrix A2 to variable named:',...
+                   'Save graph G1 to variable named:',...
+                   'Save graph G2 to variable named:',... 
+                   'Save genelist g1 to variable named:',...
+                   'Save genelist g2 to variable named:'}; 
+            A1=adjacency(G1,'weighted');
+            A2=adjacency(G2,'weighted');
+            g1=string(G1.Nodes.Name);
+            g2=string(G2.Nodes.Name);
+            vars = {'A1','A2','G1','G2','g1','g2'};...
+            values = {A1,A2,G1,G2,g1,g2};
+            msgfig=export2wsdlg(labels,vars,values);
+            uiwait(msgfig);
        else
            errordlg('This function is not available for standalone application.');
        end
    end
 
                 
-   function ChangeFontSize(hObject,event)
+   function ChangeFontSize(~,~)
        i_changefontsize(p1);
        i_changefontsize(p2);
        function i_changefontsize(p)
@@ -134,7 +89,7 @@ set(hFig, 'visible','on');
        end
    end
 
-   function ChangeWeight(hObject,event)
+   function ChangeWeight(~,~)
        %a=3:10;
        %w=a(randi(length(a),1));
        w=w+1;
@@ -148,19 +103,28 @@ set(hFig, 'visible','on');
        end
    end
 
-   function ChangeLayout(hObject,event)
+   function ChangeLayout(~,~)
        a=["auto","layered","subspace","force","circle"];       
        l=l+1;
        if l>5, l=1; end
-       p1.layout(a(l));
-       p2.layout(a(l));
+       disp(a(l))
+       switch a(l)
+           case "force"               
+               p1.layout(a(l),'Iterations',500,...
+                'WeightEffect','none',...   
+                'UseGravity',false);
+               %p2.layout(a(l),'Iterations',2500,'UseGravity','direct');
+           otherwise
+               p1.layout(a(l));
+               %p2.layout(a(l));
+       end
        p2.XData=p1.XData;
        p2.YData=p1.YData;
        p1.XData=p2.XData;
        p1.YData=p2.YData;
    end
 
-   function ChangeDirected(hObject,event)
+   function ChangeDirected(~,~)
         a1=h1.Title.String;
         a2=h2.Title.String;
        [p1,G1]=i_changedirected(p1,G1,h1);
@@ -180,7 +144,7 @@ set(hFig, 'visible','on');
        end
    end
 
-   function ChangeCutoff(hObject,event)
+    function ChangeCutoff(~,~)
         a1=h1.Title.String;
         a2=h2.Title.String;
         list = {'0.00 (show all edges)',...
@@ -224,7 +188,7 @@ set(hFig, 'visible','on');
         if any(i)
             cc=repmat([0 0 0],G.numnodes,1);
             cc(i,:)=repmat([1 0 0],sum(i),1);
-            p.NodeLabelColor=cc;
+            % p.NodeLabelColor=cc;
         end
         p.NodeFontSize=2*p.NodeFontSize;
         %title(h,'scGRN');
@@ -239,7 +203,7 @@ set(hFig, 'visible','on');
 
     end
 
-   function AnimateCutoff(hObject,event)
+   function AnimateCutoff(~,~)
         listc = 0.05:0.05:0.95;
         % pkg.progressbar
         f = waitbar(0,'Cutoff = 0.05','Name','Edge Pruning...',...
@@ -263,19 +227,23 @@ set(hFig, 'visible','on');
         delete(f)
    end
 
-   function [p,G]=i_replotg(p,G,h,cutoff)
-        a=h.Title.String;
-        x=p.XData; y=p.YData;
-        A=adjacency(G,'weighted');
-        A=ten.e_filtadjc(A,cutoff);
-        if issymmetric(A)
-            G=graph(A,G.Nodes.Name);
-        else
-            G=digraph(A,G.Nodes.Name);
+   function [p,G]=i_replotg(p,G,h,cutoff)       
+        if ismember('Weight',G.Edges.Properties.VariableNames)            
+            if length(unique(G.Edges.Weight))>1                
+                a=h.Title.String;
+                x=p.XData; y=p.YData;        
+                A=adjacency(G,'weighted');
+                A=ten.e_filtadjc(A,cutoff);
+                if issymmetric(A)
+                    G=graph(A,G.Nodes.Name);
+                else
+                    G=digraph(A,G.Nodes.Name);
+                end
+                [p]=drawnetwork(G,h);
+                p.XData=x; p.YData=y;
+                h.Title.String=a;
+            end
         end
-        [p]=drawnetwork(G,h);
-        p.XData=x; p.YData=y;
-        h.Title.String=a;
    end
 
 
