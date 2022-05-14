@@ -94,24 +94,28 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
                 end
             end
         case 'Remove Genes by Name'        % remove selected genes
-            gsorted=sort(sce.g);
-            [idx]=gui.i_selmultidlg(gsorted);
+            [glist]=gui.i_selectngenes(sce);
+            if isempty(glist), return; end
+            [y,idx]=ismember(upper(glist),upper(sce.g));
+            if ~all(y), error('xxx'); end
+            
+            %gsorted=sort(sce.g);
+            %[idx]=gui.i_selmultidlg(gsorted);
             if isempty(idx), return; end
             if isscalar(idx) && idx==0
                 helpdlg('No gene selected.','');
                 return;
-            else
-                [~,idx]=ismember(gsorted(idx),sce.g);
-                answer1 = questdlg(sprintf('Remove %d selected genes?',length(idx)));
-                if strcmpi(answer1,'Yes')   
-            	    fw = gui.gui_waitbar;                    
-                    sce.g(idx)=[];
-                    sce.X(idx,:)=[];
-                    gui.gui_waitbar(fw);
-                else
-                    return;
-                end
             end
+            %[~,idx]=ismember(sce.g(idx),sce.g);
+            answer1 = questdlg(sprintf('Remove %d selected genes?',length(idx)));
+            if strcmpi(answer1,'Yes')   
+        	    fw = gui.gui_waitbar;                    
+                sce.g(idx)=[];
+                sce.X(idx,:)=[];
+                gui.gui_waitbar(fw);
+            else
+                return;
+            end            
         case 'Remove Mt-genes'        % remove mt-genes
             sce=sce.rmmtgenes;            
         case '------------------------------------------------'
