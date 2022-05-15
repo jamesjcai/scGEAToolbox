@@ -906,8 +906,7 @@ end
     end
 
     function ShowCellStates(src, ~)
-        sce=guidata(FigureHandle);
-        
+        sce=guidata(FigureHandle);        
         [thisc,clable,~,newpickclable]=gui.i_select1state(sce);
         
         if strcmp(clable,'Cell Cycle Phase')
