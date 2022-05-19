@@ -17,6 +17,7 @@ function [done]=i_setpyenv(~,~)
             'Use this','Use another','Cancel','Use this');        
         switch answer
             case 'Use this'
+                done=true;
             case 'Use another'
                 if ~ix_setpyenv, return; end                    
             case {'Cancel',''}

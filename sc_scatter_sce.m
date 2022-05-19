@@ -939,7 +939,7 @@ end
     function DeleteSelectedCells(src, ~)
         ptsSelected = logical(h.BrushData.');
         if ~any(ptsSelected)
-            warndlg("No cells are selected.");
+            warndlg("No cells are selected.",'');
             return;
         end
         [ptsSelected,letdoit]=gui.i_expandbrushed(ptsSelected,sce);
@@ -956,8 +956,9 @@ end
 %             if tfx~=1, return; end
 %             ptsSelected=ismember(ci,indxx);
 %         end
-        answer = questdlg('Delete cells?','','Selected', 'Unselected',...
-                          'Cancel', 'Selected');
+        answer = questdlg('Delete selected or unselected cells?','', ...
+            'Selected', 'Unselected','Selected');
+        if isempty(answer), return; end
         if strcmp(answer, 'Unselected')
             i_deletecells(src,~ptsSelected);
         elseif strcmp(answer, 'Selected')            
@@ -980,12 +981,6 @@ end
         end
         [c, cL] = grp2idx(sce.c);
         RefreshAll(src,1,true,true);
-%        [c, cL] = grp2idx(sce.c);
-%        [ax, bx] = view();
-%        h = gui.i_gscatter3(sce.s, c);
-%        title(sce.title);
-%        view(ax, bx);
-
     end
 
     function DrawKNNNetwork(~,~)
