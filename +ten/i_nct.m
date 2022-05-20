@@ -39,7 +39,7 @@ c=0;
         Xrep=log(Xrep+1);
         A=sc_pcnetpar(Xrep,ncom,true);
         if savegrn
-            [~,b]=fileparts(tempname);            
+            [~,b]=fileparts(tempname);
             if ~exist(sprintf('A%d_%s.mat',k,b(1:10)),'file')
                 b=b(1:10);
             end
