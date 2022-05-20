@@ -1,4 +1,4 @@
-function [XM]=scInTime(X,genelist,ptime,varargin)
+function [T]=scInTime(X,genelist,ptime,varargin)
 
    p = inputParser;
    addOptional(p,'ncom',3,@(x) fix(x)==x & x>0);
@@ -12,17 +12,31 @@ function [XM]=scInTime(X,genelist,ptime,varargin)
    savegrn=p.Results.savegrn;
 
    [XM]=ten.i_nct(X,ptime,nsubsmpl,ncom,csubsmpl,savegrn);
-   a=rand(3,3,10);
-   for k=1:10
-       a(:,:,k)=a(:,:,k)+k;
-   end
-   R=zeros(3,3);
-   for k=1:3
-       for l=1:3
-           R(k,l)=corr(reshape(a(k,l,:),10,1),[1:10]');
-       end
-   end
-   R2=reshape(corr(reshape(a,10,9),[1:10]'),3,3);
+   assert(length(genelist)==size(XM,1))
+   assert(size(X,1)==size(XM,1))
+   n=length(genelist);
+   R=reshape(corr(reshape(XM,[n.^2,10])',[1:10]'),[n,n]);
+   s=tsne(R,"NumDimensions",3);
+   T.s=s;
+   save('scInTime_res','T');
 
-   corr(reshape(a,10,9),[1:10]')
+
+
+
+%%   
+%    a=rand(3,3,10);
+%    for k=1:10
+%        a(:,:,k)=a(:,:,k)+k;
+%    end
+%    R=zeros(3,3);
+%    for k=1:3
+%        for l=1:3
+%            R(k,l)=corr(reshape(a(k,l,:),10,1),[1:10]');
+%        end
+%    end
+%    R2=reshape(corr(reshape(a,[9,10])',[1:10]'),3,3);
+%    isequal(R,R2)
+
+
+
 
