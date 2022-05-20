@@ -6,6 +6,7 @@ function [XM]=i_nct(X,ptime,nsubsmpl,ncom,csubsmpl,savegrn)
 % output XM - k multi-layer network array (n x n x k)
 import ten.*
 
+if nargin<7, mksparse=true; end
 if nargin<6, savegrn=true; end
 if nargin<5, csubsmpl=500; end       % number of cells in subsamples                                     
 if nargin<4, ncom=3; end             % number of components for PC regression
@@ -45,6 +46,10 @@ c=0;
             end
             save(sprintf('A%d_%s',k,b),'A');
         end
-        XM(:,:,k)=ten.e_filtadjc(A,0.95,false);
+        if mksparse
+            XM(:,:,k)=ten.e_filtadjc(A,0.95,false);
+        else
+            XM(:,:,k)=A;
+        end
     end
 end

@@ -4,14 +4,16 @@ function [T]=scInTime(X,genelist,ptime,varargin)
    addOptional(p,'ncom',3,@(x) fix(x)==x & x>0);
    addOptional(p,'nsubsmpl',10,@(x) fix(x)==x & x>0);
    addOptional(p,'csubsmpl',500,@(x) fix(x)==x & x>0);
-   addOptional(p,'savegrn',false,@islogical);
+   addOptional(p,'savegrn',true,@islogical);
+   addOptional(p,'mksparse',false,@islogical);
    parse(p,varargin{:});
    nsubsmpl=p.Results.nsubsmpl;
    csubsmpl=p.Results.csubsmpl;
    ncom=p.Results.ncom;
    savegrn=p.Results.savegrn;
+   mksparse=p.Results.mksparse;
 
-   [XM]=ten.i_nct(X,ptime,nsubsmpl,ncom,csubsmpl,savegrn);
+   [XM]=ten.i_nct(X,ptime,nsubsmpl,ncom,csubsmpl,savegrn,mksparse);
    assert(length(genelist)==size(XM,1))
    assert(size(X,1)==size(XM,1))
    n=length(genelist);
