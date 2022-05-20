@@ -15,6 +15,7 @@ function callback_scTenifoldNet2(src,~)
 %         disp('addpath(''./scTenifoldNet-master/MATLAB'');');
 %         return;
 %     end
+
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
     
@@ -94,19 +95,26 @@ answer=questdlg('Construct networks de novo or use existing networks in Workspac
     
     figure;
     e_mkqqplot(T);
-    gui.i_exporttable(T,true,'T_DRgenes');   
-    answer223=questdlg('Run GSEA analysis?');
-    if strcmp(answer223,'Yes')
+    % answer223=questdlg('Run GSEA analysis?');
+    answer223=gui.questdlg_timer(15,'Run GSEA analysis?');
+    if ~isempty(answer223) && strcmp(answer223,'Yes')
+        gseaok=true;
         try
             Tr=ten.e_fgsearun(T);
+            save(sprintf('T_GSEAres_%s',tstr),'Tr');
         catch ME
-            errordlg(ME.message);
-            return;
+            warning(ME.message);
+            gseaok=false;
         end
+        if gseaok
+            answer323=gui.questdlg_timer(15,'Group GSEA hits?');
+            if ~isempty(answer323) && strcmp(answer323,'Yes')
+                ten.e_fgseanet(Tr);
+            end
+        end
+    end
+    gui.i_exporttable(T,true,'T_DRgenes');
+    if gseaok
         gui.i_exporttable(Tr,true,'T_GSEAres');
-        answer323=questdlg('Group GSEA hits?');
-        if strcmp(answer323,'Yes')
-            ten.e_fgseanet(Tr);
-        end
     end
 end

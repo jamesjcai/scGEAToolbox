@@ -3,10 +3,8 @@
 Getting Started
 ===============
 
-Run the following code in `MATLAB`:
+Run the following code in `MATLAB` to start SCGEATOOL:
 
 .. code-block::
 
- demo_Getting_Started
-
-
+ scgeatool

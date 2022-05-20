@@ -1,9 +1,11 @@
 SCGEATOOL
 ===========
 
-Overview of SCGEATOOL
-----------------------
-In MATLAB, SCGEATOOL function can be used to visualize `SCE` class/object. Below are links to several case studies and examples using scgeatool_sce to explore high-dimensional data. All examples are below are publically available through GitHub.
+SCGEATOOL is a lightweight and blazing fast MATLAB application that provides interactive visualization functionality to analyze single-cell transcriptomic data. SCGEATOOL allows you to easily interrogate different views of your scRNA-seq data to quickly gain insights into the underlying biology.
+
+Overview
+--------
+In MATLAB, scgeatool function can be used to start SCGEATOOL to visualize `SCE` class/object. Below are links to several case studies and examples using the scgeatool function to explore scRNA-seq data. All examples are below are publically available through GitHub.
 
 |Overview of scgeatool|
 
@@ -12,15 +14,25 @@ In MATLAB, SCGEATOOL function can be used to visualize `SCE` class/object. Below
   
 Using SCGEATOOL to explore
 -----------------------------
-For a quick exploratry data analysis using `SCGEATOOL` function
+For a quick exploratry data analysis using `scgeatool` function
 
 .. code-block::
 
   cdgea;
   load example_data\testXgs.mat
   scgeatool(X,g,s)
+  
+where X is the expression matrix, g is the list of genes, and s is the coordinates of embedding.
 
-If everything goes right, you will see the figure like this:
+You can also load an example SCE (`SingleCellExperiment` object) variable using the following code:
+
+.. code-block::
+
+  cdgea;
+  load example_data\testSce.mat
+  scgeatool(sce)
+
+If everything goes right, you will see the main inferface of SCGEATOOL like this:
 
 |gui|
 
