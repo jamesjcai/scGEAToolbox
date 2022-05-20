@@ -1,4 +1,4 @@
-function [XM]=i_nct(X,ptime,nsubsmpl,ncom,csubsmpl,savegrn)
+function [XM]=i_nct(X,ptime,nsubsmpl,ncom,csubsmpl,savegrn,mksparse)
 % NCT - network construction with cells subsampled using pseudotime
 %
 % input: X -  n (genes/features) x m (cells/samples) matrix
