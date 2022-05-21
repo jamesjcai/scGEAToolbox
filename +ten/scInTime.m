@@ -17,7 +17,8 @@ function [T]=scInTime(X,genelist,ptime,varargin)
    assert(length(genelist)==size(XM,1))
    assert(size(X,1)==size(XM,1))
    n=length(genelist);
-   R=reshape(corr(reshape(XM,[n.^2,10])',[1:10]'),[n,n]);
+   R=reshape(corr(reshape(XM,[n.^2,10])',(1:10)'),[n,n]);
+   R(isnan(R))=1;
    s=tsne(R,"NumDimensions",3);
    T.s=s;
    save('scInTime_res','T');
