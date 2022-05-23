@@ -20,12 +20,16 @@ function callback_DEGene2Groups(src,~)
     else
         return;
     end
-    fw=gui.gui_waitbar;
     try
         switch methodtag
             case 'ranksum'
+                fw=gui.gui_waitbar;
                 T=sc_deg(sce.X(:,i1),sce.X(:,i2),sce.g);
             case 'mast'
+                [ok]=gui.i_confirmscript('DE analysis (MAST)', ...
+                    'R_MAST','r');
+                if ~ok, return; end
+                fw=gui.gui_waitbar;
                 T=run.MAST(sce.X(:,i1),sce.X(:,i2),sce.g);
         end
     catch ME
@@ -65,7 +69,7 @@ function callback_DEGene2Groups(src,~)
     if strcmp(answer,'Yes')
         gui.i_enrichtest(Tup.gene(1:min(numel(Tup.gene),200)));
     end
-    pause(3);
+    %pause(3);
     answer = questdlg('Run enrichment analysis with top 200 down-regulated DE genes?');
     if strcmp(answer,'Yes')
         gui.i_enrichtest(Tdn.gene(1:min(numel(Tdn.gene),200)));

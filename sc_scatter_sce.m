@@ -457,7 +457,7 @@ end
         if ~ok, return; end
         fw = gui.gui_waitbar;
         try
-        [Xdecon,contamination]=run.decontX(sce);
+            [Xdecon,contamination]=run.decontX(sce);
         catch
             gui.gui_waitbar(fw);
             errordlg('Runtime error.')

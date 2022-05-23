@@ -8,6 +8,7 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
         'Remove Genes by Expression',...
         'Remove Genes by Name',...
         'Remove Mt-genes',...
+        'Remove Ribosomal Genes',...
         '------------------------------------------------',...
         'Library Size vs. Mt-reads Ratio',...
         'Library Size vs. Number of Genes',...
@@ -117,7 +118,9 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
                 return;
             end            
         case 'Remove Mt-genes'        % remove mt-genes
-            sce=sce.rmmtgenes;            
+            sce=sce.rmmtgenes;
+        case 'Remove Ribosomal Genes'
+            sce=sce.rmribosomalgenes;
         case '------------------------------------------------'
             requirerefresh=false;
             return;
@@ -217,7 +220,6 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
     end
     guidata(FigureHandle,sce);
 end
-                
 
 
 function [whitelist]=i_selectwhitelist(sce)
