@@ -1,4 +1,4 @@
-function [A0]=i_td1(XM0,methodid)
+function [A0,XM0denoised]=i_td1(XM0,methodid)
 % TD - tensor decomposition for denoising
 %
 % input:  XM0 - k multi-layer network array (n x n x k)
@@ -15,11 +15,13 @@ switch methodid
 end
 
 A0=mean(Xhat0,3);
+if nargout>1
+    XM0denoised=Xhat0;
+end
 % M=true(size(A0));
 % for k=1:size(Xhat0,3)
 %     [A]=ten.e_filtadjc(Xhat0(:,:,k),0.75);
 %     M=M & (A~=0);
 % end
 % A0=A0.*M;
-
 end

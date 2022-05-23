@@ -15,7 +15,22 @@ function callback_MarkerGeneHeatmap(src,~,sce)
     [c,cL]=grp2idx(thisc);
     if numel(cL)==1
         errordlg('Only one cell type or cluster.');
-        return; 
+        return;
+    end
+
+[answer]=questdlg('Manually order groups?','');
+    switch answer
+        case 'Yes'
+            [newidx]=gui.i_selmultidlg(cL);
+            if length(newidx)~=length(cL)
+                return;
+            end
+            cx=c;
+            for k=1:length(newidx)
+                c(cx==newidx(k))=k;
+            end
+            cL=cL(newidx);
+        otherwise
     end    
 
     answer = questdlg('Generate marker gene heatmap',...
