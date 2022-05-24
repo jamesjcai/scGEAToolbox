@@ -1,10 +1,11 @@
-function i_cascadefig(sce,g,axx,bxx,k)
+function i_cascadefig(sce,g,axx,bxx,k,methodid)
 
+if nargin<6, methodid=5; end
 if nargin<5, k=1; end
         f = figure('visible','off');
 
         [h1]=sc_scattermarker(sce.X,sce.g,...
-                     sce.s,g,5);
+                     sce.s,g,methodid);
         view(h1,axx,bxx);
         % movegui(f,'center');        
         P = get(f,'Position');

@@ -26,6 +26,7 @@ function callback_DrawDotplot(src,~)
     end
     try
         f=gui.i_dotplot(sce.X,sce.g,c,cL,glist);
+        % f=gui.i_violinplot(sce.X,sce.g,c,cL,glist);
     catch ME
         if exist('f','var') && ishandle(f)
             close(f);

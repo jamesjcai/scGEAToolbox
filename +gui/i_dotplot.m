@@ -84,8 +84,8 @@ pkg.i_addbutton2fig(tb,'on',@i_resetcolor,'plotpicker-geobubble2.gif','Reset col
 
     function i_resetcolor(~,~)
         colormap(flipud(bone));
-        for k=1:6
-            delete(af{k});
+        for kx=1:6
+            delete(af{kx});
             xlim([0.5 length(cL)+0.5]);
         end
     end

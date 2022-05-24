@@ -51,32 +51,30 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
             end
             switch methodid
                 case 1
-                    within_stemscatter(x, y, c);                    
+                    within_stemscatter(x, y, c);
+                    h1 = gca;
                 case 2
                     if isempty(z)
                         scatter(x, y, sz, c, 'filled');
                     else
                         scatter3(x, y, z, sz, c, 'filled');
                     end
+                    h1 = gca;
                 case 3
 
                     
                 case 4
-                    subplot(1, 2, 1);
+                    h1=subplot(1, 2, 1);
                     sc_scattermarker(X, genelist, s, targetg, 2, sz, false);
-                    subplot(1, 2, 2);
+                    h2=subplot(1, 2, 2);
                     sc_scattermarker(X, genelist, s, targetg, 1, sz, false);
                     hFig = gcf;
                     hFig.Position(3) = hFig.Position(3) * 2;
                 case 5          % ============ 5
                     if size(s, 2) >= 3
-                        x = s(:, 1);
-                        y = s(:, 2);
-                        z = s(:, 3);
+                        x = s(:, 1); y = s(:, 2); z = s(:, 3);
                     else
-                        x = s(:, 1);
-                        y = s(:, 2);
-                        z = zeros(size(x));
+                        x = s(:, 1); y = s(:, 2); z = zeros(size(x));
                     end
                    % explorer2IDX = y;
                    % assignin('base', 'explorer2IDX', explorer2IDX);
@@ -96,27 +94,19 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
                                   100 * sum(c > 0) ./ numel(c));
                     title(titxt);
 
-                    %                 title(sprintf('%s\n(%s/%s = %g%% nonzero)',...
-                    %                     g,...
-                    %                     num2bankScalar(sum(c>0)),...
-                    %                     num2bankScalar(numel(c)),...
-                    %                     100*sum(c>0)./numel(c)));
-
                     h2 = subplot(1, 2, 2);
                     s2=stem3(x, y, c, 'marker', 'none', 'color', 'm');
                     hold on;
                     scatter3(x, y, zeros(size(y)), 5, c, 'filled');
-                    %[ayy,byy]=view(h2);
-                    
+                    %[ayy,byy]=view(h2);                    
                     % h2.YDataSource='explorer2IDX';
-                    % hLD = linkdata('on');
-                    
+                    % hLD = linkdata('on');                    
                     evalin('base', 'h=findobj(gcf,''type'',''axes'');');
                     evalin('base', 'hlink = linkprop(h,{''CameraPosition'',''CameraUpVector''});');
                     evalin('base', 'rotate3d on');
                     hFig = gcf;
                     hFig.Position(3) = hFig.Position(3) * 2.2;
-                    view(h1, 3);                    
+                    view(h1, 3);
             end
             a=getpref('scgeatoolbox','prefcolormapname','autumn');
             gui.i_setautumncolor(c,a);
@@ -132,77 +122,15 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
             if showcam
                 hFig = gcf;
                 tb = uitoolbar(hFig);
-  %{
-                pt5pickcolr = uipushtool(tb, 'Separator', 'off');
-                [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
-                                             'resources', 'plotpicker-compass.gif'));  % plotpicker-pie
-                % map(map(:,1)+map(:,2)+map(:,3)==3) = NaN;  % Convert white pixels => transparent background
-                ptImage = ind2rgb(img, map);
-                pt5pickcolr.CData = ptImage;
-                pt5pickcolr.Tooltip = 'Switch color maps';
-                % pt5pickcolr.ClickedCallback = @callback_PickColorMap;
-                a=min([numel(unique(c)),256]);
-                pt5pickcolr.ClickedCallback = {@callback_PickColorMap, a, true};
-  %}
-
                 pkg.i_addbutton2fig(tb,'off',@gui.i_linksubplots,'plottypectl-rlocusplot.gif','Link subplots');
-
-%                 pt = uipushtool(tb, 'Separator', 'off');
-%                 [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
-%                                              'resources', 'plottypectl-rlocusplot.gif'));  % plotpicker-pie
-%                 ptImage = ind2rgb(img, map);
-%                 pt.CData = ptImage;
-%                 pt.Tooltip = 'Link subplots';
-%                 pt.ClickedCallback = @gui.i_linksubplots;
-
                 pkg.i_addbutton2fig(tb,'on',{@i_genecards,targetg},'fvtool_fdalinkbutton.gif','GeneCards...');
-
-
-%                 pt = uipushtool(tb, 'Separator', 'on');
-%                 [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
-%                                              'resources', 'fvtool_fdalinkbutton.gif'));  % plotpicker-pie
-%                 ptImage = ind2rgb(img, map);
-%                 pt.CData = ptImage;
-%                 pt.Tooltip = 'GeneCards';
-%                 pt.ClickedCallback = {@i_genecards,targetg};
-
-pkg.i_addbutton2fig(tb,'on',{@i_PickColorMap,c},'plotpicker-compass.gif','Pick new color map...');
-
-%                 pt = uipushtool(tb, 'Separator', 'on');
-%                 [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
-%                                              'resources', 'plotpicker-compass.gif'));  % plotpicker-pie
-%                 ptImage = ind2rgb(img, map);
-%                 pt.CData = ptImage;
-%                 pt.Tooltip = 'Pick new color map';
-%                 pt.ClickedCallback = {@i_PickColorMap,c};
-%                 
-
-pkg.i_addbutton2fig(tb,'off',@i_RescaleExpr,'IMG00074.GIF','Rescale expression level [log2(x+1)]');
-
-%                 pt = uipushtool(tb, 'Separator', 'off');
-%                 [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
-%                                              'resources', 'IMG00074.GIF'));  % plotpicker-pie
-%                 ptImage = ind2rgb(img, map);
-%                 pt.CData = ptImage;
-%                 pt.Tooltip = 'Rescale expression level [log2(x+1)]';
-%                 pt.ClickedCallback = @i_RescaleExpr;
-
-pkg.i_addbutton2fig(tb,'off',@i_ResetExpr,'plotpicker-geobubble2.gif','Reset expression level');
-
-%                 pt = uipushtool(tb, 'Separator', 'off');
-%                 [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
-%                                              'resources', 'plotpicker-geobubble2.gif'));  % plotpicker-pie
-%                 ptImage = ind2rgb(img, map);
-%                 pt.CData = ptImage;
-%                 pt.Tooltip = 'Reset expression level';
-%                 pt.ClickedCallback = @i_ResetExpr;
-                
-
+                pkg.i_addbutton2fig(tb,'on',{@i_PickColorMap,c},'plotpicker-compass.gif','Pick new color map...');
+                pkg.i_addbutton2fig(tb,'off',@i_RescaleExpr,'IMG00074.GIF','Rescale expression level [log2(x+1)]');
+                pkg.i_addbutton2fig(tb,'off',@i_ResetExpr,'plotpicker-geobubble2.gif','Reset expression level');
             end
         else
             warning('%s no expression', targetg);
         end
-
 
         if showcam
             gui.add_3dcamera(tb, targetg);
@@ -241,10 +169,8 @@ pkg.i_addbutton2fig(tb,'off',@i_ResetExpr,'plotpicker-geobubble2.gif','Reset exp
 end
 
 function i_genecards(~,~,g)
-web(sprintf('https://www.genecards.org/cgi-bin/carddisp.pl?gene=%s',g));
+    web(sprintf('https://www.genecards.org/cgi-bin/carddisp.pl?gene=%s',g));
 end
-
-
 
 function i_PickColorMap(~,~,c)
     list = {'parula','turbo','hsv','hot','cool','spring',...
