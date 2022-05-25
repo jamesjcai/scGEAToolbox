@@ -29,14 +29,14 @@ switch answer
 		   writetable(T,filename,'Delimiter','\t');
            pause(1)
            if needwait
-                waitfor(helpdlg(sprintf('Result has been saved in %s',filename),''));
+               waitfor(helpdlg(sprintf('Result has been saved in %s',filename),''));
            else
                helpdlg(sprintf('Result has been saved in %s',filename),'')
            end
         end
     case 'Excel file'
         [file, path] = uiputfile({'*.xlsx';'*.xls';'*.*'},'Save as');
-        if isequal(file,0) || isequal(path,0), return; end
+        if isequal(file,0) || isequal(path,0), return; end      
         
        filename=fullfile(path,file);           
        variables=T.Properties.VariableNames;
@@ -51,7 +51,7 @@ switch answer
 	   writetable(T,filename,'FileType','spreadsheet');
        pause(1)
        if needwait
-            waitfor(helpdlg(sprintf('Result has been saved in %s',filename),''));
+           waitfor(helpdlg(sprintf('Result has been saved in %s',filename),''));
        else
            helpdlg(sprintf('Result has been saved in %s',filename),'')
        end

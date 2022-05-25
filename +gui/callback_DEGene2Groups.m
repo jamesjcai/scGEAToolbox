@@ -63,18 +63,20 @@ function callback_DEGene2Groups(src,~)
                 disp('run.Enrichr(Tdn.gene(1:200))')
             end
         end
+    
+    
+        answer = questdlg('Run enrichment analysis with top 200 up-regulated DE genes?');
+        if strcmp(answer,'Yes')
+            gui.i_enrichtest(Tup.gene(1:min(numel(Tup.gene),200)));
+        end
+        
+        answer = questdlg('Run enrichment analysis with top 200 down-regulated DE genes?');
+        if strcmp(answer,'Yes')
+            gui.i_enrichtest(Tdn.gene(1:min(numel(Tdn.gene),200)));
+        end
+
     end
     
-    answer = questdlg('Run enrichment analysis with top 200 up-regulated DE genes?');
-    if strcmp(answer,'Yes')
-        gui.i_enrichtest(Tup.gene(1:min(numel(Tup.gene),200)));
-    end
-    %pause(3);
-    answer = questdlg('Run enrichment analysis with top 200 down-regulated DE genes?');
-    if strcmp(answer,'Yes')
-        gui.i_enrichtest(Tdn.gene(1:min(numel(Tdn.gene),200)));
-    end
-
 %     pause(3);
 %     
 %     %Tf=run.fgsea(T.gene);

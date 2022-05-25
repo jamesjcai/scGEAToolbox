@@ -30,13 +30,16 @@ try
                 [~,idx]=ismember(glist(k),sce.g);
                 y=full(Xt(idx,:));
                 ttxt=sce.g(idx);
+                
                 f = figure('visible','off');
                 pkg.i_violinplot(y,thisc);
                 title(strrep(ttxt,'_','\_'));
-                ylabel(a{indx1});        
+                ylabel(a{indx1});
+                tb=uitoolbar(f);
+                pkg.i_addbutton2fig(tb,'off',{@i_savedata,y,thisc},'export.gif','Export data...');
                 P = get(f,'Position');
                 set(f,'Position',[P(1)-20*k P(2)-20*k P(3) P(4)]);
-                set(f,'visible','on');
+                set(f,'visible','on');                
                 drawnow;
             end
             return;
@@ -76,5 +79,14 @@ catch ME
     errordlg(ME.message);
 end
 
+end
+
+
+function i_savedata(~,~,a,b)
+    T=table(a(:),b(:));    
+    T.Properties.VariableNames={'ExprLevel','GroupID'};
+    T=sortrows(T,'ExprLevel','descend');
+    T=sortrows(T,'GroupID');
+    gui.i_exporttable(T,true);
 end
 
