@@ -1,72 +1,73 @@
 function callback_MarkerGeneHeatmap(src,~,sce)
-    if nargin<3
 
-
+if nargin<3
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
-    end
+end
 
-    [thisc,~]=gui.i_select1class(sce);
-    if isempty(thisc)
-        % errordlg('Undefined');
-        return;
-    end
+[thisc,~]=gui.i_select1class(sce);
+if isempty(thisc), return; end
 
-    [c,cL]=grp2idx(thisc);
-    if numel(cL)==1
-        errordlg('Only one cell type or cluster.');
-        return;
-    end
+[c,cL]=grp2idx(thisc);
+if numel(cL)==1
+    errordlg('Only one cell type or cluster.');
+    return;
+end
 
 [answer]=questdlg('Manually order groups?','');
-    switch answer
-        case 'Yes'
-            [newidx]=gui.i_selmultidlg(cL);
-            if length(newidx)~=length(cL)
-                return;
-            end
-            cx=c;
-            for k=1:length(newidx)
-                c(cx==newidx(k))=k;
-            end
-            cL=cL(newidx);
-        otherwise
-    end    
-
-    answer = questdlg('Generate marker gene heatmap',...
-        'Select Method','Method 1 (DE 🐇)','Method 2 (scGeneFit 🐢)',...
-        'Method 3 (LASSO 🐢🐢)','Method 1 (DE 🐇)');
-    switch answer
-        case 'Method 1 (DE 🐇)'
-            methodid=1;
-        case 'Method 2 (scGeneFit 🐢)'
-            methodid=2;
-        case 'Method 3 (LASSO 🐢🐢)'
-            methodid=3;
-        otherwise
+switch answer
+    case 'Yes'
+        [newidx]=gui.i_selmultidlg(cL);
+        if length(newidx)~=length(cL)
             return;
-    end    
-    
-    fw=gui.gui_waitbar;
+        end
+        cx=c;
+        for k=1:length(newidx)
+            c(cx==newidx(k))=k;
+        end
+        cL=cL(newidx);
+    otherwise
+end    
+
+answer = questdlg('Generate marker gene heatmap',...
+    'Select Method','Method 1 (DE 🐇)','Method 2 (scGeneFit 🐢)',...
+    'Method 3 (LASSO 🐢🐢)','Method 1 (DE 🐇)');
+switch answer
+    case 'Method 1 (DE 🐇)'
+        methodid=1;
+    case 'Method 2 (scGeneFit 🐢)'
+        methodid=2;
+    case 'Method 3 (LASSO 🐢🐢)'
+        methodid=3;
+    otherwise
+        return;
+end    
+
+fw=gui.gui_waitbar;
+try
     [markerlist]=sc_pickmarkers(sce.X,sce.g,c,10,methodid);
-    M=cell(numel(cL),2);
-    for k=1:numel(cL)        
-        cLk=matlab.lang.makeValidName(cL{k});
-        M{k,1}=cLk;
-        M{k,2}=markerlist{k};
-    end
-    
-% ==============    
-    
-    X=[]; szcl=[]; idcl=[];
-    for k=1:length(cL)
-        i=c==k;
-        X=[X sce.X(:,i)];
-        szcl=[szcl sum(i)];
-        idcl=[idcl; c(i)];
-    end
-    X=sc_norm(X);
-    X=log(X+1);
+catch ME
+    gui.gui_waitbar(fw,true);
+    errordlg(ME.message);
+    return;
+end
+
+M=cell(numel(cL),2);
+for k=1:numel(cL)        
+    cLk=matlab.lang.makeValidName(cL{k});
+    M{k,1}=cLk;
+    M{k,2}=markerlist{k};
+end
+
+X=[]; szcl=[]; idcl=[];
+for k=1:length(cL)
+    i=c==k;
+    X=[X sce.X(:,i)];
+    szcl=[szcl sum(i)];
+    idcl=[idcl; c(i)];
+end
+X=sc_norm(X);
+X=log(X+1);
 
 % =========== 
 Y=[]; idgn=[]; szgn=[]; Z=[];
@@ -81,19 +82,15 @@ for k=1:numel(cL)
     szgn=[szgn length(markerlist)];
 end
 
-
 Y=zscore(Y,0,2);
 qx=quantile(Y(:),0.90);
 Y(Y>qx)=qx;
 qx=quantile(Y(:),0.10);
 Y(Y<qx)=qx;
-    
-    
 
 Z=[];
 for k=1:numel(cL)
     y=Y(idgn==k,:);
-    
     z=[];
     for kk=1:numel(cL)
         z=[z mean(y(:,idcl==kk),2)];
@@ -102,14 +99,11 @@ for k=1:numel(cL)
     %assert(isequal(z,z1));
     Z=[Z; z];
 end
+gui.gui_waitbar(fw);
 
-
-    gui.gui_waitbar(fw);
-
-    
-f1=figure;
 
 % ======= customized heatmap - start
+f1=figure;
 imagesc(Y);
 szc=cumsum(szgn);
 for k=1:max(idcl)-1
@@ -131,39 +125,12 @@ set(gca,'YTickLabel',MX);
 set(gca,'TickLength',[0 0])
 % ======= customized heatmap - end
 
-
 tb1=uitoolbar(f1);
-
 pkg.i_addbutton2fig(tb1,'off',{@i_saveM,M},'greencircleicon.gif','Save marker gene map...');
 pkg.i_addbutton2fig(tb1,'off',@gui.i_changefontsize,'noun_font_size_591141.gif','ChangeFontSize');
 pkg.i_addbutton2fig(tb1,'off',@i_summarymap,'HDF_object01.gif','Summary map...');
 pkg.i_addbutton2fig(tb1,'off',@i_summarymapT,'HDF_object02.gif','Summary map, transposed...');
 pkg.i_addbutton2fig(tb1,'off',@i_dotplotx,'HDF_object03.gif','Dot plot...');
-
-
-% pt1 = uipushtool(tb1,'Separator','off');
-% pt1.Tooltip = 'Save marker gene map';
-% [img,map] = imread(fullfile(matlabroot,...
-%             'toolbox','matlab','icons','greencircleicon.gif'));
-% ptImage = ind2rgb(img,map);
-% pt1.CData = ptImage;
-% pt1.ClickedCallback = {@i_saveM,M};
-% 
-% pt1 = uipushtool(tb1,'Separator','off');
-% pt1.Tooltip = 'Summary map';
-% [img,map] = imread(fullfile(matlabroot,...
-%             'toolbox','matlab','icons','HDF_object02.gif'));
-% ptImage = ind2rgb(img,map);
-% pt1.CData = ptImage;
-% pt1.ClickedCallback = @i_summarymap;
-% 
-% pt1 = uipushtool(tb1,'Separator','off');
-% pt1.Tooltip = 'Summary map, transposed';
-% [img,map] = imread(fullfile(matlabroot,...
-%             'toolbox','matlab','icons','HDF_object01.gif'));
-% ptImage = ind2rgb(img,map);
-% pt1.CData = ptImage;
-% pt1.ClickedCallback = @i_summarymapT;
 
     function i_dotplotx(~,~)
         try            
