@@ -15,7 +15,7 @@ load(fullfile(mfolder,...
        '../resources','tfome_tfgenes.mat'),'tfgenes');
 
 
-w=8;
+w=3;
 l=1;
 
 hFig=figure('name',figname,'Visible','off');
@@ -29,6 +29,7 @@ pkg.i_addbutton2fig(tb,'off',@ChangeWeight,'noun_Weight_2243621.gif','ChangeWeig
 pkg.i_addbutton2fig(tb,'off',@ChangeLayout,'noun_Layout_792775.gif','ChangeLayout');
 pkg.i_addbutton2fig(tb,'off',@ChangeDirected,'noun_directional_arrows_3497928.gif','ChangeDirected');
 pkg.i_addbutton2fig(tb,'off',@ChangeCutoff,'noun_Pruners_2469297.gif','ChangeCutoff');
+pkg.i_addbutton2fig(tb,'off',@ChangeBox,'noun_trim_3665385a.gif','Box off');
 pkg.i_addbutton2fig(tb,'off',@AnimateCutoff,'noun_trim_3665385.gif','AnimateCutoff');
 pkg.i_addbutton2fig(tb,'off',@SaveAdj,'export.gif','Export & save data');
 
@@ -87,6 +88,16 @@ title(figname);
            end
        end
    end
+
+    function ChangeBox(~,~)
+        if h1.Box
+            box(h1,'off');          
+            axis(h1,'off');            
+        else
+            box(h1,'on');            
+            axis(h1,'on');            
+        end
+    end
 
    function ChangeWeight(~,~)
        %a=3:10;

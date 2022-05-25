@@ -17,7 +17,7 @@ mfolder=fileparts(mfilename('fullpath'));
 load(fullfile(mfolder,...
        '../resources','tfome_tfgenes.mat'),'tfgenes');
 
-w=8;
+w=3;
 l=1;
 hFig=figure('name',figname,'Visible','on');
 set(0,'CurrentFigure',hFig)
@@ -25,8 +25,9 @@ set(0,'CurrentFigure',hFig)
 
 tiledlayout(1,2,'TileSpacing','compact',...
             'Padding','compact')
-h1=nexttile;
+
 %h1=subplot(1,2,1);
+h1=nexttile;
 [p1]=drawnetwork(G1,h1);
 
 %h2=subplot(1,2,2);
@@ -42,6 +43,7 @@ pkg.i_addbutton2fig(tb,'off',@ChangeWeight,'noun_Weight_2243621.gif','ChangeWeig
 pkg.i_addbutton2fig(tb,'off',@ChangeLayout,'noun_Layout_792775.gif','ChangeLayout');
 pkg.i_addbutton2fig(tb,'off',@ChangeDirected,'noun_directional_arrows_3497928.gif','ChangeDirected');
 pkg.i_addbutton2fig(tb,'off',@ChangeCutoff,'noun_Pruners_2469297.gif','ChangeCutoff');
+pkg.i_addbutton2fig(tb,'off',@ChangeBox,'noun_trim_3665385a.gif','Box off');
 pkg.i_addbutton2fig(tb,'off',@AnimateCutoff,'noun_trim_3665385.gif','AnimateCutoff');
 pkg.i_addbutton2fig(tb,'off',@SaveAdj,'export.gif','Export & save data');
 
@@ -76,6 +78,19 @@ set(hFig, 'visible','on');
        end
    end
 
+    function ChangeBox(~,~)
+        if h1.Box
+            box(h1,'off');
+            box(h2,'off');
+            axis(h1,'off');
+            axis(h2,'off');
+        else
+            box(h1,'on');
+            box(h2,'on');
+            axis(h1,'on');
+            axis(h2,'on');
+        end
+    end
                 
    function ChangeFontSize(~,~)
        i_changefontsize(p1);
@@ -107,17 +122,26 @@ set(hFig, 'visible','on');
        a=["auto","layered","subspace","force","circle"];       
        l=l+1;
        if l>5, l=1; end
-       disp(a(l))
+       %disp(a(l))
        switch a(l)
            case "force"               
                p1.layout(a(l),'Iterations',500,...
                 'WeightEffect','none',...   
                 'UseGravity',false);
+%                p2.layout(a(l),'Iterations',500,...
+%                 'WeightEffect','none',...   
+%                 'UseGravity',false);
+               
                %p2.layout(a(l),'Iterations',2500,'UseGravity','direct');
            otherwise
                p1.layout(a(l));
-               %p2.layout(a(l));
+               % p2.layout(a(l));
        end
+%        a=mean([p1.XData; p2.XData]);
+%        p1.XData=a; p2.XData=a;
+%        a=mean([p1.YData; p2.YData]);
+%        p1.YData=a; p2.YData=a;
+
        p2.XData=p1.XData;
        p2.YData=p1.YData;
        p1.XData=p2.XData;
@@ -172,12 +196,12 @@ set(hFig, 'visible','on');
     function [p]=drawnetwork(G,h)
         p=plot(h,G);
         %layout(p,'force');        
-        if isa(G,'digraph')
-            G.Nodes.NodeColors = outdegree(G)-indegree(G);
-        else
-            G.Nodes.NodeColors = degree(G);            
-        end
-        p.NodeCData = G.Nodes.NodeColors;
+%         if isa(G,'digraph')
+%             G.Nodes.NodeColors = outdegree(G)-indegree(G);
+%         else
+%             G.Nodes.NodeColors = degree(G);            
+%         end
+%         p.NodeCData = G.Nodes.NodeColors;
         n=size(G.Edges,1);
         cc=repmat([0 0.4470 0.7410],n,1);
         cc(G.Edges.Weight<0,:)=repmat([0.8500, 0.3250, 0.0980],...
