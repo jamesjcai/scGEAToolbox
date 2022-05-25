@@ -1,4 +1,4 @@
-function [hFig]=i_doublegraphs2(G1,G2,figname)
+function [hFig]=i_doublegraphs(G1,G2,figname)
 if nargin<3, figname=''; end
 if nargin<2
     G1=WattsStrogatz(100,5,0.15);
