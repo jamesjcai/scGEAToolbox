@@ -135,6 +135,7 @@ set(gca,'TickLength',[0 0])
 tb1=uitoolbar(f1);
 
 pkg.i_addbutton2fig(tb1,'off',{@i_saveM,M},'greencircleicon.gif','Save marker gene map...');
+pkg.i_addbutton2fig(tb1,'off',@gui.i_changefontsize,'noun_font_size_591141.gif','ChangeFontSize');
 pkg.i_addbutton2fig(tb1,'off',@i_summarymap,'HDF_object01.gif','Summary map...');
 pkg.i_addbutton2fig(tb1,'off',@i_summarymapT,'HDF_object02.gif','Summary map, transposed...');
 pkg.i_addbutton2fig(tb1,'off',@i_dotplotx,'HDF_object03.gif','Dot plot...');
@@ -176,23 +177,29 @@ pkg.i_addbutton2fig(tb1,'off',@i_dotplotx,'HDF_object03.gif','Dot plot...');
     end
 
     function i_summarymap(~,~)
-        figure;
+        f=figure;
         h=heatmap(cL,MX,Z);
         h.Title = 'Marker Gene Heatmap';
         h.XLabel = 'Group';
         h.YLabel = 'Marker Gene';
         h.Colormap = parula;
         h.GridVisible = 'off';
+        tb = uitoolbar('Parent', f);
+        pkg.i_addbutton2fig(tb,'off',@gui.i_changefontsize,'noun_font_size_591141.gif','ChangeFontSize');        
     end
 
     function i_summarymapT(~,~)
-        figure;
+        f=figure;
         h=heatmap(MX,cL,Z.');
         h.Title = 'Marker Gene Heatmap';
         h.YLabel = 'Group';
         h.XLabel = 'Marker Gene';
         h.Colormap = parula;
         h.GridVisible = 'off';
+%         s = struct(h);
+%         s.XAxis.TickLabelRotation=45;        
+        tb = uitoolbar('Parent', f);
+        pkg.i_addbutton2fig(tb,'off',@gui.i_changefontsize,'noun_font_size_591141.gif','ChangeFontSize');        
     end
 
     function i_saveM(~,~,M)
