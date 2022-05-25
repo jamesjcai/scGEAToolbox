@@ -81,9 +81,12 @@ function callback_Brush4MarkersLASSO(src,~,sce)
          markerlist=markerlist(jx);
 %        htmlfilename=cL{unique(c(ptsSelected))};
 %        pkg.i_markergeneshtml(sce,markerlist,numfig,...
-%                    [ax bx],htmlfilename,ptsSelected);        
+%                    [ax bx],htmlfilename,ptsSelected);
+        [methodid]=gui.i_pickscatterstem('Scatter');
+        if isempty(methodid), return; end
         for kk=1:length(markerlist)
-            gui.i_cascadefig(sce,markerlist(end-(kk-1)),ax,bx,kk);
+            gui.i_cascadefig(sce,markerlist(end-(kk-1)), ...
+                ax,bx,kk,methodid);
         end       
     end
         fprintf('%d marker genes: ',length(markerlist));

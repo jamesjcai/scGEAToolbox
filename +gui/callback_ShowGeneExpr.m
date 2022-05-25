@@ -58,17 +58,19 @@ switch answer
                     end
                     x=x.*ix;
                 case 'Individually'
-                    methodx=questdlg('Plot type:','','Scatter','Stem','Scatter+Stem','Scatter+Stem');
-                    switch methodx
-                        case 'Scatter'
-                            methodid=2;
-                        case 'Stem'
-                            methodid=1;
-                        case 'Scatter+Stem'
-                            methodid=5;
-                        otherwise
-                            methodid=5;
-                    end
+%                     methodx=questdlg('Plot type:','','Scatter','Stem','Scatter+Stem','Scatter+Stem');
+%                     switch methodx
+%                         case 'Scatter'
+%                             methodid=2;
+%                         case 'Stem'
+%                             methodid=1;
+%                         case 'Scatter+Stem'
+%                             methodid=5;
+%                         otherwise
+%                             methodid=5;
+%                     end
+                    [methodid]=gui.i_pickscatterstem('Scatter+Stem');
+                    if isempty(methodid), return; end
                     for k=1:length(glist)
                         gui.i_cascadefig(sce,glist(k),axx,bxx,k,methodid);
                         % i_showcascade(sce,gsorted(idx(k)),axx,bxx,k);

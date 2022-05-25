@@ -90,7 +90,7 @@ zlabel('CV, log');
             fprintf('%d genes are selected.\n',sum(ptsSelected));
             
             tgenes=g(ptsSelected);
-            answer=pkg.timeoutdlg(@(x){questdlg('Which analysis?','', ...
+            answer=gui.timeoutdlg(@(x){questdlg('Which analysis?','', ...
                 'Enrichr','GOrilla','Enrichr+GOrilla','Enrichr+GOrilla')},15);
             if isempty(answer), return; end
             switch answer

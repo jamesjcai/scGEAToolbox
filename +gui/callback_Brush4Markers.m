@@ -4,7 +4,10 @@ function callback_Brush4Markers(src,event)
         gui.callback_Brush4MarkersLASSO(src,event);
         return;
     end
+   
+
     
+
     
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);    
@@ -51,7 +54,7 @@ function callback_Brush4Markers(src,event)
             [markerlist]=sc_pickmarkers(sce.X,sce.g,1+ptsSelected,2);
             sce.c=1+ptsSelected;
             markerlist=markerlist{2};
-            disp('xxx')
+            % disp('xxx')
         case 2
             ptsSelected=c==unique(c(ptsSelected));
             % h.BrushData=double(ptsSelected);
