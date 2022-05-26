@@ -19,7 +19,6 @@ w=3;
 l=1;
 
 hFig=figure('name',figname,'Visible','off');
-movegui(hFig, 'center');
 h1=axes(hFig);
 [p1]=drawnetwork(G1,h1);
 
@@ -33,6 +32,7 @@ pkg.i_addbutton2fig(tb,'off',@ChangeBox,'noun_trim_3665385a.gif','Box off');
 pkg.i_addbutton2fig(tb,'off',@AnimateCutoff,'noun_trim_3665385.gif','AnimateCutoff');
 pkg.i_addbutton2fig(tb,'off',@SaveAdj,'export.gif','Export & save data');
 
+movegui(hFig, 'center');
 
 set(hFig, 'visible','on');
 title(figname);

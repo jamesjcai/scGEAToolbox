@@ -21,7 +21,6 @@ w=3;
 l=1;
 hFig=figure('name',figname,'Visible','on');
 set(0,'CurrentFigure',hFig)
-% movegui(hFig, 'center');
 
 tiledlayout(1,2,'TileSpacing','compact',...
             'Padding','compact')
@@ -54,8 +53,8 @@ if exist('suptitle.m','file')
 else
     hFig.Position(3)=hFig.Position(3)*2.2;
 end
+movegui(hFig, 'center');
 set(hFig, 'visible','on');
-
 
    function SaveAdj(~,~)
        if ~(ismcc || isdeployed)
@@ -195,7 +194,7 @@ set(hFig, 'visible','on');
 
     function [p]=drawnetwork(G,h)
         p=plot(h,G);
-        %layout(p,'force');        
+% layout(p,'force');        
 %         if isa(G,'digraph')
 %             G.Nodes.NodeColors = outdegree(G)-indegree(G);
 %         else
