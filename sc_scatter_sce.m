@@ -113,7 +113,7 @@ i_addbutton(1,1,@ClusterCellsS,"plotpicker-dendrogram.gif","Clustering using emb
 i_addbutton(1,0,@ClusterCellsX,"plotpicker-gscatter.gif","Clustering using expression matrix X")
 i_addbutton(1,1,@DetermineCellTypeClusters,"plotpicker-contour.gif","Cell types of clusters")
 i_addbutton(1,0,@Brush4Celltypes,"brush.gif","Cell types of brushed cells")
-i_addbutton(1,0,@RenameCellType,"plotpicker-scatterhist.gif","Rename cell type")
+i_addbutton(1,0,@RenameCellTypeBatchID,"plotpicker-scatterhist.gif","Rename cell type")
 i_addbutton(1,0,@callback_CellTypeMarkerScores,"cellscore.gif","Calculate Cell Scores from Cell Type Markers")
 i_addbutton(1,0,@ShowCellStemScatter,"IMG00067.GIF","Stem scatter plot")
 i_addbutton(1,1,@callback_Brush4Markers,"plotpicker-kagi.gif","Marker genes of brushed cells")
@@ -187,9 +187,10 @@ i_addmenu(m_exp,0,@callback_TCellExhaustionScores,'T Cell Exhaustion Score...');
 i_addmenu(m_exp,1,@GEOAccessionToSCE,'Import Data Using GEO Accession...');
 i_addmenu(m_exp,0,{@MergeSCEs,1},'Merge SCEs in Workspace...');
 i_addmenu(m_exp,0,{@MergeSCEs,2},'Merge SCE Data Files...');
-i_addmenu(m_exp,0,{@i_savefig,1},'Save Figure as SVG File...');
-i_addmenu(m_exp,0,{@i_savefig,2},'Export Graphics...');
+i_addmenu(m_exp,0,@RenameCellTypeBatchID,'Rename Batch IDs...');
 i_addmenu(m_exp,0,@callback_ViewMetaData,'View Metadata...');
+i_addmenu(m_exp,1,{@i_savefig,1},'Save Figure as SVG File...');
+i_addmenu(m_exp,0,{@i_savefig,2},'Export Graphics...');
 i_addmenu(m_exp,1,{@(~,~) web('https://scgeatool.github.io/')},'Visit SCGEATOOL-Standalone Website...');
 i_addmenu(m_exp,0,@callback_CheckUpdates,'Check for Updates...');
 
@@ -604,40 +605,29 @@ end
         colormap(para.oldColorMap);
     end
 
-    function RenameCellType(src,~)
-        [requirerefresh]=gui.callback_RenameCells(src);
+    function RenameCellTypeBatchID(src,~)
+        answer=questdlg('Rename cell type or batch ID?','','Cell type','Batch ID','Cell type');
+        switch answer
+            case 'Cell type'
+                [requirerefresh]=gui.callback_RenameCellType(src);
+            case 'Batch ID'
+                [requirerefresh]=gui.callback_RenameBatchID(src);
+            otherwise
+                return;
+        end
         if requirerefresh
-            sce = guidata(FigureHandle);
-            [c, cL] = grp2idx(sce.c_cell_type_tx);
-            i_labelclusters(false);
+           sce = guidata(FigureHandle);
+           switch answer
+               case 'Cell type'
+                   [c, cL] = grp2idx(sce.c_cell_type_tx);
+               case 'Batch ID'
+                   [c, cL] = grp2idx(sce.c_batch_id);
+               otherwise
+                   return;
+           end
+           i_labelclusters(false);
         end
     end
-
-
-%     function RenameCellTypex(~, ~)
-%         if isempty(sce.c_cell_type_tx)
-%             errordlg('sce.c_cell_type_tx undefined');
-%             return;
-%         end
-%         answer = questdlg('Rename a cell type?');
-%         if ~strcmp(answer, 'Yes'), return; end
-%         [ci, cLi] = grp2idx(sce.c_cell_type_tx);
-%         [indxx, tfx] = listdlg('PromptString',...
-%             {'Select cell type'},...
-%             'SelectionMode', 'single',...
-%             'ListString', string(cLi));
-%         if tfx == 1
-%             i = ismember(ci, indxx);
-%             newctype = inputdlg('New cell type', 'Rename', [1 50], cLi(ci(i)));
-%             if ~isempty(newctype)
-%                 cLi(ci(i)) = newctype;
-%                 sce.c_cell_type_tx = string(cLi(ci));
-%                 [c, cL] = grp2idx(sce.c_cell_type_tx);
-%                 i_labelclusters(false);
-%             end
-%         end
-%         guidata(FigureHandle, sce);
-%     end
 
     function EmbeddingAgain(src, ~)
         answer = questdlg('Which embedding method?', 'Select method',...
@@ -1157,24 +1147,22 @@ end
         else
             sce=guidata(FigureHandle);
             [thisc,~]=gui.i_select1class(sce);
-            if ~isempty(thisc)
-                [c,cL] = grp2idx(thisc);
-                
-                sce.c = c;
-                RefreshAll(src, 1, true, false);                
-                if max(c)<=200
-                    if i_labelclusters
-                        set(src, 'State', 'on');
-                    else
-                        set(src, 'State', 'off');
-                    end
+            if isempty(thisc), return; end
+            [c,cL] = grp2idx(thisc);
+            sce.c = c;
+            RefreshAll(src, 1, true, false);                
+            if max(c)<=200
+                if i_labelclusters
+                    set(src, 'State', 'on');
                 else
                     set(src, 'State', 'off');
-                    warndlg('Labels are not showing. Too many categories (n>200).');                    
                 end
-                setappdata(FigureHandle,'cL',cL);
-                guidata(FigureHandle, sce);
-            end        
+            else
+                set(src, 'State', 'off');
+                warndlg('Labels are not showing. Too many categories (n>200).');                    
+            end
+            setappdata(FigureHandle,'cL',cL);
+            guidata(FigureHandle, sce);                   
             % colormap(lines(min([256 numel(unique(sce.c))])));
         end
     end
@@ -1192,7 +1180,7 @@ end
             if notasking
                 stxtyes = c;
             else
-                [~,cLx]=grp2idx(c); 
+                [~,cLx]=grp2idx(c);
                 if isequal(cL,cLx)
                     stxtyes = c;
                 else
@@ -1210,7 +1198,6 @@ end
             end
             dtp = findobj(h, 'Type', 'datatip');
             delete(dtp);
-            
             row = dataTipTextRow('', stxtyes);
             h.DataTipTemplate.DataTipRows = row;
             % h.DataTipTemplate.FontSize = 5;
@@ -1224,17 +1211,4 @@ end
             isdone = true;
         end
     end
-
-%     function [para] = i_getoldsettings(src)
-%         ah = findobj(src.Parent.Parent, 'type', 'Axes');
-%         ha = findobj(ah.Children, 'type', 'Scatter');
-%         ha1 = ha(1);
-%         oldMarker = ha1.Marker;
-%         oldSizeData = ha1.SizeData;
-%         oldColorMap = colormap;
-%         para.oldMarker = oldMarker;
-%         para.oldSizeData = oldSizeData;
-%         para.oldColorMap = oldColorMap;
-%     end
-
 end

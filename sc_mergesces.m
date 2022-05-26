@@ -37,7 +37,7 @@ try
 catch
     sce.s=randn(size(X,2),3);
 end
-sce.c_batch_id=c;
+% sce.c_batch_id=c;
 
 if ~isempty(sce1.c_cell_cycle_tx) && ~isempty(sce2.c_cell_cycle_tx)
     sce.c_cell_cycle_tx=[sce1.c_cell_cycle_tx; sce2.c_cell_cycle_tx];

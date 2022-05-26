@@ -1,4 +1,4 @@
-function [requirerefresh]=callback_RenameCells(src)
+function [requirerefresh]=callback_RenameCellType(src)
     requirerefresh=false;
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
@@ -7,8 +7,8 @@ function [requirerefresh]=callback_RenameCells(src)
         errordlg('sce.c_cell_type_tx undefined');
         return;
     end
-    answer = questdlg('Rename a cell type?');
-    if ~strcmp(answer, 'Yes'), return; end
+    %answer = questdlg('Rename a cell type?');
+    %if ~strcmp(answer, 'Yes'), return; end
     [ci, cLi] = grp2idx(sce.c_cell_type_tx);
     [indxx, tfx] = listdlg('PromptString',...
         {'Select cell type'},...

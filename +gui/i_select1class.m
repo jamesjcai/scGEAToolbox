@@ -1,27 +1,45 @@
-function [thisc,clable]=i_select1class(sce)
+function [thisc,clable]=i_select1class(sce,allowunique)
 
+if nargin<2, allowunique=true; end
 thisc=[];
 clable='';
 
     listitems={'Current Class (C)'};
     if ~isempty(sce.c_cluster_id)
-        if numel(unique(sce.c_cluster_id))>1
+        if allowunique
             listitems=[listitems,'Cluster ID'];
+        else
+            if numel(unique(sce.c_cluster_id))>1
+               listitems=[listitems,'Cluster ID'];
+            end            
         end
     end
     if ~isempty(sce.c_cell_type_tx)
+        if allowunique
+                listitems=[listitems,'Cell Type'];
+        else
         if numel(unique(sce.c_cell_type_tx))>1
             listitems=[listitems,'Cell Type'];
         end
+        end
     end
+
     if ~isempty(sce.c_cell_cycle_tx)
-        if numel(unique(sce.c_cell_cycle_tx))>1
+        if allowunique
             listitems=[listitems,'Cell Cycle Phase'];
+        else           
+            if numel(unique(sce.c_cell_cycle_tx))>1
+                listitems=[listitems,'Cell Cycle Phase'];
+            end
         end
     end
     if ~isempty(sce.c_batch_id)
-        if numel(unique(sce.c_batch_id))>1
+        if allowunique
             listitems=[listitems,'Batch ID'];
+        else
+            if numel(unique(sce.c_batch_id))>1
+                listitems=[listitems,'Batch ID'];
+            end
         end
     end
     
