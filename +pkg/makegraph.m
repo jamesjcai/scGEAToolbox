@@ -5,7 +5,7 @@ function G=makegraph(A,genelist)
         if issymmetric(A)
             G=graph(A,genelist,'omitselfloops');    
         else
-            G=digraph(A,genelist,'omitselfloops');
+            G=digraph(A,genelist,'omitselfloops');            
         end
     end
 end

@@ -56,8 +56,8 @@ title(figname);
     case 'Workspace'       
      labels = {'Save adjacency matrix A1 to variable named:',...
                'Save graph G1 to variable named:',...
-               'Save genelist g1 to variable named:'};
-               A1=adjacency(G1,'weighted');
+               'Save genelist g1 to variable named:'};     
+               A1=adjacency(G1,'weighted');        
                g1=string(G1.Nodes.Name);
              vars = {'A1','G1','g1'};...
              values = {A1,G1,g1};
@@ -170,13 +170,13 @@ title(figname);
 
     function [p]=drawnetwork(G,h)
         p=plot(h,G);
-        %layout(p,'force');        
-        if isa(G,'digraph')
-            G.Nodes.NodeColors = outdegree(G)-indegree(G);
-        else
-            G.Nodes.NodeColors = degree(G);            
-        end
-        p.NodeCData = G.Nodes.NodeColors;
+        %layout(p,'force');
+%         if isa(G,'digraph')
+%             G.Nodes.NodeColors = outdegree(G)-indegree(G);
+%         else
+%             G.Nodes.NodeColors = degree(G);
+%         end
+%         p.NodeCData = G.Nodes.NodeColors;
         
         cc=repmat([0 0.4470 0.7410],G.numedges,1);
         cc(G.Edges.Weight<0,:)=repmat([0.8500, 0.3250, 0.0980],...
