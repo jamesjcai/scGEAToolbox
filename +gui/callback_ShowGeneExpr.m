@@ -1,4 +1,7 @@
 function callback_ShowGeneExpr(src,~)
+
+    import mlreportgen.ppt.*;
+
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
     [axx,bxx]=view();
@@ -71,9 +74,39 @@ switch answer
 %                     end
                     [methodid]=gui.i_pickscatterstem('Scatter+Stem');
                     if isempty(methodid), return; end
+                    
+                    answer=questdlg('Output to PowerPoint?');
+                    switch answer
+                        case 'Yes'
+                            needpptx=true;
+                        case 'No'
+                            needpptx=false;
+                        otherwise
+                            return;
+                    end
+
+                    images={};
                     for k=1:length(glist)
-                        gui.i_cascadefig(sce,glist(k),axx,bxx,k,methodid);
+                        f=gui.i_cascadefig(sce,glist(k),axx,bxx,k,methodid);
                         % i_showcascade(sce,gsorted(idx(k)),axx,bxx,k);
+                        if needpptx
+                            img1=[tempname,'.png'];
+                            images = [images {img1}];
+                            saveas(f,img1);
+                        end
+                    end
+                    if needpptx
+                        OUTppt=[tempname,'.pptx'];
+                        ppt = Presentation(OUTppt);
+                        open(ppt);
+                        for k=1:length(images)
+                            %slide1 = add(ppt,'Title Slide');
+                            slide3 = add(ppt,'Title and Content');
+                            replace(slide3,'Title',glist(k));
+                            replace(slide3,'Content',Picture(images{k}));
+                        end
+                        close(ppt);
+                        rptview(ppt);
                     end
                     return;
                 otherwise
