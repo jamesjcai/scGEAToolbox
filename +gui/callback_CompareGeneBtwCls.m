@@ -32,6 +32,7 @@ try
                 ttxt=sce.g(idx);
                 
                 f = figure('visible','off');
+                %thisc
                 pkg.i_violinplot(y,thisc);
                 title(strrep(ttxt,'_','\_'));
                 ylabel(a{indx1});
