@@ -1,5 +1,9 @@
 function callback_ShowGeneExpr(src,~)
 
+   if ismcc || isdeployed
+    makePPTCompilable();
+    % https://www.mathworks.com/help/rptgen/ug/compile-a-presentation-program.html
+   end
     import mlreportgen.ppt.*;
 
     FigureHandle=src.Parent.Parent;
@@ -96,6 +100,7 @@ switch answer
                         end
                     end
                     if needpptx
+                        try
                         fw=gui.gui_waitbar;
                         OUTppt=[tempname,'.pptx'];
                         ppt = Presentation(OUTppt);
@@ -110,6 +115,10 @@ switch answer
                         close(ppt);
                         gui.gui_waitbar(fw);
                         rptview(ppt);
+                        catch ME
+                            gui.gui_waitbar(fw,true);
+                            errordlg(ME.message);                            
+                        end
                     end
                     len = length(images);
                     for i = 1:len
