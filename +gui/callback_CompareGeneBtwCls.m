@@ -8,41 +8,42 @@ function callback_CompareGeneBtwCls(src,~)
     [thisc]=gui.i_select1class(sce);
     if isempty(thisc), return; end
     
-a={'Expression of Selected Genes','Library Size','Predefined Cell Score','Other Attribute'};
+a={'Expression of Gene','Library Size','Predefined Cell Score','Other Attribute'};
 [indx1,tf1]=listdlg('PromptString',...
     'Select a metric for comparison.',...
     'SelectionMode','single','ListString',a);
 if tf1~=1, return; end
 
-try
+%try
     switch a{indx1}
         case 'Library Size'
             y=sum(sce.X);
             ttxt='Library Size';
-        case 'Expression of Selected Genes'
+        case 'Expression of Gene'
             [glist]=gui.i_selectngenes(sce);
             if isempty(glist)
                 helpdlg('No gene selected.','');
                 return;
             end
-            [Xt]=gui.i_transformx(sce.X);        
-            for k=1:length(glist)
-                [~,idx]=ismember(glist(k),sce.g);
-                y=full(Xt(idx,:));
-                ttxt=sce.g(idx);
-                
-                f = figure('visible','off');
-                %thisc
-                pkg.i_violinplot(y,thisc);
-                title(strrep(ttxt,'_','\_'));
-                ylabel(a{indx1});
-                tb=uitoolbar(f);
-                pkg.i_addbutton2fig(tb,'off',{@i_savedata,y,thisc},'export.gif','Export data...');
-                P = get(f,'Position');
-                set(f,'Position',[P(1)-20*k P(2)-20*k P(3) P(4)]);
-                set(f,'visible','on');                
-                drawnow;
-            end
+            [Xt]=gui.i_transformx(sce.X);
+            
+%             [c,cL]=grp2idx(thisc);
+%             [answer]=questdlg('Manually order groups?','');
+%             switch answer
+%                 case 'Yes'
+%                     [newidx]=gui.i_selmultidlg(cL);
+%                     if length(newidx)~=length(cL)
+%                         return;
+%                     end
+%                     cx=c;
+%                     for k=1:length(newidx)
+%                         c(cx==newidx(k))=k;
+%                     end
+%                     cL=cL(newidx);
+%                 otherwise
+%             end
+            [cL]=i_getgrouporder(thisc);
+            gui.i_cascadeviolin(sce,Xt,thisc,glist,a{indx1},cL);
             return;
         case 'Predefined Cell Score'
             [~,T]=pkg.e_cellscores(sce.X,sce.g,0);
@@ -70,24 +71,37 @@ try
         otherwise
             return;
     end
+
+    [cL]=i_getgrouporder(thisc);
     f = figure('visible','off');
-    pkg.i_violinplot(y,thisc);
+    pkg.i_violinplot(y,thisc,false,cL);
     title(strrep(ttxt,'_','\_'));
     ylabel(a{indx1});
     movegui(f,'center');
     set(f,'visible','on');
-catch ME
-    errordlg(ME.message);
-end
+%catch ME
+%    errordlg(ME.message);
+%end
 
 end
 
 
-function i_savedata(~,~,a,b)
-    T=table(a(:),b(:));    
-    T.Properties.VariableNames={'ExprLevel','GroupID'};
-    T=sortrows(T,'ExprLevel','descend');
-    T=sortrows(T,'GroupID');
-    gui.i_exporttable(T,true);
-end
 
+function [cL]=i_getgrouporder(thisc)
+    [c,cL]=grp2idx(thisc);
+    [answer]=questdlg('Manually order groups?','');
+    switch answer
+        case 'Yes'
+            [newidx]=gui.i_selmultidlg(cL);
+            if length(newidx)~=length(cL)
+                waitfor(helpdlg('Reordering is canceled or incomplete. Default order is used. Click OK to continue.',''));
+                return;
+            end
+            cx=c;
+            for k=1:length(newidx)
+                c(cx==newidx(k))=k;
+            end
+            cL=cL(newidx);
+        otherwise
+    end
+end

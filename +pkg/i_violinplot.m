@@ -1,4 +1,4 @@
-function i_violinplot(d,c,colorit)
+function i_violinplot(d,c,colorit,grouporder)
 import pkg.Violin
 import pkg.violinplot
 % if isstring(c)
@@ -6,14 +6,28 @@ import pkg.violinplot
 % end
 % [~,cL]=grp2idx(c);
 % [~,i]=sort(grpstats(d,c,@median),'descend');
-if nargin<3, colorit=false; end
+
+c=string(c);
+if nargin<4, grouporder=[]; end
+if nargin<3 || isempty(colorit), colorit=false; end
 if issparse(d), d=full(d); end
 if ~colorit
-    violinplot(d,c,...
-        'ShowData',false,'ViolinColor',[1 1 1],...
-        'EdgeColor',[0 0 0]);
+    if isempty(grouporder)
+        violinplot(d,c,...
+            'ShowData',false,'ViolinColor',[1 1 1],...
+            'EdgeColor',[0 0 0]);
+    else
+        violinplot(d,c,...
+            'ShowData',false,'ViolinColor',[1 1 1],...
+            'EdgeColor',[0 0 0],'GroupOrder',grouporder);
+    end
 else
-    violinplot(d,c,'ShowData',false,'EdgeColor',[0 0 0]);
+    if isempty(grouporder)
+        violinplot(d,c,'ShowData',false,'EdgeColor',[0 0 0]);
+    else
+        violinplot(d,c,'ShowData',false,'EdgeColor',[0 0 0], ...
+            'GroupOrder',grouporder);
+    end
 end
 %xtickangle(-45);
 box on

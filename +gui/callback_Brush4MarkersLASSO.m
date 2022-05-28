@@ -84,10 +84,12 @@ function callback_Brush4MarkersLASSO(src,~,sce)
 %                    [ax bx],htmlfilename,ptsSelected);
         [methodid]=gui.i_pickscatterstem('Scatter');
         if isempty(methodid), return; end
+        F=cell(length(markerlist),1);
         for kk=1:length(markerlist)
-            gui.i_cascadefig(sce,markerlist(end-(kk-1)), ...
-                ax,bx,kk,methodid);
-        end       
+            F{kk}=gui.i_cascadefig(sce,markerlist(end-(kk-1)), ...
+                ax,bx,kk,methodid);            
+        end
+        gui.i_export2pptx(F,markerlist);
     end
         fprintf('%d marker genes: ',length(markerlist));
         fprintf('%s ',markerlist)
