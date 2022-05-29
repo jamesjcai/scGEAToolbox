@@ -112,28 +112,28 @@ i_addbutton(1,0,@Brushed2MergeClusters,"plotpicker-pzmap.gif","Merge brushed cel
 i_addbutton(1,1,@ClusterCellsS,"plotpicker-dendrogram.gif","Clustering using embedding S")
 i_addbutton(1,0,@ClusterCellsX,"plotpicker-gscatter.gif","Clustering using expression matrix X")
 i_addbutton(1,1,@DetermineCellTypeClusters,"plotpicker-contour.gif","Cell types of clusters")
-i_addbutton(1,0,@Brush4Celltypes,"brush.gif","Cell types of brushed cells")
-i_addbutton(1,0,@RenameCellTypeBatchID,"plotpicker-scatterhist.gif","Rename cell type")
-i_addbutton(1,0,@callback_CellTypeMarkerScores,"cellscore.gif","Calculate Cell Scores from Cell Type Markers")
-i_addbutton(1,0,@ShowCellStemScatter,"IMG00067.GIF","Stem scatter plot")
-i_addbutton(1,1,@callback_Brush4Markers,"plotpicker-kagi.gif","Marker genes of brushed cells")
-i_addbutton(1,0,@callback_MarkerGeneHeatmap,"plotpicker-plotmatrix.gif","Marker gene heatmap")
-i_addbutton(1,1,@callback_ShowClustersPop,"plotpicker-geoscatter.gif","Show cell clusters/groups individually")
-i_addbutton(1,0,@callback_SelectCellsByClass,"plotpicker-pointfig.gif","Select cells by class")
-i_addbutton(1,0,@DeleteSelectedCells,"plotpicker-qqplot.gif","Delete selected cells")
-i_addbutton(1,0,@callback_SaveX,"export.gif","Export & save data")
-i_addbutton(1,1,@EmbeddingAgain,"plotpicker-geobubble.gif","Embedding (tSNE, UMP, PHATE)")
-i_addbutton(1,0,@Switch2D3D,"plotpicker-image.gif","Switch 2D/3D")
-i_addbutton(1,1,@callback_CloseAllOthers,"noun_Pruners_2469297.gif","Close All Other Figures")
-i_addbutton(1,0,@callback_PickPlotMarker,"plotpicker-rose.gif","Switch scatter plot marker type")
-i_addbutton(1,0,@callback_PickColorMap,"plotpicker-compass.gif","Pick new color map")
-i_addbutton(1,0,@RefreshAll,"plotpicker-geobubble2.gif","Refresh")
-i_addbutton(2,0,@call_scgeatool,"IMG00107.GIF"," ")
-i_addbutton(2,0,@callback_CalculateCellScores,"cellscore2.gif","Calculate Cell Scores from List of Feature Genes")
-i_addbutton(2,0,@callback_ComparePotency,"plotpicker-candle.gif","Compare Differentiation Potency");
+i_addbutton(1,0,@Brush4Celltypes,"brush.gif","Cell types of brushed cells");
+i_addbutton(1,0,@RenameCellTypeBatchID,"plotpicker-scatterhist.gif","Rename cell type or batch ID");
+i_addbutton(1,0,@callback_CellTypeMarkerScores,"cellscore.gif","Calculate Cell Scores from Cell Type Markers");
+i_addbutton(1,0,@ShowCellStemScatter,"IMG00067.GIF","Stem scatter plot");
+i_addbutton(1,1,@callback_Brush4Markers,"plotpicker-kagi.gif","Marker genes of brushed cells");
+i_addbutton(1,0,@callback_MarkerGeneHeatmap,"plotpicker-plotmatrix.gif","Marker gene heatmap");
+i_addbutton(1,1,@callback_ShowClustersPop,"plotpicker-geoscatter.gif","Show cell clusters/groups individually");
+i_addbutton(1,0,@callback_SelectCellsByClass,"plotpicker-pointfig.gif","Select cells by class");
+i_addbutton(1,0,@DeleteSelectedCells,"plotpicker-qqplot.gif","Delete selected cells");
+i_addbutton(1,0,@callback_SaveX,"export.gif","Export & save data");
+i_addbutton(1,1,@EmbeddingAgain,"plotpicker-geobubble.gif","Embedding (tSNE, UMP, PHATE)");
+i_addbutton(1,0,@Switch2D3D,"plotpicker-image.gif","Switch 2D/3D");
+i_addbutton(1,1,@callback_CloseAllOthers,"noun_Pruners_2469297.gif","Close all other figures");
+i_addbutton(1,0,@callback_PickPlotMarker,"plotpicker-rose.gif","Switch scatter plot marker type");
+i_addbutton(1,0,@callback_PickColorMap,"plotpicker-compass.gif","Pick new color map");
+i_addbutton(1,0,@RefreshAll,"plotpicker-geobubble2.gif","Refresh");
+i_addbutton(2,0,@call_scgeatool,"IMG00107.GIF"," ");
+i_addbutton(2,0,@callback_CalculateCellScores,"cellscore2.gif","Calculate cell scores from list of feature genes")
+i_addbutton(2,0,@callback_ComparePotency,"plotpicker-candle.gif","Compare differentiation potency between groups");
 i_addbutton(2,1,@gui.callback_MultiGroupingViewer,"plotpicker-arxtimeseries.gif","Multi-grouping View...");
 i_addbutton(2,0,@gui.callback_CrossTabulation,"plotpicker-comet.gif","Cross Tabulation");
-i_addbutton(2,1,@callback_CompareGeneBtwCls,"plotpicker-priceandvol.gif","Compare Between Cell Groups");
+i_addbutton(2,1,@callback_CompareGeneBtwCls,"plotpicker-priceandvol.gif","Compare between groups");
 i_addbutton(2,0,@callback_DEGene2Groups,"plotpicker-boxplot.gif","Compare 2 groups (DE analysis)");
 i_addbutton(2,0,@callback_EnrichrHVGs,"plotpicker-andrewsplot.gif","Functional enrichment analysis with HVGs");
 i_addbutton(2,0,@callback_BuildGeneNetwork,"noun_Network_691907.gif","Build gene regulatory network");
@@ -189,8 +189,9 @@ i_addmenu(m_exp,0,{@MergeSCEs,1},'Merge SCEs in Workspace...');
 i_addmenu(m_exp,0,{@MergeSCEs,2},'Merge SCE Data Files...');
 i_addmenu(m_exp,0,@RenameCellTypeBatchID,'Rename Batch IDs...');
 i_addmenu(m_exp,0,@callback_ViewMetaData,'View Metadata...');
-i_addmenu(m_exp,1,{@i_savefig,1},'Save Figure as SVG File...');
-i_addmenu(m_exp,0,{@i_savefig,2},'Export Graphics...');
+i_addmenu(m_exp,1,{@i_savefig,3},'Save Figure to PowerPoint File...');
+i_addmenu(m_exp,0,{@i_savefig,2},'Save Figure as Graphics File...');
+i_addmenu(m_exp,0,{@i_savefig,1},'Save Figure as SVG File...');
 i_addmenu(m_exp,1,{@(~,~) web('https://scgeatool.github.io/')},'Visit SCGEATOOL-Standalone Website...');
 i_addmenu(m_exp,0,@callback_CheckUpdates,'Check for Updates...');
 
@@ -222,6 +223,8 @@ end
             if ischar(filename)
                 exportgraphics(FigureHandle,[filepath filename]);
             end
+        elseif tag==3
+            i_export2pptx({FigureHandle},{'SCGEATOOL'});
         end
     end
 

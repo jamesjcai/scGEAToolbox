@@ -1,12 +1,12 @@
 function i_export2pptx(F,glist)
 
-answer=questdlg('Output to PowerPoint?');
+import mlreportgen.ppt.*;
+answer=questdlg('Export to PowerPoint?');
 switch answer
     case 'Yes'
         if ismcc || isdeployed
             makePPTCompilable();
         end
-        import mlreportgen.ppt.*;
         
         N=length(F);
         images=cell(N,1);
