@@ -190,7 +190,7 @@ i_addmenu(m_exp,0,{@MergeSCEs,2},'Merge SCE Data Files...');
 i_addmenu(m_exp,0,@RenameCellTypeBatchID,'Rename Batch IDs...');
 i_addmenu(m_exp,0,@callback_ViewMetaData,'View Metadata...');
 i_addmenu(m_exp,1,{@i_savefig,3},'Save Figure to PowerPoint File...');
-i_addmenu(m_exp,0,{@i_savefig,2},'Save Figure as Graphics File...');
+i_addmenu(m_exp,0,{@i_savefig,2},'Save Figure as Graphic File...');
 i_addmenu(m_exp,0,{@i_savefig,1},'Save Figure as SVG File...');
 i_addmenu(m_exp,1,{@(~,~) web('https://scgeatool.github.io/')},'Visit SCGEATOOL-Standalone Website...');
 i_addmenu(m_exp,0,@callback_CheckUpdates,'Check for Updates...');
