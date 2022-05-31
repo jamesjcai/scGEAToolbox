@@ -137,7 +137,8 @@ i_addbutton(2,1,@callback_CompareGeneBtwCls,"plotpicker-priceandvol.gif","Compar
 i_addbutton(2,0,@callback_DEGene2Groups,"plotpicker-boxplot.gif","Compare 2 groups (DE analysis)");
 i_addbutton(2,0,@callback_EnrichrHVGs,"plotpicker-andrewsplot.gif","Functional enrichment analysis with HVGs");
 i_addbutton(2,0,@callback_BuildGeneNetwork,"noun_Network_691907.gif","Build gene regulatory network");
-i_addbutton(2,0,@callback_CompareGeneNetwork,"noun_Deep_Learning_2424485.gif","Compare two scGRNs");
+i_addbutton(2,0,@callback_CompareGeneNetwork,"networkcomp.gif","Compare two scGRNs");
+i_addbutton(2,1,{@i_savefig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');
 gui.add_3dcamera(defaultToolbar, 'AllCells');
 
 m_vie = uimenu(FigureHandle,'Text','Multiv&iew','Accelerator','i');
