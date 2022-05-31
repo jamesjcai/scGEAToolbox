@@ -138,7 +138,7 @@ i_addbutton(2,0,@callback_DEGene2Groups,"plotpicker-boxplot.gif","Compare 2 grou
 i_addbutton(2,0,@callback_EnrichrHVGs,"plotpicker-andrewsplot.gif","Functional enrichment analysis with HVGs");
 i_addbutton(2,0,@callback_BuildGeneNetwork,"noun_Network_691907.gif","Build gene regulatory network");
 i_addbutton(2,0,@callback_CompareGeneNetwork,"networkcomp.gif","Compare two scGRNs");
-i_addbutton(2,1,{@i_savefig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');
+i_addbutton(2,1,{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');
 gui.add_3dcamera(defaultToolbar, 'AllCells');
 
 m_vie = uimenu(FigureHandle,'Text','Multiv&iew','Accelerator','i');
@@ -190,9 +190,9 @@ i_addmenu(m_exp,0,{@MergeSCEs,1},'Merge SCEs in Workspace...');
 i_addmenu(m_exp,0,{@MergeSCEs,2},'Merge SCE Data Files...');
 i_addmenu(m_exp,0,@RenameCellTypeBatchID,'Rename Batch IDs...');
 i_addmenu(m_exp,0,@callback_ViewMetaData,'View Metadata...');
-i_addmenu(m_exp,1,{@i_savefig,3},'Save Figure to PowerPoint File...');
-i_addmenu(m_exp,0,{@i_savefig,2},'Save Figure as Graphic File...');
-i_addmenu(m_exp,0,{@i_savefig,1},'Save Figure as SVG File...');
+i_addmenu(m_exp,1,{@gui.i_savemainfig,3},'Save Figure to PowerPoint File...');
+i_addmenu(m_exp,0,{@gui.i_savemainfig,2},'Save Figure as Graphic File...');
+i_addmenu(m_exp,0,{@gui.i_savemainfig,1},'Save Figure as SVG File...');
 i_addmenu(m_exp,1,{@(~,~) web('https://scgeatool.github.io/')},'Visit SCGEATOOL-Standalone Website...');
 i_addmenu(m_exp,0,@callback_CheckUpdates,'Check for Updates...');
 
@@ -210,24 +210,24 @@ if nargout > 0
 end
 
 
-    function i_savefig(~,~,tag)        
-        if tag==1
-            filter = {'*.svg'};
-            [filename,filepath] = uiputfile(filter);
-            if ischar(filename)
-                saveas(FigureHandle,[filepath filename],'svg');
-            end
-        elseif tag==2
-            % axx=gca;
-            filter = {'*.jpg';'*.png';'*.tif';'*.pdf';'*.eps'};
-            [filename,filepath] = uiputfile(filter);
-            if ischar(filename)
-                exportgraphics(FigureHandle,[filepath filename]);
-            end
-        elseif tag==3
-            i_export2pptx({FigureHandle},{'SCGEATOOL'});
-        end
-    end
+%     function i_savefig(~,~,tag)        
+%         if tag==1
+%             filter = {'*.svg'};
+%             [filename,filepath] = uiputfile(filter);
+%             if ischar(filename)
+%                 saveas(FigureHandle,[filepath filename],'svg');
+%             end
+%         elseif tag==2
+%             % axx=gca;
+%             filter = {'*.jpg';'*.png';'*.tif';'*.pdf';'*.eps'};
+%             [filename,filepath] = uiputfile(filter);
+%             if ischar(filename)
+%                 exportgraphics(FigureHandle,[filepath filename]);
+%             end
+%         elseif tag==3
+%             gui.i_export2pptx({FigureHandle},{'SCGEATOOL'});
+%         end
+%     end
 
     function i_addmenu(menuHdl,sepTag,callbackFnc,tooltipTxt)
         if ischar(callbackFnc) || isstring(callbackFnc)
