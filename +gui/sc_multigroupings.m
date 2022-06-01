@@ -61,6 +61,8 @@ pt.Tooltip = 'Show cluster lables';
 pt.ClickedCallback = @i_showclustlabel;
 
 
+pkg.i_addbutton2fig(tb,'off',{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');
+
 gui.add_3dcamera(tb);
 movegui(f0,'center');
 set(f0,'Visible',true);

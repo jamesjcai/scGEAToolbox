@@ -14,8 +14,12 @@ for k=1:length(glist)
     title(strrep(ttxt,'_','\_'));
     ylabel(ytxt);
     tb=uitoolbar(f);
+
     pkg.i_addbutton2fig(tb,'off',{@i_savedata,y,thisc}, ...
         'export.gif','Export data...');
+    pkg.i_addbutton2fig(tb,'off',{@gui.i_savemainfig,3}, ...
+        "powerpoint.gif",'Save Figure to PowerPoint File...');
+
     P = get(f,'Position');
     set(f,'Position',[P(1)-20*k P(2)-20*k P(3) P(4)]);
     set(f,'visible','on');                

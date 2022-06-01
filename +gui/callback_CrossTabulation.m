@@ -99,6 +99,11 @@ pt.CData = ptImage;
 pt.Tooltip = 'Save cross-table';
 pt.ClickedCallback = @i_saveCrossTable;
 
+
+pkg.i_addbutton2fig(tb,'off',@i_saveCrossTable,"export.gif",'Save cross-table');
+pkg.i_addbutton2fig(tb,'off',{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');
+
+
 movegui(f0,'center');
 set(f0,'Visible',true);
 

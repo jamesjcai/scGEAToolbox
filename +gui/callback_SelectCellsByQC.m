@@ -68,13 +68,16 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
                 errordlg('Invalid input(s).');
                 return;
             end
-            [whitelist]=i_selectwhitelist(sce);
+
+            [whitelist]=gui.i_selectwhitelist(sce);
             if isnumeric(whitelist) 
                 if whitelist==0
                     requirerefresh=false;
                     return;
                 end
             end
+            % when isempty(whitelist), continue...
+
             fw=gui.gui_waitbar;
             sce=sce.qcfilterwhitelist(libsize,mtratio,...
                 min_cells_nonzero,numgenes,whitelist);
@@ -222,26 +225,26 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
 end
 
 
-function [whitelist]=i_selectwhitelist(sce)
-    whitelist=[];        
-    answer = questdlg('Genes in whitelist will not be removed. Select whitelist genes?',...
-                'Whitelist Genes','Yes','No','Cancel','No');
-    switch answer
-        case 'Yes'
-            [gsorted]=gui.i_sortgenenames(sce);
-            if isempty(gsorted), return; end
-            [idx]=gui.i_selmultidlg(gsorted);
-            if isempty(idx), return; end
-            if isscalar(idx) && idx==0, return; end
-            whitelist=gsorted(idx);
-        case 'No'
-            whitelist=[];
-            return;
-        case 'Cancel'
-            whitelist=0;
-            return;
-        otherwise
-            whitelist=0;
-            return;
-    end
-end
+% function [whitelist]=i_selectwhitelist_DEL(sce)
+%     whitelist=[];        
+%     answer = questdlg('Genes in whitelist will not be removed. Select whitelist genes?',...
+%                 'Whitelist Genes','Yes','No','Cancel','No');
+%     switch answer
+%         case 'Yes'
+%             [gsorted]=gui.i_sortgenenames(sce);
+%             if isempty(gsorted), return; end
+%             [idx]=gui.i_selmultidlg(gsorted);
+%             if isempty(idx), return; end
+%             if isscalar(idx) && idx==0, return; end
+%             whitelist=gsorted(idx);
+%         case 'No'
+%             whitelist=[];
+%             return;
+%         case 'Cancel'
+%             whitelist=0;
+%             return;
+%         otherwise
+%             whitelist=0;
+%             return;
+%     end
+% end
