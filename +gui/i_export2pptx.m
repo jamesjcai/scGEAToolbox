@@ -19,6 +19,8 @@ switch answer
             if isvalid(F{k})
                 images{k} = [tempname,'.png'];
                 saveas(F{k},images{k});
+                %images{k} = [tempname,'.emf'];
+                %saveas(F{k},images{k},'meta');
                 slide3 = add(ppt,'Title and Content');
                 replace(slide3,'Title',glist(k));
                 replace(slide3,'Content',Picture(images{k}));
