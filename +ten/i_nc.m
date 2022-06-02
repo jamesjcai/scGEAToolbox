@@ -33,7 +33,7 @@ if nargin<2, nsubsmpl=10; end        % number of subsamples
 %         save(sprintf('A_%s',tstr),'A','-v7.3');
         
         XM(:,:,k)=ten.e_filtadjc(A,0.95,false);
-        %a=max(abs(A(:)));
-        %XM(:,:,k)=A./a;
+        a=max(abs(A(:)));
+        XM(:,:,k)=A./a;
     end
 end
