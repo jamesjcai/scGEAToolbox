@@ -79,7 +79,7 @@ classdef SingleCellExperiment
     
     obj = estimatepotency(obj,speciesid,forced)
     obj = estimatecellcycle(obj,forced,methodid)
-    obj = embedcells(obj,methodid,forced,usehvgs,ndim)
+    obj = embedcells(obj,methodid,forced,usehvgs,ndim,numhvg)
     obj = clustercells(obj,k,methodid,forced)
     obj = assigncelltype(obj,speciesid)
     obj = qcfilterwhitelist(obj,libszcutoff,mtratio,min_cells_nonzero,gnnumcutoff,whitelist)

@@ -658,12 +658,19 @@ end
         end
         if ~usingold
             answer2 = questdlg(sprintf('Use highly variable genes (HVGs, n=2000) or use all genes (n=%d)?', sce.NumGenes), ...
-                '', '2000 HVGs 🐇', 'All Genes 🐢', 'Cancel', '2000 HVGs 🐇');
+                '', '2000 HVGs 🐇', 'All Genes 🐢', 'Other...', '2000 HVGs 🐇');
             switch answer2
                 case 'All Genes 🐢'
                     usehvgs = false;
-                case '2000 HVGs 🐇'
+                    K=sce.NumGenes;
+                case '2000 HVGs 🐇'                    
                     usehvgs = true;
+                    K=2000;
+                case 'Other...'
+                     K=gui.i_inputnumk(min([2500,sce.NumGenes]), ...
+                         1000,sce.NumGenes);
+                     if isempty(K), return; end
+                     usehvgs = true;
                 otherwise
                     return;
             end
@@ -672,7 +679,7 @@ end
             fw = gui.gui_waitbar;
             try
                 forced = true;
-                sce = sce.embedcells(methodtag, forced, usehvgs, ndim);
+                sce = sce.embedcells(methodtag, forced, usehvgs, ndim, K);
             catch ME
                 gui.gui_waitbar(fw);
                 errordlg(ME.message);
