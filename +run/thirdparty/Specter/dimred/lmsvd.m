@@ -52,8 +52,7 @@ end
 
 % set parameters
 mainargin = nargin;
-
-tol = 1e-8;
+tol=1e-8;
 maxit = 300;
 idisp = 0;
 
@@ -75,7 +74,6 @@ tAs = max(4*eps,(tA1 + tA2)/2);
 tqr = max(  eps,tqr);
 memb = ceil(tAs/tqr) + 1;
 memo = max(0,min(memo,memb));
-
 
 % call solver
 [X,Y,Out] = lm_lbo(A,X,Y,r,tol,maxit,memo,idisp);
@@ -195,8 +193,10 @@ kktc = zeros(maxit,1);
 disp_str = 'iter %3i: memo used %i, chg_rvr %8.4e\n';
 
 % set tolerance for terminating criterion
-rtol = 5*max(sqrt(tol*qtol),5*eps);
-ptol = 5*max(tol,sqrt(eps));
+
+qtol=1e-8;
+rtol=1e-8;
+ptol=1e-8;
 set_tolerance;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

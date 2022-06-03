@@ -124,10 +124,10 @@ S = S(1:r,1:r);
     function [U,S,V] = get_svd(X,Y)
         method = 2;
         switch method
-            case 1;
+            case 1
                 [V,S,W] = svd(Y,0);
                 U = X*W;
-            case 2;
+            case 2
                 [V,R] = qr(Y,0);
                 [W,S,Z] = svd(R');
                 U = X*W; V = V*Z;
@@ -191,7 +191,6 @@ xtrm = zeros(maxit,1);
 hrvs = zeros(maxit,r);
 kktc = zeros(maxit,1);
 disp_str = 'iter %3i: memo used %i, chg_rvr %8.4e\n';
-
 
 qtol=1e-8;
 rtol=1e-8;
