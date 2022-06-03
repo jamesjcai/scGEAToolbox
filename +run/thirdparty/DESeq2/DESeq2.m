@@ -7,15 +7,12 @@ function [log2FC,FDR,meanExp] = DESeq2(matrix1,matrix2)
 % The overexpressed genes are those with a FDR<0.1 and log2FC>1 and under-expressed
 %  with a FDR<0.1 and log2FC<-1
 %
-% https://github.com/jbmorlot/DESeq2-matlab
 
 disp('Normalization ...')
 [M1,N1] = size(matrix1);
 geom1 = geomean(matrix1);
 geom1(geom1==0)=1;
-
-norm1 = median(bsxfun(@rdivide,matrix1,geom1),2);
-%norm1 = mean(matrix1./geom1);
+norm1 = mean(bsxfun(@rdivide,matrix1,geom1),2);
 matrixN1 = bsxfun(@rdivide,matrix1',norm1')';
 
 [M2,N2] = size(matrix2);
@@ -27,13 +24,14 @@ matrixN2 = bsxfun(@rdivide,matrix2',norm2')';
 disp('Log2FC(mean)...')
 mean1 = mean(matrixN1);
 mean2 = mean(matrixN2);
-meanExp = mean(cat(1,matrix1,matrix2));
+meanExp = mean(cat(1,matrix1,matrix2))';
 
 log2FC = log2(mean1./mean2)';
 
 disp('Differential Analysis ...')
-tLocal = nbintest(matrix1',matrix2','VarianceLink', ...
-    'LocalRegression','SizeFactor',{norm1',norm2'});
+
+tLocal = nbintest(matrix1',matrix2','VarianceLink','LocalRegression', ...
+    'SizeFactor',{norm1',norm2'});
 FDR = mafdr(tLocal.pValue,'BHFDR',true);
 
 

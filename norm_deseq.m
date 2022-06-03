@@ -15,6 +15,9 @@ function [x,sf]=norm_deseq(x)
 end
 
 
+% https://www.mathworks.com/help/bioinfo/ug/identifying-differentially-expressed-genes-from-rna-seq-data.html
+
+
 %NANGEOMEAN Geometric mean, ignoring NaNs.
 %   M = NANGEOMEAN(X) returns the geometric mean of X, treating NaNs as
 %   missing values. If X is a vector, M is the n-th root of the product of
