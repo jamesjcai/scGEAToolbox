@@ -46,12 +46,17 @@ function [U,S,V,Out] = lmsvd(A,r,opts)
 
 if nargin < 2; r = 6;  end
 [m,n] = check_matrix(A);
-if r > min(m,n)/2;
+if r > min(m,n)/2
     warning(TooManySVSrequested,'r > min(m,n)/2');
 end
 
 % set parameters
 mainargin = nargin;
+
+tol = 1e-8;
+maxit = 300;
+idisp = 0;
+
 set_param;
 
 % initialize
@@ -70,6 +75,7 @@ tAs = max(4*eps,(tA1 + tA2)/2);
 tqr = max(  eps,tqr);
 memb = ceil(tAs/tqr) + 1;
 memo = max(0,min(memo,memb));
+
 
 % call solver
 [X,Y,Out] = lm_lbo(A,X,Y,r,tol,maxit,memo,idisp);
@@ -93,9 +99,9 @@ S = S(1:r,1:r);
         maxit = 300;
         idisp = 0;
         mn = min(m,n);
-        if r <= mn*0.02;
+        if r <= mn*0.02
             memo = 5;
-        elseif r <= mn*0.03;
+        elseif r <= mn*0.03
             memo = 4;
         else
             memo = 3;
@@ -189,7 +195,10 @@ kktc = zeros(maxit,1);
 disp_str = 'iter %3i: memo used %i, chg_rvr %8.4e\n';
 
 % set tolerance for terminating criterion
+rtol = 5*max(sqrt(tol*qtol),5*eps);
+ptol = 5*max(tol,sqrt(eps));
 set_tolerance;
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 for iter = 1:maxit
     SX = X;
