@@ -1,4 +1,5 @@
-function obj = embedcells(obj,methodtag,forced,usehvgs,ndim)
+function obj = embedcells(obj,methodtag,forced,usehvgs,ndim,numhvg)
+    if nargin<6, numhvg=2000; end
     if nargin<5, ndim=3; end
     if nargin<4 || isempty(usehvgs), usehvgs=true; end
     if nargin<3 || isempty(forced), forced=false; end
@@ -12,8 +13,8 @@ function obj = embedcells(obj,methodtag,forced,usehvgs,ndim)
         end
         if usehvgs
             % disp('Identifying HVGs')
-            [~,X]=sc_hvg(obj.X,obj.g,true,false);
-            X=X(1:min([size(X,1),2000]),:);
+            [~,X]=sc_hvg(obj.X,obj.g,true,false,true,false,true);
+            X=X(1:min([size(X,1),numhvg]),:);
         else
             X=obj.X;
         end
