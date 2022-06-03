@@ -1,4 +1,4 @@
-function [log2FC,FDR,meanExp] = DESeq2(matrix1,matrix2)
+function [log2FC,FDR,meanExp,pValues] = DESeq2ori(matrix1,matrix2)
 % matrix1: matrix where each line represent a sample in the condition 1 in the
 % format samples x genes
 % matrix2: matrix where each line represent a sample in the condition 2 in the
@@ -32,15 +32,22 @@ disp('Differential Analysis ...')
 
 tLocal = nbintest(matrix1',matrix2','VarianceLink','LocalRegression', ...
     'SizeFactor',{norm1',norm2'});
-FDR = mafdr(tLocal.pValue,'BHFDR',true);
+pValues=tLocal.pValue;
+
+    if exist('mafdr.m', 'file')        
+        FDR = mafdr(pValues,'BHFDR',true);
+    else
+        [~, ~, ~, FDR] = pkg.fdr_bh(pValues);
+    end  
+% FDR = mafdr(tLocal.pValue,'BHFDR',true);
 
 
-figure;
-scatter(meanExp(FDR<0.1),log2FC(FDR<0.1),5,'r','filled');
-hold on;
-scatter(meanExp(FDR>=0.1),log2FC(FDR>=0.1),5,'k','filled')
-set(gca, 'XScale', 'log')
-xlabel('Mean expression')
-ylabel('Log2 fold change')
+% figure;
+% scatter(meanExp(FDR<0.1),log2FC(FDR<0.1),5,'r','filled');
+% hold on;
+% scatter(meanExp(FDR>=0.1),log2FC(FDR>=0.1),5,'k','filled')
+% set(gca, 'XScale', 'log')
+% xlabel('Mean expression')
+% ylabel('Log2 fold change')
 
 end

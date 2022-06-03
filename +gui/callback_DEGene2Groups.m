@@ -7,10 +7,13 @@ function callback_DEGene2Groups(src,~)
 
     answer = questdlg('Which method?',...
         'Select Method','Wilcoxon rank-sum test 🐇',...
+        'DESeq 2 🐇',...
         'MAST (R required) 🐢','Wilcoxon rank-sum test 🐇');
     
     if strcmpi(answer,'Wilcoxon rank-sum test 🐇')
         methodtag="ranksum";
+    elseif strcmpi(answer,'DESeq 2 🐇')
+        methodtag="deseq2";
     elseif strcmpi(answer,'MAST (R required) 🐢')
         methodtag="mast";
         if isempty(pkg.FindRpath)
@@ -25,6 +28,9 @@ function callback_DEGene2Groups(src,~)
             case 'ranksum'
                 fw=gui.gui_waitbar;
                 T=sc_deg(sce.X(:,i1),sce.X(:,i2),sce.g);
+            case 'deseq2'
+                fw=gui.gui_waitbar;
+                T=run.DESeq2(sce.X(:,i1),sce.X(:,i2),sce.g);
             case 'mast'
                 [ok]=gui.i_confirmscript('DE analysis (MAST)', ...
                     'R_MAST','r');
