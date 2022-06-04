@@ -9,13 +9,13 @@ function [log2FC,FDR,meanExp,pValues] = DESeq2ori(matrix1,matrix2)
 %
 
 disp('Normalization ...')
-[M1,N1] = size(matrix1);
+%[M1,N1] = size(matrix1);
 geom1 = geomean(matrix1);
 geom1(geom1==0)=1;
-norm1 = mean(bsxfun(@rdivide,matrix1,geom1),2);
+norm1 = mean(bsxfun(@rdivide,matrix1,geom1),2)
 matrixN1 = bsxfun(@rdivide,matrix1',norm1')';
 
-[M2,N2] = size(matrix2);
+%[M2,N2] = size(matrix2);
 geom2 = geomean(matrix2);
 geom2(geom2==0)=1;
 norm2 = mean(bsxfun(@rdivide,matrix2,geom2),2);
@@ -49,5 +49,6 @@ pValues=tLocal.pValue;
 % set(gca, 'XScale', 'log')
 % xlabel('Mean expression')
 % ylabel('Log2 fold change')
+
 
 end
