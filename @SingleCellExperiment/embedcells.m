@@ -1,4 +1,6 @@
-function obj = embedcells(obj,methodtag,forced,usehvgs,ndim,numhvg)
+function obj = embedcells(obj,methodtag,forced,usehvgs, ...
+                          ndim,numhvg,whitelist)
+    if nargin<7, whitelist=[]; end
     if nargin<6, numhvg=2000; end
     if nargin<5, ndim=3; end
     if nargin<4 || isempty(usehvgs), usehvgs=true; end
@@ -11,13 +13,30 @@ function obj = embedcells(obj,methodtag,forced,usehvgs,ndim,numhvg)
         if isstring(methodtag) || ischar(methodtag)
             methodtag=lower(methodtag);
         end
+
+        
         if usehvgs
             % disp('Identifying HVGs')
-            [~,X]=sc_hvg(obj.X,obj.g,true,false,true,false,true);
+            [T,X]=sc_hvg(obj.X,obj.g,true,false,true,false,true);
             X=X(1:min([size(X,1),numhvg]),:);
+            g=T.genes(1:min([size(X,1),numhvg]));
         else
             X=obj.X;
+            g=obj.g;
         end
+
+        if ~isempty(whitelist)
+            assert(all(ismember(whitelist,obj.g)));
+            [~,idx]=setdiff(whitelist,g);
+            if ~isempty(idx)
+                [~,idxx]=ismember(whitelist,obj.g);
+                Xresv=obj.X(idxx,:);
+                X=[X;Xresv(idx,:)];
+                g=[g;whitelist(idx)];
+                size(g)
+            end
+        end
+
 
         switch methodtag
             case 'tsne'

@@ -667,10 +667,16 @@ end
                     usehvgs = true;
                     K=2000;
                 case 'Other...'
-                     K=gui.i_inputnumk(min([2500,sce.NumGenes]), ...
-                         1000,sce.NumGenes);
+                     K=gui.i_inputnumk(min([3000,sce.NumGenes]), ...
+                         100,sce.NumGenes);
                      if isempty(K), return; end
-                     usehvgs = true;
+                     usehvgs = true;   % xxx
+                     [whitelist]=gui.i_selectwhitelist(sce);
+                    if isnumeric(whitelist) 
+                        if whitelist==0
+                            return;
+                        end
+                    end                       
                 otherwise
                     return;
             end
@@ -679,7 +685,7 @@ end
             fw = gui.gui_waitbar;
             try
                 forced = true;
-                sce = sce.embedcells(methodtag, forced, usehvgs, ndim, K);
+                sce = sce.embedcells(methodtag, forced, usehvgs, ndim, K, whitelist);
             catch ME
                 gui.gui_waitbar(fw);
                 errordlg(ME.message);

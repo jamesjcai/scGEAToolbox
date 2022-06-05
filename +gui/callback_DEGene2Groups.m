@@ -14,6 +14,12 @@ function callback_DEGene2Groups(src,~)
         methodtag="ranksum";
     elseif strcmpi(answer,'DESeq 2 🐇')
         methodtag="deseq2";
+        if ~(ismcc || isdeployed)
+            if ~exist('nbintest.m', 'file')
+                errordlg('This option requires Bioinformatics toolbox.');
+                return;
+            end
+        end
     elseif strcmpi(answer,'MAST (R required) 🐢')
         methodtag="mast";
         if isempty(pkg.FindRpath)
