@@ -443,7 +443,7 @@ end
         if ~ok, return; end
        
        [ndim]=gui.i_choose2d3d;
-       if isempty(ndim), return; end       
+       if isempty(ndim), return; end
 	   fw = gui.gui_waitbar;
        try
            [sce]=run.SeuratWorkflow(sce,ndim);

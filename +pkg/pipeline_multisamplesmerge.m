@@ -37,10 +37,12 @@ answerstruced=questdlg('Process merged SCE data (tSNE, clustering, and cell type
 if strcmp(answerstruced,'Yes')
     [speciestag] = gui.i_selectspecies;
     if ~isempty(speciestag)
-        sce = sce.embedcells('tsne', true, true, 3);
+        [ndim]=gui.i_choose2d3d;
+        if isempty(ndim), return; end
+        sce = sce.embedcells('tsne', true, true, ndim);
         k=round(sce.NumCells/100);
         sce = sce.clustercells(k, 'kmeans', true);
-        [sce]=pkg.e_celltypes2allclust(sce,speciestag,true);
+        sce = pkg.e_celltypes2allclust(sce,speciestag,true);
     end
 end
 end
