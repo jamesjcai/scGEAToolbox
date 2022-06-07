@@ -656,6 +656,7 @@ end
                     return
             end
         end
+        whitelist=[];
         if ~usingold
             answer2 = questdlg(sprintf('Use highly variable genes (HVGs, n=2000) or use all genes (n=%d)?', sce.NumGenes), ...
                 '', '2000 HVGs 🐇', 'All Genes 🐢', 'Other...', '2000 HVGs 🐇');
