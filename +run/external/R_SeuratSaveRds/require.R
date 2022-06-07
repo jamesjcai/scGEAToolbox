@@ -8,8 +8,6 @@ if (!requireNamespace("Seurat", quietly = TRUE)){
 if (!requireNamespace("rhdf5", quietly = TRUE)){
     install.packages("rhdf5", repo="http://cran.rstudio.com/")
 }
-
-
 if (!requireNamespace("rhdf5", quietly = TRUE)){
 if (!requireNamespace("BiocManager", quietly = TRUE)){
     install.packages("BiocManager", repo="http://cran.rstudio.com/")
