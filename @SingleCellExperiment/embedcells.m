@@ -33,7 +33,7 @@ function obj = embedcells(obj,methodtag,forced,usehvgs, ...
                 Xresv=obj.X(idxx,:);
                 X=[X;Xresv(idx,:)];
                 g=[g;whitelist(idx)];
-                size(g)
+                %size(g)
             end
         end
 
