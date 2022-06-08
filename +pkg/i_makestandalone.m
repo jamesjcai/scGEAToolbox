@@ -63,6 +63,9 @@ winopen(sprintf('%s\\AppData\\Local\\Temp\\%s\\mcrCache9.11\\',a,b));
 winopen(outdir);
 catch
 end
+
+% C:\Users\jcai\AppData\Local\Temp\jcai\mcrCache9.11\scgeat1\scgeatool\+run\external\R_SeuratSaveRds
+
 %%
 cd(outdir);
 cd ..
