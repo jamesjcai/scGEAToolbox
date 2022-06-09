@@ -26,24 +26,19 @@ if tf1~=1, return; end
                 return;
             end
             [Xt]=gui.i_transformx(sce.X);
-            
-%             [c,cL]=grp2idx(thisc);
-%             [answer]=questdlg('Manually order groups?','');
-%             switch answer
-%                 case 'Yes'
-%                     [newidx]=gui.i_selmultidlg(cL);
-%                     if length(newidx)~=length(cL)
-%                         return;
-%                     end
-%                     cx=c;
-%                     for k=1:length(newidx)
-%                         c(cx==newidx(k))=k;
-%                     end
-%                     cL=cL(newidx);
-%                 otherwise
-%             end
             [cL]=i_getgrouporder(thisc);
             gui.i_cascadeviolin(sce,Xt,thisc,glist,a{indx1},cL);
+
+
+%         figure;
+%         [~,idx]=ismember(glist,sce.g);
+%         h=heatmap(Xt(idx,1:500));
+%         h.Title = 'Gene Heatmap';
+%         h.XLabel = 'Group';
+%         h.YLabel = 'Genes';
+%         h.Colormap = parula;
+%         h.GridVisible = 'off';
+
             return;
         case 'Predefined Cell Score'
             [~,T]=pkg.e_cellscores(sce.X,sce.g,0);
