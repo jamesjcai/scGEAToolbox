@@ -161,9 +161,10 @@ i_addmenu(m_ext,0,@DoubletDetection,'Detect Doublets (Scrublet/Python required).
 
 m_exp = uimenu(FigureHandle,'Text','E&xperimental','Accelerator','x');
 m_exp2 = uimenu(m_exp,'Text','sc&Tenifold Suite','Accelerator','T');
-i_addmenu(m_exp2,0,@callback_scTenifoldNet1,'scTenifoldNet Construction 🐢🐢 ...');
-i_addmenu(m_exp2,0,@callback_scTenifoldNet2,'scTenifoldNet Comparison 🐢🐢🐢 ...');
-i_addmenu(m_exp2,1,@callback_scTenifoldKnk1,'scTenifoldKnk (Virtual KO) Single Gene 🐢 ...');
+i_addmenu(m_exp2,0,@callback_scTenifoldNet1,'scTenifoldNet - GRN Construction 🐢🐢 ...');
+i_addmenu(m_exp2,0,@callback_scTenifoldNet2,'scTenifoldNet - GRN Comparison 🐢🐢🐢 ...');
+i_addmenu(m_exp2,1,@callback_scTenifoldKnk1,'scTenifoldKnk - Virtual KO of a Gene 🐢 ...');
+i_addmenu(m_exp2,1,@callback_scTenifoldXct,'scTenifoldXct - Cell-Cell Interactions 🐢 ...');
 
 i_addmenu(m_exp,1,@callback_ShowPseudoTimeGenes,'Show Genes with Expression Varies with Pseudotime...');
 i_addmenu(m_exp,0,@callback_DetectCellularCrosstalk,'Ligand-Receptor Mediated Intercellular Crosstalk...');
