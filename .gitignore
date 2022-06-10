@@ -48,3 +48,7 @@ scgeatoolstandaloneApplication/
 +run/external/R_SeuratSctransform/input.txt
 +run/external/R_MAST/input.mat
 +run/external/R_MAST/input.mat
++run/external/py_scTenifoldXct/Net_example_dev/
++run/external/py_scTenifoldXct/X.txt
++run/external/py_scTenifoldXct/g.txt
++run/external/py_scTenifoldXct/c.txt
