@@ -7,7 +7,7 @@ pw1=fileparts(mfilename('fullpath'));
 wrkpth=fullfile(pw1,'external','py_scTenifoldXct');
 cd(wrkpth);
 
-isdebug=true;
+isdebug=false;
 
 
 idx=sce.c_cell_type_tx==celltype1 | sce.c_cell_type_tx==celltype2;
@@ -15,7 +15,7 @@ sce=sce.selectcells(idx);
 sce.c_batch_id=sce.c_cell_type_tx;
 sce.c_batch_id(sce.c_cell_type_tx==celltype1)="Source";
 sce.c_batch_id(sce.c_cell_type_tx==celltype2)="Target";
-sce=sce.qcfilter;
+% sce=sce.qcfilter;
 
 tmpfilelist={'X.mat','X.txt','g.txt','c.txt','output.txt','output1.txt','output2.txt'};
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end

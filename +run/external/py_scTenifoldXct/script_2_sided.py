@@ -9,7 +9,7 @@ import scTenifoldXct as st
 from scTenifoldXct.dataLoader import build_adata
 import pandas as pd
 
-adata = build_adata("X.txt", "g.txt", "c.txt", delimiter=',', meta_cell_cols=['cell_type'])
+adata = build_adata("X.mat", "g.txt", "c.txt", delimiter=',', meta_cell_cols=['cell_type'], transpose=False)
 
 xct = st.scTenifoldXct(data = adata, 
                     source_celltype = 'Source',
