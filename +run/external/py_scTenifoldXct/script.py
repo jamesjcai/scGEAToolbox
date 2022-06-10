@@ -2,16 +2,14 @@ import os
 abspath = os.path.abspath(__file__)
 dname = os.path.dirname(abspath)
 os.chdir(dname)
-# os.chdir("U:\\GitHub\\scGEAToolbox\\+run\\external\\py_scTenifoldXct")
+#os.chdir("U:\\GitHub\\scGEAToolbox\\+run\\external\\py_scTenifoldXct")
 
 import scanpy as sc
 import scTenifoldXct as st
 from scTenifoldXct.dataLoader import build_adata
 import pandas as pd
 
-adata = build_adata("X.txt", "g.txt", "c.txt", delimiter=',', meta_cell_cols=['cell_type'])
-# adata.var.columns = ['gene_name']
-# adata.obs.columns = ['cell_type']
+adata = build_adata("X.mat", "g.txt", "c.txt", delimiter=',', meta_cell_cols=['cell_type'], transpose=False)
 
 xct = st.scTenifoldXct(data = adata, 
                     source_celltype = 'Source',
