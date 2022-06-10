@@ -24,7 +24,19 @@ xct = st.scTenifoldXct(data = adata,
 emb = xct.get_embeds(train = True)
 xct_pairs = xct.null_test()
 print(xct_pairs)
-pd.DataFrame(xct_pairs).to_csv('output.txt',index=False,header=True)
+pd.DataFrame(xct_pairs).to_csv('output1.txt',index=False,header=True)
 
 
+xct = st.scTenifoldXct(data = adata, 
+                    source_celltype = 'Target',
+                    target_celltype = 'Source',
+                    obs_label = "cell_type",
+                    rebuild_GRN = False,
+                    GRN_file_dir = 'temp_net',
+                    verbose = True,
+                    n_cpus = -1)
+emb = xct.get_embeds(train = True)
+xct_pairs = xct.null_test()
+print(xct_pairs)
+pd.DataFrame(xct_pairs).to_csv('output2.txt',index=False,header=True)
 

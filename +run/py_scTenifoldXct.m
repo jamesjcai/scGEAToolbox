@@ -1,5 +1,6 @@
-function [T]=py_scTenifoldXct(sce)
+function [T]=py_scTenifoldXct(sce,species)
 
+if nargin<2, species='human'; end
 oldpth=pwd();
 pw1=fileparts(mfilename('fullpath'));
 wrkpth=fullfile(pw1,'external','py_scTenifoldXct');
@@ -24,12 +25,21 @@ writematrix(sce.c_batch_id,'c.txt');
 
 x=pyenv;
 pkg.i_add_conda_python_path;
-cmdlinestr=sprintf('"%s" "%s%sscript.py"',x.Executable,wrkpth,filesep);
+
+
+switch species
+    case 'human'
+        cmdlinestr=sprintf('"%s" "%s%sscript.py"',x.Executable,wrkpth,filesep);
+    case 'mouse'
+        cmdlinestr=sprintf('"%s" "%s%sscript.py"',x.Executable,wrkpth,filesep);
+    otherwise
+        cmdlinestr=sprintf('"%s" "%s%sscript.py"',x.Executable,wrkpth,filesep);
+end
 disp(cmdlinestr)
 [status]=system(cmdlinestr);
 
 if status==0 && exist('output.txt','file')
-    T=readtable('output.txt',"ReadVariableNames",false);
+    T=readtable('output.txt');
 else
     T=[];    
 end

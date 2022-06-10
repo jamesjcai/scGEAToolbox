@@ -14,11 +14,11 @@ adata = build_adata("X.txt", "g.txt", "c.txt", delimiter=',', meta_cell_cols=['c
 # adata.obs.columns = ['cell_type']
 
 xct = st.scTenifoldXct(data = adata, 
-                    source_celltype = 'Source',
-                    target_celltype = 'Target',
+                    source_celltype = "Source",
+                    target_celltype = "Target",
                     obs_label = "cell_type",
-                    rebuild_GRN = True,
-                    GRN_file_dir = 'temp_net',
+                    species = "mouse",
+                    rebuild_GRN = True,                    
                     verbose = True,
                     n_cpus = -1)
 emb = xct.get_embeds(train = True)

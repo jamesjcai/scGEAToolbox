@@ -7,7 +7,7 @@ if ~gui.i_setpyenv
     return; 
 end
     
-[c,cL]=grp2idx(sce.c_cell_type_tx);
+[~,cL]=grp2idx(sce.c_cell_type_tx);
 if length(cL)<2, errordlg('Need at least 2 cell types.'); return; end
 
 [indxx,tf2] = listdlg('PromptString',...
@@ -23,8 +23,8 @@ if tf2==1
 else
     return;
 end
-a1=sprintf('Source %s -> Target %s',sce.c_cell_type_tx(i1),sce.c_cell_type_tx(i2));
-a2=sprintf('Source %s -> Target %s',sce.c_cell_type_tx(i2),sce.c_cell_type_tx(i1));
+a1=sprintf('Source %s -> Target %s',cL{i1},cL{i2});
+a2=sprintf('Source %s -> Target %s',cL{i2},cL{i1});
 
 answer=questdlg('Select direction (ligand->receptor)','',a1,a2,a1);
 switch answer
@@ -35,17 +35,19 @@ switch answer
     otherwise
         return;
 end
-idx=sce.c_cell_type_tx==cL(x1) | sce.c_cell_type_tx==cL(x2);
+idx=sce.c_cell_type_tx==cL{x1} | sce.c_cell_type_tx==cL{x2};
 sce=sce.selectcells(idx);
 
 sce.c_batch_id=sce.c_cell_type_tx;
-sce.c_batch_id(sce.c_cell_type_tx==cL(x1))="Source";
-sce.c_batch_id(sce.c_cell_type_tx==cL(x2))="Target";
+sce.c_batch_id(sce.c_cell_type_tx==cL{x1})="Source";
+sce.c_batch_id(sce.c_cell_type_tx==cL{x2})="Target";
+
+species=gui.i_selectspecies(2);
+if isempty(species), return; end
 
 try
     fw = gui.gui_waitbar;
-    %[T]=run.py_scTenifoldXct(sce);
-    T=[];
+    [T]=run.py_scTenifoldXct(sce,species);    
     gui.gui_waitbar(fw);
 catch ME
     gui.gui_waitbar(fw,true);

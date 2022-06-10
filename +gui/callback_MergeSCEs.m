@@ -71,12 +71,14 @@ switch sourcetag
             if ~ismember(answer, {'Union', 'Intersect'}), return; end
             methodtag = lower(answer);
         
+        fw=gui.gui_waitbar;
         try
         scelist=cell(length(fname));
         s="";
         for k=1:length(fname)
             scefile = fullfile(pathname, fname{k});
             load(scefile,'sce');
+            sce.metadata=[sce.metadata; fname{k}];
             scelist{k}=sce;
             s=sprintf('%s, %s',s,fname{k});
         end
@@ -85,9 +87,11 @@ switch sourcetag
         guidata(FigureHandle,sce);
         requirerefresh=true;
         catch ME
+            gui.gui_waitbar(fw,true);
             errordlg(ME.message);
             return;
         end
+        gui.gui_waitbar(fw);
 
 end  % end of sourcetag  
 
