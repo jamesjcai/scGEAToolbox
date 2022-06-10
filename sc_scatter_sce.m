@@ -145,6 +145,10 @@ m_vie = uimenu(FigureHandle,'Text','Multiv&iew','Accelerator','i');
 i_addmenu(m_vie,0,@gui.callback_MultiEmbeddingViewer,'Multi-embedding View...');
 i_addmenu(m_vie,0,@gui.callback_MultiGroupingViewer,'Multi-grouping View...');
 i_addmenu(m_vie,0,@gui.callback_CrossTabulation,'Cross Tabulation...');
+i_addmenu(m_vie,1,@callback_scTenifoldNet1,'scTenifoldNet - GRN Construction 🐢🐢 ...');
+i_addmenu(m_vie,0,@callback_scTenifoldNet2,'scTenifoldNet - GRN Comparison 🐢🐢🐢 ...');
+i_addmenu(m_vie,0,@callback_scTenifoldKnk1,'scTenifoldKnk - Virtual KO of a Gene 🐢 ...');
+i_addmenu(m_vie,0,@callback_scTenifoldXct,'scTenifoldXct - Cell-Cell Interactions 🐢 ...');
 
 m_ext = uimenu(FigureHandle,'Text','Exte&rnal','Accelerator','r');
 i_addmenu(m_ext,0,@gui.i_setrenv,'Check R Environment');
@@ -160,13 +164,13 @@ i_addmenu(m_ext,0,@HarmonyPy,'Batch Integration (Harmony/Python required)...');
 i_addmenu(m_ext,0,@DoubletDetection,'Detect Doublets (Scrublet/Python required)...');
 
 m_exp = uimenu(FigureHandle,'Text','E&xperimental','Accelerator','x');
-m_exp2 = uimenu(m_exp,'Text','sc&Tenifold Suite','Accelerator','T');
-i_addmenu(m_exp2,0,@callback_scTenifoldNet1,'scTenifoldNet - GRN Construction 🐢🐢 ...');
-i_addmenu(m_exp2,0,@callback_scTenifoldNet2,'scTenifoldNet - GRN Comparison 🐢🐢🐢 ...');
-i_addmenu(m_exp2,1,@callback_scTenifoldKnk1,'scTenifoldKnk - Virtual KO of a Gene 🐢 ...');
-i_addmenu(m_exp2,1,@callback_scTenifoldXct,'scTenifoldXct - Cell-Cell Interactions 🐢 ...');
+% m_exp2 = uimenu(m_exp,'Text','sc&Tenifold Suite','Accelerator','T');
+% i_addmenu(m_exp2,1,@callback_scTenifoldNet1,'scTenifoldNet - GRN Construction 🐢🐢 ...');
+% i_addmenu(m_exp2,0,@callback_scTenifoldNet2,'scTenifoldNet - GRN Comparison 🐢🐢🐢 ...');
+% i_addmenu(m_exp2,0,@callback_scTenifoldKnk1,'scTenifoldKnk - Virtual KO of a Gene 🐢 ...');
+% i_addmenu(m_exp2,0,@callback_scTenifoldXct,'scTenifoldXct - Cell-Cell Interactions 🐢 ...');
 
-i_addmenu(m_exp,1,@callback_ShowPseudoTimeGenes,'Show Genes with Expression Varies with Pseudotime...');
+i_addmenu(m_exp,0,@callback_ShowPseudoTimeGenes,'Show Genes with Expression Varies with Pseudotime...');
 i_addmenu(m_exp,0,@callback_DetectCellularCrosstalk,'Ligand-Receptor Mediated Intercellular Crosstalk...');
 i_addmenu(m_exp,0,@callback_SelectCellsByMarker,'Extract Cells by Marker(+/-) Expression...');
 i_addmenu(m_exp,0,@MergeSubCellTypes,'Merge Subclusters of Same Cell Type');

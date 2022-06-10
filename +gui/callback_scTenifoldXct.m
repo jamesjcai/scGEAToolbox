@@ -3,105 +3,56 @@ function callback_scTenifoldXct(src,~)
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
 
-
-        gsorted=sort(sce.g);
-        %[gsorted]=gui.i_sortgenenames(sce);
-        if isempty(gsorted), return; end
-        [indx2,tf] = listdlg('PromptString',{'Select a KO gene'},...
-            'SelectionMode','single','ListString',gsorted);
-        if tf==1
-            [~,idx]=ismember(gsorted(indx2),sce.g);
-        else
-            return;
-        end
-
-
-
-
-
+if ~gui.i_setpyenv
+    return; 
+end
     
-    if isempty(A0)
-        answer=questdlg(sprintf('Ready to construct network and then knock out gene #%d (%s). Continue?',...
-               idx,sce.g(idx)));
-    else
-        answer=questdlg(sprintf('Ready to knock out gene #%d (%s) from network (%s). Continue?',...
-               idx,sce.g(idx),a(indx).name));
+[c,cL]=grp2idx(sce.c_cell_type_tx);
+if length(cL)<2, errordlg('Need at least 2 cell types.'); return; end
+
+[indxx,tf2] = listdlg('PromptString',...
+    {'Select two cell types:'},...
+     'SelectionMode','multiple','ListString',cL);
+if tf2==1
+    if numel(indxx)~=2
+        errordlg('Please select 2 cell types');
+        return;
     end
-    
-    if ~strcmpi(answer,'Yes'), return; end
-    
+    i1=indxx(1);
+    i2=indxx(2);
+else
+    return;
+end
+a1=sprintf('Source %s -> Target %s',sce.c_cell_type_tx(i1),sce.c_cell_type_tx(i2));
+a2=sprintf('Source %s -> Target %s',sce.c_cell_type_tx(i2),sce.c_cell_type_tx(i1));
 
-    
-        if isempty(A0)
-            try
-                fw = gui.gui_waitbar;
-                [T,A0]=ten.sctenifoldknk(sce.X,sce.g,idx,...
-                          'sorttable',true,'nsubsmpl',10);                
-                gui.gui_waitbar(fw);
-             catch ME
-                gui.gui_waitbar(fw);
-                errordlg(ME.message);
-                return;
-            end
-            isreconstructed=true;
-        else
-            doit=false;
-            if sum(A0(idx,:)~=0)==0
-                s=sprintf('KO gene (%s) has no link or too few links (n<50) with other genes.',...
-                          sce.g(idx));
-                warndlg(s);
-                return;
-            elseif sum(A0(idx,:)~=0)<50
-                s=sprintf('KO gene (%s) has too few links (n=%d) with other genes. Continue?',...
-                          sce.g(idx),sum(A0(idx,:)~=0));
-                answer11 = questdlg(s);
-                switch answer11
-                    case 'Yes'
-                        doit=true;                        
-                    case 'No'
-                        return;
-                    case 'Cancel'
-                        return;
-                    otherwise
-                        return;
-                end
-            else
-                doit=true;                
-            end
-            
-            if doit
-                try
-                    fw = gui.gui_waitbar;
-                    disp('>> [T]=ten.i_knk(A0,targetgene,genelist,true);')
-                    [T]=ten.i_knk(A0,idx,sce.g,true);
-                    gui.gui_waitbar(fw);
-                catch ME
-                    gui.gui_waitbar(fw);
-                    errordlg(ME.message);
-                    return;
-                end
-            end
-            %A1=A0;
-            %A1(idx,:)=0;
-            %[aln0,aln1]=i_ma(A0,A1);
-            %T=i_dr(aln0,aln1,sce.g,true);
-            isreconstructed=false;
-        end    
-    
-        if ~(ismcc || isdeployed)
-            if isreconstructed        
-                labels = {'Save network to variable named:'}; 
-                vars = {'A0'};
-                values = {A0};
-                waitfor(export2wsdlg(labels,vars,values));
-            end
-        end
-    
+answer=questdlg('Select direction (ligand->receptor)','',a1,a2,a1);
+switch answer
+    case a1
+        x1=i1; x2=i2;
+    case a2
+        x1=i2; x2=i1;
+    otherwise
+        return;
+end
+idx=sce.c_cell_type_tx==cL(x1) | sce.c_cell_type_tx==cL(x2);
+sce=sce.selectcells(idx);
+
+sce.c_batch_id=sce.c_cell_type_tx;
+sce.c_batch_id(sce.c_cell_type_tx==cL(x1))="Source";
+sce.c_batch_id(sce.c_cell_type_tx==cL(x2))="Target";
+
+try
+    fw = gui.gui_waitbar;
+    %[T]=run.py_scTenifoldXct(sce);
+    T=[];
+    gui.gui_waitbar(fw);
+catch ME
+    gui.gui_waitbar(fw,true);
+    errordlg(ME.message);
+    return;
+end
+if ~isempty(T)
     gui.i_exporttable(T);
-    disp('Downstream Analysis Options:');
-    disp('===============================');
-    disp('run.Enrichr(T.genelist(1:200));');
-    disp('Tf=ten.e_fgsearun(T);');
-    disp('Tn=ten.e_fgseanet(Tf);');
-    disp('===============================');
+end
 end
