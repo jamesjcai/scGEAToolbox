@@ -18,7 +18,9 @@ sce.c_batch_id(sce.c_cell_type_tx==celltype2)="Target";
 % sce=sce.qcfilter;
 
 tmpfilelist={'X.mat','X.txt','g.txt','c.txt','output.txt', ...
-             'output1.txt','output2.txt'};
+             'output1.txt','output2.txt',...
+             'temp_net/gene_name_Source.tsv', 'temp_net/gene_name_Target.tsv',...
+             'temp_net/pcnet_Source.npz', 'temp_net/pcnet_Target.npz'};
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 

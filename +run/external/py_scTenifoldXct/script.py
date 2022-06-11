@@ -10,7 +10,7 @@ from scTenifoldXct.dataLoader import build_adata
 import pandas as pd
 
 adata = build_adata("X.mat", "g.txt", "c.txt", delimiter=',', meta_cell_cols=['cell_type'], transpose=False)
-
+print("input data read.")
 xct = st.scTenifoldXct(data = adata, 
                     source_celltype = 'Source',
                     target_celltype = 'Target',
@@ -19,8 +19,11 @@ xct = st.scTenifoldXct(data = adata,
                     GRN_file_dir = 'temp_net',
                     verbose = True,
                     n_cpus = -1)
+print("xct built.")
 emb = xct.get_embeds(train = True)
+print("get embedings.")
 xct_pairs = xct.null_test()
+
 print(xct_pairs)
 pd.DataFrame(xct_pairs).to_csv('output.txt',index=False,header=True)
 

@@ -57,7 +57,7 @@ X=zeros(shape(1),shape(2));
 for k=1:length(indptr)-1
     i=indptr(k)+1:indptr(k+1);
     y=indices(i)+1;
-    X(y,k)=data(i);    
+    X(y,k)=data(i);
 end
 
 
