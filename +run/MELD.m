@@ -14,21 +14,18 @@ oldpth=pwd();
 pw1=fileparts(mfilename('fullpath'));
 wrkpth=fullfile(pw1,'external','py_MELD');
 cd(wrkpth);
-if ~isdebug
-if exist('./batchid.txt','file'), delete('./batchid.txt'); end
-if exist('./input.txt','file'), delete('./input.txt'); end
-if exist('./output.txt','file'), delete('./output.txt'); end
-if exist('./input.mat','file'), delete('./input.mat'); end
-end
+tmpfilelist={'batchid.txt','input.txt','output.txt','input.mat'};
+if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+
 
 X=sc_norm(X);
 X=sqrt(X);
 
 if usematinput
-    if ~useh5
-        save('input.mat','X','batchid','-v7');
-    else
+    if useh5
         save('input.mat','X','batchid','-v7.3');
+    else
+        save('input.mat','X','batchid','-v7');
     end
 else
     writematrix(X,'input.txt');
@@ -38,13 +35,16 @@ end
 x=pyenv;
 pkg.i_add_conda_python_path;
 if usematinput
-    if ~useh5
-        cmdlinestr=sprintf('"%s" "%s%sscript_v7.py"',x.Executable,wrkpth,filesep);
+    if useh5
+        cmdlinestr=sprintf('"%s" "%s%sscript_h5.py"',x.Executable, ...
+            wrkpth,filesep);
     else
-        cmdlinestr=sprintf('"%s" "%s%sscript_h5.py"',x.Executable,wrkpth,filesep);
+        cmdlinestr=sprintf('"%s" "%s%sscript_v7.py"',x.Executable, ...
+            wrkpth,filesep);
     end
 else
-    cmdlinestr=sprintf('"%s" "%s%sscript_csv.py"',x.Executable,wrkpth,filesep);
+    cmdlinestr=sprintf('"%s" "%s%sscript_csv.py"',x.Executable, ...
+        wrkpth,filesep);
 end
 disp(cmdlinestr)
 [status]=system(cmdlinestr);
@@ -57,11 +57,6 @@ if status==0 && exist('output.txt','file')
     sample_likelihoods=table2array(T);
 end
 
-if ~isdebug
-if exist('./batchid.txt','file'), delete('./batchid.txt'); end
-if exist('./input.txt','file'), delete('./input.txt'); end
-if exist('./output.txt','file'), delete('./output.txt'); end
-if exist('./input.mat','file'), delete('./input.mat'); end
-end
+if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 cd(oldpth);
 end

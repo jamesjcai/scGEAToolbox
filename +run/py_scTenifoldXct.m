@@ -17,7 +17,9 @@ sce.c_batch_id(sce.c_cell_type_tx==celltype1)="Source";
 sce.c_batch_id(sce.c_cell_type_tx==celltype2)="Target";
 % sce=sce.qcfilter;
 
-tmpfilelist={'X.mat','X.txt','g.txt','c.txt','output.txt','output1.txt','output2.txt'};
+tmpfilelist={'X.mat','X.txt','g.txt','c.txt','output.txt', ...
+             'output1.txt','output2.txt'};
+
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 
 % load(fullfile(pw1,'..','resources','Ligand_Receptor.mat'), ...
