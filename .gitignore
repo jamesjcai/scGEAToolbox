@@ -56,3 +56,11 @@ scgeatoolstandaloneApplication/
 +run/external/py_scTenifoldXct/output1.txt
 +run/external/py_scTenifoldXct/output2.txt
 +run/external/py_scTenifoldXct/X.mat
++run/external/py_scTenifoldXct/npy-matlab/
++run/external/py_scTenifoldXct2/X.mat
++run/external/py_scTenifoldXct2/gene_name_Target.tsv
++run/external/py_scTenifoldXct2/gene_name_Source.tsv
++run/external/py_scTenifoldXct2/g.txt
++run/external/py_scTenifoldXct2/c.txt
++run/external/py_scTenifoldXct2/A2.mat
++run/external/py_scTenifoldXct2/A1.mat

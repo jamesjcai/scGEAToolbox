@@ -1,13 +1,13 @@
-function [T]=py_scTenifoldXct(sce,celltype1,celltype2,twosided)
+function [T]=py_scTenifoldXct2(sce,celltype1,celltype2,twosided)
 
 if nargin<4, twosided=false; end
 
 oldpth=pwd();
 pw1=fileparts(mfilename('fullpath'));
-wrkpth=fullfile(pw1,'external','py_scTenifoldXct');
+wrkpth=fullfile(pw1,'external','py_scTenifoldXct2');
 cd(wrkpth);
 
-isdebug=false;
+isdebug=true;
 
 
 idx=sce.c_cell_type_tx==celltype1 | sce.c_cell_type_tx==celltype2;
@@ -19,8 +19,8 @@ sce.c_batch_id(sce.c_cell_type_tx==celltype2)="Target";
 
 tmpfilelist={'X.mat','X.txt','g.txt','c.txt','output.txt', ...
              'output1.txt','output2.txt',...
-             'temp_net/gene_name_Source.tsv', 'temp_net/gene_name_Target.tsv',...
-             'temp_net/pcnet_Source.npz', 'temp_net/pcnet_Target.npz'};
+             'gene_name_Source.tsv', 'gene_name_Target.tsv',...
+             'pcnet_Source.npz', 'pcnet_Target.npz'};
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 
@@ -36,6 +36,14 @@ X=sce.X;
 save('X.mat','-v7.3','X');
 writematrix(sce.g,'g.txt');
 writematrix(sce.c_batch_id,'c.txt');
+
+t=table(sce.g,sce.g,'VariableNames',{' ','gene_name'});
+writetable(t,'gene_name_Source.tsv','filetype','text','Delimiter','\t');
+writetable(t,'gene_name_Target.tsv','filetype','text','Delimiter','\t');
+A1=sc_pcnetpar(sce.X(:,sce.c_cell_type_tx==celltype1));
+A2=sc_pcnetpar(sce.X(:,sce.c_cell_type_tx==celltype2));
+save A1.mat A1 -v7.3
+save A2.mat A2 -v7.3
 
 x=pyenv;
 pkg.i_add_conda_python_path;
