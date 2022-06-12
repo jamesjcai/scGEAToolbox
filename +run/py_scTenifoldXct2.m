@@ -7,7 +7,7 @@ pw1=fileparts(mfilename('fullpath'));
 wrkpth=fullfile(pw1,'external','py_scTenifoldXct2');
 cd(wrkpth);
 
-isdebug=true;
+isdebug=false;
 
 
 idx=sce.c_cell_type_tx==celltype1 | sce.c_cell_type_tx==celltype2;
