@@ -10,7 +10,7 @@ from scTenifoldXct.dataLoader import build_adata
 import pandas as pd
 
 adata = build_adata("X.mat", "g.txt", "c.txt", delimiter=',', meta_cell_cols=['cell_type'], transpose=False)
-
+print('Input read.............')
 xct = st.scTenifoldXct(data = adata, 
                     source_celltype = 'Source',
                     target_celltype = 'Target',
