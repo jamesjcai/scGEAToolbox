@@ -1,14 +1,13 @@
 function [T]=py_scTenifoldXct2(sce,celltype1,celltype2,twosided)
 
-if nargin<4, twosided=false; end
+if nargin<4, twosided=true; end
 
 oldpth=pwd();
 pw1=fileparts(mfilename('fullpath'));
 wrkpth=fullfile(pw1,'external','py_scTenifoldXct2');
 cd(wrkpth);
 
-isdebug=false;
-
+isdebug=true;
 
 idx=sce.c_cell_type_tx==celltype1 | sce.c_cell_type_tx==celltype2;
 sce=sce.selectcells(idx);
