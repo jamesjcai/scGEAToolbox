@@ -59,10 +59,12 @@ try
         if ~isempty(T1)
             a=sprintf('%s -> %s',cL{x1},cL{x2});
             T1 = addvars(T1,repelem(a,size(T1,1),1),'Before',1);
+            T1.Properties.VariableNames{'Var1'} = 'direction';
         end
         if ~isempty(T2)        
             a=sprintf('%s -> %s',cL{x2},cL{x1});
             T2 = addvars(T2,repelem(a,size(T2,1),1),'Before',1);
+            T2.Properties.VariableNames{'Var1'} = 'direction';
         end
         T=[T1;T2];
     else
@@ -70,9 +72,10 @@ try
         if ~isempty(T)
             a=sprintf('%s -> %s',cL{x1},cL{x2});
             T = addvars(T,repelem(a,size(T,1),1),'Before',1);
+            T.Properties.VariableNames{'Var1'} = 'direction';
         end
     end
-    T.Properties.VariableNames{'Var1'} = 'direction';
+    
 
     gui.gui_waitbar(fw);
 catch ME
@@ -82,5 +85,7 @@ catch ME
 end
 if ~isempty(T)
     gui.i_exporttable(T);
+else
+    helpdlg('No ligand-receptor pairs are identified.','');
 end
 end

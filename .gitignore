@@ -48,7 +48,6 @@ scgeatoolstandaloneApplication/
 +run/external/R_SeuratSctransform/input.txt
 +run/external/R_MAST/input.mat
 +run/external/R_MAST/input.mat
-+run/external/py_scTenifoldXct/temp_net/
 +run/external/py_scTenifoldXct/X.txt
 +run/external/py_scTenifoldXct/g.txt
 +run/external/py_scTenifoldXct/c.txt
@@ -56,11 +55,9 @@ scgeatoolstandaloneApplication/
 +run/external/py_scTenifoldXct/output1.txt
 +run/external/py_scTenifoldXct/output2.txt
 +run/external/py_scTenifoldXct/X.mat
-+run/external/py_scTenifoldXct/npy-matlab/
-+run/external/py_scTenifoldXct2/X.mat
-+run/external/py_scTenifoldXct2/gene_name_Target.tsv
-+run/external/py_scTenifoldXct2/gene_name_Source.tsv
-+run/external/py_scTenifoldXct2/g.txt
-+run/external/py_scTenifoldXct2/c.txt
-+run/external/py_scTenifoldXct2/A2.mat
-+run/external/py_scTenifoldXct2/A1.mat
++run/external/py_scTenifoldXct/A1.mat
++run/external/py_scTenifoldXct/A2.mat
++run/external/py_scTenifoldXct/gene_name_Source.tsv
++run/external/py_scTenifoldXct/gene_name_Target.tsv
++run/external/py_scTenifoldXct/pcnet_Source.npz
++run/external/py_scTenifoldXct/pcnet_Target.npz
