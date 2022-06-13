@@ -1,4 +1,4 @@
-function [A]=sc_pcnet(X,ncom,fastersvd,dozscore)
+function [A]=sc_pcnet(X,ncom,fastersvd,dozscore,guiwaitbar)
 %Construct network using PC regression
 %
 % [X]=log(1+sc_norm(X));     % pcnet input should be LogNormalized
@@ -8,9 +8,10 @@ function [A]=sc_pcnet(X,ncom,fastersvd,dozscore)
 % https://github.com/cran/dna/blob/master/src/rpcnet.c
 % https://rdrr.io/cran/dna/f/inst/doc/Introduction.pdf
 
-if nargin<4, dozscore=true; end
-if nargin<3, fastersvd=false; end
-if nargin<2, ncom=3; end
+if nargin<5 || isempty(guiwaitbar), guiwaitbar=false; end
+if nargin<4 || isempty(dozscore), dozscore=true; end
+if nargin<3 || isempty(fastersvd), fastersvd=false; end
+if nargin<2 || isempty(ncom), ncom=3; end
 
 opts.maxit=150;
 
@@ -32,7 +33,15 @@ if dozscore
 end
 n=size(X,2);
 A=1-eye(n);
+
+if guiwaitbar
+    fw=gui.gui_waitbar_adv;    
+end
 for k=1:n
+    fprintf('...... %d/%d\n',k,n);
+    if guiwaitbar
+        gui.gui_waitbar_adv(fw,k/n);
+    end
     y=X(:,k);
     Xi=X;
     Xi(:,k)=[];
@@ -50,6 +59,7 @@ for k=1:n
     Beta=sum(y.*score);
     A(k,A(k,:)==1)=coeff*Beta';
 end
+if guiwaitbar, gui.gui_waitbar_adv(fw); end
 end
 
 % [PCALoadings,PCAScores] = pca(Xi,"NumComponents",ncom);

@@ -1,19 +1,4 @@
 function callback_scPCNet1(src,events)
-    import ten.*
-    try
-        ten.check_tensor_toolbox;
-    catch ME
-        errordlg(ME.message);
-        return;
-    end
-    
-%     if exist('sctenifoldnet','file')~=2
-%         errordlg('scTenifoldNet is not installed.');
-%         disp('To install scTenifoldNet, type:')
-%         disp('unzip(''https://github.com/cailab-tamu/scTenifoldNet/archive/master.zip'');');
-%         disp('addpath(''./scTenifoldNet-master/MATLAB'');');
-%         return;
-%     end
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
 
@@ -34,31 +19,52 @@ function callback_scPCNet1(src,events)
    
     answer=questdlg('This analysis may take several hours. Continue?');
     if ~strcmpi(answer,'Yes'), return; end
-    tmpmat=tempname;
-    fw = gui.gui_waitbar;
+    
     try 
-        disp('>> [A]=ten.sc_pcnetdenoised(sce.X,''savegrn'',false);');
-        [A]=ten.sc_pcnetdenoised(sce.X,'savegrn',false);
+        disp('>> [A]=sc_pcnet(sce.X);');
+        X=sc_norm(sce.X);
+        X=log(X+1);
+        [A]=sc_pcnet(X,[],[],[],true);
     catch ME
-        gui.gui_waitbar(fw);
+        % gui.gui_waitbar(fw,true);
         errordlg(ME.message);
         return;
     end    
-    gui.gui_waitbar(fw);
+
+
     try
+        tmpmat=tempname;
         g=sce.g;
         fprintf('Saving network (A) to %s.mat\n',tmpmat);
-        save(tmpmat,'A','g');
+        save(tmpmat,'A','g','-v7.3');
     catch ME
-        disp(ME);
+        disp(ME.message);
     end
+
     % tstr=matlab.lang.makeValidName(datestr(datetime));
     % save(sprintf('A_%s',tstr),'A','g','-v7.3');
-    if ~(ismcc || isdeployed)
-        labels = {'Save network to variable named:',...
-            'Save sce.g to variable named:'}; 
-        vars = {'A','g'};
-        values = {A,sce.g};
-        export2wsdlg(labels,vars,values);
-    end
+
+%     if ~(ismcc || isdeployed)
+%         labels = {'Save network to variable named:',...
+%             'Save sce.g to variable named:'}; 
+%         vars = {'A','g'};
+%         values = {A,sce.g};
+%         export2wsdlg(labels,vars,values);
+%     end
+    
+        answer = questdlg('Save network A to MAT file?');
+        switch answer
+            case 'Yes'
+                [file, path] = uiputfile({'*.mat';'*.*'},'Save as');
+                if isequal(file,0) || isequal(path,0)
+                   return;
+                else
+                   filename=fullfile(path,file);
+                   fw=gui.gui_waitbar;
+                   g=sce.g;
+                   save(filename,'A','g','-v7.3');
+                   gui.gui_waitbar(fw);                   
+                end
+        end
+    
 end
