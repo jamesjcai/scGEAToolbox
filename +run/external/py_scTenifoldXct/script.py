@@ -15,15 +15,15 @@ import h5py
 import scipy
 from scipy import sparse
 
-f = h5py.File('A1.mat','r')
-A = np.array(f.get('A1'))
-A = sparse.csc_matrix(A)
-sparse.save_npz("pcnet_Source.npz", A)
+#f = h5py.File('A1.mat','r')
+#A = np.array(f.get('A'))
+#A = sparse.csc_matrix(A)
+#sparse.save_npz("pcnet_Source.npz", A)
 
-f = h5py.File('A2.mat','r')
-A = np.array(f.get('A2'))
-A = sparse.csc_matrix(A)
-sparse.save_npz("pcnet_Target.npz", A)
+#f = h5py.File('A2.mat','r')
+#A = np.array(f.get('A'))
+#A = sparse.csc_matrix(A)
+#sparse.save_npz("pcnet_Target.npz", A)
 
 
 adata = build_adata("X.mat", "g.txt", "c.txt", delimiter=',', meta_cell_cols=['cell_type'], transpose=False)
