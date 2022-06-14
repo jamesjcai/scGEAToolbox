@@ -19,14 +19,34 @@ function callback_scPCNet1(src,events)
    
     answer=questdlg('This analysis may take several hours. Continue?');
     if ~strcmpi(answer,'Yes'), return; end
+
+    useparallel=false;
+    answer=questdlg('Use parallel computing or not?','Parallel Computing', ...
+        'Use parallel','Not use parallel','Use parallel');
+    switch answer
+        case 'Use parallel'
+            useparallel=true;
+        case 'Not use parallel'
+            useparallel=false;
+        otherwise
+            return;
+    end   
     
     try 
         disp('>> [A]=sc_pcnet(sce.X);');
         X=sc_norm(sce.X);
         X=log(X+1);
-        [A]=sc_pcnet(X,[],[],[],true);
+        if useparallel
+            fw=gui.gui_waitbar;
+            [A]=sc_pcnetpar(X);
+            gui.gui_waitbar(fw);
+        else
+            [A]=sc_pcnet(X,[],[],[],true);
+        end
     catch ME
-        % gui.gui_waitbar(fw,true);
+        if useparallel
+            gui.gui_waitbar(fw,true);
+        end
         errordlg(ME.message);
         return;
     end    
