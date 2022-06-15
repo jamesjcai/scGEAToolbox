@@ -146,8 +146,8 @@ i_addmenu(m_vie,0,@gui.callback_MultiEmbeddingViewer,'Multi-embedding View...');
 i_addmenu(m_vie,0,@gui.callback_MultiGroupingViewer,'Multi-grouping View...');
 i_addmenu(m_vie,0,@gui.callback_CrossTabulation,'Cross Tabulation...');
 i_addmenu(m_vie,1,@callback_scPCNet1,'PC Regression - GRN Construction 🐢...');
-i_addmenu(m_vie,1,@callback_scTenifoldNet1,'scTenifoldNet - GRN Construction 🐢🐢 ...');
-i_addmenu(m_vie,0,@callback_scTenifoldNet2,'scTenifoldNet - GRN Comparison 🐢🐢🐢 ...');
+i_addmenu(m_vie,0,@callback_scTenifoldNet1,'scTenifoldNet - GRN Construction 🐢🐢 ...');
+i_addmenu(m_vie,1,@callback_scTenifoldNet2,'scTenifoldNet - GRN Comparison 🐢🐢🐢 ...');
 i_addmenu(m_vie,0,@callback_scTenifoldKnk1,'scTenifoldKnk - Virtual KO of a Gene 🐢 ...');
 i_addmenu(m_vie,0,@callback_scTenifoldXct,'scTenifoldXct - Cell-Cell Interactions 🐢🐢🐢 ...');
 

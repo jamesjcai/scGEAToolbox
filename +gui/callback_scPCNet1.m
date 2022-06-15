@@ -17,8 +17,8 @@ function callback_scPCNet1(src,events)
             return;
     end
    
-    answer=questdlg('This analysis may take several hours. Continue?');
-    if ~strcmpi(answer,'Yes'), return; end
+%     answer=questdlg('This analysis may take several hours. Continue?');
+%     if ~strcmpi(answer,'Yes'), return; end
 
     useparallel=false;
     answer=questdlg('Use parallel computing or not?','Parallel Computing', ...
@@ -64,13 +64,13 @@ function callback_scPCNet1(src,events)
     % tstr=matlab.lang.makeValidName(datestr(datetime));
     % save(sprintf('A_%s',tstr),'A','g','-v7.3');
 
-%     if ~(ismcc || isdeployed)
-%         labels = {'Save network to variable named:',...
-%             'Save sce.g to variable named:'}; 
-%         vars = {'A','g'};
-%         values = {A,sce.g};
-%         export2wsdlg(labels,vars,values);
-%     end
+    if ~(ismcc || isdeployed)
+        labels = {'Save network to variable named:',...
+            'Save sce.g to variable named:'}; 
+        vars = {'A','g'};
+        values = {A,sce.g};
+        waitfor(export2wsdlg(labels,vars,values));
+    end
     
         answer = questdlg('Save network A to MAT file?');
         switch answer
@@ -86,5 +86,5 @@ function callback_scPCNet1(src,events)
                    gui.gui_waitbar(fw);                   
                 end
         end
-    
+   
 end
