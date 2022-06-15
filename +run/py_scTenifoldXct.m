@@ -1,5 +1,6 @@
 function [T]=py_scTenifoldXct(sce,celltype1,celltype2,twosided,A1,A2)
 
+T=[];
 if nargin<6, A2=[]; end
 if nargin<5, A1=[]; end
 if nargin<4, twosided=true; end
@@ -9,14 +10,7 @@ pw1=fileparts(mfilename('fullpath'));
 wrkpth=fullfile(pw1,'external','py_scTenifoldXct');
 cd(wrkpth);
 
-isdebug=false;
-
-idx=sce.c_cell_type_tx==celltype1 | sce.c_cell_type_tx==celltype2;
-sce=sce.selectcells(idx);
-sce.c_batch_id=sce.c_cell_type_tx;
-sce.c_batch_id(sce.c_cell_type_tx==celltype1)="Source";
-sce.c_batch_id(sce.c_cell_type_tx==celltype2)="Target";
-% sce=sce.qcfilter;
+isdebug=true;
 
 tmpfilelist={'X.mat','X.txt','g.txt','c.txt','output.txt', ...
              'output1.txt','output2.txt',...
@@ -32,8 +26,14 @@ if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 % [y]=ismember(upper(sce.g),validg);
 % X=sce.X(y,:);
 % g=sce.g(y);
-
 % writematrix(sce.X,'X.txt');
+
+idx=sce.c_cell_type_tx==celltype1 | sce.c_cell_type_tx==celltype2;
+sce=sce.selectcells(idx);
+sce.c_batch_id=sce.c_cell_type_tx;
+sce.c_batch_id(sce.c_cell_type_tx==celltype1)="Source";
+sce.c_batch_id(sce.c_cell_type_tx==celltype2)="Target";
+% sce=sce.qcfilter;
 
 X=sce.X;
 save('X.mat','-v7.3','X');
