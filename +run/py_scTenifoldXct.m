@@ -50,7 +50,8 @@ else
     disp('Using A1 provided.')
 end
 A1=A1./max(abs(A1(:)));
-A=0.5*(A1+A1.');
+% A=0.5*(A1+A1.');
+A=ten.e_filtadjc(A1,0.75,false);
 save('pcnet_Source.mat','A','-v7.3');
 
 if isempty(A2)
@@ -59,7 +60,8 @@ else
     disp('Using A2 provided.');
 end
 A2=A2./max(abs(A2(:)));
-A=0.5*(A2+A2.');
+% A=0.5*(A2+A2.');
+A=ten.e_filtadjc(A2,0.75,false);
 save('pcnet_Target.mat','A','-v7.3');
 clear A A1 A2
 
