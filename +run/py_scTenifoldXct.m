@@ -39,13 +39,17 @@ X=sce.X;
 save('X.mat','-v7.3','X');
 writematrix(sce.g,'g.txt');
 writematrix(sce.c_batch_id,'c.txt');
+disp('Input X g c written.');
 
 t=table(sce.g,sce.g,'VariableNames',{' ','gene_name'});
 writetable(t,'gene_name_Source.tsv','filetype','text','Delimiter','\t');
 writetable(t,'gene_name_Target.tsv','filetype','text','Delimiter','\t');
+disp('Input gene_names written.');
 
 if isempty(A1)
+    disp('Building A1 network...')
     A1=sc_pcnetpar(sce.X(:,sce.c_cell_type_tx==celltype1));
+    disp('A1 network built.')
 else
     disp('Using A1 provided.')
 end
@@ -55,7 +59,9 @@ A=ten.e_filtadjc(A1,0.75,false);
 save('pcnet_Source.mat','A','-v7.3');
 
 if isempty(A2)
+    disp('Building A2 network...')
     A2=sc_pcnetpar(sce.X(:,sce.c_cell_type_tx==celltype2));
+    disp('A2 network built.')
 else
     disp('Using A2 provided.');
 end
