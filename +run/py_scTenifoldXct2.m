@@ -1,4 +1,4 @@
-function [T]=py_scTenifoldXct2(sce1,sce2,celltype1,celltype2,twosided,A1,A2)
+function [T]=py_scTenifoldXct2(sce1,sce2,celltype1,celltype2,twosided,A1a,A1b,A2a,A2b)
 
 T=[];
 if nargin<6, A2=[]; end
