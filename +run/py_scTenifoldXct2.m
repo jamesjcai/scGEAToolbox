@@ -1,13 +1,16 @@
-function [T]=py_scTenifoldXct2(sce1,sce2,celltype1,celltype2,twosided,A1a,A1b,A2a,A2b)
+function [T]=py_scTenifoldXct2(sce1,sce2,celltype1,celltype2, ...
+                               twosided,A1s,A1t,A2s,A2t)
 
 T=[];
-if nargin<6, A2=[]; end
-if nargin<5, A1=[]; end
-if nargin<4, twosided=true; end
+if nargin<9, A2t=[]; end
+if nargin<8, A2s=[]; end
+if nargin<7, A1t=[]; end
+if nargin<6, A1s=[]; end
+if nargin<5, twosided=true; end
 
 oldpth=pwd();
 pw1=fileparts(mfilename('fullpath'));
-wrkpth=fullfile(pw1,'external','py_scTenifoldXct');
+wrkpth=fullfile(pw1,'external','py_scTenifoldXct2');
 cd(wrkpth);
 
 isdebug=true;
@@ -28,48 +31,72 @@ if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 % g=sce.g(y);
 % writematrix(sce.X,'X.txt');
 
-idx=sce.c_cell_type_tx==celltype1 | sce.c_cell_type_tx==celltype2;
-sce=sce.selectcells(idx);
-sce.c_batch_id=sce.c_cell_type_tx;
-sce.c_batch_id(sce.c_cell_type_tx==celltype1)="Source";
-sce.c_batch_id(sce.c_cell_type_tx==celltype2)="Target";
-% sce=sce.qcfilter;
+i_prepareX(sce1,1);
+i_prepareX(sce2,2);
 
-X=sce.X;
-save('X.mat','-v7.3','X');
-writematrix(sce.g,'g.txt');
-writematrix(sce.c_batch_id,'c.txt');
-disp('Input X g c written.');
+    function i_prepareX(sce,id)
+        idx=sce.c_cell_type_tx==celltype1 | sce.c_cell_type_tx==celltype2;
+        sce=sce.selectcells(idx);
+        sce.c_batch_id=sce.c_cell_type_tx;
+        sce.c_batch_id(sce.c_cell_type_tx==celltype1)="Source";
+        sce.c_batch_id(sce.c_cell_type_tx==celltype2)="Target";
+        % sce=sce.qcfilter;        
+        X=sce.X;
+        save(sprintf('X%d.mat',id),'-v7.3','X');
+        writematrix(sce.g,sprintf('g%d.txt',id));
+        writematrix(sce.c_batch_id,sprintf('c%d.txt',id));
+        fprintf('Input X%d g%d c%d written.\n',id,id,id);        
+        t=table(sce.g,sce.g,'VariableNames',{' ','gene_name'});
+        writetable(t,sprintf('gene_name_Source%d.tsv',id), ...
+            'filetype','text','Delimiter','\t');
+        writetable(t,sprintf('gene_name_Target%d.tsv',id), ...
+            'filetype','text','Delimiter','\t');
+        disp('Input gene_names written.');
+    end
 
-t=table(sce.g,sce.g,'VariableNames',{' ','gene_name'});
-writetable(t,'gene_name_Source.tsv','filetype','text','Delimiter','\t');
-writetable(t,'gene_name_Target.tsv','filetype','text','Delimiter','\t');
-disp('Input gene_names written.');
+% idx=sce.c_cell_type_tx==celltype1 | sce.c_cell_type_tx==celltype2;
+% sce=sce.selectcells(idx);
+% sce.c_batch_id=sce.c_cell_type_tx;
+% sce.c_batch_id(sce.c_cell_type_tx==celltype1)="Source";
+% sce.c_batch_id(sce.c_cell_type_tx==celltype2)="Target";
+% % sce=sce.qcfilter;
+% 
+% X=sce.X;
+% save('X.mat','-v7.3','X');
+% writematrix(sce.g,'g.txt');
+% writematrix(sce.c_batch_id,'c.txt');
+% disp('Input X g c written.');
 
-if isempty(A1)
-    disp('Building A1 network...')
-    A1=sc_pcnetpar(sce.X(:,sce.c_cell_type_tx==celltype1));
-    disp('A1 network built.')
-else
-    disp('Using A1 provided.')
-end
-A1=A1./max(abs(A1(:)));
-% A=0.5*(A1+A1.');
-A=ten.e_filtadjc(A1,0.75,false);
-save('pcnet_Source.mat','A','-v7.3');
+i_prepareA(sce1,A1s,A1t,1);
+i_prepareA(sce2,A2s,A2t,2);
 
-if isempty(A2)
-    disp('Building A2 network...')
-    A2=sc_pcnetpar(sce.X(:,sce.c_cell_type_tx==celltype2));
-    disp('A2 network built.')
-else
-    disp('Using A2 provided.');
-end
-A2=A2./max(abs(A2(:)));
-% A=0.5*(A2+A2.');
-A=ten.e_filtadjc(A2,0.75,false);
-save('pcnet_Target.mat','A','-v7.3');
-clear A A1 A2
+    function i_prepareA(sce,A1,A2,id)
+   
+        if isempty(A1)
+            disp('Building A1 network...')
+            A1=sc_pcnetpar(sce.X(:,sce.c_cell_type_tx==celltype1));
+            disp('A1 network built.')
+        else
+            disp('Using A1 provided.')
+        end
+        A1=A1./max(abs(A1(:)));
+        % A=0.5*(A1+A1.');
+        A=ten.e_filtadjc(A1,0.75,false);
+        save(sprintf('pcnet_Source%d.mat',id),'A','-v7.3');
+
+        if isempty(A2)
+            disp('Building A2 network...')
+            A2=sc_pcnetpar(sce.X(:,sce.c_cell_type_tx==celltype2));
+            disp('A2 network built.')
+        else
+            disp('Using A2 provided.');
+        end
+        A2=A2./max(abs(A2(:)));
+        % A=0.5*(A2+A2.');
+        A=ten.e_filtadjc(A2,0.75,false);
+        save(sprintf('pcnet_Target%d.mat',id),'A','-v7.3');
+        clear A A1 A2
+    end
 
 x=pyenv;
 pkg.i_add_conda_python_path;
