@@ -183,7 +183,7 @@ i_addmenu(m_exp,0,@WorkonSelectedCells,'Select 50% Cells to Work on...');
 
 i_addmenu(m_exp,1,@DrawKNNNetwork,'Plot Cell kNN Network...');
 i_addmenu(m_exp,0,@DrawTrajectory,'Plot Cell Trajectory...');
-i_addmenu(m_exp,0,@gui.callback_CellHeatMap,'Cell Heatmap...');
+i_addmenu(m_exp,0,@gui.callback_GeneHeatMap,'Gene Heatmap...');
 i_addmenu(m_exp,0,@callback_DrawDotplot,'Dot Plot...');
 
 i_addmenu(m_exp,1,@callback_CalculateGeneStats,'Calculate Gene Expression Statistics...');
