@@ -28,7 +28,11 @@ function callback_GeneHeatMap(src,~)
 
 [~,gidx]=ismember(glist,sce.g);
 
-Y=sce.X(gidx,:);
+
+X=sc_norm(sce.X);
+X=log(X+1);
+
+Y=X(gidx,:);
 [~,cidx]=sort(c);
 Y=Y(:,cidx);
 
