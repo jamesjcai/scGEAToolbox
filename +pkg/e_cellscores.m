@@ -19,6 +19,10 @@ if ischar(typeid) || isstring(typeid)
 elseif isnumeric(typeid)
     idx=typeid;
 end
+if isempty(idx)
+    score=[];
+    return;
+end    
 if ~(idx<=size(T,1) && idx>0 && idx == floor(idx))
     score=[];
     return;
