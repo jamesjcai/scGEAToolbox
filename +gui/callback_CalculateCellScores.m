@@ -42,10 +42,31 @@ switch actiontype
         return;
 end        
     
-    figure;
-    gui.i_stemscatter(sce.s,cs);
-    zlabel('Score Value')
-    title(strrep(ttxt,'_','\_'))
+
+    if ~isempty(cs)
+        figure;
+        gui.i_stemscatter(sce.s,cs);
+        zlabel('Score Value')
+        title(strrep(ttxt,'_','\_'))        
+        gui.i_exporttable(cs,true,matlab.lang.makeValidName(ttxt{1}));
+    end
+
+
+%     figure;
+%     gui.i_stemscatter(sce.s,cs);
+%     zlabel('Score Value')
+%     title(strrep(ttxt,'_','\_'))
+% 
+% 
+% if ~(ismcc || isdeployed)    
+%     labels = {'Save score values to variable named:'}; 
+%     vars = {'CellScores'};
+%     values = {cs};
+%     waitfor(export2wsdlg(labels,vars,values));
+% else
+%     T=table(cs);
+%     gui.i_exporttable(T,true,'T_cellscore');
+% end
     
     
     answer2 = questdlg(sprintf('Score has been computed.\nCompare the score across cell classes?'),'Continue?');
@@ -73,10 +94,7 @@ end
 %         movegui(f,'center');
 %         set(f,'visible','on');
     
-%     labels = {'Save score values to variable named:'}; 
-%     vars = {'CellScores'};
-%     values = {cs};
-%     export2wsdlg(labels,vars,values);
+
 end
 
 
