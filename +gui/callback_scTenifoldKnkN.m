@@ -29,6 +29,10 @@ answer=questdlg('Construct network de novo or use existing network in Workspace?
         case 'Use existing'
             a=evalin('base','whos');
             b=struct2cell(a);
+            if isempty(b)
+                helpdlg('No variable in the WorkSpace.','');
+                return;
+            end            
             valididx=ismember(b(4,:),'double');
             b1=b(1,:);
             b2=b(2,:); targetsiz=[length(sce.g) length(sce.g)];

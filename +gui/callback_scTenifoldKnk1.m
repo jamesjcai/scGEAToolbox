@@ -9,6 +9,10 @@ answer=questdlg('Construct network de novo or use existing network in Workspace?
         case 'Use existing'
             a=evalin('base','whos');
             b=struct2cell(a);
+            if isempty(b)
+                helpdlg('No variable in the WorkSpace.','');
+                return;
+            end
             valididx=false(length(a),1);
             for k=1:length(a)
                 if max(a(k).size)==sce.NumGenes && min(a(k).size)==sce.NumGenes

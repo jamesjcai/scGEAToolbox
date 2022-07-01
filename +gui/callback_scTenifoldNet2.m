@@ -28,6 +28,10 @@ answer=questdlg('Construct networks de novo or use existing networks in Workspac
             b=struct2cell(a);
             %valididx=ismember(b(4,:),'double');
             %a=a(valididx);
+            if isempty(b)
+                helpdlg('No variable in the WorkSpace.','');
+                return;
+            end
             [indx,tf]=listdlg('PromptString',{'Select two networks:'},...
                 'liststring',b(1,:),'SelectionMode','multiple');
             if tf~=1, return; end
