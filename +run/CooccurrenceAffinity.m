@@ -1,20 +1,21 @@
-function [status]=CooccurrenceAffinity(X)
-    [status]=0;
-    isdebug=true;
-    oldpth=pwd();
-    [isok,msg]=commoncheck_R('R_CooccurrenceAffinity');
-    if ~isok, error(msg); return; end
+function [p]=CooccurrenceAffinity(X)
 
-    tmpfilelist={'input.h5','output.Rds'};
+isdebug=false;
+oldpth=pwd();
+[isok,msg]=commoncheck_R('R_CooccurrenceAffinity');
+if ~isok, error(msg); return; end
 
-    if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-    X=double(X>0);
+tmpfilelist={'input.h5','output.h5'};
 
-    h5create('input.h5', '/X', size(X));
-    h5write('input.h5', '/X', X);
+if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+X=double(X>0);
 
-    pkg.RunRcode('script.R');
-    % [status]=copyfile('output.Rds',filename,'f');
-    if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-    cd(oldpth);
+h5create('input.h5', '/X', size(X));
+h5write('input.h5', '/X', X);
+
+pkg.RunRcode('script.R');
+p=h5read('output.h5','/p');
+if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+cd(oldpth);
+
 end
