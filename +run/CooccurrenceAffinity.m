@@ -8,7 +8,7 @@ if ~isok, error(msg); return; end
 tmpfilelist={'input.h5','output.h5'};
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-X=double(X>0);
+X=uint8(X>0);
 
 h5create('input.h5', '/X', size(X));
 h5write('input.h5', '/X', X);
