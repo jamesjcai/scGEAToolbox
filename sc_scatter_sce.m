@@ -65,6 +65,8 @@ set(findall(FigureHandle,'ToolTipString','Open Property Inspector'),'Visible','O
 %a=findall(f,'tag','figMenuFile');
 
 % https://undocumentedmatlab.com/articles/customizing-standard-figure-toolbar-menubar
+a=findall(FigureHandle,'tag','figMenuWindow'); delete(a);
+a=findall(FigureHandle,'tag','figMenuDesktop'); delete(a);
 a=findall(FigureHandle,'tag','figMenuUpdateFileNew'); delete(a);
 a=findall(FigureHandle,'tag','figMenuOpen'); 
 a.MenuSelectedFcn='scgeatool';
@@ -141,17 +143,19 @@ i_addbutton(2,0,@callback_CompareGeneNetwork,"networkcomp.gif","Compare two scGR
 i_addbutton(2,1,{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');
 gui.add_3dcamera(defaultToolbar, 'AllCells');
 
-m_vie = uimenu(FigureHandle,'Text','Multiv&iew','Accelerator','i');
+m_vie = uimenu(FigureHandle,'Text','&Multiview','Accelerator','M');
 i_addmenu(m_vie,0,@gui.callback_MultiEmbeddingViewer,'Multi-embedding View...');
 i_addmenu(m_vie,0,@gui.callback_MultiGroupingViewer,'Multi-grouping View...');
 i_addmenu(m_vie,0,@gui.callback_CrossTabulation,'Cross Tabulation...');
-i_addmenu(m_vie,1,@callback_scPCNet1,'PC Regression - GRN Construction 🐢...');
-i_addmenu(m_vie,0,@callback_scTenifoldNet1,'scTenifoldNet - GRN Construction 🐢🐢 ...');
-i_addmenu(m_vie,1,@callback_scTenifoldNet2,'scTenifoldNet - GRN Comparison 🐢🐢🐢 ...');
-i_addmenu(m_vie,0,@callback_scTenifoldKnk1,'scTenifoldKnk - Virtual KO of a Gene 🐢 ...');
-i_addmenu(m_vie,0,@callback_scTenifoldXct,'scTenifoldXct - Cell-Cell Interactions 🐢🐢🐢 ...');
 
-m_ext = uimenu(FigureHandle,'Text','Exte&rnal','Accelerator','r');
+m_net = uimenu(FigureHandle,'Text','&Network','Accelerator','N');
+i_addmenu(m_net,0,@callback_scPCNet1,'GRN Construction - PC Regression 🐢...');
+i_addmenu(m_net,0,@callback_scTenifoldNet1,'GRN Construction - scTenifoldNet 🐢🐢 ...');
+i_addmenu(m_net,1,@callback_scTenifoldNet2,'GRN Comparison - scTenifoldNet 🐢🐢🐢 ...');
+i_addmenu(m_net,0,@callback_scTenifoldKnk1,'Virtual Gene KO - scTenifoldKnk 🐢🐢 ...');
+i_addmenu(m_net,0,@callback_scTenifoldXct,'Cell-Cell Interactions - scTenifoldXct (Python) 🐢🐢🐢 ...');
+
+m_ext = uimenu(FigureHandle,'Text','E&xternal','Accelerator','x');
 i_addmenu(m_ext,0,@gui.i_setrenv,'Check R Environment');
 i_addmenu(m_ext,0,@gui.i_setpyenv,'Check Python Environment');
 i_addmenu(m_ext,1,@DecontX,'Detect Ambient RNA Contamination (decontX/R required)...');
@@ -164,7 +168,7 @@ i_addmenu(m_ext,1,@callback_MELDPerturbationScore,'MELD Perturbation Score (MELD
 i_addmenu(m_ext,0,@HarmonyPy,'Batch Integration (Harmony/Python required)...');
 i_addmenu(m_ext,0,@DoubletDetection,'Detect Doublets (Scrublet/Python required)...');
 
-m_exp = uimenu(FigureHandle,'Text','E&xperimental','Accelerator','x');
+m_exp = uimenu(FigureHandle,'Text','Ex&perimental','Accelerator','p');
 % m_exp2 = uimenu(m_exp,'Text','sc&Tenifold Suite','Accelerator','T');
 % i_addmenu(m_exp2,1,@callback_scTenifoldNet1,'scTenifoldNet - GRN Construction 🐢🐢 ...');
 % i_addmenu(m_exp2,0,@callback_scTenifoldNet2,'scTenifoldNet - GRN Comparison 🐢🐢🐢 ...');
