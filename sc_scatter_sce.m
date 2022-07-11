@@ -114,7 +114,7 @@ i_addbutton(1,0,@Brushed2MergeClusters,"plotpicker-pzmap.gif","Merge brushed cel
 i_addbutton(1,1,@ClusterCellsS,"plotpicker-dendrogram.gif","Clustering using embedding S")
 i_addbutton(1,0,@ClusterCellsX,"plotpicker-gscatter.gif","Clustering using expression matrix X")
 i_addbutton(1,1,@DetermineCellTypeClusters,"plotpicker-contour.gif","Cell types of clusters")
-i_addbutton(1,0,@Brush4Celltypes,"brush.gif","Cell types of brushed cells");
+i_addbutton(1,0,@Brush4Celltypes,"brush.gif","Assign cell type label to selected cells");
 i_addbutton(1,0,@RenameCellTypeBatchID,"plotpicker-scatterhist.gif","Rename cell type or batch ID");
 i_addbutton(1,0,@callback_CellTypeMarkerScores,"cellscore.gif","Calculate Cell Scores from Cell Type Markers");
 i_addbutton(1,0,@ShowCellStemScatter,"IMG00067.GIF","Stem scatter plot");
@@ -854,11 +854,11 @@ end
     function Brush4Celltypes(~, ~)
         ptsSelected = logical(h.BrushData.');
         if ~any(ptsSelected)
-            warndlg("No cells are selected.");
+            helpdlg("No cells are selected. Please use the data brush tool to select cells for cell type assignment.",'');
             return;
         end
 
-        answer = questdlg('Labels are not saved. Continue?');
+        answer = questdlg('This is a one-time analysis. Cell type labels will not be saved. Continue?');
         if ~strcmp(answer, 'Yes')
             return;
         end
