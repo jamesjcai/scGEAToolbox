@@ -22,8 +22,10 @@ switch answer
         [indx,tf] = listdlg('PromptString',{'Select a gene:','',''},...
             'SelectionMode','single','ListString',gsorted);
         if tf==1
+            [methodid]=gui.i_pickscatterstem('Scatter+Stem');
+            if isempty(methodid), return; end
             for k=1:length(indx)
-                gui.i_cascadefig(sce,gsorted(indx(k)),axx,bxx,k);
+                gui.i_cascadefig(sce,gsorted(indx(k)),axx,bxx,k,methodid);
             end
         end
     case 'Multiple'
@@ -127,7 +129,7 @@ switch answer
                     return;
                 otherwise
                     return;
-            end
+            end   % end of AND / OR / Individual
             g=extractBefore(g,strlength(g)-2);
         end
             f=figure('visible','off');
