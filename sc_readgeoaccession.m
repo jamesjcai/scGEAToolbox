@@ -11,7 +11,8 @@ c=c(contains(c,'ftp'));
 
 if ~(length(c)==1 || length(c)>=3) 
     disp(url)
-    error('Unknown error.');
+    warning('Check GEO supplementary file list.');
+    c=c(1);
 end
 
 barcodes=[];

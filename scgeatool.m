@@ -219,11 +219,19 @@ promotesave=false;
                     if length(accv)>1
                         dmanswer=questdlg('Download and merge data sets?',...
                             '','Yes','Cancel','Yes');
-                        if ~strcmp(dmanswer,'Yes'), return; end                                                
-                        [sce]=pkg.pipeline_multisamplesmerge(accv);
+                        if ~strcmp(dmanswer,'Yes'), return; end
+                        try
+                            fw=gui.gui_waitbar;
+                            [sce]=pkg.pipeline_multisamplesmerge(accv,false);
+                            gui.gui_waitbar(fw);
+                        catch ME
+                            gui.gui_waitbar(fw);
+                            errordlg(ME.message);
+                            return;
+                        end                            
                     else    
                         try
-                            fw=gui.gui_waitbar;                
+                            fw=gui.gui_waitbar;
                             [sce]=sc_readgeoaccession(acc);
                             gui.gui_waitbar(fw);
                         catch ME
