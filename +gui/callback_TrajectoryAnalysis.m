@@ -1,6 +1,6 @@
 function callback_TrajectoryAnalysis(src,~)
     [ok]=gui.i_confirmscript('Run Pseudotime Analysis (Monocle)?', ...
-        'R_monocle','r');
+        'R_monocle','r');    
     if ~ok, return; end
 
     FigureHandle=src.Parent.Parent;
