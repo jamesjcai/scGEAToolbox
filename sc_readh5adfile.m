@@ -22,16 +22,24 @@ end
 
 hinfo=h5info(filenm);
 
-idx=find(strcmp(strtrim(string(char(hinfo.Groups.Name))),"/raw"));
-data=h5read(filenm,[hinfo.Groups(idx).Groups(1).Name,'/data']);
-indices=h5read(filenm,[hinfo.Groups(idx).Groups(1).Name,'/indices']);
-indptr=h5read(filenm,[hinfo.Groups(idx).Groups(1).Name,'/indptr']);
+idx=find(strcmp(strtrim(string(char(hinfo.Groups.Name))),"/X"));
+data=h5read(filenm,[hinfo.Groups(idx).Name,'/data']);
+indices=h5read(filenm,[hinfo.Groups(idx).Name,'/indices']);
+indptr=h5read(filenm,[hinfo.Groups(idx).Name,'/indptr']);
+
+
+
+% idx=find(strcmp(strtrim(string(char(hinfo.Groups.Name))),"/raw"));
+% data=h5read(filenm,[hinfo.Groups(idx).Groups(1).Name,'/data']);
+% indices=h5read(filenm,[hinfo.Groups(idx).Groups(1).Name,'/indices']);
+% indptr=h5read(filenm,[hinfo.Groups(idx).Groups(1).Name,'/indptr']);
 
 idx2=find(strcmp(strtrim(string(char(hinfo.Groups(idx).Attributes.Name))),"shape"));
 shape=double(hinfo.Groups(idx).Attributes(idx2).Value);
 
     idx=find(strcmp(strtrim(string(char(hinfo.Groups.Name))),"/var"));
     g=h5read(filenm,[hinfo.Groups(idx).Name,'/gene_ids']);
+    % g=h5read(filenm,[hinfo.Groups(idx).Name,'/gene_name']);
 
 % try
 %     barcodes=h5read(filenm,[hinfo.Groups.Groups(1).Name,'/barcodes']);
