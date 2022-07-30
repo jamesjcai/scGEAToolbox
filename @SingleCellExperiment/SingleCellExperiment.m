@@ -122,6 +122,13 @@ classdef SingleCellExperiment
                 end
             end
             % obj.NumCells=size(obj.X,2);
+            if ~isempty(obj.table_attributes)
+                if istable(obj.table_attributes)
+                    if size(obj.table_attributes,1)==obj.NumCells
+                        obj.table_attributes(idx,:)=[];
+                    end
+                end
+            end
         end
 
     function obj = selectcells(obj,idx)
