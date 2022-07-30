@@ -32,9 +32,16 @@ end
                 a=inputdlg('Review script and press OK to run it', ...
                     '',[10 90],{ts});
                 if isempty(a)
-                    return; 
+                    return;
                 else
-                    t=true;
+                    answer2 = questdlg("Run script?",'');
+                    if isempty(answer2), return; end
+                    switch answer2
+                        case 'Yes'
+                            t=true;
+                        otherwise
+                            return;
+                    end
                 end
             otherwise
                 return;

@@ -17,7 +17,9 @@ if guiwaitbar
 end
 for k=1:length(accv)
     [sce]=sc_readgeoaccession(accv(k));
-    gui.gui_waitbar_adv(fw,0.15+0.75*(k/length(accv)));
+    if guiwaitbar
+        gui.gui_waitbar_adv(fw,0.15+0.75*(k/length(accv)));
+    end
     if length(accv)>1
         sce=sce.qcfilterwhitelist(500,0.15,5,'');
     end
