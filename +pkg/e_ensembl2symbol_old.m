@@ -1,17 +1,14 @@
-function [output]=e_ensembl2symbol(input,species)
+function [output]=e_ensembl2symbol_old(input,species)
 
 if nargin<2, species='human'; end
     pw1=fileparts(mfilename('fullpath'));
     pth=fullfile(pw1,'..','resources', ...
-        sprintf('mart_export_%s.txt',species));
+        sprintf('genelist_%s.txt',species));
     T=readtable(pth);
 
 keySet=T.GeneStableID;
 valueSet=T.GeneName;
 output=input;
-
-idxv=strlength(string(valueSet))==0;
-valueSet(idxv)=keySet(idxv);
 
 if isstring(input)
     M = containers.Map(string(keySet),string(valueSet));
