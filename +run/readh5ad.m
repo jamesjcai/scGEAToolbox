@@ -1,7 +1,8 @@
 function [X,g,b]=readh5ad(fname)
 
-
+isdebug=true;
 if ~exist(fname,'file')
+    fname
     error('FNAME is not a file.');
 end
 
@@ -14,7 +15,7 @@ if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 
 x=pyenv;
 pkg.i_add_conda_python_path;
-cmdlinestr=sprintf('"%s" "%s%sscript_csv.py" "%s"',x.Executable, ...
+cmdlinestr=sprintf('"%s" "%s%sscript.py" "%s"',x.Executable, ...
         wrkpth,filesep,fname);
 disp(cmdlinestr)
 [status]=system(cmdlinestr);
