@@ -63,3 +63,6 @@ scgeatoolstandaloneApplication/
 +run/external/py_scTenifoldXct/pcnet_Target.npz
 +run/external/py_scTenifoldXct/pcnet_Target.mat
 +run/external/py_scTenifoldXct/pcnet_Source.mat
++run/external/py_readh5ad/X.h5
++run/external/py_readh5ad/var.csv
++run/external/py_readh5ad/obs.csv
