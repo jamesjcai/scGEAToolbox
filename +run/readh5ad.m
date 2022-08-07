@@ -39,9 +39,9 @@ X=zeros(shape(1),shape(2));
 
 % X=zeros(size(t1,1),size(t2,1));
 for k=1:length(indptr)-1
-    i=indptr(k)+1:indptr(k+1);
-    y=indices(i)+1;
-    X(y,k)=data(i);
+    ix=indptr(k)+1:indptr(k+1);
+    y=indices(ix)+1;
+    X(y,k)=data(ix);
 end
 end
 X=X.';
