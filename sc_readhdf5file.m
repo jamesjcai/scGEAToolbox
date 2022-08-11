@@ -53,11 +53,21 @@ catch
         end
 end
 
-X=zeros(shape(1),shape(2));
-for k=1:length(indptr)-1
+try
+    X=zeros(shape(1),shape(2));
+catch
+    X=sparse(shape(1),shape(2));
+end
+
+c=0;
+for k=1:length(indptr)-1    
+    if mod(c,100)==0
+        fprintf('......%f\n',c/length(indptr));
+    end
     i=indptr(k)+1:indptr(k+1);
     y=indices(i)+1;
     X(y,k)=data(i);
+    c=c+1;
 end
 
 

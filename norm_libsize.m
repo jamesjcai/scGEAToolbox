@@ -3,7 +3,9 @@ function [X]=norm_libsize(X,factorn)
 
 %aka: namely cell depth normalization to the mean cell depth, followed by log1p (log1pPF)
 % https://www.biorxiv.org/content/10.1101/2022.05.06.490859v1.full
-    X=double(X);
+    if ~isa(X,'double')
+        X=double(X);
+    end
     lbsz=sum(X,'omitnan');
     if nargin<2 || isempty(factorn)
         factorn=mean(lbsz,'omitnan'); 

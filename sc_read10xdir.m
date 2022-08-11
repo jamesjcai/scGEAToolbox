@@ -4,8 +4,12 @@ function [X,genelist,celllist,ftdone]=sc_read10xdir(selpath,coln)
 %[X,genelist,celllist]=sc_read10xdir(selpath,coln);
 %[X,genelist,celllist]=sc_read10xdir(pwd(),2);
 
+
 if nargin<2, coln=2; end
 if nargin<1, selpath = uigetdir; end
+% if isempty(selpath) || selpath==0 || ~isfolder(selpath)
+%     error('Need valide folder name.'); 
+% end
 fprintf('Processing %s...\n',selpath);
 [out,aff]=i_guessmtxfile(selpath);
 if isempty(out)

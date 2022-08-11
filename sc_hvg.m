@@ -27,14 +27,17 @@ if nargout>1, Xori=X; end
 
 dropr=1-sum(X>0,2)./size(X,2);
 if normit
-    [X]=norm_deseq(X);
-    %[X]=norm_libsize(X);	
+    %[X]=norm_deseq(X);
+    %tic
+    [X]=norm_libsize(X);
+    %toc
 end
 if any(isnan(X(:)))
     u=mean(X,2,'omitnan');
     vx=var(X,0,2,'omitnan');
     cv2=vx./u.^2;
 else
+    issparse(X)
     u=mean(X,2);
     vx=var(X,0,2);
     % vx=sum(abs(X-mean(X,2)).^2,2)./(size(X,2)-1);
