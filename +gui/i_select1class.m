@@ -54,7 +54,7 @@ clable='';
     if any(v)
         a=a(v);
         b=b(:,v);
-        listitems=[listitems,'Customized C...'];
+        listitems=[listitems,'Workspace Variable...'];
     end
 
 % listitems={'Current Class (C)','Cluster ID','Batch ID',...
@@ -75,7 +75,7 @@ if tf2==1
             thisc=sce.c_cell_type_tx;                
         case 'Cell Cycle Phase' % cell cycle
             thisc=sce.c_cell_cycle_tx;
-        case 'Customized C...'
+        case 'Workspace Variable...'
             thisc=i_pickvariable;
     end
 end

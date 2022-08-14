@@ -1,7 +1,9 @@
-function [thisc,clable,listitems,newpickclable]=i_select1state(sce,nobaseline,nocustome)
+function [thisc,clable,listitems,newpickclable]=i_select1state(sce, ...
+            nobaseline,nocustome,noattrib)
 
     if nargin<2, nobaseline=false; end
     if nargin<3, nocustome=false; end
+    if nargin<4, noattrib=false; end
 
     thisc=[];
     clable='';
@@ -12,7 +14,8 @@ function [thisc,clable,listitems,newpickclable]=i_select1state(sce,nobaseline,no
     else
         baselistitems = {'Library Size', 'Mt-reads Ratio', ...
             'Cell Cycle Phase', ...
-            'Cell Type', 'Cluster ID', 'Batch ID'};
+            'Cell Type', 'Cluster ID', ...
+            'Batch ID','-------------------'};
         listitems=[baselistitems,...
             sce.list_cell_attributes(1:2:end)];
     end
@@ -30,7 +33,15 @@ function [thisc,clable,listitems,newpickclable]=i_select1state(sce,nobaseline,no
         if any(v)
             a=a(v);
             b=b(:,v);
-            listitems=[listitems,'Customized C...'];
+            listitems=[listitems,'Workspace Variable...'];
+        end
+    end
+
+    if ~noattrib
+        if istable(sce.table_attributes)
+            if size(sce.table_attributes,1)==sce.NumCells
+                listitems=[listitems,'SCE Attribute Table...'];
+            end
         end
     end
 
@@ -80,11 +91,22 @@ if tf2==1
 %             ttxt = sprintf('%s|', string(tx));
 %             clable = sprintf('%s (%s)',clable,ttxt);
             thisc=sce.c_cell_cycle_tx;
-        case 'Customized C...'
+        case '-------------------'
+            thisc=[];
+            clable='';
+            listitems=[];
+            newpickclable=[];
+            return;
+        case 'Workspace Variable...'
             [thisc,newpickclable]=i_pickvariable;
+        case 'SCE Attribute Table...'
+            [thisc,newpickclable]=i_pickattribute;
         otherwise   % other properties
-            [~,idx]=ismember(clable,sce.list_cell_attributes(1:2:end));
+            
+            [~,idx]=ismember(clable, ...
+                sce.list_cell_attributes(1:2:end));
             thisc = sce.list_cell_attributes{idx+1};
+            
             %nx=length(baselistitems);
             %clable = sce.list_cell_attributes{2 * (indx2 - nx) - 1};
             %thisc = sce.list_cell_attributes{2 * (indx2 - nx)};
@@ -92,27 +114,44 @@ if tf2==1
 end
 
 
-function [c,x]=i_pickvariable
+    function [c,x]=i_pickvariable
+        c=[]; x='';
+    %     a=evalin('base','whos');
+    %     b=struct2cell(a);
+    %     v=false(length(a),1);
+    %     for k=1:length(a)
+    %         if max(a(k).size)==sce.NumCells && min(a(k).size)==1
+    %             v(k)=true;
+    %         end
+    %     end
+    %     if any(v)
+            %valididx=ismember(b(4,:),'double');
+            %a=a(valididx);
+            [indx,tf]=listdlg('PromptString',{'Select workspace variable:'},...
+                'liststring',b(1,:),'SelectionMode','single');
+            if tf==1
+                c = evalin('base',a(indx).name);
+                x = a(indx).name;
+            end
+    %    end
+    end
+
+function [c,x]=i_pickattribute
     c=[]; x='';
-%     a=evalin('base','whos');
-%     b=struct2cell(a);
-%     v=false(length(a),1);
-%     for k=1:length(a)
-%         if max(a(k).size)==sce.NumCells && min(a(k).size)==1
-%             v(k)=true;
-%         end
-%     end
-%     if any(v)
-        %valididx=ismember(b(4,:),'double');
-        %a=a(valididx);
-        [indx,tf]=listdlg('PromptString',{'Select network variable:'},...
-            'liststring',b(1,:),'SelectionMode','single');
+    T=sce.table_attributes;
+    att=sce.table_attributes.Properties.VariableNames;
+        [indx,tf]=listdlg('PromptString',{'Select a SCE attribute variable:'},...
+            'liststring', att, 'SelectionMode','single');
         if tf==1
-            c = evalin('base',a(indx).name);
-            x = a(indx).name;
+            x = string(att(indx));
+            c = T.(x);
+            if iscell(c)
+                c=string(c);
+            end
         end
-%    end
 end
+
+
 % if isempty(thisc)
 %     errordlg('Undefined');    
 %     return;
