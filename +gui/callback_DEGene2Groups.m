@@ -44,12 +44,16 @@ function callback_DEGene2Groups(src,~)
                 fw=gui.gui_waitbar;
                 T=run.MAST(sce.X(:,i1),sce.X(:,i2),sce.g);
         end
+
     catch ME
         gui.gui_waitbar(fw,true);
         errordlg(ME.message);
         return;
     end
     gui.gui_waitbar(fw);
+
+
+    % mavolcanoplot(sce.X(:,i1),sce.X(:,i2),T.p_val_adj,'Labels',T.gene)
 
     try
         T = sortrows(T,'p_val_adj','ascend');
