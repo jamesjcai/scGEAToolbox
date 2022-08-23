@@ -1,5 +1,20 @@
-function ari = adjustedrandindex(p1, p2)
-    ari = rand_index(p1, p2, 'adjusted');
+function ari = adjustedrandindex(X,dotransform)
+if nargin<2, dotransform=false; end
+%See also: p=run.CooccurrenceAffinity(X)
+% https://medium.com/analytics-vidhya/how-to-create-co-occurrence-networks-with-the-r-packages-cooccur-and-visnetwork-f6e1ceb1c523
+    % ari = rand_index(p1, p2, 'adjusted');
+if dotransform
+    X=(sc_transform(X,'type','PearsonResiduals')>0);
+end
+
+N=size(X,1);
+ari=zeros(N,N);
+for k=1:N-1
+    for j=k+1:N
+        ari(j,k)=rand_index(X(j,:), X(k,:), 'adjusted');
+    end
+end
+
 end
 
 %{

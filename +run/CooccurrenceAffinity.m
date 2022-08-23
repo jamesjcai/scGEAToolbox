@@ -1,5 +1,8 @@
 function [p]=CooccurrenceAffinity(X)
 
+% See also: pkg.adjustedrandindex
+% https://medium.com/analytics-vidhya/how-to-create-co-occurrence-networks-with-the-r-packages-cooccur-and-visnetwork-f6e1ceb1c523
+
 isdebug=false;
 oldpth=pwd();
 [isok,msg]=commoncheck_R('R_CooccurrenceAffinity');

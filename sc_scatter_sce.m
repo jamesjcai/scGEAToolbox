@@ -179,8 +179,9 @@ i_addmenu(m_exp,0,@callback_ShowPseudoTimeGenes,'Show Genes with Expression Vari
 i_addmenu(m_exp,0,@callback_DetectCellularCrosstalk,'Ligand-Receptor Mediated Intercellular Crosstalk...');
 i_addmenu(m_exp,0,@callback_SelectCellsByMarker,'Extract Cells by Marker(+/-) Expression...');
 i_addmenu(m_exp,0,@MergeSubCellTypes,'Merge Subclusters of Same Cell Type');
-
+i_addmenu(m_exp,0,@callback_TwoGeneCooccurrenceTest,'Two-Gene Cooccurrence Test...');
 i_addmenu(m_exp,0,@AnnotateSubGroup,'Annotate Cell Subgroups...');
+
 
 i_addmenu(m_exp,1,@WorkonSelectedGenes,'Select 2000 HVGs to Work on...');
 i_addmenu(m_exp,0,@WorkonSelectedCells,'Select 50% Cells to Work on...');

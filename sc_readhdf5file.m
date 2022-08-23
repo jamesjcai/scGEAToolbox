@@ -62,14 +62,14 @@ end
 c=0;
 for k=1:length(indptr)-1    
     if mod(c,100)==0
-        fprintf('......%f\n',c/length(indptr));
+        fprintf('......%d%%\n',round(100*(c/length(indptr))));
     end
     i=indptr(k)+1:indptr(k+1);
     y=indices(i)+1;
     X(y,k)=data(i);
     c=c+1;
 end
-
+fprintf('......100%%\n');
 
 genelist=deblank(string(g));
 % genelist=strings(length(g),1);

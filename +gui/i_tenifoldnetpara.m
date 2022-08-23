@@ -9,7 +9,7 @@ savegrn=[];
 
 definput = {'10','500'};
 prompt = {'Number of subsamples (nsubsmpl=[10..50]:',...
-          'Number of cells per subsample (csubsmpl=[500..5000]):'};
+          'Number of cells per subsample (csubsmpl=[200..5000]):'};
 dlgtitle = 'scTenifoldNet Settings';
 dims = [1 55];
 answer = inputdlg(prompt,dlgtitle,dims,definput);
@@ -19,7 +19,7 @@ try
     nsubsmpl=str2double(answer{1});
     csubsmpl=str2double(answer{2});
     assert((nsubsmpl>=10) && (nsubsmpl<=50));
-    assert((csubsmpl>=500) && (nsubsmpl<=5000));
+    assert((csubsmpl>=200) && (nsubsmpl<=5000));
 catch
     errordlg('Invalid parameter value(s).');
     return;
