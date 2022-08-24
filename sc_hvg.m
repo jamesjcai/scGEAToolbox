@@ -37,7 +37,7 @@ if any(isnan(X(:)))
     vx=var(X,0,2,'omitnan');
     cv2=vx./u.^2;
 else
-    issparse(X)
+    % issparse(X)
     u=mean(X,2);
     vx=var(X,0,2);
     % vx=sum(abs(X-mean(X,2)).^2,2)./(size(X,2)-1);

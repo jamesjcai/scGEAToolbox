@@ -17,7 +17,7 @@ function obj = embedcells(obj,methodtag,forced,usehvgs, ...
         
         if usehvgs
             % disp('Identifying HVGs')
-            [T,X]=sc_hvg(obj.X,obj.g,true,false,true,false,true);
+            [T,X]=sc_hvg(obj.X,obj.g,true,false,true,false,true);            
             X=X(1:min([size(X,1),numhvg]),:);
             g=T.genes(1:min([size(X,1),numhvg]));
         else
