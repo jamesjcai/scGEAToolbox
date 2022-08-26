@@ -4,6 +4,7 @@ if nargin<3
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
 end
+% unique(sce.c_cluster_id)
 
 [thisc,~]=gui.i_select1class(sce);
 if isempty(thisc), return; end
