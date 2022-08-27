@@ -72,9 +72,9 @@ hFig.Position(3)=hFig.Position(3)*0.7;
 tb = uitoolbar('Parent', hFig);
 pkg.i_addbutton2fig(tb,'on',{@gui.i_pickcolormap,c},'plotpicker-compass.gif','Pick new color map...');
 pkg.i_addbutton2fig(tb,'off',@gui.i_changefontsize,'noun_font_size_591141.gif','ChangeFontSize');
-pkg.i_addbutton2fig(tb,'on',@i_renamecat,'xplotpicker-compass.gif','Rename groups...');
+pkg.i_addbutton2fig(tb,'off',@i_resizedot,'networkcomp.gif','Resize dots...');
+pkg.i_addbutton2fig(tb,'on',@i_renamecat,'guideicon.gif','Rename groups...');
 pkg.i_addbutton2fig(tb,'on',@i_resetcolor,'plotpicker-geobubble2.gif','Reset color map');
-pkg.i_addbutton2fig(tb,'off',@i_resizedot,'xxplotpicker-compass.gif','Resize dots...');
 
 %     function i_changefontsize(~,~)
 %           ax=get(gca,'FontSize')+1;
@@ -105,11 +105,15 @@ pkg.i_addbutton2fig(tb,'off',@i_resizedot,'xxplotpicker-compass.gif','Resize dot
     end
 
     function i_resetcolor(~,~)
+        dotsz=0.1;
+        set(gca,'FontSize',10);
+        i_resizedot;
         colormap(flipud(bone));
-        for kx=1:6
-            delete(af{kx});
-            xlim([0.5 length(cL)+0.5]);
-        end
+
+%         for kx=1:6
+%             delete(af{kx});
+%             xlim([0.5 length(cL)+0.5]);
+%         end
     end
 
 end
