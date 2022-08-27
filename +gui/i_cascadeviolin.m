@@ -1,5 +1,5 @@
-function i_cascadeviolin(sce,Xt,thisc,glist,ytxt,grouporder)
-
+function i_cascadeviolin(sce,Xt,thisc,glist,ytxt,grouporder,colorit)
+if nargin<7, colorit=false; end
 if nargin<6, grouporder=[]; end
 if nargin<5, ytxt=''; end
 
@@ -10,7 +10,7 @@ for k=1:length(glist)
     ttxt=sce.g(idx);
     
     f = figure('visible','off');
-    pkg.i_violinplot(y,thisc,false,grouporder);
+    pkg.i_violinplot(y,thisc,colorit,grouporder);
     title(strrep(ttxt,'_','\_'));
     ylabel(ytxt);
     tb=uitoolbar(f);

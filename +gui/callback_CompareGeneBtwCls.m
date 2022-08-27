@@ -27,7 +27,19 @@ if tf1~=1, return; end
             end
             [Xt]=gui.i_transformx(sce.X);
             [cL]=i_getgrouporder(thisc);
-            gui.i_cascadeviolin(sce,Xt,thisc,glist,a{indx1},cL);
+
+            [answerc]=questdlg('Color violin plot?','');
+            switch answerc
+                case 'Yes'
+                    colorit=true;
+                case 'No'
+                    colorit=false;
+                otherwise
+                    return;
+            end
+
+            gui.i_cascadeviolin(sce,Xt,thisc,glist, ...
+                a{indx1},cL,colorit);
 
 
 %         figure;
