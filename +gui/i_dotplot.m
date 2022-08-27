@@ -41,19 +41,19 @@ txgene=[" "; tgene];
 %hold on
 hFig=figure;
 
-
+dotsz=1.0;
 sz=sz+0.001;
 vl=vl+0.001;
-scatter(x,y,500*sz,vl,'filled');
+afa=scatter(x,y,dotsz*500*sz,vl,'filled');
 hold on
-scatter(x,y,500*sz,'k');
+afb=scatter(x,y,dotsz*500*sz,'k');
 
-af{1}=scatter(max(x)+1,1,500*1,'k');
+af{1}=scatter(max(x)+1,1,dotsz*500*1,'k');
 af{2}=text(max(x)+1.4,1,'100%','BackgroundColor','none');
-af{3}=scatter(max(x)+1,1.5,500*0.5,'k');
-af{4}=text(max(x)+1.4,1.5,'50%','BackgroundColor','none');
-af{5}=scatter(max(x)+1,2,500*0.1,'k');
-af{6}=text(max(x)+1.4,2,'10%','BackgroundColor','none');
+af{3}=scatter(max(x)+1,2,dotsz*500*0.5,'k');
+af{4}=text(max(x)+1.4,2,'50%','BackgroundColor','none');
+af{5}=scatter(max(x)+1,3,dotsz*500*0.1,'k');
+af{6}=text(max(x)+1.4,3,'10%','BackgroundColor','none');
 
 
 xlim([0.5 length(cL)+2.5]);
@@ -74,12 +74,27 @@ pkg.i_addbutton2fig(tb,'on',{@gui.i_pickcolormap,c},'plotpicker-compass.gif','Pi
 pkg.i_addbutton2fig(tb,'off',@gui.i_changefontsize,'noun_font_size_591141.gif','ChangeFontSize');
 pkg.i_addbutton2fig(tb,'on',@i_renamecat,'xplotpicker-compass.gif','Rename groups...');
 pkg.i_addbutton2fig(tb,'on',@i_resetcolor,'plotpicker-geobubble2.gif','Reset color map');
+pkg.i_addbutton2fig(tb,'off',@i_resizedot,'xxplotpicker-compass.gif','Resize dots...');
 
 %     function i_changefontsize(~,~)
 %           ax=get(gca,'FontSize')+1;
 %          if ax>15, ax=5; end
 %          set(gca,'FontSize',ax);
 %     end
+
+    function i_resizedot(~,~)
+        dotsz=dotsz*0.9;
+        if dotsz<0.2, dotsz=1.0; end
+        delete(afa); delete(afb);
+        delete(af{1}); delete(af{3}); delete(af{5});
+        afa=scatter(x,y,dotsz*500*sz,vl,'filled');
+        hold on
+        afb=scatter(x,y,dotsz*500*sz,'k');
+        af{1}=scatter(max(x)+1,1,dotsz*500*1,'k');
+        af{3}=scatter(max(x)+1,2,dotsz*500*0.5,'k');
+        af{5}=scatter(max(x)+1,3,dotsz*500*0.1,'k');
+    end
+
 
     function i_renamecat(~,~)
         tg=gui.i_inputgenelist(string(cL),true);
