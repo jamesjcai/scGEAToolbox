@@ -14,6 +14,6 @@ function i_savemainfig(src,~,tag)
             exportgraphics(FigureHandle,[filepath filename]);
         end
     elseif tag==3
-        gui.i_export2pptx({FigureHandle},{'STGEATOOL'});
+        gui.i_export2pptx({FigureHandle},{''});
     end
 end

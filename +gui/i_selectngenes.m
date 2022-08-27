@@ -29,8 +29,8 @@ switch answer
         else
             tg=gui.i_inputgenelist(predefinedlist);
         end
-        if length(tg)>=2
-            
+        
+        if length(tg)>=1            
             [y,ix]=ismember(upper(tg),upper(gsorted));
             % i=i(y);
             %glist=tg(y);
@@ -50,7 +50,7 @@ switch answer
         if isa(sce,'SingleCellExperiment')
             [gsorted]=gui.i_sortgenenames(sce);
             if isempty(gsorted), return; end
-        end        
+        end
         
         [idx]=gui.i_selmultidlg(gsorted,predefinedlist);
         if isempty(idx), return; end

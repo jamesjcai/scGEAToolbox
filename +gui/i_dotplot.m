@@ -57,7 +57,7 @@ af{6}=text(max(x)+1.4,3,'10%','BackgroundColor','none');
 
 
 xlim([0.5 length(cL)+2.5]);
-ylim([0.5 length(txgene)-0.5]);
+ylim([0.5 max([4 length(txgene)])-0.5]);
 colorbar
 set(gca,'YTick',0:length(tgene))
 set(gca,'YTickLabel',txgene)
