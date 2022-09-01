@@ -19,9 +19,11 @@ function [T,Tup,Tdn] = sc_deg(X, Y, genelist, methodid)
 
     p_val = ones(ng, 1);
     avg_log2FC = ones(ng, 1);
+    avg_1 = zeros(ng, 1);
+    avg_2 = zeros(ng, 1);
     pct_1 = ones(ng, 1);
     pct_2 = ones(ng, 1);
-    
+
     nx=size(X,2);
     ny=size(Y,2);
     
@@ -42,7 +44,9 @@ function [T,Tup,Tdn] = sc_deg(X, Y, genelist, methodid)
             otherwise
                 error('Unknown option');
         end
-        avg_log2FC(k) = log2(mean(x) ./ mean(y));
+        avg_1(k) = mean(x);
+        avg_2(k) = mean(y);        
+        avg_log2FC(k) = log2(avg_1(k) ./ avg_2(k));
         pct_1(k) = sum(x > 0) ./ nx;
         pct_2(k) = sum(y > 0) ./ ny;
     end
@@ -59,7 +63,8 @@ function [T,Tup,Tdn] = sc_deg(X, Y, genelist, methodid)
         gene = genelist;
     end
     abs_log2FC = abs(avg_log2FC);
-    T = table(gene, p_val, avg_log2FC, abs_log2FC, pct_1, pct_2, p_val_adj);
+    T = table(gene, p_val, avg_log2FC, abs_log2FC, avg_1, avg_2, ...
+        pct_1, pct_2, p_val_adj);
     if nargout>1
         [Tup,Tdn]=pkg.e_processDETable(T);
     end

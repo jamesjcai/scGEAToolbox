@@ -7,6 +7,8 @@ if ~(ismcc || isdeployed)
     addpath(pth);
 end
 
+avg_1 = mean(X,2);
+avg_2 = mean(Y,2);
 pct_1 = sum(X>0,2)./size(X,2);
 pct_2 = sum(Y>0,2)./size(Y,2);
 
@@ -18,7 +20,8 @@ abs_log2FC=abs(avg_log2FC);
 % T=sortrows(T,'abs_log2FC','descend');
 % T=sortrows(T,'p_val_adj','ascend');
 
-    T = table(gene, p_val, avg_log2FC, abs_log2FC, pct_1, pct_2, p_val_adj);
+    T = table(gene, p_val, avg_log2FC, abs_log2FC, avg_1, avg_2, ...
+           pct_1, pct_2, p_val_adj);
 
     if nargout>1
         [Tup,Tdn]=pkg.e_processDETable(T);
