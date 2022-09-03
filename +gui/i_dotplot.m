@@ -29,6 +29,30 @@ for k=1:length(tgene)
     end
 end
 
+AvgExpr=vl;
+PrtExpr=sz;
+
+GroupList=repmat(string(cL),length(tgene),1);
+GeneList=[];
+for k=1:length(tgene)
+    GeneList=[GeneList; repmat(tgene(k),length(cL),1)];
+end
+
+% GroupList=[];
+% GeneList=repmat(tgene,length(cL),1);
+% for k=1:length(cL)
+%     GroupList=[GroupList; repmat(string(cL{k}),length(tgene),1)];
+% end
+
+
+assignin("base","tgene",tgene);
+assignin("base","sz",sz);
+assignin("base","vl",vl);
+assignin("base","cL",cL);
+
+T=table(GeneList,GroupList,AvgExpr,PrtExpr);
+assignin("base","T",T);
+
 
 if uselog
     vl=log2(vl+1);
