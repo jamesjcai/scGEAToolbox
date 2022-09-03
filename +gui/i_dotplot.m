@@ -44,14 +44,14 @@ end
 %     GroupList=[GroupList; repmat(string(cL{k}),length(tgene),1)];
 % end
 
-
-assignin("base","tgene",tgene);
-assignin("base","sz",sz);
-assignin("base","vl",vl);
-assignin("base","cL",cL);
+% 
+% assignin("base","tgene",tgene);
+% assignin("base","sz",sz);
+% assignin("base","vl",vl);
+% assignin("base","cL",cL);
 
 T=table(GeneList,GroupList,AvgExpr,PrtExpr);
-assignin("base","T",T);
+% assignin("base","T",T);
 
 
 if uselog
@@ -100,12 +100,45 @@ pkg.i_addbutton2fig(tb,'off',@i_resizedot,'networkcomp.gif','Resize dots...');
 pkg.i_addbutton2fig(tb,'on',@i_renamecat,'guideicon.gif','Rename groups...');
 pkg.i_addbutton2fig(tb,'on',{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');
 pkg.i_addbutton2fig(tb,'on',@i_resetcolor,'plotpicker-geobubble2.gif','Reset color map');
+pkg.i_addbutton2fig(tb,'on',@i_savetable,'export.gif','Reset color map');
 
 %     function i_changefontsize(~,~)
 %           ax=get(gca,'FontSize')+1;
 %          if ax>15, ax=5; end
 %          set(gca,'FontSize',ax);
 %     end
+
+    function i_savetable(~,~)
+            answer = questdlg('Export & save data to:','',...
+                'Workspace','TXT/CSV file','Excel file','Workspace');
+            switch answer
+                case 'Workspace'
+                    labels = {'Save T to variable named:'}; 
+                    vars = {'T'};
+                    values = {T};
+                    [~,OKPressed]=export2wsdlg(labels,vars,values,...
+                        'Save Data to Workspace');                    
+                case 'TXT/CSV file'
+                    [file, path] = uiputfile({'*.csv';'*.*'},'Save as');
+                    if isequal(file,0) || isequal(path,0)
+                       return;
+                    else
+                       filename=fullfile(path,file);
+                       writetable(T,filename,'FileType','text');
+                       OKPressed=true;
+                    end
+                case 'Excel file'
+
+                    [file, path] = uiputfile({'*.xlsx';'*.*'},'Save as');
+                    if isequal(file,0) || isequal(path,0)
+                       return;
+                    else
+                       filename=fullfile(path,file);
+                       writetable(T,filename,'FileType','spreadsheet');
+                       OKPressed=true;
+                    end
+            end
+    end
 
     function i_resizedot(~,~)
         dotsz=dotsz*0.9;
