@@ -111,32 +111,44 @@ pkg.i_addbutton2fig(tb,'on',@i_savetable,'export.gif','Reset color map');
     function i_savetable(~,~)
             answer = questdlg('Export & save data to:','',...
                 'Workspace','TXT/CSV file','Excel file','Workspace');
-            switch answer
-                case 'Workspace'
-                    labels = {'Save T to variable named:'}; 
-                    vars = {'T'};
-                    values = {T};
-                    [~,OKPressed]=export2wsdlg(labels,vars,values,...
-                        'Save Data to Workspace');                    
-                case 'TXT/CSV file'
-                    [file, path] = uiputfile({'*.csv';'*.*'},'Save as');
-                    if isequal(file,0) || isequal(path,0)
-                       return;
-                    else
-                       filename=fullfile(path,file);
-                       writetable(T,filename,'FileType','text');
-                       OKPressed=true;
-                    end
-                case 'Excel file'
-
-                    [file, path] = uiputfile({'*.xlsx';'*.*'},'Save as');
-                    if isequal(file,0) || isequal(path,0)
-                       return;
-                    else
-                       filename=fullfile(path,file);
-                       writetable(T,filename,'FileType','spreadsheet');
-                       OKPressed=true;
-                    end
+            if ~isempty(answer)
+                GroupList=repmat(string(cL),length(tgene),1);
+                GeneList=[];
+                for k=1:length(tgene)
+                    GeneList=[GeneList; repmat(tgene(k),length(cL),1)];
+                end
+                T=table(GeneList,GroupList,AvgExpr,PrtExpr);
+                switch answer
+                    case 'Workspace'
+                        labels = {'Save T to variable named:'}; 
+                        vars = {'T'};
+                        values = {T};
+                        [~,OKPressed]=export2wsdlg(labels,vars,values,...
+                            'Save Data to Workspace');                    
+                    case 'TXT/CSV file'
+                        [file, path] = uiputfile({'*.csv';'*.*'},'Save as');
+                        if isequal(file,0) || isequal(path,0)
+                           return;
+                        else
+                           fw=gui.gui_waitbar; 
+                           filename=fullfile(path,file);
+                           writetable(T,filename,'FileType','text');
+                           OKPressed=true;
+                           gui.gui_waitbar(fw);
+                        end
+                    case 'Excel file'
+    
+                        [file, path] = uiputfile({'*.xlsx';'*.*'},'Save as');
+                        if isequal(file,0) || isequal(path,0)
+                           return;
+                        else
+                           fw=gui.gui_waitbar; 
+                           filename=fullfile(path,file);
+                           writetable(T,filename,'FileType','spreadsheet');
+                           OKPressed=true;
+                           gui.gui_waitbar(fw);
+                        end
+                end
             end
     end
 
@@ -160,6 +172,7 @@ pkg.i_addbutton2fig(tb,'on',@i_savetable,'export.gif','Reset color map');
             set(gca,'XTick',0:length(cL));
             set(gca,'XTickLabel',[{''};tg(:);{''}])
         end
+        cL=tg;
     end
 
     function i_resetcolor(~,~)
