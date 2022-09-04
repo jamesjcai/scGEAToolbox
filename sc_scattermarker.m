@@ -1,5 +1,6 @@
 function [h1, h2] = sc_scattermarker(X, genelist, ...
-                                     s, targetg, methodid, sz, showcam)
+                                     s, targetg, methodid, ...
+                                     sz, showcam)
     % SC_SCATTERMARKER(X,genelist,g,s,methodid)
     %
     % USAGE:
@@ -16,15 +17,9 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
     if isvector(s) || isscalar(s)
         error('S should be a matrix.');
     end
-    if nargin < 7
-        showcam = true;
-    end
-    if nargin < 6 || isempty(sz)
-        sz = 5;
-    end
-    if nargin < 5
-        methodid = 1;
-    end
+    if nargin < 7, showcam = true; end
+    if nargin < 6 || isempty(sz), sz = 5; end
+    if nargin < 5, methodid = 1; end
     if iscell(targetg)
         for k = 1:length(targetg)
             figure;
@@ -51,7 +46,8 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
             end
             switch methodid
                 case 1
-                    within_stemscatter(x, y, c);
+                    % within_stemscatter(x, y, c);
+                    gui.i_stemscatter([x y],c)
                     h1 = gca;
                 case 2
                     if isempty(z)
