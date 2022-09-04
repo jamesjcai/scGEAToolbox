@@ -4,11 +4,14 @@ function callback_DrawDotplot(src,~)
     [thisc,~]=gui.i_select1class(sce);
     if isempty(thisc), return; end
     [c,cL] = grp2idx(thisc);
-    [answer]=questdlg('Manually order groups?','');
+    [answer]=questdlg('Manually order groups?','', ...
+        'Yes','No','Cancel','No');
+    if isempty(answer), return; end
     switch answer
         case 'Yes'
             [newidx]=gui.i_selmultidlg(cL);
             if length(newidx)~=length(cL)
+                warndlg('Please select all group items.','');
                 return;
             end
             cx=c;
@@ -16,7 +19,12 @@ function callback_DrawDotplot(src,~)
                 c(cx==newidx(k))=k;
             end
             cL=cL(newidx);
+        case 'No'
+            
+        case 'Cancel'
+            return;
         otherwise
+            return;
     end
 
     [glist]=gui.i_selectngenes(sce);
