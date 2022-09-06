@@ -23,7 +23,8 @@ end
 M=M.*log2(M*(n^2));
 M(isnan(M))=0;
 KL=real(sum(M,2));
-Tok=[OUT.Tok, table(KL)];
+%Tok=[OUT.Tok, table(KL)];
+Tok=[table(KL)];
 [Tok,idx]=sortrows(Tok,'KL','descend');
 %%
 OUT.ligand_mat=OUT.ligand_mat(idx,:);
@@ -49,8 +50,13 @@ function [M,OUT]=ii_talkr(X,g,c)
     n=numel(cL);
 
     pw=fileparts(mfilename('fullpath'));
-    dbfile=fullfile(pw,'..','resources','Ligand_Receptor.mat');
-    load(dbfile,'ligand','receptor','T');
+    %dbfile=fullfile(pw,'..','resources','Ligand_Receptor.mat');
+    %load(dbfile,'ligand','receptor','T');
+    dbfile=fullfile(pw,'..','resources','Ligand_Receptor_more.mat');
+    load(dbfile,'ligand','receptor');
+
+    
+
     %T=T(:,2:6);
 
     g=upper(g);
@@ -86,7 +92,7 @@ function [M,OUT]=ii_talkr(X,g,c)
     idx=ix&iy;
     ligandok=ligand(idx);
     receptorok=receptor(idx);
-    Tok=T(idx,:);
+    %Tok=T(idx,:);
 
     [y1,idx1]=ismember(ligandok,g);
     [y2,idx2]=ismember(receptorok,g);
@@ -131,7 +137,7 @@ function [M,OUT]=ii_talkr(X,g,c)
     OUT.receptor_mat=receptor_mat;
     OUT.ligandok=ligandok;
     OUT.receptorok=receptorok;
-    OUT.Tok=Tok;
+    %OUT.Tok=Tok;
 end
 
 
