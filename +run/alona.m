@@ -74,6 +74,7 @@ if strcmp(subtype,'all')
         save(markerfile,'Tw','Tm');
     end
 else
+    subtype=lower(subtype);
     markerfile=sprintf('marker_%s_%s.mat',stag,subtype);
     if exist(markerfile,'file')
         load(markerfile,'Tw','Tm');

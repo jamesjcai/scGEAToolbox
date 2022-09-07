@@ -113,10 +113,10 @@ i_addbutton(1,0,@Brushed2NewCluster,"plotpicker-glyplot-face.gif","Add brushed c
 i_addbutton(1,0,@Brushed2MergeClusters,"plotpicker-pzmap.gif","Merge brushed cells to same cluster")
 i_addbutton(1,1,@ClusterCellsS,"plotpicker-dendrogram.gif","Clustering using embedding S")
 i_addbutton(1,0,@ClusterCellsX,"plotpicker-gscatter.gif","Clustering using expression matrix X")
-i_addbutton(1,1,@DetermineCellTypeClusters,"plotpicker-contour.gif","Cell types of clusters")
+i_addbutton(1,1,@DetermineCellTypeClusters,"plotpicker-contour.gif","Assign cell types to clusters")
 i_addbutton(1,0,@Brush4Celltypes,"brush.gif","Assign cell type label to selected cells");
 i_addbutton(1,0,@RenameCellTypeBatchID,"plotpicker-scatterhist.gif","Rename cell type or batch ID");
-i_addbutton(1,0,@callback_CellTypeMarkerScores,"cellscore.gif","Calculate Cell Scores from Cell Type Markers");
+i_addbutton(1,0,@callback_CellTypeMarkerScores,"cellscore.gif","Calculate cell scores from cell-type markers");
 i_addbutton(1,0,@ShowCellStemScatter,"IMG00067.GIF","Stem scatter plot");
 i_addbutton(1,1,@callback_Brush4Markers,"plotpicker-kagi.gif","Marker genes of brushed cells");
 i_addbutton(1,0,@callback_MarkerGeneHeatmap,"plotpicker-plotmatrix.gif","Marker gene heatmap");
@@ -134,7 +134,7 @@ i_addbutton(2,0,@call_scgeatool,"IMG00107.GIF"," ");
 i_addbutton(2,0,@callback_CalculateCellScores,"cellscore2.gif","Calculate cell scores from list of feature genes")
 i_addbutton(2,0,@callback_ComparePotency,"plotpicker-candle.gif","Compare differentiation potency between groups");
 i_addbutton(2,1,@gui.callback_MultiGroupingViewer,"plotpicker-arxtimeseries.gif","Multi-grouping View...");
-i_addbutton(2,0,@gui.callback_CrossTabulation,"plotpicker-comet.gif","Cross Tabulation");
+i_addbutton(2,0,@gui.callback_CrossTabulation,"plotpicker-comet.gif","Cross tabulation");
 i_addbutton(2,1,@callback_CompareGeneBtwCls,"plotpicker-priceandvol.gif","Compare between groups");
 i_addbutton(2,0,@callback_DEGene2Groups,"plotpicker-boxplot.gif","Compare 2 groups (DE analysis)");
 i_addbutton(2,0,@callback_EnrichrHVGs,"plotpicker-andrewsplot.gif","Functional enrichment analysis with HVGs");
@@ -177,10 +177,11 @@ m_exp = uimenu(FigureHandle,'Text','Ex&perimental','Accelerator','p');
 
 i_addmenu(m_exp,0,@callback_ShowPseudoTimeGenes,'Show Genes with Expression Varies with Pseudotime...');
 i_addmenu(m_exp,0,@callback_DetectCellularCrosstalk,'Ligand-Receptor Mediated Intercellular Crosstalk...');
+%i_addmenu(m_exp,0,@AnnotateSubTypes,'Assign Subtypes of Cells (Neurons or T Cells)...');
 i_addmenu(m_exp,0,@callback_SelectCellsByMarker,'Extract Cells by Marker(+/-) Expression...');
 i_addmenu(m_exp,0,@MergeSubCellTypes,'Merge Subclusters of Same Cell Type');
 i_addmenu(m_exp,0,@callback_TwoGeneCooccurrenceTest,'Two-Gene Cooccurrence Test...');
-i_addmenu(m_exp,0,@AnnotateSubGroup,'Annotate Cell Subgroups...');
+%i_addmenu(m_exp,0,@AnnotateSubGroup,'Annotate Cell Subgroups...');
 
 
 i_addmenu(m_exp,1,@WorkonSelectedGenes,'Select 2000 HVGs to Work on...');
@@ -370,20 +371,51 @@ end
         end
     end
 
-    function AnnotateSubGroup(src, ~)
-        [requirerefresh,highlightindex,newclassidenty]=gui.callback_AnnotateSubGroup(src);
-        if requirerefresh && ~isempty(newclassidenty)
-            disp('OK');
-            sce.c(highlightindex)=sce.c(highlightindex)+newclassidenty./10;
-            [c, cL] = grp2idx(sce.c);
-            RefreshAll(src, 1, true);
-            answer=questdlg('Save current classes to SCE.C_CLUSTER_ID?');
-            if strcmp(answer,'Yes')
-                sce.c_cluster_id=c;
-                guidata(FigureHandle,sce);
+    function AnnotateSubTypes(~, ~)
+        manuallyselect=false;
+        bestonly=true;
+        speciestag = gui.i_selectspecies;
+        if isempty(speciestag), return; end
+        subtype = questdlg('Which cell type?',...
+            'Select Cell Type', 'Neurons', 'T Cells','Neurons');
+        if isempty(subtype), return; end
+        organtag = "all";
+        databasetag = "panglaodb";
+        dtp = findobj(h,'Type','datatip');
+        delete(dtp);
+        cLdisp = cL;
+        if ~manuallyselect, fw=gui.gui_waitbar_adv; end
+        for i = 1:max(c)
+            if ~manuallyselect
+                gui.gui_waitbar_adv(fw,i/max(c));
             end
+            ptsSelected = c == i;
+            [Tct] = pkg.local_celltypebrushed(sce.X, sce.g, ...
+                sce.s, ptsSelected, ...
+                speciestag, organtag, databasetag, bestonly, subtype);
+            if isempty(Tct)
+                ctxt={'Unknown'};
+            else
+                ctxt=Tct.C1_Cell_Type;
+            end            
+            if ~manuallyselect, gui.gui_waitbar_adv(fw); end
         end
     end
+
+%     function AnnotateSubGroup(src, ~)
+%         [requirerefresh,highlightindex,newclassidenty]=gui.callback_AnnotateSubGroup(src);
+%         if requirerefresh && ~isempty(newclassidenty)
+%             disp('OK');
+%             sce.c(highlightindex)=sce.c(highlightindex)+newclassidenty./10;
+%             [c, cL] = grp2idx(sce.c);
+%             RefreshAll(src, 1, true);
+%             answer=questdlg('Save current classes to SCE.C_CLUSTER_ID?');
+%             if strcmp(answer,'Yes')
+%                 sce.c_cluster_id=c;
+%                 guidata(FigureHandle,sce);
+%             end
+%         end
+%     end
 
     function WorkonSelectedGenes(src,~)
         answer=questdlg('Input the number of HVGs. Continue?');

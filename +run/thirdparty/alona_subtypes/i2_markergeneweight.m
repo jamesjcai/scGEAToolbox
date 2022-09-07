@@ -1,6 +1,6 @@
 species='hs';
 ctype='neurons';
-% ctype='tcells';
+ctype='tcells';
 T=readtable(sprintf('markerlist_%s_%s.txt',species,ctype),'ReadVariableNames',false,'Delimiter','\t');
 
 customf=sprintf('markerlist_%s_%s_custom.txt',species,ctype);
