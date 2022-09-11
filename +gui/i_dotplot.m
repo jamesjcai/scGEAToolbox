@@ -171,8 +171,10 @@ pkg.i_addbutton2fig(tb,'on',@i_savetable,'export.gif','Reset color map');
         if length(tg)==length(cL)
             set(gca,'XTick',0:length(cL));
             set(gca,'XTickLabel',[{''};tg(:);{''}])
-        end
-        cL=tg;
+            cL=tg;
+        else
+            errordlg('Wrong input.');
+        end        
     end
 
     function i_resetcolor(~,~)

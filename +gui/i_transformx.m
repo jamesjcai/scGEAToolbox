@@ -1,11 +1,19 @@
-function [X]=i_transformx(X)
+function [X]=i_transformx(X,donorm)
+
+if nargin<2, donorm=false; end
+
     if nargin<1
         X=nbinrnd(20,0.98,1000,200);
         disp('Using simulated X.');
     end
-    
+    if donorm    
+    answer = questdlg('Normalize, transform or impute X?', ...
+        '','Yes','No','Cancel','Yes');
+    else
     answer = questdlg('Normalize, transform or impute X?', ...
         '','Yes','No','Cancel','No');
+    end
+
     if strcmp(answer,'Yes')
         % 
     elseif strcmp(answer,'No')
