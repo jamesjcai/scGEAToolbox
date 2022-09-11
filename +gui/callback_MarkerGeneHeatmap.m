@@ -104,7 +104,7 @@ gui.gui_waitbar(fw);
 
 
 % ======= customized heatmap - start
-f1=figure;
+hFig=figure;
 imagesc(Y);
 szc=cumsum(szgn);
 for k=1:max(idcl)-1
@@ -126,12 +126,39 @@ set(gca,'YTickLabel',MX);
 set(gca,'TickLength',[0 0])
 % ======= customized heatmap - end
 
-tb1=uitoolbar(f1);
+tb1=uitoolbar(hFig);
 pkg.i_addbutton2fig(tb1,'off',{@i_saveM,M},'greencircleicon.gif','Save marker gene map...');
-pkg.i_addbutton2fig(tb1,'off',@gui.i_changefontsize,'noun_font_size_591141.gif','ChangeFontSize');
 pkg.i_addbutton2fig(tb1,'off',@i_summarymap,'HDF_object01.gif','Summary map...');
 pkg.i_addbutton2fig(tb1,'off',@i_summarymapT,'HDF_object02.gif','Summary map, transposed...');
 pkg.i_addbutton2fig(tb1,'off',@i_dotplotx,'HDF_object03.gif','Dot plot...');
+
+pkg.i_addbutton2fig(tb1,'on',{@gui.i_pickcolormap,c},'plotpicker-compass.gif','Pick new color map...');
+pkg.i_addbutton2fig(tb1,'off',@gui.i_changefontsize,'noun_font_size_591141.gif','ChangeFontSize');
+pkg.i_addbutton2fig(tb1,'on',@i_renamecat,'guideicon.gif','Rename groups...');
+pkg.i_addbutton2fig(tb1,'on',{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');
+pkg.i_addbutton2fig(tb1,'on',@i_resetcolor,'plotpicker-geobubble2.gif','Reset color map');
+
+
+    function i_renamecat(~,~)
+        tg=gui.i_inputgenelist(string(cL),true);
+        if length(tg)==length(cL)
+            set(gca,'XTick',a-b);
+            set(gca,'XTickLabel',tg(:))
+            cL=tg;
+        else
+            errordlg('Wrong input.');
+        end
+    end
+
+    function i_resetcolor(~,~)
+        set(gca,'FontSize',10);
+        if rand>0.5
+            colormap(flipud(bone));
+        else
+            colormap(bone);
+        end
+    end
+
 
     function i_dotplotx(~,~)
         try            
