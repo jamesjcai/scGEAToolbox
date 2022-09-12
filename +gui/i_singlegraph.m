@@ -31,6 +31,7 @@ pkg.i_addbutton2fig(tb,'off',@ChangeCutoff,'noun_Pruners_2469297.gif','ChangeCut
 pkg.i_addbutton2fig(tb,'off',@ChangeBox,'noun_trim_3665385a.gif','Box off');
 pkg.i_addbutton2fig(tb,'off',@AnimateCutoff,'noun_trim_3665385.gif','AnimateCutoff');
 pkg.i_addbutton2fig(tb,'off',@SaveAdj,'export.gif','Export & save data');
+pkg.i_addbutton2fig(tb,'on',{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');
 
 movegui(hFig, 'center');
 

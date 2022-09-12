@@ -8,13 +8,13 @@ function [OUT]=talklr(X,g,c)
 %
 % This function implements the method of Yuliang Wang (2020)
 % https://doi.org/10.1101/2020.02.01.930602
-
-if nargin<2, g=[]; c=[]; end
-if isa(X, 'SingleCellExperiment')    
-    g=X.g;
-    c=X.c_cell_type_tx;
-    X=X.X;
-end
+% 
+% if nargin<2, g=[]; c=[]; end
+% if isa(X, 'SingleCellExperiment')    
+%     g=X.g;
+%     c=X.c_cell_type_tx;
+%     X=X.X;
+% end
 
 
 [M,OUT]=ii_talkr(X,g,c);
@@ -40,11 +40,11 @@ end
 
 
 function [M,OUT]=ii_talkr(X,g,c)
-    if isa(X,'SingleCellExperiment')    
-        c=X.c_cell_type_tx;
-        g=X.g;
-        X=X.X;
-    end
+%     if isa(X,'SingleCellExperiment')    
+%         c=X.c_cell_type_tx;
+%         g=X.g;
+%         X=X.X;
+%     end
 
     [cx,cL]=grp2idx(c);
     n=numel(cL);

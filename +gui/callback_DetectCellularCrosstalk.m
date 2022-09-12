@@ -1,23 +1,29 @@
 function callback_DetectCellularCrosstalk(src,~)
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
-    if isempty(sce.c_cell_type_tx) || numel(unique(sce.c_cell_type_tx))<2
-        if ~isempty(sce.c_cluster_id) && numel(unique(sce.c_cluster_id))>1
-            answer = questdlg(sprintf('Cell type (C_CELL_TYPE_TX) is undefined.\nWould you like to use cluster id (C_CLUSTER_ID) to define cell groups?'));
-            switch answer
-                case 'Yes'
-                    sce.c_cell_type_tx=strcat('Goup', string(sce.c_cluster_id));
-                otherwise
-                    return;
-            end
-        else
-            warndlg('Cell type is undefined (SCE.C_CELL_TYPE_TX is empty)');
-            return;
-        end
-    end
+
+    [thisc,clable]=gui.i_select1class(sce,false);
+    if isempty(thisc), return; end
+
+%     if isempty(sce.c_cell_type_tx) || numel(unique(sce.c_cell_type_tx))<2
+%         if ~isempty(sce.c_cluster_id) && numel(unique(sce.c_cluster_id))>1
+%             answer = questdlg(sprintf('Cell type (C_CELL_TYPE_TX) is undefined.\nWould you like to use cluster id (C_CLUSTER_ID) to define cell groups?'));
+%             switch answer
+%                 case 'Yes'
+%                     sce.c_cell_type_tx=strcat('Goup', string(sce.c_cluster_id));
+%                 otherwise
+%                     return;
+%             end
+%         else
+%             warndlg('Cell type is undefined (SCE.C_CELL_TYPE_TX is empty)');
+%             return;
+%         end
+%     end   
+
+
     
-    
-    [c,cL]=grp2idx(sce.c_cell_type_tx);
+    [c,cL]=grp2idx(thisc);
+
     [idx]=gui.i_selmultidlg(cL);
     if isempty(idx), return; end
     if numel(idx)<2
@@ -27,7 +33,9 @@ function callback_DetectCellularCrosstalk(src,~)
     selected=ismember(c,idx);
     fw=gui.gui_waitbar;
     sce=sce.selectcells(selected);
-    [OUT]=run.talklr(sce);
+    
+
+    [OUT]=run.talklr(sce.X,sce.g,cL(c(selected)));
     gui.gui_waitbar(fw);    
     
     n=length(OUT.ligandok);
@@ -118,6 +126,7 @@ function i_displyres(listitems)
                 sc_scattermarker(sce.X,sce.g,sce.s,sce.g(idx2),1,[],false); title(sce.g(idx2));
                 hFig.Position(3) = hFig.Position(3) * 2.2;
                 tb = uitoolbar(hFig);
+
                 pt5pickcolr = uipushtool(tb, 'Separator', 'off');
                 [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
                                              '../','resources', 'fvtool_fdalinkbutton.gif'));  % plotpicker-pie
@@ -126,6 +135,8 @@ function i_displyres(listitems)
                 pt5pickcolr.CData = ptImage;
                 pt5pickcolr.Tooltip = 'Link subplots';
                 pt5pickcolr.ClickedCallback = @gui.i_linksubplots;
+                pkg.i_addbutton2fig(tb,'on',{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');
+
             end
             gui.i_crosstalkgraph(OUT,kk);
             i_displyres(listitems);
