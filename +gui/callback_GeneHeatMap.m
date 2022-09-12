@@ -76,7 +76,7 @@ end
 %     'GridVisible',false,'ColorScaling','scaled',...
 %     'ColorbarVisible',false)
 
-hFig=figure;
+hFig=figure('Visible','off');
 imagesc(Y);
 % hFig.Colormap = repmat(linspace(0, 1, 25).', 1, 3);
 set(gca,'XTick',a-b);
@@ -85,7 +85,7 @@ set(gca,'XTickLabelRotation',45);
 set(gca,'YTick',1:length(glist));
 set(gca,'YTickLabel',glist);
 set(gca,'TickLength',[0 0]);
-colormap(flipud(bone));
+% colormap(flipud(bone));
 box on
 
 szc=cumsum(szgn);
@@ -97,7 +97,12 @@ pkg.i_addbutton2fig(tb,'on',{@gui.i_pickcolormap,c},'plotpicker-compass.gif','Pi
 pkg.i_addbutton2fig(tb,'off',@gui.i_changefontsize,'noun_font_size_591141.gif','ChangeFontSize');
 pkg.i_addbutton2fig(tb,'on',@i_renamecat,'guideicon.gif','Rename groups...');
 pkg.i_addbutton2fig(tb,'on',{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');
-pkg.i_addbutton2fig(tb,'on',@i_resetcolor,'plotpicker-geobubble2.gif','Reset color map');
+pkg.i_addbutton2fig(tb,'on',@i_invertcolor,'plotpicker-comet.gif','Invert colors');
+pkg.i_addbutton2fig(tb,'off',@i_resetcolor,'plotpicker-geobubble2.gif','Reset color map');
+
+movegui(hFig, 'center');
+set(hFig, 'visible', 'on');
+
 
     function i_renamecat(~,~)
         tg=gui.i_inputgenelist(string(cL),true);
@@ -112,11 +117,12 @@ pkg.i_addbutton2fig(tb,'on',@i_resetcolor,'plotpicker-geobubble2.gif','Reset col
 
     function i_resetcolor(~,~)
         set(gca,'FontSize',10);
-        if rand>0.5
-            colormap(flipud(bone));
-        else
-            colormap(bone);
-        end
+        colormap default
+    end
+
+    function i_invertcolor(~,~)
+        cm=colormap();
+        colormap(flipud(cm));
     end
 
     end

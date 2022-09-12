@@ -15,7 +15,9 @@ if numel(cL)==1
     return;
 end
 
-[answer]=questdlg('Manually order groups?','');
+[answer]=questdlg('Manually order groups?','', ...
+    'Yes','No','Cancel','No');
+if isempty(answer), return; end
 switch answer
     case 'Yes'
         [newidx]=gui.i_selmultidlg(cL);
@@ -55,7 +57,8 @@ end
 
 M=cell(numel(cL),2);
 for k=1:numel(cL)        
-    cLk=matlab.lang.makeValidName(cL{k});
+    %cLk=matlab.lang.makeValidName(cL{k});
+    cLk=cL{k};
     M{k,1}=cLk;
     M{k,2}=markerlist{k};
 end
@@ -104,7 +107,7 @@ gui.gui_waitbar(fw);
 
 
 % ======= customized heatmap - start
-hFig=figure;
+hFig=figure('Visible','off');
 imagesc(Y);
 szc=cumsum(szgn);
 for k=1:max(idcl)-1
@@ -136,7 +139,11 @@ pkg.i_addbutton2fig(tb1,'on',{@gui.i_pickcolormap,c},'plotpicker-compass.gif','P
 pkg.i_addbutton2fig(tb1,'off',@gui.i_changefontsize,'noun_font_size_591141.gif','ChangeFontSize');
 pkg.i_addbutton2fig(tb1,'on',@i_renamecat,'guideicon.gif','Rename groups...');
 pkg.i_addbutton2fig(tb1,'on',{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');
-pkg.i_addbutton2fig(tb1,'on',@i_resetcolor,'plotpicker-geobubble2.gif','Reset color map');
+pkg.i_addbutton2fig(tb1,'on',@i_invertcolor,'plotpicker-comet.gif','Invert colors');
+pkg.i_addbutton2fig(tb1,'off',@i_resetcolor,'plotpicker-geobubble2.gif','Reset color map');
+
+movegui(hFig, 'center');
+set(hFig, 'visible', 'on');
 
 
     function i_renamecat(~,~)
@@ -152,13 +159,14 @@ pkg.i_addbutton2fig(tb1,'on',@i_resetcolor,'plotpicker-geobubble2.gif','Reset co
 
     function i_resetcolor(~,~)
         set(gca,'FontSize',10);
-        a=colormap();
-        if rand>0.5
-            colormap(flipud(a));
-        else
-            colormap(bone);
-        end
+        colormap default
     end
+
+    function i_invertcolor(~,~)
+        cm=colormap();
+        colormap(flipud(cm));
+    end
+
 
 
     function i_dotplotx(~,~)
@@ -184,8 +192,8 @@ pkg.i_addbutton2fig(tb1,'on',@i_resetcolor,'plotpicker-geobubble2.gif','Reset co
         pkg.i_addbutton2fig(tb,'on',{@gui.i_pickcolormap,c},'plotpicker-compass.gif','Pick new color map...');
         pkg.i_addbutton2fig(tb,'off',@gui.i_changefontsize,'noun_font_size_591141.gif','ChangeFontSize');        
         pkg.i_addbutton2fig(tb,'on',{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');
-        pkg.i_addbutton2fig(tb,'on',@i_resetcolor,'plotpicker-geobubble2.gif','Reset color map');
-
+        pkg.i_addbutton2fig(tb,'on',@i_invertcolor,'plotpicker-comet.gif','Invert colors');
+        pkg.i_addbutton2fig(tb,'off',@i_resetcolor,'plotpicker-geobubble2.gif','Reset color map');
     end
 
     function i_summarymapT(~,~)
@@ -202,17 +210,20 @@ pkg.i_addbutton2fig(tb1,'on',@i_resetcolor,'plotpicker-geobubble2.gif','Reset co
         pkg.i_addbutton2fig(tb,'on',{@gui.i_pickcolormap,c},'plotpicker-compass.gif','Pick new color map...');
         pkg.i_addbutton2fig(tb,'off',@gui.i_changefontsize,'noun_font_size_591141.gif','ChangeFontSize');        
         pkg.i_addbutton2fig(tb,'on',{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');
-        pkg.i_addbutton2fig(tb,'on',@i_resetcolor,'plotpicker-geobubble2.gif','Reset color map');
+        pkg.i_addbutton2fig(tb,'on',@i_invertcolor,'plotpicker-comet.gif','Invert colors');
+        pkg.i_addbutton2fig(tb,'off',@i_resetcolor,'plotpicker-geobubble2.gif','Reset color map');
     end
 
     function i_saveM(~,~,M)
         if ~(ismcc || isdeployed)
-            labels = {'Save marker gene map M to variable named:'}; 
-            vars = {'M'};
-            values = {M};
+            labels = {'Save marker gene map M to variable named:',...
+                'Save marker gene list G to variable named:'}; 
+            vars = {'M','G'};
+            G=cat(1,M{:,2});
+            values = {M,G};
             export2wsdlg(labels,vars,values);
         else
-            errordlg('This function is not available for standalone application.');
+            errordlg('This function is not available for standalone application. Run scgeatool.m in MATLAB to use this function.');
         end
     end    
 
