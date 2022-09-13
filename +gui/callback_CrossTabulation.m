@@ -90,26 +90,14 @@ title(lgd,llabel);
 
 
 tb = uitoolbar(f0);
-
-pt = uipushtool(tb, 'Separator', 'off');
-[img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
-                      '..','resources', 'export.gif'));
-ptImage = ind2rgb(img, map);
-pt.CData = ptImage;
-pt.Tooltip = 'Save cross-table';
-pt.ClickedCallback = @i_saveCrossTable;
-
-
 pkg.i_addbutton2fig(tb,'off',@i_saveCrossTable,"export.gif",'Save cross-table');
 pkg.i_addbutton2fig(tb,'off',{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');
-
 
 movegui(f0,'center');
 set(f0,'Visible',true);
 
     function i_saveCrossTable(~,~)
         gui.i_exporttable(T,false,'TCrosstab');
-
 %         if ~(ismcc || isdeployed)
 %             labels = {'Save Cross-table to variable named:'};
 %             vars = {'TCrosstab'};

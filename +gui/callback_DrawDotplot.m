@@ -9,7 +9,7 @@ function callback_DrawDotplot(src,~)
     if isempty(answer), return; end
     switch answer
         case 'Yes'
-            [newidx]=gui.i_selmultidlg(cL);
+            [newidx]=gui.i_selmultidlg(cL,sort(cL));
             if length(newidx)~=length(cL)
                 warndlg('Please select all group items.','');
                 return;

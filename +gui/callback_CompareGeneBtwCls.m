@@ -99,7 +99,7 @@ function [cL]=i_getgrouporder(thisc)
     [answer]=questdlg('Manually order groups?','');
     switch answer
         case 'Yes'
-            [newidx]=gui.i_selmultidlg(cL);
+            [newidx]=gui.i_selmultidlg(cL,sort(cL));
             if length(newidx)~=length(cL)
                 waitfor(helpdlg('Reordering is canceled or incomplete. Default order is used. Click OK to continue.',''));
                 return;
