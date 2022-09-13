@@ -108,7 +108,7 @@ gui.gui_waitbar(fw);
 
 % ======= customized heatmap - start
 hFig=figure('Visible','off');
-imagesc(Y);
+himg=imagesc(Y);
 szc=cumsum(szgn);
 for k=1:max(idcl)-1
     xline(sum(idcl<k+1)+0.5,'r-');
@@ -123,7 +123,7 @@ end
 set(gca,'XTick',a-b);
 % set(gca,'XTickLabel',strrep(M(:,1),'_','\_'));
 set(gca,'XTickLabel',M(:,1));
-set(gca,'XTickLabelRotation',45);
+set(gca,'XTickLabelRotation',0);
 set(gca,'YTick',1:length(MX));
 set(gca,'YTickLabel',MX);
 set(gca,'TickLength',[0 0])
@@ -131,6 +131,9 @@ set(gca,'TickLength',[0 0])
 
 tb1=uitoolbar(hFig);
 pkg.i_addbutton2fig(tb1,'off',{@i_saveM,M},'greencircleicon.gif','Save marker gene map...');
+pkg.i_addbutton2fig(tb1,'off',@i_flipxy,'xplotpicker-geobubble2.gif','Flip XY');
+
+
 pkg.i_addbutton2fig(tb1,'off',@i_summarymap,'HDF_object01.gif','Summary map...');
 pkg.i_addbutton2fig(tb1,'off',@i_summarymapT,'HDF_object02.gif','Summary map, transposed...');
 pkg.i_addbutton2fig(tb1,'off',@i_dotplotx,'HDF_object03.gif','Dot plot...');
@@ -144,6 +147,18 @@ pkg.i_addbutton2fig(tb1,'off',@i_resetcolor,'plotpicker-geobubble2.gif','Reset c
 
 movegui(hFig, 'center');
 set(hFig, 'visible', 'on');
+
+
+    function i_flipxy(~,~)        
+        himg=imagesc(Y');
+        set(gca,'YTick',a-b);
+        set(gca,'YTickLabel',M(:,1));
+        set(gca,'YTickLabelRotation',90);
+        set(gca,'XTick',1:length(MX));
+        set(gca,'XTickLabel',MX);
+        set(gca,'XTickLabelRotation',90);
+        set(gca,'TickLength',[0 0]);
+    end
 
 
     function i_renamecat(~,~)

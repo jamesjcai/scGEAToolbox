@@ -77,11 +77,11 @@ end
 %     'ColorbarVisible',false)
 
 hFig=figure('Visible','off');
-imagesc(Y);
+h=imagesc(Y);
 % hFig.Colormap = repmat(linspace(0, 1, 25).', 1, 3);
 set(gca,'XTick',a-b);
 set(gca,'XTickLabel',cL);
-set(gca,'XTickLabelRotation',45);
+set(gca,'XTickLabelRotation',0);
 set(gca,'YTick',1:length(glist));
 set(gca,'YTickLabel',glist);
 set(gca,'TickLength',[0 0]);
@@ -99,10 +99,23 @@ pkg.i_addbutton2fig(tb,'on',@i_renamecat,'guideicon.gif','Rename groups...');
 pkg.i_addbutton2fig(tb,'on',{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');
 pkg.i_addbutton2fig(tb,'on',@i_invertcolor,'plotpicker-comet.gif','Invert colors');
 pkg.i_addbutton2fig(tb,'off',@i_resetcolor,'plotpicker-geobubble2.gif','Reset color map');
+pkg.i_addbutton2fig(tb,'off',@i_flipxy,'xplotpicker-geobubble2.gif','Flip XY');
 
 movegui(hFig, 'center');
 set(hFig, 'visible', 'on');
 
+    function i_flipxy(~,~)
+        %delete(h);
+        h=imagesc(Y');
+        set(gca,'YTick',a-b);
+        set(gca,'YTickLabel',cL);
+        set(gca,'YTickLabelRotation',90);
+        set(gca,'XTick',1:length(glist));
+        set(gca,'XTickLabel',glist);
+        set(gca,'XTickLabelRotation',90);
+
+        set(gca,'TickLength',[0 0]);
+    end
 
     function i_renamecat(~,~)
         tg=gui.i_inputgenelist(string(cL),true);
