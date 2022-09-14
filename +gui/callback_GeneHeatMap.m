@@ -3,37 +3,12 @@ function callback_GeneHeatMap(src,~)
     sce=guidata(FigureHandle);
     [thisc,~]=gui.i_select1class(sce);
     if isempty(thisc), return; end
-    [c,cL] = grp2idx(thisc);
-    [answer]=questdlg('Manually order groups?','', ...
-        'Yes','No','Cancel','No');
-    if isempty(answer), return; end
-    switch answer
-        case 'Yes'
-            [newidx]=gui.i_selmultidlg(cL,sort(cL));
-            if length(newidx)~=length(cL)
-                warndlg('Please select all group items.','');
-                return;
-            end
-            cx=c;
-            for k=1:length(newidx)
-                c(cx==newidx(k))=k;
-            end
-            cL=cL(newidx);
-        case 'No'
-            
-        case 'Cancel'
-            return;
-        otherwise
-            return;
-    end
-            
-
+    [c,cL]=gui.i_reordergroups(thisc);
     [glist]=gui.i_selectngenes(sce);
     if isempty(glist)
         helpdlg('No gene selected.','');
         return;
     end
-
 
 [~,gidx]=ismember(glist,sce.g);
 
@@ -44,20 +19,7 @@ Xt=log(Xt+1);
 Y=Xt(gidx,:);
 [~,cidx]=sort(c);
 Y=Y(:,cidx);
-
-methodid=1;
-switch methodid
-    case 1
-        Y=zscore(Y,0,2);
-        qx=quantile(Y(:),0.90);
-        Y(Y>qx)=qx;
-        qx=quantile(Y(:),0.10);
-        Y(Y<qx)=qx;
-    case 2
-        Y=zscore(Y,0,2);
-        Y = reshape( zscore(Y(:)), size(Y) );
-        Y=Y./(max(abs(Y(:))));
-end
+[Y]=gui.i_norm4heatmap(Y);
 
 szgn=grpstats(c,c,@numel);
 a=zeros(1,max(c)); 
@@ -81,7 +43,7 @@ h=imagesc(Y);
 % hFig.Colormap = repmat(linspace(0, 1, 25).', 1, 3);
 set(gca,'XTick',a-b);
 set(gca,'XTickLabel',cL);
-set(gca,'XTickLabelRotation',0);
+%set(gca,'XTickLabelRotation',0);
 set(gca,'YTick',1:length(glist));
 set(gca,'YTickLabel',glist);
 set(gca,'TickLength',[0 0]);
@@ -97,28 +59,40 @@ pkg.i_addbutton2fig(tb,'on',{@gui.i_pickcolormap,c},'plotpicker-compass.gif','Pi
 pkg.i_addbutton2fig(tb,'off',@gui.i_changefontsize,'noun_font_size_591141.gif','ChangeFontSize');
 pkg.i_addbutton2fig(tb,'on',@i_renamecat,'guideicon.gif','Rename groups...');
 pkg.i_addbutton2fig(tb,'on',{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');
-pkg.i_addbutton2fig(tb,'on',@i_invertcolor,'plotpicker-comet.gif','Invert colors');
+pkg.i_addbutton2fig(tb,'on',@gui.i_invertcolor,'plotpicker-comet.gif','Invert colors');
 pkg.i_addbutton2fig(tb,'off',@i_resetcolor,'plotpicker-geobubble2.gif','Reset color map');
 pkg.i_addbutton2fig(tb,'off',@i_flipxy,'xplotpicker-geobubble2.gif','Flip XY');
 
 movegui(hFig, 'center');
 set(hFig, 'visible', 'on');
+fliped=false;
 
     function i_flipxy(~,~)
         %delete(h);
-        h=imagesc(Y');
-        set(gca,'YTick',a-b);
-        set(gca,'YTickLabel',cL);
-        set(gca,'YTickLabelRotation',90);
-        set(gca,'XTick',1:length(glist));
-        set(gca,'XTickLabel',glist);
-        set(gca,'XTickLabelRotation',90);
-
-        set(gca,'TickLength',[0 0]);
+        fliped=~fliped;
+        if fliped
+            h=imagesc(Y');
+            set(gca,'YTick',a-b);
+            set(gca,'YTickLabel',cL);
+            %set(gca,'YTickLabelRotation',90);
+            set(gca,'XTick',1:length(glist));
+            set(gca,'XTickLabel',glist);
+            set(gca,'XTickLabelRotation',90);
+            set(gca,'TickLength',[0 0]);
+        else
+            h=imagesc(Y);
+            set(gca,'XTick',a-b);
+            set(gca,'XTickLabel',cL);
+            %set(gca,'XTickLabelRotation',0);
+            set(gca,'YTick',1:length(glist));
+            set(gca,'YTickLabel',glist);
+            set(gca,'TickLength',[0 0]);
+        end
     end
 
     function i_renamecat(~,~)
         tg=gui.i_inputgenelist(string(cL),true);
+        if isempty(tg), return; end
         if length(tg)==length(cL)
             set(gca,'XTick',a-b);
             set(gca,'XTickLabel',tg(:))
@@ -132,10 +106,5 @@ set(hFig, 'visible', 'on');
         set(gca,'FontSize',10);
         colormap default
     end
-
-    function i_invertcolor(~,~)
-        cm=colormap();
-        colormap(flipud(cm));
-    end
-
-    end
+    
+end

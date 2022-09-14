@@ -63,7 +63,7 @@ txgene=[" "; tgene];
 %sz=randi(100,1,length(x));
 %scatter([-.5 .5],[-1 -1],[1 500],'k','filled');
 %hold on
-hFig=figure;
+hFig=figure('Visible','off');
 
 dotsz=1.0;
 sz=sz+0.001;
@@ -100,8 +100,11 @@ pkg.i_addbutton2fig(tb,'off',@i_resizedot,'networkcomp.gif','Resize dots...');
 pkg.i_addbutton2fig(tb,'on',@i_renamecat,'guideicon.gif','Rename groups...');
 pkg.i_addbutton2fig(tb,'on',{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');
 pkg.i_addbutton2fig(tb,'on',@i_savetable,'export.gif','Reset color map');
-pkg.i_addbutton2fig(tb,'on',@i_invertcolor,'plotpicker-comet.gif','Invert colors');
+pkg.i_addbutton2fig(tb,'on',@gui.i_invertcolor,'plotpicker-comet.gif','Invert colors');
 pkg.i_addbutton2fig(tb,'off',@i_resetcolor,'plotpicker-geobubble2.gif','Reset color map');
+
+movegui(hFig, 'center');
+set(hFig, 'visible', 'on');
 
 %     function i_changefontsize(~,~)
 %           ax=get(gca,'FontSize')+1;
@@ -166,9 +169,9 @@ pkg.i_addbutton2fig(tb,'off',@i_resetcolor,'plotpicker-geobubble2.gif','Reset co
         af{5}=scatter(max(x)+1,3,dotsz*500*0.1,'k');
     end
 
-
     function i_renamecat(~,~)
         tg=gui.i_inputgenelist(string(cL),true);
+        if isempty(tg), return; end
         if length(tg)==length(cL)
             set(gca,'XTick',0:length(cL));
             set(gca,'XTickLabel',[{''};tg(:);{''}])
@@ -185,10 +188,8 @@ pkg.i_addbutton2fig(tb,'off',@i_resetcolor,'plotpicker-geobubble2.gif','Reset co
         colormap(flipud(bone));
     end
 
-    function i_invertcolor(~,~)
-        cm=colormap();
-        colormap(flipud(cm));
-    end
-
-
+%     function i_invertcolor(~,~)
+%         cm=colormap();
+%         colormap(flipud(cm));
+%     end
 end

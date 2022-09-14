@@ -8,29 +8,8 @@ end
 
 [thisc,~]=gui.i_select1class(sce);
 if isempty(thisc), return; end
-
-[c,cL]=grp2idx(thisc);
-if numel(cL)==1
-    errordlg('Only one cell type or cluster.');
-    return;
-end
-
-[answer]=questdlg('Manually order groups?','', ...
-    'Yes','No','Cancel','No');
-if isempty(answer), return; end
-switch answer
-    case 'Yes'
-        [newidx]=gui.i_selmultidlg(cL);
-        if length(newidx)~=length(cL)
-            return;
-        end
-        cx=c;
-        for k=1:length(newidx)
-            c(cx==newidx(k))=k;
-        end
-        cL=cL(newidx);
-    otherwise
-end    
+[c,cL,noanswer]=gui.i_reordergroups(thisc);
+if noanswer, return; end
 
 answer = questdlg('Generate marker gene heatmap',...
     'Select Method','Method 1 (DE 🐇)','Method 2 (scGeneFit 🐢)',...
@@ -85,12 +64,7 @@ for k=1:numel(cL)
     idgn=[idgn; k*ones(length(markerlist),1)];
     szgn=[szgn length(markerlist)];
 end
-
-Y=zscore(Y,0,2);
-qx=quantile(Y(:),0.90);
-Y(Y>qx)=qx;
-qx=quantile(Y(:),0.10);
-Y(Y<qx)=qx;
+[Y]=gui.i_norm4heatmap(Y);
 
 Z=[];
 for k=1:numel(cL)
@@ -114,16 +88,18 @@ for k=1:max(idcl)-1
     xline(sum(idcl<k+1)+0.5,'r-');
     yline(szc(k)+0.5,'r-');
 end
+
 set(gca,'YTick',1:size(Y,1));
 a=zeros(1,max(idcl)); b=zeros(1,max(idcl));
 for k=1:max(idcl)
     a(k)=sum(idcl<=k);
     b(k)=round(sum(idcl==k)./2);
 end
+
 set(gca,'XTick',a-b);
 % set(gca,'XTickLabel',strrep(M(:,1),'_','\_'));
 set(gca,'XTickLabel',M(:,1));
-set(gca,'XTickLabelRotation',0);
+%set(gca,'XTickLabelRotation',0);
 set(gca,'YTick',1:length(MX));
 set(gca,'YTickLabel',MX);
 set(gca,'TickLength',[0 0])
@@ -132,37 +108,47 @@ set(gca,'TickLength',[0 0])
 tb1=uitoolbar(hFig);
 pkg.i_addbutton2fig(tb1,'off',{@i_saveM,M},'greencircleicon.gif','Save marker gene map...');
 pkg.i_addbutton2fig(tb1,'off',@i_flipxy,'xplotpicker-geobubble2.gif','Flip XY');
-
-
 pkg.i_addbutton2fig(tb1,'off',@i_summarymap,'HDF_object01.gif','Summary map...');
 pkg.i_addbutton2fig(tb1,'off',@i_summarymapT,'HDF_object02.gif','Summary map, transposed...');
 pkg.i_addbutton2fig(tb1,'off',@i_dotplotx,'HDF_object03.gif','Dot plot...');
-
 pkg.i_addbutton2fig(tb1,'on',{@gui.i_pickcolormap,c},'plotpicker-compass.gif','Pick new color map...');
 pkg.i_addbutton2fig(tb1,'off',@gui.i_changefontsize,'noun_font_size_591141.gif','ChangeFontSize');
 pkg.i_addbutton2fig(tb1,'on',@i_renamecat,'guideicon.gif','Rename groups...');
 pkg.i_addbutton2fig(tb1,'on',{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');
-pkg.i_addbutton2fig(tb1,'on',@i_invertcolor,'plotpicker-comet.gif','Invert colors');
+pkg.i_addbutton2fig(tb1,'on',@gui.i_invertcolor,'plotpicker-comet.gif','Invert colors');
 pkg.i_addbutton2fig(tb1,'off',@i_resetcolor,'plotpicker-geobubble2.gif','Reset color map');
 
 movegui(hFig, 'center');
 set(hFig, 'visible', 'on');
+fliped=false;
 
-
-    function i_flipxy(~,~)        
-        himg=imagesc(Y');
-        set(gca,'YTick',a-b);
-        set(gca,'YTickLabel',M(:,1));
-        set(gca,'YTickLabelRotation',90);
-        set(gca,'XTick',1:length(MX));
-        set(gca,'XTickLabel',MX);
-        set(gca,'XTickLabelRotation',90);
-        set(gca,'TickLength',[0 0]);
+    function i_flipxy(~,~)
+        fliped=~fliped;
+        if fliped
+            himg=imagesc(Y');
+            set(gca,'YTick',a-b);
+            set(gca,'YTickLabel',M(:,1));
+            %set(gca,'YTickLabelRotation',90);
+            set(gca,'XTick',1:length(MX));
+            set(gca,'XTickLabel',MX);
+            set(gca,'XTickLabelRotation',90);
+            set(gca,'TickLength',[0 0]);
+        else
+            himg=imagesc(Y);
+            %set(gca,'YTick',1:size(Y,1));
+            set(gca,'XTick',a-b);
+            set(gca,'XTickLabel',M(:,1));
+            set(gca,'YTick',1:length(MX));
+            set(gca,'YTickLabel',MX);
+            set(gca,'TickLength',[0 0])
+            
+        end
     end
 
 
     function i_renamecat(~,~)
         tg=gui.i_inputgenelist(string(cL),true);
+        if isempty(tg), return; end
         if length(tg)==length(cL)
             set(gca,'XTick',a-b);
             set(gca,'XTickLabel',tg(:))
