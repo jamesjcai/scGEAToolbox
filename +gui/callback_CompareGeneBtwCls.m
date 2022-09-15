@@ -87,9 +87,26 @@ if tf1~=1, return; end
     
     [~,cL,noanswer]=gui.i_reordergroups(thisc);
     if noanswer, return; end
+
+    [answerc]=questdlg('Color violin plot?','');
+    switch answerc
+        case 'Yes'
+            colorit=true;
+        case 'No'
+            colorit=false;
+        otherwise
+            return;
+    end
     %[cL]=i_getgrouporder(thisc);
-    f = figure('visible','off');
-    pkg.i_violinplot(y,thisc,false,cL);
+    f=figure('visible','off');
+    tb=uitoolbar(f);
+    pkg.i_addbutton2fig(tb,'off',{@i_savedata,y,thisc}, ...
+        'export.gif','Export data...');
+    pkg.i_addbutton2fig(tb,'off',{@gui.i_savemainfig,3}, ...
+        "powerpoint.gif",'Save Figure to PowerPoint File...');
+    pkg.i_addbutton2fig(tb,'off',@i_invertcolor, ...
+        "xpowerpoint.gif",'Switch BW/Color');
+    pkg.i_violinplot(y,thisc,colorit,cL);
     title(strrep(ttxt,'_','\_'));
     ylabel(selitems{indx1});
     movegui(f,'center');
@@ -98,9 +115,21 @@ if tf1~=1, return; end
 %    errordlg(ME.message);
 %end
 
+    function i_invertcolor(~,~)
+        colorit=~colorit;
+        delete(gca);
+        pkg.i_violinplot(y,thisc,colorit,cL);
+    end
+
 end
 
-
+function i_savedata(~,~,a,b)
+    T=table(a(:),b(:));    
+    T.Properties.VariableNames={'ExprLevel','GroupID'};
+    T=sortrows(T,'ExprLevel','descend');
+    T=sortrows(T,'GroupID');
+    gui.i_exporttable(T,true);
+end
 
 % function [cL]=i_getgrouporder(thisc)
 %     [c,cL]=grp2idx(thisc);

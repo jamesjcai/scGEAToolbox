@@ -19,23 +19,27 @@ l=ones(length(tgene)*length(cL),1);
 sz=l; vl=l;
 x=l; y=l;
 ct=0;
-for k=1:length(tgene)
+for kx=1:length(tgene)
     for kk=1:length(cL)
         ct=ct+1;
-        x(ct)=kk; y(ct)=k;
-        a0=X(g==tgene(k),c==kk);
+        x(ct)=kk; y(ct)=kx;
+        a0=X(g==tgene(kx),c==kk);
         sz(ct)=sum(a0~=0)./length(a0);
         vl(ct)=mean(a0);
     end
 end
+
+% qx=quantile(vl(:),0.10);
+% vl(vl<qx)=0;
+
 
 AvgExpr=vl;
 PrtExpr=sz;
 
 GroupList=repmat(string(cL),length(tgene),1);
 GeneList=[];
-for k=1:length(tgene)
-    GeneList=[GeneList; repmat(tgene(k),length(cL),1)];
+for kx=1:length(tgene)
+    GeneList=[GeneList; repmat(tgene(kx),length(cL),1)];
 end
 
 % GroupList=[];
@@ -54,6 +58,7 @@ T=table(GeneList,GroupList,AvgExpr,PrtExpr);
 % assignin("base","T",T);
 
 
+sz(sz<0.05)=0;
 if uselog
     vl=log2(vl+1);
 end
@@ -66,7 +71,7 @@ txgene=[" "; tgene];
 hFig=figure('Visible','off');
 
 dotsz=1.0;
-sz=sz+0.001;
+sz(sz==0)=eps;
 vl=vl+0.001;
 afa=scatter(x,y,dotsz*500*sz,vl,'filled');
 hold on

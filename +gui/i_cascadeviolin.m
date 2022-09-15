@@ -13,13 +13,14 @@ for k=1:length(glist)
     pkg.i_violinplot(y,thisc,colorit,grouporder);
     title(strrep(ttxt,'_','\_'));
     ylabel(ytxt);
-    tb=uitoolbar(f);
 
+    tb=uitoolbar(f);
     pkg.i_addbutton2fig(tb,'off',{@i_savedata,y,thisc}, ...
         'export.gif','Export data...');
     pkg.i_addbutton2fig(tb,'off',{@gui.i_savemainfig,3}, ...
         "powerpoint.gif",'Save Figure to PowerPoint File...');
-
+    pkg.i_addbutton2fig(tb,'off',@i_invertcolor, ...
+        "xpowerpoint.gif",'Switch BW/Color');
     P = get(f,'Position');
     set(f,'Position',[P(1)-20*k P(2)-20*k P(3) P(4)]);
     set(f,'visible','on');                
@@ -27,6 +28,14 @@ for k=1:length(glist)
     F{k}=f;
 end
 gui.i_export2pptx(F,glist);
+
+
+    function i_invertcolor(~,~)
+        colorit=~colorit;
+        delete(gca);
+        pkg.i_violinplot(y,thisc,colorit,grouporder);
+    end
+
 end
 
 function i_savedata(~,~,a,b)

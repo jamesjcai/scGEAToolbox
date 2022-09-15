@@ -7,7 +7,8 @@ switch methodid
         qx=quantile(Y(:),0.90);
         Y(Y>qx)=qx;
         qx=quantile(Y(:),0.10);
-        Y(Y<qx)=qx;
+        %Y(Y<qx)=qx;
+        Y(Y<qx)=0;
     case 2
         Y=zscore(Y,0,2);
         Y = reshape( zscore(Y(:)), size(Y) );
