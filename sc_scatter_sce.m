@@ -292,9 +292,11 @@ end
         set(hAx,'YTick',[]);
         set(hAx,'ZTick',[]);
         title('')
-        xlabel('tSNE1');
-        ylabel('tSNE2');
-        zlabel('tSNE3');
+        if rand>0.5
+            xlabel('tSNE1'); ylabel('tSNE2'); zlabel('tSNE3');
+        else
+            xlabel('UMAP1'); ylabel('UMAP2'); zlabel('UMAP3');
+        end
         grid off
         box on
     end
