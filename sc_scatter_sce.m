@@ -129,6 +129,7 @@ i_addbutton(1,0,@Switch2D3D,"plotpicker-image.gif","Switch 2D/3D");
 i_addbutton(1,1,@callback_CloseAllOthers,"noun_Pruners_2469297.gif","Close all other figures");
 i_addbutton(1,0,@callback_PickPlotMarker,"plotpicker-rose.gif","Switch scatter plot marker type");
 i_addbutton(1,0,@callback_PickColorMap,"plotpicker-compass.gif","Pick new color map");
+i_addbutton(1,0,@callback_formatfig,"xpowerpoint.gif",'Formating Figure...');
 i_addbutton(1,0,@RefreshAll,"plotpicker-geobubble2.gif","Refresh");
 i_addbutton(2,0,@call_scgeatool,"IMG00107.GIF"," ");
 i_addbutton(2,0,@callback_CalculateCellScores,"cellscore2.gif","Calculate cell scores from list of feature genes")
@@ -141,6 +142,7 @@ i_addbutton(2,0,@callback_EnrichrHVGs,"plotpicker-andrewsplot.gif","Functional e
 i_addbutton(2,0,@callback_BuildGeneNetwork,"noun_Network_691907.gif","Build gene regulatory network");
 i_addbutton(2,0,@callback_CompareGeneNetwork,"networkcomp.gif","Compare two scGRNs");
 i_addbutton(2,1,{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');
+
 gui.add_3dcamera(defaultToolbar, 'AllCells');
 
 m_vie = uimenu(FigureHandle,'Text','&Multiview','Accelerator','M');
@@ -285,6 +287,17 @@ end
 % ------------------------
 % Callback Functions
 % ------------------------
+    function callback_formatfig(~,~)
+        set(hAx,'XTick',[]);
+        set(hAx,'YTick',[]);
+        set(hAx,'ZTick',[]);
+        title('')
+        xlabel('tSNE1');
+        ylabel('tSNE2');
+        zlabel('tSNE3');
+        grid off
+        box on
+    end
 
     function call_scgeatool(~,~)    
         % scgeatool;
