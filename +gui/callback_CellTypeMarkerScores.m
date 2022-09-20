@@ -60,14 +60,14 @@ fprintf('=============\n');
         zlabel('Score Value')
         title(ctselected)
 
-tb = uitoolbar(f0);
-pkg.i_addbutton2fig(tb,'off',@i_saveCrossTable,"export.gif",'Save cross-table');
-pkg.i_addbutton2fig(tb,'off',{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');
-pkg.i_addbutton2fig(tb,'on',@gui.i_pickcolormap,'plotpicker-compass.gif','Pick new color map...');
-pkg.i_addbutton2fig(tb,'on',@gui.i_invertcolor,'plotpicker-comet.gif','Invert colors');
-pkg.i_addbutton2fig(tb,'on',@i_geneheatmapx,'plotpicker-cometx.gif','Heatmap');
-movegui(f0,'center');
-set(f0,'Visible',true);
+        tb = uitoolbar(f0);
+        pkg.i_addbutton2fig(tb,'off',@i_saveCrossTable,"export.gif",'Save cross-table');
+        pkg.i_addbutton2fig(tb,'off',{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');
+        pkg.i_addbutton2fig(tb,'on',@gui.i_pickcolormap,'plotpicker-compass.gif','Pick new color map...');
+        pkg.i_addbutton2fig(tb,'on',@gui.i_invertcolor,'plotpicker-comet.gif','Invert colors');
+        pkg.i_addbutton2fig(tb,'on',@i_geneheatmapx,'plotpicker-cometx.gif','Heatmap');
+        movegui(f0,'center');
+        set(f0,'Visible',true);
     end
 
     function i_saveCrossTable(~,~)

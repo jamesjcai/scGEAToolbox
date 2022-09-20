@@ -46,11 +46,12 @@ end
     
 
     if ~isempty(cs)
-        figure;
-        gui.i_stemscatter(sce.s,cs);
-        zlabel('Score Value')
-        title(strrep(ttxt,'_','\_'))        
-        gui.i_exporttable(cs,true,matlab.lang.makeValidName(ttxt{1}));
+        gui.i_stemscatterfig(sce,cs,matlab.lang.makeValidName(ttxt{1}));
+        %figure;
+        %gui.i_stemscatter(sce.s,cs);
+        %zlabel('Score Value')
+        %title(strrep(ttxt,'_','\_'))        
+        %gui.i_exporttable(cs,true,matlab.lang.makeValidName(ttxt{1}));
     end
 
 
