@@ -5,6 +5,14 @@ function [T,A0,A1]=sctenifoldnet(X0,X1,genelist,varargin)
 % 
 import ten.*
 
+if ~(ismcc || isdeployed)
+if exist('tensor.m','file')==2    
+    pw1=fileparts(mfilename('fullpath'));
+    pth=fullfile(pw1,'..','tensor_toolbox');
+    addpath(pth);
+end
+end
+
     if nargin<2
         error(sprintf('USAGE: T=sctenifoldnet(X0,X1);\n       T=sctenifoldnet(X0,X1,genelist,''qqplot'',true);'));
     end
@@ -46,7 +54,7 @@ import ten.*
     end
 
     if exist('tensor.m','file')~=2
-        error('Need thirdparty/tensor_toolbox');
+        error('Need tensor_toolbox');
     end
     if exist('sc_pcnet.m','file')~=2
         error('Need sc_pcnet.m in scGEAToolbox https://github.com/jamesjcai/scGEAToolbox');
