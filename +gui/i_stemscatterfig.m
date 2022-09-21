@@ -1,6 +1,7 @@
-function i_stemscatterfig(sce,cs,csname)
+function i_stemscatterfig(sce,cs,posg,csname)
 
-if nargin<3, csname="CellScore"; end
+        if nargin<4, csname="CellScore"; end
+
         f0=figure('Visible',false);
         gui.i_stemscatter(sce.s,cs);
         zlabel('Score Value')
@@ -18,6 +19,9 @@ if nargin<3, csname="CellScore"; end
         gui.i_exporttable(table(cs),false,csname);
     end
     function i_geneheatmapx(~,~)
-        gui.i_geneheatmap(sce,sce.c_cell_type_tx,posg);
+        [thisc]=gui.i_select1class(sce);
+        if ~isempty(thisc)
+            gui.i_geneheatmap(sce,thisc,posg);
+        end
     end
 end

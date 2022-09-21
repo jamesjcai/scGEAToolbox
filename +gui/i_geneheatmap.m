@@ -12,9 +12,10 @@ if nargin<3
     end
 end
     [c,cL]=gui.i_reordergroups(thisc);
-
+    
 [y,gidx]=ismember(upper(glist),upper(sce.g));
 gidx=gidx(y);
+glist=glist(y);
 
 %[Xt]=gui.i_transformx(sce.X);
 Xt=sc_norm(sce.X);

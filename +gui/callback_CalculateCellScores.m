@@ -19,7 +19,7 @@ switch actiontype
              'ListSize',[220,300]);
         if ~tf==1, return; end
         fw=gui.gui_waitbar;
-        [cs]=pkg.e_cellscores(sce.X,sce.g,indx);
+        [cs,~,posg]=pkg.e_cellscores(sce.X,sce.g,indx);
         ttxt=T.ScoreType(indx);
         gui.gui_waitbar(fw);
         
@@ -46,7 +46,7 @@ end
     
 
     if ~isempty(cs)
-        gui.i_stemscatterfig(sce,cs,matlab.lang.makeValidName(ttxt{1}));
+        gui.i_stemscatterfig(sce,cs,posg,matlab.lang.makeValidName(ttxt{1}));
         %figure;
         %gui.i_stemscatter(sce.s,cs);
         %zlabel('Score Value')

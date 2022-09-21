@@ -1,4 +1,4 @@
-function [score,T]=e_cellscores(X,genelist,typeid)
+function [score,T,posg]=e_cellscores(X,genelist,typeid)
 % Calcute predefined cell scores (marker list in cellscores.txt)
 %
 % see also: RUN.UCELL, SC_CELLSCORE, SC_CELLCYCLESCORING
