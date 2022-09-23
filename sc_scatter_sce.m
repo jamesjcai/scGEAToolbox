@@ -288,23 +288,39 @@ end
 % Callback Functions
 % ------------------------
     function callback_formatfig(~,~)
-        set(hAx,'XTick',[]);
-        set(hAx,'YTick',[]);
-        set(hAx,'ZTick',[]);
-%         hAx.XAxis.Visible = 'off';
-%         hAx.YAxis.Visible = 'off';
-%         hAx.ZAxis.Visible = 'off';
-%         set(hAx,'xcolor',[1 1 1]);
-%         set(hAx,'ycolor',[1 1 1]);
-%         set(hAx,'zcolor',[1 1 1]);
         title('')
-        if rand>0.5
-            xlabel('tSNE1'); ylabel('tSNE2'); zlabel('tSNE3');
+        a1=xlim; b1=ylim; c1=zlim;
+        hold on
+        if size(sce.s, 2) > 2 && ~isempty(h.ZData)
+            set(hAx,'XTick',[]); set(hAx,'YTick',[]); set(hAx,'ZTick',[]);
+            hAx.XAxis.Visible = 'off'; hAx.YAxis.Visible = 'off'; hAx.ZAxis.Visible = 'off';
+            quiver3(hAx,a1(1),b1(1),c1(1),0,0,20,'Color','k');
+            quiver3(hAx,a1(1),b1(1),c1(1),0,20,0,'Color','k');
+            quiver3(hAx,a1(1),b1(1),c1(1),20,0,0,'Color','k');
+            text(a1(1)+22,b1(1),c1(1),'tSNE1');
+            text(a1(1),b1(1)+22,c1(1),'tSNE2');
+            text(a1(1),b1(1),c1(1)+22,'tSNE3');
+            xlim(a1);ylim(b1);zlim(c1);
         else
-            xlabel('UMAP1'); ylabel('UMAP2'); zlabel('UMAP3');
+            set(hAx,'XTick',[]); set(hAx,'YTick',[]);
+            hAx.XAxis.Visible = 'off'; hAx.YAxis.Visible = 'off';            
+            quiver(hAx,a1(1),b1(1),20,0,'Color','k');
+            quiver(hAx,a1(1),b1(1),0,20,'Color','k');                                    
+            text(a1(1)+22,b1(1),'tSNE1');
+            text(a1(1),b1(1)+22,'tSNE2','Rotation',90);
+            xlim(a1);ylim(b1);
         end
+        
+        
+%       set(hAx,'xcolor',[1 1 1]); set(hAx,'ycolor',[1 1 1]); set(hAx,'zcolor',[1 1 1]);
+%         if rand>0.5
+%             xlabel('tSNE1'); ylabel('tSNE2'); zlabel('tSNE3');
+%         else
+%             xlabel('UMAP1'); ylabel('UMAP2'); zlabel('UMAP3');
+%         end
+
         grid off
-        box on
+        box off
 %         a1=xlim; b1=ylim; c1=zlim;
 %         hold on
 %         arrow3([a1(1),b1(1),c1(1)],[a1(1)+20,b1(1),c1(1)]);
