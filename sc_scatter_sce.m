@@ -291,6 +291,12 @@ end
         set(hAx,'XTick',[]);
         set(hAx,'YTick',[]);
         set(hAx,'ZTick',[]);
+%         hAx.XAxis.Visible = 'off';
+%         hAx.YAxis.Visible = 'off';
+%         hAx.ZAxis.Visible = 'off';
+%         set(hAx,'xcolor',[1 1 1]);
+%         set(hAx,'ycolor',[1 1 1]);
+%         set(hAx,'zcolor',[1 1 1]);
         title('')
         if rand>0.5
             xlabel('tSNE1'); ylabel('tSNE2'); zlabel('tSNE3');
@@ -298,7 +304,15 @@ end
             xlabel('UMAP1'); ylabel('UMAP2'); zlabel('UMAP3');
         end
         grid off
-        box on        
+        box on
+%         a1=xlim; b1=ylim; c1=zlim;
+%         hold on
+%         arrow3([a1(1),b1(1),c1(1)],[a1(1)+20,b1(1),c1(1)]);
+%         arrow3([a1(1),b1(1),c1(1)],[a1(1),b1(1)+20,c1(1)]);
+%         arrow3([a1(1),b1(1),c1(1)],[a1(1),b1(1),c1(1)+20]);
+        %arrow('start',[a1(1) b1(1) c1(1)],'stop',[a1(1)+20 b1(1) c1(1)]);
+        %arrow('start',[a1(1) b1(1) c1(1)],'stop',[a1(1) b1(1)+20 c1(1)]);
+        %arrow('start',[a1(1) b1(1) c1(1)],'stop',[a1(1) b1(1) c1(1)+20]);
     end
 
     function call_scgeatool(~,~)    
