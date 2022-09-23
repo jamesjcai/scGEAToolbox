@@ -207,6 +207,11 @@ promotesave=false;
                 sce=sce.appendmetainfo(metainfo);
                 if ~isempty(celllist) && length(celllist)==sce.NumCells
                     sce.c_cell_id=celllist;
+                    if isstring(cellist)
+                    if all(strlength(cellist)>17)
+                        sce.c_batch_id=extractAfter(sce.c_cell_id,17);                        
+                    end
+                    end
                 end
             case 'GEO Accession Number(s)...'
                 acc=inputdlg({'Input number (e.g., GSM3308547,GSM3308548):'},...

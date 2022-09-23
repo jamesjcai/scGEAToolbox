@@ -18,8 +18,8 @@ Xt=log(Xt+1);
 
 Y=Xt(gidx,:);
 [~,cidx]=sort(c);
-Y=Y(:,cidx);
-[Y]=gui.i_norm4heatmap(Y);
+Yori=Y(:,cidx);
+[Y]=gui.i_norm4heatmap(Yori);
 
 szgn=grpstats(c,c,@numel);
 a=zeros(1,max(c)); 
@@ -62,10 +62,30 @@ pkg.i_addbutton2fig(tb,'on',{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure
 pkg.i_addbutton2fig(tb,'on',@gui.i_invertcolor,'plotpicker-comet.gif','Invert colors');
 pkg.i_addbutton2fig(tb,'off',@i_resetcolor,'plotpicker-geobubble2.gif','Reset color map');
 pkg.i_addbutton2fig(tb,'off',@i_flipxy,'xplotpicker-geobubble2.gif','Flip XY');
+pkg.i_addbutton2fig(tb,'off',@i_summarymap,'HDF_object01.gif','Summary map...');
+pkg.i_addbutton2fig(tb,'off',@i_summarymapT,'HDF_object02.gif','Summary map, transposed...');
 
 movegui(hFig, 'center');
 set(hFig, 'visible', 'on');
 fliped=false;
+
+MX=glist;
+Z=zeros(length(glist),length(cL));
+c=c(cidx);
+for k=1:length(cL)
+    Z(:,k)=median(Yori(:,c==k),2);
+end
+[Z]=gui.i_norm4heatmap(Z);
+
+        figure;
+        h2=heatmap(cL,MX,Z);
+        h2.Title = 'Marker Gene Heatmap';
+        h2.XLabel = 'Group';
+        h2.YLabel = 'Marker Gene';
+        h2.Colormap = parula;
+        h2.GridVisible = 'off';
+        h2.CellLabelColor='none';
+
 
     function i_flipxy(~,~)
         %delete(h);
@@ -105,6 +125,42 @@ fliped=false;
     function i_resetcolor(~,~)
         set(gca,'FontSize',10);
         colormap default
+    end
+
+    function i_summarymap(~,~)
+        f=figure;
+        h=heatmap(cL,MX,Z);
+        h.Title = 'Marker Gene Heatmap';
+        h.XLabel = 'Group';
+        h.YLabel = 'Marker Gene';
+        h.Colormap = parula;
+        h.GridVisible = 'off';
+        h.CellLabelColor='none';
+        tb = uitoolbar('Parent', f);
+        pkg.i_addbutton2fig(tb,'on',{@gui.i_pickcolormap,c},'plotpicker-compass.gif','Pick new color map...');
+        pkg.i_addbutton2fig(tb,'off',@gui.i_changefontsize,'noun_font_size_591141.gif','ChangeFontSize');        
+        pkg.i_addbutton2fig(tb,'on',{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');
+        pkg.i_addbutton2fig(tb,'on',@gui.i_invertcolor,'plotpicker-comet.gif','Invert colors');
+        pkg.i_addbutton2fig(tb,'off',@i_resetcolor,'plotpicker-geobubble2.gif','Reset color map');
+    end
+
+    function i_summarymapT(~,~)
+        f=figure;
+        h=heatmap(MX,cL,Z.');
+        h.Title = 'Marker Gene Heatmap';
+        h.YLabel = 'Group';
+        h.XLabel = 'Marker Gene';
+        h.Colormap = parula;
+        h.GridVisible = 'off';
+        h.CellLabelColor='none';
+%         s = struct(h);
+%         s.XAxis.TickLabelRotation=45;        
+        tb = uitoolbar('Parent', f);
+        pkg.i_addbutton2fig(tb,'on',{@gui.i_pickcolormap,c},'plotpicker-compass.gif','Pick new color map...');
+        pkg.i_addbutton2fig(tb,'off',@gui.i_changefontsize,'noun_font_size_591141.gif','ChangeFontSize');        
+        pkg.i_addbutton2fig(tb,'on',{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');
+        pkg.i_addbutton2fig(tb,'on',@gui.i_invertcolor,'plotpicker-comet.gif','Invert colors');
+        pkg.i_addbutton2fig(tb,'off',@i_resetcolor,'plotpicker-geobubble2.gif','Reset color map');
     end
     
 end

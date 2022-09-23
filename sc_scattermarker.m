@@ -49,6 +49,10 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
                     % within_stemscatter(x, y, c);
                     gui.i_stemscatter([x y],c)
                     h1 = gca;
+                    set(h1,'XTickLabel',[]);
+                    set(h1,'YTickLabel',[]);
+                    set(h1,'ZTickLabel',[]);
+                    grid on                    
                 case 2
                     if isempty(z)
                         scatter(x, y, sz, c, 'filled');
@@ -56,6 +60,10 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
                         scatter3(x, y, z, sz, c, 'filled');
                     end
                     h1 = gca;
+                    set(h1,'XTickLabel',[]);
+                    set(h1,'YTickLabel',[]);
+                    set(h1,'ZTickLabel',[]);
+                    grid on                    
                 case 3
 
                     
@@ -79,7 +87,10 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
 
                     h1 = subplot(1, 2, 1);
                     s1=scatter3(x, y, z, sz, c, 'filled');
-                    
+                    set(h1,'XTickLabel',[]);
+                    set(h1,'YTickLabel',[]);
+                    set(h1,'ZTickLabel',[]);
+                    grid on
                     % h1.YDataSource='explorer2IDX';
                     % title(targetg)
                     
@@ -96,7 +107,12 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
                     scatter3(x, y, zeros(size(y)), 5, c, 'filled');
                     %[ayy,byy]=view(h2);                    
                     % h2.YDataSource='explorer2IDX';
-                    % hLD = linkdata('on');                    
+                    % hLD = linkdata('on'); 
+                    set(h2,'XTickLabel',[]);
+                    set(h2,'YTickLabel',[]);
+                    set(h2,'ZTickLabel',[]);
+                    grid on
+                    
                     evalin('base', 'h=findobj(gcf,''type'',''axes'');');
                     evalin('base', 'hlink = linkprop(h,{''CameraPosition'',''CameraUpVector''});');
                     evalin('base', 'rotate3d on');

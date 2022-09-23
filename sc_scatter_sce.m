@@ -298,7 +298,7 @@ end
             xlabel('UMAP1'); ylabel('UMAP2'); zlabel('UMAP3');
         end
         grid off
-        box on
+        box on        
     end
 
     function call_scgeatool(~,~)    
