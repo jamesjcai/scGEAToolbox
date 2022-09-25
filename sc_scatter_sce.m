@@ -154,7 +154,8 @@ m_net = uimenu(FigureHandle,'Text','&Network','Accelerator','N');
 i_addmenu(m_net,0,@callback_scPCNet1,'GRN Construction - PC Regression 🐢...');
 i_addmenu(m_net,0,@callback_scTenifoldNet1,'GRN Construction - scTenifoldNet 🐢🐢 ...');
 i_addmenu(m_net,1,@callback_scTenifoldNet2,'GRN Comparison - scTenifoldNet 🐢🐢🐢 ...');
-i_addmenu(m_net,0,@callback_scTenifoldKnk1,'Virtual Gene KO - scTenifoldKnk 🐢🐢 ...');
+i_addmenu(m_net,0,@callback_scTenifoldNet2lite,'GRN Comparison - scTenifoldNet Lite 🐢🐢 ...');
+i_addmenu(m_net,1,@callback_scTenifoldKnk1,'Virtual Gene KO - scTenifoldKnk 🐢🐢 ...');
 i_addmenu(m_net,0,@callback_scTenifoldXct,'Cell-Cell Interactions - scTenifoldXct (Python) 🐢🐢🐢 ...');
 
 m_ext = uimenu(FigureHandle,'Text','E&xternal','Accelerator','x');
