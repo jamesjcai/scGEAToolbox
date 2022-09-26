@@ -24,6 +24,7 @@ function callback_scTenifoldNet2lite(src,~)
     disp('Manifold alignment...')
     [aln0,aln1]=i_ma(A0sym,A1sym);
     disp('Differential regulation (DR) detection...')
+    glist=sce.g;
     T=i_dr(aln0,aln1,glist);
     gui.gui_waitbar(fw);
 
