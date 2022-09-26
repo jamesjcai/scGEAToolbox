@@ -7,10 +7,6 @@ function callback_scTenifoldNet2lite(src,~)
 
     [i1,i2]=gui.i_select2grps(sce);
     if length(i1)==1 || length(i2)==1, return; end
-    
-                disp('[T]=ten.sctenifoldnet(sce.X(:,idx1),sce.X(:,idx2),sce.g,''nsubsmpl'',10,''csubsmpl'',500,''savegrn'',true);')
-                [T]=ten.sctenifoldnet(sce.X(:,i1),sce.X(:,i2),sce.g,...
-                   'nsubsmpl',nsubsmpl,'csubsmpl',csubsmpl,'savegrn',savegrn);
 
     fw = gui.gui_waitbar;
     disp('Constructing networks...')
