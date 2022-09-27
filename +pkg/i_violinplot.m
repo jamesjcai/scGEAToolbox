@@ -11,6 +11,7 @@ c=string(c);
 if nargin<4, grouporder=[]; end
 if nargin<3 || isempty(colorit), colorit=false; end
 if issparse(d), d=full(d); end
+
 if ~colorit
     if isempty(grouporder)
         violinplot(d,c,...

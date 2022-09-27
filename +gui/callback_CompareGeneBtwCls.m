@@ -43,6 +43,9 @@ if tf1~=1, return; end
                 otherwise
                     return;
             end
+    cL=strrep(cL,'_','\_');
+    thisc=strrep(thisc,'_','\_');
+
 
             gui.i_cascadeviolin(sce,Xt,thisc,glist, ...
                 selitems{indx1},cL,colorit);
@@ -106,6 +109,8 @@ if tf1~=1, return; end
         "powerpoint.gif",'Save Figure to PowerPoint File...');
     pkg.i_addbutton2fig(tb,'off',@i_invertcolor, ...
         "xpowerpoint.gif",'Switch BW/Color');
+    cL=strrep(cL,'_','\_');
+    thisc=strrep(thisc,'_','\_');
     pkg.i_violinplot(y,thisc,colorit,cL);
     title(strrep(ttxt,'_','\_'));
     ylabel(selitems{indx1});

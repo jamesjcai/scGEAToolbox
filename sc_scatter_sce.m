@@ -1312,6 +1312,7 @@ end
             end
             dtp = findobj(h, 'Type', 'datatip');
             delete(dtp);
+            stxtyes=strrep(stxtyes,"_","\_");
             row = dataTipTextRow('', stxtyes);
             h.DataTipTemplate.DataTipRows = row;
             % h.DataTipTemplate.FontSize = 5;
