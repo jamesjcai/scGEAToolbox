@@ -39,11 +39,20 @@ function callback_ShowClustersPop(src, ~)
         for k = 1:9        
             kk=(nf-1)*9+k;
             if kk<=totaln
-                subplot(3, 3, k);
+                %subplot(3, 3, k);
+                nexttile;
                 gui.i_gscatter3(sces, c, 3, cmv(idxx(kk)));
-                title(sprintf('%s\n%d cells (%.2f%%)', ...
-                    cL{idxx(kk)}, cmx(idxx(kk)), ...
+                set(gca,'XTick',[]);
+                set(gca,'YTick',[]);
+                title(strrep(cL{idxx(kk)},'_',"\_"));
+                subtitle(sprintf('%d cells (%.2f%%)', ...
+                    cmx(idxx(kk)), ...
                     100 * cmx(idxx(kk)) / length(c)));
+%                 title(sprintf('%s\n%d cells (%.2f%%)', ...
+%                     cL{idxx(kk)}, cmx(idxx(kk)), ...
+%                     100 * cmx(idxx(kk)) / length(c)));
+
+            box on
             end
             colormap(para.oldColorMap);
         end

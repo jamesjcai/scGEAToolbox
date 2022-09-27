@@ -84,6 +84,8 @@ hAx = axes('Parent', FigureHandle);
 
 [h] = gui.i_gscatter3(sce.s, c, methodid,1,hAx);
 title(hAx,sce.title);
+subtitle('[genes x cells]');
+
 kc = numel(unique(c));
 colormap(pkg.i_mycolorlines(kc));
 
@@ -289,7 +291,7 @@ end
 % Callback Functions
 % ------------------------
     function callback_formatfig(~,~)
-        title('')
+        title(''); subtitle('');
         a1=xlim; b1=ylim; c1=zlim;
         hold on
         if size(sce.s, 2) > 2 && ~isempty(h.ZData)
@@ -656,6 +658,7 @@ end
             colormap(pkg.i_mycolorlines(kc));
         end
         title(sce.title);
+        subtitle('[genes x cells]');
         % ptlabelclusters.State = 'off';
         % UitoolbarHandle.Visible='off';
         % UitoolbarHandle.Visible='on';
@@ -693,6 +696,8 @@ end
             sce.s=sx;
         end
         title(sce.title);
+        subtitle('[genes x cells]');
+
         h.Marker = para.oldMarker;
         h.SizeData = para.oldSizeData;
         colormap(para.oldColorMap);
@@ -888,6 +893,7 @@ end
         [ax, bx] = view();
         [h] = gui.i_gscatter3(sce.s, c, methodid, hAx);
         title(sce.title);
+        subtitle('[genes x cells]');
         view(ax, bx);
         i_labelclusters(true);
         sce.c_cluster_id = c;
@@ -924,6 +930,7 @@ end
         [ax, bx] = view();
         [h] = gui.i_gscatter3(sce.s, c, methodid, hAx);
         title(sce.title);
+        subtitle('[genes x cells]');
         view(ax, bx);
         i_labelclusters(true);
         sce.c_cluster_id = c;
