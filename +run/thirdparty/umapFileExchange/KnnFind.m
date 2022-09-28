@@ -537,7 +537,9 @@ classdef KnnFind<handle
             priorPwd=pwd;
             try
                 cd(cppPath);
-                mex mexWrapper.cpp distances.cpp KnnDescent.cpp RpTree.cpp KnnGraph.cpp suh_math.cpp -output ../../nn_descent
+                if ~isdeployed
+                    mex mexWrapper.cpp distances.cpp KnnDescent.cpp RpTree.cpp KnnGraph.cpp suh_math.cpp -output ../../nn_descent
+                end
             catch ex
                 ex.getReport
                 disp('You may need to set up your C++ compiler with "mex -setup"!');

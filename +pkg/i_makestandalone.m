@@ -51,9 +51,11 @@ if ~exist(outdir,"dir"), mkdir(outdir); end
     d=[d;d2];
 
 %%
+if ~isdeployed
 compiler.build.standaloneWindowsApplication('scgeatool.m',...
     'ExecutableName','scgeatool','Verbose','On',...
     'OutputDir',outdir,'AdditionalFiles',d);
+end
 %%
 try
 a=getenv('USERPROFILE');
