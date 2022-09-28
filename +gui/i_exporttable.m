@@ -1,6 +1,9 @@
-function [answer]=i_exporttable(T,needwait,TName)
+function [answer,filename]=i_exporttable(T,needwait,TName,outfile)
+
+if nargin<4, outfile=[]; end
 if nargin<3, TName='T'; end
 if nargin<2, needwait=false; end
+filename=[];
     
 if ~(ismcc || isdeployed)
     answer = questdlg('Export & save data to:','',...
@@ -9,7 +12,7 @@ else
     answer = questdlg('Export & save data to:','',...
         'Text file','Excel file','MAT file','Text file');
 end
-	
+	%answer='Excel file'
 switch answer
     case 'Workspace'
             labels = {'Save to variable named:'}; 
@@ -35,7 +38,11 @@ switch answer
            end
         end
     case 'Excel file'
-        [file, path] = uiputfile({'*.xlsx';'*.xls';'*.*'},'Save as');
+        if ~isempty(outfile)
+            [file, path] = uiputfile(sprintf('%s.xlsx',outfile),'Save as');
+        else
+            [file, path] = uiputfile({'*.xlsx';'*.xls';'*.*'},'Save as');
+        end
         if isequal(file,0) || isequal(path,0), return; end      
         
        filename=fullfile(path,file);           
@@ -48,7 +55,7 @@ switch answer
                T.(variables{k})=xx;
            end
        end
-	   writetable(T,filename,'FileType','spreadsheet');
+	   writetable(T,filename,'FileType','spreadsheet','Sheet','All Genes');
        pause(1)
        if needwait
            waitfor(helpdlg(sprintf('Result has been saved in %s',filename),''));

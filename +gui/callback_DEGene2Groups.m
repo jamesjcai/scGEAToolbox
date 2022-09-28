@@ -57,9 +57,11 @@ function callback_DEGene2Groups(src,~)
     end
 
 
+% figure;
+% gui.i_volcanoplot(T);
+% title(sprintf('%s vs. %s', ...
+%     matlab.lang.makeValidName(string(cL1)),matlab.lang.makeValidName(string(cL2))));
 
-figure;
-gui.i_volcanoplot(T);
 
 % T2=T;
 % T2.avg_log2FC(T.avg_log2FC>10)=10;
@@ -97,22 +99,34 @@ gui.i_volcanoplot(T);
         T.Properties.VariableNames{8}, ...
         matlab.lang.makeValidName(string(cL2)));
     
-    gui.i_exporttable(T,true);
+    outfile=sprintf('%s_vs_%s', ...
+        matlab.lang.makeValidName(string(cL1)),matlab.lang.makeValidName(string(cL2)));
+    [~,filesaved]=gui.i_exporttable(T,true,'T',outfile);
 
     if ~(ismcc || isdeployed)  
         answer = questdlg('Save up- and down-regulated genes for enrichment analysis?');
+        %answer='Yes';
         if strcmp(answer,'Yes')
             [Tup,Tdn]=pkg.e_processDETable(T);
             labels = {'Save DE results (selected up-regulated) to variable named:',...
                 'Save DE results (selected down-regulated) to variable named:'}; 
             vars = {'Tup','Tdn'}; values = {Tup,Tdn};
             [~,tf]=export2wsdlg(labels,vars,values);
+
+            if ~isempty(filesaved)
+                writetable(Tup,filesaved,"FileType","spreadsheet",'Sheet','Up-regulated');
+                writetable(Tdn,filesaved,"FileType","spreadsheet",'Sheet','Down-regulated');            
+                %writetable(Tup,fullfile(tempdir,sprintf('%s_up.xlsx',outfile)),'FileType','spreadsheet',);
+                %writetable(Tdn,fullfile(tempdir,sprintf('%s_up.xlsx',outfile)),'FileType','spreadsheet');
+            end
+
             if tf==1
                 disp('To run enrichment analysis, type:')
                 disp('run.Enrichr(Tup.gene(1:200))')
                 disp('run.Enrichr(Tdn.gene(1:200))')
             end
         end
+        return;
     
     
         answer = questdlg('Run enrichment analysis with top 200 up-regulated DE genes?');
