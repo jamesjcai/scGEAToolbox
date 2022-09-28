@@ -1,5 +1,6 @@
-function [i1,i2]=i_select2grps(sce)
+function [i1,i2,cL1,cL2]=i_select2grps(sce)
 i1=0; i2=0;
+cL1=[]; cL2=[];
 % internal function called by callback_DEGene2Groups
 % listitems={'Cluster ID','Batch ID',...
 %            'Cell Type','Cell Cycle Phase'};
@@ -50,6 +51,8 @@ if tfx==1
     end
     i1=ismember(ci,indxx(1));
     i2=ismember(ci,indxx(2));
+    cL1=cLi(indxx(1));
+    cL2=cLi(indxx(2));
 else
     return;
 end

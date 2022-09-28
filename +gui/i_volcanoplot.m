@@ -1,10 +1,10 @@
 function i_volcanoplot(T,isok)
 
 if nargin<2
-    isok=(abs(T.pct_2-T.pct_1)>0.05 | abs(T.avg_logFC)>1.0)&T.p_val_adj<0.01;
+    isok=(abs(T.pct_2-T.pct_1)>0.05 | abs(T.avg_log2FC)>1.0)&T.p_val_adj<0.01;
 end
 
-x=T.avg_logFC;
+x=T.avg_log2FC;
 y=-log10(T.p_val_adj);
 y(y>100)=100;
 %isok=T.pct_1>0.01|T.pct_2>0.01;
@@ -18,8 +18,11 @@ isx=sign(x);
 x(ix)=capv;
 x=isx.*abs(x);
 
-scatter(x,y,[],isok);
-colormap lines(2)
+idx1=1*(x>1&y>2);
+idx2=2*(x<-1&y>2);
+
+scatter(x,y,[],idx1+idx2);
+colormap(gca,lines(3));
 % hold on
 % scatter(x(~isok),y(~isok),'bo')
 % 

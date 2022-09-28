@@ -89,7 +89,7 @@ function callback_Brush4MarkersLASSO(src,~,sce)
             F{kk}=gui.i_cascadefig(sce,markerlist(end-(kk-1)), ...
                 ax,bx,kk,methodid);            
         end
-        gui.i_export2pptx(F,markerlist);
+        gui.i_export2pptx(F,flipud(markerlist(:)));
     end
         fprintf('%d marker genes: ',length(markerlist));
         fprintf('%s ',markerlist)

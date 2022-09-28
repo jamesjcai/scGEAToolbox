@@ -2,7 +2,7 @@ function callback_DEGene2Groups(src,~)
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);    
 
-    [i1,i2]=gui.i_select2grps(sce);
+    [i1,i2,cL1,cL2]=gui.i_select2grps(sce);
     if length(i1)==1 || length(i2)==1, return; end
 
     answer = questdlg('Which method?',...
@@ -32,17 +32,22 @@ function callback_DEGene2Groups(src,~)
     try
         switch methodtag
             case 'ranksum'
-                fw=gui.gui_waitbar;
-                T=sc_deg(sce.X(:,i1),sce.X(:,i2),sce.g);
+                %fw=gui.gui_waitbar;
+                T=sc_deg(sce.X(:,i1),sce.X(:,i2), ...
+                    sce.g,1,true);
             case 'deseq2'
                 fw=gui.gui_waitbar;
                 T=run.DESeq2(sce.X(:,i1),sce.X(:,i2),sce.g);
+                gui.gui_waitbar(fw);
+
             case 'mast'
                 [ok]=gui.i_confirmscript('DE analysis (MAST)', ...
                     'R_MAST','r');
                 if ~ok, return; end
                 fw=gui.gui_waitbar;
                 T=run.MAST(sce.X(:,i1),sce.X(:,i2),sce.g);
+                    gui.gui_waitbar(fw);
+
         end
 
     catch ME
@@ -50,8 +55,21 @@ function callback_DEGene2Groups(src,~)
         errordlg(ME.message);
         return;
     end
-    gui.gui_waitbar(fw);
 
+
+
+figure;
+gui.i_volcanoplot(T);
+
+% T2=T;
+% T2.avg_log2FC(T.avg_log2FC>10)=10;
+% T2.avg_log2FC(T.avg_log2FC<-10)=-10;
+% T2.p_val_adj(T.p_val_adj<1e-50)=1e-50;
+% idx=(T2.avg_log2FC>1 | T2.avg_log2FC<-1) & -log10(T2.p_val_adj)>2;
+% scatter(T2.avg_log2FC,-log10(T2.p_val_adj),10,idx+1);
+% xline(0); xline(-1); xline(1);
+% yline(2);
+% colormap(gca,lines(2));
 
     % mavolcanoplot(sce.X(:,i1),sce.X(:,i2),T.p_val_adj,'Labels',T.gene)
 
@@ -63,6 +81,22 @@ function callback_DEGene2Groups(src,~)
     catch ME
         warning(ME.message);
     end
+
+
+    T.Properties.VariableNames{5}=sprintf('%s_%s', ...
+        T.Properties.VariableNames{5}, ...
+        matlab.lang.makeValidName(string(cL1)));
+    T.Properties.VariableNames{6}=sprintf('%s_%s', ...
+        T.Properties.VariableNames{6}, ...
+        matlab.lang.makeValidName(string(cL2)));
+
+    T.Properties.VariableNames{7}=sprintf('%s_%s', ...
+        T.Properties.VariableNames{7}, ...
+        matlab.lang.makeValidName(string(cL1)));
+    T.Properties.VariableNames{8}=sprintf('%s_%s', ...
+        T.Properties.VariableNames{8}, ...
+        matlab.lang.makeValidName(string(cL2)));
+    
     gui.i_exporttable(T,true);
 
     if ~(ismcc || isdeployed)  
