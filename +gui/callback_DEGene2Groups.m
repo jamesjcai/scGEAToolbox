@@ -1,4 +1,7 @@
 function callback_DEGene2Groups(src,~)
+    
+    isatac=true;
+
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);    
 
@@ -46,8 +49,7 @@ function callback_DEGene2Groups(src,~)
                 if ~ok, return; end
                 fw=gui.gui_waitbar;
                 T=run.MAST(sce.X(:,i1),sce.X(:,i2),sce.g);
-                    gui.gui_waitbar(fw);
-
+                gui.gui_waitbar(fw);
         end
 
     catch ME
@@ -101,23 +103,31 @@ function callback_DEGene2Groups(src,~)
     
     outfile=sprintf('%s_vs_%s', ...
         matlab.lang.makeValidName(string(cL1)),matlab.lang.makeValidName(string(cL2)));
+    
+    if isatac, T.gene="chr"+T.gene; end
     [~,filesaved]=gui.i_exporttable(T,true,'T',outfile);
 
     if ~(ismcc || isdeployed)  
         answer = questdlg('Save up- and down-regulated genes for enrichment analysis?');
         %answer='Yes';
         if strcmp(answer,'Yes')
-            [Tup,Tdn]=pkg.e_processDETable(T);
+            [Tup,Tdn]=pkg.e_processDETable(T,true);
             labels = {'Save DE results (selected up-regulated) to variable named:',...
                 'Save DE results (selected down-regulated) to variable named:'}; 
             vars = {'Tup','Tdn'}; values = {Tup,Tdn};
             [~,tf]=export2wsdlg(labels,vars,values);
 
-            if ~isempty(filesaved)
-                writetable(Tup,filesaved,"FileType","spreadsheet",'Sheet','Up-regulated');
-                writetable(Tdn,filesaved,"FileType","spreadsheet",'Sheet','Down-regulated');            
-                %writetable(Tup,fullfile(tempdir,sprintf('%s_up.xlsx',outfile)),'FileType','spreadsheet',);
-                %writetable(Tdn,fullfile(tempdir,sprintf('%s_up.xlsx',outfile)),'FileType','spreadsheet');
+            if ~isempty(filesaved) 
+                if strcmp(extractAfter(filesaved,strlength(filesaved)-4),'xlsx')
+%                     if isatac
+%                         Tup.gene="chr"+Tup.gene;
+%                         Tdn.gene="chr"+Tdn.gene;
+%                     end
+                    writetable(Tup,filesaved,"FileType","spreadsheet",'Sheet','Up-regulated');
+                    writetable(Tdn,filesaved,"FileType","spreadsheet",'Sheet','Down-regulated');            
+                    %writetable(Tup,fullfile(tempdir,sprintf('%s_up.xlsx',outfile)),'FileType','spreadsheet',);
+                    %writetable(Tdn,fullfile(tempdir,sprintf('%s_up.xlsx',outfile)),'FileType','spreadsheet');
+                end
             end
 
             if tf==1

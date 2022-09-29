@@ -34,7 +34,7 @@ if numel(unique(thisc))==1
 end
 
 [ci,cLi]=grp2idx(thisc);
-listitems=string(cLi);
+listitems=sort(string(cLi));
 n=length(listitems);
 if n<2
     errordlg('Need at least two groups.');
@@ -49,10 +49,18 @@ if tfx==1
         errordlg('Please select 2 groups');
         return;
     end
-    i1=ismember(ci,indxx(1));
-    i2=ismember(ci,indxx(2));
-    cL1=cLi(indxx(1));
-    cL2=cLi(indxx(2));
+    [y1,idx1]=ismember(listitems(indxx(1)),cLi);
+    [y2,idx2]=ismember(listitems(indxx(2)),cLi);
+    assert(y1&y2);
+    i1=ci==idx1;
+    i2=ci==idx2;
+    cL1=cLi(idx1);
+    cL2=cLi(idx2);
+
+    %i1=ismember(ci,indxx(1));
+    %i2=ismember(ci,indxx(2));
+    %cL1=cLi(indxx(1));
+    %cL2=cLi(indxx(2));
 else
     return;
 end
