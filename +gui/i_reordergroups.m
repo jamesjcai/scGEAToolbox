@@ -2,7 +2,8 @@ function [c,cL,noanswer]=i_reordergroups(thisc)
 noanswer=true;
 [c,cL]=grp2idx(thisc);
 if numel(cL)==1
-    errordlg('Only one cell type or cluster.');
+    %errordlg('Only one cell type or cluster.');
+    noanswer=false;
     return;
 end
 

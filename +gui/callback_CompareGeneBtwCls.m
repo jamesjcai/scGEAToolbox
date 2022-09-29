@@ -8,6 +8,15 @@ function callback_CompareGeneBtwCls(src,~)
     [thisc]=gui.i_select1class(sce);
     if isempty(thisc), return; end
 
+    if length(unique(thisc))==1
+        answer=questdlg("All cells are in the same group. Continue?","");
+        switch answer
+            case 'Yes'
+            otherwise
+                return;
+        end
+    end
+
 
     
     
@@ -31,6 +40,7 @@ if tf1~=1, return; end
             end
             [Xt]=gui.i_transformx(sce.X);
             % [cL]=i_getgrouporder(thisc);
+            
             [~,cL,noanswer]=gui.i_reordergroups(thisc);
             if noanswer, return; end
             

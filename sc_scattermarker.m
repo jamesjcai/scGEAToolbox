@@ -109,7 +109,7 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
                     % hLD = linkdata('on'); 
                     set(h2,'XTickLabel',[]);
                     set(h2,'YTickLabel',[]);
-                    set(h2,'ZTickLabel',[]);
+                    %set(h2,'ZTickLabel',[]);
                     grid on
                     
                     evalin('base', 'h=findobj(gcf,''type'',''axes'');');
