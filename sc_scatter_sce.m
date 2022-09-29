@@ -1263,7 +1263,10 @@ end
         else
             sce=guidata(FigureHandle);
             [thisc,~]=gui.i_select1class(sce);
-            if isempty(thisc), return; end
+            if isempty(thisc)
+                set(src, 'State', 'off');
+                return; 
+            end
             [c,cL] = grp2idx(thisc);
             sce.c = c;
             RefreshAll(src, 1, true, false);                
@@ -1314,7 +1317,9 @@ end
             end
             dtp = findobj(h, 'Type', 'datatip');
             delete(dtp);
-            stxtyes=strrep(stxtyes,"_","\_");
+            if isstring(stxtyes)
+                stxtyes=strrep(stxtyes,"_","\_");
+            end
             row = dataTipTextRow('', stxtyes);
             h.DataTipTemplate.DataTipRows = row;
             % h.DataTipTemplate.FontSize = 5;
