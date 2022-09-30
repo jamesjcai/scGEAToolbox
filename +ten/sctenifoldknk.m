@@ -63,7 +63,7 @@ import ten.*
     [XM]=i_nc(X,nsubsmpl,3,csubsmpl,usebootstrp);
     [A0]=i_td1(XM,tdmethod);
     if savegrn
-        tstr=matlab.lang.makeValidName(datestr(datetime));
+        tstr=matlab.lang.makeValidName(string(datetime));
         save(sprintf('A0_%s',tstr),'A0','genelist','-v7.3');        
     end
 %     A1=A0;

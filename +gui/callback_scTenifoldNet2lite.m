@@ -28,12 +28,12 @@ function callback_scTenifoldNet2lite(src,~)
     T=i_dr(aln0,aln1,glist);
     gui.gui_waitbar(fw);
 
-    tstr=matlab.lang.makeValidName(datestr(datetime));
+    tstr=matlab.lang.makeValidName(string(datetime));
     save(sprintf('T_DRgenes_%s',tstr),'T');
     fprintf('The result has been saved in T_DRgenes_%s.mat\n',tstr);    
     
     figure;
-    e_mkqqplot(T);
+    ten.e_mkqqplot(T);
     % answer223=questdlg('Run GSEA analysis?');
     answer223=gui.questdlg_timer(15,'Run GSEA analysis?');
     if ~isempty(answer223) && strcmp(answer223,'Yes')

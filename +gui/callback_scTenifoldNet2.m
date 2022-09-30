@@ -93,7 +93,7 @@ answer=questdlg('Construct networks de novo or use existing networks in Workspac
     end
         
 
-    tstr=matlab.lang.makeValidName(datestr(datetime));
+    tstr=matlab.lang.makeValidName(string(datetime));
     save(sprintf('T_DRgenes_%s',tstr),'T');
     fprintf('The result has been saved in T_DRgenes_%s.mat\n',tstr);    
     
