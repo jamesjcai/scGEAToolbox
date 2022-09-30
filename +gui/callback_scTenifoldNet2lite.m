@@ -9,15 +9,14 @@ function callback_scTenifoldNet2lite(src,~)
     if length(i1)==1 || length(i2)==1, return; end
 
     fw = gui.gui_waitbar;
-    disp('Constructing networks...')
-    
+    disp('Constructing networks (1/2) ...')    
     X=sc_norm(sce.X);
     X=log(X+1);
     X0=X(:,i1);
-    X1=X(:,i2);
+    X1=X(:,i2);    
     A0=sc_pcnetpar(X0);
-    A1=sc_pcnetpar(X1);
-
+    disp('Constructing networks (2/2) ...')
+    A1=sc_pcnetpar(X1);    
     A0sym=0.5*(A0+A0');
     A1sym=0.5*(A1+A1');
     
@@ -29,9 +28,11 @@ function callback_scTenifoldNet2lite(src,~)
     gui.gui_waitbar(fw);
 
     tstr=matlab.lang.makeValidName(string(datetime));
-    save(sprintf('T_DRgenes_%s',tstr),'T');
-    fprintf('The result has been saved in T_DRgenes_%s.mat\n',tstr);    
-    
+    save(sprintf('output_%s',tstr),'T');
+    writetable(T,sprintf('output_%s.xlsx',tstr),'FileType','spreadsheet');
+    fprintf('The result has been saved in output_%s.xlsx\n',tstr);
+
+    %{
     figure;
     ten.e_mkqqplot(T);
     % answer223=questdlg('Run GSEA analysis?');
@@ -56,4 +57,6 @@ function callback_scTenifoldNet2lite(src,~)
     if gseaok
         gui.i_exporttable(Tr,true,'T_GSEAres');
     end
+    %}
+
 end

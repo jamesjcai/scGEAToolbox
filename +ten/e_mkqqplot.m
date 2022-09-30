@@ -1,11 +1,19 @@
 function e_mkqqplot(T)
 
 pd = makedist('Gamma','a',0.5,'b',2);
-qqplot(T.FC,pd);
-[~,i]=sort(T.FC);
+h=qqplot(T.FC,pd);
+[~,idx]=sort(T.FC);
 dt = datacursormode;
-dt.UpdateFcn = {@i_myupdatefcn1,T.genelist(i)};
-    
+dt.UpdateFcn = {@i_myupdatefcn1,T.genelist(idx)};
+
+
+% h1=h(1);
+% h1.DataTipTemplate.DataTipRows = T.genelist(idx);
+% for k=1:5
+%     datatip(h1, 'DataIndex', idx(k));    
+% end
+
+
 end
 
 function txt = i_myupdatefcn1(~,event_obj,g)
