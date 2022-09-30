@@ -5,6 +5,9 @@ function callback_SelectCellsByClass(src,~)
     if isempty(thisc), return; end
     [ci,cLi]=grp2idx(thisc);
 
+%     [cLi,idx]=sort(cLi);
+%     ci=idx(ci);
+
     [indxx,tfx] = listdlg('PromptString',{'Select groups'},...
         'SelectionMode','multiple','ListString',string(cLi));
     if tfx==1
