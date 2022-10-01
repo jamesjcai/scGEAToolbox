@@ -42,7 +42,7 @@ hFig=figure('Visible','off');
 h=imagesc(Y);
 % hFig.Colormap = repmat(linspace(0, 1, 25).', 1, 3);
 set(gca,'XTick',a-b);
-set(gca,'XTickLabel',cL);
+set(gca,'XTickLabel',strrep(cL,'_','\_'));
 %set(gca,'XTickLabelRotation',0);
 set(gca,'YTick',1:length(glist));
 set(gca,'YTickLabel',glist);
@@ -78,7 +78,7 @@ end
 [Z]=gui.i_norm4heatmap(Z);
 
         figure;
-        h2=heatmap(cL,MX,Z);
+        h2=heatmap(strrep(cL,'_','\_'),MX,Z);
         h2.Title = 'Marker Gene Heatmap';
         h2.XLabel = 'Group';
         h2.YLabel = 'Marker Gene';
@@ -93,7 +93,7 @@ end
         if fliped
             h=imagesc(Y');
             set(gca,'YTick',a-b);
-            set(gca,'YTickLabel',cL);
+            set(gca,'YTickLabel',strrep(cL,'_','\_'));
             %set(gca,'YTickLabelRotation',90);
             set(gca,'XTick',1:length(glist));
             set(gca,'XTickLabel',glist);
@@ -102,7 +102,7 @@ end
         else
             h=imagesc(Y);
             set(gca,'XTick',a-b);
-            set(gca,'XTickLabel',cL);
+            set(gca,'XTickLabel',strrep(cL,'_','\_'));
             %set(gca,'XTickLabelRotation',0);
             set(gca,'YTick',1:length(glist));
             set(gca,'YTickLabel',glist);
@@ -129,7 +129,7 @@ end
 
     function i_summarymap(~,~)
         f=figure;
-        h=heatmap(cL,MX,Z);
+        h=heatmap(strrep(cL,'_','\_'),MX,Z);
         h.Title = 'Marker Gene Heatmap';
         h.XLabel = 'Group';
         h.YLabel = 'Marker Gene';
@@ -146,7 +146,7 @@ end
 
     function i_summarymapT(~,~)
         f=figure;
-        h=heatmap(MX,cL,Z.');
+        h=heatmap(MX,strrep(cL,'_','\_'),Z.');
         h.Title = 'Marker Gene Heatmap';
         h.YLabel = 'Group';
         h.XLabel = 'Marker Gene';

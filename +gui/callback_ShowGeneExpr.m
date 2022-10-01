@@ -23,6 +23,8 @@ switch answer
             'SelectionMode','single','ListString',gsorted);
         if tf==1
             [methodid]=gui.i_pickscatterstem('Scatter+Stem');
+            % methodid=2;      case 'Scatter'
+            % 'Stem'           methodid=1;
             if isempty(methodid), return; end
             for k=1:length(indx)
                 gui.i_cascadefig(sce,gsorted(indx(k)),axx,bxx,k,methodid);

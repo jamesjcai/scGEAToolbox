@@ -61,7 +61,7 @@ function callback_scPCNet1(src,events)
         disp(ME.message);
     end
 
-    % tstr=matlab.lang.makeValidName(datestr(datetime));
+    % tstr=matlab.lang.makeValidName(string(datetime));
     % save(sprintf('A_%s',tstr),'A','g','-v7.3');
 
     if ~(ismcc || isdeployed)

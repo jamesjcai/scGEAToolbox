@@ -7,6 +7,9 @@ if ~(ismcc || isdeployed)
     addpath(pth);
 end
 
+if issparse(X), X=full(X); end
+if issparse(Y), Y=full(Y); end
+
 avg_1 = mean(X,2);
 avg_2 = mean(Y,2);
 pct_1 = sum(X>0,2)./size(X,2);

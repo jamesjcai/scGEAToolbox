@@ -151,7 +151,10 @@ classdef SingleCellExperiment
     end
 
     function r = title(obj)
-       r=sprintf('%d x %d\n[genes x cells]',...
+%        r=sprintf('%d x %d\n[genes x cells]',...
+%            size(obj.X,1),size(obj.X,2));
+
+        r=sprintf('%d x %d',...
            size(obj.X,1),size(obj.X,2));
     end
     

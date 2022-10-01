@@ -66,7 +66,7 @@ import ten.*
     [A]=ten.i_td1(XM,tdmethod);
     %toc
     if savegrn
-        tstr=matlab.lang.makeValidName(datestr(datetime));
+        tstr=matlab.lang.makeValidName(string(datetime));
         save(sprintf('A_%s',tstr),'A','-v7.3');
     end    
 end

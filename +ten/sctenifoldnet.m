@@ -85,7 +85,7 @@ end
     if savegrn
         tic
         disp('Saving scGRN network 1/2')
-        tstr=matlab.lang.makeValidName(datestr(datetime));
+        tstr=matlab.lang.makeValidName(string(datetime));
         save(sprintf('A0_%s',tstr),'A0','genelist','-v7.3');
         toc
     end

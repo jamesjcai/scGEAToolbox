@@ -8,6 +8,15 @@ function callback_CompareGeneBtwCls(src,~)
     [thisc]=gui.i_select1class(sce);
     if isempty(thisc), return; end
 
+    if length(unique(thisc))==1
+        answer=questdlg("All cells are in the same group. Continue?","");
+        switch answer
+            case 'Yes'
+            otherwise
+                return;
+        end
+    end
+
 
     
     
@@ -31,6 +40,7 @@ if tf1~=1, return; end
             end
             [Xt]=gui.i_transformx(sce.X);
             % [cL]=i_getgrouporder(thisc);
+            
             [~,cL,noanswer]=gui.i_reordergroups(thisc);
             if noanswer, return; end
             
@@ -43,6 +53,9 @@ if tf1~=1, return; end
                 otherwise
                     return;
             end
+    cL=strrep(cL,'_','\_');
+    thisc=strrep(thisc,'_','\_');
+
 
             gui.i_cascadeviolin(sce,Xt,thisc,glist, ...
                 selitems{indx1},cL,colorit);
@@ -106,6 +119,8 @@ if tf1~=1, return; end
         "powerpoint.gif",'Save Figure to PowerPoint File...');
     pkg.i_addbutton2fig(tb,'off',@i_invertcolor, ...
         "xpowerpoint.gif",'Switch BW/Color');
+    cL=strrep(cL,'_','\_');
+    thisc=strrep(thisc,'_','\_');
     pkg.i_violinplot(y,thisc,colorit,cL);
     title(strrep(ttxt,'_','\_'));
     ylabel(selitems{indx1});

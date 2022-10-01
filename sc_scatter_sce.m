@@ -84,6 +84,8 @@ hAx = axes('Parent', FigureHandle);
 
 [h] = gui.i_gscatter3(sce.s, c, methodid,1,hAx);
 title(hAx,sce.title);
+subtitle('[genes x cells]');
+
 kc = numel(unique(c));
 colormap(pkg.i_mycolorlines(kc));
 
@@ -129,7 +131,9 @@ i_addbutton(1,0,@Switch2D3D,"plotpicker-image.gif","Switch 2D/3D");
 i_addbutton(1,1,@callback_CloseAllOthers,"noun_Pruners_2469297.gif","Close all other figures");
 i_addbutton(1,0,@callback_PickPlotMarker,"plotpicker-rose.gif","Switch scatter plot marker type");
 i_addbutton(1,0,@callback_PickColorMap,"plotpicker-compass.gif","Pick new color map");
-i_addbutton(1,0,@callback_formatfig,"xpowerpoint.gif",'Formating Figure...');
+if ~(ismcc || isdeployed)
+    i_addbutton(1,0,@callback_formatfig,"xpowerpoint.gif",'Formating Figure...');
+end
 i_addbutton(1,0,@RefreshAll,"plotpicker-geobubble2.gif","Refresh");
 i_addbutton(2,0,@call_scgeatool,"IMG00107.GIF"," ");
 i_addbutton(2,0,@callback_CalculateCellScores,"cellscore2.gif","Calculate cell scores from list of feature genes")
@@ -154,7 +158,8 @@ m_net = uimenu(FigureHandle,'Text','&Network','Accelerator','N');
 i_addmenu(m_net,0,@callback_scPCNet1,'GRN Construction - PC Regression 🐢...');
 i_addmenu(m_net,0,@callback_scTenifoldNet1,'GRN Construction - scTenifoldNet 🐢🐢 ...');
 i_addmenu(m_net,1,@callback_scTenifoldNet2,'GRN Comparison - scTenifoldNet 🐢🐢🐢 ...');
-i_addmenu(m_net,0,@callback_scTenifoldKnk1,'Virtual Gene KO - scTenifoldKnk 🐢🐢 ...');
+i_addmenu(m_net,0,@callback_scTenifoldNet2lite,'GRN Comparison - scTenifoldNet Lite 🐢🐢 ...');
+i_addmenu(m_net,1,@callback_scTenifoldKnk1,'Virtual Gene KO - scTenifoldKnk 🐢🐢 ...');
 i_addmenu(m_net,0,@callback_scTenifoldXct,'Cell-Cell Interactions - scTenifoldXct (Python) 🐢🐢🐢 ...');
 
 m_ext = uimenu(FigureHandle,'Text','E&xternal','Accelerator','x');
@@ -288,7 +293,7 @@ end
 % Callback Functions
 % ------------------------
     function callback_formatfig(~,~)
-        title('')
+        title(''); subtitle('');
         a1=xlim; b1=ylim; c1=zlim;
         hold on
         if size(sce.s, 2) > 2 && ~isempty(h.ZData)
@@ -655,6 +660,7 @@ end
             colormap(pkg.i_mycolorlines(kc));
         end
         title(sce.title);
+        subtitle('[genes x cells]');
         % ptlabelclusters.State = 'off';
         % UitoolbarHandle.Visible='off';
         % UitoolbarHandle.Visible='on';
@@ -692,6 +698,8 @@ end
             sce.s=sx;
         end
         title(sce.title);
+        subtitle('[genes x cells]');
+
         h.Marker = para.oldMarker;
         h.SizeData = para.oldSizeData;
         colormap(para.oldColorMap);
@@ -887,6 +895,7 @@ end
         [ax, bx] = view();
         [h] = gui.i_gscatter3(sce.s, c, methodid, hAx);
         title(sce.title);
+        subtitle('[genes x cells]');
         view(ax, bx);
         i_labelclusters(true);
         sce.c_cluster_id = c;
@@ -923,6 +932,7 @@ end
         [ax, bx] = view();
         [h] = gui.i_gscatter3(sce.s, c, methodid, hAx);
         title(sce.title);
+        subtitle('[genes x cells]');
         view(ax, bx);
         i_labelclusters(true);
         sce.c_cluster_id = c;
@@ -1253,7 +1263,10 @@ end
         else
             sce=guidata(FigureHandle);
             [thisc,~]=gui.i_select1class(sce);
-            if isempty(thisc), return; end
+            if isempty(thisc)
+                set(src, 'State', 'off');
+                return; 
+            end
             [c,cL] = grp2idx(thisc);
             sce.c = c;
             RefreshAll(src, 1, true, false);                
@@ -1290,20 +1303,24 @@ end
                 if isequal(cL,cLx)
                     stxtyes = c;
                 else
-                answer = questdlg(sprintf('Label %d groups with index or text?', numel(cL)), ...
-                    'Select Format', 'Index', 'Text', 'Cancel', 'Text');
-                switch answer
-                    case 'Text'
-                        stxtyes = cL(c);
-                    case 'Index'
-                        stxtyes = c;
-                    otherwise
-                        return;
-                end
+                    answer = questdlg(sprintf('Label %d groups with index or text?', ...
+                        numel(cL)), 'Select Format', 'Index', ...
+                        'Text', 'Cancel', 'Text');
+                    switch answer
+                        case 'Text'
+                            stxtyes = cL(c);
+                        case 'Index'
+                            stxtyes = c;
+                        otherwise
+                            return;
+                    end                
                 end
             end
             dtp = findobj(h, 'Type', 'datatip');
             delete(dtp);
+            if isstring(stxtyes)
+                stxtyes=strrep(stxtyes,"_","\_");
+            end
             row = dataTipTextRow('', stxtyes);
             h.DataTipTemplate.DataTipRows = row;
             % h.DataTipTemplate.FontSize = 5;

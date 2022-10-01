@@ -1,8 +1,11 @@
 function callback_DEGene2Groups(src,~)
+    
+    isatac=true;
+
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);    
 
-    [i1,i2]=gui.i_select2grps(sce);
+    [i1,i2,cL1,cL2]=gui.i_select2grps(sce);
     if length(i1)==1 || length(i2)==1, return; end
 
     answer = questdlg('Which method?',...
@@ -32,17 +35,21 @@ function callback_DEGene2Groups(src,~)
     try
         switch methodtag
             case 'ranksum'
-                fw=gui.gui_waitbar;
-                T=sc_deg(sce.X(:,i1),sce.X(:,i2),sce.g);
+                %fw=gui.gui_waitbar;
+                T=sc_deg(sce.X(:,i1),sce.X(:,i2), ...
+                    sce.g,1,true);
             case 'deseq2'
                 fw=gui.gui_waitbar;
                 T=run.DESeq2(sce.X(:,i1),sce.X(:,i2),sce.g);
+                gui.gui_waitbar(fw);
+
             case 'mast'
                 [ok]=gui.i_confirmscript('DE analysis (MAST)', ...
                     'R_MAST','r');
                 if ~ok, return; end
                 fw=gui.gui_waitbar;
                 T=run.MAST(sce.X(:,i1),sce.X(:,i2),sce.g);
+                gui.gui_waitbar(fw);
         end
 
     catch ME
@@ -50,8 +57,23 @@ function callback_DEGene2Groups(src,~)
         errordlg(ME.message);
         return;
     end
-    gui.gui_waitbar(fw);
 
+
+% figure;
+% gui.i_volcanoplot(T);
+% title(sprintf('%s vs. %s', ...
+%     matlab.lang.makeValidName(string(cL1)),matlab.lang.makeValidName(string(cL2))));
+
+
+% T2=T;
+% T2.avg_log2FC(T.avg_log2FC>10)=10;
+% T2.avg_log2FC(T.avg_log2FC<-10)=-10;
+% T2.p_val_adj(T.p_val_adj<1e-50)=1e-50;
+% idx=(T2.avg_log2FC>1 | T2.avg_log2FC<-1) & -log10(T2.p_val_adj)>2;
+% scatter(T2.avg_log2FC,-log10(T2.p_val_adj),10,idx+1);
+% xline(0); xline(-1); xline(1);
+% yline(2);
+% colormap(gca,lines(2));
 
     % mavolcanoplot(sce.X(:,i1),sce.X(:,i2),T.p_val_adj,'Labels',T.gene)
 
@@ -63,22 +85,58 @@ function callback_DEGene2Groups(src,~)
     catch ME
         warning(ME.message);
     end
-    gui.i_exporttable(T,true);
+
+
+    T.Properties.VariableNames{5}=sprintf('%s_%s', ...
+        T.Properties.VariableNames{5}, ...
+        matlab.lang.makeValidName(string(cL1)));
+    T.Properties.VariableNames{6}=sprintf('%s_%s', ...
+        T.Properties.VariableNames{6}, ...
+        matlab.lang.makeValidName(string(cL2)));
+
+    T.Properties.VariableNames{7}=sprintf('%s_%s', ...
+        T.Properties.VariableNames{7}, ...
+        matlab.lang.makeValidName(string(cL1)));
+    T.Properties.VariableNames{8}=sprintf('%s_%s', ...
+        T.Properties.VariableNames{8}, ...
+        matlab.lang.makeValidName(string(cL2)));
+    
+    outfile=sprintf('%s_vs_%s', ...
+        matlab.lang.makeValidName(string(cL1)),matlab.lang.makeValidName(string(cL2)));
+    
+    if isatac, T.gene="chr"+T.gene; end
+    [~,filesaved]=gui.i_exporttable(T,true,'T',outfile);
 
     if ~(ismcc || isdeployed)  
         answer = questdlg('Save up- and down-regulated genes for enrichment analysis?');
+        %answer='Yes';
         if strcmp(answer,'Yes')
-            [Tup,Tdn]=pkg.e_processDETable(T);
+            [Tup,Tdn]=pkg.e_processDETable(T,true);
             labels = {'Save DE results (selected up-regulated) to variable named:',...
                 'Save DE results (selected down-regulated) to variable named:'}; 
             vars = {'Tup','Tdn'}; values = {Tup,Tdn};
             [~,tf]=export2wsdlg(labels,vars,values);
+
+            if ~isempty(filesaved) 
+                if strcmp(extractAfter(filesaved,strlength(filesaved)-4),'xlsx')
+%                     if isatac
+%                         Tup.gene="chr"+Tup.gene;
+%                         Tdn.gene="chr"+Tdn.gene;
+%                     end
+                    writetable(Tup,filesaved,"FileType","spreadsheet",'Sheet','Up-regulated');
+                    writetable(Tdn,filesaved,"FileType","spreadsheet",'Sheet','Down-regulated');            
+                    %writetable(Tup,fullfile(tempdir,sprintf('%s_up.xlsx',outfile)),'FileType','spreadsheet',);
+                    %writetable(Tdn,fullfile(tempdir,sprintf('%s_up.xlsx',outfile)),'FileType','spreadsheet');
+                end
+            end
+
             if tf==1
                 disp('To run enrichment analysis, type:')
                 disp('run.Enrichr(Tup.gene(1:200))')
                 disp('run.Enrichr(Tdn.gene(1:200))')
             end
         end
+        return;
     
     
         answer = questdlg('Run enrichment analysis with top 200 up-regulated DE genes?');

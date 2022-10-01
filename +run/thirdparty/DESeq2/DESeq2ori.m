@@ -12,7 +12,7 @@ disp('Normalization ...')
 %[M1,N1] = size(matrix1);
 geom1 = geomean(matrix1);
 geom1(geom1==0)=1;
-norm1 = mean(bsxfun(@rdivide,matrix1,geom1),2)
+norm1 = mean(bsxfun(@rdivide,matrix1,geom1),2);
 matrixN1 = bsxfun(@rdivide,matrix1',norm1')';
 
 %[M2,N2] = size(matrix2);

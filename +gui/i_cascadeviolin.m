@@ -10,9 +10,15 @@ for k=1:length(glist)
     ttxt=sce.g(idx);
     
     f = figure('visible','off');
+    subplot(1,2,1)
     pkg.i_violinplot(y,thisc,colorit,grouporder);
+
     title(strrep(ttxt,'_','\_'));
     ylabel(ytxt);
+    subplot(1,2,2)
+    sc_scattermarker(sce.X,sce.g,...
+                     sce.s,glist(k),2);
+    
 
     tb=uitoolbar(f);
     pkg.i_addbutton2fig(tb,'off',{@i_savedata,y,thisc}, ...
@@ -23,7 +29,8 @@ for k=1:length(glist)
         "xpowerpoint.gif",'Switch BW/Color');
     P = get(f,'Position');
     set(f,'Position',[P(1)-20*k P(2)-20*k P(3) P(4)]);
-    set(f,'visible','on');                
+    set(f,'visible','on');  
+    f.Position(3) = f.Position(3) * 2.2;
     drawnow;
     F{k}=f;
 end

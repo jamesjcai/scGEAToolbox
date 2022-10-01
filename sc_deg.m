@@ -1,4 +1,4 @@
-function [T,Tup,Tdn] = sc_deg(X, Y, genelist, methodid)
+function [T,Tup,Tdn] = sc_deg(X, Y, genelist, methodid, guiwaitbar)
 %DEG analysis using Mann–Whitney U test
     % https://satijalab.org/seurat/v3.1/de_vignette.html
     % p_val : p_val (unadjusted)
@@ -13,6 +13,7 @@ function [T,Tup,Tdn] = sc_deg(X, Y, genelist, methodid)
     if nargin < 2, error("USAGE: sc_deg(X,Y)\n"); end
     if nargin < 3, genelist = string(1:size(X,1))'; end
     if nargin < 4, methodid = 1; end
+    if nargin < 5, guiwaitbar=false; end
 
     ng = size(X, 1);
     assert(isequal(ng, size(Y, 1)));
@@ -30,7 +31,13 @@ function [T,Tup,Tdn] = sc_deg(X, Y, genelist, methodid)
     X=log(1+sc_norm(X));
     Y=log(1+sc_norm(Y));
     
+if guiwaitbar
+    fw=gui.gui_waitbar_adv;    
+end
     for k = 1:ng
+        if guiwaitbar
+            gui.gui_waitbar_adv(fw,k/ng);
+        end
         x = X(k, :);
         y = Y(k, :);
         switch methodid
@@ -51,11 +58,14 @@ function [T,Tup,Tdn] = sc_deg(X, Y, genelist, methodid)
         pct_2(k) = sum(y > 0) ./ ny;
     end
 
+
     if exist('mafdr.m', 'file')
         p_val_adj = mafdr(p_val, 'BHFDR', true);
     else
         [~, ~, ~, p_val_adj] = pkg.fdr_bh(p_val);
     end
+
+    if guiwaitbar, gui.gui_waitbar_adv(fw); end
     % sortid=(1:length(genelist))';
     if size(genelist, 2) > 1
         gene = genelist';

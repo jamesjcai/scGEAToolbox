@@ -29,7 +29,7 @@ if nargin<2, nsubsmpl=10; end        % number of subsamples
         end
         A=sc_pcnetpar(Xrep,ncom,true);
 
-%         tstr=matlab.lang.makeValidName(datestr(datetime));
+%         tstr=matlab.lang.makeValidName(string(datetime));
 %         save(sprintf('A_%s',tstr),'A','-v7.3');
         
         XM(:,:,k)=ten.e_filtadjc(A,0.95,false);

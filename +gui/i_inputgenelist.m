@@ -20,9 +20,9 @@ try
     glist=strtrim(glist);
     
     if allowspace
-        spset={',',':',';'};
+        spset={',',';'};
     else
-        spset={' ',',',':',';'};
+        spset={' ',',',';'};
     end
     i=contains(glist,spset);
     if any(i)
