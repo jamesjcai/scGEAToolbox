@@ -1,7 +1,10 @@
-function [numfig]=i_inputnumg
+function [numfig]=i_inputnumg(uplimnum)
+if nargin<1
+    uplimnum=50;
+end
     numfig=[];
-    prompt = {'Enter number of genes (1-50):'};
-    dlgtitle = 'Number of marker genes';
+    prompt = {sprintf('Enter number of markers (1-%d):',uplimnum)};
+    dlgtitle = 'Number of markers';
     % answer = inputdlg(prompt,dlgtitle,[1 50],{'10'});
     
 [answer] = timeoutDlg(@inputdlg,10,...
@@ -19,7 +22,7 @@ end
             return;
         end
     end
-    if ~(numfig>0 && numfig<=50)
+    if ~(numfig>0 && numfig<=uplimnum)
         errordlg('Invalid number of figures');
         return;
     end

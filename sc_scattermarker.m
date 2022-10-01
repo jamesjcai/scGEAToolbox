@@ -77,8 +77,10 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
                 case 5          % ============ 5
                     if size(s, 2) >= 3
                         x = s(:, 1); y = s(:, 2); z = s(:, 3);
+                        is2d=false;
                     else
                         x = s(:, 1); y = s(:, 2); z = zeros(size(x));
+                        is2d=true;
                     end
                    % explorer2IDX = y;
                    % assignin('base', 'explorer2IDX', explorer2IDX);
@@ -92,14 +94,13 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
                     set(h1,'ZTickLabel',[]);
                     grid on
                     % h1.YDataSource='explorer2IDX';
-                    % title(targetg)
+                    title(targetg)
                     
-                    titxt=sprintf('%s\n(%s/%s = %.2f%% nonzero)', ...
-                                  targetg, ...
+                    titxt=sprintf('(%s/%s = %.2f%% nonzero)', ...
                                   num2bankScalar(sum(c > 0)), ...
                                   num2bankScalar(numel(c)), ...
                                   100 * sum(c > 0) ./ numel(c));
-                    title(titxt);
+                    subtitle(titxt);
 
                     h2 = subplot(1, 2, 2);
                     s2=stem3(x, y, c, 'marker', 'none', 'color', 'm');
@@ -110,22 +111,27 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
                     % hLD = linkdata('on'); 
                     set(h2,'XTickLabel',[]);
                     set(h2,'YTickLabel',[]);
-                    set(h2,'ZTickLabel',[]);
+                    %set(h2,'ZTickLabel',[]);
                     grid on
                     
-                    evalin('base', 'h=findobj(gcf,''type'',''axes'');');
-                    evalin('base', 'hlink = linkprop(h,{''CameraPosition'',''CameraUpVector''});');
-                    evalin('base', 'rotate3d on');
+                    if ~is2d
+                        evalin('base', 'h=findobj(gcf,''type'',''axes'');');
+                        evalin('base', 'hlink = linkprop(h,{''CameraPosition'',''CameraUpVector''});');
+                        evalin('base', 'rotate3d on');
+                    end
                     hFig = gcf;
                     hFig.Position(3) = hFig.Position(3) * 2.2;
-                    view(h1, 3);
+                    if ~is2d
+                        view(h1, 3);
+                    else
+                        view(h2, 3);
+                    end
             end
             a=getpref('scgeatoolbox','prefcolormapname','autumn');
             gui.i_setautumncolor(c,a);
             ori_c=c;
-            % title(titxt);
-            title(sprintf('%s\n(%s/%s = %.2f%% nonzero)', ...
-                               targetg, ...
+            title(targetg);
+            subtitle(sprintf('(%s/%s = %.2f%% nonzero)', ...
                                num2bankScalar(sum(c > 0)), ...
                                num2bankScalar(numel(c)), ...
                                100 * sum(c > 0) ./ numel(c)));

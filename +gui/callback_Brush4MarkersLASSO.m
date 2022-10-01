@@ -18,39 +18,22 @@ function callback_Brush4MarkersLASSO(src,~,sce)
     %axesh.Children(1)
     %isequal(axesh.findobj('type','Scatter'),axesh.Children(2))
     h=axesh.findobj('type','Scatter');
-    ptsSelected = logical(h.BrushData.');    
+    ptsSelected = logical(h.BrushData.');
     
+
     if ~any(ptsSelected)
-        warndlg("No cells are selected.");
-        return;
+        %warndlg("No cells are selected.");
+        %return;
+        [ptsSelected]=gui.i_select1classcells(sce,false);
+        if isempty(ptsSelected), return; end
+    else
+        assignin('base','ptsSelected',ptsSelected);
+        [ptsSelected,letdoit]=gui.i_expandbrushed(ptsSelected,sce);
+        if ~letdoit, return; end
     end
-    assignin('base','ptsSelected',ptsSelected);
-    [ptsSelected,letdoit]=gui.i_expandbrushed(ptsSelected,sce);
-    if ~letdoit, return; end
-%     [c,cL]=grp2idx(sce.c);
-%     if isscalar(unique(c))
-%         % methodtag=1;
-%     else
-%         answer = questdlg(sprintf('Select brushed cells'' group?\nYES to select brushed cells'' group\nNO to select brushed cells only'));
-%         switch answer
-%             case 'Yes'
-%                 uptsSelected=unique(c(ptsSelected));
-%                 if isscalar(uptsSelected)
-%                     % methodtag=2;   % whole group
-%                     ptsSelected=c==uptsSelected;
-%                 else
-%                     errordlg('More than one group of brushed cells');
-%                     return;
-%                 end
-%             case 'No'
-%                 % methodtag=1;       % only selected cells 
-%             otherwise
-%                 return;
-%         end
-%     end
 
 
-    [numfig]=gui.i_inputnumg;
+    [numfig]=gui.i_inputnumg(500);
     if isempty(numfig), return; end
     fw=gui.gui_waitbar;
     y=double(ptsSelected);
@@ -73,27 +56,34 @@ function callback_Brush4MarkersLASSO(src,~,sce)
     gui.gui_waitbar(fw);
     
     if ~any(idx)
-        errordlg('No marker gene found')
+        errordlg('No marker found')
         return;
     else
          markerlist=sce.g(idx);
          [~,jx]=sort(b(idx),'descend');
          markerlist=markerlist(jx);
-%        htmlfilename=cL{unique(c(ptsSelected))};
-%        pkg.i_markergeneshtml(sce,markerlist,numfig,...
-%                    [ax bx],htmlfilename,ptsSelected);
-        [methodid]=gui.i_pickscatterstem('Scatter');
-        if isempty(methodid), return; end
-        F=cell(length(markerlist),1);
-        for kk=1:length(markerlist)
-            F{kk}=gui.i_cascadefig(sce,markerlist(end-(kk-1)), ...
-                ax,bx,kk,methodid);            
-        end
-        gui.i_export2pptx(F,markerlist);
-    end
+
         fprintf('%d marker genes: ',length(markerlist));
         fprintf('%s ',markerlist)
         fprintf('\n')
+
+        gui.i_exporttable(table(markerlist),true,"T","markerlist");
+
+
+        [answer]=questdlg('Plot expression of markers?');
+        if isempty(answer), return; end
+        switch answer
+            case 'Yes'
+                [methodid]=gui.i_pickscatterstem('Scatter');
+                if isempty(methodid), return; end
+                F=cell(length(markerlist),1);
+                for kk=1:length(markerlist)
+                    F{kk}=gui.i_cascadefig(sce,markerlist(end-(kk-1)), ...
+                        ax,bx,kk,methodid);            
+                end
+                gui.i_export2pptx(F,flipud(markerlist(:)));                
+        end
+    end
 %     pause(2);
 %     export2wsdlg({'Save marker list to variable named:'},...
 %             {'g_markerlist'},{markerlist});

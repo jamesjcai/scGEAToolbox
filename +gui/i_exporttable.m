@@ -1,4 +1,5 @@
-function [answer]=i_exporttable(T,needwait,TName)
+function [answer]=i_exporttable(T,needwait,TName,defname)
+if nargin<4, defname=[]; end
 if nargin<3, TName='T'; end
 if nargin<2, needwait=false; end
     
@@ -21,7 +22,11 @@ switch answer
                 export2wsdlg(labels,vars,values);
             end
     case 'Text file'
-        [file, path] = uiputfile({'*.txt';'*.*'},'Save as');
+        if ~isempty(defname)
+            [file, path] = uiputfile({'*.txt';'*.*'},'Save as',defname);
+        else
+            [file, path] = uiputfile({'*.txt';'*.*'},'Save as');
+        end
         if isequal(file,0) || isequal(path,0)
            return;
         else			
@@ -35,8 +40,14 @@ switch answer
            end
         end
     case 'Excel file'
-        [file, path] = uiputfile({'*.xlsx';'*.xls';'*.*'},'Save as');
-        if isequal(file,0) || isequal(path,0), return; end      
+        if ~isempty(defname)
+            [file, path] = uiputfile({'*.xlsx';'*.xls';'*.*'}, ...
+                'Save as',defname);
+        else            
+            [file, path] = uiputfile({'*.xlsx';'*.xls';'*.*'}, ...
+                'Save as');
+        end
+        if isequal(file,0) || isequal(path,0), return; end
         
        filename=fullfile(path,file);           
        variables=T.Properties.VariableNames;
