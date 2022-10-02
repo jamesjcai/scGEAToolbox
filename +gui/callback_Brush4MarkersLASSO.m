@@ -67,7 +67,8 @@ function callback_Brush4MarkersLASSO(src,~,sce)
         fprintf('%s ',markerlist)
         fprintf('\n')
 
-        gui.i_exporttable(table(markerlist),true,"T","markerlist");
+        gui.i_exporttable(table(markerlist),true, ...
+            'T',"markerlist");
 
 
         [answer]=questdlg('Plot expression of markers?');

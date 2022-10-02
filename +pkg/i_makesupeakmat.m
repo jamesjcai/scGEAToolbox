@@ -6,7 +6,7 @@ if nargin<2, K=5; end
 %if isstring(endv), endv=str2double(endv); end
 
 p=cell2mat(strfind(sce.g,":"));
-chrv=extractBefore(input,p);
+chrv=extractBefore(sce.g,p);
 
 uchrv=unique(chrv,'stable');
 newX=[];
@@ -24,7 +24,7 @@ for k=1:length(uchrv)
     iG=strings(size(a,2),1);
     for kk=1:size(a,2)
         iX(kk,:)=sum(ix(a(1,kk):a(2,kk),:));
-        iG(kk)=ig(a(1,kk)+2);
+        iG(kk)=ig(a(1,kk)+floor(K/2));
     end
     newX=[newX;iX];
     newg=[newg;iG];
