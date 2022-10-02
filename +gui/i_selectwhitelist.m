@@ -5,12 +5,13 @@ function [whitelist]=i_selectwhitelist(sce)
     switch answer
         case 'Yes'
             whitelist=0;
-            [gsorted]=gui.i_sortgenenames(sce);
-            if isempty(gsorted), return; end
-            [idx]=gui.i_selmultidlg(gsorted);
-            if isempty(idx), return; end
-            if isscalar(idx) && idx==0, return; end
-            whitelist=gsorted(idx);
+%             [gsorted]=gui.i_sortgenenames(sce);
+%             if isempty(gsorted), return; end
+%             [idx]=gui.i_selmultidlg(gsorted);
+%             if isempty(idx), return; end
+%             if isscalar(idx) && idx==0, return; end
+% whitelist=gsorted(idx);
+            [whitelist]=gui.i_selectngenes(sce);
         case 'No'
             whitelist=[];     % when isempty, continue..
             return;

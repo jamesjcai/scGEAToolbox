@@ -70,6 +70,8 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
             end
 
             [whitelist]=gui.i_selectwhitelist(sce);
+            %[whitelist]=gui.i_selectngenes(sce);
+
             if isnumeric(whitelist) 
                 if whitelist==0
                     requirerefresh=false;
