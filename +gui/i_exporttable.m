@@ -14,9 +14,9 @@ end
 switch answer
     case 'Workspace'
             labels = {'Save to variable named:'}; 
-            vars = {TName}
-            values = {T}
-            T
+            vars = {TName};
+            values = {T};
+            
             if needwait
                 waitfor(export2wsdlg(labels,vars,values));
             else
