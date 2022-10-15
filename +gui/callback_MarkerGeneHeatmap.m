@@ -64,18 +64,24 @@ for k=1:numel(cL)
     idgn=[idgn; k*ones(length(markerlist),1)];
     szgn=[szgn length(markerlist)];
 end
+Yraw=Y;
 [Y]=gui.i_norm4heatmap(Y);
 
 Z=[];
-for k=1:numel(cL)
-    y=Y(idgn==k,:);
+Zfd=[];
+for kx=1:numel(cL)
+    y=Y(idgn==kx,:);
+    yraw=Yraw(idgn==kx,:);
     z=[];
+    zfd=[];
     for kk=1:numel(cL)
         z=[z mean(y(:,idcl==kk),2)];
+        zfd=[zfd log2(mean(yraw(:,idcl==kk),2)./mean(yraw(:,idcl~=kk),2))];
     end
     %z1=grpstats(y.',idcl,@mean)';
     %assert(isequal(z,z1));
     Z=[Z; z];
+    Zfd=[Zfd; zfd];
 end
 gui.gui_waitbar(fw);
 
@@ -84,16 +90,16 @@ gui.gui_waitbar(fw);
 hFig=figure('Visible','off');
 himg=imagesc(Y);
 szc=cumsum(szgn);
-for k=1:max(idcl)-1
-    xline(sum(idcl<k+1)+0.5,'r-');
-    yline(szc(k)+0.5,'r-');
+for kx=1:max(idcl)-1
+    xline(sum(idcl<kx+1)+0.5,'r-');
+    yline(szc(kx)+0.5,'r-');
 end
 
 set(gca,'YTick',1:size(Y,1));
 a=zeros(1,max(idcl)); b=zeros(1,max(idcl));
-for k=1:max(idcl)
-    a(k)=sum(idcl<=k);
-    b(k)=round(sum(idcl==k)./2);
+for kx=1:max(idcl)
+    a(kx)=sum(idcl<=kx);
+    b(kx)=round(sum(idcl==kx)./2);
 end
 
 set(gca,'XTick',a-b);
@@ -115,6 +121,8 @@ pkg.i_addbutton2fig(tb1,'on',{@gui.i_pickcolormap,c},'plotpicker-compass.gif','P
 pkg.i_addbutton2fig(tb1,'off',@gui.i_changefontsize,'noun_font_size_591141.gif','ChangeFontSize');
 pkg.i_addbutton2fig(tb1,'on',@i_renamecat,'guideicon.gif','Rename groups...');
 pkg.i_addbutton2fig(tb1,'on',{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');
+pkg.i_addbutton2fig(tb1,'on',@i_savetable,'export.gif','Export data...');
+
 pkg.i_addbutton2fig(tb1,'on',@gui.i_invertcolor,'plotpicker-comet.gif','Invert colors');
 pkg.i_addbutton2fig(tb1,'off',@i_resetcolor,'plotpicker-geobubble2.gif','Reset color map');
 
@@ -182,7 +190,7 @@ fliped=false;
     end
 
     function i_summarymap(~,~)
-        f=figure;
+        f=figure;        
         h=heatmap(cL,MX,Z);
         h.Title = 'Marker Gene Heatmap';
         h.XLabel = 'Group';
@@ -229,6 +237,49 @@ fliped=false;
             errordlg('This function is not available for standalone application. Run scgeatool.m in MATLAB to use this function.');
         end
     end    
+
+    function i_savetable(~,~)
+            answer = questdlg('Export & save data to:','',...
+                'Workspace','TXT/CSV file','Excel file','Workspace');
+            if ~isempty(answer)
+                T=table();
+                T.genes=cat(1,M{:,2});
+                T=[T,array2table(Y)];
+
+                switch answer
+                    case 'Workspace'
+                        labels = {'Save T to variable named:'}; 
+                        vars = {'T'};
+                        values = {T};
+                        [~,OKPressed]=export2wsdlg(labels,vars,values,...
+                            'Save Data to Workspace');                    
+                    case 'TXT/CSV file'
+                        [file, path] = uiputfile({'*.csv';'*.*'},'Save as');
+                        if isequal(file,0) || isequal(path,0)
+                           return;
+                        else
+                           fw=gui.gui_waitbar; 
+                           filename=fullfile(path,file);
+                           writetable(T,filename,'FileType','text');
+                           OKPressed=true;
+                           gui.gui_waitbar(fw);
+                        end
+                    case 'Excel file'
+    
+                        [file, path] = uiputfile({'*.xlsx';'*.*'},'Save as');
+                        if isequal(file,0) || isequal(path,0)
+                           return;
+                        else
+                           fw=gui.gui_waitbar; 
+                           filename=fullfile(path,file);
+                           writetable(T,filename,'FileType','spreadsheet');
+                           OKPressed=true;
+                           gui.gui_waitbar(fw);
+                        end
+                end
+            end
+    end
+
 
 end
 
