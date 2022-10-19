@@ -114,14 +114,14 @@ set(gca,'TickLength',[0 0])
 tb1=uitoolbar(hFig);
 pkg.i_addbutton2fig(tb1,'off',{@i_saveM,M},'greencircleicon.gif','Save marker gene map...');
 pkg.i_addbutton2fig(tb1,'off',@i_flipxy,'xplotpicker-geobubble2.gif','Flip XY');
-pkg.i_addbutton2fig(tb1,'off',@i_summarymap,'HDF_object01.gif','Summary map...');
-pkg.i_addbutton2fig(tb1,'off',@i_summarymapT,'HDF_object02.gif','Summary map, transposed...');
+pkg.i_addbutton2fig(tb1,'off',{@i_summarymap,Z},'HDF_object01.gif','Summary map...');
+pkg.i_addbutton2fig(tb1,'off',{@i_summarymap,Z.'},'HDF_object02.gif','Summary map, transposed...');
 pkg.i_addbutton2fig(tb1,'off',@i_dotplotx,'HDF_object03.gif','Dot plot...');
 pkg.i_addbutton2fig(tb1,'on',{@gui.i_pickcolormap,c},'plotpicker-compass.gif','Pick new color map...');
 pkg.i_addbutton2fig(tb1,'off',@gui.i_changefontsize,'noun_font_size_591141.gif','ChangeFontSize');
 pkg.i_addbutton2fig(tb1,'on',@i_renamecat,'guideicon.gif','Rename groups...');
 pkg.i_addbutton2fig(tb1,'on',{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');
-pkg.i_addbutton2fig(tb1,'on',@i_savetable,'export.gif','Export data...');
+pkg.i_addbutton2fig(tb1,'on',{@i_savetable,Y},'export.gif','Export data...');
 
 pkg.i_addbutton2fig(tb1,'on',@gui.i_invertcolor,'plotpicker-comet.gif','Invert colors');
 pkg.i_addbutton2fig(tb1,'off',@i_resetcolor,'plotpicker-geobubble2.gif','Reset color map');
@@ -189,9 +189,13 @@ fliped=false;
         end
     end
 
-    function i_summarymap(~,~)
-        f=figure;        
-        h=heatmap(cL,MX,Z);
+    function i_summarymap(~,~,thisZ)
+        f=figure;
+        if length(cL)==size(thisZ,1)
+            h=heatmap(MX,cL,thisZ);
+        else
+            h=heatmap(cL,MX,thisZ);
+        end
         h.Title = 'Marker Gene Heatmap';
         h.XLabel = 'Group';
         h.YLabel = 'Marker Gene';
@@ -204,26 +208,31 @@ fliped=false;
         pkg.i_addbutton2fig(tb,'on',{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');
         pkg.i_addbutton2fig(tb,'on',@i_invertcolor,'plotpicker-comet.gif','Invert colors');
         pkg.i_addbutton2fig(tb,'off',@i_resetcolor,'plotpicker-geobubble2.gif','Reset color map');
+        if length(cL)~=size(thisZ,1)
+    
+        pkg.i_addbutton2fig(tb,'on',{@i_savetable,thisZ},'export.gif','Export data...');
+        end
+
     end
 
-    function i_summarymapT(~,~)
-        f=figure;
-        h=heatmap(MX,cL,Z.');
-        h.Title = 'Marker Gene Heatmap';
-        h.YLabel = 'Group';
-        h.XLabel = 'Marker Gene';
-        h.Colormap = parula;
-        h.GridVisible = 'off';
-        h.CellLabelColor='none';
-%         s = struct(h);
-%         s.XAxis.TickLabelRotation=45;        
-        tb = uitoolbar('Parent', f);
-        pkg.i_addbutton2fig(tb,'on',{@gui.i_pickcolormap,c},'plotpicker-compass.gif','Pick new color map...');
-        pkg.i_addbutton2fig(tb,'off',@gui.i_changefontsize,'noun_font_size_591141.gif','ChangeFontSize');        
-        pkg.i_addbutton2fig(tb,'on',{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');
-        pkg.i_addbutton2fig(tb,'on',@i_invertcolor,'plotpicker-comet.gif','Invert colors');
-        pkg.i_addbutton2fig(tb,'off',@i_resetcolor,'plotpicker-geobubble2.gif','Reset color map');
-    end
+%     function i_summarymapT(~,~)
+%         f=figure;
+%         h=heatmap(MX,cL,Z.');
+%         h.Title = 'Marker Gene Heatmap';
+%         h.YLabel = 'Group';
+%         h.XLabel = 'Marker Gene';
+%         h.Colormap = parula;
+%         h.GridVisible = 'off';
+%         h.CellLabelColor='none';
+% %         s = struct(h);
+% %         s.XAxis.TickLabelRotation=45;        
+%         tb = uitoolbar('Parent', f);
+%         pkg.i_addbutton2fig(tb,'on',{@gui.i_pickcolormap,c},'plotpicker-compass.gif','Pick new color map...');
+%         pkg.i_addbutton2fig(tb,'off',@gui.i_changefontsize,'noun_font_size_591141.gif','ChangeFontSize');        
+%         pkg.i_addbutton2fig(tb,'on',{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');
+%         pkg.i_addbutton2fig(tb,'on',@i_invertcolor,'plotpicker-comet.gif','Invert colors');
+%         pkg.i_addbutton2fig(tb,'off',@i_resetcolor,'plotpicker-geobubble2.gif','Reset color map');
+%     end
 
     function i_saveM(~,~,M)
         if ~(ismcc || isdeployed)
@@ -238,14 +247,15 @@ fliped=false;
         end
     end    
 
-    function i_savetable(~,~)
+    function i_savetable(~,~,c)
             answer = questdlg('Export & save data to:','',...
                 'Workspace','TXT/CSV file','Excel file','Workspace');
             if ~isempty(answer)
                 T=table();
                 T.genes=cat(1,M{:,2});
-                T=[T,array2table(Y)];
+                assert(isequal(T.genes,MX))
 
+                T=[T,array2table(c)];
                 switch answer
                     case 'Workspace'
                         labels = {'Save T to variable named:'}; 
