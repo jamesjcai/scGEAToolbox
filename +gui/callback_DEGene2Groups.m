@@ -10,20 +10,20 @@ function callback_DEGene2Groups(src,~)
 
     answer = questdlg('Which method?',...
         'Select Method','Wilcoxon rank-sum test 🐇',...
-        'DESeq 2 🐇',...
+        'DESeq 2 (R required) 🐢',...
         'MAST (R required) 🐢', ...
-        'DESeq 2 🐇');
+        'Wilcoxon rank-sum test 🐇');
     
     if strcmpi(answer,'Wilcoxon rank-sum test 🐇')
         methodtag="ranksum";
-    elseif strcmpi(answer,'DESeq 2 🐇')
+    elseif strcmpi(answer,'DESeq 2 (R required) 🐢')
         methodtag="deseq2";
-        if ~(ismcc || isdeployed)
-            if ~exist('nbintest.m', 'file')
-                errordlg('This option requires Bioinformatics toolbox.');
-                return;
-            end
-        end
+%         if ~(ismcc || isdeployed)
+%             if ~exist('nbintest.m', 'file')
+%                 errordlg('This option requires Bioinformatics toolbox.');
+%                 return;
+%             end
+%         end
     elseif strcmpi(answer,'MAST (R required) 🐢')
         methodtag="mast";
         if isempty(pkg.FindRpath)
@@ -40,8 +40,11 @@ function callback_DEGene2Groups(src,~)
                 T=sc_deg(sce.X(:,i1),sce.X(:,i2), ...
                     sce.g,1,true);
             case 'deseq2'
+                [ok]=gui.i_confirmscript('DE analysis (DESeq2)', ...
+                    'R_DESeq2','r');
+                if ~ok, return; end
                 fw=gui.gui_waitbar;
-                T=run.DESeq2(sce.X(:,i1),sce.X(:,i2),sce.g);
+                T=run.DESeq2r(sce.X(:,i1),sce.X(:,i2),sce.g);
                 gui.gui_waitbar(fw);
 
             case 'mast'
@@ -87,26 +90,44 @@ function callback_DEGene2Groups(src,~)
         warning(ME.message);
     end
 
+try
 
+% avg_1 = mean(X,2);
+% avg_2 = mean(Y,2);
+% pct_1 = sum(X>0,2)./size(X,2);
+% pct_2 = sum(Y>0,2)./size(Y,2);
+
+if contains(T.Properties.VariableNames{5},'avg_1')
     T.Properties.VariableNames{5}=sprintf('%s_%s', ...
         T.Properties.VariableNames{5}, ...
         matlab.lang.makeValidName(string(cL1)));
+end
+
+if contains(T.Properties.VariableNames{6},'avg_2')
     T.Properties.VariableNames{6}=sprintf('%s_%s', ...
         T.Properties.VariableNames{6}, ...
         matlab.lang.makeValidName(string(cL2)));
+end
 
+if contains(T.Properties.VariableNames{7},'pct_1')
     T.Properties.VariableNames{7}=sprintf('%s_%s', ...
         T.Properties.VariableNames{7}, ...
         matlab.lang.makeValidName(string(cL1)));
+end
+
+if contains(T.Properties.VariableNames{8},'pct_2')
     T.Properties.VariableNames{8}=sprintf('%s_%s', ...
         T.Properties.VariableNames{8}, ...
         matlab.lang.makeValidName(string(cL2)));
-    
+end
+catch ME
+    warning(ME.message);
+end
     outfile=sprintf('%s_vs_%s', ...
         matlab.lang.makeValidName(string(cL1)),matlab.lang.makeValidName(string(cL2)));
     
     if isatac, T.gene="chr"+T.gene; end
-    [~,filesaved]=gui.i_exporttable(T,true,'T',outfile);
+    [filesaved]=gui.i_exporttable(T,true,'T',outfile);
 
     if ~(ismcc || isdeployed)  
         answer = questdlg('Save up- and down-regulated genes for enrichment analysis?');
