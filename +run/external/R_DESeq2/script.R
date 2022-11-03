@@ -1,4 +1,4 @@
-#setwd("E:\\GitHub\\scGEAToolbox\\+run\\external\\R_DESeq2")
+# setwd("E:\\GitHub\\scGEAToolbox\\+run\\external\\R_DESeq2")
 suppressMessages(library(DESeq2))
 suppressMessages(library(rhdf5))
 
@@ -26,3 +26,4 @@ dds <- DESeqDataSetFromMatrix(countData=data.counts,
 dds <- DESeq(dds)
 res <- results(dds, contrast = c(1,2))
 write.csv(res,"output.csv")
+

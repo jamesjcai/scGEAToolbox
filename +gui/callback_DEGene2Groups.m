@@ -1,6 +1,6 @@
 function callback_DEGene2Groups(src,~)
     
-    isatac=true;
+    isatac=false;
 
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);    

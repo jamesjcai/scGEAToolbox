@@ -15,6 +15,9 @@ avg_2 = mean(Y,2);
 pct_1 = sum(X>0,2)./size(X,2);
 pct_2 = sum(Y>0,2)./size(Y,2);
 
+    %T = table(gene, p_val, avg_log2FC, abs_log2FC, avg_1, avg_2, ...
+    %    pct_1, pct_2, p_val_adj);
+
 tmpfilelist={'input.mat','output.csv'};
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 save('input.mat','X','Y','-v7.3');
@@ -27,6 +30,12 @@ T.Properties.VariableNames{'Var1'} = 'gene';
 T.Properties.VariableNames{'log2FoldChange'} = 'avg_log2FC';
 abs_log2FC=abs(T.avg_log2FC);
 T = addvars(T,abs_log2FC,'After','avg_log2FC');
+
+T = addvars(T,pct_2,'After','abs_log2FC');
+T = addvars(T,pct_1,'After','abs_log2FC');
+T = addvars(T,avg_2,'After','abs_log2FC');
+T = addvars(T,avg_1,'After','abs_log2FC');
+
 T=sortrows(T,'abs_log2FC','descend');
 T=sortrows(T,'padj','ascend');
 T.Properties.VariableNames{'padj'} = 'p_val_adj';
