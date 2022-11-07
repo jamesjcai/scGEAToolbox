@@ -33,6 +33,7 @@ function callback_DrawDotplot(src,~)
         return;
     end
     [Xt]=gui.i_transformx(sce.X);
+    glist=glist(end:-1:1);
     try
         f=gui.i_dotplot(Xt,sce.g,c,cL,glist,true);
         % f=gui.i_violinplot(sce.X,sce.g,c,cL,glist);
