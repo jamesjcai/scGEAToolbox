@@ -28,6 +28,7 @@ if usematinput
         save('input.mat','X','batchid','-v7');
     end
 else
+if issparse(X), X=full(X); end
     writematrix(X,'input.txt');
     writematrix(batchid,'batchid.txt');
 end

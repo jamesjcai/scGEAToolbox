@@ -21,6 +21,7 @@ if exist('output.csv','file')
     delete('output.csv');
 end
 %if ~exist('input.csv','file')
+if issparse(X), X=full(X); end
     writematrix(transpose(X),'input.csv');
 %end
 pkg.RunRcode('script.R');

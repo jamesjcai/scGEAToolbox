@@ -24,6 +24,7 @@ if size(t,2)==1
 end
 
 %if ~exist('input.csv','file')
+if issparse(X), X=full(X); end
 writematrix(X,'input1.txt');
 writematrix(t,'input2.txt');
 %end

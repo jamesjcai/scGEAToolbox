@@ -5,6 +5,7 @@ oldpth=pwd();
 if ~isok, error(msg); s=[]; return; end
 
 if exist('output.csv','file'), delete('output.csv'); end
+if issparse(X), X=full(X); end
 writematrix(transpose(X),'input.csv');
 
 pkg.RunRcode('script.R');
