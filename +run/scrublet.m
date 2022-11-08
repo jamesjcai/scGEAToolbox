@@ -8,7 +8,7 @@ cd(wrkpth);
 if exist('./input.txt','file'), delete('./input.txt'); end
 if exist('./output1.txt','file'), delete('./output1.txt'); end
 if exist('./output2.txt','file'), delete('./output2.txt'); end
-
+if issparse(X), X=full(X); end
 writematrix(X,'input.txt');
 
 x=pyenv;
