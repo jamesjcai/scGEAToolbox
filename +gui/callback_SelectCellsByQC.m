@@ -113,6 +113,8 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
                 return;
             end
             %[~,idx]=ismember(sce.g(idx),sce.g);
+            
+            %{
             answer1 = questdlg(sprintf('Remove %d selected genes?',length(idx)));
             if strcmpi(answer1,'Yes')   
         	    fw = gui.gui_waitbar;                    
@@ -121,7 +123,26 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
                 gui.gui_waitbar(fw);
             else
                 return;
-            end            
+            end
+            %}
+    
+            answer1 = questdlg('Remove selected or unselected genes?','', ...
+                'Selected', 'Unselected','Selected');
+            if isempty(answer1), return; end
+            if strcmp(answer1, 'Selected')
+        	        fw = gui.gui_waitbar;                    
+                    sce.g(idx)=[];
+                    sce.X(idx,:)=[];
+                    gui.gui_waitbar(fw);
+            elseif strcmp(answer1, 'Unselected')
+        	        fw = gui.gui_waitbar;                    
+                    sce.g=sce.g(idx);
+                    sce.X=sce.X(idx,:);
+                    gui.gui_waitbar(fw);
+            else
+                return;
+            end
+
         case 'Remove Mt-genes'        % remove mt-genes
             sce=sce.rmmtgenes;
         case 'Remove Ribosomal Genes'
