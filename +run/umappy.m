@@ -10,6 +10,7 @@ if exist('./input.csv','file'), delete('./input.csv'); end
 if exist('./output.csv','file'), delete('./output.csv'); end
 X=sc_norm(X);
 X=log(X+1);
+if issparse(X), X=full(X); end
 writematrix(X.','input.csv');
 % writetable(array2table(X'),'input.csv','WriteVariableNames',false);
 
