@@ -16,6 +16,7 @@ if exist('output.csv','file')
 end
 
 %if ~exist('input.csv','file')
+if issparse(X), X=full(X); end
     writematrix(X,'input.csv');
 %end
 pkg.RunRcode('script.R');
