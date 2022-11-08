@@ -22,6 +22,7 @@ if exist('counts.txt','file'), delete('counts.txt'); end
 if exist('clusterid.txt','file'), delete('clusterid.txt'); end
 if exist('genelist.txt','file'), delete('genelist.txt'); end
 
+if issparse(X), X=full(X); end
 writematrix(X,'counts.txt');
 writematrix(c,'clusterid.txt');
 writematrix(genelist,'genelist.txt');
