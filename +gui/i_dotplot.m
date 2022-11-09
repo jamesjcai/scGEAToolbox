@@ -91,6 +91,7 @@ colorbar
 set(gca,'YTick',0:length(tgene))
 set(gca,'YTickLabel',txgene)
 set(gca,'XTick',0:length(cL))
+cL=strrep(cL,"_","\_");
 set(gca,'XTickLabel',[{''};cL(:);{''}])
 colormap(flipud(bone));
 box on
