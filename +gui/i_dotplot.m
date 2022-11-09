@@ -1,6 +1,7 @@
 %function i_dotplot(X0,X1,genelist,tgene,uselog)
 function [hFig]=i_dotplot(X,g,c,cL,tgene,uselog)
 
+%g=g(end:-1:1);
 if nargin<6, uselog=false; end
 [yes]=ismember(tgene,g);
 if ~any(yes), return; end
@@ -93,7 +94,7 @@ set(gca,'YTickLabel',txgene)
 set(gca,'XTick',0:length(cL))
 cL=strrep(cL,"_","\_");
 set(gca,'XTickLabel',[{''};cL(:);{''}])
-colormap(flipud(bone));
+colormap(flipud(summer));
 box on
 grid on
 % hFig=gcf;
@@ -191,7 +192,7 @@ set(hFig, 'visible', 'on');
         dotsz=0.1;
         set(gca,'FontSize',10);
         i_resizedot;
-        colormap(flipud(bone));
+        colormap(flipud(summer));
     end
 
 %     function i_invertcolor(~,~)
