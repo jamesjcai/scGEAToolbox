@@ -88,7 +88,13 @@ af{6}=text(max(x)+1.4,3,'10%','BackgroundColor','none');
 
 xlim([0.5 length(cL)+2.5]);
 ylim([0.5 max([4 length(txgene)])-0.5]);
-colorbar
+%colorbar
+%colorbar('northoutside');
+
+
+
+
+
 set(gca,'YTick',0:length(tgene))
 set(gca,'YTickLabel',txgene)
 set(gca,'XTick',0:length(cL))
@@ -110,9 +116,26 @@ pkg.i_addbutton2fig(tb,'on',@i_savetable,'export.gif','Export data...');
 pkg.i_addbutton2fig(tb,'on',@gui.i_invertcolor,'plotpicker-comet.gif','Invert colors');
 pkg.i_addbutton2fig(tb,'off',@i_resetcolor,'plotpicker-geobubble2.gif','Reset color map');
 
+
+% drawnow;
+cb=colorbar('eastoutside');
+
+% %set(cb, 'Position', get(gca,'position')); pause(1);
+% cb.Position = cb.Position + 1e-10;
+% set(cb, 'Position', cb.Position);
+% pause(1);
+% x2=get(cb,'Position');
+% % % %  %x2(1)=x2(1)*1.025;
+% x2(3)=x2(3)*0.5;
+% x2(4)=x2(4)*0.5;
+% set(cb,'Position',x2);
+% % %  % c.Label.String ="Average Expression";
+
+
 movegui(hFig, 'center');
 set(hFig, 'visible', 'on');
 
+ % "Percent Expressed"
 %     function i_changefontsize(~,~)
 %           ax=get(gca,'FontSize')+1;
 %          if ax>15, ax=5; end
