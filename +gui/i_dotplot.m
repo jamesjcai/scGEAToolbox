@@ -119,6 +119,11 @@ pkg.i_addbutton2fig(tb,'off',@i_resetcolor,'plotpicker-geobubble2.gif','Reset co
 
 % drawnow;
 cb=colorbar('eastoutside');
+ax=gca;
+axposition=ax.Position;
+cb.Position(3) = cb.Position(3)*0.5;
+cb.Position(4) = cb.Position(4)*(5/length(tgene));
+ax.Position=axposition;
 
 % %set(cb, 'Position', get(gca,'position')); pause(1);
 % cb.Position = cb.Position + 1e-10;
@@ -129,7 +134,8 @@ cb=colorbar('eastoutside');
 % x2(3)=x2(3)*0.5;
 % x2(4)=x2(4)*0.5;
 % set(cb,'Position',x2);
-% % %  % c.Label.String ="Average Expression";
+
+% cb.Label.String ="Average Expression";
 
 
 movegui(hFig, 'center');
