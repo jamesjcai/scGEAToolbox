@@ -1,6 +1,8 @@
 %function i_dotplot(X0,X1,genelist,tgene,uselog)
 function [hFig]=i_dotplot(X,g,c,cL,tgene,uselog)
 
+DOTSIZE=0.5;
+
 %g=g(end:-1:1);
 if nargin<6, uselog=false; end
 [yes]=ismember(tgene,g);
@@ -73,7 +75,7 @@ txgene=[" "; tgene];
 %hold on
 hFig=figure('Visible','off');
 
-dotsz=1.0;
+dotsz=DOTSIZE;
 sz(sz==0)=eps;
 vl=vl+0.001;
 afa=scatter(x,y,dotsz*500*sz,vl,'filled');
@@ -195,7 +197,7 @@ set(hFig, 'visible', 'on');
     end
 
     function i_resizedot(~,~)
-        dotsz=dotsz*0.9;
+        dotsz=dotsz*0.9;        
         if dotsz<0.2, dotsz=1.0; end
         delete(afa); delete(afb);
         delete(af{1}); delete(af{3}); delete(af{5});
@@ -220,7 +222,7 @@ set(hFig, 'visible', 'on');
     end
 
     function i_resetcolor(~,~)
-        dotsz=0.1;
+        dotsz=DOTSIZE;
         set(gca,'FontSize',10);
         i_resizedot;
         colormap(flipud(summer));

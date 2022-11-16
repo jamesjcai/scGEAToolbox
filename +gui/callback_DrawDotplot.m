@@ -35,16 +35,42 @@ function callback_DrawDotplot(src,~)
     [Xt]=gui.i_transformx(sce.X);
     glist=glist(end:-1:1);
 
-if length(glist)>75
+if length(glist)>50
+
+    answer=questdlg('Output to PowerPoint?');
+    switch answer
+        case 'Yes'
+            needpptx=true;
+        case 'No'
+            needpptx=false;
+        otherwise
+            return;
+    end    
+    images={};
     for k=1:50:length(glist)
         k2=min([length(glist),k+50-1]);
         f=gui.i_dotplot(Xt,sce.g,c,cL,glist(k:k2),true);
+        screensize = get( groot, 'Screensize' );
+        p=f.Position;        
+        p(2)=0;
+        p(4)=screensize(4)-150;
+        f.Position=p;
+        if needpptx
+            img1=[tempname,'.png'];
+            images = [images {img1}];
+            saveas(f,img1);
+        end
     end
+    if needpptx, gui.i_save2pptx(images); end
 else
 
     try
         f=gui.i_dotplot(Xt,sce.g,c,cL,glist,true);
         % f=gui.i_violinplot(sce.X,sce.g,c,cL,glist);
+        p=f.Position;        
+        %p(2)=0;
+        p(4)=p(4)*1.5;
+        f.Position=p;           
     catch ME
         if exist('f','var') && ishandle(f)
             close(f);
