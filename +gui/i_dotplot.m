@@ -20,6 +20,7 @@ l=ones(length(tgene)*length(cL),1);
 sz=l; vl=l;
 x=l; y=l;
 ct=0;
+D=zeros(length(tgene),length(cL));
 for kx=1:length(tgene)
     for kk=1:length(cL)
         ct=ct+1;
@@ -27,6 +28,7 @@ for kx=1:length(tgene)
         a0=X(g==tgene(kx),c==kk);
         sz(ct)=sum(a0~=0)./length(a0);
         vl(ct)=mean(a0);
+        D(kx,kk)=vl(ct);
     end
 end
 
@@ -160,9 +162,9 @@ set(hFig, 'visible', 'on');
                 T=table(GeneList,GroupList,AvgExpr,PrtExpr);
                 switch answer
                     case 'Workspace'
-                        labels = {'Save T to variable named:'}; 
-                        vars = {'T'};
-                        values = {T};
+                        labels = {'Save T to variable named:','Save D to variable named:'}; 
+                        vars = {'T','D'};
+                        values = {T,D};
                         [~,OKPressed]=export2wsdlg(labels,vars,values,...
                             'Save Data to Workspace');                    
                     case 'TXT/CSV file'
