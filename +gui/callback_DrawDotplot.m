@@ -34,6 +34,14 @@ function callback_DrawDotplot(src,~)
     end
     [Xt]=gui.i_transformx(sce.X);
     glist=glist(end:-1:1);
+
+if length(glist)>75
+    for k=1:50:length(glist)
+        k2=min([length(glist),k+50-1]);
+        f=gui.i_dotplot(Xt,sce.g,c,cL,glist(k:k2),true);
+    end
+else
+
     try
         f=gui.i_dotplot(Xt,sce.g,c,cL,glist,true);
         % f=gui.i_violinplot(sce.X,sce.g,c,cL,glist);
@@ -43,4 +51,6 @@ function callback_DrawDotplot(src,~)
         end
         errordlg(ME.message);
     end
+end
+
 end
