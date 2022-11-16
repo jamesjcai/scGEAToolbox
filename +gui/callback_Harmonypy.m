@@ -12,6 +12,10 @@ if ~ok, return; end
         return;
     end
     
+%     [c1]=grp2idx(sce.c);
+%     [c2]=grp2idx(sce.c_batch_id);
+%     isequal(c1,c2)
+
 if ~gui.i_setpyenv
     return; 
 end

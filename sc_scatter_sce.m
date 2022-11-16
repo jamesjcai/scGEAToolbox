@@ -108,7 +108,7 @@ ptlabelclusters = uitoggletool(UitoolbarHandle, 'Separator', 'on');
 [img, map] = imread(fullfile(mfolder, 'resources', 'plotpicker-scatter.gif'));
 ptImage = ind2rgb(img, map);
 ptlabelclusters.CData = ptImage;
-ptlabelclusters.Tooltip = 'Label clusters';
+ptlabelclusters.Tooltip = 'Label cell clusters';
 ptlabelclusters.ClickedCallback = @LabelClusters;
 
 i_addbutton(1,0,@Brushed2NewCluster,"plotpicker-glyplot-face.gif","Add brushed cells to a new cluster")
@@ -577,6 +577,27 @@ end
     end
 
     function HarmonyPy(src, ~)
+
+        if numel(unique(sce.c_batch_id))<2
+            warndlg('No batch effect (SCE.C_BATCH_ID is empty)');
+            return;
+        end        
+        [c1]=grp2idx(sce.c);
+        [c2]=grp2idx(sce.c_batch_id);
+        if ~isequal(c1,c2)
+            answer=questdlg('Color cells by batch id (SCE.C_BATCH_ID)?','');
+            switch answer
+                case 'Yes'
+                    [c,cL] = grp2idx(sce.c_batch_id);
+                    sce.c = c;
+                    RefreshAll(src, 1, true, false);
+                case 'No'
+                case 'Cancel'
+                    return;
+                otherwise
+                    return;
+            end
+        end
         
         if gui.callback_Harmonypy(src)
             sce = guidata(FigureHandle);
@@ -1269,7 +1290,7 @@ end
             end
             [c,cL] = grp2idx(thisc);
             sce.c = c;
-            RefreshAll(src, 1, true, false);                
+            RefreshAll(src, 1, true, false);
             if max(c)<=200
                 if i_labelclusters
                     set(src, 'State', 'on');
@@ -1278,7 +1299,7 @@ end
                 end
             else
                 set(src, 'State', 'off');
-                warndlg('Labels are not showing. Too many categories (n>200).');                    
+                warndlg('Labels are not showing. Too many categories (n>200).');
             end
             setappdata(FigureHandle,'cL',cL);
             guidata(FigureHandle, sce);                   
