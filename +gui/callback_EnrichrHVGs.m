@@ -60,7 +60,12 @@ function callback_EnrichrHVGs(src,~)
 
         case 'Splinefit Method'
             fw = gui.gui_waitbar;
-            gui.sc_scatter3genes(sce.X,sce.g);
+            try
+                gui.sc_scatter3genes(sce.X,sce.g);
+            catch ME
+                gui.gui_waitbar(fw,true);
+                errordlg(ME.message);
+            end
             gui.gui_waitbar(fw,true);
         otherwise
             return;

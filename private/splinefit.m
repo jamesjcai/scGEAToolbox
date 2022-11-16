@@ -90,6 +90,7 @@ narginchk(3,8);
 % Evaluate B-splines
 base = splinebase(breaks,n);
 pieces = base.pieces;
+base
 A = ppval(base,x);
 
 % Bin data

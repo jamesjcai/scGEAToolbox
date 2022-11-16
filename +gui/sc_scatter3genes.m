@@ -27,10 +27,25 @@ if showdata
         dt.UpdateFcn = {@i_myupdatefcn1,g};
     end
 end
+
+%grid on
+%box on
+%legend({'Genes','Spline fit'});
+xlabel('Mean, log');
+ylabel('Dropout rate (% of zeros)');
+zlabel('CV, log');
+
+
 % [xData, yData, zData] = prepareSurfaceData(x,y,z);
 % xyz=[xData yData zData]';
 if dofit
-    [~,xyz1]=sc_splinefit(X,g);
+
+    try
+        [~,xyz1]=sc_splinefit(X,g);
+    catch ME        
+        rethrow(ME);        
+    end
+    
 %     xyz=[x y z]';
 %     % xyz=sortrows([x y z],[1 2])';
 %     pieces = 15;
@@ -48,12 +63,6 @@ if dofit
     
 end
 
-%grid on
-%box on
-%legend({'Genes','Spline fit'});
-xlabel('Mean, log');
-ylabel('Dropout rate (% of zeros)');
-zlabel('CV, log');
 
    function HighlightGenes(~,~)
         %h.MarkerIndices=idx20;
@@ -109,10 +118,12 @@ zlabel('CV, log');
 
 end
 
-function txt = i_myupdatefcn1(~,event_obj,g)
-% Customizes text of data tips
-% pos = event_obj.Position;
-idx = event_obj.DataIndex;
-% i_plotsiglegene(idx,g);
-txt = {g(idx)};
-end
+
+
+    function txt = i_myupdatefcn1(~,event_obj,g)
+        % Customizes text of data tips
+        % pos = event_obj.Position;
+        idx = event_obj.DataIndex;
+        % i_plotsiglegene(idx,g);
+        txt = {g(idx)};
+    end
