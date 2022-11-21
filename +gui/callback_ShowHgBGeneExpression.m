@@ -11,8 +11,15 @@ idx=idx1|idx2|idx3;
 if any(idx)
     ttxt = sprintf("%s+", sce.g(idx));
     ci = full(sum(sce.X(idx, :), 1));
-    hFig=figure("WindowStyle","modal","ToolBar","figure");
+    hFig=figure("WindowStyle","modal");
+
+    cm = uicontextmenu(hFig); 
+    m1 = uimenu(cm,'Text','Save HgBGeneExpression...', "MenuSelectedFcn",{@i_saveM,ci});
+    hFig.ContextMenu = cm;
+    
+
     gui.i_stemscatter(sce.s,ci);
+    
     title(ttxt);
     tb1=uitoolbar(hFig);
     pkg.i_addbutton2fig(tb1,'off',{@i_saveM,ci},'greencircleicon.gif','Save marker gene map...');    
@@ -24,9 +31,10 @@ end
 
     function i_saveM(~,~,M)
         if ~(ismcc || isdeployed)
-            labels = {'Save HgBGeneExpression to variable named:'}; 
-            vars = {'c'};            
-            values = {ci};
+            labels = {'Save C_CELL_ID to variable named:',...
+                'Save HgBGeneExpression to variable named:'}; 
+            vars = {'cell_id','c'};            
+            values = {sce.c_cell_id,ci(:)};
             export2wsdlg(labels,vars,values);
         else
             errordlg('This function is not available for standalone application. Run scgeatool.m in MATLAB to use this function.');

@@ -1,11 +1,11 @@
-function i_stemscatter(s,c) 
+function [h1,h2]=i_stemscatter(s,c) 
 
 c(c<0)=0;
 x=s(:,1);
 y=s(:,2);
-stem3(x, y, c, 'marker', 'none', 'color', 'm');
+h1=stem3(x, y, c, 'marker', 'none', 'color', 'm');
 hold on;
-scatter3(x, y, zeros(size(y)), 5, c, 'filled');
+h2=scatter3(x, y, zeros(size(y)), 5, c, 'filled');
 gui.i_setautumncolor(c);
 % disp('xxx')
 
