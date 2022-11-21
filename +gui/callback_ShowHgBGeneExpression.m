@@ -11,11 +11,12 @@ idx=idx1|idx2|idx3;
 if any(idx)
     ttxt = sprintf("%s+", sce.g(idx));
     ci = full(sum(sce.X(idx, :), 1));
-    hFig=figure;
+    hFig=figure("WindowStyle","modal","ToolBar","figure");
     gui.i_stemscatter(sce.s,ci);
     title(ttxt);
     tb1=uitoolbar(hFig);
     pkg.i_addbutton2fig(tb1,'off',{@i_saveM,ci},'greencircleicon.gif','Save marker gene map...');    
+    % uiwait(hFig);
 else
     warndlg('No HgB-genes found');
 end
