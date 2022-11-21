@@ -66,3 +66,4 @@ scgeatoolstandaloneApplication/
 +run/external/py_readh5ad/X.h5
 +run/external/py_readh5ad/var.csv
 +run/external/py_readh5ad/obs.csv
++run/external/R_SeuratSaveRds/input.h5

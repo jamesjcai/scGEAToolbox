@@ -1,6 +1,11 @@
 function i_enrichtest(genelist,numgene)
 
-if nargin<2, numgene=500; end
+if nargin<2
+    numgene=100;
+    k=gui.i_inputnumk(numgene,20,500);
+    if isempty(k), return; end
+    numgene=k;
+end
 numgene=min([length(genelist), numgene]);
 
 answer1=gui.timeoutdlg(@(x){questdlg('Which functional enrichment analysis do you want to use?','Analysis Method', ...
