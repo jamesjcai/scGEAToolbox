@@ -562,7 +562,7 @@ end
             return;
         end
         gui.gui_waitbar(fw);
-        figure;
+        figure('WindowStyle','modal');
         gui.i_stemscatter(sce.s,contamination);
         % zlim([0 1]);
         zlabel('Contamination rate')
@@ -621,7 +621,7 @@ end
             return;
         end
         if done && any(isDoublet) && sce.NumCells==length(doubletscore)
-            tmpf_doubletdetection=figure;
+            tmpf_doubletdetection=figure('WindowStyle','modal');
             gui.i_stemscatter(sce.s,doubletscore);
             zlabel('Doublet Score')
             title(sprintf('Doublet Detection (%s)',methodtag))
@@ -1026,7 +1026,7 @@ end
         sce = guidata(FigureHandle);
         [thisc,clable]=gui.i_select1state(sce);
         if isempty(thisc), return; end        
-        figure;
+        figure('WindowStyle','modal');
         gui.i_stemscatter(sce.s,grp2idx(thisc));
         zlabel(clable)
         % title('')
@@ -1115,7 +1115,7 @@ end
         if isempty(k), return; end
         fw = gui.gui_waitbar;
         set(0, 'CurrentFigure', FigureHandle);
-        figure;
+        figure('WindowStyle','modal');
         sc_knngraph(sce.s,k,true);
         gui.gui_waitbar(fw);
     end
@@ -1177,7 +1177,7 @@ end
                 [~, idxn] = mink(r, 3);  % Select top 3 negatively correlated genes
                 selectedg = sce.g([idxp idxn]);
                 try
-                    psf1=figure();
+                    psf1=figure('WindowStyle','modal');
                     i_plot_pseudotimeseries(log2(sce.X + 1), ...
                         sce.g, t, selectedg);
                 catch ME

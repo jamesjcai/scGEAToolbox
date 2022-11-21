@@ -19,16 +19,20 @@ function [done]=i_setpyenv(~,~)
             case 'Use this'
                 done=true;
             case 'Use another'
-                if ~ix_setpyenv, return; end                    
+                if ~ix_setpyenv
+                    return;
+                else
+                    done=true;
+                end
             case {'Cancel',''}
                 return;
             otherwise
                 return;
         end
     end
-        if ~done
-            warndlg('Python environment is not set.','');
-        end
+    if ~done
+        warndlg('Python environment is not set.','');
+    end
     
 end
 
@@ -47,7 +51,12 @@ function [done]=ix_setpyenv
            return;
         else
            disp(['User selected: ', fullfile(path,file)]);
-           pyenv('Version',fullfile(path,file));
+           try
+                pyenv('Version',fullfile(path,file));
+           catch ME
+               errordlg(ME.message);
+               return;
+           end
            done=true;
         end
 end

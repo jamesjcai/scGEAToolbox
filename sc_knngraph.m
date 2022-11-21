@@ -25,7 +25,7 @@ switch method
         Graph = reshape(Graph, kneighbors+1, N );
 end
 
-if nargout>0
+if nargout>0 || plotit
     N=size(s,1);
     A=zeros(N,N);
     for i = 1 : size(Graph,2)
