@@ -127,11 +127,12 @@ end
         matlab.lang.makeValidName(string(cL1)),matlab.lang.makeValidName(string(cL2)));
     
     if isatac, T.gene="chr"+T.gene; end
+
     [filesaved]=gui.i_exporttable(T,true,'T',outfile);
 
-    if ~(ismcc || isdeployed)  
+%    if ~(ismcc || isdeployed)
         answer = questdlg('Save up- and down-regulated genes for enrichment analysis?');
-        %answer='Yes';
+
         if strcmp(answer,'Yes')
             [Tup,Tdn]=pkg.e_processDETable(T,true);
             labels = {'Save DE results (selected up-regulated) to variable named:',...
@@ -158,7 +159,7 @@ end
                 disp('run.Enrichr(Tdn.gene(1:200))')
             end
         end
-        return;
+        %return;
     
     
         answer = questdlg('Run enrichment analysis with top 200 up-regulated DE genes?');
@@ -171,7 +172,7 @@ end
             gui.i_enrichtest(Tdn.gene(1:min(numel(Tdn.gene),200)));
         end
 
-    end
+%    end
     
 %     pause(3);
 %     
