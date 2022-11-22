@@ -130,6 +130,7 @@ end
 
     [filesaved]=gui.i_exporttable(T,true,'T',outfile);
 
+filesaved
 %    if ~(ismcc || isdeployed)
         answer = questdlg('Save up- and down-regulated genes for enrichment analysis?');
 
@@ -142,6 +143,7 @@ end
 
             if ~isempty(filesaved) 
                 if strcmp(extractAfter(filesaved,strlength(filesaved)-4),'xlsx')
+                    filesaved
 %                     if isatac
 %                         Tup.gene="chr"+Tup.gene;
 %                         Tdn.gene="chr"+Tdn.gene;
