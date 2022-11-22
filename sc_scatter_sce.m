@@ -131,9 +131,9 @@ i_addbutton(1,0,@Switch2D3D,"plotpicker-image.gif","Switch 2D/3D");
 i_addbutton(1,1,@callback_CloseAllOthers,"noun_Pruners_2469297.gif","Close all other figures");
 i_addbutton(1,0,@callback_PickPlotMarker,"plotpicker-rose.gif","Switch scatter plot marker type");
 i_addbutton(1,0,@callback_PickColorMap,"plotpicker-compass.gif","Pick new color map");
-if ~(ismcc || isdeployed)
-    i_addbutton(1,0,@callback_formatfig,"xpowerpoint.gif",'Formating Figure...');
-end
+% if ~(ismcc || isdeployed)
+%     i_addbutton(1,0,@callback_formatfig,"xpowerpoint.gif",'Formating Figure...');
+% end
 i_addbutton(1,0,@RefreshAll,"plotpicker-geobubble2.gif","Refresh");
 i_addbutton(2,0,@call_scgeatool,"IMG00107.GIF"," ");
 i_addbutton(2,0,@callback_CalculateCellScores,"cellscore2.gif","Calculate cell scores from list of feature genes")

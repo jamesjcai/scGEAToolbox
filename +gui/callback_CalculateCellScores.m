@@ -34,9 +34,10 @@ switch actiontype
             return;
         end
         fw=gui.gui_waitbar;
-        a=sprintf('%s+',posg);
-        a=a(1:min([length(a),50]));
-        ttxt=sprintf('%s\n%s',ttxt,a);
+        %a=sprintf('%s+',posg);
+        %a=a(1:min([length(a),50]));
+        %ttxt=sprintf('%s\n%s',ttxt,a);
+        ttxt={ttxt};
         posg
         cs=sc_cellscore(sce.X,sce.g,posg);
         gui.gui_waitbar(fw);
@@ -45,31 +46,10 @@ switch actiontype
 end        
     
 
-    if ~isempty(cs)
-        gui.i_stemscatterfig(sce,cs,posg,matlab.lang.makeValidName(ttxt{1}));
-        %figure;
-        %gui.i_stemscatter(sce.s,cs);
-        %zlabel('Score Value')
-        %title(strrep(ttxt,'_','\_'))        
-        %gui.i_exporttable(cs,true,matlab.lang.makeValidName(ttxt{1}));
+    if ~isempty(cs)        
+        gui.i_stemscatterfig(sce,cs,posg, ...
+            matlab.lang.makeValidName(ttxt{1}));
     end
-
-
-%     figure;
-%     gui.i_stemscatter(sce.s,cs);
-%     zlabel('Score Value')
-%     title(strrep(ttxt,'_','\_'))
-% 
-% 
-% if ~(ismcc || isdeployed)    
-%     labels = {'Save score values to variable named:'}; 
-%     vars = {'CellScores'};
-%     values = {cs};
-%     waitfor(export2wsdlg(labels,vars,values));
-% else
-%     T=table(cs);
-%     gui.i_exporttable(T,true,'T_cellscore');
-% end
     
     
     answer2 = questdlg(sprintf('Score has been computed.\nCompare the score across cell classes?'),'Continue?');
@@ -84,20 +64,11 @@ end
         errordlg('Undefined');
         return;
     end
-    figure;
+    figure('WindowStyle','modal');
     pkg.i_violinplot_groupordered(cs,thisc);
     ylabel(strrep(ttxt,'_','\_'))
     xlabel(clabel);
     
-%         f = figure('visible','off');
-%         y=full(Xt(idx,:));
-%         pkg.i_violinplot(y,thisc);
-%         title(sce.g(idx));
-%         ylabel('Expression Level')
-%         movegui(f,'center');
-%         set(f,'visible','on');
-    
-
 end
 
 
