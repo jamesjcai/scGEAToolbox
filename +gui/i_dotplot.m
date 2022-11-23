@@ -63,7 +63,7 @@ T=table(GeneList,GroupList,AvgExpr,PrtExpr);
 % assignin("base","T",T);
 
 
-sz(sz<0.05)=0;
+% sz(sz<0.05)=0;
 if uselog
     vl=log2(vl+1);
 end
