@@ -24,6 +24,7 @@ wrkpth=fullfile(pw1,'+run','thirdparty','SinNLRR'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','ClusterPack'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','MAGIC'); addpath(wrkpth);
 
+
 %savepath;
 %%
 outdir = fullfile(pw1, '..','SCGEATOOL_StandaloneApplication');
@@ -47,6 +48,7 @@ if ~exist(outdir,"dir"), mkdir(outdir); end
     d=[d;fullfile(pw1, 'resources', 'myTemplate.pptx')];
     d=[d;fullfile(pw1, 'example_data', 'testXgs.mat')];
     d=[d;fullfile(pw1, 'example_data', 'new_example_sce.mat')];
+    % d=[d;fullfile(matlabroot,'toolbox','rptgen','rptgen','makePPTCompilable.p')];
     d2=string(pkg.dirPlus(fullfile(pw1,'+run','external')));
     d2=d2(~contains(d2,"stringdb\stringdb_"));
     d=[d;d2];

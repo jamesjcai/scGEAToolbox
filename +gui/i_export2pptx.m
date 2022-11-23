@@ -4,13 +4,13 @@ pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'..','resources','myTemplate.pptx');
 %dbfile1 = fullfile(pw1, '+run', 'external', 'stringdb', 'stringdb_human.mat');
 
-
 import mlreportgen.ppt.*;
 answer=questdlg('Export to PowerPoint?');
 switch answer
     case 'Yes'
         if ismcc || isdeployed
             makePPTCompilable();
+            warndlg('This function may not work properly in standalone applications.','');
         end
         
         N=length(F);
