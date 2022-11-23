@@ -1,7 +1,8 @@
-function [answer]=i_exporttable(T,needwait,TName,defname)
+function [answer,filename]=i_exporttable(T,needwait,TName,defname)
 if nargin<4, defname=[]; end
 if nargin<3, TName='T'; end
 if nargin<2, needwait=false; end
+filename=[];
     
 if ~(ismcc || isdeployed)
     answer = questdlg('Export & save data to:','',...
@@ -33,7 +34,7 @@ switch answer
         else			
            filename=fullfile(path,file);
 		   writetable(T,filename,'Delimiter','\t');
-           pause(1)
+           pause(1);
            if needwait
                waitfor(helpdlg(sprintf('Result has been saved in %s',filename),''));
            else

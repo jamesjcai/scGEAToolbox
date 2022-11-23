@@ -4,7 +4,7 @@ function Enrichr(genelist,genenum)
 % see also: RUN_GORILLA
 
 if nargin<1, genelist=[]; end
-if nargin<2, genenum=1000; end
+if nargin<2, genenum=100; end
 
 pw1=fileparts(mfilename('fullpath'));
 pth=fullfile(pw1,'external','Enrichr');

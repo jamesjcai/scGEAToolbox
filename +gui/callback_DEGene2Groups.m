@@ -123,35 +123,44 @@ end
 catch ME
     warning(ME.message);
 end
+
     outfile=sprintf('%s_vs_%s', ...
         matlab.lang.makeValidName(string(cL1)),matlab.lang.makeValidName(string(cL2)));
-    
     if isatac, T.gene="chr"+T.gene; end
 
-    [filesaved]=gui.i_exporttable(T,true,'T',outfile);
+    [filetype,filesaved]=gui.i_exporttable(T,true,'T',outfile);
 
-filesaved
 %    if ~(ismcc || isdeployed)
         answer = questdlg('Save up- and down-regulated genes for enrichment analysis?');
 
         if strcmp(answer,'Yes')
             [Tup,Tdn]=pkg.e_processDETable(T,true);
-            labels = {'Save DE results (selected up-regulated) to variable named:',...
-                'Save DE results (selected down-regulated) to variable named:'}; 
-            vars = {'Tup','Tdn'}; values = {Tup,Tdn};
-            [~,tf]=export2wsdlg(labels,vars,values);
+            tf=0;
+            if ~(ismcc || isdeployed) && strcmp(filetype,'Workspace')
+                labels = {'Save DE results (selected up-regulated) to variable named:',...
+                    'Save DE results (selected down-regulated) to variable named:'}; 
+                vars = {'Tup','Tdn'}; values = {Tup,Tdn};
+                [~,tf]=export2wsdlg(labels,vars,values);
+            end
 
-            if ~isempty(filesaved) 
-                if strcmp(extractAfter(filesaved,strlength(filesaved)-4),'xlsx')
-                    filesaved
-%                     if isatac
-%                         Tup.gene="chr"+Tup.gene;
-%                         Tdn.gene="chr"+Tdn.gene;
-%                     end
+            if ~isempty(filesaved)
+                if strcmp(filetype,'Excel file')
+                    % strcmp(extractAfter(filesaved,strlength(filesaved)-4),'xlsx')
                     writetable(Tup,filesaved,"FileType","spreadsheet",'Sheet','Up-regulated');
-                    writetable(Tdn,filesaved,"FileType","spreadsheet",'Sheet','Down-regulated');            
+                    writetable(Tdn,filesaved,"FileType","spreadsheet",'Sheet','Down-regulated'); 
+                    waitfor(helpdlg(sprintf('Result has been saved in %s',filesaved),''));
                     %writetable(Tup,fullfile(tempdir,sprintf('%s_up.xlsx',outfile)),'FileType','spreadsheet',);
                     %writetable(Tdn,fullfile(tempdir,sprintf('%s_up.xlsx',outfile)),'FileType','spreadsheet');
+                elseif strcmp(filetype,'Text file')
+                    % strcmp(extractAfter(filesaved,strlength(filesaved)-3),'txt')
+                    [~,filesaved1]=gui.i_exporttable(Tup,true,'Tup');
+                    if ~isempty(filesaved1)
+                        waitfor(helpdlg(sprintf('Result has been saved in %s',filesaved1),''));
+                    end
+                    [~,filesaved2]=gui.i_exporttable(Tdn,true,'Tdn');
+                    if ~isempty(filesaved2)
+                        waitfor(helpdlg(sprintf('Result has been saved in %s',filesaved2),''));
+                    end
                 end
             end
 
@@ -164,14 +173,14 @@ filesaved
         %return;
     
     
-        answer = questdlg('Run enrichment analysis with top 200 up-regulated DE genes?');
+        answer = questdlg('Run enrichment analysis with top K (=100 by default) up-regulated DE genes?');
         if strcmp(answer,'Yes')
-            gui.i_enrichtest(Tup.gene(1:min(numel(Tup.gene),200)));
+            gui.i_enrichtest(Tup.gene(1:min(numel(Tup.gene),100)));
         end
         
-        answer = questdlg('Run enrichment analysis with top 200 down-regulated DE genes?');
+        answer = questdlg('Run enrichment analysis with top K (=100 by default) down-regulated DE genes?');
         if strcmp(answer,'Yes')
-            gui.i_enrichtest(Tdn.gene(1:min(numel(Tdn.gene),200)));
+            gui.i_enrichtest(Tdn.gene(1:min(numel(Tdn.gene),100)));
         end
 
 %    end
