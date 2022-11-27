@@ -83,6 +83,24 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
             fw=gui.gui_waitbar;
             sce=sce.qcfilterwhitelist(libsize,mtratio,...
                 min_cells_nonzero,numgenes,whitelist);
+            
+            if min_cells_nonzero<1.0
+                a=sprintf('%.f%%',min_cells_nonzero*100);
+            else
+                a=sprintf('%d',min_cells_nonzero);
+            end
+
+            fprintf(['"We removed cells with more than %.f%% mitochondrial reads and ' ...
+                'with less than %d the total number of detected molecules (library size). '], mtratio*100, libsize);
+            fprintf(['We also removed the cells expressing fewer than %d unique genes ' ...
+                'and genes expressed in fewer than %s cells from the non-normalized ' ...
+                'UMI count matrix, resulting in %d genes across %d cells."\n'], ...
+                 numgenes, a,sce.NumGenes,sce.NumCells);
+                
+            % Based on the visual inspection of the distribution of the detected molecules across the retained cells, we removed cells with fewer than 500 detected transcripts indicating low-quality cells or empty droplets. 
+            % Genes with few counts (fewer than the 15th percentile based on the distribution of the average gene-wise counts across all cells) were considered uninformative and removed. 
+            % According to the applied criteria for the quality control of cells and genes, the dataset was finally composed of 12,113 genes and 2,990 cells. 
+
             gui.gui_waitbar(fw);
         %   [Xmajor,Xminor,gmajor,gminor]=pkg.e_makeshadowmat(sce.X,sce.g);
         %   [X1,g1]=pkg.e_shadowmatqc(Xmajor,Xminor,gmajor,gminor);

@@ -803,6 +803,9 @@ end
             fw = gui.gui_waitbar;
             try
                 forced = true;
+                if strcmpi(methodtag,'tsne')
+                    disp('Perplexity=30');
+                end
                 sce = sce.embedcells(methodtag, forced, usehvgs, ndim, K, whitelist);
             catch ME
                 gui.gui_waitbar(fw);
