@@ -44,10 +44,13 @@ function callback_ShowClustersPop(src, ~)
                 gui.i_gscatter3(sces, c, 3, cmv(idxx(kk)));
                 set(gca,'XTick',[]);
                 set(gca,'YTick',[]);
-                title(strrep(cL{idxx(kk)},'_',"\_"));
-                subtitle(sprintf('%d cells (%.2f%%)', ...
+                b=cL{idxx(kk)};                
+                title(strrep(b,'_',"\_"));
+                a=sprintf('%d cells (%.2f%%)', ...
                     cmx(idxx(kk)), ...
-                    100 * cmx(idxx(kk)) / length(c)));
+                    100 * cmx(idxx(kk)) / length(c));
+                fprintf('%s in %s\n',a,b);
+                subtitle(a);
 %                 title(sprintf('%s\n%d cells (%.2f%%)', ...
 %                     cL{idxx(kk)}, cmx(idxx(kk)), ...
 %                     100 * cmx(idxx(kk)) / length(c)));

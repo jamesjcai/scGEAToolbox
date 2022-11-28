@@ -122,8 +122,8 @@ i_addbutton(1,0,@callback_CellTypeMarkerScores,"cellscore.gif","Calculate cell s
 i_addbutton(1,0,@ShowCellStemScatter,"IMG00067.GIF","Stem scatter plot");
 i_addbutton(1,1,@callback_Brush4Markers,"plotpicker-kagi.gif","Marker genes of brushed cells");
 i_addbutton(1,0,@callback_MarkerGeneHeatmap,"plotpicker-plotmatrix.gif","Marker gene heatmap");
-i_addbutton(1,1,@callback_ShowClustersPop,"plotpicker-geoscatter.gif","Show cell clusters/groups individually");
-i_addbutton(1,0,@callback_SelectCellsByClass,"plotpicker-pointfig.gif","Select cells by class");
+i_addbutton(1,1,@gui.callback_ShowClustersPop,"plotpicker-geoscatter.gif","Show cell clusters/groups individually");
+i_addbutton(1,0,@gui.callback_SelectCellsByClass,"plotpicker-pointfig.gif","Select cells by class");
 i_addbutton(1,0,@DeleteSelectedCells,"plotpicker-qqplot.gif","Delete selected cells");
 i_addbutton(1,0,@callback_SaveX,"export.gif","Export & save data");
 i_addbutton(1,1,@EmbeddingAgain,"plotpicker-geobubble.gif","Embedding (tSNE, UMP, PHATE)");
