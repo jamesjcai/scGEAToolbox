@@ -37,21 +37,24 @@ switch sourcetag
             if ~ismember(answer, {'Union', 'Intersect'}), return; end
             methodtag = lower(answer);
             try
-            insce=cell(1,length(indx));
-            s="";
-            for k=1:length(indx)
-                insce{k}=evalin('base',a(indx(k)).name);
-                s=sprintf('%s,%s',s,a(indx(k)).name);
-            end
-            s=s(2:end);
-            fprintf('>> sce=sc_mergesces({%s},''%s'');\n',s,methodtag);
-            sce=sc_mergesces(insce,methodtag);
-            guidata(FigureHandle,sce);
-            requirerefresh=true;
+                insce=cell(1,length(indx));
+                s="";
+                for k=1:length(indx)
+                    insce{k}=evalin('base',a(indx(k)).name);
+                    s=sprintf('%s,%s',s,a(indx(k)).name);
+                end
+                s=s(2:end);
+                fprintf('>> sce=sc_mergesces({%s},''%s'');\n',s,methodtag);
+                fw=gui.gui_waitbar;
+                sce=sc_mergesces(insce,methodtag);
+                guidata(FigureHandle,sce);
+                requirerefresh=true;
             catch ME
+                gui.gui_waitbar(fw,true);
                 errordlg(ME.message);
                 return;
             end
+            gui.gui_waitbar(fw);
         else
             return;
         end

@@ -8,8 +8,8 @@ function callback_MultiGroupingViewer(src,~)
      end
 
     [c,cL] = grp2idx(thisc1);
-    cx1.c=c; cx1.cL=cL;
+    cx1.c=c; cx1.cL=strrep(cL,'_','\_');
     [c,cL] = grp2idx(thisc2);
-    cx2.c=c; cx2.cL=cL;
+    cx2.c=c; cx2.cL=strrep(cL,'_','\_');
     gui.sc_multigroupings(sce,cx1,cx2,clable1,clable2);
 end
