@@ -30,13 +30,19 @@ switch answer
             tg=gui.i_inputgenelist(predefinedlist);
         end
         
-        if length(tg)>=1            
+        if length(tg)>=1
             [y,ix]=ismember(upper(tg),upper(gsorted));
             % i=i(y);
-            %glist=tg(y);
-            
-            glist=gsorted(ix(y));
-
+            %glist=tg(y);            
+           glist=gsorted(ix(y));
+           a=length(glist)-length(tg);
+           if a~=0
+               if a==1
+                   warndlg(sprintf('%d gene is not found.',a));
+               elseif a>1
+                   warndlg(sprintf('%d genes are not found.',a));
+               end
+           end
 %             if length(glist)<2
 %                 warndlg('Need at leaset 2 genes');
 %                 return;

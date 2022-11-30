@@ -207,7 +207,7 @@ i_addmenu(m_exp,0,@callback_TCellExhaustionScores,'T Cell Exhaustion Score...');
 i_addmenu(m_exp,1,@GEOAccessionToSCE,'Import Data Using GEO Accession...');
 i_addmenu(m_exp,0,{@MergeSCEs,1},'Merge SCEs in Workspace...');
 i_addmenu(m_exp,0,{@MergeSCEs,2},'Merge SCE Data Files...');
-i_addmenu(m_exp,0,@RenameCellTypeBatchID,'Rename Batch IDs...');
+i_addmenu(m_exp,0,{@RenameCellTypeBatchID,'Batch ID'},'Rename Batch IDs...');
 i_addmenu(m_exp,0,@callback_ViewMetaData,'View Metadata...');
 i_addmenu(m_exp,1,{@gui.i_savemainfig,3},'Save Figure to PowerPoint File...');
 i_addmenu(m_exp,0,{@gui.i_savemainfig,2},'Save Figure as Graphic File...');
@@ -726,13 +726,17 @@ end
         colormap(para.oldColorMap);
     end
 
-    function RenameCellTypeBatchID(src,~)
-        answer=questdlg('Rename cell type or batch ID?','','Cell type','Batch ID','Cell type');
+    function RenameCellTypeBatchID(src,~,answer)
+        if nargin<3 || isempty(answer)
+            answer=questdlg('Rename cell type, batch ID, or gene name?','','Cell type','Batch ID','Gene name','Cell type');
+        end
         switch answer
             case 'Cell type'
                 [requirerefresh]=gui.callback_RenameCellType(src);
             case 'Batch ID'
                 [requirerefresh]=gui.callback_RenameBatchID(src);
+            case 'Gene name'
+                [requirerefresh]=gui.callback_RenameGenes(src);
             otherwise
                 return;
         end
