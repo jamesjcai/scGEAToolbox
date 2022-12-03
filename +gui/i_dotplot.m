@@ -116,6 +116,8 @@ pkg.i_addbutton2fig(tb,'off',@gui.i_changefontsize,'noun_font_size_591141.gif','
 pkg.i_addbutton2fig(tb,'off',@i_resizedot,'networkcomp.gif','Resize dots...');
 pkg.i_addbutton2fig(tb,'on',@i_renamecat,'guideicon.gif','Rename groups...');
 pkg.i_addbutton2fig(tb,'on',{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');
+pkg.i_addbutton2fig(tb,'off',{@gui.i_savemainfig,2},"svg.gif",'Save Figure as Graphic File...');
+pkg.i_addbutton2fig(tb,'off',{@gui.i_savemainfig,1},"svg.gif",'Save Figure as SVG File...');
 pkg.i_addbutton2fig(tb,'on',@i_savetable,'export.gif','Export data...');
 pkg.i_addbutton2fig(tb,'on',@gui.i_invertcolor,'plotpicker-comet.gif','Invert colors');
 pkg.i_addbutton2fig(tb,'off',@i_resetcolor,'plotpicker-geobubble2.gif','Reset color map');
