@@ -1,0 +1,43 @@
+        <a href="/Enrichr" id='IndexLogo-link'><img src="https://maayanlab.cloud/Enrichr/images/enrichr-icon.png"/>
+            <span>En</span><span class="red">rich</span><span>r</span>
+        </a>
+<form id="enrich" action="https://maayanlab.cloud/Enrichr/enrich" method="post" enctype="multipart/form-data">
+            <h2>Input data</h2>
+            <table id="data-input" border=0>
+                <tr id="genes">
+                    <td id="textbox">
+                        <p>Paste a list of valid Entrez gene symbols on each row in the text-box below.</p>
+<textarea name=list rows=10 id=text-area cols=63></textarea>
+                    </td>
+                </tr>
+                <tr id="contrib-button">
+                    <td style="padding: 10px">
+                        <div class="next-step">
+                            <input type="hidden" name="validate" value="true"/>
+                            <button class="proceed-button">Submit</button>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <div class="clear"></div>
+            <div id="citation"><br/>
+                Please acknowledge Enrichr in your publications by citing the
+                following references: <br/> <a
+                    href="https://www.ncbi.nlm.nih.gov/pubmed/23586463"
+                    id='pubmedCitation-link' target="_blank">Chen EY, Tan CM, Kou
+                Y, Duan Q, Wang Z, Meirelles GV, Clark NR, Ma&#39;ayan A. Enrichr:
+                interactive and collaborative HTML5 gene list enrichment analysis
+                tool. <i>BMC Bioinformatics. 2013;128(14)</i>.
+            </a> <br/>
+                <br/> <a href="https://www.ncbi.nlm.nih.gov/pubmed/27141961"
+                         id='pubmedCitation-link' target="_blank"> Kuleshov MV, Jones
+                MR, Rouillard AD, Fernandez NF, Duan Q, Wang Z, Koplev S, Jenkins
+                SL, Jagodnik KM, Lachmann A, McDermott MG, Monteiro CD, Gundersen
+                GW, Ma&#39;ayan A. Enrichr: a comprehensive gene set enrichment
+                analysis web server 2016 update. <i>Nucleic Acids Research.
+                    2016; <a href=https://doi.org/10.1093/nar/gkw377>gkw377</a>
+                </i>.
+            </a>
+            </div>
+            <div class="clear"></div>
+        </form>

@@ -1,7 +1,8 @@
 function e_mkqqplot(T)
 
 pd = makedist('Gamma','a',0.5,'b',2);
-h=qqplot(T.FC,pd);
+qqplot(T.FC,pd);
+return;
 [~,idx]=sort(T.FC);
 dt = datacursormode;
 dt.UpdateFcn = {@i_myupdatefcn1,T.genelist(idx)};

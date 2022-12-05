@@ -112,7 +112,7 @@ answer=questdlg('Construct networks de novo or use existing networks in Workspac
         end
         if gseaok
             answer323=gui.questdlg_timer(15,'Group GSEA hits?');
-            if ~isempty(answer323) && strcmp(answer323,'Yes')
+            if ~isempty(answer323) && strcmp(answer323,'Yes') && ~isempty(Tr)
                 ten.e_fgseanet(Tr);
             end
         end
