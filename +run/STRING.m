@@ -14,6 +14,8 @@ switch lower(species)
         species="10090";
     case 'rat'
         species="10116";
+    case 'zebrafish'
+        species="10116";
 end
 
 n=min([length(genelist) genenum-1]);
