@@ -5,7 +5,7 @@ function STRING(genelist,genenum,species)
 
 if nargin<1, genelist=[]; end
 if nargin<2, genenum=50; end
-if nargin<3, species="human"; end
+if nargin<3, species="rat"; end
 
 switch lower(species)
     case 'human'

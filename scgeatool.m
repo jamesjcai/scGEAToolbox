@@ -207,8 +207,8 @@ promotesave=false;
                 sce=sce.appendmetainfo(metainfo);
                 if ~isempty(celllist) && length(celllist)==sce.NumCells
                     sce.c_cell_id=celllist;
-                    if isstring(cellist)
-                    if all(strlength(cellist)>17)
+                    if isstring(celllist)
+                    if all(strlength(celllist)>17)
                         sce.c_batch_id=extractAfter(sce.c_cell_id,17);                        
                     end
                     end
