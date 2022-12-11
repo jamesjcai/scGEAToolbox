@@ -1,4 +1,4 @@
-function i_stemscatterfig(sce,cs,posg,csname)
+function [f0]=i_stemscatterfig(sce,cs,posg,csname)
 
         if nargin<4, csname="CellScore"; end
 

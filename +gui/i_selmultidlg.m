@@ -20,7 +20,8 @@ else
     inlist=genelist;
 end
 
-f = figure('Visible','off');
+f = figure('Visible','off', ...
+    'WindowStyle','modal','NumberTitle','off');
 % ax = axes(f);
 % ax.Units = 'pixels';
 % ax.Position = [75 75 325 280]

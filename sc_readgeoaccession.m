@@ -72,6 +72,18 @@ elseif length(c)==1
         end
 end
 
+
+if sum(upper(extractBefore(g,8))=='GRCH38_')>10
+    warning('Gene names contain prefix GRCH38_.');
+    try
+        g=extractAfter(g,8);
+    catch ME
+        warning('Gene names contain prefixes.');
+        rethrow(ME);
+    end
+end
+
+
 if length(g)==size(X,1)
     sce=SingleCellExperiment(X,g);
 elseif length(g)==size(X,2)
