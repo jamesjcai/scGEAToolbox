@@ -2,7 +2,7 @@ function [f0]=i_stemscatterfig(sce,cs,posg,csname)
 
         if nargin<4, csname="CellScore"; end
 
-        f0=figure('Visible',false);
+        [f0]=figure('Visible',false);
         gui.i_stemscatter(sce.s,cs);
         zlabel('Score Value')
         title(strrep(csname,'_','\_'));
@@ -12,9 +12,18 @@ function [f0]=i_stemscatterfig(sce,cs,posg,csname)
         pkg.i_addbutton2fig(tb,'on',@gui.i_pickcolormap,'plotpicker-compass.gif','Pick new color map...');
         pkg.i_addbutton2fig(tb,'on',@gui.i_invertcolor,'plotpicker-comet.gif','Invert colors');
         pkg.i_addbutton2fig(tb,'on',@i_geneheatmapx,'plotpicker-cometx.gif','Heatmap');
+        pkg.i_addbutton2fig(tb,'on',@i_viewgenenames,'plotpicker-cometxx.gif','Heatmap');
+
         movegui(f0,'center');
         set(f0,'Visible',true);
 
+    function i_viewgenenames(~,~)
+        idx=matches(sce.g,posg,'IgnoreCase',true);
+        gg=sce.g(idx);
+        inputdlg(csname, ...
+            '',[10 50], ...
+            {char(gg)});
+    end
     function i_saveCrossTable(~,~)
         gui.i_exporttable(table(cs),false,csname);
     end
