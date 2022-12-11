@@ -4,7 +4,7 @@ function [hFig]=i_dotplot(X,g,c,cL,tgene,uselog)
 DOTSIZE=0.5;
 
 %g=g(end:-1:1);
-if nargin<6, uselog=false; end
+if nargin<6, uselog=true; end
 [yes]=ismember(tgene,g);
 if ~any(yes), return; end
 z=length(tgene)-sum(yes);
@@ -67,7 +67,8 @@ T=table(GeneList,GroupList,AvgExpr,PrtExpr);
 if uselog
     vl=log2(vl+1);
 end
-txgene=[" "; tgene];
+
+txgene=[" "; tgene(:)];
 
 % figure;
 %sz=randi(100,1,length(x));

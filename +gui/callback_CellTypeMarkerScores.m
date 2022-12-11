@@ -5,7 +5,7 @@ function [cs,ctselected]=callback_CellTypeMarkerScores(src,~,sce)
     end
 cs=[];
 ctselected=[];
-species=questdlg('Which species?','Select Species','Human','Mouse','Mouse');
+species=questdlg('Which species?','Select Species','Human','Mouse','Human');
 switch lower(species)
     case 'human'
         stag='hs';
@@ -54,12 +54,15 @@ switch actiontype
 
     case 'MSigDB Genes'
         [posg,ctselected]=gui.i_selectMSigDBGeneSet(stag);
-
+        if isempty(posg) || isempty(ctselected)
+            return;
+        end
 end
+
     
     % matches(sce.g, posg,'IgnoreCase',true);
 
-    cs=sc_cellscore(sce.X,sce.g,posg);
+    [cs]=sc_cellscore(sce.X,sce.g,posg);
     
     posg=sort(posg);
     fprintf('\n=============\n%s\n-------------\n',ctselected);
