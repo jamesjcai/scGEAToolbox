@@ -1,6 +1,8 @@
-function [speciestag] = i_selectspecies(n)
+function [speciestag] = i_selectspecies(n,shorttag)
 
+if nargin<2, shorttag=false; end
 if nargin<1, n=3; end
+
 if n==3
     answer = questdlg('Which species?',...
         'Select Species', 'Human', 'Mouse','Zebrafish','Human');
@@ -18,5 +20,14 @@ switch answer
         speciestag = "zebrafish";
     otherwise
         speciestag = [];
+end
+
+if shorttag
+    switch lower(speciestag)
+        case 'human'
+            speciestag='hs';
+        case 'mouse'
+            speciestag='mm';
+    end
 end
 end

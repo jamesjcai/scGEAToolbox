@@ -7,6 +7,9 @@ function [score]=sc_cellscore(X,genelist,tgsPos,tgsNeg,nbin,ctrl)
 % see also: PKG.E_CELLSCORES, RUN.UCELL 
 %
 % ref: AddModuleScore - https://github.com/satijalab/seurat/blob/master/R/utilities.R
+% ref: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8271111/
+% disp("Seurat provides a computationally efficient gene signature scoring function, 
+% named AddModuleScore, originally proposed by Tirosh et al. [5]. ")
 
 if nargin<6, ctrl=5; end
 if nargin<5, nbin=25; end

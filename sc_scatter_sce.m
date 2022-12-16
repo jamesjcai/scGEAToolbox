@@ -118,8 +118,8 @@ i_addbutton(1,0,@ClusterCellsX,"plotpicker-gscatter.gif","Clustering using expre
 i_addbutton(1,1,@DetermineCellTypeClusters,"plotpicker-contour.gif","Assign cell types to clusters")
 i_addbutton(1,0,@Brush4Celltypes,"brush.gif","Assign cell type label to selected cells");
 i_addbutton(1,0,@RenameCellTypeBatchID,"plotpicker-scatterhist.gif","Rename cell type or batch ID");
-i_addbutton(1,0,@callback_CellTypeMarkerScores,"cellscore.gif","Calculate cell scores from cell-type markers");
-i_addbutton(1,0,@ShowCellStemScatter,"IMG00067.GIF","Stem scatter plot");
+i_addbutton(1,0,@callback_CellTypeMarkerScores,"cellscore.gif","Calculate signature scores for each cell");
+% i_addbutton(1,0,@ShowCellStemScatter,"IMG00067.GIF","Stem scatter plot");
 i_addbutton(1,1,@callback_Brush4Markers,"plotpicker-kagi.gif","Marker genes of brushed cells");
 i_addbutton(1,0,@callback_MarkerGeneHeatmap,"plotpicker-plotmatrix.gif","Marker gene heatmap");
 i_addbutton(1,1,@gui.callback_ShowClustersPop,"plotpicker-geoscatter.gif","Show cell clusters/groups individually");
@@ -820,6 +820,7 @@ end
         end
         RefreshAll(src, 1, true, false);
         guidata(FigureHandle, sce);
+        disp('Following the library-size normalization and log1p-transformation, we visualized similarity among cells by projecting them into a reduced dimensional space using t-distributed stochastic neighbor embedding (t-SNE)/uniform manifold approximation and projection (UMAP).')
     end
 
     function DetermineCellTypeClusters(src, ~)

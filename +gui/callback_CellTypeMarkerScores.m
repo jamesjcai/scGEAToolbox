@@ -1,69 +1,83 @@
 function [cs,ctselected]=callback_CellTypeMarkerScores(src,~,sce)
-    if nargin<3
-        FigureHandle=src.Parent.Parent;
-        sce=guidata(FigureHandle);
-    end
+
+answer = questdlg('Calculate a signature score for each cell with respect to a given gene set. Continue?','');
+if ~strcmp(answer,'Yes'), return; end
+
+if nargin<3
+    FigureHandle=src.Parent.Parent;
+    sce=guidata(FigureHandle);
+end
 cs=[];
 ctselected=[];
-species=questdlg('Which species?','Select Species','Human','Mouse','Human');
-switch lower(species)
-    case 'human'
-        stag='hs';
-    case 'mouse'
-        stag='mm';
-    otherwise
-        return;
-end
+posg=[];
 
-
-actiontype=questdlg('Cell score for PanglaoDB marker genes or MSigDB genes?',...
+actiontype=questdlg('Select a gene set database: PanglaoDB or MSigDB?',...
     '','PanglaoDB Markder Genes',...
     'MSigDB Genes','PanglaoDB Markder Genes');
 
 switch actiontype
     case 'PanglaoDB Markder Genes'
+        stag=gui.i_selectspecies(2,true);
+        if isempty(stag), return; end
     
-    oldpth=pwd;
-    pw1=fileparts(mfilename('fullpath'));
-    pth=fullfile(pw1,'..','+run','thirdparty','alona_panglaodb');
-    cd(pth);
-    
-    markerfile=sprintf('marker_%s.mat',stag);
-    if exist(markerfile,'file')
-        load(markerfile,'Tw','Tm');
-    else
-        Tw=readtable(sprintf('markerweight_%s.txt',stag));
-        Tm=readtable(sprintf('markerlist_%s.txt',stag),...
-            'ReadVariableNames',false,'Delimiter','\t');
-        % save(markerfile,'Tw','Tm');
-    end
-    cd(oldpth);
-    
-    ctlist=string(Tm.Var1);
-    listitems=sort(ctlist);
-    [indx,tf] = listdlg('PromptString',...
-        {'Select Class'},...
-         'SelectionMode','single','ListString',listitems,'ListSize',[220,300]);
-        if ~tf==1, return; end
-        ctselected=listitems(indx);
-        % idx=find(matches(ctlist,ctselected));
-        idx=matches(ctlist,ctselected);
-        ctmarkers=Tm.Var2{idx};
-        posg=string(strsplit(ctmarkers,','));
-        posg(strlength(posg)==0)=[];
-
+        oldpth=pwd;
+        pw1=fileparts(mfilename('fullpath'));
+        pth=fullfile(pw1,'..','+run','thirdparty','alona_panglaodb');
+        cd(pth);
+        
+        markerfile=sprintf('marker_%s.mat',stag);
+        if exist(markerfile,'file')
+            load(markerfile,'Tw','Tm');
+        else
+            Tw=readtable(sprintf('markerweight_%s.txt',stag));
+            Tm=readtable(sprintf('markerlist_%s.txt',stag),...
+                'ReadVariableNames',false,'Delimiter','\t');
+            % save(markerfile,'Tw','Tm');
+        end
+        cd(oldpth);
+        
+        ctlist=string(Tm.Var1);
+        listitems=sort(ctlist);
+        [indx,tf] = listdlg('PromptString',...
+            {'Select Class'},...
+             'SelectionMode','single','ListString',listitems,'ListSize',[220,300]);
+            if ~tf==1, return; end
+            ctselected=listitems(indx);
+            % idx=find(matches(ctlist,ctselected));
+            idx=matches(ctlist,ctselected);
+            ctmarkers=Tm.Var2{idx};
+            posg=string(strsplit(ctmarkers,','));
+            posg(strlength(posg)==0)=[];
     case 'MSigDB Genes'
-        [posg,ctselected]=gui.i_selectMSigDBGeneSet(stag);
-        if isempty(posg) || isempty(ctselected)
+        stag=gui.i_selectspecies(2,true);
+        if isempty(stag), return; end
+        try
+            [posg,ctselected]=gui.i_selectMSigDBGeneSet(stag);
+        catch ME
+            errordlg(ME.message);
             return;
         end
+    otherwise
+        return;
 end
 
-    
+    if isempty(posg) || isempty(ctselected)
+        return;
+    end    
     % matches(sce.g, posg,'IgnoreCase',true);
 
-    [cs]=sc_cellscore(sce.X,sce.g,posg);
-    
+    answer = questdlg('Which method?',...
+    'Select Method', 'AddModuleScore/Seurat', ...
+    'UCell [PMID: 34285779]','AddModuleScore/Seurat');
+    switch answer
+        case 'AddModuleScore/Seurat'
+            [cs]=sc_cellscore(sce.X,sce.g,posg);
+        case 'UCell [PMID: 34285779]'
+            [cs]=run.UCell(sce.X,sce.g,posg);
+        otherwise
+            return;
+    end
+
     posg=sort(posg);
     fprintf('\n=============\n%s\n-------------\n',ctselected);
     for k=1:length(posg)
@@ -74,9 +88,6 @@ end
         gui.i_stemscatterfig(sce,cs,posg,ctselected);
         % a=inputdlg('Gene Set Info:','Gene Viewer',[10 50],{char(sce.metadata)});
     end
-
-
-
 %     function i_saveCrossTable(~,~)
 %         gui.i_exporttable(cs,false,'CellScore');
 %     end
