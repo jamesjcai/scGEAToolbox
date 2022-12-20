@@ -119,7 +119,7 @@ i_addbutton(1,1,@DetermineCellTypeClusters,"plotpicker-contour.gif","Assign cell
 i_addbutton(1,0,@Brush4Celltypes,"brush.gif","Assign cell type label to selected cells");
 i_addbutton(1,0,@RenameCellTypeBatchID,"plotpicker-scatterhist.gif","Rename cell type or batch ID");
 i_addbutton(1,0,@callback_CellTypeMarkerScores,"cellscore.gif","Calculate signature scores for each cell");
-% i_addbutton(1,0,@ShowCellStemScatter,"IMG00067.GIF","Stem scatter plot");
+%i_addbutton(1,0,@ShowCellStemScatter,"IMG00067.GIF","Stem scatter plot");
 i_addbutton(1,1,@callback_Brush4Markers,"plotpicker-kagi.gif","Marker genes of brushed cells");
 i_addbutton(1,0,@callback_MarkerGeneHeatmap,"plotpicker-plotmatrix.gif","Marker gene heatmap");
 i_addbutton(1,1,@gui.callback_ShowClustersPop,"plotpicker-geoscatter.gif","Show cell clusters/groups individually");
@@ -196,14 +196,18 @@ i_addmenu(m_exp,0,@WorkonSelectedCells,'Select 50% Cells to Work on...');
 
 i_addmenu(m_exp,1,@DrawKNNNetwork,'Plot Cell kNN Network...');
 i_addmenu(m_exp,0,@DrawTrajectory,'Plot Cell Trajectory...');
+i_addmenu(m_exp,0,@ShowCellStemScatter,"Stem Scatter Plot...");
 i_addmenu(m_exp,0,@gui.callback_GeneHeatMap,'Gene Heatmap...');
 i_addmenu(m_exp,0,@callback_DrawDotplot,'Dot Plot...');
 
-i_addmenu(m_exp,1,@callback_CalculateGeneStats,'Calculate Gene Expression Statistics...');
+i_addmenu(m_exp,1,@DetermineCellTypeClusters2,'Annotate Cell Type Using Customized Markers...');
+i_addmenu(m_exp,0,@callback_CalculateGeneStats,'Calculate Gene Expression Statistics...');
 i_addmenu(m_exp,0,@callback_CellCycleLibrarySize,'Library Size of Cell Cycle Phases...');
 i_addmenu(m_exp,0,@callback_ShowHgBGeneExpression,'Show HgB-genes Expression...');
 i_addmenu(m_exp,0,@callback_ShowMtGeneExpression,'Show Mt-genes Expression...');
 i_addmenu(m_exp,0,@callback_TCellExhaustionScores,'T Cell Exhaustion Score...');
+
+
 i_addmenu(m_exp,1,@GEOAccessionToSCE,'Import Data Using GEO Accession...');
 i_addmenu(m_exp,0,{@MergeSCEs,1},'Merge SCEs in Workspace...');
 i_addmenu(m_exp,0,{@MergeSCEs,2},'Merge SCE Data Files...');
@@ -823,6 +827,46 @@ end
         disp('Following the library-size normalization and log1p-transformation, we visualized similarity among cells by projecting them into a reduced dimensional space using t-distributed stochastic neighbor embedding (t-SNE)/uniform manifold approximation and projection (UMAP).')
     end
 
+    function DetermineCellTypeClusters2(~, ~)
+        [Tm,Tw]=pkg.i_markerlist2weight;
+        Tw
+        wvalu=Tw.Var2;
+        wgene=string(Tw.Var1);
+        celltypev=string(Tm.Var1);
+        markergenev=string(Tm.Var2);
+        
+        S=zeros(length(celltypev),max(c));
+        
+        T=table(celltypev);
+        for k=1:max(c)
+            Xk=sce.X(:,c==k);
+            for j=1:length(celltypev)
+                g=strsplit(markergenev(j),',');
+                g=g(1:end-1);
+                %[~,idx]=ismember(g,genelist);
+                Z=0; ng=0;
+                for i=1:length(g)
+                    if any(g(i)==wgene) && any(sce.g==g(i))
+                    %if ismember(g(i),wgene) && ismember(g(i),genelist)
+                        wi=wvalu(g(i)==wgene);                
+                        z=median(Xk(sce.g==g(i),:));
+                        Z=Z+z*wi;
+                        ng=ng+1;
+                    end
+                end
+                if ng>0
+                    S(j,k)=Z./nthroot(ng,3);
+                else
+                    S(j,k)=0;
+                end
+            end    
+        end
+        [~,idx]=sort(sum(S,2),'descend');        
+        T=[T,array2table(S)];
+        T=T(idx,:)
+
+    end
+
     function DetermineCellTypeClusters(src, ~)
         answer = questdlg('Assign cell types to clusters automatically?',...
             '','Yes, automatically','No, manually',...
@@ -862,7 +906,7 @@ end
             if manuallyselect
                 [indx, tf] = listdlg('PromptString', {'Select cell type'},...
                     'SelectionMode', 'single', 'ListString', ctxt);
-            if tf ~= 1, return; end
+                if tf ~= 1, return; end
                 ctxt = Tct.C1_Cell_Type{indx};
             else
                 ctxt = Tct.C1_Cell_Type{1};
