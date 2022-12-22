@@ -2,7 +2,7 @@ function [T,xyz1]=hvg_splinefit(X,genelist,sortit,removenan)
 %SC_SPLINEFIT identify genes with a profile deviated from normal
 %
 % USAGE:
-% >> [X,genelist]=sc_readfile('example_data/GSM3044891_GeneExp.UMIs.10X1.txt');
+% >> [X,genelist]=sc_readfile('example_data/GSM3204304_P_P_Expr.csv');
 % >> [X]=sc_norm(X,'type','libsize');
 % >> [T]=sc_splinefit(X,genelist,true,true);
 

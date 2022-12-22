@@ -5,7 +5,7 @@ function STRING(genelist,genenum,species)
 
 if nargin<1, genelist=[]; end
 if nargin<2, genenum=50; end
-if nargin<3, species="rat"; end
+if nargin<3, species="human"; end
 
 switch lower(species)
     case 'human'
@@ -16,6 +16,9 @@ switch lower(species)
         species="10116";
     case 'zebrafish'
         species="10116";
+    otherwise
+        taxonid = pkg.i_species2taxid(species);
+        species=sprintf("%d",taxonid);
 end
 
 n=min([length(genelist) genenum-1]);
