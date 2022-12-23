@@ -12,9 +12,9 @@ function callback_ShowGeneExpr(src,~)
     % if any([axx,bxx]==0), axx=ax; bxx=bx; end
     % gsorted=sort(sce.g);
     
-answer = questdlg('Show expression of single or mulitple genes?',...
-    'Single/Multiple Genes','Single','Multiple','Cancel','Single');
-
+%answer = questdlg('Show expression of single or mulitple genes?',...
+%    'Single/Multiple Genes','Single','Multiple','Cancel','Single');
+answer='Multiple';
 switch answer
     case 'Single'
         [gsorted]=gui.i_sortgenenames(sce);

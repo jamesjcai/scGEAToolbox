@@ -129,6 +129,13 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
             end
             a=getpref('scgeatoolbox','prefcolormapname','autumn');
             gui.i_setautumncolor(c,a);
+            cb=colorbar(h1);
+            cb.Label.String = 'Average Expression';
+            % cb.LineWidth = 1.5;
+            % pos = get(cb, 'Position');            
+            % pos(4) = pos(4) / 2;
+            % set(cb, 'Position', pos);
+
             ori_c=c;
             title(targetg);
             subtitle(sprintf('(%s/%s = %.2f%% nonzero)', ...
