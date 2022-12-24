@@ -96,6 +96,9 @@ end
         
 metainfo=sprintf("Source: %s",acc);
 sce=sce.appendmetainfo(metainfo);
+fprintf(['The data was downloaded from the National Center' ...
+    ' for Biotechnology Information Gene Expression Omnibus (GEO) ' ...
+    'with the accession ID %s.\n'],acc);
 
 % function i_tryh5(c)
 %     c1=c(contains(c,'tsv'));

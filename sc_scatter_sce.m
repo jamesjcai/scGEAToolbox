@@ -1335,7 +1335,7 @@ end
             delete(dtp);
         else
             sce=guidata(FigureHandle);
-            [thisc,~]=gui.i_select1class(sce);
+            [thisc,clable]=gui.i_select1class(sce);
             if isempty(thisc)
                 set(src, 'State', 'off');
                 return; 
@@ -1343,6 +1343,7 @@ end
             [c,cL] = grp2idx(thisc);
             sce.c = c;
             RefreshAll(src, 1, true, false);
+            fprintf('Cells are colored by %s.\n', lower(clable));
             if max(c)<=200
                 if i_labelclusters
                     set(src, 'State', 'on');
