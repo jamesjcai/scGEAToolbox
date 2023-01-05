@@ -73,7 +73,8 @@ end
         case 'AddModuleScore/Seurat'
             [cs]=sc_cellscore(sce.X,sce.g,posg);
         case 'UCell [PMID: 34285779]'
-            [cs]=run.UCell(sce.X,sce.g,posg);
+            %[cs]=run.UCell(sce.X,sce.g,posg);
+            [cs]=sc_cellscore_ucell(sce.X,sce.g,posg);
         otherwise
             return;
     end

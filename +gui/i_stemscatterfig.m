@@ -26,7 +26,7 @@ function [f0]=i_stemscatterfig(sce,cs,posg,csname)
             {char(gg)});
     end
     function i_saveCrossTable(~,~)
-        gui.i_exporttable(table(cs),false,csname);
+        gui.i_exporttable(table(cs),false,char(csname));
     end
     function i_geneheatmapx(~,~)
         [thisc]=gui.i_select1class(sce);

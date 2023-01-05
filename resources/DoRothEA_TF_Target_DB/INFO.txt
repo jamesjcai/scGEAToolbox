@@ -1,0 +1,6 @@
+https://saezlab.github.io/dorothea/articles/dorothea.html
+
+DoRothEA
+DoRothEA is a gene set resource containing signed transcription factor (TF)-target interactions [13]. Those interactions were curated and collected from different types of evidence such as literature curated resources, ChIP-seq peaks, TF binding site motifs, and interactions inferred directly from gene expression. Based on the number of supporting evidence, each interaction is accompanied by an interaction confidence level ranging from A to E, with A being the most confidence interactions and E the least. In addition, a summary TF confidence level is assigned (also from A to E) which is derived from the leading confidence level of its interactions (e.g., a TF is assigned confidence level A if at least ten targets have confidence level A as well). DoRothEA contains in total 470,711 interactions covering 1396 TFs targeting 20,238 unique genes. We use VIPER in combination with DoRothEA to estimate TF activities from gene expression data, as described in [13].
+
+https://genomebiology.biomedcentral.com/articles/10.1186/s13059-020-1949-z#Sec9

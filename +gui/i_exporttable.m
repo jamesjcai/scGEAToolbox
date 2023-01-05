@@ -11,6 +11,10 @@ else
     answer = questdlg('Export & save data to:','',...
         'Text file','Excel file','MAT file','Text file');
 end
+
+if isstring(TName)
+    TName=char(TName);
+end
 	
 switch answer
     case 'Workspace'

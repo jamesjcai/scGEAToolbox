@@ -1,7 +1,7 @@
 function [score,T,posg]=e_cellscores(X,genelist,typeid)
 % Calcute predefined cell scores (marker list in cellscores.txt)
 %
-% see also: RUN.UCELL, SC_CELLSCORE, SC_CELLCYCLESCORING
+% see also: SC_CELLSCORE_UCELL, RUN.UCELL, SC_CELLSCORE, SC_CELLCYCLESCORING
 
 if nargin<3, typeid=0; end
 if nargin<2, genelist=[]; end
