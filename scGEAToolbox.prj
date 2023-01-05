@@ -1,13 +1,13 @@
 <deployment-project plugin="plugin.toolbox" plugin-version="1.0">
-  <configuration build-checksum="3889589680" file="C:\Users\jcai\OneDrive - Texas A&amp;M University\U-Drive\GitHub\scGEAToolbox\scGEAToolbox.prj" location="C:\Users\jcai\OneDrive - Texas A&amp;M University\U-Drive\GitHub\scGEAToolbox" name="scGEAToolbox" target="target.toolbox" target-name="Package Toolbox">
+  <configuration build-checksum="3889589680" file="E:\GitHub\scGEAToolbox\scGEAToolbox.prj" location="E:\GitHub\scGEAToolbox" name="scGEAToolbox" target="target.toolbox" target-name="Package Toolbox">
     <param.appname>scGEAToolbox</param.appname>
-    <param.authnamewatermark />
-    <param.email />
-    <param.company />
+    <param.authnamewatermark>James Cai</param.authnamewatermark>
+    <param.email>jcai@tamu.edu</param.email>
+    <param.company>Texas A&amp;M University</param.company>
     <param.summary>Single-cell Gene Expression Analysis Toolbox</param.summary>
     <param.description>scRNAseq data analysis toolbox</param.description>
     <param.screenshot>${PROJECT_ROOT}\resources\scgeatool.png</param.screenshot>
-    <param.version>22.9.1</param.version>
+    <param.version>23.1.1</param.version>
     <param.output>${PROJECT_ROOT}\scGEAToolbox.mltbx</param.output>
     <param.products.name>
       <item>Statistics and Machine Learning Toolbox</item>
@@ -82,9 +82,6 @@ resources/STRING/stringdb_mouse.mat
     <param.additional.sw.mac.url />
     <param.additional.sw.linux.url />
     <unset>
-      <param.authnamewatermark />
-      <param.email />
-      <param.company />
       <param.output />
       <param.platforms />
       <param.exclude.pcodedmfiles />
@@ -180,6 +177,7 @@ resources/STRING/stringdb_mouse.mat
       <file>${PROJECT_ROOT}\sc_read10xdir.m</file>
       <file>${PROJECT_ROOT}\sc_readfile.m</file>
       <file>${PROJECT_ROOT}\sc_readgeoaccession.m</file>
+      <file>${PROJECT_ROOT}\sc_readgeoaccessions.m</file>
       <file>${PROJECT_ROOT}\sc_readh5adfile.m</file>
       <file>${PROJECT_ROOT}\sc_readhdf5file.m</file>
       <file>${PROJECT_ROOT}\sc_readmtxfile.m</file>
@@ -200,6 +198,7 @@ resources/STRING/stringdb_mouse.mat
       <file>${PROJECT_ROOT}\sc_splinefit.m</file>
       <file>${PROJECT_ROOT}\sc_splinefit2.m</file>
       <file>${PROJECT_ROOT}\sc_ssnet.m</file>
+      <file>${PROJECT_ROOT}\sc_tajima89d.m</file>
       <file>${PROJECT_ROOT}\sc_tenifoldnet.m</file>
       <file>${PROJECT_ROOT}\sc_trajectory.m</file>
       <file>${PROJECT_ROOT}\sc_transform.m</file>
@@ -215,7 +214,7 @@ resources/STRING/stringdb_mouse.mat
     <fileset.depfun.excluded />
     <fileset.package />
     <build-deliverables>
-      <file location="${PROJECT_ROOT}" name="scGEAToolbox.mltbx" optional="false">C:\Users\jcai\OneDrive - Texas A&amp;M University\U-Drive\GitHub\scGEAToolbox\scGEAToolbox.mltbx</file>
+      <file location="${PROJECT_ROOT}" name="scGEAToolbox.mltbx" optional="false">E:\GitHub\scGEAToolbox\scGEAToolbox.mltbx</file>
     </build-deliverables>
     <workflow />
     <matlab>
