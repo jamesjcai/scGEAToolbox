@@ -53,6 +53,22 @@ n=[a;b;c]; isfound=0;
 if isfound==0,  Rpath=[]; end
 end % end of FindRpath
 
+
+
+% This function calls R to run R script (.r file) under Matlab, and returns 'runR.log' in the same folder with the input R script file.
+% This code only works in Windows environments. It might work in Mac by modifying 'FindRpath'. 
+% 'RscriptFileName' : path + filename of the R script to be run.
+% 'Rpath' (optional) : the path for the installed 'R.exe'.  e.g.  Rpath = 'C:\Program Files\R\R-3.1.1\bin';
+% If 'Rpath' is not provided, 'FindRpath' will be executed to automatically find the path for R in Windows Program Files folder.
+% Example: 
+% >> Rpath = 'C:\Program Files\R\R-3.1.1\bin';
+% >> RscriptFileName = 'D:\test\lmm.R';
+% >> RunRcode(RscriptFileName, Rpath);
+% Update:
+% Ver. 1.4  Dec-14-2017  support parallel computing (run several R codes simultaneously)
+% Weirong Chen   March-8-2015
+
+
 function env=myGetEnv
 % Get the environmental values from the operation system.
 % Returns key-value pairs stored in 'env' cell array.
