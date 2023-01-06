@@ -17,7 +17,7 @@ if ~ok, return; end
 
         gui.gui_waitbar(fw);
         errordlg("SingleR runtime error.");
-        retrun;
+        return;
     end
     gui.gui_waitbar(fw);
     if ~isempty(cx) && length(cx)==sce.NumCells
