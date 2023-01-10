@@ -152,6 +152,7 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
                 pkg.i_addbutton2fig(tb,'on',{@i_PickColorMap,c},'plotpicker-compass.gif','Pick new color map...');
                 pkg.i_addbutton2fig(tb,'off',@i_RescaleExpr,'IMG00074.GIF','Rescale expression level [log2(x+1)]');
                 pkg.i_addbutton2fig(tb,'off',@i_ResetExpr,'plotpicker-geobubble2.gif','Reset expression level');
+                pkg.i_addbutton2fig(tb,'off',{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');
             end
         else
             warning('%s no expression', targetg);
