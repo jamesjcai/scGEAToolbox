@@ -17,6 +17,7 @@ if nargin<3
             fname=[wrkpth 'dorothea_hs.mat'];
     end
     load(fname,'T');
+    T=T(T.mor>0,:);    % only consider positive regulation
 end
 
 [X]=sc_norm(X);
