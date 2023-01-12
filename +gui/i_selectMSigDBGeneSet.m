@@ -49,7 +49,7 @@ if tf1~=1, return; end
 % tmpf=tempname;
 % websave(tmpf,urllist{indx1},weboptions('ContentType','json'));
 % fid = fopen(tmpf); 
-% raw = fread(fid,inf); 
+% raw = fread(fid,inf);
 % str = char(raw'); 
 % fclose(fid);
 % val = jsondecode(str);

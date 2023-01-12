@@ -13,7 +13,7 @@ posg=[];
 
 actiontype=questdlg('Select a gene set database: PanglaoDB or MSigDB?',...
     '','PanglaoDB Markder Genes',...
-    'MSigDB Genes','PanglaoDB Markder Genes');
+    'MSigDB Signature Genes','DoRothEA TF Target Genes','PanglaoDB Markder Genes');
 
 switch actiontype
     case 'PanglaoDB Markder Genes'
@@ -48,7 +48,7 @@ switch actiontype
             ctmarkers=Tm.Var2{idx};
             posg=string(strsplit(ctmarkers,','));
             posg(strlength(posg)==0)=[];
-    case 'MSigDB Genes'
+    case 'MSigDB Signature Genes'
         stag=gui.i_selectspecies(2,true);
         if isempty(stag), return; end
         try
@@ -57,6 +57,15 @@ switch actiontype
             errordlg(ME.message);
             return;
         end
+    case 'DoRothEA TF Target Genes'
+        stag=gui.i_selectspecies(2,true);
+        if isempty(stag), return; end
+        try
+            [posg,ctselected]=gui.i_selectTFTargetSet(stag);
+        catch ME
+            errordlg(ME.message);
+            return;
+        end        
     otherwise
         return;
 end
