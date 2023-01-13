@@ -11,23 +11,35 @@ function [cs,tflist,gcommon]=sc_tfactivity(X,g,T,species)
 if nargin<2, error('USAGE: [cs,tflist]=sc_tfactivity(X,g);'); end
 if nargin<4, species='hs'; end
 if nargin<3 || isempty(T)
-    folder=fileparts(mfilename('fullpath'));
-    wrkpth=fullfile(folder,'resources',filesep,'DoRothEA_TF_Target_DB',filesep);
+    %folder=fileparts(mfilename('fullpath'));
+    %wrkpth=fullfile(folder,'resources',filesep,'DoRothEA_TF_Target_DB',filesep);
+ 
+    pw1=fileparts(mfilename('fullpath'));
     switch species
         case 'hs'
-            fname=[wrkpth 'dorothea_hs.mat'];
+            %fname=[wrkpth 'dorothea_hs.mat'];
+            fname=fullfile(pw1,'resources','DoRothEA_TF_Target_DB','dorothea_hs.mat');
         case 'mm'
-            fname=[wrkpth 'dorothea_mm.mat'];
+            %fname=[wrkpth 'dorothea_mm.mat'];
+            fname=fullfile(pw1,'resources','DoRothEA_TF_Target_DB','dorothea_mm.mat');
         otherwise
-            fname=[wrkpth 'dorothea_hs.mat'];
+            error('TF database is not available for the species.');
     end
     load(fname,'T');
     [gid,gnlist]=grp2idx(T.target);
     [tid,tflist]=grp2idx(T.tf);
+    %tic
     t=zeros(max(tid),max(gid));
-    for k=1:length(gid)
-        t(tid(k),gid(k))=T.mor(k);
-    end
+    t(sub2ind([max(tid),max(gid)],tid,gid))=T.mor;
+    %toc
+    %tic
+    %t2=zeros(max(tid),max(gid));
+    %for k=1:length(gid)
+    %    t2(tid(k),gid(k))=T.mor(k);
+    %end
+    %toc
+    %isequal(t,t2)
+    
     % T=T(T.mor>0,:);    % only consider positive regulation
     %[t]=crosstab(T.tf,T.target);   % TF-by-target regulagory relationship
     %matrix if only positive regulation
@@ -40,8 +52,8 @@ end
 
 t=t(:,tid(l));     % tf-by-gene
 X=X(k,:);          % gene-by-cell
-cs=t*X;
 
+cs=t*X;
 if nargout>2, gcommon=g(k); end
 
 end
