@@ -13,15 +13,16 @@ pth=fullfile(pw1,'..','resources','DoRothEA_TF_Target_DB',f);
 load(pth,'T');
 T=T(T.mor>0,:);                % only consider positive regulation
 [t]=crosstab(T.tf,T.target);   % TF-by-target regulagory relationship matrix
-[gid,gnlist]=grp2idx(T.target);
-[tid,tflist]=grp2idx(T.tf);
+[~,gnlist]=grp2idx(T.target);
+[~,tflist]=grp2idx(T.tf);
 
 [indx1,tf1] = listdlg('PromptString',...
     {'Select TF gene:'},...
      'SelectionMode','single','ListString',tflist);
 
 if tf1~=1, return; end
-    glist=string(gnlist(gid(t(tid(indx1),:)>0)));
+    glist=string(gnlist(t(indx1,:)>0));
+    % glist=string(gnlist(gid(t(tid(indx1),:)>0)));
     setname=tflist{indx1};
 end
 
