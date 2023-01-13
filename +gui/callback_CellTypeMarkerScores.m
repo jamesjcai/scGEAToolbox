@@ -48,24 +48,29 @@ switch actiontype
             ctmarkers=Tm.Var2{idx};
             posg=string(strsplit(ctmarkers,','));
             posg(strlength(posg)==0)=[];
+            ttxt = ctselected;
     case 'MSigDB Signature Genes'
         stag=gui.i_selectspecies(2,true);
         if isempty(stag), return; end
+        
         try
             [posg,ctselected]=gui.i_selectMSigDBGeneSet(stag);
-        catch ME
+        catch ME            
             errordlg(ME.message);
             return;
         end
+        ttxt = ctselected;
     case 'DoRothEA TF Target Genes'
         stag=gui.i_selectspecies(2,true);
         if isempty(stag), return; end
+        
         try
             [posg,ctselected]=gui.i_selectTFTargetSet(stag);
         catch ME
             errordlg(ME.message);
             return;
-        end        
+        end
+        ttxt = strcat(ctselected, ' activity');
     otherwise
         return;
 end
@@ -80,10 +85,26 @@ end
     'UCell [PMID: 34285779]','AddModuleScore/Seurat');
     switch answer
         case 'AddModuleScore/Seurat'
-            [cs]=sc_cellscore(sce.X,sce.g,posg);
+            fw=gui.gui_waitbar;
+            try
+                [cs]=sc_cellscore(sce.X,sce.g,posg);
+            catch ME
+                gui.gui_waitbar(fw,true);
+                errordlg(ME.message);                
+            return;
+            end
+            gui.gui_waitbar(fw);
         case 'UCell [PMID: 34285779]'
             %[cs]=run.UCell(sce.X,sce.g,posg);
-            [cs]=sc_cellscore_ucell(sce.X,sce.g,posg);
+            fw=gui.gui_waitbar;
+            try
+                [cs]=sc_cellscore_ucell(sce.X,sce.g,posg);
+            catch ME
+                gui.gui_waitbar(fw,true);
+                errordlg(ME.message);
+            return;
+            end
+            gui.gui_waitbar(fw);
         otherwise
             return;
     end
@@ -104,5 +125,25 @@ end
 %     function i_geneheatmapx(~,~)
 %         gui.i_geneheatmap(sce,sce.c_cell_type_tx,posg);
 %     end
+
+    answer2 = questdlg(sprintf('Score has been computed.\nCompare the score across cell classes?'),'Continue?');
+    switch answer2
+        case 'Yes'
     
+        otherwise
+            return;
+    end
+    [thisc,clabel]=gui.i_select1class(sce);
+    if isempty(thisc)   % || numel(unique(thisc))==1
+        errordlg('Undefined');
+        return;
+    end
+    figure('WindowStyle','modal');
+    pkg.i_violinplot_groupordered(cs,thisc);
+
+    
+    ylabel(strrep(ttxt,'_','\_'))
+    xlabel(clabel);
+    
+
 end

@@ -11,10 +11,10 @@ switch lower(species)
 end
 pth=fullfile(pw1,'..','resources','DoRothEA_TF_Target_DB',f);
 load(pth,'T');
+T=T(T.mor>0,:);                % only consider positive regulation
 [t]=crosstab(T.tf,T.target);   % TF-by-target regulagory relationship matrix
 [gid,gnlist]=grp2idx(T.target);
 [tid,tflist]=grp2idx(T.tf);
-
 
 [indx1,tf1] = listdlg('PromptString',...
     {'Select TF gene:'},...

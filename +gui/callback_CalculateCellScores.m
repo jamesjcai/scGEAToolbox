@@ -18,6 +18,9 @@ switch actiontype
              'ListString',listitems, ...
              'ListSize',[220,300]);
         if ~tf==1, return; end
+
+        
+
         fw=gui.gui_waitbar;
         [cs,~,posg]=pkg.e_cellscores(sce.X,sce.g,indx);
         ttxt=T.ScoreType(indx);
@@ -43,7 +46,7 @@ switch actiontype
         gui.gui_waitbar(fw);
     otherwise
         return;
-end        
+end
     
 
     if ~isempty(cs)        
