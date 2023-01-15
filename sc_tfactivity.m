@@ -26,15 +26,16 @@ if nargin<2, error('USAGE: [cs,tflist]=sc_tfactivity(X,g);'); end
         otherwise
             error('TF database is not available for the species.');
     end
+    fprintf('\nReading ... %s.\n',fname);
     load(fname,'T');
 end
 
-
-
-methodid=1;
-% T=T(T.mor>0,:);
-if methodid==1, T=T(T.mor>0,:); end
-if methodid==2
+if methodid==1
+    T=T(T.mor>0,:);
+    fprintf('Only positive regulatory relationships are used.\n');
+end
+if methodid==2    
+    T=T(T.mor>0,:);
     [X]=sc_norm(X);
     [X]=log(X+1);
 end
@@ -43,6 +44,11 @@ end
 [tid,tflist]=grp2idx(T.tf);
 t=zeros(max(tid),max(gid));
 t(sub2ind([max(tid),max(gid)],tid,gid))=T.mor;
+fprintf('Using the Dorothea dadtabase that contains %d TFs and %d targets.\n', ...
+         size(t,1),size(t,2));
+
+% size(t)
+% assignin('base','t2',t);
 
 %t2=zeros(max(tid),max(gid));
 %for k=1:length(gid)
@@ -54,23 +60,27 @@ t(sub2ind([max(tid),max(gid)],tid,gid))=T.mor;
 %matrix if only positive regulation
 
 [~,k,l]=intersect(upper(g),upper(gnlist));
-t=t(:,gid(l));     % tf-by-gene
-X=X(k,:);          % gene-by-cell
+t=t(:,l);     % tf-by-gene
+X=X(k,:);     % gene-by-cell
+fprintf('Using %d target genes that are present in the data.\n', size(t,2));
+
 if nargout>2, gcommon=g(k); end
 
 switch methodid
     case 1        % UCell method
         cs=zeros(size(t,1),size(X,2));
         R=tiedrank(-X);
-        R(R>1500)=1500+1;        
+        R(R>1500)=1500+1;
         for k=1:size(t,1)
             idx1=t(k,:)>0;
-            if tflist(k)=="ZNF445"
-                n1=sum(idx1)
-                gcommon(idx1)
-            else
-                n1=sum(idx1);
-            end
+            n1=sum(idx1);
+%             if tflist(k)=="AHR"
+%                 n1=sum(idx1)                
+%                 assignin('base','setgenes',gcommon(idx1))
+%             else
+%                 n1=sum(idx1);
+%             end
+
             if n1>0
                 u=sum(R(idx1,:))-(n1*(n1-1))/2;
                 cs(k,:) = 1-u/(n1*1500);

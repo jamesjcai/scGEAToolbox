@@ -10,9 +10,13 @@ switch lower(species)
         f='dorothea_mm.mat';
 end
 pth=fullfile(pw1,'..','resources','DoRothEA_TF_Target_DB',f);
+fprintf('\nReading ... %s.\n',pth);
 load(pth,'T');
 T=T(T.mor>0,:);                % only consider positive regulation
+%size(T)
 [t]=crosstab(T.tf,T.target);   % TF-by-target regulagory relationship matrix
+%size(t)
+%assignin('base','t1',t);
 [~,gnlist]=grp2idx(T.target);
 [~,tflist]=grp2idx(T.tf);
 
@@ -21,7 +25,9 @@ T=T(T.mor>0,:);                % only consider positive regulation
      'SelectionMode','single','ListString',tflist);
 
 if tf1~=1, return; end
-    glist=string(gnlist(t(indx1,:)>0));
+%indx1
+sum((t(indx1,:)~=0))
+    glist=string(gnlist(t(indx1,:)~=0));
     % glist=string(gnlist(gid(t(tid(indx1),:)>0)));
     setname=tflist{indx1};
 end

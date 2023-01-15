@@ -27,7 +27,6 @@ idx2=matches(genelist, tgsNeg,'IgnoreCase',true);
 n1=sum(idx1);
 
 methodid=1;
-
 switch methodid
     case 1
         % https://doi.org/10.1016/j.csbj.2021.06.043
