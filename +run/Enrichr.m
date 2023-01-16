@@ -22,7 +22,11 @@ pause(1)
 fprintf(fid,'%s\n',a(1:idx-1));
 
 fprintf(fid,'<textarea name=list rows=10 id=text-area cols=63>');
-n=min([length(genelist) genenum-1]);
+
+% n=min([length(genelist) genenum-1]);
+
+n=length(genelist);
+
 if ~isempty(genelist)
     if isstring(genelist)
         fprintf(fid,'%s\n',genelist(1));

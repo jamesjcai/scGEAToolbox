@@ -90,11 +90,11 @@ narginchk(3,8);
 % Evaluate B-splines
 base = splinebase(breaks,n);
 pieces = base.pieces;
-base
+%base
 A = ppval(base,x);
 
 % Bin data
-[~,ibin] = histc(x,[-inf,breaks(2:end-1),inf]);
+[~,~,ibin] = histcounts(x,[-inf,breaks(2:end-1),inf]);
 
 % Sparse system matrix
 mx = numel(x);

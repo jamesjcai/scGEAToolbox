@@ -20,8 +20,11 @@ if showdata
     pkg.i_addbutton2fig(UitoolbarHandle,'off',@HighlightGenes,'plotpicker-qqplot.gif','Highlight top HVGs');
     pkg.i_addbutton2fig(UitoolbarHandle,'off',@ExportGeneNames,'export.gif','Export HVG gene names...');
     pkg.i_addbutton2fig(UitoolbarHandle,'off',@EnrichrHVGs,'plotpicker-andrewsplot.gif','Enrichment analysis...');
-
-    h=scatter3(hAx,x,y,z);  % 'filled','MarkerFaceAlpha',.5);
+    pkg.i_addbutton2fig(UitoolbarHandle,'off',@ChangeAlphaValue,'xplotpicker-andrewsplot.gif','Change MarkerFaceAlpha value');
+    
+    %h=scatter3(hAx,x,y,z);  % 'filled','MarkerFaceAlpha',.5);
+    h=scatter3(hAx,x,y,z,'filled','MarkerFaceAlpha',.1);
+       
     if ~isempty(g)
         dt = datacursormode;
         dt.UpdateFcn = {@i_myupdatefcn1,g};
@@ -63,6 +66,13 @@ if dofit
     
 end
 
+    function ChangeAlphaValue(~,~)
+        if h.MarkerFaceAlpha<=0.05
+            h.MarkerFaceAlpha=1;
+        else
+            h.MarkerFaceAlpha=h.MarkerFaceAlpha-0.1;
+        end
+    end
 
    function HighlightGenes(~,~)
         %h.MarkerIndices=idx20;
