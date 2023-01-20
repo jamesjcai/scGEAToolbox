@@ -20,8 +20,10 @@ function callback_CompareGeneBtwCls(src,~)
 
     
     
-selitems={'Expression of Gene','Library Size', ...
-    'Predefined Cell Score','Other Attribute'};
+selitems={'Expression of Gene', ...
+    'Predefined Cell Score','TF Activity Score',...
+    '--------------------------------',...
+    'Library Size','Other Attribute'};
 [indx1,tf1]=listdlg('PromptString',...
     'Select a metric for comparison.',...
     'SelectionMode','single','ListString',selitems);
@@ -53,29 +55,23 @@ if tf1~=1, return; end
                 otherwise
                     return;
             end
-    cL=strrep(cL,'_','\_');
-    thisc=strrep(thisc,'_','\_');
-
-
+            cL=strrep(cL,'_','\_');
+            thisc=strrep(thisc,'_','\_');
             gui.i_cascadeviolin(sce,Xt,thisc,glist, ...
                 selitems{indx1},cL,colorit);
-
-
-%         figure;
-%         [~,idx]=ismember(glist,sce.g);
-%         h=heatmap(Xt(idx,1:500));
-%         h.Title = 'Gene Heatmap';
-%         h.XLabel = 'Group';
-%         h.YLabel = 'Genes';
-%         h.Colormap = parula;
-%         h.GridVisible = 'off';
-
+            %         figure;
+            %         [~,idx]=ismember(glist,sce.g);
+            %         h=heatmap(Xt(idx,1:500));
+            %         h.Title = 'Gene Heatmap';
+            %         h.XLabel = 'Group';
+            %         h.YLabel = 'Genes';
+            %         h.Colormap = parula;
+            %         h.GridVisible = 'off';
             return;
         case 'Predefined Cell Score'
             [~,T]=pkg.e_cellscores(sce.X,sce.g,0);
             listitems=T.ScoreType;
-            [indx2,tf2] = listdlg('PromptString',...
-                {'Select Class','',''},...
+            [indx2,tf2] = listdlg('PromptString','Select Class',...
                  'SelectionMode','single','ListString',...
                  listitems,'ListSize',[220,300]);
             if tf2~=1, return; end
@@ -94,6 +90,18 @@ if tf1~=1, return; end
             else
                 ttxt=clable;
             end
+        case 'TF Activity Score'
+
+            [~,T]=pkg.e_tfactivityscores(sce.X,sce.g,0);
+            listitems=T.tflist;
+            [indx2,tf2] = listdlg('PromptString','Select Class',...
+                 'SelectionMode','single','ListString',...
+                 listitems,'ListSize',[220,300]);
+            if tf2~=1, return; end
+            fw=gui.gui_waitbar;
+            [y]=pkg.e_tfactivityscores(sce.X,sce.g,indx2);
+            ttxt=T.tflist(indx2);
+            gui.gui_waitbar(fw);
         otherwise
             return;
     end

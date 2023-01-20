@@ -23,15 +23,21 @@ cL1=[]; cL2=[];
 % end 
 
 
-[thisc,~]=gui.i_select1class(sce);
-if isempty(thisc)
-    %errordlg('Undefined');
-    return;
+if isa(sce, 'SingleCellExperiment')
+    [thisc,~]=gui.i_select1class(sce);
+    if isempty(thisc)
+        %errordlg('Undefined');
+        return;
+    end
+else    % assume that sce input is thisc
+    thisc=sce;
 end
+
 if numel(unique(thisc))==1
     warndlg("Cannot compare with an unique group");
     return;
 end
+
 
 [ci,cLi]=grp2idx(thisc);
 listitems=sort(string(cLi));
