@@ -123,15 +123,17 @@ if tf1~=1, return; end
     [~,cL,noanswer]=gui.i_reordergroups(thisc);
     if noanswer, return; end
 
-    [answerc]=questdlg('Color violin plot?','');
-    switch answerc
-        case 'Yes'
-            colorit=true;
-        case 'No'
-            colorit=false;
-        otherwise
-            return;
-    end
+%     [answerc]=questdlg('Color violin plot?','');
+%     switch answerc
+%         case 'Yes'
+%             colorit=true;
+%         case 'No'
+%             colorit=false;
+%         otherwise
+%             return;
+%     end
+
+    colorit=true;
     %[cL]=i_getgrouporder(thisc);
     f=figure('visible','off');
     tb=uitoolbar(f);
@@ -148,6 +150,7 @@ if tf1~=1, return; end
     ylabel(selitems{indx1});
     movegui(f,'center');
     set(f,'visible','on');
+    
 %catch ME
 %    errordlg(ME.message);
 %end
