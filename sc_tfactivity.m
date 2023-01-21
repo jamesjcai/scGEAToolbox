@@ -8,13 +8,12 @@ function [cs,tflist,gcommon]=sc_tfactivity(X,g,T,species,methodid)
 % CS - is an m-by-n matrix of activity scores for m TFs and n cells.
 % TFlist - list of TF genes
 
+if nargin<2, error('USAGE: [cs,tflist]=sc_tfactivity(X,g);'); end    
 if nargin<5 || isempty(methodid), methodid=1; end
 if nargin<4 || isempty(species), species='hs'; end
 if nargin<3 || isempty(T)
-if nargin<2, error('USAGE: [cs,tflist]=sc_tfactivity(X,g);'); end    
     %folder=fileparts(mfilename('fullpath'));
     %wrkpth=fullfile(folder,'resources',filesep,'DoRothEA_TF_Target_DB',filesep);
- 
     pw1=fileparts(mfilename('fullpath'));
     switch lower(species)
         case {'hs','human'}

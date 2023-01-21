@@ -17,11 +17,8 @@ function callback_CompareGeneBtwCls(src,~)
         end
     end
 
-
-    
-    
 selitems={'Expression of Gene', ...
-    'Predefined Cell Score','TF Activity Score',...
+    'Predefined Cell Score','TF Activity Score','Differentiation Potency',...
     '--------------------------------',...
     'Library Size','Other Attribute'};
 [indx1,tf1]=listdlg('PromptString',...
@@ -31,6 +28,21 @@ if tf1~=1, return; end
 
 %try
     switch selitems{indx1}
+        case 'Differentiation Potency'
+            [a]=contains(sce.list_cell_attributes(1:2:end),'cell_potency');
+            if ~any(a)
+                answer2=questdlg('Which species?','Select Species','Mouse','Human','Mouse');
+                [yes,specisid]=ismember(lower(answer2),{'human','mouse'});
+                if ~yes, return; end                
+                sce=sce.estimatepotency(specisid);
+            end
+            [yes,idx]=ismember({'cell_potency'},sce.list_cell_attributes(1:2:end));
+            if yes
+                y=sce.list_cell_attributes{idx+1};
+                ttxt='Differentiation Potency';
+            else                
+                return;
+            end           
         case 'Library Size'
             y=sum(sce.X);
             ttxt='Library Size';
@@ -76,7 +88,7 @@ if tf1~=1, return; end
                  listitems,'ListSize',[220,300]);
             if tf2~=1, return; end
             fw=gui.gui_waitbar;
-            [y]=pkg.e_cellscores(sce.X,sce.g,indx2);
+            y=pkg.e_cellscores(sce.X,sce.g,indx2);
             ttxt=T.ScoreType(indx2);
             gui.gui_waitbar(fw);
         case 'Other Attribute'
@@ -91,16 +103,18 @@ if tf1~=1, return; end
                 ttxt=clable;
             end
         case 'TF Activity Score'
-
             [~,T]=pkg.e_tfactivityscores(sce.X,sce.g,0);
-            listitems=T.tflist;
+            listitems=unique(T.tf);
             [indx2,tf2] = listdlg('PromptString','Select Class',...
                  'SelectionMode','single','ListString',...
                  listitems,'ListSize',[220,300]);
             if tf2~=1, return; end
             fw=gui.gui_waitbar;
-            [y]=pkg.e_tfactivityscores(sce.X,sce.g,indx2);
-            ttxt=T.tflist(indx2);
+            [cs,tflist]=sc_tfactivity(sce.X,sce.g,[]);
+            idx=find(tflist==string(listitems{indx2}));
+            assert(length(idx)==1)
+            [y]=cs(idx,:);
+            ttxt=listitems{indx2};
             gui.gui_waitbar(fw);
         otherwise
             return;
