@@ -36,14 +36,17 @@ switch actiontype
             helpdlg('No feature genes selected.','')
             return;
         end
-        fw=gui.gui_waitbar;
-        %a=sprintf('%s+',posg);
-        %a=a(1:min([length(a),50]));
-        %ttxt=sprintf('%s\n%s',ttxt,a);
+%         fw=gui.gui_waitbar;
+%         %a=sprintf('%s+',posg);
+%         %a=a(1:min([length(a),50]));
+%         %ttxt=sprintf('%s\n%s',ttxt,a);
+%         posg
+%         cs=sc_cellscore(sce.X,sce.g,posg);
+%         gui.gui_waitbar(fw);
+
+        [cs]=gui.e_cellscore(sce,posg);
         ttxt={ttxt};
-        posg
-        cs=sc_cellscore(sce.X,sce.g,posg);
-        gui.gui_waitbar(fw);
+
     otherwise
         return;
 end
