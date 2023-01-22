@@ -139,10 +139,14 @@ if tf1~=1, return; end
     tb=uitoolbar(f);
     pkg.i_addbutton2fig(tb,'off',{@i_savedata,y,thisc}, ...
         'export.gif','Export data...');
+    pkg.i_addbutton2fig(tb,'off',{@i_testdata,y,thisc}, ...
+        'export.gif','One-Way ANOVA...');
+    
     pkg.i_addbutton2fig(tb,'off',{@gui.i_savemainfig,3}, ...
         "powerpoint.gif",'Save Figure to PowerPoint File...');
     pkg.i_addbutton2fig(tb,'off',@i_invertcolor, ...
         "xpowerpoint.gif",'Switch BW/Color');
+
     cL=strrep(cL,'_','\_');
     thisc=strrep(thisc,'_','\_');
     pkg.i_violinplot(y,thisc,colorit,cL);
@@ -169,6 +173,11 @@ function i_savedata(~,~,a,b)
     T=sortrows(T,'ExprLevel','descend');
     T=sortrows(T,'GroupID');
     gui.i_exporttable(T,true);
+end
+
+function i_testdata(~,~,y,grp)
+    [p,tbl,stats] = anova1(y,grp);
+    gui.i_exporttable(tbl,true);
 end
 
 % function [cL]=i_getgrouporder(thisc)
