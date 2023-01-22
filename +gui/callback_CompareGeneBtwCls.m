@@ -180,9 +180,10 @@ function i_testdata(~,~,y,grp)
         id=grp2idx(grp);
         [~,p,~,stats] = ttest2(y(id==1),y(id==2));
         stats.p=p;
-        tbl=struct2table(stats);
+        tbl=struct2table(stats);        
     else
-        [~,tbl] = anova1(y,grp);
+        [~,tbl] = anova1(y,grp,"on");
+        tbl=cell2table(tbl);
     end
     gui.i_exporttable(tbl,true);
 end
