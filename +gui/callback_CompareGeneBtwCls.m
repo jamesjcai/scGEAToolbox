@@ -140,7 +140,7 @@ if tf1~=1, return; end
     pkg.i_addbutton2fig(tb,'off',{@i_savedata,y,thisc}, ...
         'export.gif','Export data...');
     pkg.i_addbutton2fig(tb,'off',{@i_testdata,y,thisc}, ...
-        'export.gif','One-Way ANOVA...');
+        'exportx.gif','One-Way ANOVA...');
     
     pkg.i_addbutton2fig(tb,'off',{@gui.i_savemainfig,3}, ...
         "powerpoint.gif",'Save Figure to PowerPoint File...');
@@ -176,7 +176,14 @@ function i_savedata(~,~,a,b)
 end
 
 function i_testdata(~,~,y,grp)
-    [p,tbl,stats] = anova1(y,grp);
+    if length(unique(grp))==2
+        id=grp2idx(grp);
+        [~,p,~,stats] = ttest2(y(id==1),y(id==2));
+        stats.p=p;
+        tbl=struct2table(stats);
+    else
+        [~,tbl] = anova1(y,grp);
+    end
     gui.i_exporttable(tbl,true);
 end
 
