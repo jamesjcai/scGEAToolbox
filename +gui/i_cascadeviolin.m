@@ -10,7 +10,7 @@ for k=1:length(glist)
     ttxt=sce.g(idx);
     
     f = figure('visible','off');
-    subplot(1,2,1)
+    ax1=subplot(1,2,1);
     pkg.i_violinplot(y,thisc,colorit,grouporder);
 
     title(strrep(ttxt,'_','\_'));
@@ -25,7 +25,7 @@ for k=1:length(glist)
         'export.gif','Export data...');
     pkg.i_addbutton2fig(tb,'off',{@gui.i_savemainfig,3}, ...
         "powerpoint.gif",'Save Figure to PowerPoint File...');
-    pkg.i_addbutton2fig(tb,'off',@i_invertcolor, ...
+    pkg.i_addbutton2fig(tb,'off',{@i_invertcolor,ax1,colorit,y,thisc,grouporder}, ...
         "xpowerpoint.gif",'Switch BW/Color');
     P = get(f,'Position');
     set(f,'Position',[P(1)-20*k P(2)-20*k P(3) P(4)]);
@@ -35,15 +35,18 @@ for k=1:length(glist)
     F{k}=f;
 end
 gui.i_export2pptx(F,glist);
+end
 
 
-    function i_invertcolor(~,~)
+    function i_invertcolor(~,~,ax1,colorit,y,thisc,grouporder)
         colorit=~colorit;
-        delete(gca);
+        % delete(vh);
+        %cla(ax1,'reset')
+        axes(ax1)
         pkg.i_violinplot(y,thisc,colorit,grouporder);
     end
 
-end
+
 
 function i_savedata(~,~,a,b)
     T=table(a(:),b(:));    

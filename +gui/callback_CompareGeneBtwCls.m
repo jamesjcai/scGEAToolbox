@@ -58,15 +58,16 @@ if tf1~=1, return; end
             [~,cL,noanswer]=gui.i_reordergroups(thisc);
             if noanswer, return; end
             
-            [answerc]=questdlg('Color violin plot?','');
-            switch answerc
-                case 'Yes'
-                    colorit=true;
-                case 'No'
-                    colorit=false;
-                otherwise
-                    return;
-            end
+            colorit=true;
+%             [answerc]=questdlg('Color violin plot?','');
+%             switch answerc
+%                 case 'Yes'
+%                     colorit=true;
+%                 case 'No'
+%                     colorit=false;
+%                 otherwise
+%                     return;
+%             end
             cL=strrep(cL,'_','\_');
             thisc=strrep(thisc,'_','\_');
             gui.i_cascadeviolin(sce,Xt,thisc,glist, ...
@@ -140,8 +141,7 @@ if tf1~=1, return; end
     pkg.i_addbutton2fig(tb,'off',{@i_savedata,y,thisc}, ...
         'export.gif','Export data...');
     pkg.i_addbutton2fig(tb,'off',{@i_testdata,y,thisc}, ...
-        'exportx.gif','One-Way ANOVA...');
-    
+        'exportx.gif','ANOVA/T-test...');    
     pkg.i_addbutton2fig(tb,'off',{@gui.i_savemainfig,3}, ...
         "powerpoint.gif",'Save Figure to PowerPoint File...');
     pkg.i_addbutton2fig(tb,'off',@i_invertcolor, ...
