@@ -6,7 +6,8 @@ function [T]=e_grptest(y,grp)
         p_wilcoxon=zeros(size(y,1),1);  % Mann Whitney U Test (Wilcoxon Rank Sum Test)
         id=grp2idx(grp);
         for k=1:size(y,1)
-            a=y(k,id==1); b=y(k,id==2);
+            a=y(k,id==1); 
+            b=y(k,id==2);
             [~,p]=ttest2(a,b);
             p_ttest(k)=p;
             p_wilcoxon(k)=ranksum(a,b);
