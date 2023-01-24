@@ -86,6 +86,9 @@ if tf1~=1, return; end
         case 'TF Activity Score'
             [~,T]=pkg.e_tfactivityscores(sce.X,sce.g,0);
             listitems=unique(T.tf);
+
+            %[glist]=gui.i_selectngenes(string(listitems));
+
             [indx2,tf2] = listdlg('PromptString','Select Class',...
                  'SelectionMode','single','ListString',...
                  listitems,'ListSize',[220,300]);
