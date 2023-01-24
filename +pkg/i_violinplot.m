@@ -7,7 +7,9 @@ import pkg.violinplot
 % [~,cL]=grp2idx(c);
 % [~,i]=sort(grpstats(d,c,@median),'descend');
 
-c=string(c);
+if ~isstring(c)
+    c=string(c);
+end
 if nargin<4, grouporder=[]; end
 if nargin<3 || isempty(colorit), colorit=false; end
 if issparse(d), d=full(d); end

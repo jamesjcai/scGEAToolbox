@@ -103,6 +103,7 @@ if tf1~=1, return; end
         otherwise
             return;
     end
+
     [~,cL]=grp2idx(thisc);
     colorit=true;
     f=figure('visible','off');

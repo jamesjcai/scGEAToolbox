@@ -1,4 +1,5 @@
 function i_cascadeviolin(sce,Xt,thisc,glist,ytxt,grouporder,colorit)
+
 if nargin<7, colorit=false; end
 if nargin<6, grouporder=[]; end
 if nargin<5, ytxt=''; end
@@ -26,7 +27,7 @@ for k=1:length(glist)
     pkg.i_addbutton2fig(tb,'off',{@gui.i_savemainfig,3}, ...
         "powerpoint.gif",'Save Figure to PowerPoint File...');
     pkg.i_addbutton2fig(tb,'off',{@i_invertcolor,ax1,colorit,y,thisc,grouporder}, ...
-        "xpowerpoint.gif",'Switch BW/Color');
+        "xpowerpoint.gif",'Switch to BW');
     P = get(f,'Position');
     set(f,'Position',[P(1)-20*k P(2)-20*k P(3) P(4)]);
     set(f,'visible','on');  
@@ -35,16 +36,18 @@ for k=1:length(glist)
     F{k}=f;
 end
 gui.i_export2pptx(F,glist);
-end
+
 
 
     function i_invertcolor(~,~,ax1,colorit,y,thisc,grouporder)
         colorit=~colorit;
         % delete(vh);
-        %cla(ax1,'reset')
         axes(ax1)
+        cla
         pkg.i_violinplot(y,thisc,colorit,grouporder);
     end
+
+end
 
 
 

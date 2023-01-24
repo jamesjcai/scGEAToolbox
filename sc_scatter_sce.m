@@ -200,12 +200,14 @@ i_addmenu(m_exp,0,@ShowCellStemScatter,"Stem Scatter Plot...");
 i_addmenu(m_exp,0,@gui.callback_GeneHeatMap,'Gene Heatmap...');
 i_addmenu(m_exp,0,@callback_DrawDotplot,'Dot Plot...');
 
-i_addmenu(m_exp,1,@DetermineCellTypeClusters2,'Annotate Cell Type Using Customized Markers...');
-i_addmenu(m_exp,0,@callback_CalculateGeneStats,'Calculate Gene Expression Statistics...');
-i_addmenu(m_exp,0,@callback_CellCycleLibrarySize,'Library Size of Cell Cycle Phases...');
+i_addmenu(m_exp,1,@DetermineCellTypeClusters2,    'Annotate Cell Type Using Customized Markers...');
+i_addmenu(m_exp,0,@callback_CalculateGeneStats,   'Calculate Gene Expression Statistics...');
+i_addmenu(m_exp,0,@callback_CellCycleLibrarySize, 'Library Size of Cell Cycle Phases...');
+i_addmenu(m_exp,0,@callback_DiffTFActivity,       'Differential TF Activity Analysis...');
 i_addmenu(m_exp,0,@callback_ShowHgBGeneExpression,'Show HgB-genes Expression...');
-i_addmenu(m_exp,0,@callback_ShowMtGeneExpression,'Show Mt-genes Expression...');
+i_addmenu(m_exp,0,@callback_ShowMtGeneExpression, 'Show Mt-genes Expression...');
 i_addmenu(m_exp,0,@callback_TCellExhaustionScores,'T Cell Exhaustion Score...');
+
 
 
 i_addmenu(m_exp,1,@GEOAccessionToSCE,'Import Data Using GEO Accession...');
@@ -829,7 +831,9 @@ end
 
     function DetermineCellTypeClusters2(~, ~)
         [Tm,Tw]=pkg.i_markerlist2weight;
-        Tw
+        if isempty(Tm)||isempty(Tw)
+            return;
+        end        
         wvalu=Tw.Var2;
         wgene=string(Tw.Var1);
         celltypev=string(Tm.Var1);

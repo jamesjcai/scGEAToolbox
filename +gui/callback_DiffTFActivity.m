@@ -3,51 +3,56 @@ function callback_DiffTFActivity(src,~)
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
 
-
-    [thisc,clable]=i_select1class(sce,false);
-
-%     if length(unique(thisc))>2
-%         answer = questdlg('Two group or multiple group?');
-%         switch answer
-%             case 'Yes'
-%                 [i1,i2,cL1,cL2]=i_select2grps(thisc);
-%                 twogroup=true;
-%             case 'No'      
-%                 twogroup=false;
-%             otherwise
-%                 return;
-%         end
-%     end
-
-twogroup=false;
-
+    [thisc,clable]=gui.i_select1class(sce,false);
     species=gui.i_selectspecies;
 
-    [cs,tflist,gcommon]=sc_tfactivity(sce.X,sce.g,[],species);
-    idx=grp2idx(thisc);
+    fw=gui.gui_waitbar;
+    [cs,tflist]=sc_tfactivity(sce.X,sce.g,[],species);    
+    T=pkg.e_grptest(cs,thisc);
+    T=[table(tflist), T];
+    gui.gui_waitbar(fw);
+
     
-    P=ones(length(tflist),1);
-    D=true(length(tflist),1);
-    for k=1:length(tflist)
-        s=cs(k,:);
-        if twogroup
-            %[~,p]=kstest2(s(idx==1),s(idx==2));
-            [~,p]=ttest2(s(idx==1),s(idx==2));
-            if median(s(idx==1))>median(s(idx==2))
-                D(k)=false;
-            end            
-        else
-            p = anovan(s,idx);            
-        end
-        P(k)=p;
+    [yis]=ismember(upper(tflist),upper(sce.g));
+    T2=T(yis,:);
+    cs2=cs(yis,:);
+
+    outfile=sprintf('DiffTFActivity_%s',matlab.lang.makeValidName(clable));
+    
+    answer=questdlg(sprintf('%d out of %d TFs expressed in cells. Keep only %d expressed TFs?',...
+        size(T2,1),size(T,1),size(T2,1)));
+    switch answer
+        case 'Yes'
+            T=T2;
+            cs=cs2;
+        case 'No'          
+        otherwise
+            return;
     end
-    T=table(tflist,P);
-    T=sortrows(T,"P","ascend");
 
-%     outfile=sprintf('%s_vs_%s', ...
-%         matlab.lang.makeValidName(string(cL1)),matlab.lang.makeValidName(string(cL2)));    
-      outfile=sprintf('DiffTFActivity_%s',matlab.lang.makeValidName(clable));
+    try
+        if length(unique(thisc))>2
+            [T,idx] = sortrows(T,"p_anova","ascend");
+            cs=cs(idx,:);
+            [T,idx] = sortrows(T,"p_kruskalwallis","ascend");            
+            cs=cs(idx,:);
+        else
+            [T,idx] = sortrows(T,"p_ttest","ascend");
+            cs=cs(idx,:);
+            [T,idx] = sortrows(T,"p_wilcoxon","ascend");
+            cs=cs(idx,:);
+        end
+    catch
 
-    [filetype,filesaved]=gui.i_exporttable(T,true,'T',outfile);
+    end
+    gui.i_exporttable(T,true,'T',outfile);
 
+    for k=1:10
+        [~,cL]=grp2idx(thisc);
+        cL=strrep(cL,'_','\_');
+        thisc=strrep(thisc,'_','\_');
+        figure;
+        pkg.i_violinplot(cs(k,:),thisc,true,cL);
+        title(T.tflist(k));
+    end
 end

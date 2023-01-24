@@ -2,7 +2,7 @@ function [Tm,Tw]=i_markerlist2weight
 %Tm=readtable('markerlist_hs.txt','ReadVariableNames',false);
 %celltypev=string(Tm.Var1);
 %markergenev=string(Tm.Var2);
-
+Tm=[]; Tw=[];
 
 indata=sprintf('cell type 1\tgene1,gene2,gene3\ncell type 2\tgene4,gene5');
 a=inputdlg(sprintf('Format:\nCell type name [TAB] Gene1,Gene2'), ...
