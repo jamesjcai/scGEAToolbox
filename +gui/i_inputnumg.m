@@ -3,8 +3,9 @@ if nargin<1
     uplimnum=50;
 end
     numfig=[];
-    prompt = {sprintf('Enter number of markers (1-%d):',uplimnum)};
-    dlgtitle = 'Number of markers';
+    prompt = {sprintf('Enter a number (1-%d):',uplimnum)};
+    %dlgtitle = 'Number of markers';
+    dlgtitle='';
     % answer = inputdlg(prompt,dlgtitle,[1 50],{'10'});
     
 [answer] = timeoutDlg(@inputdlg,10,...

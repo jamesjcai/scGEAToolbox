@@ -55,19 +55,27 @@ function callback_DiffTFActivity(src,~)
 
     switch answer
         case 'Yes'
-            F=cell(10,1);
-            for k=1:10        
-                f = figure('visible','off');
-                pkg.i_violinplot(cs(k,:),thisc,true,cL);
-                title(T.tflist(k));
-                P = get(f,'Position');
-                set(f,'Position',[P(1)-20*k P(2)-20*k P(3) P(4)]);
-                set(f,'visible','on');  
-                f.Position(3) = f.Position(3) * 2.2;
-                drawnow;
-                F{k}=f;
-            end
-            gui.i_export2pptx(F,string(T.tflist(1:10)));
-    end
+%             a=inputdlg('Number of top TFs:','',1,{'10'});
+%             if isempty(a), return; end
+%             a=str2double(a{1});
+            [numfig]=gui.i_inputnumg(length(T.tflist));
 
+            if isempty(numfig) || isnan(numfig), return; end
+            if isnumeric(numfig) && numfig>0 && numfig<=length(T.tflist)
+                F=cell(numfig,1);
+                for k=1:numfig        
+                    f = figure('visible','off');
+                    pkg.i_violinplot(cs(k,:),thisc,true,cL);
+                    title(T.tflist(k));
+                    ylabel('TF activity')
+                    P = get(f,'Position');
+                    set(f,'Position',[P(1)-20*k P(2)-20*k P(3) P(4)]);
+                    set(f,'visible','on');
+                    f.Position(3) = f.Position(3) * 2.2;
+                    drawnow;
+                    F{k}=f;
+                end
+                gui.i_export2pptx(F,string(T.tflist(1:numfig)));
+            end
+    end
 end
