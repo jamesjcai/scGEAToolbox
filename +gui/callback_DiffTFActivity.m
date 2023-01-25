@@ -12,8 +12,9 @@ function callback_DiffTFActivity(src,~)
     T=[table(tflist), T, table(numtargetgenes)];
     gui.gui_waitbar(fw);
 
+    upperg=upper(sce.g);
     
-    [yis]=ismember(upper(tflist),upper(sce.g));
+    [yis]=ismember(upper(tflist),upperg);
     T2=T(yis,:);
     cs2=cs(yis,:);
 
@@ -29,6 +30,20 @@ function callback_DiffTFActivity(src,~)
         otherwise
             return;
     end
+
+    
+    tflist=string(T.tflist);
+    regdirection=zeros(length(tflist),1);
+    for k=1:length(tflist)
+        [yis,idx]=ismember(upper(tflist(k)),upperg);
+        if yis
+            thiscs=cs(k,:);
+            thisex=sce.X(idx,:);
+            regdirection(k)=corr(thisex(:),thiscs(:),'type','Spearman');
+        end
+    end
+    T=[T, table(regdirection)];
+
 
     try
         if length(unique(thisc))>2
@@ -47,21 +62,20 @@ function callback_DiffTFActivity(src,~)
     end
     gui.i_exporttable(T,true,'T',outfile);
 
-    [~,cL]=grp2idx(thisc);
-    cL=strrep(cL,'_','\_');
-    thisc=strrep(thisc,'_','\_');
+
     
-    answer=questdlg('Violin plot for top 10 TFs with most variable activity levels between groups?');
+    answer=questdlg('Violin plot for top TFs with most variable activity between groups?');
 
     switch answer
         case 'Yes'
-%             a=inputdlg('Number of top TFs:','',1,{'10'});
-%             if isempty(a), return; end
-%             a=str2double(a{1});
             [numfig]=gui.i_inputnumg(length(T.tflist));
-
             if isempty(numfig) || isnan(numfig), return; end
             if isnumeric(numfig) && numfig>0 && numfig<=length(T.tflist)
+                
+                [~,cL]=grp2idx(thisc);
+                cL=strrep(cL,'_','\_');
+                thisc=strrep(thisc,'_','\_');
+
                 F=cell(numfig,1);
                 for k=1:numfig        
                     f = figure('visible','off');
