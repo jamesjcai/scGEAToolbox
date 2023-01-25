@@ -4,12 +4,12 @@ function callback_DiffTFActivity(src,~)
     sce=guidata(FigureHandle);
 
     [thisc,clable]=gui.i_select1class(sce,false);
-    species=gui.i_selectspecies;
+    species=gui.i_selectspecies(2);
 
     fw=gui.gui_waitbar;
-    [cs,tflist]=sc_tfactivity(sce.X,sce.g,[],species);    
+    [cs,tflist,~,numtargetgenes]=sc_tfactivity(sce.X,sce.g,[],species);    
     T=pkg.e_grptest(cs,thisc);
-    T=[table(tflist), T];
+    T=[table(tflist), T, table(numtargetgenes)];
     gui.gui_waitbar(fw);
 
     
@@ -47,12 +47,27 @@ function callback_DiffTFActivity(src,~)
     end
     gui.i_exporttable(T,true,'T',outfile);
 
-    for k=1:10
-        [~,cL]=grp2idx(thisc);
-        cL=strrep(cL,'_','\_');
-        thisc=strrep(thisc,'_','\_');
-        figure;
-        pkg.i_violinplot(cs(k,:),thisc,true,cL);
-        title(T.tflist(k));
+    [~,cL]=grp2idx(thisc);
+    cL=strrep(cL,'_','\_');
+    thisc=strrep(thisc,'_','\_');
+    
+    answer=questdlg('Violin plot for top 10 TFs with most variable activity levels between groups?');
+
+    switch answer
+        case 'Yes'
+            F=cell(10,1);
+            for k=1:10        
+                f = figure('visible','off');
+                pkg.i_violinplot(cs(k,:),thisc,true,cL);
+                title(T.tflist(k));
+                P = get(f,'Position');
+                set(f,'Position',[P(1)-20*k P(2)-20*k P(3) P(4)]);
+                set(f,'visible','on');  
+                f.Position(3) = f.Position(3) * 2.2;
+                drawnow;
+                F{k}=f;
+            end
+            gui.i_export2pptx(F,string(T.tflist(1:10)));
     end
+
 end

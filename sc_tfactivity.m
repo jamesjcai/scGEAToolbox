@@ -1,4 +1,4 @@
-function [cs,tflist,gcommon]=sc_tfactivity(X,g,T,species,methodid)
+function [cs,tflist,gcommon,numtargetgenes]=sc_tfactivity(X,g,T,species,methodid)
 % The activity level of a transcription factor (TF) in a given cell is the
 % extent to which it is exerting its regulatory potential on its target 
 % genes.
@@ -70,27 +70,21 @@ switch methodid
         cs=zeros(size(t,1),size(X,2));
         R=tiedrank(-X);
         R(R>1500)=1500+1;
+        numtargetgenes=zeros(size(t,1),1);
         for k=1:size(t,1)
             idx1=t(k,:)>0;
             n1=sum(idx1);
-%             if tflist(k)=="AHR"
-%                 n1=sum(idx1)                
-%                 assignin('base','setgenes',gcommon(idx1))
-%             else
-%                 n1=sum(idx1);
-%             end
-
             if n1>0
                 u=sum(R(idx1,:))-(n1*(n1-1))/2;
                 cs(k,:) = 1-u/(n1*1500);
+                numtargetgenes(k)=n1;
             end
         end
         cs(cs<0)=0;
     case 2    % naive method
         cs=t*X;
+        numtargetgenes=[];
 end
-
-
 
 
 end
