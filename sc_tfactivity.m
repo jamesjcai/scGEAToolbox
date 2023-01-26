@@ -30,6 +30,7 @@ if nargin<3 || isempty(T)
 end
 
 if methodid==1
+    %X=run.MAGIC(X,true);
     T=T(T.mor>0,:);
     fprintf('Only positive regulatory relationships are used.\n');
 end
@@ -83,7 +84,7 @@ switch methodid
         cs(cs<0)=0;
     case 2    % naive method
         cs=t*X;
-        numtargetgenes=[];
+        numtargetgenes=sum(t>0,2);
 end
 
 

@@ -7,16 +7,20 @@ function callback_DiffTFActivity(src,~)
     species=gui.i_selectspecies(2);
 
     fw=gui.gui_waitbar;
-    [cs,tflist,~,numtargetgenes]=sc_tfactivity(sce.X,sce.g,[],species);    
+    
+    methodid=1;
+    [cs,tflist,~,numtargetgenes]=sc_tfactivity(sce.X,sce.g,[],species,methodid);
+    % thisc=thisc(randperm(length(thisc)));
     T=pkg.e_grptest(cs,thisc);
     T=[table(tflist), T, table(numtargetgenes)];
     gui.gui_waitbar(fw);
 
     upperg=upper(sce.g);
     
-    [yis]=ismember(upper(tflist),upperg);
-    T2=T(yis,:);
-    cs2=cs(yis,:);
+    [tfexpressed]=ismember(upper(tflist),upperg);
+    T=[T, table(tfexpressed)];
+    T2=T(tfexpressed,:);
+    cs2=cs(tfexpressed,:);
 
     outfile=sprintf('DiffTFActivity_%s',matlab.lang.makeValidName(clable));
     
@@ -35,8 +39,8 @@ function callback_DiffTFActivity(src,~)
     tflist=string(T.tflist);
     regdirection=zeros(length(tflist),1);
     for k=1:length(tflist)
-        [yis,idx]=ismember(upper(tflist(k)),upperg);
-        if yis
+        [tfexpressed,idx]=ismember(upper(tflist(k)),upperg);
+        if tfexpressed
             thiscs=cs(k,:);
             thisex=sce.X(idx,:);
             regdirection(k)=corr(thisex(:),thiscs(:),'type','Spearman');
@@ -72,7 +76,9 @@ function callback_DiffTFActivity(src,~)
             if isempty(numfig) || isnan(numfig), return; end
             if isnumeric(numfig) && numfig>0 && numfig<=length(T.tflist)
                 
-                [~,cL]=grp2idx(thisc);
+                %[~,cL]=grp2idx(thisc);
+                [~,cL,noanswer]=gui.i_reordergroups(thisc);
+                if noanswer, return; end 
                 cL=strrep(cL,'_','\_');
                 thisc=strrep(thisc,'_','\_');
 
@@ -85,11 +91,11 @@ function callback_DiffTFActivity(src,~)
                     P = get(f,'Position');
                     set(f,'Position',[P(1)-20*k P(2)-20*k P(3) P(4)]);
                     set(f,'visible','on');
-                    f.Position(3) = f.Position(3) * 2.2;
+                    %f.Position(3) = f.Position(3) * 2.2;
                     drawnow;
                     F{k}=f;
-                end
-                gui.i_export2pptx(F,string(T.tflist(1:numfig)));
+                end                
+                gui.i_export2pptx(F,string(T.tflist(1:numfig)));                
             end
     end
 end

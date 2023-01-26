@@ -8,6 +8,7 @@ import mlreportgen.ppt.*;
 answer=questdlg('Export to PowerPoint?');
 switch answer
     case 'Yes'
+        fw=gui.gui_waitbar;
         if ismcc || isdeployed
             makePPTCompilable();
             warndlg('This function may not work properly in standalone applications.','');
@@ -41,6 +42,10 @@ switch answer
         len = length(images);
         for i = 1:len
             delete(images{i});
-        end        
+        end
+        gui.gui_waitbar(fw);
+    otherwise
 end
+
+
 end
