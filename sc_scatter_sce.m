@@ -99,8 +99,8 @@ UitoolbarHandle = uitoolbar('Parent', FigureHandle);
 set(UitoolbarHandle, 'Tag', 'FigureToolBar', ...
     'HandleVisibility', 'off', 'Visible', 'on');
 mfolder = fileparts(mfilename('fullpath'));
-i_addbutton(1,0,@callback_ShowGeneExpr,"list.gif","Select a gene to show expression")
-i_addbutton(1,0,@ShowCellStates,"list2.gif","Show cell state")
+i_addbutton(1,0,@callback_ShowGeneExpr,"list.gif","Select genes to show expression")
+i_addbutton(1,0,@ShowCellStates,"list2.gif","Highlight cell state")
 i_addbutton(1,0,@SelectCellsByQC,"plotpicker-effects.gif","Filter genes and cells")
 
 %i_addbutton(1,1,@LabelClusters,"plotpicker-scatter.gif","Label clusters")
@@ -108,17 +108,17 @@ ptlabelclusters = uitoggletool(UitoolbarHandle, 'Separator', 'on');
 [img, map] = imread(fullfile(mfolder, 'resources', 'plotpicker-scatter.gif'));
 ptImage = ind2rgb(img, map);
 ptlabelclusters.CData = ptImage;
-ptlabelclusters.Tooltip = 'Label cell clusters';
+ptlabelclusters.Tooltip = 'Label cell groups';
 ptlabelclusters.ClickedCallback = @LabelClusters;
 
-i_addbutton(1,0,@Brushed2NewCluster,"plotpicker-glyplot-face.gif","Add brushed cells to a new cluster")
-i_addbutton(1,0,@Brushed2MergeClusters,"plotpicker-pzmap.gif","Merge brushed cells to same cluster")
+i_addbutton(1,0,@Brushed2NewCluster,"plotpicker-glyplot-face.gif","Add brushed cells to a new group")
+i_addbutton(1,0,@Brushed2MergeClusters,"plotpicker-pzmap.gif","Merge brushed cells to same group")
 i_addbutton(1,1,@ClusterCellsS,"plotpicker-dendrogram.gif","Clustering using embedding S")
 i_addbutton(1,0,@ClusterCellsX,"plotpicker-gscatter.gif","Clustering using expression matrix X")
-i_addbutton(1,1,@DetermineCellTypeClusters,"plotpicker-contour.gif","Assign cell types to clusters")
-i_addbutton(1,0,@Brush4Celltypes,"brush.gif","Assign cell type label to selected cells");
+i_addbutton(1,1,@DetermineCellTypeClusters,"plotpicker-contour.gif","Assign cell types to groups")
+i_addbutton(1,0,@Brush4Celltypes,"brush.gif","Assign cell type to selected cells");
 i_addbutton(1,0,@RenameCellTypeBatchID,"plotpicker-scatterhist.gif","Rename cell type or batch ID");
-i_addbutton(1,0,@callback_CellTypeMarkerScores,"cellscore.gif","Calculate signature scores for each cell");
+i_addbutton(1,1,@callback_CellTypeMarkerScores,"cellscore.gif","Calculate signature scores for each cell");
 %i_addbutton(1,0,@ShowCellStemScatter,"IMG00067.GIF","Stem scatter plot");
 i_addbutton(1,1,@callback_Brush4Markers,"plotpicker-kagi.gif","Marker genes of brushed cells");
 i_addbutton(1,0,@callback_MarkerGeneHeatmap,"plotpicker-plotmatrix.gif","Marker gene heatmap");
