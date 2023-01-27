@@ -34,7 +34,7 @@ elseif strcmpi(type,'sptensor')
     [subs, vals] = import_sparse_array(fid, length(sz), nz);   
     A = sptensor(subs, vals, sz);
  
-elseif strcmpi(type,'matrix') || strcmpi(type,'matrix')         
+elseif strcmpi(type,'matrix')
 
     sz = import_size(fid);
     data = import_array(fid, prod(sz));   

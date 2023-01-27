@@ -79,7 +79,7 @@ if ( strcmp(rep,'coordinate')) %  read matrix given in sparse
        error('End-of-file reached before size information was found.')
      end
      [sizeinfo,count] = sscanf(commentline,'%d%d%d');
-     if ( count > 0 & count ~= 3 )
+     if ( count > 0 && count ~= 3 )
        error('Invalid size specification line.')
      end
   end

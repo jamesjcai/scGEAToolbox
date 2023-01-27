@@ -181,7 +181,7 @@ case {'hsv','hsb'}
    Space = 'hsv';
 case {'hsl','hsi','hls'}
    Space = 'hsl';
-case {'rgb','yuv','yiq','ydbdr','ycbcr','jpegycbcr','xyz','lab','luv','lch'}
+case {'rgb','yuv','yiq','ydbdr','jpegycbcr','xyz','lab','luv','lch'}
    return;
 end
 return;

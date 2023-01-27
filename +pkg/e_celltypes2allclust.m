@@ -14,7 +14,7 @@ for i = 1:max(c)
         sce.s, ptsSelected, ...
         speciestag, organtag, databasetag);
     if isempty(Tct)
-        ctxt={'Unknown'};
+        ctxt='Unknown';
     else
         ctxt=Tct.C1_Cell_Type{1};
     end
