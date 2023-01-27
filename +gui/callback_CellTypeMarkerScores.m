@@ -11,9 +11,11 @@ cs=[];
 ctselected=[];
 posg=[];
 
-actiontype=questdlg('Select a gene set database: PanglaoDB or MSigDB?',...
+actiontype=questdlg('Select a gene set database:',...
     '','PanglaoDB Markder Genes',...
-    'MSigDB Signature Genes','DoRothEA TF Target Genes','PanglaoDB Markder Genes');
+    'MSigDB Signature Genes', ...
+    'DoRothEA TF Target Genes', ...
+    'PanglaoDB Markder Genes');
 
 switch actiontype
     case 'PanglaoDB Markder Genes'
@@ -140,12 +142,12 @@ end
         errordlg('Undefined');
         return;
     end
-    figure('WindowStyle','modal');
-    pkg.i_violinplot_groupordered(cs,thisc);
-
     
-    ylabel(strrep(ttxt,'_','\_'))
+%     figure('WindowStyle','modal');
+%     pkg.i_violinplot_groupordered(cs,thisc);    
+%     ylabel(strrep(ttxt,'_','\_'))
+%     xlabel(clabel);
+    gui.i_violinplot(cs,thisc,ttxt);
     xlabel(clabel);
-    
 
 end

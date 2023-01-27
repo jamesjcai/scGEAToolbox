@@ -1,4 +1,6 @@
 function callback_ComparePotency(src,~)
+% UNUSED function will be removed.
+
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
     [a]=contains(sce.list_cell_attributes(1:2:end),'cell_potency');

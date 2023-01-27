@@ -1,4 +1,6 @@
 function p=i_violinplot_groupordered(d,c,sorted_c,colorit)
+% UNUSED function will be removed.
+
 import pkg.Violin
 import pkg.violinplot
 

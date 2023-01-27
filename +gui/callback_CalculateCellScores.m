@@ -1,4 +1,6 @@
 function callback_CalculateCellScores(src,~,sce)
+% UNUSED function will be removed.
+
     if nargin<3
         FigureHandle=src.Parent.Parent;
         sce=guidata(FigureHandle);
@@ -64,16 +66,20 @@ end
     
         otherwise
             return;
-    end
+    end    
     [thisc,clabel]=gui.i_select1class(sce);
     if isempty(thisc)   % || numel(unique(thisc))==1
         errordlg('Undefined');
         return;
     end
-    figure('WindowStyle','modal');
-    pkg.i_violinplot_groupordered(cs,thisc);
-    ylabel(strrep(ttxt,'_','\_'))
+
+    gui.i_violinplot(y,thisc,ttxt);
     xlabel(clabel);
+
+    %figure('WindowStyle','modal');
+    %pkg.i_violinplot_groupordered(cs,thisc);
+    %ylabel(strrep(ttxt,'_','\_'))
+    
     
 end
 

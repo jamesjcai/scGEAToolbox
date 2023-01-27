@@ -67,7 +67,7 @@ fprintf('Using %d target genes that are present in the data.\n', size(t,2));
 if nargout>2, gcommon=g(k); end
 
 switch methodid
-    case 1        % UCell method
+    case 1        % UCell method  see also: sc_cellscore_ucell
         cs=zeros(size(t,1),size(X,2));
         R=tiedrank(-X);
         R(R>1500)=1500+1;

@@ -54,8 +54,10 @@ if tf1~=1, return; end
 % fclose(fid);
 % val = jsondecode(str);
 
+fw=gui.gui_waitbar;
 val = webread(urllist{indx1});
 setnames=fields(val);
+gui.gui_waitbar(fw);
 
 %idx=gui.i_selmultidlg(a);
 %string(val.(a{idx}).geneSymbols);

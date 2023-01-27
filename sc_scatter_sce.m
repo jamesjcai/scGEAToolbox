@@ -136,11 +136,15 @@ i_addbutton(1,0,@callback_PickColorMap,"plotpicker-compass.gif","Pick new color 
 % end
 i_addbutton(1,0,@RefreshAll,"plotpicker-geobubble2.gif","Refresh");
 i_addbutton(2,0,@call_scgeatool,"IMG00107.GIF"," ");
-i_addbutton(2,0,@callback_CalculateCellScores,"cellscore2.gif","Calculate cell scores from list of feature genes")
-i_addbutton(2,0,@callback_ComparePotency,"plotpicker-candle.gif","Compare differentiation potency between groups");
+i_addbutton(2,0,@call_scgeatool,"IMG00107.GIF"," ");
+i_addbutton(2,0,@call_scgeatool,"IMG00107.GIF"," ");
+%i_addbutton(2,0,@callback_CalculateCellScores,"cellscore2.gif","Calculate cell scores from list of feature genes")
+%i_addbutton(2,0,@callback_ComparePotency,"plotpicker-candle.gif","Compare differentiation potency between groups");
 i_addbutton(2,1,@gui.callback_MultiGroupingViewer,"plotpicker-arxtimeseries.gif","Multi-grouping View...");
 i_addbutton(2,0,@gui.callback_CrossTabulation,"plotpicker-comet.gif","Cross tabulation");
-i_addbutton(2,1,@callback_CompareGeneBtwCls,"plotpicker-priceandvol.gif","Compare between groups");
+%i_addbutton(2,1,@callback_CompareGeneBtwCls,"plotpicker-priceandvol.gif","Compare between groups");
+i_addbutton(2,1,@callback_CompareGeneBtwCls,"cellscore2.gif","Compare between groups");
+
 i_addbutton(2,0,@callback_DEGene2Groups,"plotpicker-boxplot.gif","Compare 2 groups (DE analysis)");
 i_addbutton(2,0,@callback_EnrichrHVGs,"plotpicker-andrewsplot.gif","Functional enrichment analysis with HVGs");
 i_addbutton(2,0,@callback_BuildGeneNetwork,"noun_Network_691907.gif","Build gene regulatory network");

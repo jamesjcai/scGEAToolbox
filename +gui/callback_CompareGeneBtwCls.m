@@ -18,7 +18,11 @@ function callback_CompareGeneBtwCls(src,~)
     end
 
 selitems={'Expression of Gene', ...
-    'Predefined Cell Score','TF Activity Score','Differentiation Potency',...
+    'TF Activity Score','Differentiation Potency',...
+    'MSigDB Signature Score',...    
+    '--------------------------------',...
+    'Predefined Cell Score',...
+    'Define New Score...',...
     '--------------------------------',...
     'Library Size','Other Attribute'};
 [indx1,tf1]=listdlg('PromptString',...
@@ -28,6 +32,26 @@ if tf1~=1, return; end
 
 %try
     switch selitems{indx1}
+        case 'Define New Score...'
+            ttxt='Customized Score';
+            [posg]=gui.i_selectngenes(sce.g);
+            if isempty(posg)
+                helpdlg('No feature genes selected.','')
+                return;
+            end
+            [y]=gui.e_cellscore(sce,posg);            
+        case 'MSigDB Signature Score'
+            stag=gui.i_selectspecies(2,true);
+            if isempty(stag), return; end            
+            try
+                [posg,ctselected]=gui.i_selectMSigDBGeneSet(stag);
+            catch ME            
+                errordlg(ME.message);
+                return;
+            end
+            ttxt = ctselected;
+            if isempty(posg) || isempty(ctselected), return; end
+            [y]=gui.e_cellscore(sce,posg);
         case 'Differentiation Potency'
             [a]=contains(sce.list_cell_attributes(1:2:end),'cell_potency');
             if ~any(a)
@@ -42,7 +66,7 @@ if tf1~=1, return; end
                 ttxt='Differentiation Potency';
             else                
                 return;
-            end           
+            end
         case 'Library Size'
             y=sum(sce.X);
             ttxt='Library Size';
