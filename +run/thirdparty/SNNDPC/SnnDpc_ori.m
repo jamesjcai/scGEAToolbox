@@ -166,18 +166,18 @@ end
 
 %Evaluation
 
-if ~isempty(answer)
-%   ami=GetAmi(answer,cluster);
-%   ari=GetAri(answer,cluster);
-%   fmi=GetFmi(answer,cluster);
+% if ~isempty(answer)
+% %   ami=GetAmi(answer,cluster);
+% %   ari=GetAri(answer,cluster);
+% %   fmi=GetFmi(answer,cluster);
+%   ami=nan;
+%   ari=nan;
+%   fmi=nan;
+% else
   ami=nan;
   ari=nan;
   fmi=nan;
-else
-  ami=nan;
-  ari=nan;
-  fmi=nan;
-end
+% end
 
 
 %Ui

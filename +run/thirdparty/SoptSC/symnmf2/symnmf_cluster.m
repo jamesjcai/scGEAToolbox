@@ -202,18 +202,18 @@ else
         else
             error('options.rep must be a positive integer!');
         end
-        if isfield(options, 'Hinit') & size(options.Hinit, 3) ~= rep
+        if isfield(options, 'Hinit') && size(options.Hinit, 3) ~= rep
             error('The third dimension of options.Hinit must match options.rep!')
         end
     else
-        if isfield(options, 'Hinit') & ~isempty(options.Hinit)
+        if isfield(options, 'Hinit') && ~isempty(options.Hinit)
             rep = size(options.Hinit, 3);
         else
             rep = 1;
         end
     end
     if isfield(options, 'Hinit')
-        if ~isempty(options.Hinit) & isnumeric(options.Hinit) & size(options.Hinit, 1) == n & size(options.Hinit, 2) == k
+        if ~isempty(options.Hinit) && isnumeric(options.Hinit) & size(options.Hinit, 1) == n & size(options.Hinit, 2) == k
             Hinit = options.Hinit;
         else
             error('The size of each initialization of H must be Nxk!');
@@ -222,7 +222,7 @@ else
         Hinit = [];
     end
     if isfield(options, 'computeobj')
-        if ~isempty(options.computeobj) & (isnumeric(options.computeobj) | isboolean(options.computeobj))
+        if ~isempty(options.computeobj) && (isnumeric(options.computeobj) | isboolean(options.computeobj))
             computeobj = options.computeobj;
         else
             error('options.computeobj must be boolean or a real number!');
@@ -230,7 +230,7 @@ else
     else
         computeobj = true;
     end
-    if computeobj == false & rep > 1
+    if computeobj == false && rep > 1
         error('options.computeobj must be true if options.rep > 1!');
     end
     if isfield(options, 'alg')
@@ -247,18 +247,18 @@ else
 end
 
 D = dist2(X, X);
-if strcmp(graph_type, 'full') & strcmp(similarity_type, 'gaussian')
+if strcmp(graph_type, 'full') && strcmp(similarity_type, 'gaussian')
     A = scale_dist3(D, nn);
-elseif strcmp(graph_type, 'full') & strcmp(similarity_type, 'inner_product')
+elseif strcmp(graph_type, 'full') && strcmp(similarity_type, 'inner_product')
     A = X * X';
-elseif strcmp(graph_type, 'sparse') & strcmp(similarity_type, 'gaussian')
+elseif strcmp(graph_type, 'sparse') && strcmp(similarity_type, 'gaussian')
     A = scale_dist3_knn(D, nn, kk, true);
 else % graph_type == 'sparse' & similarity_type == 'inner_product'
     Xnorm = X';
     d = 1./sqrt(sum(Xnorm.^2));
     Xnorm = bsxfun(@times, Xnorm, d);
     A = inner_product_knn(D, Xnorm, knn, true);
-    clear Xnorm, d;
+    clear Xnorm d
 end
 clear D;
 

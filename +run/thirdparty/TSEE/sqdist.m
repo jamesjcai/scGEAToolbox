@@ -32,7 +32,7 @@
 function sqd = sqdist(X,Y,w)
 
 if nargin==1	% Fast version for common case sqdist(X)
-  x = sum(X.^2,2); sqd = max(bsxfun(@plus,x,bsxfun(@plus,x',-2*X*X')),0);
+  x = sum(X.^2,2); sqd = max(bsxfun(@plus,x,bsxfun(@plus,x',-2*(X*X'))),0);
   return
 end
  

@@ -49,7 +49,7 @@ while i1 <= N
   % cancellation error for points closer than sqrt(eps).
   sd1 = max(bsxfun(@plus,sum(X2(i1:i2,:),2),...
                    bsxfun(@minus,x2,2*X(i1:i2,:)*Xt)),0);
-  if method == 'sort'
+  if strcmp(method,'sort')
     [sd1,ind] = sort(sd1,2);
   else
     [sd1,ind] = mink(sd1,k+1,2);
