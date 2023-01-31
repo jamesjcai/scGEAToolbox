@@ -1,4 +1,4 @@
-species='hs';
+species='mm';
 T1=readtable(sprintf('markerlist_%s_panglaodb.txt',species),'ReadVariableNames',false,'Delimiter','\t');
 T2=readtable(sprintf('markerlist_%s_custom.txt',species),'ReadVariableNames',false,'Delimiter','\t');
 % T3 and T4 downloaded from Enrichr
@@ -24,6 +24,8 @@ T.Var1=i_makeuniquename(T.Var1);
 writetable(T,sprintf('markerlist_%s.txt',species),...
     'WriteVariableNames',false,'Delimiter','\t');
 
+T(T.Var1=="Gamma delta T cells",:)=[];
+
 %%
 s=upper(string(T.Var2));
 S=[];
@@ -48,4 +50,9 @@ for k=1:length(genelist)
     fprintf(fid,'%f\n', w(k));    
 end
 fclose(fid);
+
+
+Tm=T;
+Tw=readtable(sprintf('markerweight_%s.txt',species));
+save(sprintf('marker_%s',species),'Tw','Tm');
 
