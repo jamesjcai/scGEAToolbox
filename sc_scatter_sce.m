@@ -130,7 +130,7 @@ i_addbutton(1,1,@EmbeddingAgain,"plotpicker-geobubble.gif","Embedding (tSNE, UMP
 i_addbutton(1,0,@Switch2D3D,"plotpicker-image.gif","Switch 2D/3D");
 i_addbutton(1,1,@callback_CloseAllOthers,"noun_Pruners_2469297.gif","Close all other figures");
 i_addbutton(1,0,@callback_PickPlotMarker,"plotpicker-rose.gif","Switch scatter plot marker type");
-i_addbutton(1,0,@callback_PickColorMap,"plotpicker-compass.gif","Pick new color map");
+i_addbutton(1,0,@gui.callback_PickColorMap,"plotpicker-compass.gif","Pick new color map");
 % if ~(ismcc || isdeployed)
 %     i_addbutton(1,0,@callback_formatfig,"xpowerpoint.gif",'Formating Figure...');
 % end

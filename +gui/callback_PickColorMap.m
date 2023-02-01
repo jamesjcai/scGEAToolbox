@@ -42,26 +42,31 @@ function callback_PickColorMap(src,~,showzero)
         'greenLinespecer'};
     assert(length(co)==length(cn));
 
+
 %     co={cx,a,b,'default',summer(kc),...
 %         jet(kc),copper(kc),winter(kc)};
-answer=questdlg('Random colormap?','');
-switch answer
-    case 'Yes'
+
         indx=randi(length(co));
         colormap(co{indx});
-        % mb=helpdlg(sprintf('Using colormap: %s',cn{indx}),'');
-        
-    case 'No'
-        [indx,tf] = listdlg('PromptString',{'Select a colormap'},...
-            'SelectionMode','single','ListString',cn);
-        if tf==1
-            colormap(co{indx});
-        end
-    case 'Cancel'
-        return;
-    otherwise
-        return;
-end
+
+% answer=questdlg('Random colormap?','');
+% switch answer
+%     case 'Yes'
+%         indx=randi(length(co));
+%         colormap(co{indx});
+%         % mb=helpdlg(sprintf('Using colormap: %s',cn{indx}),'');
+%         
+%     case 'No'
+%         [indx,tf] = listdlg('PromptString',{'Select a colormap'},...
+%             'SelectionMode','single','ListString',cn);
+%         if tf==1
+%             colormap(co{indx});
+%         end
+%     case 'Cancel'
+%         return;
+%     otherwise
+%         return;
+% end
 
     if showzero
         cm=colormap;
