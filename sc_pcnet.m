@@ -38,7 +38,7 @@ if guiwaitbar
     fw=gui.gui_waitbar_adv;    
 end
 for k=1:n
-    fprintf('...... %d/%d\n',k,n);
+    % fprintf('...... %d/%d\n',k,n);
     if guiwaitbar
         gui.gui_waitbar_adv(fw,k/n);
     end

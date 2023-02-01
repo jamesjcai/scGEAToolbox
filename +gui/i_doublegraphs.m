@@ -19,7 +19,7 @@ load(fullfile(mfolder,...
 
 w=3;
 l=1;
-hFig=figure('name',figname,'Visible','on');
+hFig=figure('name',figname,'Visible','off');
 set(0,'CurrentFigure',hFig)
 
 tiledlayout(1,2,'TileSpacing','compact',...
