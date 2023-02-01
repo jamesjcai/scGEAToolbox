@@ -1,7 +1,10 @@
-function i_violinplot(y,thisc,ttxt)
-
-    [~,cL]=grp2idx(thisc);
-    colorit=true;
+function [f]=i_violinplot(y,thisc,ttxt,colorit,cL)
+    if nargin<5
+        [~,cL]=grp2idx(thisc);
+    end
+    if nargin<4
+        colorit=true;
+    end
     f=figure('visible','off');
     tb=uitoolbar(f);
     pkg.i_addbutton2fig(tb,'off',{@i_savedata,y,thisc}, ...

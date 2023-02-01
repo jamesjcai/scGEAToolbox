@@ -117,12 +117,25 @@ if tf1~=1, return; end
                  'SelectionMode','single','ListString',...
                  listitems,'ListSize',[220,300]);
             if tf2~=1, return; end
+            species=gui.i_selectspecies(2);
+            if isempty(species), return; end
+            
+            %[cs]=gui.e_cellscore(sce,posg);
+
+%     answer = questdlg('Select algorithm:',...
+%     'Select Method', ...
+%     'UCell [PMID:34285779]','AddModuleScore/Seurat', ...
+%     'UCell [PMID:34285779]');
+%     switch answer
+%         case 'AddModuleScore/Seurat'            
+
+            methodid=1;
             fw=gui.gui_waitbar;
-            [cs,tflist]=sc_tfactivity(sce.X,sce.g,[]);
-            idx=find(tflist==string(listitems{indx2}));
-            assert(length(idx)==1)
-            [y]=cs(idx,:);
-            ttxt=listitems{indx2};
+                [cs,tflist]=sc_tfactivity(sce.X,sce.g,[],species,methodid);
+                idx=find(tflist==string(listitems{indx2}));
+                assert(length(idx)==1)
+                [y]=cs(idx,:);
+                ttxt=listitems{indx2};
             gui.gui_waitbar(fw);
         otherwise
             return;
@@ -130,62 +143,3 @@ if tf1~=1, return; end
 
     gui.i_violinplot(y,thisc,ttxt);
 
-%     [~,cL]=grp2idx(thisc);
-%     colorit=true;
-%     f=figure('visible','off');
-%     tb=uitoolbar(f);
-%     pkg.i_addbutton2fig(tb,'off',{@i_savedata,y,thisc}, ...
-%         'export.gif','Export data...');
-%     pkg.i_addbutton2fig(tb,'off',{@i_testdata,y,thisc}, ...
-%         'exportx.gif','ANOVA/T-test...');    
-%     pkg.i_addbutton2fig(tb,'off',{@gui.i_savemainfig,3}, ...
-%         "powerpoint.gif",'Save Figure to PowerPoint File...');
-%     pkg.i_addbutton2fig(tb,'off',@i_invertcolor, ...
-%         "xpowerpoint.gif",'Switch BW/Color');
-%     pkg.i_addbutton2fig(tb,'off',@i_reordersamples, ...
-%         "xpowerpoint.gif",'Reorder Samples');   
-% 
-%     cL=strrep(cL,'_','\_');
-%     thisc=strrep(thisc,'_','\_');
-%     pkg.i_violinplot(y,thisc,colorit,cL);
-%     title(strrep(ttxt,'_','\_'));
-%     ylabel(selitems{indx1});
-%     movegui(f,'center');
-%     set(f,'visible','on');
-%     
-% %catch ME
-% %    errordlg(ME.message);
-% %end
-% 
-%     function i_invertcolor(~,~)
-%         colorit=~colorit;
-%         cla;
-%         pkg.i_violinplot(y,thisc,colorit,cL);
-%     end
-% 
-% 
-%     function i_reordersamples(~,~)
-%         [~,cL,noanswer]=gui.i_reordergroups(thisc);
-%         if noanswer, return; end
-%         cla
-%         pkg.i_violinplot(y,thisc,colorit,cL);
-%     end
-% 
-% end
-% 
-% function i_savedata(~,~,a,b)
-%     T=table(a(:),b(:));    
-%     T.Properties.VariableNames={'ScoreLevel','GroupID'};
-%     T=sortrows(T,'ExprLevel','descend');
-%     T=sortrows(T,'GroupID');
-%     gui.i_exporttable(T,true);
-% end
-% 
-% function i_testdata(~,~,y,grp)
-%     if size(y,2)~=length(grp)
-%         y=y.';
-%     end
-%     tbl=pkg.e_grptest(y,grp);
-%     gui.i_exporttable(tbl,true);
-% end
-% 

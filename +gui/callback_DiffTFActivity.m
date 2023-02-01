@@ -5,15 +5,34 @@ function callback_DiffTFActivity(src,~)
 
     [thisc,clable]=gui.i_select1class(sce,false);
     species=gui.i_selectspecies(2);
+    if isempty(species), return; end
 
-    fw=gui.gui_waitbar;
+    answer=questdlg('Select algorithm:','', ...
+        'UCell [PMID:34285779] 🐇','NMF [PMID:33135076] 🐢', ...
+        'UCell [PMID:34285779] 🐇');
+    if isempty(answer), return; end
+
+    switch answer
+        case 'NMF [PMID:33135076] 🐢'
+            methodid=3;
+        case 'UCell [PMID:34285779] 🐇'
+            methodid=1;
+        otherwise
+            return;
+    end
+        
+
+    if methodid~=3 
+        fw=gui.gui_waitbar;
+    end
     
-    methodid=1;
     [cs,tflist,~,numtargetgenes]=sc_tfactivity(sce.X,sce.g,[],species,methodid);
-    % thisc=thisc(randperm(length(thisc)));
     T=pkg.e_grptest(cs,thisc);
     T=[table(tflist), T, table(numtargetgenes)];
-    gui.gui_waitbar(fw);
+    
+    if methodid~=3
+        gui.gui_waitbar(fw);
+    end
 
     upperg=upper(sce.g);
     
@@ -83,16 +102,18 @@ function callback_DiffTFActivity(src,~)
                 thisc=strrep(thisc,'_','\_');
 
                 F=cell(numfig,1);
-                for k=1:numfig        
-                    f = figure('visible','off');
-                    pkg.i_violinplot(cs(k,:),thisc,true,cL);
-                    title(T.tflist(k));
-                    ylabel('TF activity')
-                    P = get(f,'Position');
-                    set(f,'Position',[P(1)-20*k P(2)-20*k P(3) P(4)]);
-                    set(f,'visible','on');
-                    %f.Position(3) = f.Position(3) * 2.2;
-                    drawnow;
+                for k=1:numfig
+                    ttxt=T.tflist(k);
+                    f = gui.i_violinplot(cs(k,:),thisc,ttxt,true,cL);
+%                     f = figure('visible','off');
+%                     pkg.i_violinplot(cs(k,:),thisc,true,cL);
+%                     title(T.tflist(k));
+%                     ylabel('TF activity')
+%                     P = get(f,'Position');
+%                     set(f,'Position',[P(1)-20*k P(2)-20*k P(3) P(4)]);
+%                     set(f,'visible','on');
+%                     %f.Position(3) = f.Position(3) * 2.2;
+%                     drawnow;
                     F{k}=f;
                 end                
                 gui.i_export2pptx(F,string(T.tflist(1:numfig)));                

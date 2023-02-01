@@ -1,9 +1,9 @@
 function [cs]=e_cellscore(sce,posg)
 
-    answer = questdlg('Which method?',...
+    answer = questdlg('Select algorithm:',...
     'Select Method', ...
-    'UCell [PMID: 34285779]','AddModuleScore/Seurat', ...
-    'UCell [PMID: 34285779]');
+    'UCell [PMID:34285779]','AddModuleScore/Seurat', ...
+    'UCell [PMID:34285779]');
     switch answer
         case 'AddModuleScore/Seurat'
             fw=gui.gui_waitbar;
@@ -15,7 +15,7 @@ function [cs]=e_cellscore(sce,posg)
             return;
             end
             gui.gui_waitbar(fw);
-        case 'UCell [PMID: 34285779]'
+        case 'UCell [PMID:34285779]'
             %[cs]=run.UCell(sce.X,sce.g,posg);
             fw=gui.gui_waitbar;
             try
