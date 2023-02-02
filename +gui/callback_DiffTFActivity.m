@@ -98,8 +98,8 @@ function callback_DiffTFActivity(src,~)
                 %[~,cL]=grp2idx(thisc);
                 [~,cL,noanswer]=gui.i_reordergroups(thisc);
                 if noanswer, return; end 
-                cL=strrep(cL,'_','\_');
-                thisc=strrep(thisc,'_','\_');
+%                 cL=strrep(cL,'_','\_');
+%                 thisc=strrep(thisc,'_','\_');
 
                 F=cell(numfig,1);
                 for k=1:numfig

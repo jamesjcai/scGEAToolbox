@@ -294,9 +294,33 @@ promotesave=false;
                 end
                 a=a(valididx);
                 [indx,tf]=listdlg('PromptString',{'Select SCE variable:'},...
-                    'liststring',b(1,valididx),'SelectionMode','single');
+                    'liststring',b(1,valididx),'SelectionMode','multiple');
                 if tf==1
-                    sce=evalin('base',a(indx).name);
+                    if length(indx)==1
+                        sce=evalin('base',a(indx).name);
+                    elseif length(indx)>1
+                        answer = questdlg('Which set operation method to merge genes?', 'Merging method',...
+                                          'Intersect', 'Union', 'Intersect');
+                        if ~ismember(answer, {'Union', 'Intersect'}), return; end
+                        methodtag = lower(answer);
+                        try
+                            insce=cell(1,length(indx));
+                            s="";
+                            for k=1:length(indx)
+                                insce{k}=evalin('base',a(indx(k)).name);
+                                s=sprintf('%s,%s',s,a(indx(k)).name);
+                            end
+                            s=s(2:end);
+                            fprintf('>> sce=sc_mergesces({%s},''%s'');\n',s,methodtag);
+                            fw=gui.gui_waitbar;
+                            sce=sc_mergesces(insce,methodtag);
+                        catch ME
+                            gui.gui_waitbar(fw,true);
+                            errordlg(ME.message);
+                            return;
+                        end
+                        gui.gui_waitbar(fw);
+                    end
                 else
                     return;
                 end
