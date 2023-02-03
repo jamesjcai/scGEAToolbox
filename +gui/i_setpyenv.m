@@ -7,7 +7,7 @@ function [done]=i_setpyenv(~,~)
     if strlength(x.Executable)==0
         answer=questdlg('Python environment has not been set up. Locate python.exe?');
         if strcmp('Yes',answer)
-            [done]=ix_setpyenv;
+            [done]=ix_setpyenv(x.Executable);
         else
             return;
         end
@@ -19,7 +19,7 @@ function [done]=i_setpyenv(~,~)
             case 'Use this'
                 done=true;
             case 'Use another'
-                if ~ix_setpyenv
+                if ~ix_setpyenv(x.Executable)
                     return;
                 else
                     done=true;
@@ -37,14 +37,14 @@ function [done]=i_setpyenv(~,~)
 end
 
 
-function [done]=ix_setpyenv
+function [done]=ix_setpyenv(deflt)
         % selpath = uigetdir;
         done=false;        
         
         if ispc
-            [file,path] = uigetfile('python.exe','Select Python Interpreter');
+            [file,path] = uigetfile('python.exe','Select Python Interpreter',deflt);
         else
-            [file,path] = uigetfile('python','Select Python Interpreter');
+            [file,path] = uigetfile('python','Select Python Interpreter',deflt);
         end
         if isequal(file,0)
            %disp('User selected Cancel');

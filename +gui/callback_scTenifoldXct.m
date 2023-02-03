@@ -51,7 +51,7 @@ sce.c_batch_id(sce.c_cell_type_tx==cL{x2})="Target";
 
 
 try
-    fw = gui.gui_waitbar;
+    %fw = gui.gui_waitbar;
     if twosided
         [Tcell]=run.py_scTenifoldXct(sce,cL{x1},cL{x2},true);
         [T1]=Tcell{1};
@@ -61,7 +61,7 @@ try
             T1 = addvars(T1,repelem(a,size(T1,1),1),'Before',1);
             T1.Properties.VariableNames{'Var1'} = 'direction';
         end
-        if ~isempty(T2)        
+        if ~isempty(T2)      
             a=sprintf('%s -> %s',cL{x2},cL{x1});
             T2 = addvars(T2,repelem(a,size(T2,1),1),'Before',1);
             T2.Properties.VariableNames{'Var1'} = 'direction';
@@ -74,12 +74,11 @@ try
             T = addvars(T,repelem(a,size(T,1),1),'Before',1);
             T.Properties.VariableNames{'Var1'} = 'direction';
         end
-    end
-    
+    end    
 
-    gui.gui_waitbar(fw);
+    %gui.gui_waitbar(fw);
 catch ME
-    gui.gui_waitbar(fw,true);
+    %gui.gui_waitbar(fw,true);
     errordlg(ME.message);
     return;
 end

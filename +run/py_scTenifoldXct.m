@@ -1,5 +1,7 @@
 function [T]=py_scTenifoldXct(sce,celltype1,celltype2,twosided,A1,A2)
 
+isdebug=false;
+
 T=[];
 if nargin<6, A2=[]; end
 if nargin<5, A1=[]; end
@@ -10,7 +12,20 @@ pw1=fileparts(mfilename('fullpath'));
 wrkpth=fullfile(pw1,'external','py_scTenifoldXct');
 cd(wrkpth);
 
-isdebug=true;
+
+x=pyenv;
+pkg.i_add_conda_python_path;
+cmdlinestr=sprintf('"%s" "%s%srequire.py"', ...
+        x.Executable,wrkpth,filesep);
+disp(cmdlinestr)
+[status,cmdout]=system(cmdlinestr,'-echo');
+if status~=0
+    cd(oldpth);
+    waitfor(errordlg(sprintf('%s',cmdout)));
+    error('Python scTenifoldXct has not been installed properly.');
+end
+
+
 
 tmpfilelist={'X.mat','X.txt','g.txt','c.txt','output.txt', ...
              'output1.txt','output2.txt',...
@@ -19,6 +34,8 @@ tmpfilelist={'X.mat','X.txt','g.txt','c.txt','output.txt', ...
              'A1.mat','A2.mat','pcnet_Source.mat','pcnet_Target.mat'};
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+
+
 
 % load(fullfile(pw1,'..','resources','Ligand_Receptor.mat'), ...
 %     'ligand','receptor');
@@ -47,9 +64,10 @@ writetable(t,'gene_name_Target.tsv','filetype','text','Delimiter','\t');
 disp('Input gene_names written.');
 
 if isempty(A1)
+    fw = gui.gui_waitbar([],[],'Step 1 of 3: Building A1 network...');
     disp('Building A1 network...')
     A1=sc_pcnetpar(sce.X(:,sce.c_cell_type_tx==celltype1));
-    disp('A1 network built.')
+    disp('A1 network built.')    
 else
     disp('Using A1 provided.')
 end
@@ -57,11 +75,13 @@ A1=A1./max(abs(A1(:)));
 % A=0.5*(A1+A1.');
 A=ten.e_filtadjc(A1,0.75,false);
 save('pcnet_Source.mat','A','-v7.3');
+if isvalid(fw), gui.gui_waitbar(fw); end
 
 if isempty(A2)
+    fw = gui.gui_waitbar([],[],'Step 2 of 3: Building A2 network...');
     disp('Building A2 network...')
     A2=sc_pcnetpar(sce.X(:,sce.c_cell_type_tx==celltype2));
-    disp('A2 network built.')
+    disp('A2 network built.')    
 else
     disp('Using A2 provided.');
 end
@@ -69,37 +89,42 @@ A2=A2./max(abs(A2(:)));
 % A=0.5*(A2+A2.');
 A=ten.e_filtadjc(A2,0.75,false);
 save('pcnet_Target.mat','A','-v7.3');
+if isvalid(fw), gui.gui_waitbar(fw); end
 clear A A1 A2
 
-x=pyenv;
-pkg.i_add_conda_python_path;
+%x=pyenv;
+%pkg.i_add_conda_python_path;
 
-if twosided
-    cmdlinestr=sprintf('"%s" "%s%sscript.py" 2', ...
-        x.Executable,wrkpth,filesep);
-else
-    cmdlinestr=sprintf('"%s" "%s%sscript.py" 1', ...
-        x.Executable,wrkpth,filesep);
-end
+tag=1;
+if twosided, tag=2; end
+
+fw=gui.gui_waitbar([],[],'Step 1 of 3: run scTenifoldXct.py...');
+cmdlinestr=sprintf('"%s" "%s%sscript.py" %d', ...
+    x.Executable,wrkpth,filesep,tag);
 disp(cmdlinestr)
 [status]=system(cmdlinestr,'-echo');
 % https://www.mathworks.com/matlabcentral/answers/334076-why-does-externally-called-exe-using-the-system-command-freeze-on-the-third-call
+if isvalid(fw), gui.gui_waitbar(fw); end
 
 % rt=java.lang.Runtime.getRuntime(); 
 % pr = rt.exec(cmdlinestr);
 % [status]=pr.waitFor();
 
-if twosided
-    if status==0 && exist('output1.txt','file') && exist('output2.txt','file')
-        T1=readtable('output1.txt');
-        T2=readtable('output2.txt');
-        T={T1,T2};
-    end
-else
+% if twosided
+%     if status==0 && exist('output1.txt','file') && exist('output2.txt','file')
+%         T1=readtable('output1.txt');
+%         T2=readtable('output2.txt');
+%         T={T1,T2};
+%     end
+% else
     if status==0 && exist('output1.txt','file')
         T=readtable('output1.txt');
-    end    
-end
+        if twosided && exist('output2.txt','file')
+            T2=readtable('output2.txt');
+            T={T,T2};
+        end
+    end
+%end
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 cd(oldpth);
