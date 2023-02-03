@@ -13,7 +13,7 @@ wrkpth=fullfile(pw1,'external','py_scTenifoldXct');
 cd(wrkpth);
 
 
-fw = gui.gui_waitbar([],[],'Check Python environment...');
+fw = gui.gui_waitbar([],[],'Checking Python environment...');
 
 x=pyenv;
 pkg.i_add_conda_python_path;
@@ -63,7 +63,9 @@ writetable(t,'gene_name_Source.tsv','filetype','text','Delimiter','\t');
 writetable(t,'gene_name_Target.tsv','filetype','text','Delimiter','\t');
 disp('Input gene_names written.');
 
-if isvalid(fw), gui.gui_waitbar(fw); end
+if isvalid(fw) 
+    gui.gui_waitbar(fw,[],'Checking Python environment is complete');
+end
 
 
 if isempty(A1)
@@ -78,7 +80,9 @@ A1=A1./max(abs(A1(:)));
 % A=0.5*(A1+A1.');
 A=ten.e_filtadjc(A1,0.75,false);
 save('pcnet_Source.mat','A','-v7.3');
-if isvalid(fw), gui.gui_waitbar(fw); end
+if isvalid(fw)
+    gui.gui_waitbar(fw,[],'Building A1 network is complete');
+end
 
 if isempty(A2)
     fw = gui.gui_waitbar([],[],'Step 2 of 3: Building A2 network...');
@@ -92,22 +96,26 @@ A2=A2./max(abs(A2(:)));
 % A=0.5*(A2+A2.');
 A=ten.e_filtadjc(A2,0.75,false);
 save('pcnet_Target.mat','A','-v7.3');
-if isvalid(fw), gui.gui_waitbar(fw); end
+if isvalid(fw)
+    gui.gui_waitbar(fw,[],'Building A2 network is complete');
+end
 clear A A1 A2
 
-%x=pyenv;
-%pkg.i_add_conda_python_path;
+if twosided 
+    tag=2; 
+else
+    tag=1;
+end
 
-tag=1;
-if twosided, tag=2; end
-
-fw=gui.gui_waitbar([],[],'Step 3 of 3: run scTenifoldXct.py...');
+fw=gui.gui_waitbar([],[],'Step 3 of 3: Running scTenifoldXct.py...');
 cmdlinestr=sprintf('"%s" "%s%sscript.py" %d', ...
     x.Executable,wrkpth,filesep,tag);
 disp(cmdlinestr)
 [status]=system(cmdlinestr,'-echo');
 % https://www.mathworks.com/matlabcentral/answers/334076-why-does-externally-called-exe-using-the-system-command-freeze-on-the-third-call
-if isvalid(fw), gui.gui_waitbar(fw); end
+if isvalid(fw)
+    gui.gui_waitbar(fw,[],'Running scTenifoldXct.py is complete');
+end
 
 % rt=java.lang.Runtime.getRuntime(); 
 % pr = rt.exec(cmdlinestr);
@@ -120,13 +128,13 @@ if isvalid(fw), gui.gui_waitbar(fw); end
 %         T={T1,T2};
 %     end
 % else
-    if status==0 && exist('output1.txt','file')
-        T=readtable('output1.txt');
-        if twosided && exist('output2.txt','file')
-            T2=readtable('output2.txt');
-            T={T,T2};
-        end
+if status==0 && exist('output1.txt','file')
+    T=readtable('output1.txt');
+    if twosided && exist('output2.txt','file')
+        T2=readtable('output2.txt');
+        T={T,T2};
     end
+end
 %end
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end

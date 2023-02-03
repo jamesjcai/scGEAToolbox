@@ -48,10 +48,7 @@ sce.c_batch_id=sce.c_cell_type_tx;
 sce.c_batch_id(sce.c_cell_type_tx==cL{x1})="Source";
 sce.c_batch_id(sce.c_cell_type_tx==cL{x2})="Target";
 
-
-
-try
-    %fw = gui.gui_waitbar;
+try    
     if twosided
         [Tcell]=run.py_scTenifoldXct(sce,cL{x1},cL{x2},true);
         [T1]=Tcell{1};
@@ -72,19 +69,29 @@ try
         if ~isempty(T)
             a=sprintf('%s -> %s',cL{x1},cL{x2});
             T = addvars(T,repelem(a,size(T,1),1),'Before',1);
-            T.Properties.VariableNames{'Var1'} = 'direction';
+            T.Properties.VariableNames{'Var1'} = 'direction';            
         end
-    end    
-
-    %gui.gui_waitbar(fw);
+    end
 catch ME
-    %gui.gui_waitbar(fw,true);
     errordlg(ME.message);
     return;
 end
+
 if ~isempty(T)
-    gui.i_exporttable(T);
+    b=[tempname,'.txt'];
+    writetable(T,b);
+    answer=questdlg(sprintf('Result has been saved in %s',b), ...
+        '','Export result...','Locate result file...','Export result...');
+    switch answer
+        case 'Locate result file...'
+            winopen(tempdir);
+        case 'Export result...'
+            gui.i_exporttable(T);
+        otherwise
+            winopen(tempdir);
+    end
 else
     helpdlg('No ligand-receptor pairs are identified.','');
 end
+
 end

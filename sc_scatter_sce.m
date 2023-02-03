@@ -195,8 +195,9 @@ i_addmenu(m_exp,0,@callback_TwoGeneCooccurrenceTest,'Two-Gene Cooccurrence Test.
 %i_addmenu(m_exp,0,@AnnotateSubGroup,'Annotate Cell Subgroups...');
 
 
-i_addmenu(m_exp,1,@WorkonSelectedGenes,'Select 2000 HVGs to Work on...');
+i_addmenu(m_exp,1,@WorkonSelectedGenes,'Select Top n HVGs to Work on...');
 i_addmenu(m_exp,0,@WorkonSelectedCells,'Select 50% Cells to Work on...');
+
 
 i_addmenu(m_exp,1,@DrawKNNNetwork,'Plot Cell kNN Network...');
 i_addmenu(m_exp,0,@DrawTrajectory,'Plot Cell Trajectory...');
@@ -478,8 +479,8 @@ end
 %     end
 
     function WorkonSelectedGenes(src,~)
-        answer=questdlg('Input the number of HVGs. Continue?');
-        if ~strcmp(answer,'Yes'), return; end
+%         answer=questdlg('Input the number of HVGs. Continue?');
+%         if ~strcmp(answer,'Yes'), return; end
         k = gui.i_inputnumk(2000,10,sce.NumGenes);
         if isempty(k), return; end
         answer = questdlg('Which method?','Select Method', ...        
