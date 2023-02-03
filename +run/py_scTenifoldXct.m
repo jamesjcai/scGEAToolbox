@@ -13,6 +13,8 @@ wrkpth=fullfile(pw1,'external','py_scTenifoldXct');
 cd(wrkpth);
 
 
+fw = gui.gui_waitbar([],[],'Check Python environment...');
+
 x=pyenv;
 pkg.i_add_conda_python_path;
 cmdlinestr=sprintf('"%s" "%s%srequire.py"', ...
@@ -34,8 +36,6 @@ tmpfilelist={'X.mat','X.txt','g.txt','c.txt','output.txt', ...
              'A1.mat','A2.mat','pcnet_Source.mat','pcnet_Target.mat'};
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-
-
 
 % load(fullfile(pw1,'..','resources','Ligand_Receptor.mat'), ...
 %     'ligand','receptor');
@@ -62,6 +62,9 @@ t=table(sce.g,sce.g,'VariableNames',{' ','gene_name'});
 writetable(t,'gene_name_Source.tsv','filetype','text','Delimiter','\t');
 writetable(t,'gene_name_Target.tsv','filetype','text','Delimiter','\t');
 disp('Input gene_names written.');
+
+if isvalid(fw), gui.gui_waitbar(fw); end
+
 
 if isempty(A1)
     fw = gui.gui_waitbar([],[],'Step 1 of 3: Building A1 network...');
@@ -98,7 +101,7 @@ clear A A1 A2
 tag=1;
 if twosided, tag=2; end
 
-fw=gui.gui_waitbar([],[],'Step 1 of 3: run scTenifoldXct.py...');
+fw=gui.gui_waitbar([],[],'Step 3 of 3: run scTenifoldXct.py...');
 cmdlinestr=sprintf('"%s" "%s%sscript.py" %d', ...
     x.Executable,wrkpth,filesep,tag);
 disp(cmdlinestr)
