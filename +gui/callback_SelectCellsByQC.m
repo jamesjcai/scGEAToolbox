@@ -1,4 +1,6 @@
 function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
+    
+    needremove=false;
     requirerefresh=true;
     highlightindex=[];
     FigureHandle=src.Parent.Parent;
@@ -186,6 +188,7 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
             a=maxk(ci,10);                
             idx=gui.i_setranges3(ci',cj',[0 a(end)],...
                     [0 15],ttxti,ttxtj);
+            needremove=true;
         case 'Library Size vs. Number of Genes'
             cj=sum(sce.X>0,1);
             if issparse(cj), cj=full(cj); end
@@ -197,6 +200,7 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
             b=maxk(cj,10);
             idx=gui.i_setranges3(ci',cj',[0 a(end)],...
                     [0 b(end)],ttxti,ttxtj);
+            needremove=true;
         case 'Abundant lncRNAs vs. Number of Genes'    % 'Abundant lncRNAs vs. Number of Genes'
             % remove cells with a high fraction of nuclear lncRNA transcripts 
             % (Malat1, Meg3 and Kcnq10t1)
@@ -218,6 +222,7 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
             b=maxk(cj,10);
             idx=gui.i_setranges3(ci',cj',[0 a(end)],...
                     [0 b(end)],ttxti,ttxtj);
+            needremove=true;
         case 'QC Metrics in Violin Plots'   % view QC metrics violin
             gui.i_qcviolin(sce.X,sce.g);
             requirerefresh=false;
@@ -241,8 +246,10 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
             return;
     end
     
-    if ismember(indx,[6 7 8])
-        if ~isempty(idx) && any(~idx)
+    %if ismember(indx,[7 8 9])
+    %if ismember(listitems{idx},{'','',''})
+    if needremove
+         if ~isempty(idx) && any(~idx)
             answer = questdlg(sprintf('Remove or highlight %d cells?',sum(~idx)),...
                 '','Remove','Highlight','Cancel','Remove');
             switch answer
