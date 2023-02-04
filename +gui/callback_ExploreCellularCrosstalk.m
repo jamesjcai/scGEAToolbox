@@ -33,7 +33,7 @@ function callback_ExploreCellularCrosstalk(src,~)
 
     fw=gui.gui_waitbar;
     sce=sce.selectcells(selected);
-    [OUT]=run.talklr(sce);
+    [OUT,Tres]=run.talklr(sce);
     gui.gui_waitbar(fw);    
     
     n=length(OUT.ligandok);
@@ -61,6 +61,8 @@ function callback_ExploreCellularCrosstalk(src,~)
             OUT.ligandok(k), OUT.receptorok(k),...
             OUT.KL(k));
     end
+    gui.i_exporttable(T,true,'T');
+
     i_displyres(listitems);
     
 

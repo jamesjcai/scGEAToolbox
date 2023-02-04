@@ -84,8 +84,6 @@ function callback_DiffTFActivity(src,~)
 
     end
     gui.i_exporttable(T,true,'T',outfile);
-
-
     
     answer=questdlg('Violin plot for top TFs with most variable activity between groups?');
 
@@ -103,7 +101,7 @@ function callback_DiffTFActivity(src,~)
 
                 F=cell(numfig,1);
                 for k=1:numfig
-                    ttxt=T.tflist(k);
+                    ttxt=T.tflist(k);                    
                     f = gui.i_violinplot(cs(k,:),thisc,ttxt,true,cL);
 %                     f = figure('visible','off');
 %                     pkg.i_violinplot(cs(k,:),thisc,true,cL);
@@ -116,7 +114,7 @@ function callback_DiffTFActivity(src,~)
 %                     drawnow;
                     F{k}=f;
                 end                
-                gui.i_export2pptx(F,string(T.tflist(1:numfig)));                
+                gui.i_export2pptx(F,string(T.tflist(1:numfig)));  
             end
     end
 end

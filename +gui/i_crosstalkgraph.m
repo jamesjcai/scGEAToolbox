@@ -1,4 +1,4 @@
-function i_crosstalkgraph(OUT,k,sce)
+function [hFig]=i_crosstalkgraph(OUT,k,sce)
 
 if nargin<3, sce=[]; end
 if nargin<2, k=1; end

@@ -1,4 +1,4 @@
-function [h1,h2]=i_stemscatter(s,c) 
+function [h1,h2]=i_stemscatter(s,c)
 
 c(c<0)=0;
 x=s(:,1);

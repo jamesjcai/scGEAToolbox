@@ -47,7 +47,7 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
             switch methodid
                 case 1
                     % within_stemscatter(x, y, c);
-                    gui.i_stemscatter([x y],c)
+                    gui.i_stemscatter([x y],c);
                     h1 = gca;
                     set(h1,'XTickLabel',[]);
                     set(h1,'YTickLabel',[]);

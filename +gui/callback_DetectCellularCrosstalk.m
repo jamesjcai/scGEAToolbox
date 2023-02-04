@@ -18,47 +18,81 @@ function callback_DetectCellularCrosstalk(src,~)
     sce=sce.selectcells(selected);
     
 
-    [OUT]=run.talklr(sce.X,sce.g,cL(c(selected)));
-    gui.gui_waitbar(fw);    
+    [OUT,T]=run.talklr(sce.X,sce.g,cL(c(selected)));
+    gui.gui_waitbar(fw);
+
+
     
     n=length(OUT.ligandok);
     if n==0
         warndlg('Not detected.');
+        return;
     end
+
+    gui.i_exporttable(T,true,'T');
+
+%     if ~(ismcc || isdeployed)
     
-    labels = {'Save OUT to variable named:'};
-    vars = {'OUT'};
-    values = {OUT};
+%     labels = {'Save OUT to variable named:'};
+%     vars = {'OUT'};
+%     values = {OUT};
 
-    if ~(ismcc || isdeployed)
-        [f,ft]=export2wsdlg(labels, vars, values);
-        waitfor(f);
-        if ft
-            disp('Run >> gui.i_crosstalkgraph(OUT,k,sce); to plot crosstalk graph for ligand-receptor pair k.')
-        end
+%         [f,ft]=export2wsdlg(labels, vars, values);
+%         waitfor(f);
+%         if ft
+%             disp('Run >> gui.i_crosstalkgraph(OUT,k,sce); to plot crosstalk graph for ligand-receptor pair k.')
+%         end
+%     end
+
+    answer=questdlg('Plot top ligand-receptor expression?');
+
+    switch answer
+        case 'Yes'
+            [numfig]=gui.i_inputnumg(n);
+            if isempty(numfig) || isnan(numfig), return; end
+            if isnumeric(numfig) && numfig>0 && numfig<=n
+                F=cell(numfig,1);
+                %listitems=cell(numfig,1);
+                for k=1:numfig
+                    F{k}=gui.i_crosstalkgraph(OUT,k,sce);
+                    %listitems{k}=sprintf('%s -> %s (KL = %.2f)',...
+                    %    OUT.ligandok(k), OUT.receptorok(k),...
+                    %    OUT.KL(k));
+                    drawnow;
+                end
+                gui.i_export2pptx(F);
+                %gui.i_export2pptx(F,string(listitems));
+            end
     end
 
-    listitems=cell(n,1);
-    for k=1:n
-        listitems{k}=sprintf('%s -> %s (KL = %.2f)',...
-            OUT.ligandok(k), OUT.receptorok(k),...
-            OUT.KL(k));
-    end
-    i_displyres(listitems);
-    
-function i_displyres(listitems)
-    [indx2,tf2] = listdlg('PromptString',...
-        {'Select ligand-receptor pairs to plot'},...
-         'SelectionMode','single','ListString',listitems,...
-         'ListSize',[210,300]);
-     if tf2==1         
-            kk=indx2;
-            gui.i_crosstalkgraph(OUT,kk,sce);
-            i_displyres(listitems);
-     elseif tf2==0
 
-     end
-end
+
+
+% answer=questdlg('Interactive exploration?');
+% switch answer
+%     case 'Yes'
+%         listitems=cell(n,1);
+%         for k=1:n
+%             listitems{k}=sprintf('%s -> %s (KL = %.2f)',...
+%                 OUT.ligandok(k), OUT.receptorok(k),...
+%                 OUT.KL(k));
+%         end
+%         i_displyres(listitems);
+% end
+% 
+%     function i_displyres(listitems)
+%         [indx2,tf2] = listdlg('PromptString',...
+%             {'Select ligand-receptor pairs to plot'},...
+%              'SelectionMode','single','ListString',listitems,...
+%              'ListSize',[210,300]);
+%          if tf2==1         
+%                 kk=indx2;
+%                 gui.i_crosstalkgraph(OUT,kk,sce);
+%                 i_displyres(listitems);
+%          elseif tf2==0
+%     
+%          end
+%     end
 
 
 

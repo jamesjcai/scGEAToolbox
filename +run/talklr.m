@@ -1,4 +1,4 @@
-function [OUT]=talklr(X,g,c)
+function [OUT,T]=talklr(X,g,c)
 %TALKLR - uncovers ligand-receptor mediated intercellular crosstalk
 %
 % Usage: [OUT]=run.talklr(X,g,c)
@@ -35,7 +35,10 @@ OUT.receptorok=OUT.receptorok(idx);
 OUT.KL=KL(idx);
 OUT.T=Tok;
 
-disp('Try: gui.i_crosstalkgraph(OUT,k);')
+disp('Try: gui.i_crosstalkgraph(OUT,k);');
+T=table(OUT.ligandok,OUT.receptorok,OUT.T.KL);
+T.Properties.VariableNames={'ligand','receptor','KL'};
+
 end
 
 
