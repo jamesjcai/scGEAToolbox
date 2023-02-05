@@ -3,7 +3,10 @@ function callback_ShowPseudoTimeGenes(src,~)
     sce=guidata(FigureHandle);
 
 [thisc,clable,~,newpickclable]=gui.i_select1state(sce,true,false);
-if isempty(thisc), return; end
+if isempty(thisc)
+    helpdlg('No pseudotime values are available for cells.','')
+    return; 
+end
 if ~isempty(newpickclable), clable=newpickclable; end
 
 fw=gui.gui_waitbar;

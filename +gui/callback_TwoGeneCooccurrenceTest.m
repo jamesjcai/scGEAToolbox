@@ -6,7 +6,6 @@ function callback_TwoGeneCooccurrenceTest(src,~)
 helpdlg('This function is under development.','');
 return;
 
-
     answer = questdlg('Calculate gene expression mean, CV, and dropout rate. Save output to a table.','');
     if ~strcmp(answer,'Yes'), return; end    
     try
