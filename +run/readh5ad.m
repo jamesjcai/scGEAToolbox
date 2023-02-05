@@ -2,7 +2,7 @@ function [X,g,b]=readh5ad(fname)
 
 isdebug=true;
 if ~exist(fname,'file')
-    fname
+    %fname
     error('FNAME is not a file.');
 end
 
