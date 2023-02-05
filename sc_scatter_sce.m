@@ -164,7 +164,7 @@ i_addmenu(m_net,0,@callback_scTenifoldNet1,'GRN Construction - PC Regression (w/
 i_addmenu(m_net,1,@callback_scTenifoldNet2lite,'GRN Comparison - scTenifoldNet (w/o subsampling) 🐢🐢 ...');
 i_addmenu(m_net,0,@callback_scTenifoldNet2,'GRN Comparison - scTenifoldNet (w/ subsampling) 🐢🐢🐢 ...');
 i_addmenu(m_net,1,@callback_scTenifoldKnk1,'Virtual Gene KO - scTenifoldKnk 🐢🐢 ...');
-i_addmenu(m_net,0,@callback_scTenifoldXct,'Cell-Cell Interactions - scTenifoldXct (Python) 🐢🐢🐢 ...');
+i_addmenu(m_net,0,@callback_scTenifoldXct2,'Cell-Cell Interactions - scTenifoldXct (Python) 🐢🐢🐢 ...');
 
 m_ext = uimenu(FigureHandle,'Text','E&xternal','Accelerator','x');
 i_addmenu(m_ext,0,@gui.i_setrenv,'Check R Environment');

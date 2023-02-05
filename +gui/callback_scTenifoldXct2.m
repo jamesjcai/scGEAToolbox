@@ -1,4 +1,4 @@
-function callback_scTenifoldXct(src,~)
+function callback_scTenifoldXct2(src,~)
     % import ten.*
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
@@ -7,18 +7,26 @@ if ~gui.i_setpyenv
     return; 
 end
 
-%     [thisc,~]=gui.i_select1class(sce,false);
-%     if isempty(thisc), return; end    
-%     [c,cL]=grp2idx(thisc);
-%     [idx]=gui.i_selmultidlg(cL);
-%     if isempty(idx), return; end
-%     if numel(idx)<2
-%         warndlg('Need at least 2 cell types');
-%         return;
-%     end
+    [thisc,~]=gui.i_select1class(sce,false);
+    if isempty(thisc), return; end    
+    [c,cL]=grp2idx(thisc);
+    [idx]=gui.i_selmultidlg(cL);
+    if isempty(idx), return; end
+    if numel(idx)<2
+        warndlg('Need at least 2 cell groups to perform cell-cell interaction analysis.');
+        return;
+    end
+    if numel(idx)~=2
+        warndlg(sprintf('Need only 2 cell groups to perform cell-cell interaction analysis. You selected %d.',...
+                numel(idx)));
+        return;
+    end
+    
+    i1=idx(1);
+    i2=idx(2);
 
 
-
+%{
     
 [~,cL]=grp2idx(sce.c_cell_type_tx);
 if length(cL)<2, errordlg('Need at least 2 cell types.'); return; end
@@ -36,7 +44,7 @@ if tf2==1
 else
     return;
 end
-
+%}
 
 
 a1=sprintf('%s -> %s',cL{i1},cL{i2});
@@ -56,12 +64,29 @@ switch answer
         return;
 end
 
+%{
 idx=sce.c_cell_type_tx==cL{x1} | sce.c_cell_type_tx==cL{x2};
 sce=sce.selectcells(idx);
 
 sce.c_batch_id=sce.c_cell_type_tx;
 sce.c_batch_id(sce.c_cell_type_tx==cL{x1})="Source";
 sce.c_batch_id(sce.c_cell_type_tx==cL{x2})="Target";
+%}
+
+
+
+sce.c_batch_id=thisc;
+sce.c_batch_id(c==x1)="Source";
+sce.c_batch_id(c==x2)="Target";
+sce.c_cell_type_tx=string(cL(c));
+
+% idx=thisc==cL{x1} | thisc==cL{x2};
+idx=c==x1 | c==x2;
+sce=sce.selectcells(idx);
+
+
+%sce.c_batch_id(thisc==cL{x1})="Source";
+%sce.c_batch_id(thisc==cL{x2})="Target";
 
 try    
     if twosided

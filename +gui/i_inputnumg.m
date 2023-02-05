@@ -1,9 +1,12 @@
-function [numfig]=i_inputnumg(uplimnum)
+function [numfig]=i_inputnumg(uplimnum,descstr)
+if nargin<2
+    descstr='a number';
+end
 if nargin<1
     uplimnum=50;
 end
     numfig=[];
-    prompt = {sprintf('Enter a number (1-%d):',uplimnum)};
+    prompt = {sprintf('Enter %s (1-%d):',descstr,uplimnum)};
     %dlgtitle = 'Number of markers';
     dlgtitle='';
     % answer = inputdlg(prompt,dlgtitle,[1 50],{'10'});
