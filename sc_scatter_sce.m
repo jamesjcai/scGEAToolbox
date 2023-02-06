@@ -481,7 +481,7 @@ end
     function WorkonSelectedGenes(src,~)
 %         answer=questdlg('Input the number of HVGs. Continue?');
 %         if ~strcmp(answer,'Yes'), return; end
-        k = gui.i_inputnumk(2000,10,sce.NumGenes);
+        k = gui.i_inputnumk(2000,1,sce.NumGenes,'the number of HVGs');
         if isempty(k), return; end
         answer = questdlg('Which method?','Select Method', ...        
             'Brennecke et al. (2013)','Splinefit Method',...

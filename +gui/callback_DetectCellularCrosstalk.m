@@ -48,7 +48,9 @@ function callback_DetectCellularCrosstalk(src,~)
 
     switch answer
         case 'Yes'
-            [numfig]=gui.i_inputnumg(n,'the number of ligand-receptor pairs');
+            %[numfig]=gui.i_inputnumg(n,'the number of ligand-receptor pairs');
+            [numfig]=gui.i_inputnumk(10,1,n,'the number of ligand-receptor pairs');
+            
             if isempty(numfig) || isnan(numfig), return; end
             if isnumeric(numfig) && numfig>0 && numfig<=n
                 F=cell(numfig,1);
