@@ -1,4 +1,4 @@
-function [cs,tflist,gcommon,numtargetgenes]=sc_tfactivity(X,g,T,species,methodid)
+function [cs,tflist,gcommon,numtargetgenes]=sc_tfactivity(X,g,Ttfgn,species,methodid)
 % The activity level of a transcription factor (TF) in a given cell is the
 % extent to which it is exerting its regulatory potential on its target 
 % genes.
@@ -9,9 +9,9 @@ function [cs,tflist,gcommon,numtargetgenes]=sc_tfactivity(X,g,T,species,methodid
 % TFlist - list of TF genes
 
 if nargin<2, error('USAGE: [cs,tflist]=sc_tfactivity(X,g);'); end    
-if nargin<5 || isempty(methodid), methodid=3; end
+if nargin<5 || isempty(methodid), methodid=4; end
 if nargin<4 || isempty(species), species='hs'; end
-if nargin<3 || isempty(T)
+if nargin<3 || isempty(Ttfgn)         % tf-by-gene matrix T from database 
     %folder=fileparts(mfilename('fullpath'));
     %wrkpth=fullfile(folder,'resources',filesep,'DoRothEA_TF_Target_DB',filesep);
     pw1=fileparts(mfilename('fullpath'));
@@ -27,20 +27,20 @@ if nargin<3 || isempty(T)
     end
     fprintf('\nReading ... %s.\n',fname);
     load(fname,'T');
+    Ttfgn=T(T.mor>0,:);
+    fprintf('Only positive regulatory relationships are used.\n');
 end
 
-T=T(T.mor>0,:);
-fprintf('Only positive regulatory relationships are used.\n');
 
-if methodid~=1    % 2 - naive, 3 - nnmf
-    [X]=sc_norm(X);
-    [X]=log(X+1);
+if methodid~=1    % method 1 UCell is rank-based, normalization is unnecessary
+[X]=sc_norm(X);
+[X]=log(X+1);
 end
 
-[gid,gnlist]=grp2idx(T.target);
-[tid,tflist]=grp2idx(T.tf);
+[gid,gnlist]=grp2idx(Ttfgn.target);
+[tid,tflist]=grp2idx(Ttfgn.tf);
 t=zeros(max(tid),max(gid));
-t(sub2ind([max(tid),max(gid)],tid,gid))=T.mor;
+t(sub2ind([max(tid),max(gid)],tid,gid))=Ttfgn.mor;
 fprintf('Using the Dorothea dadtabase that contains %d TFs and %d targets.\n', ...
          size(t,1),size(t,2));
 
@@ -79,11 +79,13 @@ switch methodid
             end
         end
         cs(cs<0)=0;
-    case 2    % naive method
-        cs=t*X;
-        % cs=pinv(t')*X;
+    case 2    % matrix multiplication method
+        cs=t*X;        
         numtargetgenes=sum(t>0,2);
-    case 3    % nnmf method
+    case 3      % matrix inverse method 
+        cs=pinv(t')*X;
+        numtargetgenes=sum(t>0,2);
+    case 4    % nnmf method
         % ref: Bioinformatics, Volume 37, Issue 9, 1 May 2021, Pages 1234–1245, 
         % https://doi.org/10.1093/bioinformatics/btaa947
         n=size(t,1);
