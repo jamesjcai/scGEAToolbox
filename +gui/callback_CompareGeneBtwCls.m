@@ -18,7 +18,9 @@ function callback_CompareGeneBtwCls(src,~)
     end
 
 selitems={'Expression of Gene', ...
-    'TF Activity Score','Differentiation Potency',...
+    'TF Activity Score',...
+    'TF Targets Expression Score',...
+    'Differentiation Potency',...
     'MSigDB Signature Score',...    
     '--------------------------------',...
     'Predefined Cell Score',...
@@ -27,7 +29,8 @@ selitems={'Expression of Gene', ...
     'Library Size','Other Attribute'};
 [indx1,tf1]=listdlg('PromptString',...
     'Select a metric for comparison.',...
-    'SelectionMode','single','ListString',selitems);
+    'SelectionMode','single','ListString',selitems, ...
+    'ListSize',[200,300]);
 if tf1~=1, return; end
 
 %try
@@ -107,7 +110,7 @@ if tf1~=1, return; end
             else
                 ttxt=clable;
             end
-        case 'TF Activity Score'
+        case {'TF Activity Score','TF Targets Expression Score'}
             [~,T]=pkg.e_tfactivityscores(sce.X,sce.g,0);
             listitems=unique(T.tf);
 
@@ -127,9 +130,14 @@ if tf1~=1, return; end
 %     'UCell [PMID:34285779]','AddModuleScore/Seurat', ...
 %     'UCell [PMID:34285779]');
 %     switch answer
-%         case 'AddModuleScore/Seurat'            
+%         case 'AddModuleScore/Seurat'   
 
-            methodid=1;
+            switch selitems{indx1}
+                case 'TF Activity Score'
+                    methodid=4;
+                case 'TF Targets Expression Score'
+                    methodid=1;
+            end            
             fw=gui.gui_waitbar;
                 [cs,tflist]=sc_tfactivity(sce.X,sce.g,[],species,methodid);
                 idx=find(tflist==string(listitems{indx2}));
@@ -137,6 +145,15 @@ if tf1~=1, return; end
                 [y]=cs(idx,:);
                 ttxt=listitems{indx2};
             gui.gui_waitbar(fw);
+
+        case 'TF Targets Expression Score 2'
+                species=gui.i_selectspecies(2);
+                if isempty(species), return; end            
+                [posg,ctselected]=gui.i_selectTFTargetSet(species);
+                [y]=gui.e_cellscore(sce,posg);
+                %ttxt=listitems{indx2};
+                ttxt = strcat(ctselected, ' activity');
+
         otherwise
             return;
     end

@@ -49,7 +49,7 @@ end
 function i_savedata(~,~,a,b)
     T=table(a(:),b(:));    
     T.Properties.VariableNames={'ScoreLevel','GroupID'};
-    T=sortrows(T,'ExprLevel','descend');
+    T=sortrows(T,'ScoreLevel','descend');
     T=sortrows(T,'GroupID');
     gui.i_exporttable(T,true);
 end
