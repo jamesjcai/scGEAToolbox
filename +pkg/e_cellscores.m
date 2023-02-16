@@ -69,10 +69,23 @@ end
 
 
 posg=sort(tgsPos);
-fprintf('\n=============\n%s\n-------------\n','Marker Genes');
-for k=1:length(posg)
-    fprintf('%s\n',posg(k));
-end
-fprintf('=============\n');
+
+    isexpressed=ismember(upper(posg),upper(genelist));
+    fprintf('\n=============\n%s\n-------------\n','Genes');
+    for k=1:length(posg)
+        if isexpressed(k)
+           fprintf('%s\t*\n',posg(k));
+        else
+            fprintf('%s\t\n',posg(k));
+        end
+    end
+    fprintf('=============\n*expressed genes (n=%d)\n', ...
+        sum(isexpressed));
+
+% fprintf('\n=============\n%s\n-------------\n','Marker Genes');
+% for k=1:length(posg)
+%     fprintf('%s\n',posg(k));
+% end
+% fprintf('=============\n');
 
 end
