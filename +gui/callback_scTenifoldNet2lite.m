@@ -28,9 +28,21 @@ function callback_scTenifoldNet2lite(src,~)
     gui.gui_waitbar(fw);
 
     tstr=matlab.lang.makeValidName(string(datetime));
-    save(sprintf('output_%s',tstr),'T');
-    writetable(T,sprintf('output_%s.xlsx',tstr),'FileType','spreadsheet');
-    fprintf('The result has been saved in output_%s.xlsx\n',tstr);
+    b='sctenifoldnet_outs';
+    a=sprintf('output_%s',tstr);
+    f1=fullfile(tempdir,b,a);
+    save(f1,'T');
+    a=sprintf('output_%s.xlsx',tstr);
+    f1=fullfile(tempdir,b,a);
+    writetable(T,f1,'FileType','spreadsheet');
+    fprintf('The result has been saved in %s\n',f1);
+    bx=sprintf('The result has been saved in %s. Open the folder to locate it?',f1);
+    answer=questdlg(bx);
+    switch answer
+        case 'Yes'
+            winopen(fullfile(tempdir,b));
+    end
+
 
     %{
     figure;
