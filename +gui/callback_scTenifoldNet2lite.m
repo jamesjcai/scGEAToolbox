@@ -30,6 +30,8 @@ function callback_scTenifoldNet2lite(src,~)
     tstr=matlab.lang.makeValidName(string(datetime));
     b='sctenifoldnet_outs';
     a=sprintf('output_%s',tstr);
+    mkdir(fullfile(tempdir,b));
+    pause(1);
     f1=fullfile(tempdir,b,a);
     save(f1,'T');
     a=sprintf('output_%s.xlsx',tstr);
