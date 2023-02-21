@@ -1258,10 +1258,10 @@ end
         answer = questdlg('Cluster cells?');
         if ~strcmp(answer, 'Yes'), return; end        
         answer = questdlg('Which method?', 'Select Algorithm', ...
-            'K-means 🐇', 'SnnDpc 🐢', 'K-means 🐇');
+            'K-means 🐇', 'SnnDpc [DOI:10.1016/j.ins.2018.03.031] 🐢', 'K-means 🐇');
         if strcmpi(answer, 'K-means 🐇')
             methodtag = "kmeans";
-        elseif strcmpi(answer, 'SnnDpc 🐢')
+        elseif strcmpi(answer, 'SnnDpc [DOI:10.1016/j.ins.2018.03.031] 🐢')
             methodtag = "snndpc";
         else
             return;
