@@ -803,7 +803,7 @@ end
                      K=gui.i_inputnumk(min([3000,sce.NumGenes]), ...
                          100,sce.NumGenes);
                      if isempty(K), return; end
-                     usehvgs = true;   % xxx
+                     usehvgs = true;
                      [whitelist]=gui.i_selectwhitelist(sce);
                     if isnumeric(whitelist) 
                         if whitelist==0
@@ -962,26 +962,45 @@ end
     end
 
     function Brushed2NewCluster(~, ~)
-        answer = questdlg('Make a new cluster out of brushed cells?');
-        if ~strcmp(answer, 'Yes')
-            return
+        answer = questdlg('Make a new cluster or new cell type group out of brushed cells?','',...
+                    'Cluster','Cell Type','Cluster');        
+        switch answer
+            case 'Cluster'
+                iscelltype=false;
+            case 'Cell Type'
+                iscelltype=true;
+            otherwise
+                return;
         end
         ptsSelected = logical(h.BrushData.');
         if ~any(ptsSelected)
             warndlg("No cells are selected.");
             return
         end
-        c(ptsSelected) = max(c) + 1;
-        [c, cL] = grp2idx(c);
-        sce.c = c;
-        [ax, bx] = view();
-        [h] = gui.i_gscatter3(sce.s, c, methodid, hAx);
-        title(sce.title);
-        subtitle('[genes x cells]');
-        view(ax, bx);
-        i_labelclusters(true);
-        sce.c_cluster_id = c;
-        guidata(FigureHandle, sce);
+        if iscelltype
+            n=sum(contains(unique(sce.c_cell_type_tx),"New cell type"));
+            if n>0
+                nname=sprintf('New cell type %d',n+1);
+            else
+                nname='New cell type';
+            end
+            newctype = inputdlg('Enter new cell type name:', '', [1 50], {nname});
+            if isempty(newctype), return; end       
+            sce.c_cell_type_tx(ptsSelected) = string(newctype);
+            [c, cL] = grp2idx(sce.c_cell_type_tx);            
+        else
+            c(ptsSelected) = max(c) + 1;
+            [c, cL] = grp2idx(c);            
+            sce.c_cluster_id = c;
+        end
+            sce.c = c;
+            [ax, bx] = view();
+            [h] = gui.i_gscatter3(sce.s, c, methodid, hAx);
+            title(sce.title);
+            subtitle('[genes x cells]');
+            view(ax, bx);
+            i_labelclusters(true);
+            guidata(FigureHandle, sce);
     end
 
     function Brushed2MergeClusters(~, ~)
