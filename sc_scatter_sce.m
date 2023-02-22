@@ -113,12 +113,12 @@ ptlabelclusters.ClickedCallback = @LabelClusters;
 
 i_addbutton(1,0,@Brushed2NewCluster,"plotpicker-glyplot-face.gif","Add brushed cells to a new group")
 i_addbutton(1,0,@Brushed2MergeClusters,"plotpicker-pzmap.gif","Merge brushed cells to same group")
+i_addbutton(1,0,@RenameCellTypeBatchID,"plotpicker-scatterhist.gif","Rename cell type or batch ID");
+
 i_addbutton(1,1,@ClusterCellsS,"plotpicker-dendrogram.gif","Clustering using embedding S")
 i_addbutton(1,0,@ClusterCellsX,"plotpicker-gscatter.gif","Clustering using expression matrix X")
 i_addbutton(1,1,@DetermineCellTypeClusters,"plotpicker-contour.gif","Assign cell types to groups")
 i_addbutton(1,0,@Brush4Celltypes,"brush.gif","Assign cell type to selected cells");
-i_addbutton(1,0,@RenameCellTypeBatchID,"plotpicker-scatterhist.gif","Rename cell type or batch ID");
-i_addbutton(1,1,@callback_CellTypeMarkerScores,"cellscore.gif","Calculate signature scores for each cell");
 %i_addbutton(1,0,@ShowCellStemScatter,"IMG00067.GIF","Stem scatter plot");
 i_addbutton(1,1,@callback_Brush4Markers,"plotpicker-kagi.gif","Marker genes of brushed cells");
 i_addbutton(1,0,@callback_MarkerGeneHeatmap,"plotpicker-plotmatrix.gif","Marker gene heatmap");
@@ -143,7 +143,8 @@ i_addbutton(2,0,@call_scgeatool,"IMG00107.GIF"," ");
 i_addbutton(2,1,@gui.callback_MultiGroupingViewer,"plotpicker-arxtimeseries.gif","Multi-grouping View...");
 i_addbutton(2,0,@gui.callback_CrossTabulation,"plotpicker-comet.gif","Cross tabulation");
 %i_addbutton(2,1,@callback_CompareGeneBtwCls,"plotpicker-priceandvol.gif","Compare between groups");
-i_addbutton(2,1,@callback_CompareGeneBtwCls,"cellscore2.gif","Compare between groups");
+i_addbutton(2,1,@callback_CellTypeMarkerScores,"cellscore.gif","Calculate signature scores for each cell");
+i_addbutton(2,0,@callback_CompareGeneBtwCls,"cellscore2.gif","Compare between groups");
 
 i_addbutton(2,0,@callback_DEGene2Groups,"plotpicker-boxplot.gif","Compare 2 groups (DE analysis)");
 i_addbutton(2,0,@callback_EnrichrHVGs,"plotpicker-andrewsplot.gif","Functional enrichment analysis with HVGs");
@@ -961,8 +962,8 @@ end
         guidata(FigureHandle, sce);
     end
 
-    function Brushed2NewCluster(~, ~)
-        answer = questdlg('Make a new cluster or new cell type group out of brushed cells?','',...
+    function [iscelltype]=pick_celltype_clusterid(a)
+        answer = questdlg(a,'',...
                     'Cluster','Cell Type','Cluster');        
         switch answer
             case 'Cluster'
@@ -970,8 +971,13 @@ end
             case 'Cell Type'
                 iscelltype=true;
             otherwise
-                return;
-        end
+                iscelltype=[];
+        end        
+    end
+
+    function Brushed2NewCluster(~, ~)
+        [iscelltype]=pick_celltype_clusterid('Make a new cluster or new cell type group out of brushed cells?');
+        if isempty(iscelltype), return; end
         ptsSelected = logical(h.BrushData.');
         if ~any(ptsSelected)
             warndlg("No cells are selected.");
@@ -1004,39 +1010,54 @@ end
     end
 
     function Brushed2MergeClusters(~, ~)
-        answer = questdlg('Merge brushed cells into one cluster?');
-        if ~strcmp(answer, 'Yes')
-            return
-        end
+%         answer = questdlg('Merge brushed cells into one cluster?');
+%         if ~strcmp(answer, 'Yes')
+%             return
+%         end
+        [iscelltype]=pick_celltype_clusterid('Merge brushed cells into same cluster or same cell type?');
+        if isempty(iscelltype), return; end
+
         ptsSelected = logical(h.BrushData.');
         if ~any(ptsSelected)
             warndlg("No cells are brushed");
-            return
+            return;
         end
-        c_members = unique(c(ptsSelected));
-        if numel(c_members) == 1
-            warndlg("All brushed cells are in one cluster");
-            return
+        
+        if iscelltype
+            c_members = unique(sce.c_cell_type_tx(ptsSelected));
         else
-            [indx, tf] = listdlg('PromptString',...
-                {'Select target cluster'}, 'SelectionMode',...
-                'single', 'ListString', string(c_members));
-            if tf == 1
-                c_target = c_members(indx);
-            else
-                return
-            end
+            c_members = unique(c(ptsSelected));
         end
-        c(ismember(c, c_members)) = c_target;
-        [c, cL] = grp2idx(c);
-        sce.c = c;
+
+        if numel(c_members) == 1
+            warndlg("All brushed cells are in one cluster or belong to the same cell type.");
+            return;
+        end
+        
+        [indx, tf] = listdlg('PromptString',...
+            {'Select target cluster'}, 'SelectionMode',...
+            'single', 'ListString', string(c_members));
+        if tf == 1
+            c_target = c_members(indx);
+        else
+            return;
+        end
+
+        if iscelltype
+            sce.c_cell_type_tx(ismember(sce.c_cell_type_tx, c_members)) = c_target;
+            [c, cL] = grp2idx(sce.c_cell_type_tx);            
+        else
+            c(ismember(c, c_members)) = c_target;
+            [c, cL] = grp2idx(c);
+            sce.c = c;
+            sce.c_cluster_id = c;
+        end
         [ax, bx] = view();
         [h] = gui.i_gscatter3(sce.s, c, methodid, hAx);
         title(sce.title);
         subtitle('[genes x cells]');
         view(ax, bx);
         i_labelclusters(true);
-        sce.c_cluster_id = c;
         guidata(FigureHandle, sce);
     end
 
