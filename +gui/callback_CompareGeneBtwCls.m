@@ -1,5 +1,5 @@
 function callback_CompareGeneBtwCls(src,~)
-    answer = questdlg('This function generate violinplot to show differences between cell groups. Continue?','');
+    answer = questdlg('This function generates violinplot to show differences between cell groups. Continue?','');
     if ~strcmp(answer,'Yes'), return; end    
 
     FigureHandle=src.Parent.Parent;
@@ -18,10 +18,10 @@ function callback_CompareGeneBtwCls(src,~)
     end
 
 selitems={'Expression of Gene', ...
-    'TF Activity Score',...
+    'TF Activity Score [PMID: 33135076]',...
     'TF Targets Expression Score',...
-    'Differentiation Potency',...
-    'MSigDB Signature Score',...    
+    'Differentiation Potency [PMID: 33244588]',...
+    'MSigDB Signature Score',...
     '--------------------------------',...
     'Predefined Cell Score',...
     'Define New Score...',...
@@ -35,6 +35,8 @@ if tf1~=1, return; end
 
 %try
     switch selitems{indx1}
+        %case 'Global Coordination Level (GCL) [PMID: 33139959]'
+
         case 'Define New Score...'
             ttxt='Customized Score';
             [posg]=gui.i_selectngenes(sce.g);
@@ -42,7 +44,7 @@ if tf1~=1, return; end
                 helpdlg('No feature genes selected.','')
                 return;
             end
-            [y]=gui.e_cellscore(sce,posg);            
+            [y]=gui.e_cellscore(sce,posg);
         case 'MSigDB Signature Score'
             stag=gui.i_selectspecies(2,true);
             if isempty(stag), return; end            
@@ -55,7 +57,7 @@ if tf1~=1, return; end
             ttxt = ctselected;
             if isempty(posg) || isempty(ctselected), return; end
             [y]=gui.e_cellscore(sce,posg);
-        case 'Differentiation Potency'
+        case 'Differentiation Potency [PMID: 33244588]'
             [a]=contains(sce.list_cell_attributes(1:2:end),'cell_potency');
             if ~any(a)
                 answer2=questdlg('Which species?','Select Species','Mouse','Human','Mouse');
@@ -110,7 +112,7 @@ if tf1~=1, return; end
             else
                 ttxt=clable;
             end
-        case {'TF Activity Score','TF Targets Expression Score'}
+        case {'TF Activity Score [PMID: 33135076]','TF Targets Expression Score'}
             [~,T]=pkg.e_tfactivityscores(sce.X,sce.g,0);
             listitems=unique(T.tf);
 
@@ -133,7 +135,7 @@ if tf1~=1, return; end
 %         case 'AddModuleScore/Seurat'   
 
             switch selitems{indx1}
-                case 'TF Activity Score'
+                case 'TF Activity Score [PMID: 33135076]'
                     methodid=4;
                 case 'TF Targets Expression Score'
                     methodid=1;

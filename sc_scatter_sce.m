@@ -208,6 +208,7 @@ i_addmenu(m_exp,0,@gui.callback_GeneHeatMap,'Gene Heatmap...');
 i_addmenu(m_exp,0,@callback_DrawDotplot,'Dot Plot...');
 
 i_addmenu(m_exp,1,@DetermineCellTypeClusters2,    'Annotate Cell Type Using Customized Markers...');
+i_addmenu(m_exp,0,@callback_CompareGCLBtwCls,     'Differential GCL Analysis [PMID: 33139959]...');
 i_addmenu(m_exp,0,@callback_CalculateGeneStats,   'Calculate Gene Expression Statistics...');
 i_addmenu(m_exp,0,@callback_CellCycleLibrarySize, 'Library Size of Cell Cycle Phases...');
 i_addmenu(m_exp,0,@callback_DiffTFActivity,       'Differential TF Activity Analysis...');
