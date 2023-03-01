@@ -4,6 +4,7 @@ pw1=cdgea;
 wrkpth=fullfile(pw1,'tensor_toolbox'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','cbrewer'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','DESeq2'); addpath(wrkpth);
+wrkpth=fullfile(pw1,'+run','thirdparty','GCL'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','PHATE'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','umapFileExchange'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','alona_panglaodb'); addpath(wrkpth);
