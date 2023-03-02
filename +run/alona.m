@@ -171,7 +171,7 @@ for k=1:NC
             {sprintf('C%d_Cell_Type',k),sprintf('C%d_CTA_Score',k)})];
     else
         T=[T,table("Unknown",0,'VariableNames',...
-            {sprintf('C%d_Cell_Type',k),sprintf('C%d_CTA_Score',k)})];        
+            {sprintf('C%d_Cell_Type',k),sprintf('C%d_CTA_Score',k)})];
     end
 end
 if size(T,1)>10

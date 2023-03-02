@@ -14,7 +14,6 @@ if ~ok, return; end
     try
     cx=run.SingleR(sce.X,sce.g,speciestag);
     catch
-
         gui.gui_waitbar(fw);
         errordlg("SingleR runtime error.");
         return;
@@ -25,6 +24,7 @@ if ~ok, return; end
         [c,~]=grp2idx(cx);
         sce.c=c;
         guidata(FigureHandle,sce);
+        helpdlg(sprintf('SingleR cell type annotation has complete.\nLabel cell group to see the results.'),'');
     else
         errordlg("SingleR runtime error.");
     end

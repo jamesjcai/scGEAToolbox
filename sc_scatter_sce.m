@@ -117,7 +117,7 @@ i_addbutton(1,0,@RenameCellTypeBatchID,"plotpicker-scatterhist.gif","Rename cell
 
 i_addbutton(1,1,@ClusterCellsS,"plotpicker-dendrogram.gif","Clustering using embedding S")
 i_addbutton(1,0,@ClusterCellsX,"plotpicker-gscatter.gif","Clustering using expression matrix X")
-i_addbutton(1,1,@DetermineCellTypeClusters,"plotpicker-contour.gif","Assign cell types to groups")
+i_addbutton(1,1,{@DetermineCellTypeClustersGeneral,true},"plotpicker-contour.gif","Assign cell types to groups")
 i_addbutton(1,0,@Brush4Celltypes,"brush.gif","Assign cell type to selected cells");
 %i_addbutton(1,0,@ShowCellStemScatter,"IMG00067.GIF","Stem scatter plot");
 i_addbutton(1,1,@callback_Brush4Markers,"plotpicker-kagi.gif","Marker genes of brushed cells");
@@ -207,7 +207,7 @@ i_addmenu(m_exp,0,@ShowCellStemScatter,"Stem Scatter Plot...");
 i_addmenu(m_exp,0,@gui.callback_GeneHeatMap,'Gene Heatmap...');
 i_addmenu(m_exp,0,@callback_DrawDotplot,'Dot Plot...');
 
-i_addmenu(m_exp,1,@DetermineCellTypeClusters2,    'Annotate Cell Type Using Customized Markers...');
+i_addmenu(m_exp,1,{@DetermineCellTypeClustersGeneral,false},    'Annotate Cell Type Using Customized Markers...');
 i_addmenu(m_exp,0,@callback_CompareGCLBtwCls,     'Differential GCL Analysis [PMID: 33139959]...');
 i_addmenu(m_exp,0,@callback_CalculateGeneStats,   'Calculate Gene Expression Statistics...');
 i_addmenu(m_exp,0,@callback_CellCycleLibrarySize, 'Library Size of Cell Cycle Phases...');
@@ -837,49 +837,37 @@ end
         disp('Following the library-size normalization and log1p-transformation, we visualized similarity among cells by projecting them into a reduced dimensional space using t-distributed stochastic neighbor embedding (t-SNE)/uniform manifold approximation and projection (UMAP).')
     end
 
-    function DetermineCellTypeClusters2(~, ~)
-        [Tm,Tw]=pkg.i_markerlist2weight;
-        if isempty(Tm)||isempty(Tw)
-            return;
-        end        
-        wvalu=Tw.Var2;
-        wgene=string(Tw.Var1);
-        celltypev=string(Tm.Var1);
-        markergenev=string(Tm.Var2);
-        
-        S=zeros(length(celltypev),max(c));
-        
-        T=table(celltypev);
-        for k=1:max(c)
-            Xk=sce.X(:,c==k);
+    function [Tct]=i_determinecelltype(sce, ptsSelected, wvalu, wgene, celltypev, markergenev)
+            T=table(celltypev);
+            Xk=sce.X(:,ptsSelected);
+            S=zeros(length(celltypev),1);
             for j=1:length(celltypev)
                 g=strsplit(markergenev(j),',');
                 g=g(1:end-1);
-                %[~,idx]=ismember(g,genelist);
                 Z=0; ng=0;
-                for i=1:length(g)
-                    if any(g(i)==wgene) && any(sce.g==g(i))
-                    %if ismember(g(i),wgene) && ismember(g(i),genelist)
-                        wi=wvalu(g(i)==wgene);                
-                        z=median(Xk(sce.g==g(i),:));
+                for ix=1:length(g)
+                    if any(g(ix)==wgene) && any(g(ix)==sce.g)
+                        wi=wvalu(g(ix)==wgene);  
+                        z=median(Xk(sce.g==g(ix),:));
                         Z=Z+z*wi;
                         ng=ng+1;
                     end
                 end
-                if ng>0
-                    S(j,k)=Z./nthroot(ng,3);
-                else
-                    S(j,k)=0;
-                end
-            end    
-        end
-        [~,idx]=sort(sum(S,2),'descend');        
-        T=[T,array2table(S)];
-        T=T(idx,:)
-
+                if Z>0, S(j)=Z./nthroot(ng,3); end
+            end
+            if all(S(:)==0)
+                Tct=cell2table({'Unknown',0});
+            else
+                [~,idx]=sort(S,'descend');
+                T=[T,array2table(S)];
+                Tct=T(idx,:);                
+            end
+            Tct.Properties.VariableNames={'C1_Cell_Type','C1_CTA_Score'};
     end
 
-    function DetermineCellTypeClusters(src, ~)
+
+    function DetermineCellTypeClustersGeneral(src, ~, usedefaultdb)
+        if nargin<3, usedefaultdb=true; end
         answer = questdlg('Assign cell types to clusters automatically?',...
             '','Yes, automatically','No, manually',...
             'Cancel','Yes, automatically');
@@ -893,29 +881,46 @@ end
             otherwise
                 return;
         end
-        speciestag = gui.i_selectspecies;
-        if isempty(speciestag), return; end        
-        organtag = "all";
-        databasetag = "panglaodb";
+
+        if usedefaultdb
+            speciestag = gui.i_selectspecies;
+            if isempty(speciestag), return; end        
+            organtag = "all";
+            databasetag = "panglaodb";
+        else
+            [Tm,Tw]=pkg.i_markerlist2weight(sce);
+            if isempty(Tm)||isempty(Tw)
+                return;
+            end        
+            wvalu=Tw.Var2;
+            wgene=string(Tw.Var1);
+            celltypev=string(Tm.Var1);
+            markergenev=string(Tm.Var2);
+        end
+
         dtp = findobj(h,'Type','datatip');
         delete(dtp);
         cLdisp = cL;
         if ~manuallyselect, fw=gui.gui_waitbar_adv; end
+
         for i = 1:max(c)
             if ~manuallyselect
                 gui.gui_waitbar_adv(fw,i/max(c));
             end
             ptsSelected = c == i;
+
+        if usedefaultdb
             [Tct] = pkg.local_celltypebrushed(sce.X, sce.g, ...
                 sce.s, ptsSelected, ...
                 speciestag, organtag, databasetag, bestonly);
-            if isempty(Tct)
-                ctxt={'Unknown'};
-            else
-                ctxt=Tct.C1_Cell_Type;
-            end
+        else
+            [Tct]=i_determinecelltype(sce, ptsSelected, wvalu, ...
+                wgene, celltypev, markergenev);
+        end
+
+            ctxt=Tct.C1_Cell_Type;
             
-            if manuallyselect
+            if manuallyselect && length(ctxt)>1
                 [indx, tf] = listdlg('PromptString', {'Select cell type'},...
                     'SelectionMode', 'single', 'ListString', ctxt);
                 if tf ~= 1, return; end
