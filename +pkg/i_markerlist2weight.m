@@ -1,10 +1,19 @@
-function [Tm,Tw]=i_markerlist2weight
+function [Tm,Tw]=i_markerlist2weight(sce)
 %Tm=readtable('markerlist_hs.txt','ReadVariableNames',false);
 %celltypev=string(Tm.Var1);
 %markergenev=string(Tm.Var2);
 Tm=[]; Tw=[];
 
-indata=sprintf('cell type 1\tgene1,gene2,gene3\ncell type 2\tgene4,gene5');
+if nargin<1, sce=[]; end
+if isempty(sce)
+    indata=sprintf('Cell type 1\tgene1,gene2,gene3\nCell type 2\tgene4,gene5');
+else
+    a=sce.g(randperm(length(sce.g)));
+    a1=sprintf('%s,%s,%s',a(1),a(2),a(3));
+    a2=sprintf('%s,%s',a(4),a(5));
+    indata=sprintf('Cell type 1\t%s\nCell type 2\t%s',a1,a2);
+end
+
 a=inputdlg(sprintf('Format:\nCell type name [TAB] Gene1,Gene2'), ...
     'Markers Input',[10 50],{char(indata)});
 if isempty(a), return; end

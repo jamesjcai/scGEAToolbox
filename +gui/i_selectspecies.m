@@ -20,6 +20,7 @@ switch answer
         speciestag = "zebrafish";
     otherwise
         speciestag = [];
+        return;
 end
 
 if shorttag

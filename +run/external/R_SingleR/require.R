@@ -1,3 +1,7 @@
+if (!requireNamespace("BiocManager", quietly = TRUE)){
+    install.packages("BiocManager", repo="http://cran.rstudio.com/")
+}
+
 if (!requireNamespace("SingleR", quietly = TRUE)){
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
