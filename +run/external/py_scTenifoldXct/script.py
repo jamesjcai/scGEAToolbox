@@ -51,7 +51,7 @@ if sys.argv[1]=="2":
                         verbose = True,
                         n_cpus = -1)
     emb = xct.get_embeds(train = True)
-    xct_pairs = xct.null_test()
+    xct_pairs = xct.null_test(pval = 0.5)
     print(xct_pairs)
     pd.DataFrame(xct_pairs).to_csv('output2.txt',index=False,header=True)
 
