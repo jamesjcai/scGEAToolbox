@@ -106,6 +106,7 @@ try
         T=[T1;T2];
     else
         [T]=run.py_scTenifoldXct(sce,cL{x1},cL{x2},false);
+        %T=readtable('output1.txt');
         if ~isempty(T)
             a=sprintf('%s -> %s',cL{x1},cL{x2});
             T = addvars(T,repelem(a,size(T,1),1),'Before',1);
@@ -118,20 +119,34 @@ catch ME
 end
 
 if ~isempty(T)
-    b=[tempname,'.txt'];
+    [b,a]=pkg.i_tempfile("sctendifoldxct");
     writetable(T,b);
+
     answer=questdlg(sprintf('Result has been saved in %s',b), ...
         '','Export result...','Locate result file...','Export result...');
     switch answer
         case 'Locate result file...'
-            winopen(tempdir);
+            winopen(a);
+            pause(2)
+            reshowdlg;
         case 'Export result...'
             gui.i_exporttable(T);
         otherwise
-            winopen(tempdir);
-    end
+            winopen(a);            
+    end    
 else
     helpdlg('No ligand-receptor pairs are identified.','');
 end
+
+
+    function reshowdlg
+        answer=questdlg('Export result to other format?','');
+        switch answer
+            case 'Yes'
+                gui.i_exporttable(T);
+            otherwise
+                return;
+        end        
+    end
 
 end
