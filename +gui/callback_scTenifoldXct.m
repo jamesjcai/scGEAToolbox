@@ -7,18 +7,26 @@ if ~gui.i_setpyenv
     return; 
 end
 
-%     [thisc,~]=gui.i_select1class(sce,false);
-%     if isempty(thisc), return; end    
-%     [c,cL]=grp2idx(thisc);
-%     [idx]=gui.i_selmultidlg(cL);
-%     if isempty(idx), return; end
-%     if numel(idx)<2
-%         warndlg('Need at least 2 cell types');
-%         return;
-%     end
+    [thisc,~]=gui.i_select1class(sce,false);
+    if isempty(thisc), return; end    
+    [c,cL]=grp2idx(thisc);
+    [idx]=gui.i_selmultidlg(cL);
+    if isempty(idx), return; end
+    if numel(idx)<2
+        warndlg('Need at least 2 cell groups to perform cell-cell interaction analysis.');
+        return;
+    end
+    if numel(idx)~=2
+        warndlg(sprintf('Need only 2 cell groups to perform cell-cell interaction analysis. You selected %d.',...
+                numel(idx)));
+        return;
+    end
+    
+    i1=idx(1);
+    i2=idx(2);
 
 
-
+%{
     
 [~,cL]=grp2idx(sce.c_cell_type_tx);
 if length(cL)<2, errordlg('Need at least 2 cell types.'); return; end
@@ -36,7 +44,7 @@ if tf2==1
 else
     return;
 end
-
+%}
 
 
 a1=sprintf('%s -> %s',cL{i1},cL{i2});
@@ -56,12 +64,29 @@ switch answer
         return;
 end
 
+%{
 idx=sce.c_cell_type_tx==cL{x1} | sce.c_cell_type_tx==cL{x2};
 sce=sce.selectcells(idx);
 
 sce.c_batch_id=sce.c_cell_type_tx;
 sce.c_batch_id(sce.c_cell_type_tx==cL{x1})="Source";
 sce.c_batch_id(sce.c_cell_type_tx==cL{x2})="Target";
+%}
+
+
+
+sce.c_batch_id=thisc;
+sce.c_batch_id(c==x1)="Source";
+sce.c_batch_id(c==x2)="Target";
+sce.c_cell_type_tx=string(cL(c));
+
+% idx=thisc==cL{x1} | thisc==cL{x2};
+idx=c==x1 | c==x2;
+sce=sce.selectcells(idx);
+
+
+%sce.c_batch_id(thisc==cL{x1})="Source";
+%sce.c_batch_id(thisc==cL{x2})="Target";
 
 try    
     if twosided
@@ -81,6 +106,7 @@ try
         T=[T1;T2];
     else
         [T]=run.py_scTenifoldXct(sce,cL{x1},cL{x2},false);
+        %T=readtable('output1.txt');
         if ~isempty(T)
             a=sprintf('%s -> %s',cL{x1},cL{x2});
             T = addvars(T,repelem(a,size(T,1),1),'Before',1);
@@ -93,20 +119,34 @@ catch ME
 end
 
 if ~isempty(T)
-    b=[tempname,'.txt'];
+    [b,a]=pkg.i_tempfile("sctendifoldxct");
     writetable(T,b);
+
     answer=questdlg(sprintf('Result has been saved in %s',b), ...
         '','Export result...','Locate result file...','Export result...');
     switch answer
         case 'Locate result file...'
-            winopen(tempdir);
+            winopen(a);
+            pause(2)
+            reshowdlg;
         case 'Export result...'
             gui.i_exporttable(T);
         otherwise
-            winopen(tempdir);
-    end
+            winopen(a);            
+    end    
 else
     helpdlg('No ligand-receptor pairs are identified.','');
 end
+
+
+    function reshowdlg
+        answer=questdlg('Export result to other format?','');
+        switch answer
+            case 'Yes'
+                gui.i_exporttable(T);
+            otherwise
+                return;
+        end        
+    end
 
 end
