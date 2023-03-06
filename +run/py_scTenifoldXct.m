@@ -1,6 +1,7 @@
 function [T]=py_scTenifoldXct(sce,celltype1,celltype2,twosided,A1,A2)
 
-isdebug=false;
+isdebug=true;
+useexist = true;
 
 T=[];
 if nargin<6, A2=[]; end
@@ -69,33 +70,50 @@ end
 
 
 if isempty(A1)
-    fw = gui.gui_waitbar([],[],'Step 1 of 3: Building A1 network...');
-    disp('Building A1 network...')
-    A1=sc_pcnetpar(sce.X(:,sce.c_cell_type_tx==celltype1));
-    disp('A1 network built.')    
+    if isdebug && useexist && exist("pcnet_Source.mat",'file')
+        load("pcnet_Source.mat",'A');
+        A1=A;
+        disp('Using local stored A1.');
+    else
+        fw = gui.gui_waitbar([],[],'Step 1 of 3: Building A1 network...');
+        disp('Building A1 network...');
+        A1=sc_pcnetpar(sce.X(:,sce.c_cell_type_tx==celltype1));
+        disp('A1 network built.');
+    end
 else
-    disp('Using A1 provided.')
+    disp('Using A1 provided.');
 end
-A1=A1./max(abs(A1(:)));
-% A=0.5*(A1+A1.');
-A=ten.e_filtadjc(A1,0.75,false);
-save('pcnet_Source.mat','A','-v7.3');
+
+if ~useexist
+    A1=A1./max(abs(A1(:)));
+    % A=0.5*(A1+A1.');
+    A=ten.e_filtadjc(A1,0.75,false);
+    save('pcnet_Source.mat','A','-v7.3');
+end
 if isvalid(fw)
     gui.gui_waitbar(fw,[],'Building A1 network is complete');
 end
 
 if isempty(A2)
-    fw = gui.gui_waitbar([],[],'Step 2 of 3: Building A2 network...');
-    disp('Building A2 network...')
-    A2=sc_pcnetpar(sce.X(:,sce.c_cell_type_tx==celltype2));
-    disp('A2 network built.')    
+    if isdebug && useexist && exist("pcnet_Target.mat",'file')
+        load("pcnet_Target.mat",'A');
+        A2=A;
+        disp('Using local stored A2.');
+    else    
+        fw = gui.gui_waitbar([],[],'Step 2 of 3: Building A2 network...');
+        disp('Building A2 network...')
+        A2=sc_pcnetpar(sce.X(:,sce.c_cell_type_tx==celltype2));
+        disp('A2 network built.')    
+    end
 else
     disp('Using A2 provided.');
 end
-A2=A2./max(abs(A2(:)));
-% A=0.5*(A2+A2.');
-A=ten.e_filtadjc(A2,0.75,false);
-save('pcnet_Target.mat','A','-v7.3');
+if ~useexist
+    A2=A2./max(abs(A2(:)));
+    % A=0.5*(A2+A2.');
+    A=ten.e_filtadjc(A2,0.75,false);
+    save('pcnet_Target.mat','A','-v7.3');
+end
 if isvalid(fw)
     gui.gui_waitbar(fw,[],'Building A2 network is complete');
 end
