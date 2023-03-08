@@ -70,8 +70,8 @@ end
 
 
 if isempty(A1)
-    if isdebug && useexist && exist("pcnet_Source.mat",'file')
-        load("pcnet_Source.mat",'A');
+    if isdebug && useexist && exist("usernet_Source.mat",'file')
+        load("usernet_Source.mat",'A');
         A1=A;
         disp('Using local stored A1.');
     else
@@ -84,19 +84,18 @@ else
     disp('Using A1 provided.');
 end
 
-if ~useexist
-    A1=A1./max(abs(A1(:)));
-    % A=0.5*(A1+A1.');
-    A=ten.e_filtadjc(A1,0.75,false);
-    save('pcnet_Source.mat','A','-v7.3');
-end
+A1=A1./max(abs(A1(:)));
+% A=0.5*(A1+A1.');
+A=ten.e_filtadjc(A1,0.75,false);
+save('pcnet_Source.mat','A','-v7.3');
+
 if isvalid(fw)
     gui.gui_waitbar(fw,[],'Building A1 network is complete');
 end
 
 if isempty(A2)
-    if isdebug && useexist && exist("pcnet_Target.mat",'file')
-        load("pcnet_Target.mat",'A');
+    if isdebug && useexist && exist("usernet_Target.mat",'file')
+        load("usernet_Target.mat",'A');
         A2=A;
         disp('Using local stored A2.');
     else    
@@ -108,12 +107,12 @@ if isempty(A2)
 else
     disp('Using A2 provided.');
 end
-if ~useexist
-    A2=A2./max(abs(A2(:)));
-    % A=0.5*(A2+A2.');
-    A=ten.e_filtadjc(A2,0.75,false);
-    save('pcnet_Target.mat','A','-v7.3');
-end
+
+A2=A2./max(abs(A2(:)));
+% A=0.5*(A2+A2.');
+A=ten.e_filtadjc(A2,0.75,false);
+save('pcnet_Target.mat','A','-v7.3');
+
 if isvalid(fw)
     gui.gui_waitbar(fw,[],'Building A2 network is complete');
 end
