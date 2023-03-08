@@ -1,6 +1,6 @@
 function [T]=py_scTenifoldXct(sce,celltype1,celltype2,twosided,A1,A2)
 
-isdebug=true;
+isdebug = true;
 useexist = true;
 
 T=[];
@@ -78,6 +78,8 @@ if isempty(A1)
         fw = gui.gui_waitbar([],[],'Step 1 of 3: Building A1 network...');
         disp('Building A1 network...');
         A1=sc_pcnetpar(sce.X(:,sce.c_cell_type_tx==celltype1));
+        A=A1; g=sce.g;
+        save usr_Source A g
         disp('A1 network built.');
     end
 else
@@ -102,7 +104,10 @@ if isempty(A2)
         fw = gui.gui_waitbar([],[],'Step 2 of 3: Building A2 network...');
         disp('Building A2 network...')
         A2=sc_pcnetpar(sce.X(:,sce.c_cell_type_tx==celltype2));
-        disp('A2 network built.')    
+        disp('A2 network built.')
+        A=A2; g=sce.g;
+        save usr_Target A g
+        
     end
 else
     disp('Using A2 provided.');
