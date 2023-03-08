@@ -8,6 +8,7 @@ if nargin<2
 end
 numgene=min([length(genelist), numgene]);
 
+
 answer1=gui.timeoutdlg(@(x){questdlg('Which functional enrichment analysis do you want to use?','Analysis Method', ...
     'Enrichr','GOrilla','Enrichr+GOrilla','Enrichr')},15);
 if isempty(answer1), return; end
