@@ -17,7 +17,11 @@ cd(wrkpth);
 fw = gui.gui_waitbar([],[],'Checking Python environment...');
 
 x=pyenv;
-pkg.i_add_conda_python_path;
+try
+    pkg.i_add_conda_python_path;
+catch
+    
+end
 cmdlinestr=sprintf('"%s" "%s%srequire.py"', ...
         x.Executable,wrkpth,filesep);
 disp(cmdlinestr)
