@@ -9,7 +9,7 @@ function [f]=i_violinplot(y,thisc,ttxt,colorit,cL)
     tb=uitoolbar(f);
     pkg.i_addbutton2fig(tb,'off',{@i_savedata,y,thisc}, ...
         'export.gif','Export data...');
-    pkg.i_addbutton2fig(tb,'off',{@i_testdata,y,thisc}, ...
+    pkg.i_addbutton2fig(tb,'off',{@i_testdata,y,thisc,ttxt}, ...
         'exportx.gif','ANOVA/T-test...');    
     pkg.i_addbutton2fig(tb,'off',{@gui.i_savemainfig,3}, ...
         "powerpoint.gif",'Save Figure to PowerPoint File...');
@@ -19,7 +19,7 @@ function [f]=i_violinplot(y,thisc,ttxt,colorit,cL)
         "xpowerpoint.gif",'Reorder Samples');   
 
     cL=strrep(cL,'_','\_');
-    thisc=strrep(thisc,'_','\_');
+    thisc=strrep(string(thisc),'_','\_');
     pkg.i_violinplot(y,thisc,colorit,cL);
     title(strrep(ttxt,'_','\_'));
     %ylabel(selitems{indx1});
@@ -54,11 +54,21 @@ function i_savedata(~,~,a,b)
     gui.i_exporttable(T,true);
 end
 
-function i_testdata(~,~,y,grp)
+function i_testdata(~,~,y,grp,ttxt)
     if size(y,2)~=length(grp)
         y=y.';
     end
     tbl=pkg.e_grptest(y,grp);
-    gui.i_exporttable(tbl,true);
+    %h1=gca;
+    %titre=string(h1.Title.String);
+    
+    a=sprintf('%s\n%s=%.2e; %s=%.2e', ...
+        strrep(string(ttxt),'_','\_'), ...
+        strrep(tbl.Properties.VariableNames{1},'_','\_'), ...
+        tbl.(tbl.Properties.VariableNames{1}), ... 
+        strrep(tbl.Properties.VariableNames{2},'_','\_'), ...
+        tbl.(tbl.Properties.VariableNames{2}));
+    title(a);
+    %gui.i_exporttable(tbl,true);
 end
 

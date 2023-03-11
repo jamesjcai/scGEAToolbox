@@ -13,10 +13,12 @@ function callback_scTenifoldXct2(src,~)
     sce1=sce.selectcells(j1);
     sce2=sce.selectcells(j2);
 
-    [T]=run.py_scTenifoldXct2(sce1,sce2,celltype1,celltype2);
+    [T,iscomplete]=run.py_scTenifoldXct2(sce1,sce2,celltype1,celltype2);
 
 % ---- export result
-
+if ~iscomplete
+    errordlg('Running time error.','');
+end
 if ~isempty(T)
     [b,a]=pkg.i_tempfile("sctendifoldxct");
     writetable(T,b);

@@ -7,23 +7,49 @@ function [requirerefresh]=callback_RenameCellType(src)
         errordlg('sce.c_cell_type_tx undefined');
         return;
     end
-    %answer = questdlg('Rename a cell type?');
-    %if ~strcmp(answer, 'Yes'), return; end
-    [ci, cLi] = grp2idx(sce.c_cell_type_tx);
-    [indxx, tfx] = listdlg('PromptString',...
-        {'Select cell type'},...
-        'SelectionMode', 'single',...
-        'ListString', string(cLi));
-    if tfx == 1
-        i = ismember(ci, indxx);
-        newctype = inputdlg('New cell type', 'Rename', [1 50], cLi(ci(i)));
-        if ~isempty(newctype)
-            cLi(ci(i)) = newctype;
-            sce.c_cell_type_tx = string(cLi(ci));
-            requirerefresh=true;
-            %[c, cL] = grp2idx(sce.c_cell_type_tx);
-            %i_labelclusters(false);
+
+    removesubscript=false;
+    if any(contains(sce.c_cell_type_tx,"_{"))    
+        answer = questdlg('Remove subscript of cell type names?');
+        switch answer
+            case 'Yes'
+                removesubscript=true;
+            case 'No'
+                removesubscript=false;
+            otherwise
+                return;
+        end        
+    end
+    if removesubscript
+        waitfor(helpdlg('Subscript will be removed.'));
+        if ~isstring(sce.c_cell_type_tx)
+            sce.c_cell_type_tx=string(sce.c_cell_type_tx);
+        end
+        for k=1:length(sce.c_cell_type_tx)
+            a=strfind(sce.c_cell_type_tx(k),'_{');
+            if ~isempty(a)
+                sce.c_cell_type_tx(k)=extractBefore(sce.c_cell_type_tx(k),a);
+            end
+        end
+        requirerefresh=true;
+    else
+        [ci, cLi] = grp2idx(sce.c_cell_type_tx);
+        [indxx, tfx] = listdlg('PromptString',...
+            {'Select cell type'},...
+            'SelectionMode', 'single',...
+            'ListString', string(cLi));
+        if tfx == 1
+            i = ismember(ci, indxx);
+            newctype = inputdlg('New cell type', 'Rename', [1 50], cLi(ci(i)));
+            if ~isempty(newctype)
+                cLi(ci(i)) = newctype;
+                sce.c_cell_type_tx = string(cLi(ci));
+                requirerefresh=true;
+                %[c, cL] = grp2idx(sce.c_cell_type_tx);
+                %i_labelclusters(false);
+            end
         end
     end
     guidata(FigureHandle, sce);
 end
+

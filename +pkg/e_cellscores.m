@@ -65,8 +65,45 @@ switch type
         error('Undefined')
 end
 %}
-[score]=sc_cellscore(X,genelist,tgsPos,tgsNeg);
 
+
+
+%[score]=sc_cellscore(X,genelist,tgsPos,tgsNeg);
+%[score]=sc_cellscore_ucell(X,genelist,tgsPos);
+
+    answer = questdlg('Select algorithm:',...
+    'Select Method', ...
+    'UCell [PMID:34285779]','AddModuleScore/Seurat', ...
+    'UCell [PMID:34285779]');
+    switch answer
+        case 'AddModuleScore/Seurat'
+            fw=gui.gui_waitbar;
+            try
+                [score]=sc_cellscore(X,genelist,tgsPos,tgsNeg);
+            catch ME
+                gui.gui_waitbar(fw,true);
+                errordlg(ME.message);                
+            return;
+            end
+            gui.gui_waitbar(fw);
+        case 'UCell [PMID:34285779]'
+            %[cs]=run.UCell(sce.X,sce.g,posg);
+            fw=gui.gui_waitbar;
+            try
+                [score]=sc_cellscore_ucell(X,genelist,tgsPos);
+            catch ME
+                gui.gui_waitbar(fw,true);
+                errordlg(ME.message);
+            return;
+            end
+            gui.gui_waitbar(fw);
+        otherwise
+            return;
+    end
+
+
+
+% --------------------
 
 posg=sort(tgsPos);
 

@@ -97,10 +97,10 @@ if tf1~=1, return; end
                  'SelectionMode','single','ListString',...
                  listitems,'ListSize',[220,300]);
             if tf2~=1, return; end
-            fw=gui.gui_waitbar;
+            %fw=gui.gui_waitbar;
             y=pkg.e_cellscores(sce.X,sce.g,indx2);
             ttxt=T.ScoreType(indx2);
-            gui.gui_waitbar(fw);
+            %gui.gui_waitbar(fw);
         case 'Other Attribute'
             [y,clable,~,newpickclable]=gui.i_select1state(sce,true);
             if isempty(y)
