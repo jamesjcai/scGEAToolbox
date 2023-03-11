@@ -67,8 +67,8 @@ scgeatoolstandaloneApplication/
 +run/external/py_readh5ad/var.csv
 +run/external/py_readh5ad/obs.csv
 +run/external/R_SeuratSaveRds/input.h5
-+run/external/py_scTenifoldXct/*.mat
-+run/external/py_scTenifoldXct/*.tsv
-+run/external/py_scTenifoldXct/*.txt
-+run/external/py_scTenifoldXct/1/*
-+run/external/py_scTenifoldXct/2/*
++run/external/py_scTenifoldXct2/*.mat
++run/external/py_scTenifoldXct2/*.tsv
++run/external/py_scTenifoldXct2/*.txt
++run/external/py_scTenifoldXct2/1/*
++run/external/py_scTenifoldXct2/2/*
