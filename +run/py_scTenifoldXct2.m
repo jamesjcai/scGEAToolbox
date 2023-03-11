@@ -1,6 +1,7 @@
-function [T]=py_scTenifoldXct2(sce1,sce2,celltype1,celltype2, ...
+function [T,iscomplete]=py_scTenifoldXct2(sce1,sce2,celltype1,celltype2, ...
                                A1s,A1t,A2s,A2t)
 
+iscomplete=false;
 T=[];
 if nargin<8, A2t=[]; end
 if nargin<7, A2s=[]; end
@@ -13,8 +14,8 @@ pw1=fileparts(mfilename('fullpath'));
 wrkpth=fullfile(pw1,'external','py_scTenifoldXct2');
 cd(wrkpth);
 
-isdebug=false;
-
+isdebug=true;
+useexist = true;
 
 fw = gui.gui_waitbar([],[],'Checking Python environment...');
 
@@ -110,9 +111,15 @@ gui.gui_waitbar(fw,[],'Building S2 network is complete');
     function i_prepareA(sce,A1,A2,id)
    
         if isempty(A1)
-            disp('Building A1 network...')
-            A1=sc_pcnetpar(sce.X(:,sce.c_cell_type_tx==celltype1));
-            disp('A1 network built.')
+            if useexist && exist(sprintf('%d/usr_Source.mat',id),'file')
+                disp('Loading existing A1 network...');
+                load(sprintf('%d/usr_Source.mat',id),'A');
+                A1=A;
+            else
+                disp('Building A1 network...')
+                A1=sc_pcnetpar(sce.X(:,sce.c_cell_type_tx==celltype1));
+                disp('A1 network built.')
+            end
         else
             disp('Using A1 provided.')
         end
@@ -123,9 +130,15 @@ gui.gui_waitbar(fw,[],'Building S2 network is complete');
 
 
         if isempty(A2)
-            disp('Building A2 network...')            
-            A2=sc_pcnetpar(sce.X(:,sce.c_cell_type_tx==celltype2));
-            disp('A2 network built.')
+            if useexist && exist(sprintf('%d/usr_Target.mat',id),'file')
+                disp('Loading existing A2 network...');
+                load(sprintf('%d/usr_Target.mat',id),'A');
+                A2=A;
+            else            
+                disp('Building A2 network...');
+                A2=sc_pcnetpar(sce.X(:,sce.c_cell_type_tx==celltype2));
+                disp('A2 network built.');
+            end
         else
             disp('Using A2 provided.');
         end
@@ -165,6 +178,7 @@ end
 
 if status==0 && exist('output.txt','file')
     T=readtable('output.txt');
+    iscomplete=true;
 end
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
