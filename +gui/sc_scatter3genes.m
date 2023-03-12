@@ -63,6 +63,15 @@ if dofit
     [~,hvgidx]=sort(d,'descend');
     
     %g(idx20)
+
+disp('scGEAToolbox controls for the variance-mean relationship of gene')
+disp('expression. scGEAToolbox considers three sample statistics of each')
+disp('gene: expression mean⁠, coefficient of variation⁠, and dropout rate⁠.')
+disp('After normalization, it fits a spline function based on piece-wise')
+disp('polynomials to model the relationship among the three statistics, ')
+disp('and calculates the distance between each geneis observed statistics')
+disp('to the fitted 3D spline surface. Genes with larger distances are ')
+disp('ranked higher for feature selection.')    
     
 end
 
@@ -114,11 +123,11 @@ end
             if isempty(answer), return; end
             switch answer
                 case 'Enrichr'
-                    run.Enrichr(tgenes);
+                    run.Enrichr(tgenes,length(tgenes));
                 case 'GOrilla'
                     run.GOrilla(tgenes);
                 case 'Enrichr+GOrilla'
-                    run.Enrichr(tgenes);
+                    run.Enrichr(tgenes,length(tgenes));
                     run.GOrilla(tgenes);
                 otherwise
                     return;

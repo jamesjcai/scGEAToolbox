@@ -17,6 +17,8 @@ actiontype=questdlg('Select a gene set database:',...
     'DoRothEA TF Target Genes', ...
     'PanglaoDB Markder Genes');
 
+%[selecteditem] = gui.i_selectcellscore;
+
 switch actiontype
     case 'PanglaoDB Markder Genes'
         stag=gui.i_selectspecies(2,true);

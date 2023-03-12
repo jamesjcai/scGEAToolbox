@@ -11,7 +11,7 @@ function callback_CalculateCellScores(src,~,sce)
         'Define New Score','Select Predefined Score');
 switch actiontype
     case 'Select Predefined Score'
-        [~,T]=pkg.e_cellscores(sce.X,sce.g,0);
+        [~,T]=pkg.e_cellscores([],[],0);
 
         listitems=T.ScoreType;
         [indx,tf] = listdlg('PromptString',...
@@ -54,7 +54,7 @@ switch actiontype
 end
     
 
-    if ~isempty(cs)        
+    if ~isempty(cs)  
         gui.i_stemscatterfig(sce,cs,posg, ...
             matlab.lang.makeValidName(ttxt{1}));
     end
