@@ -6,7 +6,6 @@ os.chdir(dname)
 # os.chdir("U:\\GitHub\\scGEAToolbox\\+run\\external\\py_scTenifoldXct")
 # os.chdir("d:\\GitHub\\scGEAToolbox\\+run\\external\\py_scTenifoldXct2")
 
-
 import scanpy as sc
 import scTenifoldXct as st
 from scTenifoldXct.dataLoader import build_adata
@@ -26,7 +25,6 @@ from scipy import sparse
 #A = sparse.csc_matrix(A)
 #sparse.save_npz("pcnet_Target.npz", A)
 
-
 adata = build_adata("X1.mat", "g1.txt", "c1.txt", delimiter=',', meta_cell_cols=['cell_type'], transpose=False)
 print('Input read.............1')
 xct1 = st.scTenifoldXct(data = adata, 
@@ -37,7 +35,6 @@ xct1 = st.scTenifoldXct(data = adata,
                     GRN_file_dir = './1',
                     verbose = True,
                     n_cpus = -1)
-
 
 adata = build_adata("X2.mat", "g2.txt", "c2.txt", delimiter=',', meta_cell_cols=['cell_type'], transpose=False)
 print('Input read.............2')
@@ -50,18 +47,9 @@ xct2 = st.scTenifoldXct(data = adata,
                     verbose = True,
                     n_cpus = -1)
 
-
-
-
 XCTs = st.merge_scTenifoldXct(xct1, xct2)
-
 emb = XCTs.get_embeds(train = True)
-emb.shape
-
-# get significant L-R pairs
 XCTs.nn_aligned_diff(emb) 
 xcts_pairs_diff = XCTs.chi2_diff_test(pval = 1.0)
-xcts_pairs_diff
-
 pd.DataFrame(xcts_pairs_diff).to_csv('output.txt',index=False,header=True)
 

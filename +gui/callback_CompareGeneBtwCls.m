@@ -18,9 +18,9 @@ function callback_CompareGeneBtwCls(src,~)
     end
 
 % selitems={'Expression of Gene', ...
-%     'TF Activity Score [PMID: 33135076]',...
+%     'TF Activity Score [PMID:33135076]',...
 %     'TF Targets Expression Score',...
-%     'Differentiation Potency [PMID: 33244588]',...
+%     'Differentiation Potency [PMID:33244588]',...
 %     'MSigDB Signature Score',...
 %     '--------------------------------',...
 %     'Predefined Cell Score',...
@@ -37,7 +37,7 @@ function callback_CompareGeneBtwCls(src,~)
 [selecteditem] = gui.i_selectcellscore;
 %try
     switch selecteditem
-        %case 'Global Coordination Level (GCL) [PMID: 33139959]'
+        %case 'Global Coordination Level (GCL) [PMID:33139959]'
 
         case 'Define New Score...'
             ttxt='Customized Score';
@@ -59,7 +59,7 @@ function callback_CompareGeneBtwCls(src,~)
             ttxt = ctselected;
             if isempty(posg) || isempty(ctselected), return; end
             [y]=gui.e_cellscore(sce,posg);
-        case 'Differentiation Potency [PMID: 33244588]'
+        case 'Differentiation Potency [PMID:33244588]'
             [a]=contains(sce.list_cell_attributes(1:2:end),'cell_potency');
             if ~any(a)
                 answer2=questdlg('Which species?','Select Species','Mouse','Human','Mouse');
@@ -114,7 +114,7 @@ function callback_CompareGeneBtwCls(src,~)
             else
                 ttxt=clable;
             end
-        case {'TF Activity Score [PMID: 33135076]','TF Targets Expression Score'}
+        case {'TF Activity Score [PMID:33135076]','TF Targets Expression Score'}
             [~,T]=pkg.e_tfactivityscores(sce.X,sce.g,0);
             listitems=unique(T.tf);
 
@@ -137,7 +137,7 @@ function callback_CompareGeneBtwCls(src,~)
 %         case 'AddModuleScore/Seurat'   
 
             switch selitems{indx1}
-                case 'TF Activity Score [PMID: 33135076]'
+                case 'TF Activity Score [PMID:33135076]'
                     methodid=4;
                 case 'TF Targets Expression Score'
                     methodid=1;

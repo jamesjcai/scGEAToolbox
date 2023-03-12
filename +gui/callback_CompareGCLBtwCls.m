@@ -17,7 +17,7 @@ function callback_CompareGCLBtwCls(src,~)
         end
     end
 
-%'Global Coordination Level (GCL) [PMID: 33139959]'
+%'Global Coordination Level (GCL) [PMID:33139959]'
 [c,cL]=grp2idx(thisc);
 
 N=50;

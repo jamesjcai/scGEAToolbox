@@ -1,15 +1,22 @@
 function callback_EnrichrHVGs(src,~)
-    answer = questdlg('Identify HVGs and perform function enrichment analysis?');
-    if ~strcmp(answer,'Yes'), return; end 
+    answer = questdlg('Identify highly variable genes (HVGs) and perform function enrichment analysis?');
+    if ~strcmp(answer,'Yes'), return; end
     
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
+
+    answer = questdlg('This function applies to a homogeneous group of cells. Continue?');
+    if ~strcmp(answer,'Yes'), return; end
+
+    answer = questdlg('Prior to applying this function, lowly expressed genes should be filtered out and removed. Continue?');
+    if ~strcmp(answer,'Yes'), return; end
   
-    answer = questdlg('Which method?','Select Method', ...        
-        'Brennecke et al. (2013)','Splinefit Method',...
-        'Brennecke et al. (2013)');
+    answer = questdlg('Which HVG detecting method to use?','', ...        
+        'Brennecke et al. (2013) [PMID:24056876]', ...
+        'Splinefit Method [PMID:31697351]',...
+        'Brennecke et al. (2013) [PMID:24056876]');
     switch answer
-        case 'Brennecke et al. (2013)'
+        case 'Brennecke et al. (2013) [PMID:24056876]'
             fw = gui.gui_waitbar;
             t=sc_hvg(sce.X,sce.g,true,true);
             gui.gui_waitbar(fw);
@@ -23,7 +30,7 @@ function callback_EnrichrHVGs(src,~)
         
             gui.i_enrichtest(t.genes);
 
-        case 'Splinefit Method'
+        case 'Splinefit Method [PMID:31697351]'
             fw = gui.gui_waitbar;
             try
                 gui.sc_scatter3genes(sce.X,sce.g);
