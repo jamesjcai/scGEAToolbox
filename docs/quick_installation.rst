@@ -12,6 +12,7 @@ Run the following code in `MATLAB`:
   toc
   if exist('scgeatool.m','file')
       disp('scGEAToolbox installed!')
-  end
-  savepath;
-  % savepath(fullfile(userpath,'pathdef.m'));  
+  end  
+  savepath(fullfile(userpath,'pathdef.m')); 
+  % savepath;
+  
