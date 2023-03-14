@@ -14,9 +14,25 @@ function [f0]=i_stemscatterfig(sce,cs,posg,csname)
         pkg.i_addbutton2fig(tb,'on',@i_geneheatmapx,'greenarrowicon.gif','Heatmap');
         pkg.i_addbutton2fig(tb,'on',@i_genedotplot,'greencircleicon.gif','Dot plot');
         pkg.i_addbutton2fig(tb,'on',@i_viewgenenames,'HDF_point.gif','Show gene names');
+        pkg.i_addbutton2fig(tb,'on',@i_viewscatter3,'xHDF_point.gif','Show scatter plot');
 
         movegui(f0,'center');
         set(f0,'Visible',true);
+
+    function i_viewscatter3(~,~)
+        figure;
+        s=sce.s;
+        x = s(:, 1); y = s(:, 2);
+        if size(s, 2) >= 3
+            z = s(:, 3);
+            is2d=false;
+        else
+            z = zeros(size(x));
+            is2d=true;
+        end
+        scatter3(x,y,z, 10, cs, 'filled');
+        if is2d, view(2); end
+    end
 
     function i_viewgenenames(~,~)
         idx=matches(sce.g,posg,'IgnoreCase',true);

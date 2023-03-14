@@ -62,6 +62,8 @@ function callback_ShowClustersPop(src, ~)
         P = get(f,'Position');
         set(f,'Position',[P(1)-20*nf P(2)-20*nf P(3) P(4)]);
         set(f,'visible','on');
+        tb = uitoolbar(f);
+        pkg.i_addbutton2fig(tb,'off',{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');        
         drawnow;
     end
     catch ME

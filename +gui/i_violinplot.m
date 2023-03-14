@@ -11,14 +11,14 @@ function [f]=i_violinplot(y,thisc,ttxt,colorit,cL)
         'export.gif','Export data...');
     pkg.i_addbutton2fig(tb,'off',{@i_testdata,y,thisc,ttxt}, ...
         'exportx.gif','ANOVA/T-test...');    
-    pkg.i_addbutton2fig(tb,'off',{@gui.i_savemainfig,3}, ...
+    pkg.i_addbutton2fig(tb,'off',@i_addsamplesize, ...
+        "xpowerpoint.gif",'Add Sample Size');    
+    pkg.i_addbutton2fig(tb,'on',{@gui.i_savemainfig,3}, ...
         "powerpoint.gif",'Save Figure to PowerPoint File...');
     pkg.i_addbutton2fig(tb,'off',@i_invertcolor, ...
         "xpowerpoint.gif",'Switch BW/Color');
     pkg.i_addbutton2fig(tb,'off',@i_reordersamples, ...
         "xpowerpoint.gif",'Reorder Samples');   
-    pkg.i_addbutton2fig(tb,'off',@i_addsamplesize, ...
-        "xpowerpoint.gif",'Add Sample Size');
     OldTitle=[];
     OldXTickLabel=[];
     cL=strrep(cL,'_','\_');
@@ -89,8 +89,12 @@ function i_testdata(~,~,y,grp,ttxt)
         tbl.(tbl.Properties.VariableNames{1}), ... 
         strrep(tbl.Properties.VariableNames{2},'_','\_'), ...
         tbl.(tbl.Properties.VariableNames{2}));
-        newtitle=OldTitle;
-        newtitle{length(OldTitle)+1}=b;
+        if iscell(OldTitle)
+            newtitle=OldTitle;
+        else
+            newtitle={OldTitle};
+        end
+        newtitle{2}=b;
         a.Title.String=newtitle;
     else
         a.Title.String=OldTitle;
