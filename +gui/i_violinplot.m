@@ -17,7 +17,10 @@ function [f]=i_violinplot(y,thisc,ttxt,colorit,cL)
         "xpowerpoint.gif",'Switch BW/Color');
     pkg.i_addbutton2fig(tb,'off',@i_reordersamples, ...
         "xpowerpoint.gif",'Reorder Samples');   
-
+    pkg.i_addbutton2fig(tb,'off',@i_addsamplesize, ...
+        "xpowerpoint.gif",'Add Sample Size');
+    OldTitle=[];
+    OldXTickLabel=[];
     cL=strrep(cL,'_','\_');
     thisc=strrep(string(thisc),'_','\_');
     pkg.i_violinplot(y,thisc,colorit,cL);
@@ -36,6 +39,23 @@ function [f]=i_violinplot(y,thisc,ttxt,colorit,cL)
         pkg.i_violinplot(y,thisc,colorit,cL);
     end
 
+    function i_addsamplesize(~,~)
+        b=gca;
+        if isempty(OldXTickLabel)
+            a=zeros(length(cL),1);
+            
+            OldXTickLabel=b.XTickLabel;
+            for k=1:length(cL)
+                a(k)=sum(thisc==cL(k));
+                b.XTickLabel{k}=sprintf('%s\\newline(n=%d)', ...
+                    b.XTickLabel{k},a(k));
+            end
+        else
+            b.XTickLabel=OldXTickLabel;
+            OldXTickLabel=[];
+        end
+    end
+
 
     function i_reordersamples(~,~)
         [~,cL,noanswer]=gui.i_reordergroups(thisc);
@@ -43,6 +63,42 @@ function [f]=i_violinplot(y,thisc,ttxt,colorit,cL)
         cla
         pkg.i_violinplot(y,thisc,colorit,cL);
     end
+
+
+function i_testdata(~,~,y,grp,ttxt)
+    a=gca;
+    if isempty(OldTitle)
+        OldTitle=a.Title.String;
+        if size(y,2)~=length(grp)
+            y=y.';
+        end
+        tbl=pkg.e_grptest(y,grp);
+    %h1=gca;
+    %titre=string(h1.Title.String);
+    
+%     a=sprintf('%s\n%s=%.2e; %s=%.2e', ...
+%         strrep(string(ttxt),'_','\_'), ...
+%         strrep(tbl.Properties.VariableNames{1},'_','\_'), ...
+%         tbl.(tbl.Properties.VariableNames{1}), ... 
+%         strrep(tbl.Properties.VariableNames{2},'_','\_'), ...
+%         tbl.(tbl.Properties.VariableNames{2}));
+%     title(a);
+
+    b=sprintf('%s=%.2e; %s=%.2e', ...
+        strrep(tbl.Properties.VariableNames{1},'_','\_'), ...
+        tbl.(tbl.Properties.VariableNames{1}), ... 
+        strrep(tbl.Properties.VariableNames{2},'_','\_'), ...
+        tbl.(tbl.Properties.VariableNames{2}));
+        newtitle=OldTitle;
+        newtitle{length(OldTitle)+1}=b;
+        a.Title.String=newtitle;
+    else
+        a.Title.String=OldTitle;
+        OldTitle=[];
+    %gui.i_exporttable(tbl,true);
+    end
+end
+
 
 end
 
@@ -54,21 +110,4 @@ function i_savedata(~,~,a,b)
     gui.i_exporttable(T,true);
 end
 
-function i_testdata(~,~,y,grp,ttxt)
-    if size(y,2)~=length(grp)
-        y=y.';
-    end
-    tbl=pkg.e_grptest(y,grp);
-    %h1=gca;
-    %titre=string(h1.Title.String);
-    
-    a=sprintf('%s\n%s=%.2e; %s=%.2e', ...
-        strrep(string(ttxt),'_','\_'), ...
-        strrep(tbl.Properties.VariableNames{1},'_','\_'), ...
-        tbl.(tbl.Properties.VariableNames{1}), ... 
-        strrep(tbl.Properties.VariableNames{2},'_','\_'), ...
-        tbl.(tbl.Properties.VariableNames{2}));
-    title(a);
-    %gui.i_exporttable(tbl,true);
-end
 

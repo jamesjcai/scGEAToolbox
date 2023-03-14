@@ -7,6 +7,7 @@ function callback_CompareGeneBtwCls(src,~)
 
     [thisc]=gui.i_select1class(sce);
     if isempty(thisc), return; end
+    
 
     if length(unique(thisc))==1
         answer=questdlg("All cells are in the same group. No comparison will be made. Continue?","");
@@ -15,6 +16,24 @@ function callback_CompareGeneBtwCls(src,~)
             otherwise
                 return;
         end
+    else
+        [ci,cLi]=grp2idx(thisc);
+        listitems=sort(string(cLi));
+        n=length(listitems);
+        [indxx,tfx] = listdlg('PromptString',{'Select two groups:'},...
+            'SelectionMode','multiple',...
+            'ListString',listitems,...
+            'InitialValue',[1:n]);
+        if tfx==1
+            [y1,idx1]=ismember(listitems(indxx),cLi);
+            assert(all(y1));
+            idx2=ismember(ci,idx1);
+            sce=sce.selectcells(idx2);
+            thisc=thisc(idx2);
+        else
+            return;
+        end    
+
     end
 
 % selitems={'Expression of Gene', ...

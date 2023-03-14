@@ -34,8 +34,7 @@ xct = st.scTenifoldXct(data = adata,
                     obs_label = "cell_type",
                     rebuild_GRN = False,
                     GRN_file_dir = './',
-                    verbose = True,
-                    n_cpus = -1)
+                    verbose = True)
 emb = xct.get_embeds(train = True)
 xct_pairs = xct.null_test(pval = 1.0)
 print(xct_pairs)
@@ -48,8 +47,7 @@ if sys.argv[1]=="2":
                         obs_label = "cell_type",
                         rebuild_GRN = False,
                         GRN_file_dir = './',
-                        verbose = True,
-                        n_cpus = -1)
+                        verbose = True)
     emb = xct.get_embeds(train = True)
     xct_pairs = xct.null_test(pval = 1.0)
     print(xct_pairs)

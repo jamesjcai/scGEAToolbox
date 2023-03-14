@@ -33,8 +33,7 @@ xct1 = st.scTenifoldXct(data = adata,
                     obs_label = "cell_type",
                     rebuild_GRN = False,
                     GRN_file_dir = './1',
-                    verbose = True,
-                    n_cpus = -1)
+                    verbose = True)
 
 adata = build_adata("X2.mat", "g2.txt", "c2.txt", delimiter=',', meta_cell_cols=['cell_type'], transpose=False)
 print('Input read.............2')
@@ -44,8 +43,7 @@ xct2 = st.scTenifoldXct(data = adata,
                     obs_label = "cell_type",
                     rebuild_GRN = False,
                     GRN_file_dir = './2',
-                    verbose = True,
-                    n_cpus = -1)
+                    verbose = True)
 
 XCTs = st.merge_scTenifoldXct(xct1, xct2)
 emb = XCTs.get_embeds(train = True)
