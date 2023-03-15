@@ -19,6 +19,8 @@ a=inputdlg(sprintf('Format:\nCell type name [TAB] Gene1,Gene2'), ...
 if isempty(a), return; end
 b=strtrim(string(a{1}));
 [c,d]=strtok(b,sprintf('\t'));
+d=upper(d);
+d=strrep(d,' ','');
 Tm=table(strtrim(c),strtrim(d));
 
 
@@ -26,8 +28,8 @@ s=upper(string(Tm.Var2));
 S=[];
 for k=1:length(s)
     a=strsplit(s(k),',');
-    a=strtrim(a);
-    if strlength(a(end))==0
+    a=strtrim(a);    
+    if strlength(a(end))==0 || isempty(a(end))
         a=a(1:end-1);
     end
     S=[S,a];
