@@ -58,7 +58,16 @@ function [f]=i_violinplot(y,thisc,ttxt,colorit,cL)
 
 
     function i_reordersamples(~,~)
-        [~,cL,noanswer]=gui.i_reordergroups(thisc);
+        % reorder by the mean y 
+        [cx,cLx]=grp2idx(thisc);
+        a=zeros(max(cx),1);
+        for k=1:max(cx)
+            a(k)=mean(y(cx==k));
+        end
+        [~,idx]=sort(a,'descend');
+        cLx_sorted=cLx(idx);
+
+        [~,cL,noanswer]=gui.i_reordergroups(thisc,cLx_sorted);
         if noanswer, return; end
         cla
         pkg.i_violinplot(y,thisc,colorit,cL);

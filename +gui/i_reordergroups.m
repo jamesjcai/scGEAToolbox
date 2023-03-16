@@ -1,4 +1,5 @@
-function [c,cL,noanswer]=i_reordergroups(thisc)
+function [c,cL,noanswer]=i_reordergroups(thisc,preorderedcL)
+if nargin<2, preorderedcL=[]; end
 noanswer=true;
 [c,cL]=grp2idx(thisc);
 if numel(cL)==1
@@ -12,7 +13,11 @@ end
 if isempty(answer), return; end
 switch answer
     case 'Yes'
-        [newidx]=gui.i_selmultidlg(cL,sort(cL));
+        if ~isempty(preorderedcL)
+            [newidx]=gui.i_selmultidlg(cL,preorderedcL);
+        else
+            [newidx]=gui.i_selmultidlg(cL,sort(cL));
+        end
         if length(newidx)~=length(cL)
             noanswer=true;
             return;
