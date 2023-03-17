@@ -9,12 +9,8 @@ function callback_ShowGeneExpr(src,~)
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
     [axx,bxx]=view();
-    % if any([axx,bxx]==0), axx=ax; bxx=bx; end
-    % gsorted=sort(sce.g);
-    
-%answer = questdlg('Show expression of single or mulitple genes?',...
-%    'Single/Multiple Genes','Single','Multiple','Cancel','Single');
-answer='Multiple';
+
+    answer='Multiple';
 switch answer
     case 'Single'
         [gsorted]=gui.i_sortgenenames(sce);
@@ -125,34 +121,6 @@ end
 
 end
 
-% function i_showcascade(sce,g,axx,bxx,k)
-%         f = figure('visible','off');
-%         [h1]=sc_scattermarker(sce.X,sce.g,sce.s,g,5);
-%         view(h1,axx,bxx);
-%         % movegui(f,'center');        
-%         P = get(f,'Position');
-%         set(f,'Position',[P(1)-20*k P(2)-20*k P(3) P(4)]);
-%         set(f,'visible','on');
-% end                       
 
 
 
-% function [gsorted]=i_sortg(sce)
-%         gsorted=[];
-%         answer2 = questdlg('How to sort gene names?','Sort by',...
-%             'Alphabetic','Expression Mean','Dropoff Rate','Alphabetic');
-%         switch answer2
-%             case 'Alphabetic'
-%                 gsorted=sort(sce.g);
-%             case 'Expression Mean'
-%                 [T]=sc_genestats(sce.X,sce.g);
-%                 [~,idx]=sort(T.Dropout_rate);
-%                 gsorted=sce.g(idx);                
-%             case 'Dropoff Rate'
-%                 [T]=sc_genestats(sce.X,sce.g);
-%                 [~,idx]=sort(T.Dropout_rate);
-%                 gsorted=sce.g(idx);
-%             otherwise
-%                 return;
-%         end
-% end

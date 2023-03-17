@@ -40,7 +40,7 @@ end
 
 
 [ci,cLi]=grp2idx(thisc);
-listitems=sort(string(cLi));
+listitems=natsort(string(cLi));
 n=length(listitems);
 if n<2
     errordlg('Need at least two groups.');

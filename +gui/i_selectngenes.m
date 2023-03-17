@@ -6,10 +6,10 @@ if nargin<2, predefinedlist=[]; end
 % internal function used by callback_BuildGeneNetwork
 glist=[];
 if isa(sce,'SingleCellExperiment')
-    gsorted=sort(sce.g);
+    gsorted=natsort(sce.g);
 elseif isstring(sce)
     genelist=sce;
-    gsorted=sort(genelist);
+    gsorted=natsort(genelist);
 end
 
 

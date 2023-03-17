@@ -4,7 +4,7 @@ function [gsorted]=i_sortgenenames(sce)
             'Alphabetic','Average Expression','% of Nonzero Cells','Alphabetic');
         switch answer2
             case 'Alphabetic'
-                gsorted=sort(sce.g);
+                gsorted=natsort(sce.g);
             case 'Average Expression'
                 [T]=sc_genestats(sce.X,sce.g);
                 [~,idx]=sort(T.Mean,'descend');

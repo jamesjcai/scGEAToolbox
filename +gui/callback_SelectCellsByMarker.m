@@ -1,8 +1,7 @@
 function callback_SelectCellsByMarker(src,~)
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);    
-    % gsorted=sort(sce.g);
-
+    
 answer1 = questdlg('Use single or mulitple markers?',...
     'Single/Multiple Markers','Single','Multiple','Cancel','Single');
 

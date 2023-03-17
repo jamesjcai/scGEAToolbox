@@ -5,11 +5,8 @@ thisc=gui.i_select1class(sce);
 if isempty(thisc), return; end
 
 [~,cLi]=grp2idx(thisc);
-
-%     [cLi,idx]=sort(cLi);
-%     ci=idx(ci);
-    
-    [cLisorted]=sort(string(cLi));
+   
+    [cLisorted]=natsort(string(cLi));
     [indxx,tfx] = listdlg('PromptString',{'Select groups'},...
         'SelectionMode','multiple','ListString',cLisorted);
     if tfx==1        
