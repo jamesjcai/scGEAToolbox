@@ -31,9 +31,9 @@ switch actiontype
         
         markerfile=sprintf('marker_%s.mat',stag);
         if exist(markerfile,'file')
-            load(markerfile,'Tw','Tm');
+            load(markerfile,'Tm');
         else
-            Tw=readtable(sprintf('markerweight_%s.txt',stag));
+            % Tw=readtable(sprintf('markerweight_%s.txt',stag));
             Tm=readtable(sprintf('markerlist_%s.txt',stag),...
                 'ReadVariableNames',false,'Delimiter','\t');
             % save(markerfile,'Tw','Tm');

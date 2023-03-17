@@ -16,7 +16,7 @@ switch answer
         if ~isempty(preorderedcL)
             [newidx]=gui.i_selmultidlg(cL,preorderedcL);
         else
-            [newidx]=gui.i_selmultidlg(cL,sort(cL));
+            [newidx]=gui.i_selmultidlg(cL,natsort(cL));
         end
         if length(newidx)~=length(cL)
             noanswer=true;

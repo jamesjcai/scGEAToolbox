@@ -9,7 +9,7 @@ function [f]=i_violinplot(y,thisc,ttxt,colorit,cL)
     tb=uitoolbar(f);
     pkg.i_addbutton2fig(tb,'off',{@i_savedata,y,thisc}, ...
         'export.gif','Export data...');
-    pkg.i_addbutton2fig(tb,'off',{@i_testdata,y,thisc,ttxt}, ...
+    pkg.i_addbutton2fig(tb,'off',{@i_testdata,y,thisc}, ...
         'exportx.gif','ANOVA/T-test...');    
     pkg.i_addbutton2fig(tb,'off',@i_addsamplesize, ...
         "xpowerpoint.gif",'Add Sample Size');    
@@ -18,7 +18,11 @@ function [f]=i_violinplot(y,thisc,ttxt,colorit,cL)
     pkg.i_addbutton2fig(tb,'off',@i_invertcolor, ...
         "xpowerpoint.gif",'Switch BW/Color');
     pkg.i_addbutton2fig(tb,'off',@i_reordersamples, ...
-        "xpowerpoint.gif",'Reorder Samples');   
+        "xpowerpoint.gif",'Reorder Samples');  
+    pkg.i_addbutton2fig(tb,'off',@i_sortbymean, ...
+        "xpowerpoint.gif",'Sort Samples by Median');  
+
+    isdescend=false;
     OldTitle=[];
     OldXTickLabel=[];
     cL=strrep(cL,'_','\_');
@@ -56,25 +60,38 @@ function [f]=i_violinplot(y,thisc,ttxt,colorit,cL)
         end
     end
 
-
-    function i_reordersamples(~,~)
-        % reorder by the mean y 
+    function i_sortbymean(~,~)
         [cx,cLx]=grp2idx(thisc);
         a=zeros(max(cx),1);
         for k=1:max(cx)
-            a(k)=mean(y(cx==k));
+            a(k)=median(y(cx==k));
         end
-        [~,idx]=sort(a,'descend');
+        if isdescend
+            [~,idx]=sort(a,'ascend');
+            isdescend=false;
+        else
+            [~,idx]=sort(a,'descend');
+            isdescend=true;
+        end
         cLx_sorted=cLx(idx);
 
-        [~,cL,noanswer]=gui.i_reordergroups(thisc,cLx_sorted);
+        %[~,cL,noanswer]=gui.i_reordergroups(thisc,cLx_sorted);
+        %if noanswer, return; end
+        cla
+        pkg.i_violinplot(y,thisc,colorit,cLx_sorted);
+    end
+
+
+    function i_reordersamples(~,~)
+
+        [~,cL,noanswer]=gui.i_reordergroups(thisc);
         if noanswer, return; end
         cla
         pkg.i_violinplot(y,thisc,colorit,cL);
     end
 
 
-function i_testdata(~,~,y,grp,ttxt)
+function i_testdata(~,~,y,grp)
     a=gca;
     if isempty(OldTitle)
         OldTitle=a.Title.String;

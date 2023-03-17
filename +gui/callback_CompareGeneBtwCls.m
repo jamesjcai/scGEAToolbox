@@ -18,7 +18,7 @@ function callback_CompareGeneBtwCls(src,~)
         end
     else
         [ci,cLi]=grp2idx(thisc);
-        listitems=sort(string(cLi));
+        listitems=natsort(string(cLi));
         n=length(listitems);
         [indxx,tfx] = listdlg('PromptString',{'Select two groups:'},...
             'SelectionMode','multiple',...
