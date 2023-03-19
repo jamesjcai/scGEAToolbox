@@ -1,3 +1,8 @@
+% pw1=fileparts(mfilename('fullpath'))
+% pth=fullfile(pw1,'..','..','thirdparty','PHATE')
+%         addpath(pth);
+
+
 load 1.txt
 load 2.txt
 load 3.txt
@@ -33,6 +38,16 @@ for i=1:n             % cell
     end
     M(:,i)=d;
 end
-s=tsne(M,"NumDimensions",2);
+M=0.5*(M+M.');
+%s=tsne(M,"NumDimensions",2);
 load c.txt
-figure; scatter(s(:,1),s(:,2),[],c)
+%figure; scatter(s(:,1),s(:,2),[],c)
+
+ndim=2;
+Y = randmds(M, ndim);
+opt = statset('display','iter');
+Y = mdscale(M,ndim,'options',opt,'start',Y, ...
+    'Criterion','metricstress');
+
+figure; 
+scatter(Y(:,1),Y(:,2),[],c);

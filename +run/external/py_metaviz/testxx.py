@@ -3,6 +3,7 @@ abspath = os.path.abspath(__file__)
 dname = os.path.dirname(abspath)
 os.chdir(dname)
 os.chdir("D:\\GitHub\\scGEAToolbox\\+run\\external\\py_metaviz")
+os.chdir("C:\\Users\\jcai\\Documents\\GitHub\\scGEAToolbox\\+run\\external\\py_metaviz")
 
 import pandas as pd
 import numpy as np

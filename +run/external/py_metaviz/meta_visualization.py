@@ -66,7 +66,8 @@ def meta_viz(visualizations, projection_method=None):
         matrix_norms = []
         for i in range(K):
             matrix_norms.append(X_distance_matrix_list[i][:,j]/np.sqrt(np.sum(X_distance_matrix_list[i][:,j]**2)))
-        
+        #print(matrix_norms[0])
+        #print(matrix_norms[0].shape)
         temp = np.zeros(matrix_norms[0].shape)
         for i in range(K):
             temp += matrix_norms[i]*weights[j,i]
