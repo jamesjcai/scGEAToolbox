@@ -6,7 +6,7 @@ K=length(Sinput);      % K = number of embeddings
 n=size(Sinput{1},1);   % n = number of cells
 w=zeros(K,n);
 %%
-D=zeros(n,n,K);
+D=zeros(n,n,K,'single');
 for k=1:K
     d=pdist2(Sinput{k},Sinput{k});
     D(:,:,k)=d./vecnorm(d);

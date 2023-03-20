@@ -1,4 +1,5 @@
-function [f]=gui_waitbar_adv(f,p)
+function [f]=gui_waitbar_adv(f,p,msg)
+if nargin<3, msg=[]; end
 if nargin<2, p=1; end
 if nargin<1 || isempty(f)
     f = waitbar(0,'Please wait...');
@@ -18,6 +19,10 @@ elseif isvalid(f) && strcmp(f.Tag,'TMWWaitbar')
             close(f);
         end
     else
-        waitbar(p,f,'Processing your data');
+        if isempty(msg)
+            waitbar(p,f,'Processing your data');
+        else
+            waitbar(p,f,msg);
+        end
     end
 end
