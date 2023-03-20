@@ -42,10 +42,12 @@ end
 data=data';
 
 % sqrt transform
+%data = log(data+1);
 data = sqrt(data);
-% data = log(data+1);
 
-s = phate(data, 't', 20, 'ndim', ndim);
+
+s = phate(data, 't', 20, 'ndim', ndim, 'k', 10);
+%s = phate(data, 'ndim', ndim);
 %%
 if plotit
     if bygene

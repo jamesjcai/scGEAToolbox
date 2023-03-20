@@ -1,8 +1,6 @@
-%function [Y]=meta_visualization(X,ndim)
-%if nargin<2, ndim=2; end
+function [Y]=meta_visualization(X,ndim)
+if nargin<2, ndim=2; end
 S=[];
-ndim=3;
-
 pw1=fileparts(mfilename('fullpath'));
 if ~(ismcc || isdeployed)    
     pth=fullfile(pw1,'thirdparty','PHATE'); % for calling randmds.m
@@ -13,7 +11,7 @@ if ~(ismcc || isdeployed)
     javaaddpath(pth3);
 end
 
-nstep=6;
+nstep=6+1;
 
 fw=gui.gui_waitbar_adv;
 Xn=log(1+sc_norm(X))';
@@ -54,15 +52,16 @@ S{end+1}=run_umap_main(data,'n_components',ndim, ...
 gui.gui_waitbar_adv(fw,5/nstep,'PHATE1');
 S{end+1}=phate(sqrt(Xn), 't', 20, 'ndim', ndim, 'k', 5);
 gui.gui_waitbar_adv(fw,5/nstep,'PHATE2');
-S{end+1}=phate(sqrt(Xn), 't', 20, 'ndim', ndim, 'k', 30);
+S{end+1}=phate(sqrt(Xn), 't', 20, 'ndim', ndim, 'k', 15, 'pot_method', 'sqrt');
 gui.gui_waitbar_adv(fw,5/nstep,'PHATE3');
-S{end+1}=phate(sqrt(Xn), 't', 20, 'ndim', ndim, 'k', 50);
+S{end+1}=phate(sqrt(Xn), 't', 20, 'ndim', ndim, 'k', 30);
 
 gui.gui_waitbar_adv(fw,6/nstep,'METAVIZ');
 [Y]=run.metaviz(S,ndim);
 gui.gui_waitbar_adv(fw);
+end
 
-figure; scatter(Y(:,1),Y(:,2));
+%figure; scatter(Y(:,1),Y(:,2));
 
 %{
 disp('sTSNE2')

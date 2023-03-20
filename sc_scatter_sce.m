@@ -770,14 +770,29 @@ end
     end
 
     function EmbeddingAgain(src, ~)
-        answer = questdlg('Which embedding method?', 'Select method',...
-                          'tSNE', 'UMAP', 'PHATE', 'tSNE');
-        if ~ismember(answer, {'tSNE', 'UMAP', 'PHATE'}), return; end
+%         answer = questdlg('Which embedding method?', 'Select method',...
+%                           'tSNE', 'UMAP', 'PHATE', 'tSNE');
+%         if ~ismember(answer, {'tSNE', 'UMAP', 'PHATE'}), return; end
+        
+        [indx2,tf2] = listdlg('PromptString',...
+    {'Select embedding method:'},...
+     'SelectionMode','single','ListString', ...
+     {'tSNE', 'UMAP', 'PHATE', ...
+     'MetaViz [PMID:36774377] 🐢'},'ListSize',[175 130]);
+        if ~tf2, return; end
+        methodopt={'tsne','umap','phate','metaviz'};
+        methodtag=methodopt{indx2};
         if isempty(sce.struct_cell_embeddings)
-            sce.struct_cell_embeddings = struct('tsne', [], 'umap', [], 'phate', []);
+            sce.struct_cell_embeddings = struct('tsne', [], 'umap', [], ...
+                'phate', [], 'metviz', []);
         end
-        methodtag = lower(answer);
+
+        %methodtag = lower(answer);
         usingold = false;
+        if ~isfield(sce.struct_cell_embeddings,'metaviz')
+            sce.struct_cell_embeddings.('metaviz')=[];
+        end
+        
         if ~isempty(sce.struct_cell_embeddings.(methodtag))
             answer1 = questdlg(sprintf('Use existing %s embedding or re-compute new embedding?', ...
                 upper(methodtag)), '', ...
@@ -819,7 +834,9 @@ end
             end
             [ndim]=gui.i_choose2d3d;
             if isempty(ndim), return; end
-            fw = gui.gui_waitbar;
+            if ~strcmpi(methodtag,'metaviz')
+                fw = gui.gui_waitbar;
+            end
             try
                 forced = true;
                 if strcmpi(methodtag,'tsne')
@@ -827,11 +844,15 @@ end
                 end
                 sce = sce.embedcells(methodtag, forced, usehvgs, ndim, K, whitelist);
             catch ME
-                gui.gui_waitbar(fw);
+                if ~strcmpi(methodtag,'metaviz')
+                    gui.gui_waitbar(fw);
+                end
                 errordlg(ME.message);
                 return
             end
-            gui.gui_waitbar(fw);
+            if ~strcmpi(methodtag,'metaviz')
+                gui.gui_waitbar(fw);
+            end
         end
         RefreshAll(src, 1, true, false);
         guidata(FigureHandle, sce);

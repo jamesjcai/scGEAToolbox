@@ -12,7 +12,8 @@ classdef SingleCellExperiment
       list_cell_attributes cell  % e.g., attributes = {'size',[4,6,2]};
       list_gene_attributes cell  % e.g., attributes = {'size',[4,6,2]};
       metadata string
-      struct_cell_embeddings=struct('tsne',[],'umap',[],'phate',[])
+      struct_cell_embeddings=struct('tsne',[],'umap',[], ...
+          'phate',[],'metaviz',[])
       struct_cell_clusterings=struct('kmeans',[],'snndpc',[],...
                                       'sc3',[],'simlr',[],'soptsc',[],...
                                       'sinnlrr',[],'specter',[],...
@@ -48,6 +49,9 @@ classdef SingleCellExperiment
         obj.c_cell_cycle_tx=repmat("undetermined",size(X,2),1);
         obj.c_cell_type_tx=repmat("undetermined",size(X,2),1);
         obj.metadata=string(sprintf('Created: %s',datetime()));
+        if ~isfield(obj.struct_cell_embeddings,'metaviz')
+            obj.struct_cell_embeddings.('metaviz')=[];
+        end
         % obj.struct_cell_embeddings=struct('tsne',[],'umap',[],'phate',[]);
     end
 
