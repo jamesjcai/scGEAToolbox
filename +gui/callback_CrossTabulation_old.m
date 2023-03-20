@@ -54,40 +54,6 @@ f0=figure('Visible',false);
 
 sizesorted=false;
 
-    function i_plot1
-        y=T;
-        b=bar(y,'stacked','FaceColor',"flat");
-        %colormap(prism(size(y,2)));
-        colormap(turbo);
-        for k = 1:size(y,2)
-            b(k).CData = k;
-        end
-        xticks(1:length(labelsx));
-        xticklabels(labelsx);
-        xlabel(clabel)
-        ylabel('# of cells')
-       
-    end
-
-    function i_plot2
-y=T./sum(T,2);
-b=bar(y,'stacked','FaceColor',"flat");
-%colormap(prism(size(y,2)));
-colormap(turbo);
-for k = 1:size(y,2)
-    b(k).CData = k;
-end
-xlabel(clabel)
-ylabel('% of cells')
-% title(clable2); 
-xticks(1:length(labelsx));
-xticklabels(labelsx);
-ylim([0 1]);
-lgd=legend(labelsy,'Location','bestoutside');
-title(lgd,llabel);
-
-    end
-
 subplot(211)
 y=T;
 b=bar(y,'stacked','FaceColor',"flat");
@@ -142,24 +108,18 @@ set(f0,'Visible',true);
     function i_sortbymean(~,~)
         
         if sizesorted
-            [~,idx]=sort(sum(T,2),'descend');
-            T=T(idx,:);
-            labelsx=labelsx(idx);
-            
+            [~,idx]=sort(a,'ascend');
             sizesorted=false;
         else
-            [~,idx]=sort(labelsx);
-            T=T(idx,:);
-            labelsx=labelsx(idx);
+            [~,idx]=sort(a,'descend');
             sizesorted=true;
         end
-        subplot(211)
-        cla
-        i_plot1;
-        subplot(212)
-        cla
-        i_plot2;
+        cLx_sorted=cLx(idx);
 
+        %[~,cL,noanswer]=gui.i_reordergroups(thisc,cLx_sorted);
+        %if noanswer, return; end
+        cla
+        pkg.i_violinplot(y,thisc,colorit,cLx_sorted);
     end
 
     function i_saveCrossTable(~,~)

@@ -10,7 +10,8 @@ function [requirerefresh]=callback_RenameCellType(src)
 
     removesubscript=false;
     if any(contains(sce.c_cell_type_tx,"_{"))    
-        answer = questdlg('Remove subscript of cell type names?');
+        answer = questdlg('Remove subscript of cell type names?', ...
+            '','Yes','No','Cancel','No');
         switch answer
             case 'Yes'
                 removesubscript=true;
@@ -21,6 +22,7 @@ function [requirerefresh]=callback_RenameCellType(src)
         end        
     end
     if removesubscript
+        
         waitfor(helpdlg('Subscript will be removed.'));
         if ~isstring(sce.c_cell_type_tx)
             sce.c_cell_type_tx=string(sce.c_cell_type_tx);
