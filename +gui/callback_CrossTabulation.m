@@ -7,16 +7,7 @@ function callback_CrossTabulation(src,~)
          return;
      end
     
-     %{
-    [thisc1,clable1]=gui.i_select1class(sce);
-    if isempty(thisc1), return; end
-    uiwait(helpdlg(sprintf('First grouping varible (%s) selected.',clable1)));
-    [thisc2,clable2]=gui.i_select1class(sce);
-    if isempty(thisc2), return; end
-    uiwait(helpdlg(sprintf('Second grouping varible (%s) selected.',clable2)));
-    % if strcmp(clable1,clable2), return; end
-    %}
-     
+   
 answer = questdlg('Show groups by?', ...
 	'Sorted Variable', ...
 	clable1,clable2,clable1);
@@ -65,30 +56,32 @@ sizesorted=false;
         xticks(1:length(labelsx));
         xticklabels(labelsx);
         xlabel(clabel)
-        ylabel('# of cells')
-       
+        ylabel('# of cells')       
     end
 
     function i_plot2
-y=T./sum(T,2);
-b=bar(y,'stacked','FaceColor',"flat");
-%colormap(prism(size(y,2)));
-colormap(turbo);
-for k = 1:size(y,2)
-    b(k).CData = k;
-end
-xlabel(clabel)
-ylabel('% of cells')
-% title(clable2); 
-xticks(1:length(labelsx));
-xticklabels(labelsx);
-ylim([0 1]);
-lgd=legend(labelsy,'Location','bestoutside');
-title(lgd,llabel);
+        y=T./sum(T,2);
+        b=bar(y,'stacked','FaceColor',"flat");
+        %colormap(prism(size(y,2)));
+        colormap(turbo);
+        for k = 1:size(y,2)
+            b(k).CData = k;
+        end
+        xlabel(clabel)
+        
+        ylabel('% of cells')
+        % title(clable2); 
+        xticks(1:length(labelsx));
+        xticklabels(labelsx);
+        ylim([0 1]);
+        lgd=legend(labelsy,'Location','bestoutside');
+        title(lgd,llabel);
 
     end
 
 subplot(211)
+i_plot1;
+%{
 y=T;
 b=bar(y,'stacked','FaceColor',"flat");
 %colormap(prism(size(y,2)));
@@ -106,8 +99,11 @@ ylabel('# of cells')
 % title(lgd,clable2)
 % lgd=legend(labelsy,'Location','bestoutside');
 % title(lgd,llabel);
+%}
 
 subplot(212)
+i_plot2;
+%{
 y=T./sum(T,2);
 b=bar(y,'stacked','FaceColor',"flat");
 %colormap(prism(size(y,2)));
@@ -123,7 +119,7 @@ xticklabels(labelsx);
 ylim([0 1]);
 lgd=legend(labelsy,'Location','bestoutside');
 title(lgd,llabel);
-
+%}
 
 tb = uitoolbar(f0);
 pkg.i_addbutton2fig(tb,'off',@i_saveCrossTable,"export.gif",'Save cross-table');
@@ -141,17 +137,16 @@ set(f0,'Visible',true);
 
     function i_sortbymean(~,~)
         
-        if sizesorted
+        if ~sizesorted
             [~,idx]=sort(sum(T,2),'descend');
             T=T(idx,:);
-            labelsx=labelsx(idx);
-            
-            sizesorted=false;
+            labelsx=labelsx(idx);            
+            sizesorted=true;
         else
             [~,idx]=sort(labelsx);
             T=T(idx,:);
             labelsx=labelsx(idx);
-            sizesorted=true;
+            sizesorted=false;
         end
         subplot(211)
         cla
