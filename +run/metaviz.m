@@ -1,23 +1,7 @@
-% pw1=fileparts(mfilename('fullpath'))
-% pth=fullfile(pw1,'..','..','thirdparty','PHATE')
-%         addpath(pth);
+function [Y]=metaviz(Sinput,ndim,methodid)
+if nargin<3, methodid=1; end
+if nargin<2, ndim=2; end
 
-load c.txt
-
-load 1.txt
-load 2.txt
-load 3.txt
-load 4.txt
-load 5.txt
-
-
-Sinput={X1,X2,X3,X4,X5};
-
-Y=run.metaviz(Sinput,2,3);
-figure; 
-scatter(Y(:,1),Y(:,2),[],c);
-
-%%
 K=length(Sinput);      % K = number of embeddings
 n=size(Sinput{1},1);   % n = number of cells
 w=zeros(K,n);
@@ -26,7 +10,6 @@ D=zeros(n,n,K);
 for k=1:K
     d=pdist2(Sinput{k},Sinput{k});
     D(:,:,k)=d./vecnorm(d);
-    %D(:,:,k)=d;
 end
 %%
 for x=1:n              % n of cells
@@ -44,14 +27,6 @@ for i=1:n             % cell
     M(:,i)=d;
 end
 M=0.5*(M+M.');
-%s=tsne(M,"NumDimensions",2);
-%figure; scatter(s(:,1),s(:,2),[],c)
 
-ndim=2;
-Y = randmds(M, ndim);
-opt = statset('display','iter');
-Y = mdscale(M,ndim,'options',opt,'start',Y, ...
-    'Criterion','metricstress');
+[Y]=pkg.e_embedbyd(M,ndim,methodid);
 
-figure; 
-scatter(Y(:,1),Y(:,2),[],c);
