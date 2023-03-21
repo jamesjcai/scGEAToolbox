@@ -4,7 +4,7 @@ if nargin<2, ndim=2; end
 if nargin<3, methodid=1; end
 
 IniY = pkg.randmds(D, ndim);
-opt = statset('display','iter');
+opt = statset('display','off');
 
 switch methodid
     case 1     % tsne by distance matrix

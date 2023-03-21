@@ -284,7 +284,7 @@ disp(['CMDS took ' num2str(tt_cmds) ' seconds']);
 if strcmpi(mds_method, 'mmds')
     tic;
     disp 'Doing metric MDS:'
-    opt = statset('display','iter');
+    opt = statset('display','off');
     Y = mdscale(PDX,ndim,'options',opt,'start',Y,'Criterion','metricstress');
     tt_mmds = toc;
     disp(['MMDS took ' num2str(tt_mmds) ' seconds']);

@@ -17,46 +17,42 @@ fw=gui.gui_waitbar_adv;
 Xn=log(1+sc_norm(X))';
 data = svdpca(Xn, 50, 'random');
 
-gui.gui_waitbar_adv(fw,1/nstep,'PCA');
+gui.gui_waitbar_adv(fw,1/nstep,'Meta Visualization - PCA...');
 [~,S{1}]=pca(data,NumComponents=ndim);
 
-gui.gui_waitbar_adv(fw,2/nstep,'MDS');
+gui.gui_waitbar_adv(fw,2/nstep,'Meta Visualization - MDS...');
 D=squareform(pdist(data));
 S{end+1}=pkg.e_embedbyd(D,ndim,2);
 
-gui.gui_waitbar_adv(fw,3/nstep,'TSNE1');
+gui.gui_waitbar_adv(fw,3/nstep,'Meta Visualization - TSNE 1/3...');
 S{end+1}=tsne(data,Perplexity=30,NumDimensions=ndim);
 
-gui.gui_waitbar_adv(fw,3/nstep,'TSNE2');
+gui.gui_waitbar_adv(fw,3/nstep,'Meta Visualization - TSNE 2/3...');
 S{end+1}=tsne(data,Perplexity=15,NumDimensions=ndim);
 
-gui.gui_waitbar_adv(fw,3/nstep,'TSNE3');
+gui.gui_waitbar_adv(fw,3/nstep,'Meta Visualization - TSNE 3/3...');
 S{end+1}=tsne(data,Perplexity=50,NumDimensions=ndim);
 
-gui.gui_waitbar_adv(fw,4/nstep,'UMAP1');
+gui.gui_waitbar_adv(fw,4/nstep,'Meta Visualization - UMAP 1/3...');
 S{end+1}=run_umap_main(data,'n_components',ndim, ...
     'n_neighbors',15,'verbose','none');
 
-gui.gui_waitbar_adv(fw,4/nstep,'UMAP2');
+gui.gui_waitbar_adv(fw,4/nstep,'Meta Visualization - UMAP 2/3...');
 S{end+1}=run_umap_main(data,'n_components',ndim, ...
     'n_neighbors',30,'verbose','none');
 
-gui.gui_waitbar_adv(fw,4/nstep,'UMAP2');
-S{end+1}=run_umap_main(data,'n_components',ndim, ...
-    'n_neighbors',30,'verbose','none');
-
-gui.gui_waitbar_adv(fw,4/nstep,'UMAP3');
+gui.gui_waitbar_adv(fw,4/nstep,'Meta Visualization - UMAP 3/3...');
 S{end+1}=run_umap_main(data,'n_components',ndim, ...
     'n_neighbors',50,'verbose','none');
 
-gui.gui_waitbar_adv(fw,5/nstep,'PHATE1');
+gui.gui_waitbar_adv(fw,5/nstep,'Meta Visualization - PHATE 1/3...');
 S{end+1}=phate(sqrt(Xn), 't', 20, 'ndim', ndim, 'k', 5);
-gui.gui_waitbar_adv(fw,5/nstep,'PHATE2');
+gui.gui_waitbar_adv(fw,5/nstep,'Meta Visualization - PHATE 2/3...');
 S{end+1}=phate(sqrt(Xn), 't', 20, 'ndim', ndim, 'k', 15, 'pot_method', 'sqrt');
-gui.gui_waitbar_adv(fw,5/nstep,'PHATE3');
+gui.gui_waitbar_adv(fw,5/nstep,'Meta Visualization - PHATE 3/3...');
 S{end+1}=phate(sqrt(Xn), 't', 20, 'ndim', ndim, 'k', 30);
 
-gui.gui_waitbar_adv(fw,6/nstep,'METAVIZ');
+gui.gui_waitbar_adv(fw,6/nstep,'Meta Visualization - METAVIZ');
 [Y]=run.metaviz(S,ndim);
 gui.gui_waitbar_adv(fw);
 end
