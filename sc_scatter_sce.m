@@ -1256,9 +1256,9 @@ end
             'splinefit (🐇)');
         if strcmp(answer, 'splinefit (🐇)')
             dim = 1;
-            [t, xyz1] = i_pseudotime_by_splinefit(sce.s, dim, false);
+            [t, xyz1] = pkg.i_pseudotime_by_splinefit(sce.s, dim, false);
         elseif strcmp(answer, 'princurve (🐢)')
-            [t, xyz1] = i_pseudotime_by_princurve(sce.s, false);
+            [t, xyz1] = pkg.i_pseudotime_by_princurve(sce.s, false);
         else
             errordlg('Invalid Option.');
             return;
@@ -1308,7 +1308,7 @@ end
                 selectedg = sce.g([idxp idxn]);
                 try
                     psf1=figure('WindowStyle','modal');
-                    i_plot_pseudotimeseries(log2(sce.X + 1), ...
+                    pkg.i_plot_pseudotimeseries(log2(sce.X + 1), ...
                         sce.g, t, selectedg);
                 catch ME
                     if exist('psf1','var') && ishandle(psf1)

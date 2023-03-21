@@ -80,7 +80,7 @@ gui.add_3dcamera(tb);
     end
 
     function drawtrajectory(~,~)
-        [t,xyz1]=i_pseudotime_by_splinefit(s,dim,false);
+        [t,xyz1]=pkg.i_pseudotime_by_splinefit(s,dim,false);
         hold on
         if size(xyz1,2)>=3
             plot3(xyz1(:,1),xyz1(:,2),xyz1(:,3),'-r','linewidth',2);
@@ -118,7 +118,7 @@ gui.add_3dcamera(tb);
                 [~,idxn]= mink(r,3);  % Select top 3 negatively correlated genes
                 selectedg=genelist([idxp idxn]);        
                 figure;
-                i_plot_pseudotimeseries(log2(X+1),...
+                pkg.i_plot_pseudotimeseries(log2(X+1),...
                     genelist,t,selectedg);
             case 'No'
                 return;
