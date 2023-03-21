@@ -12,7 +12,7 @@ if nargin<6, ignorehigh=true; end
 if nargout>1, Xori=X; end
 
 if normit
-    [X]=norm_deseq(X);
+    [X]=pkg.norm_deseq(X);
 end
 
 u=mean(X,2,'omitnan');

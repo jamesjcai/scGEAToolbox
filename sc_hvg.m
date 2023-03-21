@@ -29,7 +29,7 @@ dropr=1-sum(X>0,2)./size(X,2);
 if normit
     %[X]=norm_deseq(X);
     %tic
-    [X]=norm_libsize(X);
+    [X]=pkg.norm_libsize(X);
     %toc
 end
 if any(isnan(X(:)))

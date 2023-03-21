@@ -17,8 +17,8 @@ end
 
 switch p.Results.type
     case 'libsize'
-        [X]=norm_libsize(X);
+        [X]=pkg.norm_libsize(X);
     case 'deseq'
-        [X]=norm_deseq(X);
+        [X]=pkg.norm_deseq(X);
 end
 end
