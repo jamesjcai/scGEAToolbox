@@ -6,7 +6,7 @@ function [T,A0,A1]=sctenifoldnet(X0,X1,genelist,varargin)
 import ten.*
 
 if ~(ismcc || isdeployed)
-if exist('tensor.m','file')==2    
+if exist('tensor.m','file')~=2
     pw1=fileparts(mfilename('fullpath'));
     pth=fullfile(pw1,'..','tensor_toolbox');
     addpath(pth);
