@@ -10,6 +10,12 @@ disp('Install scGEAToolbox...')
 unzip('https://github.com/jamesjcai/scGEAToolbox/archive/main.zip');
 addpath('./scGEAToolbox-main');
 ```
+## Getting Started Quickly
+Run the following code in MATLAB to start SCGEATOOL:
+```matlab
+scgeatool
+```
+
 ## Read Documentation
 
 [scGEAToolbox Documentation](https://scgeatoolbox.readthedocs.io/)
