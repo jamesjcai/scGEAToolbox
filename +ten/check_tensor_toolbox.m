@@ -21,8 +21,14 @@ if exist(['@tensor',filesep,'tensor.m'],'file')~=2
     error(sprintf('TENSOR TOOLBOX is not installed.\nTo download, visit https://www.tensortoolbox.org/'));
 end
 
+end
 
 function i_downloadtensortoolbox
+    pw1=cdgea;
+    %wrkpth=fullfile(pw1,'tensor_toolbox2');
     url='https://gitlab.com/tensors/tensor_toolbox/-/archive/v3.5/tensor_toolbox-v3.5.zip';
-    unzip(url);
+    %unzip(url,wrkpth);
+    aaa=fullfile(tempdir,'aaa.zip');
+    websave(aaa,url);
+    unzip(aaa,pw1);
 end
