@@ -45,7 +45,7 @@ if plotit
         for j = 1 : size(Graph,1)
             % if i~=Graph(j,i)
             if A(i,Graph(j,i))>0
-            if size(s,2)>3
+            if size(s,2)>=3
              line(s([i,Graph(j,i)],1),...
                   s([i,Graph(j,i)],2),...
                   s([i,Graph(j,i)],3),'Color','red');   
