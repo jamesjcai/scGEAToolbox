@@ -109,7 +109,7 @@ function callback_CompareGeneBtwCls(src,~)
             cL=strrep(cL,'_','\_');
             thisc=strrep(thisc,'_','\_');
             gui.i_cascadeviolin(sce,Xt,thisc,glist, ...
-                selitems{indx1},cL,colorit);
+                'Expression Level',cL,colorit);
             return;
         case 'Predefined Cell Score'
             [~,T]=pkg.e_cellscores(sce.X,sce.g,0);
