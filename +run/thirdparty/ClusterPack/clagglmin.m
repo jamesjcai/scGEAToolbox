@@ -9,21 +9,21 @@
 
 function cl = clagglmin(x,k,sfct)
 
-if ~exist('sfct'),
+if ~exist('sfct')
    sfct = 'simeucl';
    disp('clagglmin: using default Euclidean measure');
-end;
+end
 
 n = size(x,1);
 s = feval(sfct,x);
 disp('clagglmin: computed s');
-for i=1:size(s,1),
+for i=1:size(s,1)
   s(i,i) = -inf;
-end;
+end
 
 cl = 1:n;
-for i=1:(n-k),
-  if ((n-k>500)&(mod(n-i+1,100)==0)), disp(['clagglmin: at ' num2str(n-i+1) ' clusters ']); end;
+for i=1:(n-k)
+  if ((n-k>500)&&(mod(n-i+1,100)==0)), disp(['clagglmin: at ' num2str(n-i+1) ' clusters ']); end
   % compute indices of closest pair
   %[a,b] = ind2sub(size(s),topnindx(s,1)); % less efficient
   [mm, ii] = max(reshape(s,1,prod(size(s))));
@@ -36,6 +36,6 @@ for i=1:(n-k),
   blankblock = -inf * ones(length(MembersOfAInd),length(MembersOfBInd));
   s(MembersOfAInd,MembersOfBInd) = blankblock;
   s(MembersOfBInd,MembersOfAInd) = blankblock';
-end;
+end
 cl = onetomax(cl);
 
