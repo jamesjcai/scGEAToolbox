@@ -27,10 +27,8 @@ if nargout>1, Xori=X; end
 
 dropr=1-sum(X>0,2)./size(X,2);
 if normit
-    %[X]=norm_deseq(X);
-    %tic
+    %[X]=pkg.norm_deseq(X);
     [X]=pkg.norm_libsize(X);
-    %toc
 end
 if any(isnan(X(:)))
     u=mean(X,2,'omitnan');
@@ -83,7 +81,7 @@ switch methodid
         testDenom =(u*b(2) + u.^2*cv2th)/(1+cv2th/m);
         fitratio=vx./testDenom;
     case 2
-        % this code follows https://github.com/MarioniLab/MNN2017/blob/a202f960f165816f22dec3b62ce1c7549b3ba8c1/Pancreas/findHighlyVariableGenes.R       
+        % this code follows https://github.com/MarioniLab/MNN2017/blob/a202f960f165816f22dec3b62ce1c7549b3ba8c1/Pancreas/findHighlyVariableGenes.R
         % cv2fit=b(2)./u+b(1);
         fitratio=cv2./cv2fit;
 end
