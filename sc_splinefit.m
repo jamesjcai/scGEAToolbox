@@ -18,6 +18,11 @@ if nargin<2, genelist=string(1:size(X,1)); end
 
 [lgu,dropr,lgcv,genes,Xout]=sc_genestat(X,genelist,sortit,removenan);
 
+% lgu=zscore(lgu);
+% dropr=zscore(dropr);
+% lgcv=zscore(lgcv);
+
+
 [~,i]=max(lgcv);
 xyz=[lgu dropr lgcv];
 

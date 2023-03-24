@@ -30,3 +30,6 @@ if removeinf
         warning('Output GENES are less than input GENES (some GENES are removed).');
     end
 end
+
+
+end

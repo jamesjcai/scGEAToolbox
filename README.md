@@ -6,12 +6,11 @@ scGEAToolbox - a Matlab toolbox for single-cell RNA-seq data analyses
 ## Quick Installation
 Run the following code in MATLAB:
 ```matlab
-disp('Install scGEAToolbox...')
 unzip('https://github.com/jamesjcai/scGEAToolbox/archive/main.zip');
 addpath('./scGEAToolbox-main');
 ```
-## Getting Started Quickly
-Run the following code in MATLAB to start SCGEATOOL:
+## Getting Started Quickly Using the SGEATOOL App
+Run the following code in MATLAB to start:
 ```matlab
 scgeatool
 ```
