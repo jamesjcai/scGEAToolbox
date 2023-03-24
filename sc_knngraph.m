@@ -1,4 +1,4 @@
-function [A]=sc_knngraph(s,k,plotit,method)
+function [A,W]=sc_knngraph(s,k,plotit,method)
 %Generate KNN group network from cell embeddings
 %
 % input: S - cell embedding coordinates
@@ -26,12 +26,22 @@ switch method
 end
 
 if nargout>0 || plotit
+    
+
     N=size(s,1);
     A=zeros(N,N);
+    if nargout>1
+        W=zeros(N,N);
+    end
     for i = 1 : size(Graph,2)
     for j = 1 : size(Graph,1)   % k+1
          A(i,Graph(j,i))=1;
          A(Graph(j,i),i)=1;
+         if nargout>1
+             w=norm(s(i,:)-s(Graph(j,i),:));
+             W(i,Graph(j,i))=w;
+             W(Graph(j,i),i)=w;
+         end
     end
     end
     % G=0.5*(G+G');
@@ -60,3 +70,8 @@ if plotit
 end
 
 end
+
+% G=graph(W);
+% d = distances(G);
+% [diameter, long_ind] = max(d(:));
+% [a,b] = ind2sub(size(d), long_ind)
