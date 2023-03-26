@@ -159,7 +159,8 @@ else
 end
 Xi=X(:,i);
 [Xi,gi]=sc_selectg(Xi,genelist);
-[Tct]=sc_celltypecaller(Xi,gi,[],'species',species,'organ',organ);
+% sc_celltypecaller
+[Tct]=run.alona(Xi,gi,[],'species',species,'organ',organ);
 end
 
 
