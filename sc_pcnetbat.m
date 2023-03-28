@@ -21,7 +21,7 @@ for k=1:n
     Xi(:,k)=[];
     D=cat(3,D,Xi);
 end
-[~,~,coeffv]=pagesvd(D);
+[~,~,coeffv]=pagesvd(D,"econ");
 
 for k=1:n
     y=X(:,k);
