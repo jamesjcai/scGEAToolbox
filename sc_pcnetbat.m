@@ -21,7 +21,10 @@ for k=1:n
     Xi(:,k)=[];
     D=cat(3,D,Xi);
 end
+disp('Step 1.')
+
 [~,~,coeffv]=pagesvd(D,"econ");
+disp('Step 2.')
 
 for k=1:n
     y=X(:,k);
@@ -32,4 +35,5 @@ for k=1:n
     Beta=sum(y.*score);
     A(k,A(k,:)==1)=coeff*Beta';
 end
+disp('step 3.')
 end
