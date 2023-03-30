@@ -110,6 +110,7 @@ ptImage = ind2rgb(img, map);
 ptlabelclusters.CData = ptImage;
 ptlabelclusters.Tooltip = 'Label cell groups';
 ptlabelclusters.ClickedCallback = @LabelClusters;
+ptlabelclusters.State = 'off';
 
 i_addbutton(1,0,@Brushed2NewCluster,"plotpicker-glyplot-face.gif","Add brushed cells to a new group")
 i_addbutton(1,0,@Brushed2MergeClusters,"plotpicker-pzmap.gif","Merge brushed cells to same group")
@@ -1406,11 +1407,14 @@ end
         guidata(FigureHandle, sce);
     end
 
-    function LabelClusters(src, ~)
+    function LabelClusters(src, ~)        
         state = src.State;
-        if strcmp(state, 'off')
-            dtp = findobj(h, 'Type', 'datatip');
+        dtp = findobj(h, 'Type', 'datatip');
+        %disp('...state...')
+        if strcmp(state, 'off') || ~isempty(dtp)  % switch from on to off
+            %dtp = findobj(h, 'Type', 'datatip');
             delete(dtp);
+            set(src, 'State', 'off');
         else
             sce=guidata(FigureHandle);
             [thisc,clable]=gui.i_select1class(sce);
@@ -1433,7 +1437,7 @@ end
                 warndlg('Labels are not showing. Too many categories (n>200).');
             end
             setappdata(FigureHandle,'cL',cL);
-            guidata(FigureHandle, sce);                   
+            guidata(FigureHandle, sce);              
             % colormap(lines(min([256 numel(unique(sce.c))])));
         end
     end
@@ -1465,7 +1469,7 @@ end
                             stxtyes = c;
                         otherwise
                             return;
-                    end                
+                    end  
                 end
             end
             dtp = findobj(h, 'Type', 'datatip');
@@ -1483,6 +1487,7 @@ end
                 [k] = dsearchn(siv, si);
                 datatip(h, 'DataIndex', idx(k));
             end
+            ptlabelclusters.State = 'on';
             isdone = true;
         end
     end
