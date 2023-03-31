@@ -1,4 +1,4 @@
-function [Y]=meta_visualization(X,ndim)
+function [Y,S]=meta_visualization(X,ndim)
 if nargin<2, ndim=2; end
 S=[];
 pw1=fileparts(mfilename('fullpath'));
@@ -15,14 +15,29 @@ nstep=6+1;
 
 fw=gui.gui_waitbar_adv;
 Xn=log(1+sc_norm(X))';
-data = svdpca(Xn, 50, 'random');
+try    
+    data = svdpca(Xn, 300, 'random');
+catch
+    data = svdpca(Xn, 50, 'random');
+end
+%data=Xn;
 
 gui.gui_waitbar_adv(fw,1/nstep,'Meta Visualization - PCA...');
 [~,S{1}]=pca(data,NumComponents=ndim);
 
+gui.gui_waitbar_adv(fw,1/nstep,'Meta Visualization - KPCA1...');
+S{end+1}=pkg.kpca(data,ndim,30);
+
+gui.gui_waitbar_adv(fw,1/nstep,'Meta Visualization - KPCA2...');
+S{end+1}=pkg.kpca(data,ndim,40);
+
+gui.gui_waitbar_adv(fw,1/nstep,'Meta Visualization - KPCA3...');
+S{end+1}=pkg.kpca(data,ndim,50);
+
 gui.gui_waitbar_adv(fw,2/nstep,'Meta Visualization - MDS...');
 D=squareform(pdist(data));
 S{end+1}=pkg.e_embedbyd(D,ndim,2);
+
 
 gui.gui_waitbar_adv(fw,3/nstep,'Meta Visualization - TSNE 1/3...');
 S{end+1}=tsne(data,Perplexity=30,NumDimensions=ndim);

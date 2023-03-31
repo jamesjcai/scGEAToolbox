@@ -11,6 +11,13 @@ function K = km_kernel(X1,X2,ktype,kpar)
 % This file is part of the Kernel Methods Toolbox for MATLAB.
 % https://github.com/steven2358/kmbox
 switch ktype
+    case 'gauss2'	% Gaussian kernel   slow
+        sgm = kpar;	% kernel width
+        %[n] = size(X1,1);        
+        D = pdist2(X1, X2).^2;
+        K = exp(-D./(2*sgm^2));
+        %s=ones(size(K))./n;
+        %K=K-s*K-K*s+s*K*s;
 	case 'gauss'	% Gaussian kernel
 		sgm = kpar;	% kernel width
 		

@@ -1,4 +1,4 @@
-function [E,v] = km_kpca(X,m,ktype,kpar)
+function [E,v,score,K] = km_kpca(X,m,ktype,kpar)
 % KM_KPCA performs kernel principal component analysis (KPCA) on a data set
 % X.
 % Input:	- X: data matrix in column format (each data point is a row)
@@ -22,11 +22,21 @@ if nargin<3, ktype='gauss'; end
 
 n = size(X,1);
 K = pkg.km_kernel(X,X,ktype,kpar);
-[E,V] = eig(K);
-v = diag(V); % eigenvalues
-[v,ind] = sort(v,'descend');
-v = v(1:m);
-E = E(:,ind(1:m)); % principal components
-for k=1:m
-    E(:,k) = E(:,k)/sqrt(n*v(k)); % normalization
-end
+
+
+H = eye(n) - ones(n,n)/n;
+K_centered = H * K * H;
+
+[E,V] = eigs(K_centered,m);
+v=diag(V);
+%[E,V] = eig(K);
+%v = diag(V); % eigenvalues
+%[v,ind] = sort(v,'descend');
+%v = v(1:m);
+%E = E(:,ind(1:m)); % principal components
+
+score=(E'*K_centered)';
+
+% for k=1:m
+%     E(:,k) = E(:,k)/sqrt(n*v(k)); % normalization
+% end
