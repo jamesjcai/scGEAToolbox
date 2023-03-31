@@ -2,6 +2,11 @@ function [f]=gui_waitbar_adv(f,p,msg)
 if nargin<3, msg=[]; end
 if nargin<2, p=1; end
 if nargin<1 || isempty(f)
+
+    if ~usejava('desktop')
+        disp(msg);
+        return;
+    end    
     f = waitbar(0,'Please wait...');
 %     pause(.5)
 %     fprintf('Processing your data...');
@@ -20,7 +25,10 @@ elseif isvalid(f) && strcmp(f.Tag,'TMWWaitbar')
         end
     else
         if isempty(msg)
-            waitbar(p,f,'Processing your data');
+            msg='Processing your data';
+        end
+        if ~usejava('desktop')
+            disp(msg);
         else
             waitbar(p,f,msg);
         end
