@@ -8,8 +8,7 @@ import ten.*
 if ~(ismcc || isdeployed)
 if exist('tensor.m','file')~=2
     pw1=fileparts(mfilename('fullpath'));
-    %pth=fullfile(pw1,'..','tensor_toolbox');
-    pth=fullfile(pw1,'..','tensor_lite');
+    pth=fullfile(pw1,'..','tensor_toolbox');    
     addpath(pth);
 end
 end
