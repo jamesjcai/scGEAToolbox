@@ -9,13 +9,16 @@ function [coeff,score,latent]=kpca(X,k,sgm)
 if nargin<2, k=2; end
 if nargin<3, sgm=40; end
 n=size(X,1);
-%D=pdist2(X,X).^2;
-d=dot(X,X,2);
-D=d+d'-2*(X*X');
+
+try
+    d=dot(X,X,2);
+    D=d+d'-2*(X*X');
+catch
+    D=pdist2(X,X).^2;
+end
+
 K=exp(-D/(2*sgm^2));
 H=eye(n)-ones(n,n)/n;
 Kc=H*K*H;
 [coeff,latent]=eigs(Kc,k);   
 score=Kc*coeff;
-
-
