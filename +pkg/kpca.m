@@ -1,4 +1,4 @@
-function [coeff,score,latent]=kpca(X,k,sgm)
+function [coeff,score,latent]=kpca(X,k,sgm,isds)
 
 % how to use coeff of kpca:
 % 	[coeff] = pkg.kpca(XTaining);
@@ -8,15 +8,19 @@ function [coeff,score,latent]=kpca(X,k,sgm)
 
 if nargin<2, k=2; end
 if nargin<3, sgm=40; end
+if nargin<4, isds=false; end
+
 n=size(X,1);
-
-try
-    d=dot(X,X,2);
-    D=d+d'-2*(X*X');
-catch
-    D=pdist2(X,X).^2;
+if isds
+    D=X;
+else
+    try
+        d=dot(X,X,2);
+        D=d+d'-2*(X*X');
+    catch
+        D=pdist2(X,X).^2;
+    end
 end
-
 K=exp(-D/(2*sgm^2));
 H=eye(n)-ones(n,n)/n;
 Kc=H*K*H;

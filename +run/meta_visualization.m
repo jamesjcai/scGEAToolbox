@@ -25,19 +25,30 @@ end
 gui.gui_waitbar_adv(fw,1/nstep,'Meta Visualization - PCA...');
 [~,S{1}]=pca(data,NumComponents=ndim);
 
-gui.gui_waitbar_adv(fw,1/nstep,'Meta Visualization - KPCA1...');
-S{end+1}=pkg.kpca(data,ndim,30);
+try
+    d=dot(data,data,2);
+    DS=d+d'-2*(data*data');
+catch
+    DS=pdist2(data,data).^2;
+end
 
-gui.gui_waitbar_adv(fw,1/nstep,'Meta Visualization - KPCA2...');
-S{end+1}=pkg.kpca(data,ndim,40);
+try
+    gui.gui_waitbar_adv(fw,1/nstep,'Meta Visualization - MDS...');
+    %D=squareform(pdist(data));
+    S{end+1}=pkg.e_embedbyd(sqrt(DS),ndim,2);
+catch
+    
+end
 
-gui.gui_waitbar_adv(fw,1/nstep,'Meta Visualization - KPCA3...');
-S{end+1}=pkg.kpca(data,ndim,50);
 
-gui.gui_waitbar_adv(fw,2/nstep,'Meta Visualization - MDS...');
-D=squareform(pdist(data));
-S{end+1}=pkg.e_embedbyd(D,ndim,2);
+gui.gui_waitbar_adv(fw,2/nstep,'Meta Visualization - KPCA1...');
+S{end+1}=pkg.kpca(DS,ndim,30,true);
 
+gui.gui_waitbar_adv(fw,2/nstep,'Meta Visualization - KPCA2...');
+S{end+1}=pkg.kpca(DS,ndim,40,true);
+
+gui.gui_waitbar_adv(fw,2/nstep,'Meta Visualization - KPCA3...');
+S{end+1}=pkg.kpca(DS,ndim,50,true);
 
 gui.gui_waitbar_adv(fw,3/nstep,'Meta Visualization - TSNE 1/3...');
 S{end+1}=tsne(data,Perplexity=30,NumDimensions=ndim);
