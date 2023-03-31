@@ -12,6 +12,11 @@ if ~(ismcc || isdeployed)
 end
 
 nstep=6+1;
+try
+    zeros(size(X,2),size(X,2),14,'single');
+catch ME
+    error(ME.message);    
+end
 
 fw=gui.gui_waitbar_adv;
 Xn=log(1+sc_norm(X))';
@@ -37,7 +42,7 @@ try
     %D=squareform(pdist(data));
     S{end+1}=pkg.e_embedbyd(sqrt(DS),ndim,2);
 catch
-    
+
 end
 
 
