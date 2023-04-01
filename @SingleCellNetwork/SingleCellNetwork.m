@@ -17,11 +17,11 @@ classdef SingleCellNetwork
    T=virtualknockout(obj,gid)
    [scnout]=subnetwork(obj,gid)
    [scnout]=subnetwork_neighbors(obj,targetg,siz)
-
    
    function obj = SingleCellNetwork(A,g)
         if nargin<1, A=[]; end
-        if nargin<2 || isempty(g)
+        if nargin<2, g=[]; end
+        if ~isempty(A) && isempty(g)
             g=textscan(sprintf('g%d,',1:size(A,1)),'%s','delimiter',',');
             g=string(g{1});
             %g=string(transpose(1:size(A,1)));
@@ -29,7 +29,9 @@ classdef SingleCellNetwork
             %    g(k)=sprintf("g%s",g(k));
             %end
         end
-        g = matlab.lang.makeUniqueStrings(g);
+        if ~isempty(g)
+            g = matlab.lang.makeUniqueStrings(g);
+        end
         obj.G = digraph(A,g,'omitselfloops');
    end
    
