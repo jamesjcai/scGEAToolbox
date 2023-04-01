@@ -155,12 +155,18 @@ function callback_CompareGeneBtwCls(src,~)
 %     switch answer
 %         case 'AddModuleScore/Seurat'   
 
-            switch selitems{indx1}
-                case 'TF Activity Score [PMID:33135076]'
-                    methodid=4;
-                case 'TF Targets Expression Score'
-                    methodid=1;
-            end            
+        if strcmp(selecteditem,'TF Activity Score [PMID:33135076]')
+            methodid=4;
+        else
+            methodid=1;
+        end
+
+%             switch selitems{indx1}
+%                 case 'TF Activity Score [PMID:33135076]'
+%                     methodid=4;
+%                 case 'TF Targets Expression Score'
+%                     methodid=1;
+%             end            
             fw=gui.gui_waitbar;
                 [cs,tflist]=sc_tfactivity(sce.X,sce.g,[],species,methodid);
                 idx=find(tflist==string(listitems{indx2}));
