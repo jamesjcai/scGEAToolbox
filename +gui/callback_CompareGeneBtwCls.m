@@ -122,7 +122,7 @@ function callback_CompareGeneBtwCls(src,~)
             y=pkg.e_cellscores(sce.X,sce.g,indx2);
             ttxt=T.ScoreType(indx2);
             %gui.gui_waitbar(fw);
-        case 'Other Attribute'
+        case 'Other Attribute...'
             [y,clable,~,newpickclable]=gui.i_select1state(sce,true);
             if isempty(y)
                 helpdlg('No cell attribute is available.');
@@ -133,7 +133,8 @@ function callback_CompareGeneBtwCls(src,~)
             else
                 ttxt=clable;
             end
-        case {'TF Activity Score [PMID:33135076]','TF Targets Expression Score'}
+        case {'TF Activity Score [PMID:33135076] 🐢',...
+                'TF Targets Expression Score'}
             [~,T]=pkg.e_tfactivityscores(sce.X,sce.g,0);
             listitems=unique(T.tf);
 
@@ -146,8 +147,7 @@ function callback_CompareGeneBtwCls(src,~)
             species=gui.i_selectspecies(2);
             if isempty(species), return; end
             
-            %[cs]=gui.e_cellscore(sce,posg);
-
+%[cs]=gui.e_cellscore(sce,posg);
 %     answer = questdlg('Select algorithm:',...
 %     'Select Method', ...
 %     'UCell [PMID:34285779]','AddModuleScore/Seurat', ...
@@ -155,25 +155,22 @@ function callback_CompareGeneBtwCls(src,~)
 %     switch answer
 %         case 'AddModuleScore/Seurat'   
 
-        if strcmp(selecteditem,'TF Activity Score [PMID:33135076]')
-            methodid=4;
-        else
-            methodid=1;
-        end
-
-%             switch selitems{indx1}
-%                 case 'TF Activity Score [PMID:33135076]'
-%                     methodid=4;
-%                 case 'TF Targets Expression Score'
-%                     methodid=1;
-%             end            
+            if strcmp(selecteditem,'TF Targets Expression Score')
+                methodid=1;
+            else
+                methodid=4;
+            end
+            if methodid~=4
             fw=gui.gui_waitbar;
+            end
                 [cs,tflist]=sc_tfactivity(sce.X,sce.g,[],species,methodid);
                 idx=find(tflist==string(listitems{indx2}));
                 assert(length(idx)==1)
                 [y]=cs(idx,:);
                 ttxt=listitems{indx2};
+            if methodid~=4
             gui.gui_waitbar(fw);
+            end
 
         case 'TF Targets Expression Score 2'
                 species=gui.i_selectspecies(2);
