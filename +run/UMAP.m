@@ -33,9 +33,12 @@ end
 
 if nargout>1 || plotit
     if verbose
-        [s,~,c]=run_umap_main(data,'n_components',ndim);
+        [s,~,c]=run_umap_main(data, ...
+            'n_components',ndim);
     else
-        [s,~,c]=run_umap_main(data,'n_components',ndim,'verbose','none');
+        [s,~,c]=run_umap_main(data, ...
+            'n_components',ndim, ...
+            'verbose','none');
     end
 else
     if verbose
