@@ -3,10 +3,10 @@ if nargin<3, msg=[]; end
 if nargin<2, p=1; end
 if nargin<1 || isempty(f)
 
-    if ~usejava('desktop')
-        disp(msg);
-        return;
-    end    
+%     if ~usejava('desktop')
+%         disp(msg);
+%         return;
+%     end    
     f = waitbar(0,'Please wait...');
 %     pause(.5)
 %     fprintf('Processing your data...');
@@ -27,10 +27,10 @@ elseif isvalid(f) && strcmp(f.Tag,'TMWWaitbar')
         if isempty(msg)
             msg='Processing your data';
         end
-        if ~usejava('desktop')
-            disp(msg);
-        else
+        %if ~usejava('desktop')
+        %    disp(msg);
+        %else
             waitbar(p,f,msg);
-        end
+        %end
     end
 end
