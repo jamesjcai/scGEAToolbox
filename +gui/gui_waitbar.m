@@ -3,16 +3,11 @@ function [f]=gui_waitbar(f,witherror,mesg)
 if nargin<3 || isempty(mesg), mesg='Processing your data'; end
 if nargin<2 || isempty(witherror), witherror=false; end
 if nargin<1 || isempty(f)    
-    if ~usejava('desktop')
-        disp(mesg);
-        f=[];
-    else
-        f = waitbar(0,'Please wait...');
-        pause(.5)
-        fprintf('Processing your data...');
-        waitbar(.67,f,mesg);
-        fprintf('... ');
-    end
+    f = waitbar(0,'Please wait...');
+    pause(.5)
+    fprintf('Processing your data...');
+    waitbar(.67,f,mesg);
+    fprintf('... ');
     tic;    
     return;
 elseif isvalid(f) && strcmp(f.Tag,'TMWWaitbar')
