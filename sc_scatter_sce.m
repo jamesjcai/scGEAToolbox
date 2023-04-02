@@ -776,7 +776,7 @@ end
 %         if ~ismember(answer, {'tSNE', 'UMAP', 'PHATE'}), return; end
         
         [indx2,tf2] = listdlg('PromptString',...
-    {'Select embedding method:'},...
+    {'Select embedding method:'}, ...
      'SelectionMode','single','ListString', ...
      {'tSNE', 'UMAP', 'PHATE', ...
      'MetaViz [PMID:36774377] 🐢'},'ListSize',[175 130]);
@@ -785,7 +785,7 @@ end
         methodtag=methodopt{indx2};
         if isempty(sce.struct_cell_embeddings)
             sce.struct_cell_embeddings = struct('tsne', [], 'umap', [], ...
-                'phate', [], 'metviz', []);
+                'phate', [], 'metaviz', []);
         end
 
         %methodtag = lower(answer);
@@ -846,7 +846,7 @@ end
                 sce = sce.embedcells(methodtag, forced, usehvgs, ndim, K, whitelist);
             catch ME
                 if ~strcmpi(methodtag,'metaviz')
-                    gui.gui_waitbar(fw);
+                    gui.gui_waitbar(fw,true);
                 end
                 errordlg(ME.message);
                 return
