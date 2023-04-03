@@ -437,36 +437,36 @@ end
         end
     end
 
-    function AnnotateSubTypes(~, ~)
-        manuallyselect=false;
-        bestonly=true;
-        speciestag = gui.i_selectspecies;
-        if isempty(speciestag), return; end
-        subtype = questdlg('Which cell type?',...
-            'Select Cell Type', 'Neurons', 'T Cells','Neurons');
-        if isempty(subtype), return; end
-        organtag = "all";
-        databasetag = "panglaodb";
-        dtp = findobj(h,'Type','datatip');
-        delete(dtp);
-        cLdisp = cL;
-        if ~manuallyselect, fw=gui.gui_waitbar_adv; end
-        for i = 1:max(c)
-            if ~manuallyselect
-                gui.gui_waitbar_adv(fw,i/max(c));
-            end
-            ptsSelected = c == i;
-            [Tct] = pkg.local_celltypebrushed(sce.X, sce.g, ...
-                sce.s, ptsSelected, ...
-                speciestag, organtag, databasetag, bestonly, subtype);
-            if isempty(Tct)
-                ctxt={'Unknown'};
-            else
-                ctxt=Tct.C1_Cell_Type;
-            end            
-            if ~manuallyselect, gui.gui_waitbar_adv(fw); end
-        end
-    end
+%     function AnnotateSubTypes(~, ~)
+%         manuallyselect=false;
+%         bestonly=true;
+%         speciestag = gui.i_selectspecies;
+%         if isempty(speciestag), return; end
+%         subtype = questdlg('Which cell type?',...
+%             'Select Cell Type', 'Neurons', 'T Cells','Neurons');
+%         if isempty(subtype), return; end
+%         organtag = "all";
+%         databasetag = "panglaodb";
+%         dtp = findobj(h,'Type','datatip');
+%         delete(dtp);
+%         cLdisp = cL;
+%         if ~manuallyselect, fw=gui.gui_waitbar_adv; end
+%         for i = 1:max(c)
+%             if ~manuallyselect
+%                 gui.gui_waitbar_adv(fw,i/max(c));
+%             end
+%             ptsSelected = c == i;
+%             [Tct] = pkg.local_celltypebrushed(sce.X, sce.g, ...
+%                 sce.s, ptsSelected, ...
+%                 speciestag, organtag, databasetag, bestonly, subtype);
+%             if isempty(Tct)
+%                 ctxt={'Unknown'};
+%             else
+%                 ctxt=Tct.C1_Cell_Type;
+%             end            
+%             if ~manuallyselect, gui.gui_waitbar_adv(fw); end
+%         end
+%     end
 
 %     function AnnotateSubGroup(src, ~)
 %         [requirerefresh,highlightindex,newclassidenty]=gui.callback_AnnotateSubGroup(src);
