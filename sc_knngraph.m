@@ -1,15 +1,15 @@
-function [A,W]=sc_knngraph(s,k,plotit,method)
+function [A,W]=sc_knngraph(s,k,plotit,methodid)
 %Generate KNN group network from cell embeddings
 %
 % input: S - cell embedding coordinates
 % output: A - sparse adjacency matrix 
 %
 
-if nargin<4, method=1; end
+if nargin<4, methodid=1; end
 if nargin<3, plotit=false; end
 if nargin<2 || isempty(k), k=4; end
 
-switch method
+switch methodid
     case 1
         [mIdx] = knnsearch(s,s,'K',k+1);
         Graph=mIdx';
