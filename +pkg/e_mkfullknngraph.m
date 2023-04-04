@@ -1,4 +1,7 @@
-[A]=sc_knngraph(s,6);
+function [G,W]=e_mkfullknngraph(s,k)
+if nargin<2, k=5; end
+
+[A,W]=sc_knngraph(s,k);
 G=graph(A);
 b=conncomp(G);
 n=max(b);
@@ -20,13 +23,19 @@ T=minspantree(DG);
 Te=T.Edges;
 for k=1:size(Te,1)
     x=Te.EndNodes(k,1);
-    y=Te.EndNodes(k,2);    
-    A(Didx{x,y}(1),Didx{x,y}(2))=1;
-    %G=addedge(G,Didx{x,y}(1),Didx{x,y}(2),1.0);
+    y=Te.EndNodes(k,2);
+    a=Didx{x,y}(1);
+    b=Didx{x,y}(2);
+    A(a,b)=1;
+    W(a,b)=norm(s(a,:)-s(b,:));
+    W(b,a)=W(a,b);
+    G=addedge(G,a,b,1.0);
 end
 %A=G.adjacency;
 
-%%
+end
+
+%{
 figure;
 hold on
 for i = 1 : size(A,2)
@@ -45,3 +54,4 @@ for i = 1 : size(A,2)
     end
 end
 hold off
+%}

@@ -64,7 +64,7 @@ end
 
 if plotit
     figure;    
-    scatter3(xyz(1,:),xyz(2,:),xyz(3,:));  % 'filled','MarkerFaceAlpha',.5);
+    scatter3(xyz(1,:),xyz(2,:),xyz(3,:), 'filled','MarkerFaceAlpha',.1);
     hold on
     plot3(xyz1(1,:),xyz1(2,:),xyz1(3,:),'-','linewidth',4);
     xlabel('Mean, log');
