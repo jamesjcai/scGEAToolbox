@@ -1,13 +1,13 @@
 <deployment-project plugin="plugin.toolbox" plugin-version="1.0">
   <configuration build-checksum="3889589680" file="D:\GitHub\scGEAToolbox\scGEAToolbox.prj" location="D:\GitHub\scGEAToolbox" name="scGEAToolbox" target="target.toolbox" target-name="Package Toolbox">
     <param.appname>scGEAToolbox</param.appname>
-    <param.authnamewatermark />
-    <param.email />
-    <param.company />
+    <param.authnamewatermark>James Cai</param.authnamewatermark>
+    <param.email>jcai@tamu.edu</param.email>
+    <param.company>Texas A&amp;M University</param.company>
     <param.summary>Single-cell Gene Expression Analysis Toolbox</param.summary>
     <param.description>scRNAseq data analysis toolbox</param.description>
     <param.screenshot>${PROJECT_ROOT}\resources\scgeatool.png</param.screenshot>
-    <param.version>23.2.0</param.version>
+    <param.version>23.2.1</param.version>
     <param.output>${PROJECT_ROOT}\scGEAToolbox.mltbx</param.output>
     <param.products.name>
       <item>Statistics and Machine Learning Toolbox</item>
@@ -158,6 +158,7 @@ resources/STRING/stringdb_mouse.mat
       <file>${PROJECT_ROOT}\sc_mtratio.m</file>
       <file>${PROJECT_ROOT}\sc_norm.m</file>
       <file>${PROJECT_ROOT}\sc_pcnet.m</file>
+      <file>${PROJECT_ROOT}\sc_pcnetbat.m</file>
       <file>${PROJECT_ROOT}\sc_pcnetpar.m</file>
       <file>${PROJECT_ROOT}\sc_phate.m</file>
       <file>${PROJECT_ROOT}\sc_pickmarkers.m</file>
