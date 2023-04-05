@@ -23,14 +23,14 @@ if nargin<2, genelist=string(1:size(X,1)); end
 % lgcv=zscore(lgcv);
 
 
-[~,i]=max(lgcv);
-xyz=[lgu dropr lgcv];
+%[~,i]=max(lgcv);
+xyz=[lgu lgcv dropr]';
 
-[~,j]=sort(pdist2(xyz,xyz(i,:)));
-xyz=xyz(j,:)';
-lgu=lgu(j);
-dropr=dropr(j);
-lgcv=lgcv(j);
+% [~,j]=sort(pdist2(xyz,xyz(i,:)));
+% xyz=xyz(j,:)';
+% lgu=lgu(j);
+% dropr=dropr(j);
+% lgcv=lgcv(j);
 
 %xyz=[lgu dropr lgcv]';
 
@@ -48,9 +48,9 @@ pval=normcdf(d,0,distFit.sigma,'upper');
 [~,~,~,fdr]=pkg.fdr_bh(pval);
 
 if ~isempty(genes)
-   T=table(genes,lgu,dropr,lgcv,d,pval,fdr);   
+   T=table(genes,lgu,lgcv,dropr,d,pval,fdr);   
 else
-   T=table(lgu,dropr,lgcv,d,pval,fdr);   
+   T=table(lgu,lgcv,dropr,d,pval,fdr);   
 end
 % 'variablenames',{'Genes','Log10_Mean','Dropout_Rate','Log10_CV','Deviation_3DFeature'});
 
@@ -68,8 +68,9 @@ if plotit
     hold on
     plot3(xyz1(1,:),xyz1(2,:),xyz1(3,:),'-','linewidth',4);
     xlabel('Mean, log');
-    ylabel('Dropout rate (% of zeros)');
-    zlabel('CV, log');
+    ylabel('CV, log');
+    zlabel('Dropout rate (% of zeros)');
+    
     if ~isempty(genes)
         dt=datacursormode;
         dt.UpdateFcn = {@i_myupdatefcn3,genes,Xout};
@@ -77,4 +78,3 @@ if plotit
     hold off
 end
 end
-

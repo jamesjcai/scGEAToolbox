@@ -6,8 +6,8 @@ if nargin<3, dofit=true; end
 if nargin<2, g=[]; end
 [lgu,dropr,lgcv,g]=sc_genestat(X,g);
 x=lgu;
-y=dropr;
-z=lgcv;
+z=dropr;
+y=lgcv;
 if showdata
     FigureHandle=figure;
     hAx = axes('Parent', FigureHandle);
@@ -35,8 +35,9 @@ end
 %box on
 %legend({'Genes','Spline fit'});
 xlabel('Mean, log');
-ylabel('Dropout rate (% of zeros)');
-zlabel('CV, log');
+ylabel('CV, log');
+zlabel('Dropout rate (% of zeros)');
+
 
 
 % [xData, yData, zData] = prepareSurfaceData(x,y,z);
