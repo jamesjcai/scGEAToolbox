@@ -120,7 +120,7 @@ end
             
             tgenes=g(ptsSelected);
             answer=gui.timeoutdlg(@(x){questdlg('Which analysis?','', ...
-                'Enrichr','GOrilla','Enrichr+GOrilla','Enrichr+GOrilla')},15);
+                'Enrichr','GOrilla','Enrichr+GOrilla','Enrichr')},15);
             if isempty(answer), return; end
             switch answer
                 case 'Enrichr'
