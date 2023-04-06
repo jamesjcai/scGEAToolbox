@@ -615,15 +615,21 @@ end
             end
         end
         
+        
         if gui.callback_Harmonypy(src)
             sce = guidata(FigureHandle);
             [c, cL] = grp2idx(sce.c);
             RefreshAll(src, 1, true, false);
-            ButtonName = questdlg('Update Saved Embedding?','', ...
-                'tSNE','UMAP','PHATE','tSNE');
-            methodtag=lower(ButtonName);
-            if ismember(methodtag,{'tsne','umap','phate'})
-                sce.struct_cell_embeddings.(methodtag)=sce.s;
+
+            ButtonName = questdlg('Update Saved Embedding?','');
+            switch ButtonName
+                case 'Yes'        
+                    [methodtag]=i_pickembedmethod;
+                    if isempty(methodtag), return; end        
+                    if ismember(methodtag,{'tsne','umap','phate','metaviz'})
+                        sce.struct_cell_embeddings.(methodtag)=sce.s;
+                    end
+                    helpdlg(sprintf('%s Embedding is updated.',methodtag),'');                    
             end
         end
         guidata(FigureHandle, sce);
@@ -775,14 +781,18 @@ end
 %                           'tSNE', 'UMAP', 'PHATE', 'tSNE');
 %         if ~ismember(answer, {'tSNE', 'UMAP', 'PHATE'}), return; end
         
-        [indx2,tf2] = listdlg('PromptString',...
-    {'Select embedding method:'}, ...
-     'SelectionMode','single','ListString', ...
-     {'tSNE', 'UMAP', 'PHATE', ...
-     'MetaViz [PMID:36774377] 🐢'},'ListSize',[175 130]);
-        if ~tf2, return; end
-        methodopt={'tsne','umap','phate','metaviz'};
-        methodtag=methodopt{indx2};
+%         [indx2,tf2] = listdlg('PromptString',...
+%     {'Select embedding method:'}, ...
+%      'SelectionMode','single','ListString', ...
+%      {'tSNE', 'UMAP', 'PHATE', ...
+%      'MetaViz [PMID:36774377] 🐢'},'ListSize',[175 130]);
+%         if ~tf2, return; end
+%         methodopt={'tsne','umap','phate','metaviz'};
+%         methodtag=methodopt{indx2};
+
+        [methodtag]=i_pickembedmethod;
+        if isempty(methodtag), return; end
+
         if isempty(sce.struct_cell_embeddings)
             sce.struct_cell_embeddings = struct('tsne', [], 'umap', [], ...
                 'phate', [], 'metaviz', []);

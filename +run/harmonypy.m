@@ -1,4 +1,7 @@
 function [sout]=harmonypy(s,batchid,usepylib)
+
+isdebug=false;
+
 if nargin<3, usepylib=false; end
 if nargin<2, error('[s]=run.harmonypy(s,batchid)'); end
 oldpth=pwd();
@@ -6,7 +9,12 @@ pw1=fileparts(mfilename('fullpath'));
 wrkpth=fullfile(pw1,'external','py_harmonypy');
 cd(wrkpth);
 
-if exist('./output.csv','file'), delete('./output.csv'); end
+tmpfilelist={'output.csv','input1.csv','input2.csv'};
+
+if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+
+
+%if exist('./output.csv','file'), delete('./output.csv'); end
 %writematrix(s,'input1.csv');
 writetable(array2table(s),'input1.csv');
 batchidx=matlab.lang.makeValidName(string(batchid));
@@ -25,7 +33,22 @@ if usepylib
     sout=np2mat(ho.Z_corr.T);
 else    
     x=pyenv;
-    pkg.i_add_conda_python_path;
+    
+    try
+        pkg.i_add_conda_python_path;
+    catch        
+    end
+    cmdlinestr=sprintf('"%s" "%s%srequire.py"', ...
+            x.Executable,wrkpth,filesep);
+    disp(cmdlinestr)
+    [status,cmdout]=system(cmdlinestr,'-echo');
+    if status~=0
+        cd(oldpth);
+        sprintf('%s\n',cmdout);
+        % waitfor(errordlg(sprintf('%s',cmdout)));
+        error('harmony-py has not been installed properly.');
+    end
+
     cmdlinestr=sprintf('"%s" "%s%sscript.py"',x.Executable,wrkpth,filesep);
     disp(cmdlinestr)
     [status]=system(cmdlinestr);
@@ -35,9 +58,7 @@ else
         sout=[];
     end
 end
-if exist('./input1.csv','file'), delete('./input1.csv'); end
-if exist('./input2.csv','file'), delete('./input2.csv'); end
-if exist('./output.csv','file'), delete('./output.csv'); end
+if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 cd(oldpth);
 end
 

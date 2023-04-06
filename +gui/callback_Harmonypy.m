@@ -37,6 +37,9 @@ end
 %                 return;
 %         end
 
+usepylib=false;
+
+%{
         answer = questdlg('Using MATLAB engine for Python or Calling Python script?', ...
             'Engine Interface', ...
             'Use MATLAB Engine for Python','Call Python Script',...
@@ -45,17 +48,17 @@ end
             case 'Use MATLAB Engine for Python'
                 usepylib=true;
             case 'Call Python Script'
-                usepylib=false;                
+                usepylib=false;
             case {'Cancel',''}
                 return;
             otherwise
                 return;
         end        
-        
+%}      
         
         fw=gui.gui_waitbar;
         try
-            s=run.harmonypy(sce.s,sce.c_batch_id,usepylib);
+            [s]=run.harmonypy(sce.s,sce.c_batch_id,usepylib);
             if isempty(s) || isequal(sce.s,s)
                 gui.gui_waitbar(fw);
                 errordlg("Harmonypy Running Error");
@@ -63,9 +66,10 @@ end
             end
             sce.s=s;
         catch ME
-            gui.gui_waitbar(fw);
+            gui.gui_waitbar(fw,true);
             errordlg(ME.message);
-            rethrow(ME);
+            %rethrow(ME);
+            return;
         end 
             gui.gui_waitbar(fw);
     
