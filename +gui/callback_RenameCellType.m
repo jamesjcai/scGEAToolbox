@@ -35,15 +35,15 @@ function [requirerefresh]=callback_RenameCellType(src)
         end
         requirerefresh=true;
     else
-        [ci, cLi] = grp2idx(sce.c_cell_type_tx);
+        [ci, cLi] = pkg.i_grp2idxsorted(sce.c_cell_type_tx);
         
-        %---------
-        [cLisorted,idx]=natsort(cLi);
-        cisorted=ci;
-        for k=1:length(idx), cisorted(ci==idx(k))=k; end
-        ci=cisorted;
-        cLi=cLisorted;
-        %----------
+        % %---------
+        % [cLisorted,idx]=natsort(cLi);
+        % cisorted=ci;
+        % for k=1:length(idx), cisorted(ci==idx(k))=k; end
+        % ci=cisorted;
+        % cLi=cLisorted;
+        % %----------
         
         [indxx, tfx] = listdlg('PromptString',...
             {'Select cell type'},...

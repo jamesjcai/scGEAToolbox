@@ -27,5 +27,5 @@ function [requirerefresh]=callback_RenameGenes(src)
    sce.g(idx)=renamedglist;    
    requirerefresh=true;
    guidata(FigureHandle, sce);
-   helpdlg(sprintf('Successfully renamed %d genes.',length(glist)),'');
+   helpdlg(sprintf('Renamed %d genes.',length(glist)),'');
 end
