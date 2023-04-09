@@ -5,10 +5,12 @@ function [coeff,score,latent]=kpca(X,k,sgm,isds)
 %   Ktest = constructKernel(XTest)
 %   Y = Ktest*coeff;
 %   Y is the embedding result of XTest.
+%
+% (c) 2023 James Cai jcai@tamu.edu
 
 if nargin<2, k=2; end
 if nargin<3, sgm=40; end
-if nargin<4, isds=false; end
+if nargin<4, isds=false; end    % if true, then input X is a distance matrix
 
 n=size(X,1);
 if isds

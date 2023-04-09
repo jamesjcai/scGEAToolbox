@@ -14,7 +14,17 @@ function [requirerefresh]=callback_RenameBatchID(src,~)
     if ~isstring(sce.c_batch_id)
         sce.c_batch_id=string(sce.c_batch_id);
     end
-    [ci, cLi] = grp2idx(sce.c_batch_id);
+    [ci, cLi] = pkg.i_grp2idxsorted(sce.c_batch_id);
+
+    % %---------
+    % [cLisorted,idx]=natsort(cLi);
+    % cisorted=ci;
+    % for k=1:length(idx), cisorted(ci==idx(k))=k; end
+    % ci=cisorted;
+    % cLi=cLisorted;
+    % %----------
+   
+
     [indxx, tfx] = listdlg('PromptString',...
         {'Select batch ID'},...
         'SelectionMode', 'single',...
