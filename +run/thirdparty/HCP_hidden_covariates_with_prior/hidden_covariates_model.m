@@ -1,4 +1,4 @@
-function [Z,B,U,o] = hidden_covariate_model(F,Y,k,lambda,lambda2,lambda3,iter)
+function [Z,B,U,o] = hidden_covariates_model(F,Y,k,lambda,lambda2,lambda3,iter)
 %
 %
 % function [Z,B,U,o,error,error1,error2,dz,db,du] = hidden_covariate_linear(F,Y,k,lambda,lambda2,lambda3,iter);
