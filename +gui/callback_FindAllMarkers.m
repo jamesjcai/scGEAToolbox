@@ -19,11 +19,15 @@ end
     [thisc,~]=gui.i_select1class(sce);
     if isempty(thisc), return; end
 
-    T=pkg.e_findallmarkers(sce.X,sce.g,thisc,[],[],[],true);
-    needwait=true;
-    [answer,filename]=gui.i_exporttable(T,needwait);
-    if ~isempty(answer)
-        disp(filename);
-        helpdlg(sprintf('All Markers Table saved.'),'');
+    [T]=pkg.e_findallmarkers(sce.X,sce.g,thisc,[],[],[],true);
+    if ~isempty(T)
+        needwait=true;
+        [answer,filename]=gui.i_exporttable(T,needwait);
+        if ~isempty(answer)
+            disp(filename);
+            helpdlg(sprintf('All Markers Table saved.'),'');
+        end
+    else
+            helpdlg('No results.','');
     end
 
