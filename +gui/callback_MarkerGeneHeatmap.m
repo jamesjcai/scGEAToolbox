@@ -176,8 +176,6 @@ fliped=false;
         colormap(flipud(cm));
     end
 
-
-
     function i_dotplotx(~,~)
         try            
             f=gui.i_dotplot(sce.X,sce.g,c,cL,MX);
