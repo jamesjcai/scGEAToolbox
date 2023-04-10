@@ -46,7 +46,6 @@ function callback_DEGene2Groups(src,~)
                 fw=gui.gui_waitbar;
                 T=run.DESeq2r(sce.X(:,i1),sce.X(:,i2),sce.g);
                 gui.gui_waitbar(fw);
-
             case 'mast'
                 [ok]=gui.i_confirmscript('DE analysis (MAST)', ...
                     'R_MAST','r');
@@ -128,48 +127,81 @@ end
         matlab.lang.makeValidName(string(cL1)),matlab.lang.makeValidName(string(cL2)));
     if isatac, T.gene="chr"+T.gene; end
 
-    [filetype,filesaved]=gui.i_exporttable(T,true,'T',outfile);
+    [filetype,filesaved]=gui.i_exporttable(T,true,'T', outfile);
+    tf=0;
+    if ~(ismcc || isdeployed) && strcmp(filetype,'Workspace')
+        [Tup,Tdn]=pkg.e_processDETable(T,true);
+        labels = {'Save DE results (selected up-regulated) to variable named:',...
+            'Save DE results (selected down-regulated) to variable named:'}; 
+        vars = {'Tup','Tdn'}; values = {Tup,Tdn};
+        [~,tf]=export2wsdlg(labels,vars,values);
+    end
+   
+    if ~isempty(filesaved)
+        if strcmp(filetype,'Excel file')
+            answer = questdlg('Save up- and down-regulated genes to seperate sheets?');
+            if strcmp(answer,'Yes')            
+                [Tup,Tdn]=pkg.e_processDETable(T,true);
+                % strcmp(extractAfter(filesaved,strlength(filesaved)-4),'xlsx')
+                writetable(Tup,filesaved,"FileType","spreadsheet",'Sheet','Up-regulated');
+                writetable(Tdn,filesaved,"FileType","spreadsheet",'Sheet','Down-regulated'); 
+                waitfor(helpdlg(sprintf('Result has been saved in %s',filesaved),''));
+                %writetable(Tup,fullfile(tempdir,sprintf('%s_up.xlsx',outfile)),'FileType','spreadsheet',);
+                %writetable(Tdn,fullfile(tempdir,sprintf('%s_up.xlsx',outfile)),'FileType','spreadsheet');
+            end
+        elseif strcmp(filetype,'Text file')
+            % strcmp(extractAfter(filesaved,strlength(filesaved)-3),'txt')
+            answer = questdlg('Save up- and down-regulated genes to seperate files?');
+            if strcmp(answer,'Yes')
+                [Tup,Tdn]=pkg.e_processDETable(T,true);
+                [~,filesaved1]=gui.i_exporttable(Tup,true,'Tup','Upregulated','Text file');
+                [~,filesaved2]=gui.i_exporttable(Tdn,true,'Tdn','Downregulated','Text file');
+            end
+        end
+    end
+
+
 
 %    if ~(ismcc || isdeployed)
-        answer = questdlg('Save up- and down-regulated genes for enrichment analysis?');
-
-        if strcmp(answer,'Yes')
-            [Tup,Tdn]=pkg.e_processDETable(T,true);
-            tf=0;
-            if ~(ismcc || isdeployed) && strcmp(filetype,'Workspace')
-                labels = {'Save DE results (selected up-regulated) to variable named:',...
-                    'Save DE results (selected down-regulated) to variable named:'}; 
-                vars = {'Tup','Tdn'}; values = {Tup,Tdn};
-                [~,tf]=export2wsdlg(labels,vars,values);
-            end
-
-            if ~isempty(filesaved)
-                if strcmp(filetype,'Excel file')
-                    % strcmp(extractAfter(filesaved,strlength(filesaved)-4),'xlsx')
-                    writetable(Tup,filesaved,"FileType","spreadsheet",'Sheet','Up-regulated');
-                    writetable(Tdn,filesaved,"FileType","spreadsheet",'Sheet','Down-regulated'); 
-                    waitfor(helpdlg(sprintf('Result has been saved in %s',filesaved),''));
-                    %writetable(Tup,fullfile(tempdir,sprintf('%s_up.xlsx',outfile)),'FileType','spreadsheet',);
-                    %writetable(Tdn,fullfile(tempdir,sprintf('%s_up.xlsx',outfile)),'FileType','spreadsheet');
-                elseif strcmp(filetype,'Text file')
-                    % strcmp(extractAfter(filesaved,strlength(filesaved)-3),'txt')
-                    [~,filesaved1]=gui.i_exporttable(Tup,true,'Tup');
-                    if ~isempty(filesaved1)
-                        waitfor(helpdlg(sprintf('Result has been saved in %s',filesaved1),''));
-                    end
-                    [~,filesaved2]=gui.i_exporttable(Tdn,true,'Tdn');
-                    if ~isempty(filesaved2)
-                        waitfor(helpdlg(sprintf('Result has been saved in %s',filesaved2),''));
-                    end
-                end
-            end
+        % answer = questdlg('Save up- and down-regulated genes for enrichment analysis?');
+        % 
+        % if strcmp(answer,'Yes')
+        %     [Tup,Tdn]=pkg.e_processDETable(T,true);
+        %     tf=0;
+        %     if ~(ismcc || isdeployed) && strcmp(filetype,'Workspace')
+        %         labels = {'Save DE results (selected up-regulated) to variable named:',...
+        %             'Save DE results (selected down-regulated) to variable named:'}; 
+        %         vars = {'Tup','Tdn'}; values = {Tup,Tdn};
+        %         [~,tf]=export2wsdlg(labels,vars,values);
+        %     end
+        % 
+        %     if ~isempty(filesaved)
+        %         if strcmp(filetype,'Excel file')
+        %             % strcmp(extractAfter(filesaved,strlength(filesaved)-4),'xlsx')
+        %             writetable(Tup,filesaved,"FileType","spreadsheet",'Sheet','Up-regulated');
+        %             writetable(Tdn,filesaved,"FileType","spreadsheet",'Sheet','Down-regulated'); 
+        %             %waitfor(helpdlg(sprintf('Result has been saved in %s',filesaved),''));
+        %             %writetable(Tup,fullfile(tempdir,sprintf('%s_up.xlsx',outfile)),'FileType','spreadsheet',);
+        %             %writetable(Tdn,fullfile(tempdir,sprintf('%s_up.xlsx',outfile)),'FileType','spreadsheet');
+        %         elseif strcmp(filetype,'Text file')
+        %             % strcmp(extractAfter(filesaved,strlength(filesaved)-3),'txt')
+        %             [~,filesaved1]=gui.i_exporttable(Tup,true,'Tup');
+        %             if ~isempty(filesaved1)
+        %                 waitfor(helpdlg(sprintf('Result has been saved in %s',filesaved1),''));
+        %             end
+        %             [~,filesaved2]=gui.i_exporttable(Tdn,true,'Tdn');
+        %             if ~isempty(filesaved2)
+        %                 waitfor(helpdlg(sprintf('Result has been saved in %s',filesaved2),''));
+        %             end
+        %         end
+        %     end
 
             if tf==1
                 disp('To run enrichment analysis, type:')
                 disp('run.Enrichr(Tup.gene(1:200))')
                 disp('run.Enrichr(Tdn.gene(1:200))')
             end
-        end
+        %end
         %return;
     
     

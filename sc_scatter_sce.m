@@ -1494,7 +1494,9 @@ end
                 idx = find(c == i);
                 siv = sce.s(idx, :);
                 si = mean(siv, 1);
+                % si=geometric_median(siv');
                 [k] = dsearchn(siv, si);
+                %[~, k] = medoid(siv);  geometric_median
                 datatip(h, 'DataIndex', idx(k));
             end
             ptlabelclusters.State = 'on';

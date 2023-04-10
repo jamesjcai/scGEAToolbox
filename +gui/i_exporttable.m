@@ -1,15 +1,22 @@
-function [answer,filename]=i_exporttable(T,needwait,TName,defname)
+function [answer,filename]=i_exporttable(T,needwait,TName,defname,preanswer)
+
+if nargin<5, preanswer=[]; end
 if nargin<4, defname=[]; end
 if nargin<3, TName='T'; end
 if nargin<2, needwait=false; end
+
 filename=[];
-    
-if ~(ismcc || isdeployed)
-    answer = questdlg('Export & save data to:','',...
-        'Workspace','Text file','Excel file','Workspace');
+
+if ~isempty(preanswer)
+    answer=preanswer;
 else
-    answer = questdlg('Export & save data to:','',...
-        'Text file','Excel file','MAT file','Text file');
+    if ~(ismcc || isdeployed)
+        answer = questdlg('Export & save data to:','',...
+            'Workspace','Text file','Excel file','Workspace');
+    else
+        answer = questdlg('Export & save data to:','',...
+            'Text file','Excel file','MAT file','Text file');
+    end
 end
 
 if isstring(TName)
@@ -20,8 +27,7 @@ switch answer
     case 'Workspace'
             labels = {'Save to variable named:'}; 
             vars = {TName};
-            values = {T};
-            
+            values = {T};            
             if needwait
                 waitfor(export2wsdlg(labels,vars,values));
             else
