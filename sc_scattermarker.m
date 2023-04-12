@@ -44,6 +44,8 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
             if issparse(c)
                 c = full(c);
             end
+
+            titxt='';
             switch methodid
                 case 1
                     % within_stemscatter(x, y, c);
@@ -52,7 +54,7 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
                     set(h1,'XTickLabel',[]);
                     set(h1,'YTickLabel',[]);
                     set(h1,'ZTickLabel',[]);
-                    grid on                    
+                    grid on
                 case 2
                     if isempty(z)
                         scatter(x, y, sz, c, 'filled');
@@ -66,7 +68,7 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
                     grid on                    
                 case 3
 
-                    
+                       
                 case 4
                     h1=subplot(1, 2, 1);
                     sc_scattermarker(X, genelist, s, targetg, 2, sz, false);
@@ -126,25 +128,29 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
                     else
                         view(h2, 3);
                     end
-            end
+            end     % end of switch of methodid
+
+
             a=getpref('scgeatoolbox','prefcolormapname','autumn');
             gui.i_setautumncolor(c,a);
             cb=colorbar(h1);
             cb.Label.String = 'Average Expression';
             % cb.LineWidth = 1.5;
-            % pos = get(cb, 'Position');            
+            % pos = get(cb, 'Position');     
             % pos(4) = pos(4) / 2;
             % set(cb, 'Position', pos);
 
             ori_c=c;
             title(targetg);
             subtitle(titxt);
+
             % subtitle(sprintf('(%s/%s = %.2f%% nonzero)', ...
             %                    num2bankScalar(sum(c > 0)), ...
             %                    num2bankScalar(numel(c)), ...
             %                    100 * sum(c > 0) ./ numel(c)));
             % pt = uipushtool(defaultToolbar);
             % tx.ButtonDownFcn=@dispgname;
+            
             if showcam
                 hFig = gcf;
                 tb = uitoolbar(hFig);

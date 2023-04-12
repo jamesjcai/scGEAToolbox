@@ -1,4 +1,8 @@
 function callback_ExploreCellularCrosstalk(src,~)
+
+    answer = questdlg('This function is based on an unpublished method [DOI:10.1101/2020.02.01.930602]. Continue?');
+    if ~strcmp(answer,'Yes'), return; end
+
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
     if isempty(sce.c_cell_type_tx) || numel(unique(sce.c_cell_type_tx))<2

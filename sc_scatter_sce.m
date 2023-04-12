@@ -202,25 +202,23 @@ i_addmenu(m_exp,0,@MergeSubCellTypes,'Merge Subclusters of Same Cell Type');
 i_addmenu(m_exp,1,@WorkonSelectedGenes,'Select Top n HVGs to Work on...');
 i_addmenu(m_exp,0,@WorkonSelectedCells,'Select 50% Cells to Work on...');
 
-
 i_addmenu(m_exp,1,@DrawKNNNetwork,'Plot Cell kNN Network...');
 i_addmenu(m_exp,0,@DrawTrajectory,'Plot Cell Trajectory...');
-i_addmenu(m_exp,0,@ShowCellStemScatter,"Stem Scatter Plot...");
-i_addmenu(m_exp,0,@gui.callback_Violinplot,'Gene Violinplot...');
+%i_addmenu(m_exp,0,@ShowCellStemScatter,"Stem Scatter Feature Plot...");
+i_addmenu(m_exp,1,@gui.callback_Violinplot,'Gene Violin Plot...');
+i_addmenu(m_exp,0,@gui.callback_DrawDotplot,'Gene Dot Plot...');
 i_addmenu(m_exp,0,@gui.callback_GeneHeatMap,'Gene Heatmap...');
-i_addmenu(m_exp,0,@gui.callback_DrawDotplot,'Dot Plot...');
 
-i_addmenu(m_exp,1,{@DetermineCellTypeClustersGeneral,false},    'Annotate Cell Type Using Customized Markers...');
+i_addmenu(m_exp,1,@callback_ExploreCellularCrosstalk,'Talklr Intercellular Crosstalk [DOI:10.1101/2020.02.01.930602]...');
 i_addmenu(m_exp,0,@callback_CompareGCLBtwCls,     'Differential GCL Analysis [PMID:33139959]...');
-i_addmenu(m_exp,0,@callback_CalculateGeneStats,   'Calculate Gene Expression Statistics...');
-i_addmenu(m_exp,0,@callback_CellCycleLibrarySize, 'Library Size of Cell Cycle Phases...');
 i_addmenu(m_exp,0,@callback_DiffTFActivity,       'Differential TF Activity Analysis...');
+
+i_addmenu(m_exp,1,@callback_CalculateGeneStats,   'Calculate Gene Expression Statistics...');
+i_addmenu(m_exp,0,@callback_CellCycleLibrarySize, 'Library Size of Cell Cycle Phases...');
 i_addmenu(m_exp,0,@callback_ShowHgBGeneExpression,'Show HgB-genes Expression...');
 i_addmenu(m_exp,0,@callback_ShowMtGeneExpression, 'Show Mt-genes Expression...');
 i_addmenu(m_exp,0,@callback_TCellExhaustionScores,'T Cell Exhaustion Score...');
-
-
-
+i_addmenu(m_exp,1,{@DetermineCellTypeClustersGeneral,false},    'Annotate Cell Type Using Customized Markers...');
 i_addmenu(m_exp,1,@GEOAccessionToSCE,'Import Data Using GEO Accession...');
 i_addmenu(m_exp,0,{@MergeSCEs,1},'Merge SCEs in Workspace...');
 i_addmenu(m_exp,0,{@MergeSCEs,2},'Merge SCE Data Files...');
