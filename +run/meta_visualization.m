@@ -45,6 +45,7 @@ catch
 
 end
 
+%[y]=pkg.isomap(log(sc_norm(X)+1)');
 
 gui.gui_waitbar_adv(fw,2/nstep,'Meta Visualization - KPCA1...');
 S{end+1}=pkg.kpca(DS,ndim,30,true);

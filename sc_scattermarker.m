@@ -138,10 +138,11 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
 
             ori_c=c;
             title(targetg);
-            subtitle(sprintf('(%s/%s = %.2f%% nonzero)', ...
-                               num2bankScalar(sum(c > 0)), ...
-                               num2bankScalar(numel(c)), ...
-                               100 * sum(c > 0) ./ numel(c)));
+            subtitle(titxt);
+            % subtitle(sprintf('(%s/%s = %.2f%% nonzero)', ...
+            %                    num2bankScalar(sum(c > 0)), ...
+            %                    num2bankScalar(numel(c)), ...
+            %                    100 * sum(c > 0) ./ numel(c)));
             % pt = uipushtool(defaultToolbar);
             % tx.ButtonDownFcn=@dispgname;
             if showcam
@@ -169,14 +170,18 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
         delete(s2);
         s2=stem3(h2,x, y, c, 'marker', 'none', 'color', 'm');
         view(h2,ax,bx);
-        title(h2,titxt);
+        %title(h2,titxt);
+            title(h2,targetg);
+            subtitle(h2,titxt);
         
         [ax,bx]=view(h1);
         delete(s1);
         s1=scatter3(h1,x, y, z, sz, c, 'filled');
         view(h1,ax,bx);
         colorbar(h1);
-        title(h1,titxt);
+        %title(h1,titxt);
+        title(h1,targetg);
+        subtitle(h1,titxt);
     end
 
     function i_ResetExpr(~,~)
@@ -189,6 +194,10 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
         delete(s1);
         s1=scatter3(h1,x, y, z, sz, c, 'filled');
         %view(h1,axx,bxx);
+        title(h1,targetg);
+        subtitle(h1,titxt);
+        title(h2,targetg);
+        subtitle(h2,titxt);
     end
 
     

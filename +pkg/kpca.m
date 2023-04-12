@@ -26,5 +26,16 @@ end
 K=exp(-D/(2*sgm^2));
 H=eye(n)-ones(n,n)/n;
 Kc=H*K*H;
-[coeff,latent]=eigs(Kc,k);   
+
+%{
+https://lvdmaaten.github.io/drtoolbox/
+ell = size(X,1);
+        % Normalize kernel matrix K
+        mapping.column_sums = sum(K) / ell;                       % column sums
+        mapping.total_sum   = sum(mapping.column_sums) / ell;     % total sum
+        J = ones(ell, 1) * mapping.column_sums;                   % column sums (in matrix)
+        K = K - J - J';
+        K = K + mapping.total_sum;
+%}
+[coeff,latent]=eigs(Kc,k);
 score=Kc*coeff;

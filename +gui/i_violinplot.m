@@ -1,6 +1,6 @@
-function [f]=i_violinplot(y,thisc,ttxt,colorit,cL)
+function [f]=i_violinplot(y,thisc,ttxt,colorit,cLorder)
     if nargin<5
-        [~,cL]=grp2idx(thisc);
+        [~,cLorder]=grp2idx(thisc);
     end
     if nargin<4
         colorit=true;
@@ -25,9 +25,9 @@ function [f]=i_violinplot(y,thisc,ttxt,colorit,cL)
     isdescend=false;
     OldTitle=[];
     OldXTickLabel=[];
-    cL=strrep(cL,'_','\_');
+    cLorder=strrep(cLorder,'_','\_');
     thisc=strrep(string(thisc),'_','\_');
-    pkg.i_violinplot(y,thisc,colorit,cL);
+    pkg.i_violinplot(y,thisc,colorit,cLorder);
     title(strrep(ttxt,'_','\_'));
     %ylabel(selitems{indx1});
     movegui(f,'center');
@@ -40,17 +40,17 @@ function [f]=i_violinplot(y,thisc,ttxt,colorit,cL)
     function i_invertcolor(~,~)
         colorit=~colorit;
         cla;
-        pkg.i_violinplot(y,thisc,colorit,cL);
+        pkg.i_violinplot(y,thisc,colorit,cLorder);
     end
 
     function i_addsamplesize(~,~)
         b=gca;
         if isempty(OldXTickLabel)
-            a=zeros(length(cL),1);
+            a=zeros(length(cLorder),1);
             
             OldXTickLabel=b.XTickLabel;
-            for k=1:length(cL)
-                a(k)=sum(thisc==cL(k));
+            for k=1:length(cLorder)
+                a(k)=sum(thisc==cLorder(k));
                 b.XTickLabel{k}=sprintf('%s\\newline(n=%d)', ...
                     b.XTickLabel{k},a(k));
             end
@@ -84,10 +84,10 @@ function [f]=i_violinplot(y,thisc,ttxt,colorit,cL)
 
     function i_reordersamples(~,~)
 
-        [~,cL,noanswer]=gui.i_reordergroups(thisc);
+        [~,cLorder,noanswer]=gui.i_reordergroups(thisc);
         if noanswer, return; end
         cla
-        pkg.i_violinplot(y,thisc,colorit,cL);
+        pkg.i_violinplot(y,thisc,colorit,cLorder);
     end
 
 

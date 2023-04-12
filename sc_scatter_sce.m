@@ -206,8 +206,9 @@ i_addmenu(m_exp,0,@WorkonSelectedCells,'Select 50% Cells to Work on...');
 i_addmenu(m_exp,1,@DrawKNNNetwork,'Plot Cell kNN Network...');
 i_addmenu(m_exp,0,@DrawTrajectory,'Plot Cell Trajectory...');
 i_addmenu(m_exp,0,@ShowCellStemScatter,"Stem Scatter Plot...");
+i_addmenu(m_exp,0,@gui.callback_Violinplot,'Gene Violinplot...');
 i_addmenu(m_exp,0,@gui.callback_GeneHeatMap,'Gene Heatmap...');
-i_addmenu(m_exp,0,@callback_DrawDotplot,'Dot Plot...');
+i_addmenu(m_exp,0,@gui.callback_DrawDotplot,'Dot Plot...');
 
 i_addmenu(m_exp,1,{@DetermineCellTypeClustersGeneral,false},    'Annotate Cell Type Using Customized Markers...');
 i_addmenu(m_exp,0,@callback_CompareGCLBtwCls,     'Differential GCL Analysis [PMID:33139959]...');
