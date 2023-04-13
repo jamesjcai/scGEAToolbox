@@ -3,7 +3,7 @@ import sys
 abspath = os.path.abspath(__file__)
 dname = os.path.dirname(abspath)
 os.chdir(dname)
-os.chdir("D:\\GitHub\\scGEAToolbox\\+run\\external\\py_geosketch")
+# os.chdir("D:\\GitHub\\scGEAToolbox\\+run\\external\\py_geosketch")
 # os.chdir("C:\\Users\\jcai\\Documents\\GitHub\\scGEAToolbox\\+run\\external\\py_geosketch")
 
 from geosketch import gs
@@ -22,7 +22,7 @@ n = int(f['n'][()])
 #N = f.get('n')    # or f['n']
 #n=N[()].astype(int).item()
 f.close()
-X = counts.T    # X = [ sparse or dense matrix, samples in rows, features in columns ]
+X=counts.T    # X = [ sparse or dense matrix, samples in rows, features in columns ]
 sketch_index = gs(X, n, replace=False)
 
 #U, s, Vt = pca(X, k=100) # E.g., 100 PCs.

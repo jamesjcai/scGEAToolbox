@@ -44,8 +44,8 @@ function [idx]=py_geosketch(X,n)
     end
     
     fw=gui.gui_waitbar([],[],'Running geosketch...');
-    cmdlinestr=sprintf('"%s" "%s%sscript.py" %d', ...
-        x.Executable,wrkpth,filesep,tag);
+    cmdlinestr=sprintf('"%s" "%s%sscript.py"', ...
+        x.Executable,wrkpth,filesep);
     disp(cmdlinestr)
     [status]=system(cmdlinestr,'-echo');
     if isvalid(fw)
@@ -54,7 +54,7 @@ function [idx]=py_geosketch(X,n)
     
     if status==0 && exist('output.txt','file')
         T=readtable('output.txt');
-        idx=T.Var1;
+        idx=T.Var1+1;
     end
     
     if ~isdebug, pkg.i_deletefiles(tmpfilelist); end

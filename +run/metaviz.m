@@ -10,6 +10,7 @@ D=zeros(n,n,K,'single');
 for k=1:K
     d=pdist2(Sinput{k},Sinput{k});
     D(:,:,k)=d./vecnorm(d);
+    % (n^2)*(k-1)+1:(n^2)*(k)
 end
 %%
 for x=1:n              % n of cells

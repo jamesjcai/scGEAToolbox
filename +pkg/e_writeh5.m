@@ -15,4 +15,3 @@ if ~isempty(genelist)
     h5create(filename, '/g', size(genelist),'Datatype','string');
     h5write(filename, '/g', genelist);
 end
-

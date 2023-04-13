@@ -100,7 +100,7 @@ function [U,S,V] = randPCA(A,k,its,l)
 
 %   Copyright 2009 Mark Tygert.
 
-warning off;
+% warning off;
 
 %
 % Check the number of inputs.
@@ -217,7 +217,7 @@ if(((its+1)*l >= m/1.25) || ((its+1)*l >= n/1.25))
   V = V(:,1:k);
   S = S(1:k,1:k);
 
-  return
+  return;
 
 end
 
@@ -257,7 +257,7 @@ if(m >= n)
     F(1:m, (1+it*l):((it+1)*l)) = H;
   end
 
-  clear H;
+%  clear H;
 
 %
 % Form a matrix Q whose columns constitute an orthonormal basis
@@ -265,7 +265,7 @@ if(m >= n)
 %
   [Q,~,~] = qr(F,0);
 
-  clear F;
+  % clear F;
 
 %
 % SVD Q'*A to obtain approximations to the singular values
@@ -275,7 +275,7 @@ if(m >= n)
   [U2,S,V] = svd(Q'*A,'econ');
   U = Q*U2;
 
-  clear Q U2;
+  % clear Q U2;
 
 %
 % Retain only the leftmost k columns of U, the leftmost k columns of V,
@@ -323,7 +323,7 @@ if(m < n)
     F(1:n, (1+it*l):((it+1)*l)) = H;
   end
 
-  clear H;
+  % clear H;
 
 %
 % Form a matrix Q whose columns constitute an orthonormal basis
@@ -331,7 +331,7 @@ if(m < n)
 %
   [Q,~,~] = qr(F,0);
 
-  clear F;
+  % clear F;
 
 %
 % SVD A*Q to obtain approximations to the singular values
@@ -341,7 +341,7 @@ if(m < n)
   [U,S,V2] = svd(A*Q,'econ');
   V = Q*V2;
 
-  clear Q V2;
+  % clear Q V2;
 
 %
 % Retain only the leftmost k columns of U, the leftmost k columns of V,

@@ -180,6 +180,7 @@ i_addmenu(m_ext,0,@callback_RunSeuratSCTransform,'Run Seurat/R SCTransform (Seur
 i_addmenu(m_ext,0,@RunSeuratWorkflow,'Run Seurat/R Workflow (Seurat/R required)...');
 i_addmenu(m_ext,0,@callback_TrajectoryAnalysis,'Pseudotime Analysis (Monocle/R required)...');
 i_addmenu(m_ext,1,@callback_MELDPerturbationScore,'MELD Perturbation Score (MELD/Python required)...');
+i_addmenu(m_ext,0,@GeoSketching,'Geometric Sketching (geosketch/Python required)...');
 i_addmenu(m_ext,0,@HarmonyPy,'Batch Integration (Harmony/Python required)...');
 i_addmenu(m_ext,0,@DoubletDetection,'Detect Doublets (Scrublet/Python required)...');
 
@@ -200,7 +201,7 @@ i_addmenu(m_exp,0,@MergeSubCellTypes,'Merge Subclusters of Same Cell Type');
 
 
 i_addmenu(m_exp,1,@WorkonSelectedGenes,'Select Top n HVGs to Work on...');
-i_addmenu(m_exp,0,@WorkonSelectedCells,'Select 50% Cells to Work on...');
+i_addmenu(m_exp,0,@SubsampleCells,'Subsample 50% Cells to Work on...');
 
 i_addmenu(m_exp,1,@DrawKNNNetwork,'Plot Cell kNN Network...');
 i_addmenu(m_exp,0,@DrawTrajectory,'Plot Cell Trajectory...');
@@ -510,14 +511,48 @@ end
         RefreshAll(src, 1, true);
     end
 
-    function WorkonSelectedCells(src,~)
-        answer=questdlg('This function randomly samples 50% of cells. Continue?');
+    function GeoSketching(scr,~)
+        helpdlg('Under Development.');
+    end
+
+    function SubsampleCells(src,~)
+        answer=questdlg('This function subsamples 50% of cells. Continue?');
         if ~strcmp(answer,'Yes'), return; end
-        fw=gui.gui_waitbar;
-        idx=randperm(sce.NumCells);
-        sce=sce.removecells(idx(1:round(length(idx)/2)));
+        
+        answer=questdlg('Select method:','', ...
+            'Uniform Sampling', ...
+            'Geometric Sketching [PMID:31176620]','Uniform Sampling');
+        switch answer
+            case 'Uniform Sampling'
+                methodoption=1;
+            case 'Geometric Sketching [PMID:31176620]'
+                methodoption=2;
+                answerx=questdlg('This method requires Python environment and geosketch package installed. Continue?');
+                if ~strcmp(answerx,'Yes'), return; end
+            otherwise
+                return;
+        end
+
+        %fw=gui.gui_waitbar;
+        tn=round(sce.NumCells/2);
+        
+        if methodoption==1
+            idx=randperm(sce.NumCells);
+            ids=idx(1:tn);
+        elseif  methodoption==2
+            Xn=log(1+sc_norm(sce.X))';
+            [~,Xn]=pca(Xn,'NumComponents',300);
+            try
+                ids=run.py_geosketch(Xn,tn);
+            catch ME
+                %gui.gui_waitbar(fw,true);
+                errordlg(ME.message);
+                return;
+            end
+        end
+        sce=sce.selectcells(ids);
         c=sce.c;
-        gui.gui_waitbar(fw);
+        %gui.gui_waitbar(fw);
         RefreshAll(src, 1, true);
     end
 
