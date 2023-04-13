@@ -49,11 +49,18 @@ xlabel('Pseudotime')
 ylabel('Expression')
 
 pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'+run','thirdparty','locfit','m');
+pth=fullfile(pw1,'..','+run','thirdparty','locfit','m');
+
+% https://www.mathworks.com/matlabcentral/answers/3167-two-functions-with-the-same-name-how-to-directly-call-one-of-both
+oldpth=pwd();
+cd(pth);
+predict = @predict;
+cd(oldpth);
+
 if ~(ismcc || isdeployed), addpath(pth); end
-pth=fullfile(pw1,'+run','thirdparty','locfit','mex');
+pth=fullfile(pw1,'..','+run','thirdparty','locfit','mex');
 if ~(ismcc || isdeployed), addpath(pth); end
-pth=fullfile(pw1,'+run','thirdparty','locfit','source');
+pth=fullfile(pw1,'..','+run','thirdparty','locfit','source');
 if ~(ismcc || isdeployed), addpath(pth); end
 
 if size(t,2)~=1
@@ -62,7 +69,6 @@ end
 Pk=[];
 for k=1:size(x,1)
     fitm1 = locfit(t,x(k,:)');
-    % predict(fitm1,t)
     Pk=[Pk plot(t,predict(fitm1,t),'-','LineWidth',3)];
 end
 box on

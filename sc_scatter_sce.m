@@ -180,7 +180,7 @@ i_addmenu(m_ext,0,@callback_RunSeuratSCTransform,'Run Seurat/R SCTransform (Seur
 i_addmenu(m_ext,0,@RunSeuratWorkflow,'Run Seurat/R Workflow (Seurat/R required)...');
 i_addmenu(m_ext,0,@callback_TrajectoryAnalysis,'Pseudotime Analysis (Monocle/R required)...');
 i_addmenu(m_ext,1,@callback_MELDPerturbationScore,'MELD Perturbation Score (MELD/Python required)...');
-i_addmenu(m_ext,0,@GeoSketching,'Geometric Sketching (geosketch/Python required)...');
+i_addmenu(m_ext,0,{@SubsampleCells,2},'Geometric Sketching (geosketch/Python required)...');
 i_addmenu(m_ext,0,@HarmonyPy,'Batch Integration (Harmony/Python required)...');
 i_addmenu(m_ext,0,@DoubletDetection,'Detect Doublets (Scrublet/Python required)...');
 
@@ -515,10 +515,12 @@ end
         helpdlg('Under Development.');
     end
 
-    function SubsampleCells(src,~)
-        answer=questdlg('This function subsamples 50% of cells. Continue?');
-        if ~strcmp(answer,'Yes'), return; end
+    function SubsampleCells(src,~,methodoption)
+        if nargin<3, methodoption=[]; end
+        answer1=questdlg('This function subsamples 50% of cells. Continue?');
+        if ~strcmp(answer1,'Yes'), return; end
         
+        if isempty(methodoption)
         answer=questdlg('Select method:','', ...
             'Uniform Sampling', ...
             'Geometric Sketching [PMID:31176620]','Uniform Sampling');
@@ -527,19 +529,19 @@ end
                 methodoption=1;
             case 'Geometric Sketching [PMID:31176620]'
                 methodoption=2;
-                answerx=questdlg('This method requires Python environment and geosketch package installed. Continue?');
-                if ~strcmp(answerx,'Yes'), return; end
             otherwise
                 return;
         end
+        end
 
         %fw=gui.gui_waitbar;
-        tn=round(sce.NumCells/2);
-        
+        tn=round(sce.NumCells/2);        
         if methodoption==1
             idx=randperm(sce.NumCells);
             ids=idx(1:tn);
         elseif  methodoption==2
+            answerx=questdlg('This method requires Python environment and geosketch package installed. Continue?');
+            if ~strcmp(answerx,'Yes'), return; end
             Xn=log(1+sc_norm(sce.X))';
             [~,Xn]=pca(Xn,'NumComponents',300);
             try

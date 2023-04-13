@@ -5,17 +5,22 @@ pw1=fileparts(mfilename('fullpath'));
 if ~(ismcc || isdeployed)    
     pth=fullfile(pw1,'thirdparty','PHATE'); % for calling randmds.m
     addpath(pth);
-    pth1=fullfile(pw1,'thirdparty','umapFileExchange');
-    pth3=fullfile(pw1,'thirdparty','umapFileExchange','umap.jar');
+    pth1=fullfile(pw1,'thirdparty','cbrewer');
     addpath(pth1);
+    pth1=fullfile(pw1,'thirdparty','umapFileExchange');
+    addpath(pth1);
+    pth3=fullfile(pw1,'thirdparty','umapFileExchange','umap.jar');    
     javaaddpath(pth3);
 end
 
 nstep=6+1;
+usingmmfile=false;
 try
     zeros(size(X,2),size(X,2),14,'single');
 catch ME
-    error(ME.message);    
+    disp(ME.message);
+    usingmmfile=true;
+    disp('Using memory mapping file.');
 end
 
 fw=gui.gui_waitbar_adv;
@@ -85,7 +90,11 @@ gui.gui_waitbar_adv(fw,5/nstep,'Meta Visualization - PHATE 3/3...');
 S{end+1}=phate(sqrt(Xn), 't', 20, 'ndim', ndim, 'k', 30);
 
 gui.gui_waitbar_adv(fw,6/nstep,'Meta Visualization - METAVIZ');
-[Y]=run.metaviz(S,ndim);
+if usingmmfile
+    [Y]=run.metaviz_memmap(S,ndim);
+else
+    [Y]=run.metaviz_tensor(S,ndim);
+end
 gui.gui_waitbar_adv(fw);
 end
 

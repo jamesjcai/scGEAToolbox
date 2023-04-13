@@ -2,6 +2,9 @@
 
 pw1=cdgea;
 wrkpth=fullfile(pw1,'tensor_toolbox'); addpath(wrkpth);
+wrkpth=fullfile(pw1,'+run','thirdparty','locfit','m'); addpath(wrkpth);
+wrkpth=fullfile(pw1,'+run','thirdparty','locfit','mex'); addpath(wrkpth);
+wrkpth=fullfile(pw1,'+run','thirdparty','locfit','Neuro'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','cbrewer'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','DESeq2'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','GCL'); addpath(wrkpth);
