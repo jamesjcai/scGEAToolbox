@@ -107,7 +107,9 @@ function callback_CompareGeneBtwCls(src,~)
             if noanswer, return; end            
             colorit=true;
             cL=strrep(cL,'_','\_');
-            thisc=strrep(thisc,'_','\_');
+            if isstring(thisc)
+                thisc=strrep(thisc,'_','\_');
+            end
             gui.i_cascadeviolin(sce,Xt,thisc,glist, ...
                 'Expression Level',cL,colorit);
             return;

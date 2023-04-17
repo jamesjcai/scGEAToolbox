@@ -134,7 +134,7 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
             a=getpref('scgeatoolbox','prefcolormapname','autumn');
             gui.i_setautumncolor(c,a);
             cb=colorbar(h1);
-            cb.Label.String = 'Average Expression';
+            cb.Label.String =  'Expression Level';
             % cb.LineWidth = 1.5;
             % pos = get(cb, 'Position');     
             % pos(4) = pos(4) / 2;
