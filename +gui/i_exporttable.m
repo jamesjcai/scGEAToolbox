@@ -43,7 +43,11 @@ switch answer
            return;
         else			
            filename=fullfile(path,file);
-		   writetable(T,filename,'Delimiter','\t');
+           try
+    		   writetable(T,filename,'Delimiter','\t');
+           catch
+               writematrix(T,filename,'Delimiter','\t');
+           end
            pause(1);
            if needwait
                waitfor(helpdlg(sprintf('Result has been saved in %s',filename),''));
