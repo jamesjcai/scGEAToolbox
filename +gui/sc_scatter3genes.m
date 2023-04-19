@@ -6,8 +6,8 @@ if nargin<3, dofit=true; end
 if nargin<2, g=[]; end
 [lgu,dropr,lgcv,g]=sc_genestat(X,g);
 x=lgu;
-z=dropr;
 y=lgcv;
+z=dropr;
 if showdata
     FigureHandle=figure;
     hAx = axes('Parent', FigureHandle);
@@ -57,10 +57,10 @@ if dofit
 %     pp1 = splinefit(s,xyz,pieces,0.75);
 %     xyz1 = ppval(pp1,s);
     hold on
-    plot3(xyz1(1,:),xyz1(2,:),xyz1(3,:),'-','linewidth',4);
-    % scatter3(xyz1(1,:),xyz1(2,:),xyz1(3,:)); %,'MarkerEdgeAlpha',.8);
+    plot3(xyz1(:,1),xyz1(:,2),xyz1(:,3),'-','linewidth',4);
+    % scatter3(xyz1(:,1),xyz1(:,2),xyz1(:,3)); %,'MarkerEdgeAlpha',.8);
 
-    [~,d]=dsearchn(xyz1.',[x y z]);
+    [~,d]=dsearchn(xyz1,[x y z]);
     [~,hvgidx]=sort(d,'descend');
     
     %g(idx20)

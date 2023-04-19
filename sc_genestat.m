@@ -11,7 +11,7 @@ lgu=log(u);
 lgcv=log(cv);
 genes=genelist;
 if sortit
-    [xyz,i]=sortrows([lgu dropr lgcv],[1 2 3]);
+    [xyz,i]=sortrows([lgu dropr lgcv],[1 3 2]);
     lgu=xyz(:,1);
     dropr=xyz(:,2);
     lgcv=xyz(:,3);

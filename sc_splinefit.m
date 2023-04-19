@@ -24,7 +24,7 @@ if nargin<2, genelist=string(1:size(X,1)); end
 
 
 %[~,i]=max(lgcv);
-xyz=[lgu lgcv dropr]';
+xyz=[lgu lgcv dropr];
 
 % [~,j]=sort(pdist2(xyz,xyz(i,:)));
 % xyz=xyz(j,:)';
@@ -34,12 +34,15 @@ xyz=[lgu lgcv dropr]';
 
 %xyz=[lgu dropr lgcv]';
 
-s = cumsum([0;sqrt(diff(lgu(:)).^2 + diff(dropr(:)).^2 ...
-    + diff(lgcv(:)).^2)]);
-pp1 = splinefit(s,xyz,15,0.75);
-xyz1 = ppval(pp1,s);
+%s = cumsum([0;sqrt(diff(lgu(:)).^2 + diff(dropr(:)).^2 ...
+%    + diff(lgcv(:)).^2)]);
+s = cumsum([0;sqrt(diff(lgu(:)).^2 + diff(lgcv(:)).^2 ...
+    + diff(dropr(:)).^2)]);
 
-D=pdist2(xyz',xyz1');
+pp1 = splinefit(s,xyz.',15,0.75);
+xyz1 = ppval(pp1,s)';
+
+D=pdist2(xyz,xyz1);
 d=min(D,[],2);
 dx=d(d<=quantile(d,0.9));
 
@@ -63,10 +66,10 @@ if length(genes)~=length(genelist)
 end
 
 if plotit
-    figure;    
-    scatter3(xyz(1,:),xyz(2,:),xyz(3,:), 'filled','MarkerFaceAlpha',.1);
+    figure;
+    scatter3(xyz(:,1),xyz(:,2),xyz(:,3), 'filled','MarkerFaceAlpha',.1);
     hold on
-    plot3(xyz1(1,:),xyz1(2,:),xyz1(3,:),'-','linewidth',4);
+    plot3(xyz1(:,1),xyz1(:,2),xyz1(3,3),'-','linewidth',4);
     xlabel('Mean, log');
     ylabel('CV, log');
     zlabel('Dropout rate (% of zeros)');
@@ -77,4 +80,5 @@ if plotit
     end
     hold off
 end
+
 end
