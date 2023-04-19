@@ -32,7 +32,7 @@ function [idx]=py_geosketch(X,n)
     
     
     
-    tmpfilelist={'input.mat','output.txt'};
+    tmpfilelist={'input.mat','output.mat'};
     
     if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
     
@@ -52,10 +52,15 @@ function [idx]=py_geosketch(X,n)
         gui.gui_waitbar(fw,[],'Running geosketch is complete');
     end
     
-    if status==0 && exist('output.txt','file')
-        T=readtable('output.txt');
-        idx=T.Var1+1;
-    end
+    % if status==0 && exist('output.txt','file')
+    %     T=readtable('output.txt');
+    %     idx=T.Var1+1;
+    % end
+
+    if status==0 && exist('output.mat','file')
+        load("output.mat","idx")
+        idx=idx+1;
+    end    
     
     if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
     cd(oldpth);

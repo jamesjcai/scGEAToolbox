@@ -11,6 +11,7 @@ import numpy as np
 import h5py
 from fbpca import pca
 import pandas as pd
+from scipy.io import savemat
 
 f = h5py.File('input.mat','r')
 
@@ -30,4 +31,7 @@ sketch_index = gs(X, n, replace=False)
 #sketch_index = gs(X_dimred, N, replace=False)
 #X_sketch = X_dimred[sketch_index]
 
-pd.DataFrame(sketch_index).to_csv('output.txt',index=False,header=False)
+# pd.DataFrame(sketch_index).to_csv('output.txt',index=False,header=False)
+
+mdic = {"idx": np.array(sketch_index)}
+savemat("output.mat", mdic, oned_as='column')

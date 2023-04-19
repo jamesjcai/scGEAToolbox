@@ -552,10 +552,14 @@ end
                 return;
             end
         end
-        sce=sce.selectcells(ids);
-        c=sce.c;
-        %gui.gui_waitbar(fw);
-        RefreshAll(src, 1, true);
+        if ~isempty(ids)
+            sce=sce.selectcells(ids);
+            c=sce.c;
+            %gui.gui_waitbar(fw);
+            RefreshAll(src, 1, true);
+        else
+            errordlg('Running error. No action is taken.');
+        end
     end
 
     function SelectCellsByQC(src, ~)
