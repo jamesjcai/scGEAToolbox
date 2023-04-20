@@ -10,7 +10,8 @@ function callback_CompareGeneBtwCls(src,~)
     
 
     if length(unique(thisc))==1
-        answer=questdlg("All cells are in the same group. No comparison will be made. Continue?","");
+        answer=questdlg("All cells are in the same group. No comparison will be made. Continue?", ...
+            "",'Yes','No','Cancel','No');
         switch answer
             case 'Yes'
             otherwise
@@ -23,7 +24,7 @@ function callback_CompareGeneBtwCls(src,~)
         [indxx,tfx] = listdlg('PromptString',{'Select two groups:'},...
             'SelectionMode','multiple',...
             'ListString',listitems,...
-            'InitialValue',[1:n]);
+            'InitialValue',1:n);
         if tfx==1
             [y1,idx1]=ismember(listitems(indxx),cLi);
             assert(all(y1));

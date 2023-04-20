@@ -8,7 +8,7 @@ function callback_CalculateGeneStats(src,~)
 
     answer = questdlg('Grouping cells? Select Yes to pick a grouping variable. Select No to include all cells.','');
 
-    if strcmp(answer,'Yes'), 
+    if strcmp(answer,'Yes')
         [thisc,~]=gui.i_select1class(sce);
         if isempty(thisc), return; end    
         [c,cL] = grp2idx(thisc);
