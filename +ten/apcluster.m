@@ -196,10 +196,11 @@ end;
 % avoid degenerate solutions by adding a small amount of noise to the
 % input similarities
 if ~nonoise
-    rns=randn('state'); randn('state',0);
+    sd=rng(); 
+    rng('default');
     S=S+(eps*S+realmin*100).*rand(N,N);
-    randn('state',rns);
-end;
+    rng(sd);
+end
 
 % Place preferences on the diagonal of S
 if length(p)==1 for i=1:N S(i,i)=p; end;

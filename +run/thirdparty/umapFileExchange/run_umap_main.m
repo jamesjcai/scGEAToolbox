@@ -756,6 +756,9 @@ labels=[];
 beQuiet=strcmpi(args.verbose, 'none');
 extras=UMAP_extra_results;
 firstQf=[];
+
+% -------------
+
 if beGraphic
     xLabel=[];
     yLabel=[];
@@ -812,6 +815,9 @@ if beGraphic
         args.csv_file_or_data=csv_file_or_data;
     end
 end
+
+% -------------
+
 args=UmapUtil.RelocateExamples(args);
 csv_file_or_data=args.csv_file_or_data;
 if nargout>=3 && args.n_components>2
