@@ -79,20 +79,27 @@ function callback_CompareGeneBtwCls(src,~)
             if isempty(posg) || isempty(ctselected), return; end
             [y]=gui.e_cellscore(sce,posg);
         case 'Differentiation Potency [PMID:33244588]'
-            [a]=contains(sce.list_cell_attributes(1:2:end),'cell_potency');
-            if ~any(a)
                 answer2=questdlg('Which species?','Select Species','Mouse','Human','Mouse');
-                [yes,specisid]=ismember(lower(answer2),{'human','mouse'});
-                if ~yes, return; end                
-                sce=sce.estimatepotency(specisid);
-            end
-            [yes,idx]=ismember({'cell_potency'},sce.list_cell_attributes(1:2:end));
-            if yes
-                y=sce.list_cell_attributes{idx+1};
+                [yes,speciesid]=ismember(lower(answer2),{'human','mouse'});
+                if ~yes, return; end
+                y=sc_potency(sce.X,sce.g,speciesid);
                 ttxt='Differentiation Potency';
-            else                
-                return;
-            end
+
+            % [a]=contains(sce.list_cell_attributes(1:2:end),'cell_potency');
+            % if ~any(a)
+            %     answer2=questdlg('Which species?','Select Species','Mouse','Human','Mouse');
+            %     [yes,specisid]=ismember(lower(answer2),{'human','mouse'});
+            %     if ~yes, return; end
+            %     sce=sce.estimatepotency(specisid);
+            % end
+            % [yes,idx]=ismember({'cell_potency'},sce.list_cell_attributes(1:2:end));
+            % if yes
+            %     y=sce.list_cell_attributes{idx*2};                
+            %     ttxt='Differentiation Potency';
+            % else                
+            %     return;
+            % end
+
         case 'Library Size'
             y=sum(sce.X);
             ttxt='Library Size';
@@ -185,6 +192,8 @@ function callback_CompareGeneBtwCls(src,~)
         otherwise
             return;
     end
+% assignin('base','y',y);
+% assignin('base','thisc',thisc);
 
     gui.i_violinplot(y,thisc,ttxt);
 
