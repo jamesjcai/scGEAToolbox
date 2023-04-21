@@ -41,17 +41,21 @@ if nargout>1 || plotit
             'verbose','none');
     end
 else
-    if verbose
-        [s]=run_umap_lite(data,'n_components',ndim);
-    else
-        [s]=run_umap_lite(data,'n_components',ndim,'verbose','none');
-    end
-     % umap=UMAP;
-     % umap.method='MEX';
-     % umap.n_components=ndim;
-     % umap.min_dist=0.3;
-     % umap.distance_func='euclidean';
-     % s = umap.fit_transform(data);
+
+    %if ~(ismcc || isdeployed)   
+        if verbose
+            [s]=run_umap_lite(data,'n_components',ndim);
+        else
+            [s]=run_umap_lite(data,'n_components',ndim,'verbose','none');
+        end
+    % else
+    %      umap=UMAP;
+    %      umap.method='MEX';
+    %      umap.n_components=ndim;
+    %      umap.min_dist=0.3;
+    %      umap.distance_func='euclidean';
+    %      s = umap.fit_transform(data);
+    % end
 end
 
 if plotit && ~isempty(s)

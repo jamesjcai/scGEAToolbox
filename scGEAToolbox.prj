@@ -7,7 +7,7 @@
     <param.summary>Single-cell Gene Expression Analysis Toolbox</param.summary>
     <param.description>scRNAseq data analysis toolbox</param.description>
     <param.screenshot>${PROJECT_ROOT}\resources\scgeatool.png</param.screenshot>
-    <param.version>23.2.1</param.version>
+    <param.version>23.2.2</param.version>
     <param.output>${PROJECT_ROOT}\scGEAToolbox.mltbx</param.output>
     <param.products.name>
       <item>Statistics and Machine Learning Toolbox</item>
@@ -16,7 +16,7 @@
       <item>19</item>
     </param.products.id>
     <param.products.version>
-      <item>12.4</item>
+      <item>12.5</item>
     </param.products.version>
     <param.platforms />
     <param.guid>6597c9c8-34b6-4fe4-a150-99bf81bbb77f</param.guid>
@@ -63,7 +63,9 @@ resources/STRING/stringdb_mouse.mat
     <param.matlabpath.excludes>
       <item>/+run/thirdparty/faster_svd/lmsvd</item>
     </param.matlabpath.excludes>
-    <param.javaclasspath.excludes />
+    <param.javaclasspath.excludes>
+      <item>/+run/thirdparty/umapFileExchange/webDownload.jar</item>
+    </param.javaclasspath.excludes>
     <param.exported.on.package>false</param.exported.on.package>
     <param.required.addons />
     <param.matlab.project.id />
@@ -91,7 +93,6 @@ resources/STRING/stringdb_mouse.mat
       <param.examples />
       <param.demosxml />
       <param.apps />
-      <param.javaclasspath.excludes />
       <param.exported.on.package />
       <param.required.addons />
       <param.matlab.project.id />
@@ -210,7 +211,7 @@ resources/STRING/stringdb_mouse.mat
     </build-deliverables>
     <workflow />
     <matlab>
-      <root>C:\Program Files\MATLAB\R2022B</root>
+      <root>C:\Program Files\MATLAB\R2023a</root>
       <toolboxes>
         <toolbox name="matlabcoder" />
         <toolbox name="embeddedcoder" />

@@ -4,7 +4,6 @@ pw1=cdgea;
 wrkpth=fullfile(pw1,'tensor_toolbox'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','locfit','m'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','locfit','mex'); addpath(wrkpth);
-wrkpth=fullfile(pw1,'+run','thirdparty','locfit','Neuro'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','cbrewer'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','DESeq2'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','GCL'); addpath(wrkpth);
@@ -43,7 +42,8 @@ if ~exist(outdir,"dir"), mkdir(outdir); end
      d(k)=string(fullfile(c(k).folder,c(k).name));
  end
 %    d=[d;fullfile(pw1, 'resources', 'STRING', 'stringdb_human.mat')];
-%    d=[d;fullfile(pw1, 'resources', 'STRING', 'stringdb_mouse.mat')];
+%    d=[d;fullfile(pw1, 'resources', 'STRING', 'stringdb_mouse.mat')];   
+    d=[d;fullfile(pw1, '+run','thirdparty','umapFileExchange','umap.jar')];
     d=[d;fullfile(pw1, 'resources', 'tfome_tfgenes.mat')];
     d=[d;fullfile(pw1, 'resources', 'regev_lab_cell_cycle_genes.txt')];
     d=[d;fullfile(pw1, 'resources', 'cellscores.txt')];
