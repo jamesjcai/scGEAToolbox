@@ -12,8 +12,8 @@ if nargin<2, ndim=3; end
 pw1=fileparts(mfilename('fullpath'));
 if ~(ismcc || isdeployed)    
     pth1=fullfile(pw1,'thirdparty','umapFileExchange');
-    pth3=fullfile(pw1,'thirdparty','umapFileExchange','umap.jar');
     addpath(pth1);
+    pth3=fullfile(pw1,'thirdparty','umapFileExchange','umap.jar');
     javaaddpath(pth3);
 end
 
