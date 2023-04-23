@@ -31,7 +31,9 @@ promotesave=false;
               'TXT/TSV/CSV File (*.txt)...',...
               'H5/HDF5 File (*.h5)...',...
               'Seurat/Rds File (*.rds)...',...
+              '----------------------------------',...
               '10x Genomics ''outs'' Folder...',...
+              'Parse Biosciences ''outs'' Folder...',...
               '----------------------------------',...              
               'Link to GEO mtx.gz File...',... 
               'Link to GEO txt.gz File...',... 
@@ -44,7 +46,7 @@ promotesave=false;
           [indx,tf] = listdlg('ListString',list,...
             'SelectionMode','single',...
             'PromptString',{'Select an input data type:'},...
-            'ListSize',[230,200],...
+            'ListSize',[230,245],...
             'Name','SCGEATOOL','InitialValue',length(list));
         if tf~=1, return; end
         ButtonName=list{indx};
@@ -213,6 +215,31 @@ promotesave=false;
                     end
                     end
                 end
+            case 'Parse Biosciences ''outs'' Folder...'
+                selpath = uigetdir;
+                if selpath==0, return; end
+                try
+                    fw = gui.gui_waitbar;
+                    [X,g,celllist,ftdone]=sc_readparsebio(selpath);
+                    gui.gui_waitbar(fw);
+                catch ME
+                    gui.gui_waitbar(fw,true);
+                    errordlg(ME.message);
+                    return;
+                end
+                if ~ftdone, errordlg('Input Error'); return; end
+                sce = SingleCellExperiment(X,g);
+                metainfo=sprintf("Source: %s",selpath);
+                sce=sce.appendmetainfo(metainfo);
+                if ~isempty(celllist) && length(celllist)==sce.NumCells
+                    sce.c_cell_id=celllist;
+                    if isstring(celllist)
+                    if all(strlength(celllist)>17)
+                        sce.c_batch_id=extractAfter(sce.c_cell_id,17);                        
+                    end
+                    end
+                end
+
             case 'GEO Accession Number(s)...'
                 acc=inputdlg({'Input number (e.g., GSM3308547,GSM3308548):'},...
                     'GEO Accession',[1 50],{'GSM3308547'});
@@ -346,6 +373,8 @@ promotesave=false;
                 end           
                 fprintf('Done.\n');
                 toc;
+            case '----------------------------------'
+                return;                
             otherwise
                 return;
         end

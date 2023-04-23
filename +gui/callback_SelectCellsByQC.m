@@ -71,21 +71,56 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
                 return;
             end
 
-            [whitelist]=gui.i_selectwhitelist(sce);
-            %[whitelist]=gui.i_selectngenes(sce);
-
-            if isnumeric(whitelist) 
-                if whitelist==0
-                    requirerefresh=false;
-                    return;
-                end
-            end
-            % when isempty(whitelist), continue...
-
-            fw=gui.gui_waitbar;
-            sce=sce.qcfilterwhitelist(libsize,mtratio,...
-                min_cells_nonzero,numgenes,whitelist);
+            % [whitelist]=gui.i_selectwhitelist(sce);
+            % if isnumeric(whitelist) 
+            %     if whitelist==0
+            %         requirerefresh=false;
+            %         return;
+            %     end
+            % end
             
+            whitelist=[]; 
+            fw=gui.gui_waitbar;
+
+            memerror=false;
+            try
+                sce=sce.qcfilterwhitelist(libsize,mtratio,...
+                    min_cells_nonzero,numgenes,whitelist);
+            catch ME
+                 if issparse(sce.X)
+                     gui.gui_waitbar(fw,true);
+                     errordlg(ME.message);
+                     requirerefresh=false;
+                     return;
+                 else
+                    memerror=true;
+                 end
+            end
+
+            if memerror
+                disp('Making X sparse.');
+                sce.X=sparse(sce.X);
+                % disp('Using lite version of QC.');
+                % Xobj=refwrap(sce.X); 
+                % sce.X=[];
+                % [g]=sc_qcfilter_objc(Xobj,sce.g,libsize,mtratio,...
+                %         min_cells_nonzero,numgenes);                
+                % sce.X=Xobj.data;
+                
+                %[X,g]=sc_qcfilter_lite(sce.X,sce.g,libsize,mtratio,...
+                %        min_cells_nonzero,numgenes);
+                %sce=SingleCellExperiment(X,g);
+            try
+                sce=sce.qcfilterwhitelist(libsize,mtratio,...
+                    min_cells_nonzero,numgenes,whitelist);
+            catch ME
+                     gui.gui_waitbar(fw,true);
+                     errordlg(ME.message);
+                     requirerefresh=false;
+                     return;
+            end
+            end
+
             if min_cells_nonzero<1.0
                 a=sprintf('%.f%%',min_cells_nonzero*100);
             else

@@ -15,7 +15,8 @@ if sum(idx)>0
     f_mtreads=lbsz_mt./lbsz;
     keptidx=f_mtreads<mtratio;
     if sum(~keptidx)>0
-        X=X(:,keptidx);        
+        X=X(:,keptidx);
+        %X(:,~keptidx)=[];
             if vebrose
             fprintf('%d cells with mt-read ratio >=%f (or %f%%) are removed.\n',...
                 sum(~keptidx),mtratio,mtratio*100);
