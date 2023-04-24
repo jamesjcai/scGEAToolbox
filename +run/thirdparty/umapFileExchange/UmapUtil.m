@@ -900,7 +900,8 @@ classdef UmapUtil < handle
         function [args, argued]=Initialize(varargin)
             initJava;
             pth=fileparts(mfilename('fullpath'));
-            pPth=fileparts(pth);
+            pPth=pth;
+            %pPth=fileparts(pth)
             utilPath=fullfile(pPth, 'util');
 			if ~(ismcc || isdeployed)
             addpath(utilPath);
