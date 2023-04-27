@@ -5,7 +5,8 @@ function callback_CompareGeneBtwCls(src,~)
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
 
-    [thisc]=gui.i_select1class(sce);
+    allowunique=false;
+    [thisc]=gui.i_select1class(sce,allowunique);
     if isempty(thisc), return; end
     
 
