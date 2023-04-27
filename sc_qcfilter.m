@@ -9,17 +9,17 @@ end
 if nargin<4 || isempty(mtratio), mtratio=0.15; end          % 0.10
 if nargin<3 || isempty(libszcutoff), libszcutoff=500; end   % 1000
 
-%try
-%[X,keptidx]=sc_rmmtcells(X,genelist,mtratio);
+try
+[X,keptidx]=sc_rmmtcells(X,genelist,mtratio);
 
-%catch
+catch
 
-        Xobj=refwrap(X); 
+        Xobj=pkg.refwrap(X); 
         clear X
         [keptidx]=obj_rmmtcells(Xobj,genelist,mtratio);
         X=Xobj.data;
 
-%end
+end
 
 keptidxv{1}=keptidx;
 %if removemtgenes
@@ -49,7 +49,7 @@ if nargin<3, mtratio=0.1; end
 if nargin<4, mtgenenamepat="mt-"; end
 if nargin<5, vebrose=false; end
 
-assert(isa(Xobj,'refwrap'))
+assert(isa(Xobj,'pkg.refwrap'))
 assert(size(Xobj.data,1)==length(genelist))
 idx=startsWith(genelist,mtgenenamepat,'IgnoreCase',true);
 if sum(idx)>0
