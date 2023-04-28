@@ -103,7 +103,7 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
                 % disp('Using lite version of QC.');
                 % Xobj=refwrap(sce.X); 
                 % sce.X=[];
-                % [g]=sc_qcfilter_objc(Xobj,sce.g,libsize,mtratio,...
+                % [g]=pkg.sc_qcfilter_objc(Xobj,sce.g,libsize,mtratio,...
                 %         min_cells_nonzero,numgenes);                
                 % sce.X=Xobj.data;
                 

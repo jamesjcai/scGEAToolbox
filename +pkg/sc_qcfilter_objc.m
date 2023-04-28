@@ -1,4 +1,4 @@
-function [genelist]=sc_qcfilter_objc(Xobj,genelist,libszcutoff,...
+function [genelist,b]=sc_qcfilter_objc(Xobj,genelist,libszcutoff,...
                     mtratio,min_cells_nonzero,gnnumcutoff)
 if nargin<6, gnnumcutoff=200; end
 if nargin<5 || isempty(min_cells_nonzero), min_cells_nonzero=10; end
@@ -60,7 +60,9 @@ while ~isequal(oldsz,newsz)
         keptidx = (libsz>=quantile(libsz,libszcutoff)) & (gnnum>=gnnumcutoff);
     end
     Xobj.data(:,~keptidx)=[];
-    
+usr = memory;
+b = usr.MemUsedMATLAB/1e6;
+
     newsz=size(Xobj.data);
 end
 end

@@ -2,16 +2,16 @@
 <productinfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:noNamespaceSchemaLocation="optional">
     <?xml-stylesheet type="text/xsl"href="optional"?>
-    <!-- info.xml file for the mytoolbox toolbox -->
-    <!-- Version 1.0 -->
-    <!-- Copyright (date) (owner).-->
+    <!-- info.xml file for the scGEAtoolbox toolbox -->
+    <!-- Version 23.2.3 -->
+    <!-- Copyright (2023) (James Cai).-->
     
     <!-- Supply the following six elements in the order specified -->
     <!-- (Required) Release of MATLAB. Not currently used but required -->
     <!-- to parse the file -->
     <matlabrelease>2023a</matlabrelease>
     <!-- (Required) Title of toolbox. Appears in the Contents pane -->
-    <name>scGEAToolbox v23.2.2</name>
+    <name>scGEAToolbox v23.2.3</name>
     <!-- (Required) Label for the toolbox. pick one: -->
     <!-- matlab, toolbox, simulink, blockset, links_targets  -->
     <type>toolbox</type>
