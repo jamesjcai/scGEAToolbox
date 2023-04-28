@@ -825,27 +825,12 @@ end
     end
 
     function EmbeddingAgain(src, ~)
-%         answer = questdlg('Which embedding method?', 'Select method',...
-%                           'tSNE', 'UMAP', 'PHATE', 'tSNE');
-%         if ~ismember(answer, {'tSNE', 'UMAP', 'PHATE'}), return; end
-        
-%         [indx2,tf2] = listdlg('PromptString',...
-%     {'Select embedding method:'}, ...
-%      'SelectionMode','single','ListString', ...
-%      {'tSNE', 'UMAP', 'PHATE', ...
-%      'MetaViz [PMID:36774377] 🐢'},'ListSize',[175 130]);
-%         if ~tf2, return; end
-%         methodopt={'tsne','umap','phate','metaviz'};
-%         methodtag=methodopt{indx2};
-
         [methodtag]=i_pickembedmethod;
         if isempty(methodtag), return; end
-
         if isempty(sce.struct_cell_embeddings)
             sce.struct_cell_embeddings = struct('tsne', [], 'umap', [], ...
                 'phate', [], 'metaviz', []);
         end
-
         %methodtag = lower(answer);
         usingold = false;
         if ~isfield(sce.struct_cell_embeddings,'metaviz')
@@ -898,9 +883,7 @@ end
             end
             try
                 forced = true;
-                if strcmpi(methodtag,'tsne')
-                    disp('Perplexity=30');
-                end
+                if strcmpi(methodtag,'tsne'), disp('tSNE perplexity = 30'); end
                 sce = sce.embedcells(methodtag, forced, usehvgs, ndim, K, whitelist);
             catch ME
                 if ~strcmpi(methodtag,'metaviz')
@@ -909,9 +892,7 @@ end
                 errordlg(ME.message);
                 return
             end
-            if ~strcmpi(methodtag,'metaviz')
-                gui.gui_waitbar(fw);
-            end
+            if ~strcmpi(methodtag,'metaviz'), gui.gui_waitbar(fw); end
         end
         RefreshAll(src, 1, true, false);
         guidata(FigureHandle, sce);
@@ -1024,7 +1005,7 @@ end
                 siv = sce.s(ptsSelected, :);
                 si = mean(siv, 1);
                 idx = find(ptsSelected);
-                [k] = dsearchn(siv, si);    % Nearest point search
+                [k] = dsearchn(siv, si);        % Nearest point search
                 datatip(h, 'DataIndex', idx(k));
                 % text(si(:,1),si(:,2),si(:,3),sprintf('%s',ctxt),...
                 %     'fontsize',10,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');
@@ -1098,19 +1079,13 @@ end
     end
 
     function Brushed2MergeClusters(~, ~)
-%         answer = questdlg('Merge brushed cells into one cluster?');
-%         if ~strcmp(answer, 'Yes')
-%             return
-%         end
         [iscelltype]=pick_celltype_clusterid('Merge brushed cells into same cluster or same cell type?');
         if isempty(iscelltype), return; end
-
         ptsSelected = logical(h.BrushData.');
         if ~any(ptsSelected)
             warndlg("No cells are brushed");
             return;
-        end
-        
+        end       
         if iscelltype
             c_members = unique(sce.c_cell_type_tx(ptsSelected));
         else
@@ -1190,26 +1165,7 @@ end
         row = dataTipTextRow('', tmpcelltypev);
         h.DataTipTemplate.DataTipRows = row;        
         datatip(h, 'DataIndex', idx(k));
-    end
-        
-        %{
-        hold on;
-        if size(sce.s, 2) >= 3
-            %scatter3(sce.s(ptsSelected, 1), sce.s(ptsSelected, 2),...
-            %    sce.s(ptsSelected, 3), 'x');
-            si = mean(sce.s(ptsSelected, :));
-            text(si(:, 1), si(:, 2), si(:, 3), sprintf('%s', ctxt), ...
-                'fontsize', 10, 'FontWeight', 'bold', 'BackgroundColor',...
-                'w', 'EdgeColor', 'k');
-        elseif size(sce.s, 2) == 2
-            % scatter(sce.s(ptsSelected, 1), sce.s(ptsSelected, 2), 'x');
-            si = mean(sce.s(ptsSelected, :));
-            text(si(:, 1), si(:, 2), sprintf('%s', ctxt), ...
-                'fontsize', 10, 'FontWeight', 'bold',...
-                'BackgroundColor', 'w', 'EdgeColor', 'k');
-        end
-        hold off;
-        %}
+    end        
     
     function ShowCellStemScatter(~, ~)
         sce = guidata(FigureHandle);
@@ -1217,8 +1173,7 @@ end
         if isempty(thisc), return; end        
         figure('WindowStyle','modal');
         gui.i_stemscatter(sce.s,grp2idx(thisc));
-        zlabel(clable)
-        % title('')
+        zlabel(clable);        
     end
 
     function ShowCellStates(src, ~)
@@ -1261,17 +1216,6 @@ end
         [ptsSelected,letdoit]=gui.i_expandbrushed(ptsSelected,sce);
         if ~letdoit, return; end
         
-%         if ~any(ptsSelected)
-%             answer = questdlg('No brushed cells. Select cells by class?');
-%             if ~strcmp(answer, 'Yes'), return; end            
-%             [thisc,~]=gui.i_select1class(sce);
-%             if isempty(thisc), return; end
-%             [ci,cLi]=grp2idx(thisc);
-%             [indxx,tfx] = listdlg('PromptString',{'Select groups'},...
-%                 'SelectionMode','multiple','ListString',string(cLi));
-%             if tfx~=1, return; end
-%             ptsSelected=ismember(ci,indxx);
-%         end
         answer = questdlg('Delete selected or unselected cells?','', ...
             'Selected', 'Unselected','Selected');
         if isempty(answer), return; end
@@ -1319,8 +1263,7 @@ end
             [t, xyz1] = pkg.i_pseudotime_by_splinefit(sce.s, dim, false);
         elseif strcmp(answer, 'princurve (🐢)')
             [t, xyz1] = pkg.i_pseudotime_by_princurve(sce.s, false);
-        else
-            % errordlg('Invalid Option.');
+        else            
             return;
         end
         hold on;
@@ -1376,11 +1319,9 @@ end
                     end
                     errordlg(ME.message);
                 end
-
             case 'No'
-                return
-        end
-        
+                return;
+        end        
     end
 
     function ClusterCellsS(src, ~)
@@ -1401,9 +1342,7 @@ end
 
     function ClusterCellsX(src, ~)
         answer = questdlg('Cluster cells using X?');
-        if ~strcmp(answer, 'Yes')
-            return
-        end
+        if ~strcmp(answer, 'Yes'), return; end
         
         methodtagvx = {'specter (31 secs) 🐇','sc3 (77 secs) 🐇',...
              'simlr (400 secs) 🐢',...
@@ -1420,7 +1359,7 @@ end
         end
         if (ismcc || isdeployed)
             if strcmp(methodtag,'sc3')
-                warndlg('SC3 is not working in standalone application.');
+                warndlg('SC3 is not working in standalone application.','');
                 return;
             end
         end
@@ -1552,4 +1491,5 @@ end
             isdone = true;
         end
     end
+
 end

@@ -46,6 +46,7 @@ else
         'Algorithm','exact','NumPCAComponents',0,...
         'Standardize',true);
 end
+end
 
 %%
 % if plotit
@@ -80,6 +81,6 @@ end
 %         dt = datacursormode;
 %         dt.UpdateFcn = {@i_myupdatefcn1,genelist};
 %     end
-end
 
-end
+
+
