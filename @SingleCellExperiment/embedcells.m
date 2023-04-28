@@ -40,7 +40,7 @@ function obj = embedcells(obj,methodtag,forced,usehvgs, ...
 
         switch methodtag
             case 'tsne'
-                obj.s=sc_tsne(X,ndim,false,true);                
+                obj.s=sc_tsne(X,ndim,true);
             case 'umap'
                 obj.s=sc_umap(X,ndim);                
             case 'phate'

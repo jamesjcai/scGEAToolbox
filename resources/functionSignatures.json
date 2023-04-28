@@ -172,18 +172,6 @@
         {"name":"type", "kind":"namevalue", "type":"choices={'simlr','soptsc','sc3'}"}
 	]
 },
-"sc_marker":
-{
-	"inputs":
-	[		
-        {"name":"X", "kind":"required", "type":"numeric"},
-        {"name":"genelist", "kind":"required", "type":["string","vector"]},
-        {"name":"c", "kind":"required", "type":"numeric"},
-        {"name":"type", "kind":"namevalue", "type":"choices={'soptsc'}"},
-        {"name":"numofmarkers", "kind":"namevalue", "numofmarkers":"choices={'soptsc'}"},
-        {"name":"plotit", "kind":"namevalue", "type":["logical","scalar"],"purpose":"Option"}
-	]
-},
 "run.PHATE":
 {
 	"inputs":
@@ -306,12 +294,9 @@
 	"inputs":
 	[		
         {"name":"X", "kind":"required", "type":["numeric"]},
-        {"name":"ndim", "kind":"positional", "type":["numeric", "choices={2,3}", "size=1,1"]},        
-        {"name":"plotit", "kind":"positional", "type":["logical","scalar"],"purpose":"plotit"},
+        {"name":"ndim", "kind":"positional", "type":["numeric", "choices={2,3}", "size=1,1"]},                
         {"name":"donorm", "kind":"positional", "type":["logical","scalar"],"purpose":"donorm"},
-        {"name":"dolog1p", "kind":"positional", "type":["logical","scalar"],"purpose":"dolog1p"},
-        {"name":"bygene", "kind":"positional", "type":["logical","scalar"],"purpose":"bygene"},
-        {"name":"genelist", "kind":"positional", "type":["string","vector"]}
+        {"name":"dolog1p", "kind":"positional", "type":["logical","scalar"],"purpose":"dolog1p"}  
 	]
 },
 "run.UMAP":

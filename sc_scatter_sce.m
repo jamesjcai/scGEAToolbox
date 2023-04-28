@@ -1310,7 +1310,8 @@ end
     end
 
     function DrawTrajectory(~, ~)
-        answer = questdlg('Which method?', 'Select Algorithm', ...
+        warndlg('This function should not be applied to tSNE and UMAP embeddings, as they "encourage a representation of the data as disjoint clusters, which is less meaningful for modeling continuous developmental trajectories" [PMID:25664528].','');
+        answer = questdlg('Which method?', '', ...
             'splinefit (🐇)', 'princurve (🐢)', ...
             'splinefit (🐇)');
         if strcmp(answer, 'splinefit (🐇)')
@@ -1319,7 +1320,7 @@ end
         elseif strcmp(answer, 'princurve (🐢)')
             [t, xyz1] = pkg.i_pseudotime_by_princurve(sce.s, false);
         else
-            errordlg('Invalid Option.');
+            % errordlg('Invalid Option.');
             return;
         end
         hold on;
