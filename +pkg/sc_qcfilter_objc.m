@@ -13,7 +13,9 @@ if sum(idx)>0
     f_mtreads=lbsz_mt./lbsz;
     keptidx=f_mtreads<mtratio;
     if sum(~keptidx)>0
+        memUsed
         Xobj.data(:,~keptidx)=[];
+        memUsed
     end
     
 end
@@ -65,4 +67,10 @@ b = usr.MemUsedMATLAB/1e6;
 
     newsz=size(Xobj.data);
 end
+end
+
+
+function y = memUsed
+    usr = memory;
+    y = usr.MemUsedMATLAB/1e6;
 end

@@ -1,5 +1,3 @@
-
-
 % http://www.gsea-msigdb.org/gsea/msigdb/human/collections.jsp
 
 fname = 'c2.cp.v2022.1.Hs.json'; 

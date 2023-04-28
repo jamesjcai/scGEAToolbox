@@ -214,8 +214,7 @@ title(figname);
     end
 
    function AnimateCutoff(~,~)
-        listc = 0.05:0.05:0.95;
-        % pkg.progressbar
+        listc = 0.05:0.05:0.95;        
         f = waitbar(0,'Cutoff = 0.05','Name','Edge Pruning...',...
             'CreateCancelBtn','setappdata(gcbf,''canceling'',1)');
         setappdata(f,'canceling',0);        
@@ -226,8 +225,7 @@ title(figname);
                 break
             end
             
-            cutoff=listc(k);
-            %pkg.progressbar(k/m) % Update progress bar
+            cutoff=listc(k);            
             waitbar(k/m,f,sprintf('Cutoff = %g',cutoff));
             try
                 p1=i_replotg(p1,G1,h1,cutoff);
