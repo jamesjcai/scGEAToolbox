@@ -671,8 +671,8 @@ end
 
             ButtonName = questdlg('Update Saved Embedding?','');
             switch ButtonName
-                case 'Yes'        
-                    [methodtag]=i_pickembedmethod;
+                case 'Yes'
+                    [methodtag]=gui.i_pickembedmethod;
                     if isempty(methodtag), return; end        
                     if ismember(methodtag,{'tsne','umap','phate','metaviz'})
                         sce.struct_cell_embeddings.(methodtag)=sce.s;
@@ -825,7 +825,7 @@ end
     end
 
     function EmbeddingAgain(src, ~)
-        [methodtag]=i_pickembedmethod;
+        [methodtag]=gui.i_pickembedmethod;
         if isempty(methodtag), return; end
         if isempty(sce.struct_cell_embeddings)
             sce.struct_cell_embeddings = struct('tsne', [], 'umap', [], ...
