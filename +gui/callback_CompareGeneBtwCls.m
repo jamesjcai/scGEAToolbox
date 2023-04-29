@@ -56,6 +56,7 @@ function callback_CompareGeneBtwCls(src,~)
 % selecteditem=selitems{indx1};
 
 [selecteditem] = gui.i_selectcellscore;
+if isempty(selecteditem), return; end
 %try
     switch selecteditem
         %case 'Global Coordination Level (GCL) [PMID:33139959]'

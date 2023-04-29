@@ -10,17 +10,19 @@ function [f]=i_violinplot(y,thisc,ttxt,colorit,cLorder)
     pkg.i_addbutton2fig(tb,'off',{@i_savedata,y,thisc}, ...
         'export.gif','Export data...');
     pkg.i_addbutton2fig(tb,'off',{@i_testdata,y,thisc}, ...
-        'exportx.gif','ANOVA/T-test...');    
+        'exportx.gif','ANOVA/T-test...');
     pkg.i_addbutton2fig(tb,'off',@i_addsamplesize, ...
-        "xpowerpoint.gif",'Add Sample Size');    
+        "xpowerpoint.gif",'Add Sample Size');
     pkg.i_addbutton2fig(tb,'on',{@gui.i_savemainfig,3}, ...
         "powerpoint.gif",'Save Figure to PowerPoint File...');
     pkg.i_addbutton2fig(tb,'off',@i_invertcolor, ...
         "xpowerpoint.gif",'Switch BW/Color');
     pkg.i_addbutton2fig(tb,'off',@i_reordersamples, ...
-        "xpowerpoint.gif",'Reorder Samples');  
+        "xpowerpoint.gif",'Reorder Samples');
     pkg.i_addbutton2fig(tb,'off',@i_sortbymean, ...
-        "xpowerpoint.gif",'Sort Samples by Median');  
+        "xpowerpoint.gif",'Sort Samples by Median');
+    pkg.i_addbutton2fig(tb,'off',@i_renametitle, ...
+        "xpowerpoint.gif",'Change Plot Title');
 
     isdescend=false;
     OldTitle=[];
@@ -36,6 +38,10 @@ function [f]=i_violinplot(y,thisc,ttxt,colorit,cLorder)
 %catch ME
 %    errordlg(ME.message);
 %end
+
+    function i_renametitle(~,~)
+        helpdlg('Double-click on the title to make change.','');
+    end
 
     function i_invertcolor(~,~)
         colorit=~colorit;
@@ -78,12 +84,12 @@ function [f]=i_violinplot(y,thisc,ttxt,colorit,cLorder)
         %[~,cL,noanswer]=gui.i_reordergroups(thisc,cLx_sorted);
         %if noanswer, return; end
         cla
-        pkg.i_violinplot(y,thisc,colorit,cLx_sorted);
+        cLorder=cLx_sorted;
+        pkg.i_violinplot(y,thisc,colorit,cLorder);
     end
 
 
     function i_reordersamples(~,~)
-
         [~,cLorder,noanswer]=gui.i_reordergroups(thisc);
         if noanswer, return; end
         cla
