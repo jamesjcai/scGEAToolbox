@@ -41,16 +41,16 @@ shape=double(hinfo.Groups(idx).Attributes(idx2).Value);
     g=h5read(filenm,[hinfo.Groups(idx).Name,'/gene_ids']);
     % g=h5read(filenm,[hinfo.Groups(idx).Name,'/gene_name']);
 
-% try
-%     barcodes=h5read(filenm,[hinfo.Groups.Groups(1).Name,'/barcodes']);
-% catch
-%         try
+try
+    barcodes=h5read(filenm,[hinfo.Groups.Groups(1).Name,'/barcodes']);
+catch
+        try
 barcodes=h5read(filenm,[hinfo.Groups(2).Name,'/index']);
-%             barcodes=h5read(filenm,[hinfo.Groups(1).Name,'/barcodes']);
-%         catch
-%             warning('BARCODES not found.');
-%         end
-% end
+            barcodes=h5read(filenm,[hinfo.Groups(1).Name,'/barcodes']);
+        catch
+            warning('BARCODES not found.');
+        end
+end
 
 X=zeros(shape(1),shape(2));
 for k=1:length(indptr)-1

@@ -545,8 +545,9 @@ end
             answerx=questdlg('This method requires Python environment and geosketch package installed. Continue?');
             if ~strcmp(answerx,'Yes'), return; end
             Xn=log(1+sc_norm(sce.X))';
-            [~,Xn]=pca(Xn,'NumComponents',300);
+            
             try
+                [~,Xn]=pca(Xn,'NumComponents',300);
                 ids=run.py_geosketch(Xn,tn);
             catch ME
                 %gui.gui_waitbar(fw,true);
