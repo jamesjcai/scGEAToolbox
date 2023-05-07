@@ -24,6 +24,7 @@ else
     end
 end
 K=exp(-D/(2*sgm^2));
+% Centering
 H=eye(n)-ones(n,n)/n;
 Kc=H*K*H;
 
