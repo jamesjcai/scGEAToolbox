@@ -11,6 +11,10 @@ function [score]=sc_cellscore(X,genelist,tgsPos,tgsNeg,nbin,ctrl)
 % disp("Seurat provides a computationally efficient gene signature scoring function, 
 % named AddModuleScore, originally proposed by Tirosh et al. [5]. ")
 
+% The score is the average expression of a set of genes subtracted with 
+% the average expression of a reference set of genes. The reference set is randomly sampled from the gene_pool for each binned expression value.
+% This reproduces the approach in Seurat [Satija15] and has been implemented for Scanpy by Davide Cittaro.
+
 if nargin<6, ctrl=5; end
 if nargin<5, nbin=25; end
 if nargin<4
