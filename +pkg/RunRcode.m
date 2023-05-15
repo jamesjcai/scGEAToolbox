@@ -31,7 +31,7 @@ if ispc
     % commandline=['"' Rpath sep 'R.exe" CMD BATCH "' RscriptFileName '" "' logFName '"'];
     commandline=['"' Rpath sep 'Rscript.exe" "' RscriptFileName '"'];
     fprintf('COMMANDLINE = %s\n',commandline);
-elseif isunix
+else
     commandline=[Rpath ' ' RscriptFileName];
     fprintf('COMMANDLINE = %s\n',[Rpath ' ' RscriptFileName]);
 end

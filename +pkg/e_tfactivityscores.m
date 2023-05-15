@@ -22,6 +22,7 @@ switch lower(species)
 end
 fprintf('\nReading ... %s.\n',fname);
 load(fname,'T');
+T=T(T.mor>0,:);
 
 if typeid==0
     score=[];

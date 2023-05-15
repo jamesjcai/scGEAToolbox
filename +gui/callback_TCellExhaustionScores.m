@@ -20,6 +20,8 @@ function callback_TCellExhaustionScores(src,~)
         zlabel('Score Value')
         title('T Cell Exhaustion Score')
         pause(2)
+        if ~istable(cs), cs=table(cs,'VariableNames', ...
+                {'TCellExhaustionScore'}); end
         gui.i_exporttable(cs,false,'TCellExhaustionScores');
     end
 end

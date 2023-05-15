@@ -178,6 +178,7 @@ if isempty(selecteditem), return; end
                 [cs,tflist]=sc_tfactivity(sce.X,sce.g,[],species,methodid);
                 idx=find(tflist==string(listitems{indx2}));
                 assert(length(idx)==1)
+                
                 [y]=cs(idx,:);
                 ttxt=listitems{indx2};
             if methodid~=4

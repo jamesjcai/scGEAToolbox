@@ -65,7 +65,7 @@ switch answer
         end
         if isequal(file,0) || isequal(path,0), return; end
         
-       filename=fullfile(path,file);           
+       filename=fullfile(path,file);
        variables=T.Properties.VariableNames;
        for k=1:length(variables)
            xx=T.(variables{k});
