@@ -50,8 +50,18 @@ function [done]=i_setrenv(~,~)
         if exist(Rexec,'file')
             helpdlg("R environment is set successfully.",'');
         else
-            errordlg("R environment is set with error.",'');
-            done=false;
+            if ispc
+                errordlg("R environment is set with error.",'');
+                done=false;
+            else
+                Rexec=fullfile(Rpath,'R');
+                if exist(Rexec,'file')
+                    helpdlg("R environment is set successfully.",'');
+                else
+                    errordlg("R environment is set with error.",'');
+                    done=false;                    
+                end
+            end
         end
     end
 end

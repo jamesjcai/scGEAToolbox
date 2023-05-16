@@ -22,14 +22,19 @@ narginchk(2,2)
 
 if ispc
     Rscript=fullfile(Rpath,'Rscript.exe');
+    if ~exist(Rscript,'file')
+        error([Rscript ' not existing.'])
+    end    
 else
     Rscript=fullfile(Rpath,'Rscript');
+    if ~exist(Rscript,'file')
+        Rscript=fullfile(Rpath,'R');
+        if ~exist(Rscript,'file')
+            error([Rscript ' not existing.'])
+        end
+    end
 end
 
-if ~exist(Rscript,'file')
-    error(Rscript)
-    return; 
-end
 
 % if nargin<2 || isempty(Rpath), Rpath=pkg.FindRpath; end
 % if isempty(Rpath)
@@ -59,11 +64,16 @@ else
     %commandline=[Rpath ' ' RscriptFileName];    
     %fprintf('COMMANDLINE = %s\n',[Rpath ' ' RscriptFileName]);
     %commandline=[Rpath sep 'Rscript ' RscriptFileName];
-    commandline=[Rscript ' ' RscriptFileName];
-    fprintf('COMMANDLINE = %s\n',commandline);
-    [status,cmdout]=system(commandline);
+    if strcmp(Rscript(end-6:end),'Rscript')
+        commandline=[Rscript ' ' RscriptFileName];
+        fprintf('COMMANDLINE = %s\n',commandline);
+        [status,cmdout]=system(commandline);
+    else
+        commandline=[Rscript ' CMD BATCH ' RscriptFileName];
+        fprintf('COMMANDLINE = %s\n',commandline);
+        [status,cmdout]=system(commandline);        
+    end
 end
-
 
 end %RunRcode
 
