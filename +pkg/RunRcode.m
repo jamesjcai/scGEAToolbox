@@ -21,16 +21,16 @@ end
 narginchk(2,2)
 
 if ispc
-    Rscript=fullfile(Rpath,'Rscript.exe');
-    if ~exist(Rscript,'file')
-        error([Rscript ' not existing.'])
+    Rexec=fullfile(Rpath,'Rscript.exe');
+    if ~exist(Rexec,'file')
+        error([Rexec ' not existing.'])
     end    
 else
-    Rscript=fullfile(Rpath,'Rscript');
-    if ~exist(Rscript,'file')
-        Rscript=fullfile(Rpath,'R');
-        if ~exist(Rscript,'file')
-            error([Rscript ' not existing.'])
+    Rexec=fullfile(Rpath,'Rscript');
+    if ~exist(Rexec,'file')
+        Rexec=fullfile(Rpath,'R');
+        if ~exist(Rexec,'file')
+            error([Rexec ' not existing.'])
         end
     end
 end
@@ -57,19 +57,19 @@ sep=filesep;
 if ispc
     % commandline=['"' Rpath sep 'R.exe" CMD BATCH "' RscriptFileName '" "' logFName '"'];
     % commandline=['"' Rpath sep 'Rscript.exe" "' RscriptFileName '"'];
-    commandline=['"' Rscript '" "' RscriptFileName '"'];
+    commandline=['"' Rexec '" "' RscriptFileName '"'];
     fprintf('COMMANDLINE = %s\n',commandline);
     [status,cmdout]=system(commandline,'-echo');
 else
     %commandline=[Rpath ' ' RscriptFileName];    
     %fprintf('COMMANDLINE = %s\n',[Rpath ' ' RscriptFileName]);
     %commandline=[Rpath sep 'Rscript ' RscriptFileName];
-    if strcmp(Rscript(end-6:end),'Rscript')
-        commandline=[Rscript ' ' RscriptFileName];
+    if strcmp(Rexec(end-6:end),'Rscript')
+        commandline=[Rexec ' ' RscriptFileName];
         fprintf('COMMANDLINE = %s\n',commandline);
         [status,cmdout]=system(commandline);
     else
-        commandline=[Rscript ' CMD BATCH ' RscriptFileName];
+        commandline=[Rexec ' CMD BATCH ' RscriptFileName];
         fprintf('COMMANDLINE = %s\n',commandline);
         [status,cmdout]=system(commandline);        
     end
