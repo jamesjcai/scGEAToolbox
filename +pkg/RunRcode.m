@@ -45,7 +45,7 @@ end
 %     end
 % end
 
-sep=filesep;
+% sep=filesep;
 % [p,f,~]=fileparts(RscriptFileName);
 % if isempty(p), p = pwd; end
 % logFName=[p sep f '.R.log'];
