@@ -14,12 +14,13 @@ if exist('./input.txt','file'), delete('./input.txt'); end
 end
 
 sc_writefile('input.txt',X,upper(genelist));
+Rpath=getpref('scgeatoolbox','rexecutablepath');
 switch lower(species)
     case "human"
         disp("human")
-        pkg.RunRcode('script_human.R');
+        pkg.RunRcode('script_human.R',Rpath);
     case "mouse"
-        pkg.RunRcode('script_mouse.R');
+        pkg.RunRcode('script_mouse.R',Rpath);
         disp("mouse")
 end
 

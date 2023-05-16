@@ -14,28 +14,56 @@ function [status,cmdout]=RunRcode(RscriptFileName,Rpath)
 
 status=99; 
 cmdout=[];
-if ~exist(RscriptFileName,'file'), return; end
-if nargin<2 || isempty(Rpath), Rpath=pkg.FindRpath; end
-if isempty(Rpath), return; end
+if ~exist(RscriptFileName,'file')
+    disp('RscriptFile not found.');
+    return; 
+end
+narginchk(2,2)
+
+if ispc
+    Rscript=fullfile(Rpath,'Rscript.exe');
+else
+    Rscript=fullfile(Rpath,'Rscript');
+end
+
+if ~exist(Rscript,'file')
+    error(Rscript)
+    return; 
+end
+
+% if nargin<2 || isempty(Rpath), Rpath=pkg.FindRpath; end
+% if isempty(Rpath)
+%     if ~ispref('scgeatoolbox','rexecutablepath')
+%         return;
+%     else
+%         Rpath=getpref('scgeatoolbox','rexecutablepath');
+%     end
+% end
 
 sep=filesep;
 % [p,f,~]=fileparts(RscriptFileName);
 % if isempty(p), p = pwd; end
 % logFName=[p sep f '.R.log'];
 
-if iscell(Rpath)
-    Rpath=Rpath{end};    
-end
+% if iscell(Rpath)
+%     Rpath=Rpath{end};    
+% end
 
 if ispc
     % commandline=['"' Rpath sep 'R.exe" CMD BATCH "' RscriptFileName '" "' logFName '"'];
-    commandline=['"' Rpath sep 'Rscript.exe" "' RscriptFileName '"'];
+    % commandline=['"' Rpath sep 'Rscript.exe" "' RscriptFileName '"'];
+    commandline=['"' Rscript '" "' RscriptFileName '"'];
     fprintf('COMMANDLINE = %s\n',commandline);
+    [status,cmdout]=system(commandline,'-echo');
 else
-    commandline=[Rpath ' ' RscriptFileName];
-    fprintf('COMMANDLINE = %s\n',[Rpath ' ' RscriptFileName]);
+    %commandline=[Rpath ' ' RscriptFileName];    
+    %fprintf('COMMANDLINE = %s\n',[Rpath ' ' RscriptFileName]);
+    %commandline=[Rpath sep 'Rscript ' RscriptFileName];
+    commandline=[Rscript ' ' RscriptFileName];
+    fprintf('COMMANDLINE = %s\n',commandline);
+    [status,cmdout]=system(commandline);
 end
-[status,cmdout]=system(commandline,'-echo');
+
 
 end %RunRcode
 

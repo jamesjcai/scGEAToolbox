@@ -4,7 +4,7 @@ function [done]=i_setpyenv(~,~)
         [done]=false;
 
     x=pyenv;
-    if strlength(x.Executable)==0
+    if x.Version == ""  %strlength(x.Executable)==0
         answer=questdlg('Python environment has not been set up. Locate python.exe?');
         if strcmp('Yes',answer)
             [done]=ix_setpyenv(x.Executable);
@@ -14,7 +14,7 @@ function [done]=i_setpyenv(~,~)
     else
         answer = questdlg(sprintf('%s',x.Executable), ...
             'Python Executable', ...
-            'Use this','Use another','Cancel','Use this');        
+            'Use this','Use another','Cancel','Use this');
         switch answer
             case 'Use this'
                 done=true;

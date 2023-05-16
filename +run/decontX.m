@@ -23,7 +23,8 @@ if ~isdebug
 	if exist('./output.h5','file'), delete('./output.h5'); end
 end
 save('input.mat','X','-v7.3');
-pkg.RunRcode('script.R');
+Rpath=getpref('scgeatoolbox','rexecutablepath');
+pkg.RunRcode('script.R',Rpath);
 if exist('./output.h5','file')
     X=h5read('output.h5','/X');
     contamination=h5read('output.h5','/contamination');

@@ -13,7 +13,8 @@ if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 
 %save('input.mat','X','-v7.3');
 pkg.e_writeh5(X,[],'input.h5');
-pkg.RunRcode('script.R');
+Rpath=getpref('scgeatoolbox','rexecutablepath');
+pkg.RunRcode('script.R',Rpath);
 if exist('./output.csv','file')
     dat=readmatrix('output.csv');
     t=dat(:,2);

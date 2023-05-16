@@ -50,6 +50,7 @@ promotesave=false;
             'Name','SCGEATOOL','InitialValue',length(list));
         if tf~=1, return; end
         ButtonName=list{indx};
+        sce=[];
         
 %         ButtonName = questdlg('Select Input Data Type', ...
 %                               'SC_SCATTER', ...

@@ -174,9 +174,9 @@ m_ext = uimenu(FigureHandle,'Text','E&xternal','Accelerator','x');
 i_addmenu(m_ext,0,@gui.i_setrenv,'Check R Environment');
 i_addmenu(m_ext,0,@gui.i_setpyenv,'Check Python Environment');
 i_addmenu(m_ext,1,@DecontX,'Detect Ambient RNA Contamination (decontX/R required)...');
-i_addmenu(m_ext,0,@callback_SingleRCellType,'SingleR Cell Type Annotation (SingleR/R required)...');
-i_addmenu(m_ext,0,@callback_RevelioCellCycle,'Revelio Cell Cycle Analysis (Revelio/R required)...');
-i_addmenu(m_ext,0,@callback_RunSeuratSCTransform,'Run Seurat/R SCTransform (Seurat/R required)...');
+%i_addmenu(m_ext,0,@callback_SingleRCellType,'SingleR Cell Type Annotation (SingleR/R required)...');
+%i_addmenu(m_ext,0,@callback_RevelioCellCycle,'Revelio Cell Cycle Analysis (Revelio/R required)...');
+% i_addmenu(m_ext,0,@callback_RunSeuratSCTransform,'Run Seurat/R SCTransform (Seurat/R required)...');
 i_addmenu(m_ext,0,@RunSeuratWorkflow,'Run Seurat/R Workflow (Seurat/R required)...');
 i_addmenu(m_ext,0,@callback_TrajectoryAnalysis,'Pseudotime Analysis (Monocle/R required)...');
 i_addmenu(m_ext,1,@callback_MELDPerturbationScore,'MELD Perturbation Score (MELD/Python required)...');
@@ -637,12 +637,11 @@ end
             case 'Yes'
                 sce.X=round(Xdecon);
                 guidata(FigureHandle,sce);
-                helpdlg('Contamination removed.')
+                helpdlg('Contamination removed.','');
        end
     end
 
     function HarmonyPy(src, ~)
-
         if numel(unique(sce.c_batch_id))<2
             warndlg('No batch effect (SCE.C_BATCH_ID is empty)');
             return;
