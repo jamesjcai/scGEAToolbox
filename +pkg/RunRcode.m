@@ -65,11 +65,13 @@ else
     %fprintf('COMMANDLINE = %s\n',[Rpath ' ' RscriptFileName]);
     %commandline=[Rpath sep 'Rscript ' RscriptFileName];
     if strcmp(Rexec(end-6:end),'Rscript')
-        commandline=[Rexec ' ' RscriptFileName];
+        % commandline=[Rexec ' ' RscriptFileName];
+        commandline=sprintf("%s %s",Rexec,RscriptFileName);
         fprintf('COMMANDLINE = %s\n',commandline);
         [status,cmdout]=system(commandline);
     else
-        commandline=[Rexec ' CMD BATCH ' RscriptFileName];
+        %commandline=[Rexec ' CMD BATCH ' RscriptFileName];
+        commandline=sprintf("%s CMD BATCH %s",Rexec,RscriptFileName);
         fprintf('COMMANDLINE = %s\n',commandline);
         [status,cmdout]=system(commandline);        
     end
