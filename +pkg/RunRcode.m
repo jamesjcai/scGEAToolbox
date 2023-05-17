@@ -24,7 +24,7 @@ if ispc
     Rexec=fullfile(Rpath,'Rscript.exe');
     if ~exist(Rexec,'file')
         error([Rexec ' not existing.'])
-    end    
+    end
 else
     Rexec=fullfile(Rpath,'Rscript');
     if ~exist(Rexec,'file')

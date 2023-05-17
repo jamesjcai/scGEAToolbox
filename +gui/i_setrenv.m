@@ -23,6 +23,9 @@ function [done]=i_setrenv(~,~)
         if ~strcmp(answer,'Yes'), return; end
         if ispc
             rpathdefult=pkg.FindRpath;
+            if iscell(rpathdefult)
+                rpathdefult=rpathdefult{1};
+            end
         else
             rpathdefult='';
         end
