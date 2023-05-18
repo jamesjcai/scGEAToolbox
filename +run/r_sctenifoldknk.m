@@ -24,10 +24,10 @@ h5create('input.h5', '/g', size(sce.g),'Datatype','string');
 h5write('input.h5', '/g', sce.g);
 h5create('input.h5', '/targetg', size(targetg),'Datatype','string');
 h5write('input.h5', '/targetg', targetg);
-if isdebug
-    return;
-end
-pkg.RunRcode('script.R');
+
+Rpath=getpref('scgeatoolbox','rexecutablepath');
+pkg.RunRcode('script.R',Rpath);
+
 if exist('./output.txt','file')
     warning('off','MATLAB:table:ModifiedAndSavedVarnames');
     T=readtable('output.txt');

@@ -15,7 +15,8 @@ function [sce]=readSeuratRds(filename)
     if exist('./barcodes.csv','file'), delete('./barcodes.csv'); end
     
     writematrix(filename,'inputrdsfile.txt');
-    pkg.RunRcode('script.R');
+    Rpath=getpref('scgeatoolbox','rexecutablepath');
+    pkg.RunRcode('script.R',Rpath);
     
 if exist('g.csv','file') && exist('output.mat','file')
     t=readtable('g.csv');

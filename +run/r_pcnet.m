@@ -19,7 +19,10 @@ end
 if issparse(X), X=full(X); end
     writematrix(X,'input.csv');
 %end
-pkg.RunRcode('script.R');
+
+Rpath=getpref('scgeatoolbox','rexecutablepath');
+pkg.RunRcode('script.R',Rpath);
+
 if exist('output.csv','file')
     A=readmatrix('output.csv');
     %G=digraph(A);    

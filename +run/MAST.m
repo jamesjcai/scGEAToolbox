@@ -16,7 +16,10 @@ avg_2 = mean(Y,2);
 tmpfilelist={'input.mat','output.csv'};
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 save('input.mat','X','Y','-v7.3');
-pkg.RunRcode('script.R');
+
+Rpath=getpref('scgeatoolbox','rexecutablepath');
+pkg.RunRcode('script.R',Rpath);
+
 if ~exist('output.csv','file'), return; end
 warning off
 T=readtable('output.csv');

@@ -43,10 +43,12 @@ if ~isempty(warnMsg)
     sc_writefile('input.txt',sce.X,sce.g);
 end
 
+Rpath=getpref('scgeatoolbox','rexecutablepath');
+
 if ndim==3
-    pkg.RunRcode('script3d.R');
+    pkg.RunRcode('script3d.R',Rpath);
 else    
-    pkg.RunRcode('script.R');
+    pkg.RunRcode('script.R',Rpath);
 end
 %if exist('tsneoutput.csv','file')
 %    T=readtable('tsneoutput.csv','ReadVariableNames',true);

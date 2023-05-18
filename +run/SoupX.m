@@ -21,7 +21,8 @@ if exist('./input.txt','file'), delete('./input.txt'); end
 if exist('./output.h5','file'), delete('./output.h5'); end
 
 writematrix(selpath,'input.txt');
-pkg.RunRcode('script.R');
+Rpath=getpref('scgeatoolbox','rexecutablepath');
+pkg.RunRcode('script.R',Rpath);
 if exist('./output.h5','file')
     X=h5read('output.h5','/X');
     try 

@@ -16,7 +16,10 @@ if ~isempty(warnMsg)
     disp('Writing data into input.txt...')
     sc_writefile('input.txt',X,genelist);
 end
-pkg.RunRcode('scriptnew.R');
+
+
+Rpath=getpref('scgeatoolbox','rexecutablepath');
+pkg.RunRcode('scriptnew.R',Rpath);
 if exist('output.h5','file')
     X=h5read('output.h5','/X');
 elseif exist('output.txt','file')

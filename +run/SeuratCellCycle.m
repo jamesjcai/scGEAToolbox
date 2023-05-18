@@ -16,7 +16,8 @@ if ~isdebug
 end
 
 sc_writefile('input.txt',X,upper(genelist));
-pkg.RunRcode('script.R');
+Rpath=getpref('scgeatoolbox','rexecutablepath');
+pkg.RunRcode('script.R',Rpath);
 
 
 if exist('output.csv','file')

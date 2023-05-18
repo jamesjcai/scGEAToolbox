@@ -25,7 +25,10 @@ if isdebug
     if ispc, winopen(cd); end
     return;
 end
-pkg.RunRcode('script.R');
+
+Rpath=getpref('scgeatoolbox','rexecutablepath');
+pkg.RunRcode('script.R',Rpath);
+
 if exist('./output.txt','file')
     warning('off','MATLAB:table:ModifiedAndSavedVarnames');
     T=readtable('output.txt');

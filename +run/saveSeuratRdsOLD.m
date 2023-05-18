@@ -8,7 +8,9 @@ function [status]=saveSeuratRdsOLD(sce,filename)
     if exist('output.Rds','file'), delete('output.Rds'); end
     sc_writefile('input.txt',sce.X,sce.g);
     %if isdebug, return; end
-    pkg.RunRcode('script_OLD.R');
+    Rpath=getpref('scgeatoolbox','rexecutablepath');
+pkg.RunRcode('script.R',Rpath);
+
     [status]=copyfile('output.Rds',filename,'f');
     %if exist('input.txt','file'), delete('input.txt'); end
     if exist('output.Rds','file'), delete('output.Rds'); end

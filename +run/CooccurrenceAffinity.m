@@ -18,7 +18,9 @@ X=uint8(X>0);
 h5create('input.h5', '/X', size(X));
 h5write('input.h5', '/X', X);
 
-pkg.RunRcode('script.R');
+Rpath=getpref('scgeatoolbox','rexecutablepath');
+pkg.RunRcode('script.R',Rpath);
+
 p=h5read('output.h5','/p');
 if isstring(p), p=str2double(p); end
 

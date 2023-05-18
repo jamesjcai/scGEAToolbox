@@ -11,7 +11,9 @@ function [status]=saveSeuratRds(sce,filename)
     pkg.e_writeh5(sce.X,sce.g,'input.h5');
     %sc_writefile('input.txt',sce.X,sce.g);
     %    if isdebug, return; end
-    pkg.RunRcode('script.R');
+    Rpath=getpref('scgeatoolbox','rexecutablepath');
+    pkg.RunRcode('script.R',Rpath);
+    
     [status]=copyfile('output.Rds',filename,'f');
     if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
     cd(oldpth);

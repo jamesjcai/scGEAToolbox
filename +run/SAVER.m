@@ -8,7 +8,8 @@ if ~isok, error(msg); X2=[]; return; end
 if exist('input.mat','file'), delete('input.mat'); end
 if exist('output.mat','file'), delete('output.mat'); end
 save('input.mat','X');
-pkg.RunRcode('script.R');
+Rpath=getpref('scgeatoolbox','rexecutablepath');
+pkg.RunRcode('script.R',Rpath);
 if exist('output.mat','file')
     load('output.mat','X2');
 end

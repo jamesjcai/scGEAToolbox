@@ -31,7 +31,8 @@ if ~isdebug
 end
 
 save('input.mat','X','genelist','tgsPos');
-pkg.RunRcode('script.R');
+Rpath=getpref('scgeatoolbox','rexecutablepath');
+pkg.RunRcode('script.R',Rpath);
 if exist('output.csv','file')
     T=readtable('output.csv','ReadVariableNames',true);
     score=T.scoretype_UCell;

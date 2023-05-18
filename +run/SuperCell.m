@@ -23,7 +23,10 @@ if ~isempty(warnMsg)
     disp(warnId)
     error(warnId);
 end
-pkg.RunRcode('script.R');
+
+Rpath=getpref('scgeatoolbox','rexecutablepath');
+pkg.RunRcode('script.R',Rpath);
+
 if exist('output.mat','file')
     load('output.mat','X2');
 end

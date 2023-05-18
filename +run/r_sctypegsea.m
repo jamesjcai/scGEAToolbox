@@ -12,7 +12,10 @@ pth=fullfile(pw1,'thirdparty','R_scTypeGSEA');
 cd(pth);
 fprintf('CURRENTWDIR = "%s"\n',pth);
 
-[~,cmdout]=pkg.RunRcode('require.R');
+Rpath=getpref('scgeatoolbox','rexecutablepath');
+
+
+[~,cmdout]=pkg.RunRcode('require.R',Rpath);
 if strfind(cmdout,'there is no package')>0
     cd(oldpth);
     error(cmdout);
@@ -27,7 +30,10 @@ writematrix(X,'counts.txt');
 writematrix(c,'clusterid.txt');
 writematrix(genelist,'genelist.txt');
 
-pkg.RunRcode('script.R');
+
+pkg.RunRcode('script.R',Rpath);
+
+
 if exist('output.txt','file')    
     T=readtable('output.txt','Delimiter','\t','ReadVariableNames',false);
     ct=string(T.Var1);

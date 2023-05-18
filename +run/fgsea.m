@@ -37,7 +37,9 @@ if rmribo
     T=T(i,:);
 end
 writetable(T,'input.txt');
-pkg.RunRcode('script.R');
+Rpath=getpref('scgeatoolbox','rexecutablepath');
+pkg.RunRcode('script.R',Rpath);
+
 pause(1);
 if exist('output.txt','file')
     s=readtable('output.txt',"Delimiter",',');
