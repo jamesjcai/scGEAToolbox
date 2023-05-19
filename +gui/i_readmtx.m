@@ -73,7 +73,9 @@ sce=[];
                     barcodestxtfile = [];
                 else
                     barcodestxtfile = fullfile(pathname2, fname2);
-                end                
+                end
+            case 'No'
+                barcodestxtfile = [];
             otherwise
                 %[X, g] = sc_readmtxfile(matrixmtxfile, featurestxtfile, [], 2);
                 %sce = SingleCellExperiment(X, g);
@@ -95,6 +97,10 @@ sce=[];
                 return;
         end
     end
+
+    answer=questdlg(sprintf('Matrix file: %s\nFeature file: %s\nBarcode file (optional): %s\nContinne?',...
+        matrixmtxfile,featurestxtfile,barcodestxtfile),'Confirm File Selection');
+    if ~strcmp(answer,'Yes'), return; end
     fw = gui.gui_waitbar;
     if exist(matrixmtxfile, 'file') && exist(featurestxtfile, 'file') && exist(barcodestxtfile, 'file')
         [X, g, celllist] = sc_readmtxfile(matrixmtxfile, featurestxtfile, barcodestxtfile, 2);
