@@ -90,7 +90,17 @@ classdef SingleCellExperiment
     obj = sortcells(obj,idx);
     
     function obj = removecells(obj,idx)
+        try
             obj.X(:,idx)=[];
+        catch ME
+            if issparse(obj.X)
+                rethrow(ME);
+            else
+                obj.X=sparse(obj.X);
+                obj.X(:,idx)=[];
+            end
+        end
+
             obj.s(idx,:)=[];
             obj.c(idx)=[];
             if ~isempty(obj.c_cell_cycle_tx)
@@ -133,16 +143,71 @@ classdef SingleCellExperiment
                     end
                 end
             end
-        end
+    end
 
     function obj = selectcells(obj,idx)
-        if islogical(idx) && length(idx)==obj.NumCells
-            ix=idx;
+        if islogical(idx)
+            if length(idx)==obj.NumCells
+                obj = removecells(obj,~idx);
+            else
+                error('length(idx)~=sce.NumCells');
+            end
         else
-            ix=false(obj.NumCells,1);
-            ix(idx)=true;            
+            try
+                obj.X=obj.X(:,idx);
+            catch ME
+                if issparse(obj.X)
+                    rethrow(ME);
+                else
+                    obj.X=sparse(obj.X);
+                    obj.X=obj.X(:,idx);
+                end
+            end
+            obj.s=obj.s(idx,:);
+            obj.c=obj.c(idx);
+            if ~isempty(obj.c_cell_cycle_tx)
+                obj.c_cell_cycle_tx=obj.c_cell_cycle_tx(idx);
+            end
+            if ~isempty(obj.c_cell_type_tx)
+                obj.c_cell_type_tx=obj.c_cell_type_tx(idx);
+            end
+            if ~isempty(obj.c_cluster_id)
+                obj.c_cluster_id=obj.c_cluster_id(idx);
+            end
+            if ~isempty(obj.c_batch_id)
+                obj.c_batch_id=obj.c_batch_id(idx);
+            end
+            if ~isempty(obj.c_cell_id)
+                obj.c_cell_id=obj.c_cell_id(idx);
+            end
+            for k=2:2:length(obj.list_cell_attributes)
+                obj.list_cell_attributes{k}=obj.list_cell_attributes{k}(idx);
+            end
+            
+            a=fields(obj.struct_cell_embeddings);
+            for k=1:length(a)
+                if ~isempty(obj.struct_cell_embeddings.(a{k}))
+                    obj.struct_cell_embeddings.(a{k})=...
+                        obj.struct_cell_embeddings.(a{k})(idx,:);
+                end
+            end
+            
+            a=fields(obj.struct_cell_clusterings);
+            for k=1:length(a)
+                if ~isempty(obj.struct_cell_clusterings.(a{k}))
+                     obj.struct_cell_clusterings.(a{k}) = ...
+                         obj.struct_cell_clusterings.(a{k})(idx);
+                end
+            end
+            % obj.NumCells=size(obj.X,2);
+            if ~isempty(obj.table_attributes)
+                if istable(obj.table_attributes)
+                    if size(obj.table_attributes,1)==obj.NumCells
+                        obj.table_attributes=obj.table_attributes(idx,:);
+                    end
+                end
+            end
         end
-        obj = removecells(obj,~ix);
     end
 
     function obj = set.c(obj,tmpc)
