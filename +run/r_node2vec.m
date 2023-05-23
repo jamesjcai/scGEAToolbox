@@ -41,7 +41,7 @@ g2=string(T.Var1);
 s=table2array(T(:,2:end));
 [y,idx]=ismember(g,g2);
 assert(all(y));
-assert(isequal(g,g2(idx)));
+assert(isequal(g(:),g2(idx)));
 s=s(idx,:);
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 cd(oldpth);
