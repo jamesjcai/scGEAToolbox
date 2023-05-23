@@ -5,7 +5,7 @@ if ~isa(sce1,'SingleCellExperiment') || ~isa(sce2,'SingleCellExperiment')
 end
 T=[];
 assert(isequal(sce1.g,sce2.g))
-isdebug=true;
+isdebug=false;
 oldpth=pwd();
 [isok,msg]=commoncheck_R('R_scTenifoldNet');
 if ~isok, error(msg); end
