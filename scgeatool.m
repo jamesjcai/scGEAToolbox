@@ -31,6 +31,7 @@ promotesave=false;
               'TXT/TSV/CSV File (*.txt)...',...
               'H5/HDF5 File (*.h5)...',...
               'Seurat/Rds File (*.rds)...',...
+              'Loom File (*.loom)...',...
               '----------------------------------',...
               '10x Genomics ''outs'' Folder...',...
               'Parse Biosciences ''outs'' Folder...',...
@@ -84,23 +85,7 @@ promotesave=false;
                     errordlg(ME.message);
                     return;
                 end
-            case 'H5/HDF5 File (*.h5)...'
-                try
-                    [X, g, b, filename] = sc_readhdf5file;
-                    if ~isempty(X)
-                        sce = SingleCellExperiment(X, g);
-                        metainfo=sprintf("Source: %s",filename);
-                        sce=sce.appendmetainfo(metainfo);
-                        if ~isempty(b)
-                            sce.c_cell_id=b;
-                        end
-                    else
-                        return;
-                    end
-                catch ME
-                    errordlg(ME.message);
-                    return;
-                end 
+
             case 'TXT/TSV/CSV File (*.txt)...'
                 [fname, pathname] = uigetfile( ...
                                               {'*.tsv;*.csv;*.txt', 'TSV/CSV Format Files (*.tsc, *.csv, *.txt)'
@@ -130,6 +115,43 @@ promotesave=false;
                 else
                     gui.gui_waitbar(fw);
                 end
+
+            case 'H5/HDF5 File (*.h5)...'
+                try
+                    [X, g, b, filename] = sc_readhdf5file;
+                    if ~isempty(X)
+                        sce = SingleCellExperiment(X, g);
+                        metainfo=sprintf("Source: %s",filename);
+                        sce=sce.appendmetainfo(metainfo);
+                        if ~isempty(b)
+                            sce.c_cell_id=b;
+                        end
+                    else
+                        return;
+                    end
+                catch ME
+                    errordlg(ME.message);
+                    return;
+                end               
+
+            case 'Loom File (*.loom)...'
+                try
+                    [X, g, b, filename] = sc_readloomfile;
+                    if ~isempty(X)
+                        sce = SingleCellExperiment(X, g);
+                        metainfo=sprintf("Source: %s",filename);
+                        sce=sce.appendmetainfo(metainfo);
+                        if ~isempty(b)
+                            sce.c_cell_id=b;
+                        end
+                    else
+                        return;
+                    end
+                catch ME
+                    errordlg(ME.message);
+                    return;
+                end                
+
             case '10x Genomics ''outs'' Folder...'
                 selpath = uigetdir;
                 if selpath==0, return; end
