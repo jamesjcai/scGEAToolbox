@@ -5,11 +5,11 @@ if nargin<3, newpickclable=''; end
 if ~isempty(newpickclable)
     newclable=newpickclable;
 else
-    newclable=matlab.lang.makeValidName('Customized C');
+    newclable=matlab.lang.makeValidName('Workspace Variable');
 end
 
-if strcmp(clable,'Customized C...')
-    answerxx = questdlg('Rename Customized C?');
+if strcmp(clable,'Workspace Variable...')
+    answerxx = questdlg('Rename Workspace Variable?');
     if strcmp(answerxx, 'Yes')
         newclablex = inputdlg('New name',...
             'Rename', [1 50], {newpickclable});

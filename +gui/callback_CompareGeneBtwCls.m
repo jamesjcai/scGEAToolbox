@@ -196,8 +196,9 @@ if isempty(selecteditem), return; end
         otherwise
             return;
     end
-% assignin('base','y',y);
-% assignin('base','thisc',thisc);
+
+ % assignin('base','y',y);
+ % assignin('base','thisc',thisc);
 
     gui.i_violinplot(y,thisc,ttxt);
 

@@ -1180,18 +1180,21 @@ end
         sce=guidata(FigureHandle);        
         [thisc,clable,~,newpickclable]=gui.i_select1state(sce);
         
+        clable
+        newpickclable
+        
         if strcmp(clable,'Cell Cycle Phase')
             if length(unique(thisc))>1
                 sce.c_cell_cycle_tx=thisc;
             end
         end
         if isempty(thisc), return; end
-        if strcmp(clable,'Customized C...')
+        if strcmp(clable,'Workspace Variable...')
             clable=gui.i_renamec(clable,sce,newpickclable);
             sce.list_cell_attributes=[sce.list_cell_attributes,clable];
             sce.list_cell_attributes=[sce.list_cell_attributes,thisc];
         end
-        [c,cL]=grp2idx(thisc);
+        [c,cL]=grp2idx(thisc);        
         sce.c=c;
         RefreshAll(src, 1, true, false);
         n=max(c);
@@ -1199,8 +1202,10 @@ end
             f=0.5*(n-1)./n;
             f=1+f.*(1:2:2*n);        
             cb=colorbar('Ticks',f,'TickLabels',cellstr(cL));
-        else
-            cb=colorbar;
+        else            
+            %c=thisc;
+            %cb=colorbar;
+            cb=colorbar('Ticks',[]);
         end
         cb.Label.String = clable;
         % helpdlg(clable)

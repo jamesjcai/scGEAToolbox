@@ -1,4 +1,5 @@
-function [f]=i_violinplot(y,thisc,ttxt,colorit,cLorder)
+function [f]=i_violinplot(y,thisc,ttxt,colorit,cLorder) 
+
     if nargin<5
         [~,cLorder]=grp2idx(thisc);
     end
@@ -139,10 +140,10 @@ end
 end
 
 function i_savedata(~,~,a,b)
-    T=table(a(:),b(:));    
+    T=table(a(:),b(:));
     T.Properties.VariableNames={'ScoreLevel','GroupID'};
-    T=sortrows(T,'ScoreLevel','descend');
-    T=sortrows(T,'GroupID');
+    %T=sortrows(T,'ScoreLevel','descend');
+    %T=sortrows(T,'GroupID');
     gui.i_exporttable(T,true);
 end
 
