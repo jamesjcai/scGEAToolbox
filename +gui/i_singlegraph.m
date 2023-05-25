@@ -207,10 +207,11 @@ title(figname);
             'HorizontalAlignment','left', ...
             'VerticalAlignment','middle',...
             'BackgroundColor','w','Margin',0.1);
-        %}
-        
-        G.Edges.LWidths = abs(w*G.Edges.Weight/max(G.Edges.Weight));
-        p.LineWidth = G.Edges.LWidths;
+        %}        
+        if ~isempty(G.Edges.Weight)
+            G.Edges.LWidths = abs(w*G.Edges.Weight/max(G.Edges.Weight));
+            p.LineWidth = G.Edges.LWidths;
+        end
     end
 
    function AnimateCutoff(~,~)

@@ -1,64 +1,37 @@
-function callback_CompareGeneBtwCls(src,~)
-    answer = questdlg('This function generates violinplot to show differences between cell groups. Continue?','');
-    if ~strcmp(answer,'Yes'), return; end
+function [y,ttxt]=i_computecellscore(sce)
 
-    FigureHandle=src.Parent.Parent;
-    sce=guidata(FigureHandle);
+narginchk(1,1);
+validateattributes(sce,'SingleCellExperiment',{});
+y=[];
+ttxt=[];
 
-    allowunique=false;
-    [thisc]=gui.i_select1class(sce,allowunique);
-    if isempty(thisc), return; end
-    
 
-    if length(unique(thisc))==1
-        answer=questdlg("All cells are in the same group. No comparison will be made. Continue?", ...
-            "",'Yes','No','Cancel','No');
-        switch answer
-            case 'Yes'
-            otherwise
-                return;
-        end
-    else
-        [ci,cLi]=grp2idx(thisc);
-        listitems=natsort(string(cLi));
-        n=length(listitems);
-        [indxx,tfx] = listdlg('PromptString',{'Select two groups:'},...
-            'SelectionMode','multiple',...
-            'ListString',listitems,...
-            'InitialValue',1:n);
-        if tfx==1
-            [y1,idx1]=ismember(listitems(indxx),cLi);
-            assert(all(y1));
-            idx2=ismember(ci,idx1);
-            sce=sce.selectcells(idx2);
-            thisc=thisc(idx2);
-        else
-            return;
-        end    
 
-    end
 
-% selitems={'Expression of Gene', ...
-%     'TF Activity Score [PMID:33135076]',...
-%     'TF Targets Expression Score',...
-%     'Differentiation Potency [PMID:33244588]',...
-%     'MSigDB Signature Score',...
-%     '--------------------------------',...
-%     'Predefined Cell Score',...
-%     'Define New Score...',...
-%     '--------------------------------',...
-%     'Library Size','Other Attribute'};
-% [indx1,tf1]=listdlg('PromptString',...
-%     'Select a metric for comparison.',...
-%     'SelectionMode','single','ListString',selitems, ...
-%     'ListSize',[200,300]);
-% if tf1~=1, return; end
-% selecteditem=selitems{indx1};
+%[selecteditem] = gui.i_selectcellscore;
+%if isempty(selecteditem), return; end
 
-% ------------------------------------------------
 
-[selecteditem] = gui.i_selectcellscore;
-if isempty(selecteditem), return; end
+
+selitems={'TF Activity Score [PMID:33135076] 🐢',...
+    'TF Targets Expression Score',...
+    'Differentiation Potency [PMID:33244588]',...
+    'MSigDB Signature Score',...
+    '--------------------------------',...
+    'Predefined Cell Score',...
+    'Define New Score...',...
+    '--------------------------------',...
+    'Library Size','Other Attribute...'};
+[indx1,tf1]=listdlg('PromptString',...
+    'Select a metric for comparison.',...
+    'SelectionMode','single','ListString',selitems, ...
+    'ListSize',[220,300]);
+if tf1~=1, return; end
+
+selecteditem=selitems{indx1};
+
+
+
 %try
     switch selecteditem
         %case 'Global Coordination Level (GCL) [PMID:33139959]'
@@ -90,21 +63,6 @@ if isempty(selecteditem), return; end
                 y=sc_potency(sce.X,sce.g,speciesid);
                 ttxt='Differentiation Potency';
 
-            % [a]=contains(sce.list_cell_attributes(1:2:end),'cell_potency');
-            % if ~any(a)
-            %     answer2=questdlg('Which species?','Select Species','Mouse','Human','Mouse');
-            %     [yes,specisid]=ismember(lower(answer2),{'human','mouse'});
-            %     if ~yes, return; end
-            %     sce=sce.estimatepotency(specisid);
-            % end
-            % [yes,idx]=ismember({'cell_potency'},sce.list_cell_attributes(1:2:end));
-            % if yes
-            %     y=sce.list_cell_attributes{idx*2};                
-            %     ttxt='Differentiation Potency';
-            % else                
-            %     return;
-            % end
-
         case 'Library Size'
             y=sum(sce.X);
             ttxt='Library Size';
@@ -115,6 +73,10 @@ if isempty(selecteditem), return; end
                 return;
             end
             [Xt]=gui.i_transformx(sce.X);
+
+            allowunique=false;
+            [thisc]=gui.i_select1class(sce,allowunique);
+            if isempty(thisc), return; end            
             [~,cL,noanswer]=gui.i_reordergroups(thisc);
             if noanswer, return; end            
             colorit=true;
@@ -198,10 +160,3 @@ if isempty(selecteditem), return; end
         otherwise
             return;
     end
-
- % assignin('base','y',y);
- % assignin('base','thisc',thisc);
-
-    gui.i_violinplot(y,thisc,ttxt);
-
-end

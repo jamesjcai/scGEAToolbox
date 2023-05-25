@@ -27,7 +27,8 @@ function [thisc,clable,listitems,newpickclable]=i_select1state(sce, ...
         b=struct2cell(a);
         v=false(length(a),1);
         for k=1:length(a)
-            if max(a(k).size)==sce.NumCells && min(a(k).size)==1
+            if max(a(k).size)==sce.NumCells && min(a(k).size)==1 && ...
+                ~strcmp(a(k).class,'table')
                 v(k)=true;
             end
         end

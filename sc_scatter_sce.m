@@ -1180,8 +1180,8 @@ end
         sce=guidata(FigureHandle);        
         [thisc,clable,~,newpickclable]=gui.i_select1state(sce);
         
-        clable
-        newpickclable
+        %clable
+        %newpickclable
         
         if strcmp(clable,'Cell Cycle Phase')
             if length(unique(thisc))>1
@@ -1204,8 +1204,9 @@ end
             cb=colorbar('Ticks',f,'TickLabels',cellstr(cL));
         else            
             %c=thisc;
-            %cb=colorbar;
-            cb=colorbar('Ticks',[]);
+            set(h,'CData',thisc);
+            cb=colorbar;
+            %cb=colorbar('Ticks',[]);
         end
         cb.Label.String = clable;
         % helpdlg(clable)
