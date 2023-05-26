@@ -9,7 +9,7 @@ Run the following code in MATLAB:
 unzip('https://github.com/jamesjcai/scGEAToolbox/archive/main.zip');
 addpath('./scGEAToolbox-main');
 ```
-## Getting Started Quickly Using the SGEATOOL App
+## Getting Started Quickly Using the SCGEATOOL App
 Run the following code in MATLAB to start:
 ```matlab
 scgeatool
