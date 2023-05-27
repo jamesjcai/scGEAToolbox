@@ -86,8 +86,8 @@ hAx = axes('Parent', FigureHandle);
 title(hAx,sce.title);
 subtitle('[genes x cells]');
 
-kc = numel(unique(c));
-colormap(pkg.i_mycolorlines(kc));
+%kc = numel(unique(c));
+%colormap(pkg.i_mycolorlines(kc));
 
 dt = datacursormode;
 dt.UpdateFcn = {@i_myupdatefcnx};
@@ -235,6 +235,10 @@ i_addmenu(m_exp,0,@callback_CheckUpdates,'Check for Updates...');
 
 % handles = guihandles( FigureHandle );
 % guidata( FigureHandle, handles );
+
+
+kc = numel(unique(c));
+colormap(pkg.i_mycolorlines(kc));
 
 set(FigureHandle, 'visible', 'on');
 guidata(FigureHandle, sce);
