@@ -79,7 +79,6 @@ a=findall(FigureHandle,'tag','figMenuFileImportData');
 a.Text='Import Data Using GEO Accession...';
 a.MenuSelectedFcn=@GEOAccessionToSCE;
 
-
 hAx = axes('Parent', FigureHandle);
 
 [h] = gui.i_gscatter3(sce.s, c, methodid,1,hAx);
@@ -221,7 +220,7 @@ i_addmenu(m_exp,0,@callback_ShowHgBGeneExpression,'Show HgB-genes Expression...'
 i_addmenu(m_exp,0,@callback_ShowMtGeneExpression, 'Show Mt-genes Expression...');
 i_addmenu(m_exp,0,@callback_TCellExhaustionScores,'T Cell Exhaustion Score...');
                                                   
-i_addmenu(m_exp,1,{@DetermineCellTypeClustersGeneral,false},    'Annotate Cell Type Using Customized Markers...');
+i_addmenu(m_exp,1,{@DetermineCellTypeClustersGeneral,false},'Annotate Cell Type Using Customized Markers...');
 i_addmenu(m_exp,1,@GEOAccessionToSCE,'Import Data Using GEO Accession...');
 i_addmenu(m_exp,0,{@MergeSCEs,1},'Merge SCEs in Workspace...');
 i_addmenu(m_exp,0,{@MergeSCEs,2},'Merge SCE Data Files...');
@@ -1182,11 +1181,9 @@ end
 
     function ShowCellStates(src, ~)
         sce=guidata(FigureHandle);        
-        [thisc,clable,~,newpickclable]=gui.i_select1state(sce);
-        
+        [thisc,clable,~,newpickclable]=gui.i_select1state(sce);        
         %clable
-        %newpickclable
-        
+        %newpickclable        
         if strcmp(clable,'Cell Cycle Phase')
             if length(unique(thisc))>1
                 sce.c_cell_cycle_tx=thisc;
@@ -1200,17 +1197,21 @@ end
         end
         [c,cL]=grp2idx(thisc);        
         sce.c=c;
-        RefreshAll(src, 1, true, false);
-        n=max(c);
-        if n<40
-            f=0.5*(n-1)./n;
-            f=1+f.*(1:2:2*n);        
-            cb=colorbar('Ticks',f,'TickLabels',cellstr(cL));
-        else            
-            %c=thisc;
-            set(h,'CData',thisc);
-            cb=colorbar;
-            %cb=colorbar('Ticks',[]);
+        [answer]=gui.i_selvariabletype(thisc);
+
+        RefreshAll(src, 1, true, false);        
+        switch answer
+            case 'Categorical/Discrete'
+                n=max(c);
+                f=0.5*(n-1)./n;
+                f=1+f.*(1:2:2*n);
+                cb=colorbar('Ticks',f,'TickLabels',cellstr(cL));                
+            case 'Numerical/Continuous'
+                set(h,'CData',thisc);
+                cb=colorbar;
+            otherwise
+                set(h,'CData',thisc);
+                cb=colorbar;
         end
         cb.Label.String = clable;
         % helpdlg(clable)
