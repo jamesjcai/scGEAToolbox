@@ -29,7 +29,9 @@ pkg.i_addbutton2fig(tb,0,@saveoutlist,'export.gif','Save sorted gene list');
         fclose(fid);
         [status]=system(['notepad "' tmpName '" &']);
         if status~=0
-           edit(tmpName);
+           if ~(ismcc || isdeployed)            
+            edit(tmpName);
+           end
         end
     end
 

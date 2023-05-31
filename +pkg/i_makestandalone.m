@@ -60,17 +60,21 @@ if ~exist(outdir,"dir"), mkdir(outdir); end
     d=[d;d2];
 
 %%
+try
 if ~isdeployed
 compiler.build.standaloneWindowsApplication('scgeatool.m',...
     'ExecutableName','scgeatool','Verbose','On',...
-    'OutputDir',outdir,'AdditionalFiles',d);
+    'OutputDir',outdir,'AdditionalFiles',d,'SupportPackages','autodetect');
+end
+catch ME
+    disp(ME.message);
 end
 %%
 try
 a=getenv('USERPROFILE');
 b=getenv('username');
     
-winopen(sprintf('%s\\AppData\\Local\\Temp\\%s\\mcrCache9.13\\',a,b));
+winopen(sprintf('%s\\AppData\\Local\\Temp\\%s\\mcrCache9.14\\',a,b));
 winopen(outdir);
 catch
 end

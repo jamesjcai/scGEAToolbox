@@ -1,9 +1,9 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
   <configuration build-checksum="2108621455" file="D:\GitHub\scGEAToolbox\SCGEATOOL.prj" location="D:\GitHub\scGEAToolbox" name="SCGEATOOL" target="target.mlapps" target-name="Package App">
     <param.appname>SCGEATOOL</param.appname>
-    <param.authnamewatermark />
-    <param.email />
-    <param.company />
+    <param.authnamewatermark>James Cai</param.authnamewatermark>
+    <param.email>jcai@tamu.edu</param.email>
+    <param.company>Texas A&amp;M University</param.company>
     <param.icon />
     <param.icons />
     <param.summary />
@@ -19,8 +19,8 @@
       <item>19</item>
     </param.products.id>
     <param.products.version>
-      <item>9.13</item>
-      <item>12.4</item>
+      <item>9.14</item>
+      <item>12.5</item>
     </param.products.version>
     <param.platforms>
       <item>glnxa64</item>
@@ -128,7 +128,7 @@
     </build-deliverables>
     <workflow />
     <matlab>
-      <root>C:\Program Files\MATLAB\R2022B</root>
+      <root>C:\Program Files\MATLAB\R2023a</root>
       <toolboxes>
         <toolbox name="matlabcoder" />
         <toolbox name="embeddedcoder" />
