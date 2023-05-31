@@ -42,7 +42,7 @@ end
 
 [indx1,tf1] = listdlg('PromptString',...
     {'Select MSigDB Collection:'},...
-     'SelectionMode','single','ListString',listitems);
+     'SelectionMode','single','ListString',listitems,'ListSize',[220,300]);
 
 if tf1~=1, return; end
 
