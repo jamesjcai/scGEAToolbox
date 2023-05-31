@@ -47,7 +47,12 @@ function [thisc,clable,listitems,newpickclable]=i_select1state(sce, ...
         end
     end
 
+%if ~(ismcc || isdeployed)
+    listitems=[listitems,'Load Variable from File...'];
+%end
+
 if isempty(listitems), return; end
+
 
 % listitems={'Current Class (C)','Cluster ID','Batch ID',...
 %            'Cell Type','Cell Cycle Phase'};
@@ -103,6 +108,28 @@ if tf2==1
             [thisc,newpickclable]=i_pickvariable;
         case 'SCE Attribute Table...'
             [thisc,newpickclable]=i_pickattribute;
+        case 'Load Variable from File...'
+             thisc=[];
+             clable='';
+             listitems=[];
+             newpickclable=[];
+
+                [fname, pathname] = uigetfile( ...
+                                              {'*.txt', 'Variable Data Files (*.txt)'
+                                               '*.*',  'All Files (*.*)'}, ...
+                                              'Pick a Variable Data File');                
+                if isequal(fname,0), return; end
+                txtfile = fullfile(pathname, fname);
+                try
+                    T=readtable(txtfile);
+                    thisc=T.(T.Properties.VariableNames{1});
+                    assert(length(thisc)==sce.NumCells,'Invalid Variable Data File.')
+                    newpickclable='ExternalVariable';
+                catch ME
+                    thisc=[];
+                    errordlg(ME.message);
+                    return;
+                end
         otherwise   % other properties
             
             [~,idx]=ismember(clable, ...

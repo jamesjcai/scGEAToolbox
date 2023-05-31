@@ -1173,7 +1173,7 @@ end
     function ShowCellStemScatter(~, ~)
         sce = guidata(FigureHandle);
         [thisc,clable]=gui.i_select1state(sce);
-        if isempty(thisc), return; end        
+        if isempty(thisc), return; end
         figure('WindowStyle','modal');
         gui.i_stemscatter(sce.s,grp2idx(thisc));
         zlabel(clable);        
@@ -1183,7 +1183,7 @@ end
         sce=guidata(FigureHandle);        
         [thisc,clable,~,newpickclable]=gui.i_select1state(sce);        
         %clable
-        %newpickclable        
+        %newpickclable
         if strcmp(clable,'Cell Cycle Phase')
             if length(unique(thisc))>1
                 sce.c_cell_cycle_tx=thisc;
@@ -1195,7 +1195,7 @@ end
             sce.list_cell_attributes=[sce.list_cell_attributes,clable];
             sce.list_cell_attributes=[sce.list_cell_attributes,thisc];
         end
-        [c,cL]=grp2idx(thisc);        
+        [c,cL]=grp2idx(thisc);
         sce.c=c;
         [answer]=gui.i_selvariabletype(thisc);
 
