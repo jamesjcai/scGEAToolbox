@@ -1,5 +1,5 @@
 function callback_VirtualKOGenKI(src,~)
-    
+    gui.gui_showrefinfo('GenKI [PMID:37246643]');
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
 

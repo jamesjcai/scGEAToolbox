@@ -1,4 +1,5 @@
 function callback_scPCNet1(src,events)
+    
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
 

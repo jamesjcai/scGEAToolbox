@@ -1,4 +1,5 @@
 function callback_scTenifoldNet2lite(src,~)
+    gui.gui_showrefinfo('scTenifoldNet [PMID:33336197]');
     import ten.*
     import pkg.*
 

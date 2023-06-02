@@ -1,4 +1,5 @@
 function callback_scTenifoldXct2(src,~)
+    gui.gui_showrefinfo('scTenifoldXct [PMID:36787742]');
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
     % error('under development.');    

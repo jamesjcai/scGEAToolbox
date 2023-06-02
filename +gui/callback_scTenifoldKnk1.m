@@ -1,4 +1,5 @@
 function callback_scTenifoldKnk1(src,~)
+    gui.gui_showrefinfo('scTenifoldKnk [PMID:35510185]');
     import ten.*
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);

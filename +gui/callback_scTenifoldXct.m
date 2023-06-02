@@ -1,5 +1,6 @@
 function callback_scTenifoldXct(src,~)
-    % import ten.*
+    gui.gui_showrefinfo('scTenifoldXct [PMID:36787742]');
+% import ten.*
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
 

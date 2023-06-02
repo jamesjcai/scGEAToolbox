@@ -1,7 +1,6 @@
 function callback_MELDPerturbationScore(src,~)
 
-uiwait(helpdlg('The goal of MELD is to identify populations of cells that are most affected by an experimental perturbation. Rather than clustering the data first and calculating differential abundance of samples within clusters, MELD provides a density estimate for each scRNA-seq sample for every cell in each dataset. Comparing the ratio between the density of each sample provides a quantitative estimate the effect of a perturbation at the single-cell level. We can then identify the cells most or least affected by the perturbation.', ...
-    'MELD [PMID:33558698]'));
+gui.gui_showrefinfo('MELD [PMID:33558698]');
 [ok]=gui.i_confirmscript('Run MELD Perturbation Score (MELD)?', ...
     'py_MELD','python');
 if ~ok, return; end
@@ -14,9 +13,8 @@ if ~ok, return; end
     end
     
     if ~gui.i_setpyenv
-        return; 
+        return;
     end
-        
         
         fw=gui.gui_waitbar;
         try
