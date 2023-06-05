@@ -1,5 +1,5 @@
 function callback_ExploreCellularCrosstalk(src,~)
-
+gui.gui_showrefinfo('talklr [DOI:10.1101/2020.02.01.930602]');
     answer = questdlg('This function is based on an unpublished method [DOI:10.1101/2020.02.01.930602]. Continue?');
     if ~strcmp(answer,'Yes'), return; end
 
