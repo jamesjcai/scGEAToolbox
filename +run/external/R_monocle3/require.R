@@ -8,8 +8,14 @@ BiocManager::install(c('BiocGenerics', 'DelayedArray', 'DelayedMatrixStats',
                        'terra', 'ggrastr'))
 }
 
-install.packages("devtools")
-devtools::install_github('cole-trapnell-lab/monocle3')
+if (!requireNamespace("devtools", quietly = TRUE)){
+    install.packages("devtools", repo="http://cran.rstudio.com/")
+}
+
+if (!requireNamespace("monocle3", quietly = TRUE)){
+    devtools::install_github('cole-trapnell-lab/monocle3')
+}
+
 
 if (!requireNamespace("rhdf5", quietly = TRUE)){
 if (!requireNamespace("BiocManager", quietly = TRUE)){
