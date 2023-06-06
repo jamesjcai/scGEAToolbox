@@ -59,10 +59,14 @@ catch
     X=sparse(shape(1),shape(2));
 end
 
-c=0;
+c=0; olda=-1;
 for k=1:length(indptr)-1    
-    if mod(c,100)==0
-        fprintf('......%d%%\n',round(100*(c/length(indptr))));
+    if mod(c,round(length(indptr)/100))==0
+        a=round(100*(c/length(indptr)));
+        if a~=olda
+            fprintf('......%d%%\n',a);
+            olda=a;
+        end
     end
     i=indptr(k)+1:indptr(k+1);
     y=indices(i)+1;

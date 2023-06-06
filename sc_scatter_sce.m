@@ -603,14 +603,14 @@ end
 
     function RunSeuratWorkflow(src,~)
        [ok]=gui.i_confirmscript('Run Seurat/R Workflow (Seurat)?', ...
-            'R_SeuratWorkflow','r');
+            'R_Seurat','r');
         if ~ok, return; end
        
        [ndim]=gui.i_choose2d3d;
        if isempty(ndim), return; end
 	   fw = gui.gui_waitbar;
        try
-           [sce]=run.SeuratWorkflow(sce,ndim);
+           [sce]=run.r_seurat(sce,ndim);
            [c, cL] = grp2idx(sce.c);
        catch
        	   gui.gui_waitbar(fw);

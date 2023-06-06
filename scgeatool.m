@@ -173,7 +173,9 @@ promotesave=false;
                     sce.c_cell_id=celllist;
                     if isstring(celllist)
                     if all(strlength(celllist)>17)
-                        sce.c_batch_id=extractAfter(sce.c_cell_id,17);                        
+                        sce.c_batch_id=extractAfter(sce.c_cell_id,17);
+                        disp('sce.c_batch_id=extractAfter(sce.c_cell_id,17);');
+                        disp('Batch IDs assigned.');
                     end
                     end
                 end
