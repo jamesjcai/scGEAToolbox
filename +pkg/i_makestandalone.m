@@ -60,6 +60,7 @@ if ~exist(outdir,"dir"), mkdir(outdir); end
     d=[d;d2];
 
 %%
+needcorrect=false;
 try
 if ~isdeployed
 compiler.build.standaloneWindowsApplication('scgeatool.m',...
@@ -70,6 +71,7 @@ compiler.build.standaloneWindowsApplication('scgeatool.m',...
 end
 catch ME
     disp(ME.message);
+    needcorrect=true;
 end
 %%
 try
@@ -85,6 +87,10 @@ end
 
 %%
 cd(outdir);
+if needcorrect
+    a = readmatrix('requiredMCRProducts.txt');
+    writematrix(a(2:end),'requiredMCRProducts.txt','Delimiter','\t');
+end
 cd ..
 zippedfiles = zip('SCGEATOOL_StandaloneApplication.zip','SCGEATOOL_StandaloneApplication');
 movefile('SCGEATOOL_StandaloneApplication.zip','scgeatool.github.io\SCGEATOOL_StandaloneApplication.zip')
