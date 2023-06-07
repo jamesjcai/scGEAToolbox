@@ -5,23 +5,19 @@ function [sce]=readSeuratRds(filename)
     oldpth=pwd();
     [isok,msg]=commoncheck_R('R_SeuratReadRds');
     if ~isok, error(msg); sce=[]; return; end
-    
-    if exist('./inputrdsfile.txt','file'), delete('./inputrdsfile.txt'); end
-    if exist('./output.mat','file'), delete('./output.mat'); end
-    if exist('./output.mat.tmp','file'), delete('./output.mat.tmp'); end
-    if exist('./g.csv','file'), delete('./g.csv'); end
-    if exist('./X.csv','file'), delete('./X.csv'); end    
-    if exist('./umap.csv','file'), delete('./umap.csv'); end
-    if exist('./barcodes.csv','file'), delete('./barcodes.csv'); end
-    
+    isdebug=false;
+    tmpfilelist={'inputrdsfile.txt','output.h5',...
+        'g.csv','X.csv','umap.csv','barcodes.csv'};
+    if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+
     writematrix(filename,'inputrdsfile.txt');
     Rpath=getpref('scgeatoolbox','rexecutablepath');
     pkg.RunRcode('script.R',Rpath);
     
-if exist('g.csv','file') && exist('output.mat','file')
+if exist('g.csv','file') && exist('output.h5','file')
     t=readtable('g.csv');
     g=string(t.x);
-    load output.mat X
+    X=h5read('output.h5','/X');
     sce=SingleCellExperiment(X,g);
 elseif exist('g.csv','file') && exist('X.csv','file')
     t=readtable('g.csv');
@@ -36,12 +32,6 @@ if exist('barcodes.csv','file') && ~isempty(sce)
     sce.c_cell_id=id;
 end
     
-%     if exist('X.csv','file')
-%         t=readtable('X.csv');
-%         g=string(t.Var1);
-%         X=sparse(table2array(t(:,2:end)));
-%         sce=SingleCellExperiment(X,g);
-%     end
     if exist('umap.csv','file') && ~isempty(sce) && ~isempty(sce.c_cell_id)
 
         t=readtable('umap.csv');
@@ -56,17 +46,6 @@ end
 %         id=string(t.x);
 %         sce.c_batch_id=id;
 %     end
-%     if exist('input.txt','file'), delete('input.txt'); end
-%     if exist('X.csv','file'), delete('X.csv'); end
-%     if exist('umap.csv','file'), delete('umap.csv'); end
-%     if exist('batchid.csv','file'), delete('batchid.csv'); end 
-    if exist('./inputrdsfile.txt','file'), delete('./inputrdsfile.txt'); end
-    if exist('./output.mat','file'), delete('./output.mat'); end
-    if exist('./output.mat.tmp','file'), delete('./output.mat.tmp'); end    
-    if exist('./g.csv','file'), delete('./g.csv'); end
-    if exist('./X.csv','file'), delete('./X.csv'); end
-    if exist('./umap.csv','file'), delete('./umap.csv'); end
-    if exist('./barcodes.csv','file'), delete('./barcodes.csv'); end
-    
+    if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
     cd(oldpth);
 end
