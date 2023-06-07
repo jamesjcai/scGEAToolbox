@@ -91,18 +91,30 @@ subtitle('[genes x cells]');
 dt = datacursormode;
 dt.UpdateFcn = {@i_myupdatefcnx};
 
+mfolder = fileparts(mfilename('fullpath'));
+
 
 defaultToolbar = findall(FigureHandle, 'tag','FigureToolBar');  % get the figure's toolbar handle
-
 UitoolbarHandle = uitoolbar('Parent', FigureHandle);
-set(UitoolbarHandle, 'Tag', 'FigureToolBar', ...
-    'HandleVisibility', 'off', 'Visible', 'on');
-mfolder = fileparts(mfilename('fullpath'));
+set(UitoolbarHandle, 'Tag', 'FigureToolBar', 'HandleVisibility', 'off', 'Visible', 'on');
+SctoolbarHandle = uitoolbar('Parent', FigureHandle);
+set(SctoolbarHandle, 'Tag', 'FigureToolBar', 'HandleVisibility', 'off', 'Visible', 'on');
+
+
+% i_addbutton(1,1,@callback_Brush4Markers,"icon-mat-filter-1-20.gif","Marker genes of brushed cells");
+i_addbutton_toggle(2,0,@SelectCellsByQC,"icon-mat-filter-1-10.gif","Filter genes and cells","plotpicker-effects.gif");
+i_addbutton_toggle(2,0,@EmbeddingAgain,"icon-mat-filter-2-10.gif","Embedding (tSNE, UMP, PHATE)");
+i_addbutton_toggle(2,0,@ClusterCellsS,"icon-mat-filter-3-10.gif","Clustering using embedding S");
+i_addbutton_toggle(2,0,{@DetermineCellTypeClustersGeneral,true},"icon-mat-filter-4-10.gif","Assign cell types to groups");
+i_addbutton_toggle(2,0,@callback_SaveX,"icon-mat-filter-5-10.gif","Export & save data");
+
+
+
 i_addbutton(1,0,@callback_ShowGeneExpr,"list.gif","Select genes to show expression")
 i_addbutton(1,0,@ShowCellStates,"list2.gif","Show cell state")
 i_addbutton(1,0,@SelectCellsByQC,"plotpicker-effects.gif","Filter genes and cells")
-
 %i_addbutton(1,1,@LabelClusters,"plotpicker-scatter.gif","Label clusters")
+
 ptlabelclusters = uitoggletool(UitoolbarHandle, 'Separator', 'on');
 [img, map] = imread(fullfile(mfolder, 'resources', 'plotpicker-scatter.gif'));
 ptImage = ind2rgb(img, map);
@@ -120,6 +132,10 @@ i_addbutton(1,0,@ClusterCellsX,"plotpicker-gscatter.gif","Clustering using expre
 i_addbutton(1,1,{@DetermineCellTypeClustersGeneral,true},"plotpicker-contour.gif","Assign cell types to groups")
 i_addbutton(1,0,@Brush4Celltypes,"brush.gif","Assign cell type to selected cells");
 %i_addbutton(1,0,@ShowCellStemScatter,"IMG00067.GIF","Stem scatter plot");
+
+
+
+
 i_addbutton(1,1,@callback_Brush4Markers,"plotpicker-kagi.gif","Marker genes of brushed cells");
 i_addbutton(1,0,@callback_FindAllMarkers,"plotpicker-plotmatrix.gif","Marker gene heatmap");
 i_addbutton(1,1,@gui.callback_ShowClustersPop,"plotpicker-geoscatter.gif","Show cell clusters/groups individually");
@@ -135,23 +151,25 @@ i_addbutton(1,0,@gui.callback_PickColorMap,"plotpicker-compass.gif","Pick new co
 %     i_addbutton(1,0,@callback_formatfig,"xpowerpoint.gif",'Formating Figure...');
 % end
 i_addbutton(1,0,@RefreshAll,"plotpicker-geobubble2.gif","Refresh");
-i_addbutton(2,0,@call_scgeatool,"IMG00107.GIF"," ");
-%i_addbutton(2,0,@callback_CalculateCellScores,"cellscore2.gif","Calculate cell scores from list of feature genes")
-%i_addbutton(2,0,@callback_ComparePotency,"plotpicker-candle.gif","Compare differentiation potency between groups");
-i_addbutton(2,1,@gui.callback_MultiGroupingViewer,"plotpicker-arxtimeseries.gif","Multi-grouping View...");
-i_addbutton(2,0,@gui.callback_CrossTabulation,"plotpicker-comet.gif","Cross tabulation");
-i_addbutton(2,0,@call_scgeatool,"IMG00107.GIF"," ");
 
-%i_addbutton(2,1,@callback_CompareGeneBtwCls,"plotpicker-priceandvol.gif","Compare between groups");
-i_addbutton(2,1,@callback_CellTypeMarkerScores,"cellscore.gif","Calculate signature scores for each cell");
-i_addbutton(2,0,@callback_CompareGeneBtwCls,"cellscore2.gif","Compare between groups");
-i_addbutton(2,0,@call_scgeatool,"IMG00107.GIF"," ");
+i_addbutton(0,0,@call_scgeatool,"IMG00107.GIF"," ");
+%i_addbutton(0,0,@callback_CalculateCellScores,"cellscore2.gif","Calculate cell scores from list of feature genes")
+%i_addbutton(0,0,@callback_ComparePotency,"plotpicker-candle.gif","Compare differentiation potency between groups");
+i_addbutton(0,1,@gui.callback_MultiGroupingViewer,"plotpicker-arxtimeseries.gif","Multi-grouping View...");
+i_addbutton(0,0,@gui.callback_CrossTabulation,"plotpicker-comet.gif","Cross tabulation");
+i_addbutton(0,0,@call_scgeatool,"IMG00107.GIF"," ");
 
-i_addbutton(2,0,@callback_DEGene2Groups,"plotpicker-boxplot.gif","Compare 2 groups (DE analysis)");
-i_addbutton(2,0,@callback_EnrichrHVGs,"plotpicker-andrewsplot.gif","Functional enrichment analysis with HVGs");
-i_addbutton(2,0,@callback_BuildGeneNetwork,"noun_Network_691907.gif","Build gene regulatory network");
-i_addbutton(2,0,@callback_CompareGeneNetwork,"networkcomp.gif","Compare two scGRNs");
-i_addbutton(2,1,{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');
+%i_addbutton(0,1,@callback_CompareGeneBtwCls,"plotpicker-priceandvol.gif","Compare between groups");
+i_addbutton(0,1,@callback_CellTypeMarkerScores,"cellscore.gif","Calculate signature scores for each cell");
+i_addbutton(0,0,@callback_CompareGeneBtwCls,"cellscore2.gif","Compare between groups");
+i_addbutton(0,0,@call_scgeatool,"IMG00107.GIF"," ");
+
+i_addbutton(0,0,@callback_DEGene2Groups,"plotpicker-boxplot.gif","Compare 2 groups (DE analysis)");
+i_addbutton(0,0,@callback_EnrichrHVGs,"plotpicker-andrewsplot.gif","Functional enrichment analysis with HVGs");
+i_addbutton(0,0,@callback_BuildGeneNetwork,"noun_Network_691907.gif","Build gene regulatory network");
+i_addbutton(0,0,@callback_CompareGeneNetwork,"networkcomp.gif","Compare two scGRNs");
+i_addbutton(0,1,{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');
+
 
 gui.add_3dcamera(defaultToolbar, 'AllCells');
 
@@ -294,10 +312,12 @@ end
         else
             septag='off';
         end
-        if toolbarHdl==1
-            barhandle=UitoolbarHandle;
-        else
+        if toolbarHdl==0
             barhandle=defaultToolbar;
+        elseif toolbarHdl==1
+            barhandle=UitoolbarHandle;
+        elseif toolbarHdl==2
+            barhandle=SctoolbarHandle;
         end
         pt = uipushtool(barhandle, 'Separator', septag);
         try   
@@ -310,6 +330,38 @@ end
         pt.Tooltip = tooltipTxt;
         pt.ClickedCallback = callbackFnc;
     end
+
+
+    function i_addbutton_toggle(toolbarHdl,sepTag,callbackFnc,imgFil,tooltipTxt,imgFil2)
+        if nargin<6, imgFil2=imgFil; end
+        if ischar(callbackFnc) || isstring(callbackFnc)
+            callbackFnc=str2func(callbackFnc);
+        end
+        if sepTag==1
+            septag='on';
+        else
+            septag='off';
+        end
+        if toolbarHdl==0
+            barhandle=defaultToolbar;
+        elseif toolbarHdl==1
+            barhandle=UitoolbarHandle;
+        elseif toolbarHdl==2
+            barhandle=SctoolbarHandle;
+        end
+        pt =  uitoggletool (barhandle, 'Separator', septag);
+        
+        try   
+            [img, map] = imread(fullfile(mfolder, 'resources', imgFil));
+            ptImage = ind2rgb(img, map);            
+        catch
+            ptImage = rand(16,16,3);
+        end
+        pt.CData = ptImage;
+        pt.Tooltip = tooltipTxt;
+        pt.ClickedCallback = callbackFnc;
+    end
+
 
 
 % ------------------------
@@ -1511,3 +1563,4 @@ end
     end
 
 end
+
