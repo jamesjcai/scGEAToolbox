@@ -102,7 +102,10 @@ set(SctoolbarHandle, 'Tag', 'FigureToolBar', 'HandleVisibility', 'off', 'Visible
 
 
 % i_addbutton(1,1,@callback_Brush4Markers,"icon-mat-filter-1-20.gif","Marker genes of brushed cells");
-i_addbutton_push(1,0,@callback_ShowGeneExpr,"list.gif","Select genes to show expression")
+i_addbutton_toggle(1,0,{@togglebtfun,@turnoffuserguiding,"icon-mat-blur-off-10.gif", ...
+    "icon-mat-blur-on-10.gif",false},"Turn on/off user guiding toolbar");
+i_addbutton_push(0,0,@call_scgeatool,"IMG00107.GIF"," ");
+i_addbutton_push(1,1,@callback_ShowGeneExpr,"list.gif","Select genes to show expression")
 i_addbutton_push(1,0,@ShowCellStates,"list2.gif","Show cell state")
 i_addbutton_push(1,0,@SelectCellsByQC,"plotpicker-effects.gif","Filter genes and cells")
 
@@ -162,6 +165,10 @@ i_addbutton_toggle(2,0,{@togglebtfun,@EmbeddingAgain,"icon-mat-filter-2-10.gif",
 i_addbutton_toggle(2,0,{@togglebtfun,@ClusterCellsS,"icon-mat-filter-3-10.gif","plotpicker-dendrogram.gif"},"Clustering using embedding S");
 i_addbutton_toggle(2,0,{@togglebtfun,@DetermineCellTypeClustersGeneral,"icon-mat-filter-4-10.gif","plotpicker-contour.gif"},"Assign cell types to groups");
 i_addbutton_toggle(2,0,{@togglebtfun,@callback_SaveX,"icon-mat-filter-5-10.gif","export.gif"},"Export & save data");
+%i_addbutton_push(2,0,@call_scgeatool,"IMG00107.GIF"," ");
+%i_addbutton_push(2,1,@turnoffuserguiding,"icon-mat-blur-off-10.gif","Turn off user guiding toolbar");
+
+
 
 m_vie = uimenu(FigureHandle,'Text','&Multiview','Accelerator','M');
 i_addmenu(m_vie,0,@gui.callback_MultiEmbeddingViewer,'Multi-embedding View...');
@@ -258,6 +265,28 @@ if nargout > 0
     varargout{1} = FigureHandle;
 end
 
+% if ~ispref('scgeatoolbox','useronboardingtoolbar')
+%      setpref('scgeatoolbox','useronboardingtoolbar',true);
+%      showuseronboarding=true;
+% else
+%      showuseronboarding=getpref('scgeatoolbox','useronboardingtoolbar');     
+% end
+
+showuseronboarding=true;
+
+%if ~showuseronboarding
+%     set(SctoolbarHandle, 'Visible', 'off');
+%end
+
+    function turnoffuserguiding(~,~)        
+        % getpref('scgeatoolbox','useronboardingtoolbar');
+        if showuseronboarding
+            set(SctoolbarHandle, 'Visible', 'off');
+        else        
+            set(SctoolbarHandle, 'Visible', 'on');
+        end
+        showuseronboarding = ~showuseronboarding;
+    end
 
 %     function i_savefig(~,~,tag)        
 %         if tag==1
@@ -351,7 +380,8 @@ end
         pt.ClickedCallback = callbackFnc;
     end
 
-    function togglebtfun(src,~,func,imgFil1,imgFil2)
+    function togglebtfun(src,~,func,imgFil1,imgFil2,actiondelay)
+        if nargin<6, actiondelay=true; end
         try
             if src.State=="off"
                imgFil=imgFil1;
@@ -364,7 +394,9 @@ end
             ptImage = rand(16,16,3);
         end
         src.CData = ptImage;
-        if src.State=="off"
+        if actiondelay
+            if src.State=="off", func(src); end
+        else
             func(src);
         end
     end
