@@ -102,13 +102,35 @@ set(SctoolbarHandle, 'Tag', 'FigureToolBar', 'HandleVisibility', 'off', 'Visible
 
 
 % i_addbutton(1,1,@callback_Brush4Markers,"icon-mat-filter-1-20.gif","Marker genes of brushed cells");
-i_addbutton_toggle(2,0,@SelectCellsByQC,"icon-mat-filter-1-10.gif","Filter genes and cells","plotpicker-effects.gif");
+i_addbutton_toggle(2,0,{@togglebtfun,@SelectCellsByQC},"icon-mat-filter-1-10.gif","Filter genes and cells","plotpicker-effects.gif");
 i_addbutton_toggle(2,0,@EmbeddingAgain,"icon-mat-filter-2-10.gif","Embedding (tSNE, UMP, PHATE)");
 i_addbutton_toggle(2,0,@ClusterCellsS,"icon-mat-filter-3-10.gif","Clustering using embedding S");
-i_addbutton_toggle(2,0,{@DetermineCellTypeClustersGeneral,true},"icon-mat-filter-4-10.gif","Assign cell types to groups");
+i_addbutton_toggle(2,0,{@togglebtfun,@DetermineCellTypeClustersGeneral},"icon-mat-filter-4-10.gif","Assign cell types to groups");
 i_addbutton_toggle(2,0,@callback_SaveX,"icon-mat-filter-5-10.gif","Export & save data");
 
 
+    function togglebtfun(src,~,fun,imgFil1,imgFil2)
+        try
+            if src.State=="on"
+                    imgFil="icon-mat-filter-1-20.gif";
+                    [img, map] = imread(fullfile(mfolder, 'resources', imgFil));
+                    ptImage = ind2rgb(img, map);
+            elseif src.State=="off"
+                    imgFil="icon-mat-filter-1-10.gif";
+                    [img, map] = imread(fullfile(mfolder, 'resources', imgFil));
+                    ptImage = ind2rgb(img, map);                                   
+            end
+            
+        catch
+            ptImage = rand(16,16,3);
+        end
+        src.CData = ptImage;
+        if src.State=="off"
+            fun(src,[]);
+            %SelectCellsByQC(src,[]);
+        %set(src,"State","on");
+        end
+    end
 
 i_addbutton(1,0,@callback_ShowGeneExpr,"list.gif","Select genes to show expression")
 i_addbutton(1,0,@ShowCellStates,"list2.gif","Show cell state")
