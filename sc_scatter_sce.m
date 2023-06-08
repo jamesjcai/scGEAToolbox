@@ -105,6 +105,7 @@ set(SctoolbarHandle, 'Tag', 'FigureToolBar', 'HandleVisibility', 'off', 'Visible
 i_addbutton_push(1,0,@callback_ShowGeneExpr,"list.gif","Select genes to show expression")
 i_addbutton_push(1,0,@ShowCellStates,"list2.gif","Show cell state")
 i_addbutton_push(1,0,@SelectCellsByQC,"plotpicker-effects.gif","Filter genes and cells")
+
 %i_addbutton(1,1,@LabelClusters,"plotpicker-scatter.gif","Label clusters")
 ptlabelclusters = uitoggletool(UitoolbarHandle, 'Separator', 'on');
 [img, map] = imread(fullfile(mfolder, 'resources', 'plotpicker-scatter.gif'));
@@ -116,13 +117,15 @@ ptlabelclusters.State = 'off';
 i_addbutton_push(1,0,@Brushed2NewCluster,"plotpicker-glyplot-face.gif","Add brushed cells to a new group")
 i_addbutton_push(1,0,@Brushed2MergeClusters,"plotpicker-pzmap.gif","Merge brushed cells to same group")
 i_addbutton_push(1,0,@RenameCellTypeBatchID,"plotpicker-scatterhist.gif","Rename cell type or batch ID");
+i_addbutton_push(1,0,@call_scgeatool,"IMG00107.GIF"," ");
 i_addbutton_push(1,1,@ClusterCellsS,"plotpicker-dendrogram.gif","Clustering using embedding S")
-i_addbutton_push(1,0,@ClusterCellsX,"plotpicker-gscatter.gif","Clustering using expression matrix X")
+i_addbutton_push(1,0,@ClusterCellsX,"icon-mw-cluster-10.gif","Clustering using expression matrix X")
 i_addbutton_push(1,1,{@DetermineCellTypeClustersGeneral,true},"plotpicker-contour.gif","Assign cell types to groups")
 i_addbutton_push(1,0,@Brush4Celltypes,"brush.gif","Assign cell type to selected cells");
 %i_addbutton(1,0,@ShowCellStemScatter,"IMG00067.GIF","Stem scatter plot");
 i_addbutton_push(1,1,@callback_Brush4Markers,"plotpicker-kagi.gif","Marker genes of brushed cells");
 i_addbutton_push(1,0,@callback_FindAllMarkers,"plotpicker-plotmatrix.gif","Marker gene heatmap");
+i_addbutton_push(1,0,@call_scgeatool,"IMG00107.GIF"," ");
 i_addbutton_push(1,1,@gui.callback_ShowClustersPop,"plotpicker-geoscatter.gif","Show cell clusters/groups individually");
 i_addbutton_push(1,0,@gui.callback_SelectCellsByClass,"plotpicker-pointfig.gif","Select cells by class");
 i_addbutton_push(1,0,@DeleteSelectedCells,"plotpicker-qqplot.gif","Delete selected cells");
@@ -141,15 +144,15 @@ i_addbutton_push(0,0,@call_scgeatool,"IMG00107.GIF"," ");
 %i_addbutton(0,0,@callback_ComparePotency,"plotpicker-candle.gif","Compare differentiation potency between groups");
 i_addbutton_push(0,1,@gui.callback_MultiGroupingViewer,"plotpicker-arxtimeseries.gif","Multi-grouping View...");
 i_addbutton_push(0,0,@gui.callback_CrossTabulation,"plotpicker-comet.gif","Cross tabulation");
-i_addbutton_push(0,0,@call_scgeatool,"IMG00107.GIF"," ");
+%i_addbutton_push(0,0,@call_scgeatool,"IMG00107.GIF"," ");
 %i_addbutton(0,1,@callback_CompareGeneBtwCls,"plotpicker-priceandvol.gif","Compare between groups");
 i_addbutton_push(0,1,@callback_CellTypeMarkerScores,"cellscore.gif","Calculate signature scores for each cell");
 i_addbutton_push(0,0,@callback_CompareGeneBtwCls,"cellscore2.gif","Compare between groups");
-i_addbutton_push(0,0,@call_scgeatool,"IMG00107.GIF"," ");
+%i_addbutton_push(0,0,@call_scgeatool,"IMG00107.GIF"," ");
 i_addbutton_push(0,0,@callback_DEGene2Groups,"plotpicker-boxplot.gif","Compare 2 groups (DE analysis)");
 i_addbutton_push(0,0,@callback_EnrichrHVGs,"plotpicker-andrewsplot.gif","Functional enrichment analysis with HVGs");
-i_addbutton_push(0,0,@callback_BuildGeneNetwork,"noun_Network_691907.gif","Build gene regulatory network");
-i_addbutton_push(0,0,@callback_CompareGeneNetwork,"networkcomp.gif","Compare two scGRNs");
+i_addbutton_push(0,1,@callback_BuildGeneNetwork,"noun_Network_691907.gif","Build gene regulatory network");
+i_addbutton_push(0,0,@callback_CompareGeneNetwork,"icon-mw-model-net-10.gif","Compare two scGRNs");
 i_addbutton_push(0,1,{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');
 
 gui.add_3dcamera(defaultToolbar, 'AllCells');
@@ -159,7 +162,6 @@ i_addbutton_toggle(2,0,{@togglebtfun,@EmbeddingAgain,"icon-mat-filter-2-10.gif",
 i_addbutton_toggle(2,0,{@togglebtfun,@ClusterCellsS,"icon-mat-filter-3-10.gif","plotpicker-dendrogram.gif"},"Clustering using embedding S");
 i_addbutton_toggle(2,0,{@togglebtfun,@DetermineCellTypeClustersGeneral,"icon-mat-filter-4-10.gif","plotpicker-contour.gif"},"Assign cell types to groups");
 i_addbutton_toggle(2,0,{@togglebtfun,@callback_SaveX,"icon-mat-filter-5-10.gif","export.gif"},"Export & save data");
-
 
 m_vie = uimenu(FigureHandle,'Text','&Multiview','Accelerator','M');
 i_addmenu(m_vie,0,@gui.callback_MultiEmbeddingViewer,'Multi-embedding View...');
