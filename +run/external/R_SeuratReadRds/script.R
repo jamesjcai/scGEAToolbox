@@ -24,7 +24,7 @@ write.csv(rownames(A@assays$RNA),file='g.csv')
 
 tryCatch(
     {
-         write.csv(rownames(A@meta.data), file='barcodes.csv') 
+         write.csv(rownames(A@meta.data), file='barcodes.csv')
     },
     error = function(e){ 
         # (Optional)

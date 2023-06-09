@@ -15,26 +15,26 @@ function [sce]=readSeuratRds(filename)
     pkg.RunRcode('script.R',Rpath);
     
 if exist('g.csv','file') && exist('output.h5','file')
-    t=readtable('g.csv');
+    t=readtable('g.csv','Delimiter',',');
     g=string(t.x);
     X=h5read('output.h5','/X');
     sce=SingleCellExperiment(X,g);
 elseif exist('g.csv','file') && exist('X.csv','file')
-    t=readtable('g.csv');
+    t=readtable('g.csv','Delimiter',',');
     g=string(t.x);
     X=readmatrix('X.csv');    
     sce=SingleCellExperiment(X,g);    
 end
 
 if exist('barcodes.csv','file') && ~isempty(sce)
-    t=readtable('barcodes.csv');
+    t=readtable('barcodes.csv','Delimiter',',');
     id=string(t.x);
     sce.c_cell_id=id;
 end
     
     if exist('umap.csv','file') && ~isempty(sce) && ~isempty(sce.c_cell_id)
 
-        t=readtable('umap.csv');
+        t=readtable('umap.csv','Delimiter',',');
         [y,idx]=ismember(string(t.Var1),sce.c_cell_id);
         if all(y)
             s=table2array(t(:,2:end));
