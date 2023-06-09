@@ -100,6 +100,7 @@ UserToolbarHandle = uitoolbar('Parent', FigureHandle);
 set(UserToolbarHandle, 'Tag', 'UserToolBar', 'HandleVisibility', 'off', 'Visible', 'on');
 
 % i_addbutton(1,1,@callback_Brush4Markers,"icon-mat-filter-1-20.gif","Marker genes of brushed cells");
+
 i_addbutton_toggle(1,0,{@togglebtfun,@turnoffuserguiding,"icon-mat-blur-off-10.gif", ...
     "icon-mat-blur-on-10.gif",false},"Turn on/off user guiding toolbar");
 i_addbutton_push(0,0,@call_scgeatool,"IMG00107.GIF"," ");
@@ -178,9 +179,7 @@ i_addbutton_toggle(2,0,{@togglebtfun,@ClusterCellsS,"icon-mat-filter-3-10.gif","
 i_addbutton_toggle(2,0,{@togglebtfun,@DetermineCellTypeClustersGeneral,"icon-mat-filter-4-10.gif","plotpicker-contour.gif"},"Assign cell types to groups");
 i_addbutton_toggle(2,0,{@togglebtfun,@callback_SaveX,"icon-mat-filter-5-10.gif","export.gif"},"Export & save data");
 %i_addbutton_push(2,0,@call_scgeatool,"IMG00107.GIF"," ");
-%i_addbutton_push(2,1,@turnoffuserguiding,"icon-mat-blur-off-10.gif","Turn off user guiding toolbar");
-
-
+%i_addbutton_push(2,1,@turnonuserguiding,"icon-mat-blur-off-10.gif","Turn on user guiding toolbar");
 
 m_vie = uimenu(FigureHandle,'Text','&Multiview','Accelerator','M');
 i_addmenu(m_vie,0,@gui.callback_MultiEmbeddingViewer,'Multi-embedding View...');
@@ -281,23 +280,48 @@ if ~ispref('scgeatoolbox','useronboardingtoolbar')
     gui.gui_userguidingpref(true);
     setpref('scgeatoolbox','useronboardingtoolbar',true);
 else
-    if getpref('scgeatoolbox','useronboardingtoolbar')
-        gui.gui_userguidingpref(false);
-    end
+    %if getpref('scgeatoolbox','useronboardingtoolbar')
+    %    gui.gui_userguidingpref(false);
+    %end
 end
 showuseronboarding=getpref('scgeatoolbox','useronboardingtoolbar');
 if ~showuseronboarding
      set(UserToolbarHandle, 'Visible', 'off');
 end
 
-    function turnoffuserguiding(~,~)        
+
+%    function turnonuserguiding(~,~)
+%        setpref('scgeatoolbox','useronboardingtoolbar',true);
+%        % set(UserToolbarHandle, 'Visible', 'on');
+%    end
+
+    function turnoffuserguiding(~,~)
         % getpref('scgeatoolbox','useronboardingtoolbar');
+
+        if get(UserToolbarHandle, 'Visible')=="off"
+            askpref=true;
+        else
+            askpref=false;
+        end
+
         if showuseronboarding
             set(UserToolbarHandle, 'Visible', 'off');
         else        
             set(UserToolbarHandle, 'Visible', 'on');
         end
         showuseronboarding = ~showuseronboarding;
+
+        if askpref
+            gui.gui_userguidingpref(false);
+
+            %answer=questdlg('Show User Onboarding Toolbar again next time?','');
+            %switch answer
+            %    case 'Yes'
+            %        setpref('scgeatoolbox','useronboardingtoolbar',true);
+            %    case 'No'
+            %        setpref('scgeatoolbox','useronboardingtoolbar',false);
+            %end            
+        end
     end
 
 %     function i_savefig(~,~,tag)        
