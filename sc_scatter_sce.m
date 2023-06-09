@@ -37,9 +37,7 @@ if isempty(c_in)
 else
     sce.c = c_in;
 end
-if ~isempty(s_in)
-    sce.s = s_in;
-end
+if ~isempty(s_in), sce.s = s_in; end
 
 [c, cL] = grp2idx(sce.c);
 
@@ -53,6 +51,7 @@ FigureHandle = figure('Name', 'SCGEATOOL :: Single-Cell Gene Expression Analysis
     'position', round(1.25 * [0 0 560 420]), ...
     'visible', 'off', 'NumberTitle',tagx);
 movegui(FigureHandle, 'center');
+
 % b = uipanel(FigureHandle,'Title','B','BackgroundColor','cyan');
 % b.Position = [0.18 0.40 0.30 0.35];
 
@@ -94,12 +93,11 @@ dt.UpdateFcn = {@i_myupdatefcnx};
 mfolder = fileparts(mfilename('fullpath'));
 
 
-defaultToolbar = findall(FigureHandle, 'tag','FigureToolBar');  % get the figure's toolbar handle
-UitoolbarHandle = uitoolbar('Parent', FigureHandle);
-set(UitoolbarHandle, 'Tag', 'FigureToolBar', 'HandleVisibility', 'off', 'Visible', 'on');
-SctoolbarHandle = uitoolbar('Parent', FigureHandle);
-set(SctoolbarHandle, 'Tag', 'FigureToolBar', 'HandleVisibility', 'off', 'Visible', 'on');
-
+DeftToolbarHandle = findall(FigureHandle, 'Tag','FigureToolBar');  % get the figure's toolbar handle
+MainToolbarHandle = uitoolbar('Parent', FigureHandle);
+set(MainToolbarHandle, 'Tag', 'MainToolBar', 'HandleVisibility', 'off', 'Visible', 'on');
+UserToolbarHandle = uitoolbar('Parent', FigureHandle);
+set(UserToolbarHandle, 'Tag', 'UserToolBar', 'HandleVisibility', 'off', 'Visible', 'on');
 
 % i_addbutton(1,1,@callback_Brush4Markers,"icon-mat-filter-1-20.gif","Marker genes of brushed cells");
 i_addbutton_toggle(1,0,{@togglebtfun,@turnoffuserguiding,"icon-mat-blur-off-10.gif", ...
@@ -109,14 +107,28 @@ i_addbutton_push(1,1,@callback_ShowGeneExpr,"list.gif","Select genes to show exp
 i_addbutton_push(1,0,@ShowCellStates,"list2.gif","Show cell state")
 i_addbutton_push(1,0,@SelectCellsByQC,"plotpicker-effects.gif","Filter genes and cells")
 
+i_addbutton_toggle(1,1,{@togglebtfun,@LabelClusters, ...
+    "icon-mat-blur-circular-10.gif", ...
+    "icon-mat-blur-circular-8a2be2-20.gif",false}, ...
+    "Label cell groups");
+
+
 %i_addbutton(1,1,@LabelClusters,"plotpicker-scatter.gif","Label clusters")
-ptlabelclusters = uitoggletool(UitoolbarHandle, 'Separator', 'on');
-[img, map] = imread(fullfile(mfolder, 'resources', 'plotpicker-scatter.gif'));
-ptImage = ind2rgb(img, map);
+%{
+ptlabelclusters = uitoggletool(MainToolbarHandle, 'Separator', 'on');
+try
+    [img, map] = imread(fullfile(mfolder, 'resources', ...
+        'plotpicker-scatter.gif'));
+    ptImage = ind2rgb(img, map);
+catch
+    ptImage = rand(16,16,3);
+end
 ptlabelclusters.CData = ptImage;
 ptlabelclusters.Tooltip = 'Label cell groups';
 ptlabelclusters.ClickedCallback = @LabelClusters;
 ptlabelclusters.State = 'off';
+%}
+
 i_addbutton_push(1,0,@Brushed2NewCluster,"plotpicker-glyplot-face.gif","Add brushed cells to a new group")
 i_addbutton_push(1,0,@Brushed2MergeClusters,"plotpicker-pzmap.gif","Merge brushed cells to same group")
 i_addbutton_push(1,0,@RenameCellTypeBatchID,"plotpicker-scatterhist.gif","Rename cell type or batch ID");
@@ -158,7 +170,7 @@ i_addbutton_push(0,1,@callback_BuildGeneNetwork,"noun_Network_691907.gif","Build
 i_addbutton_push(0,0,@callback_CompareGeneNetwork,"icon-mw-model-net-10.gif","Compare two scGRNs");
 i_addbutton_push(0,1,{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');
 
-gui.add_3dcamera(defaultToolbar, 'AllCells');
+gui.add_3dcamera(DeftToolbarHandle, 'AllCells');
 
 i_addbutton_toggle(2,0,{@togglebtfun,@SelectCellsByQC,"icon-mat-filter-1-10.gif","plotpicker-effects.gif"},"Filter genes and cells");
 i_addbutton_toggle(2,0,{@togglebtfun,@EmbeddingAgain,"icon-mat-filter-2-10.gif","plotpicker-geobubble.gif"},"Embedding (tSNE, UMP, PHATE)");
@@ -265,25 +277,25 @@ if nargout > 0
     varargout{1} = FigureHandle;
 end
 
-% if ~ispref('scgeatoolbox','useronboardingtoolbar')
-%      setpref('scgeatoolbox','useronboardingtoolbar',true);
-%      showuseronboarding=true;
-% else
-%      showuseronboarding=getpref('scgeatoolbox','useronboardingtoolbar');     
-% end
-
-showuseronboarding=true;
-
-%if ~showuseronboarding
-%     set(SctoolbarHandle, 'Visible', 'off');
-%end
+if ~ispref('scgeatoolbox','useronboardingtoolbar')
+    gui.gui_userguidingpref(true);
+    setpref('scgeatoolbox','useronboardingtoolbar',true);
+else
+    if getpref('scgeatoolbox','useronboardingtoolbar')
+        gui.gui_userguidingpref(false);
+    end
+end
+showuseronboarding=getpref('scgeatoolbox','useronboardingtoolbar');
+if ~showuseronboarding
+     set(UserToolbarHandle, 'Visible', 'off');
+end
 
     function turnoffuserguiding(~,~)        
         % getpref('scgeatoolbox','useronboardingtoolbar');
         if showuseronboarding
-            set(SctoolbarHandle, 'Visible', 'off');
+            set(UserToolbarHandle, 'Visible', 'off');
         else        
-            set(SctoolbarHandle, 'Visible', 'on');
+            set(UserToolbarHandle, 'Visible', 'on');
         end
         showuseronboarding = ~showuseronboarding;
     end
@@ -331,14 +343,14 @@ showuseronboarding=true;
             septag='off';
         end
         if toolbarHdl==0
-            barhandle=defaultToolbar;
+            barhandle=DeftToolbarHandle;
         elseif toolbarHdl==1
-            barhandle=UitoolbarHandle;
+            barhandle=MainToolbarHandle;
         elseif toolbarHdl==2
-            barhandle=SctoolbarHandle;
+            barhandle=UserToolbarHandle;
         end
         pt = uipushtool(barhandle, 'Separator', septag);
-        try   
+        try
             [img, map] = imread(fullfile(mfolder, 'resources', imgFil));
             ptImage = ind2rgb(img, map);            
         catch
@@ -361,11 +373,11 @@ showuseronboarding=true;
             septag='off';
         end
         if toolbarHdl==0
-            barhandle=defaultToolbar;
+            barhandle=DeftToolbarHandle;
         elseif toolbarHdl==1
-            barhandle=UitoolbarHandle;
+            barhandle=MainToolbarHandle;
         elseif toolbarHdl==2
-            barhandle=SctoolbarHandle;
+            barhandle=UserToolbarHandle;
         end
         pt =  uitoggletool (barhandle, 'Separator', septag);
         
@@ -1595,7 +1607,7 @@ showuseronboarding=true;
                 %[~, k] = medoid(siv);  geometric_median
                 datatip(h, 'DataIndex', idx(k));
             end
-            ptlabelclusters.State = 'on';
+            %ptlabelclusters.State = 'on';
             isdone = true;
         end
     end
