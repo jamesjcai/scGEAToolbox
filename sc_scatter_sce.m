@@ -101,18 +101,37 @@ set(UserToolbarHandle, 'Tag', 'UserToolBar', 'HandleVisibility', 'off', 'Visible
 
 % i_addbutton(1,1,@callback_Brush4Markers,"icon-mat-filter-1-20.gif","Marker genes of brushed cells");
 
-i_addbutton_toggle(1,0,{@togglebtfun,@turnoffuserguiding,"icon-mat-blur-off-10.gif", ...
-    "icon-mat-blur-on-10.gif",false},"Turn on/off user guiding toolbar");
-i_addbutton_push(0,0,@call_scgeatool,"IMG00107.GIF"," ");
-i_addbutton_push(1,1,@callback_ShowGeneExpr,"list.gif","Select genes to show expression")
+%i_addbutton_toggle(1,0,{@togglebtfun,@turnoffuserguiding,"icon-mat-blur-off-10.gif", ...
+%    "icon-mat-blur-on-10.gif",false},"Turn on/off user onboarding toolbar");
+
+i_addbutton_toggle(1,0,{@togglebtfun,@turnoffuserguiding,"icon-mat-unfold-more-10.gif", ...
+    "icon-mat-unfold-less-10.gif",false},"Turn on/off user onboarding toolbar");
+%i_addbutton_push(1,0,@call_scgeatool,"IMG00107.GIF"," ");
+i_addbutton_push(1,0,@callback_ShowGeneExpr,"list.gif","Select genes to show expression")
 i_addbutton_push(1,0,@ShowCellStates,"list2.gif","Show cell state")
 i_addbutton_push(1,0,@SelectCellsByQC,"plotpicker-effects.gif","Filter genes and cells")
 
+
+% i_addbutton_toggle(1,1,{@togglebtfun,@LabelClusters, ...
+%     "icon-mat-blur-circular-10.gif", ...
+%     "icon-mat-blur-circular-8a2be2-20.gif",false}, ...
+%     "Label cell groups");
+% 
+% i_addbutton_toggle(1,1,{@togglebtfun,@LabelClusters, ...
+%     "icon-mat-more-10.gif", ...
+%     "icon-mat-more-a2142f-10.gif",false}, ...
+%     "Label cell groups");
+
 i_addbutton_toggle(1,1,{@togglebtfun,@LabelClusters, ...
-    "icon-mat-blur-circular-10.gif", ...
-    "icon-mat-blur-circular-8a2be2-20.gif",false}, ...
+    "icon-mat-chat-bubble-outline-10.gif", ...
+    "icon-mat-chat-10.gif",false}, ...
     "Label cell groups");
 
+% i_addbutton_toggle(1,1,{@togglebtfun,@LabelClusters, ...
+%     "icon-fa-tags-10b.gif", ...
+%     "icon-fa-tags-a2142f-10.gif",false}, ...
+%     "Label cell groups");
+% 
 
 %i_addbutton(1,1,@LabelClusters,"plotpicker-scatter.gif","Label clusters")
 %{
@@ -173,13 +192,16 @@ i_addbutton_push(0,1,{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to Pow
 
 gui.add_3dcamera(DeftToolbarHandle, 'AllCells');
 
+i_addbutton_push(2,0,@call_scgeatool,"IMG00107.GIF"," ");
 i_addbutton_toggle(2,0,{@togglebtfun,@SelectCellsByQC,"icon-mat-filter-1-10.gif","plotpicker-effects.gif"},"Filter genes and cells");
 i_addbutton_toggle(2,0,{@togglebtfun,@EmbeddingAgain,"icon-mat-filter-2-10.gif","plotpicker-geobubble.gif"},"Embedding (tSNE, UMP, PHATE)");
 i_addbutton_toggle(2,0,{@togglebtfun,@ClusterCellsS,"icon-mat-filter-3-10.gif","plotpicker-dendrogram.gif"},"Clustering using embedding S");
 i_addbutton_toggle(2,0,{@togglebtfun,@DetermineCellTypeClustersGeneral,"icon-mat-filter-4-10.gif","plotpicker-contour.gif"},"Assign cell types to groups");
 i_addbutton_toggle(2,0,{@togglebtfun,@callback_SaveX,"icon-mat-filter-5-10.gif","export.gif"},"Export & save data");
-%i_addbutton_push(2,0,@call_scgeatool,"IMG00107.GIF"," ");
-%i_addbutton_push(2,1,@turnonuserguiding,"icon-mat-blur-off-10.gif","Turn on user guiding toolbar");
+i_addbutton_push(2,0,@call_scgeatool,"IMG00107.GIF"," ");
+i_addbutton_push(2,0,@call_scgeatool,"IMG00107.GIF"," ");
+i_addbutton_push(2,0,@turnonuserguiding,"icon-fa-thumb-tack-10.gif","Turn on user guiding toolbar");
+i_addbutton_push(2,0,@call_scgeatool,"IMG00107.GIF"," ");
 
 m_vie = uimenu(FigureHandle,'Text','&Multiview','Accelerator','M');
 i_addmenu(m_vie,0,@gui.callback_MultiEmbeddingViewer,'Multi-embedding View...');
@@ -290,10 +312,12 @@ if ~showuseronboarding
 end
 
 
-%    function turnonuserguiding(~,~)
-%        setpref('scgeatoolbox','useronboardingtoolbar',true);
-%        % set(UserToolbarHandle, 'Visible', 'on');
-%    end
+    function turnonuserguiding(~,~)
+        % setpref('scgeatoolbox','useronboardingtoolbar',true);
+        % set(UserToolbarHandle, 'Visible', 'on');
+                    gui.gui_userguidingpref(false);
+
+    end
 
     function turnoffuserguiding(~,~)
         % getpref('scgeatoolbox','useronboardingtoolbar');
@@ -312,7 +336,7 @@ end
         showuseronboarding = ~showuseronboarding;
 
         if askpref
-            gui.gui_userguidingpref(false);
+           %  gui.gui_userguidingpref(false);
 
             %answer=questdlg('Show User Onboarding Toolbar again next time?','');
             %switch answer
