@@ -167,13 +167,13 @@ i_addbutton_push(1,0,@DeleteSelectedCells,"plotpicker-qqplot.gif","Delete select
 i_addbutton_push(1,0,@callback_SaveX,"export.gif","Export & save data");
 i_addbutton_push(1,1,@EmbeddingAgain,"plotpicker-geobubble.gif","Embedding (tSNE, UMP, PHATE)");
 i_addbutton_push(1,0,@Switch2D3D,"plotpicker-image.gif","Switch 2D/3D");
-i_addbutton_push(1,1,@callback_CloseAllOthers,"noun_Pruners_2469297.gif","Close all other figures");
+i_addbutton_push(1,1,@callback_CloseAllOthers,"icon-fa-cut-10.gif","Close all other figures");
 i_addbutton_push(1,0,@callback_PickPlotMarker,"plotpicker-rose.gif","Switch scatter plot marker type");
 i_addbutton_push(1,0,@gui.callback_PickColorMap,"plotpicker-compass.gif","Pick new color map");
 % if ~(ismcc || isdeployed)
 %     i_addbutton(1,0,@callback_formatfig,"xpowerpoint.gif",'Formating Figure...');
 % end
-i_addbutton_push(1,0,@RefreshAll,"plotpicker-geobubble2.gif","Refresh");
+i_addbutton_push(1,0,@RefreshAll,"icon-mat-refresh-20.gif","Refresh");
 i_addbutton_push(0,0,@call_scgeatool,"IMG00107.GIF"," ");
 %i_addbutton(0,0,@callback_CalculateCellScores,"cellscore2.gif","Calculate cell scores from list of feature genes")
 %i_addbutton(0,0,@callback_ComparePotency,"plotpicker-candle.gif","Compare differentiation potency between groups");
@@ -187,21 +187,21 @@ i_addbutton_push(0,0,@callback_CompareGeneBtwCls,"cellscore2.gif","Compare betwe
 i_addbutton_push(0,0,@callback_DEGene2Groups,"plotpicker-boxplot.gif","Compare 2 groups (DE analysis)");
 i_addbutton_push(0,0,@callback_EnrichrHVGs,"plotpicker-andrewsplot.gif","Functional enrichment analysis with HVGs");
 i_addbutton_push(0,1,@callback_BuildGeneNetwork,"noun_Network_691907.gif","Build gene regulatory network");
-i_addbutton_push(0,0,@callback_CompareGeneNetwork,"icon-mw-model-net-10.gif","Compare two scGRNs");
+i_addbutton_push(0,0,@callback_CompareGeneNetwork,"noun_Deep_Learning_2424485.gif","Compare two scGRNs");
 i_addbutton_push(0,1,{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');
 
 gui.add_3dcamera(DeftToolbarHandle, 'AllCells');
 
-i_addbutton_push(2,0,@call_scgeatool,"IMG00107.GIF"," ");
+i_addbutton_push(2,0,@turnonuserguiding,"icon-fa-thumb-tack-10.gif","Turn on user guiding toolbar");
 i_addbutton_toggle(2,0,{@togglebtfun,@SelectCellsByQC,"icon-mat-filter-1-10.gif","plotpicker-effects.gif"},"Filter genes and cells");
 i_addbutton_toggle(2,0,{@togglebtfun,@EmbeddingAgain,"icon-mat-filter-2-10.gif","plotpicker-geobubble.gif"},"Embedding (tSNE, UMP, PHATE)");
 i_addbutton_toggle(2,0,{@togglebtfun,@ClusterCellsS,"icon-mat-filter-3-10.gif","plotpicker-dendrogram.gif"},"Clustering using embedding S");
 i_addbutton_toggle(2,0,{@togglebtfun,@DetermineCellTypeClustersGeneral,"icon-mat-filter-4-10.gif","plotpicker-contour.gif"},"Assign cell types to groups");
 i_addbutton_toggle(2,0,{@togglebtfun,@callback_SaveX,"icon-mat-filter-5-10.gif","export.gif"},"Export & save data");
-i_addbutton_push(2,0,@call_scgeatool,"IMG00107.GIF"," ");
-i_addbutton_push(2,0,@call_scgeatool,"IMG00107.GIF"," ");
-i_addbutton_push(2,0,@turnonuserguiding,"icon-fa-thumb-tack-10.gif","Turn on user guiding toolbar");
-i_addbutton_push(2,0,@call_scgeatool,"IMG00107.GIF"," ");
+%i_addbutton_push(2,0,@call_scgeatool,"IMG00107.GIF"," ");
+%i_addbutton_push(2,0,@call_scgeatool,"IMG00107.GIF"," ");
+
+%i_addbutton_push(2,0,@call_scgeatool,"IMG00107.GIF"," ");
 
 m_vie = uimenu(FigureHandle,'Text','&Multiview','Accelerator','M');
 i_addmenu(m_vie,0,@gui.callback_MultiEmbeddingViewer,'Multi-embedding View...');
@@ -455,7 +455,11 @@ end
         end
         src.CData = ptImage;
         if actiondelay
-            if src.State=="off", func(src); end
+            if src.State=="off"
+                func(src); 
+            else
+                uiwait(helpdlg('To execute the function, click the button again or locate and click the same button in the toolbar above. Hover over the button to view a description of its function.',''));
+            end
         else
             func(src);
         end
