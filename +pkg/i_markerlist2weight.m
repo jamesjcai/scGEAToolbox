@@ -14,8 +14,10 @@ else
     indata=sprintf('Cell type 1\t%s\nCell type 2\t%s',a1,a2);
 end
 
+% indata=gui.i_getsctypemarkers;
+
 a=inputdlg(sprintf('Format:\nCell type name [TAB] Gene1,Gene2'), ...
-    'Markers Input',[10 50],{char(indata)});
+    'Markers Input',[10 50],{char(indata)},'on');
 if isempty(a), return; end
 b=strtrim(string(a{1}));
 [c,d]=strtok(b,sprintf('\t'));

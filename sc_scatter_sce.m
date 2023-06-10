@@ -1063,33 +1063,33 @@ end
         disp('Following the library-size normalization and log1p-transformation, we visualized similarity among cells by projecting them into a reduced dimensional space using t-distributed stochastic neighbor embedding (t-SNE)/uniform manifold approximation and projection (UMAP).')
     end
 
-    function [Tct]=i_determinecelltype(sce, ptsSelected, wvalu, wgene, celltypev, markergenev)
-            T=table(celltypev);
-            Xk=sce.X(:,ptsSelected);
-            S=zeros(length(celltypev),1);
-            for j=1:length(celltypev)
-                g=strsplit(markergenev(j),',');
-                g=g(1:end-1);
-                Z=0; ng=0;
-                for ix=1:length(g)
-                    if any(g(ix)==wgene) && any(g(ix)==sce.g)
-                        wi=wvalu(g(ix)==wgene);  
-                        z=median(Xk(sce.g==g(ix),:));
-                        Z=Z+z*wi;
-                        ng=ng+1;
-                    end
-                end
-                if Z>0, S(j)=Z./nthroot(ng,3); end
-            end
-            if all(S(:)==0)
-                Tct=cell2table({'Unknown',0});
-            else
-                [~,idx]=sort(S,'descend');
-                T=[T,array2table(S)];
-                Tct=T(idx,:);                
-            end
-            Tct.Properties.VariableNames={'C1_Cell_Type','C1_CTA_Score'};
-    end
+%     function [Tct]=i_determinecelltype(sce, ptsSelected, wvalu, wgene, celltypev, markergenev)
+%             T=table(celltypev);
+%             Xk=sce.X(:,ptsSelected);
+%             S=zeros(length(celltypev),1);
+%             for j=1:length(celltypev)
+%                 g=strsplit(markergenev(j),',');
+%                 g=g(1:end-1);
+%                 Z=0; ng=0;
+%                 for ix=1:length(g)
+%                     if any(g(ix)==wgene) && any(g(ix)==sce.g)
+%                         wi=wvalu(g(ix)==wgene);  
+%                         z=median(Xk(sce.g==g(ix),:));
+%                         Z=Z+z*wi;
+%                         ng=ng+1;
+%                     end
+%                 end
+%                 if Z>0, S(j)=Z./nthroot(ng,3); end
+%             end
+%             if all(S(:)==0)
+%                 Tct=cell2table({'Unknown',0});
+%             else
+%                 [~,idx]=sort(S,'descend');
+%                 T=[T,array2table(S)];
+%                 Tct=T(idx,:);                
+%             end
+%             Tct.Properties.VariableNames={'C1_Cell_Type','C1_CTA_Score'};
+%     end
 
 
     function DetermineCellTypeClustersGeneral(src, ~, usedefaultdb)
@@ -1140,7 +1140,7 @@ end
                 sce.s, ptsSelected, ...
                 speciestag, organtag, databasetag, bestonly);
         else
-            [Tct]=i_determinecelltype(sce, ptsSelected, wvalu, ...
+            [Tct]=pkg.e_determinecelltype(sce, ptsSelected, wvalu, ...
                 wgene, celltypev, markergenev);
         end
 
