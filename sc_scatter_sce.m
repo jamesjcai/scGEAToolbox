@@ -232,6 +232,9 @@ i_addmenu(m_ext,1,@callback_MELDPerturbationScore,'MELD Perturbation Score (MELD
 i_addmenu(m_ext,0,{@SubsampleCells,2},'Geometric Sketching (geosketch/Py) [PMID:31176620]...');
 i_addmenu(m_ext,0,@HarmonyPy,'Batch Integration (Harmony/Py) [PMID:31740819]...');
 i_addmenu(m_ext,0,@DoubletDetection,'Detect Doublets (Scrublet/Py) [PMID:30954476]...');
+i_addmenu(m_ext,1,@callback_ExploreCellularCrosstalk,'Talklr Intercellular Crosstalk [DOI:10.1101/2020.02.01.930602]...');
+i_addmenu(m_ext,0,@callback_CompareGCLBtwCls,'Differential GCL Analysis [PMID:33139959]...');
+i_addmenu(m_ext,0,@callback_DiffTFActivity,'Differential TF Activity Analysis...');
 
 m_exp = uimenu(FigureHandle,'Text','Ex&perimental','Accelerator','p');
 % m_exp2 = uimenu(m_exp,'Text','sc&Tenifold Suite','Accelerator','T');
@@ -247,8 +250,6 @@ i_addmenu(m_exp,0,@callback_SelectCellsByMarker,'Extract Cells by Marker(+/-) Ex
 i_addmenu(m_exp,0,@MergeSubCellTypes,'Merge Subclusters of Same Cell Type');
 %i_addmenu(m_exp,0,@callback_TwoGeneCooccurrenceTest,'Two-Gene Cooccurrence Test...');
 %i_addmenu(m_exp,0,@AnnotateSubGroup,'Annotate Cell Subgroups...');
-
-
 i_addmenu(m_exp,1,@WorkonSelectedGenes,'Select Top n HVGs to Work on...');
 i_addmenu(m_exp,0,@SubsampleCells,'Subsample 50% Cells to Work on...');
 
@@ -259,10 +260,6 @@ i_addmenu(m_exp,1,@gui.callback_Violinplot,'Gene Violin Plot...');
 i_addmenu(m_exp,0,@gui.callback_DrawDotplot,'Gene Dot Plot...');
 i_addmenu(m_exp,0,@gui.callback_GeneHeatMap,'Gene Heatmap...');
 
-i_addmenu(m_exp,1,@callback_ExploreCellularCrosstalk,'Talklr Intercellular Crosstalk [DOI:10.1101/2020.02.01.930602]...');
-i_addmenu(m_exp,0,@callback_CompareGCLBtwCls,     'Differential GCL Analysis [PMID:33139959]...');
-i_addmenu(m_exp,0,@callback_DiffTFActivity,       'Differential TF Activity Analysis...');
-
 i_addmenu(m_exp,1,@callback_CalculateGeneStats,   'Calculate Gene Expression Statistics...');
 i_addmenu(m_exp,0,@callback_CellCycleLibrarySize, 'Library Size of Cell Cycle Phases...');
 i_addmenu(m_exp,0,@callback_CellCycleAssignment,  'Cell Cycle Phase Assignment...');
@@ -271,6 +268,9 @@ i_addmenu(m_exp,0,@callback_ShowMtGeneExpression, 'Show Mt-genes Expression...')
 i_addmenu(m_exp,0,@callback_TCellExhaustionScores,'T Cell Exhaustion Score...');
                                                   
 i_addmenu(m_exp,1,{@DetermineCellTypeClustersGeneral,false},'Annotate Cell Type Using Customized Markers...');
+i_addmenu(m_exp,0,{@MergeCellSubtypes,1},'Import Subtype Cell Annotation from SCE in Workspace...');
+i_addmenu(m_exp,0,{@MergeCellSubtypes,2},'Import Subtype Cell Annotation from SCE Data File...');
+
 i_addmenu(m_exp,1,@GEOAccessionToSCE,'Import Data Using GEO Accession...');
 i_addmenu(m_exp,0,{@MergeSCEs,1},'Merge SCEs in Workspace...');
 i_addmenu(m_exp,0,{@MergeSCEs,2},'Merge SCE Data Files...');
@@ -587,14 +587,23 @@ end
         end        
     end
     
-    
+    function MergeCellSubtypes(src, ~, sourcetag)
+        [requirerefresh]=gui.callback_MergeCellSubtypes(src,[],sourcetag);
+        if requirerefresh
+            sce = guidata(FigureHandle);
+            [c, cL] = grp2idx(sce.c_cell_type_tx);
+            RefreshAll(src, 1, true);
+            i_labelclusters(true);
+        end
+    end
+
     function MergeSCEs(src, ~, sourcetag)
         [requirerefresh,s]=gui.callback_MergeSCEs(src,sourcetag);
         if requirerefresh && ~isempty(s)
             sce = guidata(FigureHandle);
             [c, cL] = grp2idx(sce.c_batch_id);
             RefreshAll(src, 1, true);
-            msgbox(sprintf('%s SCEs merged.', upper(s)));
+            helpdlg(sprintf('%s SCEs merged.', upper(s)),'');
         end
     end
 
@@ -1094,20 +1103,6 @@ end
 
     function DetermineCellTypeClustersGeneral(src, ~, usedefaultdb)
         if nargin<3, usedefaultdb=true; end
-        answer = questdlg('Assign cell types to clusters automatically?',...
-            '','Yes, automatically','No, manually',...
-            'Cancel','Yes, automatically');
-        switch answer
-            case 'Yes, automatically'
-                manuallyselect=false;
-                bestonly=true;
-            case 'No, manually'
-                manuallyselect=true;
-                bestonly=false;
-            otherwise
-                return;
-        end
-
         if usedefaultdb
             speciestag = gui.i_selectspecies;
             if isempty(speciestag), return; end        
@@ -1123,6 +1118,8 @@ end
             celltypev=string(Tm.Var1);
             markergenev=string(Tm.Var2);
         end
+
+        [manuallyselect,bestonly]=i_annotemanner;
 
         dtp = findobj(h,'Type','datatip');
         delete(dtp);
@@ -1623,7 +1620,8 @@ end
         isdone = false;
         if ~isempty(cL)
             if notasking
-                stxtyes = c;
+                %stxtyes = c;
+                stxtyes = cL(c);
             else
                 [~,cLx]=grp2idx(c);
                 if isequal(cL,cLx)

@@ -3,8 +3,15 @@ function [Tm,Tw]=i_markerlist2weight(sce)
 %celltypev=string(Tm.Var1);
 %markergenev=string(Tm.Var2);
 Tm=[]; Tw=[];
-
 if nargin<1, sce=[]; end
+
+answer=questdlg('Load scType marker gene list?');
+indata='';
+if strcmp(answer,'Yes')
+    indata=gui.i_getsctypemarkers;
+end
+
+if isempty(indata)
 if isempty(sce)
     indata=sprintf('Cell type 1\tgene1,gene2,gene3\nCell type 2\tgene4,gene5');
 else
@@ -13,9 +20,9 @@ else
     a2=sprintf('%s,%s',a(4),a(5));
     indata=sprintf('Cell type 1\t%s\nCell type 2\t%s',a1,a2);
 end
+end
 
 % indata=gui.i_getsctypemarkers;
-
 a=inputdlg(sprintf('Format:\nCell type name [TAB] Gene1,Gene2'), ...
     'Markers Input',[10 50],{char(indata)},'on');
 if isempty(a), return; end
