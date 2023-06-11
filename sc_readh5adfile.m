@@ -38,17 +38,25 @@ idx2=find(strcmp(strtrim(string(char(hinfo.Groups(idx).Attributes.Name))),"shape
 shape=double(hinfo.Groups(idx).Attributes(idx2).Value);
 
     idx=find(strcmp(strtrim(string(char(hinfo.Groups.Name))),"/var"));
-    g=h5read(filenm,[hinfo.Groups(idx).Name,'/gene_ids']);
+    try
+        g=h5read(filenm,[hinfo.Groups(idx).Name,'/gene_ids']);
+    catch
+        g=h5read(filenm,[hinfo.Groups(idx).Name,'/_index']);
+    end
     % g=h5read(filenm,[hinfo.Groups(idx).Name,'/gene_name']);
 
 try
     barcodes=h5read(filenm,[hinfo.Groups.Groups(1).Name,'/barcodes']);
 catch
         try
-barcodes=h5read(filenm,[hinfo.Groups(2).Name,'/index']);
-            barcodes=h5read(filenm,[hinfo.Groups(1).Name,'/barcodes']);
+            barcodes=h5read(filenm,[hinfo.Groups(2).Name,'/index']);
+            %barcodes=h5read(filenm,[hinfo.Groups(1).Name,'/barcodes']);
         catch
-            warning('BARCODES not found.');
+            try
+                barcodes=h5read(filenm,'/obs/_index');
+            catch
+                warning('BARCODES not found.');
+            end
         end
 end
 
