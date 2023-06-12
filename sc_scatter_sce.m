@@ -274,7 +274,7 @@ i_addmenu(m_exp,0,@callback_ShowMtGeneExpression, 'Show Mt-genes Expression...')
 i_addmenu(m_exp,0,@callback_TCellExhaustionScores,'T Cell Exhaustion Score...');
                                                   
 i_addmenu(m_exp,1,{@DetermineCellTypeClustersGeneral,false},'Annotate Cell Type Using Customized Markers...');
-i_addmenu(m_exp,0,{@MergeCellSubtypes,1},'Import Subtype Cell Annotation from SCE in Workspace...');
+i_addmenu(m_exp,1,{@MergeCellSubtypes,1},'Import Subtype Cell Annotation from SCE in Workspace...');
 i_addmenu(m_exp,0,{@MergeCellSubtypes,2},'Import Subtype Cell Annotation from SCE Data File...');
 
 i_addmenu(m_exp,1,@GEOAccessionToSCE,'Import Data Using GEO Accession...');
