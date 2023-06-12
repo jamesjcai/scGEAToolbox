@@ -204,10 +204,6 @@ i_addbutton_toggle(2,0,{@togglebtfun,@EmbeddingAgain,"icon-mat-filter-2-10.gif",
 i_addbutton_toggle(2,0,{@togglebtfun,@ClusterCellsS,"icon-mat-filter-3-10.gif","plotpicker-dendrogram.gif"},"Clustering using embedding S");
 i_addbutton_toggle(2,0,{@togglebtfun,@DetermineCellTypeClustersGeneral,"icon-mat-filter-4-10.gif","plotpicker-contour.gif"},"Assign cell types to groups");
 i_addbutton_toggle(2,0,{@togglebtfun,@callback_SaveX,"icon-mat-filter-5-10.gif","export.gif"},"Export & save data");
-%i_addbutton_push(2,0,@call_scgeatool,"IMG00107.GIF"," ");
-%i_addbutton_push(2,0,@call_scgeatool,"IMG00107.GIF"," ");
-
-%i_addbutton_push(2,0,@call_scgeatool,"IMG00107.GIF"," ");
 
 m_vie = uimenu(FigureHandle,'Text','&Multiview','Accelerator','M');
 i_addmenu(m_vie,0,@gui.callback_MultiEmbeddingViewer,'Multi-embedding View...');
@@ -437,7 +433,7 @@ end
         
         try   
             [img, map] = imread(fullfile(mfolder, 'resources', imgFil));
-            ptImage = ind2rgb(img, map);            
+            ptImage = ind2rgb(img, map);
         catch
             ptImage = rand(16,16,3);
         end
@@ -450,7 +446,7 @@ end
         if nargin<6, actiondelay=true; end
         try
             if src.State=="off"
-               imgFil=imgFil1;
+               imgFil=imgFil2;
             elseif src.State=="on"
                imgFil=imgFil2;
             end
@@ -462,7 +458,7 @@ end
         src.CData = ptImage;
         if actiondelay
             if src.State=="off"
-                func(src); 
+                func(src);
             else
                 uiwait(helpdlg('To execute the function, click the button again or locate and click the same button in the toolbar above. Hover over the button to view a description of its function.',''));
             end
