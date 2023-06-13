@@ -1124,10 +1124,11 @@ end
     function DetermineCellTypeClustersGeneral(src, ~, usedefaultdb)
         if nargin<3, usedefaultdb=true; end
         if usedefaultdb
-            speciestag = gui.i_selectspecies;
-            if isempty(speciestag), return; end        
             organtag = "all";
             databasetag = "panglaodb";
+            gui.gui_showrefinfo('PanglaoDB [PMID:30951143]');
+            speciestag = gui.i_selectspecies(2);
+            if isempty(speciestag), return; end
         else
             [Tm,Tw]=pkg.i_markerlist2weight(sce);
             if isempty(Tm)||isempty(Tw)
@@ -1376,19 +1377,20 @@ end
         [c,cL]=grp2idx(thisc);
         sce.c=c;
         [answer]=gui.i_selvariabletype(thisc);
-
-        RefreshAll(src, 1, true, false);        
+        RefreshAll(src, 1, true, false);
         switch answer
             case 'Categorical/Discrete'
                 n=max(c);
                 f=0.5*(n-1)./n;
                 f=1+f.*(1:2:2*n);
-                cb=colorbar('Ticks',f,'TickLabels',cellstr(cL));                
-            case 'Numerical/Continuous'
-                set(h,'CData',thisc);
-                cb=colorbar;
-            otherwise
-                set(h,'CData',thisc);
+                cb=colorbar('Ticks',f,'TickLabels', ...
+                    strrep(cellstr(cL),'_','\_'));
+            otherwise   % case 'Numerical/Continuous'
+                if isnumeric(thisc)
+                    set(h,'CData',thisc);
+                else
+                    set(h,'CData',c);
+                end
                 cb=colorbar;
         end
         cb.Label.String = strrep(clable,'_','\_');

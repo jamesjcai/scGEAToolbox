@@ -10,9 +10,6 @@ function callback_RunMonocle3(src,~)
     end
     idx=find(ptsSelected);
 
-
-
-
     [ok]=gui.i_confirmscript('Run Pseudotime Analysis (Monocle3)?', ...
         'R_monocle3','r');    
     if ~ok, return; end
