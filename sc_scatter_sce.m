@@ -104,9 +104,12 @@ set(UserToolbarHandle, 'Tag', 'UserToolBar', 'HandleVisibility', 'off', 'Visible
 %i_addbutton_toggle(1,0,{@togglebtfun,@turnoffuserguiding,"icon-mat-blur-off-10.gif", ...
 %    "icon-mat-blur-on-10.gif",false},"Turn on/off user onboarding toolbar");
 
-i_addbutton_toggle(1,0,{@togglebtfun,@turnoffuserguiding,"icon-mat-unfold-more-10.gif", ...
-    "icon-mat-unfold-less-10.gif",false},"Turn on/off user onboarding toolbar");
+i_addbutton_toggle(1,0,{@togglebtfun,@turnoffuserguiding, ...
+    "icon-mat-unfold-more-10.gif", ...
+    "icon-mat-unfold-less-10.gif",false, ...
+    "Turn on/off user onboarding toolbar"});
 %i_addbutton_push(1,0,@call_scgeatool,"IMG00107.GIF"," ");
+
 i_addbutton_push(1,0,@callback_ShowGeneExpr,"list.gif","Select genes to show expression")
 i_addbutton_push(1,0,@ShowCellStates,"list2.gif","Show cell state")
 i_addbutton_push(1,0,@SelectCellsByQC,"plotpicker-effects.gif","Filter genes and cells")
@@ -125,8 +128,7 @@ i_addbutton_push(1,0,@SelectCellsByQC,"plotpicker-effects.gif","Filter genes and
 
 i_addbutton_toggle(1,1,{@togglebtfun,@LabelClusters, ...
     "icon-fa-tag-10b.gif", ...
-    "icon-fa-tags-10b.gif",false}, ...
-    "Label cell groups");
+    "icon-fa-tags-10b.gif",false,"Label cell groups"});
 
 % i_addbutton_toggle(1,1,{@togglebtfun,@LabelClusters, ...
 %     "icon-mat-chat-bubble-outline-10.gif", ...
@@ -199,11 +201,23 @@ i_addbutton_push(0,1,{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to Pow
 gui.add_3dcamera(DeftToolbarHandle, 'AllCells');
 
 i_addbutton_push(2,0,@turnonuserguiding,"icon-fa-thumb-tack-10.gif","Turn on user guiding toolbar");
-i_addbutton_toggle(2,0,{@togglebtfun,@SelectCellsByQC,"icon-mat-filter-1-10.gif","plotpicker-effects.gif"},"Filter genes and cells");
-i_addbutton_toggle(2,0,{@togglebtfun,@EmbeddingAgain,"icon-mat-filter-2-10.gif","plotpicker-geobubble.gif"},"Embedding (tSNE, UMP, PHATE)");
-i_addbutton_toggle(2,0,{@togglebtfun,@ClusterCellsS,"icon-mat-filter-3-10.gif","plotpicker-dendrogram.gif"},"Clustering using embedding S");
-i_addbutton_toggle(2,0,{@togglebtfun,@DetermineCellTypeClustersGeneral,"icon-mat-filter-4-10.gif","plotpicker-contour.gif"},"Assign cell types to groups");
-i_addbutton_toggle(2,0,{@togglebtfun,@callback_SaveX,"icon-mat-filter-5-10.gif","export.gif"},"Export & save data");
+i_addbutton_toggle(2,0,{@togglebtfun,@SelectCellsByQC, ...
+    "icon-mat-filter-1-10.gif","plotpicker-effects.gif", true, ...
+    "Filter genes and cells"});
+i_addbutton_toggle(2,0,{@togglebtfun,@EmbeddingAgain, ...
+    "icon-mat-filter-2-10.gif","plotpicker-geobubble.gif", true ...
+    "Embedding (tSNE, UMP, PHATE)"});
+i_addbutton_toggle(2,0,{@togglebtfun,@ClusterCellsS, ...
+    "icon-mat-filter-3-10.gif", ...
+    "plotpicker-dendrogram.gif", true, ...
+    "Clustering using embedding S"});
+i_addbutton_toggle(2,0,{@togglebtfun, ...
+    @DetermineCellTypeClustersGeneral, ...
+    "icon-mat-filter-4-10.gif","plotpicker-contour.gif", true, ...
+    "Assign cell types to groups"});
+i_addbutton_toggle(2,0,{@togglebtfun, ...
+    @callback_SaveX,"icon-mat-filter-5-10.gif", true, ...
+    "export.gif","Export & save data"});
 
 m_vie = uimenu(FigureHandle,'Text','&Multiview','Accelerator','M');
 i_addmenu(m_vie,0,@gui.callback_MultiEmbeddingViewer,'Multi-embedding View...');
@@ -412,8 +426,9 @@ end
     end
 
 
-    function i_addbutton_toggle(toolbarHdl,sepTag,callbackFnc,tooltipTxt)
+    function i_addbutton_toggle(toolbarHdl,sepTag,callbackFnc)
         imgFil=callbackFnc{3};
+        tooltipTxt=callbackFnc{6};
         %if ischar(callbackFnc{1}) || isstring(callbackFnc{1})
         %    callbackFnc=str2func(callbackFnc{1});
         %end
@@ -442,7 +457,8 @@ end
         pt.ClickedCallback = callbackFnc;
     end
 
-    function togglebtfun(src,~,func,imgFil1,imgFil2,actiondelay)
+    function togglebtfun(src,~,func,imgFil1,imgFil2, ...
+            actiondelay,tooltipTxt)
         if nargin<6, actiondelay=true; end
         try
             if src.State=="off"
@@ -460,7 +476,9 @@ end
             if src.State=="off"
                 func(src);
             else
-                uiwait(helpdlg('To execute the function, click the button again or locate and click the same button in the toolbar above. Hover over the button to view a description of its function.',''));
+                uiwait(helpdlg(tooltipTxt,''));
+
+                %uiwait(helpdlg('To execute the function, click the button again or locate and click the same button in the toolbar above. Hover over the button to view a description of its function.',''));
             end
         else
             func(src);
