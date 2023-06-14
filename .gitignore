@@ -72,3 +72,5 @@ scgeatoolstandaloneApplication/
 +run/external/py_scTenifoldXct2/*.txt
 +run/external/py_scTenifoldXct2/1/*
 +run/external/py_scTenifoldXct2/2/*
++run/external/py_SERGIO/SERGIO/__pycache__/*
+
