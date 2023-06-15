@@ -307,13 +307,13 @@ eid = [];
 
     function saveGraph(varargin)        
         %str = inputdlg('Name of the MAT file','Save',1,{'mygraph'});
-        %str = inputdlg('Name of the variable','Assign',1,{'G'});
-        %if ~isempty(str)
-            %eval(sprintf('save %s A xy',str{1}));
-            %assignin('caller',sprintf('%s',str{1}),A);
+        str = inputdlg('Name of the variable','Assign',1,{'A'});
+        if ~isempty(str)
+            eval(sprintf('save %s A xy',str{1}));
+            assignin('caller',sprintf('%s',str{1}),A);
             %assignin('base','xy',xy);            
-        %end
-        % close
+        end
+        close
     end
 
     function clickDrawRadio(varargin)

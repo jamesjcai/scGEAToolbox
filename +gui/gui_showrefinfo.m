@@ -168,7 +168,8 @@ switch reftag
             'calculate the median expression per gene over normalized ' ...
             'gene expresion measurements so that gene expression ' ...
             'for a cell cluster is represented by a vector..."'];
-        
+    case 'SnnDpc [DOI:10.1016/j.ins.2018.03.031]'
+        txt='"In this paper, we improve the traditional DPC algorithm and propose a shared-nearest-neighbor-based clustering by fast search and find of density peaks, namely, SNN-DPC. SNN-DPC redefines the local density and distance from the nearest larger density point and introduces the shared neighbors and local density information between points; therefore, the newly defined ρ and δ can reflect the attributes of points more objectively and avoid the problem that the traditional DPC algorithm cannot effectively address variable-density clusters."';
     otherwise
         return;
 end

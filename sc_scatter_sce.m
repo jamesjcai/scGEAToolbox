@@ -84,14 +84,10 @@ hAx = axes('Parent', FigureHandle);
 title(hAx,sce.title);
 subtitle('[genes x cells]');
 
-%kc = numel(unique(c));
-%colormap(pkg.i_mycolorlines(kc));
-
 dt = datacursormode;
 dt.UpdateFcn = {@i_myupdatefcnx};
 
 mfolder = fileparts(mfilename('fullpath'));
-
 
 DeftToolbarHandle = findall(FigureHandle, 'Tag','FigureToolBar');  % get the figure's toolbar handle
 MainToolbarHandle = uitoolbar('Parent', FigureHandle);
@@ -114,49 +110,9 @@ i_addbutton_push(1,0,@callback_ShowGeneExpr,"list.gif","Select genes to show exp
 i_addbutton_push(1,0,@ShowCellStates,"list2.gif","Show cell state")
 i_addbutton_push(1,0,@SelectCellsByQC,"plotpicker-effects.gif","Filter genes and cells")
 
-
-% i_addbutton_toggle(1,1,{@togglebtfun,@LabelClusters, ...
-%     "icon-mat-blur-circular-10.gif", ...
-%     "icon-mat-blur-circular-8a2be2-20.gif",false}, ...
-%     "Label cell groups");
-% 
-% i_addbutton_toggle(1,1,{@togglebtfun,@LabelClusters, ...
-%     "icon-mat-more-10.gif", ...
-%     "icon-mat-more-a2142f-10.gif",false}, ...
-%     "Label cell groups");
-
-
 i_addbutton_toggle(1,1,{@togglebtfun,@LabelClusters, ...
-    "icon-fa-tag-10b.gif", ...
-    "icon-fa-tags-10b.gif",false,"Label cell groups"});
-
-% i_addbutton_toggle(1,1,{@togglebtfun,@LabelClusters, ...
-%     "icon-mat-chat-bubble-outline-10.gif", ...
-%     "icon-mat-chat-10.gif",false}, ...
-%     "Label cell groups");
-
-% i_addbutton_toggle(1,1,{@togglebtfun,@LabelClusters, ...
-%     "icon-fa-tags-10b.gif", ...
-%     "icon-fa-tags-a2142f-10.gif",false}, ...
-%     "Label cell groups");
-% 
-
-%i_addbutton(1,1,@LabelClusters,"plotpicker-scatter.gif","Label clusters")
-%{
-ptlabelclusters = uitoggletool(MainToolbarHandle, 'Separator', 'on');
-try
-    [img, map] = imread(fullfile(mfolder, 'resources', ...
-        'plotpicker-scatter.gif'));
-    ptImage = ind2rgb(img, map);
-catch
-    ptImage = rand(16,16,3);
-end
-ptlabelclusters.CData = ptImage;
-ptlabelclusters.Tooltip = 'Label cell groups';
-ptlabelclusters.ClickedCallback = @LabelClusters;
-ptlabelclusters.State = 'off';
-%}
-
+    "icon-fa-tag-10b.gif","icon-fa-tags-10b.gif", ...
+    false,"Label cell groups"});
 i_addbutton_push(1,0,@Brushed2NewCluster,"plotpicker-glyplot-face.gif","Add brushed cells to a new group")
 i_addbutton_push(1,0,@Brushed2MergeClusters,"plotpicker-pzmap.gif","Merge brushed cells to same group")
 i_addbutton_push(1,0,@RenameCellTypeBatchID,"plotpicker-scatterhist.gif","Rename cell type or batch ID");
@@ -201,23 +157,21 @@ i_addbutton_push(0,1,{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to Pow
 gui.add_3dcamera(DeftToolbarHandle, 'AllCells');
 
 i_addbutton_push(2,0,@turnonuserguiding,"icon-fa-thumb-tack-10.gif","Turn on user guiding toolbar");
-i_addbutton_toggle(2,0,{@togglebtfun,@SelectCellsByQC, ...
-    "icon-mat-filter-1-10.gif","plotpicker-effects.gif", true, ...
-    "Filter genes and cells"});
-i_addbutton_toggle(2,0,{@togglebtfun,@EmbeddingAgain, ...
-    "icon-mat-filter-2-10.gif","plotpicker-geobubble.gif", true ...
-    "Embedding (tSNE, UMP, PHATE)"});
-i_addbutton_toggle(2,0,{@togglebtfun,@ClusterCellsS, ...
-    "icon-mat-filter-3-10.gif", ...
-    "plotpicker-dendrogram.gif", true, ...
-    "Clustering using embedding S"});
-i_addbutton_toggle(2,0,{@togglebtfun, ...
-    @DetermineCellTypeClustersGeneral, ...
+i_addbutton_toggle(2,0,{@togglebtfun, @SelectCellsByQC, ...
+    "icon-mat-filter-1-10.gif","plotpicker-effects.gif", ...
+    true, "Filter genes and cells"});
+i_addbutton_toggle(2,0,{@togglebtfun, @EmbeddingAgain, ...
+    "icon-mat-filter-2-10.gif","plotpicker-geobubble.gif", ...
+    true, "Embedding (tSNE, UMP, PHATE)"});
+i_addbutton_toggle(2,0,{@togglebtfun, @ClusterCellsS, ...
+    "icon-mat-filter-3-10.gif", "plotpicker-dendrogram.gif", ...
+    true, "Clustering using embedding S"});
+i_addbutton_toggle(2,0,{@togglebtfun, @DetermineCellTypeClustersGeneral, ...
     "icon-mat-filter-4-10.gif","plotpicker-contour.gif", true, ...
     "Assign cell types to groups"});
-i_addbutton_toggle(2,0,{@togglebtfun, ...
-    @callback_SaveX,"icon-mat-filter-5-10.gif", true, ...
-    "export.gif","Export & save data"});
+i_addbutton_toggle(2,0,{@togglebtfun, @callback_SaveX, ...
+    "icon-mat-filter-5-10.gif", "export.gif", ...
+    true, "Export & save data"});
 
 m_vie = uimenu(FigureHandle,'Text','&Multiview','Accelerator','M');
 i_addmenu(m_vie,0,@gui.callback_MultiEmbeddingViewer,'Multi-embedding View...');
@@ -276,12 +230,12 @@ i_addmenu(m_exp,1,@gui.callback_Violinplot,'Gene Violin Plot...');
 i_addmenu(m_exp,0,@gui.callback_DrawDotplot,'Gene Dot Plot...');
 i_addmenu(m_exp,0,@gui.callback_GeneHeatMap,'Gene Heatmap...');
 
-i_addmenu(m_exp,1,@callback_CalculateGeneStats,   'Calculate Gene Expression Statistics...');
-i_addmenu(m_exp,0,@callback_CellCycleLibrarySize, 'Library Size of Cell Cycle Phases...');
-i_addmenu(m_exp,0,@callback_CellCycleAssignment,  'Cell Cycle Phase Assignment...');
-i_addmenu(m_exp,0,@callback_ShowHgBGeneExpression,'Show HgB-genes Expression...');
-i_addmenu(m_exp,0,@callback_ShowMtGeneExpression, 'Show Mt-genes Expression...');
-i_addmenu(m_exp,0,@callback_TCellExhaustionScores,'T Cell Exhaustion Score...');
+i_addmenu(m_exp,1,@gui.callback_CalculateGeneStats,   'Calculate Gene Expression Statistics...');
+i_addmenu(m_exp,0,@gui.callback_CellCycleLibrarySize, 'Library Size of Cell Cycle Phases...');
+i_addmenu(m_exp,0,@gui.callback_CellCycleAssignment,  'Cell Cycle Phase Assignment...');
+i_addmenu(m_exp,0,@gui.callback_ShowHgBGeneExpression,'Show HgB-genes Expression...');
+i_addmenu(m_exp,0,@gui.callback_ShowMtGeneExpression, 'Show Mt-genes Expression...');
+i_addmenu(m_exp,0,@gui.callback_TCellExhaustionScores,'T Cell Exhaustion Score...');
                                                   
 i_addmenu(m_exp,1,{@DetermineCellTypeClustersGeneral,false},'Annotate Cell Type Using Customized Markers...');
 i_addmenu(m_exp,1,{@MergeCellSubtypes,1},'Import Subtype Cell Annotation from SCE in Workspace...');
@@ -337,13 +291,11 @@ end
 
     function turnoffuserguiding(~,~)
         % getpref('scgeatoolbox','useronboardingtoolbar');
-
         if get(UserToolbarHandle, 'Visible')=="off"
             askpref=true;
         else
             askpref=false;
         end
-
         if showuseronboarding
             set(UserToolbarHandle, 'Visible', 'off');
         else        
@@ -414,13 +366,7 @@ end
             barhandle=UserToolbarHandle;
         end
         pt = uipushtool(barhandle, 'Separator', septag);
-        try
-            [img, map] = imread(fullfile(mfolder, 'resources', imgFil));
-            ptImage = ind2rgb(img, map);            
-        catch
-            ptImage = rand(16,16,3);
-        end
-        pt.CData = ptImage;
+        pt.CData = i_get_ptImage(imgFil);
         pt.Tooltip = tooltipTxt;
         pt.ClickedCallback = callbackFnc;
     end
@@ -432,11 +378,6 @@ end
         %if ischar(callbackFnc{1}) || isstring(callbackFnc{1})
         %    callbackFnc=str2func(callbackFnc{1});
         %end
-        if sepTag==1
-            septag='on';
-        else
-            septag='off';
-        end
         if toolbarHdl==0
             barhandle=DeftToolbarHandle;
         elseif toolbarHdl==1
@@ -444,47 +385,36 @@ end
         elseif toolbarHdl==2
             barhandle=UserToolbarHandle;
         end
-        pt =  uitoggletool (barhandle, 'Separator', septag);
-        
-        try   
-            [img, map] = imread(fullfile(mfolder, 'resources', imgFil));
-            ptImage = ind2rgb(img, map);
-        catch
-            ptImage = rand(16,16,3);
-        end
-        pt.CData = ptImage;
+        pt =  uitoggletool (barhandle, 'Separator', sepTag);        
+        pt.CData = i_get_ptImage(imgFil);
         pt.Tooltip = tooltipTxt;
         pt.ClickedCallback = callbackFnc;
     end
 
-    function togglebtfun(src,~,func,imgFil1,imgFil2, ...
+    function togglebtfun(src,~,func,~,imgFil, ...
             actiondelay,tooltipTxt)
         if nargin<6, actiondelay=true; end
-        try
-            if src.State=="off"
-               imgFil=imgFil2;
-            elseif src.State=="on"
-               imgFil=imgFil2;
-            end
-            [img, map] = imread(fullfile(mfolder, 'resources', imgFil));
-            ptImage = ind2rgb(img, map);
-        catch
-            ptImage = rand(16,16,3);
-        end
-        src.CData = ptImage;
+        src.CData = i_get_ptImage(imgFil);
         if actiondelay
             if src.State=="off"
                 func(src);
             else
-                uiwait(helpdlg(tooltipTxt,''));
-
-                %uiwait(helpdlg('To execute the function, click the button again or locate and click the same button in the toolbar above. Hover over the button to view a description of its function.',''));
+                s='To execute the function, click the button again or locate and click the same button in the toolbar above. Hover over the button to view a description of its function.';
+                uiwait(helpdlg(sprintf('%s\n%s',upper(tooltipTxt),s),''));
             end
         else
             func(src);
         end
     end
 
+    function [ptImage]=i_get_ptImage(imgFil)
+        try
+            [img, map] = imread(fullfile(mfolder, 'resources', imgFil));
+            ptImage = ind2rgb(img, map);
+        catch
+            ptImage = rand(16,16,3);
+        end
+    end
 
 % ------------------------
 % Callback Functions
@@ -520,7 +450,6 @@ end
 %         else
 %             xlabel('UMAP1'); ylabel('UMAP2'); zlabel('UMAP3');
 %         end
-
         grid off
         box off
 %         a1=xlim; b1=ylim; c1=zlim;
@@ -1524,6 +1453,7 @@ end
             methodtag = "kmeans";
         elseif strcmpi(answer, 'SnnDpc [DOI:10.1016/j.ins.2018.03.031] 🐢')
             methodtag = "snndpc";
+            gui.gui_showrefinfo('SnnDpc [DOI:10.1016/j.ins.2018.03.031]');
         else
             return;
         end
