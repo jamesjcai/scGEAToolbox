@@ -16,14 +16,15 @@ thisc2=[]; clable2='';
     i_additem(sce.c_batch_id, 'Batch ID');
     
     function i_additem(itemv,itemn)
-    if ~isempty(itemv)&&length(unique(itemv))>1
-        baselistitems=[baselistitems,itemn];
-    end
+        if ~isempty(itemv) && length(unique(itemv))>=1
+            baselistitems=[baselistitems,itemn];
+        end
     end
 
     listitems=[baselistitems,...
         sce.list_cell_attributes(1:2:end)];
-nx=length(baselistitems);
+        nx=length(baselistitems);
+
 %     a=evalin('base','whos');
 %     b=struct2cell(a);
 %     v=false(length(a),1);

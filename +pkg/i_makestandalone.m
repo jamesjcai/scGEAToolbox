@@ -89,7 +89,7 @@ end
 cd(outdir);
 if needcorrect
     a = readmatrix('requiredMCRProducts.txt');
-    writematrix(a(2:end),'requiredMCRProducts.txt','Delimiter','\t');
+    %writematrix(a(2:end),'requiredMCRProducts.txt','Delimiter','\t');
 end
 cd ..
 zippedfiles = zip('SCGEATOOL_StandaloneApplication.zip','SCGEATOOL_StandaloneApplication');

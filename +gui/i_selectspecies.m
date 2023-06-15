@@ -1,7 +1,7 @@
 function [speciestag] = i_selectspecies(n,shorttag)
 
 if nargin<2, shorttag=false; end
-if nargin<1, n=3; end
+if nargin<1, n=2; end
 
 if n==3
     answer = questdlg('Which species?',...
