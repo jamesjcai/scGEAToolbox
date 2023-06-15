@@ -1,4 +1,9 @@
-function [X]=py_SERGIO   
+function [X]=py_SERGIO(ncells,ngenes)
+arguments
+    ncells (1,1) {mustBeNumeric} = 1000
+    ngenes (1,1) {mustBeNumeric} = 5
+end
+
 
     X=[];
     isdebug = false;
@@ -25,15 +30,16 @@ function [X]=py_SERGIO
         error('Python SERGIO has not been installed properly.');
     end 
     
-    if isvalid(fw) 
+    if isvalid(fw)
         gui.gui_waitbar(fw,[],'Checking Python environment is complete');
     end
 
-    tmpfilelist={'output.mat'};
+    tmpfilelist={'input.mat','output.mat'};
     if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 
    
     % fw=gui.gui_waitbar([],[],'Running GenKI...');
+    save('input.mat','-v7.3','ncells','ngenes');
     
     cmdlinestr=sprintf('"%s" "%s%sscript.py"', ...
         x.Executable,wrkpth,filesep);

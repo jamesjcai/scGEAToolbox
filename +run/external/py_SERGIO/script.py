@@ -16,12 +16,17 @@ os.chdir(dname)
 import numpy as np
 import pandas as pd
 from scipy.io import savemat
-#import h5py
+import h5py
 from SERGIO.sergio import sergio
 
-sim = sergio(number_genes=5, 
+f = h5py.File('input.mat','r')
+ncells = int(f['ncells'][()])
+ngenes = int(f['ngenes'][()])
+
+
+sim = sergio(number_genes = ngenes, 
              number_bins = 1, 
-             number_sc = 1000, 
+             number_sc = ncells, 
              noise_params = 1, 
              decays=0.8, 
              sampling_state=15, 

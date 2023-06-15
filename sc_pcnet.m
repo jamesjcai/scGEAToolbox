@@ -8,14 +8,23 @@ function [A]=sc_pcnet(X,ncom,fastersvd,dozscore,guiwaitbar)
 % https://github.com/cran/dna/blob/master/src/rpcnet.c
 % https://rdrr.io/cran/dna/f/inst/doc/Introduction.pdf
 
-if nargin<5 || isempty(guiwaitbar), guiwaitbar=false; end
-if nargin<4 || isempty(dozscore), dozscore=true; end
-if nargin<3 || isempty(fastersvd), fastersvd=false; end
-if nargin<2 || isempty(ncom), ncom=3; end
+arguments
+    X double
+    ncom (1,1) {mustBeNumeric} = 3
+    fastersvd (1,1) logical = false
+    dozscore (1,1) logical = false
+    guiwaitbar (1,1) logical = false
+end
+
+%if nargin<5 || isempty(guiwaitbar), guiwaitbar=false; end
+%if nargin<4 || isempty(dozscore), dozscore=true; end
+%if nargin<3 || isempty(fastersvd), fastersvd=false; end
+%if nargin<2 || isempty(ncom), ncom=3; end
+
 
 opts.maxit=150;
 
-if fastersvd    
+if fastersvd
 	pw1=fileparts(mfilename('fullpath'));
     pth=fullfile(pw1,'+run','thirdparty','faster_svd','lmsvd');
     if ~(ismcc || isdeployed), addpath(pth); end
@@ -29,6 +38,7 @@ end
 
 X=X.';
 if dozscore
+   whos("X") 
     X=zscore(X);
 end
 n=size(X,2);

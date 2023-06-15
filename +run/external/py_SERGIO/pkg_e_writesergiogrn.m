@@ -1,10 +1,14 @@
-close all
+function pkg_e_writesergiogrn(A)
+
+if nargin<1
 rng(244)
 A=rand(5);
 A=A-diag(diag(A));
-B=A>0.55;
-g=digraph(B);
-%plot(g)
+A=A>0.55;
+end
+
+g=digraph(A);
+plot(g)
 
 d=indegree(g);
 A=full(adjacency(g));
