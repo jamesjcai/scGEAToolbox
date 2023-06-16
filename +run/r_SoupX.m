@@ -1,9 +1,9 @@
-function [X,genelist]=SoupX(selpath)
+function [X,genelist]=r_SoupX(selpath)
 %Run SoupX decontamination
 %
 % https://cran.r-project.org/web/packages/SoupX/vignettes/pbmcTutorial.html
 %
-% see also: run.decontX
+% see also: run.r_decontX
 
 oldpth=pwd();
 X=[];

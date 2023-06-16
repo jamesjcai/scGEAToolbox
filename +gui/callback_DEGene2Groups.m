@@ -44,14 +44,14 @@ function callback_DEGene2Groups(src,~)
                     'R_DESeq2','r');
                 if ~ok, return; end
                 fw=gui.gui_waitbar;
-                T=run.DESeq2r(sce.X(:,i1),sce.X(:,i2),sce.g);
+                T=run.r_DESeq2(sce.X(:,i1),sce.X(:,i2),sce.g);
                 gui.gui_waitbar(fw);
             case 'mast'
                 [ok]=gui.i_confirmscript('DE analysis (MAST)', ...
                     'R_MAST','r');
                 if ~ok, return; end
                 fw=gui.gui_waitbar;
-                T=run.MAST(sce.X(:,i1),sce.X(:,i2),sce.g);
+                T=run.r_MAST(sce.X(:,i1),sce.X(:,i2),sce.g);
                 gui.gui_waitbar(fw);
         end
 
@@ -198,8 +198,8 @@ end
 
             if tf==1
                 disp('To run enrichment analysis, type:')
-                disp('run.Enrichr(Tup.gene(1:200))')
-                disp('run.Enrichr(Tdn.gene(1:200))')
+                disp('run.web_Enrichr(Tup.gene(1:200))')
+                disp('run.web_Enrichr(Tdn.gene(1:200))')
             end
         %end
         %return;

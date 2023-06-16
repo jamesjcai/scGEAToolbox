@@ -1,7 +1,12 @@
-function STRING(genelist,genenum,species)
+function web_STRING(genelist,genenum,species)
 % Run STRING
 %
-% see also: RUN_GORILLA
+% see also: RUN.WEB_GORILLA, RUN.WEB_ENRICHR
+
+
+pw1=fileparts(mfilename('fullpath'));
+pth=fullfile(pw1,'external','web_STRING');
+%infile=fullfile(pth,'input_template.html');
 
 if nargin<1, genelist=[]; end
 if nargin<2, genenum=50; end

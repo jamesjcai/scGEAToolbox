@@ -53,7 +53,7 @@ if ~exist(outdir,"dir"), mkdir(outdir); end
     d=[d;fullfile(pw1, 'resources', 'DoRothEA_TF_Target_DB','dorothea_hs.mat')];
     d=[d;fullfile(pw1, 'resources', 'DoRothEA_TF_Target_DB','dorothea_mm.mat')];
     d=[d;fullfile(pw1, 'example_data', 'testXgs.mat')];
-    d=[d;fullfile(pw1, 'example_data', 'new_example_sce.mat')];
+    d=[d;fullfile(pw1, 'example_data', 'workshop_example.mat')];
     % d=[d;fullfile(matlabroot,'toolbox','rptgen','rptgen','makePPTCompilable.p')];
     d2=string(pkg.dirPlus(fullfile(pw1,'+run','external')));
     d2=d2(~contains(d2,"stringdb\stringdb_"));
@@ -67,7 +67,7 @@ compiler.build.standaloneWindowsApplication('scgeatool.m',...
     'ExecutableName','scgeatool','Verbose','On',...
     'OutputDir',outdir,'AdditionalFiles',d, ...
     'SupportPackages','autodetect', ...
-    'ExecutableVersion','23.2.5');
+    'ExecutableVersion','23.3.0');
 end
 catch ME
     disp(ME.message);

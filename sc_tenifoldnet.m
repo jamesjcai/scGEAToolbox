@@ -16,7 +16,7 @@ end
 
 [T,A0,A1]=ten.sctenifoldnet(X0,X1,genelist);
 glist=T.genelist(T.pAdjusted<0.05);
-run.Enrichr(glist);
+run.web_Enrichr(glist);
 
 Tf=e_fgsearun(T);
 OUT=e_fgseanet(Tf,"JaccardCutoff",0.5,"PlotNetwork",false,"ShowNotepad",false);

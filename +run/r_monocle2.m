@@ -1,11 +1,11 @@
-function [t,s]=monocle(X)
+function [t,s]=r_monocle2(X)
 % Run Monocle pseudotime analysis
 %[t_mono,s_mono]=run.monocle(X);
 
 t=[]; s=[];
 isdebug=false;
 oldpth=pwd();
-[isok,msg]=commoncheck_R('R_monocle');
+[isok,msg]=commoncheck_R('R_monocle2');
 if ~isok, error(msg); end
 
 tmpfilelist={'input.h5','output.csv'};

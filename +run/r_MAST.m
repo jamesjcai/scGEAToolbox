@@ -1,4 +1,4 @@
-function [T]=MAST(X,Y,genelist)
+function [T]=r_MAST(X,Y,genelist)
 
 if nargin<3, genelist=(1:size(X,1))'; end
 T=[];

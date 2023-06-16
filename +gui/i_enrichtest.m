@@ -14,12 +14,12 @@ answer1=gui.timeoutdlg(@(x){questdlg('Which functional enrichment analysis do yo
 if isempty(answer1), return; end
 switch answer1
     case 'Enrichr'
-        run.Enrichr(genelist,numgene);
+        run.web_Enrichr(genelist,numgene);
     case 'GOrilla'
-        run.GOrilla(genelist(1:numgene));
+        run.web_GOrilla(genelist(1:numgene));
     case 'Enrichr+GOrilla'
-        run.Enrichr(genelist,numgene);
-        run.GOrilla(genelist(1:numgene));
+        run.web_Enrichr(genelist,numgene);
+        run.web_GOrilla(genelist(1:numgene));
     otherwise
         return;
 end

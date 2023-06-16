@@ -65,7 +65,7 @@ function callback_RunMonocle3(src,~)
     %         gui.i_gscatter3(s_mono,grp2idx(t_mono));
     %         colorbar
     %         defaultToolbar = findall(FigureHandle, 'tag','FigureToolBar');  % get the figure's toolbar handle
-    %         gui.add_3dcamera(defaultToolbar, 'MELD_Scores');
+    %         gui.add_3dcamera(defaultToolbar, 'Scores');
     %         hc = colorbar;
     %         hc.Label.String = 'Pseudotime';
     %     otherwise

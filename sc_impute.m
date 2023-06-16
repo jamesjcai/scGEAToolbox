@@ -19,6 +19,6 @@ switch upper(p.Results.type)
     case 'MCIMPUTE'
         [X]=run.McImpute(X,true);
     case 'SAVER'
-        [X]=run.SAVER(X);
+        [X]=run.r_SAVER(X);
 end
 end

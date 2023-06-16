@@ -1,4 +1,4 @@
-function [T]=DESeq2r(X,Y,genelist)
+function [T]=r_DESeq2(X,Y,genelist)
 
 if nargin<3, genelist=(1:size(X,1))'; end
 T=[];

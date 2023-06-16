@@ -36,6 +36,6 @@ function callback_VirtualKOGenKI(src,~)
     gui.i_exporttable(T);
     disp('Downstream Analysis Options:');
     disp('===============================');
-    disp('run.Enrichr(T.gene(1:200));');
+    disp('run.web_Enrichr(T.gene(1:200));');
     disp('===============================');
 end

@@ -8,7 +8,7 @@ function [T,Tup,Tdn] = sc_deg(X, Y, genelist, methodid, guiwaitbar)
     % pct.2 : The percentage of cells where the feature is detected in the second group
     % p_val_adj : Adjusted p-value, based on bonferroni correction using all features in the dataset.
     %
-    % SEE ALSO: [T]=run.MAST(X,Y,genelist);
+    % SEE ALSO: [T]=run.r_MAST(X,Y,genelist);
 
     if nargin < 2, error("USAGE: sc_deg(X,Y)\n"); end
     if nargin < 3, genelist = string(1:size(X,1))'; end

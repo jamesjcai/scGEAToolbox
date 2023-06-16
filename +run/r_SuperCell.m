@@ -1,4 +1,4 @@
-function [X2]=SuperCell(X,gammavalue,kvalue)
+function [X2]=r_SuperCell(X,gammavalue,kvalue)
 % SuperCell  - gene expression recovery for single-cell RNA sequencing
 % https://github.com/GfellerLab/SuperCell
 

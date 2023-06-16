@@ -1,13 +1,13 @@
-function Enrichr(genelist,genenum)
+function web_Enrichr(genelist,genenum)
 % Run Enrichr
 %
-% see also: RUN_GORILLA
+% see also: RUN.WEB_GORILLA, RUN.WEB_STRING
 
 if nargin<1, genelist=[]; end
 if nargin<2, genenum=100; end
 
 pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'external','Enrichr');
+pth=fullfile(pw1,'external','web_Enrichr');
 infile=fullfile(pth,'input_template.html');
 outfile=fullfile(pth,'input_page.html');
 

@@ -1,4 +1,4 @@
-function [X2]=SAVER(X)
+function [X2]=r_SAVER(X)
 % SAVER - gene expression recovery for single-cell RNA sequencing
 % https://mohuangx.github.io/SAVER/articles/saver-tutorial.html
 

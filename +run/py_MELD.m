@@ -1,4 +1,4 @@
-function [sample_likelihoods,T]=MELD(X,batchid,usematinput,useh5)
+function [sample_likelihoods,T]=py_MELD(X,batchid,usematinput,useh5)
 % MELD - a graph signal processing tool used to smooth a binary variable on 
 % the cell-cell graph to determine which regions of its underlying 
 % data manifold are enriched or depleted in cells with a specific 

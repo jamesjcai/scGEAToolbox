@@ -1,15 +1,15 @@
-function callback_TrajectoryAnalysis(src,~)
+function callback_RunMonocle2(src,~)
     uiwait(warndlg(['Monocle 2 is obsoleted. Authors are ' ...
         'deprecating it in favor of Monocle 3.']));
     [ok]=gui.i_confirmscript('Run Monocle 2?', ...
-        'R_monocle','r');    
+        'R_monocle2','r');    
     if ~ok, return; end
 
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
     fw=gui.gui_waitbar;
     try
-        [t_mono, s_mono] = run.monocle(sce.X);
+        [t_mono, s_mono] = run.r_monocle2(sce.X);
     catch ME
         gui.gui_waitbar(fw,true);
         errordlg(ME.message);
@@ -56,7 +56,7 @@ function callback_TrajectoryAnalysis(src,~)
             gui.i_gscatter3(s_mono,grp2idx(t_mono));
             colorbar
             defaultToolbar = findall(FigureHandle, 'tag','FigureToolBar');  % get the figure's toolbar handle
-            gui.add_3dcamera(defaultToolbar, 'MELD_Scores');
+            gui.add_3dcamera(defaultToolbar, 'Scores');
             hc = colorbar;
             hc.Label.String = 'Pseudotime';
         otherwise

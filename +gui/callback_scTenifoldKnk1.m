@@ -147,7 +147,7 @@ answer=questdlg('Construct network de novo or use existing network in Workspace?
     gui.i_exporttable(T);
     disp('Downstream Analysis Options:');
     disp('===============================');
-    disp('run.Enrichr(T.genelist(1:200));');
+    disp('run.web_Enrichr(T.genelist(1:200));');
     disp('Tf=ten.e_fgsearun(T);');
     disp('Tn=ten.e_fgseanet(Tf);');
     disp('===============================');

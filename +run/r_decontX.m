@@ -1,7 +1,7 @@
-function [X,contamination]=decontX(X)
+function [X,contamination]=r_decontX(X)
 %Run decontX decontamination
 %
-% see also: run.SoupX
+% see also: run.r_SoupX
 % https://cran.r-project.org/web/packages/SoupX/vignettes/pbmcTutorial.html
 
 isdebug=false;

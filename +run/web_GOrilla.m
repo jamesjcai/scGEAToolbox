@@ -1,4 +1,4 @@
-function GOrilla(genelist)
+function web_GOrilla(genelist)
 % Run GOrilla
 % GOrilla is a tool for identifying and visualizing enriched GO terms in ranked lists of genes
 % 
@@ -7,11 +7,12 @@ function GOrilla(genelist)
 % Eran Eden*, Roy Navon*, Israel Steinfeld, Doron Lipson and Zohar Yakhini. "GOrilla: A Tool For Discovery And Visualization of Enriched GO Terms in Ranked Gene Lists", BMC Bioinformatics 2009, 10:48.
 % Eran Eden, Doron Lipson, Sivan Yogev, Zohar Yakhini. "Discovering Motifs in Ranked Lists of DNA sequences", PLoS Computational Biology, 3(3):e39, 2007. 
 %
-% see also: RUN_ENRICHR
+% see also: RUN.WEB_ENRICHR, RUN.WEB_STRING
+
 if nargin<1, genelist=[]; end
 
 pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'external','GOrilla');
+pth=fullfile(pw1,'external','web_GOrilla');
 
 infile=fullfile(pth,'input_template.html');
 outfile=fullfile(pth,'input_page.html');

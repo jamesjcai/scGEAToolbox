@@ -156,7 +156,7 @@
         {"name":"removeinf", "kind":"positional", "type":["logical","scalar"]}
 	]
 },
-"run.GOrilla":
+"run.web_GOrilla":
 {
 	"inputs":
 	[		
@@ -307,7 +307,7 @@
         {"name":"plotit", "kind":"positional", "type":["logical","scalar"],"purpose":"plotit"}        
 	]
 },
-"run.MAST":
+"run.r_MAST":
     {
         "inputs":
         [

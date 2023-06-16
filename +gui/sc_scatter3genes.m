@@ -124,12 +124,12 @@ end
             if isempty(answer), return; end
             switch answer
                 case 'Enrichr'
-                    run.Enrichr(tgenes,length(tgenes));
+                    run.web_Enrichr(tgenes,length(tgenes));
                 case 'GOrilla'
-                    run.GOrilla(tgenes);
+                    run.web_GOrilla(tgenes);
                 case 'Enrichr+GOrilla'
-                    run.Enrichr(tgenes,length(tgenes));
-                    run.GOrilla(tgenes);
+                    run.web_Enrichr(tgenes,length(tgenes));
+                    run.web_GOrilla(tgenes);
                 otherwise
                     return;
             end            
