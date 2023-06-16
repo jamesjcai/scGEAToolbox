@@ -353,11 +353,6 @@ end
         if ischar(callbackFnc) || isstring(callbackFnc)
             callbackFnc=str2func(callbackFnc);
         end
-        if sepTag==1
-            septag='on';
-        else
-            septag='off';
-        end
         if toolbarHdl==0
             barhandle=DeftToolbarHandle;
         elseif toolbarHdl==1
@@ -365,7 +360,7 @@ end
         elseif toolbarHdl==2
             barhandle=UserToolbarHandle;
         end
-        pt = uipushtool(barhandle, 'Separator', septag);
+        pt = uipushtool(barhandle, 'Separator', sepTag);
         pt.CData = i_get_ptImage(imgFil);
         pt.Tooltip = tooltipTxt;
         pt.ClickedCallback = callbackFnc;

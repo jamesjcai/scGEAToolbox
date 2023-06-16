@@ -17,7 +17,7 @@ pause % Press any key to continue...
 %% (2/4) Load example data sets
 % X - gene-by-cell expression matrix
 % g - gene list
-% s - coordinates of cell embedding
+% s - coordinates of cell embedding (optional)
 
 load example_data/testXgs.mat X g s
 
@@ -25,7 +25,7 @@ pause  % Press any key to continue...
 
 %% (3/4) Make a SingleCellExperiment object SCE
 
-sce=SingleCellExperiment(X,g,s);
+sce=SingleCellExperiment(X,g);
 
 pause  % Press any key to continue...
 
