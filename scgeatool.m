@@ -324,9 +324,9 @@ promotesave=false;
                 end
                 promotesave=false;
                 pw1=fileparts(mfilename('fullpath'));
-                fprintf('Loading SCE Data File example_data/new_example_sce.mat...');
+                fprintf('Loading SCE Data File example_data/workshop_example.mat...');
                 tic;
-                file1=fullfile(pw1,'example_data','new_example_sce.mat');
+                file1=fullfile(pw1,'example_data','workshop_example.mat')
                 if ~exist(file1,"file")
                     errordlg("Example data file does not exist.");
                     return;
