@@ -5,19 +5,28 @@ function [r] = sc_potency(X, genelist, speciesid)
 % CCAT (Correlation of Connectome And Transcriptome)
 %https://github.com/aet21/SCENT
 %
-%see also: run.cytotrace
+%see also: RUN.CYTOTRACE
 
-if nargin < 3, speciesid = 1; end
+    if nargin < 3, speciesid = 1; end
+
+    if ~isnumeric(speciesid)
+        switch speciesid
+            case 'human'
+                speciesid=1;
+            case 'mouse'
+                speciesid=2;
+            otherwise
+                speciesid=2;
+        end
+    end
+
     if ~ ismember(speciesid, [1 2])
         error('Invalid SPECIESID');
     end
  
-    pw1 = fileparts(mfilename('fullpath'));
-    
-%    dbfile1 = fullfile(pw1, 'resources', 'STRING', 'stringdb_human.mat');
-%    dbfile2 = fullfile(pw1, 'resources', 'STRING', 'stringdb_mouse.mat');
-    dbfile1 = fullfile(pw1, '+run', 'external', 'stringdb', 'stringdb_human.mat');
-    dbfile2 = fullfile(pw1, '+run', 'external', 'stringdb', 'stringdb_mouse.mat');
+    pw1 = fileparts(mfilename('fullpath'));    
+    dbfile1 = fullfile(pw1, '+run', 'external', 'web_STRING', 'stringdb', 'stringdb_human.mat');
+    dbfile2 = fullfile(pw1, '+run', 'external', 'web_STRING', 'stringdb', 'stringdb_mouse.mat');
 
     if ~ exist(dbfile1, 'file')
         if ~exist(fileparts(dbfile1),'dir')

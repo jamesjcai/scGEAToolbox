@@ -26,7 +26,7 @@ oldpth=pwd;
 %pw1=fileparts(which(mfilename));
 pw1=fileparts(mfilename('fullpath'));
 if strcmpi(organ,"all")
-    pth=fullfile(pw1,'external','celltype_mat_new');
+    pth=fullfile(pw1,'external','R_clustermole');
 else
     error('not yet implemented.')
 end

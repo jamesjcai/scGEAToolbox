@@ -1,5 +1,6 @@
 function [out] = x_arguments_template(X,n,b,options,axesProps)
 
+% https://www.mathworks.com/help/matlab/matlab_prog/argument-validation-functions.html
 arguments    
     X double
     A (1,1) string

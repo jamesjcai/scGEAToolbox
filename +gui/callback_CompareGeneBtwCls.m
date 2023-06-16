@@ -71,7 +71,7 @@ if isempty(selecteditem), return; end
                 return;
             end
             [y]=gui.e_cellscore(sce,posg);
-        case 'MSigDB Signature Score'
+        case 'MSigDB Signature Score...'
             stag=gui.i_selectspecies(2,true);
             if isempty(stag), return; end    
             try
@@ -84,10 +84,14 @@ if isempty(selecteditem), return; end
             if isempty(posg) || isempty(ctselected), return; end
             [y]=gui.e_cellscore(sce,posg);
         case 'Differentiation Potency [PMID:33244588]'
-                answer2=questdlg('Which species?','Select Species','Mouse','Human','Mouse');
-                [yes,speciesid]=ismember(lower(answer2),{'human','mouse'});
-                if ~yes, return; end
-                y=sc_potency(sce.X,sce.g,speciesid);
+                
+                gui.gui_showrefinfo('Differentiation Potency [PMID:33244588]');
+
+                % answer2=questdlg('Which species?','Select Species','Mouse','Human','Mouse');
+                % [yes,speciesid]=ismember(lower(answer2),{'human','mouse'});
+                % if ~yes, return; end
+                speciestag = gui.i_selectspecies(2);
+                y=sc_potency(sce.X,sce.g,speciestag);
                 ttxt='Differentiation Potency';
 
             % [a]=contains(sce.list_cell_attributes(1:2:end),'cell_potency');
@@ -105,10 +109,10 @@ if isempty(selecteditem), return; end
             %     return;
             % end
 
-        case 'Library Size'
+        case 'Library Size of Cells'
             y=sum(sce.X);
             ttxt='Library Size';
-        case 'Expression of Gene'
+        case 'Expression of Individual Genes'
             [glist]=gui.i_selectngenes(sce);
             if isempty(glist)
                 helpdlg('No gene selected.','');
@@ -125,7 +129,8 @@ if isempty(selecteditem), return; end
             gui.i_cascadeviolin(sce,Xt,thisc,glist, ...
                 'Expression Level',cL,colorit);
             return;
-        case 'Predefined Cell Score'
+        case 'Other Predefined Score...'
+            gui.gui_showrefinfo('Other Predefined Cell Score');
             [~,T]=pkg.e_cellscores(sce.X,sce.g,0);
             listitems=T.ScoreType;
             [indx2,tf2] = listdlg('PromptString','Select Class',...
@@ -136,7 +141,7 @@ if isempty(selecteditem), return; end
             y=pkg.e_cellscores(sce.X,sce.g,indx2);
             ttxt=T.ScoreType(indx2);
             %gui.gui_waitbar(fw);
-        case 'Other Attribute...'
+        case 'Other Cell Attribute...'
             [y,clable,~,newpickclable]=gui.i_select1state(sce,true);
             if isempty(y)
                 helpdlg('No cell attribute is available.');
@@ -169,7 +174,7 @@ if isempty(selecteditem), return; end
 %     switch answer
 %         case 'AddModuleScore/Seurat'   
 
-            if strcmp(selecteditem,'TF Targets Expression Score')
+            if strcmp(selecteditem,'TF Targets Expression Score...')
                 methodid=1;
             else
                 methodid=4;
