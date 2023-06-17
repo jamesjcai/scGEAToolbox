@@ -7,7 +7,7 @@ end
 %ngenes (1,1) {mustBePositive, mustBeInteger} = 5
 
     ngenes=size(A,1);
-    isdebug = false;
+    isdebug = true;
     oldpth=pwd();
     pw1=fileparts(mfilename('fullpath'));
     wrkpth=fullfile(pw1,'external','py_SERGIO');

@@ -155,7 +155,7 @@ class sergio (object):
             reader = csv.reader(f, delimiter=',')
             if (shared_coop_state <= 0):
                 for row in reader:
-                    nRegs = np.int32(row[1])
+                    nRegs = np.int(row[1])
                     ##################### Raise Error ##########################
                     if nRegs == 0:
                         print ("Error: a master regulator (#Regs = 0) appeared in input")
@@ -165,23 +165,22 @@ class sergio (object):
                     currInteraction = []
                     currParents = []
                     for regId, K, C_state in zip(row[2: 2 + nRegs], row[2+nRegs : 2+2*nRegs], row[2+2*nRegs : 2+3*nRegs]):
-                        currInteraction.append((np.int32(regId), np.float64(K), np.float64(C_state), 0)) # last zero shows half-response, it is modified in another method
-                        allRegs.append(np.int32(regId))
-                        currParents.append(np.int32(regId))
-                        self.graph_[np.int32(regId)]['targets'].append(np.int32(row[0]))
+                        currInteraction.append((np.int(regId), np.float(K), np.float(C_state), 0)) # last zero shows half-response, it is modified in another method
+                        allRegs.append(np.int(regId))
+                        currParents.append(np.int(regId))
+                        self.graph_[np.int(regId)]['targets'].append(np.int(row[0]))
 
-                    self.graph_[np.int32(row[0])]['params'] = currInteraction
-                    self.graph_[np.int32(row[0])]['regs'] = currParents
-                    self.graph_[np.int32(row[0])]['level'] = -1 # will be modified later
-                    allTargets.append(np.int32(row[0]))
+                    self.graph_[np.int(row[0])]['params'] = currInteraction
+                    self.graph_[np.int(row[0])]['regs'] = currParents
+                    self.graph_[np.int(row[0])]['level'] = -1 # will be modified later
+                    allTargets.append(np.int(row[0]))
 
                     #if self.dyn_:
                     #    for b in range(self.nBins_):
-                    #        binDict[b].append(gene(np.int32(row[0]),'T', b))
+                    #        binDict[b].append(gene(np.int(row[0]),'T', b))
             else:
                 for indRow, row in enumerate(reader):
-                    # nRegs = np.int32(np.float64(row[1]))
-                    nRegs = np.int32(np.float64(row[1]))
+                    nRegs = np.int(np.float(row[1]))
                     ##################### Raise Error ##########################
                     if nRegs == 0:
                         print ("Error: a master regulator (#Regs = 0) appeared in input")
@@ -191,19 +190,19 @@ class sergio (object):
                     currInteraction = []
                     currParents = []
                     for regId, K, in zip(row[2: 2 + nRegs], row[2+nRegs : 2+2*nRegs]):
-                        currInteraction.append((np.int32(np.float64(regId)), np.float64(K), shared_coop_state, 0)) # last zero shows half-response, it is modified in another method
-                        allRegs.append(np.int32(np.float64(regId)))
-                        currParents.append(np.int32(np.float64(regId)))
-                        self.graph_[np.int32(np.float64(regId))]['targets'].append(np.int32(np.float64(row[0])))
+                        currInteraction.append((np.int(np.float(regId)), np.float(K), shared_coop_state, 0)) # last zero shows half-response, it is modified in another method
+                        allRegs.append(np.int(np.float(regId)))
+                        currParents.append(np.int(np.float(regId)))
+                        self.graph_[np.int(np.float(regId))]['targets'].append(np.int(np.float(row[0])))
 
-                    self.graph_[np.int32(np.float64(row[0]))]['params'] = currInteraction
-                    self.graph_[np.int32(np.float64(row[0]))]['regs'] = currParents
-                    self.graph_[np.int32(np.float64(row[0]))]['level'] = -1 # will be modified later
-                    allTargets.append(np.int32(np.float64(row[0])))
+                    self.graph_[np.int(np.float(row[0]))]['params'] = currInteraction
+                    self.graph_[np.int(np.float(row[0]))]['regs'] = currParents
+                    self.graph_[np.int(np.float(row[0]))]['level'] = -1 # will be modified later
+                    allTargets.append(np.int(np.float(row[0])))
 
                     #if self.dyn_:
                     #    for b in range(self.nBins_):
-                    #        binDict[b].append(gene(np.int32(row[0]),'T', b))
+                    #        binDict[b].append(gene(np.int(row[0]),'T', b))
 
         #self.master_regulators_idx_ = set(np.setdiff1d(allRegs, allTargets))
 
@@ -216,13 +215,13 @@ class sergio (object):
                     sys.exit()
 
                 masterRegs.append(int(float(row[0])))
-                self.graph_[int(float(row[0]))]['rates'] = [np.float64(i) for i in row[1:]]
+                self.graph_[int(float(row[0]))]['rates'] = [np.float(i) for i in row[1:]]
                 self.graph_[int(float(row[0]))]['regs'] = []
                 self.graph_[int(float(row[0]))]['level'] = -1
 
                 #if self.dyn_:
                 #    for b in range(self.nBins_):
-                #        binDict[b].append(gene(np.int32(row[0]),'MR', b))
+                #        binDict[b].append(gene(np.int(row[0]),'MR', b))
 
         self.master_regulators_idx_ = set(masterRegs)
 
