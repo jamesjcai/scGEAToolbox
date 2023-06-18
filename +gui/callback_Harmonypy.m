@@ -58,7 +58,7 @@ usepylib=false;
         
         fw=gui.gui_waitbar;
         try
-            [s]=run.harmonypy(sce.s,sce.c_batch_id,usepylib);
+            [s]=run.py_harmonypy(sce.s,sce.c_batch_id,usepylib);
             if isempty(s) || isequal(sce.s,s)
                 gui.gui_waitbar(fw);
                 errordlg("Harmonypy Running Error");

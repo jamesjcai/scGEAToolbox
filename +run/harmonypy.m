@@ -49,7 +49,7 @@ else
         error('harmony-py has not been installed properly.');
     end
 
-    cmdlinestr=sprintf('"%s" "%s%sscript.py"',x.Executable,wrkpth,filesep);
+    cmdlinestr=sprintf('"%s" "%s%sold_script.py"',x.Executable,wrkpth,filesep);
     disp(cmdlinestr)
     [status]=system(cmdlinestr);
     if status==0 && exist('output.csv','file')
