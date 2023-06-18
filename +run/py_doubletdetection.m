@@ -35,7 +35,7 @@ if ~pyok, return; end
 
 
 
-if status==0 && exist('output1.txt','file')
+if status==0 && exist('output.mat','file')
     T=readtable('output1.txt',"ReadVariableNames",false);
     isDoublet=string(T.Var1)=="True"; 
     doubletscore=readmatrix('output2.txt');
