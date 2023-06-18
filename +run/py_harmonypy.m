@@ -1,5 +1,4 @@
 function [sout]=py_harmonypy(s,batchid)
-
 arguments    
     s (:,:) {mustBeNumeric}
     batchid (1,:) {mustBePositive, mustBeInteger}
@@ -39,7 +38,7 @@ if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
     end
     if status==0 && exist('output.mat','file')
         load("output.mat","sout")        
-    end    
+    end
 
 
 

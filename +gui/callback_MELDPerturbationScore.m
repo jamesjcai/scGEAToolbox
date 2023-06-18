@@ -16,20 +16,20 @@ if ~ok, return; end
         return;
     end
         
-        fw=gui.gui_waitbar;
+        %fw=gui.gui_waitbar;
         try
             [score,T]=run.py_MELD(sce.X,sce.c_batch_id);
             if isempty(score) || size(score,1)~=size(sce.X,2)
-                gui.gui_waitbar(fw);
+                %gui.gui_waitbar(fw);
                 errordlg("MELD Running Error");
                 return;
             end
         catch ME
-            gui.gui_waitbar(fw);
+            %gui.gui_waitbar(fw);
             errordlg(ME.message);
             rethrow(ME);
         end 
-            gui.gui_waitbar(fw);
+           % gui.gui_waitbar(fw);
 
         FigureHandle=figure;
         gui.i_gscatter3(sce.s,score(:,2));
