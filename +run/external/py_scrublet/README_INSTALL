@@ -1,0 +1,3 @@
+https://www.lfd.uci.edu/~gohlke/pythonlibs/#annoy
+pip install annoy-1.17.0-cp3XX-win_amd64.whl
+pip install scrublet

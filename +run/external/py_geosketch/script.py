@@ -19,9 +19,9 @@ f = h5py.File('input.mat','r')
 # N = np.array(f.get(list(f.keys())[1]), dtype='float32')
 
 counts = np.array(f.get('X'), dtype=np.float64)
-n = int(f['n'][()])
-#N = f.get('n')    # or f['n']
-#n=N[()].astype(int).item()
+#n = int(f['n'][()])
+N = f.get('n')    # or f['n']
+n=N[()].astype(int).item()
 f.close()
 X=counts.T    # X = [ sparse or dense matrix, samples in rows, features in columns ]
 sketch_index = gs(X, n, replace=False)

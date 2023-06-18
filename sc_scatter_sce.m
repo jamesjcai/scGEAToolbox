@@ -648,30 +648,30 @@ end
         end
         end
 
-        %fw=gui.gui_waitbar;
         tn=round(sce.NumCells/2);        
         if methodoption==1
             idx=randperm(sce.NumCells);
             ids=idx(1:tn);
         elseif  methodoption==2
             gui.gui_showrefinfo('Geometric Sketching [PMID:31176620]');
-            answerx=questdlg('This method requires Python environment and geosketch package installed. Continue?');
-            if ~strcmp(answerx,'Yes'), return; end
+            %answerx=questdlg('This method requires Python environment and geosketch package installed. Continue?');
+            %if ~strcmp(answerx,'Yes'), return; end
+            fw=gui.gui_waitbar;
             Xn=log(1+sc_norm(sce.X))';
-            
+            [~,Xn]=pca(Xn,'NumComponents',300);
+            gui.gui_waitbar(fw);
             try
-                [~,Xn]=pca(Xn,'NumComponents',300);
                 ids=run.py_geosketch(Xn,tn);
             catch ME
-                %gui.gui_waitbar(fw,true);
+                gui.gui_waitbar(fw,true);
                 errordlg(ME.message);
                 return;
             end
+            
         end
         if ~isempty(ids)
             sce=sce.selectcells(ids);
             c=sce.c;
-            %gui.gui_waitbar(fw);
             RefreshAll(src, 1, true);
         else
             errordlg('Running error. No action is taken.');

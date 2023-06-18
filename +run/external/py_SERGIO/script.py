@@ -25,7 +25,7 @@ f = h5py.File('input.mat','r')
 #ncells = N[()].astype(int).item()
 ncells = f['ncells'][0,0].astype(int)
 ngenes = f['ngenes'][0,0].astype(int)
-
+f.close()
 
 
 sim = sergio(number_genes = ngenes, 

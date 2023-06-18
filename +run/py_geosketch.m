@@ -7,40 +7,10 @@ function [idx]=py_geosketch(X,n)
     idx=[];
     
     oldpth=pwd();
-    [pyok,wrkpth]=run.pycommon('py_geosketch');
+    [pyok,wrkpth,x]=run.pycommon('py_geosketch');
     if ~pyok, return; end
-
-%     pw1=fileparts(mfilename('fullpath'));
-%     wrkpth=fullfile(pw1,'external','py_geosketch');
-%     cd(wrkpth);
-%     
-%     
-%     fw = gui.gui_waitbar([],[],'Checking Python environment...');
-%     
-%     x=pyenv;
-%     try
-%         pkg.i_add_conda_python_path;
-%     catch
-%         
-%     end
-%     cmdlinestr=sprintf('"%s" "%s%srequire.py"', ...
-%             x.Executable,wrkpth,filesep);
-%     disp(cmdlinestr)
-%     [status,cmdout]=system(cmdlinestr,'-echo');
-%     if status~=0
-%         cd(oldpth);
-%         waitfor(errordlg(sprintf('%s',cmdout)));
-%         error('Python geosketch has not been installed properly.');
-%     end
-%     if isvalid(fw) 
-%         gui.gui_waitbar(fw,[],'Checking Python environment is complete');
-%     end
-%     
-
-
-    
+   
     tmpfilelist={'input.mat','output.mat'};
-    
     if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
     
     save('input.mat','-v7.3','X','n');
@@ -55,12 +25,6 @@ function [idx]=py_geosketch(X,n)
     if isvalid(fw)
         gui.gui_waitbar(fw,[],'Running geosketch is complete');
     end
-    
-    % if status==0 && exist('output.txt','file')
-    %     T=readtable('output.txt');
-    %     idx=T.Var1+1;
-    % end
-
     if status==0 && exist('output.mat','file')
         load("output.mat","idx")
         idx=idx+1;
