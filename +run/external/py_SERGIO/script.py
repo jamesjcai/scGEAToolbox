@@ -14,14 +14,18 @@ os.chdir(dname)
 
 
 import numpy as np
-import pandas as pd
 from scipy.io import savemat
 import h5py
 from SERGIO.sergio import sergio
 
 f = h5py.File('input.mat','r')
-ncells = int(f['ncells'][()])
-ngenes = int(f['ngenes'][()])
+#ncells = int(f['ncells'][()])
+#ngenes = int(f['ngenes'][()])
+#N = f.get('ncells')    # or f['ncells']
+#ncells = N[()].astype(int).item()
+ncells = f['ncells'][0,0].astype(int)
+ngenes = f['ngenes'][0,0].astype(int)
+
 
 
 sim = sergio(number_genes = ngenes, 
@@ -50,6 +54,5 @@ savemat("output.mat", {"X": count_matrix})
 #f = h5py.File("mytestfile.h5", "w")
 #dset = f.create_dataset("X", c, dtype='i')
 #f.close()
-
 #df=pd.DataFrame(res_raw) 
 #df.to_csv('output.csv')
