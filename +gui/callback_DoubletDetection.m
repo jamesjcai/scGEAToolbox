@@ -23,9 +23,9 @@ methodtag='scrublet';
         try
             switch methodtag
                 case 'scrublet'
-                    [isDoublet,doubletscore]=run.scrublet(sce.X);
+                    [isDoublet,doubletscore]=run.py_scrublet(sce.X);
 %                 case 'doubletdetection'
-%                     [isDoublet,doubletscore]=run.doubletdetection(sce.X);
+%                     [isDoublet,doubletscore]=run.py_doubletdetection(sce.X);
                 otherwise
                     return;
             end

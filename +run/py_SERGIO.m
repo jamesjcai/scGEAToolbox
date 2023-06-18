@@ -4,36 +4,43 @@ arguments
     A (:,:) {mustBeNumericOrLogical,mustBeSquare(A)} = randnet_example
     ncells (1,1) {mustBePositive, mustBeInteger} = 1000
 end
-%ngenes (1,1) {mustBePositive, mustBeInteger} = 5
+X=[];
 
     ngenes=size(A,1);
     isdebug = true;
     oldpth=pwd();
-    pw1=fileparts(mfilename('fullpath'));
-    wrkpth=fullfile(pw1,'external','py_SERGIO');
-    cd(wrkpth);   
-    
-    fw = gui.gui_waitbar([],[],'Checking Python environment...');    
-    x=pyenv;
-    try
-        pkg.i_add_conda_python_path;
-    catch
-        
-    end
-    cmdlinestr=sprintf('"%s" "%s%srequire.py"', ...
-            x.Executable,wrkpth,filesep);
-    disp(cmdlinestr)
-    [status,cmdout]=system(cmdlinestr,'-echo');
-    if status~=0
-        gui.gui_waitbar(fw,true);
-        cd(oldpth);
-        waitfor(errordlg(sprintf('%s',cmdout)));
-        error('Python SERGIO has not been installed properly.');
-    end 
-    
-    if isvalid(fw)
-        gui.gui_waitbar(fw,[],'Checking Python environment is complete');
-    end
+
+    [pyok,wrkpth,x]=run.pycommon('py_SERGIO');
+    if ~pyok, return; end
+
+
+%     pw1=fileparts(mfilename('fullpath'));
+%     wrkpth=fullfile(pw1,'external','py_SERGIO');
+%     cd(wrkpth);   
+%     
+%     fw = gui.gui_waitbar([],[],'Checking Python environment...');    
+%     x=pyenv;
+%     try
+%         pkg.i_add_conda_python_path;
+%     catch
+%         
+%     end
+%     cmdlinestr=sprintf('"%s" "%s%srequire.py"', ...
+%             x.Executable,wrkpth,filesep);
+%     disp(cmdlinestr)
+%     [status,cmdout]=system(cmdlinestr,'-echo');
+%     if status~=0
+%         gui.gui_waitbar(fw,true);
+%         cd(oldpth);
+%         waitfor(errordlg(sprintf('%s',cmdout)));
+%         error('Python SERGIO has not been installed properly.');
+%     end 
+%     
+%     if isvalid(fw)
+%         gui.gui_waitbar(fw,[],'Checking Python environment is complete');
+%     end
+
+
 
     %tmpfilelist={'input.mat','output.mat','regs.txt','targets.txt'};
     tmpfilelist={'input.mat','output.mat'};

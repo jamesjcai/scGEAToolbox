@@ -1,12 +1,11 @@
 try:
+    from scipy.io import savemat
+    import doubletdetection
     import geosketch
-    import os
-    import pandas
     import numpy
     import h5py
     import scipy
-    import fbpca
-    print('All imports essential to geosketch.py are found')
+    print('All imports essential to the program are found')
 #    exit(0)
 except ImportError as exc:
     print(exc)

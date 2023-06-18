@@ -2,7 +2,7 @@ function [out] = x_arguments_template(X,n,b,options,axesProps)
 
 % https://www.mathworks.com/help/matlab/matlab_prog/argument-validation-functions.html
 arguments    
-    X double
+    X double {mustBeNonsparse}
     A (1,1) string
     B (1,:) double
     C (2,2) cell
