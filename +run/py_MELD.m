@@ -11,6 +11,8 @@ if nargin<2
     error('USAGE: score=run.MELD(X,batchid)');
 end
 oldpth=pwd();
+
+
 pw1=fileparts(mfilename('fullpath'));
 wrkpth=fullfile(pw1,'external','py_MELD');
 cd(wrkpth);

@@ -3,11 +3,10 @@ function [sout]=py_harmonypy(s,batchid)
 arguments    
     s (:,:) {mustBeNumeric}
     batchid (1,:) {mustBePositive, mustBeInteger}
-%    usepylib (1,1) {mustBeNumericOrLogical} = false
 end
 
 sout=[];
-isdebug=true;
+isdebug=false;
 
 %if nargin<3, usepylib=false; end
 %if nargin<2, error('[s]=run.harmonypy(s,batchid)'); end

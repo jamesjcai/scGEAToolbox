@@ -1,5 +1,6 @@
 try:
     import numpy
+    import pandas
     import h5py
     import scipy
     import harmonypy

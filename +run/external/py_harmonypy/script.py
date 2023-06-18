@@ -7,8 +7,6 @@ os.chdir(dname)
 # os.chdir("U:\\GitHub\\scGEAToolbox\\+run\\thirdparty\\harmony")
 import pandas as pd
 import numpy as np
-#from scipy.cluster.vq import kmeans
-#from scipy.stats.stats import pearsonr
 import harmonypy as hm
 import h5py
 from scipy.io import savemat
@@ -16,10 +14,12 @@ from scipy.io import savemat
 
 f = h5py.File('input.mat','r')
 s = f['s'][()]
-batchid= f['batchid'][()].astype(int)
+batchid= f['batchid'][()].astype(int).tolist()
 f.close()
 
+batchid=[str(x) for x in batchid]
 meta_data=pd.DataFrame(batchid)
+meta_data.columns =['batchidx']
 
 #meta_data = pd.read_csv("input2.csv")
 # data_mat = pd.read_csv("input1.csv", header=None)
@@ -27,7 +27,7 @@ meta_data=pd.DataFrame(batchid)
 #data_mat = np.array(data_mat)
 
 vars_use = ['batchidx']
-ho = hm.run_harmony(s, batchid, vars_use)
+ho = hm.run_harmony(s, meta_data, vars_use)
 
 savemat("output.mat", {"sout": ho.Z_corr.T})
 
