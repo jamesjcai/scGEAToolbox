@@ -1,4 +1,4 @@
-function [X,g,b]=readh5ad(fname)
+function [X,g,b]=py_readh5ad(fname)
 
 isdebug=true;
 if ~exist(fname,'file')
