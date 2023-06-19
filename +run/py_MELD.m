@@ -3,7 +3,6 @@ function [sample_likelihoods,T]=py_MELD(X,batchid)
 % the cell-cell graph to determine which regions of its underlying 
 % data manifold are enriched or depleted in cells with a specific 
 % feature.
-
 arguments    
     X (:,:) {mustBeNumeric}
     batchid (1,:) {mustBePositive, mustBeInteger}
@@ -12,10 +11,10 @@ sample_likelihoods=[];
 T=[];
 
 isdebug=false;
-if nargin<2
+%if nargin<2
     %batchid=string([true(ceil(size(X,2)/2),1); false(floor(size(X,2)/2),1)]);
-    error('USAGE: score=run.MELD(X,batchid)');
-end
+%    error('USAGE: score=run.MELD(X,batchid)');
+%end
 oldpth=pwd();
 [pyok,wrkpth,x]=run.pycommon('py_MELD');
 if ~pyok, return; end
@@ -31,11 +30,10 @@ if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 if issparse(X), X=full(X); end
 X=sc_norm(X);
 X=sqrt(X);
+
 save('input.mat','X','batchid','-v7.3');
-
-save('input_v7.mat','X','batchid','-v7');
-
-    disp('Input file written.');
+%save('input_v7.mat','X','batchid','-v7');
+disp('Input file written.');
     
    
     fw=gui.gui_waitbar([],[],'Running ...');

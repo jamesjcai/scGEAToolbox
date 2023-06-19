@@ -44,8 +44,7 @@ function [T]=py_GenKI(X,g,idx)
     
     
     % fw=gui.gui_waitbar([],[],'Running GenKI...');
-
-    
+   
     cmdlinestr=sprintf('"%s" "%s%sscript.py"', ...
         x.Executable,wrkpth,filesep);
     disp(cmdlinestr)
