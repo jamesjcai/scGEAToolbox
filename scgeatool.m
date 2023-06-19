@@ -333,7 +333,12 @@ promotesave=false;
                 end
                 load(file1,'sce');
                 if strcmp(answerstruced,'Raw')
+                    orisce=sce;
                     sce=SingleCellExperiment(sce.X,sce.g);
+                    sce.c_batch_id=orisce.c_batch_id;
+                    sce.c_cell_id=orisce.c_cell_id;
+                    sce.metadata=orisce.metadata;
+                    clearvars orisce
                 end           
                 fprintf('Done.\n');
                 toc;
