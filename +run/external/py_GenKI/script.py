@@ -23,8 +23,6 @@ import h5py
 # from scipy.io import savemat
 
 # adata = build_adata("X.mat", "g.txt", "c.txt", delimiter=',', meta_cell_cols=['cell_type'], transpose=False)
-
-
 adata = build_adata("X.mat",
                     "g.txt",
                     "c.txt",
@@ -38,7 +36,8 @@ adata = build_adata("X.mat",
 
 f = h5py.File('idx.mat','r')
 # counts = np.array(f.get('X'), dtype=np.float64)
-idx = int(f['idx'][()])-1
+# idx = int(f['idx'][()])-1
+idx = f['idx'][0,0].astype(int)-1
 f.close()
 
 adata.var_names[idx]

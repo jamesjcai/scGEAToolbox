@@ -7,6 +7,7 @@ os.chdir(dname)
 
 import pandas as pd
 import meld
+from scipy.io import savemat
 
 # https://stackoverflow.com/questions/874461/read-mat-files-in-python
 
@@ -25,4 +26,4 @@ meld_op = meld.MELD()
 sample_densities = meld_op.fit_transform(data.T, sample_labels)
 sample_likelihoods = meld.utils.normalize_densities(sample_densities)
 pd.DataFrame(sample_likelihoods).to_csv('output.txt',index=False,header=True)
-
+#savemat('output.mat',{"score": sample_likelihoods})

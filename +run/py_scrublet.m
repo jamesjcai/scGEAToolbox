@@ -3,8 +3,8 @@ function [isDoublet,doubletscore]=py_scrublet(X)
 oldpth=pwd();
 isDoublet=[];
 doubletscore=[];
-
-[pyok,wrkpth,x]=run.pycommon('py_scrublet');
+prgfoldername='py_scrublet';
+[pyok,wrkpth,x]=run.pycommon(prgfoldername);
 if ~pyok, return; end
 isdebug=false;
 
@@ -16,10 +16,11 @@ if issparse(X), X=full(X); end
 save('input.mat','-v7.3','X');
 disp('Input file written.');
     
-cmdlinestr=sprintf('"%s" "%s%sscript.py"', ...
-    x.Executable,wrkpth,filesep);
-disp(cmdlinestr)
-[status]=system(cmdlinestr,'-echo');
+% cmdlinestr=sprintf('"%s" "%s%sscript.py"', ...
+%     x.Executable,wrkpth,filesep);
+% disp(cmdlinestr)
+% [status]=system(cmdlinestr,'-echo');
+    [status]=run.pycommon2(x,wrkpth,prgfoldername);
 
 if status==0 && exist('output.mat','file')
     load("output.mat",'isDoublet','doubletscore')

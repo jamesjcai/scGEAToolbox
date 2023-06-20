@@ -1,36 +1,40 @@
 function [T]=py_GenKI(X,g,idx)   
 
+    prgfoldername = 'py_GenKI';
     narginchk(3,3);
     assert(size(X,1)==length(g));
 
     T=[];
     isdebug = false;
     oldpth=pwd();
-    pw1=fileparts(mfilename('fullpath'));
-    wrkpth=fullfile(pw1,'external','py_GenKI');
-    cd(wrkpth);   
+    [pyok,wrkpth,x]=run.pycommon(prgfoldername);
+    if ~pyok, return; end
     
-    fw = gui.gui_waitbar([],[],'Checking Python environment...');    
-    x=pyenv;
-    try
-        pkg.i_add_conda_python_path;
-    catch
-        
-    end
-    cmdlinestr=sprintf('"%s" "%s%srequire.py"', ...
-            x.Executable,wrkpth,filesep);
-    disp(cmdlinestr)
-    [status,cmdout]=system(cmdlinestr,'-echo');
-    if status~=0
-        gui.gui_waitbar(fw,true);
-        cd(oldpth);
-        waitfor(errordlg(sprintf('%s',cmdout)));
-        error('Python GenKI has not been installed properly.');
-    end 
-    
-    if isvalid(fw) 
-        gui.gui_waitbar(fw,[],'Checking Python environment is complete');
-    end
+%     pw1=fileparts(mfilename('fullpath'));
+%     wrkpth=fullfile(pw1,'external','py_GenKI');
+%     cd(wrkpth);   
+%     
+%     fw = gui.gui_waitbar([],[],'Checking Python environment...');    
+%     x=pyenv;
+%     try
+%         pkg.i_add_conda_python_path;
+%     catch
+%         
+%     end
+%     cmdlinestr=sprintf('"%s" "%s%srequire.py"', ...
+%             x.Executable,wrkpth,filesep);
+%     disp(cmdlinestr)
+%     [status,cmdout]=system(cmdlinestr,'-echo');
+%     if status~=0
+%         gui.gui_waitbar(fw,true);
+%         cd(oldpth);
+%         waitfor(errordlg(sprintf('%s',cmdout)));
+%         error('Python GenKI has not been installed properly.');
+%     end 
+%     
+%     if isvalid(fw) 
+%         gui.gui_waitbar(fw,[],'Checking Python environment is complete');
+%     end
 
     tmpfilelist={'X.mat','g.txt','c.txt',...
         'idx.mat','output.csv',fullfile('GRNs','pcNet_example.npz')};
@@ -45,10 +49,12 @@ function [T]=py_GenKI(X,g,idx)
     
     % fw=gui.gui_waitbar([],[],'Running GenKI...');
    
-    cmdlinestr=sprintf('"%s" "%s%sscript.py"', ...
-        x.Executable,wrkpth,filesep);
-    disp(cmdlinestr)
-    [status]=system(cmdlinestr,'-echo');
+%    cmdlinestr=sprintf('"%s" "%s%sscript.py"', ...
+%        x.Executable,wrkpth,filesep);
+%    disp(cmdlinestr)
+%    [status]=system(cmdlinestr,'-echo');
+
+    [status]=run.pycommon2(x,wrkpth,prgfoldername);
 
     % if isvalid(fw)
     %     gui.gui_waitbar(fw,[],'Running GenKI is complete');
