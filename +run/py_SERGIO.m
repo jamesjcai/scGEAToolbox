@@ -6,11 +6,13 @@ arguments
 end
 X=[];
 
-    ngenes=size(A,1);
+    prgfoldername='py_SERGIO';
     isdebug = true;
+
+    ngenes=size(A,1);
     oldpth=pwd();
 
-    [pyok,wrkpth,x]=run.pycommon('py_SERGIO');
+    [pyok,wrkpth,x]=run.pycommon(prgfoldername);
     if ~pyok, return; end
 
     %tmpfilelist={'input.mat','output.mat','regs.txt','targets.txt'};
@@ -21,10 +23,15 @@ X=[];
 
    
     save('input.mat','-v7.3','ncells','ngenes');
-    cmdlinestr=sprintf('"%s" "%s%sscript.py"', ...
-        x.Executable,wrkpth,filesep);
-    disp(cmdlinestr)
-    [status]=system(cmdlinestr,'-echo');
+    
+    [status]=run.pycommon2(x,wrkpth,prgfoldername);
+
+    % cmdlinestr=sprintf('"%s" "%s%sscript.py"', ...
+    %     x.Executable,wrkpth,filesep);
+    % disp(cmdlinestr)
+    % [status]=system(cmdlinestr,'-echo');
+
+
     if status==0 && exist('output.mat','file')
         load('output.mat','X');
     end
