@@ -19,7 +19,7 @@ methodtag='scrublet';
 % methodtag=questdlg('Which method?','',...
 %     'scrublet','doubletdetection','scrublet');
         
-        fw=gui.gui_waitbar;
+        %fw=gui.gui_waitbar;
         try
             switch methodtag
                 case 'scrublet'
@@ -30,16 +30,16 @@ methodtag='scrublet';
                     return;
             end
             if isempty(isDoublet)||isempty(doubletscore)
-                gui.gui_waitbar(fw);
-                errordlg("doubletdetection Running Error");
+                %gui.gui_waitbar(fw);
+                errordlg("Running Error.");
                 return;
             end
         catch ME
-            gui.gui_waitbar(fw);
+            %gui.gui_waitbar(fw);
             errordlg(ME.message);
             rethrow(ME);
         end 
-        gui.gui_waitbar(fw);    
+        %gui.gui_waitbar(fw);
    guidata(FigureHandle,sce);
    done=true;
 end
