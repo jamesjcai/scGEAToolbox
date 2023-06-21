@@ -26,12 +26,6 @@ X=[];
     
     [status]=run.pycommon2(x,wrkpth,prgfoldername);
 
-    % cmdlinestr=sprintf('"%s" "%s%sscript.py"', ...
-    %     x.Executable,wrkpth,filesep);
-    % disp(cmdlinestr)
-    % [status]=system(cmdlinestr,'-echo');
-
-
     if status==0 && exist('output.mat','file')
         load('output.mat','X');
     end
