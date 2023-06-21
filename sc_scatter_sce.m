@@ -173,10 +173,10 @@ i_addbutton_toggle(2,0,{@togglebtfun, @callback_SaveX, ...
     "icon-mat-filter-5-10.gif", "export.gif", ...
     true, "Export & save data"});
 
-m_vie = uimenu(FigureHandle,'Text','&Multiview','Accelerator','M');
-i_addmenu(m_vie,0,@gui.callback_MultiEmbeddingViewer,'Multi-embedding View...');
-i_addmenu(m_vie,0,@gui.callback_MultiGroupingViewer,'Multi-grouping View...');
-i_addmenu(m_vie,0,@gui.callback_CrossTabulation,'Cross Tabulation...');
+%m_vie = uimenu(FigureHandle,'Text','&Multiview','Accelerator','M');
+%i_addmenu(m_vie,0,@gui.callback_MultiEmbeddingViewer,'Multi-embedding View...');
+%i_addmenu(m_vie,0,@gui.callback_MultiGroupingViewer,'Multi-grouping View...');
+%i_addmenu(m_vie,0,@gui.callback_CrossTabulation,'Cross Tabulation...');
 
 m_net = uimenu(FigureHandle,'Text','&Network','Accelerator','N');
 i_addmenu(m_net,0,@callback_scPCNet1,'GRN Construction - PC Regression (w/o subsampling) [PMID:33336197] 🐢...');
