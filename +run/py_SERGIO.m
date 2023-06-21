@@ -2,7 +2,7 @@ function [X]=py_SERGIO(A,ncells)
 
 arguments    
     A (:,:) {mustBeNumericOrLogical,mustBeSquare(A)} = randnet_example
-    ncells (1,1) {mustBePositive, mustBeInteger} = 1000
+    ncells (1,1) {mustBeInteger, mustBeScalarOrEmpty, mustBePositive} = 1000    
 end
 X=[];
 
