@@ -1,4 +1,4 @@
-function [A]=scode(X,t)
+function [A]=r_scode(X,t)
 
 % if nargin<2, plotit=false; end
 if isempty(FindRpath)

@@ -1,17 +1,20 @@
-import os
+try:
+    import scTenifoldXct
+    print('All essential imports are found')
+    exit(0)
+except ImportError as exc:
+    print(exc)
+    exit(10)
+
+
+
 import sys
-abspath = os.path.abspath(__file__)
-dname = os.path.dirname(abspath)
-os.chdir(dname)
+import subprocess
+import pkg_resources
 
-import scTenifoldXct as st
-import scanpy as sc
-from scTenifoldXct.dataLoader import build_adata
+required  = {'numpy', 'pandas', 'scipy', 'h5py', 'scanpy'} 
+installed = {pkg.key for pkg in pkg_resources.working_set}
+missing   = required - installed
 
-import pandas as pd
-import numpy as np
-import h5py
-import scipy
-from scipy import sparse
-
-# adata = build_adata("X.mat", "g.txt", "c.txt", delimiter=',', meta_cell_cols=['cell_type'], transpose=False)
+if missing:
+    subprocess.check_call([sys.executable, '-m', 'pip', 'install', *missing])

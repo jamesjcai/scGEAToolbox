@@ -196,7 +196,7 @@ i_addmenu(m_ext,1,@DecontX,'Detect Ambient RNA Contamination (DecontX/R) [PMID:3
 %i_addmenu(m_ext,0,@callback_RevelioCellCycle,'Revelio Cell Cycle Analysis (Revelio/R required)...');
 % i_addmenu(m_ext,0,@callback_RunSeuratSCTransform,'Run Seurat/R SCTransform (Seurat/R required)...');
 i_addmenu(m_ext,0,@RunSeuratWorkflow,'Run Seurat/R Workflow (Seurat/R) [PMID:25867923]...');
-i_addmenu(m_ext,0,@callback_RunMonocle2,'Pseudotime Analysis (Monocle2/R) [PMID:28825705]...');
+%i_addmenu(m_ext,0,@callback_RunMonocle2,'Pseudotime Analysis (Monocle2/R) [PMID:28825705]...');
 i_addmenu(m_ext,0,@callback_RunMonocle3,'Pseudotime Analysis (Monocle3/R) [PMID:28825705]...');
 i_addmenu(m_ext,1,@callback_MELDPerturbationScore,'MELD Perturbation Score (MELD/Py) [PMID:33558698]...');
 i_addmenu(m_ext,0,{@SubsampleCells,2},'Geometric Sketching (geosketch/Py) [PMID:31176620]...');

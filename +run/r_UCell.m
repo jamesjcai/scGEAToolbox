@@ -1,4 +1,4 @@
-function [score]=UCell(X,genelist,tgsPos)
+function [score]=r_UCell(X,genelist,tgsPos)
 %UCell: Robust and scalable single-cell gene signature scoring
 %UCell is an R package for calculating gene signatures
 %in single-cell datasets. UCell scores, based on the 
