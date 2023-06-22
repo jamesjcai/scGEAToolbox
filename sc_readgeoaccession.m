@@ -68,7 +68,7 @@ elseif length(c)==1
             end
             disp("Found H5 file.");
             f1=i_setupfile2(c1);
-            [X,g]=sc_readhdf5file(f1);
+            [X,g]=sc_read10xh5file(f1);
         end
 end
 

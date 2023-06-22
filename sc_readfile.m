@@ -32,6 +32,6 @@ switch p.Results.type
             error('Need file ''features.tsv''');
         end
     case 'h5'
-        [X,genelist]=sc_readhdf5file(filename);
+        [X,genelist]=sc_read10xh5file(filename);
 end
 end
