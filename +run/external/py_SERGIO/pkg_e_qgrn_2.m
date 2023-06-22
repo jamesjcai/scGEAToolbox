@@ -22,7 +22,7 @@ end
 
 
 C = quantumCircuit([layer1; layer2]);
-C = quantumCircuit([layer1]);
+% C = quantumCircuit([layer1]);
 %figure; plot(C);
 
 
@@ -33,6 +33,10 @@ S.Amplitudes
 % figure; histogram(S)
 
 [states,P] = querystates(S);
+assert(isequal(states,S.BasisStates))
+assert(isequal((S.Amplitudes).^2 ,P))
+
+
 figure; bar(P)
 set(gca,'XTick',1:length(states));
 set(gca,'XTickLabel',states);
