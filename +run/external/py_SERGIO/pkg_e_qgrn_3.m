@@ -62,6 +62,40 @@ xlabel('Expression pattern');
 legend({'Target','Observed'})
 title(sprintf('kl=%f',i_kldiverg(pt,poa)));
 
+
+At=zeros(4);
+c=1;
+a=nchoosek(1:4,2);
+for k=1:size(a,1)
+    At(a(k,1),a(k,2))=xa(c);
+    c=c+1;
+    At(a(k,2),a(k,1))=xa(c);
+    c=c+1;
+end
+
+figure;
+subplot(2,2,1)
+imagesc(abs(A)+abs(A'))
+subplot(2,2,2)
+imagesc(abs(At)+abs(At'))
+
+% idx=eye(4);
+% B=zeros(4);
+% B(~idx)=xa;
+% 
+% c=1;
+% xb=zeros(size(xa));
+% 
+% a=nchoosek(1:4,2);
+% for k=1:size(a,1)
+%     xb(c)=B(a(k,1),a(k,2));
+%     c=c+1;
+%     xb(c)=B(a(k,2),a(k,1));
+%     c=c+1;
+% end
+% 
+
+
 function [y]=i_obj(x,pt,f0)
     [po]=i_fullcirc(x,f0);
     % f1=[probability(S,1,"1") probability(S,2,"1") ...
