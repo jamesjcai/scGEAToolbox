@@ -1,7 +1,7 @@
-function [po]=i_fullcirc(theta0,f0)
+function [po]=i_fullcirc(theta0,layer1)
 
-    layer1=[];
-    for k=1:4, layer1 = [layer1; ryGate(k,2*asin(sqrt(f0(k))))]; end
+%    layer1=[];
+%    for k=1:4, layer1 = [layer1; ryGate(k,2*asin(sqrt(f0(k))))]; end
     a=nchoosek(1:4,2);
     layer2=[];
     c=1;

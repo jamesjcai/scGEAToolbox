@@ -1,10 +1,10 @@
 % C:\ProgramData\MATLAB\SupportPackages\R2023a\toolbox\matlab\quantum\
 
-%{
+
 layer1=[];
 for k=1:4, layer1 = [layer1; ryGate(k,2*asin(sqrt(f0(k))))]; end
 
-
+%{
 theta0=i_randpmpi(12,1);
 a=nchoosek(1:4,2);
 layer2=[];
@@ -41,17 +41,17 @@ switch methodid
         options = optimoptions('fmincon','Display','iter');
         lb=-pi*ones(np,1);
         ub=pi*ones(np,1);
-        [xa,fval] = fmincon(@i_obj,x0,[],[],[],[],lb,ub,[],options,pt,f0);
+        [xa,fval] = fmincon(@i_obj,x0,[],[],[],[],lb,ub,[],options,pt,layer1);
     case 2
         options = optimset('Display','iter');
-        [xa,fval] = fminsearch(@i_obj,x0,options,pt,f0);
+        [xa,fval] = fminsearch(@i_obj,x0,options,pt,layer1);
     case 3
-        options = optimset('Display','iter')
-        [xa,fval] = fminunc(@i_obj,x0,options,pt,f0);
+        options = optimset('Display','iter');
+        [xa,fval] = fminunc(@i_obj,x0,options,pt,layer1);
 end
 
 
-[poa]=i_fullcirc(xa,f0);
+[poa]=i_fullcirc(xa,layer1);
 
 subplot(2,2,4)
 bar([pt poa])
