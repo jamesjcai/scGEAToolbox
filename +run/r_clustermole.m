@@ -1,4 +1,4 @@
-function [T]=celltypecaller(X,genelist,clusterid,varargin)
+function [T]=r_clustermole(X,genelist,clusterid,varargin)
 %Assigne cell type using clustermole database
 %
 % using clustermole database
