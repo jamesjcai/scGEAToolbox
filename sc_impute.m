@@ -15,7 +15,7 @@ parse(p,X,varargin{:})
    
 switch upper(p.Results.type)
     case 'MAGIC'
-        [X]=run.MAGIC(X,true);
+        [X]=run.mt_MAGIC(X,true);
     case 'MCIMPUTE'
         [X]=run.McImpute(X,true);
     case 'SAVER'

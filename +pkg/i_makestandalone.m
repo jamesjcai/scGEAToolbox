@@ -2,6 +2,9 @@
 
 pw1=cdgea;
 wrkpth=fullfile(pw1,'tensor_toolbox'); addpath(wrkpth);
+wrkpth=fullfile(pw1,'+run','external','mt_scGeneFit'); addpath(wrkpth);
+wrkpth=fullfile(pw1,'+run','external','mt_MAGIC'); addpath(wrkpth);
+
 wrkpth=fullfile(pw1,'+run','thirdparty','locfit','m'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','locfit','mex'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','cbrewer'); addpath(wrkpth);
@@ -14,7 +17,6 @@ wrkpth=fullfile(pw1,'+run','thirdparty','alona_subtypes'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','SIMLR'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','SIMLR','src'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','CSN_transform'); addpath(wrkpth);
-wrkpth=fullfile(pw1,'+run','thirdparty','scGeneFit'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','Specter'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','Specter','dimred'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','Specter','LSC'); addpath(wrkpth);
@@ -25,7 +27,7 @@ wrkpth=fullfile(pw1,'+run','thirdparty','SoptSC','symnmf2'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','SNNDPC'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','SinNLRR'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','ClusterPack'); addpath(wrkpth);
-wrkpth=fullfile(pw1,'+run','thirdparty','MAGIC'); addpath(wrkpth);
+
 
 
 %savepath;

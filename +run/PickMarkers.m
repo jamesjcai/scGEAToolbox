@@ -1,6 +1,8 @@
 function [gene_idxv,T] = PickMarkers(X,genelist,c,topn,plotit)
 %PICKMARKERS - adapted from GC_htmp_DE.m 
 
+% This is a support function for SC_PICKMARKERS
+
 if nargin<5, plotit=false; end
 if nargin<4, topn=10; end
 

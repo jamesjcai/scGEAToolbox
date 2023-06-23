@@ -11,6 +11,9 @@ markerlist=cell(max(c),1);
                 idx=idxv(1+(k-1)*topn:k*topn);            
                 markerlist{k}=genelist(idx(~isnan(idx)));
            end
+        case 2
+            num_markers=topn*numel(unique(c));
+            markerlist=run.mt_scGeneFit(X,genelist,c,num_markers);
         case 3       % LASSO (slower method)     
             for k=1:max(c)
                 fprintf('Processing cell group ... %d of %d\n',k,max(c));
@@ -21,9 +24,6 @@ markerlist=cell(max(c),1);
                 a=i_pickmarkers(X,genelist,c,k);
                 markerlist{k}=a(1:topn);
             end
-        case 2
-            num_markers=topn*numel(unique(c));
-            markerlist=run.scGeneFit(X,genelist,c,num_markers);
     end
 end
 

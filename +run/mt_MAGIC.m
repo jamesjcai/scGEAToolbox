@@ -1,9 +1,9 @@
-function X=MAGIC(X,donorm)
+function X=mt_MAGIC(X,donorm)
 
 if nargin<2, donorm=true; end
 
 pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'thirdparty','MAGIC');
+pth=fullfile(pw1,'external','mt_MAGIC');
 if ~(ismcc || isdeployed)
     addpath(pth);
 end

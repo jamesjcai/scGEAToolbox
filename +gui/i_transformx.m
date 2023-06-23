@@ -57,7 +57,7 @@ if nargin<2, donorm=false; end
             case 7
                 X=sc_transform(X,'type','FreemanTukey');
             case 8
-                X=run.MAGIC(X,true);
+                X=run.mt_MAGIC(X,true);
         end
         catch ME
             gui.gui_waitbar(fw);

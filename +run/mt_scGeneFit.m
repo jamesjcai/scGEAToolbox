@@ -1,4 +1,4 @@
-function [markerlist]=scGeneFit(X,g,c,num_markers)
+function [markerlist]=mt_scGeneFit(X,g,c,num_markers)
 %Genetic marker selection using linear programming
 %
 % https://github.com/solevillar/scGeneFit
@@ -8,7 +8,7 @@ if nargin<4
     num_markers=length(unique(c))*5;
 end
 pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'thirdparty','scGeneFit');
+pth=fullfile(pw1,'external','mt_scGeneFit');
 if ~(ismcc || isdeployed)
 addpath(pth);
 end

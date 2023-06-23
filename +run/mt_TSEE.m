@@ -8,7 +8,7 @@ if nargin<3, dim=2; end
 assert(size(X,2)==length(t))
 
 pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'thirdparty','TSEE');
+pth=fullfile(pw1,'external','mt_TSEE');
 if ~(ismcc || isdeployed), addpath(pth); end
 
 X=sc_transform(X);
