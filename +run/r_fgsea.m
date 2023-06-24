@@ -1,4 +1,4 @@
-function [s]=fgsea(genelist,rmribo,drdistin)
+function [s]=r_fgsea(genelist,rmribo,drdistin)
 
 if nargin<3, drdistin=[]; end
 if nargin<2, rmribo=true; end

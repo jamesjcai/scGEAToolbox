@@ -11,8 +11,8 @@ gx=upper(unique(genelist(i),'stable'));
 
 return;
 
-[Tpbp,Tnbp]=run_fgsea(gx,[],'bp');
-[Tpmf,Tnmf]=run_fgsea(gx,[],'mf');
+[Tpbp,Tnbp]=run.r_fgsea(gx,[],'bp');
+[Tpmf,Tnmf]=run.r_fgsea(gx,[],'mf');
 
 
 
