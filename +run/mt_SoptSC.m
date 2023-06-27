@@ -1,4 +1,4 @@
-function [C,W,eigenvalues,H]=SoptSC(X,varargin)
+function [C,W,eigenvalues,H]=mt_SoptSC(X,varargin)
 % run_soptsc - 
 %
 % REF: SoptSC: Similarity matrix optimization for clustering, lineage, and signaling inference
@@ -33,11 +33,11 @@ k=p.Results.k;
 
 
 pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'thirdparty','SoptSC');
+pth=fullfile(pw1,'external','mt_SoptSC');
 if ~(ismcc || isdeployed), addpath(pth); end
-pth=fullfile(pw1,'thirdparty','SoptSC','NNDSVD');
+pth=fullfile(pw1,'external','mt_SoptSC','NNDSVD');
 if ~(ismcc || isdeployed), addpath(pth); end
-pth=fullfile(pw1,'thirdparty','SoptSC','symnmf2');
+pth=fullfile(pw1,'external','mt_SoptSC','symnmf2');
 if ~(ismcc || isdeployed), addpath(pth); end
 
 

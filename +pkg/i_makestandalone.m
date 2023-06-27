@@ -9,25 +9,24 @@ wrkpth=fullfile(pw1,'+run','external','mt_cbrewer'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','external','mt_GCL'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','external','mt_PHATE'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','external','mt_UMAP'); addpath(wrkpth);
+wrkpth=fullfile(pw1,'+run','external','mt_SIMLR'); addpath(wrkpth);
+wrkpth=fullfile(pw1,'+run','external','mt_SIMLR','src'); addpath(wrkpth);
+wrkpth=fullfile(pw1,'+run','external','mt_CSN_transform'); addpath(wrkpth);
+wrkpth=fullfile(pw1,'+run','external','mt_Specter'); addpath(wrkpth);
+wrkpth=fullfile(pw1,'+run','external','mt_Specter','dimred'); addpath(wrkpth);
+wrkpth=fullfile(pw1,'+run','external','mt_Specter','LSC'); addpath(wrkpth);
+wrkpth=fullfile(pw1,'+run','external','mt_Specter','utils'); addpath(wrkpth);
+wrkpth=fullfile(pw1,'+run','external','mt_SoptSC'); addpath(wrkpth);
+wrkpth=fullfile(pw1,'+run','external','mt_SoptSC','NNDSVD'); addpath(wrkpth);
+wrkpth=fullfile(pw1,'+run','external','mt_SoptSC','symnmf2'); addpath(wrkpth);
+wrkpth=fullfile(pw1,'+run','external','mt_SinNLRR'); addpath(wrkpth);
+wrkpth=fullfile(pw1,'+run','external','mt_SNNDPC'); addpath(wrkpth);
+wrkpth=fullfile(pw1,'+run','external','mt_SC3','ClusterPack'); addpath(wrkpth);
+
 wrkpth=fullfile(pw1,'+run','thirdparty','locfit','m'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','locfit','mex'); addpath(wrkpth);
-
 wrkpth=fullfile(pw1,'+run','thirdparty','alona_panglaodb'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','alona_subtypes'); addpath(wrkpth);
-wrkpth=fullfile(pw1,'+run','thirdparty','SIMLR'); addpath(wrkpth);
-wrkpth=fullfile(pw1,'+run','thirdparty','SIMLR','src'); addpath(wrkpth);
-wrkpth=fullfile(pw1,'+run','thirdparty','CSN_transform'); addpath(wrkpth);
-wrkpth=fullfile(pw1,'+run','thirdparty','Specter'); addpath(wrkpth);
-wrkpth=fullfile(pw1,'+run','thirdparty','Specter','dimred'); addpath(wrkpth);
-wrkpth=fullfile(pw1,'+run','thirdparty','Specter','LSC'); addpath(wrkpth);
-wrkpth=fullfile(pw1,'+run','thirdparty','Specter','utils'); addpath(wrkpth);
-wrkpth=fullfile(pw1,'+run','thirdparty','SoptSC'); addpath(wrkpth);
-wrkpth=fullfile(pw1,'+run','thirdparty','SoptSC','NNDSVD'); addpath(wrkpth);
-wrkpth=fullfile(pw1,'+run','thirdparty','SoptSC','symnmf2'); addpath(wrkpth);
-wrkpth=fullfile(pw1,'+run','thirdparty','SNNDPC'); addpath(wrkpth);
-wrkpth=fullfile(pw1,'+run','thirdparty','SinNLRR'); addpath(wrkpth);
-wrkpth=fullfile(pw1,'+run','thirdparty','ClusterPack'); addpath(wrkpth);
-
 
 
 %savepath;

@@ -1,13 +1,13 @@
-function [c]=Specter(X,k)
+function [c]=mt_Specter(X,k)
 
 if nargin<2, k=5; end
 
 if ~(ismcc || isdeployed)
     pw1=fileparts(mfilename('fullpath'));
-    pth0=fullfile(pw1,'thirdparty','Specter');
-    pth1=fullfile(pw1,'thirdparty','Specter','dimred');
-    pth2=fullfile(pw1,'thirdparty','Specter','LSC');
-    pth3=fullfile(pw1,'thirdparty','Specter','utils');
+    pth0=fullfile(pw1,'external','Specter');
+    pth1=fullfile(pw1,'external','Specter','dimred');
+    pth2=fullfile(pw1,'external','Specter','LSC');
+    pth3=fullfile(pw1,'external','Specter','utils');
     addpath(pth0);
     addpath(pth1);
     addpath(pth2);

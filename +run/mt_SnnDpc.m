@@ -1,4 +1,4 @@
-function [c]=SnnDpc(s,cluK,knnK)
+function [c]=mt_SnnDpc(s,cluK,knnK)
 %Clustering cell embeddings using SNNDPC - a SNN clustering algorithm
 %
 % http://mlwiki.org/index.php/SNN_Clustering#SSN_Clustering_Algorithm
@@ -8,7 +8,7 @@ if nargin<3, knnK=4; end
 if nargin<2, cluK=10; end
 
 pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'thirdparty','SNNDPC');
+pth=fullfile(pw1,'external','mt_SNNDPC');
 if ~(ismcc || isdeployed)
     addpath(pth);
 end

@@ -26,20 +26,20 @@ end
 switch p.Results.type
     case 'simlr'
         % disp('To specify k, use RUN_SIMLR(X,k).');
-        [c_clustid]=run.SIMLR(X,k,true);
+        [c_clustid]=run.mt_SIMLR(X,k,true);
     case 'soptsc'
         % Symmetric NMF for cell clustering
         % https://www.biorxiv.org/content/biorxiv/early/2019/01/01/168922.full.pdf
         %disp('To specify k, use RUN_SOPTSC(X,''k'',k).');
-        [c_clustid]=run.SoptSC(X,'k',k,'donorm',true);
+        [c_clustid]=run.mt_SoptSC(X,'k',k,'donorm',true);
     case 'sc3'
         %disp('To specify k, use SC_SC3(X,k).');
         [c_clustid]=run.mt_SC3(X,k);
     case 'sinnlrr'
         % disp('To specify k, use RUN_SINNLRR(X,k).');
-        [c_clustid]=run.SinNLRR(X,k);
+        [c_clustid]=run.mt_SinNLRR(X,k);
     case 'specter'
-        [c_clustid]=run.Specter(X,k);
+        [c_clustid]=run.mt_Specter(X,k);
     case 'alona'
         warning('In development.');
         % [C]=sc_alona(X);

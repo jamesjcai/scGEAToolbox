@@ -1,4 +1,4 @@
-function [C]=SinNLRR(X,k)
+function [C]=mt_SinNLRR(X,k)
 % SinNLRR - 
 %
 % USAGE:
@@ -9,7 +9,7 @@ function [C]=SinNLRR(X,k)
 % scatter(s(:,1),s(:,2),20,C,'filled')
 
 pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'thirdparty','SinNLRR');
+pth=fullfile(pw1,'external','mt_SinNLRR');
 if ~(ismcc || isdeployed)
     addpath(pth);
 end

@@ -96,7 +96,7 @@ hLines = flipud(eventdata.Axes.Children);
                     i=ptsSelected;
                     Xi=X(:,i);
                     [Xi,gi]=sc_selectg(Xi,genelist);
-                    cx=run_singler(Xi,gi,species);
+                    cx=run.r_singler(Xi,gi,species);
                     ctxt=unique(cx);
 %                     Tct=tabulate(cx);
 %                     %ii=grp2idx(ctxt);
@@ -159,7 +159,7 @@ else
 end
 Xi=X(:,i);
 [Xi,gi]=sc_selectg(Xi,genelist);
-[Tct]=run.alona(Xi,gi,[],'species',species,'organ',organ);
+[Tct]=run.mt_alona(Xi,gi,[],'species',species,'organ',organ);
 end
 
 
