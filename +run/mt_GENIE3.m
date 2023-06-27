@@ -1,4 +1,4 @@
-function [A,s,G]=GENIE3(X,genelist,donorm,plotit)
+function [A,s,G]=mt_GENIE3(X,genelist,donorm,plotit)
 %GENIE3: GEne Network Inference with Ensemble of trees
 %
 % USAGE:
@@ -13,9 +13,9 @@ if nargin<3, donorm=false; end
 if nargin<4, plotit=false; end
 
 pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'thirdparty','GENIE3');
+pth=fullfile(pw1,'external','mt_GENIE3');
 if ~(ismcc || isdeployed), addpath(pth); end
-pth=fullfile(pw1,'thirdparty','GENIE3','RT');
+pth=fullfile(pw1,'external','mt_GENIE3','RT');
 if ~(ismcc || isdeployed), addpath(pth); end
 
 if donorm   

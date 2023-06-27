@@ -5,7 +5,7 @@ function A=csnnet_ssnet(X,idx)
 % https://github.com/WilfongGuo/Benchmark_control
     if nargin<2, idx=1; end
     pw1=fileparts(mfilename('fullpath'));
-    pth=fullfile(pw1,'thirdparty','CSN_transform');
+    pth=fullfile(pw1,'external','mt_CSN_transform');
     if ~(ismcc || isdeployed), addpath(pth); end
     A=csnet(X,idx);
  end

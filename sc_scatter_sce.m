@@ -203,7 +203,7 @@ i_addmenu(m_ext,0,{@SubsampleCells,2},'Geometric Sketching (geosketch/Py) [PMID:
 i_addmenu(m_ext,0,@HarmonyPy,'Batch Integration (Harmony/Py) [PMID:31740819]...');
 i_addmenu(m_ext,0,@DoubletDetection,'Detect Doublets (Scrublet/Py) [PMID:30954476]...');
 i_addmenu(m_ext,1,@callback_ExploreCellularCrosstalk,'Talklr Intercellular Crosstalk [DOI:10.1101/2020.02.01.930602]...');
-i_addmenu(m_ext,0,@callback_CompareGCLBtwCls,'Differential GCL Analysis [PMID:33139959]...');
+i_addmenu(m_ext,0,@callback_CompareGCLBtwCls,'Differential GCL Analysis [PMID:33139959]🐢🐢 ...');
 i_addmenu(m_ext,0,@callback_DiffTFActivity,'Differential TF Activity Analysis...');
 
 m_exp = uimenu(FigureHandle,'Text','Ex&perimental','Accelerator','p');

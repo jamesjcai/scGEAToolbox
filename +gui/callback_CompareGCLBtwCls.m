@@ -26,13 +26,17 @@ N=50;
 
 t=zeros(N*n,1);
 V=zeros(N*n,1);
+            fw = gui.gui_waitbar;
+
 for k=1:n
     fprintf('Working on %s: %s ... %d of %d\n',clable,cL{k},k,n);
     idx=(k-1)*N+1:k*N;
-    [v]=run.GCL(sce.X(:,k==c),N);
+    [v]=run.mt_GCL(sce.X(:,k==c),N);
     t(idx,:)=k;
     V(idx,:)=v;
 end
+            gui.gui_waitbar(fw);
+
 y=V;
 thisc=cL(t);
 ttxt='GCL';

@@ -1,3 +1,18 @@
+function [v]=mt_GCL(X,k)
+
+if nargin<2, k=50; end
+
+%pw1=fileparts(mfilename('fullpath'));
+%pth=fullfile(pw1,'thirdparty','GCL');
+%if ~(ismcc || isdeployed)
+%    addpath(pth);
+%end
+%pth
+[v] = gcl_ori(X, k);
+
+end
+
+
 function [gcl_output] = gcl_ori(data, num_divisions)
 % Calculate the GCL of the input data with bootstrap
 % Guy Amit, guy1.amit@gmail.com, Orr Levy, Dana Vaknin, Tom Snir, Sol

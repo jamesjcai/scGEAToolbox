@@ -5,7 +5,7 @@ function X=csndm_trans(X)
 % https://github.com/WilfongGuo/Benchmark_control
 
     pw1=fileparts(mfilename('fullpath'));
-    pth=fullfile(pw1,'thirdparty','CSN_transform');
+    pth=fullfile(pw1,'external','mt_CSN_transform');
     if ~(ismcc || isdeployed), addpath(pth); end
     % G=csnet(X(:,1:10));
     % csnedge(X(1,:),X(2,:));
