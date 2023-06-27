@@ -1,4 +1,4 @@
-function [status]=saveSeuratRds(sce,filename)
+function [status]=r_saveSeuratRds(sce,filename)
     [status]=0;
     isdebug=false;
     if nargin<2, error('run.saveSeuratRds(sce,filename)'); end

@@ -46,7 +46,7 @@ function obj = embedcells(obj,methodtag,forced,usehvgs, ...
             case 'phate'
                 obj.s=sc_phate(X,ndim);
             case 'metaviz'
-                obj.s=run.meta_visualization(X,ndim);
+                obj.s=run.mt_metaviz(X,ndim);
         end
         obj.struct_cell_embeddings.(methodtag)=obj.s;
         disp('SCE.S added');

@@ -1,4 +1,4 @@
-function [Y,S]=meta_visualization(X,ndim)
+function [Y,S]=mt_metaviz(X,ndim)
 if nargin<2, ndim=2; end
 S=[];
 pw1=fileparts(mfilename('fullpath'));
@@ -148,3 +148,104 @@ sPHATE6 = phate(data, 't', 20, 'ndim', 3, 'k', 50);
 % UMAP1&2: the R function umap from R package uwot with parameters n neighbors=n,n components=2, where we set n=30 for UMAP1 and width=50 for UMAP2.
 % tSNE1&2: the R function embed from R package dimRed with parameters method="tSNE",perplexity=n, ndim=2, where we set n=10 for tSNE1 and n=50 for tSNE2.
 % PHATE1&2: the R function phate from R package phateR with parameters knn=n, ndim=2,where we set n=30 for PHATE1 and n=50 for PHATE2.
+
+
+
+function [Y]=metaviz_memmap(Sinput,ndim,methodid)
+    if nargin<3, methodid=1; end
+    if nargin<2, ndim=2; end
+    
+    K=length(Sinput);      % K = number of embeddings
+    n=size(Sinput{1},1);   % n = number of cells
+    w=zeros(K,n);
+    %%
+    
+    N=n*n*K;
+    
+    mmf=tempname;
+    fileID = fopen(mmf,'w');
+    for k=1:K
+        fwrite(fileID, zeros([n*n,1]),'single');
+    end
+    fclose(fileID);
+    m=memmapfile(mmf,'Format','single','Writable',true);
+    
+    % D=zeros(n,n,K,'single');
+    for k=1:K
+        d=pdist2(Sinput{k},Sinput{k});
+    %    D(:,:,k)=d./vecnorm(d);
+        m.Data((n^2)*(k-1)+1:(n^2)*(k))=d./vecnorm(d);
+    end
+    
+    %isequal(D(:),m.Data)
+    
+    %%
+    m.Offset=0;
+    for x=1:n              % n of cells    
+        d=reshape(m.Data(x:n:N),[n K]);
+        S=1-squareform(pdist(d','cosine'));
+    
+        %S1=1-squareform(pdist(squeeze(D(x,:,:))','cosine'));
+        %isequal(S,S1)
+    
+        [v,~]=eigs(double(S),1);
+        w(:,x)=abs(v);
+    end
+    
+    m.Offset=0;
+    M=zeros(n,n);
+    for l=1:n             % cell    
+        d=zeros(n,1);
+        for k=1:K         % type of embedding
+            s1=(l-1)*n+1; s2=(n*n)*(k-1); s=s1+s2; t=s+n-1;
+            % isequal(s:t,D(:,l,k)')
+            d=d+w(k,l)'.*m.Data(s:t);
+            %d=d+w(k,l)'.*D(:,l,k);
+        end
+        M(:,l)=d;
+    end
+    M=0.5*(M+M.');
+    
+    if exist(mmf,'file')==2, delete(mmf); end
+    [Y]=pkg.e_embedbyd(M,ndim,methodid);
+
+end
+
+
+function [Y]=metaviz_tensor(Sinput,ndim,methodid)
+
+    if nargin<3, methodid=1; end
+    if nargin<2, ndim=2; end
+    
+    K=length(Sinput);      % K = number of embeddings
+    n=size(Sinput{1},1);   % n = number of cells
+    w=zeros(K,n);
+    %%
+    D=zeros(n,n,K,'single');
+    for k=1:K
+        d=pdist2(Sinput{k},Sinput{k});
+        D(:,:,k)=d./vecnorm(d);
+        % (n^2)*(k-1)+1:(n^2)*(k)
+    end
+    %%
+    for x=1:n              % n of cells
+        S=1-squareform(pdist(squeeze(D(x,:,:))','cosine'));
+        [v,~]=eigs(double(S),1);
+        w(:,x)=abs(v);
+    end
+    
+    M=zeros(n,n);
+    for i=1:n             % cell    
+        d=zeros(n,1);
+        for k=1:K         % type of embedding
+            d=d+w(k,i)'.*D(:,i,k);
+        end
+        M(:,i)=d;
+    end
+    M=0.5*(M+M.');
+    
+    [Y]=pkg.e_embedbyd(M,ndim,methodid);
+
+end
+
+

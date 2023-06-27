@@ -1,4 +1,4 @@
-function [X]=SeuratSctransform(X,genelist)
+function [X]=r_SeuratSctransform(X,genelist)
 
 isdebug=false;
 oldpth=pwd();

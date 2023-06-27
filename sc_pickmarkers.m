@@ -6,7 +6,7 @@ markerlist=cell(max(c),1);
 
     switch methodid
         case 1      % Fast method
-           [idxv] = run.PickMarkers(X,genelist,c,topn);
+           [idxv] = run.mt_PickMarkers(X,genelist,c,topn);
            for k=1:max(c)
                 idx=idxv(1+(k-1)*topn:k*topn);            
                 markerlist{k}=genelist(idx(~isnan(idx)));

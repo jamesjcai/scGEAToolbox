@@ -6,7 +6,7 @@ function obj = estimatecellcycle(obj,forced,methodid)
             case 1
                obj.c_cell_cycle_tx=sc_cellcyclescoring(obj.X,obj.g);
             case 2
-               obj.c_cell_cycle_tx=run.SeuratCellCycle(obj.X,obj.g);
+               obj.c_cell_cycle_tx=run.r_SeuratCellCycle(obj.X,obj.g);
         end
         disp('c_cell_cycle_tx added.');
     else

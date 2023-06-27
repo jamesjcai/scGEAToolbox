@@ -8,7 +8,7 @@ if ~ok, return; end
     sce=guidata(FigureHandle);
     fw=gui.gui_waitbar;
     try
-        [X]=run.SeuratSctransform(sce.X,sce.g);
+        [X]=run.r_SeuratSctransform(sce.X,sce.g);
     catch ME
         gui.gui_waitbar(fw);
         errordlg(ME.message);

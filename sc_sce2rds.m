@@ -10,4 +10,4 @@ if nargin < 2
 	if ~(filename), return; end
 	filename=[pathname,filename];
 end
-status=run.saveSeuratRds(sce,filename);
+status=run.r_saveSeuratRds(sce,filename);

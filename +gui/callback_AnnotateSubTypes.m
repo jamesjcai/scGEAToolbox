@@ -73,7 +73,7 @@ newclassidenty=[];
         try
         if ~isempty(k)
             fw2=gui.gui_waitbar;
-            newclassidenty=run.SC3(scex.X,k);
+            newclassidenty=run.mt_SC3(scex.X,k);
             gui.gui_waitbar(fw2);
         end
         delete(h);

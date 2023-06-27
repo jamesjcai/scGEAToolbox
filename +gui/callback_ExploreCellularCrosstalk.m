@@ -37,7 +37,7 @@ gui.gui_showrefinfo('talklr [DOI:10.1101/2020.02.01.930602]');
 
     fw=gui.gui_waitbar;
     sce=sce.selectcells(selected);
-    [OUT,Tres]=run.talklr(sce);
+    [OUT,Tres]=run.mt_talklr(sce);
     gui.gui_waitbar(fw);    
     
     n=length(OUT.ligandok);

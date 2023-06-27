@@ -13,7 +13,7 @@ if nargin<1
 end
 
 if ~exist(filename, 'file'), return; end
-[sce]=run.readSeuratRds(filename);
+[sce]=run.r_readSeuratRds(filename);
 metainfo=sprintf("Source: %s",filename);
 sce=sce.appendmetainfo(metainfo);
 end

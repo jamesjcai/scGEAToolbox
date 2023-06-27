@@ -1,4 +1,4 @@
-function [c,cls]=SC3(X,k,plotit,donorm,dolog1)
+function [c,cls]=mt_SC3(X,k,plotit,donorm,dolog1)
 % SC3 - consensus clustering of single-cell RNA-seq data
 % Ref: https://www.nature.com/articles/nmeth.4236
 

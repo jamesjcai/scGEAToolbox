@@ -1,4 +1,4 @@
-function [OUT,T]=talklr(X,g,c)
+function [OUT,T]=mt_talklr(X,g,c)
 %TALKLR - uncovers ligand-receptor mediated intercellular crosstalk
 %
 % Usage: [OUT]=run.talklr(X,g,c)
