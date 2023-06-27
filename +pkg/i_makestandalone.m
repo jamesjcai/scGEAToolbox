@@ -6,7 +6,6 @@ wrkpth=fullfile(pw1,'+run','external','mt_scGeneFit'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','external','mt_MAGIC'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','external','mt_DESeq2'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','external','mt_cbrewer'); addpath(wrkpth);
-wrkpth=fullfile(pw1,'+run','external','mt_GCL'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','external','mt_PHATE'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','external','mt_UMAP'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','external','mt_SIMLR'); addpath(wrkpth);
@@ -22,7 +21,6 @@ wrkpth=fullfile(pw1,'+run','external','mt_SoptSC','symnmf2'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','external','mt_SinNLRR'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','external','mt_SNNDPC'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','external','mt_SC3','ClusterPack'); addpath(wrkpth);
-
 wrkpth=fullfile(pw1,'+run','thirdparty','locfit','m'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','locfit','mex'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','alona_panglaodb'); addpath(wrkpth);
@@ -44,7 +42,7 @@ if ~exist(outdir,"dir"), mkdir(outdir); end
  end
 %    d=[d;fullfile(pw1, 'resources', 'STRING', 'stringdb_human.mat')];
 %    d=[d;fullfile(pw1, 'resources', 'STRING', 'stringdb_mouse.mat')];   
-    d=[d;fullfile(pw1, '+run','thirdparty','umapFileExchange','umap.jar')];
+    d=[d;fullfile(pw1, '+run','external','mt_UMAP','umap.jar')];
     d=[d;fullfile(pw1, 'resources', 'tfome_tfgenes.mat')];
     d=[d;fullfile(pw1, 'resources', 'regev_lab_cell_cycle_genes.txt')];
     d=[d;fullfile(pw1, 'resources', 'cellscores.txt')];
