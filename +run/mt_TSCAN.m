@@ -1,4 +1,4 @@
-function [t]=TSCAN(X,varargin)
+function [t]=mt_TSCAN(X,varargin)
 %TSCAN - pseudotime analysis
 
 % ref: https://academic.oup.com/nar/article/44/13/e117/2457590

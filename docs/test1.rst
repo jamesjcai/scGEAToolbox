@@ -89,7 +89,7 @@ figure; imagesc([X(1:100,1:500) Y(1:100,1:500)]); title('Log(x+1) Transformed');
 # Show data subject to MAGIC imputation
 
 ```matlab:Code
-Xo=run.MAGIC(X);
+Xo=run.mt_MAGIC(X);
 ```
 
 
@@ -158,7 +158,7 @@ figure; imagesc([Xo(1:100,1:500) Yo(1:100,1:500)]); title('MAGIC Imputated'); co
 # Show HCP normalized data
 
 ```matlab:Code
-[Xm,Ym]=run.HCP(X,Y);
+[Xm,Ym]=run.mt_HCP(X,Y);
 figure; imagesc([Xm(1:100,1:500) Ym(1:100,1:500)]); title('HCP Normalized'); colorbar; xline(500,'y-');
 ```
 
@@ -168,7 +168,7 @@ figure; imagesc([Xm(1:100,1:500) Ym(1:100,1:500)]); title('HCP Normalized'); col
 # Show data with ComBat batch correction
 
 ```matlab:Code
-[Xn,Yn]=run.ComBat(X,Y);
+[Xn,Yn]=run.mt_ComBat(X,Y);
 ```
 
 

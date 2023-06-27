@@ -5,13 +5,13 @@ wrkpth=fullfile(pw1,'tensor_toolbox'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','external','mt_scGeneFit'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','external','mt_MAGIC'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','external','mt_DESeq2'); addpath(wrkpth);
-
+wrkpth=fullfile(pw1,'+run','external','mt_cbrewer'); addpath(wrkpth);
+wrkpth=fullfile(pw1,'+run','external','mt_GCL'); addpath(wrkpth);
+wrkpth=fullfile(pw1,'+run','external','mt_PHATE'); addpath(wrkpth);
+wrkpth=fullfile(pw1,'+run','external','mt_UMAP'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','locfit','m'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','locfit','mex'); addpath(wrkpth);
-wrkpth=fullfile(pw1,'+run','thirdparty','cbrewer'); addpath(wrkpth);
-wrkpth=fullfile(pw1,'+run','thirdparty','GCL'); addpath(wrkpth);
-wrkpth=fullfile(pw1,'+run','thirdparty','PHATE'); addpath(wrkpth);
-wrkpth=fullfile(pw1,'+run','thirdparty','umapFileExchange'); addpath(wrkpth);
+
 wrkpth=fullfile(pw1,'+run','thirdparty','alona_panglaodb'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','alona_subtypes'); addpath(wrkpth);
 wrkpth=fullfile(pw1,'+run','thirdparty','SIMLR'); addpath(wrkpth);

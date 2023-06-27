@@ -1,10 +1,10 @@
-function [X,Y]=HCP(X,Y)
+function [X,Y]=mt_HCP(X,Y)
 % Run HCP (Hidden Covariates with Prior) to normalize RNA-seq data
 % HCP (Mostafavi et al. 2013)
 % doi: 10.1371/journal.pone.0068141
 
 pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'thirdparty','HCP_hidden_covariates_with_prior');
+pth=fullfile(pw1,'external','mt_HCP');
 if ~(ismcc || isdeployed), addpath(pth); end
 
 n1=size(X,2);

@@ -3,9 +3,9 @@ function s=sc_phate(X,ndim)
 % s=sc_phate(X,3);
 
 %see also: SC_TSNT, SC_UMAP
-% s_phate=run.PHATE(X,3,true);
-% s_umap=run.UMAP(X,3);
+% s_phate=run.mt_PHATE(X,3,true);
+% s_umap=run.mt_UMAP(X,3);
 
 if nargin<2, ndim=3; end
 % if ~issparse(X), X=sparse(X); end
-s=run.PHATE(X,ndim);
+s=run.mt_PHATE(X,ndim);

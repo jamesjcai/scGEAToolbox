@@ -13,10 +13,10 @@ plotit=p.Results.plotit;
 
 switch p.Results.type
     case 'splinefit'
-        s=run.PHATE(X,3,plotit,false);
+        s=run.mt_PHATE(X,3,plotit,false);
         [t]=pkg.i_pseudotime_by_splinefit(s,1,plotit);
     case 'tscan'
-        t=run.TSCAN(X,'plotit',true);        
+        t=run.mt_TSCAN(X,'plotit',true);        
 end
 if size(t,2)~=1, t=t'; end
 end

@@ -1,9 +1,9 @@
-function [X,M]=McImpute(X,donorm)
+function [X,M]=mt_McImpute(X,donorm)
 
 if nargin<2, donorm=true; end
 
 pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'thirdparty','McImpute');
+pth=fullfile(pw1,'external','mt_McImpute');
 if ~(ismcc || isdeployed), addpath(pth); end
 
 if ~donorm

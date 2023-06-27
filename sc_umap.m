@@ -19,5 +19,5 @@ if dolog1p
 	X = log(X+1); 
 	disp('Log(x+1) transformation...done.')
 end
-s=run.UMAP(X,ndim);
+s=run.mt_UMAP(X,ndim);
 end

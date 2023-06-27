@@ -5,7 +5,7 @@ if nargin<4, genelist=[]; end
 if nargin<5, colorby='mean'; end
 
 pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'../+run/thirdparty/PHATE');
+pth=fullfile(pw1,'..','+run','external','mt_PHATE');
 if ~(ismcc || isdeployed), addpath(pth); end
 
 if bygene

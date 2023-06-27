@@ -3,13 +3,13 @@ if nargin<2, ndim=2; end
 S=[];
 pw1=fileparts(mfilename('fullpath'));
 if ~(ismcc || isdeployed)    
-    pth=fullfile(pw1,'thirdparty','PHATE'); % for calling randmds.m
+    pth=fullfile(pw1,'external','mt_PHATE'); % for calling randmds.m
     addpath(pth);
-    pth1=fullfile(pw1,'thirdparty','cbrewer');
+    pth1=fullfile(pw1,'external','mt_cbrewer');
     addpath(pth1);
-    pth1=fullfile(pw1,'thirdparty','umapFileExchange');
+    pth1=fullfile(pw1,'external','mt_UMAP');
     addpath(pth1);
-    pth3=fullfile(pw1,'thirdparty','umapFileExchange','umap.jar');    
+    pth3=fullfile(pw1,'external','mt_UMAP','umap.jar');    
     javaaddpath(pth3);
 end
 

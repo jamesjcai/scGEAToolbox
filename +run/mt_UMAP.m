@@ -1,4 +1,4 @@
-function [s,c]=UMAP(X,ndim,plotit,verbose)
+function [s,c]=mt_UMAP(X,ndim,plotit,verbose)
 
 %   addpath /Users/Stephen/umap
 %   addpath /Users/Stephen/util
@@ -11,9 +11,9 @@ if nargin<2, ndim=3; end
 
 pw1=fileparts(mfilename('fullpath'));
 if ~(ismcc || isdeployed)    
-    pth1=fullfile(pw1,'thirdparty','umapFileExchange');
+    pth1=fullfile(pw1,'external','mt_UMAP');
     addpath(pth1);
-    pth3=fullfile(pw1,'thirdparty','umapFileExchange','umap.jar');
+    pth3=fullfile(pw1,'external','mt_UMAP','umap.jar');
     javaaddpath(pth3);
 end
 
@@ -25,7 +25,7 @@ data=transpose(X);
 ncells=size(data,1);
 if ncells>500
     if ~(ismcc || isdeployed)   
-        pth=fullfile(pw1,'thirdparty','PHATE');
+        pth=fullfile(pw1,'external','mt_PHATE');
         addpath(pth);
     end
 	data = svdpca(data, 50, 'random');
