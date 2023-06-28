@@ -14,6 +14,10 @@ end
 
 if ~exist(filename, 'file'), return; end
 [sce]=run.r_readSeuratRds(filename);
-metainfo=sprintf("Source: %s",filename);
-sce=sce.appendmetainfo(metainfo);
+    if ~isempty(sce)
+        if isa(sce,'SingleCellExperiment')
+            metainfo=sprintf("Source: %s",filename);
+            sce=sce.appendmetainfo(metainfo);
+        end
+    end
 end

@@ -108,8 +108,6 @@ promotesave=false;
                 filename = fullfile(pathname, fname);
                 fw = gui.gui_waitbar;
                 [sce] = sc_readrdsfile(filename);
-%                 metainfo=sprintf("Source: %s",filename);
-%                 sce=sce.appendmetainfo(metainfo);                
                 if isempty(sce)
                     gui.gui_waitbar(fw,true);
                     errordlg('File Import Failure.');
