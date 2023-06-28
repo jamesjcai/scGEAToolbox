@@ -91,9 +91,9 @@ S{end+1}=phate(sqrt(Xn), 't', 20, 'ndim', ndim, 'k', 30);
 
 gui.gui_waitbar_adv(fw,6/nstep,'Meta Visualization - METAVIZ');
 if usingmmfile
-    [Y]=run.metaviz_memmap(S,ndim);
+    [Y]=metaviz_memmap(S,ndim);
 else
-    [Y]=run.metaviz_tensor(S,ndim);
+    [Y]=metaviz_tensor(S,ndim);
 end
 gui.gui_waitbar_adv(fw);
 end

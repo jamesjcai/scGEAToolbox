@@ -96,11 +96,16 @@ imagesc(abs(At)+abs(At'))
 % 
 
 
-function [y]=i_obj(x,pt,f0)
-    [po]=i_fullcirc(x,f0);
+function [y]=i_obj(x,pt,layer1)
+    [po,f1]=i_fullcirc(x,layer1);
     % f1=[probability(S,1,"1") probability(S,2,"1") ...
     %     probability(S,3,"1") probability(S,4,"1")];     % per gene activate freq.
-    y=i_kldiverg(pt,po);
+    y1=i_kldiverg(pt,po,true);
+    %[f0; f1]
+    %pause
+    f0=[0.4878    0.2954    0.4148    0.2834];
+    y2=i_kldiverg(f0,f1,false);
+    y=y1+y2;
 end
 
 

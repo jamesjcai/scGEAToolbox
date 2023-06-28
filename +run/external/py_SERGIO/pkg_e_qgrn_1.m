@@ -1,3 +1,4 @@
+load example_grn.mat
 load output X
 [M]=permn([0 1],size(X,1));  
 y=0+(X>0).';
