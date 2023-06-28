@@ -1,10 +1,10 @@
-function [score]=sc_cellscore(X,genelist,tgsPos,tgsNeg,nbin,ctrl)
+function [score]=sc_cellscore_admdl(X,genelist,tgsPos,tgsNeg,nbin,ctrl)
 % Compute cell scores from a list of feature genes
 %
 % tgsPos - positive features (negative target marker genes)
 % tgsNeg - negative features (negative target marker genes)
 %
-% see also: PKG.E_CELLSCORES, RUN.UCELL 
+% see also: PKG.E_CELLSCORES, SC_CELLSCORE_UCELL 
 %
 % ref: AddModuleScore - https://github.com/satijalab/seurat/blob/master/R/utilities.R
 % ref: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8271111/

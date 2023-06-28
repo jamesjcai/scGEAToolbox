@@ -34,10 +34,10 @@ posg4=["Cd3g"];
 negg4=["Cd4","Cd8a"];
 
 
-cs1=sc_cellscore(sce2.X,sce2.g,posg1,negg1);
-cs2=sc_cellscore(sce2.X,sce2.g,posg2,negg2);
-cs3=sc_cellscore(sce2.X,sce2.g,posg3,negg3);
-cs4=sc_cellscore(sce2.X,sce2.g,posg4,negg4);
+cs1=sc_cellscore_admdl(sce2.X,sce2.g,posg1,negg1);
+cs2=sc_cellscore_admdl(sce2.X,sce2.g,posg2,negg2);
+cs3=sc_cellscore_admdl(sce2.X,sce2.g,posg3,negg3);
+cs4=sc_cellscore_admdl(sce2.X,sce2.g,posg4,negg4);
 cstype=["T\_CD8","Treg","Tex\_CD8","Double\_negative_Treg"].';
 [~,idx] = max([cs1,cs2,cs3,cs4],[],2);
 a=cstype(idx);

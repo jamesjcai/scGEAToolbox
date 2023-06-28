@@ -80,7 +80,7 @@ switch methodid
         end
         cs(cs<0)=0;
     case 2    % matrix multiplication method
-        cs=t*X;        
+        cs=t*X;
         numtargetgenes=sum(t>0,2);
     case 3      % matrix inverse method 
         cs=pinv(t')*X;

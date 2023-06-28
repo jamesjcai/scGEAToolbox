@@ -43,7 +43,7 @@ switch actiontype
 %         %a=a(1:min([length(a),50]));
 %         %ttxt=sprintf('%s\n%s',ttxt,a);
 %         posg
-%         cs=sc_cellscore(sce.X,sce.g,posg);
+%         cs=sc_cellscore_admdl(sce.X,sce.g,posg);
 %         gui.gui_waitbar(fw);
 
         [cs]=gui.e_cellscore(sce,posg);

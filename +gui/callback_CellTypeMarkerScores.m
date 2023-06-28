@@ -99,7 +99,7 @@ disp(['Gene signature scoring - To characterize cells ' ...
 %         case 'AddModuleScore/Seurat'
 %             fw=gui.gui_waitbar;
 %             try
-%                 [cs]=sc_cellscore(sce.X,sce.g,posg);
+%                 [cs]=sc_cellscore_admdl(sce.X,sce.g,posg);
 %             catch ME
 %                 gui.gui_waitbar(fw,true);
 %                 errordlg(ME.message);                

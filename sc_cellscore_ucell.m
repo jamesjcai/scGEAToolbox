@@ -3,6 +3,8 @@ function [score]=sc_cellscore_ucell(X,genelist,tgsPos,tgsNeg)
 %
 % tgsPos - positive features (positive target marker genes)
 % tgsNeg - negative features (negative target marker genes)
+%
+% see also: PKG.E_CELLSCORES, SC_CELLSCORE_ADMDL 
 
 if nargin<4 || isempty(tgsNeg)
     tgsNeg=["IL2","TNF"];

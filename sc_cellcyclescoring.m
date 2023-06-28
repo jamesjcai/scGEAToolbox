@@ -2,8 +2,8 @@ function [ScoreV,T]=sc_cellcyclescoring(X,genelist)
 % Score cell cycle phases
 
 [~,sgenes,g2mgenes]=pkg.i_get_cellcyclegenes;
-score_S=sc_cellscore(X,genelist,sgenes);
-score_G2M=sc_cellscore(X,genelist,g2mgenes);
+score_S=sc_cellscore_admdl(X,genelist,sgenes);
+score_G2M=sc_cellscore_admdl(X,genelist,g2mgenes);
 
 ScoreV=string(repmat('G1',size(X,2),1));
 C=[score_S,score_G2M];
