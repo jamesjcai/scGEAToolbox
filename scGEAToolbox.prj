@@ -60,9 +60,7 @@ resources/STRING/stringdb_mouse.mat
     </param.registered.apps>
     <param.docs>${PROJECT_ROOT}\info.xml</param.docs>
     <param.getting.started.guide>${PROJECT_ROOT}\doc\GettingStarted.mlx</param.getting.started.guide>
-    <param.matlabpath.excludes>
-      <item>/+run/thirdparty/faster_svd/lmsvd</item>
-    </param.matlabpath.excludes>
+    <param.matlabpath.excludes />
     <param.javaclasspath.excludes>
       <item>/+run/thirdparty/umapFileExchange/webDownload.jar</item>
     </param.javaclasspath.excludes>
@@ -93,6 +91,7 @@ resources/STRING/stringdb_mouse.mat
       <param.examples />
       <param.demosxml />
       <param.apps />
+      <param.matlabpath.excludes />
       <param.exported.on.package />
       <param.required.addons />
       <param.matlab.project.id />
@@ -138,7 +137,7 @@ resources/STRING/stringdb_mouse.mat
       <file>${PROJECT_ROOT}\README.md</file>
       <file>${PROJECT_ROOT}\resources</file>
       <file>${PROJECT_ROOT}\sc_cellcyclescoring.m</file>
-      <file>${PROJECT_ROOT}\sc_cellscore.m</file>
+      <file>${PROJECT_ROOT}\sc_cellscore_admdl.m</file>
       <file>${PROJECT_ROOT}\sc_cellscore_ucell.m</file>
       <file>${PROJECT_ROOT}\sc_cluster_s.m</file>
       <file>${PROJECT_ROOT}\sc_cluster_x.m</file>
@@ -167,6 +166,7 @@ resources/STRING/stringdb_mouse.mat
       <file>${PROJECT_ROOT}\sc_qcfilter.m</file>
       <file>${PROJECT_ROOT}\sc_qcmetrics.m</file>
       <file>${PROJECT_ROOT}\sc_read10xdir.m</file>
+      <file>${PROJECT_ROOT}\sc_read10xh5file.m</file>
       <file>${PROJECT_ROOT}\sc_readfile.m</file>
       <file>${PROJECT_ROOT}\sc_readgeoaccession.m</file>
       <file>${PROJECT_ROOT}\sc_readgeoaccessions.m</file>

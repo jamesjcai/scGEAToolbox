@@ -5,7 +5,7 @@ function [Tp,Tn]=run_fgsea2(genelist,generank,dbfile)
     folder = fileparts(mfilename('fullpath'));
     a=strfind(folder,filesep);
     folder=extractBefore(folder,a(end)+1);
-    pth=fullfile(folder,'+run','thirdparty','R_fgsea');
+    pth=fullfile(folder,'+run','external','R_fgsea');
     cd(pth);
 
     if isempty(pkg.FindRpath)

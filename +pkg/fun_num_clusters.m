@@ -13,19 +13,19 @@ parse(p,X,varargin{:})
 pw1=fileparts(mfilename('fullpath'));
 switch p.Results.type
     case 'simlr'        
-        pth=fullfile(pw1,'+run','thirdparty','SIMLR');
+        pth=fullfile(pw1,'+run','external','mt_SIMLR');
         if ~(ismcc || isdeployed), addpath(pth); end
-        pth=fullfile(pw1,'+run','thirdparty','SIMLR','src');
+        pth=fullfile(pw1,'+run','external','mt_SIMLR','src');
         if ~(ismcc || isdeployed), addpath(pth); end
         [K1, K2] = Estimate_Number_of_Clusters_SIMLR(X',2:10);
         [~,i]=min(K2);
         optimk=i+1;
     case 'soptsc'        
-        pth=fullfile(pw1,'+run','thirdparty','SoptSC');
+        pth=fullfile(pw1,'+run','external','mt_SoptSC');
         if ~(ismcc || isdeployed), addpath(pth); end
-        pth=fullfile(pw1,'+run','thirdparty','SoptSC','NNDSVD');
+        pth=fullfile(pw1,'+run','external','mt_SoptSC','NNDSVD');
         if ~(ismcc || isdeployed), addpath(pth); end
-        pth=fullfile(pw1,'+run','thirdparty','SoptSC','symnmf2');
+        pth=fullfile(pw1,'+run','external','mt_SoptSC','symnmf2');
         if ~(ismcc || isdeployed), addpath(pth); end
         
         realdata = X;

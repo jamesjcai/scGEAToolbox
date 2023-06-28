@@ -1,7 +1,7 @@
 function s=sc_tsne(X,ndim,donorm,dolog1p)
 %tSNE embedding of cells
 
-%see also: RUN_PHATE, RUN_UMAP
+%see also: RUN.MT_PHATE, RUN.MT_UMAP
 % s_phate=run.PHATE(X,3,true);
 % s_umap=run.UMAP(X,3);
 narginchk(1,4)
@@ -15,7 +15,7 @@ if nargin<4, dolog1p=true; end
 % if nargin<6, genelist=[]; end
 
 pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'+run','thirdparty','PHATE');
+pth=fullfile(pw1,'+run','external','mt_PHATE');
 if ~(ismcc || isdeployed), addpath(pth); end
 
 %if bygene, X=X.'; end
