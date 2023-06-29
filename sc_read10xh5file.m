@@ -53,11 +53,11 @@ catch
         end
 end
 
-try
-    X=zeros(shape(1),shape(2));
-catch
+% try
+%     X=zeros(shape(1),shape(2));
+% catch
     X=sparse(shape(1),shape(2));
-end
+%end
 
 c=0; olda=-1;
 for k=1:length(indptr)-1    

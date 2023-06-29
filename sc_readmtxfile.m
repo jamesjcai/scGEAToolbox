@@ -10,11 +10,12 @@ end
 %tic
 fprintf('Reading mtx file %s...',matrixmtxfile);
 X=pkg.mmread(matrixmtxfile);
-try
-    X=full(X);
-catch
-    
-end
+X=pkg.e_uint2sparse(X);
+% try
+%     X=full(X);
+% catch
+%
+% end
 fprintf('...done.\n');
 if isempty(featurestxtfile)
     genelist=[];

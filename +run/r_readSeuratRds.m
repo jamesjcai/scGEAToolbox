@@ -28,6 +28,7 @@ if exist('output.h5','file')
 elseif exist('X.csv','file')
     X=readmatrix('X.csv');
 end
+X=pkg.e_uint2sparse(X);
 sce=SingleCellExperiment(X,g);
 
 
