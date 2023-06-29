@@ -30,14 +30,17 @@ catch
         warning(ME.message);        
     end
 end
+
+
 try
-    X=sparse(double(X));
+    
+    %X=sparse(double(X));
 catch
-    tic
-    S=spalloc(size(X,1),size(X,2),nnz(X));
-    idx=find(X>0);
-    S(idx)=X(idx);
-    toc
-    X=S;
+    % tic
+    % S=spalloc(size(X,1),size(X,2),nnz(X));
+    % idx=find(X>0);
+    % S(idx)=X(idx);
+    % toc
+    % X=S;
 end
 end
