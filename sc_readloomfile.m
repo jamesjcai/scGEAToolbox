@@ -19,6 +19,25 @@ end
 
 X=h5read(filenm,'/matrix');
 genelist=h5read(filenm,'/row_attrs/Gene');
-barcodes=h5read(filenm,'/col_attrs/Cell');
 
+barcodes=[];
+try
+    barcodes=h5read(filenm,'/col_attrs/Cell');
+catch
+    try
+        barcodes=h5read(filenm,'/col_attrs/CellID');
+    catch ME
+        warning(ME.message);        
+    end
+end
+try
+    X=sparse(double(X));
+catch
+    tic
+    S=spalloc(size(X,1),size(X,2),nnz(X));
+    idx=find(X>0);
+    S(idx)=X(idx);
+    toc
+    X=S;
+end
 end
