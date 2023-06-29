@@ -29,6 +29,7 @@ promotesave=false;
         list={'SCE Data File (*.mat)...',...              
               'TXT/TSV/CSV File (*.txt)...',...              
               'Seurat/Rds File (*.rds)...',...
+              'AnnData/H5ad File (*.h5ad)...',...
               'Loom File (*.loom)...',...
               '----------------------------------',...
               '10x Genomics H5 File (*.h5)...',...
@@ -115,7 +116,21 @@ promotesave=false;
                 else
                     gui.gui_waitbar(fw);
                 end
-
+            case 'AnnData/H5ad File (*.h5ad)...'
+                try
+                [X,g,b,filename]=sc_readh5adfile;
+                    if ~isempty(X)
+                        sce = SingleCellExperiment(X, g);
+                        metainfo=sprintf("Source: %s",filename);
+                        sce=sce.appendmetainfo(metainfo);
+                        if ~isempty(b), sce.c_cell_id=b; end
+                    else
+                        return;
+                    end
+                catch ME
+                    errordlg(ME.message);
+                    return;
+                end       
             case '10x Genomics H5 File (*.h5)...'
                 try
                     [X, g, b, filename] = sc_read10xh5file;

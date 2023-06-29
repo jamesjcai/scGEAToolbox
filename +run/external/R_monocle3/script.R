@@ -1,6 +1,6 @@
 require(monocle3)
 require(rhdf5)
-#setwd('D:\\GitHub\\scGEAToolbox\\+run\\external\\R_monocle3')
+
 #X <- h5read(file = "input.h5", name = "/X")
 
 X <- h5read(file = "input.mat", name = "/X")

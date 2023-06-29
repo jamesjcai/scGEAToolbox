@@ -1,7 +1,7 @@
 library(Seurat)
 library(Matrix)
 library(sctransform)
-require(rhdf5) 
+library(rhdf5) 
 
 # setwd("U:\\GitHub\\scGEAToolbox\\+run\\external\\R_SeuratSctransform")       
 if (file.exists("input.mat")){

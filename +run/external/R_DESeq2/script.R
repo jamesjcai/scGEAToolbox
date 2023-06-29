@@ -1,4 +1,3 @@
-# setwd("E:\\GitHub\\scGEAToolbox\\+run\\external\\R_DESeq2")
 library(DESeq2)
 library(rhdf5)
 

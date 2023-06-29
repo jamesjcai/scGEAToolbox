@@ -1,7 +1,7 @@
 suppressMessages(library(Seurat))
 suppressMessages(library(Matrix))
 suppressMessages(library(rhdf5))
-# setwd("D:\\GitHub\\scGEAToolbox\\+run\\external\\R_Seurat")
+
 
 cMatrix <- h5read(file = "input.mat", name = "/X")
 ndim <- h5read(file = "input.mat", name = "/ndim")

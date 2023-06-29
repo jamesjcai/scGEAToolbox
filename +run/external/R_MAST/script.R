@@ -1,4 +1,3 @@
-#setwd("u:\\GitHub\\scGEAToolbox\\+run\\thirdparty\\R_MAST")
 suppressMessages(library(MAST))
 suppressMessages(library(Seurat))
 suppressMessages(library(rhdf5))

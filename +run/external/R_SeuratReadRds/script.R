@@ -1,12 +1,19 @@
 suppressMessages(library(Seurat))
 suppressMessages(library(Matrix))
 suppressMessages(library(rhdf5))
-setwd("D:\\GitHub\\scGEAToolbox\\+run\\external\\R_SeuratReadRds")
+
 filename<-readLines("inputrdsfile.txt")
 A<-readRDS(filename)
 
 # counts_matrix = GetAssayData(seurat_obj, slot="counts")
 # see: https://github.com/broadinstitute/inferCNV/wiki/infercnv-10x
+
+gname<-rownames(A@assays$RNA)
+if (is.null(gname)){
+    gname<-rownames(A@assays$RNA@counts)
+}
+write.csv(gname,file='g.csv')
+
 
 tryCatch(
 {
@@ -20,7 +27,8 @@ error = function(msg){
 	}
 )
 
-write.csv(rownames(A@assays$RNA),file='g.csv')
+
+# bcode<-colnames(A@assays$RNA@counts)
 
 tryCatch(
     {
@@ -41,3 +49,15 @@ tryCatch(
         # Do this if an error is caught...
     }
 )
+
+
+tryCatch(
+    {
+         write.csv(A@meta.data$annotation, file = 'annotation.csv')
+    },
+    error = function(e){ 
+        # (Optional)
+        # Do this if an error is caught...
+    }
+)
+

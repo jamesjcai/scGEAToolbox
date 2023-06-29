@@ -1,5 +1,6 @@
 function [X,genelist,barcodes,filenm]=sc_readh5adfile(filenm)
-%Read HDF5 file
+%Read H5AD file
+% https://anndata.readthedocs.io/en/latest/fileformat-prose.html
 % https://www.mathworks.com/help/matlab/hdf5-files.html
 % http://scipy-lectures.org/advanced/scipy_sparse/csc_matrix.html
 % https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/advanced/h5_matrices
@@ -7,10 +8,12 @@ function [X,genelist,barcodes,filenm]=sc_readh5adfile(filenm)
 % https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM3489183
 % h5file='GSM3489183_IPF_01_filtered_gene_bc_matrices_h5.h5';
 
+g=[];
 barcodes=[];
+
 if nargin<1
 [filenm, pathname] = uigetfile( ...
-       {'*.h5ad', 'H5AD Files (*.h5)';
+       {'*.h5ad', 'H5AD Files (*.h5ad)';
         '*.*',  'All Files (*.*)'}, ...
         'Pick a H5AD file');
 	if isequal(filenm,0), X=[]; genelist=[]; return; end
@@ -39,11 +42,19 @@ shape=double(hinfo.Groups(idx).Attributes(idx2).Value);
 
     idx=find(strcmp(strtrim(string(char(hinfo.Groups.Name))),"/var"));
     try
-        g=h5read(filenm,[hinfo.Groups(idx).Name,'/gene_ids']);
+        g=h5read(filenm,[hinfo.Groups(idx).Name,'/_index']);        
     catch
-        g=h5read(filenm,[hinfo.Groups(idx).Name,'/_index']);
+        try
+            g=h5read(filenm,[hinfo.Groups(idx).Name,'/gene_ids']);
+        catch
+            try
+                g=h5read(filenm,[hinfo.Groups(idx).Name,'/gene_name']);
+            catch
+                warning('GENELIST not found.');
+            end
+        end        
     end
-    % g=h5read(filenm,[hinfo.Groups(idx).Name,'/gene_name']);
+    
 
 try
     barcodes=h5read(filenm,[hinfo.Groups.Groups(1).Name,'/barcodes']);
@@ -60,7 +71,7 @@ catch
         end
 end
 
-X=zeros(shape(1),shape(2));
+X=sparse(shape(1),shape(2));
 for k=1:length(indptr)-1
     i=indptr(k)+1:indptr(k+1);
     y=indices(i)+1;
@@ -75,3 +86,18 @@ genelist=deblank(string(g));
 % end
 
 end
+
+
+% a=h5read(filenm,'/obs/seurat_clusters')
+% a=h5read(filenm,'/var/_index')
+% a=h5read(filenm,'/obs/annotation')
+
+%{
+function i_tryread
+    try
+                g=h5read(filenm,[hinfo.Groups(idx).Name,'/_index']);        
+    catch
+    
+    end
+end
+%}
