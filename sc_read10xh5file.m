@@ -30,7 +30,7 @@ end
 %shape=h5read(filenm,[h.Groups(1).Name,'/shape']);
 
 
-fw=gui.gui_waitbar_adv;
+%fw=gui.gui_waitbar_adv;
 
 data=pkg.e_guessh5field(filenm,{'/matrix/'},{'data'},true);
 indices=pkg.e_guessh5field(filenm,{'/matrix/'},{'indices'},true);
@@ -77,22 +77,22 @@ if isempty(b), warning('B is not assigned.'); end
     X=spalloc(shape(1),shape(2),length(data));
 %end
 
-c=0; olda=-1;
+%c=0; olda=-1;
 for k=1:length(indptr)-1
 
-    if mod(c,round(length(indptr)/100))==0
-        a=round(100*(c/length(indptr)));
-        if a~=olda
-            %fprintf('......%d%%\n',a);
-            gui.gui_waitbar_adv(fw,a/100);
-            olda=a;
-        end
-    end
+    % if mod(c,round(length(indptr)/100))==0
+    %     a=round(100*(c/length(indptr)));
+    %     if a~=olda
+    %         %fprintf('......%d%%\n',a);
+    %         gui.gui_waitbar_adv(fw,a/100);
+    %         olda=a;
+    %     end
+    % end
 
     i=indptr(k)+1:indptr(k+1);
     y=indices(i)+1;
     X(y,k)=data(i);
-    c=c+1;
+%    c=c+1;
 end
 %fprintf('......100%%\n');
 
@@ -103,6 +103,6 @@ g=deblank(string(g));
 %     genelist(k)=string(g(k).data);
 % end
 %gui.gui_waitbar(fw);
-gui.gui_waitbar_adv(fw);
+%gui.gui_waitbar_adv(fw);
 
 end

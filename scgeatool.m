@@ -138,9 +138,7 @@ promotesave=false;
                         sce = SingleCellExperiment(X, g);
                         metainfo=sprintf("Source: %s",filename);
                         sce=sce.appendmetainfo(metainfo);
-                        if ~isempty(b)
-                            sce.c_cell_id=b;
-                        end
+                        if ~isempty(b), sce.c_cell_id=b; end
                     else
                         return;
                     end
@@ -156,9 +154,7 @@ promotesave=false;
                         sce = SingleCellExperiment(X, g);
                         metainfo=sprintf("Source: %s",filename);
                         sce=sce.appendmetainfo(metainfo);
-                        if ~isempty(b)
-                            sce.c_cell_id=b;
-                        end
+                        if ~isempty(b), sce.c_cell_id=b; end
                     else
                         return;
                     end
@@ -275,7 +271,8 @@ promotesave=false;
                 definput = {'https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM4666nnn/GSM4666986/suppl/GSM4666986_BL41_filtered_feature_bc_matrix.h5'};
                 answer = inputdlg(prompt,dlgtitle,dims,definput);
                 if isempty(answer), return; end
-                if ~isempty(answer{1})                        
+                if ~isempty(answer{1})
+                    fw = gui.gui_waitbar;
                     files=websave(tempname,answer{1});
                     if iscell(files)
                         f=files{1};
@@ -283,11 +280,13 @@ promotesave=false;
                         f=files;
                     end                        
                     if isempty(f), error('f1'); end
-                    fprintf('[X,g]=sc_readhdf5file(''%s'');\n',f);
-                    [X,g]=sc_readhdf5file(f);
-                    sce = SingleCellExperiment(X, g);
+                    fprintf('[X,g,b]=sc_read10xh5file(''%s'');\n',f);
+                    [X,g,b]=sc_read10xh5file(f);
+                    sce = SingleCellExperiment(X,g);
                     metainfo=sprintf("Source: %s",answer{1});
                     sce = sce.appendmetainfo(metainfo);
+                    if ~isempty(b), sce.c_cell_id=b; end
+                    gui.gui_waitbar(fw);
                 end
             case 'Load SCE Variable from Workspace...'
                 a=evalin('base','whos');
