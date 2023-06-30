@@ -8,7 +8,7 @@ function [X,genelist,barcodes,filenm]=sc_read10xh5file(filenm)
 % h5file='GSM3489183_IPF_01_filtered_gene_bc_matrices_h5.h5';
 
 barcodes=[];
-if nargin<1
+if nargin<1 || isempty(filenm)
 [filenm, pathname] = uigetfile( ...
        {'*.h5;*.hdf5', 'HDF5 Files (*.h5)';
         '*.*',  'All Files (*.*)'}, ...
@@ -22,12 +22,14 @@ end
 
 hinfo=h5info(filenm);
 % h5disp(filenm,'/matrix','min');
-
 % if strcmp(a.Groups(1).Datasets(2).Name,'data')
+
 data=h5read(filenm,[hinfo.Groups(1).Name,'/data']);
 indices=h5read(filenm,[hinfo.Groups(1).Name,'/indices']);
 indptr=h5read(filenm,[hinfo.Groups(1).Name,'/indptr']);
 shape=h5read(filenm,[hinfo.Groups(1).Name,'/shape']);
+
+
 
 try
 g=h5read(filenm,[hinfo.Groups.Groups(1).Name,'/gene_names']);
@@ -43,15 +45,21 @@ catch
     end
 end
 
-try
-    barcodes=h5read(filenm,[hinfo.Groups.Groups(1).Name,'/barcodes']);
-catch
-        try
-            barcodes=h5read(filenm,[hinfo.Groups(1).Name,'/barcodes']);
-        catch
-            warning('BARCODES not found.');
-        end
+barcodes=pkg.e_guessh5field(filenm,[hinfo.Groups.Groups(1).Name,'/'],["barcodes"]);
+if isempty(barcodes), 
+    barcodes=pkg.e_guessh5field(filenm,[hinfo.Groups(1).Name,'/'],["barcodes"]);
 end
+if isempty(barcodes), warning('B is not assigned.'); end
+% 
+%     try
+%     barcodes=h5read(filenm,[hinfo.Groups.Groups(1).Name,'/barcodes']);
+% catch
+%         try
+%             barcodes=h5read(filenm,[hinfo.Groups(1).Name,'/barcodes']);
+%         catch
+%             warning('BARCODES not found.');
+%         end
+% end
 
 % try
 %     X=zeros(shape(1),shape(2));
@@ -76,6 +84,7 @@ end
 fprintf('......100%%\n');
 
 genelist=deblank(string(g));
+
 % genelist=strings(length(g),1);
 % for k=1:length(g)
 %     genelist(k)=string(g(k).data);

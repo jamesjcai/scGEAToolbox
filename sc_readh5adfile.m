@@ -8,20 +8,19 @@ function [X,g,b,filenm]=sc_readh5adfile(filenm)
 % https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM3489183
 % h5file='GSM3489183_IPF_01_filtered_gene_bc_matrices_h5.h5';
 
+X=[];
 g=[];
 b=[];
 
-if nargin<1
+if nargin<1 || isempty(filenm)
 [filenm, pathname] = uigetfile( ...
        {'*.h5ad', 'H5AD Files (*.h5ad)';
         '*.*',  'All Files (*.*)'}, ...
         'Pick a H5AD file');
-	if isequal(filenm,0), X=[]; genelist=[]; return; end
+	if isequal(filenm,0), return; end
 	filenm=fullfile(pathname,filenm);
 end
-if exist(filenm,'file') ~= 2
-    error('FileNotFound');
-end
+if exist(filenm,'file') ~= 2, error('File Not Found.'); end
 
 fw=gui.gui_waitbar;
 
