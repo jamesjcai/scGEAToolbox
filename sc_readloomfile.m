@@ -1,35 +1,44 @@
-function [X,genelist,barcodes,filenm]=sc_readloomfile(filenm)
+function [X,g,b,filenm]=sc_readloomfile(filenm)
 %Read LOOM file
 % http://linnarssonlab.org/loompy/index.html
 
-barcodes=[];
+X=[]; g=[]; b=[];
 if nargin<1
 [filenm, pathname] = uigetfile( ...
        {'*.loom', 'LOOM Files (*.loom)';
         '*.*',  'All Files (*.*)'}, ...
         'Pick a LOOM file');
-	if isequal(filenm,0), X=[]; genelist=[]; return; end
+	if isequal(filenm,0), return; end
 	filenm=fullfile(pathname,filenm);
 end
 if exist(filenm,'file') ~= 2
     error('FileNotFound');
 end
 
+fw=gui.gui_waitbar;
+
 %hinfo=h5info(filenm);
+% X=h5read(filenm,'/matrix/');
+X=pkg.e_guessh5field(filenm,{'/matrix/'},{''},true);
 
-X=h5read(filenm,'/matrix');
-genelist=h5read(filenm,'/row_attrs/Gene');
+%g=h5read(filenm,'/row_attrs/Gene');
+g=pkg.e_guessh5field(filenm,{'/row_attrs/'},{'Gene','gene_ids','gene_name'},false);
+if isempty(g), warning('G is not assigned.'); end
 
-barcodes=[];
-try
-    barcodes=h5read(filenm,'/col_attrs/Cell');
-catch
-    try
-        barcodes=h5read(filenm,'/col_attrs/CellID');
-    catch ME
-        warning(ME.message);        
-    end
-end
+
+b=pkg.e_guessh5field(filenm,{'/col_attrs/'},{'CellID','Cell'},false);
+if isempty(b), warning('B is not assigned.'); end
+
+% barcodes=[];
+% try
+%     barcodes=h5read(filenm,'/col_attrs/Cell');
+% catch
+%     try
+%         barcodes=h5read(filenm,'/col_attrs/CellID');
+%     catch ME
+%         warning(ME.message);        
+%     end
+% end
 
 X=pkg.e_uint2sparse(X);
 
@@ -55,4 +64,5 @@ X=pkg.e_uint2sparse(X);
 %     end
 % end
 
+gui.gui_waitbar(fw);
 end

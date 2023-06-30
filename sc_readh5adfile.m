@@ -22,7 +22,7 @@ if nargin<1 || isempty(filenm)
 end
 if exist(filenm,'file') ~= 2, error('File Not Found.'); end
 
-fw=gui.gui_waitbar;
+fw=gui.gui_waitbar_adv;
 
 hinfo=h5info(filenm);
 
@@ -31,9 +31,9 @@ idx=find(strcmp(strtrim(string(char(hinfo.Groups.Name))),"/X"));
 %indices=h5read(filenm,[hinfo.Groups(idx).Name,'/indices']);
 %indptr=h5read(filenm,[hinfo.Groups(idx).Name,'/indptr']);
 
-data=pkg.e_guessh5field(filenm,"/X/",["data"]);
-indices=pkg.e_guessh5field(filenm,"/X/",["indices"]);
-indptr=pkg.e_guessh5field(filenm,"/X/",["indptr"]);
+data=pkg.e_guessh5field(filenm,{'/X/'},{'data'},true);
+indices=pkg.e_guessh5field(filenm,{'/X/'},{'indices'},true);
+indptr=pkg.e_guessh5field(filenm,{'/X/'},{'indptr'},true);
 
 % idx=find(strcmp(strtrim(string(char(hinfo.Groups.Name))),"/raw"));
 % data=h5read(filenm,[hinfo.Groups(idx).Groups(1).Name,'/data']);
@@ -43,7 +43,7 @@ indptr=pkg.e_guessh5field(filenm,"/X/",["indptr"]);
 idx2=find(strcmp(strtrim(string(char(hinfo.Groups(idx).Attributes.Name))),"shape"));
 shape=double(hinfo.Groups(idx).Attributes(idx2).Value);
 
-g=pkg.e_guessh5field(filenm,"/var/",["_index","gene_ids","gene_name"]);
+g=pkg.e_guessh5field(filenm,{'/var/'},{'_index','gene_ids','gene_name'},false);
 if isempty(g), warning('G is not assigned.'); end
 
     % idx=find(strcmp(strtrim(string(char(hinfo.Groups.Name))),"/var"));
@@ -61,7 +61,7 @@ if isempty(g), warning('G is not assigned.'); end
     %     end        
     % end
     
-b=pkg.e_guessh5field(filenm,"/obs/",["_index","barcodes"]);
+b=pkg.e_guessh5field(filenm,{'/obs/'},{'_index','barcodes'});
 if isempty(b), warning('B is not assigned.'); end
 
 
@@ -80,13 +80,14 @@ if isempty(b), warning('B is not assigned.'); end
 %         end
 % end
 
-X=sparse(shape(1),shape(2));
+X=spalloc(shape(2),shape(1),length(data));
 for k=1:length(indptr)-1
+
     i=indptr(k)+1:indptr(k+1);
     y=indices(i)+1;
-    X(k,y)=data(i);
+    X(y,k)=data(i);
 end
-X=X.';
+% X=X.';
 
 g=deblank(string(g));
 
@@ -94,7 +95,7 @@ g=deblank(string(g));
 % for k=1:length(g)
 %     genelist(k)=string(g(k).data);
 % end
-gui.gui_waitbar(fw);
+gui.gui_waitbar_adv(fw);
 
 end
 
