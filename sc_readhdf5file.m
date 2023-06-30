@@ -20,6 +20,8 @@ if exist(filenm,'file') ~= 2
     error('FileNotFound');
 end
 
+fw = gui.gui_waitbar;
+
 hinfo=h5info(filenm);
 % h5disp(filenm,'/matrix','min');
 
@@ -80,5 +82,6 @@ genelist=deblank(string(g));
 % for k=1:length(g)
 %     genelist(k)=string(g(k).data);
 % end
+                    gui.gui_waitbar(fw);
 
 end

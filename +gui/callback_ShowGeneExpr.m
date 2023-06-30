@@ -29,7 +29,7 @@ switch answer
     case 'Multiple'
         [glist]=gui.i_selectngenes(sce);
         if isempty(glist)
-            helpdlg('No gene selected.','');
+            %helpdlg('No gene selected.','');
             return;
         %[gsorted]=gui.i_sortgenenames(sce);
         %if isempty(gsorted), return; end
