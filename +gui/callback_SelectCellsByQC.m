@@ -87,6 +87,8 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
                 sce=sce.qcfilterwhitelist(libsize,mtratio,...
                     min_cells_nonzero,numgenes,whitelist);
             catch ME
+                % if (strcmp(ME.identifier,'MATLAB:array:SizeLimitExceeded'))
+
                  if issparse(sce.X)
                      gui.gui_waitbar(fw,true);
                      errordlg(ME.message);
@@ -98,8 +100,13 @@ function [requirerefresh,highlightindex]=callback_SelectCellsByQC(src)
             end
 
             if memerror
-                disp('Making X sparse.');
-                sce.X=sparse(sce.X);
+                % disp('Making X sparse.');
+                if ~isa(sce.X,'double')
+                    [sce.X]=pkg.e_uint2sparse(sce.X);
+                else
+                    sce.X=sparse(sce.X);
+                end                
+
                 % disp('Using lite version of QC.');
                 % Xobj=refwrap(sce.X); 
                 % sce.X=[];
