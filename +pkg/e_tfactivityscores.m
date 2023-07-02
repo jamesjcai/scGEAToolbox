@@ -1,5 +1,5 @@
 function [score,T,posg]=e_tfactivityscores(X,genelist,typeid)
-% Calcute predefined cell scores (marker list in cellscores.txt)
+% Calcute predefined cell scores (marker list in cellscores.txt/xlsx)
 %
 % see also: SC_CELLSCORE_UCELL, SC_CELLSCORE_ADMDL, SC_CELLCYCLESCORING
 

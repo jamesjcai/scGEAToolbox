@@ -45,6 +45,7 @@ if ~exist(outdir,"dir"), mkdir(outdir); end
     d=[d;fullfile(pw1, '+run','external','mt_UMAP','umap.jar')];
     d=[d;fullfile(pw1, 'resources', 'tfome_tfgenes.mat')];
     d=[d;fullfile(pw1, 'resources', 'regev_lab_cell_cycle_genes.txt')];
+    d=[d;fullfile(pw1, 'resources', 'cellscores.xlsx')];
     d=[d;fullfile(pw1, 'resources', 'cellscores.txt')];
     d=[d;fullfile(pw1, 'resources', 'Ligand_Receptor.mat')];
     d=[d;fullfile(pw1, 'resources', 'Ligand_Receptor2.mat')];

@@ -1,5 +1,5 @@
 function [score,T,posg]=e_cellscores(X,genelist,typeid)
-% Calcute predefined cell scores (marker list in cellscores.txt)
+% Calcute predefined cell scores (marker list in cellscores.xlsx)
 %
 % see also: SC_CELLSCORE_UCELL, SC_CELLSCORE_ADMDL, SC_CELLCYCLESCORING
 
@@ -8,10 +8,17 @@ if nargin<2, genelist=[]; end
 if nargin<1, X=[]; end
 
 pw1=fileparts(mfilename('fullpath'));
-cellscoresfile=fullfile(pw1,'..','resources','cellscores.txt');
 
-T=readtable(cellscoresfile,'Delimiter','\t',...
-    'ReadVariableNames',true);
+try
+    cellscoresfile=fullfile(pw1,'..','resources','cellscores.xlsx');
+    T=readtable(cellscoresfile,'Sheet','Sheet1',...
+        'ReadVariableNames',true);
+catch ME
+    cellscoresfile=fullfile(pw1,'..','resources','cellscores.txt');
+    T=readtable(cellscoresfile,'Delimiter','\t',...
+        'ReadVariableNames',true);
+end
+
 %T=sortrows(T,"ScoreType");
 
 if ischar(typeid) || isstring(typeid)
