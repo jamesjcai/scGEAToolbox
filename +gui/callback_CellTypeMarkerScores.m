@@ -12,15 +12,15 @@ ctselected=[];
 posg=[];
 
 actiontype=questdlg('Select a gene set database:',...
-    '','PanglaoDB Markder Genes',...
+    '','PanglaoDB Marker Genes',...
     'MSigDB Signature Genes', ...
     'DoRothEA TF Target Genes', ...
-    'PanglaoDB Markder Genes');
+    'PanglaoDB Marker Genes');
 
 %[selecteditem] = gui.i_selectcellscore;
 
 switch actiontype
-    case 'PanglaoDB Markder Genes'
+    case 'PanglaoDB Marker Genes'
         stag=gui.i_selectspecies(2,true);
         if isempty(stag), return; end
     
@@ -137,7 +137,6 @@ disp(['Gene signature scoring - To characterize cells ' ...
 %     function i_geneheatmapx(~,~)
 %         gui.i_geneheatmap(sce,sce.c_cell_type_tx,posg);
 %     end
-
     answer2 = questdlg(sprintf('Score has been computed.\nCompare the score across cell classes?'),'Continue?');
     switch answer2
         case 'Yes'
@@ -145,6 +144,7 @@ disp(['Gene signature scoring - To characterize cells ' ...
         otherwise
             return;
     end
+
     [thisc,clabel]=gui.i_select1class(sce);
     if isempty(thisc)   % || numel(unique(thisc))==1
         errordlg('Undefined');

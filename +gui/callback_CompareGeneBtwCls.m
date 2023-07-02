@@ -1,9 +1,27 @@
 function callback_CompareGeneBtwCls(src,~)
-    answer = questdlg('This function generates violinplot to show differences between cell groups. Continue?','');
+    answer = questdlg(['This function ' ...
+        'calculates a signature score for each ' ...
+        'cell with respect to a given gene set.' ...
+        ' Continue?'],'');
     if ~strcmp(answer,'Yes'), return; end
 
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
+
+
+
+answer2 = questdlg(sprintf(['After the scores are computed, ' ...
+    'compare them between cell classes/groups?']),'');
+switch answer2
+    case 'Yes'
+        showcomparision=true;
+    case 'No'
+        showcomparision=false;
+    otherwise
+        return;
+end
+
+if showcomparision
 
     allowunique=false;
     [thisc]=gui.i_select1class(sce,allowunique);
@@ -35,8 +53,10 @@ function callback_CompareGeneBtwCls(src,~)
         else
             return;
         end    
-
     end
+
+end
+
 
 % selitems={'Expression of Gene', ...
 %     'TF Activity Score [PMID:33135076]',...
@@ -83,6 +103,43 @@ if isempty(selecteditem), return; end
             ttxt = ctselected;
             if isempty(posg) || isempty(ctselected), return; end
             [y]=gui.e_cellscore(sce,posg);
+
+        case 'PanglaoDB Cell Type Marker Score...'
+        stag=gui.i_selectspecies(2,true);
+        if isempty(stag), return; end
+    
+        oldpth=pwd;
+        pw1=fileparts(mfilename('fullpath'));
+        pth=fullfile(pw1,'..','+run','thirdparty','alona_panglaodb');
+        cd(pth);
+        
+        markerfile=sprintf('marker_%s.mat',stag);
+        if exist(markerfile,'file')
+            load(markerfile,'Tm');
+        else
+            % Tw=readtable(sprintf('markerweight_%s.txt',stag));
+            Tm=readtable(sprintf('markerlist_%s.txt',stag),...
+                'ReadVariableNames',false,'Delimiter','\t');
+            % save(markerfile,'Tw','Tm');
+        end
+        cd(oldpth);
+        
+        ctlist=string(Tm.Var1);
+        listitems=sort(ctlist);
+        [indx,tf] = listdlg('PromptString',...
+            {'Select Class'},...
+             'SelectionMode','single','ListString',listitems,'ListSize',[220,300]);
+            if ~tf==1, return; end
+            ctselected=listitems(indx);
+            % idx=find(matches(ctlist,ctselected));
+            idx=matches(ctlist,ctselected);
+            ctmarkers=Tm.Var2{idx};
+            posg=string(strsplit(ctmarkers,','));
+            posg(strlength(posg)==0)=[];
+            ttxt = ctselected;
+            if isempty(posg) || isempty(ctselected), return; end
+            [y]=gui.e_cellscore(sce,posg);
+            
         case 'Differentiation Potency [PMID:33244588]'
                 
                 gui.gui_showrefinfo('Differentiation Potency [PMID:33244588]');
@@ -207,6 +264,11 @@ if isempty(selecteditem), return; end
  % assignin('base','y',y);
  % assignin('base','thisc',thisc);
 
+ if showcomparision
     gui.i_violinplot(y,thisc,ttxt);
+ else
+    gui.i_stemscatterfig(sce,y,posg,ctselected);
+ end
+
 
 end
