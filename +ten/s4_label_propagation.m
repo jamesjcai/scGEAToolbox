@@ -42,5 +42,5 @@ C=grp2idx(idx);
 sortrows([unique(C) grpstats(C,C,@numel)],2);
 % [length(C) sum(ans(:,2)>0) sum(ans(:,2)>1)]
 sprintf('#genes=%d #modules=%d #modules (g>=2)=%d',...
-    [length(C) sum(ans(:,2)>0) sum(ans(:,2)>1)]);
+    [length(C) sum(a(:,2)>0) sum(a(:,2)>1)]);
 % clearvars -except C genelist A0 A1

@@ -178,8 +178,9 @@ classdef BasicMap < Map
             %'https://1drv.ms/u/s!AkbNI8Wap-7_jNJYg4RNDTKR4mkYOg?e=pfwWfO'
         end
         
-        function closeToolTip(this)
-        end
+%        function closeToolTip
+
+%        end
         
                 
          

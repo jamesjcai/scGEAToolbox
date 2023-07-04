@@ -143,7 +143,7 @@ function [ Z,numChol,numEq ] = normalEqComb( AtA,AtB,PassSet )
 
         %% Fixed on Aug-12-2009
         if k1==1
-                        if any(PassSet)>0
+                        if any(PassSet)
                 Z(PassSet)=AtA(PassSet,PassSet)\AtB(PassSet); 
                                 numChol = 1; numEq = 1;
                         else
@@ -163,7 +163,7 @@ function [ Z,numChol,numEq ] = normalEqComb( AtA,AtB,PassSet )
 
             %% Modified on Mar-11-2011
                         % Skip columns with no passive sets
-                        if any(sortedPassSet(1,:))==0
+                        if ~any(sortedPassSet(1,:))
                                 startIx = 2;
                         else
                                 startIx = 1;

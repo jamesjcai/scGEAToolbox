@@ -146,7 +146,7 @@ function [mappedA, mapping] = compute_mapping(A, type, no_dims, varargin)
     mapping = struct;
     
     % Handle PRTools dataset
-    if strcmp(class(A), 'dataset')
+    if ias(A,'dataset')
         prtools = 1;
         AA = A;
         if ~strcmp(type, {'LDA', 'FDA', 'GDA', 'KernelLDA', 'KernelFDA', 'MCML', 'NCA', 'LMNN'})

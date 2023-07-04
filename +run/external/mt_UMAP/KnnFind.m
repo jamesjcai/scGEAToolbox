@@ -382,7 +382,7 @@ classdef KnnFind<handle
             if strcmpi(metric, 'mahalanobis')
                 if isempty(dist_args)
                     %MatLab inverse covariance calculation is fastest
-                    dist_args=nancov(X);
+                    dist_args=cov(X);
                 end
                 dist_args=inv(dist_args);
             end

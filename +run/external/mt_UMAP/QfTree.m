@@ -1443,7 +1443,7 @@ classdef QfTree < handle
                             if idx==0
                                 html=[html '<td></td>'];
                             else
-                                [~, ~, ~, ttl, key, N]=...
+                                [~, ~, ~, ttl, key, ~]=...
                                     this.unpackNode(idx, true);
                                 ttl=strrep(ttl, this.app.smallStart, '<small>');
                                 ttl=strrep(ttl, this.app.smallEnd, '</small>');

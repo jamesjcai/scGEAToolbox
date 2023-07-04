@@ -276,7 +276,7 @@ texthandle=text( ...
     'String'              ,WrapString                      , ...
     'Interpreter'         ,Interpreter                     , ...
     'Tag'                 ,'Question'                        ...
-    );  %#ok
+    );  
 
 textExtent = get(texthandle, 'extent');
 
@@ -413,7 +413,7 @@ end
     end
   end
 
-  function doDelete(varargin)  %#ok
+  function doDelete(varargin) 
     delete(QuestFig);
   end
 end

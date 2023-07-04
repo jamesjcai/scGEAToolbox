@@ -883,8 +883,8 @@ classdef String
         function name = getNowName( prefix )
             %UNTITLED4 Summary of this function goes here
             %   Detailed explanation goes here
-            t=today;
-            n=now;
+            t=datetime('today');
+            n=datetime('now');
             name=[prefix '_' num2str( year(t), '%4d')  ];
             name = [name num2str( month(t), '%2d')];
             

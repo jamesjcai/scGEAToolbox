@@ -52,7 +52,7 @@ if (size(a,1) ~= size(b,1))
    error('A and B should be of same dimensionality');
 end
 
-if ~(isreal(a)*isreal(b))
+if ~(isreal(a)&&isreal(b))
    disp('Warning: running distance.m with imaginary numbers.  Results may be off.'); 
 end
 

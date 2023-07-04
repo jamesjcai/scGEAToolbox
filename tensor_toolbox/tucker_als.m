@@ -55,7 +55,7 @@ printitn = params.Results.printitn;
 if numel(R) == 1
     R = R * ones(N,1);
 end
-U = cell(N,1);
+% U = cell(N,1);
 
 %% Error checking 
 % Error checking on maxiters

@@ -165,7 +165,7 @@ bbck = flipud(-(sigma_x.*sigma_xy-sigma_xx.*sigma_y) ./det);
 
 %figure out the sum of per-point errors for left- and right- of-knee fits
 error_curve = nan(size(y));
-for breakpt = 2:length(y-1)
+for breakpt = 2:length(y)-1
     delsfwd = (mfwd(breakpt).*x(1:breakpt)+bfwd(breakpt))-y(1:breakpt);
     delsbck = (mbck(breakpt).*x(breakpt:end)+bbck(breakpt))-y(breakpt:end);
     %disp([sum(abs(delsfwd))/length(delsfwd), sum(abs(delsbck))/length(delsbck)])

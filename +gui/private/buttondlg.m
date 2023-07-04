@@ -238,9 +238,9 @@ DefOffset  =10;
 IconWidth  =50;                                         % <-- Modified
 IconHeight =50;                                         % <-- Modified
 IconXOffset=DefOffset;
-IconYOffset=FigPos(4)-DefOffset-IconHeight;  %#ok
+IconYOffset=FigPos(4)-DefOffset-IconHeight;  
 if isempty(IconCMap)                                    % <-- Added
-    IconCMap=[Black;get(QuestFig,'Color')];  %#ok
+    IconCMap=[Black;get(QuestFig,'Color')];  
 end                                                     % <-- Added
 
 DefBtnWidth =56;

@@ -8,12 +8,12 @@ if nargin<4, topn=10; end
 
 %% new data visualization
 numC = length(unique(c));
-gene_idxv = [];
+%gene_idxv = [];
 cluster_order = [];
 
 [No_gene] = size(X,1);
 % calculat mean of gene expression
-gene_mean = zeros(No_gene,numC);
+%gene_mean = zeros(No_gene,numC);
 gene_DE_score = zeros(No_gene,numC);
 
 % gene_value_idx = zeros(No_gene,1);

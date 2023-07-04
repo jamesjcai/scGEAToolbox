@@ -7,16 +7,16 @@ SAMPLE_FILE = 'sample10k.csv';
 file = UmapUtil.RelocateExamples(file);
 data= File.ReadCsv(file);
 
-cov = nancov(data);
+covx = cov(data);
 disp(['The covariance matrix for the data from ' SAMPLE_FILE ' is:']);
-disp(cov);
+disp(covx);
 
-invCov = inv(cov);
+invCov = inv(covx);
 disp(['The inverse of the covariance matrix for the data from ' SAMPLE_FILE ' is:']);
 disp(invCov);
 
 X1 = knnsearch(data, data, 'K', 15, 'Distance', 'mahalanobis');
-X2 = knnsearch(data, data, 'K', 15, 'Distance', 'mahalanobis', 'Cov', cov);
+X2 = knnsearch(data, data, 'K', 15, 'Distance', 'mahalanobis', 'Cov', covx);
 
 
 
