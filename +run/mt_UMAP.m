@@ -1,12 +1,12 @@
-function [s,c]=mt_UMAP(X,ndim,plotit,verbose)
+function [s,c]=mt_UMAP(X,ndim)
 
 %   addpath /Users/Stephen/umap
 %   addpath /Users/Stephen/util
 %   javaaddpath('/Users/Stephen/umap/umap.jar');
 
 
-if nargin<4, verbose=false; end
-if nargin<3, plotit=false; end
+%if nargin<4, verbose=false; end
+%if nargin<3, plotit=false; end
 if nargin<2, ndim=3; end
 
 pw1=fileparts(mfilename('fullpath'));
@@ -32,22 +32,22 @@ if ncells>500
 end
 
 if nargout>1 || plotit
-    if verbose
+    %if verbose
         [s,~,c]=run_umap_main(data, ...
             'n_components',ndim);
-    else
-        [s,~,c]=run_umap_main(data, ...
-            'n_components',ndim, ...
-            'verbose','none');
-    end
+    % else
+    %     [s,~,c]=run_umap_main(data, ...
+    %         'n_components',ndim, ...
+    %         'verbose','none');
+    % end
 else
 
     %if ~(ismcc || isdeployed)   
-        if verbose
+    %    if verbose
             [s]=run_umap_lite(data,'n_components',ndim);
-        else
-            [s]=run_umap_lite(data,'n_components',ndim,'verbose','none');
-        end
+    %     else
+    %         [s]=run_umap_lite(data,'n_components',ndim,'verbose','none');
+    %     end
     % else
     %      umap=UMAP;
     %      umap.method='MEX';
@@ -58,10 +58,10 @@ else
     % end
 end
 
-if plotit && ~isempty(s)
-    gui.i_gscatter3(s,c);
-    xlabel('UMAP 1')
-    ylabel('UMAP 2')
-end
+% if plotit && ~isempty(s)
+%     gui.i_gscatter3(s,c);
+%     xlabel('UMAP 1')
+%     ylabel('UMAP 2')
+% end
 end
 
