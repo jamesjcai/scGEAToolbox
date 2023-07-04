@@ -21,7 +21,7 @@ if nargin<4
     tgsNeg=[];
 end
 if nargin<3 || isempty(tgsPos)
-    error('USAGE: >>[score]=sc_cellscore(X,genelist,tgsPos);')
+    error('USAGE: >>[score]=sc_cellscore_admdl(X,genelist,tgsPos);')
     % tgsPos=["CD44","LY6C","KLRG1","CTLA","ICOS","LAG3"];
 end
 
