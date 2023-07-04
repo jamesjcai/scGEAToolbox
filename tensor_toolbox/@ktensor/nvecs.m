@@ -40,14 +40,14 @@ end
 % Compute Xn * Xn' excluding the nth factor
 M = X.lambda * X.lambda';
 for i = 1:ndims(X)
-    if i == n, continue, end;
+    if i == n, continue, end
     M = M .* (X.u{i}' * X.u{i});
 end
 
 % Compute Xn * Xn'
 Y = X.u{n} * M * X.u{n}';
 
-[u,d] = eigs(Y, r, 'LM', eigsopts);
+[u,~] = eigs(Y, r, 'LM', eigsopts);
 
 if isfield(opts,'flipsign') 
     flipsign = opts.flipsign;
@@ -57,7 +57,7 @@ end
     
 if flipsign
     % Make the largest magnitude element be positive
-    [val,loc] = max(abs(u));
+    [~,loc] = max(abs(u));
     for i = 1:r
         if u(loc(i),i) < 0
             u(:,i) = u(:,i) * -1;

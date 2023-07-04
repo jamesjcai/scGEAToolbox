@@ -67,21 +67,21 @@ function [ X,Y,success,numChol,numEq ] = nnlsm_blockpivot( A, B, isInputProd, in
     NotOptCols = NotGood > 0;
     
     bigIter = 0; success=0;
-    while(~isempty(find(NotOptCols)))
+    while(~isempty(find(NotOptCols, 1)))
         bigIter = bigIter+1;
         if ((MAX_BIG_ITER >0) && (bigIter > MAX_BIG_ITER))   % set max_iter for ill-conditioned (numerically unstable) case
-            success = 1;, break
+            success = 1; break
         end
 
         Cols1 = NotOptCols & (NotGood < Ninf);
         Cols2 = NotOptCols & (NotGood >= Ninf) & (P >= 1);
         Cols3Ix = find(NotOptCols & ~Cols1 & ~Cols2);
-        if ~isempty(find(Cols1))
+        if ~isempty(find(Cols1, 1))
             P(Cols1) = pbar;Ninf(Cols1) = NotGood(Cols1);
             PassiveSet(NonOptSet & repmat(Cols1,n,1)) = true;
             PassiveSet(InfeaSet & repmat(Cols1,n,1)) = false;
         end
-        if ~isempty(find(Cols2))
+        if ~isempty(find(Cols2, 1))
             P(Cols2) = P(Cols2)-1;
             PassiveSet(NonOptSet & repmat(Cols2,n,1)) = true;
             PassiveSet(InfeaSet & repmat(Cols2,n,1)) = false;
@@ -139,7 +139,7 @@ function [ Z,numChol,numEq ] = normalEqComb( AtA,AtB,PassSet )
         numChol = 1; numEq = size(AtB,2);
         else
         Z = zeros(size(AtB));
-        [n,k1] = size(PassSet);
+        [~,k1] = size(PassSet);
 
         %% Fixed on Aug-12-2009
         if k1==1
@@ -163,7 +163,7 @@ function [ Z,numChol,numEq ] = normalEqComb( AtA,AtB,PassSet )
 
             %% Modified on Mar-11-2011
                         % Skip columns with no passive sets
-                        if any(sortedPassSet(1,:))==0;
+                        if any(sortedPassSet(1,:))==0
                                 startIx = 2;
                         else
                                 startIx = 1;

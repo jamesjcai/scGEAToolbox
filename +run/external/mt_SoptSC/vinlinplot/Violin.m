@@ -248,7 +248,7 @@ classdef Violin < handle
     end
 
     methods (Access=private)
-        function results = checkInputs(obj, data, pos, varargin)
+        function results = checkInputs(~, data, pos, varargin)
             isscalarnumber = @(x) (isnumeric(x) & isscalar(x));
             p = inputParser();
             p.addRequired('Data', @isnumeric);

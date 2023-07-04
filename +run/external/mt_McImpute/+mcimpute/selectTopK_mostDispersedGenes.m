@@ -5,7 +5,7 @@ X = gene_filtered_normed_data;
 cv2 = var(X)./mean(X);
 
 %divide into bins based on quantiles of mean cv2
-[bin_numbers, mean_bin] = discretize(mean(X), [-inf, quantile(mean(X), 0.1:0.05:1), inf]  , 'IncludedEdge','right');
+[bin_numbers, ~] = discretize(mean(X), [-inf, quantile(mean(X), 0.1:0.05:1), inf]  , 'IncludedEdge','right');
 %[bin_numbers, mean_bin] = discretize(mean(X), [-inf, quantile(mean(X), 0.2:0.2:1), inf]  , 'IncludedEdge','right');
 
 
@@ -21,7 +21,7 @@ bin_disp_mad = var_by_bin(bin_numbers,2);
 normalized_dispersion = abs(cv2'-bin_disp_median)./bin_disp_mad;
 
 %pick top k indices having max dispersion
-[sortedValues,sortIndex] = sort(-normalized_dispersion);
+[~,sortIndex] = sort(-normalized_dispersion);
 topK_indices = sortIndex(1:K);
 
 %topKgenes = normalized_dispersion(indices);

@@ -39,7 +39,7 @@ function [W,s] = ea(X,K,k)
 
 N = size(X,1);
 % ---------- Argument defaults ----------
-if ~exist('k','var') || isempty(k) k = N-1; end;
+if ~exist('k','var') || isempty(k) k = N-1; end
 if iscell(k) 
   D2 = k{1}; nn = k{2}; k = size(D2,2);
 else
@@ -56,7 +56,7 @@ for i=1:N				% Compute log-beta & EAs for each point
   [b(j),Wp(j,:)] = eabeta(D2(j,:),b0,logK,B(j,:));
   b0 = b(j); j = p(i+1);		% Next point
 end
-W = sparse(repmat((1:N)',1,k),nn,Wp,N,N); if k>=N-1 W = full(W); end;
+W = sparse(repmat((1:N)',1,k),nn,Wp,N,N); if k>=N-1 W = full(W); end
 if nargout==2 s=1./sqrt(2*exp(b)); end	% Bandwidths from log-beta values
 
 

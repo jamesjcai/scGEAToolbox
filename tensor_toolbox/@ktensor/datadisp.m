@@ -47,9 +47,9 @@ while (r <= R)
 
     end
 
-    if r == R, 
+    if r == R 
         break, 
-    end;
+    end
 
     foo = input('\nReturn to continue, jump to rank, or ''0'' (zero) to quit: ');
     if foo == 0
@@ -104,7 +104,7 @@ end
 
 %%
 function x = setparam(opts,name,default)
-if isfield(opts,name);
+if isfield(opts,name)
     x = opts.(name);
 else
     x = default;

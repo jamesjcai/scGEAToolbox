@@ -13,7 +13,7 @@ htmlstr="";
 
 sx=pkg.i_3d2d(sce.s,axbx(1),axbx(2));
     for k=1:numfig
-        k
+        k;
         targeetg=markerlist(k);
         h=figure('Visible','off','Position',[1700 540 560 300]);
 %         sc_scattermarker(sce.X,sce.g,sce.s,...

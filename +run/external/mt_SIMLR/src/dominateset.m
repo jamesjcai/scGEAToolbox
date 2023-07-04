@@ -1,4 +1,4 @@
-function  [PNN_matrix,res,loc]  = dominateset(aff_matrix,NR_OF_KNN);
+function  [PNN_matrix,res,loc]  = dominateset(aff_matrix,NR_OF_KNN)
 
 %[res,loc] = maxk(aff_matrix, NR_OF_KNN, 2 );
 %inds = repmat((1:size(loc,1))',[1 size(loc,2)]);

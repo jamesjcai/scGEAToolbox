@@ -2,7 +2,7 @@ function callback_ShowPseudoTimeGenes(src,~)
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
 
-[thisc,clable,~,newpickclable]=gui.i_select1state(sce,true,false);
+[thisc,~,~,newpickclable]=gui.i_select1state(sce,true,false);
 if isempty(thisc)
     helpdlg('No pseudotime values are available for cells.','')
     return; 

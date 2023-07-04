@@ -24,7 +24,7 @@ if nargin<2, K=4; end
     
     D = floyd_warshall(min(W,W'));
     J = eye(N)-ones(N,N)/N;
-    [Y,E] = eig(-0.5*J*(D.^2)*J);
+    [Y,~] = eig(-0.5*J*(D.^2)*J);
     Y = Y(:,2:d+1);
 end
 

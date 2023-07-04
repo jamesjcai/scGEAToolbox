@@ -14,7 +14,7 @@ if strcmpi(arg, 'error')
         type=javax.swing.JOptionPane.ERROR_MESSAGE;
     elseif strcmpi(arg, 'question')
         type=javax.swing.JOptionPane.QUESTION_MESSAGE;
-    elseif strcmpi(arg, 'warning') || strcmpi(arg, 'warn');
+    elseif strcmpi(arg, 'warning') || strcmpi(arg, 'warn')
         type=javax.swing.JOptionPane.WARNING_MESSAGE;
     elseif strcmpi(arg, 'information')
         type=javax.swing.JOptionPane.INFORMATION_MESSAGE;

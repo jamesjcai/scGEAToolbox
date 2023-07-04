@@ -1,4 +1,4 @@
-function i_volcanoplot(T,isok)
+function i_volcanoplot(T,~)
 
 if nargin<2
     isok=(abs(T.pct_2-T.pct_1)>0.05 | abs(T.avg_log2FC)>1.0)&T.p_val_adj<0.01;

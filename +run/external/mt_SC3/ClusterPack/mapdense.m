@@ -4,8 +4,8 @@
 
 function dout = mapdense(din,column)
 
-if ~exist('column'),
+if ~exist('column')
   column = 1;
-end;
+end
 
 dout = mapasc(sortrows(din,column),column);

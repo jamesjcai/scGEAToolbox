@@ -32,7 +32,7 @@ for i = 2:n
 
     Ui = U{i};
     
-    for j = 1:size(U1,2);
+    for j = 1:size(U1,2)
         if dot( U1(:,j), Ui(:,j) ) < 0
             Ui(:,j) = -Ui(:,j);
             lambda(j) = -lambda(j);

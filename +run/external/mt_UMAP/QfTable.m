@@ -83,7 +83,7 @@ classdef QfTable < handle
                 'Name', figName);
             [this.data, labels, fmts, tips,  this.unmatched, groupIdx, ...
                 freqIdx, rankIdx, symIdx]=QfTable.Contents(qf, tClrs, pu);
-            [this.R, C]=size(this.data);
+            [this.R, ~]=size(this.data);
             J=edu.stanford.facs.swing.Basics;
             [sData, widths]=SortTable.Convert(this.data, fmts);
             this.sortTable=SortTable(this.fig, sData, ...
@@ -206,7 +206,7 @@ classdef QfTable < handle
                 end
             end
             
-            function shiftSortLeft(h)
+            function shiftSortLeft(~)
                 if ~SortTable.MoveSortColumnsLeft(jt)
                     if ismac
                         key='command';
@@ -247,7 +247,7 @@ classdef QfTable < handle
                 SortTable.SetColumnOrder(jt, idxs, [], true);
             end
             
-            function browse(h)
+            function browse(~)
                 Html.Browse(Html.Wrap([SortTable.ToHtml(jt) '<hr>' ...
                     Html.remove(qf.matrixHtml)]));
             end
@@ -281,7 +281,7 @@ classdef QfTable < handle
                     ex.getReport
                 end
             end
-            function select(h, e)
+            function select(~, e)
                 if ~isempty(e.Indices)
                     rowIdx=e.Indices(1,1)-1;
                     if rowIdx>=0
@@ -684,7 +684,7 @@ classdef QfTable < handle
             if isempty(data1)
                 return;
             end
-            [data2, ids2, names2, clrs2]=go(gid2);
+            [data2, ids2, names2, ~]=go(gid2);
             if isempty(data2)
                 return;
             end

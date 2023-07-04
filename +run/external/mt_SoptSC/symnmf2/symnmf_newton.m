@@ -203,7 +203,7 @@ end % function
 
 function He = hessian_blkdiag(temp, H, idx, projnorm_idx)
 
-[n, k] = size(H);
+[n, ~] = size(H);
 subset = find(projnorm_idx(:, idx) ~= 0); 
 hidx = H(subset, idx);
 eye0 = (H(:, idx)' * H(:, idx)) * eye(n);

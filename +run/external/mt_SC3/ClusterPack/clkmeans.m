@@ -12,20 +12,20 @@
 function cl = clkmeans(x,k,sfct,oldcl)
 
 if exist('oldcl')
-   if (length(oldcl)==size(x,1))&(max(oldcl)==k),
+   if (length(oldcl)==size(x,1))&(max(oldcl)==k)
       disp('clkmeans: initializing means with centroids of given clustering')
-      [centers options cln] = kmeans(clucent(x,oldcl),x,zeros(1,14),sfct);
+      [~,  ~, cln] = kmeans(clucent(x,oldcl),x,zeros(1,14),sfct);
    else
       r = randperm(size(x,1));
       initcenters = r(1:k);
       disp(['clkmeans: initializing means with random samples ' num2str(initcenters)]);
-      [centers options cln] = kmeans(x(initcenters,:),x,zeros(1,14),sfct);
-   end;
+      [~,  ~, cln] = kmeans(x(initcenters,:),x,zeros(1,14),sfct);
+   end
 else
    disp('clkmeans: initializing means with k first samples'); 
-   [centers options cln] = kmeans(x(1:k,:),x,zeros(1,14),sfct);
-end;
-[x y] = find(cln);
+   [~,  ~, cln] = kmeans(x(1:k,:),x,zeros(1,14),sfct);
+end
+[x, y] = find(cln);
 cl = sortrows([x y]);
 cl = checkcl(cl(:,2)');
 

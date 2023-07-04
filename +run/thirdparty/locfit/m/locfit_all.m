@@ -16,7 +16,7 @@ locfit_args = varargin{1};
 
 if nargin==2
 predict_args = varargin{2};
-end;
+end
 
 fit = locfit( locfit_args{:} );
 

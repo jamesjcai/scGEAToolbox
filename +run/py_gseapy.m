@@ -1,4 +1,4 @@
-function [s]=gseapy(genelist,drdistin,usepylib)
+function [s]=py_gseapy(genelist,drdistin,usepylib)
 
 if nargin<3, usepylib=true; end
 if nargin<2, drdistin=[]; end

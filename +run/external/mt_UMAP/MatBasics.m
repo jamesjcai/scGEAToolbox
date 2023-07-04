@@ -291,7 +291,7 @@ classdef MatBasics
                     end
                 end
             end
-            [minForCol, cntMinForCol, isMinForColMinForRow]=...
+            [minForCol, ~, isMinForColMinForRow]=...
                 QfHiDM.FindMinRowsForCol(matrix,false);
             N=length(minForCol);
             done=false(1, N);
@@ -311,7 +311,7 @@ classdef MatBasics
                     pairs(end+1,:)=[col nums];
                     done(nums)=true;
                 else
-                    [mn, I]=min(matrix(nums, col));
+                    [~, I]=min(matrix(nums, col));
                     pairs(end+1,:)=[col nums(I)];
                     done(nums(I))=true;
                     for idx=1:N2
@@ -484,7 +484,7 @@ classdef MatBasics
             d = sqrt(abs(repmat(aa',[1 size(bb,2)]) + ...
                 repmat(bb,[size(aa,2) 1]) - 2*ab));
             if nargin<2
-                [R,C]=size(d);
+                [R,~]=size(d);
                 for i=1:R
                     d(i,i)=0;
                 end
@@ -527,7 +527,7 @@ classdef MatBasics
             devUnits=abs(sMeans-tMeans)./tStds;
             if any(devUnits>4)
                 try
-                    [tMeans;sMeans;tStds;devUnits]
+                    [tMeans;sMeans;tStds;devUnits];
                     fprintf('%d parameters are over 4 dev unit away\n',...
                         sum(devUnits>4));
                     disp('herp');
@@ -627,7 +627,7 @@ classdef MatBasics
             tMads=mad(tData_);
             madUnits=abs(sMdns-tMdns)./tMads;
             if any(madUnits>4)
-                [tMdns;sMdns;tMads;madUnits]
+                [tMdns;sMdns;tMads;madUnits];
                 fprintf('%d parameters are over 4 dev unit away\n',...
                     sum(madUnits>4));
                 disp('herp');
@@ -996,7 +996,7 @@ classdef MatBasics
         end
         
         function SetMatrixAsProp(props, name, matrix)
-            [R, C]=size(matrix);
+            [R, ~]=size(matrix);
             A={};
             for r=1:R
                 A{end+1}=num2str(matrix(r,:));
@@ -1258,7 +1258,7 @@ classdef MatBasics
             if nargin>3
                 html=[html '<thead><tr>'];
                 for i = 1:cols
-                    if ~isempty(find(all==highlight))
+                    if ~isempty(find(all==highlight, 1))
                         html=[html '<th color="red">' String.ToHtml(names{i}) '</th>'];
                     else
                         html=[html '<th>' String.ToHtml(names{i}) '</th>'];
@@ -1274,7 +1274,7 @@ classdef MatBasics
                     n=n+1;
                     v=mat(i,j);
                     v=String.encodeRounded(v, rounded, true);
-                    if ~isempty(find(all==highlight))
+                    if ~isempty(find(all==highlight, 1))
                         v=['<b>' v '</b>'];
                     end
                     html=[html '<td align="right">' v '</td>'];
@@ -1469,7 +1469,7 @@ classdef MatBasics
                 varargin = varargin(2:end); % Remove arg 1 (axes handle)
             else
                 hAx = gca;
-            end;
+            end
             
             % Remaining args are either two point locations or a position vector
             if length(varargin) == 1        % Assume a 4-element position vector
@@ -1854,7 +1854,7 @@ classdef MatBasics
                 if i>1 && hasLegal
                     for j=1:N2
                         v2=v(j,:);
-                        if all(ismember(v2, legal{v2(1)}));
+                        if all(ismember(v2, legal{v2(1)}))
                             set.add(java.lang.String(num2str(sort(v2))));
                         end
                     end
@@ -1880,7 +1880,7 @@ classdef MatBasics
                         for k=1:N3
                             num3=v2(k);
                             legals=legal{num3};
-                            if ~any(ismember(v2, legals(2:end)));
+                            if ~any(ismember(v2, legals(2:end)))
                                 bad=true;
                                 break;
                             end
@@ -2313,7 +2313,7 @@ classdef MatBasics
             if nargin>3
                 B=B(unq2Vec,:);
             else
-                [B, unq2Vec, vec2Unq]=unique(B, 'rows');
+                [B, unq2Vec, ~]=unique(B, 'rows');
             end
             dist=pdist2(B,B);
             avg=median(dist(:));

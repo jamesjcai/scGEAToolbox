@@ -150,7 +150,7 @@ classdef UMAP_extra_results < handle
             if ~isempty(args_.sample_set)
                 sampleSet=args_.sample_set;
             elseif exist('sampleFldr', 'var')
-                [~, sampleSet]=fileparts(sampleFldr);
+                [~, ~]=fileparts(sampleFldr);
             else
                 sampleSet='';
             end

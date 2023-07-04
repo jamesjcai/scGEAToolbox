@@ -14,7 +14,7 @@ function [opts, new_fea] = learn_LSC(fea, params)
         if (params.print ~= 0)
             fprintf("Select HV genes \n");
         end
-        [dump, varidx] = sort(var(fea), 'descend');
+        [~, varidx] = sort(var(fea), 'descend');
         clear dump;
         topgenes = varidx(1:n_select_genes);
         fea = fea(:,topgenes);		

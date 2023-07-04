@@ -1,4 +1,4 @@
-function callback_TwoGeneCooccurrenceTest(src,~)
+function callback_TwoGeneCooccurrenceTest(~,~)
 
 % p=run.CooccurrenceAffinity(X)
 % pkg.adjustedrandindex

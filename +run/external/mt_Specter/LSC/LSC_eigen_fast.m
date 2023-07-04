@@ -26,7 +26,7 @@ function label = LSC_eigen_fast(data,k,opts, Sigma)
 %       label = LSC(data,10);
 
 % select subsample
-[m, n] = size(data);
+[m, ~] = size(data);
 baseCL = randperm(m);
 n_samples = round(m/10);
 cl = baseCL(1:n_samples);

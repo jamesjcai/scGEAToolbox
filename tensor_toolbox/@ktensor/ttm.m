@@ -54,7 +54,7 @@ end
 % Check for transpose option
 isTranspose = false;
 if numel(varargin) > 0
-  if isnumeric(varargin{1});
+  if isnumeric(varargin{1})
     dims = varargin{1};
   end
   isTranspose =  (ischar(varargin{end}) && (varargin{end} == 't'));

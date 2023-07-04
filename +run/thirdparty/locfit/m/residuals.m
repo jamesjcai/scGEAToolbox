@@ -16,7 +16,7 @@ function y = residuals(fit,type)
 %
 %  Author: Catherine Loader.
 
-if (nargin<2) type = 'dev'; end;
+if (nargin<2) type = 'dev'; end
   
 y = predict(fit,'d','restyp',type);
 

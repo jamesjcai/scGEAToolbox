@@ -43,11 +43,11 @@ function [y, se] = predict(varargin)
 
 if (nargin<1)
     error('predict requires fit argument');
-end;
+end
 
 fit = varargin{1};
 
-if (nargin==1) x = 'fitp'; else x = varargin{2}; end;
+if (nargin==1) x = 'fitp'; else x = varargin{2}; end
 
 band = 'n';
 what = 'coef';
@@ -63,39 +63,39 @@ while na <= nargin
   if strcmp(varargin{na},'band')
     band = varargin{na+1};
     inc = 2;
-  end;
+  end
   if strcmp(varargin{na},'what')
     what = varargin{na+1};
     inc = 2;
-  end;
+  end
   if strcmp(varargin{na},'restyp')
     rest = varargin{na+1};
     inc = 2;
-  end;
+  end
   if strcmp(varargin{na},'direct')
     dir = 1;
     inc = 1;
-  end;
+  end
   if strcmp(varargin{na},'kappa')
     kap = varargin{na+1};
     inc = 2;
-  end;
+  end
   if strcmp(varargin{na},'level')
     level = varargin{na+1};
     inc = 2;
-  end;
+  end
   if (inc == 0)
     disp(varargin{na});
     error('Unknown argument');
-  end;
+  end
   na = na+inc;
-end;
+end
 
-[y se cb] = mexpp(x,fit,band,what,rest,dir,kap,level);
+[y, se, cb] = mexpp(x,fit,band,what,rest,dir,kap,level);
 if (band=='n')
     y = y;
 else
     y = {y se cb};
-end;
+end
 
 return;

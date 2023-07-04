@@ -8,5 +8,5 @@ function x = clucent(cpm,cl)
 x = sparse(max(cl),size(cpm,2));
 for i=1:max(cl)
   x(i,:) = mean(cpm(find(cl==i),:),1);
-end;
+end
 

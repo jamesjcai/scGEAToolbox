@@ -1,4 +1,4 @@
-function [ err ] = mmwrite(filename,A,comment,field,precision)
+function [ err ] = mmwrite(filename,A,comment,~,precision)
 %
 % Function: mmwrite(filename,A,comment,field,precision)
 %
@@ -53,7 +53,7 @@ end
 mmfile = fopen([filename],'w');
 if ( mmfile == -1 )
  error('Cannot open file for output');
-end;
+end
 
 
 [M,N] = size(A);
@@ -137,11 +137,11 @@ if ( issparse(A) )
 
 
   fprintf(mmfile,'%%%%MatrixMarket matrix %s %s %s\n',rep,mattype,symm);
-  [MC,NC] = size(comment);
+  [MC,~] = size(comment);
   if ( MC == 0 )
     fprintf(mmfile,'%% Generated %s\n',[date]);
   else
-    for i=1:MC,
+    for i=1:MC
       fprintf(mmfile,'%%%s\n',comment(i,:));
     end
   end
@@ -151,20 +151,20 @@ if ( issparse(A) )
   if ( strcmp(mattype,'real') )
      for i=1:NZ
         fprintf(mmfile,realformat,I(i),J(i),V(i));
-     end;
+     end
   elseif ( strcmp(mattype,'complex') )
   for i=1:NZ
      fprintf(mmfile,cplxformat,I(i),J(i),real(V(i)),imag(V(i)));
-  end;
+  end
   elseif ( strcmp(mattype,'pattern') )
      for i=1:NZ
         fprintf(mmfile,'%d %d\n',I(i),J(i));
-     end;
+     end
   else  
      err = -1;
      disp('Unsupported mattype:')
-     mattype
-  end;
+     mattype;
+  end
 
 %%%%%%%%%%%%%       This part for dense matrices      %%%%%%%%%%%%%%%%
 else
@@ -236,11 +236,11 @@ else
 % Dense array format:
 
   rep = 'array';
-  [MC,NC] = size(comment);
+  [MC,~] = size(comment);
   fprintf(mmfile,'%%%%MatrixMarket matrix %s %s %s\n',rep,mattype,symm);
-  for i=1:MC,
+  for i=1:MC
     fprintf(mmfile,'%%%s\n',comment(i,:));
-  end;
+  end
   fprintf(mmfile,'%d %d\n',M,N);
   cplxformat = sprintf('%% .%dg %% .%dg\n', precision,precision);
   realformat = sprintf('%% .%dg\n', precision);
@@ -262,12 +262,12 @@ else
        end
      end
   elseif ( strcmp(mattype,'pattern') )
-     err = -2
+     err = -2;
      disp('Pattern type inconsistant with dense matrix')
   else
-     err = -2
+     err = -2;
      disp('Unknown matrix type:')
-     mattype
+     mattype;
   end
 end
 

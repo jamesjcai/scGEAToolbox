@@ -159,7 +159,7 @@ classdef Html
                 html=[html '</table>'];
             end
         end
-        function RotateTable(cols, rows)
+        function RotateTable(cols, ~)
             style=Html.RotatedStyle;
             hdr=Html.Rotations(cols);
         end
@@ -373,7 +373,7 @@ classdef Html
                 html=[html '</tr>'];
             end
             html=[html '</table>'];
-            function num=encode_(row, col, num)
+            function num=encode_(~, ~, num)
                 num=String.encodeRounded(num, 2, true);
             end
             function value=encodeHead(value)
@@ -418,7 +418,7 @@ classdef Html
                 html=[html '</tr>'];
             end
             html=[html '</table>'];
-            function num=encode_(col, num)
+            function num=encode_(~, num)
                 num=String.encodeRounded(num,2,true);
             end
 

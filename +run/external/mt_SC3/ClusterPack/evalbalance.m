@@ -6,7 +6,7 @@
 %
 % Copyright (c) 1998-2011 by Alexander Strehl
 
-function p = evalbalance(trueclass,cl,x,sfct)
+function p = evalbalance(~,cl,~,~)
 
 o = hist(cl,1:max(cl));
 imbalance = length(o)./length(cl)*max(o);

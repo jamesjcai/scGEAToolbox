@@ -1,5 +1,5 @@
 function min_error= kmeans_classification_error(P, k, labels)
-[d,N]=size(P);
+[~,N]=size(P);
 
 %min over 10 experiments
 min_error=100;

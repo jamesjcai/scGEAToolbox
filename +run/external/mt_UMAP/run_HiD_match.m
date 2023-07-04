@@ -117,7 +117,7 @@ BasicMap.Global.setNumeric(QfHiDM.PROP_MERGE_LIMIT, num2str(ml));
     end
 
     function [u, ids]=checkSet(dataSet, ids, names)
-        [R1,C1]=size(dataSet);
+        [R1,~]=size(dataSet);
         [R2, C2]=size(ids);
         assert((R1==R2) || (R1==C2 ), 'Need same # of data rows and id rows');
         if R1==C2 && R2==1

@@ -13,4 +13,4 @@ for p=1:length(K)
 end
 
 dashboard=table([result(:).ami]',[result(:).ari]',[result(:).fmi]',K','VariableNames',{'AMI','ARI','FMI','K'});
-resultBest=dashboard(dashboard.ARI==max([result(:).ari]),:)
+resultBest=dashboard(dashboard.ARI==max([result(:).ari]),:);

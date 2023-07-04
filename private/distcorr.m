@@ -6,7 +6,7 @@ function dcor = distcorr(x,y)
 % Author: Shen Liu (shen.liu@hotmail.com.au)
 
 % Check if the sizes of the inputs match
-if size(x,1) ~= size(y,1);
+if size(x,1) ~= size(y,1)
     error('Inputs must have the same number of rows')
 end
 

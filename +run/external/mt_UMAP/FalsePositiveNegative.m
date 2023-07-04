@@ -1160,7 +1160,7 @@ classdef FalsePositiveNegative < handle
             body=[body newline];
         end
         
-        function SaveAndPlot(file, head, body, plots)
+        function SaveAndPlot(file, head, body, ~)
             if nargin<4
                 plots=[0 1];
             end

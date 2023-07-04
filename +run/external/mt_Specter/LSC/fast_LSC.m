@@ -1,5 +1,5 @@
 % Author: Modified package by Van Hoan Do
-function label = LSC_eigen_fast(data,k,opts, Sigma)
+function label = fast_LSC(data,k,opts, Sigma)
 % label = LSC(data,k,opts): Landmark-based Spectral Clustering
 % Input:
 %       - data: the data matrix of size nSmp x nFea, where each row is a sample
@@ -26,7 +26,7 @@ function label = LSC_eigen_fast(data,k,opts, Sigma)
 %       label = LSC(data,10);
 
 % select subsample
-[m, n] = size(data);
+[m, ~] = size(data);
 baseCL = randperm(m);
 n_samples = round(m/10);
 cl = baseCL(1:n_samples);

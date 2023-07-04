@@ -11,7 +11,7 @@ function knnlength = knn_distmat(D, K)
 %
 % Copyright (c) Huzefa Neemuchwala,( hneemuch@umich.edu ). All rights reserved.
 
-[ND1 ND2]=size(D);
+[ND1, ND2]=size(D);
 if K >= ND1
 	error('First NN is point itself and hence discarded. Hence K < N, strictly')
 end

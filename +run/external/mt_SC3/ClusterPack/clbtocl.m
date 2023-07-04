@@ -6,35 +6,35 @@ function [cl, index] = clbtocl(clb,p)
 randbreakties = 1;
 
 allzerocolumns = find(sum(clb,1)==0);
-if ~isempty(allzerocolumns),
+if ~isempty(allzerocolumns)
    disp(['clbtocl: ' num2str(length(allzerocolumns)) ' objects (' num2str(100*length(allzerocolumns)/size(clb,2),'%.0f') '%) with all zero associations']);
    clb(:,allzerocolumns) = rand(size(clb,1),length(allzerocolumns));
-end;
-if randbreakties,
+end
+if randbreakties
    clb = clb + rand(size(clb))/10000;
-end;
+end
 
 clb = norml(clb',1)';
 m = max(clb,[],1);
 cl = zeros(1,size(clb,2));
 winnersprop = zeros(1,size(clb,2));
-for i=size(clb,1):-1:1,
+for i=size(clb,1):-1:1
   a = find(m==clb(i,:));
   cl(a) = i*ones(1,length(a));
   winnersprop(a) = clb(i,a);
-end;
+end
 
 if ~exist('p')
   index = []; 
 else
   index = find(winnersprop<p); 
-end;
+end
 disp(['clbtocl: delivering ' num2str(max(cl)) ' clusters']);
 disp(['clbtocl: average posterior prob is ' num2str(mean(winnersprop)) ]);
-if (length(cl)<=7),
+if (length(cl)<=7)
   disp('clbtocl: winning posterior probs are');
   disp(winnersprop);
   disp('clbtocl: full posterior probs are');
   disp(clb);
-end;
+end
 

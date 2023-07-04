@@ -4,15 +4,15 @@
 
 function renumtick(h,xcl,ycl)
 
-if exist('xcl')&~isempty(xcl),
+if exist('xcl')&~isempty(xcl)
    xtxt = num2str(perminv(xcl)');
 else
    xtxt = [];
-end;
-if exist('ycl')&~isempty(ycl),
+end
+if exist('ycl')&~isempty(ycl)
    ytxt = num2str(perminv(ycl)');
 else
    ytxt = [];
-end;
+end
 retick(h,xtxt,ytxt);
 

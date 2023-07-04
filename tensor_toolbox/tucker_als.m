@@ -38,11 +38,11 @@ normX = norm(X);
 
 %% Set algorithm parameters from input or by using defaults
 params = inputParser;
-params.addParamValue('tol',1e-4,@isscalar);
-params.addParamValue('maxiters',50,@(x) isscalar(x) & x > 0);
-params.addParamValue('dimorder',1:N,@(x) isequal(sort(x),1:N));
-params.addParamValue('init', 'random', @(x) (iscell(x) || ismember(x,{'random','nvecs','eigs'})));
-params.addParamValue('printitn',1,@isscalar);
+params.addParameter('tol',1e-4,@isscalar);
+params.addParameter('maxiters',50,@(x) isscalar(x) & x > 0);
+params.addParameter('dimorder',1:N,@(x) isequal(sort(x),1:N));
+params.addParameter('init', 'random', @(x) (iscell(x) || ismember(x,{'random','nvecs','eigs'})));
+params.addParameter('printitn',1,@isscalar);
 params.parse(varargin{:});
 
 %% Copy from params object
@@ -74,7 +74,7 @@ if iscell(init)
     if numel(Uinit) ~= N
         error('OPTS.init does not have %d cells',N);
     end
-    for n = dimorder(2:end);
+    for n = dimorder(2:end)
         if ~isequal(size(Uinit{n}),[size(X,n) R(n)])
             error('OPTS.init{%d} is the wrong size',n);
         end

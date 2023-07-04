@@ -83,11 +83,11 @@ disp(report);
 
 topItem = idx(1);
 GO(topItem).terms % the most significant gene
-topItemAncestors = getancestors(GO,topItem)
+topItemAncestors = getancestors(GO,topItem);
 
 secondItem = idx(2);
 GO(secondItem).terms % the second most significant gene
-secondItemAncestors = getancestors(GO,secondItem)
+secondItemAncestors = getancestors(GO,secondItem);
 
 %%
 

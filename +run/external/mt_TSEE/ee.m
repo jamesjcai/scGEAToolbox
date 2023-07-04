@@ -28,10 +28,10 @@ function [X,E,A,T] = ee(Wp,Wn,d,l,opts)
 
 N = size(Wp,1);
 % ---------- Argument defaults ----------
-if ~exist('opts','var') || isempty(opts) opts = []; end;
+if ~exist('opts','var') || isempty(opts) opts = []; end
 
-if ~isfield(opts,'X0') opts.X0 = 1e-5*randn(N,d); end;
-if ~isfield(opts,'pattern') opts.pattern = []; end;
+if ~isfield(opts,'X0') opts.X0 = 1e-5*randn(N,d); end
+if ~isfield(opts,'pattern') opts.pattern = []; end
 if ~isfield(opts,'tol') || isempty(opts.tol) opts.tol = 1e-3; end
 if ~isfield(opts,'maxit') || isempty(opts.maxit) opts.maxit = 200; end
 if ~isfield(opts,'runtime') || isempty(opts.runtime) opts.runtime = Inf; end

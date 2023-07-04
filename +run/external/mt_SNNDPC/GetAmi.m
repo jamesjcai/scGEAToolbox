@@ -31,7 +31,7 @@
 %       Bailey, J., Journal of Machine Learning Research, 11(Oct), pages
 %       2837-2854, 2010
 
-function [AMI_]=AMI(true_mem,mem)
+function [AMI_]=GetAmi(true_mem,mem)
 if nargin==1
     T=true_mem; %contingency table pre-supplied
 elseif nargin==2
@@ -77,9 +77,9 @@ Dari=1-AR;          %distance version of the ARI
 %-----------------------%calculate Rand index and others%----------
 
 %update the true dimensions
-[R C]=size(T);
-if C>1 a=sum(T');else a=T';end;
-if R>1 b=sum(T);else b=T;end;
+[R, C]=size(T);
+if C>1 a=sum(T');else a=T';end
+if R>1 b=sum(T);else b=T;end
 
 %calculating the Entropies
 Ha=-(a/n)*log(a/n)'; 
@@ -89,7 +89,7 @@ Hb=-(b/n)*log(b/n)';
 MI=0;
 for i=1:R
     for j=1:C
-        if T(i,j)>0 MI=MI+T(i,j)*log(T(i,j)*n/(a(i)*b(j)));end;
+        if T(i,j)>0 MI=MI+T(i,j)*log(T(i,j)*n/(a(i)*b(j)));end
     end
 end
 MI=MI/n;
@@ -145,7 +145,7 @@ NMI=MI/sqrt(Ha*Hb);
 if abs(EMI)>EMI_bound
 %     fprintf('The EMI is small: EMI < %f, setting AMI=NMI',EMI_bound);
     AMI_=NMI;
-end;
+end
 
 %---------------------auxiliary functions---------------------
 function Cont=Contingency(Mem1,Mem2)
@@ -157,7 +157,7 @@ end
 
 Cont=zeros(max(Mem1),max(Mem2));
 
-for i = 1:length(Mem1);
+for i = 1:length(Mem1)
    Cont(Mem1(i),Mem2(i))=Cont(Mem1(i),Mem2(i))+1;
 end
 

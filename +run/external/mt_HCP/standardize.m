@@ -1,6 +1,6 @@
 function [X,m,st] = standardize(X)
 
-[n p] = size(X);
+[~, p] = size(X);
 
 %X = X - nanmean(X,2)*ones(1,p);
 X=X-nanmean(X,2);

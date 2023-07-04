@@ -5,13 +5,13 @@
 function din = mapasc(din,column)
 if ~exist('column')
   column = 1;
-end;
+end
 last = NaN;
 curind = 0;
-for i=1:size(din,1),
-  if (last~=din(i,column))|(isnan(last)),
+for i=1:size(din,1)
+  if (last~=din(i,column))|(isnan(last))
     last = din(i,column);
     curind = curind + 1;
-  end;
+  end
   din(i,column) = curind;
-end;
+end

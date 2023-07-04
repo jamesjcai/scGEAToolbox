@@ -1,5 +1,5 @@
 function [out_X,flag_index] = FilterGenesZero(in_X)
-    [m,n]=size(in_X);
+    [m,~]=size(in_X);
     flag=(in_X~=0);
     flag_count=sum(flag,1);
     flag_index=flag_count>(m*0.05);

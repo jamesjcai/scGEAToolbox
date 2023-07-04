@@ -32,38 +32,38 @@
 % - IDX_LD is the result of the low-dimensional k-means
 % - ind_obs are the indices of the n sampled nodes
 % - weight_VD is the estimated probability distribution if one wants to use variable density sampling
-function [C_est, lk_est, time, IDX_LD, ind_obs, weight_VD] = CSC_v2(G,param_CSC,IDX_LD, ind_obs)
+function [C_est, lk_est, time, IDX_LD, ind_obs, weight_VD] = CHC_v2(G,param_CSC,IDX_LD, ind_obs)
 %%%
 %% ====================== check parameter list ================================
 %%%
 
-if ~isfield(param_CSC, 'poly_order'),
+if ~isfield(param_CSC, 'poly_order')
     param_CSC.poly_order = 50;
 end
 
-if ~isfield(param_CSC, 'regu'),
+if ~isfield(param_CSC, 'regu')
     param_CSC.regu = 1e-3;
 end
 
-if ~isfield(param_CSC, 'sampling'),
+if ~isfield(param_CSC, 'sampling')
     param_CSC.sampling = 'uniform';
 end
 
-if ~isfield(param_CSC, 'n_factor'),
+if ~isfield(param_CSC, 'n_factor')
     % n = param_CSC.n_factor * G.k * log(G.k);
     param_CSC.n_factor = 2;
 end
 
-if ~isfield(param_CSC, 'd_factor'),
+if ~isfield(param_CSC, 'd_factor')
     % d = param_CSC.d_factor * log(n);
     param_CSC.d_factor = 4;
 end
 
-if ~isfield(param_CSC, 'lap_type'),
+if ~isfield(param_CSC, 'lap_type')
     param_CSC.lap_type = 'normalized';
 end
 
-if ~isfield(param_CSC, 'solver'),
+if ~isfield(param_CSC, 'solver')
     param_CSC.solver = 'gmres';
 end
 
@@ -102,12 +102,12 @@ fprintf('Estimating lambda_k...')
 tic;
 param.order=param_CSC.poly_order;
 if strcmp(param_CSC.lap_type,'normalized')
-    [~, lk_est, cum_coh_k, ~] = estimate_lambda_k(G, G.k, param);
+    [~, lk_est, ~, ~] = estimate_lambda_k(G, G.k, param);
     % lk_est = 1.5 
 else
-    [~, lk_est, cum_coh_k, ~] = estimate_lambda_k(G, G.k, param);
+    [~, lk_est, ~, ~] = estimate_lambda_k(G, G.k, param);
     if normBOOL 
-        lk_est = 1.0 
+        lk_est = 1.0; 
     end
 end 
 % 

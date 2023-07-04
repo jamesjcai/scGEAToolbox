@@ -35,14 +35,14 @@ global FLAG_NANS_OCCURED;
 sz=size(x);
 
 % find the dimension
-if nargin==1,
+if nargin==1
         DIM = find(size(x)>1,1);
-        if isempty(DIM), DIM=1; end;
-end;
+        if isempty(DIM), DIM=1; end
+end
 
-if DIM>length(sz),
+if DIM>length(sz)
         sz = [sz,ones(1,DIM-length(sz))];
-end;
+end
 
 D1 = prod(sz(1:DIM-1));
 D2 = sz(DIM);
@@ -50,8 +50,8 @@ D3 = prod(sz(DIM+1:length(sz)));
 D0 = [sz(1:DIM-1),1,sz(DIM+1:length(sz))];
 y  = repmat(nan,D0);
 q  = repmat(nan,3,1);
-for k = 0:D1-1,
-for l = 0:D3-1,
+for k = 0:D1-1
+for l = 0:D3-1
         xi = k + l * D1*sz(DIM) + 1 ;
         xo = k + l * D1 + 1;
         t = x(xi+(0:sz(DIM)-1)*D1);
@@ -60,7 +60,7 @@ for l = 0:D3-1,
 	n = length(t); 
         if (n<D2) 
 	        FLAG_NANS_OCCURED = 1; 
-        end; 
+        end 
         
         % q = flix(t,x); 	% The following find the quartiles and median.
         			% INTERP1 is not an alternative since it fails for n<2;
@@ -74,5 +74,5 @@ for l = 0:D3-1,
 	q(ix) = t(floor(x(ix))).*(1-d(ix)) + t(ceil(x(ix))).*d(ix);  
         
         y(xo) = (q(1) + 2*q(2) + q(3))/4;
-end;
-end;
+end
+end

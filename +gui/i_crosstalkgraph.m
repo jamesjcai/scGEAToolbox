@@ -30,7 +30,7 @@ if nargin<2, k=1; end
             m=m./sum(m(m>0));
             figname=sprintf('%s (ligand) -> %s (receptor)',...
                 ligandok(k),receptorok(k));            
-            G=pkg.makegraph(m,OUT.cL);            
+            G=pkg.i_makegraph(m,OUT.cL);            
             p=plot(G);
             cc=repmat([0 0.4470 0.7410],G.numedges,1);
             cc(G.Edges.Weight<0,:)=repmat([0.8500, 0.3250, 0.0980],...

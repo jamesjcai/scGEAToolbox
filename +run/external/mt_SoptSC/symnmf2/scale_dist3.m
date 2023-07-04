@@ -51,7 +51,7 @@ if (distSparse)
     for i = 1 : n
         col_nz = D(:, i);
         col_nz = col_nz(col_nz ~= 0);
-        [sorted, idx] = sort(col_nz);
+        [sorted, ~] = sort(col_nz);
         if (nn > length(col_nz))
             ls(i) = sorted(end);
         else
@@ -66,7 +66,7 @@ else
     if (nn > n-1)
         nn = n-1;
     end
-    [sorted, idx] = sort(D);
+    [sorted, ~] = sort(D);
     ls = sorted(nn+1, :);
     ls = sqrt(ls);
     A = exp(-D./(ls'*ls));

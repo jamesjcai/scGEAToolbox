@@ -17,6 +17,6 @@ m.Data = X;
 
 m.Offset = 0;
 m.Repeat = 35;
-reshape(m.Data,5,7)'
+reshape(m.Data,5,7)';
 
 % https://www.mathworks.com/help/matlab/import_export/writing-to-a-mapped-file.html

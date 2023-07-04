@@ -21,4 +21,4 @@ switch(link)
         y0 = sin(y)*sin(y);
     otherwise
         disp('invlink: Unknown link function');
-end;
+end

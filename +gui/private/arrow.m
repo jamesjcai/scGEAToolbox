@@ -143,12 +143,12 @@ if isempty(ARROW_PERSP_WARN  ), ARROW_PERSP_WARN  =1; end
 if isempty(ARROW_STRETCH_WARN), ARROW_STRETCH_WARN=1; end
 
 % Handle callbacks
-if (nargin>0 & isstr(varargin{1}) & strcmp(lower(varargin{1}),'callback'))
+if (nargin>0 & isstr(varargin{1}) & strcmpi(varargin{1},'callback'))
 	arrow_callback(varargin{2:end}); return;
 end
 
 % Are we doing the demo?
-c = sprintf('\n');
+c = newline;
 if (nargin==1 & isstr(varargin{1}))
 	arg1 = lower(varargin{1});
 	if strncmp(arg1,'prop',4), arrow_props;
@@ -272,7 +272,7 @@ for k=firstprop:2:nargin
 			try
 				get(0,['DefaultLine' varargin{k}]);
 			catch
-				errstr(1:max(find(errstr==char(13)|errstr==char(10)))) = '';
+				errstr(1:max(find(errstr==char(13)|errstr==newline))) = '';
 				error('arrow:invalidProperty',[upper(mfilename) ' got ' errstr]);
 			end
 		end
@@ -846,7 +846,7 @@ if ~isempty(ii)
 		pixfact = ((limrange(1,ii)./limrange(2,ii)).*(ap(2,ii)./ap(1,ii))).^2;
 		pixfact = [pixfact pixfact pixfact pixfact];
 		pixfact = [pixfact;1./pixfact];
-		[dummyval,jj] = max(abs(Xf(1:2,:)-X0(1:2,:)));
+		[~,jj] = max(abs(Xf(1:2,:)-X0(1:2,:)));
 		jj1 = ((1:4)'*ones(1,length(jj))==ones(4,1)*jj);
 		jj2 = ((1:4)'*ones(1,length(jj))==ones(4,1)*(3-jj));
 		jj3 = jj1(1:2,:);
@@ -984,7 +984,7 @@ if (nargout<=1)
 %	% additional properties
 	set(H,'Clipping','off');
 	set(H,{'UserData'},num2cell(ud,2));
-	if length(extraprops)>0
+	if ~isempty(extraprops)
 		ii = find(strcmpi(extraprops(1:2:end),'color')); %eaj 5/25/16
 		ispatch = strcmp(get(H,'Type'),'patch');
 		%eaj start 5/25/16
@@ -1043,7 +1043,7 @@ function out = arrow_defcheck(in,def,prop)
 % check if we got 'default' values
 	out = in;
 	if ~isstr(in), return; end
-	if size(in,1)==1 & strncmp(lower(in),'def',3)
+	if size(in,1)==1 & strncmpi(in,'def',3)
 		out = def;
 	elseif ~isempty(prop)
 		error('arrow:defaultCheckInvalidProperty',[upper(mfilename) ' does not recognize ''' in(:)' ''' as a valid ''' prop ''' string.']);
@@ -1121,7 +1121,7 @@ function [wasInterrupted,errstr] = arrow_click(lockStart,H,prop,ax)
 			disp('Click at the source of the arrow')
 		end
 		% wait for the button to be pressed
-		[wasKeyPress,wasInterrupted,errstr] = arrow_wfbdown(fig);
+		[~,wasInterrupted,errstr] = arrow_wfbdown(fig);
 		% if we wanted to click-drag, set the Start point
 		if lockStart & ~wasInterrupted
 			pt = arrow_point(ARROW_CLICK_AX,ARROW_CLICK_USE_Z);
@@ -1175,7 +1175,7 @@ for possibleModes = {@pan @zoom @rotate3d @datacursormode @brush}
 	end
 end
 
-function modeReEnable(fig,modeEnabled)
+function modeReEnable(~,modeEnabled)
 % restore the figure mode
 if ~isempty(modeEnabled)
 	feval(modeEnabled,'on')
@@ -1186,8 +1186,8 @@ function arrow_callback(varargin)
 	if nargin==0, return; end
 	str = varargin{1};
 	if ~isstr(str), error('arrow:invalidCallback',[upper(mfilename) ' got an invalid Callback command.']); end
-	s = lower(str);
-	if strcmp(s,'motion')
+	s = str;
+	if strcmpi(s,'motion')
 		% motion callback
 		global ARROW_CLICK_H ARROW_CLICK_PROP ARROW_CLICK_AX ARROW_CLICK_USE_Z
 		feval(mfilename,ARROW_CLICK_H,ARROW_CLICK_PROP,arrow_point(ARROW_CLICK_AX,ARROW_CLICK_USE_Z));
@@ -1253,7 +1253,7 @@ function out = arrow_planarkids(ax)
 		            findobj(allkids{k},'flat','Type','patch')
 		            findobj(allkids{k},'flat','Type','surface')],{'ZData'});
 		for j=1:length(kids)
-			if ~isempty(kids{j}), out(k)=logical(0); break; end
+			if ~isempty(kids{j}), out(k)=false; break; end
 		end
 	end
 
@@ -1270,7 +1270,7 @@ function arrow_fixlimits(ax,lims)
 
 
 
-function out = arrow_WarpToFill(notstretched,manualcamera,curax)
+function out = arrow_WarpToFill(~,~,curax)
 % check if we are in "WarpToFill" mode.
 	out = strcmp(get(curax,'WarpToFill'),'on');
 	% 'WarpToFill' is undocumented, so may need to replace this by
@@ -1289,7 +1289,7 @@ function out = arrow_warnlimits(ax,narrows)
 	msg = [upper(mfilename) ' changed the axis limits ' msg ...
 	       'when adding the arrow'];
 	if (narrows>1), msg=[msg 's']; end
-	out = [msg '.' sprintf('\n') '         Call ' upper(mfilename) ...
+	out = [msg '.' newline '         Call ' upper(mfilename) ...
 	       ' FIXLIMITS to reset them now.'];
 
 
@@ -1315,7 +1315,7 @@ function arrow_copyprops(fm,to)
 
 function arrow_props
 % display further help info about ARROW properties
-	c = sprintf('\n');
+	c = newline;
 	disp([c ...
 	'ARROW Properties:  Default values are given in [square brackets], and other' c ...
 	'                   acceptable equivalent property names are in (parenthesis).' c c ...
@@ -1370,7 +1370,7 @@ function out = arrow_demo
  	% demo
 	% create the data
 	[x,y,z] = peaks;
-	[ddd,out.iii]=max(z(:));
+	[~,out.iii]=max(z(:));
 	out.axlim = [min(x(:)) max(x(:)) min(y(:)) max(y(:)) min(z(:)) max(z(:))];
 	
 	% modify it by inserting some NaN's
@@ -1478,7 +1478,7 @@ function h = arrow_demo2(in)
 	shading('interp');
 	view(2);
 	title(['Demo of the capabilities of the ARROW function in 2-D']);
-	hold on; [C,H]=contour(in.x,in.y,in.z,20,'-'); hold off;
+	hold on; [~,H]=contour(in.x,in.y,in.z,20,'-'); hold off;
 	for k=H'
 		set(k,'ZData',(axlim(6)+1)*ones(size(get(k,'XData'))),'Color','k');
 		if (dolog), set(k,'YData',10.^get(k,'YData')); end

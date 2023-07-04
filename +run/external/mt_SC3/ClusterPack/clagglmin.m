@@ -26,7 +26,7 @@ for i=1:(n-k)
   if ((n-k>500)&&(mod(n-i+1,100)==0)), disp(['clagglmin: at ' num2str(n-i+1) ' clusters ']); end
   % compute indices of closest pair
   %[a,b] = ind2sub(size(s),topnindx(s,1)); % less efficient
-  [mm, ii] = max(reshape(s,1,prod(size(s))));
+  [~, ii] = max(reshape(s,1,prod(size(s))));
   [a,b] = ind2sub(size(s),ii);
   % merge clusters by replacing all members of a with b's label
   MembersOfAInd = find(cl==(cl(a)));

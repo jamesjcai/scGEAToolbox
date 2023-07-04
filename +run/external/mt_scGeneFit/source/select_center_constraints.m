@@ -1,4 +1,4 @@
-function [Delta,smallest, lambda]=select_center_constraints(data, labels, samples_fraction, core)
+function [Delta,smallest, lambda]=select_center_constraints(data, labels, samples_fraction, ~)
 
 [d,~]=size(data);
 L=max(labels);

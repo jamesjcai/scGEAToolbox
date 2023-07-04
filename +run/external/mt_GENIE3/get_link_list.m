@@ -76,7 +76,7 @@ end
 
 %% Rank the list according to the weights of the edges
 
-[tmp,order] = sort(interactions(:,3),'descend');
+[~,order] = sort(interactions(:,3),'descend');
 scores_sort = interactions(order,:);
 
 %% Random permutation of edges with score equal to 0

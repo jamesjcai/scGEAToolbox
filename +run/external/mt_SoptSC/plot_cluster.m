@@ -1,4 +1,4 @@
-function latent = plot_cluster(W,cluster_label,No_cluster,method,folder)
+function latent = plot_cluster(W,cluster_label,No_cluster,method,~)
 
 % plot cluster on 2-dimensional space
 % input

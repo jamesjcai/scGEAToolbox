@@ -50,7 +50,7 @@ classdef PopUp < handle
         lastReportedSpentSecs=0;
     end
     methods
-        function incrementProgress(this, by, progressDescription)
+        function incrementProgress(this, by, ~)
             if ~isempty(this.pb)
                 if nargin<2
                     by=1;

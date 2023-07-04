@@ -59,7 +59,7 @@ end
 if isempty(par.varlist)
    errordlg('No variable SCE in Workspace.'); 
 else
-   [indx,tf] = listdlg('ListString',{par.varlist.name},...
+   [~,tf] = listdlg('ListString',{par.varlist.name},...
         'SelectionMode','single');
     if tf~=1
         par.variable = [];

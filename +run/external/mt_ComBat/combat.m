@@ -7,7 +7,7 @@
 function bayesdata = combat(dat, batch, mod)
     [sds] = std(dat')';
     wh = find(sds==0);
-    [ns,ms] = size(wh);
+    [ns,~] = size(wh);
     if ns>0
         error('Error. There are rows with constant values across samples. Remove these rows and rerun ComBat.')
     end

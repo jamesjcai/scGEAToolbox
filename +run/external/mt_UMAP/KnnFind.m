@@ -838,7 +838,7 @@ classdef KnnFind<handle
             data=feval(fCsv, file);
             if nargin>1
                 if isnumeric(args.rows)
-                    [R,C]=size(data);
+                    [R,~]=size(data);
                     args.rows=floor(args.rows*R);
                     args.rows=['1:' num2str(rows)];
                 end
@@ -1177,7 +1177,7 @@ classdef KnnFind<handle
         
         function output=ToSystem(input)
             SHELL='[\\\|&\(\)< >'':\`\*;"]';
-            if ~isempty(regexp(input, SHELL))
+            if ~isempty(regexp(input, SHELL, 'once'))
                if ispc
                    output=['"' input '"'];
                else

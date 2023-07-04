@@ -6,13 +6,13 @@
 %
 % Copyright (c) 1998-2011 by Alexander Strehl
 
-function p = evalmse(trueclass,cl,x,sfct)
+function p = evalmse(~,cl,x,~)
 
 c = clucent(x,cl);
 sse = 0;
-for i = 1:max(cl),
+for i = 1:max(cl)
    ins = find(cl==i);
    e = x(ins,:)-(ones(length(ins),1)*c(i,:));
    sse = sse + sum(sum(e.*e));
-end;
+end
 p = exp(-sse/prod(size(x)));

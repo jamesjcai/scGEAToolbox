@@ -1,4 +1,4 @@
-function callback_GetSTRINGNetworkImg(src,~,genelist)
+function callback_GetSTRINGNetworkImg(src,~,~)
 
 FigureHandle=src.Parent.Parent;
 sce=guidata(FigureHandle);    

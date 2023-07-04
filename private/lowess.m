@@ -136,7 +136,7 @@
 
 %% Primary Function: lowess
 % The main engine for this function. 
-function [dataout lowerLimit upperLimit xy] = lowess(datain,f,wantplot,imagefile,xdata)
+function [dataout, lowerLimit, upperLimit, xy] = lowess(datain,f,wantplot,imagefile,xdata)
     
     % start timer
     start = tic;
@@ -359,13 +359,13 @@ function [yy] = rwlreg(x,y,n,d,r,xx)
     
     w = w/total;
     
-    [a b] = wlsq(x,y,w);
+    [a, b] = wlsq(x,y,w);
     yy=a+b*xx;
 end
 
 %% Weighted least squares
 % This subfunction does not require any toolboxes in matlab to execute.
-function[a b] = wlsq(x,y,w)
+function[a, b] = wlsq(x,y,w)
     sumw = abs(1-sum(w));
     if sumw > 1e-10
         % The weights, w, must sum to one. Precision assuming type double,

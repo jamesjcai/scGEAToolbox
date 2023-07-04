@@ -7,6 +7,6 @@
 % Copyright (c) 1998-2011 by Alexander Strehl
 
 
-function cl = clhgraph(x,k,sfct)
+function cl = clhgraph(x,k,~)
 
 cl = hmetis(x,k);

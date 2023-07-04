@@ -108,7 +108,7 @@ classdef DensityBiased<handle
             eventL(unique(eventIdxs))=true;
             nonEventGridXy=gridXy(~eventL, :);
             eventGridXy=gridXy(eventL, :);
-            [D, I]=pdist2(eventGridXy, nonEventGridXy, ...
+            [D, ~]=pdist2(eventGridXy, nonEventGridXy, ...
                 'euclidean', 'Smallest', 1);
             close_=D<gridDistance;
             closeNonEventL=false(1,M^2);

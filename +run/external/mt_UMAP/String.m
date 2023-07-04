@@ -43,14 +43,14 @@ classdef String
         
         function str=capitalize(this)
             str=char(this.js);
-            if length(str)>0
+            if ~isempty(str)
                 str(1,1)=upper(str(1,1));
             end
             
         end
         function str=uncapitalize(this)
             str=char(this.js);
-            if length(str)>0
+            if ~isempty(str)
                 str(1,1)=lower(str(1,1));
             end
             
@@ -541,15 +541,15 @@ classdef String
             if nargin>1 && escapeHtmlTex
                 input=String.EscapeHtmlTex(input);
             end
-            if ~isempty(regexp(input,  String.SHELL))
+            if ~isempty(regexp(input,  String.SHELL, 'once'))
                 output=regexprep(input,  String.SHELL, '_');
             else
                 output=input;
             end
-            if ~isempty(regexp(output, ','))
+            if ~isempty(regexp(output, ',', 'once'))
                 output=regexprep(output, ',', '');
             end
-            if ~isempty(regexp(output, '/'))
+            if ~isempty(regexp(output, '/', 'once'))
                 output=regexprep(output, '/', '_');
             end
         end
@@ -561,7 +561,7 @@ classdef String
         end
         
         function output=ToSystem(input)
-            if ~isempty(regexp(input, String.SHELL))
+            if ~isempty(regexp(input, String.SHELL, 'once'))
                if ispc
                    output=['"' input '"'];
                else

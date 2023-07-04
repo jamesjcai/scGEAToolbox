@@ -40,19 +40,19 @@ if (fid == -1)
       junk = fscanf(fid,'%d',1); 
     end
     labels = ones(1,fscanf(fid,'%d',1));
-    if isempty(labels),
+    if isempty(labels)
       disp('sgraph: empty label vector - suspecting file system full');
-    end;
+    end
     fclose(fid);
-  end;
+  end
 else
   disp(['sgraph: ' scriptfile ' completed - loading ' resultname]);
   labels = (fscanf(fid,'%d')+1)';
   fclose(fid);
-end;
+end
 
 fid = fopen(resultname,'r');
-if (fid ~= -1),
+if (fid ~= -1)
   fclose(fid);
   delete(resultname);
-end;
+end

@@ -259,7 +259,7 @@ fliped=false;
                         labels = {'Save T to variable named:'}; 
                         vars = {'T'};
                         values = {T};
-                        [~,OKPressed]=export2wsdlg(labels,vars,values,...
+                        [~,~]=export2wsdlg(labels,vars,values,...
                             'Save Data to Workspace');                    
                     case 'TXT/CSV file'
                         [file, path] = uiputfile({'*.csv';'*.*'},'Save as');

@@ -33,7 +33,7 @@ fali = fit.fit_points.family_link;
 ydata = data.y;
 wdata = data.weights;
 cdata = data.censor;
-if (length(cdata)==1) cdata = zeros(n,1); end;
+if (length(cdata)==1) cdata = zeros(n,1); end
 showdata = (fit.evaluation_structure.derivative==0);
 ppargs = {};
 plotargs = {};
@@ -45,26 +45,26 @@ while na <= length(varargin)
   if (strcmp(varargin{na},'contour'))
     type = 'c';
     inc = 1;
-  end;
+  end
   if (strcmp(varargin{na},'what'))
     ppargs = {ppargs{:}, 'what', varargin{na+1}};
     showdata = 0;
     inc = 2;
-  end;
+  end
   if (strcmp(varargin{na},'nodata'))
     showdata = 0;
     inc = 1;
-  end;
+  end
   if (strcmp(varargin{na},'direct'))
     ppargs = {ppargs{:} 'direct'};
     inc = 1;
-  end;
+  end
   if (inc==0)
     plotargs = {plotargs{:} varargin{na}};
     inc = 1;
-  end;
+  end
   na = na+inc;
-end;
+end
 
 xfit = lfmarg(fit);
 yfit = predict(fit,xfit,ppargs{:});
@@ -72,33 +72,33 @@ yfit = invlink(yfit,fali);
 fam = mod(fali(1),64);
 if (fam>4)
   ydata = ydata ./ wdata;
-end;
+end
 
 if (d==1)
   plot(xfit{1},yfit,plotargs{:});
   if (showdata)
     hold on;
-    if (length(ydata)==1) ydata = zeros(n,1); end;
+    if (length(ydata)==1) ydata = zeros(n,1); end
     plotbyfactor(xdata,ydata,cdata);
     hold off;
-  end;
-end;
+  end
+end
 
 if (d==2)
   x1 = xfit{1};
   x2 = xfit{2};
   yfit = reshape(yfit,length(x1),length(x2));
   if (type=='c')
-    [C h] = contour(x1,x2,yfit',plotargs{:});
+    [C, h] = contour(x1,x2,yfit',plotargs{:});
     clabel(C,h);
     if (showdata)
       hold on;
       plotbyfactor(xdata(:,1),xdata(:,2),cdata);
       hold off;
-    end;
+    end
   else
     surf(x1,x2,yfit',plotargs{:});
-  end;
-end;
+  end
+end
 
 return;

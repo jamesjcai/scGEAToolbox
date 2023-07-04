@@ -11,7 +11,7 @@ switch nargin
 	case 1
 		error('not enough arguments given: data, output file name.')
 	case 2
-		k=3
+		k=3;
 		distance='euclidean';
 	case 3
 		distance='euclidean';

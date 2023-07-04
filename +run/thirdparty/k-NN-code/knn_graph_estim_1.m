@@ -63,7 +63,7 @@ for i = 1:M
     j = 1;
     for n = samp_points
         knnlen1=0;  knnlen2=0;
-	    for trial = 1:N;
+	    for trial = 1:N
 		    indices = randperm(tsamp);
 		    indices = indices(1:n);
             Xr=X(indices,:)'; 

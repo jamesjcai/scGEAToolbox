@@ -32,7 +32,7 @@ inData=csv_file_or_data;
 parameter_names=args.parameter_names;
 
 template_file=args.template_file;
-[nRows, nCols]=size(inData);
+[~, ~]=size(inData);
  
 % sCols=num2str(nCols);
 % if nRows*nCols<15

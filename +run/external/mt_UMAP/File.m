@@ -33,7 +33,7 @@ classdef File
         function [this]= File(file)
             this.file=file;
             this.absolute=File.canonicalPath(file);
-            if ~isdir(this.absolute)
+            if ~isfolder(this.absolute)
                 [this.firstFolder, ~, ~]=fileparts(this.absolute);
             else
                 this.firstFolder=this.absolute;
@@ -235,7 +235,7 @@ classdef File
         function ok=isFile(input)
             ok=false;
             if exist(input, 'file')
-                ok=~isdir(input);
+                ok=~isfolder(input);
             end
         end
         
@@ -584,7 +584,7 @@ classdef File
         function ok=endsWith( path, name )
             path=String.PruneSuffix(path, filesep);
             name=String.PruneSuffix(name, filesep);
-            [p, f, ~]=fileparts(path);
+            [~, f, ~]=fileparts(path);
             ok=strcmp(f,name);
         end
         
@@ -603,7 +603,7 @@ classdef File
                 yes=true;
             else
                 if length(files)==2
-                    if isdir(filespec) || String.EndsWith(filespec,'*.*')
+                    if isfolder(filespec) || String.EndsWith(filespec,'*.*')
                         if strcmp(files(1).name,'.')
                             if strcmp(files(2).name, '..')
                                 yes=true;
@@ -747,7 +747,7 @@ classdef File
         end
         
         function [folder]=getFolder(f)
-            if isdir(f)
+            if isfolder(f)
                 folder=f;
             else
                 [folder,~,~]=fileparts(f);
@@ -1445,7 +1445,7 @@ classdef File
                 'save16.gif', 'Export to excel and other file formats', ...
                 @(h,e)export(h));
             
-            function export(h)
+            function export(~)
                 
                 if ~isempty(jtable)
                     filterRows=SortTable.ModelRows(jtable);

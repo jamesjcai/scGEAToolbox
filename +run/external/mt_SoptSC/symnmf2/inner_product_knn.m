@@ -65,7 +65,7 @@ if (distSparse)
         col_nnz = length(col_nz);
         i(current_pos+1 : current_pos+col_nnz) = 1 : col_nnz;
         j(current_pos+1 : current_pos+col_nnz) = col_num;
-        [sorted, idx_relative] = sort(col_nz);
+        [~, idx_relative] = sort(col_nz);
         idx_s(current_pos+1 : current_pos+col_nnz) = idx_temp(idx_relative);
         current_pos = current_pos + col_nnz;
     end
@@ -82,7 +82,7 @@ else
     if (knn > n-1)
         knn = n-1;
     end
-    [sorted, idx] = sort(D);
+    [~, idx] = sort(D);
     j = meshgrid(1:n, 1:knn+1);
     j = j(:);
     i = idx(1:knn+1, :);
@@ -94,7 +94,7 @@ else
 end
 
 if (useSparse)
-    [index, i, j] = unique(index, 'rows');
+    [index, ~, ~] = unique(index, 'rows');
     A = zeros(size(index, 1), 1);
     for nnz_num = 1 : size(index, 1)
         A(nnz_num) = Xnorm(:, index(nnz_num, 1))' * Xnorm(:, index(nnz_num, 2));

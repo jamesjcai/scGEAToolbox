@@ -36,7 +36,7 @@ d = 2;
 opts.maxit = 100; opts.tol = 1e-3;
 s = RandStream('mcg16807','Seed',29); RandStream.setGlobalStream(s);
 l = 10;
-[X,E,A,T] = ee(Wp,Wn,d,l,opts); % X is the 2-dimensional embedding.
+[X,~,~,~] = ee(Wp,Wn,d,l,opts); % X is the 2-dimensional embedding.
 % save('tsee_2d.mat','X')
 s=X;
 

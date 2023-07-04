@@ -162,7 +162,7 @@ classdef UmapPython
                     curPath=fileparts(mfilename('fullpath'));
                     pythonScript=String.ToSystem(...
                         fullfile(curPath, 'testImports.py'));
-                    [status,stdout]=system([cmdline ' ' pythonScript]);
+                    [status,~]=system([cmdline ' ' pythonScript]);
                     ok=status==0;
                     if ~ok
                         app.needToAskForUmap=true;

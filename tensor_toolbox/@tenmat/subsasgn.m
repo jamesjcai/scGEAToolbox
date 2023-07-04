@@ -13,7 +13,7 @@ function t = subsasgn(t,s,b)
 
 switch s.type    
     case '()'
-        [m n] = size(t.data);
+        [m, n] = size(t.data);
 	t.data(s.subs{:}) = b;
         if ~isequal([m n],size(t.data))
             error('Ambiguous change in size')

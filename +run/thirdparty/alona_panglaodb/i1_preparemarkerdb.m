@@ -39,7 +39,7 @@ organlist=string(T.organ);
 
 fid=fopen(outfile,'w');
 for k=1:length(a)
-    k
+    k;
     idx=find(gt==a(k));
     fprintf(fid,'%s\t',a(k));
     % fprintf(fid,'%s\t',organlist(k));

@@ -79,7 +79,7 @@ switch ver
             linclassidx = tt_sub2ind(size(X), classidx);
             
             % Skip if its already symmetric
-            if all(X.data(:) == X.data(linclassidx));
+            if all(X.data(:) == X.data(linclassidx))
                 continue;                
             end
              

@@ -6,7 +6,7 @@ genesymbollist=string(Tx.GeneName);
 %%
 fid=fopen('outfile.txt','w');
 for k=1:length(a)
-    k
+    k;
     idx=find(gt==a(k));
     fprintf(fid,'%s\t',a(k));
     % fprintf(fid,'%s\t',organlist(k));

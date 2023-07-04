@@ -1,4 +1,4 @@
-function [sce]=e_readgeotxt(acc)
+function [sce]=e_readgeotxt(~)
 
 acc='GSM4318799';
 url=sprintf('https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=%s',acc);

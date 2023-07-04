@@ -1,4 +1,4 @@
-function [hFig]=i_violinmatrix(X,g,c,cL,tgene,uselog)
+function [hFig]=i_violinmatrix(X,g,c,~,tgene,~)
 
 if nargin<6, uselog=false; end
 [yes]=ismember(tgene,g);

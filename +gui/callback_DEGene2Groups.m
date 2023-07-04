@@ -154,8 +154,8 @@ end
             answer = questdlg('Save up- and down-regulated genes to seperate files?');
             if strcmp(answer,'Yes')
                 [Tup,Tdn]=pkg.e_processDETable(T,true);
-                [~,filesaved1]=gui.i_exporttable(Tup,true,'Tup','Upregulated','Text file');
-                [~,filesaved2]=gui.i_exporttable(Tdn,true,'Tdn','Downregulated','Text file');
+                [~,~]=gui.i_exporttable(Tup,true,'Tup','Upregulated','Text file');
+                [~,~]=gui.i_exporttable(Tdn,true,'Tdn','Downregulated','Text file');
             end
         end
     end

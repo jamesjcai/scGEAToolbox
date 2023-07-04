@@ -41,9 +41,9 @@ for c=1:class_num
     other_classes = cat(1, separated{1:end ~= c});
     bigdist=0;
     for marker=1:d    
-        [c1,n1]=hist(current_class(:,marker),bins);
+        [c1,~]=hist(current_class(:,marker),bins);
         c1=c1/size(current_class(:,marker),1);
-        [c2,n2]=hist(other_classes(:,marker),bins);
+        [c2,~]=hist(other_classes(:,marker),bins);
         c2=c2/size(other_classes(:,marker),1);
         
         dist=chi_square_statistics(c1,c2);

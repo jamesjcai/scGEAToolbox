@@ -1,4 +1,4 @@
-function [X]  = IST_MC(y,M,sizeX,rankX)
+function [X]  = IST_MC(y,M,sizeX,~)
 
 % Matrix Completion via Iterated Soft Thresholding
 % min nuclear-norm(X) subject to ||y - M(X)||_2<err
@@ -27,7 +27,7 @@ lambdaInit = decfac*max(abs(M(y,2))); lambda = lambdaInit;
 f_current = norm(y-M(x,1)) + lambda*norm(x,1);
 
 while lambda >lambdaInit*tol
-    lambda
+    lambda;
     for ins = 1:insweep
         
         f_previous = f_current;

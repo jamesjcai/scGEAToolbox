@@ -164,13 +164,13 @@ classdef WebDownload
             N=length(hosts);
             for i=1:N
                 beforePath=hosts{i};
-                [host,path,port]=WebDownload.UrlParts(beforePath);
+                [host,~,port]=WebDownload.UrlParts(beforePath);
                 if isempty(port) || port<=0 
                     port=80;
                 end
                 badKey=['bad:' host ':' num2str(port)];
                 if ~map.containsKey(badKey)
-                    [ok, issues]=WebDownload.CanReach(host, port);
+                    [ok, ~]=WebDownload.CanReach(host, port);
                     if ok
                         url=WebDownload.FullUrl(beforePath, urlPath);
                         return;
@@ -219,7 +219,7 @@ classdef WebDownload
                 url=map.get(key);
             end
             if ~firstTime
-                [host,path,port]=WebDownload.UrlParts(url);
+                [host,~,port]=WebDownload.UrlParts(url);
                 if ~WebDownload.CanReach(host, port)
                     map.clear;
                     [url, googleDir]=WebDownload.ResolveUrl(file, key);

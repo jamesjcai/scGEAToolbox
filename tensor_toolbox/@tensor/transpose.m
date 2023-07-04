@@ -1,4 +1,4 @@
-function transpose(x)
+function transpose(~)
 %TRANSPOSE is not defined on tensors.
 %
 %   See also TENSOR, TENSOR/PERMUTE.

@@ -28,7 +28,7 @@ for d = d_min:d_max
        for i = 1:n_trials
            X = rand(d,N);
            Xr = X(:);
-           [L Graph] = kNNgraphmex(Xr,N,d,k,gamma);
+           [L, Graph] = kNNgraphmex(Xr,N,d,k,gamma);
            
            %L/(N^(1-gamma/d))
            

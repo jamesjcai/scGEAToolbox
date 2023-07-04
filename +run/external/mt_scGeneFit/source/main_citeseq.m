@@ -5,8 +5,8 @@ names_filename='../data/CITEseq_names.mat';
 
 opt.samples_fraction=[0.15];
 opt.constraints_neighbors=3;
-opt.hinge_scale=7
-num_markers=10
+opt.hinge_scale=7;
+num_markers=10;
 
 
 aux1=load(data_filename);

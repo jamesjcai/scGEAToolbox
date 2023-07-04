@@ -52,7 +52,7 @@ if ~isempty(NUMC)
     % eigenvalues
     [U, eigenvalue] = eig(L);
     eigenvalue  = diag(eigenvalue);
-    [a,b] = sort((eigenvalue),'ascend');
+    [~,b] = sort((eigenvalue),'ascend');
     eigenvalue = (eigenvalue(b));
     U = U(:,b);
     eigengap = abs(diff(eigenvalue));
@@ -63,9 +63,9 @@ if ~isempty(NUMC)
         else
             UU = U(:,1:ck);
             UU = UU./repmat(sqrt(sum(UU.^2,2))+eps,1,size(UU,2));
-            [EigenvectorsDiscrete,EigenVectors ]=discretisation(UU);
+            [~,EigenVectors ]=discretisation(UU);
             EigenVectors = EigenVectors.^2;
-            [temp1,temp] = sort(EigenVectors,2, 'descend');
+            [temp1,~] = sort(EigenVectors,2, 'descend');
             quality(Cindex) = (1-eigenvalue(ck+1))/(1-eigenvalue(ck))*sum(sum(diag(1./(temp1(:,1)+eps))*temp1(:,1:max(2,ck-1))));
         end
     end
@@ -82,8 +82,8 @@ N = size(x,1);
 KK = 0;
 sigma = [2:-0.25:1];
 Diff = (dist2(x));
-[T,INDEX]=sort(Diff,2);
-[m,n]=size(Diff);
+[T,~]=sort(Diff,2);
+[~,n]=size(Diff);
 allk = 10:2:30;
 t=1;
 for l = 1:length(allk)
@@ -147,7 +147,7 @@ R(:,1)=EigenVectors(round(n/2),:)';
 c=zeros(n,1);
 for j=2:k
     c=c+abs(EigenVectors*R(:,j-1));
-    [minimum,i]=min(c);
+    [~,i]=min(c);
     R(:,j)=EigenVectors(i,:)';
 end
 
@@ -179,7 +179,7 @@ function Y = discretisationEigenVectorData(EigenVector)
 [n,k]=size(EigenVector);
 
 
-[Maximum,J]=max(EigenVector');
+[~,J]=max(EigenVector');
 
 Y=sparse(1:n,J',1,n,k);
 

@@ -18,9 +18,9 @@ else
 end
 
 fid = fopen(fname,'w');
-[ii,jj,val] = find(A);
+[ii,jj,~] = find(A);
 %if nargin == 3, 
-  [i2,j2,att] = find(link_attrib);
+  [~,~,att] = find(link_attrib);
   fprintf(fid,'Source\tTarget\tWeight\n');
   for ik = 1:length(att) % nnz(A)
     fprintf(fid,'%s\t%s\t%f\n',ndname(ii(ik)),ndname(jj(ik)),att(ik));  

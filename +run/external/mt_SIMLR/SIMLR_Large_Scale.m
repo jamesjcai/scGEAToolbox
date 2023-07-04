@@ -95,7 +95,7 @@ for iter = 1:NITER
     lambda = 1.5*lambda;
     r = r/1.1;
     distX = Kbeta(D_Kernels,alphaK');
-end;
+end
 val = S0;
 
 I = repmat([1:size(S0,1)]',1,size(S0,2));

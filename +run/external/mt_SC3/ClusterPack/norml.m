@@ -5,12 +5,12 @@
 function x = norml(x,mode)
 
 switch mode
-  case 0,
-  case 1,
+  case 0
+  case 1
    x = diag(sparse(1./sum(abs(x),2))) * x;
-  case 2,
+  case 2
    x = diag(sparse(1./sum((x.^2),2).^(1/2))) * x;
-  otherwise, 
+  otherwise 
      disp('norml: mode not supported');
-end; 
+end 
  

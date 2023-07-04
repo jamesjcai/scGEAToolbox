@@ -1,4 +1,4 @@
-function DisplayVisualization(Y, C, marker_size, class_names, font_size, fig_width,augmented, show_legend)
+function SIMLR_DisplayVisualization(Y, C, marker_size, class_names, font_size, fig_width,augmented, show_legend)
 % Display 2-D scatter-plot
 %
 %   DisplayVisualization(Y, C)

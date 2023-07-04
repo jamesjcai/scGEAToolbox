@@ -6,17 +6,17 @@
 %
 % Copyright (c) 1998-2011 by Alexander Strehl
 
-function m = evalf(trueclass,cl,x,sfct)
+function m = evalf(trueclass,cl,~,~)
 
 remappedcl = zeros(size(cl));
 A = zeros(max(cl),2+max(trueclass));
-for i=1:max(cl),
+for i=1:max(cl)
  activepoints = find(cl==i);
  composition = hist(trueclass(activepoints),1:max(trueclass));
  j = find(composition==max(composition));
  j = j(1);
  A(i,:) = [j i composition];
-end;
+end
 A = sortrows(A);
 
 A = A(:,3:size(A,2));

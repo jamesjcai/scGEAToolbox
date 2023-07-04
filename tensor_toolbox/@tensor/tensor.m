@@ -118,17 +118,17 @@ end
 if (nargin == 1)
     v = varargin{1};
     switch class(v)
-        case 'tensor',   
+        case 'tensor'   
             % COPY CONSTRUCTOR
             t.data = v.data;
             t.size = v.size;
             t = class(t, 'tensor');
             return;
-        case {'ktensor','ttensor','sptensor','sumtensor','symtensor','symktensor'},  
+        case {'ktensor','ttensor','sptensor','sumtensor','symtensor','symktensor'}  
             % CONVERSION
             t = full(v);
             return;
-        case 'tenmat', 
+        case 'tenmat' 
             % RESHAPE TENSOR-AS-MATRIX
             % Here we just reverse what was done in the tenmat constructor.
             % First we reshape the data to be an MDA, then we un-permute

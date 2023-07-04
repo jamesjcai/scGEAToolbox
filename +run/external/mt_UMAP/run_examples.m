@@ -81,12 +81,12 @@ if whichOnes==5.11
 end
 if ismember(6, whichOnes)
     disp('run_umap_main Example 6 starting...');
-    [~,~, clusterIds]=run_umap_main('sample30k.csv', 'cluster_output', verbose, 'verbose', verbose);
+    [~,~, ~]=run_umap_main('sample30k.csv', 'cluster_output', verbose, 'verbose', verbose);
     disp('run_umap_main Example 6 completed with no MATLAB exceptions!');
 end
 if ismember(7, whichOnes)
     disp('run_umap_main Example 7 starting...');
-    [~, ~, clusterIds]=run_umap_main('sample30k.csv', 'n_components', 3, 'save_template_file', 'utBalbc3D.mat', 'verbose', verbose);
+    [~, ~, ~]=run_umap_main('sample30k.csv', 'n_components', 3, 'save_template_file', 'utBalbc3D.mat', 'verbose', verbose);
     disp('run_umap_main Example 7 completed with no MATLAB exceptions!');
 end
 if ismember(8, whichOnes)
@@ -147,7 +147,7 @@ end
 if ismember(16, whichOnes)
     disp('run_umap_main Example 16 starting...');
     run_umap_main('sampleBalbcLabeled55k.csv', 'label_column', 11, 'label_file', 'balbcLabels.properties', 'qf_tree', true, 'n_components', 3, 'save_template_file', 'ustBalbc3D.mat', 'verbose', verbose);
-    [reduction, umap, clusterIdentifiers,extras]=run_umap_main('sample10k.csv', 'template_file', 'ustBalbc3D.mat', 'qf_tree', true, 'qf_dissimilarity', true, 'see_training', true, 'cluster_output', verbose, 'verbose', verbose);
+    [~, ~, ~,~]=run_umap_main('sample10k.csv', 'template_file', 'ustBalbc3D.mat', 'qf_tree', true, 'qf_dissimilarity', true, 'see_training', true, 'cluster_output', verbose, 'verbose', verbose);
     disp('run_umap_main Example 16 completed with no MATLAB exceptions!');
 end
 if ismember(17, whichOnes)

@@ -9,7 +9,7 @@ function s = simeucl(a,b)
 
 if ~exist('b')
   b = a;
-end;
+end
 
 n = size(a,1);
 m = size(b,1);
@@ -17,6 +17,6 @@ d = size(a,2);
 if (d~=size(b,2))
   disp('simeucl: data dimensions do not match');
   return;
-end;        
+end        
 
 s = exp(-((ones(m, 1) * sum((a.^2)', 1))' + ones(n, 1) * sum((b.^2)',1) - 2.*(a*(b'))));

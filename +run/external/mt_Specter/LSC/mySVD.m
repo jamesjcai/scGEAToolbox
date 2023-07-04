@@ -48,7 +48,7 @@ if mFea/nSmp > 1.0713
         
         [U, eigvalue] = eig(ddata);
         eigvalue = diag(eigvalue);
-        [dump, index] = sort(-eigvalue);
+        [~, index] = sort(-eigvalue);
         eigvalue = eigvalue(index);
         U = U(:, index);
     end
@@ -88,7 +88,7 @@ else
         [V, eigvalue] = eig(ddata);
         eigvalue = diag(eigvalue);
         
-        [dump, index] = sort(-eigvalue);
+        [~, index] = sort(-eigvalue);
         eigvalue = eigvalue(index);
         V = V(:, index);
     end

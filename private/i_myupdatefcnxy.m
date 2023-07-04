@@ -1,4 +1,4 @@
-function txt = i_myupdatefcnxy(~,event_obj,g,F1,F2,X,Y)
+function txt = i_myupdatefcnxy(~,event_obj,g,F1,F2,~,~)
 % Customizes text of data tips
 % pos = event_obj.Position;
 idx = event_obj.DataIndex;

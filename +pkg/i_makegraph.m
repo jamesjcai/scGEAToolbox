@@ -1,4 +1,4 @@
-function G=makegraph(A,genelist)
+function G=i_makegraph(A,genelist)
     if isa(A,'digraph')||isa(A,'graph')
         G=A;
     else

@@ -73,7 +73,7 @@ switch ver
             linclassidx = tt_sub2ind(size(X), classidx);
             
             % Compare each element to its class exemplar
-            if any(X.data(:) ~= X.data(linclassidx));
+            if any(X.data(:) ~= X.data(linclassidx))
                 tf = false;
                 return
             end

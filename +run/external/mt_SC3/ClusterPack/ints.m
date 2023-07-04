@@ -4,14 +4,14 @@
 
 function s = ints(s,tafter)
 
-if ~exist('tafter'),
+if ~exist('tafter')
   tafter = 100000000;
-end;
+end
 
 tbefore = sum(sum(s));
-if (tbefore~=0),
+if (tbefore~=0)
   s = round(s.*(tafter/tbefore));
-end;
+end
 
 p = 1-sum(sum(s>0))/prod(size(s)); 
 

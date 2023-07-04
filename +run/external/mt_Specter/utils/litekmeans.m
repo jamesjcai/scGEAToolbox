@@ -103,7 +103,7 @@ end
 
 pnames = {   'distance' 'start'   'maxiter'  'replicates' 'onlinephase' 'clustermaxiter'};
 dflts =  {'sqeuclidean' 'sample'       []        []        'off'              []        };
-[eid,errmsg,distance,start,maxit,reps,online,clustermaxit] = getargs(pnames, dflts, varargin{:});
+[eid,errmsg,distance,start,maxit,reps,~,clustermaxit] = getargs(pnames, dflts, varargin{:});
 if ~isempty(eid)
     error(sprintf('litekmeans:%s',eid),errmsg);
 end
@@ -201,7 +201,7 @@ for t=1:reps
             center = X(randsample(n,k),:);
         case 'cluster'
             Xsubset = X(randsample(n,floor(.1*n)),:);
-            [dump, center] = litekmeans(Xsubset, k, varargin{:}, 'start','sample', 'replicates',1 ,'MaxIter',clustermaxit);
+            [~, center] = litekmeans(Xsubset, k, varargin{:}, 'start','sample', 'replicates',1 ,'MaxIter',clustermaxit);
         case 'numeric'
     end
     
@@ -227,7 +227,7 @@ for t=1:reps
                     
                     aa = sum(X.*X,2);
                     val = aa + val;
-                    [dump,idx] = sort(val,1,'descend');
+                    [~,idx] = sort(val,1,'descend');
                     label(idx(1:missNum)) = missCluster;
                 end
                 E = sparse(1:n,label,1,n,k,n);  % transform label into indicator matrix
@@ -292,7 +292,7 @@ for t=1:reps
                     missCluster = 1:k;
                     missCluster(ll) = [];
                     missNum = length(missCluster);
-                    [dump,idx] = sort(val);
+                    [~,idx] = sort(val);
                     label(idx(1:missNum)) = missCluster;
                 end
                 E = sparse(1:n,label,1,n,k,n);  % transform label into indicator matrix

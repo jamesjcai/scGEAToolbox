@@ -17,7 +17,7 @@ switch p.Results.type
         if ~(ismcc || isdeployed), addpath(pth); end
         pth=fullfile(pw1,'+run','external','mt_SIMLR','src');
         if ~(ismcc || isdeployed), addpath(pth); end
-        [K1, K2] = Estimate_Number_of_Clusters_SIMLR(X',2:10);
+        [~, K2] = Estimate_Number_of_Clusters_SIMLR(X',2:10);
         [~,i]=min(K2);
         optimk=i+1;
     case 'soptsc'        
@@ -55,7 +55,7 @@ switch p.Results.type
         % Determinning the number of clusters
         eigenvalues = [];
         %if isempty(optimk)
-            [eigenvalues,No_cluster] = Num_cluster(W,No_cluster1);
+            [~,No_cluster] = Num_cluster(W,No_cluster1);
             optimk = No_cluster;
         %end
     case 'sc3'

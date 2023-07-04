@@ -15,7 +15,7 @@ z = zeros(k,4);
 
 for i=1:k
   z(i,:) = gcv(varargin{:},'alpha',alpha(i,:));
-end;
+end
 
 plot(z(:,3),z(:,4));
 xlabel('Fitted DF');

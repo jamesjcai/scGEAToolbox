@@ -1,4 +1,4 @@
-function [X,genelist,celllist,ftdone]=sc_readparsebio(selpath,coln)
+function [X,genelist,celllist,ftdone]=sc_readparsebio(selpath,~)
 
 if nargin<2, coln=2; end
 if nargin<1, selpath = uigetdir; end

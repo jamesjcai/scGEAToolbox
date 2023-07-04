@@ -24,6 +24,6 @@ for i = 0:3
   sr = (y-fh)/sigma;
   lfc_y = fh + sigma*normpdf(sr)./normcdf(-sr);
   lfc_y(unc) = y(unc);
-end;
+end
 
 return;

@@ -36,7 +36,7 @@ Short_pathd1 = distances(CC_Graph);
 % initial root cell if root_cell == 0
 if root_cell == 0
 %     root_cell0 = 1;
-    [aa1,aa2] = find(low_dis == max(low_dis(:)));
+    [aa1,~] = find(low_dis == max(low_dis(:)));
     root_cell0 = aa1(1);
 else
     root_cell0 = root_cell;
@@ -46,7 +46,7 @@ end
 %% lineage using binary graph
 W_graph = W_graph1;
 
-[nComponents,sizes,members] = networkComponents(W_graph);
+[nComponents,~,members] = networkComponents(W_graph);
 
 AA = graph(W_graph);
 Shortest_path = distances(AA);
@@ -141,7 +141,7 @@ end
 CC_Graph = graph(CC_adjacent,'upper');
 
 if root_cluster ~= 0
-    [Tree,pred] = minspantree(CC_Graph,'Root',root_cluster);
+    [~,pred] = minspantree(CC_Graph,'Root',root_cluster);
     % if root_cell = [], then infer root_cell for given root_cluster
     if root_cell == 0
         rootcc_idx = find(cluster_label==root_cluster);
@@ -166,7 +166,7 @@ if root_cluster ~= 0
 else
     if root_cell ~= 0
         root_cluster = cluster_label(root_cell);
-        [Tree,pred] = minspantree(CC_Graph,'Root',root_cluster);
+        [~,pred] = minspantree(CC_Graph,'Root',root_cluster);
     else
         % find the root cluster
         [a1,a2] = find(CC_adjacent == max(CC_adjacent(:)));
@@ -174,7 +174,7 @@ else
         display([a1 a2]);
         % root_cell = [], infer root_cell based on inferred root_cluster
         if reverse == 1
-            [Tree,pred] = minspantree(CC_Graph,'Root',a1);
+            [~,pred] = minspantree(CC_Graph,'Root',a1);
             
             if root_cell == 0
                 rootcc_idx = find(cluster_label==a1);
@@ -196,7 +196,7 @@ else
 %                plot(tau_score);
             end
         else
-            [Tree,pred] = minspantree(CC_Graph,'Root',a2);
+            [~,pred] = minspantree(CC_Graph,'Root',a2);
             
             if root_cell == 0
                 rootcc_idx = find(cluster_label==a2);

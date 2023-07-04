@@ -27,7 +27,7 @@ A = bsxfun(@minus,A,mean(A));
 %[U, S, V] = fsvd(A, k, i, usePowerMethod);
 %score = U(:,1:k)*S(1:k,1:k);
 
-[m,n]=size(A);
-[U,S,V] = svdecon(A);
+[~,~]=size(A);
+[U,S,~] = svdecon(A);
 score = U(:,1:k)*S(1:k,1:k);
 end

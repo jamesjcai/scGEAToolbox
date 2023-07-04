@@ -1,4 +1,4 @@
-function [T,Xsorted,genelistsorted]=sc_heg(X,genelist,sortit,plotit,normit,ignorehigh)
+function [T,Xsorted,genelistsorted]=sc_heg(X,genelist,~,plotit,normit,~)
 % HEGs - highly expressed genes
 
 if nargin<2 || isempty(genelist)

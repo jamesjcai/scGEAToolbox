@@ -7,7 +7,7 @@
 %
 classdef TableBasics<handle
     methods(Static)
-        function line3D(ax3D, idCols, xyzCols, symbolCol, colorMap)
+        function line3D(~, ~, ~, ~, ~)
         end
     end
 end

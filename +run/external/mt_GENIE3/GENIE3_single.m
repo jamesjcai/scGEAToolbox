@@ -124,7 +124,7 @@ end
 
 
 %% Learning of tree model
-[tree,varimp]=rtenslearn_c(expr_matrix(:,input_idx),output,int32(1:nsamples),[],ok3ensparam,0);
+[~,varimp]=rtenslearn_c(expr_matrix(:,input_idx),output,int32(1:nsamples),[],ok3ensparam,0);
 % Some variable importances might be slightly negative due to some rounding
 % error
 varimp(varimp<0) = 0;

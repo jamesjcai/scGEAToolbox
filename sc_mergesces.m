@@ -27,7 +27,7 @@ end
 function [sce]=i_merge2sces(sce1,sce2,method)
 
 if nargin<3, method='intersect'; end
-[X,g,c]=sc_mergedata(sce1.X,sce2.X,...
+[X,g,~]=sc_mergedata(sce1.X,sce2.X,...
             sce1.g,sce2.g,method);
 sce=SingleCellExperiment(X,g);
 sce.metadata=[sce1.metadata; sce2.metadata];

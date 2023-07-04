@@ -14,7 +14,7 @@ cs= sum(data>min_count);
 x_use_genes = find(cs>min_cells);
 
 gene_filtered_data=data(:,x_use_genes);
-if(length(gene_names)>0) 
+if(~isempty(gene_names)) 
     gene_names=gene_names(x_use_genes); gene_ids=gene_ids(x_use_genes); 
 end
 

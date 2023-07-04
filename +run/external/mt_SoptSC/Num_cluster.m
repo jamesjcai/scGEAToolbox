@@ -21,7 +21,7 @@ else
 end
 
 tol = 0.01;
-[all_eigs,M_all] = consen(W,nno_cluster,tau);
+[all_eigs,~] = consen(W,nno_cluster,tau);
 
 zz = sort(abs(real(all_eigs)));
 

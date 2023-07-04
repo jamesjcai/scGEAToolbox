@@ -159,7 +159,7 @@ classdef NnDescent<handle
                     labels=[];
                 end
                 if percentRows <1 && percentRows>0
-                    [R,C]=size(data);
+                    [R,~]=size(data);
                     rows=floor(percentRows*R);
                     data=data(1:rows,:);
                 end
@@ -265,7 +265,7 @@ classdef NnDescent<handle
             File.SaveMatrix([trainingSetFile '.knnIndices.csv' ], knnIndices-1, true);
             File.SaveMatrix([trainingSetFile '.knnDists.csv' ], knnDists, true);
             labels=File.ReadCsv(files{2});
-            [indptr2, indices2]=NnDescent.SearchGraphIndptrIndices(...
+            [~, ~]=NnDescent.SearchGraphIndptrIndices(...
                 trainingSetData, 15, knnIndices, knnDists, labels);
             
             testSetFile=files{3}(1:end-4);
@@ -273,7 +273,7 @@ classdef NnDescent<handle
             File.SaveMatrix([testSetFile '.knnIndices.csv' ], knnIndices-1, true);
             File.SaveMatrix([testSetFile '.knnDists.csv' ], knnDists, true);
             trainingSetData=[trainingSetData labels];
-            [M,U]=run_umap_main(trainingSetData, 'label_column', 'end', ...
+            [~,U]=run_umap_main(trainingSetData, 'label_column', 'end', ...
                 'label_file', 'balbcLabels.properties');
             [indptr, indices]=KnnFind.IndPtrAndIndices(U.search_graph);
             File.SaveMatrix([trainingSetFile '.indptr.csv' ], indptr, true);
@@ -350,7 +350,7 @@ classdef NnDescent<handle
                         fprintf(['Running knnsearch (via '...
                             'nearest_neighbors.m) on\n\t%s'], scope);
                         tic
-                        [indices1, dists1] = nearest_neighbors(...
+                        [indices1, ~] = nearest_neighbors(...
                             data(1:i,:), j, metric, dist_args);
                         t=toc;
                         fprintf(' took %s seconds !!\n', String.encodeRounded(t, 2));

@@ -85,7 +85,7 @@ switch s.type
         end
 
         % *** CASE 2a: Subscript indexing ***
-        if isequal(type,'subscripts');
+        if isequal(type,'subscripts')
 
             % extract array of subscripts
             subs = s.subs{1};
@@ -114,7 +114,7 @@ switch s.type
         end
 
         % *** CASE 2b: Linear indexing ***
-        if isequal(type,'linear indicies');
+        if isequal(type,'linear indicies')
             idx = s.subs{1};
             if any(idx > prod(x.size))
                 error('TTB:BadIndex','In assignement X(I) = Y, a tensor X cannot be resized');

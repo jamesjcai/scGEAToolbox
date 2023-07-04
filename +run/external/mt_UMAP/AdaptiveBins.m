@@ -189,7 +189,7 @@ classdef AdaptiveBins<handle
         
         function [means, teachPtrs, studPtrs, teachWeights, studWeights, ...
                 minBinSize]=Create(teachData, studData, minBinSize, ...
-                doFixedSplits, cacheFile, trackRow)
+                doFixedSplits, cacheFile, ~)
             if nargin < 4
                 doFixedSplits=false;
             end
@@ -377,7 +377,7 @@ classdef AdaptiveBins<handle
         
          function bins=Fit(data, binObj, ptrs)
              space='CityBlock';
-             [dists, bins]=pdist2(binObj.means, data, space, ...
+             [~, bins]=pdist2(binObj.means, data, space, ...
                  'Smallest', 1);
              if nargin>2
                  difs=abs(bins-ptrs);

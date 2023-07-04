@@ -18,7 +18,7 @@ tol = 1e-4;
 decfac = 0.9;
 alpha = 1.1;
 
-[U1,S1,V1] = svd(reshape(x,sizeX));
+[~,S1,V1] = svd(reshape(x,sizeX));
 V = S1(1:rankr,1:rankr)*V1(:,1:rankr)';
 
 for out = 1:outsweep

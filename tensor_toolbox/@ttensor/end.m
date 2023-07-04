@@ -1,4 +1,4 @@
-function e = end(X,k,n)
+function e = end(X,~,~)
 %END Last index of indexing expression for ttensor.
 %
 %   The expression X(end,:,:) will call END(X,1,3) to determine

@@ -1,4 +1,4 @@
-function i_pickcolormap(src,event,c,setzerocolor)
+function i_pickcolormap(~,~,c,setzerocolor)
     if nargin<4, setzerocolor=false; end
     if setzerocolor
         list = {'parula','turbo','hsv','hot','cool','spring',...

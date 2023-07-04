@@ -183,7 +183,7 @@ classdef BasicMap < Map
         
                 
          
-        function retry=reportProblem(this, exception, retryId)
+        function retry=reportProblem(~, exception, ~)
             retry=false;
             exception.getReport;
         end

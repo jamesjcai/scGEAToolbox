@@ -10,7 +10,7 @@ function s = simcorr(a,b)
 
 if ~exist('b')
   b = a;
-end;
+end
 
 n = size(a,1);
 m = size(b,1);
@@ -18,7 +18,7 @@ d = size(a,2);
 if (d~=size(b,2))
   disp('simcorr: data dimensions do not match');
   return;
-end;
+end
 
 na = a - (mean(a,2)*ones(1,size(a,2)));
 nb = b - (mean(b,2)*ones(1,size(b,2)));

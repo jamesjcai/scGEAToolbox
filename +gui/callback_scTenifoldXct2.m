@@ -4,7 +4,7 @@ function callback_scTenifoldXct2(src,~)
     sce=guidata(FigureHandle);
     % error('under development.');    
     [~,cL]=grp2idx(sce.c_batch_id);
-    [j1,j2,batchid1,batchid2]=aaa(cL,sce.c_batch_id);
+    [j1,j2,~,~]=aaa(cL,sce.c_batch_id);
     if isempty(j1) || isempty(j2), return; end
 
 

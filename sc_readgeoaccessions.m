@@ -25,7 +25,7 @@ d=strrep(d,'/<','');
 
 assert(x==length(c));
 assert(x==length(d));
-c
+c;
 
 [sce]=pkg.pipeline_multisamplesmerge(c);
 

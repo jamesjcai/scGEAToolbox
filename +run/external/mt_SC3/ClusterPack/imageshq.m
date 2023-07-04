@@ -7,15 +7,15 @@ function imageshq(s)
 imagesc(s);
 map = colormap;
 
-if (sum(sum((map(:,1)~=map(:,2))+(map(:,1)~=map(:,3)))==0)),
+if (sum(sum((map(:,1)~=map(:,2))+(map(:,1)~=map(:,3)))==0))
    
    n = 100;
-   if (size(s,1)>n),
+   if (size(s,1)>n)
       subsample = randperm(size(s,1));
       subsample = subsample(1:n);
       s = s(subsample,subsample);
       disp(['imageshq-warning: using subsample of size ' num2str(n) ' to determine transformation']);
-   end;
+   end
    
    map = gray;
    cols = size(map,1);
@@ -37,4 +37,4 @@ if (sum(sum((map(:,1)~=map(:,2))+(map(:,1)~=map(:,3)))==0)),
    
 else
    disp('imageshq-error: not a graylevel map');
-end;
+end

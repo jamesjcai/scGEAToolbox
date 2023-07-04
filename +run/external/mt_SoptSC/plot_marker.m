@@ -20,7 +20,7 @@ gene_set_idx = zeros(1,gene_set_no);
 
 for i = 1:gene_set_no
     for j = 1:allgenes_no
-        if strcmp(upper(gene_set{i}),upper(allgenes{j}))
+        if strcmpi(gene_set{i},allgenes{j})
             gene_set_idx(i) = j;
         end
     end

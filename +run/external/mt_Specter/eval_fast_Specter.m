@@ -9,7 +9,7 @@ function cls = eval_fast_Specter(fea, n_clusters, ensemble_size, mingamma, n_nei
 % Output:
     % cls: clusters of cells
     
-    [m, n] = size(fea);
+    [m, ~] = size(fea);
     samples_size = [n_clusters*100.0/sqrt(m)]; 
     % apply pre-processing
     params.HV = 1; % use highly variable genes selection: 1: yes, 0: no
@@ -25,7 +25,7 @@ function cls = eval_fast_Specter(fea, n_clusters, ensemble_size, mingamma, n_nei
     opts.kmMaxIter = 30;
     opts.maxIter = 100;
     if m > 500000
-        opts.mode = 'random'
+        opts.mode = 'random';
         opts.kmMaxIter = 10;
         opts.maxIter = 50;
     end

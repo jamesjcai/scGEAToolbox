@@ -1,7 +1,7 @@
 
 
 % Set the parameters of the method
-rtensparam=init_extra_trees() % extremely randomized trees
+rtensparam=init_extra_trees(); % extremely randomized trees
 % rtensparam=init_rf() pour random forests
 % rtensparam=init_mart() pour MART ou OKBOOST
 
@@ -50,7 +50,7 @@ mean((YPRED1-YTS).^2)
 % If no test sample is provided, the function outputs a tree structure and
 % variable importances
 
-[tree var_imp]=rtenslearn_c(X,Y,ls,w,rtensparam,1);
+[tree, var_imp]=rtenslearn_c(X,Y,ls,w,rtensparam,1);
 
 % Then, the tree ensemble can be tested on a test sample using the function
 % rtenspred.m (but this is much slower than doing it directly from

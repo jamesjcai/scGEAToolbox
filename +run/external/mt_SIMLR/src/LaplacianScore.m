@@ -38,7 +38,7 @@ function [Y] = LaplacianScore(X, W)
 
 if nargin == 0, selfdemo; return; end
 
-[nSmp,nFea] = size(X);
+[nSmp,~] = size(X);
 
 if size(W,1) ~= nSmp
     error('W is error');

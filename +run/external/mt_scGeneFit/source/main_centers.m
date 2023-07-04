@@ -47,7 +47,7 @@ end
 %Benchmarks 6,5,2,7
 for T=6:6
     filename='../output/significant'+string(T)+'.pdf';
-    CLUSTER=T
+    CLUSTER=T;
 [indices,labels]=subcluster_by_label(aux2.zeisel_labels1, T, aux3.zeisel_labels2);
 benchmarks_and_plot(aux1.zeisel_data(:,indices)/100, labels, markers, [3,5,15], zeisel_names(indices,2), filename);
 end

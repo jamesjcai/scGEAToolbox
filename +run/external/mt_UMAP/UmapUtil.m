@@ -109,7 +109,7 @@ classdef UmapUtil < handle
             args=KnnFind.ExtractDistArgs(args);
         end
         
-        function args=CheckArgs(args, argued)
+        function args=CheckArgs(args, ~)
             args.buildLabelMap=false;
             if islogical(args.verbose)
                 if args.verbose
@@ -575,7 +575,7 @@ classdef UmapUtil < handle
                 gridEdge(density, true, i, clr, ax, .8, '.', '-', .5);
                 if Supervisors.VERBOSE
                     str2double(density.clusterColors{i})
-                    clr
+                    clr;
                     disp('ok');
                 end
             end

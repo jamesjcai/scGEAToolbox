@@ -12,13 +12,13 @@ switch link
   case 5
     z = y;
     i = find(y<=0);
-    if (length(i)>0)
+    if (~isempty(i))
       z(i) = exp(y(i))./(1+exp(y(i)));
-    end;
+    end
     i = find(y>0);
-    if (length(i)>0)
+    if (~isempty(i))
       z(i) = 1./(1+exp(-y(i)));
-    end;
+    end
   case 6
     z=1./y;
   case 7
@@ -28,6 +28,6 @@ switch link
   otherwise
      disp('Backtr: invalid link');
      z=y;
-end;
+end
 
 return;

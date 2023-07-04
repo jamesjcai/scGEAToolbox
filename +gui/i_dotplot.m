@@ -170,7 +170,7 @@ set(hFig, 'visible', 'on');
                         labels = {'Save T to variable named:','Save D to variable named:'}; 
                         vars = {'T','D'};
                         values = {T,D};
-                        [~,OKPressed]=export2wsdlg(labels,vars,values,...
+                        [~,~]=export2wsdlg(labels,vars,values,...
                             'Save Data to Workspace');                    
                     case 'TXT/CSV file'
                         [file, path] = uiputfile({'*.csv';'*.*'},'Save as');

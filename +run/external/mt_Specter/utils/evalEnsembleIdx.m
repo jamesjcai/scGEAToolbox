@@ -1,7 +1,7 @@
 % ensemble clustering using maximum AIR cluster 
 function results = evalEnsembleIdx(clusters, score)
 % clusters: each row is a clustering.     
-    [N, m] = size(clusters);
+    [N, ~] = size(clusters);
     X = zeros(N);
     if score == 'mi'
         for i=1:1:N

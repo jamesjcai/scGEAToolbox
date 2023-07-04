@@ -7,7 +7,7 @@
 %
 function [means, teachPtrs, studPtrs, teachWeights, studWeights, ...
     minBinSize]=probability_bin(teachData, studData, minBinSize, ...
-    doFixedSplits, cacheFile, trackRow)
+    doFixedSplits, cacheFile, ~)
 
     if nargin < 4
         doFixedSplits=false;

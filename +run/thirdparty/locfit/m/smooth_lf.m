@@ -9,8 +9,8 @@ if (k>1)
   if (strcmp(varargin{1},'xev'))
     xev = varargin{2};
     varargin(1:2) = [];
-  end;
-end;
+  end
+end
 fit = locfit(x,y,varargin{:},'ev',xev,'module','simple');
 z = lfknots(fit);
 fv = invlink(z(:,1),fit.fit_points.family_link);

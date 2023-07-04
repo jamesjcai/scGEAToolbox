@@ -1,7 +1,7 @@
 function [localX,coverage] = localize( C )
 %C is the coefficient matrix
 %[tmp,ind] = sort(C,1,'descend');
-[m,n]=size(C);
+[~,n]=size(C);
 localX=C;
 coverage=zeros(1,n);
 for i=1:n

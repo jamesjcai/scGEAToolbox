@@ -1,4 +1,4 @@
-function [s]=TSEE(X,t,dim)
+function [s]=mt_TSEE(X,t,dim)
 if nargin<3, dim=2; end
 
 % https://bmcgenomics.biomedcentral.com/articles/10.1186/s12864-019-5477-8

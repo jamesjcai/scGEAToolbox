@@ -112,7 +112,7 @@ function [idx, iter, obj, H] = symnmf_cluster(X, k, options)
 % Please cite this paper if you find this code useful.
 %
 
-[n, p] = size(X);
+[n, ~] = size(X);
 
 if ~exist('options', 'var')
     graph_type = 'sparse';
@@ -291,7 +291,7 @@ for i = 1 : rep
             [H, iter, obj] = symnmf_anls(A, k, params);
         end
     end
-    [max_val, idx] = max(H, [], 2);
+    [~, idx] = max(H, [], 2);
     if obj < obj_best
         idx_best = idx;
         iter_best = iter;

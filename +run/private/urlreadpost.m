@@ -68,7 +68,7 @@ end
         printStream = java.io.PrintStream(urlConnection.getOutputStream);
         % also create a binary stream
         dataOutputStream = java.io.DataOutputStream(urlConnection.getOutputStream);
-        eol = [char(13),char(10)];
+        eol = [char(13),newline];
         for i=1:2:length(params)
           printStream.print(['--',boundary,eol]);
           printStream.print(['Content-Disposition: form-data; name="',params{i},'"']);

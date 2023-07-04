@@ -81,7 +81,7 @@ if strcmp(mode,'kmeans')
     if isfield(opts,'kmNumRep')
         kmNumRep = opts.kmNumRep;
     end
-    [dump,marks]=litekmeans(data,p,'MaxIter',kmMaxIter,'Replicates',kmNumRep);
+    [~,marks]=litekmeans(data,p,'MaxIter',kmMaxIter,'Replicates',kmNumRep);
     clear kmMaxIter kmNumRep
 elseif strcmp(mode,'random')
     indSmp = randperm(nSmp);

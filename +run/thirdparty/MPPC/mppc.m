@@ -104,7 +104,7 @@ num_comps = length(cut_indices)+1;
 
 m = length(y_new(:,1));
 rgb_c = [0,.8,0]; ls = '-'; %color and linestyle of curve when plotting
-if pause_bool, plotADP(x,y_new,cut_indices,[],[],0,rgb_c,ls); pause; end;
+if pause_bool, plotADP(x,y_new,cut_indices,[],[],0,rgb_c,ls); pause; end
 
 fprintf(['\n iter = %d       E = %8.',num2str(num_d),'E      cont_E = %8.',...
     num2str(num_d),'E      k = %d     m = %d'],iter,energy,cont_energy,num_comps,m);
@@ -190,7 +190,7 @@ while (~isequal(size(y),size(y_new)) || energy_prev-energy>tol*energy || energy_
             fprintf(['\n cutting:    %s   E = %8.',num2str(num_d),'E      cont_E = %8.',...
                 num2str(num_d),'E      k = %d'],repmat(' ',1,floor(log(iter)/log(10))),energy,cont_energy,length(cut_indices)+1);
         end
-        if pause_bool, plotADP(x,y_new,cut_indices,mass,I,0,rgb_c,ls); pause; end;
+        if pause_bool, plotADP(x,y_new,cut_indices,mass,I,0,rgb_c,ls); pause; end
     end
     
     if mod(iter+3,cut_freq)==0 % check singletons
@@ -206,7 +206,7 @@ while (~isequal(size(y),size(y_new)) || energy_prev-energy>tol*energy || energy_
         else
         check_singletons = 0;
         end
-        if pause_bool, plotADP(x,y_new,cut_indices,mass,I,0,rgb_c,ls); pause; end;
+        if pause_bool, plotADP(x,y_new,cut_indices,mass,I,0,rgb_c,ls); pause; end
     end
     
     if mod(iter+2,cut_freq)==0 % check connecting
@@ -228,7 +228,7 @@ while (~isequal(size(y),size(y_new)) || energy_prev-energy>tol*energy || energy_
             else
                 check_conn = 0;
             end
-            if pause_bool,plotADP(x,y_new,cut_indices,mass,I,0,rgb_c,ls); pause; end;
+            if pause_bool,plotADP(x,y_new,cut_indices,mass,I,0,rgb_c,ls); pause; end
         end
     end
     
@@ -261,7 +261,7 @@ while (~isequal(size(y),size(y_new)) || energy_prev-energy>tol*energy || energy_
             fprintf(['\n respacing: %s    E = %8.',num2str(num_d),'E      cont_E = %8.',...
                 num2str(num_d),'E                m = %d'],repmat(' ',1,floor(log(iter)/log(10))+floor(log(num_comps)/log(10))),...
                 energy,cont_energy,length(y_new(:,1)));
-            if pause_bool, plotADP(x,y_new,cut_indices,mass,I,0,rgb_c,ls); pause; end;
+            if pause_bool, plotADP(x,y_new,cut_indices,mass,I,0,rgb_c,ls); pause; end
         end
     end
 end

@@ -247,14 +247,14 @@ d = size(xdata,2);
 n = size(xdata,1);
 if ((nargin>1) && (~ischar(varargin{2})))
   ydata = double(varargin{2});
-  if (any(size(ydata) ~= [n 1])); error('y must be n*1 column vector'); end;
+  if (any(size(ydata) ~= [n 1])); error('y must be n*1 column vector'); end
   family = 'qgauss';
   na = 3;
 else
   ydata = 0;
   family = 'density';
   na = 2;
-end;
+end
 if mod(nargin-na,2)==0
   error( 'All arguments other than x, y must be name,value pairs' );
 end
@@ -293,37 +293,37 @@ while na < length(varargin)
         ydata = double(varargin{na+1});
         family = 'qgauss';
         inc = 2;
-        if (any(size(ydata) ~= [n 1])); error('y must be n*1 column vector'); end;
+        if (any(size(ydata) ~= [n 1])); error('y must be n*1 column vector'); end
     end
     if (strcmp(varargin{na},'weights'))
         wdata = double(varargin{na+1});
         inc = 2;
-        if (any(size(wdata) ~= [n 1])); error('weights must be n*1 column vector'); end;
+        if (any(size(wdata) ~= [n 1])); error('weights must be n*1 column vector'); end
     end
     if (strcmp(varargin{na},'cens'))
         cdata = double(varargin{na+1});
         inc = 2;
-        if (any(size(cdata) ~= [n 1])); error('cens must be n*1 column vector'); end;
+        if (any(size(cdata) ~= [n 1])); error('cens must be n*1 column vector'); end
     end
     if (strcmp(varargin{na},'base')) % numeric vector, n*1 or 1*1.
         base = double(varargin{na+1});
-        if (length(base)==1); base = base*ones(n,1); end;
+        if (length(base)==1); base = base*ones(n,1); end
         inc = 2;
     end
     if (strcmp(varargin{na},'style')) % character string of length d.
         style = varargin{na+1};
         inc = 2;
-    end;
+    end
     if (strcmp(varargin{na},'scale')) % row vector, length 1 or d.
         scale = varargin{na+1};
         if (scale==0)
           scale = zeros(1,d);
           for i=1:d
             scale(i) = sqrt(var(xdata(:,i)));
-          end;
-        end;
+          end
+        end
         inc = 2;
-    end;
+    end
     if (strcmp(varargin{na},'xlim')) % 2*d numeric matrix.
         xl = varargin{na+1};
         inc = 2;
@@ -340,11 +340,11 @@ while na < length(varargin)
     if (strcmp(varargin{na},'h')) % scalar
         alpha(2) = varargin{na+1};
         inc = 2;
-    end;
+    end
     if (strcmp(varargin{na},'pen')) % scalar
         alpha(3) = varargin{na+1};
         inc = 2;
-    end;
+    end
     if (strcmp(varargin{na},'acri')) % string
         acri = varargin{na+1};
         inc = 2;
@@ -352,76 +352,76 @@ while na < length(varargin)
     if (strcmp(varargin{na},'deg')) % positive integer.
         deg = varargin{na+1};
         inc = 2;
-    end;
+    end
     if (strcmp(varargin{na},'family')) % character string.
         family = varargin{na+1};
         inc = 2;
-    end;
+    end
     if (strcmp(varargin{na},'link')) % character string.
         link = varargin{na+1};
         inc = 2;
-    end;
+    end
     if (strcmp(varargin{na},'kern')) % character string.
         kern = varargin{na+1};
         inc = 2;
-    end;
+    end
     if (strcmp(varargin{na},'kt')) % character string.
         kt = varargin{na+1};
         inc = 2;
-    end;
+    end
     if (strcmp(varargin{na},'ev')) % char. string, or matrix with d columns.
         ev = varargin{na+1};
-        if (isnumeric(ev)); ev = ev'; end;
+        if (isnumeric(ev)); ev = ev'; end
         inc = 2;
-    end;
+    end
     if (strcmp(varargin{na},'ll')) % row vector of length d.
         ll = varargin{na+1};
         inc = 2;
-    end;
+    end
     if (strcmp(varargin{na},'ur')) % row vector of length d.
         ur = varargin{na+1};
         inc = 2;
-    end;
+    end
     if (strcmp(varargin{na},'mg')) % row vector of length d.
         mg = varargin{na+1};
         inc = 2;
-    end;
+    end
     if (strcmp(varargin{na},'cut')) % positive scalar.
         cut = varargin{na+1};
         inc = 2;
-    end;
+    end
     if (strcmp(varargin{na},'module')) % string.
         mdl = struct('name',varargin{na+1}, 'directory','', 'parameters',0 );
         inc = 2;
-    end;
+    end
     if (strcmp(varargin{na},'maxk')) % positive integer.
         maxk = varargin{na+1};
         inc = 2;
-    end;
+    end
     if (strcmp(varargin{na},'deriv')) % numeric row vector, up to deg elements.
         deriv = varargin{na+1};
         inc = 2;
-    end;
+    end
     if (strcmp(varargin{na},'renorm')) % density renormalization.
         deren = varargin{na+1};
         inc = 2;
-    end;
+    end
     if (strcmp(varargin{na},'itype')) % density - integration type.
         deit = varargin{na+1};
         inc = 2;
-    end;
+    end
     if (strcmp(varargin{na},'mint')) % density - # of integration points.
         demint = varargin{na+1};
         inc = 2;
-    end;
+    end
     if (strcmp(varargin{na},'debug')) % debug level.
         debug = varargin{na+1};
         inc = 2;
-    end;
+    end
     if (inc==0)
       disp(varargin{na});
       error('Unknown Input Argument.');
-    end;
+    end
     na=na+inc;
 end
 
@@ -444,7 +444,7 @@ fit.evaluation_structure.cut = cut;
 fit.evaluation_structure.maxk = maxk;
 fit.evaluation_structure.derivative = deriv;
 
-if (alpha==0); alpha = [0.7 0 0]; end;
+if (alpha==0); alpha = [0.7 0 0]; end
 
 fit.smoothing_parameters.alpha = alpha;
 fit.smoothing_parameters.adaptive_criterion = acri;
@@ -458,7 +458,7 @@ fit.smoothing_parameters.deit = deit;
 fit.smoothing_parameters.demint = demint;
 fit.smoothing_parameters.debug = debug;
 
-[fpc pcomp] = mexlf(fit.data,fit.evaluation_structure,fit.smoothing_parameters);
+[fpc, pcomp] = mexlf(fit.data,fit.evaluation_structure,fit.smoothing_parameters);
 fit.fit_points = fpc;
 fit.parametric_component = pcomp;
 

@@ -11,7 +11,7 @@ function Z = plus(X,Y)
 
 
 if isa(Y,'sumtensor') %If the 2nd component is a sumtensor, treat as such
-    Z=plus(Y,X)
+    Z=plus(Y,X);
 else
     Z = tenfun(@plus,X,Y);
 end

@@ -69,7 +69,7 @@ classdef LabelBasics
                     end
                 end
             end
-            [trainFreq, testFreq]=LabelBasics.HasFrequencies(lblMap);
+            [trainFreq, ~]=LabelBasics.HasFrequencies(lblMap);
             total=length(lbls);
             tab=sprintf('\t');
             u=unique(lbls);

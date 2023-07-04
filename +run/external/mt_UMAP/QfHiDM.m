@@ -1467,7 +1467,7 @@ classdef QfHiDM < handle
                                             String.encodeRounded(v(mergerCol),3), ...
                                             MatBasics.toString(bestIds{1}),...
                                             String.encodeRounded(r(bestRow, mergerCol),3), ...
-                                            MatBasics.toString(ids{bestRow}))
+                                            MatBasics.toString(ids{bestRow}));
                                         if this.areEqual
                                             msg(['<html>' msgTxt '<hr></html>']);
                                         end
@@ -1488,7 +1488,7 @@ classdef QfHiDM < handle
                             r=this.computeNbyN(ids, this.tIds, '', mergerCol, false);
                             [~, bestRow]=min(r(:,mergerCol));
                             if QfHiDM.TEST_F_MEASURE_OPTIMIZE
-                                [rr, xx]=this.fMeasureNby1(ids, this.tIds, mergerCol);
+                                [~, xx]=this.fMeasureNby1(ids, this.tIds, mergerCol);
                                 if xx~=bestRow
                                     disp('xx~=bestRow');
                                     this.fMeasureNby1(ids, this.tIds, mergerCol);
@@ -1524,7 +1524,7 @@ classdef QfHiDM < handle
                                             String.encodeRounded(v(mergerRow), 3), ...
                                             MatBasics.toString(bestIds{1}),...
                                             String.encodeRounded(r(mergerRow, bestCol), 3), ...
-                                            MatBasics.toString(ids{bestCol}))
+                                            MatBasics.toString(ids{bestCol}));
                                         if this.areEqual
                                             msg(['<html>' msgTxt ...
                                                 '<hr></html>']);
@@ -1546,7 +1546,7 @@ classdef QfHiDM < handle
                             r=this.computeNbyN(allStudIds, ids, '', mergerRow, true);
                             [~, bestCol]=min(r(mergerRow, :));
                             if QfHiDM.TEST_F_MEASURE_OPTIMIZE
-                                [rr, xx]=this.fMeasure1byN(allStudIds, ids, mergerRow);
+                                [~, xx]=this.fMeasure1byN(allStudIds, ids, mergerRow);
                                 if xx~=bestCol
                                     disp('assert(xx==bestCol);');
                                     this.fMeasure1byN(allStudIds, ids, mergerRow)
@@ -1709,8 +1709,8 @@ classdef QfHiDM < handle
                 getInAscendingOrder(this, nTH, idAsCellString)
             [qfDistance, x, y]=MatBasics.PokeSortedMatrix(...
                 this.result, nTH);
-            [sIds_, sIdxs]=QfHiDM.GetIds(x, this.sIds, this.sMergedIds);
-            [tIds_, tIdxs]=QfHiDM.GetIds(y, this.tIds, this.tMergedIds);
+            [sIds_, ~]=QfHiDM.GetIds(x, this.sIds, this.sMergedIds);
+            [tIds_, ~]=QfHiDM.GetIds(y, this.tIds, this.tMergedIds);
             if nargin>2 && idAsCellString
                sIds_=QfHiDM.ToCellStrings(sIds_);
                tIds_=QfHiDM.ToCellStrings(tIds_);
@@ -1795,7 +1795,7 @@ classdef QfHiDM < handle
                         lbl=[lbl String.encodeInteger(this.leafSzs(idx))...
                             ' events'];
                     catch ex
-                        ex
+                        ex;
                     end
                     if i<N
                         lbl=[lbl '<br>'];
@@ -2011,7 +2011,7 @@ classdef QfHiDM < handle
                 [maxF, bestRow]=topFs.best;
                 matrix(bestRow, mergerCol)=1-maxF;
             else
-                [rows, Fs]=topFs.all;
+                [rows, ~]=topFs.all;
                 nRows=length(rows);
                 scores=zeros(1, nRows);
                 for i=1:nRows
@@ -2095,7 +2095,7 @@ classdef QfHiDM < handle
                 [maxF, bestCol]=topFs.best;
                 matrix(mergerRow, bestCol)=1-maxF;
             else
-                [cols, Fs]=topFs.all;
+                [cols, ~]=topFs.all;
                 nCols=length(cols);
                 scores=zeros(1, nCols);
                 for i=1:nCols
@@ -2176,7 +2176,7 @@ classdef QfHiDM < handle
             end 
             if QfHiDM.F_MEASURE_MERGE_FAST ~= 1
                 if length(mergeIds) ~= length(bestIds)
-                    [length(mergeIds)            bestIds]
+                    [length(mergeIds)            bestIds];
                 else
                     fprintf('\tEverything got merged!!\n');
                 end
@@ -3111,7 +3111,7 @@ classdef QfHiDM < handle
         end
 
         function [out, missing]=RemoveMissingColumns( ...
-                requiredColumnNames, dataColumnNames, dataColumnIdxs)
+                requiredColumnNames, dataColumnNames, ~)
             N=length(requiredColumnNames);
             missing={};
             out={};
@@ -3212,7 +3212,7 @@ classdef QfHiDM < handle
             end
         end
         
-        function QF=TreeData(qft, qf)
+        function QF=TreeData(qft, ~)
             qf=qft.qf;
             QF.tIds=qf.tIds;
             QF.numLeaves=qf.numLeaves;

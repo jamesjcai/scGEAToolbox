@@ -29,7 +29,7 @@ if (p==1)
   plot(xfit{1},cu,':');
   plot(xfit{1},cl,':');
   hold off;
-end;
+end
 
 if (p==2)
   x1 = xfit{1};
@@ -38,6 +38,6 @@ if (p==2)
   surf(x1,x2,reshape(cl,length(x1),length(x2))');
   figure(2);
   surf(x1,x2,reshape(cu,length(x1),length(x2))');
-end;
+end
 
 return;

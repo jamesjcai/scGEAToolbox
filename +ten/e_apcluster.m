@@ -17,7 +17,7 @@ case 2
 end
 
 %%
-[idx,netsim,dpsim,expref]=apcluster(s,init_pref);
+[idx,~,~,~]=apcluster(s,init_pref);
 C=grp2idx(idx);
 % C=kmedoids(aln,700);
 a=sortrows([unique(C) grpstats(C,C,@numel)],2,'descend');

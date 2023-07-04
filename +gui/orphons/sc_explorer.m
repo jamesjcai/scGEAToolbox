@@ -91,7 +91,7 @@ add_3dcamera;
 
 
 
-    function MenuSelected1(src,event)
+    function MenuSelected1(~,~)
         answer = questdlg('Which species?', ...
             'Select Species', ...
             'Mouse','Human','Mouse');
@@ -118,10 +118,10 @@ add_3dcamera;
             'species',speciesx,"method",methodx);
     end
 
-    function MenuSelected2(src,event)
+    function MenuSelected2(~,~)
         gui.sc_markerexplorer(X,genelist,s);
     end
-    function MenuSelected3(src,event)
+    function MenuSelected3(~,~)
         gui.sc_pseudotimeexplorer(X,genelist,s);
     end
 

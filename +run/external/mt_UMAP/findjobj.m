@@ -985,7 +985,7 @@ function [handles,levels,parentIdx,listing] = findjobj(container,varargin) %#ok<
                 % Simple processing: slower since it does extra processing within opaque.char()
                 for componentIdx = 1 : length(handles)
                     % Note: using @toChar is faster but returns java String, not a Matlab char
-                    foundIdx(componentIdx) = ~isempty(regexpi(char(handles(componentIdx).getClass),classFilter));
+                    foundIdx(componentIdx) = ~isempty(regexpi(char(handles(componentIdx).getClass),classFilter, 'once'));
                 end
             end
 
@@ -3192,7 +3192,7 @@ function [handles,levels,parentIdx,listing] = findjobj(container,varargin) %#ok<
         msg = err.message;
         for idx = 1 : length(err.stack)
             filename = err.stack(idx).file;
-            if ~isempty(regexpi(filename,mfilename))
+            if ~isempty(regexpi(filename,mfilename, 'once'))
                 funcname = err.stack(idx).name;
                 line = num2str(err.stack(idx).line);
                 msg = [msg ' at <a href="matlab:opentoline(''' filename ''',' line ');">' funcname ' line #' line '</a>']; %#ok grow

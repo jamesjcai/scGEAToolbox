@@ -23,7 +23,7 @@ mmfile = fopen(filename,'r');
 if ( mmfile == -1 )
  disp(filename);
  error('File not found');
-end;
+end
 
 header = fgets(mmfile);
 if (header == -1 )
@@ -38,12 +38,12 @@ end
 [head1,header]   = strtok(header);
 [rep,header]     = strtok(header);
 [field,header]   = strtok(header);
-[symm,header]    = strtok(header);
+[symm,~]    = strtok(header);
 head1 = lower(head1);
 rep   = lower(rep);
 field = lower(field);
 symm  = lower(symm);
-if ( length(symm) == 0 )
+if ( isempty(symm) )
    disp(['Not enough words in header line of file ',filename]) 
    disp('Recognized format: ')
    disp('%%MatrixMarket matrix representation field symmetry')
@@ -62,7 +62,7 @@ end
 % Read through comments, ignoring them
 
 commentline = fgets(mmfile);
-while length(commentline) > 0 & commentline(1) == '%',
+while ~isempty(commentline) & commentline(1) == '%'
   commentline = fgets(mmfile);
 end
 
@@ -89,7 +89,7 @@ if ( strcmp(rep,'coordinate')) %  read matrix given in sparse
   
   if  ( strcmp(field,'real') || strcmp(field,'integer') )   % real valued entries:
   
-    [T,count] = fscanf(mmfile,'%f',3);
+    [T,~] = fscanf(mmfile,'%f',3);
     T = [T; fscanf(mmfile,'%f')];
     if ( size(T) ~= 3*entries )
        message = ...
@@ -152,7 +152,7 @@ elseif ( strcmp(rep,'array') ) %  read matrix given in dense
     A = fscanf(mmfile,'%f',1);
     A = [A; fscanf(mmfile,'%f')];
     if ( strcmp(symm,'symmetric') | strcmp(symm,'hermitian') | strcmp(symm,'skew-symmetric') ) 
-      for j=1:cols-1,
+      for j=1:cols-1
         currenti = j*rows;
         A = [A(1:currenti); zeros(j,1);A(currenti+1:length(A))];
       end
@@ -177,7 +177,7 @@ elseif ( strcmp(rep,'array') ) %  read matrix given in dense
       A  = [A; tmpr + tmpi*i];
     end
     if ( strcmp(symm,'symmetric') | strcmp(symm,'hermitian') | strcmp(symm,'skew-symmetric') ) 
-      for j=1:cols-1,
+      for j=1:cols-1
         currenti = j*rows;
         A = [A(1:currenti); zeros(j,1);A(currenti+1:length(A))];
       end

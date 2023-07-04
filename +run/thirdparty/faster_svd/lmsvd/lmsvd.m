@@ -258,7 +258,7 @@ for iter = 1:maxit
         %portion = csum/csum(end);
         %L = find(portion > .999,1)
         L = sum(sdT > 5e-8,1);
-        if L < .95*Lm; %disp([L Lm])
+        if L < .95*Lm %disp([L Lm])
             Lm = L;
             Icut = idx(1:Lm);
             Py = Py(:,Icut);

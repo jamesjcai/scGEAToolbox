@@ -14,4 +14,4 @@ for p=1:length(percent)
 end
 
 dashboard=table([result(:).ami]',[result(:).ari]',[result(:).fmi]',percent','VariableNames',{'AMI','ARI','FMI','Ratio'});
-resultBest=dashboard(dashboard.ARI==max([result(:).ari]),:)
+resultBest=dashboard(dashboard.ARI==max([result(:).ari]),:);

@@ -1,4 +1,4 @@
-function benchmarks(data, labels, markers, K)
+function main2(data, labels, markers, K)
 
 [d,N]=size(data);
 l=labels;
@@ -17,12 +17,12 @@ test_labels(I)=[];
 
 
 
-baseline=nearest_neighbors_classifier(data, labels, eye(d), test_data, test_labels, K)
+baseline=nearest_neighbors_classifier(data, labels, eye(d), test_data, test_labels, K);
 
 
 P=data(markers,:);
-sqz_kmeans=kmeans_classification_error(P, 13, labels)
-sqz_knn=nearest_neighbors_classifier(data1, labels1, diag(markers), test_data, test_labels, K)
+sqz_kmeans=kmeans_classification_error(P, 13, labels);
+sqz_knn=nearest_neighbors_classifier(data1, labels1, diag(markers), test_data, test_labels, K);
 
 
 markers=significant_cluster(G, labels, 'test.png');

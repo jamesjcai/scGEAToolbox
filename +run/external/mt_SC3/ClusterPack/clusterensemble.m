@@ -41,7 +41,7 @@ end
 
 if ~exist('cls','var')
     disp('clusterensemble-warning: no arguments - displaying illustrative example:');
-    cls = [1 1 1 2 2 3 3; 2 2 2 3 3 1 1; 1 1 2 2 3 3 3;1 2 NaN 1 2 NaN NaN]
+    cls = [1 1 1 2 2 3 3; 2 2 2 3 3 1 1; 1 1 2 2 3 3 3;1 2 NaN 1 2 NaN NaN];
     disp('clusterensemble-advice: type "help clusterensemble" for information about usage');
     disp(' ');
 end
@@ -64,6 +64,6 @@ for i = 1:length(workfcts)
    disp(['clusterensemble: ' workfct ' at ' num2str(q(i))]);
 end
 
-[qual, best] = max(q);
+[~, best] = max(q);
 
 cl = cl(best,:);

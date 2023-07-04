@@ -39,7 +39,7 @@
 % 
 %   See also NDHIST, NHIST, PLOT, COLORMAP, 43700-cubehelix-colormaps
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% by Jonathan Lansey, March 2009-2013 – Lansey at gmail.com               %
+% by Jonathan Lansey, March 2009-2013 â€“ Lansey at gmail.com               %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 
 %% credits and where the function came from
@@ -162,7 +162,7 @@ end
 
 function varIn = brighten(varIn,varargin) % increase the brightness
 
-if isempty(varargin),
+if isempty(varargin)
     frac = .9; 
 else
     frac = varargin{1}; 

@@ -41,12 +41,12 @@ set(fh,'WindowButtonDownFcn', @mouseDownCallback);
               waitfor(fh);
 
 
-function i_CloseFig(figHandle,varargin)
+function i_CloseFig(~,varargin)
     % delete(fh);
     closereq;
 end
 
-    function i_SetValues(figHandle,varargin)
+    function i_SetValues(~,varargin)
             prompt = {'X-variable cutoff:','Y-variable cutoff:'};
             answer = inputdlg(prompt,"",[1 35],...
                      {num2str(xr(2)),num2str(yr(2))});

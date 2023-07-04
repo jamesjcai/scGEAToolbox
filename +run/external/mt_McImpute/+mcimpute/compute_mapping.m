@@ -266,7 +266,7 @@ function [mappedA, mapping] = compute_mapping(A, type, no_dims, varargin)
             else [mappedA, mapping] = lle(A, tmp_dims, varargin{1}, eig_impl); end
             
             % Now perform the MVU / CCA optimalization            
-            if strcmp(type, 'MVU'),
+            if strcmp(type, 'MVU')
                 disp('Running Maximum Variance Unfolding...');
                 opts.method = 'MVU';
             else
@@ -399,7 +399,7 @@ function [mappedA, mapping] = compute_mapping(A, type, no_dims, varargin)
             Y = A(:,1); A = A(:,2:end);
             mapping.mean = mean(A, 1);
             A = bsxfun(@minus, A, mapping.mean);
-            [foo, mapping.M, mappedA] = lmnn(A, Y);
+            [~, mapping.M, mappedA] = lmnn(A, Y);
             mapping.name = 'LMNN';
             
         otherwise

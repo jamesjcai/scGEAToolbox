@@ -289,7 +289,7 @@ classdef Gui
                 end
             end
             if Gui.DEBUGGING
-                idxs_
+                idxs_;
             end
         end
 
@@ -738,7 +738,7 @@ classdef Gui
             btns.setOpaque(false);
             bp.add(btns, tipWhere);
             
-            function tipFlip(h, op)
+            function tipFlip(~, op)
                 Gui.TipDetail(BasicMap.Global, op)
                 if ~isempty(refresh)
                     feval(refresh);
@@ -1122,7 +1122,7 @@ classdef Gui
                 jl.setToolTipText(toolTip);
             end
             
-            function check(h, e)
+            function check(h, ~)
                 s=char(h.getText);
                 if isequal(s, '-') || isequal(s, '.') || isequal(s, '-.')
                     return;
@@ -1681,7 +1681,7 @@ classdef Gui
         end
         
         function icon=IconAnimated(file)
-            [path, f]=fileparts(file);
+            [path, ~]=fileparts(file);
             if isempty(path)
                 file=fullfile(BasicMap.Global.contentFolder, file);
             end
@@ -1689,7 +1689,7 @@ classdef Gui
         end        
         
         function icon=Icon(file)
-            [path, f]=fileparts(file);
+            [path, ~]=fileparts(file);
             if isempty(path)
                 file=fullfile(BasicMap.Global.contentFolder, file);
             elseif ispc
@@ -1863,7 +1863,7 @@ classdef Gui
             if N>1 || nargin>4 %% if > 1 or invoker is interested in top margin 
                 if topLeft
                     
-                    [scrNum, scrPerc, scrPos]=Gui.FindScreen(scrFig);
+                    [scrNum, ~, scrPos]=Gui.FindScreen(scrFig);
                     if Gui.DEBUGGING
                         disp(['GCF name on screen #' num2str(scrNum)]);
                         get(scrFig, 'name')
@@ -2424,7 +2424,7 @@ classdef Gui
         end
 
         function FitJavaChildWndToParentWndScreen(parent, child)
-            [scrIdx, percentOnScr, numScreens, scrJava, scrMl]=...
+            [~, ~, ~, scrJava, scrMl]=...
                 Gui.FindJavaScreenForJavaWnd(parent);
             size=child.getSize;
             x=child.getX;
@@ -3546,7 +3546,7 @@ classdef Gui
                 if h~=0 && ishandle(h)
                     set(h,'Units','data');
                     e=get(h,'Extent');
-                    if y<=e(2)+e(4) && y>=e(2);
+                    if y<=e(2)+e(4) && y>=e(2)
                         if x>e(1) && x<= e(1)+e(3)
                             ok=true;
                         end
@@ -3561,7 +3561,7 @@ classdef Gui
                 if h~=0 && ishandle(h)
                     set(h,'Units','data');
                     e=get(h,'Extent');
-                    if y<=e(2)+yPad*e(4) && y>=e(2);
+                    if y<=e(2)+yPad*e(4) && y>=e(2)
                         if x>xPad*e(1) && x<= e(1)+e(3)
                             %disp( ['***' x e(1) e(3) ])
                             amts(1)=1;
@@ -3582,7 +3582,7 @@ classdef Gui
                 if length(p)<4
                     p=get(h, 'extent');
                 end
-                if y<=p(2)+p(4) && y>=p(2);
+                if y<=p(2)+p(4) && y>=p(2)
                     if x>p(1) && x<= p(1)+p(3)
                         ok=true;
                     end
@@ -3590,7 +3590,7 @@ classdef Gui
             end
         end
         
-        function SetJavaVisible(jd, useGcf)
+        function SetJavaVisible(jd, ~)
             if isdeployed || ~ismac || 1==size(get(0, 'MonitorPositions'), 1)
                 jd.setVisible(true);
                 return;
@@ -3608,7 +3608,7 @@ classdef Gui
                         jd.getLocation
                         jd.setLocation(old);
                         disp('A D J U S T I N G');
-                        old
+                        old;
                     else
                         jd.setLocation(old);
                     end
@@ -3651,7 +3651,7 @@ classdef Gui
                     size.height, refXy.x, refXy.y, refSize.width, ...
                     refSize.height, where);
                 if ~isempty(find(where=='+', 1, 'last'))
-                    [scrIdx, percentOnScr, numScreens, scrJava, scrMl]=...
+                    [~, ~, ~, scrJava, scrMl]=...
                         Gui.FindJavaScreenForJavaWnd(reference);
                     mlY=javaPointToMatLab(x,y);
                     pos=[floor(x) (floor(mlY-size.height)) size.width size.height];
@@ -3871,7 +3871,7 @@ classdef Gui
         end
 
         function ScreenShot(h, fileName, toClipBoard, percents)
-            [cdata,a]=getscreen(h);            
+            [cdata,~]=getscreen(h);            
             imwrite(cdata, fileName);
             if toClipBoard
                 edu.stanford.facs.swing.ClipboardImage.write(...

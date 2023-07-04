@@ -39,7 +39,7 @@ c=get(gca, 'Children');
 for i=1:size(c,1)-aux
     c(i).MarkerSize=10;
 end
-[h,icons] = legend(gca);
+[h,~] = legend(gca);
 h.Location='bestoutside';
 
 axis off

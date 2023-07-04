@@ -69,7 +69,7 @@ S0 = NE_dn(S0,'ave');
 S= (S0 + S0')/2;
 D0 = diag(sum(S,order));
 L0= D0-S;
-[F, temp, evs]=eig1(L0, c, 0);
+[F, ~, evs]=eig1(L0, c, 0);
 F = NE_dn(F,'ave');
 for iter = 1:NITER
     distf = L2_distance_1(F',F');
@@ -88,7 +88,7 @@ for iter = 1:NITER
     D = diag(sum(S,order));
     L = D - S;
     F_old = F;
-    [F, temp, ev]=eig1(L, c, 0);
+    [F, ~, ev]=eig1(L, c, 0);
     F = NE_dn(F,'ave');
     F = (1-beta)*F_old+beta*F;
     evs(:,iter+1) = ev;
@@ -119,12 +119,12 @@ for iter = 1:NITER
     end
     S_old = S;
     distX = Kbeta(D_Kernels,alphaK');
-    [distX1, idx] = sort(distX,2);
-end;
+    [~, idx] = sort(distX,2);
+end
 LF = F;
 D = diag(sum(S,order));
 L = D - S;
-[U,D] = eig(L);
+[U,~] = eig(L);
 if length(no_dim)==1
     F = tsne_p_bo((S),[], U(:,1:no_dim));
 else
@@ -187,8 +187,8 @@ N = size(x,1);
 KK = 0;
 sigma = [2:-0.25:1];
 Diff = (dist2_pearson(x));
-[T,INDEX]=sort(Diff,2);
-[m,n]=size(Diff);
+[T,~]=sort(Diff,2);
+[~,n]=size(Diff);
 allk = 10:2:30;
 t=1;
 for l = 1:length(allk)

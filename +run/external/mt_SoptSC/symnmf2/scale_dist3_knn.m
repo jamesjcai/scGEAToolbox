@@ -130,7 +130,7 @@ end
 A_s = exp( -s ./ (ls(index(:,1)).*ls(index(:,2))) );
 
 if (useSparse)
-    [index, i, j] = unique(index, 'rows');
+    [index, i, ~] = unique(index, 'rows');
     A_s = A_s(i);
     A = sparse(index(:,1), index(:,2), A_s, n, n);
 else

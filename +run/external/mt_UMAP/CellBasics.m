@@ -37,7 +37,7 @@ classdef CellBasics
         
         function groups=GetRowGroups(sortedRows)
             groups={};
-            [R,C]=size(sortedRows);
+            [R,~]=size(sortedRows);
             if R>0
                 lastStartingR=1;
                 for r=2:R

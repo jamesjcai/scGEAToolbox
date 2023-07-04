@@ -4,10 +4,10 @@
 
 function labels=hmetis(x,k,w) 
 
-if ~exist('w'),
+if ~exist('w')
   filename = wgraph(x,[],2);
 else
   filename = wgraph(x,w,3);
-end; 
+end 
 labels = sgraph(k,filename); 
 delete(filename);

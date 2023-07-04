@@ -14,8 +14,8 @@ tgene=tgene(i);
 y=(1:length(tgene))';
 x=[-ones(size(y));ones(size(y))]./2;
 y=[y;y];
-x
-y
+x;
+y;
 sz=ones(size(y));
 c=ones(size(y));
 for k=1:length(tgene)    
@@ -39,10 +39,10 @@ txgene=[" ";tgene];
 %sz=randi(100,1,length(x));
 %scatter([-.5 .5],[-1 -1],[1 500],'k','filled');
 %hold on
-x
-y
-sz
-c
+x;
+y;
+sz;
+c;
 scatter(x,y,500*sz,c,'filled');
 hold on
 scatter(x,y,500*sz,'k');

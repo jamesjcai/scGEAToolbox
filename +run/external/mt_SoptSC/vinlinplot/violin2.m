@@ -83,7 +83,7 @@ violin(Y,'facecolor',[1 1 0;0 1 0;.3 .3 .3;0 0.3 0.1],'edgecolor','none','bw',0.
 ylabel('\Delta [yesno^{-2}]','FontSize',14)
 %}
 %%
-function[h,L,MX,MED,bw]=violin(Y,varargin)
+function[h,L,MX,MED,bw]=violin2(Y,varargin)
 
 %defaults:
 %_____________________
@@ -106,19 +106,19 @@ if iscell(Y)==0
 end
 
 %get additional input parameters (varargin)
-if isempty(find(strcmp(varargin,'xlabel')))==0
+if isempty(find(strcmp(varargin,'xlabel'), 1))==0
     xL = varargin{find(strcmp(varargin,'xlabel'))+1};
 end
-if isempty(find(strcmp(varargin,'facecolor')))==0
+if isempty(find(strcmp(varargin,'facecolor'), 1))==0
     fc = varargin{find(strcmp(varargin,'facecolor'))+1};
 end
-if isempty(find(strcmp(varargin,'edgecolor')))==0
+if isempty(find(strcmp(varargin,'edgecolor'), 1))==0
     lc = varargin{find(strcmp(varargin,'edgecolor'))+1};
 end
-if isempty(find(strcmp(varargin,'facealpha')))==0
+if isempty(find(strcmp(varargin,'facealpha'), 1))==0
     alp = varargin{find(strcmp(varargin,'facealpha'))+1};
 end
-if isempty(find(strcmp(varargin,'mc')))==0
+if isempty(find(strcmp(varargin,'mc'), 1))==0
     if isempty(varargin{find(strcmp(varargin,'mc'))+1})==0
         mc = varargin{find(strcmp(varargin,'mc'))+1};
         plotmean = 1;
@@ -126,7 +126,7 @@ if isempty(find(strcmp(varargin,'mc')))==0
         plotmean = 0;
     end
 end
-if isempty(find(strcmp(varargin,'medc')))==0
+if isempty(find(strcmp(varargin,'medc'), 1))==0
     if isempty(varargin{find(strcmp(varargin,'medc'))+1})==0
         medc = varargin{find(strcmp(varargin,'medc'))+1};
         plotmedian = 1;
@@ -134,8 +134,8 @@ if isempty(find(strcmp(varargin,'medc')))==0
         plotmedian = 0;
     end
 end
-if isempty(find(strcmp(varargin,'bw')))==0
-    b = varargin{find(strcmp(varargin,'bw'))+1}
+if isempty(find(strcmp(varargin,'bw'), 1))==0
+    b = varargin{find(strcmp(varargin,'bw'))+1};
     if length(b)==1
         disp(['same bandwidth bw = ',num2str(b),' used for all cols'])
         b=repmat(b,size(Y,2),1);
@@ -144,10 +144,10 @@ if isempty(find(strcmp(varargin,'bw')))==0
         error('please provide only one bandwidth or an array of b with same length as columns in the data set')
     end
 end
-if isempty(find(strcmp(varargin,'plotlegend')))==0
+if isempty(find(strcmp(varargin,'plotlegend'), 1))==0
     plotlegend = varargin{find(strcmp(varargin,'plotlegend'))+1};
 end
-if isempty(find(strcmp(varargin,'x')))==0
+if isempty(find(strcmp(varargin,'x'), 1))==0
     x = varargin{find(strcmp(varargin,'x'))+1};
 end
 %%

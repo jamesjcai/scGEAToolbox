@@ -11,7 +11,7 @@ plot_graph_option = 1;
 
 
 rrw = X(:);
-[kNNgraphlength, Graph] = kNNgraphmex(rrw, N, dim, kneighbors, 1);
+[~, Graph] = kNNgraphmex(rrw, N, dim, kneighbors, 1);
 
 Graph = reshape(Graph, kneighbors+1, N );
 

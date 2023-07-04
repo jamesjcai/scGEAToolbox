@@ -5,10 +5,10 @@ label=load(path_label);
 n_space = length(unique(label));
 [X,] = FilterGenesZero(in_X);
 Xori=X;
-[n,m]=size(X);
+[n,~]=size(X);
 X = normalize(X');
-n_space
-n
+n_space;
+n;
 NMI=0;
 ARI=0;
     for i=1:15

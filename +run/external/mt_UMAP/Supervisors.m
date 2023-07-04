@@ -439,8 +439,8 @@ classdef Supervisors < handle
                 end
             end
             if Supervisors.DEBUG_QF
-                [~, ~, tMi, sMi, supr1stIdx4Clue2, supr1stId4Clue, supervisorsUnmatched, ...
-                    clustersUnmatched, tNoMatchIds, sNoMatchIds]=qf.getMatches2;
+                [~, ~, ~, ~, supr1stIdx4Clue2, ~, supervisorsUnmatched, ...
+                    clustersUnmatched, tNoMatchIds, ~]=qf.getMatches2;
                 qf.tNames(supervisorsUnmatched)
                 assert(isequal(tNames(ismember(qf.tIds, tNoMatchIds)),...
                     qf.tNames(supervisorsUnmatched)));
@@ -450,7 +450,7 @@ classdef Supervisors < handle
                 assert(isequal(clustersUnmatched, sCnt==0))
                 assert(isequal(supervisorsUnmatched, tCnt==0))
                 [tQ, sQ, tF, sF]=qf.getScores;
-                [d2, unmatched]=qf.getTableData(clrs);
+                [d2, ~]=qf.getTableData(clrs);
                 tN=length(tQ);
                 sN=length(sQ);
                 NN=min([tN sN]);
@@ -641,7 +641,7 @@ classdef Supervisors < handle
                         if Supervisors.VERBOSE
                             sum(closestLabelIdxs)
                             this.labelMap.get(java.lang.String(num2str(label)))
-                            reChecks{i}
+                            reChecks{i};
                         end
                         if any(closestLabelIdxs)
                             %Does this cluster with no label match
@@ -690,7 +690,7 @@ classdef Supervisors < handle
                         if Supervisors.VERBOSE
                             this.labelMap.get(java.lang.String(num2str(label)))
                         end
-                        [D2, I2]=pdist2(avgs(i,:), remainder, ...
+                        [D2, ~]=pdist2(avgs(i,:), remainder, ...
                             'euclidean', 'smallest', 1);
                         pt=avgs(i,:)+devs(i,:);
                         devDist=pdist2(avgs(i,:), pt);

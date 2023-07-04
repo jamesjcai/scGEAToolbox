@@ -84,9 +84,9 @@ end
 
 %% Parse parameters
 params = inputParser;
-params.addParamValue('lambda_penalty', true, @islogical);
-params.addParamValue('greedy', true, @islogical);
-params.addParamValue('threshold', 0.99^N, @(x)(x<1));
+params.addParameter('lambda_penalty', true, @islogical);
+params.addParameter('greedy', true, @islogical);
+params.addParameter('threshold', 0.99^N, @(x)(x<1));
 params.parse(varargin{:});
 
 %% Make sure columns of factor matrices in A and B are normalized

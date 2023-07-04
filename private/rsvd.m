@@ -15,7 +15,7 @@ function [U,S,V] = rsvd(A,K)
 %-------------------------------------------------------------------------------------
 % Antoine Liutkus  (c) Inria 2014
 
-[M,N] = size(A);
+[~,N] = size(A);
 P = min(2*K,N);
 X = randn(N,P);
 Y = A*X;

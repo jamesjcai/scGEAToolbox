@@ -20,7 +20,7 @@ mmfile = fopen(filename,'r');
 if ( mmfile == -1 )
  disp(filename);
  error('File not found');
-end;
+end
 
 header = fgets(mmfile);
 if (header == -1 )
@@ -35,12 +35,12 @@ end
 [head1,header]   = strtok(header);
 [rep,header]     = strtok(header);
 [field,header]   = strtok(header);
-[symm,header]    = strtok(header);
+[symm,~]    = strtok(header);
 head1 = lower(head1);
 rep   = lower(rep);
 field = lower(field);
 symm  = lower(symm);
-if ( length(symm) == 0 )
+if ( isempty(symm) )
    disp('Not enough words in header line.') 
    disp('Recognized format: ')
    disp('%%MatrixMarket matrix representation field symmetry')
@@ -59,7 +59,7 @@ end
 % Read through comments, ignoring them
 
 commentline = fgets(mmfile);
-while length(commentline) > 0 & commentline(1) == '%',
+while ~isempty(commentline) & commentline(1) == '%'
   commentline = fgets(mmfile);
 end
 

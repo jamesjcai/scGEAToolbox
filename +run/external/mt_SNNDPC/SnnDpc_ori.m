@@ -22,7 +22,7 @@ N=size(data,1);
 
 %(Not Recommended)If K==0, assign it automatically and show its value
 if ~K
-  K=round(N/30)
+  K=round(N/30);
 end
 
 %Normalization

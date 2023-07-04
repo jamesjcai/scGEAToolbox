@@ -5,7 +5,7 @@
 %   Provided by the Herzenberg Lab at Stanford University 
 %   License: BSD 3 clause
 %
-function [d, resized]=resizeJavaPrefs(app, J, H)
+function [d, resized]=resizeJavaPrefs(app, J, ~)
 d=J.getPreferredSize;
 if app.toolBarFactor>0
     d=java.awt.Dimension(d.width*.55, d.height*.6);

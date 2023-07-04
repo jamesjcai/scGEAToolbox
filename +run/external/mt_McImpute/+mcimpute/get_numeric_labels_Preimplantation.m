@@ -1,4 +1,4 @@
-function [ labels ] = get_numeric_labels( dataname, data_dir)
+function [ labels ] = get_numeric_labels_Preimplantation( dataname, data_dir)
 %GET_NUMERIC_LABELS Summary of this function goes here
 %   Detailed explanation goes here
 

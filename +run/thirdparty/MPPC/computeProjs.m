@@ -10,7 +10,7 @@ function [ I_new ] = computeProjs( x,y,I,cut_indices )
 % computed here.
 
 [m,d] = size(y);
-[n,~] = size(x);
+[~,~] = size(x);
 
 if isempty(I)
     I = dsearchn(y,x)';

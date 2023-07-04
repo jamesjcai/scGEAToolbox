@@ -1,4 +1,4 @@
-function results = evaljointCOAL(clusters,n1, n2, fea, fea_adt, n_clusters)
+function results = evaljointCOAL(clusters,~, ~, fea, fea_adt, n_clusters)
 % clusters: each row is a clustering.     
     % clusters1 = clusters(1:n1, :);
     % [N, m] = size(clusters1);
@@ -23,7 +23,7 @@ function results = evaljointCOAL(clusters,n1, n2, fea, fea_adt, n_clusters)
     % end
     % X = X1 + X2 + corrcoef(fea') + corrcoef(fea_adt');
 
-    [N, m] = size(clusters);
+    [~, m] = size(clusters);
     X = zeros(m);
     parfor i=1:1:m
         X(i,:) = sum(clusters == clusters(:,i));

@@ -625,7 +625,7 @@ end
         RefreshAll(src, 1, true);
     end
 
-    function GeoSketching(scr,~)
+    function GeoSketching(~,~)
         helpdlg('Under Development.');
     end
 

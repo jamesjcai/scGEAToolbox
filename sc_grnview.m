@@ -7,7 +7,7 @@ if nargin<3, figname=''; end
         if nargin<2
             nodenames=string((1:size(A,1))');
         end
-        G=pkg.makegraph(A,nodenames);
+        G=pkg.i_makegraph(A,nodenames);
     end
 if nargin<3
     figname=sprintf('%d nodes',G.numnodes);

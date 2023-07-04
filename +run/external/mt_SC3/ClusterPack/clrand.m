@@ -7,15 +7,15 @@
 %
 % Copyright (c) 1998-2011 by Alexander Strehl
 
-function cl = clrand(x,k,sfct)
+function cl = clrand(x,k,~)
 
 if k<=size(x,1)
   cl = floor(k*rand(1,size(x,1)))+1;
   if (max(onetomax(cl)) ~= k)
     rindex = randperm(size(x,1));
     cl(rindex(1:k)) = 1:k;
-  end;
+  end
 else
   disp('clrand: more clusters than samples requested');
   cl = 1:size(x,1);
-end;
+end

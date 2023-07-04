@@ -95,7 +95,7 @@ Title=[Title,' ',num2str(TimeOutValue),' sec'];
 Interpreter='none';
 if ~iscell(Question),Question=cellstr(Question);end
 
-if isstruct(Default),
+if isstruct(Default)
   Interpreter=Default.Interpreter;
   Default=Default.Default;
 end
@@ -179,12 +179,12 @@ set(QuestFig,'Position',FigPos);
 
 BtnXOffset=zeros(NumButtons,1);
 
-if NumButtons==1,
+if NumButtons==1
   BtnXOffset=(FigPos(3)-BtnWidth)/2;
-elseif NumButtons==2,
+elseif NumButtons==2
   BtnXOffset=[MsgTxtXOffset
     FigPos(3)-DefOffset-BtnWidth];
-elseif NumButtons==3,
+elseif NumButtons==3
   BtnXOffset=[MsgTxtXOffset
     0
     FigPos(3)-DefOffset-BtnWidth];
@@ -291,7 +291,7 @@ FigPos(3)=max(NumButtons*(BtnWidth+DefOffset)+DefOffset, ...
 
 
 % Center Vertically around icon
-if IconHeight>MsgTxtHeight,
+if IconHeight>MsgTxtHeight
   IconYOffset=BtnYOffset+BtnHeight+DefOffset;
   MsgTxtYOffset=IconYOffset+(IconHeight-MsgTxtHeight)/2;
   FigPos(4)=IconYOffset+IconHeight+DefOffset;
@@ -302,14 +302,14 @@ else
   FigPos(4)=MsgTxtYOffset+MsgTxtHeight+DefOffset;
 end
 
-if NumButtons==1,
+if NumButtons==1
   BtnXOffset=(FigPos(3)-BtnWidth)/2;
-elseif NumButtons==2,
+elseif NumButtons==2
   BtnXOffset=[(FigPos(3)-DefOffset)/2-BtnWidth
     (FigPos(3)+DefOffset)/2
     ];
 
-elseif NumButtons==3,
+elseif NumButtons==3
   BtnXOffset(2)=(FigPos(3)-BtnWidth)/2;
   BtnXOffset=[BtnXOffset(2)-DefOffset-BtnWidth
     BtnXOffset(2)
@@ -470,7 +470,7 @@ end
         fh.setDefaultButton(btnH);
     end
 
-    function useHGDefaultButton(figHandle, btnHandle)
+    function useHGDefaultButton(~, btnHandle)
         % First get the position of the button.
         btnPos = getpixelposition(btnHandle);
 

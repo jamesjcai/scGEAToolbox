@@ -152,7 +152,7 @@ elseif isempty(strCR) && ischar(c)
     % Progress bar - initialization
     fprintf('%s',c);
     strCR = -1;
-elseif ~isempty(strCR) && ischar(c),
+elseif ~isempty(strCR) && ischar(c)
     % Progress bar  - termination
     strCR = [];  
     fprintf([c '\n']);

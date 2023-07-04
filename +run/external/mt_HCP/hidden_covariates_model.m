@@ -39,8 +39,8 @@ U = zeros(size(F,2),k);
 Z = zeros(size(F,1),k);
 B = rand(size(Z,2),size(Y,2));
 
-[n1,d1] = size(F);
-[n2,d2] = size(Y);
+[n1,~] = size(F);
+[n2,~] = size(Y);
 
 if n1~=n2
     error('number of rows in F and Y must agree');

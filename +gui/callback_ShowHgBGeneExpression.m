@@ -29,7 +29,7 @@ else
 end
 
 
-    function i_saveM(~,~,M)
+    function i_saveM(~,~,~)
         if ~(ismcc || isdeployed)
             labels = {'Save C_CELL_ID to variable named:',...
                 'Save HgBGeneExpression to variable named:'}; 
