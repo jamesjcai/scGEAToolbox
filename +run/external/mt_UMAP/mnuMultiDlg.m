@@ -86,11 +86,11 @@ hasIcon=isempty(icon) || ~strcmp('none', icon);
 if hasIcon
     ly=javaObjectEDT('java.awt.BorderLayout', 1, 1);
     pnl=javaObjectEDT('javax.swing.JPanel', ly);
-    if radioOrCheckBox
+    %if radioOrCheckBox
         pnl.setBorder(javax.swing.BorderFactory.createEmptyBorder(4, 7, 4, 5));
-    else
-        pnl.setBorder(javax.swing.BorderFactory.createEmptyBorder(4, 7, 4, 5));
-    end
+    %else
+    %    pnl.setBorder(javax.swing.BorderFactory.createEmptyBorder(4, 7, 4, 5));
+    %end
     if isempty(icon)
         pnl.add(javaObjectEDT('javax.swing.JLabel', Gui.Icon('facs.gif')), 'West');
     else

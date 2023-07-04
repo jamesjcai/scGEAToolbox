@@ -702,10 +702,13 @@ if ~isempty(ii)
 	% find an arrowdir vertical on screen and perpendicular to viewer
 	%	transform to 2-D
 		tmp1 = [(stop(:,ii)-axm(:,ii))./axr(:,ii);ones(1,length(ii))];
-		if (oneax), twoD=T*tmp1;
-		else, tmp1=[tmp1;tmp1;tmp1;tmp1]; tmp1=T(:,ii).*tmp1;
+		if (oneax) 
+            twoD=T*tmp1;
+        else
+            tmp1=[tmp1;tmp1;tmp1;tmp1]; tmp1=T(:,ii).*tmp1;
 		      tmp2=zeros(4,4*length(ii)); tmp2(:)=tmp1(:);
-		      twoD=zeros(4,length(ii)); twoD(:)=sum(tmp2)'; end
+		      twoD=zeros(4,length(ii)); twoD(:)=sum(tmp2)'; 
+        end
 		twoD=twoD./(ones(4,1)*twoD(4,:));
 	%	move the start point down just slightly
 		tmp1 = twoD + [0;-1/1000;0;0]*(limrange(2,ii)./ap(2,ii));
@@ -713,7 +716,8 @@ if ~isempty(ii)
 		if (oneax), threeD=invT*tmp1;
 		else, tmp1=[tmp1;tmp1;tmp1;tmp1]; tmp1=invT(:,ii).*tmp1;
 		      tmp2=zeros(4,4*length(ii)); tmp2(:)=tmp1(:);
-		      threeD=zeros(4,length(ii)); threeD(:)=sum(tmp2)'; end
+		      threeD=zeros(4,length(ii)); threeD(:)=sum(tmp2)'; 
+        end
 		start(:,ii) = (threeD(1:3,:)./(ones(3,1)*threeD(4,:))).*axr(:,ii)+axm(:,ii);
 end
 

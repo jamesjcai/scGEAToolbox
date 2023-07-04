@@ -692,13 +692,13 @@ classdef Gui
             else
                 bp=Gui.BorderPanel(0,0);
             end
-            if ispc
+%            if ispc
                 prfx='';
                 sfx='';
-            else
-                prfx='';
-                sfx='';
-            end
+%            else
+%                prfx='';
+%                sfx='';
+%            end
             [~, btnLess]=Gui.ImageLabel(Html.WrapSmall([prfx ...
                 '&lt;&lt;Less' sfx]), [],'', @(h,e)tipFlip(h, -1));
             btnLess.setOpaque(false);

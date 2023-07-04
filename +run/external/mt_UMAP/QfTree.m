@@ -1448,12 +1448,12 @@ classdef QfTree < handle
                                 ttl=strrep(ttl, this.app.smallStart, '<small>');
                                 ttl=strrep(ttl, this.app.smallEnd, '</small>');
                                 img=this.getPngImg(key,[], .22, true);
-                                if N==1
+                                %if N==1
                                     html=[html startHtml ttl '<hr>'...
                                         img endHtml];
-                                else
-                                    html=[html startHtml ttl '<hr>' img endHtml];
-                                end
+                                %else
+                                %    html=[html startHtml ttl '<hr>' img endHtml];
+                                %end
                             end
                         end
                     end
@@ -2463,13 +2463,13 @@ classdef QfTree < handle
                     isLeaf=idx<=nLeaves;
                     if nNodes>25
                         if nLeafs>40
-                            if isLeaf
+%                            if isLeaf
                                 fs1='\fontsize{8}';
                                 fs2='\fontsize{6}';
-                            else
-                                fs1='\fontsize{8}';
-                                fs2='\fontsize{6}';
-                            end
+%                            else
+%                                fs1='\fontsize{8}';
+%                                fs2='\fontsize{6}';
+%                            end
                         elseif nLeafs>25
                             if isLeaf
                                 fs1='\fontsize{9}';

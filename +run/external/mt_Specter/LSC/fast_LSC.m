@@ -89,11 +89,11 @@ end
 % % tic;
 D = EuDist2(trainData,marks,0);
 % toc;
-if isfield(opts,'sigma')
+%if isfield(opts,'sigma')
     sigma = Sigma;
-else
-    sigma = Sigma;
-end
+%else
+%    sigma = Sigma;
+%end
 % fprintf('prepare features for SVD\n');
 % tic;
 dump = zeros(nSmp,r);
