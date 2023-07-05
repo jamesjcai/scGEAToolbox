@@ -497,23 +497,23 @@ classdef Supervisors < handle
                 clusterColors, cluMdns, clusterLabels);
             
 
-            function d=normalize(d)
-                mn=min(d);
-                N_=length(mn);
-                for j=1:N_
-                    if mn(j)<=0
-                        add_=1-mn(j);
-                        d(:,j)=d(:,j)+add_;
-                    end
-                end
-                for j=1:N_
-                    mx_=max(d(:,j));
-                    mn_=min(d(:,j));
-                    r=mx_-mn_;
-                    d(:,j)=(d(:,j)-mn_)/r;
-                end
-            end
-        end
+        %     function d=normalize(d)
+        %         mn=min(d);
+        %         N_=length(mn);
+        %         for j=1:N_
+        %             if mn(j)<=0
+        %                 add_=1-mn(j);
+        %                 d(:,j)=d(:,j)+add_;
+        %             end
+        %         end
+        %         for j=1:N_
+        %             mx_=max(d(:,j));
+        %             mn_=min(d(:,j));
+        %             r=mx_-mn_;
+        %             d(:,j)=(d(:,j)-mn_)/r;
+        %         end
+        %     end
+        % end
         
         function nnMatchWithClusters(this, data, density, ...
                 numClusters, clusterIds, pu)

@@ -165,10 +165,10 @@ classdef NnDescent<handle
                 end
             end
             
-            function ok=test_callback(msg)
-                disp(msg);
-                ok=true;
-            end
+            % function ok=test_callback(msg)
+            %     disp(msg);
+            %     ok=true;
+            % end
 
         end
 

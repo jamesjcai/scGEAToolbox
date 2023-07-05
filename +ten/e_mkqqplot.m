@@ -2,10 +2,10 @@ function e_mkqqplot(T)
 
 pd = makedist('Gamma','a',0.5,'b',2);
 qqplot(T.FC,pd);
-return;
+
 [~,idx]=sort(T.FC);
 dt = datacursormode;
-dt.UpdateFcn = {@i_myupdatefcn1,T.genelist(idx)};
+dt.UpdateFcn = {@i_myupdatefcn1x,T.genelist(idx)};
 
 
 % h1=h(1);
@@ -14,14 +14,12 @@ dt.UpdateFcn = {@i_myupdatefcn1,T.genelist(idx)};
 %     datatip(h1, 'DataIndex', idx(k));    
 % end
 
-
 end
 
-function txt = i_myupdatefcn1(~,event_obj,g)
+function txt = i_myupdatefcn1x(~,event_obj,g)
 % Customizes text of data tips
 % pos = event_obj.Position;
 idx = event_obj.DataIndex;
 % i_plotsiglegene(idx,g);
 txt = {g(idx)};
 end
-

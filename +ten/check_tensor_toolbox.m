@@ -23,6 +23,7 @@ end
 
 end
 
+%{
 function i_downloadtensortoolbox
 %     pw1=cdgea;
 %     %wrkpth=fullfile(pw1,'tensor_toolbox2');
@@ -51,3 +52,4 @@ function i_downloadtensortoolbox
         error('check_tensor_toolbox error.');
     end
 end
+%}

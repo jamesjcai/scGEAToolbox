@@ -141,6 +141,8 @@ hLines = flipud(eventdata.Axes.Children);
     end
 end
 
+
+%{
 function [Tct]=local_celltypebrushed(X,genelist,s,brushedData,species,organ)
 
 % USAGE:
@@ -163,3 +165,4 @@ Xi=X(:,i);
 end
 
 
+%}
