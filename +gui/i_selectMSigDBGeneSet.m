@@ -1,5 +1,7 @@
-function [glist,setname]=i_selectMSigDBGeneSet(species)
+function [glist,setname,Col]=i_selectMSigDBGeneSet(species,colnoly)
 if nargin<1, species='human'; end
+if nargin<2, colnoly=false; end
+
 glist=[];
 setname=[];
 switch lower(species)
@@ -55,9 +57,13 @@ if tf1~=1, return; end
 % val = jsondecode(str);
 
 fw=gui.gui_waitbar;
-val = webread(urllist{indx1});
-setnames=fields(val);
+Col = webread(urllist{indx1});
+setnames=fields(Col);
 gui.gui_waitbar(fw);
+
+if colnoly
+    return;
+end
 
 %idx=gui.i_selmultidlg(a);
 %string(val.(a{idx}).geneSymbols);
@@ -71,6 +77,6 @@ gui.gui_waitbar(fw);
      'ListSize',[300 300]);
 if tf==1
     setname=setnames{idx};
-    glist=string(val.(setname).geneSymbols);
+    glist=string(Col.(setname).geneSymbols);
 end
 
