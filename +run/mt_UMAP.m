@@ -1,4 +1,4 @@
-function [s,c]=mt_UMAP(X,ndim)
+function [s]=mt_UMAP(X,ndim)
 
 %   addpath /Users/Stephen/umap
 %   addpath /Users/Stephen/util
@@ -30,6 +30,11 @@ if ncells>500
     end
 	data = svdpca(data, 50, 'random');
 end
+
+[s]=run_umap_lite(data,'n_components',ndim);
+
+
+%{
 
 if nargout>1 || plotit
     %if verbose
@@ -64,4 +69,6 @@ end
 %     ylabel('UMAP 2')
 % end
 end
+
+%}
 
