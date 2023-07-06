@@ -14,8 +14,8 @@ tgene=tgene(i);
 y=(1:length(tgene))';
 x=[-ones(size(y));ones(size(y))]./2;
 y=[y;y];
-x;
-y;
+
+
 sz=ones(size(y));
 c=ones(size(y));
 for k=1:length(tgene)    

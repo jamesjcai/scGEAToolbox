@@ -49,6 +49,6 @@ resultsLWEA = zeros(size(S,1), numel(ks));
 
 s = [];
 for a = 1:length(S)-1 %change matrix's format to be input of linkage fn
-    s = [s S(a,[a+1:end])];
+    s = [s S(a,a+1:end)];
 end
 d = 1 - s; %compute distance (d = 1-sim)

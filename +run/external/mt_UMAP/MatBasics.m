@@ -527,7 +527,7 @@ classdef MatBasics
             devUnits=abs(sMeans-tMeans)./tStds;
             if any(devUnits>4)
                 try
-                    [tMeans;sMeans;tStds;devUnits];
+                    %[tMeans;sMeans;tStds;devUnits];
                     fprintf('%d parameters are over 4 dev unit away\n',...
                         sum(devUnits>4));
                     disp('herp');
@@ -627,7 +627,7 @@ classdef MatBasics
             tMads=mad(tData_);
             madUnits=abs(sMdns-tMdns)./tMads;
             if any(madUnits>4)
-                [tMdns;sMdns;tMads;madUnits];
+                %[tMdns;sMdns;tMads;madUnits];
                 fprintf('%d parameters are over 4 dev unit away\n',...
                     sum(madUnits>4));
                 disp('herp');

@@ -1,4 +1,4 @@
-function callback_ShowPseudoTimeGenes(src,~)
+function xcallback_ShowPseudoTimeGenes(src,~)
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
 

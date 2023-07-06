@@ -6,7 +6,7 @@ function [aggR,pval] = SIMLR_Feature_Ranking(A,X)
 %%%glist is the ranking of genes
 %addpath('/Users/Bo/Documents/PHD_in_Stanford/Work_Serafim/SingleCell/GB_similaritylearning/RankAggreg')
 for i = 1:100
-    i;
+
     index = randperm(length(A));
     index = index(1:round(length(A)*0.9));
     Ai = A(index,index);

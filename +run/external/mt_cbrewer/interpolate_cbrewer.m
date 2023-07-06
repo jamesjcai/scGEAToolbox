@@ -24,7 +24,7 @@ ncolors=round(ncolors);
 nmax=size(cbrew_init,1);
 
 % create the associated X axis (using round to get rid of decimals)
-a=(ncolors-1)./(nmax-1);
+a=(ncolors-1)/(nmax-1);
 X=round([0 a:a:(ncolors-1)]);
 X2=0:ncolors-1;
 

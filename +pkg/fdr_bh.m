@@ -171,7 +171,7 @@ elseif strcmpi(method,'dep')
     %BH procedure for any dependency structure
     denom=m*sum(1./(1:m));
     thresh=(1:m)*q/denom;
-    wtd_p=denom*p_sorted./[1:m];
+    wtd_p=denom*p_sorted./(1:m);
     %Note, it can produce adjusted p-values greater than 1!
     %compute adjusted p-values
 else

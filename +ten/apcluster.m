@@ -252,7 +252,7 @@ while ~dn
             tmpnetsim=nan; tmpdpsim=nan; tmpexpref=nan; tmpidx=nan;
         else
             I=find(E); [~, c]=max(S(:,I),[],2); c(I)=1:K; tmpidx=I(c);
-            tmpnetsim=sum(S((tmpidx-1)*N+[1:N]'));
+            tmpnetsim=sum(S((tmpidx-1)*N+(1:N)'));
             tmpexpref=sum(dS(I)); tmpdpsim=tmpnetsim-tmpexpref;
         end
     end
@@ -276,7 +276,7 @@ if K>0
     % Refine the final set of exemplars and clusters and return results
     for k=1:K ii=find(c==k); [~, j]=max(sum(S(ii,ii),1)); I(k)=ii(j(1)); end
     [~, c]=max(S(:,I),[],2); c(I)=1:K; tmpidx=I(c);
-    tmpnetsim=sum(S((tmpidx-1)*N+[1:N]')); tmpexpref=sum(dS(I));
+    tmpnetsim=sum(S((tmpidx-1)*N+(1:N)')); tmpexpref=sum(dS(I));
 else
     tmpidx=nan*ones(N,1); tmpnetsim=nan; tmpexpref=nan;
 end

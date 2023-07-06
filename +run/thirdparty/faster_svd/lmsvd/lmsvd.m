@@ -105,7 +105,7 @@ S = S(1:r,1:r);
             memo = 3;
         end
         
-        if isfield(opts,  'gvk'); tau = opts.gvk; else tau = 10; end
+        if isfield(opts,  'gvk'); tau = opts.gvk; else, tau = 10; end
         % working size
         k = min([2*r,r+tau,m,n]);
         % initial guess
@@ -236,7 +236,7 @@ for iter = 1:maxit
         if kktcheck < ptol;  break;  end
         kktc(iter) = kktcheck;
     else
-        if iter == 1; kktc(iter) = inf; else kktc(iter) = kktc(iter-1); end
+        if iter == 1; kktc(iter) = inf; else, kktc(iter) = kktc(iter-1); end
     end
     
     %% look-back optimization

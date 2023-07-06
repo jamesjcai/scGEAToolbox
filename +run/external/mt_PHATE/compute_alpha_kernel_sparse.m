@@ -114,7 +114,7 @@ end
 
 % Radius search for the rest
 if length(idx_thresh)<N
-    disp(['Using radius based search for the rest'])
+    disp('Using radius based search for the rest')
     data_pc2=data_pc(~below_thresh,:);
     epsilon2=epsilon(~below_thresh);
     [idx2, kdist2]=rangesearch(data_pc,data_pc2,bth*max(epsilon2),'Distance',distfun);

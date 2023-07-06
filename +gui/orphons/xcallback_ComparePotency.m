@@ -1,4 +1,4 @@
-function callback_ComparePotency(src,~)
+function xcallback_ComparePotency(src,~)
 % UNUSED function will be removed.
 
     FigureHandle=src.Parent.Parent;

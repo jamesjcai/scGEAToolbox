@@ -24,9 +24,9 @@
 
 function [X,e,ker,alpha] = eels(X,Wp,Wn,l,P,ff,G,alpha0,rho,c)
 % ---------- Argument defaults ----------
-if ~exist('alpha0','var') || isempty(alpha0) alpha0 = 1; end
-if ~exist('rho','var') || isempty(rho) rho = 0.8; end
-if ~exist('c','var') || isempty(c) c = 1e-1; end
+if ~exist('alpha0','var') || isempty(alpha0), alpha0 = 1; end
+if ~exist('rho','var') || isempty(rho), rho = 0.8; end
+if ~exist('c','var') || isempty(c), c = 1e-1; end
 % ---------- End of "argument defaults" ----------
 
 alpha = alpha0;

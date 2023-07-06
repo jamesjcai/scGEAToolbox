@@ -27,7 +27,7 @@ lambdaInit = decfac*max(abs(M(y,2))); lambda = lambdaInit;
 f_current = norm(y-M(x,1)) + lambda*norm(x,1);
 
 while lambda >lambdaInit*tol
-    lambda;
+    %lambda;
     for ins = 1:insweep
         
         f_previous = f_current;

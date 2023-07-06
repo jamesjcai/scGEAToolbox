@@ -27,7 +27,7 @@ function [means, teachPtrs, studPtrs, teachWeights, studWeights, ...
     firstEntry=cell(1);
     firstEntry{1}=data; %first set is 1 bin-->the original data
     currentBins{1}=firstEntry;
-    currentBinPtrs{1}={[1:N]'};
+    currentBinPtrs{1}={(1:N)'};
     if nargin<3 || isempty(minBinSize)
         %minBinSize=floor(2*log(N));
         minBinSize=floor(2*log(minN));

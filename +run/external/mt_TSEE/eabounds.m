@@ -45,7 +45,7 @@ if logK > log(sqrt(2*N))
   p1 = 3/4;
 else
   p1 = 1/4;
-  for i=1:100 e = -p1*log(p1/N)-logK; g = -log(p1/N)-1; p1 = p1-e/g; end
+  for i=1:100, e = -p1*log(p1/N)-logK; g = -log(p1/N)-1; p1 = p1-e/g; end
   p1 = 1-p1/2;
 end
 

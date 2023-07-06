@@ -25,7 +25,7 @@ function results = evaljointCOAL(clusters,~, ~, fea, fea_adt, n_clusters)
 
     [~, m] = size(clusters);
     X = zeros(m);
-    parfor i=1:1:m
+    for i=1:1:m
         X(i,:) = sum(clusters == clusters(:,i));
     end
     X = 4*X/max(max(X)) + corrcoef(fea') + corrcoef(fea_adt');

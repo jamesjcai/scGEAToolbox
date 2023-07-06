@@ -271,7 +271,7 @@ classdef Supervisors < handle
             end            
             if size(this.knnIndices, 1) ~= size(testData, 1) ...
                 || mean(this.inputData(:)) ~= this.supervisingMean ...
-                || mean(testData(:)) ~= this.supervisedMean ...
+                || mean(testData(:)) ~= this.supervisedMean                
                 [~,II]=pdist2(this.inputData, testData, 'euclidean', 'Smallest', 1);
             else
                 II=this.knnIndices(:,1);
@@ -641,7 +641,7 @@ classdef Supervisors < handle
                         if Supervisors.VERBOSE
                             sum(closestLabelIdxs)
                             this.labelMap.get(java.lang.String(num2str(label)))
-                            reChecks{i};
+                            %reChecks{i};
                         end
                         if any(closestLabelIdxs)
                             %Does this cluster with no label match

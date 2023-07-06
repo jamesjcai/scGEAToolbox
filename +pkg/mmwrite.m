@@ -267,7 +267,7 @@ else
   else
      err = -2;
      disp('Unknown matrix type:')
-     mattype;
+     %mattype;
   end
 end
 

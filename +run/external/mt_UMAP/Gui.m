@@ -289,7 +289,7 @@ classdef Gui
                 end
             end
             if Gui.DEBUGGING
-                idxs_;
+                %idxs_;
             end
         end
 
@@ -3608,7 +3608,7 @@ classdef Gui
                         jd.getLocation
                         jd.setLocation(old);
                         disp('A D J U S T I N G');
-                        old;
+                        %old;
                     else
                         jd.setLocation(old);
                     end

@@ -102,18 +102,18 @@ sumPnij=0;
 E3=(AB/n^2).*log(AB/n^2);
 
 EPLNP=zeros(R,C);
-LogNij=log([1:min(max(a),max(b))]/N);
+LogNij=log((1:min(max(a),max(b)))/N);
 for i=1:R
     for j=1:C
         sumPnij=0;
         nij=max(1,a(i)+b(j)-N);
         X=sort([nij N-a(i)-b(j)+nij]);
         if N-b(j)>X(2)
-            nom=[[a(i)-nij+1:a(i)] [b(j)-nij+1:b(j)] [X(2)+1:N-b(j)]];
-            dem=[[N-a(i)+1:N] [1:X(1)]];
+            nom=[a(i)-nij+1:a(i) b(j)-nij+1:b(j) X(2)+1:N-b(j)];
+            dem=[N-a(i)+1:N 1:X(1)];
         else
-            nom=[[a(i)-nij+1:a(i)] [b(j)-nij+1:b(j)]];       
-            dem=[[N-a(i)+1:N] [N-b(j)+1:X(2)] [1:X(1)]];
+            nom=[a(i)-nij+1:a(i) b(j)-nij+1:b(j)];       
+            dem=[N-a(i)+1:N N-b(j)+1:X(2) 1:X(1)];
         end
         p0=prod(nom./dem)/N;
         

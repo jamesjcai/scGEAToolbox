@@ -7,8 +7,8 @@ n_space = length(unique(label));
 Xori=X;
 [n,~]=size(X);
 X = normalize(X');
-n_space;
-n;
+
+
 NMI=0;
 ARI=0;
     for i=1:15

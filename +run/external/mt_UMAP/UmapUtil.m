@@ -575,7 +575,7 @@ classdef UmapUtil < handle
                 gridEdge(density, true, i, clr, ax, .8, '.', '-', .5);
                 if Supervisors.VERBOSE
                     str2double(density.clusterColors{i})
-                    clr;
+ %                   clr;
                     disp('ok');
                 end
             end

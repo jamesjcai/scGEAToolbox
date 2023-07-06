@@ -80,7 +80,7 @@ function D_Kernels = multipleK(x)
 
 N = size(x,1);
 KK = 0;
-sigma = [2:-0.25:1];
+sigma = 2:-0.25:1;
 Diff = (dist2(x));
 [T,~]=sort(Diff,2);
 [~,n]=size(Diff);

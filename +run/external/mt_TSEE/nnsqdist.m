@@ -33,7 +33,7 @@
 function [D2,nn] = nnsqdist(X,k,method)
 
 % ---------- Argument defaults ----------
-if ~exist('method','var') || isempty(method) method='sort'; end
+if ~exist('method','var') || isempty(method), method='sort'; end
 % ---------- End of "argument defaults" ----------
 
 N = size(X,1); k = min(N-1,k);

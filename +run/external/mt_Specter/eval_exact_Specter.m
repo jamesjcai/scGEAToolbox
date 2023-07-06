@@ -26,7 +26,7 @@ function cls = eval_exact_Specter(fea, n_clusters, ensemble_size, mingamma)
     
     clusters = zeros(N,m);
     optsVec = repmat(opts, N);
-    parfor i=1:1:N
+    for i=1:1:N
         optsVec(i).r = max(5, round(opts.r*(rand*0.5+0.8)));
         optsVec(i).seed = 10*i; % use different seed to avoid repetive clustering.
         clusters(i,:) = LSC_eigen(fea, n_clusters, optsVec(i), rand*0.1 + mingamma); 

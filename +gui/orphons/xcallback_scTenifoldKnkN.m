@@ -1,4 +1,4 @@
-function callback_scTenifoldKnkN(src,~)
+function xcallback_scTenifoldKnkN(src,~)
     import ten.*
 %     if exist('sctenifoldnet','file')~=2
 %         errordlg('scTenifoldNet is not installed.');

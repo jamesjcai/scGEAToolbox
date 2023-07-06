@@ -1,4 +1,4 @@
-function callback_scInTime(src,~)
+function xcallback_scInTime(src,~)
     import ten.*    
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);

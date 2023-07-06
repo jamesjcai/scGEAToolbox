@@ -1,4 +1,4 @@
-function callback_RevelioCellCycle(src,~)
+function xcallback_RevelioCellCycle(src,~)
 [ok]=gui.i_confirmscript('Run Revelio Cell Cycle Analysis (Revelio)?', ...
     'R_Revelio','r');
 if ~ok, return; end

@@ -1,4 +1,4 @@
-function [requirerefresh,highlightindex,newclassidenty]=callback_AnnotateSubGroup(src,~)
+function [requirerefresh,highlightindex,newclassidenty]=xcallback_AnnotateSubGroup(src,~)
 
 mfolder = fileparts(mfilename('fullpath'));
 requirerefresh=false;

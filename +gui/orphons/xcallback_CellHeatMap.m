@@ -1,4 +1,4 @@
-function callback_CellHeatMap(src,~)
+function xcallback_CellHeatMap(src,~)
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
 

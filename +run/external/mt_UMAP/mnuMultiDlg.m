@@ -73,13 +73,13 @@ end
 cancelled=true;
 if ischar(options{1})
     jsa=javaArray('java.lang.String', nOptions);
-    for i=1:nOptions
-        jsa(i)=java.lang.String(options{i});
+    for iz=1:nOptions
+        jsa(iz)=java.lang.String(options{iz});
     end
 else
     jsa=javaArray('java.lang.Object', nOptions);
-    for i=1:nOptions
-        jsa(i)=options{i};
+    for iy=1:nOptions
+        jsa(iy)=options{iy};
     end
 end
 hasIcon=isempty(icon) || ~strcmp('none', icon);
@@ -362,8 +362,8 @@ conclude;
                     %idxs=1;
                 end
             else
-                for i=1:N
-                    idx=javaIdxs(i)+1;
+                for ix=1:N
+                    idx=javaIdxs(ix)+1;
                     idxs(end+1)=idx;
                     answer=StringArray.IndexOf(options, idx);
                     disp(answer);

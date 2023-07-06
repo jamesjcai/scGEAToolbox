@@ -1,4 +1,4 @@
-function [requirerefresh,highlightindex,newclassidenty]=callback_AnnotateSubTypes(src,~)
+function [requirerefresh,highlightindex,newclassidenty]=xcallback_AnnotateSubTypes(src,~)
 
 
 

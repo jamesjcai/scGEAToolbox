@@ -1,4 +1,4 @@
-function [cs,ctselected]=callback_CellTypeMarkerScores(src,~,sce)
+function [cs,ctselected]=xcallback_CellTypeMarkerScores(src,~,sce)
 
 answer = questdlg('Calculate a signature score for each cell with respect to a given gene set. Continue?','');
 if ~strcmp(answer,'Yes'), return; end

@@ -1795,7 +1795,7 @@ classdef QfHiDM < handle
                         lbl=[lbl String.encodeInteger(this.leafSzs(idx))...
                             ' events'];
                     catch ex
-                        ex;
+                        %ex;
                     end
                     if i<N
                         lbl=[lbl '<br>'];
@@ -2176,7 +2176,7 @@ classdef QfHiDM < handle
             end 
             if QfHiDM.F_MEASURE_MERGE_FAST ~= 1
                 if length(mergeIds) ~= length(bestIds)
-                    [length(mergeIds)            bestIds];
+%                    [length(mergeIds)            bestIds];
                 else
                     fprintf('\tEverything got merged!!\n');
                 end

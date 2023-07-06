@@ -1,4 +1,4 @@
-function callback_MultiEmbeddingViewer(src,~)
+function xcallback_MultiEmbeddingViewer(src,~)
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
     if isempty(sce.struct_cell_embeddings)

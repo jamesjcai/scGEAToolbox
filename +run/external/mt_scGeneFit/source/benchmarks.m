@@ -17,7 +17,7 @@ test_labels=l;
 test_labels(I)=[];
 
 baseline_kmeans=kmeans_classification_error(data, N_clusters, labels);
-K;
+
 baseline_knn=nearest_neighbors_classifier(data, labels, eye(d), test_data, test_labels, K);
 
 

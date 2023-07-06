@@ -21,7 +21,7 @@ function [b,W] = eabeta(d2,b0,logK,B)
 maxit = 20;		% Max. no. iterations before a bisection
 tol = 1e-10;		% Convergence tolerance to stop iterating
 
-if (b0<B(1) || b0>B(2)) b=(B(1)+B(2))/2; else b=b0; end
+if (b0<B(1) || b0>B(2)) b=(B(1)+B(2))/2; else, b=b0; end
 
 i = 1;			% maxit counter
 % Inside the loop, pbm is a flag to detect any numerical problems (zero
@@ -37,10 +37,10 @@ while 1
     m1v = ed2.*d2/m0; m1 = sum(m1v); e = bE*m1 + log(m0) - logK;
   end
   
-  if abs(e) < tol break; end
+  if abs(e) < tol, break; end
   
   % Very narrow bounds, no need to iterate. This can happen if K is very small.
-  if B(2)-B(1) < 10*eps break; end
+  if B(2)-B(1) < 10*eps, break; end
   
   % Update the bounds
   if (e<0 && b<=B(2))
@@ -63,7 +63,7 @@ while 1
     % Compute the gradient: m2 is O(N)
     eg2 = bE^2; m2 = m1v*d2'; m12 = m1^2-m2; 
     g = eg2*m12;
-    if g==0 pbm=1; end
+    if g==0, pbm=1; end
   end
   
   % If there was a problem with the function, do bisection with old bounds.

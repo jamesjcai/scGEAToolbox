@@ -54,7 +54,8 @@ status = 0;
 [urlConnection,errorid,errormsg] = urlreadwrite(mfilename,urlChar);
 if isempty(urlConnection)
     if catchErrors, return
-    else error(errorid,errormsg);
+    else 
+        error(errorid,errormsg);
     end
 end
 
@@ -106,7 +107,8 @@ try
     output = native2unicode(typecast(byteArrayOutputStream.toByteArray','uint8'),'UTF-8');
 catch
     if catchErrors, return
-    else error('MATLAB:urlreadpost:ConnectionFailed','Error downloading URL. Your network connection may be down or your proxy settings improperly configured.');
+    else 
+        error('MATLAB:urlreadpost:ConnectionFailed','Error downloading URL. Your network connection may be down or your proxy settings improperly configured.');
     end
 end
 

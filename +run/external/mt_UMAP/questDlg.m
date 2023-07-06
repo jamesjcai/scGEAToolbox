@@ -39,20 +39,20 @@ if adds.size>0
     N=jsa.length;
     if ispc
         objs=javaArray('java.lang.Object', N+1+adds.size);
-        for i=1:N
-            objs(i)=jsa(i);
+        for ix=1:N
+            objs(ix)=jsa(ix);
         end
         objs(N+1)=javax.swing.JLabel('<html>&nbsp;&nbsp;&nbsp;</html>');
-        for i=0:adds.size-1
-            objs(end-i)=adds.get(i);
+        for ix=0:adds.size-1
+            objs(end-ix)=adds.get(ix);
         end
     else
         objs=javaArray('java.lang.Object', N+adds.size);
-        for i=0:adds.size-1
-            objs(end-i)=adds.get(i);
+        for ix=0:adds.size-1
+            objs(end-ix)=adds.get(ix);
         end
-        for i=1:N
-            objs(i)=jsa(i);
+        for ix=1:N
+            objs(ix)=jsa(ix);
         end
     end
     pane.setOptions(objs);
@@ -129,8 +129,8 @@ if ~modal && ~isempty(checkFnc)
         btn2=Gui.FindFirst(jd, btnClass, answ);
         btnAls=btn2.getActionListeners;
         nFirstBtnAls=length(btnAls);
-        for i=1:nFirstBtnAls
-            btn2.removeActionListener(btnAls(i));
+        for ix=1:nFirstBtnAls
+            btn2.removeActionListener(btnAls(ix));
         end
         
         if ~isempty(btn2)
@@ -161,9 +161,9 @@ end
     end
 
     function idx=indexOf(str)
-        for i=1:jsa.length
-            if isequal(str, char(jsa(i)))
-                idx=i;
+        for iy=1:jsa.length
+            if isequal(str, char(jsa(iy)))
+                idx=iy;
                 return;
             end
         end

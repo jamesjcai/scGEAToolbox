@@ -1,4 +1,4 @@
-function [needupdate]=callback_RunSeuratSCTransform(src,~)
+function [needupdate]=xcallback_RunSeuratSCTransform(src,~)
 needupdate=false;
 [ok]=gui.i_confirmscript('Run Seurat sctransform to obtain normalized expression matrix?', ...
     'R_SeuratSctransform','r');

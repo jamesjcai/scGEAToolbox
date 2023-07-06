@@ -98,7 +98,7 @@ for iter = 1:NITER
 end
 val = S0;
 
-I = repmat([1:size(S0,1)]',1,size(S0,2));
+I = repmat((1:size(S0,1))',1,size(S0,2));
 S0 = sparse(I(:), ind(:), S0(:)/2.0, size(S0,1),size(S0,1)) + sparse(ind(:), I(:), S0(:)/2.0, size(S0,1),size(S0,1));
 ydata = [];
 y = [];
@@ -156,8 +156,8 @@ if nargin<3
 end
 
 val = val.*val;
-sigma = [2:-0.25:1];
-allk = [ceil(KK/2):ceil(KK/10):(ceil(KK*1.5))];
+sigma = 2:-0.25:1;
+allk = ceil(KK/2):ceil(KK/10):(ceil(KK*1.5));
 t = 1;
 for i = 1:length(allk)
     if allk(i)< size(val,2)
@@ -178,7 +178,7 @@ end
 
 function   distf = mex_L2_distance_1(F, ind)
 [m,n] = size(ind);    
-I = repmat([1:m]',1,n);
+I = repmat((1:m)',1,n);
 temp = sum((F(I(:),:) - F(ind(:),:)).^2,2);
 distf = zeros(m,n);
 distf(:) = temp;

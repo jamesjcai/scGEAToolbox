@@ -49,7 +49,8 @@ if d==2
     end
     scatter(y(singletons,1),y(singletons,2),30,rgb_c,'filled','o');
     
-else if d==3
+else 
+    if d==3
         plot3dADP(x,y,cut_indices,cut_partition,x_means,cm_bool,rgb_c,linestyle);
         scatter3(y(singletons,1),y(singletons,2),y(singletons,3),30,rgb_c,'filled','o');
     else % if d>3, visualize in first 3 principal components

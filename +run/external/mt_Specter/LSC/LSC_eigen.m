@@ -104,7 +104,7 @@ dump = zeros(nSmp,r);
 idx = dump;
 for i = 1:r
     [dump(:,i),idx(:,i)] = min(D,[],2);
-    temp = (idx(:,i)-1)*nSmp+[1:nSmp]';
+    temp = (idx(:,i)-1)*nSmp+(1:nSmp)';
     D(temp) = 1e100; 
 end
 % fprintf("sigma equals to mean of min distance\n");
@@ -115,7 +115,7 @@ sigma = sigma*mean(max(dump'));
 dump = exp(-dump/(sigma));
 sumD = sum(dump,2);
 Gsdx = bsxfun(@rdivide,dump,sumD);
-Gidx = repmat([1:nSmp]',1,r);
+Gidx = repmat((1:nSmp)',1,r);
 Gjdx = idx;
 Z=sparse(Gidx(:),Gjdx(:),Gsdx(:),nSmp,p);
 
