@@ -6,12 +6,12 @@ function labels = sgraph(k,dataname)
 
 scriptfile = ['' 'partgraph' num2str(sum(dataname=='0')) num2str(sum(dataname=='1')) num2str(sum(dataname=='2')) num2str(sum(dataname=='3')) '.bat'];
 
-if ~exist('dataname')
+if ~exist('dataname','var')
       dataname = ['' 'graph0'];
 end
 resultname = [dataname '.part.' num2str(k)];
 
-lastchar = str2num(dataname(length(dataname)));
+lastchar = str2double(dataname(length(dataname)));
 if (isempty(lastchar))
   disp('sgraph: file does not comply to name convention');
   lastchar = 0;

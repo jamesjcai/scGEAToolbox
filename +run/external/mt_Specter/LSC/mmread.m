@@ -63,7 +63,7 @@ end
 % Read through comments, ignoring them
 
 commentline = fgets(mmfile);
-while ~isempty(commentline) & commentline(1) == '%'
+while ~isempty(commentline) && commentline(1) == '%'
   commentline = fgets(mmfile);
 end
 
@@ -80,7 +80,7 @@ if ( strcmp(rep,'coordinate')) %  read matrix given in sparse
        error('End-of-file reached before size information was found.')
      end
      [sizeinfo,count] = sscanf(commentline,'%d%d%d');
-     if ( count > 0 & count ~= 3 )
+     if ( count > 0 && count ~= 3 )
        error('Invalid size specification line.')
      end
   end
@@ -156,7 +156,7 @@ elseif ( strcmp(rep,'array') ) %  read matrix given in dense
        error('End-of-file reached before size information was found.')
      end
      [sizeinfo,count] = sscanf(commentline,'%d%d');
-     if ( count > 0 & count ~= 2 )
+     if ( count > 0 && count ~= 2 )
        error('Invalid size specification line.')
      end
   end
@@ -166,7 +166,7 @@ elseif ( strcmp(rep,'array') ) %  read matrix given in dense
   if  ( strcmp(field,'real') )               % real valued entries:
     A = fscanf(mmfile,'%f',1);
     A = [A; fscanf(mmfile,'%f')];
-    if ( strcmp(symm,'symmetric') | strcmp(symm,'hermitian') | strcmp(symm,'skew-symmetric') ) 
+    if ( strcmp(symm,'symmetric') || strcmp(symm,'hermitian') || strcmp(symm,'skew-symmetric') ) 
       for j=1:cols-1
         currenti = j*rows;
         A = [A(1:currenti); zeros(j,1);A(currenti+1:length(A))];
@@ -191,7 +191,7 @@ elseif ( strcmp(rep,'array') ) %  read matrix given in dense
       tmpi = fscanf(mmfile,'%f',1);
       A  = [A; tmpr + tmpi*i];
     end
-    if ( strcmp(symm,'symmetric') | strcmp(symm,'hermitian') | strcmp(symm,'skew-symmetric') ) 
+    if ( strcmp(symm,'symmetric') || strcmp(symm,'hermitian') || strcmp(symm,'skew-symmetric') ) 
       for j=1:cols-1
         currenti = j*rows;
         A = [A(1:currenti); zeros(j,1);A(currenti+1:length(A))];

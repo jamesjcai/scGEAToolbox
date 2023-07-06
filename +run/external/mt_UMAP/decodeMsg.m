@@ -75,7 +75,7 @@ if isstruct(msg)
 end
 if ~isempty(property)
     if isnumeric(default)
-        default=str2num(properties.get(property, num2str(default)));
+        default=str2double(properties.get(property, num2str(default)));
     else
         default=properties.get(property, default);
     end

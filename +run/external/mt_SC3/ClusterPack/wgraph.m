@@ -13,11 +13,11 @@ if ~exist('dataname')
 end
 dataname = [dataname num2str(method)];
 
-if ((method == 0)|(method == 1))
+if ((method == 0)||(method == 1))
   e=e-diag(diag(e));
 end
 e = ints(e);
-if ((method==1)|(method==3))
+if ((method==1)||(method==3))
   w = ints(w);
 end
 
@@ -46,7 +46,7 @@ else
    end
 end
 
-if ((method == 0)|(method == 1))
+if ((method == 0)||(method == 1))
    for i=1:size(e,1) 
       edges = find(e(i,:)>0);
       weights = e(i,edges);

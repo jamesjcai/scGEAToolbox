@@ -601,7 +601,7 @@ classdef UmapUtil < handle
                     if isempty(clr_)
                         clrs(end+1,:)=[.95 .9 .99];
                     else
-                        clrs(end+1,:)=str2num(clr_)/256;
+                        clrs(end+1,:)=str2double(clr_)/256;
                     end
                     
                 end

@@ -10,7 +10,7 @@ function [AR,RI,MI,HI]=Cal_ARI(c1,c2)
 
 %(C) David Corney (2000)   		D.Corney@cs.ucl.ac.uk
 
-if nargin < 2 | min(size(c1)) > 1 | min(size(c2)) > 1
+if nargin < 2 || min(size(c1)) > 1 || min(size(c2)) > 1
    error('RandIndex: Requires two vector arguments')
    return
 end

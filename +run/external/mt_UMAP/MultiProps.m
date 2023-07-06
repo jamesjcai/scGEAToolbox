@@ -43,7 +43,7 @@ classdef MultiProps < handle
             if isempty(num)
                 num=[];
             else
-                num=str2num(num);
+                num=str2double(num);
             end
         end
         

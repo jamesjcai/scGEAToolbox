@@ -9,7 +9,7 @@ addpath(genpath('functions'));
 dataname='Preimplantation';
   
  %% Data read
-if(strcmp(dataname, 'Usoskin') | strcmp(dataname,'Zeisel') )
+if(strcmp(dataname, 'Usoskin') || strcmp(dataname,'Zeisel') )
     data=csvread([data_dir 'raw_data/' dataname '_raw_data.csv'],1,1)' ;
 else
    sample_dir = [data_dir 'raw_data/' dataname '_dataset/hg19'];

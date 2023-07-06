@@ -8,7 +8,7 @@ tic
 SGDmap = containers.Map();
 for i = 1:length(DB_Object_Symbol)
     key = DB_Object_Symbol{i};
-    a=str2num(GOid{i}(4:end));
+    a=str2double(GOid{i}(4:end));
     if isKey(SGDmap,key)
         SGDmap(key) = [SGDmap(key) a];
     else

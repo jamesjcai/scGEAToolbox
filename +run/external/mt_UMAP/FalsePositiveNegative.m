@@ -245,7 +245,7 @@ classdef FalsePositiveNegative < handle
                     if ~isempty(testIds)
                         testIds=r.testIds{1};
                         testIds=testIds(5:end);
-                        testIdNums=str2num(testIds);
+                        testIdNums=str2double(testIds);
                         if isequal(r.trainingId, testIdNums)
                             testIds='';
                             testName='';

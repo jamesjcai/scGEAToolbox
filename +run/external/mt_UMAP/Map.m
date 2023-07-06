@@ -87,7 +87,7 @@ classdef Map < handle
         function nums=GetNumbers(props, name)
             nums=props.get(name, []);
             if ~isempty(nums)
-                nums=str2num(nums);
+                nums=str2double(nums);
             else
                 nums=[];
             end
@@ -372,7 +372,7 @@ classdef Map < handle
             if ischar(name)
                 num=this.get([name '.count']);
                 if ~isempty(num)
-                    N=str2num(num);
+                    N=str2double(num);
                 end
             end
         end

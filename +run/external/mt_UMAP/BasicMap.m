@@ -154,7 +154,7 @@ classdef BasicMap < Map
         function nums=GetNumbers(props, name)
             nums=props.get(name, []);
             if ~isempty(nums)
-                nums=str2num(nums);
+                nums=str2double(nums);
             else
                 nums=[];
             end

@@ -1009,11 +1009,11 @@ classdef MatBasics
             R=length(A);
             if iscell(A)
                 for r=1:R
-                    matrix(r,:)=str2num(A{r});
+                    matrix(r,:)=str2double(A{r});
                 end
             else
                 for r=1:R
-                    matrix(r,:)=str2num(A(r));
+                    matrix(r,:)=str2double(A(r));
                 end
             end
         end
@@ -1205,10 +1205,10 @@ classdef MatBasics
             strs=strsplit(mat, '#');
             N=length(strs);
             if N>0
-                nums=str2num(strs{1});
+                nums=str2double(strs{1});
                 for i=2:N
                     if ~isempty(strs{i})
-                        nums(end+1,:)=str2num(strs{i});
+                        nums(end+1,:)=str2double(strs{i});
                     end
                 end
             else

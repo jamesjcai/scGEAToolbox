@@ -244,7 +244,7 @@ classdef Supervisors < handle
                         if isempty(clr_)
                             clrs(end+1,:)=[.95 .9 .99];
                         else
-                            clrs(end+1,:)=str2num(clr_)/256;
+                            clrs(end+1,:)=str2double(clr_)/256;
                         end
                     else
                         lbls(this.labels==id)=0;
@@ -333,7 +333,7 @@ classdef Supervisors < handle
                         key=num2str(id);
                         names{end+1}=name;
                         try
-                            clrs(end+1,:)=str2num(...
+                            clrs(end+1,:)=str2double(...
                                 lblMap.get([key '.color']))/256;
                         catch 
                             clrs(end+1,:)=[.1 .1 .1];
@@ -372,7 +372,7 @@ classdef Supervisors < handle
                         names{end+1}=name;
                         value=lblMap.get([key '.color']);
                         try
-                            clrs(end+1,:)=str2num(value)/256;
+                            clrs(end+1,:)=str2double(value)/256;
                         catch
                             clrs(end+1,:)=[.1 .1 .1];
                         end
@@ -513,7 +513,7 @@ classdef Supervisors < handle
         %             d(:,j)=(d(:,j)-mn_)/r;
         %         end
         %     end
-        % end
+        end
         
         function nnMatchWithClusters(this, data, density, ...
                 numClusters, clusterIds, pu)
@@ -1326,7 +1326,7 @@ classdef Supervisors < handle
             N_=length(this.density.clusterColors);
             for i=1:N_
                 if ~isempty(this.density.clusterColors{i})
-                    clr=(str2num(this.density.clusterColors{i})/256)*.85;
+                    clr=(str2double(this.density.clusterColors{i})/256)*.85;
                 else
                     clr = [0 0 0];
                 end

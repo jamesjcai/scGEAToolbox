@@ -228,13 +228,13 @@ for i=i:size(Y,2)
 end
 
 %% Add legend if requested
-if plotlegend==1 & plotmean==1 | plotlegend==1 & plotmedian==1
+if plotlegend==1 && plotmean==1 || plotlegend==1 && plotmedian==1
     
-    if plotmean==1 & plotmedian==1
+    if plotmean==1 && plotmedian==1
         L=legend([p(1) p(2)],'Mean','Median');
-    elseif plotmean==0 & plotmedian==1
+    elseif plotmean==0 && plotmedian==1
         L=legend([p(2)],'Median');
-    elseif plotmean==1 & plotmedian==0
+    elseif plotmean==1 && plotmedian==0
         L=legend([p(1)],'Mean');
     end
     

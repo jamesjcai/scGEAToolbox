@@ -151,7 +151,7 @@ elseif ( strcmp(rep,'array') ) %  read matrix given in dense
   if  ( strcmp(field,'real') )               % real valued entries:
     A = fscanf(mmfile,'%f',1);
     A = [A; fscanf(mmfile,'%f')];
-    if ( strcmp(symm,'symmetric') | strcmp(symm,'hermitian') | strcmp(symm,'skew-symmetric') ) 
+    if ( strcmp(symm,'symmetric') || strcmp(symm,'hermitian') || strcmp(symm,'skew-symmetric') ) 
       for j=1:cols-1
         currenti = j*rows;
         A = [A(1:currenti); zeros(j,1);A(currenti+1:length(A))];
@@ -176,7 +176,7 @@ elseif ( strcmp(rep,'array') ) %  read matrix given in dense
       tmpi = fscanf(mmfile,'%f',1);
       A  = [A; tmpr + tmpi*i];
     end
-    if ( strcmp(symm,'symmetric') | strcmp(symm,'hermitian') | strcmp(symm,'skew-symmetric') ) 
+    if ( strcmp(symm,'symmetric') || strcmp(symm,'hermitian') || strcmp(symm,'skew-symmetric') ) 
       for j=1:cols-1
         currenti = j*rows;
         A = [A(1:currenti); zeros(j,1);A(currenti+1:length(A))];

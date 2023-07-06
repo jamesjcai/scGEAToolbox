@@ -3200,11 +3200,11 @@ classdef QfHiDM < handle
             lineWidths=zeros(1, N);
             for i=1:N
                 gid=num2str(qf.tIds(i));
-                clr=str2num(gtp.getNode(gid, MatchInfo.PROP_LAST_COLOR));
+                clr=str2double(gtp.getNode(gid, MatchInfo.PROP_LAST_COLOR));
                 if ~isempty(clr)
                     colors(i,:)=clr;
                 end
-                e=str2num(gtp.getNode(gid, MatchInfo.PROP_LAST_EDGE));
+                e=str2double(gtp.getNode(gid, MatchInfo.PROP_LAST_EDGE));
                 if ~isempty(clr)
                     edgeColors(i,:)=e(1:3);
                     lineWidths(i)=e(4);

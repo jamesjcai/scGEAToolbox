@@ -61,7 +61,7 @@ classdef ColorsByName <handle
                             name=name(2:end);
                         end
                         if ~isempty(strColor)
-                            strColor=str2num(strColor);
+                            strColor=str2double(strColor);
                             color=strColor/256;
                             strColor=String.Num2Str(strColor, ' ');
                             if length(color)==3

@@ -2074,7 +2074,7 @@ classdef Gui
         
         function op=OuterPositionArg(op)
             if ischar(op)
-                op=str2num(op);
+                op=str2double(op);
             elseif ~isnumeric(op)
                 u=get(op,'units');
                 set(op,'units','pixels');
@@ -2302,7 +2302,7 @@ classdef Gui
             num=0;
             scrMl=[];
             if ischar(fig)
-                fig=str2num(fig);
+                fig=str2double(fig);
             end
             if length(fig)~=4
                 u=get(fig,'units');
@@ -4321,7 +4321,7 @@ classdef Gui
             priorPos=props.get(propName);
             [ok, ~, ~, scrPos]=Gui.OnScreen(priorPos);
             if ~isempty(priorPos) && ok
-                pos=str2num(priorPos);                
+                pos=str2double(priorPos);                
                 if pos(4)>maxHeightRatio*scrPos(4)
                     pos(4)=maxHeightRatio*scrPos(4);
                 end                

@@ -161,7 +161,7 @@ while exitLoop== 0
     [U,S,V] = svd(EigenvectorsDiscrete'*EigenVectors+eps,0);
     NcutValue=2*(n-trace(S));
     
-    if abs(NcutValue-lastObjectiveValue) < eps | nbIterationsDiscretisation > nbIterationsDiscretisationMax
+    if abs(NcutValue-lastObjectiveValue) < eps || nbIterationsDiscretisation > nbIterationsDiscretisationMax
         exitLoop=1;
     else
         lastObjectiveValue = NcutValue;

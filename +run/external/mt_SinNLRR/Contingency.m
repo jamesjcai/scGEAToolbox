@@ -9,7 +9,7 @@ function Cont=Contingency(Mem1,Mem2)
 
 %(C) David Corney (2000)   		D.Corney@cs.ucl.ac.uk
 
-if nargin < 2 | min(size(Mem1)) > 1 | min(size(Mem2)) > 1
+if nargin < 2 || min(size(Mem1)) > 1 || min(size(Mem2)) > 1
    error('Contingency: Requires two vector arguments')
    return
 end

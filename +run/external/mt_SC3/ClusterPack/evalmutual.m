@@ -30,7 +30,7 @@ py = sum(pdf,2);
 if length(px)>1, hxbk = - sum(px.*log2(fastchangem(px,1,0))); else hxbk = 0; end
 if length(py)>1, hybg = - sum(py.*log2(fastchangem(py,1,0))); else hybg = 0; end
 
-if (length(px)*length(py)==1)|(hxbk==0)|(hybg==0)
+if (length(px)*length(py)==1)||(hxbk==0)||(hybg==0)
  p=0;
 else
  p = sum(sum(pdf.*log2(fastchangem(pdf,1,0)./(py*px)))) / sqrt(hxbk * hybg);

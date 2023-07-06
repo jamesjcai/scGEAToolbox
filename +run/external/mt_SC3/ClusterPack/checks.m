@@ -21,16 +21,16 @@ if ~isempty(s)
    end
    mas = max(max(s));
    mis = min(min(s));
-   if (mas>1)|(mis<0)
+   if (mas>1)||(mis<0)
       disp(['checks: similarity more than 1 or less than 0 detected: values ' num2str(mis) ' to ' num2str(mas) ]); 
-      s(find(s<0))=0;
-      s(find(s>1))=1;
+      s(s<0)=0;
+      s(s>1)=1;
       disp('checks: bounded');
    end
-   if sum(sum(isinf(s)|isnan(s)))
+   if sum(sum(isinf(s)||isnan(s)))
       disp('checks: non-finite similarity detected !!! (serious)'); 
       if 0
-         s(find(isinf(s)|isnan(s))) = 0; % hangs the computer - no idea why...
+         s(find(isinf(s)||isnan(s))) = 0; % hangs the computer - no idea why...
       else
         [a,b] = find(isfinite(s));
          c = find(isfinite(s));
