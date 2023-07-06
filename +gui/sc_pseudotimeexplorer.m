@@ -13,8 +13,8 @@ function sc_pseudotimeexplorer(X,genelist,s,varargin)
    dim=p.Results.dim;
    
   
-global psexplorer_timeid
-psexplorer_timeid=1;
+%global psexplorer_timeid
+%psexplorer_timeid=1;
 hFig = figure('Name','Pseudotime Explorer');
 hAx = axes('Parent',hFig);
 

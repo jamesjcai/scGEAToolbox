@@ -259,8 +259,8 @@ classdef Density < handle
         end
         
         function y=getY(this)
-            [ygrid,xgrid]=meshgrid(this.ye(2,:), this.ye(1,:));
-            y=[xgrid(:) ygrid(:)]';
+            [ygridv,xgridv]=meshgrid(this.ye(2,:), this.ye(1,:));
+            y=[xgridv(:) ygridv(:)]';
         end
         
         function H=contour(this, ax, probabilityContourPercent, ...

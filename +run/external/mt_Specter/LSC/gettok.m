@@ -5,7 +5,7 @@ function [word, remainder] = gettok(string)
 %
 %  Retrieves the first blank separated token from the string.
 %
-si = findstr(string,' ');
+si = strfind(string,' ');
 lstring=length(string);
 lsi=length(si);
 if ( lsi == 0 )

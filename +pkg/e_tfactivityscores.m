@@ -1,10 +1,10 @@
-function [score,T,posg]=e_tfactivityscores(~,~,typeid)
+function [score,T]=e_tfactivityscores(~,~,typeid)
 % Calcute predefined cell scores (marker list in cellscores.txt/xlsx)
 %
 % see also: SC_CELLSCORE_UCELL, SC_CELLSCORE_ADMDL, SC_CELLCYCLESCORING
 
 if nargin<3, typeid=0; end
-if nargin<2, genelist=[]; end
+if nargin<2, g=[]; end
 if nargin<1, X=[]; end
 
 

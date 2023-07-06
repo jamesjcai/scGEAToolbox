@@ -380,7 +380,7 @@ classdef Plots < handle
             overH=[];
             try
                 set(fig,'WindowButtonMotionFcn', @legMotion);
-            catch ex
+            catch
             end
             fcnMotion=@legMotion;
             X=xlim(ax);

@@ -163,7 +163,7 @@ if ( issparse(A) )
   else  
      err = -1;
      disp('Unsupported mattype:')
-     mattype;
+     %mattype;
   end
 
 %%%%%%%%%%%%%       This part for dense matrices      %%%%%%%%%%%%%%%%

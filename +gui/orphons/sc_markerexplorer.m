@@ -14,7 +14,7 @@ function sc_markerexplorer(X,genelist,s,varargin)
    
 mfolder = fileparts(mfilename('fullpath'));
 
-global mkexplorer_clustid
+%global mkexplorer_clustid
 mkexplorer_clustid=0;
 hFig = figure('Name','Marker Gene Explorer');
 hAx = axes('Parent',hFig);

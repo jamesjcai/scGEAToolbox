@@ -21,8 +21,8 @@ function sc_celltypeexplorer(X,genelist,s,varargin)
        species="human";
    end
    
-global ctexplorer_celltypeid
-ctexplorer_celltypeid=0;
+%global ctexplorer_celltypeid
+%ctexplorer_celltypeid=0;
 titxt=sprintf('Cell Type Explorer\n[species: %s; method: %s]',...
     species,method);
 hFig = figure('Name','Cell Type Explorer');

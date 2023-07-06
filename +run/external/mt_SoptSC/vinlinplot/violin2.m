@@ -168,8 +168,8 @@ for i=1:size(Y,2)
     f=f/max(f)*0.3; %normalize
     F(:,i)=f;
     U(:,i)=u;
-    MED(:,i)=nanmedian(Y{i});
-    MX(:,i)=nanmean(Y{i});
+    MED(:,i)=median(Y{i});
+    MX(:,i)=mean(Y{i});
     bw(:,i)=bb;
     
 end

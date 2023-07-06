@@ -527,7 +527,7 @@ classdef KnnFind<handle
             end
         end
         
-        function ok=Build
+        function Build
             curPath=fileparts(mfilename('fullpath'));
             cppPath=fullfile(curPath, 'nndescent', 'C++');
             cppFile=fullfile(cppPath, 'KnnDescent.cpp');

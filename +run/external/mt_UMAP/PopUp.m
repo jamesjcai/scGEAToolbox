@@ -589,7 +589,7 @@ classdef PopUp < handle
                 if BasicMap.Global.is('showPopUp', true)
                     Gui.SetJavaVisible(jd);
                 end
-            catch ex
+            catch
             end
             drawnow;
             function closeit
