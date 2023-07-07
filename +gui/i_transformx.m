@@ -7,11 +7,11 @@ if nargin<2, donorm=false; end
         disp('Using simulated X.');
     end
     if donorm    
-    answer = questdlg('Normalize, transform or impute X?', ...
-        '','Yes','No','Cancel','Yes');
+        answer = questdlg('Normalize, transform or impute X?', ...
+            '','Yes','No','Cancel','Yes');
     else
-    answer = questdlg('Normalize, transform or impute X?', ...
-        '','Yes','No','Cancel','No');
+        answer = questdlg('Normalize, transform or impute X?', ...
+            '','Yes','No','Cancel','No');
     end
 
     if strcmp(answer,'Yes')

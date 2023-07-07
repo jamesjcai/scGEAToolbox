@@ -1,21 +1,23 @@
 function callback_CompareGeneBtwCls(src,~)
-    answer = questdlg(['This function ' ...
-        'calculates a signature score for each ' ...
-        'cell with respect to a given gene set.' ...
-        ' Continue?'],'');
-    if ~strcmp(answer,'Yes'), return; end
+%     answer = questdlg(['This function ' ...
+%         'calculates a signature score for each ' ...
+%         'cell with respect to a given gene set.' ...
+%         ' Continue?'],'');
+%     if ~strcmp(answer,'Yes'), return; end
 
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
 
 
-
-answer2 = questdlg(sprintf(['After the scores are computed, ' ...
-    'compare them between cell classes/groups?']),'');
+aa='Yes, compare values';
+bb='No, just show scores';
+answer2 = questdlg(sprintf(['This function will calculates a score for each cell. After the scores are calculated, do you want to ' ...
+    'compare score values between different cell groups?']),'', ...
+    aa, bb, aa);
 switch answer2
-    case 'Yes'
+    case aa
         showcomparision=true;
-    case 'No'
+    case bb
         showcomparision=false;
     otherwise
         return;
@@ -37,6 +39,7 @@ if showcomparision
                 return;
         end
     else
+
         [ci,cLi]=grp2idx(thisc);
         listitems=natsort(string(cLi));
         n=length(listitems);
@@ -54,7 +57,8 @@ if showcomparision
             return;
         end    
     end
-
+else
+    thisc=ones(sce.NumCells,1);
 end
 
 
@@ -105,28 +109,28 @@ if isempty(selecteditem), return; end
             [y]=gui.e_cellscore(sce,posg);
 
         case 'PanglaoDB Cell Type Marker Score...'
-        stag=gui.i_selectspecies(2,true);
-        if isempty(stag), return; end
-    
-        oldpth=pwd;
-        pw1=fileparts(mfilename('fullpath'));
-        pth=fullfile(pw1,'..','+run','thirdparty','alona_panglaodb');
-        cd(pth);
+            stag=gui.i_selectspecies(2,true);
+            if isempty(stag), return; end
         
-        markerfile=sprintf('marker_%s.mat',stag);
-        if exist(markerfile,'file')
-            load(markerfile,'Tm');
-        else
-            % Tw=readtable(sprintf('markerweight_%s.txt',stag));
-            Tm=readtable(sprintf('markerlist_%s.txt',stag),...
-                'ReadVariableNames',false,'Delimiter','\t');
-            % save(markerfile,'Tw','Tm');
-        end
-        cd(oldpth);
-        
-        ctlist=string(Tm.Var1);
-        listitems=sort(ctlist);
-        [indx,tf] = listdlg('PromptString',...
+            oldpth=pwd;
+            pw1=fileparts(mfilename('fullpath'));
+            pth=fullfile(pw1,'..','+run','thirdparty','alona_panglaodb');
+            cd(pth);
+            
+            markerfile=sprintf('marker_%s.mat',stag);
+            if exist(markerfile,'file')
+                load(markerfile,'Tm');
+            else
+                % Tw=readtable(sprintf('markerweight_%s.txt',stag));
+                Tm=readtable(sprintf('markerlist_%s.txt',stag),...
+                    'ReadVariableNames',false,'Delimiter','\t');
+                % save(markerfile,'Tw','Tm');
+            end
+            cd(oldpth);
+            
+            ctlist=string(Tm.Var1);
+            listitems=sort(ctlist);
+            [indx,tf] = listdlg('PromptString',...
             {'Select Class'},...
              'SelectionMode','single','ListString',listitems,'ListSize',[220,300]);
             if ~tf==1, return; end
@@ -150,6 +154,8 @@ if isempty(selecteditem), return; end
                 speciestag = gui.i_selectspecies(2);
                 y=sc_potency(sce.X,sce.g,speciestag);
                 ttxt='Differentiation Potency';
+                posg=[];
+
 
             % [a]=contains(sce.list_cell_attributes(1:2:end),'cell_potency');
             % if ~any(a)
@@ -169,6 +175,8 @@ if isempty(selecteditem), return; end
         case 'Library Size of Cells'
             y=sum(sce.X);
             ttxt='Library Size';
+            posg=[];
+
         case 'Expression of Individual Genes'
             [glist]=gui.i_selectngenes(sce);
             if isempty(glist)
@@ -209,6 +217,7 @@ if isempty(selecteditem), return; end
             else
                 ttxt=clable;
             end
+            posg=[];
         case {'TF Activity Score [PMID:33135076] 🐢',...
                 'TF Targets Expression Score'}
             [~,T]=pkg.e_tfactivityscores(sce.X,sce.g,0);
@@ -221,24 +230,14 @@ if isempty(selecteditem), return; end
                  listitems,'ListSize',[220,300]);
             if tf2~=1, return; end
             species=gui.i_selectspecies(2);
-            if isempty(species), return; end
-            
-%[cs]=gui.e_cellscore(sce,posg);
-%     answer = questdlg('Select algorithm:',...
-%     'Select Method', ...
-%     'UCell [PMID:34285779]','AddModuleScore/Seurat', ...
-%     'UCell [PMID:34285779]');
-%     switch answer
-%         case 'AddModuleScore/Seurat'   
+            if isempty(species), return; end            
 
             if strcmp(selecteditem,'TF Targets Expression Score...')
                 methodid=1;
             else
                 methodid=4;
             end
-            if methodid~=4
-            fw=gui.gui_waitbar;
-            end
+            if methodid~=4, fw=gui.gui_waitbar; end
                 [cs,tflist]=sc_tfactivity(sce.X,sce.g,[], ...
                     species,methodid);
                 idx=find(tflist==string(listitems{indx2}));
@@ -246,17 +245,16 @@ if isempty(selecteditem), return; end
                 
                 [y]=cs(idx,:);
                 ttxt=listitems{indx2};
-            if methodid~=4
-            gui.gui_waitbar(fw);
-            end
+                posg=[];    % xxxxxxxxxxx
+            if methodid~=4, gui.gui_waitbar(fw); end
 
-        case 'TF Targets Expression Score 2'
-                species=gui.i_selectspecies(2);
-                if isempty(species), return; end            
-                [posg,ctselected]=gui.i_selectTFTargetSet(species);
-                [y]=gui.e_cellscore(sce,posg);
-                %ttxt=listitems{indx2};
-                ttxt = strcat(ctselected, ' activity');
+%         case 'TF Targets Expression Score 2'
+%                 species=gui.i_selectspecies(2);
+%                 if isempty(species), return; end            
+%                 [posg,ctselected]=gui.i_selectTFTargetSet(species);
+%                 [y]=gui.e_cellscore(sce,posg);
+%                 %ttxt=listitems{indx2};
+%                 ttxt = strcat(ctselected, ' activity');
 
         otherwise
             return;

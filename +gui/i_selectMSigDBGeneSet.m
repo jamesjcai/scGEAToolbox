@@ -4,6 +4,8 @@ if nargin<2, colnoly=false; end
 
 glist=[];
 setname=[];
+Col=[];
+
 switch lower(species)
     case {'human','hs'}
         listitems={'H: hallmark gene sets','C1: positional gene sets',...
@@ -47,6 +49,10 @@ end
      'SelectionMode','single','ListString',listitems,'ListSize',[220,300]);
 
 if tf1~=1, return; end
+if pkg.isnetavl~=1
+    errordlg('This function requires internet access to retrieve information needed.');
+    return; 
+end
 
 % tmpf=tempname;
 % websave(tmpf,urllist{indx1},weboptions('ContentType','json'));
