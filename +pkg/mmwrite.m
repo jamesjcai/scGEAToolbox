@@ -193,7 +193,7 @@ else
           break; 
         end
       end
-      if ( ~ issymm ) break; end
+      if ( ~ issymm ), break; end
     
     end
     if ( issymm )
@@ -207,7 +207,7 @@ else
             break; 
           end
         end
-        if ( ~ isskew ) break; end
+        if ( ~ isskew ), break; end
       end
       if ( isskew )
         symm = 'skew-symmetric';
@@ -220,7 +220,7 @@ else
               break; 
             end
           end
-          if ( ~ isherm ) break; end
+          if ( ~ isherm ), break; end
         end
         if ( isherm )
           symm = 'hermitian';

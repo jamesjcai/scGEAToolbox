@@ -173,34 +173,50 @@ function [mappedA, mapping] = compute_mapping(A, type, no_dims, varargin)
     switch type
         case 'Isomap'         
             % Compute Isomap mapping
-			if isempty(varargin), [mappedA, mapping] = isomap(A, no_dims, 12);
-            else [mappedA, mapping] = isomap(A, no_dims, varargin{1}); end
+			if isempty(varargin)
+                [mappedA, mapping] = isomap(A, no_dims, 12);
+            else 
+                [mappedA, mapping] = isomap(A, no_dims, varargin{1}); end
             mapping.name = 'Isomap';
 			
 		case 'LandmarkIsomap'
 			% Compute Landmark Isomap mapping
-            if isempty(varargin), [mappedA, mapping] = landmark_isomap(A, no_dims, 12, 0.2);
-			elseif length(varargin) == 1, [mappedA, mapping] = landmark_isomap(A, no_dims, varargin{1}, 0.2);
-            elseif length(varargin) >  1, [mappedA, mapping] = landmark_isomap(A, no_dims, varargin{1}, varargin{2}); end
+            if isempty(varargin) 
+                [mappedA, mapping] = landmark_isomap(A, no_dims, 12, 0.2);
+            elseif length(varargin) == 1
+                [mappedA, mapping] = landmark_isomap(A, no_dims, varargin{1}, 0.2);
+            elseif length(varargin) >  1
+                [mappedA, mapping] = landmark_isomap(A, no_dims, varargin{1}, varargin{2}); 
+            end
             mapping.name = 'LandmarkIsomap';
             
         case {'Laplacian', 'LaplacianEig', 'LaplacianEigen' 'LaplacianEigenmaps'}
             % Compute Laplacian Eigenmaps-based mapping
-            if isempty(varargin), [mappedA, mapping] = laplacian_eigen(A, no_dims, 12, 1, eig_impl);
-			elseif length(varargin) == 1, [mappedA, mapping] = laplacian_eigen(A, no_dims, varargin{1}, 1, eig_impl);
-            elseif length(varargin) > 1,  [mappedA, mapping] = laplacian_eigen(A, no_dims, varargin{1}, varargin{2}, eig_impl); end
+            if isempty(varargin)
+                [mappedA, mapping] = laplacian_eigen(A, no_dims, 12, 1, eig_impl);
+			elseif length(varargin) == 1
+                [mappedA, mapping] = laplacian_eigen(A, no_dims, varargin{1}, 1, eig_impl);
+            elseif length(varargin) > 1
+                [mappedA, mapping] = laplacian_eigen(A, no_dims, varargin{1}, varargin{2}, eig_impl);
+            end
             mapping.name = 'Laplacian';
             
         case {'HLLE', 'HessianLLE'}
             % Compute Hessian LLE mapping
-			if isempty(varargin), mappedA = hlle(A, no_dims, 12, eig_impl);
-            else mappedA = hlle(A, no_dims, varargin{1}, eig_impl); end
+			if isempty(varargin)
+                mappedA = hlle(A, no_dims, 12, eig_impl);
+            else 
+                mappedA = hlle(A, no_dims, varargin{1}, eig_impl); 
+            end
             mapping.name = 'HLLE';
             
         case 'LLE'
             % Compute LLE mapping
-			if isempty(varargin), [mappedA, mapping] = lle(A, no_dims, 12, eig_impl);
-            else [mappedA, mapping] = lle(A, no_dims, varargin{1}, eig_impl); end
+			if isempty(varargin)
+                [mappedA, mapping] = lle(A, no_dims, 12, eig_impl);
+            else 
+                [mappedA, mapping] = lle(A, no_dims, varargin{1}, eig_impl); 
+            end
             mapping.name = 'LLE';
             
         case 'GPLVM'

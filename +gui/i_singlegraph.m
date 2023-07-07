@@ -186,11 +186,11 @@ title(figname);
 %       p.EdgeCData=ones(G.numedges,1);
 %       p.EdgeCData(G.Edges.Weight<0)=2;      
         
-        i=ismember(string(upper(G.Nodes.Name)),tfgenes);
-        if any(i)
+        ix=ismember(string(upper(G.Nodes.Name)),tfgenes);
+        if any(ix)
             cc=repmat([0 0 0],G.numnodes,1);
-            cc(i,:)=repmat([1 0 0],sum(i),1);
-            % p.NodeLabelColor=cc;
+            cc(ix,:)=repmat([1 0 0],sum(ix),1);
+            p.NodeLabelColor=cc;
         end
         
         p.NodeFontSize=2*p.NodeFontSize;
@@ -231,7 +231,7 @@ title(figname);
             try
                 p1=i_replotg(p1,G1,h1,cutoff);
             catch ME
-                                
+                disp(ME.message);                           
             end
             %p2=i_replotg(p2,G2,h2,cutoff);
             pause(1);

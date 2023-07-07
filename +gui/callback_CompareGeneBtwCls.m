@@ -186,16 +186,16 @@ if isempty(selecteditem), return; end
             gui.i_cascadeviolin(sce,Xt,thisc,glist, ...
                 'Expression Level',cL,colorit);
             return;
-        case 'Other Predefined Score...'
+        case 'More Predefined Score...'
             gui.gui_showrefinfo('Other Predefined Cell Score');
             [~,T]=pkg.e_cellscores(sce.X,sce.g,0);
             listitems=T.ScoreType;
             [indx2,tf2] = listdlg('PromptString','Select Class',...
                  'SelectionMode','single','ListString',...
-                 listitems,'ListSize',[220,300]);
+                 listitems,'ListSize',[320,300]);
             if tf2~=1, return; end
             %fw=gui.gui_waitbar;
-            y=pkg.e_cellscores(sce.X,sce.g,indx2);
+            [y,~,posg]=pkg.e_cellscores(sce.X,sce.g,indx2);
             ttxt=T.ScoreType(indx2);
             %gui.gui_waitbar(fw);
         case 'Other Cell Attribute...'
@@ -239,7 +239,8 @@ if isempty(selecteditem), return; end
             if methodid~=4
             fw=gui.gui_waitbar;
             end
-                [cs,tflist]=sc_tfactivity(sce.X,sce.g,[],species,methodid);
+                [cs,tflist]=sc_tfactivity(sce.X,sce.g,[], ...
+                    species,methodid);
                 idx=find(tflist==string(listitems{indx2}));
                 assert(length(idx)==1)
                 
@@ -266,8 +267,12 @@ if isempty(selecteditem), return; end
 
  if showcomparision
     gui.i_violinplot(y,thisc,ttxt);
+    xlabel('Cell Groups');
+    ylabel('Cellular Score');
  else
-    gui.i_stemscatterfig(sce,y,posg,ctselected);
+    if ~exist("posg","var"), posg=[]; end
+    if ~exist("ttxt","var"), ttxt=[]; end
+    gui.i_stemscatterfig(sce,y,posg,ttxt);
  end
 
 

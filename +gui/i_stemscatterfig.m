@@ -1,6 +1,6 @@
 function [f0]=i_stemscatterfig(sce,cs,posg,csname)
 
-        if nargin<4, csname="CellScore"; end
+        if nargin<4 || isempty(csname), csname="CellScore"; end
 
         [f0]=figure('Visible',false);
         gui.i_stemscatter(sce.s,cs);
@@ -35,14 +35,19 @@ function [f0]=i_stemscatterfig(sce,cs,posg,csname)
     end
 
     function i_viewgenenames(~,~)
+        if isempty(posg)
+            helpdlg('The score value is not associated with a gene set.');
+        else
         idx=matches(sce.g,posg,'IgnoreCase',true);
         gg=sce.g(idx);
         inputdlg(csname, ...
             '',[10 50], ...
             {char(gg)});
+        end
     end
     function i_saveCrossTable(~,~)
-        gui.i_exporttable(table(cs),false,char(csname));
+        gui.i_exporttable(table(cs),false, ...
+            char(matlab.lang.makeValidName(string(csname))));
     end
     function i_geneheatmapx(~,~)
         [thisc]=gui.i_select1class(sce);
