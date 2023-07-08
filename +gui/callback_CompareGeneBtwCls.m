@@ -9,8 +9,8 @@ function callback_CompareGeneBtwCls(src,~)
     sce=guidata(FigureHandle);
 
 
-aa='Yes, compare values';
-bb='No, just show scores';
+aa='Yes, compare scores';
+bb='No, just show values';
 answer2 = questdlg(sprintf(['This function will calculates a score for each cell. After the scores are calculated, do you want to ' ...
     'compare score values between different cell groups?']),'', ...
     aa, bb, aa);
@@ -87,7 +87,7 @@ if isempty(selecteditem), return; end
     switch selecteditem
         %case 'Global Coordination Level (GCL) [PMID:33139959]'
 
-        case 'Define New Score...'
+        case 'Define a New Score...'
             ttxt='Customized Score';
             [posg]=gui.i_selectngenes(sce.g);
             if isempty(posg)
@@ -194,11 +194,11 @@ if isempty(selecteditem), return; end
             gui.i_cascadeviolin(sce,Xt,thisc,glist, ...
                 'Expression Level',cL,colorit);
             return;
-        case 'More Predefined Score...'
+        case 'Select a Predefined Score...'
             gui.gui_showrefinfo('Other Predefined Cell Score');
             [~,T]=pkg.e_cellscores(sce.X,sce.g,0);
             listitems=T.ScoreType;
-            [indx2,tf2] = listdlg('PromptString','Select Class',...
+            [indx2,tf2] = listdlg('PromptString','Select Score',...
                  'SelectionMode','single','ListString',...
                  listitems,'ListSize',[320,300]);
             if tf2~=1, return; end
