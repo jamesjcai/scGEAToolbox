@@ -219,13 +219,13 @@ if isempty(selecteditem), return; end
             end
             posg=[];
         case {'TF Activity Score [PMID:33135076] 🐢',...
-                'TF Targets Expression Score'}
+                'TF Targets Expression Score...'}
             [~,T]=pkg.e_tfactivityscores(sce.X,sce.g,0);
             listitems=unique(T.tf);
 
             %[glist]=gui.i_selectngenes(string(listitems));
 
-            [indx2,tf2] = listdlg('PromptString','Select Class',...
+            [indx2,tf2] = listdlg('PromptString','Select a transcription factor (TF)',...
                  'SelectionMode','single','ListString',...
                  listitems,'ListSize',[220,300]);
             if tf2~=1, return; end
@@ -263,13 +263,14 @@ if isempty(selecteditem), return; end
  % assignin('base','y',y);
  % assignin('base','thisc',thisc);
 
+ if ~exist("posg","var"), posg=[]; end
+ if ~exist("ttxt","var"), ttxt=[]; end
+
  if showcomparision
-    gui.i_violinplot(y,thisc,ttxt);
-    xlabel('Cell Groups');
-    ylabel('Cellular Score');
+    gui.i_violinplot(y,thisc,ttxt,true,[],posg);
+    xlabel('Cell group');
+    ylabel('Cellular score');
  else
-    if ~exist("posg","var"), posg=[]; end
-    if ~exist("ttxt","var"), ttxt=[]; end
     gui.i_stemscatterfig(sce,y,posg,ttxt);
  end
 

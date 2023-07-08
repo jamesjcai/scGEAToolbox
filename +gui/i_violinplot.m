@@ -1,6 +1,7 @@
-function [f]=i_violinplot(y,thisc,ttxt,colorit,cLorder) 
+function [f]=i_violinplot(y,thisc,ttxt,colorit,cLorder,posg) 
 
-    if nargin<5
+    if nargin<6, posg=[]; end    % used in callback_CompareGeneBtwCls
+    if nargin<5 || isempty(cLorder)
         [~,cLorder]=grp2idx(thisc);
     end
     if nargin<4
@@ -11,19 +12,22 @@ function [f]=i_violinplot(y,thisc,ttxt,colorit,cLorder)
     pkg.i_addbutton2fig(tb,'off',{@i_savedata,y,thisc}, ...
         'export.gif','Export data...');
     pkg.i_addbutton2fig(tb,'off',{@i_testdata,y,thisc}, ...
-        'exportx.gif','ANOVA/T-test...');
+        'icon-fa-stack-exchange-10.gif','ANOVA/T-test...');
     pkg.i_addbutton2fig(tb,'off',@i_addsamplesize, ...
-        "xpowerpoint.gif",'Add Sample Size');
+        "icon-mat-blur-linear-10.gif",'Add Sample Size');
     pkg.i_addbutton2fig(tb,'on',{@gui.i_savemainfig,3}, ...
         "powerpoint.gif",'Save Figure to PowerPoint File...');
     pkg.i_addbutton2fig(tb,'off',@i_invertcolor, ...
-        "xpowerpoint.gif",'Switch BW/Color');
+        "plotpicker-pie.gif",'Switch BW/Color');
     pkg.i_addbutton2fig(tb,'off',@i_reordersamples, ...
-        "xpowerpoint.gif",'Reorder Samples');
+        "plotpicker-errorbar.gif",'Reorder Samples');
     pkg.i_addbutton2fig(tb,'off',@i_sortbymean, ...
-        "xpowerpoint.gif",'Sort Samples by Median');
+        "plotpicker-cra.gif",'Sort Samples by Median');
     pkg.i_addbutton2fig(tb,'off',@i_renametitle, ...
-        "xpowerpoint.gif",'Change Plot Title');
+        "icon-mat-touch-app-10.gif",'Change Plot Title');
+    pkg.i_addbutton2fig(tb,'on',@i_viewgenenames, ...
+        'HDF_point.gif','Show Gene Names');
+
 
     isdescend=false;
     OldTitle=[];
@@ -136,6 +140,18 @@ function i_testdata(~,~,y,grp)
     end
 end
 
+
+    function i_viewgenenames(~,~)
+        if isempty(posg)
+            helpdlg('The gene set is empty. This score may not be associated with any gene set.');
+        else
+            %idx=matches(sce.g,posg,'IgnoreCase',true);
+            %gg=sce.g(idx);
+            inputdlg(ttxt, ...
+                '',[10 50], ...
+                {char(posg)});
+        end
+    end
 
 end
 

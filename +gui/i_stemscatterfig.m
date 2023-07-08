@@ -4,7 +4,7 @@ function [f0]=i_stemscatterfig(sce,cs,posg,csname)
 
         [f0]=figure('Visible',false);
         gui.i_stemscatter(sce.s,cs);
-        zlabel('Score Value')
+        zlabel('Score value')
         title(strrep(csname,'_','\_'));
         tb = uitoolbar(f0);
         pkg.i_addbutton2fig(tb,'off',@i_saveCrossTable,"export.gif",'Save cross-table');
@@ -14,7 +14,7 @@ function [f0]=i_stemscatterfig(sce,cs,posg,csname)
         pkg.i_addbutton2fig(tb,'on',@i_geneheatmapx,'greenarrowicon.gif','Heatmap');
         pkg.i_addbutton2fig(tb,'on',@i_genedotplot,'greencircleicon.gif','Dot plot');
         pkg.i_addbutton2fig(tb,'on',@i_viewgenenames,'HDF_point.gif','Show gene names');
-        pkg.i_addbutton2fig(tb,'on',@i_viewscatter3,'xHDF_point.gif','Show scatter plot');
+        pkg.i_addbutton2fig(tb,'on',@i_viewscatter3,'icon-mat-blur-on-10.gif','Show scatter plot');
 
         movegui(f0,'center');
         set(f0,'Visible',true);
@@ -36,15 +36,16 @@ function [f0]=i_stemscatterfig(sce,cs,posg,csname)
 
     function i_viewgenenames(~,~)
         if isempty(posg)
-            helpdlg('The score value is not associated with a gene set.');
+            helpdlg('The gene set is empty. This score may not be associated with any gene set.');
         else
-        idx=matches(sce.g,posg,'IgnoreCase',true);
-        gg=sce.g(idx);
-        inputdlg(csname, ...
-            '',[10 50], ...
-            {char(gg)});
+            idx=matches(sce.g,posg,'IgnoreCase',true);
+            gg=sce.g(idx);
+            inputdlg(csname, ...
+                '',[10 50], ...
+                {char(gg)});
         end
     end
+
     function i_saveCrossTable(~,~)
         gui.i_exporttable(table(cs),false, ...
             char(matlab.lang.makeValidName(string(csname))));
