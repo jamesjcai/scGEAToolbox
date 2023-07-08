@@ -141,14 +141,17 @@ i_addbutton_push(1,0,@RefreshAll,"icon-mat-refresh-20.gif","Refresh");
 i_addbutton_push(0,0,@call_scgeatool,"IMG00107.GIF"," ");
 %i_addbutton(0,0,@callback_CalculateCellScores,"cellscore2.gif","Calculate cell scores from list of feature genes")
 %i_addbutton(0,0,@callback_ComparePotency,"plotpicker-candle.gif","Compare differentiation potency between groups");
+
+
 i_addbutton_push(0,1,@gui.callback_MultiGroupingViewer,"plotpicker-arxtimeseries.gif","Multi-grouping View...");
 i_addbutton_push(0,0,@gui.callback_CrossTabulation,"plotpicker-comet.gif","Cross tabulation");
 %i_addbutton_push(0,0,@call_scgeatool,"IMG00107.GIF"," ");
 %i_addbutton(0,1,@callback_CompareGeneBtwCls,"plotpicker-priceandvol.gif","Compare between groups");
 %i_addbutton_push(0,1,@callback_CellTypeMarkerScores,"cellscore.gif","Calculate signature scores for each cell");
-i_addbutton_push(0,1,@callback_CompareGeneBtwCls,"cellscore2.gif","Compare between groups");
+i_addbutton_push(0,1,@callback_GetCellSignatureMatrix,"icon-mat-blur-linear-10.gif","Compare differentiation potency between groups");
+i_addbutton_push(0,0,@callback_CompareGeneBtwCls,"cellscore2.gif","Compare between groups");
 %i_addbutton_push(0,0,@call_scgeatool,"IMG00107.GIF"," ");
-i_addbutton_push(0,0,@callback_DEGene2Groups,"plotpicker-boxplot.gif","Compare 2 groups (DE analysis)");
+i_addbutton_push(0,1,@callback_DEGene2Groups,"plotpicker-boxplot.gif","Compare 2 groups (DE analysis)");
 i_addbutton_push(0,0,@callback_EnrichrHVGs,"plotpicker-andrewsplot.gif","Functional enrichment analysis with HVGs");
 i_addbutton_push(0,1,@callback_BuildGeneNetwork,"noun_Network_691907.gif","Build gene regulatory network");
 i_addbutton_push(0,0,@callback_CompareGeneNetwork,"noun_Deep_Learning_2424485.gif","Compare two scGRNs");

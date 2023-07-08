@@ -1,8 +1,9 @@
-function [score,T,posg]=e_cellscores(X,genelist,typeid)
+function [score,T,posg]=e_cellscores(X,genelist,typeid,methodid)
 % Calcute predefined cell scores (marker list in cellscores.xlsx)
 %
 % see also: SC_CELLSCORE_UCELL, SC_CELLSCORE_ADMDL, SC_CELLCYCLESCORING
 
+if nargin<4, methodid=[]; end
 if nargin<3, typeid=0; end
 if nargin<2, genelist=[]; end
 if nargin<1, X=[]; end
@@ -14,6 +15,7 @@ try
     T=readtable(cellscoresfile,'Sheet','Sheet1',...
         'ReadVariableNames',true);
 catch ME
+    disp(ME.message);
     cellscoresfile=fullfile(pw1,'..','resources','cellscores.txt');
     T=readtable(cellscoresfile,'Delimiter','\t',...
         'ReadVariableNames',true);
@@ -34,6 +36,8 @@ if ~(idx<=size(T,1) && idx>0 && idx == floor(idx))
     score=[];
     return;
 end
+
+scoretype=string(T.ScoreType(idx));
 
 tgsPos=unique(strsplit(string(T.PositiveMarkers(idx)),','));
 tgsNeg=unique(strsplit(string(T.NegativeMarkers(idx)),','));
@@ -78,10 +82,14 @@ end
 %[score]=sc_cellscore_admdl(X,genelist,tgsPos,tgsNeg);
 %[score]=sc_cellscore_ucell(X,genelist,tgsPos);
 
+if methodid==1
+    answer='UCell [PMID:34285779]';
+else
     answer = questdlg('Select algorithm:',...
     'Select Method', ...
     'UCell [PMID:34285779]','AddModuleScore/Seurat', ...
     'UCell [PMID:34285779]');
+end
     switch answer
         case 'AddModuleScore/Seurat'
             fw=gui.gui_waitbar;
@@ -95,7 +103,8 @@ end
             gui.gui_waitbar(fw);
         case 'UCell [PMID:34285779]'
             %[cs]=run.UCell(sce.X,sce.g,posg);
-            fw=gui.gui_waitbar;
+
+            fw=gui.gui_waitbar([],[],scoretype);
             try
                 [score]=sc_cellscore_ucell(X,genelist,tgsPos);
             catch ME
