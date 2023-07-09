@@ -13,11 +13,13 @@ function callback_GetCellSignatureMatrix(src,~)
     sigtags=unique(string(T.SignatureTag));
     sigtags=sigtags(strlength(sigtags)>0);
     if ~isempty(sigtags)
-        sigtags=[sigtags;"Select score set..."];
-        [indx1,tf1] = listdlg('PromptString','Select a signature',...
+        sigtags=[sigtags;"-------------------------";
+                 "Select scores to make a customized score set..."];
+        [indx1,tf1] = listdlg('PromptString','Select a predefined score set',...
              'SelectionMode','single','ListString',...
              sigtags,'ListSize',[250,300]);
         if tf1~=1, return; end
+        if contains(sigtags(indx1),'----'), return; end
             
         idx=T.SignatureTag==sigtags(indx1);
         if any(idx)
@@ -46,10 +48,23 @@ function callback_GetCellSignatureMatrix(src,~)
             T=array2table(Y,'VariableNames', ...
                 listitems(indx2),'RowNames', ...
             matlab.lang.makeUniqueStrings(sce.c_cell_id));
-            gui.i_exporttable(T);
-            %assignin('base','Y',Y);
+            needwait=true;
+            gui.i_exporttable(T,needwait);
+            assignin('base','Y',Y);
             %assignin('base','listitems',listitems(indx2));
+            assignin('base','labelx',listitems(indx2));
             %gui.gui_waitbar(fw);
             % T=table(Y,'VariableNames', ...
             %     matlab.lang.makeValidName(listitems(indx2)));
+
+
+     allowunique=false;
+     [thisc]=gui.i_select1class(sce,allowunique);
+     if isempty(thisc), return; end
+     assignin('base','thisc',thisc);
+
+     P=grpstats(Y,thisc,'mean');
+     figure;
+     spider_plot_R2019b(P,'AxesLabels',labelx')
+
 end
