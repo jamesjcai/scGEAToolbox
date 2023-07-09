@@ -50,21 +50,25 @@ function callback_GetCellSignatureMatrix(src,~)
             matlab.lang.makeUniqueStrings(sce.c_cell_id));
             needwait=true;
             gui.i_exporttable(T,needwait);
-            assignin('base','Y',Y);
+            %assignin('base','Y',Y);
             %assignin('base','listitems',listitems(indx2));
-            assignin('base','labelx',listitems(indx2));
+            %assignin('base','labelx',listitems(indx2));
+            
+            labelx=listitems(indx2)';
             %gui.gui_waitbar(fw);
             % T=table(Y,'VariableNames', ...
             %     matlab.lang.makeValidName(listitems(indx2)));
 
-
+    answer = questdlg('Compare between different cell groups?','');
+    if ~strcmp(answer,'Yes'), return; end
      allowunique=false;
      [thisc]=gui.i_select1class(sce,allowunique);
      if isempty(thisc), return; end
-     assignin('base','thisc',thisc);
+     [c,cL]=grp2idx(thisc);     
+     % assignin('base','thisc',thisc);
 
-     P=grpstats(Y,thisc,'mean');
+     P=grpstats(Y,c,'mean');
      figure;
-     spider_plot_R2019b(P,'AxesLabels',labelx')
-
+     spider_plot_R2019b(P,'AxesLabels',labelx);
+     legend(cL);
 end
