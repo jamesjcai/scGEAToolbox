@@ -148,7 +148,7 @@ i_addbutton_push(0,0,@gui.callback_CrossTabulation,"plotpicker-comet.gif","Cross
 %i_addbutton_push(0,0,@call_scgeatool,"IMG00107.GIF"," ");
 %i_addbutton(0,1,@callback_CompareGeneBtwCls,"plotpicker-priceandvol.gif","Compare between groups");
 %i_addbutton_push(0,1,@callback_CellTypeMarkerScores,"cellscore.gif","Calculate signature scores for each cell");
-i_addbutton_push(0,1,@callback_GetCellSignatureMatrix,"icon-mat-blur-linear-10.gif","Compare differentiation potency between groups");
+i_addbutton_push(0,1,@callback_GetCellSignatureMatrix,"icon-mat-blur-linear-10.gif","Obtain cell state matrix -- the functional state activity profiles of cells");
 i_addbutton_push(0,0,@callback_CompareGeneBtwCls,"cellscore2.gif","Compare between groups");
 %i_addbutton_push(0,0,@call_scgeatool,"IMG00107.GIF"," ");
 i_addbutton_push(0,1,@callback_DEGene2Groups,"plotpicker-boxplot.gif","Compare 2 groups (DE analysis)");
