@@ -7,14 +7,30 @@ function callback_GetCellSignatureMatrix(src,~)
 
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
+    preselected=[];
 
-
-
-            [~,T]=pkg.e_cellscores([],[],0);
+    [~,T]=pkg.e_cellscores([],[],0);
+    sigtags=unique(string(T.SignatureTag));
+    sigtags=sigtags(strlength(sigtags)>0);
+    if ~isempty(sigtags)
+        sigtags=[sigtags;"Select score set..."];
+        [indx1,tf1] = listdlg('PromptString','Select a signature',...
+             'SelectionMode','single','ListString',...
+             sigtags,'ListSize',[250,300]);
+        if tf1~=1, return; end
+            
+        idx=T.SignatureTag==sigtags(indx1);
+        if any(idx)
+            [~,ix]=natsort(T.ScoreType);
+            %idx=idx(ix);
+            preselected=idx(ix);
+        end
+    end
             listitems=natsort(T.ScoreType);
             [indx2,tf2] = listdlg('PromptString','Select Scores',...
                  'SelectionMode','multiple','ListString',...
-                 listitems,'ListSize',[320,300]);
+                 listitems,'ListSize',[320,300], ...
+                 'InitialValue',find(preselected));
             if tf2~=1, return; end
 
             n=length(indx2);
