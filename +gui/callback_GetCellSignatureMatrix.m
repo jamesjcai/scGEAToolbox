@@ -22,7 +22,6 @@ function callback_GetCellSignatureMatrix(src,~)
         idx=T.SignatureTag==sigtags(indx1);
         if any(idx)
             [~,ix]=natsort(T.ScoreType);
-            %idx=idx(ix);
             preselected=idx(ix);
         end
     end
@@ -36,13 +35,14 @@ function callback_GetCellSignatureMatrix(src,~)
             n=length(indx2);
             Y=zeros(sce.NumCells,n);
 
-            %fw=gui.gui_waitbar;
+            fw=gui.gui_waitbar_adv;
             for k=1:n
+                gui.gui_waitbar_adv(fw,k/n,listitems{indx2(k)});
                 [y]=pkg.e_cellscores(sce.X,sce.g, ...
-                    listitems{indx2(k)},1);
-                %ttxt=T.ScoreType(indx2);
+                    listitems{indx2(k)},1,false);
                 Y(:,k)=y(:);
             end
+            gui.gui_waitbar_adv(fw);
             T=array2table(Y,'VariableNames', ...
                 listitems(indx2),'RowNames', ...
             matlab.lang.makeUniqueStrings(sce.c_cell_id));

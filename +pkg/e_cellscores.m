@@ -1,8 +1,9 @@
-function [score,T,posg]=e_cellscores(X,genelist,typeid,methodid)
+function [score,T,posg]=e_cellscores(X,genelist,typeid,methodid,showwaitbar)
 % Calcute predefined cell scores (marker list in cellscores.xlsx)
 %
 % see also: SC_CELLSCORE_UCELL, SC_CELLSCORE_ADMDL, SC_CELLCYCLESCORING
 
+if nargin<5, showwaitbar=true; end
 if nargin<4, methodid=[]; end
 if nargin<3, typeid=0; end
 if nargin<2, genelist=[]; end
@@ -84,6 +85,8 @@ end
 
 if methodid==1
     answer='UCell [PMID:34285779]';
+elseif methodid==2
+    answer='AddModuleScore/Seurat';
 else
     answer = questdlg('Select algorithm:',...
     'Select Method', ...
@@ -104,15 +107,15 @@ end
         case 'UCell [PMID:34285779]'
             %[cs]=run.UCell(sce.X,sce.g,posg);
 
-            fw=gui.gui_waitbar([],[],scoretype);
+            if showwaitbar, fw=gui.gui_waitbar([],[],scoretype); end
             try
                 [score]=sc_cellscore_ucell(X,genelist,tgsPos);
             catch ME
-                gui.gui_waitbar(fw,true);
+                if showwaitbar, gui.gui_waitbar(fw,true); end
                 errordlg(ME.message);
             return;
             end
-            gui.gui_waitbar(fw);
+            if showwaitbar, gui.gui_waitbar(fw); end
         otherwise
             return;
     end
