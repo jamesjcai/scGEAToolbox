@@ -12,7 +12,7 @@
 function cl = clkmeans(x,k,sfct,oldcl)
 
 if exist('oldcl')
-   if (length(oldcl)==size(x,1))&(max(oldcl)==k)
+   if (length(oldcl)==size(x,1))&&(max(oldcl)==k)
       disp('clkmeans: initializing means with centroids of given clustering')
       [~,  ~, cln] = kmeans(clucent(x,oldcl),x,zeros(1,14),sfct);
    else

@@ -65,7 +65,7 @@ else
     No_sel_genes = min([No_features round(size(data1,1))]);
 end
 
-gene_selection = find(aa>=bb(No_sel_genes));
+gene_selection = aa>=bb(No_sel_genes);
 input_data = data1(gene_selection,:);
 
 

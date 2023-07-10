@@ -119,7 +119,7 @@ for s = 1:num_of_steps
     k_step = min(2^s-1,k);
     mat_tpm = median(sum(mat_smooth))*bsxfun(@rdivide,mat_smooth,sum(mat_smooth));
     mat_trans = sqrt(mat_tpm)+sqrt(mat_tpm+1);
-    [~,~] = sort(sum(mat_smooth'),'descend');
+    [~,~] = sort(sum(mat_smooth,2),'descend');
     disp_texp = ['preforming pca ' num2str(s) '/' num2str(num_of_steps) ' times'];
     disp(disp_texp)
     [~,~,V] = rsvd(mat_trans',num_of_pc);

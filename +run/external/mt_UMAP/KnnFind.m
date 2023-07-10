@@ -809,7 +809,7 @@ classdef KnnFind<handle
             fprintf('Done ... C++ took %s searching %s \n', ...
                 feval(fSecs, toc(timeCpp)), sz);
 
-            fprintf(['Starting MatLab knnsearch of %s\n'], sz);
+            fprintf('Starting MatLab knnsearch of %s\n', sz);
             timeMatLab=tic;
             knnIndices1=KnnFind.Determine(X, Y, args);
             fprintf('Done ... MatLab took %s searching %s \n', ...

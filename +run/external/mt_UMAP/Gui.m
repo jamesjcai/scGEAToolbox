@@ -3044,7 +3044,7 @@ classdef Gui
                 N=size(cdata,3);
                 for i=1:N
                     tmp2=cdata(:,:,i);
-                    tmp2(find(tmp2==white(i)))=asWhite(i);
+                    tmp2(tmp2==white(i))=asWhite(i);
                     cdata(:,:,i)=tmp2;
                 end
             end

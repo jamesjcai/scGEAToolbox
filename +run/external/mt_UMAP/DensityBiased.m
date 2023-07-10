@@ -49,9 +49,9 @@ classdef DensityBiased<handle
             d2=finalD(:,:,2);
             d1(dists>this.mxDistance)=nan;
             d2(dists>this.mxDistance)=nan;
-            r11=nansum(d2'.^2);
-            r22=nansum(d1'.^2);
-            r12=nansum(d1'.*d2');
+            r11=sum(d2'.^2,"omitnan");
+            r22=sum(d1'.^2,"omitnan");
+            r12=sum(d1'.*d2',"omitnan");
             cnts=sum(dists'<this.mxDistance);
             result=[r11./cnts;r12./cnts; r12./cnts; r22./cnts];
             dets=result(4,:).*result(1,:)-result(2,:).*result(3,:);

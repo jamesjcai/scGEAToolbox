@@ -80,13 +80,13 @@ end
 %------------------------------------------------------------
 
 %actually these numbers are zeros
-W(find(W<0.0000000001))=0;
-H(find(H<0.0000000001))=0;
+W(W<0.0000000001)=0;
+H(H<0.0000000001)=0;
 
 %fill in the zero elements with the average : NNDSVDa
 if flag==1
-   ind1      =  find(W==0) ;
-   ind2      =  find(H==0) ;
+   ind1      =  W==0 ;
+   ind2      =  H==0 ;
    average   =  mean(A(:)) ; 
    W( ind1 ) =  average    ; 
    H( ind2 ) =  average    ;

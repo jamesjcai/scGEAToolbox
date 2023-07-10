@@ -2128,7 +2128,7 @@ function [handles,levels,parentIdx,listing] = findjobj(container,varargin) %#ok<
                                     [cbNames, cbIdx, cb2Idx] = intersect(cbNames,newCbNames);  %#ok cb2Idx unused
                                     cbData = cbData(cbIdx,:);
                                     for cbIdx = 1 : length(cbNames)
-                                        newIdx = find(strcmp(cbNames{cbIdx},newCbNames));
+                                        newIdx = strcmp(cbNames{cbIdx},newCbNames);
                                         if ~isequal(cbData2,cbData) && ~isequal(cbData2{newIdx,2}, cbData{cbIdx,2})
                                             cbData{cbIdx,2} = '<different values>';
                                         end

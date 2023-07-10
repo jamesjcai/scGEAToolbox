@@ -59,7 +59,7 @@ for n = 1:niters
   % Adjust the centres based on new posteriors
   for j = 1:ncentres
     if (num_points(j) > 0)
-      centres(j,:) = sum(data(find(post(:,j)),:), 1)/num_points(j);
+      centres(j,:) = sum(data(post(:,j),:), 1)/num_points(j);
     end
   end
 
@@ -74,7 +74,7 @@ for n = 1:niters
 
   if n > 1
     % Test for termination
-    if max(max(abs(centres - old_centres))) < options(2) & ...
+    if max(max(abs(centres - old_centres))) < options(2) && ...
         abs(old_e - e) < options(3)
       options(8) = e;
       return;

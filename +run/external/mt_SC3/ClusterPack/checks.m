@@ -33,7 +33,7 @@ if ~isempty(s)
          s(find(isinf(s)||isnan(s))) = 0; % hangs the computer - no idea why...
       else
         [a,b] = find(isfinite(s));
-         c = find(isfinite(s));
+         c = isfinite(s);
          s = sparse(a,b,s(c)); 
       end
       disp('checks: made zero !!! (serious)');

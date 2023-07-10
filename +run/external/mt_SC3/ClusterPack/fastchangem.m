@@ -6,5 +6,5 @@ function mapout = fastchangem(map,newcode,oldcode)
 
 mapout=map;
 for i=1:length(newcode)
-  mapout(find(map==oldcode(i))) = newcode(i);
+  mapout(map==oldcode(i)) = newcode(i);
 end

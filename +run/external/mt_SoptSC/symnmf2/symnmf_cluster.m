@@ -170,7 +170,7 @@ else
         kk = floor(log2(n)) + 1;
     end
     if isfield(options, 'nn')
-        if ~isempty(options.nn) & isnumeric(options.nn) & options.nn < n
+        if ~isempty(options.nn) && isnumeric(options.nn) && options.nn < n
             nn = options.nn;
         else
             error('options.nn must be an integer less than N!');
@@ -179,7 +179,7 @@ else
         nn = 7;
     end
     if isfield(options, 'tol')
-        if ~isempty(options.tol) & isnumeric(options.tol) & options.tol > 0 & options.tol < 1
+        if ~isempty(options.tol) && isnumeric(options.tol) && options.tol > 0 && options.tol < 1
             tol = options.tol;
         else
             error('options.tol must be a real number and 0 < options.tol < 1!');
@@ -188,7 +188,7 @@ else
         tol = 1e-3;
     end
     if isfield(options, 'maxiter')
-        if ~isempty(options.maxiter) & isnumeric(options.maxiter) & options.maxiter > 0
+        if ~isempty(options.maxiter) && isnumeric(options.maxiter) && options.maxiter > 0
             maxiter = options.maxiter;
         else
             error('options.maxiter must be a positive integer!');
@@ -197,7 +197,7 @@ else
         maxiter = 10000;
     end
     if isfield(options, 'rep')
-        if ~isempty(options.rep) & isnumeric(options.rep) & options.rep > 0
+        if ~isempty(options.rep) && isnumeric(options.rep) && options.rep > 0
             rep = options.rep;
         else
             error('options.rep must be a positive integer!');
@@ -213,7 +213,7 @@ else
         end
     end
     if isfield(options, 'Hinit')
-        if ~isempty(options.Hinit) && isnumeric(options.Hinit) & size(options.Hinit, 1) == n & size(options.Hinit, 2) == k
+        if ~isempty(options.Hinit) && isnumeric(options.Hinit) && size(options.Hinit, 1) == n && size(options.Hinit, 2) == k
             Hinit = options.Hinit;
         else
             error('The size of each initialization of H must be Nxk!');

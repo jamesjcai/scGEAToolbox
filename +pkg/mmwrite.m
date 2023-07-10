@@ -50,7 +50,7 @@ elseif ( nargin == 2)
   precision = 16;
 end
 
-mmfile = fopen([filename],'w');
+mmfile = fopen(filename,'w');
 if ( mmfile == -1 )
  error('Cannot open file for output');
 end
@@ -68,7 +68,7 @@ if ( issparse(A) )
     Vreal = 1; 
   end
 
-  if ( ~ strcmp(mattype,'pattern') & Vreal )
+  if ( ~ strcmp(mattype,'pattern') && Vreal )
     mattype = 'real'; 
   elseif ( ~ strcmp(mattype,'pattern') )
     mattype = 'complex';
@@ -173,7 +173,7 @@ else
   else 
     Areal = 1; 
   end
-  if ( ~strcmp(mattype,'pattern') & Areal )
+  if ( ~strcmp(mattype,'pattern') && Areal )
     mattype = 'real';
   elseif ( ~strcmp(mattype,'pattern')  )
     mattype = 'complex';

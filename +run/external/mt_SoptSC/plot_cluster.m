@@ -29,7 +29,9 @@ mycolor = mymap1(1:round(ncolor./No_cluster):ncolor,:);
 
 figure;
 for ik = 1:No_cluster
-    scatter(dvis(find(cluster_label==ik),1),dvis(find(cluster_label==ik),2),40,mycolor(ik,:),'filled','MarkerEdgeAlpha',0.6,'MarkerFaceAlpha',0.6);
+    scatter(dvis(cluster_label==ik,1),dvis(cluster_label==ik,2), ...
+        40,mycolor(ik,:),'filled','MarkerEdgeAlpha',0.6, ...
+        'MarkerFaceAlpha',0.6);
     hold on;
 end
 box off;

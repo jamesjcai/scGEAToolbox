@@ -134,7 +134,7 @@ testData = data(unlabel_cl, :);
 model = fitcknn(trainData,trainClass,'NumNeighbors', 5);
 prediction = predict(model,testData);
 ensemble = [trainClass; prediction];
-ensemble = sortrows([baseCL' ensemble], [1]);
+ensemble = sortrows([baseCL' ensemble], 1);
 clear trainData testData;
 label = ensemble(:,2);
 % toc;

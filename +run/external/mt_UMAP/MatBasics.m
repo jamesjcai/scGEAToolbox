@@ -989,7 +989,7 @@ classdef MatBasics
             groups=cell(1, N2);
             for i=1:N1
                 clue=clusterIds(i);
-                idxs=unique(newPtrs(find(oldPtrs==clue)));
+                idxs=unique(newPtrs(oldPtrs==clue));
                 assert( length(idxs)==1 );
                 groups{idxs(1)}=[clue groups{idxs(1)}];
             end

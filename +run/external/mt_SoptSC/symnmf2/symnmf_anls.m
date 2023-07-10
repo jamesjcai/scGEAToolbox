@@ -88,7 +88,7 @@ else
     else
         tol = 1e-3;
     end
-    if isfield(params, 'alpha') & params.alpha >= 0
+    if isfield(params, 'alpha') && params.alpha >= 0
         alpha = params.alpha;
     else
         alpha = max(max(A))^2;

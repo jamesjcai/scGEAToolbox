@@ -6,10 +6,10 @@ function sc_pseudotimeexplorer(X,genelist,s,varargin)
    addRequired(p,'X',@isnumeric);
    addRequired(p,'genelist',@isstring);
    addRequired(p,'s',@isnumeric);
-   addOptional(p,'method',"splinefit",@(x) (isstring(x)|ischar(x))&ismember(lower(string(x)),["splinefit"]));
+   addOptional(p,'method',"splinefit",@(x) (isstring(x)|ischar(x))&ismember(lower(string(x)),"splinefit"));
    addOptional(p,'dim',1,@isnumeric);
    parse(p,X,genelist,s,varargin{:});
-   method=p.Results.method;
+   %method=p.Results.method;
    dim=p.Results.dim;
    
   

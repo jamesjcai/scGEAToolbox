@@ -5,7 +5,7 @@
 
 
 function bayesdata = combat(dat, batch, mod)
-    [sds] = std(dat')';
+    [sds] = std(dat,[],2);
     wh = find(sds==0);
     [ns,~] = size(wh);
     if ns>0

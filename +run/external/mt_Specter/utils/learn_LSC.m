@@ -10,7 +10,7 @@ function [opts, new_fea] = learn_LSC(fea, params)
     [m, n] = size(fea);
     n_clusters = params.n_clusters;
     % select top params.HV genes
-    if (n > n_select_genes & params.HV ~= 0)
+    if (n > n_select_genes && params.HV ~= 0)
         if (params.print ~= 0)
             fprintf("Select HV genes \n");
         end
@@ -21,7 +21,7 @@ function [opts, new_fea] = learn_LSC(fea, params)
     end
 
     % apply PCA 
-    if (n > 900 & params.PCA ~= 0)
+    if (n > 900 && params.PCA ~= 0)
         if (params.print ~= 0)
             fprintf("Apply PCA\n");
         end
@@ -48,7 +48,7 @@ function [opts, new_fea] = learn_LSC(fea, params)
     opts.maxIter = 1000;%TODO 3000
     opts.numRep = 5;%TODO 10
     opts.reduceRatio = 300;
-    if isfield(params,'mode') & params.mode == 0 & m > 6000
+    if isfield(params,'mode') && params.mode == 0 && m > 6000
         % fprintf('set for single mode\n');
         opts.maxIter = 1000;%
         opts.numRep = 3;%
@@ -56,7 +56,7 @@ function [opts, new_fea] = learn_LSC(fea, params)
         opts.p= min(300, round(m/5)); %round(m/10);
     end
 
-    if isfield(params,'mode') & params.mode == 2
+    if isfield(params,'mode') && params.mode == 2
         fprintf('set for single mode\n');
         opts.maxIter = 3000;
         opts.numRep = 10;

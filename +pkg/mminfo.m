@@ -59,7 +59,7 @@ end
 % Read through comments, ignoring them
 
 commentline = fgets(mmfile);
-while ~isempty(commentline) & commentline(1) == '%'
+while ~isempty(commentline) && commentline(1) == '%'
   commentline = fgets(mmfile);
 end
 
@@ -76,7 +76,7 @@ if ( strcmp(rep,'coordinate')) %  read matrix given in sparse
        error('End-of-file reached before size information was found.')
      end
      [sizeinfo,count] = sscanf(commentline,'%d%d%d');
-     if ( count > 0 & count ~= 3 )
+     if ( count > 0 && count ~= 3 )
        error('Invalid size specification line.')
      end
   end
@@ -94,7 +94,7 @@ elseif ( strcmp(rep,'array') ) %  read matrix given in dense
        error('End-of-file reached before size information was found.')
      end
      [sizeinfo,count] = sscanf(commentline,'%d%d');
-     if ( count > 0 & count ~= 2 )
+     if ( count > 0 && count ~= 2 )
        error('Invalid size specification line.')
      end
   end

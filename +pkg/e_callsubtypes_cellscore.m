@@ -30,7 +30,7 @@ negg2=[];
 posg3=["Cd3d","Cd3e","Cd3g","Cd8a","Cd8a1","Gzma","Gzmb","Pdcd1","Ctla4"];
 negg3=[];
 
-posg4=["Cd3g"];
+posg4="Cd3g";
 negg4=["Cd4","Cd8a"];
 
 
