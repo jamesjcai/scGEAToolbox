@@ -70,5 +70,6 @@ function callback_GetCellSignatureMatrix(src,~)
      P=grpstats(Y,c,'mean');
      figure;
      spider_plot_R2019b(P,'AxesLabels',labelx);
+     cL=strrep(cL,'_','\_');
      legend(cL);
 end

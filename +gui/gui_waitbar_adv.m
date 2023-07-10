@@ -30,6 +30,7 @@ elseif isvalid(f) && strcmp(f.Tag,'TMWWaitbar')
         %if ~usejava('desktop')
         %    disp(msg);
         %else
+        msg=strrep(msg,'_','\_');
             waitbar(p,f,msg);
         %end
     end
