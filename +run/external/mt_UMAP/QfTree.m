@@ -2430,7 +2430,7 @@ classdef QfTree < handle
             txtObjs=findall(fig, 'type', 'text');
             nTxtObjs=length(txtObjs);
             strsArray=StringArray(phyNames);
-            op=str2num(props.get(prop,'0'));
+            op=str2double(props.get(prop,'0'));
             if length(op)==4
                 op=Gui.RepositionOnSameScreenIfRequired(op);
                 set(fig, 'OuterPosition', op);

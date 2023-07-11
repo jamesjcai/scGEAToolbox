@@ -66,7 +66,7 @@ for ii = 1:iter
     U = (F'*F*lambda + lambda3*eye(size(U,1)))\(lambda*F'*Z);
    
    if ii>1
-      if (abs(o(ii)-o(ii-1))./o(ii))<tol
+      if (abs(o(ii)-o(ii-1))/o(ii))<tol
          break
       end
     end

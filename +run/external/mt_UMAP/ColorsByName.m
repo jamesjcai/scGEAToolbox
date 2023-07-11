@@ -88,7 +88,7 @@ classdef ColorsByName <handle
                             map.set(lower(name), ColorsByName.DEFAULT_COLOR);
                         end
                     catch 
-                        fprintf('Name #%d "%s" is null?\n', i, name);
+                        %fprintf('Name #%d "%s" is null?\n', i, name);
                     end
                 end
             else
@@ -147,8 +147,8 @@ classdef ColorsByName <handle
             end
             N=length(names);
             if N>0
-                for i=1:N
-                    name=names{i};
+                for ix=1:N
+                    name=names{ix};
                     this.map.set(lower(name), color);
                     this.props.put(name, newColor);
                     cnt=cnt+1;
@@ -262,8 +262,8 @@ classdef ColorsByName <handle
                 if ~isempty(colorsByName)
                     c=StringArray.Cell(colorsByName.keySet);
                     N=length(c);
-                    for i=1:N
-                        key=c{i};
+                    for ix=1:N
+                        key=c{ix};
                         try
                             clr=colorsByName.get(key);
                             if startsWith(key, '*') %canonical name
@@ -273,7 +273,7 @@ classdef ColorsByName <handle
                             end
                         catch 
                             if nargin<3 || ~beQuiet
-                                fprintf('key #%d "%s" is null?\n', i, key);
+                                fprintf('key #%d "%s" is null?\n', ix, key);
                             end
                         end
                     end

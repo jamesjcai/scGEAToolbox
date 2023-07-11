@@ -18,15 +18,15 @@ end
 
 
 
-if (ND1 ~= ND2)
+if ND1 ~= ND2
 error('Distance matrix is not square!')
 end
 
-if(D ~= D')
-error('Distance matrix is not symmetric')
+if ~issymmetric(D)  % ~= D.'
+    error('Distance matrix is not symmetric')
 end
 
-sorted_dist_mat = zeros(size(D));
+%sorted_dist_mat = zeros(size(D));
 sorted_dist_mat=sort(D);
 
 %~ First NN is point itself and discarded. K < N strictly

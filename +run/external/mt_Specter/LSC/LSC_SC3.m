@@ -94,11 +94,11 @@ end
 % Z construction
 D = EuDist2(data,marks,0);
 
-if isfield(opts,'sigma')
-    sigma = opts.sigma;
-else
-    sigma = mean(mean(D));
-end
+% if isfield(opts,'sigma')
+%     sigma = opts.sigma;
+% else
+%     sigma = mean(mean(D));
+% end
 
 dump = zeros(nSmp,r);
 idx = dump;
@@ -125,7 +125,7 @@ U(:,1) = [];
 % store results in matrix, each row corresponds to a clustering.
 label = [];
 for n_eigens = n_dim
-    n_eigens = min(n_eigens, size(U,2));
-    res=litekmeans(U(:,1:n_eigens),k,'MaxIter',maxIter,'Replicates',numRep);
+    n_eigensx = min(n_eigens, size(U,2));
+    res=litekmeans(U(:,1:n_eigensx),k,'MaxIter',maxIter,'Replicates',numRep);
     label = [label res];
 end

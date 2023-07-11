@@ -1800,7 +1800,8 @@ function [handles,levels,parentIdx,listing] = findjobj(container,varargin) %#ok<
                     visible = visible && isempty(strfind(get(childNode,'Name'),'color="gray"'));
                     %if any(strcmp(childNode.getName,nodesToUnExpand))
                     %name = char(childNode.getName);
-                    if any(cellfun(@(s)~isempty(strmatch(s,char(childNode.getName))),nodesToUnExpand)) || ~visible
+                    if any(cellfun(@(s)~isempty(matchs(s,char(childNode.getName))), ...
+                            nodesToUnExpand)) || ~visible
                         childPath = javax.swing.tree.TreePath(childNode.getPath);
                         childRow = tree.getRowForPath(childPath);
                         tree.collapseRow(childRow);
@@ -2903,7 +2904,7 @@ function [handles,levels,parentIdx,listing] = findjobj(container,varargin) %#ok<
                 % Get the latest version date from the File Exchange webpage
                 baseUrl = 'http://www.mathworks.com/matlabcentral/fileexchange/';
                 webUrl = [baseUrl '14317'];  % 'loadFile.do?objectId=14317'];
-                webPage = urlread(webUrl);
+                webPage = webread(webUrl);
                 modIdx = strfind(webPage,'>Updates<');
                 if ~isempty(modIdx)
                     webPage = webPage(modIdx:end);

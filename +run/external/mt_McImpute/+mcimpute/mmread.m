@@ -170,11 +170,11 @@ elseif ( strcmp(rep,'array') ) %  read matrix given in dense
   elseif  ( strcmp(field,'complex'))         % complx valued entries:
     tmpr = fscanf(mmfile,'%f',1);
     tmpi = fscanf(mmfile,'%f',1);
-    A  = tmpr+tmpi*i;
+    A  = tmpr+tmpi*1i;
     for j=1:entries-1
       tmpr = fscanf(mmfile,'%f',1);
       tmpi = fscanf(mmfile,'%f',1);
-      A  = [A; tmpr + tmpi*i];
+      A  = [A; tmpr + tmpi*1i];
     end
     if ( strcmp(symm,'symmetric') || strcmp(symm,'hermitian') || strcmp(symm,'skew-symmetric') ) 
       for j=1:cols-1

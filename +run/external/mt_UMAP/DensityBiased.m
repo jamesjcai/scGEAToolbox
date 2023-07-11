@@ -152,6 +152,7 @@ classdef DensityBiased<handle
             bbw=CytoGate.Get.getNumeric('biasedBandwidth', 0);
             catc ex
             bbw=0;
+            catch
             end
             tm=tic;
             nearN=DensityBiased.DFLT_NEIGH(dns.N);

@@ -176,7 +176,8 @@ function [mappedA, mapping] = compute_mapping(A, type, no_dims, varargin)
 			if isempty(varargin)
                 [mappedA, mapping] = isomap(A, no_dims, 12);
             else 
-                [mappedA, mapping] = isomap(A, no_dims, varargin{1}); end
+                [mappedA, mapping] = isomap(A, no_dims, varargin{1}); 
+            end
             mapping.name = 'Isomap';
 			
 		case 'LandmarkIsomap'
@@ -208,6 +209,7 @@ function [mappedA, mapping] = compute_mapping(A, type, no_dims, varargin)
             else 
                 mappedA = hlle(A, no_dims, varargin{1}, eig_impl); 
             end
+
             mapping.name = 'HLLE';
             
         case 'LLE'
@@ -221,31 +223,48 @@ function [mappedA, mapping] = compute_mapping(A, type, no_dims, varargin)
             
         case 'GPLVM'
             % Compute GPLVM mapping
-			if isempty(varargin), mappedA = gplvm(A, no_dims, 1);
-            else mappedA = gplvm(A, no_dims, varargin{1}); end
+			if isempty(varargin), 
+                mappedA = gplvm(A, no_dims, 1);
+            else 
+                mappedA = gplvm(A, no_dims, varargin{1}); 
+            end
             mapping.name = 'GPLVM';
             
         case 'LLC'
             % Compute LLC mapping
-			if isempty(varargin), mappedA = run_llc(A', no_dims, 12, 20, 200, eig_impl);
-            elseif length(varargin) == 1, mappedA = run_llc(A', no_dims, varargin{1}, 20, 200, eig_impl);
-            elseif length(varargin) == 2, mappedA = run_llc(A', no_dims, varargin{1}, varargin{2}, 200, eig_impl);
-            else mappedA = run_llc(A', no_dims, varargin{1}, varargin{2}, varargin{3}, eig_impl); end
+			if isempty(varargin) 
+                mappedA = run_llc(A', no_dims, 12, 20, 200, eig_impl);
+            elseif length(varargin) == 1 
+                mappedA = run_llc(A', no_dims, varargin{1}, 20, 200, eig_impl);
+            elseif length(varargin) == 2 
+                mappedA = run_llc(A', no_dims, varargin{1}, varargin{2}, 200, eig_impl);
+            else 
+                mappedA = run_llc(A', no_dims, varargin{1}, ...
+                    varargin{2}, varargin{3}, eig_impl); 
+            end
             mappedA = mappedA';
             mapping.name = 'LLC';
                                     
         case {'ManifoldChart', 'ManifoldCharting', 'Charting', 'Chart'}
             % Compute mapping using manifold charting
-            if isempty(varargin), [mappedA, mapping] = charting(A, no_dims, 40, 200, eig_impl);
-            elseif length(varargin) == 1, [mappedA, mapping] = charting(A, no_dims, varargin{1}, 200, eig_impl);   
-            else [mappedA, mapping] = charting(A, no_dims, varargin{1}, varargin{2}, eig_impl); end
+            if isempty(varargin)
+                [mappedA, mapping] = charting(A, no_dims, 40, 200, eig_impl);
+            elseif length(varargin) == 1
+                [mappedA, mapping] = charting(A, no_dims, varargin{1}, 200, eig_impl);   
+            else 
+                [mappedA, mapping] = charting(A, no_dims, varargin{1}, varargin{2}, eig_impl); 
+            end
             mapping.name = 'ManifoldChart';
             
         case 'CFA'
             % Compute mapping using Coordinated Factor Analysis
-            if isempty(varargin), mappedA = cfa(A, no_dims, 2, 200);
-            elseif length(varargin) == 1, mappedA = cfa(A, no_dims, varargin{1}, 200);
-            else mappedA = cfa(A, no_dims, varargin{1}, varargin{2}); end
+            if isempty(varargin)
+                mappedA = cfa(A, no_dims, 2, 200);
+            elseif length(varargin) == 1
+                mappedA = cfa(A, no_dims, varargin{1}, 200);
+            else 
+                mappedA = cfa(A, no_dims, varargin{1}, varargin{2}); 
+            end
             mapping.name = 'CFA';
            
         case 'LTSA'
