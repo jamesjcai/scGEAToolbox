@@ -32,8 +32,16 @@ idx=find(strcmp(strtrim(string(char(hinfo.Groups.Name))),"/X"));
 %indptr=h5read(filenm,[hinfo.Groups(idx).Name,'/indptr']);
 
 data=pkg.e_guessh5field(filenm,{'/X/'},{'data'},true);
-indices=pkg.e_guessh5field(filenm,{'/X/'},{'indices'},true);
-indptr=pkg.e_guessh5field(filenm,{'/X/'},{'indptr'},true);
+if isequal(data(1:5),round(data(1:5)))
+    indices=pkg.e_guessh5field(filenm,{'/X/'},{'indices'},true);
+    indptr=pkg.e_guessh5field(filenm,{'/X/'},{'indptr'},true);
+else
+    disp('Reading /raw/X');
+    data=pkg.e_guessh5field(filenm,{'/raw/X/'},{'data'},true);
+    indices=pkg.e_guessh5field(filenm,{'/raw/X/'},{'indices'},true);
+    indptr=pkg.e_guessh5field(filenm,{'/raw/X/'},{'indptr'},true);
+end
+
 
 % idx=find(strcmp(strtrim(string(char(hinfo.Groups.Name))),"/raw"));
 % data=h5read(filenm,[hinfo.Groups(idx).Groups(1).Name,'/data']);
@@ -45,6 +53,16 @@ shape=double(hinfo.Groups(idx).Attributes(idx2).Value);
 
 g=pkg.e_guessh5field(filenm,{'/var/'},{'_index','gene_ids','gene_name'},false);
 if isempty(g), warning('G is not assigned.'); end
+
+
+if length(unique(strlength(g)))==1   % suggesting ENSEMBLE ID
+    disp('Reading /var/feature_name/categories');
+    gx=pkg.e_guessh5field(filenm,{'/var/feature_name/'},{'categories'},false);
+    if ~isempty(gx)
+        g=gx;
+    end
+end
+
 
     % idx=find(strcmp(strtrim(string(char(hinfo.Groups.Name))),"/var"));
     % try
