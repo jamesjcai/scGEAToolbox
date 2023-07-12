@@ -52,8 +52,6 @@ idx2=find(strcmp(strtrim(string(char(hinfo.Groups(idx).Attributes.Name))),"shape
 shape=double(hinfo.Groups(idx).Attributes(idx2).Value);
 
 g=pkg.e_guessh5field(filenm,{'/var/'},{'_index','gene_ids','gene_name'},false);
-if isempty(g), warning('G is not assigned.'); end
-
 
 if length(unique(strlength(g)))==1   % suggesting ENSEMBLE ID
     disp('Reading /var/feature_name/categories');
@@ -62,6 +60,7 @@ if length(unique(strlength(g)))==1   % suggesting ENSEMBLE ID
         g=gx;
     end
 end
+if isempty(g), warning('G is not assigned.'); end
 
 
     % idx=find(strcmp(strtrim(string(char(hinfo.Groups.Name))),"/var"));
@@ -100,12 +99,10 @@ if isempty(b), warning('B is not assigned.'); end
 
 X=spalloc(shape(2),shape(1),length(data));
 for k=1:length(indptr)-1
-
     i=indptr(k)+1:indptr(k+1);
     y=indices(i)+1;
     X(y,k)=data(i);
 end
-% X=X.';
 
 g=deblank(string(g));
 

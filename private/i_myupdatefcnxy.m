@@ -9,8 +9,8 @@ P2=F2(idx,:);
 pts = [P1; P2];
 % line(pts(:,1), pts(:,2), pts(:,3))
 plot3(pts(:,1), pts(:,2), pts(:,3),'k-')
-return;
 
+%{
 x=X(idx,:);
 y=Y(idx,:);
 persistent hFig
@@ -29,4 +29,4 @@ set(hFig, 'MenuBar', 'none');
 set(hFig,'NumberTitle','off');
 title(g(idx));
 hold off
-end
+%}

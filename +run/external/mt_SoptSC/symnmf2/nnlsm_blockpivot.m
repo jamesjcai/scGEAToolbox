@@ -129,13 +129,12 @@ function [ Z,numChol,numEq ] = normalEqComb( AtA,AtB,PassSet )
 % Updated Mar-13-2011: numEq,numChol
 %
 % numChol : number of unique cholesky decompositions done
-% numEqs : number of systems of linear equations solved
-
+% numEqs : number of systems of linear equations solved 
         if isempty(AtB)
                 Z = []; 
                 numChol = 0; numEq = 0;
-        else if (nargin==2) || all(PassSet(:))
-        Z = AtA\AtB;
+        elseif (nargin==2) || all(PassSet(:))
+            Z = AtA\AtB;
         numChol = 1; numEq = size(AtB,2);
         else
         Z = zeros(size(AtB));

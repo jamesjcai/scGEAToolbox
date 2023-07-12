@@ -67,9 +67,21 @@ function callback_GetCellSignatureMatrix(src,~)
      [c,cL]=grp2idx(thisc);     
      % assignin('base','thisc',thisc);
 
-     P=grpstats(Y,c,'mean');
-     figure;
-     spider_plot_R2019b(P,'AxesLabels',labelx);
-     cL=strrep(cL,'_','\_');
-     legend(cL);
+     if n==1
+         gui.i_violinplot(Y,thisc,labelx,true,[],[]);
+         xlabel('Cell group');
+         ylabel('Cellular score');
+     elseif n==2
+         gui.i_violinplot(Y(:,1),thisc,labelx{1},true,[],[]);
+         xlabel('Cell group'); ylabel('Cellular score');
+         gui.i_violinplot(Y(:,2),thisc,labelx{2},true,[],[]);
+         xlabel('Cell group'); ylabel('Cellular score');
+    
+     elseif n>=3
+         P=grpstats(Y,c,'mean');
+         figure;
+         spider_plot_R2019b(P,'AxesLabels',labelx);
+         cL=strrep(cL,'_','\_');
+         legend(cL);
+     end
 end

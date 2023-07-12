@@ -1,4 +1,4 @@
-function i_geneheatmap(sce,thisc,glist)
+function [h]=i_geneheatmap(sce,thisc,glist)
 
 if nargin<2
     [thisc,~]=gui.i_select1class(sce);

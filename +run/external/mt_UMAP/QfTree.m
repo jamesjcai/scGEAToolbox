@@ -1426,10 +1426,10 @@ classdef QfTree < handle
             end
             this.createImg([], false);
             grid=this.getGrid;
-            ttl=['<h2>' String.Pluralize2('1D PathFinder', length(this.nodes))...
+            ttlx=['<h2>' String.Pluralize2('1D PathFinder', length(this.nodes))...
                 ' arranged by phenogram''s associations</h2>(<b><i>Scroll vertically ' ...
                 '& horizontally to see all)<hr>'];
-            html=[html ttl '<table border="0"  cellpadding="0" cellspacing="0">'];
+            html=[html ttlx '<table border="0"  cellpadding="0" cellspacing="0">'];
             startHtml='<td><table border="1" cellpadding="0" cellspacing="0"><tr><td>';
             endHtml='</td></tr></table></td>';
             [R,C]=size(grid);
@@ -1443,13 +1443,13 @@ classdef QfTree < handle
                             if idx==0
                                 html=[html '<td></td>'];
                             else
-                                [~, ~, ~, ttl, key, ~]=...
+                                [~, ~, ~, ttlx, key, ~]=...
                                     this.unpackNode(idx, true);
-                                ttl=strrep(ttl, this.app.smallStart, '<small>');
-                                ttl=strrep(ttl, this.app.smallEnd, '</small>');
+                                ttlx=strrep(ttlx, this.app.smallStart, '<small>');
+                                ttlx=strrep(ttlx, this.app.smallEnd, '</small>');
                                 img=this.getPngImg(key,[], .22, true);
                                 %if N==1
-                                    html=[html startHtml ttl '<hr>'...
+                                    html=[html startHtml ttlx '<hr>'...
                                         img endHtml];
                                 %else
                                 %    html=[html startHtml ttl '<hr>' img endHtml];
@@ -1783,17 +1783,17 @@ classdef QfTree < handle
             end
             sz=this.qf.nodeSzs(idx);
             treeSz=this.qf.treeSz;
-            ttl=this.gt.describeForTex(id, sz, treeSz);
-            if String.Contains(ttl{1}, ' | ')
-                ttl{1}=['Gate IDs: ' strrep(ttl{1}, ' | ', ' or ')];
+            ttly=this.gt.describeForTex(id, sz, treeSz);
+            if String.Contains(ttly{1}, ' | ')
+                ttly{1}=['Gate IDs: ' strrep(ttly{1}, ' | ', ' or ')];
             end
             if idx<=length(this.leafNames)
                 who=this.gt.who(id);
-                String.IndexOf(ttl{1}, who)
-                ttl{1}=strrep(ttl{1}, who, ['\bf' this.leafNames{idx}]);
+                String.IndexOf(ttly{1}, who)
+                ttly{1}=strrep(ttly{1}, who, ['\bf' this.leafNames{idx}]);
             end
             ax_=get(fig1D, 'currentaxes');
-            T=title(ax_, ttl);
+            T=title(ax_, ttly);
             if ~isempty(colNames)
                 nD=length(colNames);
                 if nD<7

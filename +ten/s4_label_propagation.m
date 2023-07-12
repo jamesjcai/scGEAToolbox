@@ -11,6 +11,7 @@ gx=upper(unique(genelist(i),'stable'));
 
 return;
 
+%{
 [Tpbp,Tnbp]=run.r_fgsea(gx,[],'bp');
 [Tpmf,Tnmf]=run.r_fgsea(gx,[],'mf');
 
@@ -44,3 +45,5 @@ sortrows([unique(C) grpstats(C,C,@numel)],2);
 sprintf('#genes=%d #modules=%d #modules (g>=2)=%d',...
     [length(C) sum(a(:,2)>0) sum(a(:,2)>1)]);
 % clearvars -except C genelist A0 A1
+
+%}
