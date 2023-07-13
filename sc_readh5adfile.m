@@ -55,7 +55,8 @@ g=pkg.e_guessh5field(filenm,{'/var/'},{'_index','gene_ids','gene_name'},false);
 
 if length(unique(strlength(g)))==1   % suggesting ENSEMBLE ID
     disp('Reading /var/feature_name/categories');
-    gx=pkg.e_guessh5field(filenm,{'/var/feature_name/'},{'categories'},false);
+    gx=pkg.e_guessh5field(filenm,{'/raw/var/feature_name/', ...
+        '/var/feature_name/'},{'categories'},false);
     if ~isempty(gx)
         g=gx;
     end
