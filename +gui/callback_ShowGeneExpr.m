@@ -89,13 +89,13 @@ switch answer
                             return;
                     end
 
-                    images={};
+                    images=cell(length(glist),1);
                     for k=1:length(glist)
                         f=gui.i_cascadefig(sce,glist(k),axx,bxx,k,methodid);
                         % i_showcascade(sce,gsorted(idx(k)),axx,bxx,k);
                         if needpptx
                             img1=[tempname,'.png'];
-                            images = [images {img1}];
+                            images{k}=img1;
                             saveas(f,img1);
                         end
                     end
