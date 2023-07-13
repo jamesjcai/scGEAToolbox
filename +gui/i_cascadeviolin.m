@@ -13,6 +13,8 @@ for k=1:length(glist)
     f = figure('visible','off');
     ax1=subplot(1,2,1);
     pkg.i_violinplot(y,thisc,colorit,grouporder);
+    assignin('base','y',y);
+    assignin('base','c',thisc);
 
     title(strrep(ttxt,'_','\_'));
     ylabel(ytxt);
