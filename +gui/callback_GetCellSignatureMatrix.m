@@ -39,7 +39,11 @@ function callback_GetCellSignatureMatrix(src,~)
 
             fw=gui.gui_waitbar_adv;
             for k=1:n
-                gui.gui_waitbar_adv(fw,k/n,listitems{indx2(k)});
+                if n~=k
+                    gui.gui_waitbar_adv(fw,k/n,listitems{indx2(k)});
+                else
+                    gui.gui_waitbar_adv(fw,(k-1)/n,listitems{indx2(k)});
+                end
                 [y]=pkg.e_cellscores(sce.X,sce.g, ...
                     listitems{indx2(k)},1,false);
                 Y(:,k)=y(:);
@@ -79,9 +83,23 @@ function callback_GetCellSignatureMatrix(src,~)
     
      elseif n>=3
          P=grpstats(Y,c,'mean');
+         assignin('base','P',P);
+         assignin('base','labelx',labelx);
+         if ~isempty(strfind(labelx{1},')'))
+             titlex=extractBefore(labelx{1},strfind(labelx{1},')')+1);
+             labelx=extractAfter(labelx,strfind(labelx{1},')')+1);
+         else
+             titlex='';
+         end
+
+         axes_limits=[zeros(1,n); repmat(max(P(:)),1,n)];
          figure;
-         spider_plot_R2019b(P,'AxesLabels',labelx);
+         spider_plot_R2019b(P,'AxesLabels',labelx, ...
+             'AxesPrecision',2,'AxesLimits',axes_limits);
          cL=strrep(cL,'_','\_');
          legend(cL);
+         if ~isempty(titlex)
+             title(titlex);
+         end
      end
 end
