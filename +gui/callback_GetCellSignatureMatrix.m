@@ -52,6 +52,7 @@ function callback_GetCellSignatureMatrix(src,~)
             T=array2table(Y,'VariableNames', ...
                 listitems(indx2),'RowNames', ...
             matlab.lang.makeUniqueStrings(sce.c_cell_id));
+            T.Properties.DimensionNames{1}='CellID';
             needwait=true;
             gui.i_exporttable(T,needwait);
             %assignin('base','Y',Y);

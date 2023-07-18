@@ -44,7 +44,7 @@ switch answer
         else			
            filename=fullfile(path,file);
            try
-    		   writetable(T,filename,'Delimiter','\t');
+    		   writetable(T,filename,'Delimiter','\t','WriteRowNames',true);
            catch
                writematrix(T,filename,'Delimiter','\t');
            end
