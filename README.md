@@ -17,10 +17,10 @@ scgeatool
 
 ## ICIBM 2023 Workshop Event-specific Information
 
-URL for event page: [https://www.mathworks.com/licensecenter/classroom/4065650/](https://www.mathworks.com/licensecenter/classroom/4065650/)\
+URL for event page: [www.mathworks.com/licensecenter/classroom/4065650/](https://www.mathworks.com/licensecenter/classroom/4065650/)\
 Activation Key: 89355-04019-19254-51485-58564\
 Workshop Trial Label: 4065650\
-Trial Expiration Date: 2023-July-25\
+Trial Expiration Date: 2023-July-20
 
 
 ## Read Documentation
