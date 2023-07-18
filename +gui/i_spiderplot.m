@@ -32,8 +32,8 @@ if nargin<4, sce=[]; end
     %     "plotpicker-cra.gif",'Sort Samples by Median');
     pkg.i_addbutton2fig(tb,'off',@i_renametitle, ...
         "icon-mat-touch-app-10.gif",'Change Plot Title');
-    % pkg.i_addbutton2fig(tb,'on',@i_viewgenenames, ...
-    %     'HDF_point.gif','Show Gene Names');
+    pkg.i_addbutton2fig(tb,'on',@i_viewgenenames, ...
+         'HDF_point.gif','Rename Group Names');
 
     showaxes=false;
     showlegend=true;
@@ -166,6 +166,21 @@ end
 
 
     function i_viewgenenames(~,~)
+        [indxx, tfx] = listdlg('PromptString',...
+            {'Select group name'},...
+            'SelectionMode', 'single',...
+            'ListString', string(cL));
+        if tfx == 1
+            i = ismember(c, indxx);
+            newctype = inputdlg('New cell type', 'Rename', [1 50], cL(c(i)));
+            if ~isempty(newctype)
+                cL(c(i)) = newctype;
+                legend(cL,'Location','best');
+            end
+        end
+    
+
+
         % if isempty(posg)
         %     helpdlg('The gene set is empty. This score may not be associated with any gene set.');
         % else
@@ -188,7 +203,8 @@ function i_savedata(~,~)
     T=array2table(Y,'VariableNames', ...
         labelx,'RowNames', a);
     name='Cell_Group';
-    T.(name) = thisc;
+    %T.(name) = thisc;
+    T.(name) = cL(c);
     T.Properties.DimensionNames{1}='Cell_ID';
     needwait=false;
     gui.i_exporttable(T,needwait);
