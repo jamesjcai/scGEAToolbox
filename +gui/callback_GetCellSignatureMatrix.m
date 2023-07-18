@@ -52,10 +52,10 @@ function callback_GetCellSignatureMatrix(src,~)
             T=array2table(Y,'VariableNames', ...
                 listitems(indx2),'RowNames', ...
             matlab.lang.makeUniqueStrings(sce.c_cell_id));
-            T.Properties.DimensionNames{1}='CellID';
+            T.Properties.DimensionNames{1}='Cell_ID';
             needwait=true;
             gui.i_exporttable(T,needwait);
-            %assignin('base','Y',Y);
+            assignin('base','Y',Y);
             %assignin('base','listitems',listitems(indx2));
             %assignin('base','labelx',listitems(indx2));
             
@@ -70,7 +70,7 @@ function callback_GetCellSignatureMatrix(src,~)
      [thisc]=gui.i_select1class(sce,allowunique);
      if isempty(thisc), return; end
      [c,cL]=grp2idx(thisc);     
-     % assignin('base','thisc',thisc);
+     %assignin('base','thisc',thisc);
 
      if n==1
          gui.i_violinplot(Y,thisc,labelx,true,[],[]);
@@ -83,8 +83,9 @@ function callback_GetCellSignatureMatrix(src,~)
          xlabel('Cell group'); ylabel('Cellular score');
     
      elseif n>=3
+         %{
          P=grpstats(Y,c,'mean');
-         assignin('base','P',P);
+         %assignin('base','P',P);
          assignin('base','labelx',labelx);
          if ~isempty(strfind(labelx{1},')'))
              titlex=extractBefore(labelx{1},strfind(labelx{1},')')+1);
@@ -102,5 +103,8 @@ function callback_GetCellSignatureMatrix(src,~)
          if ~isempty(titlex)
              title(titlex);
          end
+         %}
+
+        gui.i_spiderplot(Y,thisc,labelx,sce);
      end
 end
