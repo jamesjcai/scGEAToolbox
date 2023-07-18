@@ -1,7 +1,6 @@
 function [f]=i_spiderplot(Y,thisc,labelx,sce)
-if nargin<4
-    sce=[];
-end
+
+if nargin<4, sce=[]; end
          
          [c,cL]=grp2idx(thisc);
          P=grpstats(Y,c,'mean');
@@ -39,10 +38,11 @@ end
     showaxes=false;
     showlegend=true;
 
- spider_plot_R2019b(P,'AxesLabels',labelx, ...
-     'AxesPrecision',2,'AxesLimits',axes_limits);
+
+     spider_plot_R2019b(P,'AxesLabels',labelx, ...
+         'AxesPrecision',2,'AxesLimits',axes_limits);
  cL=strrep(cL,'_','\_');
- legend(cL);
+ legend(cL,'Location','best');
  if ~isempty(titlex), title(titlex); end
 
     movegui(f,'center');
@@ -60,13 +60,13 @@ end
         showaxes=~showaxes;
         cla;
         if showaxes
-         spider_plot_R2019b(P,'AxesLabels',labelx, ...
-            'AxesDisplay','none','AxesLimits',axes_limits);
+             spider_plot_R2019b(P,'AxesLabels',labelx, ...
+                'AxesDisplay','none','AxesLimits',axes_limits);
         else
              spider_plot_R2019b(P,'AxesLabels',labelx, ...
                  'AxesPrecision',2,'AxesLimits',axes_limits);
         end
-         legend(cL);
+        if showlegend, legend(cL); end
          if ~isempty(titlex), title(titlex); end
     end
 
@@ -116,9 +116,9 @@ end
         % cla
         % pkg.i_violinplot(y,thisc,colorit,cLorder);
         showlegend=~showlegend;
-        
+       
         if showlegend
-         legend(cL);
+             legend(cL,'Location','best');
         else
             legend off
         end

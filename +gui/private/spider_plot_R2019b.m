@@ -83,8 +83,8 @@ end
 %%% Validate Colors
 % Check if there is enough colors
 if size(options.Color, 1) < num_data_groups
-    % warning('Warning: Default colors have been applied to match the number of data group. Please enter in "Color" option if specific colors are desired.');
-    options.Color = lines(num_data_groups);
+    %warning('Warning: Default colors have been applied to match the number of data group. Please enter in "Color" option if specific colors are desired.');
+    options.Color = pkg.i_mycolormap(num_data_groups); %lines(num_data_groups);
 end
 
 %%% Validate Properties
