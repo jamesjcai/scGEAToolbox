@@ -28,8 +28,13 @@ disp(cmdlinestr)
 [status,cmdout]=system(cmdlinestr,'-echo');
 if status~=0
     cd(oldpth);
-    waitfor(errordlg(sprintf('%s',cmdout)));
-    error('Python scTenifoldXct has not been installed properly.');
+
+    if isvalid(fw)
+        gui.gui_waitbar(fw,true);
+    end
+    %waitfor(errordlg(sprintf('%s',cmdout)));
+    error(cmdout);
+    %error('Python scTenifoldXct has not been installed properly.');
 end
 
 
