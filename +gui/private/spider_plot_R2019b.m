@@ -15,7 +15,7 @@ arguments
     P (:, :) double
     options.AxesLabels {validateAxesLabels(options.AxesLabels, P)} = cellstr("Label " + (1:size(P, 2)))
     options.AxesInterval (1, 1) double {mustBeInteger, mustBePositive} = 3
-    options.AxesPrecision (:, :) double {mustBeInteger, mustBeNonnegative} = 1
+    options.AxesPrecision (:, :) double {mustBeInteger, mustBeNonnegative} = 2
     options.AxesDisplay char {mustBeMember(options.AxesDisplay, {'all', 'none', 'one', 'data', 'data-percent'})} = 'all'
     options.AxesLimits double {validateAxesLimits(options.AxesLimits, P)} = [];
     options.FillOption {mustBeMember(options.FillOption, {'off', 'on'})} = 'off'

@@ -35,9 +35,8 @@ if nargin<4, sce=[]; end
     pkg.i_addbutton2fig(tb,'on',@i_viewgenenames, ...
          'HDF_point.gif','Rename Group Names');
 
-    showaxes=false;
+    showaxes=true;
     showlegend=true;
-
 
      spider_plot_R2019b(P,'AxesLabels',labelx, ...
          'AxesPrecision',2,'AxesLimits',axes_limits);
@@ -61,10 +60,12 @@ if nargin<4, sce=[]; end
         cla;
         if showaxes
              spider_plot_R2019b(P,'AxesLabels',labelx, ...
-                'AxesDisplay','none','AxesLimits',axes_limits);
+                'AxesDisplay','all','AxesPrecision',2, ...
+                'AxesLimits',axes_limits);
         else
              spider_plot_R2019b(P,'AxesLabels',labelx, ...
-                 'AxesPrecision',2,'AxesLimits',axes_limits);
+                 'AxesDisplay','none','AxesPrecision',2, ...
+                 'AxesLimits',axes_limits);
         end
         if showlegend, legend(cL); end
          if ~isempty(titlex), title(titlex); end
