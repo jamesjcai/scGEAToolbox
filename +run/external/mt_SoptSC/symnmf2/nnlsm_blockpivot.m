@@ -181,5 +181,3 @@ function [ Z,numChol,numEq ] = normalEqComb( AtA,AtB,PassSet )
         end 
     end 
 end
-
-end
