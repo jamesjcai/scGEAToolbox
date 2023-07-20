@@ -122,8 +122,8 @@ i_addbutton_push(1,0,@ClusterCellsX,"icon-mw-cluster-10.gif","Clustering using e
 i_addbutton_push(1,1,{@DetermineCellTypeClustersGeneral,true},"plotpicker-contour.gif","Assign cell types to groups")
 i_addbutton_push(1,0,@Brush4Celltypes,"brush.gif","Assign cell type to selected cells");
 %i_addbutton(1,0,@ShowCellStemScatter,"IMG00067.GIF","Stem scatter plot");
-i_addbutton_push(1,1,@callback_Brush4Markers,"plotpicker-kagi.gif","Marker genes of brushed cells");
-i_addbutton_push(1,0,@callback_FindAllMarkers,"plotpicker-plotmatrix.gif","Marker gene heatmap");
+i_addbutton_push(1,1,@gui.callback_Brush4Markers,"plotpicker-kagi.gif","Marker genes of brushed cells");
+i_addbutton_push(1,0,@gui.callback_FindAllMarkers,"plotpicker-plotmatrix.gif","Marker gene heatmap");
 i_addbutton_push(1,0,@call_scgeatool,"IMG00107.GIF"," ");
 i_addbutton_push(1,1,@gui.callback_ShowClustersPop,"plotpicker-geoscatter.gif","Show cell clusters/groups individually");
 i_addbutton_push(1,0,@gui.callback_SelectCellsByClass,"plotpicker-pointfig.gif","Select cells by class");
@@ -151,10 +151,10 @@ i_addbutton_push(0,0,@gui.callback_CrossTabulation,"plotpicker-comet.gif","Cross
 i_addbutton_push(0,1,@callback_GetCellSignatureMatrix,"icon-mat-blur-linear-10.gif","Obtain cell state matrix -- the functional state activity profiles of cells");
 i_addbutton_push(0,0,@callback_CompareGeneBtwCls,"cellscore2.gif","Compare between groups");
 %i_addbutton_push(0,0,@call_scgeatool,"IMG00107.GIF"," ");
-i_addbutton_push(0,1,@callback_DEGene2Groups,"plotpicker-boxplot.gif","Compare 2 groups (DE analysis)");
-i_addbutton_push(0,0,@callback_EnrichrHVGs,"plotpicker-andrewsplot.gif","Functional enrichment analysis with HVGs");
-i_addbutton_push(0,1,@callback_BuildGeneNetwork,"noun_Network_691907.gif","Build gene regulatory network");
-i_addbutton_push(0,0,@callback_CompareGeneNetwork,"noun_Deep_Learning_2424485.gif","Compare two scGRNs");
+i_addbutton_push(0,1,@gui.callback_DEGene2Groups,"plotpicker-boxplot.gif","Compare 2 groups (DE analysis)");
+i_addbutton_push(0,0,@gui.callback_EnrichrHVGs,"plotpicker-andrewsplot.gif","Functional enrichment analysis with HVGs");
+i_addbutton_push(0,1,@gui.callback_BuildGeneNetwork,"noun_Network_691907.gif","Build gene regulatory network");
+i_addbutton_push(0,0,@gui.callback_CompareGeneNetwork,"noun_Deep_Learning_2424485.gif","Compare two scGRNs");
 i_addbutton_push(0,1,{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');
 
 gui.add_3dcamera(DeftToolbarHandle, 'AllCells');
@@ -1372,7 +1372,7 @@ end
     end
 
     function DrawTrajectory(~, ~)
-        warndlg('This function should not be applied to tSNE and UMAP embeddings, as they "encourage a representation of the data as disjoint clusters, which is less meaningful for modeling continuous developmental trajectories" [PMID:25664528].','');
+        waitfor(warndlg('This function should not be applied to tSNE and UMAP embeddings, as they "encourage a representation of the data as disjoint clusters, which is less meaningful for modeling continuous developmental trajectories" [PMID:25664528].',''));
         answer = questdlg('Which method?', '', ...
             'splinefit (🐇)', 'princurve (🐢)', ...
             'splinefit (🐇)');

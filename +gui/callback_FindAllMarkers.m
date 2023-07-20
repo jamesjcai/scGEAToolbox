@@ -8,7 +8,7 @@ answer = questdlg('Select Method',...
     'Find All Markers');
 switch answer
     case 'Find All Markers'
-
+         
     case 'Marker Gene Heatmap'
         i_MarkerGeneHeatmap(src);
         return;

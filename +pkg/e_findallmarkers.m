@@ -15,9 +15,14 @@ T=table();
 if guiwaitbar
     fw=gui.gui_waitbar_adv;
 end
-for kc=1:max(c)
+mC=max(c);
+for kc=1:mC
     if guiwaitbar
-        gui.gui_waitbar_adv(fw,kc/max(c),sprintf('Calculating %s',cL{kc}));
+        if kc~=mC
+            gui.gui_waitbar_adv(fw,kc/mC,sprintf('Processing %s',cL{kc}));
+        else
+            gui.gui_waitbar_adv(fw,kc-1/mC,sprintf('Processing %s',cL{kc}));
+        end
     end
     [t]=findmarkers(X(:,c==kc), X(:,c~=kc), cL(kc));
     T=[T; t];

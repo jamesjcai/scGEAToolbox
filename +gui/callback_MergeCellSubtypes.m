@@ -1,7 +1,23 @@
 function [requirerefresh,s]=callback_MergeCellSubtypes(src,~,sourcetag)
     if nargin<3, sourcetag=1; end
-    requirerefresh=false;    
+    requirerefresh=false;
     s="";
+
+    switch sourcetag
+    case 1
+        a=evalin('base','whos');
+        b=struct2cell(a);
+        valididx=ismember(b(4,:),'SingleCellExperiment');
+        if sum(valididx)<1
+            warndlg('No SCE variables in Workspace.','');
+            return;
+        end
+    end
+
+
+
+
+
     answer = questdlg('Select SCE for a subtype cells. Continue?');
     if ~strcmp(answer, 'Yes'), return; end
     FigureHandle=src.Parent.Parent;
@@ -19,13 +35,13 @@ function [requirerefresh,s]=callback_MergeCellSubtypes(src,~,sourcetag)
 
 switch sourcetag
     case 1
-        a=evalin('base','whos');
-        b=struct2cell(a);
-        valididx=ismember(b(4,:),'SingleCellExperiment');
-        if sum(valididx)<1
-            warndlg('No SCE variables in Workspace.','');
-            return;
-        end
+        % a=evalin('base','whos');
+        % b=struct2cell(a);
+        % valididx=ismember(b(4,:),'SingleCellExperiment');
+        % if sum(valididx)<1
+        %     warndlg('No SCE variables in Workspace.','');
+        %     return;
+        % end
         b=b(:,valididx);
         a=a(valididx);
 
@@ -68,6 +84,8 @@ switch sourcetag
             return;
         end
 end  % end of sourcetag  
+
+
 
 try
     assert(insce.NumCells==sum(selecteidx));
