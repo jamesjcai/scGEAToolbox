@@ -15,7 +15,7 @@ Run the following code in MATLAB to start:
 scgeatool
 ```
 
-[![Open in MATLAB Online](https://www.mathworks.com/images/responsive/global/open-in-matlab-online.svg)](https://matlab.mathworks.com/open/github/v1?repo=jamesjcai/scGEAToolbox)
+[![Open in MATLAB Online](https://www.mathworks.com/images/responsive/global/open-in-matlab-online.svg)](https://matlab.mathworks.com/open/github/v1?repo=jamesjcai/scGEAToolbox&file=online_landing.m)
 
 
 <!-- ## ICIBM 2023 Workshop Event-specific Information
