@@ -5,7 +5,13 @@ if nargin<4, sce=[]; end
          [c,cL]=grp2idx(thisc);
          P=grpstats(Y,c,'mean');
          n=size(P,2);
-         axes_limits=[zeros(1,n); repmat(max(P(:)),1,n)];
+         
+%         axes_limits=[repmat(min([0, min(P(:))]),1,n);... 
+%             repmat(max(P(:)),1,n)];
+
+         axes_limits=[repmat(min(P(:)),1,n);... 
+             repmat(max(P(:)),1,n)];
+
 
          if ~isempty(strfind(labelx{1},')'))
              titlex=extractBefore(labelx{1},strfind(labelx{1},')')+1);
@@ -38,6 +44,7 @@ if nargin<4, sce=[]; end
     showaxes=true;
     showlegend=true;
 
+    labelx=strrep(labelx,'_','\_');
      spider_plot_R2019b(P,'AxesLabels',labelx, ...
          'AxesPrecision',2,'AxesLimits',axes_limits);
  cL=strrep(cL,'_','\_');

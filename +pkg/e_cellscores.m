@@ -83,27 +83,26 @@ end
 %[score]=sc_cellscore_admdl(X,genelist,tgsPos,tgsNeg);
 %[score]=sc_cellscore_ucell(X,genelist,tgsPos);
 
-if methodid==1
-    answer='UCell [PMID:34285779]';
-elseif methodid==2
-    answer='AddModuleScore/Seurat';
-else
-    answer = questdlg('Select algorithm:',...
-    'Select Method', ...
-    'UCell [PMID:34285779]','AddModuleScore/Seurat', ...
-    'UCell [PMID:34285779]');
-end
+% if methodid==1
+%     answer=gui.i_pickscoremethod(1); %'UCell [PMID:34285779]';
+% elseif methodid==2
+%     answer=gui.i_pickscoremethod(2); %'AddModuleScore/Seurat';
+% else
+%     answer = gui.i_pickscoremethod;
+% end
+
+answer = gui.i_pickscoremethod(methodid);
     switch answer
         case 'AddModuleScore/Seurat'
-            fw=gui.gui_waitbar;
+            if showwaitbar, fw=gui.gui_waitbar; end
             try
                 [score]=sc_cellscore_admdl(X,genelist,tgsPos,tgsNeg);
             catch ME
-                gui.gui_waitbar(fw,true);
+                if showwaitbar, gui.gui_waitbar(fw,true); end
                 errordlg(ME.message);                
             return;
             end
-            gui.gui_waitbar(fw);
+            if showwaitbar, gui.gui_waitbar(fw); end
         case 'UCell [PMID:34285779]'
             %[cs]=run.UCell(sce.X,sce.g,posg);
 

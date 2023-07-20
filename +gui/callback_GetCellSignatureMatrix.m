@@ -37,17 +37,21 @@ function callback_GetCellSignatureMatrix(src,~)
             n=length(indx2);
             Y=zeros(sce.NumCells,n);
 
+            [~,methodid] = gui.i_pickscoremethod([]);
+
             fw=gui.gui_waitbar_adv;
             for k=1:n
+                a=listitems{indx2(k)};
+                b=sprintf('Processing %s',a);
                 if n~=k
-                    gui.gui_waitbar_adv(fw,k/n,listitems{indx2(k)});
+                    gui.gui_waitbar_adv(fw,k/n,b);
                 else
-                    gui.gui_waitbar_adv(fw,(k-1)/n,listitems{indx2(k)});
+                    gui.gui_waitbar_adv(fw,(k-1)/n,b);
                 end
-                [y]=pkg.e_cellscores(sce.X,sce.g, ...
-                    listitems{indx2(k)},1,false);
+                [y]=pkg.e_cellscores(sce.X,sce.g,a,methodid,false);
                 Y(:,k)=y(:);
             end
+
             gui.gui_waitbar_adv(fw);
             T=array2table(Y,'VariableNames', ...
                 listitems(indx2),'RowNames', ...
@@ -57,7 +61,7 @@ function callback_GetCellSignatureMatrix(src,~)
             gui.i_exporttable(T,needwait);
 
 
-            assignin('base','Y',Y);
+            %assignin('base','Y',Y);
             %assignin('base','listitems',listitems(indx2));
             %assignin('base','labelx',listitems(indx2));
             
@@ -79,9 +83,8 @@ function callback_GetCellSignatureMatrix(src,~)
      allowunique=false;
      [thisc]=gui.i_select1class(sce,allowunique);
      if isempty(thisc), return; end
-     [c,cL]=grp2idx(thisc);
-     
-     assignin('base','thisc',thisc);
+     %[c,cL]=grp2idx(thisc);     
+     %assignin('base','thisc',thisc);
 
      if n==1
          gui.i_violinplot(Y,thisc,labelx,true,[],[]);
@@ -94,7 +97,8 @@ function callback_GetCellSignatureMatrix(src,~)
          xlabel('Cell group'); ylabel('Cellular score');
     
      elseif n>=3
-         assignin('base','labelx',labelx);
+         %assignin('base','labelx',labelx);
+         
          %{
          P=grpstats(Y,c,'mean');
          %assignin('base','P',P);
