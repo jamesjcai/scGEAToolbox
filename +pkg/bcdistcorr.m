@@ -23,19 +23,21 @@ Y = Astar(y);
 
 XY = modified_distance_covariance(X, Y);
 XX = modified_distance_covariance(X, X);
-clear X;
+%clear X;
 YY = modified_distance_covariance(Y, Y);
-clear Y;
+%clear Y;
 
 bcR = XY/sqrt(XX*YY);
-M = n*(n-3)/2;
-T = sqrt(M-1) * bcR / sqrt(1-bcR^2);
-df = M-1;
-p = 1 - tcdf(T, df);
-
-fprintf('bias-corrected R = %.3f, p-value=%.3f, T(%d)=%.4f\n',...
-    bcR, p, df, T);
-
+if nargout>1
+    M = n*(n-3)/2;
+    T = sqrt(M-1) * bcR / sqrt(1-bcR^2);
+    df = M-1;
+    p = 1 - tcdf(T, df);
+end
+if nargout<1
+    fprintf('bias-corrected R = %.3f, p-value=%.3f, T(%d)=%.4f\n',...
+        bcR, p, df, T);
+end
 end
 
 function XY = modified_distance_covariance(X, Y)
