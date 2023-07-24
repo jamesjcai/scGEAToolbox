@@ -1,23 +1,30 @@
 function callback_ObtainGeneSet(~,~)
 
-[selecteditem] = gui.i_selectcellscore;
-if isempty(selecteditem), return; end
+selitems={'Predefined Sets...',...
+    'MSigDB Signatures...',...
+    'PanglaoDB Cell Type Markers...',...
+    'TF Target Sets...'};
+
+    [indx1,tf1]=listdlg('PromptString',...
+        'Select a gene set from:',...
+        'SelectionMode','single','ListString',selitems, ...
+        'ListSize',[220,300]);
+    if tf1~=1, return; end
+    
+    selecteditem=selitems{indx1};
+
     switch selecteditem
-        case 'MSigDB Signature Score...'
+        case 'MSigDB Signatures...'
             stag=gui.i_selectspecies(2,true);
-            if isempty(stag), return; end    
+            if isempty(stag), return; end
             try
-                [posg,ctselected]=gui.i_selectMSigDBGeneSet(stag);
+                [posg,ttxt]=gui.i_selectMSigDBGeneSet(stag);
             catch ME
                 errordlg(ME.message);
                 return;
             end
-            if isempty(posg) || isempty(ctselected), return; end
-            
-            posg
-            ttxt = ctselected;
-
-        case 'PanglaoDB Cell Type Marker Score...'
+            if isempty(posg) || isempty(ttxt), return; end
+        case 'PanglaoDB Cell Type Markers...'
             stag=gui.i_selectspecies(2,true);
             if isempty(stag), return; end
         
@@ -51,19 +58,19 @@ if isempty(selecteditem), return; end
             posg(strlength(posg)==0)=[];
             ttxt = ctselected;
                         
-        case 'Select a Predefined Score...'
-            gui.gui_showrefinfo('Other Predefined Cell Score');
-            [~,T]=pkg.e_cellscores(sce.X,sce.g,0);
+        case 'Predefined Sets...'
+            [~,T]=pkg.e_cellscores([],[],0);
             listitems=T.ScoreType;
             [indx2,tf2] = listdlg('PromptString','Select Score',...
                  'SelectionMode','single','ListString',...
                  listitems,'ListSize',[320,300]);
             if tf2~=1, return; end
-            [~,~,posg]=pkg.e_cellscores(sce.X,sce.g,indx2);
-            ttxt=T.ScoreType(indx2);
-        case {'TF Activity Score [PMID:33135076] 🐢',...
-                'TF Targets Expression Score...'}
-            [~,T]=pkg.e_tfactivityscores(sce.X,sce.g,0);
+
+            ttxt=string(T.ScoreType(indx2));
+            posg=unique(strsplit(string(T.PositiveMarkers(indx2)),','));
+
+        case 'TF Target Sets...'
+            [~,T]=pkg.e_tfactivityscores([],[],0);
             listitems=unique(T.tf);
 
             %[glist]=gui.i_selectngenes(string(listitems));
@@ -92,5 +99,10 @@ if isempty(selecteditem), return; end
  if ~exist("posg","var"), posg=[]; end
  if ~exist("ttxt","var"), ttxt=[]; end
 
+
+posg
+            inputdlg(ttxt, ...
+                '',[10 50], ...
+                {char(posg(:))});
 
 end
