@@ -1,4 +1,4 @@
-function callback_ObtainGeneSet(~,~)
+function [posg,ttxt]=callback_ObtainGeneSet(~,~)
 
 selitems={'Predefined Sets...',...
     'MSigDB Signatures...',...
@@ -14,6 +14,19 @@ selitems={'Predefined Sets...',...
     selecteditem=selitems{indx1};
 
     switch selecteditem
+        case 'Predefined Sets...'
+            [~,T]=pkg.e_cellscores([],[],0);
+            listitems=T.ScoreType;
+            [indx2,tf2] = listdlg('PromptString','Select Score',...
+                 'SelectionMode','single','ListString',...
+                 listitems,'ListSize',[320,300]);
+            if tf2~=1, return; end
+
+            ttxt=string(T.ScoreType(indx2));
+            posg=unique(strsplit(string(T.PositiveMarkers(indx2)), ...
+                ','),'stable');
+            posg=posg(strlength(posg)>0);
+        
         case 'MSigDB Signatures...'
             stag=gui.i_selectspecies(2,true);
             if isempty(stag), return; end
@@ -58,16 +71,6 @@ selitems={'Predefined Sets...',...
             posg(strlength(posg)==0)=[];
             ttxt = ctselected;
                         
-        case 'Predefined Sets...'
-            [~,T]=pkg.e_cellscores([],[],0);
-            listitems=T.ScoreType;
-            [indx2,tf2] = listdlg('PromptString','Select Score',...
-                 'SelectionMode','single','ListString',...
-                 listitems,'ListSize',[320,300]);
-            if tf2~=1, return; end
-
-            ttxt=string(T.ScoreType(indx2));
-            posg=unique(strsplit(string(T.PositiveMarkers(indx2)),','));
 
         case 'TF Target Sets...'
             [~,T]=pkg.e_tfactivityscores([],[],0);
@@ -80,19 +83,11 @@ selitems={'Predefined Sets...',...
                  listitems,'ListSize',[220,300]);
             if tf2~=1, return; end
 
-                [cs,tflist]=sc_tfactivity(sce.X,sce.g,[], ...
-                    species,methodid);
-                idx=find(tflist==string(listitems{indx2}));
-                assert(length(idx)==1)
-                
-                [y]=cs(idx,:);
-                ttxt=listitems{indx2};
-                posg=[];    % xxxxxxxxxxx
-
+            ttxt=listitems{indx2};
+            posg=string(T.target(string(T.tf)==ttxt));
         otherwise
             return;
     end
-
  % assignin('base','y',y);
  % assignin('base','thisc',thisc);
 
@@ -100,9 +95,11 @@ selitems={'Predefined Sets...',...
  if ~exist("ttxt","var"), ttxt=[]; end
 
 
-posg
+posg=posg(:);
+if nargout<1
             inputdlg(ttxt, ...
                 '',[10 50], ...
                 {char(posg(:))});
+end
 
 end
