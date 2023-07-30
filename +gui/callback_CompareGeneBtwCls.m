@@ -195,7 +195,7 @@ if isempty(selecteditem), return; end
                 'Expression Level',cL,colorit);
             return;
         case 'Select a Predefined Score...'
-            gui.gui_showrefinfo('Other Predefined Cell Score');
+            gui.gui_showrefinfo('Predefined Cell Score');
             [~,T]=pkg.e_cellscores(sce.X,sce.g,0);
             listitems=T.ScoreType;
             [indx2,tf2] = listdlg('PromptString','Select Score',...
