@@ -116,8 +116,22 @@ end
 
 if plotit
     % [~,top100idx]=maxk(fitratio,100);
-    figure;
-    scatter(log(u),log(cv2));
+%    figure;
+
+    FigureHandle=figure;
+    hAx = axes('Parent', FigureHandle);
+    UitoolbarHandle = uitoolbar('Parent', FigureHandle);
+    set(UitoolbarHandle, 'Tag', 'FigureToolBar', ...
+        'HandleVisibility', 'off', 'Visible', 'on');
+    
+    pkg.i_addbutton2fig(UitoolbarHandle,'off',@HighlightGenes,'plotpicker-qqplot.gif','Highlight top HVGs');
+    pkg.i_addbutton2fig(UitoolbarHandle,'off',@ExportGeneNames,'export.gif','Export Selected HVG gene names...');
+    pkg.i_addbutton2fig(UitoolbarHandle,'off',@ExportTable,'xexport.gif','Export HVG Table...');
+    pkg.i_addbutton2fig(UitoolbarHandle,'off',@EnrichrHVGs,'plotpicker-andrewsplot.gif','Enrichment analysis...');
+    pkg.i_addbutton2fig(UitoolbarHandle,'off',@ChangeAlphaValue,'xplotpicker-andrewsplot.gif','Change MarkerFaceAlpha value');
+    pkg.i_addbutton2fig(UitoolbarHandle,'off',{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');    
+
+    h=scatter(log(u),log(cv2),'filled','MarkerFaceAlpha',.1);
     hold on
     % scatter(log(u(top100idx)),log(cv2(top100idx)),'x');
     plot(log(u),log(cv2fit),'.','markersize',10);    
@@ -140,6 +154,75 @@ if plotit
     end
     hold off
 end
+
+
+    function ChangeAlphaValue(~,~)
+        if h.MarkerFaceAlpha<=0.05
+            h.MarkerFaceAlpha=1;
+        else
+            h.MarkerFaceAlpha=h.MarkerFaceAlpha-0.1;
+        end
+    end
+
+   function HighlightGenes(~,~)
+        %h.MarkerIndices=idx20;
+        k=gui.i_inputnumk(200,10,2000);
+        if isempty(k), return; end
+        idx=zeros(1,length(hvgidx));
+        idx(hvgidx(1:k))=1;
+        h.BrushData=idx;
+        % datatip(h, 'DataIndex', idx20);
+        %h2=scatter3(x(idx20),y(idx20),z(idx20),'rx');  % 'filled','MarkerFaceAlpha',.5);
+   end
+
+    function ExportTable(~,~)
+        gui.i_exporttable(T,true,'T');
+    end
+
+    function ExportGeneNames(~,~)        
+            ptsSelected = logical(h.BrushData.');
+            if ~any(ptsSelected)
+                warndlg("No gene is selected.");
+                return;
+            end
+            fprintf('%d genes are selected.\n',sum(ptsSelected));
+    
+            labels = {'Save gene names to variable:'}; 
+            vars = {'g'};
+            values = {g(ptsSelected)};
+            export2wsdlg(labels,vars,values,...
+                         'Save Data to Workspace');
+    end
+
+    function EnrichrHVGs(~,~)        
+            ptsSelected = logical(h.BrushData.');
+            if ~any(ptsSelected)
+                warndlg("No gene is selected.");
+                return;
+            end
+            fprintf('%d genes are selected.\n',sum(ptsSelected));
+            
+            tgenes=g(ptsSelected);
+            answer=gui.timeoutdlg(@(x){questdlg('Which analysis?','', ...
+                'Enrichr','GOrilla','Enrichr+GOrilla','Enrichr')},15);
+            if isempty(answer), return; end
+            switch answer
+                case 'Enrichr'
+                    run.web_Enrichr(tgenes,length(tgenes));
+                case 'GOrilla'
+                    run.web_GOrilla(tgenes);
+                case 'Enrichr+GOrilla'
+                    run.web_Enrichr(tgenes,length(tgenes));
+                    run.web_GOrilla(tgenes);
+                otherwise
+                    return;
+            end            
+
+    end
+
+
+
+
 
 % Highly variable genes (HVG) is based on the assumption that genes with 
 % high variance relative to their mean expression are due to biological 

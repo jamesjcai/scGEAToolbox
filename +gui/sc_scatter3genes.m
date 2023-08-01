@@ -18,11 +18,12 @@ if showdata
     
 
     pkg.i_addbutton2fig(UitoolbarHandle,'off',@HighlightGenes,'plotpicker-qqplot.gif','Highlight top HVGs');
-    pkg.i_addbutton2fig(UitoolbarHandle,'off',@ExportGeneNames,'export.gif','Export HVG gene names...');
+    pkg.i_addbutton2fig(UitoolbarHandle,'off',@ExportGeneNames,'export.gif','Export selected HVG gene names...');
     pkg.i_addbutton2fig(UitoolbarHandle,'off',@EnrichrHVGs,'plotpicker-andrewsplot.gif','Enrichment analysis...');
     pkg.i_addbutton2fig(UitoolbarHandle,'off',@ChangeAlphaValue,'xplotpicker-andrewsplot.gif','Change MarkerFaceAlpha value');
 
     gui.add_3dcamera(UitoolbarHandle, 'HVGs');
+    pkg.i_addbutton2fig(UitoolbarHandle,'off',{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');
 
     %h=scatter3(hAx,x,y,z);  % 'filled','MarkerFaceAlpha',.5);
     h=scatter3(hAx,x,y,z,'filled','MarkerFaceAlpha',.1);

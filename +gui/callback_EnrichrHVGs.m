@@ -21,14 +21,14 @@ function callback_EnrichrHVGs(src,~)
             t=sc_hvg(sce.X,sce.g,true,true);
             gui.gui_waitbar(fw);
 
-            if ~(ismcc || isdeployed)
-                msgfig1=export2wsdlg({'Save HVG table to variable named:'},{'T'},{t});
-                uiwait(msgfig1)
-            else
-                gui.i_exporttable(t,true,'T');
-            end
-        
-            gui.i_enrichtest(t.genes);
+            % if ~(ismcc || isdeployed)
+            %     msgfig1=export2wsdlg({'Save HVG table to variable named:'},{'T'},{t});
+            %     uiwait(msgfig1)
+            % else
+            %     gui.i_exporttable(t,true,'T');
+            % end        
+            % gui.i_enrichtest(t.genes);
+            
 
         case 'Splinefit Method [PMID:31697351]'
             fw = gui.gui_waitbar;
