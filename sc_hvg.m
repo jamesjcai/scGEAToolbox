@@ -1,4 +1,4 @@
-function [T,Xsorted,genelistsorted]=sc_hvg(X,genelist,sortit,plotit, ...
+function [T,Xsorted,gsorted]=sc_hvg(X,g,sortit,plotit, ...
     normit,ignorehigh,ignorelow)
 % Identify HVGs
 % HVGs selection - This method uses the CV^2 on normalized count data to 
@@ -13,8 +13,8 @@ function [T,Xsorted,genelistsorted]=sc_hvg(X,genelist,sortit,plotit, ...
 %
 % See also: SC_SPLINEFIT, SC_VEG
 
-if nargin<2 || isempty(genelist)
-    genelist=strcat("G",string(1:size(X,1)))';
+if nargin<2 || isempty(g)
+    g=strcat("G",string(1:size(X,1)))';
 end
 if nargin<3, sortit=true; end
 if nargin<4, plotit=false; end
@@ -93,7 +93,7 @@ residualcv2=log(fitratio);   % log(cv2)-log(cv2fit);
 % fdr=mafdr(pval,'BHFDR',true);
 [~,~,~,fdr]=pkg.fdr_bh(pval);
 
-T=table(genelist,u,cv2,residualcv2,dropr,fitratio,pval,fdr);
+T=table(g,u,cv2,residualcv2,dropr,fitratio,pval,fdr);
 
 T.Properties.VariableNames(1)={'genes'};
 i=~isnan(cv2);
@@ -101,12 +101,12 @@ T=T(i,:);
 if sortit
     T.fitratio(T.dropr>(1-0.05))=0;     % ignore genes with dropout rate > 0.95
     disp('NOTE: Genes with dropout rate > 0.95 are excluded.');
-    [T,idx]=sortrows(T,'fitratio','descend');    
+    [T,hvgidx]=sortrows(T,'fitratio','descend');
     if nargout>1
-        Xsorted=Xori(idx,:);        
+        Xsorted=Xori(hvgidx,:);        
     end
     if nargout>2
-        genelistsorted=T.genes;
+        gsorted=T.genes;
     end
 else
     if nargout>1
@@ -131,10 +131,10 @@ if plotit
     pkg.i_addbutton2fig(UitoolbarHandle,'off',@ChangeAlphaValue,'xplotpicker-andrewsplot.gif','Change MarkerFaceAlpha value');
     pkg.i_addbutton2fig(UitoolbarHandle,'off',{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');    
 
-    h=scatter(log(u),log(cv2),'filled','MarkerFaceAlpha',.1);
+    h=scatter(hAx,log(u),log(cv2),'filled','MarkerFaceAlpha',.1);
     hold on
     % scatter(log(u(top100idx)),log(cv2(top100idx)),'x');
-    plot(log(u),log(cv2fit),'.','markersize',10);    
+    plot(hAx,log(u),log(cv2fit),'.','markersize',10);    
     
     %[~,i]=sort(fitratio,'descend');
     %xi=u(i); yi=cv2(i); yifit=cv2fit(i);    
@@ -148,9 +148,9 @@ if plotit
 
     xlabel('Mean expression, log')
     ylabel('CV^2, log')
-    if ~isempty(genelist)
+    if ~isempty(g)
         dt=datacursormode;
-        dt.UpdateFcn = {@i_myupdatefcn3,genelist,X};
+        dt.UpdateFcn = {@i_myupdatefcn3,g,X};
     end
     hold off
 end
