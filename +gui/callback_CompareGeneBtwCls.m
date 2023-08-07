@@ -84,6 +84,7 @@ end
 [selecteditem] = gui.i_selectcellscore;
 if isempty(selecteditem), return; end
 %try
+
     switch selecteditem
         %case 'Global Coordination Level (GCL) [PMID:33139959]'
 
@@ -94,6 +95,7 @@ if isempty(selecteditem), return; end
                 helpdlg('No feature genes selected.','')
                 return;
             end
+
             [y]=gui.e_cellscore(sce,posg);
         case 'MSigDB Signature Score...'
             stag=gui.i_selectspecies(2,true);
@@ -259,6 +261,12 @@ if isempty(selecteditem), return; end
         otherwise
             return;
     end
+%catch ME
+%    %errordlg(ME.message);
+%    return;
+%end 
+
+if isempty(y), return; end
 
  % assignin('base','y',y);
  % assignin('base','thisc',thisc);
