@@ -8,7 +8,9 @@ function [T]=py_GenKI(X,g,idx)
     isdebug = false;
     oldpth=pwd();
     [pyok,wrkpth,x]=run.pycommon(prgfoldername);
-    if ~pyok, return; end
+    if ~pyok
+        error('GenKI (requires Python) has not been installed or set up correctly.')
+    end
     
 %     pw1=fileparts(mfilename('fullpath'));
 %     wrkpth=fullfile(pw1,'external','py_GenKI');
