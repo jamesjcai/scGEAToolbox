@@ -187,7 +187,7 @@ i_addmenu(m_net,0,@callback_scTenifoldNet1,'GRN Construction - PC Regression (w/
 i_addmenu(m_net,1,@callback_scTenifoldNet2lite,'GRN Comparison - scTenifoldNet (w/o subsampling) [PMID:33336197] 🐢🐢 ...');
 i_addmenu(m_net,0,@callback_scTenifoldNet2,'GRN Comparison - scTenifoldNet (w/ subsampling) [PMID:33336197] 🐢🐢🐢 ...');
 i_addmenu(m_net,1,@callback_scTenifoldKnk1,'Virtual Gene KO - scTenifoldKnk [PMID:35510185] 🐢🐢 ...');
-i_addmenu(m_net,0,@gui.callback_VirtualKOGenKI,'Virtual Gene KO - GenKI [PMID:37246643] 🐢🐢 ...');
+i_addmenu(m_net,0,@gui.callback_VirtualKOGenKI,'Virtual Gene KO - GenKI [PMID:37246643] (Python Required) 🐢🐢 ...');
 i_addmenu(m_net,1,@callback_scTenifoldXct,'Cell-Cell Interactions (CCIs) - scTenifoldXct [PMID:36787742] 🐢🐢 ...');
 i_addmenu(m_net,0,@callback_scTenifoldXct2,'Differential CCIs - scTenifoldXct [PMID:36787742] 🐢🐢🐢 ...');
 
