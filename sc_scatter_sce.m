@@ -660,6 +660,7 @@ end
             %answerx=questdlg('This method requires Python environment and geosketch package installed. Continue?');
             %if ~strcmp(answerx,'Yes'), return; end
             fw=gui.gui_waitbar;
+            %Xn=pkg.e_log1p(sc_norm(sce.X))';
             Xn=log(1+sc_norm(sce.X))';
             [~,Xn]=pca(Xn,'NumComponents',300);
             gui.gui_waitbar(fw);
