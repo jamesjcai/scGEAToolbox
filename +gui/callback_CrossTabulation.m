@@ -74,6 +74,7 @@ sizesorted=false;
         xticks(1:length(labelsx));
         xticklabels(labelsx);
         ylim([0 1]);
+        labelsy=strrep(labelsy,'_','\_');
         lgd=legend(labelsy,'Location','bestoutside');
         title(lgd,llabel);
 

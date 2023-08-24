@@ -1,8 +1,9 @@
-function [sce]=sc_mergesces(sces,method)
+function [sce]=sc_mergesces(sces,method,keepbatchid)
 %Merges two SCE objects
 %Usage: [sce]=sc_mergesces({sce1,sce2},'intersect');
 %See also: SC_MERGEDATA
 
+if nargin<3, keepbatchid=false; end
 if nargin<2, method='intersect'; end
 validMethods = ["intersect","union"];
 method = validatestring(method,validMethods);
@@ -20,7 +21,7 @@ for k=2:length(sces)
     c=[c; k*ones(sces{k}.NumCells,1)];
     [sce]=i_merge2sces(sce,sces{k},method);
 end
-sce.c_batch_id=c;
+if ~keepbatchid, sce.c_batch_id=c; end
 end
 
 
@@ -38,6 +39,11 @@ catch
     sce.s=randn(size(X,2),3);
 end
 % sce.c_batch_id=c;
+
+
+if ~isempty(sce1.c_batch_id) && ~isempty(sce2.c_batch_id)
+    sce.c_batch_id=[sce1.c_batch_id; sce2.c_batch_id];
+end
 
 if ~isempty(sce1.c_cell_cycle_tx) && ~isempty(sce2.c_cell_cycle_tx)
     sce.c_cell_cycle_tx=[sce1.c_cell_cycle_tx; sce2.c_cell_cycle_tx];
