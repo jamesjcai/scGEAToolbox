@@ -1,10 +1,13 @@
-function [a]=i_setautumncolor(c,cmapname)
+function [a]=i_setautumncolor(c,cmapname,rev)
 
+if nargin<3, rev=true; end
 if nargin<2, cmapname='autumn'; end
     colormap default
     a = colormap(cmapname);
     if strcmpi(cmapname,'autumn')
-        a=flipud(a);
+        if rev
+            a=flipud(a);
+        end
     end
     a(1, :) = [.8 .8 .8];
     if numel(unique(c)) == 1

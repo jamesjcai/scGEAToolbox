@@ -57,7 +57,7 @@ if showcomparision
             return;
         end    
     end
-else
+else    % showcomparision=false
     thisc=ones(sce.NumCells,1);
 end
 
@@ -154,9 +154,13 @@ if isempty(selecteditem), return; end
                 % [yes,speciesid]=ismember(lower(answer2),{'human','mouse'});
                 % if ~yes, return; end
                 speciestag = gui.i_selectspecies(2);
+
+                fw = gui.gui_waitbar;
                 y=sc_potency(sce.X,sce.g,speciestag);
                 ttxt='Differentiation Potency';
                 posg=[];
+                gui.gui_waitbar(fw);
+
 
 
             % [a]=contains(sce.list_cell_attributes(1:2:end),'cell_potency');
@@ -279,7 +283,18 @@ if isempty(y), return; end
     xlabel('Cell group');
     ylabel('Cellular score');
  else
-    gui.i_stemscatterfig(sce,y,posg,ttxt);
+%     [methodid]=gui.i_pickscatterstem('Scatter+Stem');
+%     if isempty(methodid), return; end
+%         f=gui.i_cascadefig(sce,glist(k),axx,bxx,k,methodid);
+%     [h1]=sc_scattermarker(sce.X,sce.g,...
+%                  sce.s,g,methodid);
+    gui.i_heatscatterfig(sce,y,posg,ttxt);
+    answer=questdlg('Also show stem plot?','');
+    if answer=="Yes"
+        gui.i_stemscatterfig(sce,y,posg,ttxt);
+    else
+        return;
+    end
  end
 
 
