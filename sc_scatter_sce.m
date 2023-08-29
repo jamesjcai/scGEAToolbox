@@ -148,8 +148,8 @@ i_addbutton_push(0,0,@gui.callback_CrossTabulation,"plotpicker-comet.gif","Cross
 %i_addbutton_push(0,0,@call_scgeatool,"IMG00107.GIF"," ");
 %i_addbutton(0,1,@callback_CompareGeneBtwCls,"plotpicker-priceandvol.gif","Compare between groups");
 %i_addbutton_push(0,1,@callback_CellTypeMarkerScores,"cellscore.gif","Calculate signature scores for each cell");
-i_addbutton_push(0,1,@gui.callback_GetCellSignatureMatrix,"icon-mat-blur-linear-10.gif","Obtain cell state matrix -- the functional state activity profiles of cells");
-i_addbutton_push(0,0,@gui.callback_CompareGeneBtwCls,"cellscore2.gif","Compare between groups");
+i_addbutton_push(0,1,@gui.callback_GetCellSignatureMatrix,"icon-mat-blur-linear-10.gif","Cell state analysis--assessing functional state activity profiles of cells");
+i_addbutton_push(0,0,@gui.callback_CompareGeneBtwCls,"cellscore2.gif","Cell scoring analysis--obtaining gene signature score for each cell");
 %i_addbutton_push(0,0,@call_scgeatool,"IMG00107.GIF"," ");
 i_addbutton_push(0,1,@gui.callback_DEGene2Groups,"plotpicker-boxplot.gif","Compare 2 groups (DE analysis)");
 i_addbutton_push(0,0,@gui.callback_EnrichrHVGs,"plotpicker-andrewsplot.gif","Functional enrichment analysis with HVGs");
