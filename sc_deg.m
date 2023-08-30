@@ -28,8 +28,10 @@ function [T,Tup,Tdn] = sc_deg(X, Y, genelist, methodid, guiwaitbar)
     nx=size(X,2);
     ny=size(Y,2);
     
-    X=log(1+sc_norm(X));
-    Y=log(1+sc_norm(Y));
+    Z=log(1+sc_norm([X Y]));
+    X=Z(:,1:nx);
+    Y=Z(:,nx+1:end);
+    
     
 if guiwaitbar
     fw=gui.gui_waitbar_adv;    
