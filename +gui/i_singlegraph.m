@@ -171,6 +171,7 @@ title(figname);
 
     function [p]=drawnetwork(G,h)
         p=plot(h,G);
+        box off
         %layout(p,'force');
 %         if isa(G,'digraph')
 %             G.Nodes.NodeColors = outdegree(G)-indegree(G);

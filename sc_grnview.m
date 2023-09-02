@@ -10,7 +10,8 @@ if nargin<3, figname=''; end
         G=pkg.i_makegraph(A,nodenames);
     end
 if nargin<3
-    figname=sprintf('%d nodes',G.numnodes);
+    figname=sprintf('nodes (n=%d, red=TF); edges (blue=positive, red=negative)', ...
+        G.numnodes);
 end
     gui.i_singlegraph(G,figname);
 end
