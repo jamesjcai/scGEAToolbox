@@ -1,9 +1,8 @@
 function callback_EnrichrHVGs(src,~)
-    answer = questdlg('Identify highly variable genes (HVGs) and perform function enrichment analysis?');
-    if ~strcmp(answer,'Yes'), return; end
-    
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
+
+    gui.gui_showrefinfo('HVG Functional Analysis [PMID:31861624]');
 
     answer = questdlg('This function applies to a homogeneous group of cells. Continue?');
     if ~strcmp(answer,'Yes'), return; end
