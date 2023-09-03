@@ -145,10 +145,20 @@ i_addbutton_push(0,0,@call_scgeatool,"IMG00107.GIF"," ");
 
 i_addbutton_push(0,1,@gui.callback_MultiGroupingViewer,"plotpicker-arxtimeseries.gif","Multi-grouping View...");
 i_addbutton_push(0,0,@gui.callback_CrossTabulation,"plotpicker-comet.gif","Cross tabulation");
-%i_addbutton_push(0,0,@call_scgeatool,"IMG00107.GIF"," ");
+
+i_addbutton_push(0,1,@gui.callback_Violinplot,"icon-fa-linode-20.gif","Gene Violin Plot...");
+i_addbutton_push(0,0,@gui.callback_DrawDotplot,"icon-mat-blur-linear-10.gif","Gene Dot Plot...");
+i_addbutton_push(0,0,@gui.callback_GeneHeatMap,"icon-mat-apps-20.gif","Gene Heatmap...");
+
+%i_addmenu(m_exp,1,@gui.callback_Violinplot,'Gene Violin Plot...');
+%i_addmenu(m_exp,0,@gui.callback_DrawDotplot,'Gene Dot Plot...');
+%i_addmenu(m_exp,0,@gui.callback_GeneHeatMap,'Gene Heatmap...');
+
+
+i_addbutton_push(0,0,@call_scgeatool,"IMG00107.GIF"," ");
 %i_addbutton(0,1,@callback_CompareGeneBtwCls,"plotpicker-priceandvol.gif","Compare between groups");
 %i_addbutton_push(0,1,@callback_CellTypeMarkerScores,"cellscore.gif","Calculate signature scores for each cell");
-i_addbutton_push(0,1,@gui.callback_GetCellSignatureMatrix,"icon-mat-blur-linear-10.gif","Cell state analysis--assessing functional state activity profiles of cells");
+i_addbutton_push(0,1,@gui.callback_GetCellSignatureMatrix,"icon-fa-connectdevelop-20.gif","Cell state analysis--assessing functional state activity profiles of cells");
 i_addbutton_push(0,0,@gui.callback_CompareGeneBtwCls,"cellscore2.gif","Cell scoring analysis--obtaining gene signature score for each cell");
 %i_addbutton_push(0,0,@call_scgeatool,"IMG00107.GIF"," ");
 i_addbutton_push(0,1,@gui.callback_DEGene2Groups,"plotpicker-boxplot.gif","Compare 2 groups (DE analysis)");
@@ -229,9 +239,9 @@ i_addmenu(m_exp,0,@SubsampleCells,'Subsample 50% Cells to Work on...');
 i_addmenu(m_exp,1,@DrawKNNNetwork,'Plot Cell kNN Network...');
 i_addmenu(m_exp,0,@DrawTrajectory,'Plot Cell Trajectory...');
 %i_addmenu(m_exp,0,@ShowCellStemScatter,"Stem Scatter Feature Plot...");
-i_addmenu(m_exp,1,@gui.callback_Violinplot,'Gene Violin Plot...');
-i_addmenu(m_exp,0,@gui.callback_DrawDotplot,'Gene Dot Plot...');
-i_addmenu(m_exp,0,@gui.callback_GeneHeatMap,'Gene Heatmap...');
+%i_addmenu(m_exp,1,@gui.callback_Violinplot,'Gene Violin Plot...');
+%i_addmenu(m_exp,0,@gui.callback_DrawDotplot,'Gene Dot Plot...');
+%i_addmenu(m_exp,0,@gui.callback_GeneHeatMap,'Gene Heatmap...');
 
 i_addmenu(m_exp,1,@gui.callback_CalculateGeneStats,   'Calculate Gene Expression Statistics...');
 i_addmenu(m_exp,0,@gui.callback_CellCycleLibrarySize, 'Library Size of Cell Cycle Phases...');
