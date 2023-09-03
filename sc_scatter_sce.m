@@ -146,7 +146,7 @@ i_addbutton_push(0,0,@call_scgeatool,"IMG00107.GIF"," ");
 i_addbutton_push(0,1,@gui.callback_MultiGroupingViewer,"plotpicker-arxtimeseries.gif","Multi-grouping View...");
 i_addbutton_push(0,0,@gui.callback_CrossTabulation,"plotpicker-comet.gif","Cross tabulation");
 
-i_addbutton_push(0,1,@gui.callback_Violinplot,"icon-fa-linode-20.gif","Gene Violin Plot...");
+i_addbutton_push(0,1,@gui.callback_Violinplot,"violinplot.gif","Gene Violin Plot...");
 i_addbutton_push(0,0,@gui.callback_DrawDotplot,"icon-mat-blur-linear-10.gif","Gene Dot Plot...");
 i_addbutton_push(0,0,@gui.callback_GeneHeatMap,"icon-mat-apps-20.gif","Gene Heatmap...");
 
