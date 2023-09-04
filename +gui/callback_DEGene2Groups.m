@@ -135,6 +135,9 @@ end
             'Save DE results (selected down-regulated) to variable named:'}; 
         vars = {'Tup','Tdn'}; values = {Tup,Tdn};
         [~,tf]=export2wsdlg(labels,vars,values);
+        if tf~=1
+            return;
+        end
     end
    
     if ~isempty(filesaved)
@@ -200,20 +203,21 @@ end
                 disp('To run enrichment analysis, type:')
                 disp('run.web_Enrichr(Tup.gene(1:200))')
                 disp('run.web_Enrichr(Tdn.gene(1:200))')
+    
+                answer = questdlg('Run enrichment analysis with top K (=100 by default) up-regulated DE genes?');
+                if strcmp(answer,'Yes')
+                    gui.i_enrichtest(Tup.gene(1:min(numel(Tup.gene),100)));
+                else
+                    return;
+                end
+                
+                answer = questdlg('Run enrichment analysis with top K (=100 by default) down-regulated DE genes?');
+                if strcmp(answer,'Yes')
+                    gui.i_enrichtest(Tdn.gene(1:min(numel(Tdn.gene),100)));
+                else
+                    return;
+                end
             end
-        %end
-        %return;
-    
-    
-        answer = questdlg('Run enrichment analysis with top K (=100 by default) up-regulated DE genes?');
-        if strcmp(answer,'Yes')
-            gui.i_enrichtest(Tup.gene(1:min(numel(Tup.gene),100)));
-        end
-        
-        answer = questdlg('Run enrichment analysis with top K (=100 by default) down-regulated DE genes?');
-        if strcmp(answer,'Yes')
-            gui.i_enrichtest(Tdn.gene(1:min(numel(Tdn.gene),100)));
-        end
 
 %    end
     

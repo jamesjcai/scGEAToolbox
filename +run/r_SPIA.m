@@ -1,11 +1,21 @@
-function [T]=r_SPIA(X,Y,genelist)
+function [t]=r_SPIA(T)
 
-if nargin<3, genelist=(1:size(X,1))'; end
-T=[];
 isdebug=false;
 oldpth=pwd();
 [isok,msg]=commoncheck_R('R_SPIA');
 if ~isok, error(msg); end
+
+gid=pkg.i_symbol2ncbiid(T.gene);
+T=T(gid~=0,:);
+gid=gid(gid~=0);
+writematrix(string(gid),'input1.txt','QuoteStrings','all');
+
+gid=gid(T.p_val_adj<0.01);
+T=T(T.p_val_adj<0.01,:);
+writematrix(string(gid),'input2.txt','QuoteStrings','all');
+writematrix([T.avg_log2FC],'input3.txt');
+
+
 
 
 % id = pkg.i_symbol2ncbiid
