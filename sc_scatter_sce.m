@@ -1516,7 +1516,11 @@ end
             end
         end
         if ~usingold
-            k = gui.i_inputnumk;
+            defv=round(sce.NumCells/100,-1);
+            defva=min([10 round(sce.NumCells/100,-2) round(sce.NumCells/20,-1)]);
+            if defva==0, defva=min([10 defv]); end 
+            defvb=max([round(sce.NumCells/20,-2) round(sce.NumCells/20,-1)]);
+            k = gui.i_inputnumk(defv,defva,defvb);
             if isempty(k), return; end
             fw = gui.gui_waitbar;
             try
