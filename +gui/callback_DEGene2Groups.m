@@ -200,9 +200,11 @@ end
         %     end
 
             if tf==1
-                disp('To run enrichment analysis, type:')
-                disp('run.web_Enrichr(Tup.gene(1:200))')
-                disp('run.web_Enrichr(Tdn.gene(1:200))')
+                disp('To run pathway analysis, type:');
+                disp('t=run.r_SPIA(T);');
+                disp('To run enrichment analysis, type:');
+                disp('run.web_Enrichr(Tup.gene(1:200))');
+                disp('run.web_Enrichr(Tdn.gene(1:200))');
     
                 answer = questdlg('Run enrichment analysis with top K (=100 by default) up-regulated DE genes?');
                 if strcmp(answer,'Yes')
