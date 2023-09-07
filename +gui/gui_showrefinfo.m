@@ -176,8 +176,8 @@ switch reftag
         txt='This function calculates the cellular score for the expression, also known as gene signature score, for a user-defined set of genes. The score is normalized using either the UCell method (default) or Seurat''s AddModuleScore method. The UCell scores are normalized U statistics, and they are mathematically related to the Area under the ROC curve. These scores only depend on the gene expression ranks of individual cell, and therefore they are robust across datasets regardless of dataset composition. In contrast to Seurat''s AddModuleScore is normalized by binning genes of similar expression at the population level.';
     case 'HVG Functional Analysis [PMID:31861624]'
         txt = 'This function applies to a homogeneous group of cells. Our results support the "variation is function" hypothesis, arguing that scEV is required for cell type-specific, higher-level system function. Thus, quantifying and characterizing scEV are of importance for our understating of normal and pathological cellular processes.';
-
-
+    case 'SPIA [PMID:18990722]'
+        txt = '"We describe a novel signaling pathway impact analysis (SPIA) that combines the evidence obtained from the classical enrichment analysis with a novel type of evidence, which measures the actual perturbation on a given pathway under a given condition."';
     otherwise
         return;
 end

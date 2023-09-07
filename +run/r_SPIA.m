@@ -2,6 +2,8 @@ function [T]=r_SPIA(Tdeg,fdrcutoff,speciestag)
 
 if nargin<2, fdrcutoff=0.01; end
 if nargin<3, speciestag='hsa'; end
+gui.gui_showrefinfo('SPIA [PMID:18990722]');
+
 
 isdebug=false;
 oldpth=pwd();
