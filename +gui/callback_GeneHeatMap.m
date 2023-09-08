@@ -77,14 +77,15 @@ for k=1:length(cL)
 end
 [Z]=gui.i_norm4heatmap(Z);
 
-        figure;
-        h2=heatmap(strrep(cL,'_','\_'),MX,Z);
-        h2.Title = 'Marker Gene Heatmap';
-        h2.XLabel = 'Group';
-        h2.YLabel = 'Marker Gene';
-        h2.Colormap = parula;
-        h2.GridVisible = 'off';
-        h2.CellLabelColor='none';
+        % figure;
+        % h2=heatmap(strrep(cL,'_','\_'),MX,Z);
+        % h2.Title = 'Marker Gene Heatmap';
+        % h2.XLabel = 'Group';
+        % h2.YLabel = 'Marker Gene';
+        % h2.Colormap = parula;
+        % h2.GridVisible = 'off';
+        % h2.CellLabelColor='none';
+        % h2.ColorLimits=[min(Z(:)), max(Z(:))];
 
 
     function i_flipxy(~,~)
@@ -137,11 +138,44 @@ end
         h.GridVisible = 'off';
         h.CellLabelColor='none';
         tb = uitoolbar('Parent', f);
+
+        t=array2table(Z,'VariableNames',cL,'RowNames',MX);
+
+        % writetable(t,'aaa.csv','WriteRowNames',true);
+        pkg.i_addbutton2fig(tb,'off',{@i_exporttable,t},'export.gif','Save table...');
+
         pkg.i_addbutton2fig(tb,'on',{@gui.i_pickcolormap,c},'plotpicker-compass.gif','Pick new color map...');
         pkg.i_addbutton2fig(tb,'off',@gui.i_changefontsize,'noun_font_size_591141.gif','ChangeFontSize');        
         pkg.i_addbutton2fig(tb,'on',{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');
         pkg.i_addbutton2fig(tb,'on',@gui.i_invertcolor,'plotpicker-comet.gif','Invert colors');
         pkg.i_addbutton2fig(tb,'off',@i_resetcolor,'plotpicker-geobubble2.gif','Reset color map');
+        disp('https://software.broadinstitute.org/morpheus/')
+    end
+
+    function i_exporttable(~,~,T,needwait,defname)
+        if nargin<5, defname=[]; end        
+        if nargin<4, needwait=false; end
+        if ~isempty(defname)
+            [file, path] = uiputfile({'*.txt';'*.*'},'Save as',defname);
+        else
+            [file, path] = uiputfile({'*.txt';'*.*'},'Save as');
+        end
+        if isequal(file,0) || isequal(path,0)
+           return;
+        else			
+           filename=fullfile(path,file);
+           try
+    		   writetable(T,filename,'Delimiter','\t','WriteRowNames',true);
+           catch
+               writematrix(T,filename,'Delimiter','\t');
+           end
+           pause(1);
+           if needwait
+               waitfor(helpdlg(sprintf('Result has been saved in %s',filename),''));
+           else
+               helpdlg(sprintf('Result has been saved in %s',filename),'')
+           end
+        end        
     end
 
     function i_summarymapT(~,~)
@@ -156,6 +190,11 @@ end
 %         s = struct(h);
 %         s.XAxis.TickLabelRotation=45;        
         tb = uitoolbar('Parent', f);
+
+        t=array2table(Z.','VariableNames',MX,'RowNames',cL);
+        % writetable(t,'aaa.csv','WriteRowNames',true);
+        pkg.i_addbutton2fig(tb,'off',{@i_exporttable,t},'export.gif','Save table...');
+        
         pkg.i_addbutton2fig(tb,'on',{@gui.i_pickcolormap,c},'plotpicker-compass.gif','Pick new color map...');
         pkg.i_addbutton2fig(tb,'off',@gui.i_changefontsize,'noun_font_size_591141.gif','ChangeFontSize');        
         pkg.i_addbutton2fig(tb,'on',{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');
