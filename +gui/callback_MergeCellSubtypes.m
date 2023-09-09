@@ -1,4 +1,5 @@
-function [requirerefresh,s]=callback_MergeCellSubtypes(src,~,sourcetag)
+function [requirerefresh,s]=callback_MergeCellSubtypes(src,~,sourcetag,allcell)
+    if nargin<4, allcell=false; end
     if nargin<3, sourcetag=1; end
     requirerefresh=false;
     s="";
@@ -14,24 +15,25 @@ function [requirerefresh,s]=callback_MergeCellSubtypes(src,~,sourcetag)
         end
     end
 
-
-
-
-
-    answer = questdlg('Select SCE for a subtype cells. Continue?');
-    if ~strcmp(answer, 'Yes'), return; end
     FigureHandle=src.Parent.Parent;
-
     sce=guidata(FigureHandle);
 
-    celltypelist=natsort(unique(sce.c_cell_type_tx));
-    [indx,tf1] = listdlg('PromptString',...
-        {'Select Tissue Type(s):'},...
-         'SelectionMode','single', ...
-         'ListString',celltypelist,'ListSize',[220,300]);
-    if tf1~=1, return; end
-    selectedtype=celltypelist(indx);
-    selecteidx=sce.c_cell_type_tx==selectedtype;
+
+    if ~allcell
+        answer = questdlg('Select a cell subtype, then an SCE variable that contains the subtype annotation. Continue?');
+        if ~strcmp(answer, 'Yes'), return; end
+    
+        celltypelist=natsort(unique(sce.c_cell_type_tx));
+        [indx,tf1] = listdlg('PromptString',...
+            {'Select Tissue Type(s):'},...
+             'SelectionMode','single', ...
+             'ListString',celltypelist,'ListSize',[220,300]);
+        if tf1~=1, return; end
+        selectedtype=celltypelist(indx);
+        selecteidx=sce.c_cell_type_tx==selectedtype;
+    else
+        selecteidx=true(sce.NumCells,1);
+    end
 
 switch sourcetag
     case 1

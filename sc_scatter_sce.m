@@ -251,11 +251,14 @@ i_addmenu(m_exp,0,@gui.callback_ShowMtGeneExpression, 'Show Mt-genes Expression.
 i_addmenu(m_exp,0,@gui.callback_TCellExhaustionScores,'T Cell Exhaustion Score...');
                                                   
 i_addmenu(m_exp,1,{@DetermineCellTypeClustersGeneral,false},'Annotate Cell Type Using Customized Markers...');
-i_addmenu(m_exp,1,{@MergeCellSubtypes,1},'Import Subtype Cell Annotation from SCE in Workspace...');
-i_addmenu(m_exp,0,{@MergeCellSubtypes,2},'Import Subtype Cell Annotation from SCE Data File...');
+i_addmenu(m_exp,1,{@MergeCellSubtypes,1,false},'Import Subtype Cell Annotation from SCE in Workspace...');
+i_addmenu(m_exp,0,{@MergeCellSubtypes,2,false},'Import Subtype Cell Annotation from SCE Data File...');
 
-i_addmenu(m_exp,1,@GEOAccessionToSCE,'Import Data Using GEO Accession...');
-i_addmenu(m_exp,0,{@MergeSCEs,1},'Merge SCEs in Workspace...');
+i_addmenu(m_exp,1,@gui.callback_SplitAtacGex,'Split Multiome ATAC+GEX Matrix...');
+i_addmenu(m_exp,0,{@MergeCellSubtypes,1,true},'Import All Cell Annotation from SCE in Workspace...');
+i_addmenu(m_exp,0,{@MergeCellSubtypes,2,true},'Import All Cell Annotation from SCE Data File...');
+
+i_addmenu(m_exp,1,{@MergeSCEs,1},'Merge SCEs in Workspace...');
 i_addmenu(m_exp,0,{@MergeSCEs,2},'Merge SCE Data Files...');
 i_addmenu(m_exp,0,{@RenameCellTypeBatchID,'Batch ID'},'Rename Batch IDs...');
 i_addmenu(m_exp,0,@callback_ViewMetaData,'View Metadata...');
@@ -544,8 +547,9 @@ end
         end        
     end
     
-    function MergeCellSubtypes(src, ~, sourcetag)
-        [requirerefresh]=gui.callback_MergeCellSubtypes(src,[],sourcetag);
+    function MergeCellSubtypes(src, ~, sourcetag,allcell)
+
+        [requirerefresh]=gui.callback_MergeCellSubtypes(src,[],sourcetag,allcell);
         if requirerefresh
             sce = guidata(FigureHandle);
             [c, cL] = grp2idx(sce.c_cell_type_tx);
