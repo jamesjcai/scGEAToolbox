@@ -5,6 +5,7 @@ function callback_TCellExhaustionScores(src,~)
 
     FigureHandle=src.Parent.Parent;
     sce=guidata(FigureHandle);
+    disp('xxx');
     %fw=gui.gui_waitbar;
     %try
         cs=pkg.e_cellscores(sce.X,sce.g,"T Cell Exhaustion");

@@ -158,8 +158,8 @@ i_addbutton_push(0,0,@gui.callback_GeneHeatMap,"icon-mat-apps-20.gif","Gene Heat
 i_addbutton_push(0,0,@call_scgeatool,"IMG00107.GIF"," ");
 %i_addbutton(0,1,@callback_CompareGeneBtwCls,"plotpicker-priceandvol.gif","Compare between groups");
 %i_addbutton_push(0,1,@callback_CellTypeMarkerScores,"cellscore.gif","Calculate signature scores for each cell");
-i_addbutton_push(0,1,@gui.callback_GetCellSignatureMatrix,"icon-fa-connectdevelop-20.gif","Cell state analysis--assessing functional state activity profiles of cells");
-i_addbutton_push(0,0,@gui.callback_CompareGeneBtwCls,"cellscore2.gif","Cell scoring analysis--obtaining gene signature score for each cell");
+i_addbutton_push(0,1,@gui.callback_CompareGeneBtwCls,"cellscore2.gif","Cell score analysis--obtaining gene signature score for each cell");
+i_addbutton_push(0,0,@gui.callback_GetCellSignatureMatrix,"icon-fa-connectdevelop-20.gif","Cell state analysis--obtaining multiple gene signature scores to reveal functional state of cells");
 %i_addbutton_push(0,0,@call_scgeatool,"IMG00107.GIF"," ");
 i_addbutton_push(0,1,@gui.callback_DEGene2Groups,"plotpicker-boxplot.gif","Compare 2 groups (DE analysis)");
 i_addbutton_push(0,0,@gui.callback_EnrichrHVGs,"plotpicker-andrewsplot.gif","Functional enrichment analysis with HVGs");
@@ -248,7 +248,7 @@ i_addmenu(m_exp,0,@gui.callback_CellCycleLibrarySize, 'Library Size of Cell Cycl
 i_addmenu(m_exp,0,@gui.callback_CellCycleAssignment,  'Cell Cycle Phase Assignment...');
 i_addmenu(m_exp,0,@gui.callback_ShowHgBGeneExpression,'Show HgB-genes Expression...');
 i_addmenu(m_exp,0,@gui.callback_ShowMtGeneExpression, 'Show Mt-genes Expression...');
-i_addmenu(m_exp,0,@gui.callback_TCellExhaustionScores,'T Cell Exhaustion Score...');
+%i_addmenu(m_exp,0,@gui.callback_TCellExhaustionScores,'T Cell Exhaustion Score...');
                                                   
 i_addmenu(m_exp,1,{@DetermineCellTypeClustersGeneral,false},'Annotate Cell Type Using Customized Markers...');
 i_addmenu(m_exp,1,{@MergeCellSubtypes,1,false},'Import Subtype Cell Annotation from SCE in Workspace...');
