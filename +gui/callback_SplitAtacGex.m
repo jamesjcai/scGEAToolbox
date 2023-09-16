@@ -27,12 +27,35 @@ scep.X=scep.X(~isgene,:);
         values = {sceg,scep};
         [~,OKPressed]=export2wsdlg(labels,vars,values,...
             'Save Data to Workspace');
-        pause(4);
-        scgeatool(sceg);
 
-        pause(4);
-        scgeatool(scep);
+% --------------------
+            pause(2);
+            fx=sc_scatter_sce(sceg);
+            fx.Position(3:4)=0.8*fx.Position(3:4);
+            movegui(fx,'center');
+            fx.Position(1)=fx.Position(1)-250;            
+            fx=fx.CurrentAxes;
+            fy.Subtitle.String='[genes x cells]';
+            %waitfor(helpdlg(sprintf('%s Cells extracted.', ...
+            %    sprintf('%s+',tg)),''));
+            answer=questdlg('scRNAseq data extracted. Continue?','');
+            if ~strcmp(answer,'Yes')
+                return;
+            end
+            fy=sc_scatter_sce(scep);
+            fy.Position(3:4)=0.8*fy.Position(3:4);
+            movegui(fy,'center');
+            fy.Position(1)=fy.Position(1)+250;
+            fy=fy.CurrentAxes;            
+            fy.Subtitle.String='[peaks x cells]';
 
+
+        % pause(4);
+        % scgeatool(sceg);
+        % 
+        % pause(4);
+        % scgeatool(scep);
+% ---------------------
         
 %{
 %if ~(ismcc || isdeployed)

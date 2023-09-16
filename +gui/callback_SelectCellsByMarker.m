@@ -59,11 +59,48 @@ function do_single
         tg=gsorted(indx);
         c = sce.X(sce.g == tg, :);
         answer = questdlg(sprintf('Extract %s+ or %s- cells?',tg,tg),'Positive or Negative',...
-            sprintf('%s+',tg),sprintf('%s-',tg),'Cancel',sprintf('%s+',tg));
+            sprintf('%s+',tg),sprintf('%s-',tg),'Split',sprintf('%s+',tg));
         if strcmp(answer,sprintf('%s+',tg))
             idx=c>0;
         elseif strcmp(answer,sprintf('%s-',tg))
             idx=c==0;
+        elseif strcmp(answer,'Split')
+            idx1=c>0;
+            idx2=c==0;
+            %fw=gui.gui_waitbar;
+            scex=selectcells(sce,idx1);
+            fx=sc_scatter_sce(scex);
+            fx.Position(3:4)=0.8*fx.Position(3:4);
+            movegui(fx,'center');
+            fx.Position(1)=fx.Position(1)-250;
+            
+            fx=fx.CurrentAxes;
+            fx.Subtitle.String=sprintf('%s\n%s',fx.Subtitle.String, ...
+                sprintf('%s+',tg));
+            view(fx,ax,bx);
+            %waitfor(helpdlg(sprintf('%s Cells extracted.', ...
+            %    sprintf('%s+',tg)),''));
+
+            answer=questdlg(sprintf('%s Cells extracted. Continue?',sprintf('%s+',tg)),'');
+            if ~strcmp(answer,'Yes')
+                return;
+            end
+            scey=selectcells(sce,idx2);
+            fy=sc_scatter_sce(scey);
+            fy.Position(3:4)=0.8*fy.Position(3:4);
+            movegui(fy,'center');
+            fy.Position(1)=fy.Position(1)+250;
+
+            
+
+            fy=fy.CurrentAxes;            
+            fy.Subtitle.String=sprintf('%s\n%s',fy.Subtitle.String, ...
+                sprintf('%s-',tg));
+            view(fy,ax,bx);
+            %waitfor(helpdlg(sprintf('%s Cells extracted.', ...
+            %    sprintf('%s-',tg)),''));
+
+            return;
         elseif strcmp(answer,'Cancel')
            return;
         else
