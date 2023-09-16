@@ -251,12 +251,12 @@ i_addmenu(m_exp,0,@gui.callback_ShowMtGeneExpression, 'Show Mt-genes Expression.
 %i_addmenu(m_exp,0,@gui.callback_TCellExhaustionScores,'T Cell Exhaustion Score...');
                                                   
 i_addmenu(m_exp,1,{@DetermineCellTypeClustersGeneral,false},'Annotate Cell Type Using Customized Markers...');
-i_addmenu(m_exp,1,{@MergeCellSubtypes,1,false},'Import Subtype Cell Annotation from SCE in Workspace...');
-i_addmenu(m_exp,0,{@MergeCellSubtypes,2,false},'Import Subtype Cell Annotation from SCE Data File...');
+i_addmenu(m_exp,1,{@MergeCellSubtypes,1},'Import Cell Annotation from SCE in Workspace...');
+i_addmenu(m_exp,0,{@MergeCellSubtypes,2},'Import Cell Annotation from SCE Data File...');
 
 i_addmenu(m_exp,1,@gui.callback_SplitAtacGex,'Split Multiome ATAC+GEX Matrix...');
-i_addmenu(m_exp,0,{@MergeCellSubtypes,1,true},'Import All Cell Annotation from SCE in Workspace...');
-i_addmenu(m_exp,0,{@MergeCellSubtypes,2,true},'Import All Cell Annotation from SCE Data File...');
+%i_addmenu(m_exp,0,{@MergeCellSubtypes,1,true},'Import All Cell Annotation from SCE in Workspace...');
+%i_addmenu(m_exp,0,{@MergeCellSubtypes,2,true},'Import All Cell Annotation from SCE Data File...');
 
 i_addmenu(m_exp,1,{@MergeSCEs,1},'Merge SCEs in Workspace...');
 i_addmenu(m_exp,0,{@MergeSCEs,2},'Merge SCE Data Files...');
@@ -547,7 +547,19 @@ end
         end        
     end
     
-    function MergeCellSubtypes(src, ~, sourcetag,allcell)
+    function MergeCellSubtypes(src, ~,sourcetag,allcell)
+        if nargin<4
+            answer=questdlg('Import annotation for all cells or just cells of a subtype?','', ...
+                'All cells','Subtype cells','Cancel','All cells');
+            switch answer
+                case 'All cells'
+                    allcell=true;
+                case 'Subtype cells'
+                    allcell=false;
+                case 'Cancel'
+                    return;
+            end
+        end
 
         [requirerefresh]=gui.callback_MergeCellSubtypes(src,[],sourcetag,allcell);
         if requirerefresh
