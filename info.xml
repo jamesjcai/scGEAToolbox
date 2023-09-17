@@ -3,7 +3,7 @@
              xsi:noNamespaceSchemaLocation="optional">
     <?xml-stylesheet type="text/xsl"href="optional"?>
     <!-- info.xml file for the scGEAtoolbox toolbox -->
-    <!-- Version 23.4.6 -->
+    <!-- Version 23.4.7 -->
     <!-- Copyright (2023) (James Cai).-->
     
     <!-- Supply the following six elements in the order specified -->
@@ -11,7 +11,7 @@
     <!-- to parse the file -->
     <matlabrelease>2023a</matlabrelease>
     <!-- (Required) Title of toolbox. Appears in the Contents pane -->
-    <name>scGEAToolbox v23.4.6</name>
+    <name>scGEAToolbox v23.4.7</name>
     <!-- (Required) Label for the toolbox. pick one: -->
     <!-- matlab, toolbox, simulink, blockset, links_targets  -->
     <type>toolbox</type>
