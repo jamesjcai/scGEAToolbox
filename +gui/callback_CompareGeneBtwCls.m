@@ -246,7 +246,7 @@ if isempty(selecteditem), return; end
             if methodid~=4, fw=gui.gui_waitbar; end
                 [cs,tflist]=sc_tfactivity(sce.X,sce.g,[], ...
                     species,methodid);
-                idx=find(tflist==string(listitems{indx2}));
+                idx=find(upper(tflist)==upper(string(listitems{indx2})));
                 assert(length(idx)==1)
                 
                 [y]=cs(idx,:);
