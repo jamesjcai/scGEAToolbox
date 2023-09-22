@@ -1,13 +1,12 @@
-function sc_distcorr(X,g,gset)
+function sc_distcorr(X, g, gset)
 
-Xm=sc_impute(X,"type","MAGIC");
-idx=ismember(g,gset);
-x=Xm(idx,:);
-D=pkg.e_distcorrmtx(x);
-R=corr(x');
-mdl = fitlm(R(:),D(:));
-res=mdl.Residuals.Raw;
-res=reshape(res,size(R));
+Xm = sc_impute(X, "type", "MAGIC");
+idx = ismember(g, gset);
+x = Xm(idx, :);
+D = pkg.e_distcorrmtx(x);
+R = corr(x');
+mdl = fitlm(R(:), D(:));
+res = mdl.Residuals.Raw;
+res = reshape(res, size(R));
 
 gset
-

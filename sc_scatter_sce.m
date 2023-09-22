@@ -138,9 +138,6 @@ i_addbutton_push(1, 0, @Switch2D3D, "plotpicker-image.gif", "Switch 2D/3D");
 i_addbutton_push(1, 1, @callback_CloseAllOthers, "icon-fa-cut-10.gif", "Close all other figures");
 i_addbutton_push(1, 0, @callback_PickPlotMarker, "plotpicker-rose.gif", "Switch scatter plot marker type");
 i_addbutton_push(1, 0, @gui.callback_PickColorMap, "plotpicker-compass.gif", "Pick new color map");
-% if ~(ismcc || isdeployed)
-%     i_addbutton(1,0,@callback_formatfig,"xpowerpoint.gif",'Formating Figure...');
-% end
 i_addbutton_push(1, 0, @RefreshAll, "icon-mat-refresh-20.gif", "Refresh");
 i_addbutton_push(0, 0, @call_scgeatool, "IMG00107.GIF", " ");
 %i_addbutton(0,0,@callback_CalculateCellScores,"cellscore2.gif","Calculate cell scores from list of feature genes")
@@ -386,7 +383,6 @@ end
         pt.ClickedCallback = callbackFnc;
     end
 
-
     function i_addbutton_toggle(toolbarHdl, sepTag, callbackFnc)
         imgFil = callbackFnc{3};
         tooltipTxt = callbackFnc{6};
@@ -434,60 +430,60 @@ end
 % ------------------------
 % Callback Functions
 % ------------------------
-    function callback_formatfig(~, ~)
-        title('');
-        subtitle('');
-        a1 = xlim;
-        b1 = ylim;
-        c1 = zlim;
-        hold on
-        if size(sce.s, 2) > 2 && ~isempty(h.ZData)
-            set(hAx, 'XTick', []);
-            set(hAx, 'YTick', []);
-            set(hAx, 'ZTick', []);
-            hAx.XAxis.Visible = 'off';
-            hAx.YAxis.Visible = 'off';
-            hAx.ZAxis.Visible = 'off';
-            quiver3(hAx, a1(1), b1(1), c1(1), 0, 0, 20, 'Color', 'k');
-            quiver3(hAx, a1(1), b1(1), c1(1), 0, 20, 0, 'Color', 'k');
-            quiver3(hAx, a1(1), b1(1), c1(1), 20, 0, 0, 'Color', 'k');
-            text(a1(1)+22, b1(1), c1(1), 'tSNE1');
-            text(a1(1), b1(1)+22, c1(1), 'tSNE2');
-            text(a1(1), b1(1), c1(1)+22, 'tSNE3');
-            xlim(a1);
-            ylim(b1);
-            zlim(c1);
-        else
-            set(hAx, 'XTick', []);
-            set(hAx, 'YTick', []);
-            hAx.XAxis.Visible = 'off';
-            hAx.YAxis.Visible = 'off';
-            quiver(hAx, a1(1), b1(1), 20, 0, 'Color', 'k');
-            quiver(hAx, a1(1), b1(1), 0, 20, 'Color', 'k');
-            text(a1(1)+22, b1(1), 'tSNE1');
-            text(a1(1), b1(1)+22, 'tSNE2', 'Rotation', 90);
-            xlim(a1);
-            ylim(b1);
-        end
-
-
-        %       set(hAx,'xcolor',[1 1 1]); set(hAx,'ycolor',[1 1 1]); set(hAx,'zcolor',[1 1 1]);
-        %         if rand>0.5
-        %             xlabel('tSNE1'); ylabel('tSNE2'); zlabel('tSNE3');
-        %         else
-        %             xlabel('UMAP1'); ylabel('UMAP2'); zlabel('UMAP3');
-        %         end
-        grid off
-        box off
-        %         a1=xlim; b1=ylim; c1=zlim;
-        %         hold on
-        %         arrow3([a1(1),b1(1),c1(1)],[a1(1)+20,b1(1),c1(1)]);
-        %         arrow3([a1(1),b1(1),c1(1)],[a1(1),b1(1)+20,c1(1)]);
-        %         arrow3([a1(1),b1(1),c1(1)],[a1(1),b1(1),c1(1)+20]);
-        %arrow('start',[a1(1) b1(1) c1(1)],'stop',[a1(1)+20 b1(1) c1(1)]);
-        %arrow('start',[a1(1) b1(1) c1(1)],'stop',[a1(1) b1(1)+20 c1(1)]);
-        %arrow('start',[a1(1) b1(1) c1(1)],'stop',[a1(1) b1(1) c1(1)+20]);
-    end
+% function callback_formatfig(~, ~)
+%     title('');
+%     subtitle('');
+%     a1 = xlim;
+%     b1 = ylim;
+%     c1 = zlim;
+%     hold on
+%     if size(sce.s, 2) > 2 && ~isempty(h.ZData)
+%         set(hAx, 'XTick', []);
+%         set(hAx, 'YTick', []);
+%         set(hAx, 'ZTick', []);
+%         hAx.XAxis.Visible = 'off';
+%         hAx.YAxis.Visible = 'off';
+%         hAx.ZAxis.Visible = 'off';
+%         quiver3(hAx, a1(1), b1(1), c1(1), 0, 0, 20, 'Color', 'k');
+%         quiver3(hAx, a1(1), b1(1), c1(1), 0, 20, 0, 'Color', 'k');
+%         quiver3(hAx, a1(1), b1(1), c1(1), 20, 0, 0, 'Color', 'k');
+%         text(a1(1)+22, b1(1), c1(1), 'tSNE1');
+%         text(a1(1), b1(1)+22, c1(1), 'tSNE2');
+%         text(a1(1), b1(1), c1(1)+22, 'tSNE3');
+%         xlim(a1);
+%         ylim(b1);
+%         zlim(c1);
+%     else
+%         set(hAx, 'XTick', []);
+%         set(hAx, 'YTick', []);
+%         hAx.XAxis.Visible = 'off';
+%         hAx.YAxis.Visible = 'off';
+%         quiver(hAx, a1(1), b1(1), 20, 0, 'Color', 'k');
+%         quiver(hAx, a1(1), b1(1), 0, 20, 'Color', 'k');
+%         text(a1(1)+22, b1(1), 'tSNE1');
+%         text(a1(1), b1(1)+22, 'tSNE2', 'Rotation', 90);
+%         xlim(a1);
+%         ylim(b1);
+%     end
+% 
+% 
+%     %       set(hAx,'xcolor',[1 1 1]); set(hAx,'ycolor',[1 1 1]); set(hAx,'zcolor',[1 1 1]);
+%     %         if rand>0.5
+%     %             xlabel('tSNE1'); ylabel('tSNE2'); zlabel('tSNE3');
+%     %         else
+%     %             xlabel('UMAP1'); ylabel('UMAP2'); zlabel('UMAP3');
+%     %         end
+%     grid off
+%     box off
+%     %         a1=xlim; b1=ylim; c1=zlim;
+%     %         hold on
+%     %         arrow3([a1(1),b1(1),c1(1)],[a1(1)+20,b1(1),c1(1)]);
+%     %         arrow3([a1(1),b1(1),c1(1)],[a1(1),b1(1)+20,c1(1)]);
+%     %         arrow3([a1(1),b1(1),c1(1)],[a1(1),b1(1),c1(1)+20]);
+%     %arrow('start',[a1(1) b1(1) c1(1)],'stop',[a1(1)+20 b1(1) c1(1)]);
+%     %arrow('start',[a1(1) b1(1) c1(1)],'stop',[a1(1) b1(1)+20 c1(1)]);
+%     %arrow('start',[a1(1) b1(1) c1(1)],'stop',[a1(1) b1(1) c1(1)+20]);
+% end
 
     function call_scgeatool(~, ~)
         % scgeatool;
@@ -750,12 +746,6 @@ end
         end
     end
 
-%     function RunSeuratSCTransform(src,~)
-%         if callback_RunSeuratSCTransform(src)
-%             guidata(FigureHandle,sce);
-%         end
-%     end
-
     function RunSeuratWorkflow(src, ~)
         [ok] = gui.i_confirmscript('Run Seurat/R Workflow (Seurat)?', ...
             'R_Seurat', 'r');
@@ -827,7 +817,6 @@ end
             end
         end
 
-
         if gui.callback_Harmonypy(src)
             sce = guidata(FigureHandle);
             [c, cL] = grp2idx(sce.c);
@@ -846,7 +835,6 @@ end
         end
         guidata(FigureHandle, sce);
     end
-
 
     function DoubletDetection(src, ~)
         gui.gui_showrefinfo('Scrublet [PMID:30954476]');
@@ -874,7 +862,6 @@ end
         end
     end
 
-
     function MergeSubCellTypes(src, ~)
         if isempty(sce.c_cell_type_tx), return; end
         % [sce]=pkg.i_mergeSubCellNames(sce);
@@ -891,7 +878,6 @@ end
         guidata(FigureHandle, sce);
     end
 
-% =========================
     function RefreshAll(src, ~, keepview, keepcolr)
         if nargin < 4, keepcolr = false; end
         if nargin < 3, keepview = false; end

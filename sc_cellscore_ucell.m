@@ -1,59 +1,59 @@
-function [score]=sc_cellscore_ucell(X,genelist,tgsPos,tgsNeg)
+function [score] = sc_cellscore_ucell(X, genelist, tgsPos, tgsNeg)
 % Compute cell scores from a list of feature genes
 %
 % tgsPos - positive features (positive target marker genes)
 % tgsNeg - negative features (negative target marker genes)
 %
-% see also: PKG.E_CELLSCORES, SC_CELLSCORE_ADMDL 
+% see also: PKG.E_CELLSCORES, SC_CELLSCORE_ADMDL
 
-if nargin<4 || isempty(tgsNeg)
-    tgsNeg=["IL2","TNF"];
+if nargin < 4 || isempty(tgsNeg)
+    tgsNeg = ["IL2", "TNF"];
 end
-if nargin<3
-    tgsPos=["CD44","LY6C","KLRG1","CTLA","ICOS","LAG3"];
+if nargin < 3
+    tgsPos = ["CD44", "LY6C", "KLRG1", "CTLA", "ICOS", "LAG3"];
 end
 
-if ~any(matches(genelist, tgsPos,'IgnoreCase',true))
-    score=NaN(size(X,2),1);
+if ~any(matches(genelist, tgsPos, 'IgnoreCase', true))
+    score = NaN(size(X, 2), 1);
     warning('No feature genes found in GENELIST.');
     return;
 end
 
-genelist=upper(genelist);
-tgsPos=upper(tgsPos);
-tgsNeg=upper(tgsNeg);
+genelist = upper(genelist);
+tgsPos = upper(tgsPos);
+tgsNeg = upper(tgsNeg);
 
-idx1=matches(genelist, tgsPos,'IgnoreCase',true);
-idx2=matches(genelist, tgsNeg,'IgnoreCase',true);
+idx1 = matches(genelist, tgsPos, 'IgnoreCase', true);
+idx2 = matches(genelist, tgsNeg, 'IgnoreCase', true);
 
-n1=sum(idx1);
+n1 = sum(idx1);
 
-methodid=1;
+methodid = 1;
 switch methodid
     case 1
         % https://doi.org/10.1016/j.csbj.2021.06.043
-        R=tiedrank(-X);
-        R(R>1500)=1500+1;
-        u=sum(R(idx1,:))-(n1*(n1-1))/2;
-        score = 1-u/(n1*1500);
-        score=score(:);
+        R = tiedrank(-X);
+        R(R > 1500) = 1500 + 1;
+        u = sum(R(idx1, :)) - (n1 * (n1 - 1)) / 2;
+        score = 1 - u / (n1 * 1500);
+        score = score(:);
     case 2
-        X=sc_norm(X);
+        X = sc_norm(X);
         disp('Library-size normalization...done.')
-        X=log(X+1);
-        disp('Log(x+1) transformation...done.')        
+        X = log(X+1);
+        disp('Log(x+1) transformation...done.')
         data_avg = mean(X, 2);
-        idx1=matches(genelist, tgsPos,'IgnoreCase',true);
-        x=X(idx1,:);
-        [~,~,stats0] = ranksum(mean(x,2),data_avg);
-        score=zeros(size(X,2),1);
-        for k=1:size(X,2)
-            [~,~,stats] = ranksum(x(:,k),data_avg);    
-            score(k)=stats.ranksum-stats0.ranksum;    
+        idx1 = matches(genelist, tgsPos, 'IgnoreCase', true);
+        x = X(idx1, :);
+        [~, ~, stats0] = ranksum(mean(x, 2), data_avg);
+        score = zeros(size(X, 2), 1);
+        for k = 1:size(X, 2)
+            [~, ~, stats] = ranksum(x(:, k), data_avg);
+            score(k) = stats.ranksum - stats0.ranksum;
         end
         %score(score<0)=0;
         %score=log(exp(score)+1);
-        score=(score-min(score))./(max(score)-min(score));
+        score = (score - min(score)) ./ (max(score) - min(score));
 end
 
 end
