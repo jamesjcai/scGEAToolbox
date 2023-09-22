@@ -1,4 +1,4 @@
-function Y = scale(X,S,dims)
+function Y = scale(X, S, dims)
 %SCALE Scale along specified dimensions of tensor.
 %
 %   Y = SCALE(X,S,DIMS) scales the tensor X along the dimension(s)
@@ -21,30 +21,29 @@ function Y = scale(X,S,dims)
 %Tensor Toolbox for MATLAB: <a href="https://www.tensortoolbox.org">www.tensortoolbox.org</a>
 
 
-
-dims = tt_dimscheck(dims,ndims(X));
-remdims = setdiff(1:ndims(X),dims);
+dims = tt_dimscheck(dims, ndims(X));
+remdims = setdiff(1:ndims(X), dims);
 
 % Convert to a matrix so that each column of A can be scaled by a
 % vectorized version of S.
-A = double(tenmat(X,dims,remdims));
+A = double(tenmat(X, dims, remdims));
 
-switch(class(S))
+switch (class(S))
     case {'tensor'}
         if ~isequal(size(S), X.size(dims))
             error 'Size mismatch';
         end
         % Vectorize S.
-        S = double(tenmat(S,1:ndims(S),[]));
+        S = double(tenmat(S, 1:ndims(S), []));
     case {'double'}
-        if size(S,1) ~= X.size(dims)
+        if size(S, 1) ~= X.size(dims)
             error 'Size mismatch';
         end
     otherwise
         error('Invalid scaling factor');
 end
 
-[m,n] = size(A);
+[m, n] = size(A);
 
 % If the size of S is pretty small, we can convert it to a diagonal matrix
 % and multiply by A. Otherwise, we scale A column-by-column.
@@ -53,13 +52,9 @@ if (m <= n)
 else
     B = zeros(size(A));
     for j = 1:n
-        B(:,j) = S .* A(:,j);
+        B(:, j) = S .* A(:, j);
     end
 end
 
 % Convert the matrix B back into a tensor and return.
-Y = tensor(tenmat(B,dims,remdims,X.size));
-
-   
-
-
+Y = tensor(tenmat(B, dims, remdims, X.size));

@@ -3,7 +3,7 @@ function knnlength = knn_distmat(D, K)
 %
 %  knnlength = knn(D, K)
 %
-%  Input and output arguments: 
+%  Input and output arguments:
 %   D     (matrix) of size NxN: This is a precalculated dissimilarity (distance matrix).
 % NOTE:  D MUST BE  SYMMETRIC!
 %   K    (scalar) the K in K-NN classifier
@@ -11,33 +11,31 @@ function knnlength = knn_distmat(D, K)
 %
 % Copyright (c) Huzefa Neemuchwala,( hneemuch@umich.edu ). All rights reserved.
 
-[ND1, ND2]=size(D);
+[ND1, ND2] = size(D);
 if K >= ND1
-	error('First NN is point itself and hence discarded. Hence K < N, strictly')
+    error('First NN is point itself and hence discarded. Hence K < N, strictly')
 end
-
 
 
 if ND1 ~= ND2
-error('Distance matrix is not square!')
+    error('Distance matrix is not square!')
 end
 
-if ~issymmetric(D)  % ~= D.'
+if ~issymmetric(D) % ~= D.'
     error('Distance matrix is not symmetric')
 end
 
 %sorted_dist_mat = zeros(size(D));
-sorted_dist_mat=sort(D);
+sorted_dist_mat = sort(D);
 
 %~ First NN is point itself and discarded. K < N strictly
 
 %disp('ASSUMED THAT DISTANCE MATRIX IS SYMMETRIC')
 knnlength = 0;
-knnlength = sum(sum(sorted_dist_mat(2:K+1,:)));
+knnlength = sum(sum(sorted_dist_mat(2:K+1, :)));
 return
 %~ for i = 1 : ND1
-	%~ for j = 1 : K
-		%~ knnlength = knnlength + sorted_dist_mat(j+1,i);
-	%~ end
+%~ for j = 1 : K
+%~ knnlength = knnlength + sorted_dist_mat(j+1,i);
 %~ end
-
+%~ end

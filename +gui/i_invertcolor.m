@@ -1,4 +1,4 @@
-function i_invertcolor(~,~)
-    cm=colormap();
-    colormap(flipud(cm));
+function i_invertcolor(~, ~)
+cm = colormap();
+colormap(flipud(cm));
 end

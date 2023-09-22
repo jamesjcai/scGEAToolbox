@@ -1,4 +1,4 @@
-function COUNT = countmember(A,B)
+function COUNT = countmember(A, B)
 % COUNTMEMBER - count members
 %
 %   COUNT = COUNTMEMBER(A,B) counts the number of times the elements of array A are
@@ -35,23 +35,23 @@ function COUNT = countmember(A,B)
 % 2.1 (jan 2019) - using histcounts instead of histc; minor grammar fixes
 
 % input checks
-narginchk(2,2) ;
+narginchk(2, 2);
 if ~isequal(class(A), class(B))
-    error('Both inputs should be of the same class.') ;
+    error('Both inputs should be of the same class.');
 end
 
 if isempty(A) || isempty(B)
     % nothing to do
-    COUNT = zeros(size(A)) ;
-else    
+    COUNT = zeros(size(A));
+else
     % which elements are unique in A,
     % also store the position to re-order later on
-    [AUnique, ~, posJ] = unique(A(:)) ;
+    [AUnique, ~, posJ] = unique(A(:));
     % assign each element in B a number corresponding to the element of A
-    [~, loc] = ismember(B, AUnique) ;
+    [~, loc] = ismember(B, AUnique);
     % count these numbers
-    N = histcounts(loc(:), 1:length(AUnique)+1) ;
+    N = histcounts(loc(:), 1:length(AUnique)+1);
     % re-order according to A, and reshape
-    COUNT = reshape(N(posJ),size(A)) ;
+    COUNT = reshape(N(posJ), size(A));
 end
 end

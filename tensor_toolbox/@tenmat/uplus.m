@@ -6,6 +6,4 @@ function t = uplus(t)
 %Tensor Toolbox for MATLAB: <a href="https://www.tensortoolbox.org">www.tensortoolbox.org</a>
 
 
-
 % This function does nothing!
-

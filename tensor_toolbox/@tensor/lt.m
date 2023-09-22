@@ -1,4 +1,4 @@
-function Z = lt(X,Y)
+function Z = lt(X, Y)
 %LT Less than (<) for tensor.
 %
 %   See also TENSOR.
@@ -6,5 +6,4 @@ function Z = lt(X,Y)
 %Tensor Toolbox for MATLAB: <a href="https://www.tensortoolbox.org">www.tensortoolbox.org</a>
 
 
-
-Z = tenfun(@lt,X,Y);
+Z = tenfun(@lt, X, Y);

@@ -1,4 +1,4 @@
-function [eigenvalues,No_cluster,No_cluster2] = Num_cluster(W,NC1)
+function [eigenvalues, No_cluster, No_cluster2] = Num_cluster(W, NC1)
 % Estimation of the number of clusters from single cell data
 %
 % Input:
@@ -10,7 +10,7 @@ function [eigenvalues,No_cluster,No_cluster2] = Num_cluster(W,NC1)
 %   consensus matrix.
 %   -- No_cluster: Number of clusters inferred by SoptSC.
 %
-nno_cluster = 2:20;  % 2:20
+nno_cluster = 2:20; % 2:20
 
 if NC1 <= 5
     tau = 0.3; % 0.4
@@ -21,19 +21,19 @@ else
 end
 
 tol = 0.01;
-[all_eigs,~] = consen(W,nno_cluster,tau);
+[all_eigs, ~] = consen(W, nno_cluster, tau);
 
 zz = sort(abs(real(all_eigs)));
 
-if length(zz)>=2
+if length(zz) >= 2
     gap = zz(2:end) - zz(1:end-1);
-    [~,No_cluster1] = max(gap);
+    [~, No_cluster1] = max(gap);
 end
 
-No_cluster2 = length(find(zz<=tol));
+No_cluster2 = length(find(zz <= tol));
 No_cluster = No_cluster1;
 display('Number of cluster based on zero eigenvalues & Largest gap ');
-display([No_cluster2 No_cluster]);
+display([No_cluster2, No_cluster]);
 
 eigenvalues = zz;
 end

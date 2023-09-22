@@ -98,58 +98,58 @@ metainfo = sprintf("Source: %s", acc);
 sce = sce.appendmetainfo(metainfo);
 fprintf(['The data was downloaded from the National Center', ...
     ' for Biotechnology Information Gene Expression Omnibus (GEO) ', ...
-    'with the accession ID %s.\n'], acc);
+        'with the accession ID %s.\n'], acc);
 
-% function i_tryh5(c)
-%     c1=c(contains(c,'tsv'));
-% end
+    % function i_tryh5(c)
+    %     c1=c(contains(c,'tsv'));
+    % end
 
-if ~isempty(barcodes)
-    sce.c_cell_id = barcodes;
-end
-
-end
-
-function f = i_setupfile(c)
-try
-    tmpd = tempdir;
-    [x] = regexp(c(1), '<a href="ftp://(.*)">(ftp', 'match');
-    x = string(textscan(x, '<a href="ftp://%s'));
-    x = append("https://", extractBefore(x, strlength(x)-5));
-    if ~(ismcc || isdeployed)
-        x = urldecode(x);
-    else
-        x = pkg.urldecoding(x);
+    if ~isempty(barcodes)
+        sce.c_cell_id = barcodes;
     end
-    fprintf('Downloading %s\n', x)
-    files = gunzip(x, tmpd);
-    f = files{1};
-    if strcmpi(f(end-3:end), '.tar')
-        f = untar(f, tmpd);
-        if length(f) > 1
+
+end
+
+    function f = i_setupfile(c)
+        try
+            tmpd = tempdir;
+            [x] = regexp(c(1), '<a href="ftp://(.*)">(ftp', 'match');
+            x = string(textscan(x, '<a href="ftp://%s'));
+            x = append("https://", extractBefore(x, strlength(x)-5));
+            if ~(ismcc || isdeployed)
+                x = urldecode(x);
+            else
+                x = pkg.urldecoding(x);
+            end
+            fprintf('Downloading %s\n', x)
+            files = gunzip(x, tmpd);
+            f = files{1};
+            if strcmpi(f(end-3:end), '.tar')
+                f = untar(f, tmpd);
+                if length(f) > 1
+                    f = [];
+                end
+            end
+        catch ME
+            disp(ME.message)
             f = [];
         end
-    end
-catch ME
-    disp(ME.message)
-    f = [];
-end
 end
 
-function f = i_setupfile2(c)
-try
-    tmpd = tempname;
-    [x] = regexp(c(1), '<a href="ftp://(.*)">(ftp', 'match');
-    x = string(textscan(x, '<a href="ftp://%s'));
-    x = append("https://", extractBefore(x, strlength(x)-5));
-    if ~(ismcc || isdeployed)
-        x = urldecode(x);
-    else
-        x = pkg.urldecoding(x);
+        function f = i_setupfile2(c)
+            try
+                tmpd = tempname;
+                [x] = regexp(c(1), '<a href="ftp://(.*)">(ftp', 'match');
+                x = string(textscan(x, '<a href="ftp://%s'));
+                x = append("https://", extractBefore(x, strlength(x)-5));
+                if ~(ismcc || isdeployed)
+                    x = urldecode(x);
+                else
+                    x = pkg.urldecoding(x);
+                end
+                fprintf('Downloading %s\n', x)
+                f = websave(tmpd, x);
+            catch
+                f = [];
+            end
     end
-    fprintf('Downloading %s\n', x)
-    f = websave(tmpd, x);
-catch
-    f = [];
-end
-end

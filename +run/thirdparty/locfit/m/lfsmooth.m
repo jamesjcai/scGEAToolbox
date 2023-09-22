@@ -1,4 +1,4 @@
-function yhat=lfsmooth(varargin)
+function yhat = lfsmooth(varargin)
 %
 % a simple interface to locfit.
 % output is a vector of smoothed values, at each data point.
@@ -14,12 +14,12 @@ function yhat=lfsmooth(varargin)
 % hold off;
 %
 
-% Minimal input validation    
+% Minimal input validation
 if nargin < 1
-   error( 'At least one input argument required' );
+    error('At least one input argument required');
 end
 
-fit = locfit(x,varargin{:},'module','simple');
+fit = locfit(x, varargin{:}, 'module', 'simple');
 yhat = fit.fit_points.fitted_values;
 
 return;

@@ -1,17 +1,17 @@
 function c = ttt(varargin)
 %TTT Tensor mulitplication (tensor times tensor).
-% 
+%
 %   TTT(X,Y) computes the outer product of tensors X and Y.
 %
-%   TTT(X,Y,XDIMS,YDIMS) computes the contracted product of tensors 
-%   X and Y in the dimensions specified by the row vectors XDIMS and 
-%   YDIMS.  The sizes of the dimensions specified by XDIMS and YDIMS 
-%   must match; that is, size(X,XDIMS) must equal size(Y,YDIMS). 
+%   TTT(X,Y,XDIMS,YDIMS) computes the contracted product of tensors
+%   X and Y in the dimensions specified by the row vectors XDIMS and
+%   YDIMS.  The sizes of the dimensions specified by XDIMS and YDIMS
+%   must match; that is, size(X,XDIMS) must equal size(Y,YDIMS).
 %
 %   TTT(X,Y,DIMS) computes the inner product of tensors X and Y in the
 %   dimensions specified by the vector DIMS.  The sizes of the
 %   dimensions specified by DIMS must match; that is, size(X,DIMS) must
-%   equal size(Y,DIMS). 
+%   equal size(Y,DIMS).
 %
 %   Examples
 %   X = tensor(rand(4,2,3));
@@ -24,8 +24,6 @@ function c = ttt(varargin)
 %   See also TENSOR, TENSOR/TTM, TENSOR/TTV.
 %
 %Tensor Toolbox for MATLAB: <a href="https://www.tensortoolbox.org">www.tensortoolbox.org</a>
-
-
 
 
 %%%%%%%%%%%%%%%%%%%%%%
@@ -65,7 +63,7 @@ else
     bdims = adims;
 end
 
-if ~isequal(size(a,adims),size(b,bdims))
+if ~isequal(size(a, adims), size(b, bdims))
     error('Specified dimensions do not match.');
 end
 
@@ -74,12 +72,12 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Avoid transpose by reshaping A and computing C = A * B
-amatrix = tenmat(a,adims,'t');
-bmatrix = tenmat(b,bdims);
+amatrix = tenmat(a, adims, 't');
+bmatrix = tenmat(b, bdims);
 cmatrix = amatrix * bmatrix;
 
 % Check whether or not the result is a scalar.
-if isa(cmatrix,'tenmat')
+if isa(cmatrix, 'tenmat')
     c = tensor(cmatrix);
 else
     c = cmatrix;

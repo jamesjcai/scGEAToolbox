@@ -4,7 +4,7 @@
 %   - performs the supra-consensus function for CLUSTER ENSEMBLES
 %     to combine multiple clustering label vectors e.g., cls = [cl1; cl2;...]
 %   - returns a row vector of the combined clustering labels
-%   - the following consensus functions are computed 
+%   - the following consensus functions are computed
 %     - Cluster-based Similiarty Partitioning Algorithm (CSPA)
 %     - HyperGraph Partitioning Algorithm (HGPA)
 %     - Meta-CLustering Algorithm (MCLA)
@@ -17,7 +17,7 @@
 %   k     - 1,2,3,... maximum number of clusters in the combined clustering
 %           (optional, default max(max(cls))
 % EXAMPLE
-%   clusterensemble; 
+%   clusterensemble;
 %   clusterensemble([ones(3,20) 2*ones(3,30); ones(1,10) 2*ones(1,40)])
 % REFERENCE
 %   please refer to the following paper if you use CLUSTER ENSEMBLES
@@ -30,40 +30,40 @@
 %   license granted for research use ONLY (see README)
 %   copyright (c) 1998-2011 by Alexander Strehl
 
-function cl = clusterensemble(cls,k)
+function cl = clusterensemble(cls, k)
 
 if false
-    cls = [1 1 1 2 2 3 3; 2 2 2 3 3 1 1; 1 1 2 2 3 3 3;1 2 NaN 1 2 NaN NaN];
-    cl=mcla(cls,2);
-    cl=hgpa(cls,2);
-    cl=cspa(cls,2);
+    cls = [1, 1, 1, 2, 2, 3, 3; 2, 2, 2, 3, 3, 1, 1; 1, 1, 2, 2, 3, 3, 3; 1, 2, NaN, 1, 2, NaN, NaN];
+    cl = mcla(cls, 2);
+    cl = hgpa(cls, 2);
+    cl = cspa(cls, 2);
 end
 
-if ~exist('cls','var')
+if ~exist('cls', 'var')
     disp('clusterensemble-warning: no arguments - displaying illustrative example:');
-    cls = [1 1 1 2 2 3 3; 2 2 2 3 3 1 1; 1 1 2 2 3 3 3;1 2 NaN 1 2 NaN NaN];
-    disp('clusterensemble-advice: type "help clusterensemble" for information about usage');
-    disp(' ');
-end
+        cls = [1, 1, 1, 2, 2, 3, 3; 2, 2, 2, 3, 3, 1, 1; 1, 1, 2, 2, 3, 3, 3; 1, 2, NaN, 1, 2, NaN, NaN];
+        disp('clusterensemble-advice: type "help clusterensemble" for information about usage');
+            disp(' ');
+        end
 
-if size(cls,2)>1000
-  workfcts = {'hgpa', 'mcla'};
-  disp('clusterensemble-warning: using only hgpa and mcla');
-else
-  workfcts = {'cspa', 'hgpa', 'mcla'};
-end
+        if size(cls, 2) > 1000
+            workfcts = {'hgpa', 'mcla'};
+            disp('clusterensemble-warning: using only hgpa and mcla');
+        else
+            workfcts = {'cspa', 'hgpa', 'mcla'};
+        end
 
-for i = 1:length(workfcts)
-   workfct = workfcts{i};
-   if ~exist('k','var')
-      cl(i,:) = feval(workfct,cls);
-   else
-      cl(i,:) = feval(workfct,cls,k);
-   end
-   q(i) = ceevalmutual(cls,cl(i,:));
-   disp(['clusterensemble: ' workfct ' at ' num2str(q(i))]);
-end
+        for i = 1:length(workfcts)
+            workfct = workfcts{i};
+            if ~exist('k', 'var')
+                cl(i, :) = feval(workfct, cls);
+            else
+                cl(i, :) = feval(workfct, cls, k);
+            end
+            q(i) = ceevalmutual(cls, cl(i, :));
+            disp(['clusterensemble: ', workfct, ' at ', num2str(q(i))]);
+        end
 
-[~, best] = max(q);
+        [~, best] = max(q);
 
-cl = cl(best,:);
+        cl = cl(best, :);

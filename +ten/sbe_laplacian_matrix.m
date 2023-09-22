@@ -1,4 +1,4 @@
-function [L,Lnorm] = sbe_laplacian_matrix(A)
+function [L, Lnorm] = sbe_laplacian_matrix(A)
 % Get graph Laplacian matrix
 %
 %   L = laplacian(g)
@@ -21,25 +21,22 @@ function [L,Lnorm] = sbe_laplacian_matrix(A)
 
 %{
 A=[  0     1     0     1     0     0     0     0     0
-     1     0    -1     1    -1     0     0     1     0
-     0    -1     0     0     1     1     0     0     0
-     1     1     0     0    -1     0     1     1     0
-     0    -1     1    -1     0     1     0    -1     1
-     0     0     1     0     1     0     0    -1     1
-     0     0     0     1     0     0     0     1     0
-     0     1     0     1    -1    -1     1     0    -1
-     0     0     0     0     1     1     0    -1     0];
+1     0    -1     1    -1     0     0     1     0
+0    -1     0     0     1     1     0     0     0
+1     1     0     0    -1     0     1     1     0
+0    -1     1    -1     0     1     0    -1     1
+0     0     1     0     1     0     0    -1     1
+0     0     0     1     0     0     0     1     0
+0     1     0     1    -1    -1     1     0    -1
+0     0     0     0     1     1     0    -1     0];
 
 %}
 
-D=sum(abs(A));    %
-L=diag(D)-A;
-if nargout>1
-    D(D~=0)=sqrt(1./D(D~=0));
-    D=diag(D);
+D = sum(abs(A)); %
+L = diag(D) - A;
+if nargout > 1
+    D(D ~= 0) = sqrt(1./D(D ~= 0));
+    D = diag(D);
     % Lnorm=D*L*D;
-    Lnorm=eye(size(A,1))-D*A*D;     % L = I-D^-1/2*W*D^-1/2
+    Lnorm = eye(size(A, 1)) - D * A * D; % L = I-D^-1/2*W*D^-1/2
 end
-
-
-

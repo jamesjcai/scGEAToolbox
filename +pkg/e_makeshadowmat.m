@@ -1,4 +1,4 @@
-function [Xmajor,Xminor,gmajor,gminor]=e_makeshadowmat(X,genelist)
+function [Xmajor, Xminor, gmajor, gminor] = e_makeshadowmat(X, genelist)
 %E_MAKESHADOWMAT
 %Usage: [Xmajor,Xminor,gmajor,gminor]=pkg.e_makeshadowmat(X,g)
 %
@@ -8,13 +8,12 @@ function [Xmajor,Xminor,gmajor,gminor]=e_makeshadowmat(X,genelist)
 %    [X1,g1]=pkg.e_shadowmatqc(Xmajor,Xminor,gmajor,gminor);
 
 
-    [T]=sc_genestats(X,genelist);
-    [~,idx]=maxk(T.Mean,10);
-    Xminor=X(idx,:);
-    gminor=genelist(idx);
-    Xmajor=X;
-    Xmajor(idx,:)=[];
-    gmajor=genelist;
-    gmajor(idx)=[];
+[T] = sc_genestats(X, genelist);
+[~, idx] = maxk(T.Mean, 10);
+Xminor = X(idx, :);
+gminor = genelist(idx);
+Xmajor = X;
+Xmajor(idx, :) = [];
+gmajor = genelist;
+gmajor(idx) = [];
 end
-

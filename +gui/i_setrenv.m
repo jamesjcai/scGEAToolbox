@@ -1,7 +1,7 @@
-function [done]=i_setrenv(~,~)
+function [done] = i_setrenv(~, ~)
 
 %see also: I_SETPYENV
-[done]=false;
+[done] = false;
 
 % Rpath=pkg.FindRpath;
 % if isempty(Rpath)
@@ -16,80 +16,80 @@ function [done]=i_setrenv(~,~)
 %     else
 %         s=Rpath;
 %     end
-    
-    % 
-    if ~ispref('scgeatoolbox','rexecutablepath')
-        answer = questdlg('Select Path to R Executable','');
-        if ~strcmp(answer,'Yes'), return; end
-        if ispc
-            rpathdefult=pkg.FindRpath;
-            if iscell(rpathdefult)
-                rpathdefult=rpathdefult{1};
-            end
-        else
-            rpathdefult='';
+
+%
+if ~ispref('scgeatoolbox', 'rexecutablepath')
+    answer = questdlg('Select Path to R Executable', '');
+    if ~strcmp(answer, 'Yes'), return; end
+    if ispc
+        rpathdefult = pkg.FindRpath;
+        if iscell(rpathdefult)
+            rpathdefult = rpathdefult{1};
         end
-        [done]=ix_setrenv(rpathdefult);
-        % setpref('scgeatoolbox','rexecutablepath',s);
     else
-        s=getpref('scgeatoolbox','rexecutablepath');
-        answer = questdlg(sprintf('%s',s), ...
-            'Path to R Executable', ...
-            'Use this','Use another','Cancel','Use this');
-        switch answer
-            case 'Use this'
-                done=true;
-            case 'Use another'
-                [done]=ix_setrenv(s);
-        end
+        rpathdefult = '';
     end
-    if done
-        Rpath=getpref('scgeatoolbox','rexecutablepath');
+    [done] = ix_setrenv(rpathdefult);
+    % setpref('scgeatoolbox','rexecutablepath',s);
+else
+    s = getpref('scgeatoolbox', 'rexecutablepath');
+    answer = questdlg(sprintf('%s', s), ...
+        'Path to R Executable', ...
+        'Use this', 'Use another', 'Cancel', 'Use this');
+    switch answer
+        case 'Use this'
+            done = true;
+        case 'Use another'
+            [done] = ix_setrenv(s);
+    end
+end
+if done
+    Rpath = getpref('scgeatoolbox', 'rexecutablepath');
+    if ispc
+        Rexec = fullfile(Rpath, 'Rscript.exe');
+    else
+        Rexec = fullfile(Rpath, 'Rscript');
+    end
+    if exist(Rexec, 'file')
+        helpdlg("R environment is set successfully.", '');
+    else
         if ispc
-            Rexec=fullfile(Rpath,'Rscript.exe');
+            errordlg("R environment is set with error.", '');
+            done = false;
         else
-            Rexec=fullfile(Rpath,'Rscript');
-        end
-        if exist(Rexec,'file')
-            helpdlg("R environment is set successfully.",'');
-        else
-            if ispc
-                errordlg("R environment is set with error.",'');
-                done=false;
+            Rexec = fullfile(Rpath, 'R');
+            if exist(Rexec, 'file')
+                helpdlg("R environment is set successfully.", '');
             else
-                Rexec=fullfile(Rpath,'R');
-                if exist(Rexec,'file')
-                    helpdlg("R environment is set successfully.",'');
-                else
-                    errordlg("R environment is set with error.",'');
-                    done=false;                    
-                end
+                errordlg("R environment is set with error.", '');
+                done = false;
             end
         end
     end
 end
+end
 
 
-function [done]=ix_setrenv(deflt)
-        % selpath = uigetdir;
-        done=false;        
-        if ispc
-            [file,path] = uigetfile('Rscript.exe','Select R Interpreter',deflt);
-        else
-            [file,path] = uigetfile('Rscript','Select R Interpreter',deflt);
-        end
-        if isequal(file,0)
-           %disp('User selected Cancel');
-           return;
-        else
-           disp(['User selected: ', fullfile(path,file)]);
-           % fullfile(path)
-           try
-               setpref('scgeatoolbox','rexecutablepath',fullfile(path));
-           catch ME
-               errordlg(ME.message);
-               return;
-           end
-           done=true;
-        end
+function [done] = ix_setrenv(deflt)
+% selpath = uigetdir;
+done = false;
+if ispc
+    [file, path] = uigetfile('Rscript.exe', 'Select R Interpreter', deflt);
+else
+    [file, path] = uigetfile('Rscript', 'Select R Interpreter', deflt);
+end
+if isequal(file, 0)
+    %disp('User selected Cancel');
+    return;
+else
+    disp(['User selected: ', fullfile(path, file)]);
+    % fullfile(path)
+    try
+        setpref('scgeatoolbox', 'rexecutablepath', fullfile(path));
+    catch ME
+        errordlg(ME.message);
+        return;
+    end
+    done = true;
+end
 end

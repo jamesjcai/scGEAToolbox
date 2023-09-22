@@ -1,7 +1,7 @@
-function [reduction]=run_umap_lite(varargin)
+function [reduction] = run_umap_lite(varargin)
 
-[args, argued]=UmapUtil.Initialize(varargin{:});
-args=UmapUtil.CheckArgs(args, argued);
+[args, argued] = UmapUtil.Initialize(varargin{:});
+args = UmapUtil.CheckArgs(args, argued);
 %clusterIdentifiers=[];
 %globals=BasicMap.Global;
 %homeFolder=globals.appFolder;
@@ -15,25 +15,25 @@ args=UmapUtil.CheckArgs(args, argued);
 % reductions.load(fullfile(homeFolder, 'reductions.mat'));
 % args.reduction=reductions.newId;
 
-reduction=[];
-umap=[];
+reduction = [];
+umap = [];
 
 
 %csv_file_or_data=args.csv_file_or_data;
 save_template_file = args.save_template_file;
-beQuiet=true;
-extras=UMAP_extra_results;
+beQuiet = true;
+extras = UMAP_extra_results;
 
 % args=UmapUtil.RelocateExamples(args);
 
-csv_file_or_data=args.csv_file_or_data;
+csv_file_or_data = args.csv_file_or_data;
 
-inData=csv_file_or_data;
-parameter_names=args.parameter_names;
+inData = csv_file_or_data;
+parameter_names = args.parameter_names;
 
-template_file=args.template_file;
-[~, ~]=size(inData);
- 
+template_file = args.template_file;
+[~, ~] = size(inData);
+
 % sCols=num2str(nCols);
 % if nRows*nCols<15
 %     if length(inData)==1
@@ -59,7 +59,7 @@ template_file=args.template_file;
 % if strcmpi(args.label_column, 'end')
 %     args.label_column=nCols;
 % end
-% if args.label_column>0 
+% if args.label_column>0
 %     if  args.label_column>nCols
 %         % msg(Html.WrapHr(['The input data has ' sCols ' columns ...<br>'...
 %         %     'THUS the label_column must be >=1 and <= ' sCols]));
@@ -70,12 +70,12 @@ template_file=args.template_file;
 %     if args.matchingTestLabels
 %         testSetLabels=inData(:, args.label_column);
 %     end
-%     % if ~isempty(template_file) 
+%     % if ~isempty(template_file)
 %     %     if args.label_column<=length(parameter_names)
 %     %         parameter_names(args.label_column)=[];
 %     %     end
 %     % else
-%     %     labels=inData(:, args.label_column);        
+%     %     labels=inData(:, args.label_column);
 %     % end
 %     inData(:, args.label_column)=[];
 % else
@@ -86,7 +86,7 @@ template_file=args.template_file;
 umap = UMAP;
 
 % isSupervising=isprop(umap, 'supervisors') && ~isempty(umap.supervisors);
-% 
+%
 % if isSupervising
 %     if args.n_components==2
 %         progressMatchType=0;
@@ -110,20 +110,20 @@ umap = UMAP;
 % end
 
 UmapUtil.SetArgsTemplateCanOverride(umap, args, argued, parameter_names);
-umap.n_epochs=args.n_epochs;
-umap.nn_descent_min_rows=args.nn_descent_min_rows;
-umap.nn_descent_min_cols=args.nn_descent_min_cols;
-umap.nn_descent_max_neighbors=args.nn_descent_max_neighbors;
-umap.nn_descent_transform_queue_size=args.nn_descent_transform_queue_size;
+umap.n_epochs = args.n_epochs;
+umap.nn_descent_min_rows = args.nn_descent_min_rows;
+umap.nn_descent_min_cols = args.nn_descent_min_cols;
+umap.nn_descent_max_neighbors = args.nn_descent_max_neighbors;
+umap.nn_descent_transform_queue_size = args.nn_descent_transform_queue_size;
 
-        
+
 %method=umap.setMethod(args.method);
-umap.verbose=~beQuiet;
-umap.randomize=args.randomize;
+umap.verbose = ~beQuiet;
+umap.randomize = args.randomize;
 
 
 %labelMap=[];
-nParams=length(parameter_names);
+nParams = length(parameter_names);
 
 % good=nParams==0||nParams==nCols || (args.label_column>0 &&...
 %     (nParams==nCols-1 || nParams==nCols));
@@ -141,7 +141,7 @@ nParams=length(parameter_names);
 %     end
 %     % msg(Html.WrapHr(preAmble));
 %     % assert(nParams==0||nParams==nCols || (args.label_column>0 &&...
-%     %     (nParams==nCols-1 || nParams==nCols)), preAmble);    
+%     %     (nParams==nCols-1 || nParams==nCols)), preAmble);
 % end
 
 % if ~isempty(newSubsetIdxs)
@@ -158,7 +158,7 @@ nParams=length(parameter_names);
 %             'THUS the label_column must be >=1 and <= ' sCols]));
 %         assert(args.label_column>0 && args.label_column<=nCols, [...
 %             'label_column must be >=1 and <= ' sCols]);
-% 
+%
 %     end
 %     nLabels=length(unique(labels));
 %     if nLabels > .5*nRows
@@ -179,12 +179,12 @@ nParams=length(parameter_names);
 % end
 
 
-% if args.label_column>0 
+% if args.label_column>0
 %     if isSupervising && ~isempty(args.label_file) && isempty(testSetLabels)
 %         if args.label_column==0
 %             warning(['label_file has no effect when reducing '...
 %                 'with supervised template without test set labels']);
-%         elseif isempty(find(args.match_scenarios==1, 1)) .... 
+%         elseif isempty(find(args.match_scenarios==1, 1)) ....
 %                 && isempty(find(args.match_scenarios>2,1))
 %             warning(['test set labels only needed for umap'...
 %                 ' supervised templates IF specifying '...
@@ -209,7 +209,7 @@ nParams=length(parameter_names);
 %             testSetLabels=LabelBasics.RelabelIfNeedBe(testSetLabels, ...
 %                 sprv.labelMap, labelMap);
 %         end
-% 
+%
 %     end
 % end
 
@@ -246,21 +246,19 @@ nParams=length(parameter_names);
 % info2=['(optimize\_layout method=' method ')'];
 
 
-
-
 %READY TO START REDUCING HiD to LoD!!
 % if isSupervising
 %     args.reductionType=UMAP.REDUCTION_SUPERVISED_TEMPLATE;
-% else    
-    %if isempty(template_file)
-        % if hasLabels
-        %     % args.reductionType=UMAP.REDUCTION_SUPERVISED;
-        % else
-        %     args.reductionType=UMAP.REDUCTION_BASIC;
-        % end
-    %else
-    %    args.reductionType=UMAP.REDUCTION_TEMPLATE;
-    %end
+% else
+%if isempty(template_file)
+% if hasLabels
+%     % args.reductionType=UMAP.REDUCTION_SUPERVISED;
+% else
+%     args.reductionType=UMAP.REDUCTION_BASIC;
+% end
+%else
+%    args.reductionType=UMAP.REDUCTION_TEMPLATE;
+%end
 %end
 %extras.args=args;
 %strReduction=[UmapUtil.GetReductionLongText(args.reductionType) ' reduction'];
@@ -270,13 +268,13 @@ nParams=length(parameter_names);
 % reductions.save;
 
 %    if ~args.python
-            reduction = umap.fit_transform(inData);
-            % assignin("base","xumap",umap);
+reduction = umap.fit_transform(inData);
+% assignin("base","xumap",umap);
 %    end
-    % if ~isempty(umap.supervisors)
-    %     sprv=umap.supervisors;
-    %     sprv.description=args.description;
-    % end
+% if ~isempty(umap.supervisors)
+%     sprv=umap.supervisors;
+%     sprv.description=args.description;
+% end
 
 % if ~isempty(reduction)
 %     testBasicReduction;
@@ -290,10 +288,10 @@ nParams=length(parameter_names);
 % end
 
 % if (nargout>1 || ~isempty(save_template_file)) && ~isempty(reduction)
-% 
+%
 %     umap.prepareForTemplate;
-% 
-% end    
+%
+% end
 
 % if nargout>2 || ~strcmpi(args.cluster_output, 'none')
 %     if nargout<3 && ~strcmpi(args.cluster_output, 'graphic')
@@ -312,5 +310,5 @@ nParams=length(parameter_names);
 %     end
 % end
 %globals.save;
- 
+
 end

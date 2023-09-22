@@ -1,85 +1,86 @@
-function [optimk]=fun_num_clusters(X,varargin)
+function [optimk] = fun_num_clusters(X, varargin)
 %Estimate number of clusters
 p = inputParser;
 defaultType = 'simlr';
-validTypes = {'simlr','soptsc','sc3'};
-checkType = @(x) any(validatestring(x,validTypes));
+validTypes = {'simlr', 'soptsc', 'sc3'};
+checkType = @(x) any(validatestring(x, validTypes));
 
-addRequired(p,'X',@isnumeric);
-addOptional(p,'type',defaultType,checkType)
-parse(p,X,varargin{:})
+addRequired(p, 'X', @isnumeric);
+addOptional(p, 'type', defaultType, checkType)
+parse(p, X, varargin{:})
 
 
-pw1=fileparts(mfilename('fullpath'));
+pw1 = fileparts(mfilename('fullpath'));
 switch p.Results.type
-    case 'simlr'        
-        pth=fullfile(pw1,'+run','external','mt_SIMLR');
+    case 'simlr'
+        pth = fullfile(pw1, '+run', 'external', 'mt_SIMLR');
         if ~(ismcc || isdeployed), addpath(pth); end
-        pth=fullfile(pw1,'+run','external','mt_SIMLR','src');
+        pth = fullfile(pw1, '+run', 'external', 'mt_SIMLR', 'src');
         if ~(ismcc || isdeployed), addpath(pth); end
-        [~, K2] = Estimate_Number_of_Clusters_SIMLR(X',2:10);
-        [~,i]=min(K2);
-        optimk=i+1;
-    case 'soptsc'        
-        pth=fullfile(pw1,'+run','external','mt_SoptSC');
+        [~, K2] = Estimate_Number_of_Clusters_SIMLR(X', 2:10);
+        [~, i] = min(K2);
+        optimk = i + 1;
+    case 'soptsc'
+        pth = fullfile(pw1, '+run', 'external', 'mt_SoptSC');
         if ~(ismcc || isdeployed), addpath(pth); end
-        pth=fullfile(pw1,'+run','external','mt_SoptSC','NNDSVD');
+        pth = fullfile(pw1, '+run', 'external', 'mt_SoptSC', 'NNDSVD');
         if ~(ismcc || isdeployed), addpath(pth); end
-        pth=fullfile(pw1,'+run','external','mt_SoptSC','symnmf2');
+        pth = fullfile(pw1, '+run', 'external', 'mt_SoptSC', 'symnmf2');
         if ~(ismcc || isdeployed), addpath(pth); end
-        
-        realdata = X;
-        realdata = realdata-min(realdata(:));
-        realdata = realdata./max(realdata(:));
 
-        [~,n] = size(realdata);
+        realdata = X;
+        realdata = realdata - min(realdata(:));
+        realdata = realdata ./ max(realdata(:));
+
+        [~, n] = size(realdata);
         for i = 1:n
-            realdata(:,i) = realdata(:,i)/norm(realdata(:,i));
+            realdata(:, i) = realdata(:, i) / norm(realdata(:, i));
         end
         lambda = 0.5;
-        W = SimilarityM(realdata,lambda,X);
+        W = SimilarityM(realdata, lambda, X);
         WB = W;
-        n = size(W,1);
-        D = diag(WB*ones(n,1));
-        Prw = eye(size(W)) - D^(-1/2)*WB*D^(-1/2);
-        if n>=1000
+        n = size(W, 1);
+        D = diag(WB*ones(n, 1));
+        Prw = eye(size(W)) - D^(-1 / 2) * WB * D^(-1 / 2);
+        if n >= 1000
             No_eigs = 100;
-            all_eigs = real(eigs(Prw,No_eigs,'sm'));
+            all_eigs = real(eigs(Prw, No_eigs, 'sm'));
         else
             all_eigs = real(eig(Prw));
         end
 
-        ZZ = sort(abs(real(all_eigs)));        
-        No_cluster1 = length(find(ZZ<=0.01));
+        ZZ = sort(abs(real(all_eigs)));
+        No_cluster1 = length(find(ZZ <= 0.01));
 
         % Determinning the number of clusters
         eigenvalues = [];
         %if isempty(optimk)
-            [~,No_cluster] = Num_cluster(W,No_cluster1);
-            optimk = No_cluster;
+        [~, No_cluster] = Num_cluster(W, No_cluster1);
+        optimk = No_cluster;
         %end
     case 'sc3'
+
         %% estimate k
         % X=log2(X+1);
-        Dis=squareform(pdist(X'));
-        A=exp(-Dis./max(Dis(:)));   % adjacency matrix
-        xD=diag(sum(A).^-0.5);  % D=diag(sum(A)); % d(i) the degree of node i
-        xA=xD*A*xD;             % normalized adjacenty matrix
-        L=eye(size(A,1))-xA;    % also L=xD*(D-A)*xD 
+        Dis = squareform(pdist(X'));
+        A = exp(-Dis./max(Dis(:))); % adjacency matrix
+        xD = diag(sum(A).^-0.5); % D=diag(sum(A)); % d(i) the degree of node i
+        xA = xD * A * xD; % normalized adjacenty matrix
+        L = eye(size(A, 1)) - xA; % also L=xD*(D-A)*xD
 
         % see https://people.orie.cornell.edu/dpw/orie6334/lecture7.pdf
         % see https://en.wikipedia.org/wiki/Laplacian_matrix#Symmetric_normalized_Laplacian_2
 
-        [V,D]=eig(L);
-        [~,ind] = sort(diag(D));
-        Ds = D(ind,ind);
-        Vs = V(:,ind);
+        [V, D] = eig(L);
+        [~, ind] = sort(diag(D));
+        Ds = D(ind, ind);
+        Vs = V(:, ind);
 
-        clust=zeros(size(Vs,1),6);
-        for i=1:6
-            clust(:,i) = kmeans(Vs,i,'emptyaction','singleton','replicate',5);
+        clust = zeros(size(Vs, 1), 6);
+        for i = 1:6
+            clust(:, i) = kmeans(Vs, i, 'emptyaction', 'singleton', 'replicate', 5);
         end
-        va=evalclusters(Vs,clust,'CalinskiHarabasz');
-        optimk=va.OptimalK;
-        
+        va = evalclusters(Vs, clust, 'CalinskiHarabasz');
+        optimk = va.OptimalK;
+
 end

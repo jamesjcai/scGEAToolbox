@@ -45,21 +45,21 @@ n = size(A, 1); % number of nodes in the graph
 P = zeros(n);
 for i = 1:n
     % get neighbors of current node
-    nbrs = find(A(i,:));
+    nbrs = find(A(i, :));
     % compute unnormalized transition probabilities
     p_i = zeros(1, n);
-    p_i(nbrs) = 1./length(nbrs);
+    p_i(nbrs) = 1 ./ length(nbrs);
     for j = nbrs
         % compute second-order transition probabilities
-        nbrs_j = find(A(j,:));
+        nbrs_j = find(A(j, :));
         p_ij = zeros(1, n);
-        p_ij(nbrs_j) = q./length(nbrs_j);
+        p_ij(nbrs_j) = q ./ length(nbrs_j);
         p_ij(i) = p;
         % combine first- and second-order probabilities
         p_i = p_i + p_ij;
     end
     % normalize probabilities
-    P(i,:) = p_i./sum(p_i);
+    P(i, :) = p_i ./ sum(p_i);
 end
 end
 
@@ -85,10 +85,10 @@ for i = 1:n
         walk(1) = i;
         for k = 2:walk_length
             % sample next node from transition probabilities
-            p_i = P(walk(k-1),:);
+            p_i = P(walk(k-1), :);
             walk(k) = randsample(n, 1, true, p_i);
         end
-        walks{(i-1)*walks_per_node+j} = walk;
+        walks{(i - 1)*walks_per_node+j} = walk;
     end
 end
 end
@@ -112,7 +112,7 @@ all_nodes = [walks{:}];
 counts = histc(all_nodes, 1:n);
 
 % compute unigram distribution
-P = counts./sum(counts);
+P = counts ./ sum(counts);
 
 % initialize embeddings
 W = randn(d, n);
@@ -132,12 +132,12 @@ for i = 1:numel(walks)
                 continue;
             end
             % compute score for context node
-            score = W(:,context(k))'*W(:,walk(j));
+            score = W(:, context(k))' * W(:, walk(j));
             % compute error
-            err = 1./(1 + exp(-score)) - (k == 1);
+            err = 1 ./ (1 + exp(-score)) - (k == 1);
             % update embeddings
-            W(:,walk(j)) = W(:,walk(j)) + 0.01*err*W(:,context(k));
-            W(:,context(k)) = W(:,context(k)) + 0.01*err*W(:,walk(j));
+            W(:, walk(j)) = W(:, walk(j)) + 0.01 * err * W(:, context(k));
+            W(:, context(k)) = W(:, context(k)) + 0.01 * err * W(:, walk(j));
         end
     end
 end

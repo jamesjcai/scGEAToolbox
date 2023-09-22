@@ -1,4 +1,4 @@
-function vals = mask(X,W)
+function vals = mask(X, W)
 %MASK Extract values as specified by a mask tensor.
 %
 %   V = MASK(X,W) extracts the values in X that correspond to nonzero
@@ -15,5 +15,5 @@ end
 wsubs = find(W);
 
 % Extract values from X
-idx = tt_sub2ind(X.size,wsubs);
+idx = tt_sub2ind(X.size, wsubs);
 vals = X.data(idx);

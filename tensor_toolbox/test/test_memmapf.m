@@ -1,13 +1,13 @@
 rng('default')
-randData = rand([5,5,3],'single');
-fileID = fopen('mybinary1.bin','w');
-fwrite(fileID,randData,'single');
+randData = rand([5, 5, 3], 'single');
+fileID = fopen('mybinary1.bin', 'w');
+fwrite(fileID, randData, 'single');
 fclose(fileID);
 
 %%
 
-m = memmapfile('mybinary1.bin',...
-               'Format',{'single',[5 5 3],'x'});
+m = memmapfile('mybinary1.bin', ...
+    'Format', {'single', [5, 5, 3], 'x'});
 A = m.Data.x;
 
 m.Writable = true;

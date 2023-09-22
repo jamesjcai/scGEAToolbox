@@ -1,4 +1,4 @@
-function [aggR,pval] = SIMLR_Feature_Ranking(A,X)
+function [aggR, pval] = SIMLR_Feature_Ranking(A, X)
 
 %%% A is the similarity matrix by SIMLR
 %%% X is the data of size nxp
@@ -9,15 +9,15 @@ for i = 1:100
 
     index = randperm(length(A));
     index = index(1:round(length(A)*0.9));
-    Ai = A(index,index);
-    Xi = X(index,:);
-    yscore(i,:) = (LaplacianScore(Xi,Ai))';
+    Ai = A(index, index);
+    Xi = X(index, :);
+    yscore(i, :) = (LaplacianScore(Xi, Ai))';
 end
 
-yscore = 1-yscore;
-glist = (yscore' - min(yscore(:))+eps)/(max(yscore(:))-min(yscore(:))+eps);
+yscore = 1 - yscore;
+glist = (yscore' - min(yscore(:)) + eps) / (max(yscore(:)) - min(yscore(:)) + eps);
 [~, pval, ~] = aggregateRanks(glist);
-[~,aggR] = sort(pval);
+[~, aggR] = sort(pval);
 pval = pval(aggR);
 
 end
@@ -103,15 +103,15 @@ function [aggR, pval, rowNames] = aggregateRanks(R, N, complete, topCutoff)
 
 rowNames = [];
 
-if ~exist('R','var') || isempty(R)
+if ~exist('R', 'var') || isempty(R)
     error('Input parameter R is missing!');
 end
 
-if ~exist('N','var')
-    N=[];
+if ~exist('N', 'var')
+    N = [];
 end
 
-if ~exist('complete','var') || isempty(complete)
+if ~exist('complete', 'var') || isempty(complete)
     complete = 0;
 end
 
@@ -119,7 +119,7 @@ end
 if iscell(R)
     [rmat, rowNames] = rankMatrix(R, N, complete);
 elseif ismatrix(R)
-    if all(max(R,[],1)<=1) && all(min(R,[],1)>0)
+    if all(max(R, [], 1) <= 1) && all(min(R, [], 1) > 0)
         rmat = R;
     else
         error('Columns of matrix R can only contain numbers from interval (0,1].');
@@ -129,28 +129,27 @@ else
 end
 
 
-
-if ~exist('topCutoff','var') || isempty(topCutoff)
+if ~exist('topCutoff', 'var') || isempty(topCutoff)
     topCutoff = NaN;
 end
 
 pval = NaN;
 
 
-        aggR = rhoScores(rmat, topCutoff);
-        pval = aggR;
-        
+aggR = rhoScores(rmat, topCutoff);
+pval = aggR;
+
 
 end
 
 
 function rho = rhoScores(r, topCutoff)
 %RHOSCORES Compute Rho scores for rank vector
-%   rho = RHOSCORES(r, topCutoff) 
-% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -   
+%   rho = RHOSCORES(r, topCutoff)
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 %   INPUTS:
 %       r           vector of normalized rank values on interval [0,1]
-%       topCutoff   a vector of cutoff values used to limit the number of 
+%       topCutoff   a vector of cutoff values used to limit the number of
 %                   elements in the input lists
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 %   OUTPUTS:
@@ -159,58 +158,58 @@ function rho = rhoScores(r, topCutoff)
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 %   See also CORRECTBETAPVALUES, THRESHOLDBETASCORE, AGGREGATERANKS.
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-%   Copyright (2013) Nejc Ilc <nejc.ilc@gmail.com> 
-%   Based on R package RobustRankAggreg written by Raivo Kolde. 
+%   Copyright (2013) Nejc Ilc <nejc.ilc@gmail.com>
+%   Based on R package RobustRankAggreg written by Raivo Kolde.
 %   Reference:
 %     Kolde, R., Laur, S., Adler, P., & Vilo, J. (2012).
 %     Robust rank aggregation for gene list integration and meta-analysis.
 %     Bioinformatics, 28(4), 573-580
-%   
+%
 %   Revision: 1.0 Date: 2013/05/16
 %--------------------------------------------------------------------------
-    if ~exist('topCutoff','var') || isempty(topCutoff)
-        topCutoff = NaN;
-    end
-    
-    if isvector(r)
-        rows = 1;
-        r = r(:)'; % force row vector form
-    else
-        rows = size(r,1);
-    end
-    
-    rho = nan(rows,1);
-    
-    for rInd = 1:rows
-        r1 = r(rInd,:);
-        
-        if(isnan(topCutoff(1)))
-            x = betaScores(r1);
-            % Correct using Bonferroni method.
-            rho(rInd) = correctBetaPvalues( min(x), sum(~isnan(x)));
-        else            
-            r1 = r1(~isnan(r1));
-            r1(r1 == 1) = nan;
-            % Consider thresholds in topCutoff vector.
-            x = thresholdBetaScore(r1,[],[],topCutoff);
-            % Correct using Bonferroni method.
-            rho(rInd) = correctBetaPvalues( min(x), length(r1));
-        end
-    end
+if ~exist('topCutoff', 'var') || isempty(topCutoff)
+    topCutoff = NaN;
 end
 
-function pval = correctBetaPvalues(p,k)
+if isvector(r)
+    rows = 1;
+    r = r(:)'; % force row vector form
+else
+    rows = size(r, 1);
+end
+
+rho = nan(rows, 1);
+
+for rInd = 1:rows
+    r1 = r(rInd, :);
+
+    if (isnan(topCutoff(1)))
+        x = betaScores(r1);
+        % Correct using Bonferroni method.
+        rho(rInd) = correctBetaPvalues(min(x), sum(~isnan(x)));
+    else
+        r1 = r1(~isnan(r1));
+        r1(r1 == 1) = nan;
+        % Consider thresholds in topCutoff vector.
+        x = thresholdBetaScore(r1, [], [], topCutoff);
+        % Correct using Bonferroni method.
+        rho(rInd) = correctBetaPvalues(min(x), length(r1));
+    end
+end
+end
+
+function pval = correctBetaPvalues(p, k)
 %CORRECTBETAPVALUES Compute p-values based on Beta distribution
-%   pval = CORRECTBETAPVALUES(p,k) 
+%   pval = CORRECTBETAPVALUES(p,k)
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-%   Copyright (2013) Nejc Ilc <nejc.ilc@gmail.com> 
-%   Based on R package RobustRankAggreg written by Raivo Kolde. 
+%   Copyright (2013) Nejc Ilc <nejc.ilc@gmail.com>
+%   Based on R package RobustRankAggreg written by Raivo Kolde.
 %   Reference:
 %     Kolde, R., Laur, S., Adler, P., & Vilo, J. (2012).
 %     Robust rank aggregation for gene list integration and meta-analysis.
 %     Bioinformatics, 28(4), 573-580
-%   
+%
 %   Revision: 1.0 Date: 2013/05/16
 %--------------------------------------------------------------------------
-    pval = betacdf(p,1,k);
+pval = betacdf(p, 1, k);
 end

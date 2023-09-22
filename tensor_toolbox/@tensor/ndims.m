@@ -13,5 +13,4 @@ function n = ndims(t)
 %Tensor Toolbox for MATLAB: <a href="https://www.tensortoolbox.org">www.tensortoolbox.org</a>
 
 
-
 n = numel(t.size);

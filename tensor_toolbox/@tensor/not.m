@@ -6,5 +6,4 @@ function B = not(A)
 %Tensor Toolbox for MATLAB: <a href="https://www.tensortoolbox.org">www.tensortoolbox.org</a>
 
 
-
 B = tensor(not(A.data), size(A));

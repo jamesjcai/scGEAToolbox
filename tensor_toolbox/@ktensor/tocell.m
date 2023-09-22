@@ -1,4 +1,4 @@
-function U = tocell(X,N)
+function U = tocell(X, N)
 %TOCELL Convert X to a cell array.
 %
 %   TOCELL(X) converts X to a cell array, evenly distributing the
@@ -16,24 +16,22 @@ function U = tocell(X,N)
 %Tensor Toolbox for MATLAB: <a href="https://www.tensortoolbox.org">www.tensortoolbox.org</a>
 
 
-if exist('N','var')
-    X = normalize(X,N);
+if exist('N', 'var')
+    X = normalize(X, N);
     U = X.u;
     return;
 end
 
-if isequal(X.lambda,ones(size(X.lambda)))
+if isequal(X.lambda, ones(size(X.lambda)))
     U = X.u;
     return;
 end
 
 lsgn = sign(X.lambda);
-lsplit = nthroot(abs(X.lambda),ndims(X));
+lsplit = nthroot(abs(X.lambda), ndims(X));
 U = X.u;
 U{1} = U{1} * diag(lsgn);
 D = diag(lsplit);
 for n = 1:ndims(X)
     U{n} = U{n} * D;
 end
-        
-

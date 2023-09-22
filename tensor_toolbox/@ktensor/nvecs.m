@@ -1,4 +1,4 @@
-function u = nvecs(X,n,r,opts)
+function u = nvecs(X, n, r, opts)
 %NVECS Compute the leading mode-n vectors for a ktensor.
 %
 %   U = NVECS(X,N,R) computes the R leading eigenvalues of Xn*Xn'
@@ -27,11 +27,11 @@ function u = nvecs(X,n,r,opts)
 %   OPTS.flipsign: make each column's largest element positive [true]
 %
 
-if ~exist('opts','var')
+if ~exist('opts', 'var')
     opts = struct;
 end
 
-if isfield(opts,'eigsopts')
+if isfield(opts, 'eigsopts')
     eigsopts = opts.eigsopts;
 else
     eigsopts.disp = 0;
@@ -47,20 +47,20 @@ end
 % Compute Xn * Xn'
 Y = X.u{n} * M * X.u{n}';
 
-[u,~] = eigs(Y, r, 'LM', eigsopts);
+[u, ~] = eigs(Y, r, 'LM', eigsopts);
 
-if isfield(opts,'flipsign') 
+if isfield(opts, 'flipsign')
     flipsign = opts.flipsign;
 else
     flipsign = true;
 end
-    
+
 if flipsign
     % Make the largest magnitude element be positive
-    [~,loc] = max(abs(u));
+    [~, loc] = max(abs(u));
     for i = 1:r
-        if u(loc(i),i) < 0
-            u(:,i) = u(:,i) * -1;
+        if u(loc(i), i) < 0
+            u(:, i) = u(:, i) * -1;
         end
     end
 end

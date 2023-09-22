@@ -5,11 +5,10 @@
 %
 % Copyright (c) 1998-2011 by Alexander Strehl
 
-function s = simbjac(a,b)
+function s = simbjac(a, b)
 
-if ~exist('b','var')
-  b = a;
+if ~exist('b', 'var')
+    b = a;
 end
 
-s = simxjac(a>0,b>0);
-
+s = simxjac(a > 0, b > 0);

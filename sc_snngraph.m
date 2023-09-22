@@ -12,10 +12,10 @@ function [A] = sc_snngraph(s)
 % https://github.com/liurui39660/SNNDPC/tree/MatlabImplementation/src/m
 %{
 A=[   0   1   1   1   0
-   1   0   1   1   0
-   1   1   0   1   1
-   1   1   1   0   1
-   0   0   1   1   0];
+1   0   1   1   0
+1   1   0   1   1
+1   1   1   0   1
+0   0   1   1   0];
 %}
 A = sc_knngraph(s, 5);
 

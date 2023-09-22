@@ -6,5 +6,4 @@ function display(t)
 %Tensor Toolbox for MATLAB: <a href="https://www.tensortoolbox.org">www.tensortoolbox.org</a>
 
 
-
-disp(t,inputname(1));
+disp(t, inputname(1));

@@ -1,4 +1,4 @@
-function z=lfknots(fit,varargin)
+function z = lfknots(fit, varargin)
 %
 % very spartan version of the S lfknots function...
 %

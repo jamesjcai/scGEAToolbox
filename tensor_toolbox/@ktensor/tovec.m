@@ -1,8 +1,8 @@
-function x = tovec(K,lambdaflag)
+function x = tovec(K, lambdaflag)
 %TOVEC Convert Ktensor to vector.
 %
 %   V = TOVEC(K) converts the Ktensor to a column vector of length
-%   sum(size(K)+1)*ncomponents(K). The format is 
+%   sum(size(K)+1)*ncomponents(K). The format is
 %      [ K.lambda; K.U{1}(:); K.U{2}(:); ... ]
 %
 %   V = TOVEC(K,false) ignores lambda in the conversion, so the vector V is
@@ -23,7 +23,7 @@ function x = tovec(K,lambdaflag)
 %
 %Tensor Toolbox for MATLAB: <a href="https://www.tensortoolbox.org">www.tensortoolbox.org</a>
 
-if ~exist('lambdaflag','var')
+if ~exist('lambdaflag', 'var')
     lambdaflag = true;
 end
 

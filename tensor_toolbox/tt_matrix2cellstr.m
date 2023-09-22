@@ -4,14 +4,14 @@ function S = tt_matrix2cellstr(~)
 %Tensor Toolbox for MATLAB: <a href="https://www.tensortoolbox.org">www.tensortoolbox.org</a>
 
 
-fmt = get(0,'FormatSpacing');
+fmt = get(0, 'FormatSpacing');
 format compact
 S = evalc('disp(M)');
 if isempty(S)
     S = {''};
     return;
 end
-set(0,'FormatSpacing',fmt)
-S = textscan(S,'%s','delimiter','\n','whitespace','');
+set(0, 'FormatSpacing', fmt)
+S = textscan(S, '%s', 'delimiter', '\n', 'whitespace', '');
 S = S{1};
 end

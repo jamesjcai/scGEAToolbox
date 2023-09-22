@@ -1,4 +1,4 @@
-function [res_x, idx_of_result] = knee_pt(y,x,just_return)
+function [res_x, idx_of_result] = knee_pt(y, x, just_return)
 %function [res_x, idx_of_result] = knee_pt(y,x,just_return)
 %Returns the x-location of a (single) knee of curve y=f(x)
 %  (this is useful for e.g. figuring out where the eigenvalues peter out)
@@ -39,7 +39,7 @@ function [res_x, idx_of_result] = knee_pt(y,x,just_return)
 %
 %
 %Example: drawing the curve for the submission
-% x=.1:.1:3; y = exp(-x)./sqrt(x); [i,ix]=knee_pt(y,x); 
+% x=.1:.1:3; y = exp(-x)./sqrt(x); [i,ix]=knee_pt(y,x);
 % figure;plot(x,y);
 % rectangle('curvature',[1,1],'position',[x(ix)-.1,y(ix)-.1,.2,.2])
 % axis('square');
@@ -49,9 +49,8 @@ function [res_x, idx_of_result] = knee_pt(y,x,just_return)
 %be corrected with the confidence interval (i.e. a best-line fit to 2
 %points has a zero per-point fit error which is kind-a wrong).
 %Practially, I found that it doesn't make much difference.
-% 
+%
 %dk /2012
-
 
 
 %{
@@ -75,7 +74,7 @@ knee_pt([10:-1:1])  %degenerate condition -- returns location of the first "knee
 
 
 %set internal operation flags
-use_absolute_dev_p = true;  %ow quadratic
+use_absolute_dev_p = true; %ow quadratic
 
 %deal with issuing or not not issuing errors
 issue_errors_p = true;
@@ -96,11 +95,11 @@ if (isempty(y))
 end
 
 %another check
-if (sum(size(y)==1)~=1)
+if (sum(size(y) == 1) ~= 1)
     if (issue_errors_p)
         error('knee_pt: y must be a vector');
     end
-    
+
     return;
 end
 
@@ -115,11 +114,11 @@ else
 end
 
 %more checking
-if (ndims(x)~= ndims(y) || ~all(size(x) == size(y)))
+if (ndims(x) ~= ndims(y) || ~all(size(x) == size(y)))
     if (issue_errors_p)
         error('knee_pt: y and x must have the same dimensions');
     end
-    
+
     return;
 end
 
@@ -132,8 +131,8 @@ if (length(y) < 3)
 end
 
 %make sure the x and y are sorted in increasing X-order
-if (nargin > 1 && any(diff(x)<0))
-    [~,idx]=sort(x);
+if (nargin > 1 && any(diff(x) < 0))
+    [~, idx] = sort(x);
     y = y(idx);
     x = x(idx);
 else
@@ -145,40 +144,40 @@ end
 %
 %figure out the m and b (in the y=mx+b sense) for the "left-of-knee"
 sigma_xy = cumsum(x.*y);
-sigma_x  = cumsum(x);
-sigma_y  = cumsum(y);
+sigma_x = cumsum(x);
+sigma_y = cumsum(y);
 sigma_xx = cumsum(x.*x);
 n        = (1:length(y))';
-det = n.*sigma_xx-sigma_x.*sigma_x;
-mfwd = (n.*sigma_xy-sigma_x.*sigma_y)./det;
-bfwd = -(sigma_x.*sigma_xy-sigma_xx.*sigma_y) ./det;
+det = n .* sigma_xx - sigma_x .* sigma_x;
+mfwd = (n .* sigma_xy - sigma_x .* sigma_y) ./ det;
+bfwd = -(sigma_x .* sigma_xy - sigma_xx .* sigma_y) ./ det;
 
 %figure out the m and b (in the y=mx+b sense) for the "right-of-knee"
 sigma_xy = cumsum(x(end:-1:1).*y(end:-1:1));
-sigma_x  = cumsum(x(end:-1:1));
-sigma_y  = cumsum(y(end:-1:1));
+sigma_x = cumsum(x(end:-1:1));
+sigma_y = cumsum(y(end:-1:1));
 sigma_xx = cumsum(x(end:-1:1).*x(end:-1:1));
 n        = (1:length(y))';
-det = n.*sigma_xx-sigma_x.*sigma_x;
-mbck = flipud((n.*sigma_xy-sigma_x.*sigma_y)./det);
-bbck = flipud(-(sigma_x.*sigma_xy-sigma_xx.*sigma_y) ./det);
+det = n .* sigma_xx - sigma_x .* sigma_x;
+mbck = flipud((n .* sigma_xy - sigma_x .* sigma_y)./det);
+bbck = flipud(-(sigma_x .* sigma_xy - sigma_xx .* sigma_y)./det);
 
 %figure out the sum of per-point errors for left- and right- of-knee fits
 error_curve = nan(size(y));
-for breakpt = 2:length(y)-1
-    delsfwd = (mfwd(breakpt).*x(1:breakpt)+bfwd(breakpt))-y(1:breakpt);
-    delsbck = (mbck(breakpt).*x(breakpt:end)+bbck(breakpt))-y(breakpt:end);
+for breakpt = 2:length(y) - 1
+    delsfwd = (mfwd(breakpt) .* x(1:breakpt) + bfwd(breakpt)) - y(1:breakpt);
+    delsbck = (mbck(breakpt) .* x(breakpt:end) + bbck(breakpt)) - y(breakpt:end);
     %disp([sum(abs(delsfwd))/length(delsfwd), sum(abs(delsbck))/length(delsbck)])
     if (use_absolute_dev_p)
         % error_curve(breakpt) = sum(abs(delsfwd))/sqrt(length(delsfwd)) + sum(abs(delsbck))/sqrt(length(delsbck));
-        error_curve(breakpt) = sum(abs(delsfwd))+ sum(abs(delsbck));
+        error_curve(breakpt) = sum(abs(delsfwd)) + sum(abs(delsbck));
     else
         error_curve(breakpt) = sqrt(sum(delsfwd.*delsfwd)) + sqrt(sum(delsbck.*delsbck));
     end
 end
 
 %find location of the min of the error curve
-[~,loc] = min(error_curve);
+[~, loc] = min(error_curve);
 res_x = x(loc);
 idx_of_result = idx(loc);
 end

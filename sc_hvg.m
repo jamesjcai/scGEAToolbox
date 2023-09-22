@@ -162,72 +162,72 @@ end
         else
             h.MarkerFaceAlpha = h.MarkerFaceAlpha - 0.1;
         end
-    end
-
-    function HighlightGenes(~, ~)
-        %h.MarkerIndices=idx20;
-        k = gui.i_inputnumk(200, 10, 2000);
-        if isempty(k), return; end
-        idx = zeros(1, length(hvgidx));
-        idx(hvgidx(1:k)) = 1;
-        h.BrushData = idx;
-        % datatip(h, 'DataIndex', idx20);
-        %h2=scatter3(x(idx20),y(idx20),z(idx20),'rx');  % 'filled','MarkerFaceAlpha',.5);
-    end
-
-    function ExportTable(~, ~)
-        gui.i_exporttable(T, true, 'T');
-    end
-
-    function ExportGeneNames(~, ~)
-        ptsSelected = logical(h.BrushData.');
-        if ~any(ptsSelected)
-            warndlg("No gene is selected.");
-            return;
-        end
-        fprintf('%d genes are selected.\n', sum(ptsSelected));
-
-        labels = {'Save gene names to variable:'};
-        vars = {'g'};
-        values = {g(ptsSelected)};
-        export2wsdlg(labels, vars, values, ...
-            'Save Data to Workspace');
-    end
-
-    function EnrichrHVGs(~, ~)
-        ptsSelected = logical(h.BrushData.');
-        if ~any(ptsSelected)
-            warndlg("No gene is selected.");
-            return;
-        end
-        fprintf('%d genes are selected.\n', sum(ptsSelected));
-
-        tgenes = g(ptsSelected);
-        answer = gui.timeoutdlg(@(x){questdlg('Which analysis?', '', ...
-            'Enrichr', 'GOrilla', 'Enrichr+GOrilla', 'Enrichr')}, 15);
-        if isempty(answer), return; end
-        switch answer
-            case 'Enrichr'
-                run.web_Enrichr(tgenes, length(tgenes));
-            case 'GOrilla'
-                run.web_GOrilla(tgenes);
-            case 'Enrichr+GOrilla'
-                run.web_Enrichr(tgenes, length(tgenes));
-                run.web_GOrilla(tgenes);
-            otherwise
-                return;
-        end
-
-    end
-
-
-% Highly variable genes (HVG) is based on the assumption that genes with
-% high variance relative to their mean expression are due to biological
-% effects rather than just technical noise. The method seeks to identify
-% genes that have a higher variability than expected by considering the
-% relationship between variance and mean expression. This relationship is
-% difficult to fit, and in practice genes are ranked by their distance
-% from a moving median (Kolodziejczyk et al., 2015) or another statistic
-% derived from variance is used, e.g. the squared coefficient of variation
-% (Brennecke et al. (2013)).
 end
+
+        function HighlightGenes(~, ~)
+            %h.MarkerIndices=idx20;
+            k = gui.i_inputnumk(200, 10, 2000);
+            if isempty(k), return; end
+            idx = zeros(1, length(hvgidx));
+            idx(hvgidx(1:k)) = 1;
+            h.BrushData = idx;
+            % datatip(h, 'DataIndex', idx20);
+            %h2=scatter3(x(idx20),y(idx20),z(idx20),'rx');  % 'filled','MarkerFaceAlpha',.5);
+    end
+
+            function ExportTable(~, ~)
+                gui.i_exporttable(T, true, 'T');
+        end
+
+                function ExportGeneNames(~, ~)
+                    ptsSelected = logical(h.BrushData.');
+                    if ~any(ptsSelected)
+                        warndlg("No gene is selected.");
+                        return;
+                    end
+                    fprintf('%d genes are selected.\n', sum(ptsSelected));
+
+                    labels = {'Save gene names to variable:'};
+                    vars = {'g'};
+                    values = {g(ptsSelected)};
+                    export2wsdlg(labels, vars, values, ...
+                        'Save Data to Workspace');
+            end
+
+                    function EnrichrHVGs(~, ~)
+                        ptsSelected = logical(h.BrushData.');
+                        if ~any(ptsSelected)
+                            warndlg("No gene is selected.");
+                            return;
+                        end
+                        fprintf('%d genes are selected.\n', sum(ptsSelected));
+
+                        tgenes = g(ptsSelected);
+                        answer = gui.timeoutdlg(@(x){questdlg('Which analysis?', '', ...
+                            'Enrichr', 'GOrilla', 'Enrichr+GOrilla', 'Enrichr')}, 15);
+                        if isempty(answer), return; end
+                        switch answer
+                            case 'Enrichr'
+                                run.web_Enrichr(tgenes, length(tgenes));
+                            case 'GOrilla'
+                                run.web_GOrilla(tgenes);
+                            case 'Enrichr+GOrilla'
+                                run.web_Enrichr(tgenes, length(tgenes));
+                                run.web_GOrilla(tgenes);
+                            otherwise
+                                return;
+                        end
+
+                end
+
+
+                    % Highly variable genes (HVG) is based on the assumption that genes with
+                    % high variance relative to their mean expression are due to biological
+                    % effects rather than just technical noise. The method seeks to identify
+                    % genes that have a higher variability than expected by considering the
+                    % relationship between variance and mean expression. This relationship is
+                    % difficult to fit, and in practice genes are ranked by their distance
+                    % from a moving median (Kolodziejczyk et al., 2015) or another statistic
+                    % derived from variance is used, e.g. the squared coefficient of variation
+                    % (Brennecke et al. (2013)).
+                end

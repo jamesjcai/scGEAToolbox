@@ -1,4 +1,4 @@
-function Z = le(X,Y)
+function Z = le(X, Y)
 %LE Less than or equal (<=) for tensor.
 %
 %   See also TENSOR.
@@ -6,5 +6,4 @@ function Z = le(X,Y)
 %Tensor Toolbox for MATLAB: <a href="https://www.tensortoolbox.org">www.tensortoolbox.org</a>
 
 
-
-Z = tenfun(@le,X,Y);
+Z = tenfun(@le, X, Y);

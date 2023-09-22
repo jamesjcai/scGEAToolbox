@@ -41,61 +41,63 @@ function [y, se] = predict(varargin)
 %
 %  Author: Catherine Loader.
 
-if (nargin<1)
+if (nargin < 1)
     error('predict requires fit argument');
 end
 
 fit = varargin{1};
 
-if (nargin==1) x = 'fitp'; else x = varargin{2}; end
+if (nargin == 1) x = 'fitp';
+else x = varargin{2};
+end
 
 band = 'n';
 what = 'coef';
 rest = 'none';
 dir  = 0;
 level = 0.95;
-d = size(fit.data.x,2);
-kap = [zeros(1,d) 1];
+d = size(fit.data.x, 2);
+kap = [zeros(1, d), 1];
 
 na = 3;
 while na <= nargin
-  inc = 0;
-  if strcmp(varargin{na},'band')
-    band = varargin{na+1};
-    inc = 2;
-  end
-  if strcmp(varargin{na},'what')
-    what = varargin{na+1};
-    inc = 2;
-  end
-  if strcmp(varargin{na},'restyp')
-    rest = varargin{na+1};
-    inc = 2;
-  end
-  if strcmp(varargin{na},'direct')
-    dir = 1;
-    inc = 1;
-  end
-  if strcmp(varargin{na},'kappa')
-    kap = varargin{na+1};
-    inc = 2;
-  end
-  if strcmp(varargin{na},'level')
-    level = varargin{na+1};
-    inc = 2;
-  end
-  if (inc == 0)
-    disp(varargin{na});
-    error('Unknown argument');
-  end
-  na = na+inc;
+    inc = 0;
+    if strcmp(varargin{na}, 'band')
+        band = varargin{na+1};
+        inc = 2;
+    end
+    if strcmp(varargin{na}, 'what')
+        what = varargin{na+1};
+        inc = 2;
+    end
+    if strcmp(varargin{na}, 'restyp')
+        rest = varargin{na+1};
+        inc = 2;
+    end
+    if strcmp(varargin{na}, 'direct')
+        dir = 1;
+        inc = 1;
+    end
+    if strcmp(varargin{na}, 'kappa')
+        kap = varargin{na+1};
+        inc = 2;
+    end
+    if strcmp(varargin{na}, 'level')
+        level = varargin{na+1};
+        inc = 2;
+    end
+    if (inc == 0)
+        disp(varargin{na});
+        error('Unknown argument');
+    end
+    na = na + inc;
 end
 
-[y, se, cb] = mexpp(x,fit,band,what,rest,dir,kap,level);
-if (band=='n')
+[y, se, cb] = mexpp(x, fit, band, what, rest, dir, kap, level);
+if (band == 'n')
     y = y;
 else
-    y = {y se cb};
+    y = {y, se, cb};
 end
 
 return;

@@ -1,4 +1,4 @@
-function vals = mask(X,W)
+function vals = mask(X, W)
 %MASK Extract values as specified by a mask tensor.
 %
 %   V = MASK(X,W) extracts the values in X that correspond to nonzero
@@ -19,16 +19,15 @@ lambda = X.lambda;
 
 % Extract locations of nonzeros in W
 wsubs = find(W);
-vsz = [size(wsubs,1) 1];
+vsz = [size(wsubs, 1), 1];
 
 % Initialize vals array
 vals = zeros(vsz);
 for j = 1:r
     tmpvals = lambda(j) * ones(vsz);
     for k = 1:d
-        akvals = A{k}(wsubs(:,k),j);
+        akvals = A{k}(wsubs(:, k), j);
         tmpvals = tmpvals .* akvals;
     end
     vals = vals + tmpvals;
 end
-

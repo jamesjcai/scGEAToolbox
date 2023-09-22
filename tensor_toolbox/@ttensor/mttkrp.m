@@ -1,4 +1,4 @@
-function V = mttkrp(X,U,n)
+function V = mttkrp(X, U, n)
 %MTTKRP Matricized tensor times Khatri-Rao product for ttensor.
 %
 %   V = MTTKRP(X,U,n) efficiently calculates the matrix product of the
@@ -18,18 +18,18 @@ function V = mttkrp(X,U,n)
 
 N = ndims(X);
 
-if (n==1)
-    R = size(U{2},2);
+if (n == 1)
+    R = size(U{2}, 2);
 else
-    R = size(U{1},2);
+    R = size(U{1}, 2);
 end
 
 % Compute cell array of weights to multiply into core
-W = cell(N,1);
-for i = [1:n-1,n+1:N]
-  W{i} = (X.u{i}' * U{i});
-end    
-Y = mttkrp(X.core,W,n);
+W = cell(N, 1);
+for i = [1:n - 1, n + 1:N]
+    W{i} = (X.u{i}' * U{i});
+end
+Y = mttkrp(X.core, W, n);
 
-% Find each column of answer by multiplying columns of X.u{n} with weights 
+% Find each column of answer by multiplying columns of X.u{n} with weights
 V = X.u{n} * Y;

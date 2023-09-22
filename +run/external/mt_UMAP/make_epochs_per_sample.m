@@ -10,7 +10,7 @@ function result = make_epochs_per_sample(weights)
 %     The weights of how much we wish to sample each 1-simplex.
 %
 % Note that the total number of epochs does not impact this result.
-% 
+%
 % Returns
 % -------
 % result: array of size (n_1_simplices, 1)
@@ -20,10 +20,10 @@ function result = make_epochs_per_sample(weights)
 %   Math Lead & Primary Developer:  Connor Meehan <connor.gw.meehan@gmail.com>
 %   Secondary Developer: Stephen Meehan <swmeehan@stanford.edu>
 %   Bioinformatics Lead:  Wayne Moore <wmoore@stanford.edu>
-%   Provided by the Herzenberg Lab at Stanford University 
+%   Provided by the Herzenberg Lab at Stanford University
 %   License: BSD 3 clause
 %
 
-result = -1*ones(size(weights, 1), 1);
+result = -1 * ones(size(weights, 1), 1);
 L = weights > 0;
-result(L) = max(weights)*ones(sum(L), 1)./weights(L);
+result(L) = max(weights) * ones(sum(L), 1) ./ weights(L);

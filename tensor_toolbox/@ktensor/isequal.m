@@ -1,4 +1,4 @@
-function [tf, tf_lambda, tf_U] = isequal(A,B)
+function [tf, tf_lambda, tf_U] = isequal(A, B)
 %ISEQUAL True if each datum of two ktensor's are numerically equal.
 %
 %   TF = ISEQUAL(A,B) returns true if each factor matrix and the lambda
@@ -18,13 +18,12 @@ tf = false;
 tf_lambda = false;
 tf_U = false;
 
-if ~isa(B,'ktensor')
+if ~isa(B, 'ktensor')
     return;
-end    
+end
 
 tf_lambda = isequal(A.lambda, B.lambda);
 if ncomponents(A) == ncomponents(B)
     tf_U = cellfun(@isequal, A.u, B.u);
 end
 tf = tf_lambda & all(tf_U);
-

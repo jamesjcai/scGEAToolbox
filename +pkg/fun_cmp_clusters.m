@@ -1,34 +1,34 @@
-function [score]=fun_cmp_clusters(true_labels,cluster_labels,varargin)
+function [score] = fun_cmp_clusters(true_labels, cluster_labels, varargin)
 %Compare two clusters
 % https://academic.oup.com/bib/advance-article/doi/10.1093/bib/bby076/5077112
 
 p = inputParser;
 defaultType = 'nmi';
-validTypes = {'nmi','ari','fm','jaccard'};
-checkType = @(x) any(validatestring(x,validTypes));
+validTypes = {'nmi', 'ari', 'fm', 'jaccard'};
+checkType = @(x) any(validatestring(x, validTypes));
 
-addRequired(p,'true_labels',@isnumeric);
-addOptional(p,'type',defaultType,checkType)
-parse(p,true_labels,varargin{:})
+addRequired(p, 'true_labels', @isnumeric);
+addOptional(p, 'type', defaultType, checkType)
+parse(p, true_labels, varargin{:})
 
 
-pw1=fileparts(mfilename('fullpath'));
+pw1 = fileparts(mfilename('fullpath'));
 switch p.Results.type
-    case 'nmi'        
-        pth=fullfile(pw1,'external','mt_SIMLR');
+    case 'nmi'
+        pth = fullfile(pw1, 'external', 'mt_SIMLR');
         if ~(ismcc || isdeployed), addpath(pth); end
-        pth=fullfile(pw1,'external','mt_SIMLR','src');
+        pth = fullfile(pw1, 'external', 'mt_SIMLR', 'src');
         if ~(ismcc || isdeployed), addpath(pth); end
         score = Cal_NMI(true_labels, cluster_labels);
         fprintf('The NMI value is %f\n', score);
     case 'ari'
         % ----
-        pth=fullfile(pw1,'+run','external','mt_SinNLRR');
+        pth = fullfile(pw1, '+run', 'external', 'mt_SinNLRR');
         if ~(ismcc || isdeployed), addpath(pth); end
-        [AR,~,~,~]=Cal_ARI(true_labels, cluster_labels);
-        score=AR;
+        [AR, ~, ~, ~] = Cal_ARI(true_labels, cluster_labels);
+        score = AR;
         fprintf('The ARI value is %f\n', score);
-        
+
     case 'fm'
         % ----
     case 'jaccard'

@@ -1,4 +1,4 @@
-function u = nvecs(X,n,r,opts)
+function u = nvecs(X, n, r, opts)
 %NVECS Compute the leading mode-n vectors for a ttensor.
 %
 %   U = NVECS(X,n,r) computes the r leading eigenvalues of Xn*Xn'
@@ -23,20 +23,20 @@ function u = nvecs(X,n,r,opts)
 %Tensor Toolbox for MATLAB: <a href="https://www.tensortoolbox.org">www.tensortoolbox.org</a>
 
 
-if ~exist('opts','var')
+if ~exist('opts', 'var')
     opts = struct;
 end
 
-if isfield(opts,'eigsopts')
+if isfield(opts, 'eigsopts')
     eigsopts = opts.eigsopts;
 else
     eigsopts.disp = 0;
 end
 
 % Compute inner product of all n-1 factors
-V = cell(ndims(X),1);
+V = cell(ndims(X), 1);
 for i = 1:ndims(X)
-    if i == n 
+    if i == n
         V{i} = X.u{i};
     else
         V{i} = X.u{i}' * X.u{i};
@@ -44,39 +44,39 @@ for i = 1:ndims(X)
 end
 
 % Form H
-H = ttm(X.core,V);
+H = ttm(X.core, V);
 
-if isa(H,'sptensor')
-    HnT = double(sptenmat(H,n,'t'));
+if isa(H, 'sptensor')
+    HnT = double(sptenmat(H, n, 't'));
 else
     H = full(H);
-    HnT = double(tenmat(H,n,'t'));
+    HnT = double(tenmat(H, n, 't'));
 end
 G = X.core;
-if isa(G,'sptensor')
-    GnT = double(sptenmat(G,n,'t'));
+if isa(G, 'sptensor')
+    GnT = double(sptenmat(G, n, 't'));
 else
     G = full(G);
-    GnT = double(tenmat(G,n,'t'));
+    GnT = double(tenmat(G, n, 't'));
 end
 
 % Compute Xn * Xn'
-Y = HnT'*GnT*X.u{n}';
+Y = HnT' * GnT * X.u{n}';
 
-[u,~] = eigs(Y, r, 'LM', eigsopts);
+[u, ~] = eigs(Y, r, 'LM', eigsopts);
 
-if isfield(opts,'flipsign') 
+if isfield(opts, 'flipsign')
     flipsign = opts.flipsign;
 else
     flipsign = true;
 end
-    
+
 if flipsign
     % Make the largest magnitude element be positive
-    [~,loc] = max(abs(u));
+    [~, loc] = max(abs(u));
     for i = 1:r
-        if u(loc(i),i) < 0
-            u(:,i) = u(:,i) * -1;
+        if u(loc(i), i) < 0
+            u(:, i) = u(:, i) * -1;
         end
     end
 end

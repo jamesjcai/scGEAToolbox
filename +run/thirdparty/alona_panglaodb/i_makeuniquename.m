@@ -1,4 +1,4 @@
-function [new]=i_makeuniquename(orig)
+function [new] = i_makeuniquename(orig)
 
 % consider matlab.lang.makeUniqueStrings :)
 new = orig;

@@ -1,12 +1,12 @@
-function [data,answer,dist1]=ReadDataset()
+function [data, answer, dist1] = ReadDataset()
 %Enter file name manually
 % data=load(input('File name of source data? (with quotes)\n'));
 % answer=load(input('File name of ground truth? (with quotes)\n'));
 
 %Load synthetic dataset
-data=load("..\..\res\ClusteringDataset\Synthetic\ShapeSets\pathbased.txt");
-answer=data(:,end);
-data=data(:,1:end-1);
+data = load("..\..\res\ClusteringDataset\Synthetic\ShapeSets\pathbased.txt");
+answer = data(:, end);
+data = data(:, 1:end-1);
 % data=load("..\..\res\ClusteringDataset\Synthetic\DimSetsHigh\dim512.txt");
 % answer=load("..\..\res\ClusteringDataset\Synthetic\DimSetsHigh\dim512.pa");
 % data=load("..\..\res\ClusteringDataset\Synthetic\ASets\a1.txt");
@@ -37,7 +37,7 @@ data=data(:,1:end-1);
 
 %Pre-calculate distance matrix
 %If you applies PCA in previous step, don't perform min-max normalization again.
-data=(data-min(data))./(max(data)-min(data));
-data(isnan(data))=0;
-dist1=squareform(pdist(data));
+data = (data - min(data)) ./ (max(data) - min(data));
+data(isnan(data)) = 0;
+dist1 = squareform(pdist(data));
 end

@@ -1,4 +1,4 @@
-function [P,Uinit,output] = cp_als(X,R,varargin)
+function [P, Uinit, output] = cp_als(X, R, varargin)
 %CP_ALS Compute a CP decomposition of any type of tensor.
 %
 %   M = CP_ALS(X,R) computes an estimate of the best rank-R
@@ -25,7 +25,7 @@ function [P,Uinit,output] = cp_als(X,R,varargin)
 %   fit of 1 is perfect.
 %
 %   NOTE: Updated in various minor ways per work of Phan Anh Huy. See Anh
-%   Huy Phan, Petr Tichavský, Andrzej Cichocki, On Fast Computation of
+%   Huy Phan, Petr TichavskÃ½, Andrzej Cichocki, On Fast Computation of
 %   Gradients for CANDECOMP/PARAFAC Algorithms, arXiv:1204.1586, 2012.
 %
 %   Examples:
@@ -43,20 +43,18 @@ function [P,Uinit,output] = cp_als(X,R,varargin)
 %
 %Tensor Toolbox for MATLAB: <a href="https://www.tensortoolbox.org">www.tensortoolbox.org</a>
 
-
-
 %% Extract number of dimensions and norm of X.
 N = ndims(X);
 normX = norm(X);
 
 %% Set algorithm parameters from input or by using defaults
 params = inputParser;
-params.addParameter('tol',1e-4,@isscalar);
-params.addParameter('maxiters',50,@(x) isscalar(x) & x > 0);
-params.addParameter('dimorder',1:N,@(x) isequal(sort(x),1:N));
-params.addParameter('init', 'random', @(x) (iscell(x) || ismember(x,{'random','nvecs'})));
-params.addParameter('printitn',1,@isscalar);
-params.addParameter('fixsigns',true,@islogical);
+params.addParameter('tol', 1e-4, @isscalar);
+params.addParameter('maxiters', 50, @(x) isscalar(x) & x > 0);
+params.addParameter('dimorder', 1:N, @(x) isequal(sort(x), 1:N));
+params.addParameter('init', 'random', @(x) (iscell(x) || ismember(x, {'random', 'nvecs'})));
+params.addParameter('printitn', 1, @isscalar);
+params.addParameter('fixsigns', true, @islogical);
 params.parse(varargin{:});
 
 %% Copy from params object
@@ -66,32 +64,32 @@ dimorder = params.Results.dimorder;
 init = params.Results.init;
 printitn = params.Results.printitn;
 
-%% Error checking 
+%% Error checking
 
 %% Set up and error checking on initial guess for U.
 if iscell(init)
     Uinit = init;
     if numel(Uinit) ~= N
-        error('OPTS.init does not have %d cells',N);
+        error('OPTS.init does not have %d cells', N);
     end
     for n = dimorder(2:end)
-        if ~isequal(size(Uinit{n}),[size(X,n) R])
-            error('OPTS.init{%d} is the wrong size',n);
+        if ~isequal(size(Uinit{n}), [size(X, n), R])
+            error('OPTS.init{%d} is the wrong size', n);
         end
     end
 else
     % Observe that we don't need to calculate an initial guess for the
     % first index in dimorder because that will be solved for in the first
     % inner iteration.
-    if strcmp(init,'random')
-        Uinit = cell(N,1);
+    if strcmp(init, 'random')
+        Uinit = cell(N, 1);
         for n = dimorder(2:end)
-            Uinit{n} = rand(size(X,n),R);
+            Uinit{n} = rand(size(X, n), R);
         end
-    elseif strcmp(init,'nvecs') || strcmp(init,'eigs') 
-        Uinit = cell(N,1);
+    elseif strcmp(init, 'nvecs') || strcmp(init, 'eigs')
+        Uinit = cell(N, 1);
         for n = dimorder(2:end)
-            Uinit{n} = nvecs(X,n,R);
+            Uinit{n} = nvecs(X, n, R);
         end
     else
         error('The selected initialization method is not supported');
@@ -105,91 +103,90 @@ fit = 0;
 % Store the last MTTKRP result to accelerate fitness computation.
 U_mttkrp = zeros(size(X, dimorder(end)), R);
 
-if printitn>0
-  fprintf('\nCP_ALS:\n');
+if printitn > 0
+    fprintf('\nCP_ALS:\n');
 end
 
 %% Main Loop: Iterate until convergence
 
-if (isa(X,'sptensor') || isa(X,'tensor')) && (exist('cpals_core','file') == 3)
- 
+if (isa(X, 'sptensor') || isa(X, 'tensor')) && (exist('cpals_core', 'file') == 3)
+
     %fprintf('Using C++ code\n');
-    [lambda,U] = cpals_core(X, Uinit, fitchangetol, maxiters, dimorder);
-    P = ktensor(lambda,U);
-    
+    [lambda, U] = cpals_core(X, Uinit, fitchangetol, maxiters, dimorder);
+    P = ktensor(lambda, U);
+
 else
-    
-    UtU = zeros(R,R,N);
+
+    UtU = zeros(R, R, N);
     for n = 1:N
         if ~isempty(U{n})
-            UtU(:,:,n) = U{n}'*U{n};
+            UtU(:, :, n) = U{n}' * U{n};
         end
     end
-    
+
     for iter = 1:maxiters
-        
+
         fitold = fit;
-        
+
         % Iterate over all N modes of the tensor
         for n = dimorder(1:end)
-            
+
             % Calculate Unew = X_(n) * khatrirao(all U except n, 'r').
-            Unew = mttkrp(X,U,n);
+            Unew = mttkrp(X, U, n);
             % Save the last MTTKRP result for fitness check.
             if n == dimorder(end)
-              U_mttkrp = Unew;
+                U_mttkrp = Unew;
             end
-            
+
             % Compute the matrix of coefficients for linear system
-            Y = prod(UtU(:,:,[1:n-1 n+1:N]),3);
+            Y = prod(UtU(:, :, [1:n - 1, n + 1:N]), 3);
             Unew = Unew / Y;
             if issparse(Unew)
-                Unew = full(Unew);   % for the case R=1
+                Unew = full(Unew); % for the case R=1
             end
-                        
+
             % Normalize each vector to prevent singularities in coefmatrix
             if iter == 1
-                lambda = sqrt(sum(Unew.^2,1))'; %2-norm
+                lambda = sqrt(sum(Unew.^2, 1))'; %2-norm
             else
-                lambda = max( max(abs(Unew),[],1), 1 )'; %max-norm
-            end            
-            
+                lambda = max(max(abs(Unew), [], 1), 1)'; %max-norm
+            end
+
             Unew = bsxfun(@rdivide, Unew, lambda');
 
             U{n} = Unew;
-            UtU(:,:,n) = U{n}'*U{n};
+            UtU(:, :, n) = U{n}' * U{n};
         end
-        
-        P = ktensor(lambda,U);
+
+        P = ktensor(lambda, U);
 
         % This is equivalent to innerprod(X,P).
-        iprod = sum(sum(P.U{dimorder(end)} .* U_mttkrp) .* lambda');
+        iprod = sum(sum(P.U{dimorder(end)}.*U_mttkrp).*lambda');
         if normX == 0
             fit = norm(P)^2 - 2 * iprod;
         else
-            normresidual = sqrt( normX^2 + norm(P)^2 - 2 * iprod );
+            normresidual = sqrt(normX^2+norm(P)^2-2*iprod);
             fit = 1 - (normresidual / normX); %fraction explained by model
         end
-        fitchange = abs(fitold - fit);
-        
+        fitchange = abs(fitold-fit);
+
         % Check for convergence
         if (iter > 1) && (fitchange < fitchangetol)
             flag = 0;
         else
             flag = 1;
         end
-        
-        if (mod(iter,printitn)==0) || ((printitn>0) && (flag==0))
+
+        if (mod(iter, printitn) == 0) || ((printitn > 0) && (flag == 0))
             fprintf(' Iter %2d: f = %e f-delta = %7.1e\n', iter, fit, fitchange);
         end
-        
+
         % Check for convergence
         if (flag == 0)
             break;
-        end        
-    end   
+        end
+    end
 end
-
 
 %% Clean up final result
 % Arrange the final tensor so that the columns are normalized.
@@ -199,14 +196,14 @@ if params.Results.fixsigns
     P = fixsigns(P);
 end
 
-if printitn>0
+if printitn > 0
     if normX == 0
-        fit = norm(P)^2 - 2 * innerprod(X,P);
+        fit = norm(P)^2 - 2 * innerprod(X, P);
     else
-        normresidual = sqrt( normX^2 + norm(P)^2 - 2 * innerprod(X,P) );
+        normresidual = sqrt(normX^2+norm(P)^2-2*innerprod(X, P));
         fit = 1 - (normresidual / normX); %fraction explained by model
     end
-  fprintf(' Final f = %e \n', fit);
+    fprintf(' Final f = %e \n', fit);
 end
 
 output = struct;

@@ -48,7 +48,7 @@ distSparse = issparse(D);
 n = size(D, 1);
 
 if (distSparse)
-    for i = 1 : n
+    for i = 1:n
         col_nz = D(:, i);
         col_nz = col_nz(col_nz ~= 0);
         [sorted, ~] = sort(col_nz);
@@ -60,16 +60,16 @@ if (distSparse)
     end
     ls = sqrt(ls)';
     [i, j, s] = find(D);
-    A_s = exp( -s ./ (ls(i).*ls(j)) );
+    A_s = exp(-s./(ls(i) .* ls(j)));
     A = sparse(i, j, A_s, n, n);
 else
-    if (nn > n-1)
-        nn = n-1;
+    if (nn > n - 1)
+        nn = n - 1;
     end
     [sorted, ~] = sort(D);
     ls = sorted(nn+1, :);
     ls = sqrt(ls);
-    A = exp(-D./(ls'*ls));
-        ZERO_DIAG = ~eye(n);
-        A = A .* ZERO_DIAG;
+    A = exp(-D./(ls' * ls));
+    ZERO_DIAG = ~eye(n);
+    A = A .* ZERO_DIAG;
 end

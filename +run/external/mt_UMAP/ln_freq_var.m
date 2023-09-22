@@ -1,4 +1,4 @@
-function elimIdxs = ln_freq_var(labels,mean)
+function elimIdxs = ln_freq_var(labels, mean)
 %LN_FREQ_VAR Given a set of class labels and a desired mean, multiply the
 % incidence of each class label by a frequency sampled from a random
 % variable with a log-normal distribution and the given mean (frequency
@@ -24,29 +24,28 @@ function elimIdxs = ln_freq_var(labels,mean)
 %   AUTHORSHIP
 %   Math Lead & Primary Developer:  Connor Meehan <connor.gw.meehan@gmail.com>
 %   Bioinformatics Lead:  Wayne Moore <wmoore@stanford.edu>
-%   Provided by the Herzenberg Lab at Stanford University 
+%   Provided by the Herzenberg Lab at Stanford University
 %   License: BSD 3 clause
 
 if nargin < 2
-    normMean = -log(2)-1/2; %lognrnd(normMean, 1) has mean 1/2.
+    normMean = -log(2) - 1 / 2; %lognrnd(normMean, 1) has mean 1/2.
 else
-    normMean = log(mean)-1/2; %lognrnd(normMean, 1) has mean "mean".
+    normMean = log(mean) - 1 / 2; %lognrnd(normMean, 1) has mean "mean".
 end
 
-subsetIds=unique(labels);
+subsetIds = unique(labels);
 nIds = length(subsetIds);
-elimIdxs=false(size(labels));
+elimIdxs = false(size(labels));
 
 for i = 1:nIds
     id = subsetIds(i);
-    
+
     freq = min(lognrnd(normMean, 1), 1);
-    idxs= labels==id;
-    nIdxs=nnz(idxs);
-    nEliminating=floor((1-freq)*nIdxs);
+    idxs = labels == id;
+    nIdxs = nnz(idxs);
+    nEliminating = floor((1 - freq)*nIdxs);
     if nEliminating > 0
-        elimIdxs(find(idxs,nEliminating))=true;
+        elimIdxs(find(idxs, nEliminating)) = true;
     end
 end
 end
-

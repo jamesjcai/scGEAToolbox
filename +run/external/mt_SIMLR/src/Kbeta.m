@@ -2,7 +2,7 @@
 %
 % Computes weighted sum of kernel matrices
 %
-% Usage: 
+% Usage:
 %	K = Kbeta(Ks,w);
 %	K = Kbeta(Ks,w,symmetric);
 %
@@ -11,14 +11,14 @@
 %	w - weights [M x 1]
 %	symmetric (=false) - optional argument. If 1 the Ks
 %		matrices are assumed to be symmetric which results in a
-%		small speedup. 
+%		small speedup.
 %
-% Output: 
+% Output:
 %	K - weighted kernel matrix equiv with
 %		K=0;for m=1:M, K=K+ w(m)*Ks(:,:,m);end
 %
-% Example: 
-%	
+% Example:
+%
 %	K = Kbeta(randn(100,100,10),rand(10,1));
 %
 % Peter Gehler 07/2008 pgehler@tuebingen.mpg.de

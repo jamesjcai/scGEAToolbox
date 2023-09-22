@@ -4,8 +4,8 @@
 %
 % Author: Frank Lin (frank@cs.cmu.edu)
 
-function W=normcol(A)
+function W = normcol(A)
 
-    W=normrow(A')';
+W = normrow(A')';
 
 end

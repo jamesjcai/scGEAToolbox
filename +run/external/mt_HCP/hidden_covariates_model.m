@@ -1,4 +1,4 @@
-function [Z,B,U,o] = hidden_covariates_model(F,Y,k,lambda,lambda2,lambda3,iter)
+function [Z, B, U, o] = hidden_covariates_model(F, Y, k, lambda, lambda2, lambda3, iter)
 %
 %
 % function [Z,B,U,o,error,error1,error2,dz,db,du] = hidden_covariate_linear(F,Y,k,lambda,lambda2,lambda3,iter);
@@ -13,7 +13,7 @@ function [Z,B,U,o] = hidden_covariates_model(F,Y,k,lambda,lambda2,lambda3,iter)
 %
 %      note: k>0, lambda>0, lambda2>0, lambda3>0 must be set by the user based on the data at hand. one can set these values
 %      using cross-validation, by evaluating the "performance" of the  resulting residual data on a desired task.
-%      typically, if lambda>5, then hidden factors match the known covariates closely. 
+%      typically, if lambda>5, then hidden factors match the known covariates closely.
 %
 % objective:
 %
@@ -29,59 +29,52 @@ function [Z,B,U,o] = hidden_covariates_model(F,Y,k,lambda,lambda2,lambda3,iter)
 %
 
 if nargin < 7
-   iter = 100;
+    iter = 100;
 end
 
 % convergence criteria
 tol = 1e-6;
 
-U = zeros(size(F,2),k);
-Z = zeros(size(F,1),k);
-B = rand(size(Z,2),size(Y,2));
+U = zeros(size(F, 2), k);
+Z = zeros(size(F, 1), k);
+B = rand(size(Z, 2), size(Y, 2));
 
-[n1,~] = size(F);
-[n2,~] = size(Y);
+[n1, ~] = size(F);
+[n2, ~] = size(Y);
 
-if n1~=n2
+if n1 ~= n2
     error('number of rows in F and Y must agree');
 end
 
-if (k<1 || lambda<1e-6 || lambda2<1e-6 || lambda3<1e-6 )
+if (k < 1 || lambda < 1e-6 || lambda2 < 1e-6 || lambda3 < 1e-6)
     error('lambda, lambda2, lambda3 must be positive and/or k must be an integer');
 end
 
 
-
 for ii = 1:iter
-    
-    o(ii) = sum(sum((Y-Z*B).^2)) + sum(sum((Z-F*U).^2))*lambda + sum(sum(B.^2))*lambda2 + lambda3*sum(sum(U.^2));
-    
 
-    Z = (Y*B' + lambda*F*U)*inv(B*B' + lambda*eye(size(B,1)));
-    
-    
-    
-    B = (Z'*Z + lambda2*eye(size(Z,2)))\Z'*Y;
-    
-    U = (F'*F*lambda + lambda3*eye(size(U,1)))\(lambda*F'*Z);
-   
-   if ii>1
-      if (abs(o(ii)-o(ii-1))/o(ii))<tol
-         break
-      end
+    o(ii) = sum(sum((Y - Z * B).^2)) + sum(sum((Z - F * U).^2)) * lambda + sum(sum(B.^2)) * lambda2 + lambda3 * sum(sum(U.^2));
+
+
+    Z = (Y * B' + lambda * F * U) * inv(B*B'+lambda*eye(size(B, 1)));
+
+
+    B = (Z' * Z + lambda2 * eye(size(Z, 2))) \ Z' * Y;
+
+    U = (F' * F * lambda + lambda3 * eye(size(U, 1))) \ (lambda * F' * Z);
+
+    if ii > 1
+        if (abs(o(ii)-o(ii-1)) / o(ii)) < tol
+            break
+        end
     end
 
 end
 
-erroro = sum(sum((Y-Z*B).^2))./sum(sum(Y.^2)) + sum(sum((Z-F*U).^2))./sum(sum((F*U).^2));
-error1 = sum(sum((Y-Z*B).^2))./sum(sum(Y.^2)) ;
-error2 = sum(sum((Z-F*U).^2))./sum(sum((F*U).^2));
+erroro = sum(sum((Y - Z * B).^2)) ./ sum(sum(Y.^2)) + sum(sum((Z - F * U).^2)) ./ sum(sum((F * U).^2));
+error1 = sum(sum((Y - Z * B).^2)) ./ sum(sum(Y.^2));
+error2 = sum(sum((Z - F * U).^2)) ./ sum(sum((F * U).^2));
 
-dz = Z*(B*B' + lambda*eye(size(B,1)))-(Y*B' + lambda*F*U);
-db = (Z'*Z + lambda2*eye(size(Z,2)))*B - Z'*Y;
-du = (F'*F*lambda + lambda3*eye(size(U,1)))*U-lambda*F'*Z;
-
-
-
-
-
+dz = Z * (B * B' + lambda * eye(size(B, 1))) - (Y * B' + lambda * F * U);
+db = (Z' * Z + lambda2 * eye(size(Z, 2))) * B - Z' * Y;
+du = (F' * F * lambda + lambda3 * eye(size(U, 1))) * U - lambda * F' * Z;

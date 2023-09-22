@@ -8,12 +8,11 @@ function A = double(X)
 %Tensor Toolbox for MATLAB: <a href="https://www.tensortoolbox.org">www.tensortoolbox.org</a>
 
 
-
 if isempty(X.lambda) % check for empty tensor
     A = [];
     return;
 end
 
-sz = [size(X) 1];
-A = X.lambda' * khatrirao(X.u,'r')';
-A = reshape(A,sz);
+sz = [size(X), 1];
+A = X.lambda' * khatrirao(X.u, 'r')';
+A = reshape(A, sz);

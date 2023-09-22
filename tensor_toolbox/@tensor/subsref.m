@@ -1,4 +1,4 @@
-function a = subsref(t,s)
+function a = subsref(t, s)
 %SUBSREF Subscripted reference for tensors.
 %
 %   We can extract elements or subtensors from a tensor in the
@@ -38,7 +38,6 @@ function a = subsref(t,s)
 %Tensor Toolbox for MATLAB: <a href="https://www.tensortoolbox.org">www.tensortoolbox.org</a>
 
 
-
 switch s(1).type
     case '{}'
         error('Cell contents reference from a non-cell array object.')
@@ -46,16 +45,16 @@ switch s(1).type
         fieldname = s(1).subs;
         switch fieldname
             case 'data'
-                a = tt_subsubsref(t.data,s);
+                a = tt_subsubsref(t.data, s);
             case 'size'
-                a = tt_subsubsref(t.size,s);
+                a = tt_subsubsref(t.size, s);
             otherwise
                 error(['No such field: ', fieldname]);
         end
     case '()'
 
         % *** CASE 1: Rectangular Subtensor ***
-        if (numel(s(1).subs) == ndims(t)) && ~isequal(s(1).subs{end},'extract')
+        if (numel(s(1).subs) == ndims(t)) && ~isequal(s(1).subs{end}, 'extract')
 
             % Copy the subscripts
             region = s(1).subs;
@@ -68,20 +67,20 @@ switch s(1).type
             newdata = t.data(region{:});
 
             % Determine the subscripts
-            newsiz = [];                % (future) new size
-            kpdims = [];                % dimensions to keep
-            rmdims = [];                % dimensions to remove
+            newsiz = []; % (future) new size
+            kpdims = []; % dimensions to keep
+            rmdims = []; % dimensions to remove
 
             % Determine the new size and what dimensions to keep
             for i = 1:length(region)
                 if ischar(region{i}) && (region{i} == ':')
-                    newsiz = [newsiz size(t,i)];
-                    kpdims = [kpdims i];
+                    newsiz = [newsiz, size(t, i)];
+                    kpdims = [kpdims, i];
                 elseif numel(region{i}) > 1
-                    newsiz = [newsiz numel(region{i})];
-                    kpdims = [kpdims i];
+                    newsiz = [newsiz, numel(region{i})];
+                    kpdims = [kpdims, i];
                 else
-                    rmdims = [rmdims i];
+                    rmdims = [rmdims, i];
                 end
             end
 
@@ -91,27 +90,27 @@ switch s(1).type
                 a = newdata;
             else
                 if isempty(rmdims)
-                    a = tensor(newdata,newsiz);
+                    a = tensor(newdata, newsiz);
                 else
-                    a = tensor(permute(newdata,[kpdims rmdims]),newsiz);
+                    a = tensor(permute(newdata, [kpdims, rmdims]), newsiz);
                 end
             end
-            a = tt_subsubsref(a,s);
+            a = tt_subsubsref(a, s);
             return;
         end
 
         % *** CASE 2a: Subscript indexing
-        if size(s(1).subs{1},2) == ndims(t)
+        if size(s(1).subs{1}, 2) == ndims(t)
             % extract array of subscripts
             subs = s(1).subs{1};
-            a = squeeze(t.data(tt_sub2ind(t.size,subs)));
+            a = squeeze(t.data(tt_sub2ind(t.size, subs)));
             if isrow(a), a = a'; end
-            a = tt_subsubsref(a,s);
+            a = tt_subsubsref(a, s);
             return;
         end
 
         % *** CASE 2b: Linear indexing ***
-        if (numel(s(1).subs) > 2) || ((numel(s(1).subs) == 2) && ~isequal(s(1).subs{end},'extract'))
+        if (numel(s(1).subs) > 2) || ((numel(s(1).subs) == 2) && ~isequal(s(1).subs{end}, 'extract'))
             error('Invalid indexing');
         end
 
@@ -122,6 +121,6 @@ switch s(1).type
 
         a = squeeze(t.data(idx));
         if isrow(a), a = a'; end
-        a = tt_subsubsref(a,s);
+        a = tt_subsubsref(a, s);
         return;
 end

@@ -15,7 +15,7 @@ function [C, L, U] = SpectralClustering(W, k, Type)
 %      3 - Normalized according to Jordan and Weiss (2002)
 %
 %   References:
-%   - Ulrike von Luxburg, "A Tutorial on Spectral Clustering", 
+%   - Ulrike von Luxburg, "A Tutorial on Spectral Clustering",
 %     Statistics and Computing 17 (4), 2007
 %
 %   Author: Ingo Buerk
@@ -24,7 +24,7 @@ function [C, L, U] = SpectralClustering(W, k, Type)
 
 % calculate degree matrix
 degs = sum(W, 2);
-D    = sparse(1:size(W, 1), 1:size(W, 2), degs);
+D = sparse(1:size(W, 1), 1:size(W, 2), degs);
 
 % compute unnormalized Laplacian
 L = D - W;
@@ -36,7 +36,7 @@ switch Type
         degs(degs == 0) = eps;
         % calculate inverse of D
         D = spdiags(1./degs, 0, size(D, 1), size(D, 2));
-        
+
         % calculate normalized Laplacian
         L = D * L;
     case 3
@@ -44,7 +44,7 @@ switch Type
         degs(degs == 0) = eps;
         % calculate D^(-1/2)
         D = spdiags(1./(degs.^0.5), 0, size(D, 1), size(D, 2));
-        
+
         % calculate normalized Laplacian
         L = D * L * D;
 end
@@ -63,8 +63,8 @@ end
 % now use the k-means algorithm to cluster U row-wise
 % C will be a n-by-1 matrix containing the cluster number for
 % each data point
-C = litekmeans(U,k,'MaxIter',1000,'Replicates',5);
-             
+C = litekmeans(U, k, 'MaxIter', 1000, 'Replicates', 5);
+
 % now convert C to a n-by-k matrix containing the k indicator
 % vectors as columns
 % C = sparse(1:size(D, 1), C, 1);

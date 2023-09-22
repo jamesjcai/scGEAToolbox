@@ -4,8 +4,8 @@
 %
 % Author: Frank Lin (frank@cs.cmu.edu)
 
-function W=normrow(A)
+function W = normrow(A)
 
-    W=degree_inv(A)*A;
+W = degree_inv(A) * A;
 
 end

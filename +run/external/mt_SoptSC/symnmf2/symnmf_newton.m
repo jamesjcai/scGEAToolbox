@@ -60,7 +60,7 @@ if n ~= size(A, 2)
 end
 
 if ~exist('params', 'var')
-    H = 2 * full(sqrt(mean(mean(A)) / k)) * rand(n, k);
+    H = 2 * full(sqrt(mean(mean(A))/k)) * rand(n, k);
     maxiter = 10000;
     tol = 1e-4;
     sigma = 0.1;
@@ -78,7 +78,7 @@ else
         end
         H = params.Hinit;
     else
-        H = 2 * full(sqrt(mean(mean(A)) / k)) * rand(n, k);
+        H = 2 * full(sqrt(mean(mean(A))/k)) * rand(n, k);
     end
     if isfield(params, 'maxiter')
         maxiter = params.maxiter;
@@ -115,81 +115,81 @@ end
 projnorm_idx = false(n, k);
 R = cell(1, k);
 p = zeros(1, k);
-left = H'*H;
-obj = norm(A, 'fro')^2 - 2 * trace(H' * (A*H)) + trace(left * left);
-gradH = 4 * (H * (H'*H) - A*H);
+left = H' * H;
+obj = norm(A, 'fro')^2 - 2 * trace(H'*(A * H)) + trace(left*left);
+gradH = 4 * (H * (H' * H) - A * H);
 initgrad = norm(gradH, 'fro');
 if debug
     fprintf('init grad norm %g\n', initgrad);
 end
 
-for iter = 1 : maxiter
+for iter = 1:maxiter
 
-gradH = 4*(H*(H'*H) - A*H);
-projnorm_idx_prev = projnorm_idx;
-projnorm_idx = gradH<=eps | H>eps;
-projnorm = norm(gradH(projnorm_idx));
-if projnorm < tol * initgrad
-    if debug
-        fprintf('final grad norm %g\n', projnorm);
-    end
-    break;
-else
-    if debug > 1 
-        fprintf('iter %d: grad norm %g\n', iter, projnorm);
-    end
-end
-
-if mod(iter, 100) == 0
-    p = ones(1, k);
-end
-  
-step = zeros(n, k);
-hessian = cell(1, k);
-temp = H*H' - A;
-
-for i = 1 : k
-    if ~isempty(find(projnorm_idx_prev(:, i) ~= projnorm_idx(:, i), 1))
-        hessian{i} = hessian_blkdiag(temp, H, i, projnorm_idx);
-        [R{i}, p(i)] = chol(hessian{i});
-    end
-    if p(i) > 0
-        step(:, i) = gradH(:, i);
+    gradH = 4 * (H * (H' * H) - A * H);
+    projnorm_idx_prev = projnorm_idx;
+    projnorm_idx = gradH <= eps | H > eps;
+    projnorm = norm(gradH(projnorm_idx));
+    if projnorm < tol * initgrad
+        if debug
+            fprintf('final grad norm %g\n', projnorm);
+        end
+        break;
     else
-        step_temp = R{i}' \ gradH(projnorm_idx(:, i), i);
-        step_temp = R{i} \ step_temp;
-        step_part = zeros(n, 1);
-        step_part(projnorm_idx(:, i)) = step_temp;
-        step_part(step_part > -eps & H(:, i) <= eps) = 0;
-        if sum(gradH(:, i) .* step_part) / norm(gradH(:, i)) / norm(step_part) <= eps
-            p(i) = 1;
+        if debug > 1
+            fprintf('iter %d: grad norm %g\n', iter, projnorm);
+        end
+    end
+
+    if mod(iter, 100) == 0
+        p = ones(1, k);
+    end
+
+    step = zeros(n, k);
+    hessian = cell(1, k);
+    temp = H * H' - A;
+
+    for i = 1:k
+        if ~isempty(find(projnorm_idx_prev(:, i) ~= projnorm_idx(:, i), 1))
+            hessian{i} = hessian_blkdiag(temp, H, i, projnorm_idx);
+            [R{i}, p(i)] = chol(hessian{i});
+        end
+        if p(i) > 0
             step(:, i) = gradH(:, i);
         else
-            step(:, i) = step_part;
+            step_temp = R{i}' \ gradH(projnorm_idx(:, i), i);
+            step_temp = R{i} \ step_temp;
+            step_part = zeros(n, 1);
+            step_part(projnorm_idx(:, i)) = step_temp;
+            step_part(step_part > -eps & H(:, i) <= eps) = 0;
+            if sum(gradH(:, i).*step_part) / norm(gradH(:, i)) / norm(step_part) <= eps
+                p(i) = 1;
+                step(:, i) = gradH(:, i);
+            else
+                step(:, i) = step_part;
+            end
         end
     end
-end
 
-alpha_newton = 1;
-Hn = max(H - alpha_newton * step, 0);
-left = Hn'*Hn;
-newobj = norm(A, 'fro')^2 - 2 * trace(Hn' * (A*Hn)) + trace(left * left);
-if newobj - obj > sigma * sum(sum(gradH .* (Hn-H)))
-    while true
-        alpha_newton = alpha_newton * beta;
-        Hn = max(H - alpha_newton * step, 0);
-        left = Hn'*Hn;
-        newobj = norm(A, 'fro')^2 - 2 * trace(Hn' * (A*Hn)) + trace(left * left);
-        if newobj - obj <= sigma*sum(sum(gradH .* (Hn-H)))
-            H = Hn;
-            obj = newobj;
-            break;
+    alpha_newton = 1;
+    Hn = max(H-alpha_newton*step, 0);
+    left = Hn' * Hn;
+    newobj = norm(A, 'fro')^2 - 2 * trace(Hn'*(A * Hn)) + trace(left*left);
+    if newobj - obj > sigma * sum(sum(gradH.*(Hn - H)))
+        while true
+            alpha_newton = alpha_newton * beta;
+            Hn = max(H-alpha_newton*step, 0);
+            left = Hn' * Hn;
+            newobj = norm(A, 'fro')^2 - 2 * trace(Hn'*(A * Hn)) + trace(left*left);
+            if newobj - obj <= sigma * sum(sum(gradH.*(Hn - H)))
+                H = Hn;
+                obj = newobj;
+                break;
+            end
         end
-    end
-else
-    H = Hn;
-    obj = newobj;
-end % if
+    else
+        H = Hn;
+        obj = newobj;
+    end % if
 
 end % for iter = 1 : maxiter
 
@@ -204,7 +204,7 @@ end % function
 function He = hessian_blkdiag(temp, H, idx, projnorm_idx)
 
 [n, ~] = size(H);
-subset = find(projnorm_idx(:, idx) ~= 0); 
+subset = find(projnorm_idx(:, idx) ~= 0);
 hidx = H(subset, idx);
 eye0 = (H(:, idx)' * H(:, idx)) * eye(n);
 

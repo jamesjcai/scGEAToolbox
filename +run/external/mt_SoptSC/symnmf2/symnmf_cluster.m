@@ -232,75 +232,75 @@ else
     end
     if computeobj == false && rep > 1
         error('options.computeobj must be true if options.rep > 1!');
-    end
-    if isfield(options, 'alg')
-        alg_names = {'anls', 'newton'};
-        j = find(strcmpi(options.alg, alg_names));
-        if ~isempty(j)
-            alg = alg_names{j};
+        end
+        if isfield(options, 'alg')
+            alg_names = {'anls', 'newton'};
+            j = find(strcmpi(options.alg, alg_names));
+            if ~isempty(j)
+                alg = alg_names{j};
+            else
+                error('Invalid options.alg value!');
+            end
         else
-            error('Invalid options.alg value!');
-        end
-    else
-        alg = 'anls';
-    end
-end
-
-D = dist2(X, X);
-if strcmp(graph_type, 'full') && strcmp(similarity_type, 'gaussian')
-    A = scale_dist3(D, nn);
-elseif strcmp(graph_type, 'full') && strcmp(similarity_type, 'inner_product')
-    A = X * X';
-elseif strcmp(graph_type, 'sparse') && strcmp(similarity_type, 'gaussian')
-    A = scale_dist3_knn(D, nn, kk, true);
-else % graph_type == 'sparse' & similarity_type == 'inner_product'
-    Xnorm = X';
-    d = 1./sqrt(sum(Xnorm.^2));
-    Xnorm = bsxfun(@times, Xnorm, d);
-    A = inner_product_knn(D, Xnorm, knn, true);
-    clear Xnorm d
-end
-clear D;
-
-if strcmp(graph_objfun, 'ncut')
-    dd = 1 ./ sum(A);
-    dd = sqrt(dd);
-    A = bsxfun(@times, A, dd);
-    A = A';
-    A = bsxfun(@times, A, dd);
-    clear dd;
-end
-A = (A + A') / 2;
-
-params.maxiter = maxiter;
-params.tol = tol;
-
-obj_best = Inf;
-for i = 1 : rep
-    if isempty(Hinit)
-        if strcmp(alg, 'newton')
-            [H, iter, obj] = symnmf_newton(A, k, params);
-        else % strcmp(alg, 'anls')
-            [H, iter, obj] = symnmf_anls(A, k, params);
-        end
-    else
-        params.Hinit = Hinit(:, :, i);
-        if strcmp(alg, 'newton')
-            [H, iter, obj] = symnmf_newton(A, k, params);
-        else % strcmp(alg, 'anls')
-            [H, iter, obj] = symnmf_anls(A, k, params);
+            alg = 'anls';
         end
     end
-    [~, idx] = max(H, [], 2);
-    if obj < obj_best
-        idx_best = idx;
-        iter_best = iter;
-        obj_best = obj;
-        H_best = H;
-    end
-end
 
-idx = idx_best;
-iter = iter_best;
-obj = obj_best;
-H = H_best;
+    D = dist2(X, X);
+    if strcmp(graph_type, 'full') && strcmp(similarity_type, 'gaussian')
+        A = scale_dist3(D, nn);
+    elseif strcmp(graph_type, 'full') && strcmp(similarity_type, 'inner_product')
+        A = X * X';
+    elseif strcmp(graph_type, 'sparse') && strcmp(similarity_type, 'gaussian')
+        A = scale_dist3_knn(D, nn, kk, true);
+    else % graph_type == 'sparse' & similarity_type == 'inner_product'
+        Xnorm = X';
+        d = 1 ./ sqrt(sum(Xnorm.^2));
+        Xnorm = bsxfun(@times, Xnorm, d);
+        A = inner_product_knn(D, Xnorm, knn, true);
+        clear Xnorm d
+    end
+    clear D;
+
+    if strcmp(graph_objfun, 'ncut')
+        dd = 1 ./ sum(A);
+        dd = sqrt(dd);
+        A = bsxfun(@times, A, dd);
+        A = A';
+        A = bsxfun(@times, A, dd);
+        clear dd;
+    end
+    A = (A + A') / 2;
+
+    params.maxiter = maxiter;
+    params.tol = tol;
+
+    obj_best = Inf;
+    for i = 1:rep
+        if isempty(Hinit)
+            if strcmp(alg, 'newton')
+                [H, iter, obj] = symnmf_newton(A, k, params);
+            else % strcmp(alg, 'anls')
+                [H, iter, obj] = symnmf_anls(A, k, params);
+            end
+        else
+            params.Hinit = Hinit(:, :, i);
+            if strcmp(alg, 'newton')
+                [H, iter, obj] = symnmf_newton(A, k, params);
+            else % strcmp(alg, 'anls')
+                [H, iter, obj] = symnmf_anls(A, k, params);
+            end
+        end
+        [~, idx] = max(H, [], 2);
+        if obj < obj_best
+            idx_best = idx;
+            iter_best = iter;
+            obj_best = obj;
+            H_best = H;
+        end
+    end
+
+    idx = idx_best;
+    iter = iter_best;
+    obj = obj_best;
+    H = H_best;

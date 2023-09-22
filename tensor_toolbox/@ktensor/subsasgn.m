@@ -1,4 +1,4 @@
-function t = subsasgn(t,s,b)
+function t = subsasgn(t, s, b)
 %SUBSASGN Subscripted assignment for ktensor.
 %
 %   Subscripted assignment can be used to alter the lambda vector or the
@@ -16,7 +16,6 @@ function t = subsasgn(t,s,b)
 %Tensor Toolbox for MATLAB: <a href="https://www.tensortoolbox.org">www.tensortoolbox.org</a>
 
 
-
 switch s(1).type
     case '.'
         switch s(1).subs
@@ -27,7 +26,7 @@ switch s(1).type
                     newlambda = subsasgn(t.lambda, s(2:end), b);
                     t = ktensor(newlambda, t.u);
                 end
-            case {'u','U'}
+            case {'u', 'U'}
                 if length(s) == 1
                     t = ktensor(t.lambda, b);
                 else
@@ -47,5 +46,3 @@ switch s(1).type
     otherwise
         error('Invalid subsasgn.');
 end
-
-

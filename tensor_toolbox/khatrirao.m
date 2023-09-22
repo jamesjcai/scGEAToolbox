@@ -16,7 +16,7 @@ function P = khatrirao(varargin)
 %   order.
 %
 %   NOTE: Updated to use BSXFUN per work of Phan Anh Huy. See Anh Huy Phan,
-%   Petr Tichavský, Andrzej Cichocki, On Fast Computation of Gradients for
+%   Petr TichavskÃ½, Andrzej Cichocki, On Fast Computation of Gradients for
 %   CANDECOMP/PARAFAC Algorithms, arXiv:1204.1586, 2012.
 %
 %   Examples
@@ -29,7 +29,6 @@ function P = khatrirao(varargin)
 %   See also TENSOR, KTENSOR.
 %
 %Tensor Toolbox for MATLAB: <a href="https://www.tensortoolbox.org">www.tensortoolbox.org</a>
-
 
 %% Error checking on input and set matrix order
 % Note that this next if/else check forces A to be a cell array.
@@ -53,22 +52,21 @@ else
     matorder = 1:length(A);
 end
 
-%% Error check on matrices and compute number of rows in result 
+%% Error check on matrices and compute number of rows in result
 ndimsA = cellfun(@ndims, A);
-if(~all(ndimsA == 2))
+if (~all(ndimsA == 2))
     error('Each argument must be a matrix');
 end
 
 ncols = cellfun(@(x) size(x, 2), A);
-if(~all(ncols == ncols(1)))
+if (~all(ncols == ncols(1)))
     error('All matrices must have the same number of columns.');
 end
-
 
 %% Computation
 N = ncols(1);
 P = A{matorder(1)};
 for i = matorder(2:end)
-    P = bsxfun(@times, reshape(A{i},[],1,N),reshape(P,1,[],N));
+    P = bsxfun(@times, reshape(A{i}, [], 1, N), reshape(P, 1, [], N));
 end
-P = reshape(P,[],N);
+P = reshape(P, [], N);

@@ -118,11 +118,11 @@ function output = dirPlus(rootPath, varargin)
 % Copyright 2017 by Kenneth P. Eaton
 %--------------------------------------------------------------------------
 
-  % Create input parser (only have to do this once, hence the use of a
-  %   persistent variable):
+% Create input parser (only have to do this once, hence the use of a
+%   persistent variable):
 
-  persistent parser
-  if isempty(parser)
+persistent parser
+if isempty(parser)
     recursionLimit = get(0, 'RecursionLimit');
     parser = inputParser();
     parser.FunctionName = 'dirPlus';
@@ -131,47 +131,47 @@ function output = dirPlus(rootPath, varargin)
     % Add general parameters:
 
     addRequired(parser, 'rootPath', ...
-                @(s) validateattributes(s, {'char'}, {'nonempty'}));
+        @(s) validateattributes(s, {'char'}, {'nonempty'}));
     addParameter(parser, 'Struct', false, ...
-                 @(b) validateattributes(b, {'logical'}, {'scalar'}));
+        @(b) validateattributes(b, {'logical'}, {'scalar'}));
     addParameter(parser, 'Depth', recursionLimit, ...
-                 @(s) validateattributes(s, {'numeric'}, ...
-                                         {'scalar', 'nonnegative', ...
-                                          'nonnan', 'integer', ...
-                                          '<=', recursionLimit}));
+        @(s) validateattributes(s, {'numeric'}, ...
+        {'scalar', 'nonnegative', ...
+        'nonnan', 'integer', ...
+        '<=', recursionLimit}));
     addParameter(parser, 'ReturnDirs', false, ...
-                 @(b) validateattributes(b, {'logical'}, {'scalar'}));
+        @(b) validateattributes(b, {'logical'}, {'scalar'}));
     addParameter(parser, 'PrependPath', true, ...
-                 @(b) validateattributes(b, {'logical'}, {'scalar'}));
+        @(b) validateattributes(b, {'logical'}, {'scalar'}));
 
     % Add file-specific parameters:
 
     addParameter(parser, 'FileFilter', '', ...
-                 @(s) validateattributes(s, {'char'}, {'row'}));
+        @(s) validateattributes(s, {'char'}, {'row'}));
     addParameter(parser, 'ValidateFileFcn', [], ...
-                 @(f) validateattributes(f, {'function_handle'}, ...
-                                         {'scalar'}));
+        @(f) validateattributes(f, {'function_handle'}, ...
+        {'scalar'}));
 
     % Add directory-specific parameters:
 
     addParameter(parser, 'DirFilter', '', ...
-                 @(s) validateattributes(s, {'char'}, {'row'}));
+        @(s) validateattributes(s, {'char'}, {'row'}));
     addParameter(parser, 'ValidateDirFcn', [], ...
-                 @(f) validateattributes(f, {'function_handle'}, ...
-                                         {'scalar'}));
+        @(f) validateattributes(f, {'function_handle'}, ...
+        {'scalar'}));
     addParameter(parser, 'RecurseInvalid', false, ...
-                 @(b) validateattributes(b, {'logical'}, {'scalar'}));
+        @(b) validateattributes(b, {'logical'}, {'scalar'}));
 
-  end
+end
 
-  % Parse input and recursively find contents:
+% Parse input and recursively find contents:
 
-  parse(parser, rootPath, varargin{:});
-  output = dirPlus_core(parser.Results.rootPath, ...
-                        rmfield(parser.Results, 'rootPath'), 0, true);
-  if parser.Results.Struct
+parse(parser, rootPath, varargin{:});
+output = dirPlus_core(parser.Results.rootPath, ...
+    rmfield(parser.Results, 'rootPath'), 0, true);
+if parser.Results.Struct
     output = vertcat(output{:});
-  end
+end
 
 end
 
@@ -181,16 +181,16 @@ end
 % Core recursive function to find files and directories.
 function output = dirPlus_core(rootPath, optionStruct, depth, isValid)
 
-  % Get current directory contents:
+% Get current directory contents:
 
-  rootData = dir(rootPath);
-  dirIndex = [rootData.isdir];
-  subDirs = {};
-  validIndex = [];
+rootData = dir(rootPath);
+dirIndex = [rootData.isdir];
+subDirs = {};
+validIndex = [];
 
-  % Find valid subdirectories, only if necessary:
+% Find valid subdirectories, only if necessary:
 
-  if (depth < optionStruct.Depth) || optionStruct.ReturnDirs
+if (depth < optionStruct.Depth) || optionStruct.ReturnDirs
 
     % Get subdirectories, not counting current or parent:
 
@@ -203,44 +203,44 @@ function output = dirPlus_core(rootPath, optionStruct, depth, isValid)
 
     if any(validIndex)
 
-      % Apply directory name filter, if specified:
+        % Apply directory name filter, if specified:
 
-      nameFilter = optionStruct.DirFilter;
-      if ~isempty(nameFilter)
-        validIndex = ~cellfun(@isempty, regexp(subDirs, nameFilter));
-      end
-
-      if any(validIndex)
-
-        % Apply validation function to the directory list, if specified:
-
-        validateFcn = optionStruct.ValidateDirFcn;
-        if ~isempty(validateFcn)
-          validIndex(validIndex) = arrayfun(validateFcn, ...
-                                            dirData(validIndex));
+        nameFilter = optionStruct.DirFilter;
+        if ~isempty(nameFilter)
+            validIndex = ~cellfun(@isempty, regexp(subDirs, nameFilter));
         end
 
-      end
+        if any(validIndex)
+
+            % Apply validation function to the directory list, if specified:
+
+            validateFcn = optionStruct.ValidateDirFcn;
+            if ~isempty(validateFcn)
+                validIndex(validIndex) = arrayfun(validateFcn, ...
+                    dirData(validIndex));
+            end
+
+        end
 
     end
 
-  end
+end
 
-  % Determine if files or subdirectories are being returned:
+% Determine if files or subdirectories are being returned:
 
-  if optionStruct.ReturnDirs  % Return directories
+if optionStruct.ReturnDirs % Return directories
 
     % Use structure data or prepend full path, if specified:
 
     if optionStruct.Struct
-      output = {dirData(validIndex)};
+        output = {dirData(validIndex)};
     elseif any(validIndex) && optionStruct.PrependPath
-      output = fullfile(rootPath, subDirs(validIndex));
+        output = fullfile(rootPath, subDirs(validIndex));
     else
-      output = subDirs(validIndex);
+        output = subDirs(validIndex);
     end
 
-  elseif isValid  % Return files
+elseif isValid % Return files
 
     % Find all files in the current directory:
 
@@ -249,69 +249,69 @@ function output = dirPlus_core(rootPath, optionStruct, depth, isValid)
 
     if ~isempty(output)
 
-      % Apply file name filter, if specified:
+        % Apply file name filter, if specified:
 
-      fileFilter = optionStruct.FileFilter;
-      if ~isempty(fileFilter)
-        filterIndex = ~cellfun(@isempty, regexp(output, fileFilter));
-        fileData = fileData(filterIndex);
-        output = output(filterIndex);
-      end
-
-      if ~isempty(output)
-
-        % Apply validation function to the file list, if specified:
-
-        validateFcn = optionStruct.ValidateFileFcn;
-        if ~isempty(validateFcn)
-          validateIndex = arrayfun(validateFcn, fileData);
-          fileData = fileData(validateIndex);
-          output = output(validateIndex);
+        fileFilter = optionStruct.FileFilter;
+        if ~isempty(fileFilter)
+            filterIndex = ~cellfun(@isempty, regexp(output, fileFilter));
+            fileData = fileData(filterIndex);
+            output = output(filterIndex);
         end
 
-        % Use structure data or prepend full path, if specified:
+        if ~isempty(output)
 
-        if optionStruct.Struct
-          output = {fileData};
-        elseif ~isempty(output) && optionStruct.PrependPath
-          output = fullfile(rootPath, output);
+            % Apply validation function to the file list, if specified:
+
+            validateFcn = optionStruct.ValidateFileFcn;
+            if ~isempty(validateFcn)
+                validateIndex = arrayfun(validateFcn, fileData);
+                fileData = fileData(validateIndex);
+                output = output(validateIndex);
+            end
+
+            % Use structure data or prepend full path, if specified:
+
+            if optionStruct.Struct
+                output = {fileData};
+            elseif ~isempty(output) && optionStruct.PrependPath
+                output = fullfile(rootPath, output);
+            end
+
         end
-
-      end
 
     end
 
-  else  % Return nothing
+else % Return nothing
 
     output = {};
 
-  end
+end
 
-  % Check recursion depth:
+% Check recursion depth:
 
-  if (depth < optionStruct.Depth)
+if (depth < optionStruct.Depth)
 
     % Select subdirectories to recurse down:
 
     if ~optionStruct.RecurseInvalid
-      subDirs = subDirs(validIndex);
-      validIndex = validIndex(validIndex);
+        subDirs = subDirs(validIndex);
+        validIndex = validIndex(validIndex);
     end
 
     % Recursively collect output from subdirectories:
 
     nSubDirs = numel(subDirs);
     if (nSubDirs > 0)
-      subDirs = fullfile(rootPath, subDirs);
-      output = {output; cell(nSubDirs, 1)};
-      for iSub = 1:nSubDirs
-        output{iSub+1} = dirPlus_core(subDirs{iSub}, optionStruct, ...
-                                      depth+1, validIndex(iSub));
-      end
-      output = vertcat(output{:});
+        subDirs = fullfile(rootPath, subDirs);
+        output = {output; cell(nSubDirs, 1)};
+        for iSub = 1:nSubDirs
+            output{iSub+1} = dirPlus_core(subDirs{iSub}, optionStruct, ...
+                depth+1, validIndex(iSub));
+        end
+        output = vertcat(output{:});
     end
 
-  end
+end
 
 end
 

@@ -1,4 +1,4 @@
-function g=lcvplot(alpha,varargin)
+function g = lcvplot(alpha, varargin)
 %
 % Computes and plots the Likelihood Cross-Validation score (LCV)
 % for local fits with different smoothing parameters.
@@ -10,16 +10,16 @@ function g=lcvplot(alpha,varargin)
 % are stored in a matrix, and LCV score ploted against the degrees of
 % freedom.
 
-k = size(alpha,1);
-z = zeros(k,4);
+k = size(alpha, 1);
+z = zeros(k, 4);
 
-for i=1:k
-  z(i,:) = lcv(varargin{:},'alpha',alpha(i,:));
+for i = 1:k
+    z(i, :) = lcv(varargin{:}, 'alpha', alpha(i, :));
 end
 
-plot(z(:,3),z(:,4));
+plot(z(:, 3), z(:, 4));
 xlabel('Fitted DF');
 ylabel('LCV');
 
-g = [alpha z];
+g = [alpha, z];
 return;

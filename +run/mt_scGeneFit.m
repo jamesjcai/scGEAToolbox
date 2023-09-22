@@ -32,31 +32,31 @@ end
 end
 
 %{
-    [c,idx]=sort(c);
-    proj_data=proj_data(:,idx);
-    % proj_data=proj_data(:,1:5:end);
-    proj_data=log(sc_norm(proj_data)+1);
-    % T=array2table(proj_data);
-    % T.Properties.RowNames=g(markers);
-    z=[];
-    uc=unique(c);
-    for kk=1:numel(uc)
-        z=[z mean(proj_data(:,c==uc(kk)),2)];
-    end
-    [~,idx]=max(z,[],2);
-    [~,idx]=sort(idx);
-    proj_data=proj_data(idx,:);    
-    gm=matlab.lang.makeUniqueStrings(g(markers));
-    gm=gm(idx);
-    proj_data=proj_data(:,1:5:end);
+[c,idx]=sort(c);
+proj_data=proj_data(:,idx);
+% proj_data=proj_data(:,1:5:end);
+proj_data=log(sc_norm(proj_data)+1);
+% T=array2table(proj_data);
+% T.Properties.RowNames=g(markers);
+z=[];
+uc=unique(c);
+for kk=1:numel(uc)
+    z=[z mean(proj_data(:,c==uc(kk)),2)];
+end
+[~,idx]=max(z,[],2);
+[~,idx]=sort(idx);
+proj_data=proj_data(idx,:);
+gm=matlab.lang.makeUniqueStrings(g(markers));
+gm=gm(idx);
+proj_data=proj_data(:,1:5:end);
 
-    h=heatmap(num2cell(1:size(proj_data,2)),...
-        cellstr(gm),proj_data);
+h=heatmap(num2cell(1:size(proj_data,2)),...
+    cellstr(gm),proj_data);
 
-    h.Title = 'Marker Gene Heatmap';
-    h.XLabel = 'Cell Type';
-    h.YLabel = 'Marker Gene';
-    h.Colormap = parula;
-    h.GridVisible = 'off';
-    % sorty(h);
+h.Title = 'Marker Gene Heatmap';
+h.XLabel = 'Cell Type';
+h.YLabel = 'Marker Gene';
+h.Colormap = parula;
+h.GridVisible = 'off';
+% sorty(h);
 %}

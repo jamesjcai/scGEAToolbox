@@ -1,4 +1,4 @@
-function X = ttm(X,V,varargin)
+function X = ttm(X, V, varargin)
 %TTM Tensor times matrix for ktensor.
 %
 %   Y = TTM(X,A,N) computes the n-mode product of the ktensor X with a
@@ -40,8 +40,6 @@ function X = ttm(X,V,varargin)
 %Tensor Toolbox for MATLAB: <a href="https://www.tensortoolbox.org">www.tensortoolbox.org</a>
 
 
-
-
 %%%%%%%%%%%%%%%%%%%%%%
 %%% ERROR CHECKING %%%
 %%%%%%%%%%%%%%%%%%%%%%
@@ -54,49 +52,49 @@ end
 % Check for transpose option
 isTranspose = false;
 if numel(varargin) > 0
-  if isnumeric(varargin{1})
-    dims = varargin{1};
-  end
-  isTranspose =  (ischar(varargin{end}) && (varargin{end} == 't'));
+    if isnumeric(varargin{1})
+        dims = varargin{1};
+    end
+    isTranspose = (ischar(varargin{end}) && (varargin{end} == 't'));
 end
 
 % Check for dims argument
-if ~exist('dims','var')
+if ~exist('dims', 'var')
     dims = [];
 end
 
 % Check that 2nd argument is cell array. If not, recall with V as a
 % cell array with one element.
 if ~iscell(V)
-    X = ttm(X,{V},dims,varargin{end});
+    X = ttm(X, {V}, dims, varargin{end});
     return;
 end
 
 % Get sorted dims and index for multiplicands
-[dims,vidx] = tt_dimscheck(dims,ndims(X),numel(V));
+[dims, vidx] = tt_dimscheck(dims, ndims(X), numel(V));
 
 % Determine correct size index
 if isTranspose
-  j = 1; 
+    j = 1;
 else
-  j = 2;
+    j = 2;
 end
 
 % Check that each multiplicand is the right size.
 for i = 1:numel(dims)
-    if (ndims(V) ~= 2) || (size(V{vidx(i)},j) ~= size(X,dims(i)))
-disp(size(V{vidx(i)}))
-disp(size(X))
+    if (ndims(V) ~= 2) || (size(V{vidx(i)}, j) ~= size(X, dims(i)))
+        disp(size(V{vidx(i)}))
+        disp(size(X))
 
         error('Multiplicand is wrong size');
     end
 end
 
-% Do the multiplications in the specified modes. 
-for i = 1:numel(dims) 
-  if isTranspose
-    X.u{dims(i)} = V{vidx(i)}'* X.u{dims(i)};
-  else
-    X.u{dims(i)} = V{vidx(i)} * X.u{dims(i)};
-  end
+% Do the multiplications in the specified modes.
+for i = 1:numel(dims)
+    if isTranspose
+        X.u{dims(i)} = V{vidx(i)}' * X.u{dims(i)};
+    else
+        X.u{dims(i)} = V{vidx(i)} * X.u{dims(i)};
+    end
 end

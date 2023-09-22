@@ -4,7 +4,7 @@
 %
 % Author: Frank Lin (frank@cs.cmu.edu)
 
-function acc=eval_rand(truth,pred)
+function acc = eval_rand(truth, pred)
 
 %i=ones(length(truth),1);
 

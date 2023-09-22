@@ -1,4 +1,4 @@
-function [data_opt_t, t_opt]  = compute_optimal_t(data, DiffOp, varargin)
+function [data_opt_t, t_opt] = compute_optimal_t(data, DiffOp, varargin)
 
 t_max = 32;
 make_plot = true;
@@ -21,9 +21,9 @@ end
 
 data_prev = data;
 if make_plot
-    error_vec = nan(t_max,1);
-    for I=1:t_max
-        disp(['t = ' num2str(I)]);
+    error_vec = nan(t_max, 1);
+    for I = 1:t_max
+        disp(['t = ', num2str(I)]);
         data_curr = DiffOp * data_prev;
         error_vec(I) = procrustes(data_prev, data_curr);
         if error_vec(I) < th && isempty(data_opt_t)
@@ -32,7 +32,7 @@ if make_plot
         data_prev = data_curr;
     end
     t_opt = find(error_vec < th, 1, 'first');
-    
+
     figure;
     hold all;
     plot(1:t_max, error_vec, '*-');
@@ -40,14 +40,14 @@ if make_plot
     xlabel 't'
     ylabel 'error'
     axis tight
-    ylim([0 ceil(max(error_vec)*10)/10]);
-    plot(xlim, [th th], '--k');
-    legend({'y' 'optimal t' ['y=' num2str(th)]});
-    set(gca,'xtick',1:t_max);
-    set(gca,'ytick',0:0.1:1);
+    ylim([0, ceil(max(error_vec)*10) / 10]);
+    plot(xlim, [th, th], '--k');
+    legend({'y', 'optimal t', ['y=', num2str(th)]});
+    set(gca, 'xtick', 1:t_max);
+    set(gca, 'ytick', 0:0.1:1);
 else
-    for I=1:t_max
-        disp(['t = ' num2str(I)]);
+    for I = 1:t_max
+        disp(['t = ', num2str(I)]);
         data_curr = DiffOp * data_prev;
         error = procrustes(data_prev, data_curr);
         if error < th
@@ -59,13 +59,4 @@ else
     end
 end
 
-disp(['optimal t = ' num2str(t_opt)]);
-
-
-
-
-
-
-
-
-
+disp(['optimal t = ', num2str(t_opt)]);

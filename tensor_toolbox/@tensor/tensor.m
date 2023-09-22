@@ -30,13 +30,13 @@
 %   mttkrps     - Sequence of MTTKRP calculations for dense tensor.
 %   ndims       - Return the number of dimensions of a tensor.
 %   ne          - Not equal (~=) for tensors.
-%   nnz         - Number of nonzeros for tensors. 
+%   nnz         - Number of nonzeros for tensors.
 %   norm        - Frobenius norm of a tensor.
 %   not         - Logical NOT (~) for tensors.
 %   nvecs       - Compute the leading mode-n vectors for a tensor.
 %   or          - Logical OR (|) for tensors.
 %   permute     - Permute tensor dimensions.
-%   plus        - Binary addition (+) for tensors. 
+%   plus        - Binary addition (+) for tensors.
 %   power       - Elementwise power (.^) operator for a tensor.
 %   rdivide     - Right array divide for tensors.
 %   reshape     - Change tensor size.
@@ -73,20 +73,20 @@ function t = tensor(varargin)
 %TENSOR Create tensor.
 %
 %   X = TENSOR(A,SIZ) creates a tensor from the multidimensional array A.
-%   The SIZ argument is a size vector specifying the desired shape 
+%   The SIZ argument is a size vector specifying the desired shape
 %   of A.
 %
 %   X = TENSOR(F,SIZ) createa a tensor of size SIZ using the function
 %   handle F to create the data. The function F must take a size vector as
-%   input. 
+%   input.
 %
 %   X = TENSOR(A) creates a tensor from the multidimensional array A, using
-%   SIZ = size(A). 
+%   SIZ = size(A).
 %
 %   X = TENSOR(S) copies a tensor S.
 %
 %   X = TENSOR(A) converts an sptensor, ktensor, ttensor, or tenmat object
-%   to a tensor.  
+%   to a tensor.
 %
 %   X = TENSOR creates an empty, dense tensor object.
 %
@@ -103,7 +103,6 @@ function t = tensor(varargin)
 %Tensor Toolbox for MATLAB: <a href="https://www.tensortoolbox.org">www.tensortoolbox.org</a>
 
 
-
 % EMPTY/DEFAULT CONSTRUCTOR
 if nargin == 0
     t.data = [];
@@ -118,29 +117,29 @@ end
 if (nargin == 1)
     v = varargin{1};
     switch class(v)
-        case 'tensor'   
+        case 'tensor'
             % COPY CONSTRUCTOR
             t.data = v.data;
             t.size = v.size;
             t = class(t, 'tensor');
             return;
-        case {'ktensor','ttensor','sptensor','sumtensor','symtensor','symktensor'}  
+        case {'ktensor', 'ttensor', 'sptensor', 'sumtensor', 'symtensor', 'symktensor'}
             % CONVERSION
             t = full(v);
             return;
-        case 'tenmat' 
+        case 'tenmat'
             % RESHAPE TENSOR-AS-MATRIX
             % Here we just reverse what was done in the tenmat constructor.
             % First we reshape the data to be an MDA, then we un-permute
             % it using ipermute.
             sz = tsize(v);
-            order = [v.rdims,v.cdims];
-            data = reshape(v.data, [sz(order) 1 1]);
+            order = [v.rdims, v.cdims];
+            data = reshape(v.data, [sz(order), 1, 1]);
             if numel(order) >= 2
-                t.data = ipermute(data,order);
+                t.data = ipermute(data, order);
             else
                 t.data = data;
-            end              
+            end
             t.size = sz;
             t = class(t, 'tensor');
             return;
@@ -148,18 +147,18 @@ if (nargin == 1)
 end
 
 % FUNCTION HANDLE AND SIZE
-if (nargin <= 2) && isa(varargin{1},'function_handle')
+if (nargin <= 2) && isa(varargin{1}, 'function_handle')
     fh = varargin{1};
     siz = varargin{2};
-    
+
     % Check size
     if ~isrow(siz)
         error('TTB:BadInput', 'Size must be a row vector');
     end
-    
+
     % Generate data
-    data = fh([siz 1 1]);
-        
+    data = fh([siz, 1, 1]);
+
     % Create the tensor
     t.data = data;
     t.size = siz;
@@ -172,7 +171,7 @@ if (nargin <= 2)
 
     % Check first argument
     data = varargin{1};
-    if ~isa(data,'numeric') && ~isa(data,'logical')
+    if ~isa(data, 'numeric') && ~isa(data, 'logical')
         error('First argument must be a multidimensional array.')
     end
 
@@ -181,7 +180,7 @@ if (nargin <= 2)
         siz = size(data);
     else
         siz = varargin{2};
-        if ~isempty(siz) && ndims(siz) ~= 2 && size(siz,1) ~= 1
+        if ~isempty(siz) && ndims(siz) ~= 2 && size(siz, 1) ~= 1
             error('Second argument must be a row vector.');
         end
     end
@@ -194,10 +193,10 @@ if (nargin <= 2)
     elseif prod(siz) ~= numel(data)
         error('TTB:WrongSize', 'Size of data does not match specified size of tensor');
     end
-    
+
     % Make sure the data is indeed the right shape
     if ~isempty(data) && ~isempty(siz)
-        data = reshape(data,[siz 1 1]);
+        data = reshape(data, [siz, 1, 1]);
     end
 
     % Create the tensor
@@ -209,6 +208,4 @@ if (nargin <= 2)
 end
 
 
-error('Unsupported use of function TENSOR.');
-
-
+    error('Unsupported use of function TENSOR.');

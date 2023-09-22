@@ -122,10 +122,10 @@ end
 
 %{
 function i_tryread
-    try
-                g=h5read(filenm,[hinfo.Groups(idx).Name,'/_index']);        
-    catch
+try
+    g=h5read(filenm,[hinfo.Groups(idx).Name,'/_index']);
+catch
 
-    end
+end
 end
 %}

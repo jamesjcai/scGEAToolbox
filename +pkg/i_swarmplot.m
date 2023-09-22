@@ -1,7 +1,7 @@
-function i_swarmplot(d,c)
+function i_swarmplot(d, c)
 
-if ~isstring(c), c=string(c); end
+if ~isstring(c), c = string(c); end
 
-[c,cL]=grp2idx(c);
-swarmchart(c,d);
+[c, cL] = grp2idx(c);
+swarmchart(c, d);
 end

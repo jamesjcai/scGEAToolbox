@@ -1,4 +1,4 @@
-function c = ttv(a,v,dims)
+function c = ttv(a, v, dims)
 %TTV Tensor times vector.
 %
 %   Y = TTV(X,A,N) computes the product of tensor X with a (column)
@@ -35,38 +35,37 @@ function c = ttv(a,v,dims)
 %Tensor Toolbox for MATLAB: <a href="https://www.tensortoolbox.org">www.tensortoolbox.org</a>
 
 
-
 % Check the number of arguments
 if (nargin < 2)
     error('TTV requires at least two arguments.');
 end
 
 % Check for 3rd argument
-if ~exist('dims','var')
+if ~exist('dims', 'var')
     dims = [];
 end
 
 % Check that 2nd argument is cell array. If not, recall with v as a
 % cell array with one element.
 if ~iscell(v)
-    c = ttv(a,{v},dims);
+    c = ttv(a, {v}, dims);
     return;
 end
 
 % Get sorted dims and index for multiplicands
-[dims,vidx] = tt_dimscheck(dims,ndims(a),numel(v));       
+[dims, vidx] = tt_dimscheck(dims, ndims(a), numel(v));
 
 % Check that each multiplicand is the right size.
 for i = 1:numel(dims)
-    if ~isequal(size(v{vidx(i)}),[size(a,dims(i)) 1])
+    if ~isequal(size(v{vidx(i)}), [size(a, dims(i)), 1])
         error('Multiplicand is wrong size');
     end
 end
 
-if exist('tensor/ttv_single','file') == 3
+if exist('tensor/ttv_single', 'file') == 3
     c = a;
-    for i = numel(dims) : -1 : 1
-        c = ttv_single(c,v{vidx(i)},dims(i));
+    for i = numel(dims):-1:1
+        c = ttv_single(c, v{vidx(i)}, dims(i));
     end
     return;
 end
@@ -75,23 +74,22 @@ end
 c = a.data;
 
 % Permute it so that the dimensions we're working with come last
-remdims = setdiff(1:ndims(a),dims);
+remdims = setdiff(1:ndims(a), dims);
 if (ndims(a) > 1)
-    c = permute(c,[remdims dims]);
+    c = permute(c, [remdims, dims]);
 end
 
 % Do each  multiply in sequence, doing the highest index first,
 % which is important for vector multiplies.
 n = ndims(a);
-sz = a.size([remdims dims]);
-for i = numel(dims) : -1 : 1
-    c = reshape(c,prod(sz(1:n-1)),sz(n));
+sz = a.size([remdims, dims]);
+for i = numel(dims):-1:1
+    c = reshape(c, prod(sz(1:n-1)), sz(n));
     c = c * v{vidx(i)};
-    n = n-1;
+    n = n - 1;
 end
 
 % If needed, convert the final result back to a tensor
 if (n > 0)
-    c = tensor(c,sz(1:n));
+    c = tensor(c, sz(1:n));
 end
-

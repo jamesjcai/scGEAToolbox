@@ -28,9 +28,8 @@ iter = 100;
 
 % (5) run HCP
 
-[Z,B,U] = hidden_covariates_model(Fn,Yn,k,lambda,lambda2,lambda3,iter);
+[Z, B, U] = hidden_covariates_model(Fn, Yn, k, lambda, lambda2, lambda3, iter);
 
 % (6) get the residual data:
 
-Res = Yn-Z*B;
-
+Res = Yn - Z * B;

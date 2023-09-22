@@ -1,6 +1,6 @@
-function m = size(t,idx)
+function m = size(t, idx)
 %SIZE Tensor dimensions.
-%  
+%
 %   D = SIZE(T) returns the sizes of each dimension of tensor X in a
 %   vector D with ndims(X) elements.
 %
@@ -21,9 +21,7 @@ function m = size(t,idx)
 %Tensor Toolbox for MATLAB: <a href="https://www.tensortoolbox.org">www.tensortoolbox.org</a>
 
 
-
-
-if exist('idx','var')
+if exist('idx', 'var')
     m = t.size(idx);
 else
     m = t.size;

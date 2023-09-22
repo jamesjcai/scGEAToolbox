@@ -59,7 +59,7 @@ if n ~= size(A, 2)
 end
 
 if ~exist('params', 'var')
-    H = 2 * full(sqrt(mean(mean(A)) / k)) * rand(n, k);
+    H = 2 * full(sqrt(mean(mean(A))/k)) * rand(n, k);
     maxiter = 10000;
     tol = 1e-3;
     alpha = max(max(A))^2;
@@ -76,7 +76,7 @@ else
         end
         H = params.Hinit;
     else
-        H = 2 * full(sqrt(mean(mean(A)) / k)) * rand(n, k);
+        H = 2 * full(sqrt(mean(mean(A))/k)) * rand(n, k);
     end
     if isfield(params, 'maxiter')
         maxiter = params.maxiter;
@@ -110,28 +110,28 @@ I_k = alpha * eye(k);
 
 left = H' * H;
 right = A * H;
-for iter = 1 : maxiter
+for iter = 1:maxiter
 
-    W = nnlsm_blockpivot(left + I_k, (right + alpha * H)', 1, W')';
+    W = nnlsm_blockpivot(left+I_k, (right + alpha * H)', 1, W')';
     left = W' * W;
     right = A * W;
-    H = nnlsm_blockpivot(left + I_k, (right + alpha * W)', 1, H')';
+    H = nnlsm_blockpivot(left+I_k, (right + alpha * W)', 1, H')';
     tempW = sum(W, 2);
     tempH = sum(H, 2);
-    temp = alpha * (H-W);
+    temp = alpha * (H - W);
     gradH = H * left - right + temp;
     left = H' * H;
     right = A * H;
     gradW = W * left - right - temp;
 
     if iter == 1
-        initgrad = sqrt(norm(gradW(gradW<=0|W>0))^2 + norm(gradH(gradH<=0|H>0))^2);
+        initgrad = sqrt(norm(gradW(gradW <= 0 | W > 0))^2+norm(gradH(gradH <= 0 | H > 0))^2);
         if debug
             fprintf('init grad norm %g\n', initgrad);
         end
         continue;
     else
-        projnorm = sqrt(norm(gradW(gradW<=0|W>0))^2 + norm(gradH(gradH<=0|H>0))^2);
+        projnorm = sqrt(norm(gradW(gradW <= 0 | W > 0))^2+norm(gradH(gradH <= 0 | H > 0))^2);
     end
     if projnorm < tol * initgrad
         if debug
@@ -147,15 +147,15 @@ for iter = 1 : maxiter
 end % for iter = 1 : maxiter
 
 if alpha == 0
-    norms_W = sum(W.^2) .^ 0.5;
-    norms_H = sum(H.^2) .^ 0.5;
-    norms = sqrt(norms_W .* norms_H);
+    norms_W = sum(W.^2).^0.5;
+    norms_H = sum(H.^2).^0.5;
+    norms = sqrt(norms_W.*norms_H);
     W = bsxfun(@times, W, norms./norms_W);
     H = bsxfun(@times, H, norms./norms_H);
 end
 
 if computeobj
-    obj = norm(A, 'fro')^2 - 2 * trace(W' * (A*H)) + trace((W'*W) * (H'*H));
+    obj = norm(A, 'fro')^2 - 2 * trace(W'*(A * H)) + trace((W' * W)*(H' * H));
 else
     obj = -1;
 end

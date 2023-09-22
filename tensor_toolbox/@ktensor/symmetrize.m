@@ -21,7 +21,7 @@ if any(sz(2:end) ~= sz(1))
 end
 
 % Distribute lambda evenly into factors
-X = normalize(X,0);
+X = normalize(X, 0);
 
 lambda = X.lambda;
 U = X.u;
@@ -31,41 +31,33 @@ V = U1;
 for i = 2:n
 
     Ui = U{i};
-    
-    for j = 1:size(U1,2)
-        if dot( U1(:,j), Ui(:,j) ) < 0
-            Ui(:,j) = -Ui(:,j);
+
+    for j = 1:size(U1, 2)
+        if dot(U1(:, j), Ui(:, j)) < 0
+            Ui(:, j) = -Ui(:, j);
             lambda(j) = -lambda(j);
         end
     end
-    
+
     V = V + Ui;
 end
 
-V = V./ n;
+V = V ./ n;
 
 % Odd-ordered tensors should not have any negative lambda values
-if mod(ndims(X),2) == 1
+if mod(ndims(X), 2) == 1
     for j = 1:length(lambda)
         if lambda(j) < 0
             lambda(j) = -lambda(j);
-            V(:,j) = -V(:,j);
+            V(:, j) = -V(:, j);
         end
     end
 end
 
-Y = cell(n,1);
+Y = cell(n, 1);
 for i = 1:n
     Y{i} = V;
 end
-Y = ktensor(lambda,Y);
+Y = ktensor(lambda, Y);
 
 %Y = arrange(Y);
-
-
-
-
-    
-
-
-

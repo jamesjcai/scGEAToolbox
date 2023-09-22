@@ -192,101 +192,101 @@ end
         %title(h1,titxt);
         title(h1, targetg);
         subtitle(h1, titxt);
+end
+
+        function i_ResetExpr(~, ~)
+            c = ori_c;
+            delete(s2);
+            s2 = stem3(h2, x, y, c, 'marker', 'none', 'color', 'm');
+
+            %view(h2,ayy,byy);
+
+            delete(s1);
+            s1 = scatter3(h1, x, y, z, sz, c, 'filled');
+            %view(h1,axx,bxx);
+            title(h1, targetg);
+            subtitle(h1, titxt);
+            title(h2, targetg);
+            subtitle(h2, titxt);
     end
 
-    function i_ResetExpr(~, ~)
-        c = ori_c;
-        delete(s2);
-        s2 = stem3(h2, x, y, c, 'marker', 'none', 'color', 'm');
 
-        %view(h2,ayy,byy);
-
-        delete(s1);
-        s1 = scatter3(h1, x, y, z, sz, c, 'filled');
-        %view(h1,axx,bxx);
-        title(h1, targetg);
-        subtitle(h1, titxt);
-        title(h2, targetg);
-        subtitle(h2, titxt);
     end
 
-
-end
-
-function i_genecards(~, ~, g)
-web(sprintf('https://www.genecards.org/cgi-bin/carddisp.pl?gene=%s', g));
-end
-
-function i_PickColorMap(~, ~, c)
-list = {'parula', 'turbo', 'hsv', 'hot', 'cool', 'spring', ...
-    'summer', 'autumn (default)', ...
-    'winter', 'jet'};
-[indx, tf] = listdlg('ListString', list, 'SelectionMode', 'single', ...
-    'PromptString', 'Select a colormap:');
-if tf == 1
-    a = list{indx};
-    if strcmp(a, 'autumn (default)')
-        a = 'autumn';
+        function i_genecards(~, ~, g)
+        web(sprintf('https://www.genecards.org/cgi-bin/carddisp.pl?gene=%s', g));
     end
-    gui.i_setautumncolor(c, a);
-    setpref('scgeatoolbox', 'prefcolormapname', a);
-end
-end
 
-% function callback_linksubplots(~,~)
-%     evalin('base', 'h=findobj(gcf,''type'',''axes'');');
-%     evalin('base', 'hlink = linkprop(h,{''CameraPosition'',''CameraUpVector''});');
-%     evalin('base', 'rotate3d on');
-% end
+        function i_PickColorMap(~, ~, c)
+        list = {'parula', 'turbo', 'hsv', 'hot', 'cool', 'spring', ...
+            'summer', 'autumn (default)', ...
+            'winter', 'jet'};
+        [indx, tf] = listdlg('ListString', list, 'SelectionMode', 'single', ...
+            'PromptString', 'Select a colormap:');
+        if tf == 1
+            a = list{indx};
+            if strcmp(a, 'autumn (default)')
+                a = 'autumn';
+            end
+            gui.i_setautumncolor(c, a);
+            setpref('scgeatoolbox', 'prefcolormapname', a);
+        end
+    end
+
+        % function callback_linksubplots(~,~)
+        %     evalin('base', 'h=findobj(gcf,''type'',''axes'');');
+        %     evalin('base', 'hlink = linkprop(h,{''CameraPosition'',''CameraUpVector''});');
+        %     evalin('base', 'rotate3d on');
+        % end
 
 
-% function i_setautumncolor(c)
-%     a = colormap('autumn');
-%     a(1, :) = [.8 .8 .8];
-%     if numel(unique(c)) == 1
-%         for kk = 1:size(a, 1)
-%             a(kk, :) = [.8 .8 .8];
-%         end
-%     end
-%     colormap(a);
-% end
+        % function i_setautumncolor(c)
+        %     a = colormap('autumn');
+        %     a(1, :) = [.8 .8 .8];
+        %     if numel(unique(c)) == 1
+        %         for kk = 1:size(a, 1)
+        %             a(kk, :) = [.8 .8 .8];
+        %         end
+        %     end
+        %     colormap(a);
+        % end
 
 
-function selectcolormapeditor(~, ~)
-% colormapeditor;
-end
+        function selectcolormapeditor(~, ~)
+        % colormapeditor;
+    end
 
-function [str] = num2bankScalar(num)
-% https://www.mathworks.com/matlabcentral/answers/96131-is-there-a-format-in-matlab-to-display-numbers-such-that-commas-are-automatically-inserted-into-the
-num = floor(num*100) / 100;
-str = num2str(num);
-k = find(str == '.', 1);
-if isempty(k)
-    % str=[str,'.00'];
-end
-% FIN = min(length(str),find(str == '.')-1);
-FIN = length(str);
-for i = FIN - 2:-3:2
-    str(i + 1:end + 1) = str(i:end);
-    str(i) = ',';
-end
-end
+        function [str] = num2bankScalar(num)
+        % https://www.mathworks.com/matlabcentral/answers/96131-is-there-a-format-in-matlab-to-display-numbers-such-that-commas-are-automatically-inserted-into-the
+        num = floor(num*100) / 100;
+        str = num2str(num);
+        k = find(str == '.', 1);
+        if isempty(k)
+            % str=[str,'.00'];
+        end
+        % FIN = min(length(str),find(str == '.')-1);
+        FIN = length(str);
+        for i = FIN - 2:-3:2
+            str(i + 1:end + 1) = str(i:end);
+            str(i) = ',';
+        end
+    end
 
-function within_stemscatter(x, y, z)
-if nargin < 3
-    x = randn(300, 1);
-    y = randn(300, 1);
-    z = abs(randn(300, 1));
-end
-if isempty(z)
-    warndlg('No expression');
-    scatter(x, y, '.');
-else
-    stem3(x, y, z, 'marker', 'none', 'color', 'm');
-    hold on;
-    scatter(x, y, 10, z, 'filled');
-    hold off;
-end
-% [caz,cel]=view;
-% view([-45,-45,300]);
-end
+        function within_stemscatter(x, y, z)
+        if nargin < 3
+            x = randn(300, 1);
+            y = randn(300, 1);
+            z = abs(randn(300, 1));
+        end
+        if isempty(z)
+            warndlg('No expression');
+            scatter(x, y, '.');
+        else
+            stem3(x, y, z, 'marker', 'none', 'color', 'm');
+            hold on;
+            scatter(x, y, 10, z, 'filled');
+            hold off;
+        end
+        % [caz,cel]=view;
+        % view([-45,-45,300]);
+    end

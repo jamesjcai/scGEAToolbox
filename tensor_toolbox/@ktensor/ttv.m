@@ -1,4 +1,4 @@
-function c = ttv(a,v,dims)
+function c = ttv(a, v, dims)
 %TTV Tensor times vector for ktensor.
 %
 %   Y = TTV(X,A,N) computes the product of Kruskal tensor X with a
@@ -20,7 +20,6 @@ function c = ttv(a,v,dims)
 %Tensor Toolbox for MATLAB: <a href="https://www.tensortoolbox.org">www.tensortoolbox.org</a>
 
 
-
 %%%%%%%%%%%%%%%%%%%%%%
 %%% ERROR CHECKING %%%
 %%%%%%%%%%%%%%%%%%%%%%
@@ -31,39 +30,39 @@ if (nargin < 2)
 end
 
 % Check for 3rd argument
-if ~exist('dims','var')
+if ~exist('dims', 'var')
     dims = [];
 end
 
 % Check that 2nd argument is cell array. If not, recall with v as a
 % cell array with one element.
 if ~iscell(v)
-    c = ttv(a,{v},dims);
+    c = ttv(a, {v}, dims);
     return;
 end
 
 % Get sorted dims and index for multiplicands
-[dims,vidx] = tt_dimscheck(dims,ndims(a),numel(v));       
+[dims, vidx] = tt_dimscheck(dims, ndims(a), numel(v));
 
 % Check that each multiplicand is the right size.
 for i = 1:numel(dims)
-    if ~isequal(size(v{vidx(i)}),[size(a,dims(i)) 1])
+    if ~isequal(size(v{vidx(i)}), [size(a, dims(i)), 1])
         error('Multiplicand is wrong size');
     end
 end
 
 % Figure out which dimensions will be left when we're done
-remdims = setdiff(1:ndims(a),dims);
+remdims = setdiff(1:ndims(a), dims);
 
 % Collapse dimensions that are being multiplied out
 newlambda = a.lambda;
-for i = 1:numel(dims) 
-    newlambda = newlambda .* ( a.u{dims(i)}' * v{vidx(i)} );
+for i = 1:numel(dims)
+    newlambda = newlambda .* (a.u{dims(i)}' * v{vidx(i)});
 end
 
 % Create final result
 if isempty(remdims)
     c = sum(newlambda);
 else
-    c = ktensor(newlambda,a.u{remdims});
+    c = ktensor(newlambda, a.u{remdims});
 end

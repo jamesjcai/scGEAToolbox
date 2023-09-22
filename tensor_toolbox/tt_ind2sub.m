@@ -1,4 +1,4 @@
-function subs = tt_ind2sub(siz,idx)
+function subs = tt_ind2sub(siz, idx)
 %TT_IND2SUB Multiple subscripts from linear indices.
 %
 %   SUBS = TT_IND2SUB(SIZ,INDS) returns that subscripts equivalent
@@ -14,11 +14,11 @@ if isempty(idx)
     return;
 end
 
-k = [1 cumprod(siz(1:end-1))];
+k = [1, cumprod(siz(1:end-1))];
 n = length(siz);
-idx=idx-1;
-for i = n : -1 : 1 
-    div=floor(idx/k(i));
-    subs(:,i) = div+1;
-    idx=idx-k(i)*div;
+idx = idx - 1;
+for i = n:-1:1
+    div = floor(idx/k(i));
+    subs(:, i) = div + 1;
+    idx = idx - k(i) * div;
 end

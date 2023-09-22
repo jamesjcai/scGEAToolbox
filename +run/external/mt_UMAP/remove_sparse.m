@@ -1,4 +1,4 @@
-function M=remove_sparse(M, op)
+function M = remove_sparse(M, op)
 %REMOVE_SPARSE Set to zero the entries of M for which op(M) = 1.
 %
 % M = REMOVE_SPARSE(M, op)
@@ -6,9 +6,9 @@ function M=remove_sparse(M, op)
 % Parameters
 % ----------
 % M: sparse matrix of size (m1, m2)
-% 
+%
 % op: a function accepting doubles as input and outputting a boolean.
-% 
+%
 % Returns
 % -------
 % M: sparse matrix of size (m1, m2)
@@ -18,12 +18,12 @@ function M=remove_sparse(M, op)
 %   Primary Developer: Stephen Meehan <swmeehan@stanford.edu>
 %   Math Lead & Secondary Developer:  Connor Meehan <connor.gw.meehan@gmail.com>
 %   Bioinformatics Lead:  Wayne Moore <wmoore@stanford.edu>
-%   Provided by the Herzenberg Lab at Stanford University 
+%   Provided by the Herzenberg Lab at Stanford University
 %   License: BSD 3 clause
 %
 
-idxs=find(M);
-logicalIdxs=feval(op, M(idxs));
-removeIdxs=idxs(logicalIdxs);
-M(removeIdxs)=0;
+idxs = find(M);
+logicalIdxs = feval(op, M(idxs));
+removeIdxs = idxs(logicalIdxs);
+M(removeIdxs) = 0;
 end

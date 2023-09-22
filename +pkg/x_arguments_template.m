@@ -1,8 +1,8 @@
 % function [out] = x_arguments_template(X,n,b,options,axesProps)
-% 
-% % 
+%
+% %
 % web('https://www.mathworks.com/help/matlab/matlab_prog/argument-validation-functions.html')
-% arguments    
+% arguments
 %     X double {mustBeNonsparse}
 %     A (1,1) string
 %     B (1,:) double
@@ -19,18 +19,18 @@
 %     axesProps.Color string {mustBeMember(axesProps.Color,["red","green","blue"])}
 %     axesProps.Box matlab.lang.OnOffSwitchState
 % end
-% 
+%
 % % a = myAxes("XLim",[1,10],"Color","red","Box","on");
 % % myRectangle(4,5)
 % % myRectangle(4,5,LineStyle=":",LineWidth=2)
 % % myRectangle(4,5,LineWidth=2,LineStyle=":")
 % % myRectangle(4,5,LineStyle=":")
 % % myRectangle(4,5,LineWidth=2)
-% 
+%
 % arguments (Output)
 %     out (1,:) double
 % end
-% 
+%
 % % Custom validation function
 % function mustBeEqualSize(a,b)
 %     % Test for equal size
@@ -40,12 +40,11 @@
 %         throwAsCaller(MException(eid,msg))
 %     end
 % end
-% 
+%
 % end
-% 
+%
 %
 %
 %
 %
 % https://www.mathworks.com/matlabcentral/fileexchange/59561-spider_plot?focused=68d60cc9-ef7d-474b-ba34-929e593014e4&tab=example
-

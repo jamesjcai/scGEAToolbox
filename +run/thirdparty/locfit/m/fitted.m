@@ -7,7 +7,7 @@ function y = fitted(fit)
 %
 %  Author: Catherine Loader.
 
-z = predict(fit,'d','restyp','fit');
-y = backtr(z,fit);
+z = predict(fit, 'd', 'restyp', 'fit');
+y = backtr(z, fit);
 
 return;

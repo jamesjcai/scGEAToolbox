@@ -1,5 +1,5 @@
 % https://satijalab.org/seurat/v3.0/sctransform_vignette.html
-% 
+%
 % #' Use regularized negative binomial regression to normalize UMI count data
 % #'
 % #' This function calls sctransform::vst. The sctransform package is available at
@@ -229,4 +229,4 @@
 %   object <- LogSeuratCommand(object = object)
 %   return(object)
 % }
-% 
+%

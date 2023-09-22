@@ -5,6 +5,6 @@
 function clbs = clstoclbs(cls)
 
 clbs = [];
-for i=1:size(cls,1)
-  clbs = [clbs; cltoclb(cls(i,:))];
+for i = 1:size(cls, 1)
+    clbs = [clbs; cltoclb(cls(i, :))];
 end

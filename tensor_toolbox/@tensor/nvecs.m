@@ -1,4 +1,4 @@
-function u = nvecs(X,n,r,opts)
+function u = nvecs(X, n, r, opts)
 %NVECS Compute the leading mode-n vectors for a tensor.
 %
 %   U = NVECS(X,n,r) computes the r leading eigenvalues of Xn*Xn'
@@ -26,44 +26,43 @@ function u = nvecs(X,n,r,opts)
 %Tensor Toolbox for MATLAB: <a href="https://www.tensortoolbox.org">www.tensortoolbox.org</a>
 
 
-
-if ~exist('opts','var') || isempty(opts)
+if ~exist('opts', 'var') || isempty(opts)
     opts = struct;
 end
 
-if isfield(opts,'eigsopts')
+if isfield(opts, 'eigsopts')
     eigsopts = opts.eigsopts;
 else
     eigsopts.disp = 0;
 end
 
-if isfield(opts,'svds')
+if isfield(opts, 'svds')
     flag = opts.svds;
 else
     flag = false;
 end
 
-Xn = double(tenmat(X,n));
+Xn = double(tenmat(X, n));
 
 if flag
-    [u,~,~] = svds(Xn, r);
+    [u, ~, ~] = svds(Xn, r);
 else
-    Y = Xn*Xn';
-    [u,~] = eigs(Y, r, 'LM', eigsopts);
+    Y = Xn * Xn';
+    [u, ~] = eigs(Y, r, 'LM', eigsopts);
 end
 
-if isfield(opts,'flipsign') 
+if isfield(opts, 'flipsign')
     flipsign = opts.flipsign;
 else
     flipsign = true;
 end
-    
+
 if flipsign
     % Make the largest magnitude element be positive
-    [~,loc] = max(abs(u));
+    [~, loc] = max(abs(u));
     for i = 1:r
-        if u(loc(i),i) < 0
-            u(:,i) = u(:,i) * -1;
+        if u(loc(i), i) < 0
+            u(:, i) = u(:, i) * -1;
         end
     end
 end

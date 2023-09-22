@@ -11,8 +11,8 @@ function X = full(T)
 % Preallocate to ensure there is enough space
 X = tenzeros(size(T));
 
-% Now do the calculation 
-X = ttm(T.core,T.u);
+% Now do the calculation
+X = ttm(T.core, T.u);
 
 % Make sure that X is a dense tensor (small chance it could be a sparse
 % tensor).

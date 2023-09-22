@@ -1,4 +1,4 @@
-function y = residuals(fit,type)
+function y = residuals(fit, type)
 
 % Residuals (or a few other things) from a locfit() fit.
 %
@@ -16,8 +16,8 @@ function y = residuals(fit,type)
 %
 %  Author: Catherine Loader.
 
-if (nargin<2) type = 'dev'; end
-  
-y = predict(fit,'d','restyp',type);
+if (nargin < 2) type = 'dev'; end
+
+y = predict(fit, 'd', 'restyp', type);
 
 return;

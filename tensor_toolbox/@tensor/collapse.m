@@ -1,4 +1,4 @@
-function Y = collapse(X,dims,fun)
+function Y = collapse(X, dims, fun)
 %COLLAPSE Collapse tensor along specified dimensions.
 %
 %   Y = COLLAPSE(X,DIMS) sums the entries of X along all dimensions
@@ -22,7 +22,6 @@ function Y = collapse(X,dims,fun)
 %Tensor Toolbox for MATLAB: <a href="https://www.tensortoolbox.org">www.tensortoolbox.org</a>
 
 
-
 if isempty(X.data)
     Y = [];
     return;
@@ -41,8 +40,8 @@ if ~exist('fun', 'var')
     fun = @sum;
 end
 
-dims = tt_dimscheck(dims,ndims(X));
-remdims = setdiff(1:ndims(X),dims);
+dims = tt_dimscheck(dims, ndims(X));
+remdims = setdiff(1:ndims(X), dims);
 
 % Check for the case where we accumulate over *all* dimensions
 if isempty(remdims)
@@ -51,20 +50,16 @@ if isempty(remdims)
 end
 
 % Calculate the size of the result
-newsiz = size(X,remdims);
+newsiz = size(X, remdims);
 
 % Convert to a matrix where each row is going to be collapsed
-A = double(tenmat(X,remdims,dims));
+A = double(tenmat(X, remdims, dims));
 
 % Apply the collapse function
-B = zeros(size(A,1),1);
-for i = 1:size(A,1)
-    B(i) = fun(A(i,:));
+B = zeros(size(A, 1), 1);
+for i = 1:size(A, 1)
+    B(i) = fun(A(i, :));
 end
 
 % Form and return the final result
-Y = tensor(tenmat(B,1:numel(remdims),[],newsiz));
-
-
-
-
+Y = tensor(tenmat(B, 1:numel(remdims), [], newsiz));

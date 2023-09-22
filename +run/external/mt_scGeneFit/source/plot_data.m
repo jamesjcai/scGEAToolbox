@@ -25,25 +25,25 @@
 function plot_data(P, names, filename, indices)
 
 hold off
-aux=0;
-if nargin>3
-    scatter(P(not(indices),1), P(not(indices),2), '.', 'black');
+aux = 0;
+if nargin > 3
+    scatter(P(not(indices), 1), P(not(indices), 2), '.', 'black');
     hold on
-    gscatter(P(indices,1), P(indices,2), names(indices,1));
-    aux=1;
+    gscatter(P(indices, 1), P(indices, 2), names(indices, 1));
+    aux = 1;
 else
-    gscatter(P(:,1), P(:,2), names(:,1));
+    gscatter(P(:, 1), P(:, 2), names(:, 1));
 end
 colormap('jet')
-c=get(gca, 'Children');
-for i=1:size(c,1)-aux
-    c(i).MarkerSize=10;
+c = get(gca, 'Children');
+for i = 1:size(c, 1) - aux
+    c(i).MarkerSize = 10;
 end
-[h,~] = legend(gca);
-h.Location='bestoutside';
+[h, ~] = legend(gca);
+h.Location = 'bestoutside';
 
 axis off
-set(h,'FontSize',16);
+set(h, 'FontSize', 16);
 
 saveas(gcf, filename)
 

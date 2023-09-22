@@ -48,32 +48,32 @@ distfun = 'euclidean';
 make_plot_opt_t = true;
 
 % get input parameters
-for i=1:length(varargin)
+for i = 1:length(varargin)
     % k for knn adaptive sigma
-    if(strcmp(varargin{i},'k'))
-       k = lower(varargin{i+1});
+    if (strcmp(varargin{i}, 'k'))
+        k = lower(varargin{i+1});
     end
     % a (alpha) for alpha decaying kernel
-    if(strcmp(varargin{i},'a'))
-       a = lower(varargin{i+1});
+    if (strcmp(varargin{i}, 'a'))
+        a = lower(varargin{i+1});
     end
     % diffusion time
-    if(strcmp(varargin{i},'t'))
-       t = lower(varargin{i+1});
+    if (strcmp(varargin{i}, 't'))
+        t = lower(varargin{i+1});
     end
     % npca
-    if(strcmp(varargin{i},'npca'))
-       npca = lower(varargin{i+1});
+    if (strcmp(varargin{i}, 'npca'))
+        npca = lower(varargin{i+1});
     end
     % make plot optimal t
-    if(strcmp(varargin{i},'make_plot_opt_t'))
-       make_plot_opt_t = lower(varargin{i+1});
+    if (strcmp(varargin{i}, 'make_plot_opt_t'))
+        make_plot_opt_t = lower(varargin{i+1});
     end
 end
 
 % PCA
 disp 'doing PCA'
-[U,~,~] = randPCA(data', npca); % this is svd
+[U, ~, ~] = randPCA(data', npca); % this is svd
 pc = data * U; % this is PCA without mean centering to be able to handle sparse data
 
 % compute kernel
@@ -81,7 +81,7 @@ disp 'computing kernel'
 K = compute_kernel(pc, 'k', k, 'a', a, 'distfun', distfun);
 
 % row stochastic
-P = bsxfun(@rdivide, K, sum(K,2));
+P = bsxfun(@rdivide, K, sum(K, 2));
 
 % optimal t
 if isempty(t)
@@ -90,8 +90,8 @@ if isempty(t)
 else
     disp 'imputing using provided t'
     pc_imputed = pc;
-    for I=1:t
-        disp(['t = ' num2str(I)]);
+    for I = 1:t
+        disp(['t = ', num2str(I)]);
         pc_imputed = P * pc_imputed;
     end
 end

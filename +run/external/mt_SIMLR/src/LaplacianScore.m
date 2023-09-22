@@ -19,7 +19,7 @@ function [Y] = LaplacianScore(X, W)
 %
 %       LaplacianScore = LaplacianScore(fea,W);
 %       [junk, index] = sort(-LaplacianScore);
-%       
+%
 %       newfea = fea(:,index);
 %       %the features in newfea will be sorted based on their importance.
 %
@@ -31,39 +31,39 @@ function [Y] = LaplacianScore(X, W)
 %
 %   Xiaofei He, Deng Cai and Partha Niyogi, "Laplacian Score for Feature Selection".
 %   Advances in Neural Information Processing Systems 18 (NIPS 2005),
-%   Vancouver, Canada, 2005.   
+%   Vancouver, Canada, 2005.
 %
 %   Deng Cai, 2004/08
 
 
-if nargin == 0, selfdemo; return; end
+if nargin == 0, selfdemo;
+    return;
+end
 
-[nSmp,~] = size(X);
+[nSmp, ~] = size(X);
 
-if size(W,1) ~= nSmp
+if size(W, 1) ~= nSmp
     error('W is error');
 end
 
-D = full(sum(W,2));
+D = full(sum(W, 2));
 L = W;
 
-allone = ones(nSmp,1);
+allone = ones(nSmp, 1);
 
 
-tmp1 = D'*X;
+tmp1 = D' * X;
 
-D = sparse(1:nSmp,1:nSmp,D,nSmp,nSmp);
+D = sparse(1:nSmp, 1:nSmp, D, nSmp, nSmp);
 
-DPrime = sum((X'*D)'.*X)-tmp1.*tmp1/sum(diag(D));
-LPrime = sum((X'*L)'.*X)-tmp1.*tmp1/sum(diag(D));
+DPrime = sum((X' * D)'.*X) - tmp1 .* tmp1 / sum(diag(D));
+LPrime = sum((X' * L)'.*X) - tmp1 .* tmp1 / sum(diag(D));
 
 DPrime(find(DPrime < 1e-12)) = 10000;
 
-Y = LPrime./DPrime;
+Y = LPrime ./ DPrime;
 Y = Y';
 Y = full(Y);
 
 
-
-    
 %---------------------------------------------------

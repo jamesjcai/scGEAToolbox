@@ -61,26 +61,26 @@ distSparse = issparse(D);
 n = size(D, 1);
 
 if (distSparse)
-    max_rows = full(max(sum(D~=0)));
-        if (knn > max_rows)
-                knn = max_rows;
-        end
+    max_rows = full(max(sum(D ~= 0)));
+    if (knn > max_rows)
+        knn = max_rows;
+    end
     max_nonzeros = nnz(D);
     i = zeros(max_nonzeros, 1);
     j = zeros(max_nonzeros, 1);
     sorted_s = zeros(max_nonzeros, 1);
     idx_s = zeros(max_nonzeros, 1);
     current_pos = 0;
-    for col_num = 1 : n
+    for col_num = 1:n
         col_nz = D(:, col_num);
         idx_temp = find(col_nz ~= 0);
         col_nz = full(col_nz(col_nz ~= 0));
         col_nnz = length(col_nz);
-        i(current_pos+1 : current_pos+col_nnz) = 1 : col_nnz;
-        j(current_pos+1 : current_pos+col_nnz) = col_num;
+        i(current_pos+1:current_pos+col_nnz) = 1:col_nnz;
+        j(current_pos+1:current_pos+col_nnz) = col_num;
         [sorted, idx_relative] = sort(col_nz);
-        sorted_s(current_pos+1 : current_pos+col_nnz) = sorted;
-        idx_s(current_pos+1 : current_pos+col_nnz) = idx_temp(idx_relative);
+        sorted_s(current_pos+1:current_pos+col_nnz) = sorted;
+        idx_s(current_pos+1:current_pos+col_nnz) = idx_temp(idx_relative);
         if (nn > col_nnz)
             ls(col_num) = sorted(end);
         else
@@ -91,10 +91,10 @@ if (distSparse)
     ls = sqrt(ls)';
     sorted = sparse(i, j, sorted_s, max_rows, n);
     idx = sparse(i, j, idx_s, max_rows, n);
-        j = meshgrid(1:n, 1:knn);
-        j = j(:);
-        i = full(idx(1:knn, :));
-        i = i(:);
+    j = meshgrid(1:n, 1:knn);
+    j = j(:);
+    i = full(idx(1:knn, :));
+    i = i(:);
     s = full(sorted(1:knn, :));
     s = s(:);
     temp = find(i ~= 0);
@@ -104,11 +104,11 @@ if (distSparse)
     s = s(temp);
     s = [s; s];
 else
-    if (nn > n-1)
-        nn = n-1;
+    if (nn > n - 1)
+        nn = n - 1;
     end
-    if (knn > n-1)
-        knn = n-1;
+    if (knn > n - 1)
+        knn = n - 1;
     end
     [sorted, idx] = sort(D);
     ls = sorted(nn+1, :);
@@ -127,14 +127,14 @@ else
     s = [s; s];
 end
 
-A_s = exp( -s ./ (ls(index(:,1)).*ls(index(:,2))) );
+A_s = exp(-s./(ls(index(:, 1)) .* ls(index(:, 2))));
 
 if (useSparse)
     [index, i, ~] = unique(index, 'rows');
     A_s = A_s(i);
-    A = sparse(index(:,1), index(:,2), A_s, n, n);
+    A = sparse(index(:, 1), index(:, 2), A_s, n, n);
 else
-    index = (index(:,2) - 1) * n + index(:, 1);
+    index = (index(:, 2) - 1) * n + index(:, 1);
     A = zeros(n);
     A(index) = A_s;
 end

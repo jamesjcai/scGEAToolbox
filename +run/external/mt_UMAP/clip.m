@@ -2,7 +2,7 @@
 %   Math Lead & Primary Developer:  Connor Meehan <connor.gw.meehan@gmail.com>
 %   Secondary Developer: Stephen Meehan <swmeehan@stanford.edu>
 %   Bioinformatics Lead:  Wayne Moore <wmoore@stanford.edu>
-%   Funded by the Herzenberg Lab at Stanford University 
+%   Funded by the Herzenberg Lab at Stanford University
 %   License: BSD 3 clause
 %
 function val = clip(val)
@@ -11,15 +11,15 @@ function val = clip(val)
 % algorithm.
 %
 % val = CLIP(val)
-% 
+%
 % Parameters
 % ----------
 % val: double
 %     The value to be clamped.
-% 
+%
 % Returns
 % -------
 % The clamped value, now fixed to be in the range -4 to 4.
 
- val = min(4, val);
- val = max(-4, val);
+val = min(4, val);
+val = max(-4, val);

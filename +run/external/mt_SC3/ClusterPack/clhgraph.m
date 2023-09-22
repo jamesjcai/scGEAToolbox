@@ -1,12 +1,12 @@
 % function cl = clhgraph(x,k,sfct)
 %
 % DESCRIPTION
-%   provides cluster labels 1 to k from hypergraph partitioning 
+%   provides cluster labels 1 to k from hypergraph partitioning
 %   sfct is ignored
 %
 % Copyright (c) 1998-2011 by Alexander Strehl
 
 
-function cl = clhgraph(x,k,~)
+function cl = clhgraph(x, k, ~)
 
-cl = hmetis(x,k);
+cl = hmetis(x, k);

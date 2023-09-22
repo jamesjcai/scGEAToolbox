@@ -23,32 +23,32 @@ function resultsLWEA = runLWEA(S, ks)
 
 
 d = stod(S); %clear S %convert similarity matrix to distance vector
-% average linkage 
-Zal = linkage(d,'average'); clear d
+% average linkage
+Zal = linkage(d, 'average'); clear d
 
-resultsLWEA = zeros(size(S,1), numel(ks));
- for i = 1:numel(ks)
-     K = ks(i);
+resultsLWEA = zeros(size(S, 1), numel(ks));
+for i = 1:numel(ks)
+    K = ks(i);
     % disp(['Obtain ',num2str(K),' clusters by LWEA.']); tic;
-    resultsLWEA(:,i) = cluster(Zal,'maxclust',K);
- end
- 
- function d = stod(S)
-%==========================================================================
-% FUNCTION: d = stod(S)
-% DESCRIPTION: This function converts similarity values to distance values
-%              and change matrix's format from square to vector (input
-%              format for linkage function)
-%
-% INPUTS:   S = N-by-N similarity matrix
-%
-% OUTPUT:   d = a distance vector
-%==========================================================================
-% copyright (c) 2010 Iam-on & Garrett
-%==========================================================================
-
-s = [];
-for a = 1:length(S)-1 %change matrix's format to be input of linkage fn
-    s = [s S(a,a+1:end)];
+    resultsLWEA(:, i) = cluster(Zal, 'maxclust', K);
 end
-d = 1 - s; %compute distance (d = 1-sim)
+
+    function d = stod(S)
+        %==========================================================================
+        % FUNCTION: d = stod(S)
+        % DESCRIPTION: This function converts similarity values to distance values
+        %              and change matrix's format from square to vector (input
+        %              format for linkage function)
+        %
+        % INPUTS:   S = N-by-N similarity matrix
+        %
+        % OUTPUT:   d = a distance vector
+        %==========================================================================
+        % copyright (c) 2010 Iam-on & Garrett
+        %==========================================================================
+
+        s = [];
+        for a = 1:length(S) - 1 %change matrix's format to be input of linkage fn
+            s = [s, S(a, a+1:end)];
+        end
+        d = 1 - s; %compute distance (d = 1-sim)

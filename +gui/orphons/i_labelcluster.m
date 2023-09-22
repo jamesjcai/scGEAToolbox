@@ -10,7 +10,7 @@
 %         return;
 %     end
 %     if ~(fsz>=1 && fsz<=30), return; end
-    
+
 %         if stxtyes
 %             stxt=sprintf('%s',cL{i});
 %         else

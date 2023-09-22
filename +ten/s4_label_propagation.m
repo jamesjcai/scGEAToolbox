@@ -5,8 +5,8 @@
 % addpath('C:\Users\jcai\Documents\GitHub\PCrTdMa\MATLAB\thirdparty\adapt_apV3');
 % rmpath('C:\Users\jcai\Documents\GitHub\PCrTdMa\MATLAB\thirdparty\AffinityPropagation');
 
-[~,i]=sort(vecnorm(aln0-aln1,2,2),'descend');
-gx=upper(unique(genelist(i),'stable'));
+[~, i] = sort(vecnorm(aln0-aln1, 2, 2), 'descend');
+gx = upper(unique(genelist(i), 'stable'));
 
 
 return;
@@ -14,8 +14,6 @@ return;
 %{
 [Tpbp,Tnbp]=run.r_fgsea(gx,[],'bp');
 [Tpmf,Tnmf]=run.r_fgsea(gx,[],'mf');
-
-
 
 
 %%
@@ -27,12 +25,12 @@ s=-(pdist2(aln,aln).^2);
 %%
 methodid=1;
 switch methodid
-case 1
-    init_pref=median(s(s>-realmax));          % Set preference to median similarity
-case 2
-    N = size(aln,1);
-    init_pref = min(s(s~=0));    % set the preference value as a common value of median of s
-    init_pref = init_pref * log(N);
+    case 1
+        init_pref=median(s(s>-realmax));          % Set preference to median similarity
+    case 2
+        N = size(aln,1);
+        init_pref = min(s(s~=0));    % set the preference value as a common value of median of s
+        init_pref = init_pref * log(N);
 end
 
 %%

@@ -1,4 +1,4 @@
-function t = reshape(t,siz)
+function t = reshape(t, siz)
 %RESHAPE Change tensor size.
 %
 %   RESHAPE(X,SIZ) returns the tensor whose elements
@@ -9,14 +9,13 @@ function t = reshape(t,siz)
 %   reshape(X,[4,3,2])
 %
 %   See also TENSOR, TENSOR/SQUEEZE, TENSOR/PERMUTE.
-%   
+%
 %Tensor Toolbox for MATLAB: <a href="https://www.tensortoolbox.org">www.tensortoolbox.org</a>
-
 
 
 if prod(t.size) ~= prod(siz)
     error('Number of elements cannot change');
 end
 
-t.data = reshape(t.data,siz);
+t.data = reshape(t.data, siz);
 t.size = siz;

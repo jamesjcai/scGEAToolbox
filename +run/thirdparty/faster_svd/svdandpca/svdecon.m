@@ -1,4 +1,4 @@
-function [U,S,V] = svdecon(X)
+function [U, S, V] = svdecon(X)
 % Input:
 % X : m x n matrix
 %
@@ -11,33 +11,33 @@ function [U,S,V] = svdecon(X)
 % Vipin Vijayan (2014)
 
 %X = bsxfun(@minus,X,mean(X,2));
-[m,n] = size(X);
+[m, n] = size(X);
 
-if  m <= n
-    C = X*X';
-    [U,D] = eig(C);
+if m <= n
+    C = X * X';
+    [U, D] = eig(C);
     clear C;
-    
-    [d,ix] = sort(abs(diag(D)),'descend');
-    U = U(:,ix);    
-    
+
+    [d, ix] = sort(abs(diag(D)), 'descend');
+    U = U(:, ix);
+
     if nargout > 2
-        V = X'*U;
+        V = X' * U;
         s = sqrt(d);
-        V = bsxfun(@(x,c)x./c, V, s');
+        V = bsxfun(@(x, c)x./c, V, s');
         S = diag(s);
     end
 else
-    C = X'*X; 
-    [V,D] = eig(C);
+    C = X' * X;
+    [V, D] = eig(C);
     clear C;
-    
-    [d,ix] = sort(abs(diag(D)),'descend');
-    V = V(:,ix);    
-    
-    U = X*V; % convert evecs from X'*X to X*X'. the evals are the same.
+
+    [d, ix] = sort(abs(diag(D)), 'descend');
+    V = V(:, ix);
+
+    U = X * V; % convert evecs from X'*X to X*X'. the evals are the same.
     %s = sqrt(sum(U.^2,1))';
     s = sqrt(d);
-    U = bsxfun(@(x,c)x./c, U, s');
+    U = bsxfun(@(x, c)x./c, U, s');
     S = diag(s);
 end

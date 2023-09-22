@@ -1,4 +1,4 @@
-function Z = or(X,Y)
+function Z = or(X, Y)
 %OR Logical OR (|) for tensors.
 %
 %   See also TENSOR.
@@ -6,5 +6,4 @@ function Z = or(X,Y)
 %Tensor Toolbox for MATLAB: <a href="https://www.tensortoolbox.org">www.tensortoolbox.org</a>
 
 
-
-Z = tenfun(@or,X,Y);
+Z = tenfun(@or, X, Y);

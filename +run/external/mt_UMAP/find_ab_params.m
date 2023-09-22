@@ -1,4 +1,4 @@
-function [a,b] = find_ab_params(spread, min_dist)
+function [a, b] = find_ab_params(spread, min_dist)
 %FIND_AB_PARAMS Fit a and b parameters for the differentiable curve used in
 % lower dimensional fuzzy simplicial complex construction. We want the
 % smooth curve (from a pre-defined family with simple gradient) that best
@@ -17,13 +17,13 @@ function [a,b] = find_ab_params(spread, min_dist)
 %     on the manifold are drawn closer together, while larger values will
 %     result on a more even dispersal of points. The value should be set
 %     relative to the "spread" value, which determines the scale at which
-%     embedded points will be spread out.  
-% 
+%     embedded points will be spread out.
+%
 % Returns
 % -------
 % a: double
 %     Parameter of differentiable approximation of right adjoint functor.
-% 
+%
 % b: double
 %     Parameter of differentiable approximation of right adjoint functor.
 %
@@ -31,17 +31,17 @@ function [a,b] = find_ab_params(spread, min_dist)
 %   Math Lead & Primary Developer:  Connor Meehan <connor.gw.meehan@gmail.com>
 %   Secondary Developer: Stephen Meehan <swmeehan@stanford.edu>
 %   Bioinformatics Lead:  Wayne Moore <wmoore@stanford.edu>
-%   Provided by the Herzenberg Lab at Stanford University 
+%   Provided by the Herzenberg Lab at Stanford University
 %   License: BSD 3 clause
 %
 
-    curve = @(a,b,x) (1./(1 + a*x.^(2*b)));
+curve = @(a, b, x) (1 ./ (1 + a * x.^(2 * b)));
 
-    xv = linspace(0, 3*spread, 300);
-    yv = (xv < min_dist) + ~(xv < min_dist).*exp(-(xv - min_dist) / spread);
+xv = linspace(0, 3*spread, 300);
+yv = (xv < min_dist) + ~(xv < min_dist) .* exp(-(xv - min_dist)/spread);
 
-    f = fit(xv', yv', curve);
-    params = coeffvalues(f);
-    a = params(1);
-    b = params(2);
+f = fit(xv', yv', curve);
+params = coeffvalues(f);
+a = params(1);
+b = params(2);
 end

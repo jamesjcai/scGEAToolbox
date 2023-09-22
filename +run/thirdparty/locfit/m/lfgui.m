@@ -28,12 +28,12 @@ function varargout = lfgui(varargin)
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
-gui_State = struct('gui_Name',       mfilename, ...
-                   'gui_Singleton',  gui_Singleton, ...
-                   'gui_OpeningFcn', @lfgui_OpeningFcn, ...
-                   'gui_OutputFcn',  @lfgui_OutputFcn, ...
-                   'gui_LayoutFcn',  [] , ...
-                   'gui_Callback',   []);
+gui_State = struct('gui_Name', mfilename, ...
+    'gui_Singleton', gui_Singleton, ...
+    'gui_OpeningFcn', @lfgui_OpeningFcn, ...
+    'gui_OutputFcn', @lfgui_OutputFcn, ...
+    'gui_LayoutFcn', [], ...
+    'gui_Callback', []);
 if nargin && ischar(varargin{1})
     gui_State.gui_Callback = str2func(varargin{1});
 end
@@ -47,67 +47,65 @@ end
 
 
 % --- Executes just before lfgui is made visible.
-function lfgui_OpeningFcn(hObject, ~, handles, varargin)
-% This function has no output args, see OutputFcn.
-% hObject    handle to figure
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-% varargin   command line arguments to lfgui (see VARARGIN)
+    function lfgui_OpeningFcn(hObject, ~, handles, varargin)
+        % This function has no output args, see OutputFcn.
+        % hObject    handle to figure
+        % eventdata  reserved - to be defined in a future version of MATLAB
+        % handles    structure with handles and user data (see GUIDATA)
+        % varargin   command line arguments to lfgui (see VARARGIN)
 
-fit = locfit(varargin{:});
-lfplot(fit);
-handles.lfargs = varargin;
+        fit = locfit(varargin{:});
+        lfplot(fit);
+        handles.lfargs = varargin;
 
-% Choose default command line output for lfgui
-handles.output = hObject;
+        % Choose default command line output for lfgui
+        handles.output = hObject;
 
-% Update handles structure
-guidata(hObject, handles);
+        % Update handles structure
+        guidata(hObject, handles);
 
-% UIWAIT makes lfgui wait for user response (see UIRESUME)
-% uiwait(handles.figure1);
-
-
-% --- Outputs from this function are returned to the command line.
-function varargout = lfgui_OutputFcn(~, ~, handles) 
-% varargout  cell array for returning output args (see VARARGOUT);
-% hObject    handle to figure
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Get default command line output from handles structure
-varargout{1} = handles.output;
+        % UIWAIT makes lfgui wait for user response (see UIRESUME)
+        % uiwait(handles.figure1);
 
 
-% --- Executes on slider movement.
-function slider1_Callback(hObject, ~, handles)
-% hObject    handle to slider1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
+        % --- Outputs from this function are returned to the command line.
+            function varargout = lfgui_OutputFcn(~, ~, handles)
+                % varargout  cell array for returning output args (see VARARGOUT);
+                % hObject    handle to figure
+                % eventdata  reserved - to be defined in a future version of MATLAB
+                % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'Value') returns position of slider
-%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
-
-n = get(hObject,'Value');
-n0 = get(hObject,'Min');
-n1 = get(hObject,'Max');
-nn = 0.1+(n-n0)/(n1-n0);
-fit = locfit(handles.lfargs{:},'nn',nn);
-lfplot(fit);
-
-% --- Executes during object creation, after setting all properties.
-function slider1_CreateFcn(hObject, ~, ~)
-% hObject    handle to slider1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: slider controls usually have a light gray background, change
-%       'usewhitebg' to 0 to use default.  See ISPC and COMPUTER.
-usewhitebg = 1;
-if usewhitebg
-    set(hObject,'BackgroundColor',[.9 .9 .9]);
-else
-    set(hObject,'BackgroundColor',get(0,'defaultUicontrolBackgroundColor'));
-end
+                % Get default command line output from handles structure
+                varargout{1} = handles.output;
 
 
+                % --- Executes on slider movement.
+                    function slider1_Callback(hObject, ~, handles)
+                        % hObject    handle to slider1 (see GCBO)
+                        % eventdata  reserved - to be defined in a future version of MATLAB
+                        % handles    structure with handles and user data (see GUIDATA)
+
+                        % Hints: get(hObject,'Value') returns position of slider
+                        %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+                        n = get(hObject, 'Value');
+                        n0 = get(hObject, 'Min');
+                        n1 = get(hObject, 'Max');
+                        nn = 0.1 + (n - n0) / (n1 - n0);
+                        fit = locfit(handles.lfargs{:}, 'nn', nn);
+                        lfplot(fit);
+
+                        % --- Executes during object creation, after setting all properties.
+                            function slider1_CreateFcn(hObject, ~, ~)
+                                % hObject    handle to slider1 (see GCBO)
+                                % eventdata  reserved - to be defined in a future version of MATLAB
+                                % handles    empty - handles not created until after all CreateFcns called
+
+                                % Hint: slider controls usually have a light gray background, change
+                                %       'usewhitebg' to 0 to use default.  See ISPC and COMPUTER.
+                                usewhitebg = 1;
+                                if usewhitebg
+                                    set(hObject, 'BackgroundColor', [.9, .9, .9]);
+                                else
+                                    set(hObject, 'BackgroundColor', get(0, 'defaultUicontrolBackgroundColor'));
+                                end

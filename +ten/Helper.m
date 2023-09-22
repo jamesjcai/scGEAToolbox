@@ -1,37 +1,37 @@
 classdef Helper
-% Helper defines miscelanious functions for loading, converting, preparing, and analyzing data
-%
-%#ok<*AGROW>
+    % Helper defines miscelanious functions for loading, converting, preparing, and analyzing data
+    %
+    %#ok<*AGROW>
 
     methods (Static)
         function Test
             disp('xxx');
         end
 
-        function [A]=filtadjc(A,q,makesparse)
+        function [A] = filtadjc(A, q, makesparse)
             %Filter adjacnecy matrix A with cutoff Q
             %
             % A - adjacency matrix
-            
-            if nargin<3, makesparse=true; end
-            if nargin<2, q=0.95; end
-            dim=size(A);
-            if numel(dim)==2
+
+            if nargin < 3, makesparse = true; end
+            if nargin < 2, q = 0.95; end
+            dim = size(A);
+            if numel(dim) == 2
                 % a=mean(maxk(abs(A(:)),10));     % top 10 average
-                a=max(abs(A(:)));
-                if a>0
-                    A=A./a;
-                    A=A.*(abs(A)>quantile(abs(nonzeros(A)),q));
-                    if ~issparse(A)&&makesparse
-                        A=sparse(A);
+                a = max(abs(A(:)));
+                if a > 0
+                    A = A ./ a;
+                    A = A .* (abs(A) > quantile(abs(nonzeros(A)), q));
+                    if ~issparse(A) && makesparse
+                        A = sparse(A);
                     end
                 end
-            elseif numel(dim)==3
-                for k=1:dim(3)
-                    A(:,:,k)=e_filtadjc(A(:,:,k),q);
+            elseif numel(dim) == 3
+                for k = 1:dim(3)
+                    A(:, :, k) = e_filtadjc(A(:, :, k), q);
                 end
             end
         end
-        
-    end    % method
-end        % class
+
+    end % method
+end % class

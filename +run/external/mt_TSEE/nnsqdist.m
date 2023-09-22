@@ -30,30 +30,39 @@
 
 % Copyright (c) 2013 by Max Vladymyrov and Miguel A. Carreira-Perpinan
 
-function [D2,nn] = nnsqdist(X,k,method)
+function [D2, nn] = nnsqdist(X, k, method)
 
 % ---------- Argument defaults ----------
-if ~exist('method','var') || isempty(method), method='sort'; end
+if ~exist('method', 'var') || isempty(method), method = 'sort'; end
 % ---------- End of "argument defaults" ----------
 
-N = size(X,1); k = min(N-1,k);
+N = size(X, 1);
+k = min(N-1, k);
 % Block size (see below), select as large as your memory allows
-mem = 1; B = floor((mem*1024^3)/(4*N*8)/2);	% This will fit in mem GB RAM
+mem = 1;
+B = floor((mem * 1024^3)/(4 * N * 8)/2); % This will fit in mem GB RAM
 
 % Process by blocks to save memory
-i1 = 1; i2 = min(N,B);
-Xt = X'; X2 = X.^2; x2 = sum(X2,2)'; D2 = zeros(N,k); nn = D2;
+i1 = 1;
+i2 = min(N, B);
+Xt = X';
+X2 = X.^2;
+x2 = sum(X2, 2)';
+D2 = zeros(N, k);
+nn = D2;
 
 while i1 <= N
-  % This computes squared distances in a fast, vectorized way but can have
-  % cancellation error for points closer than sqrt(eps).
-  sd1 = max(bsxfun(@plus,sum(X2(i1:i2,:),2),...
-                   bsxfun(@minus,x2,2*X(i1:i2,:)*Xt)),0);
-  if strcmp(method,'sort')
-    [sd1,ind] = sort(sd1,2);
-  else
-    [sd1,ind] = mink(sd1,k+1,2);
-  end
-  D2(i1:i2,:) = sd1(:,2:(k+1)); nn(i1:i2,:) = ind(:,2:(k+1));
-  i1 = i1 + B; i2 = min(N,i1+B-1);
+    % This computes squared distances in a fast, vectorized way but can have
+    % cancellation error for points closer than sqrt(eps).
+    sd1 = max(bsxfun(@plus, sum(X2(i1:i2, :), 2), ...
+        bsxfun(@minus, x2, 2*X(i1:i2, :)*Xt)), 0);
+    if strcmp(method, 'sort')
+        [sd1, ind] = sort(sd1, 2);
+    else
+        [sd1, ind] = mink(sd1, k+1, 2);
+    end
+    D2(i1:i2, :) = sd1(:, 2:(k + 1));
+    nn(i1:i2, :) = ind(:, 2:(k + 1));
+    i1 = i1 + B;
+    i2 = min(N, i1+B-1);
 end

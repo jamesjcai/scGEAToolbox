@@ -1,4 +1,4 @@
-function [Tct]=sc_celltypebrushed(X,genelist,s,brushedData,species,organ)
+function [Tct] = sc_celltypebrushed(X, genelist, s, brushedData, species, organ)
 
 % USAGE:
 
@@ -6,15 +6,14 @@ function [Tct]=sc_celltypebrushed(X,genelist,s,brushedData,species,organ)
 % figure; sc_cellscatter(s)
 % % get brushedData
 % [Tct]=sc_celltypesbrushed(X,genelist,s,brushedData)
-if nargin<6, organ='all'; end
-if nargin<5, species='human'; end
+if nargin < 6, organ = 'all'; end
+if nargin < 5, species = 'human'; end
 
 if islogical(brushedData)
-    i=brushedData;
+    i = brushedData;
 else
-    [~,i]=ismember(brushedData,s,'rows');
+    [~, i] = ismember(brushedData, s, 'rows');
 end
-Xi=X(:,i);
-[Xi,gi]=sc_selectg(Xi,genelist);
-[Tct]=run.mt_alona(Xi,gi,[],'species',species,'organ',organ);
-
+Xi = X(:, i);
+[Xi, gi] = sc_selectg(Xi, genelist);
+[Tct] = run.mt_alona(Xi, gi, [], 'species', species, 'organ', organ);

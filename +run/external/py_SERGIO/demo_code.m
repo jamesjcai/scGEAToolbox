@@ -10,29 +10,28 @@ load("example_grn.mat");
 pkg_e_writesergiogrn(A)
 
 % Step 4: Run SERGIO
-X=run.py_SERGIO(A,5000);
-
+X = run.py_SERGIO(A, 5000);
 
 %%
-B=sc_pcnet(X);
+B = sc_pcnet(X);
 
 figure;
-subplot(2,2,1)
-p=plot(digraph(A)); title('Ground Truth')
+subplot(2, 2, 1)
+p = plot(digraph(A)); title('Ground Truth')
 
-subplot(2,2,2)
-i_plotit(B,0.6,p)
+subplot(2, 2, 2)
+i_plotit(B, 0.6, p)
 
-subplot(2,2,3)
-i_plotit(B,0.7,p)
+subplot(2, 2, 3)
+i_plotit(B, 0.7, p)
 
-subplot(2,2,4)
-i_plotit(B,0.8,p)
+subplot(2, 2, 4)
+i_plotit(B, 0.8, p)
 
 
-function i_plotit(B,c,p)
-    p2=plot(digraph(ten.e_filtadjc(B,c))); 
-    p2.XData=p.XData; 
-    p2.YData=p.YData; 
-    title(sprintf('PCNet cutoff=%g',c));
+function i_plotit(B, c, p)
+p2 = plot(digraph(ten.e_filtadjc(B, c)));
+p2.XData = p.XData;
+p2.YData = p.YData;
+title(sprintf('PCNet cutoff=%g', c));
 end

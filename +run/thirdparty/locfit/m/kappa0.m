@@ -1,4 +1,4 @@
-function kap=kappa0(x,y,varargin)
+function kap = kappa0(x, y, varargin)
 
 % Compute the constants for `tube-formula' based simultaneous
 % confidence bands.
@@ -25,9 +25,9 @@ function kap=kappa0(x,y,varargin)
 % z = predict(fit,[0.6 0.7 0.8]','kappa',kap,'band','g')
 % z{3}                        % evaluate the bands.
 
-fit = locfit(x,y,'module','kappa','ev','grid','mg',20,varargin{:});
+fit = locfit(x, y, 'module', 'kappa', 'ev', 'grid', 'mg', 20, varargin{:});
 z = fit.fit_points.kappa;
-d = size(fit.data.x,2);
-kap = z(1:(d+1));
+d = size(fit.data.x, 2);
+kap = z(1:(d + 1));
 
 return;

@@ -1,7 +1,7 @@
 cd ..
-sortby="expr_level";
+sortby = "expr_level";
 i_common_code;
-X=GM12878_expr(:,cellcycleGM12878=="G1");
+X = GM12878_expr(:, cellcycleGM12878 == "G1");
 cd MAGIC_matlab
 
 %% load data (e.g. 10x data)
@@ -15,11 +15,11 @@ cd MAGIC_matlab
 %gene_names = data.colheaders;
 %data = data.data;
 
-gene_names=cellstr(gl123);
-data=X';
+gene_names = cellstr(gl123);
+data = X';
 
 %% library size normalization
-libsize = sum(data,2);
+libsize = sum(data, 2);
 data = bsxfun(@rdivide, data, libsize) * median(libsize);
 
 %% log transform -- usually one would log transform the data. Here we don't do it.
@@ -34,14 +34,14 @@ plot_genes = {'Cdh1', 'Vim', 'Fn1', 'Zeb1'};
 
 %% plot
 ms = 20;
-v = [-45 20];
+v = [-45, 20];
 % before MAGIC
 x = data(:, ismember(lower(gene_names), lower(plot_genes{1})));
 y = data(:, ismember(lower(gene_names), lower(plot_genes{2})));
 z = data(:, ismember(lower(gene_names), lower(plot_genes{3})));
 c = data(:, ismember(lower(gene_names), lower(plot_genes{4})));
 figure;
-subplot(2,2,1);
+subplot(2, 2, 1);
 scatter(y, x, ms, c, 'filled');
 colormap(parula);
 axis tight
@@ -51,7 +51,7 @@ h = colorbar;
 %ylabel(h,plot_genes{4});
 title 'Before MAGIC'
 
-subplot(2,2,2);
+subplot(2, 2, 2);
 scatter3(x, y, z, ms, c, 'filled');
 colormap(parula);
 axis tight
@@ -59,16 +59,16 @@ xlabel(plot_genes{1});
 ylabel(plot_genes{2});
 zlabel(plot_genes{3});
 %h = colorbar;
-ylabel(h,plot_genes{4});
+ylabel(h, plot_genes{4});
 view(v);
 title 'Before MAGIC'
 
 % plot after MAGIC
-x = M_imputed(:,1);
-y = M_imputed(:,2);
-z = M_imputed(:,3);
-c = M_imputed(:,4);
-subplot(2,2,3);
+x = M_imputed(:, 1);
+y = M_imputed(:, 2);
+z = M_imputed(:, 3);
+c = M_imputed(:, 4);
+subplot(2, 2, 3);
 scatter(y, x, ms, c, 'filled');
 colormap(parula);
 axis tight
@@ -78,7 +78,7 @@ h = colorbar;
 %ylabel(h,plot_genes{4});
 title 'After MAGIC'
 
-subplot(2,2,4);
+subplot(2, 2, 4);
 scatter3(x, y, z, ms, c, 'filled');
 colormap(parula);
 axis tight
@@ -86,7 +86,7 @@ xlabel(plot_genes{1});
 ylabel(plot_genes{2});
 zlabel(plot_genes{3});
 %h = colorbar;
-ylabel(h,plot_genes{4});
+ylabel(h, plot_genes{4});
 view(v);
 title 'After MAGIC'
 
@@ -96,32 +96,31 @@ c = data(:, ismember(lower(gene_names), lower(plot_genes{4})));
 Y = svdpca(pc, 3, 'random'); % original PCs are not mean centered so doing proper PCA here
 % alternative is to do proper PCA on data:
 %Y = svdpca(data, 3, 'random');
-scatter3(Y(:,1), Y(:,2), Y(:,3), ms, c, 'filled');
+scatter3(Y(:, 1), Y(:, 2), Y(:, 3), ms, c, 'filled');
 colormap(parula);
 axis tight
 xlabel 'PC1'
 ylabel 'PC2'
 zlabel 'PC3'
 h = colorbar;
-ylabel(h,plot_genes{4});
-view([-50 22]);
+ylabel(h, plot_genes{4});
+view([-50, 22]);
 title 'Before MAGIC'
 
 %% plot PCA after MAGIC
 figure;
-c = M_imputed(:,4);
+c = M_imputed(:, 4);
 Y = svdpca(pc_imputed, 3, 'random'); % original PCs are not mean centered so doing proper PCA here
 % alternative is to go to full imputed data and then do proper PCA:
 %data_imputed = pc_imputed * U'; % project full data
 %Y = svdpca(data_imputed, 3, 'random');
-scatter3(Y(:,1), Y(:,2), Y(:,3), ms, c, 'filled');
+scatter3(Y(:, 1), Y(:, 2), Y(:, 3), ms, c, 'filled');
 colormap(parula);
 axis tight
 xlabel 'PC1'
 ylabel 'PC2'
 zlabel 'PC3'
 h = colorbar;
-ylabel(h,plot_genes{4});
-view([-50 22]);
+ylabel(h, plot_genes{4});
+view([-50, 22]);
 title 'After MAGIC'
-

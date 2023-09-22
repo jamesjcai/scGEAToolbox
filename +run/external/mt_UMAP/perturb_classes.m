@@ -1,4 +1,4 @@
-function data = perturb_classes(data,labels,SDRatio)
+function data = perturb_classes(data, labels, SDRatio)
 %PERTURB_CLASSES Given a set of data, labels for the data, and a ratio,
 % perturb each class of data independently by a vector, each component of
 % which is sampled from a normal random variable with mean 0 and standard
@@ -27,23 +27,22 @@ function data = perturb_classes(data,labels,SDRatio)
 %   AUTHORSHIP
 %   Math Lead & Primary Developer:  Connor Meehan <connor.gw.meehan@gmail.com>
 %   Bioinformatics Lead:  Wayne Moore <wmoore@stanford.edu>
-%   Provided by the Herzenberg Lab at Stanford University 
+%   Provided by the Herzenberg Lab at Stanford University
 %   License: BSD 3 clause
 if nargin < 3
     SDRatio = 0.05;
 end
 
 range = max(data) - min(data);
-SD = SDRatio*range;
-subsetIds=unique(labels);
+SD = SDRatio * range;
+subsetIds = unique(labels);
 nIds = length(subsetIds);
 
 for i = 1:nIds
     id = subsetIds(i);
-    
-    perturbation = normrnd(0,SD);
-    data(labels==id,:) = data(labels==id,:) + perturbation;
+
+    perturbation = normrnd(0, SD);
+    data(labels == id, :) = data(labels == id, :) + perturbation;
 end
 
 end
-

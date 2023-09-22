@@ -1,15 +1,15 @@
-function [best_score, A, flag, best_perm] = score(A,B,varargin)
+function [best_score, A, flag, best_perm] = score(A, B, varargin)
 %SCORE Checks if two ktensors match except for permutation.
-%   
+%
 %   SCORE(A,B) returns the score of the match between A and B where
 %   A is trying to be matched against B.
-%  
-%   We define matching as follows. If A and B are single component ktensors 
+%
+%   We define matching as follows. If A and B are single component ktensors
 %   that have been normalized so that their weights are lambda_a and
 %   lambda_b, then the score is defined as
-%   
+%
 %      score = penalty * (a1'*b1) * (a2'*b2) * ... * (aR'*bR),
-%     
+%
 %   where the penalty is defined by the lambda values such that
 %
 %      penalty = 1 - abs(lambda_a - lambda_b) / max(lamdba_a, lambda_b).
@@ -17,16 +17,16 @@ function [best_score, A, flag, best_perm] = score(A,B,varargin)
 %   The score of multi-components ktensors is a normalized sum of the
 %   scores across the best permutation of the components of A. A can have
 %   more components than B --- any extra components are ignored in terms of
-%   the matching score.     
+%   the matching score.
 %
 %   [SCORE,A] = SCORE(...) also returns A which has been normalized
-%   and permuted to best match B. 
+%   and permuted to best match B.
 %
 %   [SCORE,A,FLAG] = SCORE(...) also returns a boolean to indicate
 %   a match according to a user-specified threshold.
 %
 %   [SCORE,A,FLAG,PERM] = SCORE(...) also returns the permutation
-%   of the components of A that was used to best match B. 
+%   of the components of A that was used to best match B.
 %
 %   SCORE(A,B,'param',value,...) takes the following parameters...
 %
@@ -51,7 +51,7 @@ function [best_score, A, flag, best_perm] = score(A,B,varargin)
 %   Algorithms for Fitting the PARAFAC Model, Computational Statistics &
 %   Data Analysis, Vol. 50, No. 7, pp. 1700-1734, April 2006,
 %   doi:10.1016/j.csda.2004.11.013.
-%  
+%
 %   See also KTENSOR.
 %
 %Tensor Toolbox for MATLAB: <a href="https://www.tensortoolbox.org">www.tensortoolbox.org</a>
@@ -60,15 +60,15 @@ function [best_score, A, flag, best_perm] = score(A,B,varargin)
 %  E. Acar & T. Kolda, 2010.
 
 %% Make sure A and B are ktensors
-if ~isa(A,'ktensor')
+if ~isa(A, 'ktensor')
     A = ktensor(A);
 end
-if ~isa(B,'ktensor')
+if ~isa(B, 'ktensor')
     B = ktensor(B);
 end
 
 %% Error checking
-if ~isequal(size(A),size(B))
+if ~isequal(size(A), size(B))
     error('Size mismatch');
 end
 
@@ -86,7 +86,7 @@ end
 params = inputParser;
 params.addParameter('lambda_penalty', true, @islogical);
 params.addParameter('greedy', true, @islogical);
-params.addParameter('threshold', 0.99^N, @(x)(x<1));
+params.addParameter('threshold', 0.99^N, @(x)(x < 1));
 params.parse(varargin{:});
 
 %% Make sure columns of factor matrices in A and B are normalized
@@ -96,19 +96,19 @@ B = normalize(B);
 %% Compute all possible vector-vector congruences.
 
 % Compute every pair for each mode
-Cbig = tenzeros([RA,RB,N]);
+Cbig = tenzeros([RA, RB, N]);
 for n = 1:N
-    Cbig(:,:,n) = abs(A.u{n}' * B.u{n});
+    Cbig(:, :, n) = abs(A.u{n}'*B.u{n});
 end
 
 % Collapse across all modes using the product
-C = double(collapse(Cbig,3,@prod));
+C = double(collapse(Cbig, 3, @prod));
 
 %% Calculate penalty based on differences in the Lambda's
 % Note that we are assuming the the lambda value are positive because the
 % ktensor's were previously normalized.
 if (params.Results.lambda_penalty)
-    P = zeros(RA,RB);
+    P = zeros(RA, RB);
     for ra = 1:RA
         la = A.lambda(ra);
         for rb = 1:RB
@@ -117,32 +117,32 @@ if (params.Results.lambda_penalty)
                 % if both lambda values are zero (0), they match
                 P(ra, rb) = 1;
             else
-                P(ra,rb) = 1 - (abs(la-lb) / max(abs(la),abs(lb)));
+                P(ra, rb) = 1 - (abs(la-lb) / max(abs(la), abs(lb)));
             end
         end
     end
-    C = P.*C;
+    C = P .* C;
 end
 
 %% Option to do greedy matching
 if (params.Results.greedy)
-    
-    best_perm = zeros(1,RA);
+
+    best_perm = zeros(1, RA);
     best_score = 0;
     for r = 1:RB
-        [~,idx] = max(C(:));
-        [i,j] = ind2sub([RA RB], idx);
-        best_score = best_score + C(i,j);
-        C(i,:) = -10;
-        C(:,j) = -10;
+        [~, idx] = max(C(:));
+        [i, j] = ind2sub([RA, RB], idx);
+        best_score = best_score + C(i, j);
+        C(i, :) = -10;
+        C(:, j) = -10;
         best_perm(j) = i;
     end
     best_score = best_score / RB;
     flag = 1;
-    
+
     % Rearrange the components of A according to the best matching
     foo = 1:RA;
-    tf = ismember(foo,best_perm);
+    tf = ismember(foo, best_perm);
     best_perm(RB+1:RA) = foo(~tf);
     A = arrange(A, best_perm);
     return;
@@ -151,32 +151,30 @@ end
 %% Compute all possible matchings
 % Creates a matrix P where each row is a possible matching of components in
 % A to components of B. We assume A has at least as many components as B.
-idx = nchoosek(1:RA,RB);
+idx = nchoosek(1:RA, RB);
 M = [];
-for i = 1:size(idx,1)
-    M = [M; perms(idx(i,:))]; %#ok<AGROW>
+for i = 1:size(idx, 1)
+    M = [M; perms(idx(i, :))]; %#ok<AGROW>
 end
 
 %% Calculate the congruences for each matching
 scores = zeros(size(M));
-for i = 1:size(M,1)
+for i = 1:size(M, 1)
     for r = 1:RB
-        scores(i,r) = C(M(i,r),r);
+        scores(i, r) = C(M(i, r), r);
     end
 end
 
 %% Figure out the best matching based on sum's across the components
-score = sum(scores,2)/RB;
+score = sum(scores, 2) / RB;
 [best_score, max_score_id] = max(score);
-if min(scores(max_score_id,:)) >= params.Results.threshold
+if min(scores(max_score_id, :)) >= params.Results.threshold
     flag = 1;
 else
     flag = 0;
 end
-best_match = M(max_score_id,:);
-best_perm = [best_match setdiff(1:RA, best_match)];
+best_match = M(max_score_id, :);
+best_perm = [best_match, setdiff(1:RA, best_match)];
 
 %% Rearrange the components of A according to the best matching
 A = arrange(A, best_perm);
-
-

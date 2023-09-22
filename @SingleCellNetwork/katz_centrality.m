@@ -1,4 +1,4 @@
-function s=katz_centrality(obj,a,b)
+function s = katz_centrality(obj, a, b)
 %Katz centrality (Katz Status Index)
 % The Katz centrality for node i is:
 % x(i)=alpha * sum(A(ij)*x(j), j) + beta
@@ -15,12 +15,12 @@ function s=katz_centrality(obj,a,b)
 %     weight=None,
 % ref: https://networkx.org/documentation/stable/_modules/networkx/algorithms/centrality/katz.html
 
-if nargin<2, a=0.1; end
-if ~(a>=0 && a<=0.2), error('alpha parameter'); end
-if nargin<3, b=1.0; end
-A=obj.A;
-leadingeigenvalue=max(eig(A));
-    n=size(A,1);
-    a=0.9*(1/max(eig(A)));
-    s=b*(inv(eye(n) - a*A'))*ones(n,1);
+if nargin < 2, a = 0.1; end
+if ~(a >= 0 && a <= 0.2), error('alpha parameter'); end
+if nargin < 3, b = 1.0; end
+A = obj.A;
+leadingeigenvalue = max(eig(A));
+n = size(A, 1);
+a = 0.9 * (1 / max(eig(A)));
+s = b * (inv(eye(n)-a*A')) * ones(n, 1);
 end

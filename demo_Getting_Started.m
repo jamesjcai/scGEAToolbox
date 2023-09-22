@@ -2,10 +2,11 @@
 echo off
 clc
 echo on
+
 %% DEMO_GETTING_STARTED - Using SCGEATOOL
-%             
-% The SCGEATOOL provides a flexible interface where you can interactively 
-% explore scRNAseq data and perform analysis. For this demonstration you 
+%
+% The SCGEATOOL provides a flexible interface where you can interactively
+% explore scRNAseq data and perform analysis. For this demonstration you
 % will need to view both the command window and figure windows.
 
 %% (1/4) Change working directory
@@ -21,14 +22,14 @@ pause % Press any key to continue...
 
 load example_data/testXgs.mat X g s
 
-pause  % Press any key to continue...
+pause % Press any key to continue...
 
 %% (3/4) Make a SingleCellExperiment object SCE
 
 % sce=SingleCellExperiment(X,g,s);   % s is optional
-sce=SingleCellExperiment(X,g);
+sce = SingleCellExperiment(X, g);
 
-pause  % Press any key to continue...
+pause % Press any key to continue...
 
 %% (4/4) Run SCGEATOOL with SCE
 
@@ -36,4 +37,3 @@ scgeatool(sce)
 
 %% End of DEMO_GETTING_STARTED
 echo off
- 

@@ -22,18 +22,18 @@
 % its default value.
 % Copyright (c) 2012 by Max Vladymyrov and Miguel A. Carreira-Perpinan
 
-function [X,e,ker,alpha] = eels(X,Wp,Wn,l,P,ff,G,alpha0,rho,c)
+function [X, e, ker, alpha] = eels(X, Wp, Wn, l, P, ff, G, alpha0, rho, c)
 % ---------- Argument defaults ----------
-if ~exist('alpha0','var') || isempty(alpha0), alpha0 = 1; end
-if ~exist('rho','var') || isempty(rho), rho = 0.8; end
-if ~exist('c','var') || isempty(c), c = 1e-1; end
+if ~exist('alpha0', 'var') || isempty(alpha0), alpha0 = 1; end
+if ~exist('rho', 'var') || isempty(rho), rho = 0.8; end
+if ~exist('c', 'var') || isempty(c), c = 1e-1; end
 % ---------- End of "argument defaults" ----------
 
 alpha = alpha0;
-tmp = c*G(:)'*P(:);
-[e,ker] = ee_error(X+alpha*P,Wp,Wn,l);
-while e > ff + alpha*tmp
-  alpha = rho*alpha;
-  [e,ker] = ee_error(X+alpha*P,Wp,Wn,l);
+tmp = c * G(:)' * P(:);
+[e, ker] = ee_error(X+alpha*P, Wp, Wn, l);
+while e > ff + alpha * tmp
+    alpha = rho * alpha;
+    [e, ker] = ee_error(X+alpha*P, Wp, Wn, l);
 end
-X = X + alpha*P;
+X = X + alpha * P;

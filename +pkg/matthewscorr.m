@@ -26,4 +26,4 @@ TN = sum(X == 0 & Y == 0);
 FN = size(X, 1) - TP - FP - TN;
 
 R = (TP .* TN - FP .* FN) ./ ...
-    sqrt( (TP + FP) .* (TP + FN) .* (TN + FP) .* (TN + FN) );
+    sqrt((TP + FP).*(TP + FN).*(TN + FP).*(TN + FN));

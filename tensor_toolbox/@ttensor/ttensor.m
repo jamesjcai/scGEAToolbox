@@ -51,7 +51,7 @@ function t = ttensor(varargin)
 %     - permute
 %     - subsasgn
 %     - subsref
-%   
+%
 %   T = TTENSOR(S) creates a TUCKER tensor by copying an existing
 %   TUCKER tensor.
 %
@@ -64,7 +64,7 @@ function t = ttensor(varargin)
 
 % Empty constructor
 if (nargin == 0)
-    t.core = tensor;                    % empty tensor
+    t.core = tensor; % empty tensor
     t.u = [];
     t = class(t, 'ttensor');
     return;
@@ -81,33 +81,33 @@ end
 % Core can be basically anything that supports certain functions.
 t.core = varargin{1};
 
-if isa(varargin{2},'cell')
+if isa(varargin{2}, 'cell')
     t.u = varargin{2};
 else
-    for i = 2 : nargin
-	t.u{i-1} = varargin{i};
+    for i = 2:nargin
+        t.u{i-1} = varargin{i};
     end
 end
 
 % Check that each Um is indeed a matrix
-for i = 1 : length(t.u)
+for i = 1:length(t.u)
     if ndims(t.u{i}) ~= 2
-	error(['Matrix U' int2str(i) ' is not a matrix!']);
+        error(['Matrix U', int2str(i), ' is not a matrix!']);
     end
 end
 
-% Size error checking			     
-k = size(t.core); 
+% Size error checking
+k = size(t.core);
 
 if length(k) ~= length(t.u)
     error(['CORE has order ', int2str(length(k)), ...
-	   ' but there are ', int2str(length(t.u)), ' matrices.']);
+        ' but there are ', int2str(length(t.u)), ' matrices.']);
 end
 
-for i = 1 : length(t.u)            
-    if  size(t.u{i},2) ~= k(i)
-	error(['Matrix U' int2str(i) ' does not have ' int2str(k(i)) ...
-	       ' columns.']);
+for i = 1:length(t.u)
+    if size(t.u{i}, 2) ~= k(i)
+        error(['Matrix U', int2str(i), ' does not have ', int2str(k(i)), ...
+            ' columns.']);
     end
 end
 

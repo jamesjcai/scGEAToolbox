@@ -1,4 +1,4 @@
-function v=ppval(pp,xx)
+function v = ppval(pp, xx)
 %PPVAL  Evaluate piecewise polynomial.
 %   V = PPVAL(PP,XX) returns the value, at the entries of XX, of the
 %   piecewise polynomial f contained in PP, as constructed by PCHIP,
@@ -33,7 +33,7 @@ function v=ppval(pp,xx)
 %
 %     a = 0; b = 10;
 %     int1 = integral(@cos,a,b);
-%     x = a:b; y = cos(x); pp = spline(x,y); 
+%     x = a:b; y = cos(x); pp = spline(x,y);
 %     int2 = integral(@(x)ppval(pp,x),a,b);
 %
 %   int1 provides the integral of the cosine function over the interval [a,b]
@@ -50,7 +50,9 @@ function v=ppval(pp,xx)
 %   Copyright 1984-2019 The MathWorks, Inc.
 
 if isstruct(xx) % we assume that ppval(xx,pp) was used
-   temp = xx; xx = pp; pp = temp;
+    temp = xx;
+    xx = pp;
+    pp = temp;
 end
 
 if ~isfloat(xx)
@@ -61,66 +63,75 @@ if ~isreal(xx)
 end
 
 %  obtain the row vector xs equivalent to XX
-sizexx = size(xx); lx = numel(xx); xs = reshape(xx,1,lx);
+sizexx = size(xx);
+lx = numel(xx);
+xs = reshape(xx, 1, lx);
 %  if XX is row vector, suppress its first dimension
-if length(sizexx)==2&&sizexx(1)==1, sizexx(1) = []; end
+if length(sizexx) == 2 && sizexx(1) == 1, sizexx(1) = []; end
 
 % take apart PP
-[b,c,l,k,dd]=unmkpp(pp);
+[b, c, l, k, dd] = unmkpp(pp);
 
 % for each evaluation site, compute its breakpoint interval
 % (mindful of the possibility that xx might be empty)
 %if lx, [~,index] = histc(xs,[-inf,b(2:l),inf]);
 if lx
-    [~,~,index] = histcounts(xs,[-inf,b(2:l),inf]);    
-else 
-    index = ones(1,lx);
+    [~, ~, index] = histcounts(xs, [-inf, b(2:l), inf]);
+else
+    index = ones(1, lx);
 end
 
 %index
 
 % adjust for troubles, like evaluation sites that are NaN or +-inf
-infxs = find(xs==inf); if ~isempty(infxs), index(infxs) = l; end
-nogoodxs = find(index==0);
-if ~isempty(nogoodxs), xs(nogoodxs) = NaN; index(nogoodxs) = 1; end
+infxs = find(xs == inf);
+if ~isempty(infxs), index(infxs) = l;
+end
+nogoodxs = find(index == 0);
+if ~isempty(nogoodxs), xs(nogoodxs) = NaN;
+    index(nogoodxs) = 1;
+end
 
 % now go to local coordinates ...
-xs = xs-b(index);
+xs = xs - b(index);
 
 d = prod(dd);
-if d>1 % ... replicate xs and index in case PP is vector-valued ...
-   xs = reshape(xs(ones(d,1),:),1,d*lx);
-   index = d*index; temp = (-d:-1).';
-   index = reshape(1+index(ones(d,1),:)+temp(:,ones(1,lx)), d*lx, 1 );
+if d > 1 % ... replicate xs and index in case PP is vector-valued ...
+        xs = reshape(xs(ones(d, 1), :), 1, d*lx);
+    index = d * index;
+    temp = (-d:-1).';
+    index = reshape(1+index(ones(d, 1), :)+temp(:, ones(1, lx)), d*lx, 1);
 else
-   if length(sizexx)>1, dd = []; else dd = 1; end
+    if length(sizexx) > 1, dd = [];
+    else dd = 1;
+    end
 end
 
 % ... and apply nested multiplication:
-v = c(index,1);
-for i=2:k
-   v = xs(:).*v + c(index,i);
+v = c(index, 1);
+for i = 2:k
+    v = xs(:) .* v + c(index, i);
 end
 
 % If evaluating a piecewise constant with more than one piece at NaN, return
 % NaN.  With one piece return the constant.
-if ~isempty(nogoodxs) && k==1 && l>1
-   v = reshape(v,d,lx); v(:,nogoodxs) = NaN;
+if ~isempty(nogoodxs) && k == 1 && l > 1
+    v = reshape(v, d, lx);
+    v(:, nogoodxs) = NaN;
 end
-v = reshape(v,[dd,sizexx]);
+v = reshape(v, [dd, sizexx]);
 
-if isfield(pp,'orient') && strcmp(pp.orient,'first')
+if isfield(pp, 'orient') && strcmp(pp.orient, 'first')
     % spline orientation returns    size(yi) == [d1 ... dk m1 ... mj]
     % but the interp1 usage prefers size(yi) == [m1 ... mj d1 ... dk]
     if ~(isempty(dd) || (isscalar(dd) && dd == 1))
         % The function is non-scalar valued
-        if isvector(xx)&&~isscalar(xx)
-            permVec = [ndims(v) 1:(ndims(v)-1)];
+        if isvector(xx) && ~isscalar(xx)
+            permVec = [ndims(v), 1:(ndims(v) - 1)];
         else
             ndimsxx = ndims(xx);
-            permVec = [(ndims(v)-ndimsxx+1) : ndims(v) 1:(ndims(v)-ndimsxx)];
+            permVec = [(ndims(v) - ndimsxx + 1) : ndims(v), 1:(ndims(v) - ndimsxx)];
         end
-        v = permute(v,permVec);
+        v = permute(v, permVec);
     end
 end
-

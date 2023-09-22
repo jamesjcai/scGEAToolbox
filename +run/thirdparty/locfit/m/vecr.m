@@ -1,4 +1,4 @@
-function z=vecr(fit)
+function z = vecr(fit)
 
 z = fit.fit_points.kappa;
 

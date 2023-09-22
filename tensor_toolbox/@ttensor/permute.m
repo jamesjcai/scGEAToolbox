@@ -1,11 +1,11 @@
-function b = permute(a,order)
+function b = permute(a, order)
 %PERMUTE Permute dimensions for a ttensor.
 %
 %   Y = PERMUTE(X,ORDER) rearranges the dimensions of X so that they
 %   are in the order specified by the vector ORDER. The tensor
 %   produced has the same values of X but the order of the subscripts
 %   needed to access any particular element are rearranged as
-%   specified by ORDER.  
+%   specified by ORDER.
 %
 %   See also TTENSOR.
 %
@@ -14,14 +14,10 @@ function b = permute(a,order)
 
 N = ndims(a);
 
-if ~isequal(1:N,sort(order))
-  error('Invalid permuation');
+if ~isequal(1:N, sort(order))
+    error('Invalid permuation');
 end
 
-newcore = permute(a.core,order);
+newcore = permute(a.core, order);
 newu = a.u(order);
-b = ttensor(newcore,newu);
-
-
-
-
+b = ttensor(newcore, newu);

@@ -1,4 +1,4 @@
-function Z = gt(X,Y)
+function Z = gt(X, Y)
 %GT Greater than (>) for tensors.
 %
 %   See also TENSOR.
@@ -6,5 +6,4 @@ function Z = gt(X,Y)
 %Tensor Toolbox for MATLAB: <a href="https://www.tensortoolbox.org">www.tensortoolbox.org</a>
 
 
-
-Z = tenfun(@gt,X,Y);
+Z = tenfun(@gt, X, Y);

@@ -1,58 +1,58 @@
-function [idx]=sc_entangle(sce,targetg,allowselect)
+function [idx] = sc_entangle(sce, targetg, allowselect)
 
 % USAGE: pkg.sc_entangle(sce,["Fgfr1","Frs2","Smad4"])
 %
 %see also: sc_booleanstate
 
-    if nargin<3, allowselect=false; end
-    if nargin<2
-        targetg=gui.i_selectngenes(sce);
-    elseif nargin==2 && allowselect
-        targetg=gui.i_selectngenes(sce,targetg);
-    end
-    if isempty(targetg), return; end
+if nargin < 3, allowselect = false; end
+if nargin < 2
+    targetg = gui.i_selectngenes(sce);
+elseif nargin == 2 && allowselect
+    targetg = gui.i_selectngenes(sce, targetg);
+end
+if isempty(targetg), return; end
 
-    % X=sce.X>=median(sce.X,2);
-    X=sce.X;
-    % targetg=["Mrpl15","Lypla1","Atp6v1h"];
-    x=X(ismember(sce.g,targetg),:);
-    targetg=sce.g(ismember(sce.g,targetg));
-    if ~length(targetg)>1, error('Not enough targetg.'); end
-    
-    [M]=permn([0 1],length(targetg));
-  
-    y=0+(x>0).';
-    [~,idx]=ismember(y,M,'rows');
-    t=tabulate(idx);
-    n=zeros(size(M,1),1);
-    n(t(:,1))=t(:,2);
-    
-    bar(n)
-    for k=1:size(M,1)
-        txt{k}=sprintf('%d',M(k,:));
-    end
-    set(gca,'XTick',1:size(M,1));
-    set(gca,'XTickLabel',txt);
-    ylabel('# of cells');
-    xlabel('Expression pattern');
-    
+% X=sce.X>=median(sce.X,2);
+X = sce.X;
+% targetg=["Mrpl15","Lypla1","Atp6v1h"];
+x = X(ismember(sce.g, targetg), :);
+targetg = sce.g(ismember(sce.g, targetg));
+if ~length(targetg) > 1, error('Not enough targetg.'); end
+
+[M] = permn([0, 1], length(targetg));
+
+y = 0 + (x > 0).';
+[~, idx] = ismember(y, M, 'rows');
+t = tabulate(idx);
+n = zeros(size(M, 1), 1);
+n(t(:, 1)) = t(:, 2);
+
+bar(n)
+for k = 1:size(M, 1)
+    txt{k} = sprintf('%d', M(k, :));
+end
+set(gca, 'XTick', 1:size(M, 1));
+set(gca, 'XTickLabel', txt);
+ylabel('# of cells');
+xlabel('Expression pattern');
+
 %{
-    [a,~,b]=unique(y,'rows');
-    txt=cell(size(a,1),1);
-    for k=1:size(a,1)
-        txt{k}=sprintf('%d',a(k,:));
-    end
-    n=grpstats(b,b,@numel);
-    figure;
-    bar(n);
-    % f.Children(1)
-    set(gca,'XTickLabel',txt);
-    ylabel('# of cells');
-    xlabel('Expression pattern');
-    %[T]=sc_genestats(sce.X,sce.g);
+[a,~,b]=unique(y,'rows');
+txt=cell(size(a,1),1);
+for k=1:size(a,1)
+    txt{k}=sprintf('%d',a(k,:));
+end
+n=grpstats(b,b,@numel);
+figure;
+bar(n);
+% f.Children(1)
+set(gca,'XTickLabel',txt);
+ylabel('# of cells');
+xlabel('Expression pattern');
+%[T]=sc_genestats(sce.X,sce.g);
 %}
-    
-    title(sprintf('%s ',targetg));
+
+title(sprintf('%s ', targetg));
 end
 
 
@@ -62,7 +62,7 @@ function [M, I] = permn(V, N, K)
 %   permutations of N elements taken from the vector V, with repetitions.
 %   V can be any type of array (numbers, cells etc.) and M will be of the
 %   same type as V.  If V is empty or N is 0, M will be empty.  M has the
-%   size numel(V).^N-by-N. 
+%   size numel(V).^N-by-N.
 %
 %   When only a subset of these permutations is needed, you can call PERMN
 %   with 3 input variables: M = PERMN(V,N,K) returns only the K-ths
@@ -70,7 +70,7 @@ function [M, I] = permn(V, N, K)
 %   but it avoids memory issues that may occur when there are too many
 %   combinations.  This is particulary useful when you only need a few
 %   permutations at a given time. If V or K is empty, or N is zero, M will
-%   be empty. M has the size numel(K)-by-N. 
+%   be empty. M has the size numel(K)-by-N.
 %
 %   [M, I] = PERMN(...) also returns an index matrix I so that M = V(I).
 %
@@ -113,7 +113,7 @@ function [M, I] = permn(V, N, K)
 %     % Note that M2 is a 125-by-3 matrix
 %
 %     % PERMN can be used generate a binary table, as in
-%     B = permn([0 1],5)  
+%     B = permn([0 1],5)
 %
 %   NB Matrix sizes increases exponentially at rate (n^N)*N.
 %
@@ -155,53 +155,55 @@ function [M, I] = permn(V, N, K)
 % 6.1 (may 2016) fixed spelling errors
 % 6.2 (jan 2019) fixed some coding style warnings
 
-narginchk(2, 3) ;
+narginchk(2, 3);
 
 if fix(N) ~= N || N < 0 || numel(N) ~= 1
-    error('permn:negativeN','Second argument should be a positive integer') ;
+    error('permn:negativeN', 'Second argument should be a positive integer');
 end
-nV = numel(V) ;
+nV = numel(V);
 
-if nargin==2 
+if nargin == 2
+
     %% PERMN(V,N) - return all permutations
     if nV == 0 || N == 0
-        M = zeros(nV, N) ;
-        I = zeros(nV, N) ;
+        M = zeros(nV, N);
+        I = zeros(nV, N);
     elseif N == 1
         % return column vectors
-        M = V(:) ;
-        I = (1:nV).' ;
+        M = V(:);
+        I = (1:nV).';
     else
         % this is faster than the math trick used with 3 inputs below
-        [Y{N:-1:1}] = ndgrid(1:nV) ;
-        I = reshape(cat(N+1, Y{:}), [], N) ;
-        M = V(I) ;
+        [Y{N:-1:1}] = ndgrid(1:nV);
+        I = reshape(cat(N+1, Y{:}), [], N);
+        M = V(I);
     end
 else
+
     %% PERMN(V,N,K) - return a subset of all permutations
-    nK = numel(K) ;
+    nK = numel(K);
     if nV == 0 || N == 0 || nK == 0
-        M = zeros(numel(K), N) ;
-        I = zeros(numel(K), N) ;
-    elseif nK < 1 || any(K<1) || any(K ~= fix(K))
-        error('permn:InvalidIndex','Third argument should contain positive integers.') ;
+        M = zeros(numel(K), N);
+        I = zeros(numel(K), N);
+    elseif nK < 1 || any(K < 1) || any(K ~= fix(K))
+        error('permn:InvalidIndex', 'Third argument should contain positive integers.');
     else
-        V = reshape(V, 1, []) ; % v1.1 make input a row vector
-        nV = numel(V) ;
-        Npos = nV^N ;
+        V = reshape(V, 1, []); % v1.1 make input a row vector
+        nV = numel(V);
+        Npos = nV^N;
         if any(K > Npos)
             warning('permn:IndexOverflow', ...
                 'Values of K exceeding the total number of combinations are saturated.')
-            K = min(K, Npos) ;
+            K = min(K, Npos);
         end
-             
+
         % The engine is based on version 3.2 with the correction
         % suggested by Roger Stafford. This approach uses a single matrix
         % multiplication.
-        B = nV.^(1-N:0) ;
-        I = ((K(:)-.5) * B) ; % matrix multiplication
-        I = rem(floor(I), nV) + 1 ;
-        M = V(I) ;
+        B = nV.^(1 - N:0);
+        I = ((K(:) - .5) * B); % matrix multiplication
+        I = rem(floor(I), nV) + 1;
+        M = V(I);
     end
 end
 end

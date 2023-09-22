@@ -8,10 +8,10 @@ function [M, genes_found, gene_idx] = project_genes(genes, genes_all, pc_imputed
 %   stored in a memory efficient way, without having to store the dense
 %   matrix.
 
-[gene_idx,locb] = ismember(lower(genes_all), lower(genes));
-[~,sidx] = sort(locb(gene_idx));
+[gene_idx, locb] = ismember(lower(genes_all), lower(genes));
+[~, sidx] = sort(locb(gene_idx));
 idx = find(gene_idx);
 idx = idx(sidx);
-M = pc_imputed * U(idx,:)'; % project
+M = pc_imputed * U(idx, :)'; % project
 genes_found = genes_all(idx);
 gene_idx = find(gene_idx);

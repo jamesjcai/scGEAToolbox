@@ -2,9 +2,9 @@
 %
 % copyright (c) 1998-2011 by Alexander Strehl
 
-function mapout = fastchangem(map,newcode,oldcode)
+function mapout = fastchangem(map, newcode, oldcode)
 
-mapout=map;
-for i=1:length(newcode)
-  mapout(map==oldcode(i)) = newcode(i);
+mapout = map;
+for i = 1:length(newcode)
+    mapout(map == oldcode(i)) = newcode(i);
 end

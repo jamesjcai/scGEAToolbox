@@ -19,10 +19,10 @@ function result = cross_entropy(head_embedding, tail_embedding, head, tail, weig
 %
 % a: double
 %     Parameter of differentiable approximation of right adjoint functor.
-% 
+%
 % b: double
 %     Parameter of differentiable approximation of right adjoint functor.
-% 
+%
 % Returns
 % -------
 % result: double
@@ -34,14 +34,14 @@ function result = cross_entropy(head_embedding, tail_embedding, head, tail, weig
 %   Math Lead & Primary Developer:  Connor Meehan <connor.gw.meehan@gmail.com>
 %   Secondary Developer: Stephen Meehan <swmeehan@stanford.edu>
 %   Bioinformatics Lead:  Wayne Moore <wmoore@stanford.edu>
-%   Provided by the Herzenberg Lab at Stanford University 
+%   Provided by the Herzenberg Lab at Stanford University
 %   License: BSD 3 clause
 %
-    n1 = size(head_embedding, 1);
-    n2 = size(tail_embedding, 1);
-    
-    if n1*n2 > 1e8
-        error('HALTED: MATLAB usually freezes for embeddings this large.');
+n1 = size(head_embedding, 1);
+n2 = size(tail_embedding, 1);
+
+if n1 * n2 > 1e8
+    error('HALTED: MATLAB usually freezes for embeddings this large.');
     end
 
     full_dists = pdist2(head_embedding, tail_embedding);
@@ -49,14 +49,14 @@ function result = cross_entropy(head_embedding, tail_embedding, head, tail, weig
     if same_embedding
         full_weights = full_weights + eye(n1);
     end
-    Phi = ones(size(full_weights))./(1 + a*(full_dists.^(2*b)));
+    Phi = ones(size(full_weights)) ./ (1 + a * (full_dists.^(2 * b)));
     fw0 = full_weights == 0;
     fw1 = full_weights == 1;
     other = ~fw0 & ~fw1;
     Phi_summands = zeros(size(full_weights));
     Phi_summands(fw0) = log(1-Phi(fw0));
     Phi_summands(fw1) = log(Phi(fw1));
-    Phi_summands(other) = full_weights(other).*log(Phi(other)) + (1-full_weights(other)).*log(1-Phi(other));
+    Phi_summands(other) = full_weights(other) .* log(Phi(other)) + (1 - full_weights(other)) .* log(1-Phi(other));
 
     result = -sum(sum(Phi_summands));
 end

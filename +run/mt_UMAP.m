@@ -38,8 +38,8 @@ end
 
 if nargout>1 || plotit
     %if verbose
-        [s,~,c]=run_umap_main(data, ...
-            'n_components',ndim);
+    [s,~,c]=run_umap_main(data, ...
+        'n_components',ndim);
     % else
     %     [s,~,c]=run_umap_main(data, ...
     %         'n_components',ndim, ...
@@ -47,9 +47,9 @@ if nargout>1 || plotit
     % end
 else
 
-    %if ~(ismcc || isdeployed)   
+    %if ~(ismcc || isdeployed)
     %    if verbose
-            [s]=run_umap_lite(data,'n_components',ndim);
+    [s]=run_umap_lite(data,'n_components',ndim);
     %     else
     %         [s]=run_umap_lite(data,'n_components',ndim,'verbose','none');
     %     end

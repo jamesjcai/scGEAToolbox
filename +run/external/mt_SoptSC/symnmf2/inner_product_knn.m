@@ -48,39 +48,39 @@ distSparse = issparse(D);
 n = size(D, 1);
 
 if (distSparse)
-    max_rows = full(max(sum(D~=0)));
-        if (knn > max_rows)
-                knn = max_rows;
-        end
+    max_rows = full(max(sum(D ~= 0)));
+    if (knn > max_rows)
+        knn = max_rows;
+    end
     max_nonzeros = nnz(D);
     i = zeros(max_nonzeros, 1);
     j = zeros(max_nonzeros, 1);
     sorted_s = zeros(max_nonzeros, 1);
     idx_s = zeros(max_nonzeros, 1);
     current_pos = 0;
-    for col_num = 1 : n
+    for col_num = 1:n
         col_nz = D(:, col_num);
         idx_temp = find(col_nz ~= 0);
         col_nz = full(col_nz(col_nz ~= 0));
         col_nnz = length(col_nz);
-        i(current_pos+1 : current_pos+col_nnz) = 1 : col_nnz;
-        j(current_pos+1 : current_pos+col_nnz) = col_num;
+        i(current_pos+1:current_pos+col_nnz) = 1:col_nnz;
+        j(current_pos+1:current_pos+col_nnz) = col_num;
         [~, idx_relative] = sort(col_nz);
-        idx_s(current_pos+1 : current_pos+col_nnz) = idx_temp(idx_relative);
+        idx_s(current_pos+1:current_pos+col_nnz) = idx_temp(idx_relative);
         current_pos = current_pos + col_nnz;
     end
     idx = sparse(i, j, idx_s, max_rows, n);
-        j = meshgrid(1:n, 1:knn);
-        j = j(:);
-        i = full(idx(1:knn, :));
-        i = i(:);
+    j = meshgrid(1:n, 1:knn);
+    j = j(:);
+    i = full(idx(1:knn, :));
+    i = i(:);
     temp = find(i ~= 0);
     i = i(temp);
     j = j(temp);
     index = [i, j; j, i];
 else
-    if (knn > n-1)
-        knn = n-1;
+    if (knn > n - 1)
+        knn = n - 1;
     end
     [~, idx] = sort(D);
     j = meshgrid(1:n, 1:knn+1);
@@ -96,13 +96,13 @@ end
 if (useSparse)
     [index, ~, ~] = unique(index, 'rows');
     A = zeros(size(index, 1), 1);
-    for nnz_num = 1 : size(index, 1)
+    for nnz_num = 1:size(index, 1)
         A(nnz_num) = Xnorm(:, index(nnz_num, 1))' * Xnorm(:, index(nnz_num, 2));
     end
-    A = sparse(index(:,1), index(:,2), A, n, n);
+    A = sparse(index(:, 1), index(:, 2), A, n, n);
 else
     A = Xnorm' * Xnorm;
-    index = (index(:,2) - 1) * n + index(:, 1);
+    index = (index(:, 2) - 1) * n + index(:, 1);
     A = zeros(n);
     A(index) = A(index);
 end

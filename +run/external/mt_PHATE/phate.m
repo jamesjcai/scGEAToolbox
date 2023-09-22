@@ -92,73 +92,73 @@ pot_eps = 1e-7;
 gamma = 0.5;
 
 % get input parameters
-for i=1:length(varargin)
+for i = 1:length(varargin)
     % k for knn adaptive sigma
-    if(strcmp(varargin{i},'k'))
-       k = lower(varargin{i+1});
+    if (strcmp(varargin{i}, 'k'))
+        k = lower(varargin{i+1});
     end
     % a (alpha) for alpha decaying kernel
-    if(strcmp(varargin{i},'a'))
-       a = lower(varargin{i+1});
+    if (strcmp(varargin{i}, 'a'))
+        a = lower(varargin{i+1});
     end
     % diffusion time
-    if(strcmp(varargin{i},'t'))
-       t = lower(varargin{i+1});
+    if (strcmp(varargin{i}, 't'))
+        t = lower(varargin{i+1});
     end
     % t_max for VNE
-    if(strcmp(varargin{i},'t_max'))
-       t_max = lower(varargin{i+1});
+    if (strcmp(varargin{i}, 't_max'))
+        t_max = lower(varargin{i+1});
     end
     % Number of pca components
-    if(strcmp(varargin{i},'npca'))
-       npca = lower(varargin{i+1});
+    if (strcmp(varargin{i}, 'npca'))
+        npca = lower(varargin{i+1});
     end
     % Number of dimensions for the PHATE embedding
-    if(strcmp(varargin{i},'ndim'))
-       ndim = lower(varargin{i+1});
+    if (strcmp(varargin{i}, 'ndim'))
+        ndim = lower(varargin{i+1});
     end
     % Method for MDS
-    if(strcmp(varargin{i},'mds_method'))
-       mds_method =  varargin{i+1};
+    if (strcmp(varargin{i}, 'mds_method'))
+        mds_method = varargin{i+1};
     end
     % Distance function for the inputs
-    if(strcmp(varargin{i},'distfun'))
-       distfun = lower(varargin{i+1});
+    if (strcmp(varargin{i}, 'distfun'))
+        distfun = lower(varargin{i+1});
     end
     % distfun for MDS
-    if(strcmp(varargin{i},'distfun_mds'))
-       distfun_mds =  lower(varargin{i+1});
+    if (strcmp(varargin{i}, 'distfun_mds'))
+        distfun_mds = lower(varargin{i+1});
     end
     % nsvd for spectral clustering
-    if(strcmp(varargin{i},'nsvd'))
-       nsvd = lower(varargin{i+1});
+    if (strcmp(varargin{i}, 'nsvd'))
+        nsvd = lower(varargin{i+1});
     end
     % n_landmarks for spectral clustering
-    if(strcmp(varargin{i},'n_landmarks'))
-       n_landmarks = lower(varargin{i+1});
+    if (strcmp(varargin{i}, 'n_landmarks'))
+        n_landmarks = lower(varargin{i+1});
     end
     % potential method: log, sqrt, gamma
-    if(strcmp(varargin{i},'pot_method'))
-       pot_method = lower(varargin{i+1});
+    if (strcmp(varargin{i}, 'pot_method'))
+        pot_method = lower(varargin{i+1});
     end
     % kernel
-    if(strcmp(varargin{i},'kernel'))
-       K = lower(varargin{i+1});
+    if (strcmp(varargin{i}, 'kernel'))
+        K = lower(varargin{i+1});
     end
     % kernel
-    if(strcmp(varargin{i},'gamma'))
-       gamma = lower(varargin{i+1});
+    if (strcmp(varargin{i}, 'gamma'))
+        gamma = lower(varargin{i+1});
     end
     % pot_eps
-    if(strcmp(varargin{i},'pot_eps'))
-       pot_eps = lower(varargin{i+1});
+    if (strcmp(varargin{i}, 'pot_eps'))
+        pot_eps = lower(varargin{i+1});
     end
 end
 
-if isempty(a) && k <=5
+if isempty(a) && k <= 5
     disp '======================================================================='
     disp 'Make sure k is not too small when using an unweighted knn kernel (a=[])'
-    disp(['Currently k = ' numstr(k) ', which may be too small']);
+    disp(['Currently k = ', numstr(k), ', which may be too small']);
     disp '======================================================================='
 end
 
@@ -171,7 +171,7 @@ tt_mmds = 0;
 tt_nmmds = 0;
 
 if isempty(K)
-    if ~isempty(npca) && size(data,2) > npca
+    if ~isempty(npca) && size(data, 2) > npca
         % PCA
         disp 'Doing PCA'
         tic;
@@ -182,7 +182,7 @@ if isempty(K)
             pc = svdpca(data, npca, 'random');
         end
         tt_pca = toc;
-        disp(['PCA took ' num2str(tt_pca) ' seconds']);
+        disp(['PCA took ', num2str(tt_pca), ' seconds']);
     else
         pc = data;
     end
@@ -196,127 +196,121 @@ if isempty(K)
         K = compute_alpha_kernel_sparse(pc, 'k', k, 'a', a, 'distfun', distfun);
     end
     tt_kernel = toc;
-    disp(['Computing kernel took ' num2str(tt_kernel) ' seconds']);
+    disp(['Computing kernel took ', num2str(tt_kernel), ' seconds']);
 else
     disp 'Using supplied kernel'
 end
 
 disp 'Make kernel row stochastic'
-P = bsxfun(@rdivide, K, sum(K,2));
+P = bsxfun(@rdivide, K, sum(K, 2));
 
-if ~isempty(n_landmarks) && n_landmarks < size(K,1)
+if ~isempty(n_landmarks) && n_landmarks < size(K, 1)
     % spectral cluster for landmarks
     disp 'Spectral clustering for landmarks'
-    tic;
-    [U,S,~] = randPCA(P, nsvd);
-    tt_svd = toc;
-    disp(['svd took ' num2str(tt_svd) ' seconds']);
-    tic;
-    IDX = kmeans(U*S, n_landmarks);
-    tt_kmeans = toc;
-    disp(['kmeans took ' num2str(tt_kmeans) ' seconds']);
-    
-    % create landmark operators
-    disp 'Computing landmark operators'
-    tic;
-    n = size(K,1);
-    m = max(IDX);
-    Pnm = nan(n,m);
-    for I=1:m
-        Pnm(:,I) = sum(K(:,IDX==I),2);
+        tic;
+        [U, S, ~] = randPCA(P, nsvd);
+        tt_svd = toc;
+        disp(['svd took ', num2str(tt_svd), ' seconds']);
+        tic;
+        IDX = kmeans(U*S, n_landmarks);
+        tt_kmeans = toc;
+        disp(['kmeans took ', num2str(tt_kmeans), ' seconds']);
+
+        % create landmark operators
+        disp 'Computing landmark operators'
+        tic;
+        n = size(K, 1);
+        m = max(IDX);
+        Pnm = nan(n, m);
+        for I = 1:m
+            Pnm(:, I) = sum(K(:, IDX == I), 2);
+        end
+        Pmn = Pnm';
+        Pmn = bsxfun(@rdivide, Pmn, sum(Pmn, 2));
+        Pnm = bsxfun(@rdivide, Pnm, sum(Pnm, 2));
+        tt_lo = toc;
+        disp(['Computing landmark operators took ', num2str(tt_lo), ' seconds']);
+
+        % Pmm
+        Pmm = Pmn * Pnm;
+    else
+        disp 'Running PHATE without landmarking'
+        Pmm = bsxfun(@rdivide, K, sum(K, 2));
     end
-    Pmn = Pnm';
-    Pmn = bsxfun(@rdivide, Pmn, sum(Pmn,2));
-    Pnm = bsxfun(@rdivide, Pnm, sum(Pnm,2));
-    tt_lo = toc;
-    disp(['Computing landmark operators took ' num2str(tt_lo) ' seconds']);
-    
-    % Pmm
-    Pmm = Pmn * Pnm;
-else
-    disp 'Running PHATE without landmarking'
-    Pmm = bsxfun(@rdivide, K, sum(K,2));
-end
 
-% VNE
-if isempty(t)
-    disp 'Finding optimal t using VNE'
-    t = vne_optimal_t(Pmm, t_max);
-end
+    % VNE
+    if isempty(t)
+        disp 'Finding optimal t using VNE'
+        t = vne_optimal_t(Pmm, t_max);
+    end
 
-% diffuse
-disp 'Diffusing operator'
-tic;
-P_t = Pmm^t;
-tt_diff = toc;
-disp(['Diffusion took ' num2str(tt_diff) ' seconds']);
-
-% potential distances
-tic;
-disp 'Computing potential distances'
-switch pot_method
-    case 'log'
-        disp 'using -log(P) potential distance'
-        Pot = -log(P_t + pot_eps);
-    case 'sqrt'
-        disp 'using sqrt(P) potential distance'
-        Pot = sqrt(P_t);
-    case 'gamma'
-        disp 'Pot = 2/(1-\gamma)*P^((1-\gamma)/2)'
-        disp(['gamma = ' num2str(gamma)]);
-        gamma = min(gamma, 0.95);
-        Pot = 2/(1-gamma)*P_t.^((1-gamma)/2);
-    otherwise
-        error 'potential method unknown'
-end
-PDX = squareform(pdist(Pot, distfun_mds));
-tt_pdx = toc;
-disp(['Computing potential distance took ' num2str(tt_pdx) ' seconds']);
-
-% CMDS
-disp 'Doing classical MDS'
-tic;
-Y = randmds(PDX, ndim);
-tt_cmds = toc;
-disp(['CMDS took ' num2str(tt_cmds) ' seconds']);
-
-% MMDS
-if strcmpi(mds_method, 'mmds')
+    % diffuse
+    disp 'Diffusing operator'
     tic;
-    disp 'Doing metric MDS:'
-    opt = statset('display','off');
-    Y = mdscale(PDX,ndim,'options',opt,'start',Y,'Criterion','metricstress');
-    tt_mmds = toc;
-    disp(['MMDS took ' num2str(tt_mmds) ' seconds']);
-end
+    P_t = Pmm^t;
+    tt_diff = toc;
+    disp(['Diffusion took ', num2str(tt_diff), ' seconds']);
 
-% NMMDS
-if strcmpi(mds_method, 'nmmds')
+    % potential distances
     tic;
-    disp 'Doing non-metric MDS:'
-    opt = statset('display','iter');
-    Y = mdscale(PDX,ndim,'options',opt,'start',Y,'Criterion','stress');
-    tt_nmmds = toc;
-    disp(['NMMDS took ' num2str(tt_nmmds) ' seconds']);
+    disp 'Computing potential distances'
+    switch pot_method
+        case 'log'
+            disp 'using -log(P) potential distance'
+            Pot = -log(P_t+pot_eps);
+        case 'sqrt'
+            disp 'using sqrt(P) potential distance'
+            Pot = sqrt(P_t);
+        case 'gamma'
+            disp 'Pot = 2/(1-\gamma)*P^((1-\gamma)/2)'
+            disp(['gamma = ', num2str(gamma)]);
+            gamma = min(gamma, 0.95);
+            Pot = 2 / (1 - gamma) * P_t.^((1 - gamma) / 2);
+        otherwise
+            error 'potential method unknown'
+    end
+    PDX = squareform(pdist(Pot, distfun_mds));
+    tt_pdx = toc;
+    disp(['Computing potential distance took ', num2str(tt_pdx), ' seconds']);
+
+    % CMDS
+    disp 'Doing classical MDS'
+    tic;
+    Y = randmds(PDX, ndim);
+    tt_cmds = toc;
+    disp(['CMDS took ', num2str(tt_cmds), ' seconds']);
+
+    % MMDS
+    if strcmpi(mds_method, 'mmds')
+        tic;
+        disp 'Doing metric MDS:'
+        opt = statset('display', 'off');
+        Y = mdscale(PDX, ndim, 'options', opt, 'start', Y, 'Criterion', 'metricstress');
+        tt_mmds = toc;
+        disp(['MMDS took ', num2str(tt_mmds), ' seconds']);
+    end
+
+    % NMMDS
+    if strcmpi(mds_method, 'nmmds')
+        tic;
+        disp 'Doing non-metric MDS:'
+        opt = statset('display', 'iter');
+        Y = mdscale(PDX, ndim, 'options', opt, 'start', Y, 'Criterion', 'stress');
+        tt_nmmds = toc;
+        disp(['NMMDS took ', num2str(tt_nmmds), ' seconds']);
+    end
+
+    if ~isempty(Pnm)
+        % out of sample extension from landmarks to all points
+        disp 'Out of sample extension from landmarks to all points'
+        Y = Pnm * Y;
+    end
+
+    disp 'Done.'
+
+    tt_total = tt_pca + tt_kernel + tt_svd + tt_kmeans + tt_lo + tt_diff + ...
+        tt_pdx + tt_cmds + tt_mmds + tt_nmmds;
+
+    disp(['Total time ', num2str(tt_total), ' seconds']);
+
 end
-
-if ~isempty(Pnm)
-    % out of sample extension from landmarks to all points
-    disp 'Out of sample extension from landmarks to all points'
-    Y = Pnm * Y;
-end
-
-disp 'Done.'
-
-tt_total = tt_pca + tt_kernel + tt_svd + tt_kmeans + tt_lo + tt_diff + ...
-    tt_pdx + tt_cmds + tt_mmds + tt_nmmds;
-
-disp(['Total time ' num2str(tt_total) ' seconds']);
-
-end
-
-
-
-
-
-

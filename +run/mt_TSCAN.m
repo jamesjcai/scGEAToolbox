@@ -40,7 +40,7 @@ end
 
 
 if do_reduce
-    % Briefly, Ei from all cells are organized into a H × N matrix E?. Each row
+    % Briefly, Ei from all cells are organized into a H Ã— N matrix E?. Each row
     % corresponds to a gene cluster. The matrix is standardized such that
     % expression values within each row have zero mean and unit standard deviation
     pcadim = 5;

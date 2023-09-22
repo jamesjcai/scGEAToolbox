@@ -4,42 +4,42 @@
 %   Bioinformatics Lead:  Wayne Moore <wmoore@stanford.edu>
 %   Provided by the Herzenberg Lab at Stanford University
 %   License: BSD 3 clause
-%   
+%
 
 
-function [answer, cancelled]=inputDlg(msg,title,varargin)
-if nargin==1
-    title='Input required';
+function [answer, cancelled] = inputDlg(msg, title, varargin)
+if nargin == 1
+    title = 'Input required';
 end
-[msgType, jsa,default,~,~]=getMsgTypeAndOptions(...
+[msgType, jsa, default, ~, ~] = getMsgTypeAndOptions( ...
     javax.swing.JOptionPane.QUESTION_MESSAGE, varargin);
-[msg, where, ~, ~, ~, ~, javaWin,~,~,modal]...
-    =decodeMsg(msg, default);
+[msg, where, ~, ~, ~, ~, javaWin, ~, ~, modal] ...
+    = decodeMsg(msg, default);
 
 if ~isempty(jsa)
-    inputValue=char(jsa(1));
+    inputValue = char(jsa(1));
 else
-    inputValue='';
+    inputValue = '';
 end
-if msgType==0
-    myIcon='error.png';
-elseif msgType==1
+if msgType == 0
+    myIcon = 'error.png';
+elseif msgType == 1
     myIcon = 'facs.gif';
-elseif msgType==2
-    myIcon='warning.png';
+elseif msgType == 2
+    myIcon = 'warning.png';
 else
-    myIcon='question.png';
+    myIcon = 'question.png';
 end
-pane=javaObjectEDT('javax.swing.JOptionPane', msg, msgType);
+pane = javaObjectEDT('javax.swing.JOptionPane', msg, msgType);
 pane.setWantsInput(true);
 pane.setInitialSelectionValue(inputValue);
 pane.selectInitialValue();
 pane.setIcon(Gui.Icon(myIcon));
 pane.setOptionType(javax.swing.JOptionPane.OK_CANCEL_OPTION);
-PopUp.Pane(pane, title,where, javaWin, modal);
-answer=pane.getInputValue;
-cancelled=strcmp(answer,'uninitializedValue');
+PopUp.Pane(pane, title, where, javaWin, modal);
+answer = pane.getInputValue;
+cancelled = strcmp(answer, 'uninitializedValue');
 if cancelled
-    answer='';
+    answer = '';
 end
 end

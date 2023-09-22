@@ -1,5 +1,5 @@
-function X = redistribute(X,mode)
-%REDISTRIBUTE Distribute lambda values to a specified mode. 
+function X = redistribute(X, mode)
+%REDISTRIBUTE Distribute lambda values to a specified mode.
 %
 %   K = REDISTRIBUTE(K,N) absorbs the weights from the lambda vector
 %   into mode N. The lambda vector is then set to all ones.
@@ -14,6 +14,6 @@ function X = redistribute(X,mode)
 
 
 for r = 1:length(X.lambda)
-    X.u{mode}(:,r) = X.u{mode}(:,r) * X.lambda(r);
+    X.u{mode}(:, r) = X.u{mode}(:, r) * X.lambda(r);
     X.lambda(r) = 1;
 end

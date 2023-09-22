@@ -1,6 +1,6 @@
-function t = subsasgn(t,s,b)
+function t = subsasgn(t, s, b)
 %SUBSASGN Subscripted assignment for a ttensor.
-%   
+%
 %   Subscripted assignment can be used to alter the core tensor or the
 %   factor matrices in a ttensor. The entire factor matrix or tensor must be
 %   provided.
@@ -19,14 +19,14 @@ function t = subsasgn(t,s,b)
 switch s(1).type
     case '.'
         switch s(1).subs
-            case {'core','lambda'}
+            case {'core', 'lambda'}
                 if length(s) == 1
                     t = ttensor(b, t.u);
                 else
                     tmpcore = subsasgn(t.core, s(2:end), b);
                     t = ttensor(tmpcore, t.u);
                 end
-            case {'u','U'}
+            case {'u', 'U'}
                 if length(s) == 1
                     t = ttensor(t.core, b);
                 else
@@ -46,5 +46,3 @@ switch s(1).type
     otherwise
         error('Invalid subsasgn.');
 end
-
-

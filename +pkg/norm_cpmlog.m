@@ -1,8 +1,8 @@
-function [X]=norm_cpmlog(X)
-    % ref: https://github.com/pachterlab/BHGP_2022/blob/main/scripts/norm_sparse.py
-    % def norm_cpm_log(mtx):    mtx=sp.sparse.random(3,5,density=1)
-    % https://doi.org/10.1101/2022.05.06.490859
-    [X]=pkg.norm_libsize(X,1e6);
-    X=pkg.e_log1p(X);
-    %[X]=l__og(X+1);
+function [X] = norm_cpmlog(X)
+% ref: https://github.com/pachterlab/BHGP_2022/blob/main/scripts/norm_sparse.py
+% def norm_cpm_log(mtx):    mtx=sp.sparse.random(3,5,density=1)
+% https://doi.org/10.1101/2022.05.06.490859
+[X] = pkg.norm_libsize(X, 1e6);
+X = pkg.e_log1p(X);
+%[X]=l__og(X+1);
 end

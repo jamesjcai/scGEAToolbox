@@ -10,9 +10,9 @@ function [CE, NSO] = plot_objectives(csv_file_or_data, varargin)
 % Required input
 % ----------
 % csv_file_or_data:
-%   This is either 
-%   A) a char array identifying a CSV text file containing the data 
-%      to be reduced. 
+%   This is either
+%   A) a char array identifying a CSV text file containing the data
+%      to be reduced.
 %   B) the actual data to be reduced; a numeric matrix.
 %
 % Optional input
@@ -35,31 +35,31 @@ function [CE, NSO] = plot_objectives(csv_file_or_data, varargin)
 %   Math Lead & Primary Developer:  Connor Meehan <connor.gw.meehan@gmail.com>
 %   Secondary Developer: Stephen Meehan <swmeehan@stanford.edu>
 %   Bioinformatics Lead:  Wayne Moore <wmoore@stanford.edu>
-%   Provided by the Herzenberg Lab at Stanford University 
+%   Provided by the Herzenberg Lab at Stanford University
 %   License: BSD 3 clause
 %
 
 MAX_DIMENSIONS = 50;
 MAX_SAMPLE_SIZE = 1e4;
 
-p=parseArguments();
-parse(p,varargin{:});
-args=p.Results;
+p = parseArguments();
+parse(p, varargin{:});
+args = p.Results;
 verbose = args.verbose;
 
 if ischar(csv_file_or_data)
     if ~exist(csv_file_or_data, 'file')
         csv_file_or_data = UmapUtil.RelocateExamples(csv_file_or_data);
     end
-    t=readtable(csv_file_or_data, 'ReadVariableNames', true);
-    inData=table2array(t);
+    t = readtable(csv_file_or_data, 'ReadVariableNames', true);
+    inData = table2array(t);
 else
     inData = csv_file_or_data;
 end
 
 if size(inData, 1) > MAX_SAMPLE_SIZE
-    warning(['Looks like your dataset is too large. Trimming it down to the first ' num2str(MAX_SAMPLE_SIZE) 'rows...']);
-    inData = inData(1:MAX_SAMPLE_SIZE,:);
+    warning(['Looks like your dataset is too large. Trimming it down to the first ', num2str(MAX_SAMPLE_SIZE), 'rows...']);
+    inData = inData(1:MAX_SAMPLE_SIZE, :);
 end
 
 maxD = min(MAX_DIMENSIONS, size(inData, 2));
@@ -68,31 +68,31 @@ CE = zeros(1, maxD-1);
 NSO = zeros(1, maxD-1);
 
 for d = 2:maxD
-    [reduction,umap] = run_umap_main(inData,'n_components', d, 'verbose', verbose);
-    
+    [reduction, umap] = run_umap_main(inData, 'n_components', d, 'verbose', verbose);
+
     CE(d-1) = cross_entropy(reduction, reduction, umap.head, umap.tail, umap.weights, umap.a, umap.b, true);
     NSO(d-1) = neg_sampling_objective(reduction, reduction, umap.head, umap.tail, umap.weights, umap.a, umap.b, umap.negative_sample_rate, true);
 end
 
 Cfig = figure('Name', 'Cross Entropy vs. Embedding Dimension');
-Cax=axes('Parent', Cfig);
+Cax = axes('Parent', Cfig);
 plot(Cax, 2:maxD, CE);
 xlabel(Cax, 'Dimension');
 ylabel(Cax, 'Cross Entropy');
 
 Nfig = figure('Name', 'Negative Sampling Objective vs. Embedding Dimension');
-Nax=axes('Parent', Nfig);
+Nax = axes('Parent', Nfig);
 plot(Nax, 2:maxD, NSO);
 xlabel(Nax, 'Dimension');
 ylabel(Nax, 'Negative Sampling Objective');
 
-    function p=parseArguments()
+    function p = parseArguments()
         p = inputParser;
         DEFAULT_VERBOSE = 'none';
-        EXPECTED_VERBOSE = {'graphic','text','none'};
-        addParameter(p,'template_file',[], @(x) ischar(x) || isa(x, 'UMAP'));
-        addParameter(p,'label_column',0,@(x) isnumeric(x) && x>0);
-        addParameter(p,'verbose',DEFAULT_VERBOSE,...
-            @(x) any(validatestring(x,EXPECTED_VERBOSE)));
-    end
+        EXPECTED_VERBOSE = {'graphic', 'text', 'none'};
+        addParameter(p, 'template_file', [], @(x) ischar(x) || isa(x, 'UMAP'));
+        addParameter(p, 'label_column', 0, @(x) isnumeric(x) && x > 0);
+        addParameter(p, 'verbose', DEFAULT_VERBOSE, ...
+            @(x) any(validatestring(x, EXPECTED_VERBOSE)));
+end
 end

@@ -6,5 +6,4 @@ function a = double(t)
 %Tensor Toolbox for MATLAB: <a href="https://www.tensortoolbox.org">www.tensortoolbox.org</a>
 
 
-
 a = t.data;

@@ -1,4 +1,4 @@
-function T = gendist(P,N,M,varargin)
+function T = gendist(P, N, M, varargin)
 %
 %GENDIST - generate random numbers according to a discrete probability
 %distribution.
@@ -20,9 +20,9 @@ function T = gendist(P,N,M,varargin)
 %Conceptual EXAMPLE:
 %
 %If P = [0.2 0.4 0.4] (note sum(P)=1), then T can only take on values of 1,
-%2 or 3, corresponding to the possible indices of P.  If one calls 
+%2 or 3, corresponding to the possible indices of P.  If one calls
 %gendist(P,1,10), then on average the output T should contain two 1's, four
-%2's and four 3's, in accordance with the values of P, and a possible 
+%2's and four 3's, in accordance with the values of P, and a possible
 %output might look like:
 %
 %T = gendist(P,1,10)
@@ -52,50 +52,48 @@ function T = gendist(P,N,M,varargin)
 %Thanks to Derek O'Connor for tips on speeding up the code.
 
 %check for input errors
-if and(nargin~=3,nargin~=4)
+if and(nargin ~= 3, nargin ~= 4)
     error('Error:  Invalid number of input arguments.')
 end
 
-if min(P)<0
+if min(P) < 0
     error('Error:  All elements of first argument, P, must be positive.')
 end
 
-if or(N<1,M<1)
+if or(N < 1, M < 1)
     error('Error:  Output matrix dimensions must be greater than or equal to one.')
 end
 
 %normalize P
-Pnorm=[0 P]/sum(P);
+Pnorm = [0, P] / sum(P);
 
 %create cumlative distribution
-Pcum=cumsum(Pnorm);
+Pcum = cumsum(Pnorm);
 
 %create random matrix
-N=round(N);
-M=round(M);
-R=rand(1,N*M);
+N = round(N);
+M = round(M);
+R = rand(1, N*M);
 
 %calculate T output matrix
-V=1:length(P);
-[~,inds] = histc(R,Pcum); 
+V = 1:length(P);
+[~, inds] = histc(R, Pcum);
 T = V(inds);
 
 %shape into output matrix
-T=reshape(T,N,M);
+T = reshape(T, N, M);
 
 %if desired, output plot
-if nargin==4
-    if strcmp(varargin{1},'plot')
-        Pfreq=N*M*P/sum(P);
+if nargin == 4
+    if strcmp(varargin{1}, 'plot')
+        Pfreq = N * M * P / sum(P);
         figure;
         hold on
-        hist(T(T>0),1:length(P))
-        plot(Pfreq,'r-o')
+        hist(T(T > 0), 1:length(P))
+        plot(Pfreq, 'r-o')
         ylabel('Frequency')
         xlabel('P-vector Index')
         axis tight
         box on
     end
 end
-
-

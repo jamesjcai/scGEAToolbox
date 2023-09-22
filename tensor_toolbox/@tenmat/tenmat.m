@@ -9,9 +9,9 @@
 %   minus      - Binary subtraction (-) for tenmat.
 %   mtimes     - Multiplies two tenmat objects.
 %   norm       - Frobenius norm of a tenmat.
-%   plus       - Binary addition (+) for tenmat. 
+%   plus       - Binary addition (+) for tenmat.
 %   size       - Size of tenmat.
-%   subsasgn   - Subscripted assignment for tenmat.  
+%   subsasgn   - Subscripted assignment for tenmat.
 %   subsref    - Subscripted reference for tenmat.
 %   tenmat     - Create a matricized tensor.
 %   tsize      - Tensor size of tenmat.
@@ -111,11 +111,11 @@ if (nargin == 4)
 
     % Error check
     n = numel(tsize);
-    if ~isequal(1:n, sort([rdims cdims]))
+    if ~isequal(1:n, sort([rdims, cdims]))
         error('Incorrect specification of dimensions');
-    elseif (prod(tsize(rdims)) ~= size(data,1))
+    elseif (prod(tsize(rdims)) ~= size(data, 1))
         error('SIZE(A,1) does not match size specified by RDIMS and SIZE.');
-    elseif (prod(tsize(cdims)) ~= size(data,2))
+    elseif (prod(tsize(cdims)) ~= size(data, 2))
         error('SIZE(A,2) does not match size specified by CDIMS and SIZE.');
     end
 
@@ -133,8 +133,8 @@ end
 % Case II: Called to convert an MDA to a tenmat --- recall after
 % converting MDA to a tensor.
 %----------
-if isa(varargin{1},'double')
-    A = tenmat(tensor(varargin{1}),varargin{2:nargin});
+if isa(varargin{1}, 'double')
+    A = tenmat(tensor(varargin{1}), varargin{2:nargin});
     return;
 end
 
@@ -142,7 +142,7 @@ end
 % Case III: Convert a tensor to a tenmat
 %----------
 
-if (nargin < 2)  ||  (nargin > 3)
+if (nargin < 2) || (nargin > 3)
     error('Incorrect number of arguments.');
 end
 
@@ -154,47 +154,47 @@ n = ndims(T);
 % Figure out which dimensions get mapped where
 if (nargin == 2)
     rdims = varargin{2};
-    tmp = true(1,n); 
-    tmp(rdims) = false; 
-    cdims = find(tmp);   % i.e., cdims = setdiff(1:n, rdims);
-elseif isa(varargin{3},'char')
+    tmp = true(1, n);
+    tmp(rdims) = false;
+    cdims = find(tmp); % i.e., cdims = setdiff(1:n, rdims);
+elseif isa(varargin{3}, 'char')
     switch varargin{3}
-        case 't'                        % Transpose
+        case 't' % Transpose
             cdims = varargin{2};
-	    tmp = true(1,n); 
-	    tmp(cdims) = false; 
-	    rdims = find(tmp);   % i.e., rdims = setdiff(1:n, cdims);
-        case 'fc'                       % Forward cyclic
+            tmp = true(1, n);
+            tmp(cdims) = false;
+            rdims = find(tmp); % i.e., rdims = setdiff(1:n, cdims);
+        case 'fc' % Forward cyclic
             rdims = varargin{2};
             if (numel(rdims) ~= 1)
                 error('Only one row dimension if third argument is ''fc''.');
+                end
+                cdims = [rdims + 1:n, 1:rdims - 1];
+            case 'bc' % Backward cyclic
+                rdims = varargin{2};
+                if (numel(rdims) ~= 1)
+                    error('Only one row dimension if third argument is ''bc''.');
+                    end
+                    cdims = [rdims - 1:-1:1, n:-1:rdims + 1];
+                otherwise
+                    error('Unrecognized option');
+                end
+            else
+                rdims = varargin{2};
+                cdims = varargin{3};
             end
-            cdims = [rdims+1:n, 1:rdims-1];
-        case 'bc'                       % Backward cyclic
-            rdims = varargin{2};
-            if (numel(rdims) ~= 1)
-                error('Only one row dimension if third argument is ''bc''.');
+
+            % Error check
+            if ~isequal(1:n, sort([rdims, cdims]))
+                error('Incorrect specification of dimensions');
             end
-            cdims = [rdims-1:-1:1, n:-1:rdims+1];
-        otherwise
-            error('Unrecognized option');
-    end
-else
-    rdims = varargin{2};
-    cdims = varargin{3};
-end
 
-% Error check
-if ~isequal(1:n, sort([rdims cdims]))
-    error('Incorrect specification of dimensions');
-end
+            % Permute T so that the dimensions specified by RDIMS come first
+            data = reshape(double(permute(T, [rdims, cdims])), prod(tsize(rdims)), prod(tsize(cdims)));
 
-% Permute T so that the dimensions specified by RDIMS come first
-data = reshape(double(permute(T,[rdims cdims])), prod(tsize(rdims)), prod(tsize(cdims)));
-
-% Save class variables
-A.tsize = tsize;
-A.rindices = rdims;
-A.cindices = cdims;
-A.data = data;
-A = class(A, 'tenmat');
+            % Save class variables
+            A.tsize = tsize;
+            A.rindices = rdims;
+            A.cindices = cdims;
+            A.data = data;
+            A = class(A, 'tenmat');

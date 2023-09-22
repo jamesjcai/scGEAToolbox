@@ -1,4 +1,4 @@
-function [tf,diffs] = issymmetric(X)
+function [tf, diffs] = issymmetric(X)
 %ISSYMMETRIC Verify that a ktensor X is symmetric in all modes.
 %
 %   TF = ISSYMMETRIC(X) returns true if X is exactly symmetric for every
@@ -8,7 +8,7 @@ function [tf,diffs] = issymmetric(X)
 %   differences between the normalized factor matrices.
 %
 %   See also SYMMETRIZE.
-%  
+%
 %Tensor Toolbox for MATLAB: <a href="https://www.tensortoolbox.org">www.tensortoolbox.org</a>
 
 
@@ -16,16 +16,16 @@ function [tf,diffs] = issymmetric(X)
 
 n = ndims(X);
 sz = size(X);
-diffs = zeros(n,n);
+diffs = zeros(n, n);
 
 for i = 1:n
-    for j = i+1:n
+    for j = i + 1:n
         if ~isequal(size(X.u{i}), size(X.u{j}))
-            diffs(i,j) = Inf;            
-        elseif isequal(X.u{i},X.u{j})
-            diffs(i,j) = 0;
+            diffs(i, j) = Inf;
+        elseif isequal(X.u{i}, X.u{j})
+            diffs(i, j) = 0;
         else
-            diffs(i,j) = norm(X.u{i} - X.u{j});
+            diffs(i, j) = norm(X.u{i}-X.u{j});
         end
     end
 end

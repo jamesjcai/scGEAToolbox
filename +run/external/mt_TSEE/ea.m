@@ -35,29 +35,35 @@
 
 % Copyright (c) 2013 by Max Vladymyrov and Miguel A. Carreira-Perpinan
 
-function [W,s] = ea(X,K,k)
+function [W, s] = ea(X, K, k)
 
-N = size(X,1);
+N = size(X, 1);
 % ---------- Argument defaults ----------
-if ~exist('k','var') || isempty(k), k = N-1; end
-if iscell(k) 
-  D2 = k{1}; nn = k{2}; k = size(D2,2);
+if ~exist('k', 'var') || isempty(k), k = N - 1; end
+if iscell(k)
+    D2 = k{1};
+    nn = k{2};
+    k = size(D2, 2);
 else
-  [D2,nn] = nnsqdist(X,k);		% Square distances to k nn
-  %[D2,nn] = nnsqdist(X,k,'mink');	% Usually faster, see nnsqdist.m
+    [D2, nn] = nnsqdist(X, k); % Square distances to k nn
+    %[D2,nn] = nnsqdist(X,k,'mink');	% Usually faster, see nnsqdist.m
 end
 % ---------- End of "argument defaults" ----------
 
-b = zeros(N,1); Wp = zeros(N,k); logK = log(K);
-[B,D2] = eabounds(logK,D2);		% Log-beta bounds
-[~,p] = sort(D2(:,ceil(K)));		% Point order: distance to Kth nn
-j = p(1); b0 = mean(B(j,:)); p=[p;0];	% Initialization
-for i=1:N				% Compute log-beta & EAs for each point
-  [b(j),Wp(j,:)] = eabeta(D2(j,:),b0,logK,B(j,:));
-  b0 = b(j); j = p(i+1);		% Next point
+b = zeros(N, 1);
+Wp = zeros(N, k);
+logK = log(K);
+[B, D2] = eabounds(logK, D2); % Log-beta bounds
+[~, p] = sort(D2(:, ceil(K))); % Point order: distance to Kth nn
+j = p(1);
+b0 = mean(B(j, :));
+p = [p; 0]; % Initialization
+for i = 1:N % Compute log-beta & EAs for each point
+    [b(j), Wp(j, :)] = eabeta(D2(j, :), b0, logK, B(j, :));
+    b0 = b(j);
+    j = p(i+1); % Next point
 end
-W = sparse(repmat((1:N)',1,k),nn,Wp,N,N); if k>=N-1, W = full(W); end
-if nargout==2, s=1./sqrt(2*exp(b)); end	% Bandwidths from log-beta values
-
-
-
+W = sparse(repmat((1:N)', 1, k), nn, Wp, N, N);
+if k >= N - 1, W = full(W);
+end
+if nargout == 2, s = 1 ./ sqrt(2*exp(b)); end % Bandwidths from log-beta values

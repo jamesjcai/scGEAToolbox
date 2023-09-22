@@ -55,13 +55,13 @@ end
 % library size normalization
 if lib_size_norm
     disp 'Library size normalization'
-    libsize  = sum(data,2);
+    libsize = sum(data, 2);
     data = bsxfun(@rdivide, data, libsize) * median(libsize);
 end
 
 % log transform
 if log_transform
-    disp(['Log transform, with pseudo count ' num2str(pseudo_count)]);
+    disp(['Log transform, with pseudo count ', num2str(pseudo_count)]);
     data = log(data + pseudo_count);
 end
 
@@ -69,8 +69,8 @@ N = size(data, 1); % number of cells
 
 if ~isempty(npca)
     disp 'PCA'
-    data_centr = bsxfun(@minus, data, mean(data,1));
-    [U,~,~] = randPCA(data_centr', npca); % fast random svd
+    data_centr = bsxfun(@minus, data, mean(data, 1));
+    [U, ~, ~] = randPCA(data_centr', npca); % fast random svd
     %[U,~,~] = svds(data', npca);
     data_pc = data_centr * U; % PCA project
 else
@@ -81,9 +81,9 @@ disp 'Computing distances'
 [idx, dist] = knnsearch(data_pc, data_pc, 'k', k);
 
 disp 'Adapting sigma'
-dist = bsxfun(@rdivide, dist, dist(:,ka));
+dist = bsxfun(@rdivide, dist, dist(:, ka));
 
-i = repmat((1:N)',1,size(idx,2));
+i = repmat((1:N)', 1, size(idx, 2));
 i = i(:);
 j = idx(:);
 s = dist(:);
@@ -98,15 +98,15 @@ W = W + W';
 
 if epsilon > 0
     disp 'Computing kernel'
-    [i,j,s] = find(W);
+    [i, j, s] = find(W);
     i = [i; (1:N)'];
     j = [j; (1:N)'];
-    s = [s./(epsilon^2); zeros(N,1)];
+    s = [s ./ (epsilon^2); zeros(N, 1)];
     s = exp(-s);
-    W = sparse(i,j,s);
+    W = sparse(i, j, s);
 end
 
 disp 'Markov normalization'
-W = bsxfun(@rdivide, W, sum(W,2)); % Markov normalization
+W = bsxfun(@rdivide, W, sum(W, 2)); % Markov normalization
 
 disp 'done'

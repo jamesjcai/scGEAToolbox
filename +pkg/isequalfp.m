@@ -1,4 +1,4 @@
-function yn = isequalfp(a,b)
+function yn = isequalfp(a, b)
 % ISEQUALFP  Check two values for equality within floating point precision
 %
 % It is widely known that floating point computation has a fundamental
@@ -36,14 +36,14 @@ function yn = isequalfp(a,b)
 % todo: isequalfp(a,b,c,...)
 
 %% Check arguments
-narginchk(2,2);
+narginchk(2, 2);
 assert(isfloat(a) && isfloat(b), 'inputs a and b must be floats');
 assert(all(size(a) == size(b)), 'inputs a and b must be the same size');
 
-a = a(:);   % column vectors
+a = a(:); % column vectors
 b = b(:);
 
 %% Check for equivalence of each element, within the tolerance
-yn = abs(a - b) <= eps(max(abs(a), abs(b)));
+yn = abs(a-b) <= eps(max(abs(a), abs(b)));
 
-yn = all(yn);  % scalar logical output
+yn = all(yn); % scalar logical output

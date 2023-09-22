@@ -1,4 +1,4 @@
-function Y = ttm(X,V,varargin)
+function Y = ttm(X, V, varargin)
 %TTM Tensor times matrix.
 %
 %   Y = TTM(X,A,N) computes the n-mode product of tensor X with a
@@ -39,9 +39,6 @@ function Y = ttm(X,V,varargin)
 %
 %Tensor Toolbox for MATLAB: <a href="https://www.tensortoolbox.org">www.tensortoolbox.org</a>
 
-
-
-
 %% Check the number of arguments
 if (nargin < 2)
     error('TTM requires at least two arguments.');
@@ -67,14 +64,14 @@ elseif numel(varargin) == 3
 end
 
 %% Handle cell array
-if iscell(V)   
+if iscell(V)
     % Copy n into dims
     dims = n;
     % Check that the dimensions are valid
-    [dims,vidx] = tt_dimscheck(dims,ndims(X),numel(V));
+    [dims, vidx] = tt_dimscheck(dims, ndims(X), numel(V));
     % Calculate individual products
     Y = ttm(X, V{vidx(1)}, dims(1), tflag);
-    for k = 2 : numel(dims)
+    for k = 2:numel(dims)
         Y = ttm(Y, V{vidx(k)}, dims(k), tflag);
     end
     % All done
@@ -91,34 +88,34 @@ if (numel(n) ~= 1 || (n < 0) || n > ndims(X))
     error('Dimension N must be between 1 and NDIMS(X).');
 end
 
-%% COMPUTE SINGLE N-MODE PRODUCT 
+%% COMPUTE SINGLE N-MODE PRODUCT
 
 N = ndims(X);
 sz = size(X);
 
-if ver == 0  %old verion
-    order = [n,1:n-1,n+1:N];
-    newdata = double(permute(X,order));
-    newdata = reshape(newdata,sz(n),prod(sz([1:n-1,n+1:N])));
+if ver == 0 %old verion
+    order = [n, 1:n - 1, n + 1:N];
+    newdata = double(permute(X, order));
+    newdata = reshape(newdata, sz(n), prod(sz([1:n - 1, n + 1:N])));
     if tflag == 't'
         newdata = V' * newdata;
-        p = size(V,2);
+        p = size(V, 2);
     else
-        newdata = V*newdata;
-        p = size(V,1);
+        newdata = V * newdata;
+        p = size(V, 1);
     end
-    newsz = [p,sz(1:n-1),sz(n+1:N)];
-    Y = tensor(newdata,newsz);
-    Y = ipermute(Y,order);
+    newsz = [p, sz(1:n-1), sz(n+1:N)];
+    Y = tensor(newdata, newsz);
+    Y = ipermute(Y, order);
 else % new version
-    
+
     if tflag == 't'
         p = size(V, 2);
     else
-       p = size(V, 1);
+        p = size(V, 1);
     end
 
-    
+
     if n == 1
         A = reshape(X.data, sz(n), []);
         if tflag == 't'
@@ -138,24 +135,24 @@ else % new version
         ncols = prod(sz(1:n-1)); % Per block
         nAk = sz(n) * ncols; % Number entries in each block of A
         nBk = p * ncols;
-        B = zeros(p * nblocks * ncols, 1);
-        for k = 1 : nblocks
+        B = zeros(p*nblocks*ncols, 1);
+        for k = 1:nblocks
             % Extract k-th sub-block of A (in row-major orientation)
-            Akt = reshape(X.data((k-1) * nAk + 1: k * nAk), ncols, sz(n));
+            Akt = reshape(X.data((k - 1)*nAk+1:k*nAk), ncols, sz(n));
             if tflag == 't'
                 Bkt = Akt * V;
             else
                 Bkt = Akt * V';
             end
-            B((k-1) * nBk + 1: k * nBk) = Bkt(:);        
+            B((k - 1)*nBk+1:k*nBk) = Bkt(:);
         end
-        
+
     end
     newsz = sz;
     newsz(n) = p;
     Y = tensor(B, newsz);
-   
-   
+
+
 end
 
 return;

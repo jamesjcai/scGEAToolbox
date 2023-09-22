@@ -21,13 +21,12 @@ function n2 = dist2(x, c)
 [ndata, dimx] = size(x);
 [ncentres, dimc] = size(c);
 if dimx ~= dimc
-	error('Data dimension does not match dimension of centres')
+    error('Data dimension does not match dimension of centres')
 end
 
 tempx = full(sum(x.^2, 2));
 tempc = full(sum(c.^2, 2)');
 
-n2 = tempx(:, ones(1,ncentres)) + ...
-  		tempc(ones(1,ndata), :) - ...
-  		2.*(x*(c'));
-
+n2 = tempx(:, ones(1, ncentres)) + ...
+    tempc(ones(1, ndata), :) - ...
+    2 .* (x * (c'));

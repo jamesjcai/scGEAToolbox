@@ -1,4 +1,4 @@
-function fit=locfit(varargin)
+function fit = locfit(varargin)
 
 % Smoothing noisy data using Local Regression and Likelihood.
 %
@@ -13,7 +13,7 @@ function fit=locfit(varargin)
 %  the predict() function to interpolate this fit to other points.
 %
 %  Additional arguments to locfit() are specified as 'name',value pairs, e.g.:
-%  locfit( x, 'alpha',[0.7,1.5] , 'family','rate' , 'ev','grid' , 'mg',100 ); 
+%  locfit( x, 'alpha',[0.7,1.5] , 'family','rate' , 'ev','grid' , 'mg',100 );
 %
 %
 %  Data-related inputs:
@@ -26,22 +26,22 @@ function fit=locfit(varargin)
 %      surfaces, may limit usefulness.
 %
 %    y is the column vector of the dependent (or response) variable.
-%      For density families, 'y' is omitted. 
+%      For density families, 'y' is omitted.
 % NOTE: x and y are the first two arguments. All other arguments require
 %        the 'name',value notation.
 %
 %    'weights' Prior weights for observations (reciprocal of variance, or
-%           sample size). 
+%           sample size).
 %    'cens' Censoring indicators for hazard rate or censored regression.
 %           The coding is '1' (or 'TRUE') for a censored observation, and
-%           '0' (or 'FALSE') for uncensored observations. 
+%           '0' (or 'FALSE') for uncensored observations.
 %    'base' Baseline parameter estimate. If a baseline is provided,
 %           the local regression model is fitted as
 %                        Y_i = b_i + m(x_i) + epsilon_i,
 %           with Locfit estimating the m(x) term. For regression models,
 %           this effectively subtracts b_i from Y_i. The advantage of the
 %           'base' formulation is that it extends to likelihood
-%           regression models. 
+%           regression models.
 %    'scale' A scale to apply to each variable. This is especially
 %           important for multivariate fitting, where variables may be
 %           measured in non-comparable units. It is also used to specify
@@ -49,7 +49,7 @@ function fit=locfit(varargin)
 %     'sty' Character string (length d) of styles for each predictor variable.
 %           n denotes `normal'; a denotes angular (or periodic); l and r
 %           denotes one-sided left and right; c is conditionally parametric.
-% 
+%
 %
 %  Smoothing Parameters and Bandwidths:
 %  The bandwidth (or more accurately, half-width) of the smoothing window
@@ -77,20 +77,20 @@ function fit=locfit(varargin)
 %
 %   'deg' Degree of local polynomial. Default: 2 (local quadratic).
 %         Degrees 0 to 3 are supported by almost all parts of the
-%         Locfit code. Higher degrees may work in some cases. 
-% 
+%         Locfit code. Higher degrees may work in some cases.
+%
 %  'kern' Weight function, default = 'tcub'. Other choices are
 %         'rect', 'trwt', 'tria', 'epan', 'bisq' and 'gauss'.
 %         Choices may be restricted when derivatives are
 %         required; e.g. for confidence bands and some bandwidth
-%         selectors. 
-% 
+%         selectors.
+%
 %    'kt' Kernel type, 'sph' (default); 'prod'. In multivariate
 %         problems, 'prod' uses a simplified product model which
-%         speeds up computations. 
-% 
+%         speeds up computations.
+%
 %  'acri' Criterion for adaptive bandwidth selection.
-% 
+%
 %
 %  Derivative Estimation.
 %  Generally I recommend caution when using derivative estimation
@@ -104,7 +104,7 @@ function fit=locfit(varargin)
 %         'deriv',[1 1] specifies the second derivative. For bivariate fits
 %         'deriv',2 specifies the first partial derivative wrt x2.
 %         'deriv',[1 2] is mixed second-order derivative.
-% 
+%
 %  Fitting family.
 %  'family' is used to specify the local likelihood family.
 %         Regression-type families are 'gaussian', 'binomial',
@@ -124,8 +124,8 @@ function fit=locfit(varargin)
 %         provided, and 'dens' if no response is given.
 %    'link' Link function for local likelihood fitting. Depending on the
 %           family, choices may be 'ident', 'log', 'logit',
-%           'inverse', 'sqrt' and 'arcsin'. 
-% 
+%           'inverse', 'sqrt' and 'arcsin'.
+%
 %  Evaluation structures.
 %    By default, locfit chooses a set of points, depending on the data
 %    and smoothing parameters, to evaluate at. This is controlled by
@@ -136,22 +136,22 @@ function fit=locfit(varargin)
 %           but use leave-one-out cross validation), 'none' (no evaluation
 %           points, effectively producing the global parametric fit).
 %           Alternatively, a vector/matrix of evaluation points may be
-%           provided. 
+%           provided.
 %           (kd trees not currently supported in mlocfit)
 %     'll' and 'ur' -- row vectors specifying the upper and lower limits
 %           for the bounding box used by the evaluation structure.
-%           They default to the data range. 
+%           They default to the data range.
 %     'mg' For the 'grid' evaluation structure, 'mg' specifies the
 %           number of points on each margin. Default 10. Can be either a
-%           single number or vector. 
+%           single number or vector.
 %    'cut' Refinement parameter for adaptive partitions. Default 0.8;
-%           smaller values result in more refined partitions. 
+%           smaller values result in more refined partitions.
 %    'maxk' Controls space assignment for evaluation structures. For the
 %           adaptive evaluation structures, it is impossible to be sure
 %           in advance how many vertices will be generated. If you get
 %           warnings about `Insufficient vertex space', Locfit's default
 %           assigment can be increased by increasing 'maxk'. The default
-%           is 'maxk','100'. 
+%           is 'maxk','100'.
 %
 %    'xlim' For density estimation, Locfit allows the density to be
 %           supported on a bounded interval (or rectangle, in more than
@@ -160,10 +160,10 @@ function fit=locfit(varargin)
 %           the rectangle, and ur is the upper right corner.
 %           One-sided bounds, such as [0,infty), are not supported, but can be
 %           effectively specified by specifying a very large upper
-%           bound. 
-% 
+%           bound.
+%
 %      'module' either 'name' or {'name','/path/to/module',parameters}.
-% 
+%
 %  Density Estimation
 %      'renorm',1  will attempt to renormalize the local likelihood
 %           density estimate so that it integrates to 1. The llde
@@ -201,7 +201,7 @@ function fit=locfit(varargin)
 % fit.smoothing_parameters.link (string)
 % fit.smoothing_parameters.kernel (string)
 % fit.smoothing_parameters.kernel_type (string)
-% fit.smoothing_parameters.deren 
+% fit.smoothing_parameters.deren
 % fit.smoothing_parameters.deit
 % fit.smoothing_parameters.demint
 % fit.smoothing_parameters.debug
@@ -236,233 +236,243 @@ function fit=locfit(varargin)
 %
 
 
-
-% Minimal input validation    
+% Minimal input validation
 if nargin < 1
-   error( 'At least one input argument required' );
+    error('At least one input argument required');
 end
 
 xdata = double(varargin{1});
-d = size(xdata,2);
-n = size(xdata,1);
-if ((nargin>1) && (~ischar(varargin{2})))
-  ydata = double(varargin{2});
-  if (any(size(ydata) ~= [n 1])); error('y must be n*1 column vector'); end
-  family = 'qgauss';
-  na = 3;
+d = size(xdata, 2);
+n = size(xdata, 1);
+if ((nargin > 1) && (~ischar(varargin{2})))
+    ydata = double(varargin{2});
+    if (any(size(ydata) ~= [n, 1]));
+        error('y must be n*1 column vector');
+    end
+    family = 'qgauss';
+    na = 3;
 else
-  ydata = 0;
-  family = 'density';
-  na = 2;
+    ydata = 0;
+    family = 'density';
+    na = 2;
 end
-if mod(nargin-na,2)==0
-  error( 'All arguments other than x, y must be name,value pairs' );
-end
+if mod(nargin-na, 2) == 0
+    error('All arguments other than x, y must be name,value pairs');
+    end
 
 
-wdata = ones(n,1);
-cdata = 0;
-base  = 0;
-style = 'n';
-scale = 1;
-xl = zeros(2,d);
+    wdata = ones(n, 1);
+    cdata = 0;
+    base  = 0;
+    style = 'n';
+    scale = 1;
+    xl = zeros(2, d);
 
-alpha = [0 0 0];
-deg = 2;
-link = 'default';
-acri = 'none';
-kern = 'tcub';
-kt = 'sph';
-deren = 0;
-deit  = 'default';
-demint= 20;
-debug = 0;
+    alpha = [0, 0, 0];
+    deg = 2;
+    link = 'default';
+    acri = 'none';
+    kern = 'tcub';
+    kt = 'sph';
+    deren = 0;
+    deit = 'default';
+    demint = 20;
+    debug = 0;
 
-ev = 'tree';
-ll = zeros(1,d);
-ur = zeros(1,d);
-mg = 10;
-maxk = 100;
-deriv=0;
-cut = 0.8;
-mdl = struct('name','std', 'directory','', 'parameters',0 );
+    ev = 'tree';
+    ll = zeros(1, d);
+    ur = zeros(1, d);
+    mg = 10;
+    maxk = 100;
+    deriv = 0;
+    cut = 0.8;
+    mdl = struct('name', 'std', 'directory', '', 'parameters', 0);
 
-while na < length(varargin)
-    inc = 0;
-    if (varargin{na}=='y')
-        ydata = double(varargin{na+1});
-        family = 'qgauss';
-        inc = 2;
-        if (any(size(ydata) ~= [n 1])); error('y must be n*1 column vector'); end
-    end
-    if (strcmp(varargin{na},'weights'))
-        wdata = double(varargin{na+1});
-        inc = 2;
-        if (any(size(wdata) ~= [n 1])); error('weights must be n*1 column vector'); end
-    end
-    if (strcmp(varargin{na},'cens'))
-        cdata = double(varargin{na+1});
-        inc = 2;
-        if (any(size(cdata) ~= [n 1])); error('cens must be n*1 column vector'); end
-    end
-    if (strcmp(varargin{na},'base')) % numeric vector, n*1 or 1*1.
-        base = double(varargin{na+1});
-        if (length(base)==1); base = base*ones(n,1); end
-        inc = 2;
-    end
-    if (strcmp(varargin{na},'style')) % character string of length d.
-        style = varargin{na+1};
-        inc = 2;
-    end
-    if (strcmp(varargin{na},'scale')) % row vector, length 1 or d.
-        scale = varargin{na+1};
-        if (scale==0)
-          scale = zeros(1,d);
-          for i=1:d
-            scale(i) = sqrt(var(xdata(:,i)));
-          end
+    while na < length(varargin)
+        inc = 0;
+        if (varargin{na} == 'y')
+            ydata = double(varargin{na+1});
+            family = 'qgauss';
+            inc = 2;
+            if (any(size(ydata) ~= [n, 1]));
+                error('y must be n*1 column vector');
+            end
         end
-        inc = 2;
+        if (strcmp(varargin{na}, 'weights'))
+            wdata = double(varargin{na+1});
+            inc = 2;
+            if (any(size(wdata) ~= [n, 1]));
+                error('weights must be n*1 column vector');
+            end
+        end
+        if (strcmp(varargin{na}, 'cens'))
+            cdata = double(varargin{na+1});
+            inc = 2;
+            if (any(size(cdata) ~= [n, 1]));
+                error('cens must be n*1 column vector');
+            end
+        end
+        if (strcmp(varargin{na}, 'base')) % numeric vector, n*1 or 1*1.
+            base = double(varargin{na+1});
+            if (length(base) == 1);
+                base = base * ones(n, 1);
+            end
+            inc = 2;
+        end
+        if (strcmp(varargin{na}, 'style')) % character string of length d.
+            style = varargin{na+1};
+            inc = 2;
+        end
+        if (strcmp(varargin{na}, 'scale')) % row vector, length 1 or d.
+            scale = varargin{na+1};
+            if (scale == 0)
+                scale = zeros(1, d);
+                for i = 1:d
+                    scale(i) = sqrt(var(xdata(:, i)));
+                end
+            end
+            inc = 2;
+        end
+        if (strcmp(varargin{na}, 'xlim')) % 2*d numeric matrix.
+            xl = varargin{na+1};
+            inc = 2;
+        end
+        if (strcmp(varargin{na}, 'alpha')) % row vector of length 1, 2 or 3.
+            alpha = [varargin{na+1}, 0, 0, 0];
+            alpha = alpha(1:3);
+            inc = 2;
+        end
+        if (strcmp(varargin{na}, 'nn')) % scalar
+            alpha(1) = varargin{na+1};
+            inc = 2;
+        end
+        if (strcmp(varargin{na}, 'h')) % scalar
+            alpha(2) = varargin{na+1};
+            inc = 2;
+        end
+        if (strcmp(varargin{na}, 'pen')) % scalar
+            alpha(3) = varargin{na+1};
+            inc = 2;
+        end
+        if (strcmp(varargin{na}, 'acri')) % string
+            acri = varargin{na+1};
+            inc = 2;
+        end
+        if (strcmp(varargin{na}, 'deg')) % positive integer.
+            deg = varargin{na+1};
+            inc = 2;
+        end
+        if (strcmp(varargin{na}, 'family')) % character string.
+            family = varargin{na+1};
+            inc = 2;
+        end
+        if (strcmp(varargin{na}, 'link')) % character string.
+            link = varargin{na+1};
+            inc = 2;
+        end
+        if (strcmp(varargin{na}, 'kern')) % character string.
+            kern = varargin{na+1};
+            inc = 2;
+        end
+        if (strcmp(varargin{na}, 'kt')) % character string.
+            kt = varargin{na+1};
+            inc = 2;
+        end
+        if (strcmp(varargin{na}, 'ev')) % char. string, or matrix with d columns.
+            ev = varargin{na+1};
+            if (isnumeric(ev));
+                ev = ev';
+            end
+            inc = 2;
+        end
+        if (strcmp(varargin{na}, 'll')) % row vector of length d.
+            ll = varargin{na+1};
+            inc = 2;
+        end
+        if (strcmp(varargin{na}, 'ur')) % row vector of length d.
+            ur = varargin{na+1};
+            inc = 2;
+        end
+        if (strcmp(varargin{na}, 'mg')) % row vector of length d.
+            mg = varargin{na+1};
+            inc = 2;
+        end
+        if (strcmp(varargin{na}, 'cut')) % positive scalar.
+            cut = varargin{na+1};
+            inc = 2;
+        end
+        if (strcmp(varargin{na}, 'module')) % string.
+            mdl = struct('name', varargin{na+1}, 'directory', '', 'parameters', 0);
+            inc = 2;
+        end
+        if (strcmp(varargin{na}, 'maxk')) % positive integer.
+            maxk = varargin{na+1};
+            inc = 2;
+        end
+        if (strcmp(varargin{na}, 'deriv')) % numeric row vector, up to deg elements.
+            deriv = varargin{na+1};
+            inc = 2;
+        end
+        if (strcmp(varargin{na}, 'renorm')) % density renormalization.
+            deren = varargin{na+1};
+            inc = 2;
+        end
+        if (strcmp(varargin{na}, 'itype')) % density - integration type.
+            deit = varargin{na+1};
+            inc = 2;
+        end
+        if (strcmp(varargin{na}, 'mint')) % density - # of integration points.
+            demint = varargin{na+1};
+            inc = 2;
+        end
+        if (strcmp(varargin{na}, 'debug')) % debug level.
+            debug = varargin{na+1};
+            inc = 2;
+        end
+        if (inc == 0)
+            disp(varargin{na});
+            error('Unknown Input Argument.');
+        end
+        na = na + inc;
     end
-    if (strcmp(varargin{na},'xlim')) % 2*d numeric matrix.
-        xl = varargin{na+1};
-        inc = 2;
-    end
-    if (strcmp(varargin{na},'alpha')) % row vector of length 1, 2 or 3.
-        alpha = [varargin{na+1} 0 0 0];
-        alpha = alpha(1:3);
-        inc = 2;
-    end
-    if (strcmp(varargin{na},'nn')) % scalar
-        alpha(1) = varargin{na+1};
-        inc = 2;
-    end
-    if (strcmp(varargin{na},'h')) % scalar
-        alpha(2) = varargin{na+1};
-        inc = 2;
-    end
-    if (strcmp(varargin{na},'pen')) % scalar
-        alpha(3) = varargin{na+1};
-        inc = 2;
-    end
-    if (strcmp(varargin{na},'acri')) % string
-        acri = varargin{na+1};
-        inc = 2;
-    end
-    if (strcmp(varargin{na},'deg')) % positive integer.
-        deg = varargin{na+1};
-        inc = 2;
-    end
-    if (strcmp(varargin{na},'family')) % character string.
-        family = varargin{na+1};
-        inc = 2;
-    end
-    if (strcmp(varargin{na},'link')) % character string.
-        link = varargin{na+1};
-        inc = 2;
-    end
-    if (strcmp(varargin{na},'kern')) % character string.
-        kern = varargin{na+1};
-        inc = 2;
-    end
-    if (strcmp(varargin{na},'kt')) % character string.
-        kt = varargin{na+1};
-        inc = 2;
-    end
-    if (strcmp(varargin{na},'ev')) % char. string, or matrix with d columns.
-        ev = varargin{na+1};
-        if (isnumeric(ev)); ev = ev'; end
-        inc = 2;
-    end
-    if (strcmp(varargin{na},'ll')) % row vector of length d.
-        ll = varargin{na+1};
-        inc = 2;
-    end
-    if (strcmp(varargin{na},'ur')) % row vector of length d.
-        ur = varargin{na+1};
-        inc = 2;
-    end
-    if (strcmp(varargin{na},'mg')) % row vector of length d.
-        mg = varargin{na+1};
-        inc = 2;
-    end
-    if (strcmp(varargin{na},'cut')) % positive scalar.
-        cut = varargin{na+1};
-        inc = 2;
-    end
-    if (strcmp(varargin{na},'module')) % string.
-        mdl = struct('name',varargin{na+1}, 'directory','', 'parameters',0 );
-        inc = 2;
-    end
-    if (strcmp(varargin{na},'maxk')) % positive integer.
-        maxk = varargin{na+1};
-        inc = 2;
-    end
-    if (strcmp(varargin{na},'deriv')) % numeric row vector, up to deg elements.
-        deriv = varargin{na+1};
-        inc = 2;
-    end
-    if (strcmp(varargin{na},'renorm')) % density renormalization.
-        deren = varargin{na+1};
-        inc = 2;
-    end
-    if (strcmp(varargin{na},'itype')) % density - integration type.
-        deit = varargin{na+1};
-        inc = 2;
-    end
-    if (strcmp(varargin{na},'mint')) % density - # of integration points.
-        demint = varargin{na+1};
-        inc = 2;
-    end
-    if (strcmp(varargin{na},'debug')) % debug level.
-        debug = varargin{na+1};
-        inc = 2;
-    end
-    if (inc==0)
-      disp(varargin{na});
-      error('Unknown Input Argument.');
-    end
-    na=na+inc;
-end
 
 
-fit.data.x = xdata;
-fit.data.y = ydata;
-fit.data.weights = wdata;
-fit.data.censor = cdata;
-fit.data.baseline = base;
-fit.data.style = style;
-fit.data.scales = scale;
-fit.data.xlim = xl;
+    fit.data.x = xdata;
+    fit.data.y = ydata;
+    fit.data.weights = wdata;
+    fit.data.censor = cdata;
+    fit.data.baseline = base;
+    fit.data.style = style;
+    fit.data.scales = scale;
+    fit.data.xlim = xl;
 
-fit.evaluation_structure.type = ev;
-fit.evaluation_structure.module = mdl;
-fit.evaluation_structure.lower_left = ll;
-fit.evaluation_structure.upper_right = ur;
-fit.evaluation_structure.grid = mg;
-fit.evaluation_structure.cut = cut;
-fit.evaluation_structure.maxk = maxk;
-fit.evaluation_structure.derivative = deriv;
+    fit.evaluation_structure.type = ev;
+    fit.evaluation_structure.module = mdl;
+    fit.evaluation_structure.lower_left = ll;
+    fit.evaluation_structure.upper_right = ur;
+    fit.evaluation_structure.grid = mg;
+    fit.evaluation_structure.cut = cut;
+    fit.evaluation_structure.maxk = maxk;
+    fit.evaluation_structure.derivative = deriv;
 
-if (alpha==0); alpha = [0.7 0 0]; end
+    if (alpha == 0);
+        alpha = [0.7, 0, 0];
+    end
 
-fit.smoothing_parameters.alpha = alpha;
-fit.smoothing_parameters.adaptive_criterion = acri;
-fit.smoothing_parameters.degree = deg;
-fit.smoothing_parameters.family = family;
-fit.smoothing_parameters.link = link;
-fit.smoothing_parameters.kernel = kern;
-fit.smoothing_parameters.kernel_type = kt;
-fit.smoothing_parameters.deren = deren;
-fit.smoothing_parameters.deit = deit;
-fit.smoothing_parameters.demint = demint;
-fit.smoothing_parameters.debug = debug;
+    fit.smoothing_parameters.alpha = alpha;
+    fit.smoothing_parameters.adaptive_criterion = acri;
+    fit.smoothing_parameters.degree = deg;
+    fit.smoothing_parameters.family = family;
+    fit.smoothing_parameters.link = link;
+    fit.smoothing_parameters.kernel = kern;
+    fit.smoothing_parameters.kernel_type = kt;
+    fit.smoothing_parameters.deren = deren;
+    fit.smoothing_parameters.deit = deit;
+    fit.smoothing_parameters.demint = demint;
+    fit.smoothing_parameters.debug = debug;
 
-[fpc, pcomp] = mexlf(fit.data,fit.evaluation_structure,fit.smoothing_parameters);
-fit.fit_points = fpc;
-fit.parametric_component = pcomp;
+    [fpc, pcomp] = mexlf(fit.data, fit.evaluation_structure, fit.smoothing_parameters);
+    fit.fit_points = fpc;
+    fit.parametric_component = pcomp;
 
-return
-
-
-
+    return

@@ -1,4 +1,4 @@
-function [sdims,vidx] = tt_dimscheck(dims,N,M)
+function [sdims, vidx] = tt_dimscheck(dims, N, M)
 %TT_DIMSCHECK Used to preprocess dimensions tensor dimensions.
 %
 %   NEWDIMS = TT_DIMCHECK(DIMS,N) checks that the specified dimensions
@@ -8,7 +8,7 @@ function [sdims,vidx] = tt_dimscheck(dims,N,M)
 %   returned in sorted order.
 %
 %   [NEWDIMS,IDX] = TT_DIMCHECK(DIMS,N,M) does all of the above but
-%   also returns an index for M muliplicands. 
+%   also returns an index for M muliplicands.
 %
 %Tensor Toolbox for MATLAB: <a href="https://www.tensortoolbox.org">www.tensortoolbox.org</a>
 
@@ -21,7 +21,7 @@ end
 % Fix "minus" case
 if (max(dims) < 0)
     % Check that every member of dims is in 1:N
-    tf = ismember(-dims,1:N);
+    tf = ismember(-dims, 1:N);
     if min(tf) == 0
         error('Invalid dimensions specified');
     end
@@ -29,7 +29,7 @@ if (max(dims) < 0)
 end
 
 % Check that every member of dims is in 1:N
-tf = ismember(dims,1:N);
+tf = ismember(dims, 1:N);
 if min(tf) == 0
     error('Invalid dimensions specified');
 end
@@ -40,30 +40,30 @@ P = length(dims);
 % Reorder dims from smallest to largest (this matters in particular
 % for the vector multiplicand case, where the order affects the
 % result)
-[sdims,sidx] = sort(dims,'ascend');
+[sdims, sidx] = sort(dims, 'ascend');
 
 if (nargout == 2)
     % Can't have more multiplicands them dimensions
     if (M > N)
         error('Cannot have more multiplcands than dimensions');
     end
-    
+
     % Check that the number of mutliplicands must either be
     % full-dimensional (i.e., M==N) or equal to the number of specified
     % dimensions (i.e., M==P).
     if (M ~= N) && (M ~= P)
         error('Invalid number of multiplicands');
     end
-    
+
     % Check sizes to determine how to index multiplicands
     if (P == M)
         % Case 1: Number of items in dims and number of multiplicands
         % are equal; therefore, index in order of how sdims was sorted.
-        vidx = sidx;   
+        vidx = sidx;
     else
         % Case 2: Number of multiplicands is equal to the number of
         % dimensions in the tensor; therefore, index multiplicands by
         % dimensions specified in dims argument.
-        vidx = sdims;  % index multiplicands by (sorted) dimension
+        vidx = sdims; % index multiplicands by (sorted) dimension
     end
 end

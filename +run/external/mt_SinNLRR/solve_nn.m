@@ -1,4 +1,5 @@
-function [ X, s ] = solve_nn( Y, tau )
+function [X, s] = solve_nn(Y, tau)
+
 %% Solves the following
 %
 %   min tau * |X|_* + 1/2*|X - Y|^2
@@ -17,8 +18,7 @@ ind = find(s > tau);
 s(ind) = s(ind) - tau;
 
 S = diag(s);
-    
-X = U*S*(V');
+
+X = U * S * (V');
 
 end
-
