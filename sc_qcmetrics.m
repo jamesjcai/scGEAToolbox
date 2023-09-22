@@ -1,4 +1,4 @@
-function [nmad]=sc_qcmetrics(X)
+function [nmad] = sc_qcmetrics(X)
 %QC metrics
 
 %{
@@ -14,9 +14,9 @@ Give a higher value to remove less cells and a lower value to remove more cells
 
 pct - Use genes expressed in at least X% of the cells
 %}
-nc=size(X,2);
-pct = sum(X>0,2)./nc;       % 1%
-reads_per_cell=sum(X,2)';   % reads per cell 
-nmad=mad(log(sum(X,2))-log(sum(X>0,2)),1);
+nc = size(X, 2);
+pct = sum(X > 0, 2) ./ nc; % 1%
+reads_per_cell = sum(X, 2)'; % reads per cell
+nmad = mad(log(sum(X, 2))-log(sum(X > 0, 2)), 1);
 
 end

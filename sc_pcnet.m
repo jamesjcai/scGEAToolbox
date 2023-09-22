@@ -1,4 +1,4 @@
-function [A]=sc_pcnet(X,ncom,fastersvd,dozscore,guiwaitbar)
+function [A] = sc_pcnet(X, ncom, fastersvd, dozscore, guiwaitbar)
 %Construct network using PC regression
 %
 % [X]=log(1+sc_norm(X));     % pcnet input should be LogNormalized
@@ -10,10 +10,10 @@ function [A]=sc_pcnet(X,ncom,fastersvd,dozscore,guiwaitbar)
 
 arguments
     X double
-    ncom (1,1) {mustBeNumeric} = 3
-    fastersvd (1,1) logical = false
-    dozscore (1,1) logical = false
-    guiwaitbar (1,1) logical = false
+    ncom(1, 1) {mustBeNumeric} = 3
+    fastersvd(1, 1) logical = false
+    dozscore(1, 1) logical = false
+    guiwaitbar(1, 1) logical = false
 end
 
 %if nargin<5 || isempty(guiwaitbar), guiwaitbar=false; end
@@ -22,52 +22,52 @@ end
 %if nargin<2 || isempty(ncom), ncom=3; end
 
 
-opts.maxit=150;
+opts.maxit = 150;
 
 if fastersvd
-	pw1=fileparts(mfilename('fullpath'));
-    pth=fullfile(pw1,'+run','thirdparty','faster_svd','lmsvd');
+    pw1 = fileparts(mfilename('fullpath'));
+    pth = fullfile(pw1, '+run', 'thirdparty', 'faster_svd', 'lmsvd');
     if ~(ismcc || isdeployed), addpath(pth); end
 end
 
 % LogNormalize: Feature counts for each cell are divided by
-% the total counts for that cell and multiplied by the 
+% the total counts for that cell and multiplied by the
 % scale.factor. This is then natural-log transformed using log1p.
 % https://satijalab.org/seurat/reference/normalizedata
 %[X]=sc_norm(X);
 
-X=X.';
+X = X.';
 if dozscore
-   whos("X") 
-    X=zscore(X);
+    whos("X")
+    X = zscore(X);
 end
-n=size(X,2);
-A=1-eye(n);
+n = size(X, 2);
+A = 1 - eye(n);
 
 if guiwaitbar
-    fw=gui.gui_waitbar_adv;    
+    fw = gui.gui_waitbar_adv;
 end
-for k=1:n
+for k = 1:n
     % fprintf('...... %d/%d\n',k,n);
     if guiwaitbar
-        gui.gui_waitbar_adv(fw,k/n);
+        gui.gui_waitbar_adv(fw, k/n);
     end
-    y=X(:,k);
-    Xi=X;
-    Xi(:,k)=[];
+    y = X(:, k);
+    Xi = X;
+    Xi(:, k) = [];
     if fastersvd
-        [~,~,coeff]=lmsvd(Xi,ncom,opts);
+        [~, ~, coeff] = lmsvd(Xi, ncom, opts);
     else
-        [~,~,coeff]=svds(Xi,ncom);
+        [~, ~, coeff] = svds(Xi, ncom);
         % https://www.mathworks.com/matlabcentral/fileexchange/47835-randomized-singular-value-decomposition
         %[~,~,coeff]=rsvd(Xi,ncom);   % not recommanded
     end
-    score=Xi*coeff;
+    score = Xi * coeff;
     % [coeff,score]=pca(Xi);
     % coeff=coeff(:,1:ncom);
-    score=(score./(vecnorm(score).^2));
-    Beta=sum(y.*score);
-    A(k,A(k,:)==1)=coeff*Beta';
+    score = (score ./ (vecnorm(score).^2));
+    Beta = sum(y.*score);
+    A(k, A(k, :) == 1) = coeff * Beta';
 end
 if guiwaitbar, gui.gui_waitbar_adv(fw); end
 end
@@ -102,4 +102,3 @@ s=PCnet(X,ncom=3,rescale.data=TRUE,symmetrize.scores=FALSE)
 print(round(s,4))
 
 %}
-

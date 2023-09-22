@@ -1,4 +1,4 @@
-function [A,coeffv]=sc_pcnetbat(X,ncom)
+function [A, coeffv] = sc_pcnetbat(X, ncom)
 %Construct network using PC regression
 % >>load example_data\pcnet_example.mat
 % [X]=log(1+sc_norm(X));     % pcnet input should be LogNormalized
@@ -8,32 +8,32 @@ function [A,coeffv]=sc_pcnetbat(X,ncom)
 % https://github.com/cran/dna/blob/master/src/rpcnet.c
 % https://rdrr.io/cran/dna/f/inst/doc/Introduction.pdf
 
-if nargin<2 || isempty(ncom), ncom=3; end
+if nargin < 2 || isempty(ncom), ncom = 3; end
 
-X=X.';
-X=zscore(X);
-n=size(X,2);
-A=1-eye(n);
+X = X.';
+X = zscore(X);
+n = size(X, 2);
+A = 1 - eye(n);
 
-D=[];
-for k=1:n
-    Xi=X;
-    Xi(:,k)=[];
-    D=cat(3,D,Xi);
+D = [];
+for k = 1:n
+    Xi = X;
+    Xi(:, k) = [];
+    D = cat(3, D, Xi);
 end
 disp('Step 1.')
 
-[~,~,coeffv]=pagesvd(D,"econ");
+[~, ~, coeffv] = pagesvd(D, "econ");
 disp('Step 2.')
 
-for k=1:n
-    y=X(:,k);
-    Xi=D(:,:,k);
-    coeff=coeffv(:,1:ncom,k);
-    score=Xi*coeff;
-    score=(score./(vecnorm(score).^2));
-    Beta=sum(y.*score);
-    A(k,A(k,:)==1)=coeff*Beta';
+for k = 1:n
+    y = X(:, k);
+    Xi = D(:, :, k);
+    coeff = coeffv(:, 1:ncom, k);
+    score = Xi * coeff;
+    score = (score ./ (vecnorm(score).^2));
+    Beta = sum(y.*score);
+    A(k, A(k, :) == 1) = coeff * Beta';
 end
 disp('step 3.')
 end

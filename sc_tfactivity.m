@@ -1,6 +1,6 @@
-function [cs,tflist,gcommon,numtargetgenes]=sc_tfactivity(X,g,Ttfgn,species,methodid)
+function [cs, tflist, gcommon, numtargetgenes] = sc_tfactivity(X, g, Ttfgn, species, methodid)
 % The activity level of a transcription factor (TF) in a given cell is the
-% extent to which it is exerting its regulatory potential on its target 
+% extent to which it is exerting its regulatory potential on its target
 % genes.
 % https://academic.oup.com/bioinformatics/article/37/9/1234/5949002
 %
@@ -8,41 +8,41 @@ function [cs,tflist,gcommon,numtargetgenes]=sc_tfactivity(X,g,Ttfgn,species,meth
 % CS - is an m-by-n matrix of activity scores for m TFs and n cells.
 % TFlist - list of TF genes
 
-if nargin<2, error('USAGE: [cs,tflist]=sc_tfactivity(X,g);'); end    
-if nargin<5 || isempty(methodid), methodid=4; end
-if nargin<4 || isempty(species), species='hs'; end
-if nargin<3 || isempty(Ttfgn)         % tf-by-gene matrix T from database 
+if nargin < 2, error('USAGE: [cs,tflist]=sc_tfactivity(X,g);'); end
+if nargin < 5 || isempty(methodid), methodid = 4; end
+if nargin < 4 || isempty(species), species = 'hs'; end
+if nargin < 3 || isempty(Ttfgn) % tf-by-gene matrix T from database
     %folder=fileparts(mfilename('fullpath'));
     %wrkpth=fullfile(folder,'resources',filesep,'DoRothEA_TF_Target_DB',filesep);
-    pw1=fileparts(mfilename('fullpath'));
+    pw1 = fileparts(mfilename('fullpath'));
     switch lower(species)
-        case {'hs','human'}
+        case {'hs', 'human'}
             %fname=[wrkpth 'dorothea_hs.mat'];
-            fname=fullfile(pw1,'resources','DoRothEA_TF_Target_DB','dorothea_hs.mat');
-        case {'mm','mouse'}
+            fname = fullfile(pw1, 'resources', 'DoRothEA_TF_Target_DB', 'dorothea_hs.mat');
+        case {'mm', 'mouse'}
             %fname=[wrkpth 'dorothea_mm.mat'];
-            fname=fullfile(pw1,'resources','DoRothEA_TF_Target_DB','dorothea_mm.mat');
+            fname = fullfile(pw1, 'resources', 'DoRothEA_TF_Target_DB', 'dorothea_mm.mat');
         otherwise
             error('TF database is not available for the species.');
     end
-    fprintf('\nReading ... %s.\n',fname);
-    load(fname,'T');
-    Ttfgn=T(T.mor>0,:);
+    fprintf('\nReading ... %s.\n', fname);
+    load(fname, 'T');
+    Ttfgn = T(T.mor > 0, :);
     fprintf('Only positive regulatory relationships are used.\n');
 end
 
 
-if methodid~=1    % method 1 UCell is rank-based, normalization is unnecessary
-[X]=sc_norm(X);
-[X]=log(X+1);
+if methodid ~= 1 % method 1 UCell is rank-based, normalization is unnecessary
+    [X] = sc_norm(X);
+    [X] = log(X+1);
 end
 
-[gid,gnlist]=grp2idx(Ttfgn.target);
-[tid,tflist]=grp2idx(Ttfgn.tf);
-t=zeros(max(tid),max(gid));
-t(sub2ind([max(tid),max(gid)],tid,gid))=Ttfgn.mor;
+[gid, gnlist] = grp2idx(Ttfgn.target);
+[tid, tflist] = grp2idx(Ttfgn.tf);
+t = zeros(max(tid), max(gid));
+t(sub2ind([max(tid), max(gid)], tid, gid)) = Ttfgn.mor;
 fprintf('Using the Dorothea dadtabase that contains %d TFs and %d targets.\n', ...
-         size(t,1),size(t,2));
+    size(t, 1), size(t, 2));
 
 % size(t)
 % assignin('base','t2',t);
@@ -56,49 +56,49 @@ fprintf('Using the Dorothea dadtabase that contains %d TFs and %d targets.\n', .
 %[t]=crosstab(T.tf,T.target);   % TF-by-target regulagory relationship
 %matrix if only positive regulation
 
-[~,k,l]=intersect(upper(g),upper(gnlist));
-t=t(:,l);     % tf-by-gene matrix
-X=X(k,:);     % gene-by-cell matrix
-fprintf('Using %d target genes that are present in the data.\n', size(t,2));
+[~, k, l] = intersect(upper(g), upper(gnlist));
+t = t(:, l); % tf-by-gene matrix
+X = X(k, :); % gene-by-cell matrix
+fprintf('Using %d target genes that are present in the data.\n', size(t, 2));
 
-if nargout>2, gcommon=g(k); end
+if nargout > 2, gcommon = g(k); end
 
 switch methodid
-    case 1        % UCell method  see also: sc_cellscore_ucell
-        cs=zeros(size(t,1),size(X,2));
-        R=tiedrank(-X);
-        R(R>1500)=1500+1;
-        numtargetgenes=zeros(size(t,1),1);
-        for k=1:size(t,1)
-            idx1=t(k,:)>0;
-            n1=sum(idx1);
-            if n1>0
-                u=sum(R(idx1,:))-(n1*(n1-1))/2;
-                cs(k,:) = 1-u/(n1*1500);
-                numtargetgenes(k)=n1;
+    case 1 % UCell method  see also: sc_cellscore_ucell
+        cs = zeros(size(t, 1), size(X, 2));
+        R = tiedrank(-X);
+        R(R > 1500) = 1500 + 1;
+        numtargetgenes = zeros(size(t, 1), 1);
+        for k = 1:size(t, 1)
+            idx1 = t(k, :) > 0;
+            n1 = sum(idx1);
+            if n1 > 0
+                u = sum(R(idx1, :)) - (n1 * (n1 - 1)) / 2;
+                cs(k, :) = 1 - u / (n1 * 1500);
+                numtargetgenes(k) = n1;
             end
         end
-        cs(cs<0)=0;
-    case 2    % matrix multiplication method
-        cs=t*X;
-        numtargetgenes=sum(t>0,2);
-    case 3      % matrix inverse method 
-        cs=pinv(t')*X;
-        numtargetgenes=sum(t>0,2);
-    case 4    % nnmf method
-        % ref: Bioinformatics, Volume 37, Issue 9, 1 May 2021, Pages 1234–1245, 
+        cs(cs < 0) = 0;
+    case 2 % matrix multiplication method
+        cs = t * X;
+        numtargetgenes = sum(t > 0, 2);
+    case 3 % matrix inverse method
+        cs = pinv(t') * X;
+        numtargetgenes = sum(t > 0, 2);
+    case 4 % nnmf method
+        % ref: Bioinformatics, Volume 37, Issue 9, 1 May 2021, Pages 1234–1245,
         % https://doi.org/10.1093/bioinformatics/btaa947
-        n=size(t,1);
-        v.WRfixed=n;
-        v.W=t.';
-        [~,cs]=NMF(X,n,100,0,v);
-        numtargetgenes=sum(t>0,2);
+        n = size(t, 1);
+        v.WRfixed = n;
+        v.W = t.';
+        [~, cs] = NMF(X, n, 100, 0, v);
+        numtargetgenes = sum(t > 0, 2);
 end
 
 end
 
 
-function [W, H, bDsave] = NMF(V,R,Niter,beta,initialV)
+function [W, H, bDsave] = NMF(V, R, Niter, beta, initialV)
 % [W,H, bDsave] = NMF(V,R,Niter,beta,initialV)
 %    NMF with beta divergence cost function.
 %Input :
@@ -122,108 +122,108 @@ verbose = false;
 eta = 1;
 
 % size of input spectrogram
-M = size(V,1);
-N = size(V,2);
+M = size(V, 1);
+N = size(V, 2);
 
 % initialization
 if nargin == 5
-    if isfield(initialV,'H')
+    if isfield(initialV, 'H')
         H = initialV.H;
     else
-        H = rand(R,N);
+        H = rand(R, N);
     end
-    if isfield(initialV,'W')
+    if isfield(initialV, 'W')
         W = initialV.W;
     else
-        W = rand(M,R);
+        W = rand(M, R);
     end
-    
-    if isfield(initialV,'HRfixed')
+
+    if isfield(initialV, 'HRfixed')
         HRfixed = initialV.HRfixed;
     else
         HRfixed = 0;
     end
 
-    if isfield(initialV,'WRfixed')
+    if isfield(initialV, 'WRfixed')
         WRfixed = initialV.WRfixed;
     else
         WRfixed = 0;
     end
 
-    
+
 else
-    H = rand(R,N);
-    W = rand(M,R);
+    H = rand(R, N);
+    W = rand(M, R);
     HRfixed = 0;
     WRfixed = 0;
-    
+
     if nargin == 3
         beta = 0;
     end
 end
 
 % array to save the value of the beta-divergence
-bDsave = zeros(Niter,1);
+bDsave = zeros(Niter, 1);
 
 % computation of Lambda (estimate of V) and of filters repsonse
-Lambda = W*H;
+Lambda = W * H;
 
 % Waitbar
-message = ['Computing NMF .... iteration : 0/' int2str(Niter) ' completed'];
-h = waitbar(0,message);
+message = ['Computing NMF .... iteration : 0/', int2str(Niter), ' completed'];
+h = waitbar(0, message);
 
 
 % iterative computation
-for iter =1:Niter
+for iter = 1:Niter
 
 
-%     % plot actual and reconstructed spectrogram
-%     figure(22)
-%     subplot(211)
-%     imagesc(db(V))
-%     axis xy
-%     title('actual')
-%     subplot(212)
-%     imagesc(db(Lambda))
-%     axis xy
-%     title('reconstructed')
-%     drawnow;
+    %     % plot actual and reconstructed spectrogram
+    %     figure(22)
+    %     subplot(211)
+    %     imagesc(db(V))
+    %     axis xy
+    %     title('actual')
+    %     subplot(212)
+    %     imagesc(db(Lambda))
+    %     axis xy
+    %     title('reconstructed')
+    %     drawnow;
 
-%     % compute beta divergence and plot its evolution
-      bDsave(iter) = betaDiv(V+eps,Lambda+eps,beta);
-%     figure(23)
-%     semilogy(bDsave,'-o')
-%     title(['Evolution of beta divergence (dB) beta = ' num2str(beta) ' eta = ' num2str(eta)])
-%     xlabel('iteration')
-%     drawnow;
+    %     % compute beta divergence and plot its evolution
+    bDsave(iter) = betaDiv(V+eps, Lambda+eps, beta);
+    %     figure(23)
+    %     semilogy(bDsave,'-o')
+    %     title(['Evolution of beta divergence (dB) beta = ' num2str(beta) ' eta = ' num2str(eta)])
+    %     xlabel('iteration')
+    %     drawnow;
 
 
     % update of W
     if not(WRfixed)
-        W = W.* ((Lambda.^(beta-2).*V)*H' +eps)./((Lambda.^(beta-1))*H' + eps);
+        W = W .* ((Lambda.^(beta - 2) .* V) * H' + eps) ./ ((Lambda.^(beta - 1)) * H' + eps);
     else
-        W(:,WRfixed+1:end) = W(:,WRfixed+1:end).* ((Lambda.^(beta-2).*V)*H(WRfixed+1:end,:)' +eps)./((Lambda.^(beta-1))*H(WRfixed+1:end,:)' + eps);   
+        W(:, WRfixed+1:end) = W(:, WRfixed+1:end) .* ((Lambda.^(beta - 2) .* V) * H(WRfixed+1:end, :)' + eps) ./ ((Lambda.^(beta - 1)) * H(WRfixed+1:end, :)' + eps);
     end
-    
+
     % recomputation of Lambda (estimate of V)
-    Lambda = W*H + eps;
-    
-    
+    Lambda = W * H + eps;
+
+
     % update of H
     if not(HRfixed)
-        H = H.* (W'*(Lambda.^(beta-2).*V) +eps)./(W'*(Lambda.^(beta-1)) + eps);
+        H = H .* (W' * (Lambda.^(beta - 2) .* V) + eps) ./ (W' * (Lambda.^(beta - 1)) + eps);
     else
-        H(1:HRfixed,:) = H(1:HRfixed,:).* (W(:,1:HRfixed)'*(Lambda.^(beta-2).*V) +eps)./(W(:,1:HRfixed)'*(Lambda.^(beta-1)) + eps);
+        H(1:HRfixed, :) = H(1:HRfixed, :) .* (W(:, 1:HRfixed)' * (Lambda.^(beta - 2) .* V) + eps) ./ (W(:, 1:HRfixed)' * (Lambda.^(beta - 1)) + eps);
     end
     % recomputation of Lambda (estimate of V)
-    Lambda = W*H + eps;
+    Lambda = W * H + eps;
 
 
-    message = ['computing NMF. iteration : ' int2str(iter) '/' int2str(Niter)];
+    message = ['computing NMF. iteration : ', int2str(iter), '/', int2str(Niter)];
     if verbose
         disp(message);
     end
-    waitbar(iter/Niter,h,message);
+    waitbar(iter/Niter, h, message);
 end
 
 % % normalization
@@ -239,13 +239,12 @@ close(h)
 % close
 end
 
-function bD = betaDiv(V,Vh,beta)
+function bD = betaDiv(V, Vh, beta)
 if beta == 0
-    bD = sum((V(:)./Vh(:))-log(V(:)./Vh(:)) - 1);
+    bD = sum((V(:) ./ Vh(:))-log(V(:)./Vh(:))-1);
 elseif beta == 1
-    bD = sum(V(:).*(log(V(:))-log(Vh(:))) + Vh(:) - V(:));
+    bD = sum(V(:).*(log(V(:)) - log(Vh(:)))+Vh(:)-V(:));
 else
-    bD = sum(max(1/(beta*(beta-1))*(V(:).^beta + (beta-1)*Vh(:).^beta - beta*V(:).*Vh(:).^(beta-1)),0));
+    bD = sum(max(1/(beta * (beta - 1))*(V(:).^beta + (beta - 1) * Vh(:).^beta - beta * V(:) .* Vh(:).^(beta - 1)), 0));
 end
 end
-

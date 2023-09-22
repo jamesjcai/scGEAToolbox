@@ -1,15 +1,15 @@
-function [C,W,eigenvalues,H]=mt_SoptSC(X,varargin)
-% run_soptsc - 
+function [C, W, eigenvalues, H] = mt_SoptSC(X, varargin)
+% run_soptsc -
 %
 % REF: SoptSC: Similarity matrix optimization for clustering, lineage, and signaling inference
 %
-% Similarity matrix-based optimization for single-cell data analysis (SoptSC), 
-% in which unsupervised clustering, pseudotemporal ordering, lineage inference, 
-% and marker gene identification are inferred via a structured cell-to-cell 
+% Similarity matrix-based optimization for single-cell data analysis (SoptSC),
+% in which unsupervised clustering, pseudotemporal ordering, lineage inference,
+% and marker gene identification are inferred via a structured cell-to-cell
 % similarity matrix
 %
-% Input X: 
-% 
+% Input X:
+%
 % USAGE:
 % >> % [X,genelist]=sc_readfile('example_data/GSM3044891_GeneExp.UMIs.10X1.txt');
 % load('example_data/example10xdata.mat');
@@ -19,53 +19,53 @@ function [C,W,eigenvalues,H]=mt_SoptSC(X,varargin)
 
 
 if nargin < 1
-    error('scgea:run_soptsc:TooFewInputs','TooFewInputs');
+    error('scgea:run_soptsc:TooFewInputs', 'TooFewInputs');
 end
 
 p = inputParser;
-addRequired(p,'X',@isnumeric);
-addOptional(p,'k',[],@isnumeric);
-addOptional(p,'donorm',true,@islogical);
-parse(p,X,varargin{:});
+addRequired(p, 'X', @isnumeric);
+addOptional(p, 'k', [], @isnumeric);
+addOptional(p, 'donorm', true, @islogical);
+parse(p, X, varargin{:});
 
-donorm=p.Results.donorm;
-k=p.Results.k;
+donorm = p.Results.donorm;
+k = p.Results.k;
 
 
-pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'external','mt_SoptSC');
+pw1 = fileparts(mfilename('fullpath'));
+pth = fullfile(pw1, 'external', 'mt_SoptSC');
 if ~(ismcc || isdeployed), addpath(pth); end
-pth=fullfile(pw1,'external','mt_SoptSC','NNDSVD');
+pth = fullfile(pw1, 'external', 'mt_SoptSC', 'NNDSVD');
 if ~(ismcc || isdeployed), addpath(pth); end
-pth=fullfile(pw1,'external','mt_SoptSC','symnmf2');
+pth = fullfile(pw1, 'external', 'mt_SoptSC', 'symnmf2');
 if ~(ismcc || isdeployed), addpath(pth); end
 
 
 if donorm
-    [X]=sc_norm(X,'type','deseq');
-%    X=log10(X+1);
+    [X] = sc_norm(X, 'type', 'deseq');
+    %    X=log10(X+1);
 end
 
 
 [coeff, ~, pca_eigvalue] = pca(X');
-[~,No_Comps] = max(abs(pca_eigvalue(2:end-1) - pca_eigvalue(3:end)));
+[~, No_Comps] = max(abs(pca_eigvalue(2:end-1)-pca_eigvalue(3:end)));
 
-aa = max(coeff(:,1:No_Comps+1),[],2);
-bb = sort(aa,'descend');
-No_features=2000;
-if size(X,1) <=1000
-    No_sel_genes = size(X,1);
+aa = max(coeff(:, 1:No_Comps+1), [], 2);
+bb = sort(aa, 'descend');
+No_features = 2000;
+if size(X, 1) <= 1000
+    No_sel_genes = size(X, 1);
 else
-    No_sel_genes = min([No_features round(size(X,1))]);
+    No_sel_genes = min([No_features, round(size(X, 1))]);
 end
 
-gene_selection = aa>=bb(No_sel_genes);
-X=X(gene_selection,:);
+gene_selection = aa >= bb(No_sel_genes);
+X = X(gene_selection, :);
 if isempty(k)
     warning('Number of cluster, k, will be estimated.');
 end
-[~,W,C,eigenvalues,H] = SoptSC_Main(k,X);
-C=C';
+[~, W, C, eigenvalues, H] = SoptSC_Main(k, X);
+C = C';
 
 %{
 sct=grpstats(s',C,@mean);

@@ -1,19 +1,19 @@
-function sc_grnview(A,nodenames,figname)
-if nargin<3, figname=''; end
+function sc_grnview(A, nodenames, figname)
+if nargin < 3, figname = ''; end
 %GRN network viewer
-    if isa(A,'digraph')||isa(A,'graph')
-        G=A;
-    else
-        if nargin<2
-            nodenames=string((1:size(A,1))');
-        end
-        G=pkg.i_makegraph(A,nodenames);
+if isa(A, 'digraph') || isa(A, 'graph')
+    G = A;
+else
+    if nargin < 2
+        nodenames = string((1:size(A, 1))');
     end
-if nargin<3
-    figname=sprintf('nodes (n=%d, red=TF); edges (blue=positive, red=negative)', ...
+    G = pkg.i_makegraph(A, nodenames);
+end
+if nargin < 3
+    figname = sprintf('nodes (n=%d, red=TF); edges (blue=positive, red=negative)', ...
         G.numnodes);
 end
-    gui.i_singlegraph(G,figname);
+gui.i_singlegraph(G, figname);
 end
 
 %{
@@ -32,28 +32,28 @@ hs = addcomponents;
 [G,p]=drawnetwork(A,g,cutoff);   
 % Make figure visible after adding components
 hs.fig.Visible = 'on';
-   
+
    function hs = addcomponents
        % Add components, save handles in a struct
        hs.fig = figure('Visible','off',...
                   'Tag','fig',...
                   'SizeChangedFcn',@resizeui);
-              
+
        hs.btn = uicontrol(hs.fig,'String',...
                   'Layout',...
                   'Callback',@ChangeLayout,...
                   'Tag','button');
-              
+
        hs.btn2 = uicontrol(hs.fig,'String',...
                   'Weight',...
                   'Callback',@ChangeWeight,...
                   'Tag','button');   
-              
+
        hs.btn3 = uicontrol(hs.fig,'String',...
                   'Cutoff',...
                   'Callback',@ChangeCutoff,...
                   'Tag','button');   
-              
+
        hs.btn4 = uicontrol(hs.fig,'String',...
                   'Directed',...
                   'Callback',@ChangeDirected,...
@@ -66,7 +66,7 @@ hs.fig.Visible = 'on';
                   'Save Adj',...
                   'Callback',@SaveAdj,...
                   'Tag','button');   
-              
+
        hs.ax = axes('Parent',hs.fig,...
                   'Units','pixels',...
                   'Tag','ax');
@@ -152,7 +152,7 @@ hs.fig.Visible = 'on';
        % Get figure width and height
        figwidth = hs.fig.Position(3);
        figheight = hs.fig.Position(4);
-       
+
        % Set button position
        bheight = 30; 
        bwidth = 70;
@@ -164,7 +164,7 @@ hs.fig.Visible = 'on';
        hs.btn4.Position = [bleftedge bbottomedge-120 bwidth bheight];
        hs.btn5.Position = [bleftedge bbottomedge-160 bwidth bheight];
        hs.btn6.Position = [bleftedge bbottomedge-200 bwidth bheight];
-       
+
        % Set axes position
        axheight = .85*figheight;
        axbottomedge = max(0,figheight - axheight - 30);

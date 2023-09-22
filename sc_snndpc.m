@@ -1,4 +1,4 @@
-function [c]=sc_snndpc(s,cluK,knnK)
+function [c] = sc_snndpc(s, cluK, knnK)
 %Clustering cell embeddings using SNNDPC - a SNN clustering algorithm
 %
 % http://mlwiki.org/index.php/SNN_Clustering#SSN_Clustering_Algorithm
@@ -8,8 +8,8 @@ function [c]=sc_snndpc(s,cluK,knnK)
 % https://doi.org/10.1016/j.ins.2018.03.031
 % https://github.com/liurui39660/SNNDPC/tree/MatlabImplementation
 
-if nargin<3, knnK=4; end
-if nargin<2, cluK=10; end
-c=run.mt_SnnDpc(s,cluK,knnK);
+if nargin < 3, knnK = 4; end
+if nargin < 2, cluK = 10; end
+c = run.mt_SnnDpc(s, cluK, knnK);
 
 end

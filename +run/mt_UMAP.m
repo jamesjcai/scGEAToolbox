@@ -1,4 +1,4 @@
-function [s]=mt_UMAP(X,ndim)
+function [s] = mt_UMAP(X, ndim)
 
 %   addpath /Users/Stephen/umap
 %   addpath /Users/Stephen/util
@@ -7,31 +7,31 @@ function [s]=mt_UMAP(X,ndim)
 
 %if nargin<4, verbose=false; end
 %if nargin<3, plotit=false; end
-if nargin<2, ndim=3; end
+if nargin < 2, ndim = 3; end
 
-pw1=fileparts(mfilename('fullpath'));
-if ~(ismcc || isdeployed)    
-    pth1=fullfile(pw1,'external','mt_UMAP');
+pw1 = fileparts(mfilename('fullpath'));
+if ~(ismcc || isdeployed)
+    pth1 = fullfile(pw1, 'external', 'mt_UMAP');
     addpath(pth1);
-    pth3=fullfile(pw1,'external','mt_UMAP','umap.jar');
+    pth3 = fullfile(pw1, 'external', 'mt_UMAP', 'umap.jar');
     javaaddpath(pth3);
 end
 
-data=transpose(X);
+data = transpose(X);
 
 % data=transpose(sc_transform(X));
 % data=transpose(sc_norm(X));
 
-ncells=size(data,1);
-if ncells>500
-    if ~(ismcc || isdeployed)   
-        pth=fullfile(pw1,'external','mt_PHATE');
+ncells = size(data, 1);
+if ncells > 500
+    if ~(ismcc || isdeployed)
+        pth = fullfile(pw1, 'external', 'mt_PHATE');
         addpath(pth);
     end
-	data = svdpca(data, 50, 'random');
+    data = svdpca(data, 50, 'random');
 end
 
-[s]=run_umap_lite(data,'n_components',ndim);
+[s] = run_umap_lite(data, 'n_components', ndim);
 
 
 %{
@@ -71,4 +71,3 @@ end
 end
 
 %}
-

@@ -1,22 +1,22 @@
-function [sout]=py_harmonypy(s,batchid)
-arguments    
-    s (:,:) {mustBeNumeric}
-    batchid (1,:) {mustBePositive, mustBeInteger}
+function [sout] = py_harmonypy(s, batchid)
+arguments
+    s(:, :) {mustBeNumeric}
+    batchid(1, :) {mustBePositive, mustBeInteger}
 end
 
-prgfoldername='py_harmonypy';
+prgfoldername = 'py_harmonypy';
 
-sout=[];
-isdebug=false;
+sout = [];
+isdebug = false;
 
 %if nargin<3, usepylib=false; end
 %if nargin<2, error('[s]=run.harmonypy(s,batchid)'); end
 
-oldpth=pwd();
-[pyok,wrkpth,x]=run.pycommon(prgfoldername);
+oldpth = pwd();
+[pyok, wrkpth, x] = run.pycommon(prgfoldername);
 if ~pyok, return; end
 
-tmpfilelist={'input.mat','output.mat'};
+tmpfilelist = {'input.mat', 'output.mat'};
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 
 %pw1=fileparts(mfilename('fullpath'));
@@ -26,9 +26,9 @@ if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 %if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 
 
-    save('input.mat','-v7.3','s','batchid');
-    disp('Input file written.');
-    
+save('input.mat', '-v7.3', 's', 'batchid');
+disp('Input file written.');
+
 
 %     fw=gui.gui_waitbar([],[],'Running harmonypy...');
 %     cmdlinestr=sprintf('"%s" "%s%sscript.py"', ...
@@ -39,12 +39,11 @@ if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 %         gui.gui_waitbar(fw,[],'Running harmonypy is complete');
 %     end
 
-    [status]=run.pycommon2(x,wrkpth,prgfoldername);
+[status] = run.pycommon2(x, wrkpth, prgfoldername);
 
-    if status==0 && exist('output.mat','file')
-        load("output.mat","sout")        
-    end
-
+if status == 0 && exist('output.mat', 'file')
+    load("output.mat", "sout")
+end
 
 
 %if exist('./output.csv','file'), delete('./output.csv'); end
@@ -53,8 +52,8 @@ if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 % batchidx=matlab.lang.makeValidName(string(batchid));
 % writetable(table(batchidx),'input2.csv','QuoteStrings',true);
 % % pyenv('Version','d:\\Miniconda3\\envs\\harmonypy\\python.exe')
-% 
-% if usepylib    
+%
+% if usepylib
 %     pd = py.importlib.import_module('pandas');
 %     np = py.importlib.import_module('numpy');
 %     hm = py.importlib.import_module('harmonypy');
@@ -64,12 +63,12 @@ if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 %     vars_use = py.list({py.str('batchidx')});
 %     ho = hm.run_harmony(data_mat, meta_data, vars_use);
 %     sout=np2mat(ho.Z_corr.T);
-% else    
+% else
 %     x=pyenv;
-%     
+%
 %     try
 %         pkg.i_add_conda_python_path;
-%     catch        
+%     catch
 %     end
 %     cmdlinestr=sprintf('"%s" "%s%srequire.py"', ...
 %             x.Executable,wrkpth,filesep);
@@ -81,7 +80,7 @@ if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 %         % waitfor(errordlg(sprintf('%s',cmdout)));
 %         error('harmony-py has not been installed properly.');
 %     end
-% 
+%
 %     cmdlinestr=sprintf('"%s" "%s%sscript.py"',x.Executable,wrkpth,filesep);
 %     disp(cmdlinestr)
 %     [status]=system(cmdlinestr);
@@ -95,4 +94,3 @@ if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 cd(oldpth);
 end
-

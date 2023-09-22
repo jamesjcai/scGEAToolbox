@@ -1,52 +1,55 @@
-function [sce]=r_readSeuratRds(filename)
+function [sce] = r_readSeuratRds(filename)
 
-    sce=[];
-    if nargin<1, error('run.r_readSeuratRds(filename)'); end
-    oldpth=pwd();
-    [isok,msg]=commoncheck_R('R_SeuratReadRds');
-    if ~isok, error(msg); sce=[]; return; end
-    isdebug=false;
-    tmpfilelist={'inputrdsfile.txt','output.h5',...
-        'g.csv','X.csv','umap.csv','barcodes.csv','annotation.csv'};
-    if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+sce = [];
+if nargin < 1, error('run.r_readSeuratRds(filename)'); end
+oldpth = pwd();
+[isok, msg] = commoncheck_R('R_SeuratReadRds');
+if ~isok, error(msg);
+    sce = [];
+    return;
+end
+isdebug = false;
+tmpfilelist = {'inputrdsfile.txt', 'output.h5', ...
+    'g.csv', 'X.csv', 'umap.csv', 'barcodes.csv', 'annotation.csv'};
+if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 
-    writematrix(filename,'inputrdsfile.txt');
-    Rpath=getpref('scgeatoolbox','rexecutablepath');
-    pkg.RunRcode('script.R',Rpath);
+writematrix(filename, 'inputrdsfile.txt');
+Rpath = getpref('scgeatoolbox', 'rexecutablepath');
+pkg.RunRcode('script.R', Rpath);
 
-g=[];    
-if exist('g.csv','file')
-    t=readtable('g.csv','Delimiter',',');
-    if isa(t,'table')
-        g=string(t.x);
+g = [];
+if exist('g.csv', 'file')
+    t = readtable('g.csv', 'Delimiter', ',');
+    if isa(t, 'table')
+        g = string(t.x);
     end
 end
 
-if exist('output.h5','file')
-    X=h5read('output.h5','/X');
+if exist('output.h5', 'file')
+    X = h5read('output.h5', '/X');
 
-elseif exist('X.csv','file')
-    X=readmatrix('X.csv');
+elseif exist('X.csv', 'file')
+    X = readmatrix('X.csv');
 end
-X=pkg.e_uint2sparse(X);
-sce=SingleCellExperiment(X,g);
+X = pkg.e_uint2sparse(X);
+sce = SingleCellExperiment(X, g);
 
 
-if exist('barcodes.csv','file') && ~isempty(sce)
-    t=readtable('barcodes.csv','Delimiter',',');
-    id=string(t.x);
-    sce.c_cell_id=id;
+if exist('barcodes.csv', 'file') && ~isempty(sce)
+    t = readtable('barcodes.csv', 'Delimiter', ',');
+    id = string(t.x);
+    sce.c_cell_id = id;
 end
-    
-    if exist('umap.csv','file') && ~isempty(sce) && ~isempty(sce.c_cell_id)
 
-        t=readtable('umap.csv','Delimiter',',');
-        [y,idx]=ismember(string(t.Var1),sce.c_cell_id);
-        if all(y)
-            s=table2array(t(:,2:end));
-            sce.s=s(idx,:);
-        end
+if exist('umap.csv', 'file') && ~isempty(sce) && ~isempty(sce.c_cell_id)
+
+    t = readtable('umap.csv', 'Delimiter', ',');
+    [y, idx] = ismember(string(t.Var1), sce.c_cell_id);
+    if all(y)
+        s = table2array(t(:, 2:end));
+        sce.s = s(idx, :);
     end
+end
 %     if exist('batchid.csv','file') && ~isempty(sce)
 %         t=readtable('batchid.csv');
 %         id=string(t.x);
@@ -54,13 +57,13 @@ end
 %     end
 
 
-    if exist('annotation.csv','file') && ~isempty(sce) && ~isempty(sce.c_cell_id)
-        t=readtable('annotation.csv','Delimiter',',');
-        if sce.NumCells==length(string(t.x))
-            sce.c_cell_type_tx=string(t.x);
-        end
+if exist('annotation.csv', 'file') && ~isempty(sce) && ~isempty(sce.c_cell_id)
+    t = readtable('annotation.csv', 'Delimiter', ',');
+    if sce.NumCells == length(string(t.x))
+        sce.c_cell_type_tx = string(t.x);
     end
+end
 
-    if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-    cd(oldpth);
+if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+cd(oldpth);
 end

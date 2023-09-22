@@ -1,5 +1,5 @@
-function [C]=mt_SinNLRR(X,k)
-% SinNLRR - 
+function [C] = mt_SinNLRR(X, k)
+% SinNLRR -
 %
 % USAGE:
 % >> % [X,genelist]=sc_readfile('example_data/GSM3044891_GeneExp.UMIs.10X1.txt');
@@ -8,14 +8,14 @@ function [C]=mt_SinNLRR(X,k)
 % figure;
 % scatter(s(:,1),s(:,2),20,C,'filled')
 
-pw1=fileparts(mfilename('fullpath'));
-pth=fullfile(pw1,'external','mt_SinNLRR');
+pw1 = fileparts(mfilename('fullpath'));
+pth = fullfile(pw1, 'external', 'mt_SinNLRR');
 if ~(ismcc || isdeployed)
     addpath(pth);
 end
-if nargin<2 || isempty(k)
-    k=fun_num_cluster(X);
-    fprintf('k=%d\n',k);
+if nargin < 2 || isempty(k)
+    k = fun_num_cluster(X);
+    fprintf('k=%d\n', k);
 end
 
 % if nargin<3
@@ -27,7 +27,7 @@ end
 %     % X=log10(X+1);
 %     X=X./vecnorm(X);
 % end
-[C] = SinNLRRori(X,k);
+[C] = SinNLRRori(X, k);
 
 
 end
