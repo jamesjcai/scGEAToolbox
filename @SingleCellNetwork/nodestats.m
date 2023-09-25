@@ -5,6 +5,7 @@ A0 = obj.A;
 A0sym = 0.5 * (A0 + A0');
 A0sym = ten.e_filtadjc(A0sym);
 A0 = ten.e_filtadjc(A0);
+genelist=obj.g;
 G0 = digraph(A0, genelist, 'omitselfloops');
 G0x = graph(A0sym, genelist, 'omitselfloops');
 

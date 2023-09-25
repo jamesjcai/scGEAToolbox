@@ -78,30 +78,31 @@ classdef SingleCellNetwork
             end
         end
 
-        function p = plotweighted(obj, allgenes)
-            if nargin < 2 && obj.NumGenes <= 500
-                allgenes = true;
-            elseif nargin < 2 && obj.NumGenes > 500
-                allgenes = false;
-                disp('Cannot display >500 nodes.');
-                disp('A random subgraph is shown.')
-                disp('To force to display all nodes, use plot(SCN,true);');
-            end
-            if allgenes
-                p = plot(obj.G);
-                obj.G.Edges.LWidths = 7 * obj.G.Edges.Weight / max(abs(obj.G.Edges.Weight));
-                p.LineWidth = abs(obj.G.Edges.LWidths);
-            else
-                rid = randperm(obj.NumGenes);
-                xg = subgraph(obj.G, rid(1:100));
-                [bin, binsize] = conncomp(xg, 'Type', 'weak');
-                idx = binsize(bin) == max(binsize);
-                SG = subgraph(xg, idx);
-                %p=plotweighted(SG);
-                LWidths = 7 * SG.Edges.Weight / max(SG.Edges.Weight);
-                p = plot(SG, 'LineWidth', abs(LWidths));
-                title('Random Subnetwork')
-            end
+        function p = plotweighted(obj)
+            % if nargin < 2 && obj.NumGenes <= 500
+            %     allgenes = true;
+            % elseif nargin < 2 && obj.NumGenes > 500
+            %     allgenes = false;
+            %     disp('Cannot display >500 nodes.');
+            %     disp('A random subgraph is shown.')
+            %     disp('To force to display all nodes, use plot(SCN,true);');
+            % end
+            % if allgenes
+            %     p = plot(obj.G);
+            %     obj.G.Edges.LWidths = 7 * obj.G.Edges.Weight / max(abs(obj.G.Edges.Weight));
+            %     p.LineWidth = abs(obj.G.Edges.LWidths);
+            % else
+            %     rid = randperm(obj.NumGenes);
+            %     xg = subgraph(obj.G, rid(1:100));
+            %     [bin, binsize] = conncomp(xg, 'Type', 'weak');
+            %     idx = binsize(bin) == max(binsize);
+            %     SG = subgraph(xg, idx);
+            %     %p=plotweighted(SG);
+            %     LWidths = 7 * SG.Edges.Weight / max(SG.Edges.Weight);
+            %     p = plot(SG, 'LineWidth', abs(LWidths));
+            %     title('Random Subnetwork')
+            % end
+            sc_grnview(obj.A,obj.g);
         end
 
 
