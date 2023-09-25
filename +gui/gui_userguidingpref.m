@@ -21,18 +21,18 @@ if onlyinfo
     Button = buttondlg(['User Onboarding Toolbar helps you onboard ', ...
         'with walkthroughs to prompt the right in-app experience.'], ...
         'Thanks for choosing SCGEATOOL', 'OK', S);
-    else
-        S.Default = 'Yes';
-        S.IconString = 'custom';
-        Button = buttondlg(['User Onboarding Toolbar helps you onboard ', ...
-            'with walkthroughs to prompt the right in-app experience. ', ...
-            'Show User Onbarding Toolbar next time?'], ...
-            'Thanks for choosing SCGEATOOL', 'Yes', 'No', 'Cancel', S);
-            switch Button
-                case 'Yes'
-                    setpref('scgeatoolbox', 'useronboardingtoolbar', true);
-                case 'No'
-                    setpref('scgeatoolbox', 'useronboardingtoolbar', false);
-                case 'Cancel'
-            end
-        end
+else
+    S.Default = 'Yes';
+    S.IconString = 'custom';
+    Button = buttondlg(['User Onboarding Toolbar helps you onboard ', ...
+        'with walkthroughs to prompt the right in-app experience. ', ...
+        'Show User Onbarding Toolbar next time?'], ...
+        'Thanks for choosing SCGEATOOL', 'Yes', 'No', 'Cancel', S);
+    switch Button
+        case 'Yes'
+            setpref('scgeatoolbox', 'useronboardingtoolbar', true);
+        case 'No'
+            setpref('scgeatoolbox', 'useronboardingtoolbar', false);
+        case 'Cancel'
+    end
+end
