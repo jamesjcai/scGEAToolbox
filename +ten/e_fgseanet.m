@@ -93,4 +93,6 @@ if shownotepad
         end
     end
 end
+
+% consider using https://bioconductor.org/packages/release/bioc/vignettes/simplifyEnrichment/inst/doc/simplifyEnrichment.html
 end
