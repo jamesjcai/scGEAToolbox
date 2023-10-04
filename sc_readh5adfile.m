@@ -53,7 +53,7 @@ shape = double(hinfo.Groups(idx).Attributes(idx2).Value);
 
 g = pkg.e_guessh5field(filenm, {'/var/'}, {'_index', 'gene_ids', 'gene_name'}, false);
 
-if length(unique(strlength(g))) == 1 % suggesting ENSEMBLE ID
+if isempty(g) || length(unique(strlength(g))) == 1 % suggesting ENSEMBLE ID
     disp('Reading /var/feature_name/categories');
     gx = pkg.e_guessh5field(filenm, {'/raw/var/feature_name/', ...
         '/var/feature_name/'}, {'categories'}, false);
@@ -79,7 +79,7 @@ if isempty(g), warning('G is not assigned.'); end
 %     end
 % end
 
-b = pkg.e_guessh5field(filenm, {'/obs/'}, {'_index', 'barcodes'});
+b = pkg.e_guessh5field(filenm, {'/obs/'}, {'_index', 'barcodes','cell_id'});
 if isempty(b), warning('B is not assigned.'); end
 
 
