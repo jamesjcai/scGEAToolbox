@@ -194,14 +194,14 @@ i_addbutton_toggle(2, 0, {@togglebtfun, @callback_SaveX, ...
 %i_addmenu(m_vie,0,@gui.callback_CrossTabulation,'Cross Tabulation...');
 
 m_net = uimenu(FigureHandle, 'Text', '&Network', 'Accelerator', 'N');
-i_addmenu(m_net, 0, @callback_scPCNet1, 'GRN Construction - PC Regression (w/o subsampling) [PMID:33336197] ...');
-i_addmenu(m_net, 0, @callback_scTenifoldNet1, 'GRN Construction - PC Regression (w/ subsampling) [PMID:33336197]  ...');
-i_addmenu(m_net, 1, @callback_scTenifoldNet2lite, 'GRN Comparison - scTenifoldNet (w/o subsampling) [PMID:33336197]  ...');
-i_addmenu(m_net, 0, @callback_scTenifoldNet2, 'GRN Comparison - scTenifoldNet (w/ subsampling) [PMID:33336197]  ...');
-i_addmenu(m_net, 1, @callback_scTenifoldKnk1, 'Virtual Gene KO - scTenifoldKnk [PMID:35510185]  ...');
-i_addmenu(m_net, 0, @gui.callback_VirtualKOGenKI, 'Virtual Gene KO - GenKI [PMID:37246643] (Python Required)  ...');
-i_addmenu(m_net, 1, @callback_scTenifoldXct, 'Cell-Cell Interactions (CCIs) - scTenifoldXct [PMID:36787742]  ...');
-i_addmenu(m_net, 0, @callback_scTenifoldXct2, 'Differential CCIs - scTenifoldXct [PMID:36787742]  ...');
+i_addmenu(m_net, 0, @callback_scPCNet1, 'GRN Construction - PC Regression (w/o subsampling) [PMID:33336197] 🐢...');
+i_addmenu(m_net, 0, @callback_scTenifoldNet1, 'GRN Construction - PC Regression (w/ subsampling) [PMID:33336197] 🐢🐢 ...');
+i_addmenu(m_net, 1, @callback_scTenifoldNet2lite, 'GRN Comparison - scTenifoldNet (w/o subsampling) [PMID:33336197] 🐢🐢 ...');
+i_addmenu(m_net, 0, @callback_scTenifoldNet2, 'GRN Comparison - scTenifoldNet (w/ subsampling) [PMID:33336197] 🐢🐢🐢 ...');
+i_addmenu(m_net, 1, @callback_scTenifoldKnk1, 'Virtual Gene KO - scTenifoldKnk [PMID:35510185] 🐢🐢 ...');
+i_addmenu(m_net, 0, @gui.callback_VirtualKOGenKI, 'Virtual Gene KO - GenKI [PMID:37246643] (Python Required) 🐢🐢 ...');
+i_addmenu(m_net, 1, @callback_scTenifoldXct, 'Cell-Cell Interactions (CCIs) - scTenifoldXct [PMID:36787742] 🐢🐢 ...');
+i_addmenu(m_net, 0, @callback_scTenifoldXct2, 'Differential CCIs - scTenifoldXct [PMID:36787742] 🐢🐢🐢 ...');
 
 m_ext = uimenu(FigureHandle, 'Text', 'E&xternal', 'Accelerator', 'x');
 i_addmenu(m_ext, 0, @gui.i_setrenv, 'Check R Environment');
@@ -218,15 +218,15 @@ i_addmenu(m_ext, 0, {@SubsampleCells, 2}, 'Geometric Sketching (geosketch/Py) [P
 i_addmenu(m_ext, 0, @HarmonyPy, 'Batch Integration (Harmony/Py) [PMID:31740819]...');
 i_addmenu(m_ext, 0, @DoubletDetection, 'Detect Doublets (Scrublet/Py) [PMID:30954476]...');
 i_addmenu(m_ext, 1, @callback_ExploreCellularCrosstalk, 'Talklr Intercellular Crosstalk [DOI:10.1101/2020.02.01.930602]...');
-i_addmenu(m_ext, 0, @callback_CompareGCLBtwCls, 'Differential GCL Analysis [PMID:33139959] ...');
+i_addmenu(m_ext, 0, @callback_CompareGCLBtwCls, 'Differential GCL Analysis [PMID:33139959]🐢🐢 ...');
 i_addmenu(m_ext, 0, @callback_DiffTFActivity, 'Differential TF Activity Analysis...');
 
 m_exp = uimenu(FigureHandle, 'Text', 'Ex&perimental', 'Accelerator', 'p');
 % m_exp2 = uimenu(m_exp,'Text','sc&Tenifold Suite','Accelerator','T');
-% i_addmenu(m_exp2,1,@callback_scTenifoldNet1,'scTenifoldNet - GRN Construction  ...');
-% i_addmenu(m_exp2,0,@callback_scTenifoldNet2,'scTenifoldNet - GRN Comparison  ...');
-% i_addmenu(m_exp2,0,@callback_scTenifoldKnk1,'scTenifoldKnk - Virtual KO of a Gene  ...');
-% i_addmenu(m_exp2,0,@callback_scTenifoldXct,'scTenifoldXct - Cell-Cell Interactions  ...');
+% i_addmenu(m_exp2,1,@callback_scTenifoldNet1,'scTenifoldNet - GRN Construction 🐢🐢 ...');
+% i_addmenu(m_exp2,0,@callback_scTenifoldNet2,'scTenifoldNet - GRN Comparison 🐢🐢🐢 ...');
+% i_addmenu(m_exp2,0,@callback_scTenifoldKnk1,'scTenifoldKnk - Virtual KO of a Gene 🐢 ...');
+% i_addmenu(m_exp2,0,@callback_scTenifoldXct,'scTenifoldXct - Cell-Cell Interactions 🐢 ...');
 
 %i_addmenu(m_exp,0,@callback_ShowPseudoTimeGenes,'Show Genes with Expression Varies with Pseudotime...');
 %i_addmenu(m_exp,0,@callback_DetectCellularCrosstalk,'Ligand-Receptor Mediated Intercellular Crosstalk...');
@@ -1018,12 +1018,12 @@ end
         whitelist = [];
         if ~usingold
             answer2 = questdlg(sprintf('Use highly variable genes (HVGs, n=2000) or use all genes (n=%d)?', sce.NumGenes), ...
-                '', '2000 HVGs ', 'All Genes ', 'Other...', '2000 HVGs ');
+                '', '2000 HVGs 🐇', 'All Genes 🐢', 'Other...', '2000 HVGs 🐇');
             switch answer2
-                case 'All Genes '
+                case 'All Genes 🐢'
                     usehvgs = false;
                     K = sce.NumGenes;
-                case '2000 HVGs '
+                case '2000 HVGs 🐇'
                     usehvgs = true;
                     K = 2000;
                 case 'Other...'
@@ -1424,12 +1424,12 @@ end
     function DrawTrajectory(~, ~)
         waitfor(warndlg('This function should not be applied to tSNE and UMAP embeddings, as they "encourage a representation of the data as disjoint clusters, which is less meaningful for modeling continuous developmental trajectories" [PMID:25664528].', ''));
         answer = questdlg('Which method?', '', ...
-            'splinefit ()', 'princurve ()', ...
-            'splinefit ()');
-        if strcmp(answer, 'splinefit ()')
+            'splinefit (🐇)', 'princurve (🐢)', ...
+            'splinefit (🐇)');
+        if strcmp(answer, 'splinefit (🐇)')
             dim = 1;
             [t, xyz1] = pkg.i_pseudotime_by_splinefit(sce.s, dim, false);
-        elseif strcmp(answer, 'princurve ()')
+        elseif strcmp(answer, 'princurve (🐢)')
             [t, xyz1] = pkg.i_pseudotime_by_princurve(sce.s, false);
         else
             return;
@@ -1497,10 +1497,10 @@ end
         answer = questdlg('Cluster cells?');
         if ~strcmp(answer, 'Yes'), return; end
         answer = questdlg('Which method?', 'Select Algorithm', ...
-            'K-means ', 'SnnDpc [DOI:10.1016/j.ins.2018.03.031] ', 'K-means ');
-        if strcmpi(answer, 'K-means ')
+            'K-means 🐇', 'SnnDpc [DOI:10.1016/j.ins.2018.03.031] 🐢', 'K-means 🐇');
+        if strcmpi(answer, 'K-means 🐇')
             methodtag = "kmeans";
-        elseif strcmpi(answer, 'SnnDpc [DOI:10.1016/j.ins.2018.03.031] ')
+        elseif strcmpi(answer, 'SnnDpc [DOI:10.1016/j.ins.2018.03.031] 🐢')
             methodtag = "snndpc";
             gui.gui_showrefinfo('SnnDpc [DOI:10.1016/j.ins.2018.03.031]');
         else
@@ -1515,9 +1515,9 @@ end
         answer = questdlg('Cluster cells using X?');
         if ~strcmp(answer, 'Yes'), return; end
     
-        methodtagvx = {'specter (31 secs) ', 'sc3 (77 secs) ', ...
-            'simlr (400 secs) ', ...
-            'soptsc (1,182 secs) ', 'sinnlrr (8,307 secs) ',};
+        methodtagvx = {'specter (31 secs) 🐇', 'sc3 (77 secs) 🐇', ...
+            'simlr (400 secs) 🐢', ...
+            'soptsc (1,182 secs) 🐢🐢', 'sinnlrr (8,307 secs) 🐢🐢🐢',};
         methodtagv = {'specter', 'sc3', 'simlr', 'soptsc', 'sinnlrr'};
         [indx, tf] = listdlg('PromptString', ...
             {'Select clustering program'}, ...

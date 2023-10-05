@@ -47,14 +47,14 @@ if isempty(thisc), return; end
 if noanswer, return; end
 
 answer = questdlg('Generate marker gene heatmap', ...
-    'Select Method', 'Method 1 (DE )', 'Method 2 (scGeneFit )', ...
-    'Method 3 (LASSO )', 'Method 1 (DE )');
+    'Select Method', 'Method 1 (DE 🐇)', 'Method 2 (scGeneFit 🐢)', ...
+    'Method 3 (LASSO 🐢🐢)', 'Method 1 (DE 🐇)');
 switch answer
-    case 'Method 1 (DE )'
+    case 'Method 1 (DE 🐇)'
         methodid = 1;
-    case 'Method 2 (scGeneFit )'
+    case 'Method 2 (scGeneFit 🐢)'
         methodid = 2;
-    case 'Method 3 (LASSO )'
+    case 'Method 3 (LASSO 🐢🐢)'
         methodid = 3;
     otherwise
         return;

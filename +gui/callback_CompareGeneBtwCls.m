@@ -223,7 +223,7 @@ bb = 'No, just show values';
                         ttxt = clable;
                     end
                     posg = [];
-                case {'TF Activity Score [PMID:33135076] ', ...
+                case {'TF Activity Score [PMID:33135076] 🐢', ...
                         'TF Targets Expression Score...'}
                     [~, T] = pkg.e_tfactivityscores(sce.X, sce.g, 0);
                     listitems = unique(T.tf);
