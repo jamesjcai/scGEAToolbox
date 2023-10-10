@@ -53,9 +53,13 @@ for k = 1:n
 end
 
 gui.gui_waitbar_adv(fw);
+c_cellid=sce.c_cell_id;
+if ~isstring(c_cellid)
+    c_cellid=string(c_cellid);
+end
 T = array2table(Y, 'VariableNames', ...
     listitems(indx2), 'RowNames', ...
-    matlab.lang.makeUniqueStrings(sce.c_cell_id));
+    matlab.lang.makeUniqueStrings(c_cellid));
 T.Properties.DimensionNames{1} = 'Cell_ID';
 needwait = true;
 gui.i_exporttable(T, needwait);
