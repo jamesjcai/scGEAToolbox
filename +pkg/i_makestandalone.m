@@ -92,7 +92,7 @@ try
             'ExecutableName', 'scgeatool', 'Verbose', 'On', ...
             'OutputDir', outdir, 'AdditionalFiles', d, ...
             'SupportPackages', 'autodetect', ...
-            'ExecutableVersion', '23.4.4');
+            'ExecutableVersion', '23.10.17');
     end
 catch ME
     disp(ME.message);
@@ -113,10 +113,10 @@ end
 
 %%
 cd(outdir);
-if needcorrect
-    a = readmatrix('requiredMCRProducts.txt');
-    %writematrix(a(2:end),'requiredMCRProducts.txt','Delimiter','\t');
-end
+% if needcorrect
+%     a = readmatrix('requiredMCRProducts.txt');
+%     %writematrix(a(2:end),'requiredMCRProducts.txt','Delimiter','\t');
+% end
 cd ..
 zippedfiles = zip('SCGEATOOL_StandaloneApplication.zip', 'SCGEATOOL_StandaloneApplication');
 movefile('SCGEATOOL_StandaloneApplication.zip', 'scgeatool.github.io\SCGEATOOL_StandaloneApplication.zip')
