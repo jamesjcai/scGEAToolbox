@@ -82,7 +82,7 @@ delete(a);
 
 a = findall(FigureHandle, 'tag', 'figMenuFileImportData');
 a.Text = 'Import Data Using GEO Accession...';
-a.MenuSelectedFcn = @GEOAccessionToSCE;
+a.MenuSelectedFcn = @in_GEOAccessionToSCE;
 
 hAx = axes('Parent', FigureHandle);
 
@@ -105,86 +105,86 @@ set(UserToolbarHandle, 'Tag', 'UserToolBar', 'HandleVisibility', 'off', 'Visible
 % i_addbutton_toggle(1,0,{@togglebtfun,@turnoffuserguiding,"icon-mat-blur-off-10.gif", ...
 %    "icon-mat-blur-on-10.gif",false},"Turn on/off user onboarding toolbar");
 
-i_addbutton_toggle(1, 0, {@togglebtfun, @turnoffuserguiding, ...
+in_addbuttontoggle(1, 0, {@in_togglebtfun, @in_turnoffuserguiding, ...
     "icon-mat-unfold-more-10.gif", ...
     "icon-mat-unfold-less-10.gif", false, ...
     "Turn on/off user onboarding toolbar"});
 
 % i_addbutton_push(1,0,@call_scgeatool,"IMG00107.GIF"," ");
-i_addbutton_push(1, 0, @callback_ShowGeneExpr, "list.gif", "Select genes to show expression")
-i_addbutton_push(1, 0, @ShowCellStates, "list2.gif", "Show cell state")
-i_addbutton_push(1, 0, @SelectCellsByQC, "plotpicker-effects.gif", "Filter genes and cells")
+in_addbuttonpush(1, 0, @callback_ShowGeneExpr, "list.gif", "Select genes to show expression")
+in_addbuttonpush(1, 0, @in_ShowCellStates, "list2.gif", "Show cell state")
+in_addbuttonpush(1, 0, @in_SelectCellsByQC, "plotpicker-effects.gif", "Filter genes and cells")
 
-i_addbutton_toggle(1, 1, {@togglebtfun, @LabelClusters, ...
+in_addbuttontoggle(1, 1, {@in_togglebtfun, @in_labelcellgroups, ...
     "icon-fa-tag-10b.gif", "icon-fa-tags-10b.gif", ...
     false, "Label cell groups"});
-i_addbutton_push(1, 0, @Brushed2NewCluster, "plotpicker-glyplot-face.gif", "Add brushed cells to a new group")
-i_addbutton_push(1, 0, @Brushed2MergeClusters, "plotpicker-pzmap.gif", "Merge brushed cells to same group")
-i_addbutton_push(1, 0, @RenameCellTypeBatchID, "plotpicker-scatterhist.gif", "Rename cell type or batch ID");
-i_addbutton_push(1, 0, @call_scgeatool, "IMG00107.GIF", " ");
-i_addbutton_push(1, 1, @ClusterCellsS, "plotpicker-dendrogram.gif", "Clustering using embedding S")
-i_addbutton_push(1, 0, @ClusterCellsX, "icon-mw-cluster-10.gif", "Clustering using expression matrix X")
-i_addbutton_push(1, 1, {@DetermineCellTypeClustersGeneral, true}, "plotpicker-contour.gif", "Assign cell types to groups")
-i_addbutton_push(1, 0, @Brush4Celltypes, "brush.gif", "Assign cell type to selected cells");
+in_addbuttonpush(1, 0, @in_Brushed2NewCluster, "plotpicker-glyplot-face.gif", "Add brushed cells to a new group")
+in_addbuttonpush(1, 0, @in_Brushed2MergeClusters, "plotpicker-pzmap.gif", "Merge brushed cells to same group")
+in_addbuttonpush(1, 0, @in_RenameCellTypeBatchID, "plotpicker-scatterhist.gif", "Rename cell type or batch ID");
+in_addbuttonpush(1, 0, @in_call_scgeatool, "IMG00107.GIF", " ");
+in_addbuttonpush(1, 1, @in_ClusterCellsS, "plotpicker-dendrogram.gif", "Clustering using embedding S")
+in_addbuttonpush(1, 0, @in_ClusterCellsX, "icon-mw-cluster-10.gif", "Clustering using expression matrix X")
+in_addbuttonpush(1, 1, {@in_DetermineCellTypeClustersGeneral, true}, "plotpicker-contour.gif", "Assign cell types to groups")
+in_addbuttonpush(1, 0, @in_Brush4Celltypes, "brush.gif", "Assign cell type to selected cells");
 % i_addbutton(1,0,@ShowCellStemScatter,"IMG00067.GIF","Stem scatter plot");
-i_addbutton_push(1, 1, @gui.callback_Brush4Markers, "plotpicker-kagi.gif", "Marker genes of brushed cells");
-i_addbutton_push(1, 0, @gui.callback_FindAllMarkers, "plotpicker-plotmatrix.gif", "Marker gene heatmap");
-i_addbutton_push(1, 0, @call_scgeatool, "IMG00107.GIF", " ");
-i_addbutton_push(1, 1, @gui.callback_ShowClustersPop, "plotpicker-geoscatter.gif", "Show cell clusters/groups individually");
-i_addbutton_push(1, 0, @gui.callback_SelectCellsByClass, "plotpicker-pointfig.gif", "Select cells by class");
-i_addbutton_push(1, 0, @DeleteSelectedCells, "plotpicker-qqplot.gif", "Delete selected cells");
-i_addbutton_push(1, 0, @callback_SaveX, "export.gif", "Export & save data");
-i_addbutton_push(1, 1, @EmbeddingAgain, "plotpicker-geobubble.gif", "Embedding (tSNE, UMP, PHATE)");
-i_addbutton_push(1, 0, @Switch2D3D, "plotpicker-image.gif", "Switch 2D/3D");
-i_addbutton_push(1, 1, @callback_CloseAllOthers, "icon-fa-cut-10.gif", "Close all other figures");
-i_addbutton_push(1, 0, @callback_PickPlotMarker, "plotpicker-rose.gif", "Switch scatter plot marker type");
-i_addbutton_push(1, 0, @gui.callback_PickColorMap, "plotpicker-compass.gif", "Pick new color map");
-i_addbutton_push(1, 0, @RefreshAll, "icon-mat-refresh-20.gif", "Refresh");
-i_addbutton_push(0, 0, @call_scgeatool, "IMG00107.GIF", " ");
+in_addbuttonpush(1, 1, @gui.callback_Brush4Markers, "plotpicker-kagi.gif", "Marker genes of brushed cells");
+in_addbuttonpush(1, 0, @gui.callback_FindAllMarkers, "plotpicker-plotmatrix.gif", "Marker gene heatmap");
+in_addbuttonpush(1, 0, @in_call_scgeatool, "IMG00107.GIF", " ");
+in_addbuttonpush(1, 1, @gui.callback_ShowClustersPop, "plotpicker-geoscatter.gif", "Show cell clusters/groups individually");
+in_addbuttonpush(1, 0, @gui.callback_SelectCellsByClass, "plotpicker-pointfig.gif", "Select cells by class");
+in_addbuttonpush(1, 0, @in_DeleteSelectedCells, "plotpicker-qqplot.gif", "Delete selected cells");
+in_addbuttonpush(1, 0, @callback_SaveX, "export.gif", "Export & save data");
+in_addbuttonpush(1, 1, @in_EmbeddingAgain, "plotpicker-geobubble.gif", "Embedding (tSNE, UMP, PHATE)");
+in_addbuttonpush(1, 0, @in_Switch2D3D, "plotpicker-image.gif", "Switch 2D/3D");
+in_addbuttonpush(1, 1, @callback_CloseAllOthers, "icon-fa-cut-10.gif", "Close all other figures");
+in_addbuttonpush(1, 0, @callback_PickPlotMarker, "plotpicker-rose.gif", "Switch scatter plot marker type");
+in_addbuttonpush(1, 0, @gui.callback_PickColorMap, "plotpicker-compass.gif", "Pick new color map");
+in_addbuttonpush(1, 0, @in_RefreshAll, "icon-mat-refresh-20.gif", "Refresh");
+in_addbuttonpush(0, 0, @call_scgeatool, "IMG00107.GIF", " ");
 %i_addbutton(0,0,@callback_CalculateCellScores,"cellscore2.gif","Calculate cell scores from list of feature genes")
 %i_addbutton(0,0,@callback_ComparePotency,"plotpicker-candle.gif","Compare differentiation potency between groups");
 
 
-i_addbutton_push(0, 1, @gui.callback_MultiGroupingViewer, "plotpicker-arxtimeseries.gif", "Multi-grouping View...");
-i_addbutton_push(0, 0, @gui.callback_CrossTabulation, "plotpicker-comet.gif", "Cross tabulation");
+in_addbuttonpush(0, 1, @gui.callback_MultiGroupingViewer, "plotpicker-arxtimeseries.gif", "Multi-grouping View...");
+in_addbuttonpush(0, 0, @gui.callback_CrossTabulation, "plotpicker-comet.gif", "Cross tabulation");
 
-i_addbutton_push(0, 1, @gui.callback_Violinplot, "violinplot.gif", "Gene Violin Plot...");
-i_addbutton_push(0, 0, @gui.callback_DrawDotplot, "icon-mat-blur-linear-10.gif", "Gene Dot Plot...");
-i_addbutton_push(0, 0, @gui.callback_GeneHeatMap, "icon-mat-apps-20.gif", "Gene Heatmap...");
+in_addbuttonpush(0, 1, @gui.callback_Violinplot, "violinplot.gif", "Gene Violin Plot...");
+in_addbuttonpush(0, 0, @gui.callback_DrawDotplot, "icon-mat-blur-linear-10.gif", "Gene Dot Plot...");
+in_addbuttonpush(0, 0, @gui.callback_GeneHeatMap, "icon-mat-apps-20.gif", "Gene Heatmap...");
 
 %i_addmenu(m_exp,1,@gui.callback_Violinplot,'Gene Violin Plot...');
 %i_addmenu(m_exp,0,@gui.callback_DrawDotplot,'Gene Dot Plot...');
 %i_addmenu(m_exp,0,@gui.callback_GeneHeatMap,'Gene Heatmap...');
 
 
-i_addbutton_push(0, 0, @call_scgeatool, "IMG00107.GIF", " ");
+in_addbuttonpush(0, 0, @call_scgeatool, "IMG00107.GIF", " ");
 %i_addbutton(0,1,@callback_CompareGeneBtwCls,"plotpicker-priceandvol.gif","Compare between groups");
 %i_addbutton_push(0,1,@callback_CellTypeMarkerScores,"cellscore.gif","Calculate signature scores for each cell");
-i_addbutton_push(0, 1, @gui.callback_CompareGeneBtwCls, "cellscore2.gif", "Cell score analysis--obtaining gene signature score for each cell");
-i_addbutton_push(0, 0, @gui.callback_GetCellSignatureMatrix, "icon-fa-connectdevelop-20.gif", "Cell state analysis--obtaining multiple gene signature scores to reveal functional state of cells");
+in_addbuttonpush(0, 1, @gui.callback_CompareGeneBtwCls, "cellscore2.gif", "Cell score analysis--obtaining gene signature score for each cell");
+in_addbuttonpush(0, 0, @gui.callback_GetCellSignatureMatrix, "icon-fa-connectdevelop-20.gif", "Cell state analysis--obtaining multiple gene signature scores to reveal functional state of cells");
 %i_addbutton_push(0,0,@call_scgeatool,"IMG00107.GIF"," ");
-i_addbutton_push(0, 1, @gui.callback_DEGene2Groups, "plotpicker-boxplot.gif", "Compare 2 groups (DE analysis)");
-i_addbutton_push(0, 0, @gui.callback_EnrichrHVGs, "plotpicker-andrewsplot.gif", "Functional enrichment analysis with HVGs");
-i_addbutton_push(0, 1, @gui.callback_BuildGeneNetwork, "noun_Network_691907.gif", "Build gene regulatory network");
-i_addbutton_push(0, 0, @gui.callback_CompareGeneNetwork, "noun_Deep_Learning_2424485.gif", "Compare two scGRNs");
-i_addbutton_push(0, 1, {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
+in_addbuttonpush(0, 1, @gui.callback_DEGene2Groups, "plotpicker-boxplot.gif", "Compare 2 groups (DE analysis)");
+in_addbuttonpush(0, 0, @gui.callback_EnrichrHVGs, "plotpicker-andrewsplot.gif", "Functional enrichment analysis with HVGs");
+in_addbuttonpush(0, 1, @gui.callback_BuildGeneNetwork, "noun_Network_691907.gif", "Build gene regulatory network");
+in_addbuttonpush(0, 0, @gui.callback_CompareGeneNetwork, "noun_Deep_Learning_2424485.gif", "Compare two scGRNs");
+in_addbuttonpush(0, 1, {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 
 gui.add_3dcamera(DeftToolbarHandle, 'AllCells');
 
-i_addbutton_push(2, 0, @turnonuserguiding, "icon-fa-thumb-tack-10.gif", "Turn on user guiding toolbar");
-i_addbutton_toggle(2, 0, {@togglebtfun, @SelectCellsByQC, ...
+in_addbuttonpush(2, 0, @in_turnonuserguiding, "icon-fa-thumb-tack-10.gif", "Turn on user guiding toolbar");
+in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_SelectCellsByQC, ...
     "icon-mat-filter-1-10.gif", "plotpicker-effects.gif", ...
     true, "Filter genes and cells"});
-i_addbutton_toggle(2, 0, {@togglebtfun, @EmbeddingAgain, ...
+in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_EmbeddingAgain, ...
     "icon-mat-filter-2-10.gif", "plotpicker-geobubble.gif", ...
     true, "Embedding (tSNE, UMP, PHATE)"});
-i_addbutton_toggle(2, 0, {@togglebtfun, @ClusterCellsS, ...
+in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_ClusterCellsS, ...
     "icon-mat-filter-3-10.gif", "plotpicker-dendrogram.gif", ...
     true, "Clustering using embedding S"});
-i_addbutton_toggle(2, 0, {@togglebtfun, @DetermineCellTypeClustersGeneral, ...
+in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_DetermineCellTypeClustersGeneral, ...
     "icon-mat-filter-4-10.gif", "plotpicker-contour.gif", true, ...
     "Assign cell types to groups"});
-i_addbutton_toggle(2, 0, {@togglebtfun, @callback_SaveX, ...
+in_addbuttontoggle(2, 0, {@in_togglebtfun, @callback_SaveX, ...
     "icon-mat-filter-5-10.gif", "export.gif", ...
     true, "Export & save data"});
 
@@ -194,32 +194,32 @@ i_addbutton_toggle(2, 0, {@togglebtfun, @callback_SaveX, ...
 %i_addmenu(m_vie,0,@gui.callback_CrossTabulation,'Cross Tabulation...');
 
 m_net = uimenu(FigureHandle, 'Text', '&Network', 'Accelerator', 'N');
-i_addmenu(m_net, 0, @callback_scPCNet1, 'GRN Construction - PC Regression (w/o subsampling) [PMID:33336197] 🐢...');
-i_addmenu(m_net, 0, @callback_scTenifoldNet1, 'GRN Construction - PC Regression (w/ subsampling) [PMID:33336197] 🐢🐢 ...');
-i_addmenu(m_net, 1, @callback_scTenifoldNet2lite, 'GRN Comparison - scTenifoldNet (w/o subsampling) [PMID:33336197] 🐢🐢 ...');
-i_addmenu(m_net, 0, @callback_scTenifoldNet2, 'GRN Comparison - scTenifoldNet (w/ subsampling) [PMID:33336197] 🐢🐢🐢 ...');
-i_addmenu(m_net, 1, @callback_scTenifoldKnk1, 'Virtual Gene KO - scTenifoldKnk [PMID:35510185] 🐢🐢 ...');
-i_addmenu(m_net, 0, @gui.callback_VirtualKOGenKI, 'Virtual Gene KO - GenKI [PMID:37246643] (Python Required) 🐢🐢 ...');
-i_addmenu(m_net, 1, @callback_scTenifoldXct, 'Cell-Cell Interactions (CCIs) - scTenifoldXct [PMID:36787742] 🐢🐢 ...');
-i_addmenu(m_net, 0, @callback_scTenifoldXct2, 'Differential CCIs - scTenifoldXct [PMID:36787742] 🐢🐢🐢 ...');
+in_addmenu(m_net, 0, @callback_scPCNet1, 'GRN Construction - PC Regression (w/o subsampling) [PMID:33336197] 🐢...');
+in_addmenu(m_net, 0, @callback_scTenifoldNet1, 'GRN Construction - PC Regression (w/ subsampling) [PMID:33336197] 🐢🐢 ...');
+in_addmenu(m_net, 1, @callback_scTenifoldNet2lite, 'GRN Comparison - scTenifoldNet (w/o subsampling) [PMID:33336197] 🐢🐢 ...');
+in_addmenu(m_net, 0, @callback_scTenifoldNet2, 'GRN Comparison - scTenifoldNet (w/ subsampling) [PMID:33336197] 🐢🐢🐢 ...');
+in_addmenu(m_net, 1, @callback_scTenifoldKnk1, 'Virtual Gene KO - scTenifoldKnk [PMID:35510185] 🐢🐢 ...');
+in_addmenu(m_net, 0, @gui.callback_VirtualKOGenKI, 'Virtual Gene KO - GenKI [PMID:37246643] (Python Required) 🐢🐢 ...');
+in_addmenu(m_net, 1, @callback_scTenifoldXct, 'Cell-Cell Interactions (CCIs) - scTenifoldXct [PMID:36787742] 🐢🐢 ...');
+in_addmenu(m_net, 0, @callback_scTenifoldXct2, 'Differential CCIs - scTenifoldXct [PMID:36787742] 🐢🐢🐢 ...');
 
 m_ext = uimenu(FigureHandle, 'Text', 'E&xternal', 'Accelerator', 'x');
-i_addmenu(m_ext, 0, @gui.i_setrenv, 'Check R Environment');
-i_addmenu(m_ext, 0, @gui.i_setpyenv, 'Check Python Environment');
-i_addmenu(m_ext, 1, @DecontX, 'Detect Ambient RNA Contamination (DecontX/R) [PMID:32138770]...');
+in_addmenu(m_ext, 0, @gui.i_setrenv, 'Check R Environment');
+in_addmenu(m_ext, 0, @gui.i_setpyenv, 'Check Python Environment');
+in_addmenu(m_ext, 1, @in_DecontX, 'Detect Ambient RNA Contamination (DecontX/R) [PMID:32138770]...');
 %i_addmenu(m_ext,0,@callback_SingleRCellType,'SingleR Cell Type Annotation (SingleR/R required)...');
 %i_addmenu(m_ext,0,@callback_RevelioCellCycle,'Revelio Cell Cycle Analysis (Revelio/R required)...');
 % i_addmenu(m_ext,0,@callback_RunSeuratSCTransform,'Run Seurat/R SCTransform (Seurat/R required)...');
-i_addmenu(m_ext, 0, @RunSeuratWorkflow, 'Run Seurat/R Workflow (Seurat/R) [PMID:25867923]...');
+in_addmenu(m_ext, 0, @in_RunSeuratWorkflow, 'Run Seurat/R Workflow (Seurat/R) [PMID:25867923]...');
 %i_addmenu(m_ext,0,@callback_RunMonocle2,'Pseudotime Analysis (Monocle2/R) [PMID:28825705]...');
-i_addmenu(m_ext, 0, @callback_RunMonocle3, 'Pseudotime Analysis (Monocle3/R) [PMID:28825705]...');
-i_addmenu(m_ext, 1, @callback_MELDPerturbationScore, 'MELD Perturbation Score (MELD/Py) [PMID:33558698]...');
-i_addmenu(m_ext, 0, {@SubsampleCells, 2}, 'Geometric Sketching (geosketch/Py) [PMID:31176620]...');
-i_addmenu(m_ext, 0, @HarmonyPy, 'Batch Integration (Harmony/Py) [PMID:31740819]...');
-i_addmenu(m_ext, 0, @DoubletDetection, 'Detect Doublets (Scrublet/Py) [PMID:30954476]...');
-i_addmenu(m_ext, 1, @callback_ExploreCellularCrosstalk, 'Talklr Intercellular Crosstalk [DOI:10.1101/2020.02.01.930602]...');
-i_addmenu(m_ext, 0, @callback_CompareGCLBtwCls, 'Differential GCL Analysis [PMID:33139959]🐢🐢 ...');
-i_addmenu(m_ext, 0, @callback_DiffTFActivity, 'Differential TF Activity Analysis...');
+in_addmenu(m_ext, 0, @callback_RunMonocle3, 'Pseudotime Analysis (Monocle3/R) [PMID:28825705]...');
+in_addmenu(m_ext, 1, @callback_MELDPerturbationScore, 'MELD Perturbation Score (MELD/Py) [PMID:33558698]...');
+in_addmenu(m_ext, 0, {@in_SubsampleCells, 2}, 'Geometric Sketching (geosketch/Py) [PMID:31176620]...');
+in_addmenu(m_ext, 0, @in_HarmonyPy, 'Batch Integration (Harmony/Py) [PMID:31740819]...');
+in_addmenu(m_ext, 0, @in_DoubletDetection, 'Detect Doublets (Scrublet/Py) [PMID:30954476]...');
+in_addmenu(m_ext, 1, @gui.callback_ExploreCellularCrosstalk, 'Talklr Intercellular Crosstalk [DOI:10.1101/2020.02.01.930602]...');
+in_addmenu(m_ext, 0, @gui.callback_CompareGCLBtwCls, 'Differential GCL Analysis [PMID:33139959]🐢🐢 ...');
+in_addmenu(m_ext, 0, @gui.callback_DiffTFActivity, 'Differential TF Activity Analysis...');
 
 m_exp = uimenu(FigureHandle, 'Text', 'Ex&perimental', 'Accelerator', 'p');
 % m_exp2 = uimenu(m_exp,'Text','sc&Tenifold Suite','Accelerator','T');
@@ -231,44 +231,44 @@ m_exp = uimenu(FigureHandle, 'Text', 'Ex&perimental', 'Accelerator', 'p');
 %i_addmenu(m_exp,0,@callback_ShowPseudoTimeGenes,'Show Genes with Expression Varies with Pseudotime...');
 %i_addmenu(m_exp,0,@callback_DetectCellularCrosstalk,'Ligand-Receptor Mediated Intercellular Crosstalk...');
 %i_addmenu(m_exp,0,@AnnotateSubTypes,'Assign Subtypes of Cells (Neurons or T Cells)...');
-i_addmenu(m_exp, 0, @gui.callback_SelectCellsByMarker, 'Extract Cells by Marker(+/-) Expression...');
-i_addmenu(m_exp, 0, @MergeSubCellTypes, 'Merge Subclusters of Same Cell Type');
+in_addmenu(m_exp, 0, @gui.callback_SelectCellsByMarker, 'Extract Cells by Marker(+/-) Expression...');
+in_addmenu(m_exp, 0, @in_MergeSubCellTypes, 'Merge Subclusters of Same Cell Type');
 %i_addmenu(m_exp,0,@callback_TwoGeneCooccurrenceTest,'Two-Gene Cooccurrence Test...');
 %i_addmenu(m_exp,0,@AnnotateSubGroup,'Annotate Cell Subgroups...');
-i_addmenu(m_exp, 1, @WorkonSelectedGenes, 'Select Top n HVGs to Work on...');
-i_addmenu(m_exp, 0, @SubsampleCells, 'Subsample 50% Cells to Work on...');
+in_addmenu(m_exp, 1, @in_WorkonSelectedGenes, 'Select Top n HVGs to Work on...');
+in_addmenu(m_exp, 0, @in_SubsampleCells, 'Subsample 50% Cells to Work on...');
 
-i_addmenu(m_exp, 1, @DrawKNNNetwork, 'Plot Cell kNN Network...');
-i_addmenu(m_exp, 0, @DrawTrajectory, 'Plot Cell Trajectory...');
+in_addmenu(m_exp, 1, @in_DrawKNNNetwork, 'Plot Cell kNN Network...');
+in_addmenu(m_exp, 0, @in_DrawTrajectory, 'Plot Cell Trajectory...');
 %i_addmenu(m_exp,0,@ShowCellStemScatter,"Stem Scatter Feature Plot...");
 %i_addmenu(m_exp,1,@gui.callback_Violinplot,'Gene Violin Plot...');
 %i_addmenu(m_exp,0,@gui.callback_DrawDotplot,'Gene Dot Plot...');
 %i_addmenu(m_exp,0,@gui.callback_GeneHeatMap,'Gene Heatmap...');
 
-i_addmenu(m_exp, 1, @gui.callback_CalculateGeneStats, 'Calculate Gene Expression Statistics...');
-i_addmenu(m_exp, 0, @gui.callback_CellCycleLibrarySize, 'Library Size of Cell Cycle Phases...');
-i_addmenu(m_exp, 0, @gui.callback_CellCycleAssignment, 'Cell Cycle Phase Assignment...');
-i_addmenu(m_exp, 0, @gui.callback_ShowHgBGeneExpression, 'Show HgB-genes Expression...');
-i_addmenu(m_exp, 0, @gui.callback_ShowMtGeneExpression, 'Show Mt-genes Expression...');
+in_addmenu(m_exp, 1, @gui.callback_CalculateGeneStats, 'Calculate Gene Expression Statistics...');
+in_addmenu(m_exp, 0, @gui.callback_CellCycleLibrarySize, 'Library Size of Cell Cycle Phases...');
+in_addmenu(m_exp, 0, @gui.callback_CellCycleAssignment, 'Cell Cycle Phase Assignment...');
+in_addmenu(m_exp, 0, @gui.callback_ShowHgBGeneExpression, 'Show HgB-genes Expression...');
+in_addmenu(m_exp, 0, @gui.callback_ShowMtGeneExpression, 'Show Mt-genes Expression...');
 %i_addmenu(m_exp,0,@gui.callback_TCellExhaustionScores,'T Cell Exhaustion Score...');
 
-i_addmenu(m_exp, 1, {@DetermineCellTypeClustersGeneral, false}, 'Annotate Cell Type Using Customized Markers...');
-i_addmenu(m_exp, 1, {@MergeCellSubtypes, 1}, 'Import Cell Annotation from SCE in Workspace...');
-i_addmenu(m_exp, 0, {@MergeCellSubtypes, 2}, 'Import Cell Annotation from SCE Data File...');
+in_addmenu(m_exp, 1, {@in_DetermineCellTypeClustersGeneral, false}, 'Annotate Cell Type Using Customized Markers...');
+in_addmenu(m_exp, 1, {@in_MergeCellSubtypes, 1}, 'Import Cell Annotation from SCE in Workspace...');
+in_addmenu(m_exp, 0, {@in_MergeCellSubtypes, 2}, 'Import Cell Annotation from SCE Data File...');
 
-i_addmenu(m_exp, 1, @gui.callback_SplitAtacGex, 'Split Multiome ATAC+GEX Matrix...');
+in_addmenu(m_exp, 1, @gui.callback_SplitAtacGex, 'Split Multiome ATAC+GEX Matrix...');
 %i_addmenu(m_exp,0,{@MergeCellSubtypes,1,true},'Import All Cell Annotation from SCE in Workspace...');
 %i_addmenu(m_exp,0,{@MergeCellSubtypes,2,true},'Import All Cell Annotation from SCE Data File...');
 
-i_addmenu(m_exp, 1, {@MergeSCEs, 1}, 'Merge SCEs in Workspace...');
-i_addmenu(m_exp, 0, {@MergeSCEs, 2}, 'Merge SCE Data Files...');
-i_addmenu(m_exp, 0, {@RenameCellTypeBatchID, 'Batch ID'}, 'Rename Batch IDs...');
-i_addmenu(m_exp, 0, @callback_ViewMetaData, 'View Metadata...');
-i_addmenu(m_exp, 1, {@gui.i_savemainfig, 3}, 'Save Figure to PowerPoint File...');
-i_addmenu(m_exp, 0, {@gui.i_savemainfig, 2}, 'Save Figure as Graphic File...');
-i_addmenu(m_exp, 0, {@gui.i_savemainfig, 1}, 'Save Figure as SVG File...');
-i_addmenu(m_exp, 1, {@(~, ~) web('https://scgeatool.github.io/')}, 'Visit SCGEATOOL-Standalone Website...');
-i_addmenu(m_exp, 0, @callback_CheckUpdates, 'Check for Updates...');
+in_addmenu(m_exp, 1, {@in_MergeSCEs, 1}, 'Merge SCEs in Workspace...');
+in_addmenu(m_exp, 0, {@in_MergeSCEs, 2}, 'Merge SCE Data Files...');
+in_addmenu(m_exp, 0, {@in_RenameCellTypeBatchID, 'Batch ID'}, 'Rename Batch IDs...');
+in_addmenu(m_exp, 0, @callback_ViewMetaData, 'View Metadata...');
+in_addmenu(m_exp, 1, {@gui.i_savemainfig, 3}, 'Save Figure to PowerPoint File...');
+in_addmenu(m_exp, 0, {@gui.i_savemainfig, 2}, 'Save Figure as Graphic File...');
+in_addmenu(m_exp, 0, {@gui.i_savemainfig, 1}, 'Save Figure as SVG File...');
+in_addmenu(m_exp, 1, {@(~, ~) web('https://scgeatool.github.io/')}, 'Visit SCGEATOOL-Standalone Website...');
+in_addmenu(m_exp, 0, @callback_CheckUpdates, 'Check for Updates...');
 
 % handles = guihandles( FigureHandle );
 % guidata( FigureHandle, handles );
@@ -280,7 +280,7 @@ set(FigureHandle, 'visible', 'on');
 guidata(FigureHandle, sce);
 % setappdata(FigureHandle,'cL',cL);
 
-set(FigureHandle, 'CloseRequestFcn', @closeRequest);
+set(FigureHandle, 'CloseRequestFcn', @in_closeRequest);
 
 if nargout > 0
     varargout{1} = FigureHandle;
@@ -300,19 +300,19 @@ if ~showuseronboarding
 end
 
 
-    function turnonuserguiding(~, ~)
+    function in_turnonuserguiding(~, ~)
         % setpref('scgeatoolbox','useronboardingtoolbar',true);
         % set(UserToolbarHandle, 'Visible', 'on');
         Button=gui.gui_userguidingpref(false);
         switch Button
             case 'Yes'
             case 'No'
-                turnoffuserguiding;
+                in_turnoffuserguiding;
             case 'Cancel'
         end
     end
 
-    function turnoffuserguiding(~, ~)
+    function in_turnoffuserguiding(~, ~)
         % getpref('scgeatoolbox','useronboardingtoolbar');
         if get(UserToolbarHandle, 'Visible') == "off"
             askpref = true;
@@ -358,7 +358,7 @@ end
     %         end
     %     end
 
-    function i_addmenu(menuHdl, sepTag, callbackFnc, tooltipTxt)
+    function in_addmenu(menuHdl, sepTag, callbackFnc, tooltipTxt)
         if ischar(callbackFnc) || isstring(callbackFnc)
             callbackFnc = str2func(callbackFnc);
         end
@@ -372,7 +372,7 @@ end
             'Callback', callbackFnc);
     end
 
-    function i_addbutton_push(toolbarHdl, sepTag, callbackFnc, imgFil, tooltipTxt)
+    function in_addbuttonpush(toolbarHdl, sepTag, callbackFnc, imgFil, tooltipTxt)
         if ischar(callbackFnc) || isstring(callbackFnc)
             callbackFnc = str2func(callbackFnc);
         end
@@ -384,12 +384,12 @@ end
             barhandle = UserToolbarHandle;
         end
         pt = uipushtool(barhandle, 'Separator', sepTag);
-        pt.CData = i_get_ptImage(imgFil);
+        pt.CData = in_getPtImage(imgFil);
         pt.Tooltip = tooltipTxt;
         pt.ClickedCallback = callbackFnc;
     end
 
-    function i_addbutton_toggle(toolbarHdl, sepTag, callbackFnc)
+    function in_addbuttontoggle(toolbarHdl, sepTag, callbackFnc)
         imgFil = callbackFnc{3};
         tooltipTxt = callbackFnc{6};
         %if ischar(callbackFnc{1}) || isstring(callbackFnc{1})
@@ -403,15 +403,15 @@ end
             barhandle = UserToolbarHandle;
         end
         pt = uitoggletool(barhandle, 'Separator', sepTag);
-        pt.CData = i_get_ptImage(imgFil);
+        pt.CData = in_getPtImage(imgFil);
         pt.Tooltip = tooltipTxt;
         pt.ClickedCallback = callbackFnc;
     end
 
-    function togglebtfun(src, ~, func, ~, imgFil, ...
+    function in_togglebtfun(src, ~, func, ~, imgFil, ...
             actiondelay, tooltipTxt)
         if nargin < 6, actiondelay = true; end
-        src.CData = i_get_ptImage(imgFil);
+        src.CData = in_getPtImage(imgFil);
         if actiondelay
             if src.State == "off"
                 func(src);
@@ -424,7 +424,7 @@ end
         end
     end
 
-    function [ptImage] = i_get_ptImage(imgFil)
+    function [ptImage] = in_getPtImage(imgFil)
         try
             [img, map] = imread(fullfile(mfolder, 'resources', imgFil));
             ptImage = ind2rgb(img, map);
@@ -491,7 +491,7 @@ end
     %     %arrow('start',[a1(1) b1(1) c1(1)],'stop',[a1(1) b1(1) c1(1)+20]);
     % end
 
-    function call_scgeatool(~, ~)
+    function in_call_scgeatool(~, ~)
         % scgeatool;
         % P = get(FigureHandle,'Position');
         % k=1;
@@ -499,74 +499,74 @@ end
     end
 
 
-        function closeRequest(hObject, ~)
-            if ~(ismcc || isdeployed)
-                %             group ='scgeatool';
-                %             pref = 'savedatabeforeclosing';
-                %             title = 'Closing SCGEATOOL';
-                %             quest = {'Do you want to save SCE data before closing?'
-                %                      ''
-                %                      'If you do not save the data, all changes will be lost'};
-                %             pbtns = {'Yes','No','Cancel'};
-                %             [pval,tf] = uigetpref(group,pref,title,quest,pbtns);
-                ButtonName = questdlg('Save SCE before closing SCGEATOOL?');
+    function in_closeRequest(hObject, ~)
+        if ~(ismcc || isdeployed)
+            %             group ='scgeatool';
+            %             pref = 'savedatabeforeclosing';
+            %             title = 'Closing SCGEATOOL';
+            %             quest = {'Do you want to save SCE data before closing?'
+            %                      ''
+            %                      'If you do not save the data, all changes will be lost'};
+            %             pbtns = {'Yes','No','Cancel'};
+            %             [pval,tf] = uigetpref(group,pref,title,quest,pbtns);
+            ButtonName = questdlg('Save SCE before closing SCGEATOOL?');
 
-                switch lower(ButtonName)
-                    case 'yes'
-                        % tf=callback_SaveX(hObject,a);
-                        if ~isempty(callinghandle)
-                            guidata(callinghandle, sce);
-                            delete(hObject);
-                            helpdlg('SCE updated.');
-                        else
-                            labels = {'Save SCE to variable named:'};
-                            vars = {'sce'};
-                            sce = guidata(FigureHandle);
-                            values = {sce};
-                            [~, tf] = export2wsdlg(labels, vars, values, ...
-                                'Save Data to Workspace');
-                            if tf
-                                delete(hObject);
-                            else
-                                return;
-                            end
-                        end
-                    case 'cancel'
-                        return;
-                    case 'no'
+            switch lower(ButtonName)
+                case 'yes'
+                    % tf=callback_SaveX(hObject,a);
+                    if ~isempty(callinghandle)
+                        guidata(callinghandle, sce);
                         delete(hObject);
-                    otherwise
-                        return;
-                end
-            else
-                delete(hObject);
+                        helpdlg('SCE updated.');
+                    else
+                        labels = {'Save SCE to variable named:'};
+                        vars = {'sce'};
+                        sce = guidata(FigureHandle);
+                        values = {sce};
+                        [~, tf] = export2wsdlg(labels, vars, values, ...
+                            'Save Data to Workspace');
+                        if tf
+                            delete(hObject);
+                        else
+                            return;
+                        end
+                    end
+                case 'cancel'
+                    return;
+                case 'no'
+                    delete(hObject);
+                otherwise
+                    return;
             end
+        else
+            delete(hObject);
+        end
     end
 
-        function GEOAccessionToSCE(src, ~)
-            answer = questdlg('Current SCE will be replaced. Continue?');
-            if ~strcmp(answer, 'Yes'), return; end
+    function in_GEOAccessionToSCE(src, ~)
+        answer = questdlg('Current SCE will be replaced. Continue?');
+        if ~strcmp(answer, 'Yes'), return; end
 
-            acc = inputdlg({'GEO accession:'}, '', [1, 40], {'GSM3308545'});
-            % [acc]=gui.i_inputgenelist(["GSM3308545","GSM3308546","GSM3308547"]);
-            if isempty(acc), return; end
-            acc = acc{1};
-            if strlength(acc) > 4 && ~isempty(regexp(acc, 'G.+', 'once'))
-                try
-                    fw = gui.gui_waitbar;
-                    [sce] = sc_readgeoaccession(acc);
-                    [c, cL] = grp2idx(sce.c);
-                    gui.gui_waitbar(fw);
-                    guidata(FigureHandle, sce);
-                    RefreshAll(src, 1, false, false);
-                catch ME
-                    gui.gui_waitbar(fw);
-                    errordlg(ME.message);
-                end
+        acc = inputdlg({'GEO accession:'}, '', [1, 40], {'GSM3308545'});
+        % [acc]=gui.i_inputgenelist(["GSM3308545","GSM3308546","GSM3308547"]);
+        if isempty(acc), return; end
+        acc = acc{1};
+        if strlength(acc) > 4 && ~isempty(regexp(acc, 'G.+', 'once'))
+            try
+                fw = gui.gui_waitbar;
+                [sce] = sc_readgeoaccession(acc);
+                [c, cL] = grp2idx(sce.c);
+                gui.gui_waitbar(fw);
+                guidata(FigureHandle, sce);
+                in_RefreshAll(src, 1, false, false);
+            catch ME
+                gui.gui_waitbar(fw);
+                errordlg(ME.message);
             end
+        end
     end
 
-    function MergeCellSubtypes(src, ~, sourcetag, allcell)
+    function in_MergeCellSubtypes(src, ~, sourcetag, allcell)
         if nargin < 4
             answer = questdlg('Import annotation for all cells or just cells of a subtype?', '', ...
                     'All cells', 'Subtype cells', 'Cancel', 'All cells');
@@ -584,17 +584,17 @@ end
         if requirerefresh
             sce = guidata(FigureHandle);
             [c, cL] = grp2idx(sce.c_cell_type_tx);
-            RefreshAll(src, 1, true);
-            i_labelclusters(true);
+            in_RefreshAll(src, 1, true);
+            ix_labelclusters(true);
         end
     end
 
-    function MergeSCEs(src, ~, sourcetag)
+    function in_MergeSCEs(src, ~, sourcetag)
         [requirerefresh, s] = gui.callback_MergeSCEs(src, sourcetag);
         if requirerefresh && ~isempty(s)
             sce = guidata(FigureHandle);
             [c, cL] = grp2idx(sce.c_batch_id);
-            RefreshAll(src, 1, true);
+            in_RefreshAll(src, 1, true);
             helpdlg(sprintf('%s SCEs merged.', upper(s)), '');
         end
     end
@@ -645,7 +645,7 @@ end
 %         end
 %     end
 
-        function WorkonSelectedGenes(src, ~)
+    function in_WorkonSelectedGenes(src, ~)
             %         answer=questdlg('Input the number of HVGs. Continue?');
             %         if ~strcmp(answer,'Yes'), return; end
             k = gui.i_inputnumk(2000, 1, sce.NumGenes, 'the number of HVGs');
@@ -672,14 +672,14 @@ end
             sce.g = sce.g(idx);
             sce.X = sce.X(idx, :);
             gui.gui_waitbar(fw);
-            RefreshAll(src, 1, true);
+            in_RefreshAll(src, 1, true);
     end
 
-    function GeoSketching(~, ~)
-        helpdlg('Under Development.');
-    end
+    % function in_GeoSketching(~, ~)
+    %     helpdlg('Under Development.');
+    % end
 
-    function SubsampleCells(src, ~, methodoption)
+    function in_SubsampleCells(src, ~, methodoption)
         if nargin < 3
             methodoption = [];
         end
@@ -727,13 +727,13 @@ end
         if ~isempty(ids)
             sce = sce.selectcells(ids);
             c = sce.c;
-            RefreshAll(src, 1, true);
+            in_RefreshAll(src, 1, true);
         else
             errordlg('Running error. No action is taken.');
         end
     end
 
-    function SelectCellsByQC(src, ~)
+    function in_SelectCellsByQC(src, ~)
         oldn = sce.NumCells;
         oldm = sce.NumGenes;
         %try
@@ -746,7 +746,7 @@ end
         sce = guidata(FigureHandle);
         if requirerefresh
             [c, cL] = grp2idx(sce.c);
-            RefreshAll(src, 1, true);
+            in_RefreshAll(src, 1, true);
             newn = sce.NumCells;
             newm = sce.NumGenes;
             helpdlg(sprintf('%d cells removed; %d genes removed.', ...
@@ -757,7 +757,7 @@ end
         end
     end
 
-    function RunSeuratWorkflow(src, ~)
+    function in_RunSeuratWorkflow(src, ~)
         [ok] = gui.i_confirmscript('Run Seurat/R Workflow (Seurat)?', ...
             'R_Seurat', 'r');
         if ~ok, return; end
@@ -773,10 +773,10 @@ end
             return;
         end
         gui.gui_waitbar(fw);
-        RefreshAll(src, 1, true, false);
+        in_RefreshAll(src, 1, true, false);
     end
 
-    function DecontX(~, ~)
+    function in_DecontX(~, ~)
         gui.gui_showrefinfo('DecontX [PMID:32138770]');
 
         [ok] = gui.i_confirmscript('Detect Ambient RNA Contamination (decontX)', ...
@@ -805,7 +805,7 @@ end
         end
     end
 
-    function HarmonyPy(src, ~)
+    function in_HarmonyPy(src, ~)
         gui.gui_showrefinfo('Harmony [PMID:31740819]');
         if numel(unique(sce.c_batch_id)) < 2
             warndlg('No batch effect (SCE.C_BATCH_ID is empty)');
@@ -819,7 +819,7 @@ end
                 case 'Yes'
                     [c, cL] = grp2idx(sce.c_batch_id);
                     sce.c = c;
-                    RefreshAll(src, 1, true, false);
+                    in_RefreshAll(src, 1, true, false);
                 case 'No'
                 case 'Cancel'
                     return;
@@ -832,7 +832,7 @@ end
         if gui.callback_Harmonypy(src)
             sce = guidata(FigureHandle);
             [c, cL] = grp2idx(sce.c);
-            RefreshAll(src, 1, true, false);
+            in_RefreshAll(src, 1, true, false);
     
             ButtonName = questdlg('Update Saved Embedding?', '');
             switch ButtonName
@@ -849,7 +849,7 @@ end
     end
 
 
-    function DoubletDetection(src, ~)
+    function in_DoubletDetection(src, ~)
         gui.gui_showrefinfo('Scrublet [PMID:30954476]');
         [isDoublet, doubletscore, methodtag, done] = gui.callback_DoubletDetection(src);
         if done && ~any(isDoublet)
@@ -869,13 +869,13 @@ end
                     sce = sce.removecells(isDoublet);
                     guidata(FigureHandle, sce);
                     [c, cL] = grp2idx(sce.c);
-                    RefreshAll(src, 1, true, false);
+                    in_RefreshAll(src, 1, true, false);
                     helpdlg('Doublets deleted.', '');
             end
         end
     end
 
-    function MergeSubCellTypes(src, ~)
+    function in_MergeSubCellTypes(src, ~)
         if isempty(sce.c_cell_type_tx), return; end
         % [sce]=pkg.i_mergeSubCellNames(sce);
         newtx = erase(sce.c_cell_type_tx, "_{"+digitsPattern+"}");
@@ -885,13 +885,13 @@ end
             sce.c_cell_type_tx = newtx;
             [c, cL] = grp2idx(sce.c_cell_type_tx);
             sce.c = c;
-            RefreshAll(src, 1, true, false);
-            i_labelclusters;
+            in_RefreshAll(src, 1, true, false);
+            ix_labelclusters;
         end
         guidata(FigureHandle, sce);
     end
 
-    function RefreshAll(src, ~, keepview, keepcolr)
+    function in_RefreshAll(src, ~, keepview, keepcolr)
         if nargin < 4, keepcolr = false; end
         if nargin < 3, keepview = false; end
         if keepview || keepcolr
@@ -922,7 +922,7 @@ end
         guidata(FigureHandle, sce);
     end
 
-    function Switch2D3D(src, ~)
+    function in_Switch2D3D(src, ~)
         [para] = gui.i_getoldsettings(src);
         if isempty(h.ZData) % current 2 D
             if ~(size(sce.s, 2) > 2)
@@ -960,7 +960,7 @@ end
         colormap(para.oldColorMap);
     end
 
-    function RenameCellTypeBatchID(src, ~, answer)
+    function in_RenameCellTypeBatchID(src, ~, answer)
         if nargin < 3 || isempty(answer)
             answer = questdlg('Rename cell type, batch ID, or gene name?', '', 'Cell type', 'Batch ID', 'Gene name', 'Cell type');
         end
@@ -984,11 +984,11 @@ end
                 otherwise
                     return;
             end
-            i_labelclusters(false);
+            ix_labelclusters(false);
         end
     end
 
-    function EmbeddingAgain(src, ~)
+    function in_EmbeddingAgain(src, ~)
         [methodtag] = gui.i_pickembedmethod;
         if isempty(methodtag), return; end
         if isempty(sce.struct_cell_embeddings)
@@ -1058,7 +1058,7 @@ end
             end
             if ~strcmpi(methodtag, 'metaviz'), gui.gui_waitbar(fw); end
         end
-        RefreshAll(src, 1, true, false);
+        in_RefreshAll(src, 1, true, false);
         guidata(FigureHandle, sce);
         disp('Following the library-size normalization and log1p-transformation, we visualized similarity among cells by projecting them into a reduced dimensional space using t-distributed stochastic neighbor embedding (t-SNE)/uniform manifold approximation and projection (UMAP).')
 
@@ -1093,7 +1093,7 @@ end
     %     end
 
 
-    function DetermineCellTypeClustersGeneral(src, ~, usedefaultdb)
+    function in_DetermineCellTypeClustersGeneral(src, ~, usedefaultdb)
         if nargin < 3, usedefaultdb = true; end
         if usedefaultdb
             organtag = "all";
@@ -1178,14 +1178,14 @@ end
             if length(unique(newtx)) ~= nx
                 answer = questdlg('Merge subclusters of same cell type?');
                 if strcmp(answer, 'Yes')
-                    MergeSubCellTypes(src);
+                    in_MergeSubCellTypes(src);
                 end
             end
         end
         guidata(FigureHandle, sce);
     end
 
-    function [iscelltype] = pick_celltype_clusterid(a)
+    function [iscelltype] = in_pickcelltypeclusterid(a)
         answer = questdlg(a, '', ...
             'Cluster', 'Cell Type', 'Cluster');
         switch answer
@@ -1198,8 +1198,8 @@ end
         end
     end
 
-    function Brushed2NewCluster(~, ~)
-        [iscelltype] = pick_celltype_clusterid('Make a new cluster or new cell type group out of brushed cells?');
+    function in_Brushed2NewCluster(~, ~)
+        [iscelltype] = in_pickcelltypeclusterid('Make a new cluster or new cell type group out of brushed cells?');
         if isempty(iscelltype), return; end
         ptsSelected = logical(h.BrushData.');
         if ~any(ptsSelected)
@@ -1228,12 +1228,12 @@ end
         title(sce.title);
         subtitle('[genes x cells]');
         view(ax, bx);
-        i_labelclusters(true);
+        ix_labelclusters(true);
         guidata(FigureHandle, sce);
     end
 
-    function Brushed2MergeClusters(~, ~)
-        [iscelltype] = pick_celltype_clusterid('Merge brushed cells into same cluster or same cell type?');
+    function in_Brushed2MergeClusters(~, ~)
+        [iscelltype] = in_pickcelltypeclusterid('Merge brushed cells into same cluster or same cell type?');
         if isempty(iscelltype), return; end
         ptsSelected = logical(h.BrushData.');
         if ~any(ptsSelected)
@@ -1274,12 +1274,12 @@ end
         title(sce.title);
         subtitle('[genes x cells]');
         view(ax, bx);
-        i_labelclusters(true);
+        ix_labelclusters(true);
         guidata(FigureHandle, sce);
     end
 
 
-    function Brush4Celltypes(~, ~)
+    function in_Brush4Celltypes(~, ~)
         ptsSelected = logical(h.BrushData.');
         if ~any(ptsSelected)
             helpdlg("No cells are selected. Please use the data brush tool to select cells for cell type assignment.", '');
@@ -1322,17 +1322,17 @@ end
         datatip(h, 'DataIndex', idx(k));
     end
 
-    function ShowCellStemScatter(~, ~)
-        sce = guidata(FigureHandle);
-        [thisc, clable] = gui.i_select1state(sce);
-        if isempty(thisc), return; end
-        figure('WindowStyle', 'modal');
-        gui.i_stemscatter(sce.s, grp2idx(thisc));
-        zlabel(clable);
-    end
+    % function ShowCellStemScatter(~, ~)
+    %     sce = guidata(FigureHandle);
+    %     [thisc, clable] = gui.i_select1state(sce);
+    %     if isempty(thisc), return; end
+    %     figure('WindowStyle', 'modal');
+    %     gui.i_stemscatter(sce.s, grp2idx(thisc));
+    %     zlabel(clable);
+    % end
 
 
-    function ShowCellStates(src, ~)
+    function in_ShowCellStates(src, ~)
         sce = guidata(FigureHandle);
         [thisc, clable, ~, newpickclable] = gui.i_select1state(sce);
         %clable
@@ -1351,7 +1351,7 @@ end
         [c, cL] = grp2idx(thisc);
         sce.c = c;
         [answer] = gui.i_selvariabletype(thisc);
-        RefreshAll(src, 1, true, false);
+        in_RefreshAll(src, 1, true, false);
         switch answer
             case 'Categorical/Discrete'
                 n = max(c);
@@ -1373,7 +1373,7 @@ end
     end
 
 
-    function DeleteSelectedCells(src, ~)
+    function in_DeleteSelectedCells(src, ~)
         ptsSelected = logical(h.BrushData.');
         if ~any(ptsSelected)
             warndlg("No cells are selected.", '');
@@ -1386,9 +1386,9 @@ end
             'Selected', 'Unselected', 'Selected');
         if isempty(answer), return; end
         if strcmp(answer, 'Unselected')
-            i_deletecells(src, ~ptsSelected);
+            in_deletecells(src, ~ptsSelected);
         elseif strcmp(answer, 'Selected')
-            i_deletecells(src, ptsSelected);
+            in_deletecells(src, ptsSelected);
         else
             return;
         end
@@ -1396,7 +1396,7 @@ end
     end
 
 
-    function i_deletecells(src, ptsSelected)
+    function in_deletecells(src, ptsSelected)
         needprogressbar = false;
         if sce.NumCells > 8000, needprogressbar = true; end
         if needprogressbar
@@ -1407,11 +1407,11 @@ end
             gui.gui_waitbar(fw);
         end
         [c, cL] = grp2idx(sce.c);
-        RefreshAll(src, 1, true, true);
+        in_RefreshAll(src, 1, true, true);
     end
 
 
-    function DrawKNNNetwork(~, ~)
+    function in_DrawKNNNetwork(~, ~)
         k = gui.i_inputnumk(3);
         if isempty(k), return; end
         fw = gui.gui_waitbar;
@@ -1421,7 +1421,7 @@ end
         gui.gui_waitbar(fw);
     end
 
-    function DrawTrajectory(~, ~)
+    function in_DrawTrajectory(~, ~)
         waitfor(warndlg('This function should not be applied to tSNE and UMAP embeddings, as they "encourage a representation of the data as disjoint clusters, which is less meaningful for modeling continuous developmental trajectories" [PMID:25664528].', ''));
         answer = questdlg('Which method?', '', ...
             'splinefit (🐇)', 'princurve (🐢)', ...
@@ -1493,7 +1493,7 @@ end
     end
 
 
-    function ClusterCellsS(src, ~)
+    function in_ClusterCellsS(src, ~)
         answer = questdlg('Cluster cells?');
         if ~strcmp(answer, 'Yes'), return; end
         answer = questdlg('Which method?', 'Select Algorithm', ...
@@ -1506,12 +1506,12 @@ end
         else
             return;
         end
-        i_reclustercells(src, methodtag);
+        in_reclustercells(src, methodtag);
         guidata(FigureHandle, sce);
     end
 
 
-    function ClusterCellsX(src, ~)
+    function in_ClusterCellsX(src, ~)
         answer = questdlg('Cluster cells using X?');
         if ~strcmp(answer, 'Yes'), return; end
     
@@ -1534,12 +1534,12 @@ end
                 return;
             end
         end
-        i_reclustercells(src, methodtag);
+        in_reclustercells(src, methodtag);
         guidata(FigureHandle, sce);
     end
 
     
-    function i_reclustercells(src, methodtag)
+    function in_reclustercells(src, methodtag)
         methodtag = lower(methodtag);
         usingold = false;
         if ~isempty(sce.struct_cell_clusterings.(methodtag))
@@ -1559,7 +1559,7 @@ end
         end
         if ~usingold
             defv = round(sce.NumCells/100, -1);
-            defva = min([10, round(sce.NumCells/100, -2), round(sce.NumCells/20, -1)]);
+            defva = min([2, round(sce.NumCells/100, -2), round(sce.NumCells/20, -1)]);
             if defva == 0, defva = min([10, defv]); end
             defvb = max([round(sce.NumCells/20, -2), round(sce.NumCells/20, -1)]);
             k = gui.i_inputnumk(defv, defva, defvb);
@@ -1577,12 +1577,12 @@ end
         end
         [c, cL] = grp2idx(sce.c_cluster_id);
         sce.c = c;
-        RefreshAll(src, [], true, false);
+        in_RefreshAll(src, [], true, false);
         guidata(FigureHandle, sce);
     end
 
 
-    function LabelClusters(src, ~)
+    function in_labelcellgroups(src, ~)
         state = src.State;
         dtp = findobj(h, 'Type', 'datatip');
         %disp('...state...')
@@ -1599,10 +1599,10 @@ end
             end
             [c, cL] = grp2idx(thisc);
             sce.c = c;
-            RefreshAll(src, 1, true, false);
+            in_RefreshAll(src, 1, true, false);
             fprintf('Cells are colored by %s.\n', lower(clable));
             if max(c) <= 200
-                if i_labelclusters
+                if ix_labelclusters
                     set(src, 'State', 'on');
                 else
                     set(src, 'State', 'off');
@@ -1625,7 +1625,7 @@ end
     end
 
 
-    function [isdone] = i_labelclusters(notasking)
+    function [isdone] = ix_labelclusters(notasking)
         if nargin < 1, notasking = false; end
         isdone = false;
         if ~isempty(cL)

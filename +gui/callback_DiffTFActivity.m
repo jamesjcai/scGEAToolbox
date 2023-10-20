@@ -4,18 +4,19 @@ FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
 
 [thisc, clable] = gui.i_select1class(sce, false);
+if isempty(thisc), return; end
 species = gui.i_selectspecies(2);
 if isempty(species), return; end
 
 answer = questdlg('Select algorithm:', '', ...
-    'UCell [PMID:34285779] ', 'NMF [PMID:33135076] ', ...
-    'UCell [PMID:34285779] ');
+    'UCell [PMID:34285779]', 'NMF [PMID:33135076]🐢', ...
+    'UCell [PMID:34285779]');
 if isempty(answer), return; end
 
 switch answer
-    case 'NMF [PMID:33135076] '
+    case 'NMF [PMID:33135076]🐢'
         methodid = 3;
-    case 'UCell [PMID:34285779] '
+    case 'UCell [PMID:34285779]'
         methodid = 1;
     otherwise
         return;
