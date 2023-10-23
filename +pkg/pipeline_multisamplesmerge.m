@@ -22,6 +22,11 @@ for k = 1:length(accv)
     end
     if length(accv) > 1
         sce = sce.qcfilterwhitelist(500, 0.15, 5, '');
+        try
+           sce.c_batch_id=repmat(accv(k),size(sce.c_batch_id));
+        catch ME
+           warning(ME.message);
+        end
     end
     SCEV{k} = sce;
     pause(2);
@@ -29,23 +34,26 @@ end
 
 %%
 if length(accv) > 1
-    sce = sc_mergesces(SCEV);
+    sce = sc_mergesces(SCEV,[],true);
 else
     sce = SCEV{1};
 end
+
 if guiwaitbar, gui.gui_waitbar_adv(fw); end
 
 answerstruced = questdlg('Process merged SCE data (tSNE, clustering, and cell type annotation)?', ...
     '', 'Yes', 'Skip', 'Yes');
 if strcmp(answerstruced, 'Yes')
-    [speciestag] = gui.i_selectspecies(2);
-    if ~isempty(speciestag)
-        [ndim] = gui.i_choose2d3d;
-        if isempty(ndim), return; end
-        sce = sce.embedcells('tsne', true, true, ndim);
-        k = round(sce.NumCells/100);
-        sce = sce.clustercells(k, 'kmeans', true);
-        sce = pkg.e_celltypes2allclust(sce, speciestag, true);
+    [ndim] = gui.i_choose2d3d;
+    if ~isempty(ndim)        
+        [speciestag] = gui.i_selectspecies(2);
+        if ~isempty(speciestag)
+            if isempty(ndim), return; end
+            sce = sce.embedcells('tsne', true, true, ndim);
+            k = round(sce.NumCells/100);
+            sce = sce.clustercells(k, 'kmeans', true);
+            sce = pkg.e_celltypes2allclust(sce, speciestag, true);
+        end
     end
 end
 end

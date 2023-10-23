@@ -4,7 +4,7 @@ function [sce] = sc_mergesces(sces, method, keepbatchid)
 %See also: SC_MERGEDATA
 
 if nargin < 3, keepbatchid = false; end
-if nargin < 2, method = 'intersect'; end
+if nargin < 2 || isempty(method), method = 'intersect'; end
 validMethods = ["intersect", "union"];
 method = validatestring(method, validMethods);
 if ~iscell(sces), error('SCES is not a cell array.'); end
