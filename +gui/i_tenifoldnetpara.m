@@ -8,7 +8,7 @@ csubsmpl = [];
 savegrn = [];
 
 definput = {'10', '500'};
-prompt = {'Number of subsamples (nsubsmpl=[10..50]:', ...
+prompt = {'Number of subsamples (nsubsmpl=[10..50]):', ...
     'Number of cells per subsample (csubsmpl=[200..5000]):'};
 dlgtitle = 'scTenifoldNet Settings';
 dims = [1, 55];
