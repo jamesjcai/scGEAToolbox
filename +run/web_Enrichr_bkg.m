@@ -1,11 +1,11 @@
-function web_Enrichr(genelist, genenum, bkglist)
+function web_Enrichr_bkg(genelist, bkglist, genenum)
 % Run Enrichr
 %
 % see also: RUN.WEB_GORILLA, RUN.WEB_STRING
 
 if nargin < 1, genelist = []; end
-if nargin < 2, genenum = 100; end
-if nargin < 3, bkglist = []; end
+if nargin < 2, bkglist = []; end
+if nargin < 3, genenum = 200; end
 
 pw1 = fileparts(mfilename('fullpath'));
 pth = fullfile(pw1, 'external', 'web_Enrichr');
@@ -48,7 +48,35 @@ if ~isempty(genelist)
 end
 fprintf(fid, '</textarea>\n');
 
-fprintf(fid, '%s\n', a(idx+1:end));
+b=a(idx+1:end);
+
+
+idx = find(b == '<textarea name=background rows=15 id=text-area cols=63></textarea>');
+pause(1)
+fprintf(fid, '%s\n', b(1:idx-1));
+
+fprintf(fid, '<textarea name=background rows=15 id=text-area cols=63>');
+
+% n = min([length(genelist), genenum]);
+
+n=length(bkglist);
+
+if ~isempty(bkglist)
+    if isstring(bkglist)
+        fprintf(fid, '%s\n', bkglist(1));
+        for k = 2:n
+            fprintf(fid, '%s\n', bkglist(k));
+        end
+    elseif iscell(bkglist)
+        fprintf(fid, '%s\n', bkglist{1});
+        for k = 2:n
+            fprintf(fid, '%s\n', bkglist{k});
+        end
+    end
+end
+fprintf(fid, '</textarea>\n');
+
+fprintf(fid, '%s\n', b(idx+1:end));
 fclose(fid);
 pause(1)
 web(outfile, '-browser');
