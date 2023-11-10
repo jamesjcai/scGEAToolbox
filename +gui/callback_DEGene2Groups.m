@@ -9,14 +9,14 @@ sce = guidata(FigureHandle);
 if length(i1) == 1 || length(i2) == 1, return; end
 
 answer = questdlg('Which method?', ...
-    'Select Method', 'Wilcoxon rank-sum test ', ...
-    'DESeq 2 (R required) ', ...
-    'MAST (R required) ', ...
-    'Wilcoxon rank-sum test ');
+    'Select Method', 'Wilcoxon rank-sum test 🐇', ...
+    'DESeq 2 (R required) 🐢', ...
+    'MAST (R required) 🐢', ...
+    'Wilcoxon rank-sum test 🐇');
 
-if strcmpi(answer, 'Wilcoxon rank-sum test ')
+if strcmpi(answer, 'Wilcoxon rank-sum test 🐇')
     methodtag = "ranksum";
-elseif strcmpi(answer, 'DESeq 2 (R required) ')
+elseif strcmpi(answer, 'DESeq 2 (R required) 🐢')
     methodtag = "deseq2";
     %         if ~(ismcc || isdeployed)
     %             if ~exist('nbintest.m', 'file')
@@ -24,7 +24,7 @@ elseif strcmpi(answer, 'DESeq 2 (R required) ')
     %                 return;
     %             end
     %         end
-elseif strcmpi(answer, 'MAST (R required) ')
+elseif strcmpi(answer, 'MAST (R required) 🐢')
     methodtag = "mast";
     if isempty(pkg.FindRpath)
         warndlg('This function requires R environment.')

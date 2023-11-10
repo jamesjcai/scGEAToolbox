@@ -6,15 +6,18 @@ FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
 [thisc, ~] = gui.i_select1class(sce);
 if isempty(thisc), return; end
+[c, cL] = grp2idx(thisc);
 
-try
+SCEV=cell(max(c),1);
+for k=1:max(c)
+    SCEV{k}=sce.selectcells(c==k);
+end
 
-    [c, cL] = grp2idx(thisc);
+try    
     %cLa=getappdata(FigureHandle,'cL');
     %if ~isempty(cLa) && length(cL)==length(cLa)
     %    cL=cLa;
     %end
-
     cmv = 1:max(c);
     idxx = cmv;
     [cmx] = countmember(cmv, c);
@@ -22,6 +25,7 @@ try
     answer = questdlg('Sort by size of cell groups?');
     if strcmpi(answer, 'Yes')
         [~, idxx] = sort(cmx, 'descend');
+        SCEV=SCEV(idxx);
     end
 
     sces = sce.s;
@@ -64,9 +68,22 @@ try
         set(f, 'visible', 'on');
         tb = uitoolbar(f);
         pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
+        if nf==1
+            pkg.i_addbutton2fig(tb, 'off', @in_showsces, "xpowerpoint.gif", 'Save Figure to PowerPoint File...');
+        end
         drawnow;
     end
 catch ME
     errordlg(ME.message);
 end
+
+    function in_showsces(~,~)
+        answer1 = questdlg('Extract cells from different groups and make new SCEs?');
+        if ~strcmp(answer1, 'Yes'), return; end
+        for ik=1:length(SCEV)
+            sc_scatter_sce(SCEV{ik});
+            pause(0.5);
+        end
+    end
+
 end

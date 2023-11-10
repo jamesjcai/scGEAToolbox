@@ -23,7 +23,7 @@ end
 
 if usejava('jvm') && ~feature('ShowFigureWindows')
     error('MATLAB is in a text mode. This function requires a GUI-mode.');
-    end
+end
     promotesave = false;
     if nargin < 1
         list = {'SCE Data File (*.mat)...', ...

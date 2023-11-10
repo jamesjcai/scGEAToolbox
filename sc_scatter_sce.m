@@ -122,8 +122,8 @@ in_addbuttonpush(1, 0, @in_Brushed2NewCluster, "plotpicker-glyplot-face.gif", "A
 in_addbuttonpush(1, 0, @in_Brushed2MergeClusters, "plotpicker-pzmap.gif", "Merge brushed cells to same group")
 in_addbuttonpush(1, 0, @in_RenameCellTypeBatchID, "plotpicker-scatterhist.gif", "Rename cell type or batch ID");
 in_addbuttonpush(1, 0, @in_call_scgeatool, "IMG00107.GIF", " ");
-in_addbuttonpush(1, 1, @in_ClusterCellsS, "plotpicker-dendrogram.gif", "Clustering using embedding S")
-in_addbuttonpush(1, 0, @in_ClusterCellsX, "icon-mw-cluster-10.gif", "Clustering using expression matrix X")
+in_addbuttonpush(1, 1, @in_ClusterCellsS, "plotpicker-dendrogram.gif", "Clustering using cell embedding (S)")
+in_addbuttonpush(1, 0, @in_ClusterCellsX, "icon-mw-cluster-10.gif", "Clustering using expression matrix (X)")
 in_addbuttonpush(1, 1, {@in_DetermineCellTypeClustersGeneral, true}, "plotpicker-contour.gif", "Assign cell types to groups")
 in_addbuttonpush(1, 0, @in_Brush4Celltypes, "brush.gif", "Assign cell type to selected cells");
 % i_addbutton(1,0,@ShowCellStemScatter,"IMG00067.GIF","Stem scatter plot");
@@ -1494,7 +1494,7 @@ end
 
 
     function in_ClusterCellsS(src, ~)
-        answer = questdlg('Cluster cells?');
+        answer = questdlg('Cluster cells using embedding S?');
         if ~strcmp(answer, 'Yes'), return; end
         answer = questdlg('Which method?', 'Select Algorithm', ...
             'K-means 🐇', 'SnnDpc [DOI:10.1016/j.ins.2018.03.031] 🐢', 'K-means 🐇');
@@ -1512,7 +1512,7 @@ end
 
 
     function in_ClusterCellsX(src, ~)
-        answer = questdlg('Cluster cells using X?');
+        answer = questdlg('Cluster cells using expression matrix X?');
         if ~strcmp(answer, 'Yes'), return; end
     
         methodtagvx = {'specter (31 secs) 🐇', 'sc3 (77 secs) 🐇', ...
