@@ -237,9 +237,8 @@ in_addmenu(m_exp, 0, @in_MergeSubCellTypes, 'Merge Subclusters of Same Cell Type
 %i_addmenu(m_exp,0,@AnnotateSubGroup,'Annotate Cell Subgroups...');
 in_addmenu(m_exp, 1, @in_WorkonSelectedGenes, 'Select Top n HVGs to Work on...');
 in_addmenu(m_exp, 0, @in_SubsampleCells, 'Subsample 50% Cells to Work on...');
+in_addmenu(m_exp, 1, @gui.callback_DEGene2GroupsBatch, 'DE Analysis in Batch...');
 
-in_addmenu(m_exp, 1, @in_DrawKNNNetwork, 'Plot Cell kNN Network...');
-in_addmenu(m_exp, 0, @in_DrawTrajectory, 'Plot Cell Trajectory...');
 %i_addmenu(m_exp,0,@ShowCellStemScatter,"Stem Scatter Feature Plot...");
 %i_addmenu(m_exp,1,@gui.callback_Violinplot,'Gene Violin Plot...');
 %i_addmenu(m_exp,0,@gui.callback_DrawDotplot,'Gene Dot Plot...');
@@ -257,6 +256,9 @@ in_addmenu(m_exp, 1, {@in_MergeCellSubtypes, 1}, 'Import Cell Annotation from SC
 in_addmenu(m_exp, 0, {@in_MergeCellSubtypes, 2}, 'Import Cell Annotation from SCE Data File...');
 
 in_addmenu(m_exp, 1, @gui.callback_SplitAtacGex, 'Split Multiome ATAC+GEX Matrix...');
+in_addmenu(m_exp, 0, @in_DrawKNNNetwork, 'Plot Cell kNN Network...');
+in_addmenu(m_exp, 0, @in_DrawTrajectory, 'Plot Cell Trajectory...');
+
 %i_addmenu(m_exp,0,{@MergeCellSubtypes,1,true},'Import All Cell Annotation from SCE in Workspace...');
 %i_addmenu(m_exp,0,{@MergeCellSubtypes,2,true},'Import All Cell Annotation from SCE Data File...');
 
