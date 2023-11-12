@@ -12,8 +12,7 @@ if length(unique(sce.c_cell_type_tx))==1
     return;
 end
 
-answer = questdlg('This function iterates all cell types and, for each cell type, perform DE analysis between two groups (e.g., WT and KO). Continue?', '');
-if ~strcmp(answer,'Yes'), return; end
+gui.gui_showrefinfo('DE in Batch Mode');
 
 [thisc, clable]=gui.i_select1class(sce);
 if strcmp(clable,'Cell Type')
@@ -62,7 +61,8 @@ if ~strcmp(answer,'Yes'), return; end
 %waitfor(helpdlg(sprintf('Result files will be save in %s', outdir), ''));
 
 
-[CellTypeSorted]=in_sortcelltypes(sce.c_cell_type_tx);
+% [CellTypeSorted]=in_sortcelltypes(sce.c_cell_type_tx);
+[CellTypeSorted]=pkg.e_sortcatbysize(sce.c_cell_type_tx);
 
     fw = gui.gui_waitbar_adv;
 
@@ -158,14 +158,14 @@ function [i1, i2, cL1, cL2]=in_twogrpsencoding(thisc)
     end        
 end
 
-function [cLsorted]=in_sortcelltypes(thisc)
-    [c, cL] = grp2idx(thisc);
-    cmv = 1:max(c);
-    %idxx = cmv;
-    [cmx] = countmember(cmv, c);
-    [~, idxx] = sort(cmx, 'descend');
-    cLsorted=cL(idxx);
-end
+% function [cLsorted]=in_sortcelltypes(thisc)
+%     [c, cL] = grp2idx(thisc);
+%     cmv = 1:max(c);
+%     %idxx = cmv;
+%     [cmx] = countmember(cmv, c);
+%     [~, idxx] = sort(cmx, 'descend');
+%     cLsorted=cL(idxx);
+% end
 
 function [T]=in_DETableProcess(T,cL1,cL2)
     try

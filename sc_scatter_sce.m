@@ -237,7 +237,7 @@ in_addmenu(m_exp, 0, @in_MergeSubCellTypes, 'Merge Subclusters of Same Cell Type
 %i_addmenu(m_exp,0,@AnnotateSubGroup,'Annotate Cell Subgroups...');
 in_addmenu(m_exp, 1, @in_WorkonSelectedGenes, 'Select Top n HVGs to Work on...');
 in_addmenu(m_exp, 0, @in_SubsampleCells, 'Subsample 50% Cells to Work on...');
-in_addmenu(m_exp, 1, @gui.callback_DEGene2GroupsBatch, 'DE Analysis in Batch...');
+in_addmenu(m_exp, 1, @gui.callback_DEGene2GroupsBatch, 'DE Analysis in Batch Mode...');
 
 %i_addmenu(m_exp,0,@ShowCellStemScatter,"Stem Scatter Feature Plot...");
 %i_addmenu(m_exp,1,@gui.callback_Violinplot,'Gene Violin Plot...');

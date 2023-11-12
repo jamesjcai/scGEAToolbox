@@ -1,12 +1,22 @@
 function [ptsSelected] = i_select1classcells(sce, askunselect)
 if nargin < 2, askunselect = true; end
 ptsSelected = [];
-thisc = gui.i_select1class(sce);
+[thisc, clable] = gui.i_select1class(sce);
 if isempty(thisc), return; end
 
 [~, cLi] = grp2idx(thisc);
 
-[cLisorted] = natsort(string(cLi));
+answer2 = questdlg(sprintf('How to sort members of ''%s''?',clable), '', ...
+    'Alphabetic', 'Size (Descending Order)', 'Alphabetic');
+switch answer2
+    case 'Alphabetic'
+        [cLisorted] = natsort(string(cLi));
+    case 'Size (Descending Order)'
+        [cLisorted]=pkg.e_sortcatbysize(string(cLi));
+    otherwise
+        return;
+end
+
 [indxx, tfx] = listdlg('PromptString', {'Select groups'}, ...
     'SelectionMode', 'multiple', 'ListString', cLisorted);
 if tfx == 1
