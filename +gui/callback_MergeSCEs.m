@@ -6,7 +6,7 @@ if ~strcmp(answer, 'Yes'), return; end
 FigureHandle = src.Parent.Parent;
 
 keepbatchid=true;
-answer = questdlg('Keep BATCH_ID?');
+answer = questdlg('Keep BATCH_ID?','');
 switch answer
     case 'Yes'
         keepbatchid=true;
@@ -15,6 +15,7 @@ switch answer
     case 'Cancel'
         return;
 end
+
 
 switch sourcetag
     case 1
