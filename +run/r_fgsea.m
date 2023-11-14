@@ -2,15 +2,22 @@ function [s] = r_fgsea(genelist, rmribo, drdistin)
 
 if nargin < 3, drdistin = []; end
 if nargin < 2, rmribo = true; end
+s=[];
+
+isdebug = false;
+
 oldpth = pwd();
 [isok, msg] = commoncheck_R('R_fgsea');
-if ~isok, error(msg);
-    s = [];
+if ~isok
+    error(msg);    
     return;
 end
 
-if exist('input.txt', 'file'), delete('input.txt'); end
-if exist('output.txt', 'file'), delete('output.txt'); end
+tmpfilelist = {'input.txt', 'output.txt'};
+if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+
+%if exist('input.txt', 'file'), delete('input.txt'); end
+%if exist('output.txt', 'file'), delete('output.txt'); end
 
 %t=readtable('input_template.txt');
 %N=size(t,1);
@@ -31,6 +38,7 @@ else
     genelist = genelist(1:N);
     drdist = v(1:N);
 end
+
 sortid = (1:length(genelist))';
 T = table(sortid, genelist, drdist);
 
@@ -46,10 +54,7 @@ pkg.RunRcode('script.R', Rpath);
 pause(1);
 if exist('output.txt', 'file')
     s = readtable('output.txt', "Delimiter", ',');
-else
-    s = [];
 end
-if exist('input.txt', 'file'), delete('input.txt'); end
-if exist('output.txt', 'file'), delete('output.txt'); end
+if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 cd(oldpth);
 end

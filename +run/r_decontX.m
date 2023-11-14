@@ -18,10 +18,9 @@ if isa(X, 'SingleCellExperiment')
     X = X.X;
 end
 
-if ~isdebug
-    if exist('./input.mat', 'file'), delete('./input.mat'); end
-    if exist('./output.h5', 'file'), delete('./output.h5'); end
-end
+tmpfilelist = {'input.mat', 'output.h5'};
+if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+
 save('input.mat', 'X', '-v7.3');
 Rpath = getpref('scgeatoolbox', 'rexecutablepath');
 pkg.RunRcode('script.R', Rpath);
@@ -30,9 +29,7 @@ if exist('./output.h5', 'file')
     contamination = h5read('output.h5', '/contamination');
     % load('output.mat','X','contamination')
 end
-if ~isdebug
-    if exist('./input.mat', 'file'), delete('./input.mat'); end
-    if exist('./output.h5', 'file'), delete('./output.h5'); end
-end
+
+if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 cd(oldpth);
 end

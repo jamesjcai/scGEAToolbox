@@ -60,34 +60,72 @@ if ~strcmp(answer,'Yes'), return; end
 outdir = uigetdir;
 if ~isfolder(outdir), return; end
 
-answer=questdlg(sprintf('Result files will be save in %s. Continue?', outdir), '');
-if ~strcmp(answer,'Yes'), return; end
-
-%waitfor(helpdlg(sprintf('Result files will be save in %s', outdir), ''));
-
-
-
-    fw = gui.gui_waitbar_adv;
-
+needoverwritten=false;
 for k=1:length(CellTypeList)
-    
-    gui.gui_waitbar_adv(fw, ...
-        k/length(CellTypeList), ...
-        sprintf('Processing %s ...', CellTypeList{k}));
-
-    idx = sce.c_cell_type_tx == CellTypeList{k};
-    T = sc_deg(sce.X(:, i1&idx), sce.X(:, i2), sce.g, 1, false);
-    T = in_DETableProcess(T,cL1,cL2);
-
-    [Tup, Tdn] = pkg.e_processDETable(T, true);
-    outfile = sprintf('%s_vs_%s_%s', ...
+    outfile = sprintf('%s_vs_%s_%s.xlsx', ...
         matlab.lang.makeValidName(string(cL1)), ...
         matlab.lang.makeValidName(string(cL2)), ...
         matlab.lang.makeValidName(string(CellTypeList{k})));
     filesaved = fullfile(outdir, outfile);
-    writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All genes');
-    writetable(Tup, filesaved, "FileType", "spreadsheet", 'Sheet', 'Up-regulated');
-    writetable(Tdn, filesaved, "FileType", "spreadsheet", 'Sheet', 'Down-regulated');
+    if exist(filesaved,'file')
+        needoverwritten=true;
+    end
+end
+if needoverwritten
+    answer=questdlg(sprintf('Overwrite existing result file(s) in %s?',outdir),'');    
+else
+    answer=questdlg(sprintf('Result files will be save in %s. Continue?', outdir), '');
+end
+if ~strcmp(answer,'Yes'), return; end
+
+rungsea=false;
+answer=questdlg('Run GSEA analysis with the DE result (i.e., genes ranked by log2FC)?','');
+if strcmp(answer,'Cancel'), return; end
+if strcmp(answer,'Yes'), rungsea = true; end
+
+fw = gui.gui_waitbar_adv;
+
+for k=1:length(CellTypeList)
+   
+    gui.gui_waitbar_adv(fw, ...
+        (k-1)/length(CellTypeList), ...
+        sprintf('Processing %s ...', CellTypeList{k}));
+
+    outfile = sprintf('%s_vs_%s_%s.xlsx', ...
+        matlab.lang.makeValidName(string(cL1)), ...
+        matlab.lang.makeValidName(string(cL2)), ...
+        matlab.lang.makeValidName(string(CellTypeList{k})));
+    filesaved = fullfile(outdir, outfile);
+    % if exist(filesaved,'file')
+    %     answer=questdlg(sprintf('Overwrite existing file %s? Click No to skip.',outfile),'');
+    %     switch answer
+    %         case 'Yes'
+    %         case 'No'
+    %             continue;
+    %         case 'Cancel'
+    %             return;
+    %     end
+    % end
+
+    idx = sce.c_cell_type_tx == CellTypeList{k};
+    T = sc_deg(sce.X(:, i1&idx), sce.X(:, i2), sce.g, 1, false);
+    T = in_DETableProcess(T,cL1,cL2);
+    [Tup, Tdn] = pkg.e_processDETable(T);    
+    try
+        writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All genes');
+        writetable(Tup, filesaved, "FileType", "spreadsheet", 'Sheet', 'Up-regulated');
+        writetable(Tdn, filesaved, "FileType", "spreadsheet", 'Sheet', 'Down-regulated');
+    catch ME
+        warning(ME.message);
+    end
+    if rungsea
+        try
+            Tgsea=run.r_fgsea(T.gene,true,T.avg_log2FC);
+            writetable(Tgsea, filesaved, "FileType", "spreadsheet", 'Sheet', 'GSEA');
+        catch ME
+            warning(ME.message);
+        end
+    end
 end
 gui.gui_waitbar_adv(fw);
 
