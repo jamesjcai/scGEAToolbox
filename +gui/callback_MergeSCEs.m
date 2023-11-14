@@ -6,7 +6,7 @@ if ~strcmp(answer, 'Yes'), return; end
 FigureHandle = src.Parent.Parent;
 
 keepbatchid=true;
-answer = questdlg('Keep BATCH_ID?','');
+answer = questdlg('Keep original batch IDs of cells in the input SCEs?','');
 switch answer
     case 'Yes'
         keepbatchid=true;
@@ -98,6 +98,7 @@ switch sourcetag
                     s = sprintf('%s, %s', s, fname{k});
                 end
                 s = s(2:end);
+                pause(1)
                 sce = sc_mergesces(scelist, methodtag, keepbatchid);
                 guidata(FigureHandle, sce);
                 requirerefresh = true;
