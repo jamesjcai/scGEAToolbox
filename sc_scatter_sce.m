@@ -1594,7 +1594,7 @@ end
             set(src, 'State', 'off');
         else
             sce = guidata(FigureHandle);
-            [thisc, clable] = gui.i_select1class(sce);
+            [thisc, clable] = gui.i_select1class(sce,true);
             if isempty(thisc)
                 set(src, 'State', 'off');
                 return;

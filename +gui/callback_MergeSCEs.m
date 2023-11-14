@@ -46,7 +46,7 @@ switch sourcetag
                 s = s(2:end);
                 fprintf('>> sce=sc_mergesces({%s},''%s'');\n', s, methodtag);
                 fw = gui.gui_waitbar;
-                sce = sc_mergesces(insce, methodtag);
+                sce = sc_mergesces(insce, methodtag, true);
                 guidata(FigureHandle, sce);
                 requirerefresh = true;
             catch ME
@@ -86,7 +86,7 @@ switch sourcetag
                     s = sprintf('%s, %s', s, fname{k});
                 end
                 s = s(2:end);
-                sce = sc_mergesces(scelist, methodtag);
+                sce = sc_mergesces(scelist, methodtag, true);
                 guidata(FigureHandle, sce);
                 requirerefresh = true;
             catch ME

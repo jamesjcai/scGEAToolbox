@@ -8,12 +8,14 @@ sce = guidata(FigureHandle);
 if isempty(thisc), return; end
 [c, cL] = grp2idx(thisc);
 
-SCEV=cell(max(c),1);
-for k=1:max(c)
-    SCEV{k}=sce.selectcells(c==k);
-end
-
-try    
+fw = gui.gui_waitbar_adv;
+    SCEV=cell(max(c),1);
+    for k=1:max(c)
+        gui.gui_waitbar_adv(fw, ...
+            (k-1)/max(c), ...
+            sprintf('Processing %s ...', cL{k}));
+        SCEV{k}=sce.selectcells(c==k);
+    end
     %cLa=getappdata(FigureHandle,'cL');
     %if ~isempty(cLa) && length(cL)==length(cLa)
     %    cL=cLa;
@@ -22,12 +24,15 @@ try
     idxx = cmv;
     [cmx] = countmember(cmv, c);
 
+gui.gui_waitbar_adv(fw);
+
     answer = questdlg('Sort by size of cell groups?');
     if strcmpi(answer, 'Yes')
         [~, idxx] = sort(cmx, 'descend');
         SCEV=SCEV(idxx);
     end
 
+try
     sces = sce.s;
     h = findall(FigureHandle, 'type', 'scatter');
     if isempty(h.ZData)
@@ -69,7 +74,7 @@ try
         tb = uitoolbar(f);
         pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
         if nf==1
-            pkg.i_addbutton2fig(tb, 'off', @in_showsces, "xpowerpoint.gif", 'Save Figure to PowerPoint File...');
+            pkg.i_addbutton2fig(tb, 'off', @in_scgeatoolsce, "icon-mat-touch-app-10.gif", 'Extract and Work on Separate SCEs...');
         end
         drawnow;
     end
@@ -77,13 +82,27 @@ catch ME
     errordlg(ME.message);
 end
 
-    function in_showsces(~,~)
+    function in_scgeatoolsce(~,~)
         answer1 = questdlg('Extract cells from different groups and make new SCEs?');
         if ~strcmp(answer1, 'Yes'), return; end
-        for ik=1:length(SCEV)
-            sc_scatter_sce(SCEV{ik});
-            pause(0.5);
+        [idx] = in_selectcellgrps(cL(idxx));
+        if isempty(idx), return; end 
+           for ik=1:length(idx)
+                scev=SCEV{idx(ik)};
+                sc_scatter_sce(scev);
+                pause(0.5);
+            end
         end
-    end
+end
 
+
+function [idx] = in_selectcellgrps(grpv)
+    idx=[];
+    [indx2, tf2] = listdlg('PromptString', ...
+    {'Select Group(s):'}, ...
+    'SelectionMode', 'multiple', 'ListString', grpv, ...
+    'InitialValue',1:length(grpv));
+    if tf2 == 1
+        idx = indx2;
+    end
 end
