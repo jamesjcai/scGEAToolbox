@@ -5,6 +5,17 @@ answer = questdlg('Current SCE will be replaced. Continue?');
 if ~strcmp(answer, 'Yes'), return; end
 FigureHandle = src.Parent.Parent;
 
+keepbatchid=true;
+answer = questdlg('Keep BATCH_ID?');
+switch answer
+    case 'Yes'
+        keepbatchid=true;
+    case 'No'
+        keepbatchid=false;
+    case 'Cancel'
+        return;
+end
+
 switch sourcetag
     case 1
         a = evalin('base', 'whos');
@@ -44,9 +55,9 @@ switch sourcetag
                     s = sprintf('%s,%s', s, a(indx(k)).name);
                 end
                 s = s(2:end);
-                fprintf('>> sce=sc_mergesces({%s},''%s'');\n', s, methodtag);
+                fprintf('>> sce=sc_mergesces({%s},''%s'',true);\n', s, methodtag);
                 fw = gui.gui_waitbar;
-                sce = sc_mergesces(insce, methodtag, true);
+                sce = sc_mergesces(insce, methodtag, keepbatchid);
                 guidata(FigureHandle, sce);
                 requirerefresh = true;
             catch ME
@@ -86,7 +97,7 @@ switch sourcetag
                     s = sprintf('%s, %s', s, fname{k});
                 end
                 s = s(2:end);
-                sce = sc_mergesces(scelist, methodtag, true);
+                sce = sc_mergesces(scelist, methodtag, keepbatchid);
                 guidata(FigureHandle, sce);
                 requirerefresh = true;
             catch ME
@@ -95,7 +106,5 @@ switch sourcetag
                 return;
             end
             gui.gui_waitbar(fw);
-
-        end % end of sourcetag
-
+end
 end % end of function
