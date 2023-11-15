@@ -20,6 +20,7 @@ switch answer
         end
         if length(newidx) ~= length(cL)
             noanswer = true;
+            waitfor(helpdlg('Order unchanged',''));
             return;
         end
         cx = c;

@@ -1,6 +1,6 @@
 function [thisc, clable] = i_select1class(sce, allowunique)
 
-if nargin < 2, allowunique = false; end
+if nargin < 2, allowunique = true; end
 thisc = [];
 clable = '';
 

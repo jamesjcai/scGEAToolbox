@@ -24,12 +24,14 @@ if nargin < 3 || isempty(Ttfgn) % tf-by-gene matrix T from database
             fname = fullfile(pw1, 'resources', 'DoRothEA_TF_Target_DB', 'dorothea_mm.mat');
         otherwise
             error('TF database is not available for the species.');
-            end
-            fprintf('\nReading ... %s.\n', fname);
+            
+    end
+        fprintf('\nReading ... %s.\n', fname);
             load(fname, 'T');
             Ttfgn = T(T.mor > 0, :);
             fprintf('Only positive regulatory relationships are used.\n');
-    end
+end
+
 
 
     if methodid ~= 1 % method 1 UCell is rank-based, normalization is unnecessary
