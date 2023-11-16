@@ -238,13 +238,20 @@ bb = 'No, just show values';
                     if isempty(species), return; end
 
                     if strcmp(selecteditem, 'TF Targets Expression Score...')
-                        methodid = 1;
+                        methodid = 1;  % UCell method
+                        disp('Using the UCell method...');
                     else
                         methodid = 4;
                     end
                     if methodid ~= 4, fw = gui.gui_waitbar; end
-                    [cs, tflist] = sc_tfactivity(sce.X, sce.g, [], ...
-                        species, methodid);
+                    try
+                        [cs, tflist] = sc_tfactivity(sce.X, sce.g, [], ...
+                            species, methodid);
+                    catch ME
+                        if methodid ~= 4, gui.gui_waitbar(fw,true); end
+                        errordlg(ME.message);
+                        return;
+                    end
                     idx = find(upper(tflist) == upper(string(listitems{indx2})));
                     assert(length(idx) == 1)
 

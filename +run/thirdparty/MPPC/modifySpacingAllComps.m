@@ -59,7 +59,8 @@ start_pts = [1; cut_indices + 1]; %the start and end indices for all components 
     [am_sorted, sort_ind] = sort(am);
     removals_bool = (am_sorted(1:floor(m/2)) / am_mean < 1 / r) & mod(sort_ind(1:floor(m/2)), 2) == eo ...
         & ismember(sort_ind(1:floor(m/2)), nonendpts);
-    removals = sort_ind([removals_bool; boolean(zeros(ceil(m/2), 1))]);
+    %removals = sort_ind([removals_bool; boolean(zeros(ceil(m/2), 1))]);
+    removals = sort_ind([removals_bool; false(ceil(m/2), 1)]);
 
     k = length(removals);
     if ~isempty(num_add)
