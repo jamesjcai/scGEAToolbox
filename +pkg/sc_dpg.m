@@ -36,3 +36,5 @@ end
 T=table(setnames, avg_log2FC, p_val, p_val_adj);
 T(isnan(T.p_val),:)=[];
 T=sortrows(T,4);
+T=T(T.p_val_adj<0.01,:);
+

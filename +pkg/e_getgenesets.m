@@ -4,7 +4,6 @@ if nargin<1, option = 'TF'; end
 
 switch option
     case {'TF',1}
-
         pw1 = fileparts(mfilename('fullpath'));
         fname = fullfile(pw1, '..','resources', 'DoRothEA_TF_Target_DB', 'dorothea_hs.mat');
         load(fname, 'T');
@@ -19,10 +18,32 @@ switch option
         setgenes=string(gnlist);
     case {2,'GSEA'}
         [~, ~, Col] = gui.i_selectMSigDBGeneSet('human',true);
-        setnames = fields(Col);
+        setnames = string(fields(Col));
         glist=[];
         for k=1:length(setnames)  
             glist=[glist;Col.(setnames{k}).geneSymbols];
+        end
+        glist=unique(glist);
+        setgenes=glist(strlength(glist)>0);
+        setmatrx=false(length(setnames),length(setgenes));
+        for k=1:length(setnames)
+            tgsPos = string(Col.(setnames(k)).geneSymbols);
+            setmatrx(k,:)=ismember(setgenes,tgsPos);
+        end
+    case {3,'Predefined'}
+        [~, T] = pkg.e_cellscores([], [], 0);
+        glist=[];
+        for k=1:size(T,1)
+            tgsPos = unique(strsplit(string(T.PositiveMarkers(k)), ','));
+            glist=[glist;tgsPos'];
+        end
+        glist=unique(glist);
+        setgenes=glist(strlength(glist)>0);
+        setnames=string(T.ScoreType);
+        setmatrx=false(length(setnames),length(setgenes));
+        for k=1:length(setnames)
+            tgsPos = unique(strsplit(string(T.PositiveMarkers(k)), ','));
+            setmatrx(k,:)=ismember(setgenes,tgsPos);
         end
 end
 

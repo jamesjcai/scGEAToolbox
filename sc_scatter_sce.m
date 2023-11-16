@@ -194,7 +194,12 @@ in_addbuttontoggle(2, 0, {@in_togglebtfun, @callback_SaveX, ...
 %i_addmenu(m_vie,0,@gui.callback_CrossTabulation,'Cross Tabulation...');
 
 m_net = uimenu(FigureHandle, 'Text', '&Network', 'Accelerator', 'N');
-in_addmenu(m_net, 0, @callback_scPCNet1, 'GRN Construction - PC Regression (w/o subsampling) [PMID:33336197] 🐢...');
+
+
+
+in_addmenu(m_net, 0, @in_Select5000Genes, 'Narrow Down Gene Size to 5000...');
+
+in_addmenu(m_net, 1, @callback_scPCNet1, 'GRN Construction - PC Regression (w/o subsampling) [PMID:33336197] 🐢...');
 in_addmenu(m_net, 0, @callback_scTenifoldNet1, 'GRN Construction - PC Regression (w/ subsampling) [PMID:33336197] 🐢🐢 ...');
 in_addmenu(m_net, 1, @callback_scTenifoldNet2lite, 'GRN Comparison - scTenifoldNet (w/o subsampling) [PMID:33336197] 🐢🐢 ...');
 in_addmenu(m_net, 0, @callback_scTenifoldNet2, 'GRN Comparison - scTenifoldNet (w/ subsampling) [PMID:33336197] 🐢🐢🐢 ...');
@@ -238,7 +243,7 @@ in_addmenu(m_exp, 0, @in_MergeSubCellTypes, 'Merge Subclusters of Same Cell Type
 in_addmenu(m_exp, 1, @in_WorkonSelectedGenes, 'Select Top n HVGs to Work on...');
 in_addmenu(m_exp, 0, @in_SubsampleCells, 'Subsample 50% Cells to Work on...');
 in_addmenu(m_exp, 1, @gui.callback_DEGene2GroupsBatch, 'DE Analysis in Batch Mode...');
-
+in_addmenu(m_exp, 1, @gui.callback_DPGene2Groups, 'Differential Program (DP) Analysis...');
 %i_addmenu(m_exp,0,@ShowCellStemScatter,"Stem Scatter Feature Plot...");
 %i_addmenu(m_exp,1,@gui.callback_Violinplot,'Gene Violin Plot...');
 %i_addmenu(m_exp,0,@gui.callback_DrawDotplot,'Gene Dot Plot...');
@@ -758,6 +763,21 @@ end
             h.BrushData = highlightindex;
         end
     end
+
+    function in_Select5000Genes(src, ~)
+        oldm = sce.NumGenes;
+        [requirerefresh] = ...
+            gui.callback_Select5000Genes(src);
+        sce = guidata(FigureHandle);
+        if requirerefresh
+            in_RefreshAll(src, 1, true);
+            %newn = sce.NumCells;
+            newm = sce.NumGenes;
+            helpdlg(sprintf('%d genes removed.', ...
+                oldm-newm), '');
+        end
+    end
+
 
     function in_RunSeuratWorkflow(src, ~)
         [ok] = gui.i_confirmscript('Run Seurat/R Workflow (Seurat)?', ...
