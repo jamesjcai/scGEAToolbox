@@ -24,11 +24,13 @@ end
 fw = gui.gui_waitbar;
 
 if strcmpi(answer{1},'Y')
-    sce = sce.rmmtgenes; 
+    sce = sce.rmmtgenes;
+    disp('Mt-genes removed.');
     requirerefresh = true;
 end
 if strcmpi(answer{2},'Y')
     sce = sce.rmribosomalgenes;
+    disp('Ribosomal genes removed.');
     requirerefresh = true;
 end
 
@@ -37,6 +39,7 @@ try
     if a > 0 && a < intmax
         
         sce = sce.selectkeepgenes(1, a);
+        disp('Lowly expressed genes removed.');
         requirerefresh = true;
 
     end
