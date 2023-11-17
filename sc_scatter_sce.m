@@ -197,7 +197,7 @@ m_net = uimenu(FigureHandle, 'Text', '&Network', 'Accelerator', 'N');
 
 
 
-in_addmenu(m_net, 0, @in_Select5000Genes, 'Narrow Down Gene Size to 5000...');
+in_addmenu(m_net, 0, @in_Select5000Genes, 'Choose Most Informative Genes...');
 
 in_addmenu(m_net, 1, @callback_scPCNet1, 'GRN Construction - PC Regression (w/o subsampling) [PMID:33336197] 🐢...');
 in_addmenu(m_net, 0, @callback_scTenifoldNet1, 'GRN Construction - PC Regression (w/ subsampling) [PMID:33336197] 🐢🐢 ...');
