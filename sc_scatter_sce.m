@@ -772,13 +772,21 @@ end
         oldm = sce.NumGenes;
         [requirerefresh] = gui.callback_Select5000Genes(src);
         sce = guidata(FigureHandle);
-        if requirerefresh
-            in_RefreshAll(src, 1, true);
-            %newn = sce.NumCells;
-            newm = sce.NumGenes;
-            helpdlg(sprintf('%d genes removed.', ...
-                oldm-newm), '');
+
+        try
+            sce = sce.qcfilterwhitelist(500, 0.2, 10, 200, []);
+            disp('Basic QC for cells.');
+            c=sce.c;
+        catch ME
+            warning(ME.message);
         end
+
+        if requirerefresh
+            in_RefreshAll(src, 1, true);            
+            newm = sce.NumGenes;
+            helpdlg(sprintf('%d genes removed.', oldm-newm), '');
+        end
+        
     end
 
 

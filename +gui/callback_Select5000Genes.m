@@ -15,7 +15,8 @@ prompt = {'Remove mt-genes?', ...
     'Select top n HVGs (e.g., n=5000)?'};
 dlgtitle = '';
 dims = [1, 65];
-definput = {'Y', 'Y', '0.075','5000'};
+
+definput = {'Y', 'Y', '0.075',num2str(min([sce.NumGenes,5000]))};
 answer = inputdlg(prompt, dlgtitle, dims, definput);
 if isempty(answer)
     requirerefresh = false;
@@ -60,6 +61,9 @@ try
 catch ME
     warning(ME.message);
 end
+
+
+
 guidata(FigureHandle, sce);
 gui.gui_waitbar(fw);
 
