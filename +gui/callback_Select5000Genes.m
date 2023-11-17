@@ -4,7 +4,8 @@ requirerefresh = false;
 FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
 
-if sce.NumGenes<=5000
+if sce.NumGenes<=500
+    warndlg('Number of cells is too small.');
     return;
 end
 
@@ -36,12 +37,10 @@ end
 
 try
     a = str2double(answer{3});
-    if a > 0 && a < intmax
-        
+    if a > 0 && a < intmax        
         sce = sce.selectkeepgenes(1, a);
         disp('Lowly expressed genes removed.');
         requirerefresh = true;
-
     end
 catch ME
     warning(ME.message);

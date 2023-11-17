@@ -3,20 +3,21 @@ function callback_scPCNet1(src, events)
 FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
 
-answer = questdlg('Construct gene regulatory network (GRN) for all cells or selected cells?', ...
-        '', 'All Cells', 'Select Cells...', 'Cancel', ...
-        'All Cells');
+if numel(unique(sce.c_cell_type_tx))>1
+    answer = questdlg('Construct gene regulatory network (GRN) for all cells or selected cells?', ...
+            '', 'All Cells', 'Select Cells...', 'Cancel', ...
+            'All Cells');
     switch answer
         case 'Cancel'
             return;
-        case 'All Cells'
-
+        case 'All Cells'    
         case 'Select Cells...'
             gui.callback_SelectCellsByClass(src, events);
             return;
         otherwise
             return;
     end
+end
 
     %     answer=questdlg('This analysis may take several hours. Continue?');
     %     if ~strcmpi(answer,'Yes'), return; end
@@ -42,7 +43,7 @@ answer = questdlg('Construct gene regulatory network (GRN) for all cells or sele
             [A] = sc_pcnetpar(X);
             gui.gui_waitbar(fw);
         else
-            [A] = sc_pcnet(X, [], [], [], true);
+            [A] = sc_pcnet(X, 3, false, false, true);
         end
     catch ME
         if useparallel

@@ -199,10 +199,14 @@ m_net = uimenu(FigureHandle, 'Text', '&Network', 'Accelerator', 'N');
 
 in_addmenu(m_net, 0, @in_Select5000Genes, 'Choose Most Informative Genes...');
 
-in_addmenu(m_net, 1, @callback_scPCNet1, 'GRN Construction - PC Regression (w/o subsampling) [PMID:33336197] 🐢...');
-in_addmenu(m_net, 0, @callback_scTenifoldNet1, 'GRN Construction - PC Regression (w/ subsampling) [PMID:33336197] 🐢🐢 ...');
-in_addmenu(m_net, 1, @callback_scTenifoldNet2lite, 'GRN Comparison - scTenifoldNet (w/o subsampling) [PMID:33336197] 🐢🐢 ...');
-in_addmenu(m_net, 0, @callback_scTenifoldNet2, 'GRN Comparison - scTenifoldNet (w/ subsampling) [PMID:33336197] 🐢🐢🐢 ...');
+in_addmenu(m_net, 1, {@in_scTenifoldNet,1}, 'Construct GRN using PC Regression [PMID:33336197] 🐢...');
+%in_addmenu(m_net, 1, @callback_scPCNet1, 'GRN Construction - PC Regression (w/o subsampling) [PMID:33336197] 🐢...');
+%in_addmenu(m_net, 0, @callback_scTenifoldNet1, 'GRN Construction - PC Regression (w/ subsampling) [PMID:33336197] 🐢🐢 ...');
+in_addmenu(m_net, 0, {@in_scTenifoldNet,2}, 'Construct & Compare GRNs (scTenifoldNet Analysis) [PMID:33336197] 🐢...');
+
+%in_addmenu(m_net, 1, @callback_scTenifoldNet2lite, 'GRN Comparison - scTenifoldNet (w/o subsampling) [PMID:33336197] 🐢🐢 ...');
+%in_addmenu(m_net, 0, @callback_scTenifoldNet2, 'GRN Comparison - scTenifoldNet (w/ subsampling) [PMID:33336197] 🐢🐢🐢 ...');
+
 in_addmenu(m_net, 1, @callback_scTenifoldKnk1, 'Virtual Gene KO - scTenifoldKnk [PMID:35510185] 🐢🐢 ...');
 in_addmenu(m_net, 0, @gui.callback_VirtualKOGenKI, 'Virtual Gene KO - GenKI [PMID:37246643] (Python Required) 🐢🐢 ...');
 in_addmenu(m_net, 1, @callback_scTenifoldXct, 'Cell-Cell Interactions (CCIs) - scTenifoldXct [PMID:36787742] 🐢🐢 ...');
@@ -766,8 +770,7 @@ end
 
     function in_Select5000Genes(src, ~)
         oldm = sce.NumGenes;
-        [requirerefresh] = ...
-            gui.callback_Select5000Genes(src);
+        [requirerefresh] = gui.callback_Select5000Genes(src);
         sce = guidata(FigureHandle);
         if requirerefresh
             in_RefreshAll(src, 1, true);
@@ -1430,6 +1433,38 @@ end
         end
         [c, cL] = grp2idx(sce.c);
         in_RefreshAll(src, 1, true, true);
+    end
+
+    % function in_scPCNet(src,events)
+    %     answer=questdlg('Subsample cells?','','Yes 🐢','No 🐇','Cancel','No 🐇');
+    %     switch answer
+    %         case 'No 🐇'
+    %             gui.callback_scPCNet1(src,events);
+    %         case 'Yes 🐢'
+    %             gui.callback_scTenifoldNet1(src,events);
+    %     end
+    % end
+
+    function in_scTenifoldNet(src,events,methodtag)
+        if numel(unique(sce.c_cell_type_tx))>1
+            answer=questdlg('This analysis is cell type-specific; however, current SCE contains multiple cell types. Continue?');
+            if ~strcmp(answer,'Yes'), return; end
+        end
+        answer=questdlg('Subsample cells?','','Yes 🐢','No 🐇','Cancel','No 🐇');
+        switch answer
+            case 'No 🐇'
+                if methodtag==1
+                    gui.callback_scPCNet1(src,events);
+                elseif methodtag==2
+                    gui.callback_scTenifoldNet2lite(src,events);
+                end
+            case 'Yes 🐢'
+                if methodtag==1
+                    gui.callback_scTenifoldNet1(src,events);
+                elseif methodtag==2
+                    gui.callback_scTenifoldNet2(src,events);
+                end
+        end
     end
 
 
