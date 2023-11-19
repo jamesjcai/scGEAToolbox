@@ -1,9 +1,40 @@
 function [setmatrx, setnames, setgenes] = e_getgenesets(option)
 
-if nargin<1, option = 'TF'; end
+if nargin<1, option = 1; end
 
 switch option
-    case {'TF',1}
+    case {1,'MSIGDB'}
+        % [Col]=pkg.e_getmsigdbset;
+        [~, ~, Col, ctag] = gui.i_selectMSigDBGeneSet('human',true);
+
+        pw1 = fileparts(mfilename('fullpath'));
+        isloaded=false;
+        try
+            dbfile = fullfile(pw1, '..', 'resources', ...
+                sprintf('msigdb_%s.mat',ctag));
+            load(dbfile,'setmatrx','setnames','setgenes');
+            isloaded=true;
+        catch ME
+            warning(ME.message);            
+        end
+
+        if ~isloaded
+            setnames = string(fields(Col));
+            glist=[];
+            for k=1:length(setnames)  
+                glist=[glist;Col.(setnames{k}).geneSymbols];
+            end
+            glist=unique(glist);
+            setgenes=glist(strlength(glist)>0);
+            setmatrx=false(length(setnames),length(setgenes));
+            for k=1:length(setnames)
+                tgsPos = string(Col.(setnames(k)).geneSymbols);
+                setmatrx(k,:)=ismember(setgenes,tgsPos);
+            end
+            % save(sprintf('msigdb_%s',ctag),'setmatrx','setnames','setgenes');
+        end
+   
+    case {'TF',2}
         pw1 = fileparts(mfilename('fullpath'));
         fname = fullfile(pw1, '..','resources', 'DoRothEA_TF_Target_DB', 'dorothea_hs.mat');
         load(fname, 'T');
@@ -16,20 +47,6 @@ switch option
         setmatrx=logical(t);
         setnames=string(tflist);
         setgenes=string(gnlist);
-    case {2,'GSEA'}
-        [~, ~, Col] = gui.i_selectMSigDBGeneSet('human',true);
-        setnames = string(fields(Col));
-        glist=[];
-        for k=1:length(setnames)  
-            glist=[glist;Col.(setnames{k}).geneSymbols];
-        end
-        glist=unique(glist);
-        setgenes=glist(strlength(glist)>0);
-        setmatrx=false(length(setnames),length(setgenes));
-        for k=1:length(setnames)
-            tgsPos = string(Col.(setnames(k)).geneSymbols);
-            setmatrx(k,:)=ismember(setgenes,tgsPos);
-        end
     case {3,'Predefined'}
         [~, T] = pkg.e_cellscores([], [], 0);
         glist=[];
