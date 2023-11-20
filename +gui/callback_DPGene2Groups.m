@@ -33,7 +33,7 @@ end
 
 fw = gui.gui_waitbar;
 
-[gc,ix,iy]=intersect(upper(setgenes),upper(sce.g)); %,'stable');
+[~,ix,iy]=intersect(upper(setgenes),upper(sce.g)); %,'stable');
 setgenes=setgenes(ix);
 setmatrx=setmatrx(:,ix);    % s x g
 
@@ -96,54 +96,43 @@ T=T(T.p_val_adj<0.01 & T.gsetsize>=5,:);
             matlab.lang.makeValidName(string(cL1)), matlab.lang.makeValidName(string(cL2)));
         %filesaved = fullfile(outdir, outfile);
         %writetable(T, filesaved, 'FileType', 'spreadsheet');
-        [~, filesaved] = gui.i_exporttable(T, true, 'T', outfile);    
+        [~, filesaved] = gui.i_exporttable(T, true, 'T', outfile);
+
         if ~isempty(filesaved)
            waitfor(helpdlg(sprintf('Result has been saved in %s',filesaved),''));
         end
     end
 
 
-
-answer=questdlg('Plot results? You will be asked to select a folder to save figure files. Continue?','');
+answer=questdlg('Plot results?','');
 if ~strcmp(answer,'Yes'), return; end
-outdir = uigetdir;
+
+
+answer=questdlg('Where to save figure files?','','Select a Folder','Use TEMP folder','Cancel','Select a Folder');
+switch answer
+    case 'Select a Folder'
+        outdir = uigetdir;
+        if ~isfolder(outdir), return; end
+        waitfor(helpdlg(sprintf('Figure files will be saved in %s.',outdir),''));        
+    case 'Use TEMP folder'
+        outdir = tempdir;
+    case 'Cancel'
+        return;
+    otherwise
+        outdir = tempdir;
+end
 if ~isfolder(outdir), return; end
-    
 
-
-%                c=zeros(size(i1));
-%                c(i1)=1; c(i2)=2; 
-%                sce=sce.selectcells(c>0);
-
-                
-                Xt=log(1+sc_norm(sce.X));
-
+Xt=log(1+sc_norm(sce.X));
 images = {};
-
-    % answer = questdlg('Output to PowerPoint?');
-    % switch answer
-    %     case 'Yes'
-    %         needpptx = true;
-    %     case 'No'
-    %         needpptx = false;
-    %     otherwise
-    %         return;
-    % end
 
 
  fw = gui.gui_waitbar_adv;
- for k=1:size(T,1)
-     
+ success=false;
+ for k=1:size(T,1)     
      idx=T.setnames(k)==setnames;
      posg=string(setgenes(setmatrx(idx,:)));
     
-% % [y] = gui.e_cellscore(sce, posg);
-% % [i1, i2, cL1, cL2] = gui.i_select2grps(sce);
-                % gui.i_violinplot(y, thisc, ttxt, true, [], posg);
-                % xlabel('Cell group');
-                % ylabel('Cellular score');
-                
-                %figure;
         outfile1 = sprintf('dotplot_%s.png', ...
             matlab.lang.makeValidName(T.setnames(k)));
         outfile2 = sprintf('violplt_%s.png', ...
@@ -159,27 +148,48 @@ images = {};
         % assignin("base","posg",posg);
         gui.gui_waitbar_adv(fw,(k-1)./size(T,1));
 
-                %try
+                try
                     f1=gui.i_dotplot(Xt, upper(sce.g), c, cL, upper(posg), true, T.setnames(k));
-                    saveas(f1, filesaved1);
-                    images = [images, {f1}];
-                %catch ME
-                %    warning(ME.message);
-                %end
+                    saveas(f1, filesaved1);                    
+                    images = [images, {filesaved1}];
+                catch ME
+                    success=false;
+                    warning(ME.message);
+                end
                 
-                %try
+                try
                     [y] = gui.e_cellscore(sce, posg, 2, false);  % 'AddModuleScore/Seurat'
                     ttxt=T.setnames(k);
                     f2=gui.i_violinplot(y, c, ttxt, true, [], posg);
                     saveas(f2, filesaved2);
-                    images = [images, {f2}];
-                %catch ME
-                %    warning(ME.message);
-                %end                    
-
+                    images = [images, {filesaved2}];
+                catch ME
+                    success=false;
+                    warning(ME.message);
+                end
+    success=true;
  end
  gui.gui_waitbar_adv(fw);
-% if needpptx, gui.i_save2pptx(images); end
-assignin("base","images",images);
+ if success     
+     %waitfor(helpdlg(sprintf('Figure files have been saved in %s.',outdir)));
+     answer=questdlg(sprintf('Figure files have been saved in %s. Open the folder to view files?', outdir),'');
+     if strcmp(answer, 'Yes'), winopen(outdir); end
+ else
+     waitfor(helpdlg('All figure files are not saved.',''));
+ end
+
+% assignin("base","images",images);
+
+    answer = questdlg('Output to PowerPoint?','','Yes','No','Yes');
+    switch answer
+        case 'Yes'
+            needpptx = true;
+        case 'No'
+            needpptx = false;
+        otherwise
+            needpptx = false;
+    end
+if needpptx, gui.i_save2pptx(images); end
+
 end
 
