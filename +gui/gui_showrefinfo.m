@@ -181,7 +181,9 @@ case 'HVG Functional Analysis [PMID:31861624]'
 txt = 'This function applies to a homogeneous group of cells. Our results support the "variation is function" hypothesis, arguing that scEV is required for cell type-specific, higher-level system function. Thus, quantifying and characterizing scEV are of importance for our understating of normal and pathological cellular processes.';
 case 'SPIA [PMID:18990722]'
 txt = '"We describe a novel signaling pathway impact analysis (SPIA) that combines the evidence obtained from the classical enrichment analysis with a novel type of evidence, which measures the actual perturbation on a given pathway under a given condition."';
-otherwise
+    case 'DP Analysis'
+txt = 'Differential Program (DP) Analysis aims to identify gene expression programs, involving multiple functionally related genes, expressed at varying levels between conditions. These differentially expressed programs can provide biological insights into the processes affected by the conditions of interest.';
+    otherwise
 return;
 end
 

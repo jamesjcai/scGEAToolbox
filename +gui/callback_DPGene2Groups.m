@@ -4,6 +4,8 @@ function callback_DPGene2Groups(src, ~)
 FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
 
+gui.gui_showrefinfo('DP Analysis');
+
 [i1, i2, cL1, cL2] = gui.i_select2grps(sce);
 if length(i1) == 1 || length(i2) == 1, return; end
 
@@ -116,6 +118,19 @@ if ~isfolder(outdir), return; end
                 
                 Xt=log(1+sc_norm(sce.X));
 
+images = {};
+
+    % answer = questdlg('Output to PowerPoint?');
+    % switch answer
+    %     case 'Yes'
+    %         needpptx = true;
+    %     case 'No'
+    %         needpptx = false;
+    %     otherwise
+    %         return;
+    % end
+
+
  fw = gui.gui_waitbar_adv;
  for k=1:size(T,1)
      
@@ -137,16 +152,17 @@ if ~isfolder(outdir), return; end
         filesaved1 = fullfile(outdir, outfile1);
         filesaved2 = fullfile(outdir, outfile2);
 
-        assignin("base","Xt",Xt);
-        assignin("base","g",sce.g);
-        assignin("base","c",c);
-        assignin("base","cL",cL);
-        assignin("base","posg",posg);
+        % assignin("base","Xt",Xt);
+        % assignin("base","g",sce.g);
+        % assignin("base","c",c);
+        % assignin("base","cL",cL);
+        % assignin("base","posg",posg);
         gui.gui_waitbar_adv(fw,(k-1)./size(T,1));
 
                 %try
                     f1=gui.i_dotplot(Xt, upper(sce.g), c, cL, upper(posg), true, T.setnames(k));
                     saveas(f1, filesaved1);
+                    images = [images, {f1}];
                 %catch ME
                 %    warning(ME.message);
                 %end
@@ -156,13 +172,14 @@ if ~isfolder(outdir), return; end
                     ttxt=T.setnames(k);
                     f2=gui.i_violinplot(y, c, ttxt, true, [], posg);
                     saveas(f2, filesaved2);
+                    images = [images, {f2}];
                 %catch ME
                 %    warning(ME.message);
-                %end
-                    
+                %end                    
 
  end
  gui.gui_waitbar_adv(fw);
-
+% if needpptx, gui.i_save2pptx(images); end
+assignin("base","images",images);
 end
 

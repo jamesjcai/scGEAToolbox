@@ -3,7 +3,7 @@ function i_save2pptx(images, rmthem)
 
 if nargin < 2, rmthem = false; end
 import mlreportgen.ppt.*;
-try
+%try
     pw1 = fileparts(mfilename('fullpath'));
     pth = fullfile(pw1, '..', 'resources', 'myTemplate.pptx');
 
@@ -21,10 +21,10 @@ try
     close(ppt);
     gui.gui_waitbar(fw);
     rptview(ppt);
-catch ME
-    gui.gui_waitbar(fw, true);
-    errordlg(ME.message);
-end
+% catch ME
+%     gui.gui_waitbar(fw, true);
+%     errordlg(ME.message);
+% end
 
 if rmthem
     len = length(images);
