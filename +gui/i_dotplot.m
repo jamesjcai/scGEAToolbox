@@ -1,12 +1,16 @@
 %function i_dotplot(X0,X1,genelist,tgene,uselog)
-function [hFig] = i_dotplot(X, g, c, cL, tgene, uselog)
-
+function [hFig] = i_dotplot(X, g, c, cL, tgene, uselog, ttxt)
+if nargin<7, ttxt=[]; end
 DOTSIZE = 0.5;
+cL=cL(:);
 
 %g=g(end:-1:1);
 if nargin < 6, uselog = true; end
 [yes] = ismember(tgene, g);
-if ~any(yes), return; end
+if ~any(yes)
+    warning('No genes found.');
+    return; 
+end
 z = length(tgene) - sum(yes);
 if z > 0
     fprintf('%d gene(s) not in the list are excluded.\n', z);
@@ -62,6 +66,11 @@ end
 % assignin("base","vl",vl);
 % assignin("base","cL",cL);
 
+% size(GeneList)
+% size(GroupList)
+% size(AvgExpr)
+% size(PrtExpr)
+
 T = table(GeneList, GroupList, AvgExpr, PrtExpr);
 % assignin("base","T",T);
 
@@ -77,6 +86,7 @@ txgene = [" "; tgene(:)];
 %sz=randi(100,1,length(x));
 %scatter([-.5 .5],[-1 -1],[1 500],'k','filled');
 %hold on
+
 hFig = figure('Visible', 'off');
 
 dotsz = DOTSIZE;
@@ -111,6 +121,22 @@ grid on
 % hFig=gcf;
 hFig.Position(3) = hFig.Position(3) * 0.7;
 
+
+
+
+
+% drawnow;
+cb = colorbar('eastoutside');
+ax = gca;
+axposition = ax.Position;
+cb.Position(3) = cb.Position(3) * 0.5;
+cb.Position(4) = cb.Position(4) * (5 / length(tgene));
+ax.Position = axposition;
+
+ttxt=strrep(ttxt,'_','\_');
+title(ttxt);
+if nargout > 0, return; end
+
 tb = uitoolbar('Parent', hFig);
 pkg.i_addbutton2fig(tb, 'on', {@gui.i_pickmonocolor, true}, 'plotpicker-compass.gif', 'Pick new color map...');
 pkg.i_addbutton2fig(tb, 'off', @gui.i_changefontsize, 'noun_font_size_591141.gif', 'ChangeFontSize');
@@ -123,14 +149,6 @@ pkg.i_addbutton2fig(tb, 'on', @i_savetable, 'export.gif', 'Export data...');
 pkg.i_addbutton2fig(tb, 'on', @gui.i_invertcolor, 'plotpicker-comet.gif', 'Invert colors');
 pkg.i_addbutton2fig(tb, 'off', @i_resetcolor, 'plotpicker-geobubble2.gif', 'Reset color map');
 
-
-% drawnow;
-cb = colorbar('eastoutside');
-ax = gca;
-axposition = ax.Position;
-cb.Position(3) = cb.Position(3) * 0.5;
-cb.Position(4) = cb.Position(4) * (5 / length(tgene));
-ax.Position = axposition;
 
 % %set(cb, 'Position', get(gca,'position')); pause(1);
 % cb.Position = cb.Position + 1e-10;
@@ -147,6 +165,7 @@ ax.Position = axposition;
 
 movegui(hFig, 'center');
 set(hFig, 'visible', 'on');
+
 
 % "Percent Expressed"
 %     function i_changefontsize(~,~)
@@ -238,4 +257,4 @@ end
                 %         cm=colormap();
                 %         colormap(flipud(cm));
                 %     end
-            end
+end

@@ -4,6 +4,7 @@ sce = guidata(FigureHandle);
 [thisc, ~] = gui.i_select1class(sce);
 if isempty(thisc), return; end
 [c, cL] = grp2idx(thisc);
+
 [answer] = questdlg('Manually order groups?', '', ...
     'Yes', 'No', 'Cancel', 'No');
 if isempty(answer), return; end

@@ -42,7 +42,33 @@ end
 
 
 [ci, cLi] = grp2idx(thisc);
-listitems = natsort(string(cLi));
+
+[answer] = questdlg('Manually order groups?', '', ...
+    'Yes', 'No', 'Cancel', 'No');
+if isempty(answer), return; end
+switch answer
+    case 'Yes'
+        [newidx] = gui.i_selmultidlg(cLi, natsort(cLi));
+        if length(newidx) ~= length(cLi)
+            warndlg('Please select all group items.', '');
+            return;
+        end
+        cx = ci;
+        for k = 1:length(newidx)
+            ci(cx == newidx(k)) = k;
+        end
+        cLi = cLi(newidx);
+    case 'No'
+
+    case 'Cancel'
+        return;
+    otherwise
+        return;
+end
+
+
+
+listitems = string(cLi);
 n = length(listitems);
 if n < 2
     errordlg('Need at least two groups.');
