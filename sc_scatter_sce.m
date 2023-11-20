@@ -240,14 +240,14 @@ m_exp = uimenu(FigureHandle, 'Text', 'Ex&perimental', 'Accelerator', 'p');
 %i_addmenu(m_exp,0,@callback_ShowPseudoTimeGenes,'Show Genes with Expression Varies with Pseudotime...');
 %i_addmenu(m_exp,0,@callback_DetectCellularCrosstalk,'Ligand-Receptor Mediated Intercellular Crosstalk...');
 %i_addmenu(m_exp,0,@AnnotateSubTypes,'Assign Subtypes of Cells (Neurons or T Cells)...');
-in_addmenu(m_exp, 0, @gui.callback_SelectCellsByMarker, 'Extract Cells by Marker(+/-) Expression...');
-in_addmenu(m_exp, 0, @in_MergeSubCellTypes, 'Merge Subclusters of Same Cell Type');
+in_addmenu(m_exp, 0, @gui.callback_SelectCellsByMarker, 'Extract Cells by Marker (+/-) Expression...');
+in_addmenu(m_exp, 0, @in_MergeSubCellTypes, 'Merge Subclusters of the Same Cell Type');
 %i_addmenu(m_exp,0,@callback_TwoGeneCooccurrenceTest,'Two-Gene Cooccurrence Test...');
 %i_addmenu(m_exp,0,@AnnotateSubGroup,'Annotate Cell Subgroups...');
-in_addmenu(m_exp, 1, @in_WorkonSelectedGenes, 'Select Top n HVGs to Work on...');
+in_addmenu(m_exp, 1, @in_WorkonSelectedGenes, 'Select Top n  Highly Variable Genes (HVGs) to Work on...');
 in_addmenu(m_exp, 0, @in_SubsampleCells, 'Subsample 50% Cells to Work on...');
-in_addmenu(m_exp, 1, @gui.callback_DEGene2GroupsBatch, 'DE Analysis in Batch Mode...');
-in_addmenu(m_exp, 1, @gui.callback_DPGene2Groups, 'Differential Program (DP) Analysis...');
+in_addmenu(m_exp, 1, @gui.callback_DEGene2GroupsBatch, 'Differential Expression (DE) Analysis in Batch Mode...');
+in_addmenu(m_exp, 0, @gui.callback_DPGene2Groups, 'Differential Program (DP) Analysis...');
 %i_addmenu(m_exp,0,@ShowCellStemScatter,"Stem Scatter Feature Plot...");
 %i_addmenu(m_exp,1,@gui.callback_Violinplot,'Gene Violin Plot...');
 %i_addmenu(m_exp,0,@gui.callback_DrawDotplot,'Gene Dot Plot...');
@@ -255,9 +255,9 @@ in_addmenu(m_exp, 1, @gui.callback_DPGene2Groups, 'Differential Program (DP) Ana
 
 in_addmenu(m_exp, 1, @gui.callback_CalculateGeneStats, 'Calculate Gene Expression Statistics...');
 in_addmenu(m_exp, 0, @gui.callback_CellCycleLibrarySize, 'Library Size of Cell Cycle Phases...');
-in_addmenu(m_exp, 0, @gui.callback_CellCycleAssignment, 'Cell Cycle Phase Assignment...');
-in_addmenu(m_exp, 0, @gui.callback_ShowHgBGeneExpression, 'Show HgB-genes Expression...');
-in_addmenu(m_exp, 0, @gui.callback_ShowMtGeneExpression, 'Show Mt-genes Expression...');
+in_addmenu(m_exp, 0, @gui.callback_CellCycleAssignment, 'Assign Cell Cycle Phase...');
+in_addmenu(m_exp, 0, @gui.callback_ShowHgBGeneExpression, 'Show Hemoglobin (HgB) Genes Expression...');
+in_addmenu(m_exp, 0, @gui.callback_ShowMtGeneExpression, 'Show Mitochondrial (Mt-) Genes Expression...');
 %i_addmenu(m_exp,0,@gui.callback_TCellExhaustionScores,'T Cell Exhaustion Score...');
 
 in_addmenu(m_exp, 1, {@in_DetermineCellTypeClustersGeneral, false}, 'Annotate Cell Type Using Customized Markers...');
