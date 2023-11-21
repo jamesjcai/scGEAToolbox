@@ -29,7 +29,10 @@ end
 %     'ListSize',[200,300]);
 % if tf1~=1, return; end
 
-[setmatrx, setnames, setgenes] = pkg.e_getgenesets; %(indx1);
+species = gui.i_selectspecies(2);
+if isempty(species), return; end
+
+[setmatrx, setnames, setgenes] = pkg.e_getgenesets(1,species); %(indx1);
 
 fw = gui.gui_waitbar;
 

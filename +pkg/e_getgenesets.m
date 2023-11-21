@@ -1,11 +1,11 @@
-function [setmatrx, setnames, setgenes] = e_getgenesets(option)
-
-if nargin<1, option = 1; end
+function [setmatrx, setnames, setgenes] = e_getgenesets(option,species)
+if nargin<2, species='human'; end
+if nargin<1 || isempty(option), option = 1; end
 
 switch option
     case {1,'MSIGDB'}
         % [Col]=pkg.e_getmsigdbset;
-        [~, ~, Col, ctag] = gui.i_selectMSigDBGeneSet('human',true);
+        [~, ~, Col, ctag] = gui.i_selectMSigDBGeneSet(species,true);
 
         pw1 = fileparts(mfilename('fullpath'));
         isloaded=false;
