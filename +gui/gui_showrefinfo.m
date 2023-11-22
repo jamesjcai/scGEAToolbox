@@ -1,18 +1,19 @@
-function [txt] = gui_showrefinfo(reftarget)
-
-% pw1 = fileparts(mfilename('fullpath'));
-% fname = fullfile(pw1, '..','resources','refinfo.txt');
-% fid=fopen(fname,'r');
-% T=textscan(fid,'%s%s','Delimiter','\t');
-% fclose(fid);
-% reftag=string(T{:,1});
-% 
-% idx=find(reftarget==reftag);
-% if ~isempty(idx)
-%     txt=T{idx,2};
-% end
+function [txt,T] = gui_showrefinfo(reftarget)
 
 txt = [];
+pw1 = fileparts(mfilename('fullpath'));
+fname = fullfile(pw1, '..','resources','refinfo.txt');
+fid=fopen(fname,'r');
+T=textscan(fid,'%s%s','Delimiter','\t');
+fclose(fid);
+reftag=string(T{:,1});
+
+idx=find(reftarget==reftag);
+if ~isempty(idx)
+    txt=T{:,2}{idx};
+end
+
+%{
 switch reftarget
     case 'DE in Batch Mode'
         txt='This function iterates all cell types. For each cell type, DE analysis based on Wilcoxon rank-sum test will be performed to compare between two selected cell groups (e.g., WT and KO). The results will be saved in Excel files in a folder provided.';
@@ -198,6 +199,7 @@ txt = 'Differential Program (DP) Analysis aims to identify gene expression progr
     otherwise
 return;
 end
+%}
 
 if ~isempty(txt)
     fprintf('%s\n%s\n', reftarget, txt);
