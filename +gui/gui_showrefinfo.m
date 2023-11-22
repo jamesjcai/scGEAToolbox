@@ -1,5 +1,12 @@
 function [txt] = gui_showrefinfo(reftag)
 
+% pw1 = fileparts(mfilename('fullpath'));
+% fname = fullfile(pw1, '..','resources','refinfo.txt');
+% fid=fopen(fname,'r');
+% T=textscan(fid,'%s%s','Delimiter','\t');
+% fclose(fid);
+% string(T{:,1})
+
 txt = [];
 switch reftag
     case 'DE in Batch Mode'
