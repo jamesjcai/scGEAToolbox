@@ -1,14 +1,19 @@
-function [txt] = gui_showrefinfo(reftag)
+function [txt] = gui_showrefinfo(reftarget)
 
 % pw1 = fileparts(mfilename('fullpath'));
 % fname = fullfile(pw1, '..','resources','refinfo.txt');
 % fid=fopen(fname,'r');
 % T=textscan(fid,'%s%s','Delimiter','\t');
 % fclose(fid);
-% string(T{:,1})
+% reftag=string(T{:,1});
+% 
+% idx=find(reftarget==reftag);
+% if ~isempty(idx)
+%     txt=T{idx,2};
+% end
 
 txt = [];
-switch reftag
+switch reftarget
     case 'DE in Batch Mode'
         txt='This function iterates all cell types. For each cell type, DE analysis based on Wilcoxon rank-sum test will be performed to compare between two selected cell groups (e.g., WT and KO). The results will be saved in Excel files in a folder provided.';
     case 'Geometric Sketching [PMID:31176620]'
@@ -195,6 +200,6 @@ return;
 end
 
 if ~isempty(txt)
-    fprintf('%s\n%s\n', reftag, txt);
-    uiwait(helpdlg(txt, reftag));
+    fprintf('%s\n%s\n', reftarget, txt);
+    uiwait(helpdlg(txt, reftarget));
 end
