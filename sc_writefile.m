@@ -1,9 +1,9 @@
-function sc_writefile(filename, X, genelist, delim)
+function sc_writefile(filename, X, g, delim)
 if nargin < 4
     delim = '\t';
 end
 t = table();
-t.genes = string(genelist(:));
+t.genes = string(g(:));
 t = [t, array2table(X)];
 %[file,path] = uiputfile('data_1.txt');
 %if file~=0
