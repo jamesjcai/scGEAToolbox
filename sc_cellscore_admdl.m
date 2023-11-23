@@ -37,9 +37,9 @@ end
 
 
 X = sc_norm(X);
-disp('Library-size normalization...done.')
+%disp('Library-size normalization...done.')
 X = log(X+1);
-disp('Log(x+1) transformation...done.')
+%disp('Log(x+1) transformation...done.')
 
 
 %idx=matches(genelist, tgsPos, 'IgnoreCase',true);

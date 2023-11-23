@@ -140,7 +140,8 @@ images = {};
 
  fw = gui.gui_waitbar_adv;
  success=false;
- for k=1:size(T,1)
+ for kk=1:numel(idxneedplot) % size(T,1)
+     k=idxneedplot(kk);
      if ~ismember(k,idxneedplot), continue; end
      idx=T.setnames(k)==setnames;
      posg=string(setgenes(setmatrx(idx,:)));
@@ -158,17 +159,18 @@ images = {};
         % assignin("base","c",c);
         % assignin("base","cL",cL);
         % assignin("base","posg",posg);
-        gui.gui_waitbar_adv(fw,(k-1)./size(T,1));
-                
+        
+        % gui.gui_waitbar_adv(fw,(k-1)./size(T,1));
+        gui.gui_waitbar_adv(fw,(kk-1)./numel(idxneedplot));
+        
+
                 suc1=false;
                 try
-                    f1=gui.i_dotplot(Xt, upper(sce.g), c, cL, upper(posg), true, T.setnames(k));
+                    f1 = gui.i_dotplot(Xt, upper(sce.g), c, cL, upper(posg), true, T.setnames(k));
                     saveas(f1, filesaved1);                    
                     images = [images, {filesaved1}];
                     suc1=true;
-
                 catch ME
-                    %success=false;
                     warning(ME.message);
                 end
                 
@@ -176,7 +178,14 @@ images = {};
                 try
                     [y] = gui.e_cellscore(sce, posg, 2, false);  % 'AddModuleScore/Seurat'
                     ttxt=T.setnames(k);
-                    f2=gui.i_violinplot(y, c, ttxt, true, cL, posg);
+
+
+        % assignin("base","y",y);
+        % assignin("base","c",c);
+        % assignin("base","cL",cL);
+        % assignin("base","posg",posg);
+
+                    f2 = gui.i_violinplot(y, cL(c), ttxt, true, [], posg);
                     saveas(f2, filesaved2);
                     images = [images, {filesaved2}];
                     suc2=true;
@@ -188,13 +197,7 @@ images = {};
     success=suc1&suc2;
  end
  gui.gui_waitbar_adv(fw);
- if success
-     if ~strcmp(answer,'Use TEMP Folder')
-         %waitfor(helpdlg(sprintf('Figure files have been saved in %s.',outdir)));
-         answer=questdlg(sprintf('Figure files have been saved in %s. Open the folder to view files?', outdir),'');
-         if strcmp(answer, 'Yes'), winopen(outdir); end
-     end
- else
+ if ~success
      waitfor(helpdlg('All figure files are not saved.',''));
  end
 
@@ -209,7 +212,13 @@ images = {};
         otherwise
             needpptx = false;
     end
-if needpptx, gui.i_save2pptx(images); end
 
+    if needpptx
+        gui.i_save2pptx(images); 
+    else
+        if success    
+            answer = questdlg(sprintf('Figure files have been saved in %s. Open the folder to view files?', outdir),'');
+            if strcmp(answer, 'Yes'), winopen(outdir); end
+        end
+    end
 end
-
