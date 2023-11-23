@@ -20,19 +20,26 @@ if ~all(c>0)
 end
 
 
-% selitems={'TF Targets Expression',...    
-%     'MSigDB Signature',...
-%     'Predefined Signature'};
-% [indx1,tf1]=listdlg('PromptString',...
-%     'Select a metric for comparison.',...
-%     'SelectionMode','single','ListString',selitems, ...
-%     'ListSize',[200,300]);
-% if tf1~=1, return; end
+selitems={'MSigDB Molecular Signatures',...
+          'DoRothEA TF Targets Expression',...
+        'Predefined Gene Collections'};
+    [indx1,tf1]=listdlg('PromptString',...
+        'Select a metric for comparison.',...
+        'SelectionMode','single','ListString',selitems, ...
+        'ListSize',[200,300]);
+    if tf1~=1, return; end
 
-species = gui.i_selectspecies(2);
-if isempty(species), return; end
+    if indx1==1
+        species = gui.i_selectspecies(2);
+        if isempty(species), return; end
+    else
+        species='human';
+    end
 
-[setmatrx, setnames, setgenes] = pkg.e_getgenesets(1,species); %(indx1);
+[setmatrx, setnames, setgenes] = pkg.e_getgenesets(indx1,species); %(indx1);
+if isempty(setmatrx) || isempty(setnames) || isempty(setgenes) 
+    return; 
+end
 
 fw = gui.gui_waitbar;
 
