@@ -1,14 +1,8 @@
-function [T] = sc_dpg(X, Y, g, setmatrx, setnames, setgenes)
-if nargin<6, setgenes=[]; end
-if nargin<5, setnames=[]; end
-if nargin<4, setmatrx=[]; end
-
+function [T] = sc_dpg(X, Y, g)
 
 %X = log(1+sc_norm(X));
-if isempty(setmatrx)
-    [setmatrx, setnames, setgenes] = pkg.e_getgenesets;
-end
 
+[setmatrx, setnames, setgenes] = pkg.e_getgenesets;
 [~,ix,iy]=intersect(upper(setgenes),upper(g));
 
 setgenes=setgenes(ix);
@@ -23,17 +17,19 @@ Zy = setmatrx*Y;               % s x c
 
 gsetsize = sum(setmatrx,2);   % gene number per set
 
-p_val = ones(size(Z,1),1);
-avg_log2FC = nan(size(Z,1),1);
-v1 = nan(size(Z,1),1);
-v2 = nan(size(Z,1),1);
-n1 = nan(size(Z,1),1);
-n2 = nan(size(Z,1),1);
-m1 = nan(size(Z,1),1);
-m2 = nan(size(Z,1),1);
+n=size(Zx,1);
+
+p_val = ones(n,1);
+avg_log2FC = nan(n,1);
+v1 = nan(n,1);
+v2 = nan(n,1);
+n1 = nan(n,1);
+n2 = nan(n,1);
+m1 = nan(n,1);
+m2 = nan(n,1);
 
 
-for k=1:size(Z,1)
+for k=1:n
     if any(setmatrx(k,:))
     a=Zx(k,:);
     b=Zy(k,:);
