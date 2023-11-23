@@ -5,7 +5,7 @@ if nargin < 2, colnoly = false; end
 glist = [];
 setname = [];
 Col = [];
-ctag=[];
+ctag = [];
 
 switch lower(species)
     case {'human', 'hs'}
