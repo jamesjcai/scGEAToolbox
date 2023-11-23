@@ -167,6 +167,8 @@ in_addbuttonpush(0, 1, @gui.callback_DEGene2Groups, "plotpicker-boxplot.gif", "D
 in_addbuttonpush(0, 0, @gui.callback_DPGene2Groups, "plotpicker_noisepsd.gif", "Differential program (DP) analysis)");
 in_addbuttonpush(0, 0, @gui.callback_EnrichrHVGs, "plotpicker-andrewsplot.gif", "Functional enrichment analysis with HVGs");
 
+% fullfile(matlabroot,'toolbox','matlab','icons','HDF_grid.gif')
+
 in_addbuttonpush(0, 1, @gui.callback_BuildGeneNetwork, "noun_Network_691907.gif", "Build gene regulatory network");
 in_addbuttonpush(0, 0, @gui.callback_CompareGeneNetwork, "noun_Deep_Learning_2424485.gif", "Compare two scGRNs");
 in_addbuttonpush(0, 1, {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
@@ -249,8 +251,6 @@ in_addmenu(m_exp, 0, @in_MergeSubCellTypes, 'Merge Subclusters of the Same Cell 
 in_addmenu(m_exp, 1, @in_WorkonSelectedGenes, 'Select Top n  Highly Variable Genes (HVGs) to Work on...');
 in_addmenu(m_exp, 0, @in_SubsampleCells, 'Subsample 50% Cells to Work on...');
 in_addmenu(m_exp, 1, @gui.callback_DEGene2GroupsBatch, 'Differential Expression (DE) Analysis in Batch Mode...');
-%in_addmenu(m_exp, 0, @gui.callback_DPGene2Groups, 'Differential Program (DP) Analysis...');
-%plotpicker_noisepsd
 
 %i_addmenu(m_exp,0,@ShowCellStemScatter,"Stem Scatter Feature Plot...");
 %i_addmenu(m_exp,1,@gui.callback_Violinplot,'Gene Violin Plot...');
@@ -444,7 +444,13 @@ end
             [img, map] = imread(fullfile(mfolder, 'resources', imgFil));
             ptImage = ind2rgb(img, map);
         catch
-            ptImage = rand(16, 16, 3);
+            try
+                [img, map] = imread(fullfile(matlabroot,'toolbox', ...
+                    'matlab','icons', imgFil));
+                 ptImage = ind2rgb(img, map);
+            catch
+                ptImage = rand(16, 16, 3);
+            end
         end
     end
 
