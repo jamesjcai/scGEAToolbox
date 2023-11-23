@@ -63,22 +63,23 @@ if ~strcmp(answer,'Yes'), return; end
 % if strcmp(answer,'Yes'), rungsea = true; end
 
 
-selitems={'MSigDB Molecular Signatures',...
-          'DoRothEA TF Targets Expression',...
-        'Predefined Gene Collections'};
-    [indx1,tf1]=listdlg('PromptString',...
-        'Select a metric for comparison.',...
-        'SelectionMode','single','ListString',selitems, ...
-        'ListSize',[200,300]);
-    if tf1~=1, return; end
-
-    if indx1==1
-        species = gui.i_selectspecies(2);
-        if isempty(species), return; end
-    else
-        species='human';
-    end
-
+% selitems={'MSigDB Molecular Signatures',...
+%           'DoRothEA TF Targets Expression',...
+%         'Predefined Gene Collections'};
+%     [indx1,tf1]=listdlg('PromptString',...
+%         'Select a metric for comparison.',...
+%         'SelectionMode','single','ListString',selitems, ...
+%         'ListSize',[200,300]);
+%     if tf1~=1, return; end
+% 
+%     if indx1==1
+%         species = gui.i_selectspecies(2);
+%         if isempty(species), return; end
+%     else
+%         species='human';
+%     end
+[indx1,species]=gui.i_selgenecollection;
+if isempty(indx1), return; end
 [setmatrx, setnames, setgenes] = pkg.e_getgenesets(indx1,species); %(indx1);
 if isempty(setmatrx) || isempty(setnames) || isempty(setgenes) 
     return; 

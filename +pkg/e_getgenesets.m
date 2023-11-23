@@ -1,5 +1,5 @@
 function [setmatrx, setnames, setgenes] = e_getgenesets(option,species)
-if nargin<2, species='human'; end
+if nargin<2 || isempty(species), species='human'; end
 if nargin<1 || isempty(option), option = 1; end
 
 setmatrx=[];
