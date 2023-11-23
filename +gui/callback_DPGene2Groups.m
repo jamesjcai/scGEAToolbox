@@ -36,7 +36,8 @@ if isempty(species), return; end
 
 fw = gui.gui_waitbar;
 
-[~,ix,iy]=intersect(upper(setgenes),upper(sce.g)); %,'stable');
+[~,ix,iy]=intersect(upper(setgenes), ...
+                    upper(sce.g)); %,'stable');
 setgenes=setgenes(ix);
 setmatrx=setmatrx(:,ix);    % s x g
 
@@ -44,17 +45,17 @@ X=sce.X(iy,:);              % g x c
 sce.X=X;
 sce.g=sce.g(iy);
 
-Z=setmatrx*X;               % s x c
-gsetsize=sum(setmatrx,2);   % gene number per set
+Z = setmatrx*X;               % s x c
+gsetsize = sum(setmatrx,2);   % gene number per set
 
-p_val=ones(size(Z,1),1);
-avg_log2FC=nan(size(Z,1),1);
-v1=nan(size(Z,1),1);
-v2=nan(size(Z,1),1);
-n1=nan(size(Z,1),1);
-n2=nan(size(Z,1),1);
-m1=nan(size(Z,1),1);
-m2=nan(size(Z,1),1);
+p_val = ones(size(Z,1),1);
+avg_log2FC = nan(size(Z,1),1);
+v1 = nan(size(Z,1),1);
+v2 = nan(size(Z,1),1);
+n1 = nan(size(Z,1),1);
+n2 = nan(size(Z,1),1);
+m1 = nan(size(Z,1),1);
+m2 = nan(size(Z,1),1);
 
 %warning off
 for k=1:size(Z,1)
@@ -106,18 +107,24 @@ T=T(T.p_val_adj<0.01 & T.gsetsize>=5,:);
         end
     end
 
+idxneedplot=[];
+answer=questdlg('Select gene sets and plot results?','');
+if ~strcmp(answer,'Yes')
+    return;
+else
+    [idxneedplot] = gui.i_selmultidlg(T.setnames);
+end
+if isempty(idxneedplot), return; end
 
-answer=questdlg('Plot results?','');
-if ~strcmp(answer,'Yes'), return; end
 
-
-answer=questdlg('Where to save figure files?','','Select a Folder','Use TEMP folder','Cancel','Select a Folder');
+answer=questdlg('Where to save figure files?','','Use TEMP Folder', ...
+    'Select a Folder','Cancel','Use TEMP Folder');
 switch answer
     case 'Select a Folder'
         outdir = uigetdir;
         if ~isfolder(outdir), return; end
         waitfor(helpdlg(sprintf('Figure files will be saved in %s.',outdir),''));        
-    case 'Use TEMP folder'
+    case 'Use TEMP Folder'
         outdir = tempdir;
     case 'Cancel'
         return;
@@ -130,9 +137,11 @@ Xt=log(1+sc_norm(sce.X));
 images = {};
 
 
+
  fw = gui.gui_waitbar_adv;
  success=false;
- for k=1:size(T,1)     
+ for k=1:size(T,1)
+     if ~ismember(k,idxneedplot), continue; end
      idx=T.setnames(k)==setnames;
      posg=string(setgenes(setmatrx(idx,:)));
     
@@ -150,33 +159,41 @@ images = {};
         % assignin("base","cL",cL);
         % assignin("base","posg",posg);
         gui.gui_waitbar_adv(fw,(k-1)./size(T,1));
-
+                
+                suc1=false;
                 try
                     f1=gui.i_dotplot(Xt, upper(sce.g), c, cL, upper(posg), true, T.setnames(k));
                     saveas(f1, filesaved1);                    
                     images = [images, {filesaved1}];
+                    suc1=true;
+
                 catch ME
-                    success=false;
+                    %success=false;
                     warning(ME.message);
                 end
                 
+                suc2=false;
                 try
                     [y] = gui.e_cellscore(sce, posg, 2, false);  % 'AddModuleScore/Seurat'
                     ttxt=T.setnames(k);
-                    f2=gui.i_violinplot(y, c, ttxt, true, [], posg);
+                    f2=gui.i_violinplot(y, c, ttxt, true, cL, posg);
                     saveas(f2, filesaved2);
                     images = [images, {filesaved2}];
+                    suc2=true;
                 catch ME
-                    success=false;
+                    %success=false;
                     warning(ME.message);
                 end
-    success=true;
+
+    success=suc1&suc2;
  end
  gui.gui_waitbar_adv(fw);
- if success     
-     %waitfor(helpdlg(sprintf('Figure files have been saved in %s.',outdir)));
-     answer=questdlg(sprintf('Figure files have been saved in %s. Open the folder to view files?', outdir),'');
-     if strcmp(answer, 'Yes'), winopen(outdir); end
+ if success
+     if ~strcmp(answer,'Use TEMP Folder')
+         %waitfor(helpdlg(sprintf('Figure files have been saved in %s.',outdir)));
+         answer=questdlg(sprintf('Figure files have been saved in %s. Open the folder to view files?', outdir),'');
+         if strcmp(answer, 'Yes'), winopen(outdir); end
+     end
  else
      waitfor(helpdlg('All figure files are not saved.',''));
  end
