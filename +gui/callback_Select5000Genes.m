@@ -16,7 +16,7 @@ prompt = {'Remove mt-genes?', ...
 dlgtitle = '';
 dims = [1, 65];
 
-definput = {'Y', 'Y', '0.075',num2str(min([sce.NumGenes,5000]))};
+definput = {'Yes', 'Yes', '0.075',num2str(min([sce.NumGenes,5000]))};
 answer = inputdlg(prompt, dlgtitle, dims, definput);
 if isempty(answer)
     requirerefresh = false;
@@ -25,12 +25,12 @@ end
 
 fw = gui.gui_waitbar;
 
-if strcmpi(answer{1},'Y')
+if strcmpi(answer{1},'Yes') || strcmpi(answer{1},'Y')
     sce = sce.rmmtgenes;
     disp('Mt-genes removed.');
     requirerefresh = true;
 end
-if strcmpi(answer{2},'Y')
+if strcmpi(answer{2},'Yes') || strcmpi(answer{2},'Y')
     sce = sce.rmribosomalgenes;
     disp('Ribosomal genes removed.');
     requirerefresh = true;
