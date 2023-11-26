@@ -15,15 +15,15 @@ try
         d=d{1}{1};
         fclose(fid);
         if ~strcmp(d,Col.pushed_at)
-            answer=questdlg('There is a new version of scGEAToolbox. Learn how to install?','', ...
-                'Yes','No','Ignore','Yes');
+            answer=questdlg('Minor update is available. Learn how to install it?','', ...
+                'Yes','Remind me later','Skip this update','Yes');
             switch answer
                 case 'Yes'
                     web('https://scgeatoolbox.readthedocs.io/en/latest/quick_installation.html');
                     needupdate=true;
                     return;
-                case 'No'
-                case 'Ignore'
+                case 'Remind me later'
+                case 'Skip this update'
                     fid=fopen('TIMESTAMP','w');
                     fprintf(fid,'%s\n',Col.pushed_at);
                     fclose(fid);
