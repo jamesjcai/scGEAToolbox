@@ -3,30 +3,34 @@ FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
 [thisc, ~] = gui.i_select1class(sce);
 if isempty(thisc), return; end
-[c, cL] = grp2idx(thisc);
 
-[answer] = questdlg('Manually order groups?', '', ...
-    'Yes', 'No', 'Cancel', 'No');
-if isempty(answer), return; end
-switch answer
-    case 'Yes'
-        [newidx] = gui.i_selmultidlg(cL, natsort(cL));
-        if length(newidx) ~= length(cL)
-            warndlg('Please select all group items.', '');
-            return;
-        end
-        cx = c;
-        for k = 1:length(newidx)
-            c(cx == newidx(k)) = k;
-        end
-        cL = cL(newidx);
-    case 'No'
+[c, cL, noanswer] = gui.i_reordergroups(thisc);
+if noanswer, return; end
 
-    case 'Cancel'
-        return;
-    otherwise
-        return;
-end
+% [c, cL] = grp2idx(thisc);
+% 
+% [answer] = questdlg('Manually order groups?', '', ...
+%     'Yes', 'No', 'Cancel', 'No');
+% if isempty(answer), return; end
+% switch answer
+%     case 'Yes'
+%         [newidx] = gui.i_selmultidlg(cL, natsort(cL));
+%         if length(newidx) ~= length(cL)
+%             warndlg('Please select all group items.', '');
+%             return;
+%         end
+%         cx = c;
+%         for k = 1:length(newidx)
+%             c(cx == newidx(k)) = k;
+%         end
+%         cL = cL(newidx);
+%     case 'No'
+% 
+%     case 'Cancel'
+%         return;
+%     otherwise
+%         return;
+% end
 
 [glist] = gui.i_selectngenes(sce);
 if isempty(glist)

@@ -3,7 +3,10 @@ FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
 [thisc, ~] = gui.i_select1class(sce);
 if isempty(thisc), return; end
-[c, cL] = gui.i_reordergroups(thisc);
+
+[c, cL, noanswer] = gui.i_reordergroups(thisc);
+if noanswer, return; end
+
 [glist] = gui.i_selectngenes(sce);
 if isempty(glist)
     helpdlg('No gene selected.', '');

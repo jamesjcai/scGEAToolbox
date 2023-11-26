@@ -40,31 +40,34 @@ if numel(unique(thisc)) == 1
     return;
 end
 
+[ci, cLi, noanswer] = gui.i_reordergroups(thisc);
+if noanswer, return; end
 
-[ci, cLi] = grp2idx(thisc);
 
-[answer] = questdlg('Manually order groups?', '', ...
-    'Yes', 'No', 'Cancel', 'No');
-if isempty(answer), return; end
-switch answer
-    case 'Yes'
-        [newidx] = gui.i_selmultidlg(cLi, natsort(cLi));
-        if length(newidx) ~= length(cLi)
-            warndlg('Please select all group items.', '');
-            return;
-        end
-        cx = ci;
-        for k = 1:length(newidx)
-            ci(cx == newidx(k)) = k;
-        end
-        cLi = cLi(newidx);
-    case 'No'
-
-    case 'Cancel'
-        return;
-    otherwise
-        return;
-end
+% [ci, cLi] = grp2idx(thisc);
+% 
+% [answer] = questdlg('Manually order groups?', '', ...
+%     'Yes', 'No', 'Cancel', 'No');
+% if isempty(answer), return; end
+% switch answer
+%     case 'Yes'
+%         [newidx] = gui.i_selmultidlg(cLi, natsort(cLi));
+%         if length(newidx) ~= length(cLi)
+%             warndlg('Please select all group items.', '');
+%             return;
+%         end
+%         cx = ci;
+%         for k = 1:length(newidx)
+%             ci(cx == newidx(k)) = k;
+%         end
+%         cLi = cLi(newidx);
+%     case 'No'
+% 
+%     case 'Cancel'
+%         return;
+%     otherwise
+%         return;
+% end
 
 
 

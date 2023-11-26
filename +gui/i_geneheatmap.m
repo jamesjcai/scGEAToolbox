@@ -11,7 +11,8 @@ if nargin < 3
         return;
     end
 end
-[c, cL] = gui.i_reordergroups(thisc);
+[c, cL, noanswer] = gui.i_reordergroups(thisc);
+if noanswer, return; end
 
 [y, gidx] = ismember(upper(glist), upper(sce.g));
 gidx = gidx(y);

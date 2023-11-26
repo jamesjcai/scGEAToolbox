@@ -18,11 +18,6 @@ pkg.i_violinplot(y, thisc, colorit, cLorder);
 title(strrep(ttxt, '_', '\_'));
 %ylabel(selitems{indx1});
 
-if nargout > 0
-    i_addsamplesize([],[]);
-    i_testdata([],[], y, thisc);
-    return; 
-end
 
 tb = uitoolbar(f);
 pkg.i_addbutton2fig(tb, 'off', {@i_savedata, y, thisc}, ...
@@ -45,6 +40,13 @@ pkg.i_addbutton2fig(tb, 'on', @i_viewgenenames, ...
     'HDF_point.gif', 'Show Gene Names');
 
 movegui(f, 'center');
+
+if nargout > 0
+    i_addsamplesize([],[]);
+    i_testdata([],[], y, thisc);
+    return; 
+end
+
 set(f, 'visible', 'on');
 
 %catch ME
