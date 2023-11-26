@@ -15,7 +15,8 @@ try
         d=d{1}{1};
         fclose(fid);
         if ~strcmp(d,Col.pushed_at)
-            answer=questdlg('Minor update is available. Learn how to install it?','', ...
+
+            answer=questdlg('A minor update is now available. Learn how to install it?','', ...
                 'Yes','Remind me later','Skip this update','Yes');
             switch answer
                 case 'Yes'
