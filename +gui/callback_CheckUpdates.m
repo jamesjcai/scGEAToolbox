@@ -1,7 +1,7 @@
 function callback_CheckUpdates(~, ~)
 
 % Col = webread('https://api.github.com/repos/jamesjcai/scGEAToolbox')
-[needupdate, v1, v2] = pkg.i_vercheck;
+[needupdate, v1, v2] = pkg.i_majvercheck;
 % Check for updates.
 if needupdate
     answer = questdlg(sprintf('There is a new version of scGEAToolbox (%s vs. %s). Learn how to install?', v2, v1));

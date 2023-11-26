@@ -1,8 +1,9 @@
-function [needupdate, v1local, v2web] = i_vercheck
+function [needupdate, v1local, v2web] = i_majvercheck
+
+% major version update check
 needupdate = false;
 olddir = pwd();
 cdgea;
-
 try
     %    a=textread('info.xml','%s','delimiter','\n');
     fid = fopen('info.xml', 'r');
