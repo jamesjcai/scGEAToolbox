@@ -10,26 +10,26 @@ FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
 [axx, bxx] = view();
 
-answer = 'Multiple';
-switch answer
-    case 'Single'
-        [gsorted] = gui.i_sortgenenames(sce);
-        if isempty(gsorted), return; end
-        [indx, tf] = listdlg('PromptString', {'Select a gene:', '', ''}, ...
-            'SelectionMode', 'single', 'ListString', gsorted);
-        if tf == 1
-            [methodid] = gui.i_pickscatterstem('Scatter+Stem');
-            % methodid=2;      case 'Scatter'
-            % 'Stem'           methodid=1;
-            if isempty(methodid), return; end
-            for k = 1:length(indx)
-                gui.i_cascadefig(sce, gsorted(indx(k)), axx, bxx, k, methodid);
-            end
-        end
-    case 'Multiple'
+% answer = 'Multiple';
+% switch answer
+%     case 'Single'
+%         [gsorted] = gui.i_sortgenenames(sce);
+%         if isempty(gsorted), return; end
+%         [indx, tf] = listdlg('PromptString', {'Select a gene:', '', ''}, ...
+%             'SelectionMode', 'single', 'ListString', gsorted);
+%         if tf == 1
+%             [methodid] = gui.i_pickscatterstem('Scatter+Stem');
+%             % methodid=2;      case 'Scatter'
+%             % 'Stem'           methodid=1;
+%             if isempty(methodid), return; end
+%             for k = 1:length(indx)
+%                 gui.i_cascadefig(sce, gsorted(indx(k)), axx, bxx, k, methodid);
+%             end
+%         end
+%     case 'Multiple'
         [glist] = gui.i_selectngenes(sce);
         if isempty(glist)
-            %helpdlg('No gene selected.','');
+            helpdlg('No genes are selected or present in the dataset.','');
             return;
             %[gsorted]=gui.i_sortgenenames(sce);
             %if isempty(gsorted), return; end
@@ -60,7 +60,7 @@ switch answer
                         g = sprintf("%s & ", glist);
                         ix = sum(sce.X(i, :) > 0, 1) == length(i);
                         if ~any(ix)
-                            helpdlg('No cells expressing all selected genes.', '');
+                            helpdlg('No cells express all the selected genes.', '');
                             return;
                         end
                         x = x .* ix;
@@ -114,9 +114,9 @@ switch answer
             movegui(f, 'center');
             set(f, 'visible', 'on');
         end
-    case 'Cancel'
-        % helpdlg('Action cancelled.','');
-        return;
-end
+%     case 'Cancel'
+%         % helpdlg('Action cancelled.','');
+%         return;
+% end
 
 end
