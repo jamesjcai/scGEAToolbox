@@ -3,7 +3,7 @@ function [sce] = sc_mergesces(sces, method, keepbatchid)
 %Usage: [sce]=sc_mergesces({sce1,sce2},'intersect');
 %See also: SC_MERGEDATA
 
-if nargin < 3, keepbatchid = false; end
+if nargin < 3, keepbatchid = true; end
 if nargin < 2 || isempty(method), method = 'intersect'; end
 validMethods = ["intersect", "union"];
 method = validatestring(method, validMethods);

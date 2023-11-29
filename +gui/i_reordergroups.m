@@ -1,7 +1,9 @@
-function [c, cL, noanswer] = i_reordergroups(thisc, preorderedcL)
+function [c, cL, noanswer, newidx] = i_reordergroups(thisc, preorderedcL)
 if nargin < 2, preorderedcL = []; end
+
 noanswer = true;
 [c, cL] = grp2idx(thisc);
+newidx=1:numel(cL);
 if numel(cL) == 1
     %errordlg('Only one cell type or cluster.');
     noanswer = false;
