@@ -3,9 +3,19 @@ function callback_ShowHgBGeneExpression(src, ~)
 FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
 
-idx1 = startsWith(sce.g, 'Hba-', 'IgnoreCase', true);
-idx2 = startsWith(sce.g, 'Hbb-', 'IgnoreCase', true);
-idx3 = strcmpi(sce.g, "Alas2");
+species = gui.i_selectspecies(2);
+if isempty(species), return; end
+
+switch species
+    case 'mouse'
+        idx1 = startsWith(sce.g, 'Hba-', 'IgnoreCase', true);
+        idx2 = startsWith(sce.g, 'Hbb-', 'IgnoreCase', true);
+        idx3 = strcmpi(sce.g, "Alas2");
+    case 'human'
+        idx1 = strcmpi(sce.g, "HBA1");
+        idx2 = strcmpi(sce.g, "HBA2");
+        idx3 = strcmpi(sce.g, "HBB");
+end
 idx = idx1 | idx2 | idx3;
 
 if any(idx)
@@ -25,7 +35,7 @@ if any(idx)
     pkg.i_addbutton2fig(tb1, 'off', {@i_saveM, ci}, 'greencircleicon.gif', 'Save marker gene map...');
     % uiwait(hFig);
 else
-    warndlg('No HgB-genes found');
+    warndlg('No Hgb-genes found');
 end
 
 
@@ -37,7 +47,7 @@ end
             values = {sce.c_cell_id, ci(:)};
             export2wsdlg(labels, vars, values);
         else
-            errordlg('This function is not available for standalone application. Run scgeatool.m in MATLAB to use this function.');
-                end
-            end
-        end
+            errordlg('This function is not available for standalone application. Run scgeatool.m in MATLAB to use this function.');                
+        end            
+    end        
+end

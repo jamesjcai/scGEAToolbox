@@ -261,7 +261,7 @@ in_addmenu(m_exp, 0, @gui.callback_DPGene2GroupsBatch, 'Differential Program (DP
 in_addmenu(m_exp, 1, @gui.callback_CalculateGeneStats, 'Calculate Gene Expression Statistics...');
 in_addmenu(m_exp, 0, @gui.callback_CellCycleLibrarySize, 'Library Size of Cell Cycle Phases...');
 in_addmenu(m_exp, 0, @gui.callback_CellCycleAssignment, 'Assign Cell Cycle Phase...');
-in_addmenu(m_exp, 0, @gui.callback_ShowHgBGeneExpression, 'Show Hemoglobin (HgB) Genes Expression...');
+in_addmenu(m_exp, 0, @gui.callback_ShowHgBGeneExpression, 'Show Hemoglobin (Hgb) Genes Expression...');
 in_addmenu(m_exp, 0, @gui.callback_ShowMtGeneExpression, 'Show Mitochondrial (Mt-) Genes Expression...');
 %i_addmenu(m_exp,0,@gui.callback_TCellExhaustionScores,'T Cell Exhaustion Score...');
 
