@@ -135,7 +135,7 @@ ax.Position = axposition;
 
 ttxt=strrep(ttxt,'_','\_');
 title(ttxt);
-if nargout > 0, return; end
+
 
 tb = uitoolbar('Parent', hFig);
 pkg.i_addbutton2fig(tb, 'on', {@gui.i_pickmonocolor, true}, 'plotpicker-compass.gif', 'Pick new color map...');
@@ -164,6 +164,7 @@ pkg.i_addbutton2fig(tb, 'off', @i_resetcolor, 'plotpicker-geobubble2.gif', 'Rese
 
 
 movegui(hFig, 'center');
+if nargout > 0, return; end
 set(hFig, 'visible', 'on');
 
 

@@ -162,17 +162,17 @@ end
         else
             h.MarkerFaceAlpha = h.MarkerFaceAlpha - 0.1;
         end
-end
+    end
 
-        function HighlightGenes(~, ~)
-            %h.MarkerIndices=idx20;
-            k = gui.i_inputnumk(200, 10, 2000);
-            if isempty(k), return; end
-            idx = zeros(1, length(hvgidx));
-            idx(hvgidx(1:k)) = 1;
-            h.BrushData = idx;
-            % datatip(h, 'DataIndex', idx20);
-            %h2=scatter3(x(idx20),y(idx20),z(idx20),'rx');  % 'filled','MarkerFaceAlpha',.5);
+    function HighlightGenes(~, ~)
+        %h.MarkerIndices=idx20;
+        k = gui.i_inputnumk(200, 10, 2000);
+        if isempty(k), return; end
+        idx = zeros(1, length(hvgidx));
+        idx(hvgidx(1:k)) = 1;
+        h.BrushData = idx;
+        % datatip(h, 'DataIndex', idx20);
+        %h2=scatter3(x(idx20),y(idx20),z(idx20),'rx');  % 'filled','MarkerFaceAlpha',.5);
     end
 
             function ExportTable(~, ~)

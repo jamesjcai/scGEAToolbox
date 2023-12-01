@@ -17,6 +17,7 @@ if showdata
 
 
     pkg.i_addbutton2fig(UitoolbarHandle, 'off', @HighlightGenes, 'plotpicker-qqplot.gif', 'Highlight top HVGs');
+    pkg.i_addbutton2fig(UitoolbarHandle, 'off', @in_HighlightSelectedGenes, 'xplotpicker-qqplot.gif', 'Highlight selected genes');
     pkg.i_addbutton2fig(UitoolbarHandle, 'off', @ExportGeneNames, 'export.gif', 'Export selected HVG gene names...');
     pkg.i_addbutton2fig(UitoolbarHandle, 'off', @EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Enrichment analysis...');
     pkg.i_addbutton2fig(UitoolbarHandle, 'off', @ChangeAlphaValue, 'xplotpicker-andrewsplot.gif', 'Change MarkerFaceAlpha value');
@@ -43,8 +44,8 @@ zlabel('Dropout rate (% of zeros)');
 
 % [xData, yData, zData] = prepareSurfaceData(x,y,z);
 % xyz=[xData yData zData]';
-if dofit
 
+if dofit
     try
         [~, xyz1] = sc_splinefit(X, g);
     catch ME
@@ -62,88 +63,114 @@ if dofit
     % scatter3(xyz1(:,1),xyz1(:,2),xyz1(:,3)); %,'MarkerEdgeAlpha',.8);
 
     [~, d] = dsearchn(xyz1, [x, y, z]);
+
+    d(x>max(xyz1(:,1)))=d(x>max(xyz1(:,1)))./100;
+    d(x<min(xyz1(:,1)))=d(x<min(xyz1(:,1)))./10;
+
     [~, hvgidx] = sort(d, 'descend');
 
     %g(idx20)
 
     disp('scGEAToolbox controls for the variance-mean relationship of gene')
-        disp('expression. scGEAToolbox considers three sample statistics of each')
-        disp('gene: expression mean⁠, coefficient of variation⁠, and dropout rate⁠.')
-        disp('After normalization, it fits a spline function based on piece-wise')
-            disp('polynomials to model the relationship among the three statistics, ')
-            disp('and calculates the distance between each geneis observed statistics')
-            disp('to the fitted 3D spline surface. Genes with larger distances are ')
-            disp('ranked higher for feature selection.')
+    disp('expression. scGEAToolbox considers three sample statistics of each')
+    disp('gene: expression mean⁠, coefficient of variation⁠, and dropout rate⁠.')
+    disp('After normalization, it fits a spline function based on piece-wise')
+    disp('polynomials to model the relationship among the three statistics, ')
+    disp('and calculates the distance between each geneis observed statistics')
+    disp('to the fitted 3D spline surface. Genes with larger distances are ')
+    disp('ranked higher for feature selection.')        
+end
 
+
+    function ChangeAlphaValue(~, ~)
+        if h.MarkerFaceAlpha <= 0.05
+            h.MarkerFaceAlpha = 1;
+        else
+            h.MarkerFaceAlpha = h.MarkerFaceAlpha - 0.1;
+        end
+    end            
+
+    function HighlightGenes(~, ~)
+        %h.MarkerIndices=idx20;
+        k = gui.i_inputnumk(200, 10, 2000);
+        if isempty(k), return; end
+        idx = zeros(1, length(hvgidx));
+        idx(hvgidx(1:k)) = 1;
+        h.BrushData = idx;
+        % datatip(h, 'DataIndex', idx20);
+        %h2=scatter3(x(idx20),y(idx20),z(idx20),'rx');  % 'filled','MarkerFaceAlpha',.5);
+    end
+
+    function in_HighlightSelectedGenes(~,~)
+        
+        %Myc, Oct3/4, Sox2, Klf4
+
+        [glist] = gui.i_selectngenes(SingleCellExperiment(X,g),...
+            intersect(upper(g),["MYC", "POU5F1", "SOX2", "KLF4"]));       
+
+
+        if ~isempty(glist)            
+            [y,idx]=ismember(glist,g);
+            idx=idx(y);            
+            % idv = zeros(1, length(hvgidx));
+            % idv(idx)=1;
+            % h.BrushData = idv;
+
+            for k=1:length(idx)
+                dt = datatip(h,'DataIndex',idx(k));
             end
 
-                function ChangeAlphaValue(~, ~)
-                    if h.MarkerFaceAlpha <= 0.05
-                        h.MarkerFaceAlpha = 1;
-                    else
-                        h.MarkerFaceAlpha = h.MarkerFaceAlpha - 0.1;
-                    end
-            end
+        end
+    end
 
-                    function HighlightGenes(~, ~)
-                        %h.MarkerIndices=idx20;
-                        k = gui.i_inputnumk(200, 10, 2000);
-                        if isempty(k), return; end
-                        idx = zeros(1, length(hvgidx));
-                        idx(hvgidx(1:k)) = 1;
-                        h.BrushData = idx;
-                        % datatip(h, 'DataIndex', idx20);
-                        %h2=scatter3(x(idx20),y(idx20),z(idx20),'rx');  % 'filled','MarkerFaceAlpha',.5);
-                end
+    function ExportGeneNames(~, ~)
+        ptsSelected = logical(h.BrushData.');
+        if ~any(ptsSelected)
+            warndlg("No gene is selected.");
+            return;
+        end
+        fprintf('%d genes are selected.\n', sum(ptsSelected));
 
-                        function ExportGeneNames(~, ~)
-                            ptsSelected = logical(h.BrushData.');
-                            if ~any(ptsSelected)
-                                warndlg("No gene is selected.");
-                                return;
-                            end
-                            fprintf('%d genes are selected.\n', sum(ptsSelected));
+        labels = {'Save gene names to variable:'};
+        vars = {'g'};
+        values = {g(ptsSelected)};
+        export2wsdlg(labels, vars, values, ...
+            'Save Data to Workspace');
+    end
 
-                            labels = {'Save gene names to variable:'};
-                            vars = {'g'};
-                            values = {g(ptsSelected)};
-                            export2wsdlg(labels, vars, values, ...
-                                'Save Data to Workspace');
-                    end
+    function EnrichrHVGs(~, ~)
+        ptsSelected = logical(h.BrushData.');
+        if ~any(ptsSelected)
+            warndlg("No gene is selected.");
+            return;
+        end
+        fprintf('%d genes are selected.\n', sum(ptsSelected));
 
-                            function EnrichrHVGs(~, ~)
-                                ptsSelected = logical(h.BrushData.');
-                                if ~any(ptsSelected)
-                                    warndlg("No gene is selected.");
-                                    return;
-                                end
-                                fprintf('%d genes are selected.\n', sum(ptsSelected));
-
-                                tgenes = g(ptsSelected);
-                                answer = gui.timeoutdlg(@(x){questdlg('Which analysis?', '', ...
-                                    'Enrichr', 'GOrilla', 'Enrichr+GOrilla', 'Enrichr')}, 15);
-                                if isempty(answer), return; end
-                                switch answer
-                                    case 'Enrichr'
-                                        run.web_Enrichr(tgenes, length(tgenes));
-                                    case 'GOrilla'
-                                        run.web_GOrilla(tgenes);
-                                    case 'Enrichr+GOrilla'
-                                        run.web_Enrichr(tgenes, length(tgenes));
-                                        run.web_GOrilla(tgenes);
-                                    otherwise
-                                        return;
-                                end
-
-                        end
-
-                        end
+        tgenes = g(ptsSelected);
+        answer = gui.timeoutdlg(@(x){questdlg('Which analysis?', '', ...
+            'Enrichr', 'GOrilla', 'Enrichr+GOrilla', 'Enrichr')}, 15);
+        if isempty(answer), return; end
+        switch answer
+            case 'Enrichr'
+                run.web_Enrichr(tgenes, length(tgenes));
+            case 'GOrilla'
+                run.web_GOrilla(tgenes);
+            case 'Enrichr+GOrilla'
+                run.web_Enrichr(tgenes, length(tgenes));
+                run.web_GOrilla(tgenes);
+            otherwise
+                return;
+        end
+    end        
+end
 
 
-                        function txt = i_myupdatefcn1(~, event_obj, g)
-                            % Customizes text of data tips
-                            % pos = event_obj.Position;
-                            idx = event_obj.DataIndex;
-                            % i_plotsiglegene(idx,g);
-                            txt = {g(idx)};
-                        end
+    function txt = i_myupdatefcn1(~, event_obj, g)
+        % Customizes text of data tips
+        % pos = event_obj.Position;
+        idx = event_obj.DataIndex;
+        % i_plotsiglegene(idx,g);
+        txt = {g(idx)};
+    end
+
+

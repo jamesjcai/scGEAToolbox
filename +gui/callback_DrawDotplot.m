@@ -76,6 +76,7 @@ else
         %p(2)=0;
         p(4) = p(4) * 1.5;
         f.Position = p;
+        set(f, 'visible', 'on');
     catch ME
         if exist('f', 'var') && ishandle(f)
             close(f);

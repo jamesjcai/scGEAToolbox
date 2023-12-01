@@ -68,7 +68,12 @@ elseif length(c) == 1
         end
         disp("Found H5 file.");
         f1 = i_setupfile2(c1);
-        [X, g] = sc_read10xh5file(f1);
+        if strcmpi(f1(end-2:end), '.gz')
+            files=gunzip(f1,tempdir);
+            [X, g] = sc_read10xh5file(files{1});
+        elseif strcmpi(f1(end-2:end), '.h5')
+            [X, g] = sc_read10xh5file(f1);
+        end
     end
 end
 
