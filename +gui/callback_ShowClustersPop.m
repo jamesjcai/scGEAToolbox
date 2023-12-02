@@ -44,8 +44,6 @@ gui.gui_waitbar_adv(fw);
     if strcmpi(answer, 'Yes')
         [~, idxx] = sort(cmx, 'descend');
         SCEV=SCEV(idxx);
-        % cL=cL(idxx)
-        % newidx=newidx(idxx);
     end
 
 try
@@ -76,9 +74,6 @@ try
                     100*cmx(idxx(kk))/length(c));
                 fprintf('%s in %s\n', a, b);
                 subtitle(a);
-                %                 title(sprintf('%s\n%d cells (%.2f%%)', ...
-                %                     cL{idxx(kk)}, cmx(idxx(kk)), ...
-                %                     100 * cmx(idxx(kk)) / length(c)));
                 box on
             end
             colormap(para.oldColorMap);
@@ -107,23 +102,23 @@ end
            for ik=1:length(idx)
                 scev=SCEV{idx(ik)};
 
-                scev=scev.qcfilter;
+                % scev=scev.qcfilter;
+                % outmatfile=sprintf('%s.mat', ...
+                %     matlab.lang.makeValidName(cL2{idx(ik)}));
+                % 
+                % if ~exist(outmatfile,"file")
+                %     q=sprintf('Save file %s?',outmatfile);
+                % else
+                %     q=sprintf('Overwrite file %s?',outmatfile);
+                % end
+                % answerx=questdlg(q,'');
+                % switch answerx
+                %     case 'Yes'
+                %         save(outmatfile,"scev",'-v7.3');
+                % end
 
 
-                outmatfile=sprintf('%s.mat', ...
-                    matlab.lang.makeValidName(cL2{idx(ik)}));
-                
-                if ~exist(outmatfile,"file")
-                    q=sprintf('Save file %s?',outmatfile);
-                else
-                    q=sprintf('Overwrite file %s?',outmatfile);
-                end
-                answerx=questdlg(q,'');
-                switch answerx
-                    case 'Yes'
-                        save(outmatfile,"scev",'-v7.3');
-                end
-                % sc_scatter_sce(scev);
+                sc_scatter_sce(scev);
                 pause(0.5);
             end
         end
