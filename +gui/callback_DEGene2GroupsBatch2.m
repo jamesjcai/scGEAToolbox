@@ -1,31 +1,26 @@
-function callback_DEGene2GroupsBatch(src, ~)
+function callback_DEGene2GroupsBatch2(src, ~)
 
 
 FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
 
-%warndlg('Function is under development.','');
-%return;
 
-
-
-
-
-if length(unique(sce.c_cell_type_tx))==1
-    warndlg('Only one cell type or cell type is undetermined.','');
+if length(unique(sce.c_batch_id))==1
+    warndlg('Only one batch.','');
     return;
 end
 
-gui.gui_showrefinfo('DE in Batch Mode');
+% gui.gui_showrefinfo('DE in Batch Mode (2)');
 
-[CellTypeSorted] = pkg.e_sortcatbysize(sce.c_cell_type_tx);
-[CellTypeList] = in_selectcelltypes(CellTypeSorted);
-if isempty(CellTypeList), return; end
+[BatchIDSorted] = pkg.e_sortcatbysize(sce.c_batch_id);
+[BatchIDList] = in_selectcelltypes(BatchIDSorted);
+if isempty(BatchIDList), return; end
 
-[thisc, clable]=in_select1class(sce);
+% [thisc, clable]=in_select1class(sce);
+[thisc, clable]=gui.i_select1class(sce);
 if isempty(thisc), return; end
-if strcmp(clable,'Cell Type')
-    helpdlg('Cannot select ''Cell Type'' as grouping varialbe.');
+if strcmp(clable,'Batch ID')
+    helpdlg('Cannot select ''Batch ID'' as grouping varialbe.');
     return;
 end
 
@@ -65,11 +60,11 @@ outdir = uigetdir;
 if ~isfolder(outdir), return; end
 
 needoverwritten=false;
-for k=1:length(CellTypeList)
+for k=1:length(BatchIDList)
     outfile = sprintf('%s_vs_%s_%s.xlsx', ...
         matlab.lang.makeValidName(string(cL1)), ...
         matlab.lang.makeValidName(string(cL2)), ...
-        matlab.lang.makeValidName(string(CellTypeList{k})));
+        matlab.lang.makeValidName(string(BatchIDList{k})));
     filesaved = fullfile(outdir, outfile);
     if exist(filesaved,'file')
         needoverwritten=true;
@@ -89,16 +84,16 @@ if strcmp(answer,'Yes'), rungsea = true; end
 
 fw = gui.gui_waitbar_adv;
 
-for k=1:length(CellTypeList)
+for k=1:length(BatchIDList)
    
     gui.gui_waitbar_adv(fw, ...
-        (k-1)/length(CellTypeList), ...
-        sprintf('Processing %s ...', CellTypeList{k}));
+        (k-1)/length(BatchIDList), ...
+        sprintf('Processing %s ...', BatchIDList{k}));
 
     outfile = sprintf('%s_vs_%s_%s.xlsx', ...
         matlab.lang.makeValidName(string(cL1)), ...
         matlab.lang.makeValidName(string(cL2)), ...
-        matlab.lang.makeValidName(string(CellTypeList{k})));
+        matlab.lang.makeValidName(string(BatchIDList{k})));
     filesaved = fullfile(outdir, outfile);
     % if exist(filesaved,'file')
     %     answer=questdlg(sprintf('Overwrite existing file %s? Click No to skip.',outfile),'');
@@ -111,7 +106,7 @@ for k=1:length(CellTypeList)
     %     end
     % end
 
-    idx = sce.c_cell_type_tx == CellTypeList{k};
+    idx = sce.c_cell_type_tx == BatchIDList{k};
 
     
     T = sc_deg(sce.X(:, i1&idx), sce.X(:, i2&idx), sce.g, 1, false);
@@ -343,8 +338,8 @@ end
                     thisc = sce.c_cluster_id;
                 case 'Batch ID' % batch id
                     thisc = sce.c_batch_id;
-                %case 'Cell Type' % cell type
-                %    thisc = sce.c_cell_type_tx;
+                case 'Cell Type' % cell type
+                    thisc = sce.c_cell_type_tx;
                 case 'Cell Cycle Phase' % cell cycle
                     thisc = sce.c_cell_cycle_tx;
                 case 'Workspace Variable...'

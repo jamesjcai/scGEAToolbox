@@ -41,11 +41,11 @@ pkg.i_addbutton2fig(tb, 'on', @i_viewgenenames, ...
 
 movegui(f, 'center');
 
-% if nargout > 0
-%     i_addsamplesize([],[]);
-%     i_testdata([],[], y, thisc);
-%     return; 
-% end
+i_addsamplesize([],[]);
+i_testdata([],[], y, thisc);
+if nargout > 0
+    return; 
+end
 
 set(f, 'visible', 'on');
 

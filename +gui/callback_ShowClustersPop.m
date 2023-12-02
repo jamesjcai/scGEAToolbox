@@ -40,11 +40,11 @@ end
 
 gui.gui_waitbar_adv(fw);
 
-    answer = questdlg('Sort by size of cell groups?');
-    if strcmpi(answer, 'Yes')
-        [~, idxx] = sort(cmx, 'descend');
-        SCEV=SCEV(idxx);
-    end
+answer = questdlg('Sort by size of cell groups?');
+if strcmpi(answer, 'Yes')
+    [~, idxx] = sort(cmx, 'descend');
+    SCEV=SCEV(idxx);
+end
 
 try
     sces = sce.s;
@@ -96,12 +96,10 @@ end
         answer1 = questdlg('Extract cells from different groups and make new SCEs?');
         if ~strcmp(answer1, 'Yes'), return; end
         [idx] = in_selectcellgrps(cL(idxx));
-        cL2=cL(idxx);
-
+        % cL2=cL(idxx);
         if isempty(idx), return; end 
            for ik=1:length(idx)
                 scev=SCEV{idx(ik)};
-
                 % scev=scev.qcfilter;
                 % outmatfile=sprintf('%s.mat', ...
                 %     matlab.lang.makeValidName(cL2{idx(ik)}));
@@ -116,8 +114,6 @@ end
                 %     case 'Yes'
                 %         save(outmatfile,"scev",'-v7.3');
                 % end
-
-
                 sc_scatter_sce(scev);
                 pause(0.5);
             end

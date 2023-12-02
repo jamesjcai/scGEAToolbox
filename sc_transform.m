@@ -134,5 +134,5 @@ for s = 1:num_of_steps
         mat_smooth(:, cell) = sum(raw_mat(:, c_sort_cell_idx(1:k_step+1)), 2);
     end
 end
-disp done !
+
 end
