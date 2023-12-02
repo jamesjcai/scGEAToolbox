@@ -26,8 +26,8 @@ end
             %p(2)=0;
             p(4) = p(4) * 1.5;
             f.Position = p;
-            f.Visible = "on";
-            pause(1);
+            % f.Visible = "on";
+            % pause(1);
         end    
     catch ME
         if exist('f','var') && ishandle(f)

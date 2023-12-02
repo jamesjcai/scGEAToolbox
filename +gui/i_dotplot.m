@@ -133,8 +133,10 @@ cb.Position(3) = cb.Position(3) * 0.5;
 cb.Position(4) = cb.Position(4) * (5 / length(tgene));
 ax.Position = axposition;
 
+if ~isempty(ttxt)
 ttxt=strrep(ttxt,'_','\_');
 title(ttxt);
+end
 
 
 tb = uitoolbar('Parent', hFig);

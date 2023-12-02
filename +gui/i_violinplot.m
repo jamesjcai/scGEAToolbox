@@ -41,11 +41,11 @@ pkg.i_addbutton2fig(tb, 'on', @i_viewgenenames, ...
 
 movegui(f, 'center');
 
-if nargout > 0
-    i_addsamplesize([],[]);
-    i_testdata([],[], y, thisc);
-    return; 
-end
+% if nargout > 0
+%     i_addsamplesize([],[]);
+%     i_testdata([],[], y, thisc);
+%     return; 
+% end
 
 set(f, 'visible', 'on');
 
@@ -59,20 +59,27 @@ set(f, 'visible', 'on');
 
         function i_invertcolor(~, ~)
             colorit = ~colorit;
-            cla;
+            b = f.get("CurrentAxes");
+            cla(b);
             pkg.i_violinplot(y, thisc, colorit, cLorder);
         end
 
         function i_addsamplesize(~, ~)
-            b = gca;
+            % b = gca;
+            b = f.get("CurrentAxes");
             if isempty(OldXTickLabel)
                 a = zeros(length(cLorder), 1);
 
                 OldXTickLabel = b.XTickLabel;
                 for k = 1:length(cLorder)
-                    a(k) = sum(thisc == cLorder(k));
-                    b.XTickLabel{k} = sprintf('%s\\newline(n=%d)', ...
-                        b.XTickLabel{k}, a(k));
+                    a(k) = sum(thisc == cLorder(k));                  
+
+                    b.XTickLabel{k} = sprintf('%s\\newline%s', ...
+                        pad([string(b.XTickLabel{k}); ...
+                        sprintf("(n=%d)",a(k))],'both'));
+
+                    %b.XTickLabel{k} = sprintf('%s\\newline(n=%d)', ...
+                    %    b.XTickLabel{k}, a(k));
                 end
             else
                 b.XTickLabel = OldXTickLabel;
@@ -97,7 +104,8 @@ set(f, 'visible', 'on');
 
             %[~,cL,noanswer]=gui.i_reordergroups(thisc,cLx_sorted);
             %if noanswer, return; end
-            cla
+            b = f.get("CurrentAxes");
+            cla(b);
             cLorder = cLx_sorted;
             pkg.i_violinplot(y, thisc, colorit, cLorder);
         end
@@ -106,13 +114,14 @@ set(f, 'visible', 'on');
         function i_reordersamples(~, ~)
             [~, cLorder, noanswer] = gui.i_reordergroups(thisc);
             if noanswer, return; end
-            cla
+            b = f.get("CurrentAxes");
+            cla(b);
             pkg.i_violinplot(y, thisc, colorit, cLorder);
         end
 
 
-        function i_testdata(~, ~, y, grp)
-            a = gca;
+        function i_testdata(~, ~, y, grp)           
+            a = f.get("CurrentAxes");
             if isempty(OldTitle)
                 OldTitle = a.Title.String;
                 if size(y, 2) ~= length(grp)

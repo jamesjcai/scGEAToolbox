@@ -7,24 +7,29 @@ sce = guidata(FigureHandle);
 [thisc, ~] = gui.i_select1class(sce);
 if isempty(thisc), return; end
 % [c, cL] = grp2idx(thisc);
-[c, cL, noanswer, newidx] = gui.i_reordergroups(thisc);
+[c, cL, noanswer] = gui.i_reordergroups(thisc);
 if noanswer, return; end
+if max(c)==1
+    waitfor(helpdlg(sprintf('Only one type of cells: %s',cL{1}),''))
+    return;
+end
 
-fw = gui.gui_waitbar_adv;
+    fw = gui.gui_waitbar_adv;
     SCEV=cell(max(c),1);
 
-    try
-    for k=1:max(c)
-        gui.gui_waitbar_adv(fw, ...
-            (k-1)/max(c), ...
-            sprintf('Processing %s ...', cL{k}));
-        SCEV{k}=sce.selectcells(c==k);
-    end
+   try
+        for k=1:max(c)
+            gui.gui_waitbar_adv(fw, ...
+                (k-1)/max(c), ...
+                sprintf('Processing %s ...', cL{k}));
+            SCEV{k}=sce.selectcells(c==k);
+        end
     catch ME
         gui.gui_waitbar_adv(fw);
         errordlg(ME.message);
         return;
     end
+
     %cLa=getappdata(FigureHandle,'cL');
     %if ~isempty(cLa) && length(cL)==length(cLa)
     %    cL=cLa;
@@ -39,7 +44,8 @@ gui.gui_waitbar_adv(fw);
     if strcmpi(answer, 'Yes')
         [~, idxx] = sort(cmx, 'descend');
         SCEV=SCEV(idxx);
-        %newidx=newidx(idxx);
+        % cL=cL(idxx)
+        % newidx=newidx(idxx);
     end
 
 try
@@ -75,7 +81,7 @@ try
                 %                     100 * cmx(idxx(kk)) / length(c)));
                 box on
             end
-            colormap(para.oldColorMap(newidx,:));
+            colormap(para.oldColorMap);
         end
         P = get(f, 'Position');
         set(f, 'Position', [P(1) - 20 * nf, P(2) - 20 * nf, P(3), P(4)]);
@@ -95,10 +101,29 @@ end
         answer1 = questdlg('Extract cells from different groups and make new SCEs?');
         if ~strcmp(answer1, 'Yes'), return; end
         [idx] = in_selectcellgrps(cL(idxx));
+        cL2=cL(idxx);
+
         if isempty(idx), return; end 
            for ik=1:length(idx)
                 scev=SCEV{idx(ik)};
-                sc_scatter_sce(scev);
+
+                scev=scev.qcfilter;
+
+
+                outmatfile=sprintf('%s.mat', ...
+                    matlab.lang.makeValidName(cL2{idx(ik)}));
+                
+                if ~exist(outmatfile,"file")
+                    q=sprintf('Save file %s?',outmatfile);
+                else
+                    q=sprintf('Overwrite file %s?',outmatfile);
+                end
+                answerx=questdlg(q,'');
+                switch answerx
+                    case 'Yes'
+                        save(outmatfile,"scev",'-v7.3');
+                end
+                % sc_scatter_sce(scev);
                 pause(0.5);
             end
         end
