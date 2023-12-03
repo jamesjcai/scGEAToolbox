@@ -75,3 +75,6 @@ scgeatoolstandaloneApplication/
 +run/external/py_SERGIO/SERGIO/__pycache__/*
 
 TIMESTAMP
++run/external/py_SERGIO/input.mat
++run/external/py_SERGIO/output.mat
++run/external/py_SERGIO/targets.txt
