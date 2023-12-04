@@ -11,7 +11,7 @@ f = figure('visible', 'off');
 
 isdescend = false;
 OldTitle = [];
-OldXTickLabel = [];
+% OldXTickLabel = [];
 cLorder = strrep(cLorder, '_', '\_');
 thisc = strrep(string(thisc), '_', '\_');
 pkg.i_violinplot(y, thisc, colorit, cLorder);
@@ -67,23 +67,22 @@ set(f, 'visible', 'on');
         function i_addsamplesize(~, ~)
             % b = gca;
             b = f.get("CurrentAxes");
-            if isempty(OldXTickLabel)
+            
+            % assert(isequal(cLorder, b.XTickLabel));
+
+            if isequal(cLorder, b.XTickLabel)
                 a = zeros(length(cLorder), 1);
 
-                OldXTickLabel = b.XTickLabel;
+                % OldXTickLabel = b.XTickLabel;
                 for k = 1:length(cLorder)
                     a(k) = sum(thisc == cLorder(k));                  
 
                     b.XTickLabel{k} = sprintf('%s\\newline%s', ...
                         pad([string(b.XTickLabel{k}); ...
                         sprintf("(n=%d)",a(k))],'both'));
-
-                    %b.XTickLabel{k} = sprintf('%s\\newline(n=%d)', ...
-                    %    b.XTickLabel{k}, a(k));
                 end
             else
-                b.XTickLabel = OldXTickLabel;
-                OldXTickLabel = [];
+                b.XTickLabel = cLorder;                
             end
         end
 
@@ -113,6 +112,8 @@ set(f, 'visible', 'on');
 
         function i_reordersamples(~, ~)
             [~, cLorder, noanswer] = gui.i_reordergroups(thisc);
+
+            cLorder
             if noanswer, return; end
             b = f.get("CurrentAxes");
             cla(b);

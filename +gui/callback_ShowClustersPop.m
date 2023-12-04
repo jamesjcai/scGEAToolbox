@@ -49,12 +49,9 @@ end
 try
     sces = sce.s;
     h = findall(FigureHandle, 'type', 'scatter');
-    if isempty(h.ZData)
-        sces = sce.s(:, 1:2);
-    end
+    if isempty(h.ZData), sces = sce.s(:, 1:2); end
 
     [para] = gui.i_getoldsettings(src);
-
     totaln = max(c);
     numfig = ceil(totaln/9);
     for nf = 1:numfig
@@ -93,33 +90,47 @@ catch ME
 end
 
     function in_scgeatoolsce(~,~)
-        answer1 = questdlg('Extract cells from different groups and make new SCEs?');
-        if ~strcmp(answer1, 'Yes'), return; end
-        [idx] = in_selectcellgrps(cL(idxx));
-        % cL2=cL(idxx);
-        if isempty(idx), return; end 
-           for ik=1:length(idx)
-                scev=SCEV{idx(ik)};
-                % scev=scev.qcfilter;
-                % outmatfile=sprintf('%s.mat', ...
-                %     matlab.lang.makeValidName(cL2{idx(ik)}));
-                % 
-                % if ~exist(outmatfile,"file")
-                %     q=sprintf('Save file %s?',outmatfile);
-                % else
-                %     q=sprintf('Overwrite file %s?',outmatfile);
-                % end
-                % answerx=questdlg(q,'');
-                % switch answerx
-                %     case 'Yes'
-                %         save(outmatfile,"scev",'-v7.3');
-                % end
-                sc_scatter_sce(scev);
-                pause(0.5);
-            end
+        answer1 = questdlg('Extract cells from different groups and view new SCEs, or save new SCEs?','',...
+            'View SCEs','Save SCEs','Cancel','View SCEs');
+        switch answer1
+            case 'Cancel'
+                return;
+            case 'View SCEs'
+                [idx] = in_selectcellgrps(cL(idxx));                
+                if isempty(idx), return; end 
+                for ik=1:length(idx)
+                    scev=SCEV{idx(ik)};
+                    sc_scatter_sce(scev);
+                    pause(0.5);
+                end
+           case 'Save SCEs'
+                [idx] = in_selectcellgrps(cL(idxx));
+                cL2=cL(idxx);
+                if isempty(idx), return; end 
+                for ik=1:length(idx)
+                    scev=SCEV{idx(ik)};
+                    scev=scev.qcfilter;
+                    outmatfile=sprintf('%s.mat', ...
+                        matlab.lang.makeValidName(cL2{idx(ik)}));                
+                    if ~exist(outmatfile,"file")
+                        q=sprintf('Save file %s?',outmatfile);
+                        answerx=gui.questdlg_timer(15,q,'','Yes','No','Cancel','Yes');
+                    else
+                        q=sprintf('Overwrite file %s?',outmatfile);
+                        answerx=questdlg(q,'');
+                    end
+                    switch answerx
+                        case 'Yes'
+                            sce=scev;
+                            save(outmatfile,"sce",'-v7.3');
+                    end
+                    pause(0.5);
+                end
+            otherwise
+                return;
         end
+    end
 end
-
 
 function [idx] = in_selectcellgrps(grpv)
     idx=[];

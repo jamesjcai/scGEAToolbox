@@ -102,7 +102,7 @@ if nargout > 1
                     NumButtons = 3; %#ok
                 end
 
-                Title = [Title, ' ', num2str(TimeOutValue), ' sec'];
+                Title = [Title, ' ', num2str(TimeOutValue), ' sec timer on'];
 
                 Interpreter = 'none';
                 if ~iscell(Question), Question = cellstr(Question); end
@@ -148,8 +148,8 @@ if nargout > 1
                 %%%%%%%%%%%%%%%%%%%%%
                 DefOffset = 10;
 
-                IconWidth = 54;
-                IconHeight = 54;
+                IconWidth = 32;
+                IconHeight = 32;
                 IconXOffset = DefOffset;
                 IconYOffset = FigPos(4) - DefOffset - IconHeight; %#ok
                 IconCMap = [Black; get(QuestFig, 'Color')]; %#ok
@@ -357,19 +357,29 @@ if nargout > 1
 
                 set(QuestFig, 'NextPlot', 'add');
 
-                load dialogicons.mat questIconData questIconMap;
-                IconData = questIconData;
-                questIconMap(256, :) = get(QuestFig, 'color');
-                IconCMap = questIconMap;
+[iconData, alphaData] = matlab.ui.internal.dialog.DialogUtils.imreadDefaultIcon('quest');
+Img=image('CData',iconData, 'AlphaData', alphaData, 'Parent',IconAxes);
+set(IconAxes, ...
+    'Visible','off'           , ...
+    'YDir'   ,'reverse'       , ...
+    'XLim'   ,get(Img,'XData')+[-0.5 0.5], ...
+    'YLim'   ,get(Img,'YData')+[-0.5 0.5]  ...
+    );
 
-                Img = image('CData', IconData, 'Parent', IconAxes);
-                set(QuestFig, 'Colormap', IconCMap);
-                set(IconAxes, ...
-                    'Visible', 'off', ...
-                    'YDir', 'reverse', ...
-                    'XLim', get(Img, 'XData'), ...
-                    'YLim', get(Img, 'YData') ...
-                    );
+                
+                % load dialogicons.mat questIconData questIconMap;
+                % IconData = questIconData;
+                % questIconMap(256, :) = get(QuestFig, 'color');
+                % IconCMap = questIconMap;
+
+                %Img = image('CData', IconData, 'Parent', IconAxes);
+                %set(QuestFig, 'Colormap', IconCMap);
+                % set(IconAxes, ...
+                %     'Visible', 'off', ...
+                %     'YDir', 'reverse', ...
+                %     'XLim', get(Img, 'XData'), ...
+                %     'YLim', get(Img, 'YData') ...
+                %     );
 
                 % make sure we are on screen
                 movegui(QuestFig)
