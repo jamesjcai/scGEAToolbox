@@ -30,7 +30,7 @@ if showdata
 
     if ~isempty(g)
         dt = datacursormode;
-        dt.UpdateFcn = {@i_myupdatefcn1, g};
+        dt.UpdateFcn = {@i_myupdatefcn3, g, X};
     end
 end
 
@@ -104,22 +104,17 @@ end
     function in_HighlightSelectedGenes(~,~)
         
         %Myc, Oct3/4, Sox2, Klf4
-
         [glist] = gui.i_selectngenes(SingleCellExperiment(X,g),...
-            intersect(upper(g),["MYC", "POU5F1", "SOX2", "KLF4"]));       
-
-
+            intersect(upper(g),["MYC", "POU5F1", "SOX2", "KLF4"]));
         if ~isempty(glist)            
             [y,idx]=ismember(glist,g);
             idx=idx(y);            
             % idv = zeros(1, length(hvgidx));
             % idv(idx)=1;
             % h.BrushData = idv;
-
             for k=1:length(idx)
                 dt = datatip(h,'DataIndex',idx(k));
             end
-
         end
     end
 
@@ -165,12 +160,5 @@ end
 end
 
 
-    function txt = i_myupdatefcn1(~, event_obj, g)
-        % Customizes text of data tips
-        % pos = event_obj.Position;
-        idx = event_obj.DataIndex;
-        % i_plotsiglegene(idx,g);
-        txt = {g(idx)};
-    end
 
 
