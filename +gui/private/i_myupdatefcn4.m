@@ -1,4 +1,4 @@
-function txt = i_myupdatefcn3(~, event_obj, g, X, Y)
+function txt = i_myupdatefcn4(~, event_obj, g, X, Y)
 if nargin < 5
     Y = [];
 end
@@ -21,6 +21,9 @@ end
 n1=length(X(idx, :));
 x1 = X(idx, :);
 stem(1:n1, x1, 'marker', 'none');
+hold on
+x2=-1*(x1==0);
+stem(1:n1, x2, 'marker', 'none');
 
 if ~isempty(Y)
     hold on
