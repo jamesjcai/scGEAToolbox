@@ -7,7 +7,7 @@
     <param.summary>Single-cell Gene Expression Analysis Toolbox</param.summary>
     <param.description>scRNAseq data analysis toolbox</param.description>
     <param.screenshot>${PROJECT_ROOT}\resources\scgeatool.png</param.screenshot>
-    <param.version>23.6.0</param.version>
+    <param.version>23.6.5</param.version>
     <param.output>${PROJECT_ROOT}\scGEAToolbox.mltbx</param.output>
     <param.products.name>
       <item>Statistics and Machine Learning Toolbox</item>
@@ -50,7 +50,8 @@ resources/STRING/stringdb_mouse.mat
 **/.Rhistory
 **/html
 **/docs
-**/scgeatoolstandaloneApplication</param.exclude.filters>
+**/scgeatoolstandaloneApplication
+TIMESTAMP</param.exclude.filters>
     <param.exclude.pcodedmfiles>true</param.exclude.pcodedmfiles>
     <param.examples />
     <param.demosxml />
@@ -207,7 +208,6 @@ resources/STRING/stringdb_mouse.mat
       <file>${PROJECT_ROOT}\scgeatool.m</file>
       <file>${PROJECT_ROOT}\SCGEATOOL.mlapp</file>
       <file>${PROJECT_ROOT}\tensor_toolbox</file>
-      <file>${PROJECT_ROOT}\TIMESTAMP</file>
     </fileset.rootfiles>
     <fileset.depfun.included />
     <fileset.depfun.excluded />
