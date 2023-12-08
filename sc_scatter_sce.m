@@ -591,11 +591,11 @@ end
     function in_MergeCellSubtypes(src, ~, sourcetag, allcell)
         if nargin < 4
             answer = questdlg('Import annotation for all cells or just cells of a subtype?', '', ...
-                    'All cells', 'Subtype cells', 'Cancel', 'All cells');
+                    'All Cells', 'Subtype Cells', 'Cancel', 'All Cells');
             switch answer
-                case 'All cells'
+                case 'All Cells'
                     allcell = true;
-                case 'Subtype cells'
+                case 'Subtype Cells'
                     allcell = false;
                 case 'Cancel'
                     return;

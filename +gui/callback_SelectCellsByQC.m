@@ -1,5 +1,8 @@
 function [requirerefresh, highlightindex] = callback_SelectCellsByQC(src)
 
+mfolder = fileparts(mfilename('fullpath'));
+
+
 needremove = false;
 requirerefresh = true;
 highlightindex = [];
@@ -11,6 +14,8 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
         'Remove Genes by Name', ...
         'Remove Mt-genes', ...
         'Remove Ribosomal Genes', ...
+        '------------------------------------------------', ...
+        'Filter Genes with HGNC Approved Symbols', ...
         '------------------------------------------------', ...
         'Library Size vs. Mt-reads Ratio', ...
         'Library Size vs. Number of Genes', ...
@@ -209,6 +214,26 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
             sce = sce.rmmtgenes;
         case 'Remove Ribosomal Genes'
             sce = sce.rmribosomalgenes;
+        case 'Filter Genes with HGNC Approved Symbols'
+
+            % Filter protein-coding genes based on HGNC approval status and remove all non-coding genes and pseudogenes.
+            % Filter protein-coding genes with HGNC approved symbols and remove all remaining genes.
+
+            answer=questdlg('Keep all protein-coding genes with HGNC-approved symbols and remove all remaining genes, such as non-coding genes, pseudogenes, and genes that do not have approved symbols. Continue?','');
+            switch answer
+                case 'Yes'
+                    load(fullfile(mfolder, ...
+                        '../resources', 'hgnc_coding_genes.mat'), 'ApprovedSymbol');
+                    [idx] = ismember(upper(sce.g),upper(ApprovedSymbol));
+                    fw = gui.gui_waitbar;
+                    sce.g(~idx) = [];
+                    sce.X(~idx, :) = [];
+                    gui.gui_waitbar(fw);
+                otherwise
+                    requirerefresh = false;
+                    return;
+            end
+                
         case '------------------------------------------------'
             requirerefresh = false;
             return;

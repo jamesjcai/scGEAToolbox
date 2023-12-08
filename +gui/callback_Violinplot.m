@@ -27,7 +27,8 @@ end
             p(4) = p(4) * 1.5;
             f.Position = p;
             f.Visible = "on";
-            pause(1);
+            % pause(1);
+            drawnow;
         end    
     catch ME
         if exist('f','var') && ishandle(f)
