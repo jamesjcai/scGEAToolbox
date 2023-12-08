@@ -126,7 +126,7 @@ elseif isStringScalar(targetg) || ischar(targetg)
                     evalin('base', 'rotate3d on');
                 end
                 hFig = gcf;
-                hFig.Position(3) = hFig.Position(3) * 2.2;
+                hFig.Position(3) = hFig.Position(3) * 1.8;
                 if ~is2d
                     view(h1, 3);
                 else
@@ -137,8 +137,9 @@ elseif isStringScalar(targetg) || ischar(targetg)
 
         a = getpref('scgeatoolbox', 'prefcolormapname', 'autumn');
         gui.i_setautumncolor(c, a, true, any(c==0));
-        cb = colorbar(h1);
-        cb.Label.String = 'Expression Level';
+        %cb = colorbar(h1);
+        %cb.Label.String = 'Expression Level';
+
         % cb.LineWidth = 1.5;
         % pos = get(cb, 'Position');
         % pos(4) = pos(4) / 2;
@@ -189,6 +190,7 @@ end
         s1 = scatter3(h1, x, y, z, sz, c, 'filled');
         view(h1, ax, bx);
         colorbar(h1);
+        
         %title(h1,titxt);
         title(h1, targetg);
         subtitle(h1, titxt);
