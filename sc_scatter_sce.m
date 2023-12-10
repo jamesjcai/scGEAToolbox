@@ -283,6 +283,7 @@ in_addmenu(m_exp, 0, @callback_ViewMetaData, 'View Metadata...');
 in_addmenu(m_exp, 1, {@gui.i_savemainfig, 3}, 'Save Figure to PowerPoint File...');
 in_addmenu(m_exp, 0, {@gui.i_savemainfig, 2}, 'Save Figure as Graphic File...');
 in_addmenu(m_exp, 0, {@gui.i_savemainfig, 1}, 'Save Figure as SVG File...');
+in_addmenu(m_exp, 1, @in_SingleClickSolution, 'Single Click Solution (from Raw Data to Annotation)...');
 in_addmenu(m_exp, 1, {@(~, ~) web('https://scgeatool.github.io/')}, 'Visit SCGEATOOL-Standalone Website...');
 in_addmenu(m_exp, 0, @callback_CheckUpdates, 'Check for Updates...');
 
@@ -753,6 +754,31 @@ end
         else
             errordlg('Running error. No action is taken.');
         end
+    end
+
+    function in_SingleClickSolution(src, ~)
+        speciestag = gui.i_selectspecies(2);
+        if isempty(speciestag), return; end
+
+        fw = gui.gui_waitbar_adv;
+        gui.gui_waitbar_adv(fw,1/6,'Basic QC filtering.');
+        sce = sce.qcfilter;
+        gui.gui_waitbar_adv(fw,2/6, 'Embeding cells with tSNE.');
+        sce = sce.embedcells('tSNE',true);
+        gui.gui_waitbar_adv(fw,3/6, 'Clustering cells using K-means.');
+        sce = sce.clustercells([], [], true);
+        gui.gui_waitbar_adv(fw,4/6, 'Annotating cell type using PanglaoDB.');
+        [c_cell_type_tx] = sc_celltypeanno(sce.X, sce.g, ...
+            sce.c_cluster_id, speciestag);
+        sce.c_cell_type_tx = c_cell_type_tx;
+        gui.gui_waitbar_adv(fw,5/6);
+        [c,cL]=grp2idx(c_cell_type_tx);
+        sce.c=c;
+        gui.gui_waitbar_adv(fw);
+        in_RefreshAll(src, 1, true);
+        ix_labelclusters(true);
+        setappdata(FigureHandle, 'cL', cL);
+        guidata(FigureHandle, sce);
     end
 
     function in_SelectCellsByQC(src, ~)
