@@ -768,11 +768,14 @@ end
         gui.gui_waitbar_adv(fw,3/6, 'Clustering cells using K-means.');
         sce = sce.clustercells([], [], true);
         gui.gui_waitbar_adv(fw,4/6, 'Annotating cell type using PanglaoDB.');
-        [c_cell_type_tx] = sc_celltypeanno(sce.X, sce.g, ...
-            sce.c_cluster_id, speciestag);
-        sce.c_cell_type_tx = c_cell_type_tx;
+        
+        %[c_cell_type_tx] = sc_celltypeanno(sce.X, sce.g, ...
+        %    sce.c_cluster_id, speciestag);
+        %sce.c_cell_type_tx = c_cell_type_tx;
+        
+        sce = sce.assigncelltype(speciestag, false);
         gui.gui_waitbar_adv(fw,5/6);
-        [c,cL]=grp2idx(c_cell_type_tx);
+        [c,cL]=grp2idx(sce.c_cell_type_tx);
         sce.c=c;
         gui.gui_waitbar_adv(fw);
         in_RefreshAll(src, 1, true);

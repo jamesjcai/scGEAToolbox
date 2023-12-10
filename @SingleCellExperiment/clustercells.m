@@ -5,7 +5,8 @@ end
 if nargin < 4, forced = false; end
 if nargin < 3 || isempty(methodid), methodid = 'kmeans'; end
 if nargin < 2 || isempty(k)
-    k = min([10, round(obj.NumCells/100, -1)]);
+    k = round(obj.NumCells/100, -1);
+    if k==0, k=1; end
 end
 
 if isempty(obj.c_cluster_id) || forced
