@@ -244,7 +244,7 @@ end
                             errordlg(ME.message);
                             return;
                         end
-                    else
+                    else                        
                         try
                             fw = gui.gui_waitbar;
                             [sce] = sc_readgeoaccession(acc);

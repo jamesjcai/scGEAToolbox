@@ -3,8 +3,11 @@ if isempty(obj.s)
     error('SCE.S is empty');
 end
 if nargin < 4, forced = false; end
-if nargin < 3, methodid = 'kmeans'; end
-if nargin < 2, k = 10; end
+if nargin < 3 || isempty(methodid), methodid = 'kmeans'; end
+if nargin < 2 || isempty(k)
+    k = min([10, round(obj.NumCells/100, -1)]);
+end
+
 if isempty(obj.c_cluster_id) || forced
     switch methodid
         case {'kmeans', 'snndpc'}
