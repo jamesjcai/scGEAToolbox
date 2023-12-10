@@ -15,11 +15,11 @@ if isempty(obj.s) || forced
     end
 
 
-    if usehvgs
+    if usehvgs && size(obj.X, 1) > numhvg
         % disp('Identifying HVGs')
-        [T, X] = sc_hvg(obj.X, obj.g, true, false, true, false, true);
-        X = X(1:min([size(X, 1), numhvg]), :);
-        g = T.genes(1:min([size(X, 1), numhvg]));
+        [~, X, g] = sc_hvg(obj.X, obj.g, true, false, true, false, true);
+        X = X(1:numhvg, :);
+        g = g(1:numhvg);
     else
         X = obj.X;
         g = obj.g;
