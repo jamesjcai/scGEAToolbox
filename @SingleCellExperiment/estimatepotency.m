@@ -27,8 +27,8 @@ if forced || sum(strcmp('cell_potency', obj.list_cell_attributes)) == 0
     r = sc_potency(obj.X, obj.g, speciesid);
     obj.list_cell_attributes = [obj.list_cell_attributes, ...
         {'cell_potency', r}];
-    disp('cell_potency added.');
+    disp('cell_potency added to SCE.LIST_CELL_ATTRIBUTES.');
 else
-    disp('cell_potency existed.');
+    disp('cell_potency existed in SCE.LIST_CELL_ATTRIBUTES.');
 end
 end

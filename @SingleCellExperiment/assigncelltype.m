@@ -1,7 +1,10 @@
 function obj = assigncelltype(obj, speciesid, keepclusterid)
+
 % Assigning cell type identity to clusters.
+
 if nargin < 3 || isempty(keepclusterid), keepclusterid = true; end
 if nargin < 2 || isempty(speciesid), speciesid = 'human'; end
+
 [c, cL] = grp2idx(obj.c_cluster_id);
 organtag = "all";
 databasetag = "panglaodb";

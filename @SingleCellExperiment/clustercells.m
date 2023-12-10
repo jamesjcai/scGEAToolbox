@@ -18,8 +18,8 @@ if isempty(obj.c_cluster_id) || forced
     end
     obj.c_cluster_id = id(:);
     obj.struct_cell_clusterings.(methodid) = obj.c_cluster_id;
-    disp('C_CLUSTER_ID added.');
+    disp('SCE.C_CLUSTER_ID added.');
 else
-    disp('C_CLUSTER_ID existed.');
+    disp('SCE.C_CLUSTER_ID existed.');
 end
 end

@@ -5,6 +5,5 @@ obj = obj.qcfilter;
 obj = obj.embedcells('tSNE',true);        
 obj = obj.clustercells([], [], true);
 obj = obj.assigncelltype(speciesid, false);
-
 end
 

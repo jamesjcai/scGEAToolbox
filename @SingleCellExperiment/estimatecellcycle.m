@@ -8,8 +8,8 @@ if isempty(obj.c_cell_cycle_tx) || forced
         case 2
             obj.c_cell_cycle_tx = run.r_SeuratCellCycle(obj.X, obj.g);
     end
-    disp('C_CELL_CYCLE_TX added.');
+    disp('SCE.C_CELL_CYCLE_TX added.');
 else
-    disp('C_CELL_CYCLE_TX is existing.');
+    disp('SCE.C_CELL_CYCLE_TX is existing.');
 end
 end
