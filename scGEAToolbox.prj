@@ -7,7 +7,7 @@
     <param.summary>Single-cell Gene Expression Analysis Toolbox</param.summary>
     <param.description>scRNAseq data analysis toolbox</param.description>
     <param.screenshot>${PROJECT_ROOT}\resources\scgeatool.png</param.screenshot>
-    <param.version>23.6.5</param.version>
+    <param.version>23.7.0</param.version>
     <param.output>${PROJECT_ROOT}\scGEAToolbox.mltbx</param.output>
     <param.products.name>
       <item>Statistics and Machine Learning Toolbox</item>
@@ -141,6 +141,7 @@ TIMESTAMP</param.exclude.filters>
       <file>${PROJECT_ROOT}\sc_cellcyclescore.m</file>
       <file>${PROJECT_ROOT}\sc_cellscore_admdl.m</file>
       <file>${PROJECT_ROOT}\sc_cellscore_ucell.m</file>
+      <file>${PROJECT_ROOT}\sc_celltypeanno.m</file>
       <file>${PROJECT_ROOT}\sc_cluster_s.m</file>
       <file>${PROJECT_ROOT}\sc_cluster_x.m</file>
       <file>${PROJECT_ROOT}\sc_deg.m</file>
