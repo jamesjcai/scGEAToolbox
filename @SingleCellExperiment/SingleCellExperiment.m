@@ -4,11 +4,11 @@ classdef SingleCellExperiment
         g string % genelist
         s double{mustBeNumeric, mustBeFinite} % cell embeddings
         c % current/active group/class id
-        c_cell_cycle_tx % cell cycle string
-        c_cell_type_tx % cell type string
-        c_cluster_id % clustering result
-        c_batch_id % batch id
-        c_cell_id % barcode
+        c_cell_cycle_tx % cell cycle string array
+        c_cell_type_tx % cell type string array
+        c_cluster_id % clustering result vector
+        c_batch_id % batch id vector
+        c_cell_id % barcode vector
         list_cell_attributes cell % e.g., attributes = {'size',[4,6,2]};
         list_gene_attributes cell % e.g., attributes = {'size',[4,6,2]};
         metadata string
@@ -85,9 +85,10 @@ classdef SingleCellExperiment
         obj = estimatecellcycle(obj, forced, methodid)
         obj = embedcells(obj, methodid, forced, usehvgs, ndim, numhvg, whitelist)
         obj = clustercells(obj, k, methodid, forced)
-        obj = assigncelltype(obj, speciesid)
+        obj = assigncelltype(obj, speciesid, keepclusterid)
         obj = qcfilterwhitelist(obj, libszcutoff, mtratio, min_cells_nonzero, gnnumcutoff, whitelist)
         obj = sortcells(obj, idx);
+        obj = onestepraw2anno(obj, speciesid);
 
         function obj = removecells(obj, idx)
             try

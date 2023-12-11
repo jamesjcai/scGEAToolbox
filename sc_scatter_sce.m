@@ -761,13 +761,13 @@ end
         if isempty(speciestag), return; end
 
         fw = gui.gui_waitbar_adv;
-        gui.gui_waitbar_adv(fw,1/6,'Basic QC filtering.');
+        gui.gui_waitbar_adv(fw,1/6,'Basic QC Filtering...');
         sce = sce.qcfilter;
-        gui.gui_waitbar_adv(fw,2/6, 'Embeding cells with tSNE.');
+        gui.gui_waitbar_adv(fw,2/6, 'Embeding Cells Using tSNE...');
         sce = sce.embedcells('tSNE',true);
-        gui.gui_waitbar_adv(fw,3/6, 'Clustering cells using K-means.');
+        gui.gui_waitbar_adv(fw,3/6, 'Clustering Cells Using K-means...');
         sce = sce.clustercells([], [], true);
-        gui.gui_waitbar_adv(fw,4/6, 'Annotating cell type using PanglaoDB.');
+        gui.gui_waitbar_adv(fw,4/6, 'Annotating Cell Type Using PanglaoDB...');
         
         %[c_cell_type_tx] = sc_celltypeanno(sce.X, sce.g, ...
         %    sce.c_cluster_id, speciestag);
