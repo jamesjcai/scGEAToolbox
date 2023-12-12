@@ -67,7 +67,10 @@ elseif length(c) == 1
             error('File not found.');
         end
         disp("Found H5 file.");
+        
         f1 = i_setupfile2(c1);
+        if isempty(f1), sce=[]; return; end
+
         if strcmpi(f1(end-2:end), '.gz')
             files=gunzip(f1,tempdir);
             [X, g, barcodes] = sc_read10xh5file(files{1});
