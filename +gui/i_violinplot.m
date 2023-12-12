@@ -38,6 +38,10 @@ pkg.i_addbutton2fig(tb, 'off', @i_renametitle, ...
     "icon-mat-touch-app-10.gif", 'Change Plot Title');
 pkg.i_addbutton2fig(tb, 'on', @i_viewgenenames, ...
     'HDF_point.gif', 'Show Gene Names');
+pkg.i_addbutton2fig(tb, 'on', @i_resizewin, ...
+    'HDF_pointx.gif', 'Resize Plot Window');
+
+
 
 movegui(f, 'center');
 
@@ -53,125 +57,133 @@ set(f, 'visible', 'on');
 %    errordlg(ME.message);
 %end
 
+
+    function i_resizewin(~,~)
+        %oldw
+        %oldh
+        w = gui.i_inputnumk(450, 10, 2000, 'Window width');
+        if isempty(w), return; end
+        h = gui.i_inputnumk(420, 10, 2000, 'Window height');
+        if isempty(h), return; end
+        f.Position = [f.Position(1) f.Position(2) w h];
+    end
+
     function i_renametitle(~, ~)
         helpdlg('Double-click on the title to make change.', '');
     end
 
-        function i_invertcolor(~, ~)
-            colorit = ~colorit;
-            b = f.get("CurrentAxes");
-            cla(b);
-            pkg.i_violinplot(y, thisc, colorit, cLorder);
+    function i_invertcolor(~, ~)
+        colorit = ~colorit;
+        b = f.get("CurrentAxes");
+        cla(b);
+        pkg.i_violinplot(y, thisc, colorit, cLorder);
+    end
+
+    function i_addsamplesize(~, ~)
+        % b = gca;
+        b = f.get("CurrentAxes");
+        b.FontName='Palatino';
+        % assert(isequal(cLorder, b.XTickLabel));
+
+        if isequal(cLorder, b.XTickLabel)
+            a = zeros(length(cLorder), 1);            
+            for k = 1:length(cLorder)
+                a(k) = sum(thisc == cLorder(k));
+                cb=pad([b.XTickLabel{k}; sprintf("(n=%d)",a(k))],'both');
+                b.XTickLabel{k} = strtrim(sprintf('%s\\newline%s', cb(:)));                
+            end
+        else
+            b.XTickLabel = cLorder;                
+        end        
+    end
+
+    function i_sortbymean(~, ~)
+        [cx, cLx] = grp2idx(thisc);
+        a = zeros(max(cx), 1);
+        for k = 1:max(cx)
+            a(k) = median(y(cx == k));
         end
+        if isdescend
+            [~, idx] = sort(a, 'ascend');
+            isdescend = false;
+        else
+            [~, idx] = sort(a, 'descend');
+            isdescend = true;
+        end
+        cLx_sorted = cLx(idx);
 
-        function i_addsamplesize(~, ~)
-            % b = gca;
-            b = f.get("CurrentAxes");
-            
-            % assert(isequal(cLorder, b.XTickLabel));
+        %[~,cL,noanswer]=gui.i_reordergroups(thisc,cLx_sorted);
+        %if noanswer, return; end
+        b = f.get("CurrentAxes");
+        cla(b);
+        cLorder = cLx_sorted;
+        pkg.i_violinplot(y, thisc, colorit, cLorder);
+    end
 
-            if isequal(cLorder, b.XTickLabel)
-                a = zeros(length(cLorder), 1);
 
-                % OldXTickLabel = b.XTickLabel;
-                for k = 1:length(cLorder)
-                    a(k) = sum(thisc == cLorder(k));                  
+    function i_reordersamples(~, ~)
+        [~, cLorder, noanswer] = gui.i_reordergroups(thisc);
 
-                    b.XTickLabel{k} = sprintf('%s\\newline%s', ...
-                        pad([string(b.XTickLabel{k}); ...
-                        sprintf("(n=%d)",a(k))],'both'));
-                end
+        % cLorder
+        if noanswer, return; end
+        b = f.get("CurrentAxes");
+        cla(b);
+        pkg.i_violinplot(y, thisc, colorit, cLorder);
+    end
+
+
+    function i_testdata(~, ~, y, grp)           
+        a = f.get("CurrentAxes");
+        if isempty(OldTitle)
+            OldTitle = a.Title.String;
+            if size(y, 2) ~= length(grp)
+                y = y.';
+            end
+            tbl = pkg.e_grptest(y, grp);
+            %h1=gca;
+            %titre=string(h1.Title.String);
+
+            %     a=sprintf('%s\n%s=%.2e; %s=%.2e', ...
+            %         strrep(string(ttxt),'_','\_'), ...
+            %         strrep(tbl.Properties.VariableNames{1},'_','\_'), ...
+            %         tbl.(tbl.Properties.VariableNames{1}), ...
+            %         strrep(tbl.Properties.VariableNames{2},'_','\_'), ...
+            %         tbl.(tbl.Properties.VariableNames{2}));
+            %     title(a);
+
+            b = sprintf('%s=%.2e; %s=%.2e', ...
+                strrep(tbl.Properties.VariableNames{1}, '_', '\_'), ...
+                tbl.(tbl.Properties.VariableNames{1}), ...
+                strrep(tbl.Properties.VariableNames{2}, '_', '\_'), ...
+                tbl.(tbl.Properties.VariableNames{2}));
+            if iscell(OldTitle)
+                newtitle = OldTitle;
             else
-                b.XTickLabel = cLorder;                
+                newtitle = {OldTitle};
             end
+            newtitle{2} = b;
+            a.Title.String = newtitle;
+        else
+            a.Title.String = OldTitle;
+            OldTitle = [];
+            %gui.i_exporttable(tbl,true);
         end
+    end
 
-        function i_sortbymean(~, ~)
-            [cx, cLx] = grp2idx(thisc);
-            a = zeros(max(cx), 1);
-            for k = 1:max(cx)
-                a(k) = median(y(cx == k));
-            end
-            if isdescend
-                [~, idx] = sort(a, 'ascend');
-                isdescend = false;
-            else
-                [~, idx] = sort(a, 'descend');
-                isdescend = true;
-            end
-            cLx_sorted = cLx(idx);
 
-            %[~,cL,noanswer]=gui.i_reordergroups(thisc,cLx_sorted);
-            %if noanswer, return; end
-            b = f.get("CurrentAxes");
-            cla(b);
-            cLorder = cLx_sorted;
-            pkg.i_violinplot(y, thisc, colorit, cLorder);
+    function i_viewgenenames(~, ~)
+        if isempty(posg)
+            helpdlg('The gene set is empty. This score may not be associated with any gene set.');
+        else
+            %idx=matches(sce.g,posg,'IgnoreCase',true);
+            %gg=sce.g(idx);
+            inputdlg(ttxt, ...
+                '', [10, 50], ...
+                {char(posg)});
         end
+    end
 
-
-        function i_reordersamples(~, ~)
-            [~, cLorder, noanswer] = gui.i_reordergroups(thisc);
-
-            cLorder
-            if noanswer, return; end
-            b = f.get("CurrentAxes");
-            cla(b);
-            pkg.i_violinplot(y, thisc, colorit, cLorder);
-        end
-
-
-        function i_testdata(~, ~, y, grp)           
-            a = f.get("CurrentAxes");
-            if isempty(OldTitle)
-                OldTitle = a.Title.String;
-                if size(y, 2) ~= length(grp)
-                    y = y.';
-                end
-                tbl = pkg.e_grptest(y, grp);
-                %h1=gca;
-                %titre=string(h1.Title.String);
-
-                %     a=sprintf('%s\n%s=%.2e; %s=%.2e', ...
-                %         strrep(string(ttxt),'_','\_'), ...
-                %         strrep(tbl.Properties.VariableNames{1},'_','\_'), ...
-                %         tbl.(tbl.Properties.VariableNames{1}), ...
-                %         strrep(tbl.Properties.VariableNames{2},'_','\_'), ...
-                %         tbl.(tbl.Properties.VariableNames{2}));
-                %     title(a);
-
-                b = sprintf('%s=%.2e; %s=%.2e', ...
-                    strrep(tbl.Properties.VariableNames{1}, '_', '\_'), ...
-                    tbl.(tbl.Properties.VariableNames{1}), ...
-                    strrep(tbl.Properties.VariableNames{2}, '_', '\_'), ...
-                    tbl.(tbl.Properties.VariableNames{2}));
-                if iscell(OldTitle)
-                    newtitle = OldTitle;
-                else
-                    newtitle = {OldTitle};
-                end
-                newtitle{2} = b;
-                a.Title.String = newtitle;
-            else
-                a.Title.String = OldTitle;
-                OldTitle = [];
-                %gui.i_exporttable(tbl,true);
-            end
-        end
-
-
-        function i_viewgenenames(~, ~)
-            if isempty(posg)
-                helpdlg('The gene set is empty. This score may not be associated with any gene set.');
-            else
-                %idx=matches(sce.g,posg,'IgnoreCase',true);
-                %gg=sce.g(idx);
-                inputdlg(ttxt, ...
-                    '', [10, 50], ...
-                    {char(posg)});
-            end
-        end
-end
+end    
 
 function i_savedata(~, ~, a, b)
     T = table(a(:), b(:));
@@ -180,3 +192,4 @@ function i_savedata(~, ~, a, b)
     %T=sortrows(T,'GroupID');
     gui.i_exporttable(T, true);
 end
+

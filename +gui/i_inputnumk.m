@@ -1,4 +1,5 @@
 function k = i_inputnumk(defaultk, a, b, descstr)
+
 if nargin < 4, descstr = 'a number'; end
 if nargin < 3, b = 100; end
 if nargin < 2, a = 1; end

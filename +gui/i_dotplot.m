@@ -148,9 +148,10 @@ pkg.i_addbutton2fig(tb, 'on', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save F
 pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 2}, "svg.gif", 'Save Figure as Graphic File...');
 pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 1}, "svg.gif", 'Save Figure as SVG File...');
 pkg.i_addbutton2fig(tb, 'on', @i_savetable, 'export.gif', 'Export data...');
-pkg.i_addbutton2fig(tb, 'on', @gui.i_invertcolor, 'plotpicker-comet.gif', 'Invert colors');
-pkg.i_addbutton2fig(tb, 'off', @i_resetcolor, 'plotpicker-geobubble2.gif', 'Reset color map');
-
+pkg.i_addbutton2fig(tb, 'on', @gui.i_invertcolor, 'plotpicker-comet.gif', 'Invert Colors');
+pkg.i_addbutton2fig(tb, 'off', @i_resetcolor, 'plotpicker-geobubble2.gif', 'Reset Colormap');
+pkg.i_addbutton2fig(tb, 'on', @i_resizewin, ...
+    'HDF_pointx.gif', 'Resize Plot Window');
 
 % %set(cb, 'Position', get(gca,'position')); pause(1);
 % cb.Position = cb.Position + 1e-10;
@@ -176,6 +177,17 @@ set(hFig, 'visible', 'on');
 %          if ax>15, ax=5; end
 %          set(gca,'FontSize',ax);
 %     end
+
+    function i_resizewin(~,~)
+        %oldw
+        %oldh
+        w = gui.i_inputnumk(450, 10, 2000, 'Window width');
+        if isempty(w), return; end
+        h = gui.i_inputnumk(420, 10, 2000, 'Window height');
+        if isempty(h), return; end
+        hFig.Position = [hFig.Position(1) hFig.Position(2) w h];
+    end
+
 
     function i_savetable(~, ~)
         answer = questdlg('Export & save data to:', '', ...
