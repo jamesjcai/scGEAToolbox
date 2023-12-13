@@ -20,9 +20,9 @@ title(strrep(ttxt, '_', '\_'));
 
 
 tb = uitoolbar(f);
-pkg.i_addbutton2fig(tb, 'off', {@i_savedata, y, thisc}, ...
+pkg.i_addbutton2fig(tb, 'off', @i_savedata, ...
     'export.gif', 'Export data...');
-pkg.i_addbutton2fig(tb, 'off', {@i_testdata, y, thisc}, ...
+pkg.i_addbutton2fig(tb, 'off', @i_testdata, ...
     'icon-fa-stack-exchange-10.gif', 'ANOVA/T-test...');
 pkg.i_addbutton2fig(tb, 'off', @i_addsamplesize, ...
     "icon-mat-blur-linear-10.gif", 'Add Sample Size');
@@ -32,6 +32,11 @@ pkg.i_addbutton2fig(tb, 'off', @i_invertcolor, ...
     "plotpicker-pie.gif", 'Switch BW/Color');
 pkg.i_addbutton2fig(tb, 'off', @i_reordersamples, ...
     "plotpicker-errorbar.gif", 'Reorder Samples');
+
+pkg.i_addbutton2fig(tb, 'off', @i_selectsamples, ...
+    "plotpicker-errorbarx.gif", 'Select Samples');
+
+
 pkg.i_addbutton2fig(tb, 'off', @i_sortbymean, ...
     "plotpicker-cra.gif", 'Sort Samples by Median');
 pkg.i_addbutton2fig(tb, 'off', @i_renametitle, ...
@@ -46,7 +51,7 @@ pkg.i_addbutton2fig(tb, 'on', @i_resizewin, ...
 movegui(f, 'center');
 
 i_addsamplesize([],[]);
-i_testdata([],[], y, thisc);
+i_testdata([],[]);
 if nargout > 0
     return; 
 end
@@ -132,14 +137,32 @@ set(f, 'visible', 'on');
     end
 
 
-    function i_testdata(~, ~, y, grp)           
+    function i_selectsamples(~, ~)
+        [~,cL]=grp2idx(thisc);
+        [newidx] = gui.i_selmultidlg(cL, cLorder);
+        if isempty(newidx), return; end
+        picked=ismember(thisc,cL(newidx));
+%        [~, cLorder, noanswer] = gui.i_reordergroups(thisc);
+%        % cLorder
+%        if noanswer, return; end
+        
+        cLorder=cLorder(ismember(cLorder,cL(newidx)));
+        b = f.get("CurrentAxes");
+        cla(b);
+        y=y(picked);
+        thisc=thisc(picked);
+        pkg.i_violinplot(y, thisc, colorit, cLorder);
+    end
+
+
+    function i_testdata(~, ~)
         a = f.get("CurrentAxes");
         if isempty(OldTitle)
             OldTitle = a.Title.String;
-            if size(y, 2) ~= length(grp)
+            if size(y, 2) ~= length(thisc)
                 y = y.';
             end
-            tbl = pkg.e_grptest(y, grp);
+            tbl = pkg.e_grptest(y, thisc);
             %h1=gca;
             %titre=string(h1.Title.String);
 
@@ -183,13 +206,11 @@ set(f, 'visible', 'on');
         end
     end
 
-end    
-
-function i_savedata(~, ~, a, b)
-    T = table(a(:), b(:));
-    T.Properties.VariableNames = {'ScoreLevel', 'GroupID'};
-    %T=sortrows(T,'ScoreLevel','descend');
-    %T=sortrows(T,'GroupID');
-    gui.i_exporttable(T, true);
+    function i_savedata(~, ~)    
+        T = table(y(:), thisc(:));
+        T.Properties.VariableNames = {'ScoreLevel', 'GroupID'};
+        %T=sortrows(T,'ScoreLevel','descend');
+        %T=sortrows(T,'GroupID');
+        gui.i_exporttable(T, true);
+    end
 end
-

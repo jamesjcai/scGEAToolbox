@@ -3,8 +3,10 @@ function sc_scatter3genes(X, g, dofit, showdata)
 
 if nargin < 4, showdata = true; end
 if nargin < 3, dofit = true; end
-if nargin < 2, g = []; end
-[lgu, dropr, lgcv, g] = sc_genestat(X, g);
+if nargin < 2 || isempty(g), g = string(1:size(X,1)); end
+
+[lgu, dropr, lgcv, g, X] = sc_genestat(X, g);
+
 x = lgu;
 y = lgcv;
 z = dropr;
@@ -16,9 +18,10 @@ if showdata
         'HandleVisibility', 'off', 'Visible', 'on');
 
 
-    pkg.i_addbutton2fig(UitoolbarHandle, 'off', @HighlightGenes, 'plotpicker-qqplot.gif', 'Highlight top HVGs');
+    pkg.i_addbutton2fig(UitoolbarHandle, 'off', @in_HighlightGenes, 'plotpicker-qqplot.gif', 'Highlight top HVGs');
     pkg.i_addbutton2fig(UitoolbarHandle, 'off', @in_HighlightSelectedGenes, 'xplotpicker-qqplot.gif', 'Highlight selected genes');
     pkg.i_addbutton2fig(UitoolbarHandle, 'off', @ExportGeneNames, 'export.gif', 'Export selected HVG gene names...');
+    pkg.i_addbutton2fig(UitoolbarHandle, 'off', @ExportTable, 'xexport.gif', 'Export HVG Table...');
     pkg.i_addbutton2fig(UitoolbarHandle, 'off', @EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Enrichment analysis...');
     pkg.i_addbutton2fig(UitoolbarHandle, 'off', @ChangeAlphaValue, 'xplotpicker-andrewsplot.gif', 'Change MarkerFaceAlpha value');
 
@@ -64,10 +67,20 @@ if dofit
 
     [~, d] = dsearchn(xyz1, [x, y, z]);
 
-    d(x>max(xyz1(:,1)))=d(x>max(xyz1(:,1)))./100;
-    d(x<min(xyz1(:,1)))=d(x<min(xyz1(:,1)))./10;
 
-    [~, hvgidx] = sort(d, 'descend');
+    fitmeanv=xyz1(:,1);
+    d(x>max(fitmeanv))=d(x>max(fitmeanv))./100;
+    d(x<min(fitmeanv))=d(x<min(fitmeanv))./10;
+
+    [sortedd, hvgidx] = sort(d, 'descend');
+
+    hvg=g(hvgidx);
+
+lgu=lgu(hvgidx);
+lgcv=lgcv(hvgidx);
+dropr=dropr(hvgidx);    
+    T=table(sortedd,hvgidx,hvg,lgu,lgcv,dropr);
+    assignin("base","T",T);
 
     %g(idx20)
 
@@ -90,25 +103,32 @@ end
         end
     end            
 
-    function HighlightGenes(~, ~)
+    function in_HighlightGenes(~, ~)
         %h.MarkerIndices=idx20;
-        k = gui.i_inputnumk(200, 10, 2000);
-        if isempty(k), return; end
         idx = zeros(1, length(hvgidx));
+        h.BrushData = idx;
+
+        k = gui.i_inputnumk(200, 1, 2000);
+        if isempty(k), return; end
+        
+
         idx(hvgidx(1:k)) = 1;
         h.BrushData = idx;
         % datatip(h, 'DataIndex', idx20);
         %h2=scatter3(x(idx20),y(idx20),z(idx20),'rx');  % 'filled','MarkerFaceAlpha',.5);
     end
 
-    function in_HighlightSelectedGenes(~,~)
-        
+    function ExportTable(~, ~)
+        gui.i_exporttable(T, true, 'T');
+    end
+
+    function in_HighlightSelectedGenes(~,~)        
         %Myc, Oct3/4, Sox2, Klf4
         [glist] = gui.i_selectngenes(SingleCellExperiment(X,g),...
             intersect(upper(g),["MYC", "POU5F1", "SOX2", "KLF4"]));
         if ~isempty(glist)            
-            [y,idx]=ismember(glist,g);
-            idx=idx(y);            
+            [yes,idx]=ismember(glist,g);
+            idx=idx(yes);
             % idv = zeros(1, length(hvgidx));
             % idv(idx)=1;
             % h.BrushData = idv;
@@ -126,9 +146,16 @@ end
         end
         fprintf('%d genes are selected.\n', sum(ptsSelected));
 
+        gselected=g(ptsSelected);
+        [yes,idx]=ismember(gselected,T.hvg);
+        Tx=T(idx,:);
+        Tx=sortrows(Tx,1,'descend');        
+        if ~all(yes), error('Running time error.'); end
+        tgenes=Tx.hvg;
+
         labels = {'Save gene names to variable:'};
         vars = {'g'};
-        values = {g(ptsSelected)};
+        values = {tgenes};
         export2wsdlg(labels, vars, values, ...
             'Save Data to Workspace');
     end
@@ -141,7 +168,15 @@ end
         end
         fprintf('%d genes are selected.\n', sum(ptsSelected));
 
-        tgenes = g(ptsSelected);
+        
+
+        gselected=g(ptsSelected);
+        [yes,idx]=ismember(gselected,T.hvg);
+        Tx=T(idx,:);
+        Tx=sortrows(Tx,1,'descend');        
+        if ~all(yes), error('Running time error.'); end
+        tgenes=Tx.hvg;
+
         answer = gui.timeoutdlg(@(x){questdlg('Which analysis?', '', ...
             'Enrichr', 'GOrilla', 'Enrichr+GOrilla', 'Enrichr')}, 15);
         if isempty(answer), return; end

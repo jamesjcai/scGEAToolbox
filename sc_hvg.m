@@ -182,19 +182,16 @@ end
     end
 
     function HighlightGenes(~, ~)
-        %h.MarkerIndices=idx20;
-        k = gui.i_inputnumk(100, 10, 2000);
-        if isempty(k), return; end
         idx = zeros(1, length(hvgidx));
+        h.BrushData = idx;
+        k = gui.i_inputnumk(200, 1, 2000);
+        if isempty(k), return; end
         idx(hvgidx(1:k)) = 1;
         h.BrushData = idx;
-        % datatip(h, 'DataIndex', idx20);
-        %h2=scatter3(x(idx20),y(idx20),z(idx20),'rx');  % 'filled','MarkerFaceAlpha',.5);
     end
 
     function ExportTable(~, ~)
         gui.i_exporttable(T, true, 'T');
-        
     end
 
     function ExportGeneNames(~, ~)
@@ -205,9 +202,18 @@ end
         end
         fprintf('%d genes are selected.\n', sum(ptsSelected));
 
+
+        gselected=g(ptsSelected);
+        [yes,idx]=ismember(gselected,T.genes);
+        Tx=T(idx,:);
+        Tx=sortrows(Tx,4,'descend');
+        if ~all(yes), error('Running time error.'); end
+        tgenes=Tx.genes;
+
+
         labels = {'Save gene names to variable:'};
         vars = {'g'};
-        values = {g(ptsSelected)};
+        values = {tgenes};
         export2wsdlg(labels, vars, values, ...
             'Save Data to Workspace');
     end
@@ -220,7 +226,14 @@ end
         end
         fprintf('%d genes are selected.\n', sum(ptsSelected));
 
-        tgenes = g(ptsSelected);
+        gselected=g(ptsSelected);
+        [yes,idx]=ismember(gselected,T.genes);
+        Tx=T(idx,:);
+        Tx=sortrows(Tx,4,'descend');
+        if ~all(yes), error('Running time error.'); end
+        tgenes=Tx.genes;
+
+        
         answer = gui.timeoutdlg(@(x){questdlg('Which analysis?', '', ...
             'Enrichr', 'GOrilla', 'Enrichr+GOrilla', 'Enrichr')}, 15);
         if isempty(answer), return; end
