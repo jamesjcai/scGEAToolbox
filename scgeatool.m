@@ -224,7 +224,7 @@ end
                 end
 
             case 'GEO Accession Number(s)...'
-                acc = inputdlg({'Input number (e.g., GSM3308547,GSM3308548):'}, ...
+                acc = inputdlg({'Input Number(s) (e.g., GSM3308547,GSM3308548):'}, ...
                     'GEO Accession', [1, 50], {'GSM3308547'});
                 if isempty(acc), return; end
                 acc = deblank(acc{1});

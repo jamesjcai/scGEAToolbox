@@ -73,13 +73,15 @@ a = findall(FigureHandle, 'tag', 'figMenuUpdateFileNew');
 delete(a);
 a = findall(FigureHandle, 'tag', 'figMenuOpen');
 a.MenuSelectedFcn = 'scgeatool';
+
 a = findall(FigureHandle, 'tag', 'figMenuFileSaveAs');
 delete(a);
 a = findall(FigureHandle, 'tag', 'figMenuFileSave');
+a.Text='&Save SCE...';
 a.MenuSelectedFcn = @callback_SaveX;
+
 a = findall(FigureHandle, 'tag', 'figMenuGenerateCode');
 delete(a);
-
 a = findall(FigureHandle, 'tag', 'figMenuFileImportData');
 a.Text = 'Import Data Using GEO Accession...';
 a.MenuSelectedFcn = @in_GEOAccessionToSCE;
@@ -570,7 +572,9 @@ end
         answer = questdlg('Current SCE will be replaced. Continue?');
         if ~strcmp(answer, 'Yes'), return; end
 
-        acc = inputdlg({'GEO accession:'}, '', [1, 40], {'GSM3308545'});
+        
+        acc = inputdlg({'Input Number(s) (e.g., GSM3308547,GSM3308548):'}, ...
+                    'GEO Accession', [1, 50], {'GSM3308547'});        
         % [acc]=gui.i_inputgenelist(["GSM3308545","GSM3308546","GSM3308547"]);
         if isempty(acc), return; end
         acc = acc{1};
