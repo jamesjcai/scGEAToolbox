@@ -15,21 +15,29 @@ for k = 1:length(sces)
     end
 end
 
+needappendix=false;
 sce = sces{1};
 c = ones(sce.NumCells, 1);
 for k = 2:length(sces)
     c = [c; k * ones(sces{k}.NumCells, 1)];
-    [sce] = i_merge2sces(sce, sces{k}, method);
+    [sce, hasidoverlap] = i_merge2sces(sce, sces{k}, method);
+    if hasidoverlap
+        needappendix=true;
+    end
 end
 if ~keepbatchid || numel(unique(sce.c_batch_id))==1 
     sce.c_batch_id = c; 
 end
+if needappendix
+    sce.c_batch_id = strcat(string(sce.c_batch_id), "_", string(c));
+    warning('A suffix is added to SCE.C_BATCH_ID to distinguish cells'' original batch IDs.');
+end
 
 end
 
 
-function [sce] = i_merge2sces(sce1, sce2, method)
-
+function [sce, hasidoverlap] = i_merge2sces(sce1, sce2, method)
+    hasidoverlap = false;
     if nargin < 3, method = 'intersect'; end
     [X, g, ~] = sc_mergedata(sce1.X, sce2.X, ...
         sce1.g, sce2.g, method);
@@ -46,6 +54,7 @@ function [sce] = i_merge2sces(sce1, sce2, method)
     
     if ~isempty(sce1.c_batch_id) && ~isempty(sce2.c_batch_id)
         sce.c_batch_id = [sce1.c_batch_id; sce2.c_batch_id];
+        hasidoverlap = ~isempty(intersect(sce1.c_batch_id, sce2.c_batch_id));
     end
     
     if ~isempty(sce1.c_cell_cycle_tx) && ~isempty(sce2.c_cell_cycle_tx)
