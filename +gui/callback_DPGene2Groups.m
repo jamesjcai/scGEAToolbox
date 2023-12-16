@@ -109,15 +109,14 @@ else
 end
 if isempty(idxneedplot), return; end
 
-
-answer=questdlg('Where to save figure files?','','Use TEMP Folder', ...
+answer=questdlg('Where to save figure files?','','Use Temporary Folder', ...
     'Select a Folder','Cancel','Use TEMP Folder');
 switch answer
     case 'Select a Folder'
         outdir = uigetdir;
         if ~isfolder(outdir), return; end
         waitfor(helpdlg(sprintf('Figure files will be saved in %s.',outdir),''));        
-    case 'Use TEMP Folder'
+    case 'Use Temporary Folder'
         outdir = tempdir;
     case 'Cancel'
         return;

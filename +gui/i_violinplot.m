@@ -94,8 +94,8 @@ set(f, 'visible', 'on');
             a = zeros(length(cLorder), 1);            
             for k = 1:length(cLorder)
                 a(k) = sum(thisc == cLorder(k));
-                cb=pad([b.XTickLabel{k}; sprintf("(n=%d)",a(k))],'both');
-                b.XTickLabel{k} = strtrim(sprintf('%s\\newline%s', cb(:)));                
+                cb=pad([string(b.XTickLabel{k}); sprintf("(n=%d)",a(k))],'both');
+                b.XTickLabel{k} = sprintf('%s\\newline%s', cb(:));                
             end
         else
             b.XTickLabel = cLorder;                
