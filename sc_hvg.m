@@ -232,22 +232,24 @@ end
         Tx=sortrows(Tx,4,'descend');
         if ~all(yes), error('Running time error.'); end
         tgenes=Tx.genes;
-
         
-        answer = gui.timeoutdlg(@(x){questdlg('Which analysis?', '', ...
-            'Enrichr', 'GOrilla', 'Enrichr+GOrilla', 'Enrichr')}, 15);
-        if isempty(answer), return; end
-        switch answer
-            case 'Enrichr'
-                run.web_Enrichr(tgenes, length(tgenes));
-            case 'GOrilla'
-                run.web_GOrilla(tgenes);
-            case 'Enrichr+GOrilla'
-                run.web_Enrichr(tgenes, length(tgenes));
-                run.web_GOrilla(tgenes);
-            otherwise
-                return;
-        end
+        gui.i_enrichtest(tgenes, g);
+        
+        
+        % answer = gui.timeoutdlg(@(x){questdlg('Which analysis?', '', ...
+        %     'Enrichr', 'GOrilla', 'Enrichr+GOrilla', 'Enrichr')}, 15);
+        % if isempty(answer), return; end
+        % switch answer
+        %     case 'Enrichr'
+        %         run.web_Enrichr(tgenes, length(tgenes));
+        %     case 'GOrilla'
+        %         run.web_GOrilla(tgenes);
+        %     case 'Enrichr+GOrilla'
+        %         run.web_Enrichr(tgenes, length(tgenes));
+        %         run.web_GOrilla(tgenes);
+        %     otherwise
+        %         return;
+        % end
     end
 end
 

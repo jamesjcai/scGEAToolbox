@@ -175,7 +175,7 @@ end
         if ~all(yes), error('Running time error.'); end
         tgenes=Tx.hvg;
 
-        gui.i_enrichtest(tgenes, T.hvg);
+        gui.i_enrichtest(tgenes, g);
 
         % answer = gui.timeoutdlg(@(x){questdlg('Which analysis?', '', ...
         %     'Enrichr', 'GOrilla', 'Enrichr+GOrilla', 'Enrichr')}, 15);
