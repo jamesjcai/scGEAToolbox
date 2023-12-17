@@ -71,6 +71,7 @@ if dofit
     fitmeanv=xyz1(:,1);
     d(x>max(fitmeanv))=d(x>max(fitmeanv))./100;
     d(x<min(fitmeanv))=d(x<min(fitmeanv))./10;
+    d((y-xyz1(:, 2))<0)=d((y-xyz1(:, 2))<0)./100;
 
     [sortedd, hvgidx] = sort(d, 'descend');
 
@@ -175,7 +176,7 @@ end
         if ~all(yes), error('Running time error.'); end
         tgenes=Tx.hvg;
 
-        gui.i_enrichtest(tgenes, g);
+        gui.i_enrichtest(tgenes, g, numel(tgenes));
 
         % answer = gui.timeoutdlg(@(x){questdlg('Which analysis?', '', ...
         %     'Enrichr', 'GOrilla', 'Enrichr+GOrilla', 'Enrichr')}, 15);

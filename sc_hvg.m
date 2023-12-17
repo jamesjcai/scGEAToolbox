@@ -233,7 +233,7 @@ end
         if ~all(yes), error('Running time error.'); end
         tgenes=Tx.genes;
         
-        gui.i_enrichtest(tgenes, g);
+        gui.i_enrichtest(tgenes, g, numel(tgenes));
         
         
         % answer = gui.timeoutdlg(@(x){questdlg('Which analysis?', '', ...
