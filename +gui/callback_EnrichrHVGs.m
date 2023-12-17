@@ -9,9 +9,9 @@ answer = questdlg('This function applies to a homogeneous group of cells. Remove
 if ~strcmp(answer, 'Yes'), return; end
 
 answer = questdlg('Which HVG detecting method to use?', '', ...
-    'Brennecke et al. (2013) [PMID:24056876]', ...
     'Splinefit Method [PMID:31697351]', ...
-    'Brennecke et al. (2013) [PMID:24056876]');
+    'Brennecke et al. (2013) [PMID:24056876]', ...
+    'Splinefit Method [PMID:31697351]');
 
     switch answer
         case 'Brennecke et al. (2013) [PMID:24056876]'
@@ -37,4 +37,3 @@ answer = questdlg('Which HVG detecting method to use?', '', ...
     end
 
 end
-

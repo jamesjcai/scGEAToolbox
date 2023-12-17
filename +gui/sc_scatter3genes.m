@@ -76,13 +76,12 @@ if dofit
     [sortedd, hvgidx] = sort(d, 'descend');
 
     hvg=g(hvgidx);
+    lgu=lgu(hvgidx);
+    lgcv=lgcv(hvgidx);
+    dropr=dropr(hvgidx);    
 
-lgu=lgu(hvgidx);
-lgcv=lgcv(hvgidx);
-dropr=dropr(hvgidx);    
     T=table(sortedd,hvgidx,hvg,lgu,lgcv,dropr);
-    assignin("base","T",T);
-
+    %assignin("base","T",T);
     %g(idx20)
 
     disp('scGEAToolbox controls for the variance-mean relationship of gene')
@@ -194,7 +193,3 @@ end
         % end
     end        
 end
-
-
-
-
