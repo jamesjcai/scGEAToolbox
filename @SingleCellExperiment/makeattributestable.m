@@ -15,8 +15,6 @@ if isempty(obj.table_attributes) || forced
         end
     end
     obj.table_attributes = T;
-    disp('table_attributes made.');
-else
-    disp('table_attributes existed.');
+    %disp('table_attributes made.');
 end
 end

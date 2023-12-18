@@ -1043,7 +1043,7 @@ end
     function in_ExportCellAttribTable(~,~)
         sce = sce.makeattributestable;
         T = sce.table_attributes;
-        gui.i_exporttable(T,true,"Tcellattrib");
+        gui.i_exporttable(T,true,"Tcellattrib","CellattribTable");
     end
 
     function in_RenameCellTypeBatchID(src, ~, answer)
