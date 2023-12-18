@@ -20,7 +20,7 @@ switch answer
         speciestag = "zebrafish";
     otherwise
         speciestag = [];
-        helpdlg('Action cancelled.','');
+        % helpdlg('Action cancelled.','');
         return;
 end
 

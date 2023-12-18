@@ -280,7 +280,10 @@ in_addmenu(m_exp, 0, @in_DrawTrajectory, 'Plot Cell Trajectory...');
 
 in_addmenu(m_exp, 1, {@in_MergeSCEs, 1}, 'Merge SCEs in Workspace...');
 in_addmenu(m_exp, 0, {@in_MergeSCEs, 2}, 'Merge SCE Data Files...');
-in_addmenu(m_exp, 0, {@in_RenameCellTypeBatchID, 'Batch ID'}, 'Rename Batch IDs...');
+
+% in_addmenu(m_exp, 0, {@in_RenameCellTypeBatchID, 'Batch ID'}, 'Rename Batch IDs...');
+in_addmenu(m_exp, 1, @in_ExportCellAttribTable, 'Export Cell Attribute Table...');
+
 in_addmenu(m_exp, 0, @callback_ViewMetaData, 'View Metadata...');
 in_addmenu(m_exp, 1, {@gui.i_savemainfig, 3}, 'Save Figure to PowerPoint File...');
 in_addmenu(m_exp, 0, {@gui.i_savemainfig, 2}, 'Save Figure as Graphic File...');
@@ -1035,6 +1038,12 @@ end
         h.Marker = para.oldMarker;
         h.SizeData = para.oldSizeData;
         colormap(para.oldColorMap);
+    end
+
+    function in_ExportCellAttribTable(~,~)
+        sce = sce.makeattributestable;
+        T = sce.table_attributes;
+        gui.i_exporttable(T,true,"Tcellattrib");
     end
 
     function in_RenameCellTypeBatchID(src, ~, answer)

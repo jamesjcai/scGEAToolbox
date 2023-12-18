@@ -40,11 +40,11 @@ end
 
 gui.gui_waitbar_adv(fw);
 
-answer = questdlg('Sort by size of cell groups?');
-if strcmpi(answer, 'Yes')
+%answer = questdlg('Sort by size of cell groups?');
+%if strcmpi(answer, 'Yes')
     [~, idxx] = sort(cmx, 'descend');
     SCEV=SCEV(idxx);
-end
+%end
 
 try
     sces = sce.s;

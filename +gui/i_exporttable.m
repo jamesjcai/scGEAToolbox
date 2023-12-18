@@ -1,14 +1,15 @@
-function [answer, filename] = i_exporttable(T, needwait, TName, defname, preanswer)
+function [answer, filename] = i_exporttable(T, needwait, TName, ...
+    deffilename, outtype)
 
-if nargin < 5, preanswer = []; end
-if nargin < 4, defname = []; end
+if nargin < 5, outtype = []; end
+if nargin < 4, deffilename = []; end
 if nargin < 3, TName = 'T'; end
 if nargin < 2, needwait = false; end
 
 filename = [];
 
-if ~isempty(preanswer)
-    answer = preanswer;
+if ~isempty(outtype)
+    answer = outtype;
 else
     if ~(ismcc || isdeployed)
         answer = questdlg('Export & save data to:', '', ...
@@ -34,8 +35,8 @@ switch answer
             export2wsdlg(labels, vars, values);
         end
     case 'Text file'
-        if ~isempty(defname)
-            [file, path] = uiputfile({'*.txt'; '*.*'}, 'Save as', defname);
+        if ~isempty(deffilename)
+            [file, path] = uiputfile({'*.txt'; '*.*'}, 'Save as', deffilename);
         else
             [file, path] = uiputfile({'*.txt'; '*.*'}, 'Save as');
         end
@@ -56,9 +57,9 @@ switch answer
             end
         end
     case 'Excel file'
-        if ~isempty(defname)
+        if ~isempty(deffilename)
             [file, path] = uiputfile({'*.xlsx'; '*.xls'; '*.*'}, ...
-                'Save as', defname);
+                'Save as', deffilename);
         else
             [file, path] = uiputfile({'*.xlsx'; '*.xls'; '*.*'}, ...
                 'Save as');

@@ -227,7 +227,9 @@ end
                 acc = inputdlg({'Input Number(s) (e.g., GSM3308547,GSM3308548):'}, ...
                     'GEO Accession', [1, 50], {'GSM3308547'});
                 if isempty(acc), return; end
-                acc = deblank(acc{1});
+                %acc = strtrim(deblank(acc{1}));
+                %acc = strrep(acc,' ','');
+                acc = regexprep(acc,'[^a-zA-Z0-9,;]','');
                 if isempty(acc) || ~strlength(acc) > 4, return; end
                 if strlength(acc) > 4 && ~isempty(regexp(acc, 'G.+', 'once'))
                     accv = unique(strsplit(acc, {',', ';', ' '}), 'stable');

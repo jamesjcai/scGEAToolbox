@@ -16,7 +16,7 @@ if guiwaitbar
     gui.gui_waitbar_adv(fw, 0.15);
 end
 for k = 1:length(accv)
-    [sce] = sc_readgeoaccession(accv(k));
+    [sce] = sc_readgeoaccession(strtrim(accv(k)));
     if guiwaitbar
         gui.gui_waitbar_adv(fw, 0.15+0.75*(k / length(accv)));
     end
@@ -50,10 +50,19 @@ if strcmp(answerstruced, 'Yes')
         if ~isempty(speciestag)
             if isempty(ndim), return; end
             sce = sce.embedcells('tsne', true, true, ndim);
-            k = round(sce.NumCells/100);
-            sce = sce.clustercells(k, 'kmeans', true);
-            sce = pkg.e_celltypes2allclust(sce, speciestag, true);
+            %k = round(sce.NumCells/100);
+            %sce = sce.clustercells(k, 'kmeans', true);
+            sce = sce.clustercells([], [], true);
+            %sce = pkg.e_celltypes2allclust(sce, speciestag, true);
+            sce = sce.assigncelltype(speciestag, false);
         end
     end
 end
 end
+
+    % 
+    % sce = sce.qcfilter;
+    % sce = sce.embedcells('tSNE',true);
+    % sce = sce.clustercells([], [], true);
+    % sce = sce.assigncelltype(speciestag, false);
+
