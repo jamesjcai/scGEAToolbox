@@ -160,8 +160,6 @@ in_addbuttonpush(0, 0, @gui.callback_GeneHeatMap, "icon-mat-apps-20.gif", "Gene 
 
 
 in_addbuttonpush(0, 0, @call_scgeatool, "IMG00107.GIF", " ");
-%i_addbutton(0,1,@callback_CompareGeneBtwCls,"plotpicker-priceandvol.gif","Compare between groups");
-%i_addbutton_push(0,1,@callback_CellTypeMarkerScores,"cellscore.gif","Calculate signature scores for each cell");
 in_addbuttonpush(0, 1, @gui.callback_CompareGeneBtwCls, "cellscore2.gif", "Cell score analysis--obtaining gene signature score for each cell");
 in_addbuttonpush(0, 0, @gui.callback_GetCellSignatureMatrix, "icon-fa-connectdevelop-20.gif", "Cell state analysis--obtaining multiple gene signature scores to reveal functional state of cells");
 %i_addbutton_push(0,0,@call_scgeatool,"IMG00107.GIF"," ");

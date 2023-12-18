@@ -1,7 +1,7 @@
 function obj = estimatecellcycle(obj, forced, methodid)
 if nargin < 3, methodid = 1; end
 if nargin < 2, forced = false; end
-if isempty(obj.c_cell_cycle_tx) || forced
+if isempty(obj.c_cell_cycle_tx) || forced || (length(unique(obj.c_cell_cycle_tx))==1 && unique(obj.c_cell_cycle_tx)=="undetermined" )
     switch methodid
         case 1
             obj.c_cell_cycle_tx = sc_cellcyclescore(obj.X, obj.g);
