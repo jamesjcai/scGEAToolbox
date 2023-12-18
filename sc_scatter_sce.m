@@ -280,8 +280,6 @@ in_addmenu(m_exp, 0, @in_DrawTrajectory, 'Plot Cell Trajectory...');
 
 in_addmenu(m_exp, 1, {@in_MergeSCEs, 1}, 'Merge SCEs in Workspace...');
 in_addmenu(m_exp, 0, {@in_MergeSCEs, 2}, 'Merge SCE Data Files...');
-
-% in_addmenu(m_exp, 0, {@in_RenameCellTypeBatchID, 'Batch ID'}, 'Rename Batch IDs...');
 in_addmenu(m_exp, 1, @in_ExportCellAttribTable, 'Export Cell Attribute Table...');
 
 in_addmenu(m_exp, 0, @callback_ViewMetaData, 'View Metadata...');
@@ -1041,9 +1039,9 @@ end
     end
 
     function in_ExportCellAttribTable(~,~)
-        sce = sce.makeattributestable;
-        T = sce.table_attributes;
-        gui.i_exporttable(T,true,"Tcellattrib","CellattribTable");
+        sce = sce.makeattributestable(true);        
+        gui.i_exporttable(sce.table_attributes,true, ...
+            "Tcellattrib","CellattribTable");
     end
 
     function in_RenameCellTypeBatchID(src, ~, answer)

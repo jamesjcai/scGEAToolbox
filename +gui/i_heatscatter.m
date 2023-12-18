@@ -28,8 +28,11 @@ grid on
 % h1.YDataSource='explorer2IDX';
 %title(targetg)
 
-a = getpref('scgeatoolbox', 'prefcolormapname', 'autumn');
 
-gui.i_setautumncolor(c, a, false);
+% a = getpref('scgeatoolbox', 'prefcolormapname', 'autumn');
+% gui.i_setautumncolor(c, a, false);
+
+
+
 %cb=colorbar(h1);
 %cb.Label.String =  'Expression Level';

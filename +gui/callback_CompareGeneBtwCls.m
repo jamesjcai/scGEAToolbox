@@ -23,13 +23,12 @@ bb = 'No, just show values';
                     return;
             end
 
-            if showcomparision
-
+            if ~showcomparision
+                thisc = ones(sce.NumCells, 1);
+            else
                 allowunique = false;
                 [thisc] = gui.i_select1class(sce, allowunique);
                 if isempty(thisc), return; end
-
-
                 if length(unique(thisc)) == 1
                     answer = questdlg("All cells are in the same group. No comparison will be made. Continue?", ...
                         "", 'Yes', 'No', 'Cancel', 'No');
@@ -38,8 +37,7 @@ bb = 'No, just show values';
                         otherwise
                             return;
                     end
-                else
-
+                else    % length(unique(thisc)) ~= 1
                     [ci, cLi] = grp2idx(thisc);
                     listitems = natsort(string(cLi));
                     n = length(listitems);
@@ -57,8 +55,6 @@ bb = 'No, just show values';
                         return;
                     end
                 end
-            else % showcomparision=false
-                thisc = ones(sce.NumCells, 1);
             end
 
 
@@ -295,12 +291,12 @@ bb = 'No, just show values';
                 %     [h1]=sc_scattermarker(sce.X,sce.g,...
                 %                  sce.s,g,methodid);
                 gui.i_heatscatterfig(sce, y, posg, ttxt);
-                answer = questdlg('Also show stem plot?', '');
-                if answer == "Yes"
-                    gui.i_stemscatterfig(sce, y, posg, ttxt);
-                else
-                    return;
-                end
+                % answer = questdlg('Also show stem plot?', '');
+                % if answer == "Yes"
+                %     gui.i_stemscatterfig(sce, y, posg, ttxt);
+                % else
+                %     return;
+                % end
             end
 
 
