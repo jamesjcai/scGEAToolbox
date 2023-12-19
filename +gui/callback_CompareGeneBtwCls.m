@@ -153,6 +153,11 @@ bb = 'No, just show values';
 
                     fw = gui.gui_waitbar;
                     y = sc_potency(sce.X, sce.g, speciestag);
+                    if sum(strcmp('cell_potency', sce.list_cell_attributes)) == 0
+                        sce.list_cell_attributes = [sce.list_cell_attributes, ...
+                            {'cell_potency', y(:)}];                  
+                    end
+
                     ttxt = 'Differentiation Potency';
                     posg = [];
                     gui.gui_waitbar(fw);
@@ -177,6 +182,10 @@ bb = 'No, just show values';
                     y = sum(sce.X);
                     ttxt = 'Library Size';
                     posg = [];
+                    if sum(strcmp('library_size', sce.list_cell_attributes)) == 0
+                        sce.list_cell_attributes = [sce.list_cell_attributes, ...
+                            {'library_size', y(:)}];                  
+                    end                    
 
                 case 'Expression of Individual Genes'
                     [glist] = gui.i_selectngenes(sce);
@@ -299,5 +308,6 @@ bb = 'No, just show values';
                 % end
             end
 
+            guidata(FigureHandle, sce);
 
-        end
+end

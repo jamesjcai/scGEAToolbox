@@ -160,7 +160,7 @@ in_addbuttonpush(0, 0, @gui.callback_GeneHeatMap, "icon-mat-apps-20.gif", "Gene 
 
 
 in_addbuttonpush(0, 0, @call_scgeatool, "IMG00107.GIF", " ");
-in_addbuttonpush(0, 1, @gui.callback_CompareGeneBtwCls, "cellscore2.gif", "Cell score analysis--obtaining gene signature score for each cell");
+in_addbuttonpush(0, 1, @in_CompareGeneBtwCls, "cellscore2.gif", "Cell score analysis--obtaining gene signature score for each cell");
 in_addbuttonpush(0, 0, @gui.callback_GetCellSignatureMatrix, "icon-fa-connectdevelop-20.gif", "Cell state analysis--obtaining multiple gene signature scores to reveal functional state of cells");
 %i_addbutton_push(0,0,@call_scgeatool,"IMG00107.GIF"," ");
 in_addbuttonpush(0, 1, @gui.callback_DEGene2Groups, "plotpicker-boxplot.gif", "Differential expression (DE) analysis)");
@@ -316,6 +316,12 @@ showuseronboarding = getpref('scgeatoolbox', 'useronboardingtoolbar');
 if ~showuseronboarding
     set(UserToolbarHandle, 'Visible', 'off');
 end
+
+
+    function in_CompareGeneBtwCls(src,events)
+        gui.callback_CompareGeneBtwCls(src,events);
+        sce = guidata(FigureHandle);
+    end
 
 
     function in_turnonuserguiding(~, ~)
@@ -1420,7 +1426,7 @@ end
         %clable
         %newpickclable
         if strcmp(clable, 'Cell Cycle Phase')
-            if length(unique(thisc)) > 1
+            if ~all(strcmp(unique(thisc), "undetermined"))
                 sce.c_cell_cycle_tx = thisc;
             end
         end
