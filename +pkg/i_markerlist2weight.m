@@ -14,11 +14,17 @@ end
 
 if isempty(indata)
     if isempty(sce)
-        indata = sprintf('Cell type 1\tgene1,gene2,gene3\nCell type 2\tgene4,gene5');
+        indata = sprintf('Cell type 1\tgene1,gene2,gene3,gene4\nCell type 2\tgene5,gene6,gene7');
     else
-        a = sce.g(randperm(length(sce.g)));
-        a1 = sprintf('%s,%s,%s', a(1), a(2), a(3));
-        a2 = sprintf('%s,%s', a(4), a(5));
+        try
+            t=sc_splinefit(sce.X,sce.g);
+            a=t.genes;
+        catch ME
+            warning(ME.message);
+            a = sce.g(randperm(length(sce.g)));
+        end        
+        a1 = sprintf('%s,%s,%s,%s', a(1), a(2), a(3), a(4));
+        a2 = sprintf('%s,%s,%s', a(5), a(6), a(7));
         indata = sprintf('Cell type 1\t%s\nCell type 2\t%s', a1, a2);
     end
 end

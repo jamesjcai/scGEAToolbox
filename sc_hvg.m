@@ -100,7 +100,7 @@ i = ~isnan(cv2);
 T = T(i, :);
 if sortit
     T.fitratio(T.dropr > (1 - 0.05)) = 0; % ignore genes with dropout rate > 0.95
-    disp('NOTE: Genes with dropout rate > 0.95 are excluded.');
+    % disp('NOTE: Genes with dropout rate > 0.95 are excluded.');
     [T, hvgidx] = sortrows(T, 'fitratio', 'descend');
     if nargout > 1
         Xsorted = Xori(hvgidx, :);

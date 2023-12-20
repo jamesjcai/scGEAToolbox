@@ -42,8 +42,17 @@ s = cumsum([0; sqrt(diff(lgu(:)).^2+diff(lgcv(:)).^2 ...
 pp1 = splinefit(s, xyz.', 15, 0.75);
 xyz1 = ppval(pp1, s)';
 
-D = pdist2(xyz, xyz1);
-d = min(D, [], 2);
+
+[~, d] = dsearchn(xyz1, xyz);
+fitmeanv=xyz1(:,1);
+x=xyz(:,1); y=xyz(:,2);
+d(x>max(fitmeanv))=d(x>max(fitmeanv))./100;
+d(x<min(fitmeanv))=d(x<min(fitmeanv))./10;
+d((y-xyz1(:, 2))<0)=d((y-xyz1(:, 2))<0)./100;
+
+
+%D = pdist2(xyz, xyz1);
+%d = min(D, [], 2);
 dx = d(d <= quantile(d, 0.9));
 
 distFit = fitdist([-dx; dx], 'Normal');
@@ -58,7 +67,7 @@ end
 % 'variablenames',{'Genes','Log10_Mean','Dropout_Rate','Log10_CV','Deviation_3DFeature'});
 
 T.d(T.dropr > (1 - 0.05)) = 0; % ignore genes with dropout rate > 0.95
-disp('NOTE: Genes with dropout rate > 0.95 are excluded.');
+% disp('NOTE: Genes with dropout rate > 0.95 are excluded.');
 if sortit, T = sortrows(T, 'd', 'descend'); end
 
 if length(genes) ~= length(genelist)
@@ -69,7 +78,7 @@ if plotit
     figure;
     scatter3(xyz(:, 1), xyz(:, 2), xyz(:, 3), 'filled', 'MarkerFaceAlpha', .1);
     hold on
-    plot3(xyz1(:, 1), xyz1(:, 2), xyz1(3, 3), '-', 'linewidth', 4);
+    plot3(xyz1(:, 1), xyz1(:, 2), xyz1(:, 3), '-', 'linewidth', 4);
     xlabel('Mean, log');
     ylabel('CV, log');
     zlabel('Dropout rate (% of zeros)');
