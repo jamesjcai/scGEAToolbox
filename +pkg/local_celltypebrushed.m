@@ -13,7 +13,7 @@ else
     [~, i] = ismember(brushedData, s, 'rows');
 end
 Xi = X(:, i);
-gi = genelist;
+gi = upper(genelist);
 %[Xi,gi]=sc_selectg(Xi,genelist);
 if strcmpi(database, 'clustermole')
     %disp('Using clustermole marker database')

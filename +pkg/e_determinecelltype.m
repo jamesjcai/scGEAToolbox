@@ -1,6 +1,9 @@
 function [Tct] = e_determinecelltype(sce, ptsSelected, wvalu, wgene, celltypev, markergenev)
+
 T = table(celltypev);
 Xk = sce.X(:, ptsSelected);
+gk = upper(sce.g);
+
 S = zeros(length(celltypev), 1);
 for j = 1:length(celltypev)
     g = strsplit(markergenev(j), ',');
@@ -8,9 +11,9 @@ for j = 1:length(celltypev)
     Z = 0;
     ng = 0;
     for ix = 1:length(g)
-        if any(g(ix) == wgene) && any(g(ix) == sce.g)
+        if any(g(ix) == wgene) && any(g(ix) == gk)
             wi = wvalu(g(ix) == wgene);
-            z = median(Xk(sce.g == g(ix), :));
+            z = median(Xk(gk == g(ix), :));
             Z = Z + z * wi;
             ng = ng + 1;
         end
