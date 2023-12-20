@@ -3,7 +3,7 @@ function [thisc, clable, listitems, newpickclable] = i_select1state(sce, ...
 
 if nargin < 2, nobaseline = false; end
 if nargin < 3, nocustome = false; end
-if nargin < 4, noattrib = false; end
+if nargin < 4, noattrib = true; end
 
 thisc = [];
 clable = '';
@@ -40,11 +40,11 @@ if ~nocustome
 end
 
 if ~noattrib
-    if istable(sce.table_attributes)
-        if size(sce.table_attributes, 1) == sce.NumCells
-            listitems = [listitems, 'SCE Attribute Table...'];
-        end
-    end
+    % if istable(sce.table_attributes)
+    %     if size(sce.table_attributes, 1) == sce.NumCells
+    %         listitems = [listitems, 'SCE Attribute Table...'];
+    %     end
+    % end
 end
 
 %if ~(ismcc || isdeployed)
@@ -133,8 +133,8 @@ if tf2 == 1
         otherwise % other properties
 
             [~, idx] = ismember(clable, ...
-                sce.list_cell_attributes(1:2:end));
-            thisc = sce.list_cell_attributes{idx+1};
+                string(sce.list_cell_attributes(1:2:end)));
+            thisc = sce.list_cell_attributes{idx*2};
 
             %nx=length(baselistitems);
             %clable = sce.list_cell_attributes{2 * (indx2 - nx) - 1};

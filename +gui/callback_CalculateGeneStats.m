@@ -31,5 +31,5 @@ else
     gui.gui_waitbar(fw);
 end
 
-gui.i_exporttable(T);
+gui.i_exporttable(T,true,"Tgenestats","GeneStatsTable");
 end

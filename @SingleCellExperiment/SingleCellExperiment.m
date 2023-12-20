@@ -18,7 +18,7 @@ classdef SingleCellExperiment
             'sc3', [], 'simlr', [], 'soptsc', [], ...
             'sinnlrr', [], 'specter', [], ...
             'seurat', [])
-        table_attributes table
+        % table_attributes table
     end
 
     % inputdlg('Sample Info:','Meta data',[10 50],{char(b.')})
@@ -81,15 +81,15 @@ classdef SingleCellExperiment
             r = size(obj.X, 1);
         end
 
-        obj = estimatepotency(obj, speciesid, forced)
-        obj = estimatecellcycle(obj, forced, methodid)
-        obj = embedcells(obj, methodid, forced, usehvgs, ndim, numhvg, whitelist)
-        obj = clustercells(obj, k, methodid, forced)
         obj = assigncelltype(obj, speciesid, keepclusterid)
+        obj = clustercells(obj, k, methodid, forced)
+        obj = embedcells(obj, methodid, forced, usehvgs, ndim, numhvg, whitelist)
+        obj = estimatecellcycle(obj, forced, methodid)
+        obj = estimatepotency(obj, speciesid, forced)
+        obj = onestepraw2anno(obj, speciesid);
         obj = qcfilterwhitelist(obj, libszcutoff, mtratio, min_cells_nonzero, gnnumcutoff, whitelist)
         obj = sortcells(obj, idx);
-        obj = onestepraw2anno(obj, speciesid);
-
+       
         function obj = removecells(obj, idx)
             try
                 obj.X(:, idx) = [];
@@ -137,13 +137,14 @@ classdef SingleCellExperiment
                 end
             end
             % obj.NumCells=size(obj.X,2);
-            if ~isempty(obj.table_attributes)
-                if istable(obj.table_attributes)
-                    if size(obj.table_attributes, 1) == obj.NumCells
-                        obj.table_attributes(idx, :) = [];
-                    end
-                end
-            end
+
+            % if ~isempty(obj.table_attributes)
+            %     if istable(obj.table_attributes)
+            %         if size(obj.table_attributes, 1) == obj.NumCells
+            %             obj.table_attributes(idx, :) = [];
+            %         end
+            %     end
+            % end
         end
 
         function obj = selectcells(obj, idx)
@@ -201,13 +202,14 @@ classdef SingleCellExperiment
                     end
                 end
                 % obj.NumCells=size(obj.X,2);
-                if ~isempty(obj.table_attributes)
-                    if istable(obj.table_attributes)
-                        if size(obj.table_attributes, 1) == obj.NumCells
-                            obj.table_attributes = obj.table_attributes(idx, :);
-                        end
-                    end
-                end
+
+                % if ~isempty(obj.table_attributes)
+                %     if istable(obj.table_attributes)
+                %         if size(obj.table_attributes, 1) == obj.NumCells
+                %             obj.table_attributes = obj.table_attributes(idx, :);
+                %         end
+                %     end
+                % end
             end
         end
 
@@ -222,7 +224,6 @@ classdef SingleCellExperiment
         function r = title(obj)
             %        r=sprintf('%d x %d\n[genes x cells]',...
             %            size(obj.X,1),size(obj.X,2));
-
             r = sprintf('%d x %d', ...
                 size(obj.X, 1), size(obj.X, 2));
         end

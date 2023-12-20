@@ -276,11 +276,11 @@ in_addmenu(m_exp, 0, @in_DrawTrajectory, 'Plot Cell Trajectory...');
 %i_addmenu(m_exp,0,{@MergeCellSubtypes,1,true},'Import All Cell Annotation from SCE in Workspace...');
 %i_addmenu(m_exp,0,{@MergeCellSubtypes,2,true},'Import All Cell Annotation from SCE Data File...');
 
-in_addmenu(m_exp, 1, {@in_MergeSCEs, 1}, 'Merge SCEs in Workspace...');
+in_addmenu(m_exp, 1, {@in_MergeSCEs, 1}, 'Merge SCE Variables in Workspace...');
 in_addmenu(m_exp, 0, {@in_MergeSCEs, 2}, 'Merge SCE Data Files...');
-in_addmenu(m_exp, 1, @in_ExportCellAttribTable, 'Export Cell Attribute Table...');
-
-in_addmenu(m_exp, 0, @callback_ViewMetaData, 'View Metadata...');
+in_addmenu(m_exp, 1, @in_AddEditCellAttribs, 'Add/Edit Cell Attributes...');
+in_addmenu(m_exp, 0, @in_ExportCellAttribTable, 'Export Cell Attribute Table...');
+in_addmenu(m_exp, 0, @gui.callback_ViewMetaData, 'View Metadata...');
 in_addmenu(m_exp, 1, {@gui.i_savemainfig, 3}, 'Save Figure to PowerPoint File...');
 in_addmenu(m_exp, 0, {@gui.i_savemainfig, 2}, 'Save Figure as Graphic File...');
 in_addmenu(m_exp, 0, {@gui.i_savemainfig, 1}, 'Save Figure as SVG File...');
@@ -1042,10 +1042,26 @@ end
         colormap(para.oldColorMap);
     end
 
+    function in_AddEditCellAttribs(~,~)
+        answer = questdlg('Add or edit cell attribute?','', ...
+            'Add','Edit','Cancel','Add');
+        switch answer
+            case 'Edit'
+                addnew = false;
+            case 'Add'
+                addnew = true;
+            otherwise
+                return;
+        end        
+        [sce] = gui.sc_cellattribeditor(sce, addnew);
+        guidata(FigureHandle, sce);
+    end
+
     function in_ExportCellAttribTable(~,~)
-        sce = sce.makeattributestable(true);        
-        gui.i_exporttable(sce.table_attributes,true, ...
-            "Tcellattrib","CellattribTable");
+        %sce = guidata(FigureHandle);
+        T = pkg.makeattributestable(sce);        
+        gui.i_exporttable(T,true, ...
+            "Tcellattrib","CellAttribTable");
     end
 
     function in_RenameCellTypeBatchID(src, ~, answer)
