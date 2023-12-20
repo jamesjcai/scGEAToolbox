@@ -24,7 +24,7 @@ for k = 1:length(glist)
 
 
     tb = uitoolbar(f);
-    pkg.i_addbutton2fig(tb, 'off', {@i_savedata, y, thisc}, ...
+    pkg.i_addbutton2fig(tb, 'off', {@in_savedata, y, thisc}, ...
         'export.gif', 'Export data...');
     % pkg.i_addbutton2fig(tb,'off',{@gui.i_savemainfig,3}, ...
     %     "powerpoint.gif",'Save Figure to PowerPoint File...');
@@ -50,11 +50,13 @@ end
 
 end
 
-
-    function i_savedata(~, ~, a, b)
+function in_savedata(~, ~, a, b)
     T = table(a(:), b(:));
     T.Properties.VariableNames = {'ExprLevel', 'GroupID'};
     T = sortrows(T, 'ExprLevel', 'descend');
     T = sortrows(T, 'GroupID');
-    gui.i_exporttable(T, true);
+    gui.i_exporttable(T, true, 'Tviolindata','ViolinPlotTable');
 end
+
+% "Tcellattrib","CellAttribTable"
+% "Tviolindata","ViolinPlotTable"

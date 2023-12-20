@@ -150,8 +150,13 @@ end
     end
 
     function i_saveCrossTable(~, ~)
-        gui.i_exporttable(T, false, 'TCrosstab');
+        gui.i_exporttable(T, false, 'Tcrosstabul','CrosstabulTable');
+        % "Tcellattrib","CellAttribTable"
+        % "Tviolindata","ViolinPlotTable"
+        % "Tcrosstabul","CrosstabulTable"
     end
+
+
 end
 
 

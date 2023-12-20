@@ -1,11 +1,10 @@
 function [answer, filename] = i_exporttable(T, needwait, TName, ...
     deffilename, outtype)
 
-if nargin < 5, outtype = []; end
-if nargin < 4, deffilename = []; end
-if nargin < 3, TName = 'T'; end
-if nargin < 2, needwait = false; end
-
+if nargin < 5 || isempty(outtype), outtype = []; end
+if nargin < 4 || isempty(deffilename), deffilename = []; end
+if nargin < 3 || isempty(TName), TName = 'T'; end
+if nargin < 2 || isempty(needwait), needwait = false; end
 filename = [];
 
 if ~isempty(outtype)

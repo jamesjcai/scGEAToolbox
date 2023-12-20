@@ -93,7 +93,12 @@ T=T(T.p_val_adj<0.01 & T.gsetsize>=5,:);
             matlab.lang.makeValidName(string(cL1)), matlab.lang.makeValidName(string(cL2)));
         %filesaved = fullfile(outdir, outfile);
         %writetable(T, filesaved, 'FileType', 'spreadsheet');
-        [~, filesaved] = gui.i_exporttable(T, true, 'T', outfile);
+        [~, filesaved] = gui.i_exporttable(T, true, 'Tdpgenesres', outfile);
+            % "Tcellattrib","CellAttribTable"
+            % "Tviolindata","ViolinPlotTable"
+            % "Tcrosstabul","CrosstabulTable"
+            % "Tcellsignmt","CellSignatTable"
+            % "Tdpgenesres","DPGenesResTable"
 
         if ~isempty(filesaved)
            waitfor(helpdlg(sprintf('Result has been saved in %s',filesaved),''));

@@ -62,8 +62,12 @@ T = array2table(Y, 'VariableNames', ...
     matlab.lang.makeUniqueStrings(c_cellid));
 T.Properties.DimensionNames{1} = 'Cell_ID';
 needwait = true;
-gui.i_exporttable(T, needwait);
+gui.i_exporttable(T, needwait,'Tcellsignmt','CellSignatTable');
 
+        % "Tcellattrib","CellAttribTable"
+        % "Tviolindata","ViolinPlotTable"
+        % "Tcrosstabul","CrosstabulTable"
+        % "Tcellsignmt","CellSignatTable"
 
 %assignin('base','Y',Y);
 %assignin('base','listitems',listitems(indx2));

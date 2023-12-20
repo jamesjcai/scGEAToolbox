@@ -22,7 +22,14 @@ if isempty(thisc), return; end
 [T] = pkg.e_findallmarkers(sce.X, sce.g, thisc, [], [], [], true);
 if ~isempty(T)
     needwait = true;
-    [answer, filename] = gui.i_exporttable(T, needwait);
+    [answer, filename] = gui.i_exporttable(T, needwait, 'Tallmarkers', ...
+        'AllMarkersTable');
+            % "Tcellattrib","CellAttribTable"
+            % "Tviolindata","ViolinPlotTable"
+            % "Tcrosstabul","CrosstabulTable"
+            % "Tcellsignmt","CellSignatTable"
+            % "Tdpgenesres","DPGenesResTable"
+            % "Tallmarkers","AllMarkersTable"
     if ~isempty(answer)
         disp(filename);
         helpdlg(sprintf('All Markers Table saved.'), '');
