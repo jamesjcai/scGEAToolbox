@@ -12,13 +12,10 @@ classdef SingleCellExperiment
         list_cell_attributes cell % e.g., attributes = {'size',[4,6,2]};
         list_gene_attributes cell % e.g., attributes = {'size',[4,6,2]};
         metadata string
-        struct_cell_embeddings = struct('tsne', [], 'umap', [], ...
-            'phate', [], 'metaviz', [])
-        struct_cell_clusterings = struct('kmeans', [], 'snndpc', [], ...
-            'sc3', [], 'simlr', [], 'soptsc', [], ...
-            'sinnlrr', [], 'specter', [], ...
-            'seurat', [])
-        % table_attributes table
+        struct_cell_embeddings = struct('tsne', [], 'umap', [], 'phate', [], 'metaviz', [])
+        struct_cell_clusterings = struct('kmeans', [], 'snndpc', [], 'sc3', [])
+        struct_embed struct
+        struct_clust struct
     end
 
     % inputdlg('Sample Info:','Meta data',[10 50],{char(b.')})
@@ -32,7 +29,8 @@ classdef SingleCellExperiment
 
         function obj = SingleCellExperiment(X, g, s, c)
             if nargin < 1, X = []; end
-            if nargin < 2 || isempty(g), g = pkg.i_num2strcell(size(X, 1), "g"); end
+            % if nargin < 2 || isempty(g), g = pkg.i_num2strcell(size(X, 1), "g"); end
+            if nargin < 2 || isempty(g), g = "g"+string((1:size(X, 1))'); end
             if nargin < 3 || isempty(s), s = randn(size(X, 2), 3); end
             if nargin < 4 || isempty(c), c = ones(size(X, 2), 1); end
             assert(size(X, 2) == size(s, 1))
@@ -53,6 +51,17 @@ classdef SingleCellExperiment
                 obj.struct_cell_embeddings.('metaviz') = [];
             end
             % obj.struct_cell_embeddings=struct('tsne',[],'umap',[],'phate',[]);
+            s_embed(1) = struct('id','tsne2d','name','tSNE (2D)','value',[]);
+            s_embed(2) = struct('id','tsne3d','name','tSNE (3D)','value',[]);
+            %s_embed(3) = struct('id','umap2d','name','UMAP (2D)','value',[]);
+            %s_embed(4) = struct('id','umap3d','name','UMAP (3D)','value',[]);
+            %s_embed(5) = struct('id','phate2d','name','PHATE (2D)','value',[]);
+            %s_embed(6) = struct('id','phate3d','name','PHATE (3D)','value',[]);
+            s_clust(1) = struct('id','kmeans','name','k-Means','value',[]);
+            s_clust(2) = struct('id','snndpc','name','SNNDPC','value',[]);
+            %s_clust(3) = struct('id','sc3','name','SC3','value',[]);
+            obj.struct_embed = s_embed;
+            obj.struct_clust = s_clust;
         end
 
         function m = get.NumCells(obj)
@@ -137,14 +146,6 @@ classdef SingleCellExperiment
                 end
             end
             % obj.NumCells=size(obj.X,2);
-
-            % if ~isempty(obj.table_attributes)
-            %     if istable(obj.table_attributes)
-            %         if size(obj.table_attributes, 1) == obj.NumCells
-            %             obj.table_attributes(idx, :) = [];
-            %         end
-            %     end
-            % end
         end
 
         function obj = selectcells(obj, idx)
@@ -202,14 +203,6 @@ classdef SingleCellExperiment
                     end
                 end
                 % obj.NumCells=size(obj.X,2);
-
-                % if ~isempty(obj.table_attributes)
-                %     if istable(obj.table_attributes)
-                %         if size(obj.table_attributes, 1) == obj.NumCells
-                %             obj.table_attributes = obj.table_attributes(idx, :);
-                %         end
-                %     end
-                % end
             end
         end
 
@@ -297,15 +290,9 @@ classdef SingleCellExperiment
             obj.metadata = [obj.metadata; infostr];
         end
 
-        function c_check(self)
-            assert(~isempty(self.c), 'Must be defined!');
+        function c_check(obj)
+            assert(~isempty(obj.c), 'SCE.C must be defined!');
         end
-
-        % function disp(td)
-        %   fprintf(1,...
-        %      'SingleCellExperiment: %d genes x %d cells\n',...
-        %      numgenes(td),numcells(td));
-        % end
 
     end
 

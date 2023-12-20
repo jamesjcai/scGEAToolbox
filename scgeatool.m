@@ -229,7 +229,7 @@ end
                 if isempty(acc), return; end
                 %acc = strtrim(deblank(acc{1}));
                 %acc = strrep(acc,' ','');
-                acc = regexprep(acc,'[^a-zA-Z0-9,;]','');
+                acc = regexprep(acc{1},'[^a-zA-Z0-9,;]','');
                 if isempty(acc) || ~strlength(acc) > 4, return; end
                 if strlength(acc) > 4 && ~isempty(regexp(acc, 'G.+', 'once'))
                     accv = unique(strsplit(acc, {',', ';', ' '}), 'stable');
