@@ -49,7 +49,7 @@ if strcmp(answerstruced, 'Yes')
         [speciestag] = gui.i_selectspecies(2);
         if ~isempty(speciestag)
             if isempty(ndim), return; end
-            sce = sce.embedcells('tsne', true, true, ndim);
+            sce = sce.embedcells('tsne3d', true, true, ndim);
             %k = round(sce.NumCells/100);
             %sce = sce.clustercells(k, 'kmeans', true);
             sce = sce.clustercells([], [], true);
@@ -62,7 +62,7 @@ end
 
     % 
     % sce = sce.qcfilter;
-    % sce = sce.embedcells('tSNE',true);
+    % sce = sce.embedcells('tsne3d',true);
     % sce = sce.clustercells([], [], true);
     % sce = sce.assigncelltype(speciestag, false);
 

@@ -36,8 +36,33 @@ if exist('./output.h5', 'file')
     sce.c_cluster_id = c;
     sce.struct_cell_clusterings.seurat = c_ident;
     sce.c = c;
-    sce.struct_cell_embeddings.umap = s_umap;
-    sce.struct_cell_embeddings.tsne = s_tsne;
+
+    if ~isfield(sce.struct_cell_embeddings,'umap3d')
+        sce.struct_cell_embeddings = setfield(sce.struct_cell_embeddings, 'umap3d', []);
+    end
+    if ~isfield(sce.struct_cell_embeddings,'umap2d')
+        sce.struct_cell_embeddings = setfield(sce.struct_cell_embeddings, 'umap2d', []);
+    end
+    if ~isfield(sce.struct_cell_embeddings,'tsne3d')
+        sce.struct_cell_embeddings = setfield(sce.struct_cell_embeddings, 'tsne3d', []);
+    end
+    if ~isfield(sce.struct_cell_embeddings,'tsne2d')
+        sce.struct_cell_embeddings = setfield(sce.struct_cell_embeddings, 'tsne2d', []);
+    end
+    
+
+    if size(s_umap,2) == 3
+        sce.struct_cell_embeddings.umap3d = s_umap;
+    else
+        sce.struct_cell_embeddings.umap2d = s_umap;
+    end
+
+    if size(s_tsne,2) == 3
+        sce.struct_cell_embeddings.tsne3d = s_tsne;
+    else
+        sce.struct_cell_embeddings.tsne2d = s_tsne;
+    end
+
     sce.s = s_tsne;
 end
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end

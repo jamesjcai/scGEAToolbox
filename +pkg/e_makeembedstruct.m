@@ -1,0 +1,6 @@
+function [out] = e_makeembedstruct
+
+out = struct('tsne3d', [], 'tsne2d', [], ...
+              'umap3d', [], 'umap2d', [], 'phate3d', [], 'phate2d', [], ...
+              'metaviz3d', [], 'metaviz2d', []);
+out = orderfields(out);

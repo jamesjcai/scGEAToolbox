@@ -24,9 +24,9 @@ if tf2 == 1
     clable = listitems{indx2};
     switch clable
         case 'Compute tSNE embedding...'
-            sce = sce.embedcells('tsne', true);
+            sce = sce.embedcells('tsne3d', true);
             thiss = sce.struct_cell_embeddings.tsne;
-            clable = 'tsne';
+            clable = 'tsne3d';
         otherwise
             thiss = sce.struct_cell_embeddings.(clable);
     end

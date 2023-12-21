@@ -41,7 +41,7 @@ else
     sce.list_cell_attributes = [sce.list_cell_attributes, ...
         {'monocle3_pseudotime', t_mono3}];
 end
-%sce.struct_cell_embeddings.('monocle')=s_mono;
+% sce.struct_cell_embeddings.('monocle')=s_mono;
 
 guidata(FigureHandle, sce);
 

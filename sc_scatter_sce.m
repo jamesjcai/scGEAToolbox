@@ -199,10 +199,7 @@ in_addbuttontoggle(2, 0, {@in_togglebtfun, @callback_SaveX, ...
 
 m_net = uimenu(FigureHandle, 'Text', '&Network', 'Accelerator', 'N');
 
-
-
 in_addmenu(m_net, 0, @in_Select5000Genes, 'Choose Most Informative Genes...');
-
 in_addmenu(m_net, 1, {@in_scTenifoldNet,1}, 'Construct GRN using PC Regression [PMID:33336197] 🐢...');
 %in_addmenu(m_net, 1, @callback_scPCNet1, 'GRN Construction - PC Regression (w/o subsampling) [PMID:33336197] 🐢...');
 %in_addmenu(m_net, 0, @callback_scTenifoldNet1, 'GRN Construction - PC Regression (w/ subsampling) [PMID:33336197] 🐢🐢 ...');
@@ -295,9 +292,83 @@ kc = numel(unique(c));
 colormap(pkg.i_mycolorlines(kc));
 
 set(FigureHandle, 'visible', 'on');
+
+if ~isfield(sce.struct_cell_embeddings,'tsne3d') && isfield(sce.struct_cell_embeddings,'tsne')
+    if ~isempty(sce.struct_cell_embeddings.('tsne'))
+        if size(sce.struct_cell_embeddings.('tsne'),2) == 3
+            sce.struct_cell_embeddings.('tsne3d') = sce.struct_cell_embeddings.('tsne');
+            sce.struct_cell_embeddings = rmfield(sce.struct_cell_embeddings,'tsne');
+        end
+    end
+end
+
+if ~isfield(sce.struct_cell_embeddings,'umap3d') && isfield(sce.struct_cell_embeddings,'umap')
+    if ~isempty(sce.struct_cell_embeddings.('umap'))
+        if size(sce.struct_cell_embeddings.('umap'),2) == 3
+            sce.struct_cell_embeddings.('umap3d') = sce.struct_cell_embeddings.('umap');
+            sce.struct_cell_embeddings = rmfield(sce.struct_cell_embeddings,'umap');
+        end
+    end
+end
+
+
+if ~isfield(sce.struct_cell_embeddings,'phate3d') && isfield(sce.struct_cell_embeddings,'phate')
+    if ~isempty(sce.struct_cell_embeddings.('phate'))
+        if size(sce.struct_cell_embeddings.('phate'),2) == 3
+            sce.struct_cell_embeddings.('phate3d') = sce.struct_cell_embeddings.('phate');
+            sce.struct_cell_embeddings = rmfield(sce.struct_cell_embeddings,'phate');
+        end
+    end
+end
+
+
+if ~isfield(sce.struct_cell_embeddings,'metaviz3d') && isfield(sce.struct_cell_embeddings,'metaviz')
+    if ~isempty(sce.struct_cell_embeddings.('metaviz'))
+        if size(sce.struct_cell_embeddings.('metaviz'),2) == 3
+            sce.struct_cell_embeddings.('metaviz3d') = sce.struct_cell_embeddings.('metaviz');
+            sce.struct_cell_embeddings = rmfield(sce.struct_cell_embeddings,'metaviz');
+        end
+    end
+end
+
+avx = fieldnames(sce.struct_cell_embeddings);
+bvx = fieldnames(pkg.e_makeembedstruct);
+cvx = setdiff(bvx,avx);
+for k=1:length(cvx)
+    sce.struct_cell_embeddings = setfield(sce.struct_cell_embeddings,cvx{k},[]);
+end
+sce.struct_cell_embeddings = orderfields(sce.struct_cell_embeddings);
+
+
+if isfield(sce.struct_cell_embeddings,'phate')
+    if isempty(sce.struct_cell_embeddings.('phate'))
+        sce.struct_cell_embeddings = rmfield(sce.struct_cell_embeddings,'phate');
+    end
+end
+
+if isfield(sce.struct_cell_embeddings,'umap')
+    if isempty(sce.struct_cell_embeddings.('umap'))
+        sce.struct_cell_embeddings = rmfield(sce.struct_cell_embeddings,'umap');
+    end
+end
+
+if isfield(sce.struct_cell_embeddings,'tsne')
+    if isempty(sce.struct_cell_embeddings.('tsne'))
+        sce.struct_cell_embeddings = rmfield(sce.struct_cell_embeddings,'tsne');
+    end
+end
+
+if isfield(sce.struct_cell_embeddings,'metaviz')
+    if isempty(sce.struct_cell_embeddings.('metaviz'))
+        sce.struct_cell_embeddings = rmfield(sce.struct_cell_embeddings,'metaviz');
+    end
+end
+
+
+
+
 guidata(FigureHandle, sce);
 % setappdata(FigureHandle,'cL',cL);
-
 set(FigureHandle, 'CloseRequestFcn', @in_closeRequest);
 
 if nargout > 0
@@ -773,7 +844,7 @@ end
         gui.gui_waitbar_adv(fw,1/6,'Basic QC Filtering...');
         sce = sce.qcfilter;
         gui.gui_waitbar_adv(fw,2/6, 'Embeding Cells Using tSNE...');
-        sce = sce.embedcells('tSNE',true);
+        sce = sce.embedcells('tsne3d',true);
         gui.gui_waitbar_adv(fw,3/6, 'Clustering Cells Using K-means...');
         sce = sce.clustercells([], [], true);
         gui.gui_waitbar_adv(fw,4/6, 'Annotating Cell Type Using PanglaoDB...');
@@ -919,12 +990,17 @@ end
             ButtonName = questdlg('Update Saved Embedding?', '');
             switch ButtonName
                 case 'Yes'
+                    
+
                     [methodtag] = gui.i_pickembedmethod;
                     if isempty(methodtag), return; end
-                    if ismember(methodtag, {'tsne', 'umap', 'phate', 'metaviz'})
+                    [ndim] = gui.i_choose2d3d;
+                    if isempty(ndim), return; end
+                    methoddimtag = sprintf('%s%dd',methodtag, ndim);
+                    if ismember(methoddimtag, fieldnames(sce.struct_cell_embeddings))
                         sce.struct_cell_embeddings.(methodtag) = sce.s;
                     end
-                    helpdlg(sprintf('%s Embedding is updated.', methodtag), '');
+                    helpdlg(sprintf('%s Embedding is updated.', methoddimtag), '');
             end
         end
         guidata(FigureHandle, sce);
@@ -1095,31 +1171,36 @@ end
     function in_EmbeddingAgain(src, ~)
         [methodtag] = gui.i_pickembedmethod;
         if isempty(methodtag), return; end
+        [ndim] = gui.i_choose2d3d;
+        if isempty(ndim), return; end
+        methoddimtag = sprintf('%s%dd',methodtag, ndim);
+
         if isempty(sce.struct_cell_embeddings)
-            sce.struct_cell_embeddings = struct('tsne', [], 'umap', [], ...
-                'phate', [], 'metaviz', []);
+            sce.struct_cell_embeddings = pkg.e_makeembedstruct;
         end
-        %methodtag = lower(answer);
-        usingold = false;
-        if ~isfield(sce.struct_cell_embeddings, 'metaviz')
-            sce.struct_cell_embeddings.('metaviz') = [];
+        if ~isfield(sce.struct_cell_embeddings, 'metaviz3d')
+            sce.struct_cell_embeddings.('metaviz3d') = [];
         end
 
-        if ~isempty(sce.struct_cell_embeddings.(methodtag))
+        usingold = false;
+        if ~isfield(sce.struct_cell_embeddings, methoddimtag)
+            sce.struct_cell_embeddings = setfield(sce.struct_cell_embeddings,methoddimtag,[]);
+        end
+        if ~isempty(sce.struct_cell_embeddings.(methoddimtag))
             answer1 = questdlg(sprintf('Use existing %s embedding or re-compute new embedding?', ...
-                upper(methodtag)), '', ...
+                upper(methoddimtag)), '', ...
                 'Use existing', 'Re-compute', 'Cancel', 'Use existing');
             switch answer1
                 case 'Use existing'
-                    sce.s = sce.struct_cell_embeddings.(methodtag);
+                    sce.s = sce.struct_cell_embeddings.(methoddimtag);
                     usingold = true;
                 case 'Re-compute'
                     usingold = false;
                 case {'Cancel', ''}
-                    return
+                    return;
             end
         end
-        whitelist = [];
+        % whitelist = [];
         if ~usingold
             answer2 = questdlg(sprintf('Use highly variable genes (HVGs, n=2000) or use all genes (n=%d)?', sce.NumGenes), ...
                 '', '2000 HVGs 🐇', 'All Genes 🐢', 'Other...', '2000 HVGs 🐇');
@@ -1135,37 +1216,31 @@ end
                         100, sce.NumGenes);
                     if isempty(K), return; end
                     usehvgs = true;
-                    [whitelist] = gui.i_selectwhitelist(sce);
-                    if isnumeric(whitelist)
-                        if whitelist == 0
-                            return;
-                        end
-                    end
+                    %[whitelist] = gui.i_selectwhitelist(sce);
+                    %if isnumeric(whitelist)
+                    %    if whitelist == 0
+                    %        return;
+                    %    end
+                    %end
                 otherwise
                     return;
             end
-            [ndim] = gui.i_choose2d3d;
-            if isempty(ndim), return; end
-            if ~strcmpi(methodtag, 'metaviz')
-                fw = gui.gui_waitbar;
-            end
+
+            fw = gui.gui_waitbar;
             try
                 forced = true;
-                if strcmpi(methodtag, 'tsne'), disp('tSNE perplexity = 30'); end
-                sce = sce.embedcells(methodtag, forced, usehvgs, ndim, K, whitelist);
+                if contains(methoddimtag, 'tsne'), disp('tSNE perplexity = 30'); end
+                sce = sce.embedcells(methoddimtag, forced, usehvgs, ndim, K);
             catch ME
-                if ~strcmpi(methodtag, 'metaviz')
-                    gui.gui_waitbar(fw, true);
-                end
+                gui.gui_waitbar(fw, true);
                 errordlg(ME.message);
-                return
+                return;
             end
-            if ~strcmpi(methodtag, 'metaviz'), gui.gui_waitbar(fw); end
+            gui.gui_waitbar(fw);
         end
         in_RefreshAll(src, 1, true, false);
         guidata(FigureHandle, sce);
         disp('Following the library-size normalization and log1p-transformation, we visualized similarity among cells by projecting them into a reduced dimensional space using t-distributed stochastic neighbor embedding (t-SNE)/uniform manifold approximation and projection (UMAP).')
-
     end
 
     %     function [Tct]=i_determinecelltype(sce, ptsSelected, wvalu, wgene, celltypev, markergenev)

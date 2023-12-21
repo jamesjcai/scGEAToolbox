@@ -73,7 +73,7 @@ Assuming the .m file containing the following code is in the folder ./filtered_f
   sce=sce.qcfilter;
   sce=sce.estimatecellcycle;
   sce=sce.estimatepotency("mouse");
-  sce=sce.embedcells('tSNE',true);
+  sce=sce.embedcells('tsne3d',true);
   save clean_data sce -v7.3
   scgeatool(sce)
 

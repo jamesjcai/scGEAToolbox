@@ -12,7 +12,7 @@ filesaved = fullfile(outdir, 'run_tsne.m');
 fid=fopen(filesaved,'w');
 fprintf(fid, 'addpath(''../scGEAToolbox'');\n');
 fprintf(fid, 'load("clean_data.mat","sce");\n');
-fprintf(fid, 'sce=sce.embedcells(''tsne'',true,true,2);\n');
+fprintf(fid, 'sce=sce.embedcells(''tsne3d'',true,true,2);\n');
 fprintf(fid, 'save("clean_data_1.mat","sce",''-v7.3'');\n');
 fclose(fid);
 
