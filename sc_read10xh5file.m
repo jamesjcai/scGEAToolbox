@@ -30,17 +30,23 @@ end
 %indices=h5read(filenm,[h.Groups(1).Name,'/indices']);
 %indptr=h5read(filenm,[h.Groups(1).Name,'/indptr']);
 %shape=h5read(filenm,[h.Groups(1).Name,'/shape']);
-
-
 %fw=gui.gui_waitbar_adv;
 
-data = pkg.e_guessh5field(filenm, {'/matrix/'}, {'data'}, true);
-indices = pkg.e_guessh5field(filenm, {'/matrix/'}, {'indices'}, true);
-indptr = pkg.e_guessh5field(filenm, {'/matrix/'}, {'indptr'}, true);
-shape = pkg.e_guessh5field(filenm, {'/matrix/'}, {'shape'}, true);
+grouptag = "/matrix/";
+try
+    h=h5info(filenm);
+    grouptag = h.Groups(1).Name + "/";
+catch
+end
 
 
-g = pkg.e_guessh5field(filenm, {'/matrix/', '/matrix/features/'}, {'gene_names', 'name'}, false);
+data = pkg.e_guessh5field(filenm, {grouptag}, {'data'}, true);
+indices = pkg.e_guessh5field(filenm, {grouptag}, {'indices'}, true);
+indptr = pkg.e_guessh5field(filenm, {grouptag}, {'indptr'}, true);
+shape = pkg.e_guessh5field(filenm, {grouptag}, {'shape'}, true);
+
+
+g = pkg.e_guessh5field(filenm, {grouptag, '/matrix/features/'}, {'gene_names', 'name'}, false);
 if isempty(g), warning('G is not assigned.'); end
 
 % try
@@ -57,7 +63,7 @@ if isempty(g), warning('G is not assigned.'); end
 %     end
 % end
 
-b = pkg.e_guessh5field(filenm, {'/matrix/', '/matrix/features/'}, {'barcodes'}, false);
+b = pkg.e_guessh5field(filenm, {grouptag, '/matrix/features/'}, {'barcodes'}, false);
 if isempty(b), warning('B is not assigned.'); end
 
 
