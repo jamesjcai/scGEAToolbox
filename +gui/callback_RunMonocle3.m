@@ -53,7 +53,12 @@ if ~(ismcc || isdeployed)
     msgfig = export2wsdlg(labels, vars, values);
     uiwait(msgfig)
 else
-    gui.i_exporttable(table(t_mono3), true, 't_mono3');
+    gui.i_exporttable(table(t_mono3), true, 'Tmonocleout', 'MonocleResTable');
+
+    % "Tcellattrib","CellAttribTable"
+    % "Tviolindata","ViolinPlotTable"
+    % "Tgenkiglist","GenKIResulTable"
+    % "Tmonocleout","MonocleResTable"
 end
 
 % answer = questdlg('View Monocle DDRTree?', ...

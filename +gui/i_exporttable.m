@@ -83,7 +83,12 @@ switch answer
             helpdlg(sprintf('Result has been saved in %s', filename), '')
         end
     case 'MAT file'
-        [file, path] = uiputfile({'*.mat'; '*.*'}, 'Save as');
+        if ~isempty(deffilename)            
+            [file, path] = uiputfile({'*.mat'; '*.*'}, ...
+                'Save as', deffilename);
+        else        
+            [file, path] = uiputfile({'*.mat'; '*.*'}, 'Save as');
+        end
         if isequal(file, 0) || isequal(path, 0), return; end
         filename = fullfile(path, file);
         %fw=gui.gui_waitbar;

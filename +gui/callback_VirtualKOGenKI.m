@@ -30,7 +30,11 @@ catch ME
 end
 
 
-gui.i_exporttable(T);
+gui.i_exporttable(T, true, 'Tgenkiglist', 'GenKIResulTable');
+% "Tcellattrib","CellAttribTable"
+% "Tviolindata","ViolinPlotTable"
+% "Tgenkiglist","GenKIResulTable"
+
 disp('Downstream Analysis Options:');
 disp('===============================');
 disp('run.web_Enrichr(T.gene(1:200));');

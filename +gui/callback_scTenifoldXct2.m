@@ -32,7 +32,14 @@ if ~isempty(T)
             pause(2)
             reshowdlg;
         case 'Export result...'
-            gui.i_exporttable(T);
+            gui.i_exporttable(T, false, 'Ttenifldxct', 'TenifldXctTable');
+
+    % "Tcellattrib","CellAttribTable"
+    % "Tviolindata","ViolinPlotTable"
+    % "Tgenkiglist","GenKIResulTable"
+    % "Tmonocleout","MonocleResTable"
+    % "Ttenifldxct","TenifldXctTable"
+
         otherwise
             winopen(a);
     end
