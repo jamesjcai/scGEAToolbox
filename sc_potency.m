@@ -16,7 +16,7 @@ if ~isnumeric(speciesid)
         case 'mouse'
             speciesid = 2;
         otherwise
-            speciesid = 2;
+            speciesid = 1;
     end
 end
 

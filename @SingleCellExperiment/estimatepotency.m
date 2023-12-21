@@ -4,15 +4,17 @@ if nargin < 2, speciesid = []; end
 if forced || sum(strcmp('cell_potency', obj.list_cell_attributes)) == 0
     if isempty(speciesid)
         % speciesid=input('Species: 1=human,2=mouse >>');
-        answer = questdlg('Which species?', 'Select Species', 'Mouse', 'Human', 'Mouse');
+        % answer = questdlg('Which species?', 'Select Species', 'Mouse', 'Human', 'Mouse');
+        % 
+        % if strcmp(answer, 'Human')
+        %     speciesid = 1;
+        % elseif strcmp(answer, 'Mouse')
+        %     speciesid = 2;
+        % else
+        %     return;
+        % end
+        speciesid = gui.i_selectspecies(2);
 
-        if strcmp(answer, 'Human')
-            speciesid = 1;
-        elseif strcmp(answer, 'Mouse')
-            speciesid = 2;
-        else
-            return;
-        end
     elseif ischar(speciesid)
         [y, idx] = ismember(lower(speciesid), {'human', 'mouse'});
         if y, speciesid = idx; end
