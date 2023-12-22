@@ -48,8 +48,8 @@ switch methodid
         h = gui.i_gscatter3(s, c, 1);
         h.MarkerEdgeAlpha = 0;
         hold on
-        i = c == targetc;
-        h = gui.i_gscatter3(s(i, :), c(i), 1);
+        idx = c == targetc;
+        h = gui.i_gscatter3(s(idx, :), c(idx), 1);
         hold off
 end
 

@@ -870,10 +870,8 @@ end
             in_RefreshAll(src, 1, true);            
             newm = sce.NumGenes;
             helpdlg(sprintf('%d genes removed.', oldm-newm), '');
-        end
-        
+        end        
     end
-
 
     function in_RunSeuratWorkflow(src, ~)
         [ok] = gui.i_confirmscript('Run Seurat/R Workflow (Seurat)?', ...
@@ -1020,12 +1018,15 @@ end
         if keepview || keepcolr
             [para] = gui.i_getoldsettings(src);
         end
-        if size(sce.s, 2) > 2 && ~isempty(h.ZData)
-            if keepview, [ax, bx] = view(); end
+        was3d = ~isempty(h.ZData);        
+        if size(sce.s, 2) >= 3                  
+            if keepview && was3d, [ax, bx] = view(); end
             h = gui.i_gscatter3(sce.s, c, methodid, hAx);
-            if keepview, view(ax, bx); end
-        else % otherwise 2D
+            if keepview && was3d, view(ax, bx); end
+        else        % otherwise going to show 2D            
+            if keepview && ~was3d, [ax, bx] = view(); end
             h = gui.i_gscatter3(sce.s(:, 1:2), c, methodid, hAx);
+            if keepview && ~was3d, [ax, bx] = view(); end
         end
         if keepview
             h.Marker = para.oldMarker;
@@ -1042,38 +1043,48 @@ end
         % ptlabelclusters.State = 'off';
         % UitoolbarHandle.Visible='off';
         % UitoolbarHandle.Visible='on';
-        guidata(FigureHandle, sce);
+        % guidata(FigureHandle, sce);
     end
 
     function in_Switch2D3D(src, ~)
         [para] = gui.i_getoldsettings(src);
-        if isempty(h.ZData) % current 2 D
-            if ~(size(sce.s, 2) > 2)
-                helpdlg('Canno swith to 3-D. SCE.S is 2-D', '');
-                return;
-            end
-            h = gui.i_gscatter3(sce.s, c, methodid, hAx);
-            if ~isempty(ax) && ~isempty(bx) && ~any([ax, bx] == 0)
-                view(ax, bx);
+        if isempty(h.ZData)               % current 2D
+            if ~(size(sce.s, 2) >= 3)
+                in_EmbeddingAgain(src, [], 3);
             else
-                view(3);
+                h = gui.i_gscatter3(sce.s, c, methodid, hAx);
+                if ~isempty(ax) && ~isempty(bx) && ~any([ax, bx] == 0)
+                    view(ax, bx);
+                else
+                    view(3);
+                end
             end
-        else % current 3D do following
-            [ax, bx] = view();
-            answer = questdlg('Which view to be used to project cells?', '', ...
-                'X-Y Plane', 'Screen/Camera', 'PCA-rotated', 'X-Y Plane');
+        else        % current 3D do following
+            answer = questdlg('Select a method of making 2D embedding.','', ...
+                'Re-embedding to 2D','Compress 3D embedding','Cancel', ...
+                'Re-embedding to 2D');
             switch answer
-                case 'X-Y Plane'
-                    sx = sce.s;
-                case 'Screen/Camera'
-                    sx = pkg.i_3d2d(sce.s, ax, bx);
-                case {'PCA-rotated'}
-                    [~, sx] = pca(sce.s);
-                otherwise
+                case 'Cancel'
                     return;
+                case 'Re-embedding to 2D'
+                    in_EmbeddingAgain(src, [], 2);
+                case 'Compress 3D embedding'
+                    [ax, bx] = view();
+                    answer2 = questdlg('Which view to be used to project cells?', '', ...
+                        'X-Y Plane', 'Screen/Camera', 'PCA-rotated', 'X-Y Plane');
+                    switch answer2
+                        case 'X-Y Plane'
+                            sx = sce.s;
+                        case 'Screen/Camera'
+                            sx = pkg.i_3d2d(sce.s, ax, bx);
+                        case {'PCA-rotated'}
+                            [~, sx] = pca(sce.s);
+                        otherwise
+                            return;
+                    end
+                    h = gui.i_gscatter3(sx(:, 1:2), c, methodid, hAx);
+                    sce.s = sx;
             end
-            h = gui.i_gscatter3(sx(:, 1:2), c, methodid, hAx);
-            sce.s = sx;
         end
         title(sce.title);
         subtitle('[genes x cells]');
@@ -1133,10 +1144,13 @@ end
         end
     end
 
-    function in_EmbeddingAgain(src, ~)
+    function in_EmbeddingAgain(src, ~, ndim)
+        if nargin<3, ndim=[]; end
         [methodtag] = gui.i_pickembedmethod;
         if isempty(methodtag), return; end
-        [ndim] = gui.i_choose2d3d;
+        if isempty(ndim)
+            [ndim] = gui.i_choose2d3d;
+        end
         if isempty(ndim), return; end
         methoddimtag = sprintf('%s%dd',methodtag, ndim);
 
@@ -1202,9 +1216,9 @@ end
                 return;
             end
             gui.gui_waitbar(fw);
-        end
-        in_RefreshAll(src, 1, true, false);
+        end        
         guidata(FigureHandle, sce);
+        in_RefreshAll(src, [], true, false);   % keepview, keepcolr
         disp('Following the library-size normalization and log1p-transformation, we visualized similarity among cells by projecting them into a reduced dimensional space using t-distributed stochastic neighbor embedding (t-SNE)/uniform manifold approximation and projection (UMAP).')
     end
 
@@ -1235,7 +1249,6 @@ end
     %             end
     %             Tct.Properties.VariableNames={'C1_Cell_Type','C1_CTA_Score'};
     %     end
-
 
     function in_DetermineCellTypeClustersGeneral(src, ~, usedefaultdb)
         if nargin < 3, usedefaultdb = true; end
@@ -1512,10 +1525,8 @@ end
                 cb = colorbar;
         end
         cb.Label.String = strrep(clable, '_', '\_');
-        % helpdlg(clable)
-        % guidata(FigureHandle, sce);
+        guidata(FigureHandle, sce);
     end
-
 
     function in_DeleteSelectedCells(src, ~)
         ptsSelected = logical(h.BrushData.');
@@ -1696,7 +1707,6 @@ end
         guidata(FigureHandle, sce);
     end
 
-
     function in_ClusterCellsX(src, ~)
         answer = questdlg('Cluster cells using expression matrix X?');
         if ~strcmp(answer, 'Yes'), return; end
@@ -1724,7 +1734,6 @@ end
         guidata(FigureHandle, sce);
     end
 
-    
     function in_reclustercells(src, methodtag)
         methodtag = lower(methodtag);
         usingold = false;
@@ -1767,7 +1776,6 @@ end
         guidata(FigureHandle, sce);
     end
 
-
     function in_labelcellgroups(src, ~)
         state = src.State;
         dtp = findobj(h, 'Type', 'datatip');
@@ -1802,7 +1810,6 @@ end
             % colormap(lines(min([256 numel(unique(sce.c))])));
         end
     end
-
 
     function [txt] = i_myupdatefcnx(~, event_obj)
         % pos = event_obj.Position;
