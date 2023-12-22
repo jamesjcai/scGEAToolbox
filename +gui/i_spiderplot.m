@@ -212,8 +212,9 @@ end
                                     %T.(name) = thisc;
                                     T.(name) = cL(c);
                                     T.Properties.DimensionNames{1} = 'Cell_ID';
-                                    needwait = false;
-                                    gui.i_exporttable(T, needwait);
+                                    needwait = false;                                    
+                                    gui.i_exporttable(T, needwait, ...
+                                        'Tspiderdata', 'SpiderOutTable');
                             end
 
                             end

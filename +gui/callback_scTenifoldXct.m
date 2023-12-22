@@ -1,4 +1,5 @@
 function callback_scTenifoldXct(src, ~)
+
 gui.gui_showrefinfo('scTenifoldXct [PMID:36787742]');
 % import ten.*
 FigureHandle = src.Parent.Parent;
@@ -146,7 +147,13 @@ end
         answer = questdlg('Export result to other format?', '');
         switch answer
             case 'Yes'
-                gui.i_exporttable(T);
+                gui.i_exporttable(T, false, 'Ttenifldxct', 'TenifldXctTable');
+
+    % 'Tviolindata','ViolinPlotTable'
+    % 'Tmarkerlist','MarkerListTable'
+    % 'Ttenifldxct','TenifldXctTable'
+    
+
             otherwise
                 return;
         end

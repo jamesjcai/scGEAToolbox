@@ -120,8 +120,12 @@ if ~isempty(answer223) && strcmp(answer223, 'Yes')
         end
     end
 end
-gui.i_exporttable(T, true, 'T_DRgenes');
+gui.i_exporttable(T, true, 'Ttenifldnet', 'TenifldNetTable');
+
+% 'Ttenifldxct', 'TenifldXctTable'
+% 'Ttenifldnet', 'TenifldNetTable'
+% 'Tgseaoutput', 'GSEAResultTable'
 if gseaok
-    gui.i_exporttable(Tr, true, 'T_GSEAres');
+    gui.i_exporttable(Tr, true, 'Tgseaoutput', 'GSEAResultTable');
 end
 end

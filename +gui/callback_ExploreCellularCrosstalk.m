@@ -64,7 +64,7 @@ gui.gui_showrefinfo('talklr [DOI:10.1101/2020.02.01.930602]');
                     OUT.ligandok(k), OUT.receptorok(k), ...
                     OUT.KL(k));
             end
-            gui.i_exporttable(T, true, 'T');
+            gui.i_exporttable(T, true, 'Tccrosstalk', 'CrossTalkTable');            
 
             i_displyres(listitems);
 

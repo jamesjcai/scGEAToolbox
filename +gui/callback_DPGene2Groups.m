@@ -93,7 +93,7 @@ T=T(T.p_val_adj<0.01 & T.gsetsize>=5,:);
             matlab.lang.makeValidName(string(cL1)), matlab.lang.makeValidName(string(cL2)));
         %filesaved = fullfile(outdir, outfile);
         %writetable(T, filesaved, 'FileType', 'spreadsheet');
-        [~, filesaved] = gui.i_exporttable(T, true, 'Tdpgenesres', outfile);
+        [~, filesaved] = gui.i_exporttable(T, true, 'Tdpgenelist', outfile);
             % "Tcellattrib","CellAttribTable"
             % "Tviolindata","ViolinPlotTable"
             % "Tcrosstabul","CrosstabulTable"

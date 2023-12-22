@@ -191,7 +191,10 @@ end
     end
 
     function ExportTable(~, ~)
-        gui.i_exporttable(T, true, 'T');
+        gui.i_exporttable(T, true, 'Thvgreslist', 'HVGResultTable');
+        % Tdegenelist 
+        % 'Tviolindata','ViolinPlotTable'
+        % 'Thvgreslist', 'HVGResultTable' 
     end
 
     function ExportGeneNames(~, ~)

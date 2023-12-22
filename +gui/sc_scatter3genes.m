@@ -118,8 +118,8 @@ end
         %h2=scatter3(x(idx20),y(idx20),z(idx20),'rx');  % 'filled','MarkerFaceAlpha',.5);
     end
 
-    function ExportTable(~, ~)
-        gui.i_exporttable(T, true, 'T');
+    function ExportTable(~, ~)                
+        gui.i_exporttable(T, true, 'Tsplinefitg', 'SplinefitGTable');
     end
 
     function in_HighlightSelectedGenes(~,~)        

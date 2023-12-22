@@ -139,7 +139,7 @@ if ~(ismcc || isdeployed)
     end
 end
 
-gui.i_exporttable(T);
+gui.i_exporttable(T, true, 'Ttenifldknk', 'TenifldKnkTable');
 disp('Downstream Analysis Options:');
 disp('===============================');
 disp('run.web_Enrichr(T.genelist(1:200));');

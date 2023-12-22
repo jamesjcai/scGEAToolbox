@@ -189,7 +189,7 @@ set(f, 'visible', 'on');
         else
             a.Title.String = OldTitle;
             OldTitle = [];
-            %gui.i_exporttable(tbl,true);
+            
         end
     end
 
@@ -211,6 +211,7 @@ set(f, 'visible', 'on');
         T.Properties.VariableNames = {'ScoreLevel', 'GroupID'};
         %T=sortrows(T,'ScoreLevel','descend');
         %T=sortrows(T,'GroupID');
-        gui.i_exporttable(T, true);
+        gui.i_exporttable(T, true, 'Tviolindata','ViolinPlotTable');
+
     end
 end

@@ -127,7 +127,11 @@ end
         matlab.lang.makeValidName(string(cL1)), matlab.lang.makeValidName(string(cL2)));
     if isatac, T.gene = "chr" + T.gene; end
 
-    [filetype, filesaved] = gui.i_exporttable(T, true, 'T', outfile);
+    [filetype, filesaved] = gui.i_exporttable(T, true, 'Tdegenelist', outfile);
+
+    % 'Tviolindata','ViolinPlotTable'
+    % 'Tdegenelist'
+
     tf = 0;
     if ~(ismcc || isdeployed) && strcmp(filetype, 'Workspace')
         [Tup, Tdn] = pkg.e_processDETable(T, true);

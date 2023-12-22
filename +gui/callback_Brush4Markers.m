@@ -77,8 +77,10 @@ else
     fprintf('\n')
 
     gui.i_exporttable(table(markerlist), true, ...
-        'T', "markerlist");
+        'Tmarkerlist','MarkerListTable');
 
+    % 'Tviolindata','ViolinPlotTable'
+    % 'Tmarkerlist','MarkerListTable'
 
     [answer] = questdlg('Plot expression of markers?');
     if isempty(answer), return; end
