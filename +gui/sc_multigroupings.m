@@ -12,13 +12,15 @@ f0 = figure('Visible', false);
 
 ax1 = subplot(1, 2, 1);
 h1 = gui.i_gscatter3(sce.s, c1, 1, 1);
-if ~isempty(ttl1), title(ax1, ttl1); end
+if ~isempty(ttl1), title(ax1, strrep(ttl1,'_','\_')); end
+
 dt = datacursormode(f0);
 dt.UpdateFcn = {@i_myupdatefcnx12};
 
 ax2 = subplot(1, 2, 2);
 h2 = gui.i_gscatter3(sce.s, c2, 1, 1);
-if ~isempty(ttl2), title(ax2, ttl2); end
+if ~isempty(ttl2), title(ax2, strrep(ttl2,'_','\_')); end
+
 dt = datacursormode(f0);
 dt.UpdateFcn = {@i_myupdatefcnx12};
 sgtitle(sce.title);

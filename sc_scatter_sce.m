@@ -29,6 +29,8 @@ callinghandle = p.Results.callinghandle;
 c_in = p.Results.c;
 s_in = p.Results.s;
 methodid = p.Results.methodid;
+f_traj = [];   % trajectory curve
+
 ax = [];
 bx = [];
 tmpcelltypev = cell(sce.NumCells, 1);
@@ -293,43 +295,12 @@ colormap(pkg.i_mycolorlines(kc));
 
 set(FigureHandle, 'visible', 'on');
 
-if ~isfield(sce.struct_cell_embeddings,'tsne3d') && isfield(sce.struct_cell_embeddings,'tsne')
-    if ~isempty(sce.struct_cell_embeddings.('tsne'))
-        if size(sce.struct_cell_embeddings.('tsne'),2) == 3
-            sce.struct_cell_embeddings.('tsne3d') = sce.struct_cell_embeddings.('tsne');
-            sce.struct_cell_embeddings = rmfield(sce.struct_cell_embeddings,'tsne');
-        end
-    end
-end
-
-if ~isfield(sce.struct_cell_embeddings,'umap3d') && isfield(sce.struct_cell_embeddings,'umap')
-    if ~isempty(sce.struct_cell_embeddings.('umap'))
-        if size(sce.struct_cell_embeddings.('umap'),2) == 3
-            sce.struct_cell_embeddings.('umap3d') = sce.struct_cell_embeddings.('umap');
-            sce.struct_cell_embeddings = rmfield(sce.struct_cell_embeddings,'umap');
-        end
-    end
-end
 
 
-if ~isfield(sce.struct_cell_embeddings,'phate3d') && isfield(sce.struct_cell_embeddings,'phate')
-    if ~isempty(sce.struct_cell_embeddings.('phate'))
-        if size(sce.struct_cell_embeddings.('phate'),2) == 3
-            sce.struct_cell_embeddings.('phate3d') = sce.struct_cell_embeddings.('phate');
-            sce.struct_cell_embeddings = rmfield(sce.struct_cell_embeddings,'phate');
-        end
-    end
-end
-
-
-if ~isfield(sce.struct_cell_embeddings,'metaviz3d') && isfield(sce.struct_cell_embeddings,'metaviz')
-    if ~isempty(sce.struct_cell_embeddings.('metaviz'))
-        if size(sce.struct_cell_embeddings.('metaviz'),2) == 3
-            sce.struct_cell_embeddings.('metaviz3d') = sce.struct_cell_embeddings.('metaviz');
-            sce.struct_cell_embeddings = rmfield(sce.struct_cell_embeddings,'metaviz');
-        end
-    end
-end
+in_fixfield('tsne','tsne3d');
+in_fixfield('umap','umap3d');
+in_fixfield('phate','phate3d');
+in_fixfield('metaviz','metaviz3d');
 
 avx = fieldnames(sce.struct_cell_embeddings);
 bvx = fieldnames(pkg.e_makeembedstruct);
@@ -338,34 +309,6 @@ for k=1:length(cvx)
     sce.struct_cell_embeddings = setfield(sce.struct_cell_embeddings,cvx{k},[]);
 end
 sce.struct_cell_embeddings = orderfields(sce.struct_cell_embeddings);
-
-
-if isfield(sce.struct_cell_embeddings,'phate')
-    if isempty(sce.struct_cell_embeddings.('phate'))
-        sce.struct_cell_embeddings = rmfield(sce.struct_cell_embeddings,'phate');
-    end
-end
-
-if isfield(sce.struct_cell_embeddings,'umap')
-    if isempty(sce.struct_cell_embeddings.('umap'))
-        sce.struct_cell_embeddings = rmfield(sce.struct_cell_embeddings,'umap');
-    end
-end
-
-if isfield(sce.struct_cell_embeddings,'tsne')
-    if isempty(sce.struct_cell_embeddings.('tsne'))
-        sce.struct_cell_embeddings = rmfield(sce.struct_cell_embeddings,'tsne');
-    end
-end
-
-if isfield(sce.struct_cell_embeddings,'metaviz')
-    if isempty(sce.struct_cell_embeddings.('metaviz'))
-        sce.struct_cell_embeddings = rmfield(sce.struct_cell_embeddings,'metaviz');
-    end
-end
-
-
-
 
 guidata(FigureHandle, sce);
 % setappdata(FigureHandle,'cL',cL);
@@ -387,6 +330,28 @@ showuseronboarding = getpref('scgeatoolbox', 'useronboardingtoolbar');
 if ~showuseronboarding
     set(UserToolbarHandle, 'Visible', 'off');
 end
+
+
+% ----------------------------------
+% ----------------------------------
+% ----------------------------------
+% ----------------------------------
+
+    function in_fixfield(oldf,newf)
+        if ~isfield(sce.struct_cell_embeddings,newf) && isfield(sce.struct_cell_embeddings,oldf)
+            if ~isempty(sce.struct_cell_embeddings.(oldf))
+                if size(sce.struct_cell_embeddings.(oldf),2) == 3
+                    sce.struct_cell_embeddings.(newf) = sce.struct_cell_embeddings.(oldf);
+                    sce.struct_cell_embeddings = rmfield(sce.struct_cell_embeddings,oldf);
+                end
+            end
+        end
+        if isfield(sce.struct_cell_embeddings,'phate')
+            if isempty(sce.struct_cell_embeddings.('phate'))
+                sce.struct_cell_embeddings = rmfield(sce.struct_cell_embeddings,'phate');
+            end
+        end        
+    end
 
 
     function in_CompareGeneBtwCls(src,events)
@@ -1632,8 +1597,17 @@ end
         gui.gui_waitbar(fw);
     end
 
-    function in_DrawTrajectory(~, ~)
+    function in_DrawTrajectory(src, ~)
+        
         waitfor(warndlg('This function should not be applied to tSNE and UMAP embeddings, as they "encourage a representation of the data as disjoint clusters, which is less meaningful for modeling continuous developmental trajectories" [PMID:25664528].', ''));
+        if ~isempty(f_traj)
+            answer = questdlg('Remove existing trajectory curve?','');
+            if strcmp(answer,'Yes')
+                in_RefreshAll(src, [], true, true);  % keepview, keepcolr
+            elseif strcmp(answer,'Cancel')
+                return;                
+            end
+        end
         answer = questdlg('Which method?', '', ...
             'splinefit (🐇)', 'princurve (🐢)', ...
             'splinefit (🐇)');
@@ -1647,20 +1621,19 @@ end
         end
         hold on;
         if size(xyz1, 2) >= 3
-            plot3(xyz1(:, 1), xyz1(:, 2), xyz1(:, 3), '-r', 'linewidth', 2);
+            f_traj = plot3(xyz1(:, 1), xyz1(:, 2), xyz1(:, 3), '-r', 'linewidth', 2);
             text(xyz1(1, 1), xyz1(1, 2), xyz1(1, 3), 'Start', ...
                 'fontsize', 10, 'FontWeight', 'bold', 'BackgroundColor', 'w', 'EdgeColor', 'k');
             text(xyz1(end, 1), xyz1(end, 2), xyz1(end, 3), 'End', ...
                 'fontsize', 10, 'FontWeight', 'bold', 'BackgroundColor', 'w', 'EdgeColor', 'k');
         elseif size(xyz1, 2) == 2
-            plot(xyz1(:, 1), xyz1(:, 2), '-r', 'linewidth', 2);
+            f_traj = plot(xyz1(:, 1), xyz1(:, 2), '-r', 'linewidth', 2);
             text(xyz1(1, 1), xyz1(1, 2), 'Start', ...
                 'fontsize', 10, 'FontWeight', 'bold', 'BackgroundColor', 'w', 'EdgeColor', 'k');
             text(xyz1(end, 1), xyz1(end, 2), 'End', ...
                 'fontsize', 10, 'FontWeight', 'bold', 'BackgroundColor', 'w', 'EdgeColor', 'k');
         end
         hold off;
-
         answerx = questdlg('Save/Update pseudotime T in SCE', ...
             'Save Pseudotime', ...
             'Yes', 'No', 'Yes');
@@ -1668,9 +1641,9 @@ end
             case 'Yes'
                 tag = sprintf('%s pseudotime', answer);
                 % iscellstr(sce.list_cell_attributes(1:2:end))
-                i = find(contains(sce.list_cell_attributes(1:2:end), tag));
-                if ~isempty(i)
-                    sce.list_cell_attributes{i + 1} = t;
+                idx = find(contains(sce.list_cell_attributes(1:2:end), tag));
+                if ~isempty(idx)
+                    sce.list_cell_attributes{idx + 1} = t;
                     fprintf('%s is updated.\n', tag);
                 else
                     sce.list_cell_attributes{end+1} = tag;
@@ -1684,7 +1657,9 @@ end
             'Yes', 'No', 'Yes');
         switch answer
             case 'Yes'
+                fw = gui.gui_waitbar;
                 r = corr(t, sce.X.', 'type', 'spearman'); % Calculate linear correlation between gene expression profile and T
+                gui.gui_waitbar(fw);
                 [~, idxp] = maxk(r, 4); % Select top 4 positively correlated genes
                 [~, idxn] = mink(r, 3); % Select top 3 negatively correlated genes
                 selectedg = sce.g([idxp, idxn]);
