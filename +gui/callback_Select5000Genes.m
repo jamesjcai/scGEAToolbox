@@ -10,14 +10,14 @@ if sce.NumGenes<=500
     return;
 end
 
-prompt = {'Remove mt-genes?', ...
-    'Remove ribosomal genes?', ...
-    'Remove genes expressed less than p cells (e.g., p=0.075)?', ...
-    'Select top n HVGs (e.g., n=5000)?'};
+prompt = {'Remove Mt-Genes (MT-ND1, MT-ND6, MT-CYB, MT-COI, MT-ATP6, etc)?', ...
+    'Remove Ribosomal Genes (RPSA, RPS2, RPS3, RPL3, RPL4, RPLP1, etc)?', ...
+    'Remove Genes Expressed in < m Cells (m = 0.075 or 0.050, 10 or 50)?', ...
+    'Select Top n HVGs (n = 5000 or 2000)?'};
 dlgtitle = '';
-dims = [1, 65];
+dims = [1, 85];
 
-definput = {'Yes', 'Yes', '0.075',num2str(min([sce.NumGenes,5000]))};
+definput = {'Yes', 'Yes', '0.075', num2str(min([sce.NumGenes,5000]))};
 answer = inputdlg(prompt, dlgtitle, dims, definput);
 if isempty(answer)
     requirerefresh = false;
@@ -39,7 +39,7 @@ end
 
 try
     a = str2double(answer{3});
-    if a > 0 && a < intmax        
+    if a > 0 && a < intmax
         sce = sce.selectkeepgenes(1, a);
         disp('Lowly expressed genes removed.');
         requirerefresh = true;

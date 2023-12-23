@@ -250,8 +250,8 @@ in_addmenu(m_exp, 0, @in_MergeSubCellTypes, 'Merge Subclusters of the Same Cell 
 %i_addmenu(m_exp,0,@AnnotateSubGroup,'Annotate Cell Subgroups...');
 in_addmenu(m_exp, 1, @in_WorkonSelectedGenes, 'Select Top n  Highly Variable Genes (HVGs) to Work on...');
 in_addmenu(m_exp, 0, @in_SubsampleCells, 'Subsample 50% Cells to Work on...');
-in_addmenu(m_exp, 1, @gui.callback_DEGene2GroupsBatch, 'Differential Expression (DE) Analysis in Batch Mode...');
-in_addmenu(m_exp, 0, @gui.callback_DPGene2GroupsBatch, 'Differential Program (DP) Analysis in Batch Mode...');
+in_addmenu(m_exp, 1, @gui.callback_DEGene2GroupsBatch, 'Differential Expression (DE) Analysis in Cell Type Batch Mode...');
+in_addmenu(m_exp, 0, @gui.callback_DPGene2GroupsBatch, 'Differential Program (DP) Analysis in Cell Type Batch Mode...');
 
 %i_addmenu(m_exp,0,@ShowCellStemScatter,"Stem Scatter Feature Plot...");
 %i_addmenu(m_exp,1,@gui.callback_Violinplot,'Gene Violin Plot...');
@@ -710,6 +710,8 @@ end
     function in_Select5000Genes(src, ~)
         oldm = sce.NumGenes;
         [requirerefresh] = gui.callback_Select5000Genes(src);
+        
+        if requirerefresh
         sce = guidata(FigureHandle);
         try
             sce = sce.qcfilterwhitelist(500, 0.2, 10, 200, []);
@@ -717,6 +719,7 @@ end
             c=sce.c;
         catch ME
             warning(ME.message);
+        end
         end
 
         if requirerefresh
