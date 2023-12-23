@@ -1467,6 +1467,17 @@ end
             'Yes', 'No', 'Yes');
         switch answer
             case 'Yes'
+
+    % T = sc_hvg(sce.X, sce.g);
+    % glist = T.genes(1:min([a, sce.NumGenes]));
+    % [y, idx] = ismember(glist, sce.g);
+    % if ~all(y)
+    %     errordlg('Runtime error.');
+    %     return;   % xxxxxxxxx
+    % end
+    % sce.g = sce.g(idx);
+    % sce.X = sce.X(idx, :);
+                
                 fw = gui.gui_waitbar;
                 r = corr(t, sce.X.', 'type', 'spearman'); % Calculate linear correlation between gene expression profile and T
                 gui.gui_waitbar(fw);
@@ -1483,6 +1494,7 @@ end
                     end
                     errordlg(ME.message);
                 end
+
             case 'No'
                 return;
         end            
@@ -1509,12 +1521,14 @@ end
         answer = questdlg('Cluster cells using expression matrix X?');
         if ~strcmp(answer, 'Yes'), return; end
     
-        methodtagvx = {'specter (31 secs) 🐇', 'sc3 (77 secs) 🐇', ...
-            'simlr (400 secs) 🐢', ...
-            'soptsc (1,182 secs) 🐢🐢', 'sinnlrr (8,307 secs) 🐢🐢🐢',};
-        methodtagv = {'specter', 'sc3', 'simlr', 'soptsc', 'sinnlrr'};
+        % methodtagvx = {'specter (31 secs) 🐇', 'sc3 (77 secs) 🐇', ...
+        %     'simlr (400 secs) 🐢', ...
+        %     'soptsc (1,182 secs) 🐢🐢', 'sinnlrr (8,307 secs) 🐢🐢🐢',};
+        % methodtagv = {'specter', 'sc3', 'simlr', 'soptsc', 'sinnlrr'};
+        methodtagvx = {'SC3 [PMID:28346451] 🐢🐢'};
+        methodtagv = {'sc3'};
         [indx, tf] = listdlg('PromptString', ...
-            {'Select clustering program'}, ...
+            {'Select a clustering algorithm'}, ...
             'SelectionMode', 'single', ...
             'ListString', methodtagvx);
         if tf == 1

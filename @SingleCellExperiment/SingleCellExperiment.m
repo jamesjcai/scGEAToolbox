@@ -128,14 +128,14 @@ methods
             obj.list_cell_attributes{k}(idx) = [];
         end
 
-        a = fields(obj.struct_cell_embeddings);
+        a = fieldnames(obj.struct_cell_embeddings);
         for k = 1:length(a)
             if ~isempty(obj.struct_cell_embeddings.(a{k}))
                 obj.struct_cell_embeddings.(a{k})(idx, :) = [];
             end
         end
 
-        a = fields(obj.struct_cell_clusterings);
+        a = fieldnames(obj.struct_cell_clusterings);
         for k = 1:length(a)
             if ~isempty(obj.struct_cell_clusterings.(a{k}))
                 obj.struct_cell_clusterings.(a{k})(idx) = [];
@@ -183,7 +183,7 @@ methods
                 obj.list_cell_attributes{k} = obj.list_cell_attributes{k}(idx);
             end
 
-            a = fields(obj.struct_cell_embeddings);
+            a = fieldnames(obj.struct_cell_embeddings);
             for k = 1:length(a)
                 if ~isempty(obj.struct_cell_embeddings.(a{k}))
                     obj.struct_cell_embeddings.(a{k}) = ...
@@ -191,7 +191,7 @@ methods
                 end
             end
 
-            a = fields(obj.struct_cell_clusterings);
+            a = fieldnames(obj.struct_cell_clusterings);
             for k = 1:length(a)
                 if ~isempty(obj.struct_cell_clusterings.(a{k}))
                     obj.struct_cell_clusterings.(a{k}) = ...
@@ -225,7 +225,8 @@ methods
         %            definput = {'500','0.20','10'};
         %        case 'Strigent (keep less cells/genes)'
         %            definput = {'1000','0.15','15'};
-        [~, keptg, keptidxv] = sc_qcfilter(obj.X, obj.g, libsize, mtratio, ...
+        [~, keptg, keptidxv] = sc_qcfilter(obj.X, obj.g, ...
+            libsize, mtratio, ...
             min_cells_nonzero);
         for k = 1:length(keptidxv)
             obj = selectcells(obj, keptidxv{k});
@@ -239,9 +240,17 @@ methods
     function obj = selectgenes(obj, min_cellnum, nonzero_cutoff)
         if nargin < 3, nonzero_cutoff = 1; end
         if nargin < 2, min_cellnum = 0.01; end
-        [tmpX, tmpg] = sc_selectg(obj.X, obj.g, min_cellnum, nonzero_cutoff);
+        [tmpX, tmpg, idx] = sc_selectg(obj.X, obj.g, ...
+            min_cellnum, nonzero_cutoff);
         obj.X = tmpX;
         obj.g = tmpg;
+        try
+        for k = 2:2:length(obj.list_gene_attributes)
+            obj.list_gene_attributes{k} = obj.list_gene_attributes{k}(idx);
+        end
+        catch ME
+            warning(ME.message);
+        end
     end
 
     function obj = selectkeepgenes(obj, min_countnum, min_cellnum)
@@ -260,6 +269,13 @@ methods
         idxkeep = idxkeep1 | idxkeep2;
         obj.X = obj.X(idxkeep, :);
         obj.g = obj.g(idxkeep);
+        try
+            for k = 2:2:length(obj.list_gene_attributes)
+                obj.list_gene_attributes{k} = obj.list_gene_attributes{k}(idxkeep);
+            end
+        catch ME
+            warning(ME.message);
+        end
     end
 
     function obj = rmmtgenes(obj)
@@ -267,16 +283,30 @@ methods
         if sum(idx) > 0
             obj.X = tmpX;
             obj.g = tmpg;
+            try
+                for k = 2:2:length(obj.list_gene_attributes)
+                    obj.list_gene_attributes{k}(idx) = [];
+                end
+            catch ME
+                warning(ME.message);
+            end
         end
     end
 
     function obj = rmribosomalgenes(obj)
         ribog = pkg.i_get_ribosomalgenes;
-        [i] = ismember(upper(obj.g), ribog);
-        obj.X = obj.X(~i, :);
-        obj.g = obj.g(~i);
+        [idx] = ismember(upper(obj.g), ribog);
+        obj.X = obj.X(~idx, :);
+        obj.g = obj.g(~idx);
         fprintf('%d ribosomal genes found and removed.\n', ...
-            sum(i));
+            sum(idx));
+            try
+                for k = 2:2:length(obj.list_gene_attributes)
+                    obj.list_gene_attributes{k}(idx) = [];
+                end
+            catch ME
+                warning(ME.message);
+            end
     end
 
     function obj = appendmetainfo(obj, infostr)
@@ -289,7 +319,6 @@ methods
     function c_check(obj)
         assert(~isempty(obj.c), 'SCE.C must be defined!');
     end
-
 end
 % https://www.mathworks.com/help/matlab/matlab_oop/example-representing-structured-data.html
 end

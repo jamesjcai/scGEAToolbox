@@ -20,3 +20,4 @@ X = X(idx, :);
 if nargout > 1
     genelist = genelist(idx);
 end
+end

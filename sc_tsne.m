@@ -5,7 +5,8 @@ function s = sc_tsne(X, ndim, donorm, dolog1p)
 % s_phate=run.PHATE(X,3,true);
 % s_umap=run.UMAP(X,3);
 narginchk(1, 4)
-validateattributes(ndim, {'numeric'}, {'scalar', 'integer', '>=', 2, '<=', 3});
+validateattributes(ndim, {'numeric'}, ...
+    {'scalar', 'integer', '>=', 2, '<=', 3});
 
 if nargin < 2, ndim = 3; end
 if nargin < 3, donorm = true; end
