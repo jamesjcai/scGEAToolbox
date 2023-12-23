@@ -202,7 +202,7 @@ in_addbuttontoggle(2, 0, {@in_togglebtfun, @callback_SaveX, ...
 
 m_net = uimenu(FigureHandle, 'Text', '&Network', 'Accelerator', 'N');
 
-in_addmenu(m_net, 0, @in_Select5000Genes, 'Choose Most Informative Genes...');
+in_addmenu(m_net, 0, @in_Select5000Genes, 'Remove Less Informative Genes to Reduce Gene Space...');
 in_addmenu(m_net, 1, {@in_scTenifoldNet,1}, 'Construct GRN using PC Regression [PMID:33336197] 🐢...');
 %in_addmenu(m_net, 1, @callback_scPCNet1, 'GRN Construction - PC Regression (w/o subsampling) [PMID:33336197] 🐢...');
 %in_addmenu(m_net, 0, @callback_scTenifoldNet1, 'GRN Construction - PC Regression (w/ subsampling) [PMID:33336197] 🐢🐢 ...');
@@ -709,18 +709,18 @@ end
 
     function in_Select5000Genes(src, ~)
         oldm = sce.NumGenes;
+        oldn = sce.NumCells;
         [requirerefresh] = gui.callback_Select5000Genes(src);
         
         if requirerefresh
             sce = guidata(FigureHandle);
             try
-
                 % case 'Relaxed (keep more cells/genes)'
                 %     definput = {'500', '0.20', '10', '200'};
                 % case 'Strigent (remove more cells/genes)'
-                %     definput = {'1000', '0.15', '15', '500'};               
-                sce = sce.qcfilterwhitelist(500, 0.2, 10, 200, []);
-                disp('Basic QC for cells.');
+                %     definput = {'1000', '0.15', '15', '500'};
+                sce = sce.qcfilterwhitelist(1000, 0.15, 15, 500, []);
+                disp('Strigent QC applied.');
                 c=sce.c;
             catch ME
                 warning(ME.message);
@@ -728,7 +728,11 @@ end
 
             in_RefreshAll(src, 1, true);            
             newm = sce.NumGenes;
-            helpdlg(sprintf('%d genes removed.', oldm-newm), '');
+            newn = sce.NumCells;
+            helpdlg(sprintf('%d cells removed; %d genes removed.', ...
+                oldn-newn, oldm-newm), '');
+            
+            % helpdlg(sprintf('%d genes removed.', oldm-newm), '');
         end        
     end
 
