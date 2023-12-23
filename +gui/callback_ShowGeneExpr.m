@@ -29,7 +29,7 @@ sce = guidata(FigureHandle);
 %     case 'Multiple'
         [glist] = gui.i_selectngenes(sce);
         if isempty(glist)
-            helpdlg('No genes are selected or present in the dataset.','');
+            % helpdlg('No genes are selected or present in the dataset.','');
             return;
             %[gsorted]=gui.i_sortgenenames(sce);
             %if isempty(gsorted), return; end
@@ -60,7 +60,7 @@ sce = guidata(FigureHandle);
                         g = sprintf("%s & ", glist);
                         ix = sum(sce.X(i, :) > 0, 1) == length(i);
                         if ~any(ix)
-                            helpdlg('No cells express all the selected genes.', '');
+                            % helpdlg('No cells express all the selected genes.', '');
                             return;
                         end
                         x = x .* ix;

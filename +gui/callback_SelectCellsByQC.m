@@ -93,7 +93,6 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
                     min_cells_nonzero, numgenes, whitelist);
             catch ME
                 % if (strcmp(ME.identifier,'MATLAB:array:SizeLimitExceeded'))
-
                 if issparse(sce.X)
                     gui.gui_waitbar(fw, true);
                     errordlg(ME.message);

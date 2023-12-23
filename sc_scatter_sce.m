@@ -712,17 +712,20 @@ end
         [requirerefresh] = gui.callback_Select5000Genes(src);
         
         if requirerefresh
-        sce = guidata(FigureHandle);
-        try
-            sce = sce.qcfilterwhitelist(500, 0.2, 10, 200, []);
-            disp('Basic QC for cells.');
-            c=sce.c;
-        catch ME
-            warning(ME.message);
-        end
-        end
+            sce = guidata(FigureHandle);
+            try
 
-        if requirerefresh
+                % case 'Relaxed (keep more cells/genes)'
+                %     definput = {'500', '0.20', '10', '200'};
+                % case 'Strigent (remove more cells/genes)'
+                %     definput = {'1000', '0.15', '15', '500'};               
+                sce = sce.qcfilterwhitelist(500, 0.2, 10, 200, []);
+                disp('Basic QC for cells.');
+                c=sce.c;
+            catch ME
+                warning(ME.message);
+            end
+
             in_RefreshAll(src, 1, true);            
             newm = sce.NumGenes;
             helpdlg(sprintf('%d genes removed.', oldm-newm), '');
