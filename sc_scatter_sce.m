@@ -1424,8 +1424,10 @@ end
         if strcmp(answer, 'splinefit (🐇)')
             dim = 1;
             [t, xyz1] = pkg.i_pseudotime_by_splinefit(sce.s, dim, false);
+            pseudotimemethod = 'splinefit';
         elseif strcmp(answer, 'princurve (🐢)')
             [t, xyz1] = pkg.i_pseudotime_by_princurve(sce.s, false);
+            pseudotimemethod = 'princurve';
         else
             return;
         end
@@ -1444,57 +1446,36 @@ end
                 'fontsize', 10, 'FontWeight', 'bold', 'BackgroundColor', 'w', 'EdgeColor', 'k');
         end
         hold off;
-        answerx = questdlg('Save/Update pseudotime T in SCE', ...
-            'Save Pseudotime', ...
-            'Yes', 'No', 'Yes');
-        switch answerx
-            case 'Yes'
-                tag = sprintf('%s pseudotime', answer);
-                % iscellstr(sce.list_cell_attributes(1:2:end))
-                idx = find(contains(sce.list_cell_attributes(1:2:end), tag));
-                if ~isempty(idx)
-                    sce.list_cell_attributes{idx + 1} = t;
-                    fprintf('%s is updated.\n', tag);
-                else
-                    sce.list_cell_attributes{end+1} = tag;
-                    sce.list_cell_attributes{end+1} = t;
-                    fprintf('%s is saved.\n', tag);
-                end
-                guidata(FigureHandle, sce);
+
+        % pseudotimemethod
+        % answer = questdlg('Save/Update pseudotime T in SCE', ...
+        %     'Save Pseudotime', ...
+        %     'Yes', 'No', 'Yes');
+
+        tag = sprintf('%s_pseudotime', pseudotimemethod);
+        % iscellstr(sce.list_cell_attributes(1:2:end))
+        try
+            idx = find(contains(sce.list_cell_attributes(1:2:end), tag));
+        catch ME
+            idx = [];
+            warning(ME.message);
         end
+        if ~isempty(idx)
+            sce.list_cell_attributes{idx*2} = t;
+            fprintf('%s is updated.\n', upper(tag));
+        else
+            sce.list_cell_attributes{end+1} = tag;
+            sce.list_cell_attributes{end+1} = t;
+            fprintf('%s is saved.\n', upper(tag));
+        end
+        guidata(FigureHandle, sce);
+
         answer = questdlg('View expression of selected genes', ...
             'Pseudotime Function', ...
             'Yes', 'No', 'Yes');
         switch answer
             case 'Yes'
-
-    % T = sc_hvg(sce.X, sce.g);
-    % glist = T.genes(1:min([a, sce.NumGenes]));
-    % [y, idx] = ismember(glist, sce.g);
-    % if ~all(y)
-    %     errordlg('Runtime error.');
-    %     return;   % xxxxxxxxx
-    % end
-    % sce.g = sce.g(idx);
-    % sce.X = sce.X(idx, :);
-                
-                fw = gui.gui_waitbar;
-                r = corr(t, sce.X.', 'type', 'spearman'); % Calculate linear correlation between gene expression profile and T
-                gui.gui_waitbar(fw);
-                [~, idxp] = maxk(r, 4); % Select top 4 positively correlated genes
-                [~, idxn] = mink(r, 3); % Select top 3 negatively correlated genes
-                selectedg = sce.g([idxp, idxn]);
-                try
-                    psf1 = figure('WindowStyle', 'modal');
-                    pkg.i_plot_pseudotimeseries(log2(sce.X+1), ...
-                        sce.g, t, selectedg);
-                catch ME
-                    if exist('psf1', 'var') && ishandle(psf1)
-                        close(psf1);
-                    end
-                    errordlg(ME.message);
-                end
-
+                gui.sc_pseudotimegenes(sce, t);
             case 'No'
                 return;
         end            
