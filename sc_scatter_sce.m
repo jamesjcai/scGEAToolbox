@@ -344,11 +344,11 @@ end
                 end
             end
         end
-        if isfield(sce.struct_cell_embeddings,'phate')
-            if isempty(sce.struct_cell_embeddings.('phate'))
-                sce.struct_cell_embeddings = rmfield(sce.struct_cell_embeddings,'phate');
+        if isfield(sce.struct_cell_embeddings, oldf)
+            if isempty(sce.struct_cell_embeddings.(oldf))
+                sce.struct_cell_embeddings = rmfield(sce.struct_cell_embeddings,oldf);
             end
-        end        
+        end
     end
 
 
@@ -667,7 +667,7 @@ end
         gui.gui_waitbar_adv(fw,1/6,'Basic QC Filtering...');
         sce = sce.qcfilter;
         gui.gui_waitbar_adv(fw,2/6, 'Embeding Cells Using tSNE...');
-        sce = sce.embedcells('tsne3d',true);
+        sce = sce.embedcells('tsne3d', true, true, 3);
         gui.gui_waitbar_adv(fw,3/6, 'Clustering Cells Using K-means...');
         sce = sce.clustercells([], [], true);
         gui.gui_waitbar_adv(fw,4/6, 'Annotating Cell Type Using PanglaoDB...');
@@ -806,8 +806,7 @@ end
                     return;
             end
         end
-    
-    
+        
         if gui.callback_Harmonypy(src)
             sce = guidata(FigureHandle);
             [c, cL] = grp2idx(sce.c);
@@ -879,6 +878,7 @@ end
         if keepview || keepcolr
             [para] = gui.i_getoldsettings(src);
         end
+        figure(FigureHandle);
         was3d = ~isempty(h.ZData);        
         if size(sce.s, 2) >= 3                  
             if keepview && was3d, [ax, bx] = view(); end

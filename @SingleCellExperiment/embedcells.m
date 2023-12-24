@@ -52,8 +52,8 @@ if isempty(obj.s) || forced
         methoddimtag = sprintf('%s%dd',methodtag, ndim);
     end
 
-    obj.struct_cell_embeddings.(methoddimtag) = obj.s;    
-    disp('SCE.S added');
+    obj.struct_cell_embeddings.(methoddimtag) = single(obj.s);
+    % disp('SCE.S added');
 else    
     disp('Use `sce = sce.embedcells(''tSNE'', true)` to overwirte existing SCE.S.');
 end
