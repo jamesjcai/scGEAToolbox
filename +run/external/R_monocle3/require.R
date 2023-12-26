@@ -23,3 +23,6 @@ if (!requireNamespace("BiocManager", quietly = TRUE)){
 }
     BiocManager::install("rhdf5")
 }
+if (!(packageVersion("Matrix")=='1.6.1.1')){
+    remotes::install_version("Matrix", version = "1.6-1.1")
+}
