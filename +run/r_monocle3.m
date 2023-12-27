@@ -1,6 +1,6 @@
 function [t] = r_monocle3(X, idx)
 % Run Monocle pseudotime analysis
-%[t]=run.r_monocle3(X,idx);
+% [t]=run.r_monocle3(X,idx);
 if nargin < 2, idx = [1, 2]; end
 t = [];
 isdebug = false;

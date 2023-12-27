@@ -46,15 +46,14 @@ end
 guidata(FigureHandle, sce);
 
 if ~(ismcc || isdeployed)
-    labels = {'Save pseudotime T to variable named:', ...
-        };
-    vars = {'t_mono3'};
+    labels = {'Save pseudotime T to variable named:'};
+    vars = {'Tmonocleout'};
     values = {t_mono3};
     msgfig = export2wsdlg(labels, vars, values);
     uiwait(msgfig)
 else
-    gui.i_exporttable(table(t_mono3), true, 'Tmonocleout', 'MonocleResTable');
-
+    gui.i_exporttable(table(t_mono3), true, 'Tmonocleout', ...
+        'MonocleResTable');
     % "Tcellattrib","CellAttribTable"
     % "Tviolindata","ViolinPlotTable"
     % "Tgenkiglist","GenKIResulTable"
