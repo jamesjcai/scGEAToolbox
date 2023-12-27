@@ -19,7 +19,7 @@ function [done] = i_setrenv(~, ~)
 
 %
 if ~ispref('scgeatoolbox', 'rexecutablepath')
-    answer = questdlg('Select Path to R Executable', '');
+    answer = questdlg('R environment has not been set up. Locate R executable Rscript.exe?');
     if ~strcmp(answer, 'Yes'), return; end
     if ispc
         rpathdefult = pkg.FindRpath;
