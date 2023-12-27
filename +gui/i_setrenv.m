@@ -1,7 +1,10 @@
 function [done] = i_setrenv(~, ~)
 
-%see also: I_SETPYENV
+%see also: I_SETPYENV, I_SETEXTWD
 [done] = false;
+
+preftagname = 'rexecutablepath';
+
 
 % Rpath=pkg.FindRpath;
 % if isempty(Rpath)
@@ -18,7 +21,7 @@ function [done] = i_setrenv(~, ~)
 %     end
 
 %
-if ~ispref('scgeatoolbox', 'rexecutablepath')
+if ~ispref('scgeatoolbox', preftagname)
     answer = questdlg('R environment has not been set up. Locate R executable Rscript.exe?');
     if ~strcmp(answer, 'Yes'), return; end
     if ispc
@@ -30,9 +33,9 @@ if ~ispref('scgeatoolbox', 'rexecutablepath')
         rpathdefult = '';
     end
     [done] = ix_setrenv(rpathdefult);
-    % setpref('scgeatoolbox','rexecutablepath',s);
+    % setpref('scgeatoolbox',preftagname,s);
 else
-    s = getpref('scgeatoolbox', 'rexecutablepath');
+    s = getpref('scgeatoolbox', preftagname);
     answer = questdlg(sprintf('%s', s), ...
         'Path to R Executable', ...
         'Use this', 'Use another', 'Cancel', 'Use this');
@@ -44,7 +47,7 @@ else
     end
 end
 if done
-    Rpath = getpref('scgeatoolbox', 'rexecutablepath');
+    Rpath = getpref('scgeatoolbox', preftagname);
     if ispc
         Rexec = fullfile(Rpath, 'Rscript.exe');
     else
@@ -85,7 +88,7 @@ else
     disp(['User selected: ', fullfile(path, file)]);
     % fullfile(path)
     try
-        setpref('scgeatoolbox', 'rexecutablepath', fullfile(path));
+        setpref('scgeatoolbox', preftagname, fullfile(path));
     catch ME
         errordlg(ME.message);
         return;

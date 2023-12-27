@@ -1,5 +1,21 @@
 function callback_RunMonocle3(src, ~)
 
+extprogname = 'R_monocle3';
+preftagname = 'externalwrkpath';
+if ~gui.i_setwrkdir(preftagname), return; end
+s = getpref('scgeatoolbox', preftagname);
+try
+    wkdir = fullfile(s, extprogname);
+    if ~exist(wkdir,"dir")
+        mkdir(wkdir);
+    end
+catch ME
+    warning(ME.message);
+    wkdir = s;
+end
+fprintf('CURRENTWDIR = "%s"\n', wkdir);
+% helpdlg(sprintf('CURRENTWDIR = "%s"', wkdir),'');
+
 FigureHandle = src.Parent.Parent;
 a = findall(FigureHandle, 'type', 'axes');
 h = findall(a, 'type', 'scatter');
@@ -11,19 +27,19 @@ end
 idx = find(ptsSelected);
 
 [ok] = gui.i_confirmscript('Run Pseudotime Analysis (Monocle3)?', ...
-    'R_monocle3', 'r');
+    extprogname, 'r');
 if ~ok, return; end
 
 
 sce = guidata(FigureHandle);
 fw = gui.gui_waitbar;
-try
-    [t_mono3] = run.r_monocle3(sce.X, idx);
-catch ME
-    gui.gui_waitbar(fw, true);
-    errordlg(ME.message);
-    return;
-end
+%try
+    [t_mono3] = run.r_monocle3(sce.X, idx, wkdir);
+% catch ME
+%     gui.gui_waitbar(fw, true);
+%     errordlg(ME.message);
+%     return;
+% end
 gui.gui_waitbar(fw);
 if isempty(t_mono3)
     errordlg('MONOCLE3 running time error.');

@@ -203,6 +203,7 @@ in_addbuttontoggle(2, 0, {@in_togglebtfun, @callback_SaveX, ...
 m_net = uimenu(FigureHandle, 'Text', '&Network', 'Accelerator', 'N');
 
 in_addmenu(m_net, 0, @in_Select5000Genes, 'Remove Less Informative Genes to Reduce Gene Space...');
+in_addmenu(m_net, 0, @gui.i_setnetwd, 'Set Network Analysis Working Directory...');
 in_addmenu(m_net, 1, {@in_scTenifoldNet,1}, 'Construct GRN using PC Regression [PMID:33336197] 🐢...');
 %in_addmenu(m_net, 1, @callback_scPCNet1, 'GRN Construction - PC Regression (w/o subsampling) [PMID:33336197] 🐢...');
 %in_addmenu(m_net, 0, @callback_scTenifoldNet1, 'GRN Construction - PC Regression (w/ subsampling) [PMID:33336197] 🐢🐢 ...');
@@ -219,6 +220,8 @@ in_addmenu(m_net, 0, @callback_scTenifoldXct2, 'Differential CCIs - scTenifoldXc
 m_ext = uimenu(FigureHandle, 'Text', 'E&xternal', 'Accelerator', 'x');
 in_addmenu(m_ext, 0, @gui.i_setrenv, 'Check R Environment');
 in_addmenu(m_ext, 0, @gui.i_setpyenv, 'Check Python Environment');
+in_addmenu(m_ext, 0, @gui.i_setextwd, 'Set External Program Working Directory...');
+
 in_addmenu(m_ext, 1, @in_DecontX, 'Detect Ambient RNA Contamination (DecontX/R) [PMID:32138770]...');
 %i_addmenu(m_ext,0,@callback_SingleRCellType,'SingleR Cell Type Annotation (SingleR/R required)...');
 %i_addmenu(m_ext,0,@callback_RevelioCellCycle,'Revelio Cell Cycle Analysis (Revelio/R required)...');

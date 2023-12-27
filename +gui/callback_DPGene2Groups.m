@@ -115,7 +115,7 @@ end
 if isempty(idxneedplot), return; end
 
 answer=questdlg('Where to save figure files?','','Use Temporary Folder', ...
-    'Select a Folder','Cancel','Use TEMP Folder');
+    'Select a Folder','Cancel','Use Temporary Folder');
 switch answer
     case 'Select a Folder'
         outdir = uigetdir;

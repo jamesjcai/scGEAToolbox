@@ -1,4 +1,4 @@
-function [ok, msg] = commoncheck_R(rscriptdir, externalfolder)
+function [ok, msg, codepth] = commoncheck_R(rscriptdir, externalfolder)
 
 if nargin < 2, externalfolder = 'external'; end
 ok = false;
@@ -21,9 +21,10 @@ end
 folder = fileparts(mfilename('fullpath'));
 a = strfind(folder, filesep);
 folder = extractBefore(folder, a(end)+1);
-wrkpth = fullfile(folder, externalfolder, rscriptdir);
-cd(wrkpth);
-fprintf('CURRENTWDIR = "%s"\n', wrkpth);
+codepth = fullfile(folder, externalfolder, rscriptdir);
+cd(codepth);
+% fprintf('CURRENTWDIR = "%s"\n', wrkpth);
+fprintf('SORCCODEDIR = "%s"\n', codepth);
 [~, cmdout] = pkg.RunRcode('require.R', Rpath);
 if strfind(cmdout, 'there is no package') > 0
     msg = cmdout;
