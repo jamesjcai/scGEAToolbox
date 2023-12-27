@@ -5,9 +5,11 @@ preftagname = 'externalwrkpath';
 if ~gui.i_setwrkdir(preftagname), return; end
 s = getpref('scgeatoolbox', preftagname);
 try
-    wkdir = fullfile(s, extprogname);
+    wkdir = fullfile(s, sprintf('%s_workingfolder', extprogname));
     if ~exist(wkdir,"dir")
         mkdir(wkdir);
+    else
+        wkdir = s;
     end
 catch ME
     warning(ME.message);
@@ -15,6 +17,7 @@ catch ME
 end
 fprintf('CURRENTWDIR = "%s"\n', wkdir);
 % helpdlg(sprintf('CURRENTWDIR = "%s"', wkdir),'');
+
 
 FigureHandle = src.Parent.Parent;
 a = findall(FigureHandle, 'type', 'axes');
@@ -33,19 +36,15 @@ if ~ok, return; end
 
 sce = guidata(FigureHandle);
 fw = gui.gui_waitbar;
-%try
+try
     [t_mono3] = run.r_monocle3(sce.X, idx, wkdir);
-% catch ME
-%     gui.gui_waitbar(fw, true);
-%     errordlg(ME.message);
-%     return;
-% end
-gui.gui_waitbar(fw);
-if isempty(t_mono3)
-    errordlg('MONOCLE3 running time error.');
+catch ME
+    gui.gui_waitbar(fw, true);
+    errordlg(ME.message);
     return;
 end
-if length(t_mono3) ~= sce.NumCells
+gui.gui_waitbar(fw);
+if isempty(t_mono3) || length(t_mono3) ~= sce.NumCells
     errordlg('MONOCLE3 running time error.');
     return;
 end
