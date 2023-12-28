@@ -740,6 +740,10 @@ end
     end
 
     function in_RunSeuratWorkflow(src, ~)
+        extprogname = 'R_Seurat';
+        preftagname = 'externalwrkpath';
+        [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
+
         [ok] = gui.i_confirmscript('Run Seurat/R Workflow (Seurat)?', ...
             'R_Seurat', 'r');
         if ~ok, return; end
@@ -748,25 +752,30 @@ end
         if isempty(ndim), return; end
         fw = gui.gui_waitbar;
         try
-            [sce] = run.r_seurat(sce, ndim);
+            [sce] = run.r_seurat(sce, ndim, wkdir);
             [c, cL] = grp2idx(sce.c);
         catch
             gui.gui_waitbar(fw);
             return;
         end
         gui.gui_waitbar(fw);
+        guidata(FigureHandle, sce);
         in_RefreshAll(src, 1, true, false);
     end
 
     function in_DecontX(~, ~)
         gui.gui_showrefinfo('DecontX [PMID:32138770]');
 
+        extprogname = 'R_decontX';
+        preftagname = 'externalwrkpath';
+        [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
+
         [ok] = gui.i_confirmscript('Detect Ambient RNA Contamination (decontX)', ...
             'R_decontX', 'r');
         if ~ok, return; end
         fw = gui.gui_waitbar;
         try
-            [Xdecon, contamination] = run.r_decontX(sce);
+            [Xdecon, contamination] = run.r_decontX(sce, wkdir);
         catch
             gui.gui_waitbar(fw);
             errordlg('Runtime error.')

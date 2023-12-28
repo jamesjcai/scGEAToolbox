@@ -21,7 +21,7 @@ Rpath = getpref('scgeatoolbox', 'rexecutablepath');
 
 codefullpath = fullfile(codepath,'script.R');
 pkg.RunRcode(codefullpath, Rpath);
-if exist('./output.h5', 'file')
+if exist('output.h5', 'file')
     t = h5read('output.h5', '/t');
 end
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end

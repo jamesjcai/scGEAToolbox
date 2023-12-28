@@ -1,14 +1,19 @@
-function [sce] = r_seurat(X, genelist)
+function [sce] = r_seurat(X, genelist, wkdir, isdebug)
 
-isdebug = false;
+if nargin < 3, wkdir = ''; end
+if nargin < 4, isdebug = false; end
+
 oldpth = pwd();
-[isok, msg] = commoncheck_R('R_Seurat');
+[isok, msg, codepath] = commoncheck_R('R_Seurat');
 if ~isok, error(msg); end
 
 if ~isok, error(msg);
     sce = [];
     return;
 end
+if ~isempty(wkdir), cd(wkdir); end
+
+
 if isa(X, 'SingleCellExperiment') && isnumeric(genelist)
     sce = X;
     ndim = genelist;
@@ -22,13 +27,15 @@ tmpfilelist = {'input.mat', 'output.h5', 'g.txt'};
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 
 X = sce.X;
+if issparse(X), X = full(X); end
 save('input.mat', 'X', 'ndim', '-v7.3');
 writematrix(sce.g, 'g.txt');
 
 Rpath = getpref('scgeatoolbox', 'rexecutablepath');
-pkg.RunRcode('script.R', Rpath);
+codefullpath = fullfile(codepath,'script.R');
+pkg.RunRcode(codefullpath, Rpath);
 
-if exist('./output.h5', 'file')
+if exist('output.h5', 'file')
     s_tsne = h5read('output.h5', '/s_tsne');
     s_umap = h5read('output.h5', '/s_umap');
     c_ident = h5read('output.h5', '/c_ident');
