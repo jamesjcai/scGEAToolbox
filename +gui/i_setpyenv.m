@@ -37,26 +37,26 @@ end
 end
 
 
-function [done] = ix_setpyenv(deflt)
-% selpath = uigetdir;
-done = false;
-
-if ispc
-    [file, path] = uigetfile('python.exe', 'Select Python Interpreter', deflt);
-else
-    [file, path] = uigetfile('python', 'Select Python Interpreter', deflt);
-end
-if isequal(file, 0)
-    %disp('User selected Cancel');
-    return;
-else
-    disp(['User selected: ', fullfile(path, file)]);
-    try
-        pyenv('Version', fullfile(path, file));
-    catch ME
-        errordlg(ME.message);
-        return;
+    function [done] = ix_setpyenv(deflt)
+    % selpath = uigetdir;
+        done = false;
+    
+        if ispc
+            [file, path] = uigetfile('python.exe', 'Select Python Interpreter', deflt);
+        else
+            [file, path] = uigetfile('python', 'Select Python Interpreter', deflt);
+        end
+        if isequal(file, 0)
+            %disp('User selected Cancel');
+            return;
+        else
+            disp(['User selected: ', fullfile(path, file)]);
+            try
+                pyenv('Version', fullfile(path, file));
+            catch ME
+                errordlg(ME.message);
+                return;
+            end
+            done = true;
+        end
     end
-    done = true;
-end
-end

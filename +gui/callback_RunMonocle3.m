@@ -4,20 +4,17 @@ extprogname = 'R_monocle3';
 preftagname = 'externalwrkpath';
 if ~gui.i_setwrkdir(preftagname), return; end
 s = getpref('scgeatoolbox', preftagname);
-try
-    wkdir = fullfile(s, sprintf('%s_workingfolder', extprogname));
-    if ~exist(wkdir,"dir")
-        mkdir(wkdir);
-    else
-        wkdir = s;
-    end
-catch ME
-    warning(ME.message);
-    wkdir = s;
-end
-fprintf('CURRENTWDIR = "%s"\n', wkdir);
-% helpdlg(sprintf('CURRENTWDIR = "%s"', wkdir),'');
+s1 = sprintf('%s_workingfolder', extprogname);
+wkdir = fullfile(s, s1);
 
+if ~exist(wkdir,"dir")
+    mkdir(wkdir);
+else
+    answer = questdlg('Directory existing. Overwrite?');
+    if ~strcmp(answer,'Yes'), return; end
+end
+   
+fprintf('CURRENTWDIR = "%s"\n', wkdir);
 
 FigureHandle = src.Parent.Parent;
 a = findall(FigureHandle, 'type', 'axes');

@@ -26,6 +26,8 @@ if (!requireNamespace("rhdf5", quietly = TRUE)){
     BiocManager::install("rhdf5")
 }
 
-if (!(packageVersion("Matrix")=='1.6.1.1')){
-    remotes::install_version("Matrix", version = "1.6-1.1", repos = "http://cran.us.r-project.org")
-}
+#if (!(packageVersion("Matrix")=='1.6.1.1')){
+#    remotes::install_version("Matrix", version = "1.6-1.1", repos = "http://cran.us.r-project.org")
+#}
+
+packageVersion("Matrix")
