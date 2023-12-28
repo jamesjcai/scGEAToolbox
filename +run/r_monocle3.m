@@ -14,6 +14,7 @@ if ~isempty(wkdir), cd(wkdir); end
 tmpfilelist = {'input.h5', 'output.h5', 'input.mat'};
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 
+if issparse(X), X = full(X); end
 save('input.mat', 'X', 'idx', '-v7.3');
 %pkg.e_writeh5(X,[],'input.h5');
 Rpath = getpref('scgeatoolbox', 'rexecutablepath');
