@@ -1016,14 +1016,6 @@ end
 
     function in_EmbeddingAgain(src, ~, ndim)
         if nargin<3, ndim=[]; end
-        [methodtag] = gui.i_pickembedmethod;
-        if isempty(methodtag), return; end
-        if isempty(ndim)
-            [ndim] = gui.i_choose2d3d;
-        end
-        if isempty(ndim), return; end
-        methoddimtag = sprintf('%s%dd',methodtag, ndim);
-
         if isempty(sce.struct_cell_embeddings)
             sce.struct_cell_embeddings = pkg.e_makeembedstruct;
         end
@@ -1031,59 +1023,73 @@ end
             sce.struct_cell_embeddings.('metaviz3d') = [];
         end
 
-        usingold = false;
-        if ~isfield(sce.struct_cell_embeddings, methoddimtag)
-            sce.struct_cell_embeddings = setfield(sce.struct_cell_embeddings,methoddimtag,[]);
-        end
-        if ~isempty(sce.struct_cell_embeddings.(methoddimtag))
-            answer1 = questdlg(sprintf('Use existing %s embedding or re-compute new embedding?', ...
-                upper(methoddimtag)), '', ...
-                'Use existing', 'Re-compute', 'Cancel', 'Use existing');
-            switch answer1
-                case 'Use existing'
-                    sce.s = sce.struct_cell_embeddings.(methoddimtag);
-                    usingold = true;
-                case 'Re-compute'
-                    usingold = false;
-                case {'Cancel', ''}
-                    return;
-            end
-        end
-        % whitelist = [];
-        if ~usingold
-            answer2 = questdlg(sprintf('Use highly variable genes (HVGs, n=2000) or use all genes (n=%d)?', sce.NumGenes), ...
-                '', '2000 HVGs 🐇', 'All Genes 🐢', 'Other...', '2000 HVGs 🐇');
-            switch answer2
-                case 'All Genes 🐢'
-                    usehvgs = false;
-                    K = sce.NumGenes;
-                case '2000 HVGs 🐇'
-                    usehvgs = true;
-                    K = 2000;
-                case 'Other...'
-                    K = gui.i_inputnumk(min([3000, sce.NumGenes]), ...
-                        100, sce.NumGenes);
-                    if isempty(K), return; end
-                    usehvgs = true;
-                otherwise
-                    return;
-            end
+        
 
-            fw = gui.gui_waitbar;
-            try
-                forced = true;
-                if contains(methoddimtag, 'tsne'), disp('tSNE perplexity = 30'); end
-                sce = sce.embedcells(methoddimtag, forced, usehvgs, ndim, K);
-            catch ME
-                gui.gui_waitbar(fw, true);
-                errordlg(ME.message);
-                return;
+        answer = questdlg('Using exsiting embedding?');
+        if strcmp(answer, 'Yes')
+            [s] = gui.i_pickembedvalues(sce);
+            if ~isempty(s), sce.s = s; end
+        else
+
+            [methodtag] = gui.i_pickembedmethod;
+            if isempty(methodtag), return; end
+            if isempty(ndim), [ndim] = gui.i_choose2d3d; end
+            if isempty(ndim), return; end
+            methoddimtag = sprintf('%s%dd',methodtag, ndim);
+            usingold = false;
+            if ~isfield(sce.struct_cell_embeddings, methoddimtag)
+                sce.struct_cell_embeddings = setfield(sce.struct_cell_embeddings,methoddimtag,[]);
             end
-            gui.gui_waitbar(fw);
-        end        
+            if ~isempty(sce.struct_cell_embeddings.(methoddimtag))
+                answer1 = questdlg(sprintf('Use existing %s embedding or re-compute new embedding?', ...
+                    upper(methoddimtag)), '', ...
+                    'Use existing', 'Re-compute', 'Cancel', 'Use existing');
+                switch answer1
+                    case 'Use existing'
+                        sce.s = sce.struct_cell_embeddings.(methoddimtag);
+                        usingold = true;
+                    case 'Re-compute'
+                        usingold = false;
+                    case {'Cancel', ''}
+                        return;
+                end
+            end
+            % whitelist = [];
+            if ~usingold
+                answer2 = questdlg(sprintf('Use highly variable genes (HVGs, n=2000) or use all genes (n=%d)?', sce.NumGenes), ...
+                    '', '2000 HVGs 🐇', 'All Genes 🐢', 'Other...', '2000 HVGs 🐇');
+                switch answer2
+                    case 'All Genes 🐢'
+                        usehvgs = false;
+                        K = sce.NumGenes;
+                    case '2000 HVGs 🐇'
+                        usehvgs = true;
+                        K = 2000;
+                    case 'Other...'
+                        K = gui.i_inputnumk(min([3000, sce.NumGenes]), ...
+                            100, sce.NumGenes);
+                        if isempty(K), return; end
+                        usehvgs = true;
+                    otherwise
+                        return;
+                end
+    
+                fw = gui.gui_waitbar;
+                try
+                    forced = true;
+                    if contains(methoddimtag, 'tsne'), disp('tSNE perplexity = 30'); end
+                    sce = sce.embedcells(methoddimtag, forced, usehvgs, ndim, K);
+                    % disp('Following the library-size normalization and log1p-transformation, we visualized similarity among cells by projecting them into a reduced dimensional space using t-distributed stochastic neighbor embedding (t-SNE)/uniform manifold approximation and projection (UMAP).')
+                catch ME
+                    gui.gui_waitbar(fw, true);
+                    errordlg(ME.message);
+                    return;
+                end
+                gui.gui_waitbar(fw);
+            end
+        end
         guidata(FigureHandle, sce);
         in_RefreshAll(src, [], true, false);   % keepview, keepcolr
-        disp('Following the library-size normalization and log1p-transformation, we visualized similarity among cells by projecting them into a reduced dimensional space using t-distributed stochastic neighbor embedding (t-SNE)/uniform manifold approximation and projection (UMAP).')
     end
 
     function in_DetermineCellTypeClustersGeneral(src, ~, usedefaultdb)
