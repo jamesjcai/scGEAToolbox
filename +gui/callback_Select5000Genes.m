@@ -16,7 +16,7 @@ if isempty(spciestag), return; end
 
 prompt = {'Remove Mt-Genes (MT-ND1, MT-ND6, MT-CYB, MT-COI, MT-ATP6, etc)?', ...
     'Remove Ribosomal Genes (RPSA, RPS2, RPS3, RPL3, RPL4, RPLP1, etc)?', ...
-    'Remove Genes Lacking Approved Symbols?', ...
+    'Remove Genes Without Approved Symbols?', ...
     'Remove Genes Expressed in Less Than m Cells (m = 0.075 or 0.050, 10 or 50)?', ...
     'Keep Top n Highly Variable Genes (HVGs) (n = 5000 or 2000)?'};
 dlgtitle = '';
@@ -60,7 +60,7 @@ if strcmpi(answer{3},'Yes') || strcmpi(answer{3},'Y')
     sce.g(~idx) = [];
     sce.X(~idx, :) = [];
     a2 = length(sce.g);
-    fprintf('%d unapproved genes found and removed.\n',a1-a2);
+    fprintf('%d genes without approved symbols are found and removed.\n',a1-a2);
     requirerefresh = true;
 end
 
