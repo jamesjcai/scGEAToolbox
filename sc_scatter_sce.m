@@ -828,8 +828,6 @@ end
             ButtonName = questdlg('Update Saved Embedding?', '');
             switch ButtonName
                 case 'Yes'
-                    
-
                     [methodtag] = gui.i_pickembedmethod;
                     if isempty(methodtag), return; end
                     [ndim] = gui.i_choose2d3d;
@@ -916,29 +914,60 @@ end
         subtitle('[genes x cells]');
     end
 
-    function in_Switch2D3D(src, ~)
+    function in_Switch2D3D(src, ~)  
         [para] = gui.i_getoldsettings(src);
+
         if isempty(h.ZData)               % current 2D
-            if ~(size(sce.s, 2) >= 3)
-                in_EmbeddingAgain(src, [], 3);
-            else
+            ansx = questdlg('Switch to 3D?');
+            if ~strcmp(ansx, 'Yes'), return; end
+            if size(sce.s, 2) >= 3
                 h = gui.i_gscatter3(sce.s, c, methodid, hAx);
                 if ~isempty(ax) && ~isempty(bx) && ~any([ax, bx] == 0)
                     view(ax, bx);
                 else
                     view(3);
                 end
+            else
+                [vslist] = gui.i_checkexistingembed(sce, 3);
+                if isempty(vslist)
+                    in_EmbeddingAgain(src, [], 3);
+                else
+                    ansx = questdlg('Using existing 3D embedding? Select "No" to re-embed.');
+                    switch ansx
+                        case 'Yes'
+                            [sx] = gui.i_pickembedvalues(sce, 3);
+                            if ~isempty(sx) && size(sx,1) == sce.NumCells
+                                sce.s = sx;
+                            else
+                                warning('Running error.');
+                                return;
+                            end
+                        case 'No'
+                            in_EmbeddingAgain(src, [], 3);
+                        case 'Cancel'
+                            return;
+                    end
+                end
             end
         else        % current 3D do following
-            answer = questdlg('Select a method of making 2D embedding.','', ...
-                'Re-embedding to 2D','Compress 3D embedding','Cancel', ...
-                'Re-embedding to 2D');
+            ansx = questdlg('Switch to 2D?');
+            if ~strcmp(ansx, 'Yes'), return; end
+            [vslist] = gui.i_checkexistingembed(sce, 2);
+            if ~isempty(vslist)
+                answer = questdlg('How to make 2D embedding?','', ...
+                    'Pick existing 2D','Re-embed cells', ...
+                    'Reduce current 3D','Pick existing 2D');
+            else
+                answer = questdlg('How to make 2D embedding?','', ...
+                    'Re-embed cells', ...
+                    'Reduce current 3D','Cancel','Re-embed cells');
+            end
             switch answer
                 case 'Cancel'
                     return;
-                case 'Re-embedding to 2D'
+                case 'Re-embed cells'
                     in_EmbeddingAgain(src, [], 2);
-                case 'Compress 3D embedding'
+                case 'Reduce current 3D'
                     [ax, bx] = view();
                     answer2 = questdlg('Which view to be used to project cells?', '', ...
                         'X-Y Plane', 'Screen/Camera', 'PCA-rotated', 'X-Y Plane');
@@ -954,14 +983,28 @@ end
                     end
                     h = gui.i_gscatter3(sx(:, 1:2), c, methodid, hAx);
                     sce.s = sx;
+                    title(sce.title);
+                    subtitle('[genes x cells]');
+                    h.Marker = para.oldMarker;
+                    h.SizeData = para.oldSizeData;
+                    colormap(para.oldColorMap);
+                    return;
+                    
+                case 'Pick existing 2D'
+                    [sx] = gui.i_pickembedvalues(sce, 2);
+                    if ~isempty(sx) && size(sx,1) == sce.NumCells
+                        sce.s = sx;
+                    else
+                        warning('Running error.');
+                        return;
+                    end
             end
         end
-        title(sce.title);
-        subtitle('[genes x cells]');
 
-        h.Marker = para.oldMarker;
-        h.SizeData = para.oldSizeData;
-        colormap(para.oldColorMap);
+        
+        guidata(FigureHandle, sce);
+        in_RefreshAll(src, [], true, true);   % keepview, keepcolr
+       
     end
 
     function in_AddEditCellAttribs(~,~)
@@ -1023,14 +1066,16 @@ end
             sce.struct_cell_embeddings.('metaviz3d') = [];
         end
 
-        
-
-        answer = questdlg('Using exsiting embedding?');
-        if strcmp(answer, 'Yes')
-            [s] = gui.i_pickembedvalues(sce);
-            if ~isempty(s), sce.s = s; end
+        [vslist] = gui.i_checkexistingembed(sce, ndim);
+        if ~isempty(vslist)
+            answer = questdlg('Using exsiting embedding?');
         else
-
+            answer = 'No';
+        end
+        if strcmp(answer, 'Yes')
+            [sx] = gui.i_pickembedvalues(sce);
+            if ~isempty(sx), sce.s = sx; end
+        elseif strcmp(answer, 'No')
             [methodtag] = gui.i_pickembedmethod;
             if isempty(methodtag), return; end
             if isempty(ndim), [ndim] = gui.i_choose2d3d; end
@@ -1087,6 +1132,8 @@ end
                 end
                 gui.gui_waitbar(fw);
             end
+        else
+            return;
         end
         guidata(FigureHandle, sce);
         in_RefreshAll(src, [], true, false);   % keepview, keepcolr
