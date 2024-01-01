@@ -70,23 +70,16 @@ set(findall(FigureHandle, 'ToolTipString', 'Open File'), 'Visible', 'Off')
 %a=findall(f,'tag','figMenuFile');
 
 % https://undocumentedmatlab.com/articles/customizing-standard-figure-toolbar-menubar
-a = findall(FigureHandle, 'tag', 'figMenuWindow');
-delete(a);
-a = findall(FigureHandle, 'tag', 'figMenuDesktop');
-delete(a);
-a = findall(FigureHandle, 'tag', 'figMenuUpdateFileNew');
-delete(a);
+a = findall(FigureHandle, 'tag', 'figMenuWindow'); delete(a);
+a = findall(FigureHandle, 'tag', 'figMenuDesktop'); delete(a);
+a = findall(FigureHandle, 'tag', 'figMenuUpdateFileNew'); delete(a);
 a = findall(FigureHandle, 'tag', 'figMenuOpen');
 a.MenuSelectedFcn = 'scgeatool';
-
-a = findall(FigureHandle, 'tag', 'figMenuFileSaveAs');
-delete(a);
-a = findall(FigureHandle, 'tag', 'figMenuFileSave');
+a = findall(FigureHandle, 'tag', 'figMenuFileSaveAs'); delete(a);
+a = findall(FigureHandle, 'tag', 'figMenuFileSave'); 
 a.Text='&Save SCE...';
 a.MenuSelectedFcn = @callback_SaveX;
-
-a = findall(FigureHandle, 'tag', 'figMenuGenerateCode');
-delete(a);
+a = findall(FigureHandle, 'tag', 'figMenuGenerateCode'); delete(a);
 a = findall(FigureHandle, 'tag', 'figMenuFileImportData');
 a.Text = 'Import Data Using GEO Accession...';
 a.MenuSelectedFcn = @in_GEOAccessionToSCE;
@@ -116,7 +109,6 @@ in_addbuttontoggle(1, 0, {@in_togglebtfun, @in_turnoffuserguiding, ...
     "icon-mat-unfold-more-10.gif", ...
     "icon-mat-unfold-less-10.gif", false, ...
     "Turn on/off user onboarding toolbar"});
-
 in_addbuttonpush(1, 0, @callback_ShowGeneExpr, "list.gif", "Select genes to show expression")
 in_addbuttonpush(1, 0, @in_ShowCellStates, "list2.gif", "Show cell state")
 in_addbuttonpush(1, 0, @in_SelectCellsByQC, "plotpicker-effects.gif", "Filter genes and cells")
@@ -878,7 +870,7 @@ end
             [c, cL] = grp2idx(sce.c_cell_type_tx);
             sce.c = c;
             in_RefreshAll(src, 1, true, false);
-            ix_labelclusters;
+            ix_labelclusters(true);
         end
         guidata(FigureHandle, sce);
     end
@@ -1351,7 +1343,7 @@ end
     end
 
     function in_ShowCellStates(src, ~)
-        sce = guidata(FigureHandle);
+        % sce = guidata(FigureHandle);
         [thisc, clable, ~, newpickclable] = gui.i_select1state(sce);
         %clable
         %newpickclable
@@ -1458,28 +1450,29 @@ end
     end
 
     function in_DrawTrajectory(src, ~)
-        
         % waitfor(warndlg('This function should not be applied to tSNE and UMAP embeddings, as they "encourage a representation of the data as disjoint clusters, which is less meaningful for modeling continuous developmental trajectories" [PMID:25664528].', ''));
         if ~isempty(f_traj)
-            answer = questdlg('Remove existing trajectory curve?','');
-            if strcmp(answer,'Yes')
-                in_RefreshAll(src, [], true, true);  % keepview, keepcolr
-            elseif strcmp(answer,'Cancel')
-                return;                
+            answer = questdlg('Remove existing trajectory curve?');
+            switch answer
+                case 'Yes'
+                    in_RefreshAll(src, [], true, true);  % keepview, keepcolr
+                case 'No'
+                otherwise
+                    return;
             end
         end
-        answer = questdlg('Which method?', '', ...
-            'splinefit (🐇)', 'princurve (🐢)', ...
-            'splinefit (🐇)');
-        if strcmp(answer, 'splinefit (🐇)')
-            dim = 1;
-            [t, xyz1] = pkg.i_pseudotime_by_splinefit(sce.s, dim, false);
-            pseudotimemethod = 'splinefit';
-        elseif strcmp(answer, 'princurve (🐢)')
-            [t, xyz1] = pkg.i_pseudotime_by_princurve(sce.s, false);
-            pseudotimemethod = 'princurve';
-        else
-            return;
+        answer = questdlg('Which method?', '', 'splinefit', 'princurve', ...
+            'Cancel', 'splinefit');
+        switch answer
+            case 'splinefit'
+                dim = 1;
+                [t, xyz1] = pkg.i_pseudotime_by_splinefit(sce.s, dim, false);
+                pseudotimemethod = 'splinefit';
+            case 'princurve'
+                [t, xyz1] = pkg.i_pseudotime_by_princurve(sce.s, false);
+                pseudotimemethod = 'princurve';
+            otherwise
+                return;
         end
         hold on;
         if size(xyz1, 2) >= 3
@@ -1496,7 +1489,6 @@ end
                 'fontsize', 10, 'FontWeight', 'bold', 'BackgroundColor', 'w', 'EdgeColor', 'k');
         end
         hold off;
-
         % pseudotimemethod
         % answer = questdlg('Save/Update pseudotime T in SCE', ...
         %     'Save Pseudotime', ...
@@ -1551,7 +1543,6 @@ end
     function in_ClusterCellsX(src, ~)
         answer = questdlg('Cluster cells using expression matrix X?');
         if ~strcmp(answer, 'Yes'), return; end
-    
         % methodtagvx = {'specter (31 secs) 🐇', 'sc3 (77 secs) 🐇', ...
         %     'simlr (400 secs) 🐢', ...
         %     'soptsc (1,182 secs) 🐢🐢', 'sinnlrr (8,307 secs) 🐢🐢🐢',};
@@ -1639,7 +1630,7 @@ end
             in_RefreshAll(src, 1, true, false);
             fprintf('Cells are colored by %s.\n', lower(clable));
             if max(c) <= 200
-                if ix_labelclusters
+                if ix_labelclusters(true)
                     set(src, 'State', 'on');
                 else
                     set(src, 'State', 'off');
@@ -1661,7 +1652,7 @@ end
     end
 
     function [isdone] = ix_labelclusters(notasking)
-        if nargin < 1, notasking = false; end
+        if nargin < 1, notasking = true; end
         isdone = false;
         if ~isempty(cL)
             if notasking
