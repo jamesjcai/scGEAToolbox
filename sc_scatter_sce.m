@@ -668,16 +668,24 @@ end
         if isempty(speciestag), return; end
 
         fw = gui.gui_waitbar_adv;
-        gui.gui_waitbar_adv(fw,1/6,'Basic QC Filtering...');
+        gui.gui_waitbar_adv(fw,1/8,'Basic QC Filtering...');
         sce = sce.qcfilter;
-        gui.gui_waitbar_adv(fw,2/6, 'Embeding Cells Using tSNE...');
+        gui.gui_waitbar_adv(fw,2/8, 'Embeding Cells Using tSNE...');
         sce = sce.embedcells('tsne3d', true, true, 3);
-        gui.gui_waitbar_adv(fw,3/6, 'Clustering Cells Using K-means...');
+
+        gui.gui_waitbar_adv(fw,3/8, 'Clustering Cells Using K-means...');
         sce = sce.clustercells([], [], true);
-        gui.gui_waitbar_adv(fw,4/6, 'Annotating Cell Type Using PanglaoDB...');
+        gui.gui_waitbar_adv(fw,4/8, 'Annotating Cell Type Using PanglaoDB...');
         
         sce = sce.assigncelltype(speciestag, false);
-        gui.gui_waitbar_adv(fw,5/6);
+        gui.gui_waitbar_adv(fw,5/8, 'Estimate Cell Cycles...');
+        
+        sce = sce.estimatecellcycle;
+        gui.gui_waitbar_adv(fw,6/8, 'Estimate Differentiation Potency of Cells...');
+
+        sce = sce.estimatepotency(speciestag);
+
+        gui.gui_waitbar_adv(fw,7/8);
         [c,cL]=grp2idx(sce.c_cell_type_tx);
         sce.c=c;
         gui.gui_waitbar_adv(fw);
@@ -1078,7 +1086,7 @@ end
         elseif strcmp(answer, 'No')
             [methodtag] = gui.i_pickembedmethod;
             if isempty(methodtag), return; end
-            if isempty(ndim), [ndim] = gui.i_choose2d3d; end
+            if isempty(ndim), [ndim] = gui.i_choose2d3dnmore; end
             if isempty(ndim), return; end
             methoddimtag = sprintf('%s%dd',methodtag, ndim);
             usingold = false;
@@ -1106,8 +1114,8 @@ end
                 fw = gui.gui_waitbar;
                 try
                     forced = true;
-                    if contains(methoddimtag, 'tsne'), disp('tSNE perplexity = 30'); end
-                    sce = sce.embedcells(methoddimtag, forced, usehvgs, ndim, K);
+                    %if contains(methoddimtag, 'tsne'), disp('tSNE perplexity = 30'); end
+                    sce = sce.embedcells(methodtag, forced, usehvgs, ndim, K);
                     % disp('Following the library-size normalization and log1p-transformation, we visualized similarity among cells by projecting them into a reduced dimensional space using t-distributed stochastic neighbor embedding (t-SNE)/uniform manifold approximation and projection (UMAP).')
                 catch ME
                     gui.gui_waitbar(fw, true);
@@ -1534,6 +1542,10 @@ end
     function in_ClusterCellsS(src, ~)
         answer = questdlg('Cluster cells using embedding S?');
         if ~strcmp(answer, 'Yes'), return; end
+
+        [sx] = gui.i_pickembedvalues(sce);
+        if isempty(sx), return; end
+
         answer = questdlg('Which method?', 'Select Algorithm', ...
             'K-means 🐇', 'SnnDpc [DOI:10.1016/j.ins.2018.03.031] 🐢', 'K-means 🐇');
         if strcmpi(answer, 'K-means 🐇')
@@ -1544,7 +1556,7 @@ end
         else
             return;
         end
-        in_reclustercells(src, methodtag);
+        in_reclustercells(src, methodtag, sx);        
         guidata(FigureHandle, sce);
     end
 
@@ -1573,11 +1585,12 @@ end
                 return;
             end
         end
-        in_reclustercells(src, methodtag);
+        in_reclustercells(src, methodtag, []);
         guidata(FigureHandle, sce);
     end
 
-    function in_reclustercells(src, methodtag)
+    function in_reclustercells(src, methodtag, sx)
+        if nargin<3, sx = []; end
         methodtag = lower(methodtag);
         usingold = false;
         if ~isempty(sce.struct_cell_clusterings.(methodtag))
@@ -1605,7 +1618,7 @@ end
             fw = gui.gui_waitbar;
             try
                 % [sce.c_cluster_id]=sc_cluster_x(sce.X,k,'type',methodtag);
-                sce = sce.clustercells(k, methodtag, true);
+                sce = sce.clustercells(k, methodtag, true, sx);
             catch ME
                 gui.gui_waitbar(fw, true);
                 errordlg(ME.message);

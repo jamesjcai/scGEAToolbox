@@ -5,8 +5,8 @@ function s = sc_tsne(X, ndim, donorm, dolog1p)
 % s_phate=run.PHATE(X,3,true);
 % s_umap=run.UMAP(X,3);
 narginchk(1, 4)
-validateattributes(ndim, {'numeric'}, ...
-    {'scalar', 'integer', '>=', 2, '<=', 3});
+% validateattributes(ndim, {'numeric'}, ...
+%     {'scalar', 'integer', '>=', 2, '<=', 3});
 
 if nargin < 2, ndim = 3; end
 if nargin < 3, donorm = true; end
@@ -41,46 +41,18 @@ data = X.';
 %	data = svdpca(data, 50, 'random');
 %end
 if ngenes > 500
-    s = tsne(data, 'NumDimensions', ndim, ...
-        'Algorithm', 'barneshut', 'NumPCAComponents', 50, ...
-        'Standardize', true);
+    if ndim < 10
+        s = tsne(data, 'NumDimensions', ndim, ...
+            'Algorithm', 'barneshut', 'NumPCAComponents', 50, ...
+            'Standardize', false);
+    else
+        s = tsne(data, 'NumDimensions', ndim, ...
+            'Algorithm', 'barneshut', 'NumPCAComponents', 5*ndim, ...
+            'Standardize', false);
+    end
 else
     s = tsne(data, 'NumDimensions', ndim, ...
         'Algorithm', 'exact', 'NumPCAComponents', 0, ...
-        'Standardize', true);
+        'Standardize', false);
 end
 end
-
-%%
-% if plotit
-%     if bygene
-%         [lgu, dropr, lgcv] = sc_genestat(X, [], false);
-%         colorby='mean';
-%         switch colorby
-%             case 'mean'
-%                 C=lgu;
-%             case 'dropout'
-%                 C=dropr;
-%             case 'cv'
-%                 C=lgcv;
-%         end
-%     else
-%         C=sum(X,1);
-%     end
-%     switch ndim
-%         case 2
-%             scatter(s(:,1), s(:,2), 10, C, 'filled');
-%             xlabel 'tSNE1'
-%             ylabel 'tSNE2'
-%             title 'tSNE'
-%         otherwise
-%             scatter3(s(:,1), s(:,2), s(:,3), 10, C, 'filled');
-%             xlabel 'tSNE1'
-%             ylabel 'tSNE2'
-%             zlabel 'tSNE3'
-%             title 'tSNE 3D'
-%     end
-%     if bygene && ~isempty(genelist)
-%         dt = datacursormode;
-%         dt.UpdateFcn = {@i_myupdatefcn1,genelist};
-%     end

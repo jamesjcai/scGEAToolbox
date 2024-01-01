@@ -87,7 +87,7 @@ methods
     end
 
     obj = assigncelltype(obj, speciesid, keepclusterid)
-    obj = clustercells(obj, k, methodid, forced)
+    obj = clustercells(obj, k, methodid, forced, sx)
     obj = embedcells(obj, methodid, forced, usehvgs, ndim, numhvg, whitelist)
     obj = estimatecellcycle(obj, forced, methodid)
     obj = estimatepotency(obj, speciesid, forced)

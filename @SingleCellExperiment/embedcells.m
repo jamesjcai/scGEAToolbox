@@ -46,11 +46,11 @@ if isempty(obj.s) || forced
             obj.s = run.mt_metaviz(X, ndim);
     end
 
-    if contains(methodtag,'2d') || contains(methodtag,'3d')
-        methoddimtag = methodtag;
-    else
+    % if contains(methodtag,'2d') || contains(methodtag,'3d')
+    %     methoddimtag = methodtag;
+    % elseif ndim > 3
         methoddimtag = sprintf('%s%dd',methodtag, ndim);
-    end
+    % end
 
     obj.struct_cell_embeddings.(methoddimtag) = single(obj.s);
     % disp('SCE.S added');
