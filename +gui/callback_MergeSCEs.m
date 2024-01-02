@@ -79,34 +79,35 @@ switch sourcetag
         if isequal(fname, 0), return; end
         if ~iscell(fname)
             errordlg("This function needs at least two SCE data files.");
-                return;
-            end
-            answer = questdlg('Which set operation method to merge genes?', 'Merging method', ...
-                'Intersect', 'Union', 'Intersect');
-            if ~ismember(answer, {'Union', 'Intersect'}), return; end
-            methodtag = lower(answer);
+            return;
+        end
 
-            fw = gui.gui_waitbar;
-            try
-                scelist = cell(length(fname));
-                s = "";
-                for k = 1:length(fname)
-                    scefile = fullfile(pathname, fname{k});
-                    load(scefile, 'sce');
-                    sce.metadata = [sce.metadata; fname{k}];
-                    scelist{k} = sce;
-                    s = sprintf('%s, %s', s, fname{k});
-                end
-                s = s(2:end);
-                pause(1)
-                sce = sc_mergesces(scelist, methodtag, keepbatchid);
-                guidata(FigureHandle, sce);
-                requirerefresh = true;
-            catch ME
-                gui.gui_waitbar(fw, true);
-                errordlg(ME.message);
-                return;
+        answer = questdlg('Which set operation method to merge genes?', 'Merging method', ...
+            'Intersect', 'Union', 'Intersect');
+        if ~ismember(answer, {'Union', 'Intersect'}), return; end
+        methodtag = lower(answer);
+
+        fw = gui.gui_waitbar;
+        try
+            scelist = cell(length(fname));
+            s = "";
+            for k = 1:length(fname)
+                scefile = fullfile(pathname, fname{k});
+                load(scefile, 'sce');
+                sce.metadata = [sce.metadata; fname{k}];
+                scelist{k} = sce;
+                s = sprintf('%s, %s', s, fname{k});
             end
-            gui.gui_waitbar(fw);
+            s = s(2:end);
+            pause(1)
+            sce = sc_mergesces(scelist, methodtag, keepbatchid);
+            guidata(FigureHandle, sce);
+            requirerefresh = true;
+        catch ME
+            gui.gui_waitbar(fw, true);
+            errordlg(ME.message);
+            return;
+        end
+        gui.gui_waitbar(fw);
 end
 end % end of function

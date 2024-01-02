@@ -1,12 +1,10 @@
-function callback_EnrichrHVGs(src, ~)
+function callback_EnrichrHVGs(src, ~, sce)
 
-FigureHandle = src.Parent.Parent;
-sce = guidata(FigureHandle);
+if nargin < 3 || isempty(sce)
+    FigureHandle = src.Parent.Parent;
+    sce = guidata(FigureHandle);
+end
 
-gui.gui_showrefinfo('HVG Functional Analysis [PMID:31861624]');
-
-answer = questdlg('This function applies to a homogeneous group of cells. Remove lowly expressed genes before applying. Continue?');
-if ~strcmp(answer, 'Yes'), return; end
 
 answer = questdlg('Which HVG detecting method to use?', '', ...
     'Splinefit Method [PMID:31697351]', ...

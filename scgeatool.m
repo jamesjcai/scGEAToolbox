@@ -66,6 +66,7 @@ end
         %                               'TSV/CSV .txt', 'SCE Data .mat');
         switch ButtonName
             case 'SCE Data File (*.mat)...'
+                
                 promotesave = false;
                 [fname, pathname] = uigetfile( ...
                     {'*.mat', 'SCE Data Files (*.mat)'; ...

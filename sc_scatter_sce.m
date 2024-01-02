@@ -160,7 +160,7 @@ in_addbuttonpush(0, 1, @in_CompareGeneBtwCls, "cellscore2.gif", "Cell score anal
 in_addbuttonpush(0, 0, @gui.callback_GetCellSignatureMatrix, "icon-fa-connectdevelop-20.gif", "Cell state analysis--obtaining multiple gene signature scores to reveal functional state of cells");
 in_addbuttonpush(0, 1, @gui.callback_DEGene2Groups, "plotpicker-boxplot.gif", "Differential expression (DE) analysis)");
 in_addbuttonpush(0, 0, @gui.callback_DPGene2Groups, "plotpicker_noisepsd.gif", "Differential program (DP) analysis)");
-in_addbuttonpush(0, 0, @gui.callback_EnrichrHVGs, "plotpicker-andrewsplot.gif", "Functional enrichment analysis with HVGs");
+in_addbuttonpush(0, 0, @in_EnrichrHVGs, "plotpicker-andrewsplot.gif", "Functional enrichment analysis with HVGs");
 
 % fullfile(matlabroot,'toolbox','matlab','icons','HDF_grid.gif')
 
@@ -571,6 +571,7 @@ end
         if requirerefresh && ~isempty(s)
             sce = guidata(FigureHandle);
             [c, cL] = grp2idx(sce.c_batch_id);
+            sce.c = c;
             in_RefreshAll(src, 1, true);
             helpdlg(sprintf('%s SCEs merged.', upper(s)), '');
         end
@@ -678,8 +679,8 @@ end
         sce = sce.estimatepotency(speciestag);
 
         gui.gui_waitbar_adv(fw,7/8);
-        [c,cL]=grp2idx(sce.c_cell_type_tx);
-        sce.c=c;
+        [c,cL] = grp2idx(sce.c_cell_type_tx);
+        sce.c = c;
         gui.gui_waitbar_adv(fw);
         in_RefreshAll(src, 1, true);
         ix_labelclusters(true);
@@ -690,13 +691,15 @@ end
     function in_SelectCellsByQC(src, ~)
         oldn = sce.NumCells;
         oldm = sce.NumGenes;
-        %try
+        sce.c = c;
+        guidata(FigureHandle, sce);
+        try
         [requirerefresh, highlightindex] = ...
             gui.callback_SelectCellsByQC(src);
-        %catch ME
-        %    errordlg(ME.message);
-        %    return;
-        %end
+        catch ME
+            errordlg(ME.message);
+            return;
+        end
         sce = guidata(FigureHandle);
         if requirerefresh
             [c, cL] = grp2idx(sce.c);
@@ -1389,6 +1392,30 @@ end
         end
         cb.Label.String = strrep(clable, '_', '\_');
         guidata(FigureHandle, sce);
+    end
+
+    function in_EnrichrHVGs(src, events)
+        gui.gui_showrefinfo('HVG Functional Analysis [PMID:31861624]');
+        
+        answer = questdlg('This function applies to a homogeneous group of cells. Remove lowly expressed genes before applying. Continue?');
+        if ~strcmp(answer, 'Yes'), return; end
+        
+        ptsSelected = logical(h.BrushData.');
+        if any(ptsSelected)
+            [ptsSelected, letdoit] = gui.i_expandbrushed(ptsSelected, sce);
+            if ~letdoit, return; end
+            if sum(ptsSelected) < 200
+                answer = questdlg(sprintf('Too few cells (n = %d) selected, continue?', sum(ptsSelected)));
+                if ~strcmp(answer, 'Yes'), return; end
+            end           
+            scetmp = sce.removecells(~ptsSelected);
+            scetmp = scetmp.qcfilter(1000, 0.15, 15);
+            gui.callback_EnrichrHVGs(src, events, scetmp);
+        else
+            answer = questdlg(sprintf('All cells (n = %d) included, continue?', sce.NumCells));
+            if ~strcmp(answer, 'Yes'), return; end
+            gui.callback_EnrichrHVGs(src, events);
+        end
     end
 
     function in_DeleteSelectedCells(src, ~)
