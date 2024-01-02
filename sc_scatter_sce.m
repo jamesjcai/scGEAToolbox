@@ -1085,23 +1085,25 @@ end
             if ~isfield(sce.struct_cell_embeddings, methoddimtag)
                 sce.struct_cell_embeddings = setfield(sce.struct_cell_embeddings,methoddimtag,[]);
             end
-            if ~isempty(sce.struct_cell_embeddings.(methoddimtag))
-                answer1 = questdlg(sprintf('Use existing %s embedding or re-compute new embedding?', ...
-                    upper(methoddimtag)), '', ...
-                    'Use existing', 'Re-compute', 'Cancel', 'Use existing');
-                switch answer1
-                    case 'Use existing'
-                        sce.s = sce.struct_cell_embeddings.(methoddimtag);
-                        usingold = true;
-                    case 'Re-compute'
-                        usingold = false;
-                    case {'Cancel', ''}
-                        return;
-                end
-            end
+            
+            % if ~isempty(sce.struct_cell_embeddings.(methoddimtag))
+            %     answer1 = questdlg(sprintf('Use existing %s embedding or re-compute new embedding?', ...
+            %         upper(methoddimtag)), '', ...
+            %         'Use existing', 'Re-compute', 'Cancel', 'Use existing');
+            %     switch answer1
+            %         case 'Use existing'
+            %             sce.s = sce.struct_cell_embeddings.(methoddimtag);
+            %             usingold = true;
+            %         case 'Re-compute'
+            %             usingold = false;
+            %         case {'Cancel', ''}
+            %             return;
+            %     end
+            % end
+
             % whitelist = [];
             if ~usingold
-                [K,usehvgs] = gui.i_gethvgnum(sce);
+                [K, usehvgs] = gui.i_gethvgnum(sce);
                 if isempty(K), return; end
                 fw = gui.gui_waitbar;
                 try
