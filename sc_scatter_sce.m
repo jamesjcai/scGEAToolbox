@@ -1722,18 +1722,19 @@ end
             delete(dtp);
             if isstring(stxtyes) || iscellstr(stxtyes)
                 stxtyes = strrep(stxtyes, "_", "\_");
+                stxtyes = strtrim(stxtyes);
             end
             row = dataTipTextRow('', stxtyes);
             h.DataTipTemplate.DataTipRows = row;
             % h.DataTipTemplate.FontSize = 5;
-            for i = 1:max(c)
-                idx = find(c == i);
+            for ik = 1:max(c)
+                idx = find(c == ik);
                 siv = sce.s(idx, :);
-                si = mean(siv, 1);
+                si = median(siv, 1);                
                 % si=geometric_median(siv');
-                [k] = dsearchn(siv, si);
+                [kb] = dsearchn(siv, si);
                 %[~, k] = medoid(siv);  geometric_median
-                datatip(h, 'DataIndex', idx(k));
+                datatip(h, 'DataIndex', idx(kb));
             end
             %ptlabelclusters.State = 'on';
             isdone = true;
