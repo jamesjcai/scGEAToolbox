@@ -8,7 +8,7 @@ if nargin < 5, isdebug = false; end
 
 t = []; s = []; m = [];
 oldpth = pwd();
-[isok, msg, codepath] = commoncheck_R('R_monocle3');
+[isok, msg, codepth] = commoncheck_R('R_monocle3');
 if ~isok, error(msg); end
 if ~isempty(wkdir), cd(wkdir); end
 
@@ -20,7 +20,7 @@ save('input.mat', 'X', 'idx', 'ndim', '-v7.3');
 %pkg.e_writeh5(X,[],'input.h5');
 Rpath = getpref('scgeatoolbox', 'rexecutablepath');
 
-codefullpath = fullfile(codepath,'script.R');
+codefullpath = fullfile(codepth,'script.R');
 pkg.RunRcode(codefullpath, Rpath);
 if exist('output.h5', 'file')
     t = h5read('output.h5', '/t');

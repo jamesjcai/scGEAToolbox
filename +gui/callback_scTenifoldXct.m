@@ -1,13 +1,17 @@
 function callback_scTenifoldXct(src, ~)
 
+
+extprogname = 'py_scTenifoldXct';
+preftagname = 'externalwrkpath';
+[wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
+if isempty(wkdir), return; end
+
+
 gui.gui_showrefinfo('scTenifoldXct [PMID:36787742]');
-% import ten.*
 FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
 
-if ~gui.i_setpyenv
-    return;
-end
+if ~gui.i_setpyenv, return; end
 
 [thisc, ~] = gui.i_select1class(sce, false);
 if isempty(thisc), return; end
@@ -27,9 +31,7 @@ end
 i1 = idx(1);
 i2 = idx(2);
 
-
 %{
-
 [~,cL]=grp2idx(sce.c_cell_type_tx);
 if length(cL)<2, errordlg('Need at least 2 cell types.'); return; end
 
@@ -94,7 +96,7 @@ sce = sce.selectcells(idx);
 
 try
     if twosided
-        [Tcell] = run.py_scTenifoldXct(sce, cL{x1}, cL{x2}, true);
+        [Tcell] = run.py_scTenifoldXct(sce, cL{x1}, cL{x2}, true, wkdir);
         [T1] = Tcell{1};
         [T2] = Tcell{2};
         if ~isempty(T1)
@@ -109,7 +111,7 @@ try
         end
         T = [T1; T2];
     else
-        [T] = run.py_scTenifoldXct(sce, cL{x1}, cL{x2}, false);
+        [T] = run.py_scTenifoldXct(sce, cL{x1}, cL{x2}, false, wkdir);
         %T=readtable('output1.txt');
         if ~isempty(T)
             a = sprintf('%s -> %s', cL{x1}, cL{x2});
@@ -123,40 +125,47 @@ catch ME
 end
 
 if ~isempty(T)
-    [b, a] = pkg.i_tempfile("sctendifoldxct");
-    writetable(T, b);
+    outfile = fullfile(wkdir,"outfile.txt");
 
-    answer = questdlg(sprintf('Result has been saved in %s', b), ...
-        '', 'Export result...', 'Locate result file...', 'Export result...');
-    switch answer
-        case 'Locate result file...'
-            winopen(a);
-            pause(2)
-            reshowdlg;
-        case 'Export result...'
-            gui.i_exporttable(T);
-        otherwise
-            winopen(a);
+    if isfile(outfile)
+        answerx = questdlg('Overwrite outfile.txt? Select No to save in a temporary file.');
+    else
+        answerx = 'Yes';
+    end
+
+    if isempty(wkdir) || ~isfolder(wkdir) || ~strcmp(answerx, 'Yes')
+        [b, a] = pkg.i_tempfile("sctendifoldxct");
+        writetable(T, b);
+    
+        answer = questdlg(sprintf('Result has been saved in %s', b), ...
+            '', 'Export result...', 'Locate result file...', 'Export result...');
+        switch answer
+            case 'Locate result file...'
+                winopen(a);
+                pause(2)
+                reshowdlg;
+            case 'Export result...'
+                gui.i_exporttable(T);
+            otherwise
+                winopen(a);
+        end
+    else
+        writetable(T, outfile);
+        waitfor(helpdlg(sprintf('Result has been saved in %s', outfile), ''));
     end
 else
     helpdlg('No ligand-receptor pairs are identified.', '');
 end
 
 
-    function reshowdlg
-        answer = questdlg('Export result to other format?', '');
-        switch answer
-            case 'Yes'
-                gui.i_exporttable(T, false, 'Ttenifldxct', 'TenifldXctTable');
-
-    % 'Tviolindata','ViolinPlotTable'
-    % 'Tmarkerlist','MarkerListTable'
-    % 'Ttenifldxct','TenifldXctTable'
-    
-
-            otherwise
-                return;
-        end
+function reshowdlg
+    answer = questdlg('Export result to other format?', '');
+    switch answer
+        case 'Yes'
+            gui.i_exporttable(T, false, 'Ttenifldxct', 'TenifldXctTable');
+        otherwise
+            return;
+    end
 end
 
 end
