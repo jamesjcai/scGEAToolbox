@@ -1,13 +1,16 @@
-function [sce] = r_readSeuratRds(filename)
+function [sce] = r_readSeuratRds(filename, wkdir)
 
+if nargin < 2, wkdir = tempdir; end
 sce = [];
 if nargin < 1, error('run.r_readSeuratRds(filename)'); end
 oldpth = pwd();
-[isok, msg] = commoncheck_R('R_SeuratReadRds');
+[isok, msg, codepth] = commoncheck_R('R_SeuratReadRds');
 if ~isok, error(msg);
     sce = [];
     return;
 end
+if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
+
 isdebug = false;
 tmpfilelist = {'inputrdsfile.txt', 'output.h5', ...
     'g.csv', 'X.csv', 'umap.csv', 'barcodes.csv', 'annotation.csv'};
@@ -15,7 +18,9 @@ if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 
 writematrix(filename, 'inputrdsfile.txt');
 Rpath = getpref('scgeatoolbox', 'rexecutablepath');
-pkg.RunRcode('script.R', Rpath);
+
+codefullpath = fullfile(codepth,'script.R');
+pkg.RunRcode(codefullpath, Rpath);
 
 g = [];
 if exist('g.csv', 'file')
@@ -27,10 +32,10 @@ end
 
 if exist('output.h5', 'file')
     X = h5read('output.h5', '/X');
-
 elseif exist('X.csv', 'file')
     X = readmatrix('X.csv');
 end
+
 X = pkg.e_uint2sparse(X);
 sce = SingleCellExperiment(X, g);
 

@@ -114,7 +114,13 @@ end
                 if isequal(fname, 0), return; end
                 filename = fullfile(pathname, fname);
                 fw = gui.gui_waitbar;
-                [sce] = sc_readrdsfile(filename);
+                try
+                    [sce] = sc_readrdsfile(filename);
+                catch ME
+                    gui.gui_waitbar(fw, true);
+                    errordlg(ME.message);
+                    return;
+                end
                 if isempty(sce)
                     gui.gui_waitbar(fw, true);
                     errordlg('File Import Failure.');

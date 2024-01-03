@@ -1,11 +1,13 @@
-function [T] = r_DESeq2(X, Y, genelist)
+function [T] = r_DESeq2(X, Y, genelist, wkdir)
 
+if nargin < 4, wkdir = tempdir; end
 if nargin < 3, genelist = (1:size(X, 1))'; end
 T = [];
 isdebug = false;
 oldpth = pwd();
-[isok, msg] = commoncheck_R('R_DESeq2');
+[isok, msg, codepth] = commoncheck_R('R_DESeq2');
 if ~isok, error(msg); end
+if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
 
 if issparse(X), X = full(X); end
 if issparse(Y), Y = full(Y); end
@@ -23,7 +25,8 @@ if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 save('input.mat', 'X', 'Y', '-v7.3');
 
 Rpath = getpref('scgeatoolbox', 'rexecutablepath');
-pkg.RunRcode('script.R', Rpath);
+codefullpath = fullfile(codepth,'script.R');
+pkg.RunRcode(codefullpath, Rpath);
 
 if ~exist('output.csv', 'file'), return; end
 warning off
