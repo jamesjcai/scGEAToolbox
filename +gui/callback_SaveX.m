@@ -25,7 +25,16 @@ switch answer
             'Save Data to Workspace', ...
             logical([1, 0, 0, 0]), {@smhelp});
     case 'MAT file'
-        [file, path] = uiputfile({'*.mat'; '*.*'}, 'Save as');
+        a = sce.metadata(contains(sce.metadata, "Source:"));
+        if ~isempty(a), a = strtrim(strrep(a, "Source: ","")); end
+        if ~isempty(a), a = sprintf("%s_",a(:)); end
+        if ~isempty(a), a = extractBefore(a, strlength(a)-1); end
+        if ~isempty(a), a = matlab.lang.makeValidName(a); end
+        if ~isempty(a)
+            [file, path] = uiputfile({'*.mat'; '*.*'}, 'Save as', a);
+        else
+            [file, path] = uiputfile({'*.mat'; '*.*'}, 'Save as');
+        end
         if isequal(file, 0) || isequal(path, 0)
             return;
         else
