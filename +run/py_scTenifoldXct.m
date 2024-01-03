@@ -1,7 +1,6 @@
 function [T] = py_scTenifoldXct(sce, celltype1, celltype2, twosided, wkdir)
 
 isdebug = true;
-useexist = true;
 
 T = [];
 if nargin < 5, wkdir = []; end
@@ -87,40 +86,64 @@ if isvalid(fw)
     gui.gui_waitbar(fw, [], 'Checking Python environment is complete');
 end
 
-
-if isdebug && useexist && exist("pcnet_Source.mat", 'file')
-    disp('Using local stored A1.');
-else
-    fw = gui.gui_waitbar([], [], 'Step 1 of 3: Building A1 network...');
-    disp('Building A1 network...');
+useexist = false;
+if exist("pcnet_Source.mat", 'file')
+    answer = gui.questdlg_timer(10, 'pcnet_Source.mat existing. Use it?','', 'Yes, use pcnet_Source', 'No, reconstruct pcnet_Source', ...
+        'Cancel', 'Yes, use pcnet_Source');
+    switch answer
+        case 'Yes, use pcnet_Source'
+            useexist = true;
+        case 'No, reconstruct pcnet_Source'
+            useexist = false;
+        case 'Cancel'
+            return;
+        otherwise
+            return;
+    end
+end
+if ~useexist
+    fw = gui.gui_waitbar([], [], 'Step 1 of 3: Building pcnet_Source network...');
+    disp('Building pcnet_Source network...');
     A1 = sc_pcnetpar(sce.X(:, sce.c_cell_type_tx == celltype1));
     A1 = A1 ./ max(abs(A1(:)));
     A = ten.e_filtadjc(A1, 0.75, false);
     save('pcnet_Source.mat', 'A', '-v7.3');
-    disp('A1 network built.');
+    disp('pcnet_Source.mat saved.');
 end
 
 if isvalid(fw)
-    gui.gui_waitbar(fw, [], 'Building A1 network is complete');
+    gui.gui_waitbar(fw, [], 'Building pcnet_Source is complete');
 end
 
-if isdebug && useexist && exist("pcnet_Target.mat", 'file')
-    disp('Using local stored A2.');
-else
-    fw = gui.gui_waitbar([], [], 'Step 2 of 3: Building A2 network...');
-    disp('Building A2 network...')
+
+useexist = false;
+if exist("pcnet_Target.mat", 'file')
+    answer = gui.questdlg_timer(10, 'pcnet_Target.mat existing. Use it?','', 'Yes, use pcnet_Target', 'No, reconstruct pcnet_Target', ...
+        'Cancel', 'Yes, use pcnet_Target');
+    switch answer
+        case 'Yes, use pcnet_Target'
+            useexist = true;
+        case 'No, reconstruct pcnet_Target'
+            useexist = false;
+        case 'Cancel'
+            return;
+        otherwise
+            return;
+    end
+end
+if ~useexist
+    fw = gui.gui_waitbar([], [], 'Step 2 of 3: Building pcnet_Target network...');
+    disp('Building pcnet_Target network...')
     A2 = sc_pcnetpar(sce.X(:, sce.c_cell_type_tx == celltype2));
-    disp('A2 network built.')
     A2 = A2 ./ max(abs(A2(:)));
-    % A=0.5*(A2+A2.');
     A = ten.e_filtadjc(A2, 0.75, false);
-    save('pcnet_Target.mat', 'A', '-v7.3');        
+    save('pcnet_Target.mat', 'A', '-v7.3');
+    disp('pcnet_Target network saved.')
 end
 
 if isvalid(fw)
-    gui.gui_waitbar(fw, [], 'Building A2 network is complete');
+    gui.gui_waitbar(fw, [], 'Building pcnet_Target is complete');
 end
-%clear A A1 A2
 
 if twosided
     twosidedtag = 2;
