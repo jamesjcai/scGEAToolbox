@@ -1,6 +1,6 @@
 function [sce] = r_seurat(X, genelist, wkdir, isdebug)
 
-if nargin < 3, wkdir = ''; end
+if nargin < 3, wkdir = tempdir; end
 if nargin < 4, isdebug = false; end
 
 oldpth = pwd();
@@ -11,7 +11,8 @@ if ~isok, error(msg);
     sce = [];
     return;
 end
-if ~isempty(wkdir), cd(wkdir); end
+if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
+
 
 
 if isa(X, 'SingleCellExperiment') && isnumeric(genelist)

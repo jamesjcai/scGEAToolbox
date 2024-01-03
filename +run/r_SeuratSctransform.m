@@ -1,11 +1,15 @@
-function [X] = r_SeuratSctransform(X, genelist)
+function [X] = r_SeuratSctransform(X, genelist, wkdir)
+
+if nargin < 3, wkdir = tempdir; end
 
 isdebug = false;
 oldpth = pwd();
-[isok, msg] = commoncheck_R('R_SeuratSctransform');
+[isok, msg, codepath] = commoncheck_R('R_SeuratSctransform');
 if ~isok, error(msg);
     return;
 end
+if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
+
 tmpfilelist = {'input.mat', 'output.h5', 'input.txt', 'output.txt', 'g.txt'};
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 lastwarn('')
@@ -21,7 +25,9 @@ end
 
 
 Rpath = getpref('scgeatoolbox', 'rexecutablepath');
-pkg.RunRcode('scriptnew.R', Rpath);
+codefullpath = fullfile(codepath,'script.R');
+pkg.RunRcode(codefullpath, Rpath);
+
 if exist('output.h5', 'file')
     X = h5read('output.h5', '/X');
 elseif exist('output.txt', 'file')

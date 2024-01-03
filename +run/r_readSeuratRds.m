@@ -18,7 +18,6 @@ if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 
 writematrix(filename, 'inputrdsfile.txt');
 Rpath = getpref('scgeatoolbox', 'rexecutablepath');
-
 codefullpath = fullfile(codepth,'script.R');
 pkg.RunRcode(codefullpath, Rpath);
 

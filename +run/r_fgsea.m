@@ -1,5 +1,6 @@
-function [s] = r_fgsea(genelist, rmribo, drdistin)
+function [s] = r_fgsea(genelist, rmribo, drdistin, wkdir)
 
+if nargin < 4, wkdir = tempdir; end
 if nargin < 3, drdistin = []; end
 if nargin < 2, rmribo = true; end
 s=[];
@@ -7,11 +8,12 @@ s=[];
 isdebug = false;
 
 oldpth = pwd();
-[isok, msg] = commoncheck_R('R_fgsea');
+[isok, msg, codepath] = commoncheck_R('R_fgsea');
 if ~isok
     error(msg);    
     return;
 end
+if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
 
 tmpfilelist = {'input.txt', 'output.txt'};
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
@@ -49,7 +51,8 @@ if rmribo
 end
 writetable(T, 'input.txt');
 Rpath = getpref('scgeatoolbox', 'rexecutablepath');
-pkg.RunRcode('script.R', Rpath);
+codefullpath = fullfile(codepath,'script.R');
+pkg.RunRcode(codefullpath, Rpath);
 
 pause(1);
 if exist('output.txt', 'file')

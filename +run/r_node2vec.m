@@ -1,6 +1,7 @@
-function [s] = r_node2vec(A, g)
+function [s] = r_node2vec(A, g, wkdir)
 
-narginchk(1, 2);
+narginchk(1, 3);
+if nargin < 3, wkdir = tempdir; end
 if isa(A, 'graph') || isa(A, 'digraph')
     A = G.adjacency;
     g = G.Nodes.Name;
@@ -13,8 +14,10 @@ end
 s = [];
 isdebug = false;
 oldpth = pwd();
-[isok, msg] = commoncheck_R('R_node2vec');
+[isok, msg, codepath] = commoncheck_R('R_node2vec');
 if ~isok, error(msg); end
+if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
+
 
 tmpfilelist = {'input.txt', 'output.txt'};
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
@@ -33,7 +36,8 @@ fclose(fid);
 
 
 Rpath = getpref('scgeatoolbox', 'rexecutablepath');
-pkg.RunRcode('script.R', Rpath);
+codefullpath = fullfile(codepath,'script.R');
+pkg.RunRcode(codefullpath, Rpath);
 
 if ~exist('output.txt', 'file'), return; end
 T = readtable('output.txt');

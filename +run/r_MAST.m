@@ -1,12 +1,13 @@
-function [T] = r_MAST(X, Y, genelist)
+function [T] = r_MAST(X, Y, genelist, wkdir)
 
+if nargin < 4, wkdir = tempdir; end
 if nargin < 3, genelist = (1:size(X, 1))'; end
 T = [];
 isdebug = false;
 oldpth = pwd();
-[isok, msg] = commoncheck_R('R_MAST');
+[isok, msg, codepath] = commoncheck_R('R_MAST');
 if ~isok, error(msg); end
-
+if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
 
 avg_1 = mean(X, 2);
 avg_2 = mean(Y, 2);
@@ -18,7 +19,8 @@ if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 save('input.mat', 'X', 'Y', '-v7.3');
 
 Rpath = getpref('scgeatoolbox', 'rexecutablepath');
-pkg.RunRcode('script.R', Rpath);
+codefullpath = fullfile(codepath,'script.R');
+pkg.RunRcode(codefullpath, Rpath);
 
 if ~exist('output.csv', 'file'), return; end
 warning off
