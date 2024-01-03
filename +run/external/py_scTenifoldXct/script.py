@@ -1,7 +1,7 @@
-import os
-import sys
-abspath = os.path.abspath(__file__)
-dname = os.path.dirname(abspath)
+#import os
+#import sys
+#abspath = os.path.abspath(__file__)
+#dname = os.path.dirname(abspath)
 # os.chdir(dname)
 # os.chdir("U:\\GitHub\\scGEAToolbox\\+run\\external\\py_scTenifoldXct")
 # os.chdir("C:\\Users\\jcai\\Documents\\GitHub\\scGEAToolbox\\+run\\external\\py_scTenifoldXct2")
