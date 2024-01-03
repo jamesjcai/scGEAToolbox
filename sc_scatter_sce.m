@@ -895,13 +895,13 @@ end
         figure(FigureHandle);
         was3d = ~isempty(h.ZData);        
         if size(sce.s, 2) >= 3                  
-            if keepview && was3d, [ax, bx] = view(); end
+            if keepview, [ax, bx] = view(); end
             h = gui.i_gscatter3(sce.s, c, methodid, hAx);
-            if keepview && was3d, view(ax, bx); end
+            if keepview, view(ax, bx); end
         else        % otherwise going to show 2D            
-            if keepview && ~was3d, [ax, bx] = view(); end
+            if keepview, [ax, bx] = view(); end
             h = gui.i_gscatter3(sce.s(:, 1:2), c, methodid, hAx);
-            if keepview && ~was3d, [ax, bx] = view(); end
+            if keepview, [ax, bx] = view(); end
         end
         if keepview
             h.Marker = para.oldMarker;
@@ -985,7 +985,7 @@ end
                             return;
                     end
                     h = gui.i_gscatter3(sx(:, 1:2), c, methodid, hAx);
-                    sce.s = sx;
+                    sce.s = sx(:, 1:2);
                     title(sce.title);
                     subtitle('[genes x cells]');
                     h.Marker = para.oldMarker;

@@ -1,4 +1,4 @@
-species = 'hs';
+species = 'mm';
 T1 = readtable(sprintf('markerlist_%s_panglaodb.txt', species), 'ReadVariableNames', false, 'Delimiter', '\t');
 T2 = readtable(sprintf('markerlist_%s_custom.txt', species), 'ReadVariableNames', false, 'Delimiter', '\t');
 % T3 and T4 downloaded from Enrichr
