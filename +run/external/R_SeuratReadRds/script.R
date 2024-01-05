@@ -15,17 +15,37 @@ if (is.null(gname)){
 write.csv(gname,file='g.csv')
 
 
+#tryCatch(
+#{
+#    X=A@assays$RNA@counts
+#    #X is a dgCMatrix
+#    X<-as.matrix(X)   # this requires large memory
+#    h5write(X, "output.h5", "X")
+#},
+#error = function(msg){
+#	# write.csv(A@assays$RNA@counts, file = 'X.csv', col.names=F)  #
+#	write.table(A@assays$RNA@counts, file = 'X.csv', sep=",", col.names=FALSE, row.names=FALSE)
+#	}
+#)
+
 tryCatch(
 {
     X=A@assays$RNA@counts
-    X<-as.matrix(X)
-    h5write(X, "output.h5", "X")
+    # X is a dgCMatrix
+    h5createFile("output.h5")    
+    h5write(X@x, "output.h5", "data")
+    h5write(X@i, "output.h5", "indices")
+    h5write(X@p, "output.h5", "indptr")
+    h5write(X@Dim, "output.h5", "shape")
+    h5closeAll()
 },
 error = function(msg){
-	# write.csv(A@assays$RNA@counts, file = 'X.csv', col.names=F)  #
-	write.table(A@assays$RNA@counts, file = 'X.csv', sep=",", col.names=FALSE, row.names=FALSE)
+
 	}
 )
+
+
+
 
 
 # bcode<-colnames(A@assays$RNA@counts)

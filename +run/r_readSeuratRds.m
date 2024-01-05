@@ -30,9 +30,22 @@ if exist('g.csv', 'file')
 end
 
 if exist('output.h5', 'file')
-    X = h5read('output.h5', '/X');
-elseif exist('X.csv', 'file')
-    X = readmatrix('X.csv');
+    % X = h5read('output.h5', '/X');
+    filenm = 'output.h5';
+    grouptag = '/';
+    data = pkg.e_guessh5field(filenm, {grouptag}, {'data'}, true);
+    indices = pkg.e_guessh5field(filenm, {grouptag}, {'indices'}, true);
+    indptr = pkg.e_guessh5field(filenm, {grouptag}, {'indptr'}, true);
+    shape = pkg.e_guessh5field(filenm, {grouptag}, {'shape'}, true);
+    X = spalloc(shape(1), shape(2), length(data));    
+    for k = 1:length(indptr) - 1
+        i = indptr(k) + 1:indptr(k+1);
+        y = indices(i) + 1;
+        X(y, k) = data(i);
+    end
+    if isequal(size(X), shape)
+        warning('Matrix size changed.');
+    end
 end
 
 X = pkg.e_uint2sparse(X);
@@ -45,8 +58,7 @@ if exist('barcodes.csv', 'file') && ~isempty(sce)
     sce.c_cell_id = id;
 end
 
-if exist('umap.csv', 'file') && ~isempty(sce) && ~isempty(sce.c_cell_id)
-
+if exist('umap.csv', 'file') && ~isempty(sce) && ~isempty(sce.c_cell_id)   
     t = readtable('umap.csv', 'Delimiter', ',');
     [y, idx] = ismember(string(t.Var1), sce.c_cell_id);
     if all(y)
@@ -63,8 +75,10 @@ end
 
 if exist('annotation.csv', 'file') && ~isempty(sce) && ~isempty(sce.c_cell_id)
     t = readtable('annotation.csv', 'Delimiter', ',');
-    if sce.NumCells == length(string(t.x))
-        sce.c_cell_type_tx = string(t.x);
+    if ~isempty(t) && contains(t.Properties.VariableNames,'x')
+        if sce.NumCells == length(string(t.x))
+            sce.c_cell_type_tx = string(t.x);
+        end
     end
 end
 

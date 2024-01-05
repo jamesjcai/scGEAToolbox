@@ -51,10 +51,13 @@ elseif isStringScalar(targetg) || ischar(targetg)
                 % within_stemscatter(x, y, c);
                 gui.i_stemscatter([x, y], c);
                 h1 = gca;
-                set(h1, 'XTickLabel', []);
-                set(h1, 'YTickLabel', []);
-                set(h1, 'ZTickLabel', []);
                 grid on
+                title(targetg)
+                titxt = sprintf('(%s/%s = %.2f%% nonzero)', ...
+                    num2bankScalar(sum(c > 0)), ...
+                    num2bankScalar(numel(c)), ...
+                    100*sum(c > 0)./numel(c));
+                subtitle(titxt);                
             case 2
                 if isempty(z)
                     scatter(x, y, sz, c, 'filled');
@@ -66,6 +69,15 @@ elseif isStringScalar(targetg) || ischar(targetg)
                 set(h1, 'YTickLabel', []);
                 set(h1, 'ZTickLabel', []);
                 grid on
+
+                title(targetg)
+
+                titxt = sprintf('(%s/%s = %.2f%% nonzero)', ...
+                    num2bankScalar(sum(c > 0)), ...
+                    num2bankScalar(numel(c)), ...
+                    100*sum(c > 0)./numel(c));
+                subtitle(titxt);
+                
             case 3
 
 
