@@ -1,7 +1,12 @@
 function callback_Violinplot(src, ~)
 
-FigureHandle = src.Parent.Parent;
-sce = guidata(FigureHandle);
+if isa(src,"SingleCellExperiment")
+    sce = src;
+else
+    FigureHandle = src.Parent.Parent;
+    sce = guidata(FigureHandle);
+end
+
 [thisc, ~] = gui.i_select1class(sce);
 if isempty(thisc), return; end
 
