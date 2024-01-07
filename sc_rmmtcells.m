@@ -4,7 +4,8 @@ if nargin < 3, mtratio = 0.1; end
 if nargin < 4, mtgenenamepat = "mt-"; end
 if nargin < 5, vebrose = false; end
 
-assert(size(X, 1) == length(genelist))
+assert(size(X, 1) == length(genelist), ...
+    sprintf('%s: size(X,1) is not equal to length(g).', upper(mfilename)))
 idx = startsWith(genelist, mtgenenamepat, 'IgnoreCase', true);
 if sum(idx) > 0
     if vebrose

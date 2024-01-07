@@ -11,9 +11,9 @@ if ~isempty(whitelist)
     [~, idxx] = ismember(whitelist, obj.g);
     Xresv = obj.X(idxx, :);
 end
-
 [~, keptg, keptidxv] = sc_qcfilter(obj.X, obj.g, libszcutoff, mtratio, ...
     min_cells_nonzero, gnnumcutoff);
+
 for k = 1:length(keptidxv)
     obj = selectcells(obj, keptidxv{k});
 end
