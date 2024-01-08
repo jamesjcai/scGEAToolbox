@@ -21,12 +21,12 @@ idx = idx1 | idx2 | idx3;
 if any(idx)
     ttxt = sprintf("%s+", sce.g(idx));
     ci = full(sum(sce.X(idx, :), 1));
-    hFig = figure("WindowStyle", "modal");
+    % hFig = figure("WindowStyle", "modal");
+    hFig = figure;
 
     cm = uicontextmenu(hFig);
     m1 = uimenu(cm, 'Text', 'Save HgBGeneExpression...', "MenuSelectedFcn", {@i_saveM, ci});
     hFig.ContextMenu = cm;
-
 
     gui.i_stemscatter(sce.s, ci);
 
@@ -49,5 +49,5 @@ end
         else
             errordlg('This function is not available for standalone application. Run scgeatool.m in MATLAB to use this function.');                
         end            
-    end        
+    end
 end

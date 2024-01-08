@@ -57,7 +57,7 @@ elseif isStringScalar(targetg) || ischar(targetg)
                     num2bankScalar(sum(c > 0)), ...
                     num2bankScalar(numel(c)), ...
                     100*sum(c > 0)./numel(c));
-                subtitle(titxt);                
+                subtitle(titxt);
             case 2
                 if isempty(z)
                     scatter(x, y, sz, c, 'filled');

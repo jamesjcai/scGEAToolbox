@@ -88,7 +88,7 @@ hAx = axes('Parent', FigureHandle);
 
 [h] = gui.i_gscatter3(sce.s, c, methodid, 1, hAx);
 title(hAx, sce.title);
-subtitle('[genes x cells]');
+subtitle(hAx,'[genes x cells]');
 
 dt = datacursormode;
 dt.UpdateFcn = {@i_myupdatefcnx};
@@ -302,8 +302,8 @@ in_fixfield('metaviz','metaviz3d');
 avx = fieldnames(sce.struct_cell_embeddings);
 bvx = fieldnames(pkg.e_makeembedstruct);
 cvx = setdiff(bvx,avx);
-for k=1:length(cvx)
-    sce.struct_cell_embeddings = setfield(sce.struct_cell_embeddings,cvx{k},[]);
+for kx=1:length(cvx)
+    sce.struct_cell_embeddings = setfield(sce.struct_cell_embeddings,cvx{kx},[]);
 end
 sce.struct_cell_embeddings = orderfields(sce.struct_cell_embeddings);
 
@@ -535,7 +535,7 @@ end
                 [c, cL] = grp2idx(sce.c);
                 gui.gui_waitbar(fw);
                 guidata(FigureHandle, sce);
-                in_RefreshAll(src, 1, false, false);
+                in_RefreshAll(src, [], false, false);
             catch ME
                 gui.gui_waitbar(fw);
                 errordlg(ME.message);
@@ -561,7 +561,7 @@ end
         if requirerefresh
             sce = guidata(FigureHandle);
             [c, cL] = grp2idx(sce.c_cell_type_tx);
-            in_RefreshAll(src, 1, true);
+            in_RefreshAll(src, [], true, false);
             ix_labelclusters(true);
         end
     end
@@ -572,7 +572,7 @@ end
             sce = guidata(FigureHandle);
             [c, cL] = grp2idx(sce.c_batch_id);
             sce.c = c;
-            in_RefreshAll(src, 1, true);
+            in_RefreshAll(src, [], true, false);
             helpdlg(sprintf('%s SCEs merged.', upper(s)), '');
         end
     end
@@ -602,7 +602,7 @@ end
             sce.g = sce.g(idx);
             sce.X = sce.X(idx, :);
             gui.gui_waitbar(fw);
-            in_RefreshAll(src, 1, true);
+            in_RefreshAll(src, [], true, false);
     end
 
     function in_SubsampleCells(src, ~, methodoption)
@@ -650,7 +650,7 @@ end
         if ~isempty(ids)
             sce = sce.selectcells(ids);
             c = sce.c;
-            in_RefreshAll(src, 1, true);
+            in_RefreshAll(src, [], true, false);
         else
             errordlg('Running error. No action is taken.');
         end
@@ -682,7 +682,7 @@ end
         [c,cL] = grp2idx(sce.c_cell_type_tx);
         sce.c = c;
         gui.gui_waitbar_adv(fw);
-        in_RefreshAll(src, 1, true);
+        in_RefreshAll(src, [], true, false);
         ix_labelclusters(true);
         setappdata(FigureHandle, 'cL', cL);
         guidata(FigureHandle, sce);
@@ -703,7 +703,7 @@ end
         sce = guidata(FigureHandle);
         if requirerefresh
             [c, cL] = grp2idx(sce.c);
-            in_RefreshAll(src, 1, true);
+            in_RefreshAll(src, [], true, false);
             newn = sce.NumCells;
             newm = sce.NumGenes;
             helpdlg(sprintf('%d cells removed; %d genes removed.', ...
@@ -733,7 +733,7 @@ end
                 warning(ME.message);
             end
 
-            in_RefreshAll(src, 1, true);            
+            in_RefreshAll(src, [], true, false);
             newm = sce.NumGenes;
             newn = sce.NumCells;
             helpdlg(sprintf('%d cells removed; %d genes removed.', ...
@@ -764,7 +764,7 @@ end
         end
         gui.gui_waitbar(fw);
         guidata(FigureHandle, sce);
-        in_RefreshAll(src, 1, true, false);
+        in_RefreshAll(src, [], true, false);
     end
 
     function in_DecontX(~, ~)
@@ -814,7 +814,7 @@ end
                 case 'Yes'
                     [c, cL] = grp2idx(sce.c_batch_id);
                     sce.c = c;
-                    in_RefreshAll(src, 1, true, false);
+                    in_RefreshAll(src, [], true, false);
                 case 'No'
                 case 'Cancel'
                     return;
@@ -826,7 +826,7 @@ end
         if gui.callback_Harmonypy(src)
             sce = guidata(FigureHandle);
             [c, cL] = grp2idx(sce.c);
-            in_RefreshAll(src, 1, true, false);
+            in_RefreshAll(src, [], true, false);
     
             ButtonName = questdlg('Update Saved Embedding?', '');
             switch ButtonName
@@ -865,7 +865,7 @@ end
                     sce = sce.removecells(isDoublet);
                     guidata(FigureHandle, sce);
                     [c, cL] = grp2idx(sce.c);
-                    in_RefreshAll(src, 1, true, false);
+                    in_RefreshAll(src, [], true, false);
                     helpdlg('Doublets deleted.', '');
             end
         end
@@ -880,7 +880,7 @@ end
             sce.c_cell_type_tx = newtx;
             [c, cL] = grp2idx(sce.c_cell_type_tx);
             sce.c = c;
-            in_RefreshAll(src, 1, true, false);
+            in_RefreshAll(src, [], true, false);
             ix_labelclusters(true);
         end
         guidata(FigureHandle, sce);
@@ -893,7 +893,7 @@ end
             [para] = gui.i_getoldsettings(src);
         end
         figure(FigureHandle);
-        was3d = ~isempty(h.ZData);        
+        % was3d = ~isempty(h.ZData);
         if size(sce.s, 2) >= 3                  
             if keepview, [ax, bx] = view(); end
             h = gui.i_gscatter3(sce.s, c, methodid, hAx);
@@ -913,8 +913,8 @@ end
             kc = numel(unique(c));
             colormap(pkg.i_mycolorlines(kc));
         end
-        title(sce.title);
-        subtitle('[genes x cells]');
+        title(hAx, sce.title);
+        subtitle(hAx, '[genes x cells]');
     end
 
     function in_Switch2D3D(src, ~)  
@@ -963,14 +963,14 @@ end
             else
                 answer = questdlg('How to make 2D embedding?','', ...
                     'Re-embed cells', ...
-                    'Reduce current 3D','Cancel','Re-embed cells');
+                    'Reduce current 3D to 2D','Cancel','Re-embed cells');
             end
             switch answer
                 case 'Cancel'
                     return;
                 case 'Re-embed cells'
                     in_EmbeddingAgain(src, [], 2);
-                case 'Reduce current 3D'
+                case 'Reduce current 3D to 2D'
                     [ax, bx] = view();
                     answer2 = questdlg('Which view to be used to project cells?', '', ...
                         'X-Y Plane', 'Screen/Camera', 'PCA-rotated', 'X-Y Plane');
@@ -986,8 +986,8 @@ end
                     end
                     h = gui.i_gscatter3(sx(:, 1:2), c, methodid, hAx);
                     sce.s = sx(:, 1:2);
-                    title(sce.title);
-                    subtitle('[genes x cells]');
+                    title(hAx, sce.title);
+                    subtitle(hAx, '[genes x cells]');
                     h.Marker = para.oldMarker;
                     h.SizeData = para.oldSizeData;
                     colormap(para.oldColorMap);
@@ -1260,8 +1260,8 @@ end
         sce.c = c;
         [ax, bx] = view();
         [h] = gui.i_gscatter3(sce.s, c, methodid, hAx);
-        title(sce.title);
-        subtitle('[genes x cells]');
+        title(hAx, sce.title);
+        subtitle(hAx, '[genes x cells]');
         view(ax, bx);
         ix_labelclusters(true);
         guidata(FigureHandle, sce);
@@ -1306,8 +1306,8 @@ end
         end
         [ax, bx] = view();
         [h] = gui.i_gscatter3(sce.s, c, methodid, hAx);
-        title(sce.title);
-        subtitle('[genes x cells]');
+        title(hAx, sce.title);
+        subtitle(hAx, '[genes x cells]');
         view(ax, bx);
         ix_labelclusters(true);
         guidata(FigureHandle, sce);
@@ -1373,22 +1373,45 @@ end
         end
         [c, cL] = grp2idx(thisc);
         sce.c = c;
-        [answer] = gui.i_selvariabletype(thisc);
-        in_RefreshAll(src, 1, true, false);
+        answer1 = questdlg('Display in place or in new figure?', '', ...
+            'In place', 'New figure','Cancel','In place');
+        switch answer1
+            case 'In place'
+                in_RefreshAll(src, [], true, false);
+                target{1} = hAx;
+                target{2} = h;
+            case 'New figure'
+                hFig = figure('Visible','off');
+                hFigAx = axes('Parent', hFig);
+                h2 = gui.i_gscatter3(sce.s, c, 1, 1, hFigAx);
+                title(hFigAx, sce.title);
+                subtitle(hFigAx, '[genes x cells]');
+                target{1} = hFigAx;
+                target{2} = h2;
+                dp = get(hFig, 'Position');
+                pp = get(FigureHandle, 'Position');
+                cpx = pp(1) + pp(3)/2 - dp(3)/2;
+                cpy = pp(2) + pp(4)/2 - dp(4)/2;
+                movegui(hFig, [cpx cpy]);
+                set(hFig,'Visible','on');
+            otherwise
+                return;
+        end
+        [answer] = gui.i_selvariabletype(thisc);        
         switch answer
             case 'Categorical/Discrete'
                 n = max(c);
                 f = 0.5 * (n - 1) ./ n;
                 f = 1 + f .* (1:2:2 * n);
-                cb = colorbar('Ticks', f, 'TickLabels', ...
+                cb = colorbar(target{1}, 'Ticks', f, 'TickLabels', ...
                     strrep(cellstr(cL), '_', '\_'));
-            otherwise % case 'Numerical/Continuous'
+            otherwise  % case 'Numerical/Continuous'
                 if isnumeric(thisc)
-                    set(h, 'CData', thisc);
+                    set(target{2}, 'CData', thisc);
                 else
-                    set(h, 'CData', c);
+                    set(target{2}, 'CData', c);
                 end
-                cb = colorbar;
+                cb = colorbar(target{1});
         end
         cb.Label.String = strrep(clable, '_', '\_');
         guidata(FigureHandle, sce);
@@ -1451,7 +1474,7 @@ end
             gui.gui_waitbar(fw);
         end
         [c, cL] = grp2idx(sce.c);
-        in_RefreshAll(src, 1, true, true);
+        in_RefreshAll(src, [], true, true);
     end
 
     function in_scTenifoldNet(src,events,methodtag)
@@ -1669,7 +1692,7 @@ end
             end
             [c, cL] = grp2idx(thisc);
             sce.c = c;
-            in_RefreshAll(src, 1, true, false);
+            in_RefreshAll(src, [], true, false);
             fprintf('Cells are colored by %s.\n', lower(clable));
             if max(c) <= 200
                 if ix_labelclusters(true)
