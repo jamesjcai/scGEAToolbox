@@ -84,6 +84,9 @@ a = findall(FigureHandle, 'tag', 'figMenuFileImportData');
 a.Text = 'Import Data Using GEO Accession...';
 a.MenuSelectedFcn = @in_GEOAccessionToSCE;
 
+m_tool = findall(FigureHandle, 'tag', 'figMenuTools');
+in_addmenu(m_tool, 1, @gui.callback_GetCellSignatureMatrix, 'SCGEATOOL Cell State Analysis');
+
 hAx = axes('Parent', FigureHandle);
 
 [h] = gui.i_gscatter3(sce.s, c, methodid, 1, hAx);
