@@ -39,7 +39,6 @@ try
 catch
 end
 
-
 data = pkg.e_guessh5field(filenm, {grouptag}, {'data'}, true);
 indices = pkg.e_guessh5field(filenm, {grouptag}, {'indices'}, true);
 indptr = pkg.e_guessh5field(filenm, {grouptag}, {'indptr'}, true);
@@ -86,7 +85,6 @@ X = spalloc(shape(1), shape(2), length(data));
 
 %c=0; olda=-1;
 for k = 1:length(indptr) - 1
-
     % if mod(c,round(length(indptr)/100))==0
     %     a=round(100*(c/length(indptr)));
     %     if a~=olda
@@ -95,10 +93,8 @@ for k = 1:length(indptr) - 1
     %         olda=a;
     %     end
     % end
-
-    i = indptr(k) + 1:indptr(k+1);
-    y = indices(i) + 1;
-    X(y, k) = data(i);
+    ix = indptr(k) + 1:indptr(k+1);
+    X((indices(ix) + 1), k) = data(ix);
     %    c=c+1;
 end
 %fprintf('......100%%\n');
@@ -113,3 +109,42 @@ g = deblank(string(g));
 %gui.gui_waitbar_adv(fw);
 
 end
+
+
+
+%{
+
+function countMatrix = getMatrixFromH5(filename)
+    info = h5info(filename, '/matrix');
+    
+    barcodes = h5read(filename, '/matrix/barcodes');
+    data = h5read(filename, '/matrix/data');
+    indices = h5read(filename, '/matrix/indices');
+    indptr = h5read(filename, '/matrix/indptr');
+    shape = h5read(filename, '/matrix/shape');
+    
+    matrix = sparse(indices+1, indptr+1, data, shape(2), shape(1));
+    
+    featureRef = struct();
+    featureGroup = info.Groups(strcmp({info.Groups.Name}, '/matrix/features'));
+    featureRef.id = h5read(filename, '/matrix/features/id');
+    featureRef.name = h5read(filename, '/matrix/features/name');
+    featureRef.featureType = h5read(filename, '/matrix/features/feature_type');
+    
+    tagKeys = h5read(filename, '/matrix/features/_all_tag_keys');
+    for i = 1:length(tagKeys)
+        key = char(tagKeys(i));
+        featureRef.(key) = h5read(filename, ['/matrix/features/' key]);
+    end
+    
+    countMatrix = struct('featureRef', featureRef, 'barcodes', barcodes, 'matrix', matrix);
+end
+
+filteredH5 = '/opt/sample345/outs/filtered_feature_bc_matrix.h5';
+filteredMatrix = getMatrixFromH5(filteredH5);
+
+% https://www.10xgenomics.com/support/software/space-ranger/advanced/hdf5-feature-barcode-matrix-format
+
+%}
+
+
