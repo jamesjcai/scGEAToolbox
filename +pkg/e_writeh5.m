@@ -5,6 +5,15 @@ function e_writeh5(X, genelist, filename)
 %     X=X.X;
 % end
 % if nargin<2, genelist=string([1:size(X,1)].'); end
+
+% X = sparse([1 0 2; 0 0 3; 4 5 6]);
+% pkg.e_writeh5(X,["a"],'test.h5');
+% [Y,g]=pkg.e_readh5('test.h5');
+
+
+% https://www.10xgenomics.com/support/software/space-ranger/advanced/hdf5-feature-barcode-matrix-format
+% http://scipy-lectures.org/advanced/scipy_sparse/csc_matrix.html
+
 if issparse(X)
     disp('writing sparse...');
     [indptr, indices, data] = convert_sparse_to_indptr(X);
