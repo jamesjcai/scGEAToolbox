@@ -228,6 +228,7 @@ in_addmenu(m_ext, 1, @gui.callback_MELDPerturbationScore, 'MELD Perturbation Sco
 in_addmenu(m_ext, 0, {@in_SubsampleCells, 2}, 'Geometric Sketching (geosketch/Py) [PMID:31176620]...');
 in_addmenu(m_ext, 0, @in_HarmonyPy, 'Batch Integration (Harmony/Py) [PMID:31740819]...');
 in_addmenu(m_ext, 0, @in_DoubletDetection, 'Detect Doublets (Scrublet/Py) [PMID:30954476]...');
+in_addmenu(m_ext, 0, @gui.callback_RunDataMapPlot, 'Run DataMapPlot (datamapplot/Py)...');
 in_addmenu(m_ext, 1, @gui.callback_ExploreCellularCrosstalk, 'Talklr Intercellular Crosstalk [DOI:10.1101/2020.02.01.930602]...');
 
 % in_addmenu(m_ext, 0, @gui.callback_CompareGCLBtwCls, 'Differential GCL Analysis [PMID:33139959]🐢🐢 ...');
@@ -897,7 +898,7 @@ end
         end
         figure(FigureHandle);
         % was3d = ~isempty(h.ZData);
-        if size(sce.s, 2) >= 3                  
+        if size(sce.s, 2) >= 3
             if keepview, [ax, bx] = view(); end
             h = gui.i_gscatter3(sce.s, c, methodid, hAx);
             if keepview, view(ax, bx); end
@@ -994,8 +995,7 @@ end
                     h.Marker = para.oldMarker;
                     h.SizeData = para.oldSizeData;
                     colormap(para.oldColorMap);
-                    return;
-                    
+                    return;                    
                 case 'Pick existing 2D'
                     [sx] = gui.i_pickembedvalues(sce, 2);
                     if ~isempty(sx) && size(sx,1) == sce.NumCells
@@ -1005,12 +1005,9 @@ end
                         return;
                     end
             end
-        end
-
-        
+        end        
         guidata(FigureHandle, sce);
-        in_RefreshAll(src, [], true, true);   % keepview, keepcolr
-       
+        in_RefreshAll(src, [], true, true);   % keepview, keepcolr       
     end
 
     function in_AddEditCellAttribs(~,~)
