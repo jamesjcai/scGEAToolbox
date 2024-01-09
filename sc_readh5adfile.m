@@ -22,7 +22,7 @@ if nargin < 1 || isempty(filenm)
 end
 if exist(filenm, 'file') ~= 2, error('File Not Found.'); end
 
-fw = gui.gui_waitbar_adv;
+% fw = gui.gui_waitbar_adv;
 
 hinfo = h5info(filenm);
 
@@ -111,7 +111,7 @@ g = deblank(string(g));
 % for k=1:length(g)
 %     genelist(k)=string(g(k).data);
 % end
-gui.gui_waitbar_adv(fw);
+% gui.gui_waitbar_adv(fw);
 
 end
 
