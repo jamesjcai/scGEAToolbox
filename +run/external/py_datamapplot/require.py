@@ -13,11 +13,15 @@ except ImportError as exc:
 
 import sys
 import subprocess
-import pkg_resources
+#import pkg_resources
+import importlib.metadata
 
-required  = {'numpy', 'pandas', 'scipy', 'numba', 'matplotlib', 'datamapplot'} 
-installed = {pkg.key for pkg in pkg_resources.working_set}
-missing   = required - installed
+
+required  = {'h5py', 'numpy', 'pandas', 'scipy', 'numba', 'matplotlib', 'datamapplot'} 
+#installed = {pkg.key for pkg in pkg_resources.working_set}
+installed = {distribution.metadata["Name"] for distribution in importlib.metadata.distributions()}
+
+missing   = required - installed2
 
 if missing:
     subprocess.check_call([sys.executable, '-m', 'pip', 'install', *missing])
