@@ -1,6 +1,5 @@
 function callback_RunDataMapPlot(src, ~)
 
-
 if ~isa(src,'SingleCellExperiment')
     FigureHandle = src.Parent.Parent;
     sce = guidata(FigureHandle);

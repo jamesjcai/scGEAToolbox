@@ -47,10 +47,11 @@ save('input.mat', '-v7.3', 's');
 disp('Input files written.');
 
 if isvalid(fw)
-    gui.gui_waitbar(fw, [], 'Checking Python environment is complete');
+    gui.gui_waitbar(fw, [], [], 'Checking Python environment is complete');
+    pause(0.5);
+    gui.gui_waitbar(fw, [], [], 'Running DataMapPlot...');
 end
-
-fw = gui.gui_waitbar([],[],'Running DataMapPlot...');
+% fw = gui.gui_waitbar([],[],'Running DataMapPlot...');
 codefullpath = fullfile(codepth,'script.py');
 cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);
 disp(cmdlinestr)
