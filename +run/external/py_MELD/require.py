@@ -27,10 +27,12 @@ except ImportError as exc:
 
 import sys
 import subprocess
-import pkg_resources
+# import pkg_resources
+import importlib.metadata
 
 required  = {'numpy', 'pandas', 'scipy', 'h5py', 'meld'} 
-installed = {pkg.key for pkg in pkg_resources.working_set}
+# installed = {pkg.key for pkg in pkg_resources.working_set}
+installed = {distribution.metadata["Name"] for distribution in importlib.metadata.distributions()}
 missing   = required - installed
 
 if missing:
