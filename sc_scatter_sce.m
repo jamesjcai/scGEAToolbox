@@ -1154,11 +1154,11 @@ end
         cLdisp = cL;
         if ~manuallyselect, fw = gui.gui_waitbar_adv; end
 
-        for i = 1:max(c)
+        for ix = 1:max(c)
             if ~manuallyselect
-                gui.gui_waitbar_adv(fw, i/max(c));
+                gui.gui_waitbar_adv(fw, ix/max(c));
             end
-            ptsSelected = c == i;
+            ptsSelected = c == ix;
 
             if usedefaultdb
                 [Tct] = pkg.local_celltypebrushed(sce.X, sce.g, ...
@@ -1182,11 +1182,11 @@ end
 
             hold on;
             ctxtdisp = strrep(ctxt, '_', '\_');
-            ctxtdisp = sprintf('%s_{%d}', ctxtdisp, i);
-            cLdisp{i} = ctxtdisp;
+            ctxtdisp = sprintf('%s_{%d}', ctxtdisp, ix);
+            cLdisp{ix} = ctxtdisp;
 
-            ctxt = sprintf('%s_{%d}', ctxt, i);
-            cL{i} = ctxt;
+            ctxt = sprintf('%s_{%d}', ctxt, ix);
+            cL{ix} = ctxt;
 
             row = dataTipTextRow('', cLdisp(c));
             h.DataTipTemplate.DataTipRows = row;
