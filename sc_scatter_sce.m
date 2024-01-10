@@ -296,8 +296,6 @@ colormap(pkg.i_mycolorlines(kc));
 
 set(FigureHandle, 'visible', 'on');
 
-
-
 in_fixfield('tsne','tsne3d');
 in_fixfield('umap','umap3d');
 in_fixfield('phate','phate3d');
@@ -351,12 +349,10 @@ end
         end
     end
 
-
     function in_CompareGeneBtwCls(src,events)
         gui.callback_CompareGeneBtwCls(src,events);
         sce = guidata(FigureHandle);
     end
-
 
     function in_turnonuserguiding(~, ~)
         % setpref('scgeatoolbox','useronboardingtoolbar',true);
@@ -488,7 +484,6 @@ end
         % set(FigureHandle,'Position',[P(1)-30*k P(2)-30*k P(3) P(4)]);
     end
 
-
     function in_closeRequest(hObject, ~)
         if ~(ismcc || isdeployed)
             ButtonName = questdlg('Save SCE before closing SCGEATOOL?');
@@ -525,9 +520,7 @@ end
 
     function in_GEOAccessionToSCE(src, ~)
         answer = questdlg('Current SCE will be replaced. Continue?');
-        if ~strcmp(answer, 'Yes'), return; end
-
-        
+        if ~strcmp(answer, 'Yes'), return; end       
         acc = inputdlg({'Input Number(s) (e.g., GSM3308547,GSM3308548):'}, ...
                     'GEO Accession', [1, 50], {'GSM3308547'});        
         if isempty(acc), return; end
@@ -547,6 +540,18 @@ end
         end
     end
 
+    function in_callback_RunDataMapPlot(src, ~)
+        ndim = 2;
+        [vslist] = gui.i_checkexistingembed(sce, ndim);
+        if ~isempty(vslist)
+            answer = questdlg('Using exsiting embedding?');
+        else
+            answer = 'No';
+            in_EmbeddingAgain(src, [], 2);
+        end        
+        gui.callback_RunDataMapPlot(src, []);  % xxx
+    end
+
     function in_MergeCellSubtypes(src, ~, sourcetag, allcell)
         if nargin < 4
             answer = questdlg('Import annotation for all cells or just cells of a subtype?', '', ...
@@ -559,8 +564,7 @@ end
                 case 'Cancel'
                     return;
             end
-        end       
-    
+        end
         [requirerefresh] = gui.callback_MergeCellSubtypes(src, [], sourcetag, allcell);
         if requirerefresh
             sce = guidata(FigureHandle);
