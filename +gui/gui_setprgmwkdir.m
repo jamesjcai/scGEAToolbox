@@ -11,8 +11,12 @@ wkdir = fullfile(s, s1);
 if ~exist(wkdir,"dir")
     mkdir(wkdir);
 else
-    answer = questdlg('Directory existing. Overwrite?');
-    if ~strcmp(answer,'Yes'), return; end
+    answer = questdlg(sprintf('%s existing. Overwrite?', ...
+        wkdir));
+    if ~strcmp(answer,'Yes')
+        wkdir = '';
+        return;
+    end
 end
    
 fprintf('CURRENTWDIR = "%s"\n', wkdir);

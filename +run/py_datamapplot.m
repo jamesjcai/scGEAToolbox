@@ -1,4 +1,4 @@
-function [idx] = py_datamapplot(sce, wkdir, isdebug)
+function py_datamapplot(sce, wkdir, isdebug)
 
 if nargin < 3, isdebug = true; end
 if nargin < 2, wkdir = []; end

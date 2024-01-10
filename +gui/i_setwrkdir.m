@@ -11,7 +11,8 @@ if ~ispref('scgeatoolbox', preftagname)
     if ~strcmp(answer, 'Yes'), return; end
     if ispc
         [~,b]=system("echo %username%");
-        pathdefult = sprintf('C:\\Users\\%s\\Documents\\',string(deblank(b)));
+        pathdefult = sprintf('C:\\Users\\%s\\Documents\\', ...
+            string(deblank(b)));
     else
         pathdefult = '';
     end
@@ -19,7 +20,7 @@ if ~ispref('scgeatoolbox', preftagname)
 else
     s = getpref('scgeatoolbox', preftagname);
     answer1 = questdlg(sprintf('%s', s), ...
-        'Working Directory', ...
+        'Working Root', ...
         'Use this', 'Use another', 'Cancel', 'Use this');
     switch answer1
         case 'Use this'

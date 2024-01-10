@@ -198,7 +198,7 @@ in_addbuttontoggle(2, 0, {@in_togglebtfun, @callback_SaveX, ...
 m_net = uimenu(FigureHandle, 'Text', '&Network', 'Accelerator', 'N');
 
 in_addmenu(m_net, 0, @in_Select5000Genes, 'Remove Less Informative Genes to Reduce Gene Space...');
-in_addmenu(m_net, 0, @gui.i_setnetwd, 'Set Network Analysis Working Directory...');
+in_addmenu(m_net, 0, @gui.i_setnetwd, 'Set Network Analysis Working Root Directory...');
 in_addmenu(m_net, 1, {@in_scTenifoldNet,1}, 'Construct GRN using PC Regression [PMID:33336197] 🐢...');
 %in_addmenu(m_net, 1, @callback_scPCNet1, 'GRN Construction - PC Regression (w/o subsampling) [PMID:33336197] 🐢...');
 %in_addmenu(m_net, 0, @callback_scTenifoldNet1, 'GRN Construction - PC Regression (w/ subsampling) [PMID:33336197] 🐢🐢 ...');
@@ -207,15 +207,15 @@ in_addmenu(m_net, 0, {@in_scTenifoldNet,2}, 'Construct & Compare GRNs (scTenifol
 %in_addmenu(m_net, 1, @callback_scTenifoldNet2lite, 'GRN Comparison - scTenifoldNet (w/o subsampling) [PMID:33336197] 🐢🐢 ...');
 %in_addmenu(m_net, 0, @callback_scTenifoldNet2, 'GRN Comparison - scTenifoldNet (w/ subsampling) [PMID:33336197] 🐢🐢🐢 ...');
 
-in_addmenu(m_net, 1, @callback_scTenifoldKnk1, 'Virtual Gene KO - scTenifoldKnk [PMID:35510185] 🐢🐢 ...');
+in_addmenu(m_net, 1, @gui.callback_scTenifoldKnk1, 'Virtual Gene KO - scTenifoldKnk [PMID:35510185] 🐢🐢 ...');
 in_addmenu(m_net, 0, @gui.callback_VirtualKOGenKI, 'Virtual Gene KO - GenKI [PMID:37246643] (Python Required) 🐢🐢 ...');
-in_addmenu(m_net, 1, @callback_scTenifoldXct, 'Cell-Cell Interactions (CCIs) - scTenifoldXct [PMID:36787742] 🐢🐢 ...');
-in_addmenu(m_net, 0, @callback_scTenifoldXct2, 'Differential CCIs - scTenifoldXct [PMID:36787742] 🐢🐢🐢 ...');
+in_addmenu(m_net, 1, @gui.callback_scTenifoldXct, 'Cell-Cell Interactions (CCIs) - scTenifoldXct [PMID:36787742] 🐢🐢 ...');
+in_addmenu(m_net, 0, @gui.callback_scTenifoldXct2, 'Differential CCIs - scTenifoldXct [PMID:36787742] 🐢🐢🐢 ...');
 
 m_ext = uimenu(FigureHandle, 'Text', 'E&xternal', 'Accelerator', 'x');
 in_addmenu(m_ext, 0, @gui.i_setrenv, 'Check R Environment');
 in_addmenu(m_ext, 0, @gui.i_setpyenv, 'Check Python Environment');
-in_addmenu(m_ext, 0, @gui.i_setextwd, 'Set External Program Working Directory...');
+in_addmenu(m_ext, 0, @gui.i_setextwd, 'Set External Program Working Root Directory...');
 
 in_addmenu(m_ext, 1, @in_DecontX, 'Detect Ambient RNA Contamination (DecontX/R) [PMID:32138770]...');
 %i_addmenu(m_ext,0,@callback_SingleRCellType,'SingleR Cell Type Annotation (SingleR/R required)...');
@@ -228,7 +228,7 @@ in_addmenu(m_ext, 1, @gui.callback_MELDPerturbationScore, 'MELD Perturbation Sco
 in_addmenu(m_ext, 0, {@in_SubsampleCells, 2}, 'Geometric Sketching (geosketch/Py) [PMID:31176620]...');
 in_addmenu(m_ext, 0, @in_HarmonyPy, 'Batch Integration (Harmony/Py) [PMID:31740819]...');
 in_addmenu(m_ext, 0, @in_DoubletDetection, 'Detect Doublets (Scrublet/Py) [PMID:30954476]...');
-in_addmenu(m_ext, 0, @gui.callback_RunDataMapPlot, 'Run DataMapPlot (datamapplot/Py)...');
+in_addmenu(m_ext, 0, @in_RunDataMapPlot, 'Run DataMapPlot (datamapplot/Py)...');
 in_addmenu(m_ext, 1, @gui.callback_ExploreCellularCrosstalk, 'Talklr Intercellular Crosstalk [DOI:10.1101/2020.02.01.930602]...');
 
 % in_addmenu(m_ext, 0, @gui.callback_CompareGCLBtwCls, 'Differential GCL Analysis [PMID:33139959]🐢🐢 ...');
@@ -540,17 +540,39 @@ end
         end
     end
 
-    function in_callback_RunDataMapPlot(src, ~)
+    function in_RunDataMapPlot(src, ~)        
         ndim = 2;
         [vslist] = gui.i_checkexistingembed(sce, ndim);
-        if ~isempty(vslist)
-            answer = questdlg('Using exsiting embedding?');
-        else
-            answer = 'No';
-            in_EmbeddingAgain(src, [], 2);
-        end        
-        gui.callback_RunDataMapPlot(src, []);  % xxx
-    end
+        if isempty(h.ZData) && size(sce.s,2)==2 && length(vslist) <= 1
+            gui.callback_RunDataMapPlot(src, []);
+        elseif isempty(h.ZData) && size(sce.s,2)==2 && length(vslist) > 1
+            answer = questdlg('Using current 2D embedding?');
+            switch answer
+                case 'Yes'
+                    gui.callback_RunDataMapPlot(src, []);
+                case 'No'
+                    [sx] = gui.i_pickembedvalues(sce, 2);
+                    if ~isempty(sx) && size(sx,1) == sce.NumCells
+                        sce.s = sx;
+                    else
+                        warning('Running error.');
+                        return;
+                    end
+                    guidata(FigureHandle, sce);
+                    gui.callback_RunDataMapPlot(src, []);
+                case 'Cancel'
+                    return;
+            end
+        elseif ~isempty(h.ZData)
+            answer=questdlg('This function requires 2D embedding. Continue?');
+            switch answer
+                case 'Yes'
+                    in_Switch2D3D(src,[]);
+                otherwise
+                    return;
+            end
+        end
+    end   % xxx
 
     function in_MergeCellSubtypes(src, ~, sourcetag, allcell)
         if nargin < 4
@@ -928,7 +950,7 @@ end
     function in_Switch2D3D(src, ~)  
         [para] = gui.i_getoldsettings(src);
 
-        if isempty(h.ZData)               % current 2D
+        if isempty(h.ZData)               % current 2D xxx
             ansx = questdlg('Switch to 3D?');
             if ~strcmp(ansx, 'Yes'), return; end
             if size(sce.s, 2) >= 3
