@@ -43,28 +43,36 @@ function [sce] = sc_csubtypeanno(sce, cell_type_target, speciestag)
     Tw = table(genelist, w);
     Tw.Properties.VariableNames = {'Var1', 'Var2'};
     
+    wvalu = Tw.Var2;
+    wgene = string(Tw.Var1);
+    celltypev = string(Tm.SubType);
+    markergenev = string(Tm.PositiveMarkers);
+
+selecteidx = sce.c_cell_type_tx == cell_type_target;
+sce2 = sce.selectcells(selecteidx);
+sce2 = sce2.embedcells('tsne3d', true, true, 3);
+sce2 = sce2.clustercells([], [], true);
 
 
+[c, cL] = grp2idx(sce2.c_cluster_id);
+for ik = 1:max(c)
+    ptsSelected = c == ik;
+    [Tct] = pkg.e_determinecelltype(sce2, ptsSelected, wvalu, ...
+            wgene, celltypev, markergenev);
 
-            wvalu = Tw.Var2;
-            wgene = string(Tw.Var1);
-            celltypev = string(Tm.Var1);
-            markergenev = string(Tm.Var2);
-
-
-            sce2 = sce.selectcells(sce.c_cell_type_tx == cell_type_target);
-
-            [Tct] = pkg.e_determinecelltype(sce2, ptsSelected, wvalu, ...
-                wgene, celltypev, markergenev);            
-
-            ctxt = Tct.C1_Cell_Type;
-            if length(ctxt) > 1
-                ctxt = Tct.C1_Cell_Type{1};
-            end
-            
+    % [Tct] = pkg.local_celltypebrushed(sce2.X, sce2.g, ...
+    %     sce2.s, ptsSelected, ...
+    %     speciesid, organtag, databasetag);
+    ctxt = Tct.C1_Cell_Type{1};
+    %if keepclusterid
+    %    ctxt = sprintf('%s_{%d}', ctxt, ik);
+    %end
+    cL{ik} = ctxt;
+end
+sce2.c_cell_type_tx = string(cL(c));
+sce.c_cell_type_tx(selecteidx) = sce2.c_cell_type_tx;
 
 end
-
 
 
     function [primarymarkerstr] = in_getprimarymarkers(pw1, cell_type_target)
@@ -81,7 +89,7 @@ end
     end
 
     function [Tm] = in_addprimarymarkers(Tm, pmarkerstr)
-        for k=1:size(T,1)
+        for k=1:size(Tm,1)
             a = string(Tm.PositiveMarkers{k});
             a = strtrim(a);
             a = erase(a," ");
