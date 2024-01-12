@@ -50,7 +50,7 @@ zlabel('Dropout rate (% of zeros)');
 
 if dofit
     try
-        [~, xyz1] = sc_splinefit(X, g);
+        [~, ~, ~, xyz1] = sc_splinefit(X, g);
     catch ME
         rethrow(ME);
     end

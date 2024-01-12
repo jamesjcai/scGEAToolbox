@@ -19,7 +19,8 @@ parse(p, X, k, varargin{:})
 
 if p.Results.usehvgs
     disp('Using 2000 HVGs.')
-    [~, X] = sc_hvg(X, [], true, false);
+    % [~, X] = sc_hvg(X, [], true, false);
+    [~, X] = sc_splinefit(X, [], true, false);
     X = X(1:min([size(X, 1), 2000]), :);
 end
 

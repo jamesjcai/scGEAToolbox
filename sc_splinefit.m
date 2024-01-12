@@ -1,4 +1,4 @@
-function [T, xyz1] = sc_splinefit(X, genelist, sortit, plotit, removenan)
+function [T, Xsorted, gsorted, xyz1] = sc_splinefit(X, genelist, sortit, plotit, removenan)
 %SC_SPLINEFIT identify genes with a profile deviated from normal
 %
 % USAGE:
@@ -16,7 +16,14 @@ if nargin < 4, plotit = false; end
 if nargin < 3, sortit = true; end
 if nargin < 2, genelist = string(1:size(X, 1)); end
 
-[lgu, dropr, lgcv, genes, Xout, removedgidx] = sc_genestat(X, genelist, sortit, removenan);
+
+[lgu, dropr, lgcv, gsorted, Xsorted, removedgidx, removedT] = sc_genestat(X, genelist, sortit, removenan);
+% size(lgu)
+% removedgidx
+if removenan && ~isempty(removedgidx)
+    gsorted = [gsorted; genelist(removedgidx)];
+    Xsorted = [Xsorted; X(removedgidx,:)];
+end
 
 % lgu=zscore(lgu);
 % dropr=zscore(dropr);
@@ -59,7 +66,8 @@ distFit = fitdist([-dx; dx], 'Normal');
 pval = normcdf(d, 0, distFit.sigma, 'upper');
 [~, ~, ~, fdr] = pkg.fdr_bh(pval);
 
-if ~isempty(genes)
+if ~isempty(gsorted)
+    genes = gsorted;
     T = table(genes, lgu, lgcv, dropr, d, pval, fdr);
 else
     T = table(lgu, lgcv, dropr, d, pval, fdr);
@@ -68,9 +76,16 @@ end
 
 T.d(T.dropr > (1 - 0.05)) = 0; % ignore genes with dropout rate > 0.95
 % disp('NOTE: Genes with dropout rate > 0.95 are excluded.');
-if sortit, T = sortrows(T, 'd', 'descend'); end
 
-if length(genes) ~= length(genelist)
+removedT.Properties.VariableNames = T.Properties.VariableNames;
+T = [T; removedT]; 
+if sortit
+    [T,idx] = sortrows(T, 'd', 'descend');
+    gsorted = gsorted(idx);
+    Xsorted = Xsorted(idx,:);
+end
+
+if length(gsorted) ~= length(genelist)
     warning('Output GENES are less than input GENES (some GENES are removed).');
 end
 
@@ -83,9 +98,9 @@ if plotit
     ylabel('CV, log');
     zlabel('Dropout rate (% of zeros)');
 
-    if ~isempty(genes)
+    if ~isempty(gsorted)
         dt = datacursormode;
-        dt.UpdateFcn = {@i_myupdatefcn3, genes, Xout};
+        dt.UpdateFcn = {@i_myupdatefcn3, gsorted, Xsorted};
     end
     hold off
 end

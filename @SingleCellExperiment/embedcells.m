@@ -16,11 +16,13 @@ if isempty(obj.s) || forced
 
     if usehvgs && size(obj.X, 1) > numhvg
         % disp('Identifying HVGs')
-        [~, X, g] = sc_hvg(obj.X, obj.g, true, false, true, false, true);
-
-
-        %size(X)
-        %size(obj.X)
+        
+        try
+            [~, X, g] = sc_splinetif(obj.X, obj.g, true, false, true);
+        catch ME
+            warning(ME.message);
+            [~, X, g] = sc_hvg(obj.X, obj.g, true, false, true, false, true);
+        end
 
 
         idx = false(size(obj.g));

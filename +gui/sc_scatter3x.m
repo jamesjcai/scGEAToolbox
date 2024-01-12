@@ -18,8 +18,8 @@ end
 % [xData, yData, zData] = prepareSurfaceData(x,y,z);
 % xyz=[xData yData zData]';
 if dofit
-    [~, xyz1] = sc_splinefit(X, genelist);
-    [~, xyz2] = sc_splinefit(Y, genelist);
+    [~, ~, ~, xyz1] = sc_splinefit(X, genelist);
+    [~, ~, ~, xyz2] = sc_splinefit(Y, genelist);
     plot3(xyz1(:, 1), xyz1(:, 2), xyz1(:, 3), '-', 'linewidth', 4);
     % scatter3(xyz1(1,:),xyz1(2,:),xyz1(3,:)); %,'MarkerEdgeAlpha',.8);
     plot3(xyz2(:, 1), xyz2(:, 2), xyz2(:, 3), '-', 'linewidth', 4);

@@ -8,9 +8,9 @@ if nargin < 5, sortid = true; end
 X = X(i, :);
 Y = Y(j, :);
 
-[T1, sx] = sc_splinefit(X, genelist);
+[T1, ~, ~, sx] = sc_splinefit(X, genelist);
 T1.Properties.VariableNames = {'genes', 'logu1', 'logcv1', 'dropr1', 'd1', 'pval1', 'fdr1'};
-[T2, sy] = sc_splinefit(Y, genelist);
+[T2, ~, ~, sy] = sc_splinefit(Y, genelist);
 T2.Properties.VariableNames = {'genes', 'logu2', 'logcv2', 'dropr2', 'd2', 'pval2', 'fdr2'};
 
 T = join(T1, T2, 'Keys', 'genes');

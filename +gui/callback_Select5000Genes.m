@@ -79,7 +79,8 @@ end
 
 try
     a = str2double(answer{5});
-    T = sc_hvg(sce.X, sce.g);
+    % T = sc_hvg(sce.X, sce.g);
+    T = sc_splinefit(sce.X, sce.g);
     glist = T.genes(1:min([a, sce.NumGenes]));
     [y, idx] = ismember(glist, sce.g);
     if ~all(y)

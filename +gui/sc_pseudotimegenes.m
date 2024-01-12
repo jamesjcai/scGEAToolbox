@@ -4,7 +4,8 @@ function sc_pseudotimegenes(sce, t)
     [K,usehvgs] = gui.i_gethvgnum(sce);
     
     if usehvgs
-        T = sc_hvg(sce.X, sce.g);
+        % T = sc_hvg(sce.X, sce.g);
+        T = sc_splinefit(sce.X, sce.g);
         glist = T.genes(1:min([K, sce.NumGenes]));
         [y, idx] = ismember(glist, sce.g);
         if ~all(y), error('Runtime error.'); end

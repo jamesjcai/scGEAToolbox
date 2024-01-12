@@ -78,9 +78,16 @@ switch methodid
     case 2
         Xm = zeros(numel(g), n);
         for k = 1:n
-            [t] = sc_hvg(X(:, cx == k), g, false);
-            [y, id] = ismember(g, t.genes);
-            Xm(y, k) = table2array(t(id(y), 4));
+                
+            try
+                [t] = sc_splinefit(X(:, cx == k), g, false);
+                [y, id] = ismember(g, t.genes);
+                Xm(y, k) = table2array(t(id(y), 5));
+            catch
+                [t] = sc_hvg(X(:, cx == k), g, false);
+                [y, id] = ismember(g, t.genes);
+                Xm(y, k) = table2array(t(id(y), 4));
+            end            
         end
         Xm(Xm < 0) = 0;
         cutoff = 0.05;
