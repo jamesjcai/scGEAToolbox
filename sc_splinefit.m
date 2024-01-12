@@ -16,7 +16,7 @@ if nargin < 4, plotit = false; end
 if nargin < 3, sortit = true; end
 if nargin < 2, genelist = string(1:size(X, 1)); end
 
-[lgu, dropr, lgcv, genes, Xout] = sc_genestat(X, genelist, sortit, removenan);
+[lgu, dropr, lgcv, genes, Xout, removedgidx] = sc_genestat(X, genelist, sortit, removenan);
 
 % lgu=zscore(lgu);
 % dropr=zscore(dropr);

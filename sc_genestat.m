@@ -1,8 +1,10 @@
-function [lgu, dropr, lgcv, genes, X] = sc_genestat(X, genelist, sortit, removeinf)
+function [lgu, dropr, lgcv, genes, X, removedgeneidx] = sc_genestat(X, genelist, sortit, removeinf)
 
 if nargin < 4, removeinf = true; end
 if nargin < 3, sortit = true; end
 if nargin < 2 || isempty(genelist), genelist = string(1:size(X,1)); end
+
+geneidx = 1:length(genelist);
 
 dropr = 1 - sum(X > 0, 2) ./ size(X, 2);
 u = mean(X, 2, 'omitnan');
@@ -18,6 +20,7 @@ if sortit
     lgcv = xyz(:, 3);
     genes = genelist(si); 
     X=X(si,:);
+    geneidx = geneidx(si);
 end
 if removeinf
     si = isnan(lgu) | isinf(lgu) | isnan(lgcv) | isinf(lgcv);
@@ -29,6 +32,9 @@ if removeinf
     if length(genes) ~= length(genelist)
         warning('Output GENES are less than input GENES (some GENES are removed).');
     end
+    removedgeneidx = geneidx(si);
+else
+    removedgeneidx = [];
 end
 
 end

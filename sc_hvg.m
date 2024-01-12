@@ -123,7 +123,7 @@ else
 end
 % T=T(removedidx,:);
 if plotit
-    % [~,top100idx]=maxk(fitratio,100);
+    [~,top100idx]=maxk(fitratio,100);
     %    figure;
 
     FigureHandle = figure;
@@ -149,6 +149,7 @@ if plotit
 
     plot(hAx, log(u(removedidx1)), log(cv2(removedidx1)), 'xr', 'markersize', 10);
     plot(hAx, log(u(removedidx2)), log(cv2(removedidx2)), '+r', 'markersize', 10);
+    plot(hAx, log(u(top100idx)), log(cv2(top100idx)), '^k', 'markersize', 10);
 
     %[~,i]=sort(fitratio,'descend');
     %xi=u(i); yi=cv2(i); yifit=cv2fit(i);
@@ -228,9 +229,10 @@ end
         tgenes=Tx.genes;
 
 
-        labels = {'Save gene names to variable:'};
-        vars = {'g'};
-        values = {tgenes};
+        labels = {'Save selected gene names to variable:',...
+            'Save HVG table:'};
+        vars = {'g','T'};
+        values = {tgenes,T};
         export2wsdlg(labels, vars, values, ...
             'Save Data to Workspace');
     end
