@@ -39,7 +39,7 @@ else
     u = mean(X, 2);
     vx = var(X, 0, 2);
     % vx=sum(abs(X-mean(X,2)).^2,2)./(size(X,2)-1);
-    cv2 = vx ./ u.^2;
+    cv2 = vx ./ u.^2;    
 end
 
 if issparse(u), u = full(u); end
@@ -49,15 +49,20 @@ if issparse(cv2), cv2 = full(cv2); end
 xi = 1 ./ u;
 yi = cv2;
 
+removedidx1 = false(length(xi),1);
+removedidx2 = false(length(xi),1);
 if ignorelow
-    xi = xi(dropr < 0.95);
-    yi = yi(dropr < 0.95);
+    % removing genes with the dropoff rate >= 0.95
+    idx1 = dropr >= 0.95;
+    removedidx1(idx1) = true;
 end
+
 if ignorehigh
-    a = 1 ./ quantile(u, 0.95);
-    yi = yi(xi > a);
-    xi = xi(xi > a);
+    removedidx2(u > quantile(u, 0.99)) = true;
 end
+
+xi(removedidx1|removedidx2)=[];
+yi(removedidx1|removedidx2)=[];
 
 m = size(X, 2);
 df = m - 1;
@@ -93,11 +98,14 @@ residualcv2 = log(fitratio); % log(cv2)-log(cv2fit);
 % fdr=mafdr(pval,'BHFDR',true);
 [~, ~, ~, fdr] = pkg.fdr_bh(pval);
 
-T = table(g, u, cv2, residualcv2, dropr, fitratio, pval, fdr);
+T = table(g, u, cv2, residualcv2, dropr, fitratio, pval, fdr, removedidx1, removedidx2);
+
 
 T.Properties.VariableNames(1) = {'genes'};
-i = ~isnan(cv2);
-T = T(i, :);
+
+%i = ~isnan(cv2);
+%T = T(i, :);
+
 if sortit
     T.fitratio(T.dropr > (1 - 0.05)) = 0; % ignore genes with dropout rate > 0.95
     % disp('NOTE: Genes with dropout rate > 0.95 are excluded.');
@@ -113,7 +121,7 @@ else
         error('SORTIT was not required.');
     end
 end
-
+% T=T(removedidx,:);
 if plotit
     % [~,top100idx]=maxk(fitratio,100);
     %    figure;
@@ -134,8 +142,13 @@ if plotit
 
     h = scatter(hAx, log(u), log(cv2), 'filled', 'MarkerFaceAlpha', .1);
     hold on
+
+
     % scatter(log(u(top100idx)),log(cv2(top100idx)),'x');
     plot(hAx, log(u), log(cv2fit), '.', 'markersize', 10);
+
+    plot(hAx, log(u(removedidx1)), log(cv2(removedidx1)), 'xr', 'markersize', 10);
+    plot(hAx, log(u(removedidx2)), log(cv2(removedidx2)), '+r', 'markersize', 10);
 
     %[~,i]=sort(fitratio,'descend');
     %xi=u(i); yi=cv2(i); yifit=cv2fit(i);
@@ -155,6 +168,7 @@ if plotit
     end
     hold off
 end
+
 
 
     function ChangeAlphaValue(~, ~)

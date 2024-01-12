@@ -18,6 +18,11 @@ if isempty(obj.s) || forced
         % disp('Identifying HVGs')
         [~, X, g] = sc_hvg(obj.X, obj.g, true, false, true, false, true);
 
+
+        %size(X)
+        %size(obj.X)
+
+
         idx = false(size(obj.g));
         idx(1:numhvg) = true;
 
@@ -38,8 +43,6 @@ if isempty(obj.s) || forced
 
         X = X(idx, :);
         g = g(idx);
-
-
 
 
     else

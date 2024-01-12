@@ -1,6 +1,6 @@
 function callback_CellCycleAssignment(src, ~)
 
-    answer = questdlg('This function assigned cell cycle phase to each cell, continue?', '');
+    answer = questdlg('This function assigns cell cycle phase to each cell, continue?', '');
         if ~strcmp(answer, 'Yes'), return; end
 
         FigureHandle = src.Parent.Parent;
