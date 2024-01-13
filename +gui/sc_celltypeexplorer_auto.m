@@ -44,7 +44,7 @@ for i = 1:max(c)
 
     switch lower(tmethod)
         case 'alona'
-            [Tct] = run.mt_alona(Xi, gi, [], 'species', species, 'organ', organ);
+            [Tct] = run.mt_alona_new(Xi, gi, [], 'species', species);
             ctxt = Tct.C1_Cell_Type{1};
         case 'singler'
             cx = run.r_singler(Xi, gi, species);

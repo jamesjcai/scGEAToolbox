@@ -21,7 +21,6 @@ else
 end
 [id] = grp2idx(id);
 
-% [T]=run.mt_alona(sce2.X,sce2.g,id);
 
 posg1 = ["Cd3d", "Cd3e", "Cd3g", "Cd8a", "Cd8a1"];
 negg1 = ["Gzma", "Gzmb", "Pdcd1", "Ctla4"];

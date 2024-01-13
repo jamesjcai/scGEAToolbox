@@ -700,7 +700,9 @@ end
         sce = sce.clustercells([], [], true);
         gui.gui_waitbar_adv(fw,4/8, 'Annotating Cell Type Using PanglaoDB...');
         
+        tic
         sce = sce.assigncelltype(speciestag, false);
+        toc
         gui.gui_waitbar_adv(fw,5/8, 'Estimate Cell Cycles...');
         
         sce = sce.estimatecellcycle;

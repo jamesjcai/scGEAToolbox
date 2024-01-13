@@ -20,7 +20,15 @@ if strcmpi(database, 'clustermole')
     [Tct] = run.r_clustermole(Xi, gi, [], 'species', species);
 elseif strcmpi(database, 'panglaodb')
     % disp('Using panglaodb marker database')
-    [Tct] = run.mt_alona(Xi, gi, [], 'species', species, 'organ', organ, ...
-        'bestonly', bestonly, 'subtype', subtype);
+
+    
+%    [Tct] = run.mt_alona(Xi, gi, [], 'species', species, 'organ', organ, ...
+%        'bestonly', bestonly, 'subtype', subtype);
+    
+    
+    [Tct] = run.mt_alona_new(Xi, gi, [], 'species', species, ...
+        'bestonly', bestonly);
+    
+
 end
 end
