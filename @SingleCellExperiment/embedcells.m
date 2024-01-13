@@ -18,7 +18,7 @@ if isempty(obj.s) || forced
         % disp('Identifying HVGs')
         
         try
-            [~, X, g] = sc_splinetif(obj.X, obj.g, true, false, true);
+            [~, X, g] = sc_splinefit(obj.X, obj.g, true, false, true);
         catch ME
             warning(ME.message);
             [~, X, g] = sc_hvg(obj.X, obj.g, true, false, true, false, true);
