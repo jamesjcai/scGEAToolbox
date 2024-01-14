@@ -1,6 +1,6 @@
-function [done] = callback_SubtypeAnnotation(src, ~)
+function [requirerefresh] = callback_SubtypeAnnotation(src, ~)
 
-    done = false;
+    requirerefresh = false;
     % answer = questdlg('This function assigns subtype name to selected cell type, continue?', '');
     % if ~strcmp(answer, 'Yes'), return; end
 
@@ -44,6 +44,8 @@ function [done] = callback_SubtypeAnnotation(src, ~)
         for k = 1:length(celltypetarget_list)
             [sce] = sc_csubtypeanno(sce, celltypetarget_list(k), formatid);
         end
-        % guidata(FigureHandle, sce);
-        done = true;
+        if ~isa(src, "SingleCellExperiment")
+            guidata(FigureHandle, sce);
+        end
+        requirerefresh = true;
 end

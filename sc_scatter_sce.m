@@ -266,6 +266,8 @@ in_addmenu(m_exp, 0, @gui.callback_ShowMtGeneExpression, 'Show Mitochondrial (Mt
 %i_addmenu(m_exp,0,@gui.callback_TCellExhaustionScores,'T Cell Exhaustion Score...');
 
 in_addmenu(m_exp, 1, {@in_DetermineCellTypeClustersGeneral, false}, 'Annotate Cell Type Using Customized Markers...');
+in_addmenu(m_exp, 0, @in_SubtypeAnnotation, 'Annotate Cell Subtype...');
+
 in_addmenu(m_exp, 1, {@in_MergeCellSubtypes, 1}, 'Import Cell Annotation from SCE in Workspace...');
 in_addmenu(m_exp, 0, {@in_MergeCellSubtypes, 2}, 'Import Cell Annotation from SCE Data File...');
 
@@ -281,7 +283,7 @@ in_addmenu(m_exp, 0, {@in_MergeSCEs, 2}, 'Merge SCE Data Files...');
 in_addmenu(m_exp, 1, @in_AddEditCellAttribs, 'Add/Edit Cell Attributes...');
 in_addmenu(m_exp, 0, @in_ExportCellAttribTable, 'Export Cell Attribute Table...');
 in_addmenu(m_exp, 0, @gui.callback_ViewMetaData, 'View Metadata...');
-in_addmenu(m_exp, 1, {@gui.i_savemainfig, 3}, 'Save Figure to PowerPoint File...');
+% in_addmenu(m_exp, 1, {@gui.i_savemainfig, 3}, 'Save Figure to PowerPoint File...');
 in_addmenu(m_exp, 0, {@gui.i_savemainfig, 2}, 'Save Figure as Graphic File...');
 in_addmenu(m_exp, 0, {@gui.i_savemainfig, 1}, 'Save Figure as SVG File...');
 in_addmenu(m_exp, 1, @in_SingleClickSolution, 'Single Click Solution (from Raw Data to Annotation)...');
@@ -572,7 +574,17 @@ end
                     return;
             end
         end
-    end   % xxx
+    end
+
+    function in_SubtypeAnnotation(src, ~)
+        [requirerefresh] = gui.callback_SubtypeAnnotation(src, []);
+        if requirerefresh
+            sce = guidata(FigureHandle);
+            [c, cL] = grp2idx(sce.c_cell_type_tx);
+            in_RefreshAll(src, [], true, false);
+            ix_labelclusters(true);
+        end        
+    end
 
     function in_MergeCellSubtypes(src, ~, sourcetag, allcell)
         if nargin < 4
@@ -1772,7 +1784,7 @@ end
             dtp = findobj(h, 'Type', 'datatip');
             delete(dtp);
             if isstring(stxtyes) || iscellstr(stxtyes)
-                stxtyes = strrep(stxtyes, "_", "\_");
+                % stxtyes = strrep(stxtyes, "_", "\_");
                 stxtyes = strtrim(stxtyes);
             end
             row = dataTipTextRow('', stxtyes);

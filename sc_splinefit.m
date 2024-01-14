@@ -1,4 +1,4 @@
-function [T, Xsorted, gsorted, xyz1] = sc_splinefit(X, genelist, sortit, plotit, removenan)
+function [T, Xsorted_completed, gsorted_completed, xyz1] = sc_splinefit(X, genelist, sortit, plotit, removenan)
 %SC_SPLINEFIT identify genes with a profile deviated from normal
 %
 % USAGE:
@@ -17,18 +17,19 @@ if nargin < 3, sortit = true; end
 if nargin < 2, genelist = string(1:size(X, 1)); end
 
 
-[lgu, dropr, lgcv, gsorted, Xsorted, removedgidx, removedT] = sc_genestat(X, genelist, sortit, removenan);
-% size(lgu)
-% removedgidx
+[lgu, dropr, lgcv, gsorted, Xsorted, ...
+    removedgidx, removedT] = sc_genestat(X, genelist, sortit, removenan);
+
 if removenan && ~isempty(removedgidx)
-    gsorted = [gsorted; genelist(removedgidx)];
-    Xsorted = [Xsorted; X(removedgidx,:)];
+    gsorted_completed = [gsorted; genelist(removedgidx)];
+    Xsorted_completed = [Xsorted; X(removedgidx,:)];
+    assert(isequal(size(Xsorted_completed),size(X)),'SC_SPLINEFIT')
+    assert(length(gsorted_completed) == length(genelist),'SC_SPLINEFIT')
 end
 
 % lgu=zscore(lgu);
 % dropr=zscore(dropr);
 % lgcv=zscore(lgcv);
-
 
 %[~,i]=max(lgcv);
 xyz = [lgu, lgcv, dropr];
@@ -81,12 +82,12 @@ removedT.Properties.VariableNames = T.Properties.VariableNames;
 T = [T; removedT]; 
 if sortit
     [T,idx] = sortrows(T, 'd', 'descend');
-    gsorted = gsorted(idx);
-    Xsorted = Xsorted(idx,:);
+    gsorted_completed = gsorted_completed(idx);
+    Xsorted_completed = Xsorted_completed(idx,:);
 end
 
-if length(gsorted) ~= length(genelist)
-    warning('Output GENES are less than input GENES (some GENES are removed).');
+if length(gsorted_completed) ~= length(genelist)
+    error('Output GENES are less than input GENES (some GENES are removed).');
 end
 
 if plotit

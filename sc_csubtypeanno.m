@@ -59,7 +59,6 @@ function [sce] = sc_csubtypeanno(sce, cell_type_target, formatid, speciestag)
     markergenev = string(Tm.PositiveMarkers);
 
 
-    sum(selectedidx)
     sce2 = sce.selectcells(selectedidx);
     sce2 = sce2.embedcells('tsne3d', true, true, 3);
     sce2 = sce2.clustercells([], [], true);

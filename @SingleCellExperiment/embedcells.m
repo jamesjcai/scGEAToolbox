@@ -20,8 +20,8 @@ if isempty(obj.s) || forced
         try
             [~, X, g] = sc_splinefit(obj.X, obj.g, true, false, true);
         catch ME
-            warning(ME.message);
-            [~, X, g] = sc_hvg(obj.X, obj.g, true, false, true, false, true);
+           warning(ME.message);
+           [~, X, g] = sc_hvg(obj.X, obj.g, true, false, true, false, true);
         end
 
 
