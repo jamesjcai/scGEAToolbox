@@ -25,6 +25,9 @@ if removenan && ~isempty(removedgidx)
     Xsorted_completed = [Xsorted; X(removedgidx,:)];
     assert(isequal(size(Xsorted_completed),size(X)),'SC_SPLINEFIT')
     assert(length(gsorted_completed) == length(genelist),'SC_SPLINEFIT')
+else
+    gsorted_completed = gsorted;
+    Xsorted_completed = Xsorted;
 end
 
 % lgu=zscore(lgu);

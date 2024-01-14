@@ -27,18 +27,18 @@ if sortit
     geneidx = geneidx(si);
 end
 
-if removeinf
-    si = isnan(lgu) | isinf(lgu) | isnan(lgcv) | isinf(lgcv);
-    removedT = table(genes(si), lgu(si), lgcv(si), dropr(si), zeros(size(dropr(si))), ...
-            ones(size(dropr(si))), ones(size(dropr(si))) );
+si = isnan(lgu) | isinf(lgu) | isnan(lgcv) | isinf(lgcv);
+
+if removeinf && any(si)
+    removedT = table(genes(si), lgu(si), lgcv(si), dropr(si), ...
+        zeros(sum(si),1), ...
+        ones(sum(si),1), ...
+        ones(sum(si),1));
     lgu(si) = [];
     lgcv(si) = [];
     dropr(si) = [];
     genes(si) = [];
     X(si, :) = [];
-    if length(genes) ~= length(genelist)
-%        warning('Output GENES are less than input GENES (some GENES are removed).');
-    end
     removedgeneidx = geneidx(si);    
 else
     removedgeneidx = [];
