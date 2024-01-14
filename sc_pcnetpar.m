@@ -11,12 +11,11 @@ if nargin < 2, ncom = 3; end
 
 opts.maxit = 150;
 
-if fastersvd
-    opts.maxit = 150;
-    pw1 = fileparts(mfilename('fullpath'));
-    pth = fullfile(pw1, '+run', 'thirdparty', 'faster_svd', 'lmsvd');
-    if ~(ismcc || isdeployed), addpath(pth); end
-end
+% if fastersvd
+%     pw1 = fileparts(mfilename('fullpath'));
+%     pth = fullfile(pw1, '+run', 'thirdparty', 'faster_svd', 'lmsvd');
+%     if ~(ismcc || isdeployed), addpath(pth); end
+% end
 
 % X is supposed to be LogNormalized, i.e., [X]=log(1+sc_norm(X));
 X = X';
@@ -27,16 +26,14 @@ end
 n = size(X, 2);
 A = 1 - eye(n);
 B = A(:, 1:end-1);
-
+warning off
 parfor k = 1:n
     y = X(:, k);
     Xi = X;
     Xi(:, k) = [];
     if fastersvd
         % disp('Using fastsvd.')
-        warning off
         [~, ~, coeff] = lmsvd(Xi, ncom, opts);
-        warning on
     else
         [~, ~, coeff] = svds(Xi, ncom);
         %[~,~,coeff]=rsvd(Xi,ncom);
@@ -46,6 +43,7 @@ parfor k = 1:n
     Beta = sum(y.*score);
     B(k, :) = coeff * Beta';
 end
+warning on
 for k = 1:n
     A(k, A(k, :) == 1) = B(k, :);
 end

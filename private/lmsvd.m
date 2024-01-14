@@ -214,7 +214,7 @@ end % set_param
                         n = size(Y, 1);
                         mn = min(m, n);
                         k = size(Y, 2);
-                        if k < r;
+                        if k < r
                             error('working size too small');
                         end
 
@@ -291,7 +291,7 @@ end % set_param
 
                             %% look-back optimization
                             xtrm(iter) = Lm / k;
-                            if Lm == 0;
+                            if Lm == 0
                                 continue;
                             end
                             Xm(:, 1:k) = X;
@@ -323,7 +323,7 @@ end % set_param
                             [~, idx] = sort(ev, 'ascend');
                             e_tol = min(sqrt(eps), tol);
                             cut = find(ev(idx) > e_tol, 1);
-                            if isempty(cut);
+                            if isempty(cut)
                                 Lm = 0;
                                 continue;
                             end
@@ -334,14 +334,14 @@ end % set_param
                             % subspace optimization
                             Yo = [Y, Py * T];
                             T = Yo' * Yo;
-                            if issparse(T);
+                            if issparse(T)
                                 T = full(T);
                             end
                             [U, D] = eig(T);
                             [rv_sort, idx] = sort(diag(D), 'ascend');
                             Y = Yo * U(:, idx(end-k+1:end));
                             Lm = max(0, round(L/k)) * k;
-                            if iter < memo;
+                            if iter < memo
                                 Lm = Lm + k;
                             end
                             if Lm > 0
