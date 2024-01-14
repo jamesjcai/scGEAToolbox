@@ -25,3 +25,6 @@ function [X, genelist] = e_readh5(filenm)
     end
     genelist = h5read(filenm, '/g');
 end
+
+
+% https://stackoverflow.com/questions/43021896/construct-sparse-matrix-in-matlab-from-compressed-sparse-column-csc-format
