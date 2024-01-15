@@ -1157,6 +1157,7 @@ end
                 catch ME
                     gui.gui_waitbar(fw, true);
                     errordlg(ME.message);
+                    % rethrow(ME)
                     return;
                 end
                 gui.gui_waitbar(fw);

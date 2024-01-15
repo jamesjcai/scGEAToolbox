@@ -16,7 +16,6 @@ if isempty(obj.s) || forced
 
     if usehvgs && size(obj.X, 1) > numhvg
         % disp('Identifying HVGs')
-        
         try
             [~, X, g] = sc_splinefit(obj.X, obj.g, true, false, true);
         catch ME
@@ -24,12 +23,12 @@ if isempty(obj.s) || forced
            [~, X, g] = sc_hvg(obj.X, obj.g, true, false, true, false, true);
         end
 
-
         idx = false(size(obj.g));
         idx(1:numhvg) = true;
 
         try
             pw1 = fileparts(mfilename('fullpath'));
+            
             pth = fullfile(pw1, '..', '+run', 'thirdparty', 'alona_panglaodb','marker_hs.mat');
             load(pth,'Tw');
             markerg = unique(string(Tw.Var1));
@@ -38,6 +37,11 @@ if isempty(obj.s) || forced
             load(pth,'Tw');
             markerg = unique(string(Tw.Var1));
             idx(ismember(upper(obj.g), upper(markerg))) = true;
+
+            %pth = fullfile(pw1, '..', 'resources', 'celltypes.xlsx');
+            %T1 = readtable(pth,"FileType","spreadsheet","Sheet",'human');
+            %T2 = readtable(pth,"FileType","spreadsheet","Sheet",'mouse');
+
             fprintf('EMBEDCELLS: %d additional marker genes included.\n', sum(idx(numhvg+1:end)));
         catch
             warning('EMBEDCELLS: marker genes not included.');

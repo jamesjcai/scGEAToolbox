@@ -1,4 +1,5 @@
-function [T, Xsorted_completed, gsorted_completed, xyz1] = sc_splinefit(X, genelist, sortit, plotit, removenan)
+function [T, Xsorted_completed, gsorted_completed, ...
+    xyz1] = sc_splinefit(X, genelist, sortit, plotit, removenan)
 %SC_SPLINEFIT identify genes with a profile deviated from normal
 %
 % USAGE:
@@ -81,8 +82,11 @@ end
 T.d(T.dropr > (1 - 0.05)) = 0; % ignore genes with dropout rate > 0.95
 % disp('NOTE: Genes with dropout rate > 0.95 are excluded.');
 
-removedT.Properties.VariableNames = T.Properties.VariableNames;
-T = [T; removedT]; 
+if ~isempty(removedT) && istable(removedT)
+    removedT.Properties.VariableNames = T.Properties.VariableNames;
+    T = [T; removedT];
+end
+
 if sortit
     [T,idx] = sortrows(T, 'd', 'descend');
     gsorted_completed = gsorted_completed(idx);
