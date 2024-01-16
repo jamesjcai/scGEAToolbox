@@ -11,11 +11,17 @@ end
 geneidx = 1:length(genelist);
 
 dropr = 1 - sum(X > 0, 2) ./ size(X, 2);
+
+% m = X./sum(X);
+% lgm = log(std(m, [], 2, 'omitnan') ./ mean(m, 2, 'omitnan'));
+
+
 u = mean(X, 2, 'omitnan');
 cv = std(X, [], 2, 'omitnan') ./ u;
 lgu = log(u);
 lgcv = log(cv);
 genes = genelist;
+
 
 if sortit
     [xyz, si] = sortrows([lgu, dropr, lgcv], [1, 3, 2]);
