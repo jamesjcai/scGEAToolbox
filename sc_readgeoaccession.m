@@ -120,6 +120,8 @@ end
 
 
 function f = i_setupfile(c)
+
+% https://www.ncbi.nlm.nih.gov/geo/info/geo_paccess.html#FTP
     try
         tmpd = tempdir;
         [x] = regexp(c(1), '<a href="ftp://(.*)">(ftp', 'match');

@@ -28,3 +28,11 @@ assert(x == length(d));
 
 
 [sce] = pkg.pipeline_multisamplesmerge(c);
+
+
+% https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=gds&term=GSE117770
+% https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=gds&id=303308547
+% https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=gds&id=303308547
+% https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=gds&id=200117770
+% https://www.ncbi.nlm.nih.gov/geo/info/geo_paccess.html
+
