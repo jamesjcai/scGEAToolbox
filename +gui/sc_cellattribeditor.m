@@ -39,20 +39,36 @@ if ~addnew
     end
     
     %fw = gui.gui_waitbar;
-    x = inputdlg(sprintf('Attribute Name: %s\n%s',clable, 'Attribute Value:'), ...
+    uiwait(helpdlg('It may take a while to load values. Click OK and wait.',''));
+    x = inputdlg(sprintf('Attribute Name: %s\n%s',clable, 'Attribute Values:'), ...
                       'Attribute Editor', [25 50], {char(string(thisc))});
     %gui.gui_waitbar(fw);
 
 else  
-    x = inputdlg({'Attribute Name','Attribute Value'},...
+    x = inputdlg({'Attribute Name','Attribute Values'},...
                   'Attribute Editor', [1 50; 25 50]);
     % {'new_attrib', char(string([1:sce.NumCells]'))});
 end
 
-    if isempty(x), return; end
+if isempty(x), return; end
 
+if addnew
+    if isempty(x{1})
+        uiwait(warndlg('Attribute Name cannot be empty.',''));
+        return; 
+    end
+    if isempty(x{2})
+        uiwait(warndlg('Attribute Values cannot be empty.',''));
+        return; 
+    end
+else
+    if isempty(x{1})       % when add new - x{1} is the values
+        uiwait(warndlg('Attribute Values cannot be empty.',''));
+        return; 
+    end    
+end
 
-    answer = questdlg('What is the input data type?', ...
+    answer = questdlg('What is the data type of attribute values?', ...
 	    'Data Type', ...
 	    'String','Numeric','Cancel','String');
     switch answer
@@ -61,14 +77,14 @@ end
                 clable = strtrim(string(x{1}));
                 newthisc = strtrim(string(x{2}));
             else
-                newthisc = strtrim(string(x{1}));
+                newthisc = strtrim(string(x{1}));    % when add new - x{1} is the values
             end
         case 'Numeric'
             if addnew
                 clable = strtrim(string(x{1}));
                 newthisc = str2double(string(x{2}));
             else
-                newthisc = str2double(string(x{1}));
+                newthisc = str2double(string(x{1}));   % when add new - x{1} is the values
             end
         case 'Cancel'
             return;
@@ -77,12 +93,12 @@ end
 
     if addnew
         if size(newthisc,1)~=sce.NumCells
-           errordlg('Attribute length is not equal to the number of cells.');
+           uiwait(warndlg('Attribute length is not equal to the number of cells.',''));
            return;
         end
     else
         if ~isequal(size(newthisc), size(thisc))
-           errordlg('Attribute length changed.');
+           uiwait(warndlg('Attribute length changed.',''));
            return;
         end
     end
