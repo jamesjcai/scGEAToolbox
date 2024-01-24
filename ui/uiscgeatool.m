@@ -63,83 +63,53 @@ MainToolbarHandle = uitoolbar(FigureHandle);
 %     "Turn on/off user onboarding toolbar"});
 
 in_addbuttonpush(1, 0, @callback_ShowGeneExpr, "list.gif", "Select genes to show expression")
-% in_addbuttonpush(1, 0, @in_ShowCellStates, "list2.gif", "Show cell state")
-% in_addbuttonpush(1, 0, @in_SelectCellsByQC, "plotpicker-effects.gif", "Filter genes and cells")
-% 
-% in_addbuttontoggle(1, 1, {@in_togglebtfun, @in_labelcellgroups, ...
-%     "icon-fa-tag-10b.gif", "icon-fa-tags-10b.gif", ...
-%     false, "Label cell groups"});
-% in_addbuttonpush(1, 0, @in_Brushed2NewCluster, "plotpicker-glyplot-face.gif", "Add brushed cells to a new group")
-% in_addbuttonpush(1, 0, @in_Brushed2MergeClusters, "plotpicker-pzmap.gif", "Merge brushed cells to same group")
-% in_addbuttonpush(1, 0, @in_RenameCellTypeBatchID, "plotpicker-scatterhist.gif", "Rename cell type or batch ID");
-% in_addbuttonpush(1, 0, @in_call_scgeatool, "IMG00107.GIF", " ");
-% in_addbuttonpush(1, 1, @in_ClusterCellsS, "plotpicker-dendrogram.gif", "Clustering using cell embedding (S)")
-% in_addbuttonpush(1, 0, @in_ClusterCellsX, "icon-mw-cluster-10.gif", "Clustering using expression matrix (X)")
-% in_addbuttonpush(1, 1, {@in_DetermineCellTypeClustersGeneral, true}, "plotpicker-contour.gif", "Assign cell types to groups")
-% in_addbuttonpush(1, 0, @in_Brush4Celltypes, "brush.gif", "Assign cell type to selected cells");
-% % i_addbutton(1,0,@ShowCellStemScatter,"IMG00067.GIF","Stem scatter plot");
-% in_addbuttonpush(1, 1, @gui.callback_Brush4Markers, "plotpicker-kagi.gif", "Marker genes of brushed cells");
-% in_addbuttonpush(1, 0, @gui.callback_FindAllMarkers, "plotpicker-plotmatrix.gif", "Marker gene heatmap");
-% in_addbuttonpush(1, 0, @in_call_scgeatool, "IMG00107.GIF", " ");
-% in_addbuttonpush(1, 1, @gui.callback_ShowClustersPop, "plotpicker-geoscatter.gif", "Show cell clusters/groups individually");
-% in_addbuttonpush(1, 0, @gui.callback_SelectCellsByClass, "plotpicker-pointfig.gif", "Select cells by class");
-% in_addbuttonpush(1, 0, @in_DeleteSelectedCells, "plotpicker-qqplot.gif", "Delete selected cells");
-% in_addbuttonpush(1, 0, @callback_SaveX, "export.gif", "Export & save data");
-% in_addbuttonpush(1, 1, @in_EmbeddingAgain, "plotpicker-geobubble.gif", "Embedding (tSNE, UMP, PHATE)");
-% in_addbuttonpush(1, 0, @in_Switch2D3D, "plotpicker-image.gif", "Switch 2D/3D");
-% in_addbuttonpush(1, 1, @callback_CloseAllOthers, "icon-fa-cut-10.gif", "Close all other figures");
-% in_addbuttonpush(1, 0, @callback_PickPlotMarker, "plotpicker-rose.gif", "Switch scatter plot marker type");
-% in_addbuttonpush(1, 0, @gui.callback_PickColorMap, "plotpicker-compass.gif", "Pick new color map");
-% in_addbuttonpush(1, 0, @in_RefreshAll, "icon-mat-refresh-20.gif", "Refresh");
+in_addbuttonpush(1, 0, @in_ShowCellStates, "list2.gif", "Show cell state")
+in_addbuttonpush(1, 0, @in_SelectCellsByQC, "plotpicker-effects.gif", "Filter genes and cells")
+ in_addbuttontoggle(1, 1, {@in_togglebtfun, @in_labelcellgroups, ...
+     "icon-fa-tag-10b.gif", "icon-fa-tags-10b.gif", ...
+     false, "Label cell groups"});
+in_addbuttonpush(1, 0, @in_Brushed2NewCluster, "plotpicker-glyplot-face.gif", "Add brushed cells to a new group")
+in_addbuttonpush(1, 0, @in_Brushed2MergeClusters, "plotpicker-pzmap.gif", "Merge brushed cells to same group")
+in_addbuttonpush(1, 0, @in_RenameCellTypeBatchID, "plotpicker-scatterhist.gif", "Rename cell type or batch ID");
+in_addbuttonpush(1, 1, @in_ClusterCellsS, "plotpicker-dendrogram.gif", "Clustering using cell embedding (S)")
+in_addbuttonpush(1, 0, @in_ClusterCellsX, "icon-mw-cluster-10.gif", "Clustering using expression matrix (X)")
+in_addbuttonpush(1, 1, {@in_DetermineCellTypeClustersGeneral, true}, "plotpicker-contour.gif", "Assign cell types to groups")
+in_addbuttonpush(1, 0, @in_Brush4Celltypes, "brush.gif", "Assign cell type to selected cells");
+% i_addbutton(1,0,@ShowCellStemScatter,"IMG00067.GIF","Stem scatter plot");
+in_addbuttonpush(1, 1, @gui.callback_Brush4Markers, "plotpicker-kagi.gif", "Marker genes of brushed cells");
+in_addbuttonpush(1, 0, @gui.callback_FindAllMarkers, "plotpicker-plotmatrix.gif", "Marker gene heatmap");
+in_addbuttonpush(1, 1, @gui.callback_ShowClustersPop, "plotpicker-geoscatter.gif", "Show cell clusters/groups individually");
+in_addbuttonpush(1, 0, @gui.callback_SelectCellsByClass, "plotpicker-pointfig.gif", "Select cells by class");
+in_addbuttonpush(1, 0, @in_DeleteSelectedCells, "plotpicker-qqplot.gif", "Delete selected cells");
+in_addbuttonpush(1, 0, @callback_SaveX, "export.gif", "Export & save data");
+in_addbuttonpush(1, 1, @in_EmbeddingAgain, "plotpicker-geobubble.gif", "Embedding (tSNE, UMP, PHATE)");
+in_addbuttonpush(1, 0, @in_Switch2D3D, "plotpicker-image.gif", "Switch 2D/3D");
+in_addbuttonpush(1, 1, @callback_CloseAllOthers, "icon-fa-cut-10.gif", "Close all other figures");
+in_addbuttonpush(1, 0, @callback_PickPlotMarker, "plotpicker-rose.gif", "Switch scatter plot marker type");
+in_addbuttonpush(1, 0, @gui.callback_PickColorMap, "plotpicker-compass.gif", "Pick new color map");
+in_addbuttonpush(1, 0, @in_RefreshAll, "icon-mat-refresh-20.gif", "Refresh");
 % in_addbuttonpush(0, 0, @in_call_scgeatool, "IMG00107.GIF", " ");
 % %i_addbutton(0,0,@callback_CalculateCellScores,"cellscore2.gif","Calculate cell scores from list of feature genes")
 % %i_addbutton(0,0,@callback_ComparePotency,"plotpicker-candle.gif","Compare differentiation potency between groups");
-% 
-% 
-% in_addbuttonpush(0, 1, @gui.callback_MultiGroupingViewer, "plotpicker-arxtimeseries.gif", "Multi-grouping View...");
-% in_addbuttonpush(0, 0, @gui.callback_CrossTabulation, "plotpicker-comet.gif", "Cross tabulation");
-% 
-% in_addbuttonpush(0, 1, @gui.callback_Violinplot, "violinplot.gif", "Gene Violin Plot...");
-% in_addbuttonpush(0, 0, @gui.callback_DrawDotplot, "icon-mat-blur-linear-10.gif", "Gene Dot Plot...");
-% in_addbuttonpush(0, 0, @gui.callback_GeneHeatMap, "icon-mat-apps-20.gif", "Gene Heatmap...");
-% 
+in_addbuttonpush(0, 0, @gui.callback_MultiGroupingViewer, "plotpicker-arxtimeseries.gif", "Multi-grouping View...");
+in_addbuttonpush(0, 0, @gui.callback_CrossTabulation, "plotpicker-comet.gif", "Cross tabulation");
+in_addbuttonpush(0, 1, @gui.callback_Violinplot, "violinplot.gif", "Gene Violin Plot...");
+in_addbuttonpush(0, 0, @gui.callback_DrawDotplot, "icon-mat-blur-linear-10.gif", "Gene Dot Plot...");
+in_addbuttonpush(0, 0, @gui.callback_GeneHeatMap, "icon-mat-apps-20.gif", "Gene Heatmap...");
+
 % %i_addmenu(m_exp,1,@gui.callback_Violinplot,'Gene Violin Plot...');
 % %i_addmenu(m_exp,0,@gui.callback_DrawDotplot,'Gene Dot Plot...');
 % %i_addmenu(m_exp,0,@gui.callback_GeneHeatMap,'Gene Heatmap...');
-% 
-% 
-% in_addbuttonpush(0, 0, @in_call_scgeatool, "IMG00107.GIF", " ");
-% in_addbuttonpush(0, 1, @in_CompareGeneBtwCls, "cellscore2.gif", "Cell score analysis--obtaining gene signature score for each cell");
-% in_addbuttonpush(0, 0, @gui.callback_GetCellSignatureMatrix, "icon-fa-connectdevelop-20.gif", "Cell state analysis--obtaining multiple gene signature scores to reveal functional state of cells");
-% in_addbuttonpush(0, 1, @gui.callback_DEGene2Groups, "plotpicker-boxplot.gif", "Differential expression (DE) analysis)");
-% in_addbuttonpush(0, 0, @gui.callback_DPGene2Groups, "plotpicker_noisepsd.gif", "Differential program (DP) analysis)");
-% in_addbuttonpush(0, 0, @in_EnrichrHVGs, "plotpicker-andrewsplot.gif", "Functional enrichment analysis with HVGs");
-% 
-% % fullfile(matlabroot,'toolbox','matlab','icons','HDF_grid.gif')
-% 
-% in_addbuttonpush(0, 1, @gui.callback_BuildGeneNetwork, "noun_Network_691907.gif", "Build gene regulatory network");
-% in_addbuttonpush(0, 0, @gui.callback_CompareGeneNetwork, "noun_Deep_Learning_2424485.gif", "Compare two scGRNs");
-% in_addbuttonpush(0, 1, {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-% 
-% gui.add_3dcamera(DeftToolbarHandle, 'AllCells');
-% 
-% in_addbuttonpush(2, 0, @in_turnonuserguiding, "icon-fa-thumb-tack-10.gif", "Turn on user guiding toolbar");
-% in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_SelectCellsByQC, ...
-%     "icon-mat-filter-1-10.gif", "plotpicker-effects.gif", ...
-%     true, "Filter genes and cells"});
-% in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_EmbeddingAgain, ...
-%     "icon-mat-filter-2-10.gif", "plotpicker-geobubble.gif", ...
-%     true, "Embedding (tSNE, UMP, PHATE)"});
-% in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_ClusterCellsS, ...
-%     "icon-mat-filter-3-10.gif", "plotpicker-dendrogram.gif", ...
-%     true, "Clustering using embedding S"});
-% in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_DetermineCellTypeClustersGeneral, ...
-%     "icon-mat-filter-4-10.gif", "plotpicker-contour.gif", true, ...
-%     "Assign cell types to groups"});
-% in_addbuttontoggle(2, 0, {@in_togglebtfun, @callback_SaveX, ...
-%     "icon-mat-filter-5-10.gif", "export.gif", ...
-%     true, "Export & save data"});
-% 
+ 
+in_addbuttonpush(0, 1, @in_CompareGeneBtwCls, "cellscore2.gif", "Cell score analysis--obtaining gene signature score for each cell");
+in_addbuttonpush(0, 0, @gui.callback_GetCellSignatureMatrix, "icon-fa-connectdevelop-20.gif", "Cell state analysis--obtaining multiple gene signature scores to reveal functional state of cells");
+in_addbuttonpush(0, 1, @gui.callback_DEGene2Groups, "plotpicker-boxplot.gif", "Differential expression (DE) analysis)");
+in_addbuttonpush(0, 0, @gui.callback_DPGene2Groups, "plotpicker_noisepsd.gif", "Differential program (DP) analysis)");
+in_addbuttonpush(0, 0, @in_EnrichrHVGs, "plotpicker-andrewsplot.gif", "Functional enrichment analysis with HVGs");
+in_addbuttonpush(0, 1, @gui.callback_BuildGeneNetwork, "noun_Network_691907.gif", "Build gene regulatory network");
+in_addbuttonpush(0, 0, @gui.callback_CompareGeneNetwork, "noun_Deep_Learning_2424485.gif", "Compare two scGRNs");
+in_addbuttonpush(0, 1, {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
+gui.add_3dcamera(DeftToolbarHandle, 'AllCells');
 
 m_vie = uimenu(FigureHandle,'Text','&View','Accelerator','V');
 in_addmenu(m_vie,0,@gui.callback_MultiEmbeddingViewer,'Multi-embedding View...');
