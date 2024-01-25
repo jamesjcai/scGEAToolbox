@@ -1,8 +1,8 @@
 function [f] = uiwaitbar(fig, f, witherror, mesg, newmesg)
-if nargin < 4, newmesg = ''; end
-if nargin < 3 || isempty(mesg), mesg = 'Processing your data'; end
-if nargin < 2 || isempty(witherror), witherror = false; end
-if nargin < 1 || isempty(f)
+if nargin < 5, newmesg = ''; end
+if nargin < 4 || isempty(mesg), mesg = 'Processing your data'; end
+if nargin < 3 || isempty(witherror), witherror = false; end
+if nargin < 2 || isempty(f)
     f = uiprogressdlg(fig, 'title','Please wait...',...
         'Message','Processing the data');
     pause(.5)

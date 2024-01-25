@@ -8,7 +8,7 @@ import mlreportgen.ppt.*;
 
 FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
-[axx, bxx] = view();
+[axx, bxx] = view(findall(FigureHandle,'type','axes'));
 
 % answer = 'Multiple';
 % switch answer

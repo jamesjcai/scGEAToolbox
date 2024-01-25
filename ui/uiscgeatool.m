@@ -2,6 +2,7 @@ function uiscgeatool
 
 import pkg.*
 import gui.*
+
 mfolder = fileparts(mfilename('fullpath'));
 load(fullfile(mfolder,'..','example_data','workshop_example.mat'),'sce');
 c=[];
@@ -32,7 +33,7 @@ h=[];
 
 DeftToolbarHandle = uitoolbar(FigureHandle);
 MainToolbarHandle = uitoolbar(FigureHandle);
-in_addbuttonpush(1, 0, @callback_ShowGeneExpr, "list.gif", "Select genes to show expression")
+in_addbuttonpush(1, 0, @gui.callback_ShowGeneExpr, "list.gif", "Select genes to show expression")
 in_addbuttonpush(1, 0, @in_ShowCellStates, "list2.gif", "Show cell state")
 in_addbuttonpush(1, 0, @in_SelectCellsByQC, "plotpicker-effects.gif", "Filter genes and cells")
 in_addbuttontoggle(1, 1, {@in_togglebtfun, @in_labelcellgroups, ...
@@ -78,8 +79,18 @@ in_addmenu(m_fil, 0, @OpenSCEDataFilematMenuSelected, 'Open SCE Data File (*.mat
 in_addmenu(m_fil, 0, @ExitMenuSelected, 'Open TXT/TSV/CSV File (*.txt)...');
 in_addmenu(m_fil, 0, @ExitMenuSelected, 'Open Seurat/Rds File (*.rds)...');
 in_addmenu(m_fil, 0, @ExitMenuSelected, 'Open AnnData/H5ad File (*.h5ad)...');
-in_addmenu(m_fil, 1, @ExitMenuSelected, 'Open Loom File (*.loom)...');
-in_addmenu(m_fil, 1, @LoadExampleDataMenuSelected, 'Load Example Data...');
+in_addmenu(m_fil, 0, @ExitMenuSelected, 'Open Loom File (*.loom)...');
+
+in_addmenu(m_fil, 1, @ExitMenuSelected, 'Open 10x Genomics H5 File (*.h5)...');
+in_addmenu(m_fil, 0, @ExitMenuSelected, 'Open 10x Genomics MTX File (*.mtx)...');
+in_addmenu(m_fil, 1, @ExitMenuSelected, 'Import From 10x Genomics ''outs'' Folder...');
+in_addmenu(m_fil, 0, @ExitMenuSelected, 'Import From Parse Biosciences ''outs'' Folder...');
+in_addmenu(m_fil, 1, @ExitMenuSelected, 'Read From Link to GEO h5 File...');
+in_addmenu(m_fil, 0, @ExitMenuSelected, 'Read From Link to GEO mtx.gz File...');
+in_addmenu(m_fil, 0, @ExitMenuSelected, 'Read From Link to GEO txt.gz File...');
+in_addmenu(m_fil, 0, @ReadFromGEOAccession, 'Read From GEO Accession Number(s)...');
+in_addmenu(m_fil, 1, @LoadSCEFromWorkspace, 'Load SCE Variable from Workspace...');
+in_addmenu(m_fil, 0, @LoadExampleDataMenuSelected, 'Load Example Data...');
 in_addmenu(m_fil, 1, @CloseSCEDataMenuSelected, 'Close SCE Data');
 in_addmenu(m_fil, 1, @ExitMenuSelected, 'Exit');
 
@@ -173,6 +184,7 @@ in_update_figure;
     end
 
     function in_update_figure
+        focus(FigureHandle);
         if sce.NumCells>0
             % kc = numel(unique(c));
             % colormap(pkg.i_mycolorlines(kc));
@@ -218,6 +230,94 @@ in_update_figure;
         end
     end
 
+    function ReadFromGEOAccession(~,~)
+        acc = inputdlg({'Input Number(s) (e.g., GSM3308547,GSM3308548):'}, ...
+            'GEO Accession', [1, 50], {'GSM3308547'});
+        if isempty(acc), return; end
+        %acc = strtrim(deblank(acc{1}));
+        %acc = strrep(acc,' ','');
+        acc = regexprep(acc{1},'[^a-zA-Z0-9,;]','');
+        if isempty(acc) || ~strlength(acc) > 4, return; end
+        if strlength(acc) > 4 && ~isempty(regexp(acc, 'G.+', 'once'))
+            accv = unique(strsplit(acc, {',', ';', ' '}), 'stable');
+            if length(accv) > 1
+                dmanswer = questdlg('Download and merge data sets?', ...
+                    '', 'Yes', 'Cancel', 'Yes');
+                if ~strcmp(dmanswer, 'Yes'), return; end
+                try
+                    fw = uiwaitbar(FigureHandle);
+                    [sce] = pkg.pipeline_multisamplesmerge(accv, false);
+                    uiwaitbar(FigureHandle,fw);
+                catch ME
+                    uiwaitbar(FigureHandle,fw,true);
+                    uialert(FigureHandle, ME.message,"");
+                    return;
+                end
+            else                        
+                try
+                    fw = uiwaitbar(FigureHandle);
+                    [sce] = sc_readgeoaccession(acc);
+                    uiwaitbar(FigureHandle,fw);
+                catch ME
+                    uiwaitbar(FigureHandle,fw,true);
+                    uialert(FigureHandle, ME.message,"");
+                    return;
+                end
+            end
+            %                     metainfo=sprintf("Source: %s",acc);
+            %                     sce=sce.appendmetainfo(metainfo);
+        end
+        if isempty(sce), return; end
+        if length(sce.g) ~= length(unique(sce.g))
+            disp('Construct unique gene names from input gene list.')
+            sce.g = matlab.lang.makeUniqueStrings(sce.g);
+        end
+        in_update_figure;
+    end
+
+    function LoadSCEFromWorkspace(~,~)
+        a = evalin('base', 'whos');
+        b = struct2cell(a);
+        valididx = ismember(b(4, :), 'SingleCellExperiment');
+        if isempty(valididx) || ~any(valididx)
+            uialert(FigureHandle,'No SCE in the Workspace.', '');
+            return;
+        end
+        a = a(valididx);
+        [indx, tf] = listdlg('PromptString', {'Select SCE variable:'}, ...
+            'liststring', b(1, valididx), 'SelectionMode', 'multiple');
+        if tf == 1
+            if length(indx) == 1
+                sce = evalin('base', a(indx).name);
+            elseif length(indx) > 1
+                answer = questdlg('Which set operation method to merge genes?', 'Merging method', ...
+                    'Intersect', 'Union', 'Intersect');
+                if ~ismember(answer, {'Union', 'Intersect'}), return; end
+                methodtag = lower(answer);
+                try
+                    insce = cell(1, length(indx));
+                    s = "";
+                    for k = 1:length(indx)
+                        insce{k} = evalin('base', a(indx(k)).name);
+                        s = sprintf('%s,%s', s, a(indx(k)).name);
+                    end
+                    s = s(2:end);
+                    fprintf('>> sce=sc_mergesces({%s},''%s'');\n', s, methodtag);
+                    fw = uiwaitbar(FigureHandle);
+                    sce = sc_mergesces(insce, methodtag);
+                catch ME
+                    uiwaitbar(FigureHandle,fw);
+                    uialert(FigureHandle, ME.message, "");
+                    return;
+                end
+                gui.gui_waitbar(fw);
+            end
+        else
+            return;
+        end
+        in_update_figure;
+    end
+
     function LoadExampleDataMenuSelected(~, ~)        
         selection = uiconfirm(FigureHandle, ...
             "Load processed or raw data?", "Load Data", ...
@@ -236,7 +336,7 @@ in_update_figure;
         tic;
         file1 = fullfile(pw1, '..', 'example_data', 'workshop_example.mat');
         if ~exist(file1, "file")
-            uialert(FigureHandle,"Example data file does not exist.");            
+            uialert(FigureHandle,"Example data file does not exist.","Missing File");
             return;
         end
         load(file1, 'sce');
@@ -388,13 +488,6 @@ in_update_figure;
     % Callback Functions
     % ------------------------
 
-    function in_call_scgeatool(~, ~)
-        % scgeatool;
-        % P = get(FigureHandle,'Position');
-        % k=1;
-        % set(FigureHandle,'Position',[P(1)-30*k P(2)-30*k P(3) P(4)]);
-    end
-
     function in_closeRequest(hObject, ~)
         if ~(ismcc || isdeployed)
             ButtonName = uiconfirm(FigureHandle, 'Save SCE before closing SCGEATOOL?','');
@@ -438,15 +531,15 @@ in_update_figure;
         acc = acc{1};
         if strlength(acc) > 4 && ~isempty(regexp(acc, 'G.+', 'once'))
             try
-                fw = uiwaitbar;
+                fw = uiwaitbar(FigureHandle);
                 [sce] = sc_readgeoaccession(acc);
                 [c, cL] = grp2idx(sce.c);
-                uiwaitbar(fw);
+                uiwaitbar(FigureHandle, fw);
                 guidata(FigureHandle, sce);
                 in_RefreshAll(src, [], false, false);
             catch ME
-                uiwaitbar(fw);
-                uialert(FigureHandle, ME.message);
+                uiwaitbar(FigureHandle, fw);
+                uialert(FigureHandle, ME.message, "");
             end
         end
     end
@@ -535,7 +628,7 @@ in_update_figure;
             answer = uiconfirm(FigureHandle, 'Which method?', 'Select Method', ...
                 'Brennecke et al. (2013)', 'Splinefit Method', ...
                 'Brennecke et al. (2013)');
-            fw = uiwaitbar;
+            fw = uiwaitbar(FigureHandle);
             switch answer
                 case 'Brennecke et al. (2013)'
                     T = sc_hvg(sce.X, sce.g);
@@ -546,12 +639,12 @@ in_update_figure;
             end
             glist = T.genes(1:min([k, sce.NumGenes]));
             [y, idx] = ismember(glist, sce.g);
-            if ~all(y), uialert(FigureHandle, 'Runtime error.');
+            if ~all(y), uialert(FigureHandle, 'Runtime error.',"");
                 return;
             end
             sce.g = sce.g(idx);
             sce.X = sce.X(idx, :);
-            uiwaitbar(fw);
+            uiwaitbar(FigureHandle, fw);
             in_RefreshAll(src, [], true, false);
     end
 
@@ -584,15 +677,15 @@ in_update_figure;
             ids = idx(1:tn);
         elseif methodoption == 2
             gui.gui_showrefinfo('Geometric Sketching [PMID:31176620]');
-            fw = uiwaitbar;
+            fw = uiwaitbar(FigureHandle);
             Xn = log(1+sc_norm(sce.X))';
             [~, Xn] = pca(Xn, 'NumComponents', 300);
-            uiwaitbar(fw);
+            uiwaitbar(FigureHandle, fw);
             try
                 ids = run.py_geosketch(Xn, tn);
             catch ME
-                uiwaitbar(fw, true);
-                uialert(FigureHandle, ME.message);
+                uiwaitbar(FigureHandle, fw, true);
+                uialert(FigureHandle, ME.message,"");
                 return;
             end
 
@@ -602,7 +695,7 @@ in_update_figure;
             c = sce.c;
             in_RefreshAll(src, [], true, false);
         else
-            uialert(FigureHandle, 'Running error. No action is taken.');
+            uialert(FigureHandle, 'Running error. No action is taken.',"");
         end
     end
 
@@ -649,7 +742,7 @@ in_update_figure;
         [requirerefresh, highlightindex] = ...
             gui.callback_SelectCellsByQC(src);
         catch ME
-            uialert(FigureHandle, ME.message);
+            uialert(FigureHandle, ME.message,"");
             return;
         end
         sce = guidata(FigureHandle);
@@ -706,15 +799,15 @@ in_update_figure;
 
         [ndim] = gui.i_choose2d3d;
         if isempty(ndim), return; end
-        fw = uiwaitbar;
+        fw = uiwaitbar(FigureHandle);
         try
             [sce] = run.r_seurat(sce, ndim, wkdir);
             [c, cL] = grp2idx(sce.c);
         catch
-            uiwaitbar(fw);
+            uiwaitbar(FigureHandle, fw);
             return;
         end
-        uiwaitbar(fw);
+        uiwaitbar(FigureHandle, fw);
         guidata(FigureHandle, sce);
         in_RefreshAll(src, [], true, false);
     end
@@ -728,15 +821,15 @@ in_update_figure;
         [ok] = gui.i_confirmscript('Detect Ambient RNA Contamination (decontX)', ...
             'R_decontX', 'r');
         if ~ok, return; end
-        fw = uiwaitbar;
+        fw = uiwaitbar(FigureHandle);
         try
             [Xdecon, contamination] = run.r_decontX(sce, wkdir);
         catch
-            uiwaitbar(fw);
-            uialert(FigureHandle, 'Runtime error.')
+            uiwaitbar(FigureHandle, fw, true);
+            uialert(FigureHandle, 'Runtime error.',"");
             return;
         end
-        uiwaitbar(fw);
+        uiwaitbar(FigureHandle, fw);
         figure('WindowStyle', 'modal');
         gui.i_stemscatter(sce.s, contamination);
         % zlim([0 1]);
@@ -846,13 +939,13 @@ in_update_figure;
         figure(FigureHandle);
         % was3d = ~isempty(h.ZData);
         if size(sce.s, 2) >= 3
-            if keepview, [ax, bx] = view(); end
+            if keepview, [ax, bx] = view(hAx); end
             [h] = in_gscatter3(hAx, sce.s, c);
             if keepview, view(ax, bx); end
         else        % otherwise going to show 2D            
-            if keepview, [ax, bx] = view(); end
+            if keepview, [ax, bx] = view(hAx); end
             h = gui.i_gscatter3(sce.s(:, 1:2), c, methodid, hAx);
-            if keepview, [ax, bx] = view(); end
+            if keepview, [ax, bx] = view(hAx); end
         end
         if keepview
             h.Marker = para.oldMarker;
@@ -923,7 +1016,7 @@ in_update_figure;
                 case 'Re-embed cells'
                     in_EmbeddingAgain(src, [], 2);
                 case 'Reduce current 3D to 2D'
-                    [ax, bx] = view();
+                    [ax, bx] = view(hAx);
                     answer2 = uiconfirm(FigureHandle, 'Which view to be used to project cells?', '', ...
                         'X-Y Plane', 'Screen/Camera', 'PCA-rotated', 'X-Y Plane');
                     switch answer2
@@ -1059,19 +1152,19 @@ in_update_figure;
             if ~usingold
                 [K, usehvgs] = gui.i_gethvgnum(sce);
                 if isempty(K), return; end
-                fw = uiwaitbar;
+                fw = uiwaitbar(FigureHandle);
                 try
                     forced = true;
                     %if contains(methoddimtag, 'tsne'), disp('tSNE perplexity = 30'); end
                     sce = sce.embedcells(methodtag, forced, usehvgs, ndim, K);
                     % disp('Following the library-size normalization and log1p-transformation, we visualized similarity among cells by projecting them into a reduced dimensional space using t-distributed stochastic neighbor embedding (t-SNE)/uniform manifold approximation and projection (UMAP).')
                 catch ME
-                    uiwaitbar(fw, true);
-                    uialert(FigureHandle, ME.message);
+                    uiwaitbar(FigureHandle,fw, true);
+                    uialert(FigureHandle, ME.message,"");
                     % rethrow(ME)
                     return;
                 end
-                uiwaitbar(fw);
+                uiwaitbar(FigureHandle, fw);
             end
         else
             return;
@@ -1211,7 +1304,7 @@ in_update_figure;
             sce.c_cluster_id = c;
         end
         sce.c = c;
-        [ax, bx] = view();
+        [ax, bx] = view(hAx);
         [h] = gui.i_gscatter3(sce.s, c, methodid, hAx);
         title(hAx, sce.title);
         subtitle(hAx, '[genes x cells]');
@@ -1257,7 +1350,7 @@ in_update_figure;
             sce.c = c;
             sce.c_cluster_id = c;
         end
-        [ax, bx] = view();
+        [ax, bx] = view(hAx);
         [h] = gui.i_gscatter3(sce.s, c, methodid, hAx);
         title(hAx, sce.title);
         subtitle(hAx, '[genes x cells]');
@@ -1280,12 +1373,12 @@ in_update_figure;
         end
         speciestag = gui.i_selectspecies;
         if isempty(speciestag), return; end
-        fw = uiwaitbar;
+        fw = uiwaitbar(FigureHandle);
         [Tct] = pkg.local_celltypebrushed(sce.X, sce.g, sce.s, ...
             ptsSelected, ...
             speciestag, "all", "panglaodb", false);
         ctxt = Tct.C1_Cell_Type;
-        uiwaitbar(fw);
+        uiwaitbar(FigureHandle, fw);
 
         [indx, tf] = listdlg('PromptString', ...
             {'Select cell type'}, 'SelectionMode', 'single', 'ListString', ctxt);
@@ -1423,11 +1516,11 @@ in_update_figure;
         needprogressbar = false;
         if sce.NumCells > 8000, needprogressbar = true; end
         if needprogressbar
-            fw = uiwaitbar;
+            fw = uiwaitbar(FigureHandle);
         end
         sce = sce.removecells(ptsSelected);
         if needprogressbar
-            uiwaitbar(fw);
+            uiwaitbar(FigureHandle, fw);
         end
         [c, cL] = grp2idx(sce.c);
         in_RefreshAll(src, [], true, true);
@@ -1458,11 +1551,11 @@ in_update_figure;
     function in_DrawKNNNetwork(~, ~)
         k = gui.i_inputnumk(3);
         if isempty(k), return; end
-        fw = uiwaitbar;
+        fw = uiwaitbar(FigureHandle);
         set(0, 'CurrentFigure', FigureHandle);
         figure('WindowStyle', 'modal');
         sc_knngraph(sce.s, k, true);
-        uiwaitbar(fw);
+        uiwaitbar(FigureHandle, fw);
     end
 
     function in_DrawTrajectory(src, ~)
@@ -1614,16 +1707,16 @@ in_update_figure;
             defvb = max([round(sce.NumCells/20, -2), round(sce.NumCells/20, -1)]);
             k = gui.i_inputnumk(defv, defva, defvb);
             if isempty(k), return; end
-            fw = uiwaitbar;
+            fw = uiwaitbar(FigureHandle);
             try
                 % [sce.c_cluster_id]=sc_cluster_x(sce.X,k,'type',methodtag);
                 sce = sce.clustercells(k, methodtag, true, sx);
             catch ME
-                uiwaitbar(fw, true);
-                uialert(FigureHandle, ME.message);
+                uiwaitbar(FigureHandle, fw, true);
+                uialert(FigureHandle, ME.message,"");
                 return
             end
-            uiwaitbar(fw);
+            uiwaitbar(FigureHandle, fw);
         end
         [c, cL] = grp2idx(sce.c_cluster_id);
         sce.c = c;

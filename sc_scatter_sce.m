@@ -939,13 +939,13 @@ end
         figure(FigureHandle);
         % was3d = ~isempty(h.ZData);
         if size(sce.s, 2) >= 3
-            if keepview, [ax, bx] = view(); end
+            if keepview, [ax, bx] = view(hAx); end
             h = gui.i_gscatter3(sce.s, c, methodid, hAx);
             if keepview, view(ax, bx); end
         else        % otherwise going to show 2D            
-            if keepview, [ax, bx] = view(); end
+            if keepview, [ax, bx] = view(hAx); end
             h = gui.i_gscatter3(sce.s(:, 1:2), c, methodid, hAx);
-            if keepview, [ax, bx] = view(); end
+            if keepview, [ax, bx] = view(hAx); end
         end
         if keepview
             h.Marker = para.oldMarker;
@@ -1015,7 +1015,7 @@ end
                 case 'Re-embed cells'
                     in_EmbeddingAgain(src, [], 2);
                 case 'Reduce current 3D to 2D'
-                    [ax, bx] = view();
+                    [ax, bx] = view(hAx);
                     answer2 = questdlg('Which view to be used to project cells?', '', ...
                         'X-Y Plane', 'Screen/Camera', 'PCA-rotated', 'X-Y Plane');
                     switch answer2
@@ -1299,7 +1299,7 @@ end
             sce.c_cluster_id = c;
         end
         sce.c = c;
-        [ax, bx] = view();
+        [ax, bx] = view(hAx);
         [h] = gui.i_gscatter3(sce.s, c, methodid, hAx);
         title(hAx, sce.title);
         subtitle(hAx, '[genes x cells]');
@@ -1345,7 +1345,7 @@ end
             sce.c = c;
             sce.c_cluster_id = c;
         end
-        [ax, bx] = view();
+        [ax, bx] = view(hAx);
         [h] = gui.i_gscatter3(sce.s, c, methodid, hAx);
         title(hAx, sce.title);
         subtitle(hAx, '[genes x cells]');
