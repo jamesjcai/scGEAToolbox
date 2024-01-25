@@ -6,43 +6,32 @@ import gui.*
 mfolder = fileparts(mfilename('fullpath'));
 FigureHandle = uifigure('Visible', 'off');
 FigureHandle.Position = round(1.25*[0, 0, 560, 420]);
-FigureHandle.Name = 'SCGEATOOL';
-movegui(FigureHandle, 'center');
-
-sce = SingleCellExperiment;
-
-m_fil = uimenu(FigureHandle,'Text','&File','Accelerator','F');
-in_addmenu(m_fil, 0, @OpenSCEDataFilematMenuSelected, 'Open SCE Data File (*.mat)...');
-in_addmenu(m_fil, 0, @ExitMenuSelected, 'Open TXT/TSV/CSV File (*.txt)...');
-in_addmenu(m_fil, 0, @ExitMenuSelected, 'Open Seurat/Rds File (*.rds)...');
-in_addmenu(m_fil, 0, @ExitMenuSelected, 'Open AnnData/H5ad File (*.h5ad)...');
-in_addmenu(m_fil, 1, @ExitMenuSelected, 'Open Loom File (*.loom)...');
-in_addmenu(m_fil, 1, @LoadExampleDataMenuSelected, 'Load Example Data...');
-in_addmenu(m_fil, 1, @CloseSCEDataMenuSelected, 'Close SCE Data');
-in_addmenu(m_fil, 1, @ExitMenuSelected, 'Exit');
-
-hAx = uiaxes(FigureHandle);
-%title(hAx, 'Title')
-%subtitle(hAx,'[genes x cells]');
+FigureHandle.Name = 'scgeatool ui';
+hAx = uiaxes(FigureHandle,'Visible','off');
+title(hAx, 'Title')
+subtitle(hAx,'[genes x cells]');
 %hAx.Toolbar.Visible = 'off';
 %hAx.XGrid = 'on';
 %hAx.YGrid = 'on';
 %hAx.ZGrid = 'on';
-hAx.Visible = 'off';
-hAx.Position = [25 25 640 480];
+%hAx.Visible = 'off';
+%hAx.Position = [25 25 640 480];
 % hAx.Position(3:4)= [680, 500];
-% height = 500;
-% width = 680;
-% sz = FigureHandle.Position;
-% x = mean( sz( [1, 3]));
-% y = mean( sz( [2, 4]));
-% hAx.Position= [x - width/2, y - height/2, width, height];
+height = 480;
+width = 580;
+sz = FigureHandle.Position;
+x = mean( sz( [1, 3]));
+y = mean( sz( [2, 4]));
+hAx.Position= [x - width/2, y - height/2, width, height];
+movegui(FigureHandle, 'center');
+[h]=scatter3(hAx,randn(300,1),randn(300,1),randn(300,1));
+h.Visible="off";
 
-% hAx = axes('Parent', FigureHandle);
-% [h] = gui.i_gscatter3(sce.s, c, methodid, 1, hAx);
-% title(hAx, sce.title);
-% subtitle(hAx,'[genes x cells]');
-% 
+sce = SingleCellExperiment;
+
+testf=fullfile(mfolder,'..','example_data','workshop_example.mat');
+load(testf,'sce');
+
 % dt = datacursormode;
 % dt.UpdateFcn = {@i_myupdatefcnx};
 
@@ -65,7 +54,7 @@ MainToolbarHandle = uitoolbar(FigureHandle);
 in_addbuttonpush(1, 0, @callback_ShowGeneExpr, "list.gif", "Select genes to show expression")
 in_addbuttonpush(1, 0, @in_ShowCellStates, "list2.gif", "Show cell state")
 in_addbuttonpush(1, 0, @in_SelectCellsByQC, "plotpicker-effects.gif", "Filter genes and cells")
- in_addbuttontoggle(1, 1, {@in_togglebtfun, @in_labelcellgroups, ...
+in_addbuttontoggle(1, 1, {@in_togglebtfun, @in_labelcellgroups, ...
      "icon-fa-tag-10b.gif", "icon-fa-tags-10b.gif", ...
      false, "Label cell groups"});
 in_addbuttonpush(1, 0, @in_Brushed2NewCluster, "plotpicker-glyplot-face.gif", "Add brushed cells to a new group")
@@ -111,11 +100,34 @@ in_addbuttonpush(0, 0, @gui.callback_CompareGeneNetwork, "noun_Deep_Learning_242
 in_addbuttonpush(0, 1, {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 gui.add_3dcamera(DeftToolbarHandle, 'AllCells');
 
+m_fil = uimenu(FigureHandle,'Text','&File','Accelerator','F');
+in_addmenu(m_fil, 0, @OpenSCEDataFilematMenuSelected, 'Open SCE Data File (*.mat)...');
+in_addmenu(m_fil, 0, @ExitMenuSelected, 'Open TXT/TSV/CSV File (*.txt)...');
+in_addmenu(m_fil, 0, @ExitMenuSelected, 'Open Seurat/Rds File (*.rds)...');
+in_addmenu(m_fil, 0, @ExitMenuSelected, 'Open AnnData/H5ad File (*.h5ad)...');
+in_addmenu(m_fil, 1, @ExitMenuSelected, 'Open Loom File (*.loom)...');
+in_addmenu(m_fil, 1, @LoadExampleDataMenuSelected, 'Load Example Data...');
+in_addmenu(m_fil, 1, @CloseSCEDataMenuSelected, 'Close SCE Data');
+in_addmenu(m_fil, 1, @ExitMenuSelected, 'Exit');
+
+m_edi = uimenu(FigureHandle,'Text','&Edit','Accelerator','E');
+in_addmenu(m_edi,0,@in_SelectCellsByQC,'Filter genes and cells');
+in_addmenu(m_edi,1,@in_Brushed2NewCluster,'Add brushed cells to a new group');
+in_addmenu(m_edi,0,@in_Brushed2MergeClusters,'Merge brushed cells to same group');
+in_addmenu(m_edi,1,@in_RenameCellTypeBatchID,'Rename cell type or batch ID');
+in_addmenu(m_edi,0,@in_RenameCellTypeBatchID,'Rename cell type or batch ID');
+
+%in_addbuttonpush(1, 1, @in_ClusterCellsS, "plotpicker-dendrogram.gif", "Clustering using cell embedding (S)")
+%in_addbuttonpush(1, 0, @in_ClusterCellsX, "icon-mw-cluster-10.gif", "Clustering using expression matrix (X)")
+
 m_vie = uimenu(FigureHandle,'Text','&View','Accelerator','V');
-in_addmenu(m_vie,0,@gui.callback_MultiEmbeddingViewer,'Multi-embedding View...');
+in_addmenu(m_vie,0,@gui.callback_ShowGeneExpr,'Select genes to show expression');
+in_addmenu(m_vie,0,@in_ShowCellStates,'Show cell state');
+in_addmenu(m_vie,0,@in_SelectCellsByQC,'Label cell groups');
+in_addmenu(m_vie,1,@gui.callback_MultiEmbeddingViewer,'Multi-embedding View...');
 in_addmenu(m_vie,0,@gui.callback_MultiGroupingViewer,'Multi-grouping View...');
 in_addmenu(m_vie,0,@gui.callback_CrossTabulation,'Cross Tabulation...');
- 
+
 m_net = uimenu(FigureHandle, 'Text', '&Network', 'Accelerator', 'N');
 in_addmenu(m_net, 0, @in_Select5000Genes, 'Remove Less Informative Genes to Reduce Gene Space...');
 in_addmenu(m_net, 0, @gui.i_setnetwd, 'Set Network Analysis Working Root Directory...');
@@ -188,28 +200,24 @@ in_addmenu(m_hlp, 0, @callback_CheckUpdates, 'Check for Updates...');
 
 guidata( FigureHandle, sce );
  
-% kc = numel(unique(c));
-% colormap(pkg.i_mycolorlines(kc));
-
-set(FigureHandle, 'visible', 'on'); 
-% in_fixfield('tsne','tsne3d');
-% in_fixfield('umap','umap3d');
-% in_fixfield('phate','phate3d');
-% in_fixfield('metaviz','metaviz3d');
-% 
-% avx = fieldnames(sce.struct_cell_embeddings);
-% bvx = fieldnames(pkg.e_makeembedstruct);
-% cvx = setdiff(bvx,avx);
-% for kx=1:length(cvx)
-%     sce.struct_cell_embeddings = setfield(sce.struct_cell_embeddings,cvx{kx},[]);
-% end
-% sce.struct_cell_embeddings = orderfields(sce.struct_cell_embeddings);
+FigureHandle.Visible="on";
+in_update_figure;
 
     function in_update_figure
-        gui.i_gscatter3(sce.s, sce.c, 1, 1, hAx);
-        title(hAx, sce.title);
-        subtitle(hAx, '[genes x cells]');
-        hAx.Visible="on";            
+        if sce.NumCells>0
+            % kc = numel(unique(c));
+            % colormap(pkg.i_mycolorlines(kc));
+            [h]=scatter3(hAx, sce.s(:,1), sce.s(:,2), sce.s(:,3), 10, sce.c);
+            % gui.i_gscatter3(sce.s, sce.c, 1, 1, hAx);
+            title(hAx, sce.title);
+            subtitle(hAx, '[genes x cells]');
+            hAx.Visible="on";
+        else
+            if isvalid(h)
+                h.Visible="off";
+            end
+            hAx.Visible="off";
+        end
     end
 
     function ExitMenuSelected(src, event)
@@ -218,8 +226,9 @@ set(FigureHandle, 'visible', 'on');
 
     function CloseSCEDataMenuSelected(src, event)
         sce = SingleCellExperiment;
-        delete(hAx.Children);
-        hAx.Visible="off";
+        %delete(hAx.Children);
+        %hAx.Visible="off";
+        in_update_figure;
     end
 
     function OpenSCEDataFilematMenuSelected(src, event)
@@ -429,7 +438,7 @@ set(FigureHandle, 'visible', 'on');
 
     function in_closeRequest(hObject, ~)
         if ~(ismcc || isdeployed)
-            ButtonName = uiconfirm(FigureHandle, 'Save SCE before closing SCGEATOOL?');
+            ButtonName = uiconfirm(FigureHandle, 'Save SCE before closing SCGEATOOL?','');
             switch lower(ButtonName)
                 case 'yes'
                     if ~isempty(callinghandle)
@@ -462,7 +471,7 @@ set(FigureHandle, 'visible', 'on');
     end
 
     function in_GEOAccessionToSCE(src, ~)
-        answer = uiconfirm(FigureHandle, 'Current SCE will be replaced. Continue?');
+        answer = uiconfirm(FigureHandle, 'Current SCE will be replaced. Continue?','');
         if ~strcmp(answer, 'Yes'), return; end       
         acc = inputdlg({'Input Number(s) (e.g., GSM3308547,GSM3308548):'}, ...
                     'GEO Accession', [1, 50], {'GSM3308547'});        
@@ -489,7 +498,7 @@ set(FigureHandle, 'visible', 'on');
         if isempty(h.ZData) && size(sce.s,2)==2 && length(vslist) <= 1
             gui.callback_RunDataMapPlot(src, []);
         elseif isempty(h.ZData) && size(sce.s,2)==2 && length(vslist) > 1
-            answer = uiconfirm(FigureHandle, 'Using current 2D embedding?');
+            answer = uiconfirm(FigureHandle, 'Using current 2D embedding?','');
             switch answer
                 case 'Yes'
                     gui.callback_RunDataMapPlot(src, []);
@@ -507,7 +516,8 @@ set(FigureHandle, 'visible', 'on');
                     return;
             end
         elseif ~isempty(h.ZData)
-            answer=uiconfirm(FigureHandle, 'This function requires 2D embedding. Continue?');
+            answer=uiconfirm(FigureHandle, ...
+                'This function requires 2D embedding. Continue?','');
             switch answer
                 case 'Yes'
                     in_Switch2D3D(src,[]);
@@ -561,8 +571,6 @@ set(FigureHandle, 'visible', 'on');
     end
 
     function in_WorkonSelectedGenes(src, ~)
-            %         answer=uiconfirm(FigureHandle, 'Input the number of HVGs. Continue?');
-            %         if ~strcmp(answer,'Yes'), return; end
             k = gui.i_inputnumk(2000, 1, sce.NumGenes, 'the number of HVGs');
             if isempty(k), return; end
             answer = uiconfirm(FigureHandle, 'Which method?', 'Select Method', ...
@@ -592,8 +600,8 @@ set(FigureHandle, 'visible', 'on');
         if nargin < 3
             methodoption = [];
         end
-        answer1 = uiconfirm(FigureHandle, 'This function subsamples 50% of cells. Continue?');
-        if ~strcmp(answer1, 'Yes')
+        answer1 = uiconfirm(FigureHandle, 'This function subsamples 50% of cells. Continue?','');
+        if ~strcmp(answer1, 'OK')
             return;
         end
 
@@ -776,9 +784,9 @@ set(FigureHandle, 'visible', 'on');
         % zlim([0 1]);
         zlabel('Contamination rate')
         title('Ambient RNA contamination')
-        answer = uiconfirm(FigureHandle, "Remove contamination?");
+        answer = uiconfirm(FigureHandle, "Remove contamination?",'');
         switch answer
-            case 'Yes'
+            case 'OK'
                 sce.X = round(Xdecon);
                 guidata(FigureHandle, sce);
                 helpdlg('Contamination removed.', '');
@@ -796,7 +804,7 @@ set(FigureHandle, 'visible', 'on');
         if ~isequal(c1, c2)
             answer = uiconfirm(FigureHandle, 'Color cells by batch id (SCE.C_BATCH_ID)?', '');
             switch answer
-                case 'Yes'
+                case 'OK'
                     [c, cL] = grp2idx(sce.c_batch_id);
                     sce.c = c;
                     in_RefreshAll(src, [], true, false);
@@ -842,7 +850,7 @@ set(FigureHandle, 'visible', 'on');
             gui.i_stemscatter(sce.s, doubletscore);
             zlabel('Doublet Score')
             title(sprintf('Doublet Detection (%s)', methodtag))
-            answer = uiconfirm(FigureHandle, sprintf("Remove %d doublets?", sum(isDoublet)));
+            answer = uiconfirm(FigureHandle, sprintf("Remove %d doublets?", sum(isDoublet)),'');
             switch answer
                 case 'Yes'
                     close(tmpf_doubletdetection);
@@ -906,7 +914,7 @@ set(FigureHandle, 'visible', 'on');
         [para] = gui.i_getoldsettings(src);
 
         if isempty(h.ZData)               % current 2D xxx
-            ansx = uiconfirm(FigureHandle, 'Switch to 3D?');
+            ansx = uiconfirm(FigureHandle, 'Switch to 3D?','');
             if ~strcmp(ansx, 'Yes'), return; end
             if size(sce.s, 2) >= 3
                 h = gui.i_gscatter3(sce.s, c, methodid, hAx);
@@ -920,7 +928,8 @@ set(FigureHandle, 'visible', 'on');
                 if isempty(vslist)
                     in_EmbeddingAgain(src, [], 3);
                 else
-                    ansx = uiconfirm(FigureHandle, 'Using existing 3D embedding? Select "No" to re-embed.');
+                    ansx = uiconfirm(FigureHandle, ...
+                        'Using existing 3D embedding? Select "No" to re-embed.','');
                     switch ansx
                         case 'Yes'
                             [sx] = gui.i_pickembedvalues(sce, 3);
@@ -938,7 +947,7 @@ set(FigureHandle, 'visible', 'on');
                 end
             end
         else        % current 3D do following
-            ansx = uiconfirm(FigureHandle, 'Switch to 2D?');
+            ansx = uiconfirm(FigureHandle, 'Switch to 2D?','');
             if ~strcmp(ansx, 'Yes'), return; end
             [vslist] = gui.i_checkexistingembed(sce, 2);
             if ~isempty(vslist)
@@ -1015,7 +1024,8 @@ set(FigureHandle, 'visible', 'on');
 
     function in_RenameCellTypeBatchID(src, ~, answer)
         if nargin < 3 || isempty(answer)
-            answer = uiconfirm(FigureHandle, 'Rename cell type, batch ID, or gene name?', '', 'Cell type', 'Batch ID', 'Gene name', 'Cell type');
+            answer = uiconfirm(FigureHandle, 'Rename cell type, batch ID, or gene name?', ...
+                '', 'Cell type', 'Batch ID', 'Gene name', 'Cell type');
         end
         switch answer
             case 'Cell type'
@@ -1052,7 +1062,7 @@ set(FigureHandle, 'visible', 'on');
 
         [vslist] = gui.i_checkexistingembed(sce, ndim);
         if ~isempty(vslist)
-            answer = uiconfirm(FigureHandle, 'Using exsiting embedding?');
+            answer = uiconfirm(FigureHandle, 'Using exsiting embedding?','');
         else
             answer = 'No';
         end
@@ -1193,7 +1203,8 @@ set(FigureHandle, 'visible', 'on');
         if nx > 1
             newtx = erase(sce.c_cell_type_tx, "_{"+digitsPattern+"}");
             if length(unique(newtx)) ~= nx
-                answer = uiconfirm(FigureHandle, 'Merge subclusters of same cell type?');
+                answer = uiconfirm(FigureHandle, ...
+                    'Merge subclusters of same cell type?','');
                 if strcmp(answer, 'Yes')
                     in_MergeSubCellTypes(src);
                 end
@@ -1302,7 +1313,8 @@ set(FigureHandle, 'visible', 'on');
             helpdlg("No cells are selected. Please use the data brush tool to select cells for cell type assignment.", '');
                 return;
         end
-        answer = uiconfirm(FigureHandle, 'This is a one-time analysis. Cell type labels will not be saved. Continue?');
+        answer = uiconfirm(FigureHandle, ...
+            'This is a one-time analysis. Cell type labels will not be saved. Continue?','');
         if ~strcmp(answer, 'Yes')
             return;
         end
@@ -1402,8 +1414,9 @@ set(FigureHandle, 'visible', 'on');
     function in_EnrichrHVGs(src, events)
         gui.gui_showrefinfo('HVG Functional Analysis [PMID:31861624]');
         
-        answer = uiconfirm(FigureHandle, 'This function applies to a homogeneous group of cells. Remove lowly expressed genes before applying. Continue?');
-        if ~strcmp(answer, 'Yes'), return; end
+        answer = uiconfirm(FigureHandle, ...
+            'This function applies to a homogeneous group of cells. Remove lowly expressed genes before applying. Continue?','');
+        if ~strcmp(answer, 'OK'), return; end
         
         ptsSelected = logical(h.BrushData.');
         if any(ptsSelected)
