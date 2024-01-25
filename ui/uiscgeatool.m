@@ -2,21 +2,15 @@ function uiscgeatool
 
 import pkg.*
 import gui.*
-
 mfolder = fileparts(mfilename('fullpath'));
+testf=fullfile(mfolder,'..','example_data','workshop_example.mat');
+load(testf,'sce');
+
+
 FigureHandle = uifigure('Visible', 'off');
 FigureHandle.Position = round(1.25*[0, 0, 560, 420]);
 FigureHandle.Name = 'scgeatool ui';
 hAx = uiaxes(FigureHandle,'Visible','off');
-title(hAx, 'Title')
-subtitle(hAx,'[genes x cells]');
-%hAx.Toolbar.Visible = 'off';
-%hAx.XGrid = 'on';
-%hAx.YGrid = 'on';
-%hAx.ZGrid = 'on';
-%hAx.Visible = 'off';
-%hAx.Position = [25 25 640 480];
-% hAx.Position(3:4)= [680, 500];
 height = 480;
 width = 580;
 sz = FigureHandle.Position;
@@ -24,33 +18,19 @@ x = mean( sz( [1, 3]));
 y = mean( sz( [2, 4]));
 hAx.Position= [x - width/2, y - height/2, width, height];
 movegui(FigureHandle, 'center');
-[h]=scatter3(hAx,randn(300,1),randn(300,1),randn(300,1));
-h.Visible="off";
+%[h]=scatter3(hAx,randn(300,1),randn(300,1),randn(300,1));
+%h.Visible="off";
+h=[];
 
-sce = SingleCellExperiment;
+%sce = SingleCellExperiment;
 
-testf=fullfile(mfolder,'..','example_data','workshop_example.mat');
-load(testf,'sce');
 
 % dt = datacursormode;
 % dt.UpdateFcn = {@i_myupdatefcnx};
 
+
 DeftToolbarHandle = uitoolbar(FigureHandle);
 MainToolbarHandle = uitoolbar(FigureHandle);
-
-% MainToolbarHandle = uitoolbar('Parent', FigureHandle);
-% set(MainToolbarHandle, 'Tag', 'MainToolBar', 'HandleVisibility', 'off', 'Visible', 'on');
-% UserToolbarHandle = uitoolbar('Parent', FigureHandle);
-% set(UserToolbarHandle, 'Tag', 'UserToolBar', 'HandleVisibility', 'off', 'Visible', 'on');
-% i_addbutton(1,1,@callback_Brush4Markers,"icon-mat-filter-1-20.gif","Marker genes of brushed cells");
-% i_addbutton_toggle(1,0,{@togglebtfun,@turnoffuserguiding,"icon-mat-blur-off-10.gif", ...
-%    "icon-mat-blur-on-10.gif",false},"Turn on/off user onboarding toolbar");
-
-% in_addbuttontoggle(1, 0, {@in_togglebtfun, @in_turnoffuserguiding, ...
-%     "icon-mat-unfold-more-10.gif", ...
-%     "icon-mat-unfold-less-10.gif", false, ...
-%     "Turn on/off user onboarding toolbar"});
-
 in_addbuttonpush(1, 0, @callback_ShowGeneExpr, "list.gif", "Select genes to show expression")
 in_addbuttonpush(1, 0, @in_ShowCellStates, "list2.gif", "Show cell state")
 in_addbuttonpush(1, 0, @in_SelectCellsByQC, "plotpicker-effects.gif", "Filter genes and cells")
@@ -85,11 +65,6 @@ in_addbuttonpush(0, 0, @gui.callback_CrossTabulation, "plotpicker-comet.gif", "C
 in_addbuttonpush(0, 1, @gui.callback_Violinplot, "violinplot.gif", "Gene Violin Plot...");
 in_addbuttonpush(0, 0, @gui.callback_DrawDotplot, "icon-mat-blur-linear-10.gif", "Gene Dot Plot...");
 in_addbuttonpush(0, 0, @gui.callback_GeneHeatMap, "icon-mat-apps-20.gif", "Gene Heatmap...");
-
-% %i_addmenu(m_exp,1,@gui.callback_Violinplot,'Gene Violin Plot...');
-% %i_addmenu(m_exp,0,@gui.callback_DrawDotplot,'Gene Dot Plot...');
-% %i_addmenu(m_exp,0,@gui.callback_GeneHeatMap,'Gene Heatmap...');
- 
 in_addbuttonpush(0, 1, @in_CompareGeneBtwCls, "cellscore2.gif", "Cell score analysis--obtaining gene signature score for each cell");
 in_addbuttonpush(0, 0, @gui.callback_GetCellSignatureMatrix, "icon-fa-connectdevelop-20.gif", "Cell state analysis--obtaining multiple gene signature scores to reveal functional state of cells");
 in_addbuttonpush(0, 1, @gui.callback_DEGene2Groups, "plotpicker-boxplot.gif", "Differential expression (DE) analysis)");
@@ -99,6 +74,7 @@ in_addbuttonpush(0, 1, @gui.callback_BuildGeneNetwork, "noun_Network_691907.gif"
 in_addbuttonpush(0, 0, @gui.callback_CompareGeneNetwork, "noun_Deep_Learning_2424485.gif", "Compare two scGRNs");
 in_addbuttonpush(0, 1, {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 gui.add_3dcamera(DeftToolbarHandle, 'AllCells');
+drawnow
 
 m_fil = uimenu(FigureHandle,'Text','&File','Accelerator','F');
 in_addmenu(m_fil, 0, @OpenSCEDataFilematMenuSelected, 'Open SCE Data File (*.mat)...');
@@ -116,6 +92,11 @@ in_addmenu(m_edi,1,@in_Brushed2NewCluster,'Add brushed cells to a new group');
 in_addmenu(m_edi,0,@in_Brushed2MergeClusters,'Merge brushed cells to same group');
 in_addmenu(m_edi,1,@in_RenameCellTypeBatchID,'Rename cell type or batch ID');
 in_addmenu(m_edi,0,@in_RenameCellTypeBatchID,'Rename cell type or batch ID');
+in_addmenu(m_edi, 1, @in_AddEditCellAttribs, 'Add/Edit Cell Attributes...');
+in_addmenu(m_edi, 0, @in_ExportCellAttribTable, 'Export Cell Attribute Table...');
+in_addmenu(m_edi, 0, @gui.callback_ViewMetaData, 'View Metadata...');
+in_addmenu(m_edi, 1, {@in_MergeCellSubtypes, 1}, 'Import Cell Annotation from SCE in Workspace...');
+in_addmenu(m_edi, 0, {@in_MergeCellSubtypes, 2}, 'Import Cell Annotation from SCE Data File...');
 
 %in_addbuttonpush(1, 1, @in_ClusterCellsS, "plotpicker-dendrogram.gif", "Clustering using cell embedding (S)")
 %in_addbuttonpush(1, 0, @in_ClusterCellsX, "icon-mw-cluster-10.gif", "Clustering using expression matrix (X)")
@@ -127,6 +108,8 @@ in_addmenu(m_vie,0,@in_SelectCellsByQC,'Label cell groups');
 in_addmenu(m_vie,1,@gui.callback_MultiEmbeddingViewer,'Multi-embedding View...');
 in_addmenu(m_vie,0,@gui.callback_MultiGroupingViewer,'Multi-grouping View...');
 in_addmenu(m_vie,0,@gui.callback_CrossTabulation,'Cross Tabulation...');
+in_addmenu(m_vie, 0, @gui.callback_ShowHgBGeneExpression, 'Show Hemoglobin (Hgb) Genes Expression...');
+in_addmenu(m_vie, 0, @gui.callback_ShowMtGeneExpression, 'Show Mitochondrial (Mt-) Genes Expression...');
 
 m_net = uimenu(FigureHandle, 'Text', '&Network', 'Accelerator', 'N');
 in_addmenu(m_net, 0, @in_Select5000Genes, 'Remove Less Informative Genes to Reduce Gene Space...');
@@ -159,21 +142,11 @@ in_addmenu(m_tol, 1, @in_WorkonSelectedGenes, 'Select Top n  Highly Variable Gen
 in_addmenu(m_tol, 0, @in_SubsampleCells, 'Subsample 50% Cells to Work on...');
 in_addmenu(m_tol, 1, @gui.callback_DEGene2GroupsBatch, 'Differential Expression (DE) Analysis in Cell Type Batch Mode...');
 in_addmenu(m_tol, 0, @gui.callback_DPGene2GroupsBatch, 'Differential Program (DP) Analysis in Cell Type Batch Mode...');
-
-%i_addmenu(m_exp,0,@ShowCellStemScatter,"Stem Scatter Feature Plot...");
-%i_addmenu(m_exp,1,@gui.callback_Violinplot,'Gene Violin Plot...');
-%i_addmenu(m_exp,0,@gui.callback_DrawDotplot,'Gene Dot Plot...');
-%i_addmenu(m_exp,0,@gui.callback_GeneHeatMap,'Gene Heatmap...');
-
 in_addmenu(m_tol, 1, @gui.callback_CalculateGeneStats, 'Calculate Gene Expression Statistics...');
 in_addmenu(m_tol, 0, @gui.callback_CellCycleLibrarySize, 'Library Size of Cell Cycle Phases...');
 in_addmenu(m_tol, 0, @gui.callback_CellCycleAssignment, 'Assign Cell Cycle Phase...');
-in_addmenu(m_tol, 0, @gui.callback_ShowHgBGeneExpression, 'Show Hemoglobin (Hgb) Genes Expression...');
-in_addmenu(m_tol, 0, @gui.callback_ShowMtGeneExpression, 'Show Mitochondrial (Mt-) Genes Expression...');
 in_addmenu(m_tol, 1, {@in_DetermineCellTypeClustersGeneral, false}, 'Annotate Cell Type Using Customized Markers...');
 in_addmenu(m_tol, 0, @in_SubtypeAnnotation, 'Annotate Cell Subtype...');
-in_addmenu(m_tol, 1, {@in_MergeCellSubtypes, 1}, 'Import Cell Annotation from SCE in Workspace...');
-in_addmenu(m_tol, 0, {@in_MergeCellSubtypes, 2}, 'Import Cell Annotation from SCE Data File...');
 
 m_exp = uimenu(FigureHandle, 'Text', 'Ex&perimental', 'Accelerator', 'p');
 in_addmenu(m_exp, 1, @gui.callback_SplitAtacGex, 'Split Multiome ATAC+GEX Matrix...');
@@ -185,9 +158,6 @@ in_addmenu(m_exp, 0, @in_DrawTrajectory, 'Plot Cell Trajectory...');
 
 in_addmenu(m_exp, 1, {@in_MergeSCEs, 1}, 'Merge SCE Variables in Workspace...');
 in_addmenu(m_exp, 0, {@in_MergeSCEs, 2}, 'Merge SCE Data Files...');
-in_addmenu(m_exp, 1, @in_AddEditCellAttribs, 'Add/Edit Cell Attributes...');
-in_addmenu(m_exp, 0, @in_ExportCellAttribTable, 'Export Cell Attribute Table...');
-in_addmenu(m_exp, 0, @gui.callback_ViewMetaData, 'View Metadata...');
 in_addmenu(m_exp, 0, {@gui.i_savemainfig, 2}, 'Save Figure as Graphic File...');
 in_addmenu(m_exp, 0, {@gui.i_savemainfig, 1}, 'Save Figure as SVG File...');
 in_addmenu(m_exp, 1, @in_SingleClickSolution, 'Single Click Solution (from Raw Data to Annotation)...');
@@ -195,6 +165,7 @@ in_addmenu(m_exp, 1, @in_SingleClickSolution, 'Single Click Solution (from Raw D
 m_hlp = uimenu(FigureHandle, 'Text', '&Help', 'Accelerator', 'H');
 in_addmenu(m_hlp, 1, {@(~, ~) web('https://scgeatool.github.io/')}, 'Visit SCGEATOOL-Standalone Website...');
 in_addmenu(m_hlp, 0, @callback_CheckUpdates, 'Check for Updates...');
+drawnow
 
 % handles = guihandles( FigureHandle );
 
@@ -213,7 +184,7 @@ in_update_figure;
             subtitle(hAx, '[genes x cells]');
             hAx.Visible="on";
         else
-            if isvalid(h)
+            if ~isempty(h) && isvalid(h)
                 h.Visible="off";
             end
             hAx.Visible="off";
@@ -275,16 +246,12 @@ in_update_figure;
             a.c_cell_id = sce.c_cell_id;
             a.metadata = sce.metadata;
             sce = a;
-        else
-            app.SCE = sce;
         end
         fprintf('Done.\n');
         toc;
         in_update_figure;
     end
 
-% ----------------------------------
-% ----------------------------------
 
     function in_fixfield(oldf,newf)
         if ~isfield(sce.struct_cell_embeddings,newf) && isfield(sce.struct_cell_embeddings,oldf)
@@ -385,11 +352,9 @@ in_update_figure;
             barhandle = DeftToolbarHandle;
         elseif toolbarHdl == 1
             barhandle = MainToolbarHandle;
-        elseif toolbarHdl == 2
-            barhandle = UserToolbarHandle;
         end
-        pt = uitoggletool(barhandle, 'Separator', sepTag);
-        pt.CData = in_getPtImage(imgFil);
+        pt = uitoggletool(barhandle, 'Separator', sepTag);        
+        pt.Icon = fullfile(mfolder,'..','resources',imgFil);
         pt.Tooltip = tooltipTxt;
         pt.ClickedCallback = callbackFnc;
     end
@@ -397,7 +362,7 @@ in_update_figure;
     function in_togglebtfun(src, ~, func, ~, imgFil, ...
             actiondelay, tooltipTxt)
         if nargin < 6, actiondelay = true; end
-        src.CData = in_getPtImage(imgFil);
+        src.Icon = fullfile(mfolder,'..','resources',imgFil);
         if actiondelay
             if src.State == "off"
                 func(src);
