@@ -17,7 +17,7 @@ try
         if ~strcmp(d,Col.pushed_at)
 
             answer=questdlg('A minor update is now available. Learn how to install it?','', ...
-                'Yes','Remind me later','Skip this update','Yes');
+                'Yes','Remind me later','Skip this update','Skip this update');
             switch answer
                 case 'Yes'
                     web('https://scgeatoolbox.readthedocs.io/en/latest/quick_installation.html');

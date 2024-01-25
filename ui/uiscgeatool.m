@@ -3,9 +3,10 @@ function uiscgeatool
 import pkg.*
 import gui.*
 mfolder = fileparts(mfilename('fullpath'));
-testf=fullfile(mfolder,'..','example_data','workshop_example.mat');
-load(testf,'sce');
-
+load(fullfile(mfolder,'..','example_data','workshop_example.mat'),'sce');
+c=[];
+cL=[];
+ax=[]; bx=[]; f_traj=[];
 
 FigureHandle = uifigure('Visible', 'off');
 FigureHandle.Position = round(1.25*[0, 0, 560, 420]);
@@ -44,7 +45,6 @@ in_addbuttonpush(1, 1, @in_ClusterCellsS, "plotpicker-dendrogram.gif", "Clusteri
 in_addbuttonpush(1, 0, @in_ClusterCellsX, "icon-mw-cluster-10.gif", "Clustering using expression matrix (X)")
 in_addbuttonpush(1, 1, {@in_DetermineCellTypeClustersGeneral, true}, "plotpicker-contour.gif", "Assign cell types to groups")
 in_addbuttonpush(1, 0, @in_Brush4Celltypes, "brush.gif", "Assign cell type to selected cells");
-% i_addbutton(1,0,@ShowCellStemScatter,"IMG00067.GIF","Stem scatter plot");
 in_addbuttonpush(1, 1, @gui.callback_Brush4Markers, "plotpicker-kagi.gif", "Marker genes of brushed cells");
 in_addbuttonpush(1, 0, @gui.callback_FindAllMarkers, "plotpicker-plotmatrix.gif", "Marker gene heatmap");
 in_addbuttonpush(1, 1, @gui.callback_ShowClustersPop, "plotpicker-geoscatter.gif", "Show cell clusters/groups individually");
@@ -57,9 +57,6 @@ in_addbuttonpush(1, 1, @callback_CloseAllOthers, "icon-fa-cut-10.gif", "Close al
 in_addbuttonpush(1, 0, @callback_PickPlotMarker, "plotpicker-rose.gif", "Switch scatter plot marker type");
 in_addbuttonpush(1, 0, @gui.callback_PickColorMap, "plotpicker-compass.gif", "Pick new color map");
 in_addbuttonpush(1, 0, @in_RefreshAll, "icon-mat-refresh-20.gif", "Refresh");
-% in_addbuttonpush(0, 0, @in_call_scgeatool, "IMG00107.GIF", " ");
-% %i_addbutton(0,0,@callback_CalculateCellScores,"cellscore2.gif","Calculate cell scores from list of feature genes")
-% %i_addbutton(0,0,@callback_ComparePotency,"plotpicker-candle.gif","Compare differentiation potency between groups");
 in_addbuttonpush(0, 0, @gui.callback_MultiGroupingViewer, "plotpicker-arxtimeseries.gif", "Multi-grouping View...");
 in_addbuttonpush(0, 0, @gui.callback_CrossTabulation, "plotpicker-comet.gif", "Cross tabulation");
 in_addbuttonpush(0, 1, @gui.callback_Violinplot, "violinplot.gif", "Gene Violin Plot...");
@@ -97,9 +94,6 @@ in_addmenu(m_edi, 0, @in_ExportCellAttribTable, 'Export Cell Attribute Table...'
 in_addmenu(m_edi, 0, @gui.callback_ViewMetaData, 'View Metadata...');
 in_addmenu(m_edi, 1, {@in_MergeCellSubtypes, 1}, 'Import Cell Annotation from SCE in Workspace...');
 in_addmenu(m_edi, 0, {@in_MergeCellSubtypes, 2}, 'Import Cell Annotation from SCE Data File...');
-
-%in_addbuttonpush(1, 1, @in_ClusterCellsS, "plotpicker-dendrogram.gif", "Clustering using cell embedding (S)")
-%in_addbuttonpush(1, 0, @in_ClusterCellsX, "icon-mw-cluster-10.gif", "Clustering using expression matrix (X)")
 
 m_vie = uimenu(FigureHandle,'Text','&View','Accelerator','V');
 in_addmenu(m_vie,0,@gui.callback_ShowGeneExpr,'Select genes to show expression');
@@ -152,10 +146,8 @@ m_exp = uimenu(FigureHandle, 'Text', 'Ex&perimental', 'Accelerator', 'p');
 in_addmenu(m_exp, 1, @gui.callback_SplitAtacGex, 'Split Multiome ATAC+GEX Matrix...');
 in_addmenu(m_exp, 0, @in_DrawKNNNetwork, 'Plot Cell kNN Network...');
 in_addmenu(m_exp, 0, @in_DrawTrajectory, 'Plot Cell Trajectory...');
-
-%i_addmenu(m_exp,0,{@MergeCellSubtypes,1,true},'Import All Cell Annotation from SCE in Workspace...');
-%i_addmenu(m_exp,0,{@MergeCellSubtypes,2,true},'Import All Cell Annotation from SCE Data File...');
-
+in_addmenu(m_exp,0,{@MergeCellSubtypes,1,true},'Import All Cell Annotation from SCE in Workspace...');
+in_addmenu(m_exp,0,{@MergeCellSubtypes,2,true},'Import All Cell Annotation from SCE Data File...');
 in_addmenu(m_exp, 1, {@in_MergeSCEs, 1}, 'Merge SCE Variables in Workspace...');
 in_addmenu(m_exp, 0, {@in_MergeSCEs, 2}, 'Merge SCE Data Files...');
 in_addmenu(m_exp, 0, {@gui.i_savemainfig, 2}, 'Save Figure as Graphic File...');
@@ -168,17 +160,25 @@ in_addmenu(m_hlp, 0, @callback_CheckUpdates, 'Check for Updates...');
 drawnow
 
 % handles = guihandles( FigureHandle );
-
 guidata( FigureHandle, sce );
- 
 FigureHandle.Visible="on";
 in_update_figure;
+
+    function [out]=in_gscatter3(fig, s,c)
+        if size(s,2)>=3
+            [out]=scatter3(fig, s(:,1), s(:,2), s(:,3), 10, c);
+        else
+            [out]=scatter(fig, s(:,1), s(:,2), 10, c);
+        end
+    end
 
     function in_update_figure
         if sce.NumCells>0
             % kc = numel(unique(c));
             % colormap(pkg.i_mycolorlines(kc));
-            [h]=scatter3(hAx, sce.s(:,1), sce.s(:,2), sce.s(:,3), 10, sce.c);
+            c=sce.c;
+            [h]=in_gscatter3(hAx,sce.s,c);
+            % [h]=scatter3(hAx, sce.s(:,1), sce.s(:,2), sce.s(:,3), 10, sce.c);
             % gui.i_gscatter3(sce.s, sce.c, 1, 1, hAx);
             title(hAx, sce.title);
             subtitle(hAx, '[genes x cells]');
@@ -191,18 +191,18 @@ in_update_figure;
         end
     end
 
-    function ExitMenuSelected(src, event)
+    function ExitMenuSelected(~, ~)
         delete(FigureHandle)
     end
 
-    function CloseSCEDataMenuSelected(src, event)
+    function CloseSCEDataMenuSelected(~, ~)
         sce = SingleCellExperiment;
         %delete(hAx.Children);
         %hAx.Visible="off";
         in_update_figure;
     end
 
-    function OpenSCEDataFilematMenuSelected(src, event)
+    function OpenSCEDataFilematMenuSelected(~, ~)
         [fname, pathname] = uigetfile( ...
                         {'*.mat', 'SCE Data Files (*.mat)'; ...
                         '*.*', 'All Files (*.*)'}, ...
@@ -218,7 +218,7 @@ in_update_figure;
         end
     end
 
-    function LoadExampleDataMenuSelected(src, event)        
+    function LoadExampleDataMenuSelected(~, ~)        
         selection = uiconfirm(FigureHandle, ...
             "Load processed or raw data?", "Load Data", ...
             "Options",["Processed","Raw","Cancel"], ...
@@ -293,12 +293,6 @@ in_update_figure;
         else
             askpref = false;
         end
-        if showuseronboarding
-            set(UserToolbarHandle, 'Visible', 'off');
-        else
-            set(UserToolbarHandle, 'Visible', 'on');
-        end
-        showuseronboarding = ~showuseronboarding;
 
         if askpref
             %  gui.gui_userguidingpref(false);
@@ -727,7 +721,6 @@ in_update_figure;
 
     function in_DecontX(~, ~)
         gui.gui_showrefinfo('DecontX [PMID:32138770]');
-
         extprogname = 'R_decontX';
         preftagname = 'externalwrkpath';
         [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
@@ -854,7 +847,7 @@ in_update_figure;
         % was3d = ~isempty(h.ZData);
         if size(sce.s, 2) >= 3
             if keepview, [ax, bx] = view(); end
-            h = gui.i_gscatter3(sce.s, c, methodid, hAx);
+            [h] = in_gscatter3(hAx, sce.s, c);
             if keepview, view(ax, bx); end
         else        % otherwise going to show 2D            
             if keepview, [ax, bx] = view(); end
@@ -989,8 +982,10 @@ in_update_figure;
 
     function in_RenameCellTypeBatchID(src, ~, answer)
         if nargin < 3 || isempty(answer)
-            answer = uiconfirm(FigureHandle, 'Rename cell type, batch ID, or gene name?', ...
-                '', 'Cell type', 'Batch ID', 'Gene name', 'Cell type');
+            answer = uiconfirm(FigureHandle, ...
+                'Rename cell type, batch ID, or gene name?', ...
+                '', "Options",["Cell type","Batch ID","Gene name"], ...
+                "DefaultOption",2,"CancelOption",3);
         end
         switch answer
             case 'Cell type'
@@ -1333,7 +1328,8 @@ in_update_figure;
         [c, cL] = grp2idx(thisc);
         sce.c = c;
         answer1 = uiconfirm(FigureHandle, 'Display in place or in new figure?', '', ...
-            'In place', 'New figure','Cancel','In place');
+            'Options',["In place", "New figure","Cancel"]);            
+            
         switch answer1
             case 'In place'
                 in_RefreshAll(src, [], true, false);
