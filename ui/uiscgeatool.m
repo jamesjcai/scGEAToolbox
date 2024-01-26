@@ -226,6 +226,8 @@ end
             % gui.i_gscatter3(sce.s, sce.c, 1, 1, hAx);
             title(hAx, sce.title);
             subtitle(hAx, '[genes x cells]');
+            grid(hAx,"on");
+            drawnow;
             hAx.Visible="on";
         else
             if ~isempty(h) && isvalid(h)
