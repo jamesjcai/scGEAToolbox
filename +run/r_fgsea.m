@@ -10,7 +10,7 @@ isdebug = false;
 oldpth = pwd();
 [isok, msg, codepath] = commoncheck_R('R_fgsea');
 if ~isok
-    error(msg);    
+    error(msg);
     return;
 end
 if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
@@ -34,8 +34,11 @@ genelist = upper(genelist);
 
 if ~isempty(drdistin) && length(genelist) == length(drdistin)
     drdist = drdistin;
-else
-    v = readmatrix('value_template_pos.txt');
+else    
+    [pw1, pw0] = cdgea;
+    cd(pw0);
+    dfile=fullfile(pw1,'resources','value_template_pos.txt');
+    v = readmatrix(dfile);
     N = min([length(v), length(genelist)]);
     genelist = genelist(1:N);
     drdist = v(1:N);

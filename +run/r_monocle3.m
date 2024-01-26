@@ -3,7 +3,7 @@ function [t, s, m, q] = r_monocle3(X, idx, ndim, wkdir, isdebug)
 % [t]=run.r_monocle3(X,idx);
 if nargin < 2, idx = [1, 2]; end
 if nargin < 3 || isempty(ndim), ndim = 2; end
-if nargin < 4, wkdir = ''; end
+if nargin < 4, wkdir = tempdir; end
 if nargin < 5, isdebug = false; end
 
 t = []; s = []; m = [];
