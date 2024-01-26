@@ -1,10 +1,17 @@
 function uiscgeatool
 
+useexample = rand>0.5;
+
+YOffset = 5;
+p = get(0,"ScreenSize");
+maxh = p(4) - 2*YOffset - 50;
+
 import pkg.*
 import gui.*
 
 mfolder = fileparts(mfilename('fullpath'));
-load(fullfile(mfolder,'..','example_data','workshop_example.mat'),'sce');
+
+
 c=[];
 cL=[];
 ax=[]; bx=[]; f_traj=[];
@@ -13,6 +20,8 @@ FigureHandle = uifigure('Visible', 'off');
 FigureHandle.Position = round(1.25*[0, 0, 560, 420]);
 FigureHandle.Name = 'scgeatool ui';
 hAx = uiaxes(FigureHandle,'Visible','off');
+
+
 height = 480;
 width = 580;
 sz = FigureHandle.Position;
@@ -20,6 +29,24 @@ x = mean( sz( [1, 3]));
 y = mean( sz( [2, 4]));
 hAx.Position= [x - width/2, y - height/2, width, height];
 movegui(FigureHandle, 'center');
+drawnow;
+
+if useexample
+    FigureHandle.Visible="on";
+    pD = uiprogressdlg(FigureHandle,...
+        Indeterminate = "on",...
+        Message = "Loading...",...
+        Title = "Please wait");
+    load(fullfile(mfolder,'..','example_data','workshop_example.mat'),'sce');
+else
+    sce = SingleCellExperiment;
+end
+
+if FigureHandle.Position(4) + YOffset > maxh
+    FigureHandle.Position(4) = maxh;
+    scroll(FigureHandle,"top");
+end
+
 %[h]=scatter3(hAx,randn(300,1),randn(300,1),randn(300,1));
 %h.Visible="off";
 h=[];
@@ -72,7 +99,7 @@ in_addbuttonpush(0, 1, @gui.callback_BuildGeneNetwork, "noun_Network_691907.gif"
 in_addbuttonpush(0, 0, @gui.callback_CompareGeneNetwork, "noun_Deep_Learning_2424485.gif", "Compare two scGRNs");
 in_addbuttonpush(0, 1, {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 gui.add_3dcamera(DeftToolbarHandle, 'AllCells');
-drawnow
+drawnow;
 
 m_fil = uimenu(FigureHandle,'Text','&File','Accelerator','F');
 in_addmenu(m_fil, 0, @OpenSCEDataFilematMenuSelected, 'Open SCE Data File (*.mat)...');
@@ -168,12 +195,17 @@ in_addmenu(m_exp, 1, @in_SingleClickSolution, 'Single Click Solution (from Raw D
 m_hlp = uimenu(FigureHandle, 'Text', '&Help', 'Accelerator', 'H');
 in_addmenu(m_hlp, 1, {@(~, ~) web('https://scgeatool.github.io/')}, 'Visit SCGEATOOL-Standalone Website...');
 in_addmenu(m_hlp, 0, @callback_CheckUpdates, 'Check for Updates...');
-drawnow
+drawnow;
 
 % handles = guihandles( FigureHandle );
 guidata( FigureHandle, sce );
 FigureHandle.Visible="on";
 in_update_figure;
+drawnow;
+
+if useexample
+    close(pD);
+end
 
     function [out]=in_gscatter3(fig, s,c)
         if size(s,2)>=3
