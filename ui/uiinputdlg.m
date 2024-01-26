@@ -1,4 +1,8 @@
-function [name] = uiinputdlg(fig)
+function [name] = uiinputdlg(fig,Items)
+
+if nargin<2
+    Items = ["aaa","bbb","ccc"];
+end
 name = [];
 height = 200;
 width = 300;
@@ -13,18 +17,19 @@ y = sz(2) + sz(4)/2;
 
 f = uifigure(Visible="off",WindowStyle="modal");
 f.Position= [x - width/2, y - height/2, width, height];
-% hPrompt = uicontrol('Parent', f, 'Style', 'text', ...
-%                    'String', 'Enter your name:');
-% hNameInput = uicontrol('Parent', f, 'Style', 'edit', ...
-%                       'Position', [50 50 150 25]);
-% hOKButton = uicontrol('Parent', f, 'Style', 'pushbutton', ...
-%                      'String', 'OK', ...
-%                      'Callback', @handleInput);
+
 b = uibutton(f,'ButtonPushedFcn', @handleInput, ...
     "Position",[10 10 80 20],'Text',"OK");
 
+%hNameInput = uidropdown(f);
+%hNameInput.Items = Items;
+
+
 hNameInput = uilistbox(f);
-hNameInput.Items = ["Red","Green","Blue"];
+hNameInput.Items = Items;
+hNameInput.Multiselect = "on";
+
+% ["Red","Green","Blue","Green","Blue","Green","Blue","Green","Blue","Green","Blue"];
 
 f.Visible='on';
 %focus(f);
