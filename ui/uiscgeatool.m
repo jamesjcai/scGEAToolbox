@@ -224,10 +224,11 @@ end
         if sce.NumCells>0
             % kc = numel(unique(c));
             % colormap(pkg.i_mycolorlines(kc));
-            c=sce.c;
-            [h]=in_gscatter3(hAx,sce.s,c);
-            % [h]=scatter3(hAx, sce.s(:,1), sce.s(:,2), sce.s(:,3), 10, sce.c);
-            % gui.i_gscatter3(sce.s, sce.c, 1, 1, hAx);
+            % c=sce.c;
+            %[ax,bx]=view(hAx);
+            mean(sce.c)
+            [h]=in_gscatter3(hAx,sce.s,sce.c);
+            %view(hAx,ax,bx);
             title(hAx, sce.title);
             subtitle(hAx, '[genes x cells]');
             grid(hAx,"on");
@@ -395,10 +396,10 @@ end
 % xxxxxxx
 
     function in_callback_ShowGeneExpr(~,~)
-        [selectedg] = ui_dropdown(FigureHandle,sce.g);
-        c = sce.X(sce.g == selectedg, :);
-        sce.c=c;
+        [selectedg] = ui_dropdown(FigureHandle,sce.g)
+        sce.c = sce.X(sce.g == selectedg, :);
         in_update_figure;
+        drawnow;
     end
 
 
