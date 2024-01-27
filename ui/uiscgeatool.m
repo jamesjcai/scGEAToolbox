@@ -60,7 +60,7 @@ h=[];
 
 DeftToolbarHandle = uitoolbar(FigureHandle);
 MainToolbarHandle = uitoolbar(FigureHandle);
-in_addbuttonpush(1, 0, @gui.callback_ShowGeneExpr, "list.gif", "Select genes to show expression")
+in_addbuttonpush(1, 0, @in_callback_ShowGeneExpr, "list.gif", "Select genes to show expression")
 in_addbuttonpush(1, 0, @in_ShowCellStates, "list2.gif", "Show cell state")
 in_addbuttonpush(1, 0, @in_SelectCellsByQC, "plotpicker-effects.gif", "Filter genes and cells")
 in_addbuttontoggle(1, 1, {@in_togglebtfun, @in_labelcellgroups, ...
@@ -206,6 +206,10 @@ drawnow;
 if useexample
     close(pD);
 end
+
+
+
+
 
     function [out]=in_gscatter3(fig, s,c)
         if size(s,2)>=3
@@ -383,6 +387,17 @@ end
         end
         fprintf('Done.\n');
         toc;
+        in_update_figure;
+    end
+
+
+
+% xxxxxxx
+
+    function in_callback_ShowGeneExpr(~,~)
+        [selectedg] = ui_dropdown(FigureHandle,sce.g);
+        c = sce.X(sce.g == selectedg, :);
+        sce.c=c;
         in_update_figure;
     end
 
