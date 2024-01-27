@@ -396,10 +396,11 @@ end
 % xxxxxxx
 
     function in_callback_ShowGeneExpr(~,~)
-        [selectedg] = ui_dropdown(FigureHandle,sce.g)
-        sce.c = sce.X(sce.g == selectedg, :);
-        in_update_figure;
-        drawnow;
+        [selectedg] = ui_dropdown(FigureHandle,sce.g);
+        if ~empty(selectedg)
+            sce.c = sce.X(sce.g == selectedg, :);
+            in_update_figure;
+        end
     end
 
 
