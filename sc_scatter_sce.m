@@ -420,6 +420,7 @@ end
             barhandle = UserToolbarHandle;
         end
         pt = uipushtool(barhandle, 'Separator', sepTag);
+        %pt.Icon = fullfile(mfolder,'..','resources',imgFil);
         pt.CData = in_getPtImage(imgFil);
         pt.Tooltip = tooltipTxt;
         pt.ClickedCallback = callbackFnc;

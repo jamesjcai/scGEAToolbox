@@ -60,7 +60,7 @@ h=[];
 
 DeftToolbarHandle = uitoolbar(FigureHandle);
 MainToolbarHandle = uitoolbar(FigureHandle);
-in_addbuttonpush(1, 0, @gui.callback_ShowGeneExpr, "list.gif", "Select genes to show expression")
+in_addbuttonpush(1, 0, @in_callback_ShowGeneExpr, "list.gif", "Select genes to show expression")
 in_addbuttonpush(1, 0, @in_ShowCellStates, "list2.gif", "Show cell state")
 in_addbuttonpush(1, 0, @in_SelectCellsByQC, "plotpicker-effects.gif", "Filter genes and cells")
 in_addbuttontoggle(1, 1, {@in_togglebtfun, @in_labelcellgroups, ...
@@ -207,6 +207,10 @@ if useexample
     close(pD);
 end
 
+
+
+
+
     function [out]=in_gscatter3(fig, s,c)
         if size(s,2)>=3
             [out]=scatter3(fig, s(:,1), s(:,2), s(:,3), 10, c);
@@ -220,10 +224,11 @@ end
         if sce.NumCells>0
             % kc = numel(unique(c));
             % colormap(pkg.i_mycolorlines(kc));
-            c=sce.c;
-            [h]=in_gscatter3(hAx,sce.s,c);
-            % [h]=scatter3(hAx, sce.s(:,1), sce.s(:,2), sce.s(:,3), 10, sce.c);
-            % gui.i_gscatter3(sce.s, sce.c, 1, 1, hAx);
+            % c=sce.c;
+            %[ax,bx]=view(hAx);
+            mean(sce.c)
+            [h]=in_gscatter3(hAx,sce.s,sce.c);
+            %view(hAx,ax,bx);
             title(hAx, sce.title);
             subtitle(hAx, '[genes x cells]');
             grid(hAx,"on");
@@ -384,6 +389,18 @@ end
         fprintf('Done.\n');
         toc;
         in_update_figure;
+    end
+
+
+
+% xxxxxxx
+
+    function in_callback_ShowGeneExpr(~,~)
+        [selectedg] = ui_dropdown(FigureHandle,sce.g);
+        if ~empty(selectedg)
+            sce.c = sce.X(sce.g == selectedg, :);
+            in_update_figure;
+        end
     end
 
 
