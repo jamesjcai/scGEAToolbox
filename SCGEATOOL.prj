@@ -9,7 +9,7 @@
     <param.summary />
     <param.description />
     <param.screenshot />
-    <param.version>1.1</param.version>
+    <param.version>24.1</param.version>
     <param.products.name>
       <item>MATLAB</item>
       <item>Statistics and Machine Learning Toolbox</item>
@@ -22,12 +22,7 @@
       <item>23.2</item>
       <item>23.2</item>
     </param.products.version>
-    <param.platforms>
-      <item>glnxa64</item>
-      <item>win64</item>
-      <item>win32</item>
-      <item>maci64</item>
-    </param.platforms>
+    <param.platforms />
     <param.output>C:\Users\jcai\Documents\MATLAB</param.output>
     <param.guid>2525969a-79a6-4e1d-87b0-3922ba9e2d7a</param.guid>
     <unset>
@@ -39,6 +34,7 @@
       <param.summary />
       <param.description />
       <param.screenshot />
+      <param.platforms />
     </unset>
     <fileset.main>
       <file>${PROJECT_ROOT}\SCGEATOOL.mlapp</file>
