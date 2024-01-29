@@ -90,12 +90,13 @@ catch ME
 end
 
     function in_scgeatoolsce(~,~)
-        answer1 = questdlg('Extract cells from different groups and view new SCEs, or save new SCEs?','',...
-            'View SCEs','Save SCEs','Cancel','View SCEs');
+        %answer1 = questdlg('Extract cells from different groups and view new SCEs, or save new SCEs?','',...
+        %    'View SCEs','Save SCEs','Cancel','View SCEs');
+        answer1 = questdlg('Extract cells and make new SCEs?','');
         switch answer1
-            case 'Cancel'
+            case {'Cancel','No'}
                 return;
-            case 'View SCEs'
+            case {'Yes','View SCEs'}
                 [idx] = in_selectcellgrps(cL(idxx));                
                 if isempty(idx), return; end 
                 for ik=1:length(idx)
@@ -104,6 +105,25 @@ end
                     pause(0.5);
                 end
            case 'Save SCEs'
+
+                answer2=questdlg('Where to save files?','','Use Temporary Folder', ...
+                    'Select a Folder','Cancel','Use Temporary Folder');
+                switch answer2
+                    case 'Select a Folder'
+                        [seltpath] = uigetdir(deflt);
+                        if seltpath==0, return; end
+                        if ~isfolder(seltpath), return; end
+                    case 'Use Temporary Folder'
+                        seltpath = tempdir;
+                    case 'Cancel'
+                        return;
+                end
+                disp(['User selected: ', seltpath]);
+                if ~isfolder(seltpath)
+                    errordlg('Not a folder.');
+                    return;
+                end
+               
                 [idx] = in_selectcellgrps(cL(idxx));
                 cL2=cL(idxx);
                 if isempty(idx), return; end 
@@ -111,7 +131,8 @@ end
                     scev=SCEV{idx(ik)};
                     scev=scev.qcfilter;
                     outmatfile=sprintf('%s.mat', ...
-                        matlab.lang.makeValidName(cL2{idx(ik)}));                
+                        matlab.lang.makeValidName(cL2{idx(ik)}));
+                    outmatfile=fullfile(seltpath,outmatfile);
                     if ~exist(outmatfile,"file")
                         q=sprintf('Save file %s?',outmatfile);
                         answerx=gui.questdlg_timer(15,q,'','Yes','No','Cancel','Yes');
@@ -123,6 +144,8 @@ end
                         case 'Yes'
                             sce=scev;
                             save(outmatfile,"sce",'-v7.3');
+                        otherwise
+                            return;
                     end
                     pause(0.5);
                 end
