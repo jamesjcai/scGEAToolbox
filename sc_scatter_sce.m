@@ -84,6 +84,8 @@ a = findall(FigureHandle, 'tag', 'figMenuFileImportData');
 a.Text = 'Import Data Using GEO Accession...';
 a.MenuSelectedFcn = @in_GEOAccessionToSCE;
 
+m_edit=findall(FigureHandle,'tag','figMenuEdit');
+in_addmenu(m_edit, 1, @gui.callback_SelectCellsByClass, 'Select Cells...');
 m_tool = findall(FigureHandle, 'tag', 'figMenuTools');
 in_addmenu(m_tool, 1, @gui.callback_GetCellSignatureMatrix, 'SCGEATOOL Cell State Analysis');
 
