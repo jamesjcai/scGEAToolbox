@@ -85,7 +85,19 @@ a.Text = 'Import Data Using GEO Accession...';
 a.MenuSelectedFcn = @in_GEOAccessionToSCE;
 
 m_edit=findall(FigureHandle,'tag','figMenuEdit');
-in_addmenu(m_edit, 1, @gui.callback_SelectCellsByClass, 'Select Cells...');
+in_addmenu(m_edit, 1, @in_RenameCellTypeBatchID, 'Rename Cell Type or Batch ID...');
+in_addmenu(m_edit, 0, @gui.callback_SelectCellsByClass, 'Select Cells...');
+
+m_view=findall(FigureHandle,'tag','figMenuView');
+in_addmenu(m_view, 1, @gui.callback_ShowGeneExpr, 'Gene Expression...');
+in_addmenu(m_view, 0, @in_ShowCellStates, 'Cell States...');
+in_addmenu(m_view, 0, @in_labelcellgroups, 'Cell Groups...');
+in_addmenu(m_view, 0, @gui.callback_MultiGroupingViewer, 'Multi-Grouping View...');
+in_addmenu(m_view, 0, @gui.callback_CrossTabulation, 'Cross Tabulation');
+
+in_addmenu(m_view, 0, @in_RefreshAll, 'Refresh View');
+
+
 m_tool = findall(FigureHandle, 'tag', 'figMenuTools');
 in_addmenu(m_tool, 1, @gui.callback_GetCellSignatureMatrix, 'SCGEATOOL Cell State Analysis');
 
@@ -114,7 +126,7 @@ in_addbuttontoggle(1, 0, {@in_togglebtfun, @in_turnoffuserguiding, ...
     "icon-mat-unfold-more-10.gif", ...
     "icon-mat-unfold-less-10.gif", false, ...
     "Turn on/off user onboarding toolbar"});
-in_addbuttonpush(1, 0, @callback_ShowGeneExpr, "list.gif", "Select genes to show expression")
+in_addbuttonpush(1, 0, @gui.callback_ShowGeneExpr, "list.gif", "Select genes to show expression")
 in_addbuttonpush(1, 0, @in_ShowCellStates, "list2.gif", "Show cell state")
 in_addbuttonpush(1, 0, @in_SelectCellsByQC, "plotpicker-effects.gif", "Filter genes and cells")
 
