@@ -70,36 +70,171 @@ set(findall(FigureHandle, 'ToolTipString', 'Open File'), 'Visible', 'Off')
 %a=findall(f,'tag','figMenuFile');
 
 % https://undocumentedmatlab.com/articles/customizing-standard-figure-toolbar-menubar
-a = findall(FigureHandle, 'tag', 'figMenuWindow'); delete(a);
-a = findall(FigureHandle, 'tag', 'figMenuDesktop'); delete(a);
-a = findall(FigureHandle, 'tag', 'figMenuUpdateFileNew'); delete(a);
-a = findall(FigureHandle, 'tag', 'figMenuOpen');
-a.MenuSelectedFcn = 'scgeatool';
-a = findall(FigureHandle, 'tag', 'figMenuFileSaveAs'); delete(a);
-a = findall(FigureHandle, 'tag', 'figMenuFileSave'); 
-a.Text='&Save SCE...';
-a.MenuSelectedFcn = @callback_SaveX;
-a = findall(FigureHandle, 'tag', 'figMenuGenerateCode'); delete(a);
-a = findall(FigureHandle, 'tag', 'figMenuFileImportData');
-a.Text = 'Import Data Using GEO Accession...';
-a.MenuSelectedFcn = @in_GEOAccessionToSCE;
 
-m_edit=findall(FigureHandle,'tag','figMenuEdit');
-in_addmenu(m_edit, 1, @in_RenameCellTypeBatchID, 'Rename Cell Type or Batch ID...');
-in_addmenu(m_edit, 0, @gui.callback_SelectCellsByClass, 'Select Cells...');
+% delete(findall(FigureHandle,'tag','figMenuEditClearWorkspace'));
+% delete(findall(FigureHandle,'tag','figMenuEditClearCmdHistory'));
+% delete(findall(FigureHandle,'tag','figMenuEditClearCmdWindow'));
+% delete(findall(FigureHandle,'tag','figMenuEditClearFigure'));
+% delete(findall(FigureHandle,'tag','figMenuEditFindFiles'));
+% delete(findall(FigureHandle,'tag','figMenuEditSelectAll'));
+% delete(findall(FigureHandle,'tag','figMenuEditGCO'));
+% delete(findall(FigureHandle,'tag','figMenuEditGCA'));
+% delete(findall(FigureHandle,'tag','figMenuEditGCF'));
+delete(allchild(findall(FigureHandle, 'tag', 'figMenuView')))
+
+delete(findall(FigureHandle,'tag','figMenuInsertAxes'));
+delete(findall(FigureHandle,'tag','figMenuInsertLight'));
+delete(findall(FigureHandle, 'tag', 'figMenuWindow'));
+delete(findall(FigureHandle, 'tag', 'figMenuDesktop'));
+delete(findall(FigureHandle, 'tag', 'figMenuUpdateFileNew'));
+set(findall(FigureHandle, 'tag', 'figMenuOpen'),'MenuSelectedFcn','scgeatool');
+delete(findall(FigureHandle, 'tag', 'figMenuFileSaveAs'));
+set(findall(FigureHandle, 'tag', 'figMenuFileSave'),'Text','&Save SCE...','MenuSelectedFcn', @callback_SaveX);
+delete(findall(FigureHandle, 'tag', 'figMenuGenerateCode'));
+set(findall(FigureHandle, 'tag', 'figMenuFileImportData'),'MenuSelectedFcn', @in_GEOAccessionToSCE,...
+    'Text','Import Data Using GEO Accession...');
+
+m_file=findall(FigureHandle,'tag','figMenuFile');
+in_addmenu(m_file, 1, {@gui.i_savemainfig, 3}, 'Save Figure to PowerPoint File...');
+in_addmenu(m_file, 0, {@gui.i_savemainfig, 2}, 'Save Figure as Graphic File...');
+in_addmenu(m_file, 0, {@gui.i_savemainfig, 1}, 'Save Figure as SVG File...');
+
+
+%i_addmenu(m_exp,0,{@MergeCellSubtypes,1,true},'Import All Cell Annotation from SCE in Workspace...');
+%i_addmenu(m_exp,0,{@MergeCellSubtypes,2,true},'Import All Cell Annotation from SCE Data File...');
 
 m_view=findall(FigureHandle,'tag','figMenuView');
-in_addmenu(m_view, 1, @gui.callback_ShowGeneExpr, 'Gene Expression...');
+in_addmenu(m_view, 0, @gui.callback_ShowGeneExpr, 'Gene Expression...');
 in_addmenu(m_view, 0, @in_ShowCellStates, 'Cell States...');
 in_addmenu(m_view, 0, @in_labelcellgroups, 'Cell Groups...');
 in_addmenu(m_view, 0, @gui.callback_MultiGroupingViewer, 'Multi-Grouping View...');
 in_addmenu(m_view, 0, @gui.callback_CrossTabulation, 'Cross Tabulation');
+in_addmenu(m_view, 1, @gui.callback_ViewMetaData, 'View Metadata...');
+in_addmenu(m_view, 1, @gui.callback_ShowHgBGeneExpression, 'Hemoglobin (Hgb) Genes Expression...');
+in_addmenu(m_view, 0, @gui.callback_ShowMtGeneExpression, 'Mitochondrial (Mt-) Genes Expression...');
+in_addmenu(m_view, 1, @in_DrawKNNNetwork, 'Cell kNN Network...');
+in_addmenu(m_view, 0, @in_DrawTrajectory, 'Cell Trajectory...');
+in_addmenu(m_view, 1, @in_RefreshAll, 'Refresh View');
 
-in_addmenu(m_view, 0, @in_RefreshAll, 'Refresh View');
+m_plot = findall(FigureHandle, 'tag', 'figMenuTools');
+set(m_plot,'Text','&Plot')
+m_insert=findall(FigureHandle,'tag','figMenuInsert');
+set(m_insert,'Parent', m_plot,'Separator','on');
+
+set(findall(FigureHandle,'tag','figMenuEditCopyFigure'),'Parent', m_plot);
+set(findall(FigureHandle,'tag','figMenuEditCopyOptions'),'Parent', m_plot);
+
+set(findall(FigureHandle,'tag','figMenuEditColormap'),'Parent', m_plot,'Separator','on');
 
 
-m_tool = findall(FigureHandle, 'tag', 'figMenuTools');
-in_addmenu(m_tool, 1, @gui.callback_GetCellSignatureMatrix, 'SCGEATOOL Cell State Analysis');
+m_edit=findall(FigureHandle,'tag','figMenuEdit');
+delete(allchild(m_edit));
+in_addmenu(m_edit, 0, @in_SelectCellsByQC, 'Filter genes and cells...');
+in_addmenu(m_edit, 0, @in_Brushed2NewCluster, 'Add brushed cells to a new group');
+in_addmenu(m_edit, 0, @in_Brushed2MergeClusters, 'Merge brushed cells to same group');
+in_addmenu(m_edit, 0, @in_RenameCellTypeBatchID, 'Rename Cell Type or Batch ID...');
+in_addmenu(m_edit, 1, @gui.callback_SplitAtacGex, 'Split Multiome ATAC+GEX Matrix...');
+in_addmenu(m_edit, 1, {@in_MergeSCEs, 1}, 'Merge SCE Variables in Workspace...');
+in_addmenu(m_edit, 0, {@in_MergeSCEs, 2}, 'Merge SCE Data Files...');
+in_addmenu(m_edit, 1, @in_AddEditCellAttribs, 'Add/Edit Cell Attributes...');
+in_addmenu(m_edit, 0, @in_ExportCellAttribTable, 'Export Cell Attribute Table...');
+in_addmenu(m_edit, 1, {@in_MergeCellSubtypes, 1}, 'Import Cell Annotation from SCE in Workspace...');
+in_addmenu(m_edit, 0, {@in_MergeCellSubtypes, 2}, 'Import Cell Annotation from SCE Data File...');
+in_addmenu(m_edit, 1, @gui.callback_SelectCellsByClass, 'Select Cells...');
+
+%i_addmenu(m_plot,1,@gui.callback_Violinplot,'Gene Violin Plot...');
+%i_addmenu(m_plot,0,@gui.callback_DrawDotplot,'Gene Dot Plot...');
+%i_addmenu(m_plot,0,@gui.callback_GeneHeatMap,'Gene Heatmap...');
+
+m_help = findall(FigureHandle, 'tag', 'figMenuHelp');
+delete(m_help);
+
+%m_vie = uimenu(FigureHandle,'Text','&Multiview','Accelerator','M');
+%i_addmenu(m_vie,0,@gui.callback_MultiEmbeddingViewer,'Multi-embedding View...');
+%i_addmenu(m_vie,0,@gui.callback_MultiGroupingViewer,'Multi-grouping View...');
+%i_addmenu(m_vie,0,@gui.callback_CrossTabulation,'Cross Tabulation...');
+
+m_exp = uimenu(FigureHandle, 'Text', '&Tools', 'Accelerator', 'T');
+
+
+% m_exp2 = uimenu(m_exp,'Text','sc&Tenifold Suite','Accelerator','T');
+% i_addmenu(m_exp2,1,@callback_scTenifoldNet1,'scTenifoldNet - GRN Construction 🐢🐢 ...');
+% i_addmenu(m_exp2,0,@callback_scTenifoldNet2,'scTenifoldNet - GRN Comparison 🐢🐢🐢 ...');
+% i_addmenu(m_exp2,0,@callback_scTenifoldKnk1,'scTenifoldKnk - Virtual KO of a Gene 🐢 ...');
+% i_addmenu(m_exp2,0,@callback_scTenifoldXct,'scTenifoldXct - Cell-Cell Interactions 🐢 ...');
+%i_addmenu(m_exp,0,@callback_ShowPseudoTimeGenes,'Show Genes with Expression Varies with Pseudotime...');
+%i_addmenu(m_exp,0,@callback_DetectCellularCrosstalk,'Ligand-Receptor Mediated Intercellular Crosstalk...');
+%i_addmenu(m_exp,0,@AnnotateSubTypes,'Assign Subtypes of Cells (Neurons or T Cells)...');
+in_addmenu(m_exp, 0, @gui.callback_SelectCellsByMarker, 'Extract Cells by Marker (+/-) Expression...');
+in_addmenu(m_exp, 0, @in_MergeSubCellTypes, 'Merge Subclusters of the Same Cell Type');
+%i_addmenu(m_exp,0,@callback_TwoGeneCooccurrenceTest,'Two-Gene Cooccurrence Test...');
+%i_addmenu(m_exp,0,@AnnotateSubGroup,'Annotate Cell Subgroups...');
+in_addmenu(m_exp, 1, @in_WorkonSelectedGenes, 'Select Top n  Highly Variable Genes (HVGs) to Work on...');
+in_addmenu(m_exp, 0, @in_SubsampleCells, 'Subsample 50% Cells to Work on...');
+in_addmenu(m_exp, 1, @gui.callback_DEGene2GroupsBatch, 'Differential Expression (DE) Analysis in Cell Type Batch Mode...');
+in_addmenu(m_exp, 0, @gui.callback_DPGene2GroupsBatch, 'Differential Program (DP) Analysis in Cell Type Batch Mode...');
+
+%i_addmenu(m_exp,0,@ShowCellStemScatter,"Stem Scatter Feature Plot...");
+%i_addmenu(m_exp,1,@gui.callback_Violinplot,'Gene Violin Plot...');
+%i_addmenu(m_exp,0,@gui.callback_DrawDotplot,'Gene Dot Plot...');
+%i_addmenu(m_exp,0,@gui.callback_GeneHeatMap,'Gene Heatmap...');
+
+in_addmenu(m_exp, 1, @gui.callback_CalculateGeneStats, 'Calculate Gene Expression Statistics...');
+in_addmenu(m_exp, 0, @gui.callback_CellCycleLibrarySize, 'Library Size of Cell Cycle Phases...');
+in_addmenu(m_exp, 0, @gui.callback_CellCycleAssignment, 'Assign Cell Cycle Phase...');
+%i_addmenu(m_exp,0,@gui.callback_TCellExhaustionScores,'T Cell Exhaustion Score...');
+in_addmenu(m_exp, 1, {@in_DetermineCellTypeClustersGeneral, false}, 'Annotate Cell Type Using Customized Markers...');
+in_addmenu(m_exp, 0, @in_SubtypeAnnotation, 'Annotate Cell Subtype...');
+in_addmenu(m_exp, 0, @gui.callback_GetCellSignatureMatrix, 'Cell State Analysis...');
+in_addmenu(m_exp, 1, @in_SingleClickSolution, 'Single Click Solution (from Raw Data to Annotation)...');
+
+
+m_net = uimenu(FigureHandle, 'Text', '&Network', 'Accelerator', 'N');
+in_addmenu(m_net, 0, @in_Select5000Genes, 'Remove Less Informative Genes to Reduce Gene Space...');
+in_addmenu(m_net, 0, @gui.i_setnetwd, 'Set Network Analysis Working Root Directory...');
+in_addmenu(m_net, 1, {@in_scTenifoldNet,1}, 'Construct GRN using PC Regression [PMID:33336197] 🐢...');
+%in_addmenu(m_net, 1, @callback_scPCNet1, 'GRN Construction - PC Regression (w/o subsampling) [PMID:33336197] 🐢...');
+%in_addmenu(m_net, 0, @callback_scTenifoldNet1, 'GRN Construction - PC Regression (w/ subsampling) [PMID:33336197] 🐢🐢 ...');
+in_addmenu(m_net, 0, {@in_scTenifoldNet,2}, 'Construct & Compare GRNs (scTenifoldNet Analysis) [PMID:33336197] 🐢...');
+
+%in_addmenu(m_net, 1, @callback_scTenifoldNet2lite, 'GRN Comparison - scTenifoldNet (w/o subsampling) [PMID:33336197] 🐢🐢 ...');
+%in_addmenu(m_net, 0, @callback_scTenifoldNet2, 'GRN Comparison - scTenifoldNet (w/ subsampling) [PMID:33336197] 🐢🐢🐢 ...');
+
+in_addmenu(m_net, 1, @gui.callback_scTenifoldKnk1, 'Virtual Gene KO - scTenifoldKnk [PMID:35510185] 🐢🐢 ...');
+in_addmenu(m_net, 0, @gui.callback_VirtualKOGenKI, 'Virtual Gene KO - GenKI [PMID:37246643] (Python Required) 🐢🐢 ...');
+in_addmenu(m_net, 1, @gui.callback_scTenifoldXct, 'Cell-Cell Interactions (CCIs) - scTenifoldXct [PMID:36787742] 🐢🐢 ...');
+in_addmenu(m_net, 0, @gui.callback_scTenifoldXct2, 'Differential CCIs - scTenifoldXct [PMID:36787742] 🐢🐢🐢 ...');
+
+m_ext = uimenu(FigureHandle, 'Text', 'E&xternal', 'Accelerator', 'x');
+in_addmenu(m_ext, 0, @gui.i_setrenv, 'Check R Environment');
+in_addmenu(m_ext, 0, @gui.i_setpyenv, 'Check Python Environment');
+in_addmenu(m_ext, 0, @gui.i_setextwd, 'Set External Program Working Root Directory...');
+
+in_addmenu(m_ext, 1, @in_DecontX, 'Detect Ambient RNA Contamination (DecontX/R) [PMID:32138770]...');
+%i_addmenu(m_ext,0,@callback_SingleRCellType,'SingleR Cell Type Annotation (SingleR/R required)...');
+%i_addmenu(m_ext,0,@callback_RevelioCellCycle,'Revelio Cell Cycle Analysis (Revelio/R required)...');
+% i_addmenu(m_ext,0,@callback_RunSeuratSCTransform,'Run Seurat/R SCTransform (Seurat/R required)...');
+in_addmenu(m_ext, 0, @in_RunSeuratWorkflow, 'Run Seurat/R Workflow (Seurat/R) [PMID:25867923]...');
+%i_addmenu(m_ext,0,@callback_RunMonocle2,'Pseudotime Analysis (Monocle2/R) [PMID:28825705]...');
+in_addmenu(m_ext, 0, @gui.callback_RunMonocle3, 'Pseudotime Analysis (Monocle3/R) [PMID:28825705]...');
+in_addmenu(m_ext, 1, @gui.callback_MELDPerturbationScore, 'MELD Perturbation Score (MELD/Py) [PMID:33558698]...');
+in_addmenu(m_ext, 0, {@in_SubsampleCells, 2}, 'Geometric Sketching (geosketch/Py) [PMID:31176620]...');
+in_addmenu(m_ext, 0, @in_HarmonyPy, 'Batch Integration (Harmony/Py) [PMID:31740819]...');
+in_addmenu(m_ext, 0, @in_DoubletDetection, 'Detect Doublets (Scrublet/Py) [PMID:30954476]...');
+in_addmenu(m_ext, 0, @in_RunDataMapPlot, 'Run DataMapPlot (datamapplot/Py)...');
+in_addmenu(m_ext, 1, @gui.callback_ExploreCellularCrosstalk, 'Talklr Intercellular Crosstalk [DOI:10.1101/2020.02.01.930602]...');
+
+% in_addmenu(m_ext, 0, @gui.callback_CompareGCLBtwCls, 'Differential GCL Analysis [PMID:33139959]🐢🐢 ...');
+% in_addmenu(m_ext, 0, @gui.callback_DiffTFActivity, 'Differential TF Activity Analysis...');
+m_help = uimenu(FigureHandle, 'Text', '&Help', 'Accelerator', 'H');
+in_addmenu(m_help, 0, {@(~, ~) web('https://scgeatool.github.io/')}, 'Visit SCGEATOOL-Standalone Website...');
+in_addmenu(m_help, 0, @callback_CheckUpdates, 'Check for Updates...');
+
+
+
+
+
+
 
 hAx = axes('Parent', FigureHandle);
 
@@ -167,11 +302,6 @@ in_addbuttonpush(0, 1, @gui.callback_Violinplot, "violinplot.gif", "Gene Violin 
 in_addbuttonpush(0, 0, @gui.callback_DrawDotplot, "icon-mat-blur-linear-10.gif", "Gene Dot Plot...");
 in_addbuttonpush(0, 0, @gui.callback_GeneHeatMap, "icon-mat-apps-20.gif", "Gene Heatmap...");
 
-%i_addmenu(m_exp,1,@gui.callback_Violinplot,'Gene Violin Plot...');
-%i_addmenu(m_exp,0,@gui.callback_DrawDotplot,'Gene Dot Plot...');
-%i_addmenu(m_exp,0,@gui.callback_GeneHeatMap,'Gene Heatmap...');
-
-
 in_addbuttonpush(0, 0, @in_call_scgeatool, "IMG00107.GIF", " ");
 in_addbuttonpush(0, 1, @in_CompareGeneBtwCls, "cellscore2.gif", "Cell score analysis--obtaining gene signature score for each cell");
 in_addbuttonpush(0, 0, @gui.callback_GetCellSignatureMatrix, "icon-fa-connectdevelop-20.gif", "Cell state analysis--obtaining multiple gene signature scores to reveal functional state of cells");
@@ -204,105 +334,6 @@ in_addbuttontoggle(2, 0, {@in_togglebtfun, @callback_SaveX, ...
     "icon-mat-filter-5-10.gif", "export.gif", ...
     true, "Export & save data"});
 
-%m_vie = uimenu(FigureHandle,'Text','&Multiview','Accelerator','M');
-%i_addmenu(m_vie,0,@gui.callback_MultiEmbeddingViewer,'Multi-embedding View...');
-%i_addmenu(m_vie,0,@gui.callback_MultiGroupingViewer,'Multi-grouping View...');
-%i_addmenu(m_vie,0,@gui.callback_CrossTabulation,'Cross Tabulation...');
-
-m_net = uimenu(FigureHandle, 'Text', '&Network', 'Accelerator', 'N');
-
-in_addmenu(m_net, 0, @in_Select5000Genes, 'Remove Less Informative Genes to Reduce Gene Space...');
-in_addmenu(m_net, 0, @gui.i_setnetwd, 'Set Network Analysis Working Root Directory...');
-in_addmenu(m_net, 1, {@in_scTenifoldNet,1}, 'Construct GRN using PC Regression [PMID:33336197] 🐢...');
-%in_addmenu(m_net, 1, @callback_scPCNet1, 'GRN Construction - PC Regression (w/o subsampling) [PMID:33336197] 🐢...');
-%in_addmenu(m_net, 0, @callback_scTenifoldNet1, 'GRN Construction - PC Regression (w/ subsampling) [PMID:33336197] 🐢🐢 ...');
-in_addmenu(m_net, 0, {@in_scTenifoldNet,2}, 'Construct & Compare GRNs (scTenifoldNet Analysis) [PMID:33336197] 🐢...');
-
-%in_addmenu(m_net, 1, @callback_scTenifoldNet2lite, 'GRN Comparison - scTenifoldNet (w/o subsampling) [PMID:33336197] 🐢🐢 ...');
-%in_addmenu(m_net, 0, @callback_scTenifoldNet2, 'GRN Comparison - scTenifoldNet (w/ subsampling) [PMID:33336197] 🐢🐢🐢 ...');
-
-in_addmenu(m_net, 1, @gui.callback_scTenifoldKnk1, 'Virtual Gene KO - scTenifoldKnk [PMID:35510185] 🐢🐢 ...');
-in_addmenu(m_net, 0, @gui.callback_VirtualKOGenKI, 'Virtual Gene KO - GenKI [PMID:37246643] (Python Required) 🐢🐢 ...');
-in_addmenu(m_net, 1, @gui.callback_scTenifoldXct, 'Cell-Cell Interactions (CCIs) - scTenifoldXct [PMID:36787742] 🐢🐢 ...');
-in_addmenu(m_net, 0, @gui.callback_scTenifoldXct2, 'Differential CCIs - scTenifoldXct [PMID:36787742] 🐢🐢🐢 ...');
-
-m_ext = uimenu(FigureHandle, 'Text', 'E&xternal', 'Accelerator', 'x');
-in_addmenu(m_ext, 0, @gui.i_setrenv, 'Check R Environment');
-in_addmenu(m_ext, 0, @gui.i_setpyenv, 'Check Python Environment');
-in_addmenu(m_ext, 0, @gui.i_setextwd, 'Set External Program Working Root Directory...');
-
-in_addmenu(m_ext, 1, @in_DecontX, 'Detect Ambient RNA Contamination (DecontX/R) [PMID:32138770]...');
-%i_addmenu(m_ext,0,@callback_SingleRCellType,'SingleR Cell Type Annotation (SingleR/R required)...');
-%i_addmenu(m_ext,0,@callback_RevelioCellCycle,'Revelio Cell Cycle Analysis (Revelio/R required)...');
-% i_addmenu(m_ext,0,@callback_RunSeuratSCTransform,'Run Seurat/R SCTransform (Seurat/R required)...');
-in_addmenu(m_ext, 0, @in_RunSeuratWorkflow, 'Run Seurat/R Workflow (Seurat/R) [PMID:25867923]...');
-%i_addmenu(m_ext,0,@callback_RunMonocle2,'Pseudotime Analysis (Monocle2/R) [PMID:28825705]...');
-in_addmenu(m_ext, 0, @gui.callback_RunMonocle3, 'Pseudotime Analysis (Monocle3/R) [PMID:28825705]...');
-in_addmenu(m_ext, 1, @gui.callback_MELDPerturbationScore, 'MELD Perturbation Score (MELD/Py) [PMID:33558698]...');
-in_addmenu(m_ext, 0, {@in_SubsampleCells, 2}, 'Geometric Sketching (geosketch/Py) [PMID:31176620]...');
-in_addmenu(m_ext, 0, @in_HarmonyPy, 'Batch Integration (Harmony/Py) [PMID:31740819]...');
-in_addmenu(m_ext, 0, @in_DoubletDetection, 'Detect Doublets (Scrublet/Py) [PMID:30954476]...');
-in_addmenu(m_ext, 0, @in_RunDataMapPlot, 'Run DataMapPlot (datamapplot/Py)...');
-in_addmenu(m_ext, 1, @gui.callback_ExploreCellularCrosstalk, 'Talklr Intercellular Crosstalk [DOI:10.1101/2020.02.01.930602]...');
-
-% in_addmenu(m_ext, 0, @gui.callback_CompareGCLBtwCls, 'Differential GCL Analysis [PMID:33139959]🐢🐢 ...');
-% in_addmenu(m_ext, 0, @gui.callback_DiffTFActivity, 'Differential TF Activity Analysis...');
-
-m_exp = uimenu(FigureHandle, 'Text', 'Ex&perimental', 'Accelerator', 'p');
-% m_exp2 = uimenu(m_exp,'Text','sc&Tenifold Suite','Accelerator','T');
-% i_addmenu(m_exp2,1,@callback_scTenifoldNet1,'scTenifoldNet - GRN Construction 🐢🐢 ...');
-% i_addmenu(m_exp2,0,@callback_scTenifoldNet2,'scTenifoldNet - GRN Comparison 🐢🐢🐢 ...');
-% i_addmenu(m_exp2,0,@callback_scTenifoldKnk1,'scTenifoldKnk - Virtual KO of a Gene 🐢 ...');
-% i_addmenu(m_exp2,0,@callback_scTenifoldXct,'scTenifoldXct - Cell-Cell Interactions 🐢 ...');
-
-%i_addmenu(m_exp,0,@callback_ShowPseudoTimeGenes,'Show Genes with Expression Varies with Pseudotime...');
-%i_addmenu(m_exp,0,@callback_DetectCellularCrosstalk,'Ligand-Receptor Mediated Intercellular Crosstalk...');
-%i_addmenu(m_exp,0,@AnnotateSubTypes,'Assign Subtypes of Cells (Neurons or T Cells)...');
-in_addmenu(m_exp, 0, @gui.callback_SelectCellsByMarker, 'Extract Cells by Marker (+/-) Expression...');
-in_addmenu(m_exp, 0, @in_MergeSubCellTypes, 'Merge Subclusters of the Same Cell Type');
-%i_addmenu(m_exp,0,@callback_TwoGeneCooccurrenceTest,'Two-Gene Cooccurrence Test...');
-%i_addmenu(m_exp,0,@AnnotateSubGroup,'Annotate Cell Subgroups...');
-in_addmenu(m_exp, 1, @in_WorkonSelectedGenes, 'Select Top n  Highly Variable Genes (HVGs) to Work on...');
-in_addmenu(m_exp, 0, @in_SubsampleCells, 'Subsample 50% Cells to Work on...');
-in_addmenu(m_exp, 1, @gui.callback_DEGene2GroupsBatch, 'Differential Expression (DE) Analysis in Cell Type Batch Mode...');
-in_addmenu(m_exp, 0, @gui.callback_DPGene2GroupsBatch, 'Differential Program (DP) Analysis in Cell Type Batch Mode...');
-
-%i_addmenu(m_exp,0,@ShowCellStemScatter,"Stem Scatter Feature Plot...");
-%i_addmenu(m_exp,1,@gui.callback_Violinplot,'Gene Violin Plot...');
-%i_addmenu(m_exp,0,@gui.callback_DrawDotplot,'Gene Dot Plot...');
-%i_addmenu(m_exp,0,@gui.callback_GeneHeatMap,'Gene Heatmap...');
-
-in_addmenu(m_exp, 1, @gui.callback_CalculateGeneStats, 'Calculate Gene Expression Statistics...');
-in_addmenu(m_exp, 0, @gui.callback_CellCycleLibrarySize, 'Library Size of Cell Cycle Phases...');
-in_addmenu(m_exp, 0, @gui.callback_CellCycleAssignment, 'Assign Cell Cycle Phase...');
-in_addmenu(m_exp, 0, @gui.callback_ShowHgBGeneExpression, 'Show Hemoglobin (Hgb) Genes Expression...');
-in_addmenu(m_exp, 0, @gui.callback_ShowMtGeneExpression, 'Show Mitochondrial (Mt-) Genes Expression...');
-%i_addmenu(m_exp,0,@gui.callback_TCellExhaustionScores,'T Cell Exhaustion Score...');
-
-in_addmenu(m_exp, 1, {@in_DetermineCellTypeClustersGeneral, false}, 'Annotate Cell Type Using Customized Markers...');
-in_addmenu(m_exp, 0, @in_SubtypeAnnotation, 'Annotate Cell Subtype...');
-
-in_addmenu(m_exp, 1, {@in_MergeCellSubtypes, 1}, 'Import Cell Annotation from SCE in Workspace...');
-in_addmenu(m_exp, 0, {@in_MergeCellSubtypes, 2}, 'Import Cell Annotation from SCE Data File...');
-
-in_addmenu(m_exp, 1, @gui.callback_SplitAtacGex, 'Split Multiome ATAC+GEX Matrix...');
-in_addmenu(m_exp, 0, @in_DrawKNNNetwork, 'Plot Cell kNN Network...');
-in_addmenu(m_exp, 0, @in_DrawTrajectory, 'Plot Cell Trajectory...');
-
-%i_addmenu(m_exp,0,{@MergeCellSubtypes,1,true},'Import All Cell Annotation from SCE in Workspace...');
-%i_addmenu(m_exp,0,{@MergeCellSubtypes,2,true},'Import All Cell Annotation from SCE Data File...');
-
-in_addmenu(m_exp, 1, {@in_MergeSCEs, 1}, 'Merge SCE Variables in Workspace...');
-in_addmenu(m_exp, 0, {@in_MergeSCEs, 2}, 'Merge SCE Data Files...');
-in_addmenu(m_exp, 1, @in_AddEditCellAttribs, 'Add/Edit Cell Attributes...');
-in_addmenu(m_exp, 0, @in_ExportCellAttribTable, 'Export Cell Attribute Table...');
-in_addmenu(m_exp, 0, @gui.callback_ViewMetaData, 'View Metadata...');
-% in_addmenu(m_exp, 1, {@gui.i_savemainfig, 3}, 'Save Figure to PowerPoint File...');
-in_addmenu(m_exp, 0, {@gui.i_savemainfig, 2}, 'Save Figure as Graphic File...');
-in_addmenu(m_exp, 0, {@gui.i_savemainfig, 1}, 'Save Figure as SVG File...');
-in_addmenu(m_exp, 1, @in_SingleClickSolution, 'Single Click Solution (from Raw Data to Annotation)...');
-in_addmenu(m_exp, 1, {@(~, ~) web('https://scgeatool.github.io/')}, 'Visit SCGEATOOL-Standalone Website...');
-in_addmenu(m_exp, 0, @callback_CheckUpdates, 'Check for Updates...');
 
 % handles = guihandles( FigureHandle );
 % guidata( FigureHandle, handles );
