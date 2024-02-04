@@ -118,6 +118,8 @@ in_addmenu(m_view, 1, @in_RefreshAll, 'Refresh View');
 
 m_plot = findall(FigureHandle, 'tag', 'figMenuTools');
 set(m_plot,'Text','&Plot')
+delete(allchild(m_plot));
+
 m_insert=findall(FigureHandle,'tag','figMenuInsert');
 set(m_insert,'Parent', m_plot,'Separator','on');
 
@@ -142,9 +144,9 @@ in_addmenu(m_edit, 1, {@in_MergeCellSubtypes, 1}, 'Import Cell Annotation from S
 in_addmenu(m_edit, 0, {@in_MergeCellSubtypes, 2}, 'Import Cell Annotation from SCE Data File...');
 in_addmenu(m_edit, 1, @gui.callback_SelectCellsByClass, 'Select Cells...');
 
-%i_addmenu(m_plot,1,@gui.callback_Violinplot,'Gene Violin Plot...');
-%i_addmenu(m_plot,0,@gui.callback_DrawDotplot,'Gene Dot Plot...');
-%i_addmenu(m_plot,0,@gui.callback_GeneHeatMap,'Gene Heatmap...');
+in_addmenu(m_plot,1,@gui.callback_Violinplot,'Gene Violin Plot...');
+in_addmenu(m_plot,0,@gui.callback_DrawDotplot,'Gene Dot Plot...');
+in_addmenu(m_plot,0,@gui.callback_GeneHeatMap,'Gene Heatmap...');
 
 m_help = findall(FigureHandle, 'tag', 'figMenuHelp');
 delete(m_help);
