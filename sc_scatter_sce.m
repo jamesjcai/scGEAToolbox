@@ -117,9 +117,10 @@ m_insert=findall(FigureHandle,'tag','figMenuInsert');
 set(m_insert,'Parent', m_plot,'Separator','off');
 set(findall(FigureHandle,'tag','figMenuEditCopyFigure'),'Parent', m_plot);
 set(findall(FigureHandle,'tag','figMenuEditCopyOptions'),'Parent', m_plot);
+in_addmenu(m_plot,1,@gui.callback_PickColorMap,'Next Colormap');
 set(findall(FigureHandle,'tag','figMenuEditColormap'),'Parent', m_plot,'Text','Colormap Editor...');
-in_addmenu(m_plot,0,@gui.callback_PickColorMap,'Colormap...');
-in_addmenu(m_plot,0,@gui.callback_PickPlotMarker,'Marker Type...');
+
+in_addmenu(m_plot,1,@gui.callback_PickPlotMarker,'Next Marker Type');
 in_addmenu(m_plot,1,@gui.callback_Violinplot,'Gene Violin Plot...');
 in_addmenu(m_plot,0,@gui.callback_DrawDotplot,'Gene Dot Plot...');
 in_addmenu(m_plot,0,@gui.callback_GeneHeatMap,'Gene Heatmap...');
