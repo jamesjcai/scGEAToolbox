@@ -4,11 +4,7 @@ if usejava('jvm') && ~feature('ShowFigureWindows')
     error('MATLAB is in a text mode. This function requires a GUI-mode.');
 end
 
-if nargin < 1
-    % error('Usage: sc_scatter_sce(sce)');
-    scgeatool;
-    return;
-end
+if nargin < 1, scgeatool; return; end
 if ~isa(sce, 'SingleCellExperiment')
     error('requires sce=SingleCellExperiment();');
 end
@@ -35,11 +31,7 @@ ax = [];
 bx = [];
 tmpcelltypev = cell(sce.NumCells, 1);
 
-if isempty(c_in)
-    sce.c = ones(size(sce.X, 2), 1);
-else
-    sce.c = c_in;
-end
+if ~isempty(c_in), sce.c = c_in; end
 if ~isempty(s_in), sce.s = s_in; end
 
 [c, cL] = grp2idx(sce.c);
@@ -55,7 +47,7 @@ FigureHandle = figure('Name', 'SCGEATOOL :: Single-Cell Gene Expression Analysis
     'visible', 'off', 'NumberTitle', tagx);
 movegui(FigureHandle, 'center');
 
-% b = uipanel(FigureHandle,'Title','B','BackgroundColor','cyan');
+% b=uipanel(FigureHandle,'Title','B','BackgroundColor','cyan');
 % b.Position = [0.18 0.40 0.30 0.35];
 
 set(findall(FigureHandle, 'ToolTipString', 'Link/Unlink Plot'), 'Visible', 'Off')
@@ -319,7 +311,9 @@ in_addbuttonpush(0, 1, {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure t
 
 gui.add_3dcamera(DeftToolbarHandle, 'AllCells');
 
-in_addbuttonpush(2, 0, @in_turnonuserguiding, "icon-fa-thumb-tack-10.gif", "Turn on user guiding toolbar");
+in_addbuttonpush(2, 0, @in_turnonuserguiding, "icon-fa-thumb-tack-10.gif", ...
+    "Turn on user guiding toolbar");
+
 in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_SelectCellsByQC, ...
     "icon-mat-filter-1-10.gif", "plotpicker-effects.gif", ...
     true, "Filter genes and cells"});
@@ -342,7 +336,8 @@ in_addbuttontoggle(2, 0, {@in_togglebtfun, @callback_SaveX, ...
 
 kc = numel(unique(c));
 colormap(pkg.i_mycolorlines(kc));
-
+% xxx
+drawnow;
 set(FigureHandle, 'visible', 'on');
 
 in_fixfield('tsne','tsne3d');
