@@ -7,6 +7,14 @@ catch ME
     return;
 end
 
+extprogname = 'scTenifoldNet';
+preftagname = 'netanalywrkpath';
+[wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
+if isempty(wkdir), return; end
+if isfolder(wkdir)
+    cd(wkdir);
+end
+
 %     if exist('sctenifoldnet','file')~=2
 %         errordlg('scTenifoldNet is not installed.');
 %         disp('To install scTenifoldNet, type:')

@@ -20,6 +20,14 @@ end
 FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
 
+extprogname = 'scTenifoldNet';
+preftagname = 'netanalywrkpath';
+[wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
+if isempty(wkdir), return; end
+if isfolder(wkdir)
+    cd(wkdir);
+end
+
 
 answer = questdlg('Construct networks de novo or use existing networks in Workspace?', ...
     'Input Networks', 'Construct de novo', 'Use existing', 'Construct de novo');

@@ -1,9 +1,17 @@
 function callback_scTenifoldKnk1(src, ~)
 gui.gui_showrefinfo('scTenifoldKnk [PMID:35510185]');
 
+try
+    ten.check_tensor_toolbox;
+catch ME
+    errordlg(ME.message);
+    return;
+end
+
 extprogname = 'scTenifoldKnk';
 preftagname = 'netanalywrkpath';
 [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
+if isempty(wkdir), return; end
 if isfolder(wkdir)
     cd(wkdir);
 end
@@ -84,7 +92,8 @@ if ~strcmpi(answer, 'Yes'), return; end
 if isempty(A0)
     try
         fw = gui.gui_waitbar;
-        parpool;
+        parfor k=1:32
+        end
         figure(FigureHandle);
  
         [T, A0] = ten.sctenifoldknk(sce.X, sce.g, idx, ...

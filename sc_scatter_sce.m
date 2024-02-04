@@ -106,19 +106,23 @@ in_addmenu(m_view, 1, @gui.callback_ShowHgBGeneExpression, 'Hemoglobin (Hgb) Gen
 in_addmenu(m_view, 0, @gui.callback_ShowMtGeneExpression, 'Mitochondrial (Mt-) Genes Expression...');
 in_addmenu(m_view, 1, @in_DrawKNNNetwork, 'Cell kNN Network...');
 in_addmenu(m_view, 0, @in_DrawTrajectory, 'Cell Trajectory...');
-in_addmenu(m_view, 1, @in_RefreshAll, 'Refresh View');
+in_addmenu(m_view, 1, @gui.callback_CloseAllOthers, 'Close All Other Figures');
+in_addmenu(m_view, 0, @in_RefreshAll, 'Refresh Current View');
 
 m_plot = findall(FigureHandle, 'tag', 'figMenuTools');
 set(m_plot,'Text','&Plot')
 delete(allchild(m_plot));
 
 m_insert=findall(FigureHandle,'tag','figMenuInsert');
-set(m_insert,'Parent', m_plot,'Separator','on');
-
+set(m_insert,'Parent', m_plot,'Separator','off');
 set(findall(FigureHandle,'tag','figMenuEditCopyFigure'),'Parent', m_plot);
 set(findall(FigureHandle,'tag','figMenuEditCopyOptions'),'Parent', m_plot);
-
-set(findall(FigureHandle,'tag','figMenuEditColormap'),'Parent', m_plot,'Separator','on');
+set(findall(FigureHandle,'tag','figMenuEditColormap'),'Parent', m_plot,'Text','Colormap Editor...');
+in_addmenu(m_plot,0,@gui.callback_PickColorMap,'Colormap...');
+in_addmenu(m_plot,0,@gui.callback_PickPlotMarker,'Marker Type...');
+in_addmenu(m_plot,1,@gui.callback_Violinplot,'Gene Violin Plot...');
+in_addmenu(m_plot,0,@gui.callback_DrawDotplot,'Gene Dot Plot...');
+in_addmenu(m_plot,0,@gui.callback_GeneHeatMap,'Gene Heatmap...');
 
 
 m_edit=findall(FigureHandle,'tag','figMenuEdit');
@@ -136,9 +140,7 @@ in_addmenu(m_edit, 1, {@in_MergeCellSubtypes, 1}, 'Import Cell Annotation from S
 in_addmenu(m_edit, 0, {@in_MergeCellSubtypes, 2}, 'Import Cell Annotation from SCE Data File...');
 in_addmenu(m_edit, 1, @gui.callback_SelectCellsByClass, 'Select Cells...');
 
-in_addmenu(m_plot,1,@gui.callback_Violinplot,'Gene Violin Plot...');
-in_addmenu(m_plot,0,@gui.callback_DrawDotplot,'Gene Dot Plot...');
-in_addmenu(m_plot,0,@gui.callback_GeneHeatMap,'Gene Heatmap...');
+
 
 m_help = findall(FigureHandle, 'tag', 'figMenuHelp');
 delete(m_help);
@@ -280,8 +282,8 @@ in_addbuttonpush(1, 0, @in_DeleteSelectedCells, "plotpicker-qqplot.gif", "Delete
 in_addbuttonpush(1, 0, @callback_SaveX, "export.gif", "Export & save data");
 in_addbuttonpush(1, 1, @in_EmbeddingAgain, "plotpicker-geobubble.gif", "Embedding (tSNE, UMP, PHATE)");
 in_addbuttonpush(1, 0, @in_Switch2D3D, "plotpicker-image.gif", "Switch 2D/3D");
-in_addbuttonpush(1, 1, @callback_CloseAllOthers, "icon-fa-cut-10.gif", "Close all other figures");
-in_addbuttonpush(1, 0, @callback_PickPlotMarker, "plotpicker-rose.gif", "Switch scatter plot marker type");
+in_addbuttonpush(1, 1, @gui.callback_CloseAllOthers, "icon-fa-cut-10.gif", "Close all other figures");
+in_addbuttonpush(1, 0, @gui.callback_PickPlotMarker, "plotpicker-rose.gif", "Switch scatter plot marker type");
 in_addbuttonpush(1, 0, @gui.callback_PickColorMap, "plotpicker-compass.gif", "Pick new color map");
 in_addbuttonpush(1, 0, @in_RefreshAll, "icon-mat-refresh-20.gif", "Refresh");
 in_addbuttonpush(0, 0, @in_call_scgeatool, "IMG00107.GIF", " ");
