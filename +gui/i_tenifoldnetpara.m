@@ -18,6 +18,8 @@ if isempty(answer), return; end
 try
     nsubsmpl = str2double(answer{1});
     csubsmpl = str2double(answer{2});
+    assert(isfinite(nsubsmpl) & nsubsmpl==floor(nsubsmpl));
+    assert(isfinite(csubsmpl) & csubsmpl==floor(csubsmpl));    
     assert((nsubsmpl >= 10) && (nsubsmpl <= 50));
     assert((csubsmpl >= 200) && (nsubsmpl <= 5000));
 catch

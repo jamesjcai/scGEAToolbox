@@ -81,12 +81,16 @@ delete(findall(FigureHandle, 'tag', 'figMenuDesktop'));
 delete(findall(FigureHandle, 'tag', 'figMenuUpdateFileNew'));
 set(findall(FigureHandle, 'tag', 'figMenuOpen'),'MenuSelectedFcn','scgeatool');
 delete(findall(FigureHandle, 'tag', 'figMenuFileSaveAs'));
+delete(findall(FigureHandle, 'tag', 'figMenuFileSaveWorkspaceAs'));
+delete(findall(FigureHandle, 'tag', 'figMenuFilePreferences'));
+delete(findall(FigureHandle, 'tag', 'figMenuFileExportSetup'));
 set(findall(FigureHandle, 'tag', 'figMenuFileSave'),'Text','&Save SCE...','MenuSelectedFcn', @callback_SaveX);
 delete(findall(FigureHandle, 'tag', 'figMenuGenerateCode'));
 set(findall(FigureHandle, 'tag', 'figMenuFileImportData'),'MenuSelectedFcn', @in_GEOAccessionToSCE,...
-    'Text','Import Data Using GEO Accession...');
-
+    'Text','Import Data Using GEO Accession...','Separator','on');
+set(findall(FigureHandle,'tag','figMenuFilePrintPreview'),'Separator','on');
 m_file=findall(FigureHandle,'tag','figMenuFile');
+in_addmenu(m_file, 1, @in_simulateSCE, 'Simulate SCE...');
 in_addmenu(m_file, 1, {@gui.i_savemainfig, 3}, 'Save Figure to PowerPoint File...');
 in_addmenu(m_file, 0, {@gui.i_savemainfig, 2}, 'Save Figure as Graphic File...');
 in_addmenu(m_file, 0, {@gui.i_savemainfig, 1}, 'Save Figure as SVG File...');
@@ -564,6 +568,43 @@ end
         else
             delete(hObject);
         end
+    end
+
+    function in_simulateSCE(src, ~)
+        answer = questdlg('Current SCE will be replaced. Continue?');
+        if ~strcmp(answer, 'Yes'), return; end
+        definput = {'3000', '5000'};
+        prompt = {'Number of genes:', ...
+            'Number of cells:'};
+        dlgtitle = 'Simulation Settings';
+        dims = [1, 55];
+        answer = inputdlg(prompt, dlgtitle, dims, definput);
+        if isempty(answer), return; end
+        try
+            numgenes = str2double(answer{1});
+            numcells = str2double(answer{2});
+            assert(isfinite(numgenes) & numgenes==floor(numgenes));
+            assert(isfinite(numcells) & numcells==floor(numcells));
+            assert((numgenes >= 1) && (numgenes <= 30000));
+            assert((numcells >= 1) && (numcells <= 30000));
+        catch
+            errordlg('Invalid parameter value(s).');
+            return;
+        end
+        
+            try
+                fw = gui.gui_waitbar;
+                [X] = sc_simudata(numgenes, numcells);
+                [sce] = SingleCellExperiment(X);
+                [c, cL] = grp2idx(sce.c);
+                gui.gui_waitbar(fw);
+                guidata(FigureHandle, sce);
+                in_RefreshAll(src, [], false, false);
+            catch ME
+                gui.gui_waitbar(fw);
+                errordlg(ME.message);
+            end
+
     end
 
     function in_GEOAccessionToSCE(src, ~)
