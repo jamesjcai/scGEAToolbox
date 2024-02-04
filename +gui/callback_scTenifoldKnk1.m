@@ -1,5 +1,12 @@
 function callback_scTenifoldKnk1(src, ~)
 gui.gui_showrefinfo('scTenifoldKnk [PMID:35510185]');
+
+extprogname = 'scTenifoldKnk';
+preftagname = 'netanalywrkpath';
+[wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
+if isfolder(wkdir)
+    cd(wkdir);
+end
 import ten.*
 FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
@@ -77,8 +84,12 @@ if ~strcmpi(answer, 'Yes'), return; end
 if isempty(A0)
     try
         fw = gui.gui_waitbar;
+        parpool;
+        figure(FigureHandle);
+ 
         [T, A0] = ten.sctenifoldknk(sce.X, sce.g, idx, ...
-            'sorttable', true, 'nsubsmpl', 10);
+            'sorttable', true, 'nsubsmpl', 10, ...
+            'savegrn', isfolder(wkdir));
         gui.gui_waitbar(fw);
     catch ME
         gui.gui_waitbar(fw);

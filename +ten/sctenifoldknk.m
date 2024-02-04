@@ -49,7 +49,7 @@ end
 
 if exist('@tensor/tensor.m', 'file') ~= 2
     error('Need Tensor Toolbox for MATLAB (https://www.tensortoolbox.org/)');
-    end
+end
     %    if exist('ten.i_td1.m','file')~=2
     %        error('Need i_td1.m in the scTendifoldNet https://github.com/cailab-tamu/scTenifoldNet/tree/master/MATLAB');
     %    end
