@@ -90,7 +90,7 @@ set(findall(FigureHandle, 'tag', 'figMenuFileImportData'),'MenuSelectedFcn', @in
     'Text','Import Data Using GEO Accession...','Separator','on');
 set(findall(FigureHandle,'tag','figMenuFilePrintPreview'),'Separator','on');
 m_file=findall(FigureHandle,'tag','figMenuFile');
-in_addmenu(m_file, 1, @in_simulateSCE, 'Simulate SCE...');
+in_addmenu(m_file, 1, @in_simulateSCE, 'Simulate Data [PMID:27122128]...');
 in_addmenu(m_file, 1, {@gui.i_savemainfig, 3}, 'Save Figure to PowerPoint File...');
 in_addmenu(m_file, 0, {@gui.i_savemainfig, 2}, 'Save Figure as Graphic File...');
 in_addmenu(m_file, 0, {@gui.i_savemainfig, 1}, 'Save Figure as SVG File...');
@@ -594,7 +594,7 @@ end
         
             try
                 fw = gui.gui_waitbar;
-                [X] = sc_simudata(numgenes, numcells);
+                [X] = sc_simudata(numgenes, numcells,'lun');
                 [sce] = SingleCellExperiment(X);
                 [c, cL] = grp2idx(sce.c);
                 gui.gui_waitbar(fw);

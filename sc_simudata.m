@@ -25,6 +25,8 @@ switch lower(methodtype)
             X(k, :) = nbinrnd(r, p, 1, numcells); % negative binomial distribution
         end
     case 'lun'
+        % PMID:27122128
+        % Pooling across cells to normalize single-cell RNA sequencing data with many zero counts
         % https://github.com/Oshlack/splatter/blob/master/R/lun-simulate.R
         shape = 2;
         scale = 0.5;
@@ -38,10 +40,11 @@ switch lower(methodtype)
         % These parameter values were chosen to recapitulate aspects of real data [5]
         % https://genomebiology.biomedcentral.com/articles/10.1186/s13059-016-0947-7#Abs1
 
-        for k = 1:numgenes
-            for l = 1:numcells
-                X(k, l) = nbinrnd(F(k, l), p); % negative binomial distribution
-            end
-        end
+        % for k = 1:numgenes
+        %     for l = 1:numcells
+        %         X(k, l) = nbinrnd(F(k, l), p); % negative binomial distribution
+        %     end
+        % end
+        X=nbinrnd(F,p);
     otherwise
 end
