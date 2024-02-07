@@ -89,12 +89,34 @@ delete(findall(FigureHandle, 'tag', 'figMenuGenerateCode'));
 set(findall(FigureHandle, 'tag', 'figMenuFileImportData'),'MenuSelectedFcn', @in_GEOAccessionToSCE,...
     'Text','Import Data Using GEO Accession...','Separator','on');
 set(findall(FigureHandle,'tag','figMenuFilePrintPreview'),'Separator','on');
+
 m_file=findall(FigureHandle,'tag','figMenuFile');
 in_addmenu(m_file, 1, @in_simulateSCE, 'Simulate Data [PMID:27122128]...');
 in_addmenu(m_file, 1, {@gui.i_savemainfig, 3}, 'Save Figure to PowerPoint File...');
 in_addmenu(m_file, 0, {@gui.i_savemainfig, 2}, 'Save Figure as Graphic File...');
 in_addmenu(m_file, 0, {@gui.i_savemainfig, 1}, 'Save Figure as SVG File...');
 
+
+m_edit=findall(FigureHandle,'tag','figMenuEdit');
+delete(allchild(m_edit));
+in_addmenu(m_edit, 0, @in_SelectCellsByQC, 'Filter genes and cells...');
+in_addmenu(m_edit, 0, @in_Brushed2NewCluster, 'Add brushed cells to a new group');
+in_addmenu(m_edit, 0, @in_Brushed2MergeClusters, 'Merge brushed cells to same group');
+in_addmenu(m_edit, 0, @in_RenameCellTypeBatchID, 'Rename Cell Type or Batch ID...');
+in_addmenu(m_edit, 1, @gui.callback_SplitAtacGex, 'Split Multiome ATAC+GEX Matrix...');
+in_addmenu(m_edit, 1, {@in_MergeSCEs, 1}, 'Merge SCE Variables in Workspace...');
+in_addmenu(m_edit, 0, {@in_MergeSCEs, 2}, 'Merge SCE Data Files...');
+in_addmenu(m_edit, 1, @in_AddEditCellAttribs, 'Add/Edit Cell Attributes...');
+in_addmenu(m_edit, 0, @in_ExportCellAttribTable, 'Export Cell Attribute Table...');
+in_addmenu(m_edit, 1, {@in_MergeCellSubtypes, 1}, 'Import Cell Annotation from SCE in Workspace...');
+in_addmenu(m_edit, 0, {@in_MergeCellSubtypes, 2}, 'Import Cell Annotation from SCE Data File...');
+in_addmenu(m_edit, 1, @gui.callback_SelectCellsByMarker, 'Extract Cells by Marker (+/-) Expression...');
+in_addmenu(m_edit, 0, @in_MergeSubCellTypes, 'Merge Subclusters of the Same Cell Type');
+%i_addmenu(m_edit,0,@callback_TwoGeneCooccurrenceTest,'Two-Gene Cooccurrence Test...');
+%i_addmenu(m_edit,0,@AnnotateSubGroup,'Annotate Cell Subgroups...');
+in_addmenu(m_edit, 1, @in_WorkonSelectedGenes, 'Select Top n  Highly Variable Genes (HVGs) to Work on...');
+in_addmenu(m_edit, 0, @in_SubsampleCells, 'Subsample 50% Cells to Work on...');
+in_addmenu(m_edit, 1, @gui.callback_SelectCellsByClass, 'Select Cells...');
 
 %i_addmenu(m_exp,0,{@MergeCellSubtypes,1,true},'Import All Cell Annotation from SCE in Workspace...');
 %i_addmenu(m_exp,0,{@MergeCellSubtypes,2,true},'Import All Cell Annotation from SCE Data File...');
@@ -116,48 +138,17 @@ in_addmenu(m_view, 0, @in_RefreshAll, 'Refresh Current View');
 m_plot = findall(FigureHandle, 'tag', 'figMenuTools');
 set(m_plot,'Text','&Plot')
 delete(allchild(m_plot));
-
-m_insert=findall(FigureHandle,'tag','figMenuInsert');
-set(m_insert,'Parent', m_plot,'Separator','off');
+set(findall(FigureHandle,'tag','figMenuInsert'),'Parent', m_plot,'Separator','off');
 set(findall(FigureHandle,'tag','figMenuEditCopyFigure'),'Parent', m_plot);
 set(findall(FigureHandle,'tag','figMenuEditCopyOptions'),'Parent', m_plot);
 in_addmenu(m_plot,1,@gui.callback_PickColorMap,'Next Colormap');
 set(findall(FigureHandle,'tag','figMenuEditColormap'),'Parent', m_plot,'Text','Colormap Editor...');
-
 in_addmenu(m_plot,1,@gui.callback_PickPlotMarker,'Next Marker Type');
 in_addmenu(m_plot,1,@gui.callback_Violinplot,'Gene Violin Plot...');
 in_addmenu(m_plot,0,@gui.callback_DrawDotplot,'Gene Dot Plot...');
 in_addmenu(m_plot,0,@gui.callback_GeneHeatMap,'Gene Heatmap...');
 
-
-m_edit=findall(FigureHandle,'tag','figMenuEdit');
-delete(allchild(m_edit));
-in_addmenu(m_edit, 0, @in_SelectCellsByQC, 'Filter genes and cells...');
-in_addmenu(m_edit, 0, @in_Brushed2NewCluster, 'Add brushed cells to a new group');
-in_addmenu(m_edit, 0, @in_Brushed2MergeClusters, 'Merge brushed cells to same group');
-in_addmenu(m_edit, 0, @in_RenameCellTypeBatchID, 'Rename Cell Type or Batch ID...');
-in_addmenu(m_edit, 1, @gui.callback_SplitAtacGex, 'Split Multiome ATAC+GEX Matrix...');
-in_addmenu(m_edit, 1, {@in_MergeSCEs, 1}, 'Merge SCE Variables in Workspace...');
-in_addmenu(m_edit, 0, {@in_MergeSCEs, 2}, 'Merge SCE Data Files...');
-in_addmenu(m_edit, 1, @in_AddEditCellAttribs, 'Add/Edit Cell Attributes...');
-in_addmenu(m_edit, 0, @in_ExportCellAttribTable, 'Export Cell Attribute Table...');
-in_addmenu(m_edit, 1, {@in_MergeCellSubtypes, 1}, 'Import Cell Annotation from SCE in Workspace...');
-in_addmenu(m_edit, 0, {@in_MergeCellSubtypes, 2}, 'Import Cell Annotation from SCE Data File...');
-in_addmenu(m_edit, 1, @gui.callback_SelectCellsByClass, 'Select Cells...');
-
-
-
-m_help = findall(FigureHandle, 'tag', 'figMenuHelp');
-delete(m_help);
-
-%m_vie = uimenu(FigureHandle,'Text','&Multiview','Accelerator','M');
-%i_addmenu(m_vie,0,@gui.callback_MultiEmbeddingViewer,'Multi-embedding View...');
-%i_addmenu(m_vie,0,@gui.callback_MultiGroupingViewer,'Multi-grouping View...');
-%i_addmenu(m_vie,0,@gui.callback_CrossTabulation,'Cross Tabulation...');
-
 m_exp = uimenu(FigureHandle, 'Text', '&Tools', 'Accelerator', 'T');
-
-
 % m_exp2 = uimenu(m_exp,'Text','sc&Tenifold Suite','Accelerator','T');
 % i_addmenu(m_exp2,1,@callback_scTenifoldNet1,'scTenifoldNet - GRN Construction 🐢🐢 ...');
 % i_addmenu(m_exp2,0,@callback_scTenifoldNet2,'scTenifoldNet - GRN Comparison 🐢🐢🐢 ...');
@@ -166,19 +157,14 @@ m_exp = uimenu(FigureHandle, 'Text', '&Tools', 'Accelerator', 'T');
 %i_addmenu(m_exp,0,@callback_ShowPseudoTimeGenes,'Show Genes with Expression Varies with Pseudotime...');
 %i_addmenu(m_exp,0,@callback_DetectCellularCrosstalk,'Ligand-Receptor Mediated Intercellular Crosstalk...');
 %i_addmenu(m_exp,0,@AnnotateSubTypes,'Assign Subtypes of Cells (Neurons or T Cells)...');
-in_addmenu(m_exp, 0, @gui.callback_SelectCellsByMarker, 'Extract Cells by Marker (+/-) Expression...');
-in_addmenu(m_exp, 0, @in_MergeSubCellTypes, 'Merge Subclusters of the Same Cell Type');
-%i_addmenu(m_exp,0,@callback_TwoGeneCooccurrenceTest,'Two-Gene Cooccurrence Test...');
-%i_addmenu(m_exp,0,@AnnotateSubGroup,'Annotate Cell Subgroups...');
-in_addmenu(m_exp, 1, @in_WorkonSelectedGenes, 'Select Top n  Highly Variable Genes (HVGs) to Work on...');
-in_addmenu(m_exp, 0, @in_SubsampleCells, 'Subsample 50% Cells to Work on...');
-in_addmenu(m_exp, 1, @gui.callback_DEGene2GroupsBatch, 'Differential Expression (DE) Analysis in Cell Type Batch Mode...');
-in_addmenu(m_exp, 0, @gui.callback_DPGene2GroupsBatch, 'Differential Program (DP) Analysis in Cell Type Batch Mode...');
+in_addmenu(m_exp, 0, @in_CompareGeneBtwCls, 'Cell Score Analysis...');
+in_addmenu(m_exp, 0, @gui.callback_GetCellSignatureMatrix, 'Cell State Analysis...');
 
-%i_addmenu(m_exp,0,@ShowCellStemScatter,"Stem Scatter Feature Plot...");
-%i_addmenu(m_exp,1,@gui.callback_Violinplot,'Gene Violin Plot...');
-%i_addmenu(m_exp,0,@gui.callback_DrawDotplot,'Gene Dot Plot...');
-%i_addmenu(m_exp,0,@gui.callback_GeneHeatMap,'Gene Heatmap...');
+in_addmenu(m_exp, 1, @in_EnrichrHVGs, 'HVG Functional Enrichment Analysis...');
+in_addmenu(m_exp, 1, @gui.callback_DEGene2Groups, 'Differential Expression (DE) Analysis...');
+in_addmenu(m_exp, 0, @gui.callback_DPGene2Groups, 'Differential Program (DP) Analysis...');
+in_addmenu(m_exp, 0, @gui.callback_DEGene2GroupsBatch, 'Differential Expression (DE) Analysis in Cell Type Batch Mode...');
+in_addmenu(m_exp, 0, @gui.callback_DPGene2GroupsBatch, 'Differential Program (DP) Analysis in Cell Type Batch Mode...');
 
 in_addmenu(m_exp, 1, @gui.callback_CalculateGeneStats, 'Calculate Gene Expression Statistics...');
 in_addmenu(m_exp, 0, @gui.callback_CellCycleLibrarySize, 'Library Size of Cell Cycle Phases...');
@@ -186,13 +172,15 @@ in_addmenu(m_exp, 0, @gui.callback_CellCycleAssignment, 'Assign Cell Cycle Phase
 %i_addmenu(m_exp,0,@gui.callback_TCellExhaustionScores,'T Cell Exhaustion Score...');
 in_addmenu(m_exp, 1, {@in_DetermineCellTypeClustersGeneral, false}, 'Annotate Cell Type Using Customized Markers...');
 in_addmenu(m_exp, 0, @in_SubtypeAnnotation, 'Annotate Cell Subtype...');
-in_addmenu(m_exp, 0, @gui.callback_GetCellSignatureMatrix, 'Cell State Analysis...');
+
 in_addmenu(m_exp, 1, @in_SingleClickSolution, 'Single Click Solution (from Raw Data to Annotation)...');
 
 
 m_net = uimenu(FigureHandle, 'Text', '&Network', 'Accelerator', 'N');
 in_addmenu(m_net, 0, @in_Select5000Genes, 'Remove Less Informative Genes to Reduce Gene Space...');
 in_addmenu(m_net, 0, @gui.i_setnetwd, 'Set Network Analysis Working Root Directory...');
+in_addmenu(m_net, 1, @gui.callback_BuildGeneNetwork, 'Build GRN with Selected Genes...');
+in_addmenu(m_net, 0, @gui.callback_CompareGeneNetwork, 'Build & Compare Two GRNs...');
 in_addmenu(m_net, 1, {@in_scTenifoldNet,1}, 'Construct GRN using PC Regression [PMID:33336197] 🐢...');
 %in_addmenu(m_net, 1, @callback_scPCNet1, 'GRN Construction - PC Regression (w/o subsampling) [PMID:33336197] 🐢...');
 %in_addmenu(m_net, 0, @callback_scTenifoldNet1, 'GRN Construction - PC Regression (w/ subsampling) [PMID:33336197] 🐢🐢 ...');
@@ -227,10 +215,18 @@ in_addmenu(m_ext, 1, @gui.callback_ExploreCellularCrosstalk, 'Talklr Intercellul
 
 % in_addmenu(m_ext, 0, @gui.callback_CompareGCLBtwCls, 'Differential GCL Analysis [PMID:33139959]🐢🐢 ...');
 % in_addmenu(m_ext, 0, @gui.callback_DiffTFActivity, 'Differential TF Activity Analysis...');
-m_help = uimenu(FigureHandle, 'Text', '&Help', 'Accelerator', 'H');
-in_addmenu(m_help, 0, {@(~, ~) web('https://scgeatool.github.io/')}, 'Visit SCGEATOOL-Standalone Website...');
-in_addmenu(m_help, 0, @callback_CheckUpdates, 'Check for Updates...');
 
+delete(findall(FigureHandle, 'tag', 'figMenuHelp'));
+m_help = uimenu(FigureHandle, 'Text', '&Help', 'Accelerator', 'H');
+in_addmenu(m_help, 0, {@(~, ~) web('https://scgeatoolbox.readthedocs.io/en/latest/')}, 'Online Documentation...');
+in_addmenu(m_help, 0, {@(~, ~) web('https://scgeatoolbox.readthedocs.io/en/latest/quick_installation.html')}, 'Quick Installation...');
+in_addmenu(m_help, 1, {@(~, ~) web('https://www.mathworks.com/matlabcentral/fileexchange/72917-scgeatoolbox-single-cell-gene-expression-analysis-toolbox')}, 'View scGEAToolbox on File Exchange...');
+in_addmenu(m_help, 0, {@(~, ~) web('https://scgeatool.github.io/')}, 'Visit SCGEATOOL-Standalone Website...');
+in_addmenu(m_help, 1, {@(~, ~) web('https://pubmed.ncbi.nlm.nih.gov/31697351/')}, 'Cite scGEAToolbox Paper...');
+in_addmenu(m_help, 0, {@(~, ~) web('https://scholar.google.com/scholar?cites=4661048952867744439&as_sdt=5,44&sciodt=0,44&hl=en')}, 'Show Papers Citing scGEAToolbox...');
+in_addmenu(m_help, 1, {@(~, ~) web('https://matlab.mathworks.com/open/github/v1?repo=jamesjcai/scGEAToolbox&file=online_landing.m')}, 'Open in MATLAB Online...');
+in_addmenu(m_help, 1, @callback_CheckUpdates, 'Check for Updates...');
+in_addmenu(m_help, 0, {@(~, ~) web('https://scgeatoolbox.readthedocs.io/en/latest/license.html')}, 'License Agreement');
 
 
 
@@ -306,12 +302,10 @@ in_addbuttonpush(0, 0, @gui.callback_GeneHeatMap, "icon-mat-apps-20.gif", "Gene 
 in_addbuttonpush(0, 0, @in_call_scgeatool, "IMG00107.GIF", " ");
 in_addbuttonpush(0, 1, @in_CompareGeneBtwCls, "cellscore2.gif", "Cell score analysis--obtaining gene signature score for each cell");
 in_addbuttonpush(0, 0, @gui.callback_GetCellSignatureMatrix, "icon-fa-connectdevelop-20.gif", "Cell state analysis--obtaining multiple gene signature scores to reveal functional state of cells");
-in_addbuttonpush(0, 1, @gui.callback_DEGene2Groups, "plotpicker-boxplot.gif", "Differential expression (DE) analysis)");
+in_addbuttonpush(0, 1, @in_EnrichrHVGs, "plotpicker-andrewsplot.gif", "Functional enrichment analysis with HVGs");
+in_addbuttonpush(0, 0, @gui.callback_DEGene2Groups, "plotpicker-boxplot.gif", "Differential expression (DE) analysis)");
 in_addbuttonpush(0, 0, @gui.callback_DPGene2Groups, "plotpicker_noisepsd.gif", "Differential program (DP) analysis)");
-in_addbuttonpush(0, 0, @in_EnrichrHVGs, "plotpicker-andrewsplot.gif", "Functional enrichment analysis with HVGs");
-
 % fullfile(matlabroot,'toolbox','matlab','icons','HDF_grid.gif')
-
 in_addbuttonpush(0, 1, @gui.callback_BuildGeneNetwork, "noun_Network_691907.gif", "Build gene regulatory network");
 in_addbuttonpush(0, 0, @gui.callback_CompareGeneNetwork, "noun_Deep_Learning_2424485.gif", "Compare two scGRNs");
 in_addbuttonpush(0, 1, {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
