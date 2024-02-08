@@ -401,22 +401,23 @@ if ~showuseronboarding
 end
 
 if isempty(sce) || sce.NumCells==0
-    [sce]=gui.sc_openscedlg;
+    %[sce]=gui.sc_openscedlg;
+    in_sc_openscedlg;
 end
-guidata(FigureHandle, sce);
-in_RefreshAll;
+%guidata(FigureHandle, sce);
+%in_RefreshAll;
 
 % ----------------------------------
 % ----------------------------------
-    function in_sc_openscedlg(~,~)
+    function in_sc_openscedlg(~, ~)
         [sce] = gui.sc_openscedlg;
-        %if ~isempty(sce) && sce.NumCells > 0
-        guidata(FigureHandle, sce);
-        %end
-        in_RefreshAll;
+        if ~isempty(sce) && sce.NumCells > 0
+            guidata(FigureHandle, sce);
+        end
+        in_RefreshAll([], [], false, false);
     end
 
-    function in_fixfield(oldf,newf)
+    function in_fixfield(oldf, newf)
         if ~isfield(sce.struct_cell_embeddings,newf) && isfield(sce.struct_cell_embeddings,oldf)
             if ~isempty(sce.struct_cell_embeddings.(oldf))
                 if size(sce.struct_cell_embeddings.(oldf),2) == 3

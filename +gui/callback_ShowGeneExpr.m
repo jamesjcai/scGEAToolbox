@@ -90,15 +90,17 @@ sce = guidata(FigureHandle);
                         end
 
                         images = cell(length(glist), 1);
+                        warning off
                         for k = 1:length(glist)
                             f = gui.i_cascadefig(sce, glist(k), axx, bxx, k, methodid);
                             % i_showcascade(sce,gsorted(idx(k)),axx,bxx,k);
                             if needpptx
                                 img1 = [tempname, '.png'];
-                                images{k} = img1;
+                                images{k} = img1;                                
                                 saveas(f, img1);
                             end
                         end
+                        warning on
                         if needpptx, gui.i_save2pptx(images); end
                         return;
                     otherwise
