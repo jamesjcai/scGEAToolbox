@@ -31,6 +31,8 @@ f_traj = [];   % trajectory curve
 
 ax = [];
 bx = [];
+pushbuttonV = [];
+
 tmpcelltypev = cell(sce.NumCells, 1);
 
 if ~isempty(c_in), sce.c = c_in; end
@@ -43,7 +45,8 @@ if ~(ismcc || isdeployed)
 else
     tagx = 'off';
 end
-pushbuttonV={};
+
+
 FigureHandle = figure('Name', 'SCGEATOOL :: Single-Cell Gene Expression Analysis Tool', ...
     'position', round(1.25*[0, 0, 560, 420]), ...
     'visible', 'off', 'NumberTitle', tagx);
@@ -52,12 +55,24 @@ movegui(FigureHandle, 'center');
 % b=uipanel(FigureHandle,'Title','B','BackgroundColor','cyan');
 % b.Position = [0.18 0.40 0.30 0.35];
 
-set(findall(FigureHandle, 'ToolTipString', 'Link/Unlink Plot'), 'Visible', 'Off')
-set(findall(FigureHandle, 'ToolTipString', 'Edit Plot'), 'Visible', 'Off')
-set(findall(FigureHandle, 'ToolTipString', 'Open Property Inspector'), 'Visible', 'Off')
-set(findall(FigureHandle, 'ToolTipString', 'Save Figure'), 'Visible', 'Off')
-set(findall(FigureHandle, 'ToolTipString', 'New Figure'), 'Visible', 'Off')
-set(findall(FigureHandle, 'ToolTipString', 'Open File'), 'Visible', 'Off')
+% set(findall(FigureHandle, 'ToolTipString', 'Insert Colorbar'), 'Visible', 'Off')
+% set(findall(FigureHandle, 'ToolTipString', 'Insert Legend'), 'Visible', 'Off')
+% set(findall(FigureHandle, 'ToolTipString', 'Print Figure'), 'Visible', 'Off')
+
+pushbuttonV = findall(FigureHandle, 'ToolTipString', 'Insert Colorbar');
+set(pushbuttonV,'Separator','off');
+%pushbuttonV = [pushbuttonV; findall(FigureHandle, 'ToolTipString', 'Insert Legend')];
+%pushbuttonV = [pushbuttonV; findall(FigureHandle, 'ToolTipString', 'Print Figure')];
+delete(findall(FigureHandle, 'ToolTipString', 'Print Figure'));
+delete(findall(FigureHandle, 'ToolTipString', 'Insert Legend'));
+delete(findall(FigureHandle, 'ToolTipString', 'Link/Unlink Plot'));
+delete(findall(FigureHandle, 'ToolTipString', 'Edit Plot'));
+delete(findall(FigureHandle, 'ToolTipString', 'Open Property Inspector'));
+delete(findall(FigureHandle, 'ToolTipString', 'Save Figure'));
+delete(findall(FigureHandle, 'ToolTipString', 'New Figure'));
+delete(findall(FigureHandle, 'ToolTipString', 'Open File'));
+
+
 
 %a=findall(FigureHandle,'ToolTipString','New Figure');
 %a.ClickedCallback = @__;
@@ -88,8 +103,10 @@ delete(findall(FigureHandle, 'tag', 'figMenuFilePreferences'));
 delete(findall(FigureHandle, 'tag', 'figMenuFileExportSetup'));
 set(findall(FigureHandle, 'tag', 'figMenuFileSave'),'Text','&Save SCE...','MenuSelectedFcn', @callback_SaveX);
 delete(findall(FigureHandle, 'tag', 'figMenuGenerateCode'));
-set(findall(FigureHandle, 'tag', 'figMenuFileImportData'),'MenuSelectedFcn', @in_GEOAccessionToSCE,...
-    'Text','Import Data Using GEO Accession...','Separator','on');
+delete(findall(FigureHandle, 'tag', 'figMenuFileImportData'));
+
+% set(findall(FigureHandle, 'tag', 'figMenuFileImportData'),'MenuSelectedFcn', @in_GEOAccessionToSCE,...
+%     'Text','Import Data Using GEO Accession...','Separator','on');
 set(findall(FigureHandle,'tag','figMenuFilePrintPreview'),'Separator','on');
 
 m_file=findall(FigureHandle,'tag','figMenuFile');
@@ -145,7 +162,7 @@ set(findall(FigureHandle,'tag','figMenuEditCopyFigure'),'Parent', m_plot);
 set(findall(FigureHandle,'tag','figMenuEditCopyOptions'),'Parent', m_plot);
 in_addmenu(m_plot,1,@gui.callback_PickColorMap,'Next Colormap');
 set(findall(FigureHandle,'tag','figMenuEditColormap'),'Parent', m_plot,'Text','Colormap Editor...');
-in_addmenu(m_plot,1,@gui.callback_PickPlotMarker,'Next Marker Type');
+in_addmenu(m_plot,0,@gui.callback_PickPlotMarker,'Next Marker Type');
 in_addmenu(m_plot,1,@gui.callback_Violinplot,'Gene Violin Plot...');
 in_addmenu(m_plot,0,@gui.callback_DrawDotplot,'Gene Dot Plot...');
 in_addmenu(m_plot,0,@gui.callback_GeneHeatMap,'Gene Heatmap...');
@@ -230,14 +247,11 @@ in_addmenu(m_help, 1, {@(~, ~) web('https://matlab.mathworks.com/open/github/v1?
 in_addmenu(m_help, 1, @callback_CheckUpdates, 'Check for Updates...');
 in_addmenu(m_help, 0, {@(~, ~) web('https://scgeatoolbox.readthedocs.io/en/latest/license.html')}, 'License Agreement');
 
-
-
-
-
-
 hAx = axes('Parent', FigureHandle,'Visible','off');
-if ~isempty(sce)&&sce.NumCells>0
-    [h] = gui.i_gscatter3(sce.s, c, methodid, 1, hAx);
+if ~isempty(sce) && sce.NumCells>0
+    h = gui.i_gscatter3(sce.s, c, methodid, 1, hAx);
+else
+    h = [];
 end
 title(hAx, sce.title);
 subtitle(hAx,'[genes x cells]');
@@ -290,7 +304,9 @@ in_addbuttonpush(1, 1, @gui.callback_CloseAllOthers, "icon-fa-cut-10.gif", "Clos
 in_addbuttonpush(1, 0, @gui.callback_PickPlotMarker, "plotpicker-rose.gif", "Switch scatter plot marker type");
 in_addbuttonpush(1, 0, @gui.callback_PickColorMap, "plotpicker-compass.gif", "Pick new color map");
 in_addbuttonpush(1, 0, @in_RefreshAll, "icon-mat-refresh-20.gif", "Refresh");
-in_addbuttonpush(0, 0, @in_call_scgeatool, "IMG00107.GIF", " ");
+
+
+%in_addbuttonpush(0, 0, @in_call_scgeatool, "IMG00107.GIF", " ");
 %i_addbutton(0,0,@callback_CalculateCellScores,"cellscore2.gif","Calculate cell scores from list of feature genes")
 %i_addbutton(0,0,@callback_ComparePotency,"plotpicker-candle.gif","Compare differentiation potency between groups");
 
@@ -313,7 +329,7 @@ in_addbuttonpush(0, 1, @gui.callback_BuildGeneNetwork, "noun_Network_691907.gif"
 in_addbuttonpush(0, 0, @gui.callback_CompareGeneNetwork, "noun_Deep_Learning_2424485.gif", "Compare two scGRNs");
 in_addbuttonpush(0, 1, {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 
-gui.add_3dcamera(DeftToolbarHandle, 'AllCells');
+pushbuttonV=[pushbuttonV; gui.add_3dcamera(DeftToolbarHandle, 'AllCells')];
 
 in_addbuttonpush(2, 0, @in_turnonuserguiding, "icon-fa-thumb-tack-10.gif", ...
     "Turn on user guiding toolbar");
@@ -337,10 +353,16 @@ in_addbuttontoggle(2, 0, {@in_togglebtfun, @callback_SaveX, ...
 
 % handles = guihandles( FigureHandle );
 % guidata( FigureHandle, handles );
+if ~isempty(c)
+    kc = numel(unique(c));
+    colormap(pkg.i_mycolorlines(kc));
+end
 
-kc = numel(unique(c));
-colormap(pkg.i_mycolorlines(kc));
-% xxx
+if ~isempty(sce) && sce.NumCells>0
+    in_EnDisableMenu('on');
+else
+    in_EnDisableMenu('off');
+end
 drawnow;
 set(FigureHandle, 'visible', 'on');
 if ~isempty(sce) && sce.NumCells>0
@@ -501,6 +523,7 @@ in_RefreshAll;
         pt.CData = in_getPtImage(imgFil);
         pt.Tooltip = tooltipTxt;
         pt.ClickedCallback = callbackFnc;
+        pushbuttonV=[pushbuttonV; pt];        
     end
 
     function in_togglebtfun(src, ~, func, ~, imgFil, ...
@@ -1033,11 +1056,23 @@ in_RefreshAll;
     end
 
     function in_EnDisableMenu(entag)
-        if nargin<1, entag='off'; end 
-        for k=1:length(pushbuttonV)
-            set(pushbuttonV{k},'Enable','off');
+        % if nargin<1, entag='off'; end
+        % for k=1:length(pushbuttonV)
+        %     set(pushbuttonV(k),'Enable',entag);
+        % end
+        set(DeftToolbarHandle,'Visible',entag);
+        set(MainToolbarHandle,'Visible',entag);
+        showuseronboarding = getpref('scgeatoolbox', 'useronboardingtoolbar');
+        switch entag
+            case 'on'
+                if showuseronboarding
+                    set(UserToolbarHandle,'Visible','on');
+                else
+                    set(UserToolbarHandle,'Visible','off');
+                end
+            case 'off'
+                set(UserToolbarHandle,'Visible','off');
         end
-
         menusv={m_file,m_edit,m_view,m_plot,m_ext,m_exp,m_net};
         for j=1:length(menusv)
             a=allchild(menusv{j});
@@ -1048,8 +1083,8 @@ in_RefreshAll;
         a=allchild(m_file);
         a(end).Enable='on';
         a(end-1).Enable='on';
-        a(end-3).Enable='on';
-        a(end-7).Enable='on';
+        %a(end-3).Enable='on';
+        a(end-6).Enable='on';
         %allchild(m_file)
         a=allchild(m_ext);
         a(end).Enable='on';
@@ -1100,7 +1135,7 @@ in_RefreshAll;
     function in_Switch2D3D(src, ~)  
         [para] = gui.i_getoldsettings(src);
 
-        if isempty(h.ZData)               % current 2D xxx
+        if isempty(h.ZData)               % current 2D
             ansx = questdlg('Switch to 3D?');
             if ~strcmp(ansx, 'Yes'), return; end
             if size(sce.s, 2) >= 3

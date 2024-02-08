@@ -1,4 +1,4 @@
-function add_3dcamera(tb, prefix, flatview)
+function [pt]=add_3dcamera(tb, prefix, flatview)
 
 if nargin < 3, flatview = false; end
 if nargin < 2, prefix = ''; end
