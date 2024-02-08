@@ -24,6 +24,7 @@ addOptional(p, 'callinghandle', []);
 parse(p, sce, varargin{:});
 callinghandle = p.Results.callinghandle;
 
+
 c_in = p.Results.c;
 s_in = p.Results.s;
 methodid = p.Results.methodid;
@@ -263,9 +264,9 @@ mfolder = fileparts(mfilename('fullpath'));
 
 DeftToolbarHandle = findall(FigureHandle, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
 MainToolbarHandle = uitoolbar('Parent', FigureHandle);
-set(MainToolbarHandle, 'Tag', 'MainToolBar', 'HandleVisibility', 'off', 'Visible', 'on');
+set(MainToolbarHandle, 'Tag', 'MainToolBar', 'HandleVisibility', 'off', 'Visible', 'off');
 UserToolbarHandle = uitoolbar('Parent', FigureHandle);
-set(UserToolbarHandle, 'Tag', 'UserToolBar', 'HandleVisibility', 'off', 'Visible', 'on');
+set(UserToolbarHandle, 'Tag', 'UserToolBar', 'HandleVisibility', 'off', 'Visible', 'off');
 
 % i_addbutton(1,1,@callback_Brush4Markers,"icon-mat-filter-1-20.gif","Marker genes of brushed cells");
 % i_addbutton_toggle(1,0,{@togglebtfun,@turnoffuserguiding,"icon-mat-blur-off-10.gif", ...
@@ -364,10 +365,11 @@ else
     in_EnDisableMenu('off');
 end
 drawnow;
-set(FigureHandle, 'visible', 'on');
 if ~isempty(sce) && sce.NumCells>0
     hAx.Visible="on";
 end
+set(FigureHandle, 'visible', 'on');
+
 in_fixfield('tsne','tsne3d');
 in_fixfield('umap','umap3d');
 in_fixfield('phate','phate3d');
@@ -392,10 +394,6 @@ end
 if ~ispref('scgeatoolbox', 'useronboardingtoolbar')
     gui.gui_userguidingpref(true);
     setpref('scgeatoolbox', 'useronboardingtoolbar', true);
-else
-    %if getpref('scgeatoolbox','useronboardingtoolbar')
-    %    gui.gui_userguidingpref(false);
-    %end
 end
 showuseronboarding = getpref('scgeatoolbox', 'useronboardingtoolbar');
 if ~showuseronboarding
@@ -405,17 +403,17 @@ end
 if isempty(sce) || sce.NumCells==0
     [sce]=gui.sc_openscedlg;
 end
-in_RefreshAll;
 guidata(FigureHandle, sce);
+in_RefreshAll;
 
 % ----------------------------------
 % ----------------------------------
     function in_sc_openscedlg(~,~)
         [sce] = gui.sc_openscedlg;
-        if ~isempty(sce) && sce.NumCells > 0
-            in_RefreshAll;
-            guidata(FigureHandle, sce);
-        end
+        %if ~isempty(sce) && sce.NumCells > 0
+        guidata(FigureHandle, sce);
+        %end
+        in_RefreshAll;
     end
 
     function in_fixfield(oldf,newf)
@@ -857,7 +855,7 @@ guidata(FigureHandle, sce);
         gui.gui_waitbar_adv(fw);
         in_RefreshAll(src, [], true, false);
         ix_labelclusters(true);
-        setappdata(FigureHandle, 'cL', cL);
+        %setappdata(FigureHandle, 'cL', cL);
         guidata(FigureHandle, sce);
     end
 
@@ -1098,23 +1096,23 @@ guidata(FigureHandle, sce);
     end
 
     function in_RefreshAll(src, ~, keepview, keepcolr)
-        if isempty(sce) || sce.NumCells==0
-            set(hAx,'Visible','off');
-            %delete(h);
-            in_EnDisableMenu('off');
-            return;
-        end
-        in_EnDisableMenu('on');
         if nargin < 4, keepcolr = false; end
         if nargin < 3, keepview = false; end
         if keepview || keepcolr
             [para] = gui.i_getoldsettings(src);
         end
+        if isempty(sce) || sce.NumCells==0
+            set(hAx,'Visible','off');
+            in_EnDisableMenu('off');
+            return;
+        end
+        in_EnDisableMenu('on');        
         figure(FigureHandle);
-        [c,cL]=grp2idx(sce.c);
+        % [c,cL]=grp2idx(sce.c);
         % was3d = ~isempty(h.ZData);
         if size(sce.s, 2) >= 3
             if keepview, [ax, bx] = view(hAx); end
+            if isempty(c), [c,cL] = grp2idx(sce.c); end
             h = gui.i_gscatter3(sce.s, c, methodid, hAx);
             if keepview, view(ax, bx); end
         else        % otherwise going to show 2D            
@@ -1901,8 +1899,8 @@ guidata(FigureHandle, sce);
             delete(dtp);
             set(src, 'State', 'off');
         else
-            sce = guidata(FigureHandle);
-            [thisc, clable] = gui.i_select1class(sce,true);
+            % sce = guidata(FigureHandle);
+            [thisc, clable] = gui.i_select1class(sce,true);            
             if isempty(thisc)
                 set(src, 'State', 'off');
                 return;
@@ -1921,7 +1919,7 @@ guidata(FigureHandle, sce);
                 set(src, 'State', 'off');
                 warndlg('Labels are not showing. Too many categories (n>200).');
             end
-            setappdata(FigureHandle, 'cL', cL);
+            %setappdata(FigureHandle, 'cL', cL);
             guidata(FigureHandle, sce);
             % colormap(lines(min([256 numel(unique(sce.c))])));
         end
