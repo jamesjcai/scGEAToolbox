@@ -381,7 +381,7 @@ for kx=1:length(cvx)
 end
 sce.struct_cell_embeddings = orderfields(sce.struct_cell_embeddings);
 
-guidata(FigureHandle, sce);
+% guidata(FigureHandle, sce);
 % setappdata(FigureHandle,'cL',cL);
 set(FigureHandle, 'CloseRequestFcn', @in_closeRequest);
 
@@ -406,12 +406,16 @@ if isempty(sce) || sce.NumCells==0
     [sce]=gui.sc_openscedlg;
 end
 in_RefreshAll;
+guidata(FigureHandle, sce);
 
 % ----------------------------------
 % ----------------------------------
     function in_sc_openscedlg(~,~)
-        [sce]=gui.sc_openscedlg;
-        in_RefreshAll;
+        [sce] = gui.sc_openscedlg;
+        if ~isempty(sce) && sce.NumCells > 0
+            in_RefreshAll;
+            guidata(FigureHandle, sce);
+        end
     end
 
     function in_fixfield(oldf,newf)
@@ -1107,10 +1111,11 @@ in_RefreshAll;
             [para] = gui.i_getoldsettings(src);
         end
         figure(FigureHandle);
+        [c,cL]=grp2idx(sce.c);
         % was3d = ~isempty(h.ZData);
         if size(sce.s, 2) >= 3
             if keepview, [ax, bx] = view(hAx); end
-            h = gui.i_gscatter3(sce.s, sce.c, methodid, hAx);
+            h = gui.i_gscatter3(sce.s, c, methodid, hAx);
             if keepview, view(ax, bx); end
         else        % otherwise going to show 2D            
             if keepview, [ax, bx] = view(hAx); end
