@@ -48,7 +48,7 @@ else
 end
 
 
-FigureHandle = figure('Name', 'SCGEATOOL :: Single-Cell Gene Expression Analysis Tool', ...
+FigureHandle = figure('Name', 'scgeatool', ...
     'position', round(1.25*[0, 0, 560, 420]), ...
     'visible', 'off', 'NumberTitle', tagx);
 movegui(FigureHandle, 'center');
@@ -59,7 +59,7 @@ fig_height = fig_pos(4);
 btn_width = 100; % Adjust as needed
 btn_height = 25; % Adjust as needed
 btn_x = (fig_width - btn_width) / 2;
-btn_y = (fig_height - btn_height) / 1.5;
+btn_y = (fig_height - btn_height) / 1.618;
 
 button = uicontrol(...
     'Style', 'pushbutton',...
@@ -68,6 +68,7 @@ button = uicontrol(...
     'String', 'Import Data...',... % Customize label
     'Callback', {@in_sc_openscedlg}); % Assign callback function
 
+set(FigureHandle,'resizefcn',{@myResizeFun,button});
 
 % b=uipanel(FigureHandle,'Title','B','BackgroundColor','cyan');
 % b.Position = [0.18 0.40 0.30 0.35];
@@ -427,7 +428,7 @@ end
         [sce] = gui.sc_openscedlg;
         if ~isempty(sce) && sce.NumCells > 0
             guidata(FigureHandle, sce);
-            delete(button);
+            set(button,'Visible','off');
         else
             return;
         end
@@ -1090,6 +1091,9 @@ end
                 else
                     set(UserToolbarHandle,'Visible','off');
                 end
+                if isvalid(button)
+                    set(button,'Visible','off'); 
+                end
             case 'off'
                 set(UserToolbarHandle,'Visible','off');
         end
@@ -1123,7 +1127,9 @@ end
             return;
         end
         in_EnDisableMenu('on');
-        if isvalid(button), delete(button); end
+        if isvalid(button)
+            set(button,'Visible','off'); 
+        end
         figure(FigureHandle);
         % [c,cL]=grp2idx(sce.c);
         % was3d = ~isempty(h.ZData);
@@ -1996,4 +2002,18 @@ end
         end
     end
 
+
 end
+
+    function myResizeFun(src, ~, butt)
+        fig_pos = get(src, 'Position'); % [left bottom width height]
+        fig_width = fig_pos(3);
+        fig_height = fig_pos(4);
+        
+        btn_width = 100; % Adjust as needed
+        btn_height = 25; % Adjust as needed
+        btn_x = (fig_width - btn_width) / 2;
+        btn_y = (fig_height - btn_height) / 1.618;
+    
+        set(butt,'Position',[btn_x btn_y btn_width btn_height]);
+    end

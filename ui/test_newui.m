@@ -1,4 +1,5 @@
 f=figure('Position',[10 10 200 300]);
+set(f,'resizefcn',@myResizeFun);
 movegui(f,"center")
 height = 25;
 width = 120;
@@ -15,6 +16,9 @@ a = uicontrol('style','push',...
                  'position',Position,...
                  'string','Import Data...',...
                  'callback',{@gui.sc_openscedlg});
+% set(a,"Visible","off");
+
+
 
 
 
@@ -44,3 +48,21 @@ button = uicontrol(...
 
 
 % uibutton(fig)
+set(fig,'resizefcn',{@myResizeFun,button});
+
+function myResizeFun(src,events,butt)
+src
+events
+disp('aaa')
+
+fig_pos = get(src, 'Position'); % [left bottom width height]
+fig_width = fig_pos(3);
+fig_height = fig_pos(4);
+
+btn_width = 100; % Adjust as needed
+btn_height = 25; % Adjust as needed
+btn_x = (fig_width - btn_width) / 2;
+btn_y = (fig_height - btn_height) / 2;
+
+set(butt,'Position',[btn_x btn_y btn_width btn_height]);
+end
