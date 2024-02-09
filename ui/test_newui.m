@@ -1,4 +1,4 @@
-f=figure('Position',[100 100 200 300]);
+f=figure('Position',[100 100 500 300]);
 % set(f,'resizefcn',@myResizeFun);
 movegui(f,"center")
 height = 25;
@@ -10,14 +10,18 @@ y = sz(4);
 %y = mean( sz( [2, 4]));
 Position= [(x - width)/2, (y - height)/2, width, height];
 
-text(Position(1),Position(2),0,'Ready to explore.');
+% text(Position(1),Position(2),0,'Ready to explore.');
 a = uicontrol('style','push',...
             'Parent',f,...
                  'position',Position,...
                  'string','Import Data...',...
                  'callback',{@gui.sc_openscedlg});
 % set(a,"Visible","off");
-
+Position(1)=Position(1)-120;
+b = uicontrol('style','text',...
+            'Parent',f,...
+                 'position',Position,...
+                 'string','Ready to explore.');
 
 return;
 
