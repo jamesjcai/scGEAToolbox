@@ -117,7 +117,11 @@ delete(findall(FigureHandle,'tag','figMenuInsertLight'));
 delete(findall(FigureHandle, 'tag', 'figMenuWindow'));
 delete(findall(FigureHandle, 'tag', 'figMenuDesktop'));
 delete(findall(FigureHandle, 'tag', 'figMenuUpdateFileNew'));
-set(findall(FigureHandle, 'tag', 'figMenuOpen'),'MenuSelectedFcn', @in_sc_openscedlg);
+
+m_menuopen = findall(FigureHandle, 'tag', 'figMenuOpen');
+set(m_menuopen,'MenuSelectedFcn', @in_sc_openscedlg, 'Text', '&Import Data...');
+m_menuopen.Accelerator='I';
+
 delete(findall(FigureHandle, 'tag', 'figMenuFileSaveAs'));
 delete(findall(FigureHandle, 'tag', 'figMenuFileSaveWorkspaceAs'));
 delete(findall(FigureHandle, 'tag', 'figMenuFilePreferences'));
@@ -217,10 +221,10 @@ in_addmenu(m_exp, 1, @in_SingleClickSolution, 'Single Click Solution (from Raw D
 
 
 m_net = uimenu(FigureHandle, 'Text', '&Network', 'Accelerator', 'N');
-in_addmenu(m_net, 0, @in_Select5000Genes, 'Remove Less Informative Genes to Reduce Gene Space...');
-in_addmenu(m_net, 0, @gui.i_setnetwd, 'Set Network Analysis Working Root Directory...');
-in_addmenu(m_net, 1, @gui.callback_BuildGeneNetwork, 'Build GRN with Selected Genes...');
+% in_addmenu(m_net, 0, @gui.i_setnetwd, 'Set Network Analysis Working Root Directory...');
+in_addmenu(m_net, 0, @gui.callback_BuildGeneNetwork, 'Build GRN with Selected Genes...');
 in_addmenu(m_net, 0, @gui.callback_CompareGeneNetwork, 'Build & Compare Two GRNs...');
+in_addmenu(m_net, 1, @in_Select5000Genes, 'Remove Less Informative Genes to Reduce Gene Space...');
 in_addmenu(m_net, 1, {@in_scTenifoldNet,1}, 'Construct GRN using PC Regression [PMID:33336197] 🐢...');
 %in_addmenu(m_net, 1, @callback_scPCNet1, 'GRN Construction - PC Regression (w/o subsampling) [PMID:33336197] 🐢...');
 %in_addmenu(m_net, 0, @callback_scTenifoldNet1, 'GRN Construction - PC Regression (w/ subsampling) [PMID:33336197] 🐢...');
@@ -259,14 +263,14 @@ in_addmenu(m_ext, 1, @gui.callback_ExploreCellularCrosstalk, 'Talklr Intercellul
 delete(findall(FigureHandle, 'tag', 'figMenuHelp'));
 m_help = uimenu(FigureHandle, 'Text', '&Help', 'Accelerator', 'H');
 in_addmenu(m_help, 0, {@(~, ~) web('https://scgeatoolbox.readthedocs.io/en/latest/')}, 'Online Documentation...');
-in_addmenu(m_help, 0, {@(~, ~) web('https://scgeatoolbox.readthedocs.io/en/latest/quick_installation.html')}, 'Quick Installation...');
+in_addmenu(m_help, 0, {@(~, ~) web('https://scgeatoolbox.readthedocs.io/en/latest/quick_installation.html')}, 'Quick Installation Guide...');
 in_addmenu(m_help, 1, {@(~, ~) web('https://www.mathworks.com/matlabcentral/fileexchange/72917-scgeatoolbox-single-cell-gene-expression-analysis-toolbox')}, 'View scGEAToolbox on File Exchange...');
 in_addmenu(m_help, 0, {@(~, ~) web('https://scgeatool.github.io/')}, 'Visit SCGEATOOL-Standalone Website...');
 in_addmenu(m_help, 1, {@(~, ~) web('https://pubmed.ncbi.nlm.nih.gov/31697351/')}, 'Cite scGEAToolbox Paper...');
 in_addmenu(m_help, 0, {@(~, ~) web('https://scholar.google.com/scholar?cites=4661048952867744439&as_sdt=5,44&sciodt=0,44&hl=en')}, 'Show Papers Citing scGEAToolbox...');
 in_addmenu(m_help, 1, {@(~, ~) web('https://matlab.mathworks.com/open/github/v1?repo=jamesjcai/scGEAToolbox&file=online_landing.m')}, 'Open in MATLAB Online...');
 in_addmenu(m_help, 1, @callback_CheckUpdates, 'Check for Updates...');
-in_addmenu(m_help, 0, {@(~, ~) web('https://scgeatoolbox.readthedocs.io/en/latest/license.html')}, 'License Agreement');
+in_addmenu(m_help, 0, {@(~, ~) web('https://github.com/jamesjcai/scGEAToolbox')}, 'About scgeatool');
 
 hAx = axes('Parent', FigureHandle,'Visible','off');
 if ~isempty(sce) && sce.NumCells>0
