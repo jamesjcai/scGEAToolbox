@@ -1,5 +1,5 @@
-f=figure('Position',[10 10 200 300]);
-set(f,'resizefcn',@myResizeFun);
+f=figure('Position',[100 100 200 300]);
+% set(f,'resizefcn',@myResizeFun);
 movegui(f,"center")
 height = 25;
 width = 120;
@@ -10,7 +10,7 @@ y = sz(4);
 %y = mean( sz( [2, 4]));
 Position= [(x - width)/2, (y - height)/2, width, height];
 
-
+text(Position(1),Position(2),0,'Ready to explore.');
 a = uicontrol('style','push',...
             'Parent',f,...
                  'position',Position,...
@@ -19,7 +19,7 @@ a = uicontrol('style','push',...
 % set(a,"Visible","off");
 
 
-
+return;
 
 
 %%
