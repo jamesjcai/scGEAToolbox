@@ -74,7 +74,6 @@ end
                 scex.c_batch_id(idx2) = sprintf('%s-', tg);
                 scex.c = scex.c_batch_id;
                 scgeatool(scex);
-
                 %{
                 scex = selectcells(sce, idx1);
                 fx = scgeatool(scex);
@@ -96,7 +95,6 @@ end
                 fy.Subtitle.String = sprintf('%s\n%s', fy.Subtitle.String, sprintf('%s-', tg));
                 view(fy, ax, bx);
                 %}
-
                 return;                
             elseif strcmp(answer, 'Cancel')
                 return;
