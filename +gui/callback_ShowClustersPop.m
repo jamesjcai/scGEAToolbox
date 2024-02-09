@@ -101,7 +101,7 @@ end
                 if isempty(idx), return; end 
                 for ik=1:length(idx)
                     scev=SCEV{idx(ik)};
-                    sc_scatter_sce(scev);
+                    scgeatool(scev);
                     pause(0.5);
                 end
            case 'Save SCEs'

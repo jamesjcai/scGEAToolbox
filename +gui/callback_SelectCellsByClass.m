@@ -12,7 +12,7 @@ try
     scex = selectcells(sce, ptsSelected);
     % scex.c=cLi(ci(idx));
     scex.c = sce.c(ptsSelected);
-    sc_scatter_sce(scex);
+    scgeatool(scex);
     view(ax, bx);
 catch ME
     gui.gui_waitbar(fw, true);

@@ -40,7 +40,7 @@ end
             [ax, bx] = view(findall(FigureHandle,'type','axes'));
             fw = gui.gui_waitbar;
             scex = selectcells(sce, idx);
-            sc_scatter_sce(scex);
+            scgeatool(scex);
             view(ax, bx);
             gui.gui_waitbar(fw);
 
@@ -73,11 +73,10 @@ end
                 scex.c_batch_id(idx1) = sprintf('%s+', tg);
                 scex.c_batch_id(idx2) = sprintf('%s-', tg);
                 scex.c = scex.c_batch_id;
-                sc_scatter_sce(scex);
-
+                scgeatool(scex);
                 %{
                 scex = selectcells(sce, idx1);
-                fx = sc_scatter_sce(scex);
+                fx = scgeatool(scex);
                 fx.Position(3:4) = 0.8 * fx.Position(3:4);
                 movegui(fx, 'center');
                 fx.Position(1) = fx.Position(1) - 250;
@@ -88,7 +87,7 @@ end
                 answer = questdlg(sprintf('%s Cells extracted. Continue?', sprintf('%s+', tg)), '');
                 if ~strcmp(answer, 'Yes'), return; end
                 scey = selectcells(sce, idx2);
-                fy = sc_scatter_sce(scey);
+                fy = scgeatool(scey);
                 fy.Position(3:4) = 0.8 * fy.Position(3:4);
                 movegui(fy, 'center');
                 fy.Position(1) = fy.Position(1) + 250;                
@@ -96,7 +95,6 @@ end
                 fy.Subtitle.String = sprintf('%s\n%s', fy.Subtitle.String, sprintf('%s-', tg));
                 view(fy, ax, bx);
                 %}
-
                 return;                
             elseif strcmp(answer, 'Cancel')
                 return;
@@ -105,7 +103,7 @@ end
             end
             fw = gui.gui_waitbar;
             scex = selectcells(sce, idx);
-            sc_scatter_sce(scex);
+            scgeatool(scex);
             view(ax, bx);
             gui.gui_waitbar(fw);
         end
