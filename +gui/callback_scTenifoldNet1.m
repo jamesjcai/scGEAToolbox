@@ -8,7 +8,7 @@ catch ME
 end
 
 extprogname = 'scTenifoldNet';
-preftagname = 'netanalywrkpath';
+preftagname = 'externalwrkpath';
 [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
 if isempty(wkdir), return; end
 if isfolder(wkdir)
