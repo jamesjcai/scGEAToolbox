@@ -32,7 +32,8 @@ try
             end        
         end
     end
-catch
+catch ME
+    errordlg(ME.message);
 end
 cd(olddir);
 end

@@ -69,6 +69,7 @@ button = uicontrol(...
     'Callback', {@in_sc_openscedlg}); % Assign callback function
 
 set(FigureHandle,'resizefcn',{@myResizeFun,button});
+% set(FigureHandle, 'WindowButtonDownFcn',@(~,~) figure(FigureHandle))
 
 % b=uipanel(FigureHandle,'Title','B','BackgroundColor','cyan');
 % b.Position = [0.18 0.40 0.30 0.35];

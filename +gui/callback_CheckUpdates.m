@@ -15,7 +15,6 @@ if majneedupdate
         inputdlg(prompt,dlgtitle,fieldsize,definput);
     end
 else
-    if ~pkg.i_minvercheck
-        helpdlg(sprintf('scGEAToolbox (%s) is up to date.', v1), '');
-    end
+    waitfor(helpdlg(sprintf('scGEAToolbox (%s) is up to date.', v1), ''));
+    pkg.i_minvercheck;    
 end
