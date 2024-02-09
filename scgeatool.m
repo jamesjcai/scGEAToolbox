@@ -32,7 +32,7 @@ f_traj = [];   % trajectory curve
 
 ax = [];
 bx = [];
-pushbuttonV = [];
+%pushbuttonV = [];
 
 tmpcelltypev = cell(sce.NumCells, 1);
 
@@ -77,8 +77,10 @@ set(FigureHandle,'resizefcn',{@myResizeFun,button});
 % set(findall(FigureHandle, 'ToolTipString', 'Insert Legend'), 'Visible', 'Off')
 % set(findall(FigureHandle, 'ToolTipString', 'Print Figure'), 'Visible', 'Off')
 
-pushbuttonV = findall(FigureHandle, 'ToolTipString', 'Insert Colorbar');
-set(pushbuttonV,'Separator','off');
+%pushbuttonV = findall(FigureHandle, 'ToolTipString', 'Insert Colorbar');
+%set(pushbuttonV,'Separator','off');
+set(findall(FigureHandle, 'ToolTipString', 'Insert Colorbar'),'Separator','off');
+
 %pushbuttonV = [pushbuttonV; findall(FigureHandle, 'ToolTipString', 'Insert Legend')];
 %pushbuttonV = [pushbuttonV; findall(FigureHandle, 'ToolTipString', 'Print Figure')];
 delete(findall(FigureHandle, 'ToolTipString', 'Print Figure'));
@@ -221,15 +223,15 @@ in_addmenu(m_net, 0, @gui.callback_CompareGeneNetwork, 'Build & Compare Two GRNs
 in_addmenu(m_net, 1, {@in_scTenifoldNet,1}, 'Construct GRN using PC Regression [PMID:33336197] 🐢...');
 %in_addmenu(m_net, 1, @callback_scPCNet1, 'GRN Construction - PC Regression (w/o subsampling) [PMID:33336197] 🐢...');
 %in_addmenu(m_net, 0, @callback_scTenifoldNet1, 'GRN Construction - PC Regression (w/ subsampling) [PMID:33336197] 🐢...');
-in_addmenu(m_net, 0, {@in_scTenifoldNet,2}, 'Construct & Compare GRNs (scTenifoldNet Analysis) [PMID:33336197] 🐢...');
+in_addmenu(m_net, 0, {@in_scTenifoldNet,2}, 'Construct & Compare GRNs - scTenifoldNet [PMID:33336197] 🐢...');
 
 %in_addmenu(m_net, 1, @callback_scTenifoldNet2lite, 'GRN Comparison - scTenifoldNet (w/o subsampling) [PMID:33336197] 🐢 ...');
 %in_addmenu(m_net, 0, @callback_scTenifoldNet2, 'GRN Comparison - scTenifoldNet (w/ subsampling) [PMID:33336197] 🐢 ...');
 
 in_addmenu(m_net, 1, @gui.callback_scTenifoldKnk1, 'Virtual Gene KO - scTenifoldKnk [PMID:35510185] 🐢 ...');
 in_addmenu(m_net, 0, @gui.callback_VirtualKOGenKI, 'Virtual Gene KO - GenKI [PMID:37246643] (Python Required) 🐢 ...');
-in_addmenu(m_net, 1, @gui.callback_scTenifoldXct, 'Cell-Cell Interactions (CCIs) - scTenifoldXct [PMID:36787742] 🐢 ...');
-in_addmenu(m_net, 0, @gui.callback_scTenifoldXct2, 'Differential CCIs - scTenifoldXct [PMID:36787742] 🐢 ...');
+in_addmenu(m_net, 1, @gui.callback_scTenifoldXct, 'Cell-Cell Interactions - scTenifoldXct [PMID:36787742] 🐢 ...');
+%in_addmenu(m_net, 0, @gui.callback_scTenifoldXct2, 'Differential CCIs - scTenifoldXct [PMID:36787742] 🐢 ...');
 
 m_ext = uimenu(FigureHandle, 'Text', 'E&xternal', 'Accelerator', 'x');
 in_addmenu(m_ext, 0, @gui.i_setrenv, 'Check R Environment');
@@ -347,7 +349,7 @@ in_addbuttonpush(0, 1, @gui.callback_BuildGeneNetwork, "noun_Network_691907.gif"
 in_addbuttonpush(0, 0, @gui.callback_CompareGeneNetwork, "noun_Deep_Learning_2424485.gif", "Compare two scGRNs");
 in_addbuttonpush(0, 1, {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 
-pushbuttonV=[pushbuttonV; gui.add_3dcamera(DeftToolbarHandle, 'AllCells')];
+%pushbuttonV=[pushbuttonV; gui.add_3dcamera(DeftToolbarHandle, 'AllCells')];
 
 in_addbuttonpush(2, 0, @in_turnonuserguiding, "icon-fa-thumb-tack-10.gif", ...
     "Turn on user guiding toolbar");
@@ -524,7 +526,7 @@ end
         pt.CData = in_getPtImage(imgFil);
         pt.Tooltip = tooltipTxt;
         pt.ClickedCallback = callbackFnc;
-        pushbuttonV=[pushbuttonV; pt];
+        %pushbuttonV=[pushbuttonV; pt];
     end
 
     function in_addbuttontoggle(toolbarHdl, sepTag, callbackFnc)
@@ -544,7 +546,7 @@ end
         pt.CData = in_getPtImage(imgFil);
         pt.Tooltip = tooltipTxt;
         pt.ClickedCallback = callbackFnc;
-        pushbuttonV=[pushbuttonV; pt];        
+        %pushbuttonV=[pushbuttonV; pt];        
     end
 
     function in_togglebtfun(src, ~, func, ~, imgFil, ...
