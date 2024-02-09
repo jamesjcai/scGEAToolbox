@@ -1,4 +1,4 @@
-function [sce]=sc_openscedlg
+function [sce] = sc_openscedlg(~, ~)
     sce = [];
     list = {'SCE Data File (*.mat)...', ...
         'TXT/TSV/CSV File (*.txt)...', ...
@@ -16,13 +16,14 @@ function [sce]=sc_openscedlg
         'Link to GEO txt.gz File...', ...
         'GEO Accession Number(s)...', ...
         '----------------------------------', ...
+        'Simulate Data [PMID:27122128]...',...
         'Load SCE Variable from Workspace...', ...
         'Load Example Data...'};
     [indx, tf] = listdlg('ListString', list, ...
         'SelectionMode', 'single', ...
-        'PromptString', {'Select an input data type:'}, ...
-        'ListSize', [230, 265], ...
-        'Name', '', 'InitialValue', length(list));
+        'PromptString', {'Select Data Source:'}, ...
+        'ListSize', [230, 275], ...
+        'Name', 'Import Data', 'InitialValue', length(list));
     if tf ~= 1, return; end
     ButtonName = list{indx};
     %         ButtonName = questdlg('Select Input Data Type', ...
@@ -31,6 +32,13 @@ function [sce]=sc_openscedlg
     %                               '10x Genomics .mtx', ...
     %                               'TSV/CSV .txt', 'SCE Data .mat');
     switch ButtonName
+        case 'Simulate Data [PMID:27122128]...'
+            try
+                [sce]=in_simulatedata;
+            catch ME
+                errordlg(ME.message);
+                return;
+            end
         case 'SCE Data File (*.mat)...'
             promotesave = false;
             [fname, pathname] = uigetfile( ...
@@ -340,3 +348,42 @@ function [sce]=sc_openscedlg
             return;
     end
 end
+
+
+    function [sce]=in_simulatedata
+        sce=[];
+        definput = {'3000', '5000'};
+        prompt = {'Number of genes:', ...
+            'Number of cells:'};
+        dlgtitle = 'Simulation Settings';
+        dims = [1, 55];
+        answer = inputdlg(prompt, dlgtitle, dims, definput);
+
+        if isempty(answer), return; end
+        try
+            numgenes = str2double(answer{1});
+            numcells = str2double(answer{2});
+            assert(isfinite(numgenes) & numgenes==floor(numgenes));
+            assert(isfinite(numcells) & numcells==floor(numcells));
+            assert((numgenes >= 1) && (numgenes <= 30000));
+            assert((numcells >= 1) && (numcells <= 30000));
+        catch
+            errordlg('Invalid parameter value(s).');
+            return;
+        end
+        
+            try
+                fw = gui.gui_waitbar;
+                [X] = sc_simudata(numgenes, numcells,'lun');
+                [sce] = SingleCellExperiment(X);
+                %[c, cL] = grp2idx(sce.c);
+                gui.gui_waitbar(fw);
+                % guidata(FigureHandle, sce);
+                % in_RefreshAll(src, [], false, false);
+            catch ME
+                gui.gui_waitbar(fw,true);
+                errordlg(ME.message);
+            end
+    end
+
+

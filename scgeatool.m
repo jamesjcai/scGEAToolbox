@@ -53,6 +53,22 @@ FigureHandle = figure('Name', 'SCGEATOOL :: Single-Cell Gene Expression Analysis
     'visible', 'off', 'NumberTitle', tagx);
 movegui(FigureHandle, 'center');
 
+fig_pos = get(FigureHandle, 'Position'); % [left bottom width height]
+fig_width = fig_pos(3);
+fig_height = fig_pos(4);
+btn_width = 100; % Adjust as needed
+btn_height = 25; % Adjust as needed
+btn_x = (fig_width - btn_width) / 2;
+btn_y = (fig_height - btn_height) / 1.5;
+
+button = uicontrol(...
+    'Style', 'pushbutton',...
+    'Units', 'pixels',...
+    'Position', [btn_x btn_y btn_width btn_height],...
+    'String', 'Import Data...',... % Customize label
+    'Callback', {@in_sc_openscedlg}); % Assign callback function
+
+
 % b=uipanel(FigureHandle,'Title','B','BackgroundColor','cyan');
 % b.Position = [0.18 0.40 0.30 0.35];
 
@@ -111,7 +127,7 @@ delete(findall(FigureHandle, 'tag', 'figMenuFileImportData'));
 set(findall(FigureHandle,'tag','figMenuFilePrintPreview'),'Separator','on');
 
 m_file=findall(FigureHandle,'tag','figMenuFile');
-in_addmenu(m_file, 1, @in_SimulateSCE, 'Simulate Data [PMID:27122128]...');
+% in_addmenu(m_file, 1, @in_SimulateSCE, 'Simulate Data [PMID:27122128]...');
 in_addmenu(m_file, 1, {@gui.i_savemainfig, 3}, 'Save Figure to PowerPoint File...');
 in_addmenu(m_file, 0, {@gui.i_savemainfig, 2}, 'Save Figure as Graphic File...');
 in_addmenu(m_file, 0, {@gui.i_savemainfig, 1}, 'Save Figure as SVG File...');
@@ -170,8 +186,8 @@ in_addmenu(m_plot,0,@gui.callback_GeneHeatMap,'Gene Heatmap...');
 
 m_exp = uimenu(FigureHandle, 'Text', '&Tools', 'Accelerator', 'T');
 % m_exp2 = uimenu(m_exp,'Text','sc&Tenifold Suite','Accelerator','T');
-% i_addmenu(m_exp2,1,@callback_scTenifoldNet1,'scTenifoldNet - GRN Construction 🐢🐢 ...');
-% i_addmenu(m_exp2,0,@callback_scTenifoldNet2,'scTenifoldNet - GRN Comparison 🐢🐢🐢 ...');
+% i_addmenu(m_exp2,1,@callback_scTenifoldNet1,'scTenifoldNet - GRN Construction 🐢 ...');
+% i_addmenu(m_exp2,0,@callback_scTenifoldNet2,'scTenifoldNet - GRN Comparison 🐢 ...');
 % i_addmenu(m_exp2,0,@callback_scTenifoldKnk1,'scTenifoldKnk - Virtual KO of a Gene 🐢 ...');
 % i_addmenu(m_exp2,0,@callback_scTenifoldXct,'scTenifoldXct - Cell-Cell Interactions 🐢 ...');
 %i_addmenu(m_exp,0,@callback_ShowPseudoTimeGenes,'Show Genes with Expression Varies with Pseudotime...');
@@ -203,16 +219,16 @@ in_addmenu(m_net, 1, @gui.callback_BuildGeneNetwork, 'Build GRN with Selected Ge
 in_addmenu(m_net, 0, @gui.callback_CompareGeneNetwork, 'Build & Compare Two GRNs...');
 in_addmenu(m_net, 1, {@in_scTenifoldNet,1}, 'Construct GRN using PC Regression [PMID:33336197] 🐢...');
 %in_addmenu(m_net, 1, @callback_scPCNet1, 'GRN Construction - PC Regression (w/o subsampling) [PMID:33336197] 🐢...');
-%in_addmenu(m_net, 0, @callback_scTenifoldNet1, 'GRN Construction - PC Regression (w/ subsampling) [PMID:33336197] 🐢🐢 ...');
+%in_addmenu(m_net, 0, @callback_scTenifoldNet1, 'GRN Construction - PC Regression (w/ subsampling) [PMID:33336197] 🐢...');
 in_addmenu(m_net, 0, {@in_scTenifoldNet,2}, 'Construct & Compare GRNs (scTenifoldNet Analysis) [PMID:33336197] 🐢...');
 
-%in_addmenu(m_net, 1, @callback_scTenifoldNet2lite, 'GRN Comparison - scTenifoldNet (w/o subsampling) [PMID:33336197] 🐢🐢 ...');
-%in_addmenu(m_net, 0, @callback_scTenifoldNet2, 'GRN Comparison - scTenifoldNet (w/ subsampling) [PMID:33336197] 🐢🐢🐢 ...');
+%in_addmenu(m_net, 1, @callback_scTenifoldNet2lite, 'GRN Comparison - scTenifoldNet (w/o subsampling) [PMID:33336197] 🐢 ...');
+%in_addmenu(m_net, 0, @callback_scTenifoldNet2, 'GRN Comparison - scTenifoldNet (w/ subsampling) [PMID:33336197] 🐢 ...');
 
-in_addmenu(m_net, 1, @gui.callback_scTenifoldKnk1, 'Virtual Gene KO - scTenifoldKnk [PMID:35510185] 🐢🐢 ...');
-in_addmenu(m_net, 0, @gui.callback_VirtualKOGenKI, 'Virtual Gene KO - GenKI [PMID:37246643] (Python Required) 🐢🐢 ...');
-in_addmenu(m_net, 1, @gui.callback_scTenifoldXct, 'Cell-Cell Interactions (CCIs) - scTenifoldXct [PMID:36787742] 🐢🐢 ...');
-in_addmenu(m_net, 0, @gui.callback_scTenifoldXct2, 'Differential CCIs - scTenifoldXct [PMID:36787742] 🐢🐢🐢 ...');
+in_addmenu(m_net, 1, @gui.callback_scTenifoldKnk1, 'Virtual Gene KO - scTenifoldKnk [PMID:35510185] 🐢 ...');
+in_addmenu(m_net, 0, @gui.callback_VirtualKOGenKI, 'Virtual Gene KO - GenKI [PMID:37246643] (Python Required) 🐢 ...');
+in_addmenu(m_net, 1, @gui.callback_scTenifoldXct, 'Cell-Cell Interactions (CCIs) - scTenifoldXct [PMID:36787742] 🐢 ...');
+in_addmenu(m_net, 0, @gui.callback_scTenifoldXct2, 'Differential CCIs - scTenifoldXct [PMID:36787742] 🐢 ...');
 
 m_ext = uimenu(FigureHandle, 'Text', 'E&xternal', 'Accelerator', 'x');
 in_addmenu(m_ext, 0, @gui.i_setrenv, 'Check R Environment');
@@ -400,12 +416,10 @@ if ~showuseronboarding
     set(UserToolbarHandle, 'Visible', 'off');
 end
 
-if isempty(sce) || sce.NumCells==0
+%if isempty(sce) || sce.NumCells==0
     %[sce]=gui.sc_openscedlg;
-    in_sc_openscedlg;
-end
-%guidata(FigureHandle, sce);
-%in_RefreshAll;
+%    in_sc_openscedlg;
+%end
 
 % ----------------------------------
 % ----------------------------------
@@ -413,6 +427,9 @@ end
         [sce] = gui.sc_openscedlg;
         if ~isempty(sce) && sce.NumCells > 0
             guidata(FigureHandle, sce);
+            delete(button);
+        else
+            return;
         end
         in_RefreshAll([], [], false, false);
     end
@@ -620,6 +637,7 @@ end
         dlgtitle = 'Simulation Settings';
         dims = [1, 55];
         answer = inputdlg(prompt, dlgtitle, dims, definput);
+
         if isempty(answer), return; end
         try
             numgenes = str2double(answer{1});
@@ -639,13 +657,12 @@ end
                 [sce] = SingleCellExperiment(X);
                 [c, cL] = grp2idx(sce.c);
                 gui.gui_waitbar(fw);
-                guidata(FigureHandle, sce);
+                % guidata(FigureHandle, sce);
                 in_RefreshAll(src, [], false, false);
             catch ME
                 gui.gui_waitbar(fw);
                 errordlg(ME.message);
             end
-
     end
 
     function in_GEOAccessionToSCE(src, ~)
@@ -1086,9 +1103,7 @@ end
         a=allchild(m_file);
         a(end).Enable='on';
         a(end-1).Enable='on';
-        %a(end-3).Enable='on';
-        a(end-6).Enable='on';
-        %allchild(m_file)
+        % a(end-6).Enable='on';
         a=allchild(m_ext);
         a(end).Enable='on';
         a(end-1).Enable='on';
@@ -1107,7 +1122,8 @@ end
             in_EnDisableMenu('off');
             return;
         end
-        in_EnDisableMenu('on');        
+        in_EnDisableMenu('on');
+        if isvalid(button), delete(button); end
         figure(FigureHandle);
         % [c,cL]=grp2idx(sce.c);
         % was3d = ~isempty(h.ZData);

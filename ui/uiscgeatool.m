@@ -25,9 +25,9 @@ hAx = uiaxes(FigureHandle,'Visible','off');
 height = 480;
 width = 580;
 sz = FigureHandle.Position;
-x = mean( sz( [1, 3]));
-y = mean( sz( [2, 4]));
-hAx.Position= [x - width/2, y - height/2, width, height];
+%x = mean( sz( [1, 3]));
+%y = mean( sz( [2, 4]));
+hAx.Position= [(sz(3) - width)/2, (sz(4) - height)/2, width, height];
 movegui(FigureHandle, 'center');
 drawnow;
 
