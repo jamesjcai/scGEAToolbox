@@ -67,7 +67,8 @@ button1 = uicontrol(...
     'Units', 'pixels',...
     'Position', [btn_x btn_y btn_width btn_height],...
     'String', 'Import Data...',... % Customize label
-    'Callback', {@in_sc_openscedlg}); % Assign callback function
+    'Callback', {@in_sc_openscedlg}, ...
+    'KeyPressFcn',{@in_sc_openscedlg}); % Assign callback function
 
 button2 = uicontrol('style','text',...
             'Parent',FigureHandle,...
@@ -175,7 +176,7 @@ in_addmenu(m_edit, 1, @gui.callback_SelectCellsByClass, 'Select Cells...');
 m_view=findall(FigureHandle,'tag','figMenuView');
 in_addmenu(m_view, 0, @gui.callback_ShowGeneExpr, 'Gene Expression...');
 in_addmenu(m_view, 0, @in_ShowCellStates, 'Cell States...');
-in_addmenu(m_view, 0, @in_labelcellgroups, 'Cell Groups...');
+in_addmenu(m_view, 0, @in_labelcellgroups_menu, 'Cell Groups...');
 in_addmenu(m_view, 0, @gui.callback_MultiGroupingViewer, 'Multi-Grouping View...');
 in_addmenu(m_view, 0, @gui.callback_CrossTabulation, 'Cross Tabulation');
 in_addmenu(m_view, 1, @gui.callback_ViewMetaData, 'View Metadata...');
@@ -277,7 +278,8 @@ in_addmenu(m_help, 0, {@(~, ~) web('https://scholar.google.com/scholar?cites=466
 in_addmenu(m_help, 1, {@(~, ~) web('https://scgeatool.github.io/')}, 'Visit SCGEATOOL-Standalone Website...');
 in_addmenu(m_help, 0, {@(~, ~) web('https://matlab.mathworks.com/open/github/v1?repo=jamesjcai/scGEAToolbox&file=online_landing.m')}, 'Run SCGEATOOL in MATLAB Online...');
 in_addmenu(m_help, 1, @callback_CheckUpdates, 'Check for Updates...');
-in_addmenu(m_help, 1, {@(~, ~) web('https://github.com/jamesjcai/scGEAToolbox')}, 'About SCGEATOOL');
+%in_addmenu(m_help, 1, {@(~, ~) web('https://github.com/jamesjcai/scGEAToolbox')}, 'About SCGEATOOL');
+in_addmenu(m_help, 1, {@(~, ~) inputdlg('', 'About SCGEATOOL', [10, 50], {sprintf('Single-Cell Gene Expression Analysis Tool\n\nJames Cai')})}, 'About SCGEATOOL');
 
 hAx = axes('Parent', FigureHandle,'Visible','off');
 if ~isempty(sce) && sce.NumCells>0
@@ -396,11 +398,12 @@ if ~isempty(sce) && sce.NumCells>0
 else
     in_EnDisableMenu('off');
 end
-drawnow;
 if ~isempty(sce) && sce.NumCells>0
     hAx.Visible="on";
 end
 set(FigureHandle, 'visible', 'on');
+drawnow;
+uicontrol(button1);
 
 in_fixfield('tsne','tsne3d');
 in_fixfield('umap','umap3d');
@@ -1928,7 +1931,44 @@ end
         guidata(FigureHandle, sce);
     end
 
-    function in_labelcellgroups(src, ~)
+    function in_labelcellgroups_menu(src, ~)        
+        state = src.Checked;
+
+        dtp = findobj(h, 'Type', 'datatip');
+        %disp('...state...')
+        if strcmp(state, 'on') || ~isempty(dtp) % switch from on to off
+            %dtp = findobj(h, 'Type', 'datatip');
+            delete(dtp);
+            set(src, 'Checked', 'off');
+        else
+            % sce = guidata(FigureHandle);
+            [thisc, clable] = gui.i_select1class(sce,true);            
+            if isempty(thisc)
+                set(src, 'Checked', 'off');
+                return;
+            end
+            [c, cL] = grp2idx(thisc);
+            sce.c = c;
+            in_RefreshAll(src, [], true, false);
+            fprintf('Cells are colored by %s.\n', lower(clable));
+            if max(c) <= 200
+                if ix_labelclusters(true)
+                    set(src, 'Checked', 'on');
+                else
+                    set(src, 'Checked', 'off');
+                end
+            else
+                set(src, 'Checked', 'off');
+                warndlg('Labels are not showing. Too many categories (n>200).');
+            end
+            %setappdata(FigureHandle, 'cL', cL);
+            guidata(FigureHandle, sce);
+            % colormap(lines(min([256 numel(unique(sce.c))])));
+        end
+    end
+
+
+    function in_labelcellgroups(src, ~)        
         state = src.State;
         dtp = findobj(h, 'Type', 'datatip');
         %disp('...state...')
