@@ -48,7 +48,7 @@ else
 end
 
 
-FigureHandle = figure('Name', 'scgeatool', ...
+FigureHandle = figure('Name', 'SCGEATOOL', ...
     'position', round(1.25*[0, 0, 560, 420]), ...
     'visible', 'off', 'NumberTitle', tagx);
 movegui(FigureHandle, 'center');
@@ -61,14 +61,21 @@ btn_height = 25; % Adjust as needed
 btn_x = (fig_width - btn_width) / 2;
 btn_y = (fig_height - btn_height) / 1.618;
 
-button = uicontrol(...
+button1 = uicontrol(...
+    'Parent',FigureHandle,...
     'Style', 'pushbutton',...
     'Units', 'pixels',...
     'Position', [btn_x btn_y btn_width btn_height],...
     'String', 'Import Data...',... % Customize label
     'Callback', {@in_sc_openscedlg}); % Assign callback function
 
-set(FigureHandle,'resizefcn',{@myResizeFun,button});
+button2 = uicontrol('style','text',...
+            'Parent',FigureHandle,...
+            'FontSize',9,...
+            'position',[btn_x btn_y+25 btn_width btn_height],...
+            'string','Ready to explore.');
+
+set(FigureHandle,'resizefcn',{@myResizeFun,button1,button2});
 % set(FigureHandle, 'WindowButtonDownFcn',@(~,~) figure(FigureHandle))
 
 % b=uipanel(FigureHandle,'Title','B','BackgroundColor','cyan');
@@ -265,12 +272,12 @@ m_help = uimenu(FigureHandle, 'Text', '&Help', 'Accelerator', 'H');
 in_addmenu(m_help, 0, {@(~, ~) web('https://scgeatoolbox.readthedocs.io/en/latest/')}, 'Online Documentation...');
 in_addmenu(m_help, 0, {@(~, ~) web('https://scgeatoolbox.readthedocs.io/en/latest/quick_installation.html')}, 'Quick Installation Guide...');
 in_addmenu(m_help, 1, {@(~, ~) web('https://www.mathworks.com/matlabcentral/fileexchange/72917-scgeatoolbox-single-cell-gene-expression-analysis-toolbox')}, 'View scGEAToolbox on File Exchange...');
-in_addmenu(m_help, 0, {@(~, ~) web('https://scgeatool.github.io/')}, 'Visit SCGEATOOL-Standalone Website...');
-in_addmenu(m_help, 1, {@(~, ~) web('https://pubmed.ncbi.nlm.nih.gov/31697351/')}, 'Cite scGEAToolbox Paper...');
-in_addmenu(m_help, 0, {@(~, ~) web('https://scholar.google.com/scholar?cites=4661048952867744439&as_sdt=5,44&sciodt=0,44&hl=en')}, 'Show Papers Citing scGEAToolbox...');
-in_addmenu(m_help, 1, {@(~, ~) web('https://matlab.mathworks.com/open/github/v1?repo=jamesjcai/scGEAToolbox&file=online_landing.m')}, 'Open in MATLAB Online...');
+in_addmenu(m_help, 0, {@(~, ~) web('https://pubmed.ncbi.nlm.nih.gov/31697351/')}, 'Cite scGEAToolbox Paper...');
+in_addmenu(m_help, 0, {@(~, ~) web('https://scholar.google.com/scholar?cites=4661048952867744439&as_sdt=5,44&sciodt=0,44&hl=en')}, 'Papers Citing scGEAToolbox...');
+in_addmenu(m_help, 1, {@(~, ~) web('https://scgeatool.github.io/')}, 'Visit SCGEATOOL-Standalone Website...');
+in_addmenu(m_help, 0, {@(~, ~) web('https://matlab.mathworks.com/open/github/v1?repo=jamesjcai/scGEAToolbox&file=online_landing.m')}, 'Run SCGEATOOL in MATLAB Online...');
 in_addmenu(m_help, 1, @callback_CheckUpdates, 'Check for Updates...');
-in_addmenu(m_help, 0, {@(~, ~) web('https://github.com/jamesjcai/scGEAToolbox')}, 'About scgeatool');
+in_addmenu(m_help, 1, {@(~, ~) web('https://github.com/jamesjcai/scGEAToolbox')}, 'About SCGEATOOL');
 
 hAx = axes('Parent', FigureHandle,'Visible','off');
 if ~isempty(sce) && sce.NumCells>0
@@ -436,7 +443,8 @@ end
         [sce] = gui.sc_openscedlg;
         if ~isempty(sce) && sce.NumCells > 0
             guidata(FigureHandle, sce);
-            set(button,'Visible','off');
+            set(button1,'Visible','off');
+            set(button2,'Visible','off');
         else
             return;
         end
@@ -1099,9 +1107,9 @@ end
                 else
                     set(UserToolbarHandle,'Visible','off');
                 end
-                if isvalid(button)
-                    set(button,'Visible','off'); 
-                end
+                if isvalid(button1), set(button1,'Visible','off'); end
+                if isvalid(button2), set(button2,'Visible','off'); end
+
             case 'off'
                 set(UserToolbarHandle,'Visible','off');
         end
@@ -1135,9 +1143,8 @@ end
             return;
         end
         in_EnDisableMenu('on');
-        if isvalid(button)
-            set(button,'Visible','off'); 
-        end
+        if isvalid(button1), set(button1,'Visible','off'); end
+        if isvalid(button2), set(button2,'Visible','off'); end
         figure(FigureHandle);
         % [c,cL]=grp2idx(sce.c);
         % was3d = ~isempty(h.ZData);
@@ -2013,7 +2020,7 @@ end
 
 end
 
-    function myResizeFun(src, ~, butt)
+    function myResizeFun(src, ~, butt,butt2)
         fig_pos = get(src, 'Position'); % [left bottom width height]
         fig_width = fig_pos(3);
         fig_height = fig_pos(4);
@@ -2024,4 +2031,5 @@ end
         btn_y = (fig_height - btn_height) / 1.618;
     
         set(butt,'Position',[btn_x btn_y btn_width btn_height]);
+        set(butt2,'Position',[btn_x btn_y+25 btn_width btn_height]);
     end
