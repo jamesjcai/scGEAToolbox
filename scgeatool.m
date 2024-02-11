@@ -443,12 +443,16 @@ end
 % ----------------------------------
 % ----------------------------------
     function in_sc_openscedlg(~, ~)
+        set(button1,'Visible','off');
+        set(button2,'Visible','off');
         [sce] = gui.sc_openscedlg;
         if ~isempty(sce) && sce.NumCells > 0
             guidata(FigureHandle, sce);
-            set(button1,'Visible','off');
-            set(button2,'Visible','off');
         else
+            set(button1,'Visible','on');
+            set(button2,'Visible','on');
+            drawnow;
+            uicontrol(button1);
             return;
         end
         in_RefreshAll([], [], false, false);
@@ -524,7 +528,8 @@ end
         end
         uimenu(menuHdl, 'Text', tooltipTxt, ...
             'Separator', septag, ...
-            'Callback', callbackFnc);
+            'Callback', callbackFnc, ...
+            'Tag', "figMenu" + matlab.lang.makeValidName(tooltipTxt));
     end
 
     function in_addbuttonpush(toolbarHdl, sepTag, callbackFnc, imgFil, tooltipTxt)
@@ -543,6 +548,7 @@ end
         pt.CData = in_getPtImage(imgFil);
         pt.Tooltip = tooltipTxt;
         pt.ClickedCallback = callbackFnc;
+        pt.Tag = "figPush" + matlab.lang.makeValidName(tooltipTxt);
         %pushbuttonV=[pushbuttonV; pt];
     end
 
@@ -1112,7 +1118,6 @@ end
                 end
                 if isvalid(button1), set(button1,'Visible','off'); end
                 if isvalid(button2), set(button2,'Visible','off'); end
-
             case 'off'
                 set(UserToolbarHandle,'Visible','off');
         end
@@ -1146,8 +1151,8 @@ end
             return;
         end
         in_EnDisableMenu('on');
-        if isvalid(button1), set(button1,'Visible','off'); end
-        if isvalid(button2), set(button2,'Visible','off'); end
+%        if isvalid(button1), set(button1,'Visible','off'); end
+%        if isvalid(button2), set(button2,'Visible','off'); end
         figure(FigureHandle);
         % [c,cL]=grp2idx(sce.c);
         % was3d = ~isempty(h.ZData);
@@ -1931,43 +1936,6 @@ end
         guidata(FigureHandle, sce);
     end
 
-    function in_labelcellgroups_menu(src, ~)        
-        state = src.Checked;
-
-        dtp = findobj(h, 'Type', 'datatip');
-        %disp('...state...')
-        if strcmp(state, 'on') || ~isempty(dtp) % switch from on to off
-            %dtp = findobj(h, 'Type', 'datatip');
-            delete(dtp);
-            set(src, 'Checked', 'off');
-        else
-            % sce = guidata(FigureHandle);
-            [thisc, clable] = gui.i_select1class(sce,true);            
-            if isempty(thisc)
-                set(src, 'Checked', 'off');
-                return;
-            end
-            [c, cL] = grp2idx(thisc);
-            sce.c = c;
-            in_RefreshAll(src, [], true, false);
-            fprintf('Cells are colored by %s.\n', lower(clable));
-            if max(c) <= 200
-                if ix_labelclusters(true)
-                    set(src, 'Checked', 'on');
-                else
-                    set(src, 'Checked', 'off');
-                end
-            else
-                set(src, 'Checked', 'off');
-                warndlg('Labels are not showing. Too many categories (n>200).');
-            end
-            %setappdata(FigureHandle, 'cL', cL);
-            guidata(FigureHandle, sce);
-            % colormap(lines(min([256 numel(unique(sce.c))])));
-        end
-    end
-
-
     function in_labelcellgroups(src, ~)
         switch src.Type
             case 'uitoggletool'
@@ -1975,13 +1943,14 @@ end
             case 'uimenu'
                 statetag = 'Checked';
         end
-        state = src.(statetag);
+        % state = src.(statetag);
         dtp = findobj(h, 'Type', 'datatip');
         %disp('...state...')
         if ~isempty(dtp) % switch from on to off
             %dtp = findobj(h, 'Type', 'datatip');
             delete(dtp);
             set(src, statetag, 'off');
+            set(findall(FigureHandle,'Text','Cell Groups...'),'Checked','off');
         else
             % sce = guidata(FigureHandle);
             [thisc, clable] = gui.i_select1class(sce,true);            
@@ -1996,11 +1965,14 @@ end
             if max(c) <= 200
                 if ix_labelclusters(true)
                     set(src, statetag, 'on');
+                    set(findall(FigureHandle,'Text','Cell Groups...'),'Checked','on');
                 else
                     set(src, statetag, 'off');
+                    set(findall(FigureHandle,'Text','Cell Groups...'),'Checked','off');
                 end
             else
                 set(src, statetag, 'off');
+                set(findall(FigureHandle,'Text','Cell Groups...'),'Checked','off');
                 warndlg('Labels are not showing. Too many categories (n>200).');
             end
             %setappdata(FigureHandle, 'cL', cL);
