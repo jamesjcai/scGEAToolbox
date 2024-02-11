@@ -176,7 +176,7 @@ in_addmenu(m_edit, 1, @gui.callback_SelectCellsByClass, 'Select Cells...');
 m_view=findall(FigureHandle,'tag','figMenuView');
 in_addmenu(m_view, 0, @gui.callback_ShowGeneExpr, 'Gene Expression...');
 in_addmenu(m_view, 0, @in_ShowCellStates, 'Cell States...');
-in_addmenu(m_view, 0, @in_labelcellgroups_menu, 'Cell Groups...');
+in_addmenu(m_view, 0, @in_labelcellgroups, 'Cell Groups...');
 in_addmenu(m_view, 0, @gui.callback_MultiGroupingViewer, 'Multi-Grouping View...');
 in_addmenu(m_view, 0, @gui.callback_CrossTabulation, 'Cross Tabulation');
 in_addmenu(m_view, 1, @gui.callback_ViewMetaData, 'View Metadata...');
@@ -1968,19 +1968,25 @@ end
     end
 
 
-    function in_labelcellgroups(src, ~)        
-        state = src.State;
+    function in_labelcellgroups(src, ~)
+        switch src.Type
+            case 'uitoggletool'
+                statetag = 'State';
+            case 'uimenu'
+                statetag = 'Checked';
+        end
+        state = src.(statetag);
         dtp = findobj(h, 'Type', 'datatip');
         %disp('...state...')
-        if strcmp(state, 'off') || ~isempty(dtp) % switch from on to off
+        if ~isempty(dtp) % switch from on to off
             %dtp = findobj(h, 'Type', 'datatip');
             delete(dtp);
-            set(src, 'State', 'off');
+            set(src, statetag, 'off');
         else
             % sce = guidata(FigureHandle);
             [thisc, clable] = gui.i_select1class(sce,true);            
             if isempty(thisc)
-                set(src, 'State', 'off');
+                set(src, statetag, 'off');
                 return;
             end
             [c, cL] = grp2idx(thisc);
@@ -1989,12 +1995,12 @@ end
             fprintf('Cells are colored by %s.\n', lower(clable));
             if max(c) <= 200
                 if ix_labelclusters(true)
-                    set(src, 'State', 'on');
+                    set(src, statetag, 'on');
                 else
-                    set(src, 'State', 'off');
+                    set(src, statetag, 'off');
                 end
             else
-                set(src, 'State', 'off');
+                set(src, statetag, 'off');
                 warndlg('Labels are not showing. Too many categories (n>200).');
             end
             %setappdata(FigureHandle, 'cL', cL);
