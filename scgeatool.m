@@ -572,6 +572,10 @@ end
         pt.CData = in_getPtImage(imgFil);
         pt.Tooltip = tooltipTxt;
         pt.ClickedCallback = callbackFnc;
+        pt.Tag = "figTogl" + matlab.lang.makeValidName(tooltipTxt);
+
+        % a=findall(f,'tag','figToglLabelCellGroups')
+        % a=findall(f,'tag','figMenuCellGroups___')
         %pushbuttonV=[pushbuttonV; pt];        
     end
 
@@ -1941,6 +1945,8 @@ end
     end
 
     function in_labelcellgroups(src, ~)
+        a=findall(FigureHandle,'tag','figMenuCellGroups___');
+        b=findall(FigureHandle,'tag','figToglLabelCellGroups');
         switch src.Type
             case 'uitoggletool'
                 statetag = 'State';
@@ -1954,7 +1960,8 @@ end
             %dtp = findobj(h, 'Type', 'datatip');
             delete(dtp);
             set(src, statetag, 'off');
-            set(findall(FigureHandle,'Text','Cell Groups...'),'Checked','off');
+            set(a,'Checked','off');
+            set(b,'State','off');
         else
             % sce = guidata(FigureHandle);
             [thisc, clable] = gui.i_select1class(sce,true);            
@@ -1969,14 +1976,17 @@ end
             if max(c) <= 200
                 if ix_labelclusters(true)
                     set(src, statetag, 'on');
-                    set(findall(FigureHandle,'Text','Cell Groups...'),'Checked','on');
+                    set(a,'Checked','on');
+                    set(b,'State','on');
                 else
                     set(src, statetag, 'off');
-                    set(findall(FigureHandle,'Text','Cell Groups...'),'Checked','off');
+                    set(a,'Checked','off');
+                    set(b,'State','off');
                 end
             else
                 set(src, statetag, 'off');
-                set(findall(FigureHandle,'Text','Cell Groups...'),'Checked','off');
+                set(a,'Checked','off');
+                set(b,'State','off');
                 warndlg('Labels are not showing. Too many categories (n>200).');
             end
             %setappdata(FigureHandle, 'cL', cL);
