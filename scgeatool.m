@@ -443,18 +443,21 @@ end
 % ----------------------------------
 % ----------------------------------
     function in_sc_openscedlg(~, ~)
-        set(button1,'Visible','off');
-        set(button2,'Visible','off');
+        %set(button1,'Visible','off');
+        %set(button2,'Visible','off');
+        set(button1,'Enable','off');        
         [sce] = gui.sc_openscedlg;
         if ~isempty(sce) && sce.NumCells > 0
             guidata(FigureHandle, sce);
         else
-            set(button1,'Visible','on');
-            set(button2,'Visible','on');
-            drawnow;
+            %set(button1,'Visible','on');
+            %set(button2,'Visible','on');
+            %drawnow;
+            set(button1,'Enable','on');            
             uicontrol(button1);
             return;
         end
+        c=[];
         in_RefreshAll([], [], false, false);
     end
 
@@ -1156,9 +1159,10 @@ end
         figure(FigureHandle);
         % [c,cL]=grp2idx(sce.c);
         % was3d = ~isempty(h.ZData);
+        
+        if isempty(c), [c,cL] = grp2idx(sce.c); end
         if size(sce.s, 2) >= 3
-            if keepview, [ax, bx] = view(hAx); end
-            if isempty(c), [c,cL] = grp2idx(sce.c); end
+            if keepview, [ax, bx] = view(hAx); end            
             h = gui.i_gscatter3(sce.s, c, methodid, hAx);
             if keepview, view(ax, bx); end
         else        % otherwise going to show 2D            
