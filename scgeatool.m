@@ -174,7 +174,9 @@ in_addmenu(m_edit, 1, @gui.callback_SelectCellsByClass, 'Select Cells...');
 %i_addmenu(m_exp,0,{@MergeCellSubtypes,2,true},'Import All Cell Annotation from SCE Data File...');
 
 m_view=findall(FigureHandle,'tag','figMenuView');
-in_addmenu(m_view, 0, @gui.callback_ShowGeneExpr, 'Gene Expression...');
+in_addmenu(m_view, 0, @in_EmbeddingAgain, 'Embed Cells Using tSNE, UMP, PHATE...');
+in_addmenu(m_view, 0, @in_Switch2D3D, 'Switch Between 2D/3D Embeddings...');
+in_addmenu(m_view, 1, @gui.callback_ShowGeneExpr, 'Gene Expression...');
 in_addmenu(m_view, 0, @in_ShowCellStates, 'Cell States...');
 in_addmenu(m_view, 0, @in_labelcellgroups, 'Cell Groups...');
 in_addmenu(m_view, 0, @gui.callback_MultiGroupingViewer, 'Multi-Grouping View...');
@@ -182,8 +184,6 @@ in_addmenu(m_view, 0, @gui.callback_CrossTabulation, 'Cross Tabulation');
 in_addmenu(m_view, 1, @gui.callback_ViewMetaData, 'View Metadata...');
 in_addmenu(m_view, 1, @gui.callback_ShowHgBGeneExpression, 'Hemoglobin (Hgb) Genes Expression...');
 in_addmenu(m_view, 0, @gui.callback_ShowMtGeneExpression, 'Mitochondrial (Mt-) Genes Expression...');
-in_addmenu(m_view, 1, @in_DrawKNNNetwork, 'Cell kNN Network...');
-in_addmenu(m_view, 0, @in_DrawTrajectory, 'Cell Trajectory...');
 in_addmenu(m_view, 1, @gui.callback_CloseAllOthers, 'Close All Other Figures');
 in_addmenu(m_view, 0, @in_RefreshAll, 'Refresh Current View');
 
@@ -196,6 +196,8 @@ set(findall(FigureHandle,'tag','figMenuEditCopyOptions'),'Parent', m_plot);
 in_addmenu(m_plot,1,@gui.callback_PickColorMap,'Next Colormap');
 set(findall(FigureHandle,'tag','figMenuEditColormap'),'Parent', m_plot,'Text','Colormap Editor...');
 in_addmenu(m_plot,0,@gui.callback_PickPlotMarker,'Next Marker Type');
+in_addmenu(m_plot, 1, @in_DrawKNNNetwork, 'Cell kNN Network...');
+in_addmenu(m_plot, 0, @in_DrawTrajectory, 'Cell Trajectory...');
 in_addmenu(m_plot,1,@gui.callback_Violinplot,'Gene Violin Plot...');
 in_addmenu(m_plot,0,@gui.callback_DrawDotplot,'Gene Dot Plot...');
 in_addmenu(m_plot,0,@gui.callback_GeneHeatMap,'Gene Heatmap...');
