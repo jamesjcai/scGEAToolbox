@@ -7,7 +7,7 @@
     <param.summary>Single-cell Gene Expression Analysis Toolbox</param.summary>
     <param.description>scRNAseq data analysis toolbox</param.description>
     <param.screenshot>${PROJECT_ROOT}\resources\scgeatool.png</param.screenshot>
-    <param.version>24.2.0</param.version>
+    <param.version>24.3.1</param.version>
     <param.output>${PROJECT_ROOT}\scGEAToolbox.mltbx</param.output>
     <param.products.name>
       <item>Statistics and Machine Learning Toolbox</item>
@@ -51,6 +51,7 @@ resources/STRING/stringdb_mouse.mat
 **/html
 **/docs
 **/scgeatoolstandaloneApplication
+**/ui
 TIMESTAMP</param.exclude.filters>
     <param.exclude.pcodedmfiles>true</param.exclude.pcodedmfiles>
     <param.examples />
@@ -187,7 +188,6 @@ TIMESTAMP</param.exclude.filters>
       <file>${PROJECT_ROOT}\sc_rmmtcells.m</file>
       <file>${PROJECT_ROOT}\sc_rmmtgenes.m</file>
       <file>${PROJECT_ROOT}\sc_scatter.m</file>
-      <file>${PROJECT_ROOT}\sc_scatter_sce.m</file>
       <file>${PROJECT_ROOT}\sc_scattermarker.m</file>
       <file>${PROJECT_ROOT}\sc_sce2hdf5.m</file>
       <file>${PROJECT_ROOT}\sc_sce2rds.m</file>
@@ -209,9 +209,7 @@ TIMESTAMP</param.exclude.filters>
       <file>${PROJECT_ROOT}\sc_veg.m</file>
       <file>${PROJECT_ROOT}\sc_writefile.m</file>
       <file>${PROJECT_ROOT}\scgeatool.m</file>
-      <file>${PROJECT_ROOT}\SCGEATOOL.mlapp</file>
       <file>${PROJECT_ROOT}\tensor_toolbox</file>
-      <file>${PROJECT_ROOT}\ui</file>
     </fileset.rootfiles>
     <fileset.depfun.included />
     <fileset.depfun.excluded />
