@@ -26,13 +26,19 @@ b = uicontrol('style','text',...
             'string','Ready to explore.');
 
 
+
+hAx = axes('Parent', f,'Visible','off');
+title(hAx, 'sce.title');
+subtitle(hAx,'[genes x cells]');
+dt = datacursormode(hAx,'on');
+%dt.UpdateFcn = {@i_myupdatefcnx};
 return;
 
 
 %%
 
 % fig = figure;
-fig=figure('Position',[10 10 200 300]);
+fig=figure('Position',[300 300 500 300]);
 
 fig_pos = get(fig, 'Position'); % [left bottom width height]
 fig_width = fig_pos(3);
@@ -56,6 +62,8 @@ button = uicontrol(...
 
 % uibutton(fig)
 set(fig,'resizefcn',{@myResizeFun,button});
+plot(rand(300,1));
+
 
 function myResizeFun(src,events,butt)
 src

@@ -20,7 +20,14 @@ try
                 'Yes','Remind me later','Skip this update','Skip this update');
             switch answer
                 case 'Yes'
-                    web('https://scgeatoolbox.readthedocs.io/en/latest/quick_installation.html');
+                    %web('https://scgeatoolbox.readthedocs.io/en/latest/quick_installation.html');
+
+                    prompt = {'Copy the following code and run it in MATLAB:'};
+                    dlgtitle = 'Quick Installation/Upgrade';
+                    fieldsize = [18 75];
+                    definput = {sprintf('tic;\ndisp(''Installing scGEAToolbox...'')\nunzip(''https://github.com/jamesjcai/scGEAToolbox/archive/main.zip'');\naddpath(''./scGEAToolbox-main'');\ntoc;\nif exist(''scgeatool.m'',''file'')\n    disp(''scGEAToolbox installed!'')\nend\nsavepath(fullfile(userpath,''pathdef.m''));')};
+                    inputdlg(prompt,dlgtitle,fieldsize,definput);
+
                     needupdate=true;
                     return;
                 case 'Remind me later'

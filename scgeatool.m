@@ -5,7 +5,7 @@ if usejava('jvm') && ~feature('ShowFigureWindows')
 end
 
 if nargin < 1
-   sce = SingleCellExperiment; 
+    sce = SingleCellExperiment;
 end
 if ~isa(sce, 'SingleCellExperiment')
     error('requires sce=SingleCellExperiment();');
@@ -71,10 +71,10 @@ button1 = uicontrol(...
     'KeyPressFcn',{@in_sc_openscedlg}); % Assign callback function
 
 button2 = uicontrol('style','text',...
-            'Parent',FigureHandle,...
-            'FontSize',9,...
-            'position',[btn_x btn_y+25 btn_width btn_height],...
-            'string','Ready to explore.');
+    'Parent',FigureHandle,...
+    'FontSize',9,...
+    'position',[btn_x btn_y+25 btn_width btn_height],...
+    'string','Ready to explore.');
 
 set(FigureHandle,'resizefcn',{@myResizeFun,button1,button2});
 % set(FigureHandle, 'WindowButtonDownFcn',@(~,~) figure(FigureHandle))
@@ -257,7 +257,7 @@ in_addmenu(m_ext, 1, @in_DecontX, 'Detect Ambient RNA Contamination (DecontX/R) 
 %i_addmenu(m_ext,0,@callback_SingleRCellType,'SingleR Cell Type Annotation (SingleR/R required)...');
 %i_addmenu(m_ext,0,@callback_RevelioCellCycle,'Revelio Cell Cycle Analysis (Revelio/R required)...');
 % i_addmenu(m_ext,0,@callback_RunSeuratSCTransform,'Run Seurat/R SCTransform (Seurat/R required)...');
-in_addmenu(m_ext, 0, @in_RunSeuratWorkflow, 'Run Seurat/R Workflow (Seurat/R) [PMID:25867923]...');
+in_addmenu(m_ext, 0, @in_RunSeuratWorkflow, 'Run Seurat Workflow (Seurat/R) [PMID:25867923]...');
 %i_addmenu(m_ext,0,@callback_RunMonocle2,'Pseudotime Analysis (Monocle2/R) [PMID:28825705]...');
 in_addmenu(m_ext, 0, @gui.callback_RunMonocle3, 'Pseudotime Analysis (Monocle3/R) [PMID:28825705]...');
 in_addmenu(m_ext, 1, @gui.callback_MELDPerturbationScore, 'MELD Perturbation Score (MELD/Py) [PMID:33558698]...');
@@ -292,7 +292,7 @@ end
 title(hAx, sce.title);
 subtitle(hAx,'[genes x cells]');
 
-dt = datacursormode;
+dt = datacursormode(FigureHandle);
 dt.UpdateFcn = {@i_myupdatefcnx};
 
 mfolder = fileparts(mfilename('fullpath'));
@@ -438,7 +438,7 @@ if ~showuseronboarding
 end
 
 %if isempty(sce) || sce.NumCells==0
-    %[sce]=gui.sc_openscedlg;
+%[sce]=gui.sc_openscedlg;
 %    in_sc_openscedlg;
 %end
 
@@ -447,7 +447,7 @@ end
     function in_sc_openscedlg(~, ~)
         %set(button1,'Visible','off');
         %set(button2,'Visible','off');
-        set(button1,'Enable','off');        
+        set(button1,'Enable','off');
         [sce] = gui.sc_openscedlg;
         if ~isempty(sce) && sce.NumCells > 0
             guidata(FigureHandle, sce);
@@ -455,7 +455,7 @@ end
             %set(button1,'Visible','on');
             %set(button2,'Visible','on');
             %drawnow;
-            set(button1,'Enable','on');            
+            set(button1,'Enable','on');
             uicontrol(button1);
             return;
         end
@@ -578,7 +578,7 @@ end
 
         % a=findall(f,'tag','figToglLabelCellGroups')
         % a=findall(f,'tag','figMenuCellGroups___')
-        %pushbuttonV=[pushbuttonV; pt];        
+        %pushbuttonV=[pushbuttonV; pt];
     end
 
     function in_togglebtfun(src, ~, func, ~, imgFil, ...
@@ -590,7 +590,7 @@ end
                 func(src);
             else
                 s = 'To execute the function, click the button again or locate and click the same button in the toolbar above. Hover over the button to view a description of its function.';
-                    uiwait(helpdlg(sprintf('%s\n%s', upper(tooltipTxt), s), ''));
+                uiwait(helpdlg(sprintf('%s\n%s', upper(tooltipTxt), s), ''));
             end
         else
             func(src);
@@ -605,16 +605,16 @@ end
             try
                 [img, map] = imread(fullfile(matlabroot,'toolbox', ...
                     'matlab','icons', imgFil));
-                 ptImage = ind2rgb(img, map);
+                ptImage = ind2rgb(img, map);
             catch
                 ptImage = rand(16, 16, 3);
             end
         end
     end
 
-    % ------------------------
-    % Callback Functions
-    % ------------------------
+% ------------------------
+% Callback Functions
+% ------------------------
 
     function in_call_scgeatool(~, ~)
         % scgeatool;
@@ -685,26 +685,26 @@ end
             errordlg('Invalid parameter value(s).');
             return;
         end
-        
-            try
-                fw = gui.gui_waitbar;
-                [X] = sc_simudata(numgenes, numcells,'lun');
-                [sce] = SingleCellExperiment(X);
-                [c, cL] = grp2idx(sce.c);
-                gui.gui_waitbar(fw);
-                % guidata(FigureHandle, sce);
-                in_RefreshAll(src, [], false, false);
-            catch ME
-                gui.gui_waitbar(fw);
-                errordlg(ME.message);
-            end
+
+        try
+            fw = gui.gui_waitbar;
+            [X] = sc_simudata(numgenes, numcells,'lun');
+            [sce] = SingleCellExperiment(X);
+            [c, cL] = grp2idx(sce.c);
+            gui.gui_waitbar(fw);
+            % guidata(FigureHandle, sce);
+            in_RefreshAll(src, [], false, false);
+        catch ME
+            gui.gui_waitbar(fw);
+            errordlg(ME.message);
+        end
     end
 
     function in_GEOAccessionToSCE(src, ~)
         answer = questdlg('Current SCE will be replaced. Continue?');
-        if ~strcmp(answer, 'Yes'), return; end       
+        if ~strcmp(answer, 'Yes'), return; end
         acc = inputdlg({'Input Number(s) (e.g., GSM3308547,GSM3308548):'}, ...
-                    'GEO Accession', [1, 50], {'GSM3308547'});        
+            'GEO Accession', [1, 50], {'GSM3308547'});
         if isempty(acc), return; end
         acc = acc{1};
         if strlength(acc) > 4 && ~isempty(regexp(acc, 'G.+', 'once'))
@@ -722,7 +722,7 @@ end
         end
     end
 
-    function in_RunDataMapPlot(src, ~)        
+    function in_RunDataMapPlot(src, ~)
         ndim = 2;
         [vslist] = gui.i_checkexistingembed(sce, ndim);
         if isempty(h.ZData) && size(sce.s,2)==2 && length(vslist) <= 1
@@ -763,13 +763,13 @@ end
             [c, cL] = grp2idx(sce.c_cell_type_tx);
             in_RefreshAll(src, [], true, false);
             ix_labelclusters(true);
-        end        
+        end
     end
 
     function in_MergeCellSubtypes(src, ~, sourcetag, allcell)
         if nargin < 4
             answer = questdlg('Import annotation for all cells or just cells of a subtype?', '', ...
-                    'All Cells', 'Subtype Cells', 'Cancel', 'All Cells');
+                'All Cells', 'Subtype Cells', 'Cancel', 'All Cells');
             switch answer
                 case 'All Cells'
                     allcell = true;
@@ -800,31 +800,31 @@ end
     end
 
     function in_WorkonSelectedGenes(src, ~)
-            %         answer=questdlg('Input the number of HVGs. Continue?');
-            %         if ~strcmp(answer,'Yes'), return; end
-            k = gui.i_inputnumk(2000, 1, sce.NumGenes, 'the number of HVGs');
-            if isempty(k), return; end
-            answer = questdlg('Which method?', 'Select Method', ...
-                'Brennecke et al. (2013)', 'Splinefit Method', ...
-                'Brennecke et al. (2013)');
-            fw = gui.gui_waitbar;
-            switch answer
-                case 'Brennecke et al. (2013)'
-                    T = sc_hvg(sce.X, sce.g);
-                case 'Splinefit Method'
-                    T = sc_splinefit(sce.X, sce.g);
-                otherwise
-                    return;
-            end
-            glist = T.genes(1:min([k, sce.NumGenes]));
-            [y, idx] = ismember(glist, sce.g);
-            if ~all(y), errordlg('Runtime error.');
+        %         answer=questdlg('Input the number of HVGs. Continue?');
+        %         if ~strcmp(answer,'Yes'), return; end
+        k = gui.i_inputnumk(2000, 1, sce.NumGenes, 'the number of HVGs');
+        if isempty(k), return; end
+        answer = questdlg('Which method?', 'Select Method', ...
+            'Brennecke et al. (2013)', 'Splinefit Method', ...
+            'Brennecke et al. (2013)');
+        fw = gui.gui_waitbar;
+        switch answer
+            case 'Brennecke et al. (2013)'
+                T = sc_hvg(sce.X, sce.g);
+            case 'Splinefit Method'
+                T = sc_splinefit(sce.X, sce.g);
+            otherwise
                 return;
-            end
-            sce.g = sce.g(idx);
-            sce.X = sce.X(idx, :);
-            gui.gui_waitbar(fw);
-            in_RefreshAll(src, [], true, false);
+        end
+        glist = T.genes(1:min([k, sce.NumGenes]));
+        [y, idx] = ismember(glist, sce.g);
+        if ~all(y), errordlg('Runtime error.');
+            return;
+        end
+        sce.g = sce.g(idx);
+        sce.X = sce.X(idx, :);
+        gui.gui_waitbar(fw);
+        in_RefreshAll(src, [], true, false);
     end
 
     function in_SubsampleCells(src, ~, methodoption)
@@ -891,12 +891,12 @@ end
         gui.gui_waitbar_adv(fw,3/8, 'Clustering Cells Using K-means...');
         sce = sce.clustercells([], [], true);
         gui.gui_waitbar_adv(fw,4/8, 'Annotating Cell Type Using PanglaoDB...');
-        
+
         tic
         sce = sce.assigncelltype(speciestag, false);
         toc
         gui.gui_waitbar_adv(fw,5/8, 'Estimate Cell Cycles...');
-        
+
         sce = sce.estimatecellcycle;
         gui.gui_waitbar_adv(fw,6/8, 'Estimate Differentiation Potency of Cells...');
 
@@ -918,8 +918,8 @@ end
         sce.c = c;
         guidata(FigureHandle, sce);
         try
-        [requirerefresh, highlightindex] = ...
-            gui.callback_SelectCellsByQC(src);
+            [requirerefresh, highlightindex] = ...
+                gui.callback_SelectCellsByQC(src);
         catch ME
             errordlg(ME.message);
             return;
@@ -942,7 +942,7 @@ end
         oldm = sce.NumGenes;
         oldn = sce.NumCells;
         [requirerefresh] = gui.callback_Select5000Genes(src);
-        
+
         if requirerefresh
             sce = guidata(FigureHandle);
             try
@@ -962,9 +962,9 @@ end
             newn = sce.NumCells;
             helpdlg(sprintf('%d cells removed; %d genes removed.', ...
                 oldn-newn, oldm-newm), '');
-            
+
             % helpdlg(sprintf('%d genes removed.', oldm-newm), '');
-        end        
+        end
     end
 
     function in_RunSeuratWorkflow(src, ~)
@@ -972,7 +972,7 @@ end
         preftagname = 'externalwrkpath';
         [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
 
-        [ok] = gui.i_confirmscript('Run Seurat/R Workflow (Seurat)?', ...
+        [ok] = gui.i_confirmscript('Run Seurat Workflow (Seurat/R)?', ...
             'R_Seurat', 'r');
         if ~ok, return; end
 
@@ -1046,12 +1046,12 @@ end
                     return;
             end
         end
-        
+
         if gui.callback_Harmonypy(src)
             sce = guidata(FigureHandle);
             [c, cL] = grp2idx(sce.c);
             in_RefreshAll(src, [], true, false);
-    
+
             ButtonName = questdlg('Update Saved Embedding?', '');
             switch ButtonName
                 case 'Yes'
@@ -1160,18 +1160,18 @@ end
             return;
         end
         in_EnDisableMenu('on');
-%        if isvalid(button1), set(button1,'Visible','off'); end
-%        if isvalid(button2), set(button2,'Visible','off'); end
+        %        if isvalid(button1), set(button1,'Visible','off'); end
+        %        if isvalid(button2), set(button2,'Visible','off'); end
         figure(FigureHandle);
         % [c,cL]=grp2idx(sce.c);
         % was3d = ~isempty(h.ZData);
-        
+
         if isempty(c), [c,cL] = grp2idx(sce.c); end
         if size(sce.s, 2) >= 3
-            if keepview, [ax, bx] = view(hAx); end            
+            if keepview, [ax, bx] = view(hAx); end
             h = gui.i_gscatter3(sce.s, c, methodid, hAx);
             if keepview, view(ax, bx); end
-        else        % otherwise going to show 2D            
+        else        % otherwise going to show 2D
             if keepview, [ax, bx] = view(hAx); end
             h = gui.i_gscatter3(sce.s(:, 1:2), c, methodid, hAx);
             if keepview, [ax, bx] = view(hAx); end
@@ -1191,7 +1191,7 @@ end
         set(hAx,'Visible','on');
     end
 
-    function in_Switch2D3D(src, ~)  
+    function in_Switch2D3D(src, ~)
         [para] = gui.i_getoldsettings(src);
 
         if isempty(h.ZData)               % current 2D
@@ -1265,7 +1265,7 @@ end
                     h.Marker = para.oldMarker;
                     h.SizeData = para.oldSizeData;
                     colormap(para.oldColorMap);
-                    return;                    
+                    return;
                 case 'Pick existing 2D'
                     [sx] = gui.i_pickembedvalues(sce, 2);
                     if ~isempty(sx) && size(sx,1) == sce.NumCells
@@ -1275,9 +1275,9 @@ end
                         return;
                     end
             end
-        end        
+        end
         guidata(FigureHandle, sce);
-        in_RefreshAll(src, [], true, true);   % keepview, keepcolr       
+        in_RefreshAll(src, [], true, true);   % keepview, keepcolr
     end
 
     function in_AddEditCellAttribs(~,~)
@@ -1290,14 +1290,14 @@ end
                 addnew = true;
             otherwise
                 return;
-        end        
+        end
         [sce] = gui.sc_cellattribeditor(sce, addnew);
         guidata(FigureHandle, sce);
     end
 
     function in_ExportCellAttribTable(~,~)
         %sce = guidata(FigureHandle);
-        T = pkg.makeattributestable(sce);        
+        T = pkg.makeattributestable(sce);
         gui.i_exporttable(T,true, ...
             "Tcellattrib","CellAttribTable");
     end
@@ -1358,7 +1358,7 @@ end
             if ~isfield(sce.struct_cell_embeddings, methoddimtag)
                 sce.struct_cell_embeddings = setfield(sce.struct_cell_embeddings,methoddimtag,[]);
             end
-            
+
             % if ~isempty(sce.struct_cell_embeddings.(methoddimtag))
             %     answer1 = questdlg(sprintf('Use existing %s embedding or re-compute new embedding?', ...
             %         upper(methoddimtag)), '', ...
@@ -1589,7 +1589,7 @@ end
         ptsSelected = logical(h.BrushData.');
         if ~any(ptsSelected)
             helpdlg("No cells are selected. Please use the data brush tool to select cells for cell type assignment.", '');
-                return;
+            return;
         end
         answer = questdlg('This is a one-time analysis. Cell type labels will not be saved. Continue?');
         if ~strcmp(answer, 'Yes')
@@ -1668,7 +1668,7 @@ end
             otherwise
                 return;
         end
-        [answer] = gui.i_selvariabletype(thisc);        
+        [answer] = gui.i_selvariabletype(thisc);
         switch answer
             case 'Categorical/Discrete'
                 n = max(c);
@@ -1690,10 +1690,10 @@ end
 
     function in_EnrichrHVGs(src, events)
         gui.gui_showrefinfo('HVG Functional Analysis [PMID:31861624]');
-        
+
         answer = questdlg('This function applies to a homogeneous group of cells. Remove lowly expressed genes before applying. Continue?');
         if ~strcmp(answer, 'Yes'), return; end
-        
+
         ptsSelected = logical(h.BrushData.');
         if any(ptsSelected)
             [ptsSelected, letdoit] = gui.i_expandbrushed(ptsSelected, sce);
@@ -1701,7 +1701,7 @@ end
             if sum(ptsSelected) < 200
                 answer = questdlg(sprintf('Too few cells (n = %d) selected, continue?', sum(ptsSelected)));
                 if ~strcmp(answer, 'Yes'), return; end
-            end           
+            end
             scetmp = sce.removecells(~ptsSelected);
             scetmp = scetmp.qcfilter(1000, 0.15, 15);
             gui.callback_EnrichrHVGs(src, events, scetmp);
@@ -1851,7 +1851,7 @@ end
                 gui.sc_pseudotimegenes(sce, t);
             case 'No'
                 return;
-        end            
+        end
     end
 
     function in_ClusterCellsS(src, ~)
@@ -1871,7 +1871,7 @@ end
         else
             return;
         end
-        in_reclustercells(src, methodtag, sx);        
+        in_reclustercells(src, methodtag, sx);
         guidata(FigureHandle, sce);
     end
 
@@ -1966,7 +1966,7 @@ end
             set(b,'State','off');
         else
             % sce = guidata(FigureHandle);
-            [thisc, clable] = gui.i_select1class(sce,true);            
+            [thisc, clable] = gui.i_select1class(sce,true);
             if isempty(thisc)
                 set(src, statetag, 'off');
                 return;
@@ -2040,7 +2040,7 @@ end
             for ik = 1:max(c)
                 idx = find(c == ik);
                 siv = sce.s(idx, :);
-                si = median(siv, 1);                
+                si = median(siv, 1);
                 % si=geometric_median(siv');
                 [kb] = dsearchn(siv, si);
                 %[~, k] = medoid(siv);  geometric_median
@@ -2054,16 +2054,16 @@ end
 
 end
 
-    function myResizeFun(src, ~, butt,butt2)
-        fig_pos = get(src, 'Position'); % [left bottom width height]
-        fig_width = fig_pos(3);
-        fig_height = fig_pos(4);
-        
-        btn_width = 100; % Adjust as needed
-        btn_height = 25; % Adjust as needed
-        btn_x = (fig_width - btn_width) / 2;
-        btn_y = (fig_height - btn_height) / 1.618;
-    
-        set(butt,'Position',[btn_x btn_y btn_width btn_height]);
-        set(butt2,'Position',[btn_x btn_y+25 btn_width btn_height]);
-    end
+function myResizeFun(src, ~, butt,butt2)
+fig_pos = get(src, 'Position'); % [left bottom width height]
+fig_width = fig_pos(3);
+fig_height = fig_pos(4);
+
+btn_width = 100; % Adjust as needed
+btn_height = 25; % Adjust as needed
+btn_x = (fig_width - btn_width) / 2;
+btn_y = (fig_height - btn_height) / 1.618;
+
+set(butt,'Position',[btn_x btn_y btn_width btn_height]);
+set(butt2,'Position',[btn_x btn_y+25 btn_width btn_height]);
+end
