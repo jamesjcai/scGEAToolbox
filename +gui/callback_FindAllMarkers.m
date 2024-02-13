@@ -18,6 +18,10 @@ end
 
 [thisc, ~] = gui.i_select1class(sce);
 if isempty(thisc), return; end
+if numel(unique(thisc))==1
+    warndlg("All cells are in the same group.",'');
+    return;
+end
 
 [T] = pkg.e_findallmarkers(sce.X, sce.g, thisc, [], [], [], true);
 if ~isempty(T)
@@ -50,6 +54,10 @@ end
 
 [thisc, ~] = gui.i_select1class(sce);
 if isempty(thisc), return; end
+if numel(unique(thisc))==1
+    warndlg("All cells are in the same group.",'');
+    return;
+end
 [c, cL, noanswer] = gui.i_reordergroups(thisc);
 if noanswer, return; end
 

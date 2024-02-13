@@ -1,6 +1,6 @@
 function callback_Brush4Markers(src, event)
 if exist('lasso', 'file')
-    disp('using LASSO')
+    % disp('using LASSO')
     i_Brush4MarkersLASSO(src, event);
     return;
 end
@@ -31,12 +31,17 @@ ptsSelected = logical(h.BrushData.');
 
 
 if ~any(ptsSelected)
-    %warndlg("No cells are selected.");
-    %return;
-    [ptsSelected] = gui.i_select1classcells(sce, false);
+    waitfor(warndlg("No cells are brushed/selected.",''));
+    answer=questdlg('Select cells by a grouping variable?','');
+    if ~strcmp(answer,'Yes'), return; end
+    [ptsSelected] = gui.i_select1classcells(sce, false);    
     if isempty(ptsSelected), return; end
+    if all(ptsSelected)
+        warndlg("All cells are in the same group.",'');
+        return;
+    end
 else
-    assignin('base', 'ptsSelected', ptsSelected);
+    % assignin('base', 'ptsSelected', ptsSelected);
     [ptsSelected, letdoit] = gui.i_expandbrushed(ptsSelected, sce);
     if ~letdoit, return; end
 end
@@ -49,9 +54,7 @@ y = double(ptsSelected);
 sce.c = 1 + ptsSelected;
 X = sce.X';
 try
-    if issparse(X)
-        X = full(X);
-    end
+    if issparse(X), X = full(X); end
     [B] = lasso(X, y, 'DFmax', numfig*3, 'MaxIter', 1e3);
 catch ME
     gui.gui_waitbar(fw);
