@@ -30,8 +30,8 @@ b = uicontrol('style','text',...
 hAx = axes('Parent', f,'Visible','off');
 title(hAx, 'sce.title');
 subtitle(hAx,'[genes x cells]');
-dt = datacursormode(hAx,'on');
-%dt.UpdateFcn = {@i_myupdatefcnx};
+dt = datacursormode(f);
+dt.UpdateFcn = {@i_myupdatefcnx};
 return;
 
 
