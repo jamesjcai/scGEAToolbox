@@ -36,14 +36,19 @@ if ~ispref('scgeatoolbox', preftagname)
     % setpref('scgeatoolbox',preftagname,s);
 else
     s = getpref('scgeatoolbox', preftagname);
-    answer = questdlg(sprintf('%s', s), ...
-        'Path to R Executable', ...
-        'Use this', 'Use another', 'Cancel', 'Use this');
-    switch answer
-        case 'Use this'
-            done = true;
-        case 'Use another'
-            [done] = ix_setrenv(s);
+    if isempty(s)
+        rmpref('scgeatoolbox', preftagname);
+        done = false;
+    else
+        answer = questdlg(sprintf('%s', s), ...
+            'Path to R Executable', ...
+            'Use this', 'Use another', 'Cancel', 'Use this');
+        switch answer
+            case 'Use this'
+                done = true;
+            case 'Use another'
+                [done] = ix_setrenv(s);
+        end
     end
 end
 if done

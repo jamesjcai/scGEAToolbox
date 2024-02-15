@@ -24,7 +24,10 @@ tmpfilelist = {'input.mat', 'output.csv'};
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 save('input.mat', 'X', 'Y', '-v7.3');
 
-Rpath = getpref('scgeatoolbox', 'rexecutablepath');
+Rpath = getpref('scgeatoolbox', 'rexecutablepath',[]);
+if isempty(Rpath)
+    error('R environment has not been set up.');
+end
 codefullpath = fullfile(codepth,'script.R');
 pkg.RunRcode(codefullpath, Rpath);
 
