@@ -23,7 +23,11 @@ X = uint8(X > 0);
 h5create('input.h5', '/X', size(X));
 h5write('input.h5', '/X', X);
 
-Rpath = getpref('scgeatoolbox', 'rexecutablepath');
+Rpath = getpref('scgeatoolbox', 'rexecutablepath',[]);
+if isempty(Rpath)
+    error('R environment has not been set up.');
+end
+
 codefullpath = fullfile(codepath,'script.R');
 pkg.RunRcode(codefullpath, Rpath);
 

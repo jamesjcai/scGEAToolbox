@@ -17,7 +17,10 @@ tmpfilelist = {'inputrdsfile.txt', 'output.h5', ...
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 
 writematrix(filename, 'inputrdsfile.txt');
-Rpath = getpref('scgeatoolbox', 'rexecutablepath');
+Rpath = getpref('scgeatoolbox', 'rexecutablepath',[]);
+if isempty(Rpath)
+    error('R environment has not been set up.');
+end
 codefullpath = fullfile(codepth,'script.R');
 pkg.RunRcode(codefullpath, Rpath);
 

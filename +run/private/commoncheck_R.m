@@ -9,7 +9,10 @@ if ~ispref('scgeatoolbox', 'rexecutablepath')
     if strcmp(answer, 'Yes'), gui.i_setrenv; end
     return;
 else
-    Rpath = getpref('scgeatoolbox', 'rexecutablepath');
+    Rpath = getpref('scgeatoolbox', 'rexecutablepath',[]);
+    if isempty(Rpath)
+        error('R environment has not been set up.');
+    end    
 end
 
 %if isempty(pkg.FindRpath)

@@ -429,7 +429,7 @@ if ~ispref('scgeatoolbox', 'useronboardingtoolbar')
     gui.gui_userguidingpref(true);
     setpref('scgeatoolbox', 'useronboardingtoolbar', true);
 end
-showuseronboarding = getpref('scgeatoolbox', 'useronboardingtoolbar');
+showuseronboarding = getpref('scgeatoolbox', 'useronboardingtoolbar',false);
 if ~showuseronboarding
     set(UserToolbarHandle, 'Visible', 'off');
 end
@@ -494,7 +494,6 @@ end
     end
 
     function in_turnoffuserguiding(~, ~)
-        % getpref('scgeatoolbox','useronboardingtoolbar');
         if get(UserToolbarHandle, 'Visible') == "off"
             askpref = true;
         else
@@ -1114,7 +1113,7 @@ end
         % end
         set(DeftToolbarHandle,'Visible',entag);
         set(MainToolbarHandle,'Visible',entag);
-        showuseronboarding = getpref('scgeatoolbox', 'useronboardingtoolbar');
+        showuseronboarding = getpref('scgeatoolbox', 'useronboardingtoolbar',false);
         switch entag
             case 'on'
                 if showuseronboarding

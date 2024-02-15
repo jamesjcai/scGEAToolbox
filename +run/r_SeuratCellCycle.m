@@ -21,7 +21,10 @@ if ~isdebug
 end
 
 sc_writefile('input.txt', X, upper(genelist));
-Rpath = getpref('scgeatoolbox', 'rexecutablepath');
+Rpath = getpref('scgeatoolbox', 'rexecutablepath',[]);
+if isempty(Rpath)
+    error('R environment has not been set up.');
+end
 codefullpath = fullfile(codepath,'script.R');
 pkg.RunRcode(codefullpath, Rpath);
 

@@ -16,7 +16,10 @@ if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 pkg.e_writeh5(full(sce.X), sce.g, 'input.h5');
 %sc_writefile('input.txt',sce.X,sce.g);
 %    if isdebug, return; end
-Rpath = getpref('scgeatoolbox', 'rexecutablepath');
+Rpath = getpref('scgeatoolbox', 'rexecutablepath',[]);
+if isempty(Rpath)
+    error('R environment has not been set up.');
+end
 codefullpath = fullfile(codepath,'script.R');
 pkg.RunRcode(codefullpath, Rpath);
 

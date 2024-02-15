@@ -32,7 +32,7 @@ if showdata
     h = scatter3(hAx, x, y, z, 'filled', 'MarkerFaceAlpha', .1);
 
     if ~isempty(g)
-        dt = datacursormode;
+        dt = datacursormode(FigureHandle);
         dt.UpdateFcn = {@i_myupdatefcn3, g, X};
     end
 end
@@ -65,7 +65,7 @@ if dofit
     plot3(xyz1(:, 1), xyz1(:, 2), xyz1(:, 3), '-', 'linewidth', 4);
     % scatter3(xyz1(:,1),xyz1(:,2),xyz1(:,3)); %,'MarkerEdgeAlpha',.8);
 
-    [~, d] = dsearchn(xyz1, [x, y, z]);
+    [nearestidx, d] = dsearchn(xyz1, [x, y, z]);
 
 
     fitmeanv=xyz1(:,1);
@@ -129,6 +129,8 @@ end
         if ~isempty(glist)            
             [yes,idx]=ismember(glist,g);
             idx=idx(yes);
+
+            %idx=[idx(:); find(nearestidx==1)];
             % idv = zeros(1, length(hvgidx));
             % idv(idx)=1;
             % h.BrushData = idv;

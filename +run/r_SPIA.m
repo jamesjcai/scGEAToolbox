@@ -31,7 +31,10 @@ writematrix(fc, 'input3.txt');
 tmpfilelist = {'input1.txt', 'input2.txt', 'input3.txt', 'output.csv'};
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 
-Rpath = getpref('scgeatoolbox', 'rexecutablepath');
+Rpath = getpref('scgeatoolbox', 'rexecutablepath',[]);
+if isempty(Rpath)
+    error('R environment has not been set up.');
+end
 codefullpath = fullfile(codepath,'script.R');
 pkg.RunRcode(codefullpath, Rpath);
 
