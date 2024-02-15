@@ -9,7 +9,7 @@ pw1 = fileparts(mfilename('fullpath'));
 
 
 if ~strcmp(pw0, pw1) && ~isconfirmed
-    [selectedButton] = uigetpref('scGEApp', ... % Group
+    [selectedButton] = uigetpref('scgeatoolbox', ... % Group
     'cdgea_ask', ... % Preference
     'Changing Working Directory', ... % Window title
     {'Do you want to change current working directory to scGEApp directory?'}, ...
