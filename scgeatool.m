@@ -3,6 +3,14 @@ function varargout = scgeatool(sce, varargin)
 if usejava('jvm') && ~feature('ShowFigureWindows')
     error('MATLAB is in a text mode. This function requires a GUI-mode.');
 end
+if isempty(which('grp2idx.m'))
+    waitfor(warndlg('SCGEATOOL requires Statistics and Machine Learning Toolbox.','Missing Dependencies'));
+    answer3 = questdlg('Learn how to install Statistics and Machine Learning Toolbox?','');
+    if strcmp(answer3,'Yes')
+        web('https://www.mathworks.com/help/matlab/matlab_env/get-add-ons.html');
+    end
+    return;
+end
 
 if nargin < 1
     sce = SingleCellExperiment;
