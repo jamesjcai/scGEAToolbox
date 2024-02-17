@@ -215,10 +215,7 @@ end
         title(h2, targetg);
         subtitle(h2, titxt);
     end
-    
-
-
-    end
+end
 
     function i_genecards(~, ~, g)
         web(sprintf('https://www.genecards.org/cgi-bin/carddisp.pl?gene=%s', g));
