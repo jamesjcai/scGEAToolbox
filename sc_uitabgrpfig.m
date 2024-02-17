@@ -1,4 +1,10 @@
-function sc_uitabgrpfig(sce, targetg)
+function sc_uitabgrpfig(sce, targetg, parentfig)
+
+if nargin<3, parentfig = []; end
+if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 
+    p=parentfig.Position;
+    cx = [p(1)+p(3)/2 p(2)+p(4)/2];
+end
 
 import mlreportgen.ppt.*;
 
@@ -8,6 +14,19 @@ pth = fullfile(pw1, 'resources', 'myTemplate.pptx');
 
 hFig=figure("Visible","off");
 hFig.Position(3) = hFig.Position(3) * 1.8;
+
+if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 
+    px = hFig.Position;
+    px_new = [cx(1)-px(3)/2 cx(2)-px(4)/2];
+    
+    % if px_new(1)<0
+    %     ss = get(0, 'screensize');
+    %     px_new(1)=px_new(1)-ss(4); %ss(3); 
+    % end
+else
+    px_new = [];
+end
+
 n=length(targetg);
 a = getpref('scgeatoolbox', 'prefcolormapname', 'autumn');
 
@@ -42,7 +61,7 @@ for k=1:n
     subtitle(ax{k,1}, gui.i_getsubtitle(c));
     title(ax{k,2}, targetg(k));
     subtitle(ax{k,2}, gui.i_getsubtitle(c));
-    
+
     %{
     ax = axes('Parent', tab{k});
     hold(ax, 'on');
@@ -87,7 +106,12 @@ pkg.i_addbutton2fig(tb, 'on', {@i_PickColorMap, c}, 'plotpicker-compass.gif', 'P
 pkg.i_addbutton2fig(tb, 'off', @i_savemainfig, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 
 %gui.add_3dcamera(tb);
-movegui(hFig,'center');
+if isempty(px_new)
+    movegui(hFig,'center');
+else
+    px_new
+    movegui(hFig, px_new);
+end
 drawnow;
 hFig.Visible=true;
 

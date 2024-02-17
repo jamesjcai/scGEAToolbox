@@ -226,7 +226,7 @@ in_addmenu(m_tool, 0, @gui.callback_DPGene2Groups, 'Differential Program (DP) An
 in_addmenu(m_tool, 0, @gui.callback_DEGene2GroupsBatch, 'Differential Expression (DE) Analysis in Cell Type Batch Mode...');
 in_addmenu(m_tool, 0, @gui.callback_DPGene2GroupsBatch, 'Differential Program (DP) Analysis in Cell Type Batch Mode...');
 in_addmenu(m_tool, 1, @gui.callback_CalculateGeneStats, 'Calculate Gene Expression Statistics...');
-in_addmenu(m_tool, 0, @gui.callback_CellCycleLibrarySize, 'Library Size of Cell Cycle Phases...');
+in_addmenu(m_tool, 0, @gui.callback_CellCycleLibrarySize, 'Library Size of Cell Groups...');
 in_addmenu(m_tool, 0, @gui.callback_CellCycleAssignment, 'Assign Cell Cycle Phase...');
 %i_addmenu(m_exp,0,@gui.callback_TCellExhaustionScores,'T Cell Exhaustion Score...');
 in_addmenu(m_tool, 1, @in_CompareGeneBtwCls, 'Cell Score Analysis...');

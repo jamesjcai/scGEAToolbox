@@ -29,7 +29,7 @@ sce = guidata(FigureHandle);
 %     case 'Multiple'
         [glist] = gui.i_selectngenes(sce);
         if isempty(glist), return; end
-        sc_uitabgrpfig(sce,glist);
+        sc_uitabgrpfig(sce,glist,FigureHandle);
 end
 
 
