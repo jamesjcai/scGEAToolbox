@@ -53,10 +53,7 @@ elseif isStringScalar(targetg) || ischar(targetg)
                 h1 = gca;
                 grid on
                 title(targetg)
-                titxt = sprintf('(%s/%s = %.2f%% nonzero)', ...
-                    num2bankScalar(sum(c > 0)), ...
-                    num2bankScalar(numel(c)), ...
-                    100*sum(c > 0)./numel(c));
+                titxt = gui.i_getsubtitle(c);
                 subtitle(titxt);
             case 2
                 if isempty(z)
@@ -72,10 +69,7 @@ elseif isStringScalar(targetg) || ischar(targetg)
 
                 title(targetg)
 
-                titxt = sprintf('(%s/%s = %.2f%% nonzero)', ...
-                    num2bankScalar(sum(c > 0)), ...
-                    num2bankScalar(numel(c)), ...
-                    100*sum(c > 0)./numel(c));
+                titxt = gui.i_getsubtitle(c);
                 subtitle(titxt);
                 
             case 3
@@ -114,10 +108,7 @@ elseif isStringScalar(targetg) || ischar(targetg)
                 % h1.YDataSource='explorer2IDX';
                 title(targetg)
 
-                titxt = sprintf('(%s/%s = %.2f%% nonzero)', ...
-                    num2bankScalar(sum(c > 0)), ...
-                    num2bankScalar(numel(c)), ...
-                    100*sum(c > 0)./numel(c));
+                titxt = gui.i_getsubtitle(c);
                 subtitle(titxt);
 
                 h2 = subplot(1, 2, 2);
@@ -206,32 +197,34 @@ end
         %title(h1,titxt);
         title(h1, targetg);
         subtitle(h1, titxt);
-end
-
-        function i_ResetExpr(~, ~)
-            c = ori_c;
-            delete(s2);
-            s2 = stem3(h2, x, y, c, 'marker', 'none', 'color', 'm');
-
-            %view(h2,ayy,byy);
-
-            delete(s1);
-            s1 = scatter3(h1, x, y, z, sz, c, 'filled');
-            %view(h1,axx,bxx);
-            title(h1, targetg);
-            subtitle(h1, titxt);
-            title(h2, targetg);
-            subtitle(h2, titxt);
     end
 
 
+    function i_ResetExpr(~, ~)
+        c = ori_c;
+        delete(s2);
+        s2 = stem3(h2, x, y, c, 'marker', 'none', 'color', 'm');
+
+        %view(h2,ayy,byy);
+
+        delete(s1);
+        s1 = scatter3(h1, x, y, z, sz, c, 'filled');
+        %view(h1,axx,bxx);
+        title(h1, targetg);
+        subtitle(h1, titxt);
+        title(h2, targetg);
+        subtitle(h2, titxt);
+    end
+    
+
+
     end
 
-        function i_genecards(~, ~, g)
+    function i_genecards(~, ~, g)
         web(sprintf('https://www.genecards.org/cgi-bin/carddisp.pl?gene=%s', g));
     end
 
-        function i_PickColorMap(~, ~, c)
+    function i_PickColorMap(~, ~, c)
         list = {'parula', 'turbo', 'hsv', 'hot', 'cool', 'spring', ...
             'summer', 'autumn (default)', ...
             'winter', 'jet'};
@@ -266,25 +259,25 @@ end
         % end
 
 
-        function selectcolormapeditor(~, ~)
+    function selectcolormapeditor(~, ~)
         % colormapeditor;
     end
 
-        function [str] = num2bankScalar(num)
-        % https://www.mathworks.com/matlabcentral/answers/96131-is-there-a-format-in-matlab-to-display-numbers-such-that-commas-are-automatically-inserted-into-the
-        num = floor(num*100) / 100;
-        str = num2str(num);
-        k = find(str == '.', 1);
-        if isempty(k)
-            % str=[str,'.00'];
-        end
-        % FIN = min(length(str),find(str == '.')-1);
-        FIN = length(str);
-        for i = FIN - 2:-3:2
-            str(i + 1:end + 1) = str(i:end);
-            str(i) = ',';
-        end
-    end
+    % function [str] = num2bankScalar(num)
+    %     % https://www.mathworks.com/matlabcentral/answers/96131-is-there-a-format-in-matlab-to-display-numbers-such-that-commas-are-automatically-inserted-into-the
+    %     num = floor(num*100) / 100;
+    %     str = num2str(num);
+    %     k = find(str == '.', 1);
+    %     if isempty(k)
+    %         % str=[str,'.00'];
+    %     end
+    %     % FIN = min(length(str),find(str == '.')-1);
+    %     FIN = length(str);
+    %     for i = FIN - 2:-3:2
+    %         str(i + 1:end + 1) = str(i:end);
+    %         str(i) = ',';
+    %     end
+    % end
 
         function within_stemscatter(x, y, z)
         if nargin < 3
