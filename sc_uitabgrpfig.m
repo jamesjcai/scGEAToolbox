@@ -1,6 +1,12 @@
 function sc_uitabgrpfig(sce, targetg)
 
-hFig=figure("Visible","off");       
+import mlreportgen.ppt.*;
+
+pw1 = fileparts(mfilename('fullpath'));
+pth = fullfile(pw1, 'resources', 'myTemplate.pptx');
+
+
+hFig=figure("Visible","off");
 hFig.Position(3) = hFig.Position(3) * 1.8;
 n=length(targetg);
 a = getpref('scgeatoolbox', 'prefcolormapname', 'autumn');
@@ -23,7 +29,7 @@ for k=1:n
     hpl{k,2} = scatter(sce.s(:,1), sce.s(:,2), 5, c, 'filled','Parent', ax2);
     %}
     
-    axes('parent',tab{k});
+    ax0{k} = axes('parent',tab{k});
     ax{k,1} = subplot(1,2,1);
     scatter3(sce.s(:,1), sce.s(:,2), sce.s(:,3), 5, c, 'filled');
     ax{k,2} = subplot(1,2,2);
@@ -62,22 +68,52 @@ for k=1:n
 
     gui.i_setautumncolor(c, a, true, any(c==0));
 end
+  
 tabgp.SelectionChangedFcn=@displaySelection;
 
 tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
-pkg.i_addbutton2fig(tb, 'off', [], "IMG00107.GIF", " ");
+
+% b=allchild(tb0)
 % tb = uitoolbar(hFig);
+% copyobj(b(4),tb);
+% delete(tb0);
+pkg.i_addbutton2fig(tb, 'off', [], "IMG00107.GIF", " ");
 % pkg.i_addbutton2fig(tb, 'off', @i_linksubplots, 'plottypectl-rlocusplot.gif', 'Link subplots');
 pkg.i_addbutton2fig(tb, 'on',  @i_genecards, 'fvtool_fdalinkbutton.gif', 'GeneCards...');
 pkg.i_addbutton2fig(tb, 'on', {@i_PickColorMap, c}, 'plotpicker-compass.gif', 'Pick new color map...');
 %pkg.i_addbutton2fig(tb, 'off', @i_RescaleExpr, 'IMG00074.GIF', 'Rescale expression level [log2(x+1)]');
 %pkg.i_addbutton2fig(tb, 'off', @i_ResetExpr, 'plotpicker-geobubble2.gif', 'Reset expression level');
-pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
+% pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
+pkg.i_addbutton2fig(tb, 'off', @i_savemainfig, "powerpoint.gif", 'Save Figure to PowerPoint File...');
+
 %gui.add_3dcamera(tb);
 movegui(hFig,'center');
 drawnow;
 hFig.Visible=true;
 
+    function i_savemainfig(~,~)
+        answer = questdlg('Export to PowerPoint?');
+        if ~strcmp(answer,'Yes'), return; end
+
+        fw=gui.gui_waitbar_adv;
+            OUTppt = [tempname, '.pptx'];
+            ppt = Presentation(OUTppt, pth);
+            open(ppt);
+            images=cell(n,1);
+            warning off
+        for kx=1:n
+            gui.gui_waitbar_adv(fw,kx./n,"Processing "+targetg(kx)+" ...");
+            images{kx} = [tempname, '.png'];
+            tabgp.SelectedTab=tab{kx};
+            saveas(tab{kx},images{kx});
+            slide3 = add(ppt, 'Small Title and Content');
+            replace(slide3, 'Title', targetg(kx));
+            replace(slide3, 'Content', Picture(images{kx}));        
+        end
+            close(ppt);
+            rptview(ppt);      
+            gui.gui_waitbar_adv(fw);
+    end
 
     function i_linksubplots(~,~)        
         hlink = linkprop([ax{idx,1},ax{idx,2}],{'CameraPosition','CameraUpVector'});
@@ -92,7 +128,7 @@ hFig.Visible=true;
     end
 
     function i_genecards(~, ~)
-        web(sprintf('https://www.genecards.org/cgi-bin/carddisp.pl?gene=%s', focalg));
+        web(sprintf('https://www.genecards.org/cgi-bin/carddisp.pl?gene=%s', focalg),'-new');
     end
 
 end

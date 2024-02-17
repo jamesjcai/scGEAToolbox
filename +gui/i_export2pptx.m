@@ -46,8 +46,10 @@ switch answer
                 delete(images{i});
             end
             gui.gui_waitbar(fw);
-        otherwise
-        end
+      
+    otherwise
+       
+end
 
 
 end

@@ -54,6 +54,41 @@ try
     [para] = gui.i_getoldsettings(src);
     totaln = max(c);
     numfig = ceil(totaln/9);
+
+% -------------
+
+hFig = figure('visible', 'off');
+tabgp = uitabgroup();
+for nf=1:numfig
+    tab{nf} = uitab(tabgp, 'Title', sprintf('Tab%d',nf));
+    axes('parent',tab{nf});
+    for k=1:9
+        kk = (nf - 1) * 9 + k;
+        if kk <= totaln
+        ax{nf,k} = subplot(3,3,k);
+        gui.i_gscatter3(sces, c, 3, cmv(idxx(kk)));
+        set(ax{nf,k}, 'XTick', []);
+        set(ax{nf,k}, 'YTick', []);
+        b = cL{idxx(kk)};
+        title(strrep(b, '_', "\_"));
+        a = sprintf('%d cells (%.2f%%)', ...
+            cmx(idxx(kk)), ...
+            100*cmx(idxx(kk))/length(c));
+        fprintf('%s in %s\n', a, b);
+        subtitle(a);
+        box on
+        end
+    end
+    colormap(para.oldColorMap);
+end
+tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
+pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
+pkg.i_addbutton2fig(tb, 'off', @in_scgeatoolsce, "icon-mat-touch-app-10.gif", 'Extract and Work on Separate SCEs...');
+drawnow;
+set(hFig, 'visible', 'on');
+
+%{ 
+--------------------------------------------    
     for nf = 1:numfig
         f = figure('visible', 'off');
         for k = 1:9
@@ -76,15 +111,17 @@ try
             colormap(para.oldColorMap);
         end
         P = get(f, 'Position');
-        set(f, 'Position', [P(1) - 20 * nf, P(2) - 20 * nf, P(3), P(4)]);
-        set(f, 'visible', 'on');
+        set(f, 'Position', [P(1) - 20 * nf, P(2) - 20 * nf, P(3), P(4)]);        
         tb = uitoolbar(f);
         pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
         if nf==1
             pkg.i_addbutton2fig(tb, 'off', @in_scgeatoolsce, "icon-mat-touch-app-10.gif", 'Extract and Work on Separate SCEs...');
         end
         drawnow;
+        set(f, 'visible', 'on');
     end
+%} 
+
 catch ME
     errordlg(ME.message);
 end
