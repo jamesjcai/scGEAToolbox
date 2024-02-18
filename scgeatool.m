@@ -58,7 +58,8 @@ end
 
 FigureHandle = figure('Name', 'SCGEATOOL', ...
     'position', round(1.25*[0, 0, 560, 420]), ...
-    'visible', 'off', 'NumberTitle', tagx);
+    'visible', 'off', 'NumberTitle', tagx, ...
+    'DockControls','off');
 movegui(FigureHandle, 'center');
 
 fig_pos = get(FigureHandle, 'Position'); % [left bottom width height]
