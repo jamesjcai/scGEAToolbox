@@ -291,11 +291,12 @@ in_addmenu(m_help, 1, {@(~, ~) inputdlg('', 'About SCGEATOOL', [10, 50], {sprint
 hAx = axes('Parent', FigureHandle,'Visible','off');
 if ~isempty(sce) && sce.NumCells>0
     h = gui.i_gscatter3(sce.s, c, methodid, 1, hAx);
+    title(hAx, sce.title);
+    subtitle(hAx,'[genes x cells]');
 else
     h = [];
+    hAx.Toolbar.Visible = 'off';
 end
-title(hAx, sce.title);
-subtitle(hAx,'[genes x cells]');
 
 dt = datacursormode(FigureHandle);
 dt.UpdateFcn = {@i_myupdatefcnx};
@@ -1187,7 +1188,8 @@ end
         end
         title(hAx, sce.title);
         subtitle(hAx, '[genes x cells]');
-        set(hAx,'Visible','on');
+        hAx.Toolbar.Visible = 'on';
+        set(hAx,'Visible','on');        
     end
 
     function in_Switch2D3D(src, ~)
