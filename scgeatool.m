@@ -142,7 +142,7 @@ delete(findall(FigureHandle, 'tag', 'figMenuFileSaveAs'));
 delete(findall(FigureHandle, 'tag', 'figMenuFileSaveWorkspaceAs'));
 delete(findall(FigureHandle, 'tag', 'figMenuFilePreferences'));
 delete(findall(FigureHandle, 'tag', 'figMenuFileExportSetup'));
-set(findall(FigureHandle, 'tag', 'figMenuFileSave'),'Text','&Save SCE...','MenuSelectedFcn', @callback_SaveX);
+set(findall(FigureHandle, 'tag', 'figMenuFileSave'),'Text','Export/&Save Data...','MenuSelectedFcn', @callback_SaveX);
 delete(findall(FigureHandle, 'tag', 'figMenuGenerateCode'));
 delete(findall(FigureHandle, 'tag', 'figMenuFileImportData'));
 
