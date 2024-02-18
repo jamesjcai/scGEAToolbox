@@ -3,7 +3,12 @@ if nargin < 4, newmesg = ''; end
 if nargin < 3 || isempty(mesg), mesg = 'Processing your data'; end
 if nargin < 2 || isempty(witherror), witherror = false; end
 if nargin < 1 || isempty(f)
-    f = waitbar(0, 'Please wait...');
+    hFig = gcf;
+
+    f = waitbar(0, 'Please wait...','Visible','off','Units','pixels');
+    [~, newpos] = gui.i_getchildpos(hFig, f);
+    f.Position = newpos;
+    f.Visible = "on";
     pause(.5)
     fprintf('Processing your data...');
     waitbar(.618, f, mesg);

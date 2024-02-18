@@ -29,7 +29,9 @@ sce = guidata(FigureHandle);
 %     case 'Multiple'
         [glist] = gui.i_selectngenes(sce);
         if isempty(glist), return; end
+        fw=gui.gui_waitbar;
         sc_uitabgrpfig(sce,glist,FigureHandle);
+        gui.gui_waitbar(fw);
 end
 
 

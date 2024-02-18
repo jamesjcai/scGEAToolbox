@@ -3,7 +3,7 @@ FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
 
 [thisc1, clable1, thisc2, clable2] = gui.i_select2class(sce);
-
+fw = gui.gui_waitbar;
 
 % [c, cL, noanswer] = gui.i_reordergroups(thisc1);
 % thisc1=cL(c);
@@ -21,11 +21,13 @@ T=[];
 
 hFig=figure("Visible","off");
 
-    p=FigureHandle.Position;
-    cx = [p(1)+p(3)/2 p(2)+p(4)/2];
+[px_new] = gui.i_getchildpos(FigureHandle, hFig);
 
-    px = hFig.Position;
-    px_new = [cx(1)-px(3)/2 cx(2)-px(4)/2];
+    % p=FigureHandle.Position;
+    % cx = [p(1)+p(3)/2 p(2)+p(4)/2];
+    % 
+    % px = hFig.Position;
+    % px_new = [cx(1)-px(3)/2 cx(2)-px(4)/2];
 
 
 tabgp = uitabgroup();
@@ -67,9 +69,15 @@ tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
 %    movegui(hFig, 'center');
 %    set(hFig, 'Visible', true);
 
-movegui(hFig, px_new);
+if any(px_new<0)
+    movegui(hFig, 'center');
+else
+    movegui(hFig, px_new);
+end
 drawnow;
+gui.gui_waitbar(fw);
 hFig.Visible=true;
+
 
 
     function in_crossplot(thiscA,thiscB)
