@@ -1238,24 +1238,24 @@ end
                     'Reduce current 3D','Pick existing 2D');
             else
                 answer = questdlg('How to make 2D embedding?','', ...
-                    'Re-embed cells', ...
-                    'Reduce current 3D to 2D','Cancel','Re-embed cells');
+                    'Embed Cells to 2D', ...
+                    'Project Current 3D Embedding to 2D','Cancel','Embed Cells to 2D');
             end
             switch answer
                 case 'Cancel'
                     return;
-                case 'Re-embed cells'
+                case 'Embed Cells to 2D'
                     in_EmbeddingAgain(src, [], 2);
-                case 'Reduce current 3D to 2D'
+                case 'Project Current 3D Embedding to 2D'
                     [ax, bx] = view(hAx);
-                    answer2 = questdlg('Which view to be used to project cells?', '', ...
-                        'X-Y Plane', 'Screen/Camera', 'PCA-rotated', 'X-Y Plane');
+                    answer2 = questdlg('Which view to be used to project 3D to 2D?', '', ...
+                        'X-Y Plane', 'Screen/Camera', 'PCA-Rotated', 'X-Y Plane');
                     switch answer2
                         case 'X-Y Plane'
                             sx = sce.s;
                         case 'Screen/Camera'
                             sx = pkg.i_3d2d(sce.s, ax, bx);
-                        case {'PCA-rotated'}
+                        case {'PCA-Rotated'}
                             [~, sx] = pca(sce.s);
                         otherwise
                             return;
