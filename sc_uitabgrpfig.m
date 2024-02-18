@@ -91,12 +91,13 @@ end
 tabgp.SelectionChangedFcn=@displaySelection;
 
 tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
-
 % b=allchild(tb0)
 % tb = uitoolbar(hFig);
 % copyobj(b(4),tb);
 % delete(tb0);
-pkg.i_addbutton2fig(tb, 'off', [], "IMG00107.GIF", " ");
+
+uipushtool(tb, 'Separator', 'off');
+% pkg.i_addbutton2fig(tb, 'off', [], "IMG00107.GIF", " ");
 % pkg.i_addbutton2fig(tb, 'off', @i_linksubplots, 'plottypectl-rlocusplot.gif', 'Link subplots');
 pkg.i_addbutton2fig(tb, 'on',  @i_genecards, 'fvtool_fdalinkbutton.gif', 'GeneCards...');
 pkg.i_addbutton2fig(tb, 'on', {@i_PickColorMap, c}, 'plotpicker-compass.gif', 'Pick new color map...');
@@ -108,8 +109,7 @@ pkg.i_addbutton2fig(tb, 'off', @i_savemainfig, "powerpoint.gif", 'Save Figure to
 %gui.add_3dcamera(tb);
 if isempty(px_new)
     movegui(hFig,'center');
-else
-    px_new
+else    
     movegui(hFig, px_new);
 end
 drawnow;

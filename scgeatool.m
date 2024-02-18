@@ -326,15 +326,16 @@ in_addbuttontoggle(1, 1, {@in_togglebtfun, @in_labelcellgroups, ...
 in_addbuttonpush(1, 0, @in_Brushed2NewCluster, "plotpicker-glyplot-face.gif", "Add brushed cells to a new group")
 in_addbuttonpush(1, 0, @in_Brushed2MergeClusters, "plotpicker-pzmap.gif", "Merge brushed cells to same group")
 in_addbuttonpush(1, 0, @in_RenameCellTypeBatchID, "plotpicker-scatterhist.gif", "Rename cell type or batch ID");
-in_addbuttonpush(1, 0, [], "IMG00107.GIF", " ");
+
+in_addbuttonpush(1, 0, [], [], "");
 in_addbuttonpush(1, 1, @in_ClusterCellsS, "plotpicker-dendrogram.gif", "Clustering using cell embedding (S)")
 in_addbuttonpush(1, 0, @in_ClusterCellsX, "icon-mw-cluster-10.gif", "Clustering using expression matrix (X)")
 in_addbuttonpush(1, 1, {@in_DetermineCellTypeClustersGeneral, true}, "plotpicker-contour.gif", "Assign cell types to groups")
 in_addbuttonpush(1, 0, @in_Brush4Celltypes, "brush.gif", "Assign cell type to selected cells");
-% i_addbutton(1,0,@ShowCellStemScatter,"IMG00067.GIF","Stem scatter plot");
 in_addbuttonpush(1, 1, @gui.callback_Brush4Markers, "plotpicker-kagi.gif", "Marker genes of brushed cells");
 in_addbuttonpush(1, 0, @gui.callback_FindAllMarkers, "plotpicker-plotmatrix.gif", "Marker gene heatmap");
-in_addbuttonpush(1, 0, [], "IMG00107.GIF", " ");
+
+in_addbuttonpush(1, 0, [], [], "");
 in_addbuttonpush(1, 1, @gui.callback_ShowClustersPop, "plotpicker-geoscatter.gif", "Show cell clusters/groups individually");
 in_addbuttonpush(1, 0, @gui.callback_SelectCellsByClass, "plotpicker-pointfig.gif", "Select cells by class");
 in_addbuttonpush(1, 0, @in_DeleteSelectedCells, "plotpicker-qqplot.gif", "Delete brushed/selected cells");
@@ -347,19 +348,18 @@ in_addbuttonpush(1, 0, @gui.callback_PickColorMap, "plotpicker-compass.gif", "Pi
 in_addbuttonpush(1, 0, @in_RefreshAll, "icon-mat-refresh-20.gif", "Refresh");
 
 
-%in_addbuttonpush(0, 0, [], "IMG00107.GIF", " ");
 %i_addbutton(0,0,@callback_CalculateCellScores,"cellscore2.gif","Calculate cell scores from list of feature genes")
 %i_addbutton(0,0,@callback_ComparePotency,"plotpicker-candle.gif","Compare differentiation potency between groups");
 
 
 in_addbuttonpush(0, 1, @gui.callback_MultiGroupingViewer, "plotpicker-arxtimeseries.gif", "Multi-grouping View...");
-in_addbuttonpush(0, 0, @gui.callback_CrossTabulation, "plotpicker-comet.gif", "Cross tabulation");
+in_addbuttonpush(0, 0, @gui.callback_CrossTabulation_new, "plotpicker-comet.gif", "Cross tabulation");
 
 in_addbuttonpush(0, 1, @gui.callback_Violinplot, "violinplot.gif", "Gene Violin Plot...");
 in_addbuttonpush(0, 0, @gui.callback_DrawDotplot, "icon-mat-blur-linear-10.gif", "Gene Dot Plot...");
 in_addbuttonpush(0, 0, @gui.callback_GeneHeatMap, "icon-mat-apps-20.gif", "Gene Heatmap...");
 
-in_addbuttonpush(0, 0, [], "IMG00107.GIF", " ");
+in_addbuttonpush(0, 0, [], [], "");
 in_addbuttonpush(0, 1, @in_CompareGeneBtwCls, "cellscore2.gif", "Cell score analysis--obtaining gene signature score for each cell");
 in_addbuttonpush(0, 0, @gui.callback_GetCellSignatureMatrix, "icon-fa-connectdevelop-20.gif", "Cell state analysis--obtaining multiple gene signature scores to reveal functional state of cells");
 in_addbuttonpush(0, 1, @in_EnrichrHVGs, "plotpicker-andrewsplot.gif", "Functional enrichment analysis with HVGs");
@@ -553,12 +553,14 @@ end
             barhandle = UserToolbarHandle;
         end
         pt = uipushtool(barhandle, 'Separator', sepTag);
-        %pt.Icon = fullfile(mfolder,'..','resources',imgFil);
-        pt.CData = in_getPtImage(imgFil);
-        pt.Tooltip = tooltipTxt;
-        pt.ClickedCallback = callbackFnc;
-        pt.Tag = "figPush" + matlab.lang.makeValidName(tooltipTxt);
-        %pushbuttonV=[pushbuttonV; pt];
+        
+        if ~isempty(imgFil)
+            %pt.Icon = fullfile(mfolder,'..','resources',imgFil);
+            pt.CData = in_getPtImage(imgFil);
+            pt.Tooltip = tooltipTxt;
+            pt.ClickedCallback = callbackFnc;
+            pt.Tag = "figPush" + matlab.lang.makeValidName(tooltipTxt);
+        end
     end
 
     function in_addbuttontoggle(toolbarHdl, sepTag, callbackFnc)

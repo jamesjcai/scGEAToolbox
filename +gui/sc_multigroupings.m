@@ -40,27 +40,34 @@ hBr = brush(f0);
 hBr.ActionPostCallback = {@onBrushAction, h1, h2};
 
 
-tb = uitoolbar(f0);
+% tb = uitoolbar(f0);
+tb = findall(f0, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
+%pkg.i_addbutton2fig(tb, 'off', [], "IMG00107.GIF", " ");
+uipushtool(tb, 'Separator', 'off');
 
-pt = uipushtool(tb, 'Separator', 'off');
-[img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
-    '..', 'resources', 'plottypectl-rlocusplot.gif')); % plotpicker-pie
-ptImage = ind2rgb(img, map);
-pt.CData = ptImage;
-pt.Tooltip = 'Link subplots';
-pt.ClickedCallback = @gui.i_linksubplots;
+pkg.i_addbutton2fig(tb, 'off', @gui.i_linksubplots, "plottypectl-rlocusplot.gif", "Link subplots");
 
-pt = uipushtool(tb, 'Separator', 'off');
+% pt = uipushtool(tb, 'Separator', 'off');
+% [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
+%     '..', 'resources', 'plottypectl-rlocusplot.gif')); % plotpicker-pie
+% ptImage = ind2rgb(img, map);
+% pt.CData = ptImage;
+% pt.Tooltip = 'Link subplots';
+% pt.ClickedCallback = @gui.i_linksubplots;
+
+pkg.i_addbutton2fig(tb, 'off', @i_showclustlabel, "plotpicker-scatter.gif", "Show cluster lables");
+
+
+% pt = uipushtool(tb, 'Separator', 'off');
 %[img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
 %                             '..','resources', 'plottypectl-rlocusplot.gif'));  % plotpicker-pie
-[img, map] = imread(fullfile(matlabroot, ...
-    'toolbox', 'matlab', 'icons', 'plotpicker-scatter.gif'));
-
-ptImage = ind2rgb(img, map);
-pt.CData = ptImage;
-pt.Tooltip = 'Show cluster lables';
-pt.ClickedCallback = @i_showclustlabel;
-
+% [img, map] = imread(fullfile(matlabroot, ...
+%     'toolbox', 'matlab', 'icons', 'plotpicker-scatter.gif'));
+% 
+% ptImage = ind2rgb(img, map);
+% pt.CData = ptImage;
+% pt.Tooltip = 'Show cluster lables';
+% pt.ClickedCallback = @i_showclustlabel;
 
 pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 
