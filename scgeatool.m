@@ -152,7 +152,6 @@ delete(findall(FigureHandle, 'tag', 'figMenuFileImportData'));
 set(findall(FigureHandle,'tag','figMenuFilePrintPreview'),'Separator','on');
 
 m_file=findall(FigureHandle,'tag','figMenuFile');
-% in_addmenu(m_file, 1, @in_SimulateSCE, 'Simulate Data [PMID:27122128]...');
 in_addmenu(m_file, 1, {@gui.i_savemainfig, 3}, 'Save Figure to PowerPoint File...');
 in_addmenu(m_file, 0, {@gui.i_savemainfig, 2}, 'Save Figure as Graphic File...');
 in_addmenu(m_file, 0, {@gui.i_savemainfig, 1}, 'Save Figure as SVG File...');
@@ -234,7 +233,6 @@ in_addmenu(m_tool, 1, @in_CompareGeneBtwCls, 'Cell Score Analysis...');
 in_addmenu(m_tool, 0, @gui.callback_GetCellSignatureMatrix, 'Cell State Analysis...');
 in_addmenu(m_tool, 1, @in_EnrichrHVGs, 'HVG Functional Enrichment Analysis...');
 in_addmenu(m_tool, 1, @in_SingleClickSolution, 'Single Click Solution (from Raw Data to Annotation)...');
-
 
 m_ntwk = uimenu(FigureHandle, 'Text', '&Network', 'Accelerator', 'N');
 % in_addmenu(m_net, 0, @gui.i_setnetwd, 'Set Network Analysis Working Root Directory...');
@@ -402,6 +400,9 @@ if ~isempty(c)
     colormap(pkg.i_mycolorlines(kc));
 end
 
+tb1=uitoolbar('Parent', FigureHandle);
+tb2=uitoolbar('Parent', FigureHandle);
+
 if ~isempty(sce) && sce.NumCells>0
     in_EnDisableMenu('on');
 else
@@ -427,7 +428,7 @@ for kx=1:length(cvx)
 end
 sce.struct_cell_embeddings = orderfields(sce.struct_cell_embeddings);
 
-% guidata(FigureHandle, sce);
+guidata(FigureHandle, sce);
 % setappdata(FigureHandle,'cL',cL);
 set(FigureHandle, 'CloseRequestFcn', @in_closeRequest);
 
@@ -1116,6 +1117,10 @@ end
         % for k=1:length(pushbuttonV)
         %     set(pushbuttonV(k),'Enable',entag);
         % end
+        if strcmpi(entag,'on')
+            set(tb1,'Visible','off');
+            set(tb2,'Visible','off');           
+        end
         set(DeftToolbarHandle,'Visible',entag);
         set(MainToolbarHandle,'Visible',entag);
         showuseronboarding = getpref('scgeatoolbox', 'useronboardingtoolbar',false);
