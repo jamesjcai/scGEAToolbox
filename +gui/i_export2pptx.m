@@ -22,10 +22,12 @@ switch answer
             OUTppt = [tempname, '.pptx'];
             ppt = Presentation(OUTppt, pth);
             open(ppt);
-
+            
+            warning off
             for k = 1:N
                 if isvalid(F{k})
                     images{k} = [tempname, '.png'];
+                    
                     saveas(F{k}, images{k});
                     %images{k} = [tempname,'.emf'];
                     %saveas(F{k},images{k},'meta');
@@ -39,6 +41,7 @@ switch answer
                     replace(slide3, 'Content', Picture(images{k}));
                 end
             end
+            warning on
             close(ppt);
             rptview(ppt);
             len = length(images);
@@ -46,8 +49,10 @@ switch answer
                 delete(images{i});
             end
             gui.gui_waitbar(fw);
-        otherwise
-        end
+      
+    otherwise
+       
+end
 
 
 end

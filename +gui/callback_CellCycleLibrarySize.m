@@ -11,9 +11,18 @@ sce = guidata(FigureHandle);
 %         return;
 %     end
 % end
-[sce] = gui.e_cellcycle(sce);
+
+[thisc, clabel] = gui.i_select1class(sce,true);
+if isempty(thisc), return; end
+
+if strcmp(clabel,"Cell Cycle Phase")
+    [sce] = gui.e_cellcycle(sce);
+end
+
 %pkg.i_violinplot(sum(sce.X),sce.c_cell_cycle_tx);
-[c, cL] = grp2idx(sce.c_cell_cycle_tx);
+[c, cL] = grp2idx(thisc);
+
 gui.i_violinplot(sum(sce.X), cL(c), "", true, cL);
-ylabel('Library Size (Sum of UMIs per cell)');
+ylabel('Library Size (Total UMIs per Cell)');
+xlabel(clabel)
 end

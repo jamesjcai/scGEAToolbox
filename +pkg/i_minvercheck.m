@@ -36,7 +36,9 @@ try
                     fprintf(fid,'%s\n',Col.pushed_at);
                     fclose(fid);
                 otherwise
-            end        
+            end
+        else
+            waitfor(helpdlg('No update is available.',''));
         end
     end
 catch ME

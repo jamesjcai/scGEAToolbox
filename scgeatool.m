@@ -3,6 +3,14 @@ function varargout = scgeatool(sce, varargin)
 if usejava('jvm') && ~feature('ShowFigureWindows')
     error('MATLAB is in a text mode. This function requires a GUI-mode.');
 end
+if isempty(which('grp2idx.m'))
+    waitfor(warndlg('SCGEATOOL requires Statistics and Machine Learning Toolbox.','Missing Dependencies'));
+    answer3 = questdlg('Learn how to install Statistics and Machine Learning Toolbox?','');
+    if strcmp(answer3,'Yes')
+        web('https://www.mathworks.com/help/matlab/matlab_env/get-add-ons.html');
+    end
+    return;
+end
 
 if nargin < 1
     sce = SingleCellExperiment;
@@ -50,7 +58,8 @@ end
 
 FigureHandle = figure('Name', 'SCGEATOOL', ...
     'position', round(1.25*[0, 0, 560, 420]), ...
-    'visible', 'off', 'NumberTitle', tagx);
+    'visible', 'off', 'NumberTitle', tagx, ...
+    'DockControls','off');
 movegui(FigureHandle, 'center');
 
 fig_pos = get(FigureHandle, 'Position'); % [left bottom width height]
@@ -134,7 +143,7 @@ delete(findall(FigureHandle, 'tag', 'figMenuFileSaveAs'));
 delete(findall(FigureHandle, 'tag', 'figMenuFileSaveWorkspaceAs'));
 delete(findall(FigureHandle, 'tag', 'figMenuFilePreferences'));
 delete(findall(FigureHandle, 'tag', 'figMenuFileExportSetup'));
-set(findall(FigureHandle, 'tag', 'figMenuFileSave'),'Text','&Save SCE...','MenuSelectedFcn', @callback_SaveX);
+set(findall(FigureHandle, 'tag', 'figMenuFileSave'),'Text','Export/&Save Data...','MenuSelectedFcn', @callback_SaveX);
 delete(findall(FigureHandle, 'tag', 'figMenuGenerateCode'));
 delete(findall(FigureHandle, 'tag', 'figMenuFileImportData'));
 
@@ -143,7 +152,6 @@ delete(findall(FigureHandle, 'tag', 'figMenuFileImportData'));
 set(findall(FigureHandle,'tag','figMenuFilePrintPreview'),'Separator','on');
 
 m_file=findall(FigureHandle,'tag','figMenuFile');
-% in_addmenu(m_file, 1, @in_SimulateSCE, 'Simulate Data [PMID:27122128]...');
 in_addmenu(m_file, 1, {@gui.i_savemainfig, 3}, 'Save Figure to PowerPoint File...');
 in_addmenu(m_file, 0, {@gui.i_savemainfig, 2}, 'Save Figure as Graphic File...');
 in_addmenu(m_file, 0, {@gui.i_savemainfig, 1}, 'Save Figure as SVG File...');
@@ -218,14 +226,13 @@ in_addmenu(m_tool, 0, @gui.callback_DPGene2Groups, 'Differential Program (DP) An
 in_addmenu(m_tool, 0, @gui.callback_DEGene2GroupsBatch, 'Differential Expression (DE) Analysis in Cell Type Batch Mode...');
 in_addmenu(m_tool, 0, @gui.callback_DPGene2GroupsBatch, 'Differential Program (DP) Analysis in Cell Type Batch Mode...');
 in_addmenu(m_tool, 1, @gui.callback_CalculateGeneStats, 'Calculate Gene Expression Statistics...');
-in_addmenu(m_tool, 0, @gui.callback_CellCycleLibrarySize, 'Library Size of Cell Cycle Phases...');
+in_addmenu(m_tool, 0, @gui.callback_CellCycleLibrarySize, 'Library Size of Cell Groups...');
 in_addmenu(m_tool, 0, @gui.callback_CellCycleAssignment, 'Assign Cell Cycle Phase...');
 %i_addmenu(m_exp,0,@gui.callback_TCellExhaustionScores,'T Cell Exhaustion Score...');
 in_addmenu(m_tool, 1, @in_CompareGeneBtwCls, 'Cell Score Analysis...');
 in_addmenu(m_tool, 0, @gui.callback_GetCellSignatureMatrix, 'Cell State Analysis...');
 in_addmenu(m_tool, 1, @in_EnrichrHVGs, 'HVG Functional Enrichment Analysis...');
 in_addmenu(m_tool, 1, @in_SingleClickSolution, 'Single Click Solution (from Raw Data to Annotation)...');
-
 
 m_ntwk = uimenu(FigureHandle, 'Text', '&Network', 'Accelerator', 'N');
 % in_addmenu(m_net, 0, @gui.i_setnetwd, 'Set Network Analysis Working Root Directory...');
@@ -283,11 +290,12 @@ in_addmenu(m_help, 1, {@(~, ~) inputdlg('', 'About SCGEATOOL', [10, 50], {sprint
 hAx = axes('Parent', FigureHandle,'Visible','off');
 if ~isempty(sce) && sce.NumCells>0
     h = gui.i_gscatter3(sce.s, c, methodid, 1, hAx);
+    title(hAx, sce.title);
+    subtitle(hAx,'[genes x cells]');
 else
     h = [];
+    hAx.Toolbar.Visible = 'off';
 end
-title(hAx, sce.title);
-subtitle(hAx,'[genes x cells]');
 
 dt = datacursormode(FigureHandle);
 dt.UpdateFcn = {@i_myupdatefcnx};
@@ -318,15 +326,16 @@ in_addbuttontoggle(1, 1, {@in_togglebtfun, @in_labelcellgroups, ...
 in_addbuttonpush(1, 0, @in_Brushed2NewCluster, "plotpicker-glyplot-face.gif", "Add brushed cells to a new group")
 in_addbuttonpush(1, 0, @in_Brushed2MergeClusters, "plotpicker-pzmap.gif", "Merge brushed cells to same group")
 in_addbuttonpush(1, 0, @in_RenameCellTypeBatchID, "plotpicker-scatterhist.gif", "Rename cell type or batch ID");
-in_addbuttonpush(1, 0, @in_call_scgeatool, "IMG00107.GIF", " ");
+
+in_addbuttonpush(1, 0, [], [], "");
 in_addbuttonpush(1, 1, @in_ClusterCellsS, "plotpicker-dendrogram.gif", "Clustering using cell embedding (S)")
 in_addbuttonpush(1, 0, @in_ClusterCellsX, "icon-mw-cluster-10.gif", "Clustering using expression matrix (X)")
 in_addbuttonpush(1, 1, {@in_DetermineCellTypeClustersGeneral, true}, "plotpicker-contour.gif", "Assign cell types to groups")
 in_addbuttonpush(1, 0, @in_Brush4Celltypes, "brush.gif", "Assign cell type to selected cells");
-% i_addbutton(1,0,@ShowCellStemScatter,"IMG00067.GIF","Stem scatter plot");
 in_addbuttonpush(1, 1, @gui.callback_Brush4Markers, "plotpicker-kagi.gif", "Marker genes of brushed cells");
 in_addbuttonpush(1, 0, @gui.callback_FindAllMarkers, "plotpicker-plotmatrix.gif", "Marker gene heatmap");
-in_addbuttonpush(1, 0, @in_call_scgeatool, "IMG00107.GIF", " ");
+
+in_addbuttonpush(1, 0, [], [], "");
 in_addbuttonpush(1, 1, @gui.callback_ShowClustersPop, "plotpicker-geoscatter.gif", "Show cell clusters/groups individually");
 in_addbuttonpush(1, 0, @gui.callback_SelectCellsByClass, "plotpicker-pointfig.gif", "Select cells by class");
 in_addbuttonpush(1, 0, @in_DeleteSelectedCells, "plotpicker-qqplot.gif", "Delete brushed/selected cells");
@@ -339,19 +348,18 @@ in_addbuttonpush(1, 0, @gui.callback_PickColorMap, "plotpicker-compass.gif", "Pi
 in_addbuttonpush(1, 0, @in_RefreshAll, "icon-mat-refresh-20.gif", "Refresh");
 
 
-%in_addbuttonpush(0, 0, @in_call_scgeatool, "IMG00107.GIF", " ");
 %i_addbutton(0,0,@callback_CalculateCellScores,"cellscore2.gif","Calculate cell scores from list of feature genes")
 %i_addbutton(0,0,@callback_ComparePotency,"plotpicker-candle.gif","Compare differentiation potency between groups");
 
 
 in_addbuttonpush(0, 1, @gui.callback_MultiGroupingViewer, "plotpicker-arxtimeseries.gif", "Multi-grouping View...");
-in_addbuttonpush(0, 0, @gui.callback_CrossTabulation, "plotpicker-comet.gif", "Cross tabulation");
+in_addbuttonpush(0, 0, @gui.callback_CrossTabulation_new, "plotpicker-comet.gif", "Cross tabulation");
 
 in_addbuttonpush(0, 1, @gui.callback_Violinplot, "violinplot.gif", "Gene Violin Plot...");
 in_addbuttonpush(0, 0, @gui.callback_DrawDotplot, "icon-mat-blur-linear-10.gif", "Gene Dot Plot...");
 in_addbuttonpush(0, 0, @gui.callback_GeneHeatMap, "icon-mat-apps-20.gif", "Gene Heatmap...");
 
-in_addbuttonpush(0, 0, @in_call_scgeatool, "IMG00107.GIF", " ");
+in_addbuttonpush(0, 0, [], [], "");
 in_addbuttonpush(0, 1, @in_CompareGeneBtwCls, "cellscore2.gif", "Cell score analysis--obtaining gene signature score for each cell");
 in_addbuttonpush(0, 0, @gui.callback_GetCellSignatureMatrix, "icon-fa-connectdevelop-20.gif", "Cell state analysis--obtaining multiple gene signature scores to reveal functional state of cells");
 in_addbuttonpush(0, 1, @in_EnrichrHVGs, "plotpicker-andrewsplot.gif", "Functional enrichment analysis with HVGs");
@@ -392,6 +400,9 @@ if ~isempty(c)
     colormap(pkg.i_mycolorlines(kc));
 end
 
+tb1=uitoolbar('Parent', FigureHandle);
+tb2=uitoolbar('Parent', FigureHandle);
+
 if ~isempty(sce) && sce.NumCells>0
     in_EnDisableMenu('on');
 else
@@ -417,7 +428,7 @@ for kx=1:length(cvx)
 end
 sce.struct_cell_embeddings = orderfields(sce.struct_cell_embeddings);
 
-% guidata(FigureHandle, sce);
+guidata(FigureHandle, sce);
 % setappdata(FigureHandle,'cL',cL);
 set(FigureHandle, 'CloseRequestFcn', @in_closeRequest);
 
@@ -545,12 +556,14 @@ end
             barhandle = UserToolbarHandle;
         end
         pt = uipushtool(barhandle, 'Separator', sepTag);
-        %pt.Icon = fullfile(mfolder,'..','resources',imgFil);
-        pt.CData = in_getPtImage(imgFil);
-        pt.Tooltip = tooltipTxt;
-        pt.ClickedCallback = callbackFnc;
-        pt.Tag = "figPush" + matlab.lang.makeValidName(tooltipTxt);
-        %pushbuttonV=[pushbuttonV; pt];
+        
+        if ~isempty(imgFil)
+            %pt.Icon = fullfile(mfolder,'..','resources',imgFil);
+            pt.CData = in_getPtImage(imgFil);
+            pt.Tooltip = tooltipTxt;
+            pt.ClickedCallback = callbackFnc;
+            pt.Tag = "figPush" + matlab.lang.makeValidName(tooltipTxt);
+        end
     end
 
     function in_addbuttontoggle(toolbarHdl, sepTag, callbackFnc)
@@ -612,13 +625,6 @@ end
 % Callback Functions
 % ------------------------
 
-    function in_call_scgeatool(~, ~)
-        % scgeatool;
-        % P = get(FigureHandle,'Position');
-        % k=1;
-        % set(FigureHandle,'Position',[P(1)-30*k P(2)-30*k P(3) P(4)]);
-    end
-
     function in_closeRequest(hObject, ~)
         if ~(ismcc || isdeployed)
             if isempty(sce)||sce.NumCells==0
@@ -633,17 +639,21 @@ end
                         delete(hObject);
                         helpdlg('SCE updated.');
                     else
-                        labels = {'Save SCE to variable named:'};
-                        vars = {'sce'};
-                        sce = guidata(FigureHandle);
-                        values = {sce};
-                        [~, tf] = export2wsdlg(labels, vars, values, ...
-                            'Save Data to Workspace');
-                        if tf
+                        if gui.callback_SaveX(FigureHandle,[])
+                            pause(1);
                             delete(hObject);
-                        else
-                            return;
                         end
+                        % labels = {'Save SCE to variable named:'};
+                        % vars = {'sce'};
+                        % sce = guidata(FigureHandle);
+                        % values = {sce};
+                        % [~, tf] = export2wsdlg(labels, vars, values, ...
+                        %     'Save Data to Workspace');
+                        % if tf
+                        %     delete(hObject);
+                        % else
+                        %     return;
+                        % end
                     end
                 case 'cancel'
                     return;
@@ -1111,6 +1121,10 @@ end
         % for k=1:length(pushbuttonV)
         %     set(pushbuttonV(k),'Enable',entag);
         % end
+        if strcmpi(entag,'on')
+            set(tb1,'Visible','off');
+            set(tb2,'Visible','off');           
+        end
         set(DeftToolbarHandle,'Visible',entag);
         set(MainToolbarHandle,'Visible',entag);
         showuseronboarding = getpref('scgeatoolbox', 'useronboardingtoolbar',false);
@@ -1184,7 +1198,8 @@ end
         end
         title(hAx, sce.title);
         subtitle(hAx, '[genes x cells]');
-        set(hAx,'Visible','on');
+        hAx.Toolbar.Visible = 'on';
+        set(hAx,'Visible','on');        
     end
 
     function in_Switch2D3D(src, ~)
@@ -1232,24 +1247,24 @@ end
                     'Reduce current 3D','Pick existing 2D');
             else
                 answer = questdlg('How to make 2D embedding?','', ...
-                    'Re-embed cells', ...
-                    'Reduce current 3D to 2D','Cancel','Re-embed cells');
+                    'Embed Cells to 2D', ...
+                    'Project Current 3D Embedding to 2D','Cancel','Embed Cells to 2D');
             end
             switch answer
                 case 'Cancel'
                     return;
-                case 'Re-embed cells'
+                case 'Embed Cells to 2D'
                     in_EmbeddingAgain(src, [], 2);
-                case 'Reduce current 3D to 2D'
+                case 'Project Current 3D Embedding to 2D'
                     [ax, bx] = view(hAx);
-                    answer2 = questdlg('Which view to be used to project cells?', '', ...
-                        'X-Y Plane', 'Screen/Camera', 'PCA-rotated', 'X-Y Plane');
+                    answer2 = questdlg('Which view to be used to project 3D to 2D?', '', ...
+                        'X-Y Plane', 'Screen/Camera', 'PCA-Rotated', 'X-Y Plane');
                     switch answer2
                         case 'X-Y Plane'
                             sx = sce.s;
                         case 'Screen/Camera'
                             sx = pkg.i_3d2d(sce.s, ax, bx);
-                        case {'PCA-rotated'}
+                        case {'PCA-Rotated'}
                             [~, sx] = pca(sce.s);
                         otherwise
                             return;

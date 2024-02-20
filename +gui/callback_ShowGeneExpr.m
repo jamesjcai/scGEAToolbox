@@ -28,17 +28,16 @@ sce = guidata(FigureHandle);
 %         end
 %     case 'Multiple'
         [glist] = gui.i_selectngenes(sce);
-        if isempty(glist)
-            % helpdlg('No genes are selected or present in the dataset.','');
-            return;
-            %[gsorted]=gui.i_sortgenenames(sce);
-            %if isempty(gsorted), return; end
-            %[idx]=gui.i_selmultidlg(gsorted);
-            %if isempty(idx), return; end
-            %if isscalar(idx) && idx==0
-            %   helpdlg('No gene selected.','');
-            %    return;
-        else
+        if isempty(glist), return; end
+        fw=gui.gui_waitbar;
+        sc_uitabgrpfig(sce,glist,FigureHandle);
+        gui.gui_waitbar(fw);
+end
+
+
+
+%{
+
             [y, i] = ismember(upper(glist), upper(sce.g));
             if ~all(y), error('Unspecific running error.'); end
             glist = sce.g(i);
@@ -65,17 +64,8 @@ sce = guidata(FigureHandle);
                         end
                         x = x .* ix;
                     case 'Individually'
-                        %                     methodx=questdlg('Plot type:','','Scatter','Stem','Scatter+Stem','Scatter+Stem');
-                        %                     switch methodx
-                        %                         case 'Scatter'
-                        %                             methodid=2;
-                        %                         case 'Stem'
-                        %                             methodid=1;
-                        %                         case 'Scatter+Stem'
-                        %                             methodid=5;
-                        %                         otherwise
-                        %                             methodid=5;
-                        %                     end
+
+
                         [methodid] = gui.i_pickscatterstem('Scatter+Stem');
                         if isempty(methodid), return; end
 
@@ -115,10 +105,5 @@ sce = guidata(FigureHandle);
 
             movegui(f, 'center');
             set(f, 'visible', 'on');
-        end
-%     case 'Cancel'
-%         % helpdlg('Action cancelled.','');
-%         return;
-% end
 
-end
+%}

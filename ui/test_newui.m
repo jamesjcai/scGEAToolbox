@@ -65,6 +65,26 @@ set(fig,'resizefcn',{@myResizeFun,button});
 plot(rand(300,1));
 
 
+%%
+fig = figure('Position',[561 497 333 239]);
+h = uihtml(fig);
+h.HTMLSource = '<p style="font-family:arial;"><b><span style="color:red;">Hello</span> <u>World</u>!</b></p>';
+
+%%
+% fig = figure;
+% im = uiimage(fig);
+% im.ImageSource = "peppers.png";
+
+ f= figure()
+ a = axes('Position',[0 0 0.1 0.1],'Units','Normalized');
+ imshow('peppers.png','Parent',a);
+ uicontrol('Style','text','Units', ...
+     'Normalized','Position', ...
+     [0.1 0.1 0.3 0.6],'String','Example');
+
+%%
+
+
 function myResizeFun(src,events,butt)
 src
 events

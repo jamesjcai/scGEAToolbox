@@ -1,60 +1,57 @@
-%hFigure=figure('Position',[100 100 500 300],'Visible','off');
-hFigure=figure('Visible','off');
+function uitabgroupfig(hc,parentfig)
 
+% f1=figure('visibl','off');
+% a1=axes('Parent',f1);
+% scatter(a1,randn(300,1),rand(300,1));
+% f2=figure('visibl','off');
+% a2=axes('Parent',f2);
+% scatter(a2,randn(300,1),rand(300,1),'r');
+% % figure; h2=scatter(randn(300,1),rand(300,1),'rs');
+% uitabgroupfig({a1,a2})
+
+if nargin<2, parentfig=[]; end
+if ~isa(hc,'cell'), error('aaa'); end
+
+n=length(hc);
+
+hFigure=figure('Visible','off');
+if ~isempty(parentfig)
+    height = 420;
+    width = 560;
+    sz = parentfig.Position;
+    x = sz(1);
+    y = sz(2);
+    %Position= [(x - width)/2, (y - height)/2, width, height];
+    Position= [x, y, width, height];
+    hFigure.Position=Position;
+else
+    movegui(hFigure,'center');
+end
 set(hFigure, 'MenuBar', 'none');
 set(hFigure, 'ToolBar', 'none');
 
-% set(f,'resizefcn',@myResizeFun);
-movegui(hFigure,"center")
-height = 25;
-width = 120;
-sz = hFigure.Position;
-x = sz(3);
-y = sz(4);
-%x = mean( sz( [1, 3]));
-%y = mean( sz( [2, 4]));
-Position= [(x - width)/2, (y - height)/2, width, height];
+tabgp = uitabgroup(hFigure,"Position",[.0 .0 1.0 1.0]);
 
-tabgp = uitabgroup(hFigure,"Position",[.05 .05 .8 .7]);
-tab1 = uitab(tabgp,"Title","Settings",'Tag',"1");
-tab2 = uitab(tabgp,"Title","Options",'Tag',"2");
-tabgp.SelectionChangedFcn=@displaySelection;
+for k=1:n
+    tag=sprintf('%d',k);
+    tab1 = uitab(tabgp,"Title",tag,'Tag',tag);
+    set(hc{k},'Parent',tab1);
+    %hax1 = axes('Parent', tab1);
+    %set(hc{k},'Parent',hax1);
+    % tab2 = uitab(tabgp,"Title","Options",'Tag',"2");
+    % tabgp.SelectionChangedFcn=@displaySelection;
+end
 
 
-
-% % text(Position(1),Position(2),0,'Ready to explore.');
-% a = uicontrol('style','push',...
-%             'Parent',hFigure,...
-%                  'position',Position,...
-%                  'string','Import Data...',...
-%                  'callback',{@gui.sc_openscedlg});
-% % set(a,"Visible","off");
-% Position(2)=Position(2)+24;
-% %Position(3)=Position(3)*2;
-% b = uicontrol('style','text',...
-%             'Parent',hFigure,...
-%             'FontSize',9,...
-%             'position',Position,...
-%             'string','Ready to explore.');
-
-
-hAx = axes('Parent',hFigure,'Visible','on');
-title(hAx, 'sce.title');
-subtitle(hAx,'[genes x cells]');
-
-hax1 = axes('Parent', tab1);
-hax2 = axes('Parent', tab2);
-
-h1=scatter(hax1,randn(300,1),rand(300,1));
-h2=scatter(hax2,randn(300,1),rand(300,1),'rs');
 
 %dt = datacursormode(hFigure);
 %dt.UpdateFcn = {@i_myupdatefcnx};
 
 drawnow;
 set(hFigure,'Visible','on');
-set(hAx,'Visible','on');
 
+
+end
 
 
 function displaySelection(src,event)
@@ -64,5 +61,6 @@ function displaySelection(src,event)
     % h1.Visible="on";
     % h2.Visible="off";
 end
+
 
 

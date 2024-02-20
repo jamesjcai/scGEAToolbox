@@ -17,13 +17,14 @@ function [sce] = sc_openscedlg(~, ~)
         'GEO Accession Number(s)...', ...
         '----------------------------------', ...
         'Simulate Data [PMID:27122128]...',...
-        'Load SCE Variable from Workspace...', ...
+        'Import SCE Variable from Workspace...', ...
         'Load Example Data...'};
     [indx, tf] = listdlg('ListString', list, ...
         'SelectionMode', 'single', ...
-        'PromptString', {'Select Data Source:'}, ...
-        'ListSize', [230, 275], ...
-        'Name', 'Import Data', 'InitialValue', length(list));
+        'PromptString', {'Select a source:'}, ...
+        'ListSize', [230, 295], ...
+        'Name', 'Import Data', ...
+        'InitialValue', length(list));
     if tf ~= 1, return; end
     ButtonName = list{indx};
     %         ButtonName = questdlg('Select Input Data Type', ...
@@ -275,7 +276,7 @@ function [sce] = sc_openscedlg(~, ~)
                 if ~isempty(b), sce.c_cell_id = b; end
                 gui.gui_waitbar(fw);
             end
-        case 'Load SCE Variable from Workspace...'
+        case 'Import SCE Variable from Workspace...'
             a = evalin('base', 'whos');
             b = struct2cell(a);
             valididx = ismember(b(4, :), 'SingleCellExperiment');
@@ -324,8 +325,8 @@ function [sce] = sc_openscedlg(~, ~)
             end
             promotesave = false;
             pw1 = fileparts(mfilename('fullpath'));
-            fprintf('Loading SCE Data File example_data/workshop_example.mat...');
-            tic;
+            %fprintf('Loading SCE Data File example_data/workshop_example.mat...');
+            %tic;
             file1 = fullfile(pw1, '..', 'example_data', 'workshop_example.mat');
             if ~exist(file1, "file")
                 errordlg("Example data file does not exist.");
@@ -340,8 +341,8 @@ function [sce] = sc_openscedlg(~, ~)
                 sce.metadata = orisce.metadata;
                 clearvars orisce
             end
-            fprintf('Done.\n');
-            toc;
+            %fprintf('Done.\n');
+            %toc;
         case '----------------------------------'
             return;
         otherwise
