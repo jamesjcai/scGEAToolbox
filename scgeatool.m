@@ -625,7 +625,7 @@ end
 % Callback Functions
 % ------------------------
 
-    function in_closeRequest(hObject, ~)        
+    function in_closeRequest(hObject, ~)
         if ~(ismcc || isdeployed)
             if isempty(sce)||sce.NumCells==0
                 ButtonName='no';
@@ -640,6 +640,7 @@ end
                         helpdlg('SCE updated.');
                     else
                         if gui.callback_SaveX(FigureHandle,[])
+                            pause(1);
                             delete(hObject);
                         end
                         % labels = {'Save SCE to variable named:'};

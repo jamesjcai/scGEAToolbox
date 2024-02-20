@@ -86,10 +86,11 @@ function [OKPressed] = sc_savescedlg(sce)
                 return;
             else
                 filename = fullfile(path, file);
-                sc_sce2h5ad(sce, filename);
-                fprintf("\nTo read file, in Python:\n");
-                fprintf("adata = anndata.read(""%s"")\n", file);
-                OKPressed = true;
+                if sc_sce2h5ad(sce, filename)
+                    fprintf("\nTo read file, in Python:\n");
+                    fprintf("adata = anndata.read(""%s"")\n", file);
+                    OKPressed = true;
+                end
             end
             
         case 'Export SCE Variable to Workspace...'
@@ -102,8 +103,6 @@ function [OKPressed] = sc_savescedlg(sce)
             [~, OKPressed] = export2wsdlg(labels, vars, values, ...
                 'Save Data to Workspace', ...
                 logical([1, 0, 0, 0]), {@smhelp});
-        case '----------------------------------'
-            return;
         otherwise
             return;
     end

@@ -1,5 +1,6 @@
 function [OKPressed] = callback_SaveX(src, ~)
 
+% OKPressed = false;
 if isa(src, 'matlab.ui.Figure')
     FigureHandle = src;
 else
