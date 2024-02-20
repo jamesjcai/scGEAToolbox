@@ -1,33 +1,25 @@
-% % Example data to save
+
 data = rand(100, 10); % Example data, replace with your own
-% 
-% % Define file name
-% filename = 'example_data.h5';
-% 
-% % Write data to HDF5 file
-% h5create(filename, '/data', size(data));
-% h5write(filename, '/data', data);
-% 
-% disp('Data saved successfully.');
+g="g"+string(1:100);
+c="c"+string(1:10);
 
-% Define filename and dataset name
-your_data = data;
+% py.scipy.sparse.csr_matrix(data)
+% py.str(c(1))
 
-filename = 'my_data.h5ad';
-dataset_name = '/my_dataset';
+filename = 'example_data.h5'; 
+delete(filename)
 
-% Create the file and dataset with appropriate data type
-file_id = H5F.create(filename, 'H5F_CREATE', 'H5P_DEFAULT');
-data_type_id = H5T.copy('H5T_NATIVE_DOUBLE'); % Change data type as needed
-dataspace_id = H5S.create_simple(size(your_data)); % Replace with data dimensions
-dataset_id = H5D.create(file_id, dataset_name, data_type_id, dataspace_id, 'H5P_DEFAULT');
+% py.scipy.sparse.csr_matrix(data)
 
-% Close the data space and data type identifiers
-H5S.close(dataspace_id);
-H5T.close(data_type_id);
-% Write your data to the dataset
-H5D.write(dataset_id, 'H5ML_DEFAULT', 'H5S_ALL', 'H5S_ALL', 'H5P_DEFAULT', your_data);
+h5create(filename, '/X/data', size(data));
+h5write(filename, '/X/data', py.numpy.array(data));
 
-% Close the dataset and file identifiers
-H5D.close(dataset_id);
-H5F.close(file_id);
+h5create(filename, '/obs/barcode', size(c(:)),'Datatype','string');
+h5create(filename, '/var/gene', size(g(:)),'Datatype','string');
+
+h5write(filename, '/obs/barcode', c(:));
+h5write(filename, '/var/gene', g(:));
+
+a = h5info("example_data.h5")
+
+
