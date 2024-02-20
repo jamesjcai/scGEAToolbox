@@ -625,7 +625,7 @@ end
 % Callback Functions
 % ------------------------
 
-    function in_closeRequest(hObject, ~)
+    function in_closeRequest(hObject, ~)        
         if ~(ismcc || isdeployed)
             if isempty(sce)||sce.NumCells==0
                 ButtonName='no';
@@ -639,17 +639,20 @@ end
                         delete(hObject);
                         helpdlg('SCE updated.');
                     else
-                        labels = {'Save SCE to variable named:'};
-                        vars = {'sce'};
-                        sce = guidata(FigureHandle);
-                        values = {sce};
-                        [~, tf] = export2wsdlg(labels, vars, values, ...
-                            'Save Data to Workspace');
-                        if tf
+                        if gui.callback_SaveX(FigureHandle,[])
                             delete(hObject);
-                        else
-                            return;
                         end
+                        % labels = {'Save SCE to variable named:'};
+                        % vars = {'sce'};
+                        % sce = guidata(FigureHandle);
+                        % values = {sce};
+                        % [~, tf] = export2wsdlg(labels, vars, values, ...
+                        %     'Save Data to Workspace');
+                        % if tf
+                        %     delete(hObject);
+                        % else
+                        %     return;
+                        % end
                     end
                 case 'cancel'
                     return;

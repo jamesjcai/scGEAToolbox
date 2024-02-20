@@ -54,21 +54,22 @@ writetable(table(g),'g.csv','WriteVariableNames',false);
 sce.c_cell_id = matlab.lang.makeUniqueStrings(sce.c_cell_id);
 T = pkg.makeattributestable(sce);
 writetable(T,'c.csv');
-disp('Files written.');
+% disp('Files written.');
 
 if isvalid(fw)
     gui.gui_waitbar(fw, [], [], 'Checking Python environment is complete');
     pause(0.5);
-    gui.gui_waitbar(fw, [], [], 'Running Py_WriteH5AD...');
+    gui.gui_waitbar(fw, [], [], 'Running py\_writeh5ad...');
 end
 
 codefullpath = fullfile(codepth,'script.py');
 cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);
 disp(cmdlinestr)
-[status] = system(cmdlinestr, '-echo');
+[status1] = system(cmdlinestr, '-echo');
+[status2] = movefile('output.h5ad',fname);
 
-if status == 0 && isvalid(fw)
-    gui.gui_waitbar(fw, [], 'Job is complete.');
+if status1 == 0 && status2 == 1 && isvalid(fw)
+    gui.gui_waitbar(fw, [], 'File is written.');
 end
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end

@@ -1,10 +1,16 @@
 function [OKPressed] = callback_SaveX(src, ~)
 
-OKPressed = false;
-
-FigureHandle = src.Parent.Parent;
+if isa(src, 'matlab.ui.Figure')
+    FigureHandle = src;
+else
+    FigureHandle = src.Parent.Parent;
+end
 sce = guidata(FigureHandle);
 
+[OKPressed] = gui.sc_savescedlg(sce);
+end
+
+%{
 %if ~(ismcc || isdeployed)
 answer = questdlg('Export & save data to:', '', ...
     'Workspace', 'MAT file', 'Seurat/RDS file', 'Workspace');
@@ -65,3 +71,5 @@ end
                 'and then click OK.'});
         end
 end
+%}
+
