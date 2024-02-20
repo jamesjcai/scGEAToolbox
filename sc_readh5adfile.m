@@ -61,7 +61,7 @@ if isempty(g) || length(unique(strlength(g))) == 1 % suggesting ENSEMBLE ID
         g = gx;
     end
 end
-if isempty(g), warning('G is not assigned.'); end
+if isempty(g), warning('Genename is not assigned.'); end
 
 
 % idx=find(strcmp(strtrim(string(char(hinfo.Groups.Name))),"/var"));
@@ -79,8 +79,8 @@ if isempty(g), warning('G is not assigned.'); end
 %     end
 % end
 
-b = pkg.e_guessh5field(filenm, {'/obs/'}, {'_index', 'barcodes','cell_id'});
-if isempty(b), warning('B is not assigned.'); end
+b = pkg.e_guessh5field(filenm, {'/obs/'}, {'_index', 'barcodes','cell_id','CellID'});
+if isempty(b), warning('Barcode is not assigned.'); end
 
 
 % try
