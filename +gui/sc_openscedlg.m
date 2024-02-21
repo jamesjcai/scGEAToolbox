@@ -17,7 +17,7 @@ function [sce] = sc_openscedlg(~, ~)
         'GEO Accession Number(s)...', ...
         '----------------------------------', ...
         'Simulate Data [PMID:27122128]...',...
-        'Import SCE Variable from Workspace...', ...
+        'Import SCE Data from Workspace...', ...
         'Load Example Data...'};
     [indx, tf] = listdlg('ListString', list, ...
         'SelectionMode', 'single', ...
@@ -35,7 +35,7 @@ function [sce] = sc_openscedlg(~, ~)
     switch ButtonName
         case 'Simulate Data [PMID:27122128]...'
             try
-                [sce]=in_simulatedata;
+                [sce] = in_simulatedata;
             catch ME
                 errordlg(ME.message);
                 return;
@@ -276,14 +276,14 @@ function [sce] = sc_openscedlg(~, ~)
                 if ~isempty(b), sce.c_cell_id = b; end
                 gui.gui_waitbar(fw);
             end
-        case 'Import SCE Variable from Workspace...'
+        case 'Import SCE Data from Workspace...'
             a = evalin('base', 'whos');
             b = struct2cell(a);
             valididx = ismember(b(4, :), 'SingleCellExperiment');
-            if isempty(valididx)
-                helpdlg('No SCE in the Workspace.', '');
+            if ~valididx
+                waitfor(helpdlg('No SCE in Workspace.', ''));
                 return;
-            end
+            end            
             a = a(valididx);
             [indx, tf] = listdlg('PromptString', {'Select SCE variable:'}, ...
                 'liststring', b(1, valididx), 'SelectionMode', 'multiple');
