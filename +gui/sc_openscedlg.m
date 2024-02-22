@@ -200,7 +200,7 @@ function [sce] = sc_openscedlg(~, ~)
             end
         case 'GEO Accession Number(s)...'
             acc = inputdlg({'Input Number(s) (e.g., GSM3308547,GSM3308548):'}, ...
-                'GEO Accession', [1, 50], {'GSM3308547'});
+                'GEO Accession', [1, 50], {'GSM7855468'});
             if isempty(acc), return; end
             %acc = strtrim(deblank(acc{1}));
             %acc = strrep(acc,' ','');

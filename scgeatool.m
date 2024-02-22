@@ -147,8 +147,6 @@ set(findall(FigureHandle, 'tag', 'figMenuFileSave'),'Text','Export/&Save Data...
 delete(findall(FigureHandle, 'tag', 'figMenuGenerateCode'));
 delete(findall(FigureHandle, 'tag', 'figMenuFileImportData'));
 
-% set(findall(FigureHandle, 'tag', 'figMenuFileImportData'),'MenuSelectedFcn', @in_GEOAccessionToSCE,...
-%     'Text','Import Data Using GEO Accession...','Separator','on');
 set(findall(FigureHandle,'tag','figMenuFilePrintPreview'),'Separator','on');
 
 m_file=findall(FigureHandle,'tag','figMenuFile');
@@ -456,6 +454,10 @@ end
         %set(button1,'Visible','off');
         %set(button2,'Visible','off');
         set(button1,'Enable','off');
+        if ~isempty(sce) && sce.NumCells > 0
+            answer=questdlg('Current SCE will be replaced. Continue?'.'');
+            if ~strcmp(answer,'Yes'), return; end
+        end
         [sce] = gui.sc_openscedlg;
         if ~isempty(sce) && sce.NumCells > 0
             guidata(FigureHandle, sce);
@@ -706,27 +708,27 @@ end
         end
     end
 
-    function in_GEOAccessionToSCE(src, ~)
-        answer = questdlg('Current SCE will be replaced. Continue?');
-        if ~strcmp(answer, 'Yes'), return; end
-        acc = inputdlg({'Input Number(s) (e.g., GSM3308547,GSM3308548):'}, ...
-            'GEO Accession', [1, 50], {'GSM3308547'});
-        if isempty(acc), return; end
-        acc = acc{1};
-        if strlength(acc) > 4 && ~isempty(regexp(acc, 'G.+', 'once'))
-            try
-                fw = gui.gui_waitbar;
-                [sce] = sc_readgeoaccession(acc);
-                [c, cL] = grp2idx(sce.c);
-                gui.gui_waitbar(fw);
-                guidata(FigureHandle, sce);
-                in_RefreshAll(src, [], false, false);
-            catch ME
-                gui.gui_waitbar(fw);
-                errordlg(ME.message);
-            end
-        end
-    end
+    % function in_GEOAccessionToSCE(src, ~)
+    %     answer = questdlg('Current SCE will be replaced. Continue?');
+    %     if ~strcmp(answer, 'Yes'), return; end
+    %     acc = inputdlg({'Input Number(s) (e.g., GSM3308547,GSM3308548):'}, ...
+    %         'GEO Accession', [1, 50], {'GSM3308547'});
+    %     if isempty(acc), return; end
+    %     acc = acc{1};
+    %     if strlength(acc) > 4 && ~isempty(regexp(acc, 'G.+', 'once'))
+    %         try
+    %             fw = gui.gui_waitbar;
+    %             [sce] = sc_readgeoaccession(acc);
+    %             [c, cL] = grp2idx(sce.c);
+    %             gui.gui_waitbar(fw);
+    %             guidata(FigureHandle, sce);
+    %             in_RefreshAll(src, [], false, false);
+    %         catch ME
+    %             gui.gui_waitbar(fw);
+    %             errordlg(ME.message);
+    %         end
+    %     end
+    % end
 
     function in_RunDataMapPlot(src, ~)
         ndim = 2;
