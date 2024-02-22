@@ -1,8 +1,8 @@
-function sc_uitabgrpfig(sce, targetg, parentfig)
+function sc_uitabgrpfig(sce, glist, parentfig)
 
 if nargin<3, parentfig = []; end
 if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 
-    p=parentfig.Position;
+    p = parentfig.Position;
     cx = [p(1)+p(3)/2 p(2)+p(4)/2];
 end
 
@@ -27,18 +27,18 @@ else
     px_new = [];
 end
 
-n=length(targetg);
+n = length(glist);
 a = getpref('scgeatoolbox', 'prefcolormapname', 'autumn');
 
 tabgp = uitabgroup();
 
 idx = 1;
-focalg = targetg(idx);
+focalg = glist(idx);
 
 for k=1:n
-    c = sce.X(sce.g == targetg(k), :);
+    c = sce.X(sce.g == glist(k), :);
     if issparse(c), c = full(c); end
-    tab{k} = uitab(tabgp, 'Title', sprintf('%s',targetg(k)));
+    tab{k} = uitab(tabgp, 'Title', sprintf('%s',glist(k)));
     
     %{
     t = tiledlayout(1,2,'Parent',tab{k});
@@ -57,9 +57,9 @@ for k=1:n
     hold on;
     scatter3(sce.s(:,1), sce.s(:,2), zeros(size(sce.s(:,2))), 5, c, 'filled');
 
-    title(ax{k,1}, targetg(k));
+    title(ax{k,1}, glist(k));
     subtitle(ax{k,1}, gui.i_getsubtitle(c));
-    title(ax{k,2}, targetg(k));
+    title(ax{k,2}, glist(k));
     subtitle(ax{k,2}, gui.i_getsubtitle(c));
 
     %{
@@ -126,12 +126,12 @@ hFig.Visible=true;
             images=cell(n,1);
             warning off
         for kx=1:n
-            gui.gui_waitbar_adv(fw,kx./n,"Processing "+targetg(kx)+" ...");
+            gui.gui_waitbar_adv(fw,kx./n,"Processing "+glist(kx)+" ...");
             images{kx} = [tempname, '.png'];
             tabgp.SelectedTab=tab{kx};
             saveas(tab{kx},images{kx});
             slide3 = add(ppt, 'Small Title and Content');
-            replace(slide3, 'Title', targetg(kx));
+            replace(slide3, 'Title', glist(kx));
             replace(slide3, 'Content', Picture(images{kx}));        
         end
             close(ppt);
@@ -139,16 +139,16 @@ hFig.Visible=true;
             gui.gui_waitbar_adv(fw);
     end
 
-    function i_linksubplots(~,~)        
-        hlink = linkprop([ax{idx,1},ax{idx,2}],{'CameraPosition','CameraUpVector'});
-    end
+    % function i_linksubplots(~,~)        
+    %     hlink = linkprop([ax{idx,1},ax{idx,2}],{'CameraPosition','CameraUpVector'});
+    % end
 
     function displaySelection(~,event)
         t = event.NewValue;
         txt = t.Title;
         % disp("Viewing gene " + txt);
-        [~,idx]=ismember(txt,targetg);
-        focalg = targetg(idx);
+        [~,idx]=ismember(txt,glist);
+        focalg = glist(idx);
     end
 
     function i_genecards(~, ~)
