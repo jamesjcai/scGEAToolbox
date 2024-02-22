@@ -49,16 +49,16 @@ if ~isempty(s_in), sce.s = s_in; end
 
 [c, cL] = grp2idx(sce.c);
 
-if ~(ismcc || isdeployed)
-    tagx = 'on';
-else
-    tagx = 'off';
-end
+% if ~(ismcc || isdeployed)
+%     tagx = 'off';
+% else
+%     tagx = 'off';
+% end
 
 
 FigureHandle = figure('Name', 'SCGEATOOL', ...
     'position', round(1.25*[0, 0, 560, 420]), ...
-    'visible', 'off', 'NumberTitle', tagx, ...
+    'visible', 'off', 'NumberTitle', 'off', ...
     'DockControls','off');
 movegui(FigureHandle, 'center');
 
@@ -253,8 +253,8 @@ in_addmenu(m_ntwk, 1, @gui.callback_scTenifoldXct, 'Cell-Cell Communication Anal
 %in_addmenu(m_net, 0, @gui.callback_scTenifoldXct2, 'Differential CCIs - scTenifoldXct [PMID:36787742] 🐢 ...');
 
 m_extn = uimenu(FigureHandle, 'Text', 'E&xternal', 'Accelerator', 'x');
-in_addmenu(m_extn, 0, @gui.i_setrenv, 'Check R Environment');
-in_addmenu(m_extn, 0, @gui.i_setpyenv, 'Check Python Environment');
+in_addmenu(m_extn, 0, @gui.i_setrenv, 'Set up R Environment');
+in_addmenu(m_extn, 0, @gui.i_setpyenv, 'Set up Python Environment');
 in_addmenu(m_extn, 0, @gui.i_setextwd, 'Set External Program Working Root Directory...');
 
 in_addmenu(m_extn, 1, @in_DecontX, 'Detect Ambient RNA Contamination (DecontX/R) [PMID:32138770]...');

@@ -40,8 +40,8 @@ methods
         obj.g = g;
         obj.s = s;
         obj.c = c;
-        obj.c_cell_id = transpose(1:size(X, 2));
-        obj.c_batch_id = ones(size(X, 2), 1);
+        obj.c_cell_id = string(transpose(1:size(X, 2)));
+        obj.c_batch_id = string(ones(size(X, 2), 1));
         obj.c_cluster_id = ones(size(X, 2), 1);
         obj.c_cell_cycle_tx = repmat("undetermined", size(X, 2), 1);
         obj.c_cell_type_tx = repmat("undetermined", size(X, 2), 1);

@@ -66,7 +66,6 @@ function [sce] = sc_openscedlg(~, ~)
                 errordlg(ME.message);
                 return;
             end
-
         case 'TXT/TSV/CSV File (*.txt)...'
             [fname, pathname] = uigetfile( ...
                 {'*.tsv;*.csv;*.txt', 'TSV/CSV Format Files (*.tsc, *.csv, *.txt)'; ...
@@ -145,7 +144,6 @@ function [sce] = sc_openscedlg(~, ~)
                 errordlg(ME.message);
                 return;
             end
-
         case '10x Genomics ''outs'' Folder...'
             selpath = uigetdir;
             if selpath == 0, return; end
@@ -268,7 +266,7 @@ function [sce] = sc_openscedlg(~, ~)
                     f = files;
                 end
                 if isempty(f), error('f1'); end
-                fprintf('[X,g,b]=sc_read10xh5file(''%s'');\n', f);
+                fprintf('[X, g, b] = sc_read10xh5file(''%s'');\n', f);
                 [X, g, b] = sc_read10xh5file(f);
                 sce = SingleCellExperiment(X, g);
                 metainfo = sprintf("Source: %s", answer{1});
@@ -347,6 +345,9 @@ function [sce] = sc_openscedlg(~, ~)
             return;
         otherwise
             return;
+    end
+    if isstring(sce.c_cell_id) || ischar(sce.c_cell_id) || iscellstr(sce.c_cell_id)
+        sce.c_cell_id = matlab.lang.makeUniqueStrings(sce.c_cell_id);
     end
 end
 
