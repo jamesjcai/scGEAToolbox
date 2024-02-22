@@ -8,25 +8,6 @@ else
     sce = guidata(FigureHandle);
 end
 
-if ~isempty(FigureHandle) && isa(FigureHandle,'matlab.ui.Figure') 
-    p=FigureHandle.Position;
-    cx = [p(1)+p(3)/2 p(2)+p(4)/2];
-end
-
-
-import mlreportgen.ppt.*;
-
-pw1 = fileparts(mfilename('fullpath'));
-pth = fullfile(pw1, 'resources', 'myTemplate.pptx');
-
-hFig=figure("Visible","off");
-%hFig.Position(3) = hFig.Position(3) * 1.8;
-if ~isempty(FigureHandle) && isa(FigureHandle,'matlab.ui.Figure') 
-    px = hFig.Position;
-    px_new = [cx(1)-px(3)/2 cx(2)-px(4)/2];
-else
-    px_new = [];
-end
 
 
 

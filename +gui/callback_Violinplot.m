@@ -2,6 +2,7 @@ function callback_Violinplot(src, ~)
 
 if isa(src,"SingleCellExperiment")
     sce = src;
+    FigureHandle = gcf;
 else
     FigureHandle = src.Parent.Parent;
     sce = guidata(FigureHandle);
@@ -10,8 +11,7 @@ end
 [thisc, ~] = gui.i_select1class(sce);
 if isempty(thisc), return; end
 
-
-[c, cL]=grp2idx(thisc);
+%[c, cL]=grp2idx(thisc);
 
 % [c, cL, noanswer] = gui.i_reordergroups(thisc);
 % if noanswer, return; end
@@ -21,10 +21,15 @@ if isempty(glist)
     helpdlg('No gene selected.', '');
     return;
 end
-[Xt] = gui.i_transformx(sce.X);
+%[Xt] = gui.i_transformx(sce.X);
 % glist=glist(end:-1:1);
+gui.sc_uitabgrpfig_violin(sce, glist, thisc, FigureHandle);
 
-    % try
+return;
+
+
+%{
+    try
         %f=gui.i_violinmatrix(Xt,sce.g,c,cL,"PRLR");
         for k = 1:length(glist)
             y = Xt(upper(sce.g) == upper(glist(k)), :);
@@ -38,10 +43,13 @@ end
             % pause(1);
             drawnow;
         end    
-    % catch ME
-    %     if exist('f','var') && ishandle(f)
-    %         close(f);
-    %     end
-    %     errordlg(ME.message);
-    % end
+    catch ME
+        if exist('f','var') && ishandle(f)
+            close(f);
+        end
+        errordlg(ME.message);
+    end
+
+%}
+
 end
