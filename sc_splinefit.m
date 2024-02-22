@@ -12,11 +12,12 @@ function [T, Xsorted_completed, gsorted_completed, ...
 %     genelist=strcat("gene_",genelist);
 % end
 
-if nargin < 5, removenan = true; end
+if nargin < 5, removenan = false; end
 if nargin < 4, plotit = false; end
 if nargin < 3, sortit = true; end
-if nargin < 2, genelist = string(1:size(X, 1)); end
-
+if nargin < 2 || isempty(genelist)
+    genelist = string(1:size(X, 1)); 
+end
 
 [lgu, dropr, lgcv, gsorted, Xsorted, ...
     removedgidx, removedT] = sc_genestat(X, genelist, sortit, removenan);

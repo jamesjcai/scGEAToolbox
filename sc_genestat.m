@@ -7,6 +7,7 @@ if nargin < 3, sortit = true; end
 if nargin < 2 || isempty(genelist)
     genelist = "Gene"+string(1:size(X,1)).'; 
 end
+genelist=genelist(:);
 
 geneidx = 1:length(genelist);
 
