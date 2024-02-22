@@ -213,11 +213,11 @@ in_addmenu(m_plot,0,@gui.callback_GeneHeatMap,'Gene Heatmap...');
 m_tool = uimenu(FigureHandle, 'Text', '&Tools', 'Accelerator', 'T');
 in_addmenu(m_tool, 0, @in_ClusterCellsS, "Cluster Cells Using Cell Embedding (S)")
 in_addmenu(m_tool, 0, @in_ClusterCellsX, "Cluster Cells Using Expression Matrix (X)")
-in_addmenu(m_tool, 1, {@in_DetermineCellTypeClustersGeneral, true}, "Assign Cell Types to Groups Using PanglaoDB Markers");
-in_addmenu(m_tool, 0, @in_Brush4Celltypes, "Assign Cell Type to Brushed/Selected Cells");
-in_addmenu(m_tool, 0, {@in_DetermineCellTypeClustersGeneral, false}, 'Annotate Cell Type Using Customized Markers...');
+in_addmenu(m_tool, 1, {@in_DetermineCellTypeClustersGeneral, true}, "Annotate Cell Types Using PanglaoDB Marker Genes");
+in_addmenu(m_tool, 0, {@in_DetermineCellTypeClustersGeneral, false}, 'Annotate Cell Type Using Customized Marker Genes...');
 % in_addmenu(m_exp, 0, @in_SubtypeAnnotation, 'Annotate Cell Subtype...');
-in_addmenu(m_tool, 1, @gui.callback_Brush4Markers, "Find Marker Genes of Brushed Cells");
+in_addmenu(m_tool, 1, @in_Brush4Celltypes, "Annotate Cell Types for Brushed Cells");
+in_addmenu(m_tool, 0, @gui.callback_Brush4Markers, "Find Marker Genes for Brushed Cells");
 in_addmenu(m_tool, 0, @gui.callback_FindAllMarkers, "Make Marker Gene Heatmap");
 in_addmenu(m_tool, 1, @gui.callback_DEGene2Groups, 'Differential Expression (DE) Analysis...');
 in_addmenu(m_tool, 0, @gui.callback_DPGene2Groups, 'Differential Program (DP) Analysis...');
