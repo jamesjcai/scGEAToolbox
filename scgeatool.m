@@ -55,9 +55,10 @@ if ~isempty(s_in), sce.s = s_in; end
 %     tagx = 'off';
 % end
 
+% round(1.25*[0, 0, 560, 420])
 
 FigureHandle = figure('Name', 'SCGEATOOL', ...
-    'position', round(1.25*[0, 0, 560, 420]), ...
+    'position', [0     0   700   525+50], ...
     'visible', 'off', 'NumberTitle', 'off', ...
     'DockControls','off');
 movegui(FigureHandle, 'center');
@@ -65,8 +66,8 @@ movegui(FigureHandle, 'center');
 fig_pos = get(FigureHandle, 'Position'); % [left bottom width height]
 fig_width = fig_pos(3);
 fig_height = fig_pos(4);
-btn_width = 100; % Adjust as needed
-btn_height = 25; % Adjust as needed
+btn_width = 100; 
+btn_height = 25;
 btn_x = (fig_width - btn_width) / 2;
 btn_y = (fig_height - btn_height) / 1.618;
 
@@ -75,9 +76,9 @@ button1 = uicontrol(...
     'Style', 'pushbutton',...
     'Units', 'pixels',...
     'Position', [btn_x btn_y btn_width btn_height],...
-    'String', 'Import Data...',... % Customize label
+    'String', 'Import Data...',...
     'Callback', {@in_sc_openscedlg}, ...
-    'KeyPressFcn',{@in_sc_openscedlg}); % Assign callback function
+    'KeyPressFcn',{@in_sc_openscedlg});
 
 button2 = uicontrol('style','text',...
     'Parent',FigureHandle,...
@@ -90,15 +91,14 @@ set(FigureHandle,'resizefcn',{@myResizeFun,button1,button2});
 
 % b=uipanel(FigureHandle,'Title','B','BackgroundColor','cyan');
 % b.Position = [0.18 0.40 0.30 0.35];
-
 % set(findall(FigureHandle, 'ToolTipString', 'Insert Colorbar'), 'Visible', 'Off')
 % set(findall(FigureHandle, 'ToolTipString', 'Insert Legend'), 'Visible', 'Off')
 % set(findall(FigureHandle, 'ToolTipString', 'Print Figure'), 'Visible', 'Off')
 
 %pushbuttonV = findall(FigureHandle, 'ToolTipString', 'Insert Colorbar');
 %set(pushbuttonV,'Separator','off');
-set(findall(FigureHandle, 'ToolTipString', 'Insert Colorbar'),'Separator','off');
 
+set(findall(FigureHandle, 'ToolTipString', 'Insert Colorbar'),'Separator','off');
 %pushbuttonV = [pushbuttonV; findall(FigureHandle, 'ToolTipString', 'Insert Legend')];
 %pushbuttonV = [pushbuttonV; findall(FigureHandle, 'ToolTipString', 'Print Figure')];
 delete(findall(FigureHandle, 'ToolTipString', 'Print Figure'));
@@ -111,22 +111,10 @@ delete(findall(FigureHandle, 'ToolTipString', 'New Figure'));
 delete(findall(FigureHandle, 'ToolTipString', 'Open File'));
 
 
-
-%a=findall(FigureHandle,'ToolTipString','New Figure');
-%a.ClickedCallback = @__;
-%a=findall(f,'tag','figMenuFile');
-
+% a=findall(FigureHandle,'ToolTipString','New Figure');
+% a.ClickedCallback = @__;
+% a=findall(f,'tag','figMenuFile');
 % https://undocumentedmatlab.com/articles/customizing-standard-figure-toolbar-menubar
-
-% delete(findall(FigureHandle,'tag','figMenuEditClearWorkspace'));
-% delete(findall(FigureHandle,'tag','figMenuEditClearCmdHistory'));
-% delete(findall(FigureHandle,'tag','figMenuEditClearCmdWindow'));
-% delete(findall(FigureHandle,'tag','figMenuEditClearFigure'));
-% delete(findall(FigureHandle,'tag','figMenuEditFindFiles'));
-% delete(findall(FigureHandle,'tag','figMenuEditSelectAll'));
-% delete(findall(FigureHandle,'tag','figMenuEditGCO'));
-% delete(findall(FigureHandle,'tag','figMenuEditGCA'));
-% delete(findall(FigureHandle,'tag','figMenuEditGCF'));
 delete(allchild(findall(FigureHandle, 'tag', 'figMenuView')))
 
 delete(findall(FigureHandle,'tag','figMenuInsertAxes'));
@@ -138,7 +126,6 @@ delete(findall(FigureHandle, 'tag', 'figMenuUpdateFileNew'));
 m_menuopen = findall(FigureHandle, 'tag', 'figMenuOpen');
 set(m_menuopen,'MenuSelectedFcn', @in_sc_openscedlg, 'Text', '&Import Data...');
 m_menuopen.Accelerator='I';
-
 delete(findall(FigureHandle, 'tag', 'figMenuFileSaveAs'));
 delete(findall(FigureHandle, 'tag', 'figMenuFileSaveWorkspaceAs'));
 delete(findall(FigureHandle, 'tag', 'figMenuFilePreferences'));
@@ -146,14 +133,12 @@ delete(findall(FigureHandle, 'tag', 'figMenuFileExportSetup'));
 set(findall(FigureHandle, 'tag', 'figMenuFileSave'),'Text','Export/&Save Data...','MenuSelectedFcn', @callback_SaveX);
 delete(findall(FigureHandle, 'tag', 'figMenuGenerateCode'));
 delete(findall(FigureHandle, 'tag', 'figMenuFileImportData'));
-
 set(findall(FigureHandle,'tag','figMenuFilePrintPreview'),'Separator','on');
 
 m_file=findall(FigureHandle,'tag','figMenuFile');
 in_addmenu(m_file, 1, {@gui.i_savemainfig, 3}, 'Save Figure to PowerPoint File...');
 in_addmenu(m_file, 0, {@gui.i_savemainfig, 2}, 'Save Figure as Graphic File...');
 in_addmenu(m_file, 0, {@gui.i_savemainfig, 1}, 'Save Figure as SVG File...');
-
 
 m_edit=findall(FigureHandle,'tag','figMenuEdit');
 delete(allchild(m_edit));
@@ -176,7 +161,6 @@ in_addmenu(m_edit, 1, @in_WorkonSelectedGenes, 'Select Top n  Highly Variable Ge
 in_addmenu(m_edit, 0, @in_SubsampleCells, 'Subsample 50% Cells to Work on...');
 in_addmenu(m_edit, 1, @in_DeleteSelectedCells, 'Delete Brushed Cells...');
 in_addmenu(m_edit, 0, @gui.callback_SelectCellsByClass, 'Select Cells...');
-
 %i_addmenu(m_exp,0,{@MergeCellSubtypes,1,true},'Import All Cell Annotation from SCE in Workspace...');
 %i_addmenu(m_exp,0,{@MergeCellSubtypes,2,true},'Import All Cell Annotation from SCE Data File...');
 
@@ -241,7 +225,6 @@ in_addmenu(m_ntwk, 1, {@in_scTenifoldNet,1}, 'Construct GRN with All Genes - scT
 in_addmenu(m_ntwk, 0, {@in_scTenifoldNet,2}, 'Construct & Compare GRNs - scTenifoldNet [PMID:33336197] 🐢...');
 %in_addmenu(m_net, 1, @callback_scPCNet1, 'GRN Construction - PC Regression (w/o subsampling) [PMID:33336197] 🐢...');
 %in_addmenu(m_net, 0, @callback_scTenifoldNet1, 'GRN Construction - PC Regression (w/ subsampling) [PMID:33336197] 🐢...');
-
 %in_addmenu(m_net, 1, @callback_scTenifoldNet2lite, 'GRN Comparison - scTenifoldNet (w/o subsampling) [PMID:33336197] 🐢 ...');
 %in_addmenu(m_net, 0, @callback_scTenifoldNet2, 'GRN Comparison - scTenifoldNet (w/ subsampling) [PMID:33336197] 🐢 ...');
 
@@ -285,7 +268,7 @@ in_addmenu(m_help, 1, @callback_CheckUpdates, 'Check for Updates...');
 %in_addmenu(m_help, 1, {@(~, ~) web('https://github.com/jamesjcai/scGEAToolbox')}, 'About SCGEATOOL');
 in_addmenu(m_help, 1, {@(~, ~) inputdlg('', 'About SCGEATOOL', [10, 50], {sprintf('Single-Cell Gene Expression Analysis Tool\n\nJames Cai\n\njcai@tamu.edu\n')})}, 'About SCGEATOOL');
 
-hAx = axes('Parent', FigureHandle,'Visible','off');
+hAx = axes('Parent', FigureHandle, 'Visible', 'off');
 if ~isempty(sce) && sce.NumCells>0
     h = gui.i_gscatter3(sce.s, c, methodid, 1, hAx);
     title(hAx, sce.title);
@@ -345,10 +328,8 @@ in_addbuttonpush(1, 0, @gui.callback_PickPlotMarker, "plotpicker-rose.gif", "Swi
 in_addbuttonpush(1, 0, @gui.callback_PickColorMap, "plotpicker-compass.gif", "Pick new color map");
 in_addbuttonpush(1, 0, @in_RefreshAll, "icon-mat-refresh-20.gif", "Refresh");
 
-
 %i_addbutton(0,0,@callback_CalculateCellScores,"cellscore2.gif","Calculate cell scores from list of feature genes")
 %i_addbutton(0,0,@callback_ComparePotency,"plotpicker-candle.gif","Compare differentiation potency between groups");
-
 
 in_addbuttonpush(0, 1, @gui.callback_MultiGroupingViewer, "plotpicker-arxtimeseries.gif", "Multi-grouping View...");
 in_addbuttonpush(0, 0, @gui.callback_CrossTabulation_new, "plotpicker-comet.gif", "Cross tabulation");
@@ -398,8 +379,8 @@ if ~isempty(c)
     colormap(pkg.i_mycolorlines(kc));
 end
 
-tb1=uitoolbar('Parent', FigureHandle);
-tb2=uitoolbar('Parent', FigureHandle);
+%tb1 = uitoolbar('Parent', FigureHandle);
+%tb2 = uitoolbar('Parent', FigureHandle);
 
 if ~isempty(sce) && sce.NumCells>0
     in_EnDisableMenu('on');
@@ -427,7 +408,6 @@ end
 sce.struct_cell_embeddings = orderfields(sce.struct_cell_embeddings);
 
 guidata(FigureHandle, sce);
-% setappdata(FigureHandle,'cL',cL);
 set(FigureHandle, 'CloseRequestFcn', @in_closeRequest);
 
 if nargout > 0
@@ -443,16 +423,9 @@ if ~showuseronboarding
     set(UserToolbarHandle, 'Visible', 'off');
 end
 
-%if isempty(sce) || sce.NumCells==0
-%[sce]=gui.sc_openscedlg;
-%    in_sc_openscedlg;
-%end
+% ----------------------------------
 
-% ----------------------------------
-% ----------------------------------
     function in_sc_openscedlg(~, ~)
-        %set(button1,'Visible','off');
-        %set(button2,'Visible','off');
         set(button1,'Enable','off');
         if ~isempty(sce) && sce.NumCells > 0
             answer=questdlg('Current SCE will be replaced. Continue?'.'');
@@ -462,9 +435,6 @@ end
         if ~isempty(sce) && sce.NumCells > 0
             guidata(FigureHandle, sce);
         else
-            %set(button1,'Visible','on');
-            %set(button2,'Visible','on');
-            %drawnow;
             set(button1,'Enable','on');
             uicontrol(button1);
             return;
@@ -1124,8 +1094,12 @@ end
         %     set(pushbuttonV(k),'Enable',entag);
         % end
         if strcmpi(entag,'on')
-            set(tb1,'Visible','off');
-            set(tb2,'Visible','off');           
+            %set(tb1,'Visible','off');
+            %set(tb2,'Visible','off');
+
+            px=FigureHandle.Position;
+            px(4)=px(4)-50;
+            FigureHandle.Position=px;
         end
         set(DeftToolbarHandle,'Visible',entag);
         set(MainToolbarHandle,'Visible',entag);
