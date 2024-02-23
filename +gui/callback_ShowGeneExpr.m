@@ -30,7 +30,7 @@ sce = guidata(FigureHandle);
         [glist] = gui.i_selectngenes(sce);
         if isempty(glist), return; end
         fw=gui.gui_waitbar;
-        sc_uitabgrpfig(sce,glist,FigureHandle);
+        gui.sc_uitabgrpfig_feaplot(sce, glist, FigureHandle, [axx, bxx]);
         gui.gui_waitbar(fw);
 end
 
