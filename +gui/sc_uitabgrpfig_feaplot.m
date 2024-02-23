@@ -10,7 +10,7 @@ end
 import mlreportgen.ppt.*;
 
 pw1 = fileparts(mfilename('fullpath'));
-pth = fullfile(pw1, 'resources', 'myTemplate.pptx');
+pth = fullfile(pw1, '..', 'resources', 'myTemplate.pptx');
 
 
 hFig=figure("Visible","off");

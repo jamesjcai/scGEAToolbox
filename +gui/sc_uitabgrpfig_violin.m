@@ -8,6 +8,8 @@ if nargin<4, parentfig = []; end
 cLorder = strrep(cLorder, '_', '\_');
 [Xt] = gui.i_transformx(sce.X);
 
+
+fw = gui.gui_waitbar;
 isdescend = false;
 OldTitle = [];
 thisc = strrep(string(thisc), '_', '\_');
@@ -24,7 +26,7 @@ end
 
 import mlreportgen.ppt.*;
 pw1 = fileparts(mfilename('fullpath'));
-pth = fullfile(pw1, 'resources', 'myTemplate.pptx');
+pth = fullfile(pw1, '..', 'resources', 'myTemplate.pptx');
 
 hFig = figure("Visible","off");
 hFig.Position(3) = hFig.Position(3) * 1.8;
@@ -45,14 +47,14 @@ idx = 1;
 focalg = glist(idx);
 tab=cell(n,1);
 ax0=cell(n,1);
-
+y=cell(n,1);
 for k=1:n
     % c = sce.X(sce.g == glist(k), :);
     % if issparse(c), c = full(c); end
     tab{k} = uitab(tabgp, 'Title', sprintf('%s',glist(k)));
     ax0{k} = axes('parent',tab{k});
-    y = full(Xt(upper(sce.g) == upper(glist(k)), :));
-    pkg.i_violinplot(y, thisc, true, cLorder);
+    y{k} = full(Xt(upper(sce.g) == upper(glist(k)), :));
+    pkg.i_violinplot(y{k}, thisc, true, cLorder);
     title(ax0{k}, strrep(glist(k), '_', '\_'));
     % subtitle(ax0{k}, gui.i_getsubtitle(c));
     % gui.i_setautumncolor(c, a, true, any(c==0));
@@ -84,6 +86,7 @@ else
     movegui(hFig, px_new);
 end
 drawnow;
+gui.gui_waitbar(fw);
 hFig.Visible=true;
 
 
@@ -127,10 +130,7 @@ hFig.Visible=true;
         web(sprintf('https://www.genecards.org/cgi-bin/carddisp.pl?gene=%s', focalg),'-new');
     end
 
-
     function i_resizewin(~,~)
-        %oldw
-        %oldh
         w = gui.i_inputnumk(450, 10, 2000, 'Window width');
         if isempty(w), return; end
         h = gui.i_inputnumk(420, 10, 2000, 'Window height');
@@ -144,17 +144,33 @@ hFig.Visible=true;
 
     function i_invertcolor(~, ~)
         colorit = ~colorit;
-        b = hFig.get("CurrentAxes");
-        cla(b);
-        pkg.i_violinplot(y, thisc, colorit, cLorder);
+        [~,idx]=ismember(focalg, glist);
+        % xxxx
+        %b = hFig.get("CurrentAxes");
+        %cla(b);
+        % cla(ax0{idx});
+        delete(ax0{idx});
+        ax0{idx} = axes('parent',tab{idx});
+        pkg.i_violinplot(y{idx}, thisc, colorit, cLorder);
+        tabgp.SelectedTab=tab{idx};
+        drawnow;
+        for k=1:n
+            if k~=idx
+                delete(ax0{k});
+                ax0{k} = axes('parent',tab{k});
+                pkg.i_violinplot(y{k}, thisc, colorit, cLorder);
+            end
+        end
+        % tabgp.SelectedTab=tab{idx};
     end
 
     function i_addsamplesize(~, ~)
         % b = gca;
-        b = hFig.get("CurrentAxes");
+        [~,idx]=ismember(focalg, glist);
+        b = ax0{idx};        
+        % b = hFig.get("CurrentAxes");
         b.FontName='Palatino';
         % assert(isequal(cLorder, b.XTickLabel));
-
         if isequal(cLorder, b.XTickLabel)
             a = zeros(length(cLorder), 1);            
             for k = 1:length(cLorder)
@@ -164,30 +180,34 @@ hFig.Visible=true;
             end
         else
             b.XTickLabel = cLorder;                
-        end        
+        end
     end
 
     function i_sortbymean(~, ~)
+        [~,idx]=ismember(focalg, glist);
+       
         [cx, cLx] = grp2idx(thisc);
         a = zeros(max(cx), 1);
         for k = 1:max(cx)
-            a(k) = median(y(cx == k));
+            a(k) = median(y{idx}(cx == k));
         end
         if isdescend
-            [~, idx] = sort(a, 'ascend');
+            [~, idxx] = sort(a, 'ascend');
             isdescend = false;
         else
-            [~, idx] = sort(a, 'descend');
+            [~, idxx] = sort(a, 'descend');
             isdescend = true;
         end
-        cLx_sorted = cLx(idx);
+        cLx_sorted = cLx(idxx);
 
         %[~,cL,noanswer]=gui.i_reordergroups(thisc,cLx_sorted);
         %if noanswer, return; end
-        b = hFig.get("CurrentAxes");
-        cla(b);
+
+        delete(ax0{idx});
+        ax0{idx} = axes('parent',tab{idx});
+       
         cLorder = cLx_sorted;
-        pkg.i_violinplot(y, thisc, colorit, cLorder);
+        pkg.i_violinplot(y{idx}, thisc, colorit, cLorder);
     end
 
 
@@ -196,8 +216,12 @@ hFig.Visible=true;
 
         % cLorder
         if noanswer, return; end
-        b = hFig.get("CurrentAxes");
-        cla(b);
+        [~,idx]=ismember(focalg, glist);
+        delete(ax0{idx});
+        ax0{idx} = axes('parent',tab{idx});
+
+        %b = hFig.get("CurrentAxes");
+        %cla(b);
         pkg.i_violinplot(y, thisc, colorit, cLorder);
     end
 
@@ -212,22 +236,31 @@ hFig.Visible=true;
 %        if noanswer, return; end
         
         cLorder=cLorder(ismember(cLorder,cLorder(newidx)));
-        b = hFig.get("CurrentAxes");
-        cla(b);
-        y=y(picked);
-        thisc=thisc(picked);
-        pkg.i_violinplot(y, thisc, colorit, cLorder);
+        [~,idx]=ismember(focalg, glist);
+        delete(ax0{idx});
+        ax0{idx} = axes('parent',tab{idx});
+        
+        %b = hFig.get("CurrentAxes");
+        %cla(b);
+        y_picked = y{idx}(picked);
+        thisc_picked = thisc(picked);
+        pkg.i_violinplot(y_picked, thisc_picked, colorit, cLorder);
     end
 
 
     function i_testdata(~, ~)
-        a = hFig.get("CurrentAxes");
+        [~,idx]=ismember(focalg, glist);
+        %delete(ax0{idx});
+        %ax0{idx} = axes('parent',tab{idx});
+        a = ax0{idx};
+        thisy = y{idx};
+        %a = hFig.get("CurrentAxes");
         if isempty(OldTitle)
-            OldTitle = a.Title.String;
-            if size(y, 2) ~= length(thisc)
-                y = y.';
+            OldTitle = focalg; % a.Title.String;
+            if size(thisy, 2) ~= length(thisc)
+                thisy = thisy.';
             end
-            tbl = pkg.e_grptest(y, thisc);
+            tbl = pkg.e_grptest(thisy, thisc);
             %h1=gca;
             %titre=string(h1.Title.String);
 
@@ -263,8 +296,11 @@ hFig.Visible=true;
     end
 
 
-    function i_savedata(~, ~)    
-        T = table(y(:), thisc(:));
+    function i_savedata(~, ~)
+        [~,idx]=ismember(focalg, glist);
+        thisy = y{idx};
+        
+        T = table(thisy(:), thisc(:));
         T.Properties.VariableNames = {'ScoreLevel', 'GroupID'};
         %T=sortrows(T,'ScoreLevel','descend');
         %T=sortrows(T,'GroupID');
