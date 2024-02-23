@@ -145,22 +145,25 @@ hFig.Visible=true;
     function i_invertcolor(~, ~)
         colorit = ~colorit;
         [~,idx]=ismember(focalg, glist);
-        % xxxx
-        %b = hFig.get("CurrentAxes");
-        %cla(b);
-        % cla(ax0{idx});
         delete(ax0{idx});
         ax0{idx} = axes('parent',tab{idx});
         pkg.i_violinplot(y{idx}, thisc, colorit, cLorder);
+        title(ax0{idx}, strrep(glist(idx), '_', '\_'));
         tabgp.SelectedTab=tab{idx};
         drawnow;
+        if length(tab)==1, return; end
+        answer = questdlg('Apply to other genes?','');
+        if ~strcmp(answer,'Yes'), return; end
+        %fw = gui.gui_waitbar;
         for k=1:n
             if k~=idx
                 delete(ax0{k});
                 ax0{k} = axes('parent',tab{k});
                 pkg.i_violinplot(y{k}, thisc, colorit, cLorder);
+                title(ax0{k}, strrep(glist(k), '_', '\_'));                
             end
         end
+        %gui.gui_waitbar(fw);
         % tabgp.SelectedTab=tab{idx};
     end
 
