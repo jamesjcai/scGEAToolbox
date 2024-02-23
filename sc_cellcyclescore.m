@@ -16,13 +16,17 @@ function [ScoreV, T] = sc_cellcyclescore(X, g)
     score_S = sc_cellscore_admdl(X, g, sgenes);
     score_G2M = sc_cellscore_admdl(X, g, g2mgenes);
     
-    ScoreV = string(repmat('G1', size(X, 2), 1));
-    C = [score_S, score_G2M];
-    [~, I] = max(C, [], 2);
-    Cx = C > 0;
-    i = sum(Cx, 2) > 0;
-    ScoreV(i & I == 1) = "S";
-    ScoreV(i & I == 2) = "G2M";
+    if all(isnan(score_S)) || all(isnan(score_G2M)) 
+        ScoreV = string(repmat('unknown', size(X, 2), 1));
+    else
+        ScoreV = string(repmat('G1', size(X, 2), 1));
+        C = [score_S, score_G2M];
+        [~, I] = max(C, [], 2);
+        Cx = C > 0;
+        i = sum(Cx, 2) > 0;
+        ScoreV(i & I == 1) = "S";
+        ScoreV(i & I == 2) = "G2M";
+    end
     if nargout > 1
         T = table(score_S, score_G2M, ScoreV);
     end
