@@ -22,7 +22,7 @@ switch answer
         end
         if length(newidx) ~= length(cL)
             noanswer = true;
-            waitfor(helpdlg('Order unchanged',''));
+            waitfor(warndlg('Please select all items.',''));
             return;
         end
         cx = c;
@@ -33,8 +33,6 @@ switch answer
         noanswer = false;
     case 'No'
         noanswer = false;
-    otherwise
-
 end
 
 end

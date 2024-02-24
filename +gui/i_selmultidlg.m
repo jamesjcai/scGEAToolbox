@@ -55,19 +55,20 @@ uiwait(); % add this to the end
         end
 end
 
-        function plotButtonPushed2(~, ~, genelist)
-            % https://www.mathworks.com/matlabcentral/answers/92064-why-do-i-receive-a-warning-when-i-repopulate-my-listbox-uicontrol-in-matlab
-            % set(h_list2,'Value',1);
-            if ~isempty(h_list2.String)
-                h_list2.String(h_list2.Value) = [];
-                set(h_list2, 'Value', 1);
-            end
-            h_list1.String = setxor(genelist, h_list2.String, 'stable');
+   function plotButtonPushed2(~, ~, genelist)
+        % https://www.mathworks.com/matlabcentral/answers/92064-why-do-i-receive-a-warning-when-i-repopulate-my-listbox-uicontrol-in-matlab
+        % set(h_list2,'Value',1);
+        if ~isempty(h_list2.String)
+            h_list2.String(h_list2.Value) = [];
+            set(h_list2, 'Value', 1);
+        end
+        h_list1.String = setxor(genelist, h_list2.String, 'stable');
     end
 
-            function doneButtonPushed(~, ~, genelist)
-                [~, idx] = ismember(h_list2.String, genelist);
-                uiresume();
-                closereq();
-        end
-        end
+    function doneButtonPushed(~, ~, genelist)
+        [~, idx] = ismember(h_list2.String, genelist);
+        uiresume();
+        closereq();
+    end
+end
+

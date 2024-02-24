@@ -225,20 +225,20 @@ hFig.Visible=true;
 
         %b = hFig.get("CurrentAxes");
         %cla(b);
-        pkg.i_violinplot(y, thisc, colorit, cLorder);
+        pkg.i_violinplot(y{idx}, thisc, colorit, cLorder);
     end
 
 
     function i_selectsamples(~, ~)
-        [~,cLorder]=grp2idx(thisc);
+        [~, cLorder] = grp2idx(thisc);
         [newidx] = gui.i_selmultidlg(cLorder, cLorder);
         if isempty(newidx), return; end
-        picked=ismember(thisc,cLorder(newidx));
+        picked=ismember(thisc, cLorder(newidx));
 %        [~, cLorder, noanswer] = gui.i_reordergroups(thisc);
 %        % cLorder
 %        if noanswer, return; end
         
-        cLorder=cLorder(ismember(cLorder,cLorder(newidx)));
+        cLorderx = cLorder(ismember(cLorder,cLorder(newidx)));
         [~,idx]=ismember(focalg, glist);
         delete(ax0{idx});
         ax0{idx} = axes('parent',tab{idx});
@@ -247,7 +247,7 @@ hFig.Visible=true;
         %cla(b);
         y_picked = y{idx}(picked);
         thisc_picked = thisc(picked);
-        pkg.i_violinplot(y_picked, thisc_picked, colorit, cLorder);
+        pkg.i_violinplot(y_picked, thisc_picked, colorit, cLorderx);
     end
 
 
