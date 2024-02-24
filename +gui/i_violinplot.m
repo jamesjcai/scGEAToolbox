@@ -117,7 +117,7 @@ set(f, 'visible', 'on');
         end
         cLx_sorted = cLx(idx);
 
-        %[~,cL,noanswer]=gui.i_reordergroups(thisc,cLx_sorted);
+        %[~,cL,noanswer]=gui.i_reordergroups(thisc, cLx_sorted, f);
         %if noanswer, return; end
         b = f.get("CurrentAxes");
         cla(b);
@@ -127,7 +127,7 @@ set(f, 'visible', 'on');
 
 
     function i_reordersamples(~, ~)
-        [~, cLorder, noanswer] = gui.i_reordergroups(thisc);
+        [~, cLorder, noanswer] = gui.i_reordergroups(thisc, [], f);
 
         % cLorder
         if noanswer, return; end
@@ -142,7 +142,7 @@ set(f, 'visible', 'on');
         [newidx] = gui.i_selmultidlg(cL, cLorder);
         if isempty(newidx), return; end
         picked=ismember(thisc,cL(newidx));
-%        [~, cLorder, noanswer] = gui.i_reordergroups(thisc);
+%        [~, cLorder, noanswer] = gui.i_reordergroups(thisc, [], f);
 %        % cLorder
 %        if noanswer, return; end
         
