@@ -5,9 +5,9 @@ sce = guidata(FigureHandle);
 [thisc1, clable1, thisc2, clable2] = gui.i_select2class(sce);
 fw = gui.gui_waitbar;
 
-% [c, cL, noanswer] = gui.i_reordergroups(thisc1);
+% [c, cL, noanswer] = gui.i_reordergroups(thisc1, [], FigureHandle);
 % thisc1=cL(c);
-% [c, cL, noanswer] = gui.i_reordergroups(thisc2);
+% [c, cL, noanswer] = gui.i_reordergroups(thisc2, [], FigureHandle);
 % thisc2=cL(c);
 
 if isempty(thisc1) || isempty(thisc2)

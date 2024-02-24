@@ -4,7 +4,7 @@ sce = guidata(FigureHandle);
 [thisc, ~] = gui.i_select1class(sce);
 if isempty(thisc), return; end
 
-[c, cL, noanswer] = gui.i_reordergroups(thisc);
+[c, cL, noanswer] = gui.i_reordergroups(thisc, [], FigureHandle);
 if noanswer, return; end
 
 % [c, cL] = grp2idx(thisc);

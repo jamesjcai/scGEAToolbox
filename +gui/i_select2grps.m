@@ -1,4 +1,5 @@
-function [i1, i2, cL1, cL2] = i_select2grps(sce, needreorder)
+function [i1, i2, cL1, cL2] = i_select2grps(sce, needreorder, parentfig)
+if nargin < 3, parentfig = []; end
 if nargin < 2, needreorder = true; end
 i1 = 0;
 i2 = 0;
@@ -42,7 +43,7 @@ if numel(unique(thisc)) == 1
 end
 
 if needreorder
-    [ci, cLi, noanswer] = gui.i_reordergroups(thisc);
+    [ci, cLi, noanswer] = gui.i_reordergroups(thisc, [], parentfig);
     if noanswer, return; end
 else
     [ci, cLi] = grp2idx(thisc);
