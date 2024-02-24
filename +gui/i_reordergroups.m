@@ -1,5 +1,6 @@
-function [c, cL, noanswer, newidx] = i_reordergroups(thisc, preorderedcL)
+function [c, cL, noanswer, newidx] = i_reordergroups(thisc, preorderedcL, parentfig)
 
+if nargin < 3, parentfig = []; end
 if nargin < 2, preorderedcL = []; end
 noanswer = true;
 [c, cL] = grp2idx(thisc);
@@ -16,9 +17,9 @@ if isempty(answer), return; end
     switch answer
         case 'Yes'
             if ~isempty(preorderedcL)
-                [newidx] = gui.i_selmultidlg(cL, preorderedcL);
+                [newidx] = gui.i_selmultidlg(cL, preorderedcL, parentfig);
             else
-                [newidx] = gui.i_selmultidlg(cL, natsort(cL));
+                [newidx] = gui.i_selmultidlg(cL, natsort(cL), parentfig);
             end
             if length(newidx) ~= length(cL)
                 noanswer = true;
