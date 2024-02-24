@@ -23,12 +23,6 @@ hFig=figure("Visible","off");
 
 [px_new] = gui.i_getchildpos(FigureHandle, hFig);
 
-    % p=FigureHandle.Position;
-    % cx = [p(1)+p(3)/2 p(2)+p(4)/2];
-    % 
-    % px = hFig.Position;
-    % px_new = [cx(1)-px(3)/2 cx(2)-px(4)/2];
-
 
 tabgp = uitabgroup();
 for k=1:2
