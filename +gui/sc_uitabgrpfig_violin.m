@@ -215,19 +215,13 @@ hFig.Visible=true;
 
 
     function i_reordersamples(~, ~)
-        [~, cLorder, noanswer] = gui.i_reordergroups(thisc);
-
-        % cLorder
+        [~, cLorderx, noanswer] = gui.i_reordergroups(thisc);
         if noanswer, return; end
         [~,idx]=ismember(focalg, glist);
         delete(ax0{idx});
         ax0{idx} = axes('parent',tab{idx});
-
-        %b = hFig.get("CurrentAxes");
-        %cla(b);
-        pkg.i_violinplot(y{idx}, thisc, colorit, cLorder);
+        pkg.i_violinplot(y{idx}, thisc, colorit, cLorderx);
     end
-
 
     function i_selectsamples(~, ~)
         [~, cLorder] = grp2idx(thisc);

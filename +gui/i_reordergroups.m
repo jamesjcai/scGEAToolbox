@@ -1,6 +1,6 @@
 function [c, cL, noanswer, newidx] = i_reordergroups(thisc, preorderedcL)
-if nargin < 2, preorderedcL = []; end
 
+if nargin < 2, preorderedcL = []; end
 noanswer = true;
 [c, cL] = grp2idx(thisc);
 newidx=1:numel(cL);
@@ -13,26 +13,25 @@ end
 [answer] = questdlg('Manually order groups?', '', ...
     'Yes', 'No', 'Cancel', 'No');
 if isempty(answer), return; end
-switch answer
-    case 'Yes'
-        if ~isempty(preorderedcL)
-            [newidx] = gui.i_selmultidlg(cL, preorderedcL);
-        else
-            [newidx] = gui.i_selmultidlg(cL, natsort(cL));
-        end
-        if length(newidx) ~= length(cL)
-            noanswer = true;
-            waitfor(warndlg('Please select all items.',''));
-            return;
-        end
-        cx = c;
-        for k = 1:length(newidx)
-            c(cx == newidx(k)) = k;
-        end
-        cL = cL(newidx);
-        noanswer = false;
-    case 'No'
-        noanswer = false;
-end
-
+    switch answer
+        case 'Yes'
+            if ~isempty(preorderedcL)
+                [newidx] = gui.i_selmultidlg(cL, preorderedcL);
+            else
+                [newidx] = gui.i_selmultidlg(cL, natsort(cL));
+            end
+            if length(newidx) ~= length(cL)
+                noanswer = true;
+                waitfor(warndlg('Please select all items.',''));
+                return;
+            end
+            cx = c;
+            for k = 1:length(newidx)
+                c(cx == newidx(k)) = k;
+            end
+            cL = cL(newidx);
+            noanswer = false;
+        case 'No'
+            noanswer = false;
+    end
 end
