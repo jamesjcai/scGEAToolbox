@@ -11,10 +11,10 @@ i_additem(sce.c_cell_cycle_tx, 'Cell Cycle Phase');
 i_additem(sce.c_cell_type_tx, 'Cell Type');
 i_additem(sce.c_batch_id, 'Batch ID');
 
-    function i_additem(itemv, itemn)
-        if ~isempty(itemv) && length(unique(itemv)) > 1
-            listitems = [listitems, itemn];
-        end
+function i_additem(itemv, itemn)
+    if ~isempty(itemv) && length(unique(itemv)) > 1
+        listitems = [listitems, itemn];
+    end
 end
 
 
@@ -50,20 +50,20 @@ end
     % end
 
 
-        function [thisc, clable] = i_getidx(indx)
-            clable = listitems{indx};
-            switch clable
-                case 'Current Class (C)'
-                    thisc = sce.c;
-                case 'Cluster ID' % cluster id
-                    thisc = sce.c_cluster_id;
-                case 'Batch ID' % batch id
-                    thisc = sce.c_batch_id;
-                case 'Cell Type' % cell type
-                    thisc = sce.c_cell_type_tx;
-                case 'Cell Cycle Phase' % cell cycle
-                    thisc = sce.c_cell_cycle_tx;
-            end
+    function [thisc, clable] = i_getidx(indx)
+        clable = listitems{indx};
+        switch clable
+            case 'Current Class (C)'
+                thisc = sce.c;
+            case 'Cluster ID' % cluster id
+                thisc = sce.c_cluster_id;
+            case 'Batch ID' % batch id
+                thisc = sce.c_batch_id;
+            case 'Cell Type' % cell type
+                thisc = sce.c_cell_type_tx;
+            case 'Cell Cycle Phase' % cell cycle
+                thisc = sce.c_cell_cycle_tx;
+        end
     end
 
-    end
+end

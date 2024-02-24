@@ -21,7 +21,7 @@ gui.gui_showrefinfo('talklr [DOI:10.1101/2020.02.01.930602]');
         end
 
         [c, cL] = grp2idx(sce.c_cell_type_tx);
-        [idx] = gui.i_selmultidlg(cL);
+        [idx] = gui.i_selmultidlg(cL, [], FigureHandle);
         if isempty(idx), return; end
         if numel(idx) < 2
             warndlg('Need at least 2 cell types');

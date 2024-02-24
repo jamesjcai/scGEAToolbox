@@ -135,7 +135,7 @@ end
             labelsx = labelsx(idx);
             sizesorted = true;
         else
-            [idx] = gui.i_selmultidlg(labelsx, natsort(labelsx));
+            [idx] = gui.i_selmultidlg(labelsx, natsort(labelsx), FigureHandle);
             % [~, idx] = sort(labelsx);
             T = T(idx, :);
             labelsx = labelsx(idx);

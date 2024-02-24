@@ -16,7 +16,7 @@ if ~gui.i_setpyenv, return; end
 [thisc, ~] = gui.i_select1class(sce, false);
 if isempty(thisc), return; end
 [c, cL] = grp2idx(thisc);
-[idx] = gui.i_selmultidlg(cL);
+[idx] = gui.i_selmultidlg(cL, [], FigureHandle);
 if isempty(idx), return; end
 if numel(idx) < 2
     warndlg('Need at least 2 cell groups to perform cell-cell interaction analysis.');

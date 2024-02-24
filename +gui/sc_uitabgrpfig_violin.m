@@ -68,7 +68,7 @@ pkg.i_addbutton2fig(tb, 'on',  @i_genecards, 'fvtool_fdalinkbutton.gif', 'GeneCa
 % pkg.i_addbutton2fig(tb, 'on', {@i_PickColorMap, c}, 'plotpicker-compass.gif', 'Pick new color map...');
 
 pkg.i_addbutton2fig(tb, 'off', @i_savedata, 'export.gif', 'Export data...');
-pkg.i_addbutton2fig(tb, 'off', @i_testdata, 'icon-fa-stack-exchange-10.gif', 'ANOVA/T-test...');
+%pkg.i_addbutton2fig(tb, 'off', @i_testdata, 'icon-fa-stack-exchange-10.gif', 'ANOVA/T-test...');
 pkg.i_addbutton2fig(tb, 'off', @i_addsamplesize, "icon-mat-blur-linear-10.gif", 'Add Sample Size');
 pkg.i_addbutton2fig(tb, 'off', @i_savemainfig, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 pkg.i_addbutton2fig(tb, 'off', @i_invertcolor, "plotpicker-pie.gif", 'Switch BW/Color');
@@ -142,6 +142,18 @@ hFig.Visible=true;
         helpdlg('Double-click on the title to make change.', '');
     end
 
+    function i_updatealltab(idx)
+        if nargin<1, idx = []; end
+        for ks=1:n
+            if ks~=idx
+                delete(ax0{ks});
+                ax0{ks} = axes('parent',tab{ks});
+                pkg.i_violinplot(y{ks}, thisc, colorit, cLorder);
+                title(ax0{ks}, strrep(glist(ks), '_', '\_'));           
+            end
+        end        
+    end
+
     function i_invertcolor(~, ~)
         colorit = ~colorit;
         [~,idx]=ismember(focalg, glist);
@@ -154,36 +166,47 @@ hFig.Visible=true;
         if length(tab)==1, return; end
         answer = questdlg('Apply to other genes?','');
         if ~strcmp(answer,'Yes'), return; end
-        %fw = gui.gui_waitbar;
-        for k=1:n
-            if k~=idx
-                delete(ax0{k});
-                ax0{k} = axes('parent',tab{k});
-                pkg.i_violinplot(y{k}, thisc, colorit, cLorder);
-                title(ax0{k}, strrep(glist(k), '_', '\_'));                
-            end
+        i_updatealltab(idx);
+    end
+
+    function i_updatesamplesizelabel(idx)
+        if nargin<1, idx=[]; end
+        for ks = 1:n
+            if ks~=idx
+                b = ax0{ks};        
+                b.FontName='Palatino';
+                if isequal(cLorder, b.XTickLabel)
+                    a = zeros(length(cLorder), 1);            
+                    for kx = 1:length(cLorder)
+                        a(kx) = sum(thisc == cLorder(kx));
+                        cb=pad([string(b.XTickLabel{kx}); sprintf("(n=%d)",a(kx))],'both');
+                        b.XTickLabel{kx} = sprintf('%s\\newline%s', cb(:));                
+                    end
+                else
+                    b.XTickLabel = cLorder;
+                end
+            end            
         end
-        %gui.gui_waitbar(fw);
-        % tabgp.SelectedTab=tab{idx};
     end
 
     function i_addsamplesize(~, ~)
-        % b = gca;
         [~,idx]=ismember(focalg, glist);
         b = ax0{idx};        
-        % b = hFig.get("CurrentAxes");
         b.FontName='Palatino';
-        % assert(isequal(cLorder, b.XTickLabel));
         if isequal(cLorder, b.XTickLabel)
             a = zeros(length(cLorder), 1);            
-            for k = 1:length(cLorder)
-                a(k) = sum(thisc == cLorder(k));
-                cb=pad([string(b.XTickLabel{k}); sprintf("(n=%d)",a(k))],'both');
-                b.XTickLabel{k} = sprintf('%s\\newline%s', cb(:));                
+            for kx = 1:length(cLorder)
+                a(kx) = sum(thisc == cLorder(k));
+                cb=pad([string(b.XTickLabel{kx}); sprintf("(n=%d)",a(kx))],'both');
+                b.XTickLabel{kx} = sprintf('%s\\newline%s', cb(:));            
             end
         else
             b.XTickLabel = cLorder;                
         end
+
+        answer = questdlg('Apply to other genes?','');
+        if ~strcmp(answer,'Yes'), return; end
+        i_updatesamplesizelabel(idx);
     end
 
     function i_sortbymean(~, ~)
@@ -191,8 +214,8 @@ hFig.Visible=true;
        
         [cx, cLx] = grp2idx(thisc);
         a = zeros(max(cx), 1);
-        for k = 1:max(cx)
-            a(k) = median(y{idx}(cx == k));
+        for ks = 1:max(cx)
+            a(ks) = median(y{idx}(cx == ks));
         end
         if isdescend
             [~, idxx] = sort(a, 'ascend');
@@ -202,10 +225,6 @@ hFig.Visible=true;
             isdescend = true;
         end
         cLx_sorted = cLx(idxx);
-
-        %[~,cL,noanswer]=gui.i_reordergroups(thisc,cLx_sorted);
-        %if noanswer, return; end
-
         delete(ax0{idx});
         ax0{idx} = axes('parent',tab{idx});
        
@@ -218,33 +237,41 @@ hFig.Visible=true;
     function i_reordersamples(~, ~)
         [~, cLorderx, noanswer] = gui.i_reordergroups(thisc);
         if noanswer, return; end
-        [~,idx]=ismember(focalg, glist);
+        [~,idx] = ismember(focalg, glist);
         delete(ax0{idx});
         ax0{idx} = axes('parent',tab{idx});
         pkg.i_violinplot(y{idx}, thisc, colorit, cLorderx);
         title(ax0{idx}, strrep(glist(idx), '_', '\_'));  
+
+        answer = questdlg('Apply to other genes?','');
+        if ~strcmp(answer,'Yes'), return; end
+        cLorder = cLorderx;
+        i_updatealltab(idx);
     end
 
     function i_selectsamples(~, ~)
         [~, cLorder] = grp2idx(thisc);
-        [newidx] = gui.i_selmultidlg(cLorder, cLorder);
+        [newidx] = gui.i_selmultidlg(cLorder, cLorder, hFig);
         if isempty(newidx), return; end
         picked=ismember(thisc, cLorder(newidx));
-%        [~, cLorder, noanswer] = gui.i_reordergroups(thisc);
-%        % cLorder
-%        if noanswer, return; end
-        
+       
         cLorderx = cLorder(ismember(cLorder,cLorder(newidx)));
         [~,idx]=ismember(focalg, glist);
         delete(ax0{idx});
         ax0{idx} = axes('parent',tab{idx});
-        
-        %b = hFig.get("CurrentAxes");
-        %cla(b);
         y_picked = y{idx}(picked);
         thisc_picked = thisc(picked);
         pkg.i_violinplot(y_picked, thisc_picked, colorit, cLorderx);
-        title(ax0{idx}, strrep(glist(idx), '_', '\_'));  
+        title(ax0{idx}, strrep(glist(idx), '_', '\_'));
+        answer = questdlg('Apply to other genes?','');
+        if ~strcmp(answer,'Yes'), return; end
+
+        for ks=1:n
+            y{ks} = y{ks}(picked);
+        end
+        thisc = thisc_picked;
+        cLorder = cLorderx;
+        i_updatealltab(idx);              
     end
 
 
@@ -252,11 +279,12 @@ hFig.Visible=true;
         [~,idx]=ismember(focalg, glist);
         %delete(ax0{idx});
         %ax0{idx} = axes('parent',tab{idx});
+        tabgp.SelectedTab=tab{idx};
         a = ax0{idx};
         thisy = y{idx};
         %a = hFig.get("CurrentAxes");
         if isempty(OldTitle)
-            OldTitle = focalg; % a.Title.String;
+            OldTitle = a.Title.String;
             if size(thisy, 2) ~= length(thisc)
                 thisy = thisy.';
             end
@@ -290,8 +318,7 @@ hFig.Visible=true;
             a.Title.String = newtitle;
         else
             a.Title.String = OldTitle;
-            OldTitle = [];
-            
+            OldTitle = [];            
         end
     end
 
@@ -305,7 +332,6 @@ hFig.Visible=true;
         %T=sortrows(T,'ScoreLevel','descend');
         %T=sortrows(T,'GroupID');
         gui.i_exporttable(T, true, 'Tviolindata','ViolinPlotTable');
-
     end
 
 end
