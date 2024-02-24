@@ -32,7 +32,7 @@ if noanswer, return; end
 %         return;
 % end
 
-[glist] = gui.i_selectngenes(sce);
+[glist] = gui.i_selectngenes(sce, [], FigureHandle);
 if isempty(glist)
     helpdlg('No gene selected.', '');
     return;

@@ -1,7 +1,8 @@
-function [glist] = i_selectngenes(sce, predefinedlist)
+function [glist] = i_selectngenes(sce, predefinedlist, parentfig)
 
 % This function uses i_selectngenes
 if nargin < 2, predefinedlist = []; end
+if nargin < 3, parentfig = []; end
 
 % internal function used by callback_BuildGeneNetwork
 glist = [];
@@ -58,7 +59,7 @@ switch answer
             if isempty(gsorted), return; end
         end
 
-        [idx] = gui.i_selmultidlg(gsorted, predefinedlist);
+        [idx] = gui.i_selmultidlg(gsorted, predefinedlist, parentfig);
         if isempty(idx), return; end
         if idx == 0, return; end
         %if length(idx)<2

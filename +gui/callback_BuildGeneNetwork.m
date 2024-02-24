@@ -2,7 +2,7 @@ function callback_BuildGeneNetwork(src, ~)
 FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
 
-[glist] = gui.i_selectngenes(sce);
+[glist] = gui.i_selectngenes(sce, [], FigureHandle);
 if isempty(glist), return; end
 
 [y, i] = ismember(upper(glist), upper(sce.g));

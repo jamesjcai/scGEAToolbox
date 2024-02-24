@@ -27,7 +27,7 @@ sce = guidata(FigureHandle);
 %             end
 %         end
 %     case 'Multiple'
-        [glist] = gui.i_selectngenes(sce);
+        [glist] = gui.i_selectngenes(sce, [], FigureHandle);
         if isempty(glist), return; end
         fw=gui.gui_waitbar;
         gui.sc_uitabgrpfig_feaplot(sce, glist, FigureHandle, [axx, bxx]);

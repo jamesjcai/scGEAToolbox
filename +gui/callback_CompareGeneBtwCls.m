@@ -86,7 +86,7 @@ bb = 'No, just show values';
 
                 case 'Define a New Score...'
                     ttxt = 'Customized Score';
-                    [posg] = gui.i_selectngenes(sce.g);
+                    [posg] = gui.i_selectngenes(sce.g,[],FigureHandle);
                     if isempty(posg)
                         helpdlg('No feature genes selected.', '')
                         return;
@@ -188,7 +188,7 @@ bb = 'No, just show values';
                     end                    
 
                 case 'Expression of Individual Genes'
-                    [glist] = gui.i_selectngenes(sce);
+                    [glist] = gui.i_selectngenes(sce,[],FigureHandle);
                     if isempty(glist)
                         helpdlg('No gene selected.', '');
                         return;
@@ -233,8 +233,7 @@ bb = 'No, just show values';
                     [~, T] = pkg.e_tfactivityscores(sce.X, sce.g, 0);
                     listitems = unique(T.tf);
 
-                    %[glist]=gui.i_selectngenes(string(listitems));
-
+                    
                     [indx2, tf2] = listdlg('PromptString', 'Select a transcription factor (TF)', ...
                         'SelectionMode', 'single', 'ListString', ...
                         listitems, 'ListSize', [220, 300]);

@@ -7,7 +7,7 @@ if isempty(thisc), return; end
 [c, cL, noanswer] = gui.i_reordergroups(thisc);
 if noanswer, return; end
 
-[glist] = gui.i_selectngenes(sce);
+[glist] = gui.i_selectngenes(sce,[],FigureHandle);
 if isempty(glist)
     helpdlg('No gene selected.', '');
     return;

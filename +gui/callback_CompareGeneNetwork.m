@@ -7,7 +7,7 @@ if isscalar(i1) || isscalar(i2)
     if i1 == 0 || i2 == 0, return; end
 end
 
-[glist] = gui.i_selectngenes(sce);
+[glist] = gui.i_selectngenes(sce,[],FigureHandle);
 if isempty(glist), return; end
 
 [y, i] = ismember(glist, sce.g);

@@ -14,7 +14,7 @@ switch answer1
 end
 
     function do_multiple
-        [glist] = gui.i_selectngenes(sce);
+        [glist] = gui.i_selectngenes(sce, [] , FigureHandle);
         if ~isempty(glist)
             [y, i] = ismember(upper(glist), upper(sce.g));
             if ~all(y), error('Unspecific running error.'); end

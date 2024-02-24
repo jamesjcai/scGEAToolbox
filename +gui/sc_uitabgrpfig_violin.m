@@ -211,6 +211,7 @@ hFig.Visible=true;
        
         cLorder = cLx_sorted;
         pkg.i_violinplot(y{idx}, thisc, colorit, cLorder);
+        title(ax0{idx}, strrep(glist(idx), '_', '\_'));  
     end
 
 
@@ -221,6 +222,7 @@ hFig.Visible=true;
         delete(ax0{idx});
         ax0{idx} = axes('parent',tab{idx});
         pkg.i_violinplot(y{idx}, thisc, colorit, cLorderx);
+        title(ax0{idx}, strrep(glist(idx), '_', '\_'));  
     end
 
     function i_selectsamples(~, ~)
@@ -242,6 +244,7 @@ hFig.Visible=true;
         y_picked = y{idx}(picked);
         thisc_picked = thisc(picked);
         pkg.i_violinplot(y_picked, thisc_picked, colorit, cLorderx);
+        title(ax0{idx}, strrep(glist(idx), '_', '\_'));  
     end
 
 

@@ -5,7 +5,7 @@ sce = guidata(FigureHandle);
 
 answer = questdlg('Select genes to be renamed?');
 if ~strcmp(answer, 'Yes'), return; end
-[glist] = gui.i_selectngenes(sce);
+[glist] = gui.i_selectngenes(sce, [], FigureHandle);
 if isempty(glist)
     helpdlg('No gene selected.', '');
     return;

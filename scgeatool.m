@@ -55,10 +55,8 @@ if ~isempty(s_in), sce.s = s_in; end
 %     tagx = 'off';
 % end
 
-% round(1.25*[0, 0, 560, 420])
-
 FigureHandle = figure('Name', 'SCGEATOOL', ...
-    'position', [0     0   700   525+50], ...
+    'position', round(1.25*[0, 0, 560, 420]), ...
     'visible', 'off', 'NumberTitle', 'off', ...
     'DockControls','off');
 movegui(FigureHandle, 'center');
@@ -379,8 +377,8 @@ if ~isempty(c)
     colormap(pkg.i_mycolorlines(kc));
 end
 
-%tb1 = uitoolbar('Parent', FigureHandle);
-%tb2 = uitoolbar('Parent', FigureHandle);
+tb1 = uitoolbar('Parent', FigureHandle);
+tb2 = uitoolbar('Parent', FigureHandle);
 
 if ~isempty(sce) && sce.NumCells>0
     in_EnDisableMenu('on');
@@ -1094,12 +1092,11 @@ end
         %     set(pushbuttonV(k),'Enable',entag);
         % end
         if strcmpi(entag,'on')
-            %set(tb1,'Visible','off');
-            %set(tb2,'Visible','off');
-
-            px=FigureHandle.Position;
-            px(4)=px(4)-50;
-            FigureHandle.Position=px;
+            set(tb1,'Visible','off');
+            set(tb2,'Visible','off');
+            %px=FigureHandle.Position;
+            %px(4)=px(4)-50;
+            %FigureHandle.Position=px;
         end
         set(DeftToolbarHandle,'Visible',entag);
         set(MainToolbarHandle,'Visible',entag);

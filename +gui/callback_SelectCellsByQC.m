@@ -165,7 +165,7 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
                 end
             end
         case 'Remove Genes by Name' % remove selected genes
-            [glist] = gui.i_selectngenes(sce);
+            [glist] = gui.i_selectngenes(sce, [], FigureHandle);
             if isempty(glist), return; end
             [y, idx] = ismember(upper(glist), upper(sce.g));
             if ~all(y), error('xxx'); end

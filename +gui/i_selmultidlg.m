@@ -1,7 +1,9 @@
-function [idx] = i_selmultidlg(genelist, predefinedlist)
+function [idx] = i_selmultidlg(genelist, predefinedlist, parentfig)
 %gui.i_selmultidlg
 % This function is called by gui.i_selectngenes
 idx = [];
+
+if nargin < 3, parentfig = []; end
 if nargin < 2, predefinedlist = []; end
 txt_cell_array = {'line1'; 'line2'; 'line3'; 'line4'; 'line5'};
 if nargin < 1, genelist = txt_cell_array; end
@@ -25,7 +27,16 @@ f = figure('Visible', 'off', ...
 % ax = axes(f);
 % ax.Units = 'pixels';
 % ax.Position = [75 75 325 280]
-movegui(f, 'center');
+
+if ~isempty(parentfig)   
+    p = parentfig.Position;
+    cx = [p(1)+p(3)/2 p(2)+p(4)/2];
+    px = f.Position;
+    px_new = [cx(1)-px(3)/2 cx(2)-px(4)/2];
+    movegui(f, px_new);
+else
+    movegui(f, 'center');
+end
 uicontrol('style', 'pushbutton', 'Position', [220, 180, 100, 30], ...
     'String', '>', 'Callback', {@plotButtonPushed, genelist});
 uicontrol('style', 'pushbutton', 'Position', [220, 215, 100, 30], ...

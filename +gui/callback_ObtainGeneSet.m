@@ -76,8 +76,6 @@ switch selecteditem
         [~, T] = pkg.e_tfactivityscores([], [], 0);
         listitems = unique(T.tf);
 
-        %[glist]=gui.i_selectngenes(string(listitems));
-
         [indx2, tf2] = listdlg('PromptString', 'Select a transcription factor (TF)', ...
             'SelectionMode', 'single', 'ListString', ...
             listitems, 'ListSize', [220, 300]);
