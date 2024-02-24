@@ -378,6 +378,8 @@ end
                 fw = gui.gui_waitbar;
                 [X] = sc_simudata(numgenes, numcells,'lun');
                 [sce] = SingleCellExperiment(X);
+                sce.c_batch_id = string([ones(round(sce.NumCells/2),1);... 
+                    2*ones(sce.NumCells-round(sce.NumCells/2),1)]);
                 %[c, cL] = grp2idx(sce.c);
                 gui.gui_waitbar(fw);
                 % guidata(FigureHandle, sce);

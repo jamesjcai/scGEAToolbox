@@ -17,6 +17,7 @@ if showdata
     set(UitoolbarHandle, 'Tag', 'FigureToolBar', ...
         'HandleVisibility', 'off', 'Visible', 'on');
 
+    pkg.i_addbutton2fig(UitoolbarHandle, 'off', @in_ShowProfile, 'plotpicker-qqplotx.gif', 'Show Profile of Genes');
 
     pkg.i_addbutton2fig(UitoolbarHandle, 'off', @in_HighlightGenes, 'plotpicker-qqplot.gif', 'Highlight top HVGs');
     pkg.i_addbutton2fig(UitoolbarHandle, 'off', @in_HighlightSelectedGenes, 'xplotpicker-qqplot.gif', 'Highlight selected genes');
@@ -33,7 +34,9 @@ if showdata
 
     if ~isempty(g)
         dt = datacursormode(FigureHandle);
-        dt.UpdateFcn = {@i_myupdatefcn3, g, X};
+        dt.UpdateFcn = {@i_myupdatefcn1, g};
+    else
+        dt = [];
     end
 end
 
@@ -65,7 +68,7 @@ if dofit
     plot3(xyz1(:, 1), xyz1(:, 2), xyz1(:, 3), '-', 'linewidth', 4);
     % scatter3(xyz1(:,1),xyz1(:,2),xyz1(:,3)); %,'MarkerEdgeAlpha',.8);
 
-    [nearestidx, d] = dsearchn(xyz1, [x, y, z]);
+    [~, d] = dsearchn(xyz1, [x, y, z]);
 
 
     fitmeanv=xyz1(:,1);
@@ -94,6 +97,11 @@ if dofit
     disp('ranked higher for feature selection.')        
 end
 
+    function in_ShowProfile(~, ~)
+        if ~isempty(dt)
+           dt.UpdateFcn = {@i_myupdatefcn3, g, X};
+        end
+    end
 
     function ChangeAlphaValue(~, ~)
         if h.MarkerFaceAlpha <= 0.05
