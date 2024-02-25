@@ -25,22 +25,26 @@ for i=1:NTrial
         Left=Ns;
      else
         Left=Ix-1;
-     end;
+     end
+
      if Ix==Ns
        Right=1;
-     else;
+     else
         Right=Ix+1;
-     end;
+     end
+
      if Iy==1
         Down=Ns;
-     else;  
+     else  
         Down=Iy-1;
-     end;
+     end
+
      if Iy==Ns
         Up=1;
      else
         Up=Iy+1;
-     end;
+     end
+
      % energy change
      de=2*s(Iy,Ix)*(-h+J*(s(Iy,Left)+s(Iy,Right)+s(Down,Ix)+s(Up,Ix)));
      if de<=Edemon % energy change accepted
@@ -48,7 +52,8 @@ for i=1:NTrial
         Accept=Accept+1;
         Edemon=Edemon-de;
         Esystem=Esystem+de;
-     end;
+     end
+
      k=k+1;
      Es(k)=Esystem;
      Ed(k)=Edemon;

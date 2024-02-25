@@ -1,8 +1,9 @@
 function callback_EnrichrHVGs(src, ~, sce)
 
+FigureHandle = [];
 if nargin < 3 || isempty(sce)
     FigureHandle = src.Parent.Parent;
-    sce = guidata(FigureHandle);
+    sce = guidata(FigureHandle);    
 end
 
 
@@ -21,15 +22,12 @@ answer = questdlg('Which HVG detecting method to use?', '', ...
                 errordlg(ME.message);
             end
             gui.gui_waitbar(fw, true);
-        case 'Splinefit Method [PMID:31697351]'
-            fw = gui.gui_waitbar;
+        case 'Splinefit Method [PMID:31697351]'            
             try
-                gui.sc_scatter3genes(sce.X, sce.g);
+                gui.sc_scatter3genes_new(sce.X, sce.g, true, true, FigureHandle);
             catch ME
-                gui.gui_waitbar(fw, true);
                 errordlg(ME.message);
-            end
-            gui.gui_waitbar(fw, true);
+            end            
         otherwise
             return;
     end
