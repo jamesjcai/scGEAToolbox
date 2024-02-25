@@ -19,6 +19,35 @@ if ~isa(sce, 'SingleCellExperiment')
     error('requires sce=SingleCellExperiment();');
 end
 
+mfolder = fileparts(mfilename('fullpath'));
+
+% fx=figure('ToolBar','none','MenuBar','none','DockControls','off', ...
+%     'Resize','off','WindowStyle','modal','Name','','NumberTitle','off', ...
+%     'Visible','off');
+% fx.Position(3) = fx.Position(3)/1.5;
+% fx.Position(4) = fx.Position(4)/1.5;
+% movegui(fx,'center');
+% fx.Visible=true;
+% drawnow();
+
+
+if ~(ismcc || isdeployed)
+    splashpng = 'example_splash.png';
+    %splashpng = 'splash.png';
+    fx = gui.SplashScreen( 'Splashscreen', ...
+        fullfile(mfolder,'resources',splashpng), ...
+                    'ProgressBar', 'on', ...
+                    'ProgressPosition', 5, ...
+                    'ProgressRatio', 0.1 );
+    fx.addText( 30, 50, 'SCGEATOOL', 'FontSize', 30, 'Color', [0 0 0.6] )
+    fx.addText( 30, 80, 'v24.3.3', 'FontSize', 20, 'Color', [0.2 0.2 0.5] )
+    fx.addText( 300, 270, 'Loading...', 'FontSize', 20, 'Color', 'white' )
+    %fx.Visible=true;
+    drawnow();
+else
+    fx = [];
+end
+
 import pkg.*
 import gui.*
 
@@ -68,6 +97,8 @@ btn_width = 100;
 btn_height = 25;
 btn_x = (fig_width - btn_width) / 2;
 btn_y = (fig_height - btn_height) / 1.618;
+
+if ~isempty(fx), fx.ProgressRatio = 0.2; end
 
 button1 = uicontrol(...
     'Parent',FigureHandle,...
@@ -266,6 +297,8 @@ in_addmenu(m_help, 1, @callback_CheckUpdates, 'Check for Updates...');
 %in_addmenu(m_help, 1, {@(~, ~) web('https://github.com/jamesjcai/scGEAToolbox')}, 'About SCGEATOOL');
 in_addmenu(m_help, 1, {@(~, ~) inputdlg('', 'About SCGEATOOL', [10, 50], {sprintf('Single-Cell Gene Expression Analysis Tool\n\nJames Cai\n\njcai@tamu.edu\n')})}, 'About SCGEATOOL');
 
+if ~isempty(fx), fx.ProgressRatio = 0.4; end
+
 hAx = axes('Parent', FigureHandle, 'Visible', 'off');
 if ~isempty(sce) && sce.NumCells>0
     h = gui.i_gscatter3(sce.s, c, methodid, 1, hAx);
@@ -279,7 +312,6 @@ end
 dt = datacursormode(FigureHandle);
 dt.UpdateFcn = {@i_myupdatefcnx};
 
-mfolder = fileparts(mfilename('fullpath'));
 
 DeftToolbarHandle = findall(FigureHandle, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
 MainToolbarHandle = uitoolbar('Parent', FigureHandle);
@@ -350,6 +382,9 @@ gui.add_3dcamera(DeftToolbarHandle, 'AllCells');
 
 %pushbuttonV=[pushbuttonV; gui.add_3dcamera(DeftToolbarHandle, 'AllCells')];
 
+if ~isempty(fx), fx.ProgressRatio = 0.6; end
+
+
 in_addbuttonpush(2, 0, @in_turnonuserguiding, "icon-fa-thumb-tack-10.gif", ...
     "Turn on user guiding toolbar");
 
@@ -369,6 +404,7 @@ in_addbuttontoggle(2, 0, {@in_togglebtfun, @callback_SaveX, ...
     "icon-mat-filter-5-10.gif", "export.gif", ...
     true, "Export & save data"});
 
+if ~isempty(fx), fx.ProgressRatio = 0.8; end
 
 % handles = guihandles( FigureHandle );
 % guidata( FigureHandle, handles );
@@ -388,6 +424,10 @@ end
 if ~isempty(sce) && sce.NumCells>0
     hAx.Visible="on";
 end
+
+if ~isempty(fx), fx.ProgressRatio = 1.0; end
+pause(1);
+delete(fx);
 set(FigureHandle, 'visible', 'on');
 drawnow;
 uicontrol(button1);
