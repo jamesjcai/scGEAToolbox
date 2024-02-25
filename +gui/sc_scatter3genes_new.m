@@ -25,7 +25,7 @@ if ~isempty(parentfig)
     end
 end
 
-hAx = axes('Parent', hFig);
+% hAx = axes('Parent', hFig);
 
 UitoolbarHandle = uitoolbar('Parent', hFig);
 set(UitoolbarHandle, 'Tag', 'FigureToolBar', ...
@@ -42,7 +42,7 @@ pkg.i_addbutton2fig(UitoolbarHandle, 'off', {@gui.i_savemainfig, 3}, "powerpoint
 
 if showdata
     %h=scatter3(hAx,x,y,z);  % 'filled','MarkerFaceAlpha',.5);
-    hAx1 = subplot(1,2,1);
+    hAx1 = subplot(2,2,[1 3]);
     h = scatter3(hAx1, x, y, z, 'filled', 'MarkerFaceAlpha', .1);
 
     if ~isempty(g)
@@ -108,7 +108,7 @@ if dofit
 end
 
 
-hAx2 = subplot(1,2,2);
+hAx2 = subplot(2,2,2);
 xlim([1 size(X,2)]);
 xlabel(hAx2,'Cell Index')
 ylabel(hAx2,'Expression Level')
@@ -143,9 +143,7 @@ drawnow;
         h.BrushData = idx;
 
         k = gui.i_inputnumk(200, 1, 2000);
-        if isempty(k), return; end
-        
-
+        if isempty(k), return; end      
         idx(hvgidx(1:k)) = 1;
         h.BrushData = idx;
         % datatip(h, 'DataIndex', idx20);
