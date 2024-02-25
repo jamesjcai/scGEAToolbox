@@ -1,4 +1,4 @@
-function callback_CrossTabulation_new(src, ~)
+function callback_CrossTabulation(src, ~)
 FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
 

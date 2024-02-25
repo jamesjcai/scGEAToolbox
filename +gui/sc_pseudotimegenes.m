@@ -1,4 +1,6 @@
-function sc_pseudotimegenes(sce, t)
+function sc_pseudotimegenes(sce, t, parentfig)
+
+if nargin<3, parentfig=[]; end
 
 
     [K,usehvgs] = gui.i_gethvgnum(sce);
@@ -48,9 +50,18 @@ function sc_pseudotimegenes(sce, t)
     % [~, idxn] = mink(r, 3); % Select top 3 negatively correlated genes
     selectedg = sce.g(idxp);
     try
-        psf1 = figure('WindowStyle', 'modal');
+        psf1 = figure('WindowStyle', 'modal', 'Visible','off');
+        psf1.Position(3) = psf1.Position(3) * 1.8;
+        if ~isempty(parentfig)
+            [px_new] = gui.i_getchildpos(parentfig, psf1);
+        end
+        if ~isempty(px_new)
+            movegui(psf1,px_new);
+        end
+        figure(psf1);
         pkg.i_plot_pseudotimeseries(log2(sce.X+1), ...
             sce.g, t, selectedg);
+        psf1.Visible = true;
     catch ME
         if exist('psf1', 'var') && ishandle(psf1)
             close(psf1);

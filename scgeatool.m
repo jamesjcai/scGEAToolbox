@@ -1832,7 +1832,7 @@ end
             'Yes', 'No', 'Yes');
         switch answer
             case 'Yes'
-                gui.sc_pseudotimegenes(sce, t);
+                gui.sc_pseudotimegenes(sce, t, FigureHandle);
             case 'No'
                 return;
         end
