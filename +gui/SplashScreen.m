@@ -1,4 +1,4 @@
-classdef SplashScreen < hgsetget
+classdef SplashScreen < matlab.mixin.SetGet 
     %SplashScreen  create a splashscreen
     %
     %   s = SplashScreen(title,imagefile) creates a splashscreen using

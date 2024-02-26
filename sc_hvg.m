@@ -22,7 +22,9 @@ if nargin < 5, normit = true; end
 if nargin < 6, ignorehigh = true; end
 if nargin < 7, ignorelow = true; end
 
-if nargout > 1, Xori = X; end
+%if nargout > 1, 
+    Xori = X; 
+%end
 
 
 dropr = 1 - sum(X > 0, 2) ./ size(X, 2);
@@ -110,48 +112,45 @@ if sortit
     T.fitratio(T.dropr > (1 - 0.05)) = 0; % ignore genes with dropout rate > 0.95
     % disp('NOTE: Genes with dropout rate > 0.95 are excluded.');
     [T, hvgidx] = sortrows(T, 'fitratio', 'descend');
-    if nargout > 1
+    %if nargout > 1
         Xsorted = Xori(hvgidx, :);
-    end
-    if nargout > 2
+    %end
+    %if nargout > 2
         gsorted = T.genes;
-    end
+    %end
 else
-    if nargout > 1
+    %if nargout > 1
         error('SORTIT was not required.');
-    end
+    %end
 end
 % T=T(removedidx,:);
 if plotit
     [~,top100idx]=maxk(fitratio,100);
     %    figure;
 
-    FigureHandle = figure;
-    FigureHandle.Position(3)=FigureHandle.Position(3)*1.8;
+    hFig = figure;
+    hFig.Position(3)=hFig.Position(3)*1.8;
     %hAx = axes('Parent', FigureHandle);
-    hAx = subplot(2,2,[1 3]);
-    UitoolbarHandle = uitoolbar('Parent', FigureHandle);
-    set(UitoolbarHandle, 'Tag', 'FigureToolBar', ...
-        'HandleVisibility', 'off', 'Visible', 'on');
-
-    pkg.i_addbutton2fig(UitoolbarHandle, 'off', @HighlightGenes, 'plotpicker-qqplot.gif', 'Highlight top HVGs');
-    pkg.i_addbutton2fig(UitoolbarHandle, 'off', @in_HighlightSelectedGenes, 'xplotpicker-qqplot.gif', 'Highlight selected genes');
-    pkg.i_addbutton2fig(UitoolbarHandle, 'off', @ExportGeneNames, 'export.gif', 'Export Selected HVG gene names...');
-    pkg.i_addbutton2fig(UitoolbarHandle, 'off', @ExportTable, 'xexport.gif', 'Export HVG Table...');
-    pkg.i_addbutton2fig(UitoolbarHandle, 'off', @EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Enrichment analysis...');
-    pkg.i_addbutton2fig(UitoolbarHandle, 'off', @ChangeAlphaValue, 'xplotpicker-andrewsplot.gif', 'Change MarkerFaceAlpha value');
-    pkg.i_addbutton2fig(UitoolbarHandle, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-
-    h = scatter(hAx, log(u), log(cv2), 'filled', 'MarkerFaceAlpha', .1);
+    hAx1 = subplot(2,2,[1 3]);
+    % tb = uitoolbar('Parent', FigureHandle);
+    % set(tb, 'Tag', 'FigureToolBar', ...
+    %     'HandleVisibility', 'off', 'Visible', 'on');
+    tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
+uipushtool(tb, 'Separator', 'off');
+    pkg.i_addbutton2fig(tb, 'off', @HighlightGenes, 'plotpicker-qqplot.gif', 'Highlight top HVGs');
+    pkg.i_addbutton2fig(tb, 'off', @in_HighlightSelectedGenes, 'xplotpicker-qqplot.gif', 'Highlight selected genes');
+    pkg.i_addbutton2fig(tb, 'off', @ExportGeneNames, 'export.gif', 'Export Selected HVG gene names...');
+    pkg.i_addbutton2fig(tb, 'off', @ExportTable, 'xexport.gif', 'Export HVG Table...');
+    pkg.i_addbutton2fig(tb, 'off', @EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Enrichment analysis...');
+    pkg.i_addbutton2fig(tb, 'off', @ChangeAlphaValue, 'xplotpicker-andrewsplot.gif', 'Change MarkerFaceAlpha value');
+    pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
+    h = scatter(hAx1, log(u), log(cv2), 'filled', 'MarkerFaceAlpha', .1);
     hold on
-
-
     % scatter(log(u(top100idx)),log(cv2(top100idx)),'x');
-    plot(hAx, log(u), log(cv2fit), '.', 'markersize', 10);
-
-    plot(hAx, log(u(removedidx1)), log(cv2(removedidx1)), 'xr', 'markersize', 10);
-    plot(hAx, log(u(removedidx2)), log(cv2(removedidx2)), '+r', 'markersize', 10);
-    plot(hAx, log(u(top100idx)), log(cv2(top100idx)), '^k', 'markersize', 10);
+    plot(hAx1, log(u), log(cv2fit), '.', 'markersize', 10);
+    %plot(hAx1, log(u(removedidx1)), log(cv2(removedidx1)), 'xr', 'markersize', 10);
+    %plot(hAx1, log(u(removedidx2)), log(cv2(removedidx2)), '+r', 'markersize', 10);
+    %plot(hAx1, log(u(top100idx)), log(cv2(top100idx)), '^k', 'markersize', 10);
 
     %[~,i]=sort(fitratio,'descend');
     %xi=u(i); yi=cv2(i); yifit=cv2fit(i);
@@ -163,18 +162,26 @@ if plotit
     %    plot(log(xi),log(yifit*chi2inv(0.975,df)./df),'.k');
     %    plot(log(xi),log(yifit*chi2inv(0.025,df)./df),'.k');
 
-    xlabel(hAx,'Mean expression, log')
-    ylabel(hAx,'CV^2, log')
+    xlabel(hAx1,'Mean expression, log')
+    ylabel(hAx1,'CV^2, log')
     if ~isempty(g)
-        dt = datacursormode;
-        dt.UpdateFcn = {@in_myupdatefcn3, g};
+        dt = datacursormode(hFig);        
     end
     hold off
 
     hAx2=subplot(2,2,2);
+    x1 = Xsorted(1,:);
+    stem(hAx2, 1:length(x1), x1, 'marker', 'none');
+    xlim(hAx2,[1 size(X,2)]);
+    title(hAx2, gsorted(1));
+    [titxt] = gui.i_getsubtitle(x1);
+    subtitle(hAx2, titxt);
+    xlabel(hAx2,'Cell Index');
+    ylabel(hAx2,'Expression Level');
     
 end
 
+dt.UpdateFcn = {@in_myupdatefcn3, g};
 
 
     function ChangeAlphaValue(~, ~)
@@ -277,17 +284,21 @@ end
     end
 
     function txt = in_myupdatefcn3(~, event_obj, g)
-        idx = event_obj.DataIndex;
-        txt = {g(idx)};
-        x1 = X(idx, :);
-        stem(hAx2, 1:length(x1), x1, 'marker', 'none');
-        xlim(hAx2,[1 size(X,2)]);
-        title(hAx2, g(idx));
-
-        [titxt] = gui.i_getsubtitle(x1);
-        subtitle(hAx2, titxt);
-        xlabel(hAx2,'Cell Index')
-        ylabel(hAx2,'Expression Level')        
+        if isequal(get(src, 'Parent'), hAx1)
+            idx = event_obj.DataIndex;
+            txt = {g(idx)};
+            x1 = X(idx, :);
+            stem(hAx2, 1:length(x1), x1, 'marker', 'none');
+            xlim(hAx2,[1 size(X,2)]);
+            title(hAx2, g(idx));
+    
+            [titxt] = gui.i_getsubtitle(x1);
+            subtitle(hAx2, titxt);
+            xlabel(hAx2,'Cell Index');
+            ylabel(hAx2,'Expression Level');
+        else
+            txt = num2str(event_obj.Position(2));
+        end
     end
 end
 
