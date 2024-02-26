@@ -70,7 +70,6 @@ addOptional(p, 'callinghandle', []);
 parse(p, sce, varargin{:});
 callinghandle = p.Results.callinghandle;
 
-
 c_in = p.Results.c;
 s_in = p.Results.s;
 methodid = p.Results.methodid;
@@ -107,8 +106,7 @@ btn_height = 25;
 btn_x = (fig_width - btn_width) / 2;
 btn_y = (fig_height - btn_height) / 1.618;
 
-%if ~isempty(fx), fx.ProgressRatio = 0.2; end
-if ~isempty(fx), gui.sc_simplesplash(fx,2); end
+if ~isempty(fx) && isvalid(fx), gui.sc_simplesplash(fx,2); end
 
 button1 = uicontrol(...
     'Parent',FigureHandle,...
@@ -308,9 +306,7 @@ in_addmenu(m_help, 1, @callback_CheckUpdates, 'Check for Updates...');
 in_addmenu(m_help, 1, {@(~, ~) inputdlg('', 'About SCGEATOOL', [10, 50], {sprintf('Single-Cell Gene Expression Analysis Tool\n\nJames Cai\n\njcai@tamu.edu\n')})}, 'About SCGEATOOL');
 % in_addmenu(m_help, 1, {@gui.sc_splashscreen,false}, 'About SCGEATOOL');
 
-
-%if ~isempty(fx), fx.ProgressRatio = 0.4; end
-if ~isempty(fx), gui.sc_simplesplash(fx, 4); end
+if ~isempty(fx) && isvalid(fx), gui.sc_simplesplash(fx, 4); end
 
 hAx = axes('Parent', FigureHandle, 'Visible', 'off');
 if ~isempty(sce) && sce.NumCells>0
@@ -395,8 +391,7 @@ gui.add_3dcamera(DeftToolbarHandle, 'AllCells');
 
 %pushbuttonV=[pushbuttonV; gui.add_3dcamera(DeftToolbarHandle, 'AllCells')];
 
-%if ~isempty(fx), fx.ProgressRatio = 0.6; end
-if ~isempty(fx), gui.sc_simplesplash(fx, 6); end
+if ~isempty(fx) && isvalid(fx), gui.sc_simplesplash(fx, 6); end
 
 in_addbuttonpush(2, 0, @in_turnonuserguiding, "icon-fa-thumb-tack-10.gif", ...
     "Turn on user guiding toolbar");
@@ -417,11 +412,11 @@ in_addbuttontoggle(2, 0, {@in_togglebtfun, @callback_SaveX, ...
     "icon-mat-filter-5-10.gif", "export.gif", ...
     true, "Export & save data"});
 
-%if ~isempty(fx), fx.ProgressRatio = 0.8; end
-if ~isempty(fx), gui.sc_simplesplash(fx, 8); end
+if ~isempty(fx) && isvalid(fx), gui.sc_simplesplash(fx, 8); end
 
 % handles = guihandles( FigureHandle );
 % guidata( FigureHandle, handles );
+
 if ~isempty(c)
     kc = numel(unique(c));
     colormap(pkg.i_mycolorlines(kc));
@@ -440,9 +435,9 @@ if ~isempty(sce) && sce.NumCells>0
 end
 
 %if ~isempty(fx), fx.ProgressRatio = 1.0; end
-if ~isempty(fx), gui.sc_simplesplash(fx, 10); end
+if ~isempty(fx) && isvalid(fx), gui.sc_simplesplash(fx, 10); end
 pause(1);
-set(fx, 'visible', 'off');
+if ~isempty(fx) && isvalid(fx), set(fx, 'visible', 'off'); end
 pause(0.2);
 set(FigureHandle, 'visible', 'on');
 delete(fx);
