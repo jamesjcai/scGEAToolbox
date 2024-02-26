@@ -127,7 +127,9 @@ if plotit
     %    figure;
 
     FigureHandle = figure;
-    hAx = axes('Parent', FigureHandle);
+    FigureHandle.Position(3)=FigureHandle.Position(3)*1.8;
+    %hAx = axes('Parent', FigureHandle);
+    hAx = subplot(2,2,[1 3]);
     UitoolbarHandle = uitoolbar('Parent', FigureHandle);
     set(UitoolbarHandle, 'Tag', 'FigureToolBar', ...
         'HandleVisibility', 'off', 'Visible', 'on');
@@ -161,13 +163,16 @@ if plotit
     %    plot(log(xi),log(yifit*chi2inv(0.975,df)./df),'.k');
     %    plot(log(xi),log(yifit*chi2inv(0.025,df)./df),'.k');
 
-    xlabel('Mean expression, log')
-    ylabel('CV^2, log')
+    xlabel(hAx,'Mean expression, log')
+    ylabel(hAx,'CV^2, log')
     if ~isempty(g)
         dt = datacursormode;
-        dt.UpdateFcn = {@i_myupdatefcn3, g, X};
+        dt.UpdateFcn = {@in_myupdatefcn3, g};
     end
     hold off
+
+    hAx2=subplot(2,2,2);
+    
 end
 
 
@@ -269,6 +274,20 @@ end
         %     otherwise
         %         return;
         % end
+    end
+
+    function txt = in_myupdatefcn3(~, event_obj, g)
+        idx = event_obj.DataIndex;
+        txt = {g(idx)};
+        x1 = X(idx, :);
+        stem(hAx2, 1:length(x1), x1, 'marker', 'none');
+        xlim(hAx2,[1 size(X,2)]);
+        title(hAx2, g(idx));
+
+        [titxt] = gui.i_getsubtitle(x1);
+        subtitle(hAx2, titxt);
+        xlabel(hAx2,'Cell Index')
+        ylabel(hAx2,'Expression Level')        
     end
 end
 
