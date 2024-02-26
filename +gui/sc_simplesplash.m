@@ -20,7 +20,7 @@ if nargin < 1 || isempty(fx)
     movegui(fx,'center');
     set(fa,'Color','k','XColor','k','YColor','k');
     text(fa,0.2, 0.8,'SCGEATOOL','Color','w','FontSize',18);
-    text(fa,0.2,0.675,'v24.3.3','Color',[.7 .7 .7],'FontSize',14);
+    text(fa,0.2,0.675,'v24.3.4','Color',[.7 .7 .7],'FontSize',14);
     text(fa,1.0,0.2,'Loading...','Color',[.7 .7 .7],'FontSize',14);
     fx.Visible=true;
     hold on
