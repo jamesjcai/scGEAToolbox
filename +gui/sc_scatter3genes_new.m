@@ -27,18 +27,21 @@ end
 
 % hAx = axes('Parent', hFig);
 
-UitoolbarHandle = uitoolbar('Parent', hFig);
-set(UitoolbarHandle, 'Tag', 'FigureToolBar', ...
-    'HandleVisibility', 'off', 'Visible', 'on');
-pkg.i_addbutton2fig(UitoolbarHandle, 'off', @in_ShowProfile, 'plotpicker-qqplotx.gif', 'Show Profile of Genes');
-pkg.i_addbutton2fig(UitoolbarHandle, 'off', @in_HighlightGenes, 'plotpicker-qqplot.gif', 'Highlight top HVGs');
-pkg.i_addbutton2fig(UitoolbarHandle, 'off', @in_HighlightSelectedGenes, 'xplotpicker-qqplot.gif', 'Highlight selected genes');
-pkg.i_addbutton2fig(UitoolbarHandle, 'off', @ExportGeneNames, 'export.gif', 'Export selected HVG gene names...');
-pkg.i_addbutton2fig(UitoolbarHandle, 'off', @ExportTable, 'xexport.gif', 'Export HVG Table...');
-pkg.i_addbutton2fig(UitoolbarHandle, 'off', @EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Enrichment analysis...');
-pkg.i_addbutton2fig(UitoolbarHandle, 'off', @ChangeAlphaValue, 'xplotpicker-andrewsplot.gif', 'Change MarkerFaceAlpha value');
-gui.add_3dcamera(UitoolbarHandle, 'HVGs');
-pkg.i_addbutton2fig(UitoolbarHandle, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
+tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
+
+% tb = uitoolbar('Parent', hFig);
+% set(tb, 'Tag', 'FigureToolBar', ...
+%     'HandleVisibility', 'off', 'Visible', 'on');
+uipushtool(tb, 'Separator', 'off');
+%pkg.i_addbutton2fig(tb, 'off', @in_ShowProfile, 'plotpicker-qqplotx.gif', 'Show Profile of Genes');
+pkg.i_addbutton2fig(tb, 'off', @in_HighlightGenes, 'plotpicker-qqplot.gif', 'Highlight top HVGs');
+pkg.i_addbutton2fig(tb, 'off', @in_HighlightSelectedGenes, 'xplotpicker-qqplot.gif', 'Highlight selected genes');
+pkg.i_addbutton2fig(tb, 'off', @ExportGeneNames, 'export.gif', 'Export selected HVG gene names...');
+pkg.i_addbutton2fig(tb, 'off', @ExportTable, 'xexport.gif', 'Export HVG Table...');
+pkg.i_addbutton2fig(tb, 'off', @EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Enrichment analysis...');
+pkg.i_addbutton2fig(tb, 'off', @ChangeAlphaValue, 'xplotpicker-andrewsplot.gif', 'Change MarkerFaceAlpha value');
+gui.add_3dcamera(tb, 'HVGs');
+pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 
 if showdata
     %h=scatter3(hAx,x,y,z);  % 'filled','MarkerFaceAlpha',.5);
@@ -47,7 +50,7 @@ if showdata
 
     if ~isempty(g)
         dt = datacursormode(hFig);
-        dt.UpdateFcn = {@i_myupdatefcn1, g};
+        % dt.UpdateFcn = {@i_myupdatefcn1, g};
     else
         dt = [];
     end
@@ -55,10 +58,11 @@ end
     %grid on
     %box on
     %legend({'Genes','Spline fit'});
-    xlabel('Mean, log');
-    ylabel('CV, log');
-    zlabel('Dropout rate (% of zeros)');
+    xlabel(hAx1,'Mean, log');
+    ylabel(hAx1,'CV, log');
+    zlabel(hAx1,'Dropout rate (% of zeros)');
 
+        
 % [xData, yData, zData] = prepareSurfaceData(x,y,z);
 % xyz=[xData yData zData]';
 
@@ -109,9 +113,15 @@ end
 
 
 hAx2 = subplot(2,2,2);
-xlim([1 size(X,2)]);
-xlabel(hAx2,'Cell Index')
-ylabel(hAx2,'Expression Level')
+x1=X(hvgidx(1),:);
+stem(hAx2, 1:length(x1), x1, 'marker', 'none');
+xlim(hAx2,[1 size(X,2)]);
+title(hAx2, hvg(1));
+[titxt] = gui.i_getsubtitle(x1);
+subtitle(hAx2, titxt);
+xlabel(hAx2,'Cell Index');
+ylabel(hAx2,'Expression Level');
+
 dt.UpdateFcn = {@in_myupdatefcn3, g};
 
 gui.gui_waitbar(fw);
@@ -211,18 +221,22 @@ drawnow;
         gui.i_enrichtest(tgenes, g, numel(tgenes));
     end
 
-    function txt = in_myupdatefcn3(~, event_obj, g)
-        idx = event_obj.DataIndex;
-        txt = {g(idx)};
-        x1 = X(idx, :);
-        stem(hAx2, 1:length(x1), x1, 'marker', 'none');
-        xlim(hAx2,[1 size(X,2)]);
-        title(hAx2, g(idx));
-
-        [titxt] = gui.i_getsubtitle(x1);
-        subtitle(hAx2, titxt);
-        xlabel(hAx2,'Cell Index')
-        ylabel(hAx2,'Expression Level')        
+    function txt = in_myupdatefcn3(src, event_obj, g)
+        if isequal(get(src, 'Parent'), hAx1)
+            idx = event_obj.DataIndex;
+            txt = {g(idx)};
+            x1 = X(idx, :);
+            stem(hAx2, 1:length(x1), x1, 'marker', 'none');
+            xlim(hAx2,[1 size(X,2)]);
+            title(hAx2, g(idx));
+    
+            [titxt] = gui.i_getsubtitle(x1);
+            subtitle(hAx2, titxt);
+            xlabel(hAx2,'Cell Index');
+            ylabel(hAx2,'Expression Level');
+        else
+            txt = num2str(event_obj.Position(2));
+        end
     end
 
 end

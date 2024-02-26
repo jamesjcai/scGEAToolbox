@@ -32,17 +32,21 @@ mfolder = fileparts(mfilename('fullpath'));
 
 
 if ~(ismcc || isdeployed)
-    splashpng = 'example_splash.png';
+    %splashpng = 'example_splash.png';
     %splashpng = 'splash.png';
-    fx = gui.SplashScreen( 'Splashscreen', ...
-        fullfile(mfolder,'resources',splashpng), ...
-                    'ProgressBar', 'on', ...
-                    'ProgressPosition', 5, ...
-                    'ProgressRatio', 0.1 );
-    fx.addText( 30, 50, 'SCGEATOOL', 'FontSize', 30, 'Color', [0 0 0.6] )
-    fx.addText( 30, 80, 'v24.3.3', 'FontSize', 20, 'Color', [0.2 0.2 0.5] )
-    fx.addText( 300, 270, 'Loading...', 'FontSize', 20, 'Color', 'white' )
-    %fx.Visible=true;
+    
+    % [~, v1] = pkg.i_majvercheck;
+    % splashpng = '700813831-hero-1536x1536.png';
+    % fx = gui.SplashScreen( 'Splashscreen', ...
+    %     fullfile(mfolder,'resources',splashpng), ...
+    %                 'ProgressBar', 'on', ...
+    %                 'ProgressPosition', 5, ...
+    %                 'ProgressRatio', 0.1 );
+    % fx.addText( 30, 50, 'SCGEATOOL', 'FontSize', 30, 'Color', [1 1 1] )
+    % fx.addText( 30, 80, v1, 'FontSize', 20, 'Color', [0.7 0.7 0.7] )
+    % fx.addText( 300, 270, 'Loading...', 'FontSize', 20, 'Color', 'white' )
+    
+    [fx] = gui.sc_splashscreen(true);
     drawnow();
 else
     fx = [];
@@ -296,6 +300,8 @@ in_addmenu(m_help, 0, {@(~, ~) web('https://matlab.mathworks.com/open/github/v1?
 in_addmenu(m_help, 1, @callback_CheckUpdates, 'Check for Updates...');
 %in_addmenu(m_help, 1, {@(~, ~) web('https://github.com/jamesjcai/scGEAToolbox')}, 'About SCGEATOOL');
 in_addmenu(m_help, 1, {@(~, ~) inputdlg('', 'About SCGEATOOL', [10, 50], {sprintf('Single-Cell Gene Expression Analysis Tool\n\nJames Cai\n\njcai@tamu.edu\n')})}, 'About SCGEATOOL');
+% in_addmenu(m_help, 1, {@gui.sc_splashscreen,false}, 'About SCGEATOOL');
+
 
 if ~isempty(fx), fx.ProgressRatio = 0.4; end
 
