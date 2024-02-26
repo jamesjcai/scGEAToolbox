@@ -303,8 +303,8 @@ in_addmenu(m_help, 1, {@(~, ~) web('https://scgeatool.github.io/')}, 'Visit SCGE
 in_addmenu(m_help, 0, {@(~, ~) web('https://matlab.mathworks.com/open/github/v1?repo=jamesjcai/scGEAToolbox&file=online_landing.m')}, 'Run SCGEATOOL in MATLAB Online...');
 in_addmenu(m_help, 1, @callback_CheckUpdates, 'Check for Updates...');
 %in_addmenu(m_help, 1, {@(~, ~) web('https://github.com/jamesjcai/scGEAToolbox')}, 'About SCGEATOOL');
-in_addmenu(m_help, 1, {@(~, ~) inputdlg('', 'About SCGEATOOL', [10, 50], {sprintf('Single-Cell Gene Expression Analysis Tool\n\nJames Cai\n\njcai@tamu.edu\n')})}, 'About SCGEATOOL');
-% in_addmenu(m_help, 1, {@gui.sc_splashscreen,false}, 'About SCGEATOOL');
+%in_addmenu(m_help, 1, {@(~, ~) inputdlg('', 'About SCGEATOOL', [10, 50], {sprintf('Single-Cell Gene Expression Analysis Tool\n\nJames Cai\n\njcai@tamu.edu\n')})}, 'About SCGEATOOL');
+in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle)}, 'About SCGEATOOL');
 
 if ~isempty(fx) && isvalid(fx), gui.sc_simplesplash(fx, 4); end
 
