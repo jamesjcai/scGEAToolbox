@@ -21,6 +21,12 @@ end
 
 mfolder = fileparts(mfilename('fullpath'));
 
+if ~(ismcc || isdeployed)
+    fx = gui.sc_simplesplash;
+else
+    fx = [];
+end
+
 % fx=figure('ToolBar','none','MenuBar','none','DockControls','off', ...
 %     'Resize','off','WindowStyle','modal','Name','','NumberTitle','off', ...
 %     'Visible','off');
@@ -30,8 +36,7 @@ mfolder = fileparts(mfilename('fullpath'));
 % fx.Visible=true;
 % drawnow();
 
-
-if ~(ismcc || isdeployed)
+% if ~(ismcc || isdeployed)
     %splashpng = 'example_splash.png';
     %splashpng = 'splash.png';
     
@@ -46,11 +51,11 @@ if ~(ismcc || isdeployed)
     % fx.addText( 30, 80, v1, 'FontSize', 20, 'Color', [0.7 0.7 0.7] )
     % fx.addText( 300, 270, 'Loading...', 'FontSize', 20, 'Color', 'white' )
     
-    [fx] = gui.sc_splashscreen(true);
-    drawnow();
-else
-    fx = [];
-end
+    %[fx] = gui.sc_splashscreen(true);
+    %drawnow();
+% else
+%     fx = [];
+% end
 
 import pkg.*
 import gui.*
@@ -102,7 +107,8 @@ btn_height = 25;
 btn_x = (fig_width - btn_width) / 2;
 btn_y = (fig_height - btn_height) / 1.618;
 
-if ~isempty(fx), fx.ProgressRatio = 0.2; end
+%if ~isempty(fx), fx.ProgressRatio = 0.2; end
+if ~isempty(fx), gui.sc_simplesplash(fx,2); end
 
 button1 = uicontrol(...
     'Parent',FigureHandle,...
@@ -303,7 +309,8 @@ in_addmenu(m_help, 1, {@(~, ~) inputdlg('', 'About SCGEATOOL', [10, 50], {sprint
 % in_addmenu(m_help, 1, {@gui.sc_splashscreen,false}, 'About SCGEATOOL');
 
 
-if ~isempty(fx), fx.ProgressRatio = 0.4; end
+%if ~isempty(fx), fx.ProgressRatio = 0.4; end
+if ~isempty(fx), gui.sc_simplesplash(fx, 4); end
 
 hAx = axes('Parent', FigureHandle, 'Visible', 'off');
 if ~isempty(sce) && sce.NumCells>0
@@ -388,8 +395,8 @@ gui.add_3dcamera(DeftToolbarHandle, 'AllCells');
 
 %pushbuttonV=[pushbuttonV; gui.add_3dcamera(DeftToolbarHandle, 'AllCells')];
 
-if ~isempty(fx), fx.ProgressRatio = 0.6; end
-
+%if ~isempty(fx), fx.ProgressRatio = 0.6; end
+if ~isempty(fx), gui.sc_simplesplash(fx, 6); end
 
 in_addbuttonpush(2, 0, @in_turnonuserguiding, "icon-fa-thumb-tack-10.gif", ...
     "Turn on user guiding toolbar");
@@ -410,7 +417,8 @@ in_addbuttontoggle(2, 0, {@in_togglebtfun, @callback_SaveX, ...
     "icon-mat-filter-5-10.gif", "export.gif", ...
     true, "Export & save data"});
 
-if ~isempty(fx), fx.ProgressRatio = 0.8; end
+%if ~isempty(fx), fx.ProgressRatio = 0.8; end
+if ~isempty(fx), gui.sc_simplesplash(fx, 8); end
 
 % handles = guihandles( FigureHandle );
 % guidata( FigureHandle, handles );
@@ -431,11 +439,14 @@ if ~isempty(sce) && sce.NumCells>0
     hAx.Visible="on";
 end
 
-if ~isempty(fx), fx.ProgressRatio = 1.0; end
+%if ~isempty(fx), fx.ProgressRatio = 1.0; end
+if ~isempty(fx), gui.sc_simplesplash(fx, 10); end
 pause(1);
-delete(fx);
+set(fx, 'visible', 'off');
+pause(0.2);
 set(FigureHandle, 'visible', 'on');
-drawnow;
+delete(fx);
+% drawnow;
 uicontrol(button1);
 
 in_fixfield('tsne','tsne3d');
