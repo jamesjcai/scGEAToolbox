@@ -7,6 +7,8 @@ if nargin<1
     v1='v24.3.3';
     %[~, v1] = pkg.i_majvercheck;
     splashpng = '700813831-hero-1536x1536.png';
+
+    %splashpng = '09-small.jpg';
     %splashpng = 'Untitled.png';
     fx = gui.SplashScreen( 'Splashscreen', ...
         fullfile(mfolder,'..','resources', splashpng), ...
