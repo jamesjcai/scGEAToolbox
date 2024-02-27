@@ -21,10 +21,12 @@ end
 
 mfolder = fileparts(mfilename('fullpath'));
 
+fx = [];
 if ~(ismcc || isdeployed)
-    fx = gui.sc_simplesplash;
-else
-    fx = [];
+    try
+        fx = gui.sc_simplesplash2;
+    catch 
+    end
 end
 
 % fx=figure('ToolBar','none','MenuBar','none','DockControls','off', ...
@@ -92,6 +94,8 @@ if ~isempty(s_in), sce.s = s_in; end
 %     tagx = 'off';
 % end
 
+% if ~isempty(fx) && isvalid(fx), gui.sc_simplesplash2(fx,0.2); end
+
 FigureHandle = figure('Name', 'SCGEATOOL', ...
     'position', round(1.25*[0, 0, 560, 420]), ...
     'visible', 'off', 'NumberTitle', 'off', ...
@@ -106,7 +110,7 @@ btn_height = 25;
 btn_x = (fig_width - btn_width) / 2;
 btn_y = (fig_height - btn_height) / 1.618;
 
-if ~isempty(fx) && isvalid(fx), gui.sc_simplesplash(fx,2); end
+if ~isempty(fx) && isvalid(fx), gui.sc_simplesplash2(fx,0.2); end
 
 button1 = uicontrol(...
     'Parent',FigureHandle,...
@@ -304,9 +308,9 @@ in_addmenu(m_help, 0, {@(~, ~) web('https://matlab.mathworks.com/open/github/v1?
 in_addmenu(m_help, 1, @callback_CheckUpdates, 'Check for Updates...');
 %in_addmenu(m_help, 1, {@(~, ~) web('https://github.com/jamesjcai/scGEAToolbox')}, 'About SCGEATOOL');
 %in_addmenu(m_help, 1, {@(~, ~) inputdlg('', 'About SCGEATOOL', [10, 50], {sprintf('Single-Cell Gene Expression Analysis Tool\n\nJames Cai\n\njcai@tamu.edu\n')})}, 'About SCGEATOOL');
-in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle)}, 'About SCGEATOOL');
+in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout2(FigureHandle)}, 'About SCGEATOOL');
 
-if ~isempty(fx) && isvalid(fx), gui.sc_simplesplash(fx, 4); end
+if ~isempty(fx) && isvalid(fx), gui.sc_simplesplash2(fx, 0.4); end
 
 hAx = axes('Parent', FigureHandle, 'Visible', 'off');
 if ~isempty(sce) && sce.NumCells>0
@@ -391,7 +395,7 @@ gui.add_3dcamera(DeftToolbarHandle, 'AllCells');
 
 %pushbuttonV=[pushbuttonV; gui.add_3dcamera(DeftToolbarHandle, 'AllCells')];
 
-if ~isempty(fx) && isvalid(fx), gui.sc_simplesplash(fx, 6); end
+if ~isempty(fx) && isvalid(fx), gui.sc_simplesplash2(fx, 0.6); end
 
 in_addbuttonpush(2, 0, @in_turnonuserguiding, "icon-fa-thumb-tack-10.gif", ...
     "Turn on user guiding toolbar");
@@ -412,7 +416,7 @@ in_addbuttontoggle(2, 0, {@in_togglebtfun, @callback_SaveX, ...
     "icon-mat-filter-5-10.gif", "export.gif", ...
     true, "Export & save data"});
 
-if ~isempty(fx) && isvalid(fx), gui.sc_simplesplash(fx, 8); end
+if ~isempty(fx) && isvalid(fx), gui.sc_simplesplash2(fx, 0.8); end
 
 % handles = guihandles( FigureHandle );
 % guidata( FigureHandle, handles );
@@ -435,7 +439,7 @@ if ~isempty(sce) && sce.NumCells>0
 end
 
 %if ~isempty(fx), fx.ProgressRatio = 1.0; end
-if ~isempty(fx) && isvalid(fx), gui.sc_simplesplash(fx, 10); end
+if ~isempty(fx) && isvalid(fx), gui.sc_simplesplash2(fx, 1.0); end
 pause(1);
 if ~isempty(fx) && isvalid(fx), set(fx, 'visible', 'off'); end
 pause(0.2);

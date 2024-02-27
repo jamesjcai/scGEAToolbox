@@ -1,6 +1,7 @@
 function [fx] = sc_simplesplash(fx,r)
 
 if nargin < 2, r = 1; end
+if r<1, r=r*10; end
 if nargin < 1 || isempty(fx)
     fx = figure('MenuBar','none','ToolBar','none', ...
         'Name','','NumberTitle','off','Color','k', ...
