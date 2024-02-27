@@ -19,37 +19,17 @@ if ~isa(sce, 'SingleCellExperiment')
     error('requires sce=SingleCellExperiment();');
 end
 
-mfolder = fileparts(mfilename('fullpath'));
 
+
+import pkg.*
+import gui.*
+
+mfolder = fileparts(mfilename('fullpath'));
 
 fx = [];
 %fxfun = @gui.sc_simplesplash2;
 fxfun = @gui.sc_splashscreen;
 if ~(ismcc || isdeployed), fx = fxfun(); end
-
-% if ~(ismcc || isdeployed)
-    %splashpng = 'example_splash.png';
-    %splashpng = 'splash.png';
-    
-    % [~, v1] = pkg.i_majvercheck;
-    % splashpng = '700813831-hero-1536x1536.png';
-    % fx = gui.SplashScreen( 'Splashscreen', ...
-    %     fullfile(mfolder,'resources',splashpng), ...
-    %                 'ProgressBar', 'on', ...
-    %                 'ProgressPosition', 5, ...
-    %                 'ProgressRatio', 0.1 );
-    % fx.addText( 30, 50, 'SCGEATOOL', 'FontSize', 30, 'Color', [1 1 1] )
-    % fx.addText( 30, 80, v1, 'FontSize', 20, 'Color', [0.7 0.7 0.7] )
-    % fx.addText( 300, 270, 'Loading...', 'FontSize', 20, 'Color', 'white' )
-    
-    %[fx] = gui.sc_splashscreen(true);
-    %drawnow();
-% else
-%     fx = [];
-% end
-
-import pkg.*
-import gui.*
 
 p = inputParser;
 checkCS = @(x) isempty(x) | size(sce.X, 2) == length(x);
