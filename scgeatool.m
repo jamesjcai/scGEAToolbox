@@ -12,24 +12,24 @@ if isempty(which('grp2idx.m'))
     return;
 end
 
-if nargin < 1
-    sce = SingleCellExperiment;
-end
-if ~isa(sce, 'SingleCellExperiment')
-    error('requires sce=SingleCellExperiment();');
-end
-
-
-
 import pkg.*
 import gui.*
 
-mfolder = fileparts(mfilename('fullpath'));
-
 fx = [];
-%fxfun = @gui.sc_simplesplash2;
-fxfun = @gui.sc_splashscreen;
-if ~(ismcc || isdeployed), fx = fxfun(); end
+if nargin < 1
+    if ~(ismcc || isdeployed)
+        %fxfun = @gui.sc_simplesplash2;
+        fxfun = @gui.sc_splashscreen;
+        fx = fxfun(); 
+    end
+    sce = SingleCellExperiment;
+else
+    if ~isa(sce, 'SingleCellExperiment')
+        error('requires sce=SingleCellExperiment(); scgeatool(sce)');
+    end
+end
+
+mfolder = fileparts(mfilename('fullpath'));
 
 p = inputParser;
 checkCS = @(x) isempty(x) | size(sce.X, 2) == length(x);
