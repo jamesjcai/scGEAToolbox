@@ -3,7 +3,10 @@ function [fx] = sc_simplesplash2(fx,r)
 % https://www.mathworks.com/matlabcentral/answers/92259-how-do-i-make-a-splash-screen-for-my-matlab-gui-application
     mfolder = fileparts(mfilename('fullpath'));
     splashpng = '700813831-hero-1536x1536.png';
+   
     [im] = imread(fullfile(mfolder,'..','resources', splashpng));
+
+    
 
 if nargin < 2, r = 0.1; end
 % if r>1, r=r/10; end

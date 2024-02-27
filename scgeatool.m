@@ -1,5 +1,9 @@
 function varargout = scgeatool(sce, varargin)
 
+    % mfolder = fileparts(mfilename('fullpath'));
+    % splashpng = '700813831-hero-1536x1536.png';
+    % hh = splash(fullfile(mfolder,'resources', splashpng));
+
 if usejava('jvm') && ~feature('ShowFigureWindows')
     error('MATLAB is in a text mode. This function requires a GUI-mode.');
 end
@@ -476,6 +480,8 @@ showuseronboarding = getpref('scgeatoolbox', 'useronboardingtoolbar',false);
 if ~showuseronboarding
     set(UserToolbarHandle, 'Visible', 'off');
 end
+
+% splash(hh,'off');
 
 % ----------------------------------
 
