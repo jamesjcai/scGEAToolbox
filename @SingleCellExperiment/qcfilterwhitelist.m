@@ -11,23 +11,34 @@ if ~isempty(whitelist)
     [~, idxx] = ismember(whitelist, obj.g);
     Xresv = obj.X(idxx, :);
 end
+
 [~, keptg, keptidxv] = sc_qcfilter(obj.X, obj.g, libszcutoff, mtratio, ...
     min_cells_nonzero, gnnumcutoff);
 
 for k = 1:length(keptidxv)
     obj = selectcells(obj, keptidxv{k});
 end
+
 [y] = ismember(obj.g, keptg);
 obj.X = obj.X(y, :);
 obj.g = obj.g(y);
 [obj.X, obj.g] = sc_rmdugenes(obj.X, obj.g);
+
 if ~isempty(whitelist)
     for k = 1:length(keptidxv)
         Xresv = Xresv(:, keptidxv{k});
     end
-    [~, idxx] = ismember(whitelist, obj.g);
-    obj.X(idxx, :) = [];
-    obj.g(idxx) = [];
+    [y, idxx] = ismember(whitelist, obj.g);
+    
+    if any(y)
+        idxx=idxx(y);
+        %assignin("base","X1",obj.X(idxx, :));
+        %assignin("base","g1",obj.g(idxx));
+        obj.X(idxx, :) = [];
+        obj.g(idxx) = [];
+    end
+    %assignin("base","Xresv",Xresv)
+    %assignin("base","whitelist",whitelist)
     obj.X = [obj.X; Xresv];
     obj.g = [obj.g; whitelist(:)];
 end

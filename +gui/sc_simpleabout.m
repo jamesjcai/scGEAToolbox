@@ -1,10 +1,13 @@
 function [fx] = sc_simpleabout(parentfig)
 
+    % mfolder = fileparts(mfilename('fullpath'));
+    % splashpng = '700813831-hero-1536x1536.png';
+    % [im] = imread(fullfile(mfolder,'..','resources', splashpng));
+    
 
 if nargin<1
     parentfig=[];
 end
-
 
     fx = figure('MenuBar','none','ToolBar','none', ...
         'Name','About','NumberTitle','off','Color','k', ...
@@ -18,8 +21,7 @@ end
         'XColor','k','YColor','k');
     %    'Units','Normalize','Position',[0 0 1 1]);    
     % set(gcf, 'WindowButtonDownFcn', @(src, event) close(gcf));
-
-
+    %image(fa,im);
     [~, v1] = pkg.i_majvercheck;
 
     cdgea;

@@ -1,4 +1,7 @@
-function i_qcviolin(X, genelist)
+function i_qcviolin(X, genelist, parentfig)
+if nargin<3
+    parentfig=[];
+end
 
 i = startsWith(genelist, 'mt-', 'IgnoreCase', true);
 nftr = full(sum(X > 0, 1));
@@ -7,7 +10,14 @@ lbsz_mt = full(sum(X(i, :), 1));
 cj = 100 * (lbsz_mt ./ lbsz);
 
 
-figure;
+fx=figure('Visible','off');
+
+if ~isempty(parentfig)
+        px_new = gui.i_getchildpos(parentfig,fx);
+else
+    px_new=[];
+end
+
 subplot(1, 3, 1)
 pkg.violinplot(nftr, [], 'showdata', false);
 title(sprintf('nFeature\\_RNA\n(# of genes)'));
@@ -22,3 +32,9 @@ subplot(1, 3, 3)
 pkg.violinplot(cj, [], 'showdata', false);
 title(sprintf('percent.mt\n(mitochondrial content)'));
 box on;
+if ~isempty(px_new)
+movegui(fx, px_new);
+else
+movegui(fx, 'center');
+end
+fx.Visible=true;

@@ -9,7 +9,10 @@ highlightindex = [];
 FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
 % 'SC_QCFILTER (QC Preserves Lowly-expressed Cells/Genes)',...
+
 listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
+        'SC_QCFILTER (Enabling Whitelist Genes)', ...
+        '------------------------------------------------', ...
         'Remove Genes by Expression', ...
         'Remove Genes by Name', ...
         'Remove Mt-genes', ...
@@ -34,7 +37,8 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
 
     switch listitems{indx}
 
-        case 'SC_QCFILTER (Basic QC for Cells/Genes)'            
+        case {'SC_QCFILTER (Basic QC for Cells/Genes)',...
+                'SC_QCFILTER (Enabling Whitelist Genes)'}
 
             answer3 = questdlg('Relaxed or Strigent?', ...
                 'Cutoff Settings', 'Relaxed (keep more cells/genes)', ...
@@ -75,15 +79,18 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
                 return;
             end
 
-            % [whitelist]=gui.i_selectwhitelist(sce);
-            % if isnumeric(whitelist)
-            %     if whitelist==0
-            %         requirerefresh=false;
-            %         return;
-            %     end
-            % end
-
-            whitelist = [];
+            if strcmp(listitems{indx},'SC_QCFILTER (Enabling Whitelist Genes)')
+                [whitelist]=gui.i_selectwhitelist(sce, FigureHandle);
+                if isnumeric(whitelist)
+                    if whitelist==0
+                        requirerefresh=false;
+                        return;
+                    end
+                end
+            else
+                whitelist = [];
+            end
+            
             fw = gui.gui_waitbar;
 
             memerror = false;
@@ -91,7 +98,7 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
                 sce = sce.qcfilterwhitelist(libsize, mtratio, ...
                     min_cells_nonzero, numgenes, whitelist);
             catch ME
-                % if (strcmp(ME.identifier,'MATLAB:array:SizeLimitExceeded'))
+                if (strcmp(ME.identifier,'MATLAB:array:SizeLimitExceeded'))
                 if issparse(sce.X)
                     gui.gui_waitbar(fw, true);
                     errordlg(ME.message);
@@ -100,8 +107,10 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
                 else
                     memerror = true;
                 end
+                end
             end
-
+                    
+               
             if memerror
                 % disp('Making X sparse.');
                 if ~isa(sce.X, 'double')
@@ -120,6 +129,7 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
                 %[X,g]=sc_qcfilter_lite(sce.X,sce.g,libsize,mtratio,...
                 %        min_cells_nonzero,numgenes);
                 %sce=SingleCellExperiment(X,g);
+
                 try
                     sce = sce.qcfilterwhitelist(libsize, mtratio, ...
                         min_cells_nonzero, numgenes, whitelist);
@@ -299,7 +309,7 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
                 [0, b(end)], ttxti, ttxtj);
             needremove = true;
         case 'QC Metrics in Violin Plots' % view QC metrics violin
-            gui.i_qcviolin(sce.X, sce.g);
+            gui.i_qcviolin(sce.X, sce.g, FigureHandle);
             requirerefresh = false;
             return;
             %         case 11
