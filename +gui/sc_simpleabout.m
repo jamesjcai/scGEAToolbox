@@ -4,7 +4,7 @@ function [fx] = sc_simpleabout(parentfig)
     % splashpng = '700813831-hero-1536x1536.png';
     % [im] = imread(fullfile(mfolder,'..','resources', splashpng));
     
-
+olddir = pwd;
 if nargin<1
     parentfig=[];
 end
@@ -15,7 +15,8 @@ end
         'WindowStyle','modal', ...
         'DockControls','off', ...
         'Resize','off', ...
-        'WindowButtonDownFcn',@(src, ~) close(src));
+        'WindowButtonDownFcn',@(src, ~) close(src),...
+        'WindowKeyPressFcn',@(src, ~) close(src));
     
     fa = axes('Parent',fx,'Color','k', ...
         'XColor','k','YColor','k');
@@ -68,4 +69,4 @@ end
 %     pause(.5);
 %     drawnow;
 % end
-
+cd(olddir);

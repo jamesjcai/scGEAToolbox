@@ -422,8 +422,8 @@ if ~isempty(c)
     colormap(pkg.i_mycolorlines(kc));
 end
 
-tb1 = uitoolbar('Parent', FigureHandle);
-tb2 = uitoolbar('Parent', FigureHandle);
+%tb1 = uitoolbar('Parent', FigureHandle);
+%tb2 = uitoolbar('Parent', FigureHandle);
 
 if ~isempty(sce) && sce.NumCells>0
     in_EnDisableMenu('on');
@@ -1144,8 +1144,9 @@ end
         %     set(pushbuttonV(k),'Enable',entag);
         % end
         if strcmpi(entag,'on')
-            set(tb1,'Visible','off');
-            set(tb2,'Visible','off');
+            %set(tb1,'Visible','off');
+            %set(tb2,'Visible','off');
+            
             %px=FigureHandle.Position;
             %px(4)=px(4)-50;
             %FigureHandle.Position=px;
