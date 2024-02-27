@@ -153,6 +153,9 @@ imgHeight = icon.getIconHeight;
 imgWidth = icon.getIconWidth;
 win.setLocation((screenWidth-imgWidth)/2,(screenHeight-imgHeight)/2);
 
+% screenWidth
+% imgWidth
+
 win.show % show the splash screen
 win.toFront %raise the splash window to the top (foreground)
 

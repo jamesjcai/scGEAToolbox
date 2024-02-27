@@ -1,9 +1,5 @@
 function varargout = scgeatool(sce, varargin)
 
-    % mfolder = fileparts(mfilename('fullpath'));
-    % splashpng = '700813831-hero-1536x1536.png';
-    % hh = splash(fullfile(mfolder,'resources', splashpng));
-
 if usejava('jvm') && ~feature('ShowFigureWindows')
     error('MATLAB is in a text mode. This function requires a GUI-mode.');
 end
@@ -25,22 +21,11 @@ end
 
 mfolder = fileparts(mfilename('fullpath'));
 
-fx = [];
-if ~(ismcc || isdeployed)
-    try
-        fx = gui.sc_simplesplash2;
-    catch 
-    end
-end
 
-% fx=figure('ToolBar','none','MenuBar','none','DockControls','off', ...
-%     'Resize','off','WindowStyle','modal','Name','','NumberTitle','off', ...
-%     'Visible','off');
-% fx.Position(3) = fx.Position(3)/1.5;
-% fx.Position(4) = fx.Position(4)/1.5;
-% movegui(fx,'center');
-% fx.Visible=true;
-% drawnow();
+fx = [];
+%fxfun = @gui.sc_simplesplash2;
+fxfun = @gui.sc_splashscreen;
+if ~(ismcc || isdeployed), fx = fxfun(); end
 
 % if ~(ismcc || isdeployed)
     %splashpng = 'example_splash.png';
@@ -114,7 +99,7 @@ btn_height = 25;
 btn_x = (fig_width - btn_width) / 2;
 btn_y = (fig_height - btn_height) / 1.618;
 
-if ~isempty(fx) && isvalid(fx), gui.sc_simplesplash2(fx,0.2); end
+if ~isempty(fx) && isvalid(fx), fxfun(fx,0.2); end
 
 button1 = uicontrol(...
     'Parent',FigureHandle,...
@@ -314,7 +299,7 @@ in_addmenu(m_help, 1, @callback_CheckUpdates, 'Check for Updates...');
 %in_addmenu(m_help, 1, {@(~, ~) inputdlg('', 'About SCGEATOOL', [10, 50], {sprintf('Single-Cell Gene Expression Analysis Tool\n\nJames Cai\n\njcai@tamu.edu\n')})}, 'About SCGEATOOL');
 in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout2(FigureHandle)}, 'About SCGEATOOL');
 
-if ~isempty(fx) && isvalid(fx), gui.sc_simplesplash2(fx, 0.4); end
+if ~isempty(fx) && isvalid(fx), fxfun(fx, 0.4); end
 
 hAx = axes('Parent', FigureHandle, 'Visible', 'off');
 if ~isempty(sce) && sce.NumCells>0
@@ -399,7 +384,7 @@ gui.add_3dcamera(DeftToolbarHandle, 'AllCells');
 
 %pushbuttonV=[pushbuttonV; gui.add_3dcamera(DeftToolbarHandle, 'AllCells')];
 
-if ~isempty(fx) && isvalid(fx), gui.sc_simplesplash2(fx, 0.6); end
+if ~isempty(fx) && isvalid(fx), fxfun(fx, 0.6); end
 
 in_addbuttonpush(2, 0, @in_turnonuserguiding, "icon-fa-thumb-tack-10.gif", ...
     "Turn on user guiding toolbar");
@@ -420,7 +405,7 @@ in_addbuttontoggle(2, 0, {@in_togglebtfun, @callback_SaveX, ...
     "icon-mat-filter-5-10.gif", "export.gif", ...
     true, "Export & save data"});
 
-if ~isempty(fx) && isvalid(fx), gui.sc_simplesplash2(fx, 0.8); end
+if ~isempty(fx) && isvalid(fx), fxfun(fx, 0.8); end
 
 % handles = guihandles( FigureHandle );
 % guidata( FigureHandle, handles );
@@ -443,7 +428,7 @@ if ~isempty(sce) && sce.NumCells>0
 end
 
 %if ~isempty(fx), fx.ProgressRatio = 1.0; end
-if ~isempty(fx) && isvalid(fx), gui.sc_simplesplash2(fx, 1.0); end
+if ~isempty(fx) && isvalid(fx), fxfun(fx, 1.0); end
 pause(1);
 if ~isempty(fx) && isvalid(fx), set(fx, 'visible', 'off'); end
 pause(0.2);
