@@ -19,8 +19,12 @@ if nargin<1
     v1 = extractBetween(x, a1{1}+length('<name>'), a2{1}-1);
     v1 = strrep(v1{1}, 'scGEAToolbox ', '');
 
-    splashpng = fullfile(mfolder,'..','resources', ...
-        '700813831-hero-1536x1536.png');
+    %pngfilename = 'dna-adn-black-background-1080P-wallpaper.jpg';
+    %pngfilename = 'OIP (1).jpg';
+    %pngfilename = 'wave-white-particles-abstract-technology-flow-background-future-vector-illustration_435055-172.jpg';
+    %pngfilename = '0321efeecd4da13290687593d55674cf.png';
+    pngfilename = '700813831-hero-1536x1536.png';
+    splashpng = fullfile(mfolder,'..','resources', pngfilename);
     %splashpng = '09-small.jpg';
     %splashpng = 'Untitled.png';
     fx = gui.SplashScreen( 'Splashscreen', splashpng, ...
