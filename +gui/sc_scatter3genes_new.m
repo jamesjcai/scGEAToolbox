@@ -36,8 +36,8 @@ uipushtool(tb, 'Separator', 'off');
 %pkg.i_addbutton2fig(tb, 'off', @in_ShowProfile, 'plotpicker-qqplotx.gif', 'Show Profile of Genes');
 pkg.i_addbutton2fig(tb, 'off', @in_HighlightGenes, 'plotpicker-qqplot.gif', 'Highlight top HVGs');
 pkg.i_addbutton2fig(tb, 'off', @in_HighlightSelectedGenes, 'xplotpicker-qqplot.gif', 'Highlight selected genes');
-pkg.i_addbutton2fig(tb, 'off', @ExportGeneNames, 'export.gif', 'Export selected HVG gene names...');
-pkg.i_addbutton2fig(tb, 'off', @ExportTable, 'xexport.gif', 'Export HVG Table...');
+pkg.i_addbutton2fig(tb, 'off', @ExportGeneNames, 'xexport.gif', 'Export selected HVG gene names...');
+pkg.i_addbutton2fig(tb, 'off', @ExportTable, 'export.gif', 'Export HVG Table...');
 pkg.i_addbutton2fig(tb, 'off', @EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Enrichment analysis...');
 pkg.i_addbutton2fig(tb, 'off', @ChangeAlphaValue, 'xplotpicker-andrewsplot.gif', 'Change MarkerFaceAlpha value');
 gui.add_3dcamera(tb, 'HVGs');
@@ -96,8 +96,9 @@ if dofit
     lgu=lgu(hvgidx);
     lgcv=lgcv(hvgidx);
     dropr=dropr(hvgidx);    
-
-    T=table(sortedd,hvgidx,hvg,lgu,lgcv,dropr);
+    
+    gene=hvg(:);
+    T=table(gene,sortedd,hvgidx,lgu,lgcv,dropr);
     %assignin("base","T",T);
     %g(idx20)
 
