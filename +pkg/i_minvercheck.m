@@ -1,16 +1,19 @@
 function [needupdate]=i_minvercheck
 % min version update check
 needupdate = false;
-olddir = pwd();
-cdgea;
+mfolder = fileparts(mfilename('fullpath'));
+
 try
     Col = webread('https://api.github.com/repos/jamesjcai/scGEAToolbox');
-    if ~exist('TIMESTAMP','file')
-        fid=fopen('TIMESTAMP','w');
+
+    stfile =   fullfile(mfolder,'..','TIMESTAMP');
+
+    if ~exist(stfile,'file')
+        fid=fopen(stfile,'w');
         fprintf(fid,'%s\n',Col.pushed_at);
         fclose(fid);
     else
-        fid=fopen('TIMESTAMP','r');
+        fid=fopen(stfile,'r');
         d=textscan(fid,'%s');
         d=d{1}{1};
         fclose(fid);
@@ -32,7 +35,7 @@ try
                     return;
                 case 'Remind me later'
                 case 'Skip this update'
-                    fid=fopen('TIMESTAMP','w');
+                    fid=fopen(stfile,'w');
                     fprintf(fid,'%s\n',Col.pushed_at);
                     fclose(fid);
                 otherwise
@@ -44,5 +47,5 @@ try
 catch ME
     errordlg(ME.message);
 end
-cd(olddir);
+
 end

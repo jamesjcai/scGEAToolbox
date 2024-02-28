@@ -4,7 +4,7 @@ function [fx] = sc_simpleabout(parentfig)
     % splashpng = '700813831-hero-1536x1536.png';
     % [im] = imread(fullfile(mfolder,'..','resources', splashpng));
     
-olddir = pwd;
+mfolder = fileparts(mfilename('fullpath'));
 if nargin<1
     parentfig=[];
 end
@@ -25,11 +25,12 @@ end
     %image(fa,im);
     [~, v1] = pkg.i_majvercheck;
 
-    cdgea;
-    if ~exist('TIMESTAMP','file')
+    
+    stfile =   fullfile(mfolder,'..','TIMESTAMP');
+    if ~exist(stfile,'file')
         d = '';
     else
-        fid=fopen('TIMESTAMP','r');
+        fid=fopen(stfile,'r');
         d=textscan(fid,'%s');
         d=d{1}{1};
         fclose(fid);
@@ -69,4 +70,4 @@ end
 %     pause(.5);
 %     drawnow;
 % end
-cd(olddir);
+

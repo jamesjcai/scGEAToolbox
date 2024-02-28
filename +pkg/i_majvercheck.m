@@ -5,8 +5,8 @@ needupdate = false;
 
 
     mfolder = fileparts(mfilename('fullpath'));
-    splashpng = 'info.xml';
-    xfile = fullfile(mfolder,'..', splashpng);
+    
+    xfile = fullfile(mfolder,'..', 'info.xml');
 
 try
     %    a=textread('info.xml','%s','delimiter','\n');
