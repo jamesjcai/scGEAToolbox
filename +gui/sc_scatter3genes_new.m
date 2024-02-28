@@ -79,7 +79,7 @@ if dofit
     %     s = cumsum([0;sqrt(diff(x(:)).^2 + diff(y(:)).^2 + diff(z(:)).^2)]);
     %     pp1 = splinefit(s,xyz,pieces,0.75);
     %     xyz1 = ppval(pp1,s);
-    hold on
+    hold(hAx1,'on');
     plot3(hAx1, xyz1(:, 1), xyz1(:, 2), xyz1(:, 3), '-', 'linewidth', 4);
     % scatter3(xyz1(:,1),xyz1(:,2),xyz1(:,3)); %,'MarkerEdgeAlpha',.8);
 
@@ -115,13 +115,23 @@ end
 
 hAx2 = subplot(2,2,2);
 x1=X(hvgidx(1),:);
-stem(hAx2, 1:length(x1), x1, 'marker', 'none');
+sh = stem(hAx2, 1:length(x1), x1, 'marker', 'none');
 xlim(hAx2,[1 size(X,2)]);
 title(hAx2, hvg(1));
 [titxt] = gui.i_getsubtitle(x1);
 subtitle(hAx2, titxt);
 xlabel(hAx2,'Cell Index');
 ylabel(hAx2,'Expression Level');
+
+figure;
+assignin("base","x1",x1);
+stem(1:length(x1), x1, 'marker', 'none');
+xlim([1 size(X,2)]);
+title(hvg(1));
+subtitle(titxt);
+xlabel('Cell Index');
+ylabel('Expression Level');
+
 
 dt.UpdateFcn = {@in_myupdatefcn3, g};
 
@@ -130,15 +140,15 @@ hFig.Visible = true;
 drawnow;
 
 
-    function in_ShowProfile(~, ~)
-        idx = 1;
-        x1 = X(idx, :);
-        stem(hAx2, 1:length(x1), x1, 'marker', 'none');
-        xlim(hAx2,[1 size(X,2)]);
-        title(hAx2, g(idx));
-        xlabel(hAx2,'Cell Index')
-        ylabel(hAx2,'Expression Level')
-    end
+    % function in_ShowProfile(~, ~)
+    %     idx = 1;
+    %     x1 = X(idx, :);
+    %     stem(hAx2, 1:length(x1), x1, 'marker', 'none');
+    %     xlim(hAx2,[1 size(X,2)]);
+    %     title(hAx2, g(idx));
+    %     xlabel(hAx2,'Cell Index')
+    %     ylabel(hAx2,'Expression Level')
+    % end
 
     function ChangeAlphaValue(~, ~)
         if h.MarkerFaceAlpha <= 0.05
@@ -227,10 +237,12 @@ drawnow;
             idx = event_obj.DataIndex;
             txt = {g(idx)};
             x1 = X(idx, :);
-            stem(hAx2, 1:length(x1), x1, 'marker', 'none');
+            if ~isempty(sh) && isvalid(sh)
+                delete(sh);
+            end
+            sh = stem(hAx2, 1:length(x1), x1, 'marker', 'none');
             xlim(hAx2,[1 size(X,2)]);
-            title(hAx2, g(idx));
-    
+            title(hAx2, g(idx));    
             [titxt] = gui.i_getsubtitle(x1);
             subtitle(hAx2, titxt);
             xlabel(hAx2,'Cell Index');

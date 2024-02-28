@@ -165,13 +165,14 @@ uipushtool(tb, 'Separator', 'off');
     xlabel(hAx1,'Mean expression, log')
     ylabel(hAx1,'CV^2, log')
     if ~isempty(g)
-        dt = datacursormode(hFig);        
+        dt = datacursormode(hFig);
+        dt.UpdateFcn = {@in_myupdatefcn3, g};
     end
-    hold off
+    hold(hAx1,'off');
 
     hAx2=subplot(2,2,2);
     x1 = Xsorted(1,:);
-    stem(hAx2, 1:length(x1), x1, 'marker', 'none');
+    sh = stem(hAx2, 1:length(x1), x1, 'marker', 'none');
     xlim(hAx2,[1 size(X,2)]);
     title(hAx2, gsorted(1));
     [titxt] = gui.i_getsubtitle(x1);
@@ -181,7 +182,7 @@ uipushtool(tb, 'Separator', 'off');
     
 end
 
-dt.UpdateFcn = {@in_myupdatefcn3, g};
+
 
 
     function ChangeAlphaValue(~, ~)
@@ -265,7 +266,7 @@ dt.UpdateFcn = {@in_myupdatefcn3, g};
         tgenes=Tx.genes;
         
         gui.i_enrichtest(tgenes, g, numel(tgenes));
-        
+    end
         
         % answer = gui.timeoutdlg(@(x){questdlg('Which analysis?', '', ...
         %     'Enrichr', 'GOrilla', 'Enrichr+GOrilla', 'Enrichr')}, 15);
@@ -281,17 +282,20 @@ dt.UpdateFcn = {@in_myupdatefcn3, g};
         %     otherwise
         %         return;
         % end
-    end
-
-    function txt = in_myupdatefcn3(~, event_obj, g)
+    
+   
+    function txt = in_myupdatefcn3(src, event_obj, g)  
+    
         if isequal(get(src, 'Parent'), hAx1)
             idx = event_obj.DataIndex;
             txt = {g(idx)};
             x1 = X(idx, :);
-            stem(hAx2, 1:length(x1), x1, 'marker', 'none');
+            if ~isempty(sh) && isvalid(sh)
+                delete(sh);
+            end
+            sh = stem(hAx2, 1:length(x1), x1, 'marker', 'none');
             xlim(hAx2,[1 size(X,2)]);
-            title(hAx2, g(idx));
-    
+            title(hAx2, g(idx));    
             [titxt] = gui.i_getsubtitle(x1);
             subtitle(hAx2, titxt);
             xlabel(hAx2,'Cell Index');
@@ -300,8 +304,8 @@ dt.UpdateFcn = {@in_myupdatefcn3, g};
             txt = num2str(event_obj.Position(2));
         end
     end
-end
 
+end
 
 % Highly variable genes (HVG) is based on the assumption that genes with
 % high variance relative to their mean expression are due to biological
