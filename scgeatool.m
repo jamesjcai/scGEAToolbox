@@ -1783,7 +1783,7 @@ end
     end
 
     function in_DrawKNNNetwork(~, ~)
-        k = gui.i_inputnumk(3);
+        k = gui.i_inputnumk(4);
         if isempty(k), return; end
         fw = gui.gui_waitbar;
         set(0, 'CurrentFigure', FigureHandle);

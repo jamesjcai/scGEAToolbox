@@ -10,5 +10,5 @@ result = solve(qprob,Algorithm=ts);
 % https://arxiv.org/ftp/arxiv/papers/1811/1811.11538.pdf
 Q=[-5 2 4 0; 2 -3 1 0; 4 1 -8 5; 0 0 5 -6];
 qprob=qubo(Q);
-r=solve(qprob);
+r2=solve(qprob);
 r.BestX

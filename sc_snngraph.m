@@ -1,4 +1,4 @@
-function [A] = sc_snngraph(s)
+function [A] = sc_snngraph(s,k)
 %Generates Shared Nearest Neighbor (SNN) graph from embedding
 %
 % https://satijalab.org/seurat/v3.0/pbmc3k_tutorial.html
@@ -17,7 +17,8 @@ A=[   0   1   1   1   0
 1   1   1   0   1
 0   0   1   1   0];
 %}
-A = sc_knngraph(s, 5);
+if nargin < 2 || isempty(k), k = 4; end
+A = sc_knngraph(s, k);
 
 B = zeros(size(A));
 n = size(A, 1);
