@@ -2,11 +2,15 @@ function [needupdate, v1local, v2web] = i_majvercheck
 
 % major version update check
 needupdate = false;
-olddir = pwd();
-cdgea;
+
+
+    mfolder = fileparts(mfilename('fullpath'));
+    splashpng = 'info.xml';
+    xfile = fullfile(mfolder,'..', splashpng);
+
 try
     %    a=textread('info.xml','%s','delimiter','\n');
-    fid = fopen('info.xml', 'r');
+    fid = fopen(xfile, 'r');
     C = textscan(fid, '%s', 'delimiter', '\n');
     fclose(fid);
     a = C{1};
@@ -46,5 +50,5 @@ catch
 end
 if nargout > 1, v1local = strrep(v1local{1}, 'scGEAToolbox ', ''); end
 if nargout > 2, v2web = strrep(v2web{1}, 'scGEAToolbox ', ''); end
-cd(olddir);
+
 end
