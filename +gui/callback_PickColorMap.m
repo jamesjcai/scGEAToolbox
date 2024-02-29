@@ -18,6 +18,7 @@ CT = cbrewer('seq', 'Blues', n);
 cx = autumn(n);
 cx(1, :) = [.8, .8, .8];
 %a=lines(kc);
+%rng("shuffle");
 %b=a(randperm(size(a,1)),:);
 ukraineflag = [0, 87, 183; 255, 215, 0] ./ 255;
 mycmap = pkg.i_mycolormap(n);

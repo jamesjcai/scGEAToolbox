@@ -28,6 +28,7 @@ gcl_output = zeros(num_divisions, 1);
 Vn = @(Aij, Bij) (1 / (n * (n - 3))) .* (sum(sum(Aij.*Bij)) - (n / (n - 2)) * diag(Aij)' * diag(Bij));
 Rn = @(Aij, Bij) Vn(Aij, Bij) ./ sqrt(Vn(Aij, Aij).*Vn(Bij, Bij));
 
+rng("shuffle");
 for i = 1:num_divisions
     % Random divisions
     random_genes = randperm(num_genes);

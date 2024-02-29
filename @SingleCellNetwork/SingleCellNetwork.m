@@ -68,6 +68,7 @@ classdef SingleCellNetwork
             if allgenes
                 p = plot(obj.G);
             else
+                rng("shuffle");
                 rid = randperm(obj.NumGenes);
                 xg = subgraph(obj.G, rid(1:100));
                 [bin, binsize] = conncomp(xg, 'Type', 'weak');
@@ -92,6 +93,7 @@ classdef SingleCellNetwork
             %     obj.G.Edges.LWidths = 7 * obj.G.Edges.Weight / max(abs(obj.G.Edges.Weight));
             %     p.LineWidth = abs(obj.G.Edges.LWidths);
             % else
+            %     rng("shuffle");
             %     rid = randperm(obj.NumGenes);
             %     xg = subgraph(obj.G, rid(1:100));
             %     [bin, binsize] = conncomp(xg, 'Type', 'weak');

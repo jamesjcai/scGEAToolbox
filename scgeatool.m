@@ -11,6 +11,7 @@ if isempty(which('grp2idx.m'))
     end
     return;
 end
+rng("shuffle");
 
 import pkg.*
 import gui.*
@@ -157,7 +158,7 @@ in_addmenu(m_edit, 0, @in_Brushed2NewCluster, 'Add brushed cells to a new group'
 in_addmenu(m_edit, 0, @in_Brushed2MergeClusters, 'Merge brushed cells to same group');
 in_addmenu(m_edit, 0, @in_RenameCellTypeBatchID, 'Rename Cell Type or Batch ID...');
 in_addmenu(m_edit, 1, @gui.callback_SplitAtacGex, 'Split Multiome ATAC+GEX Matrix...');
-in_addmenu(m_edit, 1, {@in_MergeSCEs, 1}, 'Merge SCE Variables in Workspace...');
+in_addmenu(m_edit, 1, {@in_MergeSCEs, 1}, 'Merge SCE Data Variables in Workspace...');
 in_addmenu(m_edit, 0, {@in_MergeSCEs, 2}, 'Merge SCE Data Files...');
 in_addmenu(m_edit, 1, @in_AddEditCellAttribs, 'Add/Edit Cell Attributes...');
 in_addmenu(m_edit, 0, @in_ExportCellAttribTable, 'Export Cell Attribute Table...');
@@ -459,9 +460,10 @@ end
         [sce] = gui.sc_openscedlg;
         if ~isempty(sce) && sce.NumCells > 0
             guidata(FigureHandle, sce);
-        else
+        else            
             set(button1,'Enable','on');
             uicontrol(button1);
+            warndlg('Imported SCE contains no cells.','');
             return;
         end
         c=[];
@@ -685,7 +687,7 @@ end
             assert((numgenes >= 1) && (numgenes <= 30000));
             assert((numcells >= 1) && (numcells <= 30000));
         catch
-            errordlg('Invalid parameter value(s).');
+            errordlg('Invalid parameter values.','');
             return;
         end
 
@@ -699,7 +701,7 @@ end
             in_RefreshAll(src, [], false, false);
         catch ME
             gui.gui_waitbar(fw);
-            errordlg(ME.message);
+            errordlg(ME.message,'');
         end
     end
 
@@ -720,12 +722,16 @@ end
     %             in_RefreshAll(src, [], false, false);
     %         catch ME
     %             gui.gui_waitbar(fw);
-    %             errordlg(ME.message);
+    %             errordlg(ME.message,'');
     %         end
     %     end
     % end
 
     function in_RunDataMapPlot(src, ~)
+        if ~pkg.i_checkpython
+            warndlg('Python not installed.','');
+            return;
+        end
         ndim = 2;
         [vslist] = gui.i_checkexistingembed(sce, ndim);
         if isempty(h.ZData) && size(sce.s,2)==2 && length(vslist) <= 1
@@ -797,8 +803,13 @@ end
             sce = guidata(FigureHandle);
             [c, cL] = grp2idx(sce.c_batch_id);
             sce.c = c;
-            in_RefreshAll(src, [], true, false);
-            helpdlg(sprintf('%s SCEs merged.', upper(s)), '');
+            if sce.NumCells==0
+                warndlg('Merged SCE contains no cells.','');
+                return;
+            else
+                in_RefreshAll(src, [], true, false);
+                helpdlg(sprintf('%s SCEs merged.', upper(s)), '');
+            end
         end
     end
 
@@ -821,7 +832,8 @@ end
         end
         glist = T.genes(1:min([k, sce.NumGenes]));
         [y, idx] = ismember(glist, sce.g);
-        if ~all(y), errordlg('Runtime error.');
+        if ~all(y)
+            errordlg('Runtime error.','');
             return;
         end
         sce.g = sce.g(idx);
@@ -847,6 +859,10 @@ end
                 case 'Uniform Sampling'
                     methodoption = 1;
                 case 'Geometric Sketching [PMID:31176620]'
+                    if ~pkg.i_checkpython
+                        warndlg('Python not installed.','');
+                        return;
+                    end
                     methodoption = 2;
                 otherwise
                     return;
@@ -855,6 +871,7 @@ end
 
         tn = round(sce.NumCells/2);
         if methodoption == 1
+            rng("shuffle");
             idx = randperm(sce.NumCells);
             ids = idx(1:tn);
         elseif methodoption == 2
@@ -867,7 +884,7 @@ end
                 ids = run.py_geosketch(Xn, tn);
             catch ME
                 gui.gui_waitbar(fw, true);
-                errordlg(ME.message);
+                errordlg(ME.message,'');
                 return;
             end
 
@@ -877,7 +894,7 @@ end
             c = sce.c;
             in_RefreshAll(src, [], true, false);
         else
-            errordlg('Running error. No action is taken.');
+            errordlg('Runtime error. No action is taken.','');
         end
     end
 
@@ -924,7 +941,7 @@ end
             [requirerefresh, highlightindex] = ...
                 gui.callback_SelectCellsByQC(src);
         catch ME
-            errordlg(ME.message);
+            errordlg(ME.message,'');
             return;
         end
         sce = guidata(FigureHandle);
@@ -1009,7 +1026,7 @@ end
             [Xdecon, contamination] = run.r_decontX(sce, wkdir);
         catch
             gui.gui_waitbar(fw);
-            errordlg('Runtime error.')
+            errordlg('Runtime error.','');
             return;
         end
         gui.gui_waitbar(fw);
@@ -1028,6 +1045,10 @@ end
     end
 
     function in_HarmonyPy(src, ~)
+        if ~pkg.i_checkpython
+            warndlg('Python not installed.','');
+            return;
+        end        
         gui.gui_showrefinfo('Harmony [PMID:31740819]');
         if numel(unique(sce.c_batch_id)) < 2
             warndlg('No batch effect (SCE.C_BATCH_ID is empty)');
@@ -1073,6 +1094,10 @@ end
     end
 
     function in_DoubletDetection(src, ~)
+        if ~pkg.i_checkpython
+            warndlg('Python not installed.','');
+            return;
+        end
         gui.gui_showrefinfo('Scrublet [PMID:30954476]');
         [isDoublet, doubletscore, methodtag, done] = gui.callback_DoubletDetection(src);
         if done && ~any(isDoublet)
@@ -1398,7 +1423,7 @@ end
                     % disp('Following the library-size normalization and log1p-transformation, we visualized similarity among cells by projecting them into a reduced dimensional space using t-distributed stochastic neighbor embedding (t-SNE)/uniform manifold approximation and projection (UMAP).')
                 catch ME
                     gui.gui_waitbar(fw, true);
-                    errordlg(ME.message);
+                    errordlg(ME.message,'');
                     % rethrow(ME)
                     return;
                 end
@@ -1947,7 +1972,7 @@ end
                 sce = sce.clustercells(k, methodtag, true, sx);
             catch ME
                 gui.gui_waitbar(fw, true);
-                errordlg(ME.message);
+                errordlg(ME.message,'');
                 return
             end
             gui.gui_waitbar(fw);

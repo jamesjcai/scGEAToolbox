@@ -13,6 +13,8 @@ if nargin < 2, nsubsmpl = 10; end % number of subsamples
 
 n = size(X, 1);
 XM = zeros(n, n, nsubsmpl);
+
+rng("shuffle");
 for k = 1:nsubsmpl
     fprintf('Building network...%d of %d\n', k, nsubsmpl);
 

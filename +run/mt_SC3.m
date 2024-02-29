@@ -70,6 +70,7 @@ function drange = get_drange(X)
 n = size(X, 2);
 drge = round(n.*[0.04, 0.07]);
 drange = drge(1):drge(2);
+rng("shuffle");
 if length(drange) > 15
     dx = drange(randperm(length(drange)));
     drange = dx(1:15);

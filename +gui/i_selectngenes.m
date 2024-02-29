@@ -24,6 +24,7 @@ switch answer
     case 'Cancel'
         return;
     case 'Paste'
+        rng("shuffle");
         n = length(gsorted);
         if isempty(predefinedlist)
             tg = gui.i_inputgenelist(gsorted(randperm(n, min([20, length(gsorted)]))));
