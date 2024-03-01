@@ -458,16 +458,17 @@ end
             if ~strcmp(answer,'Yes'), return; end
         end
         [sce] = gui.sc_openscedlg;
-        if ~isempty(sce) && sce.NumCells > 0
+        if ~isempty(sce) && sce.NumCells > 0 && sce.NumGenes > 0
             guidata(FigureHandle, sce);
-        else            
+            c=[];
+            in_RefreshAll([], [], false, false);
+        else
             set(button1,'Enable','on');
             uicontrol(button1);
-            warndlg('Imported SCE contains no cells.','');
-            return;
+            if ~isempty(sce)
+                warndlg('Imported SCE contains no cells.','');
+            end
         end
-        c=[];
-        in_RefreshAll([], [], false, false);
     end
 
     function in_fixfield(oldf, newf)

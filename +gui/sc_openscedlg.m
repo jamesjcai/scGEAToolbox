@@ -346,8 +346,10 @@ function [sce] = sc_openscedlg(~, ~)
         otherwise
             return;
     end
-    if isstring(sce.c_cell_id) || ischar(sce.c_cell_id) || iscellstr(sce.c_cell_id)
-        sce.c_cell_id = matlab.lang.makeUniqueStrings(sce.c_cell_id);
+    if isa(sce, 'SingleCellExperiment')
+        if isstring(sce.c_cell_id) || ischar(sce.c_cell_id) || iscellstr(sce.c_cell_id)
+            sce.c_cell_id = matlab.lang.makeUniqueStrings(sce.c_cell_id);
+        end
     end
 end
 
@@ -370,24 +372,23 @@ end
             assert((numgenes >= 1) && (numgenes <= 30000));
             assert((numcells >= 1) && (numcells <= 30000));
         catch
-            errordlg('Invalid parameter value(s).');
+            waitfor(warndlg('Invalid parameter values.',''));
             return;
+        end        
+        try
+            fw = gui.gui_waitbar;
+            [X] = sc_simudata(numgenes, numcells,'lun');
+            [sce] = SingleCellExperiment(X);
+            sce.c_batch_id = string([ones(round(sce.NumCells/2),1);... 
+                2*ones(sce.NumCells-round(sce.NumCells/2),1)]);
+            %[c, cL] = grp2idx(sce.c);
+            gui.gui_waitbar(fw);
+            % guidata(FigureHandle, sce);
+            % in_RefreshAll(src, [], false, false);
+        catch ME
+            gui.gui_waitbar(fw,true);
+            waitfor(errordlg(ME.message,''));
         end
-        
-            try
-                fw = gui.gui_waitbar;
-                [X] = sc_simudata(numgenes, numcells,'lun');
-                [sce] = SingleCellExperiment(X);
-                sce.c_batch_id = string([ones(round(sce.NumCells/2),1);... 
-                    2*ones(sce.NumCells-round(sce.NumCells/2),1)]);
-                %[c, cL] = grp2idx(sce.c);
-                gui.gui_waitbar(fw);
-                % guidata(FigureHandle, sce);
-                % in_RefreshAll(src, [], false, false);
-            catch ME
-                gui.gui_waitbar(fw,true);
-                errordlg(ME.message);
-            end
     end
 
 
