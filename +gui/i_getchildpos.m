@@ -1,7 +1,5 @@
 function [px_new, childfigpos] = i_getchildpos(partentfigpos, childfigpos)
 
-px_new=[];
-if ismac, return; end
 
 if ~isequal(size(partentfigpos),[1 4])
     partentfigpos = partentfigpos.Position;
@@ -15,7 +13,9 @@ end
 
     px = childfigpos;
     px_new = [cx(1)-px(3)/2 cx(2)-px(4)/2];
+
 if nargout>1
     % updated childfigpos to new start and end positions
     childfigpos([1 2]) = px_new;
+end
 end
