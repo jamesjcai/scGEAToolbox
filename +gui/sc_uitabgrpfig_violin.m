@@ -17,12 +17,12 @@ colorit = true;
 
 
 
-if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 
-    p = parentfig.Position;
-    cx = [p(1)+p(3)/2 p(2)+p(4)/2];
-else
-    cx = [];
-end
+% if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 
+%     p = parentfig.Position;
+%     cx = [p(1)+p(3)/2 p(2)+p(4)/2];
+% else
+%     cx = [];
+% end
 
 import mlreportgen.ppt.*;
 pw1 = fileparts(mfilename('fullpath'));
@@ -31,12 +31,12 @@ pth = fullfile(pw1, '..', 'resources', 'myTemplate.pptx');
 hFig = figure("Visible","off");
 hFig.Position(3) = hFig.Position(3) * 1.8;
 
-if ~isempty(cx)
-    px = hFig.Position;
-    px_new = [cx(1)-px(3)/2 cx(2)-px(4)/2];
-else
-    px_new = [];
-end
+% if ~isempty(cx)
+%     px = hFig.Position;
+%     px_new = [cx(1)-px(3)/2 cx(2)-px(4)/2];
+% else
+%     px_new = [];
+% end
 
 n = length(glist);
 % a = getpref('scgeatoolbox', 'prefcolormapname', 'autumn');
@@ -81,12 +81,24 @@ pkg.i_addbutton2fig(tb, 'off', @i_renametitle, "icon-mat-touch-app-10.gif", 'Cha
 %pkg.i_addbutton2fig(tb, 'on', @i_viewgenenames, 'HDF_point.gif', 'Show Gene Names');
 pkg.i_addbutton2fig(tb, 'on', @i_resizewin, 'HDF_pointx.gif', 'Resize Plot Window');
 
-if isempty(px_new)
-    movegui(hFig,'center');
-else    
-    movegui(hFig, px_new);
+% if isempty(px_new)
+%     movegui(hFig,'center');
+% else    
+%     movegui(hFig, px_new);
+% end
+
+%[px_new] = gui.i_getchildpos(parentfig, hFig);
+if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 
+    [px_new] = gui.i_getchildpos(parentfig, hFig);
+    if ~isempty(px_new)
+        movegui(hFig, px_new);
+    else
+        movegui(hFig, 'center');
+    end
+else
+    movegui(hFig, 'center');
 end
-drawnow;
+% drawnow;
 gui.gui_waitbar(fw);
 hFig.Visible=true;
 

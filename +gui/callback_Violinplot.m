@@ -2,7 +2,7 @@ function callback_Violinplot(src, ~)
 
 if isa(src,"SingleCellExperiment")
     sce = src;
-    FigureHandle = gcf;
+    FigureHandle = [];
 else
     FigureHandle = src.Parent.Parent;
     sce = guidata(FigureHandle);
