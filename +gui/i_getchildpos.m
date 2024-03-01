@@ -1,5 +1,8 @@
 function [px_new, childfigpos] = i_getchildpos(partentfigpos, childfigpos)
 
+px_new=[];
+if ismac, return; end
+
 if ~isequal(size(partentfigpos),[1 4])
     partentfigpos = partentfigpos.Position;
 end

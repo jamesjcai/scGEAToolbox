@@ -11,7 +11,7 @@ cLorder = strrep(cLorder, '_', '\_');
 
 fw = gui.gui_waitbar;
 isdescend = false;
-OldTitle = [];
+
 thisc = strrep(string(thisc), '_', '\_');
 colorit = true;
 
@@ -48,6 +48,7 @@ focalg = glist(idx);
 tab=cell(n,1);
 ax0=cell(n,1);
 y=cell(n,1);
+OldTitle = cell(n,1);
 for k=1:n
     % c = sce.X(sce.g == glist(k), :);
     % if issparse(c), c = full(c); end
@@ -68,7 +69,7 @@ pkg.i_addbutton2fig(tb, 'on',  @i_genecards, 'fvtool_fdalinkbutton.gif', 'GeneCa
 % pkg.i_addbutton2fig(tb, 'on', {@i_PickColorMap, c}, 'plotpicker-compass.gif', 'Pick new color map...');
 
 pkg.i_addbutton2fig(tb, 'off', @i_savedata, 'export.gif', 'Export data...');
-%pkg.i_addbutton2fig(tb, 'off', @i_testdata, 'icon-fa-stack-exchange-10.gif', 'ANOVA/T-test...');
+pkg.i_addbutton2fig(tb, 'off', @i_testdata, 'icon-fa-stack-exchange-10.gif', 'ANOVA/T-test...');
 pkg.i_addbutton2fig(tb, 'off', @i_addsamplesize, "icon-mat-blur-linear-10.gif", 'Add Sample Size');
 pkg.i_addbutton2fig(tb, 'off', @i_savemainfig, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 pkg.i_addbutton2fig(tb, 'off', @i_invertcolor, "plotpicker-pie.gif", 'Switch BW/Color');
@@ -283,8 +284,8 @@ hFig.Visible=true;
         a = ax0{idx};
         thisy = y{idx};
         %a = hFig.get("CurrentAxes");
-        if isempty(OldTitle)
-            OldTitle = a.Title.String;
+        if isempty(OldTitle{idx})
+            OldTitle{idx} = a.Title.String;
             if size(thisy, 2) ~= length(thisc)
                 thisy = thisy.';
             end
@@ -301,24 +302,34 @@ hFig.Visible=true;
             %     title(a);
             if ~isempty(tbl) && istable(tbl)
                 b = sprintf('%s=%.2e; %s=%.2e', ...
-                    strrep(tbl.Properties.VariableNames{1}, '_', '\_'), ...
+                    tbl.Properties.VariableNames{1}, ...
                     tbl.(tbl.Properties.VariableNames{1}), ...
-                    strrep(tbl.Properties.VariableNames{2}, '_', '\_'), ...
+                    tbl.Properties.VariableNames{2}, ...
                     tbl.(tbl.Properties.VariableNames{2}));
+
+                % b = sprintf('%s=%.2e; %s=%.2e', ...
+                %     strrep(tbl.Properties.VariableNames{1}, '_', '_'), ...
+                %     tbl.(tbl.Properties.VariableNames{1}), ...
+                %     strrep(tbl.Properties.VariableNames{2}, '_', '\_'), ...
+                %     tbl.(tbl.Properties.VariableNames{2}));
             else
-                b='p\_ttest=N.A.; p\_wilcoxon=N.A.';
+                if length(unique(thisc)) == 2
+                    b='p_{ttest}=N.A.; p_{wilcoxon}=N.A.';
+                else
+                    b='p_{anova}=N.A.; p_{kruskalwallis}=N.A.';
+                end
             end
 
-            if iscell(OldTitle)
-                newtitle = OldTitle;
+            if iscell(OldTitle{idx})
+                newtitle = OldTitle{idx};
             else
-                newtitle = {OldTitle};
+                newtitle = OldTitle(idx);
             end
             newtitle{2} = b;
             a.Title.String = newtitle;
         else
-            a.Title.String = OldTitle;
-            OldTitle = [];            
+            a.Title.String = OldTitle{idx};
+            OldTitle{idx} = [];
         end
     end
 

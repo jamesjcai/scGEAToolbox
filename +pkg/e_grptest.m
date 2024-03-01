@@ -1,5 +1,6 @@
 function [T] = e_grptest(y, grp)
 
+% used by sc_uitabgrpfig_violin
 T = [];
 if length(unique(grp)) == 2
     p_ttest = zeros(size(y, 1), 1);
@@ -13,7 +14,7 @@ if length(unique(grp)) == 2
         p_wilcoxon(k) = ranksum(a, b);
         % The Kruskal-Wallis test is a nonparametric version of classical one-way ANOVA, and an extension of the Wilcoxon rank sum test to more than two groups.
     end
-    T = table(p_ttest, p_wilcoxon);
+    T = table(p_ttest, p_wilcoxon,'VariableNames',{'P_{ttest}','P_{wilcoxon}'});
 elseif length(unique(grp)) > 2
     p_anova = zeros(size(y, 1), 1);
     p_kruskalwallis = zeros(size(y, 1), 1);
@@ -22,7 +23,7 @@ elseif length(unique(grp)) > 2
         p_kruskalwallis(k) = kruskalwallis(y(k, :), grp, 'off');
         % The Kruskal-Wallis test is a nonparametric version of classical one-way ANOVA, and an extension of the Wilcoxon rank sum test to more than two groups.
     end
-    T = table(p_anova, p_kruskalwallis);
+    T = table(p_anova, p_kruskalwallis,'VariableNames',{'p_{anova}','p_{kruskalwallis}'});
 end
 
 end

@@ -22,21 +22,35 @@ else
     inlist = genelist;
 end
 
-f = figure('Visible', 'off', ...
+
+hFig = figure('Visible', 'off', ...
     'WindowStyle', 'modal', 'NumberTitle', 'off');
 % ax = axes(f);
 % ax.Units = 'pixels';
 % ax.Position = [75 75 325 280]
 
-if ~isempty(parentfig)   
-    p = parentfig.Position;
-    cx = [p(1)+p(3)/2 p(2)+p(4)/2];
-    px = f.Position;
-    px_new = [cx(1)-px(3)/2 cx(2)-px(4)/2];
-    movegui(f, px_new);
+% if ~isempty(parentfig)
+%     p = parentfig.Position;
+%     cx = [p(1)+p(3)/2 p(2)+p(4)/2];
+%     px = hFig.Position;
+%     px_new = [cx(1)-px(3)/2 cx(2)-px(4)/2];
+%     movegui(hFig, px_new);
+% else
+%     movegui(hFig, 'center');
+% end
+
+if ~isempty(parentfig) && ~ismac
+    [px_new] = gui.i_getchildpos(parentfig, hFig);
+    if ~isempty(px_new)
+        movegui(hFig, px_new);
+    else
+        movegui(hFig, 'center');
+    end
 else
-    movegui(f, 'center');
+    movegui(hFig, 'center');
 end
+
+
 uicontrol('style', 'pushbutton', 'Position', [220, 180, 100, 30], ...
     'String', '>', 'Callback', {@plotButtonPushed, genelist});
 uicontrol('style', 'pushbutton', 'Position', [220, 215, 100, 30], ...
@@ -52,7 +66,7 @@ h_list1 = uicontrol('style', 'list', 'max', length(genelist), ...
 h_list2 = uicontrol('style', 'list', 'max', length(genelist), ...
     'min', 1, 'Position', [360, 20, 170, 360], ...
     'string', predefinedlist);
-set(f, 'Visible', 'on')
+set(hFig, 'Visible', 'on')
 drawnow();
 uiwait(); % add this to the end
 
