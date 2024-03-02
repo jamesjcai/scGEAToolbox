@@ -2,10 +2,10 @@ function sc_uitabgrpfig_feaplot(sce, glist, parentfig, cazcel)
 
 if nargin < 4, cazcel = []; end
 if nargin < 3, parentfig = []; end
-if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 
-    p = parentfig.Position;
-    cx = [p(1)+p(3)/2 p(2)+p(4)/2];
-end
+% if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 
+%     p = parentfig.Position;
+%     cx = [p(1)+p(3)/2 p(2)+p(4)/2];
+% end
 
 import mlreportgen.ppt.*;
 
@@ -16,22 +16,25 @@ pth = fullfile(pw1, '..', 'resources', 'myTemplate.pptx');
 hFig=figure("Visible","off");
 hFig.Position(3) = hFig.Position(3) * 1.8;
 
-if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 
-    px = hFig.Position;
-    px_new = [cx(1)-px(3)/2 cx(2)-px(4)/2];
-    
-    % if px_new(1)<0
-    %     ss = get(0, 'screensize');
-    %     px_new(1)=px_new(1)-ss(4); %ss(3); 
-    % end
-else
-    px_new = [];
-end
+% if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 
+%     px = hFig.Position;
+%     px_new = [cx(1)-px(3)/2 cx(2)-px(4)/2];
+% 
+%     % if px_new(1)<0
+%     %     ss = get(0, 'screensize');
+%     %     px_new(1)=px_new(1)-ss(4); %ss(3); 
+%     % end
+% else
+%     px_new = [];
+% end
 
 n = length(glist);
 a = getpref('scgeatoolbox', 'prefcolormapname', 'autumn');
 
 tabgp = uitabgroup();
+tab = cell(n,1);
+ax0 = cell(n,1);
+ax = cell(n,2);
 
 idx = 1;
 focalg = glist(idx);
@@ -111,11 +114,23 @@ pkg.i_addbutton2fig(tb, 'on', {@i_PickColorMap, c}, 'plotpicker-compass.gif', 'P
 pkg.i_addbutton2fig(tb, 'off', @i_savemainfig, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 
 %gui.add_3dcamera(tb);
-if isempty(px_new)
-    movegui(hFig,'center');
-else    
-    movegui(hFig, px_new);
+% if isempty(px_new)
+%     movegui(hFig,'center');
+% else    
+%     movegui(hFig, px_new);
+% end
+
+if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 
+    [px_new] = gui.i_getchildpos(parentfig, hFig);
+    if ~isempty(px_new)
+        movegui(hFig, px_new);
+    else
+        movegui(hFig, 'center');
+    end
+else
+    movegui(hFig, 'center');
 end
+
 drawnow;
 hFig.Visible=true;
 
