@@ -21,29 +21,33 @@ end
 %     uiwait(helpdlg(txt, reftarget));
 % end
 
-fig = uifigure;
-g = uigridlayout(fig,[3 2]);
+hFig = uifigure;
+hFig.Position(3)=0.85*hFig.Position(3);
+hFig.Position(4)=0.85*hFig.Position(4);
+g = uigridlayout(hFig,[3 3]);
 g.RowHeight = {'fit','2x','fit'};
-g.ColumnWidth = {'1x','1x'};
+g.ColumnWidth = {'1x',75,75};
 
 lbl = uilabel(g,"Text",reftarget);
 lbl.Layout.Row = 1;
 lbl.Layout.Column = 1;
+
 txa = uitextarea(g);
 txa.Layout.Row = 2;
-txa.Layout.Column = [1 2];
+txa.Layout.Column = [1 3];
 txa.Value = txt;
 % txa.Position(4)=txa.Position(4)*2;
 btn = uibutton(g,"Text","Continue","Enable","on");
 btn.Layout.Row = 3;
-btn.Layout.Column = 1;
+btn.Layout.Column = 2;
 btn.ButtonPushedFcn = @(src,event) textEntered(src,event,btn);
+%btn.Position(3) = 50;
 
 btn2 = uibutton(g,"Text","Cancel","Enable","on");
 btn2.Layout.Row = 3;
-btn2.Layout.Column = 2;
+btn2.Layout.Column = 3;
 btn2.ButtonPushedFcn = @(src,event) textEntered(src,event,btn2);
-
+%btn2.Position(3) = 50;
 
 if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 
     [px_new] = gui.i_getchildpos(parentfig, hFig);
@@ -52,13 +56,13 @@ if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure')
     end
 end
 
-waitfor(fig);
+waitfor(hFig);
 
 function textEntered(src,event,btn)
     if strcmp(btn.Text,"Continue")
         y = true;
     end
-    delete(fig);
+    delete(hFig);
 end
 
 end

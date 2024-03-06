@@ -2,6 +2,9 @@ function callback_DPGene2GroupsBatch(src, ~)
 
 
 FigureHandle = src.Parent.Parent;
+if ~gui.gui_showrefinfo('DP in Batch Mode',FigureHandle)
+    return;
+end
 sce = guidata(FigureHandle);
 
 %warndlg('Function is under development.','');
@@ -12,7 +15,6 @@ if length(unique(sce.c_cell_type_tx))==1
     return;
 end
 
-gui.gui_showrefinfo('DP in Batch Mode');
 
 [CellTypeSorted]=pkg.e_sortcatbysize(sce.c_cell_type_tx);
 [CellTypeList]=in_selectcelltypes(CellTypeSorted);

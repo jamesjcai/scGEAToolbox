@@ -1,6 +1,12 @@
 function callback_scTenifoldXct2(src, ~)
-gui.gui_showrefinfo('scTenifoldXct [PMID:36787742]');
+
+
 FigureHandle = src.Parent.Parent;
+
+if ~gui.gui_uishowrefinfo('scTenifoldXct [PMID:36787742]',FigureHandle)
+    return;
+end
+
 sce = guidata(FigureHandle);
 % error('under development.');
 [~, cL] = grp2idx(sce.c_batch_id);

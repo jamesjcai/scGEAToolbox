@@ -1,9 +1,13 @@
 function callback_ExploreCellularCrosstalk(src, ~)
-gui.gui_showrefinfo('talklr [DOI:10.1101/2020.02.01.930602]');
+
+FigureHandle = src.Parent.Parent;
+if ~gui.gui_showrefinfo('talklr [DOI:10.1101/2020.02.01.930602]',FigureHandle)
+    return;
+end
+
     answer = questdlg('This function is based on an unpublished method [DOI:10.1101/2020.02.01.930602]. Continue?');
         if ~strcmp(answer, 'Yes'), return; end
-
-        FigureHandle = src.Parent.Parent;
+        
         sce = guidata(FigureHandle);
         if isempty(sce.c_cell_type_tx) || numel(unique(sce.c_cell_type_tx)) < 2
             if ~isempty(sce.c_cluster_id) && numel(unique(sce.c_cluster_id)) > 1

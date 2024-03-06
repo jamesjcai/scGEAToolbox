@@ -3,7 +3,10 @@ function [T] = r_SPIA(Tdeg, fdrcutoff, speciestag, wkdir)
 if nargin < 4, wkdir = tempdir; end
 if nargin < 2, fdrcutoff = 0.01; end
 if nargin < 3, speciestag = 'hsa'; end
-gui.gui_showrefinfo('SPIA [PMID:18990722]');
+T = [];
+if ~gui.gui_uishowrefinfo('SPIA [PMID:18990722]')
+    return;
+end
 
 
 isdebug = false;

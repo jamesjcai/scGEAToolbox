@@ -7,8 +7,11 @@ preftagname = 'externalwrkpath';
 if isempty(wkdir), return; end
 
 
-gui.gui_showrefinfo('scTenifoldXct [PMID:36787742]');
 FigureHandle = src.Parent.Parent;
+if ~gui.gui_uishowrefinfo('scTenifoldXct [PMID:36787742]',FigureHandle)
+    return;
+end
+
 sce = guidata(FigureHandle);
 
 if ~gui.i_setpyenv, return; end

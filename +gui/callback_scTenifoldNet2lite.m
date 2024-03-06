@@ -1,9 +1,13 @@
 function callback_scTenifoldNet2lite(src, ~)
-gui.gui_showrefinfo('scTenifoldNet [PMID:33336197]');
+
 import ten.*
 import pkg.*
 
 FigureHandle = src.Parent.Parent;
+if ~gui.gui_uishowrefinfo('scTenifoldNet [PMID:33336197]',FigureHandle)
+    return;
+end
+
 sce = guidata(FigureHandle);
 
 [i1, i2] = gui.i_select2grps(sce);

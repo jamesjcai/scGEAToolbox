@@ -1,11 +1,15 @@
 function callback_MELDPerturbationScore(src, ~)
 
-gui.gui_showrefinfo('MELD [PMID:33558698]');
+FigureHandle = src.Parent.Parent;
+if ~gui.gui_showrefinfo('MELD [PMID:33558698]',FigureHandle)
+    return;
+end
+
 [ok] = gui.i_confirmscript('Run MELD Perturbation Score (MELD)?', ...
     'py_MELD', 'python');
 if ~ok, return; end
 
-FigureHandle = src.Parent.Parent;
+
 sce = guidata(FigureHandle);
 if numel(unique(sce.c_batch_id)) < 2
     warndlg('No batch effect (SCE.C_BATCH_ID is empty)');

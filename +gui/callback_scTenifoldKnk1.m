@@ -1,5 +1,4 @@
 function callback_scTenifoldKnk1(src, ~)
-gui.gui_showrefinfo('scTenifoldKnk [PMID:35510185]');
 
 try
     ten.check_tensor_toolbox;
@@ -16,7 +15,11 @@ if isfolder(wkdir)
     cd(wkdir);
 end
 import ten.*
+
 FigureHandle = src.Parent.Parent;
+if ~gui.gui_showrefinfo('scTenifoldKnk [PMID:35510185]',FigureHandle)
+    return;
+end
 sce = guidata(FigureHandle);
 
 answer = questdlg('Construct network de novo or use existing network in Workspace?', ...

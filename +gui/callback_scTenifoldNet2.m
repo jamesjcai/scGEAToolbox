@@ -1,5 +1,5 @@
 function callback_scTenifoldNet2(src, ~)
-gui.gui_showrefinfo('scTenifoldNet [PMID:33336197]');
+% gui.gui_showrefinfo('scTenifoldNet [PMID:33336197]');
 import ten.*
 import pkg.*
 try
@@ -18,6 +18,9 @@ end
 %     end
 
 FigureHandle = src.Parent.Parent;
+if ~gui.gui_uishowrefinfo('scTenifoldNet [PMID:33336197]',FigureHandle)
+    return;
+end
 sce = guidata(FigureHandle);
 
 extprogname = 'scTenifoldNet';
