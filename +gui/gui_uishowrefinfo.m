@@ -1,4 +1,4 @@
-function [y,txt,T] = gui_uishowrefinfo(reftarget,parentfig)
+function [y,txt,T] = gui_uishowrefinfo(reftarget, parentfig)
 
 if nargin<2, parentfig = []; end
 
@@ -21,7 +21,8 @@ end
 %     uiwait(helpdlg(txt, reftarget));
 % end
 
-hFig = uifigure;
+hFig = uifigure("WindowStyle","alwaysontop");
+
 hFig.Position(3)=0.85*hFig.Position(3);
 hFig.Position(4)=0.85*hFig.Position(4);
 g = uigridlayout(hFig,[3 3]);
@@ -35,9 +36,10 @@ lbl.Layout.Column = 1;
 txa = uitextarea(g);
 txa.Layout.Row = 2;
 txa.Layout.Column = [1 3];
-txa.Value = txt;
+txa.Value = compose(txt);
+
 % txa.Position(4)=txa.Position(4)*2;
-btn = uibutton(g,"Text","Continue","Enable","on");
+btn = uibutton(g,"Text","OK","Enable","on");
 btn.Layout.Row = 3;
 btn.Layout.Column = 2;
 btn.ButtonPushedFcn = @(src,event) textEntered(src,event,btn);
@@ -55,11 +57,10 @@ if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure')
         movegui(hFig, px_new);
     end
 end
-
 waitfor(hFig);
 
 function textEntered(src,event,btn)
-    if strcmp(btn.Text,"Continue")
+    if strcmp(btn.Text,"OK")
         y = true;
     end
     delete(hFig);
