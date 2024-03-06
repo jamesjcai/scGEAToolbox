@@ -253,7 +253,7 @@ classdef SplashScreen < matlab.mixin.SetGet
             win = javax.swing.JWindow;
             screenSize = win.getToolkit.getScreenSize;
             screenHeight = screenSize.height;
-            screenWidth = screenSize.width;            
+            screenWidth = screenSize.width;
             imgHeight = obj.Icon.getIconHeight();
             imgWidth = obj.Icon.getIconWidth();
             obj.Frame.setLocation((screenWidth-imgWidth)/2,(screenHeight-imgHeight)/2);

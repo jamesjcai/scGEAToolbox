@@ -72,6 +72,14 @@ FigureHandle = figure('Name', 'SCGEATOOL', ...
     'DockControls','off');
 movegui(FigureHandle, 'center');
 
+% win = javax.swing.JWindow;
+% screenSize = win.getToolkit.getScreenSize;
+% screenHeight = screenSize.height;
+% screenWidth = screenSize.width;
+% imgHeight = FigureHandle.Position(4);
+% imgWidth = FigureHandle.Position(3);
+% movegui(FigureHandle, [(screenWidth-imgWidth)/2, (screenHeight-imgHeight)/2]);
+
 fig_pos = get(FigureHandle, 'Position'); % [left bottom width height]
 fig_width = fig_pos(3);
 fig_height = fig_pos(4);
@@ -1214,11 +1222,15 @@ end
         if size(sce.s, 2) >= 3
             if keepview, [ax, bx] = view(hAx); end
             h = gui.i_gscatter3(sce.s, c, methodid, hAx);
-            if keepview, view(ax, bx); end
+            if keepview && bx~=90
+                view(hAx, ax, bx);
+            end
         else        % otherwise going to show 2D
             if keepview, [ax, bx] = view(hAx); end
             h = gui.i_gscatter3(sce.s(:, 1:2), c, methodid, hAx);
-            if keepview, [ax, bx] = view(hAx); end
+            if keepview && bx==90
+                view(hAx, ax, bx);
+            end
         end
         if keepview
             h.Marker = para.oldMarker;
@@ -1233,21 +1245,23 @@ end
         title(hAx, sce.title);
         subtitle(hAx, '[genes x cells]');
         hAx.Toolbar.Visible = 'on';
-        set(hAx,'Visible','on');        
+        set(hAx,'Visible','on');
     end
 
     function in_Switch2D3D(src, ~)
         [para] = gui.i_getoldsettings(src);
+        [ax, bx]=view(hAx);
 
-        if isempty(h.ZData)               % current 2D
+        if bx == 90   % isempty(h.ZData)               % current 2D
             ansx = questdlg('Switch to 3D?');
             if ~strcmp(ansx, 'Yes'), return; end
+            figure(FigureHandle);
             if size(sce.s, 2) >= 3
                 h = gui.i_gscatter3(sce.s, c, methodid, hAx);
                 if ~isempty(ax) && ~isempty(bx) && ~any([ax, bx] == 0)
-                    view(ax, bx);
+                    view(hAx, ax, bx);
                 else
-                    view(3);
+                    view(hAx, 3);
                 end
             else
                 [vslist] = gui.i_checkexistingembed(sce, 3);
