@@ -1,6 +1,9 @@
 function callback_RScorpion(src, ~)
 
-gui.gui_showrefinfo('SCORPION [PMID:38438786]');
+FigureHandle = src.Parent.Parent;
+if ~gui.gui_uishowrefinfo('SCORPION [PMID:38438786]',FigureHandle)
+    return;
+end
 
 extprogname = 'R_SCORPION';
 preftagname = 'externalwrkpath';
@@ -10,7 +13,7 @@ preftagname = 'externalwrkpath';
     extprogname, 'r');
 if ~ok, return; end
 
-FigureHandle = src.Parent.Parent;
+
 sce = guidata(FigureHandle);
 
 fw = gui.gui_waitbar;
