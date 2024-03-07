@@ -718,8 +718,7 @@ end
             [X] = sc_simudata(numgenes, numcells,'lun');
             [sce] = SingleCellExperiment(X);
             [c, cL] = grp2idx(sce.c);
-            gui.gui_waitbar(fw);
-            % guidata(FigureHandle, sce);
+            gui.gui_waitbar(fw);            
             in_RefreshAll(src, [], false, false);
         catch ME
             gui.gui_waitbar(fw);
@@ -985,29 +984,16 @@ end
     function in_Select5000Genes(src, ~)
         oldm = sce.NumGenes;
         oldn = sce.NumCells;
-        [requirerefresh] = gui.callback_Select5000Genes(src);
-
+        [requirerefresh, scenew] = gui.callback_Select5000Genes(src);
         if requirerefresh
-            sce = guidata(FigureHandle);
-            try
-                % case 'Relaxed (keep more cells/genes)'
-                %     definput = {'500', '0.20', '10', '200'};
-                % case 'Strigent (remove more cells/genes)'
-                %     definput = {'1000', '0.15', '15', '500'};
-                sce = sce.qcfilterwhitelist(1000, 0.15, 15, 500, []);
-                disp('Strigent QC applied.');
-                c=sce.c;
-            catch ME
-                warning(ME.message);
-            end
-
+            sce = scenew;
+            c=sce.c;
             in_RefreshAll(src, [], true, false);
             newm = sce.NumGenes;
             newn = sce.NumCells;
             helpdlg(sprintf('%d cells removed; %d genes removed.', ...
                 oldn-newn, oldm-newm), '');
-
-            % helpdlg(sprintf('%d genes removed.', oldm-newm), '');
+            guidata(FigureHandle, sce);
         end
     end
 
@@ -1220,6 +1206,9 @@ end
             [para] = gui.i_getoldsettings(src);
         end
         if isempty(sce) || sce.NumCells==0
+            if ~isempty(h) && isvalid(h)
+                delete(h);
+            end
             set(hAx,'Visible','off');
             in_EnDisableMenu('off');
             return;
@@ -1367,8 +1356,7 @@ end
         guidata(FigureHandle, sce);
     end
 
-    function in_ExportCellAttribTable(~,~)
-        %sce = guidata(FigureHandle);
+    function in_ExportCellAttribTable(~,~)        
         T = pkg.makeattributestable(sce);
         gui.i_exporttable(T,true, ...
             "Tcellattrib","CellAttribTable");
@@ -1700,8 +1688,7 @@ end
         datatip(h, 'DataIndex', idx(k));
     end
 
-    function in_ShowCellStates(src, ~)
-        % sce = guidata(FigureHandle);
+    function in_ShowCellStates(src, ~)        
         [thisc, clable, ~, newpickclable] = gui.i_select1state(sce);
         %clable
         %newpickclable
@@ -2043,7 +2030,6 @@ end
             set(a,'Checked','off');
             set(b,'State','off');
         else
-            % sce = guidata(FigureHandle);
             [thisc, clable] = gui.i_select1class(sce,true);
             if isempty(thisc)
                 set(src, statetag, 'off');

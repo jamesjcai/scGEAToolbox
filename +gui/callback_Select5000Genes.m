@@ -1,7 +1,8 @@
-function [requirerefresh] = callback_Select5000Genes(src)
-
+function [requirerefresh, scenew] = callback_Select5000Genes(src)
 
 requirerefresh = false;
+scenew = [];
+
 FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
 
@@ -30,16 +31,18 @@ if isempty(answer)
 end
 
 fw = gui.gui_waitbar;
+scenew = sce;
 
 if strcmpi(answer{1},'Yes') || strcmpi(answer{1},'Y')
-    sce = sce.rmmtgenes;
+    scenew = scenew.rmmtgenes;
     disp('Mt-genes removed.');
-    requirerefresh = true;
+    % requirerefresh = true;
 end
+
 if strcmpi(answer{2},'Yes') || strcmpi(answer{2},'Y')
-    sce = sce.rmribosomalgenes;
+    scenew = scenew.rmribosomalgenes;
     disp('Ribosomal genes removed.');
-    requirerefresh = true;
+    % requirerefresh = true;
 end
 
 if strcmpi(answer{3},'Yes') || strcmpi(answer{3},'Y')
@@ -55,23 +58,23 @@ if strcmpi(answer{3},'Yes') || strcmpi(answer{3},'Y')
                 '../resources', 'Biomart_mouse_genes.mat'), 'T');
     end
     ApprovedSymbol = string(T.GeneName);
-    [idx] = ismember(upper(sce.g), upper(ApprovedSymbol));
-    a1 = length(sce.g);
-    sce.g(~idx) = [];
-    sce.X(~idx, :) = [];
-    a2 = length(sce.g);
+    [idx] = ismember(upper(scenew.g), upper(ApprovedSymbol));
+    a1 = length(scenew.g);
+    scenew.g(~idx) = [];
+    scenew.X(~idx, :) = [];
+    a2 = length(scenew.g);
     fprintf('%d genes without approved symbols are found and removed.\n',a1-a2);
-    requirerefresh = true;
+    % requirerefresh = true;
 end
 
 try
     a = str2double(answer{4});
     if a > 0 && a < intmax
-        a1 = length(sce.g);
-        sce = sce.selectkeepgenes(1, a);
-        a2 = length(sce.g);
+        a1 = length(scenew.g);
+        scenew = scenew.selectkeepgenes(1, a);
+        a2 = length(scenew.g);
         fprintf('%d lowly expressed genes found and removed.\n',a1-a2);
-        requirerefresh = true;
+        % requirerefresh = true;
     end
 catch ME
     warning(ME.message);
@@ -79,23 +82,36 @@ end
 
 try
     a = str2double(answer{5});
-    % T = sc_hvg(sce.X, sce.g);
-    T = sc_splinefit(sce.X, sce.g);
-    glist = T.genes(1:min([a, sce.NumGenes]));
-    [y, idx] = ismember(glist, sce.g);
+    % T = sc_hvg(scenew.X, scenew.g);
+    T = sc_splinefit(scenew.X, scenew.g);
+    glist = T.genes(1:min([a, scenew.NumGenes]));
+    [y, idx] = ismember(glist, scenew.g);
     if ~all(y)
         errordlg('Runtime error.');
         return;
     end
-    sce.g = sce.g(idx);
-    sce.X = sce.X(idx, :);
+    scenew.g = scenew.g(idx);
+    scenew.X = scenew.X(idx, :);
 catch ME
-    warning(ME.message);
+    gui.gui_waitbar(fw,true);
+    warndlg(ME.message,'');
+    return;
 end
 
+try
+    scenew = scenew.qcfilterwhitelist(1000, 0.15, 15, 500, []);
+catch ME
+    gui.gui_waitbar(fw,true);
+    warndlg(ME.message,'');
+    return;
+end
 
-
-guidata(FigureHandle, sce);
 gui.gui_waitbar(fw);
+if scenew.NumCells == 0 || scenew.NumGenes==0
+    warndlg('No cells or genes left. The operation is cancelled','');
+    requirerefresh = false;
+else
+    requirerefresh = true;
+end    
 
 end
