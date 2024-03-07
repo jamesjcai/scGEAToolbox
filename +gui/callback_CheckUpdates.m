@@ -7,7 +7,7 @@ FigureHandle = src.Parent.Parent;
 if majneedupdate
     answer = questdlg(sprintf('There is a new version of scGEAToolbox (%s vs. %s). Learn how to install?', v2, v1));
     if strcmp(answer, 'Yes')
-        gui.gui_uishowrefinfo('Quick Installation',FigureHandle);
+        gui.gui_uishowrefinfo('Quick Installation', FigureHandle);
 
         %web('https://scgeatoolbox.readthedocs.io/en/latest/quick_installation.html');        
         % prompt = {'Copy the following code and run it in MATLAB:'};

@@ -1,5 +1,5 @@
 function [needupdate] = i_minvercheck(parentfig)
-if nargin<2, parentfig = []; end
+if nargin<1, parentfig = []; end
 % min version update check
 needupdate = false;
 mfolder = fileparts(mfilename('fullpath'));

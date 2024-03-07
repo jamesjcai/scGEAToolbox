@@ -51,7 +51,7 @@ btn2.Layout.Column = 3;
 btn2.ButtonPushedFcn = @(src,event) textEntered(src,event,btn2);
 %btn2.Position(3) = 50;
 
-if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 
+if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure')
     [px_new] = gui.i_getchildpos(parentfig, hFig);
     if ~isempty(px_new)
         movegui(hFig, px_new);
@@ -59,7 +59,7 @@ if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure')
 end
 waitfor(hFig);
 
-function textEntered(src,event,btn)
+function textEntered(~,~,btn)
     if strcmp(btn.Text,"OK")
         y = true;
     end
