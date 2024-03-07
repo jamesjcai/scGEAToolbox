@@ -57,11 +57,11 @@ xyz1 = ppval(pp1, s)';
 
 
 [~, d] = dsearchn(xyz1, xyz);
-fitmeanv=xyz1(:,1);
-x=xyz(:,1); y=xyz(:,2);
-d(x>max(fitmeanv))=d(x>max(fitmeanv))./100;
-d(x<min(fitmeanv))=d(x<min(fitmeanv))./10;
-d((y-xyz1(:, 2))<0)=d((y-xyz1(:, 2))<0)./100;
+%fitmeanv=xyz1(:,1);
+%x=xyz(:,1); y=xyz(:,2);
+%d(x>max(fitmeanv))=d(x>max(fitmeanv))./100;
+%d(x<min(fitmeanv))=d(x<min(fitmeanv))./10;
+%d((y-xyz1(:, 2))<0)=d((y-xyz1(:, 2))<0)./100;
 
 
 %D = pdist2(xyz, xyz1);
@@ -81,6 +81,8 @@ end
 % 'variablenames',{'Genes','Log10_Mean','Dropout_Rate','Log10_CV','Deviation_3DFeature'});
 
 T.d(T.dropr > (1 - 0.05)) = 0; % ignore genes with dropout rate > 0.95
+T.d(T.dropr < (0.01)) = 0; % ignore genes with dropout rate < 0.01 (removes ribosomal and mitochondrial genes)
+
 % disp('NOTE: Genes with dropout rate > 0.95 are excluded.');
 
 if ~isempty(removedT) && istable(removedT)
