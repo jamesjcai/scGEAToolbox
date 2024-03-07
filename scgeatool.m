@@ -19,9 +19,12 @@ import gui.*
 fx = [];
 if nargin < 1
     if ~(ismcc || isdeployed)
-        %fxfun = @gui.sc_simplesplash2;
-        fxfun = @gui.sc_splashscreen;
-        fx = fxfun(); 
+        try        
+            fxfun = @gui.sc_splashscreen;
+        catch
+            fxfun = @gui.sc_simplesplash2;
+        end
+        fx = fxfun();
     end
     sce = SingleCellExperiment;
 else

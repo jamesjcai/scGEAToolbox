@@ -1,5 +1,6 @@
 function [fx] = sc_splashscreen(fx, r, showloading)
-
+import pkg.*
+import gui.*
 if nargin<3, showloading=true; end
 if nargin<2, r = 0.0; end
 if nargin<1
@@ -30,7 +31,7 @@ if nargin<1
     splashpng = fullfile(mfolder,'..','resources', pngfilename);
     %splashpng = '09-small.jpg';
     %splashpng = 'Untitled.png';
-    fx = gui.SplashScreen( 'Splashscreen', splashpng, ...
+    fx = gui.SplashScreen('scgeatoolSplash', splashpng, ...
                     'ProgressBar', 'on', ...
                     'ProgressPosition', 5, ...
                     'ProgressRatio', 0.0 );

@@ -102,7 +102,7 @@ if exist("pcnet_Source.mat", 'file')
     end
 end
 if ~useexist
-    fw = gui.gui_waitbar([], [], 'Step 1 of 3: Building pcnet_Source network...');
+    fw = gui.gui_waitbar([], [], 'Step 1 of 3: Building pcnet\_Source network...');
     disp('Building pcnet_Source network...');
     A1 = sc_pcnetpar(sce.X(:, sce.c_cell_type_tx == celltype1));
     A1 = A1 ./ max(abs(A1(:)));
@@ -118,7 +118,7 @@ end
 
 useexist = false;
 if exist("pcnet_Target.mat", 'file')
-    answer = gui.questdlg_timer(10, 'pcnet_Target.mat existing. Use it?','', 'Yes, use pcnet_Target', 'No, reconstruct pcnet_Target', ...
+    answer = gui.questdlg_timer(10, 'pcnet\_Target.mat existing. Use it?','', 'Yes, use pcnet_Target', 'No, reconstruct pcnet_Target', ...
         'Cancel', 'Yes, use pcnet_Target');
     switch answer
         case 'Yes, use pcnet_Target'
@@ -132,7 +132,7 @@ if exist("pcnet_Target.mat", 'file')
     end
 end
 if ~useexist
-    fw = gui.gui_waitbar([], [], 'Step 2 of 3: Building pcnet_Target network...');
+    fw = gui.gui_waitbar([], [], 'Step 2 of 3: Building pcnet\_Target network...');
     disp('Building pcnet_Target network...')
     A2 = sc_pcnetpar(sce.X(:, sce.c_cell_type_tx == celltype2));
     A2 = A2 ./ max(abs(A2(:)));
@@ -142,7 +142,7 @@ if ~useexist
 end
 
 if isvalid(fw)
-    gui.gui_waitbar(fw, [], 'Building pcnet_Target is complete');
+    gui.gui_waitbar(fw, [], 'Building pcnet\_Target is complete');
 end
 
 if twosided
