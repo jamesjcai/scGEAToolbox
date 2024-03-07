@@ -8,8 +8,9 @@ function MIs  = FastPairMI(data,h)
 MIs = zeros(size(data,1));
 h_square = h^2;
 L = size(data,2);
-for i=1:L
-    tmp = data - repmat(data(:,i),1,L);
+for k=1:L
+    % tmp = data - repmat(data(:,k),1,L); same as the line below
+    tmp = data - data(:,k);
     tmp = exp(-(tmp.^2)/(2*h_square));
     tmp1 = sum(tmp,2);
 

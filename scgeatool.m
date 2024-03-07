@@ -199,7 +199,7 @@ in_addmenu(m_view, 1, @gui.callback_CloseAllOthers, 'Close All Other Figures');
 in_addmenu(m_view, 0, @in_RefreshAll, 'Refresh Current View');
 
 m_plot = findall(FigureHandle, 'tag', 'figMenuTools');
-set(m_plot,'Text','&Plot')
+set(m_plot,'Text','&Plots')
 delete(allchild(m_plot));
 set(findall(FigureHandle,'tag','figMenuInsert'),'Parent', m_plot,'Separator','off');
 set(findall(FigureHandle,'tag','figMenuEditCopyFigure'),'Parent', m_plot);
@@ -213,7 +213,7 @@ in_addmenu(m_plot,1,@gui.callback_Violinplot,'Gene Violin Plot...');
 in_addmenu(m_plot,0,@gui.callback_DrawDotplot,'Gene Dot Plot...');
 in_addmenu(m_plot,0,@gui.callback_GeneHeatMap,'Gene Heatmap...');
 
-m_tool = uimenu(FigureHandle, 'Text', '&Tools', 'Accelerator', 'T');
+m_tool = uimenu(FigureHandle, 'Text', '&Analyze', 'Accelerator', 'A');
 in_addmenu(m_tool, 0, @in_ClusterCellsS, "Cluster Cells Using Cell Embedding (S)")
 in_addmenu(m_tool, 0, @in_ClusterCellsX, "Cluster Cells Using Expression Matrix (X)")
 in_addmenu(m_tool, 1, {@in_DetermineCellTypeClustersGeneral, true}, "Annotate Cell Types Using PanglaoDB Marker Genes");
@@ -463,6 +463,7 @@ end
 % ----------------------------------
 
     function in_sc_openscedlg(~, ~)
+        %clickType = get(FigureHandle, 'SelectionType')
         set(button1,'Enable','off');
         if ~isempty(sce) && sce.NumCells > 0
             answer=questdlg('Current SCE will be replaced. Continue?'.'');

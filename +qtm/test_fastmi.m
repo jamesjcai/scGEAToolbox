@@ -10,18 +10,17 @@ X = X(1:n,:);
 g = g(1:n);
 y = X(18,:);
 
-
-
 X(18,:)=[];
 g(18)
 g(18)=[];
 
-idx=randperm(length(g));
-g=g(idx);
-X=X(idx,:);
+% idx=randperm(length(g));
+% g=g(idx);
+% X=X(idx,:);
 
 h = 1.2;
-K = 18;
+
+K = 15;
 
 data = [X; y];
 R0  = qtm.FastPairMI(data, h);
