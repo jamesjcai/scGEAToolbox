@@ -1,7 +1,7 @@
 function callback_VirtualKOGenKI(src, ~)
 
 FigureHandle = src.Parent.Parent;
-if ~gui.gui_showrefinfo('GenKI [PMID:37246643]',FigureHandle)
+if ~gui.gui_uishowrefinfo('GenKI [PMID:37246643]',FigureHandle)
     return;
 end
 

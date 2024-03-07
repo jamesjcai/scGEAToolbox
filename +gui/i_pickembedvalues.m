@@ -16,7 +16,10 @@ s = [];
 % vslist = slist(valids);
 
 [vslist] = gui.i_checkexistingembed(sce, ndim);
-if isempty(vslist), return; end
+if isempty(vslist)
+    warndlg('No embedding is available. Please embed cells using an embedding algorithm first.','');
+    return; 
+end
 
 [indx, tf] = listdlg('PromptString', ...
     {'Select an embedding S:'}, ...

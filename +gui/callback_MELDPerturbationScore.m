@@ -1,7 +1,7 @@
 function callback_MELDPerturbationScore(src, ~)
 
 FigureHandle = src.Parent.Parent;
-if ~gui.gui_showrefinfo('MELD [PMID:33558698]',FigureHandle)
+if ~gui.gui_uishowrefinfo('MELD [PMID:33558698]',FigureHandle)
     return;
 end
 

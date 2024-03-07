@@ -17,7 +17,7 @@ end
 import ten.*
 
 FigureHandle = src.Parent.Parent;
-if ~gui.gui_showrefinfo('scTenifoldKnk [PMID:35510185]',FigureHandle)
+if ~gui.gui_uishowrefinfo('scTenifoldKnk [PMID:35510185]',FigureHandle)
     return;
 end
 sce = guidata(FigureHandle);

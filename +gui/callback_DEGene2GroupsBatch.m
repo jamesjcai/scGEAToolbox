@@ -16,7 +16,9 @@ if length(unique(sce.c_cell_type_tx))==1
     return;
 end
 
-gui.gui_showrefinfo('DE in Batch Mode');
+if ~gui.gui_uishowrefinfo('DE in Batch Mode',FigureHandle)
+    return;
+end
 
 [CellTypeSorted] = pkg.e_sortcatbysize(sce.c_cell_type_tx);
 [CellTypeList] = in_selectcelltypes(CellTypeSorted);

@@ -2,7 +2,7 @@ function callback_DPGene2Groups(src, ~)
 
 
 FigureHandle = src.Parent.Parent;
-if ~gui.gui_showrefinfo('DP Analysis',FigureHandle)
+if ~gui.gui_uishowrefinfo('DP Analysis',FigureHandle)
     return;
 end
 sce = guidata(FigureHandle);

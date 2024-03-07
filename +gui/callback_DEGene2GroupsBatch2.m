@@ -10,7 +10,6 @@ if length(unique(sce.c_batch_id))==1
     return;
 end
 
-% gui.gui_showrefinfo('DE in Batch Mode (2)');
 
 [BatchIDSorted] = pkg.e_sortcatbysize(sce.c_batch_id);
 [BatchIDList] = in_selectcelltypes(BatchIDSorted);

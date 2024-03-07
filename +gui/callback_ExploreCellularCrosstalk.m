@@ -1,7 +1,7 @@
 function callback_ExploreCellularCrosstalk(src, ~)
 
 FigureHandle = src.Parent.Parent;
-if ~gui.gui_showrefinfo('talklr [DOI:10.1101/2020.02.01.930602]',FigureHandle)
+if ~gui.gui_uishowrefinfo('talklr [DOI:10.1101/2020.02.01.930602]',FigureHandle)
     return;
 end
 
