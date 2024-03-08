@@ -61,20 +61,42 @@ if ~exist(outdir, "dir"), mkdir(outdir); end
 
 %%
 c = dir('resources/*.gif');
-d = strings(length(c), 1);
+d1 = strings(length(c), 1);
 for k = 1:length(c)
-    d(k) = string(fullfile(c(k).folder, c(k).name));
+    d1(k) = string(fullfile(c(k).folder, c(k).name));
 end
+c = dir('resources/*.png');
+d2 = strings(length(c), 1);
+for k = 1:length(c)
+    d2(k) = string(fullfile(c(k).folder, c(k).name));
+end
+c = dir('resources/*.jpg');
+d3 = strings(length(c), 1);
+for k = 1:length(c)
+    d3(k) = string(fullfile(c(k).folder, c(k).name));
+end
+c = dir('resources/*.mat');
+d4 = strings(length(c), 1);
+for k = 1:length(c)
+    d4(k) = string(fullfile(c(k).folder, c(k).name));
+end
+d = [d1;d2;d3;d4];
 %    d=[d;fullfile(pw1, 'resources', 'STRING', 'stringdb_human.mat')];
 %    d=[d;fullfile(pw1, 'resources', 'STRING', 'stringdb_mouse.mat')];
 d = [d; fullfile(pw1, '+run', 'external', 'mt_UMAP', 'umap.jar')];
-d = [d; fullfile(pw1, 'resources', 'tfome_tfgenes.mat')];
+d = [d; fullfile(pw1, 'resources', 'refinfo.txt')];
+%d = [d; fullfile(pw1, 'resources', 'tfome_tfgenes.mat')];
 d = [d; fullfile(pw1, 'resources', 'cellcyclegenes.xlsx')];
 d = [d; fullfile(pw1, 'resources', 'cellscores.xlsx')];
 d = [d; fullfile(pw1, 'resources', 'cellscores.txt')];
-d = [d; fullfile(pw1, 'resources', 'Ligand_Receptor.mat')];
-d = [d; fullfile(pw1, 'resources', 'Ligand_Receptor2.mat')];
+d = [d; fullfile(pw1, 'resources', 'ScTypeDB_full.xlsx')];
+d = [d; fullfile(pw1, 'resources', 'celltypes.xlsx')];
+%d = [d; fullfile(pw1, 'resources', 'Ligand_Receptor.mat')];
+%d = [d; fullfile(pw1, 'resources', 'Ligand_Receptor2.mat')];
+%d = [d; fullfile(pw1, 'resources', 'Ligand_Receptor_more.mat')];
 d = [d; fullfile(pw1, 'resources', 'myTemplate.pptx')];
+d = [d; fullfile(pw1, 'resources', 'value_template_pos.txt')];
+d = [d; fullfile(pw1, 'resources', 'value_template_std.txt')];
 d = [d; fullfile(pw1, 'resources', 'DoRothEA_TF_Target_DB', 'dorothea_hs.mat')];
 d = [d; fullfile(pw1, 'resources', 'DoRothEA_TF_Target_DB', 'dorothea_mm.mat')];
 d = [d; fullfile(pw1, 'example_data', 'testXgs.mat')];
@@ -88,11 +110,13 @@ d = [d; d2];
 needcorrect = false;
 try
     if ~isdeployed
+        a = datestr(datetime("today"), 'yy.mm.dd');
+        % a = string(datetime("today",'Format','uu.MM.dd'))
         compiler.build.standaloneWindowsApplication('scgeatool.m', ...
             'ExecutableName', 'scgeatool', 'Verbose', 'On', ...
             'OutputDir', outdir, 'AdditionalFiles', d, ...
             'SupportPackages', 'autodetect', ...
-            'ExecutableVersion', '23.10.17');
+            'ExecutableVersion', a);
     end
 catch ME
     disp(ME.message);
@@ -103,8 +127,7 @@ end
 try
     a = getenv('USERPROFILE');
     b = getenv('username');
-
-    winopen(sprintf('%s\\AppData\\Local\\Temp\\%s\\mcrCache9.14\\', a, b));
+    winopen(sprintf('%s\\AppData\\Local\\Temp\\%s\\mcrCache23.2\\', a, b));
     winopen(outdir);
 catch
 end
@@ -112,6 +135,8 @@ end
 % C:\Users\jcai\AppData\Local\Temp\jcai\mcrCache9.11\scgeat1\scgeatool\+run\external\R_SeuratSaveRds
 
 %%
+
+copyfile('resources/700813831-hero-1536x1536.png',fullfile(outdir,"splash.png"));
 cd(outdir);
 % if needcorrect
 %     a = readmatrix('requiredMCRProducts.txt');
