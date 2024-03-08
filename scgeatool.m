@@ -2095,7 +2095,7 @@ end
             dtp = findobj(h, 'Type', 'datatip');
             delete(dtp);
             if isstring(stxtyes) || iscellstr(stxtyes)
-                % stxtyes = strrep(stxtyes, "_", "\_");
+                stxtyes = strrep(stxtyes, "_", "\_");
                 stxtyes = strtrim(stxtyes);
             end
             row = dataTipTextRow('', stxtyes);

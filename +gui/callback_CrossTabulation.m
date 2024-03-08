@@ -58,8 +58,8 @@ tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
     pkg.i_addbutton2fig(tb, 'on', @gui.i_invertcolor, 'plotpicker-comet.gif', 'Invert colors');
     % pkg.i_addbutton2fig(tb,'off',@i_reordersamples, ...
     %     "xpowerpoint.gif",'Reorder Samples');
-    pkg.i_addbutton2fig(tb, 'off', @i_sortbymean, ...
-        "xpowerpoint.gif", 'Sort Samples by Size');
+    % pkg.i_addbutton2fig(tb, 'off', @i_sortbymean, ...
+    %     "xpowerpoint.gif", 'Sort Samples by Size');
 %    movegui(hFig, 'center');
 %    set(hFig, 'Visible', true);
 
@@ -108,11 +108,13 @@ hFig.Visible=true;
             b(kx).CData = kx;
         end
         xticks(1:length(labelsx));
-        xticklabels(labelsx);
+        labelsx1 = strrep(labelsx, '_', '\_');
+        xticklabels(labelsx1);       
+        
         xlabel(clabel)
         ylabel('# of cells')
-        labelsy = strrep(labelsy, '_', '\_');
-        lgd = legend(labelsy, 'Location', 'bestoutside');
+        labelsy1 = strrep(labelsy, '_', '\_');
+        lgd = legend(labelsy1, 'Location', 'bestoutside');
         title(lgd, llabel);
 
     end        
@@ -129,10 +131,12 @@ hFig.Visible=true;
         ylabel('% of cells')
         % title(clable2);
         xticks(1:length(labelsx));
-        xticklabels(labelsx);
+
+        labelsx2 = strrep(labelsx, '_', '\_');
+        xticklabels(labelsx2);
         ylim([0, 1]);
-        labelsy = strrep(labelsy, '_', '\_');
-        lgd = legend(labelsy, 'Location', 'bestoutside');
+        labelsy2 = strrep(labelsy, '_', '\_');
+        lgd = legend(labelsy2, 'Location', 'bestoutside');
         title(lgd, llabel);
     end        
 
