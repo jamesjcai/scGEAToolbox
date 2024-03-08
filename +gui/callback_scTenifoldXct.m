@@ -128,7 +128,7 @@ catch ME
 end
 
 if ~isempty(T)
-    outfile = fullfile(wkdir,"outfile.txt");
+    outfile = fullfile(wkdir,"outfile.csv");
 
     if isfile(outfile)
         answerx = questdlg('Overwrite outfile.txt? Select No to save in a temporary file.');
