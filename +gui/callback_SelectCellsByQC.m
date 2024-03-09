@@ -40,6 +40,19 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
         case {'SC_QCFILTER (Basic QC for Cells/Genes)',...
                 'SC_QCFILTER (Enabling Whitelist Genes)'}
 
+            if strcmp(listitems{indx},'SC_QCFILTER (Enabling Whitelist Genes)')
+                [whitelist]=gui.i_selectwhitelist(sce, FigureHandle);
+                if isnumeric(whitelist)
+                    if whitelist==0
+                        requirerefresh=false;
+                        return;
+                    end
+                end
+            else
+                whitelist = [];
+            end
+
+
             answer3 = questdlg('Relaxed or Strigent?', ...
                 'Cutoff Settings', 'Relaxed (keep more cells/genes)', ...
                 'Strigent (remove more cells/genes)', 'Relaxed (keep more cells/genes)');
@@ -79,17 +92,6 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
                 return;
             end
 
-            if strcmp(listitems{indx},'SC_QCFILTER (Enabling Whitelist Genes)')
-                [whitelist]=gui.i_selectwhitelist(sce, FigureHandle);
-                if isnumeric(whitelist)
-                    if whitelist==0
-                        requirerefresh=false;
-                        return;
-                    end
-                end
-            else
-                whitelist = [];
-            end
             
             fw = gui.gui_waitbar;
 
