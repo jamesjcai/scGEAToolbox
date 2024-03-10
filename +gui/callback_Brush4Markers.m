@@ -73,7 +73,9 @@ gui.gui_waitbar(fw);
 if ~any(idx)
     warndlg('No marker found','')
     return;
-else
+end
+
+
     markerlist = sce.g(idx);
     [~, jx] = sort(b(idx), 'descend');
     markerlist = markerlist(jx);
@@ -82,16 +84,16 @@ else
     fprintf('%s ', markerlist)
     fprintf('\n')
 
-    gui.i_exporttable(table(markerlist), true, ...
-        'Tmarkerlist','MarkerListTable');
+%    gui.i_exporttable(table(markerlist), true, ...
+%        'Tmarkerlist','MarkerListTable');
 
     % 'Tviolindata','ViolinPlotTable'
     % 'Tmarkerlist','MarkerListTable'
 
-    [answer] = questdlg('Plot expression of markers?');
-    if isempty(answer), return; end
-    switch answer
-        case 'Yes'
+%    [answer] = questdlg('Plot expression of markers?');
+%    if isempty(answer), return; end
+%    switch answer
+%        case 'Yes'
             % [methodid] = gui.i_pickscatterstem('Scatter');
             % if isempty(methodid), return; end
             % F = cell(length(markerlist), 1);
@@ -100,11 +102,12 @@ else
             %         ax, bx, kk, methodid);
             % end
             % gui.i_export2pptx(F, flipud(markerlist(:)));
-        fw=gui.gui_waitbar;
+%        fw=gui.gui_waitbar;
         gui.sc_uitabgrpfig_feaplot(sce, markerlist, FigureHandle, [axx, bxx]);
         gui.gui_waitbar(fw);    
-    end
-end
+%    end
+%end
+
 %     pause(2);
 %     export2wsdlg({'Save marker list to variable named:'},...
 %             {'g_markerlist'},{markerlist});

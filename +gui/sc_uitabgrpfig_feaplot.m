@@ -111,6 +111,11 @@ pkg.i_addbutton2fig(tb, 'on', {@i_PickColorMap, c}, 'plotpicker-compass.gif', 'P
 %pkg.i_addbutton2fig(tb, 'off', @i_RescaleExpr, 'IMG00074.GIF', 'Rescale expression level [log2(x+1)]');
 %pkg.i_addbutton2fig(tb, 'off', @i_ResetExpr, 'plotpicker-geobubble2.gif', 'Reset expression level');
 % pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
+
+pkg.i_addbutton2fig(tb, 'off', @in_savedata, "powerpointx.gif", 'Save Gene List...');
+
+
+
 pkg.i_addbutton2fig(tb, 'off', @i_savemainfig, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 
 %gui.add_3dcamera(tb);
@@ -133,6 +138,12 @@ end
 
 drawnow;
 hFig.Visible=true;
+
+
+    function in_savedata(~,~)
+        gui.i_exporttable(table(glist), true, ...
+            'Tmarkerlist','MarkerListTable');    
+    end
 
     function i_savemainfig(~,~)
         answer = questdlg('Export to PowerPoint?');
