@@ -77,14 +77,14 @@ end
 %     end
 
 try
-    tmpfilelist = {'X.mat', 'g.txt', 'c.txt', ...
+    tmpfilelist = {'X.mat', 'g.txt', 'pcnet_Source.mat', ...
         'idx.mat', 'output.csv', fullfile('GRNs', 'pcNet_example.npz')};
     if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
     if issparse(X), X=full(X); end
     save('X.mat', '-v7.3', 'X');
     save('idx.mat', '-v7.3', 'idx');
     writematrix(g, 'g.txt');
-    % writematrix(ones(size(X, 2), 1), 'c.txt');
+    writematrix(ones(size(X, 2), 1), 'c.txt');
     % disp('Input X g c written.');
 catch ME
     if isvalid(fw)
@@ -101,15 +101,14 @@ end
 
 
 if isvalid(fw)
-    gui.gui_waitbar(fw, [], [], 'Building pcnet_Source network...');
+    gui.gui_waitbar(fw, [], [], 'Building pcnet\_Source network...');
 end
-    A1 = sc_pcnetpar(sce.X(:, sce.c_cell_type_tx == celltype1));
-    A1 = A1 ./ max(abs(A1(:)));
-    A = ten.e_filtadjc(A1, 0.75, false);
-    save('pcnet_Source.mat', 'A', '-v7.3');
-    % disp('pcnet_Source.mat saved.');
+    % A1 = sc_pcnetpar(X);
+    % A1 = A1 ./ max(abs(A1(:)));
+    % A = ten.e_filtadjc(A1, 0.75, false);
+    % save('pcnet_Source.mat', 'A', '-v7.3');
 if isvalid(fw)
-    gui.gui_waitbar(fw, [], [], 'pcnet_Source.mat saved.');
+    gui.gui_waitbar(fw, [], [], 'pcnet\_Source.mat saved.');
 end
 
 codefullpath = fullfile(codepth,'script.py');
