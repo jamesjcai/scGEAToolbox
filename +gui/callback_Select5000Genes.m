@@ -112,6 +112,6 @@ if scenew.NumCells == 0 || scenew.NumGenes==0
     requirerefresh = false;
 else
     requirerefresh = true;
-end    
+end
 
 end

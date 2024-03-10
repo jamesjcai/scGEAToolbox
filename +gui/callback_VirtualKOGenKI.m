@@ -22,13 +22,17 @@ answer = questdlg(sprintf('Ready to construct network and then knock out gene #%
     idx, sce.g(idx)));
 if ~strcmpi(answer, 'Yes'), return; end
 
+extprogname = 'py_GenKI';
+preftagname = 'externalwrkpath';
+[wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
+if isempty(wkdir), return; end
 
 try
-    fw = gui.gui_waitbar;
-    [T] = run.py_GenKI(sce.X, sce.g, idx);
-    gui.gui_waitbar(fw);
+    %fw = gui.gui_waitbar;
+    [T] = run.py_GenKI(sce.X, sce.g, idx, wkdir);
+    %gui.gui_waitbar(fw);
 catch ME
-    gui.gui_waitbar(fw);
+    %gui.gui_waitbar(fw);
     errordlg(ME.message);
     return;
 end

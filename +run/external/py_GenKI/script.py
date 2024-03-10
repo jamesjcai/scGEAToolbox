@@ -1,8 +1,8 @@
-import os
-import sys
-abspath = os.path.abspath(__file__)
-dname = os.path.dirname(abspath)
-os.chdir(dname)
+#import os
+#import sys
+#abspath = os.path.abspath(__file__)
+#dname = os.path.dirname(abspath)
+#os.chdir(dname)
 # os.chdir("D:\\GitHub\\scGEAToolbox\\+run\\external\\py_GenKI")
 # os.chdir("C:\\Users\\jcai\\Documents\\GitHub\\scGEAToolbox\\+run\\external\\py_GenKI")
 
@@ -29,8 +29,7 @@ adata = build_adata("X.mat",
                     meta_cell_cols=["cell_type"], # colname of cell type
                     transpose=False,
                     log_normalize=True,
-                    scale_data=True,
-                   )
+                    scale_data=True)
 #adata = adata[:100, :300].copy()
 #print(adata)
 
@@ -48,12 +47,12 @@ adata.var_names[idx]
 
 data_wrapper =  DataLoader(
                 adata, # adata object
-                target_gene = [idx], # KO gene name/index
+                target_gene = [adata.var_names[idx]], # KO gene name/index
                 target_cell = None, # obsname for cell type, if none use all
                 obs_label = "cell_type", # colname for genes
-                GRN_file_dir = "GRNs", # folder name for GRNs
-                rebuild_GRN = True, # whether build GRN by pcNet
-                pcNet_name = "pcNet_example", # GRN file name
+                GRN_file_dir = "./", # folder name for GRNs
+                rebuild_GRN = false, # whether build GRN by pcNet
+                pcNet_name = "pcNet_Source", # GRN file name
                 verbose = True, # whether verbose
                 n_cpus = 8, # multiprocessing
                 )

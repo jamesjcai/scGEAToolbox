@@ -7,6 +7,7 @@ try:
     import scipy
     import h5py
     import torch_geometric
+    import tensorboard
     print('All imports essential to GenKI are found')
     exit(0)
 except ImportError as exc:
