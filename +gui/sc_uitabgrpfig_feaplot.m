@@ -14,6 +14,7 @@ pth = fullfile(pw1, '..', 'resources', 'myTemplate.pptx');
 
 
 hFig=figure("Visible","off");
+set(hFig, 'ToolBar', 'none');
 hFig.Position(3) = hFig.Position(3) * 1.8;
 
 % if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 
@@ -54,7 +55,11 @@ for k=1:n
     
     ax0{k} = axes('parent',tab{k});
     ax{k,1} = subplot(1,2,1);
-    scatter3(sce.s(:,1), sce.s(:,2), sce.s(:,3), 5, c, 'filled');
+    if size(sce.s,2)>2
+        scatter3(sce.s(:,1), sce.s(:,2), sce.s(:,3), 5, c, 'filled');
+    else
+        scatter(sce.s(:,1), sce.s(:,2), 5, c, 'filled');
+    end
     if ~isempty(cazcel)
         view(ax{k,1},cazcel(1),cazcel(2));
     end
@@ -97,13 +102,14 @@ end
   
 tabgp.SelectionChangedFcn=@displaySelection;
 
-tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
+%tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
+%uipushtool(tb, 'Separator', 'off');
+
 % b=allchild(tb0)
-% tb = uitoolbar(hFig);
+tb = uitoolbar(hFig);
 % copyobj(b(4),tb);
 % delete(tb0);
 
-uipushtool(tb, 'Separator', 'off');
 % pkg.i_addbutton2fig(tb, 'off', [], "IMG00107.GIF", " ");
 % pkg.i_addbutton2fig(tb, 'off', @i_linksubplots, 'plottypectl-rlocusplot.gif', 'Link subplots');
 pkg.i_addbutton2fig(tb, 'on',  @i_genecards, 'fvtool_fdalinkbutton.gif', 'GeneCards...');
