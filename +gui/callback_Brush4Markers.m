@@ -21,7 +21,10 @@ end
 
 % axesh=FigureHandle.Children(1)
 axesh = FigureHandle.findobj('type', 'Axes');
-[ax, bx] = view(axesh);
+[axx, bxx] = view(axesh);
+
+% [axx, bxx] = view(findall(FigureHandle,'type','axes'));
+
 assert(isequal(axesh.findobj('type', 'Scatter'), ...
     FigureHandle.findobj('type', 'Scatter')))
 %axesh.Children(1)
@@ -68,7 +71,7 @@ idx = b > 0;
 gui.gui_waitbar(fw);
 
 if ~any(idx)
-    errordlg('No marker found')
+    warndlg('No marker found','')
     return;
 else
     markerlist = sce.g(idx);
@@ -89,14 +92,17 @@ else
     if isempty(answer), return; end
     switch answer
         case 'Yes'
-            [methodid] = gui.i_pickscatterstem('Scatter');
-            if isempty(methodid), return; end
-            F = cell(length(markerlist), 1);
-            for kk = 1:length(markerlist)
-                F{kk} = gui.i_cascadefig(sce, markerlist(end-(kk - 1)), ...
-                    ax, bx, kk, methodid);
-            end
-            gui.i_export2pptx(F, flipud(markerlist(:)));
+            % [methodid] = gui.i_pickscatterstem('Scatter');
+            % if isempty(methodid), return; end
+            % F = cell(length(markerlist), 1);
+            % for kk = 1:length(markerlist)
+            %     F{kk} = gui.i_cascadefig(sce, markerlist(end-(kk - 1)), ...
+            %         ax, bx, kk, methodid);
+            % end
+            % gui.i_export2pptx(F, flipud(markerlist(:)));
+        fw=gui.gui_waitbar;
+        gui.sc_uitabgrpfig_feaplot(sce, markerlist, FigureHandle, [axx, bxx]);
+        gui.gui_waitbar(fw);    
     end
 end
 %     pause(2);
