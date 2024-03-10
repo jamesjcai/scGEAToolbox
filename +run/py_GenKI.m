@@ -103,10 +103,10 @@ end
 if isvalid(fw)
     gui.gui_waitbar(fw, [], [], 'Building pcnet\_Source network...');
 end
-    % A1 = sc_pcnetpar(X);
-    % A1 = A1 ./ max(abs(A1(:)));
-    % A = ten.e_filtadjc(A1, 0.75, false);
-    % save('pcnet_Source.mat', 'A', '-v7.3');
+    A1 = sc_pcnetpar(X);
+    A1 = A1 ./ max(abs(A1(:)));
+    A = ten.e_filtadjc(A1, 0.75, false);
+    save('pcnet_Source.mat', 'A', '-v7.3');
 if isvalid(fw)
     gui.gui_waitbar(fw, [], [], 'pcnet\_Source.mat saved.');
 end

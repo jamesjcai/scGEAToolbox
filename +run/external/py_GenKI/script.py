@@ -19,6 +19,9 @@ from GenKI.dataLoader import DataLoader
 from GenKI.train import VGAE_trainer
 from GenKI import utils
 import h5py
+import scipy as sp
+from scipy.sparse import csr_matrix
+
 
 # from scipy.io import savemat
 
@@ -44,6 +47,12 @@ adata.var_names[idx]
 # X=counts.T    # X = [ sparse or dense matrix, samples in rows, features in columns ]
 #mdic = {"idx": np.array(sketch_index)}
 #savemat("output.mat", mdic, oned_as='column')
+
+
+f = h5py.File("pcNet_Source.mat",'r')
+A = csr_matrix(f.get('A'))
+f.close()
+sp.sparse.save_npz("pcNet_Source.npz", A)
 
 data_wrapper =  DataLoader(
                 adata, # adata object
