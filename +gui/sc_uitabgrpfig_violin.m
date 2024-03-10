@@ -28,7 +28,7 @@ import mlreportgen.ppt.*;
 pw1 = fileparts(mfilename('fullpath'));
 pth = fullfile(pw1, '..', 'resources', 'myTemplate.pptx');
 
-hFig = figure("Visible","off");
+hFig = figure("Visible","off",'MenuBar','none','ToolBar','none');
 hFig.Position(3) = hFig.Position(3) * 1.8;
 
 % if ~isempty(cx)
@@ -63,9 +63,11 @@ end
   
 
 tabgp.SelectionChangedFcn=@displaySelection;
-tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
-uipushtool(tb, 'Separator', 'off');
-pkg.i_addbutton2fig(tb, 'on',  @i_genecards, 'fvtool_fdalinkbutton.gif', 'GeneCards...');
+
+% tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
+% uipushtool(tb, 'Separator', 'off');
+tb = uitoolbar(hFig);
+pkg.i_addbutton2fig(tb, 'off',  @i_genecards, 'fvtool_fdalinkbutton.gif', 'GeneCards...');
 % pkg.i_addbutton2fig(tb, 'on', {@i_PickColorMap, c}, 'plotpicker-compass.gif', 'Pick new color map...');
 
 pkg.i_addbutton2fig(tb, 'off', @i_savedata, 'export.gif', 'Export data...');

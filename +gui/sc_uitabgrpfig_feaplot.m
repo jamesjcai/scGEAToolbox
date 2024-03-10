@@ -13,7 +13,7 @@ pw1 = fileparts(mfilename('fullpath'));
 pth = fullfile(pw1, '..', 'resources', 'myTemplate.pptx');
 
 
-hFig=figure("Visible","off");
+hFig=figure("Visible","off", 'MenuBar','none');
 set(hFig, 'ToolBar', 'none');
 hFig.Position(3) = hFig.Position(3) * 1.8;
 
@@ -112,7 +112,7 @@ tb = uitoolbar(hFig);
 
 % pkg.i_addbutton2fig(tb, 'off', [], "IMG00107.GIF", " ");
 % pkg.i_addbutton2fig(tb, 'off', @i_linksubplots, 'plottypectl-rlocusplot.gif', 'Link subplots');
-pkg.i_addbutton2fig(tb, 'on',  @i_genecards, 'fvtool_fdalinkbutton.gif', 'GeneCards...');
+pkg.i_addbutton2fig(tb, 'off',  @i_genecards, 'fvtool_fdalinkbutton.gif', 'GeneCards...');
 pkg.i_addbutton2fig(tb, 'on', {@i_PickColorMap, c}, 'plotpicker-compass.gif', 'Pick new color map...');
 %pkg.i_addbutton2fig(tb, 'off', @i_RescaleExpr, 'IMG00074.GIF', 'Rescale expression level [log2(x+1)]');
 %pkg.i_addbutton2fig(tb, 'off', @i_ResetExpr, 'plotpicker-geobubble2.gif', 'Reset expression level');
