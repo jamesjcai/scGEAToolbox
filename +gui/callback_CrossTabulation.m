@@ -3,7 +3,7 @@ FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
 
 [thisc1, clable1, thisc2, clable2] = gui.i_select2class(sce);
-fw = gui.gui_waitbar;
+
 
 % [c, cL, noanswer] = gui.i_reordergroups(thisc1, [], FigureHandle);
 % thisc1=cL(c);
@@ -13,6 +13,8 @@ fw = gui.gui_waitbar;
 if isempty(thisc1) || isempty(thisc2)
     return;
 end
+
+fw = gui.gui_waitbar;
 
 sizesorted = false;
 labelsx='';

@@ -3,10 +3,10 @@ function callback_MultiGroupingViewer(src, ~)
     sce = guidata(FigureHandle);
     
     answer = questdlg('Select the type of multi-view:','', ...
-        'Multigrouping','Multiembedding','Cancel','Multigrouping');
+        'Two-group','Multigrouping','Multiembedding','Two-group');
 
     switch answer
-        case 'Multigrouping'
+        case 'Two-group'
 
             if matlab.ui.internal.isUIFigure(FigureHandle), focus(FigureHandle); end
             [thisc1, clable1, thisc2, clable2] = gui.i_select2state_new(sce);
@@ -25,8 +25,24 @@ function callback_MultiGroupingViewer(src, ~)
             
             if matlab.ui.internal.isUIFigure(FigureHandle), focus(FigureHandle); end
 
+        case 'Multigrouping'
+            if matlab.ui.internal.isUIFigure(FigureHandle), focus(FigureHandle); end
+            [thiscv, clablev] = gui.i_selectnstates(sce);
+            if isempty(thiscv) || isempty(clablev), return; end
+
+            hFig = figure('Visible', false);
+            hFig.Position(3) = hFig.Position(3) * 1.8;
+            [~, newpos] = gui.i_getchildpos(hFig, FigureHandle);
+            movegui(hFig, newpos);
+            figure(hFig);
+            for k=1:length(thiscv)
+                nexttile
+                gui.i_gscatter3(sce.s, thiscv{k}, 1, 1);
+                title(clablev{k});
+            end                
+            hFig.Visible=true;
         case 'Multiembedding'
-            listitems = fields(sce.struct_cell_embeddings);
+            listitems = fieldnames(sce.struct_cell_embeddings);
             n = length(listitems);
             valididx = false(n,1);
             for k=1:n
@@ -48,7 +64,7 @@ function callback_MultiGroupingViewer(src, ~)
                 'ListString', listitems, ...
                 'InitialValue', 1:n);
             if tf2 == 1
-                hFig = figure('Visible', false);                
+                hFig = figure('Visible', false);
                 hFig.Position(3) = hFig.Position(3) * 1.8;
                 [~, newpos] = gui.i_getchildpos(hFig, FigureHandle);
                 movegui(hFig, newpos);
