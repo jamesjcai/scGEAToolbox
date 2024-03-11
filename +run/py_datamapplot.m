@@ -1,7 +1,8 @@
-function py_datamapplot(sce, wkdir, isdebug)
+function py_datamapplot(sce, thisc, wkdir, isdebug)
 
-if nargin < 3, isdebug = true; end
-if nargin < 2, wkdir = []; end
+if nargin < 4, isdebug = true; end
+if nargin < 3, wkdir = []; end
+if nargin < 2, thisc = sce.c_cell_type_tx; end
 
 oldpth = pwd();
 pw1 = fileparts(mfilename('fullpath'));
@@ -41,7 +42,7 @@ end
 tmpfilelist = {'input.mat', 'c.txt'};
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 
-writematrix(sce.c_cell_type_tx, 'c.txt', 'Delimiter', ',');
+writematrix(thisc, 'c.txt', 'Delimiter', ',');
 s = sce.s;
 save('input.mat', '-v7.3', 's');
 disp('Input files written.');

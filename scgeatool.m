@@ -301,6 +301,11 @@ hAx = axes('Parent', FigureHandle, 'Visible', 'off');
 if ~isempty(sce) && sce.NumCells>0
     h = gui.i_gscatter3(sce.s, c, methodid, 1, hAx);
     title(hAx, sce.title);
+    if sce.s>2
+        rotate3d(hAx,'on');
+    else
+        brush(hAx,'on');
+    end
     subtitle(hAx,'[genes x cells]');
 else
     h = [];

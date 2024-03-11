@@ -9,13 +9,15 @@ if size(sce.s, 2) ~= 2
     return;
 end
 
+[thisc, clable] = gui.i_select1class(sce, true);
+
 extprogname = 'py_datamapplot';
 preftagname = 'externalwrkpath';
 [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
 if isempty(wkdir), return; end
 
 try
-    run.py_datamapplot(sce,wkdir);
+    run.py_datamapplot(sce, thisc, wkdir);
 catch ME
     errordlg(ME.message);
 end
