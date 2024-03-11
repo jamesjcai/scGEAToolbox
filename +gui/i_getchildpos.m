@@ -1,6 +1,5 @@
 function [px_new, childfigpos] = i_getchildpos(partentfigpos, childfigpos)
 px_new=[1, 1];
-childfigpos([1 2]) = px_new;
 if ~isequal(size(partentfigpos),[1 4])
     try
         partentfigpos = partentfigpos.Position;
@@ -15,7 +14,6 @@ if ~isequal(size(childfigpos),[1 4])
         return
     end
 end
-
 try
     p = partentfigpos;
     cx = [p(1)+p(3)/2 p(2)+p(4)/2];
@@ -30,5 +28,4 @@ try
 catch
     return;
 end
-
 end
