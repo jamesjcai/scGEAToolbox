@@ -10,7 +10,7 @@ if numel(unique(sce.c_cell_type_tx))>1
     switch answer
         case 'Cancel'
             return;
-        case 'All Cells'    
+        case 'All Cells'
         case 'Select Cells...'
             gui.callback_SelectCellsByClass(src, events);
             return;
@@ -21,8 +21,7 @@ end
 
     %     answer=questdlg('This analysis may take several hours. Continue?');
     %     if ~strcmpi(answer,'Yes'), return; end
-
-    useparallel = false;
+    %useparallel = false;
     answer = questdlg('Use parallel computing or not?', 'Parallel Computing', ...
         'Use parallel', 'Not use parallel', 'Use parallel');
     switch answer
@@ -77,7 +76,8 @@ end
     answer = questdlg('Save network A to MAT file?');
     switch answer
         case 'Yes'
-            [file, path] = uiputfile({'*.mat'; '*.*'}, 'Save as');
+            [file, path] = uiputfile({'*.mat'; '*.*'}, 'Save as', ...
+                'GeneRegulatoryNetwork');
             if isequal(file, 0) || isequal(path, 0)
                 return;
             else

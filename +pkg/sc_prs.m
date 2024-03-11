@@ -1,4 +1,4 @@
-function [clustered_mat, summary_df] = sc_prs(data, gene_names, Corr_cutoff, Kclusters)
+function [clustered_mat, summary_df] = sc_prs(A, gene_names, Corr_cutoff, Kclusters)
 % Reading in data as MATLAB array
 genes = gene_names;
 n_genes = length(gene_names);
@@ -7,15 +7,15 @@ n_genes = length(gene_names);
 %data = double(data);
 %data(logical(eye(size(data)))) = 0;
 
-data = data - diag(diag(data));
+A = A - diag(diag(A));
 
 % Binarizing using cutoff and removing unlinked nodes
-data(data < Corr_cutoff) = 0;
-[i, j, v] = find(data);
-data = data(:, any(data, 1));
-data = data(any(data, 2), :);
+A(A < Corr_cutoff) = 0;
+[i, j, v] = find(A);
+A = A(:, any(A, 1));
+A = A(any(A, 2), :);
 
-disp(['Correlation matrix created. Shape: ', num2str(size(data))]);
+disp(['Correlation matrix created. Shape: ', num2str(size(A))]);
 
 % [i, j, v] = find(data);
 edgelist = table(genes(j), genes(i), v, 'VariableNames', {'gene1', 'gene2', 'Val'});
@@ -32,7 +32,7 @@ graph_gc = Gc;
 
 figure
 plot(graph_gc)
-disp(['Giant component shape: ', num2str(size(data))]);
+disp(['Giant component shape: ', num2str(size(A))]);
 
 % Getting Laplacian matrix
 disp('Performing eigen decomposition...');
@@ -116,7 +116,6 @@ df.eff_clust = eff_clust;
 df.sens_clust = sens_clust;
 
 summary_df = sortrows(df, 'eff_orig', 'descend');
-
 clustered_mat = norm_prs_matrix(nds_row, nds_col);
-disp('DONE');
+
 end
