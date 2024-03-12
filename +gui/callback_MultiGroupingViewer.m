@@ -29,17 +29,20 @@ function callback_MultiGroupingViewer(src, ~)
             if matlab.ui.internal.isUIFigure(FigureHandle), focus(FigureHandle); end
             [thiscv, clablev] = gui.i_selectnstates(sce);
             if isempty(thiscv) || isempty(clablev), return; end
-
-            hFig = figure('Visible', false);
+            hFig = figure('Visible','off');
             hFig.Position(3) = hFig.Position(3) * 1.8;
-            [~, newpos] = gui.i_getchildpos(hFig, FigureHandle);
-            movegui(hFig, newpos);
-            figure(hFig);
             for k=1:length(thiscv)
                 nexttile
                 gui.i_gscatter3(sce.s, thiscv{k}, 1, 1);
                 title(clablev{k});
-            end                
+            end
+            [px_new] = gui.i_getchildpos(FigureHandle, hFig);
+            if ~isempty(px_new)
+                movegui(hFig, px_new);
+            else
+                movegui(hFig, 'center');
+            end
+            drawnow;
             hFig.Visible=true;
         case 'Multiembedding'
             listitems = fieldnames(sce.struct_cell_embeddings);
@@ -64,11 +67,8 @@ function callback_MultiGroupingViewer(src, ~)
                 'ListString', listitems, ...
                 'InitialValue', 1:n);
             if tf2 == 1
-                hFig = figure('Visible', false);
+                hFig = figure('Visible', 'off');
                 hFig.Position(3) = hFig.Position(3) * 1.8;
-                [~, newpos] = gui.i_getchildpos(hFig, FigureHandle);
-                movegui(hFig, newpos);
-                figure(hFig);
                 for k=1:length(indx2)
                     s = sce.struct_cell_embeddings.(listitems{k});
                     if size(s,2)>1 && size(s,1)==sce.NumCells
@@ -77,6 +77,13 @@ function callback_MultiGroupingViewer(src, ~)
                         title(listitems{k});
                     end
                 end
+                [px_new] = gui.i_getchildpos(FigureHandle, hFig);
+                if ~isempty(px_new)
+                    movegui(hFig, px_new);
+                else
+                    movegui(hFig, 'center');
+                end
+                drawnow;
                 hFig.Visible=true;
             end            
         otherwise
