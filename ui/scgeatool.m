@@ -1414,15 +1414,15 @@ end
             [sx] = gui.i_pickembedvalues(sce);
             if ~isempty(sx), sce.s = sx; end
         elseif strcmp(answer, 'No')
-            [methodtag] = gui.i_pickembedmethod_new;
+            [methodtag] = gui.i_pickembedmethod;
             if isempty(methodtag), return; end
-            %if isempty(ndim), [ndim] = gui.i_choose2d3dnmore; end
-            %if isempty(ndim), return; end
-            %methoddimtag = sprintf('%s%dd',methodtag, ndim);
+            if isempty(ndim), [ndim] = gui.i_choose2d3dnmore; end
+            if isempty(ndim), return; end
+            methoddimtag = sprintf('%s%dd',methodtag, ndim);
             usingold = false;
-            %if ~isfield(sce.struct_cell_embeddings, methoddimtag)
-            %    sce.struct_cell_embeddings = setfield(sce.struct_cell_embeddings,methoddimtag,[]);
-            %end
+            if ~isfield(sce.struct_cell_embeddings, methoddimtag)
+                sce.struct_cell_embeddings = setfield(sce.struct_cell_embeddings,methoddimtag,[]);
+            end
 
             % if ~isempty(sce.struct_cell_embeddings.(methoddimtag))
             %     answer1 = questdlg(sprintf('Use existing %s embedding or re-compute new embedding?', ...
@@ -1443,23 +1443,19 @@ end
             if ~usingold
                 [K, usehvgs] = gui.i_gethvgnum(sce);
                 if isempty(K), return; end
-                K
-                fw = gui.gui_waitbar_adv;
+                fw = gui.gui_waitbar;
                 try
                     forced = true;
-                    %if contains(methoddimtag, 'tsne'), disp('tSNE perplexity = 30'); end
-                    for k=1:length(methodtag)
-                        gui.gui_waitbar_adv(fw,(k-1)/length(methodtag),methodtag{k})
-                        sce = sce.embedcells(methodtag{k}, forced, usehvgs, ndim, K);
-                    end
+                    %if contains(methoddimtag, 'tsne'), disp('tSNE perplexity = 30'); end                    
+                    sce = sce.embedcells(methodtag, forced, usehvgs, ndim, K);
                     % disp('Following the library-size normalization and log1p-transformation, we visualized similarity among cells by projecting them into a reduced dimensional space using t-distributed stochastic neighbor embedding (t-SNE)/uniform manifold approximation and projection (UMAP).')
                 catch ME
-                    gui.gui_waitbar_adv(fw);
+                    gui.gui_waitbar(fw, true);
                     errordlg(ME.message,'');
                     % rethrow(ME)
                     return;
                 end
-                gui.gui_waitbar_adv(fw);
+                gui.gui_waitbar(fw);
             end
         else
             return;

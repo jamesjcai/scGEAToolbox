@@ -1,8 +1,8 @@
 function obj = embedcells(obj, methodtag, forced, usehvgs, ...
     ndim, numhvg, whitelist)
 if nargin < 7, whitelist = []; end
-if nargin < 6, numhvg = 2000; end
-if nargin < 5, ndim = 3; end
+if nargin < 6 || isempty(numhvg), numhvg = 2000; end
+if nargin < 5 || isempty(ndim), ndim = 3; end
 if nargin < 4 || isempty(usehvgs), usehvgs = true; end
 if nargin < 3 || isempty(forced), forced = false; end
 if nargin < 2, methodtag = 'tsne3d'; end
