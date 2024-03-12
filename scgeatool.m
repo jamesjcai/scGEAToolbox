@@ -1396,6 +1396,7 @@ end
     end
 
     function in_EmbeddingAgain(src, ~, ndim)
+        readytoshow = false;
         if nargin<3, ndim=[]; end
         if isempty(sce.struct_cell_embeddings)
             sce.struct_cell_embeddings = pkg.e_makeembedstruct;
@@ -1450,17 +1451,20 @@ end
                     for k=1:length(methodtag)
 
                         gui.gui_waitbar_adv(fw,(k-1)/length(methodtag), ...
-                            sprintf('Embedding cells using %s',methodtag{k}));
+                            sprintf('Embedding cells using %s', ...
+                            upper(methodtag{k})));
                         ndim = 2+contains(methodtag{k},'3d');
-                        sce = sce.embedcells(methodtag{k}, forced, usehvgs, ndim, K, [], false);
+                        sce = sce.embedcells(methodtag{k}, forced, usehvgs, ndim, K, [], false);                        
                     end
                     % disp('Following the library-size normalization and log1p-transformation, we visualized similarity among cells by projecting them into a reduced dimensional space using t-distributed stochastic neighbor embedding (t-SNE)/uniform manifold approximation and projection (UMAP).')
+                    
                 catch ME
                     gui.gui_waitbar_adv(fw);
                     errordlg(ME.message,'');
                     % rethrow(ME)
                     return;
                 end
+                if length(methodtag)>1, readytoshow = true; end
                 gui.gui_waitbar_adv(fw);
             end
         else
@@ -1468,6 +1472,12 @@ end
         end
         guidata(FigureHandle, sce);
         in_RefreshAll(src, [], true, false);   % keepview, keepcolr
+        if readytoshow
+            answer = questdlg('Show all avaiable embeddings?','');
+            if strcmp(answer, 'Yes')
+                gui.sc_multiembeddingview(sce, [], FigureHandle);
+            end
+        end
     end
 
     function in_DetermineCellTypeClustersGeneral(src, ~, usedefaultdb)
