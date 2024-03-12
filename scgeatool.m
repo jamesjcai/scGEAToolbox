@@ -1450,9 +1450,9 @@ end
                     for k=1:length(methodtag)
 
                         gui.gui_waitbar_adv(fw,(k-1)/length(methodtag), ...
-                            sprintf('Embedding cells using %s',methodtag{k}))
+                            sprintf('Embedding cells using %s',methodtag{k}));
                         ndim = 2+contains(methodtag{k},'3d');
-                        sce = sce.embedcells(methodtag{k}, forced, usehvgs, ndim, K);
+                        sce = sce.embedcells(methodtag{k}, forced, usehvgs, ndim, K, [], false);
                     end
                     % disp('Following the library-size normalization and log1p-transformation, we visualized similarity among cells by projecting them into a reduced dimensional space using t-distributed stochastic neighbor embedding (t-SNE)/uniform manifold approximation and projection (UMAP).')
                 catch ME

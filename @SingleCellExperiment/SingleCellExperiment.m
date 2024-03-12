@@ -88,7 +88,7 @@ methods
 
     obj = assigncelltype(obj, speciesid, keepclusterid)
     obj = clustercells(obj, k, methodid, forced, sx)
-    obj = embedcells(obj, methodid, forced, usehvgs, ndim, numhvg, whitelist)
+    obj = embedcells(obj, methodid, forced, usehvgs, ndim, numhvg, whitelist, showwaitbar)
     obj = estimatecellcycle(obj, forced, methodid)
     obj = estimatepotency(obj, speciesid, forced)
     obj = onestepraw2anno(obj, speciesid);

@@ -1,4 +1,5 @@
-function [Y, S] = mt_metaviz(X, ndim)
+function [Y, S] = mt_metaviz(X, ndim, showwaitbar)
+if nargin < 3, showwaitbar = true; end
 if nargin < 2, ndim = 2; end
 S = [];
 pw1 = fileparts(mfilename('fullpath'));
@@ -23,7 +24,7 @@ catch ME
     disp('Using memory mapping file.');
 end
 
-fw = gui.gui_waitbar_adv;
+if showwaitbar, fw = gui.gui_waitbar_adv; end
 Xn = log(1+sc_norm(X))';
 try
     data = svdpca(Xn, 300, 'random');
@@ -32,7 +33,7 @@ catch
 end
 %data=Xn;
 
-gui.gui_waitbar_adv(fw, 1/nstep, 'Meta Visualization - PCA...');
+if showwaitbar, gui.gui_waitbar_adv(fw, 1/nstep, 'Meta Visualization - PCA...'); end
 [~, S{1}] = pca(data, NumComponents = ndim);
 
 try
@@ -43,7 +44,7 @@ catch
 end
 
 try
-    gui.gui_waitbar_adv(fw, 1/nstep, 'Meta Visualization - MDS...');
+    if showwaitbar, gui.gui_waitbar_adv(fw, 1/nstep, 'Meta Visualization - MDS...'); end
     %D=squareform(pdist(data));
     S{end+1} = pkg.e_embedbyd(sqrt(DS), ndim, 2);
 catch
@@ -52,50 +53,52 @@ end
 
 %[y]=pkg.isomap(log(sc_norm(X)+1)');
 
-gui.gui_waitbar_adv(fw, 2/nstep, 'Meta Visualization - KPCA1...');
+if showwaitbar, gui.gui_waitbar_adv(fw, 2/nstep, 'Meta Visualization - KPCA1...'); end
 S{end+1} = pkg.kpca(DS, ndim, 30, true);
 
-gui.gui_waitbar_adv(fw, 2/nstep, 'Meta Visualization - KPCA2...');
+if showwaitbar, gui.gui_waitbar_adv(fw, 2/nstep, 'Meta Visualization - KPCA2...'); end
 S{end+1} = pkg.kpca(DS, ndim, 40, true);
 
-gui.gui_waitbar_adv(fw, 2/nstep, 'Meta Visualization - KPCA3...');
+if showwaitbar, gui.gui_waitbar_adv(fw, 2/nstep, 'Meta Visualization - KPCA3...'); end
 S{end+1} = pkg.kpca(DS, ndim, 50, true);
 
-gui.gui_waitbar_adv(fw, 3/nstep, 'Meta Visualization - TSNE 1/3...');
+if showwaitbar, gui.gui_waitbar_adv(fw, 3/nstep, 'Meta Visualization - TSNE 1/3...'); end
 S{end+1} = tsne(data, Perplexity = 30, NumDimensions = ndim);
 
-gui.gui_waitbar_adv(fw, 3/nstep, 'Meta Visualization - TSNE 2/3...');
+if showwaitbar, gui.gui_waitbar_adv(fw, 3/nstep, 'Meta Visualization - TSNE 2/3...'); end
 S{end+1} = tsne(data, Perplexity = 15, NumDimensions = ndim);
 
-gui.gui_waitbar_adv(fw, 3/nstep, 'Meta Visualization - TSNE 3/3...');
+if showwaitbar, gui.gui_waitbar_adv(fw, 3/nstep, 'Meta Visualization - TSNE 3/3...'); end
 S{end+1} = tsne(data, Perplexity = 50, NumDimensions = ndim);
 
-gui.gui_waitbar_adv(fw, 4/nstep, 'Meta Visualization - UMAP 1/3...');
+if showwaitbar, gui.gui_waitbar_adv(fw, 4/nstep, 'Meta Visualization - UMAP 1/3...'); end
 S{end+1} = run_umap_lite(data, 'n_components', ndim, ...
     'n_neighbors', 15, 'verbose', 'none');
 
-gui.gui_waitbar_adv(fw, 4/nstep, 'Meta Visualization - UMAP 2/3...');
+if showwaitbar, gui.gui_waitbar_adv(fw, 4/nstep, 'Meta Visualization - UMAP 2/3...'); end
 S{end+1} = run_umap_lite(data, 'n_components', ndim, ...
     'n_neighbors', 30, 'verbose', 'none');
 
-gui.gui_waitbar_adv(fw, 4/nstep, 'Meta Visualization - UMAP 3/3...');
+if showwaitbar, gui.gui_waitbar_adv(fw, 4/nstep, 'Meta Visualization - UMAP 3/3...'); end
 S{end+1} = run_umap_lite(data, 'n_components', ndim, ...
     'n_neighbors', 50, 'verbose', 'none');
 
-gui.gui_waitbar_adv(fw, 5/nstep, 'Meta Visualization - PHATE 1/3...');
+if showwaitbar, gui.gui_waitbar_adv(fw, 5/nstep, 'Meta Visualization - PHATE 1/3...'); end
 S{end+1} = phate(sqrt(Xn), 't', 20, 'ndim', ndim, 'k', 5);
-gui.gui_waitbar_adv(fw, 5/nstep, 'Meta Visualization - PHATE 2/3...');
+
+if showwaitbar, gui.gui_waitbar_adv(fw, 5/nstep, 'Meta Visualization - PHATE 2/3...'); end
 S{end+1} = phate(sqrt(Xn), 't', 20, 'ndim', ndim, 'k', 15, 'pot_method', 'sqrt');
-gui.gui_waitbar_adv(fw, 5/nstep, 'Meta Visualization - PHATE 3/3...');
+
+if showwaitbar, gui.gui_waitbar_adv(fw, 5/nstep, 'Meta Visualization - PHATE 3/3...'); end
 S{end+1} = phate(sqrt(Xn), 't', 20, 'ndim', ndim, 'k', 30);
 
-gui.gui_waitbar_adv(fw, 6/nstep, 'Meta Visualization - METAVIZ');
+if showwaitbar, gui.gui_waitbar_adv(fw, 6/nstep, 'Meta Visualization - METAVIZ'); end
 if usingmmfile
     [Y] = metaviz_memmap(S, ndim);
 else
     [Y] = metaviz_tensor(S, ndim);
 end
-gui.gui_waitbar_adv(fw);
+if showwaitbar, gui.gui_waitbar_adv(fw); end
 end
 
 %figure; scatter(Y(:,1),Y(:,2));

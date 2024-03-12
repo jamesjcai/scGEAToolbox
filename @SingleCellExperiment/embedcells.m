@@ -1,5 +1,6 @@
 function obj = embedcells(obj, methodtag, forced, usehvgs, ...
-    ndim, numhvg, whitelist)
+    ndim, numhvg, whitelist, showwaitbar)
+if nargin < 8, showwaitbar = true; end
 if nargin < 7, whitelist = []; end
 if nargin < 6 || isempty(numhvg), numhvg = 2000; end
 if nargin < 5 || isempty(ndim), ndim = 3; end
@@ -75,14 +76,14 @@ if isempty(obj.s) || forced
         case {'phate','phate2d','phate3d'}
             obj.s = sc_phate(X, ndim);
         case {'metaviz','metaviz2d','metaviz3d'}
-            obj.s = run.mt_metaviz(X, ndim);
+            obj.s = run.mt_metaviz(X, ndim, showwaitbar);
     end
 
-    % if contains(methodtag,'2d') || contains(methodtag,'3d')
-    %     methoddimtag = methodtag;
-    % elseif ndim > 3
+    if contains(methodtag,'2d') || contains(methodtag,'3d')
+        methoddimtag = methodtag;
+    elseif ndim > 3
         methoddimtag = sprintf('%s%dd',methodtag, ndim);
-    % end
+    end
 
     obj.struct_cell_embeddings.(methoddimtag) = single(obj.s);
     % disp('SCE.S added');
