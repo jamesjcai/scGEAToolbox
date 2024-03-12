@@ -44,6 +44,11 @@ function callback_MultiGroupingViewer(src, ~)
             end
             drawnow;
             hFig.Visible=true;
+            evalin('base', 'h=findobj(gcf,''type'',''axes'');');
+            evalin('base', 'hlink = linkprop(h,{''CameraPosition'',''CameraUpVector''});');
+            % h=findobj(hFig,'type','axes');
+            % linkprop(h,{'CameraPosition','CameraUpVector'});
+            rotate3d(hFig,'on');
         case 'Multiembedding'
             listitems = fieldnames(sce.struct_cell_embeddings);
             n = length(listitems);

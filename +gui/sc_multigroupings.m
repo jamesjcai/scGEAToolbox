@@ -34,6 +34,9 @@ colormap(ax2, pkg.i_mycolorlines(kc2));
 
 evalin('base', 'h=findobj(gcf,''type'',''axes'');');
 evalin('base', 'hlink = linkprop(h,{''CameraPosition'',''CameraUpVector''});');
+
+% h=findobj(hFig,'type','axes');
+% linkprop(h,{'CameraPosition','CameraUpVector'});
 rotate3d(hFig, 'on');
 hFig.Position(3) = hFig.Position(3) * 2;
 
