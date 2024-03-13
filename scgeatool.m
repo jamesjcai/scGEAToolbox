@@ -1420,8 +1420,16 @@ end
             if isempty(methodtag), return; end
             %if isempty(ndim), [ndim] = gui.i_choose2d3dnmore; end
             %if isempty(ndim), return; end
-            %methoddimtag = sprintf('%s%dd',methodtag, ndim);
-            usingold = false;
+            %methoddimtag = sprintf('%s%dd',methodtag, ndim);            
+            answer = questdlg('Overwritten existing embeddings, if any?','');
+            switch answer
+                case 'Yes'
+                    overwrittenold = true;
+                case 'No'
+                    overwrittenold = false;
+                otherwise
+                    return;
+            end
             %if ~isfield(sce.struct_cell_embeddings, methoddimtag)
             %    sce.struct_cell_embeddings = setfield(sce.struct_cell_embeddings,methoddimtag,[]);
             %end
@@ -1442,32 +1450,37 @@ end
             % end
 
             % whitelist = [];
-            if ~usingold
-                [K, usehvgs] = gui.i_gethvgnum(sce);
-                if isempty(K), return; end                
-                fw = gui.gui_waitbar_adv;
-                try
-                    forced = true;
-                    %if contains(methoddimtag, 'tsne'), disp('tSNE perplexity = 30'); end
-                    for k=1:length(methodtag)
+            
+            [K, usehvgs] = gui.i_gethvgnum(sce);
+            if isempty(K), return; end                
+            fw = gui.gui_waitbar_adv;
+            try
+                forced = true;
+                %if contains(methoddimtag, 'tsne'), disp('tSNE perplexity = 30'); end
+                for k=1:length(methodtag)
 
+
+                    if ~overwrittenold && isfield(sce.struct_cell_embeddings, methodtag{k}) && ~isempty(sce.struct_cell_embeddings.(methodtag{k}))
+                        fprintf('Embedding cells using %s - skipping...\n', upper(methodtag{k}));
+                        continue;
+                    else
                         gui.gui_waitbar_adv(fw,(k-1)/length(methodtag), ...
-                            sprintf('Embedding cells using %s', ...
-                            upper(methodtag{k})));
-                        ndim = 2+contains(methodtag{k},'3d');
-                        sce = sce.embedcells(methodtag{k}, forced, usehvgs, ndim, K, [], false);                        
+                            sprintf('Embedding cells using %s', upper(methodtag{k})));          
                     end
-                    % disp('Following the library-size normalization and log1p-transformation, we visualized similarity among cells by projecting them into a reduced dimensional space using t-distributed stochastic neighbor embedding (t-SNE)/uniform manifold approximation and projection (UMAP).')
-                    
-                catch ME
-                    gui.gui_waitbar_adv(fw);
-                    errordlg(ME.message,'');
-                    % rethrow(ME)
-                    return;
+                    ndim = 2 + contains(methodtag{k},'3d');
+                    sce = sce.embedcells(methodtag{k}, forced, usehvgs, ndim, K, [], false);
                 end
-                if length(methodtag)>1, readytoshow = true; end
+                % disp('Following the library-size normalization and log1p-transformation, we visualized similarity among cells by projecting them into a reduced dimensional space using t-distributed stochastic neighbor embedding (t-SNE)/uniform manifold approximation and projection (UMAP).')
+                
+            catch ME
                 gui.gui_waitbar_adv(fw);
+                errordlg(ME.message,'');
+                % rethrow(ME)
+                return;
             end
+            if length(methodtag)>1, readytoshow = true; end
+            gui.gui_waitbar_adv(fw);
+
         else
             return;
         end
