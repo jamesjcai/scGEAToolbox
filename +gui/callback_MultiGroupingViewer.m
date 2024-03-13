@@ -56,7 +56,8 @@ function callback_MultiGroupingViewer(src, ~)
             hBr = brush(hFig);
             hBr.ActionPostCallback = {@onBrushAction, axesv};
             
-        case 'Multiembedding'
+        case 'Multiembedding'            
+
             listitems = fieldnames(sce.struct_cell_embeddings);
             n = length(listitems);
             valididx = false(n,1);
@@ -79,13 +80,17 @@ function callback_MultiGroupingViewer(src, ~)
                 'ListString', listitems, ...
                 'InitialValue', 1:n);
             if tf2 == 1
+
+                gui.sc_multiembeddingview(sce, listitems(indx2), FigureHandle);
+
+                %{
                 hFig = figure('Visible', 'off');
                 hFig.Position(3) = hFig.Position(3) * 1.8;
                 axesv = cell(length(indx2),1);
                 for k=1:length(indx2)
                     s = sce.struct_cell_embeddings.(listitems{k});
                     if size(s,2)>1 && size(s,1)==sce.NumCells
-                        axesv{k}=nexttile;
+                        axesv{k} = nexttile;
                         gui.i_gscatter3(s, sce.c, 1, 1);
                         title(listitems{k});
                     end
@@ -107,7 +112,8 @@ function callback_MultiGroupingViewer(src, ~)
 
                 hBr = brush(hFig);
                 hBr.ActionPostCallback = {@onBrushAction, axesv};
-            end 
+                %}
+            end
         otherwise
     end
 

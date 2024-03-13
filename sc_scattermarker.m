@@ -124,8 +124,8 @@ elseif isStringScalar(targetg) || ischar(targetg)
                 grid on
 
                 if ~is2d
-                    evalin('base', 'h=findobj(gcf,''type'',''axes'');');
-                    evalin('base', 'hlink = linkprop(h,{''CameraPosition'',''CameraUpVector''});');
+                    % evalin('base', 'h=findobj(gcf,''type'',''axes'');');
+                    evalin('base', 'linkprop(findobj(gcf,''type'',''axes''), {''CameraPosition'',''CameraUpVector''});');
                     evalin('base', 'rotate3d on');
                 end
                 hFig = gcf;
