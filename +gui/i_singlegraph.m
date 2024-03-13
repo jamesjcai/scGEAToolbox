@@ -1,4 +1,5 @@
-function i_singlegraph(G1, figname)
+function i_singlegraph(G1, figname, parentfig)
+if nargin < 3, parentfig = []; end
 if nargin < 2, figname = ''; end
 if nargin < 1
     G1 = WattsStrogatz(100, 5, 0.15);
@@ -19,11 +20,13 @@ load(fullfile(mfolder, ...
 w = 3;
 l = 1;
 
-hFig = figure('name', figname, 'Visible', 'off');
+hFig = figure('Visible', 'off');
 h1 = axes(hFig);
 [p1] = drawnetwork(G1, h1);
 
-tb = uitoolbar(hFig);
+%tb = uitoolbar(hFig);
+tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
+uipushtool(tb, 'Separator', 'off');
 pkg.i_addbutton2fig(tb, 'off', @ChangeFontSize, 'noun_font_size_591141.gif', 'ChangeFontSize');
 pkg.i_addbutton2fig(tb, 'off', @ChangeWeight, 'noun_Weight_2243621.gif', 'ChangeWeight');
 pkg.i_addbutton2fig(tb, 'off', @ChangeLayout, 'noun_Layout_792775.gif', 'ChangeLayout');
@@ -34,10 +37,23 @@ pkg.i_addbutton2fig(tb, 'off', @AnimateCutoff, 'noun_trim_3665385.gif', 'Animate
 pkg.i_addbutton2fig(tb, 'off', @SaveAdj, 'export.gif', 'Export & save data');
 pkg.i_addbutton2fig(tb, 'on', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 
-movegui(hFig, 'center');
+title(h1,figname);
 
-set(hFig, 'visible', 'on');
-title(figname);
+if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 
+    [px_new] = gui.i_getchildpos(parentfig, hFig);
+    if ~isempty(px_new)
+        movegui(hFig, px_new);
+    else
+        movegui(hFig, 'center');
+    end
+else
+    movegui(hFig, 'center');
+end
+drawnow;
+hFig.Visible=true;
+
+
+
 
 
     function SaveAdj(~, ~)
@@ -58,9 +74,9 @@ title(figname);
                 labels = {'Save adjacency matrix A1 to variable named:', ...
                     'Save graph G1 to variable named:', ...
                     'Save genelist g1 to variable named:'};
-                A1 = adjacency(G1, 'weighted');
+                A1 = full(adjacency(G1, 'weighted'));
                 g1 = string(G1.Nodes.Name);
-                vars = {'A1', 'G1', 'g1'}; ...
+                vars = {'A', 'G', 'g'}; ...
                     values = {A1, G1, g1};
                 msgfig = export2wsdlg(labels, vars, values);
                 uiwait(msgfig);

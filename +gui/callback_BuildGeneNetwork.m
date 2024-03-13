@@ -16,6 +16,7 @@ x = sce.X(i, :);
 %     export2wsdlg({'y','x'},{'y','x'},{y,x})
 x = sc_transform(x);
 A = sc_pcnet(x);
+%if issparse(A), A = full(A); end
 gui.gui_waitbar(fw);
-sc_grnview(A, glist);
+sc_grnview(A, glist, [], FigureHandle);
 end

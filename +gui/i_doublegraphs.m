@@ -1,4 +1,6 @@
-function [hFig] = i_doublegraphs(G1, G2, figname)
+function [hFig] = i_doublegraphs(G1, G2, figname, parentfig)
+
+if nargin < 4, parentfig = []; end
 if nargin < 3, figname = ''; end
 if nargin < 2
     G1 = WattsStrogatz(100, 5, 0.15);
@@ -19,7 +21,8 @@ load(fullfile(mfolder, ...
 
 w = 3;
 l = 1;
-hFig = figure('name', figname, 'Visible', 'off');
+
+hFig = figure('Visible', 'off');
 set(0, 'CurrentFigure', hFig);
 
 tiledlayout(1, 2, 'TileSpacing', 'compact', ...
@@ -54,8 +57,20 @@ if exist('suptitle.m', 'file')
 else
     hFig.Position(3) = hFig.Position(3) * 2.2;
 end
-movegui(hFig, 'center');
-set(hFig, 'visible', 'on');
+
+if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 
+    [px_new] = gui.i_getchildpos(parentfig, hFig);
+    if ~isempty(px_new)
+        movegui(hFig, px_new);
+    else
+        movegui(hFig, 'center');
+    end
+else
+    movegui(hFig, 'center');
+end
+drawnow;
+hFig.Visible=true;
+
 
     function SaveAdj(~, ~)
         if ~(ismcc || isdeployed)
@@ -65,8 +80,8 @@ set(hFig, 'visible', 'on');
                 'Save graph G2 to variable named:', ...
                 'Save genelist g1 to variable named:', ...
                 'Save genelist g2 to variable named:'};
-            A1 = adjacency(G1, 'weighted');
-            A2 = adjacency(G2, 'weighted');
+            A1 = full(adjacency(G1, 'weighted'));
+            A2 = full(adjacency(G2, 'weighted'));
             g1 = string(G1.Nodes.Name);
             g2 = string(G2.Nodes.Name);
             vars = {'A1', 'A2', 'G1', 'G2', 'g1', 'g2'}; ...

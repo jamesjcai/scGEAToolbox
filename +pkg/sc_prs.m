@@ -1,14 +1,6 @@
-function [clustered_mat, summary_df] = sc_prs(A, gene_names, Corr_cutoff, Kclusters)
-% Reading in data as MATLAB array
-genes = gene_names;
-n_genes = length(gene_names);
+function [clustered_mat, summary_df] = sc_prs(A, g, Kclusters)
 
-% Converting to MATLAB matrix
-%data = double(data);
-%data(logical(eye(size(data)))) = 0;
-
-A = A - diag(diag(A));
-
+%{
 % Binarizing using cutoff and removing unlinked nodes
 A(A < Corr_cutoff) = 0;
 [i, j, v] = find(A);
@@ -18,7 +10,7 @@ A = A(any(A, 2), :);
 disp(['Correlation matrix created. Shape: ', num2str(size(A))]);
 
 % [i, j, v] = find(data);
-edgelist = table(genes(j), genes(i), v, 'VariableNames', {'gene1', 'gene2', 'Val'});
+edgelist = table(g(j), g(i), v, 'VariableNames', {'gene1', 'gene2', 'Val'});
 edgelist = edgelist(edgelist.Val ~= 0, :);
 
 G = graph(edgelist.gene1, edgelist.gene2);
@@ -41,28 +33,30 @@ if ismultigraph(Gc)
     figure
     plot(Gc)
 end
-L = full(laplacian(Gc));
-n_genes = length(L);
-[vectors, values] = eigs(L, 21, 'smallestabs');
-values(1,:) = [];
-values(:,1) = [];
-vectors(:,1) = [];
-var = 1 ./ values;
-var(isinf(var)) = 0 ;
-disp('DONE');
+%}
+
+A = 0.5*(A + A');
+A = A - diag(diag(A));
+G = graph(A, g);
+L = laplacian(G);
+n = length(L);
+
+
+[V, D] = eigs(L, 21, 'smallestabs');
+D(1,:) = [];
+D(:,1) = [];
+V(:,1) = [];
+varx = 1 ./ D;
+varx(isinf(varx)) = 0;
 
 % Calculating Covariance
-cov = vectors * var * vectors';
+cov = V * varx * V';
 
 prs_matrix = cov.^2;
+norm_prs_matrix = prs_matrix ./ diag(prs_matrix);
 
-% Normalizing
-disp('Normalizing...');
-self_dp = diag(prs_matrix);
-norm_prs_matrix = prs_matrix ./ repmat(self_dp, 1, n_genes);
-disp('DONE');
 
-% Summary DataFrame
+
 disp('Summarising...');
 orf_name = Gc.Nodes.Name;
 deg = diag(L);
@@ -70,17 +64,13 @@ eff_orig = mean(norm_prs_matrix, 2);
 sens_orig = mean(norm_prs_matrix, 1)';
 
 df = table(orf_name, deg, eff_orig, sens_orig);
-
 eigenvector_centr = centrality(Gc, 'eigenvector');
 closeness_centr = centrality(Gc, 'closeness');
-
 df.trans = calculate_clustering_coefficient(adjacency(Gc));
 df.eigenvec_centr = eigenvector_centr;
 df.closeness_centr = closeness_centr;
-df.smallest_eigenvec = vectors(:, 4);
+df.smallest_eigenvec = V(:, 4);
 
-
-disp('DONE');
 
 % Clustering
 disp('Clustering...');

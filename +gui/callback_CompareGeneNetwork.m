@@ -20,5 +20,5 @@ A1 = sc_pcnet(x1, 3, false, true, false);
 A2 = sc_pcnet(x2, 3, false, true, false);
 gui.gui_waitbar(fw);
 pause(1)
-sc_grnview2(A1, A2, glist);
+sc_grnview2(A1, A2, glist, [], FigureHandle);
 end
