@@ -31,8 +31,9 @@ function callback_MultiGroupingViewer(src, ~)
             if isempty(thiscv) || isempty(clablev), return; end
             hFig = figure('Visible','off');
             hFig.Position(3) = hFig.Position(3) * 1.8;
+            axesv = cell(length(thiscv),1);
             for k=1:length(thiscv)
-                nexttile
+                axesv{k} = nexttile;
                 gui.i_gscatter3(sce.s, thiscv{k}, 1, 1);
                 title(clablev{k});
             end
@@ -44,11 +45,17 @@ function callback_MultiGroupingViewer(src, ~)
             end
             drawnow;
             hFig.Visible=true;
-            evalin('base', 'h=findobj(gcf,''type'',''axes'');');
-            evalin('base', 'hlink = linkprop(h,{''CameraPosition'',''CameraUpVector''});');
-            % h=findobj(hFig,'type','axes');
-            % linkprop(h,{'CameraPosition','CameraUpVector'});
+            %evalin('base', 'h = findobj(gcf,''type'',''axes'');');
+            %evalin('base', 'hlink = linkprop(h, {''CameraPosition'',''CameraUpVector''});');
+            
+            evalin('base', 'linkprop(findobj(gcf,''type'',''axes''), {''CameraPosition'',''CameraUpVector''});');
+            %h = findobj(hFig,'type','axes');
+            %linkprop(h, {'CameraPosition','CameraUpVector'});
+
             rotate3d(hFig,'on');
+            hBr = brush(hFig);
+            hBr.ActionPostCallback = {@onBrushAction, axesv};
+            
         case 'Multiembedding'
             listitems = fieldnames(sce.struct_cell_embeddings);
             n = length(listitems);
@@ -74,10 +81,11 @@ function callback_MultiGroupingViewer(src, ~)
             if tf2 == 1
                 hFig = figure('Visible', 'off');
                 hFig.Position(3) = hFig.Position(3) * 1.8;
+                axesv = cell(length(indx2),1);
                 for k=1:length(indx2)
                     s = sce.struct_cell_embeddings.(listitems{k});
                     if size(s,2)>1 && size(s,1)==sce.NumCells
-                        nexttile
+                        axesv{k}=nexttile;
                         gui.i_gscatter3(s, sce.c, 1, 1);
                         title(listitems{k});
                     end
@@ -90,7 +98,31 @@ function callback_MultiGroupingViewer(src, ~)
                 end
                 drawnow;
                 hFig.Visible=true;
-            end            
+                % evalin('base', 'h = findobj(gcf,''type'',''axes'');');
+                % evalin('base', 'a = false(length(h),1); for k=1:length(h), [~,b]=view(h(k)); if b==90, a(k) = true; end; end');
+                % evalin('base', 'h(a) = [];');
+                % evalin('base', 'hlink = linkprop(h,{''CameraPosition'',''CameraUpVector''});');
+
+                evalin('base', 'linkprop(findobj(gcf,''type'',''axes''), {''CameraPosition'',''CameraUpVector''});');
+
+                hBr = brush(hFig);
+                hBr.ActionPostCallback = {@onBrushAction, axesv};
+            end 
         otherwise
     end
+
+        function onBrushAction(~, event, axv)
+            for kx=1:length(axv)
+                if isequal(event.Axes, axv{kx})
+                    idx = kx;
+                    continue;
+                end
+            end
+            d = axv{idx}.Children.BrushData;
+            for kx=1:length(axv)
+                if kx ~= idx
+                    axv{kx}.Children.BrushData = d;
+                end
+            end
+        end
 end

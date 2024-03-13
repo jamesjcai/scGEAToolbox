@@ -313,8 +313,9 @@ else
 end
 
 dt = datacursormode(FigureHandle);
+dt.Enable = 'off';
 dt.UpdateFcn = {@i_myupdatefcnx};
-
+% disableDefaultInteractivity(hAx);
 
 DeftToolbarHandle = findall(FigureHandle, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
 MainToolbarHandle = uitoolbar('Parent', FigureHandle);
@@ -2082,10 +2083,13 @@ end
         end
     end
 
-    function [txt] = i_myupdatefcnx(~, event_obj)
+    function [txt] = i_myupdatefcnx(pdt, event_obj)
         % pos = event_obj.Position;
-        idx = event_obj.DataIndex;
-        txt = cL(c(idx));
+        %idx = event_obj.DataIndex;
+        %txt = cL(c(idx));
+        % https://www.mathworks.com/matlabcentral/answers/549567-disable-datatips-on-click
+        pdt.Visible = 'off';
+        txt = '';        
     end
 
     function [isdone] = ix_labelclusters(notasking)
