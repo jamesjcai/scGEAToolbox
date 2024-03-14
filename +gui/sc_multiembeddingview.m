@@ -25,12 +25,22 @@ end
     hBr = brush(hFig);
     hBr.ActionPostCallback = {@onBrushAction, axesv};
 
-
     tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
     uipushtool(tb, 'Separator', 'off');
     %tb = uitoolbar(hFig);
     pkg.i_addbutton2fig(tb, 'on',  @in_showgeneexp, 'list.gif', 'Select a gene to show expression...');
- 
+    pkg.i_addbutton2fig(tb, 'off',  @in_showcellstate, 'list2.gif', 'Select a gene to show expression...');
+     
+    function in_showcellstate(~, ~)
+        [thisc, clable] = gui.i_select1state(sce);
+        if isempty(thisc), return; end
+        [c] = grp2idx(thisc);
+        for kx = 1:length(axesv)
+           s = sce.struct_cell_embeddings.(embeddingtags{kx});
+           gui.i_gscatter3(s, c, 1, 1, axesv{kx});
+           title(axesv{kx}, string(embeddingtags{k})+" - "+string(clable));
+        end
+    end
 
     function in_showgeneexp(~, ~)
         [gsorted] = gui.i_sortgenenames(sce);
@@ -42,14 +52,12 @@ end
             for kx = 1:length(axesv)
                s = sce.struct_cell_embeddings.(embeddingtags{kx});
                gui.i_gscatter3(s, c, 1, 1, axesv{kx});
-               title(axesv{kx}, string(embeddingtags{k})+" "+string(gsorted(indx)));
+               title(axesv{kx}, string(embeddingtags{k})+" - "+string(gsorted(indx)));
             end
             a = getpref('scgeatoolbox', 'prefcolormapname', 'autumn');
             gui.i_setautumncolor(c, a, true, any(c==0));
         end
     end
-    
-
 
     function onBrushAction(~, event, axv)
         for kx=1:length(axv)
@@ -65,4 +73,5 @@ end
             end
         end
     end
+
 end    
