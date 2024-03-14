@@ -9,12 +9,8 @@ if nargin < 3, isdebug = false; end
 
 oldpth = pwd();
 [isok, msg, codepath] = commoncheck_R('R_decontX');
-if ~isok
-    error(msg);
-    X = [];
-    contamination = [];
-    return;
-end
+
+if ~isok, error(msg); end
 if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
 
 
@@ -24,6 +20,7 @@ end
 
 tmpfilelist = {'input.mat', 'output.h5'};
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+
 
 if issparse(X), X = full(X); end
 save('input.mat', 'X', '-v7.3');
