@@ -54,6 +54,9 @@ if isvalid(fw)
 end
 % fw = gui.gui_waitbar([],[],'Running DataMapPlot...');
 codefullpath = fullfile(codepth,'script.py');
+
+pkg.i_addwd2script(codefullpath, wkdir, 'python');
+
 cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);
 disp(cmdlinestr)
 [status] = system(cmdlinestr, '-echo');
