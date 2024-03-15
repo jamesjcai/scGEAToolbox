@@ -1035,9 +1035,10 @@ end
         preftagname = 'externalwrkpath';
         [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
 
-        [ok] = gui.i_confirmscript('Detect Ambient RNA Contamination (decontX)', ...
-            'R_decontX', 'r');
-        if ~ok, return; end
+        %[ok] = gui.i_confirmscript('Detect Ambient RNA Contamination (decontX)', ...
+        %    'R_decontX', 'r');
+        %if ~ok, return; end
+
         fw = gui.gui_waitbar;
         try
             [Xdecon, contamination] = run.r_decontX(sce, wkdir);
