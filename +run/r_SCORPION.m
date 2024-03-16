@@ -35,6 +35,7 @@ if isempty(Rpath)
 end
 
 codefullpath = fullfile(codepth,'script.R');
+pkg.i_addwd2script(codefullpath, wkdir, 'R');
 pkg.RunRcode(codefullpath, Rpath);
 if exist('output.h5', 'file')
     regNet = h5read('output.h5', '/regNet');

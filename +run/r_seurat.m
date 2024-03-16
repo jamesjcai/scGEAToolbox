@@ -33,7 +33,9 @@ save('input.mat', 'X', 'ndim', '-v7.3');
 writematrix(sce.g, 'g.txt');
 
 Rpath = getpref('scgeatoolbox', 'rexecutablepath');
+
 codefullpath = fullfile(codepath,'script.R');
+pkg.i_addwd2script(codefullpath, wkdir, 'R');
 pkg.RunRcode(codefullpath, Rpath);
 
 if exist('output.h5', 'file')

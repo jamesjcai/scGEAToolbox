@@ -64,6 +64,7 @@ function [succeeded] = py_sceodesic(sce, wkdir, isdebug)
     end
     
     codefullpath = fullfile(codepth,'script.py');
+    pkg.i_addwd2script(codefullpath, wkdir, 'python');
     cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);
     disp(cmdlinestr)
     [status1] = system(cmdlinestr, '-echo');
