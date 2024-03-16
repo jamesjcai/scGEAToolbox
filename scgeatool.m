@@ -1039,13 +1039,13 @@ end
             'R_decontX', 'r');
         if ~ok, return; end
         fw = gui.gui_waitbar;
-        try
+        %try
             [Xdecon, contamination] = run.r_decontX(sce, wkdir);
-        catch
-            gui.gui_waitbar(fw);
-            errordlg('Runtime error.','');
-            return;
-        end
+        %catch
+        %    gui.gui_waitbar(fw);
+        %    errordlg('Runtime error.','');
+        %    return;
+        %end
         gui.gui_waitbar(fw);
         figure('WindowStyle', 'modal');
         gui.i_stemscatter(sce.s, contamination);

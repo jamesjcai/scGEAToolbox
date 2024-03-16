@@ -13,14 +13,12 @@ oldpth = pwd();
 if ~isok, error(msg); end
 if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
 
-
 if isa(X, 'SingleCellExperiment')
     X = X.X;
 end
 
 tmpfilelist = {'input.mat', 'output.h5'};
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-
 
 if issparse(X), X = full(X); end
 save('input.mat', 'X', '-v7.3');
