@@ -1035,9 +1035,10 @@ end
         preftagname = 'externalwrkpath';
         [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
 
-        [ok] = gui.i_confirmscript('Detect Ambient RNA Contamination (decontX)', ...
-            'R_decontX', 'r');
-        if ~ok, return; end
+        %[ok] = gui.i_confirmscript('Detect Ambient RNA Contamination (decontX)', ...
+        %    'R_decontX', 'r');
+        %if ~ok, return; end
+
         fw = gui.gui_waitbar;
         %try
             [Xdecon, contamination] = run.r_decontX(sce, wkdir);
@@ -1047,17 +1048,17 @@ end
         %    return;
         %end
         gui.gui_waitbar(fw);
-        figure('WindowStyle', 'modal');
-        gui.i_stemscatter(sce.s, contamination);
-        % zlim([0 1]);
-        zlabel('Contamination rate')
-        title('Ambient RNA contamination')
-        answer = questdlg("Remove contamination?");
-        switch answer
-            case 'Yes'
-                sce.X = round(Xdecon);
-                guidata(FigureHandle, sce);
-                helpdlg('Contamination removed.', '');
+        
+%        figure('WindowStyle', 'modal');
+%        gui.i_stemscatter(sce.s, contamination);
+%        zlabel('Contamination rate')
+%        title('Ambient RNA contamination')
+
+        answer = questdlg("Remove contamination? Click ''No'' to keep data unchanged.");
+        if strcmp(answer, 'Yes')
+            sce.X = round(Xdecon);
+            guidata(FigureHandle, sce);
+            helpdlg('Contamination removed.', '');
         end
     end
 
