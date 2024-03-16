@@ -5,6 +5,22 @@ function [done] = i_setrenv(~, ~)
 
 preftagname = 'rexecutablepath';
 
+if ismac
+    if ispref('scgeatoolbox', preftagname)
+        s = getpref('scgeatoolbox', preftagname);
+    else
+        s = '/Library/Frameworks/R.framework/Versions/4.3/Resources/bin/R';
+    end
+    new_s = inputdlg('Path to R Executable (e.g., /Library/Frameworks/R.framework/Versions/4.3/Resources/bin/R)','Set up R Environment',[1 90],{s});
+    if isempty(new_s), return; end
+    if ~isempty(new_s{1}) && strlength(new_s{1})
+        setpref('scgeatoolbox', preftagname, new_s{1});
+        done = true;
+    end
+    return;
+end
+
+
 
 % Rpath=pkg.FindRpath;
 % if isempty(Rpath)
