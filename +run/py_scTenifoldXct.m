@@ -1,6 +1,8 @@
-function [T] = py_scTenifoldXct(sce, celltype1, celltype2, twosided, wkdir)
+function [T] = py_scTenifoldXct(sce, celltype1, celltype2, twosided, wkdir, isdebug)
 
-isdebug = true;
+if nargin<6
+    isdebug = true;
+end
 
 T = [];
 if nargin < 5, wkdir = []; end
@@ -154,6 +156,7 @@ end
 fw = gui.gui_waitbar([], [], 'Step 3 of 3: Running scTenifoldXct.py...');
 
 codefullpath = fullfile(codepth,'script.py');
+pkg.i_addwd2script(codefullpath, wkdir, 'python');
 cmdlinestr = sprintf('"%s" "%s" %d', x.Executable, codefullpath, twosidedtag);
 
 % 

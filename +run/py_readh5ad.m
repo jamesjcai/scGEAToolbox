@@ -1,8 +1,8 @@
-function [X, g, b] = py_readh5ad(fname)
+function [X, g, b] = py_readh5ad(fname, isdebug)
 
-isdebug = true;
+if nargin<2, isdebug = true; end
+
 if ~exist(fname, 'file')
-    %fname
     error('FNAME is not a file.');
 end
 

@@ -29,7 +29,6 @@ end
 
 codefullpath = fullfile(codepath,'script.R');
 pkg.i_addwd2script(codefullpath, wkdir, 'R');
-
 pkg.RunRcode(codefullpath, Rpath);
 if exist('output.h5', 'file')
     X = h5read('output.h5', '/X');

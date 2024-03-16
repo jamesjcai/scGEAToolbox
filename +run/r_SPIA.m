@@ -39,6 +39,7 @@ if isempty(Rpath)
     error('R environment has not been set up.');
 end
 codefullpath = fullfile(codepath,'script.R');
+pkg.i_addwd2script(codefullpath, wkdir, 'R');
 pkg.RunRcode(codefullpath, Rpath);
 
 if ~exist('output.csv', 'file'), return; end
