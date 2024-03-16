@@ -15,8 +15,8 @@ ax1 = subplot(1, 2, 1);
 h1 = gui.i_gscatter3(sce.s, c1, 1, 1);
 if ~isempty(ttl1), title(ax1, strrep(ttl1,'_','\_')); end
 
-dt = datacursormode(hFig);
-dt.UpdateFcn = {@i_myupdatefcnx12};
+%dt = datacursormode(hFig);
+%dt.UpdateFcn = {@i_myupdatefcnx12};
 
 ax2 = subplot(1, 2, 2);
 h2 = gui.i_gscatter3(sce.s, c2, 1, 1);
@@ -95,7 +95,7 @@ set(hFig, 'Visible', true);
             idx = event_obj.DataIndex;
             txt = cL2(c2(idx));
         end
-end
+    end
 
         function i_showclustlabel(~, ~)
             dtp1 = findobj(h1, 'Type', 'datatip');

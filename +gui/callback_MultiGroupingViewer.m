@@ -35,7 +35,7 @@ function callback_MultiGroupingViewer(src, ~)
             for k=1:length(thiscv)
                 axesv{k} = nexttile;
                 gui.i_gscatter3(sce.s, thiscv{k}, 1, 1);
-                title(clablev{k});
+                title(strrep(clablev{k},'_','\_'));
             end
             [px_new] = gui.i_getchildpos(FigureHandle, hFig);
             if ~isempty(px_new)
@@ -45,6 +45,8 @@ function callback_MultiGroupingViewer(src, ~)
             end
             drawnow;
             hFig.Visible=true;
+            dt = datacursormode(hFig);
+            dt.UpdateFcn = {@in_myupdatefcnx12};
             %evalin('base', 'h = findobj(gcf,''type'',''axes'');');
             %evalin('base', 'hlink = linkprop(h, {''CameraPosition'',''CameraUpVector''});');
             
@@ -131,4 +133,22 @@ function callback_MultiGroupingViewer(src, ~)
                 end
             end
         end
+
+    function [txt] = in_myupdatefcnx12(Targxet, event_obj)
+        % pos = event_obj.Position;
+       
+
+        for kx=1:length(axesv)
+            if isequal(Targxet.Parent, axesv{kx})
+                idx = event_obj.DataIndex;
+                c1 = thiscv{kx};
+                %[~,cL1]=grp2idx(c1);                   
+                txt = c1(idx);
+                if isstring(txt) || ischar(txt)
+                    txt = strrep(txt,'_','\_');
+                end
+                continue;
+            end
+        end
+    end    
 end
