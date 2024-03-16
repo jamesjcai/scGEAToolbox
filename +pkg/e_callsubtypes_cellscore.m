@@ -14,7 +14,7 @@ end
 
 sce2 = removecells(sce, ~ismember(c_cell_type_tx, targettype));
 
-if length(unique(sce2.c_cluster_id)) == 1
+if isscalar(unique(sce2.c_cluster_id))
     id = sc_cluster_s(sce2.s, k);
 else
     id = sce2.c_cluster_id;

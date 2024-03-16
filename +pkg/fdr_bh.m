@@ -218,5 +218,7 @@ if strcmpi(report, 'yes')
         fprintf('FDR/FCR procedure used is guaranteed valid for independent or positively dependent tests.\n');
         else
             fprintf('FDR/FCR procedure used is guaranteed valid for independent or dependent tests.\n');
-            end
-        end
+    end
+
+end
+

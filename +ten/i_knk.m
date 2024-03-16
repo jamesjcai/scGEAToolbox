@@ -8,7 +8,7 @@ if ischar(idx) || isstring(idx)
     [~, idx] = ismember(idx, genelist);
 end
 
-if sum(A0(idx, :) ~= 0) < 10
+if nnz(A0(idx, :) ~= 0) < 10
     warning('KO gene (%s) has no link or too few links with other genes.', ...
         genelist(idx));
     T = table();

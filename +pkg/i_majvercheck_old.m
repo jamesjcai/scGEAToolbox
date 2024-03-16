@@ -1,4 +1,4 @@
-function [needupdate, v1local, v2web] = i_majvercheck
+function [needupdate, v1local, v2web] = i_majvercheck_old
 
 % major version update check
 needupdate = false;

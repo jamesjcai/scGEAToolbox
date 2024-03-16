@@ -19,7 +19,8 @@ switch lower(species)
         fname = fullfile(pw1, '..', 'resources', 'DoRothEA_TF_Target_DB', 'dorothea_mm.mat');
     otherwise
         error('TF database is not available for the species.');
-        end
+end
+
         fprintf('\nReading ... %s.\n', fname);
         load(fname, 'T');
         T = T(T.mor > 0, :);

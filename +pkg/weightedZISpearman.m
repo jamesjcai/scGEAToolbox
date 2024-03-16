@@ -33,7 +33,7 @@ function [rho_star] = weightedZISpearman(x, y, w)
 if nargin < 3, w = 1.0; end
 if any(x < 0 | y < 0), error('x and/or y values have negative values'); end
 if (length(x) ~= length(y)), error('x and y should have the same length'); end
-if (length(w) == 1), w = w * ones(size(x)); end
+if (isscalar(w)), w = w * ones(size(x)); end
 
 i = x > 0;
 j = y > 0;

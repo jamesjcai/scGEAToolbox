@@ -40,7 +40,7 @@ for i = 1:length(n)
         B = find(cell2mat(cellfun(@(s) contains(s, 'R-'), A, 'uniformoutput', 0))); %,1)
         if ~isempty(B)
             isfound = 1;
-            if length(B) == 1
+            if isscalar(B)
                 Rpath = [programPath, sep, 'R', sep, A{B}, sep, 'bin'];
             else
                 Rpath = cell(length(B), 1);

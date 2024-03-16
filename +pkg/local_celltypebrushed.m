@@ -1,5 +1,5 @@
 function [Tct] = local_celltypebrushed(X, genelist, s, ...
-    brushedData, species, organ, database, bestonly, subtype)
+    brushedData, species, ~, database, bestonly, ~)
 
 if nargin < 9, subtype = 'all'; end
 if nargin < 8, bestonly = true; end

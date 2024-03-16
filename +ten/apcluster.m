@@ -124,7 +124,8 @@
 function [idx, netsim, i, unconverged, dpsim, expref] = apcluster(s, p, varargin)
 
 % Handle arguments to function
-if nargin < 2 error('Too few input arguments');
+if nargin < 2 
+    error('Too few input arguments');
 else
     maxits = 500;
     convits = 50;
@@ -149,11 +150,13 @@ else
         elseif strcmp(varargin{i}, 'maxits')
             maxits = varargin{i+1};
             i = i + 2;
-            if maxits <= 0 error('maxits must be a positive integer'); end
+            if maxits <= 0 
+                error('maxits must be a positive integer'); end
         elseif strcmp(varargin{i}, 'convits')
             convits = varargin{i+1};
             i = i + 2;
-            if convits <= 0 error('convits must be a positive integer'); end
+            if convits <= 0 
+                error('convits must be a positive integer'); end
         elseif strcmp(varargin{i}, 'dampfact')
             lam = varargin{i+1};
             i = i + 2;
@@ -172,12 +175,16 @@ if lam > 0.9
 end
 
 % Check that standard arguments are consistent in size
-if length(size(s)) ~= 2 error('s should be a 2D matrix');
-elseif length(size(p)) > 2 error('p should be a vector or a scalar');
+if length(size(s)) ~= 2 
+    error('s should be a 2D matrix');
+elseif length(size(p)) > 2 
+    error('p should be a vector or a scalar');
 elseif size(s, 2) == 3
     tmp = max(max(s(:, 1)), max(s(:, 2)));
-    if length(p) == 1 N = tmp;
-    else N = length(p);
+    if isscalar(p) 
+        N = tmp;
+    else 
+        N = length(p);
     end
     if tmp > N
         error('data point index exceeds number of data points');
@@ -189,7 +196,9 @@ elseif size(s, 1) == size(s, 2)
     if (length(p) ~= N) && (length(p) ~= 1)
         error('p should be scalar or a vector of size N');
     end
-else error('s must have 3 columns or be square'); end
+else 
+    error('s must have 3 columns or be square'); 
+end
 
 % Construct similarity matrix
 if N > 30000
@@ -213,8 +222,10 @@ if ~nonoise
 end
 
 % Place preferences on the diagonal of S
-if length(p) == 1 for i = 1:N S(i, i) = p; end
-else for i = 1:N S(i, i) = p(i); end
+if isscalar(p) 
+    for i = 1:N S(i, i) = p; end
+else 
+    for i = 1:N S(i, i) = p(i); end
 end
 
 % Allocate space for messages, etc
@@ -222,7 +233,9 @@ dS = diag(S);
 A = zeros(N, N);
 R = zeros(N, N);
 t = 1;
-if plt netsim = zeros(1, maxits+1); end
+if plt 
+    netsim = zeros(1, maxits+1); 
+end
 if details
     idx = zeros(N, maxits+1);
     netsim = zeros(1, maxits+1);
@@ -241,7 +254,8 @@ while ~dn
     Rold = R;
     AS = A + S;
     [Y, I] = max(AS, [], 2);
-    for k = 1:N AS(k, I(k)) = -realmax;
+    for k = 1:N 
+        AS(k, I(k)) = -realmax;
     end
     [Y2, ~] = max(AS, [], 2);
     R = S - repmat(Y, [1, N]);

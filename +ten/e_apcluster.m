@@ -23,7 +23,7 @@ C = grp2idx(idx);
 a = sortrows([unique(C), grpstats(C, C, @numel)], 2, 'descend');
 % [length(C) sum(ans(:,2)>0) sum(ans(:,2)>1)]
 fprintf('#genes=%d #modules=%d #modules (g>=2)=%d', ...
-    [length(C), sum(a(:, 2) > 0), sum(a(:, 2) > 1)]);
+    [length(C), nnz(a(:, 2) > 0), nnz(a(:, 2) > 1)]);
 GS = cell(size(a, 1), 1);
 if ~isempty(genelist)
     for k = 1:size(a, 1)

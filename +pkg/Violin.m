@@ -105,7 +105,7 @@ classdef Violin < handle
 
             args = obj.checkInputs(data, pos, varargin{:});
             data = data(not(isnan(data)));
-            if numel(data) == 1
+            if isscalar(data)
                 obj.MedianPlot = scatter(pos, data, 'filled');
                 obj.MedianColor = args.MedianColor;
                 obj.MedianPlot.MarkerEdgeColor = args.EdgeColor;
