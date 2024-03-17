@@ -39,6 +39,7 @@ if showwaitbar, gui.gui_waitbar_adv(fw, 1/nstep, 'Meta Visualization - PCA...');
 try
     d = dot(data, data, 2);
     DS = d + d' - 2 * (data * data');
+    % [1] Albanie, Samuel. Euclidean Distance Matrix Trick. June, 2019. Available at https://www.robots.ox.ac.uk/%7Ealbanie/notes/Euclidean_distance_trick.pdf.
 catch
     DS = pdist2(data, data).^2;
 end
