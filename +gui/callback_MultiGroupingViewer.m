@@ -2,8 +2,8 @@ function callback_MultiGroupingViewer(src, ~)
     FigureHandle = src.Parent.Parent;
     sce = guidata(FigureHandle);
     
-    answer = questdlg('Select the type of multi-view:','', ...
-        'Multigrouping','Multiembedding','Cancel','Multigrouping');
+    answer = questdlg('Select type of multi-view:','', ...
+        'Multigrouping','Multiembedding','Multigrouping');
 
     switch answer
         % case 'Two-group'
