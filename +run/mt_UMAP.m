@@ -11,10 +11,13 @@ if nargin < 2, ndim = 3; end
 
 pw1 = fileparts(mfilename('fullpath'));
 if ~(ismcc || isdeployed)
-    pth1 = fullfile(pw1, 'external', 'mt_UMAP');
+    pth1 = fullfile(pw1, 'external', 'mt_UMAP44');
     addpath(pth1);
-    pth3 = fullfile(pw1, 'external', 'mt_UMAP', 'umap.jar');
-    javaaddpath(pth3);
+    pth2 = fullfile(pw1, 'external', 'mt_UMAP44', 'util');
+    addpath(pth2);
+
+    %pth3 = fullfile(pw1, 'external', 'mt_UMAP44', 'umap.jar');
+    %javaaddpath(pth3);
 end
 
 data = transpose(X);
@@ -31,11 +34,11 @@ if ncells > 500
     data = svdpca(data, 50, 'random');
 end
 
-if ~ispc
-    [s] = run_umap_lite(data, 'n_components', ndim, 'verbose', false);
-else
+%if ~ispc
+%    [s] = run_umap_lite(data, 'n_components', ndim, 'verbose', false);
+%else
     [s] = run_umap_lite_super(data, ndim);
-end
+%end
 %{
 
 if nargout>1 || plotit
