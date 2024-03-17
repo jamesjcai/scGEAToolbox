@@ -15,8 +15,12 @@ forced = true;
 usehvgs = true;
 K = 2000;
 for k=1:length(methodtag)
-    ndim = 2 + contains(methodtag{k},'3d');    
-    sce = sce.embedcells(methodtag{k}, ...
-        forced, usehvgs, ndim, K, [], false);
+    ndim = 2 + contains(methodtag{k},'3d');
+    try
+        sce = sce.embedcells(methodtag{k}, ...
+            forced, usehvgs, ndim, K, [], false);
+    catch ME
+        disp(ME.message);
+    end
 end
 end
