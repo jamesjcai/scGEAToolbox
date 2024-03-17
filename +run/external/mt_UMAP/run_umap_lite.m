@@ -1,7 +1,9 @@
 function [reduction] = run_umap_lite(varargin)
 
 [args, argued] = UmapUtil.Initialize(varargin{:});
+%args.verbose='none';
 args = UmapUtil.CheckArgs(args, argued);
+
 %clusterIdentifiers=[];
 %globals=BasicMap.Global;
 %homeFolder=globals.appFolder;

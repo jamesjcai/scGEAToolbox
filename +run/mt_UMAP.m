@@ -31,9 +31,11 @@ if ncells > 500
     data = svdpca(data, 50, 'random');
 end
 
-[s] = run_umap_lite(data, 'n_components', ndim);
-
-
+if ~ispc
+    [s] = run_umap_lite(data, 'n_components', ndim, 'verbose', false);
+else
+    [s] = run_umap_lite_super(data, ndim);
+end
 %{
 
 if nargout>1 || plotit

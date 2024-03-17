@@ -144,7 +144,8 @@ classdef UmapUtil < handle
                 if args.qf_dissimilarity
                     warning('qf_dissimarity=true is ONLY for supervised template reductions');
                         args.qf_dissimilarity = false;
-                    end
+                end
+
                     if args.matchingUst
                         warning('match_scenarios==1 or 2 needs supervised template_file');
                         ms(ustMatches) = [];
@@ -164,6 +165,8 @@ classdef UmapUtil < handle
                         args.matchingUst = true;
                     end
                 end
+                
+
                 args.matchingUmap = any(ms == 3 | ms == 4);
                 if ~isequal(args.label_column, 0)
                     if ~isempty(args.template_file)
@@ -177,32 +180,41 @@ classdef UmapUtil < handle
                             args.buildLabelMap = true;
                         end
                     end
+
                 else
                     if ~isempty(args.label_file)
                         warning(['label_file has no effect without a label_column ', ...
                             'to match/supervise'])
                         disp('A map of colors and names for labels will be built');
                             args.buildLabelMap = true;
-                        end
+                    end
+
                         testLabelMatches = ms == 1 | ms == 3 | ms == 4;
                         if any(testLabelMatches)
                             warning('label_column needed for match_scenarios 1 3 or 4 ');
                                 ms(testLabelMatches) = [];
                                 args.match_scenarios = ms;
-                            end
                         end
+
+                end
+
                         if isempty(ms)
                             if args.qf_dissimilarity
                                 ms = 2;
                                 args.match_scenarios = 2;
                             end
+
                         end
+
+
                         args.matchingUmap = any(ms == 3 | ms == 4);
                         args.ustMatches = ms == 1 | ms == 2;
                         args.matchingUst = any(args.ustMatches);
                         args.matchingTestLabels = any(ms == 1 | ms == 3 | ms == 4);
 
-                    end
+        end
+
+
 
                     function SetArgsTemplateCanOverride(umap, args, argued, parameter_names)
                         warningCnt = 0;
