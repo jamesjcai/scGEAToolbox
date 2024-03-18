@@ -119,7 +119,7 @@ classdef LabelBasics
                         end
                     end
                     sFreq = String.encodeInteger(freq);
-                    fprintf(['%s%s=%s events for #%d="%s"\n'], start, ...
+                    fprintf('%s%s=%s events for #%d="%s"\n', start, ...
                             pFreq, sFreq, lbl, name);
                     end
                 end

@@ -268,7 +268,7 @@ classdef FileBasics < handle
                         property, 'MatLab path conficts', 1);
                     if answer == 1
                         if nSystemConflicts > 0
-                            disableIdxs = [nConflicts + 1:nConflicts + nSystemConflicts];
+                            disableIdxs = nConflicts + 1:nConflicts + nSystemConflicts;
                             up = [uniquePaths, mapNonRemovable.getUniqueValues];
                         else
                             disableIdxs = [];

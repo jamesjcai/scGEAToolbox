@@ -769,7 +769,7 @@ classdef File
                                                                                                                                     if N2 < prefix
                                                                                                                                         list{i} = '.';
                                                                                                                                     elseif N2 > prefix
-                                                                                                                                        subPath = path(1, [prefix + 2:N2]);
+                                                                                                                                        subPath = path(1, prefix + 2:N2);
                                                                                                                                         list{i} = [name, ext, ' (in ', subPath, ')'];
                                                                                                                                     else
                                                                                                                                         list{i} = [name, ext];
@@ -831,7 +831,7 @@ classdef File
                                                                                                                                         end
                                                                                                                                 end
                                                                                                                                         function files = ToList(pathString, canonical)
-                                                                                                                                            if strcmp('cell', class(pathString))
+                                                                                                                                            if iscell(pathString)
                                                                                                                                                 files = pathString;
                                                                                                                                                 return;
                                                                                                                                             end
@@ -1044,7 +1044,7 @@ classdef File
                                                                                                                                                                                                     prefix = ['<b>~', filesep, 'Desktop</b>'];
                                                                                                                                                                                                     break;
                                                                                                                                                                                                 elseif isequal(home, path)
-                                                                                                                                                                                                    prefix = ['<b>~</b>'];
+                                                                                                                                                                                                    prefix = '<b>~</b>';
                                                                                                                                                                                                     break;
                                                                                                                                                                                                 end
                                                                                                                                                                                             end

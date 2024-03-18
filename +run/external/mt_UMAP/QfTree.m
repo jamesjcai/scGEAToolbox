@@ -650,7 +650,7 @@ classdef QfTree < handle
 
                                         ids = this.getPhenogramId(ids, idx);
                                         if ~isempty(ids)
-                                            Gui.NewMenuLabel(this.mnuOpts, ['<html>Boolean gate in GatingTree</html>']);
+                                            Gui.NewMenuLabel(this.mnuOpts, '<html>Boolean gate in GatingTree</html>');
                                             gateMenuItems(ids);
                                         end
                                         if idx < 1
@@ -1344,11 +1344,11 @@ classdef QfTree < handle
                                                                                                                         end
                                                                                                                         if isempty(idxs)
                                                                                                                             if which == 0
-                                                                                                                                idxs = [1:length(this.nodes)];
+                                                                                                                                idxs = 1:length(this.nodes);
                                                                                                                             elseif which == 1
-                                                                                                                                idxs = [1:length(this.leafNames)];
+                                                                                                                                idxs = 1:length(this.leafNames);
                                                                                                                             else
-                                                                                                                                idxs = [length(this.leafNames) + 1:length(this.nodes)];
+                                                                                                                                idxs = length(this.leafNames) + 1:length(this.nodes);
                                                                                                                             end
                                                                                                                         end
                                                                                                                         N = length(idxs);

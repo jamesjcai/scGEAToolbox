@@ -173,7 +173,7 @@ classdef Density < handle
                     assert(binIdxsWithEvents(mapW2E(pick)) == ...
                         e(eventIdxsForBin(mapW2E(pick))))
                     dataAtEvent = data(eventIdx, :);
-                    dataAtBinIdx = displayData(pick, [1:2]);
+                    dataAtBinIdx = displayData(pick, 1:2);
                     result = abs(dataAtEvent-dataAtBinIdx);
                     %the statement below does not WORK because it produces scalar:
                     % perc=result/ranges*100;
@@ -211,7 +211,7 @@ classdef Density < handle
                     nearestBinIdx = binIdxsWithEvents(idx);
                     assert(nearestBinIdx == e(eventIdx));
                     dataAtEvent = data(eventIdx, :);
-                    dataAtBinIdx = displayData(pick, [1:2]);
+                    dataAtBinIdx = displayData(pick, 1:2);
                     result = abs(dataAtEvent-dataAtBinIdx);
                     perc = result ./ ranges * 100;
                     if max(perc) > 3 && Density.IsDebugging2014
@@ -482,7 +482,7 @@ classdef Density < handle
             xx = this.mins(axis) + ((value - 1) * this.deltas(axis));
         end
         function [xx, yy] = allGridData(this)
-            [x, y] = ind2sub([this.M, this.M], [1:this.M^2]);
+            [x, y] = ind2sub([this.M, this.M], 1:this.M^2);
             xx = this.mins(1) + ((x - 1) * this.deltas(1));
             yy = this.mins(2) + ((y - 1) * this.deltas(2));
         end
@@ -1934,8 +1934,8 @@ classdef Density < handle
                                                                                         %test rectangular bin test for pixel resolution of data
                                                                                         MX = 10;
                                                                                         MY = 100;
-                                                                                        x = [2:9];
-                                                                                        y = [26:33];
+                                                                                        x = 2:9;
+                                                                                        y = 26:33;
                                                                                         pxMatrix = randi(500, MX, MY);
                                                                                         pxVector = reshape(pxMatrix, 1, MX*MY);
                                                                                         zz = Density.ToVectorIdx(x, y, MX);

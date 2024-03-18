@@ -1067,9 +1067,9 @@ classdef FalsePositiveNegative < handle
                                                                             elseif matchType == 3
                                                                                 matchType = ['nn', num2str(loD), 'D'];
                                                                             elseif matchType == 2
-                                                                                matchType = ['nnClust'];
+                                                                                matchType = 'nnClust';
                                                                             else
-                                                                                matchType = ['disClust'];
+                                                                                matchType = 'disClust';
                                                                             end
                                                                             try
                                                                                 if matchType < 3

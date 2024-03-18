@@ -515,7 +515,7 @@ classdef StringArray < handle
         files = {};
         if isfield(handles, fileField)
             temp = getfield(handles, fileField);
-            if ~strcmp('cell', class(temp))
+            if ~iscell(temp)
                 files = {temp};
             else
                 files = temp;
@@ -524,7 +524,7 @@ classdef StringArray < handle
     end
 
     function array = toArray(something)
-        if ~strcmp('cell', class(something))
+        if ~iscell(something)
             array = {something};
         else
             array = something;
@@ -598,7 +598,7 @@ classdef StringArray < handle
         if N1 ~= N2
             ok = false;
         else
-            ok = StringArray.EqualsIndexed(these, those, [1:N1]);
+            ok = StringArray.EqualsIndexed(these, those, 1:N1);
         end
     end
 

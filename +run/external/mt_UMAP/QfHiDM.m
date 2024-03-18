@@ -290,7 +290,7 @@ classdef QfHiDM < handle
                     sizeLimit_ = floor(mn*perc);
                     if ~isequal(sData, tData)
                         nEvents = size(sData, 1) + size(tData, 1);
-                        minEvents = min([size(sData, 1) + size(tData, 1);]);
+                        minEvents = min(size(sData, 1) + size(tData, 1););
                     else
                         nEvents = size(sData, 1);
                         minEvents = nEvents;

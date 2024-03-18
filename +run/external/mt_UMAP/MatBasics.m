@@ -1609,7 +1609,7 @@ classdef MatBasics
                             end
 
                             function idxs = SmoothLow(ln)
-                                idxs = [1];
+                                idxs = 1;
                                 N = length(ln);
                                 pI = 1;
                                 pV = ln(pI);
@@ -1635,7 +1635,7 @@ classdef MatBasics
                             end
 
                             function idxs = SmoothLowExact(ln)
-                                idxs = [1];
+                                idxs = 1;
                                 N = length(ln);
                                 pI = 1;
                                 pV = ln(pI);
@@ -1675,7 +1675,7 @@ classdef MatBasics
                             end
 
                             function idxs = SmoothHigh(ln)
-                                idxs = [1];
+                                idxs = 1;
                                 N = length(ln);
                                 pI = 1;
                                 pV = ln(pI);
@@ -1701,7 +1701,7 @@ classdef MatBasics
                             end
 
                             function idxs = SmoothHighExact(ln)
-                                idxs = [1];
+                                idxs = 1;
                                 N = length(ln);
                                 pI = 1;
                                 pV = ln(pI);
@@ -2329,7 +2329,7 @@ classdef MatBasics
 
                                 function inds = IdentiyMatrixHalfInds(matrixWidth, inds)
                                     if nargin < 2
-                                        subs = nchoosek([1:matrixWidth], 2);
+                                        subs = nchoosek(1:matrixWidth, 2);
                                     else
                                         subs = nchoosek(inds, 2);
                                     end

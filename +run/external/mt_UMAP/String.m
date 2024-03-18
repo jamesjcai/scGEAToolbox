@@ -512,7 +512,7 @@ classdef String
                 prefix = '';
             else
                 lastIdx = a(1, size(a, 2));
-                prefix = string(1, [1: lastIdx - 1]);
+                prefix = string(1, 1: lastIdx - 1);
             end
         end
 
