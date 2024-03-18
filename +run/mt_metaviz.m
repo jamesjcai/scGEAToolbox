@@ -1,6 +1,8 @@
-function [Y, S] = mt_metaviz(X, ndim, showwaitbar)
-if nargin < 3, showwaitbar = true; end
-if nargin < 2, ndim = 2; end
+function [Y, S] = mt_metaviz(X, ndim, showwaitbar, dophate)
+
+if nargin < 4 || isempty(dophate), dophate = true; end
+if nargin < 3 || isempty(showwaitbar), showwaitbar = true; end
+if nargin < 2 || isempty(ndim), ndim = 2; end
 S = [];
 pw1 = fileparts(mfilename('fullpath'));
 if ~(ismcc || isdeployed)
@@ -8,10 +10,10 @@ if ~(ismcc || isdeployed)
     addpath(pth);
     pth1 = fullfile(pw1, 'external', 'mt_cbrewer');
     addpath(pth1);
-    pth1 = fullfile(pw1, 'external', 'mt_UMAP');
+    pth1 = fullfile(pw1, 'external', 'mt_UMAP44');
     addpath(pth1);
-    pth3 = fullfile(pw1, 'external', 'mt_UMAP', 'umap.jar');
-    javaaddpath(pth3);
+%    pth3 = fullfile(pw1, 'external', 'mt_UMAP', 'umap.jar');
+%    javaaddpath(pth3);
 end
 
 nstep = 6 + 1;
@@ -84,14 +86,16 @@ if showwaitbar, gui.gui_waitbar_adv(fw, 4/nstep, 'Meta Visualization - UMAP 3/3.
 S{end+1} = run_umap_lite(data, 'n_components', ndim, ...
     'n_neighbors', 50, 'verbose', 'none');
 
-if showwaitbar, gui.gui_waitbar_adv(fw, 5/nstep, 'Meta Visualization - PHATE 1/3...'); end
-S{end+1} = phate(sqrt(Xn), 't', 20, 'ndim', ndim, 'k', 5);
-
-if showwaitbar, gui.gui_waitbar_adv(fw, 5/nstep, 'Meta Visualization - PHATE 2/3...'); end
-S{end+1} = phate(sqrt(Xn), 't', 20, 'ndim', ndim, 'k', 15, 'pot_method', 'sqrt');
-
-if showwaitbar, gui.gui_waitbar_adv(fw, 5/nstep, 'Meta Visualization - PHATE 3/3...'); end
-S{end+1} = phate(sqrt(Xn), 't', 20, 'ndim', ndim, 'k', 30);
+if dophate
+    if showwaitbar, gui.gui_waitbar_adv(fw, 5/nstep, 'Meta Visualization - PHATE 1/3...'); end
+    S{end+1} = phate(sqrt(Xn), 't', 20, 'ndim', ndim, 'k', 5);
+    
+    if showwaitbar, gui.gui_waitbar_adv(fw, 5/nstep, 'Meta Visualization - PHATE 2/3...'); end
+    S{end+1} = phate(sqrt(Xn), 't', 20, 'ndim', ndim, 'k', 15, 'pot_method', 'sqrt');
+    
+    if showwaitbar, gui.gui_waitbar_adv(fw, 5/nstep, 'Meta Visualization - PHATE 3/3...'); end
+    S{end+1} = phate(sqrt(Xn), 't', 20, 'ndim', ndim, 'k', 30);
+end
 
 if showwaitbar, gui.gui_waitbar_adv(fw, 6/nstep, 'Meta Visualization - METAVIZ'); end
 if usingmmfile
