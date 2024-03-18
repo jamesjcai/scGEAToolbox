@@ -1406,7 +1406,6 @@ end
         if ~isfield(sce.struct_cell_embeddings, 'metaviz3d')
             sce.struct_cell_embeddings.('metaviz3d') = [];
         end
-
         [vslist] = gui.i_checkexistingembed(sce, ndim);
         if ~isempty(vslist)
             answer = questdlg('Using exsiting embedding?');
@@ -1460,7 +1459,6 @@ end
                 %if contains(methoddimtag, 'tsne'), disp('tSNE perplexity = 30'); end
                 for k=1:length(methodtag)
 
-
                     if ~overwrittenold && isfield(sce.struct_cell_embeddings, methodtag{k}) && ~isempty(sce.struct_cell_embeddings.(methodtag{k}))
                         fprintf('Embedding cells using %s - skipping...\n', upper(methodtag{k}));
                         continue;
@@ -1469,7 +1467,8 @@ end
                             sprintf('Embedding cells using %s', upper(methodtag{k})));          
                     end
                     ndim = 2 + contains(methodtag{k},'3d');
-                    sce = sce.embedcells(methodtag{k}, forced, usehvgs, ndim, K, [], false);
+                    sce = sce.embedcells(methodtag{k}, forced, ...
+                        usehvgs, ndim, K, [], false);
                 end
                 % disp('Following the library-size normalization and log1p-transformation, we visualized similarity among cells by projecting them into a reduced dimensional space using t-distributed stochastic neighbor embedding (t-SNE)/uniform manifold approximation and projection (UMAP).')
                 
