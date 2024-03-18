@@ -30,11 +30,22 @@ end
 codefullpath = fullfile(codepath,'script.R');
 pkg.i_addwd2script(codefullpath, wkdir, 'R');
 pkg.RunRcode(codefullpath, Rpath);
-if exist('output.h5', 'file')
-    X = h5read('output.h5', '/X');
-    contamination = h5read('output.h5', '/contamination');
-    % load('output.mat','X','contamination')
+
+outputfile1 = fullfile(wkdir,'output.h5');
+outputfile2 = fullfile(codepath,'output.h5');
+
+if exist(outputfile1, 'file')
+   outputfile = outputfile1;
+else
+    if exist(outputfile1, 'file')
+        outputfile = outputfile2;
+    else
+        error('output.h5 missing.');
+    end
 end
+
+    X = h5read(outputfile, '/X');
+    contamination = h5read(outputfile, '/contamination');
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 cd(oldpth);
