@@ -181,11 +181,11 @@ set(hFig, 'visible', 'on');
     function i_resizewin(~,~)
         %oldw
         %oldh
-        w = gui.i_inputnumk(450, 10, 2000, 'Window width');
-        if isempty(w), return; end
-        h = gui.i_inputnumk(420, 10, 2000, 'Window height');
-        if isempty(h), return; end
-        hFig.Position = [hFig.Position(1) hFig.Position(2) w h];
+        wx = gui.i_inputnumk(450, 10, 2000, 'Window width');
+        if isempty(wx), return; end
+        hx = gui.i_inputnumk(420, 10, 2000, 'Window height');
+        if isempty(hx), return; end
+        hFig.Position = [hFig.Position(1) hFig.Position(2) wx hx];
     end
 
 

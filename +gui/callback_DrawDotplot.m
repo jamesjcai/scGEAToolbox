@@ -54,32 +54,40 @@ if length(glist) > 50
     images = {};
     for k = 1:50:length(glist)
         k2 = min([length(glist), k + 50 - 1]);
-        f = gui.i_dotplot(Xt, sce.g, c, cL, glist(k:k2), true);
+        hFig = gui.i_dotplot(Xt, sce.g, c, cL, glist(k:k2), true);
         screensize = get(groot, 'Screensize');
-        p = f.Position;
+        p = hFig.Position;
         p(2) = 0;
         p(4) = screensize(4) - 150;
-        f.Position = p;
+        hFig.Position = p;
         if needpptx
             img1 = [tempname, '.png'];
             images = [images, {img1}];
-            saveas(f, img1);
+            saveas(hFig, img1);
         end
     end
     if needpptx, gui.i_save2pptx(images); end
 else
 
     try
-        f = gui.i_dotplot(Xt, sce.g, c, cL, glist, true);
+        hFig = gui.i_dotplot(Xt, sce.g, c, cL, glist, true);
         % f=gui.i_violinplot(sce.X,sce.g,c,cL,glist);
-        p = f.Position;
+        p = hFig.Position;
         %p(2)=0;
         p(4) = p(4) * 1.5;
-        f.Position = p;
-        set(f, 'visible', 'on');
+        hFig.Position = p;        
+
+        [px_new] = gui.i_getchildpos(FigureHandle, hFig);
+        if ~isempty(px_new)
+            movegui(hFig, px_new);
+        else
+            movegui(hFig, 'center');
+        end 
+        set(hFig, 'visible', 'on');
+
     catch ME
-        if exist('f', 'var') && ishandle(f)
-            close(f);
+        if exist('f', 'var') && ishandle(hFig)
+            close(hFig);
         end
         errordlg(ME.message);
     end

@@ -72,8 +72,16 @@ pkg.i_addbutton2fig(tb, 'off', @i_resetcolor, 'plotpicker-geobubble2.gif', 'Rese
 pkg.i_addbutton2fig(tb, 'off', @i_flipxy, 'xplotpicker-geobubble2.gif', 'Flip XY');
 pkg.i_addbutton2fig(tb, 'off', @i_summarymap, 'HDF_object01.gif', 'Summary map...');
 pkg.i_addbutton2fig(tb, 'off', @i_summarymapT, 'HDF_object02.gif', 'Summary map, transposed...');
+pkg.i_addbutton2fig(tb, 'on', @i_resizewin, ...
+    'HDF_pointx.gif', 'Resize Plot Window');
 
-movegui(hFig, 'center');
+    [px_new] = gui.i_getchildpos(FigureHandle, hFig);
+    if ~isempty(px_new)
+        movegui(hFig, px_new);
+    else
+        movegui(hFig, 'center');
+    end 
+        
 set(hFig, 'visible', 'on');
 fliped = false;
 
@@ -210,4 +218,13 @@ end
                             pkg.i_addbutton2fig(tb, 'off', @i_resetcolor, 'plotpicker-geobubble2.gif', 'Reset color map');
                     end
 
-                    end
+    function i_resizewin(~,~)
+        wx = gui.i_inputnumk(450, 10, 2000, 'Window width');
+        if isempty(wx), return; end
+        hx = gui.i_inputnumk(420, 10, 2000, 'Window height');
+        if isempty(hx), return; end
+        hFig.Position = [hFig.Position(1) hFig.Position(2) wx hx];
+    end
+
+end
+
