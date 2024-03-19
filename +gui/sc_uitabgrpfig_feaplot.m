@@ -123,6 +123,7 @@ pkg.i_addbutton2fig(tb, 'off', @in_savedata, "powerpointx.gif", 'Save Gene List.
 
 
 pkg.i_addbutton2fig(tb, 'off', @i_savemainfig, "powerpoint.gif", 'Save Figure to PowerPoint File...');
+pkg.i_addbutton2fig(tb, 'off', @i_savemainfigx, "xpowerpoint.gif", 'Save Figure as Graphic File...');
 
 %gui.add_3dcamera(tb);
 % if isempty(px_new)
@@ -149,6 +150,28 @@ hFig.Visible=true;
     function in_savedata(~,~)
         gui.i_exporttable(table(glist), true, ...
             'Tmarkerlist','MarkerListTable');    
+    end
+
+
+    function i_savemainfigx(~,~)
+        answer = questdlg('Select Sub-plot to export:','', ...
+            'Left','Right','Cancel','Left');
+        switch answer
+            case 'Left'
+                p = 1;
+            case 'Right'
+                p = 2;
+            otherwise
+                return;
+        end
+
+        [~,idx]=ismember(focalg, glist);     
+        filter = {'*.jpg'; '*.png'; '*.tif'; '*.pdf'; '*.eps'};
+        [filename, filepath] = uiputfile(filter,'Save Feature Plot', ...
+            sprintf('FeaturePlot_%s', focalg));
+        if ischar(filename)
+            exportgraphics(ax{idx,p}, [filepath, filename]);
+        end
     end
 
     function i_savemainfig(~,~)
@@ -210,3 +233,4 @@ end
             setpref('scgeatoolbox', 'prefcolormapname', a);
         end
     end
+
