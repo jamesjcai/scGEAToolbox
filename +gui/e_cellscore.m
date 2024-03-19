@@ -1,4 +1,4 @@
-function [cs] = e_cellscore(sce, posg, methodid,showwaitbar)
+function [cs] = e_cellscore(sce, posg, methodid, showwaitbar)
 
 if nargin < 4, showwaitbar=true; end
 

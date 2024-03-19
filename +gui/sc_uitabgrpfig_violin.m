@@ -1,5 +1,5 @@
 function sc_uitabgrpfig_violin(sce, glist, thisc, parentfig)
-
+%see also: gui.i_violinplot
 
 if nargin<4, parentfig = []; end
 

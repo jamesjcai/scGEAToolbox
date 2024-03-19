@@ -1,11 +1,13 @@
-function [score, T, posg] = e_cellscores(X, genelist, typeid, methodid, showwaitbar)
+function [score, T, posg] = e_cellscores(X, genelist, scoretypeid, methodid, showwaitbar)
 % Calcute predefined cell scores (marker list in cellscores.xlsx)
 %
 % see also: SC_CELLSCORE_UCELL, SC_CELLSCORE_ADMDL, SC_CELLCYCLESCORING
 
+% scoretypeid
+
 if nargin < 5, showwaitbar = true; end
 if nargin < 4, methodid = []; end
-if nargin < 3, typeid = 0; end
+if nargin < 3, scoretypeid = 0; end
 if nargin < 2, genelist = []; end
 if nargin < 1, X = []; end
 
@@ -24,10 +26,10 @@ end
 
 %T=sortrows(T,"ScoreType");
 
-if ischar(typeid) || isstring(typeid)
-    idx = find(matches(T.ScoreType, typeid, 'IgnoreCase', true));
-elseif isnumeric(typeid)
-    idx = typeid;
+if ischar(scoretypeid) || isstring(scoretypeid)
+    idx = find(matches(T.ScoreType, scoretypeid, 'IgnoreCase', true));
+elseif isnumeric(scoretypeid)
+    idx = scoretypeid;
 end
 if isempty(idx)
     score = [];

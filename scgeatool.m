@@ -1371,7 +1371,8 @@ end
 
     function in_RenameCellTypeBatchID(src, ~, answer)
         if nargin < 3 || isempty(answer)
-            answer = questdlg('Rename cell type, batch ID, or gene name?', '', 'Cell type', 'Batch ID', 'Gene name', 'Cell type');
+            answer = questdlg('Rename cell type, batch ID, or gene name?', ...
+                '', 'Cell type', 'Batch ID', 'Others...', 'Cell type');
         end
         switch answer
             case 'Cell type'
@@ -1380,6 +1381,8 @@ end
                 [requirerefresh] = gui.callback_RenameBatchID(src);
             case 'Gene name'
                 [requirerefresh] = gui.callback_RenameGenes(src);
+            case 'Others...'
+                [requirerefresh, answer] = gui.callback_RenameOthers(src);
             otherwise
                 return;
         end
@@ -1390,6 +1393,8 @@ end
                     [c, cL] = grp2idx(sce.c_cell_type_tx);
                 case 'Batch ID'
                     [c, cL] = grp2idx(sce.c_batch_id);
+                case 'Cluster ID'
+                    [c, cL] = grp2idx(sce.c_cluster_id);
                 otherwise
                     return;
             end

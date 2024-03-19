@@ -1,4 +1,5 @@
 function [requirerefresh] = callback_RenameBatchID(src, ~)
+
 requirerefresh = false;
 FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);

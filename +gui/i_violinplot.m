@@ -1,5 +1,7 @@
-function [f] = i_violinplot(y, thisc, ttxt, colorit, cLorder, posg)
+function [hFig] = i_violinplot(y, thisc, ttxt, colorit, cLorder, posg, parentfig)
+% see also: gui.sc_uitabgrpfig_violin
 
+if nargin < 7, parentfig = []; end
 if nargin < 6, posg = []; end % used in callback_CompareGeneBtwCls
 if nargin < 5 || isempty(cLorder)
     [~, cLorder] = grp2idx(thisc);
@@ -7,7 +9,7 @@ end
 if nargin < 4
     colorit = true;
 end
-f = figure('visible', 'off');
+hFig = figure('visible', 'off');
 
 isdescend = false;
 OldTitle = [];
@@ -19,7 +21,10 @@ title(strrep(ttxt, '_', '\_'));
 %ylabel(selitems{indx1});
 
 
-tb = uitoolbar(f);
+% tb = uitoolbar(hFig);
+tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
+uipushtool(tb, 'Separator', 'off');
+
 pkg.i_addbutton2fig(tb, 'off', @i_savedata, ...
     'export.gif', 'Export data...');
 pkg.i_addbutton2fig(tb, 'off', @i_testdata, ...
@@ -47,16 +52,24 @@ pkg.i_addbutton2fig(tb, 'on', @i_resizewin, ...
     'HDF_pointx.gif', 'Resize Plot Window');
 
 
-
-movegui(f, 'center');
-
 i_addsamplesize([],[]);
 i_testdata([],[]);
 if nargout > 0
-    return; 
+    return;
 end
 
-set(f, 'visible', 'on');
+if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 
+    [px_new] = gui.i_getchildpos(parentfig, hFig);
+    if ~isempty(px_new)
+        movegui(hFig, px_new);
+    else
+        movegui(hFig, 'center');
+    end
+else
+    movegui(hFig, 'center');
+end
+
+set(hFig, 'visible', 'on');
 
 %catch ME
 %    errordlg(ME.message);
@@ -70,7 +83,7 @@ set(f, 'visible', 'on');
         if isempty(w), return; end
         h = gui.i_inputnumk(420, 10, 2000, 'Window height');
         if isempty(h), return; end
-        f.Position = [f.Position(1) f.Position(2) w h];
+        hFig.Position = [hFig.Position(1) hFig.Position(2) w h];
     end
 
     function i_renametitle(~, ~)
@@ -79,14 +92,14 @@ set(f, 'visible', 'on');
 
     function i_invertcolor(~, ~)
         colorit = ~colorit;
-        b = f.get("CurrentAxes");
+        b = hFig.get("CurrentAxes");
         cla(b);
         pkg.i_violinplot(y, thisc, colorit, cLorder);
     end
 
     function i_addsamplesize(~, ~)
         % b = gca;
-        b = f.get("CurrentAxes");
+        b = hFig.get("CurrentAxes");
         b.FontName='Palatino';
         % assert(isequal(cLorder, b.XTickLabel));
 
@@ -119,7 +132,7 @@ set(f, 'visible', 'on');
 
         %[~,cL,noanswer]=gui.i_reordergroups(thisc, cLx_sorted, f);
         %if noanswer, return; end
-        b = f.get("CurrentAxes");
+        b = hFig.get("CurrentAxes");
         cla(b);
         cLorder = cLx_sorted;
         pkg.i_violinplot(y, thisc, colorit, cLorder);
@@ -127,11 +140,11 @@ set(f, 'visible', 'on');
 
 
     function i_reordersamples(~, ~)
-        [~, cLorder, noanswer] = gui.i_reordergroups(thisc, [], f);
+        [~, cLorder, noanswer] = gui.i_reordergroups(thisc, [], hFig);
 
         % cLorder
         if noanswer, return; end
-        b = f.get("CurrentAxes");
+        b = hFig.get("CurrentAxes");
         cla(b);
         pkg.i_violinplot(y, thisc, colorit, cLorder);
     end
@@ -147,7 +160,7 @@ set(f, 'visible', 'on');
 %        if noanswer, return; end
         
         cLorder=cLorder(ismember(cLorder,cL(newidx)));
-        b = f.get("CurrentAxes");
+        b = hFig.get("CurrentAxes");
         cla(b);
         y=y(picked);
         thisc=thisc(picked);
@@ -156,7 +169,7 @@ set(f, 'visible', 'on');
 
 
     function i_testdata(~, ~)
-        a = f.get("CurrentAxes");
+        a = hFig.get("CurrentAxes");
         if isempty(OldTitle)
             OldTitle = a.Title.String;
             if size(y, 2) ~= length(thisc)
@@ -180,7 +193,8 @@ set(f, 'visible', 'on');
                     strrep(tbl.Properties.VariableNames{2}, '_', '\_'), ...
                     tbl.(tbl.Properties.VariableNames{2}));
             else
-                b='p\_ttest=N.A.; p\_wilcoxon=N.A.';
+                % b='p\_ttest=N.A.; p\_wilcoxon=N.A.';
+                b='p_{ttest}=N.A.; p_{wilcoxon}=N.A.';
             end
 
             if iscell(OldTitle)

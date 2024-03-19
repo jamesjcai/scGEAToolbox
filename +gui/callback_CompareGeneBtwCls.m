@@ -51,6 +51,7 @@ bb = 'No, just show values';
                         idx2 = ismember(ci, idx1);
                         sce = sce.selectcells(idx2);
                         thisc = thisc(idx2);
+                        % xxxxx
                     else
                         return;
                     end
@@ -293,7 +294,7 @@ bb = 'No, just show values';
             if ~exist("ttxt", "var"), ttxt = []; end
 
             if showcomparision
-                gui.i_violinplot(y, thisc, ttxt, true, [], posg);
+                gui.i_violinplot(y, thisc, ttxt, true, [], posg, FigureHandle);
                 xlabel('Cell group');
                 ylabel('Cellular score');
             else
@@ -311,6 +312,6 @@ bb = 'No, just show values';
                 % end
             end
 
-            guidata(FigureHandle, sce);
+            % guidata(FigureHandle, sce);
 
 end
