@@ -74,6 +74,7 @@ pkg.i_addbutton2fig(tb, 'off', @i_savedata, 'export.gif', 'Export data...');
 pkg.i_addbutton2fig(tb, 'off', @i_testdata, 'icon-fa-stack-exchange-10.gif', 'ANOVA/T-test...');
 pkg.i_addbutton2fig(tb, 'off', @i_addsamplesize, "icon-mat-blur-linear-10.gif", 'Add Sample Size');
 pkg.i_addbutton2fig(tb, 'off', @i_savemainfig, "powerpoint.gif", 'Save Figure to PowerPoint File...');
+pkg.i_addbutton2fig(tb, 'off', @i_savemainfigx, "xpowerpoint.gif", 'Save Figure as Graphic File...');
 pkg.i_addbutton2fig(tb, 'off', @i_invertcolor, "plotpicker-pie.gif", 'Switch BW/Color');
 pkg.i_addbutton2fig(tb, 'off', @i_reordersamples, "plotpicker-errorbar.gif", 'Reorder Samples');
 
@@ -103,6 +104,17 @@ end
 % drawnow;
 gui.gui_waitbar(fw);
 hFig.Visible=true;
+
+
+    function i_savemainfigx(~,~)
+        [~,idx]=ismember(focalg, glist);     
+        filter = {'*.jpg'; '*.png'; '*.tif'; '*.pdf'; '*.eps'};
+        [filename, filepath] = uiputfile(filter,'Save Violin Plot', ...
+            sprintf('ViolinPlot_%s',focalg));
+        if ischar(filename)
+            exportgraphics(ax0{idx}, [filepath, filename]);
+        end
+    end
 
 
     function i_savemainfig(~,~)
@@ -358,5 +370,7 @@ hFig.Visible=true;
         %T=sortrows(T,'GroupID');
         gui.i_exporttable(T, true, 'Tviolindata','ViolinPlotTable');
     end
+
+
 
 end
