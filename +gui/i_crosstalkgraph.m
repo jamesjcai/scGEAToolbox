@@ -1,5 +1,6 @@
 function [hFig] = i_crosstalkgraph(OUT, k, sce)
 
+
 if nargin < 3, sce = []; end
 if nargin < 2, k = 1; end
 
@@ -11,6 +12,7 @@ if nargin < 2, k = 1; end
 % pkg.heatmap(m, cL, cL,'%0.2f', 'TickAngle', 45, 'ShowAllTicks', true, 'TextColor', 'w');
 if ~isempty(sce)
     [c, cL] = grp2idx(sce.c_cell_type_tx);
+    
     hFig = figure;
     ax1 = subplot(2, 2, 1);
     gui.i_gscatter3(sce.s(:, 1:2), c);
@@ -40,9 +42,11 @@ if ~isempty(sce)
     G.Edges.LWidths = abs(w*G.Edges.Weight/max(G.Edges.Weight));
     p.LineWidth = G.Edges.LWidths;
     title('Interaction Graph')
+
     ax3 = subplot(2, 2, 3);
     sc_scattermarker(sce.X, upper(sce.g), sce.s, OUT.ligandok(k), 1, [], false);
     box on
+    
     ax4 = subplot(2, 2, 4);
     sc_scattermarker(sce.X, upper(sce.g), sce.s, OUT.receptorok(k), 1, [], false);
     box on
@@ -83,7 +87,8 @@ end
         evalin('base', 'h=findobj(gcf,''type'',''axes'');');
         evalin('base', 'hlink = linkprop(h(1:2),{''CameraPosition'',''CameraUpVector''});');
         evalin('base', 'rotate3d on');
-end
+    end
+
 
         function [txt] = i_myupdatefcnx(~, event_obj)
             % pos = event_obj.Position;
