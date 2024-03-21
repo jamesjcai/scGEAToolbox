@@ -123,14 +123,14 @@ subtitle(hAx2, titxt);
 xlabel(hAx2,'Cell Index');
 ylabel(hAx2,'Expression Level');
 
-figure;
-assignin("base","x1",x1);
-stem(1:length(x1), x1, 'marker', 'none');
-xlim([1 size(X,2)]);
-title(hvg(1));
-subtitle(titxt);
-xlabel('Cell Index');
-ylabel('Expression Level');
+% figure;
+% assignin("base","x1",x1);
+% stem(1:length(x1), x1, 'marker', 'none');
+% xlim([1 size(X,2)]);
+% title(hvg(1));
+% subtitle(titxt);
+% xlabel('Cell Index');
+% ylabel('Expression Level');
 
 
 dt.UpdateFcn = {@in_myupdatefcn3, g};
@@ -202,11 +202,11 @@ drawnow;
         fprintf('%d genes are selected.\n', sum(ptsSelected));
 
         gselected=g(ptsSelected);
-        [yes,idx]=ismember(gselected,T.hvg);
+        [yes,idx]=ismember(gselected,T.gene);
         Tx=T(idx,:);
         Tx=sortrows(Tx,1,'descend');        
         if ~all(yes), error('Running time error.'); end
-        tgenes=Tx.hvg;
+        tgenes=Tx.gene;
 
         labels = {'Save gene names to variable:'};
         vars = {'g'};
@@ -224,11 +224,11 @@ drawnow;
         fprintf('%d genes are selected.\n', sum(ptsSelected));        
 
         gselected=g(ptsSelected);
-        [yes,idx]=ismember(gselected,T.hvg);
+        [yes,idx]=ismember(gselected,T.gene);
         Tx=T(idx,:);
         Tx=sortrows(Tx,1,'descend');        
         if ~all(yes), error('Running time error.'); end
-        tgenes=Tx.hvg;
+        tgenes=Tx.gene;
         gui.i_enrichtest(tgenes, g, numel(tgenes));
     end
 
