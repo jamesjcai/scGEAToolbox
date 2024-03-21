@@ -1,4 +1,4 @@
-function callback_CompareGeneBtwCls(src, ~)
+function [needupdatesce]=callback_CompareGeneBtwCls(src, ~)
 %     answer = questdlg(['This function ' ...
 %         'calculates a signature score for each ' ...
 %         'cell with respect to a given gene set.' ...
@@ -7,7 +7,7 @@ function callback_CompareGeneBtwCls(src, ~)
 
 FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
-
+needupdatesce = false;
 
 aa = 'Yes, compare scores';
 bb = 'No, just show values';
@@ -51,7 +51,6 @@ bb = 'No, just show values';
                         idx2 = ismember(ci, idx1);
                         sce = sce.selectcells(idx2);
                         thisc = thisc(idx2);
-                        % xxxxx
                     else
                         return;
                     end
@@ -159,6 +158,10 @@ bb = 'No, just show values';
                     if sum(strcmp('cell_potency', sce.list_cell_attributes)) == 0
                         sce.list_cell_attributes = [sce.list_cell_attributes, ...
                             {'cell_potency', y(:)}];                  
+                    end
+                    if ~showcomparision
+                        needupdatesce = true;
+                        guidata(FigureHandle, sce);
                     end
 
                     ttxt = 'Differentiation Potency';
@@ -303,7 +306,7 @@ bb = 'No, just show values';
                 %         f=gui.i_cascadefig(sce,glist(k),axx,bxx,k,methodid);
                 %     [h1]=sc_scattermarker(sce.X,sce.g,...
                 %                  sce.s,g,methodid);
-                gui.i_heatscatterfig(sce, y, posg, ttxt);
+                gui.i_heatscatterfig(sce, y, posg, ttxt, FigureHandle);
                 % answer = questdlg('Also show stem plot?', '');
                 % if answer == "Yes"
                 %     gui.i_stemscatterfig(sce, y, posg, ttxt);

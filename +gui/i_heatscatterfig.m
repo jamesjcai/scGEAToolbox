@@ -1,8 +1,9 @@
-function [f0] = i_heatscatterfig(sce, cs, posg, csname)
+function [hFig] = i_heatscatterfig(sce, cs, posg, csname, parentfig)
 
+if nargin < 5, parentfig = []; end
 if nargin < 4 || isempty(csname), csname = "CellScore"; end
 
-[f0] = figure('Visible', false);
+hFig = figure('Visible', false);
 
 
 gui.i_heatscatter(sce.s, cs);
@@ -14,8 +15,10 @@ colorbar;
 zlabel('Score value')
 title(strrep(csname, '_', '\_'));
 
+tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
+uipushtool(tb, 'Separator', 'off');
 
-tb = uitoolbar(f0);
+%tb = uitoolbar(hFig);
 pkg.i_addbutton2fig(tb, 'off', @i_saveCrossTable, "export.gif", 'Save cross-table');
 pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 pkg.i_addbutton2fig(tb, 'on', @gui.i_pickcolormap, 'plotpicker-compass.gif', 'Pick new color map...');
@@ -26,8 +29,17 @@ pkg.i_addbutton2fig(tb, 'on', @i_viewgenenames, 'HDF_point.gif', 'Show gene name
 pkg.i_addbutton2fig(tb,'on', @in_stemplot,'icon-mat-blur-on-10.gif','Show stem plot');
 %pkg.i_addbutton2fig(tb,'on',@i_viewscatter3,'icon-mat-blur-on-10.gif','Show scatter plot');
 
-movegui(f0, 'center');
-set(f0, 'Visible', true);
+if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 
+    [px_new] = gui.i_getchildpos(parentfig, hFig);
+    if ~isempty(px_new)
+        movegui(hFig, px_new);
+    else
+        movegui(hFig, 'center');
+    end
+else
+    movegui(hFig, 'center');
+end
+set(hFig, 'Visible', true);
 
     function in_stemplot(~,~)
         gui.i_stemscatterfig(sce, cs, posg, csname);

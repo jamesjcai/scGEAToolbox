@@ -515,8 +515,9 @@ end
     end
 
     function in_CompareGeneBtwCls(src,events)
-        gui.callback_CompareGeneBtwCls(src,events);
-        sce = guidata(FigureHandle);
+        if gui.callback_CompareGeneBtwCls(src,events)
+            sce = guidata(FigureHandle);
+        end
     end
 
     function in_turnonuserguiding(~, ~)
