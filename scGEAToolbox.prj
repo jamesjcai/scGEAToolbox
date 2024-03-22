@@ -7,7 +7,7 @@
     <param.summary>Single-cell Gene Expression Analysis Toolbox</param.summary>
     <param.description>scRNAseq data analysis toolbox</param.description>
     <param.screenshot>${PROJECT_ROOT}\resources\scgeatool.png</param.screenshot>
-    <param.version>24.3.6</param.version>
+    <param.version>24.3.7</param.version>
     <param.output>${PROJECT_ROOT}\scGEAToolbox.mltbx</param.output>
     <param.products.name>
       <item>Statistics and Machine Learning Toolbox</item>
@@ -117,11 +117,9 @@ TIMESTAMP</param.exclude.filters>
     <fileset.rootfiles>
       <file>${PROJECT_ROOT}\+gui</file>
       <file>${PROJECT_ROOT}\+pkg</file>
-      <file>${PROJECT_ROOT}\+qtm</file>
       <file>${PROJECT_ROOT}\+run</file>
       <file>${PROJECT_ROOT}\+ten</file>
       <file>${PROJECT_ROOT}\@SingleCellExperiment</file>
-      <file>${PROJECT_ROOT}\@SingleCellNetwork</file>
       <file>${PROJECT_ROOT}\cdgea.m</file>
       <file>${PROJECT_ROOT}\demo_Getting_Started.m</file>
       <file>${PROJECT_ROOT}\demo_script1.mlx</file>
@@ -163,6 +161,7 @@ TIMESTAMP</param.exclude.filters>
       <file>${PROJECT_ROOT}\sc_mergedata.m</file>
       <file>${PROJECT_ROOT}\sc_mergesces.m</file>
       <file>${PROJECT_ROOT}\sc_mtratio.m</file>
+      <file>${PROJECT_ROOT}\sc_multiembed.m</file>
       <file>${PROJECT_ROOT}\sc_norm.m</file>
       <file>${PROJECT_ROOT}\sc_pcnet.m</file>
       <file>${PROJECT_ROOT}\sc_pcnetbat.m</file>
