@@ -26,9 +26,7 @@ if ~isempty(parentfig)
 end
 
 % hAx = axes('Parent', hFig);
-
 tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
-
 % tb = uitoolbar('Parent', hFig);
 % set(tb, 'Tag', 'FigureToolBar', ...
 %     'HandleVisibility', 'off', 'Visible', 'on');
@@ -58,8 +56,8 @@ end
     %grid on
     %box on
     %legend({'Genes','Spline fit'});
-    xlabel(hAx1,'Mean, log');
-    ylabel(hAx1,'CV, log');
+    xlabel(hAx1,'Mean+1, log');
+    ylabel(hAx1,'CV+1, log');
     zlabel(hAx1,'Dropout rate (% of zeros)');
 
         
@@ -237,10 +235,13 @@ drawnow;
             idx = event_obj.DataIndex;
             txt = {g(idx)};
             x1 = X(idx, :);
+
+            % figure; stem(1:length(x1), x1, 'marker', 'none');
+
             if ~isempty(sh) && isvalid(sh)
                 delete(sh);
             end
-            sh = stem(hAx2, 1:length(x1), x1, 'marker', 'none');
+            sh = plot(hAx2, 1:length(x1), x1, 'marker', 'none');
             xlim(hAx2,[1 size(X,2)]);
             title(hAx2, g(idx));    
             [titxt] = gui.i_getsubtitle(x1);
