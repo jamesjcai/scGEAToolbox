@@ -1,6 +1,7 @@
-%function i_dotplot(X0,X1,genelist,tgene,uselog)
-function [hFig] = i_dotplot(X, g, c, cL, tgene, uselog, ttxt)
-if nargin<7, ttxt=[]; end
+function [hFig] = i_dotplot(X, g, c, cL, tgene, uselog, ttxt, parentfig)
+
+if nargin < 8, parentfig = []; end
+if nargin < 7, ttxt=[]; end
 DOTSIZE = 0.5;
 cL=cL(:);
 
@@ -121,10 +122,6 @@ grid on
 % hFig=gcf;
 hFig.Position(3) = hFig.Position(3) * 0.7;
 
-
-
-
-
 % drawnow;
 cb = colorbar('eastoutside');
 ax = gca;
@@ -138,8 +135,10 @@ ttxt=strrep(ttxt,'_','\_');
 title(ttxt);
 end
 
+tb1 = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
+uipushtool(tb1, 'Separator', 'off');
 
-tb = uitoolbar('Parent', hFig);
+%tb = uitoolbar('Parent', hFig);
 pkg.i_addbutton2fig(tb, 'on', {@gui.i_pickmonocolor, true}, 'plotpicker-compass.gif', 'Pick new color map...');
 pkg.i_addbutton2fig(tb, 'off', @gui.i_changefontsize, 'noun_font_size_591141.gif', 'ChangeFontSize');
 pkg.i_addbutton2fig(tb, 'off', @i_resizedot, 'networkcomp.gif', 'Resize dots...');
@@ -166,7 +165,18 @@ pkg.i_addbutton2fig(tb, 'on', @i_resizewin, ...
 % cb.Label.String ="Average Expression";
 
 
-movegui(hFig, 'center');
+if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 
+    [px_new] = gui.i_getchildpos(parentfig, hFig);
+    if ~isempty(px_new)
+        movegui(hFig, px_new);
+    else
+        movegui(hFig, 'center');
+    end
+else
+    movegui(hFig, 'center');
+end
+
+
 if nargout > 0, return; end
 set(hFig, 'visible', 'on');
 

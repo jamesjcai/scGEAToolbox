@@ -1,7 +1,6 @@
 function i_qcviolin(X, genelist, parentfig)
-if nargin<3
-    parentfig=[];
-end
+
+if nargin<3, parentfig=[]; end
 
 i = startsWith(genelist, 'mt-', 'IgnoreCase', true);
 nftr = full(sum(X > 0, 1));
@@ -13,7 +12,7 @@ cj = 100 * (lbsz_mt ./ lbsz);
 fx=figure('Visible','off');
 
 if ~isempty(parentfig)
-        px_new = gui.i_getchildpos(parentfig,fx);
+    px_new = gui.i_getchildpos(parentfig,fx);
 else
     px_new=[];
 end

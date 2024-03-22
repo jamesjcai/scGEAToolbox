@@ -9,6 +9,7 @@ end
 if nargin < 4
     colorit = true;
 end
+if matlab.ui.internal.isUIFigure(parentfig), focus(parentfig); end
 hFig = figure('visible', 'off');
 
 isdescend = false;
@@ -230,6 +231,6 @@ set(hFig, 'visible', 'on');
         %T=sortrows(T,'ScoreLevel','descend');
         %T=sortrows(T,'GroupID');
         gui.i_exporttable(T, true, 'Tviolindata','ViolinPlotTable');
-
     end
+
 end

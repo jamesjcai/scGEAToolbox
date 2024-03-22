@@ -167,7 +167,10 @@ set(gca, 'YTickLabel', MX);
 set(gca, 'TickLength', [0, 0])
 % ======= customized heatmap - end
 
-tb1 = uitoolbar(hFig);
+% tb1 = uitoolbar(hFig);
+tb1 = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
+uipushtool(tb1, 'Separator', 'off');
+
 pkg.i_addbutton2fig(tb1, 'off', {@i_saveM, M}, 'greencircleicon.gif', 'Save marker gene map...');
 pkg.i_addbutton2fig(tb1, 'off', @i_flipxy, 'xplotpicker-geobubble2.gif', 'Flip XY');
 pkg.i_addbutton2fig(tb1, 'off', {@i_summarymap, Z}, 'HDF_object01.gif', 'Summary map...');
@@ -182,7 +185,12 @@ pkg.i_addbutton2fig(tb1, 'on', {@i_savetable, Y}, 'export.gif', 'Export data...'
 pkg.i_addbutton2fig(tb1, 'on', @gui.i_invertcolor, 'plotpicker-comet.gif', 'Invert colors');
 pkg.i_addbutton2fig(tb1, 'off', @i_resetcolor, 'plotpicker-geobubble2.gif', 'Reset color map');
 
-movegui(hFig, 'center');
+[px_new] = gui.i_getchildpos(FigureHandle, hFig);
+if ~isempty(px_new)
+    movegui(hFig, px_new);
+else
+    movegui(hFig, 'center');
+end
 set(hFig, 'visible', 'on');
 fliped = false;
 
