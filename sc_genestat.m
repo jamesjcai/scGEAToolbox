@@ -19,8 +19,8 @@ dropr = 1 - sum(X > 0, 2) ./ size(X, 2);
 
 u = mean(X, 2, 'omitnan');
 cv = std(X, [], 2, 'omitnan') ./ u;
-lgu = log(u);
-lgcv = log(cv);
+lgu = log(u+1);
+lgcv = log(cv+1);
 genes = genelist;
 
 
