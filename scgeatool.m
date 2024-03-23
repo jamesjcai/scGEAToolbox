@@ -21,10 +21,14 @@ if nargin < 1
     if ~(ismcc || isdeployed)
         try        
             fxfun = @gui.sc_splashscreen;
+            [fx, v1] = fxfun();
+            %v1
         catch
             fxfun = @gui.sc_simplesplash2;
+            fx = fxfun();
+            v1 = [];
         end
-        fx = fxfun();
+        
     end
     sce = SingleCellExperiment;
 else
@@ -68,8 +72,12 @@ if ~isempty(s_in), sce.s = s_in; end
 % end
 
 % if ~isempty(fx) && isvalid(fx), gui.sc_simplesplash2(fx,0.2); end
-
-FigureHandle = figure('Name', 'SCGEATOOL', ...
+if ~isempty(v1)
+    figname = sprintf('SCGEATOOL v%s', v1);
+else
+    figname = 'SCGEATOOL';
+end
+FigureHandle = figure('Name', figname, ...
     'position', round(1.25*[0, 0, 560, 420]), ...
     'visible', 'off', 'NumberTitle', 'off', ...
     'DockControls','off');

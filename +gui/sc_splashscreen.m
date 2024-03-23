@@ -1,4 +1,4 @@
-function [fx] = sc_splashscreen(fx, r, showloading)
+function [fx, v1] = sc_splashscreen(fx, r, showloading)
 import pkg.*
 import gui.*
 if nargin<3, showloading=true; end
