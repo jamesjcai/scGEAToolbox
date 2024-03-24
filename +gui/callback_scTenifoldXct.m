@@ -8,10 +8,7 @@ if isempty(wkdir), return; end
 
 
 FigureHandle = src.Parent.Parent;
-if ~gui.gui_uishowrefinfo('scTenifoldXct [PMID:36787742]',FigureHandle)
-    return;
-end
-
+gui.gui_showrefinfo('scTenifoldXct [PMID:36787742]');
 sce = guidata(FigureHandle);
 
 if ~gui.i_setpyenv, return; end
