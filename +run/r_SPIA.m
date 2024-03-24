@@ -4,7 +4,7 @@ if nargin < 4, wkdir = tempdir; end
 if nargin < 2, fdrcutoff = 0.01; end
 if nargin < 3, speciestag = 'hsa'; end
 T = [];
-gui.gui_showrefinfo('SPIA [PMID:18990722]');
+if ~gui.gui_showrefinfo('SPIA [PMID:18990722]'), return; end
 
 isdebug = false;
 oldpth = pwd();
