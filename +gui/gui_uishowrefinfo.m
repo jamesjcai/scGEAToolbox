@@ -1,9 +1,13 @@
 function [y,txt,T] = gui_uishowrefinfo(reftarget, parentfig)
 
 if nargin<2, parentfig = []; end
-
-y = false;
+gui.gui_showrefinfo(reftarget);
+y = true;
 txt = [];
+T=[];
+return;
+
+%{
 pw1 = fileparts(mfilename('fullpath'));
 fname = fullfile(pw1, '..','resources','refinfo.txt');
 fid=fopen(fname,'r');
@@ -21,7 +25,7 @@ end
 %     uiwait(helpdlg(txt, reftarget));
 % end
 
-hFig = uifigure("WindowStyle","alwaysontop",'Visible','off');
+hFig = uifigure("WindowStyle","modal",'Visible','off');
 hFig.Position(3)=0.85*hFig.Position(3);
 hFig.Position(4)=0.85*hFig.Position(4);
 g = uigridlayout(hFig,[3 3]);
@@ -64,7 +68,7 @@ if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure')
     end
 end
 hFig.Visible=true;
-waitfor(hFig);
+uiwait(hFig);
 
 function textEntered(~,~,btn)
     if strcmp(btn.Text,oktext)
@@ -75,3 +79,4 @@ end
 
 end
 
+%}

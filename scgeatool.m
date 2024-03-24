@@ -290,7 +290,7 @@ delete(findall(FigureHandle, 'tag', 'figMenuHelp'));
 m_help = uimenu(FigureHandle, 'Text', '&Help', 'Accelerator', 'H');
 in_addmenu(m_help, 0, {@(~, ~) web('https://scgeatoolbox.readthedocs.io/en/latest/')}, 'Online Documentation...');
 
-in_addmenu(m_help, 0, {@(~, ~) gui.gui_uishowrefinfo('Quick Installation',FigureHandle)}, 'Quick Installation Guide...');
+% in_addmenu(m_help, 0, {@(~, ~) gui.gui_uishowrefinfo('Quick Installation',FigureHandle)}, 'Quick Installation Guide...');
 
 
 in_addmenu(m_help, 1, {@(~, ~) web('https://www.mathworks.com/matlabcentral/fileexchange/72917-scgeatoolbox-single-cell-gene-expression-analysis-toolbox')}, 'View scGEAToolbox on File Exchange...');
@@ -1800,9 +1800,11 @@ end
 
     function in_EnrichrHVGs(src, events)
 
-        if ~gui.gui_uishowrefinfo('HVG Functional Analysis [PMID:31861624]',FigureHandle)
-            return;
-        end
+        %if ~gui.gui_uishowrefinfo('HVG Functional Analysis [PMID:31861624]',FigureHandle)
+        %    return;
+        %end
+
+        gui_showrefinfo('HVG Functional Analysis [PMID:31861624]');
         %answer = questdlg('This function applies to a homogeneous group of cells. Remove lowly expressed genes before applying. Continue?');
         %if ~strcmp(answer, 'Yes'), return; end
 

@@ -15,5 +15,6 @@ end
 
 if ~isempty(txt)
     fprintf('%s\n%s\n', reftarget, txt);
-    uiwait(helpdlg(txt, reftarget));
+    % uiwait(helpdlg(txt, reftarget));
+    uiwait(msgbox(txt, reftarget, "help", "modal"));
 end
