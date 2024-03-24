@@ -1,7 +1,7 @@
 function callback_RScorpion(src, ~)
 
 FigureHandle = src.Parent.Parent;
-gui.gui_showrefinfo('SCORPION [PMID:38438786]');
+if ~gui.gui_showrefinfo('SCORPION [PMID:38438786]'), return; end
 
 extprogname = 'R_SCORPION';
 preftagname = 'externalwrkpath';
