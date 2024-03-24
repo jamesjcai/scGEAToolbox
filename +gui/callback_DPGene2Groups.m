@@ -3,7 +3,7 @@ function callback_DPGene2Groups(src, ~)
 
 FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
-gui.gui_showrefinfo('DP Analysis');
+if ~gui.gui_showrefinfo('DP Analysis'), return; end
 
 
 [i1, i2, cL1, cL2] = gui.i_select2grps(sce);
