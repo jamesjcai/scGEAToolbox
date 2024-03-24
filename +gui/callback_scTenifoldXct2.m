@@ -3,9 +3,7 @@ function callback_scTenifoldXct2(src, ~)
 
 FigureHandle = src.Parent.Parent;
 
-if ~gui.gui_uishowrefinfo('scTenifoldXct [PMID:36787742]',FigureHandle)
-    return;
-end
+gui.gui_showrefinfo('scTenifoldXct [PMID:36787742]');
 
 sce = guidata(FigureHandle);
 % error('under development.');
