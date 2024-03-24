@@ -1,5 +1,7 @@
 function callback_scTenifoldKnk1(src, ~)
 
+if ~gui.gui_showrefinfo('scTenifoldKnk [PMID:35510185]'), return; end
+
 try
     ten.check_tensor_toolbox;
 catch ME
@@ -17,7 +19,6 @@ end
 import ten.*
 
 FigureHandle = src.Parent.Parent;
-gui.gui_showrefinfo('scTenifoldKnk [PMID:35510185]');
 sce = guidata(FigureHandle);
 
 answer = questdlg('Construct network de novo or use existing network in Workspace?', ...
