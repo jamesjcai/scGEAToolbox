@@ -144,7 +144,7 @@ bb = 'No, just show values';
 
                 case 'Differentiation Potency [PMID:33244588]'
 
-                    gui.gui_showrefinfo('Differentiation Potency [PMID:33244588]');
+                    if ~gui.gui_showrefinfo('Differentiation Potency [PMID:33244588]'), return; end
 
                     % answer2=questdlg('Which species?','Select Species','Mouse','Human','Mouse');
                     % [yes,speciesid]=ismember(lower(answer2),{'human','mouse'});
@@ -209,7 +209,7 @@ bb = 'No, just show values';
                         'Expression Level', cL, colorit);
                     return;
                 case 'Select a Predefined Score...'
-                    gui.gui_showrefinfo('Predefined Cell Score');
+                    if ~gui.gui_showrefinfo('Predefined Cell Score'), return; end
                     [~, T] = pkg.e_cellscores(sce.X, sce.g, 0);
                     listitems = T.ScoreType;
                     [indx2, tf2] = listdlg('PromptString', 'Select Score', ...
