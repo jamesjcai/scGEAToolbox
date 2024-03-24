@@ -4,21 +4,13 @@ function callback_DEGene2GroupsBatch(src, ~)
 FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
 
-%warndlg('Function is under development.','');
-%return;
-
-
-
-
 
 if length(unique(sce.c_cell_type_tx))==1
     warndlg('Only one cell type or cell type is undetermined.','');
     return;
 end
 
-if ~gui.gui_uishowrefinfo('DE in Batch Mode',FigureHandle)
-    return;
-end
+gui.gui_showrefinfo('DE in Batch Mode');
 
 [CellTypeSorted] = pkg.e_sortcatbysize(sce.c_cell_type_tx);
 [CellTypeList] = in_selectcelltypes(CellTypeSorted);
