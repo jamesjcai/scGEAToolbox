@@ -17,9 +17,7 @@ end
 import ten.*
 
 FigureHandle = src.Parent.Parent;
-if ~gui.gui_uishowrefinfo('scTenifoldKnk [PMID:35510185]',FigureHandle)
-    return;
-end
+gui.gui_showrefinfo('scTenifoldKnk [PMID:35510185]');
 sce = guidata(FigureHandle);
 
 answer = questdlg('Construct network de novo or use existing network in Workspace?', ...
