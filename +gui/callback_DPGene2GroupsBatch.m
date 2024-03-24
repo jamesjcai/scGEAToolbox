@@ -1,8 +1,9 @@
 function callback_DPGene2GroupsBatch(src, ~)
 
+if ~gui.gui_showrefinfo('DP in Batch Mode'), return; end
+
 
 FigureHandle = src.Parent.Parent;
-gui.gui_showrefinfo('DP in Batch Mode');
 sce = guidata(FigureHandle);
 
 %warndlg('Function is under development.','');
