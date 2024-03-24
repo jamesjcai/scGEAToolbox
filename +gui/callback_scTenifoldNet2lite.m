@@ -4,7 +4,7 @@ import ten.*
 import pkg.*
 
 FigureHandle = src.Parent.Parent;
-gui.gui_showrefinfo('scTenifoldNet [PMID:33336197]');
+if ~gui.gui_showrefinfo('scTenifoldNet [PMID:33336197]'), return; end
 
 sce = guidata(FigureHandle);
 
