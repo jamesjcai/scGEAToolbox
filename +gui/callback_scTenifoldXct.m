@@ -1,5 +1,6 @@
 function callback_scTenifoldXct(src, ~)
 
+if ~gui.gui_showrefinfo('scTenifoldXct [PMID:36787742]'), return; end
 
 extprogname = 'py_scTenifoldXct';
 preftagname = 'externalwrkpath';
@@ -8,7 +9,6 @@ if isempty(wkdir), return; end
 
 
 FigureHandle = src.Parent.Parent;
-gui.gui_showrefinfo('scTenifoldXct [PMID:36787742]');
 sce = guidata(FigureHandle);
 
 if ~gui.i_setpyenv, return; end
