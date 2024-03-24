@@ -13,7 +13,7 @@ wrkpth = fullfile(pw1, '+run', 'external', 'mt_cbrewer');
 addpath(wrkpth);
 wrkpth = fullfile(pw1, '+run', 'external', 'mt_PHATE');
 addpath(wrkpth);
-wrkpth = fullfile(pw1, '+run', 'external', 'mt_UMAP');
+wrkpth = fullfile(pw1, '+run', 'external', 'mt_UMAP44');
 addpath(wrkpth);
 wrkpth = fullfile(pw1, '+run', 'external', 'mt_SIMLR');
 addpath(wrkpth);
@@ -83,7 +83,7 @@ end
 d = [d1;d2;d3;d4];
 %    d=[d;fullfile(pw1, 'resources', 'STRING', 'stringdb_human.mat')];
 %    d=[d;fullfile(pw1, 'resources', 'STRING', 'stringdb_mouse.mat')];
-d = [d; fullfile(pw1, '+run', 'external', 'mt_UMAP', 'umap.jar')];
+% d = [d; fullfile(pw1, '+run', 'external', 'mt_UMAP', 'umap.jar')];
 d = [d; fullfile(pw1, 'resources', 'refinfo.txt')];
 %d = [d; fullfile(pw1, 'resources', 'tfome_tfgenes.mat')];
 d = [d; fullfile(pw1, 'resources', 'cellcyclegenes.xlsx')];

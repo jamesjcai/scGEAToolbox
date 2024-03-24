@@ -4,6 +4,8 @@ isatac = false;
 
 FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
+gui.gui_showrefinfo('DE Analysis');
+
 
 [i1, i2, cL1, cL2] = gui.i_select2grps(sce);
 if length(i1) == 1 || length(i2) == 1, return; end

@@ -56,7 +56,7 @@ pp1 = splinefit(s, xyz.', 15, 0.75);
 xyz1 = ppval(pp1, s)';
 
 
-[~, d] = dsearchn(xyz1, xyz);
+[nearidx, d] = dsearchn(xyz1, xyz);
 %fitmeanv=xyz1(:,1);
 %x=xyz(:,1); y=xyz(:,2);
 %d(x>max(fitmeanv))=d(x>max(fitmeanv))./100;
@@ -72,11 +72,13 @@ distFit = fitdist([-dx; dx], 'Normal');
 pval = normcdf(d, 0, distFit.sigma, 'upper');
 [~, ~, ~, fdr] = pkg.fdr_bh(pval);
 
+
+
 if ~isempty(gsorted)
     genes = gsorted;
-    T = table(genes, lgu, lgcv, dropr, d, pval, fdr);
+    T = table(genes, lgu, lgcv, dropr, d, pval, fdr, nearidx);
 else
-    T = table(lgu, lgcv, dropr, d, pval, fdr);
+    T = table(lgu, lgcv, dropr, d, pval, fdr, nearidx);
 end
 % 'variablenames',{'Genes','Log10_Mean','Dropout_Rate','Log10_CV','Deviation_3DFeature'});
 
