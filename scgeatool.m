@@ -293,8 +293,7 @@ in_addmenu(m_extn, 1, @gui.callback_ExploreCellularCrosstalk, 'Talklr Intercellu
 delete(findall(FigureHandle, 'tag', 'figMenuHelp'));
 m_help = uimenu(FigureHandle, 'Text', '&Help', 'Accelerator', 'H');
 in_addmenu(m_help, 0, {@(~, ~) web('https://scgeatoolbox.readthedocs.io/en/latest/')}, 'Online Documentation...');
-
-% in_addmenu(m_help, 0, {@(~, ~) gui.gui_uishowrefinfo('Quick Installation',FigureHandle)}, 'Quick Installation Guide...');
+in_addmenu(m_help, 0, {@(~, ~) gui.gui_uishowrefinfo('Quick Installation',FigureHandle)}, 'Quick Installation Guide...');
 
 
 in_addmenu(m_help, 1, {@(~, ~) web('https://www.mathworks.com/matlabcentral/fileexchange/72917-scgeatoolbox-single-cell-gene-expression-analysis-toolbox')}, 'View scGEAToolbox on File Exchange...');
@@ -915,9 +914,7 @@ end
             idx = randperm(sce.NumCells);
             ids = idx(1:tn);
         elseif methodoption == 2
-            if ~gui.gui_uishowrefinfo('Geometric Sketching [PMID:31176620]',FigureHandle)
-                return;
-            end
+            gui.gui_showrefinfo('Geometric Sketching [PMID:31176620]');
             fw = gui.gui_waitbar;
             Xn = log(1+sc_norm(sce.X))';
             [~, Xn] = pca(Xn, 'NumComponents', 300);
@@ -1041,9 +1038,7 @@ end
     end
 
     function in_DecontX(~, ~)
-        if ~gui.gui_uishowrefinfo('DecontX [PMID:32138770]',FigureHandle)
-            return; 
-        end
+        gui.gui_showrefinfo('DecontX [PMID:32138770]');
         extprogname = 'R_decontX';
         preftagname = 'externalwrkpath';
         [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
@@ -1080,9 +1075,7 @@ end
             warndlg('Python not installed.','');
             return;
         end        
-        if ~gui.gui_uishowrefinfo('Harmony [PMID:31740819]',FigureHandle)
-            return; 
-        end
+        gui.gui_showrefinfo('Harmony [PMID:31740819]');
         if numel(unique(sce.c_batch_id)) < 2
             warndlg('No batch effect (SCE.C_BATCH_ID is empty)');
             return;
@@ -1131,9 +1124,7 @@ end
             warndlg('Python not installed.','');
             return;
         end
-        if ~gui.gui_uishowrefinfo('Scrublet [PMID:30954476]',FigureHandle)
-            return;
-        end        
+        gui.gui_showrefinfo('Scrublet [PMID:30954476]');
         [isDoublet, doubletscore, methodtag, done] = gui.callback_DoubletDetection(src);
         if done && ~any(isDoublet)
             helpdlg('No doublet detected.', '');
@@ -1517,9 +1508,7 @@ end
         if usedefaultdb
             organtag = "all";
             databasetag = "panglaodb";
-            if ~gui.gui_uishowrefinfo('PanglaoDB [PMID:30951143]',FigureHandle)
-                return;
-            end
+            gui.gui_showrefinfo('PanglaoDB [PMID:30951143]');
             speciestag = gui.i_selectspecies(2);
             if isempty(speciestag), return; end
         else
@@ -1804,11 +1793,7 @@ end
 
     function in_EnrichrHVGs(src, events)
 
-        %if ~gui.gui_uishowrefinfo('HVG Functional Analysis [PMID:31861624]',FigureHandle)
-        %    return;
-        %end
-
-        gui_showrefinfo('HVG Functional Analysis [PMID:31861624]');
+        gui.gui_showrefinfo('HVG Functional Analysis [PMID:31861624]');
         %answer = questdlg('This function applies to a homogeneous group of cells. Remove lowly expressed genes before applying. Continue?');
         %if ~strcmp(answer, 'Yes'), return; end
 
@@ -1985,9 +1970,7 @@ end
             methodtag = "kmeans";
         elseif strcmpi(answer, 'SnnDpc [DOI:10.1016/j.ins.2018.03.031] 🐢')
             methodtag = "snndpc";
-            if ~gui.gui_uishowrefinfo('SnnDpc [DOI:10.1016/j.ins.2018.03.031]',FigureHandle)
-                return;
-            end
+            gui.gui_showrefinfo('SnnDpc [DOI:10.1016/j.ins.2018.03.031]');
         else
             return;
         end
