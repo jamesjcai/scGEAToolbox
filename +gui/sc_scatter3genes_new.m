@@ -78,6 +78,8 @@ if dofit
     %     pp1 = splinefit(s,xyz,pieces,0.75);
     %     xyz1 = ppval(pp1,s);
     hold(hAx1,'on');
+        assignin("base","xyz1a",xyz1)
+
     plot3(hAx1, xyz1(:, 1), xyz1(:, 2), xyz1(:, 3), '-', 'linewidth', 4);
     % scatter3(xyz1(:,1),xyz1(:,2),xyz1(:,3)); %,'MarkerEdgeAlpha',.8);
 
@@ -113,7 +115,9 @@ end
 
 hAx2 = subplot(2,2,2);
 x1=X(hvgidx(1),:);
-sh = stem(hAx2, 1:length(x1), x1, 'marker', 'none');
+%sh = stem(hAx2, 1:length(x1), x1, 'marker', 'none');
+
+sh = plot(hAx2, 1:length(x1), x1);
 xlim(hAx2,[1 size(X,2)]);
 title(hAx2, hvg(1));
 [titxt] = gui.i_getsubtitle(x1);
