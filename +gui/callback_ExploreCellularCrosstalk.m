@@ -1,7 +1,7 @@
 function callback_ExploreCellularCrosstalk(src, ~)
 
 FigureHandle = src.Parent.Parent;
-gui.gui_showrefinfo('talklr [DOI:10.1101/2020.02.01.930602]');
+if ~gui.gui_showrefinfo('talklr [DOI:10.1101/2020.02.01.930602]'), return; end
 
     answer = questdlg('This function is based on an unpublished method [DOI:10.1101/2020.02.01.930602]. Continue?');
         if ~strcmp(answer, 'Yes'), return; end
