@@ -14,7 +14,8 @@ pth = fullfile(pw1, '..', 'resources', 'myTemplate.pptx');
 
 
 hFig=figure("Visible","off", 'MenuBar','none');
-set(hFig, 'ToolBar', 'none');
+%set(hFig, 'ToolBar', 'none');
+
 hFig.Position(3) = hFig.Position(3) * 1.8;
 
 % if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 
@@ -63,6 +64,7 @@ for k=1:n
     if ~isempty(cazcel)
         view(ax{k,1},cazcel(1),cazcel(2));
     end
+
     ax{k,2} = subplot(1,2,2);
     scatter(sce.s(:,1), sce.s(:,2), 5, c, 'filled');
     stem3(sce.s(:,1), sce.s(:,2), c, 'marker', 'none', 'color', 'm');
@@ -119,9 +121,6 @@ pkg.i_addbutton2fig(tb, 'on', {@i_PickColorMap, c}, 'plotpicker-compass.gif', 'P
 % pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 
 pkg.i_addbutton2fig(tb, 'off', @in_savedata, "powerpointx.gif", 'Save Gene List...');
-
-
-
 pkg.i_addbutton2fig(tb, 'off', @i_savemainfig, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 pkg.i_addbutton2fig(tb, 'off', @i_savemainfigx, "xpowerpoint.gif", 'Save Figure as Graphic File...');
 
