@@ -1,5 +1,5 @@
-function [txt,T] = gui_showrefinfo(reftarget)
-
+function [y, txt, T] = gui_showrefinfo(reftarget)
+y=false;
 txt = [];
 pw1 = fileparts(mfilename('fullpath'));
 fname = fullfile(pw1, '..','resources','refinfo.txt');
@@ -16,5 +16,12 @@ end
 if ~isempty(txt)
     fprintf('%s\n%s\n', reftarget, txt);
     % uiwait(helpdlg(txt, reftarget));
-    uiwait(msgbox(txt, reftarget, "help", "modal"));
+%    uiwait(msgbox(txt, reftarget, "help", "modal"));
+
+     answer = questdlg(txt,reftarget,'Continue','Cancel','Continue');
+     switch answer
+         case 'Continue'
+             y = true;
+         otherwise
+     end
 end

@@ -1,13 +1,13 @@
 function [y,txt,T] = gui_uishowrefinfo(reftarget, parentfig)
 
 if nargin<2, parentfig = []; end
-gui.gui_showrefinfo(reftarget);
-y = true;
-txt = [];
-T=[];
-return;
+% gui.gui_showrefinfo(reftarget);
+% y = true;
+% txt = [];
+% T=[];
+% return;
 
-%{
+
 pw1 = fileparts(mfilename('fullpath'));
 fname = fullfile(pw1, '..','resources','refinfo.txt');
 fid=fopen(fname,'r');
@@ -79,4 +79,3 @@ end
 
 end
 
-%}

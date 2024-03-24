@@ -914,7 +914,7 @@ end
             idx = randperm(sce.NumCells);
             ids = idx(1:tn);
         elseif methodoption == 2
-            gui.gui_showrefinfo('Geometric Sketching [PMID:31176620]');
+            if ~gui.gui_showrefinfo('Geometric Sketching [PMID:31176620]'), return; end
             fw = gui.gui_waitbar;
             Xn = log(1+sc_norm(sce.X))';
             [~, Xn] = pca(Xn, 'NumComponents', 300);
@@ -1038,7 +1038,7 @@ end
     end
 
     function in_DecontX(~, ~)
-        gui.gui_showrefinfo('DecontX [PMID:32138770]');
+        if ~gui.gui_showrefinfo('DecontX [PMID:32138770]'), return; end
         extprogname = 'R_decontX';
         preftagname = 'externalwrkpath';
         [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
@@ -1075,7 +1075,7 @@ end
             warndlg('Python not installed.','');
             return;
         end        
-        gui.gui_showrefinfo('Harmony [PMID:31740819]');
+        if ~gui.gui_showrefinfo('Harmony [PMID:31740819]'), return; end
         if numel(unique(sce.c_batch_id)) < 2
             warndlg('No batch effect (SCE.C_BATCH_ID is empty)');
             return;
@@ -1124,7 +1124,7 @@ end
             warndlg('Python not installed.','');
             return;
         end
-        gui.gui_showrefinfo('Scrublet [PMID:30954476]');
+        if ~gui.gui_showrefinfo('Scrublet [PMID:30954476]'), return; end
         [isDoublet, doubletscore, methodtag, done] = gui.callback_DoubletDetection(src);
         if done && ~any(isDoublet)
             helpdlg('No doublet detected.', '');
@@ -1508,7 +1508,7 @@ end
         if usedefaultdb
             organtag = "all";
             databasetag = "panglaodb";
-            gui.gui_showrefinfo('PanglaoDB [PMID:30951143]');
+            if ~gui.gui_showrefinfo('PanglaoDB [PMID:30951143]'), return; end
             speciestag = gui.i_selectspecies(2);
             if isempty(speciestag), return; end
         else
@@ -1792,11 +1792,9 @@ end
     end
 
     function in_EnrichrHVGs(src, events)
-
-        gui.gui_showrefinfo('HVG Functional Analysis [PMID:31861624]');
+        if ~gui.gui_showrefinfo('HVG Functional Analysis [PMID:31861624]'), return; end
         %answer = questdlg('This function applies to a homogeneous group of cells. Remove lowly expressed genes before applying. Continue?');
         %if ~strcmp(answer, 'Yes'), return; end
-
         ptsSelected = logical(h.BrushData.');
         if any(ptsSelected)
             [ptsSelected, letdoit] = gui.i_expandbrushed(ptsSelected, sce);
@@ -1970,7 +1968,7 @@ end
             methodtag = "kmeans";
         elseif strcmpi(answer, 'SnnDpc [DOI:10.1016/j.ins.2018.03.031] 🐢')
             methodtag = "snndpc";
-            gui.gui_showrefinfo('SnnDpc [DOI:10.1016/j.ins.2018.03.031]');
+            if ~gui.gui_showrefinfo('SnnDpc [DOI:10.1016/j.ins.2018.03.031]'), return; end
         else
             return;
         end
