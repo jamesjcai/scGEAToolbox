@@ -2,7 +2,7 @@ function callback_CompareGCLBtwCls(src, ~)
 %gui.gui_showrefinfo('GCL Analysis [PMID:33139959]');
 
 FigureHandle = src.Parent.Parent;
-gui.gui_showrefinfo('GCL Analysis [PMID:33139959]');
+if ~gui.gui_showrefinfo('GCL Analysis [PMID:33139959]'), return; end
 
     answer = questdlg('This function compares GCL of genes to show differences between cell groups. Continue?', '');
 
