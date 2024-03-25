@@ -13,6 +13,8 @@ function callback_DVGene2Groups(src, ~)
     c=zeros(size(i1));
     c(i1)=1; c(i2)=2;
     cL=[cL1;cL2];
+    cL1 = matlab.lang.makeValidName(cL1);
+    cL2 = matlab.lang.makeValidName(cL2);
     if ~all(c>0)
         sce=sce.selectcells(c>0);
         c=c(c>0);
