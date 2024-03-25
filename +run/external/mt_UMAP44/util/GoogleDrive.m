@@ -613,7 +613,7 @@ classdef GoogleDrive < handle
                 end
             end
             
-            function checkDownloadsFolder(jd, url)
+            function checkDownloadsFolder(jd, ~)
                 handleConflict(jd);
                 handleBrowserOpen;
             end

@@ -235,47 +235,51 @@ end
                 colormap default
         end
 
-                function i_invertcolor(~, ~)
-                    cm = colormap();
-                    colormap(flipud(cm));
-            end
+                
+    function i_invertcolor(~, ~)
+        cm = colormap();
+        colormap(flipud(cm));
+    end
 
-                    function i_dotplotx(~, ~)
-                        try
-                            f = gui.i_dotplot(sce.X, sce.g, c, cL, MX);
-                        catch ME
-                            if exist('f', 'var') && ishandle(f)
-                                close(f);
-                            end
-                            errordlg(ME.message);
-                        end
-                end
 
-                        function i_summarymap(~, ~, thisZ)
-                            f = figure;
-                            if length(cL) == size(thisZ, 1)
-                                h = heatmap(MX, cL, thisZ);
-                            else
-                                h = heatmap(cL, MX, thisZ);
-                            end
-                            h.Title = 'Marker Gene Heatmap';
-                            h.XLabel = 'Group';
-                            h.YLabel = 'Marker Gene';
-                            h.Colormap = parula;
-                            h.GridVisible = 'off';
-                            h.CellLabelColor = 'none';
-                            tb = uitoolbar('Parent', f);
-                            pkg.i_addbutton2fig(tb, 'on', {@gui.i_pickcolormap, c}, 'plotpicker-compass.gif', 'Pick new color map...');
-                            pkg.i_addbutton2fig(tb, 'off', @gui.i_changefontsize, 'noun_font_size_591141.gif', 'ChangeFontSize');
-                            pkg.i_addbutton2fig(tb, 'on', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-                            pkg.i_addbutton2fig(tb, 'on', @i_invertcolor, 'plotpicker-comet.gif', 'Invert colors');
-                            pkg.i_addbutton2fig(tb, 'off', @i_resetcolor, 'plotpicker-geobubble2.gif', 'Reset color map');
-                            if length(cL) ~= size(thisZ, 1)
+                    
+    function i_dotplotx(~, ~)
+        try
+            gui.i_dotplot(sce.X, sce.g, c, cL, MX);
+        catch ME
+            % if exist('f', 'var') && ishandle(f)
+            %     close(f);
+            % end
+            errordlg(ME.message);
+        end
+    end
 
-                                pkg.i_addbutton2fig(tb, 'on', {@i_savetable, thisZ}, 'export.gif', 'Export data...');
-                            end
 
-                    end
+    function i_summarymap(~, ~, thisZ)
+        f = figure;
+        if length(cL) == size(thisZ, 1)
+            h = heatmap(MX, cL, thisZ);
+        else
+            h = heatmap(cL, MX, thisZ);
+        end
+        h.Title = 'Marker Gene Heatmap';
+        h.XLabel = 'Group';
+        h.YLabel = 'Marker Gene';
+        h.Colormap = parula;
+        h.GridVisible = 'off';
+        h.CellLabelColor = 'none';
+        tb = uitoolbar('Parent', f);
+        pkg.i_addbutton2fig(tb, 'on', {@gui.i_pickcolormap, c}, 'plotpicker-compass.gif', 'Pick new color map...');
+        pkg.i_addbutton2fig(tb, 'off', @gui.i_changefontsize, 'noun_font_size_591141.gif', 'ChangeFontSize');
+        pkg.i_addbutton2fig(tb, 'on', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
+        pkg.i_addbutton2fig(tb, 'on', @i_invertcolor, 'plotpicker-comet.gif', 'Invert colors');
+        pkg.i_addbutton2fig(tb, 'off', @i_resetcolor, 'plotpicker-geobubble2.gif', 'Reset color map');
+        if length(cL) ~= size(thisZ, 1)
+
+            pkg.i_addbutton2fig(tb, 'on', {@i_savetable, thisZ}, 'export.gif', 'Export data...');
+        end
+    end
+
 
                         %     function i_summarymapT(~,~)
                         %         f=figure;
@@ -296,61 +300,61 @@ end
                         %         pkg.i_addbutton2fig(tb,'off',@i_resetcolor,'plotpicker-geobubble2.gif','Reset color map');
                         %     end
 
-                            function i_saveM(~, ~, M)
-                                if ~(ismcc || isdeployed)
-                                    labels = {'Save marker gene map M to variable named:', ...
-                                        'Save marker gene list G to variable named:'};
-                                    vars = {'M', 'G'};
-                                    G = cat(1, M{:, 2});
-                                    values = {M, G};
-                                    export2wsdlg(labels, vars, values);
-                                else
-                                    errordlg('This function is not available for standalone application. Run scgeatool.m in MATLAB to use this function.');
-                                        end
-                                    end
-
-                                    function i_savetable(~, ~, c)
-                                        answer = questdlg('Export & save data to:', '', ...
-                                            'Workspace', 'TXT/CSV file', 'Excel file', 'Workspace');
-                                        if ~isempty(answer)
-                                            T = table();
-                                            T.genes = cat(1, M{:, 2});
-                                            assert(isequal(T.genes, MX))
-
-                                            T = [T, array2table(c)];
-                                            switch answer
-                                                case 'Workspace'
-                                                    labels = {'Save T to variable named:'};
-                                                    vars = {'T'};
-                                                    values = {T};
-                                                    [~, ~] = export2wsdlg(labels, vars, values, ...
-                                                        'Save Data to Workspace');
-                                                case 'TXT/CSV file'
-                                                    [file, path] = uiputfile({'*.csv'; '*.*'}, 'Save as');
-                                                    if isequal(file, 0) || isequal(path, 0)
-                                                        return;
-                                                    else
-                                                        fw = gui.gui_waitbar;
-                                                        filename = fullfile(path, file);
-                                                        writetable(T, filename, 'FileType', 'text');
-                                                        OKPressed = true;
-                                                        gui.gui_waitbar(fw);
-                                                    end
-                                                case 'Excel file'
-
-                                                    [file, path] = uiputfile({'*.xlsx'; '*.*'}, 'Save as');
-                                                    if isequal(file, 0) || isequal(path, 0)
-                                                        return;
-                                                    else
-                                                        fw = gui.gui_waitbar;
-                                                        filename = fullfile(path, file);
-                                                        writetable(T, filename, 'FileType', 'spreadsheet');
-                                                        OKPressed = true;
-                                                        gui.gui_waitbar(fw);
-                                                    end
-                                            end
-                                        end
-                                    end
+    function i_saveM(~, ~, M)
+        if ~(ismcc || isdeployed)
+            labels = {'Save marker gene map M to variable named:', ...
+                'Save marker gene list G to variable named:'};
+            vars = {'M', 'G'};
+            G = cat(1, M{:, 2});
+            values = {M, G};
+            export2wsdlg(labels, vars, values);
+        else
+            errordlg('This function is not available for standalone application. Run scgeatool.m in MATLAB to use this function.');
+        end        
+    end
 
 
-                                end
+    function i_savetable(~, ~, c)
+        answer = questdlg('Export & save data to:', '', ...
+            'Workspace', 'TXT/CSV file', 'Excel file', 'Workspace');
+        if ~isempty(answer)
+            T = table();
+            T.genes = cat(1, M{:, 2});
+            assert(isequal(T.genes, MX))
+
+            T = [T, array2table(c)];
+            switch answer
+                case 'Workspace'
+                    labels = {'Save T to variable named:'};
+                    vars = {'T'};
+                    values = {T};
+                    [~, ~] = export2wsdlg(labels, vars, values, ...
+                        'Save Data to Workspace');
+                case 'TXT/CSV file'
+                    [file, path] = uiputfile({'*.csv'; '*.*'}, 'Save as');
+                    if isequal(file, 0) || isequal(path, 0)
+                        return;
+                    else
+                        fw = gui.gui_waitbar;
+                        filename = fullfile(path, file);
+                        writetable(T, filename, 'FileType', 'text');
+                        OKPressed = true;
+                        gui.gui_waitbar(fw);
+                    end
+                case 'Excel file'
+
+                    [file, path] = uiputfile({'*.xlsx'; '*.*'}, 'Save as');
+                    if isequal(file, 0) || isequal(path, 0)
+                        return;
+                    else
+                        fw = gui.gui_waitbar;
+                        filename = fullfile(path, file);
+                        writetable(T, filename, 'FileType', 'spreadsheet');
+                        OKPressed = true;
+                        gui.gui_waitbar(fw);
+                    end
+            end
+        end
+    end
+
+end

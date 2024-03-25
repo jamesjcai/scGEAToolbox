@@ -1,4 +1,4 @@
-function [f] = i_spiderplot(Y, thisc, labelx, sce, parentfig)
+function [hFig] = i_spiderplot(Y, thisc, labelx, sce, parentfig)
 
 if nargin < 5, parentfig = []; end
 if nargin < 4, sce = []; end
@@ -21,8 +21,12 @@ else
     titlex = '';
 end
 
-f = figure('visible', 'off');
-tb = uitoolbar(f);
+hFig = figure('visible', 'off');
+% tb = uitoolbar(hFig);
+
+tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
+uipushtool(tb, 'Separator', 'off');
+
 pkg.i_addbutton2fig(tb, 'off', {@i_savedata}, ...
     'export.gif', 'Export data...');
 % pkg.i_addbutton2fig(tb,'off',{@i_testdata,P,thisc}, ...
@@ -52,8 +56,17 @@ cL = strrep(cL, '_', '\_');
 legend(cL, 'Location', 'best');
 if ~isempty(titlex), title(titlex); end
 
-movegui(f, 'center');
-set(f, 'visible', 'on');
+if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 
+    [px_new] = gui.i_getchildpos(parentfig, hFig);
+    if ~isempty(px_new)
+        movegui(hFig, px_new);
+    else
+        movegui(hFig, 'center');
+    end
+else
+    movegui(hFig, 'center');
+end
+set(hFig, 'visible', 'on');
 
 %catch ME
 %    errordlg(ME.message);

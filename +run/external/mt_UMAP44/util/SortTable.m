@@ -386,7 +386,7 @@ classdef SortTable < handle
             end
         end
         
-        function [jtable, jscrollpane]=Go(uit, fig)
+        function [jtable, jscrollpane]=Go(uit, ~)
             app=BasicMap.Global;
             jscrollpane = javaObjectEDT(findjobj_fast(uit));
             jtable = javaObjectEDT(jscrollpane.getViewport.getView);

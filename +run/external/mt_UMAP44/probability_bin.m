@@ -1,6 +1,6 @@
 function [means, teachPtrs, studPtrs, teachWeights, studWeights, ...
     minBinSize]=probability_bin(teachData, studData, minBinSize, ...
-    doFixedSplits, cacheFile, trackRow)
+    doFixedSplits, cacheFile, ~)
 %Simplification of tedious util/AdaptiveBins.m for fewer use cases and no
 %caching
 

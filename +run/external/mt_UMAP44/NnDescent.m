@@ -262,7 +262,7 @@ classdef NnDescent<handle
             File.SaveMatrix([trainingSetFile '.knnIndices.csv' ], knnIndices-1, true);
             File.SaveMatrix([trainingSetFile '.knnDists.csv' ], knnDists, true);
             labels=File.ReadCsv(files{2});
-            [indptr2, indices2]=NnDescent.SearchGraphIndptrIndices(...
+            [~, ~]=NnDescent.SearchGraphIndptrIndices(...
                 trainingSetData, 15, knnIndices, knnDists, labels);
             
             testSetFile=files{3}(1:end-4);

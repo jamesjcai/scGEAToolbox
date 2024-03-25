@@ -968,7 +968,7 @@ end
                 Html.Remove(String.RemoveTex(dataSetName)), ...
                 String.Pluralize2('classifier', nClassifiers));
             html=doHtml;
-            [figBrowser, tp, btnForTip, btnSvg]=internalBrowser(html);
+            [figBrowser, tp, btnForTip, ~]=internalBrowser(html);
             %shift window down in size a tad to position as legend
             pos=Gui.GetOuterPixels(figBrowser);
             dim=tp.getPreferredSize;

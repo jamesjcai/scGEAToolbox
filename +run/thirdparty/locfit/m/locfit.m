@@ -246,7 +246,7 @@ d = size(xdata, 2);
 n = size(xdata, 1);
 if ((nargin > 1) && (~ischar(varargin{2})))
     ydata = double(varargin{2});
-    if (any(size(ydata) ~= [n, 1]));
+    if (any(size(ydata) ~= [n, 1]))
         error('y must be n*1 column vector');
     end
     family = 'qgauss';
@@ -294,27 +294,27 @@ if mod(nargin-na, 2) == 0
             ydata = double(varargin{na+1});
             family = 'qgauss';
             inc = 2;
-            if (any(size(ydata) ~= [n, 1]));
+            if (any(size(ydata) ~= [n, 1]))
                 error('y must be n*1 column vector');
             end
         end
         if (strcmp(varargin{na}, 'weights'))
             wdata = double(varargin{na+1});
             inc = 2;
-            if (any(size(wdata) ~= [n, 1]));
+            if (any(size(wdata) ~= [n, 1]))
                 error('weights must be n*1 column vector');
             end
         end
         if (strcmp(varargin{na}, 'cens'))
             cdata = double(varargin{na+1});
             inc = 2;
-            if (any(size(cdata) ~= [n, 1]));
+            if (any(size(cdata) ~= [n, 1]))
                 error('cens must be n*1 column vector');
             end
         end
         if (strcmp(varargin{na}, 'base')) % numeric vector, n*1 or 1*1.
             base = double(varargin{na+1});
-            if (length(base) == 1);
+            if (length(base) == 1)
                 base = base * ones(n, 1);
             end
             inc = 2;
@@ -380,7 +380,7 @@ if mod(nargin-na, 2) == 0
         end
         if (strcmp(varargin{na}, 'ev')) % char. string, or matrix with d columns.
             ev = varargin{na+1};
-            if (isnumeric(ev));
+            if (isnumeric(ev))
                 ev = ev';
             end
             inc = 2;
@@ -455,7 +455,7 @@ if mod(nargin-na, 2) == 0
     fit.evaluation_structure.maxk = maxk;
     fit.evaluation_structure.derivative = deriv;
 
-    if (alpha == 0);
+    if (alpha == 0)
         alpha = [0.7, 0, 0];
     end
 

@@ -9,7 +9,7 @@ if size(sce.s, 2) ~= 2
     return;
 end
 
-[thisc, clable] = gui.i_select1class(sce, true);
+[thisc, ~] = gui.i_select1class(sce, true);
 
 extprogname = 'py_datamapplot';
 preftagname = 'externalwrkpath';

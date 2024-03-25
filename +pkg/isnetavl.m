@@ -201,7 +201,7 @@ if octave
             UseWebread = ~no_webread;
         end
         try
-            then = now;
+            then = datetime("now");
             if UseWebread
                 str = webread('http://google.com'); %#ok<NASGU>
             else

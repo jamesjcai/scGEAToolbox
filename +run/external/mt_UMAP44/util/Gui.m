@@ -1780,7 +1780,7 @@ classdef Gui
             btns.setOpaque(false);
             bp.add(btns, tipWhere);
             
-            function tipFlip(h, op)
+            function tipFlip(~, op)
                 Gui.TipDetail(BasicMap.Global, op)
                 if ~isempty(refresh)
                     feval(refresh);
@@ -3280,7 +3280,7 @@ classdef Gui
             [X,Y]=Gui.SwingOffset(pm, cmp);
             %fprintf('pm=%d/%d; X=%d, Y=%d]\n', pm(1), pm(2), X, Y);
             app=BasicMap.Global;
-            [pm X Y]
+            [pm X Y];
             if app.highDef
                 X=X*1.5;%app.toolBarFactor;
                 Y=Y*1.45;%app.toolBarFactor;
@@ -5589,7 +5589,7 @@ classdef Gui
             end
         end
         
-        function SetJavaVisible(jd, useGcf)
+        function SetJavaVisible(jd, ~)
             if isdeployed || ~ismac || 1==size(get(0, 'MonitorPositions'), 1)
                 jd.setVisible(true);
                 return;

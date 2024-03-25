@@ -4,7 +4,7 @@ X = sparse(X);
 
 % pkg.e_writeh5(X,["aaa"],'ccc.h5');
 
-[indptr, indices, data] = convert_sparse_to_indptr(X)
+[indptr, indices, data] = convert_sparse_to_indptr(X);
 % indices = indices'-1    % J
 
 
@@ -33,7 +33,7 @@ if ~issparse(X)
 end
 
 % Get matrix dimensions
-[m, n] = size(X);
+[~, n] = size(X);
 
 % Initialize indptr with 1 and n+1
 indptr = [1, n+1];

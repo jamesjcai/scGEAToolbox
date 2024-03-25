@@ -1,4 +1,4 @@
-function [T] = r_SPIA(Tdeg, fdrcutoff, speciestag, wkdir)
+function [T] = r_SPIA(Tdeg, fdrcutoff, ~, wkdir)
 
 if nargin < 4, wkdir = tempdir; end
 if nargin < 2, fdrcutoff = 0.01; end

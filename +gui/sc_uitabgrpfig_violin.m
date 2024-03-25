@@ -303,13 +303,13 @@ hFig.Visible=true;
 
 
     function i_testdata(~, ~)
-        for idx=1:n
-            tabgp.SelectedTab=tab{idx};
-            a = ax0{idx};
-            thisy = y{idx};
+        for tabidx=1:n
+            tabgp.SelectedTab=tab{tabidx};
+            a = ax0{tabidx};
+            thisy = y{tabidx};
             %a = hFig.get("CurrentAxes");
-            if isempty(OldTitle{idx})
-                OldTitle{idx} = a.Title.String;
+            if isempty(OldTitle{tabidx})
+                OldTitle{tabidx} = a.Title.String;
                 if size(thisy, 2) ~= length(thisc)
                     thisy = thisy.';
                 end
@@ -328,20 +328,20 @@ hFig.Visible=true;
                     end
                 end
     
-                if iscell(OldTitle{idx})
-                    newtitle = OldTitle{idx};
+                if iscell(OldTitle{tabidx})
+                    newtitle = OldTitle{tabidx};
                 else
-                    newtitle = OldTitle(idx);
+                    newtitle = OldTitle(tabidx);
                 end
                 newtitle{2} = b;
                 a.Title.String = newtitle;
             else
-                a.Title.String = OldTitle{idx};
-                OldTitle{idx} = [];
+                a.Title.String = OldTitle{tabidx};
+                OldTitle{tabidx} = [];
             end
         end
-        [~,idx]=ismember(focalg, glist);
-        tabgp.SelectedTab=tab{idx};
+        [~,tabidx]=ismember(focalg, glist);
+        tabgp.SelectedTab=tab{tabidx};
     end
 
         

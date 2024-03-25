@@ -35,7 +35,7 @@ function [variable, varname] = uigetvar(variableclass)
 % if variableclass is supplied, is it a string or a cellstr?
 if (nargin > 1)
     error('UIGETVAR:multiple_arguments', 'Only 1 argument allowed for uigetvar')
-    elseif (nargin > 0) && ~(ischar(variableclass) || iscellstr(variableclass))
+    elseif (nargin > 0) && ~(ischar(variableclass) || iscellstr(variableclass) || isstring(variableclass))
         error('UIGETVAR:string', 'variableclass must be a string or a cell array of strings')
     elseif (nargin == 1) && ischar(variableclass)
         % only one class is provided. Just make it a cell
@@ -44,7 +44,7 @@ if (nargin > 1)
     elseif (nargin == 0)
         % no class was indicated, so list all variables
         variableclass = {};
-    end
+end
 
     % get the list of all variables in the base workspace,
     par.varlist = evalin('base', 'whos');
@@ -75,6 +75,7 @@ if (nargin > 1)
         end
     end
     return;
+
     % open up a figure window
     par.fig = figure('Color', [0.8, 0.8, 0.8], ...
         'Units', 'normalized', ...

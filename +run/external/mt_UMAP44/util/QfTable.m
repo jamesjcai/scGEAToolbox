@@ -452,7 +452,7 @@
             end
             Gui.BlowWindow(tb_.jToolbar);
 
-            function ok=hearHighlighting(gate, on, rows)
+            function ok=hearHighlighting(gate, ~, ~)
                 if ~ishandle(this.fig)
                     ok=false;
                     return;

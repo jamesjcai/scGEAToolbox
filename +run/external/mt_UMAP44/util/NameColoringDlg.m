@@ -17,7 +17,7 @@ classdef NameColoringDlg <handle
     end
     
     methods
-        function this=NameColoringDlg(names, colors, itemName, fncRefresh)
+        function this=NameColoringDlg(names, colors, itemName, ~)
             if nargin<3
                 itemName='Cell Subset';
             end

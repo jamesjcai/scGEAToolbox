@@ -49,7 +49,7 @@ classdef PopUp < handle
         hasListSouth=false;
     end
     methods
-        function incrementProgress(this, by, progressDescription)
+        function incrementProgress(this, by, ~)
             if ~isempty(this.pb)
                 if nargin<2
                     by=1;

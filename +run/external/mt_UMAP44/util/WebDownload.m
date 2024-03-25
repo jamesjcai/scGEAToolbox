@@ -1129,7 +1129,7 @@ classdef WebDownload
                 if fromWspFile &&  endsWith(lower(file), '.wsp')
                     uri2=[uri(1:end-4) '.guiV2.properties'];
                     file2=[file(1:end-4) '.guiV2.properties'];
-                    [p,f,e]=fileparts(file2);
+                    [p,f,~]=fileparts(file2);
                     cancelled=WebDownload.Get({uri, uri2}, {file, file2}, false);
                     if cancelled || ~exist(file, 'file')
                         file=[];

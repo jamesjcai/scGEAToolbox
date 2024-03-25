@@ -98,7 +98,7 @@ classdef DoubleClicker < handle
             ok=this.ups~=this.downs;
         end
         
-        function up(this, obj,evt)
+        function up(this, obj,~)
             if ~ishandle(obj)
                 return;
             end

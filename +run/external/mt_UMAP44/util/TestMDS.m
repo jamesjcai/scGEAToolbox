@@ -57,7 +57,7 @@ classdef TestMDS< handle
             cityMap.see(3);
             cityMap.setMouseEar(@notifyMouse);
 
-            function notifyMouse(~, isMotion, idx,x, y)
+            function notifyMouse(~, isMotion, idx,~, ~)
                 if ~isMotion
                     msg(['Clicked on ' cities{idx}]);
                 end

@@ -1123,7 +1123,7 @@ classdef Args < handle
             end
         end
         
-        function askUser(this, arg)
+        function askUser(~, ~)
         end
            
         function this=Args(p, varargin)

@@ -35,7 +35,7 @@ classdef SuhStruct < handle
             end
         end
 
-        function items=FindUnequalFields(a,b, suffix)
+        function items=FindUnequalFields(a,b, ~)
             if isstruct(a)
                 names=fieldnames(a);
             else

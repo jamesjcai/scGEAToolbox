@@ -460,7 +460,7 @@ conclude;
         mainDlg.dispose;
     end
 
-    function myCallbackFcn(jListbox,jEventData)
+    function myCallbackFcn(~,jEventData)
         % Determine the click type
         % (can similarly test for CTRL/ALT/SHIFT-click)
         if jEventData.getClickCount==2

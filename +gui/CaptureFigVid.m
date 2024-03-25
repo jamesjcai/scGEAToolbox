@@ -51,12 +51,12 @@ function CaptureFigVid(ViewZ, FileName, OptionZ)
 %% preliminaries
 
 % initialize optional argument
-if nargin < 3;
+if nargin < 3
     OptionZ = struct([]);
 end
 
 % check orientation of ViewZ, should be two columns and >=2 rows
-if size(ViewZ, 2) > size(ViewZ, 1);
+if size(ViewZ, 2) > size(ViewZ, 1)
     ViewZ = ViewZ.';
 end
 if size(ViewZ, 2) > 2

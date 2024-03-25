@@ -56,7 +56,7 @@ classdef MatBasics
         
         function [matrixOut, rowsI, colsI]...
                 =SortDavidParksV1(matrix)
-            [R, C]=size(matrix);
+            [~, C]=size(matrix);
             totals=sum(matrix,2);
             [~,rowsI]=sort(totals, 'descend');
             N=length(rowsI);

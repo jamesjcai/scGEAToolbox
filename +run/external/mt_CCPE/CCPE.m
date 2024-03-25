@@ -12,12 +12,12 @@ Y=Z;
 
 iter = 0;
 while iter < 200
-      [x_centre, y_centre,Z_p,a,v,th] = HelixFit(Z,vaxis);
+      [~, ~,Z_p,~,~,~] = HelixFit(Z,vaxis);
       [R] = get_R(Z,Y,sigma);
       T=diag(diag(ones(k,N)*R));
       Q=inv((1+lambda+gamma)*eye(N,N)-gamma*R*inv(T)*R');
       A=Z_p*Q*X';
-      [U,S,V] = svd(A);
+      [U,~,V] = svd(A);
       I=eye(size(W));
       W=V*I*U';
       Z=(W'*X+lambda*Z_p)*Q;
@@ -25,7 +25,7 @@ while iter < 200
       error1=trace((X-W*Z)*(X-W*Z)');
       error2=lambda*trace((Z-Z_p)*(Z-Z_p)');
       error3=gamma*(trace(Z*Z')-2*trace(R'*Z'*Y)+trace(Y*T*Y'));
-      MSE_error=error1+error2+error3
+      MSE_error=error1+error2+error3;
       iter=iter+1;
       if iter > 199
          fprintf('iter achieved!\n');

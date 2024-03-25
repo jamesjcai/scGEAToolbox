@@ -1694,7 +1694,7 @@ classdef File
                 'save16.gif', 'Export to Excel and other file formats', ...
                 @(h,e)export(h));
             
-            function export(h)
+            function export(~)
                 
                 if ~isempty(jtable)
                     filterRows=SortTable.ModelRows(jtable);
@@ -2620,7 +2620,7 @@ classdef File
                 fldr, created, modified, deleted, ...
                 btn, log2Console, priority);
             
-            function parse(h, e)
+            function parse(h, ~)
                 txt=char(h.getActionCommand);
                 if startsWith(txt, 'Created: ')
                     event='created';
@@ -2894,7 +2894,7 @@ classdef File
             [same, reordered]=StringArray.AreSameOrEmpty(...
                 modelColumnNames, columnNames);
             if ~same
-                [allFound, modelNameIdxs]=StringArray.Find(...
+                [allFound, ~]=StringArray.Find(...
                     modelColumnNames, columnNames, true);
                 if allFound
                     reordered=true;

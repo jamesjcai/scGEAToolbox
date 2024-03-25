@@ -44,7 +44,7 @@ function [U, S, V, Out] = lmsvd(A, r, opts)
 %     Revised: March, 2012.
 %     Revised:  June, 2014.
 
-if nargin < 2;
+if nargin < 2
     r = 6;
 end
 [m, n] = check_matrix(A);
@@ -118,7 +118,7 @@ S = S(1:r, 1:r);
             memo = 3;
         end
 
-        if isfield(opts, 'gvk');
+        if isfield(opts, 'gvk')
             tau = opts.gvk;
         else tau = 10;
         end
@@ -127,22 +127,22 @@ S = S(1:r, 1:r);
         % initial guess
         Y = randn(n, k);
 
-        if mainargin < 3;
+        if mainargin < 3
             return;
         end
-        if isfield(opts, 'tol');
+        if isfield(opts, 'tol')
             tol = opts.tol;
         end
-        if isfield(opts, 'maxit');
+        if isfield(opts, 'maxit')
             maxit = opts.maxit;
         end
-        if isfield(opts, 'memo');
+        if isfield(opts, 'memo')
             memo = opts.memo;
         end
-        if isfield(opts, 'idisp');
+        if isfield(opts, 'idisp')
             idisp = opts.idisp;
         end
-        if isfield(opts, 'initY');
+        if isfield(opts, 'initY')
             Y = opts.initY(:, 1:k);
         end
 
@@ -171,13 +171,13 @@ end % set_param
                     if ~isstruct(A)
                         error('A must be either numeric or struct');
                     end
-                    if ~isfield(A, 'times');
+                    if ~isfield(A, 'times')
                         error('A.times missing');
                     end
-                    if ~isfield(A, 'trans');
+                    if ~isfield(A, 'trans')
                         error('A.trans missing');
                     end
-                    if ~isfield(A, 'size');
+                    if ~isfield(A, 'size')
                         error('A.size  missing');
                     end
                     if ~isa(A.times, 'function_handle')
@@ -214,7 +214,7 @@ end % set_param
                         n = size(Y, 1);
                         mn = min(m, n);
                         k = size(Y, 2);
-                        if k < r;
+                        if k < r
                             error('working size too small');
                         end
 
@@ -270,7 +270,7 @@ end % set_param
                             % display iter info
                             xtrm(iter) = Lm / k;
                             chgv(iter) = chg_rvr;
-                            if idisp;
+                            if idisp
                                 fprintf(disp_str, iter, Lm/k, chg_rvr);
                             end
 
@@ -283,7 +283,7 @@ end % set_param
                                 if kktcheck < ptol, break; end
                                 kktc(iter) = kktcheck;
                             else
-                                if iter == 1;
+                                if iter == 1
                                     kktc(iter) = inf;
                                 else kktc(iter) = kktc(iter-1);
                                 end
@@ -291,7 +291,7 @@ end % set_param
 
                             %% look-back optimization
                             xtrm(iter) = Lm / k;
-                            if Lm == 0;
+                            if Lm == 0
                                 continue;
                             end
                             Xm(:, 1:k) = X;
@@ -323,7 +323,7 @@ end % set_param
                             [~, idx] = sort(ev, 'ascend');
                             e_tol = min(sqrt(eps), tol);
                             cut = find(ev(idx) > e_tol, 1);
-                            if isempty(cut);
+                            if isempty(cut)
                                 Lm = 0;
                                 continue;
                             end
@@ -334,14 +334,14 @@ end % set_param
                             % subspace optimization
                             Yo = [Y, Py * T];
                             T = Yo' * Yo;
-                            if issparse(T);
+                            if issparse(T)
                                 T = full(T);
                             end
                             [U, D] = eig(T);
                             [rv_sort, idx] = sort(diag(D), 'ascend');
                             Y = Yo * U(:, idx(end-k+1:end));
                             Lm = max(0, round(L/k)) * k;
-                            if iter < memo;
+                            if iter < memo
                                 Lm = Lm + k;
                             end
                             if Lm > 0

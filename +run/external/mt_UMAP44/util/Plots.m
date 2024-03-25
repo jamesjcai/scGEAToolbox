@@ -715,7 +715,7 @@ classdef Plots < handle
             if this.is3D
                 Z=this.mdns(idx, 3);
                 Plots.ShowLegendTip(ax, event.Peer, X, Y, str, fsz, 0, Z);
-                [X Y Z]
+                [X Y Z];
             else
                 Plots.ShowLegendTip(ax, event.Peer, X, Y, str, fsz, 0);
             end

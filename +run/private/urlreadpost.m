@@ -33,8 +33,8 @@ import com.mathworks.mlwidgets.io.InterruptibleStreamCopier;
 com.mathworks.mlwidgets.html.HTMLPrefs.setProxySettings
 
 % Check number of inputs and outputs.
-error(nargchk(2, 2, nargin))
-error(nargoutchk(0, 2, nargout))
+narginchk(2, 2)
+nargoutchk(0, 2)
 if ~ischar(urlChar)
     error('MATLAB:urlreadpost:InvalidInput', 'The first input, the URL, must be a character array.');
 end
@@ -78,12 +78,12 @@ for i = 1:2:length(params)
         % Echo Nest API demands a filename in this case
         printStream.print(['; filename="dummy"', eol]);
         printStream.print(['Content-Type: application/octet-stream', eol]);
-        printStream.print([eol]);
+        printStream.print(eol);
         dataOutputStream.write(params{i+1}, 0, length(params{i+1}));
-        printStream.print([eol]);
+        printStream.print(eol);
     else
-        printStream.print([eol]);
-        printStream.print([eol]);
+        printStream.print(eol);
+        printStream.print(eol);
         printStream.print([params{i+1}, eol]);
     end
 end

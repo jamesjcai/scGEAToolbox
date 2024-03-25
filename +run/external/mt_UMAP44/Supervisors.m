@@ -1634,7 +1634,7 @@ classdef Supervisors < handle
         
         function qft=qfMatch(this, priorQf, visibleOrLocateFig, pu, scenario, ...
                 tUnreducedData, sUnreducedData, tLbls, sLbls, ...
-                tNames, sNames, clrs, fHist, matchStrategy, predictions)
+                tNames, sNames, clrs, ~, matchStrategy, predictions)
             if nargin<15
                 predictions=false;
             end

@@ -98,7 +98,7 @@ classdef DoubleClicker2 < handle
             this.tmr=tic;
         end
         
-        function up(this, obj,evt)
+        function up(this, obj,~)
             if ~ishandle(obj)
                 return;
             end

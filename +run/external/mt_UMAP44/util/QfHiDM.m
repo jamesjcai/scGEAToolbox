@@ -3622,7 +3622,7 @@ classdef QfHiDM < handle
         end
 
         function [out, missing]=RemoveMissingColumns( ...
-                requiredColumnNames, dataColumnNames, dataColumnIdxs)
+                requiredColumnNames, dataColumnNames, ~)
             N=length(requiredColumnNames);
             missing={};
             out={};
@@ -3723,7 +3723,7 @@ classdef QfHiDM < handle
             end
         end
         
-        function QF=TreeData(qft, qf)
+        function QF=TreeData(qft, ~)
             qf=qft.qf;
             QF.tIds=qf.tIds;
             QF.numLeaves=qf.numLeaves;
@@ -4544,7 +4544,7 @@ classdef QfHiDM < handle
                      num=String.encodeInteger(num);
                      if row>nStudents || col > nTeachers
                          num=[notMatchedStart app.smallEnd num ...
-                             app.smallStart notMatchedEnd ]
+                             app.smallStart notMatchedEnd ];
                          return;
                      end
                      if ~forBrowser
@@ -4622,7 +4622,7 @@ classdef QfHiDM < handle
              end
 
              function hdr=doHdr(ids, mergeIds, names, szs, ...
-                     setName, showIds, overlapMatrix)
+                     setName, showIds, ~)
                  if nargin<7
                      overlapMatrix=[];
                  end
@@ -4722,7 +4722,7 @@ classdef QfHiDM < handle
                 fld(args, 'title', ...
                 'Matrix'), 'none');
 
-            function LinkCallback(h, e, args, lbl)
+            function LinkCallback(~, e, args, lbl)
 
                 description = char(e.getDescription); % URL stri
                 et=char(e.getEventType);

@@ -41,7 +41,7 @@ if ~issparse(X)
 end
 
 % Get matrix dimensions
-[m, n] = size(X);
+[~, n] = size(X);
 
 % Initialize indptr with 1 and n+1
 indptr = [1, n+1];

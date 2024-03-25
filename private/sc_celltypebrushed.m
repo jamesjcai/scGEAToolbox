@@ -1,4 +1,4 @@
-function [Tct] = sc_celltypebrushed(X, genelist, s, brushedData, species, organ)
+function [Tct] = sc_celltypebrushed(X, genelist, s, brushedData, species, ~)
 
 % USAGE:
 

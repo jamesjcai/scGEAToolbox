@@ -125,7 +125,7 @@ else
 end
 % T=T(removedidx,:);
 if plotit
-    [~,top100idx]=maxk(fitratio,100);
+    [~,~]=maxk(fitratio,100);
     %    figure;
 
     hFig = figure;

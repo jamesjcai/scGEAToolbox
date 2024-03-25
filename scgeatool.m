@@ -1049,7 +1049,7 @@ end
 
         fw = gui.gui_waitbar;
         %try
-            [Xdecon, contamination] = run.r_decontX(sce, wkdir);
+            [Xdecon, ~] = run.r_decontX(sce, wkdir);
         %catch
         %    gui.gui_waitbar(fw);
         %    errordlg('Runtime error.','');
@@ -2097,7 +2097,7 @@ end
         end
     end
 
-    function [txt] = i_myupdatefcnx(pdt, event_obj)
+    function [txt] = i_myupdatefcnx(pdt, ~)
         % pos = event_obj.Position;
         %idx = event_obj.DataIndex;
         %txt = cL(c(idx));

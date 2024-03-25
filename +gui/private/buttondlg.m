@@ -663,7 +663,7 @@ if nargin < 1
                             % that *both* files are modified.
 
                             % Nargin Check
-                            error(nargchk(1, 2, nargin))
+                            narginchk(1, 2)
 
                             if (usejava('awt') == 1)
                                 % We are running with Java Figures

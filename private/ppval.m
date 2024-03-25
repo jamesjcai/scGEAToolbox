@@ -103,7 +103,7 @@ if d > 1 % ... replicate xs and index in case PP is vector-valued ...
     index = reshape(1+index(ones(d, 1), :)+temp(:, ones(1, lx)), d*lx, 1);
 else
     if length(sizexx) > 1, dd = [];
-    else dd = 1;
+    else, dd = 1;
     end
 end
 

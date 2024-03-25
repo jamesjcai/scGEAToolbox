@@ -1532,7 +1532,7 @@ classdef MDS< handle
             end
         end
         
-        function keyDown(this, src, evd)
+        function keyDown(this, ~, evd)
             pressedMeta=StringArray.Contains(evd.Modifier, 'command') && isequal('0', evd.Key);
             pressedCtrl=StringArray.Contains(evd.Modifier, 'control') && isequal('control', evd.Key);
             if pressedCtrl||pressedMeta
@@ -1583,7 +1583,7 @@ classdef MDS< handle
     end
     
     methods
-        function xy=normalize(this, ax, xy)
+        function xy=normalize(this, ~, xy)
             xy=(xy-[this.xl(1) this.yl(1)])./[this.xRange this.yRange];
         end
 
@@ -1613,7 +1613,7 @@ classdef MDS< handle
             end
         end
         
-        function motion(this, h, e)
+        function motion(this, ~, ~)
             [x, y, ax_, idx]=this.getCp;
             if isempty(ax_)
                 return;
@@ -1777,7 +1777,7 @@ classdef MDS< handle
             Gui.HideBusy(fig, busy, true);
             app=BasicMap.Global;
             
-            function notifyMouse(~, isMotion, idx,x, y)
+            function notifyMouse(~, isMotion, idx,~, ~)
                 if ~isMotion
                     msg(['Clicked on ' ...
                         String.RemoveTex(names{idx})]);
