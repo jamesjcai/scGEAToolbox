@@ -303,6 +303,49 @@ hFig.Visible=true;
 
 
     function i_testdata(~, ~)
+        for idx=1:n
+            tabgp.SelectedTab=tab{idx};
+            a = ax0{idx};
+            thisy = y{idx};
+            %a = hFig.get("CurrentAxes");
+            if isempty(OldTitle{idx})
+                OldTitle{idx} = a.Title.String;
+                if size(thisy, 2) ~= length(thisc)
+                    thisy = thisy.';
+                end
+                tbl = pkg.e_grptest(thisy, thisc);
+                if ~isempty(tbl) && istable(tbl)
+                    b = sprintf('%s = %.2e; %s = %.2e', ...
+                        tbl.Properties.VariableNames{1}, ...
+                        tbl.(tbl.Properties.VariableNames{1}), ...
+                        tbl.Properties.VariableNames{2}, ...
+                        tbl.(tbl.Properties.VariableNames{2}));
+                else
+                    if length(unique(thisc)) == 2
+                        b='p_{ttest} = N.A.; p_{wilcoxon} = N.A.';
+                    else
+                        b='p_{anova} = N.A.; p_{kruskalwallis} = N.A.';
+                    end
+                end
+    
+                if iscell(OldTitle{idx})
+                    newtitle = OldTitle{idx};
+                else
+                    newtitle = OldTitle(idx);
+                end
+                newtitle{2} = b;
+                a.Title.String = newtitle;
+            else
+                a.Title.String = OldTitle{idx};
+                OldTitle{idx} = [];
+            end
+        end
+        [~,idx]=ismember(focalg, glist);
+        tabgp.SelectedTab=tab{idx};
+    end
+
+        
+    function i_testdataone(~,~)
         [~,idx]=ismember(focalg, glist);
         %delete(ax0{idx});
         %ax0{idx} = axes('parent',tab{idx});
