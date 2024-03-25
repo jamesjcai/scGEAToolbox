@@ -134,8 +134,9 @@ ylabel(hAx2,'Expression Level');
 % xlabel('Cell Index');
 % ylabel('Expression Level');
 
-
-dt.UpdateFcn = {@in_myupdatefcn3, g};
+if showdata && ~isempty(dt)
+    dt.UpdateFcn = {@in_myupdatefcn3, g};
+end
 
 gui.gui_waitbar(fw);
 hFig.Visible = true;

@@ -14,18 +14,19 @@ if max(c)==1
     return;
 end
 
-    fw = gui.gui_waitbar_adv;
+%    fw = gui.gui_waitbar_adv;
     SCEV=cell(max(c),1);
 
    try
         for k=1:max(c)
-            gui.gui_waitbar_adv(fw, ...
-                (k-1)/max(c), ...
-                sprintf('Processing %s ...', cL{k}));
-            SCEV{k}=sce.selectcells(c==k);
+            % gui.gui_waitbar_adv(fw, ...
+            %     (k-1)/max(c), ...
+            %     sprintf('Processing %s ...', cL{k}));
+            % SCEV{k}=sce.selectcells(c==k);
+            SCEV{k} = c==k;
         end
     catch ME
-        gui.gui_waitbar_adv(fw);
+       % gui.gui_waitbar_adv(fw);
         errordlg(ME.message);
         return;
     end
@@ -38,12 +39,12 @@ end
     idxx = cmv;
     [cmx] = countmember(cmv, c);
 
-gui.gui_waitbar_adv(fw);
+%gui.gui_waitbar_adv(fw);
 
 %answer = questdlg('Sort by size of cell groups?');
 %if strcmpi(answer, 'Yes')
     [~, idxx] = sort(cmx, 'descend');
-    SCEV=SCEV(idxx);
+    SCEV = SCEV(idxx);
 %end
 
 try
@@ -59,7 +60,7 @@ try
 
 hFig = figure('visible', 'off','Position',FigureHandle.Position);
 tabgp = uitabgroup();
-for nf=1:numfig
+for nf = 1:numfig
     tab{nf} = uitab(tabgp, 'Title', sprintf('Tab%d',nf));
     axes('parent',tab{nf});
     for k=1:9
@@ -67,8 +68,8 @@ for nf=1:numfig
         if kk <= totaln
         ax{nf,k} = subplot(3,3,k);
         gui.i_gscatter3(sces, c, 3, cmv(idxx(kk)));
-        set(ax{nf,k}, 'XTick', []);
-        set(ax{nf,k}, 'YTick', []);
+        set(ax{nf, k}, 'XTick', []);
+        set(ax{nf, k}, 'YTick', []);
         b = cL{idxx(kk)};
         title(strrep(b, '_', "\_"));
         a = sprintf('%d cells (%.2f%%)', ...
@@ -137,12 +138,12 @@ end
                 [idx] = in_selectcellgrps(cL(idxx));                
                 if isempty(idx), return; end 
                 for ik=1:length(idx)
-                    scev=SCEV{idx(ik)};
+                    % scev = SCEV{idx(ik)};
+                    scev = sce.selectcells(SCEV{idx(ik)});
                     scgeatool(scev);
                     pause(0.5);
                 end
            case 'Save SCEs'
-
                 answer2=questdlg('Where to save files?','','Use Temporary Folder', ...
                     'Select a Folder','Cancel','Use Temporary Folder');
                 switch answer2
@@ -165,7 +166,9 @@ end
                 cL2=cL(idxx);
                 if isempty(idx), return; end 
                 for ik=1:length(idx)
-                    scev=SCEV{idx(ik)};
+                    % scev=SCEV{idx(ik)};
+                    scev = sce.selectcells(SCEV{idx(ik)});
+                    
                     scev=scev.qcfilter;
                     outmatfile=sprintf('%s.mat', ...
                         matlab.lang.makeValidName(cL2{idx(ik)}));
@@ -179,8 +182,8 @@ end
                     end
                     switch answerx
                         case 'Yes'
-                            sce=scev;
-                            save(outmatfile,"sce",'-v7.3');
+                            sce = scev;
+                            save(outmatfile, 'sce', '-v7.3');
                         otherwise
                             return;
                     end
@@ -197,7 +200,7 @@ function [idx] = in_selectcellgrps(grpv)
     [indx2, tf2] = listdlg('PromptString', ...
     {'Select Group(s):'}, ...
     'SelectionMode', 'multiple', 'ListString', grpv, ...
-    'InitialValue',1:length(grpv));
+    'InitialValue',1);
     if tf2 == 1
         idx = indx2;
     end

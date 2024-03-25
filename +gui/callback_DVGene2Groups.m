@@ -37,9 +37,14 @@ function callback_DVGene2Groups(src, ~)
     [T1, ~, ~, xyz1] = sc_splinefit(sce1.X, sce1.g, true, false);
     [T2, ~, ~, xyz2] = sc_splinefit(sce2.X, sce2.g, true, false);
     
-    [~,ia,ib] = intersect(T1.genes, T2.genes);
+    [g, ia, ib] = intersect(T1.genes, T2.genes);
     T1 = T1(ia, :);
     T2 = T2(ib, :);
+
+    sce1.X = sce1.X(ia, :);
+    sce1.g = sce1.g(ia);
+    sce2.X = sce2.X(ia, :);
+    sce2.g = sce2.g(ia);
 
     %x1 = T1.lgu; y1 = T1.lgcv; z1 = T1.dropr;
     %x2 = T2.lgu; y2 = T2.lgcv; z2 = T2.dropr;
@@ -48,6 +53,11 @@ function callback_DVGene2Groups(src, ~)
     T1 = T1(valididx,:);
     T2 = T2(valididx,:);
 
+    sce1.X = sce1.X(valididx, :);
+    sce1.g = sce1.g(valididx);
+    sce2.X = sce2.X(valididx, :);
+    sce2.g = sce2.g(valididx);
+    
     assert(isequal(T1.genes, T2.genes))
     
     bd = vecnorm(xyz1(T1.nearidx,:) - xyz2(T2.nearidx,:),2,2); % baseline difference
@@ -61,6 +71,9 @@ function callback_DVGene2Groups(src, ~)
     BaselineDiffDist(valididx) = bd;
     DiffDistRaw(valididx) = dd;
     DiffDistNormlized(valididx) = ddn;
+
+    x1 = T1.lgu; y1 = T1.lgcv; z1 = T1.dropr;
+    x2 = T2.lgu; y2 = T2.lgcv; z2 = T2.dropr;
     
     T1.Properties.VariableNames = append(T1.Properties.VariableNames, sprintf('_%s',cL1{1}));
     T2.Properties.VariableNames = append(T2.Properties.VariableNames, sprintf('_%s',cL2{1}));
@@ -68,10 +81,10 @@ function callback_DVGene2Groups(src, ~)
     T=[T1 T2 table(BaselineDiffDist, DiffDistRaw, DiffDistNormlized)];
     
     %assignin("base","T",T)
-    assignin("base","T1",T1)
-    assignin("base","T2",T2)
-    assignin("base","xyz1",xyz1)
-    assignin("base","xyz2",xyz2)
+    %assignin("base","T1",T1)
+    %assignin("base","T2",T2)
+    %assignin("base","xyz1",xyz1)
+    %assignin("base","xyz2",xyz2)
     
     T = sortrows(T,"DiffDistNormlized","descend");
     
@@ -85,8 +98,10 @@ function callback_DVGene2Groups(src, ~)
     end
 
 % ---------
+answer = questdlg('Show gene expression profiles?','');
+if ~strcmp(answer,'Yes'), return; end
 
-%{
+
 hFig = figure('Visible','off');
 hFig.Position(3)=hFig.Position(3)*1.8;
 [px_new] = gui.i_getchildpos(FigureHandle, hFig);
@@ -99,10 +114,10 @@ tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
 uipushtool(tb, 'Separator', 'off');
 hFig.Visible=true;
 hAx0 = subplot(2,2,[1 3]);
-%h1 = scatter3(hAx0, x1, y1, z1, 'filled', 'MarkerFaceAlpha', .1);
+h1 = scatter3(hAx0, x1, y1, z1, 'filled', 'MarkerFaceAlpha', .1);
 hold on
+h2 = scatter3(hAx0, x2, y2, z2, 'filled', 'MarkerFaceAlpha', .1);
 plot3(hAx0, xyz1(:, 1), xyz1(:, 2), xyz1(:, 3), '-', 'linewidth', 4);
-%h2 = scatter3(hAx0, x2, y2, z2, 'filled', 'MarkerFaceAlpha', .1);
 plot3(hAx0, xyz2(:, 1), xyz2(:, 2), xyz2(:, 3), '-', 'linewidth', 4);
 
 xlabel(hAx0,'Mean+1, log');
@@ -110,12 +125,12 @@ ylabel(hAx0,'CV+1, log');
 zlabel(hAx0,'Dropout rate (% of zeros)');
 
 
-    % if ~isempty(g)
-    %     dt = datacursormode(hFig);
-    %     % dt.UpdateFcn = {@i_myupdatefcn1, g};
-    % else
-    %     dt = [];
-    % end
+    if ~isempty(g)
+        dt = datacursormode(hFig);
+        dt.UpdateFcn = {@in_myupdatefcn3, g};
+    end
+X1 = sce1.X;
+X2 = sce2.X;
 
 hAx1 = subplot(2,2,2);
 x1 = X1(1,:);
@@ -136,4 +151,45 @@ title(hAx2, '');
 subtitle(hAx2, titxt);
 xlabel(hAx2,'Cell Index');
 ylabel(hAx2,'Expression Level');
-%}
+
+
+
+    function txt = in_myupdatefcn3(src, event_obj, g)
+        if isequal(get(src, 'Parent'), hAx0)
+            idx = event_obj.DataIndex;
+            if idx > length(g)*2
+                txt = num2str(event_obj.Position(2)); 
+                return; 
+            end
+            if idx > length(g)
+                idx = idx - length(g);
+            end
+
+            txt = {g(idx)};
+
+            x1 = X1(idx, :);
+            if ~isempty(sh1) && isvalid(sh1), delete(sh1); end
+            sh1 = plot(hAx1, 1:length(x1), x1, 'marker', 'none');
+            xlim(hAx1,[1 size(X1,2)]);
+            title(hAx1, g(idx));    
+            [titxt] = gui.i_getsubtitle(x1);
+            subtitle(hAx1, titxt);
+            xlabel(hAx1,'Cell Index');
+            ylabel(hAx1,'Expression Level');
+
+            x2 = X2(idx, :);
+            if ~isempty(sh2) && isvalid(sh2), delete(sh2); end
+            sh1 = plot(hAx2, 1:length(x2), x2, 'marker', 'none');
+            xlim(hAx2,[1 size(X2,2)]);
+            title(hAx2, g(idx));    
+            [titxt] = gui.i_getsubtitle(x2);
+            subtitle(hAx2, titxt);
+            xlabel(hAx2,'Cell Index');
+            ylabel(hAx2,'Expression Level');
+            
+        else
+            txt = num2str(event_obj.Position(2));
+        end
+    end
+
+end
