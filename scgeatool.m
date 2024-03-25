@@ -4,7 +4,7 @@ if usejava('jvm') && ~feature('ShowFigureWindows')
     error('MATLAB is in a text mode. This function requires a GUI-mode.');
 end
 if isempty(which('grp2idx.m'))
-    waitfor(warndlg('SCGEATOOL requires Statistics and Machine Learning Toolbox.','Missing Dependencies'));
+    uiwait(warndlg('SCGEATOOL requires Statistics and Machine Learning Toolbox.','Missing Dependencies'));
     answer3 = questdlg('Learn how to install Statistics and Machine Learning Toolbox?','');
     if strcmp(answer3,'Yes')
         web('https://www.mathworks.com/help/matlab/matlab_env/get-add-ons.html');
@@ -504,7 +504,7 @@ end
             set(button1,'Enable','on');
             uicontrol(button1);
             if ~isempty(sce)
-                warndlg('Imported SCE contains no cells.','');
+                uiwait(warndlg('Imported SCE contains no cells.',''));
             end
         end
     end
@@ -676,7 +676,7 @@ end
                     if ~isempty(callinghandle)
                         guidata(callinghandle, sce);
                         delete(hObject);
-                        helpdlg('SCE updated.');
+                        uiwait(helpdlg('SCE updated.',''));
                     else
                         if gui.callback_SaveX(FigureHandle,[])
                             pause(1);
@@ -768,7 +768,7 @@ end
 
     function in_RunDataMapPlot(src, ~)
         if ~pkg.i_checkpython
-            warndlg('Python not installed.','');
+            uiwait(warndlg('Python not installed.',''));
             return;
         end
         ndim = 2;
@@ -843,11 +843,11 @@ end
             [c, cL] = grp2idx(sce.c_batch_id);
             sce.c = c;
             if sce.NumCells==0
-                warndlg('Merged SCE contains no cells.','');
+                uiwait(warndlg('Merged SCE contains no cells.',''));
                 return;
             else
                 in_RefreshAll(src, [], true, false);
-                helpdlg(sprintf('%s SCEs merged.', upper(s)), '');
+                uiwait(helpdlg(sprintf('%s SCEs merged.', upper(s)), ''));
             end
         end
     end
@@ -899,7 +899,7 @@ end
                     methodoption = 1;
                 case 'Geometric Sketching [PMID:31176620]'
                     if ~pkg.i_checkpython
-                        warndlg('Python not installed.','');
+                        uiwait(warndlg('Python not installed.',''));
                         return;
                     end
                     methodoption = 2;
@@ -989,8 +989,8 @@ end
             in_RefreshAll(src, [], true, false);
             newn = sce.NumCells;
             newm = sce.NumGenes;
-            helpdlg(sprintf('%d cells removed; %d genes removed.', ...
-                oldn-newn, oldm-newm), '');
+            uiwait(helpdlg(sprintf('%d cells removed; %d genes removed.', ...
+                oldn-newn, oldm-newm), ''));
         end
         if ~isempty(highlightindex)
             h.BrushData = highlightindex;
@@ -1007,8 +1007,8 @@ end
             in_RefreshAll(src, [], true, false);
             newm = sce.NumGenes;
             newn = sce.NumCells;
-            helpdlg(sprintf('%d cells removed; %d genes removed.', ...
-                oldn-newn, oldm-newm), '');
+            uiwait(helpdlg(sprintf('%d cells removed; %d genes removed.', ...
+                oldn-newn, oldm-newm), ''));
             guidata(FigureHandle, sce);
         end
     end
@@ -1066,18 +1066,18 @@ end
         if strcmp(answer, 'Yes')
             sce.X = round(Xdecon);
             guidata(FigureHandle, sce);
-            helpdlg('Contamination removed.', '');
+            uiwait(helpdlg('Contamination removed.', ''));
         end
     end
 
     function in_HarmonyPy(src, ~)
         if ~pkg.i_checkpython
-            warndlg('Python not installed.','');
+            uiwait(warndlg('Python not installed.',''));
             return;
         end        
         if ~gui.gui_showrefinfo('Harmony [PMID:31740819]'), return; end
         if numel(unique(sce.c_batch_id)) < 2
-            warndlg('No batch effect (SCE.C_BATCH_ID is empty)');
+            uiwait(warndlg('No batch effect (SCE.C_BATCH_ID is empty)'));
             return;
         end
         [c1] = grp2idx(sce.c);
@@ -1113,7 +1113,7 @@ end
                     if ismember(methoddimtag, fieldnames(sce.struct_cell_embeddings))
                         sce.struct_cell_embeddings.(methodtag) = sce.s;
                     end
-                    helpdlg(sprintf('%s Embedding is updated.', methoddimtag), '');
+                    uiwait(helpdlg(sprintf('%s Embedding is updated.', methoddimtag), ''));
             end
         end
         guidata(FigureHandle, sce);
@@ -1121,13 +1121,13 @@ end
 
     function in_DoubletDetection(src, ~)
         if ~pkg.i_checkpython
-            warndlg('Python not installed.','');
+            uiwait(warndlg('Python not installed.',''));
             return;
         end
         if ~gui.gui_showrefinfo('Scrublet [PMID:30954476]'), return; end
         [isDoublet, doubletscore, methodtag, done] = gui.callback_DoubletDetection(src);
         if done && ~any(isDoublet)
-            helpdlg('No doublet detected.', '');
+            uiwait(helpdlg('No doublet detected.', ''));
             return;
         end
         if done && any(isDoublet) && sce.NumCells == length(doubletscore)
@@ -1144,7 +1144,7 @@ end
                     guidata(FigureHandle, sce);
                     [c, cL] = grp2idx(sce.c);
                     in_RefreshAll(src, [], true, false);
-                    helpdlg('Doublets deleted.', '');
+                    uiwait(helpdlg('Doublets deleted.', ''));
             end
         end
     end
@@ -1153,7 +1153,7 @@ end
         if isempty(sce.c_cell_type_tx), return; end
         newtx = erase(sce.c_cell_type_tx, "_{"+digitsPattern+"}");
         if isequal(sce.c_cell_type_tx, newtx)
-            helpdlg("No sub-clusters are meraged.");
+            uiwait(helpdlg("No sub-clusters are meraged."));
         else
             sce.c_cell_type_tx = newtx;
             [c, cL] = grp2idx(sce.c_cell_type_tx);
@@ -1613,7 +1613,7 @@ end
         if isempty(iscelltype), return; end
         ptsSelected = logical(h.BrushData.');
         if ~any(ptsSelected)
-            warndlg("No cells are selected.");
+            uiwait(warndlg("No cells are selected.",''));
             return;
         end
         if iscelltype
@@ -1647,7 +1647,7 @@ end
         if isempty(iscelltype), return; end
         ptsSelected = logical(h.BrushData.');
         if ~any(ptsSelected)
-            warndlg("No cells are brushed");
+            uiwait(warndlg("No cells are brushed",''));
             return;
         end
         if iscelltype
@@ -1657,7 +1657,7 @@ end
         end
 
         if numel(c_members) == 1
-            warndlg("All brushed cells are in one cluster or belong to the same cell type.");
+            uiwait(warndlg("All brushed cells are in one cluster or belong to the same cell type.",''));
             return;
         end
 
@@ -1692,7 +1692,7 @@ end
     function in_Brush4Celltypes(~, ~)
         ptsSelected = logical(h.BrushData.');
         if ~any(ptsSelected)
-            helpdlg("No cells are selected. Please use the data brush tool to select cells for cell type assignment.", '');
+            uiwait(helpdlg("No cells are selected. Please use the data brush tool to select cells for cell type assignment.", ''));
             return;
         end
         answer = questdlg('This is a one-time analysis. Cell type labels will not be saved. Continue?');
@@ -1816,7 +1816,7 @@ end
     function in_DeleteSelectedCells(src, ~)
         ptsSelected = logical(h.BrushData.');
         if ~any(ptsSelected)
-            warndlg("No cells are selected.", '');
+            uiwait(warndlg("No cells are selected.", ''));
             return;
         end
         [ptsSelected, letdoit] = gui.i_expandbrushed(ptsSelected, sce);
@@ -1996,7 +1996,7 @@ end
         end
         if (ismcc || isdeployed)
             if strcmp(methodtag, 'sc3')
-                warndlg('SC3 is not working in standalone application.', '');
+                uiwait(warndlg('SC3 is not working in standalone application.', ''));
                 return;
             end
         end
@@ -2089,7 +2089,7 @@ end
                 set(src, statetag, 'off');
                 set(a,'Checked','off');
                 set(b,'State','off');
-                warndlg('Labels are not showing. Too many categories (n>200).');
+                uiwait(warndlg('Labels are not showing. Too many categories (n>200).',''));
             end
             %setappdata(FigureHandle, 'cL', cL);
             guidata(FigureHandle, sce);
