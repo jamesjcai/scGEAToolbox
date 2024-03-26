@@ -135,8 +135,8 @@ ttxt=strrep(ttxt,'_','\_');
 title(ttxt);
 end
 
-tb1 = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
-uipushtool(tb1, 'Separator', 'off');
+tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
+uipushtool(tb, 'Separator', 'off');
 
 %tb = uitoolbar('Parent', hFig);
 pkg.i_addbutton2fig(tb, 'on', {@gui.i_pickmonocolor, true}, 'plotpicker-compass.gif', 'Pick new color map...');
