@@ -150,6 +150,7 @@ zlabel(hAx0,'Dropout rate (% of zeros)');
 
 if ~isempty(g)
     dt = datacursormode(hFig);
+    datacursormode(hFig, 'on');
     dt.UpdateFcn = {@in_myupdatefcn3, g};
 end
 
