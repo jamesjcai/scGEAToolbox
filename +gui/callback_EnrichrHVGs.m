@@ -23,11 +23,11 @@ answer = questdlg('Which HVG detecting method to use?', '', ...
             end
             gui.gui_waitbar(fw, true);
         case 'Splinefit Method [PMID:31697351]'            
-            try
+            %try
                 gui.sc_scatter3genes_new(sce.X, sce.g, true, true, FigureHandle);
-            catch ME
-                errordlg(ME.message);
-            end            
+            %catch ME
+            %    errordlg(ME.message);
+            %end            
         otherwise
             return;
     end

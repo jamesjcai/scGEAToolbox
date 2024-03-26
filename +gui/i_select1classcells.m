@@ -4,15 +4,16 @@ ptsSelected = [];
 [thisc, clable] = gui.i_select1class(sce);
 if isempty(thisc), return; end
 
-[~, cLi] = grp2idx(thisc);
+
 
 answer2 = questdlg(sprintf('How to sort members of ''%s''?',clable), '', ...
     'Alphabetic', 'Size (Descending Order)', 'Alphabetic');
 switch answer2
     case 'Alphabetic'
+        [~, cLi] = grp2idx(thisc);
         [cLisorted] = natsort(string(cLi));
     case 'Size (Descending Order)'
-        [cLisorted]=pkg.e_sortcatbysize(string(cLi));
+        [cLisorted]=pkg.e_sortcatbysize(thisc);
     otherwise
         return;
 end

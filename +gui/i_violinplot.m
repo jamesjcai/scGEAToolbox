@@ -3,12 +3,10 @@ function [hFig] = i_violinplot(y, thisc, ttxt, colorit, cLorder, posg, parentfig
 
 if nargin < 7, parentfig = []; end
 if nargin < 6, posg = []; end % used in callback_CompareGeneBtwCls
-if nargin < 5 || isempty(cLorder)
-    [~, cLorder] = grp2idx(thisc);
-end
-if nargin < 4
-    colorit = true;
-end
+if nargin < 5 || isempty(cLorder), [~, cLorder] = grp2idx(thisc); end
+if nargin < 4, colorit = true; end
+if nargin < 3, ttxt = ''; end
+
 if matlab.ui.internal.isUIFigure(parentfig), focus(parentfig); end
 hFig = figure('visible', 'off');
 

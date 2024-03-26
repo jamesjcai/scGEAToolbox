@@ -125,9 +125,8 @@ else
 end
 % T=T(removedidx,:);
 if plotit
-    [~,~]=maxk(fitratio,100);
+    %[~,~]=maxk(fitratio,100);
     %    figure;
-
     hFig = figure;
     hFig.Position(3)=hFig.Position(3)*1.8;
     %hAx = axes('Parent', FigureHandle);
@@ -136,7 +135,7 @@ if plotit
     % set(tb, 'Tag', 'FigureToolBar', ...
     %     'HandleVisibility', 'off', 'Visible', 'on');
     tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
-uipushtool(tb, 'Separator', 'off');
+    uipushtool(tb, 'Separator', 'off');
     pkg.i_addbutton2fig(tb, 'off', @HighlightGenes, 'plotpicker-qqplot.gif', 'Highlight top HVGs');
     pkg.i_addbutton2fig(tb, 'off', @in_HighlightSelectedGenes, 'xplotpicker-qqplot.gif', 'Highlight selected genes');
     pkg.i_addbutton2fig(tb, 'off', @ExportGeneNames, 'export.gif', 'Export Selected HVG gene names...');
@@ -172,7 +171,7 @@ uipushtool(tb, 'Separator', 'off');
 
     hAx2=subplot(2,2,2);
     x1 = Xsorted(1,:);
-    sh = stem(hAx2, 1:length(x1), x1, 'marker', 'none');
+    sh = plot(hAx2, 1:length(x1), x1);
     xlim(hAx2,[1 size(X,2)]);
     title(hAx2, gsorted(1));
     [titxt] = gui.i_getsubtitle(x1);
@@ -293,7 +292,7 @@ end
             if ~isempty(sh) && isvalid(sh)
                 delete(sh);
             end
-            sh = stem(hAx2, 1:length(x1), x1, 'marker', 'none');
+            sh = plot(hAx2, 1:length(x1), x1);
             xlim(hAx2,[1 size(X,2)]);
             title(hAx2, g(idx));    
             [titxt] = gui.i_getsubtitle(x1);
