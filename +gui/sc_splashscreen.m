@@ -22,7 +22,7 @@ if nargin<1
     v1 = extractBetween(x, a1{1}+length(sprintf('<%s>',tag)), a2{1}-1);
     % v1 = strrep(v1{1}, 'scGEAToolbox ', '');
     v1 = v1{1};
-
+    
     %pngfilename = 'dna-adn-black-background-1080P-wallpaper.jpg';
     %pngfilename = 'OIP (1).jpg';
     %pngfilename = 'wave-white-particles-abstract-technology-flow-background-future-vector-illustration_435055-172.jpg';
@@ -36,7 +36,8 @@ if nargin<1
                     'ProgressPosition', 5, ...
                     'ProgressRatio', 0.0 );
     fx.addText( 30, 50, 'SCGEATOOL', 'FontSize', 18, 'Color', [1 1 1] )
-    fx.addText( 30, 73, v1, 'FontSize', 14, 'Color', [0.7 0.7 0.7] )
+    fx.addText( 30, 73, sprintf('Version %s', v1), ...
+        'FontSize', 14, 'Color', [0.7 0.7 0.7] )
     if showloading
         fx.addText( 307, 277, 'Loading...', 'FontSize', 14, 'Color', 'white' )
     end

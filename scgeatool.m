@@ -74,7 +74,7 @@ if ~isempty(s_in), sce.s = s_in; end
 
 % if ~isempty(fx) && isvalid(fx), gui.sc_simplesplash2(fx,0.2); end
 if ~isempty(v1)
-    figname = sprintf('SCGEATOOL v%s', v1);
+    figname = sprintf('SCGEATOOL %s', v1);
 else
     figname = 'SCGEATOOL';
 end

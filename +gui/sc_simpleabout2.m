@@ -54,9 +54,9 @@ set(fx,'Position',figpos);
     set(fa,'Color','k','XColor','k','YColor','k');
     text(fa, 20, 50,'SCGEATOOL','Color','w','FontSize',16);
     if ~isempty(d)
-        text(fa,20, 80,v1+" (build "+d+")",'Color',[.7 .7 .7],'FontSize',12);
+        text(fa,20, 80, "Version "+v1+" (build "+d+")",'Color',[.7 .7 .7],'FontSize',12);
     else
-        text(fa,20, 80,v1,'Color',[.7 .7 .7],'FontSize',12);
+        text(fa,20, 80,"Version "+v1,'Color',[.7 .7 .7],'FontSize',12);
     end
     %text(fa,1.0,0.2,'James Cai (jcai@tamu.edu)','Color',[.7 .7 .7],'FontSize',14);
 
