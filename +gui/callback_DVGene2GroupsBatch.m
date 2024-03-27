@@ -6,7 +6,7 @@ sce = guidata(FigureHandle);
 
 if ~gui.gui_showrefinfo('DP in Batch Mode'), return; end
 
-if length(unique(sce.c_cell_type_tx))==1
+if length(unique(sce.c_cell_type_tx)) == 1
     warndlg('Only one cell type or cell type is undetermined.','');
     return;
 end
@@ -26,7 +26,7 @@ if strcmp(clable,'Cell Type')
     return;
 end
 
-%[i1, i2, cL1, cL2] = gui.i_select2grps(sce);
+%[i1, i2, cL1, cL2] = gui.i_select2grps(sce, false);
 
 [i1, i2, cL1, cL2]=in_twogrpsencoding(thisc);
 if isempty(i1) || isempty(i2) || isempty(cL1) || isempty(cL2)
