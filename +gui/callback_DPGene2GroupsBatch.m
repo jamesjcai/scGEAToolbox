@@ -26,7 +26,7 @@ if strcmp(clable,'Cell Type')
     return;
 end
 
-%[i1, i2, cL1, cL2] = gui.i_select2grps(sce);
+%[i1, i2, cL1, cL2] = gui.i_select2grps(sce, false);
 
 [i1, i2, cL1, cL2]=in_twogrpsencoding(thisc);
 if isempty(i1) || isempty(i2) || isempty(cL1) || isempty(cL2)
