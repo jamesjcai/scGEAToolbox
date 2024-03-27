@@ -85,7 +85,7 @@ cx2=cx(2,:);
     
     bd = vecnorm(xyz1(T1.nearidx,:) - xyz2(T2.nearidx,:),2,2); % baseline difference
     dd = abs(T1.d - T2.d);
-    ddn = dd./bd;
+    ddn = dd./(1+bd);
     
     BaselineDiffDist = zeros(size(T1,1), 1);
     DiffDistRaw =  zeros(size(T1,1), 1);
@@ -135,6 +135,10 @@ else
 end
 tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
 uipushtool(tb, 'Separator', 'off');
+
+pkg.i_addbutton2fig(tb, 'off', @in_HighlightGenes, 'xplotpicker-qqplot.gif', 'Highlight top HVGs');
+% pkg.i_addbutton2fig(tb, 'off', @in_HighlightSelectedGenes, 'xplotpicker-qqplot.gif', 'Highlight selected genes');
+
 hFig.Visible=true;
 hAx0 = subplot(2,2,[1 3]);
 h1 = scatter3(hAx0, px1, py1, pz1, 'filled', 'MarkerFaceAlpha', .1);
@@ -179,6 +183,12 @@ h3 = [];
 
     function txt = in_myupdatefcn3(src, event_obj, g)
         if isequal(get(src, 'Parent'), hAx0)
+
+            % dtp = findobj(h1, 'Type', 'datatip');
+            % if ~isempty(dtp), delete(dtp); end
+            % dtp = findobj(h2, 'Type', 'datatip');
+            % if ~isempty(dtp), delete(dtp); end
+            
             idx = event_obj.DataIndex;
             if idx > length(g)*2
                 txt = num2str(event_obj.Position(2)); 
@@ -188,9 +198,8 @@ h3 = [];
                 idx = idx - length(g);
             end
 
-            if ~isempty(h3)
-                delete(h3)                
-            end
+            
+            if ~isempty(h3), delete(h3); end
             h3 = plot3(hAx0, [px1(idx) px2(idx)], ...
                 [py1(idx), py2(idx)], ...
                 [pz1(idx), pz2(idx)],'k-','LineWidth',1);
@@ -221,5 +230,38 @@ h3 = [];
             txt = num2str(event_obj.Position(2));
         end
     end
+
+
+    function in_HighlightGenes(~, ~)
+        %h.MarkerIndices=idx20;
+       dtp = findobj(h1, 'Type', 'datatip');
+       if ~isempty(dtp), delete(dtp); end
+       dtp = findobj(h2, 'Type', 'datatip');
+       if ~isempty(dtp), delete(dtp); end
+       if ~isempty(h3), delete(h3); end
+        
+        gsorted = natsort(g);
+        [indx2, tf2] = listdlg('PromptString', ...
+            'Select a gene:', ...
+            'SelectionMode', 'single', ...
+            'ListString', gsorted);
+        if tf2 == 1
+            idx = find(g == gsorted{indx2});
+        else
+            return;
+        end        
+        h1.BrushData = idx;
+        h2.BrushData = idx;
+        datatip(h1, 'DataIndex', idx);
+        datatip(h2, 'DataIndex', idx);
+
+            % if ~isempty(h3), delete(h3); end
+            % h3 = plot3(hAx0, [px1(idx) px2(idx)], ...
+            %     [py1(idx), py2(idx)], ...
+            %     [pz1(idx), pz2(idx)],'k-','LineWidth',1);
+        
+        
+    end
+
 
 end

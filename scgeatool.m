@@ -2118,17 +2118,18 @@ end
                 if isequal(cL, cLx)
                     stxtyes = c;
                 else
-                    answer = questdlg(sprintf('Label %d groups with index or text?', ...
-                        numel(cL)), 'Select Format', 'Index', ...
-                        'Text', 'Cancel', 'Text');
-                    switch answer
-                        case 'Text'
-                            stxtyes = cL(c);
-                        case 'Index'
-                            stxtyes = c;
-                        otherwise
-                            return;
-                    end
+                    % answer = questdlg(sprintf('Label %d groups with index or text?', ...
+                    %     numel(cL)), 'Select Format', 'Index', ...
+                    %     'Text', 'Cancel', 'Text');
+                    % switch answer
+                    %     case 'Text'
+                    %         stxtyes = cL(c);
+                    %     case 'Index'
+                    %         stxtyes = c;
+                    %     otherwise
+                    %         return;
+                    % end
+                    stxtyes = cL(c);
                 end
             end
             dtp = findobj(h, 'Type', 'datatip');

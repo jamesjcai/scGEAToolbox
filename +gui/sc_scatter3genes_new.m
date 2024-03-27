@@ -14,7 +14,7 @@ z = dropr;
 
 fw = gui.gui_waitbar;
 hFig = figure('Visible','off');
-hFig.Position(3)=hFig.Position(3)*1.8;
+hFig.Position(3) = hFig.Position(3)*1.8;
 
 if ~isempty(parentfig)
     [px_new] = gui.i_getchildpos(parentfig, hFig);
