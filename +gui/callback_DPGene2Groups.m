@@ -6,7 +6,7 @@ sce = guidata(FigureHandle);
 if ~gui.gui_showrefinfo('DP Analysis'), return; end
 
 
-[i1, i2, cL1, cL2] = gui.i_select2grps(sce);
+[i1, i2, cL1, cL2] = gui.i_select2grps(sce, false);
 if length(i1) == 1 || length(i2) == 1, return; end
 
 c=zeros(size(i1));
