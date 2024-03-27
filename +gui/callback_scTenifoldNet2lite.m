@@ -8,7 +8,7 @@ if ~gui.gui_showrefinfo('scTenifoldNet [PMID:33336197]'), return; end
 
 sce = guidata(FigureHandle);
 
-[i1, i2] = gui.i_select2grps(sce);
+[i1, i2] = gui.i_select2grps(sce, false);
 if length(i1) == 1 || length(i2) == 1, return; end
 
 fw = gui.gui_waitbar;
