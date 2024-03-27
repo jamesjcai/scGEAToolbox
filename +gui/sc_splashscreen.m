@@ -8,21 +8,21 @@ if nargin<1
     %v1='v24.3.3';
     %[~, v1] = pkg.i_majvercheck;
 
-    xfile = 'scGEAToolbox.prj';
-    tag = 'param.version';
-
-    xfilelocal = fullfile(mfolder,'..', xfile);
-    fid = fopen(xfilelocal, 'r');
-    C = textscan(fid, '%s', 'delimiter', '\n');
-    fclose(fid);
-    a = C{1};
-    x = a(contains(a, sprintf('<%s>',tag)));
-    a1 = strfind(x, sprintf('<%s>',tag));
-    a2 = strfind(x, sprintf('</%s>',tag));
-    v1 = extractBetween(x, a1{1}+length(sprintf('<%s>',tag)), a2{1}-1);
-    % v1 = strrep(v1{1}, 'scGEAToolbox ', '');
-    v1 = v1{1};
-    
+    % xfile = 'scGEAToolbox.prj';
+    % tag = 'param.version';
+    % 
+    % xfilelocal = fullfile(mfolder,'..', xfile);
+    % fid = fopen(xfilelocal, 'r');
+    % C = textscan(fid, '%s', 'delimiter', '\n');
+    % fclose(fid);
+    % a = C{1};
+    % x = a(contains(a, sprintf('<%s>',tag)));
+    % a1 = strfind(x, sprintf('<%s>',tag));
+    % a2 = strfind(x, sprintf('</%s>',tag));
+    % v1 = extractBetween(x, a1{1}+length(sprintf('<%s>',tag)), a2{1}-1);
+    % % v1 = strrep(v1{1}, 'scGEAToolbox ', '');
+    % v1 = v1{1};
+    v1 = pkg.i_getversionnum;
     %pngfilename = 'dna-adn-black-background-1080P-wallpaper.jpg';
     %pngfilename = 'OIP (1).jpg';
     %pngfilename = 'wave-white-particles-abstract-technology-flow-background-future-vector-illustration_435055-172.jpg';

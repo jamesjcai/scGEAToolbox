@@ -7,12 +7,13 @@ mfolder = fileparts(mfilename('fullpath'));
 try
     Col = webread('https://api.github.com/repos/jamesjcai/scGEAToolbox');
 
-    stfile =   fullfile(mfolder,'..','TIMESTAMP');
+    stfile = fullfile(mfolder,'..','TIMESTAMP');
 
     if ~exist(stfile,'file')
         fid=fopen(stfile,'w');
         fprintf(fid,'%s\n',Col.pushed_at);
         fclose(fid);
+        needupdate = true;        
     else
         fid=fopen(stfile,'r');
         d=textscan(fid,'%s');
@@ -33,7 +34,7 @@ try
                     % definput = {sprintf('tic;\ndisp(''Installing scGEAToolbox...'')\nunzip(''https://github.com/jamesjcai/scGEAToolbox/archive/main.zip'');\naddpath(''./scGEAToolbox-main'');\ntoc;\nif exist(''scgeatool.m'',''file'')\n    disp(''scGEAToolbox installed!'')\nend\nsavepath(fullfile(userpath,''pathdef.m''));')};
                     % inputdlg(prompt,dlgtitle,fieldsize,definput);
 
-                    needupdate=true;
+                    needupdate = true;
                     return;
                 case 'Remind me later'
                 case 'Skip this update'
@@ -43,7 +44,7 @@ try
                 otherwise
             end
         else
-            waitfor(helpdlg('No update is available.',''));
+            uiwait(helpdlg('No update is available.',''));
         end
     end
 catch ME

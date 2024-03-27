@@ -34,7 +34,8 @@ figpos = get(fx,'Position');
 figpos(3:4) = [imxpos(2) imypos(2)];
 set(fx,'Position',figpos);
 
-    [~, v1] = pkg.i_majvercheck;
+    % [~, v1] = pkg.i_majvercheck;
+    v1 = pkg.i_getversionnum;
 
     stfile =   fullfile(mfolder,'..','TIMESTAMP');
     if ~exist(stfile,'file')
