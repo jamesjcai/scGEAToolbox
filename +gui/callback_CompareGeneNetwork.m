@@ -2,7 +2,7 @@ function callback_CompareGeneNetwork(src, ~)
 FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
 
-[i1, i2] = gui.i_select2grps(sce);
+[i1, i2] = gui.i_select2grps(sce, false);
 if isscalar(i1) || isscalar(i2)
     if i1 == 0 || i2 == 0, return; end
 end
