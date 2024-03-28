@@ -83,25 +83,30 @@ cx2=cx(2,:);
     assert(isequal(T1.genes, T2.genes))
     assert(isequal(T1.genes, g))
     
-    bd = vecnorm(xyz1(T1.nearidx,:) - xyz2(T2.nearidx,:),2,2); % baseline difference
-    dd = abs(T1.d - T2.d);
-    ddn = dd./(1+bd);
-    
+    %bd = vecnorm(xyz1(T1.nearidx,:) - xyz2(T2.nearidx,:),2,2); % baseline difference
+    %dd = abs(T1.d - T2.d);
+    %ddn = dd./(1+bd);
+
+    px1 = T1.lgu; py1 = T1.lgcv; pz1 = T1.dropr;
+    px2 = T2.lgu; py2 = T2.lgcv; pz2 = T2.dropr;
+
+    d1=([px1 py1 pz1] - xyz1(T1.nearidx));
+    d2=([px2 py2 pz2] - xyz2(T2.nearidx));
+    ddn = vecnorm(d1-d2,2,2);
+
     BaselineDiffDist = zeros(size(T1,1), 1);
     DiffDistRaw =  zeros(size(T1,1), 1);
     DiffDistNormlized = zeros(size(T1,1), 1);
     
-    BaselineDiffDist(valididx) = bd;
-    DiffDistRaw(valididx) = dd;
+%    BaselineDiffDist(valididx) = bd;
+%    DiffDistRaw(valididx) = dd;
     DiffDistNormlized(valididx) = ddn;
 
-    px1 = T1.lgu; py1 = T1.lgcv; pz1 = T1.dropr;
-    px2 = T2.lgu; py2 = T2.lgcv; pz2 = T2.dropr;
     
     T1.Properties.VariableNames = append(T1.Properties.VariableNames, sprintf('_%s',cL1{1}));
     T2.Properties.VariableNames = append(T2.Properties.VariableNames, sprintf('_%s',cL2{1}));
     
-    T=[T1 T2 table(BaselineDiffDist, DiffDistRaw, DiffDistNormlized)];
+    T=[T1 T2 table(DiffDistNormlized)];
     
     %assignin("base","T",T)
     %assignin("base","T1",T1)
@@ -144,8 +149,8 @@ hAx0 = subplot(2,2,[1 3]);
 h1 = scatter3(hAx0, px1, py1, pz1, 'filled', 'MarkerFaceAlpha', .1);
 hold on
 h2 = scatter3(hAx0, px2, py2, pz2, 'filled', 'MarkerFaceAlpha', .1);
-plot3(hAx0, xyz1(:, 1), xyz1(:, 2), xyz1(:, 3), '-b', 'linewidth', 4);
-plot3(hAx0, xyz2(:, 1), xyz2(:, 2), xyz2(:, 3), '-r', 'linewidth', 4);
+plot3(hAx0, xyz1(:, 1), xyz1(:, 2), xyz1(:, 3), '-', 'linewidth', 4, 'Color',cx1);
+plot3(hAx0, xyz2(:, 1), xyz2(:, 2), xyz2(:, 3), '-', 'linewidth', 4, 'Color',cx2);
 
 xlabel(hAx0,'Mean+1, log');
 ylabel(hAx0,'CV+1, log');
