@@ -119,7 +119,7 @@ set(gca, 'XTickLabel', [{''}; cL(:); {''}])
 colormap(flipud(summer));
 box on
 grid on
-% hFig=gcf;
+
 hFig.Position(3) = hFig.Position(3) * 0.7;
 
 % drawnow;

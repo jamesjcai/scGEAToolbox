@@ -527,7 +527,7 @@ end
     end
 
     function in_CompareCellScoreBtwCls(src,events)
-        if gui.callback_CompareGeneBtwCls(src,events)
+        if gui.callback_CompareCellScoreBtwCls(src,events)
             sce = guidata(FigureHandle);
         end
     end

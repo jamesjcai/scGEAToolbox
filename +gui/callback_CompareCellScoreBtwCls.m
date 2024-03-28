@@ -1,9 +1,4 @@
-function [needupdatesce]=callback_CompareGeneBtwCls(src, ~)
-%     answer = questdlg(['This function ' ...
-%         'calculates a signature score for each ' ...
-%         'cell with respect to a given gene set.' ...
-%         ' Continue?'],'');
-%     if ~strcmp(answer,'Yes'), return; end
+function [needupdatesce]=callback_CompareCellScoreBtwCls(src, ~)
 
 FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
@@ -213,13 +208,22 @@ bb = 'No, just show values';
                     [~, T] = pkg.e_cellscores(sce.X, sce.g, 0);
                     listitems = T.ScoreType;
                     [indx2, tf2] = listdlg('PromptString', 'Select Score', ...
-                        'SelectionMode', 'single', 'ListString', ...
+                        'SelectionMode', 'multiple', 'ListString', ...
                         listitems, 'ListSize', [320, 300]);
                     if tf2 ~= 1, return; end
-                    %fw=gui.gui_waitbar;
-                    [y, ~, posg] = pkg.e_cellscores(sce.X, sce.g, indx2);
-                    ttxt = T.ScoreType(indx2);
-                    %gui.gui_waitbar(fw);
+                    
+
+                    n = length(indx2);
+                    y = cell(n,1); ttxt=cell(n,1);
+                    [~, methodid] = gui.i_pickscoremethod;
+
+                    fw=gui.gui_waitbar;
+                    for k=1:n
+                        [y{k}, ~, posg] = pkg.e_cellscores(sce.X, sce.g, ...
+                            indx2(k), methodid, false);
+                        ttxt{k} = T.ScoreType(indx2(k));
+                    end
+                    gui.gui_waitbar(fw);
                 case 'Other Cell Attribute...'
                     [y, clable, ~, newpickclable] = gui.i_select1state(sce, true);
                     if isempty(y)
@@ -293,9 +297,13 @@ bb = 'No, just show values';
             if ~exist("ttxt", "var"), ttxt = []; end
 
             if showcomparision
-                gui.i_violinplot(y, thisc, ttxt, true, [], posg, FigureHandle);
-                xlabel('Cell group');
-                ylabel('Cellular score');
+                if iscell(y)
+                    gui.i_violintabs(y, ttxt, thisc, FigureHandle);
+                else
+                    gui.i_violinplot(y, thisc, ttxt, true, [], posg, FigureHandle);
+                    xlabel('Cell group');
+                    ylabel('Cellular score');
+                end
             else
                 %     [methodid]=gui.i_pickscatterstem('Scatter+Stem');
                 %     if isempty(methodid), return; end

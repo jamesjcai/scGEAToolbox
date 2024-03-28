@@ -3,15 +3,18 @@ if nargin < 3, msg = []; end
 if nargin < 2, p = 1; end
 if nargin < 1 || isempty(f)
 
-    hFig = gcf;
+    % hFig = gcf;
+    hFig = get(groot,'CurrentFigure');
     %     if ~usejava('desktop')
     %         disp(msg);
     %         return;
     %     end
     f = waitbar(0, 'Please wait...','Visible','off','Units','pixels');
 
-    [~, newpos] = gui.i_getchildpos(hFig, f);
-    f.Position = newpos;
+    if ~isempty(hFig) && strcmp(get(hFig,'type'),'figure')
+        [~, newpos] = gui.i_getchildpos(hFig, f);
+        f.Position = newpos;
+    end
     f.Visible = "on";
     pause(.5)
     %     pause(.5)

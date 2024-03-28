@@ -2,7 +2,7 @@ function [hFig] = i_violinplot(y, thisc, ttxt, colorit, cLorder, posg, parentfig
 % see also: gui.sc_uitabgrpfig_violin
 
 if nargin < 7, parentfig = []; end
-if nargin < 6, posg = []; end % used in callback_CompareGeneBtwCls
+if nargin < 6, posg = []; end
 if nargin < 5 || isempty(cLorder), [~, cLorder] = grp2idx(thisc); end
 if nargin < 4, colorit = true; end
 if nargin < 3, ttxt = ''; end
