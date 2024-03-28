@@ -225,6 +225,7 @@ in_addmenu(m_plot, 0, @in_DrawTrajectory, 'Cell Trajectory...');
 in_addmenu(m_plot,1,@gui.callback_Violinplot,'Gene Violin Plot...');
 in_addmenu(m_plot,0,@gui.callback_DrawDotplot,'Gene Dot Plot...');
 in_addmenu(m_plot,0,@gui.callback_GeneHeatMap,'Gene Heatmap...');
+in_addmenu(m_plot,1,@gui.callback_ShowGeneExprCompr,'Side-by-Side Gene Expression...');
 
 m_tool = uimenu(FigureHandle, 'Text', '&Analyze', 'Accelerator', 'A');
 in_addmenu(m_tool, 0, @in_ClusterCellsS, "Cluster Cells Using Cell Embedding (S)")
@@ -246,7 +247,7 @@ in_addmenu(m_tool, 1, @gui.callback_CalculateGeneStats, 'Calculate Gene Expressi
 in_addmenu(m_tool, 0, @gui.callback_CellCycleLibrarySize, 'Library Size of Cell Groups...');
 in_addmenu(m_tool, 0, @gui.callback_CellCycleAssignment, 'Assign Cell Cycle Phase...');
 %i_addmenu(m_exp,0,@gui.callback_TCellExhaustionScores,'T Cell Exhaustion Score...');
-in_addmenu(m_tool, 1, @in_CompareGeneBtwCls, 'Cell Score Analysis...');
+in_addmenu(m_tool, 1, @in_CompareCellScoreBtwCls, 'Cell Score Analysis...');
 in_addmenu(m_tool, 0, @gui.callback_GetCellSignatureMatrix, 'Cell State Analysis...');
 in_addmenu(m_tool, 1, @in_EnrichrHVGs, 'HVG Functional Enrichment Analysis...');
 in_addmenu(m_tool, 1, @in_SingleClickSolution, 'Single Click Solution (from Raw Data to Annotation)...');
@@ -384,7 +385,7 @@ in_addbuttonpush(0, 0, @gui.callback_DrawDotplot, "icon-mat-blur-linear-10.gif",
 in_addbuttonpush(0, 0, @gui.callback_GeneHeatMap, "icon-mat-apps-20.gif", "Gene Heatmap...");
 
 in_addbuttonpush(0, 0, [], [], "");
-in_addbuttonpush(0, 1, @in_CompareGeneBtwCls, "cellscore2.gif", "Cell score analysis--obtaining gene signature score for each cell");
+in_addbuttonpush(0, 1, @in_CompareCellScoreBtwCls, "cellscore2.gif", "Cell score analysis--obtaining gene signature score for each cell");
 in_addbuttonpush(0, 0, @gui.callback_GetCellSignatureMatrix, "icon-fa-connectdevelop-20.gif", "Cell state analysis--obtaining multiple gene signature scores to reveal functional state of cells");
 in_addbuttonpush(0, 1, @in_EnrichrHVGs, "plotpicker-andrewsplot.gif", "Functional enrichment analysis with HVGs");
 in_addbuttonpush(0, 0, @gui.callback_DEGene2Groups, "plotpicker-boxplot.gif", "Differential expression (DE) analysis)");
@@ -525,7 +526,7 @@ end
         end
     end
 
-    function in_CompareGeneBtwCls(src,events)
+    function in_CompareCellScoreBtwCls(src,events)
         if gui.callback_CompareGeneBtwCls(src,events)
             sce = guidata(FigureHandle);
         end

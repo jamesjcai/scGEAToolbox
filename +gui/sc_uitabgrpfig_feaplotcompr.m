@@ -1,4 +1,4 @@
-function sc_uitabgrpfig_feaplot(sce, glist, parentfig, cazcel)
+function sc_uitabgrpfig_feaplotcompr(sce, glist, parentfig, cazcel, thisc)
 
 if nargin < 4, cazcel = []; end
 if nargin < 3, parentfig = []; end
@@ -43,9 +43,16 @@ ax = cell(n,2);
 idx = 1;
 focalg = glist(idx);
 
+[c, cL] = grp2idx(thisc);
+sce1 = sce.selectcells(c == 1);
+sce2 = sce.selectcells(c == 2);
+
 for k=1:n
-    c = sce.X(sce.g == glist(k), :);
-    if issparse(c), c = full(c); end
+    c1 = sce1.X(sce1.g == glist(k), :);
+    if issparse(c1), c1 = full(c1); end
+    c2 = sce2.X(sce2.g == glist(k), :);
+    if issparse(c2), c2 = full(c2); end
+ 
     tab{k} = uitab(tabgp, 'Title', sprintf('%s',glist(k)));
     
     %{
@@ -58,50 +65,35 @@ for k=1:n
     
     ax0{k} = axes('parent',tab{k});
     ax{k,1} = subplot(1,2,1);
-    if size(sce.s,2)>2
-        scatter3(sce.s(:,1), sce.s(:,2), sce.s(:,3), 5, c, 'filled');
-    else
-        scatter(sce.s(:,1), sce.s(:,2), 5, c, 'filled');
-    end
-    if ~isempty(cazcel)
-        view(ax{k,1},cazcel(1),cazcel(2));
-    end
+
+    scatter(sce1.s(:,1), sce1.s(:,2), 5, c1, 'filled');
+    stem3(sce1.s(:,1), sce1.s(:,2), c1, 'marker', 'none', 'color', 'm');
+    hold on;
+    scatter3(sce1.s(:,1), sce1.s(:,2), zeros(size(sce1.s(:,2))), 5, c1, 'filled');
+    z1 = zlim(ax{k,1});
+    z1 = z1(2);
+    
 
     ax{k,2} = subplot(1,2,2);
-    scatter(sce.s(:,1), sce.s(:,2), 5, c, 'filled');
-    stem3(sce.s(:,1), sce.s(:,2), c, 'marker', 'none', 'color', 'm');
+    scatter(sce2.s(:,1), sce2.s(:,2), 5, c2, 'filled');
+    stem3(sce2.s(:,1), sce2.s(:,2), c2, 'marker', 'none', 'color', 'm');
     hold on;
-    scatter3(sce.s(:,1), sce.s(:,2), zeros(size(sce.s(:,2))), 5, c, 'filled');
+    scatter3(sce2.s(:,1), sce2.s(:,2), zeros(size(sce2.s(:,2))), 5, c2, 'filled');
+    z2 = zlim(ax{k,2});
+    z2 = z2(2);
+
+    zz = max([z1 z2]);
+    zlim(ax{k,1},[0 zz]);
+    zlim(ax{k,2},[0 zz]);
+
     
-    title(ax{k,1}, glist(k));
-    subtitle(ax{k,1}, gui.i_getsubtitle(c));
-    title(ax{k,2}, glist(k));
-    subtitle(ax{k,2}, gui.i_getsubtitle(c));
-
-    %{
-    ax = axes('Parent', tab{k});
-    hold(ax, 'on');
-    ax1 = subplot(1,2,1,tab{k});
-    hold(ax1,'on')
-    hpl{k,1} = scatter3(sce.s(:,1), sce.s(:,2), sce.s(:,3), 5, c, 'filled','Parent', ax1);
-    ax2 = subplot(1,2,2,tab{k});
-    hold(ax2,'on')
-    hpl{k,2} = scatter(sce.s(:,1), sce.s(:,2), 5, c, 'filled','Parent', ax2);
-    %}
-
-    %{
-    hax{k} = axes('Parent', tab{k});
-    if size(sce.s,2)>=3
-        hpl{k} = scatter3(sce.s(:,1), sce.s(:,2), sce.s(:,3), 5, c, 'filled','Parent', hax{k});
-    else
-        hpl{k} = scatter(sce.s(:,1), sce.s(:,2), 5, c, 'filled','Parent', hax{k});
-    end
-    title(hax{k}, targetg(k));
-    subtitle(hax{k}, gui.i_getsubtitle(c));
-    %}
+    title(ax{k,1}, glist(k)+" "+string(cL{1}));
+    subtitle(ax{k,1}, gui.i_getsubtitle(c1));
+    title(ax{k,2}, glist(k)+" "+string(cL{2}));
+    subtitle(ax{k,2}, gui.i_getsubtitle(c2));
 
 
-    gui.i_setautumncolor(c, a, true, any(c==0));
+    % gui.i_setautumncolor(c, a, true, any(c==0));
 end
   
 tabgp.SelectionChangedFcn=@displaySelection;

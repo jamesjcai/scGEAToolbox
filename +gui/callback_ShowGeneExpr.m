@@ -1,11 +1,5 @@
 function callback_ShowGeneExpr(src, ~)
 
-if ismcc || isdeployed
-    makePPTCompilable();
-    % https://www.mathworks.com/help/rptgen/ug/compile-a-presentation-program.html
-end
-import mlreportgen.ppt.*;
-
 FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
 [axx, bxx] = view(findall(FigureHandle,'type','axes'));
