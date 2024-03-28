@@ -1,13 +1,13 @@
-function [f] = gui_waitbar(f, witherror, mesg, newmesg)
+function [f] = gui_waitbar_simple(f, witherror, mesg, newmesg)
 if nargin < 4, newmesg = ''; end
 if nargin < 3 || isempty(mesg), mesg = 'Processing your data'; end
 if nargin < 2 || isempty(witherror), witherror = false; end
 if nargin < 1 || isempty(f)
     
-    hFig = gcf;
+    %hFig = gcf;
     f = waitbar(0, 'Please wait...','Visible','off','Units','pixels');
-    [~, newpos] = gui.i_getchildpos(hFig, f);
-    f.Position = newpos;
+    %[~, newpos] = gui.i_getchildpos(hFig, f);
+    %f.Position = newpos;
 
     f.Visible = "on";
     pause(.5)
