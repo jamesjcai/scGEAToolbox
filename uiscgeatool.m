@@ -1,4 +1,4 @@
-function varargout = scgeatool(sce, varargin)
+function varargout = uiscgeatool(sce, varargin)
 
 if usejava('jvm') && ~feature('ShowFigureWindows')
     error('MATLAB is in a text mode. This function requires a GUI-mode.');
