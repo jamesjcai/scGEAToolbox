@@ -1,4 +1,4 @@
-function varargout = uiscgeatool(sce, varargin)
+function varargout = scgeatool(sce, varargin)
 
 if usejava('jvm') && ~feature('ShowFigureWindows')
     error('MATLAB is in a text mode. This function requires a GUI-mode.');
@@ -81,7 +81,7 @@ end
 FigureHandle = figure('Name', figname, ...
     'position', round(1.25*[0, 0, 560, 420]), ...
     'visible', 'off', 'NumberTitle', 'off', ...
-    'DockControls','off');
+    'DockControls','off','MenuBar','figure','ToolBar','figure');
 movegui(FigureHandle, 'center');
 
 % win = javax.swing.JWindow;
