@@ -27,11 +27,11 @@ function [v1] = i_getversionnum
         fclose(fid);
         a = C{1};
         % https://www.mathworks.com/matlabcentral/answers/359034-how-do-i-replace-textread-with-textscan
-        x = a(contains(a, '<version>'));
-        a1 = strfind(x, '<version>');
-        a2 = strfind(x, '</version>');
-        v1 = extractBetween(x, a1{1}+length('<version>'), a2{1}-1);
-        v1 = v1{1};
+        x = a(contains(a, '<name>'));
+        a1 = strfind(x, '<name>');
+        a2 = strfind(x, '</name>');
+        v1 = extractBetween(x, a1{1}+length('<name>'), a2{1}-1);
+        v1 = strrep(v1{1},'scGEAToolbox ','');
     catch
     end
     end
