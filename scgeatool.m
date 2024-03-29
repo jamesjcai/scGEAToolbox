@@ -167,12 +167,18 @@ delete(findall(FigureHandle, 'tag', 'figMenuGenerateCode'));
 delete(findall(FigureHandle, 'tag', 'figMenuFileImportData'));
 set(findall(FigureHandle,'tag','figMenuFilePrintPreview'),'Separator','on');
 
-m_file=findall(FigureHandle,'tag','figMenuFile');
+m_file = findall(FigureHandle,'tag','figMenuFile');
+if isempty(m_file)
+    m_file = uimenu(FigureHandle, 'Text', '&File', 'Accelerator', 'F');
+end
 in_addmenu(m_file, 1, {@gui.i_savemainfig, 3}, 'Save Figure to PowerPoint File...');
 in_addmenu(m_file, 0, {@gui.i_savemainfig, 2}, 'Save Figure as Graphic File...');
 in_addmenu(m_file, 0, {@gui.i_savemainfig, 1}, 'Save Figure as SVG File...');
 
 m_edit=findall(FigureHandle,'tag','figMenuEdit');
+if isempty(m_edit)
+    m_edit = uimenu(FigureHandle, 'Text', '&Edit', 'Accelerator', 'E');
+end
 delete(allchild(m_edit));
 in_addmenu(m_edit, 0, @in_SelectCellsByQC, 'Filter genes and cells...');
 in_addmenu(m_edit, 0, @in_Brushed2NewCluster, 'Add brushed cells to a new group');
@@ -197,6 +203,9 @@ in_addmenu(m_edit, 0, @gui.callback_SelectCellsByClass, 'Select Cells...');
 %i_addmenu(m_exp,0,{@MergeCellSubtypes,2,true},'Import All Cell Annotation from SCE Data File...');
 
 m_view=findall(FigureHandle,'tag','figMenuView');
+if isempty(m_view)
+    m_view = uimenu(FigureHandle, 'Text', '&View', 'Accelerator', 'V');
+end
 in_addmenu(m_view, 0, @in_EmbeddingAgain, 'Embed Cells Using tSNE, UMP, PHATE...');
 in_addmenu(m_view, 0, @in_Switch2D3D, 'Switch Between 2D/3D Embeddings...');
 in_addmenu(m_view, 1, @gui.callback_ShowGeneExpr, 'Gene Expression...');
@@ -212,8 +221,12 @@ in_addmenu(m_view, 1, @gui.callback_CloseAllOthers, 'Close All Other Figures');
 in_addmenu(m_view, 0, @in_RefreshAll, 'Refresh Current View');
 
 m_plot = findall(FigureHandle, 'tag', 'figMenuTools');
-set(m_plot,'Text','&Plots')
-delete(allchild(m_plot));
+if isempty(m_plot) || ~strcmp(get(m_plot,'type'),'uimenu')
+    m_plot = uimenu(FigureHandle, 'Text', '&Plots', 'Accelerator', 'P');
+else
+    set(m_plot,'Text','&Plots')
+    delete(allchild(m_plot));
+end
 set(findall(FigureHandle,'tag','figMenuInsert'),'Parent', m_plot,'Separator','off');
 set(findall(FigureHandle,'tag','figMenuEditCopyFigure'),'Parent', m_plot);
 set(findall(FigureHandle,'tag','figMenuEditCopyOptions'),'Parent', m_plot);
