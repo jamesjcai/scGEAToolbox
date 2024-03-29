@@ -89,33 +89,46 @@ bb = 'No, just show values';
 
                     [y] = gui.e_cellscore(sce, posg);
                 case 'MSigDB Signature Score...'
-                    stag = gui.i_selectspecies(2, true);
-                    if isempty(stag), return; end
+                    speciestag = gui.i_selectspecies(2, true);
+                    if isempty(speciestag), return; end
                     try
-                        [posg, ctselected] = gui.i_selectMSigDBGeneSet(stag);
+                        [posg, ctselected] = gui.i_selectMSigDBGeneSets(speciestag);
                     catch ME
                         errordlg(ME.message);
                         return;
                     end
                     ttxt = ctselected;
                     if isempty(posg) || isempty(ctselected), return; end
-                    [y] = gui.e_cellscore(sce, posg);
+
+                    n = length(posg);
+                    y = cell(n,1);                    
+                    [~, methodid] = gui.i_pickscoremethod;
+
+                    fw=gui.gui_waitbar;
+                    for k=1:n
+                        y{k} = gui.e_cellscore(sce, posg{k}, ...
+                            methodid, false);
+                    end
+                    gui.gui_waitbar(fw);
+
+
+                    
 
                 case 'PanglaoDB Cell Type Marker Score...'
-                    stag = gui.i_selectspecies(2, true);
-                    if isempty(stag), return; end
+                    speciestag = gui.i_selectspecies(2, true);
+                    if isempty(speciestag), return; end
 
                     oldpth = pwd;
                     pw1 = fileparts(mfilename('fullpath'));
                     pth = fullfile(pw1, '..', '+run', 'thirdparty', 'alona_panglaodb');
                     cd(pth);
 
-                    markerfile = sprintf('marker_%s.mat', stag);
+                    markerfile = sprintf('marker_%s.mat', speciestag);
                     if exist(markerfile, 'file')
                         load(markerfile, 'Tm');
                     else
                         % Tw=readtable(sprintf('markerweight_%s.txt',stag));
-                        Tm = readtable(sprintf('markerlist_%s.txt', stag), ...
+                        Tm = readtable(sprintf('markerlist_%s.txt', speciestag), ...
                             'ReadVariableNames', false, 'Delimiter', '\t');
                         % save(markerfile,'Tw','Tm');
                     end
@@ -211,7 +224,7 @@ bb = 'No, just show values';
                         'SelectionMode', 'multiple', 'ListString', ...
                         listitems, 'ListSize', [320, 300]);
                     if tf2 ~= 1, return; end
-                    
+                    % xxxx
 
                     n = length(indx2);
                     y = cell(n,1); ttxt=cell(n,1);
