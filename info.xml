@@ -9,7 +9,8 @@
     <!-- to parse the file -->
     <matlabrelease>2023b</matlabrelease>
     <!-- (Required) Title of toolbox. Appears in the Contents pane -->
-    <name>scGEAToolbox v24.3.8</name>
+    <name>scGEAToolbox</name>
+    <version>24.3.8</version>
     <!-- (Required) Label for the toolbox. pick one: -->
     <!-- matlab, toolbox, simulink, blockset, links_targets  -->
     <type>toolbox</type>
