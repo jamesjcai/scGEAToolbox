@@ -244,6 +244,9 @@ DeftToolbarHandle = findall(FigureHandle, 'Tag', 'FigureToolBar'); % get the fig
 if isempty(DeftToolbarHandle)
     DeftToolbarHandle = uitoolbar('Parent', FigureHandle);
 end
+
+
+
 MainToolbarHandle = uitoolbar('Parent', FigureHandle);
 set(MainToolbarHandle, 'Tag', 'MainToolBar', 'HandleVisibility', 'off', 'Visible', 'off');
 UserToolbarHandle = uitoolbar('Parent', FigureHandle);
@@ -290,8 +293,8 @@ in_addbuttonpush(1, 0, @in_RefreshAll, "icon-mat-refresh-20.gif", "Refresh");
 
 %i_addbutton(0,0,@callback_CalculateCellScores,"cellscore2.gif","Calculate cell scores from list of feature genes")
 %i_addbutton(0,0,@callback_ComparePotency,"plotpicker-candle.gif","Compare differentiation potency between groups");
-
-in_addbuttonpush(0, 1, @gui.callback_MultiGroupingViewer, "plotpicker-arxtimeseries.gif", "Multi-grouping View...");
+in_addbuttonpush(0, 0, [], [], "");
+in_addbuttonpush(0, 0, @gui.callback_MultiGroupingViewer, "plotpicker-arxtimeseries.gif", "Multi-grouping View...");
 in_addbuttonpush(0, 0, @gui.callback_CrossTabulation, "plotpicker-comet.gif", "Cross tabulation");
 
 in_addbuttonpush(0, 1, @gui.callback_Violinplot, "violinplot.gif", "Gene Violin Plot...");
@@ -309,6 +312,11 @@ in_addbuttonpush(0, 1, @gui.callback_BuildGeneNetwork, "noun_Network_691907.gif"
 in_addbuttonpush(0, 0, @gui.callback_CompareGeneNetwork, "noun_Deep_Learning_2424485.gif", "Compare two scGRNs");
 in_addbuttonpush(0, 1, {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 gui.add_3dcamera(DeftToolbarHandle, 'AllCells');
+pt = uitoggletool(DeftToolbarHandle);
+pt.CData = in_getPtImage('aaa');
+pt.Tooltip = 'Insert Colorbar';
+pt.ClickedCallback = @in_addcolorbar;
+pt.Tag = "figToglColorbar";
 
 %pushbuttonV=[pushbuttonV; gui.add_3dcamera(DeftToolbarHandle, 'AllCells')];
 
@@ -580,6 +588,15 @@ end
 % ------------------------
 % Callback Functions
 % ------------------------
+
+    function in_addcolorbar(~,~)
+        cbtogg = uigettool(FigureHandle,'figToglColorbar');
+        if ~isempty(cbtogg) && isequal(cbtogg,gcbo) && strcmpi(get(cbtogg,'State'),'on');
+            colorbar(hAx);
+        else
+            colorbar(hAx,'off')
+        end
+    end
 
     function in_closeRequest(hObject, ~)
         if ~(ismcc || isdeployed)
