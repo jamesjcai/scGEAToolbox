@@ -155,36 +155,35 @@ delete(findall(FigureHandle, 'tag', 'figMenuWindow'));
 delete(findall(FigureHandle, 'tag', 'figMenuDesktop'));
 delete(findall(FigureHandle, 'tag', 'figMenuUpdateFileNew'));
 
-
-
 delete(findall(FigureHandle, 'tag', 'figMenuFileSaveAs'));
 delete(findall(FigureHandle, 'tag', 'figMenuFileSaveWorkspaceAs'));
 delete(findall(FigureHandle, 'tag', 'figMenuFilePreferences'));
 delete(findall(FigureHandle, 'tag', 'figMenuFileExportSetup'));
 set(findall(FigureHandle, 'tag', 'figMenuFileSave'),'Text','Export/&Save Data...','MenuSelectedFcn', @callback_SaveX);
+
 delete(findall(FigureHandle, 'tag', 'figMenuGenerateCode'));
 delete(findall(FigureHandle, 'tag', 'figMenuFileImportData'));
 set(findall(FigureHandle,'tag','figMenuFilePrintPreview'),'Separator','on');
 
 m_file = findall(FigureHandle,'tag','figMenuFile');
 if isempty(m_file)
-    m_file = uimenu(FigureHandle, 'Text', '&File', 'Accelerator', 'F');
+    m_file = uimenu(FigureHandle, 'Text', '&File');
 end
 
-m_menuopen = findall(FigureHandle, 'tag', 'figMenuOpen');
-if ~isempty(m_menuopen) && strcmp(get(m_menuopen, 'type'),'uimenu')
-    set(m_menuopen,'MenuSelectedFcn', @in_sc_openscedlg, 'Text', '&Import Data...');
-    m_menuopen.Accelerator='I';
-else
-    in_addmenu(m_file, 0, @in_sc_openscedlg, '&Import Data...');
-end
+% m_menuopen = findall(FigureHandle, 'tag', 'figMenuOpen');
+% if ~isempty(m_menuopen) && strcmp(get(m_menuopen, 'type'),'uimenu')
+%     set(m_menuopen,'MenuSelectedFcn', @in_sc_openscedlg, 'Text', '&Import Data...');
+%     m_menuopen.Accelerator='I';
+% else
+    in_addmenu(m_file, 0, @in_sc_openscedlg, '&Import Data...', 'I');
+% end
 in_addmenu(m_file, 1, {@gui.i_savemainfig, 3}, 'Save Figure to PowerPoint File...');
 in_addmenu(m_file, 0, {@gui.i_savemainfig, 2}, 'Save Figure as Graphic File...');
 in_addmenu(m_file, 0, {@gui.i_savemainfig, 1}, 'Save Figure as SVG File...');
 
 m_edit=findall(FigureHandle,'tag','figMenuEdit');
 if isempty(m_edit)
-    m_edit = uimenu(FigureHandle, 'Text', '&Edit', 'Accelerator', 'E');
+    m_edit = uimenu(FigureHandle, 'Text', '&Edit');
 end
 delete(allchild(m_edit));
 in_addmenu(m_edit, 0, @in_SelectCellsByQC, 'Filter genes and cells...');
@@ -211,7 +210,7 @@ in_addmenu(m_edit, 0, @gui.callback_SelectCellsByClass, 'Select Cells...');
 
 m_view=findall(FigureHandle,'tag','figMenuView');
 if isempty(m_view)
-    m_view = uimenu(FigureHandle, 'Text', '&View', 'Accelerator', 'V');
+    m_view = uimenu(FigureHandle, 'Text', '&View');
 end
 in_addmenu(m_view, 0, @in_EmbeddingAgain, 'Embed Cells Using tSNE, UMP, PHATE...');
 in_addmenu(m_view, 0, @in_Switch2D3D, 'Switch Between 2D/3D Embeddings...');
@@ -229,7 +228,7 @@ in_addmenu(m_view, 0, @in_RefreshAll, 'Refresh Current View');
 
 m_plot = findall(FigureHandle, 'tag', 'figMenuTools');
 if isempty(m_plot) || ~strcmp(get(m_plot,'type'),'uimenu')
-    m_plot = uimenu(FigureHandle, 'Text', '&Plots', 'Accelerator', 'P');
+    m_plot = uimenu(FigureHandle, 'Text', '&Plots');
 else
     set(m_plot,'Text','&Plots')
     delete(allchild(m_plot));
@@ -247,7 +246,7 @@ in_addmenu(m_plot,0,@gui.callback_DrawDotplot,'Gene Dot Plot...');
 in_addmenu(m_plot,0,@gui.callback_GeneHeatMap,'Gene Heatmap...');
 in_addmenu(m_plot,1,@gui.callback_ShowGeneExprCompr,'Side-by-Side Gene Expression...');
 
-m_tool = uimenu(FigureHandle, 'Text', '&Analyze', 'Accelerator', 'A');
+m_tool = uimenu(FigureHandle, 'Text', '&Analyze');
 in_addmenu(m_tool, 0, @in_ClusterCellsS, "Cluster Cells Using Cell Embedding (S)")
 in_addmenu(m_tool, 0, @in_ClusterCellsX, "Cluster Cells Using Expression Matrix (X)")
 in_addmenu(m_tool, 1, {@in_DetermineCellTypeClustersGeneral, true}, "Annotate Cell Types Using PanglaoDB Marker Genes");
@@ -272,7 +271,7 @@ in_addmenu(m_tool, 0, @gui.callback_GetCellSignatureMatrix, 'Cell State Analysis
 in_addmenu(m_tool, 1, @in_EnrichrHVGs, 'HVG Functional Enrichment Analysis...');
 in_addmenu(m_tool, 1, @in_SingleClickSolution, 'Single Click Solution (from Raw Data to Annotation)...');
 
-m_ntwk = uimenu(FigureHandle, 'Text', '&Network', 'Accelerator', 'N');
+m_ntwk = uimenu(FigureHandle, 'Text', '&Network');
 % in_addmenu(m_net, 0, @gui.i_setnetwd, 'Set Network Analysis Working Root Directory...');
 in_addmenu(m_ntwk, 0, @gui.callback_BuildGeneNetwork, 'Build GRN with Selected Genes...');
 in_addmenu(m_ntwk, 0, @gui.callback_CompareGeneNetwork, 'Build & Compare GRNs...');
@@ -289,7 +288,7 @@ in_addmenu(m_ntwk, 0, @gui.callback_VirtualKOGenKI, 'Virtual Gene Knockout - Gen
 in_addmenu(m_ntwk, 1, @gui.callback_scTenifoldXct, 'Cell-Cell Communication Analysis - scTenifoldXct [PMID:36787742] 🐢 ...');
 %in_addmenu(m_net, 0, @gui.callback_scTenifoldXct2, 'Differential CCIs - scTenifoldXct [PMID:36787742] 🐢 ...');
 
-m_extn = uimenu(FigureHandle, 'Text', 'E&xternal', 'Accelerator', 'x');
+m_extn = uimenu(FigureHandle, 'Text', 'E&xternal');
 in_addmenu(m_extn, 0, @gui.i_setrenv, 'Set up R Environment');
 in_addmenu(m_extn, 0, @gui.i_setpyenv, 'Set up Python Environment');
 in_addmenu(m_extn, 0, @gui.i_setextwd, 'Set External Program Working Root Directory...');
@@ -311,11 +310,12 @@ in_addmenu(m_extn, 1, @gui.callback_ExploreCellularCrosstalk, 'Talklr Intercellu
 % in_addmenu(m_ext, 0, @gui.callback_CompareGCLBtwCls, 'Differential GCL Analysis [PMID:33139959]🐢🐢 ...');
 % in_addmenu(m_ext, 0, @gui.callback_DiffTFActivity, 'Differential TF Activity Analysis...');
 
-delete(findall(FigureHandle, 'tag', 'figMenuHelp'));
-m_help = uimenu(FigureHandle, 'Text', '&Help', 'Accelerator', 'H');
+m_help = findall(FigureHandle, 'tag', 'figMenuHelp');
+delete(allchild(m_help));
+delete(m_help);
+m_help = uimenu(FigureHandle, 'Text', '&Help ');
 in_addmenu(m_help, 0, {@(~, ~) web('https://scgeatoolbox.readthedocs.io/en/latest/')}, 'Online Documentation...');
 in_addmenu(m_help, 0, {@(~, ~) gui.gui_uishowrefinfo('Quick Installation',FigureHandle)}, 'Quick Installation Guide...');
-
 
 in_addmenu(m_help, 1, {@(~, ~) web('https://www.mathworks.com/matlabcentral/fileexchange/72917-scgeatoolbox-single-cell-gene-expression-analysis-toolbox')}, 'View scGEAToolbox on File Exchange...');
 in_addmenu(m_help, 0, {@(~, ~) web('https://pubmed.ncbi.nlm.nih.gov/31697351/')}, 'Cite scGEAToolbox Paper...');
@@ -593,7 +593,8 @@ end
         end
     end
 
-    function in_addmenu(menuHdl, sepTag, callbackFnc, tooltipTxt)
+    function in_addmenu(menuHdl, sepTag, callbackFnc, tooltipTxt, acchar)
+        if nargin < 5, acchar = ''; end
         if ischar(callbackFnc) || isstring(callbackFnc)
             callbackFnc = str2func(callbackFnc);
         end
@@ -605,6 +606,7 @@ end
         uimenu(menuHdl, 'Text', tooltipTxt, ...
             'Separator', septag, ...
             'Callback', callbackFnc, ...
+            'Accelerator', acchar, ...
             'Tag', "figMenu" + matlab.lang.makeValidName(tooltipTxt));
     end
 
