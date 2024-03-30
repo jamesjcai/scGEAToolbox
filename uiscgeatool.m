@@ -104,10 +104,9 @@ button2 = uicontrol('style','text',...
 set(FigureHandle,'resizefcn',{@myResizeFun,button1,button2});
 
 
-
-m_file = uimenu(FigureHandle, 'Text', '&File', 'Accelerator', 'F');
-in_addmenu(m_file, 0, @in_sc_openscedlg, '&Import Data...');
-in_addmenu(m_file, 0, @in_closeRequest, '&Close');
+m_file = uimenu(FigureHandle, 'Text', '&File');
+in_addmenu(m_file, 0, @in_sc_openscedlg, '&Import Data...','i');
+in_addmenu(m_file, 0, @in_closeRequest, '&Close','W');
 in_addmenu(m_file, 1, {@gui.i_savemainfig, 3}, 'Save Figure to PowerPoint File...');
 in_addmenu(m_file, 0, {@gui.i_savemainfig, 2}, 'Save Figure as Graphic File...');
 in_addmenu(m_file, 0, {@gui.i_savemainfig, 1}, 'Save Figure as SVG File...');
@@ -484,7 +483,8 @@ end
         end
     end
 
-    function in_addmenu(menuHdl, sepTag, callbackFnc, tooltipTxt)
+    function in_addmenu(menuHdl, sepTag, callbackFnc, tooltipTxt, acchar)
+        if nargin<5, acchar=''; end
         if ischar(callbackFnc) || isstring(callbackFnc)
             callbackFnc = str2func(callbackFnc);
         end
@@ -496,6 +496,7 @@ end
         uimenu(menuHdl, 'Text', tooltipTxt, ...
             'Separator', septag, ...
             'Callback', callbackFnc, ...
+            'Accelerator', acchar, ...
             'Tag', "figMenu" + matlab.lang.makeValidName(tooltipTxt));
     end
 
@@ -583,7 +584,7 @@ end
     function in_closeRequest(hObject, ~)
         if ~(ismcc || isdeployed)
             if isempty(sce)||sce.NumCells==0
-                ButtonName='no';
+                ButtonName = 'no';
             else
                 ButtonName = questdlg('Save SCE before closing SCGEATOOL?');
             end
@@ -613,7 +614,8 @@ end
                 case 'cancel'
                     return;
                 case 'no'
-                    delete(hObject);
+                    % delete(hObject);
+                    delete(FigureHandle);
                 otherwise
                     return;
             end
@@ -1108,7 +1110,7 @@ end
             case 'off'
                 set(UserToolbarHandle,'Visible','off');
         end
-        menusv={m_file,m_edit,m_view,m_plot,m_extn,m_tool,m_ntwk};
+        menusv={m_file, m_edit, m_view, m_plot, m_extn, m_tool, m_ntwk};
         for j=1:length(menusv)
             a=allchild(menusv{j});
             for k=1:length(a)
