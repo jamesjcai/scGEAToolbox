@@ -10,7 +10,7 @@ yr = [0.025, 0.1];
 x = nGenes;
 y = mtratio;
 
-fh = figure();
+fh = figure('DockControls', 'off');
 scatter(x, y);
 xlim([min([xr(1) * 0.9, min(x) * 0.9]), max([xr(2) * 1.1, max(x) * 1.1])]);
 ylim([min([yr(1) * 0.9, min(y) * 0.9]), max([yr(2) * 1.1, max(y) * 1.1])]);
