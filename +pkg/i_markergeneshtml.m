@@ -24,7 +24,7 @@ fid = fopen(fname, 'w');
 htmlstr = "";
 for k = 1:numfig
     targeetg = markerlist(k);
-    h = figure('Visible', 'off');
+    h = figure('Visible', 'off', 'DockControls', 'off');
     %         sc_scattermarker(sce.X,sce.g,sce.s,...
     %             markerlist(k),3,5,false);
     c = log2(1+sce.X(sce.g == targeetg, :));
@@ -48,7 +48,7 @@ for k = 1:numfig
     end
 
     %subplot(2,2,2);
-    h2 = figure('Visible', 'off');
+    h2 = figure('Visible', 'off', 'DockControls', 'off');
     %             stem3(x,y,c,'marker','none','color','m');
     %             hold on
     %             scatter3(x,y,zeros(size(y)),5,c,'filled');
@@ -69,7 +69,7 @@ for k = 1:numfig
     saveas(h2, sprintf('%s%s', dirtxt, imgfname2));
     close(h2);
 
-    h = figure('Visible', 'off');
+    h = figure('Visible', 'off', 'DockControls', 'off');
     pkg.i_violinplot_groupordered(c, sce.c, ["1", "2"]);
     ylabel('log2(UMI+1)');
     title(targeetg)
