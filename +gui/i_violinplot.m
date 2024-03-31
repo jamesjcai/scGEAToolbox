@@ -8,7 +8,7 @@ if nargin < 4, colorit = true; end
 if nargin < 3, ttxt = ''; end
 
 if matlab.ui.internal.isUIFigure(parentfig), focus(parentfig); end
-hFig = figure('visible', 'off');
+hFig = figure('visible', 'off', 'DockControls', 'off');
 
 isdescend = false;
 OldTitle = [];
