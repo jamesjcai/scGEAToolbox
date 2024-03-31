@@ -15,7 +15,7 @@ sx = pkg.i_3d2d(sce.s, axbx(1), axbx(2));
 for k = 1:numfig
 
     targeetg = markerlist(k);
-    h = figure('Visible', 'off', 'Position', [1700, 540, 560, 300]);
+    h = figure('Visible', 'off', 'Position', [1700, 540, 560, 300], 'DockControls', 'off');
     %         sc_scattermarker(sce.X,sce.g,sce.s,...
     %             markerlist(k),3,5,false);
     z = log2(1+sce.X(sce.g == targeetg, :));
@@ -34,7 +34,7 @@ for k = 1:numfig
     %saveas(h,sprintf('%s%s',dirtxt,imgfname1));
     %close(h);
 
-    %h=figure('Visible','off');
+    %h=figure('Visible','off', 'DockControls', 'off');
     subplot(1, 2, 2)
 
     [~, cL] = grp2idx(sce.c);
