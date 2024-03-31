@@ -21,7 +21,7 @@ else
     titlex = '';
 end
 
-hFig = figure('visible', 'off');
+hFig = figure('visible', 'off', 'DockControls', 'off');
 % tb = uitoolbar(hFig);
 
 tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
