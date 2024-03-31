@@ -21,7 +21,7 @@ labelsx='';
 labelsy='';
 T=[];
 
-hFig=figure("Visible","off");
+hFig=figure("Visible","off", "DockControls", "off");
 
 [px_new] = gui.i_getchildpos(FigureHandle, hFig);
 
