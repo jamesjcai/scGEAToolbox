@@ -15,7 +15,7 @@ pw1 = fileparts(mfilename('fullpath'));
 pth = fullfile(pw1, '..', 'resources', 'myTemplate.pptx');
 
 
-hFig=figure("Visible","off", 'MenuBar','none');
+hFig=figure("Visible","off", 'MenuBar','none', 'DockControls', 'off');
 %set(hFig, 'ToolBar', 'none');
 
 hFig.Position(3) = hFig.Position(3) * 1.8;
