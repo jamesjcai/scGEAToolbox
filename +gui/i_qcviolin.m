@@ -9,7 +9,7 @@ lbsz_mt = full(sum(X(i, :), 1));
 cj = 100 * (lbsz_mt ./ lbsz);
 
 
-fx=figure('Visible','off');
+fx=figure('Visible','off', 'DockControls', 'off');
 
 if ~isempty(parentfig)
     px_new = gui.i_getchildpos(parentfig,fx);
