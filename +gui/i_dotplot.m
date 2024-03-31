@@ -88,7 +88,7 @@ txgene = [" "; tgene(:)];
 %scatter([-.5 .5],[-1 -1],[1 500],'k','filled');
 %hold on
 
-hFig = figure('Visible', 'off');
+hFig = figure('Visible', 'off', 'DockControls', 'off');
 
 dotsz = DOTSIZE;
 sz(sz == 0) = eps;
