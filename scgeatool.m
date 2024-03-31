@@ -849,25 +849,53 @@ end
         speciestag = gui.i_selectspecies(2);
         if isempty(speciestag), return; end
 
+        prompt = {
+            'Add UMAP Embedding?', ...
+            'Add PHATE Embedding?', ...
+            'Estimate Cell Cycles?', ...
+            'Estimate Differentiation Potency of Cells?'};
+        dlgtitle = '';
+        dims = [1, 85];        
+        definput = {'No', 'No', 'Yes', 'Yes'};
+        answer = inputdlg(prompt, dlgtitle, dims, definput);
+        if isempty(answer)
+            return;
+        end
+
+
+
         fw = gui.gui_waitbar_adv;
         gui.gui_waitbar_adv(fw,1/8,'Basic QC Filtering...');
         sce = sce.qcfilter;
+
+
+        if strcmpi(answer{1},'Yes') || strcmpi(answer{1},'Y')
+            gui.gui_waitbar_adv(fw,2/8, 'Embeding Cells Using UMAP...');
+            sce = sce.embedcells('umap3d', true, true, 3);
+        end
+        if strcmpi(answer{2},'Yes') || strcmpi(answer{2},'Y')
+            gui.gui_waitbar_adv(fw,2/8, 'Embeding Cells Using PHATE...');
+            sce = sce.embedcells('phate3d', true, true, 3);
+        end
+
         gui.gui_waitbar_adv(fw,2/8, 'Embeding Cells Using tSNE...');
         sce = sce.embedcells('tsne3d', true, true, 3);
+
 
         gui.gui_waitbar_adv(fw,3/8, 'Clustering Cells Using K-means...');
         sce = sce.clustercells([], [], true);
         gui.gui_waitbar_adv(fw,4/8, 'Annotating Cell Type Using PanglaoDB...');
-
-        tic
         sce = sce.assigncelltype(speciestag, false);
-        toc
-        gui.gui_waitbar_adv(fw,5/8, 'Estimate Cell Cycles...');
 
-        sce = sce.estimatecellcycle;
-        gui.gui_waitbar_adv(fw,6/8, 'Estimate Differentiation Potency of Cells...');
+        if strcmpi(answer{3},'Yes') || strcmpi(answer{3},'Y')
+            gui.gui_waitbar_adv(fw,5/8, 'Estimate Cell Cycles...');
+            sce = sce.estimatecellcycle;
+        end
 
-        sce = sce.estimatepotency(speciestag);
+        if strcmpi(answer{4},'Yes') || strcmpi(answer{4},'Y')
+            gui.gui_waitbar_adv(fw,6/8, 'Estimate Differentiation Potency of Cells...');
+            sce = sce.estimatepotency(speciestag);
+        end
 
         gui.gui_waitbar_adv(fw,7/8);
         [c,cL] = grp2idx(sce.c_cell_type_tx);

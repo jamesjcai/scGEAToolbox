@@ -9,7 +9,8 @@ if nargin < 1 || isempty(f)
     %         disp(msg);
     %         return;
     %     end
-    f = waitbar(0, 'Please wait...','Visible','off','Units','pixels');
+    f = waitbar(0, 'Please wait...','Visible','off', ...
+        'Units','pixels');
 
     if ~isempty(hFig) && strcmp(get(hFig,'type'),'figure')
         [~, newpos] = gui.i_getchildpos(hFig, f);
