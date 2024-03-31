@@ -105,14 +105,14 @@ set(FigureHandle,'resizefcn',{@myResizeFun,button1,button2});
 
 
 m_file = uimenu(FigureHandle, 'Text', '&File');
-in_addmenu(m_file, 0, @in_sc_openscedlg, '&Import Data...','i');
+in_addmenu(m_file, 0, @in_sc_openscedlg, '&Import Data... ','I');
 in_addmenu(m_file, 0, @in_closeRequest, '&Close','W');
 in_addmenu(m_file, 1, {@gui.i_savemainfig, 3}, 'Save Figure to PowerPoint File...');
 in_addmenu(m_file, 0, {@gui.i_savemainfig, 2}, 'Save Figure as Graphic File...');
 in_addmenu(m_file, 0, {@gui.i_savemainfig, 1}, 'Save Figure as SVG File...');
 
 
-m_edit = uimenu(FigureHandle, 'Text', '&Edit', 'Accelerator', 'E');
+m_edit = uimenu(FigureHandle, 'Text', '&Edit');
 in_addmenu(m_edit, 0, @in_SelectCellsByQC, 'Filter genes and cells...');
 in_addmenu(m_edit, 0, @in_Brushed2NewCluster, 'Add brushed cells to a new group');
 in_addmenu(m_edit, 0, @in_Brushed2MergeClusters, 'Merge brushed cells to same group');
@@ -131,7 +131,7 @@ in_addmenu(m_edit, 0, @in_SubsampleCells, 'Subsample 50% Cells to Work on...');
 in_addmenu(m_edit, 1, @in_DeleteSelectedCells, 'Delete Brushed Cells...');
 in_addmenu(m_edit, 0, @gui.callback_SelectCellsByClass, 'Select Cells...');
 
-m_view = uimenu(FigureHandle, 'Text', '&View', 'Accelerator', 'V');
+m_view = uimenu(FigureHandle, 'Text', '&View');
 in_addmenu(m_view, 0, @in_EmbeddingAgain, 'Embed Cells Using tSNE, UMP, PHATE...');
 in_addmenu(m_view, 0, @in_Switch2D3D, 'Switch Between 2D/3D Embeddings...');
 in_addmenu(m_view, 1, @gui.callback_ShowGeneExpr, 'Gene Expression...');
@@ -146,7 +146,7 @@ in_addmenu(m_view, 1, @gui.callback_ShowClustersPop,"Show Cell Clusters/Groups I
 in_addmenu(m_view, 1, @gui.callback_CloseAllOthers, 'Close All Other Figures');
 in_addmenu(m_view, 0, @in_RefreshAll, 'Refresh Current View');
 
-m_plot = uimenu(FigureHandle, 'Text', '&Plots', 'Accelerator', 'P');
+m_plot = uimenu(FigureHandle, 'Text', '&Plots');
 in_addmenu(m_plot,1,@gui.callback_PickColorMap,'Next Colormap');
 in_addmenu(m_plot,0,@gui.callback_PickPlotMarker,'Next Marker Type');
 in_addmenu(m_plot, 1, @in_DrawKNNNetwork, 'Cell kNN Network...');
@@ -156,7 +156,7 @@ in_addmenu(m_plot,0,@gui.callback_DrawDotplot,'Gene Dot Plot...');
 in_addmenu(m_plot,0,@gui.callback_GeneHeatMap,'Gene Heatmap...');
 in_addmenu(m_plot,1,@gui.callback_ShowGeneExprCompr,'Side-by-Side Gene Expression...');
 
-m_tool = uimenu(FigureHandle, 'Text', '&Analyze', 'Accelerator', 'A');
+m_tool = uimenu(FigureHandle, 'Text', '&Analyze');
 in_addmenu(m_tool, 0, @in_ClusterCellsS, "Cluster Cells Using Cell Embedding (S)")
 in_addmenu(m_tool, 0, @in_ClusterCellsX, "Cluster Cells Using Expression Matrix (X)")
 in_addmenu(m_tool, 1, {@in_DetermineCellTypeClustersGeneral, true}, "Annotate Cell Types Using PanglaoDB Marker Genes");
@@ -179,7 +179,7 @@ in_addmenu(m_tool, 0, @gui.callback_GetCellSignatureMatrix, 'Cell State Analysis
 in_addmenu(m_tool, 1, @in_EnrichrHVGs, 'HVG Functional Enrichment Analysis...');
 in_addmenu(m_tool, 1, @in_SingleClickSolution, 'Single Click Solution (from Raw Data to Annotation)...');
 
-m_ntwk = uimenu(FigureHandle, 'Text', '&Network', 'Accelerator', 'N');
+m_ntwk = uimenu(FigureHandle, 'Text', '&Network');
 in_addmenu(m_ntwk, 0, @gui.callback_BuildGeneNetwork, 'Build GRN with Selected Genes...');
 in_addmenu(m_ntwk, 0, @gui.callback_CompareGeneNetwork, 'Build & Compare GRNs...');
 in_addmenu(m_ntwk, 1, @in_Select5000Genes, 'Remove Less Informative Genes to Reduce Gene Space...');
@@ -189,7 +189,7 @@ in_addmenu(m_ntwk, 1, @gui.callback_scTenifoldKnk1, 'Virtual Gene Knockout - scT
 in_addmenu(m_ntwk, 0, @gui.callback_VirtualKOGenKI, 'Virtual Gene Knockout - GenKI [PMID:37246643] (Python Required) 🐢 ...');
 in_addmenu(m_ntwk, 1, @gui.callback_scTenifoldXct, 'Cell-Cell Communication Analysis - scTenifoldXct [PMID:36787742] 🐢 ...');
 
-m_extn = uimenu(FigureHandle, 'Text', 'E&xternal', 'Accelerator', 'x');
+m_extn = uimenu(FigureHandle, 'Text', 'E&xternal');
 in_addmenu(m_extn, 0, @gui.i_setrenv, 'Set up R Environment');
 in_addmenu(m_extn, 0, @gui.i_setpyenv, 'Set up Python Environment');
 in_addmenu(m_extn, 0, @gui.i_setextwd, 'Set External Program Working Root Directory...');
@@ -204,7 +204,7 @@ in_addmenu(m_extn, 0, @in_DoubletDetection, 'Detect Doublets (Scrublet/Py) [PMID
 in_addmenu(m_extn, 0, @in_RunDataMapPlot, 'Run DataMapPlot (datamapplot/Py)...');
 in_addmenu(m_extn, 1, @gui.callback_ExploreCellularCrosstalk, 'Talklr Intercellular Crosstalk [DOI:10.1101/2020.02.01.930602]...');
 
-m_help = uimenu(FigureHandle, 'Text', '&Help', 'Accelerator', 'H');
+m_help = uimenu(FigureHandle, 'Text', '&Help ');
 in_addmenu(m_help, 0, {@(~, ~) web('https://scgeatoolbox.readthedocs.io/en/latest/')}, 'Online Documentation...');
 in_addmenu(m_help, 0, {@(~, ~) gui.gui_uishowrefinfo('Quick Installation',FigureHandle)}, 'Quick Installation Guide...');
 in_addmenu(m_help, 1, {@(~, ~) web('https://www.mathworks.com/matlabcentral/fileexchange/72917-scgeatoolbox-single-cell-gene-expression-analysis-toolbox')}, 'View scGEAToolbox on File Exchange...');
