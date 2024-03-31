@@ -64,7 +64,7 @@ if ~isempty(s_in), sce.s = s_in; end
 [c, cL] = grp2idx(sce.c);
 
 if ~isempty(v1)
-    figname = sprintf('SCGEATOOL %s', v1);
+    figname = sprintf('SCGEATOOL v%s', v1);
 else
     figname = 'SCGEATOOL';
 end
@@ -256,8 +256,15 @@ in_addbuttonpush(0, 1, @gui.callback_BuildGeneNetwork, "noun_Network_691907.gif"
 in_addbuttonpush(0, 0, @gui.callback_CompareGeneNetwork, "noun_Deep_Learning_2424485.gif", "Compare two scGRNs");
 in_addbuttonpush(0, 1, {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 gui.add_3dcamera(DeftToolbarHandle, 'AllCells');
+
+
 pt = uitoggletool(DeftToolbarHandle);
-pt.CData = in_getPtImage('aaa');
+try
+    load(fullfile(mfolder, 'resources', 'colorbarcdata.mat'),'CData');
+    pt.CData = CData;
+catch
+    pt.CData = in_getPtImage('aaa');
+end
 pt.Tooltip = 'Insert Colorbar';
 pt.ClickedCallback = @in_addcolorbar;
 pt.Tag = "figToglColorbar";
