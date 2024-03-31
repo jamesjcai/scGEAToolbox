@@ -1,4 +1,4 @@
-function varargout = scgeatool(sce, varargin)
+function varargout = scgeatool_old(sce, varargin)
 
 if usejava('jvm') && ~feature('ShowFigureWindows')
     error('MATLAB is in a text mode. This function requires a GUI-mode.');
@@ -55,7 +55,10 @@ s_in = p.Results.s;
 methodid = p.Results.methodid;
 f_traj = [];   % trajectory curve
 
-ax = []; bx = [];
+ax = [];
+bx = [];
+%pushbuttonV = [];
+
 tmpcelltypev = cell(sce.NumCells, 1);
 
 if ~isempty(c_in), sce.c = c_in; end
@@ -63,17 +66,31 @@ if ~isempty(s_in), sce.s = s_in; end
 
 [c, cL] = grp2idx(sce.c);
 
+% if ~(ismcc || isdeployed)
+%     tagx = 'off';
+% else
+%     tagx = 'off';
+% end
+
+% if ~isempty(fx) && isvalid(fx), gui.sc_simplesplash2(fx,0.2); end
 if ~isempty(v1)
     figname = sprintf('SCGEATOOL %s', v1);
 else
     figname = 'SCGEATOOL';
 end
-
 FigureHandle = figure('Name', figname, ...
     'position', round(1.25*[0, 0, 560, 420]), ...
     'visible', 'off', 'NumberTitle', 'off', ...
-    'DockControls','off','MenuBar','none','ToolBar','figure');
+    'DockControls','off','MenuBar','figure','ToolBar','figure');
 movegui(FigureHandle, 'center');
+
+% win = javax.swing.JWindow;
+% screenSize = win.getToolkit.getScreenSize;
+% screenHeight = screenSize.height;
+% screenWidth = screenSize.width;
+% imgHeight = FigureHandle.Position(4);
+% imgWidth = FigureHandle.Position(3);
+% movegui(FigureHandle, [(screenWidth-imgWidth)/2, (screenHeight-imgHeight)/2]);
 
 fig_pos = get(FigureHandle, 'Position'); % [left bottom width height]
 fig_width = fig_pos(3);
@@ -102,19 +119,76 @@ button2 = uicontrol('style','text',...
     'string','Ready to explore.');
 
 set(FigureHandle,'resizefcn',{@myResizeFun,button1,button2});
+% set(FigureHandle, 'WindowButtonDownFcn',@(~,~) figure(FigureHandle))
 
-m_file = uimenu(FigureHandle, 'Text', '&File');
-in_addmenu(m_file, 0, @in_sc_openscedlg, '&Import Data... ','I');
-in_addmenu(m_file, 0, @in_closeRequest, '&Close','W');
+% b=uipanel(FigureHandle,'Title','B','BackgroundColor','cyan');
+% b.Position = [0.18 0.40 0.30 0.35];
+% set(findall(FigureHandle, 'ToolTipString', 'Insert Colorbar'), 'Visible', 'Off')
+% set(findall(FigureHandle, 'ToolTipString', 'Insert Legend'), 'Visible', 'Off')
+% set(findall(FigureHandle, 'ToolTipString', 'Print Figure'), 'Visible', 'Off')
+
+%pushbuttonV = findall(FigureHandle, 'ToolTipString', 'Insert Colorbar');
+%set(pushbuttonV,'Separator','off');
+
+set(findall(FigureHandle, 'ToolTipString', 'Insert Colorbar'),'Separator','off');
+%pushbuttonV = [pushbuttonV; findall(FigureHandle, 'ToolTipString', 'Insert Legend')];
+%pushbuttonV = [pushbuttonV; findall(FigureHandle, 'ToolTipString', 'Print Figure')];
+delete(findall(FigureHandle, 'ToolTipString', 'Print Figure'));
+delete(findall(FigureHandle, 'ToolTipString', 'Insert Legend'));
+delete(findall(FigureHandle, 'ToolTipString', 'Link/Unlink Plot'));
+delete(findall(FigureHandle, 'ToolTipString', 'Edit Plot'));
+delete(findall(FigureHandle, 'ToolTipString', 'Open Property Inspector'));
+delete(findall(FigureHandle, 'ToolTipString', 'Save Figure'));
+delete(findall(FigureHandle, 'ToolTipString', 'New Figure'));
+delete(findall(FigureHandle, 'ToolTipString', 'Open File'));
+
+
+% a=findall(FigureHandle,'ToolTipString','New Figure');
+% a.ClickedCallback = @__;
+% a=findall(f,'tag','figMenuFile');
+% https://undocumentedmatlab.com/articles/customizing-standard-figure-toolbar-menubar
+delete(allchild(findall(FigureHandle, 'tag', 'figMenuView')))
+
+delete(findall(FigureHandle,'tag','figMenuInsertAxes'));
+delete(findall(FigureHandle,'tag','figMenuInsertLight'));
+delete(findall(FigureHandle, 'tag', 'figMenuWindow'));
+delete(findall(FigureHandle, 'tag', 'figMenuDesktop'));
+delete(findall(FigureHandle, 'tag', 'figMenuUpdateFileNew'));
+
+delete(findall(FigureHandle, 'tag', 'figMenuFileSaveAs'));
+delete(findall(FigureHandle, 'tag', 'figMenuFileSaveWorkspaceAs'));
+delete(findall(FigureHandle, 'tag', 'figMenuFilePreferences'));
+delete(findall(FigureHandle, 'tag', 'figMenuFileExportSetup'));
+set(findall(FigureHandle, 'tag', 'figMenuFileSave'),'Text','Export/&Save Data...','MenuSelectedFcn', @callback_SaveX);
+
+delete(findall(FigureHandle, 'tag', 'figMenuGenerateCode'));
+delete(findall(FigureHandle, 'tag', 'figMenuFileImportData'));
+set(findall(FigureHandle,'tag','figMenuFilePrintPreview'),'Separator','on');
+
+m_file = findall(FigureHandle,'tag','figMenuFile');
+if isempty(m_file)
+    m_file = uimenu(FigureHandle, 'Text', '&File');
+end
+
+% m_menuopen = findall(FigureHandle, 'tag', 'figMenuOpen');
+% if ~isempty(m_menuopen) && strcmp(get(m_menuopen, 'type'),'uimenu')
+%     set(m_menuopen,'MenuSelectedFcn', @in_sc_openscedlg, 'Text', '&Import Data...');
+%     m_menuopen.Accelerator='I';
+% else
+    in_addmenu(m_file, 0, @in_sc_openscedlg, '&Import Data...', 'I');
+% end
 in_addmenu(m_file, 1, {@gui.i_savemainfig, 3}, 'Save Figure to PowerPoint File...');
 in_addmenu(m_file, 0, {@gui.i_savemainfig, 2}, 'Save Figure as Graphic File...');
 in_addmenu(m_file, 0, {@gui.i_savemainfig, 1}, 'Save Figure as SVG File...');
-in_addmenu(m_file, 1, @callback_SaveX, 'Export && &Save Data...', 'S');
 
-m_edit = uimenu(FigureHandle, 'Text', '&Edit');
-in_addmenu(m_edit, 0, @in_SelectCellsByQC, 'Filter Genes and Cells...', 'F');
-in_addmenu(m_edit, 0, @in_Brushed2NewCluster, 'Add Brushed Cells to a New Group');
-in_addmenu(m_edit, 0, @in_Brushed2MergeClusters, 'Merge Brushed Cells to Same Group');
+m_edit=findall(FigureHandle,'tag','figMenuEdit');
+if isempty(m_edit)
+    m_edit = uimenu(FigureHandle, 'Text', '&Edit');
+end
+delete(allchild(m_edit));
+in_addmenu(m_edit, 0, @in_SelectCellsByQC, 'Filter genes and cells...');
+in_addmenu(m_edit, 0, @in_Brushed2NewCluster, 'Add brushed cells to a new group');
+in_addmenu(m_edit, 0, @in_Brushed2MergeClusters, 'Merge brushed cells to same group');
 in_addmenu(m_edit, 0, @in_RenameCellTypeBatchID, 'Rename Cell Type or Batch ID...');
 in_addmenu(m_edit, 1, @gui.callback_SplitAtacGex, 'Split Multiome ATAC+GEX Matrix...');
 in_addmenu(m_edit, 1, {@in_MergeSCEs, 1}, 'Merge SCE Data Variables in Workspace...');
@@ -124,14 +198,21 @@ in_addmenu(m_edit, 0, @in_ExportCellAttribTable, 'Export Cell Attribute Table...
 in_addmenu(m_edit, 1, {@in_MergeCellSubtypes, 1}, 'Import Cell Annotation from SCE in Workspace...');
 in_addmenu(m_edit, 0, {@in_MergeCellSubtypes, 2}, 'Import Cell Annotation from SCE Data File...');
 in_addmenu(m_edit, 1, @gui.callback_SelectCellsByMarker, 'Extract Cells by Marker (+/-) Expression...');
-in_addmenu(m_edit, 0, @in_MergeSubCellTypes, 'Merge Subclusters of Same Cell Type');
+in_addmenu(m_edit, 0, @in_MergeSubCellTypes, 'Merge Subclusters of the Same Cell Type');
+%i_addmenu(m_edit,0,@callback_TwoGeneCooccurrenceTest,'Two-Gene Cooccurrence Test...');
+%i_addmenu(m_edit,0,@AnnotateSubGroup,'Annotate Cell Subgroups...');
 in_addmenu(m_edit, 1, @in_WorkonSelectedGenes, 'Select Top n  Highly Variable Genes (HVGs) to Work on...');
 in_addmenu(m_edit, 0, @in_SubsampleCells, 'Subsample 50% Cells to Work on...');
 in_addmenu(m_edit, 1, @in_DeleteSelectedCells, 'Delete Brushed Cells...');
 in_addmenu(m_edit, 0, @gui.callback_SelectCellsByClass, 'Select Cells...');
+%i_addmenu(m_exp,0,{@MergeCellSubtypes,1,true},'Import All Cell Annotation from SCE in Workspace...');
+%i_addmenu(m_exp,0,{@MergeCellSubtypes,2,true},'Import All Cell Annotation from SCE Data File...');
 
-m_view = uimenu(FigureHandle, 'Text', '&View');
-in_addmenu(m_view, 0, @in_EmbeddingAgain, 'Embed Cells Using tSNE, UMP, PHATE...', 'E');
+m_view=findall(FigureHandle,'tag','figMenuView');
+if isempty(m_view)
+    m_view = uimenu(FigureHandle, 'Text', '&View');
+end
+in_addmenu(m_view, 0, @in_EmbeddingAgain, 'Embed Cells Using tSNE, UMP, PHATE...');
 in_addmenu(m_view, 0, @in_Switch2D3D, 'Switch Between 2D/3D Embeddings...');
 in_addmenu(m_view, 1, @gui.callback_ShowGeneExpr, 'Gene Expression...');
 in_addmenu(m_view, 0, @in_ShowCellStates, 'Cell States...');
@@ -142,24 +223,35 @@ in_addmenu(m_view, 1, @gui.callback_ViewMetaData, 'View Metadata...');
 in_addmenu(m_view, 1, @gui.callback_ShowHgBGeneExpression, 'Hemoglobin (Hgb) Genes Expression...');
 in_addmenu(m_view, 0, @gui.callback_ShowMtGeneExpression, 'Mitochondrial (Mt-) Genes Expression...');
 in_addmenu(m_view, 1, @gui.callback_ShowClustersPop,"Show Cell Clusters/Groups Individually...");
-in_addmenu(m_view, 1, @gui.callback_CloseAllOthers, 'Close All Other Figures', 'X');
+in_addmenu(m_view, 1, @gui.callback_CloseAllOthers, 'Close All Other Figures');
 in_addmenu(m_view, 0, @in_RefreshAll, 'Refresh Current View');
 
-m_plot = uimenu(FigureHandle, 'Text', '&Plots');
-in_addmenu(m_plot, 0, @gui.callback_Violinplot, 'Gene Violin Plot...');
-in_addmenu(m_plot, 0, @gui.callback_DrawDotplot, 'Gene Dot Plot...');
-in_addmenu(m_plot, 0, @gui.callback_GeneHeatMap, 'Gene Heatmap...');
-in_addmenu(m_plot, 1, @gui.callback_ShowGeneExprCompr,'Side-by-Side Gene Expression...');
+m_plot = findall(FigureHandle, 'tag', 'figMenuTools');
+if isempty(m_plot) || ~strcmp(get(m_plot,'type'),'uimenu')
+    m_plot = uimenu(FigureHandle, 'Text', '&Plots');
+else
+    set(m_plot,'Text','&Plots')
+    delete(allchild(m_plot));
+end
+set(findall(FigureHandle,'tag','figMenuInsert'),'Parent', m_plot,'Separator','off');
+set(findall(FigureHandle,'tag','figMenuEditCopyFigure'),'Parent', m_plot);
+set(findall(FigureHandle,'tag','figMenuEditCopyOptions'),'Parent', m_plot);
+in_addmenu(m_plot,1,@gui.callback_PickColorMap,'Next Colormap');
+set(findall(FigureHandle,'tag','figMenuEditColormap'),'Parent', m_plot,'Text','Colormap Editor...');
+in_addmenu(m_plot,0,@gui.callback_PickPlotMarker,'Next Marker Type');
 in_addmenu(m_plot, 1, @in_DrawKNNNetwork, 'Cell kNN Network...');
 in_addmenu(m_plot, 0, @in_DrawTrajectory, 'Cell Trajectory...');
-in_addmenu(m_plot, 1, @gui.callback_PickPlotMarker,'Next Marker Type');
-in_addmenu(m_plot, 0 ,@gui.callback_PickColorMap,'Next Colormap');
+in_addmenu(m_plot,1,@gui.callback_Violinplot,'Gene Violin Plot...');
+in_addmenu(m_plot,0,@gui.callback_DrawDotplot,'Gene Dot Plot...');
+in_addmenu(m_plot,0,@gui.callback_GeneHeatMap,'Gene Heatmap...');
+in_addmenu(m_plot,1,@gui.callback_ShowGeneExprCompr,'Side-by-Side Gene Expression...');
 
 m_tool = uimenu(FigureHandle, 'Text', '&Analyze');
-in_addmenu(m_tool, 0, @in_ClusterCellsS, "Cluster Cells Using Cell Embedding (S)", 'L')
+in_addmenu(m_tool, 0, @in_ClusterCellsS, "Cluster Cells Using Cell Embedding (S)")
 in_addmenu(m_tool, 0, @in_ClusterCellsX, "Cluster Cells Using Expression Matrix (X)")
 in_addmenu(m_tool, 1, {@in_DetermineCellTypeClustersGeneral, true}, "Annotate Cell Types Using PanglaoDB Marker Genes");
 in_addmenu(m_tool, 0, {@in_DetermineCellTypeClustersGeneral, false}, 'Annotate Cell Type Using Customized Marker Genes...');
+% in_addmenu(m_exp, 0, @in_SubtypeAnnotation, 'Annotate Cell Subtype...');
 in_addmenu(m_tool, 1, @in_Brush4Celltypes, "Annotate Cell Types for Brushed Cells");
 in_addmenu(m_tool, 0, @gui.callback_Brush4Markers, "Find Marker Genes for Brushed Cells");
 in_addmenu(m_tool, 0, @gui.callback_FindAllMarkers, "Make Marker Gene Heatmap");
@@ -169,6 +261,7 @@ in_addmenu(m_tool, 0, @gui.callback_DVGene2Groups, 'Differential Variability (DV
 in_addmenu(m_tool, 1, @gui.callback_DEGene2GroupsBatch, 'Differential Expression (DE) Analysis in Cell Type Batch Mode...');
 in_addmenu(m_tool, 0, @gui.callback_DPGene2GroupsBatch, 'Differential Program (DP) Analysis in Cell Type Batch Mode...');
 % in_addmenu(m_tool, 0, @gui.callback_DVGene2GroupsBatch, 'Differential Variability (DV) Analysis in Cell Type Batch Mode...');
+
 in_addmenu(m_tool, 1, @gui.callback_CalculateGeneStats, 'Calculate Gene Expression Statistics...');
 in_addmenu(m_tool, 0, @gui.callback_CellCycleLibrarySize, 'Library Size of Cell Groups...');
 in_addmenu(m_tool, 0, @gui.callback_CellCycleAssignment, 'Assign Cell Cycle Phase...');
@@ -179,21 +272,33 @@ in_addmenu(m_tool, 1, @in_EnrichrHVGs, 'HVG Functional Enrichment Analysis...');
 in_addmenu(m_tool, 1, @in_SingleClickSolution, 'Single Click Solution (from Raw Data to Annotation)...');
 
 m_ntwk = uimenu(FigureHandle, 'Text', '&Network');
+% in_addmenu(m_net, 0, @gui.i_setnetwd, 'Set Network Analysis Working Root Directory...');
 in_addmenu(m_ntwk, 0, @gui.callback_BuildGeneNetwork, 'Build GRN with Selected Genes...');
 in_addmenu(m_ntwk, 0, @gui.callback_CompareGeneNetwork, 'Build & Compare GRNs...');
 in_addmenu(m_ntwk, 1, @in_Select5000Genes, 'Remove Less Informative Genes to Reduce Gene Space...');
 in_addmenu(m_ntwk, 1, {@in_scTenifoldNet,1}, 'Construct GRN with All Genes - scTenifoldNet [PMID:33336197] 🐢...');
 in_addmenu(m_ntwk, 0, {@in_scTenifoldNet,2}, 'Construct & Compare GRNs - scTenifoldNet [PMID:33336197] 🐢...');
+%in_addmenu(m_net, 1, @callback_scPCNet1, 'GRN Construction - PC Regression (w/o subsampling) [PMID:33336197] 🐢...');
+%in_addmenu(m_net, 0, @callback_scTenifoldNet1, 'GRN Construction - PC Regression (w/ subsampling) [PMID:33336197] 🐢...');
+%in_addmenu(m_net, 1, @callback_scTenifoldNet2lite, 'GRN Comparison - scTenifoldNet (w/o subsampling) [PMID:33336197] 🐢 ...');
+%in_addmenu(m_net, 0, @callback_scTenifoldNet2, 'GRN Comparison - scTenifoldNet (w/ subsampling) [PMID:33336197] 🐢 ...');
+
 in_addmenu(m_ntwk, 1, @gui.callback_scTenifoldKnk1, 'Virtual Gene Knockout - scTenifoldKnk [PMID:35510185] 🐢 ...');
 in_addmenu(m_ntwk, 0, @gui.callback_VirtualKOGenKI, 'Virtual Gene Knockout - GenKI [PMID:37246643] (Python Required) 🐢 ...');
 in_addmenu(m_ntwk, 1, @gui.callback_scTenifoldXct, 'Cell-Cell Communication Analysis - scTenifoldXct [PMID:36787742] 🐢 ...');
+%in_addmenu(m_net, 0, @gui.callback_scTenifoldXct2, 'Differential CCIs - scTenifoldXct [PMID:36787742] 🐢 ...');
 
 m_extn = uimenu(FigureHandle, 'Text', 'E&xternal');
 in_addmenu(m_extn, 0, @gui.i_setrenv, 'Set up R Environment');
 in_addmenu(m_extn, 0, @gui.i_setpyenv, 'Set up Python Environment');
 in_addmenu(m_extn, 0, @gui.i_setextwd, 'Set External Program Working Root Directory...');
+
 in_addmenu(m_extn, 1, @in_DecontX, 'Detect Ambient RNA Contamination (DecontX/R) [PMID:32138770]...');
+%i_addmenu(m_ext,0,@callback_SingleRCellType,'SingleR Cell Type Annotation (SingleR/R required)...');
+%i_addmenu(m_ext,0,@callback_RevelioCellCycle,'Revelio Cell Cycle Analysis (Revelio/R required)...');
+% i_addmenu(m_ext,0,@callback_RunSeuratSCTransform,'Run Seurat/R SCTransform (Seurat/R required)...');
 in_addmenu(m_extn, 0, @in_RunSeuratWorkflow, 'Run Seurat Workflow (Seurat/R) [PMID:25867923]...');
+%i_addmenu(m_ext,0,@callback_RunMonocle2,'Pseudotime Analysis (Monocle2/R) [PMID:28825705]...');
 in_addmenu(m_extn, 0, @gui.callback_RunMonocle3, 'Pseudotime Analysis (Monocle3/R) [PMID:28825705]...');
 in_addmenu(m_extn, 1, @gui.callback_MELDPerturbationScore, 'MELD Perturbation Score (MELD/Py) [PMID:33558698]...');
 in_addmenu(m_extn, 0, {@in_SubsampleCells, 2}, 'Geometric Sketching (geosketch/Py) [PMID:31176620]...');
@@ -202,15 +307,24 @@ in_addmenu(m_extn, 0, @in_DoubletDetection, 'Detect Doublets (Scrublet/Py) [PMID
 in_addmenu(m_extn, 0, @in_RunDataMapPlot, 'Run DataMapPlot (datamapplot/Py)...');
 in_addmenu(m_extn, 1, @gui.callback_ExploreCellularCrosstalk, 'Talklr Intercellular Crosstalk [DOI:10.1101/2020.02.01.930602]...');
 
+% in_addmenu(m_ext, 0, @gui.callback_CompareGCLBtwCls, 'Differential GCL Analysis [PMID:33139959]🐢🐢 ...');
+% in_addmenu(m_ext, 0, @gui.callback_DiffTFActivity, 'Differential TF Activity Analysis...');
+
+m_help = findall(FigureHandle, 'tag', 'figMenuHelp');
+delete(allchild(m_help));
+delete(m_help);
 m_help = uimenu(FigureHandle, 'Text', '&Help ');
 in_addmenu(m_help, 0, {@(~, ~) web('https://scgeatoolbox.readthedocs.io/en/latest/')}, 'Online Documentation...');
 in_addmenu(m_help, 0, {@(~, ~) gui.gui_uishowrefinfo('Quick Installation',FigureHandle)}, 'Quick Installation Guide...');
+
 in_addmenu(m_help, 1, {@(~, ~) web('https://www.mathworks.com/matlabcentral/fileexchange/72917-scgeatoolbox-single-cell-gene-expression-analysis-toolbox')}, 'View scGEAToolbox on File Exchange...');
 in_addmenu(m_help, 0, {@(~, ~) web('https://pubmed.ncbi.nlm.nih.gov/31697351/')}, 'Cite scGEAToolbox Paper...');
 in_addmenu(m_help, 0, {@(~, ~) web('https://scholar.google.com/scholar?cites=4661048952867744439&as_sdt=5,44&sciodt=0,44&hl=en')}, 'Papers Citing scGEAToolbox...');
 in_addmenu(m_help, 1, {@(~, ~) web('https://scgeatool.github.io/')}, 'Visit SCGEATOOL-Standalone Website...');
 in_addmenu(m_help, 0, {@(~, ~) web('https://matlab.mathworks.com/open/github/v1?repo=jamesjcai/scGEAToolbox&file=online_landing.m')}, 'Run SCGEATOOL in MATLAB Online...');
 in_addmenu(m_help, 1, @gui.callback_CheckUpdates, 'Check for Updates...');
+%in_addmenu(m_help, 1, {@(~, ~) web('https://github.com/jamesjcai/scGEAToolbox')}, 'About SCGEATOOL');
+%in_addmenu(m_help, 1, {@(~, ~) inputdlg('', 'About SCGEATOOL', [10, 50], {sprintf('Single-Cell Gene Expression Analysis Tool\n\nJames Cai\n\njcai@tamu.edu\n')})}, 'About SCGEATOOL');
 in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout2(FigureHandle)}, 'About SCGEATOOL');
 
 if ~isempty(fx) && isvalid(fx), fxfun(fx, 0.4); end
@@ -235,32 +349,19 @@ dt.Enable = 'off';
 dt.UpdateFcn = {@i_myupdatefcnx};
 % disableDefaultInteractivity(hAx);
 
-delete(findall(FigureHandle, 'Tag', 'FigureToolBar'));
-DeftToolbarHandle = uitoolbar('Parent', FigureHandle);
-MainToolbarHandle = uitoolbar('Parent', FigureHandle);
-UserToolbarHandle = uitoolbar('Parent', FigureHandle);
 
-in_addbuttonpush(0, 0, [], [], "");
-in_addbuttonpush(0, 0, @gui.callback_MultiGroupingViewer, "plotpicker-arxtimeseries.gif", "Multi-grouping View...");
-in_addbuttonpush(0, 0, @gui.callback_CrossTabulation, "plotpicker-comet.gif", "Cross tabulation");
-in_addbuttonpush(0, 1, @gui.callback_Violinplot, "violinplot.gif", "Gene Violin Plot...");
-in_addbuttonpush(0, 0, @gui.callback_DrawDotplot, "icon-mat-blur-linear-10.gif", "Gene Dot Plot...");
-in_addbuttonpush(0, 0, @gui.callback_GeneHeatMap, "icon-mat-apps-20.gif", "Gene Heatmap...");
-in_addbuttonpush(0, 0, [], [], "");
-in_addbuttonpush(0, 1, @in_CompareCellScoreBtwCls, "cellscore2.gif", "Cell score analysis--obtaining gene signature score for each cell");
-in_addbuttonpush(0, 0, @gui.callback_GetCellSignatureMatrix, "icon-fa-connectdevelop-20.gif", "Cell state analysis--obtaining multiple gene signature scores to reveal functional state of cells");
-in_addbuttonpush(0, 1, @in_EnrichrHVGs, "plotpicker-andrewsplot.gif", "Functional enrichment analysis with HVGs");
-in_addbuttonpush(0, 0, @gui.callback_DEGene2Groups, "plotpicker-boxplot.gif", "Differential expression (DE) analysis)");
-in_addbuttonpush(0, 0, @gui.callback_DPGene2Groups, "plotpicker_noisepsd.gif", "Differential program (DP) analysis)");
-in_addbuttonpush(0, 1, @gui.callback_BuildGeneNetwork, "noun_Network_691907.gif", "Build gene regulatory network");
-in_addbuttonpush(0, 0, @gui.callback_CompareGeneNetwork, "noun_Deep_Learning_2424485.gif", "Compare two scGRNs");
-in_addbuttonpush(0, 1, {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-gui.add_3dcamera(DeftToolbarHandle, 'AllCells');
-pt = uitoggletool(DeftToolbarHandle);
-pt.CData = in_getPtImage('aaa');
-pt.Tooltip = 'Insert Colorbar';
-pt.ClickedCallback = @in_addcolorbar;
-pt.Tag = "figToglColorbar";
+DeftToolbarHandle = findall(FigureHandle, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
+if isempty(DeftToolbarHandle)
+    DeftToolbarHandle = uitoolbar('Parent', FigureHandle);
+end
+MainToolbarHandle = uitoolbar('Parent', FigureHandle);
+set(MainToolbarHandle, 'Tag', 'MainToolBar', 'HandleVisibility', 'off', 'Visible', 'off');
+UserToolbarHandle = uitoolbar('Parent', FigureHandle);
+set(UserToolbarHandle, 'Tag', 'UserToolBar', 'HandleVisibility', 'off', 'Visible', 'off');
+
+% i_addbutton(1,1,@callback_Brush4Markers,"icon-mat-filter-1-20.gif","Marker genes of brushed cells");
+% i_addbutton_toggle(1,0,{@togglebtfun,@turnoffuserguiding,"icon-mat-blur-off-10.gif", ...
+%    "icon-mat-blur-on-10.gif",false},"Turn on/off user onboarding toolbar");
 
 in_addbuttontoggle(1, 0, {@in_togglebtfun, @in_turnoffuserguiding, ...
     "icon-mat-unfold-more-10.gif", ...
@@ -269,12 +370,14 @@ in_addbuttontoggle(1, 0, {@in_togglebtfun, @in_turnoffuserguiding, ...
 in_addbuttonpush(1, 0, @gui.callback_ShowGeneExpr, "list.gif", "Select genes to show expression")
 in_addbuttonpush(1, 0, @in_ShowCellStates, "list2.gif", "Show cell state")
 in_addbuttonpush(1, 0, @in_SelectCellsByQC, "plotpicker-effects.gif", "Filter genes and cells")
+
 in_addbuttontoggle(1, 1, {@in_togglebtfun, @in_labelcellgroups, ...
     "icon-fa-tag-10b.gif", "icon-fa-tags-10b.gif", ...
     false, "Label cell groups"});
 in_addbuttonpush(1, 0, @in_Brushed2NewCluster, "plotpicker-glyplot-face.gif", "Add brushed cells to a new group")
 in_addbuttonpush(1, 0, @in_Brushed2MergeClusters, "plotpicker-pzmap.gif", "Merge brushed cells to same group")
 in_addbuttonpush(1, 0, @in_RenameCellTypeBatchID, "plotpicker-scatterhist.gif", "Rename cell type or batch ID");
+
 in_addbuttonpush(1, 0, [], [], "");
 in_addbuttonpush(1, 1, @in_ClusterCellsS, "plotpicker-dendrogram.gif", "Clustering using cell embedding (S)")
 in_addbuttonpush(1, 0, @in_ClusterCellsX, "icon-mw-cluster-10.gif", "Clustering using expression matrix (X)")
@@ -282,6 +385,7 @@ in_addbuttonpush(1, 1, {@in_DetermineCellTypeClustersGeneral, true}, "plotpicker
 in_addbuttonpush(1, 0, @in_Brush4Celltypes, "brush.gif", "Assign cell type to selected cells");
 in_addbuttonpush(1, 1, @gui.callback_Brush4Markers, "plotpicker-kagi.gif", "Marker genes of brushed cells");
 in_addbuttonpush(1, 0, @gui.callback_FindAllMarkers, "plotpicker-plotmatrix.gif", "Marker gene heatmap");
+
 in_addbuttonpush(1, 0, [], [], "");
 in_addbuttonpush(1, 1, @gui.callback_ShowClustersPop, "plotpicker-geoscatter.gif", "Show cell clusters/groups individually");
 in_addbuttonpush(1, 0, @gui.callback_SelectCellsByClass, "plotpicker-pointfig.gif", "Select cells by class");
@@ -294,10 +398,35 @@ in_addbuttonpush(1, 0, @gui.callback_PickPlotMarker, "plotpicker-rose.gif", "Swi
 in_addbuttonpush(1, 0, @gui.callback_PickColorMap, "plotpicker-compass.gif", "Pick new color map");
 in_addbuttonpush(1, 0, @in_RefreshAll, "icon-mat-refresh-20.gif", "Refresh");
 
+%i_addbutton(0,0,@callback_CalculateCellScores,"cellscore2.gif","Calculate cell scores from list of feature genes")
+%i_addbutton(0,0,@callback_ComparePotency,"plotpicker-candle.gif","Compare differentiation potency between groups");
+
+in_addbuttonpush(0, 1, @gui.callback_MultiGroupingViewer, "plotpicker-arxtimeseries.gif", "Multi-grouping View...");
+in_addbuttonpush(0, 0, @gui.callback_CrossTabulation, "plotpicker-comet.gif", "Cross tabulation");
+
+in_addbuttonpush(0, 1, @gui.callback_Violinplot, "violinplot.gif", "Gene Violin Plot...");
+in_addbuttonpush(0, 0, @gui.callback_DrawDotplot, "icon-mat-blur-linear-10.gif", "Gene Dot Plot...");
+in_addbuttonpush(0, 0, @gui.callback_GeneHeatMap, "icon-mat-apps-20.gif", "Gene Heatmap...");
+
+in_addbuttonpush(0, 0, [], [], "");
+in_addbuttonpush(0, 1, @in_CompareCellScoreBtwCls, "cellscore2.gif", "Cell score analysis--obtaining gene signature score for each cell");
+in_addbuttonpush(0, 0, @gui.callback_GetCellSignatureMatrix, "icon-fa-connectdevelop-20.gif", "Cell state analysis--obtaining multiple gene signature scores to reveal functional state of cells");
+in_addbuttonpush(0, 1, @in_EnrichrHVGs, "plotpicker-andrewsplot.gif", "Functional enrichment analysis with HVGs");
+in_addbuttonpush(0, 0, @gui.callback_DEGene2Groups, "plotpicker-boxplot.gif", "Differential expression (DE) analysis)");
+in_addbuttonpush(0, 0, @gui.callback_DPGene2Groups, "plotpicker_noisepsd.gif", "Differential program (DP) analysis)");
+% fullfile(matlabroot,'toolbox','matlab','icons','HDF_grid.gif')
+in_addbuttonpush(0, 1, @gui.callback_BuildGeneNetwork, "noun_Network_691907.gif", "Build gene regulatory network");
+in_addbuttonpush(0, 0, @gui.callback_CompareGeneNetwork, "noun_Deep_Learning_2424485.gif", "Compare two scGRNs");
+in_addbuttonpush(0, 1, {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
+gui.add_3dcamera(DeftToolbarHandle, 'AllCells');
+
+%pushbuttonV=[pushbuttonV; gui.add_3dcamera(DeftToolbarHandle, 'AllCells')];
+
 if ~isempty(fx) && isvalid(fx), fxfun(fx, 0.6); end
 
 in_addbuttonpush(2, 0, @in_turnonuserguiding, "icon-fa-thumb-tack-10.gif", ...
     "Turn on user guiding toolbar");
+
 in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_SelectCellsByQC, ...
     "icon-mat-filter-1-10.gif", "plotpicker-effects.gif", ...
     true, "Filter genes and cells"});
@@ -316,10 +445,16 @@ in_addbuttontoggle(2, 0, {@in_togglebtfun, @callback_SaveX, ...
 
 if ~isempty(fx) && isvalid(fx), fxfun(fx, 0.8); end
 
+% handles = guihandles( FigureHandle );
+% guidata( FigureHandle, handles );
+
 if ~isempty(c)
     kc = numel(unique(c));
     colormap(pkg.i_mycolorlines(kc));
 end
+
+%tb1 = uitoolbar('Parent', FigureHandle);
+%tb2 = uitoolbar('Parent', FigureHandle);
 
 if ~isempty(sce) && sce.NumCells>0
     in_EnDisableMenu('on');
@@ -330,13 +465,14 @@ if ~isempty(sce) && sce.NumCells>0
     hAx.Visible="on";
 end
 
+%if ~isempty(fx), fx.ProgressRatio = 1.0; end
 if ~isempty(fx) && isvalid(fx), fxfun(fx, 1.0); end
 pause(1);
 if ~isempty(fx) && isvalid(fx), set(fx, 'visible', 'off'); end
 pause(0.2);
 set(FigureHandle, 'visible', 'on');
 delete(fx);
-drawnow;
+% drawnow;
 uicontrol(button1);
 
 in_fixfield('tsne','tsne3d');
@@ -363,12 +499,12 @@ if ~ispref('scgeatoolbox', 'useronboardingtoolbar')
     gui.gui_userguidingpref(true);
     setpref('scgeatoolbox', 'useronboardingtoolbar', true);
 end
-
 showuseronboarding = getpref('scgeatoolbox', 'useronboardingtoolbar',false);
 if ~showuseronboarding
     set(UserToolbarHandle, 'Visible', 'off');
 end
 
+% splash(hh,'off');
 
 % ----------------------------------
 
@@ -458,7 +594,7 @@ end
     end
 
     function in_addmenu(menuHdl, sepTag, callbackFnc, tooltipTxt, acchar)
-        if nargin<5, acchar=''; end
+        if nargin < 5, acchar = ''; end
         if ischar(callbackFnc) || isstring(callbackFnc)
             callbackFnc = str2func(callbackFnc);
         end
@@ -514,6 +650,7 @@ end
         pt.Tooltip = tooltipTxt;
         pt.ClickedCallback = callbackFnc;
         pt.Tag = "figTogl" + matlab.lang.makeValidName(tooltipTxt);
+
         % a=findall(f,'tag','figToglLabelCellGroups')
         % a=findall(f,'tag','figMenuCellGroups___')
         %pushbuttonV=[pushbuttonV; pt];
@@ -554,20 +691,10 @@ end
 % Callback Functions
 % ------------------------
 
-    function in_addcolorbar(~,~)
-        % cbtogg = uigettool(FigureHandle,'figToglColorbar');
-        cbtogg = findall(FigureHandle, 'Tag', 'figToglColorbar');
-        if ~isempty(cbtogg) && isequal(cbtogg,gcbo) && strcmpi(get(cbtogg,'State'),'on')
-            colorbar(hAx);
-        else
-            colorbar(hAx,'off')
-        end
-    end
-
     function in_closeRequest(hObject, ~)
         if ~(ismcc || isdeployed)
             if isempty(sce)||sce.NumCells==0
-                ButtonName = 'no';
+                ButtonName='no';
             else
                 ButtonName = questdlg('Save SCE before closing SCGEATOOL?');
             end
@@ -597,8 +724,7 @@ end
                 case 'cancel'
                     return;
                 case 'no'
-                    % delete(hObject);
-                    delete(FigureHandle);
+                    delete(hObject);
                 otherwise
                     return;
             end
@@ -1093,7 +1219,7 @@ end
             case 'off'
                 set(UserToolbarHandle,'Visible','off');
         end
-        menusv={m_file, m_edit, m_view, m_plot, m_extn, m_tool, m_ntwk};
+        menusv={m_file,m_edit,m_view,m_plot,m_extn,m_tool,m_ntwk};
         for j=1:length(menusv)
             a=allchild(menusv{j});
             for k=1:length(a)
