@@ -131,19 +131,19 @@ in_addmenu(m_edit, 1, @in_DeleteSelectedCells, 'Delete Brushed Cells...');
 in_addmenu(m_edit, 0, @gui.callback_SelectCellsByClass, 'Select Cells...');
 
 m_view = uimenu(FigureHandle, 'Text', '&View');
-in_addmenu(m_view, 0, @in_EmbeddingAgain, 'Embed Cells Using tSNE, UMP, PHATE...', 'E');
+in_addmenu(m_view, 0, @in_EmbeddingAgain, 'Embed Cells Using tSNE, UMP, PHATE...', 'B');
 in_addmenu(m_view, 0, @in_Switch2D3D, 'Switch Between 2D/3D Embeddings...');
-in_addmenu(m_view, 1, @gui.callback_ShowGeneExpr, 'Gene Expression...');
+in_addmenu(m_view, 1, @gui.callback_ShowGeneExpr, 'Gene Expression...', 'E');
 in_addmenu(m_view, 0, @in_ShowCellStates, 'Cell States...');
-in_addmenu(m_view, 0, @in_labelcellgroups, 'Cell Groups...');
+in_addmenu(m_view, 0, @in_labelcellgroups, 'Cell Groups...', 'L');
 in_addmenu(m_view, 0, @gui.callback_MultiGroupingViewer, 'Multi-Grouping View...');
 in_addmenu(m_view, 0, @gui.callback_CrossTabulation, 'Cross Tabulation');
-in_addmenu(m_view, 1, @gui.callback_ViewMetaData, 'View Metadata...');
+in_addmenu(m_view, 1, @gui.callback_ViewMetaData, 'View Metadata...', 'M');
 in_addmenu(m_view, 1, @gui.callback_ShowHgBGeneExpression, 'Hemoglobin (Hgb) Genes Expression...');
 in_addmenu(m_view, 0, @gui.callback_ShowMtGeneExpression, 'Mitochondrial (Mt-) Genes Expression...');
 in_addmenu(m_view, 1, @gui.callback_ShowClustersPop,"Show Cell Clusters/Groups Individually...");
 in_addmenu(m_view, 1, @gui.callback_CloseAllOthers, 'Close All Other Figures', 'X');
-in_addmenu(m_view, 0, @in_RefreshAll, 'Refresh Current View');
+in_addmenu(m_view, 0, @in_RefreshAll, 'Refresh Current View', 'R');
 
 m_plot = uimenu(FigureHandle, 'Text', '&Plots');
 in_addmenu(m_plot, 0, @gui.callback_Violinplot, 'Gene Violin Plot...');
@@ -156,8 +156,8 @@ in_addmenu(m_plot, 1, @gui.callback_PickPlotMarker,'Next Marker Type');
 in_addmenu(m_plot, 0 ,@gui.callback_PickColorMap,'Next Colormap');
 
 m_tool = uimenu(FigureHandle, 'Text', '&Analyze');
-in_addmenu(m_tool, 0, @in_ClusterCellsS, "Cluster Cells Using Cell Embedding (S)", 'L')
-in_addmenu(m_tool, 0, @in_ClusterCellsX, "Cluster Cells Using Expression Matrix (X)")
+in_addmenu(m_tool, 0, @in_ClusterCellsS, "Cluster Cells Using Cell Embedding (S)", 'C');
+in_addmenu(m_tool, 0, @in_ClusterCellsX, "Cluster Cells Using Expression Matrix (X)");
 in_addmenu(m_tool, 1, {@in_DetermineCellTypeClustersGeneral, true}, "Annotate Cell Types Using PanglaoDB Marker Genes");
 in_addmenu(m_tool, 0, {@in_DetermineCellTypeClustersGeneral, false}, 'Annotate Cell Type Using Customized Marker Genes...');
 in_addmenu(m_tool, 1, @in_Brush4Celltypes, "Annotate Cell Types for Brushed Cells");

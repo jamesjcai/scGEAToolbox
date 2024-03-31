@@ -15,7 +15,8 @@ pw1 = fileparts(mfilename('fullpath'));
 pth = fullfile(pw1, '..', 'resources', 'myTemplate.pptx');
 
 
-hFig=figure("Visible","off", 'MenuBar','none');
+hFig=figure("Visible","off", ...
+    'MenuBar','none','DockControls','off');
 %set(hFig, 'ToolBar', 'none');
 
 hFig.Position(3) = hFig.Position(3) * 1.8;
@@ -33,7 +34,7 @@ hFig.Position(3) = hFig.Position(3) * 1.8;
 % end
 
 n = length(glist);
-a = getpref('scgeatoolbox', 'prefcolormapname', 'autumn');
+% a = getpref('scgeatoolbox', 'prefcolormapname', 'autumn');
 
 tabgp = uitabgroup();
 tab = cell(n,1);
@@ -125,6 +126,7 @@ pkg.i_addbutton2fig(tb, 'off', @i_savemainfigx, "xpowerpoint.gif", 'Save Figure 
 %     movegui(hFig, px_new);
 % end
 
+try
 if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 
     [px_new] = gui.i_getchildpos(parentfig, hFig);
     if ~isempty(px_new)
@@ -135,7 +137,9 @@ if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure')
 else
     movegui(hFig, 'center');
 end
-
+catch
+    movegui(hFig, 'center');
+end
 drawnow;
 hFig.Visible=true;
 
