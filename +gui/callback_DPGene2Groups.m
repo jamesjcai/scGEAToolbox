@@ -53,22 +53,22 @@ m2 = nan(size(Z,1),1);
 %warning off
 for k=1:size(Z,1)
     if any(setmatrx(k,:))
-    a=Z(k,i1);
-    b=Z(k,i2);
-    p_val(k) = ranksum(a,b);
-    if ~isnan(p_val(k)) && p_val(k)<1e-3
-        %[ax]=nbinfit(a);
-        %[bx]=nbinfit(b);
-        [ax]=mean(a);
-        [bx]=mean(b);
-        avg_log2FC(k) = log2(ax(1)./bx(1));
-        v1(k)=ax(1);
-        v2(k)=bx(1);
-        n1(k)=numel(a);
-        n2(k)=numel(b);
-        m1(k)=sum(a>0);
-        m2(k)=sum(b>0);
-    end
+        a=Z(k,i1);
+        b=Z(k,i2);
+        p_val(k) = ranksum(a,b);
+        if ~isnan(p_val(k)) && p_val(k)<1e-3
+            %[ax]=nbinfit(a);
+            %[bx]=nbinfit(b);
+            [ax]=mean(a);
+            [bx]=mean(b);
+            avg_log2FC(k) = log2(ax(1)./bx(1));
+            v1(k)=ax(1);
+            v2(k)=bx(1);
+            n1(k)=numel(a);
+            n2(k)=numel(b);
+            m1(k)=sum(a>0);
+            m2(k)=sum(b>0);
+        end
     end
 end
 %warning on
@@ -137,6 +137,7 @@ images = {};
 
  fw = gui.gui_waitbar_adv;
  success=false;
+
  for kk=1:numel(idxneedplot) % size(T,1)
      k=idxneedplot(kk);
      if ~ismember(k,idxneedplot), continue; end
@@ -160,7 +161,6 @@ images = {};
         % gui.gui_waitbar_adv(fw,(k-1)./size(T,1));
         gui.gui_waitbar_adv(fw,(kk-1)./numel(idxneedplot));
         
-
                 suc1=false;
                 try
                     f1 = gui.i_dotplot(Xt, upper(sce.g), c, cL, upper(posg), true, T.setnames(k));
