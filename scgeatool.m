@@ -1299,8 +1299,11 @@ end
             otherwise
                 return;
         end
-        [sce] = gui.sc_cellattribeditor(sce, addnew);
-        guidata(FigureHandle, sce);
+        [sceback, needupdate] = gui.sc_cellattribeditor(sce, addnew);
+        if needupdate
+            sce = sceback;
+            guidata(FigureHandle, sce);
+        end
     end
 
     function in_ExportCellAttribTable(~,~)        

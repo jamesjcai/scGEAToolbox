@@ -64,8 +64,8 @@ if addnew
 else
     if isempty(x{1})       % when add new - x{1} is the values
         uiwait(warndlg('Attribute Values cannot be empty.',''));
-        return; 
-    end    
+        return;
+    end
 end
 
     answer = questdlg('What is the data type of attribute values?', ...
@@ -74,14 +74,14 @@ end
     switch answer
         case 'String'
             if addnew
-                clable = strtrim(string(x{1}));
+                clable = strtrim(x{1});
                 newthisc = strtrim(string(x{2}));
             else
                 newthisc = strtrim(string(x{1}));    % when add new - x{1} is the values
             end
         case 'Numeric'
             if addnew
-                clable = strtrim(string(x{1}));
+                clable = strtrim(x{1});
                 newthisc = str2double(string(x{2}));
             else
                 newthisc = str2double(string(x{1}));   % when add new - x{1} is the values
@@ -104,7 +104,12 @@ end
     end
 
     if addnew
-        clable = matlab.lang.makeValidName(clable);
+        clable = matlab.lang.makeValidName(clable);        
+        existinglabels = sce.list_cell_attributes(1:2:end);
+        if ismember(clable, existinglabels)
+            waitfor(warndlg('Cell Attribute Name Existing.',''));
+            return;
+        end
         sce.list_cell_attributes = [sce.list_cell_attributes, ...
                                     {clable, newthisc(:)}];
         waitfor(helpdlg('Cell Attribute Added.',''));
