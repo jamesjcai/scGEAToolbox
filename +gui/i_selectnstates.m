@@ -1,7 +1,7 @@
-function [thisc, clable] = i_selectnstates(sce)
+function [thisc, clabel] = i_selectnstates(sce)
 
 thisc = [];
-clable = [];
+clabel = [];
 
 
 baselistitems = {'Current Class (C)'};
@@ -53,16 +53,16 @@ end
 
     if tf2 == 1
         thisc=cell(length(indx2),1);
-        clable=cell(length(indx2),1);
+        clabel=cell(length(indx2),1);
         for k=1:length(indx2)
-            [thisc{k}, clable{k}] = i_getidx(indx2(k));
+            [thisc{k}, clabel{k}] = i_getidx(indx2(k));
         end
     end
 
 
-    function [thisc, clable] = i_getidx(indx)
-        clable = listitems{indx};
-        switch clable
+    function [thisc, clabel] = i_getidx(indx)
+        clabel = listitems{indx};
+        switch clabel
             case 'Library Size'
                 thisc = full(sum(sce.X).');
             case 'Mt-reads Ratio'
@@ -82,7 +82,7 @@ end
                 thisc = sce.c_cell_cycle_tx;
             otherwise % other properties
                 nx = length(baselistitems);
-                clable = sce.list_cell_attributes{2*(indx - nx)-1};
+                clabel = sce.list_cell_attributes{2*(indx - nx)-1};
                 thisc = sce.list_cell_attributes{2*(indx - nx)};
         end
     end

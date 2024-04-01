@@ -32,13 +32,13 @@ end
     pkg.i_addbutton2fig(tb, 'off',  @in_showcellstate, 'list2.gif', 'Select a gene to show expression...');
      
     function in_showcellstate(~, ~)
-        [thisc, clable] = gui.i_select1state(sce);
+        [thisc, clabel] = gui.i_select1state(sce);
         if isempty(thisc), return; end
         [c] = grp2idx(thisc);
         for kx = 1:length(axesv)
            s = sce.struct_cell_embeddings.(embeddingtags{kx});
            gui.i_gscatter3(s, c, 1, 1, axesv{kx});
-           title(axesv{kx}, string(embeddingtags{k})+" - "+string(clable));
+           title(axesv{kx}, string(embeddingtags{k})+" - "+string(clabel));
         end
     end
 

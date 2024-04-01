@@ -59,7 +59,7 @@ pkg.i_addbutton2fig(tb, 'off', @gui.i_linksubplots, "plottypectl-rlocusplot.gif"
 % pt.Tooltip = 'Link subplots';
 % pt.ClickedCallback = @gui.i_linksubplots;
 
-pkg.i_addbutton2fig(tb, 'off', @i_showclustlabel, "plotpicker-scatter.gif", "Show cluster lables");
+pkg.i_addbutton2fig(tb, 'off', @i_showclustlabel, "plotpicker-scatter.gif", "Show cluster labels");
 
 
 % pt = uipushtool(tb, 'Separator', 'off');
@@ -70,7 +70,7 @@ pkg.i_addbutton2fig(tb, 'off', @i_showclustlabel, "plotpicker-scatter.gif", "Sho
 % 
 % ptImage = ind2rgb(img, map);
 % pt.CData = ptImage;
-% pt.Tooltip = 'Show cluster lables';
+% pt.Tooltip = 'Show cluster labels';
 % pt.ClickedCallback = @i_showclustlabel;
 
 pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');

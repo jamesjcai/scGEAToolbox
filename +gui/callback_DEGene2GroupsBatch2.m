@@ -15,10 +15,10 @@ end
 [BatchIDList] = in_selectcelltypes(BatchIDSorted);
 if isempty(BatchIDList), return; end
 
-% [thisc, clable]=in_select1class(sce);
-[thisc, clable]=gui.i_select1class(sce);
+% [thisc, clabel]=in_select1class(sce);
+[thisc, clabel]=gui.i_select1class(sce);
 if isempty(thisc), return; end
-if strcmp(clable,'Batch ID')
+if strcmp(clabel,'Batch ID')
     helpdlg('Cannot select ''Batch ID'' as grouping varialbe.');
     return;
 end
@@ -276,10 +276,10 @@ end
 
 
 
-    function [thisc, clable] = in_select1class(sce, allowunique)
+    function [thisc, clabel] = in_select1class(sce, allowunique)
         if nargin < 2, allowunique = false; end
         thisc = [];
-        clable = '';
+        clabel = '';
         
         listitems = {'Current Class (C)'};
         if ~isempty(sce.c_cluster_id)
@@ -329,8 +329,8 @@ end
             {'Select grouping variable:'}, ...
             'SelectionMode', 'single', 'ListString', listitems);
         if tf2 == 1
-            clable = listitems{indx2};
-            switch clable
+            clabel = listitems{indx2};
+            switch clabel
                 case 'Current Class (C)'
                     thisc = sce.c;
                 case 'Cluster ID' % cluster id

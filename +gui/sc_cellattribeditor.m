@@ -16,8 +16,8 @@ if ~addnew
         'SelectionMode', 'single', 'ListString', listitems,'ListSize',[200 300]);
     
     if tf2 == 1
-        clable = listitems{indx2};
-        switch clable
+        clabel = listitems{indx2};
+        switch clabel
             case 'Cluster ID'   % cluster id
                 thisc = sce.c_cluster_id;
             case 'Batch ID'       % batch id
@@ -29,7 +29,7 @@ if ~addnew
             case 'Cell ID'
                 thisc = sce.c_cell_id;
             otherwise
-                [y,idx]=ismember(clable, sce.list_cell_attributes(1:2:end));
+                [y,idx]=ismember(clabel, sce.list_cell_attributes(1:2:end));
                 if y
                     thisc = sce.list_cell_attributes{idx+1};
                 end
@@ -40,7 +40,7 @@ if ~addnew
     
     %fw = gui.gui_waitbar;
     uiwait(helpdlg('It may take a while to load values. Click OK and wait.',''));
-    x = inputdlg(sprintf('Attribute Name: %s\n%s',clable, 'Attribute Values:'), ...
+    x = inputdlg(sprintf('Attribute Name: %s\n%s',clabel, 'Attribute Values:'), ...
                       'Attribute Editor', [25 50], {char(string(thisc))});
     %gui.gui_waitbar(fw);
 
@@ -74,14 +74,14 @@ end
     switch answer
         case 'String'
             if addnew
-                clable = strtrim(x{1});
+                clabel = strtrim(x{1});
                 newthisc = strtrim(string(x{2}));
             else
                 newthisc = strtrim(string(x{1}));    % when add new - x{1} is the values
             end
         case 'Numeric'
             if addnew
-                clable = strtrim(x{1});
+                clabel = strtrim(x{1});
                 newthisc = str2double(string(x{2}));
             else
                 newthisc = str2double(string(x{1}));   % when add new - x{1} is the values
@@ -104,18 +104,18 @@ end
     end
 
     if addnew
-        clable = matlab.lang.makeValidName(clable);        
+        clabel = matlab.lang.makeValidName(clabel);        
         existinglabels = sce.list_cell_attributes(1:2:end);
-        if ismember(clable, existinglabels)
+        if ismember(clabel, existinglabels)
             waitfor(warndlg('Cell Attribute Name Existing.',''));
             return;
         end
         sce.list_cell_attributes = [sce.list_cell_attributes, ...
-                                    {clable, newthisc(:)}];
+                                    {clabel, newthisc(:)}];
         waitfor(helpdlg('Cell Attribute Added.',''));
         needupdate = true;
     else
-        switch clable
+        switch clabel
             case 'Cluster ID'   % cluster id
                 sce.c_cluster_id = newthisc;
             case 'Batch ID'       % batch id
@@ -127,7 +127,7 @@ end
             case 'Cell ID'
                 sce.c_cell_id = newthisc;
             otherwise
-                [y,idx]=ismember(clable, sce.list_cell_attributes(1:2:end));
+                [y,idx]=ismember(clabel, sce.list_cell_attributes(1:2:end));
                 if y, sce.list_cell_attributes{idx+1} = newthisc; end
         end
         waitfor(helpdlg('Cell Attribute Changed.',''));

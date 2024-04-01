@@ -1,12 +1,12 @@
 function [ptsSelected] = i_select1classcells(sce, askunselect)
 if nargin < 2, askunselect = true; end
 ptsSelected = [];
-[thisc, clable] = gui.i_select1class(sce);
+[thisc, clabel] = gui.i_select1class(sce);
 if isempty(thisc), return; end
 
 
 
-answer2 = questdlg(sprintf('How to sort members of ''%s''?',clable), '', ...
+answer2 = questdlg(sprintf('How to sort members of ''%s''?',clabel), '', ...
     'Alphabetic', 'Size (Descending Order)', 'Alphabetic');
 switch answer2
     case 'Alphabetic'

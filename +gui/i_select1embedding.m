@@ -1,6 +1,6 @@
-function [thiss, clable, sce] = i_select1embedding(sce)
+function [thiss, clabel, sce] = i_select1embedding(sce)
 thiss = [];
-clable = '';
+clabel = '';
 
 listitems = {''};
 methodtagv = fieldnames(sce.struct_cell_embeddings);
@@ -21,14 +21,14 @@ end
     {'Select embedding:'}, ...
     'SelectionMode', 'single', 'ListString', listitems);
 if tf2 == 1
-    clable = listitems{indx2};
-    switch clable
+    clabel = listitems{indx2};
+    switch clabel
         case 'Compute tSNE embedding...'
             sce = sce.embedcells('tsne3d', true);
             thiss = sce.struct_cell_embeddings.tsne;
-            clable = 'tsne3d';
+            clabel = 'tsne3d';
         otherwise
-            thiss = sce.struct_cell_embeddings.(clable);
+            thiss = sce.struct_cell_embeddings.(clabel);
     end
 end
 

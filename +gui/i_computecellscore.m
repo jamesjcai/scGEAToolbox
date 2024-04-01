@@ -95,15 +95,15 @@ selitems = {'TF Activity Score [PMID:33135076]', ...
             ttxt = T.ScoreType(indx2);
             %gui.gui_waitbar(fw);
         case 'Other Attribute...'
-            [y, clable, ~, newpickclable] = gui.i_select1state(sce, true);
+            [y, clabel, ~, newpickclabel] = gui.i_select1state(sce, true);
             if isempty(y)
                 helpdlg('No cell attribute is available.');
                 return;
             end
-            if ~isempty(newpickclable)
-                ttxt = newpickclable;
+            if ~isempty(newpickclabel)
+                ttxt = newpickclabel;
             else
-                ttxt = clable;
+                ttxt = clabel;
             end
         case {'TF Activity Score [PMID:33135076]', ...
                 'TF Targets Expression Score'}

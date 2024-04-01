@@ -1,29 +1,29 @@
-function newclable = i_renamec(clable, sce, newpickclable)
+function [newclabel] = i_renamec(clabel, sce, newpickclabel)
 
-if nargin < 3, newpickclable = ''; end
+if nargin < 3, newpickclabel = ''; end
 
-if ~isempty(newpickclable)
-    newclable = newpickclable;
+if ~isempty(newpickclabel)
+    newclabel = newpickclabel;
 else
-    newclable = matlab.lang.makeValidName('Workspace Variable');
+    newclabel = matlab.lang.makeValidName('Workspace Variable');
 end
 
-if strcmp(clable, 'Workspace Variable...')
+if strcmp(clabel, 'Workspace Variable...')
     answerxx = questdlg('Rename Workspace Variable?');
     if strcmp(answerxx, 'Yes')
-        newclablex = inputdlg('New name', ...
-            'Rename', [1, 50], {newpickclable});
-        if ~isempty(newclablex) && ~isempty(newclablex{1})
-            newclable = matlab.lang.makeValidName(newclablex);
+        newclabelx = inputdlg('New name', ...
+            'Rename', [1, 50], {newpickclabel});
+        if ~isempty(newclabelx) && ~isempty(newclabelx{1})
+            newclabel = matlab.lang.makeValidName(newclabelx);
         end
     end
-    currentclable = sce.list_cell_attributes(1:2:end);
-    currentclablex = [currentclable, newclable];
-    currentclablex1 = matlab.lang.makeUniqueStrings(currentclablex);
-    newclable = currentclablex1(end);
-    if ~isequal(currentclablex1, currentclablex)
+    currentclabel = sce.list_cell_attributes(1:2:end);
+    currentclabelx = [currentclabel, newclabel];
+    currentclabelx1 = matlab.lang.makeUniqueStrings(currentclabelx);
+    newclabel = currentclabelx1(end);
+    if ~isequal(currentclabelx1, currentclabelx)
         waitfor(helpdlg(sprintf('Name exisiting. New name is changed to %s.', ...
-            newclable{1}), ''));
+            newclabel{1}), ''));
     end
 end
 end

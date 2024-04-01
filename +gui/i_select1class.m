@@ -1,8 +1,8 @@
-function [thisc, clable] = i_select1class(sce, allowunique)
+function [thisc, clabel] = i_select1class(sce, allowunique)
 
 if nargin < 2, allowunique = true; end
 thisc = [];
-clable = '';
+clabel = '';
 
 listitems = {'Current Class (C)'};
 if ~isempty(sce.c_cluster_id)
@@ -63,8 +63,8 @@ end
     {'Select grouping variable:'}, ...
     'SelectionMode', 'single', 'ListString', listitems);
 if tf2 == 1
-    clable = listitems{indx2};
-    switch clable
+    clabel = listitems{indx2};
+    switch clabel
         case 'Current Class (C)'
             thisc = sce.c;
         case 'Cluster ID' % cluster id

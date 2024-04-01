@@ -9,7 +9,7 @@ function callback_MultiGroupingViewer(src, ~)
         % case 'Two-group'
         % 
         %     if matlab.ui.internal.isUIFigure(FigureHandle), focus(FigureHandle); end
-        %     [thisc1, clable1, thisc2, clable2] = gui.i_select2state_new(sce);
+        %     [thisc1, clabel1, thisc2, clabel2] = gui.i_select2state_new(sce);
         %     if isempty(thisc1) || isempty(thisc2), return; end
         % 
         %     if matlab.ui.internal.isUIFigure(FigureHandle), focus(FigureHandle); end    
@@ -20,22 +20,22 @@ function callback_MultiGroupingViewer(src, ~)
         %     [c, cL] = grp2idx(thisc2);
         %     cx2.c = c;
         %     cx2.cL = strrep(cL, '_', '\_');
-        %     gui.sc_multigroupings(sce, cx1, cx2, clable1, clable2, FigureHandle);
+        %     gui.sc_multigroupings(sce, cx1, cx2, clabel1, clabel2, FigureHandle);
         %     gui.gui_waitbar(fw);
         % 
         %     if matlab.ui.internal.isUIFigure(FigureHandle), focus(FigureHandle); end
 
         case 'Multigrouping'
             if matlab.ui.internal.isUIFigure(FigureHandle), focus(FigureHandle); end
-            [thiscv, clablev] = gui.i_selectnstates(sce);
-            if isempty(thiscv) || isempty(clablev), return; end
+            [thiscv, clabelv] = gui.i_selectnstates(sce);
+            if isempty(thiscv) || isempty(clabelv), return; end
             hFig = figure('Visible','off');
             hFig.Position(3) = hFig.Position(3) * 1.8;
             axesv = cell(length(thiscv),1);
             for k=1:length(thiscv)
                 axesv{k} = nexttile;
                 gui.i_gscatter3(sce.s, thiscv{k}, 1, 1);
-                title(strrep(clablev{k},'_','\_'));
+                title(strrep(clabelv{k},'_','\_'));
             end
             [px_new] = gui.i_getchildpos(FigureHandle, hFig);
             if ~isempty(px_new)

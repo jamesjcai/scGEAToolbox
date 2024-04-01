@@ -1,15 +1,9 @@
-function [thisc1, clable1, thisc2, clable2] = i_select2state(sce)
+function [thisc1, clabel1, thisc2, clabel2] = i_select2state(sce)
 
 thisc1 = [];
-clable1 = '';
+clabel1 = '';
 thisc2 = [];
-clable2 = '';
-
-%function [thisc,clable,listitems,newpickclable]=i_select2state(sce)
-
-%    thisc=[];
-%    clable='';
-%    newpickclable='';
+clabel2 = '';
 
 baselistitems = {'Current Class (C)'};
 i_additem(sce.c_cluster_id, 'Cluster ID');
@@ -62,14 +56,14 @@ end
                 return;
             end
 
-            [thisc1, clable1] = i_getidx(indx2(1));
-            [thisc2, clable2] = i_getidx(indx2(2));
+            [thisc1, clabel1] = i_getidx(indx2(1));
+            [thisc2, clabel2] = i_getidx(indx2(2));
         end
 
 
-        function [thisc, clable] = i_getidx(indx)
-            clable = listitems{indx};
-            switch clable
+        function [thisc, clabel] = i_getidx(indx)
+            clabel = listitems{indx};
+            switch clabel
                 case 'Library Size'
                     thisc = sum(sce.X).';
                 case 'Mt-reads Ratio'
@@ -89,7 +83,7 @@ end
                     thisc = sce.c_cell_cycle_tx;
                 otherwise % other properties
                     nx = length(baselistitems);
-                    clable = sce.list_cell_attributes{2*(indx - nx)-1};
+                    clabel = sce.list_cell_attributes{2*(indx - nx)-1};
                     thisc = sce.list_cell_attributes{2*(indx - nx)};
 
             end

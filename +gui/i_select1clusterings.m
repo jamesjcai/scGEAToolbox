@@ -1,6 +1,6 @@
-function [thisc, clable] = i_select1clusterings(sce)
+function [thisc, clabel] = i_select1clusterings(sce)
 thisc = [];
-clable = '';
+clabel = '';
 
 listitems = {''};
 methodtagv = fieldnames(sce.struct_cell_clusterings);
@@ -35,12 +35,12 @@ end
     {'Select clustering variable:'}, ...
     'SelectionMode', 'single', 'ListString', listitems);
 if tf2 == 1
-    clable = listitems{indx2};
-    switch clable
+    clabel = listitems{indx2};
+    switch clabel
         case 'Customized C...'
             thisc = i_pickvariable;
         otherwise
-            thisc = sce.struct_cell_clusterings.(clable);
+            thisc = sce.struct_cell_clusterings.(clabel);
     end
 end
 

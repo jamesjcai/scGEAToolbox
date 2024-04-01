@@ -1,4 +1,4 @@
-function [thisc, clable, listitems, newpickclable] = i_select1state(sce, ...
+function [thisc, clabel, listitems, newpickclabel] = i_select1state(sce, ...
     nobaseline, nocustome, noattrib)
 
 if nargin < 2, nobaseline = false; end
@@ -6,8 +6,8 @@ if nargin < 3, nocustome = false; end
 if nargin < 4, noattrib = true; end
 
 thisc = [];
-clable = '';
-newpickclable = '';
+clabel = '';
+newpickclabel = '';
 
 if nobaseline
     listitems = sce.list_cell_attributes(1:2:end);
@@ -60,8 +60,8 @@ if isempty(listitems), return; end
     {'Select state/grouping variable:'}, ...
     'SelectionMode', 'single', 'ListString', listitems);
 if tf2 == 1
-    clable = listitems{indx2};
-    switch clable
+    clabel = listitems{indx2};
+    switch clabel
         case 'Library Size'
             thisc = sum(sce.X).';
         case 'Mt-reads Ratio'
@@ -96,23 +96,23 @@ if tf2 == 1
             end
             %             [~, tx] = grp2idx(sce.c_cell_cycle_tx);
             %             ttxt = sprintf('%s|', string(tx));
-            %             clable = sprintf('%s (%s)',clable,ttxt);
+            %             clabel = sprintf('%s (%s)',clabel,ttxt);
             thisc = sce.c_cell_cycle_tx;
         case '-------------------'
             thisc = [];
-            clable = '';
+            clabel = '';
             listitems = [];
-            newpickclable = [];
+            newpickclabel = [];
             return;
         case 'Workspace Variable...'
-            [thisc, newpickclable] = i_pickvariable;
+            [thisc, newpickclabel] = i_pickvariable;
         case 'SCE Attribute Table...'
-            [thisc, newpickclable] = i_pickattribute;
+            [thisc, newpickclabel] = i_pickattribute;
         case 'Load Variable from File...'
             thisc = [];
-            clable = '';
+            clabel = '';
             listitems = [];
-            newpickclable = [];
+            newpickclabel = [];
 
             [fname, pathname] = uigetfile( ...
                 {'*.txt', 'Variable Data Files (*.txt)'; ...
@@ -124,7 +124,7 @@ if tf2 == 1
                 T = readtable(txtfile);
                 thisc = T.(T.Properties.VariableNames{1});
                 assert(length(thisc) == sce.NumCells, 'Invalid Variable Data File.')
-                newpickclable = 'ExternalVariable';
+                newpickclabel = 'ExternalVariable';
             catch ME
                 thisc = [];
                 errordlg(ME.message);
@@ -132,12 +132,12 @@ if tf2 == 1
             end
         otherwise % other properties
 
-            [~, idx] = ismember(clable, ...
+            [~, idx] = ismember(clabel, ...
                 string(sce.list_cell_attributes(1:2:end)));
             thisc = sce.list_cell_attributes{idx*2};
 
             %nx=length(baselistitems);
-            %clable = sce.list_cell_attributes{2 * (indx2 - nx) - 1};
+            %clabel = sce.list_cell_attributes{2 * (indx2 - nx) - 1};
             %thisc = sce.list_cell_attributes{2 * (indx2 - nx)};
     end
 end

@@ -3,7 +3,7 @@ function callback_DiffTFActivity(src, ~)
 FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
 
-[thisc, clable] = gui.i_select1class(sce, false);
+[thisc, clabel] = gui.i_select1class(sce, false);
 if isempty(thisc), return; end
 species = gui.i_selectspecies(2);
 if isempty(species), return; end
@@ -42,7 +42,7 @@ T = [T, table(tfexpressed)];
 T2 = T(tfexpressed, :);
 cs2 = cs(tfexpressed, :);
 
-outfile = sprintf('DiffTFActivity_%s', matlab.lang.makeValidName(clable));
+outfile = sprintf('DiffTFActivity_%s', matlab.lang.makeValidName(clabel));
 
 answer = questdlg(sprintf('%d out of %d TFs expressed in cells. Keep only %d expressed TFs?', ...
     size(T2, 1), size(T, 1), size(T2, 1)));

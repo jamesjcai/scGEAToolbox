@@ -10,7 +10,7 @@ if ~gui.gui_showrefinfo('GCL Analysis [PMID:33139959]'), return; end
     
         sce = guidata(FigureHandle);
 
-        [thisc, clable] = gui.i_select1class(sce);
+        [thisc, clabel] = gui.i_select1class(sce);
         if isempty(thisc), return; end
         n = length(unique(thisc));
         if n == 1
@@ -32,7 +32,7 @@ if ~gui.gui_showrefinfo('GCL Analysis [PMID:33139959]'), return; end
         fw = gui.gui_waitbar;
 
         for k = 1:n
-            fprintf('Working on %s: %s ... %d of %d\n', clable, cL{k}, k, n);
+            fprintf('Working on %s: %s ... %d of %d\n', clabel, cL{k}, k, n);
             idx = (k - 1) * N + 1:k * N;
             [v] = run.mt_GCL(sce.X(:, k == c), N);
             t(idx, :) = k;

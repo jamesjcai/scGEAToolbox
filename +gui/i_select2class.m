@@ -1,9 +1,9 @@
-function [thisc1, clable1, thisc2, clable2] = i_select2class(sce)
+function [thisc1, clabel1, thisc2, clabel2] = i_select2class(sce)
 
 thisc1 = [];
-clable1 = '';
+clabel1 = '';
 thisc2 = [];
-clable2 = '';
+clabel2 = '';
 
 listitems = {'Current Class (C)'};
 i_additem(sce.c_cluster_id, 'Cluster ID');
@@ -36,8 +36,8 @@ end
             warndlg('Please select 2 grouping variables.');
             return;
         end
-        [thisc1, clable1] = i_getidx(indx2(1));
-        [thisc2, clable2] = i_getidx(indx2(2));
+        [thisc1, clabel1] = i_getidx(indx2(1));
+        [thisc2, clabel2] = i_getidx(indx2(2));
     end
 
     % if isempty(thisc)
@@ -50,9 +50,9 @@ end
     % end
 
 
-    function [thisc, clable] = i_getidx(indx)
-        clable = listitems{indx};
-        switch clable
+    function [thisc, clabel] = i_getidx(indx)
+        clabel = listitems{indx};
+        switch clabel
             case 'Current Class (C)'
                 thisc = sce.c;
             case 'Cluster ID' % cluster id

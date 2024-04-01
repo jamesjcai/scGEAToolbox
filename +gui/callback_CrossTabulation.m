@@ -2,7 +2,7 @@ function callback_CrossTabulation(src, ~)
 FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
 
-[thisc1, clable1, thisc2, clable2] = gui.i_select2class(sce);
+[thisc1, clabel1, thisc2, clabel2] = gui.i_select2class(sce);
 
 
 % [c, cL, noanswer] = gui.i_reordergroups(thisc1, [], FigureHandle);
@@ -32,13 +32,13 @@ for k=1:2
         case 1
             thiscA = thisc1;
             thiscB = thisc2;
-            clabel = clable1;
-            llabel = clable2;
+            clabel = clabel1;
+            llabel = clabel2;
         case 2
             thiscA = thisc2;
             thiscB = thisc1;
-            clabel = clable2;
-            llabel = clable1;
+            clabel = clabel2;
+            llabel = clabel1;
     end
     in_crossplot(thiscA,thiscB);
     tab{k} = uitab(tabgp, 'Title', sprintf('Tab%d',k));
@@ -131,7 +131,7 @@ hFig.Visible=true;
         end
         xlabel(clabel)
         ylabel('% of cells')
-        % title(clable2);
+        % title(clabel2);
         xticks(1:length(labelsx));
 
         labelsx2 = strrep(labelsx, '_', '\_');

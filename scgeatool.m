@@ -1670,18 +1670,16 @@ end
     end
 
     function in_ShowCellStates(src, ~)        
-        [thisc, clable, ~, newpickclable] = gui.i_select1state(sce);
-        %clable
-        %newpickclable
-        if strcmp(clable, 'Cell Cycle Phase')
+        [thisc, clabel, ~, newpickclabel] = gui.i_select1state(sce);
+        if strcmp(clabel, 'Cell Cycle Phase')
             if ~all(strcmp(unique(thisc), "undetermined"))
                 sce.c_cell_cycle_tx = thisc;
             end
         end
         if isempty(thisc), return; end
-        if strcmp(clable, 'Workspace Variable...')
-            clable = gui.i_renamec(clable, sce, newpickclable);
-            sce.list_cell_attributes = [sce.list_cell_attributes, clable];
+        if strcmp(clabel, 'Workspace Variable...')
+            clabel = gui.i_renamec(clabel, sce, newpickclabel);
+            sce.list_cell_attributes = [sce.list_cell_attributes, clabel];
             sce.list_cell_attributes = [sce.list_cell_attributes, thisc];
         end
         [c, cL] = grp2idx(thisc);
@@ -1726,7 +1724,7 @@ end
                 end
                 cb = colorbar(target{1});
         end
-        cb.Label.String = strrep(clable, '_', '\_');
+        cb.Label.String = strrep(clabel, '_', '\_');
         guidata(FigureHandle, sce);
     end
 
@@ -2005,7 +2003,7 @@ end
             set(a,'Checked','off');
             set(b,'State','off');
         else
-            [thisc, clable] = gui.i_select1class(sce,true);
+            [thisc, clabel] = gui.i_select1class(sce,true);
             if isempty(thisc)
                 set(src, statetag, 'off');
                 return;
@@ -2013,7 +2011,7 @@ end
             [c, cL] = grp2idx(thisc);
             sce.c = c;
             in_RefreshAll(src, [], true, false);
-            fprintf('Cells are colored by %s.\n', lower(clable));
+            fprintf('Cells are colored by %s.\n', lower(clabel));
             if max(c) <= 200
                 if ix_labelclusters(true)
                     set(src, statetag, 'on');
