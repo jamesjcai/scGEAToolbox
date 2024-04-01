@@ -16,6 +16,7 @@ fw = gui.gui_waitbar;
 hFig = figure('Visible','off');
 hFig.Position(3) = hFig.Position(3)*1.8;
 
+try
 if ~isempty(parentfig)
     [px_new] = gui.i_getchildpos(parentfig, hFig);
     if ~isempty(px_new)
@@ -23,6 +24,9 @@ if ~isempty(parentfig)
     else
         movegui(hFig, 'center');
     end
+end
+catch
+    movegui(hFig, 'center');
 end
 
 % hAx = axes('Parent', hFig);

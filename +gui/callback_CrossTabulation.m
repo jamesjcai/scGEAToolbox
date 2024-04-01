@@ -65,10 +65,14 @@ tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
 %    movegui(hFig, 'center');
 %    set(hFig, 'Visible', true);
 
-if any(px_new<0)
+try
+    if any(px_new<0)
+        movegui(hFig, 'center');
+    else
+        movegui(hFig, px_new);
+    end
+catch
     movegui(hFig, 'center');
-else
-    movegui(hFig, px_new);
 end
 drawnow;
 gui.gui_waitbar(fw);

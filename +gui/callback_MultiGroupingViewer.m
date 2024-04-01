@@ -37,10 +37,15 @@ function callback_MultiGroupingViewer(src, ~)
                 gui.i_gscatter3(sce.s, thiscv{k}, 1, 1);
                 title(strrep(clabelv{k},'_','\_'));
             end
-            [px_new] = gui.i_getchildpos(FigureHandle, hFig);
-            if ~isempty(px_new)
-                movegui(hFig, px_new);
-            else
+
+            try
+                [px_new] = gui.i_getchildpos(FigureHandle, hFig);
+                if ~isempty(px_new)
+                    movegui(hFig, px_new);
+                else
+                    movegui(hFig, 'center');
+                end
+            catch
                 movegui(hFig, 'center');
             end
             drawnow;

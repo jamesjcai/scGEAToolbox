@@ -75,14 +75,18 @@ else
         p = hFig.Position;
         %p(2)=0;
         p(4) = p(4) * 1.5;
-        hFig.Position = p;        
+        hFig.Position = p;
 
-        [px_new] = gui.i_getchildpos(FigureHandle, hFig);
-        if ~isempty(px_new)
-            movegui(hFig, px_new);
-        else
+        try
+            [px_new] = gui.i_getchildpos(FigureHandle, hFig);
+            if ~isempty(px_new)
+                movegui(hFig, px_new);
+            else
+                movegui(hFig, 'center');
+            end
+        catch
             movegui(hFig, 'center');
-        end 
+        end
         set(hFig, 'visible', 'on');
 
     catch ME

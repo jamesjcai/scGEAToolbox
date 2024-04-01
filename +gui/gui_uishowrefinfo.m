@@ -61,12 +61,19 @@ if nargout > 0
     btn2.ButtonPushedFcn = @(src,event) textEntered(src,event,btn2);
 end
 
-if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure')
-    [px_new] = gui.i_getchildpos(parentfig, hFig);
-    if ~isempty(px_new)
-        movegui(hFig, px_new);
+try
+    if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure')
+        [px_new] = gui.i_getchildpos(parentfig, hFig);
+        if ~isempty(px_new)
+            movegui(hFig, px_new);
+        else
+            movegui(hFig, 'center');
+        end
     end
+catch
+    movegui(hFig, 'center');
 end
+
 hFig.Visible=true;
 uiwait(hFig);
 

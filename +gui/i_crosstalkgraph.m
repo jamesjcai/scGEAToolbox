@@ -87,6 +87,7 @@ end
         evalin('base', 'h=findobj(gcf,''type'',''axes'');');
         evalin('base', 'hlink = linkprop(h(1:2),{''CameraPosition'',''CameraUpVector''});');
         evalin('base', 'rotate3d on');
+        
     end
 
 

@@ -75,12 +75,16 @@ pkg.i_addbutton2fig(tb, 'off', @i_summarymapT, 'HDF_object02.gif', 'Summary map,
 pkg.i_addbutton2fig(tb, 'on', @i_resizewin, ...
     'HDF_pointx.gif', 'Resize Plot Window');
 
+try
     [px_new] = gui.i_getchildpos(FigureHandle, hFig);
     if ~isempty(px_new)
         movegui(hFig, px_new);
     else
         movegui(hFig, 'center');
-    end 
+    end
+catch
+    movegui(hFig, 'center');
+end
         
 set(hFig, 'visible', 'on');
 fliped = false;

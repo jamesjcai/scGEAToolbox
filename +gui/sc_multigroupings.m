@@ -1,5 +1,6 @@
 function [hFig] = sc_multigroupings(sce, cx1, cx2, ttl1, ttl2, parentfig)
-if nargin < 6, parentfig = gcf; end
+
+if nargin < 6, parentfig = []; end
 if nargin < 5, ttl2 = ""; end
 if nargin < 4, ttl1 = ""; end
 
@@ -77,11 +78,19 @@ pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save 
 
 gui.add_3dcamera(tb);
 
-[px_new] = gui.i_getchildpos(parentfig, hFig);
-if any(px_new<0)
+try
+    if ~isempty(parentfig)
+        [px_new] = gui.i_getchildpos(parentfig, hFig);
+        if any(px_new<0)
+            movegui(hFig, 'center');
+        else
+            movegui(hFig, px_new);
+        end
+    else
+        movegui(hFig, px_new);
+    end
+catch
     movegui(hFig, 'center');
-else
-    movegui(hFig, px_new);
 end
 set(hFig, 'Visible', true);
 

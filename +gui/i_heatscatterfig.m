@@ -29,16 +29,21 @@ pkg.i_addbutton2fig(tb, 'on', @i_viewgenenames, 'HDF_point.gif', 'Show gene name
 pkg.i_addbutton2fig(tb,'on', @in_stemplot,'icon-mat-blur-on-10.gif','Show stem plot');
 %pkg.i_addbutton2fig(tb,'on',@i_viewscatter3,'icon-mat-blur-on-10.gif','Show scatter plot');
 
-if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 
-    [px_new] = gui.i_getchildpos(parentfig, hFig);
-    if ~isempty(px_new)
-        movegui(hFig, px_new);
+try
+    if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 
+        [px_new] = gui.i_getchildpos(parentfig, hFig);
+        if ~isempty(px_new)
+            movegui(hFig, px_new);
+        else
+            movegui(hFig, 'center');
+        end
     else
         movegui(hFig, 'center');
     end
-else
+catch
     movegui(hFig, 'center');
 end
+
 set(hFig, 'Visible', true);
 
     function in_stemplot(~,~)

@@ -49,13 +49,16 @@ end
         text(fa,0.2,0.675,v1,'Color',[.7 .7 .7],'FontSize',14);
     end
     %text(fa,1.0,0.2,'James Cai (jcai@tamu.edu)','Color',[.7 .7 .7],'FontSize',14);
-
+try
     if ~isempty(parentfig)
         px_new = gui.i_getchildpos(parentfig,fx);
         movegui(fx,px_new);
     else
         movegui(fx,'center');
     end
+catch
+    movegui(hFig, 'center');
+end
     fx.Visible=true;
     
 % for k = 3:10

@@ -57,6 +57,7 @@ if nargout > 0
     return;
 end
 
+try
 if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 
     [px_new] = gui.i_getchildpos(parentfig, hFig);
     if ~isempty(px_new)
@@ -67,7 +68,9 @@ if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure')
 else
     movegui(hFig, 'center');
 end
-
+catch
+    movegui(hFig, 'center');
+end
 set(hFig, 'visible', 'on');
 
 %catch ME

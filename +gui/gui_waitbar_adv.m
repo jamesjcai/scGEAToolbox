@@ -12,9 +12,12 @@ if nargin < 1 || isempty(f)
     f = waitbar(0, 'Please wait...','Visible','off', ...
         'Units','pixels');
 
-    if ~isempty(hFig) && strcmp(get(hFig,'type'),'figure')
-        [~, newpos] = gui.i_getchildpos(hFig, f);
-        f.Position = newpos;
+    try
+        if ~isempty(hFig) && strcmp(get(hFig,'type'),'figure')
+            [~, newpos] = gui.i_getchildpos(hFig, f);
+            f.Position = newpos;
+        end
+    catch
     end
     f.Visible = "on";
     pause(.5)

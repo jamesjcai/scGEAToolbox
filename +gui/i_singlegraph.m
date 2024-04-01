@@ -38,15 +38,18 @@ pkg.i_addbutton2fig(tb, 'off', @SaveAdj, 'export.gif', 'Export & save data');
 pkg.i_addbutton2fig(tb, 'on', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 
 title(h1,figname);
-
-if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 
-    [px_new] = gui.i_getchildpos(parentfig, hFig);
-    if ~isempty(px_new)
-        movegui(hFig, px_new);
+try
+    if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 
+        [px_new] = gui.i_getchildpos(parentfig, hFig);
+        if ~isempty(px_new)
+            movegui(hFig, px_new);
+        else
+            movegui(hFig, 'center');
+        end
     else
         movegui(hFig, 'center');
     end
-else
+catch
     movegui(hFig, 'center');
 end
 drawnow;

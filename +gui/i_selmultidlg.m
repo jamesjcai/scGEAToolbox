@@ -39,14 +39,18 @@ hFig = figure('Visible', 'off', ...
 %     movegui(hFig, 'center');
 % end
 
-if ~isempty(parentfig)
-    [px_new] = gui.i_getchildpos(parentfig, hFig);
-    if ~isempty(px_new)
-        movegui(hFig, px_new);
+try
+    if ~isempty(parentfig)
+        [px_new] = gui.i_getchildpos(parentfig, hFig);
+        if ~isempty(px_new)
+            movegui(hFig, px_new);
+        else
+            movegui(hFig, 'center');
+        end
     else
         movegui(hFig, 'center');
     end
-else
+catch
     movegui(hFig, 'center');
 end
 

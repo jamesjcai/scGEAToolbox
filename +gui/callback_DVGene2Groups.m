@@ -132,12 +132,17 @@ if ~strcmp(answer,'Yes'), return; end
 
 hFig = figure('Visible','off');
 hFig.Position(3)=hFig.Position(3)*1.8;
-[px_new] = gui.i_getchildpos(FigureHandle, hFig);
-if ~isempty(px_new)
-    movegui(hFig, px_new);
-else
+try
+    [px_new] = gui.i_getchildpos(FigureHandle, hFig);
+    if ~isempty(px_new)
+        movegui(hFig, px_new);
+    else
+        movegui(hFig, 'center');
+    end
+catch
     movegui(hFig, 'center');
 end
+
 tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
 uipushtool(tb, 'Separator', 'off');
 
