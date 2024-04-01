@@ -269,16 +269,11 @@ pt.Tooltip = 'Insert Colorbar';
 pt.ClickedCallback = @in_addcolorbar;
 pt.Tag = "figToglColorbar";
 
-in_addbuttontoggle(1, 0, {@in_togglebtfun, @in_turnoffuserguiding, ...
-    "icon-mat-unfold-more-10.gif", ...
-    "icon-mat-unfold-less-10.gif", false, ...
-    "Turn on/off user onboarding toolbar"});
+in_addbuttontoggle(1, 0, {@in_togglebtfun, @in_turnoffuserguiding, "icon-mat-unfold-more-10.gif", "icon-mat-unfold-less-10.gif", false, "Turn on/off user onboarding toolbar"});
 in_addbuttonpush(1, 0, @gui.callback_ShowGeneExpr, "list.gif", "Select genes to show expression")
 in_addbuttonpush(1, 0, @in_ShowCellStates, "list2.gif", "Show cell state")
 in_addbuttonpush(1, 0, @in_SelectCellsByQC, "plotpicker-effects.gif", "Filter genes and cells")
-in_addbuttontoggle(1, 1, {@in_togglebtfun, @in_labelcellgroups, ...
-    "icon-fa-tag-10b.gif", "icon-fa-tags-10b.gif", ...
-    false, "Label cell groups"});
+in_addbuttontoggle(1, 1, {@in_togglebtfun, @in_labelcellgroups, "icon-fa-tag-10b.gif", "icon-fa-tags-10b.gif", false, "Label cell groups"});
 in_addbuttonpush(1, 0, @in_Brushed2NewCluster, "plotpicker-glyplot-face.gif", "Add brushed cells to a new group")
 in_addbuttonpush(1, 0, @in_Brushed2MergeClusters, "plotpicker-pzmap.gif", "Merge brushed cells to same group")
 in_addbuttonpush(1, 0, @in_RenameCellTypeBatchID, "plotpicker-scatterhist.gif", "Rename cell type or batch ID");
@@ -303,23 +298,12 @@ in_addbuttonpush(1, 0, @in_RefreshAll, "icon-mat-refresh-20.gif", "Refresh");
 
 if ~isempty(fx) && isvalid(fx), fxfun(fx, 0.6); end
 
-in_addbuttonpush(2, 0, @in_turnonuserguiding, "icon-fa-thumb-tack-10.gif", ...
-    "Turn on user guiding toolbar");
-in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_SelectCellsByQC, ...
-    "icon-mat-filter-1-10.gif", "plotpicker-effects.gif", ...
-    true, "Filter genes and cells"});
-in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_EmbeddingAgain, ...
-    "icon-mat-filter-2-10.gif", "plotpicker-geobubble.gif", ...
-    true, "Embedding (tSNE, UMP, PHATE)"});
-in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_ClusterCellsS, ...
-    "icon-mat-filter-3-10.gif", "plotpicker-dendrogram.gif", ...
-    true, "Clustering using embedding S"});
-in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_DetermineCellTypeClustersGeneral, ...
-    "icon-mat-filter-4-10.gif", "plotpicker-contour.gif", true, ...
-    "Assign cell types to groups"});
-in_addbuttontoggle(2, 0, {@in_togglebtfun, @callback_SaveX, ...
-    "icon-mat-filter-5-10.gif", "export.gif", ...
-    true, "Export & save data"});
+in_addbuttonpush(2, 0, @in_turnonuserguiding, "icon-fa-thumb-tack-10.gif", "Turn on user guiding toolbar");
+in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_SelectCellsByQC, "icon-mat-filter-1-10.gif", "plotpicker-effects.gif", true, "Filter genes and cells"});
+in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_EmbeddingAgain, "icon-mat-filter-2-10.gif", "plotpicker-geobubble.gif", true, "Embedding (tSNE, UMP, PHATE)"});
+in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_ClusterCellsS, "icon-mat-filter-3-10.gif", "plotpicker-dendrogram.gif", true, "Clustering using embedding S"});
+in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_DetermineCellTypeClustersGeneral, "icon-mat-filter-4-10.gif", "plotpicker-contour.gif", true, "Assign cell types to groups"});
+in_addbuttontoggle(2, 0, {@in_togglebtfun, @callback_SaveX, "icon-mat-filter-5-10.gif", "export.gif", true, "Export & save data"});
 
 if ~isempty(fx) && isvalid(fx), fxfun(fx, 0.8); end
 
@@ -339,6 +323,7 @@ end
 
 if ~isempty(fx) && isvalid(fx), fxfun(fx, 1.0); end
 pause(1);
+
 if ~isempty(fx) && isvalid(fx), set(fx, 'visible', 'off'); end
 pause(0.2);
 set(FigureHandle, 'visible', 'on');
@@ -370,11 +355,8 @@ if ~ispref('scgeatoolbox', 'useronboardingtoolbar')
     gui.gui_userguidingpref(true);
     setpref('scgeatoolbox', 'useronboardingtoolbar', true);
 end
-
 showuseronboarding = getpref('scgeatoolbox', 'useronboardingtoolbar',false);
-if ~showuseronboarding
-    set(UserToolbarHandle, 'Visible', 'off');
-end
+if ~showuseronboarding, set(UserToolbarHandle, 'Visible', 'off'); end
 
 
 % ----------------------------------
@@ -430,7 +412,7 @@ end
     function in_turnonuserguiding(~, ~)
         % setpref('scgeatoolbox','useronboardingtoolbar',true);
         % set(UserToolbarHandle, 'Visible', 'on');
-        Button=gui.gui_userguidingpref(false);
+        Button = gui.gui_userguidingpref(false);
         switch Button
             case 'Yes'
             case 'No'
@@ -520,10 +502,10 @@ end
         pt.CData = in_getPtImage(imgFil);
         pt.Tooltip = tooltipTxt;
         pt.ClickedCallback = callbackFnc;
+        %callbackFnc =
+        %    1×6 cell array
+        %    {function_handle}    {function_handle}    {["icon-mat-filt…"]}    {["plotpicker-co…"]}    {[1]}    {["Assign cell t…"]}
         pt.Tag = "figTogl" + matlab.lang.makeValidName(tooltipTxt);
-        % a=findall(f,'tag','figToglLabelCellGroups')
-        % a=findall(f,'tag','figMenuCellGroups___')
-        %pushbuttonV=[pushbuttonV; pt];
     end
 
     function in_togglebtfun(src, ~, func, ~, imgFil, ...
