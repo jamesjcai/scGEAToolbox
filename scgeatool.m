@@ -70,7 +70,7 @@ else
 end
 
 FigureHandle = figure('Name', figname, ...
-    'position', round(1.25*[0, 0, 560, 420]), ...
+    'position', round(1.2*[0, 0, 560, 420]), ...
     'visible', 'off', 'NumberTitle', 'off', ...
     'DockControls','off','MenuBar','none','ToolBar','figure');
 movegui(FigureHandle, 'center');
@@ -85,8 +85,7 @@ btn_y = (fig_height - btn_height) / 1.618;
 
 if ~isempty(fx) && isvalid(fx), fxfun(fx,0.2); end
 
-button1 = uicontrol(...
-    'Parent',FigureHandle,...
+button1 = uicontrol('Parent', FigureHandle,...
     'Style', 'pushbutton',...
     'Units', 'pixels',...
     'Position', [btn_x btn_y btn_width btn_height],...
@@ -96,12 +95,12 @@ button1 = uicontrol(...
     'KeyPressFcn', @in_sc_openscedlg, 'Tooltip','Click or Press i');
 
 button2 = uicontrol('style','text',...
-    'Parent',FigureHandle,...
-    'FontSize',9,...
-    'position',[btn_x btn_y+25 btn_width btn_height],...
+    'Parent', FigureHandle,...
+    'FontSize', 9,...
+    'position', [btn_x btn_y+25 btn_width btn_height],...
     'string','Ready to explore.');
 
-set(FigureHandle,'resizefcn',{@myResizeFun,button1,button2});
+set(FigureHandle,'resizefcn',{@myResizeFun, button1, button2});
 
 m_file = uimenu(FigureHandle, 'Text', '&File');
 in_addmenu(m_file, 0, @in_sc_openscedlg, '&Import Data... ','I');
@@ -1568,7 +1567,7 @@ if ~showuseronboarding, set(UserToolbarHandle, 'Visible', 'off'); end
         if isempty(iscelltype), return; end
         ptsSelected = logical(h.BrushData.');
         if ~any(ptsSelected)
-            uiwait(warndlg("No cells are brushed",''));
+            uiwait(warndlg("No cells are brushed.",''));
             return;
         end
         if iscelltype
@@ -1577,7 +1576,7 @@ if ~showuseronboarding, set(UserToolbarHandle, 'Visible', 'off'); end
             c_members = unique(c(ptsSelected));
         end
 
-        if numel(c_members) == 1
+        if isscalar(c_members)
             uiwait(warndlg("All brushed cells are in one cluster or belong to the same cell type.",''));
             return;
         end
@@ -1977,9 +1976,9 @@ if ~showuseronboarding, set(UserToolbarHandle, 'Visible', 'off'); end
         end
         % state = src.(statetag);
         dtp = findobj(h, 'Type', 'datatip');
-        %disp('...state...')
+        % disp('...state...')
         if ~isempty(dtp) % switch from on to off
-            %dtp = findobj(h, 'Type', 'datatip');
+            % dtp = findobj(h, 'Type', 'datatip');
             delete(dtp);
             set(src, statetag, 'off');
             set(a,'Checked','off');
@@ -2010,7 +2009,7 @@ if ~showuseronboarding, set(UserToolbarHandle, 'Visible', 'off'); end
                 set(b,'State','off');
                 uiwait(warndlg('Labels are not showing. Too many categories (n>200).',''));
             end
-            %setappdata(FigureHandle, 'cL', cL);
+            % setappdata(FigureHandle, 'cL', cL);
             guidata(FigureHandle, sce);
             % colormap(lines(min([256 numel(unique(sce.c))])));
         end
@@ -2018,8 +2017,8 @@ if ~showuseronboarding, set(UserToolbarHandle, 'Visible', 'off'); end
 
     function [txt] = i_myupdatefcnx(pdt, ~)
         % pos = event_obj.Position;
-        %idx = event_obj.DataIndex;
-        %txt = cL(c(idx));
+        % idx = event_obj.DataIndex;
+        % txt = cL(c(idx));
         % https://www.mathworks.com/matlabcentral/answers/549567-disable-datatips-on-click
         pdt.Visible = 'off';
         txt = '';        
@@ -2030,7 +2029,7 @@ if ~showuseronboarding, set(UserToolbarHandle, 'Visible', 'off'); end
         isdone = false;
         if ~isempty(cL)
             if notasking
-                %stxtyes = c;
+                % stxtyes = c;
                 stxtyes = cL(c);
             else
                 [~, cLx] = grp2idx(c);
@@ -2066,27 +2065,27 @@ if ~showuseronboarding, set(UserToolbarHandle, 'Visible', 'off'); end
                 si = median(siv, 1);
                 % si=geometric_median(siv');
                 [kb] = dsearchn(siv, si);
-                %[~, k] = medoid(siv);  geometric_median
+                % [~, k] = medoid(siv);  geometric_median
                 datatip(h, 'DataIndex', idx(kb));
             end
-            %ptlabelclusters.State = 'on';
+            % ptlabelclusters.State = 'on';
             isdone = true;
         end
     end
-
-
 end
 
+
+
 function myResizeFun(src, ~, butt,butt2)
-fig_pos = get(src, 'Position'); % [left bottom width height]
-fig_width = fig_pos(3);
-fig_height = fig_pos(4);
-
-btn_width = 100; % Adjust as needed
-btn_height = 25; % Adjust as needed
-btn_x = (fig_width - btn_width) / 2;
-btn_y = (fig_height - btn_height) / 1.618;
-
-set(butt,'Position',[btn_x btn_y btn_width btn_height]);
-set(butt2,'Position',[btn_x btn_y+25 btn_width btn_height]);
+    fig_pos = get(src, 'Position'); % [left bottom width height]
+    fig_width = fig_pos(3);
+    fig_height = fig_pos(4);
+    
+    btn_width = 100;
+    btn_height = 25;
+    btn_x = (fig_width - btn_width) / 2;
+    btn_y = (fig_height - btn_height) / 1.618;
+    
+    set(butt,'Position',[btn_x btn_y btn_width btn_height]);
+    set(butt2,'Position',[btn_x btn_y+25 btn_width btn_height]);
 end
