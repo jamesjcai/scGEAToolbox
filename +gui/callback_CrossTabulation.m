@@ -21,9 +21,9 @@ labelsx='';
 labelsy='';
 T=[];
 
-hFig=figure("Visible","off", "DockControls", "off");
+hFig = figure("Visible","off", "DockControls", "off");
 
-[px_new] = gui.i_getchildpos(FigureHandle, hFig);
+% [px_new] = gui.i_getchildpos(FigureHandle, hFig);
 
 
 tabgp = uitabgroup();
@@ -65,15 +65,18 @@ tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
 %    movegui(hFig, 'center');
 %    set(hFig, 'Visible', true);
 
-try
-    if any(px_new<0)
-        movegui(hFig, 'center');
-    else
-        movegui(hFig, px_new);
-    end
-catch
-    movegui(hFig, 'center');
-end
+% try
+%     if any(px_new<0)
+%         movegui(hFig, 'center');
+%     else
+%         movegui(hFig, px_new);
+%     end
+% catch
+%     movegui(hFig, 'center');
+% end
+
+gui.i_movegui2parent(hFig, FigureHandle);
+
 drawnow;
 gui.gui_waitbar(fw);
 hFig.Visible=true;

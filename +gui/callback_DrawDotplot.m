@@ -77,16 +77,18 @@ else
         p(4) = p(4) * 1.5;
         hFig.Position = p;
 
-        try
-            [px_new] = gui.i_getchildpos(FigureHandle, hFig);
-            if ~isempty(px_new)
-                movegui(hFig, px_new);
-            else
-                movegui(hFig, 'center');
-            end
-        catch
-            movegui(hFig, 'center');
-        end
+        % try
+        %     [px_new] = gui.i_getchildpos(FigureHandle, hFig);
+        %     if ~isempty(px_new)
+        %         movegui(hFig, px_new);
+        %     else
+        %         movegui(hFig, 'center');
+        %     end
+        % catch
+        %     movegui(hFig, 'center');
+        % end
+        gui.i_movegui2parent(hFig, FigureHandle);
+
         set(hFig, 'visible', 'on');
 
     catch ME

@@ -50,21 +50,23 @@ if nargin<3, parentfig=[]; end
     % [~, idxn] = mink(r, 3); % Select top 3 negatively correlated genes
     selectedg = sce.g(idxp);
     try
-        psf1 = figure('WindowStyle', 'modal', 'Visible','off');
-        psf1.Position(3) = psf1.Position(3) * 1.8;
-        if ~isempty(parentfig)
-            [px_new] = gui.i_getchildpos(parentfig, psf1);
-        end
-        if ~isempty(px_new)
-            movegui(psf1,px_new);
-        end
-        figure(psf1);
+        hFig = figure('WindowStyle', 'modal', 'Visible','off');
+        hFig.Position(3) = hFig.Position(3) * 1.8;
+        % if ~isempty(parentfig)
+        %     [px_new] = gui.i_getchildpos(parentfig, hFig);
+        % end
+        % if ~isempty(px_new)
+        %     movegui(hFig,px_new);
+        % end
+        gui.i_movegui2parent(hFig, parentfig);
+
+        figure(hFig);
         pkg.i_plot_pseudotimeseries(log2(sce.X+1), ...
             sce.g, t, selectedg);
-        psf1.Visible = true;
+        hFig.Visible = true;
     catch ME
-        if exist('psf1', 'var') && ishandle(psf1)
-            close(psf1);
+        if exist('psf1', 'var') && ishandle(hFig)
+            close(hFig);
         end
         errordlg(ME.message);
     end

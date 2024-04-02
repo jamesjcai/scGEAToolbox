@@ -78,20 +78,22 @@ pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save 
 
 gui.add_3dcamera(tb);
 
-try
-    if ~isempty(parentfig)
-        [px_new] = gui.i_getchildpos(parentfig, hFig);
-        if any(px_new<0)
-            movegui(hFig, 'center');
-        else
-            movegui(hFig, px_new);
-        end
-    else
-        movegui(hFig, px_new);
-    end
-catch
-    movegui(hFig, 'center');
-end
+% try
+%     if ~isempty(parentfig)
+%         [px_new] = gui.i_getchildpos(parentfig, hFig);
+%         if any(px_new<0)
+%             movegui(hFig, 'center');
+%         else
+%             movegui(hFig, px_new);
+%         end
+%     else
+%         movegui(hFig, px_new);
+%     end
+% catch
+%     movegui(hFig, 'center');
+% end
+gui.i_movegui2parent(hFig, parentfig);
+
 set(hFig, 'Visible', true);
 
 

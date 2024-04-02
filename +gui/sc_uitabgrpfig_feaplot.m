@@ -15,8 +15,8 @@ pw1 = fileparts(mfilename('fullpath'));
 pth = fullfile(pw1, '..', 'resources', 'myTemplate.pptx');
 
 
-hFig=figure("Visible","off", 'MenuBar','none', 'DockControls', 'off');
-%set(hFig, 'ToolBar', 'none');
+hFig = figure("Visible","off", 'MenuBar','none', 'DockControls', 'off', ...
+    'ToolBar','figure');
 
 hFig.Position(3) = hFig.Position(3) * 1.8;
 
@@ -133,20 +133,22 @@ pkg.i_addbutton2fig(tb, 'off', @i_savemainfigx, "xpowerpoint.gif", 'Save Figure 
 %     movegui(hFig, px_new);
 % end
 
-try
-if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 
-    [px_new] = gui.i_getchildpos(parentfig, hFig);
-    if ~isempty(px_new)
-        movegui(hFig, px_new);
-    else
-        movegui(hFig, 'center');
-    end
-else
-    movegui(hFig, 'center');
-end
-catch
-    movegui(hFig, 'center');
-end
+% try
+% if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 
+%     [px_new] = gui.i_getchildpos(parentfig, hFig);
+%     if ~isempty(px_new)
+%         movegui(hFig, px_new);
+%     else
+%         movegui(hFig, 'center');
+%     end
+% else
+%     movegui(hFig, 'center');
+% end
+% catch
+%     movegui(hFig, 'center');
+% end
+gui.i_movegui2parent(hFig, parentfig);
+
 
 drawnow;
 hFig.Visible=true;
