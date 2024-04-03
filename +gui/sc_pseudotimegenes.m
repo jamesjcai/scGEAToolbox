@@ -52,12 +52,6 @@ if nargin<3, parentfig=[]; end
     try
         hFig = figure('WindowStyle', 'modal', 'Visible','off');
         hFig.Position(3) = hFig.Position(3) * 1.8;
-        % if ~isempty(parentfig)
-        %     [px_new] = gui.i_getchildpos(parentfig, hFig);
-        % end
-        % if ~isempty(px_new)
-        %     movegui(hFig,px_new);
-        % end
         gui.i_movegui2parent(hFig, parentfig);
 
         figure(hFig);

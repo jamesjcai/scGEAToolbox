@@ -1,5 +1,4 @@
-function i_movegui2parent(hFig, parentfig)
-    
+function i_movegui2parent(hFig, parentfig)    
     try
         if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 
             [px_new] = gui.i_getchildpos(parentfig, hFig);

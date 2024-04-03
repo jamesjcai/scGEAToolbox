@@ -16,7 +16,7 @@ end
 
 fw = gui.gui_waitbar;
 
-sizesorted = false;
+% sizesorted = false;
 labelsx='';
 labelsy='';
 T=[];
@@ -62,18 +62,7 @@ tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
     %     "xpowerpoint.gif",'Reorder Samples');
     % pkg.i_addbutton2fig(tb, 'off', @i_sortbymean, ...
     %     "xpowerpoint.gif", 'Sort Samples by Size');
-%    movegui(hFig, 'center');
-%    set(hFig, 'Visible', true);
 
-% try
-%     if any(px_new<0)
-%         movegui(hFig, 'center');
-%     else
-%         movegui(hFig, px_new);
-%     end
-% catch
-%     movegui(hFig, 'center');
-% end
 
 gui.i_movegui2parent(hFig, FigureHandle);
 
@@ -149,26 +138,26 @@ hFig.Visible=true;
         title(lgd, llabel);
     end        
 
-    function i_sortbymean(~, ~)
-        if ~sizesorted
-            [~, idx] = sort(sum(T, 2), 'descend');
-            T = T(idx, :);
-            labelsx = labelsx(idx);
-            sizesorted = true;
-        else
-            [idx] = gui.i_selmultidlg(labelsx, natsort(labelsx));
-            % [~, idx] = sort(labelsx);
-            T = T(idx, :);
-            labelsx = labelsx(idx);
-            sizesorted = false;
-        end
-        subplot(211)
-        cla
-        in_plot1;
-        subplot(212)
-        cla
-        in_plot2;
-    end
+    % function i_sortbymean(~, ~)
+    %     if ~sizesorted
+    %         [~, idx] = sort(sum(T, 2), 'descend');
+    %         T = T(idx, :);
+    %         labelsx = labelsx(idx);
+    %         sizesorted = true;
+    %     else
+    %         [idx] = gui.i_selmultidlg(labelsx, natsort(labelsx));
+    %         % [~, idx] = sort(labelsx);
+    %         T = T(idx, :);
+    %         labelsx = labelsx(idx);
+    %         sizesorted = false;
+    %     end
+    %     subplot(211)
+    %     cla
+    %     in_plot1;
+    %     subplot(212)
+    %     cla
+    %     in_plot2;
+    % end
 
     function i_saveCrossTable(~, ~)
         gui.i_exporttable(T, false, 'Tcrosstabul','CrosstabulTable');

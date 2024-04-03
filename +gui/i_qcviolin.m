@@ -32,12 +32,6 @@ pkg.violinplot(cj, [], 'showdata', false);
 title(sprintf('percent.mt\n(mitochondrial content)'));
 box on;
 
-% if ~isempty(px_new)
-%     movegui(hFig, px_new);
-% else
-%     movegui(hFig, 'center');
-% end
-
 gui.i_movegui2parent(hFig, parentfig);
 
 

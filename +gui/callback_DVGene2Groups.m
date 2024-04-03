@@ -94,8 +94,8 @@ cx2=cx(2,:);
     d2=([px2 py2 pz2] - xyz2(T2.nearidx));
     ddn = vecnorm(d1-d2,2,2);
 
-    BaselineDiffDist = zeros(size(T1,1), 1);
-    DiffDistRaw =  zeros(size(T1,1), 1);
+    % BaselineDiffDist = zeros(size(T1,1), 1);
+    % DiffDistRaw =  zeros(size(T1,1), 1);
     DiffDistNormlized = zeros(size(T1,1), 1);
     
 %    BaselineDiffDist(valididx) = bd;
@@ -133,17 +133,6 @@ if ~strcmp(answer,'Yes'), return; end
 hFig = figure('Visible','off');
 hFig.Position(3) = hFig.Position(3)*1.8;
 gui.i_movegui2parent(hFig, FigureHandle);
-
-% try
-%     [px_new] = gui.i_getchildpos(FigureHandle, hFig);
-%     if ~isempty(px_new)
-%         movegui(hFig, px_new);
-%     else
-%         movegui(hFig, 'center');
-%     end
-% catch
-%     movegui(hFig, 'center');
-% end
 
 tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
 uipushtool(tb, 'Separator', 'off');

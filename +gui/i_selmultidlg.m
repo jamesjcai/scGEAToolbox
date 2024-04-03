@@ -29,30 +29,6 @@ hFig = figure('Visible', 'off', ...
 % ax.Units = 'pixels';
 % ax.Position = [75 75 325 280]
 
-% if ~isempty(parentfig)
-%     p = parentfig.Position;
-%     cx = [p(1)+p(3)/2 p(2)+p(4)/2];
-%     px = hFig.Position;
-%     px_new = [cx(1)-px(3)/2 cx(2)-px(4)/2];
-%     movegui(hFig, px_new);
-% else
-%     movegui(hFig, 'center');
-% end
-
-% try
-%     if ~isempty(parentfig)
-%         [px_new] = gui.i_getchildpos(parentfig, hFig);
-%         if ~isempty(px_new)
-%             movegui(hFig, px_new);
-%         else
-%             movegui(hFig, 'center');
-%         end
-%     else
-%         movegui(hFig, 'center');
-%     end
-% catch
-%     movegui(hFig, 'center');
-% end
 gui.i_movegui2parent(hFig, parentfig);
 
 

@@ -84,28 +84,6 @@ pkg.i_addbutton2fig(tb, 'off', @i_renametitle, "icon-mat-touch-app-10.gif", 'Cha
 %pkg.i_addbutton2fig(tb, 'on', @i_viewgenenames, 'HDF_point.gif', 'Show Gene Names');
 pkg.i_addbutton2fig(tb, 'on', @i_resizewin, 'HDF_pointx.gif', 'Resize Plot Window');
 
-% if isempty(px_new)
-%     movegui(hFig,'center');
-% else    
-%     movegui(hFig, px_new);
-% end
-
-%[px_new] = gui.i_getchildpos(parentfig, hFig);
-% try
-%     if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 
-%         [px_new] = gui.i_getchildpos(parentfig, hFig);
-%         if ~isempty(px_new)
-%             movegui(hFig, px_new);
-%         else
-%             movegui(hFig, 'center');
-%         end
-%     else
-%         movegui(hFig, 'center');
-%     end
-% catch
-%     movegui(hFig, 'center');
-% end
-
 gui.i_movegui2parent(hFig, parentfig);
 
 % drawnow;

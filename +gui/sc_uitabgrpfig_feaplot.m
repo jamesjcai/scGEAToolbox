@@ -126,27 +126,7 @@ pkg.i_addbutton2fig(tb, 'off', @in_savedata, "powerpointx.gif", 'Save Gene List.
 pkg.i_addbutton2fig(tb, 'off', @i_savemainfig, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 pkg.i_addbutton2fig(tb, 'off', @i_savemainfigx, "xpowerpoint.gif", 'Save Figure as Graphic File...');
 
-%gui.add_3dcamera(tb);
-% if isempty(px_new)
-%     movegui(hFig,'center');
-% else    
-%     movegui(hFig, px_new);
-% end
 
-% try
-% if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 
-%     [px_new] = gui.i_getchildpos(parentfig, hFig);
-%     if ~isempty(px_new)
-%         movegui(hFig, px_new);
-%     else
-%         movegui(hFig, 'center');
-%     end
-% else
-%     movegui(hFig, 'center');
-% end
-% catch
-%     movegui(hFig, 'center');
-% end
 gui.i_movegui2parent(hFig, parentfig);
 
 

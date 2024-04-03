@@ -185,16 +185,6 @@ pkg.i_addbutton2fig(tb1, 'on', {@i_savetable, Y}, 'export.gif', 'Export data...'
 pkg.i_addbutton2fig(tb1, 'on', @gui.i_invertcolor, 'plotpicker-comet.gif', 'Invert colors');
 pkg.i_addbutton2fig(tb1, 'off', @i_resetcolor, 'plotpicker-geobubble2.gif', 'Reset color map');
 
-% try
-%     [px_new] = gui.i_getchildpos(FigureHandle, hFig);
-%     if ~isempty(px_new)
-%         movegui(hFig, px_new);
-%     else
-%         movegui(hFig, 'center');
-%     end
-% catch
-%     movegui(hFig, 'center');
-% end
 gui.i_movegui2parent(hFig, FigureHandle);
 
 set(hFig, 'visible', 'on');

@@ -60,16 +60,7 @@ set(hFig,'Position',figpos);
         text(fa,20, 80,"Version "+v1,'Color',[.7 .7 .7],'FontSize',12);
     end
     %text(fa,1.0,0.2,'James Cai (jcai@tamu.edu)','Color',[.7 .7 .7],'FontSize',14);
-% try
-%     if ~isempty(parentfig)
-%         px_new = gui.i_getchildpos(parentfig, hFig);
-%         movegui(hFig, px_new);
-%     else
-%         movegui(hFig,'center');
-%     end
-% catch
-%     movegui(hFig, 'center');
-% end
+
 gui.i_movegui2parent(hFig, parentfig);
 
     hFig.Visible=true;

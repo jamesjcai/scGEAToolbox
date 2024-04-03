@@ -38,16 +38,6 @@ function callback_MultiGroupingViewer(src, ~)
                 title(strrep(clabelv{k},'_','\_'));
             end
 
-            % try
-            %     [px_new] = gui.i_getchildpos(FigureHandle, hFig);
-            %     if ~isempty(px_new)
-            %         movegui(hFig, px_new);
-            %     else
-            %         movegui(hFig, 'center');
-            %     end
-            % catch
-            %     movegui(hFig, 'center');
-            % end
             gui.i_movegui2parent(hFig, FigureHandle);
 
             drawnow;
