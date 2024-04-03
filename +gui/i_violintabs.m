@@ -23,6 +23,8 @@ hFig = figure("Visible","off",'MenuBar','none', ...
     'ToolBar','figure', 'DockControls', 'off');
 hFig.Position(3) = hFig.Position(3) * 1.8;
 
+delete(findall(hFig, 'Tag', 'FigureToolBar'));
+
 % if ~isempty(cx)
 %     px = hFig.Position;
 %     px_new = [cx(1)-px(3)/2 cx(2)-px(4)/2];
@@ -58,7 +60,7 @@ tb = uitoolbar(hFig);
 pkg.i_addbutton2fig(tb, 'off',  @i_genecards, 'fvtool_fdalinkbutton.gif', 'GeneCards...');
 % pkg.i_addbutton2fig(tb, 'on', {@i_PickColorMap, c}, 'plotpicker-compass.gif', 'Pick new color map...');
 
-pkg.i_addbutton2fig(tb, 'off', @i_savedata, 'export.gif', 'Export data...');
+pkg.i_addbutton2fig(tb, 'off', @in_savedata, 'export.gif', 'Export data...');
 pkg.i_addbutton2fig(tb, 'off', @i_testdata, 'icon-fa-stack-exchange-10.gif', 'ANOVA/T-test...');
 pkg.i_addbutton2fig(tb, 'off', @i_addsamplesize, "icon-mat-blur-linear-10.gif", 'Add Sample Size');
 pkg.i_addbutton2fig(tb, 'off', @i_savemainfig, "powerpoint.gif", 'Save Figure to PowerPoint File...');
@@ -397,6 +399,8 @@ hFig.Visible=true;
     end
 
 
+
+
     function i_savedata(~, ~)
         [~,idx]=ismember(focalg, tabnamelist);
         thisy = y{idx};
@@ -405,6 +409,23 @@ hFig.Visible=true;
         T.Properties.VariableNames = {'ScoreLevel', 'GroupID'};
         %T=sortrows(T,'ScoreLevel','descend');
         %T=sortrows(T,'GroupID');
+        gui.i_exporttable(T, true, 'Tviolindata','ViolinPlotTable');
+    end
+
+
+    function in_savedata(~, ~)
+        [~, idxlabel]= grp2idx(thisc(:));
+        T=table();
+        for tabidx=1:n
+            g = tabnamelist(tabidx);
+            thisy = y{tabidx};            
+            a1=grpstats(thisy, thisc(:), @mean);
+            a2=grpstats(thisy, thisc(:), @median);
+            t = table(a1, a2);
+            t.Properties.RowNames = idxlabel;
+            t.Properties.VariableNames = matlab.lang.makeValidName({sprintf('Mean_%s',g), sprintf('Median_%s',g)});
+            T = [T, t];
+        end
         gui.i_exporttable(T, true, 'Tviolindata','ViolinPlotTable');
     end
 

@@ -75,7 +75,7 @@ switch answer
                 T.(variables{k}) = xx;
             end
         end
-        writetable(T, filename, 'FileType', 'spreadsheet');
+        writetable(T, filename, 'FileType', 'spreadsheet','WriteRowNames',true);
         pause(1)
         if needwait
             waitfor(helpdlg(sprintf('Result has been saved in %s', filename), ''));
