@@ -426,6 +426,7 @@ hFig.Visible=true;
             t.Properties.VariableNames = matlab.lang.makeValidName({sprintf('Mean_%s',g), sprintf('Median_%s',g)});
             T = [T, t];
         end
+        T = rows2vars(T);
         gui.i_exporttable(T, true, 'Tviolindata','ViolinPlotTable');
     end
 
