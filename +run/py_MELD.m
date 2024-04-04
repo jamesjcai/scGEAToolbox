@@ -10,7 +10,7 @@ end
 sample_likelihoods = [];
 T = [];
 
-isdebug = true;
+isdebug = false;
 
 oldpth = pwd();
 prgfoldername = 'py_MELD';

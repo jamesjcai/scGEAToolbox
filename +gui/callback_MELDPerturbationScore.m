@@ -20,7 +20,12 @@ end
 
 %fw=gui.gui_waitbar;
 try
-    [score, T] = run.py_MELD(sce.X, sce.c_batch_id);
+    id = sce.c_batch_id;
+    if ~isnumeric(id)
+        id = grp2idx(sce.c_batch_id);
+        id = id(:);
+    end    
+    [score, T] = run.py_MELD(sce.X, id);
     if isempty(score) || size(score, 1) ~= size(sce.X, 2)
         %gui.gui_waitbar(fw);
         errordlg("MELD Running Error");

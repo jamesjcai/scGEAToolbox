@@ -90,8 +90,8 @@ cx2=cx(2,:);
     px1 = T1.lgu; py1 = T1.lgcv; pz1 = T1.dropr;
     px2 = T2.lgu; py2 = T2.lgcv; pz2 = T2.dropr;
 
-    d1=([px1 py1 pz1] - xyz1(T1.nearidx));
-    d2=([px2 py2 pz2] - xyz2(T2.nearidx));
+    d1=([px1 py1 pz1] - xyz1(T1.nearidx,:));
+    d2=([px2 py2 pz2] - xyz2(T2.nearidx,:));
     ddn = vecnorm(d1 - d2, 2, 2);
 
 
