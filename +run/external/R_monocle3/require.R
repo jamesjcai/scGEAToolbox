@@ -18,7 +18,6 @@ if (!requireNamespace("monocle3", quietly = TRUE)){
     devtools::install_github('cole-trapnell-lab/monocle3')
 }
 
-
 if (!requireNamespace("rhdf5", quietly = TRUE)){
     if (!requireNamespace("BiocManager", quietly = TRUE)){
         install.packages("BiocManager", repo="http://cran.rstudio.com/")
