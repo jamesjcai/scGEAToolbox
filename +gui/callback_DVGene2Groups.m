@@ -30,8 +30,8 @@ cx2=cx(2,:);
     
     sce1 = sce.selectcells(i1);
     sce2 = sce.selectcells(i2);
-    sce1 = sce1.qcfilter;  
-    sce2 = sce2.qcfilter;  
+    sce1 = sce1.qcfilter;
+    sce2 = sce2.qcfilter;
 
     if sce1.NumCells < 50 || sce2.NumCells < 50
         uiwait(warndlg('One of groups contains too few cells (n < 50). The result may not be reliable.',''));
@@ -51,26 +51,10 @@ cx2=cx(2,:);
     X2 = X2(ib, :);
     g1 = g1(ia);
     g2 = g2(ib);
-
-
-    %sce1.X = sce1.X(ia, :);
-    %sce1.g = sce1.g(ia);
-    %sce2.X = sce2.X(ib, :);
-    %sce2.g = sce2.g(ib);
-
-    %isequal(sce1.g, sce2.g)
-
-    %x1 = T1.lgu; y1 = T1.lgcv; z1 = T1.dropr;
-    %x2 = T2.lgu; y2 = T2.lgcv; z2 = T2.dropr;
-    
+ 
     valididx = T1.nearidx>0 & T2.nearidx>0;
     T1 = T1(valididx,:);
     T2 = T2(valididx,:);
-
-    % size(T1)
-    % size(xyz1)
-    % size(T2)
-    % size(xyz2)
 
     X1 = X1(valididx, :);
     g1 = g1(valididx);
