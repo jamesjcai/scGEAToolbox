@@ -64,7 +64,7 @@ if ~isempty(s_in), sce.s = s_in; end
 [c, cL] = grp2idx(sce.c);
 
 if ~isempty(v1)
-    figname = sprintf('SCGEATOOL v%s', v1);
+    figname = sprintf('SCGEATOOL v%sa', v1);
 else
     figname = 'SCGEATOOL';
 end
@@ -193,7 +193,7 @@ in_addmenu(m_extn, 0, @gui.i_setpyenv, 'Set up Python Environment');
 in_addmenu(m_extn, 0, @gui.i_setextwd, 'Set External Program Working Root Directory...');
 in_addmenu(m_extn, 1, @in_DecontX, 'Detect Ambient RNA Contamination (DecontX/R) [PMID:32138770]...');
 in_addmenu(m_extn, 0, @in_RunSeuratWorkflow, 'Run Seurat Workflow (Seurat/R) [PMID:25867923]...');
-in_addmenu(m_extn, 0, @gui.callback_RunMonocle3, 'Pseudotime Analysis (Monocle3/R) [PMID:28825705]...');
+in_addmenu(m_extn, 0, @in_RunMonocle3, 'Pseudotime Analysis (Monocle3/R) [PMID:28825705]...');
 in_addmenu(m_extn, 1, @gui.callback_MELDPerturbationScore, 'MELD Perturbation Score (MELD/Py) [PMID:33558698]...');
 in_addmenu(m_extn, 0, {@in_SubsampleCells, 2}, 'Geometric Sketching (geosketch/Py) [PMID:31176620]...');
 in_addmenu(m_extn, 0, @in_HarmonyPy, 'Batch Integration (Harmony/Py) [PMID:31740819]...');
@@ -402,11 +402,18 @@ if ~showuseronboarding, set(UserToolbarHandle, 'Visible', 'off'); end
         end
     end
 
-    function in_CompareCellScoreBtwCls(src,events)
-        if gui.callback_CompareCellScoreBtwCls(src,events)
+    function in_CompareCellScoreBtwCls(src, events)
+        if gui.callback_CompareCellScoreBtwCls(src, events)
             sce = guidata(FigureHandle);
         end
     end
+
+    function in_RunMonocle3(src, events)
+        if gui.callback_RunMonocle3(src, events)
+            sce = guidata(FigureHandle);
+        end
+    end
+
 
     function in_turnonuserguiding(~, ~)
         % setpref('scgeatoolbox','useronboardingtoolbar',true);

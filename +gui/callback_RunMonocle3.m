@@ -1,5 +1,6 @@
-function callback_RunMonocle3(src, ~)
+function [needupdatesce] = callback_RunMonocle3(src, ~)
 
+needupdatesce = false;
 extprogname = 'R_monocle3';
 preftagname = 'externalwrkpath';
 [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
@@ -88,6 +89,8 @@ else
 end
 
 guidata(FigureHandle, sce);
+needupdatesce = true;
+
 
 if ~(ismcc || isdeployed)
     labels = {'Save pseudotime T to variable named:'};
