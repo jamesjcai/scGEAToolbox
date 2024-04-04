@@ -69,7 +69,8 @@ answer = questdlg('Using MATLAB engine for Python or Calling Python script?', ..
                             id = grp2idx(sce.c_batch_id);
                             id = id(:);
                         end
-                        [s] = run.py_harmonypy(sce.s, id, wkdir);
+                        [s] = run.py_harmonypy_new(sce.s, id, wkdir);
+                        % [s] = run.py_harmonypy(sce.s, id);
 
                         if isempty(s) || isequal(sce.s, s)
                             % gui.gui_waitbar(fw);

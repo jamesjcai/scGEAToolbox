@@ -1,10 +1,8 @@
-import os
-#import sys
-abspath = os.path.abspath(__file__)
-dname = os.path.dirname(abspath)
-os.chdir(dname)
+#import os
+#abspath = os.path.abspath(__file__)
+#dname = os.path.dirname(abspath)
+#os.chdir(dname)
 
-# os.chdir("U:\\GitHub\\scGEAToolbox\\+run\\thirdparty\\harmony")
 import pandas as pd
 import numpy as np
 import harmonypy as hm

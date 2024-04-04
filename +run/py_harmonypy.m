@@ -7,7 +7,7 @@ end
 prgfoldername = 'py_harmonypy';
 
 sout = [];
-isdebug = false;
+isdebug = true;
 
 %if nargin<3, usepylib=false; end
 %if nargin<2, error('[s]=run.harmonypy(s,batchid)'); end

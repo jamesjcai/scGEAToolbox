@@ -1,10 +1,12 @@
 function [sout] = py_harmonypy_new(s, batchid, wkdir, isdebug)
-% arguments
-%     s(:, :) {mustBeNumeric}
-%     batchid(1, :) {mustBePositive, mustBeInteger}
-% end
-if nargin < 4, isdebug = true; end
-if nargin < 3, wkdir = []; end
+arguments
+    s(:, :) {mustBeNumeric}
+    batchid(1, :) {mustBePositive, mustBeInteger}
+    wkdir = []
+    isdebug = true
+end
+%if nargin < 4, isdebug = true; end
+%if nargin < 3, wkdir = []; end
 
 % prgfoldername = 'py_harmonypy';
 
@@ -75,9 +77,6 @@ if isvalid(fw)
 end
 % fw = gui.gui_waitbar([],[],'Running DataMapPlot...');
 codefullpath = fullfile(codepth,'script.py');
-
-codefullpath
-wkdir
 
 pkg.i_addwd2script(codefullpath, wkdir, 'python');
 %     fw=gui.gui_waitbar([],[],'Running harmonypy...');
