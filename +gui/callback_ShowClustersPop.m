@@ -6,9 +6,9 @@ FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
 [thisc, ~] = gui.i_select1class(sce);
 if isempty(thisc), return; end
-% [c, cL] = grp2idx(thisc);
-[c, cL, noanswer] = gui.i_reordergroups(thisc);
-if noanswer, return; end
+[c, cL] = grp2idx(thisc);
+% [c, cL, noanswer] = gui.i_reordergroups(thisc);
+% if noanswer, return; end
 if max(c)==1
     waitfor(helpdlg(sprintf('Only one type of cells: %s',cL{1}),''))
     return;

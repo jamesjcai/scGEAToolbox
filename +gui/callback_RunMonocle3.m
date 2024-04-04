@@ -48,9 +48,9 @@ end
 %    extprogname, 'r');
 %if ~ok, return; end
 
-
 sce = guidata(FigureHandle);
 fw = gui.gui_waitbar;
+
 try
     [t_mono3, s_mono3, ~, q_mono3] = run.r_monocle3(sce.X, idx, ndim, wkdir, isdebug);
 catch ME
