@@ -92,21 +92,18 @@ cx2=cx(2,:);
 
     d1=([px1 py1 pz1] - xyz1(T1.nearidx));
     d2=([px2 py2 pz2] - xyz2(T2.nearidx));
-    ddn = vecnorm(d1-d2,2,2);
+    ddn = vecnorm(d1 - d2, 2, 2);
 
-    % BaselineDiffDist = zeros(size(T1,1), 1);
-    % DiffDistRaw =  zeros(size(T1,1), 1);
-    DiffDistNormlized = zeros(size(T1,1), 1);
-    
-%    BaselineDiffDist(valididx) = bd;
-%    DiffDistRaw(valididx) = dd;
-    DiffDistNormlized(valididx) = ddn;
+
+    DiffDist = zeros(size(T1,1), 1);
+   
+    DiffDist(valididx) = ddn;
 
     
     T1.Properties.VariableNames = append(T1.Properties.VariableNames, sprintf('_%s',cL1{1}));
     T2.Properties.VariableNames = append(T2.Properties.VariableNames, sprintf('_%s',cL2{1}));
     
-    T=[T1 T2 table(DiffDistNormlized)];
+    T=[T1 T2 table(DiffDist)];
     
     %assignin("base","T",T)
     %assignin("base","T1",T1)
@@ -114,7 +111,7 @@ cx2=cx(2,:);
     %assignin("base","xyz1",xyz1)
     %assignin("base","xyz2",xyz2)
     
-    T = sortrows(T,"DiffDistNormlized","descend");
+    T = sortrows(T,"DiffDist","descend");
     
     gui.gui_waitbar(fw);
 
