@@ -73,9 +73,8 @@ disp('Input file written.');
 if isvalid(fw)
     gui.gui_waitbar(fw, [], [], 'Checking Python environment is complete');
     %pause(0.5);
-    %gui.gui_waitbar(fw, [], [], 'Running Harmonypy...');
+    gui.gui_waitbar(fw, [], [], 'Running Harmonypy...');
 end
-fw = gui.gui_waitbar([],[],'Running Harmonypy...');
 codefullpath = fullfile(codepth,'script.py');
 
 pkg.i_addwd2script(codefullpath, wkdir, 'python');
