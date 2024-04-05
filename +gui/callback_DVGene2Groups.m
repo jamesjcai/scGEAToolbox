@@ -115,11 +115,16 @@ hFig = figure('Visible','off');
 hFig.Position(3) = hFig.Position(3)*1.8;
 gui.i_movegui2parent(hFig, FigureHandle);
 
-tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
+delete(findall(hFig, 'Tag', 'FigureToolBar'))
+tb = uitoolbar('Parent', hFig);
+%tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
 uipushtool(tb, 'Separator', 'off');
 
-pkg.i_addbutton2fig(tb, 'off', @in_HighlightGenes, 'xplotpicker-qqplot.gif', 'Highlight top HVGs');
+pkg.i_addbutton2fig(tb, 'off', {@in_HighlightGenes, 1}, 'list.gif', 'Highlight top HVGs');
 % pkg.i_addbutton2fig(tb, 'off', @in_HighlightSelectedGenes, 'xplotpicker-qqplot.gif', 'Highlight selected genes');
+pkg.i_addbutton2fig(tb, 'off', {@in_HighlightGenes, 2}, 'plotpicker-qqplot.gif', 'Highlight top HVGs');
+pkg.i_addbutton2fig(tb, 'off', @EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Enrichment analysis...');
+
 
 hFig.Visible=true;
 hAx0 = subplot(2,2,[1 3]);
@@ -161,16 +166,13 @@ xlabel(hAx2,'Cell Index');
 ylabel(hAx2,'Expression Level');
 h3 = [];
 
-
-
     function txt = in_myupdatefcn3(src, event_obj, g)
         if isequal(get(src, 'Parent'), hAx0)
 
             % dtp = findobj(h1, 'Type', 'datatip');
             % if ~isempty(dtp), delete(dtp); end
             % dtp = findobj(h2, 'Type', 'datatip');
-            % if ~isempty(dtp), delete(dtp); end
-            
+            % if ~isempty(dtp), delete(dtp); end            
             idx = event_obj.DataIndex;
             if idx > length(g)*2
                 txt = num2str(event_obj.Position(2)); 
@@ -179,7 +181,6 @@ h3 = [];
             if idx > length(g)
                 idx = idx - length(g);
             end
-
             
             if ~isempty(h3), delete(h3); end
             h3 = plot3(hAx0, [px1(idx) px2(idx)], ...
@@ -206,15 +207,14 @@ h3 = [];
             [titxt] = gui.i_getsubtitle(x2);
             subtitle(hAx2, titxt);
             xlabel(hAx2,'Cell Index');
-            ylabel(hAx2,'Expression Level');
-            
+            ylabel(hAx2,'Expression Level');            
         else
             txt = num2str(event_obj.Position(2));
         end
     end
 
-
-    function in_HighlightGenes(~, ~)
+    function in_HighlightGenes(~, ~, typeid)
+        if nargin < 3, typeid = 1; end
         %h.MarkerIndices=idx20;
        dtp = findobj(h1, 'Type', 'datatip');
        if ~isempty(dtp), delete(dtp); end
@@ -222,7 +222,13 @@ h3 = [];
        if ~isempty(dtp), delete(dtp); end
        if ~isempty(h3), delete(h3); end
         
-        gsorted = natsort(g);
+       switch typeid
+           case 1
+                gsorted = natsort(g);
+           case 2
+                gsorted = T.(T.Properties.VariableNames{1});
+       end
+
         [indx2, tf2] = listdlg('PromptString', ...
             'Select a gene:', ...
             'SelectionMode', 'single', ...
@@ -236,14 +242,20 @@ h3 = [];
         h2.BrushData = idx;
         datatip(h1, 'DataIndex', idx);
         datatip(h2, 'DataIndex', idx);
-
-            % if ~isempty(h3), delete(h3); end
-            % h3 = plot3(hAx0, [px1(idx) px2(idx)], ...
-            %     [py1(idx), py2(idx)], ...
-            %     [pz1(idx), pz2(idx)],'k-','LineWidth',1);
-        
-        
+        % if ~isempty(h3), delete(h3); end
+        % h3 = plot3(hAx0, [px1(idx) px2(idx)], ...
+        %     [py1(idx), py2(idx)], ...
+        %     [pz1(idx), pz2(idx)],'k-','LineWidth',1);       
     end
 
+    function EnrichrHVGs(~, ~)
+        k = gui.i_inputnumk(10, 1, 2000);
+        if ~isempty(k)
+            gsorted = T.(T.Properties.VariableNames{1});
+            gselected = gsorted(1:k);
+            fprintf('%d genes are selected.\n', length(gselected));        
+            gui.i_enrichtest(gselected, gsorted, k);
+        end
+    end
 
 end

@@ -15,15 +15,16 @@ spciestag = gui.i_selectspecies(2);
 if isempty(spciestag), return; end
 
 
-prompt = {'Remove Mt-Genes (MT-ND1, MT-ND6, MT-CYB, MT-COI, MT-ATP6, etc)?', ...
-    'Remove Ribosomal Genes (RPSA, RPS2, RPS3, RPL3, RPL4, RPLP1, etc)?', ...
+prompt = {'Remove Mt-Genes (MT-ND1, MT-ND6, MT-CYB, MT-COI, MT-ATP6, etc.)?', ...
+    'Remove Hemoglobin Genes (HBA1, HBB, Hba-a1, etc.)?', ...
+    'Remove Ribosomal Genes (RPSA, RPS2, RPS3, RPL3, RPL4, RPLP1, etc.)?', ...
     'Remove Genes Without Approved Symbols?', ...
     'Remove Genes Expressed in Less Than m Cells (m = 0.075 or 0.050, 10 or 50)?', ...
     'Keep Top n Highly Variable Genes (HVGs) (n = 5000 or 2000)?'};
 dlgtitle = '';
 dims = [1, 85];
 
-definput = {'Yes', 'Yes', 'Yes', '0.075', num2str(min([sce.NumGenes,5000]))};
+definput = {'Yes', 'Yes', 'Yes', 'Yes', '0.075', num2str(min([sce.NumGenes,5000]))};
 answer = inputdlg(prompt, dlgtitle, dims, definput);
 if isempty(answer)
     requirerefresh = false;
@@ -40,12 +41,18 @@ if strcmpi(answer{1},'Yes') || strcmpi(answer{1},'Y')
 end
 
 if strcmpi(answer{2},'Yes') || strcmpi(answer{2},'Y')
+    scenew = scenew.rmhemoglobingenes;
+    disp('Hemoglobin genes removed.');
+    % requirerefresh = true;
+end
+
+if strcmpi(answer{3},'Yes') || strcmpi(answer{3},'Y')
     scenew = scenew.rmribosomalgenes;
     disp('Ribosomal genes removed.');
     % requirerefresh = true;
 end
 
-if strcmpi(answer{3},'Yes') || strcmpi(answer{3},'Y')
+if strcmpi(answer{4},'Yes') || strcmpi(answer{4},'Y')
     mfolder = fileparts(mfilename('fullpath'));
     switch spciestag
         case 'human'
@@ -68,7 +75,7 @@ if strcmpi(answer{3},'Yes') || strcmpi(answer{3},'Y')
 end
 
 try
-    a = str2double(answer{4});
+    a = str2double(answer{5});
     if a > 0 && a < intmax
         a1 = length(scenew.g);
         scenew = scenew.selectkeepgenes(1, a);
@@ -81,7 +88,7 @@ catch ME
 end
 
 try
-    a = str2double(answer{5});
+    a = str2double(answer{6});
     % T = sc_hvg(scenew.X, scenew.g);
     T = sc_splinefit(scenew.X, scenew.g);
     glist = T.genes(1:min([a, scenew.NumGenes]));

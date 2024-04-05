@@ -310,7 +310,7 @@ methods
     end
 
     function obj = rmhemoglobingenes(obj)
-        hemog = pkg.i_get_hemoglobingenes;
+        hemog = pkg.i_get_hemoglobingenes;        
         [idx] = ismember(obj.g, hemog);
         obj.X = obj.X(~idx, :);
         obj.g = obj.g(~idx);
