@@ -5,30 +5,38 @@ isDoublet = [];
 doubletscore = [];
 methodtag = [];
 
-[ok] = gui.i_confirmscript('Run Detect Doublets (Scrublet)?', ...
-    'py_scrublet', 'python');
-if ~ok, return; end
+%[ok] = gui.i_confirmscript('Run Detect Doublets (Scrublet)?', ...
+%    'py_scrublet', 'python');
+%if ~ok, return; end
 
 FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
 
+
+extprogname = 'py_scrublet';
+preftagname = 'externalwrkpath';
+[wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
+if isempty(wkdir), return; end
 if ~gui.i_setpyenv, return; end
 
-methodtag = 'scrublet';
+
+% methodtag = 'scrublet';
 
 % methodtag=questdlg('Which method?','',...
 %     'scrublet','doubletdetection','scrublet');
 
 %fw=gui.gui_waitbar;
+% try
+%     switch methodtag
+%         case 'scrublet'
 try
-    switch methodtag
-        case 'scrublet'
-            [isDoublet, doubletscore] = run.py_scrublet(sce.X);
+    
+[isDoublet, doubletscore] = run.py_scrublet_new(sce.X, wkdir);
             %                 case 'doubletdetection'
             %                     [isDoublet,doubletscore]=run.py_doubletdetection(sce.X);
-        otherwise
-            return;
-    end
+    %     otherwise
+    %         return;
+    % end
     if isempty(isDoublet) || isempty(doubletscore)
         %gui.gui_waitbar(fw);
         errordlg("Running Error.");

@@ -1,9 +1,3 @@
-import os
-abspath = os.path.abspath(__file__)
-dname = os.path.dirname(abspath)
-os.chdir(dname)
-#os.chdir("U:\\GitHub\\scGEAToolbox\\+run\\thirdparty\\doubletdetection")
-
 #import pandas as pd
 import h5py
 import scrublet as scr

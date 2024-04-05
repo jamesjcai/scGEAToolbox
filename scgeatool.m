@@ -64,7 +64,7 @@ if ~isempty(s_in), sce.s = s_in; end
 [c, cL] = grp2idx(sce.c);
 
 if ~isempty(v1)
-    figname = sprintf('SCGEATOOL v%sa', v1);
+    figname = sprintf('SCGEATOOL v%sb', v1);
 else
     figname = 'SCGEATOOL';
 end
@@ -75,7 +75,7 @@ FigureHandle = figure('Name', figname, ...
     'DockControls','off','MenuBar','none','ToolBar','figure');
 movegui(FigureHandle, 'center');
 
-fig_pos = get(FigureHandle, 'Position'); % [left bottom width height]
+fig_pos = get(FigureHandle, 'Position'); 
 fig_width = fig_pos(3);
 fig_height = fig_pos(4);
 btn_width = 100; 

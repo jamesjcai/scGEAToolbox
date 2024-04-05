@@ -243,7 +243,7 @@ h3 = [];
     end
 
     function EnrichrHVGs(~, ~)
-        k = gui.i_inputnumk(10, 1, 2000);
+        k = gui.i_inputnumk(150, 1, 2000, 'Select top n genes');
         if ~isempty(k)
             gsorted = T.(T.Properties.VariableNames{1});
             gselected = gsorted(1:k);
