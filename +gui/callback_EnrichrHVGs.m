@@ -6,7 +6,6 @@ if nargin < 3 || isempty(sce)
     sce = guidata(FigureHandle);    
 end
 
-
 answer = questdlg('Which HVG detecting method to use?', '', ...
     'Splinefit Method [PMID:31697351]', ...
     'Brennecke et al. (2013) [PMID:24056876]', ...
@@ -16,18 +15,18 @@ answer = questdlg('Which HVG detecting method to use?', '', ...
         case 'Brennecke et al. (2013) [PMID:24056876]'
             fw = gui.gui_waitbar;
             try
-                t = sc_hvg(sce.X, sce.g, true, true);
+                sc_hvg(sce.X, sce.g, true, true);
             catch ME
                 gui.gui_waitbar(fw, true);
-                errordlg(ME.message);
+                uiwait(errordlg(ME.message,''));
             end
             gui.gui_waitbar(fw, true);
         case 'Splinefit Method [PMID:31697351]'            
-            %try
-                gui.sc_scatter3genes_new(sce.X, sce.g, true, true, FigureHandle);
-            %catch ME
-            %    errordlg(ME.message);
-            %end            
+            try
+               gui.sc_scatter3genes_new(sce.X, sce.g, true, true, FigureHandle);
+            catch ME
+               uiwait(errordlg(ME.message,''));
+            end            
         otherwise
             return;
     end
