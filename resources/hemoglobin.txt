@@ -1,0 +1,16 @@
+HBA1
+HBA2
+HBB
+HBD
+HBG1
+HBG2
+HBE1
+Hba-a1
+Hba-a2
+Hbb-b1
+Hbb-b2
+Hbb-y
+Hbe-y
+Hbq-1
+Hbb-bs
+Hbb-bt

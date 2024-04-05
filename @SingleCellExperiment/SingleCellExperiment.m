@@ -309,6 +309,22 @@ methods
             end
     end
 
+    function obj = rmhemoglobingenes(obj)
+        hemog = pkg.i_get_hemoglobingenes;
+        [idx] = ismember(obj.g, hemog);
+        obj.X = obj.X(~idx, :);
+        obj.g = obj.g(~idx);
+        fprintf('%d hemoglobin genes found and removed.\n', ...
+            sum(idx));
+            try
+                for k = 2:2:length(obj.list_gene_attributes)
+                    obj.list_gene_attributes{k}(idx) = [];
+                end
+            catch ME
+                warning(ME.message);
+            end
+    end    
+
     function obj = appendmetainfo(obj, infostr)
         if ~isstring(infostr)
             infostr = string(infostr);

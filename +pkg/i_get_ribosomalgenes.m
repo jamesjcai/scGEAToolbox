@@ -2,8 +2,8 @@ function [g] = i_get_ribosomalgenes
 %Get ribosomal genes
 
 pw1 = fileparts(mfilename('fullpath'));
-ribosomalfile = fullfile(pw1, 'ribosomal.txt');
-if ~exist(ribosomalfile, 'file')
+ribosomalfile = fullfile(pw1, '..','resources', 'ribosomal.txt');
+if ~exist(ribosomalfile, 'file')    
     options = weboptions('Timeout', 21);
     % fname=tempname;
     disp('Downloading ribosomal gene names...');

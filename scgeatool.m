@@ -899,16 +899,16 @@ if ~showuseronboarding, set(UserToolbarHandle, 'Visible', 'off'); end
         oldn = sce.NumCells;
         oldm = sce.NumGenes;
         sce.c = c;
-        guidata(FigureHandle, sce);
+        % guidata(FigureHandle, sce);
         try
             [requirerefresh, highlightindex] = ...
                 gui.callback_SelectCellsByQC(src);
         catch ME
             errordlg(ME.message,'');
             return;
-        end
-        sce = guidata(FigureHandle);
+        end        
         if requirerefresh
+            sce = guidata(FigureHandle);
             [c, cL] = grp2idx(sce.c);
             in_RefreshAll(src, [], true, false);
             newn = sce.NumCells;

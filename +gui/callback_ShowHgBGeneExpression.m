@@ -10,7 +10,8 @@ switch species
     case 'mouse'
         idx1 = startsWith(sce.g, 'Hba-', 'IgnoreCase', true);
         idx2 = startsWith(sce.g, 'Hbb-', 'IgnoreCase', true);
-        idx3 = strcmpi(sce.g, "Alas2");
+        % idx3 = strcmpi(sce.g, "Alas2");
+        idx3 = false;
     case 'human'
         idx1 = strcmpi(sce.g, "HBA1");
         idx2 = strcmpi(sce.g, "HBA2");
