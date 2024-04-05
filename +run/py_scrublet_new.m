@@ -82,8 +82,13 @@ disp(cmdlinestr)
 if status == 0 && exist('output.mat', 'file')
     load("output.mat", 'isDoublet', 'doubletscore')
 end
+
+if status == 0 && isvalid(fw)
+    gui.gui_waitbar(fw, [], 'Scrublet is complete');
+end
+
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 cd(oldpth);
 
-gui.gui_waitbar(fw);
+
 end
