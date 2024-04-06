@@ -37,7 +37,9 @@ switch sourcetag
         %sce=guidata(FigureHandle);
 
         [indx, tf] = listdlg('PromptString', {'Select SCEs:'}, ...
-            'liststring', b(1, :), 'SelectionMode', 'multiple');
+            'liststring', b(1, :), ...
+            'SelectionMode', 'multiple', ...
+            'ListSize', [220, 300]);
         if tf == 1
             if length(indx) < 2
                 warndlg('Need at least two selected SCEs.');

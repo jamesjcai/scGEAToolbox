@@ -226,7 +226,7 @@ end
             'summer', 'autumn (default)', ...
             'winter', 'jet'};
         [indx, tf] = listdlg('ListString', list, 'SelectionMode', 'single', ...
-            'PromptString', 'Select a colormap:');
+            'PromptString', 'Select a colormap:', 'ListSize', [220, 300]);
         if tf == 1
             a = list{indx};
             if strcmp(a, 'autumn (default)')

@@ -44,7 +44,9 @@ switch answer
             return;
         end
         [indx, tf] = listdlg('PromptString', {'Select two networks:'}, ...
-            'liststring', b(1, :), 'SelectionMode', 'multiple');
+            'liststring', b(1, :), ...
+            'SelectionMode', 'multiple', ...
+            'ListSize', [220, 300]);
         if tf ~= 1, return; end
         if length(indx) ~= 2, warndlg('Need two networks.');
             return;
@@ -56,7 +58,9 @@ switch answer
             return;
         end
         [indx, tf] = listdlg('PromptString', {'Select the gene list:'}, ...
-            'liststring', b(1, :), 'SelectionMode', 'single');
+            'liststring', b(1, :), ...
+            'SelectionMode', 'single', ...
+            'ListSize', [220, 300]);
         if tf ~= 1, return; end
         glist = evalin('base', a(indx).name);
         if length(glist) ~= size(A0, 1)

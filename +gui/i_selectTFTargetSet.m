@@ -22,7 +22,7 @@ T = T(T.mor > 0, :); % only consider positive regulation
 
 [indx1, tf1] = listdlg('PromptString', ...
     {'Select TF gene:'}, ...
-    'SelectionMode', 'single', 'ListString', tflist);
+    'SelectionMode', 'single', 'ListString', tflist, 'ListSize', [220, 300]);
 
 if tf1 ~= 1, return; end
 %indx1

@@ -1480,7 +1480,7 @@ if ~showuseronboarding, set(UserToolbarHandle, 'Visible', 'off'); end
 
             if manuallyselect && length(ctxt) > 1
                 [indx, tf] = listdlg('PromptString', {'Select cell type'}, ...
-                    'SelectionMode', 'single', 'ListString', ctxt);
+                    'SelectionMode', 'single', 'ListString', ctxt, 'ListSize', [220, 300]);
                 if tf ~= 1, return; end
                 ctxt = Tct.C1_Cell_Type{indx};
             else
@@ -1595,7 +1595,8 @@ if ~showuseronboarding, set(UserToolbarHandle, 'Visible', 'off'); end
 
         [indx, tf] = listdlg('PromptString', ...
             {'Select target cluster'}, 'SelectionMode', ...
-            'single', 'ListString', string(c_members));
+            'single', 'ListString', string(c_members), ...
+            'ListSize', [220, 300]);
         if tf == 1
             c_target = c_members(indx);
         else
@@ -1641,7 +1642,8 @@ if ~showuseronboarding, set(UserToolbarHandle, 'Visible', 'off'); end
         gui.gui_waitbar(fw);
 
         [indx, tf] = listdlg('PromptString', ...
-            {'Select cell type'}, 'SelectionMode', 'single', 'ListString', ctxt);
+            {'Select cell type'}, 'SelectionMode', 'single', ...
+            'ListString', ctxt, 'ListSize', [220, 300]);
         if tf == 1
             ctxt = Tct.C1_Cell_Type{indx};
         else
@@ -1918,7 +1920,7 @@ if ~showuseronboarding, set(UserToolbarHandle, 'Visible', 'off'); end
         [indx, tf] = listdlg('PromptString', ...
             {'Select a clustering algorithm'}, ...
             'SelectionMode', 'single', ...
-            'ListString', methodtagvx);
+            'ListString', methodtagvx, 'ListSize', [220, 300]);
         if tf == 1
             methodtag = methodtagv{indx};
         else

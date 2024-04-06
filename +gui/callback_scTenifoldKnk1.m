@@ -45,7 +45,7 @@ switch answer
             a = a(valididx);
             b = b(:, valididx);
             [indx, tf] = listdlg('PromptString', {'Select network variable:'}, ...
-                'liststring', b(1, :), 'SelectionMode', 'single');
+                'liststring', b(1, :), 'SelectionMode', 'single', 'ListSize', [220, 300]);
             if tf == 1
                 A0 = evalin('base', a(indx).name);
             else
@@ -72,7 +72,7 @@ end
 gsorted = natsort(sce.g);
 if isempty(gsorted), return; end
 [indx2, tf] = listdlg('PromptString', {'Select a KO gene'}, ...
-    'SelectionMode', 'single', 'ListString', gsorted);
+    'SelectionMode', 'single', 'ListString', gsorted, 'ListSize', [220, 300]);
 if tf == 1
     [~, idx] = ismember(gsorted(indx2), sce.g);
 else

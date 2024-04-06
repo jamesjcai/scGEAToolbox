@@ -284,7 +284,8 @@ function [sce] = sc_openscedlg(~, ~)
             end            
             a = a(valididx);
             [indx, tf] = listdlg('PromptString', {'Select SCE variable:'}, ...
-                'liststring', b(1, valididx), 'SelectionMode', 'multiple');
+                'liststring', b(1, valididx), ...
+                'SelectionMode', 'multiple', 'ListSize', [220, 300]);
             if tf == 1
                 if length(indx) == 1
                     sce = evalin('base', a(indx).name);

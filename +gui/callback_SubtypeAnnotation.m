@@ -25,7 +25,7 @@ function [requirerefresh] = callback_SubtypeAnnotation(src, ~)
 
         [indx2, tf2] = listdlg('PromptString', 'Select Cell Type(s):', ...
             'SelectionMode', 'multiple', 'ListString', ...
-            cellstr(ctypelist));
+            cellstr(ctypelist), 'ListSize', [220, 300]);
         if tf2 ~= 1, return; end
         
         celltypetarget_list = ctypelist(indx2);

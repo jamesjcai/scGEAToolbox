@@ -58,7 +58,8 @@ if isempty(listitems), return; end
 %            'Cell Type','Cell Cycle Phase'};
 [indx2, tf2] = listdlg('PromptString', ...
     {'Select state/grouping variable:'}, ...
-    'SelectionMode', 'single', 'ListString', listitems);
+    'SelectionMode', 'single', 'ListString', listitems, ...
+    'ListSize', [220, 300]);
 if tf2 == 1
     clabel = listitems{indx2};
     switch clabel
@@ -158,7 +159,7 @@ end
         %valididx=ismember(b(4,:),'double');
         %a=a(valididx);
         [indx, tf] = listdlg('PromptString', {'Select workspace variable:'}, ...
-            'liststring', b(1, :), 'SelectionMode', 'single');
+            'liststring', b(1, :), 'SelectionMode', 'single', 'ListSize', [220, 300]);
         if tf == 1
             c = evalin('base', a(indx).name);
             x = a(indx).name;
@@ -172,7 +173,7 @@ end
             T = sce.table_attributes;
             att = sce.table_attributes.Properties.VariableNames;
             [indx, tf] = listdlg('PromptString', {'Select a SCE attribute variable:'}, ...
-                'liststring', att, 'SelectionMode', 'single');
+                'liststring', att, 'SelectionMode', 'single', 'ListSize', [220, 300]);
             if tf == 1
                 x = string(att(indx));
                 c = T.(x);

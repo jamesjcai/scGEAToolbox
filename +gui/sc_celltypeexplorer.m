@@ -105,7 +105,8 @@ end
                     %                     ctxt=unique(cx(mode(grp2idx(cx),'all')==grp2idx(cx)));
             end
             [indx, tf] = listdlg('PromptString', {'Select cell type', ...
-                '', ''}, 'SelectionMode', 'single', 'ListString', ctxt);
+                '', ''}, 'SelectionMode', 'single', ...
+                'ListString', ctxt, 'ListSize', [220, 300]);
             if tf == 1
                 ctxt = ctxt{indx};
             else

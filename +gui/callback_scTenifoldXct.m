@@ -37,7 +37,7 @@ if length(cL)<2, errordlg('Need at least 2 cell types.'); return; end
 
 [indxx,tf2] = listdlg('PromptString',...
     {'Select two cell types:'},...
-    'SelectionMode','multiple','ListString',cL);
+    'SelectionMode','multiple','ListString',cL, 'ListSize', [220, 300]);
 if tf2==1
     if numel(indxx)~=2
         errordlg('Please select 2 cell types');

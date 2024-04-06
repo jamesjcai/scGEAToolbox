@@ -33,7 +33,8 @@ end
 
 [indx2, tf2] = listdlg('PromptString', ...
     {'Select clustering variable:'}, ...
-    'SelectionMode', 'single', 'ListString', listitems);
+    'SelectionMode', 'single', ...
+    'ListString', listitems, 'ListSize', [220, 300]);
 if tf2 == 1
     clabel = listitems{indx2};
     switch clabel
@@ -47,7 +48,7 @@ end
     function [c] = i_pickvariable
         c = [];
         [indx, tf] = listdlg('PromptString', {'Select variable:'}, ...
-            'liststring', b(1, :), 'SelectionMode', 'single');
+            'liststring', b(1, :), 'SelectionMode', 'single', 'ListSize', [220, 300]);
         if tf == 1
             c = evalin('base', a(indx).name);
         end

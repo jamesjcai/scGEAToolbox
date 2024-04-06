@@ -19,7 +19,7 @@ end
 
 [indx2, tf2] = listdlg('PromptString', ...
     {'Select embedding:'}, ...
-    'SelectionMode', 'single', 'ListString', listitems);
+    'SelectionMode', 'single', 'ListString', listitems, 'ListSize', [220, 300]);
 if tf2 == 1
     clabel = listitems{indx2};
     switch clabel

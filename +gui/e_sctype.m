@@ -11,7 +11,8 @@ utissuelist = unique(T.tissueType);
 [indx1, tf1] = listdlg('PromptString', ...
     {'Select Tissue Type(s):'}, ...
     'SelectionMode', 'multiple', ...
-    'ListString', utissuelist, 'ListSize', [220, 300]);
+    'ListString', utissuelist, ...
+    'ListSize', [220, 300]);
 
 if tf1 ~= 1, return; end
 selectedtissue = utissuelist(indx1);
@@ -32,8 +33,9 @@ for k = 1:max(c)
     ctxt = Tct.C1_Cell_Type;
 
     if manuallyselect && length(ctxt) > 1
-        [indx, tf] = listdlg('PromptString', {'Select cell type'}, ...
-            'SelectionMode', 'single', 'ListString', ctxt);
+        [indx, tf] = listdlg('PromptString', {'Select cell type'},...
+            'SelectionMode', 'single', ...
+            'ListString', ctxt, 'ListSize', [220, 300]);
         if tf ~= 1, return; end
         ctxt = Tct.C1_Cell_Type{indx};
     else
@@ -89,7 +91,7 @@ ctxt=Tct.C1_Cell_Type;
 
 if manuallyselect && length(ctxt)>1
     [indx, tf] = listdlg('PromptString', {'Select cell type'},...
-        'SelectionMode', 'single', 'ListString', ctxt);
+        'SelectionMode', 'single', 'ListString', ctxt, 'ListSize', [220, 300]);
     if tf ~= 1, return; end
     ctxt = Tct.C1_Cell_Type{indx};
 else

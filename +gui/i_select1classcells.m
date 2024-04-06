@@ -19,7 +19,9 @@ switch answer2
 end
 
 [indxx, tfx] = listdlg('PromptString', {'Select groups'}, ...
-    'SelectionMode', 'multiple', 'ListString', cLisorted);
+    'SelectionMode', 'multiple', ...
+    'ListString', cLisorted, ...
+    'ListSize', [220, 300]);
 if tfx == 1
     ptsSelected = ismember(string(thisc), cLisorted(indxx));
     %ptsSelected=ismember(ci,indxx);

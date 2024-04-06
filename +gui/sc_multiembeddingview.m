@@ -43,7 +43,7 @@ end
         [gsorted] = gui.i_sortgenenames(sce);
         if isempty(gsorted), return; end
         [indx, tf] = listdlg('PromptString', 'Select a gene:', ...
-            'SelectionMode', 'single', 'ListString', gsorted);
+            'SelectionMode', 'single', 'ListString', gsorted, 'ListSize', [220, 300]);
         if tf == 1
             c = full(sce.X(sce.g == gsorted(indx), :));
             for kx = 1:length(axesv)
