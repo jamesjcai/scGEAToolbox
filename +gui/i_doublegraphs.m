@@ -187,7 +187,7 @@ hFig.Visible=true;
             '0.65', '0.70', '0.75', '0.80', '0.85', ...
             '0.90', '0.95 (show 5% of edges)'};
         [indx, tf] = listdlg('ListString', list, ...
-            'SelectionMode', 'single', 'ListSize', [160, 230]);
+            'SelectionMode', 'single', 'ListSize', [220, 300]);
         if tf
             if indx == 1
                 cutoff = 0;

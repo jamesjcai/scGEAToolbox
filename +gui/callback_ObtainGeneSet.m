@@ -19,7 +19,7 @@ switch selecteditem
         listitems = T.ScoreType;
         [indx2, tf2] = listdlg('PromptString', 'Select Score', ...
             'SelectionMode', 'single', 'ListString', ...
-            listitems, 'ListSize', [320, 300]);
+            listitems, 'ListSize', [260, 300]);
         if tf2 ~= 1, return; end
 
         ttxt = string(T.ScoreType(indx2));

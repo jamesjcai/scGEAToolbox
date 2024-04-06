@@ -13,7 +13,8 @@ if ~addnew
 
     [indx2, tf2] = listdlg('PromptString', ...
         {'Select Cell Attribute:'}, ...
-        'SelectionMode', 'single', 'ListString', listitems,'ListSize',[200 300]);
+        'SelectionMode', 'single', 'ListString', listitems, ...
+        'ListSize', [220, 300]);
     
     if tf2 == 1
         clabel = listitems{indx2};

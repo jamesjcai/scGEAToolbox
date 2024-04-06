@@ -66,7 +66,7 @@ bb = 'No, just show values';
             % [indx1,tf1]=listdlg('PromptString',...
             %     'Select a metric for comparison.',...
             %     'SelectionMode','single','ListString',selitems, ...
-            %     'ListSize',[200,300]);
+            %     'ListSize',[220, 300]);
             % if tf1~=1, return; end
             % selecteditem=selitems{indx1};
 
@@ -86,7 +86,6 @@ bb = 'No, just show values';
                         helpdlg('No feature genes selected.', '')
                         return;
                     end
-
                     [y] = gui.e_cellscore(sce, posg);
                 case 'MSigDB Signature Score...'
                     speciestag = gui.i_selectspecies(2, true);
@@ -110,8 +109,6 @@ bb = 'No, just show values';
                             methodid, false);
                     end
                     gui.gui_waitbar(fw);
-
-
                     
 
                 case 'PanglaoDB Cell Type Marker Score...'
@@ -138,7 +135,8 @@ bb = 'No, just show values';
                     listitems = sort(ctlist);
                     [indx, tf] = listdlg('PromptString', ...
                         {'Select Class'}, ...
-                        'SelectionMode', 'single', 'ListString', listitems, 'ListSize', [220, 300]);
+                        'SelectionMode', 'single', 'ListString', listitems, ...
+                        'ListSize', [220, 300]);
                     if ~tf == 1, return; end
                     ctselected = listitems(indx);
                     % idx=find(matches(ctlist,ctselected));
@@ -222,9 +220,8 @@ bb = 'No, just show values';
                     listitems = T.ScoreType;
                     [indx2, tf2] = listdlg('PromptString', 'Select Score', ...
                         'SelectionMode', 'multiple', 'ListString', ...
-                        listitems, 'ListSize', [320, 300]);
+                        listitems, 'ListSize', [260, 300]);
                     if tf2 ~= 1, return; end
-                    % xxxx
 
                     n = length(indx2);
                     y = cell(n,1); ttxt=cell(n,1);

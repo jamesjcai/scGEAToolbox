@@ -140,6 +140,7 @@ in_addmenu(m_view, 0, @gui.callback_CrossTabulation, 'Cross Tabulation');
 in_addmenu(m_view, 1, @gui.callback_ViewMetaData, 'View Metadata...', 'M');
 in_addmenu(m_view, 1, @gui.callback_ShowHgBGeneExpression, 'Hemoglobin (Hgb) Genes Expression...');
 in_addmenu(m_view, 0, @gui.callback_ShowMtGeneExpression, 'Mitochondrial (Mt-) Genes Expression...');
+in_addmenu(m_view, 0, @in_qcviolin, 'Cell QC Metrics in Violin Plots...');
 in_addmenu(m_view, 1, @gui.callback_ShowClustersPop,"Show Cell Clusters/Groups Individually...");
 in_addmenu(m_view, 1, @gui.callback_CloseAllOthers, 'Close All Other Figures', 'X');
 in_addmenu(m_view, 0, @in_RefreshAll, 'Refresh Current View', 'R');
@@ -638,6 +639,10 @@ if ~showuseronboarding, set(UserToolbarHandle, 'Visible', 'off'); end
             gui.gui_waitbar(fw);
             errordlg(ME.message,'');
         end
+    end
+
+    function in_qcviolin(~, ~)
+        gui.i_qcviolin(sce.X, sce.g, FigureHandle);
     end
 
     % function in_GEOAccessionToSCE(src, ~)
