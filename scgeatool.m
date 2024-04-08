@@ -243,7 +243,7 @@ UserToolbarHandle = uitoolbar('Parent', FigureHandle);
 in_addbuttonpush(0, 0, [], [], "");
 in_addbuttonpush(0, 0, @gui.callback_MultiGroupingViewer, "plotpicker-arxtimeseries.gif", "Multi-grouping View...");
 in_addbuttonpush(0, 0, @gui.callback_CrossTabulation, "plotpicker-comet.gif", "Cross tabulation");
-in_addbuttonpush(0, 1, @gui.callback_Violinplot, "violinplot.gif", "Gene Violin Plot...");
+in_addbuttonpush(0, 1, @gui.callback_Violinplot, "violinplot.gif", "Gene/Cell State Violin Plot...");
 in_addbuttonpush(0, 0, @gui.callback_DrawDotplot, "icon-mat-blur-linear-10.gif", "Gene Dot Plot...");
 in_addbuttonpush(0, 0, @gui.callback_GeneHeatMap, "icon-mat-apps-20.gif", "Gene Heatmap...");
 in_addbuttonpush(0, 0, [], [], "");
