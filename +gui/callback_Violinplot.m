@@ -33,9 +33,11 @@ function callback_Violinplot(src, ~)
                 a(k) = isnumeric(thisyv{k});
             end
             if any(a)
-                thisyv = thisyv(a);
-                ylabelv = ylabelv(a);
-                waitfor(helpdlg('Only continuous variables of cell state will be shown.',''));
+                if ~all(a)
+                    thisyv = thisyv(a);
+                    ylabelv = ylabelv(a);
+                    waitfor(helpdlg('Only continuous variables of cell state will be shown.',''));
+                end
                 gui.i_violintabs(thisyv, ylabelv, thisc, FigureHandle);
             else
                 waitfor(helpdlg('No valid cell state variables. Violinplot cannot be shown.',''));
