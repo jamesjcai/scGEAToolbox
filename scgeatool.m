@@ -146,7 +146,7 @@ in_addmenu(m_view, 1, @gui.callback_CloseAllOthers, 'Close All Other Figures', '
 in_addmenu(m_view, 0, @in_RefreshAll, 'Refresh Current View', 'R');
 
 m_plot = uimenu(FigureHandle, 'Text', '&Plots');
-in_addmenu(m_plot, 0, @gui.callback_Violinplot, 'Gene Violin Plot...');
+in_addmenu(m_plot, 0, @gui.callback_Violinplot, 'Gene/Cell State Violin Plot...');
 in_addmenu(m_plot, 0, @gui.callback_DrawDotplot, 'Gene Dot Plot...');
 in_addmenu(m_plot, 0, @gui.callback_GeneHeatMap, 'Gene Heatmap...');
 in_addmenu(m_plot, 1, @gui.callback_ShowGeneExprCompr,'Side-by-Side Gene Expression...');
