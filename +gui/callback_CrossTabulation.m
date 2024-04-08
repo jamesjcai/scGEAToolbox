@@ -10,9 +10,7 @@ sce = guidata(FigureHandle);
 % [c, cL, noanswer] = gui.i_reordergroups(thisc2, [], FigureHandle);
 % thisc2=cL(c);
 
-if isempty(thisc1) || isempty(thisc2)
-    return;
-end
+if isempty(thisc1) || isempty(thisc2), return; end
 
 fw = gui.gui_waitbar;
 

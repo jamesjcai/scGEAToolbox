@@ -10,6 +10,7 @@ i_additem(sce.c_cell_cycle_tx, 'Cell Cycle Phase');
 i_additem(sce.c_cell_type_tx, 'Cell Type');
 i_additem(sce.c_batch_id, 'Batch ID');
 i_additem(full(sum(sce.X))', 'Library Size');
+i_additem(full(sum(sce.X > 0))', 'Number of Detected Genes');
 % i_additem(zeros(sce.NumCells,1), 'Mt-reads Ratio');
 
 
@@ -65,6 +66,8 @@ end
         switch clabel
             case 'Library Size'
                 thisc = full(sum(sce.X).');
+            case 'Number of Detected Genes'
+                thisc = full(sum(sce.X > 0).');
             case 'Mt-reads Ratio'
                 i = startsWith(sce.g, 'mt-', 'IgnoreCase', true);
                 lbsz = full(sum(sce.X, 1));

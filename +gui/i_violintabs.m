@@ -44,7 +44,7 @@ ax0=cell(n,1);
 OldTitle = cell(n,1);
 for k=1:n
     tab{k} = uitab(tabgp, 'Title', sprintf('%s',tabnamelist(k)));
-    ax0{k} = axes('parent',tab{k});    
+    ax0{k} = axes('parent',tab{k});
     pkg.i_violinplot(y{k}, thisc, true, cLorder);
     title(ax0{k}, strrep(tabnamelist(k), '_', '\_'));
     % subtitle(ax0{k}, gui.i_getsubtitle(c));
