@@ -1,6 +1,4 @@
-function [thisc, clabel] = i_selectnstates(sce, continuousonly)
-
-if nargin < 2, continuousonly = false; end
+function [thisc, clabel] = i_selectnstates_continous(sce)
 
 thisc = [];
 clabel = [];
@@ -10,39 +8,36 @@ baselistitems = {'Current Class (C)'};
 i_additem(sce.c_cluster_id, 'Cluster ID');
 i_additem(sce.c_cell_cycle_tx, 'Cell Cycle Phase');
 i_additem(sce.c_cell_type_tx, 'Cell Type');
+
 i_additem(sce.c_batch_id, 'Batch ID');
 i_additem(full(sum(sce.X))', 'Library Size');
 i_additem(full(sum(sce.X > 0))', 'Number of Detected Genes');
 % i_additem(zeros(sce.NumCells,1), 'Mt-reads Ratio');
 
+
     function i_additem(itemv, itemn)
-        if ~isempty(itemv) && length(unique(itemv)) >= 1
-            if continuousonly
-                if isnumeric(itemv)
-                    baselistitems = [baselistitems, itemn];
-                end
-            else
-                baselistitems = [baselistitems, itemn];
-            end
+        if ~isempty(itemv) && length(unique(itemv)) >= 1 && isnumeric(itemv)
+            baselistitems = [baselistitems, itemn];
         end
     end
 
-    listitems = [baselistitems, sce.list_cell_attributes(1:2:end)];
+    listitems = [baselistitems, ...
+        sce.list_cell_attributes(1:2:end)];
     nx = length(baselistitems);
 
-    % a=evalin('base','whos');
-    % b=struct2cell(a);
-    % v=false(length(a),1);
-    % for k=1:length(a)
-    %     if max(a(k).size)==sce.NumCells && min(a(k).size)==1
-    %         v(k)=true;
+    %     a=evalin('base','whos');
+    %     b=struct2cell(a);
+    %     v=false(length(a),1);
+    %     for k=1:length(a)
+    %         if max(a(k).size)==sce.NumCells && min(a(k).size)==1
+    %             v(k)=true;
+    %         end
     %     end
-    % end
-    % if any(v)
-    %     a=a(v);
-    %     b=b(:,v);
-    %     listitems=[listitems,'Customized C...'];
-    % end
+    %     if any(v)
+    %         a=a(v);
+    %         b=b(:,v);
+    %         listitems=[listitems,'Customized C...'];
+    %     end
 
     n = length(listitems);
     if n < 1
@@ -65,6 +60,7 @@ i_additem(full(sum(sce.X > 0))', 'Number of Detected Genes');
             [thisc{k}, clabel{k}] = i_getidx(indx2(k));
         end
     end
+
 
     function [thisc, clabel] = i_getidx(indx)
         clabel = listitems{indx};
@@ -94,5 +90,4 @@ i_additem(full(sum(sce.X > 0))', 'Number of Detected Genes');
                 thisc = sce.list_cell_attributes{2*(indx - nx)};
         end
     end
-
 end

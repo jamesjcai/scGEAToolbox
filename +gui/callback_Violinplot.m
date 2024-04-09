@@ -27,7 +27,7 @@ function callback_Violinplot(src, ~)
             gui.sc_uitabgrpfig_violin(sce, glist, thisc, FigureHandle);
             % gui.i_violintabs({y}, '', thisc, parentfig);
         case 'Cell State'
-            [thisyv, ylabelv] = gui.i_selectnstates(sce);
+            [thisyv, ylabelv] = gui.i_selectnstates(sce, true);
             a = false(length(thisyv), 1);
             for k = 1:length(thisyv)
                 a(k) = isnumeric(thisyv{k});

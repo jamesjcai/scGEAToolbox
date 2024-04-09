@@ -1,12 +1,12 @@
-function [thisc, clabel] = i_select1class(sce, allowunique)
+function [thisc, clabel] = i_select1class(sce, allowsingle)
 
-if nargin < 2, allowunique = true; end
+if nargin < 2, allowsingle = true; end
 thisc = [];
 clabel = '';
 
 listitems = {'Current Class (C)'};
 if ~isempty(sce.c_cluster_id)
-    if allowunique
+    if allowsingle
         listitems = [listitems, 'Cluster ID'];
     else
         if numel(unique(sce.c_cluster_id)) > 1
@@ -15,7 +15,7 @@ if ~isempty(sce.c_cluster_id)
     end
 end
 if ~isempty(sce.c_cell_type_tx)
-    if allowunique
+    if allowsingle
         listitems = [listitems, 'Cell Type'];
     else
         if numel(unique(sce.c_cell_type_tx)) > 1
@@ -25,7 +25,7 @@ if ~isempty(sce.c_cell_type_tx)
 end
 
 if ~isempty(sce.c_cell_cycle_tx)
-    if allowunique
+    if allowsingle
         listitems = [listitems, 'Cell Cycle Phase'];
     else
         if numel(unique(sce.c_cell_cycle_tx)) > 1
@@ -34,7 +34,7 @@ if ~isempty(sce.c_cell_cycle_tx)
     end
 end
 if ~isempty(sce.c_batch_id)
-    if allowunique
+    if allowsingle
         listitems = [listitems, 'Batch ID'];
     else
         if numel(unique(sce.c_batch_id)) > 1
