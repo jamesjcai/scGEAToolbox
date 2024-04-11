@@ -39,8 +39,6 @@ A = 0.5*(A + A');
 A = A - diag(diag(A));
 G = graph(A, g);
 L = laplacian(G);
-n = length(L);
-
 
 [V, D] = eigs(L, 21, 'smallestabs');
 D(1,:) = [];
@@ -55,13 +53,14 @@ cov = V * varx * V';
 prs_matrix = cov.^2;
 norm_prs_matrix = prs_matrix ./ diag(prs_matrix);
 
+n = size(norm_prs_matrix, 1);
+W = 1 - eye(n);
+eff_orig = mean(norm_prs_matrix .* W, 2);
+sens_orig = mean(norm_prs_matrix .* W, 1)';
 
-
-disp('Summarising...');
+% Summarising...
 orf_name = Gc.Nodes.Name;
 deg = diag(L);
-eff_orig = mean(norm_prs_matrix, 2);
-sens_orig = mean(norm_prs_matrix, 1)';
 
 df = table(orf_name, deg, eff_orig, sens_orig);
 eigenvector_centr = centrality(Gc, 'eigenvector');
@@ -72,6 +71,13 @@ df.closeness_centr = closeness_centr;
 df.smallest_eigenvec = V(:, 4);
 
 
+
+
+
+
+
+
+
 % Clustering
 disp('Clustering...');
 row_dist = pdist(norm_prs_matrix, 'seuclidean');
@@ -80,8 +86,6 @@ row_linkage = linkage(row_dist, 'ward');
 
 [~, ~, nds_row] = dendrogram(row_linkage,length(norm_prs_matrix));
 % leafOrder = optimalleaforder(row_linkage,row_dist);
-
-
 % row_linkage = [row_linkage, repmat(length(row_dist), size(row_linkage, 1), 1)];
 % for i = 1:size(row_linkage, 1)
 %     row_linkage(i, 4) = numel(unique([row_linkage(i, 1), row_linkage(i, 2)]));
@@ -108,4 +112,3 @@ df.sens_clust = sens_clust;
 summary_df = sortrows(df, 'eff_orig', 'descend');
 clustered_mat = norm_prs_matrix(nds_row, nds_col);
 
-end

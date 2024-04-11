@@ -833,6 +833,7 @@ if ~showuseronboarding, set(UserToolbarHandle, 'Visible', 'off'); end
             sce = sce.selectcells(ids);
             c = sce.c;
             in_RefreshAll(src, [], true, false);
+            %guidata(FigureHandle, sce);
         else
             errordlg('Runtime error. No action is taken.','');
         end
@@ -904,7 +905,7 @@ if ~showuseronboarding, set(UserToolbarHandle, 'Visible', 'off'); end
         oldn = sce.NumCells;
         oldm = sce.NumGenes;
         sce.c = c;
-        % guidata(FigureHandle, sce);
+        guidata(FigureHandle, sce);
         try
             [requirerefresh, highlightindex] = ...
                 gui.callback_SelectCellsByQC(src);
