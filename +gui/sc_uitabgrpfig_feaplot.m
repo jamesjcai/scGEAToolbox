@@ -15,22 +15,11 @@ pw1 = fileparts(mfilename('fullpath'));
 pth = fullfile(pw1, '..', 'resources', 'myTemplate.pptx');
 
 
-hFig = figure("Visible","off", 'MenuBar','none', 'DockControls', 'off', ...
+hFig = figure("Visible","off", 'MenuBar','none', ...
+    'DockControls', 'off', ...
     'ToolBar','figure');
 
 hFig.Position(3) = hFig.Position(3) * 1.8;
-
-% if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 
-%     px = hFig.Position;
-%     px_new = [cx(1)-px(3)/2 cx(2)-px(4)/2];
-% 
-%     % if px_new(1)<0
-%     %     ss = get(0, 'screensize');
-%     %     px_new(1)=px_new(1)-ss(4); %ss(3); 
-%     % end
-% else
-%     px_new = [];
-% end
 
 n = length(glist);
 a = getpref('scgeatoolbox', 'prefcolormapname', 'autumn');

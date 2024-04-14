@@ -64,7 +64,7 @@ if ~isempty(s_in), sce.s = s_in; end
 [c, cL] = grp2idx(sce.c);
 
 if ~isempty(v1)
-    figname = sprintf('SCGEATOOL v%sb', v1);
+    figname = sprintf('SCGEATOOL v%sc', v1);
 else
     figname = 'SCGEATOOL';
 end
@@ -150,6 +150,7 @@ in_addmenu(m_plot, 0, @gui.callback_Violinplot, 'Gene/Cell State Violin Plot...'
 in_addmenu(m_plot, 0, @gui.callback_DrawDotplot, 'Gene Dot Plot...');
 in_addmenu(m_plot, 0, @gui.callback_GeneHeatMap, 'Gene Heatmap...');
 in_addmenu(m_plot, 1, @gui.callback_ShowGeneExprCompr,'Side-by-Side Gene Expression...');
+in_addmenu(m_plot, 0, @gui.callback_ShowCellScatter,'Cell State Scatter Plot...');
 in_addmenu(m_plot, 1, @in_DrawKNNNetwork, 'Cell kNN Network...');
 in_addmenu(m_plot, 0, @in_DrawTrajectory, 'Cell Trajectory...');
 in_addmenu(m_plot, 1, @gui.callback_PickPlotMarker,'Next Marker Type');

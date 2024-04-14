@@ -14,7 +14,8 @@ import mlreportgen.ppt.*;
 pw1 = fileparts(mfilename('fullpath'));
 pth = fullfile(pw1, '..', 'resources', 'myTemplate.pptx');
 
-hFig = figure("Visible","off", 'MenuBar','none','DockControls','off');
+hFig = figure("Visible","off", 'MenuBar','none', ...
+    'DockControls','off','ToolBar','figure');
 hFig.Position(3) = hFig.Position(3) * 1.8;
 
 % if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 

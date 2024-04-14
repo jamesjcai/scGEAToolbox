@@ -1,16 +1,20 @@
-function i_violintabs(y, tabnamelist, thisc, parentfig)
+function i_scattertabs(y, tabnamelist, thisx, xlabelv, parentfig)
 %see also: gui.i_violinplot
+
+
+%assignin('base',"y",y)
+%assignin('base',"thisx",thisx)
 
 if nargin<4, parentfig = []; end
 tabnamelist = string(tabnamelist);
 
-[~, cLorder]=grp2idx(thisc);
-cLorder = strrep(cLorder, '_', '\_');
+%[~, cLorder]=grp2idx(thisx);
+xlabelv = strrep(xlabelv, '_', '\_');
 
 fw = gui.gui_waitbar;
 isdescend = false;
 
-thisc = strrep(string(thisc), '_', '\_');
+% thisx = strrep(string(thisx), '_', '\_');
 colorit = true;
 
 
@@ -44,7 +48,10 @@ OldTitle = cell(n,1);
 for k=1:n
     tab{k} = uitab(tabgp, 'Title', sprintf('%s',tabnamelist(k)));
     ax0{k} = axes('parent',tab{k});
-    pkg.i_violinplot(y{k}, thisc, true, cLorder);
+    scatter(ax0{k}, thisx(:), y{k}(:));
+    xlabel(ax0{k}, xlabelv);
+    ylabel(ax0{k}, strrep(tabnamelist(k), '_', '\_'));
+    % pkg.i_violinplot(y{k}, thisx, true, cLorder);
     title(ax0{k}, strrep(tabnamelist(k), '_', '\_'));
     % subtitle(ax0{k}, gui.i_getsubtitle(c));
     % gui.i_setautumncolor(c, a, true, any(c==0));
@@ -56,19 +63,21 @@ tabgp.SelectionChangedFcn=@displaySelection;
 % tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
 % uipushtool(tb, 'Separator', 'off');
 tb = uitoolbar(hFig);
-pkg.i_addbutton2fig(tb, 'off',  @i_genecards, 'fvtool_fdalinkbutton.gif', 'GeneCards...');
+% pkg.i_addbutton2fig(tb, 'off',  @i_genecards, 'fvtool_fdalinkbutton.gif', 'GeneCards...');
 % pkg.i_addbutton2fig(tb, 'on', {@i_PickColorMap, c}, 'plotpicker-compass.gif', 'Pick new color map...');
 
-pkg.i_addbutton2fig(tb, 'off', @in_savedata, 'export.gif', 'Export data...');
-pkg.i_addbutton2fig(tb, 'off', @in_testdata, 'icon-fa-stack-exchange-10.gif', 'ANOVA/T-test...');
-pkg.i_addbutton2fig(tb, 'off', @i_addsamplesize, "icon-mat-blur-linear-10.gif", 'Add Sample Size');
+% pkg.i_addbutton2fig(tb, 'off', @in_savedata, 'export.gif', 'Export data...');
+% pkg.i_addbutton2fig(tb, 'off', @in_testdata, 'icon-fa-stack-exchange-10.gif', 'ANOVA/T-test...');
+% pkg.i_addbutton2fig(tb, 'off', @i_addsamplesize, "icon-mat-blur-linear-10.gif", 'Add Sample Size');
 pkg.i_addbutton2fig(tb, 'off', @i_savemainfig, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 pkg.i_addbutton2fig(tb, 'off', @i_savemainfigx, "xpowerpoint.gif", 'Save Figure as Graphic File...');
-pkg.i_addbutton2fig(tb, 'off', @i_invertcolor, "plotpicker-pie.gif", 'Switch BW/Color');
-pkg.i_addbutton2fig(tb, 'off', @i_reordersamples, "plotpicker-errorbar.gif", 'Reorder Samples');
 
-pkg.i_addbutton2fig(tb, 'off', @i_selectsamples, "plotpicker-errorbarx.gif", 'Select Samples');
-pkg.i_addbutton2fig(tb, 'off', @i_sortbymean, "plotpicker-cra.gif", 'Sort Samples by Median');
+%pkg.i_addbutton2fig(tb, 'off', @i_invertcolor, "plotpicker-pie.gif", 'Switch BW/Color');
+%pkg.i_addbutton2fig(tb, 'off', @i_reordersamples, "plotpicker-errorbar.gif", 'Reorder Samples');
+
+%pkg.i_addbutton2fig(tb, 'off', @i_selectsamples, "plotpicker-errorbarx.gif", 'Select Samples');
+%pkg.i_addbutton2fig(tb, 'off', @i_sortbymean, "plotpicker-cra.gif", 'Sort Samples by Median');
+
 pkg.i_addbutton2fig(tb, 'off', @i_renametitle, "icon-mat-touch-app-10.gif", 'Change Plot Title');
 %pkg.i_addbutton2fig(tb, 'on', @i_viewgenenames, 'HDF_point.gif', 'Show Gene Names');
 pkg.i_addbutton2fig(tb, 'on', @i_resizewin, 'HDF_pointx.gif', 'Resize Plot Window');
@@ -154,7 +163,7 @@ hFig.Visible=true;
             if ks~=idx
                 delete(ax0{ks});
                 ax0{ks} = axes('parent',tab{ks});
-                pkg.i_violinplot(y{ks}, thisc, colorit, cLorder);
+                pkg.i_violinplot(y{ks}, thisx, colorit, cLorder);
                 title(ax0{ks}, strrep(tabnamelist(ks), '_', '\_'));           
             end
         end        
@@ -165,7 +174,7 @@ hFig.Visible=true;
         [~,idx]=ismember(focalg, tabnamelist);
         delete(ax0{idx});
         ax0{idx} = axes('parent',tab{idx});
-        pkg.i_violinplot(y{idx}, thisc, colorit, cLorder);
+        pkg.i_violinplot(y{idx}, thisx, colorit, cLorder);
         title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));
         tabgp.SelectedTab=tab{idx};
         drawnow;
@@ -184,7 +193,7 @@ hFig.Visible=true;
                 if isequal(cLorder, b.XTickLabel)
                     a = zeros(length(cLorder), 1);            
                     for kx = 1:length(cLorder)
-                        a(kx) = sum(thisc == cLorder(kx));
+                        a(kx) = sum(thisx == cLorder(kx));
                         cb=pad([string(b.XTickLabel{kx}); sprintf("(n=%d)",a(kx))],'both');
                         b.XTickLabel{kx} = sprintf('%s\\newline%s', cb(:));                
                     end
@@ -202,7 +211,7 @@ hFig.Visible=true;
         if isequal(cLorder, b.XTickLabel)
             a = zeros(length(cLorder), 1);            
             for kx = 1:length(cLorder)
-                a(kx) = sum(thisc == cLorder(k));
+                a(kx) = sum(thisx == cLorder(k));
                 cb=pad([string(b.XTickLabel{kx}); sprintf("(n=%d)",a(kx))],'both');
                 b.XTickLabel{kx} = sprintf('%s\\newline%s', cb(:));            
             end
@@ -216,7 +225,7 @@ hFig.Visible=true;
 
     function i_sortbymean(~, ~)
         [~,idx]=ismember(focalg, tabnamelist);       
-        [cx, cLx] = grp2idx(thisc);
+        [cx, cLx] = grp2idx(thisx);
         a = zeros(max(cx), 1);
         for ks = 1:max(cx)
             a(ks) = median(y{idx}(cx == ks));
@@ -232,17 +241,17 @@ hFig.Visible=true;
         delete(ax0{idx});
         ax0{idx} = axes('parent',tab{idx});       
         cLorder = cLx_sorted;
-        pkg.i_violinplot(y{idx}, thisc, colorit, cLorder);
+        pkg.i_violinplot(y{idx}, thisx, colorit, cLorder);
         title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));  
     end
 
     function i_reordersamples(~, ~)
-        [~, cLorderx, noanswer] = gui.i_reordergroups(thisc);
+        [~, cLorderx, noanswer] = gui.i_reordergroups(thisx);
         if noanswer, return; end
         [~,idx] = ismember(focalg, tabnamelist);
         delete(ax0{idx});
         ax0{idx} = axes('parent',tab{idx});
-        pkg.i_violinplot(y{idx}, thisc, colorit, cLorderx);
+        pkg.i_violinplot(y{idx}, thisx, colorit, cLorderx);
         title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));  
 
         answer = questdlg('Apply to other genes?','');
@@ -252,17 +261,17 @@ hFig.Visible=true;
     end
 
     function i_selectsamples(~, ~)
-        [~, cLorder] = grp2idx(thisc);
+        [~, cLorder] = grp2idx(thisx);
         [newidx] = gui.i_selmultidlg(cLorder, cLorder, hFig);
         if isempty(newidx), return; end
-        picked=ismember(thisc, cLorder(newidx));
+        picked=ismember(thisx, cLorder(newidx));
        
         cLorderx = cLorder(ismember(cLorder,cLorder(newidx)));
         [~,idx]=ismember(focalg, tabnamelist);
         delete(ax0{idx});
         ax0{idx} = axes('parent',tab{idx});
         y_picked = y{idx}(picked);
-        thisc_picked = thisc(picked);
+        thisc_picked = thisx(picked);
         pkg.i_violinplot(y_picked, thisc_picked, colorit, cLorderx);
         title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));
         answer = questdlg('Apply to other genes?','');
@@ -271,7 +280,7 @@ hFig.Visible=true;
         for ks=1:n
             y{ks} = y{ks}(picked);
         end
-        thisc = thisc_picked;
+        thisx = thisc_picked;
         cLorder = cLorderx;
         i_updatealltab(idx);              
     end
@@ -284,10 +293,10 @@ hFig.Visible=true;
             %a = hFig.get("CurrentAxes");
             if isempty(OldTitle{tabidx})
                 OldTitle{tabidx} = a.Title.String;
-                if size(thisy, 2) ~= length(thisc)
+                if size(thisy, 2) ~= length(thisx)
                     thisy = thisy.';
                 end
-                tbl = pkg.e_grptest(thisy, thisc);
+                tbl = pkg.e_grptest(thisy, thisx);
                 if ~isempty(tbl) && istable(tbl)
                     b = sprintf('%s = %.2e; %s = %.2e', ...
                         tbl.Properties.VariableNames{1}, ...
@@ -295,7 +304,7 @@ hFig.Visible=true;
                         tbl.Properties.VariableNames{2}, ...
                         tbl.(tbl.Properties.VariableNames{2}));
                 else
-                    if length(unique(thisc)) == 2
+                    if length(unique(thisx)) == 2
                         b='p_{ttest} = N.A.; p_{wilcoxon} = N.A.';
                     else
                         b='p_{anova} = N.A.; p_{kruskalwallis} = N.A.';
@@ -386,13 +395,13 @@ hFig.Visible=true;
     % end
 
     function in_savedata(~, ~)
-        [~, idxlabel]= grp2idx(thisc(:));
+        [~, idxlabel]= grp2idx(thisx(:));
         T=table();
         for tabidx=1:n
             g = tabnamelist(tabidx);
             thisy = y{tabidx};            
-            a1=grpstats(thisy, thisc(:), @mean);
-            a2=grpstats(thisy, thisc(:), @median);
+            a1=grpstats(thisy, thisx(:), @mean);
+            a2=grpstats(thisy, thisx(:), @median);
             t = table(a1, a2);
             t.Properties.RowNames = idxlabel;
             t.Properties.VariableNames = matlab.lang.makeValidName({sprintf('Mean_%s',g), sprintf('Median_%s',g)});
