@@ -1,8 +1,5 @@
 function callback_DVGene2Groups_new(src, ~)
 
-%warndlg('The function is under development.');
-%return;
-
 cx=lines(2);
 cx1=cx(1,:);
 cx2=cx(2,:);
@@ -129,8 +126,7 @@ end
     T1.Properties.VariableNames = append(T1.Properties.VariableNames, sprintf('_%s',cL1{1}));
     T2.Properties.VariableNames = append(T2.Properties.VariableNames, sprintf('_%s',cL2{1}));
     
-    T = [T1 T2 table(DiffDist)];   
-    
+    T = [T1 T2 table(DiffDist)];    
     T = sortrows(T,"DiffDist","descend");
     
     gui.gui_waitbar(fw);
@@ -154,12 +150,12 @@ gui.i_movegui2parent(hFig, FigureHandle);
 delete(findall(hFig, 'Tag', 'FigureToolBar'))
 tb = uitoolbar('Parent', hFig);
 %tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
-uipushtool(tb, 'Separator', 'off');
+% uipushtool(tb, 'Separator', 'off');
 
-pkg.i_addbutton2fig(tb, 'off', {@in_HighlightGenes, 1}, 'list.gif', 'Highlight top HVGs');
+pkg.i_addbutton2fig(tb, 'off', {@in_HighlightGenes, 1}, 'list.gif', 'Selet a gene to show expression profile');
 % pkg.i_addbutton2fig(tb, 'off', @in_HighlightSelectedGenes, 'xplotpicker-qqplot.gif', 'Highlight selected genes');
-pkg.i_addbutton2fig(tb, 'off', {@in_HighlightGenes, 2}, 'plotpicker-qqplot.gif', 'Highlight top HVGs');
-pkg.i_addbutton2fig(tb, 'off', @EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Enrichment analysis...');
+pkg.i_addbutton2fig(tb, 'off', {@in_HighlightGenes, 2}, 'plotpicker-qqplot.gif', 'Selet a gene from sorted list');
+pkg.i_addbutton2fig(tb, 'off', @EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Select top n genes to perform web-based enrichment analysis...');
 
 
 hFig.Visible=true;
@@ -191,6 +187,8 @@ subtitle(hAx1, titxt);
 xlabel(hAx1,'Cell Index');
 ylabel(hAx1,'Expression Level');
 
+
+
 hAx2 = subplot(2,2,4);
 x2 = X2(1,:);
 sh2 = plot(hAx2, 1:length(x2), x2, 'Color',cx2);
@@ -201,6 +199,10 @@ subtitle(hAx2, titxt);
 xlabel(hAx2,'Cell Index');
 ylabel(hAx2,'Expression Level');
 h3 = [];
+yl = cell2mat(get([hAx1, hAx2], 'Ylim'));
+ylnew = [min(yl(:, 1)), max(yl(:, 2))];
+set([hAx1, hAx2], 'Ylim', ylnew);
+
 
     function txt = in_myupdatefcn3(src, event_obj, g)
         if isequal(get(src, 'Parent'), hAx0)
@@ -243,7 +245,12 @@ h3 = [];
             [titxt] = gui.i_getsubtitle(x2);
             subtitle(hAx2, titxt);
             xlabel(hAx2,'Cell Index');
-            ylabel(hAx2,'Expression Level');            
+            ylabel(hAx2,'Expression Level');
+
+            yl = cell2mat(get([hAx1, hAx2], 'Ylim'));
+            ylnew = [min(yl(:, 1)), max(yl(:, 2))];
+            set([hAx1, hAx2], 'Ylim', ylnew);
+            
         else
             txt = num2str(event_obj.Position(2));
         end

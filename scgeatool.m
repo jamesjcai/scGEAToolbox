@@ -146,11 +146,12 @@ in_addmenu(m_view, 1, @gui.callback_CloseAllOthers, 'Close All Other Figures', '
 in_addmenu(m_view, 0, @in_RefreshAll, 'Refresh Current View', 'R');
 
 m_plot = uimenu(FigureHandle, 'Text', '&Plots');
+
+in_addmenu(m_plot, 0, @gui.callback_ShowCellScatter,'Gene/Cell State Scatter Plot...');
 in_addmenu(m_plot, 0, @gui.callback_Violinplot, 'Gene/Cell State Violin Plot...');
 in_addmenu(m_plot, 0, @gui.callback_DrawDotplot, 'Gene Dot Plot...');
 in_addmenu(m_plot, 0, @gui.callback_GeneHeatMap, 'Gene Heatmap...');
 in_addmenu(m_plot, 1, @gui.callback_ShowGeneExprCompr,'Side-by-Side Gene Expression...');
-in_addmenu(m_plot, 0, @gui.callback_ShowCellScatter,'Cell State Scatter Plot...');
 in_addmenu(m_plot, 1, @in_DrawKNNNetwork, 'Cell kNN Network...');
 in_addmenu(m_plot, 0, @in_DrawTrajectory, 'Cell Trajectory...');
 in_addmenu(m_plot, 1, @gui.callback_PickPlotMarker,'Next Marker Type');
@@ -244,7 +245,8 @@ UserToolbarHandle = uitoolbar('Parent', FigureHandle);
 in_addbuttonpush(0, 0, [], [], "");
 in_addbuttonpush(0, 0, @gui.callback_MultiGroupingViewer, "plotpicker-arxtimeseries.gif", "Multi-grouping View...");
 in_addbuttonpush(0, 0, @gui.callback_CrossTabulation, "plotpicker-comet.gif", "Cross tabulation");
-in_addbuttonpush(0, 1, @gui.callback_Violinplot, "violinplot.gif", "Gene/Cell State Violin Plot...");
+in_addbuttonpush(0, 1, @gui.callback_ShowCellScatter, "icon-mat-blur-off-10a.gif", "Gene/Cell State Scatter Plot...");
+in_addbuttonpush(0, 0, @gui.callback_Violinplot, "violinplot.gif", "Gene/Cell State Violin Plot...");
 in_addbuttonpush(0, 0, @gui.callback_DrawDotplot, "icon-mat-blur-linear-10.gif", "Gene Dot Plot...");
 in_addbuttonpush(0, 0, @gui.callback_GeneHeatMap, "icon-mat-apps-20.gif", "Gene Heatmap...");
 in_addbuttonpush(0, 0, [], [], "");

@@ -4,6 +4,7 @@ needupdatesce = false;
 extprogname = 'R_monocle3';
 preftagname = 'externalwrkpath';
 [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
+if isempty(wkdir), return; end
 
 % if ~gui.i_setwrkdir(preftagname), return; end
 % s = getpref('scgeatoolbox', preftagname);

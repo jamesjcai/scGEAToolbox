@@ -12,10 +12,10 @@ tabnamelist = string(tabnamelist);
 xlabelv = strrep(xlabelv, '_', '\_');
 
 fw = gui.gui_waitbar;
-isdescend = false;
+% isdescend = false;
 
 % thisx = strrep(string(thisx), '_', '\_');
-colorit = true;
+% colorit = true;
 
 
 import mlreportgen.ppt.*;
@@ -66,8 +66,8 @@ tb = uitoolbar(hFig);
 % pkg.i_addbutton2fig(tb, 'off',  @i_genecards, 'fvtool_fdalinkbutton.gif', 'GeneCards...');
 % pkg.i_addbutton2fig(tb, 'on', {@i_PickColorMap, c}, 'plotpicker-compass.gif', 'Pick new color map...');
 
-% pkg.i_addbutton2fig(tb, 'off', @in_savedata, 'export.gif', 'Export data...');
-% pkg.i_addbutton2fig(tb, 'off', @in_testdata, 'icon-fa-stack-exchange-10.gif', 'ANOVA/T-test...');
+pkg.i_addbutton2fig(tb, 'off', @in_savedata, 'export.gif', 'Export data...');
+pkg.i_addbutton2fig(tb, 'off', @in_testdata, 'icon-fa-stack-exchange-10.gif', 'ANOVA/T-test...');
 % pkg.i_addbutton2fig(tb, 'off', @i_addsamplesize, "icon-mat-blur-linear-10.gif", 'Add Sample Size');
 pkg.i_addbutton2fig(tb, 'off', @i_savemainfig, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 pkg.i_addbutton2fig(tb, 'off', @i_savemainfigx, "xpowerpoint.gif", 'Save Figure as Graphic File...');
@@ -141,9 +141,9 @@ hFig.Visible=true;
         focalg = tabnamelist(idx);
     end
 
-    function i_genecards(~, ~)
-        web(sprintf('https://www.genecards.org/cgi-bin/carddisp.pl?gene=%s', focalg),'-new');
-    end
+    % function i_genecards(~, ~)
+    %     web(sprintf('https://www.genecards.org/cgi-bin/carddisp.pl?gene=%s', focalg),'-new');
+    % end
 
     function i_resizewin(~,~)
         w = gui.i_inputnumk(450, 10, 2000, 'Window width');
@@ -157,133 +157,133 @@ hFig.Visible=true;
         helpdlg('Double-click on the title to make change.', '');
     end
 
-    function i_updatealltab(idx)
-        if nargin<1, idx = []; end
-        for ks=1:n
-            if ks~=idx
-                delete(ax0{ks});
-                ax0{ks} = axes('parent',tab{ks});
-                pkg.i_violinplot(y{ks}, thisx, colorit, cLorder);
-                title(ax0{ks}, strrep(tabnamelist(ks), '_', '\_'));           
-            end
-        end        
-    end
+    % function i_updatealltab(idx)
+    %     if nargin<1, idx = []; end
+    %     for ks=1:n
+    %         if ks~=idx
+    %             delete(ax0{ks});
+    %             ax0{ks} = axes('parent',tab{ks});
+    %             pkg.i_violinplot(y{ks}, thisx, colorit, cLorder);
+    %             title(ax0{ks}, strrep(tabnamelist(ks), '_', '\_'));           
+    %         end
+    %     end        
+    % end
 
-    function i_invertcolor(~, ~)
-        colorit = ~colorit;
-        [~,idx]=ismember(focalg, tabnamelist);
-        delete(ax0{idx});
-        ax0{idx} = axes('parent',tab{idx});
-        pkg.i_violinplot(y{idx}, thisx, colorit, cLorder);
-        title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));
-        tabgp.SelectedTab=tab{idx};
-        drawnow;
-        if length(tab)==1, return; end
-        answer = questdlg('Apply to other genes?','');
-        if ~strcmp(answer,'Yes'), return; end
-        i_updatealltab(idx);
-    end
+    % function i_invertcolor(~, ~)
+    %     colorit = ~colorit;
+    %     [~,idx]=ismember(focalg, tabnamelist);
+    %     delete(ax0{idx});
+    %     ax0{idx} = axes('parent',tab{idx});
+    %     pkg.i_violinplot(y{idx}, thisx, colorit, cLorder);
+    %     title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));
+    %     tabgp.SelectedTab=tab{idx};
+    %     drawnow;
+    %     if length(tab)==1, return; end
+    %     answer = questdlg('Apply to other genes?','');
+    %     if ~strcmp(answer,'Yes'), return; end
+    %     i_updatealltab(idx);
+    % end
 
-    function i_updatesamplesizelabel(idx)
-        if nargin<1, idx=[]; end
-        for ks = 1:n
-            if ks~=idx
-                b = ax0{ks};        
-                b.FontName='Palatino';
-                if isequal(cLorder, b.XTickLabel)
-                    a = zeros(length(cLorder), 1);            
-                    for kx = 1:length(cLorder)
-                        a(kx) = sum(thisx == cLorder(kx));
-                        cb=pad([string(b.XTickLabel{kx}); sprintf("(n=%d)",a(kx))],'both');
-                        b.XTickLabel{kx} = sprintf('%s\\newline%s', cb(:));                
-                    end
-                else
-                    b.XTickLabel = cLorder;
-                end
-            end            
-        end
-    end
+    % function i_updatesamplesizelabel(idx)
+    %     if nargin<1, idx=[]; end
+    %     for ks = 1:n
+    %         if ks~=idx
+    %             b = ax0{ks};        
+    %             b.FontName='Palatino';
+    %             if isequal(cLorder, b.XTickLabel)
+    %                 a = zeros(length(cLorder), 1);            
+    %                 for kx = 1:length(cLorder)
+    %                     a(kx) = sum(thisx == cLorder(kx));
+    %                     cb=pad([string(b.XTickLabel{kx}); sprintf("(n=%d)",a(kx))],'both');
+    %                     b.XTickLabel{kx} = sprintf('%s\\newline%s', cb(:));                
+    %                 end
+    %             else
+    %                 b.XTickLabel = cLorder;
+    %             end
+    %         end            
+    %     end
+    % end
 
-    function i_addsamplesize(~, ~)
-        [~,idx]=ismember(focalg, tabnamelist);
-        b = ax0{idx};        
-        b.FontName='Palatino';
-        if isequal(cLorder, b.XTickLabel)
-            a = zeros(length(cLorder), 1);            
-            for kx = 1:length(cLorder)
-                a(kx) = sum(thisx == cLorder(k));
-                cb=pad([string(b.XTickLabel{kx}); sprintf("(n=%d)",a(kx))],'both');
-                b.XTickLabel{kx} = sprintf('%s\\newline%s', cb(:));            
-            end
-        else
-            b.XTickLabel = cLorder;                
-        end
-        answer = questdlg('Apply to other genes?','');
-        if ~strcmp(answer,'Yes'), return; end
-        i_updatesamplesizelabel(idx);
-    end
+    % function i_addsamplesize(~, ~)
+    %     [~,idx]=ismember(focalg, tabnamelist);
+    %     b = ax0{idx};        
+    %     b.FontName='Palatino';
+    %     if isequal(cLorder, b.XTickLabel)
+    %         a = zeros(length(cLorder), 1);            
+    %         for kx = 1:length(cLorder)
+    %             a(kx) = sum(thisx == cLorder(k));
+    %             cb=pad([string(b.XTickLabel{kx}); sprintf("(n=%d)",a(kx))],'both');
+    %             b.XTickLabel{kx} = sprintf('%s\\newline%s', cb(:));            
+    %         end
+    %     else
+    %         b.XTickLabel = cLorder;                
+    %     end
+    %     answer = questdlg('Apply to other genes?','');
+    %     if ~strcmp(answer,'Yes'), return; end
+    %     i_updatesamplesizelabel(idx);
+    % end
 
-    function i_sortbymean(~, ~)
-        [~,idx]=ismember(focalg, tabnamelist);       
-        [cx, cLx] = grp2idx(thisx);
-        a = zeros(max(cx), 1);
-        for ks = 1:max(cx)
-            a(ks) = median(y{idx}(cx == ks));
-        end
-        if isdescend
-            [~, idxx] = sort(a, 'ascend');
-            isdescend = false;
-        else
-            [~, idxx] = sort(a, 'descend');
-            isdescend = true;
-        end
-        cLx_sorted = cLx(idxx);
-        delete(ax0{idx});
-        ax0{idx} = axes('parent',tab{idx});       
-        cLorder = cLx_sorted;
-        pkg.i_violinplot(y{idx}, thisx, colorit, cLorder);
-        title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));  
-    end
-
-    function i_reordersamples(~, ~)
-        [~, cLorderx, noanswer] = gui.i_reordergroups(thisx);
-        if noanswer, return; end
-        [~,idx] = ismember(focalg, tabnamelist);
-        delete(ax0{idx});
-        ax0{idx} = axes('parent',tab{idx});
-        pkg.i_violinplot(y{idx}, thisx, colorit, cLorderx);
-        title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));  
-
-        answer = questdlg('Apply to other genes?','');
-        if ~strcmp(answer,'Yes'), return; end
-        cLorder = cLorderx;
-        i_updatealltab(idx);
-    end
-
-    function i_selectsamples(~, ~)
-        [~, cLorder] = grp2idx(thisx);
-        [newidx] = gui.i_selmultidlg(cLorder, cLorder, hFig);
-        if isempty(newidx), return; end
-        picked=ismember(thisx, cLorder(newidx));
-       
-        cLorderx = cLorder(ismember(cLorder,cLorder(newidx)));
-        [~,idx]=ismember(focalg, tabnamelist);
-        delete(ax0{idx});
-        ax0{idx} = axes('parent',tab{idx});
-        y_picked = y{idx}(picked);
-        thisc_picked = thisx(picked);
-        pkg.i_violinplot(y_picked, thisc_picked, colorit, cLorderx);
-        title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));
-        answer = questdlg('Apply to other genes?','');
-        if ~strcmp(answer,'Yes'), return; end
-
-        for ks=1:n
-            y{ks} = y{ks}(picked);
-        end
-        thisx = thisc_picked;
-        cLorder = cLorderx;
-        i_updatealltab(idx);              
-    end
+    % function i_sortbymean(~, ~)
+    %     [~,idx]=ismember(focalg, tabnamelist);       
+    %     [cx, cLx] = grp2idx(thisx);
+    %     a = zeros(max(cx), 1);
+    %     for ks = 1:max(cx)
+    %         a(ks) = median(y{idx}(cx == ks));
+    %     end
+    %     if isdescend
+    %         [~, idxx] = sort(a, 'ascend');
+    %         isdescend = false;
+    %     else
+    %         [~, idxx] = sort(a, 'descend');
+    %         isdescend = true;
+    %     end
+    %     cLx_sorted = cLx(idxx);
+    %     delete(ax0{idx});
+    %     ax0{idx} = axes('parent',tab{idx});       
+    %     cLorder = cLx_sorted;
+    %     pkg.i_violinplot(y{idx}, thisx, colorit, cLorder);
+    %     title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));  
+    % end
+    % 
+    % function i_reordersamples(~, ~)
+    %     [~, cLorderx, noanswer] = gui.i_reordergroups(thisx);
+    %     if noanswer, return; end
+    %     [~,idx] = ismember(focalg, tabnamelist);
+    %     delete(ax0{idx});
+    %     ax0{idx} = axes('parent',tab{idx});
+    %     pkg.i_violinplot(y{idx}, thisx, colorit, cLorderx);
+    %     title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));  
+    % 
+    %     answer = questdlg('Apply to other genes?','');
+    %     if ~strcmp(answer,'Yes'), return; end
+    %     cLorder = cLorderx;
+    %     i_updatealltab(idx);
+    % end
+    % 
+    % function i_selectsamples(~, ~)
+    %     [~, cLorder] = grp2idx(thisx);
+    %     [newidx] = gui.i_selmultidlg(cLorder, cLorder, hFig);
+    %     if isempty(newidx), return; end
+    %     picked=ismember(thisx, cLorder(newidx));
+    % 
+    %     cLorderx = cLorder(ismember(cLorder,cLorder(newidx)));
+    %     [~,idx]=ismember(focalg, tabnamelist);
+    %     delete(ax0{idx});
+    %     ax0{idx} = axes('parent',tab{idx});
+    %     y_picked = y{idx}(picked);
+    %     thisc_picked = thisx(picked);
+    %     pkg.i_violinplot(y_picked, thisc_picked, colorit, cLorderx);
+    %     title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));
+    %     answer = questdlg('Apply to other genes?','');
+    %     if ~strcmp(answer,'Yes'), return; end
+    % 
+    %     for ks=1:n
+    %         y{ks} = y{ks}(picked);
+    %     end
+    %     thisx = thisc_picked;
+    %     cLorder = cLorderx;
+    %     i_updatealltab(idx);              
+    % end
 
     function in_testdata(~, ~)
         for tabidx=1:n
@@ -296,20 +296,30 @@ hFig.Visible=true;
                 if size(thisy, 2) ~= length(thisx)
                     thisy = thisy.';
                 end
-                tbl = pkg.e_grptest(thisy, thisx);
-                if ~isempty(tbl) && istable(tbl)
-                    b = sprintf('%s = %.2e; %s = %.2e', ...
-                        tbl.Properties.VariableNames{1}, ...
-                        tbl.(tbl.Properties.VariableNames{1}), ...
-                        tbl.Properties.VariableNames{2}, ...
-                        tbl.(tbl.Properties.VariableNames{2}));
-                else
-                    if length(unique(thisx)) == 2
-                        b='p_{ttest} = N.A.; p_{wilcoxon} = N.A.';
-                    else
-                        b='p_{anova} = N.A.; p_{kruskalwallis} = N.A.';
-                    end
-                end    
+                % tbl = pkg.e_grptest(thisy, thisx);
+                A  = fitlm(thisx(:), thisy(:));
+                b = sprintf('Coeff. = %.2f; Adj. R^2 = %.2f; p-value = %.2e',...
+                    A.Coefficients.Estimate(2), A.Rsquared.Adjusted, A.coefTest);
+                % tbl = A.anova;
+                % if ~isempty(tbl) && istable(tbl)
+                %     b = sprintf('p_{anova} = %.2e', tbl.pValue);
+                % else
+                %         b='p_{anova} = N.A.';
+                % end
+
+                DM = [thisx(:), ones(size(thisx(:)))];
+                B = DM \ thisy(:);
+                y1 = DM * B;
+
+                % p = polyfit(thisx(:), thisy(:), 2);
+                % y_fit = polyval(p,thisx(:));
+
+                hold(a,"on");
+                [sortedx, idxx]=sort(thisx(:));
+                plot(a, sortedx, y1(idxx), '-', 'LineWidth', 1);                
+               % plot(a, sortedx, y_fit(idxx), '-','LineWidth', 1); 
+                hold(a,"off");
+
                 if iscell(OldTitle{tabidx})
                     newtitle = OldTitle{tabidx};
                 else
@@ -394,20 +404,15 @@ hFig.Visible=true;
     %     gui.i_exporttable(T, true, 'Tviolindata','ViolinPlotTable');
     % end
 
-    function in_savedata(~, ~)
-        [~, idxlabel]= grp2idx(thisx(:));
-        T=table();
-        for tabidx=1:n
-            g = tabnamelist(tabidx);
-            thisy = y{tabidx};            
-            a1=grpstats(thisy, thisx(:), @mean);
-            a2=grpstats(thisy, thisx(:), @median);
-            t = table(a1, a2);
-            t.Properties.RowNames = idxlabel;
-            t.Properties.VariableNames = matlab.lang.makeValidName({sprintf('Mean_%s',g), sprintf('Median_%s',g)});
+    function in_savedata(~, ~)        
+        T=table(thisx);
+        T.Properties.VariableNames = matlab.lang.makeValidName({xlabelv});
+        for tabidx=1:n            
+            thisy = y{tabidx};
+            t = table(thisy(:));            
+            t.Properties.VariableNames = matlab.lang.makeValidName(tabnamelist(tabidx));
             T = [T, t];
-        end
-        T = rows2vars(T);
-        gui.i_exporttable(T, true, 'Tviolindata','ViolinPlotTable');
+        end        
+        gui.i_exporttable(T, true, 'Tscatterdata','ScatterPlotTable');
     end
 end
