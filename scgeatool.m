@@ -276,7 +276,9 @@ in_addbuttontoggle(1, 0, {@in_togglebtfun, @in_turnoffuserguiding, "icon-mat-unf
 in_addbuttonpush(1, 0, @gui.callback_ShowGeneExpr, "list.gif", "Select genes to show expression")
 in_addbuttonpush(1, 0, @in_ShowCellStates, "list2.gif", "Show cell state")
 in_addbuttonpush(1, 0, @in_SelectCellsByQC, "plotpicker-effects.gif", "Filter genes and cells")
-in_addbuttontoggle(1, 1, {@in_togglebtfun, @in_labelcellgroups, "icon-fa-tag-10b.gif", "icon-fa-tags-10b.gif", false, "Label cell groups"});
+
+in_addbuttonpush(1, 1, @in_labelcellgroups, "icon-fa-tags-10b.gif", "Label cell groups");
+% in_addbuttontoggle(1, 1, {@in_togglebtfun, @in_labelcellgroups, "icon-fa-tag-10b.gif", "icon-fa-tags-10b.gif", false, "Label cell groups"});
 in_addbuttonpush(1, 0, @in_Brushed2NewCluster, "plotpicker-glyplot-face.gif", "Add brushed cells to a new group")
 in_addbuttonpush(1, 0, @in_Brushed2MergeClusters, "plotpicker-pzmap.gif", "Merge brushed cells to same group")
 in_addbuttonpush(1, 0, @in_RenameCellTypeBatchID, "plotpicker-scatterhist.gif", "Rename cell type or batch ID");
@@ -1985,12 +1987,14 @@ if ~showuseronboarding, set(UserToolbarHandle, 'Visible', 'off'); end
 
     function in_labelcellgroups(src, ~)
         a=findall(FigureHandle,'tag','figMenuCellGroups___');
-        b=findall(FigureHandle,'tag','figToglLabelCellGroups');
-        switch src.Type
+        b=findall(FigureHandle,'tag','figToglLabelCellGroups');        
+        switch src.Type            
             case 'uitoggletool'
                 statetag = 'State';
             case 'uimenu'
                 statetag = 'Checked';
+            case 'uipushtool'
+                statetag = '';
         end
         % state = src.(statetag);
         dtp = findobj(h, 'Type', 'datatip');
@@ -1998,13 +2002,14 @@ if ~showuseronboarding, set(UserToolbarHandle, 'Visible', 'off'); end
         if ~isempty(dtp) % switch from on to off
             % dtp = findobj(h, 'Type', 'datatip');
             delete(dtp);
-            set(src, statetag, 'off');
-            set(a,'Checked','off');
-            set(b,'State','off');
+
+            if ~isempty(statetag), set(src, statetag, 'off'); end
+            if ~isempty(a), set(a,'Checked','off'); end
+            if ~isempty(b), set(b,'State','off'); end
         else
             [thisc, clabel] = gui.i_select1class(sce,true);
             if isempty(thisc)
-                set(src, statetag, 'off');
+                if ~isempty(statetag), set(src, statetag, 'off'); end
                 return;
             end
             [c, cL] = grp2idx(thisc);
@@ -2013,18 +2018,18 @@ if ~showuseronboarding, set(UserToolbarHandle, 'Visible', 'off'); end
             fprintf('Cells are colored by %s.\n', lower(clabel));
             if max(c) <= 200
                 if ix_labelclusters(true)
-                    set(src, statetag, 'on');
-                    set(a,'Checked','on');
-                    set(b,'State','on');
+                    if ~isempty(statetag), set(src, statetag, 'on'); end
+                    if ~isempty(a), set(a,'Checked','on'); end
+                    if ~isempty(b), set(b,'State','on'); end
                 else
-                    set(src, statetag, 'off');
-                    set(a,'Checked','off');
-                    set(b,'State','off');
+                    if ~isempty(statetag), set(src, statetag, 'off'); end
+                    if ~isempty(a), set(a,'Checked','off'); end
+                    if ~isempty(b), set(b,'State','off'); end
                 end
             else
-                set(src, statetag, 'off');
-                set(a,'Checked','off');
-                set(b,'State','off');
+                if ~isempty(statetag), set(src, statetag, 'off'); end
+                if ~isempty(a), set(a,'Checked','off'); end
+                if ~isempty(b), set(b,'State','off'); end
                 uiwait(warndlg('Labels are not showing. Too many categories (n>200).',''));
             end
             % setappdata(FigureHandle, 'cL', cL);
