@@ -177,48 +177,65 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
                 end
             end
         case 'Remove Genes by Name' % remove selected genes
-            [glist] = gui.i_selectngenes(sce, [], FigureHandle);
-            if isempty(glist), return; end
-            [y, idx] = ismember(upper(glist), upper(sce.g));
-            if ~all(y), error('xxx'); end
+            answer2 = questdlg('Select genes to be removed.','', ...
+                'Manually Select','Select by Patterns','Manually Select');
+            switch answer2
+                case 'Select by Patterns'
+                    prompt = {'Remove Genes With Name Contains ''orf'' or ''-AS'' (C22orf42, C21orf58, etc.)?', ...
+                        'Remove Genes With Name Starts With ''LINC'' (LINC01426, LINC01694, etc.)?'};
+                    dlgtitle = '';
+                    dims = [1, 85];                    
+                    definput = {'Yes', 'Yes'};
+                    answer3 = inputdlg(prompt, dlgtitle, dims, definput);
+                    if isempty(answer3), return; end
+                    c = 1;
+                    if strcmpi(answer3{c},'Yes') || strcmpi(answer3{c},'Y')
+                        a1 = length(sce.g);
+                        idx = contains(sce.g, 'orf') | contains(sce.g, '-AS') | contains(sce.g, '-as');
+                        sce.g(idx) = [];
+                        sce.X(idx, :) = [];
+                        a2 = length(sce.g);
+                        fprintf('%d genes with name contains ''orf'' or ''-AS'' are found and removed.\n',a1-a2);
+                    end
+                    
+                    c = c + 1;
+                    if strcmpi(answer3{c},'Yes') || strcmpi(answer3{c},'Y')
+                        a1 = length(sce.g);
+                        idx = startsWith(sce.g, 'LINC');
+                        sce.g(idx) = [];
+                        sce.X(idx, :) = [];
+                        a2 = length(sce.g);
+                        fprintf('%d genes with name starts with ''LINC'' are found and removed.\n',a1-a2);
+                    end
 
-            %gsorted=sort(sce.g);
-            %[idx]=gui.i_selmultidlg(gsorted);
-            if isempty(idx), return; end
-            if isscalar(idx) && idx == 0
-                helpdlg('No gene selected.', '');
-                return;
+                case 'Manually Select'
+                    [glist] = gui.i_selectngenes(sce, [], FigureHandle);
+                    if isempty(glist), return; end
+                    [y, idx] = ismember(upper(glist), upper(sce.g));
+                    if ~all(y), error('xxx'); end
+                    if isempty(idx), return; end
+                    if isscalar(idx) && idx == 0
+                        helpdlg('No gene selected.', '');
+                        return;
+                    end
+                    answer1 = questdlg('Remove selected or unselected genes?', '', ...
+                        'Selected', 'Unselected', 'Selected');
+                    if isempty(answer1), return; end
+                    if strcmp(answer1, 'Selected')
+                        fw = gui.gui_waitbar;
+                        sce.g(idx) = [];
+                        sce.X(idx, :) = [];
+                        gui.gui_waitbar(fw);
+                    elseif strcmp(answer1, 'Unselected')
+                        fw = gui.gui_waitbar;
+                        sce.g = sce.g(idx);
+                        sce.X = sce.X(idx, :);
+                        gui.gui_waitbar(fw);
+                    else
+                        return;
+                    end
+                otherwise
             end
-            %[~,idx]=ismember(sce.g(idx),sce.g);
-
-            %{
-            answer1 = questdlg(sprintf('Remove %d selected genes?',length(idx)));
-            if strcmpi(answer1,'Yes')
-                fw = gui.gui_waitbar;
-                sce.g(idx)=[];
-                sce.X(idx,:)=[];
-                gui.gui_waitbar(fw);
-            else
-                return;
-            end
-            %}
-
-            answer1 = questdlg('Remove selected or unselected genes?', '', ...
-                'Selected', 'Unselected', 'Selected');
-            if isempty(answer1), return; end
-            if strcmp(answer1, 'Selected')
-                fw = gui.gui_waitbar;
-                sce.g(idx) = [];
-                sce.X(idx, :) = [];
-                gui.gui_waitbar(fw);
-            elseif strcmp(answer1, 'Unselected')
-                fw = gui.gui_waitbar;
-                sce.g = sce.g(idx);
-                sce.X = sce.X(idx, :);
-                gui.gui_waitbar(fw);
-            else
-                return;
-            end        
 
         case '(a) Remove Mt-Genes' % remove mt-genes
             sce = sce.rmmtgenes;

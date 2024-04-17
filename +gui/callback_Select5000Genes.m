@@ -17,6 +17,8 @@ if isempty(spciestag), return; end
 
 prompt = {'Remove Mt-Genes (MT-ND1, MT-ND6, MT-CYB, MT-COI, MT-ATP6, etc.)?', ...
     'Remove Hemoglobin Genes (HBA1, HBB, Hba-a1, etc.)?', ...
+    'Remove Genes With Name Contains ''orf'' or ''-AS'' (C22orf42, C21orf58, etc.)?', ...
+    'Remove Genes With Name Starts With ''LINC'' (LINC01426, LINC01694, etc.)?', ...
     'Remove Ribosomal Genes (RPSA, RPS2, RPS3, RPL3, RPL4, RPLP1, etc.)?', ...
     'Remove Genes Without Approved Symbols?', ...
     'Remove Genes Expressed in Less Than m Cells (m = 0.075 or 0.050, 10 or 50)?', ...
@@ -24,7 +26,7 @@ prompt = {'Remove Mt-Genes (MT-ND1, MT-ND6, MT-CYB, MT-COI, MT-ATP6, etc.)?', ..
 dlgtitle = '';
 dims = [1, 85];
 
-definput = {'Yes', 'Yes', 'Yes', 'Yes', '0.075', num2str(min([sce.NumGenes,5000]))};
+definput = {'Yes', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes', '0.075', num2str(min([sce.NumGenes,5000]))};
 answer = inputdlg(prompt, dlgtitle, dims, definput);
 if isempty(answer)
     requirerefresh = false;
@@ -34,25 +36,49 @@ end
 fw = gui.gui_waitbar;
 scenew = sce;
 
-if strcmpi(answer{1},'Yes') || strcmpi(answer{1},'Y')
+c = 1;
+if strcmpi(answer{c},'Yes') || strcmpi(answer{c},'Y')
     scenew = scenew.rmmtgenes;
     disp('Mt-genes removed.');
     % requirerefresh = true;
 end
 
-if strcmpi(answer{2},'Yes') || strcmpi(answer{2},'Y')
+c = c + 1;
+if strcmpi(answer{c},'Yes') || strcmpi(answer{c},'Y')
     scenew = scenew.rmhemoglobingenes;
     disp('Hemoglobin genes removed.');
     % requirerefresh = true;
 end
 
-if strcmpi(answer{3},'Yes') || strcmpi(answer{3},'Y')
+c = c + 1;
+if strcmpi(answer{c},'Yes') || strcmpi(answer{c},'Y')
+    a1 = length(scenew.g);
+    idx = contains(scenew.g, 'orf') | contains(scenew.g, '-AS') | contains(scenew.g, '-as');
+    scenew.g(idx) = [];
+    scenew.X(idx, :) = [];
+    a2 = length(scenew.g);
+    fprintf('%d genes with name contains ''orf'' or ''-AS'' are found and removed.\n',a1-a2);
+end
+
+c = c + 1;
+if strcmpi(answer{c},'Yes') || strcmpi(answer{c},'Y')
+    a1 = length(scenew.g);
+    idx = startsWith(scenew.g, 'LINC');
+    scenew.g(idx) = [];
+    scenew.X(idx, :) = [];
+    a2 = length(scenew.g);
+    fprintf('%d genes with name starts with ''LINC'' are found and removed.\n',a1-a2);
+end
+
+c = c + 1;
+if strcmpi(answer{c},'Yes') || strcmpi(answer{c},'Y')
     scenew = scenew.rmribosomalgenes;
     disp('Ribosomal genes removed.');
     % requirerefresh = true;
 end
 
-if strcmpi(answer{4},'Yes') || strcmpi(answer{4},'Y')
+c = c + 1;
+if strcmpi(answer{c},'Yes') || strcmpi(answer{c},'Y')
     mfolder = fileparts(mfilename('fullpath'));
     switch spciestag
         case 'human'
@@ -75,7 +101,7 @@ if strcmpi(answer{4},'Yes') || strcmpi(answer{4},'Y')
 end
 
 try
-    a = str2double(answer{5});
+    a = str2double(answer{end-1});
     if a > 0 && a < intmax
         a1 = length(scenew.g);
         scenew = scenew.selectkeepgenes(1, a);
@@ -88,7 +114,7 @@ catch ME
 end
 
 try
-    a = str2double(answer{6});
+    a = str2double(answer{end});
     % T = sc_hvg(scenew.X, scenew.g);
     T = sc_splinefit(scenew.X, scenew.g);
     glist = T.genes(1:min([a, scenew.NumGenes]));
