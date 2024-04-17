@@ -55,7 +55,7 @@ end
 figure;
 ten.e_mkqqplot(T);
 % answer223=questdlg('Run GSEA analysis?');
-answer223=gui.questdlg_timer(15,'Run GSEA analysis?');
+answer223=gui.i_questdlgtimer(15,'Run GSEA analysis?');
 if ~isempty(answer223) && strcmp(answer223,'Yes')
     gseaok=true;
     try
@@ -66,7 +66,7 @@ if ~isempty(answer223) && strcmp(answer223,'Yes')
         gseaok=false;
     end
     if gseaok
-        answer323=gui.questdlg_timer(15,'Group GSEA hits?');
+        answer323=gui.i_questdlgtimer(15,'Group GSEA hits?');
         if ~isempty(answer323) && strcmp(answer323,'Yes')
             ten.e_fgseanet(Tr);
         end

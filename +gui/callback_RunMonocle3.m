@@ -118,7 +118,7 @@ end
     %         end
     %         colorbar
     %         defaultToolbar = findall(f, 'tag','FigureToolBar');
-    %         gui.add_3dcamera(defaultToolbar, 'Scores');
+    %         gui.gui_3dcamera(defaultToolbar, 'Scores');
     %         hc = colorbar;
     %         hc.Label.String = 'Pseudotime';
     %     otherwise

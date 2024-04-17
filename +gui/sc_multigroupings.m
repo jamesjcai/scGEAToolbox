@@ -76,7 +76,7 @@ pkg.i_addbutton2fig(tb, 'off', @i_showclustlabel, "plotpicker-scatter.gif", "Sho
 
 pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 
-gui.add_3dcamera(tb);
+gui.gui_3dcamera(tb);
 
 gui.i_movegui2parent(hFig, parentfig);
 

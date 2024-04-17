@@ -175,7 +175,7 @@ end
                     outmatfile=fullfile(seltpath,outmatfile);
                     if ~exist(outmatfile,"file")
                         q=sprintf('Save file %s?',outmatfile);
-                        answerx=gui.questdlg_timer(15,q,'','Yes','No','Cancel','Yes');
+                        answerx=gui.i_questdlgtimer(15,q,'','Yes','No','Cancel','Yes');
                     else
                         q=sprintf('Overwrite file %s?',outmatfile);
                         answerx=questdlg(q,'');

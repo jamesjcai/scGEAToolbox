@@ -33,7 +33,7 @@ pkg.i_addbutton2fig(tb, 'off', @ExportGeneNames, 'xexport.gif', 'Export selected
 pkg.i_addbutton2fig(tb, 'off', @ExportTable, 'export.gif', 'Export HVG Table...');
 pkg.i_addbutton2fig(tb, 'off', @EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Enrichment analysis...');
 pkg.i_addbutton2fig(tb, 'off', @ChangeAlphaValue, 'xplotpicker-andrewsplot.gif', 'Change MarkerFaceAlpha value');
-gui.add_3dcamera(tb, 'HVGs');
+gui.gui_3dcamera(tb, 'HVGs');
 pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 
 if showdata

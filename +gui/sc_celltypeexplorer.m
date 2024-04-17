@@ -64,7 +64,7 @@ end
     hBr.ActionPostCallback = {@onBrushAction, X, genelist, s, ...
         species, organ, method};
 
-    gui.add_3dcamera(tb);
+    gui.gui_3dcamera(tb);
 
 end
 

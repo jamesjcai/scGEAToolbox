@@ -258,7 +258,7 @@ in_addbuttonpush(0, 0, @gui.callback_DPGene2Groups, "plotpicker_noisepsd.gif", "
 in_addbuttonpush(0, 1, @gui.callback_BuildGeneNetwork, "noun_Network_691907.gif", "Build gene regulatory network");
 in_addbuttonpush(0, 0, @gui.callback_CompareGeneNetwork, "noun_Deep_Learning_2424485.gif", "Compare two scGRNs");
 in_addbuttonpush(0, 1, {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-gui.add_3dcamera(DeftToolbarHandle, 'AllCells');
+gui.gui_3dcamera(DeftToolbarHandle, 'AllCells');
 
 
 pt = uitoggletool(DeftToolbarHandle);

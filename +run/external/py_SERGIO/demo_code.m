@@ -1,7 +1,7 @@
 % cd 'D:\GitHub\scGEAToolbox\+run\external\py_SERGIO'
 
 % Step 1: Draw GRN
-% gui.graph_gui
+% graph_gui
 
 % Step 2: Save GRN as A
 load("example_grn.mat");

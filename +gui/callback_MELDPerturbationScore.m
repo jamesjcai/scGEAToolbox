@@ -42,7 +42,7 @@ FigureHandle = figure;
 gui.i_gscatter3(sce.s, score(:, 2));
 colorbar
 defaultToolbar = findall(FigureHandle, 'tag', 'FigureToolBar'); % get the figure's toolbar handle
-gui.add_3dcamera(defaultToolbar, 'MELD_Scores');
+gui.gui_3dcamera(defaultToolbar, 'MELD_Scores');
 
 if ~(ismcc || isdeployed)
     labels = {'Save score values to variable named:', 'Save score table to variable named:'};

@@ -26,7 +26,7 @@ if showdata
     pkg.i_addbutton2fig(UitoolbarHandle, 'off', @EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Enrichment analysis...');
     pkg.i_addbutton2fig(UitoolbarHandle, 'off', @ChangeAlphaValue, 'xplotpicker-andrewsplot.gif', 'Change MarkerFaceAlpha value');
 
-    gui.add_3dcamera(UitoolbarHandle, 'HVGs');
+    gui.gui_3dcamera(UitoolbarHandle, 'HVGs');
     pkg.i_addbutton2fig(UitoolbarHandle, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 
     %h=scatter3(hAx,x,y,z);  % 'filled','MarkerFaceAlpha',.5);
@@ -187,7 +187,7 @@ end
 
         gui.i_enrichtest(tgenes, g, numel(tgenes));
 
-        % answer = gui.timeoutdlg(@(x){questdlg('Which analysis?', '', ...
+        % answer = (@(x){questdlg('Which analysis?', '', ...
         %     'Enrichr', 'GOrilla', 'Enrichr+GOrilla', 'Enrichr')}, 15);
         % if isempty(answer), return; end
         % switch answer

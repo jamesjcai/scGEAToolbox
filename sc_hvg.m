@@ -267,7 +267,7 @@ end
         gui.i_enrichtest(tgenes, g, numel(tgenes));
     end
         
-        % answer = gui.timeoutdlg(@(x){questdlg('Which analysis?', '', ...
+        % answer = (@(x){questdlg('Which analysis?', '', ...
         %     'Enrichr', 'GOrilla', 'Enrichr+GOrilla', 'Enrichr')}, 15);
         % if isempty(answer), return; end
         % switch answer

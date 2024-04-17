@@ -174,7 +174,7 @@ elseif isStringScalar(targetg) || ischar(targetg)
     end
 
     if showcam
-        gui.add_3dcamera(tb, targetg);
+        gui.gui_3dcamera(tb, targetg);
     end
 end
 

@@ -90,7 +90,8 @@ end
 
 useexist = false;
 if exist("pcnet_Source.mat", 'file')
-    answer = gui.questdlg_timer(10, 'pcnet_Source.mat existing. Use it?','', 'Yes, use pcnet_Source', 'No, reconstruct pcnet_Source', ...
+    answer = gui.i_questdlgtimer(10, ...
+        'pcnet_Source.mat existing. Use it?','', 'Yes, use pcnet_Source', 'No, reconstruct pcnet_Source', ...
         'Cancel', 'Yes, use pcnet_Source');
     switch answer
         case 'Yes, use pcnet_Source'
@@ -120,7 +121,8 @@ end
 
 useexist = false;
 if exist("pcnet_Target.mat", 'file')
-    answer = gui.questdlg_timer(10, 'pcnet\_Target.mat existing. Use it?','', 'Yes, use pcnet_Target', 'No, reconstruct pcnet_Target', ...
+    answer = gui.i_questdlgtimer(10, ...
+        'pcnet\_Target.mat existing. Use it?','', 'Yes, use pcnet_Target', 'No, reconstruct pcnet_Target', ...
         'Cancel', 'Yes, use pcnet_Target');
     switch answer
         case 'Yes, use pcnet_Target'
