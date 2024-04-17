@@ -149,7 +149,7 @@ gui.i_movegui2parent(hFig, FigureHandle);
 
 delete(findall(hFig, 'Tag', 'FigureToolBar'))
 tb = uitoolbar('Parent', hFig);
-%tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
+% tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
 % uipushtool(tb, 'Separator', 'off');
 
 pkg.i_addbutton2fig(tb, 'off', {@in_HighlightGenes, 1}, 'list.gif', 'Selet a gene to show expression profile');
@@ -225,14 +225,16 @@ set([hAx1, hAx2], 'Ylim', ylnew);
             if ~isempty(h3), delete(h3); end
             if ~isempty(h3a), delete(h3a); end
             if ~isempty(h3b), delete(h3b); end
-            h3 = plot3(hAx0, [px1(idx) px2(idx)], ...
-                [py1(idx), py2(idx)], ...
-                [pz1(idx), pz2(idx)],'k-','LineWidth',1);
-            h3a = plot3(hAx0, px1(idx), py1(idx), pz1(idx), 'b.','MarkerSize',10);
-            h3b = plot3(hAx0, px2(idx), py2(idx), pz2(idx), 'r.','MarkerSize',10);
-
+                h3 = plot3(hAx0, [px1(idx) px2(idx)], ...
+                    [py1(idx), py2(idx)], ...
+                    [pz1(idx), pz2(idx)],'k-','LineWidth',1);
+                h3a = plot3(hAx0, px1(idx), py1(idx), pz1(idx), 'b.','MarkerSize',10);
+                h3b = plot3(hAx0, px2(idx), py2(idx), pz2(idx), 'r.','MarkerSize',10);
+                % daspect(hAx0,'auto');
+                %h3b = arrow3([px1(idx), py1(idx), pz1(idx)], ...
+                %    [px2(idx), py2(idx), pz2(idx)]);
+                %h3b = quiver3(hAx0, px1(idx), py1(idx), pz1(idx), px2(idx), py2(idx), pz2(idx));
             txt = {g(idx)};
-
             x1 = X1(idx, :);
             if ~isempty(sh1) && isvalid(sh1), delete(sh1); end
             sh1 = plot(hAx1, 1:length(x1), x1, 'Color',cx1);
@@ -270,7 +272,9 @@ set([hAx1, hAx2], 'Ylim', ylnew);
        dtp = findobj(h2, 'Type', 'datatip');
        if ~isempty(dtp), delete(dtp); end
        if ~isempty(h3), delete(h3); end
-        
+       if ~isempty(h3a), delete(h3a); end
+       if ~isempty(h3b), delete(h3b); end
+       
        switch typeid
            case 1
                 gsorted = natsort(g);
@@ -292,10 +296,10 @@ set([hAx1, hAx2], 'Ylim', ylnew);
         h2.BrushData = idx;
         datatip(h1, 'DataIndex', idx);
         datatip(h2, 'DataIndex', idx);
-        % if ~isempty(h3), delete(h3); end
-        % h3 = plot3(hAx0, [px1(idx) px2(idx)], ...
-        %     [py1(idx), py2(idx)], ...
-        %     [pz1(idx), pz2(idx)],'k-','LineWidth',1);       
+         if ~isempty(h3), delete(h3); end
+         h3 = plot3(hAx0, [px1(idx) px2(idx)], ...
+             [py1(idx), py2(idx)], ...
+             [pz1(idx), pz2(idx)],'k-','LineWidth',1);       
     end
 
     function EnrichrHVGs(~, ~)

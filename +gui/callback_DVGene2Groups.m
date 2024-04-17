@@ -1,8 +1,5 @@
 function callback_DVGene2Groups(src, ~)
 
-%warndlg('The function is under development.');
-%return;
-
 cx=lines(2);
 cx1=cx(1,:);
 cx2=cx(2,:);
@@ -10,6 +7,57 @@ cx2=cx(2,:);
     FigureHandle = src.Parent.Parent;
     sce = guidata(FigureHandle);
     if ~gui.gui_showrefinfo('DV Analysis'), return; end
+
+% ---------------------------------
+spciestag = gui.i_selectspecies(2);
+if isempty(spciestag), return; end
+
+prompt = {'Remove Mt-Genes (MT-ND1, MT-ND6, MT-CYB, MT-COI, MT-ATP6, etc.)?', ...
+    'Remove Hemoglobin Genes (HBA1, HBB, Hba-a1, etc.)?', ...
+    'Remove Ribosomal Genes (RPSA, RPS2, RPS3, RPL3, RPL4, RPLP1, etc.)?', ...
+    'Remove Genes Without Approved Symbols?'};
+dlgtitle = '';
+dims = [1, 85];
+
+definput = {'Yes', 'Yes', 'Yes', 'Yes'};
+answer = inputdlg(prompt, dlgtitle, dims, definput);
+if isempty(answer), return; end
+
+if strcmpi(answer{1},'Yes') || strcmpi(answer{1},'Y')
+    sce = sce.rmmtgenes;
+    disp('Mt-genes removed.');    
+end
+
+if strcmpi(answer{2},'Yes') || strcmpi(answer{2},'Y')
+    sce = sce.rmhemoglobingenes;
+    disp('Hemoglobin genes removed.');    
+end
+
+if strcmpi(answer{3},'Yes') || strcmpi(answer{3},'Y')
+    sce = sce.rmribosomalgenes;
+    disp('Ribosomal genes removed.');    
+end
+
+if strcmpi(answer{4},'Yes') || strcmpi(answer{4},'Y')
+    mfolder = fileparts(mfilename('fullpath'));
+    switch spciestag
+        case 'human'
+            load(fullfile(mfolder, ...
+                '../resources', 'Biomart_human_genes.mat'), 'T');
+        case 'mouse'
+            load(fullfile(mfolder, ...
+                '../resources', 'Biomart_mouse_genes.mat'), 'T');
+    end
+    ApprovedSymbol = string(T.GeneName);
+    [idx] = ismember(upper(sce.g), upper(ApprovedSymbol));
+    a1 = length(sce.g);
+    sce.g(~idx) = [];
+    sce.X(~idx, :) = [];
+    a2 = length(sce.g);
+    fprintf('%d genes without approved symbols are found and removed.\n',a1-a2);
+end
+
+% ---------------------------------
     
     [i1, i2, cL1, cL2] = gui.i_select2grps(sce, false);
     if length(i1) == 1 || length(i2) == 1, return; end
@@ -40,55 +88,45 @@ cx2=cx(2,:);
         uiwait(warndlg('One of groups contains too few genes (n < 50). The result may not be reliable.',''));
     end
 
-    [T1, X1, g1, xyz1] = sc_splinefit(sce1.X, sce1.g, true, false);
-    [T2, X2, g2, xyz2] = sc_splinefit(sce2.X, sce2.g, true, false);
+    if ~isequal(sce1.g, sce2.g)
+        [g, ia, ib] = intersect(sce1.g, sce2.g,'stable');
+        X1 = sce1.X(ia, :);
+        X2 = sce2.X(ib, :);
+    else
+        g = sce1.g;
+        X1 = sce1.X;
+        X2 = sce2.X;        
+    end
     
-    [g, ia, ib] = intersect(T1.genes, T2.genes);
-    T1 = T1(ia, :);
-    T2 = T2(ib, :);
+    X1 = sc_norm(X1,'type','libsize');
+    X2 = sc_norm(X2,'type','libsize');
 
-    X1 = X1(ia, :);
-    X2 = X2(ib, :);
-    g1 = g1(ia);
-    g2 = g2(ib);
- 
-    valididx = T1.nearidx>0 & T2.nearidx>0;
-    T1 = T1(valididx,:);
-    T2 = T2(valididx,:);
+    [T1, X1, g1, xyz1] = sc_splinefit(X1, g, true, false);
+    [T1, idx] = sortrows(T1,'genes','descend');
+    X1 = X1(idx, :);
+    g1 = g1(idx);
 
-    X1 = X1(valididx, :);
-    g1 = g1(valididx);
-    X2 = X2(valididx, :);
-    g2 = g2(valididx);
-    g = g(valididx);
+    [T2, X2, g2, xyz2] = sc_splinefit(X2, g, true, false);
+    [T2, idx] = sortrows(T2,'genes','descend');
+    X2 = X2(idx, :);
+    g2 = g2(idx);
 
     assert(isequal(g1, g2))
-    assert(isequal(g, g2))
-    assert(isequal(T1.genes, T2.genes))
-    assert(isequal(T1.genes, g))
-    
+    g = g1;
+
+
     px1 = T1.lgu; py1 = T1.lgcv; pz1 = T1.dropr;
     px2 = T2.lgu; py2 = T2.lgcv; pz2 = T2.dropr;
 
     d1=([px1 py1 pz1] - xyz1(T1.nearidx,:));
     d2=([px2 py2 pz2] - xyz2(T2.nearidx,:));
-    DiffDist = vecnorm(d1 - d2, 2, 2);
 
-%    DiffDist = zeros(size(T1,1), 1);
-%    DiffDist(valididx) = ddn;
-%    DiffDist = ddn;
-    
+    DiffDist = vecnorm(d1 - d2, 2, 2);    
+   
     T1.Properties.VariableNames = append(T1.Properties.VariableNames, sprintf('_%s',cL1{1}));
     T2.Properties.VariableNames = append(T2.Properties.VariableNames, sprintf('_%s',cL2{1}));
     
-    T=[T1 T2 table(DiffDist)];
-    
-    %assignin("base","T",T)
-    %assignin("base","T1",T1)
-    %assignin("base","T2",T2)
-    %assignin("base","xyz1",xyz1)
-    %assignin("base","xyz2",xyz2)
-    
+    T = [T1 T2 table(DiffDist)];    
     T = sortrows(T,"DiffDist","descend");
     
     gui.gui_waitbar(fw);
@@ -111,13 +149,13 @@ gui.i_movegui2parent(hFig, FigureHandle);
 
 delete(findall(hFig, 'Tag', 'FigureToolBar'))
 tb = uitoolbar('Parent', hFig);
-%tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
-uipushtool(tb, 'Separator', 'off');
+% tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
+% uipushtool(tb, 'Separator', 'off');
 
-pkg.i_addbutton2fig(tb, 'off', {@in_HighlightGenes, 1}, 'list.gif', 'Highlight top HVGs');
+pkg.i_addbutton2fig(tb, 'off', {@in_HighlightGenes, 1}, 'list.gif', 'Selet a gene to show expression profile');
 % pkg.i_addbutton2fig(tb, 'off', @in_HighlightSelectedGenes, 'xplotpicker-qqplot.gif', 'Highlight selected genes');
-pkg.i_addbutton2fig(tb, 'off', {@in_HighlightGenes, 2}, 'plotpicker-qqplot.gif', 'Highlight top HVGs');
-pkg.i_addbutton2fig(tb, 'off', @EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Enrichment analysis...');
+pkg.i_addbutton2fig(tb, 'off', {@in_HighlightGenes, 2}, 'plotpicker-qqplot.gif', 'Selet a gene from sorted list');
+pkg.i_addbutton2fig(tb, 'off', @EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Select top n genes to perform web-based enrichment analysis...');
 
 
 hFig.Visible=true;
@@ -149,6 +187,8 @@ subtitle(hAx1, titxt);
 xlabel(hAx1,'Cell Index');
 ylabel(hAx1,'Expression Level');
 
+
+
 hAx2 = subplot(2,2,4);
 x2 = X2(1,:);
 sh2 = plot(hAx2, 1:length(x2), x2, 'Color',cx2);
@@ -159,6 +199,12 @@ subtitle(hAx2, titxt);
 xlabel(hAx2,'Cell Index');
 ylabel(hAx2,'Expression Level');
 h3 = [];
+h3a = [];
+h3b = [];
+yl = cell2mat(get([hAx1, hAx2], 'Ylim'));
+ylnew = [min(yl(:, 1)), max(yl(:, 2))];
+set([hAx1, hAx2], 'Ylim', ylnew);
+
 
     function txt = in_myupdatefcn3(src, event_obj, g)
         if isequal(get(src, 'Parent'), hAx0)
@@ -177,12 +223,18 @@ h3 = [];
             end
             
             if ~isempty(h3), delete(h3); end
-            h3 = plot3(hAx0, [px1(idx) px2(idx)], ...
-                [py1(idx), py2(idx)], ...
-                [pz1(idx), pz2(idx)],'k-','LineWidth',1);
-
+            if ~isempty(h3a), delete(h3a); end
+            if ~isempty(h3b), delete(h3b); end
+                h3 = plot3(hAx0, [px1(idx) px2(idx)], ...
+                    [py1(idx), py2(idx)], ...
+                    [pz1(idx), pz2(idx)],'k-','LineWidth',1);
+                h3a = plot3(hAx0, px1(idx), py1(idx), pz1(idx), 'b.','MarkerSize',10);
+                h3b = plot3(hAx0, px2(idx), py2(idx), pz2(idx), 'r.','MarkerSize',10);
+                % daspect(hAx0,'auto');
+                %h3b = arrow3([px1(idx), py1(idx), pz1(idx)], ...
+                %    [px2(idx), py2(idx), pz2(idx)]);
+                %h3b = quiver3(hAx0, px1(idx), py1(idx), pz1(idx), px2(idx), py2(idx), pz2(idx));
             txt = {g(idx)};
-
             x1 = X1(idx, :);
             if ~isempty(sh1) && isvalid(sh1), delete(sh1); end
             sh1 = plot(hAx1, 1:length(x1), x1, 'Color',cx1);
@@ -201,7 +253,12 @@ h3 = [];
             [titxt] = gui.i_getsubtitle(x2);
             subtitle(hAx2, titxt);
             xlabel(hAx2,'Cell Index');
-            ylabel(hAx2,'Expression Level');            
+            ylabel(hAx2,'Expression Level');
+
+            yl = cell2mat(get([hAx1, hAx2], 'Ylim'));
+            ylnew = [min(yl(:, 1)), max(yl(:, 2))];
+            set([hAx1, hAx2], 'Ylim', ylnew);
+            
         else
             txt = num2str(event_obj.Position(2));
         end
@@ -215,7 +272,9 @@ h3 = [];
        dtp = findobj(h2, 'Type', 'datatip');
        if ~isempty(dtp), delete(dtp); end
        if ~isempty(h3), delete(h3); end
-        
+       if ~isempty(h3a), delete(h3a); end
+       if ~isempty(h3b), delete(h3b); end
+       
        switch typeid
            case 1
                 gsorted = natsort(g);
@@ -237,10 +296,10 @@ h3 = [];
         h2.BrushData = idx;
         datatip(h1, 'DataIndex', idx);
         datatip(h2, 'DataIndex', idx);
-        % if ~isempty(h3), delete(h3); end
-        % h3 = plot3(hAx0, [px1(idx) px2(idx)], ...
-        %     [py1(idx), py2(idx)], ...
-        %     [pz1(idx), pz2(idx)],'k-','LineWidth',1);       
+         if ~isempty(h3), delete(h3); end
+         h3 = plot3(hAx0, [px1(idx) px2(idx)], ...
+             [py1(idx), py2(idx)], ...
+             [pz1(idx), pz2(idx)],'k-','LineWidth',1);       
     end
 
     function EnrichrHVGs(~, ~)
