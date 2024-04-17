@@ -199,6 +199,8 @@ subtitle(hAx2, titxt);
 xlabel(hAx2,'Cell Index');
 ylabel(hAx2,'Expression Level');
 h3 = [];
+h3a = [];
+h3b = [];
 yl = cell2mat(get([hAx1, hAx2], 'Ylim'));
 ylnew = [min(yl(:, 1)), max(yl(:, 2))];
 set([hAx1, hAx2], 'Ylim', ylnew);
@@ -221,9 +223,13 @@ set([hAx1, hAx2], 'Ylim', ylnew);
             end
             
             if ~isempty(h3), delete(h3); end
+            if ~isempty(h3a), delete(h3a); end
+            if ~isempty(h3b), delete(h3b); end
             h3 = plot3(hAx0, [px1(idx) px2(idx)], ...
                 [py1(idx), py2(idx)], ...
                 [pz1(idx), pz2(idx)],'k-','LineWidth',1);
+            h3a = plot3(hAx0, px1(idx), py1(idx), pz1(idx), 'b.','MarkerSize',10);
+            h3b = plot3(hAx0, px2(idx), py2(idx), pz2(idx), 'r.','MarkerSize',10);
 
             txt = {g(idx)};
 
