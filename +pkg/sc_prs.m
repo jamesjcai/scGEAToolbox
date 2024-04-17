@@ -14,11 +14,10 @@ end
 [V, D] = eigs(L, 21, 'smallestabs');
 V(:,1) = [];
 d = diag(D);
-d = d(2:end);
-C = V * diag(1 ./ d) * V';
+d(1) = [];                  % or d = d(2:end);
+C = V * diag(1 ./ d) * V';  % covariance matrix?
 M = C.^2;
-M = M ./ diag(M);
-
+M = M ./ diag(M);           % PRS matrix
 W = 1 - eye(size(M, 1));
 effe_v = mean(M .* W, 2);
 sens_v = mean(M .* W, 1)';
