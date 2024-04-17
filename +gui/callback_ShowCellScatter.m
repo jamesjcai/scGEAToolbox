@@ -4,8 +4,13 @@ function callback_ShowCellScatter(src, ~)
     sce = guidata(FigureHandle);
     [axx, bxx] = view(findall(FigureHandle,'type','axes'));
 
-    [thisx, xlabelv] = gui.i_select1state(sce, false, false, false);
+    [thisx, xlabelv] = gui.i_select1state(sce, false, false, false, true);
     if isempty(thisx), return; end
+    if ~isnumeric(thisx)
+        warndlg('This function works with continuous varibles only.','');
+        return;
+    end
+
 
 
     answer = questdlg("Violinplot for gene expression or cell state variables?","", ...
@@ -33,7 +38,7 @@ function callback_ShowCellScatter(src, ~)
                 end
                 gui.i_scattertabs(thisyv, ylabelv, thisx, xlabelv, FigureHandle);
             else
-                waitfor(helpdlg('No valid cell state variables. Violinplot cannot be shown.',''));
+                waitfor(helpdlg('No valid cell state variables.',''));
             end            
     end
 end
