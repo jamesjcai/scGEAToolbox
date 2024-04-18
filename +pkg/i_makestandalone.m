@@ -102,7 +102,7 @@ d = [d; fullfile(pw1, 'resources', 'DoRothEA_TF_Target_DB', 'dorothea_mm.mat')];
 d = [d; fullfile(pw1, 'example_data', 'testXgs.mat')];
 d = [d; fullfile(pw1, 'example_data', 'workshop_example.mat')];
 % d=[d;fullfile(matlabroot,'toolbox','rptgen','rptgen','makePPTCompilable.p')];
-d2 = string(pkg.dirPlus(fullfile(pw1, '+run', 'external')));
+d2 = string(dirPlus(fullfile(pw1, '+run', 'external')));
 d2 = d2(~contains(d2, "stringdb\stringdb_"));
 d = [d; d2];
 
