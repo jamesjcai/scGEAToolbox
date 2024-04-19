@@ -64,7 +64,7 @@ if ~isempty(s_in), sce.s = s_in; end
 [c, cL] = grp2idx(sce.c);
 
 if ~isempty(v1)
-    figname = sprintf('SCGEATOOL v%sd', v1);
+    figname = sprintf('SCGEATOOL v%s', v1);
 else
     figname = 'SCGEATOOL';
 end
