@@ -80,7 +80,7 @@ pkg.i_addbutton2fig(tb, 'off', @i_savemainfigx, "xpowerpoint.gif", 'Save Figure 
 
 pkg.i_addbutton2fig(tb, 'off', @i_renametitle, "icon-mat-touch-app-10.gif", 'Change Plot Title');
 %pkg.i_addbutton2fig(tb, 'on', @i_viewgenenames, 'HDF_point.gif', 'Show Gene Names');
-pkg.i_addbutton2fig(tb, 'on', @i_resizewin, 'HDF_pointx.gif', 'Resize Plot Window');
+pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
 
 % if isempty(px_new)
 %     movegui(hFig,'center');
@@ -145,13 +145,6 @@ hFig.Visible=true;
     %     web(sprintf('https://www.genecards.org/cgi-bin/carddisp.pl?gene=%s', focalg),'-new');
     % end
 
-    function i_resizewin(~,~)
-        w = gui.i_inputnumk(450, 10, 2000, 'Window width');
-        if isempty(w), return; end
-        h = gui.i_inputnumk(420, 10, 2000, 'Window height');
-        if isempty(h), return; end
-        hFig.Position = [hFig.Position(1) hFig.Position(2) w h];
-    end
 
     function i_renametitle(~, ~)
         helpdlg('Double-click on the title to make change.', '');

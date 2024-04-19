@@ -110,7 +110,6 @@ ylim([0.5, max([4, length(txgene)]) - 0.5]);
 %colorbar
 %colorbar('northoutside');
 
-
 set(gca, 'YTick', 0:length(tgene))
 set(gca, 'YTickLabel', txgene)
 set(gca, 'XTick', 0:length(cL))
@@ -120,9 +119,8 @@ colormap(flipud(summer));
 box on
 grid on
 
-hFig.Position(3) = hFig.Position(3) * 0.7;
+%hFig.Position(3) = hFig.Position(3) * 0.7;
 
-% drawnow;
 cb = colorbar('eastoutside');
 ax = gca;
 axposition = ax.Position;
@@ -131,11 +129,11 @@ cb.Position(4) = cb.Position(4) * (5 / length(tgene));
 ax.Position = axposition;
 
 if ~isempty(ttxt)
-ttxt=strrep(ttxt,'_','\_');
-title(ttxt);
+    ttxt=strrep(ttxt,'_','\_');
+    title(ttxt);
 end
 
-tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
+tb = findall(hFig, 'Tag', 'FigureToolBar'); 
 uipushtool(tb, 'Separator', 'off');
 
 %tb = uitoolbar('Parent', hFig);
@@ -149,8 +147,7 @@ pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 1}, "svg.gif", 'Save Figure 
 pkg.i_addbutton2fig(tb, 'on', @i_savetable, 'export.gif', 'Export data...');
 pkg.i_addbutton2fig(tb, 'on', @gui.i_invertcolor, 'plotpicker-comet.gif', 'Invert Colors');
 pkg.i_addbutton2fig(tb, 'off', @i_resetcolor, 'plotpicker-geobubble2.gif', 'Reset Colormap');
-pkg.i_addbutton2fig(tb, 'on', @i_resizewin, ...
-    'HDF_pointx.gif', 'Resize Plot Window');
+pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
 
 % %set(cb, 'Position', get(gca,'position')); pause(1);
 % cb.Position = cb.Position + 1e-10;
@@ -163,30 +160,11 @@ pkg.i_addbutton2fig(tb, 'on', @i_resizewin, ...
 % set(cb,'Position',x2);
 
 % cb.Label.String ="Average Expression";
-
 gui.i_movegui2parent(hFig, parentfig);
 
 
 if nargout > 0, return; end
 set(hFig, 'visible', 'on');
-
-
-% "Percent Expressed"
-%     function i_changefontsize(~,~)
-%           ax=get(gca,'FontSize')+1;
-%          if ax>15, ax=5; end
-%          set(gca,'FontSize',ax);
-%     end
-
-    function i_resizewin(~,~)
-        %oldw
-        %oldh
-        wx = gui.i_inputnumk(450, 10, 2000, 'Window width');
-        if isempty(wx), return; end
-        hx = gui.i_inputnumk(420, 10, 2000, 'Window height');
-        if isempty(hx), return; end
-        hFig.Position = [hFig.Position(1) hFig.Position(2) wx hx];
-    end
 
 
     function i_savetable(~, ~)
@@ -231,45 +209,41 @@ set(hFig, 'visible', 'on');
                     end
             end
         end
-end
-
-        function i_resizedot(~, ~)
-            dotsz = dotsz * 0.9;
-            if dotsz < 0.2, dotsz = 1.0; end
-            delete(afa);
-            delete(afb);
-            delete(af{1});
-            delete(af{3});
-            delete(af{5});
-            afa = scatter(x, y, dotsz*500*sz, vl, 'filled');
-            hold on
-            afb = scatter(x, y, dotsz*500*sz, 'k');
-            af{1} = scatter(max(x)+1, 1, dotsz*500*1, 'k');
-            af{3} = scatter(max(x)+1, 2, dotsz*500*0.5, 'k');
-            af{5} = scatter(max(x)+1, 3, dotsz*500*0.1, 'k');
     end
 
-            function i_renamecat(~, ~)
-                tg = gui.i_inputgenelist(string(cL), true);
-                if isempty(tg), return; end
-                if length(tg) == length(cL)
-                    set(gca, 'XTick', 0:length(cL));
-                    set(gca, 'XTickLabel', [{''}; tg(:); {''}])
-                    cL = tg;
-                else
-                    errordlg('Wrong input.');
-                end
+    function i_resizedot(~, ~)
+        dotsz = dotsz * 0.9;
+        if dotsz < 0.2, dotsz = 1.0; end
+        delete(afa);
+        delete(afb);
+        delete(af{1});
+        delete(af{3});
+        delete(af{5});
+        afa = scatter(x, y, dotsz*500*sz, vl, 'filled');
+        hold on
+        afb = scatter(x, y, dotsz*500*sz, 'k');
+        af{1} = scatter(max(x)+1, 1, dotsz*500*1, 'k');
+        af{3} = scatter(max(x)+1, 2, dotsz*500*0.5, 'k');
+        af{5} = scatter(max(x)+1, 3, dotsz*500*0.1, 'k');
+    end
+
+    function i_renamecat(~, ~)
+        tg = gui.i_inputgenelist(string(cL), true);
+        if isempty(tg), return; end
+        if length(tg) == length(cL)
+            set(gca, 'XTick', 0:length(cL));
+            set(gca, 'XTickLabel', [{''}; tg(:); {''}])
+            cL = tg;
+        else
+            errordlg('Wrong input.');
         end
+    end
 
-                function i_resetcolor(~, ~)
-                    dotsz = DOTSIZE;
-                    set(gca, 'FontSize', 10);
-                    i_resizedot;
-                    colormap(flipud(summer));
-            end
+    function i_resetcolor(~, ~)
+        dotsz = DOTSIZE;
+        set(gca, 'FontSize', 10);
+        i_resizedot;
+        colormap(flipud(summer));
+    end
 
-                %     function i_invertcolor(~,~)
-                %         cm=colormap();
-                %         colormap(flipud(cm));
-                %     end
 end
