@@ -7,7 +7,7 @@
     <param.summary>Single-cell Gene Expression Analysis Toolbox</param.summary>
     <param.description>scRNAseq data analysis toolbox</param.description>
     <param.screenshot>${PROJECT_ROOT}\resources\scgeatool.png</param.screenshot>
-    <param.version>24.4.0</param.version>
+    <param.version>24.4.2</param.version>
     <param.output>${PROJECT_ROOT}\scGEAToolbox.mltbx</param.output>
     <param.products.name>
       <item>Statistics and Machine Learning Toolbox</item>
@@ -154,7 +154,6 @@ TIMESTAMP</param.exclude.filters>
       <file>${PROJECT_ROOT}\sc_grn.m</file>
       <file>${PROJECT_ROOT}\sc_grnview.m</file>
       <file>${PROJECT_ROOT}\sc_grnview2.m</file>
-      <file>${PROJECT_ROOT}\sc_heg.m</file>
       <file>${PROJECT_ROOT}\sc_hvg.m</file>
       <file>${PROJECT_ROOT}\sc_impute.m</file>
       <file>${PROJECT_ROOT}\sc_knngraph.m</file>
@@ -196,17 +195,14 @@ TIMESTAMP</param.exclude.filters>
       <file>${PROJECT_ROOT}\sc_selectg.m</file>
       <file>${PROJECT_ROOT}\sc_simudata.m</file>
       <file>${PROJECT_ROOT}\sc_snndpc.m</file>
-      <file>${PROJECT_ROOT}\sc_snngraph.m</file>
       <file>${PROJECT_ROOT}\sc_splinefit.m</file>
       <file>${PROJECT_ROOT}\sc_splinefit2.m</file>
-      <file>${PROJECT_ROOT}\sc_ssnet.m</file>
       <file>${PROJECT_ROOT}\sc_tenifoldnet.m</file>
       <file>${PROJECT_ROOT}\sc_tfactivity.m</file>
       <file>${PROJECT_ROOT}\sc_trajectory.m</file>
       <file>${PROJECT_ROOT}\sc_transform.m</file>
       <file>${PROJECT_ROOT}\sc_tsne.m</file>
       <file>${PROJECT_ROOT}\sc_umap.m</file>
-      <file>${PROJECT_ROOT}\sc_veg.m</file>
       <file>${PROJECT_ROOT}\sc_writefile.m</file>
       <file>${PROJECT_ROOT}\scgeatool.m</file>
       <file>${PROJECT_ROOT}\tensor_toolbox</file>

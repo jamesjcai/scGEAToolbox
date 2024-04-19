@@ -1683,13 +1683,14 @@ if ~showuseronboarding, set(UserToolbarHandle, 'Visible', 'off'); end
             sce.list_cell_attributes = [sce.list_cell_attributes, clabel];
             sce.list_cell_attributes = [sce.list_cell_attributes, thisc];
         end
-        [c, cL] = grp2idx(thisc);
-        sce.c = c;
+
+
+        %{
         answer1 = questdlg('Display in place or in new figure?', '', ...
             'In place', 'New figure','Cancel','In place');
         switch answer1
             case 'In place'
-                in_RefreshAll(src, [], true, false);
+                % in_RefreshAll(src, [], true, false);
                 target{1} = hAx;
                 target{2} = h;
             case 'New figure'
@@ -1709,15 +1710,26 @@ if ~showuseronboarding, set(UserToolbarHandle, 'Visible', 'off'); end
             otherwise
                 return;
         end
+        %}
+
         [answer] = gui.i_selvariabletype(thisc);
+        if isempty(answer), return; end
+
+        [c, cL] = grp2idx(thisc);
+        sce.c = c;
         switch answer
             case 'Categorical/Discrete'
+                in_RefreshAll(src, [], true, false);
+                target{1} = hAx;
                 n = max(c);
                 f = 0.5 * (n - 1) ./ n;
                 f = 1 + f .* (1:2:2 * n);
                 cb = colorbar(target{1}, 'Ticks', f, 'TickLabels', ...
-                    strrep(cellstr(cL), '_', '\_'));
-            otherwise  % case 'Numerical/Continuous'
+                    strrep(cellstr(cL), '_', '\_'));                
+            case {'Numerical/Continuous','Unknown'}
+                in_RefreshAll(src, [], true, false);
+                target{1} = hAx;
+                target{2} = h;
                 if isnumeric(thisc)
                     set(target{2}, 'CData', thisc);
                 else
@@ -1726,6 +1738,8 @@ if ~showuseronboarding, set(UserToolbarHandle, 'Visible', 'off'); end
                 cb = colorbar(target{1});
         end
         cb.Label.String = strrep(clabel, '_', '\_');
+        cbtogg = findall(FigureHandle, 'Tag', 'figToglColorbar');
+        set(cbtogg,'State','on');
         guidata(FigureHandle, sce);
     end
 
