@@ -6,7 +6,6 @@ if nargin<3, parentfig=[]; end
     [K,usehvgs] = gui.i_gethvgnum(sce);
     
     if usehvgs
-        % T = sc_hvg(sce.X, sce.g);
         T = sc_splinefit(sce.X, sce.g);
         glist = T.genes(1:min([K, sce.NumGenes]));
         [y, idx] = ismember(glist, sce.g);
@@ -14,6 +13,8 @@ if nargin<3, parentfig=[]; end
         sce.g = sce.g(idx);
         sce.X = sce.X(idx, :);
     end
+
+    % [Xt] = gui.i_transformx(sce.X);
 
     answer = questdlg('Select method:','','Spearman Correlation','Distance Correlation','Cancel','Spearman Correlation');
     switch answer
@@ -46,8 +47,7 @@ if nargin<3, parentfig=[]; end
             return;
     end
 
-    [~, idxp] = maxk(r, 10); % Select top 4 positively correlated genes
-    % [~, idxn] = mink(r, 3); % Select top 3 negatively correlated genes
+    [~, idxp] = maxk(r, 10); 
     selectedg = sce.g(idxp);
     try
         hFig = figure('WindowStyle', 'modal', 'Visible','off');
