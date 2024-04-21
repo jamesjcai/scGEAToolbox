@@ -14,8 +14,8 @@ function i_viewtable(T)
 hFigure = uifigure('Visible', false);
 %set(hFigure, 'MenuBar', 'none');
 %set(hFigure, 'ToolBar', 'none');
-uitable(hFigure, 'Data', T{:, :}, 'ColumnName', T.Properties.VariableNames, ...
+uitable(hFigure, 'Data', T, 'ColumnName', T.Properties.VariableNames, ...
     'RowName', T.Properties.RowNames, 'Units', ...
-    'Normalized', 'Position', [0.03, 0.03, 0.94, 0.93]);
+    'Normalized', 'Position', [0.05, 0.05, 0.92, 0.90]);
 movegui(hFigure, 'center');
 set(hFigure, 'visible', 'on');
