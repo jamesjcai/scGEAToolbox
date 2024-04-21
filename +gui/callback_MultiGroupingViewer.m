@@ -29,6 +29,7 @@ function callback_MultiGroupingViewer(src, ~)
             if matlab.ui.internal.isUIFigure(FigureHandle), focus(FigureHandle); end
             [thiscv, clabelv] = gui.i_selectnstates(sce);
             if isempty(thiscv) || isempty(clabelv), return; end
+
             hFig = figure('Visible','off');
             hFig.Position(3) = hFig.Position(3) * 1.8;
             axesv = cell(length(thiscv),1);
@@ -52,6 +53,10 @@ function callback_MultiGroupingViewer(src, ~)
             rotate3d(hFig,'on');
             hBr = brush(hFig);
             hBr.ActionPostCallback = {@onBrushAction, axesv};
+
+            tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
+            uipushtool(tb, 'Separator', 'off');
+            gui.gui_3dcamera(tb, 'AllCells');
             
         case 'Multiembedding'
             listitems = fieldnames(sce.struct_cell_embeddings);

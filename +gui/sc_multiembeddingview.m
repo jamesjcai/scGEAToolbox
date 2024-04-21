@@ -1,4 +1,5 @@
 function sc_multiembeddingview(sce, embeddingtags, parentfig)
+
 if isempty(embeddingtags)
     embeddingtags = fieldnames(sce.struct_cell_embeddings);
 end
@@ -27,6 +28,7 @@ end
     %tb = uitoolbar(hFig);
     pkg.i_addbutton2fig(tb, 'on',  @in_showgeneexp, 'list.gif', 'Select a gene to show expression...');
     pkg.i_addbutton2fig(tb, 'off',  @in_showcellstate, 'list2.gif', 'Select a gene to show expression...');
+    gui.gui_3dcamera(tb, 'AllCells');    
      
     function in_showcellstate(~, ~)
         [thisc, clabel] = gui.i_select1state(sce);
