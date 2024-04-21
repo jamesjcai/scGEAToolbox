@@ -111,8 +111,8 @@ in_addmenu(m_file, 0, {@gui.i_savemainfig, 1}, 'Save Figure as SVG File...');
 in_addmenu(m_file, 1, @callback_SaveX, 'Export && &Save Data...', 'S');
 
 m_edit = uimenu(FigureHandle, 'Text', '&Edit');
-in_addmenu(m_edit, 0, @in_SelectCellsByQC, 'Filter Genes and Cells...', 'F');
-in_addmenu(m_edit, 0, @in_Brushed2NewCluster, 'Add Brushed Cells to a New Group');
+in_addmenu(m_edit, 0, @in_SelectCellsByQC, 'Filter Genes & Cells...', 'F');
+in_addmenu(m_edit, 1, @in_Brushed2NewCluster, 'Add Brushed Cells to a New Group');
 in_addmenu(m_edit, 0, @in_Brushed2MergeClusters, 'Merge Brushed Cells to Same Group');
 in_addmenu(m_edit, 0, @in_RenameCellTypeBatchID, 'Rename Cell Type or Batch ID...');
 in_addmenu(m_edit, 1, @gui.callback_SplitAtacGex, 'Split Multiome ATAC+GEX Matrix...');
@@ -160,12 +160,13 @@ in_addmenu(m_plot, 0 ,@gui.callback_PickColorMap,'Next Colormap');
 m_anno = uimenu(FigureHandle, 'Text', 'Ann&otate');
 in_addmenu(m_anno, 0, {@in_DetermineCellTypeClustersGeneral, true}, "Annotate Cell Types Using PanglaoDB Marker Genes");
 in_addmenu(m_anno, 0, {@in_DetermineCellTypeClustersGeneral, false}, 'Annotate Cell Type Using Customized Marker Genes...');
+in_addmenu(m_anno, 1, {@in_MergeCellSubtypes, 1}, 'Import Cell Annotation from SCE in Workspace...');
+in_addmenu(m_anno, 0, {@in_MergeCellSubtypes, 2}, 'Import Cell Annotation from SCE Data File...');
 in_addmenu(m_anno, 1, @in_Brush4Celltypes, "Annotate Cell Types for Brushed Cells");
 in_addmenu(m_anno, 0, @gui.callback_Brush4Markers, "Find Marker Genes for Brushed Cells");
 in_addmenu(m_anno, 0, @gui.callback_FindAllMarkers, "Make Marker Gene Heatmap");
-in_addmenu(m_anno, 1, {@in_MergeCellSubtypes, 1}, 'Import Cell Annotation from SCE in Workspace...');
-in_addmenu(m_anno, 0, {@in_MergeCellSubtypes, 2}, 'Import Cell Annotation from SCE Data File...');
-in_addmenu(m_anno, 1, @gui.callback_CellCycleAssignment, 'Assign Cell Cycle Phase...');
+in_addmenu(m_anno, 0, @gui.callback_CellCycleAssignment, 'Assign Cell Cycle Phase...');
+in_addmenu(m_anno, 1, @in_SingleClickSolution, 'Single Click Solution (from Raw Data to Annotation)...');
 
 m_tool = uimenu(FigureHandle, 'Text', '&Analyze');
 in_addmenu(m_tool, 0, @gui.callback_DEGene2Groups, 'Differential Expression (DE) Analysis...');
@@ -178,7 +179,7 @@ in_addmenu(m_tool, 1, @gui.callback_CalculateGeneStats, 'Calculate Gene Expressi
 in_addmenu(m_tool, 1, @in_CompareCellScoreBtwCls, 'Cell Score Analysis...');
 in_addmenu(m_tool, 0, @gui.callback_GetCellSignatureMatrix, 'Cell State Analysis...');
 in_addmenu(m_tool, 1, @in_EnrichrHVGs, 'HVG Functional Enrichment Analysis...');
-in_addmenu(m_tool, 1, @in_SingleClickSolution, 'Single Click Solution (from Raw Data to Annotation)...');
+
 
 m_ntwk = uimenu(FigureHandle, 'Text', '&Network');
 in_addmenu(m_ntwk, 0, @in_Select5000Genes, 'Remove Less Informative Genes to Reduce Gene Space...');
@@ -210,6 +211,7 @@ in_addmenu(m_extn, 0, @gui.callback_VirtualKOGenKI, 'Virtual Gene Knockout (GenK
 m_help = uimenu(FigureHandle, 'Text', '&Help ');
 in_addmenu(m_help, 0, {@(~, ~) web('https://scgeatoolbox.readthedocs.io/en/latest/')}, 'Online Documentation...');
 in_addmenu(m_help, 0, {@(~, ~) gui.gui_uishowrefinfo('Quick Installation',FigureHandle)}, 'Quick Installation Guide...');
+in_addmenu(m_help, 0, {@(~, ~) gui.gui_uishowrefinfo('Shortcuts Guide',FigureHandle)}, 'Shortcuts User Guide...');
 in_addmenu(m_help, 1, {@(~, ~) web('https://www.mathworks.com/matlabcentral/fileexchange/72917-scgeatoolbox-single-cell-gene-expression-analysis-toolbox')}, 'View scGEAToolbox on File Exchange...');
 in_addmenu(m_help, 0, {@(~, ~) web('https://pubmed.ncbi.nlm.nih.gov/31697351/')}, 'Cite scGEAToolbox Paper...');
 in_addmenu(m_help, 0, {@(~, ~) web('https://scholar.google.com/scholar?cites=4661048952867744439&as_sdt=5,44&sciodt=0,44&hl=en')}, 'Papers Citing scGEAToolbox...');
@@ -278,7 +280,7 @@ pt.Tag = "figToglColorbar";
 in_addbuttontoggle(1, 0, {@in_togglebtfun, @in_turnoffuserguiding, "icon-mat-unfold-more-10.gif", "icon-mat-unfold-less-10.gif", false, "Turn on/off user onboarding toolbar"});
 in_addbuttonpush(1, 0, @gui.callback_ShowGeneExpr, "list.gif", "Select genes to show expression")
 in_addbuttonpush(1, 0, @in_ShowCellStates, "list2.gif", "Show cell state")
-in_addbuttonpush(1, 0, @in_SelectCellsByQC, "plotpicker-effects.gif", "Filter genes and cells")
+in_addbuttonpush(1, 0, @in_SelectCellsByQC, "plotpicker-effects.gif", "Filter genes & cells")
 
 in_addbuttonpush(1, 1, @in_labelcellgroups, "icon-fa-tags-10b.gif", "Label cell groups");
 % in_addbuttontoggle(1, 1, {@in_togglebtfun, @in_labelcellgroups, "icon-fa-tag-10b.gif", "icon-fa-tags-10b.gif", false, "Label cell groups"});
@@ -307,7 +309,7 @@ in_addbuttonpush(1, 0, @in_RefreshAll, "icon-mat-refresh-20.gif", "Refresh");
 if ~isempty(fx) && isvalid(fx), fxfun(fx, 0.6); end
 
 in_addbuttonpush(2, 0, @in_turnonuserguiding, "icon-fa-thumb-tack-10.gif", "Turn on user guiding toolbar");
-in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_SelectCellsByQC, "icon-mat-filter-1-10.gif", "plotpicker-effects.gif", true, "Filter genes and cells"});
+in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_SelectCellsByQC, "icon-mat-filter-1-10.gif", "plotpicker-effects.gif", true, "Filter genes & cells"});
 in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_EmbeddingAgain, "icon-mat-filter-2-10.gif", "plotpicker-geobubble.gif", true, "Embedding (tSNE, UMP, PHATE)"});
 in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_ClusterCellsS, "icon-mat-filter-3-10.gif", "plotpicker-dendrogram.gif", true, "Clustering using embedding S"});
 in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_DetermineCellTypeClustersGeneral, "icon-mat-filter-4-10.gif", "plotpicker-contour.gif", true, "Assign cell types to groups"});
