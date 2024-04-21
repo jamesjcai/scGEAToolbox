@@ -120,8 +120,6 @@ in_addmenu(m_edit, 1, {@in_MergeSCEs, 1}, 'Merge SCE Data Variables in Workspace
 in_addmenu(m_edit, 0, {@in_MergeSCEs, 2}, 'Merge SCE Data Files...');
 in_addmenu(m_edit, 1, @in_AddEditCellAttribs, 'Add/Edit Cell Attributes...');
 in_addmenu(m_edit, 0, @in_ExportCellAttribTable, 'Export Cell Attribute Table...');
-in_addmenu(m_edit, 1, {@in_MergeCellSubtypes, 1}, 'Import Cell Annotation from SCE in Workspace...');
-in_addmenu(m_edit, 0, {@in_MergeCellSubtypes, 2}, 'Import Cell Annotation from SCE Data File...');
 in_addmenu(m_edit, 1, @gui.callback_SelectCellsByMarker, 'Extract Cells by Marker (+/-) Expression...');
 in_addmenu(m_edit, 0, @in_MergeSubCellTypes, 'Merge Subclusters of Same Cell Type');
 in_addmenu(m_edit, 1, @in_WorkonSelectedGenes, 'Select Top n  Highly Variable Genes (HVGs) to Work on...');
@@ -132,6 +130,8 @@ in_addmenu(m_edit, 0, @gui.callback_SelectCellsByClass, 'Select Cells...');
 m_view = uimenu(FigureHandle, 'Text', '&View');
 in_addmenu(m_view, 0, @in_EmbeddingAgain, 'Embed Cells Using tSNE, UMP, PHATE...', 'B');
 in_addmenu(m_view, 0, @in_Switch2D3D, 'Switch Between 2D/3D Embeddings...');
+in_addmenu(m_view, 1, @in_ClusterCellsS, "Cluster Cells Using Cell Embedding (S)", 'C');
+in_addmenu(m_view, 0, @in_ClusterCellsX, "Cluster Cells Using Expression Matrix (X) 🐢 ...");
 in_addmenu(m_view, 1, @gui.callback_ShowGeneExpr, 'Gene Expression...', 'E');
 in_addmenu(m_view, 0, @in_ShowCellStates, 'Cell States...');
 in_addmenu(m_view, 0, @in_labelcellgroups, 'Cell Groups...', 'L');
@@ -157,50 +157,55 @@ in_addmenu(m_plot, 0, @in_DrawTrajectory, 'Cell Trajectory...');
 in_addmenu(m_plot, 1, @gui.callback_PickPlotMarker,'Next Marker Type');
 in_addmenu(m_plot, 0 ,@gui.callback_PickColorMap,'Next Colormap');
 
+m_anno = uimenu(FigureHandle, 'Text', 'Ann&otate');
+in_addmenu(m_anno, 0, {@in_DetermineCellTypeClustersGeneral, true}, "Annotate Cell Types Using PanglaoDB Marker Genes");
+in_addmenu(m_anno, 0, {@in_DetermineCellTypeClustersGeneral, false}, 'Annotate Cell Type Using Customized Marker Genes...');
+in_addmenu(m_anno, 1, @in_Brush4Celltypes, "Annotate Cell Types for Brushed Cells");
+in_addmenu(m_anno, 0, @gui.callback_Brush4Markers, "Find Marker Genes for Brushed Cells");
+in_addmenu(m_anno, 0, @gui.callback_FindAllMarkers, "Make Marker Gene Heatmap");
+in_addmenu(m_anno, 1, {@in_MergeCellSubtypes, 1}, 'Import Cell Annotation from SCE in Workspace...');
+in_addmenu(m_anno, 0, {@in_MergeCellSubtypes, 2}, 'Import Cell Annotation from SCE Data File...');
+in_addmenu(m_anno, 1, @gui.callback_CellCycleAssignment, 'Assign Cell Cycle Phase...');
+
 m_tool = uimenu(FigureHandle, 'Text', '&Analyze');
-in_addmenu(m_tool, 0, @in_ClusterCellsS, "Cluster Cells Using Cell Embedding (S)", 'C');
-in_addmenu(m_tool, 0, @in_ClusterCellsX, "Cluster Cells Using Expression Matrix (X)");
-in_addmenu(m_tool, 1, {@in_DetermineCellTypeClustersGeneral, true}, "Annotate Cell Types Using PanglaoDB Marker Genes");
-in_addmenu(m_tool, 0, {@in_DetermineCellTypeClustersGeneral, false}, 'Annotate Cell Type Using Customized Marker Genes...');
-in_addmenu(m_tool, 1, @in_Brush4Celltypes, "Annotate Cell Types for Brushed Cells");
-in_addmenu(m_tool, 0, @gui.callback_Brush4Markers, "Find Marker Genes for Brushed Cells");
-in_addmenu(m_tool, 0, @gui.callback_FindAllMarkers, "Make Marker Gene Heatmap");
-in_addmenu(m_tool, 1, @gui.callback_DEGene2Groups, 'Differential Expression (DE) Analysis...');
+in_addmenu(m_tool, 0, @gui.callback_DEGene2Groups, 'Differential Expression (DE) Analysis...');
 in_addmenu(m_tool, 0, @gui.callback_DPGene2Groups, 'Differential Program (DP) Analysis...');
 in_addmenu(m_tool, 0, @gui.callback_DVGene2Groups, 'Differential Variability (DV) Analysis...');
 in_addmenu(m_tool, 1, @gui.callback_DEGene2GroupsBatch, 'Differential Expression (DE) Analysis in Cell Type Batch Mode...');
 in_addmenu(m_tool, 0, @gui.callback_DPGene2GroupsBatch, 'Differential Program (DP) Analysis in Cell Type Batch Mode...');
 % in_addmenu(m_tool, 0, @gui.callback_DVGene2GroupsBatch, 'Differential Variability (DV) Analysis in Cell Type Batch Mode...');
 in_addmenu(m_tool, 1, @gui.callback_CalculateGeneStats, 'Calculate Gene Expression Statistics...');
-in_addmenu(m_tool, 0, @gui.callback_CellCycleAssignment, 'Assign Cell Cycle Phase...');
 in_addmenu(m_tool, 1, @in_CompareCellScoreBtwCls, 'Cell Score Analysis...');
 in_addmenu(m_tool, 0, @gui.callback_GetCellSignatureMatrix, 'Cell State Analysis...');
 in_addmenu(m_tool, 1, @in_EnrichrHVGs, 'HVG Functional Enrichment Analysis...');
 in_addmenu(m_tool, 1, @in_SingleClickSolution, 'Single Click Solution (from Raw Data to Annotation)...');
 
 m_ntwk = uimenu(FigureHandle, 'Text', '&Network');
-in_addmenu(m_ntwk, 0, @gui.callback_BuildGeneNetwork, 'Build GRN with Selected Genes...');
+in_addmenu(m_ntwk, 0, @in_Select5000Genes, 'Remove Less Informative Genes to Reduce Gene Space...');
+in_addmenu(m_ntwk, 1, @gui.callback_BuildGeneNetwork, 'Build GRN with Selected Genes...');
 in_addmenu(m_ntwk, 0, @gui.callback_CompareGeneNetwork, 'Build & Compare GRNs...');
-in_addmenu(m_ntwk, 1, @in_Select5000Genes, 'Remove Less Informative Genes to Reduce Gene Space...');
 in_addmenu(m_ntwk, 1, {@in_scTenifoldNet,1}, 'Construct GRN with All Genes - scTenifoldNet [PMID:33336197] 🐢...');
 in_addmenu(m_ntwk, 0, {@in_scTenifoldNet,2}, 'Construct & Compare GRNs - scTenifoldNet [PMID:33336197] 🐢...');
 in_addmenu(m_ntwk, 1, @gui.callback_scTenifoldKnk1, 'Virtual Gene Knockout - scTenifoldKnk [PMID:35510185] 🐢 ...');
-in_addmenu(m_ntwk, 0, @gui.callback_VirtualKOGenKI, 'Virtual Gene Knockout - GenKI [PMID:37246643] (Python Required) 🐢 ...');
-in_addmenu(m_ntwk, 1, @gui.callback_scTenifoldXct, 'Cell-Cell Communication Analysis - scTenifoldXct [PMID:36787742] 🐢 ...');
+%in_addmenu(m_ntwk, 0, @gui.callback_VirtualKOGenKI, 'Virtual Gene Knockout (GenKI/🐍) [PMID:37246643] 🐢 ...');
+%in_addmenu(m_ntwk, 1, @gui.callback_scTenifoldXct, 'Cell-Cell Communication (scTenifoldXct/🐍) [PMID:36787742] 🐢 ...');
 
 m_extn = uimenu(FigureHandle, 'Text', 'E&xternal');
-in_addmenu(m_extn, 0, @gui.i_setrenv, 'Set up R Environment');
-in_addmenu(m_extn, 0, @gui.i_setpyenv, 'Set up Python Environment');
 in_addmenu(m_extn, 0, @gui.i_setextwd, 'Set External Program Working Root Directory...');
-in_addmenu(m_extn, 1, @in_DecontX, 'Detect Ambient RNA Contamination (DecontX/R) [PMID:32138770]...');
-in_addmenu(m_extn, 0, @in_RunSeuratWorkflow, 'Run Seurat Workflow (Seurat/R) [PMID:25867923]...');
-in_addmenu(m_extn, 0, @in_RunMonocle3, 'Pseudotime Analysis (Monocle3/R) [PMID:28825705]...');
-in_addmenu(m_extn, 1, @gui.callback_MELDPerturbationScore, 'MELD Perturbation Score (MELD/Py) [PMID:33558698]...');
-in_addmenu(m_extn, 0, {@in_SubsampleCells, 2}, 'Geometric Sketching (geosketch/Py) [PMID:31176620]...');
-in_addmenu(m_extn, 0, @in_HarmonyPy, 'Batch Integration (Harmony/Py) [PMID:31740819]...');
-in_addmenu(m_extn, 0, @in_DoubletDetection, 'Detect Doublets (Scrublet/Py) [PMID:30954476]...');
-in_addmenu(m_extn, 0, @in_RunDataMapPlot, 'Run DataMapPlot (datamapplot/Py)...');
-in_addmenu(m_extn, 1, @gui.callback_ExploreCellularCrosstalk, 'Talklr Intercellular Crosstalk [DOI:10.1101/2020.02.01.930602]...');
+in_addmenu(m_extn, 1, @gui.i_setrenv, 'Set up R Environment (ℝ)');
+in_addmenu(m_extn, 0, @gui.i_setpyenv, 'Set up Python Environment (🐍)');
+in_addmenu(m_extn, 1, @in_DecontX, 'Detect Ambient RNA Contamination (DecontX/ℝ) [PMID:32138770]...');
+in_addmenu(m_extn, 0, @in_RunSeuratWorkflow, 'Run Seurat Workflow (Seurat/ℝ) [PMID:25867923]...');
+in_addmenu(m_extn, 0, @in_RunMonocle3, 'Pseudotime Analysis (Monocle3/ℝ) [PMID:28825705]...');
+in_addmenu(m_extn, 1, @gui.callback_MELDPerturbationScore, 'MELD Perturbation Score (MELD/🐍) [PMID:33558698]...');
+in_addmenu(m_extn, 0, {@in_SubsampleCells, 2}, 'Geometric Sketching (geosketch/🐍) [PMID:31176620]...');
+in_addmenu(m_extn, 0, @in_HarmonyPy, 'Batch Integration (Harmony/🐍) [PMID:31740819]...');
+in_addmenu(m_extn, 0, @in_DoubletDetection, 'Detect Doublets (Scrublet/🐍) [PMID:30954476]...');
+in_addmenu(m_extn, 0, @in_RunDataMapPlot, 'Run DataMapPlot (datamapplot/🐍)...');
+in_addmenu(m_extn, 1, @gui.callback_scTenifoldXct, 'Cell-Cell Communication (scTenifoldXct/🐍) [PMID:36787742]...');
+in_addmenu(m_extn, 0, @gui.callback_VirtualKOGenKI, 'Virtual Gene Knockout (GenKI/🐍) [PMID:37246643] ...');
+
+% in_addmenu(m_extn, 1, @gui.callback_ExploreCellularCrosstalk, 'Talklr Intercellular Crosstalk [DOI:10.1101/2020.02.01.930602]...');
 
 m_help = uimenu(FigureHandle, 'Text', '&Help ');
 in_addmenu(m_help, 0, {@(~, ~) web('https://scgeatoolbox.readthedocs.io/en/latest/')}, 'Online Documentation...');
@@ -1125,7 +1130,7 @@ if ~showuseronboarding, set(UserToolbarHandle, 'Visible', 'off'); end
             case 'off'
                 set(UserToolbarHandle,'Visible','off');
         end
-        menusv={m_file, m_edit, m_view, m_plot, m_extn, m_tool, m_ntwk};
+        menusv={m_file, m_edit, m_view, m_plot, m_extn, m_anno, m_tool, m_ntwk};
         for j=1:length(menusv)
             a=allchild(menusv{j});
             for k=1:length(a)
