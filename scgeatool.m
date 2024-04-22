@@ -11,25 +11,25 @@ if isempty(which('grp2idx.m'))
     end
     return;
 end
-rng("shuffle");
+% rng("shuffle");
+rng("default");
 
 import pkg.*
 import gui.*
 
 fx = [];
 v1 = [];
+
 if nargin < 1
     if ~(ismcc || isdeployed)
         try        
             fxfun = @gui.sc_splashscreen;
-            [fx, v1] = fxfun();
-            %v1
+            [fx, v1] = fxfun();            
         catch
             fxfun = @gui.sc_simplesplash2;
             fx = fxfun();
             v1 = [];
-        end
-        
+        end        
     end
     sce = SingleCellExperiment;
 else
@@ -146,7 +146,6 @@ in_addmenu(m_view, 1, @gui.callback_CloseAllOthers, 'Close All Other Figures', '
 in_addmenu(m_view, 0, @in_RefreshAll, 'Refresh Current View', 'R');
 
 m_plot = uimenu(FigureHandle, 'Text', '&Plots');
-
 in_addmenu(m_plot, 0, @gui.callback_ShowCellScatter,'Gene/Cell State Scatter Plot...');
 in_addmenu(m_plot, 0, @gui.callback_Violinplot, 'Gene/Cell State Violin Plot...');
 in_addmenu(m_plot, 0, @gui.callback_DrawDotplot, 'Gene Dot Plot...');
@@ -854,49 +853,55 @@ if ~showuseronboarding, set(UserToolbarHandle, 'Visible', 'off'); end
         if isempty(speciestag), return; end
 
         prompt = {
-            'Add UMAP Embedding?', ...
+            'tSNE Embedding?', ...            
+            'Add UMAP Embedding?', ...            
             'Add PHATE Embedding?', ...
             'Estimate Cell Cycles?', ...
             'Estimate Differentiation Potency of Cells?'};
         dlgtitle = '';
         dims = [1, 85];        
-        definput = {'No', 'No', 'Yes', 'Yes'};
+        definput = {'Yes', 'No', 'No', 'Yes', 'Yes'};
         answer = inputdlg(prompt, dlgtitle, dims, definput);
         if isempty(answer)
             return;
         end
 
-
-
         fw = gui.gui_waitbar_adv;
         gui.gui_waitbar_adv(fw,1/8,'Basic QC Filtering...');
         sce = sce.qcfilter;
 
+        count = 1;
+        if ~(strcmpi(answer{count},'Yes') || strcmpi(answer{count},'Y'))
+            errordlg('tSNE Embedding has to be included.','');
+            return;        
+        end
 
-        if strcmpi(answer{1},'Yes') || strcmpi(answer{1},'Y')
+        count = count + 1;
+        if strcmpi(answer{count},'Yes') || strcmpi(answer{count},'Y')
             gui.gui_waitbar_adv(fw,2/8, 'Embeding Cells Using UMAP...');
             sce = sce.embedcells('umap3d', true, true, 3);
         end
-        if strcmpi(answer{2},'Yes') || strcmpi(answer{2},'Y')
+        count = count + 1;
+        if strcmpi(answer{count},'Yes') || strcmpi(answer{count},'Y')
             gui.gui_waitbar_adv(fw,2/8, 'Embeding Cells Using PHATE...');
             sce = sce.embedcells('phate3d', true, true, 3);
         end
-
         gui.gui_waitbar_adv(fw,2/8, 'Embeding Cells Using tSNE...');
         sce = sce.embedcells('tsne3d', true, true, 3);
-
 
         gui.gui_waitbar_adv(fw,3/8, 'Clustering Cells Using K-means...');
         sce = sce.clustercells([], [], true);
         gui.gui_waitbar_adv(fw,4/8, 'Annotating Cell Type Using PanglaoDB...');
         sce = sce.assigncelltype(speciestag, false);
 
-        if strcmpi(answer{3},'Yes') || strcmpi(answer{3},'Y')
+        count = count + 1;
+        if strcmpi(answer{count},'Yes') || strcmpi(answer{count},'Y')
             gui.gui_waitbar_adv(fw,5/8, 'Estimate Cell Cycles...');
             sce = sce.estimatecellcycle;
         end
 
-        if strcmpi(answer{4},'Yes') || strcmpi(answer{4},'Y')
+        count = count + 1;
+        if strcmpi(answer{count},'Yes') || strcmpi(answer{count},'Y')
             gui.gui_waitbar_adv(fw,6/8, 'Estimate Differentiation Potency of Cells...');
             sce = sce.estimatepotency(speciestag);
         end

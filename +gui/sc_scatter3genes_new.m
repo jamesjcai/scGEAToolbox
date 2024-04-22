@@ -35,6 +35,7 @@ pkg.i_addbutton2fig(tb, 'off', @EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Enri
 pkg.i_addbutton2fig(tb, 'off', @ChangeAlphaValue, 'xplotpicker-andrewsplot.gif', 'Change MarkerFaceAlpha value');
 gui.gui_3dcamera(tb, 'HVGs');
 pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
+pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
 
 if showdata
     %h=scatter3(hAx,x,y,z);  % 'filled','MarkerFaceAlpha',.5);
