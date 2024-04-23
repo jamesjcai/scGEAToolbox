@@ -56,6 +56,7 @@ function callback_MultiGroupingViewer(src, ~)
 
             tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
             uipushtool(tb, 'Separator', 'off');
+            pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
             gui.gui_3dcamera(tb, 'AllCells');
             
         case 'Multiembedding'

@@ -45,6 +45,7 @@ pkg.i_addbutton2fig(tb, 'off', @i_renametitle, ...
     "icon-mat-touch-app-10.gif", 'Change Plot Title');
 pkg.i_addbutton2fig(tb, 'on', @i_viewgenenames, ...
     'HDF_point.gif', 'Rename Group Names');
+pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
 
 showaxes = true;
 showlegend = true;

@@ -50,6 +50,7 @@ pkg.i_addbutton2fig(tb, 'off', @ChangeBox, 'noun_trim_3665385a.gif', 'Box off');
 pkg.i_addbutton2fig(tb, 'off', @AnimateCutoff, 'noun_trim_3665385.gif', 'AnimateCutoff');
 pkg.i_addbutton2fig(tb, 'off', @SaveAdj, 'export.gif', 'Export & save data');
 pkg.i_addbutton2fig(tb, 'on', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
+pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
 
 if exist('suptitle.m', 'file')
     hFig.Position(3) = hFig.Position(3) * 1.8;

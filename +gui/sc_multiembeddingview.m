@@ -28,6 +28,7 @@ end
     %tb = uitoolbar(hFig);
     pkg.i_addbutton2fig(tb, 'on',  @in_showgeneexp, 'list.gif', 'Select a gene to show expression...');
     pkg.i_addbutton2fig(tb, 'off',  @in_showcellstate, 'list2.gif', 'Select a gene to show expression...');
+    pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
     gui.gui_3dcamera(tb, 'AllCells');    
      
     function in_showcellstate(~, ~)

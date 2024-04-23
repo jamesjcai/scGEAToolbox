@@ -156,7 +156,7 @@ pkg.i_addbutton2fig(tb, 'off', {@in_HighlightGenes, 1}, 'list.gif', 'Selet a gen
 % pkg.i_addbutton2fig(tb, 'off', @in_HighlightSelectedGenes, 'xplotpicker-qqplot.gif', 'Highlight selected genes');
 pkg.i_addbutton2fig(tb, 'off', {@in_HighlightGenes, 2}, 'plotpicker-qqplot.gif', 'Selet a gene from sorted list');
 pkg.i_addbutton2fig(tb, 'off', @EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Select top n genes to perform web-based enrichment analysis...');
-
+pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
 
 hFig.Visible=true;
 hAx0 = subplot(2,2,[1 3]);

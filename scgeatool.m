@@ -36,6 +36,7 @@ else
     if ~isa(sce, 'SingleCellExperiment')
         error('requires sce=SingleCellExperiment(); scgeatool(sce)');
     end
+    v1 = pkg.i_getversionnum;
 end
 
 mfolder = fileparts(mfilename('fullpath'));

@@ -28,6 +28,7 @@ pkg.i_addbutton2fig(tb, 'on', @i_genedotplot, 'greencircleicon.gif', 'Dot plot')
 pkg.i_addbutton2fig(tb, 'on', @i_viewgenenames, 'HDF_point.gif', 'Show gene names');
 pkg.i_addbutton2fig(tb,'on', @in_stemplot,'icon-mat-blur-on-10.gif','Show stem plot');
 %pkg.i_addbutton2fig(tb,'on',@i_viewscatter3,'icon-mat-blur-on-10.gif','Show scatter plot');
+pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
 
 gui.i_movegui2parent(hFig, parentfig);
 

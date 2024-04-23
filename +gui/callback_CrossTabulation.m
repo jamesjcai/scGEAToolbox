@@ -56,6 +56,7 @@ tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
     pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
     pkg.i_addbutton2fig(tb, 'on', @gui.i_pickcolormap, 'plotpicker-compass.gif', 'Pick new color map...');
     pkg.i_addbutton2fig(tb, 'on', @gui.i_invertcolor, 'plotpicker-comet.gif', 'Invert colors');
+    pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
     % pkg.i_addbutton2fig(tb,'off',@i_reordersamples, ...
     %     "xpowerpoint.gif",'Reorder Samples');
     % pkg.i_addbutton2fig(tb, 'off', @i_sortbymean, ...

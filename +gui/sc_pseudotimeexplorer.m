@@ -54,7 +54,7 @@ ptImage = ind2rgb(img, map);
 pt3.CData = ptImage;
 pt3.Tooltip = 'Select dimension';
 pt3.ClickedCallback = @selectdimension;
-
+pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
 gui.gui_3dcamera(tb);
 
     function selectdimension(~, ~)

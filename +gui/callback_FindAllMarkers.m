@@ -184,6 +184,7 @@ pkg.i_addbutton2fig(tb1, 'on', {@i_savetable, Y}, 'export.gif', 'Export data...'
 
 pkg.i_addbutton2fig(tb1, 'on', @gui.i_invertcolor, 'plotpicker-comet.gif', 'Invert colors');
 pkg.i_addbutton2fig(tb1, 'off', @i_resetcolor, 'plotpicker-geobubble2.gif', 'Reset color map');
+pkg.i_addbutton2fig(tb1, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
 
 gui.i_movegui2parent(hFig, FigureHandle);
 
@@ -270,31 +271,12 @@ end
         pkg.i_addbutton2fig(tb, 'on', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
         pkg.i_addbutton2fig(tb, 'on', @i_invertcolor, 'plotpicker-comet.gif', 'Invert colors');
         pkg.i_addbutton2fig(tb, 'off', @i_resetcolor, 'plotpicker-geobubble2.gif', 'Reset color map');
+        pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, f}, 'HDF_pointx.gif', 'Resize Plot Window');
         if length(cL) ~= size(thisZ, 1)
-
             pkg.i_addbutton2fig(tb, 'on', {@i_savetable, thisZ}, 'export.gif', 'Export data...');
         end
     end
 
-
-                        %     function i_summarymapT(~,~)
-                        %         f=figure;
-                        %         h=heatmap(MX,cL,Z.');
-                        %         h.Title = 'Marker Gene Heatmap';
-                        %         h.YLabel = 'Group';
-                        %         h.XLabel = 'Marker Gene';
-                        %         h.Colormap = parula;
-                        %         h.GridVisible = 'off';
-                        %         h.CellLabelColor='none';
-                        % %         s = struct(h);
-                        % %         s.XAxis.TickLabelRotation=45;
-                        %         tb = uitoolbar('Parent', f);
-                        %         pkg.i_addbutton2fig(tb,'on',{@gui.i_pickcolormap,c},'plotpicker-compass.gif','Pick new color map...');
-                        %         pkg.i_addbutton2fig(tb,'off',@gui.i_changefontsize,'noun_font_size_591141.gif','ChangeFontSize');
-                        %         pkg.i_addbutton2fig(tb,'on',{@gui.i_savemainfig,3},"powerpoint.gif",'Save Figure to PowerPoint File...');
-                        %         pkg.i_addbutton2fig(tb,'on',@i_invertcolor,'plotpicker-comet.gif','Invert colors');
-                        %         pkg.i_addbutton2fig(tb,'off',@i_resetcolor,'plotpicker-geobubble2.gif','Reset color map');
-                        %     end
 
     function i_saveM(~, ~, M)
         if ~(ismcc || isdeployed)
