@@ -152,9 +152,9 @@ tb = uitoolbar('Parent', hFig);
 % tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
 % uipushtool(tb, 'Separator', 'off');
 
-pkg.i_addbutton2fig(tb, 'off', {@in_HighlightGenes, 1}, 'list.gif', 'Selet a gene to show expression profile');
+pkg.i_addbutton2fig(tb, 'off', {@in_HighlightSelectedGenes, 1}, 'list.gif', 'Selet a gene to show expression profile');
 % pkg.i_addbutton2fig(tb, 'off', @in_HighlightSelectedGenes, 'xplotpicker-qqplot.gif', 'Highlight selected genes');
-pkg.i_addbutton2fig(tb, 'off', {@in_HighlightGenes, 2}, 'plotpicker-qqplot.gif', 'Selet a gene from sorted list');
+pkg.i_addbutton2fig(tb, 'off', {@in_HighlightSelectedGenes, 2}, 'plotpicker-qqplot.gif', 'Selet a gene from sorted list');
 pkg.i_addbutton2fig(tb, 'off', @EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Select top n genes to perform web-based enrichment analysis...');
 pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
 
@@ -264,7 +264,7 @@ set([hAx1, hAx2], 'Ylim', ylnew);
         end
     end
 
-    function in_HighlightGenes(~, ~, typeid)
+    function in_HighlightSelectedGenes(~, ~, typeid)
         if nargin < 3, typeid = 1; end
         %h.MarkerIndices=idx20;
        dtp = findobj(h1, 'Type', 'datatip');
