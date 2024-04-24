@@ -218,7 +218,7 @@ in_addmenu(m_help, 0, {@(~, ~) web('https://scholar.google.com/scholar?cites=466
 in_addmenu(m_help, 1, {@(~, ~) web('https://scgeatool.github.io/')}, 'Visit SCGEATOOL-Standalone Website...');
 in_addmenu(m_help, 0, {@(~, ~) web('https://matlab.mathworks.com/open/github/v1?repo=jamesjcai/scGEAToolbox&file=online_landing.m')}, 'Run SCGEATOOL in MATLAB Online...');
 in_addmenu(m_help, 1, @gui.callback_CheckUpdates, 'Check for Updates...');
-in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout2(FigureHandle)}, 'About SCGEATOOL');
+in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle)}, 'About SCGEATOOL');
 
 if ~isempty(fx) && isvalid(fx), fxfun(fx, 0.4); end
 

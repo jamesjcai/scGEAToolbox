@@ -1,59 +1,74 @@
-function sc_scatter3genes(X, g, dofit, showdata)
+function [xyz, xyz1, gsorted]= sc_scatter3genes(X, g, dofit, showdata, parentfig)
 %Scatter3 plot for genes
 
+if nargin < 5, parentfig = []; end
 if nargin < 4, showdata = true; end
 if nargin < 3, dofit = true; end
 if nargin < 2 || isempty(g), g = string(1:size(X,1)); end
+xyz=[]; xyz1=[];
 
-[lgu, dropr, lgcv, g, X] = sc_genestat(X, g);
+[lgu, dropr, lgcv, gsorted, Xsorted] = sc_genestat(X, g);
 
 x = lgu;
 y = lgcv;
 z = dropr;
+
+fw = gui.gui_waitbar;
+hFig = figure('Visible','off');
+hFig.Position(3) = hFig.Position(3)*1.8;
+
+
+gui.i_movegui2parent(hFig, parentfig);
+
+
+% hAx = axes('Parent', hFig);
+tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
+% tb = uitoolbar('Parent', hFig);
+% set(tb, 'Tag', 'FigureToolBar', ...
+%     'HandleVisibility', 'off', 'Visible', 'on');
+uipushtool(tb, 'Separator', 'off');
+%pkg.i_addbutton2fig(tb, 'off', @in_ShowProfile, 'plotpicker-qqplotx.gif', 'Show Profile of Genes');
+pkg.i_addbutton2fig(tb, 'off', @in_HighlightTopHVGs, 'plotpicker-qqplot.gif', 'Highlight top HVGs');
+pkg.i_addbutton2fig(tb, 'off', {@in_HighlightSelectedGenes,2}, 'xplotpicker-qqplot.gif', 'Highlight top HVGs');
+
+pkg.i_addbutton2fig(tb, 'off', {@in_HighlightSelectedGenes,1}, 'xplotpicker-qqplot.gif', 'Highlight selected genes');
+
+
+pkg.i_addbutton2fig(tb, 'on', @ExportTable, 'export.gif', 'Export HVG Table...');
+pkg.i_addbutton2fig(tb, 'off', @ExportGeneNames, 'xexport.gif', 'Export selected HVG gene names...');
+
+pkg.i_addbutton2fig(tb, 'off', @EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Enrichment analysis...');
+pkg.i_addbutton2fig(tb, 'off', @ChangeAlphaValue, 'xplotpicker-andrewsplot.gif', 'Change MarkerFaceAlpha value');
+gui.gui_3dcamera(tb, 'HVGs');
+pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
+pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
+
 if showdata
-    FigureHandle = figure;
-    hAx = axes('Parent', FigureHandle);
-    UitoolbarHandle = uitoolbar('Parent', FigureHandle);
-    set(UitoolbarHandle, 'Tag', 'FigureToolBar', ...
-        'HandleVisibility', 'off', 'Visible', 'on');
-
-    pkg.i_addbutton2fig(UitoolbarHandle, 'off', @in_ShowProfile, 'plotpicker-qqplotx.gif', 'Show Profile of Genes');
-
-    pkg.i_addbutton2fig(UitoolbarHandle, 'off', @in_HighlightGenes, 'plotpicker-qqplot.gif', 'Highlight top HVGs');
-    pkg.i_addbutton2fig(UitoolbarHandle, 'off', @in_HighlightSelectedGenes, 'xplotpicker-qqplot.gif', 'Highlight selected genes');
-    pkg.i_addbutton2fig(UitoolbarHandle, 'off', @ExportGeneNames, 'export.gif', 'Export selected HVG gene names...');
-    pkg.i_addbutton2fig(UitoolbarHandle, 'off', @ExportTable, 'xexport.gif', 'Export HVG Table...');
-    pkg.i_addbutton2fig(UitoolbarHandle, 'off', @EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Enrichment analysis...');
-    pkg.i_addbutton2fig(UitoolbarHandle, 'off', @ChangeAlphaValue, 'xplotpicker-andrewsplot.gif', 'Change MarkerFaceAlpha value');
-
-    gui.gui_3dcamera(UitoolbarHandle, 'HVGs');
-    pkg.i_addbutton2fig(UitoolbarHandle, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-
     %h=scatter3(hAx,x,y,z);  % 'filled','MarkerFaceAlpha',.5);
-    h = scatter3(hAx, x, y, z, 'filled', 'MarkerFaceAlpha', .1);
+    hAx1 = subplot(2,2,[1 3]);
+    h = scatter3(hAx1, x, y, z, 'filled', 'MarkerFaceAlpha', .1);
 
-    if ~isempty(g)
-        dt = datacursormode(FigureHandle);
-        dt.UpdateFcn = {@i_myupdatefcn1, g};
+    if ~isempty(gsorted)
+        dt = datacursormode(hFig);
+        % dt.UpdateFcn = {@i_myupdatefcn1, g};
     else
         dt = [];
     end
-end
+end    
+    %grid on
+    %box on
+    %legend({'Genes','Spline fit'});
+    xlabel(hAx1,'Mean+1, log');
+    ylabel(hAx1,'CV+1, log');
+    zlabel(hAx1,'Dropout rate (% of zeros)');
 
-%grid on
-%box on
-%legend({'Genes','Spline fit'});
-xlabel('Mean, log');
-ylabel('CV, log');
-zlabel('Dropout rate (% of zeros)');
-
-
+        
 % [xData, yData, zData] = prepareSurfaceData(x,y,z);
 % xyz=[xData yData zData]';
 
 if dofit
     try
-        [~, ~, ~, xyz1] = sc_splinefit(X, g);
+        [~, ~, ~, xyz1] = sc_splinefit(Xsorted, gsorted);
     catch ME
         rethrow(ME);
     end
@@ -64,12 +79,16 @@ if dofit
     %     s = cumsum([0;sqrt(diff(x(:)).^2 + diff(y(:)).^2 + diff(z(:)).^2)]);
     %     pp1 = splinefit(s,xyz,pieces,0.75);
     %     xyz1 = ppval(pp1,s);
-    hold on
-    plot3(xyz1(:, 1), xyz1(:, 2), xyz1(:, 3), '-', 'linewidth', 4);
+    hold(hAx1,'on');
+    xyz = [x y z];
+    %assignin("base","xyz1a", xyz1);
+    %assignin("base","xyz1a", xyz);
+        
+
+    plot3(hAx1, xyz1(:, 1), xyz1(:, 2), xyz1(:, 3), '-', 'linewidth', 4);
     % scatter3(xyz1(:,1),xyz1(:,2),xyz1(:,3)); %,'MarkerEdgeAlpha',.8);
 
     [~, d] = dsearchn(xyz1, [x, y, z]);
-
 
     fitmeanv=xyz1(:,1);
     d(x>max(fitmeanv))=d(x>max(fitmeanv))./100;
@@ -78,12 +97,13 @@ if dofit
 
     [sortedd, hvgidx] = sort(d, 'descend');
 
-    hvg=g(hvgidx);
+    hvg=gsorted(hvgidx);
     lgu=lgu(hvgidx);
     lgcv=lgcv(hvgidx);
     dropr=dropr(hvgidx);    
-
-    T=table(sortedd,hvgidx,hvg,lgu,lgcv,dropr);
+    
+    gene=hvg(:);
+    T=table(gene,sortedd,hvgidx,lgu,lgcv,dropr);
     %assignin("base","T",T);
     %g(idx20)
 
@@ -97,11 +117,46 @@ if dofit
     disp('ranked higher for feature selection.')        
 end
 
-    function in_ShowProfile(~, ~)
-        if ~isempty(dt)
-           dt.UpdateFcn = {@i_myupdatefcn3, g, X};
-        end
-    end
+
+hAx2 = subplot(2,2,2);
+x1=Xsorted(hvgidx(1),:);
+%sh = stem(hAx2, 1:length(x1), x1, 'marker', 'none');
+
+sh = plot(hAx2, 1:length(x1), x1);
+xlim(hAx2,[1 size(Xsorted,2)]);
+title(hAx2, hvg(1));
+[titxt] = gui.i_getsubtitle(x1);
+subtitle(hAx2, titxt);
+xlabel(hAx2,'Cell Index');
+ylabel(hAx2,'Expression Level');
+
+% figure;
+% assignin("base","x1",x1);
+% stem(1:length(x1), x1, 'marker', 'none');
+% xlim([1 size(X,2)]);
+% title(hvg(1));
+% subtitle(titxt);
+% xlabel('Cell Index');
+% ylabel('Expression Level');
+
+if showdata && ~isempty(dt)
+    dt.UpdateFcn = {@in_myupdatefcn3, gsorted};
+end
+
+gui.gui_waitbar(fw);
+hFig.Visible = true;
+drawnow;
+
+
+    % function in_ShowProfile(~, ~)
+    %     idx = 1;
+    %     x1 = X(idx, :);
+    %     stem(hAx2, 1:length(x1), x1, 'marker', 'none');
+    %     xlim(hAx2,[1 size(X,2)]);
+    %     title(hAx2, g(idx));
+    %     xlabel(hAx2,'Cell Index')
+    %     ylabel(hAx2,'Expression Level')
+    % end
 
     function ChangeAlphaValue(~, ~)
         if h.MarkerFaceAlpha <= 0.05
@@ -111,15 +166,13 @@ end
         end
     end            
 
-    function in_HighlightGenes(~, ~)
+    function in_HighlightTopHVGs(~, ~)
         %h.MarkerIndices=idx20;
         idx = zeros(1, length(hvgidx));
         h.BrushData = idx;
 
         k = gui.i_inputnumk(200, 1, 2000);
-        if isempty(k), return; end
-        
-
+        if isempty(k), return; end      
         idx(hvgidx(1:k)) = 1;
         h.BrushData = idx;
         % datatip(h, 'DataIndex', idx20);
@@ -130,12 +183,30 @@ end
         gui.i_exporttable(T, true, 'Tsplinefitg', 'SplinefitGTable');
     end
 
-    function in_HighlightSelectedGenes(~,~)        
-        %Myc, Oct3/4, Sox2, Klf4
-        [glist] = gui.i_selectngenes(SingleCellExperiment(X,g),...
-            intersect(upper(g),["MYC", "POU5F1", "SOX2", "KLF4"]));
+    function in_HighlightSelectedGenes(~,~,typeid)        
+        if nargin<3, typeid = 1; end
+
+           switch typeid
+               case 1
+                    %Myc, Oct3/4, Sox2, Klf4
+                    [glist] = gui.i_selectngenes(SingleCellExperiment(Xsorted,gsorted),...
+                        intersect(upper(gsorted),["MYC", "POU5F1", "SOX2", "KLF4"]));                    
+               case 2
+                    gsorted = T.(T.Properties.VariableNames{1});
+                    [indx2, tf2] = listdlg('PromptString', ...
+                        'Select genes:', ...
+                        'SelectionMode', 'multiple', ...
+                        'ListString', gsorted, ...
+                        'ListSize', [220, 300]);
+                    if tf2 == 1
+                        glist = gsorted(indx2);
+                    else
+                        return;
+                    end
+           end
+
         if ~isempty(glist)            
-            [yes,idx]=ismember(glist,g);
+            [yes,idx]=ismember(glist,gsorted);
             idx=idx(yes);
 
             %idx=[idx(:); find(nearestidx==1)];
@@ -156,12 +227,12 @@ end
         end
         fprintf('%d genes are selected.\n', sum(ptsSelected));
 
-        gselected=g(ptsSelected);
-        [yes,idx]=ismember(gselected,T.hvg);
+        gselected=gsorted(ptsSelected);
+        [yes,idx]=ismember(gselected,T.gene);
         Tx=T(idx,:);
         Tx=sortrows(Tx,1,'descend');        
         if ~all(yes), error('Running time error.'); end
-        tgenes=Tx.hvg;
+        tgenes=Tx.gene;
 
         labels = {'Save gene names to variable:'};
         vars = {'g'};
@@ -178,28 +249,36 @@ end
         end
         fprintf('%d genes are selected.\n', sum(ptsSelected));        
 
-        gselected=g(ptsSelected);
-        [yes,idx]=ismember(gselected,T.hvg);
+        gselected=gsorted(ptsSelected);
+        [yes,idx]=ismember(gselected,T.gene);
         Tx=T(idx,:);
         Tx=sortrows(Tx,1,'descend');        
         if ~all(yes), error('Running time error.'); end
-        tgenes=Tx.hvg;
+        tgenes=Tx.gene;
+        gui.i_enrichtest(tgenes, gsorted, numel(tgenes));
+    end
 
-        gui.i_enrichtest(tgenes, g, numel(tgenes));
+    function txt = in_myupdatefcn3(src, event_obj, g)
+        if isequal(get(src, 'Parent'), hAx1)
+            idx = event_obj.DataIndex;
+            txt = {g(idx)};
+            x1 = Xsorted(idx, :);
 
-        % answer = (@(x){questdlg('Which analysis?', '', ...
-        %     'Enrichr', 'GOrilla', 'Enrichr+GOrilla', 'Enrichr')}, 15);
-        % if isempty(answer), return; end
-        % switch answer
-        %     case 'Enrichr'
-        %         run.web_Enrichr(tgenes, length(tgenes));
-        %     case 'GOrilla'
-        %         run.web_GOrilla(tgenes);
-        %     case 'Enrichr+GOrilla'
-        %         run.web_Enrichr(tgenes, length(tgenes));
-        %         run.web_GOrilla(tgenes);
-        %     otherwise
-        %         return;
-        % end
-    end        
+            % figure; stem(1:length(x1), x1, 'marker', 'none');
+
+            if ~isempty(sh) && isvalid(sh)
+                delete(sh);
+            end
+            sh = plot(hAx2, 1:length(x1), x1, 'marker', 'none');
+            xlim(hAx2,[1 size(Xsorted,2)]);
+            title(hAx2, g(idx));    
+            [titxt] = gui.i_getsubtitle(x1);
+            subtitle(hAx2, titxt);
+            xlabel(hAx2,'Cell Index');
+            ylabel(hAx2,'Expression Level');
+        else
+            txt = num2str(event_obj.Position(2));
+        end
+    end
+
 end
