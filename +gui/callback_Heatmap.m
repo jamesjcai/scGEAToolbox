@@ -1,4 +1,4 @@
-function callback_GeneHeatMap(src, ~)
+function callback_Heatmap(src, ~)
 FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
 [thisc, ~] = gui.i_select1class(sce);

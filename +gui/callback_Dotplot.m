@@ -1,4 +1,4 @@
-function callback_DrawDotplot(src, ~)
+function callback_Dotplot(src, ~)
 FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
 [thisc, ~] = gui.i_select1class(sce);

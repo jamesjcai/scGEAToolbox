@@ -1,4 +1,4 @@
-function callback_ShowCellScatter(src, ~)
+function callback_Scatterplot(src, ~)
 
     FigureHandle = src.Parent.Parent;
     sce = guidata(FigureHandle);

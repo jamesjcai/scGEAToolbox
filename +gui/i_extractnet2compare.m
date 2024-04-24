@@ -1,4 +1,4 @@
-function [A0, A1, glist] = i_extractnetworks2compare(A0, A1, genelist, glist)
+function [A0, A1, glist] = i_extractnet2compare(A0, A1, genelist, glist)
 if nargin < 4
     [glist] = gui.i_selectngenes(genelist);
 end

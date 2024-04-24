@@ -22,7 +22,7 @@ Tf = e_fgsearun(T);
 OUT = e_fgseanet(Tf, "JaccardCutoff", 0.5, "PlotNetwork", false, "ShowNotepad", false);
 
 g = OUT{1, 1};
-[A0sml, A1sml, glst] = gui.i_extractnetworks2compare(A0, A1, genelist, g);
+[A0sml, A1sml, glst] = gui.i_extractnet2compare(A0, A1, genelist, g);
 sc_grnview2(A0sml, A1sml, glst);
 
 end
