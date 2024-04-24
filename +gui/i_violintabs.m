@@ -1,5 +1,5 @@
 function i_violintabs(y, tabnamelist, thisc, parentfig)
-%see also: gui.i_violinplot
+%see also: gui.i_violinplot, gui.i_scattertabs
 
 if nargin<4, parentfig = []; end
 tabnamelist = string(tabnamelist);

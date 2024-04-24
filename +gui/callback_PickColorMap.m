@@ -22,7 +22,7 @@ cx(1, :) = [.8, .8, .8];
 %b=a(randperm(size(a,1)),:);
 ukraineflag = [0, 87, 183; 255, 215, 0] ./ 255;
 mycmap = pkg.i_mycolormap(n);
-co = {cx, lines(n), 'default', summer(n), ...
+co = {cx, lines(n), parula(n), summer(n), ...
     jet(n), copper(n), winter(n), hsv(n), ...
     ukraineflag, ...
     mycmap, CT, ...
@@ -48,7 +48,7 @@ assert(length(co) == length(cn));
 %         jet(kc),copper(kc),winter(kc)};
 
 indx = randi(length(co));
-colormap(co{indx});
+colormap(abs(co{indx}));
 
 % answer=questdlg('Random colormap?','');
 % switch answer
