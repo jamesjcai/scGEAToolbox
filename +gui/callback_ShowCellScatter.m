@@ -2,7 +2,7 @@ function callback_ShowCellScatter(src, ~)
 
     FigureHandle = src.Parent.Parent;
     sce = guidata(FigureHandle);
-    [axx, bxx] = view(findall(FigureHandle,'type','axes'));
+    %[axx, bxx] = view(findall(FigureHandle,'type','axes'));
 
     [thisx, xlabelv] = gui.i_select1state(sce, false, false, false, true);
     if isempty(thisx), return; end
@@ -24,6 +24,7 @@ function callback_ShowCellScatter(src, ~)
                 return;
             end
             gui.sc_uitabgrpfig_scatter(sce, glist, thisx, xlabelv, FigureHandle);
+        
         case 'Cell State'
             [thisyv, ylabelv] = gui.i_selectnstates(sce, true);
             a = false(length(thisyv), 1);

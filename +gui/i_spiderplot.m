@@ -41,7 +41,7 @@ pkg.i_addbutton2fig(tb, 'off', @i_reordersamples, ...
     "plotpicker-errorbar.gif", 'Switch Legend ON/OFF');
 % pkg.i_addbutton2fig(tb,'off',@i_sortbymean, ...
 %     "plotpicker-cra.gif",'Sort Samples by Median');
-pkg.i_addbutton2fig(tb, 'off', @i_renametitle, ...
+pkg.i_addbutton2fig(tb, 'off', @gui.i_renametitle, ...
     "icon-mat-touch-app-10.gif", 'Change Plot Title');
 pkg.i_addbutton2fig(tb, 'on', @i_viewgenenames, ...
     'HDF_point.gif', 'Rename Group Names');
@@ -65,9 +65,6 @@ set(hFig, 'visible', 'on');
 %    errordlg(ME.message);
 %end
 
-    function i_renametitle(~, ~)
-        helpdlg('Double-click on the title to make change.', '');
-    end
 
     function i_invertcolor(~, ~)
         showaxes = ~showaxes;

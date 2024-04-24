@@ -24,30 +24,16 @@ title(strrep(ttxt, '_', '\_'));
 tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
 uipushtool(tb, 'Separator', 'off');
 
-pkg.i_addbutton2fig(tb, 'off', @i_savedata, ...
-    'export.gif', 'Export data...');
-pkg.i_addbutton2fig(tb, 'off', @i_testdata, ...
-    'icon-fa-stack-exchange-10.gif', 'ANOVA/T-test...');
-pkg.i_addbutton2fig(tb, 'off', @i_addsamplesize, ...
-    "icon-mat-blur-linear-10.gif", 'Add Sample Size');
-pkg.i_addbutton2fig(tb, 'on', {@gui.i_savemainfig, 3}, ...
-    "powerpoint.gif", 'Save Figure to PowerPoint File...');
-pkg.i_addbutton2fig(tb, 'off', @i_invertcolor, ...
-    "plotpicker-pie.gif", 'Switch BW/Color');
-pkg.i_addbutton2fig(tb, 'off', @i_reordersamples, ...
-    "plotpicker-errorbar.gif", 'Reorder Samples');
-
-pkg.i_addbutton2fig(tb, 'off', @i_selectsamples, ...
-    "plotpicker-errorbarx.gif", 'Select Samples');
-
-
-pkg.i_addbutton2fig(tb, 'off', @i_sortbymean, ...
-    "plotpicker-cra.gif", 'Sort Samples by Median');
-pkg.i_addbutton2fig(tb, 'off', @i_renametitle, ...
-    "icon-mat-touch-app-10.gif", 'Change Plot Title');
-pkg.i_addbutton2fig(tb, 'on', @i_viewgenenames, ...
-    'HDF_point.gif', 'Show Gene Names');
-
+pkg.i_addbutton2fig(tb, 'off', @i_savedata, 'export.gif', 'Export data...');
+pkg.i_addbutton2fig(tb, 'off', @i_testdata, 'icon-fa-stack-exchange-10.gif', 'ANOVA/T-test...');
+pkg.i_addbutton2fig(tb, 'off', @i_addsamplesize, "icon-mat-blur-linear-10.gif", 'Add Sample Size');
+pkg.i_addbutton2fig(tb, 'on', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
+pkg.i_addbutton2fig(tb, 'off', @i_invertcolor, "plotpicker-pie.gif", 'Switch BW/Color');
+pkg.i_addbutton2fig(tb, 'off', @i_reordersamples, "plotpicker-errorbar.gif", 'Reorder Samples');
+pkg.i_addbutton2fig(tb, 'off', @i_selectsamples, "plotpicker-errorbarx.gif", 'Select Samples');
+pkg.i_addbutton2fig(tb, 'off', @i_sortbymean, "plotpicker-cra.gif", 'Sort Samples by Median');
+pkg.i_addbutton2fig(tb, 'off', @gui.i_renametitle, "icon-mat-touch-app-10.gif", 'Change Plot Title');
+pkg.i_addbutton2fig(tb, 'on', @i_viewgenenames, 'HDF_point.gif', 'Show Gene Names');
 pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
 
 i_addsamplesize([],[]);
@@ -66,9 +52,7 @@ set(hFig, 'visible', 'on');
 
 
 
-    function i_renametitle(~, ~)
-        helpdlg('Double-click on the title to make change.', '');
-    end
+
 
     function i_invertcolor(~, ~)
         colorit = ~colorit;
