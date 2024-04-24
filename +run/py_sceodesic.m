@@ -45,9 +45,12 @@ function [succeeded] = py_sceodesic(sce, wkdir, isdebug)
     %[pyok, wrkpth, x] = run.pycommon(prgfoldername);
     %if ~pyok, return; end
     tmpfilelist = {'X.mat', 'g.csv', 'c.csv'};
-    if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-    
-    X = single(full(sce.X));
+    if ~isdebug, pkg.i_deletefiles(tmpfilelist); end    
+    if issparse(sce.X)
+        X = single(full(sce.X));         
+    else
+        X = single(sce.X);
+    end
     save('X.mat','-v7.3',"X");
     g = sce.g;
     writetable(table(g),'g.csv','WriteVariableNames',false);

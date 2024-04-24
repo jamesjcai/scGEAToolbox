@@ -79,8 +79,12 @@ end
 try
     tmpfilelist = {'X.mat', 'g.txt', 'pcnet_Source.mat', ...
         'idx.mat', 'output.csv', fullfile('GRNs', 'pcNet_example.npz')};
-    if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-    if issparse(X), X=full(X); end
+    if ~isdebug, pkg.i_deletefiles(tmpfilelist); end    
+    if issparse(sce.X)
+        X = single(full(sce.X));         
+    else
+        X = single(sce.X);
+    end
     save('X.mat', '-v7.3', 'X');
     save('idx.mat', '-v7.3', 'idx');
     writematrix(g, 'g.txt');

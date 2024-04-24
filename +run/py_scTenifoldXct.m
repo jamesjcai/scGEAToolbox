@@ -73,7 +73,12 @@ sce.c_batch_id(sce.c_cell_type_tx == celltype1) = "Source";
 sce.c_batch_id(sce.c_cell_type_tx == celltype2) = "Target";
 % sce=sce.qcfilter;
 
-X = sce.X;
+
+if issparse(sce.X)
+    X = single(full(sce.X)); 
+else
+    X = single(sce.X);
+end
 save('X.mat', '-v7.3', 'X');
 writematrix(sce.g, 'g.txt');
 writematrix(sce.c_batch_id, 'c.txt');
