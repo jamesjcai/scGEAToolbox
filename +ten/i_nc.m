@@ -31,9 +31,6 @@ for k = 1:nsubsmpl
     end
     A = sc_pcnetpar(Xrep, ncom, true);
 
-    %         tstr=matlab.lang.makeValidName(string(datetime));
-    %         save(sprintf('A_%s',tstr),'A','-v7.3');
-
     XM(:, :, k) = ten.e_filtadjc(A, 0.95, false);
     a = max(abs(A(:)));
     XM(:, :, k) = A ./ a;

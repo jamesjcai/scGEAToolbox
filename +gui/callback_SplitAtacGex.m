@@ -34,7 +34,7 @@ fx = scgeatool(sceg);
 fx.Position(3:4) = 0.8 * fx.Position(3:4);
 movegui(fx, 'center');
 fx.Position(1) = fx.Position(1) - 250;
-fx = fx.CurrentAxes;
+fy = fx.CurrentAxes;
 fy.Subtitle.String = '[genes x cells]';
 %waitfor(helpdlg(sprintf('%s Cells extracted.', ...
 %    sprintf('%s+',tg)),''));
@@ -50,63 +50,3 @@ fy = fy.CurrentAxes;
 fy.Subtitle.String = '[peaks x cells]';
 
 
-% pause(4);
-% scgeatool(sceg);
-%
-% pause(4);
-% scgeatool(scep);
-% ---------------------
-
-%{
-%if ~(ismcc || isdeployed)
-answer = questdlg('Export & save data to:','',...
-    'Workspace','MAT file','Seurat/RDS file','Workspace');
-%else
-%    answer = questdlg('Export & save data to:','',...
-%        'MAT file','Seurat/RDS file','MAT file');
-%end
-
-switch answer
-    case 'Workspace'
-        labels = {'Save SCE to variable named:',...
-            'Save SCE.X to variable named:',...
-            'Save SCE.g to variable named:',...
-            'Save SCE.S to variable named:'};
-        vars = {'sce','X','g','s'};
-        values = {sce,sce.X,sce.g,sce.s};
-        [~,OKPressed]=export2wsdlg(labels,vars,values,...
-            'Save Data to Workspace',...
-            logical([1 0 0 0]),{@smhelp});
-    case 'MAT file'
-        [file, path] = uiputfile({'*.mat';'*.*'},'Save as');
-        if isequal(file,0) || isequal(path,0)
-            return;
-        else
-            filename=fullfile(path,file);
-            fw=gui.gui_waitbar;
-            save(filename,'sce','-v7.3');
-            gui.gui_waitbar(fw);
-            OKPressed=true;
-        end
-    case 'Seurat/RDS file'
-        [file, path] = uiputfile({'*.rds';'*.*'},'Save as');
-        if isequal(file,0) || isequal(path,0)
-            return;
-        else
-            filename=fullfile(path,file);
-            fw=gui.gui_waitbar;
-            sc_sce2rds(sce,filename);
-            gui.gui_waitbar(fw);
-            disp("A<-readRDS(""input.rds"")");
-            OKPressed=true;
-        end
-    otherwise
-        return;
-end
-    function smhelp
-        helpdlg({'Select one or both check boxes.',...
-            'Change the variable names, if desired,',...
-                'and then click OK.'});
-        end
-end
-    %}

@@ -22,6 +22,10 @@ pct_2 = sum(Y > 0, 2) ./ size(Y, 2);
 
 tmpfilelist = {'input.mat', 'output.csv'};
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+
+if issparse(X), X = full(X); end
+if issparse(Y), Y = full(Y); end
+
 save('input.mat', 'X', 'Y', '-v7.3');
 
 Rpath = getpref('scgeatoolbox', 'rexecutablepath',[]);

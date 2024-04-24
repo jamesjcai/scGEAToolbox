@@ -13,6 +13,7 @@ if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
 tmpfilelist = {'input.mat', 'output.h5', 'input.txt', 'output.txt', 'g.txt'};
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 lastwarn('')
+if issparse(X), X = full(X); end
 save('input.mat', 'X', '-v7.3');
 writematrix(genelist, 'g.txt');
 [warnMsg, warnId] = lastwarn;

@@ -25,7 +25,7 @@ tmpfilelist = {'input.mat', 'output.mat'};
 %tmpfilelist={'output.csv','input1.csv','input2.csv'};
 %if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 
-
+if issparse(s), s = full(s); end
 save('input.mat', '-v7.3', 's', 'batchid');
 disp('Input file written.');
 

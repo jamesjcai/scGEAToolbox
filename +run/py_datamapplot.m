@@ -44,6 +44,7 @@ if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 
 writematrix(thisc, 'c.txt', 'Delimiter', ',');
 s = sce.s;
+if issparse(s), s = full(s); end
 save('input.mat', '-v7.3', 's');
 disp('Input files written.');
 

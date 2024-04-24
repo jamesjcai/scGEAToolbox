@@ -14,7 +14,7 @@ if ~pyok, return; end
 
 tmpfilelist = {'input.mat', 'output.mat'};
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-
+if issparse(X), X = full(X); end
 save('input.mat', '-v7.3', 'X', 'n');
 disp('Input file written.');
 

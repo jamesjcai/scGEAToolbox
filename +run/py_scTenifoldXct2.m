@@ -128,7 +128,11 @@ function [T, iscomplete] = py_scTenifoldXct2(sce1, sce2, celltype1, celltype2, .
         sce.c_batch_id(sce.c_cell_type_tx == celltype1) = "Source";
         sce.c_batch_id(sce.c_cell_type_tx == celltype2) = "Target";
         % sce=sce.qcfilter;
-        X = sce.X;
+        if issparse(sce.X)
+            X = single(full(sce.X)); 
+        else
+            X = single(sce.X);
+        end
         save(sprintf('X%d.mat', id), '-v7.3', 'X');
         writematrix(sce.g, sprintf('g%d.txt', id));
         writematrix(sce.c_batch_id, sprintf('c%d.txt', id));
