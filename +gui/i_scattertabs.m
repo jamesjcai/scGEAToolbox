@@ -42,12 +42,13 @@ idx = 1;
 focalg = tabnamelist(idx);
 tab=cell(n,1);
 ax0=cell(n,1);
+h0=cell(n,1);
 
 OldTitle = cell(n,1);
 for k=1:n
     tab{k} = uitab(tabgp, 'Title', sprintf('%s',tabnamelist(k)));
     ax0{k} = axes('parent',tab{k});
-    scatter(ax0{k}, thisx(:), y{k}(:));
+    h0{k} = scatter(ax0{k}, thisx(:), y{k}(:));
     xlabel(ax0{k}, xlabelv);
     ylabel(ax0{k}, strrep(tabnamelist(k), '_', '\_'));
     % pkg.i_violinplot(y{k}, thisx, true, cLorder);
@@ -65,7 +66,7 @@ tb = uitoolbar(hFig);
 % pkg.i_addbutton2fig(tb, 'on', {@i_PickColorMap, c}, 'plotpicker-compass.gif', 'Pick new color map...');
 
 pkg.i_addbutton2fig(tb, 'off', @in_savedata, 'export.gif', 'Export data...');
-pkg.i_addbutton2fig(tb, 'off', @in_testdata, 'icon-fa-stack-exchange-10.gif', 'Add Regression Line...');
+pkg.i_addbutton2fig(tb, 'off', @in_testdata, 'plotpicker-renko.gif', 'Add Regression Line...');
 % pkg.i_addbutton2fig(tb, 'off', @i_addsamplesize, "icon-mat-blur-linear-10.gif", 'Add Sample Size');
 pkg.i_addbutton2fig(tb, 'off', @i_savemainfig, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 pkg.i_addbutton2fig(tb, 'off', @i_savemainfigx, "xpowerpoint.gif", 'Save Figure as Graphic File...');
@@ -77,18 +78,20 @@ pkg.i_addbutton2fig(tb, 'off', @i_savemainfigx, "xpowerpoint.gif", 'Save Figure 
 %pkg.i_addbutton2fig(tb, 'off', @i_sortbymean, "plotpicker-cra.gif", 'Sort Samples by Median');
 
 pkg.i_addbutton2fig(tb, 'off', @gui.i_renametitle, "icon-mat-touch-app-10.gif", 'Change Plot Title');
-%pkg.i_addbutton2fig(tb, 'on', @i_viewgenenames, 'HDF_point.gif', 'Show Gene Names');
+pkg.i_addbutton2fig(tb, 'on', @in_PickPlotMarker, 'plotpicker-rose.gif', 'Switch scatter plot marker type');
+pkg.i_addbutton2fig(tb, 'off', @in_BoxOnOff, 'RectGate.gif', 'Switch box on/off');
 pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
+
+ybox = false;
 
 if ~(ismcc || isdeployed)
     if ~isempty(which('curveFitter'))
-        pkg.i_addbutton2fig(tb, 'on', @in_curvefitter, 'HDF_pointxx.gif', 'Invoke curveFitter');
+        pkg.i_addbutton2fig(tb, 'on', @in_curvefitter, 'icon-fa-stack-exchange-10.gif', 'Invoke curveFitter');
     end
 end
 
 gui.i_movegui2parent(hFig, parentfig);
 
-% drawnow;
 gui.gui_waitbar(fw);
 hFig.Visible=true;
 
@@ -101,19 +104,6 @@ hFig.Visible=true;
          end
      end
          
-    %     delete(ax0{idx});
-    %     ax0{idx} = axes('parent',tab{idx});
-    %     pkg.i_violinplot(y{idx}, thisx, colorit, cLorder);
-    %     title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));
-    %     tabgp.SelectedTab=tab{idx};
-    %     drawnow;
-    %     if length(tab)==1, return; end
-    %     answer = questdlg('Apply to other genes?','');
-    %     if ~strcmp(answer,'Yes'), return; end
-    %     i_updatealltab(idx);
-    % end
-
-
     function i_savemainfigx(~,~)
         [~,idx]=ismember(focalg, tabnamelist);     
         filter = {'*.jpg'; '*.png'; '*.tif'; '*.pdf'; '*.eps'};
@@ -156,6 +146,40 @@ hFig.Visible=true;
         focalg = tabnamelist(idx);
     end
 
+    function in_BoxOnOff(~,~)
+        for tabidx=1:n
+            if ~ybox
+                box(ax0{tabidx},'on');
+            else
+                box(ax0{tabidx},'off');
+            end
+            ybox = ~ybox;
+        end        
+    end
+
+    function in_PickPlotMarker(~, ~)
+        %answer = questdlg('Box on?','');
+        %ybox = false;
+        %if isempty(answer), return; end
+        %if strcmp(answer,'Yes'), ybox = true; end
+        s1 = 10 * randi(10);
+        s2 = 50 * randi(10);        
+        for tabidx=1:n
+            if h0{tabidx}.Marker == '.'
+                h0{tabidx}.Marker = 'o';
+                h0{tabidx}.SizeData = s1;
+            else
+                h0{tabidx}.Marker = '.';
+                h0{tabidx}.SizeData = s2;
+            end
+            if ybox
+                box(ax0{tabidx},'on');
+            else
+                box(ax0{tabidx},'off');
+            end
+        end
+    end
+
     function in_testdata(~, ~)
         for tabidx=1:n
             tabgp.SelectedTab=tab{tabidx};
@@ -182,13 +206,13 @@ hFig.Visible=true;
                 B = DM \ thisy(:);
                 y1 = DM * B;
 
-                % p = polyfit(thisx(:), thisy(:), 2);
-                % y_fit = polyval(p,thisx(:));
+                p = polyfit(thisx(:), thisy(:), 2);
+                y_fit = polyval(p,thisx(:));
 
                 hold(thisax,"on");
                 [sortedx, idxx]=sort(thisx(:));
-                plot(thisax, sortedx, y1(idxx), '-', 'LineWidth', 1);                
-               % plot(thisax, sortedx, y_fit(idxx), '-','LineWidth', 1); 
+                plot(thisax, sortedx, y1(idxx), '-', 'LineWidth', 1);
+                plot(thisax, sortedx, y_fit(idxx), '-','LineWidth', 1);
                 hold(thisax,"off");
 
                 if iscell(OldTitle{tabidx})
