@@ -14,42 +14,41 @@ switch answer
         if ismcc || isdeployed
             makePPTCompilable();
             warndlg('This function may not work properly in standalone applications.', '');
-            end
+        end        
 
-            N = length(F);
-            images = cell(N, 1);
+        N = length(F);
+        images = cell(N, 1);
 
-            OUTppt = [tempname, '.pptx'];
-            ppt = Presentation(OUTppt, pth);
-            open(ppt);
-            
-            warning off
-            for k = 1:N
-                if isvalid(F{k})
-                    images{k} = [tempname, '.png'];
-                    
-                    saveas(F{k}, images{k});
-                    %images{k} = [tempname,'.emf'];
-                    %saveas(F{k},images{k},'meta');
+        OUTppt = [tempname, '.pptx'];
+        ppt = Presentation(OUTppt, pth);
+        open(ppt);
+        
+        warning off
+        for k = 1:N
+            if isvalid(F{k})
+                images{k} = [tempname, '.png'];
+                
+                saveas(F{k}, images{k});
+                %images{k} = [tempname,'.emf'];
+                %saveas(F{k},images{k},'meta');
 
-                    if ~isempty(glist{1})
-                        slide3 = add(ppt, 'Small Title and Content');
-                        replace(slide3, 'Title', glist(k));
-                    else
-                        slide3 = add(ppt, 'Content Only');
-                    end
-                    replace(slide3, 'Content', Picture(images{k}));
+                if ~isempty(glist{1})
+                    slide3 = add(ppt, 'Small Title and Content');
+                    replace(slide3, 'Title', glist(k));
+                else
+                    slide3 = add(ppt, 'Content Only');
                 end
+                replace(slide3, 'Content', Picture(images{k}));
             end
-            warning on
-            close(ppt);
-            rptview(ppt);
-            len = length(images);
-            for i = 1:len
-                delete(images{i});
-            end
-            gui.gui_waitbar(fw);
-      
+        end
+        warning on
+        close(ppt);
+        rptview(ppt);
+        len = length(images);
+        for i = 1:len
+            delete(images{i});
+        end
+        gui.gui_waitbar(fw);  
     otherwise
        
 end

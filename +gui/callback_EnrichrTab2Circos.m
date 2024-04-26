@@ -1,5 +1,11 @@
 function callback_EnrichrTab2Circos(src, ~)
 
+
+import mlreportgen.ppt.*;
+pw1 = fileparts(mfilename('fullpath'));
+pth = fullfile(pw1, '..', 'resources', 'myTemplate.pptx');
+
+
     FigureHandle = src.Parent.Parent;
    
     answer = questdlg("Input Enrichr output table from:","Select Source", ...
@@ -39,7 +45,7 @@ function callback_EnrichrTab2Circos(src, ~)
     [indx2, tf2] = listdlg('PromptString', ...
     {'Select terms:'}, ...
     'SelectionMode', 'multiple', ...
-    'ListString', listitems, 'ListSize', [220, 300]);
+    'ListString', listitems, 'ListSize', [260, 300]);
 
     if tf2 ~= 1, return; end
 
@@ -76,20 +82,74 @@ df1 = cell2table(df1,'VariableNames',allg);
 df1 = table2array(df1);
 
 hFig = figure('Visible',"off");
-
+ax0 = hFig.CurrentAxes;
 gui.i_movegui2parent(hFig, FigureHandle);
 
-CC=gui.chordChart(df1,'Arrow','off','rowName',terms,'colName',allg);
-CC=CC.draw();
-
+CC = gui.chordChart(df1,'Arrow','off','rowName',terms,'colName',allg);
+CC = CC.draw();
 % zoom(0.75) % Zooming
-
 % 修改字体，字号及颜色
 CC.setFont('FontName','Arial','FontSize',10)
 CC.labelRotate('on');
-
 % 调节标签半径
 % Adjustable Label radius
-CC.setLabelRadius(1.2);    
+CC.setLabelRadius(1.2);
+
+
+
+tb = uitoolbar(hFig);
+%pkg.i_addbutton2fig(tb, 'off', @in_savedata, 'export.gif', 'Export data...');
+%pkg.i_addbutton2fig(tb, 'off', @in_testdata, 'plotpicker-renko.gif', 'Add Regression Line...');
+%pkg.i_addbutton2fig(tb, 'off', @i_savemainfig, "powerpoint.gif", 'Save Figure to PowerPoint File...');
+%pkg.i_addbutton2fig(tb, 'off', @i_savemainfig2, "powerpoint.gif", 'Save Figure to PowerPoint File...');
+
+% pkg.i_addbutton2fig(tb, 'off', @i_savemainfigx, "xpowerpoint.gif", 'Save Figure as Graphic File...');
+pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 2}, "xpowerpoint.gif", 'Save Figure as Graphic File...');
+pkg.i_addbutton2fig(tb, 'off', @i_resizefont, "icon-mat-touch-app-10.gif", 'Change Font Size');
 
 hFig.Visible=true;
+
+sz = 10;
+
+    function i_resizefont(~, ~)
+        sz = sz + 1;
+        if sz > 20, sz = 5; end
+        CC.setFont('FontName','Arial','FontSize', sz);
+    end
+
+
+    % function i_savemainfigx(~,~)
+    %     filter = {'*.jpg'; '*.png'; '*.tif'; '*.pdf'; '*.eps'};
+    %     [filename, filepath] = uiputfile(filter,'Save Circos Plot', ...
+    %         sprintf('CircosPlot_%s','Enrichr'));
+    %     if ischar(filename)
+    %         exportgraphics(hFig, [filepath, filename]);
+    %     end
+    % end
+
+%   function i_savemainfig2(~,~)    
+%        gui.i_export2pptx({CC}, {'CircosPlot_Enrichr'});
+%    end
+
+    % function i_savemainfig(~,~)
+    %     answer = questdlg('Export to PowerPoint?');
+    %     if ~strcmp(answer,'Yes'), return; end
+    % 
+    % 
+    %         OUTppt = [tempname, '.pptx'];
+    %         ppt = Presentation(OUTppt, pth);
+    %         open(ppt);
+    %         images=cell(1,1);
+    %         warning off
+    %     for kx=1:1            
+    %         images{kx} = [tempname, '.png'];
+    %         saveas(CC,images{kx});
+    %         slide3 = add(ppt, 'Small Title and Content');
+    %         replace(slide3, 'Title', 'Enrichr Circos Plot');
+    %         replace(slide3, 'Content', Picture(images{kx}));        
+    %     end
+    %         close(ppt);
+    %         rptview(ppt);            
+    % end
+
+end
