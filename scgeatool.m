@@ -26,7 +26,7 @@ if nargin < 1
             fxfun = @gui.sc_splashscreen;
             [fx, v1] = fxfun();            
         catch
-            fxfun = @gui.sc_simplesplash2;
+            fxfun = @gui.sc_simplesplash;
             fx = fxfun();
             v1 = [];
         end        
@@ -152,6 +152,7 @@ in_addmenu(m_plot, 0, @gui.callback_Violinplot, 'Gene/Cell State Violin Plot...'
 in_addmenu(m_plot, 0, @gui.callback_Dotplot, 'Gene Dot Plot...');
 in_addmenu(m_plot, 0, @gui.callback_Heatmap, 'Gene Heatmap...');
 in_addmenu(m_plot, 1, @gui.callback_ShowGeneExprCompr,'Side-by-Side Gene Expression...');
+in_addmenu(m_plot, 0, @gui.callback_EnrichrTab2Circos,'Enrichr Result Table to Circos Plot...');
 in_addmenu(m_plot, 1, @in_DrawKNNNetwork, 'Cell kNN Network...');
 in_addmenu(m_plot, 0, @in_DrawTrajectory, 'Cell Trajectory...');
 in_addmenu(m_plot, 1, @gui.callback_PickPlotMarker,'Next Marker Type');
