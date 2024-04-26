@@ -107,6 +107,8 @@ tb = uitoolbar(hFig);
 pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 2}, "xpowerpoint.gif", 'Save Figure as Graphic File...');
 pkg.i_addbutton2fig(tb, 'off', @i_resizefont, "noun_font_size_591141.gif", 'Change Font Size');
+pkg.i_addbutton2fig(tb, 'off', @i_PickColorMap, "plotpicker-compass.gif", "Pick new color map");
+
 
 hFig.Visible=true;
 sz = 10;
@@ -115,6 +117,10 @@ sz = 10;
         sz = sz + 1;
         if sz > 20, sz = 5; end
         CC.setFont('FontName','Arial','FontSize', sz);
+    end
+
+    function i_PickColorMap(~, ~)
+        CC.setChordColorByMap(gui.i_getrandcolormap);
     end
 
 end

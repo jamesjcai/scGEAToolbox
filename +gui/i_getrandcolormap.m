@@ -1,11 +1,5 @@
-function callback_PickColorMap(src, ~, showzero)
+function [c] = i_getrandcolormap
 
-FigureHandle = src.Parent.Parent;
-sce = guidata(FigureHandle);
-if nargin < 3, showzero = false; end
-n = numel(unique(sce.c));
-% disp(sprintf('Using %d colors',n));
-n = max([n, 3]);
 folder = fileparts(mfilename('fullpath'));
 a = strfind(folder, filesep);
 folder = extractBefore(folder, a(end)+1);
@@ -13,6 +7,7 @@ wrkpth = fullfile(folder, '+run', 'external', 'mt_cbrewer');
 if ~(ismcc || isdeployed)
     addpath(wrkpth);
 end
+n = 10;
 CT = cbrewer('seq', 'Blues', n);
 
 cx = autumn(n);
@@ -48,35 +43,5 @@ assert(length(co) == length(cn));
 %         jet(kc),copper(kc),winter(kc)};
 
 indx = randi(length(co));
-colormap(abs(co{indx}));
-
-% answer=questdlg('Random colormap?','');
-% switch answer
-%     case 'Yes'
-%         indx=randi(length(co));
-%         colormap(co{indx});
-%         % mb=helpdlg(sprintf('Using colormap: %s',cn{indx}),'');
-%
-%     case 'No'
-%         [indx,tf] = listdlg('PromptString',{'Select a colormap'},...
-%             'SelectionMode','single','ListString',cn);
-%         if tf==1
-%             colormap(co{indx});
-%         end
-%     case 'Cancel'
-%         return;
-%     otherwise
-%         return;
-% end
-
-if showzero
-    cm = colormap;
-    cm(1, :) = [.8, .8, .8];
-    colormap(cm);
-end
-
-
-end
-
-
+c = abs(co{indx});
 
