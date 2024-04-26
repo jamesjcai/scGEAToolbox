@@ -14,7 +14,7 @@ pth = fullfile(pw1, '..', 'resources', 'myTemplate.pptx');
     switch answer
         case 'Paste Text'
             [userInput] = inputdlg('Paste table text', 'Enrichr Results', ...
-                [40, 20], {''});
+                [25, 50], {''});
             if isempty(userInput)
              disp('User canceled input.')
              return;

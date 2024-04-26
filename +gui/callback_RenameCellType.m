@@ -51,7 +51,8 @@ else
         'ListString', string(cLi), 'ListSize', [220, 300]);
     if tfx == 1
         i = ismember(ci, indxx);
-        newctype = inputdlg('New cell type', 'Rename', [1, 50], cLi(ci(i)));
+        newctype = inputdlg('New cell type', 'Rename', ...
+            [1, 50], cLi(ci(i)));
         if ~isempty(newctype)
             cLi(ci(i)) = newctype;
             sce.c_cell_type_tx = string(cLi(ci));

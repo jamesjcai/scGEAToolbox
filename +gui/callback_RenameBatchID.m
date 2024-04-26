@@ -32,7 +32,8 @@ end
     'ListString', string(cLi), 'ListSize', [220, 300]);
 if tfx == 1
     i = ismember(ci, indxx);
-    newctype = inputdlg('New batch ID name', 'Rename', [1, 50], cLi(ci(i)));
+    newctype = inputdlg('New batch ID name', 'Rename', ...
+        [1, 50], cLi(ci(i)));
     if ~isempty(newctype)
         cLi(ci(i)) = newctype;
         sce.c_batch_id = string(cLi(ci));

@@ -146,15 +146,6 @@ end
                 legend(cL, 'Location', 'best');
             end
         end
-        % if isempty(posg)
-        %     helpdlg('The gene set is empty. This score may not be associated with any gene set.');
-        % else
-        %     %idx=matches(sce.g,posg,'IgnoreCase',true);
-        %     %gg=sce.g(idx);
-        %     inputdlg(ttxt, ...
-        %         '',[10 50], ...
-        %         {char(posg)});
-        % end
     end
 
 
