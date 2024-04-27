@@ -907,7 +907,6 @@ if ~showuseronboarding, set(UserToolbarHandle, 'Visible', 'off'); end
             gui.gui_waitbar_adv(fw,6/8, 'Estimate Differentiation Potency of Cells...');
             sce = sce.estimatepotency(speciestag);
         end
-
         gui.gui_waitbar_adv(fw,7/8);
         [c,cL] = grp2idx(sce.c_cell_type_tx);
         sce.c = c;
@@ -1154,7 +1153,6 @@ if ~showuseronboarding, set(UserToolbarHandle, 'Visible', 'off'); end
         a(end).Enable='on';
         a(end-1).Enable='on';
         a(end-2).Enable='on';
-
     end
 
     function in_RefreshAll(src, ~, keepview, keepcolr)
@@ -1375,7 +1373,7 @@ if ~showuseronboarding, set(UserToolbarHandle, 'Visible', 'off'); end
             [sx] = gui.i_pickembedvalues(sce);
             if ~isempty(sx), sce.s = sx; end
         elseif strcmp(answer, 'No')
-            [methodtag] = gui.i_pickembedmethod_new;
+            [methodtag] = gui.i_pickembedmethod;
             if isempty(methodtag), return; end
             %if isempty(ndim), [ndim] = gui.i_choose2d3dnmore; end
             %if isempty(ndim), return; end

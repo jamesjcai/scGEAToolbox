@@ -37,7 +37,7 @@ function [sce] = sc_openscedlg(~, ~)
             try
                 [sce] = in_simulatedata;
             catch ME
-                errordlg(ME.message);
+                errordlg(ME.message,'','modal');
                 return;
             end
         case 'SCE Data File (*.mat)...'
@@ -54,7 +54,7 @@ function [sce] = sc_openscedlg(~, ~)
                 load(scefile, 'sce');
             catch ME
                 gui.gui_waitbar(fw, true);
-                errordlg(ME.message);
+                errordlg(ME.message,'','modal');
                 return;
             end
             gui.gui_waitbar(fw);
@@ -63,7 +63,7 @@ function [sce] = sc_openscedlg(~, ~)
             try
                 [sce] = gui.i_readmtx;
             catch ME
-                errordlg(ME.message);
+                errordlg(ME.message,'','modal');
                 return;
             end
         case 'TXT/TSV/CSV File (*.txt)...'
@@ -89,12 +89,12 @@ function [sce] = sc_openscedlg(~, ~)
                 [sce] = sc_readrdsfile(filename);
             catch ME
                 gui.gui_waitbar(fw, true);
-                errordlg(ME.message);
+                errordlg(ME.message,'','modal');
                 return;
             end
             if isempty(sce)
                 gui.gui_waitbar(fw, true);
-                errordlg('File Import Failure.');
+                errordlg('File Import Failure.','','modal');
                 return;
             else
                 gui.gui_waitbar(fw);
@@ -111,7 +111,8 @@ function [sce] = sc_openscedlg(~, ~)
                     return;
                 end
             catch ME
-                errordlg(ME.message);
+                disp(ME.message);
+                errordlg(ME.message,ME.identifier,'modal');
                 return;
             end
         case '10x Genomics H5 File (*.h5)...'
@@ -126,7 +127,7 @@ function [sce] = sc_openscedlg(~, ~)
                     return;
                 end
             catch ME
-                errordlg(ME.message);
+                errordlg(ME.message,'','modal');
                 return;
             end
         case 'Loom File (*.loom)...'
@@ -141,7 +142,7 @@ function [sce] = sc_openscedlg(~, ~)
                     return;
                 end
             catch ME
-                errordlg(ME.message);
+                errordlg(ME.message,'','modal');
                 return;
             end
         case '10x Genomics ''outs'' Folder...'
@@ -153,10 +154,11 @@ function [sce] = sc_openscedlg(~, ~)
                 gui.gui_waitbar(fw);
             catch ME
                 gui.gui_waitbar(fw, true);
-                errordlg(ME.message);
+                errordlg(ME.message,'','modal');
                 return;
             end
-            if ~ftdone, errordlg('Input Error');
+            if ~ftdone
+                errordlg('Input Error','','modal');
                 return;
             end
             sce = SingleCellExperiment(X, g);
@@ -181,10 +183,11 @@ function [sce] = sc_openscedlg(~, ~)
                 gui.gui_waitbar(fw);
             catch ME
                 gui.gui_waitbar(fw, true);
-                errordlg(ME.message);
+                errordlg(ME.message,'','modal');
                 return;
             end
-            if ~ftdone, errordlg('Input Error');
+            if ~ftdone
+                errordlg('Input Error.','','modal');
                 return;
             end
             sce = SingleCellExperiment(X, g);
@@ -218,7 +221,7 @@ function [sce] = sc_openscedlg(~, ~)
                         gui.gui_waitbar(fw);
                     catch ME
                         gui.gui_waitbar(fw);
-                        errordlg(ME.message);
+                        errordlg(ME.message,'','modal');
                         return;
                     end
                 else                        
@@ -228,7 +231,7 @@ function [sce] = sc_openscedlg(~, ~)
                         gui.gui_waitbar(fw);
                     catch ME
                         gui.gui_waitbar(fw);
-                        errordlg(ME.message);
+                        errordlg(ME.message,'','modal');
                         return;
                     end
                 end
@@ -307,7 +310,8 @@ function [sce] = sc_openscedlg(~, ~)
                         sce = sc_mergesces(insce, methodtag);
                     catch ME
                         gui.gui_waitbar(fw, true);
-                        errordlg(ME.message);
+                        disp(ME.message);
+                        errordlg(ME.message, ME.identifier, 'modal');
                         return;
                     end
                     gui.gui_waitbar(fw);
@@ -328,7 +332,7 @@ function [sce] = sc_openscedlg(~, ~)
             %tic;
             file1 = fullfile(pw1, '..', 'example_data', 'workshop_example.mat');
             if ~exist(file1, "file")
-                errordlg("Example data file does not exist.");
+                errordlg("Example data file does not exist.",'','modal');
                 return;
             end
             load(file1, 'sce');
@@ -388,7 +392,7 @@ end
             % in_RefreshAll(src, [], false, false);
         catch ME
             gui.gui_waitbar(fw,true);
-            waitfor(errordlg(ME.message,''));
+            errordlg(ME.message,'','modal');
         end
     end
 

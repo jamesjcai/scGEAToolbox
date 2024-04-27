@@ -1,5 +1,4 @@
 function [s] = i_pickembedvalues(sce, ndim)
-%see also:             i_pickembedmethod
 if nargin<2, ndim=[]; end
 
 s = [];

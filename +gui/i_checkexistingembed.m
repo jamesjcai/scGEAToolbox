@@ -1,5 +1,4 @@
 function [vslist] = i_checkexistingembed(sce, ndim)
-%see also:             i_pickembedmethod
 if nargin<2, ndim=[]; end
 
 vslist = '';
