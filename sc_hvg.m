@@ -131,10 +131,7 @@ if plotit
     hFig.Position(3)=hFig.Position(3)*1.8;
     %hAx = axes('Parent', FigureHandle);
     hAx1 = subplot(2,2,[1 3]);
-    % tb = uitoolbar('Parent', FigureHandle);
-    % set(tb, 'Tag', 'FigureToolBar', ...
-    %     'HandleVisibility', 'off', 'Visible', 'on');
-    tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
+    tb = findall(hFig, 'Tag', 'FigureToolBar');
     uipushtool(tb, 'Separator', 'off');
     pkg.i_addbutton2fig(tb, 'off', @HighlightGenes, 'plotpicker-qqplot.gif', 'Highlight top HVGs');
     pkg.i_addbutton2fig(tb, 'off', @in_HighlightSelectedGenes, 'xplotpicker-qqplot.gif', 'Highlight selected genes');

@@ -22,10 +22,7 @@ gui.i_movegui2parent(hFig, parentfig);
 
 
 % hAx = axes('Parent', hFig);
-tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
-% tb = uitoolbar('Parent', hFig);
-% set(tb, 'Tag', 'FigureToolBar', ...
-%     'HandleVisibility', 'off', 'Visible', 'on');
+tb = findall(hFig, 'Tag', 'FigureToolBar'); 
 uipushtool(tb, 'Separator', 'off');
 %pkg.i_addbutton2fig(tb, 'off', @in_ShowProfile, 'plotpicker-qqplotx.gif', 'Show Profile of Genes');
 pkg.i_addbutton2fig(tb, 'off', @in_HighlightTopHVGs, 'plotpicker-qqplot.gif', 'Highlight top HVGs');

@@ -23,9 +23,8 @@ end
     hBr = brush(hFig);
     hBr.ActionPostCallback = {@onBrushAction, axesv};
 
-    tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
+    tb = findall(hFig, 'Tag', 'FigureToolBar');
     uipushtool(tb, 'Separator', 'off');
-    %tb = uitoolbar(hFig);
     pkg.i_addbutton2fig(tb, 'on',  @in_showgeneexp, 'list.gif', 'Select a gene to show expression...');
     pkg.i_addbutton2fig(tb, 'off',  @in_showcellstate, 'list2.gif', 'Select a gene to show expression...');
     pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');

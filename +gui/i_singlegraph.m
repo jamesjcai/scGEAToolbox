@@ -24,8 +24,7 @@ hFig = figure('Visible', 'off');
 h1 = axes(hFig);
 [p1] = drawnetwork(G1, h1);
 
-%tb = uitoolbar(hFig);
-tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
+tb = findall(hFig, 'Tag', 'FigureToolBar');
 uipushtool(tb, 'Separator', 'off');
 pkg.i_addbutton2fig(tb, 'off', @ChangeFontSize, 'noun_font_size_591141.gif', 'ChangeFontSize');
 pkg.i_addbutton2fig(tb, 'off', @ChangeWeight, 'noun_Weight_2243621.gif', 'ChangeWeight');

@@ -44,10 +44,7 @@ hFig.Position(3) = hFig.Position(3) * 2;
 hBr = brush(hFig);
 hBr.ActionPostCallback = {@onBrushAction, h1, h2};
 
-
-% tb = uitoolbar(f0);
-tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
-%pkg.i_addbutton2fig(tb, 'off', [], "IMG00107.GIF", " ");
+tb = findall(hFig, 'Tag', 'FigureToolBar');
 uipushtool(tb, 'Separator', 'off');
 
 pkg.i_addbutton2fig(tb, 'off', @gui.i_linksubplots, "plottypectl-rlocusplot.gif", "Link subplots");

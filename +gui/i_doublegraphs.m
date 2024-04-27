@@ -38,8 +38,7 @@ h2 = nexttile;
 p2.XData = p1.XData;
 p2.YData = p1.YData;
 
-% tb = uitoolbar(hFig);
-tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
+tb = findall(hFig, 'Tag', 'FigureToolBar');
 uipushtool(tb, 'Separator', 'off');
 pkg.i_addbutton2fig(tb, 'off', @ChangeFontSize, 'noun_font_size_591141.gif', 'ChangeFontSize');
 pkg.i_addbutton2fig(tb, 'off', @ChangeWeight, 'noun_Weight_2243621.gif', 'ChangeWeight');
