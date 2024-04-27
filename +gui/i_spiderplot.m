@@ -24,7 +24,7 @@ end
 hFig = figure('visible', 'off', 'DockControls', 'off');
 % tb = uitoolbar(hFig);
 
-tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
+tb = findall(hFig, 'Tag', 'FigureToolBar');
 uipushtool(tb, 'Separator', 'off');
 
 pkg.i_addbutton2fig(tb, 'off', {@i_savedata}, ...

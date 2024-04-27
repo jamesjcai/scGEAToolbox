@@ -2,8 +2,8 @@ function callback_EnrichrTab2Circos(src, ~)
 
 
 import mlreportgen.ppt.*;
-pw1 = fileparts(mfilename('fullpath'));
-pth = fullfile(pw1, '..', 'resources', 'myTemplate.pptx');
+%pw1 = fileparts(mfilename('fullpath'));
+%pth = fullfile(pw1, '..', 'resources', 'myTemplate.pptx');
 
 
     FigureHandle = src.Parent.Parent;
@@ -95,9 +95,18 @@ CC.labelRotate('on');
 % Adjustable Label radius
 CC.setLabelRadius(1.2);
 
+% 修改弦颜色(Modify chord color)
+CListC = lines(size(df1, 2));
+for i = 1:size(df1, 1)
+    for j = 1:size(df1, 2)
+        CC.setChordMN(i,j, 'FaceColor',CListC(j,:), 'FaceAlpha',.4)
+    end
+end
 
+tb = findall(hFig, 'Tag', 'FigureToolBar');
+uipushtool(tb, 'Separator', 'off');
 
-tb = uitoolbar(hFig);
+% tb = uitoolbar(hFig);
 %pkg.i_addbutton2fig(tb, 'off', @in_savedata, 'export.gif', 'Export data...');
 %pkg.i_addbutton2fig(tb, 'off', @in_testdata, 'plotpicker-renko.gif', 'Add Regression Line...');
 %pkg.i_addbutton2fig(tb, 'off', @i_savemainfig, "powerpoint.gif", 'Save Figure to PowerPoint File...');

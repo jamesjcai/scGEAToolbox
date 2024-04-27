@@ -168,7 +168,7 @@ set(gca, 'TickLength', [0, 0])
 % ======= customized heatmap - end
 
 % tb1 = uitoolbar(hFig);
-tb1 = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
+tb1 = findall(hFig, 'Tag', 'FigureToolBar');
 uipushtool(tb1, 'Separator', 'off');
 
 pkg.i_addbutton2fig(tb1, 'off', {@i_saveM, M}, 'greencircleicon.gif', 'Save marker gene map...');

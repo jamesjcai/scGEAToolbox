@@ -15,10 +15,8 @@ colorbar;
 zlabel('Score value')
 title(strrep(csname, '_', '\_'));
 
-tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
+tb = findall(hFig, 'Tag', 'FigureToolBar');
 uipushtool(tb, 'Separator', 'off');
-
-%tb = uitoolbar(hFig);
 pkg.i_addbutton2fig(tb, 'off', @i_saveCrossTable, "export.gif", 'Save cross-table');
 pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 pkg.i_addbutton2fig(tb, 'on', @gui.i_pickcolormap, 'plotpicker-compass.gif', 'Pick new color map...');
