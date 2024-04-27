@@ -12,7 +12,7 @@ if isempty(which('grp2idx.m'))
     return;
 end
 % rng("shuffle");
-rng("default");
+% rng("default");
 
 import pkg.*
 import gui.*
