@@ -37,12 +37,11 @@ import mlreportgen.ppt.*;
             if isequal(fname, 0), return; end
             tabfile = fullfile(pathname, fname);
             warning off
-            tab = readtable(tabfile, 'FileType', 'text');
+            tab = readtable(tabfile, 'FileType', 'text','Delimiter','\t');
             warning on
         otherwise
             return;
     end
-
 
     if all(ismember({'Term','Genes'}, tab.Properties.VariableNames))
         listitems = tab.Term;    
@@ -63,8 +62,7 @@ import mlreportgen.ppt.*;
         terms = tab.(tab.Properties.VariableNames{1})(indx2);
         genes = tab.(tab.Properties.VariableNames{2})(indx2);
     end
-
-    
+   
 % taking out all gene names
 allg = {};
 g_by_term = {};
@@ -94,21 +92,19 @@ df1 = reshape(df,[length(terms),length(allg)]);
 df1 = cell2table(df1,'VariableNames',allg);
 df1 = table2array(df1);
 
+
+
+
+
 hFig = figure('Visible',"off");
 % ax0 = hFig.CurrentAxes;
 gui.i_movegui2parent(hFig, FigureHandle);
 
 CC = gui.chordChart(df1,'Arrow','off','rowName',terms,'colName',allg);
 CC = CC.draw();
-% zoom(0.75) % Zooming
-% 修改字体，字号及颜色
 CC.setFont('FontName','Arial','FontSize',10)
 CC.labelRotate('on');
-% 调节标签半径
-% Adjustable Label radius
 CC.setLabelRadius(1.2);
-
-% 修改弦颜色(Modify chord color)
 CListC = lines(size(df1, 2));
 for i = 1:size(df1, 1)
     for j = 1:size(df1, 2)
@@ -116,33 +112,32 @@ for i = 1:size(df1, 1)
     end
 end
 
+CC.setSquareT_Prop('FaceColor',[0,0,0])
+% CC.setSquareT_N(2,'FaceColor',[.8,0,0])
+% CC.tickState('on')
+
 tb = findall(hFig, 'Tag', 'FigureToolBar');
 uipushtool(tb, 'Separator', 'off');
-
-% tb = uitoolbar(hFig);
-%pkg.i_addbutton2fig(tb, 'off', @in_savedata, 'export.gif', 'Export data...');
-%pkg.i_addbutton2fig(tb, 'off', @in_testdata, 'plotpicker-renko.gif', 'Add Regression Line...');
-%pkg.i_addbutton2fig(tb, 'off', @i_savemainfig, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-%pkg.i_addbutton2fig(tb, 'off', @i_savemainfig2, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-
-% pkg.i_addbutton2fig(tb, 'off', @i_savemainfigx, "xpowerpoint.gif", 'Save Figure as Graphic File...');
+pkg.i_addbutton2fig(tb, 'off', @in_savedata, 'export.gif', 'Export data...');
 pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 2}, "xpowerpoint.gif", 'Save Figure as Graphic File...');
-pkg.i_addbutton2fig(tb, 'off', @i_resizefont, "noun_font_size_591141.gif", 'Change Font Size');
-pkg.i_addbutton2fig(tb, 'off', @i_PickColorMap, "plotpicker-compass.gif", "Pick new color map");
-
+pkg.i_addbutton2fig(tb, 'off', @in_resizefont, "noun_font_size_591141.gif", 'Change Font Size');
+pkg.i_addbutton2fig(tb, 'off', @in_PickColorMap, "plotpicker-compass.gif", "Pick new color map");
 
 hFig.Visible=true;
 sz = 10;
+    function in_savedata(~,~)
+        gui.i_exporttable(tab(indx2,:), true, ...
+            'Tcircostabl','CircosTermTable');
+    end
 
-    function i_resizefont(~, ~)
+    function in_resizefont(~, ~)
         sz = sz + 1;
         if sz > 20, sz = 5; end
         CC.setFont('FontName','Arial','FontSize', sz);
     end
 
-    function i_PickColorMap(~, ~)
+    function in_PickColorMap(~, ~)
         CC.setChordColorByMap(gui.i_getrandcolormap);
     end
-
 end
