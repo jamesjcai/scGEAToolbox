@@ -41,7 +41,12 @@ import mlreportgen.ppt.*;
     end
 
 
-    listitems = tab.Term;
+    try
+        listitems = tab.Term;
+    catch
+        listitems = tab.(tab.Properties.VariableNames{1});
+    end
+
     [indx2, tf2] = listdlg('PromptString', ...
     {'Select terms:'}, ...
     'SelectionMode', 'multiple', ...
