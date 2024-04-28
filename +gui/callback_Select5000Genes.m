@@ -24,7 +24,7 @@ prompt = {'Remove Mt-Genes (MT-ND1, MT-ND6, MT-CYB, MT-COI, MT-ATP6, etc.)?', ..
     'Remove Genes Expressed in Less Than m Cells (m = 0.075 or 0.050, 10 or 50)?', ...
     'Keep Top n Highly Variable Genes (HVGs) (n = 5000 or 2000)?'};
 dlgtitle = '';
-dims = [1, 85];
+dims = [1, 60];
 
 definput = {'Yes', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes', '0.075', num2str(min([sce.NumGenes,5000]))};
 answer = inputdlg(prompt, dlgtitle, dims, definput);

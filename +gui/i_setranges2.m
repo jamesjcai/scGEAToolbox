@@ -48,7 +48,7 @@ end
 
         function i_SetValues(~, varargin)
             prompt = {'X-variable cutoff:', 'Y-variable cutoff:'};
-            answer = inputdlg(prompt, "", [1, 35], ...
+            answer = inputdlg(prompt, "", [1, 50], ...
                 {num2str(xr(2)), num2str(yr(2))});
             if isempty(answer), return; end
             try

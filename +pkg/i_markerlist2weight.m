@@ -33,7 +33,7 @@ end
 
 % indata=gui.i_getsctypemarkers;
 a = inputdlg(sprintf('Format:\nCell type name [TAB] Gene1,Gene2'), ...
-    'Markers Input', [10, 50], {char(indata)}, 'on');
+    'Markers Input', [15, 60], {char(indata)}, 'on');
 if isempty(a), return; end
 b = strtrim(string(a{1}));
 [c, d] = strtok(b, sprintf('\t'));

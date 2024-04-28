@@ -11,7 +11,7 @@ definput = {'10', '500'};
 prompt = {'Number of subsamples (nsubsmpl=[10..50]):', ...
     'Number of cells per subsample (csubsmpl=[200..5000]):'};
 dlgtitle = 'scTenifoldNet Settings';
-dims = [1, 55];
+dims = [1, 50];
 answer = inputdlg(prompt, dlgtitle, dims, definput);
 
 if isempty(answer), return; end

@@ -30,7 +30,7 @@ switch answer
         CR = char(13); %  carriage return character equivalent to char(13) or sprintf('\r').
         ts = strrep(ts, [CR, newline], newline);
         a = inputdlg('Review script and press OK to run it', ...
-            '', [10, 90], {ts});
+            '', [15, 60], {ts});
         if isempty(a)
             return;
         else

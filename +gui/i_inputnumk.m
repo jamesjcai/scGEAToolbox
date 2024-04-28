@@ -8,7 +8,7 @@ k = [];
 prompt = {sprintf('%s (%d..%d):', ...
     descstr, a, b)};
 dlgtitle = '';
-dims = [1, 45];
+dims = [1, 50];
 definput = {sprintf('%d', defaultk)};
 answer = inputdlg(prompt, dlgtitle, dims, definput);
 if isempty(answer), return; end

@@ -1,7 +1,7 @@
 function callback_ViewMetaData(src, ~)
 FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
-a = inputdlg('Data Info:', 'Metadata Viewer', [10, 50], {char(sce.metadata)});
+a = inputdlg('Data Info:', 'Metadata Viewer', [15, 60], {char(sce.metadata)});
 if ~isempty(a)
     newmetadata = strtrim(string(a{1}));
     if ~isequal(newmetadata, sce.metadata)
