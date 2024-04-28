@@ -22,6 +22,9 @@ T=[];
 hFig = figure("Visible","off", "DockControls", "off");
 
 % [px_new] = gui.i_getchildpos(FigureHandle, hFig);
+tab=cell(2,1);
+ax0=cell(2,1);
+ax=cell(2,2);
 
 
 tabgp = uitabgroup();
