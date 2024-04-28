@@ -9,7 +9,7 @@ s = sprintf('%s\n', glist0);
 s = s(1:end-1);
 prompt = {'Paste List:'};
 dlgtitle = 'Input List';
-[answer] = inputdlg(prompt, dlgtitle, [15, 60], {s});
+[answer] = inputdlg(prompt, dlgtitle, [15, 80], {s});
 glist = [];
 if isempty(answer), return; end
 if iscell(answer)

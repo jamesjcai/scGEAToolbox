@@ -71,7 +71,7 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
                 'Min nonzero cells per gene (0.01 or 0.05, 10 or 50):', ...
                 'Min nonzero genes per cell (200 or 500):'};
             dlgtitle = 'QC Cutoffs';
-            dims = [1, 60];
+            dims = [1, 80];
             answer = inputdlg(prompt, dlgtitle, dims, definput);
             if isempty(answer)
                 requirerefresh = false;
@@ -166,7 +166,7 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
 
         case 'Remove Genes by Expression' % remove genes by expression
             answer = inputdlg('Expressed in less than % of cells (e.g., 0.05=5%) or # of cells (e.g., 10).', ...
-                'Remove Genes', [1, 60], {'0.05'});
+                'Remove Genes', [1, 50], {'0.05'});
             if isempty(answer), return; end
             if iscell(answer)
                 a = str2double(answer{1});
@@ -184,7 +184,7 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
                     prompt = {'Remove Genes With Name Contains ''orf'' or ''-AS'' (C22orf42, C21orf58, etc.)?', ...
                         'Remove Genes With Name Starts With ''LINC'' (LINC01426, LINC01694, etc.)?'};
                     dlgtitle = '';
-                    dims = [1, 60];                    
+                    dims = [1, 80];
                     definput = {'Yes', 'Yes'};
                     answer3 = inputdlg(prompt, dlgtitle, dims, definput);
                     if isempty(answer3), return; end

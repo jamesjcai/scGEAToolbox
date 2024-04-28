@@ -1,5 +1,8 @@
 function [y,txt,T] = gui_uishowrefinfo(reftarget, parentfig)
 
+%see also: gui.gui_showrefinfo
+
+
 if nargin<2, parentfig = []; end
 % gui.gui_showrefinfo(reftarget);
 % y = true;
@@ -21,8 +24,8 @@ if ~isempty(idx)
 end
 
 hFig = uifigure("WindowStyle","modal",'Visible','off');
-hFig.Position(3)=0.85*hFig.Position(3);
-hFig.Position(4)=0.85*hFig.Position(4);
+hFig.Position(3)=0.75*hFig.Position(3);
+hFig.Position(4)=0.75*hFig.Position(4);
 g = uigridlayout(hFig,[3 3]);
 g.RowHeight = {'fit','2x','fit'};
 g.ColumnWidth = {'1x',75,75};

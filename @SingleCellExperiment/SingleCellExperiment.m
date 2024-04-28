@@ -18,7 +18,6 @@ classdef SingleCellExperiment
         % struct_clust struct
     end
 
-    % inputdlg('Sample Info:','Meta data',[10 50],{char(b.')})
     properties (Dependent)
         NumCells
         NumGenes

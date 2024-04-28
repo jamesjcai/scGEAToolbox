@@ -97,7 +97,7 @@ if ~exist("ttxt", "var"), ttxt = []; end
 
 posg = posg(:);
 if nargout < 1
-    inputdlg(ttxt, '', [10, 60], {char(posg(:))});
+    inputdlg(ttxt, '', [15, 80], {char(posg(:))});
 end
 
 end

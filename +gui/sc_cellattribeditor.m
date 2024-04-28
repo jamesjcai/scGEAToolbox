@@ -42,12 +42,12 @@ if ~addnew
     %fw = gui.gui_waitbar;
     uiwait(helpdlg('It may take a while to load values. Click OK and wait.',''));
     x = inputdlg(sprintf('Attribute Name: %s\n%s',clabel, 'Attribute Values:'), ...
-                      'Attribute Editor', [25 60], {char(string(thisc))});
+                      'Attribute Editor', [15 80], {char(string(thisc))});
     %gui.gui_waitbar(fw);
 
 else  
     x = inputdlg({'Attribute Name','Attribute Values'},...
-                  'Attribute Editor', [1 60; 25 60]);
+                  'Attribute Editor', [1 80; 15 80]);
     % {'new_attrib', char(string([1:sce.NumCells]'))});
 end
 

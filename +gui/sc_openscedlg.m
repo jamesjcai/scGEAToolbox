@@ -256,9 +256,8 @@ function [sce] = sc_openscedlg(~, ~)
         case 'Link to GEO h5 File...'
             prompt = {'Enter link to .h5 file:'};
             dlgtitle = 'Input Download Links';
-            dims = [1, 100];
             definput = {'https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM4666nnn/GSM4666986/suppl/GSM4666986_BL41_filtered_feature_bc_matrix.h5'};
-            answer = inputdlg(prompt, dlgtitle, dims, definput);
+            answer = inputdlg(prompt, dlgtitle, [1, 100], definput);
             if isempty(answer), return; end
             if ~isempty(answer{1})
                 fw = gui.gui_waitbar;
@@ -365,8 +364,7 @@ end
         prompt = {'Number of genes:', ...
             'Number of cells:'};
         dlgtitle = 'Simulation Settings';
-        dims = [1, 55];
-        answer = inputdlg(prompt, dlgtitle, dims, definput);
+        answer = inputdlg(prompt, dlgtitle, [1, 50], definput);
 
         if isempty(answer), return; end
         try

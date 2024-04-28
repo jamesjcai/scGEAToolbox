@@ -17,7 +17,7 @@ prompt = {'Remove Mt-Genes (MT-ND1, MT-ND6, MT-CYB, MT-COI, MT-ATP6, etc.)?', ..
     'Remove Ribosomal Genes (RPSA, RPS2, RPS3, RPL3, RPL4, RPLP1, etc.)?', ...
     'Remove Genes Without Approved Symbols?'};
 dlgtitle = '';
-dims = [1, 60];
+dims = [1, 80];
 
 definput = {'Yes', 'Yes', 'Yes', 'Yes'};
 answer = inputdlg(prompt, dlgtitle, dims, definput);

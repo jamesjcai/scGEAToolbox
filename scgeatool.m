@@ -614,43 +614,42 @@ if ~showuseronboarding, set(UserToolbarHandle, 'Visible', 'off'); end
         end
     end
 
-    function in_SimulateSCE(src, ~)
-        if ~isempty(sce) && sce.NumCells>0
-            answer = questdlg('Current SCE will be replaced. Continue?');
-            if ~strcmp(answer, 'Yes'), return; end
-        end
-        definput = {'3000', '5000'};
-        prompt = {'Number of genes:', ...
-            'Number of cells:'};
-        dlgtitle = 'Simulation Settings';
-        dims = [1, 55];
-        answer = inputdlg(prompt, dlgtitle, dims, definput);
-
-        if isempty(answer), return; end
-        try
-            numgenes = str2double(answer{1});
-            numcells = str2double(answer{2});
-            assert(isfinite(numgenes) & numgenes==floor(numgenes));
-            assert(isfinite(numcells) & numcells==floor(numcells));
-            assert((numgenes >= 1) && (numgenes <= 30000));
-            assert((numcells >= 1) && (numcells <= 30000));
-        catch
-            errordlg('Invalid parameter values.','');
-            return;
-        end
-
-        try
-            fw = gui.gui_waitbar;
-            [X] = sc_simudata(numgenes, numcells,'lun');
-            [sce] = SingleCellExperiment(X);
-            [c, cL] = grp2idx(sce.c);
-            gui.gui_waitbar(fw);            
-            in_RefreshAll(src, [], false, false);
-        catch ME
-            gui.gui_waitbar(fw);
-            errordlg(ME.message,'');
-        end
-    end
+    % function in_SimulateSCE(src, ~)
+    %     if ~isempty(sce) && sce.NumCells>0
+    %         answer = questdlg('Current SCE will be replaced. Continue?');
+    %         if ~strcmp(answer, 'Yes'), return; end
+    %     end
+    %     definput = {'3000', '5000'};
+    %     prompt = {'Number of genes:', ...
+    %         'Number of cells:'};
+    %     dlgtitle = 'Simulation Settings';
+    %     answer = inputdlg(prompt, dlgtitle, [1, 50], definput);
+    % 
+    %     if isempty(answer), return; end
+    %     try
+    %         numgenes = str2double(answer{1});
+    %         numcells = str2double(answer{2});
+    %         assert(isfinite(numgenes) & numgenes==floor(numgenes));
+    %         assert(isfinite(numcells) & numcells==floor(numcells));
+    %         assert((numgenes >= 1) && (numgenes <= 30000));
+    %         assert((numcells >= 1) && (numcells <= 30000));
+    %     catch
+    %         errordlg('Invalid parameter values.','');
+    %         return;
+    %     end
+    % 
+    %     try
+    %         fw = gui.gui_waitbar;
+    %         [X] = sc_simudata(numgenes, numcells,'lun');
+    %         [sce] = SingleCellExperiment(X);
+    %         [c, cL] = grp2idx(sce.c);
+    %         gui.gui_waitbar(fw);            
+    %         in_RefreshAll(src, [], false, false);
+    %     catch ME
+    %         gui.gui_waitbar(fw);
+    %         errordlg(ME.message,'');
+    %     end
+    % end
 
     function in_qcviolin(~, ~)
         gui.i_qcviolin(sce.X, sce.g, FigureHandle);

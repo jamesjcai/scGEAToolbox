@@ -1,4 +1,7 @@
 function [y, txt, T] = gui_showrefinfo(reftarget)
+
+%see also: gui.gui_uishowrefinfo
+
 y=false;
 txt = [];
 pw1 = fileparts(mfilename('fullpath'));

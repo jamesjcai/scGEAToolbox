@@ -33,7 +33,7 @@ listitems = {'Gene name','Cluster ID'};
             if tfx == 1
                 i = ismember(ci, indxx);
                 newctype = inputdlg('New cluster ID name', 'Rename', ...
-                    [1, 60], cLi(ci(i)));
+                    [1, 50], cLi(ci(i)));
                 if ~isempty(newctype)
                     cLi(ci(i)) = newctype;
                     sce.c_cluster_id = string(cLi(ci));
