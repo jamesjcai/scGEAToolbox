@@ -34,28 +34,32 @@ import mlreportgen.ppt.*;
             if isequal(fname, 0), return; end
             tabfile = fullfile(pathname, fname);
             warning off
-            tab = readtable(tabfile);
+            tab = readtable(tabfile, 'FileType', 'text');
             warning on
         otherwise
             return;
     end
 
 
-    try
-        listitems = tab.Term;
-    catch
+    if all(ismember({'Term','Genes'}, tab.Properties.VariableNames))
+        listitems = tab.Term;    
+        [indx2, tf2] = listdlg('PromptString', ...
+        {'Select terms:'}, ...
+        'SelectionMode', 'multiple', ...
+        'ListString', listitems, 'ListSize', [260, 300]);
+        if tf2 ~= 1, return; end
+        terms = tab.Term(indx2);
+        genes = tab.Genes(indx2);
+    else
         listitems = tab.(tab.Properties.VariableNames{1});
+        [indx2, tf2] = listdlg('PromptString', ...
+        {'Select terms:'}, ...
+        'SelectionMode', 'multiple', ...
+        'ListString', listitems, 'ListSize', [260, 300]);
+        if tf2 ~= 1, return; end
+        terms = tab.(tab.Properties.VariableNames{1})(indx2);
+        genes = tab.(tab.Properties.VariableNames{2})(indx2);
     end
-
-    [indx2, tf2] = listdlg('PromptString', ...
-    {'Select terms:'}, ...
-    'SelectionMode', 'multiple', ...
-    'ListString', listitems, 'ListSize', [260, 300]);
-
-    if tf2 ~= 1, return; end
-
-    terms = tab.Term(indx2);
-    genes = tab.Genes(indx2);
 
 % taking out all gene names
 allg = {};
