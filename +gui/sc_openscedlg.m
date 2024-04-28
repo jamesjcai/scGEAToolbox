@@ -377,12 +377,12 @@ end
             assert((numgenes >= 1) && (numgenes <= 30000));
             assert((numcells >= 1) && (numcells <= 30000));
         catch
-            waitfor(warndlg('Invalid parameter values.',''));
+            warndlg('Invalid parameter values.','','modal');
             return;
         end        
         try
             fw = gui.gui_waitbar;
-            [X] = sc_simudata(numgenes, numcells,'lun');
+            [X] = sc_simudata(numgenes, numcells, 'lun');
             [sce] = SingleCellExperiment(X);
             sce.c_batch_id = string([ones(round(sce.NumCells/2),1);... 
                 2*ones(sce.NumCells-round(sce.NumCells/2),1)]);

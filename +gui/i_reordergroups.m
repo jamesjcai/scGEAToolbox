@@ -23,7 +23,7 @@ if isempty(answer), return; end
             end
             if length(newidx) ~= length(cL)
                 noanswer = true;
-                waitfor(warndlg('Please select all items.',''));
+                warndlg('Please select all items.','','modal');
                 return;
             end
             cx = c;

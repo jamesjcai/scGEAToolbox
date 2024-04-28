@@ -34,7 +34,6 @@ if any(idx)
     title(ttxt);
     tb1 = uitoolbar(hFig);
     pkg.i_addbutton2fig(tb1, 'off', {@i_saveM, ci}, 'greencircleicon.gif', 'Save marker gene map...');
-    % uiwait(hFig);
 else
     warndlg('No Hgb-genes found');
 end

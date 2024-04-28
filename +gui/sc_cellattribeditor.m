@@ -55,16 +55,16 @@ if isempty(x), return; end
 
 if addnew
     if isempty(x{1})
-        uiwait(warndlg('Attribute Name cannot be empty.',''));
+        warndlg('Attribute Name cannot be empty.','','modal');
         return; 
     end
     if isempty(x{2})
-        uiwait(warndlg('Attribute Values cannot be empty.',''));
+        warndlg('Attribute Values cannot be empty.','','modal');
         return; 
     end
 else
     if isempty(x{1})       % when add new - x{1} is the values
-        uiwait(warndlg('Attribute Values cannot be empty.',''));
+        warndlg('Attribute Values cannot be empty.','','modal');
         return;
     end
 end
@@ -94,12 +94,12 @@ end
 
     if addnew
         if size(newthisc,1)~=sce.NumCells
-           uiwait(warndlg('Attribute length is not equal to the number of cells.',''));
+           warndlg('Attribute length is not equal to the number of cells.','','modal');
            return;
         end
     else
         if ~isequal(size(newthisc), size(thisc))
-           uiwait(warndlg('Attribute length changed.',''));
+           warndlg('Attribute length changed.','','modal');
            return;
         end
     end
@@ -108,7 +108,7 @@ end
         clabel = matlab.lang.makeValidName(clabel);        
         existinglabels = sce.list_cell_attributes(1:2:end);
         if ismember(clabel, existinglabels)
-            waitfor(warndlg('Cell Attribute Name Existing.',''));
+            warndlg('Cell Attribute Name Existing.','','modal');
             return;
         end
         sce.list_cell_attributes = [sce.list_cell_attributes, ...

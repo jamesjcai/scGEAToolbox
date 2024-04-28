@@ -34,7 +34,7 @@ ptsSelected = logical(h.BrushData.');
 
 
 if ~any(ptsSelected)
-    waitfor(warndlg("No cells are brushed/selected.",''));
+    warndlg("No cells are brushed/selected.",'','modal');
     answer=questdlg('Select cells by a grouping variable?','');
     if ~strcmp(answer,'Yes'), return; end
     [ptsSelected] = gui.i_select1classcells(sce, false);    

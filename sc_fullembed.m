@@ -1,4 +1,4 @@
-function [sce]=sc_scefullembed(sce)
+function [sce]=sc_fullembed(sce)
 
 
 in_fixfield('tsne','tsne3d');

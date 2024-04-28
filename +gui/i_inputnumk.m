@@ -15,7 +15,7 @@ if isempty(answer), return; end
 k = round(str2double(cell2mat(answer)));
 if isnan(k) || k < a || k > b
     k = [];
-    uiwait(errordlg('Invalid number.'));
+    errordlg('Invalid number.','','modal');
     return;
 end
 end

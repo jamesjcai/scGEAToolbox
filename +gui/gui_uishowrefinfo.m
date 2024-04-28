@@ -20,11 +20,6 @@ if ~isempty(idx)
     txt=T{:,2}{idx};
 end
 
-% if ~isempty(txt)
-%     fprintf('%s\n%s\n', reftarget, txt);
-%     uiwait(helpdlg(txt, reftarget));
-% end
-
 hFig = uifigure("WindowStyle","modal",'Visible','off');
 hFig.Position(3)=0.85*hFig.Position(3);
 hFig.Position(4)=0.85*hFig.Position(4);

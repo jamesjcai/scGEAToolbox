@@ -36,12 +36,8 @@ movegui(fx, 'center');
 fx.Position(1) = fx.Position(1) - 250;
 fy = fx.CurrentAxes;
 fy.Subtitle.String = '[genes x cells]';
-%waitfor(helpdlg(sprintf('%s Cells extracted.', ...
-%    sprintf('%s+',tg)),''));
 answer = questdlg('scRNAseq data extracted. Continue?', '');
-if ~strcmp(answer, 'Yes')
-    return;
-end
+if ~strcmp(answer, 'Yes'), return; end
 fy = scgeatool(scep);
 fy.Position(3:4) = 0.8 * fy.Position(3:4);
 movegui(fy, 'center');
@@ -49,4 +45,4 @@ fy.Position(1) = fy.Position(1) + 250;
 fy = fy.CurrentAxes;
 fy.Subtitle.String = '[peaks x cells]';
 
-
+end

@@ -37,7 +37,6 @@ if ~(ismcc || isdeployed)
     export2wsdlg(labels, vars, values, ...
         'Save Data to Workspace', ...
         logical([1, 0]));
-    % uiwait(ex)
 end
 
 % figure;

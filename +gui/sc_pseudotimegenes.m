@@ -62,7 +62,7 @@ if nargin<3, parentfig=[]; end
         if exist('psf1', 'var') && ishandle(hFig)
             close(hFig);
         end
-        errordlg(ME.message);
+        errordlg(ME.message,'','modal');
     end
 
 end

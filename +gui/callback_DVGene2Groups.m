@@ -87,10 +87,10 @@ end
     sce2 = sce2.qcfilter;
 
     if sce1.NumCells < 50 || sce2.NumCells < 50
-        uiwait(warndlg('One of groups contains too few cells (n < 50). The result may not be reliable.',''));
+        warndlg('One of groups contains too few cells (n < 50). The result may not be reliable.','','modal');
     end
     if sce1.NumGenes < 50 || sce2.NumGenes < 50
-        uiwait(warndlg('One of groups contains too few genes (n < 50). The result may not be reliable.',''));
+        warndlg('One of groups contains too few genes (n < 50). The result may not be reliable.','','modal');
     end
 
     if ~isequal(sce1.g, sce2.g)
@@ -100,7 +100,7 @@ end
     else
         g = sce1.g;
         X1 = sce1.X;
-        X2 = sce2.X;        
+        X2 = sce2.X;
     end
     
     X1 = sc_norm(X1,'type','libsize');
