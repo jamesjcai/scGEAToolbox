@@ -134,6 +134,18 @@ end
     T = [T1 T2 table(DiffDist)];    
     T = sortrows(T,"DiffDist","descend");
     
+    % a few lines to get rid of the outliers for DV:    % Removing ends
+    tt1 = table2array(T(:,8));
+    nlast = max(tt1);
+    idx = and( tt1 > 1, tt1 < nlast);
+    T = T(idx,:);
+    tt1 = table2array(T(:,16));
+    nlast = max(tt1);
+    idx = and( tt1 > 1, tt1 < nlast);
+    T = T(idx,:);
+    % Done removing ends
+
+
     gui.gui_waitbar(fw);
 
     outfile = sprintf('%s_vs_%s', ...
