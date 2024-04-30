@@ -124,13 +124,13 @@ end
     px1 = T1.lgu; py1 = T1.lgcv; pz1 = T1.dropr;
     px2 = T2.lgu; py2 = T2.lgcv; pz2 = T2.dropr;
 
-    d1=([px1 py1 pz1] - xyz1(T1.nearidx,:));
-    d2=([px2 py2 pz2] - xyz2(T2.nearidx,:));
+    v1=([px1 py1 pz1] - xyz1(T1.nearidx,:));
+    v2=([px2 py2 pz2] - xyz2(T2.nearidx,:));
 
-    DiffDist = vecnorm(d1 - d2, 2, 2);
+    DiffDist = vecnorm(v1 - v2, 2, 2);
 
-    T1.Properties.VariableNames = append(T1.Properties.VariableNames, sprintf('_%s',cL1{1}));
-    T2.Properties.VariableNames = append(T2.Properties.VariableNames, sprintf('_%s',cL2{1}));
+    T1.Properties.VariableNames = append(T1.Properties.VariableNames, sprintf('_%s', cL1{1}));
+    T2.Properties.VariableNames = append(T2.Properties.VariableNames, sprintf('_%s', cL2{1}));
     
     T = [T1 T2 table(DiffDist)];    
     T = sortrows(T,"DiffDist","descend");
@@ -206,7 +206,7 @@ x1 = X1(idx,:);
 sh1 = plot(hAx1, 1:length(x1), x1, 'Color',lcolor1);
 xlim(hAx1,[1 size(X1,2)]);
 
-title(hAx1, g(idx));
+title(hAx1, sprintf('%s (%s)',g(idx), cL1{1}));
 [titxt] = gui.i_getsubtitle(x1);
 subtitle(hAx1, titxt);
 xlabel(hAx1,'Cell Index');
@@ -218,7 +218,7 @@ x2 = X2(idx,:);
 sh2 = plot(hAx2, 1:length(x2), x2, 'Color',lcolor2);
 xlim(hAx2,[1 size(X2,2)]);
 
-title(hAx2, g(idx));
+title(hAx2, sprintf('%s (%s)',g(idx), cL2{1}));
 [titxt] = gui.i_getsubtitle(x1);
 subtitle(hAx2, titxt);
 xlabel(hAx2,'Cell Index');
@@ -254,7 +254,7 @@ hFig.Visible=true;
             idx = event_obj.DataIndex;
             if idx > length(g)*2
                 txt = num2str(event_obj.Position(2)); 
-                return; 
+                return;
             end
             if idx > length(g)
                 idx = idx - length(g);
@@ -277,7 +277,9 @@ hFig.Visible=true;
             if ~isempty(sh1) && isvalid(sh1), delete(sh1); end
             sh1 = plot(hAx1, 1:length(x1), x1, 'Color',lcolor1);
             xlim(hAx1,[1 size(X1,2)]);
-            title(hAx1, g(idx));    
+            % title(hAx1, g(idx));  
+            title(hAx1, sprintf('%s (%s)',g(idx), cL1{1}));
+  
             [titxt] = gui.i_getsubtitle(x1);
             subtitle(hAx1, titxt);
             xlabel(hAx1,'Cell Index');
@@ -287,7 +289,8 @@ hFig.Visible=true;
             if ~isempty(sh2) && isvalid(sh2), delete(sh2); end
             sh1 = plot(hAx2, 1:length(x2), x2, 'Color',lcolor2);
             xlim(hAx2,[1 size(X2,2)]);
-            title(hAx2, g(idx));    
+            %title(hAx2, g(idx));
+            title(hAx2, sprintf('%s (%s)',g(idx), cL2{1}));
             [titxt] = gui.i_getsubtitle(x2);
             subtitle(hAx2, titxt);
             xlabel(hAx2,'Cell Index');
