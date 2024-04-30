@@ -73,6 +73,8 @@ pkg.i_addbutton2fig(tb, 'off', @gui.i_renametitle, "icon-mat-touch-app-10.gif", 
 %pkg.i_addbutton2fig(tb, 'on', @i_viewgenenames, 'HDF_point.gif', 'Show Gene Names');
 pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
 
+pkg.i_addbutton2fig(tb, 'off', @i_showbarplot, "plotpicker-errorbarx.gif", 'Show barplot');
+
 % if isempty(px_new)
 %     movegui(hFig,'center');
 % else    
@@ -85,6 +87,30 @@ gui.i_movegui2parent(hFig, parentfig);
 gui.gui_waitbar(fw);
 hFig.Visible=true;
 
+
+    function i_showbarplot(~,~)
+        [~,idx]=ismember(focalg, tabnamelist); 
+        [cx, cLx] = grp2idx(thisc);
+        a = zeros(max(cx), 1);
+        for ks = 1:max(cx)
+            a(ks) = median(y{idx}(cx == ks));
+        end
+        delete(ax0{idx});
+        ax0{idx} = axes('parent',tab{idx});
+        
+        if rand>0.5
+            bar(grpstats(y{idx},thisc,@mean),'w');
+        else
+            bar(grpstats(y{idx},thisc,@mean));
+        end
+        hold on
+        errorbar(grpstats(y{idx},thisc,@mean), ...
+            grpstats(y{idx},thisc,@std), 'k','linestyle','none')
+        set(ax0{idx},'xticklabel',cLx);
+        
+        title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));  
+        
+    end
 
     function i_savemainfigx(~,~)
         [~,idx]=ismember(focalg, tabnamelist);     

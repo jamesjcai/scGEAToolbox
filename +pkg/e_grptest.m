@@ -1,6 +1,6 @@
 function [T] = e_grptest(y, grp)
 
-% used by sc_uitabgrpfig_violin
+% used by gui.i_violintabs
 T = [];
 if length(unique(grp)) == 2
     p_ttest = zeros(size(y, 1), 1);

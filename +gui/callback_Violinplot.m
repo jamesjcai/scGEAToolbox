@@ -24,8 +24,15 @@ function callback_Violinplot(src, ~)
                 helpdlg('No gene selected.', '');
                 return;
             end
-            gui.sc_uitabgrpfig_violin(sce, glist, thisc, FigureHandle);
-            % gui.i_violintabs({y}, '', thisc, parentfig);
+
+            [Xt] = gui.i_transformx(sce.X);
+            n = length(glist);
+            thisyv=cell(n,1);
+            for k=1:n
+                thisyv{k} = full(Xt(upper(sce.g) == upper(glist(k)), :));
+            end             
+            ylabelv = glist;
+
         case 'Cell State'
             [thisyv, ylabelv] = gui.i_selectnstates(sce, true);
             a = false(length(thisyv), 1);
@@ -38,9 +45,11 @@ function callback_Violinplot(src, ~)
                     ylabelv = ylabelv(a);
                     waitfor(helpdlg('Only continuous variables of cell state will be shown.',''));
                 end
-                gui.i_violintabs(thisyv, ylabelv, thisc, FigureHandle);
+                
             else
                 waitfor(helpdlg('No valid cell state variables. Violinplot cannot be shown.',''));
             end
     end
+gui.i_violintabs(thisyv, ylabelv, thisc, FigureHandle);
+
 end
