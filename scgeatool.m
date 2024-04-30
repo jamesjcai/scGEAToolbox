@@ -172,7 +172,7 @@ in_addmenu(m_anno, 1, @in_SingleClickSolution, 'Single Click Solution (from Raw 
 m_tool = uimenu(FigureHandle, 'Text', '&Analyze');
 in_addmenu(m_tool, 0, @gui.callback_DEGene2Groups, 'Differential Expression (DE) Analysis...');
 in_addmenu(m_tool, 0, @gui.callback_DPGene2Groups, 'Differential Program (DP) Analysis...');
-in_addmenu(m_tool, 0, @gui.callback_DVGene2Groups, 'Differential Variability (DV) Analysis...');
+in_addmenu(m_tool, 0, @gui.callback_DVGene2Groups_new, 'Differential Variability (DV) Analysis...');
 in_addmenu(m_tool, 1, @gui.callback_DEGene2GroupsBatch, 'Differential Expression (DE) Analysis in Cell Type Batch Mode...');
 in_addmenu(m_tool, 0, @gui.callback_DPGene2GroupsBatch, 'Differential Program (DP) Analysis in Cell Type Batch Mode...');
 % in_addmenu(m_tool, 0, @gui.callback_DVGene2GroupsBatch, 'Differential Variability (DV) Analysis in Cell Type Batch Mode...');

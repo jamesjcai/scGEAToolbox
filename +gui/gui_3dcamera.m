@@ -36,14 +36,14 @@ pt.ClickedCallback = @camera3dmp4;
             fname = fullfile(a1, b1);
         end
         warning off
-
+    
         if flatview
             ax = [-20, 50; -110, 65; -190, 80; -290, 60; -380, 40];
         else
             ax = [-20, 10; -110, 10; -190, 80; -290, 10; -380, 10];
         end
         CaptureFigVid(ax, fname, OptionZ);
-
+    
         warning on
         pause(1);
         winopen(tempdir);
@@ -57,7 +57,7 @@ pt.ClickedCallback = @camera3dmp4;
                 winopen(vfile);
             end
         end
-end
+    end
 
 end
 
