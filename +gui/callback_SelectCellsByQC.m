@@ -14,7 +14,7 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
         'SC_QCFILTER (Enabling Whitelist Genes)', ...
         '------------------------------------------------', ...
         'Remove Genes by Expression', ...
-        'Remove Genes by Name', ...
+        'Remove Genes by Name or Naming Pattern', ...
         '------------------------------------------------', ...
         '(a) Remove Mt-Genes', ...
         '(b) Remove Hemoglobin Genes', ...
@@ -176,24 +176,28 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
                     gui.gui_waitbar(fw);
                 end
             end
-        case 'Remove Genes by Name' % remove selected genes
+        case 'Remove Genes by Name or Naming Pattern' % remove selected genes
             answer2 = questdlg('Select genes to be removed.','', ...
                 'Manually Select','Select by Patterns','Manually Select');
             switch answer2
                 case 'Select by Patterns'
                     prompt = {'Remove Genes With Name Contains ''orf'' or ''-AS'' (C22orf42, C21orf58, etc.)?', ...
-                        'Remove Genes With Name Starts With ''LINC'' (LINC01426, LINC01694, etc.)?'};
+                        'Remove Genes With Name Starts With ''LINC'' (LINC01426, LINC01694, etc.)?', ...
+                        'Remove Genes With Name Starts With ''Gm'' (Gm12768, Gm13305, etc.)?',...
+                        'Remove Genes With Name Ends With ''Rik'' (0610005C13Rik, 0610007C21Ri, etc.)?'};
                     dlgtitle = '';
                     dims = [1, 80];
-                    definput = {'Yes', 'Yes'};
+                    definput = {'Yes', 'Yes', 'Yes', 'Yes'};
                     answer3 = inputdlg(prompt, dlgtitle, dims, definput);
                     if isempty(answer3), return; end
                     c = 1;
                     if strcmpi(answer3{c},'Yes') || strcmpi(answer3{c},'Y')
                         a1 = length(sce.g);
                         idx = contains(sce.g, 'orf') | contains(sce.g, '-AS') | contains(sce.g, '-as');
-                        sce.g(idx) = [];
-                        sce.X(idx, :) = [];
+                        if any(idx)
+                            sce.g(idx) = [];
+                            sce.X(idx, :) = [];
+                        end
                         a2 = length(sce.g);
                         fprintf('%d genes with name contains ''orf'' or ''-AS'' are found and removed.\n',a1-a2);
                     end
@@ -202,10 +206,36 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
                     if strcmpi(answer3{c},'Yes') || strcmpi(answer3{c},'Y')
                         a1 = length(sce.g);
                         idx = startsWith(sce.g, 'LINC');
-                        sce.g(idx) = [];
-                        sce.X(idx, :) = [];
+                        if any(idx)
+                            sce.g(idx) = [];
+                            sce.X(idx, :) = [];
+                        end
                         a2 = length(sce.g);
                         fprintf('%d genes with name starts with ''LINC'' are found and removed.\n',a1-a2);
+                    end
+
+                    c = c + 1;
+                    if strcmpi(answer3{c},'Yes') || strcmpi(answer3{c},'Y')
+                        a1 = length(sce.g);
+                        idx = find(~cellfun(@isempty, regexp(sce.g,"Gm[0-9][0-9][0-9]")));
+                        if any(idx)
+                            sce.g(idx) = [];
+                            sce.X(idx, :) = [];
+                        end
+                        a2 = length(sce.g);
+                        fprintf('%d genes with name starts with ''Gm'' are found and removed.\n',a1-a2);
+                    end
+
+                    c = c + 1;
+                    if strcmpi(answer3{c},'Yes') || strcmpi(answer3{c},'Y')
+                        a1 = length(sce.g);
+                        idx = endsWith(sce.g, 'Rik');
+                        if any(idx)
+                            sce.g(idx) = [];
+                            sce.X(idx, :) = [];
+                        end
+                        a2 = length(sce.g);
+                        fprintf('%d genes with name ends with ''Rik'' are found and removed.\n',a1-a2);
                     end
 
                 case 'Manually Select'
