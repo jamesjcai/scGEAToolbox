@@ -6,8 +6,8 @@
     <param.company>Texas A&amp;M University</param.company>
     <param.summary>Single-cell Gene Expression Analysis Toolbox</param.summary>
     <param.description>scRNAseq data analysis toolbox</param.description>
-    <param.screenshot>${PROJECT_ROOT}\resources\scgeatool.png</param.screenshot>
-    <param.version>24.4.3</param.version>
+    <param.screenshot>C:\Users\jcai\Desktop\Screenshot 2024-04-30 105651.png</param.screenshot>
+    <param.version>24.4.4</param.version>
     <param.output>${PROJECT_ROOT}\scGEAToolbox.mltbx</param.output>
     <param.products.name>
       <item>Statistics and Machine Learning Toolbox</item>
@@ -149,6 +149,7 @@ TIMESTAMP</param.exclude.filters>
       <file>${PROJECT_ROOT}\sc_dpg.m</file>
       <file>${PROJECT_ROOT}\sc_filterc.m</file>
       <file>${PROJECT_ROOT}\sc_filterg.m</file>
+      <file>${PROJECT_ROOT}\sc_fullembed.m</file>
       <file>${PROJECT_ROOT}\sc_genestat.m</file>
       <file>${PROJECT_ROOT}\sc_genestats.m</file>
       <file>${PROJECT_ROOT}\sc_grn.m</file>
@@ -190,7 +191,6 @@ TIMESTAMP</param.exclude.filters>
       <file>${PROJECT_ROOT}\sc_sce2h5ad.m</file>
       <file>${PROJECT_ROOT}\sc_sce2hdf5.m</file>
       <file>${PROJECT_ROOT}\sc_sce2rds.m</file>
-      <file>${PROJECT_ROOT}\sc_scefullembed.m</file>
       <file>${PROJECT_ROOT}\sc_selectc.m</file>
       <file>${PROJECT_ROOT}\sc_selectg.m</file>
       <file>${PROJECT_ROOT}\sc_simudata.m</file>
