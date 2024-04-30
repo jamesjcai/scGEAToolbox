@@ -86,7 +86,7 @@ gui.i_movegui2parent(hFig, parentfig);
 % drawnow;
 gui.gui_waitbar(fw);
 hFig.Visible=true;
-
+ccx = true;
 
     function i_showbarplot(~,~)
         [~,idx]=ismember(focalg, tabnamelist); 
@@ -98,14 +98,16 @@ hFig.Visible=true;
         delete(ax0{idx});
         ax0{idx} = axes('parent',tab{idx});
         
-        if rand>0.5
-            bar(grpstats(y{idx},thisc,@mean),'w');
+        if ccx
+            bar(grpstats(y{idx},thisc,@mean),'w');            
         else
             bar(grpstats(y{idx},thisc,@mean));
         end
+        ccx = ~ccx;
         hold on
+        
         errorbar(grpstats(y{idx},thisc,@mean), ...
-            grpstats(y{idx},thisc,@std), 'k','linestyle','none')
+             grpstats(y{idx},thisc,@std), 'k','linestyle','none');
         set(ax0{idx},'xticklabel',cLx);
         
         title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));  
