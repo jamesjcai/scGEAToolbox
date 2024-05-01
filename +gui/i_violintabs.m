@@ -107,7 +107,9 @@ ccx = true;
         hold on
         
         errorbar(grpstats(y{idx},thisc,@mean), ...
-             grpstats(y{idx},thisc,@std), 'k','linestyle','none');
+             grpstats(y{idx},thisc,@std)./sqrt(grpstats(y{idx},thisc,@numel)), ...
+             'k','linestyle','none');
+        disp('Error bar shows the standard error of the mean (SEM), i.e., the standard deviation and dividing it by the square root of the sample size')
         set(ax0{idx},'xticklabel',cLx);
         
         title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));  
