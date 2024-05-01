@@ -210,7 +210,7 @@ x1 = X1(idx,:);
 sh1 = plot(hAx1, 1:length(x1), x1, 'Color',lcolor1);
 xlim(hAx1,[1 size(X1,2)]);
 
-title(hAx1, sprintf('%s (%s)',g(idx), cL1{1}));
+title(hAx1, strrep(sprintf('%s (%s)',g(idx), cL1{1}),'_','\_') );
 [titxt] = gui.i_getsubtitle(x1);
 subtitle(hAx1, titxt);
 xlabel(hAx1,'Cell Index');
@@ -222,7 +222,7 @@ x2 = X2(idx,:);
 sh2 = plot(hAx2, 1:length(x2), x2, 'Color',lcolor2);
 xlim(hAx2,[1 size(X2,2)]);
 
-title(hAx2, sprintf('%s (%s)',g(idx), cL2{1}));
+title(hAx2, strrep(sprintf('%s (%s)',g(idx), cL2{1}),'_','\_'));
 [titxt] = gui.i_getsubtitle(x1);
 subtitle(hAx2, titxt);
 xlabel(hAx2,'Cell Index');
@@ -281,9 +281,7 @@ hFig.Visible=true;
             if ~isempty(sh1) && isvalid(sh1), delete(sh1); end
             sh1 = plot(hAx1, 1:length(x1), x1, 'Color',lcolor1);
             xlim(hAx1,[1 size(X1,2)]);
-            % title(hAx1, g(idx));  
-            title(hAx1, sprintf('%s (%s)',g(idx), cL1{1}));
-  
+            title(hAx1, strrep(sprintf('%s (%s)',g(idx), cL1{1}),'_','\_') );
             [titxt] = gui.i_getsubtitle(x1);
             subtitle(hAx1, titxt);
             xlabel(hAx1,'Cell Index');
@@ -293,8 +291,7 @@ hFig.Visible=true;
             if ~isempty(sh2) && isvalid(sh2), delete(sh2); end
             sh1 = plot(hAx2, 1:length(x2), x2, 'Color',lcolor2);
             xlim(hAx2,[1 size(X2,2)]);
-            %title(hAx2, g(idx));
-            title(hAx2, sprintf('%s (%s)',g(idx), cL2{1}));
+            title(hAx2, strrep(sprintf('%s (%s)',g(idx), cL2{1}),'_','\_'));
             [titxt] = gui.i_getsubtitle(x2);
             subtitle(hAx2, titxt);
             xlabel(hAx2,'Cell Index');
@@ -310,8 +307,8 @@ hFig.Visible=true;
     end
 
     function in_HighlightSelectedGenes(~, ~, typeid)
-        if nargin < 3, typeid = 1; end
-        %h.MarkerIndices=idx20;
+       if nargin < 3, typeid = 1; end
+       %h.MarkerIndices=idx20;
        dtp = findobj(h1, 'Type', 'datatip');
        if ~isempty(dtp), delete(dtp); end
        dtp = findobj(h2, 'Type', 'datatip');
@@ -343,10 +340,10 @@ hFig.Visible=true;
         h2.BrushData = idx;
         dt1 = datatip(h1, 'DataIndex', idx);
         dt2 = datatip(h2, 'DataIndex', idx);
-        %dt1.FaceColor = [1 0 0];
-         if ~isempty(h3), delete(h3); end
-         if ~isempty(h4), delete(h4); end
-         if ~isempty(h5), delete(h5); end
+
+        if ~isempty(h3), delete(h3); end
+        if ~isempty(h4), delete(h4); end
+        if ~isempty(h5), delete(h5); end
          
          % h3 = plot3(hAx0, [px1(idx) px2(idx)], ...
          %     [py1(idx), py2(idx)], ...
