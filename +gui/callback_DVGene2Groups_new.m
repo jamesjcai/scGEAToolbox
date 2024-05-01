@@ -150,6 +150,8 @@ end
     T = T(idxx,:);
     % Done removing ends
 
+
+    
     gui.gui_waitbar(fw);
 
     outfile = sprintf('%s_vs_%s', ...
@@ -184,7 +186,6 @@ gui.gui_3dcamera(tb, 'DV_Results');
 pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
 
 
-idx = find(g==table2array(T(1,1)));
 
 hAx0 = subplot(2,2,[1 3]);
 h1 = scatter3(hAx0, px1, py1, pz1, 'filled', 'MarkerFaceAlpha', .1);
@@ -203,6 +204,9 @@ if ~isempty(g)
     datacursormode(hFig, 'on');
     dt.UpdateFcn = {@in_myupdatefcn3, g};
 end
+
+
+idx = find(g==table2array(T(1,1)));
 
 
 hAx1 = subplot(2,2,2);
