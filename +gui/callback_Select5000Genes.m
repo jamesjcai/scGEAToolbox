@@ -20,13 +20,15 @@ prompt = {'Remove Mt-Genes (MT-ND1, MT-ND6, MT-CYB, MT-COI, MT-ATP6, etc.)?', ..
     'Remove Genes With Name Contains ''orf'' or ''-AS'' (C22orf42, C21orf58, etc.)?', ...
     'Remove Genes With Name Starts With ''LINC'' (LINC01426, LINC01694, etc.)?', ...
     'Remove Ribosomal Genes (RPSA, RPS2, RPS3, RPL3, RPL4, RPLP1, etc.)?', ...
+    'Remove Genes With Name Starts With ''Gm'' (Gm12768, Gm13305, etc.)?',...
+    'Remove Genes With Name Ends With ''Rik'' (0610005C13Rik, 0610007C21Ri, etc.)?',...
     'Remove Genes Without Approved Symbols?', ...
     'Remove Genes Expressed in Less Than m Cells (m = 0.075 or 0.050, 10 or 50)?', ...
     'Keep Top n Highly Variable Genes (HVGs) (n = 5000 or 2000)?'};
 dlgtitle = '';
 dims = [1, 80];
 
-definput = {'Yes', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes', '0.075', num2str(min([sce.NumGenes,5000]))};
+definput = {'Yes', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes', '0.075', num2str(min([sce.NumGenes,5000]))};
 answer = inputdlg(prompt, dlgtitle, dims, definput);
 if isempty(answer)
     requirerefresh = false;
@@ -75,6 +77,27 @@ if strcmpi(answer{c},'Yes') || strcmpi(answer{c},'Y')
     scenew = scenew.rmribosomalgenes;
     disp('Ribosomal genes removed.');
     % requirerefresh = true;
+end
+
+c = c + 1;
+if strcmpi(answer{c},'Yes') || strcmpi(answer{c},'Y')
+    a1 = length(scenew.g);
+    idx = find(~cellfun(@isempty, regexp(scenew.g,"Gm[0-9][0-9][0-9]")));
+    scenew.g(idx) = [];
+    scenew.X(idx, :) = [];
+    a2 = length(scenew.g);
+    fprintf('%d genes with name starts with ''Gm'' are found and removed.\n',a1-a2);
+end
+
+
+c = c + 1;
+if strcmpi(answer{c},'Yes') || strcmpi(answer{c},'Y')
+    a1 = length(scenew.g);
+    idx = endsWith(scenew.g, 'Rik');
+    scenew.g(idx) = [];
+    scenew.X(idx, :) = [];
+    a2 = length(scenew.g);
+    fprintf('%d genes with name ends with ''Rik'' are found and removed.\n',a1-a2);
 end
 
 c = c + 1;
