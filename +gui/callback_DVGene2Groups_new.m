@@ -103,8 +103,8 @@ end
         X2_ori = sce2.X;
     end
     
-    %X1 = sc_norm(X1,'type','libsize');
-    %X2 = sc_norm(X2,'type','libsize');
+    X1_ori = sc_norm(X1_ori,'type','libsize');
+    X2_ori = sc_norm(X2_ori,'type','libsize');
 
     [T1, X1, g1, xyz1] = sc_splinefit(X1_ori, g_ori, true, false);
     [T1, idx1] = sortrows(T1,'genes','ascend');
@@ -368,7 +368,7 @@ hFig.Visible=true;
     end
 
     function EnrichrHVGs(~, ~)
-        k = gui.i_inputnumk(150, 1, 2000, 'Select top n genes');
+        k = gui.i_inputnumk(200, 1, 2000, 'Select top n genes');
         if ~isempty(k)
             gsorted = T.(T.Properties.VariableNames{1});
             gselected = gsorted(1:k);
