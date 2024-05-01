@@ -58,8 +58,9 @@ tabgp.SelectionChangedFcn=@displaySelection;
 tb = uitoolbar(hFig);
 pkg.i_addbutton2fig(tb, 'off',  @i_genecards, 'fvtool_fdalinkbutton.gif', 'GeneCards...');
 % pkg.i_addbutton2fig(tb, 'on', {@i_PickColorMap, c}, 'plotpicker-compass.gif', 'Pick new color map...');
+pkg.i_addbutton2fig(tb, 'off', @i_showbarplot, "plotpicker-priceandvol.gif", 'Switch to Bar Plot');
 
-pkg.i_addbutton2fig(tb, 'off', @in_savedata, 'export.gif', 'Export data...');
+pkg.i_addbutton2fig(tb, 'on', @in_savedata, 'export.gif', 'Export data...');
 pkg.i_addbutton2fig(tb, 'off', @in_testdata, 'icon-fa-stack-exchange-10.gif', 'ANOVA/T-test...');
 pkg.i_addbutton2fig(tb, 'off', @i_addsamplesize, "icon-mat-blur-linear-10.gif", 'Add Sample Size');
 pkg.i_addbutton2fig(tb, 'off', @i_savemainfig, "powerpoint.gif", 'Save Figure to PowerPoint File...');
@@ -73,7 +74,6 @@ pkg.i_addbutton2fig(tb, 'off', @gui.i_renametitle, "icon-mat-touch-app-10.gif", 
 %pkg.i_addbutton2fig(tb, 'on', @i_viewgenenames, 'HDF_point.gif', 'Show Gene Names');
 pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
 
-pkg.i_addbutton2fig(tb, 'off', @i_showbarplot, "plotpicker-errorbarx.gif", 'Show barplot');
 
 % if isempty(px_new)
 %     movegui(hFig,'center');
@@ -119,12 +119,11 @@ ccx = true;
     function i_updatebarplot(idx)
         if nargin<1, idx=[]; end
         [~, cLx] = grp2idx(thisc);
-        ccx = ~ccx;
         for ks = 1:n
             if ks~=idx
                 delete(ax0{ks});
                 ax0{ks} = axes('parent',tab{ks});
-                if ccx
+                if ~ccx
                     bar(ax0{ks}, grpstats(y{ks},thisc,@mean),'w');            
                 else
                     bar(ax0{ks}, grpstats(y{ks},thisc,@mean));
@@ -237,12 +236,12 @@ ccx = true;
 
     function i_addsamplesize(~, ~)
         [~,idx]=ismember(focalg, tabnamelist);
-        b = ax0{idx};        
+        b = ax0{idx};
         b.FontName='Palatino';
         if isequal(cLorder, b.XTickLabel)
             a = zeros(length(cLorder), 1);            
             for kx = 1:length(cLorder)
-                a(kx) = sum(thisc == cLorder(k));
+                a(kx) = sum(thisc == cLorder(kx));
                 cb=pad([string(b.XTickLabel{kx}); sprintf("(n=%d)",a(kx))],'both');
                 b.XTickLabel{kx} = sprintf('%s\\newline%s', cb(:));            
             end
