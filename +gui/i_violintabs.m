@@ -89,7 +89,7 @@ hFig.Visible=true;
 ccx = true;
 
     function i_showbarplot(~,~)
-        [~,idx]=ismember(focalg, tabnamelist); 
+        [~, idx]=ismember(focalg, tabnamelist); 
         [cx, cLx] = grp2idx(thisc);
         a = zeros(max(cx), 1);
         for ks = 1:max(cx)
@@ -111,7 +111,31 @@ ccx = true;
         set(ax0{idx},'xticklabel',cLx);
         
         title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));  
-        
+        answer = questdlg('Apply to other tabs?','');
+        if ~strcmp(answer,'Yes'), return; end
+        i_updatebarplot(idx);        
+    end
+
+    function i_updatebarplot(idx)
+        if nargin<1, idx=[]; end
+        [~, cLx] = grp2idx(thisc);
+        ccx = ~ccx;
+        for ks = 1:n
+            if ks~=idx
+                delete(ax0{ks});
+                ax0{ks} = axes('parent',tab{ks});
+                if ccx
+                    bar(ax0{ks}, grpstats(y{ks},thisc,@mean),'w');            
+                else
+                    bar(ax0{ks}, grpstats(y{ks},thisc,@mean));
+                end
+                hold on        
+                errorbar(grpstats(y{ks}, thisc, @mean), ...
+                     grpstats(y{ks}, thisc, @std), 'k','linestyle','none');
+                set(ax0{ks},'xticklabel',cLx);
+                title(ax0{ks}, strrep(tabnamelist(ks), '_', '\_'));  
+            end
+        end    
     end
 
     function i_savemainfigx(~,~)
@@ -186,7 +210,7 @@ ccx = true;
         tabgp.SelectedTab=tab{idx};
         drawnow;
         if length(tab)==1, return; end
-        answer = questdlg('Apply to other genes?','');
+        answer = questdlg('Apply to other tabs?','');
         if ~strcmp(answer,'Yes'), return; end
         i_updatealltab(idx);
     end
@@ -207,7 +231,7 @@ ccx = true;
                 else
                     b.XTickLabel = cLorder;
                 end
-            end            
+            end
         end
     end
 
@@ -225,7 +249,7 @@ ccx = true;
         else
             b.XTickLabel = cLorder;                
         end
-        answer = questdlg('Apply to other genes?','');
+        answer = questdlg('Apply to other tabs?','');
         if ~strcmp(answer,'Yes'), return; end
         i_updatesamplesizelabel(idx);
     end
@@ -261,7 +285,7 @@ ccx = true;
         pkg.i_violinplot(y{idx}, thisc, colorit, cLorderx);
         title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));  
 
-        answer = questdlg('Apply to other genes?','');
+        answer = questdlg('Apply to other tabs?','');
         if ~strcmp(answer,'Yes'), return; end
         cLorder = cLorderx;
         i_updatealltab(idx);
@@ -281,7 +305,7 @@ ccx = true;
         thisc_picked = thisc(picked);
         pkg.i_violinplot(y_picked, thisc_picked, colorit, cLorderx);
         title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));
-        answer = questdlg('Apply to other genes?','');
+        answer = questdlg('Apply to other tabs?','');
         if ~strcmp(answer,'Yes'), return; end
 
         for ks=1:n

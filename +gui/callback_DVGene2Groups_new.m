@@ -151,7 +151,7 @@ end
     % Done removing ends
 
 
-    
+
     gui.gui_waitbar(fw);
 
     outfile = sprintf('%s_vs_%s', ...
@@ -186,7 +186,6 @@ gui.gui_3dcamera(tb, 'DV_Results');
 pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
 
 
-
 hAx0 = subplot(2,2,[1 3]);
 h1 = scatter3(hAx0, px1, py1, pz1, 'filled', 'MarkerFaceAlpha', .1);
 hold on
@@ -214,31 +213,32 @@ x1 = X1(idx,:);
 sh1 = plot(hAx1, 1:length(x1), x1, 'Color',lcolor1);
 xlim(hAx1,[1 size(X1,2)]);
 
-title(hAx1, strrep(sprintf('%s (%s)',g(idx), cL1{1}),'_','\_') );
-[titxt] = gui.i_getsubtitle(x1);
+title(hAx1, strrep(sprintf('%s',g(idx)),'_','\_') );
+[titxt] = gui.i_getsubtitle(x1, cL1{1});
 subtitle(hAx1, titxt);
 xlabel(hAx1,'Cell Index');
 ylabel(hAx1,'Expression Level');
-
 
 hAx2 = subplot(2,2,4);
 x2 = X2(idx,:);
 sh2 = plot(hAx2, 1:length(x2), x2, 'Color',lcolor2);
 xlim(hAx2,[1 size(X2,2)]);
 
-title(hAx2, strrep(sprintf('%s (%s)',g(idx), cL2{1}),'_','\_'));
-[titxt] = gui.i_getsubtitle(x1);
+title(hAx2, strrep(sprintf('%s',g(idx)),'_','\_'));
+[titxt] = gui.i_getsubtitle(x2, cL2{1});
 subtitle(hAx2, titxt);
 xlabel(hAx2,'Cell Index');
 ylabel(hAx2,'Expression Level');
 h3 = []; h4=[]; h5=[];
-h3a = [];
-h3b = [];
+h3a = []; h3b = [];
 yl = cell2mat(get([hAx1, hAx2], 'Ylim'));
 ylnew = [min(yl(:, 1)), max(yl(:, 2))];
 set([hAx1, hAx2], 'Ylim', ylnew);
 
 hFig.Visible=true;
+
+
+
 
    function ExportTable(~, ~)                
        % gui.i_exporttable(T, true, 'Tsplinefitg', 'SplinefitGTable');
@@ -249,12 +249,9 @@ hFig.Visible=true;
         % end        
     end
 
-
     function txt = in_myupdatefcn3(src, event_obj, g)
         if isequal(get(src, 'Parent'), hAx0)
-
             subplot(hAx0);
-
             % dtp = findobj(h1, 'Type', 'datatip');
             % if ~isempty(dtp), delete(dtp); end
             % dtp = findobj(h2, 'Type', 'datatip');
@@ -285,8 +282,8 @@ hFig.Visible=true;
             if ~isempty(sh1) && isvalid(sh1), delete(sh1); end
             sh1 = plot(hAx1, 1:length(x1), x1, 'Color',lcolor1);
             xlim(hAx1,[1 size(X1,2)]);
-            title(hAx1, strrep(sprintf('%s (%s)',g(idx), cL1{1}),'_','\_') );
-            [titxt] = gui.i_getsubtitle(x1);
+            title(hAx1, strrep(sprintf('%s',g(idx)),'_','\_') );
+            [titxt] = gui.i_getsubtitle(x1, cL1{1});
             subtitle(hAx1, titxt);
             xlabel(hAx1,'Cell Index');
             ylabel(hAx1,'Expression Level');
@@ -295,8 +292,8 @@ hFig.Visible=true;
             if ~isempty(sh2) && isvalid(sh2), delete(sh2); end
             sh1 = plot(hAx2, 1:length(x2), x2, 'Color',lcolor2);
             xlim(hAx2,[1 size(X2,2)]);
-            title(hAx2, strrep(sprintf('%s (%s)',g(idx), cL2{1}),'_','\_'));
-            [titxt] = gui.i_getsubtitle(x2);
+            title(hAx2, strrep(sprintf('%s',g(idx)),'_','\_'));
+            [titxt] = gui.i_getsubtitle(x2, cL2{1});
             subtitle(hAx2, titxt);
             xlabel(hAx2,'Cell Index');
             ylabel(hAx2,'Expression Level');
@@ -304,7 +301,6 @@ hFig.Visible=true;
             yl = cell2mat(get([hAx1, hAx2], 'Ylim'));
             ylnew = [min(yl(:, 1)), max(yl(:, 2))];
             set([hAx1, hAx2], 'Ylim', ylnew);
-            
         else
             txt = num2str(event_obj.Position(2));
         end
@@ -312,7 +308,6 @@ hFig.Visible=true;
 
     function in_HighlightSelectedGenes(~, ~, typeid)
        if nargin < 3, typeid = 1; end
-       %h.MarkerIndices=idx20;
        dtp = findobj(h1, 'Type', 'datatip');
        if ~isempty(dtp), delete(dtp); end
        dtp = findobj(h2, 'Type', 'datatip');
