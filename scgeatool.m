@@ -278,6 +278,9 @@ pt.Tooltip = 'Insert Colorbar';
 pt.ClickedCallback = @in_addcolorbar;
 pt.Tag = "figToglColorbar";
 
+
+
+
 in_addbuttontoggle(1, 0, {@in_togglebtfun, @in_turnoffuserguiding, "icon-mat-unfold-more-10.gif", "icon-mat-unfold-less-10.gif", false, "Turn on/off user onboarding toolbar"});
 in_addbuttonpush(1, 0, @gui.callback_ShowGeneExpr, "list.gif", "Select genes to show expression")
 in_addbuttonpush(1, 0, @in_ShowCellStates, "list2.gif", "Show cell state")
@@ -305,6 +308,7 @@ in_addbuttonpush(1, 0, @in_Switch2D3D, "plotpicker-image.gif", "Switch 2D/3D");
 in_addbuttonpush(1, 1, @gui.callback_CloseAllOthers, "icon-fa-cut-10.gif", "Close all other figures");
 in_addbuttonpush(1, 0, @gui.callback_PickPlotMarker, "plotpicker-rose.gif", "Switch scatter plot marker type");
 in_addbuttonpush(1, 0, @gui.callback_PickColorMap, "plotpicker-compass.gif", "Pick new color map");
+in_addbuttonpush(1, 0, {@gui.i_resizewin, FigureHandle}, 'HDF_pointx.gif', 'Resize Plot Window')
 in_addbuttonpush(1, 0, @in_RefreshAll, "icon-mat-refresh-20.gif", "Refresh");
 
 if ~isempty(fx) && isvalid(fx), fxfun(fx, 0.6); end
