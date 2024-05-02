@@ -229,7 +229,7 @@ title(hAx2, strrep(sprintf('%s',g(idx)),'_','\_'));
 subtitle(hAx2, titxt);
 xlabel(hAx2,'Cell Index');
 ylabel(hAx2,'Expression Level');
-h3 = []; h4=[]; h5=[];
+h3 = []; h4 = []; h5 = [];
 h3a = []; h3b = [];
 yl = cell2mat(get([hAx1, hAx2], 'Ylim'));
 ylnew = [min(yl(:, 1)), max(yl(:, 2))];
@@ -268,9 +268,13 @@ hFig.Visible=true;
             if ~isempty(h3), delete(h3); end
             if ~isempty(h3a), delete(h3a); end
             if ~isempty(h3b), delete(h3b); end
+            if ~isempty(h4), delete(h4); end
+            if ~isempty(h5), delete(h5); end
+
                 h3 = plot3(hAx0, [px1(idx) px2(idx)], ...
                     [py1(idx), py2(idx)], ...
                     [pz1(idx), pz2(idx)],'k-','LineWidth',1);
+
                 h3a = plot3(hAx0, px1(idx), py1(idx), pz1(idx), 'b.','MarkerSize',10);
                 h3b = plot3(hAx0, px2(idx), py2(idx), pz2(idx), 'r.','MarkerSize',10);
                 % daspect(hAx0,'auto');
@@ -313,8 +317,6 @@ hFig.Visible=true;
        dtp = findobj(h2, 'Type', 'datatip');
        if ~isempty(dtp), delete(dtp); end
        if ~isempty(h3), delete(h3); end
-       if ~isempty(h4), delete(h4); end
-       if ~isempty(h5), delete(h5); end
        if ~isempty(h3a), delete(h3a); end
        if ~isempty(h3b), delete(h3b); end
        
