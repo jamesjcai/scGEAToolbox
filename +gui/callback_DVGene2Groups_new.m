@@ -132,25 +132,28 @@ end
     v2=([px2 py2 pz2] - xyz2(T2.nearidx,:));
 
     DiffDist = vecnorm(v1 - v2, 2, 2);
+    DiffSign = sign(vecnorm(v2,2,2)-vecnorm(v1,2,2));
 
     T1.Properties.VariableNames = append(T1.Properties.VariableNames, sprintf('_%s', cL1{1}));
     T2.Properties.VariableNames = append(T2.Properties.VariableNames, sprintf('_%s', cL2{1}));
     
-    T = [T1 T2 table(DiffDist)];    
-    T = sortrows(T,"DiffDist","descend");
+    T = [T1 T2 table(DiffDist) table(DiffSign)];
+    
     
     % a few lines to get rid of the outliers for DV:    % Removing ends
-    tt1 = table2array(T(:,8));
-    nlast = max(tt1);
-    idxx = and( tt1 > 1, tt1 < nlast);
-    T = T(idxx,:);
-    tt1 = table2array(T(:,16));
-    nlast = max(tt1);
-    idxx = and( tt1 > 1, tt1 < nlast);
-    T = T(idxx,:);
-    % Done removing ends
-
-
+    % tt1 = table2array(T(:,8));
+    % nlast = max(tt1);
+    % idxx = and( tt1 > 1, tt1 < nlast);
+    % % T = T(idxx,:);
+    % T.DiffDist(~idxx)=0;
+    % tt1 = table2array(T(:,16));
+    % nlast = max(tt1);
+    % idxx = and( tt1 > 1, tt1 < nlast);
+    % % T = T(idxx,:);    
+    
+    idxx = T.(8)==1 | T.(16)==1 | T.(8) == max(T.(8)) | T.(16) == max(T.(16));
+    T.DiffDist(idxx) = 0;
+    T = sortrows(T,"DiffDist","descend");
 
     gui.gui_waitbar(fw);
 
@@ -265,11 +268,13 @@ hFig.Visible=true;
                 idx = idx - length(g);
             end
             
-            if ~isempty(h3), delete(h3); end
-            if ~isempty(h3a), delete(h3a); end
-            if ~isempty(h3b), delete(h3b); end
-            if ~isempty(h4), delete(h4); end
-            if ~isempty(h5), delete(h5); end
+            x_cleanfigspace(false);
+
+            % if ~isempty(h3), delete(h3); end
+            % if ~isempty(h3a), delete(h3a); end
+            % if ~isempty(h3b), delete(h3b); end
+            % if ~isempty(h4), delete(h4); end
+            % if ~isempty(h5), delete(h5); end
 
                 h3 = plot3(hAx0, [px1(idx) px2(idx)], ...
                     [py1(idx), py2(idx)], ...
@@ -310,15 +315,36 @@ hFig.Visible=true;
         end
     end
 
-    function in_HighlightSelectedGenes(~, ~, typeid)
-       if nargin < 3, typeid = 1; end
-       dtp = findobj(h1, 'Type', 'datatip');
-       if ~isempty(dtp), delete(dtp); end
-       dtp = findobj(h2, 'Type', 'datatip');
-       if ~isempty(dtp), delete(dtp); end
+    function x_cleanfigspace(deldatatip)
+        if nargin<1, deldatatip = false; end
+        if deldatatip
+           dtp = findobj(h1, 'Type', 'datatip');
+           if ~isempty(dtp), delete(dtp); end
+           dtp = findobj(h2, 'Type', 'datatip');
+           if ~isempty(dtp), delete(dtp); end
+        end
+        
        if ~isempty(h3), delete(h3); end
        if ~isempty(h3a), delete(h3a); end
        if ~isempty(h3b), delete(h3b); end
+       if ~isempty(h4), delete(h4); end
+       if ~isempty(h5), delete(h5); end
+    end
+
+    function in_HighlightSelectedGenes(~, ~, typeid)
+       if nargin < 3, typeid = 1; end
+
+       x_cleanfigspace(true);
+
+       % dtp = findobj(h1, 'Type', 'datatip');
+       % if ~isempty(dtp), delete(dtp); end
+       % dtp = findobj(h2, 'Type', 'datatip');
+       % if ~isempty(dtp), delete(dtp); end
+       % if ~isempty(h3), delete(h3); end
+       % if ~isempty(h3a), delete(h3a); end
+       % if ~isempty(h3b), delete(h3b); end
+       % if ~isempty(h4), delete(h4); end
+       % if ~isempty(h5), delete(h5); end
        
        switch typeid
            case 1
@@ -341,10 +367,11 @@ hFig.Visible=true;
         h2.BrushData = idx;
         dt1 = datatip(h1, 'DataIndex', idx);
         dt2 = datatip(h2, 'DataIndex', idx);
-
-        if ~isempty(h3), delete(h3); end
-        if ~isempty(h4), delete(h4); end
-        if ~isempty(h5), delete(h5); end
+        
+        x_cleanfigspace(false);
+        %if ~isempty(h3), delete(h3); end
+        %if ~isempty(h4), delete(h4); end
+        %if ~isempty(h5), delete(h5); end
          
          % h3 = plot3(hAx0, [px1(idx) px2(idx)], ...
          %     [py1(idx), py2(idx)], ...
