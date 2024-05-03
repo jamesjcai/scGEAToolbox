@@ -5,7 +5,6 @@ if nargin < 4 || isempty(csname), csname = "CellScore"; end
 
 hFig = figure('Visible', false);
 
-
 gui.i_heatscatter(sce.s, cs);
 
 colorbar;

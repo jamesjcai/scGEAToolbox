@@ -60,8 +60,10 @@ pkg.i_addbutton2fig(tb, 'off',  @i_genecards, 'fvtool_fdalinkbutton.gif', 'GeneC
 % pkg.i_addbutton2fig(tb, 'on', {@i_PickColorMap, c}, 'plotpicker-compass.gif', 'Pick new color map...');
 pkg.i_addbutton2fig(tb, 'off', @i_showbarplot, "plotpicker-priceandvol.gif", 'Switch to Bar Plot');
 
-pkg.i_addbutton2fig(tb, 'on', @in_savedata, 'export.gif', 'Export data...');
-pkg.i_addbutton2fig(tb, 'off', @in_testdata, 'icon-fa-stack-exchange-10.gif', 'ANOVA/T-test...');
+pkg.i_addbutton2fig(tb, 'on', @in_savedata, 'export.gif', 'Export summary data...');
+pkg.i_addbutton2fig(tb, 'off', @i_savedata_alltab, 'export.gif', 'Export individual cell data... (new format)');
+
+pkg.i_addbutton2fig(tb, 'on', @in_testdata, 'icon-fa-stack-exchange-10.gif', 'ANOVA/T-test...');
 pkg.i_addbutton2fig(tb, 'off', @i_addsamplesize, "icon-mat-blur-linear-10.gif", 'Add Sample Size');
 pkg.i_addbutton2fig(tb, 'off', @i_savemainfig, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 pkg.i_addbutton2fig(tb, 'off', @i_savemainfigx, "xpowerpoint.gif", 'Save Figure as Graphic File...');
@@ -418,23 +420,44 @@ ccx = true;
     %     end
     % end
 
-    % function i_savedata(~, ~)
-    %     [~,idx]=ismember(focalg, tabnamelist);
-    %     thisy = y{idx};
-    % 
-    %     T = table(thisy(:), thisc(:));
-    %     T.Properties.VariableNames = {'ScoreLevel', 'GroupID'};
-    %     %T=sortrows(T,'ScoreLevel','descend');
-    %     %T=sortrows(T,'GroupID');
-    %     gui.i_exporttable(T, true, 'Tviolindata','ViolinPlotTable');
-    % end
+     function i_savedata_thistab(~, ~)
+         [~,idx]=ismember(focalg, tabnamelist);
+         thisy = y{idx};
+         T = table(thisy(:), thisc(:));
+         T.Properties.VariableNames = {'ScoreLevel', 'GroupID'};
+         %T=sortrows(T,'ScoreLevel','descend');
+         %T=sortrows(T,'GroupID');
+         gui.i_exporttable(T, true, 'Tviolindata','ViolinPlotTable');
+     end
+
+
+     function i_savedata_alltab(~, ~)
+%         [~,idx]=ismember(focalg, tabnamelist);
+%         thisy = y{idx};
+     
+        T=table();
+        for tabidx=1:n
+            g = tabnamelist(tabidx);
+            thisy = y{tabidx};
+            t = table(thisy(:));
+            t.Properties.VariableNames = matlab.lang.makeValidName(tabnamelist(tabidx));
+            T = [T, t];
+        end
+         t = table(thisc(:));
+         t.Properties.VariableNames = {'GroupID'};
+         T = [t, T];
+         %T=sortrows(T,'ScoreLevel','descend');
+         %T=sortrows(T,'GroupID');
+         gui.i_exporttable(T, true, 'Tviolindata','ViolinPlotTable');
+     end
+ 
 
     function in_savedata(~, ~)
         [~, idxlabel]= grp2idx(thisc(:));
         T=table();
         for tabidx=1:n
             g = tabnamelist(tabidx);
-            thisy = y{tabidx};            
+            thisy = y{tabidx};
             a1=grpstats(thisy, thisc(:), @mean);
             a2=grpstats(thisy, thisc(:), @median);
             t = table(a1, a2);

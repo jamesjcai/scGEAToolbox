@@ -95,11 +95,11 @@ end
   
 tabgp.SelectionChangedFcn=@displaySelection;
 
-%tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
-%uipushtool(tb, 'Separator', 'off');
+tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
+uipushtool(tb, 'Separator', 'off');
 
 % b=allchild(tb0)
-tb = uitoolbar(hFig);
+% tb = uitoolbar(hFig);
 % copyobj(b(4),tb);
 % delete(tb0);
 

@@ -321,7 +321,14 @@ bb = 'No, just show values';
                 %         f=gui.i_cascadefig(sce,glist(k),axx,bxx,k,methodid);
                 %     [h1]=sc_scattermarker(sce.X,sce.g,...
                 %                  sce.s,g,methodid);
-                gui.i_heatscatterfig(sce, y, posg, ttxt, FigureHandle);
+                if iscell(y)
+                    for k=1:length(y)
+                        gui.i_heatscatterfig(sce, y{k}, posg, ttxt{k}, FigureHandle);
+                    end
+                else
+                    gui.i_heatscatterfig(sce, y, posg, ttxt, FigureHandle);
+                end
+
                 % answer = questdlg('Also show stem plot?', '');
                 % if answer == "Yes"
                 %     gui.i_stemscatterfig(sce, y, posg, ttxt);
