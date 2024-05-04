@@ -1,4 +1,4 @@
-function callback_CellCycleAssignment(src, ~, typeid)
+function callback_CellCyclePotency(src, ~, typeid)
 
     if nargin < 3, typeid = 1; end
 
