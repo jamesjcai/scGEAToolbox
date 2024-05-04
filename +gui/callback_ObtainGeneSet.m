@@ -75,7 +75,7 @@ switch selecteditem
         ttxt = ctselected;
 
     case 'TF Target Sets...'
-        [~, T] = pkg.e_tfactivityscores([], [], 0);
+        [T] = pkg.e_gettflist;
         listitems = unique(T.tf);
 
         [indx2, tf2] = listdlg('PromptString', 'Select a transcription factor (TF)', ...
