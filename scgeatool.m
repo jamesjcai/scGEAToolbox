@@ -166,20 +166,21 @@ in_addmenu(m_anno, 0, {@in_MergeCellSubtypes, 2}, 'Import Cell Annotation from S
 in_addmenu(m_anno, 1, @in_Brush4Celltypes, "Annotate Cell Types for Brushed Cells");
 in_addmenu(m_anno, 0, @gui.callback_Brush4Markers, "Find Marker Genes for Brushed Cells");
 in_addmenu(m_anno, 0, @gui.callback_FindAllMarkers, "Make Marker Gene Heatmap");
-in_addmenu(m_anno, 0, @gui.callback_CellCycleAssignment, 'Assign Cell Cycle Phase...');
+in_addmenu(m_anno, 1, {@gui.callback_CellCycleAssignment, 1}, 'Estimate Cell Cycle Phase...');
+in_addmenu(m_anno, 0, {@gui.callback_CellCycleAssignment, 2}, 'Estimate Differentiation Potency...');
 in_addmenu(m_anno, 1, @in_SingleClickSolution, 'Single Click Solution (from Raw Data to Annotation)...');
 
 m_tool = uimenu(FigureHandle, 'Text', '&Analyze');
-in_addmenu(m_tool, 0, @gui.callback_DEGene2Groups, 'Differential Expression (DE) Analysis...','D');
-in_addmenu(m_tool, 0, @gui.callback_DPGene2Groups, 'Differential Program (DP) Analysis...','P');
-in_addmenu(m_tool, 0, @gui.callback_DVGene2Groups_new, 'Differential Variability (DV) Analysis...','V');
-in_addmenu(m_tool, 1, @gui.callback_DEGene2GroupsBatch, 'Differential Expression (DE) Analysis in Cell Type Batch Mode...');
-in_addmenu(m_tool, 0, @gui.callback_DPGene2GroupsBatch, 'Differential Program (DP) Analysis in Cell Type Batch Mode...');
-% in_addmenu(m_tool, 0, @gui.callback_DVGene2GroupsBatch, 'Differential Variability (DV) Analysis in Cell Type Batch Mode...');
-in_addmenu(m_tool, 1, @gui.callback_CalculateGeneStats, 'Calculate Gene Expression Statistics...');
+in_addmenu(m_tool, 0, @gui.callback_CalculateGeneStats, 'Calculate Gene Expression Statistics...');
+in_addmenu(m_tool, 0, @in_EnrichrHVGs, 'HVG Functional Enrichment Analysis...');
 in_addmenu(m_tool, 1, @in_CompareCellScoreBtwCls, 'Cell Score Analysis...');
 in_addmenu(m_tool, 0, @gui.callback_GetCellSignatureMatrix, 'Cell State Analysis...');
-in_addmenu(m_tool, 1, @in_EnrichrHVGs, 'HVG Functional Enrichment Analysis...');
+in_addmenu(m_tool, 1, @gui.callback_DEGene2Groups, 'Differential Expression (DE) Analysis...','D');
+in_addmenu(m_tool, 0, @gui.callback_DPGene2Groups, 'Differential Program (DP) Analysis...','P');
+in_addmenu(m_tool, 0, @gui.callback_DVGene2Groups_new, 'Differential Variability (DV) Analysis...','V');
+in_addmenu(m_tool, 1, @gui.callback_DEGene2GroupsBatch, 'DE Analysis in Cell Type Batch Mode...');
+in_addmenu(m_tool, 0, @gui.callback_DPGene2GroupsBatch, 'DP Analysis in Cell Type Batch Mode...');
+% in_addmenu(m_tool, 0, @gui.callback_DVGene2GroupsBatch, 'Differential Variability (DV) Analysis in Cell Type Batch Mode...');
 
 
 m_ntwk = uimenu(FigureHandle, 'Text', '&Network');

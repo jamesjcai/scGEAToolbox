@@ -1,12 +1,25 @@
-function callback_CellCycleAssignment(src, ~)
+function callback_CellCycleAssignment(src, ~, typeid)
 
-    answer = questdlg('This function assigns cell cycle phase to each cell, continue?', '');
-        if ~strcmp(answer, 'Yes'), return; end
+if nargin < 3, typeid = 1; end
 
-        FigureHandle = src.Parent.Parent;
-        sce = guidata(FigureHandle);
+    FigureHandle = src.Parent.Parent;
+    sce = guidata(FigureHandle);
+    needestimate = false;
 
-        needestimate = false;
+
+    switch typeid
+        case 1
+            answer = questdlg('This function assigns cell cycle phase to each cell, continue?', '');
+        case 2
+            answer = questdlg('This function assigns differentiation potency [PMID:33244588] to each cell, continue?', '');
+    end
+    if ~strcmp(answer, 'Yes'), return; end
+
+
+
+switch typeid
+    case 1
+
         if isempty(sce.c_cell_cycle_tx) || all(strcmp(unique(sce.c_cell_cycle_tx), "undetermined"))
             needestimate = true;
         else
@@ -26,5 +39,22 @@ function callback_CellCycleAssignment(src, ~)
             guidata(FigureHandle, sce);
             helpdlg('Cell cycle phase (c_cell_cycle_tx) added.', '');
         end
+
+    case 2
+
+            [yes, idx]=ismember('cell_potency', sce.list_cell_attributes(1:2:end));
+            needestimate = ~yes;
+            if needestimate
+                [yes, speciesid] = ismember(lower(answer2), {'human', 'mouse'});
+                if ~yes, return; end
+                fw = gui.gui_waitbar;
+                sce = sce.estimatepotency(speciesid);
+                gui.gui_waitbar(fw);
+                guidata(FigureHandle, sce);
+                helpdlg('Cell differentiation potency added.', '');
+            else
+                helpdlg('Cell differentiation potency existing.', '');
+            end
+end
 
 end
