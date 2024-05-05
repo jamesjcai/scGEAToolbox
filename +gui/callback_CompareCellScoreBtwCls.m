@@ -8,7 +8,7 @@ aa = 'Yes, compare scores';
 bb = 'No, just show values';
     answer2 = questdlg(sprintf(['This function will calculates a score for each cell. After the scores are calculated, do you want to ', ...
                 'compare score values between different cell groups?']), '', ...
-                aa, bb, aa);
+                bb, aa, bb);
             switch answer2
                 case aa
                     showcomparision = true;
@@ -89,10 +89,10 @@ bb = 'No, just show values';
                 %     end
                 %     [y] = gui.e_cellscore(sce, posg);
                 case 'MSigDB Molecular Signatures'
-                    speciestag = gui.i_selectspecies(2, true);
-                    if isempty(speciestag), return; end
+                    % speciestag = gui.i_selectspecies(2, true);
+                    % if isempty(speciestag), return; end
                     try
-                        [posg, ctselected] = gui.i_selectMSigDBGeneSets(speciestag);
+                        [posg, ctselected] = gui.i_selectMSigDBGeneSets(speciesid);
                     catch ME
                         errordlg(ME.message);
                         return;

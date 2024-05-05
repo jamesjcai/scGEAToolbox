@@ -19,7 +19,7 @@ selitems={'MSigDB Molecular Signatures',...
         'ListSize', [220, 300]);
     if tf1~=1, return; end
     selecteditem = selitems{selectedindx};
-    if selectedindx == 2
+    if selectedindx ~= 4
         speciesid = gui.i_selectspecies(2);
     else
         speciesid = 'human';

@@ -153,7 +153,9 @@ in_addmenu(m_plot, 0, @gui.callback_Dotplot, 'Gene Dot Plot...');
 in_addmenu(m_plot, 0, @gui.callback_Heatmap, 'Gene Heatmap...');
 in_addmenu(m_plot, 1, @gui.callback_ShowGeneExprCompr,'Side-by-Side Gene Expression...');
 in_addmenu(m_plot, 0, @gui.callback_EnrichrTab2Circos,'Enrichr Result Table to Circos Plot...');
-in_addmenu(m_plot, 1, @in_DrawKNNNetwork, 'Cell kNN Network...');
+in_addmenu(m_plot, 1, @gui.callback_GetCellSignatureMatrix, 'Cell State Radar Plot...');
+
+in_addmenu(m_plot, 0, @in_DrawKNNNetwork, 'Cell kNN Network...');
 in_addmenu(m_plot, 0, @in_DrawTrajectory, 'Cell Trajectory...');
 in_addmenu(m_plot, 1, @gui.callback_PickPlotMarker,'Next Marker Type');
 in_addmenu(m_plot, 0 ,@gui.callback_PickColorMap,'Next Colormap');
@@ -171,10 +173,9 @@ in_addmenu(m_anno, 0, {@gui.callback_CellCyclePotency, 2}, 'Estimate Differentia
 in_addmenu(m_anno, 1, @in_SingleClickSolution, 'Single Click Solution (from Raw Data to Annotation)...');
 
 m_tool = uimenu(FigureHandle, 'Text', '&Analyze');
-in_addmenu(m_tool, 0, @gui.callback_CalculateGeneStats, 'Calculate Gene Expression Statistics...');
-in_addmenu(m_tool, 0, @in_EnrichrHVGs, 'HVG Functional Enrichment Analysis...');
-in_addmenu(m_tool, 1, @in_CompareCellScoreBtwCls, 'Cell Score Analysis...');
-in_addmenu(m_tool, 0, @gui.callback_GetCellSignatureMatrix, 'Cell State Analysis...');
+in_addmenu(m_tool, 0, @gui.callback_CalculateGeneStats, 'Gene Expression (Statistics) Analysis...');
+in_addmenu(m_tool, 0, @in_CompareCellScoreBtwCls, 'Gene Program (Cell Score) Analysis...');
+in_addmenu(m_tool, 0, @in_EnrichrHVGs, 'Gene Variability (HVG Function) Analysis...');
 in_addmenu(m_tool, 1, @gui.callback_DEGene2Groups, 'Differential Expression (DE) Analysis...','D');
 in_addmenu(m_tool, 0, @gui.callback_DPGene2Groups, 'Differential Program (DP) Analysis...','P');
 in_addmenu(m_tool, 0, @gui.callback_DVGene2Groups_new, 'Differential Variability (DV) Analysis...','V');
