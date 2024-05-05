@@ -36,8 +36,8 @@ pkg.i_addbutton2fig(tb, 'off', @gui.i_renametitle, "icon-mat-touch-app-10.gif", 
 pkg.i_addbutton2fig(tb, 'on', @i_viewgenenames, 'HDF_point.gif', 'Show Gene Names');
 pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
 
-i_addsamplesize([],[]);
-i_testdata([],[]);
+%i_addsamplesize([],[]);
+%i_testdata([],[]);
 if nargout > 0
     return;
 end

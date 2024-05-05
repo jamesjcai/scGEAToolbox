@@ -421,7 +421,7 @@ if ~showuseronboarding, set(UserToolbarHandle, 'Visible', 'off'); end
 
     function in_CompareCellScoreBtwCls(src, events)
         if gui.callback_CompareCellScoreBtwCls(src, events)
-            sce = guidata(FigureHandle);
+           sce = guidata(FigureHandle);
         end
     end
 

@@ -1,6 +1,7 @@
 function i_violintabs(y, tabnamelist, thisc, parentfig)
 %see also: gui.i_violinplot, gui.i_scattertabs
 
+if ~iscell(y), y = {y}; end
 if nargin<4, parentfig = []; end
 tabnamelist = string(tabnamelist);
 
@@ -12,7 +13,6 @@ isdescend = false;
 
 thisc = strrep(string(thisc), '_', '\_');
 colorit = true;
-
 
 import mlreportgen.ppt.*;
 pw1 = fileparts(mfilename('fullpath'));

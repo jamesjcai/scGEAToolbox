@@ -73,22 +73,22 @@ bb = 'No, just show values';
 
             % ------------------------------------------------
 
-            [selecteditem] = gui.i_selectcellscore;
+            [selecteditem, speciesid] = gui.i_selgenesetcollection;
             if isempty(selecteditem), return; end
             %try
 
             switch selecteditem
                     %case 'Global Coordination Level (GCL) [PMID:33139959]'
 
-                case 'Define a New Score...'
-                    ttxt = 'Customized Score';
-                    [posg] = gui.i_selectngenes(sce.g,[],FigureHandle);
-                    if isempty(posg)
-                        helpdlg('No feature genes selected.', '')
-                        return;
-                    end
-                    [y] = gui.e_cellscore(sce, posg);
-                case 'MSigDB Signature Score...'
+                % case 'Define a New Score...'
+                %     ttxt = 'Customized Score';
+                %     [posg] = gui.i_selectngenes(sce.g,[],FigureHandle);
+                %     if isempty(posg)
+                %         helpdlg('No feature genes selected.', '')
+                %         return;
+                %     end
+                %     [y] = gui.e_cellscore(sce, posg);
+                case 'MSigDB Molecular Signatures'
                     speciestag = gui.i_selectspecies(2, true);
                     if isempty(speciestag), return; end
                     try
@@ -112,7 +112,7 @@ bb = 'No, just show values';
                     gui.gui_waitbar(fw);
                     
 
-                case 'PanglaoDB Cell Type Marker Score...'
+                case 'PanglaoDB Cell Type Markers'
                     speciestag = gui.i_selectspecies(2, true);
                     if isempty(speciestag), return; end
 
@@ -216,7 +216,7 @@ bb = 'No, just show values';
                 %         'Expression Level', cL, colorit);
                 %     return;
 
-                case 'Select a Predefined Score...'
+                case 'Custom Gene Sets'
                     if ~gui.gui_showrefinfo('Predefined Cell Score'), return; end
                     [~, T] = pkg.e_cellscores(sce.X, sce.g, 0);
                     listitems = T.ScoreType;
@@ -237,20 +237,20 @@ bb = 'No, just show values';
                     end
                     gui.gui_waitbar(fw);
                     
-                case 'Other Cell Attribute...'
-                    [y, clabel, ~, newpickclabel] = gui.i_select1state(sce, true);
-                    if isempty(y)
-                        helpdlg('No cell attribute is available.');
-                        return;
-                    end
-                    if ~isempty(newpickclabel)
-                        ttxt = newpickclabel;
-                    else
-                        ttxt = clabel;
-                    end
-                    posg = [];
+                % case 'Other Cell Attribute...'
+                %     [y, clabel, ~, newpickclabel] = gui.i_select1state(sce, true);
+                %     if isempty(y)
+                %         helpdlg('No cell attribute is available.');
+                %         return;
+                %     end
+                %     if ~isempty(newpickclabel)
+                %         ttxt = newpickclabel;
+                %     else
+                %         ttxt = clabel;
+                %     end
+                %     posg = [];
                 case {'TF Activity Score [PMID:33135076] 🐢', ...
-                        'TF Targets Expression Score...'}
+                        'DoRothEA TF Targets'}
                     [T] = pkg.e_gettflist;
                     listitems = unique(T.tf);
 
@@ -259,19 +259,19 @@ bb = 'No, just show values';
                         'SelectionMode', 'single', 'ListString', ...
                         listitems, 'ListSize', [220, 300]);
                     if tf2 ~= 1, return; end
-                    species = gui.i_selectspecies(2);
-                    if isempty(species), return; end
+                    %species = gui.i_selectspecies(2);
+                    %if isempty(species), return; end
 
-                    if strcmp(selecteditem, 'TF Targets Expression Score...')
-                        methodid = 1;  % UCell method
-                        disp('Using the UCell method...');
+                    if strcmp(selecteditem, 'DoRothEA TF Targets')
+                        methodid = 4;  % UCell method
+                        % disp('Using the UCell method...');
                     else
                         methodid = 4;
                     end
                     if methodid ~= 4, fw = gui.gui_waitbar; end
                     try
                         [cs, tflist] = sc_tfactivity(sce.X, sce.g, [], ...
-                            species, methodid);
+                            speciesid, methodid);
                     catch ME
                         if methodid ~= 4, gui.gui_waitbar(fw,true); end
                         errordlg(ME.message);
@@ -310,13 +310,13 @@ bb = 'No, just show values';
             if ~exist("ttxt", "var"), ttxt = []; end
 
             if showcomparision
-                if iscell(y)
+                %if iscell(y)
                     gui.i_violintabs(y, ttxt, thisc, FigureHandle);
-                else
-                    gui.i_violinplot(y, thisc, ttxt, true, [], posg, FigureHandle);
-                    xlabel('Cell group');
-                    ylabel('Cellular score');
-                end
+                %else
+%                    gui.i_violinplot(y, thisc, ttxt, true, [], posg, FigureHandle);
+%                    xlabel('Cell group');
+%                    ylabel('Cellular score');
+%                end
             else
                 %     [methodid]=gui.i_pickscatterstem('Scatter+Stem');
                 %     if isempty(methodid), return; end
