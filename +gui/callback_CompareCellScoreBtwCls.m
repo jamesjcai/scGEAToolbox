@@ -149,29 +149,29 @@ bb = 'No, just show values';
                     if isempty(posg) || isempty(ctselected), return; end
                     [y] = gui.e_cellscore(sce, posg);
 
-                case 'Differentiation Potency [PMID:33244588]'
-
-                    if ~gui.gui_showrefinfo('Differentiation Potency [PMID:33244588]'), return; end
-
-                    % answer2=questdlg('Which species?','Select Species','Mouse','Human','Mouse');
-                    % [yes,speciesid]=ismember(lower(answer2),{'human','mouse'});
-                    % if ~yes, return; end
-                    speciestag = gui.i_selectspecies(2);
-
-                    fw = gui.gui_waitbar;
-                    y = sc_potency(sce.X, sce.g, speciestag);
-                    if sum(strcmp('cell_potency', sce.list_cell_attributes)) == 0
-                        sce.list_cell_attributes = [sce.list_cell_attributes, ...
-                            {'cell_potency', y(:)}];                  
-                    end
-                    if ~showcomparision
-                        needupdatesce = true;
-                        guidata(FigureHandle, sce);
-                    end
-
-                    ttxt = 'Differentiation Potency';
-                    posg = [];
-                    gui.gui_waitbar(fw);
+                % case 'Differentiation Potency [PMID:33244588]'
+                % 
+                %     if ~gui.gui_showrefinfo('Differentiation Potency [PMID:33244588]'), return; end
+                % 
+                %     % answer2=questdlg('Which species?','Select Species','Mouse','Human','Mouse');
+                %     % [yes,speciesid]=ismember(lower(answer2),{'human','mouse'});
+                %     % if ~yes, return; end
+                %     speciestag = gui.i_selectspecies(2);
+                % 
+                %     fw = gui.gui_waitbar;
+                %     y = sc_potency(sce.X, sce.g, speciestag);
+                %     if sum(strcmp('cell_potency', sce.list_cell_attributes)) == 0
+                %         sce.list_cell_attributes = [sce.list_cell_attributes, ...
+                %             {'cell_potency', y(:)}];                  
+                %     end
+                %     if ~showcomparision
+                %         needupdatesce = true;
+                %         guidata(FigureHandle, sce);
+                %     end
+                % 
+                %     ttxt = 'Differentiation Potency';
+                %     posg = [];
+                %     gui.gui_waitbar(fw);
 
 
                     % [a]=contains(sce.list_cell_attributes(1:2:end),'cell_potency');
@@ -189,32 +189,33 @@ bb = 'No, just show values';
                     %     return;
                     % end
 
-                case 'Library Size of Cells'
-                    y = sum(sce.X);
-                    ttxt = 'Library Size';
-                    posg = [];
-                    if sum(strcmp('library_size', sce.list_cell_attributes)) == 0
-                        sce.list_cell_attributes = [sce.list_cell_attributes, ...
-                            {'library_size', y(:)}];                  
-                    end                    
+                % case 'Library Size of Cells'
+                %     y = sum(sce.X);
+                %     ttxt = 'Library Size';
+                %     posg = [];
+                %     if sum(strcmp('library_size', sce.list_cell_attributes)) == 0
+                %         sce.list_cell_attributes = [sce.list_cell_attributes, ...
+                %             {'library_size', y(:)}];                  
+                %     end                    
+                % 
+                % case 'Expression of Individual Genes'
+                %     [glist] = gui.i_selectngenes(sce,[],FigureHandle);
+                %     if isempty(glist)
+                %         helpdlg('No gene selected.', '');
+                %         return;
+                %     end
+                %     [Xt] = gui.i_transformx(sce.X);
+                %     [~, cL, noanswer] = gui.i_reordergroups(thisc);
+                %     if noanswer, return; end
+                %     colorit = true;
+                %     cL = strrep(cL, '_', '\_');
+                %     if isstring(thisc)
+                %         thisc = strrep(thisc, '_', '\_');
+                %     end
+                %     gui.i_cascadeviolin(sce, Xt, thisc, glist, ...
+                %         'Expression Level', cL, colorit);
+                %     return;
 
-                case 'Expression of Individual Genes'
-                    [glist] = gui.i_selectngenes(sce,[],FigureHandle);
-                    if isempty(glist)
-                        helpdlg('No gene selected.', '');
-                        return;
-                    end
-                    [Xt] = gui.i_transformx(sce.X);
-                    [~, cL, noanswer] = gui.i_reordergroups(thisc);
-                    if noanswer, return; end
-                    colorit = true;
-                    cL = strrep(cL, '_', '\_');
-                    if isstring(thisc)
-                        thisc = strrep(thisc, '_', '\_');
-                    end
-                    gui.i_cascadeviolin(sce, Xt, thisc, glist, ...
-                        'Expression Level', cL, colorit);
-                    return;
                 case 'Select a Predefined Score...'
                     if ~gui.gui_showrefinfo('Predefined Cell Score'), return; end
                     [~, T] = pkg.e_cellscores(sce.X, sce.g, 0);
@@ -235,6 +236,7 @@ bb = 'No, just show values';
                         ttxt{k} = T.ScoreType(indx2(k));
                     end
                     gui.gui_waitbar(fw);
+                    
                 case 'Other Cell Attribute...'
                     [y, clabel, ~, newpickclabel] = gui.i_select1state(sce, true);
                     if isempty(y)
@@ -249,7 +251,7 @@ bb = 'No, just show values';
                     posg = [];
                 case {'TF Activity Score [PMID:33135076] 🐢', ...
                         'TF Targets Expression Score...'}
-                    [~, T] = pkg.e_tfactivityscores(sce.X, sce.g, 0);
+                    [T] = pkg.e_gettflist;
                     listitems = unique(T.tf);
 
                     

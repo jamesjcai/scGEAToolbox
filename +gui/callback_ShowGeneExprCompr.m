@@ -42,7 +42,7 @@ function callback_ShowGeneExprCompr(src, ~)
 
 
     fw=gui.gui_waitbar;
-    gui.sc_uitabgrpfig_feaplotcompr(sce, glist, FigureHandle, [axx, bxx], thisc);
+    gui.sc_uitabgrpfig_expcomp(sce, glist, FigureHandle, [axx, bxx], thisc);
     gui.gui_waitbar(fw);
 
 end

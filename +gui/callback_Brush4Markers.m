@@ -103,7 +103,7 @@ end
             % end
             % gui.i_export2pptx(F, flipud(markerlist(:)));
 %        fw=gui.gui_waitbar;
-        gui.sc_uitabgrpfig_feaplot(sce, markerlist, FigureHandle, [axx, bxx]);
+        gui.sc_uitabgrpfig_expplot(sce, markerlist, FigureHandle, [axx, bxx]);
         gui.gui_waitbar(fw);    
 %    end
 %end

@@ -20,7 +20,7 @@ if ~all(c>0)
 end
 
 
-[indx1,species]=gui.i_selgenecollection;
+[indx1,species] = gui.i_selgenecollection;
 if isempty(indx1), return; end
 [setmatrx, setnames, setgenes] = pkg.e_getgenesets(indx1,species); %(indx1);
 if isempty(setmatrx) || isempty(setnames) || isempty(setgenes) 
