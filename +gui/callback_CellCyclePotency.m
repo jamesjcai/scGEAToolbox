@@ -54,16 +54,24 @@ function callback_CellCyclePotency(src, ~, typeid)
                 end
             end
             if needestimate
-                [yes, speciesid] = ismember(lower(answer2), {'human', 'mouse'});
-                if ~yes, return; end
+                speciestag = gui.i_selectspecies(2, true);
+                if isempty(speciestag), return; end
+                switch speciestag
+                    case 'hs'
+                        speciesname = 'human';
+                    case 'mm'
+                        speciesname = 'mouse';
+                    otherwise
+                        error('Unknown species.');
+                end
                 fw = gui.gui_waitbar;
-                sce = sce.estimatepotency(speciesid);
+                sce = sce.estimatepotency(speciesname);
                 gui.gui_waitbar(fw);
                 guidata(FigureHandle, sce);
-                uiwait(helpdlg('Cell differentiation potency added.', ''));
+                uiwait(helpdlg('Cell differentiation potency added. To see it, use View -> Cell State (Ctrl + T)...', ''));
             end
             y =  sce.list_cell_attributes{idx+1};
-            fealabels = ["cell_potency"];
+            fealabels = "cell_potency";
     end
 
     gui.sc_uitabgrpfig_feaplot({y}, fealabels, sce.s, FigureHandle);
