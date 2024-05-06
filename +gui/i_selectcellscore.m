@@ -1,6 +1,5 @@
 function [selecteditem] = i_selectcellscore
 
-% see also: i_selgenecollection
 
 selecteditem = [];
 selitems = {'Select a Predefined Score...', ...

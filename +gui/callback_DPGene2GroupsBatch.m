@@ -79,6 +79,7 @@ if ~strcmp(answer,'Yes'), return; end
 %     else
 %         species='human';
 %     end
+
 [indx1,species]=gui.i_selgenecollection;
 if isempty(indx1), return; end
 [setmatrx, setnames, setgenes] = pkg.e_getgenesets(indx1,species); %(indx1);
