@@ -16,7 +16,7 @@ switch option
         pw1 = fileparts(mfilename('fullpath'));
         isloaded=false;
         try
-            dbfile = fullfile(pw1, '..', 'resources', ...
+            dbfile = fullfile(pw1, '..', 'resources', 'MSigDB', ...
                 sprintf('msigdb_%s.mat',ctag));
             load(dbfile,'setmatrx','setnames','setgenes');
             isloaded=true;

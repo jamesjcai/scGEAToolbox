@@ -1,5 +1,4 @@
 function [g] = i_get_hemoglobingenes
-%Get ribosomal genes
 
 pw1 = fileparts(mfilename('fullpath'));
 txtfile = fullfile(pw1, '..','resources', 'hemoglobin.txt');

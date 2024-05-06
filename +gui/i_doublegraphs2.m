@@ -16,7 +16,7 @@ import ten.*
 
 mfolder = fileparts(mfilename('fullpath'));
 load(fullfile(mfolder, ...
-    '../resources', 'tfome_tfgenes.mat'), 'tfgenes');
+    '..', 'resources', 'TFome', 'tfome_tfgenes.mat'), 'tfgenes');
 
 A = blkdiag(adjacency(G1, 'weighted'), adjacency(G2, 'weighted'));
 n = matlab.lang.makeUniqueStrings([table2cell(G1.Nodes); table2cell(G2.Nodes)]);

@@ -14,7 +14,7 @@ import ten.*
 mfolder = fileparts(mfilename('fullpath'));
 
 load(fullfile(mfolder, ...
-    '../resources', 'tfome_tfgenes.mat'), 'tfgenes');
+    '..', 'resources', 'TFome', 'tfome_tfgenes.mat'), 'tfgenes');
 
 
 w = 3;
