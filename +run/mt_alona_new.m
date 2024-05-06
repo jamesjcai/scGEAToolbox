@@ -31,7 +31,7 @@ bestonly = p.Results.bestonly;
 oldpth = pwd;
 pw1 = fileparts(mfilename('fullpath'));
 % pth = fullfile(pw1, '..', 'resources', 'celltypes.xlsx');
-pth = fullfile(cdgea, 'resources', 'celltypes.xlsx');
+pth = fullfile(cdgea, 'resources', 'PanglaoDB', 'celltypes.xlsx');
 
 if issparse(X)
     try
