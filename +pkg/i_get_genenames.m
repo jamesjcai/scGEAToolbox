@@ -2,7 +2,7 @@ function [T] = i_get_genenames(g)
 %Get gene names
 
 pw = fileparts(mfilename('fullpath'));
-dbfile = fullfile(pw, '..', 'resources', 'HGNCBiomart.txt');
+dbfile = fullfile(pw, '..', 'resources', 'HGNC', 'HGNCBiomart.txt');
 Tright = readtable(dbfile);
 g = upper(g(:));
 if ~iscell(g)

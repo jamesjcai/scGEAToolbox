@@ -66,6 +66,8 @@ function callback_CellCyclePotency(src, ~, typeid)
                 end
                 fw = gui.gui_waitbar;
                 sce = sce.estimatepotency(speciesname);
+                [yesx, idx] = ismember('cell_potency', sce.list_cell_attributes(1:2:end));
+                assert(yesx);
                 gui.gui_waitbar(fw);
                 guidata(FigureHandle, sce);
                 uiwait(helpdlg('Cell differentiation potency added. To see it, use View -> Cell State (Ctrl + T)...', ''));
@@ -73,7 +75,5 @@ function callback_CellCyclePotency(src, ~, typeid)
             y =  sce.list_cell_attributes{idx+1};
             fealabels = "cell_potency";
     end
-
     gui.sc_uitabgrpfig_feaplot({y}, fealabels, sce.s, FigureHandle);
-
 end

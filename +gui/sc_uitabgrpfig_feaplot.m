@@ -31,17 +31,16 @@ focalg = fealabels(idx);
 
 for k=1:n
     c = feays{k};
+    if issparse(c), c = full(c); end
     if ~isnumeric(c)
         [c] = grp2idx(c);
     end
-    if issparse(c), c = full(c); end
     tab{k} = uitab(tabgp, 'Title', sprintf('%s', fealabels(k)));
-    
     
     ax0{k} = axes('parent',tab{k});
     %ax{k,1} = subplot(1,2,1);
     ax{k,1} = ax0{k};
-    if size(sce_s,2)>2
+    if size(sce_s,2) > 2
         scatter3(sce_s(:,1), sce_s(:,2), sce_s(:,3), 5, c, 'filled');
     else
         scatter(sce_s(:,1), sce_s(:,2), 5, c, 'filled');

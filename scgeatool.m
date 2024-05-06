@@ -1740,7 +1740,7 @@ if ~showuseronboarding, set(UserToolbarHandle, 'Visible', 'off'); end
                 f = 0.5 * (n - 1) ./ n;
                 f = 1 + f .* (1:2:2 * n);
                 cb = colorbar(target{1}, 'Ticks', f, 'TickLabels', ...
-                    strrep(cellstr(cL), '_', '\_'));                
+                    strrep(cellstr(cL), '_', '\_'));
             case {'Numerical/Continuous','Unknown'}
                 in_RefreshAll(src, [], true, false);
                 target{1} = hAx;

@@ -1,7 +1,7 @@
 function [g] = i_get_hemoglobingenes
 
 pw1 = fileparts(mfilename('fullpath'));
-txtfile = fullfile(pw1, '..','resources', 'hemoglobin.txt');
+txtfile = fullfile(pw1, '..','resources', 'HGNC', 'hemoglobin.txt');
 warning off
 t = readtable(txtfile, 'ReadVariableNames',false);
 warning on
