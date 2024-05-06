@@ -168,8 +168,8 @@ in_addmenu(m_anno, 0, {@in_MergeCellSubtypes, 2}, 'Import Cell Annotation from S
 in_addmenu(m_anno, 1, @in_Brush4Celltypes, "Annotate Cell Types for Brushed Cells");
 in_addmenu(m_anno, 0, @gui.callback_Brush4Markers, "Find Marker Genes for Brushed Cells");
 in_addmenu(m_anno, 0, @gui.callback_FindAllMarkers, "Make Marker Gene Heatmap");
-in_addmenu(m_anno, 1, {@gui.callback_CellCyclePotency, 1}, 'Estimate Cell Cycle Phase...');
-in_addmenu(m_anno, 0, {@gui.callback_CellCyclePotency, 2}, 'Estimate Differentiation Potency...');
+in_addmenu(m_anno, 1, {@in_CellCyclePotency, 1}, 'Estimate Cell Cycle Phase...');
+in_addmenu(m_anno, 0, {@in_CellCyclePotency, 2}, 'Estimate Differentiation Potency...');
 in_addmenu(m_anno, 1, @in_SingleClickSolution, 'Single Click Solution (from Raw Data to Annotation)...');
 
 m_tool = uimenu(FigureHandle, 'Text', '&Analyze');
@@ -422,6 +422,12 @@ if ~showuseronboarding, set(UserToolbarHandle, 'Visible', 'off'); end
 
     function in_CompareCellScoreBtwCls(src, events)
         if gui.callback_CompareCellScoreBtwCls(src, events)
+           sce = guidata(FigureHandle);
+        end
+    end
+
+    function in_CellCyclePotency(src, events, typeid)
+        if gui.callback_CellCyclePotency(src, events, typeid)
            sce = guidata(FigureHandle);
         end
     end
