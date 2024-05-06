@@ -21,8 +21,9 @@ end
 
 
 [indx1,speciesid] = gui.i_selgenecollection;
+
 if isempty(indx1), return; end
-[setmatrx, setnames, setgenes] = pkg.e_getgenesets(indx1,speciesid); %(indx1);
+[setmatrx, setnames, setgenes] = pkg.e_getgenesets(indx1, speciesid); %(indx1);
 if isempty(setmatrx) || isempty(setnames) || isempty(setgenes) 
     return; 
 end

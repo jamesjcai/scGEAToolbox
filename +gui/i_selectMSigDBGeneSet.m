@@ -1,4 +1,4 @@
-function [glist, setname, Col, ctag] = i_selectMSigDBGeneSet(species, colnoly)
+function [glist, setname, Col, ctag] = i_selectMSigDBGeneSet (species, colnoly)
 
 if nargin < 1, species = 'human'; end
 if nargin < 2, colnoly = false; end
@@ -81,7 +81,6 @@ end
     %string(val.(a{idx}).geneSymbols);
 
     %%
-
     [idx, tf] = listdlg('PromptString', ...
         {'Select gene set:'}, ...
         'SelectionMode', 'single', ...

@@ -3,7 +3,7 @@ function [T] = sc_dpg(X, Y, g)
 %X = log(1+sc_norm(X));
 
 [setmatrx, setnames, setgenes] = pkg.e_getgenesets;
-[~,ix,iy]=intersect(upper(setgenes),upper(g));
+[~,ix,iy] = intersect(upper(setgenes),upper(g));
 
 setgenes=setgenes(ix);
 setmatrx=setmatrx(:,ix);    % s x g
@@ -60,5 +60,3 @@ T=table(setnames, gsetsize, v1, v2, avg_log2FC, m1, n1, m2, n2, p_val, p_val_adj
 T(isnan(T.p_val)|isnan(T.avg_log2FC)|abs(T.avg_log2FC)<1,:)=[];
 T = sortrows(T, 'p_val_adj', 'ascend');
 T=T(T.p_val_adj<0.01 & T.gsetsize>=5,:);
-
-

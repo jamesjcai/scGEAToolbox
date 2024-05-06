@@ -12,7 +12,6 @@ switch option
         if isempty(Col) || isempty(ctag)
             return;
         end
-
         pw1 = fileparts(mfilename('fullpath'));
         isloaded=false;
         try
