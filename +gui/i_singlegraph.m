@@ -97,7 +97,6 @@ oldG1=[];
         end
     end
 
-
     function ChangeFontSize(~, ~)
         i_changefontsize(p1);
         %i_changefontsize(p2);
@@ -127,10 +126,10 @@ oldG1=[];
         if w > 10, w = 2; end
         i_changeweight(p1, w);
         %i_changeweight(p2,G2,w);
-            function i_changeweight(p, b)
-                %G.Edges.LWidths = abs(b*G.Edges.Weight/max(abs(G.Edges.Weight)));
-                %p.LineWidth = G.Edges.LWidths;
-                p.LineWidth = abs(b*p.LineWidth/max(abs(p.LineWidth)));
+        function i_changeweight(p, b)
+            %G.Edges.LWidths = abs(b*G.Edges.Weight/max(abs(G.Edges.Weight)));
+            %p.LineWidth = G.Edges.LWidths;
+            p.LineWidth = abs(b*p.LineWidth/max(abs(p.LineWidth)));
         end
     end
 
@@ -146,11 +145,6 @@ oldG1=[];
             otherwise
                 p1.layout(a(l));
         end
-        %p2.layout(a(l));
-        %p2.XData=p1.XData;
-        %p2.YData=p1.YData;
-        %p1.XData=p2.XData;
-        %p1.YData=p2.YData;
     end
 
     function ChangeDirected(~, ~)
