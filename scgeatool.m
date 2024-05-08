@@ -258,7 +258,8 @@ in_addbuttonpush(0, 0, @gui.callback_Violinplot, "violinplot.gif", "Gene/Cell St
 in_addbuttonpush(0, 0, @gui.callback_Dotplot, "icon-mat-blur-linear-10.gif", "Gene Dot Plot...");
 in_addbuttonpush(0, 0, @gui.callback_Heatmap, "icon-mat-apps-20.gif", "Gene Heatmap...");
 in_addbuttonpush(0, 0, [], [], "");
-in_addbuttonpush(0, 1, @in_CompareCellScoreBtwCls, "cellscore2.gif", "Cell score analysis--obtaining gene signature score for each cell");
+in_addbuttonpush(0, 1, @in_SingleClickSolution, "icon-mat-fingerprint-10.gif", "Single-click cell type annotation")
+in_addbuttonpush(0, 0, @in_CompareCellScoreBtwCls, "cellscore2.gif", "Cell score analysis--obtaining gene signature score for each cell");
 in_addbuttonpush(0, 0, @gui.callback_GetCellSignatureMatrix, "icon-fa-connectdevelop-20.gif", "Cell state analysis--obtaining multiple gene signature scores to reveal functional state of cells");
 in_addbuttonpush(0, 1, @in_EnrichrHVGs, "plotpicker-andrewsplot.gif", "Functional enrichment analysis with HVGs");
 in_addbuttonpush(0, 0, @gui.callback_DEGene2Groups, "plotpicker-boxplot.gif", "Differential expression (DE) analysis)");
@@ -267,8 +268,6 @@ in_addbuttonpush(0, 1, @gui.callback_BuildGeneNetwork, "noun_Network_691907.gif"
 in_addbuttonpush(0, 0, @gui.callback_CompareGeneNetwork, "noun_Deep_Learning_2424485.gif", "Compare two scGRNs");
 in_addbuttonpush(0, 1, {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 gui.gui_3dcamera(DeftToolbarHandle, 'AllCells');
-
-
 pt = uitoggletool(DeftToolbarHandle);
 try
     load(fullfile(mfolder, 'resources', 'colorbarcdata.mat'),'CData');
@@ -279,7 +278,7 @@ end
 pt.Tooltip = 'Insert Colorbar';
 pt.ClickedCallback = @in_addcolorbar;
 pt.Tag = "figToglColorbar";
-
+in_addbuttonpush(0, 0, {@gui.i_resizewin, FigureHandle}, 'HDF_pointx.gif', 'Resize Plot Window')
 
 
 
@@ -293,10 +292,11 @@ in_addbuttonpush(1, 1, @in_labelcellgroups, "icon-fa-tags-10b.gif", "Label cell 
 in_addbuttonpush(1, 0, @in_Brushed2NewCluster, "plotpicker-glyplot-face.gif", "Add brushed cells to a new group")
 in_addbuttonpush(1, 0, @in_Brushed2MergeClusters, "plotpicker-pzmap.gif", "Merge brushed cells to same group")
 in_addbuttonpush(1, 0, @in_RenameCellTypeBatchID, "plotpicker-scatterhist.gif", "Rename cell type or batch ID");
-in_addbuttonpush(1, 0, [], [], "");
+%in_addbuttonpush(1, 0, [], [], "");
+
 in_addbuttonpush(1, 1, @in_ClusterCellsS, "plotpicker-dendrogram.gif", "Clustering using cell embedding (S)")
-in_addbuttonpush(1, 0, @in_ClusterCellsX, "icon-mw-cluster-10.gif", "Clustering using expression matrix (X)")
-in_addbuttonpush(1, 1, {@in_DetermineCellTypeClustersGeneral, true}, "plotpicker-contour.gif", "Assign cell types to groups")
+% in_addbuttonpush(1, 0, @in_ClusterCellsX, "icon-mw-cluster-10.gif", "Clustering using expression matrix (X)")
+in_addbuttonpush(1, 0, {@in_DetermineCellTypeClustersGeneral, true}, "plotpicker-contour.gif", "Assign cell types to groups")
 in_addbuttonpush(1, 0, @in_Brush4Celltypes, "brush.gif", "Assign cell type to selected cells");
 in_addbuttonpush(1, 1, @gui.callback_Brush4Markers, "plotpicker-kagi.gif", "Marker genes of brushed cells");
 in_addbuttonpush(1, 0, @gui.callback_FindAllMarkers, "plotpicker-plotmatrix.gif", "Marker gene heatmap");
@@ -310,7 +310,6 @@ in_addbuttonpush(1, 0, @in_Switch2D3D, "plotpicker-image.gif", "Switch 2D/3D");
 in_addbuttonpush(1, 1, @gui.callback_CloseAllOthers, "icon-fa-cut-10.gif", "Close all other figures");
 in_addbuttonpush(1, 0, @gui.callback_PickPlotMarker, "plotpicker-rose.gif", "Switch scatter plot marker type");
 in_addbuttonpush(1, 0, @gui.callback_PickColorMap, "plotpicker-compass.gif", "Pick new color map");
-in_addbuttonpush(1, 0, {@gui.i_resizewin, FigureHandle}, 'HDF_pointx.gif', 'Resize Plot Window')
 in_addbuttonpush(1, 0, @in_RefreshAll, "icon-mat-refresh-20.gif", "Refresh");
 
 if ~isempty(fx) && isvalid(fx), fxfun(fx, 0.6); end
