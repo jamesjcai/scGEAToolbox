@@ -21,8 +21,8 @@ w = 3;
 l = 1;
 
 hFig = figure('Visible', 'off');
-hFig.Position(3)=hFig.Position(3)*1.2;
-hFig.Position(4)=hFig.Position(4)*1.2;
+%hFig.Position(3)=hFig.Position(3)*1.2;
+%hFig.Position(4)=hFig.Position(4)*1.2;
 
 h1 = axes(hFig);
 [p1] = drawnetwork(G1, h1);
@@ -33,9 +33,9 @@ pkg.i_addbutton2fig(tb, 'off', @ChangeFontSize, 'noun_font_size_591141.gif', 'Ch
 pkg.i_addbutton2fig(tb, 'off', @ChangeWeight, 'noun_Weight_2243621.gif', 'ChangeWeight');
 pkg.i_addbutton2fig(tb, 'off', @ChangeLayout, 'noun_Layout_792775.gif', 'ChangeLayout');
 pkg.i_addbutton2fig(tb, 'off', @ChangeDirected, 'noun_directional_arrows_3497928.gif', 'ChangeDirected');
-pkg.i_addbutton2fig(tb, 'off', @ChangeCutoff, 'noun_Pruners_2469297.gif', 'ChangeCutoff');
 pkg.i_addbutton2fig(tb, 'off', @ChangeBox, 'PlotPoly.gif', 'Box on/off');
 pkg.i_addbutton2fig(tb, 'off', @AnimateCutoff, 'noun_trim_3665385.gif', 'AnimateCutoff');
+pkg.i_addbutton2fig(tb, 'off', @ChangeCutoff, 'noun_Pruners_2469297.gif', 'ChangeCutoff');
 pkg.i_addbutton2fig(tb, 'off', @SaveAdj, 'export.gif', 'Export & save data');
 pkg.i_addbutton2fig(tb, 'on', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
@@ -50,7 +50,7 @@ hFig.Visible=true;
 gui.gui_showrefinfo('Network Legend');
 
 oldG1=[];
-
+axistrig = true;
 
     function in_RefreshAll(~, ~)
         if ~isempty(oldG1)
@@ -112,12 +112,19 @@ oldG1=[];
     function ChangeBox(~, ~)
         if h1.Box
             box(h1, 'off');
-            axis(h1, 'off');
+            if axistrig
+                axis(h1, 'off');
+            else
+                axis(h1, 'on');
+            end
+            axistrig = ~axistrig;
+            
         else
             box(h1, 'on');
             axis(h1, 'on');
         end
     end
+
 
     function ChangeWeight(~, ~)
         %a=3:10;
