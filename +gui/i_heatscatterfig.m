@@ -28,76 +28,77 @@ pkg.i_addbutton2fig(tb,'on', @in_stemplot,'icon-mat-blur-on-10.gif','Show stem p
 pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
 
 gui.i_movegui2parent(hFig, parentfig);
-
-
 set(hFig, 'Visible', true);
 
     function in_stemplot(~,~)
         gui.i_stemscatterfig(sce, cs, posg, csname);
     end
 
-    function i_viewscatter3(~, ~)
-        figure;
-        s = sce.s;
-        x = s(:, 1);
-        y = s(:, 2);
-        if size(s, 2) >= 3
-            z = s(:, 3);
-            is2d = false;
-        else
-            z = zeros(size(x));
-            is2d = true;
-        end
-        scatter3(x, y, z, 10, cs, 'filled');
-        if is2d, view(2); end
-end
+    % function i_viewscatter3(~, ~)
+    %     figure;
+    %     s = sce.s;
+    %     x = s(:, 1);
+    %     y = s(:, 2);
+    %     if size(s, 2) >= 3
+    %         z = s(:, 3);
+    %         is2d = false;
+    %     else
+    %         z = zeros(size(x));
+    %         is2d = true;
+    %     end
+    %     scatter3(x, y, z, 10, cs, 'filled');
+    %     if is2d, view(2); end
+    % end
 
-        function i_viewgenenames(~, ~)
-            [passed] = i_checkposg;
-            if ~passed, return; end
-
-            %         if isempty(posg)
-            %             helpdlg('The gene set is empty. This score may not be associated with any gene set.');
-            %         else
-            idx = matches(sce.g, posg, 'IgnoreCase', true);
-            gg = sce.g(idx);
-            inputdlg(csname, ...
-                '', [15, 80], ...
-                {char(gg)});
-            %        end
+    function i_viewgenenames(~, ~)
+        [passed] = i_checkposg;
+        if ~passed, return; end
+        %         if isempty(posg)
+        %             helpdlg('The gene set is empty. This score may not be associated with any gene set.');
+        %         else
+        idx = matches(sce.g, posg, 'IgnoreCase', true);
+        gg = sce.g(idx);
+        inputdlg(csname, ...
+            '', [15, 80], ...
+            {char(gg)});
+        %        end
     end
 
-            function i_saveCrossTable(~, ~)
-                gui.i_exporttable(table(cs), false, ...
-                    char(matlab.lang.makeValidName(string(csname))));
-        end
-                function i_geneheatmapx(~, ~)
-                    [passed] = i_checkposg;
-                    if ~passed, return; end
+    function i_saveCrossTable(~, ~)
+        gui.i_exporttable(table(cs), false, ...
+            char(matlab.lang.makeValidName(string(csname))));
+    end
+        
+    function i_geneheatmapx(~, ~)
+        [passed] = i_checkposg;
+        if ~passed, return; end
 
-                    [thisc] = gui.i_select1class(sce);
-                    if ~isempty(thisc)
-                        gui.i_geneheatmap(sce, thisc, posg);
-                    end
-            end
-                    function i_genedotplot(~, ~)
-                        [passed] = i_checkposg;
-                        if ~passed, return; end
-                        [thisc] = gui.i_select1class(sce);
-                        [c, cL] = grp2idx(thisc);
-                        idx = matches(posg, sce.g, 'IgnoreCase', true);
-                        if any(idx)
-                            gui.i_dotplot(sce.X, sce.g, c, cL, posg(idx));
-                        else
-                            helpdlg('No genes in this data set.')
-                        end
-                end
-                        function [passed] = i_checkposg
-                            if isempty(posg)
-                                passed = false;
-                                helpdlg('The gene set is empty. This score may not be associated with any gene set.');
-                            else
-                                passed = true;
-                            end
-                    end
-                    end
+        [thisc] = gui.i_select1class(sce);
+        if ~isempty(thisc)
+            gui.i_geneheatmap(sce, thisc, posg);
+        end
+    end
+            
+    function i_genedotplot(~, ~)
+        [passed] = i_checkposg;
+        if ~passed, return; end
+        [thisc] = gui.i_select1class(sce);
+        [c, cL] = grp2idx(thisc);
+        idx = matches(posg, sce.g, 'IgnoreCase', true);
+        if any(idx)
+            gui.i_dotplot(sce.X, sce.g, c, cL, posg(idx));
+        else
+            helpdlg('No genes in this data set.')
+        end
+    end
+                
+    function [passed] = i_checkposg
+        if isempty(posg)
+            passed = false;
+            helpdlg('The gene set is empty. This score may not be associated with any gene set.');
+        else
+            passed = true;
+        end
+    end
+
+end
