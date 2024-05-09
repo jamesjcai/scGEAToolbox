@@ -1,6 +1,6 @@
 function [T] = e_grptest(y, grp)
 
-% used by gui.i_violintabs
+% used by gui.sc_uitabgrpfig_vioplot
 T = [];
 if length(unique(grp)) == 2
     p_ttest = zeros(size(y, 1), 1);

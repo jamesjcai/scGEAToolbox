@@ -1,5 +1,5 @@
 function sc_uitabgrpfig_scatter(sce, glist, thisx, xlabelv, parentfig)
-%see also: gui.i_violinplot, gui.i_violintabs
+%see also: gui.i_violinplot, gui.sc_uitabgrpfig_vioplot
 
 if nargin<4, parentfig = []; end
 

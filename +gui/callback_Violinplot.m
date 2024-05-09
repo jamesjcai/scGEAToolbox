@@ -50,6 +50,6 @@ function callback_Violinplot(src, ~)
                 waitfor(helpdlg('No valid cell state variables. Violinplot cannot be shown.',''));
             end
     end
-gui.i_violintabs(thisyv, ylabelv, thisc, FigureHandle);
+gui.sc_uitabgrpfig_vioplot(thisyv, ylabelv, thisc, FigureHandle);
 
 end

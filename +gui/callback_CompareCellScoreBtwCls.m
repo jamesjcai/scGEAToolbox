@@ -173,21 +173,20 @@ bb = 'No, just show values';
                 %     posg = [];
                 %     gui.gui_waitbar(fw);
 
-
-                    % [a]=contains(sce.list_cell_attributes(1:2:end),'cell_potency');
-                    % if ~any(a)
-                    %     answer2=questdlg('Which species?','Select Species','Mouse','Human','Mouse');
-                    %     [yes,specisid]=ismember(lower(answer2),{'human','mouse'});
-                    %     if ~yes, return; end
-                    %     sce=sce.estimatepotency(specisid);
-                    % end
-                    % [yes,idx]=ismember({'cell_potency'},sce.list_cell_attributes(1:2:end));
-                    % if yes
-                    %     y=sce.list_cell_attributes{idx*2};
-                    %     ttxt='Differentiation Potency';
-                    % else
-                    %     return;
-                    % end
+                % [a]=contains(sce.list_cell_attributes(1:2:end),'cell_potency');
+                % if ~any(a)
+                %     answer2=questdlg('Which species?','Select Species','Mouse','Human','Mouse');
+                %     [yes,specisid]=ismember(lower(answer2),{'human','mouse'});
+                %     if ~yes, return; end
+                %     sce=sce.estimatepotency(specisid);
+                % end
+                % [yes,idx]=ismember({'cell_potency'},sce.list_cell_attributes(1:2:end));
+                % if yes
+                %     y=sce.list_cell_attributes{idx*2};
+                %     ttxt='Differentiation Potency';
+                % else
+                %     return;
+                % end
 
                 % case 'Library Size of Cells'
                 %     y = sum(sce.X);
@@ -236,25 +235,23 @@ bb = 'No, just show values';
                         ttxt{k} = T.ScoreType(indx2(k));
                     end
                     gui.gui_waitbar(fw);
-                    
-                % case 'Other Cell Attribute...'
-                %     [y, clabel, ~, newpickclabel] = gui.i_select1state(sce, true);
-                %     if isempty(y)
-                %         helpdlg('No cell attribute is available.');
-                %         return;
-                %     end
-                %     if ~isempty(newpickclabel)
-                %         ttxt = newpickclabel;
-                %     else
-                %         ttxt = clabel;
-                %     end
-                %     posg = [];
+                    % case 'Other Cell Attribute...'
+                    %     [y, clabel, ~, newpickclabel] = gui.i_select1state(sce, true);
+                    %     if isempty(y)
+                    %         helpdlg('No cell attribute is available.');
+                    %         return;
+                    %     end
+                    %     if ~isempty(newpickclabel)
+                    %         ttxt = newpickclabel;
+                    %     else
+                    %         ttxt = clabel;
+                    %     end
+                    %     posg = [];
                 case {'TF Activity Score [PMID:33135076] 🐢', ...
-                        'DoRothEA TF Targets'}
+                      'DoRothEA TF Targets'}
                     [T] = pkg.e_gettflist;
                     listitems = unique(T.tf);
-
-                    
+                   
                     [indx2, tf2] = listdlg('PromptString', 'Select a transcription factor (TF)', ...
                         'SelectionMode', 'single', 'ListString', ...
                         listitems, 'ListSize', [220, 300]);
@@ -262,12 +259,15 @@ bb = 'No, just show values';
                     %species = gui.i_selectspecies(2);
                     %if isempty(species), return; end
 
-                    if strcmp(selecteditem, 'DoRothEA TF Targets')
-                        methodid = 4;  % UCell method
-                        % disp('Using the UCell method...');
-                    else
-                        methodid = 4;
-                    end
+                    methodid = 4;
+
+                    % if strcmp(selecteditem, 'DoRothEA TF Targets')
+                    %     methodid = 4;  % UCell method
+                    %     % disp('Using the UCell method...');
+                    % else
+                    %     methodid = 4;
+                    % end
+                    
                     if methodid ~= 4, fw = gui.gui_waitbar; end
                     try
                         [cs, tflist] = sc_tfactivity(sce.X, sce.g, [], ...
@@ -282,9 +282,8 @@ bb = 'No, just show values';
 
                     [y] = cs(idx, :);
                     ttxt = listitems{indx2};
-                    posg = []; % xxxxxxxxxxx
+                    posg = [];
                     if methodid ~= 4, gui.gui_waitbar(fw); end
-
                     %         case 'TF Targets Expression Score 2'
                     %                 species=gui.i_selectspecies(2);
                     %                 if isempty(species), return; end
@@ -311,7 +310,7 @@ bb = 'No, just show values';
 
             if showcomparision
                 %if iscell(y)
-                    gui.i_violintabs(y, ttxt, thisc, FigureHandle);
+                    gui.sc_uitabgrpfig_vioplot(y, ttxt, thisc, FigureHandle);
                 %else
 %                    gui.i_violinplot(y, thisc, ttxt, true, [], posg, FigureHandle);
 %                    xlabel('Cell group');
@@ -327,10 +326,12 @@ bb = 'No, just show values';
                     for k=1:length(y)
                         gui.i_heatscatterfig(sce, y{k}, posg, ttxt{k}, FigureHandle);
                     end
+
+                    % gui.sc_uitabgrpfig_expplot(y, markerlist, sce.s, FigureHandle, [axx, bxx]);
+
                 else
                     gui.i_heatscatterfig(sce, y, posg, ttxt, FigureHandle);
                 end
-
                 % answer = questdlg('Also show stem plot?', '');
                 % if answer == "Yes"
                 %     gui.i_stemscatterfig(sce, y, posg, ttxt);
@@ -338,7 +339,6 @@ bb = 'No, just show values';
                 %     return;
                 % end
             end
-
             % guidata(FigureHandle, sce);
 
 end

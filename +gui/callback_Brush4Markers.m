@@ -103,7 +103,14 @@ end
             % end
             % gui.i_export2pptx(F, flipud(markerlist(:)));
 %        fw=gui.gui_waitbar;
-        gui.sc_uitabgrpfig_expplot(sce, markerlist, FigureHandle, [axx, bxx]);
+
+        n = length(markerlist);
+        y = cell(n,1);
+        for k=1:n
+            y{k} = sce.X(sce.g == markerlist(k), :);
+        end
+
+        gui.sc_uitabgrpfig_expplot(y, markerlist, sce.s, FigureHandle, [axx, bxx]);
         gui.gui_waitbar(fw);    
 %    end
 %end

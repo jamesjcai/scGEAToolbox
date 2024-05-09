@@ -1,10 +1,8 @@
 function callback_DPGene2Groups(src, ~)
 
-
 FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
 if ~gui.gui_showrefinfo('DP Analysis'), return; end
-
 
 [i1, i2, cL1, cL2] = gui.i_select2grps(sce, false);
 if length(i1) == 1 || length(i2) == 1, return; end
@@ -13,15 +11,13 @@ c=zeros(size(i1));
 c(i1)=1; c(i2)=2;
 cL=[cL1;cL2];
 if ~all(c>0)
-    sce=sce.selectcells(c>0);
-    c=c(c>0);
-    i1=c==1;
-    i2=c==2;
+    sce = sce.selectcells(c>0);
+    c = c(c>0);
+    i1 = c==1;
+    i2 = c==2;
 end
 
-
 [indx1,speciesid] = gui.i_selgenecollection;
-
 if isempty(indx1), return; end
 [setmatrx, setnames, setgenes] = pkg.e_getgenesets(indx1, speciesid); %(indx1);
 if isempty(setmatrx) || isempty(setnames) || isempty(setgenes) 
@@ -35,9 +31,9 @@ fw = gui.gui_waitbar;
 setgenes=setgenes(ix);
 setmatrx=setmatrx(:,ix);    % s x g
 
-X=sce.X(iy,:);              % g x c
-sce.X=X;
-sce.g=sce.g(iy);
+X = sce.X(iy,:);              % g x c
+sce.X = X;
+sce.g = sce.g(iy);
 
 Z = setmatrx*X;               % s x c
 gsetsize = sum(setmatrx,2);   % gene number per set
@@ -52,23 +48,23 @@ m1 = nan(size(Z,1),1);
 m2 = nan(size(Z,1),1);
 
 %warning off
-for k=1:size(Z,1)
+for k = 1:size(Z,1)
     if any(setmatrx(k,:))
-        a=Z(k,i1);
-        b=Z(k,i2);
+        a = Z(k,i1);
+        b = Z(k,i2);
         p_val(k) = ranksum(a,b);
         if ~isnan(p_val(k)) && p_val(k)<1e-3
             %[ax]=nbinfit(a);
             %[bx]=nbinfit(b);
-            [ax]=mean(a);
-            [bx]=mean(b);
+            [ax] = mean(a);
+            [bx] = mean(b);
             avg_log2FC(k) = log2(ax(1)./bx(1));
-            v1(k)=ax(1);
-            v2(k)=bx(1);
-            n1(k)=numel(a);
-            n2(k)=numel(b);
-            m1(k)=sum(a>0);
-            m2(k)=sum(b>0);
+            v1(k) = ax(1);
+            v2(k) = bx(1);
+            n1(k) = numel(a);
+            n2(k) = numel(b);
+            m1(k) = sum(a>0);
+            m2(k) = sum(b>0);
         end
     end
 end
@@ -134,8 +130,6 @@ if ~isfolder(outdir), return; end
 Xt=log(1+sc_norm(sce.X));
 images = {};
 
-
-
  fw = gui.gui_waitbar_adv;
  success=false;
 
@@ -162,45 +156,43 @@ images = {};
         % gui.gui_waitbar_adv(fw,(k-1)./size(T,1));
         gui.gui_waitbar_adv(fw,(kk-1)./numel(idxneedplot));
         
-                suc1=false;
-                try
-                    f1 = gui.i_dotplot(Xt, upper(sce.g), c, cL, upper(posg), true, T.setnames(k));
-                    saveas(f1, filesaved1);                    
-                    images = [images, {filesaved1}];
-                    suc1=true;
-                catch ME
-                    warning(ME.message);
-                end
-                
-                suc2=false;
-                try
-                    [y] = gui.e_cellscore(sce, posg, 2, false);  % 'AddModuleScore/Seurat'
-                    ttxt=T.setnames(k);
-
-
+    suc1=false;
+    try
+        f1 = gui.i_dotplot(Xt, upper(sce.g), c, cL, upper(posg), true, T.setnames(k));
+        saveas(f1, filesaved1);                    
+        images = [images, {filesaved1}];
+        suc1=true;
+    catch ME
+        warning(ME.message);
+    end
+    
+    suc2=false;
+    try
+        [y] = gui.e_cellscore(sce, posg, 2, false);  % 'AddModuleScore/Seurat'
+        ttxt=T.setnames(k);
         % assignin("base","y",y);
         % assignin("base","c",c);
         % assignin("base","cL",cL);
         % assignin("base","posg",posg);
 
-                    f2 = gui.i_violinplot(y, cL(c), ttxt, true, [], posg);
-                    saveas(f2, filesaved2);
-                    images = [images, {filesaved2}];
-                    suc2=true;
-                catch ME
-                    %success=false;
-                    warning(ME.message);
-                end
+        f2 = gui.i_violinplot(y, cL(c), ttxt, true, [], posg);
+        saveas(f2, filesaved2);
+        images = [images, {filesaved2}];
+        suc2 = true;
+    catch ME
+        %success=false;
+        warning(ME.message);
+    end
 
-    success=suc1&suc2;
+    success = suc1 & suc2;
  end
  gui.gui_waitbar_adv(fw);
  if ~success
      waitfor(helpdlg('All figure files are not saved.',''));
  end
 
-% assignin("base","images",images);
-
+    % assignin("base","images",images);
+    
     answer = questdlg('Output to PowerPoint?','','Yes','No','Yes');
     switch answer
         case 'Yes'

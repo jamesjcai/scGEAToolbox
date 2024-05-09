@@ -1,4 +1,4 @@
-function sc_uitabgrpfig_expplot(sce, glist, parentfig, cazcel)
+function sc_uitabgrpfig_expplot(y, glist, s, parentfig, cazcel)
 
 if nargin < 4, cazcel = []; end
 if nargin < 3, parentfig = []; end
@@ -32,35 +32,40 @@ ax = cell(n,2);
 idx = 1;
 focalg = glist(idx);
 
+% y = cell(n,1);
+% for k=1:n
+%     y{k} = sce.X(sce.g == glist(k), :);
+% end
+
 for k=1:n
-    c = sce.X(sce.g == glist(k), :);
+    c = y{k};
     if issparse(c), c = full(c); end
     tab{k} = uitab(tabgp, 'Title', sprintf('%s',glist(k)));
     
     %{
     t = tiledlayout(1,2,'Parent',tab{k});
     ax1 = nexttile;
-    hpl{k,1} = scatter3(sce.s(:,1), sce.s(:,2), sce.s(:,3), 5, c, 'filled','Parent', ax1);
+    hpl{k,1} = scatter3(s(:,1), s(:,2), s(:,3), 5, c, 'filled','Parent', ax1);
     ax2 = nexttile;
-    hpl{k,2} = scatter(sce.s(:,1), sce.s(:,2), 5, c, 'filled','Parent', ax2);
+    hpl{k,2} = scatter(s(:,1), s(:,2), 5, c, 'filled','Parent', ax2);
     %}
     
     ax0{k} = axes('parent',tab{k});
     ax{k,1} = subplot(1,2,1);
-    if size(sce.s,2)>2
-        scatter3(sce.s(:,1), sce.s(:,2), sce.s(:,3), 5, c, 'filled');
+    if size(s,2)>2
+        scatter3(s(:,1), s(:,2), s(:,3), 5, c, 'filled');
     else
-        scatter(sce.s(:,1), sce.s(:,2), 5, c, 'filled');
+        scatter(s(:,1), s(:,2), 5, c, 'filled');
     end
     if ~isempty(cazcel)
         view(ax{k,1},cazcel(1),cazcel(2));
     end
 
     ax{k,2} = subplot(1,2,2);
-    scatter(sce.s(:,1), sce.s(:,2), 5, c, 'filled');
-    stem3(sce.s(:,1), sce.s(:,2), c, 'marker', 'none', 'color', 'm');
+    scatter(s(:,1), s(:,2), 5, c, 'filled');
+    stem3(s(:,1), s(:,2), c, 'marker', 'none', 'color', 'm');
     hold on;
-    scatter3(sce.s(:,1), sce.s(:,2), zeros(size(sce.s(:,2))), 5, c, 'filled');
+    scatter3(s(:,1), s(:,2), zeros(size(s(:,2))), 5, c, 'filled');
     
     title(ax{k,1}, glist(k));
     subtitle(ax{k,1}, gui.i_getsubtitle(c));
@@ -72,18 +77,18 @@ for k=1:n
     hold(ax, 'on');
     ax1 = subplot(1,2,1,tab{k});
     hold(ax1,'on')
-    hpl{k,1} = scatter3(sce.s(:,1), sce.s(:,2), sce.s(:,3), 5, c, 'filled','Parent', ax1);
+    hpl{k,1} = scatter3(s(:,1), s(:,2), s(:,3), 5, c, 'filled','Parent', ax1);
     ax2 = subplot(1,2,2,tab{k});
     hold(ax2,'on')
-    hpl{k,2} = scatter(sce.s(:,1), sce.s(:,2), 5, c, 'filled','Parent', ax2);
+    hpl{k,2} = scatter(s(:,1), s(:,2), 5, c, 'filled','Parent', ax2);
     %}
 
     %{
     hax{k} = axes('Parent', tab{k});
-    if size(sce.s,2)>=3
-        hpl{k} = scatter3(sce.s(:,1), sce.s(:,2), sce.s(:,3), 5, c, 'filled','Parent', hax{k});
+    if size(s,2)>=3
+        hpl{k} = scatter3(s(:,1), s(:,2), s(:,3), 5, c, 'filled','Parent', hax{k});
     else
-        hpl{k} = scatter(sce.s(:,1), sce.s(:,2), 5, c, 'filled','Parent', hax{k});
+        hpl{k} = scatter(s(:,1), s(:,2), 5, c, 'filled','Parent', hax{k});
     end
     title(hax{k}, targetg(k));
     subtitle(hax{k}, gui.i_getsubtitle(c));
@@ -107,18 +112,15 @@ uipushtool(tb, 'Separator', 'off');
 % pkg.i_addbutton2fig(tb, 'off', @i_linksubplots, 'plottypectl-rlocusplot.gif', 'Link subplots');
 pkg.i_addbutton2fig(tb, 'off',  @i_genecards, 'fvtool_fdalinkbutton.gif', 'GeneCards...');
 pkg.i_addbutton2fig(tb, 'on', {@i_PickColorMap, c}, 'plotpicker-compass.gif', 'Pick new color map...');
-%pkg.i_addbutton2fig(tb, 'off', @i_RescaleExpr, 'IMG00074.GIF', 'Rescale expression level [log2(x+1)]');
-%pkg.i_addbutton2fig(tb, 'off', @i_ResetExpr, 'plotpicker-geobubble2.gif', 'Reset expression level');
+% pkg.i_addbutton2fig(tb, 'off', @i_RescaleExpr, 'IMG00074.GIF', 'Rescale expression level [log2(x+1)]');
+% pkg.i_addbutton2fig(tb, 'off', @i_ResetExpr, 'plotpicker-geobubble2.gif', 'Reset expression level');
 % pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 
 pkg.i_addbutton2fig(tb, 'off', @in_savedata, "powerpointx.gif", 'Save Gene List...');
 pkg.i_addbutton2fig(tb, 'off', @i_savemainfig, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 pkg.i_addbutton2fig(tb, 'off', @i_savemainfigx, "xpowerpoint.gif", 'Save Figure as Graphic File...');
 pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
-
 gui.i_movegui2parent(hFig, parentfig);
-
-
 drawnow;
 hFig.Visible=true;
 
@@ -127,7 +129,6 @@ hFig.Visible=true;
         gui.i_exporttable(table(glist), true, ...
             'Tmarkerlist','MarkerListTable');    
     end
-
 
     function i_savemainfigx(~,~)
         answer = questdlg('Select Sub-plot to export:','', ...
@@ -140,7 +141,6 @@ hFig.Visible=true;
             otherwise
                 return;
         end
-
         [~,idx]=ismember(focalg, glist);     
         filter = {'*.jpg'; '*.png'; '*.tif'; '*.pdf'; '*.eps'};
         [filename, filepath] = uiputfile(filter,'Save Feature Plot', ...
@@ -182,7 +182,7 @@ hFig.Visible=true;
         t = event.NewValue;
         txt = t.Title;
         % disp("Viewing gene " + txt);
-        [~,idx]=ismember(txt,glist);
+        [~,idx] = ismember(txt,glist);
         focalg = glist(idx);
     end
 
@@ -191,7 +191,6 @@ hFig.Visible=true;
     end
 
 end
-
 
 
     function i_PickColorMap(~, ~, c)

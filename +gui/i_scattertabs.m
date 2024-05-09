@@ -1,5 +1,5 @@
 function i_scattertabs(y, tabnamelist, thisx, xlabelv, parentfig)
-%see also: gui.i_violinplot, gui.i_violintabs
+%see also: gui.i_violinplot, gui.sc_uitabgrpfig_vioplot
 
 %assignin('base',"y",y)
 %assignin('base',"thisx",thisx)
