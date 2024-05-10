@@ -7,6 +7,21 @@ if ~gui.gui_showrefinfo('DP Analysis'), return; end
 [i1, i2, cL1, cL2] = gui.i_select2grps(sce, false);
 if length(i1) == 1 || length(i2) == 1, return; end
 
+% --------
+a=sprintf('%s vs. %s',cL1{1}, cL2{1});
+b=sprintf('%s vs. %s',cL2{1}, cL1{1});
+answer = questdlg('Which vs. which?','',a,b,a);
+switch answer
+    case a
+    case b
+        i3=i1; i1=i2; i2=i3;
+        cL3=cL1; cL1=cL2; cL2=cL3;
+    otherwise
+        return;
+end
+% ----------
+
+
 c=zeros(size(i1));
 c(i1)=1; c(i2)=2;
 cL=[cL1;cL2];
@@ -86,7 +101,7 @@ T=T(T.p_val_adj<0.01 & T.gsetsize>=5,:);
         waitfor(helpdlg('No significant results.',''));
         return;
     else
-        outfile = sprintf('%s_vs_%s', ...
+        outfile = sprintf('%s_vs_%s_DP_results', ...
             matlab.lang.makeValidName(string(cL1)), matlab.lang.makeValidName(string(cL2)));
         %filesaved = fullfile(outdir, outfile);
         %writetable(T, filesaved, 'FileType', 'spreadsheet');
@@ -102,7 +117,6 @@ T=T(T.p_val_adj<0.01 & T.gsetsize>=5,:);
         end
     end
 
-idxneedplot=[];
 answer=questdlg('Select gene sets and plot results?','');
 if ~strcmp(answer,'Yes')
     return;
@@ -204,7 +218,7 @@ images = {};
     end
 
     if needpptx
-        gui.i_save2pptx(images); 
+        gui.i_save2pptx(images);
     else
         if success    
             answer = questdlg(sprintf('Figure files have been saved in %s. Open the folder to view files?', outdir),'');

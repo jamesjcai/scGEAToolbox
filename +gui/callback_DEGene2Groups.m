@@ -10,6 +10,7 @@ if ~gui.gui_showrefinfo('DE Analysis'), return; end
 [i1, i2, cL1, cL2] = gui.i_select2grps(sce, false);
 if length(i1) == 1 || length(i2) == 1, return; end
 
+% --------
 a=sprintf('%s vs. %s',cL1{1}, cL2{1});
 b=sprintf('%s vs. %s',cL2{1}, cL1{1});
 answer = questdlg('Which vs. which?','',a,b,a);
@@ -21,6 +22,7 @@ switch answer
     otherwise
         return;
 end
+% ----------
 
 answer = questdlg('Which method?', ...
     'Select Method', 'Wilcoxon rank-sum test 🐇', ...
@@ -47,6 +49,8 @@ elseif strcmpi(answer, 'MAST (R required) 🐢')
 else
     return;
 end
+
+
     try
         switch methodtag
             case 'ranksum'
@@ -137,7 +141,7 @@ end
         warning(ME.message);
     end
 
-    outfile = sprintf('%s_vs_%s', ...
+    outfile = sprintf('%s_vs_%s_DE_results', ...
         matlab.lang.makeValidName(string(cL1)), matlab.lang.makeValidName(string(cL2)));
     if isatac, T.gene = "chr" + T.gene; end
 

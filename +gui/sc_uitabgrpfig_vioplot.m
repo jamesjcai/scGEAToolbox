@@ -114,10 +114,12 @@ ccx = true;
         disp('Error bar shows the standard error of the mean (SEM), i.e., the standard deviation and dividing it by the square root of the sample size')
         set(ax0{idx},'xticklabel',cLx);
         
-        title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));  
-        answer = questdlg('Apply to other tabs?','');
-        if ~strcmp(answer,'Yes'), return; end
-        i_updatebarplot(idx);        
+        title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));
+        if length(tab)>1
+            answer = questdlg('Apply to other tabs?','');
+            if ~strcmp(answer,'Yes'), return; end
+            i_updatebarplot(idx);
+        end
     end
 
     function i_updatebarplot(idx)
@@ -215,10 +217,11 @@ ccx = true;
         title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));
         tabgp.SelectedTab=tab{idx};
         drawnow;
-        if length(tab)==1, return; end
-        answer = questdlg('Apply to other tabs?','');
-        if ~strcmp(answer,'Yes'), return; end
-        i_updatealltab(idx);
+        if length(tab)>1
+            answer = questdlg('Apply to other tabs?','');
+            if ~strcmp(answer,'Yes'), return; end
+            i_updatealltab(idx);
+        end
     end
 
     function i_updatesamplesizelabel(idx)
@@ -255,9 +258,11 @@ ccx = true;
         else
             b.XTickLabel = cLorder;                
         end
-        answer = questdlg('Apply to other tabs?','');
-        if ~strcmp(answer,'Yes'), return; end
-        i_updatesamplesizelabel(idx);
+        if length(tab)>1
+            answer = questdlg('Apply to other tabs?','');
+            if ~strcmp(answer,'Yes'), return; end
+            i_updatesamplesizelabel(idx);
+        end
     end
 
     function i_sortbymean(~, ~)
@@ -291,10 +296,12 @@ ccx = true;
         pkg.i_violinplot(y{idx}, thisc, colorit, cLorderx);
         title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));  
 
-        answer = questdlg('Apply to other tabs?','');
-        if ~strcmp(answer,'Yes'), return; end
-        cLorder = cLorderx;
-        i_updatealltab(idx);
+        if length(tab)>1
+            answer = questdlg('Apply to other tabs?','');
+            if ~strcmp(answer,'Yes'), return; end
+            cLorder = cLorderx;
+            i_updatealltab(idx);
+        end
     end
 
     function i_selectsamples(~, ~)
@@ -311,15 +318,18 @@ ccx = true;
         thisc_picked = thisc(picked);
         pkg.i_violinplot(y_picked, thisc_picked, colorit, cLorderx);
         title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));
-        answer = questdlg('Apply to other tabs?','');
-        if ~strcmp(answer,'Yes'), return; end
 
-        for ks=1:n
-            y{ks} = y{ks}(picked);
+        if length(tab)>1        
+            answer = questdlg('Apply to other tabs?','');
+            if ~strcmp(answer,'Yes'), return; end
+    
+            for ks=1:n
+                y{ks} = y{ks}(picked);
+            end
+            thisc = thisc_picked;
+            cLorder = cLorderx;
+            i_updatealltab(idx);
         end
-        thisc = thisc_picked;
-        cLorder = cLorderx;
-        i_updatealltab(idx);              
     end
 
     function in_testdata(~, ~)
