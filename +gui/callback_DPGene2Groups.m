@@ -44,7 +44,7 @@ fw = gui.gui_waitbar;
 [~,ix,iy]=intersect(upper(setgenes), ...
                     upper(sce.g)); %,'stable');
 setgenes=setgenes(ix);
-setmatrx=setmatrx(:,ix);    % s x g
+setmatrx=setmatrx(:,ix);      % s x g
 
 X = sce.X(iy,:);              % g x c
 sce.X = X;
@@ -125,6 +125,8 @@ else
 end
 if isempty(idxneedplot), return; end
 
+outdir = tempdir;
+%{
 answer=questdlg('Where to save figure files?','','Use Temporary Folder', ...
     'Select a Folder','Cancel','Use Temporary Folder');
 switch answer
@@ -140,6 +142,7 @@ switch answer
         outdir = tempdir;
 end
 if ~isfolder(outdir), return; end
+%}
 
 Xt=log(1+sc_norm(sce.X));
 images = {};
@@ -203,26 +206,26 @@ images = {};
  gui.gui_waitbar_adv(fw);
  if ~success
      waitfor(helpdlg('All figure files are not saved.',''));
+     winopen(outdir);
  end
 
-    % assignin("base","images",images);
     
-    answer = questdlg('Output to PowerPoint?','','Yes','No','Yes');
-    switch answer
-        case 'Yes'
-            needpptx = true;
-        case 'No'
-            needpptx = false;
-        otherwise
-            needpptx = false;
-    end
+    % answer = questdlg('Output to PowerPoint?','','Yes','No','Yes');
+    % switch answer
+    %     case 'Yes'
+    %         needpptx = true;
+    %     case 'No'
+    %         needpptx = false;
+    %     otherwise
+    %         needpptx = false;
+    % end
 
-    if needpptx
+    % if needpptx
         gui.i_save2pptx(images);
-    else
-        if success    
-            answer = questdlg(sprintf('Figure files have been saved in %s. Open the folder to view files?', outdir),'');
-            if strcmp(answer, 'Yes'), winopen(outdir); end
-        end
-    end
+    % else
+        % if success    
+        %     answer = questdlg(sprintf('Figure files have been saved in %s. Open the folder to view files?', outdir),'');
+        %     if strcmp(answer, 'Yes'), winopen(outdir); end
+        % end
+    % end
 end
