@@ -8,7 +8,7 @@ function [indx1, species] = i_selgenecollection
 %Custom Gene Sets
 
 species=[];
-indx1=[];
+
 selitems={'MSigDB Molecular Signatures',...
           'DoRothEA TF Targets',...
           'Custome Gene Sets'};

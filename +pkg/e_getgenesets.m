@@ -6,7 +6,7 @@ setmatrx=[];
 setnames=[];
 setgenes=[];
 switch option
-    case {1,'MSIGDB'}
+    case {1,'MSIGDB','MSigDB Molecular Signatures'}
         % [Col]=pkg.e_getmsigdbset;
         [~, ~, Col, ctag] = gui.i_selectMSigDBGeneSet(species,true);
         if isempty(Col) || isempty(ctag)
@@ -39,7 +39,7 @@ switch option
             % save(sprintf('msigdb_%s',ctag),'setmatrx','setnames','setgenes');
         end
    
-    case {'TF',2}
+    case {'TF',2,'DoRothEA TF Targets'}
         pw1 = fileparts(mfilename('fullpath'));
         fname = fullfile(pw1, '..','resources', 'DoRothEA_TF_Target_DB', 'dorothea_hs.mat');
         load(fname, 'T');

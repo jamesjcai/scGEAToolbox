@@ -80,14 +80,14 @@ bb = 'No, just show values';
             switch selecteditem
                     %case 'Global Coordination Level (GCL) [PMID:33139959]'
 
-                % case 'Define a New Score...'
-                %     ttxt = 'Customized Score';
-                %     [posg] = gui.i_selectngenes(sce.g,[],FigureHandle);
-                %     if isempty(posg)
-                %         helpdlg('No feature genes selected.', '')
-                %         return;
-                %     end
-                %     [y] = gui.e_cellscore(sce, posg);
+                case 'Define a New Score...'
+                    ttxt = 'Customized Score';
+                    [posg] = gui.i_selectngenes(sce.g,[],FigureHandle);
+                    if isempty(posg)
+                        helpdlg('No feature genes selected.', '')
+                        return;
+                    end
+                    [y] = gui.e_cellscore(sce, posg);
                 case 'MSigDB Molecular Signatures'
                     % speciestag = gui.i_selectspecies(2, true);
                     % if isempty(speciestag), return; end
@@ -215,7 +215,7 @@ bb = 'No, just show values';
                 %         'Expression Level', cL, colorit);
                 %     return;
 
-                case 'Custom Gene Sets'
+                case 'Predefined Custom Gene Sets'
                     if ~gui.gui_showrefinfo('Predefined Cell Score'), return; end
                     [~, T] = pkg.e_cellscores(sce.X, sce.g, 0);
                     listitems = T.ScoreType;
