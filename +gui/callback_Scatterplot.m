@@ -25,6 +25,9 @@ function callback_Scatterplot(src, ~)
             end
             gui.sc_uitabgrpfig_scatter(sce, glist, thisx, xlabelv, FigureHandle);
         
+           % i_plot_pseudotimeseries(X, genelist, t, genes)
+           % %Plot pseudotime series
+
         case 'Cell State'
             [thisyv, ylabelv] = gui.i_selectnstates(sce, true);
             a = false(length(thisyv), 1);

@@ -66,7 +66,12 @@ tb = uitoolbar(hFig);
 % pkg.i_addbutton2fig(tb, 'on', {@i_PickColorMap, c}, 'plotpicker-compass.gif', 'Pick new color map...');
 
 pkg.i_addbutton2fig(tb, 'off', @in_savedata, 'export.gif', 'Export data...');
-pkg.i_addbutton2fig(tb, 'off', @in_testdata, 'plotpicker-renko.gif', 'Add Regression Line...');
+pkg.i_addbutton2fig(tb, 'off', @in_addregress, 'plotpicker-renko.gif', 'Add Regression Line...');
+pkg.i_addbutton2fig(tb, 'off', @in_addlocfitx, 'plotpicker-renkox.gif', 'Add Locfit Local Regression...');
+
+pkg.i_addbutton2fig(tb, 'off', @in_addlocfit, 'plotpicker-renko.gif', 'Add Locfit Local Regression...');
+
+
 % pkg.i_addbutton2fig(tb, 'off', @i_addsamplesize, "icon-mat-blur-linear-10.gif", 'Add Sample Size');
 pkg.i_addbutton2fig(tb, 'off', @i_savemainfig, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 pkg.i_addbutton2fig(tb, 'off', @i_savemainfigx, "xpowerpoint.gif", 'Save Figure as Graphic File...');
@@ -180,7 +185,78 @@ hFig.Visible=true;
         end
     end
 
-    function in_testdata(~, ~)
+    function in_addlocfit(~, ~)
+        for tabidx=1:n
+            tabgp.SelectedTab=tab{tabidx};
+            thisax = ax0{tabidx};
+            thisy = y{tabidx};
+            %[~,tabidx]=ismember(focalg, tabnamelist);
+            %thisy = y{tabidx};
+            [y_fit] = pkg.e_locfit(thisy(:), thisx(:));
+            %thisax = ax0{tabidx};
+            hold(thisax,"on");
+            [sortedx, idxx]=sort(thisx(:));
+            plot(thisax, sortedx, y_fit(idxx), '-','LineWidth', 2);
+            hold(thisax,"off");
+        end
+        [~,tabidx]=ismember(focalg, tabnamelist);
+        tabgp.SelectedTab=tab{tabidx};
+    end
+
+    function in_addlocfitx(~, ~)
+        % [~,tabidx]=ismember(focalg, tabnamelist);
+        % thisy = y{tabidx};
+        % [y_fit] = pkg.e_locfit(thisy(:), thisx(:));
+        % thisax = ax0{tabidx};
+        % hold(thisax,"on");
+        % [sortedx, idxx]=sort(thisx(:));
+        % plot(thisax, sortedx, y_fit(idxx), '-','LineWidth', 2);
+        % hold(thisax,"off");
+
+        [idxx] = gui.i_selmultidlg(tabnamelist);
+        if isempty(idxx), return; end
+        if idxx == 0, return; end
+        
+        tabnamelist_a = tabnamelist(idxx);
+
+        Y = [];
+        for k=1:n
+            if ismember(k, idxx)
+                Y = [Y y{k}(:)];
+            end
+        end
+        [Y_fit] = pkg.e_locfit(Y, thisx(:));
+        answer = questdlg('ZScore transform data?','');
+        switch answer
+            case 'Yes'
+                zs = true;
+            case 'No'
+                zs = false;
+            otherwise
+                return;
+        end
+        f = figure;
+        f.Position(3)=f.Position(3)*1.8;
+        hold on
+        [sortedx, idxx]=sort(thisx(:));
+        Y_fit = Y_fit(idxx,:);
+        
+        Pk = [];
+        for k = 1:size(Y_fit, 2)
+            if zs
+                Pk = [Pk, plot(sortedx, zscore(Y_fit(:, k)), '-', 'LineWidth', 3)];
+            else
+                plot(thisx(:), Y(:,k), '.', 'markersize', 1);
+                Pk = [Pk, plot(sortedx, Y_fit(:, k), '-', 'LineWidth', 3)];
+            end
+        end
+        box on
+        tabnamelist_a = strrep(tabnamelist_a,'_','\_');
+        legend(Pk, tabnamelist_a, 'location', 'eastoutside');
+        xlim([0, max(thisx(:))]);        
+    end
+
+    function in_addregress(~, ~)
         for tabidx=1:n
             tabgp.SelectedTab=tab{tabidx};
             thisax = ax0{tabidx};
