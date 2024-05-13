@@ -108,10 +108,10 @@ if strcmpi(answer{c},'Yes') || strcmpi(answer{c},'Y')
             % T = readtable(fullfile(mfolder, ...
             %     '../resources', 'HGNCBiomart.txt'));
             load(fullfile(mfolder, ...
-                '../resources', 'Biomart_human_genes.mat'), 'T');
+                '../resources', 'Biomart', 'Biomart_human_genes.mat'), 'T');
         case 'mouse'
             load(fullfile(mfolder, ...
-                '../resources', 'Biomart_mouse_genes.mat'), 'T');
+                '../resources',  'Biomart', 'Biomart_mouse_genes.mat'), 'T');
     end
     ApprovedSymbol = string(T.GeneName);
     [idx] = ismember(upper(scenew.g), upper(ApprovedSymbol));

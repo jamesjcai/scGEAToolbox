@@ -1,5 +1,5 @@
 function [hFig] = i_violinplot(y, thisc, ttxt, colorit, cLorder, posg, parentfig)
-% see also: gui.i_violinplottab, gui.i_scattertabs
+
 
 if nargin < 7, parentfig = []; end
 if nargin < 6, posg = []; end

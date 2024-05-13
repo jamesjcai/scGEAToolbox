@@ -280,7 +280,7 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
                 return;
             end
             load(fullfile(mfolder, ...
-                '../resources', sprintf('Biomart_%s_genes.mat',speciestag)), 'T');
+                '../resources',  'Biomart', sprintf('Biomart_%s_genes.mat',speciestag)), 'T');
             ApprovedSymbol = string(T.GeneName);
             [idx] = ~ismember(upper(sce.g), upper(ApprovedSymbol));
             if any(idx)
@@ -310,7 +310,7 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
                 return;
             end
             load(fullfile(mfolder, ...
-                '../resources', sprintf('Biomart_%s_genes.mat',speciestag)), 'T');
+                '../resources',  'Biomart', sprintf('Biomart_%s_genes.mat',speciestag)), 'T');
             ApprovedSymbol = string(T.GeneName);
             sce = sce.rmmtgenes;
             sce = sce.rmhemoglobingenes;

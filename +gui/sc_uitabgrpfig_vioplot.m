@@ -1,5 +1,4 @@
 function sc_uitabgrpfig_vioplot(y, tabnamelist, thisc, parentfig)
-%see also: gui.i_violinplot, gui.i_scattertabs
 
 if ~iscell(y), y = {y}; end
 if nargin<4, parentfig = []; end

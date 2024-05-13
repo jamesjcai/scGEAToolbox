@@ -23,7 +23,16 @@ function callback_Scatterplot(src, ~)
                 helpdlg('No gene selected.', '');
                 return;
             end
-            gui.sc_uitabgrpfig_scatter(sce, glist, thisx, xlabelv, FigureHandle);
+            [Xt] = gui.i_transformx(sce.X);
+            n = length(glist);
+            y=cell(n,1);
+            for k=1:n
+                y{k} = full(Xt(upper(sce.g) == upper(glist(k)), :));
+            end
+            gui.i_scattertabs(y, glist, thisx, xlabelv, FigureHandle);
+
+
+            % gui.sc_uitabgrpfig_scatter(sce, glist, thisx, xlabelv, FigureHandle);
         
            % i_plot_pseudotimeseries(X, genelist, t, genes)
            % %Plot pseudotime series
