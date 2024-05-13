@@ -1,5 +1,10 @@
 function [Y] = e_locfit(X, t)
 
+arguments
+    X {mustBeNumeric,mustBeReal}
+    t (:,1) {mustBeNumeric,mustBeReal}
+end
+
 %[t, idx] = sort(t);
 %X = X(idx, :);
 
