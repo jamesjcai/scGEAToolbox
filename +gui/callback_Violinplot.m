@@ -10,10 +10,19 @@ function callback_Violinplot(src, ~)
     
     [thisc, ~] = gui.i_select1class(sce);
     if isempty(thisc), return; end
+
+
+    [~, cLorder] = grp2idx(thisc);
+    [newidx] = gui.i_selmultidlg(cLorder, cLorder, FigureHandle);
+    if isempty(newidx), return; end
+    picked = ismember(thisc, cLorder(newidx));
+    % cLorderx = cLorder(ismember(cLorder,cLorder(newidx)));
+    if ~all(picked)
+        thisc = thisc(picked);
+    end
     
     answer = questdlg("Violinplot for gene expression or cell state variables?","", ...
         'Gene Expression', 'Cell State','Gene Expression');
-
     switch answer
         case 'Gene Expression'
             % [c, cL] = grp2idx(thisc);
@@ -27,16 +36,21 @@ function callback_Violinplot(src, ~)
 
             [Xt] = gui.i_transformx(sce.X);
             n = length(glist);
-            thisyv=cell(n,1);
+            thisyv = cell(n,1);
             for k=1:n
                 thisyv{k} = full(Xt(upper(sce.g) == upper(glist(k)), :));
-            end             
+                if ~all(picked)
+                    thisyv{k} = thisyv{k}(picked);
+                end
+            end
             ylabelv = glist;
 
         case 'Cell State'
             [thisyv, ylabelv] = gui.i_selectnstates(sce, true);
+
             a = false(length(thisyv), 1);
             for k = 1:length(thisyv)
+                thisyv{k} = thisyv{k}(picked);
                 a(k) = isnumeric(thisyv{k});
             end
             if any(a)
@@ -44,12 +58,14 @@ function callback_Violinplot(src, ~)
                     thisyv = thisyv(a);
                     ylabelv = ylabelv(a);
                     waitfor(helpdlg('Only continuous variables of cell state will be shown.',''));
-                end
-                
+                end                
             else
                 waitfor(helpdlg('No valid cell state variables. Violinplot cannot be shown.',''));
             end
+        otherwise
+            return;
     end
-gui.sc_uitabgrpfig_vioplot(thisyv, ylabelv, thisc, FigureHandle);
+
+    gui.sc_uitabgrpfig_vioplot(thisyv, ylabelv, thisc, FigureHandle);
 
 end
