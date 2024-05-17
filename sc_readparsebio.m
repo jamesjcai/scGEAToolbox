@@ -15,8 +15,8 @@ if ~isempty(aff)
     mmfname = fullfile(selpath, sprintf('%sDGE.mtx', aff));
     zmmfname = fullfile(selpath, sprintf('%sDGE.mtx.gz', aff));
 else
-    mmfname = fullfile(selpath, 'DGE.mtx');
-    zmmfname = fullfile(selpath, 'DGE.mtx.gz');
+    mmfname = fullfile(selpath, out);
+    zmmfname = fullfile(selpath, sprintf('%s.gz', out));
 end
 if ~exist(mmfname, 'file')
     if ~exist(zmmfname, 'file')
@@ -115,6 +115,14 @@ for k = 1:length(a)
         out = a(k).name;
         aff = extractBefore(out, 'DGE.mtx');
         continue;
+    end
+end
+if isempty(out)
+    for k = 1:length(a)
+        if contains(a(k).name, 'count_matrix.mtx')
+            out = 'count_matrix.mtx';
+            continue;
+        end
     end
 end
 end
