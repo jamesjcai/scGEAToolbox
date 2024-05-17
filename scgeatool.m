@@ -1881,22 +1881,27 @@ if ~showuseronboarding, set(UserToolbarHandle, 'Visible', 'off'); end
         hold on;
         if size(xyz1, 2) >= 3
             f_traj = plot3(xyz1(:, 1), xyz1(:, 2), xyz1(:, 3), '-r', 'linewidth', 2);
-            text(xyz1(1, 1), xyz1(1, 2), xyz1(1, 3), 'Start', ...
+            t1 = text(xyz1(1, 1), xyz1(1, 2), xyz1(1, 3), 'Start', ...
                 'fontsize', 10, 'FontWeight', 'bold', 'BackgroundColor', 'w', 'EdgeColor', 'k');
-            text(xyz1(end, 1), xyz1(end, 2), xyz1(end, 3), 'End', ...
+            t2 = text(xyz1(end, 1), xyz1(end, 2), xyz1(end, 3), 'End', ...
                 'fontsize', 10, 'FontWeight', 'bold', 'BackgroundColor', 'w', 'EdgeColor', 'k');
         elseif size(xyz1, 2) == 2
             f_traj = plot(xyz1(:, 1), xyz1(:, 2), '-r', 'linewidth', 2);
-            text(xyz1(1, 1), xyz1(1, 2), 'Start', ...
+            t1 = text(xyz1(1, 1), xyz1(1, 2), 'Start', ...
                 'fontsize', 10, 'FontWeight', 'bold', 'BackgroundColor', 'w', 'EdgeColor', 'k');
-            text(xyz1(end, 1), xyz1(end, 2), 'End', ...
+            t2 = text(xyz1(end, 1), xyz1(end, 2), 'End', ...
                 'fontsize', 10, 'FontWeight', 'bold', 'BackgroundColor', 'w', 'EdgeColor', 'k');
         end
+
+
         hold off;
         % pseudotimemethod
-        % answer = questdlg('Save/Update pseudotime T in SCE', ...
-        %     'Save Pseudotime', ...
-        %     'Yes', 'No', 'Yes');
+        answer = questdlg('Swap ''Start'' and ''End''?','');
+        switch answer
+            case 'Yes'
+                t1.String = 'End';
+                t2.String = 'Start';
+        end
 
         tag = sprintf('%s_pseudotime', pseudotimemethod);
         % iscellstr(sce.list_cell_attributes(1:2:end))

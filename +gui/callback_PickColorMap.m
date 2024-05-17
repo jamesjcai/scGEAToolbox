@@ -49,6 +49,7 @@ assert(length(co) == length(cn));
 
 indx = randi(length(co));
 colormap(abs(co{indx}));
+fprintf('Set colormap to %s.\n', cn{indx});
 
 % answer=questdlg('Random colormap?','');
 % switch answer
