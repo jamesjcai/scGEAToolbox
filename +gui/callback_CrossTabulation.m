@@ -101,11 +101,15 @@ hFig.Visible=true;
 
     function in_plot1
         y = T;
+        assignin("base","y",y);
         b = bar(y, 'stacked', 'FaceColor', "flat");
         %colormap(prism(size(y,2)));
         colormap(turbo);
+        try
         for kx = 1:size(y, 2)
             b(kx).CData = kx;
+        end
+        catch
         end
         xticks(1:length(labelsx));
         labelsx1 = strrep(labelsx, '_', '\_');
@@ -124,8 +128,11 @@ hFig.Visible=true;
         b = bar(y, 'stacked', 'FaceColor', "flat");
         %colormap(prism(size(y,2)));
         colormap(turbo);
+        try
         for kx = 1:size(y, 2)
             b(kx).CData = kx;
+        end
+        catch
         end
         xlabel(clabel)
         ylabel('% of cells')
