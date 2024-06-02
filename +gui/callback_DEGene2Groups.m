@@ -8,7 +8,7 @@ if ~gui.gui_showrefinfo('DE Analysis'), return; end
 
 
 [i1, i2, cL1, cL2] = gui.i_select2grps(sce, false);
-if length(i1) == 1 || length(i2) == 1, return; end
+if isscalar(i1) || isscalar(i2), return; end
 
 % --------
 a=sprintf('%s vs. %s',cL1{1}, cL2{1});
@@ -74,7 +74,9 @@ end
         end
 
     catch ME
-        gui.gui_waitbar(fw, true);
+        %if isvalid(fw)
+        %    gui.gui_waitbar(fw, true);
+        %end
         errordlg(ME.message);
         return;
     end
