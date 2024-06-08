@@ -84,7 +84,7 @@ for i = 1:length(l)
     end
 
     % save parameters in an array (non homotopy) or in a cell array (for homotopy)
-    if (length(l) == 1)
+    if (isscalar(l))
         E = e;
         A = a;
         T = t;

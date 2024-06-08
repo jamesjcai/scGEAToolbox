@@ -1,4 +1,4 @@
-function sc_uitabgrpfig_expcomp(sce, glist, parentfig, cazcel, thisc)
+function sc_uitabgrpfig_expcomp(sce, glist, parentfig, ~, thisc)
 
 if nargin < 4, cazcel = []; end
 if nargin < 3, parentfig = []; end

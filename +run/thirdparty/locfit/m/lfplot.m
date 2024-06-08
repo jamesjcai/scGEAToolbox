@@ -33,7 +33,7 @@ fali = fit.fit_points.family_link;
 ydata = data.y;
 wdata = data.weights;
 cdata = data.censor;
-if (length(cdata) == 1) cdata = zeros(n, 1); end
+if (isscalar(cdata)) cdata = zeros(n, 1); end
 showdata = (fit.evaluation_structure.derivative == 0);
 ppargs = {};
 plotargs = {};
@@ -78,7 +78,7 @@ if (d == 1)
     plot(xfit{1}, yfit, plotargs{:});
     if (showdata)
         hold on;
-        if (length(ydata) == 1) ydata = zeros(n, 1); end
+        if (isscalar(ydata)) ydata = zeros(n, 1); end
         plotbyfactor(xdata, ydata, cdata);
         hold off;
     end

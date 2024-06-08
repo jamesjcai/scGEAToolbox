@@ -314,7 +314,7 @@ classdef FalsePositiveNegative < handle
                             end
                         end
                     end
-                    if length(plotType) == 1 && (plotType(1) < 0 || plotType(1) > 4)
+                    if isscalar(plotType) && (plotType(1) < 0 || plotType(1) > 4)
                         plotType = 3; %2D of +/-
                     end
                     if isempty(fileNameOrObj)
@@ -789,7 +789,7 @@ classdef FalsePositiveNegative < handle
                                 'Callback', @(h, e)changeD(3, newAx));
                             c{end+1} = uimenu(um, 'Label', 'False pos x neg x f-measure', ...
                                 'Callback', @(h, e)changeD(4, newAx));
-                            if length(plotType) == 1
+                            if isscalar(plotType)
                                 c{end+1} = uimenu(um, 'Separator', 'on', 'Label', ...
                                     'No legend', 'Callback', @(h, e)changeLegend(0));
                                 c{end+1} = uimenu(um, 'Label', 'Legend inside', ...
@@ -814,7 +814,7 @@ classdef FalsePositiveNegative < handle
                                     @(h, e)changeD(3, newAx));
                                 c{end+1} = Gui.NewMenuItem(jm, 'False pos x neg x f-measure', ...
                                     @(h, e)changeD(4, newAx));
-                                if length(plotType) == 1
+                                if isscalar(plotType)
                                     jm.addSeparator;
                                     c{end+1} = Gui.NewMenuItem(jm, 'No legend', ...
                                         @(h, e)changeLegend(0));

@@ -288,7 +288,7 @@ classdef Html
         end
 
         function s = Color(ml)
-            if length(ml) == 1
+            if isscalar(ml)
                 idx = mod(ml, Html.NCOLORS) + 1;
                 s = Html.COLORS{idx};
                 return;
@@ -302,7 +302,7 @@ classdef Html
             end
                 function c = hex(c)
                     c = dec2hex(c);
-                    if length(c) == 1
+                    if isscalar(c)
                         c = ['0', c];
                     end
             end

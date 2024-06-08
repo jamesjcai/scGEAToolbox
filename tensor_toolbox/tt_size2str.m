@@ -9,7 +9,7 @@ if isempty(sz)
     return;
 end
 
-if numel(sz) == 1
+if isscalar(sz)
     s = sprintf('%d', sz);
 else
     s = [sprintf('%d x ', sz(1:end-1)), sprintf('%d', sz(end))];

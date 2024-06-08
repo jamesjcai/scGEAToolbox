@@ -8,7 +8,7 @@ end
 %A = A - diag(diag(A));
 %G = graph(A);
 %L = laplacian(G);
-[L, Lnorm] = ten.sbe_laplacian_matrix(A);
+[L, ~] = ten.sbe_laplacian_matrix(A);
 
 
 [V, D] = eigs(L, 21, 'smallestabs');

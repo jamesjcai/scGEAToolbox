@@ -24,7 +24,7 @@ bb = 'No, just show values';
                 allowunique = false;
                 [thisc] = gui.i_select1class(sce, allowunique);
                 if isempty(thisc), return; end
-                if length(unique(thisc)) == 1
+                if isscalar(unique(thisc))
                     answer = questdlg("All cells are in the same group. No comparison will be made. Continue?", ...
                         "", 'Yes', 'No', 'Cancel', 'No');
                     switch answer
@@ -278,7 +278,7 @@ bb = 'No, just show values';
                         return;
                     end
                     idx = find(upper(tflist) == upper(string(listitems{indx2})));
-                    assert(length(idx) == 1)
+                    assert(isscalar(idx))
 
                     [y] = cs(idx, :);
                     ttxt = listitems{indx2};

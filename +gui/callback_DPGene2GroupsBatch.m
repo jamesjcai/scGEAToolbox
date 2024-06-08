@@ -9,7 +9,7 @@ sce = guidata(FigureHandle);
 %warndlg('Function is under development.','');
 %return;
 
-if length(unique(sce.c_cell_type_tx))==1
+if isscalar(unique(sce.c_cell_type_tx))
     warndlg('Only one cell type or cell type is undetermined.','');
     return;
 end
@@ -32,7 +32,7 @@ end
 if isempty(i1) || isempty(i2) || isempty(cL1) || isempty(cL2)
     return;
 end
-if length(i1) == 1 || length(i2) == 1, return; end
+if isscalar(i1) || isscalar(i2), return; end
 
 answer=questdlg('Select a folder to save the outupt Excel files. Continue?','');
 if ~strcmp(answer,'Yes'), return; end

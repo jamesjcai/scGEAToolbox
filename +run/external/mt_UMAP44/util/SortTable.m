@@ -411,12 +411,12 @@ classdef SortTable < handle
                     filter.setFont(java.awt.Font('arial', 0, 14));
                     filter.setRowHeightDelta(16)
                 end
-            elseif false
-                tableHeader = com.jidesoft.grid.AutoFilterTableHeader(jtable); 
-                tableHeader.setAutoFilterEnabled(true);
-                tableHeader.setShowFilterName(true);
-                tableHeader.setShowFilterIcon(true);
-                jtable.setTableHeader(tableHeader)
+            % elseif false
+            %     tableHeader = com.jidesoft.grid.AutoFilterTableHeader(jtable); 
+            %     tableHeader.setAutoFilterEnabled(true);
+            %     tableHeader.setShowFilterName(true);
+            %     tableHeader.setShowFilterIcon(true);
+            %     jtable.setTableHeader(tableHeader)
             end
             jtable.getTableHeader.setReorderingAllowed(true);
             

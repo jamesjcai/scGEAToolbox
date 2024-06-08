@@ -11,7 +11,7 @@ if strcmpi(cmapname, 'autumn')
 end
 if grayz
     a(1, :) = [.8, .8, .8];
-    if numel(unique(c)) == 1    
+    if isscalar(unique(c))    
         for kk = 1:size(a, 1)
             a(kk, :) = [.8, .8, .8];
         end

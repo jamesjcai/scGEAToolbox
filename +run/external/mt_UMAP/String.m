@@ -993,7 +993,7 @@ classdef String
             % Steven L. Eddins
             % $Revision: 1.19 $  $Date: 2020/11/28 23:16:31 $
 
-            error(nargchk(1, 2, nargin));
+            narginchk(1, 2);
 
             bad_s = ~ischar(s) || (ndims(s) > 2) || (size(s, 1) ~= 1);
             if bad_s

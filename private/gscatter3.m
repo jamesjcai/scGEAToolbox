@@ -95,7 +95,7 @@ x = x(:)';
 y = y(:)';
 z = z(:)';
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-if ~iscellstr(g)
+if ~isstring(g)
     if ischar(g)
         g = cellstr(g)';
     else
@@ -129,7 +129,7 @@ if length(gu) > 128
             clr = clrmap(inds, :);
         end
     else
-        if iscellstr(clr)
+        if isstring(clr)
             if ~isvector(clr)
                 disp('If clr is a cell array of strings, clr must be a vector.');
                 return;
@@ -204,7 +204,7 @@ if length(gu) > 128
             mrksle = mrkslestr(1, 1:length(gu));
         end
     else
-        if ~iscellstr(mrksle) && ~ischar(mrksle)
+        if ~isstring(mrksle) && ~ischar(mrksle)
             disp('Marker style must be either a cell array of strings or a character array.');
             return;
         end
@@ -212,7 +212,7 @@ if length(gu) > 128
             disp('If mrksle is a cell array of strings or a character array, mrksle must be a vector.');
             return;
         end
-        if iscellstr(mrksle) || ischar(mrksle)
+        if isstring(mrksle) || ischar(mrksle)
             if length(mrksle) ~= length(g) && length(mrksle) ~= length(gu)
                 disp('If mrksle is either a cell array of strings or a character array,');
                 disp('the length of mrksle must be either of length of g or of length equal to no of groups.');
@@ -269,7 +269,7 @@ if length(gu) > 128
         inds = strcmpi(gu{1, i}, g);
         h(1, i) = plot3(x(inds), y(inds), z(inds));
         hold on;
-        if ~iscellstr(clr) && ~ischar(clr)
+        if ~isstring(clr) && ~ischar(clr)
             set(h(1, i), 'LineStyle', 'none', 'Color', clr(i, :), 'Marker', mrksle{1, i}, 'MarkerSize', mrksze, 'MarkerFaceColor', mrkfclr(i, :));
         else
             set(h(1, i), 'LineStyle', 'none', 'Color', clr{1, i}, 'Marker', mrksle{1, i}, 'MarkerSize', mrksze, 'MarkerFaceColor', mrkfclr{1, i});

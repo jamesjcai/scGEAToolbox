@@ -1497,12 +1497,12 @@ classdef QfTree < handle
                                 ttl=strrep(ttl, this.app.smallStart, '<small>');
                                 ttl=strrep(ttl, this.app.smallEnd, '</small>');
                                 img=this.getPngImg(key,[], .22, true);
-                                if N==1
+                                %if N==1
                                     html=[html startHtml ttl '<hr>'...
                                         img endHtml];
-                                else
-                                    html=[html startHtml ttl '<hr>' img endHtml];
-                                end
+                                %else
+                                %    html=[html startHtml ttl '<hr>' img endHtml];
+                                %end
                             end
                         end
                     end

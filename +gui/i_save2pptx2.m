@@ -1,4 +1,4 @@
-function i_save2pptx(images, rmthem)
+function i_save2pptx2(images, rmthem)
 
 
 if nargin < 2, rmthem = false; end

@@ -48,7 +48,7 @@ end
 n = 1:ndims(X);
 tflag = '';
 ver = 0;
-if numel(varargin) == 1
+if isscalar(varargin)
     if ischar(varargin{1})
         tflag = varargin{1};
     else

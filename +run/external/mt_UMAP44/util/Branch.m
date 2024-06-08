@@ -51,7 +51,7 @@ classdef Branch < handle
             tree.set(this.key, this);
             
             function childPtr=getPtr(childIds)
-                if length(childIds)==1
+                if isscalar(childIds)
                     childPtr=find(ids==childIds,1);
                 else
                     childKey=num2str(sort(childIds));
@@ -114,7 +114,7 @@ classdef Branch < handle
                 branchNames{end+1}='root';
             else
                 lost=find(~found);
-                if length(lost)==1
+                if isscalar(lost)
                     phyTree(end, 1)=numLeaves+top(1);
                     phyTree(end, 2)=lost(1);
                     branchNames{end+1}='root';

@@ -118,7 +118,7 @@ classdef Gui
             % Pekka Kumpulainen 12.2.2008
             
             textopts = {};
-            if length(varargin{1})==1 && ...
+            if isscalar(varargin{1}) && ...
                     ishandle(varargin{1}) && ...
                     strcmpi(get(varargin{1},'Type'),'axes')
                 Ha = varargin{1};
@@ -216,7 +216,7 @@ classdef Gui
             % Pekka Kumpulainen 12.2.2008
             
             textopts = {};
-            if length(varargin{1})==1 && ...
+            if isscalar(varargin{1}) && ...
                     ishandle(varargin{1}) && ...
                     strcmpi(get(varargin{1},'Type'),'axes')
                 Ha = varargin{1};
@@ -1734,13 +1734,13 @@ classdef Gui
             else
                 bp=Gui.BorderPanel(0,0);
             end
-            if ispc
+            %if ispc
                 prfx='';
                 sfx='';
-            else
-                prfx='';
-                sfx='';
-            end
+            %else
+            %    prfx='';
+            %    sfx='';
+            %end
             [~, btnLess]=Gui.ImageLabel(Html.WrapSmall([prfx ...
                 '&lt;&lt;Less' sfx]), [],'', @(h,e)tipFlip(h, -1));
             btnLess.setOpaque(false);
@@ -3456,7 +3456,7 @@ classdef Gui
             end
             function c=hex(c)
                 c=dec2hex(c);
-                if length(c)==1
+                if isscalar(c)
                     c=['0' c];
                 end
             end
@@ -3486,7 +3486,7 @@ classdef Gui
             end
             function c=hex(c)
                 c=dec2hex(c);
-                if length(c)==1
+                if isscalar(c)
                     c=['0' c];
                 end
             end
@@ -4424,7 +4424,7 @@ classdef Gui
         
         function [ok,key]=HeardTheCloseKey(eventData)
             ok=false;
-            if length(eventData.Modifier)==1
+            if isscalar(eventData.Modifier)
                 key=[eventData.Modifier{1} '-' eventData.Key ];
                 if strcmpi(eventData.Modifier{1},'command')
                     if eventData.Key=='w'

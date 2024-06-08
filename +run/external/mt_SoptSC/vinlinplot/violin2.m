@@ -137,7 +137,7 @@ if isempty(find(strcmp(varargin, 'medc'), 1)) == 0
 end
 if isempty(find(strcmp(varargin, 'bw'), 1)) == 0
     b = varargin{find(strcmp(varargin, 'bw'))+1};
-    if length(b) == 1
+    if isscalar(b)
         disp(['same bandwidth bw = ', num2str(b), ' used for all cols'])
             b = repmat(b, size(Y, 2), 1);
         elseif length(b) ~= size(Y, 2)

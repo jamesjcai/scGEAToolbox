@@ -920,7 +920,7 @@ classdef UmapUtil < handle
                                                                                                                             end
                                                                                                                             FileBasics.AddNonConflictingPaths({pth, utilPath});
                                                                                                                             if nargin > 0
-                                                                                                                                if length(varargin) == 1 && isstruct(varargin{1}) ...
+                                                                                                                                if isscalar(varargin) && isstruct(varargin{1}) ...
                                                                                                                                         && isfield(varargin{1}, 'n_components')
                                                                                                                                     args = varargin{1};
                                                                                                                                     argued = [];

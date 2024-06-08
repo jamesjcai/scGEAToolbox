@@ -178,7 +178,7 @@ classdef UmapUtil < handle
                 args.class_descriptions={args.class_descriptions,...
                     'data points'};
             elseif iscell(args.class_descriptions)
-                if length(args.class_descriptions)==1
+                if isscalar(args.class_descriptions)
                     args.class_descriptions=[args.class_descriptions, 'data points'];
                 end
             end
@@ -1313,7 +1313,7 @@ classdef UmapUtil < handle
             end
             
             if nargin>0
-                if length(varargin)==1 && isstruct(varargin{1}) ...
+                if isscalar(varargin) && isstruct(varargin{1}) ...
                         && isfield(varargin{1}, 'n_components')
                     args=varargin{1};
                     argued=[];

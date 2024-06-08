@@ -37,7 +37,7 @@ else % assume that sce input is thisc
     thisc = sce;
 end
 
-if numel(unique(thisc)) == 1
+if isscalar(unique(thisc))
     warndlg("Cannot compare with an unique group");
     return;
 end

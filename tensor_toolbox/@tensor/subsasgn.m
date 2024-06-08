@@ -96,7 +96,7 @@ switch s.type
                 if ~isequal(newsiz, x.size)
                     % We need to enlarge x.data. A trick is to assign its last
                     % "new" element to zero. This resizes the array correctly.
-                    if numel(newsiz) == 1
+                    if isscalar(newsiz)
                         str = sprintf('x.data(%d)=0;', newsiz);
                     else
                         str = [sprintf('x.data('), ...

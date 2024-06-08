@@ -216,7 +216,7 @@ end
             %backward compatibility before March 1, 2023
             hasSimilarities=size(resultsT, 2)>=8;
             col2=resultsT{:, COLS{2}};
-            if length(dataSet)==1 % MLP paper clue
+            if isscalar(dataSet) % MLP paper clue
                 isTensorFlowDataset=strcmpi(col2, 'GHOSN') ...
                     | strcmpi(col2, 'OMIP-058') ...
                     | strcmpi(col2, 'LEIPOLD');

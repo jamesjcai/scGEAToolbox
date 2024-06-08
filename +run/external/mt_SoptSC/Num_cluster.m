@@ -32,7 +32,7 @@ end
 
 No_cluster2 = length(find(zz <= tol));
 No_cluster = No_cluster1;
-display('Number of cluster based on zero eigenvalues & Largest gap ');
+disp('Number of cluster based on zero eigenvalues & Largest gap ');
 display([No_cluster2, No_cluster]);
 
 eigenvalues = zz;

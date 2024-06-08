@@ -26,7 +26,7 @@ switch s(1).type
                 error(['No such field: ', s(1).subs]);
         end
     case '()'
-        if length(s.subs) == 1
+        if isscalar(s.subs)
             subs = s.subs{1};
             r = length(t.lambda);
             ns = size(subs, 1);

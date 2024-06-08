@@ -5,7 +5,7 @@ if nargin < 2, preorderedcL = []; end
 noanswer = true;
 [c, cL] = grp2idx(thisc);
 newidx=1:numel(cL);
-if numel(cL) == 1
+if isscalar(cL)
     %errordlg('Only one cell type or cluster.');
     noanswer = false;
     return;

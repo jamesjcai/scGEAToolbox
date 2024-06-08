@@ -192,7 +192,7 @@ classdef chordChart < handle
             % colorFunc=colorFuncFactory(flipud(summer(50)));
             colormap(obj.ax,flipud(summer(50)))
             try clim([0,1]),catch,end
-            try caxis([0,1]),catch,end
+            try clim([0,1]),catch,end
             % 绘制弦
             for i=1:sepNumF
                 for j=sepNumT:-1:1

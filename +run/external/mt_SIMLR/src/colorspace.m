@@ -143,13 +143,13 @@ return;
             Str = lower(strrep(strrep(Str, '-', ''), '=', ''));
             k = find(Str == '>');
 
-            if length(k) == 1 % Interpret the form 'src->dest'
+            if isscalar(k) % Interpret the form 'src->dest'
                 SrcSpace = Str(1:k-1);
                 DestSpace = Str(k+1:end);
             else
                 k = find(Str == '<');
 
-                if length(k) == 1 % Interpret the form 'dest<-src'
+                if isscalar(k) % Interpret the form 'dest<-src'
                     DestSpace = Str(1:k-1);
                     SrcSpace = Str(k+1:end);
                 else

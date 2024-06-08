@@ -185,7 +185,7 @@ switch type
         % Compute Landmark Isomap mapping
         if isempty(varargin)
             [mappedA, mapping] = landmark_isomap(A, no_dims, 12, 0.2);
-        elseif length(varargin) == 1
+        elseif isscalar(varargin)
             [mappedA, mapping] = landmark_isomap(A, no_dims, varargin{1}, 0.2);
         elseif length(varargin) > 1
             [mappedA, mapping] = landmark_isomap(A, no_dims, varargin{1}, varargin{2});
@@ -196,7 +196,7 @@ switch type
         % Compute Laplacian Eigenmaps-based mapping
         if isempty(varargin)
             [mappedA, mapping] = laplacian_eigen(A, no_dims, 12, 1, eig_impl);
-        elseif length(varargin) == 1
+        elseif isscalar(varargin)
             [mappedA, mapping] = laplacian_eigen(A, no_dims, varargin{1}, 1, eig_impl);
         elseif length(varargin) > 1
             [mappedA, mapping] = laplacian_eigen(A, no_dims, varargin{1}, varargin{2}, eig_impl);
@@ -236,7 +236,7 @@ switch type
         % Compute LLC mapping
         if isempty(varargin)
             mappedA = run_llc(A', no_dims, 12, 20, 200, eig_impl);
-        elseif length(varargin) == 1
+        elseif isscalar(varargin)
             mappedA = run_llc(A', no_dims, varargin{1}, 20, 200, eig_impl);
         elseif length(varargin) == 2
             mappedA = run_llc(A', no_dims, varargin{1}, varargin{2}, 200, eig_impl);
@@ -251,7 +251,7 @@ switch type
         % Compute mapping using manifold charting
         if isempty(varargin)
             [mappedA, mapping] = charting(A, no_dims, 40, 200, eig_impl);
-        elseif length(varargin) == 1
+        elseif isscalar(varargin)
             [mappedA, mapping] = charting(A, no_dims, varargin{1}, 200, eig_impl);
         else
             [mappedA, mapping] = charting(A, no_dims, varargin{1}, varargin{2}, eig_impl);
@@ -262,7 +262,7 @@ switch type
         % Compute mapping using Coordinated Factor Analysis
         if isempty(varargin)
             mappedA = cfa(A, no_dims, 2, 200);
-        elseif length(varargin) == 1
+        elseif isscalar(varargin)
             mappedA = cfa(A, no_dims, varargin{1}, 200);
         else
             mappedA = cfa(A, no_dims, varargin{1}, varargin{2});
@@ -302,7 +302,7 @@ switch type
         % Compute MVU mapping
         if isempty(varargin)
             [mappedA, mapping] = fastmvu(A, no_dims, 12, eig_impl);
-        elseif length(varargin) == 1
+        elseif isscalar(varargin)
             [mappedA, mapping] = fastmvu(A, no_dims, varargin{1}, true, eig_impl);
         elseif length(varargin) == 2
             [mappedA, mapping] = fastmvu(A, no_dims, varargin{1}, ...
@@ -338,7 +338,7 @@ switch type
         % Compute diffusion maps mapping
         if isempty(varargin)
             mappedA = diffusion_maps(A, no_dims, 1, 1);
-        elseif length(varargin) == 1
+        elseif isscalar(varargin)
             mappedA = diffusion_maps(A, no_dims, varargin{1}, 1);
         else
             mappedA = diffusion_maps(A, no_dims, varargin{1}, ...
@@ -350,7 +350,7 @@ switch type
         % Compute SPE mapping
         if isempty(varargin)
             mappedA = spe(A, no_dims, 'Global');
-        elseif length(varargin) == 1
+        elseif isscalar(varargin)
             mappedA = spe(A, no_dims, varargin{1});
         elseif length(varargin) == 2
             mappedA = spe(A, no_dims, varargin{1}, ...
@@ -363,7 +363,7 @@ switch type
         if isempty(varargin)
             [mappedA, mapping] = lpp(A, no_dims, 12, ...
                 1, eig_impl);
-        elseif length(varargin) == 1
+        elseif isscalar(varargin)
             [mappedA, mapping] = lpp(A, no_dims, varargin{1}, ...
                 1, eig_impl);
         else
@@ -394,7 +394,7 @@ switch type
         % Compute Symmetric SNE mapping
         if isempty(varargin)
             mappedA = sym_sne(A, no_dims);
-        elseif length(varargin) == 1
+        elseif isscalar(varargin)
             mappedA = sym_sne(A, no_dims, varargin{1});
         else
             mappedA = sym_sne(A, no_dims, varargin{1}, ...

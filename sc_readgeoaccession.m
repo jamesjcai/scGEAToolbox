@@ -9,7 +9,7 @@ b = strsplit(a, '\n');
 c = string(b(contains(b, acc)))';
 c = c(contains(c, 'ftp'));
 
-if ~(length(c) == 1 || length(c) >= 3)
+if ~(isscalar(c) || length(c) >= 3)
     disp(url)
     % warning('Check GEO supplementary file list.');
     c = c(1);
@@ -43,7 +43,7 @@ if length(c) >= 3
     else
         [X, g, barcodes] = sc_readmtxfile(f1, f2, f3);
     end
-elseif length(c) == 1
+elseif isscalar(c)
     txtnotfound = false;
     c1 = c(contains(c, 'txt'));
     if isempty(c1)

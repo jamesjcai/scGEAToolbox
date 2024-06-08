@@ -81,7 +81,7 @@ W = 0.5 .* (abs(Z) + abs(Z'));
         Y3 = zeros(n, n);
         iter = 0;
 
-        display('Iter  Err');
+        disp('Iter  Err');
         while 1
             iter = iter + 1;
             if iter >= maxiter

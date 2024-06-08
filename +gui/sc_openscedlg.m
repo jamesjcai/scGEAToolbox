@@ -289,7 +289,7 @@ function [sce] = sc_openscedlg(~, ~)
                 'liststring', b(1, valididx), ...
                 'SelectionMode', 'multiple', 'ListSize', [220, 300]);
             if tf == 1
-                if length(indx) == 1
+                if isscalar(indx)
                     sce = evalin('base', a(indx).name);
                 elseif length(indx) > 1
                     answer = questdlg('Which set operation method to merge genes?', 'Merging method', ...

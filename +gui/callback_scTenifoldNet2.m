@@ -80,7 +80,7 @@ switch answer
 
     case 'Construct de novo'
         [i1, i2] = gui.i_select2grps(sce, false);
-        if length(i1) == 1 || length(i2) == 1, return; end
+        if isscalar(i1) || isscalar(i2), return; end
 
         [nsubsmpl, csubsmpl, savegrn] = gui.i_tenifoldnetpara;
         if isempty(nsubsmpl) || isempty(csubsmpl) || isempty(savegrn), return; end

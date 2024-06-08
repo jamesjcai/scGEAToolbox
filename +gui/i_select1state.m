@@ -1,5 +1,5 @@
 function [thisc, clabel, listitems, newpickclabel] = i_select1state(sce, ...
-    nobaseline, nocustome, noattrib, continuousonly)
+    nobaseline, nocustome, noattrib, ~)
 
 if nargin < 2, nobaseline = false; end
 if nargin < 3, nocustome = false; end

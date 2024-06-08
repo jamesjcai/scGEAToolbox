@@ -5,7 +5,7 @@ if nargin < 2, prefix = ''; end
 if nargin < 1
     hFig = gcf;
     tb = findall(hFig, 'Type', 'uitoolbar');
-    if length(tb) == 1
+    if isscalar(tb)
         tb = uitoolbar(hFig);
     else
         tb = tb(1);

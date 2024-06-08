@@ -6,9 +6,9 @@ function C = mtimes(A, B)
 %Tensor Toolbox for MATLAB: <a href="https://www.tensortoolbox.org">www.tensortoolbox.org</a>
 
 
-if ~isa(B, 'ttensor') && numel(B) == 1
+if ~isa(B, 'ttensor') && isscalar(B)
     C = ttensor(B*A.core, A.u);
-elseif ~isa(A, 'ttensor') && numel(A) == 1
+elseif ~isa(A, 'ttensor') && isscalar(A)
     C = ttensor(A*B.core, B.u);
 else
     error('Use mtimes(full(A),full(B)).');

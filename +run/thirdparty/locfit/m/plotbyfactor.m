@@ -7,11 +7,9 @@ function plotbyfactor(x, y, f)
 z = unique(f);
 cols = ['b', 'r', 'g', 'm', 'c', 'y', 'k', 'w'];
 
-for (i = 1:length(z))
-    u = find(f == z(i));
-    plot(x(u), y(u), '.', 'color', cols(i));
-    hold on;
+for ix = 1:length(z)
+    u = find(f == z(ix));
+    plot(x(u), y(u), '.', 'color', cols(ix));
+    hold on
 end
-hold off;
-
-return;
+hold off

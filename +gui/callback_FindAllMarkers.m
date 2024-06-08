@@ -18,7 +18,7 @@ end
 
 [thisc, ~] = gui.i_select1class(sce);
 if isempty(thisc), return; end
-if numel(unique(thisc))==1
+if isscalar(unique(thisc))
     warndlg("All cells are in the same group.",'');
     return;
 end
@@ -54,7 +54,7 @@ end
 
 [thisc, ~] = gui.i_select1class(sce);
 if isempty(thisc), return; end
-if numel(unique(thisc))==1
+if isscalar(unique(thisc))
     warndlg("All cells are in the same group.",'');
     return;
 end
@@ -262,7 +262,7 @@ end
         h.Title = 'Marker Gene Heatmap';
         h.XLabel = 'Group';
         h.YLabel = 'Marker Gene';
-        h.Colormap = parula;
+        h.Colormap = parula(256);
         h.GridVisible = 'off';
         h.CellLabelColor = 'none';
         tb = uitoolbar('Parent', f);

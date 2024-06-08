@@ -123,7 +123,7 @@ LF = F;
 D = diag(sum(S, order));
 L = D - S;
 [U, ~] = eig(L);
-if length(no_dim) == 1
+if isscalar(no_dim)
     F = tsne_p_bo((S), [], U(:, 1:no_dim));
 else
     clear F;

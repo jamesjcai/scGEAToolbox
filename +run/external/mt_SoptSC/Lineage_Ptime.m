@@ -156,7 +156,7 @@ if root_cluster ~= 0
         end
         [~, root_cell1] = max(tau_score);
         root_cell = rootcc_idx(root_cell1);
-        display('Inferred root cell is:');
+        disp('Inferred root cell is:');
         display(root_cell);
         %        plot(tau_score);
     end
@@ -168,7 +168,7 @@ else
     else
         % find the root cluster
         [a1, a2] = find(CC_adjacent == max(CC_adjacent(:)));
-        display('Root cluster candidates:');
+        disp('Root cluster candidates:');
         display([a1, a2]);
         % root_cell = [], infer root_cell based on inferred root_cluster
         if reverse == 1
@@ -189,7 +189,7 @@ else
                 end
                 [~, root_cell1] = max(tau_score);
                 root_cell = rootcc_idx(root_cell1);
-                display('Inferred root cell is:');
+                disp('Inferred root cell is:');
                 display(root_cell);
                 %                plot(tau_score);
             end
@@ -211,7 +211,7 @@ else
                 end
                 [~, root_cell1] = max(tau_score);
                 root_cell = rootcc_idx(root_cell1);
-                display('Inferred root cell is:');
+                disp('Inferred root cell is:');
                 display(root_cell);
                 %                plot(tau_score);
             end

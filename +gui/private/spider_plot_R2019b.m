@@ -102,7 +102,7 @@ end
 % Check if axes precision is numeric
 if isnumeric(options.AxesPrecision)
     % Check is length is one
-    if length(options.AxesPrecision) == 1
+    if isscalar(options.AxesPrecision)
         % Repeat array to number of data points
         options.AxesPrecision = repmat(options.AxesPrecision, num_data_points, 1);
     elseif length(options.AxesPrecision) ~= num_data_points
@@ -122,7 +122,7 @@ if ischar(options.LineStyle)
     options.LineStyle = repmat(options.LineStyle, num_data_groups, 1);
 elseif iscellstr(options.LineStyle) %#ok<*ISCLSTR>
     % Check is length is one
-    if length(options.LineStyle) == 1
+    if isscalar(options.LineStyle)
         % Repeat cell to number of data groups
         options.LineStyle = repmat(options.LineStyle, num_data_groups, 1);
     elseif length(options.LineStyle) ~= num_data_groups
@@ -136,7 +136,7 @@ end
 % Check if line width is numeric
 if isnumeric(options.LineWidth)
     % Check is length is one
-    if length(options.LineWidth) == 1
+    if isscalar(options.LineWidth)
         % Repeat array to number of data groups
         options.LineWidth = repmat(options.LineWidth, num_data_groups, 1);
     elseif length(options.LineWidth) ~= num_data_groups
@@ -156,7 +156,7 @@ if ischar(options.Marker)
     options.Marker = repmat(options.Marker, num_data_groups, 1);
 elseif iscellstr(options.Marker)
     % Check is length is one
-    if length(options.Marker) == 1
+    if isscalar(options.Marker)
         % Repeat cell to number of data groups
         options.Marker = repmat(options.Marker, num_data_groups, 1);
     elseif length(options.Marker) ~= num_data_groups
@@ -169,7 +169,7 @@ end
 %%% Validate Marker Size
 % Check if line width is numeric
 if isnumeric(options.MarkerSize)
-    if length(options.MarkerSize) == 1
+    if isscalar(options.MarkerSize)
         % Repeat array to number of data groups
         options.MarkerSize = repmat(options.MarkerSize, num_data_groups, 1);
     elseif length(options.MarkerSize) ~= num_data_groups
@@ -188,7 +188,7 @@ end
 % Check if axes scaling is a cell
 if iscell(options.AxesScaling)
     % Check is length is one
-    if length(options.AxesScaling) == 1
+    if isscalar(options.AxesScaling)
         % Repeat array to number of data points
         options.AxesScaling = repmat(options.AxesScaling, num_data_points, 1);
     elseif length(options.AxesScaling) ~= num_data_points
@@ -203,7 +203,7 @@ end
 % Check if axes direction is a cell
 if iscell(options.AxesDirection)
     % Check is length is one
-    if length(options.AxesDirection) == 1
+    if isscalar(options.AxesDirection)
         % Repeat array to number of data points
         options.AxesDirection = repmat(options.AxesDirection, num_data_points, 1);
     elseif length(options.AxesDirection) ~= num_data_points
@@ -218,7 +218,7 @@ end
 % Check if fill option is a cell
 if iscell(options.FillOption)
     % Check is length is one
-    if length(options.FillOption) == 1
+    if isscalar(options.FillOption)
         % Repeat array to number of data groups
         options.FillOption = repmat(options.FillOption, num_data_groups, 1);
     elseif length(options.FillOption) ~= num_data_groups
@@ -233,7 +233,7 @@ end
 % Check if fill transparency is numeric
 if isnumeric(options.FillTransparency)
     % Check is length is one
-    if length(options.FillTransparency) == 1
+    if isscalar(options.FillTransparency)
         % Repeat array to number of data groups
         options.FillTransparency = repmat(options.FillTransparency, num_data_groups, 1);
     elseif length(options.FillTransparency) ~= num_data_groups
@@ -247,7 +247,7 @@ end
 % Check if line transparency is numeric
 if isnumeric(options.LineTransparency)
     % Check is length is one
-    if length(options.LineTransparency) == 1
+    if isscalar(options.LineTransparency)
         % Repeat array to number of data groups
         options.LineTransparency = repmat(options.LineTransparency, num_data_groups, 1);
     elseif length(options.LineTransparency) ~= num_data_groups
@@ -261,7 +261,7 @@ end
 % Check if marker transparency is numeric
 if isnumeric(options.MarkerTransparency)
     % Check is length is one
-    if length(options.MarkerTransparency) == 1
+    if isscalar(options.MarkerTransparency)
         % Repeat array to number of data groups
         options.MarkerTransparency = repmat(options.MarkerTransparency, num_data_groups, 1);
     elseif length(options.MarkerTransparency) ~= num_data_groups
@@ -311,7 +311,7 @@ if any(~ismember(options.AxesInterpreter, {'tex', 'latex', 'none'}))
         options.AxesInterpreter = repmat(options.AxesInterpreter, length(options.AxesLabels), 1);
     elseif iscellstr(options.AxesInterpreter)
         % Check is length is one
-        if length(options.AxesInterpreter) == 1
+        if isscalar(options.AxesInterpreter)
             % Repeat cell to number of axes labels
             options.AxesInterpreter = repmat(options.AxesInterpreter, length(options.AxesLabels), 1);
         elseif length(options.AxesInterpreter) ~= length(options.AxesLabels)
@@ -348,7 +348,7 @@ if any(~ismember(options.AxesInterpreter, {'tex', 'latex', 'none'}))
         options.AxesShadedColor = repmat(options.AxesShadedColor, length(options.AxesShadedLimits), 1);
     elseif iscellstr(options.AxesShadedColor)
         % Check is length is one
-        if length(options.AxesShadedColor) == 1
+        if isscalar(options.AxesShadedColor)
             % Repeat cell to number of axes shaded limits groups
             options.AxesShadedColor = repmat(options.AxesShadedColor, length(options.AxesShadedLimits), 1);
         end
@@ -360,7 +360,7 @@ if any(~ismember(options.AxesInterpreter, {'tex', 'latex', 'none'}))
     end
 
     % Check is length is one
-    if length(options.AxesShadedTransparency) == 1
+    if isscalar(options.AxesShadedTransparency)
         % Repeat array to number of axes shaded limits groups
         options.AxesShadedTransparency = repmat(options.AxesShadedTransparency, length(options.AxesShadedLimits), 1);
     elseif length(options.AxesShadedTransparency) ~= length(options.AxesShadedLimits)
@@ -377,7 +377,7 @@ if any(~ismember(options.AxesInterpreter, {'tex', 'latex', 'none'}))
         options.AxesTickFormat = repmat(options.AxesTickFormat, num_data_points, 1);
     elseif iscellstr(options.AxesTickFormat)
         % Check is length is one
-        if length(options.AxesTickFormat) == 1
+        if isscalar(options.AxesTickFormat)
             % Repeat cell to number of axes shaded limits groups
             options.AxesTickFormat = repmat(options.AxesTickFormat, num_data_points, 1);
         end

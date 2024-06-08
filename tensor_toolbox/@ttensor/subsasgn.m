@@ -20,14 +20,14 @@ switch s(1).type
     case '.'
         switch s(1).subs
             case {'core', 'lambda'}
-                if length(s) == 1
+                if isscalar(s)
                     t = ttensor(b, t.u);
                 else
                     tmpcore = subsasgn(t.core, s(2:end), b);
                     t = ttensor(tmpcore, t.u);
                 end
             case {'u', 'U'}
-                if length(s) == 1
+                if isscalar(s)
                     t = ttensor(t.core, b);
                 else
                     tmpu = subsasgn(t.u, s(2:end), b); %Refine in U

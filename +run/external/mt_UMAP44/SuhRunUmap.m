@@ -1296,7 +1296,7 @@ classdef SuhRunUmap < handle
                 end                
                 sCols=num2str(nCols);
                 if nRows*nCols<15
-                    if length(inData)==1
+                    if isscalar(inData)
                         if inData>1&&inData<=34
                             if askYesOrNo(['Run example #' num2str(inData) '??'])
                                 run_examples(inData)
@@ -1384,7 +1384,7 @@ classdef SuhRunUmap < handle
                         inData=LabelBasics.Compress(inData, [], args.compress);
                     else
                         if isempty(template_file)
-                            if length(args.compress)==1
+                            if isscalar(args.compress)
                                 [inData,labels]=LabelBasics.Compress(...
                                     inData, labels, args.compress);
                             else
@@ -1392,7 +1392,7 @@ classdef SuhRunUmap < handle
                                     args.compress(1), args.compress(2));
                             end
                         else
-                            if length(args.compress)==1
+                            if isscalar(args.compress)
                                 [inData,testSetLabels]=LabelBasics.Compress(inData, ...
                                     testSetLabels,args.compress);
                             else

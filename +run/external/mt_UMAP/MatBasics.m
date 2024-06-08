@@ -992,7 +992,7 @@ classdef MatBasics
                 for i = 1:N1
                     clue = clusterIds(i);
                     idxs = unique(newPtrs(oldPtrs == clue));
-                    assert(length(idxs) == 1);
+                    assert(isscalar(idxs));
                     groups{idxs(1)} = [clue, groups{idxs(1)}];
                 end
             end
@@ -1465,7 +1465,7 @@ classdef MatBasics
 
                 % Obtain arguments (limited argument checking is done)
                 % Determine if axes handle is specified
-                if length(varargin{1}) == 1 && ishandle(varargin{1}) ...
+                if isscalar(varargin{1}) && ishandle(varargin{1}) ...
                         && strcmp(get(varargin{1}, 'type'), 'axes')
                     hAx = varargin{1};
                     varargin = varargin(2:end); % Remove arg 1 (axes handle)
@@ -1474,7 +1474,7 @@ classdef MatBasics
                 end
 
                 % Remaining args are either two point locations or a position vector
-                if length(varargin) == 1 % Assume a 4-element position vector
+                if isscalar(varargin) % Assume a 4-element position vector
                     pos = varargin{1};
                 else
                     [x, y] = deal(varargin{:}); % Assume two pairs (start, end points)

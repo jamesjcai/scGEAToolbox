@@ -13,12 +13,12 @@ function C = mtimes(A, B)
 
 
 % Handle scalar input
-if ~isa(B, 'tenmat') && numel(B) == 1
+if ~isa(B, 'tenmat') && isscalar(B)
     C = A;
     C.data = C.data * B;
     return;
 end
-if ~isa(A, 'tenmat') && numel(A) == 1
+if ~isa(A, 'tenmat') && isscalar(A)
     C = B;
     C.data = C.data * A;
     return;

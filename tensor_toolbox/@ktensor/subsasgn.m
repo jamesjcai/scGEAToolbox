@@ -20,14 +20,14 @@ switch s(1).type
     case '.'
         switch s(1).subs
             case 'lambda'
-                if length(s) == 1
+                if isscalar(s)
                     t = ktensor(b, t.u);
                 else
                     newlambda = subsasgn(t.lambda, s(2:end), b);
                     t = ktensor(newlambda, t.u);
                 end
             case {'u', 'U'}
-                if length(s) == 1
+                if isscalar(s)
                     t = ktensor(t.lambda, b);
                 else
                     tmpu = subsasgn(t.u, s(2:end), b);

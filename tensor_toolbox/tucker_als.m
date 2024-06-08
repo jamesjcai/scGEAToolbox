@@ -52,7 +52,7 @@ dimorder = params.Results.dimorder;
 init = params.Results.init;
 printitn = params.Results.printitn;
 
-if numel(R) == 1
+if isscalar(R)
     R = R * ones(N, 1);
 end
 % U = cell(N,1);

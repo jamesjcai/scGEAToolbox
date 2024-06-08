@@ -1140,9 +1140,9 @@ classdef ColorsEditor <handle
             this.setColor(color, mrs, vrs, c-1, false);
             this.updateBtnsAndDfltStatus(mrs, vrs);
             drawnow;
-            if length(vrs)==1
+            if isscalar(vrs)
                 vcs=J.getSelectedColumns;
-                if length(vcs)==1
+                if isscalar(vcs)
                     vScatter=J.convertColumnIndexToView(ColorsEditor.COL_SCATTER);
                     if vcs(1)==vScatter
                         J.changeSelection(vrs(1), vScatter, true, false);

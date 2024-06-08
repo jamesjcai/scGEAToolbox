@@ -314,7 +314,7 @@ if mod(nargin-na, 2) == 0
         end
         if (strcmp(varargin{na}, 'base')) % numeric vector, n*1 or 1*1.
             base = double(varargin{na+1});
-            if (length(base) == 1)
+            if (isscalar(base))
                 base = base * ones(n, 1);
             end
             inc = 2;

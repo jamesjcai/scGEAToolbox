@@ -52,13 +52,13 @@ X = [tt .* cos(tt); height; tt .* sin(tt)]; % Matrix of points
 [dknn_1, Hknn_1, Lavgknn_1, Lstdknn_1] = knn_graph_estim_1(X', kneighbors, gamma, 1, 10, samp); % (M,N)=(1,10)
 
 display(['Intrinsic dimension estimate = ', num2str(round(dknn_1))]) % note that dknn_1 is rounded to the nearest integer
-display(['Intrinsic entropy estimate = ', num2str(Hknn_1), ' bits'])
+disp(['Intrinsic entropy estimate = ', num2str(Hknn_1), ' bits'])
 
 
 [dknn_2, Hknn_2, Lavgknn_2, Lstdknn_2] = knn_graph_estim_1(X', kneighbors, gamma, 10, 1, samp); % (M,N)=(10,1)
 
 display(['Intrinsic dimension estimate = ', num2str(round(dknn_2))])
-display(['Intrinsic entropy estimate = ', num2str(Hknn_2), ' bits'])
+disp(['Intrinsic entropy estimate = ', num2str(Hknn_2), ' bits'])
 
 
 Dist = L2_distance(X, X, 1); % matrix of Euclidean distances between points
@@ -67,7 +67,7 @@ Dist = L2_distance(X, X, 1); % matrix of Euclidean distances between points
 [dknn_3, Hknn_3, Lavgknn_3, Lstdknn_3] = knn_graph_estim_2(Dist, kneighbors, gamma, 1, 10, samp); % (M,N)=(1,10)
 
 display(['Intrinsic dimension estimate = ', num2str(round(dknn_3))])
-display(['Intrinsic entropy estimate = ', num2str(Hknn_3), ' bits'])
+disp(['Intrinsic entropy estimate = ', num2str(Hknn_3), ' bits'])
 
 %%
 

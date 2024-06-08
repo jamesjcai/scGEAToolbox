@@ -38,7 +38,7 @@ classdef TreeMapOfMany < handle
             k = CellBasics.Java(this.map.keySet);
         end
         function put(this, k, v)
-            if ischar(k) && length(k) == 1
+            if ischar(k) && isscalar(k)
                 k = java.lang.String(k);
             end
             if this.map.containsKey(k)
@@ -51,14 +51,14 @@ classdef TreeMapOfMany < handle
                 end
                 this.map.put(k, l);
             end
-            if ischar(v) && length(v) == 1
+            if ischar(v) && isscalar(v)
                 v = java.lang.String(v);
             end
             l.add(v);
         end
 
         function it = getIterator(this, k)
-            if ischar(k) && length(k) == 1
+            if ischar(k) && isscalar(k)
                 k = java.lang.String(k);
             end
             if this.map.containsKey(k)
@@ -80,7 +80,7 @@ classdef TreeMapOfMany < handle
                 it = this.map.keySet.iterator;
                 while (it.hasNext)
                     k = it.next;
-                    if ischar(k) && length(k) == 1
+                    if ischar(k) && isscalar(k)
                         k = java.lang.String(k);
                     end
                     l = this.map.get(k);
@@ -139,7 +139,7 @@ classdef TreeMapOfMany < handle
             i = 1;
             while it.hasNext
                 k = it.next;
-                if ischar(k) && length(k) == 1
+                if ischar(k) && isscalar(k)
                     k = java.lang.String(k);
                 end
                 l = this.map.get(k);
@@ -164,7 +164,7 @@ classdef TreeMapOfMany < handle
             i = 1;
             while it.hasNext
                 k = it.next;
-                if ischar(k) && length(k) == 1
+                if ischar(k) && isscalar(k)
                     k = java.lang.String(k);
                 end
                 l = this.map.get(k);
@@ -191,7 +191,7 @@ classdef TreeMapOfMany < handle
             i = 1;
             while it.hasNext
                 k = it.next;
-                if ischar(k) && length(k) == 1
+                if ischar(k) && isscalar(k)
                     k = java.lang.String(k);
                 end
                 l = this.map.get(k);
@@ -289,7 +289,7 @@ classdef TreeMapOfMany < handle
             i = 1;
             while it.hasNext
                 k = it.next;
-                if ischar(k) && length(k) == 1
+                if ischar(k) && isscalar(k)
                     k = java.lang.String(k);
                 end
                 l = this.map.get(k);
@@ -313,7 +313,7 @@ classdef TreeMapOfMany < handle
             all = java.util.ArrayList;
             while it.hasNext
                 k = it.next;
-                if ischar(k) && length(k) == 1
+                if ischar(k) && isscalar(k)
                     k = java.lang.String(k);
                 end
                 all.addAll(this.map.get(k));
@@ -323,12 +323,12 @@ classdef TreeMapOfMany < handle
 
         function out = remove(this, k, v)
             out = [];
-            if ischar(k) && length(k) == 1
+            if ischar(k) && isscalar(k)
                 k = java.lang.String(k);
             end
             if this.map.containsKey(k)
                 l = this.map.get(k);
-                if ischar(v) && length(v) == 1
+                if ischar(v) && isscalar(v)
                     v = java.lang.String(v);
                 end
                 out = l.remove(v);
@@ -336,13 +336,13 @@ classdef TreeMapOfMany < handle
         end
 
         function renameKey(this, k, newKey)
-            if ischar(k) && length(k) == 1
+            if ischar(k) && isscalar(k)
                 k = java.lang.String(k);
             end
             l = this.map.remove(k);
             if ~isempty(l)
                 k = newKey;
-                if ischar(k) && length(k) == 1
+                if ischar(k) && isscalar(k)
                     k = java.lang.String(k);
                 end
                 this.map.put(k, l);

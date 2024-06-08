@@ -365,7 +365,7 @@ for iOpt = 1:nOpt
          isBin = true;
          if ischar(Data)
             Data  = uint8(Data);
-         elseif myIsString(Data) && numel(Data) == 1
+         elseif myIsString(Data) && isscalar(Data)
             Data  = uint8(char(Data));
          else
             Error_L('BadDataType', ...

@@ -13,7 +13,7 @@ function callback_ShowGeneExprCompr(src, ~)
         allowunique = false;
         [thisc] = gui.i_select1class(sce, allowunique);
         if isempty(thisc), return; end
-        if length(unique(thisc)) == 1
+        if isscalar(unique(thisc))
             answer = questdlg("All cells are in the same group. No comparison will be made. Continue?", ...
                 "", 'Yes', 'No', 'Cancel', 'No');
             switch answer

@@ -234,7 +234,10 @@ pp = mkpp(breaks, coefs, dim);
                 % Interpolate breaks linearly from x-data
                 dx = diff(x);
                 ibreaks = linspace(1, mx, p+1);
-                [~, ibin] = histc(ibreaks, [0, 2:mx - 1, mx + 1]);
+                [~, ibin2] = histc(ibreaks, [0, 2:mx - 1, mx + 1]);
+                [~, ~, ibin] = histcounts(ibreaks, [0, 2:mx - 1, mx + 1]);
+                assert(isequal(ibin2, ibin));
+
                 breaks = x(ibin) + dx(ibin) .* (ibreaks - ibin);
             else
                 breaks = x(1) + linspace(0, 1, p+1);
@@ -482,7 +485,9 @@ pp = mkpp(breaks, coefs, dim);
                         cc = constr.cc;
 
                         % Bin data
-                        [~, ibin] = histc(xc, [-inf, breaks(2:end-1), inf]);
+                        [~, ibin2] = histc(xc, [-inf, breaks(2:end-1), inf]);
+                        [~, ~, ibin] = histcounts(xc, [-inf, breaks(2:end-1), inf]);
+                        assert(isequal(ibin2, ibin));
 
                         % Evaluate constraints
                         nx = numel(xc);

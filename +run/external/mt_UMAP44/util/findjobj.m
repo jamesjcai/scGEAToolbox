@@ -331,7 +331,7 @@ function [handles,levels,parentIdx,listing] = findjobj(container,varargin) %#ok<
         processArgs(varargin{:});
 
         % De-cell and trim listing, if only one element was found (no use for indented listing in this case)
-        if iscell(listing) && length(listing)==1
+        if iscell(listing) && isscalar(listing)
             listing = strtrim(listing{1});
         end
 
@@ -1003,7 +1003,7 @@ function [handles,levels,parentIdx,listing] = findjobj(container,varargin) %#ok<
                 if length(propertyName) == 2
                     propertyVal  = propertyName{2};
                     propertyName = propertyName{1};
-                elseif length(propertyName) == 1
+                elseif isscalar(propertyName)
                     propertyName = propertyName{1};
                 else
                     error('YMA:findjobj:IllegalPropertyFilter','Property filter must be a string (case insensitive name of property) or cell array {propName,propValue}');
@@ -2027,7 +2027,7 @@ function [handles,levels,parentIdx,listing] = findjobj(container,varargin) %#ok<
                             callbacksTableModel = eval('com.jidesoft.grid.PropertyTableModel(list);');  %#ok prevent JIDE alert by run-time (not load-time) evaluation
                             
                             % Expand if only one category
-                            if length(callbacksTableModel.getCategories)==1
+                            if isscalar(callbacksTableModel.getCategories)
                                 callbacksTableModel.expandFirstLevel;
                             end
                         catch
@@ -2148,7 +2148,7 @@ function [handles,levels,parentIdx,listing] = findjobj(container,varargin) %#ok<
                             callbacksTableModel = eval('com.jidesoft.grid.PropertyTableModel(list);');  %#ok prevent JIDE alert by run-time (not load-time) evaluation
                             
                             % Expand if only one category
-                            if length(callbacksTableModel.getCategories)==1
+                            if isscalar(callbacksTableModel.getCategories)
                                 callbacksTableModel.expandFirstLevel;
                             end
                         catch
@@ -2382,7 +2382,7 @@ function [handles,levels,parentIdx,listing] = findjobj(container,varargin) %#ok<
             end
 
             % If we have a single child handle, wrap it within a javaArray for tree.add() to "swallow"
-            if (length(childnodes) == 1)
+            if (isscalar(childnodes))
                 chnodes = childnodes;
                 childnodes = javaArray('com.mathworks.hg.peer.UITreeNode', 1);
                 childnodes(1) = java(chnodes);
@@ -2811,7 +2811,7 @@ function [handles,levels,parentIdx,listing] = findjobj(container,varargin) %#ok<
     function btInspect_Callback(src, evd, varargin)  %#ok
         try
             % Inspect the specified object
-            if length(varargin) == 1
+            if isscalar(varargin)
                 object = varargin{1};
             else
                 object = getTopSelectedObject(varargin{:});

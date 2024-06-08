@@ -1803,7 +1803,7 @@ classdef Gui
                                                                                         end
                                                                                             function c = hex(c)
                                                                                                 c = dec2hex(c);
-                                                                                                if length(c) == 1
+                                                                                                if isscalar(c)
                                                                                                     c = ['0', c];
                                                                                                 end
                                                                                         end
@@ -2656,7 +2656,7 @@ classdef Gui
 
                                                                                                                                                                                                                                     function [ok, key] = HeardTheCloseKey(eventData)
                                                                                                                                                                                                                                         ok = false;
-                                                                                                                                                                                                                                        if length(eventData.Modifier) == 1
+                                                                                                                                                                                                                                        if isscalar(eventData.Modifier)
                                                                                                                                                                                                                                             key = [eventData.Modifier{1}, '-', eventData.Key];
                                                                                                                                                                                                                                             if strcmpi(eventData.Modifier{1}, 'command')
                                                                                                                                                                                                                                                 if eventData.Key == 'w'

@@ -344,7 +344,7 @@ pp = mkpp(breaks, coefs, dim);
         if isempty(yc)
             % Zero array
             yc = zeros(pdim, nx);
-        elseif numel(yc) == 1
+        elseif isscalar(yc)
             % Constant array
             yc = zeros(pdim, nx) + yc;
         elseif numel(yc) ~= pdim * nx

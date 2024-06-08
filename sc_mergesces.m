@@ -25,7 +25,7 @@ for k = 2:length(sces)
         needappendix=true;
     end
 end
-if ~keepbatchid || numel(unique(sce.c_batch_id))==1 
+if ~keepbatchid || isscalar(unique(sce.c_batch_id)) 
     sce.c_batch_id = c; 
 end
 if needappendix

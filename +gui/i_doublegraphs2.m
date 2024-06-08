@@ -24,7 +24,7 @@ G = digraph(A, n);
 
 % gui.i_singlegraph(G);
 hFig = figure;
-[p] = drawnetwork(G);
+[~] = drawnetwork(G);
 % hFig = gcf;
 hFig.Position(3) = hFig.Position(3) * 2.2;
 

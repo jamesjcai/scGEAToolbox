@@ -140,7 +140,7 @@ k = find(cspec == c(1));
 if isempty(k)
     error('MATLAB:InvalidColorString', 'Unknown color string.');
 end
-if k ~= 3 || length(c) == 1
+if k ~= 3 || isscalar(c)
     c = rgbspec(k, :);
 elseif length(c) > 2
     if strcmpi(c(1:3), 'bla')

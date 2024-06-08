@@ -82,24 +82,24 @@ set(hFig, 'visible', 'on');
         if ~isempty(titlex), title(titlex); end
     end
 
-    function i_addsamplesize(~, ~)
-        % b=gca;
-        % if isempty(OldXTickLabel)
-        %     a=zeros(length(cLorder),1);
-        %
-        %     OldXTickLabel=b.XTickLabel;
-        %     for k=1:length(cLorder)
-        %         a(k)=sum(thisc==cLorder(k));
-        %         b.XTickLabel{k}=sprintf('%s\\newline(n=%d)', ...
-        %             b.XTickLabel{k},a(k));
-        %     end
-        % else
-        %     b.XTickLabel=OldXTickLabel;
-        %     OldXTickLabel=[];
-        % end
-    end
+    % function i_addsamplesize(~, ~)
+    %     % b=gca;
+    %     % if isempty(OldXTickLabel)
+    %     %     a=zeros(length(cLorder),1);
+    %     %
+    %     %     OldXTickLabel=b.XTickLabel;
+    %     %     for k=1:length(cLorder)
+    %     %         a(k)=sum(thisc==cLorder(k));
+    %     %         b.XTickLabel{k}=sprintf('%s\\newline(n=%d)', ...
+    %     %             b.XTickLabel{k},a(k));
+    %     %     end
+    %     % else
+    %     %     b.XTickLabel=OldXTickLabel;
+    %     %     OldXTickLabel=[];
+    %     % end
+    % end
 
-    function i_sortbymean(~, ~)
+%    function i_sortbymean(~, ~)
         % [cx,cLx]=grp2idx(thisc);
         % a=zeros(max(cx),1);
         % for k=1:max(cx)
@@ -119,7 +119,7 @@ set(hFig, 'visible', 'on');
         % cla
         % cLorder=cLx_sorted;
         % pkg.i_violinplot(y,thisc,colorit,cLorder);
-end
+%end
 
 
     function i_reordersamples(~, ~)

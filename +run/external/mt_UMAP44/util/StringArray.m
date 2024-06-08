@@ -481,7 +481,7 @@ classdef StringArray < handle
                     nf=StringArray.NotFound(d2, d1);
                     if isempty(nf)
                         sameButReordered=true;
-                    elseif length(nf)==1
+                    elseif isscalar(nf)
                         % is FMO?
                         if isempty(d1{nf}) || isempty(d2{nf})
                             d1_=d1;
@@ -571,11 +571,11 @@ classdef StringArray < handle
                     else
                         value=values{i};
                     end
-                    if isnumeric(value)
+                    %if isnumeric(value)
+                    %    v=[v '=' num2str(value)];
+                    %else
                         v=[v '=' num2str(value)];
-                    else
-                        v=[v '=' num2str(value)];
-                    end
+                    %end
                 end
                 if (i>1)
                     str=[str delimiter v];

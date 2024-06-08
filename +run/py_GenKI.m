@@ -1,4 +1,4 @@
-function [T] = py_GenKI(X, g, idx, wkdir, isdebug)
+function [T] = py_GenKI(~, g, idx, wkdir, isdebug)
 
 if nargin < 5, isdebug = true; end
 if nargin < 4, wkdir = []; end

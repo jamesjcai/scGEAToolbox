@@ -47,7 +47,7 @@ if nargout > 1
     edgeBinIdxs = gce.edgeBins;
 end
 if ~isa(fgOrDensityObject, 'Density')
-    if length(clusterIds) == 1
+    if isscalar(clusterIds)
         fgOrDensityObject.edgeX{clusterIds} = xx;
         fgOrDensityObject.edgeY{clusterIds} = yy;
     end
