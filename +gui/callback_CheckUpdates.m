@@ -2,8 +2,12 @@ function callback_CheckUpdates(src, ~)
 % Check for updates.
 FigureHandle = src.Parent.Parent;
 % Col = webread('https://api.github.com/repos/jamesjcai/scGEAToolbox')
-[majneedupdate, v1, v2] = pkg.i_majvercheck;
-
+try
+    [majneedupdate, v1, v2] = pkg.i_majvercheck;
+catch ME
+    errordlg('Could not access server.');
+    return;
+end
 if majneedupdate
     answer = questdlg(sprintf('There is a new version of scGEAToolbox (%s vs. %s). Learn how to install?', v2, v1));
     if strcmp(answer, 'Yes')
