@@ -186,6 +186,9 @@ y = y(si);
 r = 1:n;
 r(si) = r;
 
+% no Y ties
+% r = tiedrank(y);
+
 % If no Y ties compute it directly
 if length(unique(y)) == n
     xi = 1 - 3*sum(abs(diff(r)))/(n^2 - 1);
