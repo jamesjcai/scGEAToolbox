@@ -115,7 +115,7 @@ function [blockVectorX,lambda,varargout] = ...
 %
 % The following Example:
 %
-% L=ichol(A,struct('michol','on')); precfun = @(x)L'\(L\x);
+% R=ichol(A,struct('michol','on')); precfun = @(x)R\(R'\x);
 % [blockVectorX,lambda,failureFlag]=lobpcg(randn(n,8),A,[],@(x)precfun(x),1e-5,60,2);
 %
 % computes the same eigenpairs in less then 25 steps, so that failureFlag=0
@@ -166,9 +166,6 @@ function [blockVectorX,lambda,varargout] = ...
 % A = diag(1:100); B = diag(101:200);
 % [blockVectorX,lambda]=lobpcg(randn(100,2,'single'),A,1e-5,15,2);
 %
-% Revision 4.18 removes the check for the size of operatorA apparently
-% not working for function handles
-%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % This main function LOBPCG is a version of
@@ -206,8 +203,8 @@ function [blockVectorX,lambda,varargout] = ...
 % https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.lobpcg.html
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %   License:  MIT / Apache-2.0
-%   Copyright (c) 2000-2021 A.V. Knyazev, Andrew.Knyazev@ucdenver.edu
-%   $Revision: 4.18 $  $Date: 26-April-2021
+%   Copyright (c) 2000-2019 A.V. Knyazev, Andrew.Knyazev@ucdenver.edu
+%   $Revision: 1.2 $  $Date: 13-June-2019
 %   This revision is tested in 9.6.0.1114505 (R2019a) Update 2, but is
 %   expected to work on any >R2007b MATLAB.
 %   Revision 4.13 tested in MATLAB 6.5-7.13.
@@ -249,6 +246,19 @@ if n < 6
     error('BLOPEX:lobpcg:MatrixTooSmall',...
         'The code does not work for matrices of small sizes');
 end
+if isa(operatorA,'numeric')
+    nA = size(operatorA,1);
+    if any(size(operatorA) ~= nA)
+        error('BLOPEX:lobpcg:MatrixNotSquare',...
+            'operatorA must be a square matrix or a string');
+    end
+    if size(operatorA) ~= n
+        error('BLOPEX:lobpcg:MatrixWrongSize',...
+            ['The size ' int2str(size(operatorA))...
+            ' of operatorA is not the same as ' int2str(n)...
+            ' - the number of rows of blockVectorX']);
+    end
+end
 count_string = 0;
 operatorT = [];
 operatorB = [];
@@ -287,7 +297,7 @@ for j = 1:nargin-2
             warning('BLOPEX:lobpcg:TooManyStringFunctionHandleInputs',...
                 'Too many string or FunctionHandle input arguments');
         end
-    elseif isequal(size(varargin{j}),[n,n])
+    elseif ~isequal(size(varargin{j}),[n,n])
         error('BLOPEX:lobpcg:WrongPreconditionerFormat',...
             'Preconditioner operatorT must be an M-function');
     elseif max(size(varargin{j})) == 1
