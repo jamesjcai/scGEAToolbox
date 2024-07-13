@@ -17,8 +17,8 @@ function [OKPressed] = sc_savescedlg(sce)
 
             a = sce.metadata(contains(sce.metadata, "Source:"));
             if ~isempty(a), a = strtrim(strrep(a, "Source: ","")); end
-            if ~isempty(a), a = sprintf("%s_",a(:)); end
-            if ~isempty(a), a = extractBefore(a, strlength(a)-1); end
+            if ~isempty(a), a = sprintf("%s_", a(:)); end
+            if ~isempty(a), a = extractBefore(a, strlength(a)); end
             if ~isempty(a), a = matlab.lang.makeValidName(a); end
     ButtonName = list{indx};
     switch ButtonName
