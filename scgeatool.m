@@ -109,7 +109,7 @@ in_addmenu(m_file, 0, @in_closeRequest, '&Close','W');
 in_addmenu(m_file, 1, {@gui.i_savemainfig, 3}, 'Save Figure to PowerPoint File...');
 in_addmenu(m_file, 0, {@gui.i_savemainfig, 2}, 'Save Figure as Graphic File...');
 in_addmenu(m_file, 0, {@gui.i_savemainfig, 1}, 'Save Figure as SVG File...');
-in_addmenu(m_file, 1, @callback_SaveX, 'Export && &Save Data...', 'S');
+in_addmenu(m_file, 1, @gui.callback_SaveX, 'Export && &Save Data...', 'S');
 
 m_edit = uimenu(FigureHandle, 'Text', '&Edit');
 in_addmenu(m_edit, 0, @in_SelectCellsByQC, 'Filter Genes & Cells...', 'F');
@@ -304,7 +304,7 @@ in_addbuttonpush(1, 0, [], [], "");
 in_addbuttonpush(1, 1, @gui.callback_ShowClustersPop, "plotpicker-geoscatter.gif", "Show cell clusters/groups individually");
 in_addbuttonpush(1, 0, @gui.callback_SelectCellsByClass, "plotpicker-pointfig.gif", "Select cells by class");
 in_addbuttonpush(1, 0, @in_DeleteSelectedCells, "plotpicker-qqplot.gif", "Delete brushed/selected cells");
-in_addbuttonpush(1, 0, @callback_SaveX, "export.gif", "Export & save data");
+in_addbuttonpush(1, 0, @gui.callback_SaveX, "export.gif", "Export & save data");
 in_addbuttonpush(1, 1, @in_EmbeddingAgain, "plotpicker-geobubble.gif", "Embedding (tSNE, UMP, PHATE)");
 in_addbuttonpush(1, 0, @in_Switch2D3D, "plotpicker-image.gif", "Switch 2D/3D");
 in_addbuttonpush(1, 1, @gui.callback_CloseAllOthers, "icon-fa-cut-10.gif", "Close all other figures");
@@ -319,7 +319,7 @@ in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_SelectCellsByQC, "icon-mat-filter
 in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_EmbeddingAgain, "icon-mat-filter-2-10.gif", "plotpicker-geobubble.gif", true, "Embedding (tSNE, UMP, PHATE)"});
 in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_ClusterCellsS, "icon-mat-filter-3-10.gif", "plotpicker-dendrogram.gif", true, "Clustering using embedding S"});
 in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_DetermineCellTypeClustersGeneral, "icon-mat-filter-4-10.gif", "plotpicker-contour.gif", true, "Assign cell types to groups"});
-in_addbuttontoggle(2, 0, {@in_togglebtfun, @callback_SaveX, "icon-mat-filter-5-10.gif", "export.gif", true, "Export & save data"});
+in_addbuttontoggle(2, 0, {@in_togglebtfun, @gui.callback_SaveX, "icon-mat-filter-5-10.gif", "export.gif", true, "Export & save data"});
 
 if ~isempty(fx) && isvalid(fx), fxfun(fx, 0.8); end
 
