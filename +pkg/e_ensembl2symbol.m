@@ -2,9 +2,13 @@ function [output] = e_ensembl2symbol(input, species)
 
 if nargin < 2, species = 'human'; end
 pw1 = fileparts(mfilename('fullpath'));
-pth = fullfile(pw1, '..', 'resources', 'Biomart', ...
-    sprintf('mart_export_%s.txt', species));
-T = readtable(pth);
+%pth = fullfile(pw1, '..', 'resources', 'Biomart', ...
+%    sprintf('mart_export_%s.txt', species));
+%T = readtable(pth);
+pth = fullfile(pw1, '..', 'resources', 'Ensembl', ...
+    sprintf('Ensembl_%s_genes.mat', species));
+
+load(pth,"T");
 
 keySet = T.GeneStableID;
 valueSet = T.GeneName;
