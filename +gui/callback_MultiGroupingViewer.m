@@ -62,6 +62,7 @@ function callback_MultiGroupingViewer(src, ~)
             uipushtool(tb, 'Separator', 'off');
 
             pkg.i_addbutton2fig(tb, 'on', @in_showclustlabel, "plotpicker-scatter.gif", "Show cluster labels");
+            pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');            
             pkg.i_addbutton2fig(tb, 'off', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
             gui.gui_3dcamera(tb, 'AllCells');
 
