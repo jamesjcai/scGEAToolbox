@@ -33,10 +33,14 @@ function callback_MultiGroupingViewer(src, ~)
             hFig = figure('Visible','off');
             hFig.Position(3) = hFig.Position(3) * 1.8;
             axesv = cell(length(thiscv),1);
-            for k=1:length(thiscv)
+            cmapv = cell(length(thiscv),1);
+            hv = cell(length(thiscv),1);
+
+            for k = 1:length(thiscv)
                 axesv{k} = nexttile;
-                gui.i_gscatter3(sce.s, thiscv{k}, 1, 1);
+                hv{k} = gui.i_gscatter3(sce.s, thiscv{k}, 1, 1);
                 title(strrep(clabelv{k},'_','\_'));
+                cmapv{k} = colormap;
             end
 
             gui.i_movegui2parent(hFig, FigureHandle);
@@ -56,8 +60,14 @@ function callback_MultiGroupingViewer(src, ~)
 
             tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
             uipushtool(tb, 'Separator', 'off');
-            pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
+
+            pkg.i_addbutton2fig(tb, 'on', @in_showclustlabel, "plotpicker-scatter.gif", "Show cluster labels");
+            pkg.i_addbutton2fig(tb, 'off', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
             gui.gui_3dcamera(tb, 'AllCells');
+
+            for k = 1:length(thiscv)
+               colormap(axesv{k}, cmapv{k});
+            end            
             
         case 'Multiembedding'
             listitems = fieldnames(sce.struct_cell_embeddings);
@@ -88,25 +98,24 @@ function callback_MultiGroupingViewer(src, ~)
 
     end
 
-        function onBrushAction(~, event, axv)
-            for kx=1:length(axv)
-                if isequal(event.Axes, axv{kx})
-                    idx = kx;
-                    continue;
-                end
-            end
-            d = axv{idx}.Children.BrushData;
-            for kx=1:length(axv)
-                if kx ~= idx
-                    axv{kx}.Children.BrushData = d;
-                end
+
+    function onBrushAction(~, event, axv)
+        for kx=1:length(axv)
+            if isequal(event.Axes, axv{kx})
+                idx = kx;
+                continue;
             end
         end
+        d = axv{idx}.Children.BrushData;
+        for kx=1:length(axv)
+            if kx ~= idx
+                axv{kx}.Children.BrushData = d;
+            end
+        end
+    end
 
     function [txt] = in_myupdatefcnx12(Targxet, event_obj)
         % pos = event_obj.Position;
-       
-
         for kx=1:length(axesv)
             if isequal(Targxet.Parent, axesv{kx})
                 idx = event_obj.DataIndex;
@@ -119,5 +128,32 @@ function callback_MultiGroupingViewer(src, ~)
                 continue;
             end
         end
-    end    
+    end
+
+    function in_showclustlabel(~, ~)
+        hastip = false;
+        for kx = 1:length(thiscv)
+            dtp1 = findobj(hv{kx}, 'Type', 'datatip');
+            if ~isempty(dtp1)
+                delete(dtp1);
+                hastip = true;                
+            end
+        end
+        if hastip, return; end
+
+        for kx = 1:length(thiscv)
+            [c1, cL1] = grp2idx(thiscv{kx});
+            if max(c1) < 50
+                hv{kx}.DataTipTemplate.DataTipRows = dataTipTextRow('', cL1(c1));
+                for i = 1:max(c1)
+                    idx = find(c1 == i);
+                    siv = sce.s(idx, :);
+                    si = mean(siv, 1);
+                    [kk] = dsearchn(siv, si);
+                    datatip(hv{kx}, 'DataIndex', idx(kk));
+                end        
+            end
+        end
+    end
+
 end
