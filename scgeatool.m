@@ -854,7 +854,7 @@ if ~showuseronboarding, set(UserToolbarHandle, 'Visible', 'off'); end
             sce = sce.selectcells(ids);
             c = sce.c;
             in_RefreshAll(src, [], true, false);
-            %guidata(FigureHandle, sce);
+            guidata(FigureHandle, sce);
         else
             errordlg('Runtime error. No action is taken.','');
         end
