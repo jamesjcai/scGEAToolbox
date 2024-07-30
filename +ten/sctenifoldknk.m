@@ -65,6 +65,7 @@ end
     if savegrn
         tstr = matlab.lang.makeValidName(string(datetime));
         save(sprintf('A0_%s', tstr), 'A0', 'genelist', '-v7.3');
+        fprintf('\nConstructed gene regulatory network (GRN) is saved in A0_%s.mat\n', tstr);
     end
     %     A1=A0;
     %     A1(idx,:)=0;

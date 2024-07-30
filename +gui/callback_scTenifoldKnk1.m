@@ -65,7 +65,7 @@ switch answer
             return;
         end
         A0 = [];
-        uiwait(helpdlg("Network will be constructed. Now, select a KO gene.", ''));
+        uiwait(helpdlg("Network will be constructed. Now, select a KO gene (i.e., gene to be knocked out).", ''));
     otherwise
         return;
 end
@@ -84,8 +84,8 @@ if isempty(A0)
     answer = questdlg(sprintf('Ready to construct network and then knock out gene #%d (%s). Continue?', ...
         idx, sce.g(idx)));
 else
-    answer = questdlg(sprintf('Ready to knock out gene #%d (%s) from network (%s). Continue?', ...
-        idx, sce.g(idx), a(indx).name));
+    answer = questdlg(sprintf('Ready to knock out %s (gene #%d) from network (%s). Continue?', ...
+        sce.g(idx), idx, a(indx).name));
 end
 
 if ~strcmpi(answer, 'Yes'), return; end
@@ -136,7 +136,7 @@ else
     if doit
         try
             fw = gui.gui_waitbar;
-            disp('>> [T]=ten.i_knk(A0,targetgene,genelist,true);')
+            disp('>> [T] = ten.i_knk(A0, targetgene, genelist, true);')
             [T] = ten.i_knk(A0, idx, sce.g, true);
             gui.gui_waitbar(fw);
         catch ME
@@ -161,7 +161,8 @@ if ~(ismcc || isdeployed)
     end
 end
 
-gui.i_exporttable(T, true, 'Ttenifldknk', 'TenifldKnkTable');
+[answer, filename] = gui.i_exporttable(T, true, 'Ttenifldknk', 'TenifldKnkTable');
+fprintf('\nResults have been saved in %s: %s.\n\n', answer, filename);
 disp('Downstream Analysis Options:');
 disp('===============================');
 disp('run.web_Enrichr(T.genelist(1:200));');
