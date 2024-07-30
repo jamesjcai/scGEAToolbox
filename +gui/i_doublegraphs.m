@@ -52,12 +52,16 @@ pkg.i_addbutton2fig(tb, 'on', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save F
 pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
 pkg.i_addbutton2fig(tb, 'on', @in_RefreshAll, "icon-mat-refresh-20.gif", "Refresh");
 
-if exist('suptitle.m', 'file')
+%if exist('suptitle.m', 'file')
+%    hFig.Position(3) = hFig.Position(3) * 1.8;
+%    suptitle(figname);
+%else
     hFig.Position(3) = hFig.Position(3) * 1.8;
-    suptitle(figname);
-else
-    hFig.Position(3) = hFig.Position(3) * 2.2;
-end
+    if ~isempty(figname)
+        figname = strrep(figname, '_', '\_');
+        sgtitle(figname);
+    end
+%end
 
 gui.i_movegui2parent(hFig, parentfig);
 
