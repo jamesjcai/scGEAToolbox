@@ -27,19 +27,25 @@ switch answer
     case 'Use existing'
         a = evalin('base', 'whos');
         b = struct2cell(a);
-        if isempty(b)
-            helpdlg('No variable in the WorkSpace.', '');
-            return;
-        end
+        % if isempty(b)
+        %     helpdlg('No variable in the WorkSpace.', '');
+        % 
+        %     return;
+        % end
         valididx = false(length(a), 1);
         for k = 1:length(a)
             if max(a(k).size) == sce.NumGenes && min(a(k).size) == sce.NumGenes
                 valididx(k) = true;
             end
         end
-        if ~any(valididx)
-            warndlg('Workspace contains no network varible.');
-            return;
+        if isempty(b) || ~any(valididx)
+            [anw] = questdlg('Workspace contains no network varible. Read from .mat file?','');
+            if ~strcmp(anw, 'Yes'), return; end
+            [A0] = in_readA0fromfile(sce.NumGenes);
+            if isempty(A0) || size(A0, 1) ~= sce.NumGenes || size(A0, 2) ~= sce.NumGenes
+                errordlg('Not a valid network.');
+                return;
+            end
         else
             %valididx=ismember(b(4,:),'double');
             a = a(valididx);
@@ -176,4 +182,28 @@ disp('run.web_Enrichr(T.genelist(1:200));');
 disp('Tf=ten.e_fgsearun(T);');
 disp('Tn=ten.e_fgseanet(Tf);');
 disp('===============================');
+
+    function [A0] = in_readA0fromfile(n)
+        A0 = [];
+        [fname, pathname] = uigetfile( ...
+            {'*.mat', 'Saved GRN Files (*.mat)'; ...
+            '*.*', 'All Files (*.*)'}, ...
+            'Pick a GRN Data File');
+             if isequal(fname, 0), return; end
+            filen = fullfile(pathname, fname);
+            data = load(filen, 'A0');
+
+            try
+                A0 = data.A0;
+            catch ME
+                disp(ME.message);
+            end
+            if ~isempty(A0)
+                if ~(size(A0,1)==n && size(A0,2) == n)
+                    A0 = [];
+                end
+            end
+    end
+
 end
+
