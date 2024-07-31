@@ -81,8 +81,8 @@ end
 
 
 if isempty(A0)
-    answer = questdlg(sprintf('Ready to construct network and then knock out gene #%d (%s). Continue?', ...
-        idx, sce.g(idx)));
+    answer = questdlg(sprintf('Ready to construct network and then knock out %s (gene #%d). Continue?', ...
+        sce.g(idx), idx));
 else
     answer = questdlg(sprintf('Ready to knock out %s (gene #%d) from network (%s). Continue?', ...
         sce.g(idx), idx, a(indx).name));
@@ -161,8 +161,15 @@ if ~(ismcc || isdeployed)
     end
 end
 
-[answer, filename] = gui.i_exporttable(T, true, 'Ttenifldknk', 'TenifldKnkTable');
-fprintf('\nResults have been saved in %s: %s.\n\n', answer, filename);
+
+[answer, filename] = gui.i_exporttable(T, true, ...
+    sprintf('Ttenifldknk_%s', sce.g(idx)), ...
+    sprintf('TenifldKnkTable_%s', sce.g(idx)));
+if isempty(filename)
+    fprintf('\nResults have been saved in %s.\n\n', answer);
+else
+    fprintf('\nResults have been saved in %s: %s.\n\n', answer, filename);
+end
 disp('Downstream Analysis Options:');
 disp('===============================');
 disp('run.web_Enrichr(T.genelist(1:200));');
