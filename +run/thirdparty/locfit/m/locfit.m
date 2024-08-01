@@ -471,6 +471,10 @@ if mod(nargin-na, 2) == 0
     fit.smoothing_parameters.demint = demint;
     fit.smoothing_parameters.debug = debug;
 
+% pw1 = fileparts(mfilename('fullpath'));
+% pth = fullfile(pw1, '..', 'mex');
+% addpath(pth);
+
     [fpc, pcomp] = mexlf(fit.data, fit.evaluation_structure, fit.smoothing_parameters);
     fit.fit_points = fpc;
     fit.parametric_component = pcomp;
