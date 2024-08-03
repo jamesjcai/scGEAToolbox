@@ -21,20 +21,18 @@ fx = [];
 v1 = [];
 
 if nargin < 1
-    if ~(ismcc || isdeployed)
-        try        
-            fxfun = @gui.sc_splashscreen;
-            [fx, v1] = fxfun();            
-        catch
-            fxfun = @gui.sc_simplesplash;
-            fx = fxfun();
-            v1 = [];
-        end        
+    try        
+        fxfun = @gui.sc_splashscreen;
+        [fx, v1] = fxfun();            
+    catch
+        fxfun = @gui.sc_simplesplash;
+        fx = fxfun();
+        v1 = pkg.i_getversionnum;
     end
     sce = SingleCellExperiment;
 else
     if ~isa(sce, 'SingleCellExperiment')
-        error('requires sce=SingleCellExperiment(); scgeatool(sce)');
+        error('requires sce = SingleCellExperiment(); scgeatool(sce)');
     end
     v1 = pkg.i_getversionnum;
 end
