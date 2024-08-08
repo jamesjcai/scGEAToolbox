@@ -176,7 +176,7 @@ in_addmenu(m_tool, 0, @in_CompareCellScoreBtwCls, 'Gene Program (Cell Score) Ana
 in_addmenu(m_tool, 0, @in_EnrichrHVGs, 'Gene Variability (HVG Function) Analysis...');
 in_addmenu(m_tool, 1, @gui.callback_DEGene2Groups, 'Differential Expression (DE) Analysis...','D');
 in_addmenu(m_tool, 0, @gui.callback_DPGene2Groups, 'Differential Program (DP) Analysis...','P');
-in_addmenu(m_tool, 0, @gui.callback_DVGene2Groups_new, 'Differential Variability (DV) Analysis...','V');
+in_addmenu(m_tool, 0, @gui.callback_DVGene2Groups, 'Differential Variability (DV) Analysis...','V');
 in_addmenu(m_tool, 1, @gui.callback_DEGene2GroupsBatch, 'DE Analysis in Cell Type Batch Mode...');
 in_addmenu(m_tool, 0, @gui.callback_DPGene2GroupsBatch, 'DP Analysis in Cell Type Batch Mode...');
 % in_addmenu(m_tool, 0, @gui.callback_DVGene2GroupsBatch, 'Differential Variability (DV) Analysis in Cell Type Batch Mode...');

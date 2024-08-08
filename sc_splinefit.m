@@ -37,6 +37,7 @@ end
 % lgcv=zscore(lgcv);
 
 %[~,i]=max(lgcv);
+
 xyz = [lgu, lgcv, dropr];
 
 % [~,j]=sort(pdist2(xyz,xyz(i,:)));

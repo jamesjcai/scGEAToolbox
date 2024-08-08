@@ -57,6 +57,7 @@ if strcmpi(answer{4},'Yes') || strcmpi(answer{4},'Y')
     fprintf('%d genes without approved symbols are found and removed.\n',a1-a2);
 end
 
+
 % ---------------------------------
     
     [i1, i2, cL1, cL2] = gui.i_select2grps(sce, false);
@@ -81,11 +82,18 @@ end
         i2=c==2;
     end
     
+    
     sce1 = sce.selectcells(i1);
-    sce2 = sce.selectcells(i2);
     sce1 = sce1.qcfilter;
+
+    sce2 = sce.selectcells(i2);
     sce2 = sce2.qcfilter;
 
+
+    if sce1.NumCells < 10 || sce2.NumCells < 10 || sce1.NumGenes < 10 || sce2.NumGenes < 10
+        errordlg('Filtered SCE contains too few cells (n < 10) or genes (n < 10).','','modal');
+        return;
+    end
     if sce1.NumCells < 50 || sce2.NumCells < 50
         warndlg('One of groups contains too few cells (n < 50). The result may not be reliable.','','modal');
     end
