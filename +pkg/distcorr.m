@@ -54,3 +54,5 @@ function [D] = xpdist2(data)
 d = dot(data, data, 2);
 D = sqrt(d+d'-2*(data * data'));
 end
+
+% ref: https://doi.org/10.1101/2023.11.16.566292
