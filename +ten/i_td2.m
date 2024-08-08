@@ -6,11 +6,13 @@ function [A0, A1] = i_td2(XM0, XM1, methodid)
 % outputs: A0 - n x n adjacency matrix of denoised network
 %          A1 - n x n adjacency matrix of denoised network
 
+import ten.*
+
 if nargin < 3, methodid = 1; end
 
 if exist('@tensor/tensor.m', 'file') ~= 2
     error('Need Tensor Toolbox for MATLAB (https://www.tensortoolbox.org/)');
-    end
+end
 
     switch methodid
         case 1

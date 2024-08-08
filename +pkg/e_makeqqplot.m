@@ -2,6 +2,7 @@ function e_makeqqplot(T)
 
 pd = makedist('Gamma', 'a', 0.5, 'b', 2);
 qqplot(T.FC, pd);
+
 [~, i] = sort(T.FC);
 dt = datacursormode;
 dt.UpdateFcn = {@i_myupdatefcn1, T.genelist(i)};

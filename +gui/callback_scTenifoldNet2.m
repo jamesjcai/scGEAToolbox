@@ -114,8 +114,8 @@ tstr = matlab.lang.makeValidName(string(datetime));
 save(sprintf('T_DRgenes_%s', tstr), 'T');
 fprintf('The result has been saved in T_DRgenes_%s.mat\n', tstr);
 
-figure;
-e_mkqqplot(T);
+%figure;
+ten.e_mkqqplot(T);
 % answer223=questdlg('Run GSEA analysis?');
 answer223 = gui.i_questdlgtimer(15, 'Run GSEA analysis?');
 if ~isempty(answer223) && strcmp(answer223, 'Yes')
