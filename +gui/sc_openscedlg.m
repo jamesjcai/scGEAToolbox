@@ -60,6 +60,7 @@ function [sce] = sc_openscedlg(~, ~)
                 end
                 gui.gui_waitbar(fw);
             else
+                if ~in_multifilesgo, return; end
                 answer = questdlg('Which set operation method to merge data?', 'Merging method', ...
                     'Intersect', 'Union', 'Intersect');
                 if ~ismember(answer, {'Union', 'Intersect'}), return; end
@@ -149,9 +150,10 @@ function [sce] = sc_openscedlg(~, ~)
                 [filenm, pathname] = uigetfile( ...
                     {'*.h5;*.hdf5', 'HDF5 Files (*.h5)'; ...
                     '*.*', 'All Files (*.*)'}, ...
-                    'Pick a 10x Genomics H5 file','MultiSelect','on');
+                    'Pick 10x Genomics H5 file(s)','MultiSelect','on');
                     if isequal(filenm, 0), return; end
                     if iscell(filenm)
+                        if ~in_multifilesgo, return; end
                         answer = questdlg('Which set operation method to merge data?', 'Merging method', ...
                             'Intersect', 'Union', 'Intersect');
                         if ~ismember(answer, {'Union', 'Intersect'}), return; end
@@ -443,6 +445,16 @@ function [sce] = sc_openscedlg(~, ~)
             sce.c_cell_id = matlab.lang.makeUniqueStrings(sce.c_cell_id);
         end
     end
+end
+
+
+function [y] = in_multifilesgo
+    [answer]=questdlg('Multiple files selected. After reading each file, data will be merged. Continue?','');
+    switch answer
+        case 'Yes'
+            y=true;
+    end
+    y=false;
 end
 
 
