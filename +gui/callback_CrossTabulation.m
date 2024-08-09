@@ -2,7 +2,7 @@ function callback_CrossTabulation(src, ~)
 FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
 
-[thisc1, clabel1, thisc2, clabel2] = gui.i_select2class(sce);
+[thisc1, clabel1, thisc2, clabel2] = gui.i_select2class(sce, true);
 
 
 % [c, cL, noanswer] = gui.i_reordergroups(thisc1, [], FigureHandle);
@@ -10,7 +10,43 @@ sce = guidata(FigureHandle);
 % [c, cL, noanswer] = gui.i_reordergroups(thisc2, [], FigureHandle);
 % thisc2=cL(c);
 
-if isempty(thisc1) || isempty(thisc2), return; end
+if isempty(thisc1), return; end
+
+if isempty(thisc2)
+    hFig = figure("Visible","off", "DockControls", "off");
+    tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
+        % tb = uitoolbar(hFig);
+        uipushtool(tb, 'Separator', 'off');
+        % pkg.i_addbutton2fig(tb, 'off', [], "IMG00107.GIF", " ");
+        %pkg.i_addbutton2fig(tb, 'off', @i_saveCrossTable, "export.gif", 'Save cross-table');
+        pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
+        pkg.i_addbutton2fig(tb, 'on', @gui.i_pickcolormap, 'plotpicker-compass.gif', 'Pick new color map...');
+        %pkg.i_addbutton2fig(tb, 'on', @gui.i_invertcolor, 'plotpicker-comet.gif', 'Invert colors');
+        pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
+        % pkg.i_addbutton2fig(tb,'off',@i_reordersamples, ...
+        %     "xpowerpoint.gif",'Reorder Samples');
+        % pkg.i_addbutton2fig(tb, 'off', @i_sortbymean, ...
+        %     "xpowerpoint.gif", 'Sort Samples by Size');
+    
+        T=tabulate(thisc1);
+        y = T(:,2);
+        if iscell(y), y = cell2mat(y); end
+        bar(y,'FaceColor', "flat");    
+        colormap("turbo")
+        labelsx=string(T(:,1));
+
+        xticks(1:length(labelsx));
+        labelsx1 = strrep(labelsx, '_', '\_');
+        xticklabels(labelsx1);
+    gui.i_movegui2parent(hFig, FigureHandle);
+    
+    drawnow;    
+    hFig.Visible=true;
+    return;
+end
+
+
+
 
 fw = gui.gui_waitbar;
 
@@ -101,7 +137,7 @@ hFig.Visible=true;
 
     function in_plot1
         y = T;
-        assignin("base","y",y);
+        % assignin("base","y",y);
         b = bar(y, 'stacked', 'FaceColor', "flat");
         %colormap(prism(size(y,2)));
         colormap(turbo);

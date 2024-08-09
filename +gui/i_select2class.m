@@ -1,4 +1,7 @@
-function [thisc1, clabel1, thisc2, clabel2] = i_select2class(sce)
+function [thisc1, clabel1, thisc2, clabel2] = i_select2class(sce, allowsingle)
+
+if nargin<2, allowsingle = false; end
+
 
 thisc1 = [];
 clabel1 = '';
@@ -33,11 +36,16 @@ end
         'InitialValue', [n - 1, n], 'ListSize', [220, 300]);
     if tf2 == 1
         if length(indx2) ~= 2
-            warndlg('Please select 2 grouping variables.');
-            return;
+            if allowsingle
+                [thisc1, clabel1] = i_getidx(indx2(1));
+            else
+                warndlg('Please select 2 grouping variables.','');
+                return;                
+            end
+        else
+            [thisc1, clabel1] = i_getidx(indx2(1));
+            [thisc2, clabel2] = i_getidx(indx2(2));
         end
-        [thisc1, clabel1] = i_getidx(indx2(1));
-        [thisc2, clabel2] = i_getidx(indx2(2));
     end
 
     % if isempty(thisc)
