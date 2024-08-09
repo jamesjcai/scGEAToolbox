@@ -20,8 +20,8 @@ sce = sces{1};
 c = ones(sce.NumCells, 1);
 for k = 2:length(sces)
     c = [c; k * ones(sces{k}.NumCells, 1)];
-    [sce, hasidoverlap] = i_merge2sces(sce, sces{k}, method);
-    if hasidoverlap
+    [sce, hasidoverlapx] = i_merge2sces(sce, sces{k}, method);
+    if hasidoverlapx
         needappendix=true;
     end
 end
@@ -54,6 +54,10 @@ function [sce, hasidoverlap] = i_merge2sces(sce1, sce2, method)
     
     if ~isempty(sce1.c_batch_id) && ~isempty(sce2.c_batch_id)
         sce.c_batch_id = [sce1.c_batch_id; sce2.c_batch_id];
+        % assignin("base","a",sce1.c_batch_id)
+        % assignin("base","b",sce2.c_batch_id)
+        % intersect(sce1.c_batch_id, sce2.c_batch_id)
+        % pause
         hasidoverlap = ~isempty(intersect(sce1.c_batch_id, sce2.c_batch_id));
     end
     

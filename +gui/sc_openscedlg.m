@@ -1,12 +1,12 @@
 function [sce] = sc_openscedlg(~, ~)
     sce = [];
-    list = {'SCE Data File (*.mat)...', ...
+    list = {'SCE Data File(s) (*.mat)...', ...
         'TXT/TSV/CSV File (*.txt)...', ...
         'Seurat/Rds File (*.rds)...', ...
         'AnnData/H5ad File (*.h5ad)...', ...
         'Loom File (*.loom)...', ...
         '----------------------------------', ...
-        '10x Genomics H5 File (*.h5)...', ...
+        '10x Genomics H5 File(s) (*.h5)...', ...
         '10x Genomics MTX File (*.mtx)...', ...
         '10x Genomics ''outs'' Folder...', ...
         'Parse Biosciences ''outs'' Folder...', ...
@@ -40,24 +40,53 @@ function [sce] = sc_openscedlg(~, ~)
                 errordlg(ME.message,'','modal');
                 return;
             end
-        case 'SCE Data File (*.mat)...'
+        case 'SCE Data File(s) (*.mat)...'
             promotesave = false;
-            [fname, pathname] = uigetfile( ...
+            [filenm, pathname] = uigetfile( ...
                 {'*.mat', 'SCE Data Files (*.mat)'; ...
                 '*.*', 'All Files (*.*)'}, ...
-                'Pick a SCE Data File');
+                'Pick SCE Data File(s)','MultiSelect','on');
             % if ~(fname), return; end
-            if isequal(fname, 0), return; end
-            scefile = fullfile(pathname, fname);
-            try
-                fw = gui.gui_waitbar;
-                load(scefile, 'sce');
-            catch ME
-                gui.gui_waitbar(fw, true);
-                errordlg(ME.message,'','modal');
-                return;
+            if isequal(filenm, 0), return; end
+            if ~iscell(filenm)
+                scefile = fullfile(pathname, filenm);
+                try
+                    fw = gui.gui_waitbar;
+                    load(scefile, 'sce');
+                catch ME
+                    gui.gui_waitbar(fw, true);
+                    errordlg(ME.message,'','modal');
+                    return;
+                end
+                gui.gui_waitbar(fw);
+            else
+                answer = questdlg('Which set operation method to merge data?', 'Merging method', ...
+                    'Intersect', 'Union', 'Intersect');
+                if ~ismember(answer, {'Union', 'Intersect'}), return; end
+                methodtag = lower(answer);
+                fw = gui.gui_waitbar_adv;
+                try
+                    insce = cell(1, length(filenm));
+                    for k = 1:length(filenm)
+                        filename = fullfile(pathname, filenm{k});
+                        if exist(filename,'file')
+                            gui.gui_waitbar_adv(fw,k./length(filenm), ...
+                                sprintf('Loading %s...', filenm{k}));
+                            load(filename, 'sce');
+                            insce{k} = sce;
+                            metainfo = sprintf("Source: %s", filename);
+                            insce{k} = insce{k}.appendmetainfo(metainfo);
+                        end
+                    end
+                        sce = sc_mergesces(insce, methodtag);
+                catch ME
+                    gui.gui_waitbar_adv(fw);
+                    disp(ME.message);
+                    errordlg(ME.message, ME.identifier, 'modal');
+                    return;
+                end
+                gui.gui_waitbar_adv(fw);
             end
-            gui.gui_waitbar(fw);
         case '10x Genomics MTX File (*.mtx)...'
             %'Matrix/MTX File (*.mtx)...'
             try
@@ -115,21 +144,80 @@ function [sce] = sc_openscedlg(~, ~)
                 errordlg(ME.message,ME.identifier,'modal');
                 return;
             end
-        case '10x Genomics H5 File (*.h5)...'
-            try
-                [X, g, b, filename] = sc_read10xh5file;
-                if ~isempty(X)
-                    sce = SingleCellExperiment(X, g);
-                    metainfo = sprintf("Source: %s", filename);
-                    sce = sce.appendmetainfo(metainfo);
-                    if ~isempty(b), sce.c_cell_id = b; end
-                else
-                    return;
-                end
-            catch ME
-                errordlg(ME.message,'','modal');
-                return;
-            end
+
+        case '10x Genomics H5 File(s) (*.h5)...'
+                [filenm, pathname] = uigetfile( ...
+                    {'*.h5;*.hdf5', 'HDF5 Files (*.h5)'; ...
+                    '*.*', 'All Files (*.*)'}, ...
+                    'Pick a 10x Genomics H5 file','MultiSelect','on');
+                    if isequal(filenm, 0), return; end
+                    if iscell(filenm)
+                        answer = questdlg('Which set operation method to merge data?', 'Merging method', ...
+                            'Intersect', 'Union', 'Intersect');
+                        if ~ismember(answer, {'Union', 'Intersect'}), return; end
+                        methodtag = lower(answer);
+                        fw = gui.gui_waitbar_adv;
+                        try
+                            insce = cell(1, length(filenm));
+                            for k = 1:length(filenm)
+                                filename = fullfile(pathname, filenm{k});
+                                if exist(filename,'file')
+                                    gui.gui_waitbar_adv(fw,k./length(filenm), ...
+                                        sprintf('Reading %s...', filenm{k}));
+                                    [X, g, b] = sc_read10xh5file(filename);
+                                    if ~isempty(X)
+                                        insce{k} = SingleCellExperiment(X, g);
+                                        metainfo = sprintf("Source: %s", filename);
+                                        insce{k} = insce{k}.appendmetainfo(metainfo);                                        
+                                        if ~isempty(b), insce{k}.c_cell_id = b; end
+                                        insce{k}.c_batch_id = string(repmat(matlab.lang.makeValidName(filenm{k}), ...
+                                            [insce{k}.NumCells, 1]));
+                                    end
+                                end
+                            end                            
+                            sce = sc_mergesces(insce, methodtag);
+                        catch ME
+                            gui.gui_waitbar_adv(fw);
+                            disp(ME.message);
+                            errordlg(ME.message, ME.identifier, 'modal');
+                            return;
+                        end
+                        gui.gui_waitbar_adv(fw);
+                    else
+                        filename = fullfile(pathname, filenm);
+                        if exist(filename,'file')
+                            try
+                                [X, g, b] = sc_read10xh5file(filename);
+                                if ~isempty(X)
+                                    sce = SingleCellExperiment(X, g);
+                                    metainfo = sprintf("Source: %s", filenm);
+                                    sce = sce.appendmetainfo(metainfo);
+                                    if ~isempty(b), sce.c_cell_id = b; end
+                                else
+                                    return;
+                                end
+                            catch ME
+                                errordlg(ME.message,'','modal');
+                                return;
+                            end
+                        end
+                    end                                
+
+        % case '10x Genomics H5 File (*.h5)...'
+        %     try
+        %         [X, g, b, filename] = sc_read10xh5file;
+        %         if ~isempty(X)
+        %             sce = SingleCellExperiment(X, g);
+        %             metainfo = sprintf("Source: %s", filename);
+        %             sce = sce.appendmetainfo(metainfo);
+        %             if ~isempty(b), sce.c_cell_id = b; end
+        %         else
+        %             return;
+        %         end
+        %     catch ME
+        %         errordlg(ME.message,'','modal');
+        %         return;
+        %     end
         case 'Loom File (*.loom)...'
             try
                 [X, g, b, filename] = sc_readloomfile;

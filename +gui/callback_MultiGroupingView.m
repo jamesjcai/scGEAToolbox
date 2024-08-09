@@ -1,4 +1,4 @@
-function callback_MultiGroupingViewer(src, ~)
+function callback_MultiGroupingView(src, ~)
     FigureHandle = src.Parent.Parent;
     sce = guidata(FigureHandle);
     
@@ -144,6 +144,7 @@ function callback_MultiGroupingViewer(src, ~)
 
         for kx = 1:length(thiscv)
             [c1, cL1] = grp2idx(thiscv{kx});
+            cL1 = strrep(cL1,'_','\_');
             if max(c1) < 50
                 hv{kx}.DataTipTemplate.DataTipRows = dataTipTextRow('', cL1(c1));
                 for i = 1:max(c1)

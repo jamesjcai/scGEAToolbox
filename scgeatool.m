@@ -134,7 +134,7 @@ in_addmenu(m_view, 0, @in_ClusterCellsX, "Cluster Cells Using Expression Matrix 
 in_addmenu(m_view, 1, @gui.callback_ShowGeneExpr, 'Gene Expression...', 'E');
 in_addmenu(m_view, 0, @in_ShowCellStates, 'Cell States...', 'T');
 in_addmenu(m_view, 0, @in_labelcellgroups, 'Cell Groups...', 'G');
-in_addmenu(m_view, 0, @gui.callback_MultiGroupingViewer, 'Multi-Grouping View...');
+in_addmenu(m_view, 0, @gui.callback_MultiGroupingView, 'Multi-Grouping View...');
 in_addmenu(m_view, 0, @gui.callback_CrossTabulation, 'Cross Tabulation');
 in_addmenu(m_view, 1, @gui.callback_ViewMetaData, 'View Metadata...', 'M');
 in_addmenu(m_view, 1, @gui.callback_ShowHgBGeneExpression, 'Hemoglobin (Hgb) Genes Expression...');
@@ -249,7 +249,7 @@ MainToolbarHandle = uitoolbar('Parent', FigureHandle);
 UserToolbarHandle = uitoolbar('Parent', FigureHandle);
 
 in_addbuttonpush(0, 0, [], [], "");
-in_addbuttonpush(0, 0, @gui.callback_MultiGroupingViewer, "plotpicker-arxtimeseries.gif", "Multi-grouping View...");
+in_addbuttonpush(0, 0, @gui.callback_MultiGroupingView, "plotpicker-arxtimeseries.gif", "Multi-grouping View...");
 in_addbuttonpush(0, 0, @gui.callback_CrossTabulation, "plotpicker-comet.gif", "Cross tabulation");
 in_addbuttonpush(0, 1, @gui.callback_Scatterplot, "icon-mat-blur-off-10a.gif", "Gene/Cell State Scatter Plot...");
 in_addbuttonpush(0, 0, @gui.callback_Violinplot, "violinplot.gif", "Gene/Cell State Violin Plot...");
