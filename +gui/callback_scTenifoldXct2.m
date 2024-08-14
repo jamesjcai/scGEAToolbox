@@ -1,12 +1,11 @@
 function callback_scTenifoldXct2(src, ~)
 
-
 FigureHandle = src.Parent.Parent;
 
 if ~gui.gui_showrefinfo('scTenifoldXct [PMID:36787742]'), return; end
 
 sce = guidata(FigureHandle);
-% error('under development.');
+
 [~, cL] = grp2idx(sce.c_batch_id);
 [j1, j2, ~, ~] = aaa(cL, sce.c_batch_id);
 if isempty(j1) || isempty(j2), return; end
@@ -36,14 +35,7 @@ if ~isempty(T)
             pause(2)
             reshowdlg;
         case 'Export result...'
-            gui.i_exporttable(T, false, 'Ttenifldxct', 'TenifldXctTable');
-
-    % "Tcellattrib","CellAttribTable"
-    % "Tviolindata","ViolinPlotTable"
-    % "Tgenkiglist","GenKIResulTable"
-    % "Tmonocleout","MonocleResTable"
-    % "Ttenifldxct","TenifldXctTable"
-
+            gui.i_exporttable(T, false, 'Ttenifldxt2', 'TenifldXt2Table');
         otherwise
             winopen(a);
     end
@@ -52,9 +44,19 @@ else
 end
 
 
-% ----- end of export result
+function reshowdlg
+    answer = questdlg('Export result to other format?', '');
+    switch answer
+        case 'Yes'
+            gui.i_exporttable(T, false, 'Ttenifldxt2', 'TenifldXt2Table');
+        otherwise
+            return;
+    end
+end
+
 
 end
+
 
 function [i1, i2, cL1, cL2] = aaa(listitems, ci)
 i1 = [];
@@ -76,4 +78,9 @@ if tfx == 1
     i1 = ci == cL1;
     i2 = ci == cL2;
 end
+
+
+
 end
+
+
