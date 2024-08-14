@@ -4,20 +4,37 @@ FigureHandle = src.Parent.Parent;
 
 if ~gui.gui_showrefinfo('scTenifoldXct [PMID:36787742]'), return; end
 
+extprogname = 'py_scTenifoldXct2';
+preftagname = 'externalwrkpath';
+[wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
+if isempty(wkdir), return; end
+
+FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
 
 [~, cL] = grp2idx(sce.c_batch_id);
 [j1, j2, ~, ~] = aaa(cL, sce.c_batch_id);
-if isempty(j1) || isempty(j2), return; end
+if isempty(j1) || isempty(j2)
+    warndlg('All cells have the same BATCH_ID. Two samples are required.','')
+    return; 
+end
+sce1 = sce.selectcells(j1);
+sce2 = sce.selectcells(j2);
+
+if sce1.NumCells < 50 || sce2.NumCells < 50
+    [answer] = questdlg('One of samples contains too few cells (n < 50). Continue?','');
+    if ~strcmp(answer, 'Yes'), return; end
+end
 
 
 [~, cL] = grp2idx(sce.c_cell_type_tx);
 [~, ~, celltype1, celltype2] = aaa(cL, sce.c_cell_type_tx);
-if isempty(celltype1) || isempty(celltype2), return; end
-sce1 = sce.selectcells(j1);
-sce2 = sce.selectcells(j2);
+if isempty(celltype1) || isempty(celltype2) 
+    warndlg('All cells are the same type. Two different cell types are required.','')
+    return; 
+end
 
-[T, iscomplete] = run.py_scTenifoldXct2(sce1, sce2, celltype1, celltype2);
+[T, iscomplete] = run.py_scTenifoldXct2(sce1, sce2, celltype1, celltype2, true, wkdir);
 
 % ---- export result
 if ~iscomplete
@@ -33,7 +50,7 @@ if ~isempty(T)
         case 'Locate result file...'
             winopen(a);
             pause(2)
-            reshowdlg;
+            %reshowdlg;
         case 'Export result...'
             gui.i_exporttable(T, false, 'Ttenifldxt2', 'TenifldXt2Table');
         otherwise
@@ -64,6 +81,7 @@ i2 = [];
 cL1 = [];
 cL2 = [];
 n = length(listitems);
+if n < 2, return; end
 [indxx, tfx] = listdlg('PromptString', {'Select two groups:'}, ...
     'SelectionMode', 'multiple', ...
     'ListString', listitems, ...

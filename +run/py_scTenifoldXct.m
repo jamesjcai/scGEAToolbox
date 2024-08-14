@@ -1,8 +1,7 @@
-function [T] = py_scTenifoldXct(sce, celltype1, celltype2, twosided, wkdir, isdebug)
+function [T] = py_scTenifoldXct(sce, celltype1, celltype2, twosided, ...
+                                wkdir, isdebug)
 
-if nargin<6
-    isdebug = true;
-end
+if nargin<6, isdebug = true; end
 
 T = [];
 if nargin < 5, wkdir = []; end
@@ -11,7 +10,6 @@ if nargin < 4, twosided = true; end
 oldpth = pwd();
 pw1 = fileparts(mfilename('fullpath'));
 codepth = fullfile(pw1, 'external', 'py_scTenifoldXct');
-
 
 if isempty(wkdir) || ~isfolder(wkdir)
     cd(codepth);
