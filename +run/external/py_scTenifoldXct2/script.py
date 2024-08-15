@@ -1,8 +1,8 @@
 #import os
-#import sys
+import sys
 #abspath = os.path.abspath(__file__)
 #dname = os.path.dirname(abspath)
-#os.chdir(dname)
+# os.chdir(dname)
 # os.chdir("U:\\GitHub\\scGEAToolbox\\+run\\external\\py_scTenifoldXct")
 # os.chdir("d:\\GitHub\\scGEAToolbox\\+run\\external\\py_scTenifoldXct2")
 
@@ -25,9 +25,9 @@ from scipy import sparse
 #A = sparse.csc_matrix(A)
 #sparse.save_npz("pcnet_Target.npz", A)
 
-adata = build_adata("X1.mat", "g1.txt", "c1.txt", delimiter=',', meta_cell_cols=['cell_type'], transpose=False)
+adata1 = build_adata("X1.mat", "g1.txt", "c1.txt", delimiter=',', meta_cell_cols=['cell_type'], transpose=False)
 print('Input read.............1')
-xct1 = st.scTenifoldXct(data = adata, 
+xct1 = st.scTenifoldXct(data = adata1, 
                     source_celltype = 'Source',
                     target_celltype = 'Target',
                     obs_label = "cell_type",
@@ -35,9 +35,9 @@ xct1 = st.scTenifoldXct(data = adata,
                     GRN_file_dir = './1',
                     verbose = True)
 
-adata = build_adata("X2.mat", "g2.txt", "c2.txt", delimiter=',', meta_cell_cols=['cell_type'], transpose=False)
+adata2 = build_adata("X2.mat", "g2.txt", "c2.txt", delimiter=',', meta_cell_cols=['cell_type'], transpose=False)
 print('Input read.............2')
-xct2 = st.scTenifoldXct(data = adata, 
+xct2 = st.scTenifoldXct(data = adata2, 
                     source_celltype = 'Source',
                     target_celltype = 'Target',
                     obs_label = "cell_type",
@@ -49,5 +49,28 @@ XCTs = st.merge_scTenifoldXct(xct1, xct2)
 emb = XCTs.get_embeds(train = True)
 XCTs.nn_aligned_diff(emb) 
 xcts_pairs_diff = XCTs.chi2_diff_test(pval = 1.0)
-pd.DataFrame(xcts_pairs_diff).to_csv('output.txt',index=False,header=True)
+pd.DataFrame(xcts_pairs_diff).to_csv('output1.txt',index=False,header=True)
+
+if sys.argv[1]=="2":
+    xct1 = st.scTenifoldXct(data = adata1, 
+                        source_celltype = 'Target',
+                        target_celltype = 'Source',
+                        obs_label = "cell_type",
+                        rebuild_GRN = False,
+                        GRN_file_dir = './1',
+                        verbose = True)
+    
+    xct2 = st.scTenifoldXct(data = adata2, 
+                        source_celltype = 'Target',
+                        target_celltype = 'Source',
+                        obs_label = "cell_type",
+                        rebuild_GRN = False,
+                        GRN_file_dir = './2',
+                        verbose = True)
+    
+    XCTs = st.merge_scTenifoldXct(xct1, xct2)
+    emb = XCTs.get_embeds(train = True)
+    XCTs.nn_aligned_diff(emb) 
+    xcts_pairs_diff = XCTs.chi2_diff_test(pval = 1.0)
+    pd.DataFrame(xcts_pairs_diff).to_csv('output2.txt',index=False,header=True)
 

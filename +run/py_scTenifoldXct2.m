@@ -103,7 +103,12 @@ function [T, iscomplete] = py_scTenifoldXct2(sce1, sce2, celltype1, celltype2, .
 
 codefullpath = fullfile(codepth,'script.py');
 pkg.i_addwd2script(codefullpath, wkdir, 'python');
-twosidedtag = 2;
+
+if twosided
+    twosidedtag = 2;
+else
+    twosidedtag = 1;
+end
 cmdlinestr = sprintf('"%s" "%s" %d', x.Executable, codefullpath, twosidedtag);
     
 %    cmdlinestr = sprintf('"%s" "%s%sscript.py"', ...
@@ -129,10 +134,24 @@ cmdlinestr = sprintf('"%s" "%s" %d', x.Executable, codefullpath, twosidedtag);
         gui.gui_waitbar(fw, [], 'Running scTenifoldXct2.py is complete');
     end
 
-    if status == 0 && exist('output.txt', 'file')
-        T = readtable('output.txt');
+    if status == 0 && exist('output1.txt', 'file')
+        T = readtable('output1.txt');
+        if twosided && exist('output2.txt', 'file')
+            T2 = readtable('output2.txt');
+            T = {T, T2};
+        end
         iscomplete = true;
+    else
+        if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+        cd(oldpth);
+        error('scTenifoldXct2 runtime error.');
     end
+    
+
+    % if status == 0 && exist('output.txt', 'file')
+    %     T = readtable('output.txt');
+    %     iscomplete = true;
+    % end
     if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
     cd(oldpth);
 

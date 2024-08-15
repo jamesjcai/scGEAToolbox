@@ -1,10 +1,9 @@
 #import os
-#import sys
+import sys
 #abspath = os.path.abspath(__file__)
 #dname = os.path.dirname(abspath)
 # os.chdir(dname)
 # os.chdir("U:\\GitHub\\scGEAToolbox\\+run\\external\\py_scTenifoldXct")
-# os.chdir("C:\\Users\\jcai\\Documents\\GitHub\\scGEAToolbox\\+run\\external\\py_scTenifoldXct2")
 
 import scanpy as sc
 import scTenifoldXct as st
