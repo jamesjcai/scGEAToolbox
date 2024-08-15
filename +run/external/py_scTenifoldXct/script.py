@@ -1,10 +1,4 @@
-#import os
 import sys
-#abspath = os.path.abspath(__file__)
-#dname = os.path.dirname(abspath)
-# os.chdir(dname)
-# os.chdir("U:\\GitHub\\scGEAToolbox\\+run\\external\\py_scTenifoldXct")
-
 import scanpy as sc
 import scTenifoldXct as st
 from scTenifoldXct.dataLoader import build_adata
@@ -23,7 +17,6 @@ from scipy import sparse
 #A = np.array(f.get('A'))
 #A = sparse.csc_matrix(A)
 #sparse.save_npz("pcnet_Target.npz", A)
-
 
 adata = build_adata("X.mat", "g.txt", "c.txt", delimiter=',', meta_cell_cols=['cell_type'], transpose=False)
 print('Input read.............')
@@ -51,4 +44,3 @@ if sys.argv[1]=="2":
     xct_pairs = xct.null_test(pval = 1.0)
     print(xct_pairs)
     pd.DataFrame(xct_pairs).to_csv('output2.txt',index=False,header=True)
-
