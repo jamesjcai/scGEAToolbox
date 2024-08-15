@@ -206,7 +206,7 @@ in_addmenu(m_extn, 0, @in_DoubletDetection, 'Detect Doublets (Scrublet/🐍) [PM
 in_addmenu(m_extn, 0, @in_RunDataMapPlot, 'Run DataMapPlot (datamapplot/🐍)...');
 in_addmenu(m_extn, 1, @gui.callback_scTenifoldXct, 'One-Sample Cell-Cell Communication (scTenifoldXct/🐍) [PMID:36787742]...');
 in_addmenu(m_extn, 0, @gui.callback_scTenifoldXct2, 'Two-Sample Cell-Cell Communication (scTenifoldXct2/🐍) [PMID:36787742]...');
-in_addmenu(m_extn, 0, @gui.callback_VirtualKOGenKI, 'Virtual Gene Knockout (GenKI/🐍) [PMID:37246643] ...');
+in_addmenu(m_extn, 1, @gui.callback_VirtualKOGenKI, 'Virtual Gene Knockout (GenKI/🐍) [PMID:37246643] ...');
 
 % in_addmenu(m_extn, 1, @gui.callback_ExploreCellularCrosstalk, 'Talklr Intercellular Crosstalk [DOI:10.1101/2020.02.01.930602]...');
 

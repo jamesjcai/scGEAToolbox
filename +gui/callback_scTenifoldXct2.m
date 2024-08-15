@@ -32,9 +32,6 @@ if isempty(celltype1) || isempty(celltype2)
     return; 
 end
 
-celltype1
-celltype2
-
 celltype1 = string(celltype1);
 celltype2 = string(celltype2);
 
