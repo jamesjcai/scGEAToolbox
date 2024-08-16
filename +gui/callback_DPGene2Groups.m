@@ -46,8 +46,11 @@ fw = gui.gui_waitbar;
 setgenes=setgenes(ix);
 setmatrx=setmatrx(:,ix);      % s x g
 
-X = sce.X(iy,:);              % g x c
-sce.X = X;
+sceX = log(1+sc_norm(sce.X));
+X = sceX(iy,:);              % g x c
+
+
+sce.X = sce.X(iy,:);
 sce.g = sce.g(iy);
 
 Z = setmatrx*X;               % s x c
