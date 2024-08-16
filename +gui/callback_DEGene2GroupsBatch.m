@@ -77,9 +77,9 @@ end
 if ~strcmp(answer,'Yes'), return; end
 
 rungsea=false;
-answer=questdlg('Run GSEA analysis with the DE result (i.e., genes ranked by log2FC)?','');
-if strcmp(answer,'Cancel'), return; end
-if strcmp(answer,'Yes'), rungsea = true; end
+% answer=questdlg('Run GSEA analysis with the DE result (i.e., genes ranked by log2FC)?','');
+% if strcmp(answer,'Cancel'), return; end
+% if strcmp(answer,'Yes'), rungsea = true; end
 
 fw = gui.gui_waitbar_adv;
 
@@ -106,27 +106,33 @@ for k=1:length(CellTypeList)
     % end
 
     idx = sce.c_cell_type_tx == CellTypeList{k};
-
-    
-    T = sc_deg(sce.X(:, i1&idx), sce.X(:, i2&idx), sce.g, 1, false);
-    T = in_DETableProcess(T,cL1,cL2);
-    [Tup, Tdn] = pkg.e_processDETable(T);
+    T = [];
     try
-        writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All genes');
-        writetable(Tup, filesaved, "FileType", "spreadsheet", 'Sheet', 'Up-regulated');
-        writetable(Tdn, filesaved, "FileType", "spreadsheet", 'Sheet', 'Down-regulated');
+        T = sc_deg(sce.X(:, i1&idx), sce.X(:, i2&idx), sce.g, 1, false);
     catch ME
         warning(ME.message);
     end
-    if rungsea
+
+    if ~isempty(T)
+        T = in_DETableProcess(T,cL1,cL2);
+        [Tup, Tdn] = pkg.e_processDETable(T);
         try
-            Tgsea=run.r_fgsea(T.gene,true,T.avg_log2FC);
-            if ~isempty(Tgsea)
-                writetable(Tgsea, filesaved, "FileType", "spreadsheet", 'Sheet', 'GSEA');
-            end
+            writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All genes');
+            writetable(Tup, filesaved, "FileType", "spreadsheet", 'Sheet', 'Up-regulated');
+            writetable(Tdn, filesaved, "FileType", "spreadsheet", 'Sheet', 'Down-regulated');
         catch ME
             warning(ME.message);
         end
+        % if rungsea
+        %     try
+        %         Tgsea=run.r_fgsea(T.gene,true,T.avg_log2FC);
+        %         if ~isempty(Tgsea)
+        %             writetable(Tgsea, filesaved, "FileType", "spreadsheet", 'Sheet', 'GSEA');
+        %         end
+        %     catch ME
+        %         warning(ME.message);
+        %     end
+        % end
     end
 end
 gui.gui_waitbar_adv(fw);

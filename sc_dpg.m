@@ -1,8 +1,9 @@
-function [T] = sc_dpg(X, Y, g)
+function [T] = sc_dpg(X, Y, g, setmatrx, setnames, setgenes)
 
 %X = log(1+sc_norm(X));
-
-[setmatrx, setnames, setgenes] = pkg.e_getgenesets;
+if nargin<6
+    [setmatrx, setnames, setgenes] = pkg.e_getgenesets;
+end
 [~,ix,iy] = intersect(upper(setgenes),upper(g));
 
 setgenes=setgenes(ix);

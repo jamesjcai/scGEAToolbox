@@ -91,6 +91,8 @@ end
 
 fw = gui.gui_waitbar_adv;
 
+sceX = log(1+sc_norm(sce.X));
+
 for k=1:length(CellTypeList)
    
     gui.gui_waitbar_adv(fw, ...
@@ -109,7 +111,7 @@ for k=1:length(CellTypeList)
     % -----------
 
     
-    T = sc_dpg(sce.X(:, i1&idx), sce.X(:, i2&idx), sce.g, ...
+    T = sc_dpg(sceX(:, i1&idx), sceX(:, i2&idx), sce.g, ...
         setmatrx, setnames, setgenes);
     try
         writetable(T, filesaved, 'FileType', 'spreadsheet');
