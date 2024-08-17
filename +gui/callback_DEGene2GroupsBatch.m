@@ -1,9 +1,13 @@
 function callback_DEGene2GroupsBatch(src, ~)
 
-
 FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
 
+[done, CellTypeList, i1, i2, cL1, cL2,... 
+    outdir] = gui.i_batchmodeprep(sce,'DE in Batch Mode');
+if ~done, return; end
+
+%{
 
 if isscalar(unique(sce.c_cell_type_tx))
     warndlg('Only one cell type or cell type is undetermined.','');
@@ -81,6 +85,9 @@ rungsea=false;
 % if strcmp(answer,'Cancel'), return; end
 % if strcmp(answer,'Yes'), rungsea = true; end
 
+%}
+
+
 fw = gui.gui_waitbar_adv;
 
 for k=1:length(CellTypeList)
@@ -143,6 +150,55 @@ if strcmp(answer,'Yes'), winopen(outdir); end
 end
 
 
+function [T]=in_DETableProcess(T,cL1,cL2)
+    try
+        T = sortrows(T, 'p_val_adj', 'ascend');
+        T = sortrows(T, 'pct_1', 'ascend');
+        T = sortrows(T, 'pct_2', 'descend');
+        T = sortrows(T, 'avg_log2FC', 'ascend');
+    catch ME
+        warning(ME.message);
+    end
+    
+    try
+        if contains(T.Properties.VariableNames{5}, 'avg_1')
+            T.Properties.VariableNames{5} = sprintf('%s_%s', ...
+                T.Properties.VariableNames{5}, ...
+                matlab.lang.makeValidName(string(cL1)));
+        end
+    
+        if contains(T.Properties.VariableNames{6}, 'avg_2')
+            T.Properties.VariableNames{6} = sprintf('%s_%s', ...
+                T.Properties.VariableNames{6}, ...
+                matlab.lang.makeValidName(string(cL2)));
+        end
+    
+        if contains(T.Properties.VariableNames{7}, 'pct_1')
+            T.Properties.VariableNames{7} = sprintf('%s_%s', ...
+                T.Properties.VariableNames{7}, ...
+                matlab.lang.makeValidName(string(cL1)));
+        end
+    
+        if contains(T.Properties.VariableNames{8}, 'pct_2')
+            T.Properties.VariableNames{8} = sprintf('%s_%s', ...
+                T.Properties.VariableNames{8}, ...
+                matlab.lang.makeValidName(string(cL2)));
+        end
+    catch ME
+        warning(ME.message);
+    end
+        variables = T.Properties.VariableNames;
+        for k = 1:length(variables)
+            xx = T.(variables{k});
+            if isnumeric(xx) && any(isinf(xx))
+                xx(isinf(xx) & xx > 0) = 1e99;
+                xx(isinf(xx) & xx < 0) = -1e99;
+                T.(variables{k}) = xx;
+            end
+        end
+end
+
+
 % try
 %     switch methodtag
 %         case 'ranksum'
@@ -176,7 +232,7 @@ end
 
 
 
-
+%{
 
 function [i1, i2, cL1, cL2]=in_twogrpsencoding(thisc)
     [ci, cLi] = grp2idx(thisc);
@@ -234,53 +290,6 @@ end
 %     cLsorted=cL(idxx);
 % end
 
-function [T]=in_DETableProcess(T,cL1,cL2)
-    try
-        T = sortrows(T, 'p_val_adj', 'ascend');
-        T = sortrows(T, 'pct_1', 'ascend');
-        T = sortrows(T, 'pct_2', 'descend');
-        T = sortrows(T, 'avg_log2FC', 'ascend');
-    catch ME
-        warning(ME.message);
-    end
-    
-    try
-        if contains(T.Properties.VariableNames{5}, 'avg_1')
-            T.Properties.VariableNames{5} = sprintf('%s_%s', ...
-                T.Properties.VariableNames{5}, ...
-                matlab.lang.makeValidName(string(cL1)));
-        end
-    
-        if contains(T.Properties.VariableNames{6}, 'avg_2')
-            T.Properties.VariableNames{6} = sprintf('%s_%s', ...
-                T.Properties.VariableNames{6}, ...
-                matlab.lang.makeValidName(string(cL2)));
-        end
-    
-        if contains(T.Properties.VariableNames{7}, 'pct_1')
-            T.Properties.VariableNames{7} = sprintf('%s_%s', ...
-                T.Properties.VariableNames{7}, ...
-                matlab.lang.makeValidName(string(cL1)));
-        end
-    
-        if contains(T.Properties.VariableNames{8}, 'pct_2')
-            T.Properties.VariableNames{8} = sprintf('%s_%s', ...
-                T.Properties.VariableNames{8}, ...
-                matlab.lang.makeValidName(string(cL2)));
-        end
-    catch ME
-        warning(ME.message);
-    end
-        variables = T.Properties.VariableNames;
-        for k = 1:length(variables)
-            xx = T.(variables{k});
-            if isnumeric(xx) && any(isinf(xx))
-                xx(isinf(xx) & xx > 0) = 1e99;
-                xx(isinf(xx) & xx < 0) = -1e99;
-                T.(variables{k}) = xx;
-            end
-        end
-end
 
 
 
@@ -368,3 +377,4 @@ end
             %    end
         end
     end
+%}

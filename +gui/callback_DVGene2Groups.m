@@ -95,9 +95,9 @@ end
         return;
     end
 
-    [T] = gui.e_dvanalysis(sce1, sce2, cL1, cL2);
+    % [T] = gui.e_dvanalysis(sce1, sce2, cL1, cL2);
 
-    %{
+    
     if sce1.NumCells < 50 || sce2.NumCells < 50
         warndlg('One of groups contains too few cells (n < 50). The result may not be reliable.','','modal');
     end
@@ -166,8 +166,7 @@ end
     idxx = T.(8)==1 | T.(16)==1 | T.(8) == max(T.(8)) | T.(16) == max(T.(16));
     T.DiffDist(idxx) = 0;
     T = sortrows(T,"DiffDist","descend");
-    %}
-    
+        
     gui.gui_waitbar(fw);
 
     outfile = sprintf('%s_vs_%s', ...
