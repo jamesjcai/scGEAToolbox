@@ -94,6 +94,10 @@ end
         errordlg('Filtered SCE contains too few cells (n < 10) or genes (n < 10).','','modal');
         return;
     end
+
+    [T] = gui.e_dvanalysis(sce1, sce2, cL1, cL2);
+
+    %{
     if sce1.NumCells < 50 || sce2.NumCells < 50
         warndlg('One of groups contains too few cells (n < 50). The result may not be reliable.','','modal');
     end
@@ -162,7 +166,8 @@ end
     idxx = T.(8)==1 | T.(16)==1 | T.(8) == max(T.(8)) | T.(16) == max(T.(16));
     T.DiffDist(idxx) = 0;
     T = sortrows(T,"DiffDist","descend");
-
+    %}
+    
     gui.gui_waitbar(fw);
 
     outfile = sprintf('%s_vs_%s', ...
@@ -246,18 +251,19 @@ yl = cell2mat(get([hAx1, hAx2], 'Ylim'));
 ylnew = [min(yl(:, 1)), max(yl(:, 2))];
 set([hAx1, hAx2], 'Ylim', ylnew);
 
-hFig.Visible=true;
+ExportTable;
+
+[answer]=questdlg('Explore DV genes?','');
+if strcmp(answer, 'Yes'), hFig.Visible=true; end
 
 
-
-
-   function ExportTable(~, ~)                
-       % gui.i_exporttable(T, true, 'Tsplinefitg', 'SplinefitGTable');
+   function ExportTable(~, ~)
+        % gui.i_exporttable(T, true, 'Tsplinefitg', 'SplinefitGTable');
         [~, filesaved] = gui.i_exporttable(T, true, 'Tdvgenelist', outfile);
-        fprintf('Result has been saved in %s\n',filesaved);        
-        % if ~isempty(filesaved)
-        %    waitfor(helpdlg(sprintf('Result has been saved in %s',filesaved),''));
-        % end        
+        if ~isempty(filesaved)
+            %    waitfor(helpdlg(sprintf('Result has been saved in %s',filesaved),''));
+            fprintf('Result has been saved in %s\n', filesaved);
+        end        
     end
 
     function txt = in_myupdatefcn3(src, event_obj, g)
@@ -428,7 +434,6 @@ hFig.Visible=true;
             h2.SizeData = h2.SizeData + 2;
         end
     end
-
 
     function ChangeAlphaValue(~, ~)
         if h1.MarkerFaceAlpha <= 0.05

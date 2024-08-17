@@ -1,19 +1,18 @@
 function callback_DPGene2GroupsBatch(src, ~)
 
-if ~gui.gui_showrefinfo('DP in Batch Mode'), return; end
-
+%if ~gui.gui_showrefinfo('DP in Batch Mode'), return; end
 
 FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
+[done, CellTypeList, i1, i2, cL1, cL2,... 
+    outdir] = gui.i_batchmodeprep(sce,'DP in Batch Mode');
+if ~done, return; end
 
-%warndlg('Function is under development.','');
-%return;
-
+%{
 if isscalar(unique(sce.c_cell_type_tx))
     warndlg('Only one cell type or cell type is undetermined.','');
     return;
 end
-
 
 [CellTypeSorted]=pkg.e_sortcatbysize(sce.c_cell_type_tx);
 [CellTypeList]=in_selectcelltypes(CellTypeSorted);
@@ -40,6 +39,7 @@ if ~strcmp(answer,'Yes'), return; end
 outdir = uigetdir;
 if ~isfolder(outdir), return; end
 
+
 needoverwritten=false;
 for k=1:length(CellTypeList)
     outfile = sprintf('%s_vs_%s_%s.xlsx', ...
@@ -57,6 +57,8 @@ else
     answer=questdlg(sprintf('Result files will be save in %s. Continue?', outdir), '');
 end
 if ~strcmp(answer,'Yes'), return; end
+%}
+
 
 % rungsea=false;
 % answer=questdlg('Run GSEA analysis with the DE result (i.e., genes ranked by log2FC)?','');
@@ -80,7 +82,7 @@ if ~strcmp(answer,'Yes'), return; end
 %         species='human';
 %     end
 
-[indx1,species]=gui.i_selgenecollection;
+[indx1,species] = gui.i_selgenecollection;
 if isempty(indx1), return; end
 [setmatrx, setnames, setgenes] = pkg.e_getgenesets(indx1,species); %(indx1);
 if isempty(setmatrx) || isempty(setnames) || isempty(setgenes) 
@@ -157,11 +159,7 @@ end
 
 % mavolcanoplot(sce.X(:,i1),sce.X(:,i2),T.p_val_adj,'Labels',T.gene)
 
-
-
-
-
-
+%{
 function [i1, i2, cL1, cL2]=in_twogrpsencoding(thisc)
     [ci, cLi] = grp2idx(thisc);
     listitems = natsort(string(cLi));
@@ -354,3 +352,4 @@ function [thisc, clabel] = in_select1class(sce, allowunique)
         %    end
     end
 end
+%}

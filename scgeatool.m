@@ -179,7 +179,7 @@ in_addmenu(m_tool, 0, @gui.callback_DPGene2Groups, 'Differential Program (DP) An
 in_addmenu(m_tool, 0, @gui.callback_DVGene2Groups, 'Differential Variability (DV) Analysis...','V');
 in_addmenu(m_tool, 1, @gui.callback_DEGene2GroupsBatch, 'DE Analysis in Cell Type Batch Mode...');
 in_addmenu(m_tool, 0, @gui.callback_DPGene2GroupsBatch, 'DP Analysis in Cell Type Batch Mode...');
-% in_addmenu(m_tool, 0, @gui.callback_DVGene2GroupsBatch, 'Differential Variability (DV) Analysis in Cell Type Batch Mode...');
+in_addmenu(m_tool, 0, @gui.callback_DVGene2GroupsBatch, 'DV Analysis in Cell Type Batch Mode...');
 
 
 m_ntwk = uimenu(FigureHandle, 'Text', '&Network');
