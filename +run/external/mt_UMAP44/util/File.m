@@ -1211,7 +1211,7 @@ classdef File
                 end
             end
             l=dir(path);
-            isub = [l(:).isdir]; %# returns logical vector
+            isub = [l(:).isdir]; % returns logical vector
             nameFolds = {l(isub).name}';
             N=length(nameFolds);
             for i=1:N
