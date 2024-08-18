@@ -2,8 +2,11 @@ function callback_DVGene2GroupsBatch(src, ~)
 
 FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
+if ~gui.gui_showrefinfo('DV in Batch Mode'), return; end
+prefixtag = 'DV';
 
-[done, CellTypeList, i1, i2, cL1, cL2, outdir] = gui.i_batchmodeprep(sce,'DV in Batch Mode');
+[done, CellTypeList, i1, i2, cL1, cL2, ...
+    outdir] = gui.i_batchmodeprep(sce, prefixtag);
 if ~done, return; end
 
 
@@ -54,7 +57,6 @@ for k=1:length(CellTypeList)
     X1 = X1(idx1, :);
     g1 = g1(idx1);
 
-
     [T2, X2, g2, xyz2] = sc_splinefit(X2_ori, g_ori, true, false);
     [T2, idx2] = sortrows(T2,'genes','ascend');
     X2 = X2(idx2, :);
@@ -62,7 +64,6 @@ for k=1:length(CellTypeList)
 
     assert(isequal(g1, g2))
     g = g1;
-
 
     px1 = T1.lgu; py1 = T1.lgcv; pz1 = T1.dropr;
     px2 = T2.lgu; py2 = T2.lgcv; pz2 = T2.dropr;
@@ -87,13 +88,22 @@ for k=1:length(CellTypeList)
     T = sortrows(T,"DiffDist","descend");
 %}
     [T] = gui.e_dvanalysis(sce1, sce2, cL1, cL2);
-    outfile = sprintf('%s_vs_%s_%s.xlsx', ...
+    outfile = sprintf('%s_%s_vs_%s_%s.xlsx', ...
+        prefixtag,...
         matlab.lang.makeValidName(string(cL1)), ...
         matlab.lang.makeValidName(string(cL2)), ...
         matlab.lang.makeValidName(string(CellTypeList{k})));
         filesaved = fullfile(outdir, outfile);
-        % T = table(rand(3,1));
-        writetable(T, filesaved, 'FileType', 'spreadsheet');
+
+        Tup = T(T.DiffSign > 0, :);
+        Tdn = T(T.DiffSign < 0, :);
+        try
+            writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All genes');
+            writetable(Tup, filesaved, "FileType", "spreadsheet", 'Sheet', 'Up-regulated');
+            writetable(Tdn, filesaved, "FileType", "spreadsheet", 'Sheet', 'Down-regulated');
+        catch ME
+            warning(ME.message);
+        end
    
 end
 
@@ -101,6 +111,3 @@ gui.gui_waitbar_adv(fw);
 
 answer=questdlg(sprintf('Result files saved. Open the folder %s?', outdir), '');
 if strcmp(answer,'Yes'), winopen(outdir); end
-
-
-

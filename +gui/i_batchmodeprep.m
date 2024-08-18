@@ -1,7 +1,8 @@
-function [done, CellTypeList, i1, i2, cL1, cL2, outdir] = i_batchmodeprep(sce, prgnm)
+function [done, CellTypeList, i1, i2, cL1, cL2,...
+    outdir] = i_batchmodeprep(sce, prefixtag)
 
 done = false;
-if ~gui.gui_showrefinfo(prgnm), return; end
+% if ~gui.gui_showrefinfo(prgnm), return; end
 
 if isscalar(unique(sce.c_cell_type_tx))
     warndlg('Only one cell type or cell type is undetermined.','');
@@ -35,7 +36,8 @@ if ~isfolder(outdir), return; end
 
 needoverwritten=false;
 for k=1:length(CellTypeList)
-    outfile = sprintf('%s_vs_%s_%s.xlsx', ...
+    outfile = sprintf('%s_%s_vs_%s_%s.xlsx', ...
+        prefixtag, ...
         matlab.lang.makeValidName(string(cL1)), ...
         matlab.lang.makeValidName(string(cL2)), ...
         matlab.lang.makeValidName(string(CellTypeList{k})));
