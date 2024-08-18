@@ -83,8 +83,8 @@ else
 end
 % 'variablenames',{'Genes','Log10_Mean','Dropout_Rate','Log10_CV','Deviation_3DFeature'});
 
-T.d(T.dropr > (1 - 0.05)) = 0; % ignore genes with dropout rate > 0.95
-T.d(T.dropr < (0.01)) = 0; % ignore genes with dropout rate < 0.01 (removes ribosomal and mitochondrial genes)
+%T.d(T.dropr > (1 - 0.05)) = 0; % ignore genes with dropout rate > 0.95
+%T.d(T.dropr < (0.01)) = 0;     % ignore genes with dropout rate < 0.01 (removes ribosomal and mitochondrial genes)
 
 % disp('NOTE: Genes with dropout rate > 0.95 are excluded.');
 

@@ -11,56 +11,6 @@ lcolor2 = lcolors(2,:);
     [sce] = gui.i_selectinfogenes(sce);
     b=sce.NumGenes;
     fprintf('%d genes removed.\n', a-b);
-%{ 
----------------------------------
-spciestag = gui.i_selectspecies(2);
-if isempty(spciestag), return; end
-
-prompt = {'Remove Mt-Genes (MT-ND1, MT-ND6, MT-CYB, MT-COI, MT-ATP6, etc.)?', ...
-    'Remove Hemoglobin Genes (HBA1, HBB, Hba-a1, etc.)?', ...
-    'Remove Ribosomal Genes (RPSA, RPS2, RPS3, RPL3, RPL4, RPLP1, etc.)?', ...
-    'Remove Genes Without Approved Symbols?'};
-dlgtitle = '';
-dims = [1, 80];
-
-definput = {'Yes', 'Yes', 'Yes', 'Yes'};
-answer = inputdlg(prompt, dlgtitle, dims, definput);
-if isempty(answer), return; end
-
-if strcmpi(answer{1},'Yes') || strcmpi(answer{1},'Y')
-    sce = sce.rmmtgenes;
-    disp('Mt-genes removed.');    
-end
-
-if strcmpi(answer{2},'Yes') || strcmpi(answer{2},'Y')
-    sce = sce.rmhemoglobingenes;
-    disp('Hemoglobin genes removed.');    
-end
-
-if strcmpi(answer{3},'Yes') || strcmpi(answer{3},'Y')
-    sce = sce.rmribosomalgenes;
-    disp('Ribosomal genes removed.');    
-end
-
-if strcmpi(answer{4},'Yes') || strcmpi(answer{4},'Y')
-    mfolder = fileparts(mfilename('fullpath'));
-    switch spciestag
-        case 'human'
-            load(fullfile(mfolder, ...
-                '../resources', 'Biomart', 'Biomart_human_genes.mat'), 'T');
-        case 'mouse'
-            load(fullfile(mfolder, ...
-                '../resources', 'Biomart', 'Biomart_mouse_genes.mat'), 'T');
-    end
-    ApprovedSymbol = string(T.GeneName);
-    [idx0] = ismember(upper(sce.g), upper(ApprovedSymbol));
-    a1 = length(sce.g);
-    sce.g(~idx0) = [];
-    sce.X(~idx0, :) = [];
-    a2 = length(sce.g);
-    fprintf('%d genes without approved symbols are found and removed.\n',a1-a2);
-end
-%} 
     
     [i1, i2, cL1, cL2] = gui.i_select2grps(sce, false);
     if isscalar(i1) || isscalar(i2), return; end
@@ -97,86 +47,14 @@ end
         return;
     end
 
-    % [T] = gui.e_dvanalysis(sce1, sce2, cL1, cL2);
+    [T, X1, X2, g, xyz1, xyz2,...
+        px1, py1, pz1,...
+        px2, py2, pz2] = gui.e_dvanalysis(sce1, sce2, cL1, cL2);
 
-    
-    if sce1.NumCells < 50 || sce2.NumCells < 50
-        warndlg('One of groups contains too few cells (n < 50). The result may not be reliable.','','modal');
-    end
-    if sce1.NumGenes < 50 || sce2.NumGenes < 50
-        warndlg('One of groups contains too few genes (n < 50). The result may not be reliable.','','modal');
-    end
-
-    if ~isequal(sce1.g, sce2.g)
-        [g_ori, ia, ib] = intersect(sce1.g, sce2.g,'stable');
-        X1_ori = sce1.X(ia, :);
-        X2_ori = sce2.X(ib, :);
-    else
-        g_ori = sce1.g;
-        X1_ori = sce1.X;
-        X2_ori = sce2.X;
-    end
-    
-    X1_ori = sc_norm(X1_ori,'type','libsize');
-    X2_ori = sc_norm(X2_ori,'type','libsize');
-
-    [T1, X1, g1, xyz1] = sc_splinefit(X1_ori, g_ori, true, false);
-    [T1, idx1] = sortrows(T1,'genes','ascend');
-    X1 = X1(idx1, :);
-    g1 = g1(idx1);
-
-
-    [T2, X2, g2, xyz2] = sc_splinefit(X2_ori, g_ori, true, false);
-    [T2, idx2] = sortrows(T2,'genes','ascend');
-    X2 = X2(idx2, :);
-    g2 = g2(idx2);
-
-    assert(isequal(g1, g2))
-    g = g1;
-
-
-    px1 = T1.lgu; py1 = T1.lgcv; pz1 = T1.dropr;
-    px2 = T2.lgu; py2 = T2.lgcv; pz2 = T2.dropr;
-
-    %assignin("base","V1",[px1 py1 pz1]);
-    %assignin("base","T1",T1);
-    %assignin("base","xyz1",xyz1);
-
-    v1=([px1 py1 pz1] - xyz1(T1.nearidx,:));
-    v2=([px2 py2 pz2] - xyz2(T2.nearidx,:));
-
-    DiffDist = vecnorm(v1 - v2, 2, 2);
-    DiffSign = sign(vecnorm(v2,2,2)-vecnorm(v1,2,2));
-
-    T1.Properties.VariableNames = append(T1.Properties.VariableNames, sprintf('_%s', cL1{1}));
-    T2.Properties.VariableNames = append(T2.Properties.VariableNames, sprintf('_%s', cL2{1}));
-    
-    T = [T1 T2 table(DiffDist) table(DiffSign)];
-    
-    
-    % a few lines to get rid of the outliers for DV:    % Removing ends
-    % tt1 = table2array(T(:,8));
-    % nlast = max(tt1);
-    % idxx = and( tt1 > 1, tt1 < nlast);
-    % % T = T(idxx,:);
-    % T.DiffDist(~idxx)=0;
-    % tt1 = table2array(T(:,16));
-    % nlast = max(tt1);
-    % idxx = and( tt1 > 1, tt1 < nlast);
-    % % T = T(idxx,:);    
-    
-    idxx = T.(8)==1 | T.(16)==1 | T.(8) == max(T.(8)) | T.(16) == max(T.(16));
-    T.DiffDist(idxx) = 0;
-    T = sortrows(T,"DiffDist","descend");
-        
     gui.gui_waitbar(fw);
 
     outfile = sprintf('%s_vs_%s', ...
         matlab.lang.makeValidName(string(cL1)), matlab.lang.makeValidName(string(cL2)));
-
-% ---------
-%answer = questdlg('Show gene expression profiles?','');
-%if ~strcmp(answer,'Yes'), return; end
 
 pause(1);
 hFig = figure('Visible','off');
@@ -253,6 +131,7 @@ ylnew = [min(yl(:, 1)), max(yl(:, 2))];
 set([hAx1, hAx2], 'Ylim', ylnew);
 
 ExportTable;
+
 
 [answer]=questdlg('Explore DV genes?','');
 if strcmp(answer, 'Yes'), hFig.Visible=true; end

@@ -1,4 +1,5 @@
-function [T] = e_dvanalysis(sce1, sce2, cL1, cL2)
+function [T, X1, X2, g, xyz1, xyz2,...
+    px1, py1, pz1, px2, py2, pz2] = e_dvanalysis(sce1, sce2, cL1, cL2)
 
 if nargin<3
     cL1 = {'1'};
@@ -50,7 +51,7 @@ end
     v2=([px2 py2 pz2] - xyz2(T2.nearidx,:));
 
     DiffDist = vecnorm(v1 - v2, 2, 2);
-    DiffSign = sign(vecnorm(v2,2,2)-vecnorm(v1,2,2));
+    DiffSign = sign(vecnorm(v1,2,2)-vecnorm(v2,2,2));
 
     T1.Properties.VariableNames = append(T1.Properties.VariableNames, sprintf('_%s', cL1{1}));
     T2.Properties.VariableNames = append(T2.Properties.VariableNames, sprintf('_%s', cL2{1}));
