@@ -2,7 +2,7 @@ function [done, CellTypeList, i1, i2, cL1, cL2,...
     outdir] = i_batchmodeprep(sce, prefixtag)
 
 done = false;
-% if ~gui.gui_showrefinfo(prgnm), return; end
+CellTypeList=[]; i1=[]; i2=[]; cL1=[]; cL2=[]; outdir=[];
 
 if isscalar(unique(sce.c_cell_type_tx))
     warndlg('Only one cell type or cell type is undetermined.','');

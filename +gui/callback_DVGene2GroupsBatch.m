@@ -5,6 +5,11 @@ sce = guidata(FigureHandle);
 if ~gui.gui_showrefinfo('DV in Batch Mode'), return; end
 prefixtag = 'DV';
 
+a=sce.NumGenes;
+[sce] = gui.i_selectinfogenes(sce);
+b=sce.NumGenes;
+fprintf('%d genes removed.\n', a-b);
+
 [done, CellTypeList, i1, i2, cL1, cL2, ...
     outdir] = gui.i_batchmodeprep(sce, prefixtag);
 if ~done, return; end

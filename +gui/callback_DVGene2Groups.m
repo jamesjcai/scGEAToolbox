@@ -7,8 +7,12 @@ lcolor2 = lcolors(2,:);
     FigureHandle = src.Parent.Parent;
     sce = guidata(FigureHandle);
     if ~gui.gui_showrefinfo('DV Analysis'), return; end
-
-% ---------------------------------
+    a=sce.NumGenes;
+    [sce] = gui.i_selectinfogenes(sce);
+    b=sce.NumGenes;
+    fprintf('%d genes removed.\n', a-b);
+%{ 
+---------------------------------
 spciestag = gui.i_selectspecies(2);
 if isempty(spciestag), return; end
 
@@ -56,9 +60,7 @@ if strcmpi(answer{4},'Yes') || strcmpi(answer{4},'Y')
     a2 = length(sce.g);
     fprintf('%d genes without approved symbols are found and removed.\n',a1-a2);
 end
-
-
-% ---------------------------------
+%} 
     
     [i1, i2, cL1, cL2] = gui.i_select2grps(sce, false);
     if isscalar(i1) || isscalar(i2), return; end
