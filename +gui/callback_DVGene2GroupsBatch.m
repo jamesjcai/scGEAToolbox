@@ -98,20 +98,30 @@ for k=1:length(CellTypeList)
         matlab.lang.makeValidName(string(cL1)), ...
         matlab.lang.makeValidName(string(cL2)), ...
         matlab.lang.makeValidName(string(CellTypeList{k})));
-        filesaved = fullfile(outdir, outfile);
-
+        filesaved = fullfile(outdir, outfile);        
+         
         Tup = T(T.DiffSign > 0, :);
         Tdn = T(T.DiffSign < 0, :);
+
+        Item = T.Properties.VariableNames';
+        Description = {'gene name';'log mean in sample 1';...
+            'log CV in sample 1'; 'dropout rate in sample 1';...
+            'distance to curve 1';'p-value of distance in sample 1';...
+            'FDR of distance in sample 1';'log mean in sample 2';...
+            'log CV in sample 2'; 'dropout rate in sample 2';...
+            'distance to curve 2'; 'p-value of distance in sample 2';...
+            'FDR of distance in sample 2'; 'Difference in distances';...
+            'Sign of difference'};
+        Tnt = table(Item, Description);
         try
             writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All genes');
             writetable(Tup, filesaved, "FileType", "spreadsheet", 'Sheet', 'Up-regulated');
             writetable(Tdn, filesaved, "FileType", "spreadsheet", 'Sheet', 'Down-regulated');
+            writetable(Tnt, filesaved, "FileType", "spreadsheet", 'Sheet', 'Note');
         catch ME
             warning(ME.message);
         end
-   
 end
-
 gui.gui_waitbar_adv(fw);
 
 answer=questdlg(sprintf('Result files saved. Open the folder %s?', outdir), '');

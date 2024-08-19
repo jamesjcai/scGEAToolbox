@@ -55,9 +55,15 @@ end
 
     T1.Properties.VariableNames = append(T1.Properties.VariableNames, sprintf('_%s', cL1{1}));
     T2.Properties.VariableNames = append(T2.Properties.VariableNames, sprintf('_%s', cL2{1}));
-    
+    idxx = T1.(8)==1 | T2.(8)==1 | T1.(8) == max(T1.(8)) | T2.(8) == max(T2.(8));
+    T1 = T1(:,1:end-1);
+    T2 = T2(:,2:end);
+    T2 = T2(:,1:end-1);
+
+    T1.Properties.VariableNames{1} = 'gene';
+
     T = [T1 T2 table(DiffDist) table(DiffSign)];
 
-    idxx = T.(8)==1 | T.(16)==1 | T.(8) == max(T.(8)) | T.(16) == max(T.(16));
     T.DiffDist(idxx) = 0;
     T = sortrows(T,"DiffDist","descend");
+    

@@ -43,11 +43,35 @@ for k=1:length(CellTypeList)
 
     if ~isempty(T)
         T = in_DETableProcess(T, cL1, cL2);
+
+        Item = T.Properties.VariableNames';
+        Description = {'gene name';'p-value';...
+            'log2 fold change between average expression';...
+            'absolute value of log2 fold change';...
+            'average expression in sample 1';...
+            'average expression in sample 2';...
+            'percentage of cells expressing the gene in sample 1';...
+            'percentage of cells expressing the gene in sample 2';...
+            'adjusted p-value'};
+        Tnt = table(Item, Description);
+%{
+gene
+p_val
+avg_log2FC
+abs_log2FC
+avg_1_GSM3308547
+avg_2_GSM3308548
+pct_1_GSM3308547
+pct_2_GSM3308548
+p_val_adj
+%}
+        
         [Tup, Tdn] = pkg.e_processDETable(T);
         try
             writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All genes');
             writetable(Tup, filesaved, "FileType", "spreadsheet", 'Sheet', 'Up-regulated');
             writetable(Tdn, filesaved, "FileType", "spreadsheet", 'Sheet', 'Down-regulated');
+            writetable(Tnt, filesaved, "FileType", "spreadsheet", 'Sheet', 'Note');
         catch ME
             warning(ME.message);
         end
