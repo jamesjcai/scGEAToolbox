@@ -9,6 +9,10 @@ prefixtag = 'DE';
     outdir] = gui.i_batchmodeprep(sce, prefixtag);
 if ~done, return; end
 
+runenrichr = questdlg('Run EnrichR with top genes?','');
+if strcmp(runenrichr,'Cancel'), return; end
+
+
 fw = gui.gui_waitbar_adv;
 for k=1:length(CellTypeList)
    
@@ -38,7 +42,7 @@ for k=1:length(CellTypeList)
     try
         T = sc_deg(sce.X(:, i1&idx), sce.X(:, i2&idx), sce.g, 1, false);
     catch ME
-        warning(ME.message);
+        disp(ME.message);
     end
 
     if ~isempty(T)
@@ -77,6 +81,20 @@ p_val_adj
         catch ME
             warning(ME.message);
         end
+
+        if strcmp(runenrichr,'Yes')
+            try
+                [Tmf1,Tbp1]= run.r_enrichR(Tup.gene(1:min([250 size(Tup, 1)])));
+                in_writetable(Tmf1, filesaved, 'Up_250_GO_MF');
+                in_writetable(Tbp1, filesaved, 'Up_250_GO_BP');
+                [Tmf2,Tbp2]= run.r_enrichR(Tdn.gene(1:min([250 size(Tdn, 1)])));
+                in_writetable(Tmf2, filesaved, 'Dn_250_GO_MF');
+                in_writetable(Tbp2, filesaved, 'Dn_250_GO_BP');
+            catch ME
+                disp(ME.message);
+            end
+        end
+        
         % if rungsea
         %     try
         %         Tgsea=run.r_fgsea(T.gene,true,T.avg_log2FC);
@@ -93,6 +111,12 @@ gui.gui_waitbar_adv(fw);
 
 answer=questdlg(sprintf('Result files saved. Open the folder %s?', outdir), '');
 if strcmp(answer,'Yes'), winopen(outdir); end
+
+    function in_writetable(Tmf1, filesaved, shtname)
+        if ~isempty(Tmf1) && istable(Tmf1) && size(Tmf1, 1) > 0
+            writetable(Tmf1, filesaved, "FileType", "spreadsheet", 'Sheet', shtname);
+        end
+    end
 
 end
 

@@ -14,10 +14,10 @@ fprintf('%d genes removed.\n', a-b);
     outdir] = gui.i_batchmodeprep(sce, prefixtag);
 if ~done, return; end
 
+runenrichr = questdlg('Run EnrichR with top genes?','');
+if strcmp(runenrichr,'Cancel'), return; end
 
 fw = gui.gui_waitbar_adv;
-
-
 for k=1:length(CellTypeList)
    
     gui.gui_waitbar_adv(fw, ...
@@ -123,8 +123,29 @@ for k=1:length(CellTypeList)
         catch ME
             warning(ME.message);
         end
+
+        if strcmp(runenrichr,'Yes')
+            try
+                [Tmf1,Tbp1]= run.r_enrichR(Tup.gene(1:min([250 size(Tup, 1)])));
+                in_writetable(Tmf1, filesaved, 'Up_250_GO_MF');
+                in_writetable(Tbp1, filesaved, 'Up_250_GO_BP');
+                [Tmf2,Tbp2]= run.r_enrichR(Tdn.gene(1:min([250 size(Tdn, 1)])));
+                in_writetable(Tmf2, filesaved, 'Dn_250_GO_MF');
+                in_writetable(Tbp2, filesaved, 'Dn_250_GO_BP');
+            catch ME
+                disp(ME.message);
+            end
+        end
 end
 gui.gui_waitbar_adv(fw);
 
 answer=questdlg(sprintf('Result files saved. Open the folder %s?', outdir), '');
 if strcmp(answer,'Yes'), winopen(outdir); end
+
+    function in_writetable(Tmf1, filesaved, shtname)
+        if ~isempty(Tmf1) && istable(Tmf1) && size(Tmf1, 1) > 0
+            writetable(Tmf1, filesaved, "FileType", "spreadsheet", 'Sheet', shtname);
+        end
+    end
+
+end
