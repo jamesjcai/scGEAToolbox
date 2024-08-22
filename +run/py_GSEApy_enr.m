@@ -1,10 +1,12 @@
-function [T] = py_GSEApy_enr(genelist, backgroundlist, wkdir, ...
-    showbarplot, isdebug)
+function [Tmf, Tbp] = py_GSEApy_enr(genelist, backgroundlist, wkdir, ...
+    showbarplot, showprogress, isdebug)
 
-if nargin < 5, isdebug = true; end
-if nargin < 4, showbarplot = true; end
+if nargin < 6, isdebug = true; end
+if nargin < 5, showprogress = false; end
+if nargin < 4, showbarplot = false; end
 if nargin < 2, backgroundlist = []; end
-
+if nargin < 1, return; end
+Tmf=[]; Tbp = [];
 
 extprogname = 'py_GSEApy_enr';
 if nargin < 3 || isempty(wkdir)
@@ -22,8 +24,11 @@ end
         disp('Using working directory provided.');
         cd(wkdir);
     end
-    fw = gui.gui_waitbar([], [], 'Checking Python environment...');
-    
+
+    if showprogress
+        fw = gui.gui_waitbar([], [], 'Checking Python environment...');
+    end
+
     x = pyenv;
     try
         pkg.i_add_conda_python_path;
@@ -37,7 +42,7 @@ end
     [status, cmdout] = system(cmdlinestr, '-echo');
     if status ~= 0
         cd(oldpth);
-        if isvalid(fw)
+        if showprogress && isvalid(fw)
             gui.gui_waitbar(fw, true);
         end
         error(cmdout);
@@ -55,7 +60,7 @@ if ~isempty(backgroundlist)
 end
 disp('Input files written.');
 
-if isvalid(fw)
+if showprogress && isvalid(fw)
     gui.gui_waitbar(fw, [], [], 'Checking Python environment is complete');
     pause(0.5);
     gui.gui_waitbar(fw, [], [], 'Running GSEApy Enrichr...');
@@ -70,14 +75,12 @@ end
     [status] = system(cmdlinestr, '-echo');
 
 
-if status == 0 && isvalid(fw)
-
+if status == 0 && showprogress && isvalid(fw)
     gui.gui_waitbar(fw, [], 'GSEApy Enrichr is complete');
 end
 
-T1 = readtable('GO_Biological_Process_2023.Human.enrichr.reports.txt');
-T2 = readtable('GO_Molecular_Function_2023.Human.enrichr.reports.txt');
-T = [T1; T2];
+Tbp = readtable('GO_Biological_Process_2023.Human.enrichr.reports.txt');
+Tmf = readtable('GO_Molecular_Function_2023.Human.enrichr.reports.txt');
 
 if showbarplot
     figure; imshow(imread('GO_Biological_Process_2023.Human.enrichr.reports.png'))

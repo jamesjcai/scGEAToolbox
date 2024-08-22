@@ -1,9 +1,9 @@
-function [T1, T2] = r_enrichR(genelist, wkdir, isdebug)
+function [Tmf, Tbp] = r_enrichR(genelist, wkdir, isdebug)
 
 if nargin < 2, wkdir = tempdir; end
 if nargin < 3, isdebug = true; end
 
-T1 = []; T2 = [];
+Tmf = []; Tbp = [];
 oldpth = pwd();
 [isok, msg, codepth] = commoncheck_R('R_enrichR');
 if ~isok, error(msg); end
@@ -25,12 +25,12 @@ pkg.i_addwd2script(codefullpath, wkdir, 'R');
 pkg.RunRcode(codefullpath, Rpath);
 warning off
 if exist('output1.txt', 'file')
-    T1 = readtable('output1.txt');
-    [T1] = in_trimT(T1);
+    Tmf = readtable('output1.txt');
+    [Tmf] = in_trimT(Tmf);
 end
 if exist('output2.txt', 'file')
-    T2 = readtable('output2.txt');
-    [T2] = in_trimT(T2);
+    Tbp = readtable('output2.txt');
+    [Tbp] = in_trimT(Tbp);
 end
 warning on
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
