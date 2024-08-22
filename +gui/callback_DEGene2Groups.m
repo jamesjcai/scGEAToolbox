@@ -27,7 +27,6 @@ end
 answer = questdlg('Which method?', ...
     'Select Method', 'Wilcoxon rank-sum test 🐇', ...
     'DESeq 2 (R required) 🐢', ...
-    'MAST (R required) 🐢', ...
     'Wilcoxon rank-sum test 🐇');
 
 if strcmpi(answer, 'Wilcoxon rank-sum test 🐇')
@@ -230,19 +229,24 @@ end
         disp('run.web_Enrichr(Tup.gene(1:200))');
         disp('run.web_Enrichr(Tdn.gene(1:200))');
 
-        answer = questdlg('Run enrichment analysis with top K (=200 by default) up-regulated DE genes?');
-        if strcmp(answer, 'Yes')
-            gui.i_enrichtest(Tup.gene(1:min(numel(Tup.gene), 200)), sce.g);
-        else
-            return;
-        end
+       gui.gui_enrichr(Tup.gene, sce.g,... 
+           'Run enrichment analysis with up-regulated DE genes?');
+       % answer = questdlg('Run enrichment analysis with top K (=200 by default) up-regulated DE genes?');
+       % if strcmp(answer, 'Yes')
+       %     gui.i_enrichtest(Tup.gene(1:min(numel(Tup.gene), 200)), sce.g);
+       % else
+       %     return;
+       % end
 
-        answer = questdlg('Run enrichment analysis with top K (=200 by default) down-regulated DE genes?');
-        if strcmp(answer, 'Yes')
-            gui.i_enrichtest(Tdn.gene(1:min(numel(Tdn.gene), 200)), sce.g);
-        else
-            return;
-        end
+       gui.gui_enrichr(Tdn.gene, sce.g,... 
+           'Run enrichment analysis with down-regulated DE genes?');
+       
+       % answer = questdlg('Run enrichment analysis with top K (=200 by default) down-regulated DE genes?');
+       % if strcmp(answer, 'Yes')
+       %     gui.i_enrichtest(Tdn.gene(1:min(numel(Tdn.gene), 200)), sce.g);
+       % else
+       %     return;
+       % end
     end
 
     %    end
