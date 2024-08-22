@@ -1,4 +1,6 @@
-function i_viewtable(T)
+function i_viewtable(T, ParentFigureHandle)
+
+if nargin < 2, ParentFigureHandle = []; end
 
 %T.Properties.RowNames = T.hvg;
 %T = T(:, 2:end);
@@ -11,11 +13,15 @@ function i_viewtable(T)
 % Weight = [176;163;131;133;119];
 % T = table(Age,Height,Weight,'RowNames',LastName);
 
-hFigure = uifigure('Visible', false);
+hFig = uifigure('Visible', false);
 %set(hFigure, 'MenuBar', 'none');
 %set(hFigure, 'ToolBar', 'none');
-uitable(hFigure, 'Data', T, 'ColumnName', T.Properties.VariableNames, ...
+uitable(hFig, 'Data', T, 'ColumnName', T.Properties.VariableNames, ...
     'RowName', T.Properties.RowNames, 'Units', ...
     'Normalized', 'Position', [0.05, 0.05, 0.92, 0.90]);
-movegui(hFigure, 'center');
-set(hFigure, 'visible', 'on');
+if isempty(ParentFigureHandle)
+    movegui(hFig, 'center');
+else
+    gui.i_movegui2parent(hFig, ParentFigureHandle);
+end
+set(hFig, 'visible', 'on');

@@ -70,10 +70,12 @@ tb = uitoolbar('Parent', hFig);
 pkg.i_addbutton2fig(tb, 'off', {@in_HighlightSelectedGenes, 1}, 'list.gif', 'Selet a gene to show expression profile');
 % pkg.i_addbutton2fig(tb, 'off', @in_HighlightSelectedGenes, 'xplotpicker-qqplot.gif', 'Highlight selected genes');
 pkg.i_addbutton2fig(tb, 'off', {@in_HighlightSelectedGenes, 2}, 'list2.gif', 'Selet a gene from sorted list');
+pkg.i_addbutton2fig(tb, 'off', @in_viewTable, 'icon-fa-stack-exchange-10.gif', 'View DV gene table...');
 
-pkg.i_addbutton2fig(tb, 'on', @EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Select top n genes to perform web-based enrichment analysis...');
-pkg.i_addbutton2fig(tb, 'off',  @i_genecards, 'fvtool_fdalinkbutton.gif', 'GeneCards...');
-pkg.i_addbutton2fig(tb, 'off', @ExportTable, 'export.gif', 'Export HVG Table...');
+pkg.i_addbutton2fig(tb, 'on', @in_EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Select top n genes to perform web-based enrichment analysis...');
+pkg.i_addbutton2fig(tb, 'off', @in_Enrichr, 'plotpicker-andrewsplot.gif', 'Enrichr test...');
+pkg.i_addbutton2fig(tb, 'off', @in_genecards, 'fvtool_fdalinkbutton.gif', 'GeneCards...');
+pkg.i_addbutton2fig(tb, 'off', @in_ExportTable, 'export.gif', 'Export HVG Table...');
 
 pkg.i_addbutton2fig(tb, 'on', @ChangeAlphaValue, 'plotpicker-rose.gif', 'Change MarkerFaceAlpha value');
 pkg.i_addbutton2fig(tb, 'off', @in_changeMarkerSize, 'icon-mat-text-fields-10.gif', 'ChangeFontSize');
@@ -130,14 +132,36 @@ yl = cell2mat(get([hAx1, hAx2], 'Ylim'));
 ylnew = [min(yl(:, 1)), max(yl(:, 2))];
 set([hAx1, hAx2], 'Ylim', ylnew);
 
-ExportTable;
+in_ExportTable;
 
 
 [answer]=questdlg('Explore DV genes?','');
 if strcmp(answer, 'Yes'), hFig.Visible=true; end
 
+    function in_Enrichr(~, ~)
+        answer = questdlg('Enrichr test with top DV genes. Continue?','');
+        if ~strcmp(answer,'Yes'), return; end
+        answer = questdlg('Select type of DV genes.','',...
+            'Mixed','Varibility increasing','Varibility decreasing','Mixed');
+        switch answer
+            case 'Mixed'
+               Tin = T;
+            case 'Varibility increasing'
+                Tup = T(T.DiffSign > 0, :);
+                Tin = Tup;
+            case 'Varibility decreasing'
+                Tdn = T(T.DiffSign < 0, :);
+                Tin = Tdn;
+        end
+       gui.gui_enrichr(Tin.gene(1:500), Tin.gene,... 
+           sprintf('Run enrichment analysis with %s DV genes?', lower(answer)));
+    end
 
-   function ExportTable(~, ~)
+    function in_viewTable(~, ~)
+        gui.i_viewtable(T, FigureHandle);
+    end
+
+    function in_ExportTable(~, ~)
         % gui.i_exporttable(T, true, 'Tsplinefitg', 'SplinefitGTable');
         [~, filesaved] = gui.i_exporttable(T, true, 'Tdvgenelist', outfile);
         if ~isempty(filesaved)
@@ -290,7 +314,7 @@ if strcmp(answer, 'Yes'), hFig.Visible=true; end
 
     end
 
-    function EnrichrHVGs(~, ~)
+    function in_EnrichrHVGs(~, ~)
         k = gui.i_inputnumk(200, 1, 2000, 'Select top n genes');
         if ~isempty(k)
             gsorted = T.(T.Properties.VariableNames{1});
@@ -300,7 +324,7 @@ if strcmp(answer, 'Yes'), hFig.Visible=true; end
         end
     end
 
-    function i_genecards(~, ~)
+    function in_genecards(~, ~)
         web(sprintf('https://www.genecards.org/cgi-bin/carddisp.pl?gene=%s', g(idx)),'-new');
     end
 
