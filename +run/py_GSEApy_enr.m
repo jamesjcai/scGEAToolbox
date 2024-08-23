@@ -4,12 +4,13 @@ function [Tmf, Tbp] = py_GSEApy_enr(genelist, backgroundlist, wkdir, ...
 if nargin < 6, isdebug = true; end
 if nargin < 5, showprogress = false; end
 if nargin < 4, showbarplot = false; end
+if nargin < 3, wkdir = tempdir; end
 if nargin < 2, backgroundlist = []; end
 if nargin < 1, return; end
 Tmf=[]; Tbp = [];
 
 extprogname = 'py_GSEApy_enr';
-if nargin < 3 || isempty(wkdir)
+if isempty(wkdir)
     preftagname = 'externalwrkpath';
     [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
     if isempty(wkdir), return; end
@@ -82,6 +83,11 @@ end
 Tbp = readtable('GO_Biological_Process_2023.Human.enrichr.reports.txt');
 Tmf = readtable('GO_Molecular_Function_2023.Human.enrichr.reports.txt');
 
+if isempty(backgroundlist)
+    [Tbp] = in_trimT(Tbp);
+    [Tmf] = in_trimT(Tmf);
+end
+
 if showbarplot
     figure; imshow(imread('GO_Biological_Process_2023.Human.enrichr.reports.png'))
     figure; imshow(imread('GO_Molecular_Function_2023.Human.enrichr.reports.png'))
@@ -89,4 +95,17 @@ end
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 cd(oldpth);
+end
+
+
+function [T] = in_trimT(T)
+    try
+        if ~isempty(T)
+            a = string(T.Overlap);
+            b = extractBefore(a, cell2mat(strfind(a,'/')));
+            idx = double(b)>=5 & T.P_value < 0.05;
+            T=T(idx,:);
+        end
+    catch
+    end
 end
