@@ -14,7 +14,7 @@ fprintf('%d genes removed.\n', a-b);
     outdir] = gui.i_batchmodeprep(sce, prefixtag);
 if ~done, return; end
 
-runenrichr = questdlg('Run EnrichR with top genes?','');
+runenrichr = questdlg('Run Enrichr (R required) with top 250 DV genes? Results will be saved in the output Excel files.','');
 if strcmp(runenrichr,'Cancel'), return; end
 
 fw = gui.gui_waitbar_adv;
@@ -126,12 +126,12 @@ for k=1:length(CellTypeList)
 
         if strcmp(runenrichr,'Yes')
             try
-                [Tmf1,Tbp1]= run.r_enrichR(Tup.gene(1:min([250 size(Tup, 1)])));
-                in_writetable(Tmf1, filesaved, 'Up_250_GO_MF');
+                [Tbp1, Tmf1]= run.r_enrichR(Tup.gene(1:min([250 size(Tup, 1)])));                
                 in_writetable(Tbp1, filesaved, 'Up_250_GO_BP');
-                [Tmf2,Tbp2]= run.r_enrichR(Tdn.gene(1:min([250 size(Tdn, 1)])));
-                in_writetable(Tmf2, filesaved, 'Dn_250_GO_MF');
+                in_writetable(Tmf1, filesaved, 'Up_250_GO_MF');
+                [Tbp2, Tmf2]= run.r_enrichR(Tdn.gene(1:min([250 size(Tdn, 1)])));                
                 in_writetable(Tbp2, filesaved, 'Dn_250_GO_BP');
+                in_writetable(Tmf2, filesaved, 'Dn_250_GO_MF');
             catch ME
                 disp(ME.message);
             end
