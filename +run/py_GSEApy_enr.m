@@ -22,7 +22,7 @@ end
     if isempty(wkdir) || ~isfolder(wkdir)
         cd(codepth);
     else
-        disp('Using working directory provided.');
+        % disp('Using working directory provided.');
         cd(wkdir);
     end
 
