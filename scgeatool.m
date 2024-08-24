@@ -121,7 +121,7 @@ in_addmenu(m_edit, 1, @in_AddEditCellAttribs, 'Add/Edit Cell Attributes...');
 in_addmenu(m_edit, 0, @in_ExportCellAttribTable, 'Export Cell Attribute Table...');
 in_addmenu(m_edit, 1, @gui.callback_SelectCellsByMarker, 'Extract Cells by Marker (+/-) Expression...');
 in_addmenu(m_edit, 0, @in_MergeSubCellTypes, 'Merge Subclusters of Same Cell Type');
-in_addmenu(m_edit, 1, @in_WorkonSelectedGenes, 'Select Top n  Highly Variable Genes (HVGs) to Work on...');
+in_addmenu(m_edit, 1, @in_WorkonSelectedGenes, 'Select Top n Highly Variable Genes (HVGs) to Work on...');
 in_addmenu(m_edit, 0, @in_SubsampleCells, 'Subsample 50% Cells to Work on...');
 in_addmenu(m_edit, 1, @in_DeleteSelectedCells, 'Delete Brushed Cells...');
 in_addmenu(m_edit, 0, @gui.callback_SelectCellsByClass, 'Select Cells...');
@@ -777,9 +777,9 @@ if ~showuseronboarding, set(UserToolbarHandle, 'Visible', 'off'); end
         %         if ~strcmp(answer,'Yes'), return; end
         k = gui.i_inputnumk(2000, 1, sce.NumGenes, 'the number of HVGs');
         if isempty(k), return; end
-        answer = questdlg('Which method?', 'Select Method', ...
-            'Brennecke et al. (2013)', 'Splinefit Method', ...
-            'Brennecke et al. (2013)');
+        answer = questdlg('Which method?', 'Select Algorithm', ...
+            'Splinefit Method', 'Brennecke et al. (2013)',...
+            'Splinefit Method');
         fw = gui.gui_waitbar;
         switch answer
             case 'Brennecke et al. (2013)'

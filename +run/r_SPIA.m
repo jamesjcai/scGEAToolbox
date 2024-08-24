@@ -12,6 +12,9 @@ oldpth = pwd();
 if ~isok, error(msg); end
 if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
 
+tmpfilelist = {'input1.txt', 'input2.txt', 'input3.txt', 'output.csv'};
+if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+
 
 gid = pkg.i_symbol2ncbiid(Tdeg.gene);
 Tdeg = Tdeg(gid ~= 0, :);
@@ -28,8 +31,6 @@ mfc = 2 * max(abs(fc(~isinf(fc))));
 fc(isinf(fc)) = sign(fc(isinf(fc))) * mfc;
 writematrix(fc, 'input3.txt');
 
-tmpfilelist = {'input1.txt', 'input2.txt', 'input3.txt', 'output.csv'};
-if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 
 Rpath = getpref('scgeatoolbox', 'rexecutablepath',[]);
 if isempty(Rpath)
