@@ -21,7 +21,7 @@ if isempty(Rpath)
 end
 
 codefullpath = fullfile(codepth,'script.R');
-pkg.i_addwd2script(codefullpath, wkdir, 'R');
+pkg.i_addwd2script(codefullpath, wkdir, 'R');  % save a local, runnable code copy for debugging
 pkg.RunRcode(codefullpath, Rpath);
 warning off
 if exist('output1.txt', 'file')

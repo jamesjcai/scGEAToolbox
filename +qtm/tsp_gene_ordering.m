@@ -9,6 +9,7 @@ function gene_order = tsp_gene_ordering(expression_matrix)
 end
 
 % https://www.mathworks.com/help/optim/ug/traveling-salesman-problem-based.html
+% https://blogs.mathworks.com/cleve/2018/09/17/usa-traveling-salesman-tour/
 
 %{
 Example usage
