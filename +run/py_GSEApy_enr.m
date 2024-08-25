@@ -55,11 +55,13 @@ tmpfilelist = {'input.txt', 'background.txt',...
     'GO_Molecular_Function_2023.Human.enrichr.reports.txt'};
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 
+usebktag = 1;
 writematrix(genelist, 'input.txt');
 if ~isempty(backgroundlist)
     writematrix(backgroundlist, 'background.txt');
+    usebktag = 2;
 end
-disp('Input files written.');
+% disp('Input files written.');
 
 if showprogress && isvalid(fw)
     gui.gui_waitbar(fw, [], [], 'Checking Python environment is complete');
@@ -68,22 +70,22 @@ if showprogress && isvalid(fw)
 end
 % fw = gui.gui_waitbar([],[],'Running DataMapPlot...');
 
-
     codefullpath = fullfile(codepth,'script.py');
     pkg.i_addwd2script(codefullpath, wkdir, 'python');
-    cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);
+    cmdlinestr = sprintf('"%s" "%s" %d', x.Executable, codefullpath, usebktag);
+
     disp(cmdlinestr)
     [status] = system(cmdlinestr, '-echo');
-
 
 if status == 0 && showprogress && isvalid(fw)
     gui.gui_waitbar(fw, [], 'GSEApy Enrichr is complete');
 end
-
+warning off
 Tbp = readtable('GO_Biological_Process_2023.Human.enrichr.reports.txt');
 Tmf = readtable('GO_Molecular_Function_2023.Human.enrichr.reports.txt');
+warning on
 
-if isempty(backgroundlist)
+if isempty(backgroundlist) && usebktag ~= 2
     [Tbp] = in_trimT(Tbp);
     [Tmf] = in_trimT(Tmf);
 end
