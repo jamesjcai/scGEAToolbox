@@ -1,7 +1,7 @@
 function [Tbp, Tmf] = py_GSEApy_enr(genelist, backgroundlist, wkdir, ...
     showbarplot, showprogress, isdebug)
 
-if nargin < 6, isdebug = true; end
+if nargin < 6, isdebug = false; end
 if nargin < 5, showprogress = false; end
 if nargin < 4, showbarplot = false; end
 if nargin < 3, wkdir = tempdir; end
@@ -52,7 +52,9 @@ end
 
 tmpfilelist = {'input.txt', 'background.txt',...
     'GO_Biological_Process_2023.Human.enrichr.reports.txt',...
-    'GO_Molecular_Function_2023.Human.enrichr.reports.txt'};
+    'GO_Molecular_Function_2023.Human.enrichr.reports.txt',...
+    'GO_Biological_Process_2023.Human.enrichr.reports.png',...
+    'GO_Molecular_Function_2023.Human.enrichr.reports.png'};
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 
 usebktag = 1;
@@ -60,8 +62,8 @@ writematrix(genelist, 'input.txt');
 if ~isempty(backgroundlist)
     writematrix(backgroundlist, 'background.txt');
     usebktag = 2;
+    disp('Background file written.');
 end
-% disp('Input files written.');
 
 if showprogress && isvalid(fw)
     gui.gui_waitbar(fw, [], [], 'Checking Python environment is complete');
@@ -72,6 +74,7 @@ end
 
     codefullpath = fullfile(codepth,'script.py');
     pkg.i_addwd2script(codefullpath, wkdir, 'python');
+    
     cmdlinestr = sprintf('"%s" "%s" %d', x.Executable, codefullpath, usebktag);
 
     disp(cmdlinestr)
@@ -81,18 +84,23 @@ if status == 0 && showprogress && isvalid(fw)
     gui.gui_waitbar(fw, [], 'GSEApy Enrichr is complete');
 end
 warning off
-Tbp = readtable('GO_Biological_Process_2023.Human.enrichr.reports.txt');
-Tmf = readtable('GO_Molecular_Function_2023.Human.enrichr.reports.txt');
-warning on
-
-if isempty(backgroundlist) && usebktag ~= 2
+if exist('GO_Biological_Process_2023.Human.enrichr.reports.txt','file')
+    Tbp = readtable('GO_Biological_Process_2023.Human.enrichr.reports.txt');
     [Tbp] = in_trimT(Tbp);
+end
+if exist('GO_Molecular_Function_2023.Human.enrichr.reports.txt','file')
+    Tmf = readtable('GO_Molecular_Function_2023.Human.enrichr.reports.txt');
     [Tmf] = in_trimT(Tmf);
 end
+warning on
 
 if showbarplot
-    figure; imshow(imread('GO_Biological_Process_2023.Human.enrichr.reports.png'))
-    figure; imshow(imread('GO_Molecular_Function_2023.Human.enrichr.reports.png'))
+    if exist('GO_Biological_Process_2023.Human.enrichr.reports.png','file')
+        figure; imshow(imread('GO_Biological_Process_2023.Human.enrichr.reports.png'))
+    end
+    if exist('GO_Molecular_Function_2023.Human.enrichr.reports.png','file')
+        figure; imshow(imread('GO_Molecular_Function_2023.Human.enrichr.reports.png'))
+    end
 end
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
@@ -101,13 +109,18 @@ end
 
 
 function [T] = in_trimT(T)
-    try
+    %try
         if ~isempty(T)
-            a = string(T.Overlap);
-            b = extractBefore(a, cell2mat(strfind(a,'/')));
-            idx = double(b)>=5 & T.P_value < 0.05;
-            T=T(idx,:);
+            if ismember('Overlap', T.Properties.VariableNames) && ismember('P_value', T.Properties.VariableNames)
+                a = string(T.Overlap);
+                b = extractBefore(a, cell2mat(strfind(a,'/')));
+                idx = double(b)>=5 & T.P_value < 0.05;
+                T = T(idx,:);
+            elseif ismember('Genes', T.Properties.VariableNames) && ismember('P_value', T.Properties.VariableNames)
+                idx = cellfun(@numel,strfind(T.Genes,';'))+1 >= 5 & T.P_value < 0.05;
+                T = T(idx,:);
+            end
         end
-    catch
-    end
+    %catch
+    %end
 end

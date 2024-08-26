@@ -195,6 +195,8 @@ m_extn = uimenu(FigureHandle, 'Text', 'E&xternal');
 in_addmenu(m_extn, 0, @gui.i_setextwd, 'Set External Program Working Root Directory...');
 in_addmenu(m_extn, 1, @gui.i_setrenv, 'Set up R (ℝ) Environment');
 in_addmenu(m_extn, 0, @gui.i_setpyenv, 'Set up Python (🐍) Environment');
+
+in_addmenu(m_extn, 1, @gui.callback_RunEnrichr, 'Run Enrichr Analysis...');
 in_addmenu(m_extn, 1, @in_DecontX, 'Detect Ambient RNA Contamination (DecontX/ℝ) [PMID:32138770]...');
 in_addmenu(m_extn, 0, @in_RunSeuratWorkflow, 'Run Seurat Workflow (Seurat/ℝ) [PMID:25867923]...');
 in_addmenu(m_extn, 0, @in_RunMonocle3, 'Pseudotime Analysis (Monocle3/ℝ) [PMID:28825705]...');
