@@ -65,4 +65,12 @@ if nargin < 3, predefinedlist = []; end
     [filetype, filesaved] = gui.i_exporttable(T, true, 'Tenrichrres', 'Enrichr_Results');
     gui.i_viewtable(T, FigureHandle);
 
+
+    function in_selDataSources
+        dsv = ["GO biological process", "GO cellular component", "GO molecular function", ...
+               "KEGG", "Reactome", "WikiPathways", "TRANSFAC", "miRTarBase"]; 
+        [idx] = gui.i_selmultidlg(dsv, ["GO biological process", "GO molecular function"], FigureHandle);
+        
+    end
+
 end
