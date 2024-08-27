@@ -14,17 +14,30 @@ fprintf('%d genes removed.\n', a-b);
     outdir] = gui.i_batchmodeprep(sce, prefixtag);
 if ~done, return; end
 
-runenrichr = questdlg('Run Enrichr (R required) with top 250 DV genes? Results will be saved in the output Excel files.','');
+%{
+runenrichr = questdlg('Run Enrichr (R required) with top 250 DE genes? Results will be saved in the output Excel files.','');
 if strcmp(runenrichr,'Cancel'), return; end
-
 isok = false;
 if strcmp(runenrichr, 'Yes')
     [isok] = gui.i_commoncheck_R('r_enrichR');
     if ~isok
-        answer = questdlg('R Environment Error: It seems that your R environment is not configured correctly. This means that Gene Function Enrichment Analysis using enrichR cannot be performed for differentially expressed genes. Continue withouth enrichR?',''); 
+        answer = questdlg('R Environment Error: It seems that your R environment is not configured correctly. This means that Gene Function Enrichment Analysis cannot be performed. Continue?',''); 
         if ~strcmp(answer,'Yes'), return; end
     end
 end
+%}
+
+runenrichr = questdlg('Run Enrichr (Python required) with top 250 DE genes? Results will be saved in the output Excel files.','');
+if strcmp(runenrichr,'Cancel'), return; end
+isok = false;
+if strcmp(runenrichr, 'Yes')
+    [isok] = gui.i_commoncheck_Python('py_GSEApy_enr');
+    if ~isok
+        answer = questdlg('Python Environment Error: It seems that your Python environment is not configured correctly. This means that Gene Function Enrichment Analysis cannot be performed. Continue?',''); 
+        if ~strcmp(answer,'Yes'), return; end
+    end
+end
+
 
 fw = gui.gui_waitbar_adv;
 for k=1:length(CellTypeList)
@@ -135,10 +148,12 @@ for k=1:length(CellTypeList)
 
         if strcmp(runenrichr,'Yes') && isok
             try
-                [Tbp1, Tmf1]= run.r_enrichR(Tup.gene(1:min([250 size(Tup, 1)])));                
+                % [Tbp1, Tmf1]= run.r_enrichR(Tup.gene(1:min([250 size(Tup, 1)])));  
+                [Tbp1, Tmf1]= run.py_GSEApy_enr(Tup.gene(1:min([250 size(Tup, 1)])), T.gene, tempdir);
                 in_writetable(Tbp1, filesaved, 'Up_250_GO_BP');
                 in_writetable(Tmf1, filesaved, 'Up_250_GO_MF');
-                [Tbp2, Tmf2]= run.r_enrichR(Tdn.gene(1:min([250 size(Tdn, 1)])));                
+                % [Tbp2, Tmf2]= run.r_enrichR(Tdn.gene(1:min([250 size(Tdn, 1)])));                
+                [Tbp2, Tmf2]= run.py_GSEApy_enr(Tdn.gene(1:min([250 size(Tup, 1)])), T.gene, tempdir);                
                 in_writetable(Tbp2, filesaved, 'Dn_250_GO_BP');
                 in_writetable(Tmf2, filesaved, 'Dn_250_GO_MF');
             catch ME
