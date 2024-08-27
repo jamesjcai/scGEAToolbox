@@ -153,7 +153,7 @@ if strcmp(answer, 'Yes'), hFig.Visible=true; end
                 Tdn = T(T.DiffSign < 0, :);
                 Tin = Tdn;
         end
-       gui.gui_enrichr(Tin.gene(1:500), Tin.gene,... 
+       gui.gui_enrichr(Tin.gene(1:250), Tin.gene,... 
            sprintf('Run enrichment analysis with %s DV genes?', lower(answer)));
     end
 

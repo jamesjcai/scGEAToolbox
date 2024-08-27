@@ -12,11 +12,13 @@ if ~done, return; end
 runenrichr = questdlg('Run Enrichr (R required) with top 250 DE genes? Results will be saved in the output Excel files.','');
 if strcmp(runenrichr,'Cancel'), return; end
 
-[isok, msg] = commoncheck_R('R_enrichR');
-if ~isok
-    disp(msg);
-    answer = questdlg('R Environment Error: It seems that your R environment is not configured correctly. This means that Gene Function Enrichment Analysis using enrichR cannot be performed for differentially expressed genes. Continue withouth enrichR?',''); 
-    if ~strcmp(answer,'Yes'), return; end
+isok = false;
+if strcmp(runenrichr, 'Yes')
+    [isok] = gui.i_commoncheck_R('r_enrichR');
+    if ~isok
+        answer = questdlg('R Environment Error: It seems that your R environment is not configured correctly. This means that Gene Function Enrichment Analysis using enrichR cannot be performed for differentially expressed genes. Continue withouth enrichR?',''); 
+        if ~strcmp(answer,'Yes'), return; end
+    end
 end
 
 fw = gui.gui_waitbar_adv;
@@ -88,7 +90,7 @@ p_val_adj
             warning(ME.message);
         end
 
-        if strcmp(runenrichr,'Yes')
+        if strcmp(runenrichr,'Yes') && isok
             try
                 [Tbp1, Tmf1]= run.r_enrichR(Tup.gene(1:min([250 size(Tup, 1)])));
                 %[Tbp1, Tmf1]= run.py_GSEApy_enr(Tup.gene(1:min([250 size(Tup, 1)])), T.gene, tempdir);
