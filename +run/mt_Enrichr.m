@@ -52,8 +52,7 @@ import matlab.net.http.io.MultipartFormProvider
 n = length(genesets);
 output = cell(n, 2);
 
-headertxt = ["Rank", "Term name", "P-value", "Odds ratio", "Combined score", "Overlapping genes", "Adjusted p-value", "Old p-value", "Old adjusted p-value"];
-headertxt = matlab.lang.makeValidName(headertxt);
+
 
 
 if isempty(backgroundlist)
@@ -75,18 +74,20 @@ if isempty(backgroundlist)
                        user_list_id, gene_set_library); 
         url = ENRICHR_URL + query_string;
         response = jsondecode(convertCharsToStrings(char(webread(url))));
-        res = response.(gene_set_library);
-        isok = false(length(res),1);
-        for k = 1:length(res)
-            if size(res{k}{6},1) >= minumgene
-                isok(k) = true;
-            end
-        end
-        res = res(isok);
-        T = table; 
-        for k = 1:length(res)
-            T = [T; cell2table(res{k}','VariableNames', headertxt)];
-        end
+        % res = response.(gene_set_library);
+        % isok = false(length(res),1);
+        % for k = 1:length(res)
+        %     if size(res{k}{6},1) >= minumgene
+        %         isok(k) = true;
+        %     end
+        % end
+        % res = res(isok);
+        % T = table; 
+        % for k = 1:length(res)
+        %     T = [T; cell2table(res{k}','VariableNames', headertxt)];
+        % end
+
+        [T] = in_response2T(response, gene_set_library, minumgene);
         output{id, 1} = T;
     end
 
@@ -119,6 +120,8 @@ else    % using background
 
         response = convertCharsToStrings(char(response.Body.Data));
         response = jsondecode(response);
+
+        %{
         res = response.(gene_set_library);
         isok = false(length(res),1);
         for k = 1:length(res)
@@ -129,10 +132,46 @@ else    % using background
         res = res(isok);
         T = table;
         for k = 1:length(res)
-            T = [T; cell2table(res{k}','VariableNames', headertxt)];
+            T = [T; cell2table(res{k}', 'VariableNames', headertxt)];
         end
-        output{id, 1} = T;
+        Ta = table(repmat(gene_set_library, size(T,1), 1), ...
+                'VariableNames',{'GeneSetLibrary'});
+        T2 = [Ta T];
+        T2.TermName=string(T2.TermName);
+        T2(:,end-1:end)=[];
+
+        %} 
+        T2 = in_response2T(response, gene_set_library, minumgene);
+        output{id, 1} = T2;
     end
+end
+
+end
+
+function [T2] = in_response2T(response, gene_set_library, minumgene)
+
+headertxt = ["Rank", "Term name", "P-value", "Odds ratio", "Combined score", "Overlapping genes", "Adjusted p-value", "Old p-value", "Old adjusted p-value"];
+headertxt = matlab.lang.makeValidName(headertxt);
+
+        res = response.(gene_set_library);
+        isok = false(length(res),1);
+        for k = 1:length(res)
+            if size(res{k}{6},1) >= minumgene
+                isok(k) = true;
+            end
+        end
+        res = res(isok);
+        T = table;
+        for k = 1:length(res)
+            t = cell2table(res{k}', 'VariableNames', headertxt);
+            t.OverlappingGenes{1} = sprintf("%s,", t.OverlappingGenes{1}{:});
+            T = [T; t];
+        end
+        Ta = table(repmat(gene_set_library, size(T,1), 1), ...
+                'VariableNames',{'GeneSetLibrary'});
+        T2 = [Ta T];
+        T2.TermName=string(T2.TermName);
+        T2(:,end-1:end)=[];
 end
 
 

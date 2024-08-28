@@ -9,7 +9,9 @@ prefixtag = 'DE';
     outdir] = gui.i_batchmodeprep(sce, prefixtag);
 if ~done, return; end
 
-[runenrichr] = gui.i_enrichrprep;
+%[runenrichr] = gui.i_enrichrprep;
+[runenrichr] = questdlg('Run Enrichr (Python required) with top 250 DE genes? Results will be saved in the output Excel files.','');
+if strcmp(runenrichr,'Cancel'), return; end
 
 fw = gui.gui_waitbar_adv;
 for k=1:length(CellTypeList)
@@ -58,23 +60,38 @@ for k=1:length(CellTypeList)
         catch ME
             warning(ME.message);
         end
-
-        if ~isempty(runenrichr) && runenrichr
+        
+        % - start of enrichr
+        if ~isempty(runenrichr) && strcmp(runenrichr, 'Yes')
             try
                 % [Tbp1, Tmf1]= run.r_enrichR(Tup.gene(1:min([250 size(Tup, 1)])));
-                [Tbp1, Tmf1] = run.py_GSEApy_enr(Tup.gene(1:min([250 size(Tup, 1)])), ...
-                    T.gene, tempdir);
+                %[Tbp1, Tmf1] = run.py_GSEApy_enr(Tup.gene(1:min([250 size(Tup, 1)])), ...
+                %    T.gene, tempdir);
+
+                [Tlist] = run.mt_Enrichr(Tup.gene(1:min([250 size(Tup, 1)])), ...
+                            T.gene, ["GO_Biological_Process_2023", ...
+                                     "GO_Molecular_Function_2023"]);
+                Tbp1 = Tlist{1,1};
+                Tmf1 = Tlist{2,1};
                 in_writetable(Tbp1, filesaved, 'Up_250_GO_BP');
-                in_writetable(Tmf1, filesaved, 'Up_250_GO_MF');                
+                in_writetable(Tmf1, filesaved, 'Up_250_GO_MF');
                 % [Tbp2, Tmf2] = run.r_enrichR(Tdn.gene(1:min([250 size(Tdn, 1)])));
-                [Tbp2, Tmf2] = run.py_GSEApy_enr(Tdn.gene(1:min([250 size(Tup, 1)])), ...
-                    T.gene, tempdir);                
+                % [Tbp2, Tmf2] = run.py_GSEApy_enr(Tdn.gene(1:min([250 size(Tup, 1)])), ...
+                %    T.gene, tempdir);
+
+                [Tlist] = run.mt_Enrichr(Tdn.gene(1:min([250 size(Tup, 1)])), ...
+                            T.gene, ["GO_Biological_Process_2023", ...
+                                     "GO_Molecular_Function_2023"]);
+                Tbp2 = Tlist{1,1};
+                Tmf2 = Tlist{2,1};
                 in_writetable(Tbp2, filesaved, 'Dn_250_GO_BP');
                 in_writetable(Tmf2, filesaved, 'Dn_250_GO_MF');
             catch ME
-                disp(ME.message);
+                warning(ME.message);
             end
-        end        
+        end
+        % - end of enrichr
+
     end
 end
 gui.gui_waitbar_adv(fw);
