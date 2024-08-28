@@ -139,12 +139,15 @@ background_id = response.Body.Data.backgroundid;
 
 base_url = "https://maayanlab.cloud/speedrichr/api/backgroundenrich";
 
-formData = MultipartFormProvider('userListID', num2str(user_list_id), ...
+formData = MultipartFormProvider('userListId', num2str(user_list_id), ...
             'backgroundid', background_id, ...
             'backgroundType', 'ChEA_2022');
 
 request = RequestMessage('post', [], formData);
 response = send(request, URI(base_url));
+
+convertCharsToStrings(char(response.Body.Data))
+
 %}
 
 
