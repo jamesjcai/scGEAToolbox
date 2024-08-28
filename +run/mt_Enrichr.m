@@ -1,11 +1,13 @@
-function [response] = mt_Enrichr(genelist, backgroundlist, genesets, minumgene)
+function [output] = mt_Enrichr(genelist, backgroundlist, genesets, minumgene)
 
+output = [];
 
 if nargin < 4, minumgene = 5; end
 
 if nargin < 3
-    genesets = ["GO_Biological_Process_2023",...
-                "GO_Molecular_Function_2023"]; 
+    genesets = ["GO_Biological_Process_2023", ...
+                "GO_Molecular_Function_2023", ...
+                "KEGG_2021_Human"]; 
 end
 
 if nargin < 2
@@ -32,7 +34,7 @@ if nargin < 2
 	"LOC100047782","2410012H22RIK","RILP","A230062G08RIK",...
 	"PTTG1IP","RAB1","AFAP1L1", "LYRM5","2310026E23RIK",...
 	"SLC7A6OS","MAT2B","4932438A13RIK","LRRC8A","SMO","NUPL2"];
-    backgroundlist = [];
+    % backgroundlist = [];
 end
 if nargin < 1
     genelist = ["PHF14", "RBM3", "MSL1", "PHF21A", "ARL10", "INSR", "JADE2", "P2RX7", ...
@@ -47,34 +49,94 @@ import matlab.net.http.RequestMessage
 import matlab.net.http.io.MultipartProvider
 import matlab.net.http.io.MultipartFormProvider
 
+n = length(genesets);
+output = cell(n, 2);
 
-base_url = 'https://maayanlab.cloud/Enrichr/addList';
-formData = MultipartFormProvider('list', strjoin(genelist, newline), ...
-           'description', 'genelist');
-request = RequestMessage('post', [], formData);
-response = send(request, URI(base_url));
-res = jsondecode(response.Body.Data);
-user_list_id = res.userListId;
+headertxt = ["Rank", "Term name", "P-value", "Odds ratio", "Combined score", "Overlapping genes", "Adjusted p-value", "Old p-value", "Old adjusted p-value"];
+headertxt = matlab.lang.makeValidName(headertxt);
 
 
-gene_set_library = genesets(1); % "KEGG_2015";
-ENRICHR_URL = "https://maayanlab.cloud/Enrichr/enrich";
-query_string = sprintf("?userListId=%d&backgroundType=%s", ...
-               user_list_id, gene_set_library); 
-url = ENRICHR_URL + query_string;
-response = jsondecode(convertCharsToStrings(char(webread(url))));
+if isempty(backgroundlist)
 
+    base_url = 'https://maayanlab.cloud/Enrichr/addList';
+    formData = MultipartFormProvider('list', strjoin(genelist, newline), ...
+               'description', 'genelist');
+    request = RequestMessage('post', [], formData);
+    response = send(request, URI(base_url));
+    res = jsondecode(response.Body.Data);
+    user_list_id = res.userListId;
+    
+    
+    for id = 1:n
+        gene_set_library = genesets(id); % "KEGG_2015";
+        output{id, 2} = gene_set_library;
+        ENRICHR_URL = "https://maayanlab.cloud/Enrichr/enrich";
+        query_string = sprintf("?userListId=%d&backgroundType=%s", ...
+                       user_list_id, gene_set_library); 
+        url = ENRICHR_URL + query_string;
+        response = jsondecode(convertCharsToStrings(char(webread(url))));
+        res = response.(gene_set_library);
+        isok = false(length(res),1);
+        for k = 1:length(res)
+            if size(res{k}{6},1) >= minumgene
+                isok(k) = true;
+            end
+        end
+        res = res(isok);
+        T = table; 
+        for k = 1:length(res)
+            T = [T; cell2table(res{k}','VariableNames', headertxt)];
+        end
+        output{id, 1} = T;
+    end
 
-res = response.(gene_set_library);
-isok = false(length(res),1);
-for k = 1:length(res)
-    if size(res{k}{6},1) >= minumgene
-        isok(k) = true;
+else    % using background
+
+    base_url = "https://maayanlab.cloud/speedrichr/api/addList";
+    formData = MultipartFormProvider('list', strjoin(genelist, newline), ...
+               'description', 'genelist');
+    request = RequestMessage('post', [], formData);
+    response = send(request, URI(base_url));
+    res = response.Body.Data;
+    user_list_id = res.userListId;
+
+    base_url = "https://maayanlab.cloud/speedrichr/api/addbackground";
+    formData = MultipartFormProvider('background', strjoin(backgroundlist, newline));
+    request = RequestMessage('post', [], formData);
+    response = send(request, URI(base_url));
+    background_id = response.Body.Data.backgroundid;
+
+    for id = 1:n
+        gene_set_library = genesets(id); % "KEGG_2015";
+        output{id, 2} = gene_set_library;
+   
+        base_url = "https://maayanlab.cloud/speedrichr/api/backgroundenrich";
+        formData = MultipartFormProvider('userListId', num2str(user_list_id), ...
+                    'backgroundid', background_id, ...
+                    'backgroundType', gene_set_library);
+        request = RequestMessage('post', [], formData);
+        response = send(request, URI(base_url));
+
+        response = convertCharsToStrings(char(response.Body.Data));
+        response = jsondecode(response);
+        res = response.(gene_set_library);
+        isok = false(length(res),1);
+        for k = 1:length(res)
+            if size(res{k}{6},1) >= minumgene
+                isok(k) = true;
+            end
+        end
+        res = res(isok);
+        T = table;
+        for k = 1:length(res)
+            T = [T; cell2table(res{k}','VariableNames', headertxt)];
+        end
+        output{id, 1} = T;
     end
 end
-response = res(isok);
 
 
+% --------------------------------------------
 
 %{
 ENRICHR_URL = "https://maayanlab.cloud/Enrichr/export";
@@ -86,12 +148,7 @@ response = strsplit(convertCharsToStrings(char(response)),'\n');
 %}
 
 
-
 %{
-import matlab.net.URI
-import matlab.net.http.RequestMessage
-import matlab.net.http.io.MultipartProvider
-import matlab.net.http.io.MultipartFormProvider
 
 ENRICHR_URL = 'https://maayanlab.cloud/Enrichr/addList';
 genes = {'PHF14', 'RBM3', 'MSL1', 'PHF21A', 'ARL10', 'INSR', 'JADE2', 'P2RX7', ...
@@ -120,36 +177,3 @@ res = jsondecode(convertCharsToStrings(char(webread(ENRICHR_URL + query_string))
 % https://www.mathworks.com/matlabcentral/answers/2148269-try-to-call-the-rest-apis-provided-by-enrichr-from-matlab-but-webwrite-does-not-work#answer_1506069
 
 %} 
-
-
-%{
-base_url = "https://maayanlab.cloud/speedrichr/api/addList";
-formData = MultipartFormProvider('list', strjoin(genelist, newline), ...
-           'description', 'genelist');
-request = RequestMessage('post', [], formData);
-response = send(request, URI(base_url));
-res = response.Body.Data;
-user_list_id = res.userListId;
-
-base_url = "https://maayanlab.cloud/speedrichr/api/addbackground";
-formData = MultipartFormProvider('background', strjoin(backgroundlist, newline));
-request = RequestMessage('post', [], formData);
-response = send(request, URI(base_url));
-background_id = response.Body.Data.backgroundid;
-
-base_url = "https://maayanlab.cloud/speedrichr/api/backgroundenrich";
-
-formData = MultipartFormProvider('userListId', num2str(user_list_id), ...
-            'backgroundid', background_id, ...
-            'backgroundType', 'ChEA_2022');
-
-request = RequestMessage('post', [], formData);
-response = send(request, URI(base_url));
-
-convertCharsToStrings(char(response.Body.Data))
-
-%}
-
-
-
-
