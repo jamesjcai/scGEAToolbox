@@ -62,15 +62,15 @@ for k=1:n
     end
 
     ax{k,2} = subplot(1,2,2);
-    scatter(s(:,1), s(:,2), 5, c, 'filled');
-    stem3(s(:,1), s(:,2), c, 'marker', 'none', 'color', 'm');
-    hold on;
-    scatter3(s(:,1), s(:,2), zeros(size(s(:,2))), 5, c, 'filled');
-    
-    title(ax{k,1}, glist(k));
-    subtitle(ax{k,1}, gui.i_getsubtitle(c));
-    title(ax{k,2}, glist(k));
-    subtitle(ax{k,2}, gui.i_getsubtitle(c));
+        scatter(s(:,1), s(:,2), 5, c, 'filled');
+        stem3(s(:,1), s(:,2), c, 'marker', 'none', 'color', 'm');
+        hold on;
+        scatter3(s(:,1), s(:,2), zeros(size(s(:,2))), 5, c, 'filled');
+        
+        title(ax{k,1}, glist(k));
+        subtitle(ax{k,1}, gui.i_getsubtitle(c));
+        title(ax{k,2}, glist(k));
+        subtitle(ax{k,2}, gui.i_getsubtitle(c));
 
     %{
     ax = axes('Parent', tab{k});
@@ -110,27 +110,40 @@ uipushtool(tb, 'Separator', 'off');
 
 % pkg.i_addbutton2fig(tb, 'off', [], "IMG00107.GIF", " ");
 % pkg.i_addbutton2fig(tb, 'off', @i_linksubplots, 'plottypectl-rlocusplot.gif', 'Link subplots');
-pkg.i_addbutton2fig(tb, 'off',  @i_genecards, 'fvtool_fdalinkbutton.gif', 'GeneCards...');
-pkg.i_addbutton2fig(tb, 'on', {@i_PickColorMap, c}, 'plotpicker-compass.gif', 'Pick new color map...');
+pkg.i_addbutton2fig(tb, 'off',  @in_genecards, 'fvtool_fdalinkbutton.gif', 'GeneCards...');
+pkg.i_addbutton2fig(tb, 'on', {@in_PickColorMap, c}, 'plotpicker-compass.gif', 'Pick new color map...');
 % pkg.i_addbutton2fig(tb, 'off', @i_RescaleExpr, 'IMG00074.GIF', 'Rescale expression level [log2(x+1)]');
 % pkg.i_addbutton2fig(tb, 'off', @i_ResetExpr, 'plotpicker-geobubble2.gif', 'Reset expression level');
 % pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 
-pkg.i_addbutton2fig(tb, 'off', @in_savedata, "powerpointx.gif", 'Save Gene List...');
-pkg.i_addbutton2fig(tb, 'off', @i_savemainfig, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-pkg.i_addbutton2fig(tb, 'off', @i_savemainfigx, "xpowerpoint.gif", 'Save Figure as Graphic File...');
+pkg.i_addbutton2fig(tb, 'off', @in_savedata, "exportx.gif", 'Save Gene List...');
+pkg.i_addbutton2fig(tb, 'off', @in_savemainfig, "powerpoint.gif", 'Save Figure to PowerPoint File...');
+pkg.i_addbutton2fig(tb, 'off', @in_savemainfigx, "label.gif", 'Save Figure as Graphic File...');
+pkg.i_addbutton2fig(tb, 'off', @in_set3dview, "tool_ellipse.gif", 'Set 3D View...');
 pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
 gui.i_movegui2parent(hFig, parentfig);
 drawnow;
 hFig.Visible=true;
 
 
+    function in_set3dview(~, ~)
+        [aa, bb] = view(ax{idx,2});
+        answer = questdlg('Apply current view (azimuth and elevation angles) to all tabs?','');
+        if strcmp(answer, 'Yes')
+            for kx = 1:length(glist)
+                if kx ~= idx
+                    view(ax{kx,2}, [aa, bb]);
+                end
+            end
+        end
+    end
+
     function in_savedata(~,~)
         gui.i_exporttable(table(glist), true, ...
             'Tmarkerlist','MarkerListTable');    
     end
 
-    function i_savemainfigx(~,~)
+    function in_savemainfigx(~,~)
         answer = questdlg('Select Sub-plot to export:','', ...
             'Left','Right','Cancel','Left');
         switch answer
@@ -150,7 +163,7 @@ hFig.Visible=true;
         end
     end
 
-    function i_savemainfig(~,~)
+    function in_savemainfig(~,~)
         answer = questdlg('Export to PowerPoint?');
         if ~strcmp(answer,'Yes'), return; end
 
@@ -182,18 +195,18 @@ hFig.Visible=true;
         t = event.NewValue;
         txt = t.Title;
         % disp("Viewing gene " + txt);
-        [~,idx] = ismember(txt,glist);
+        [~,idx] = ismember(txt, glist);
         focalg = glist(idx);
     end
 
-    function i_genecards(~, ~)
+    function in_genecards(~, ~)
         web(sprintf('https://www.genecards.org/cgi-bin/carddisp.pl?gene=%s', focalg),'-new');
     end
 
 end
 
 
-    function i_PickColorMap(~, ~, c)
+function in_PickColorMap(~, ~, c)
         list = {'parula', 'turbo', 'hsv', 'hot', 'cool', 'spring', ...
             'summer', 'autumn (default)', ...
             'winter', 'jet'};
