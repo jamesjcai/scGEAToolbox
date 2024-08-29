@@ -180,6 +180,7 @@ in_addmenu(m_tool, 0, @gui.callback_DPGene2Groups, 'Differential Program (DP) An
 in_addmenu(m_tool, 1, @gui.callback_DEGene2GroupsBatch, 'DE Analysis in Cell Type Batch Mode...');
 in_addmenu(m_tool, 0, @gui.callback_DVGene2GroupsBatch, 'DV Analysis in Cell Type Batch Mode...');
 in_addmenu(m_tool, 0, @gui.callback_DPGene2GroupsBatch, 'DP Analysis in Cell Type Batch Mode...');
+in_addmenu(m_tool, 1, @gui.callback_RunEnrichr, 'Enrichr Analysis...');
 
 m_ntwk = uimenu(FigureHandle, 'Text', '&Network');
 in_addmenu(m_ntwk, 0, @in_Select5000Genes, 'Remove Less Informative Genes to Reduce Gene Space...');
@@ -195,8 +196,6 @@ m_extn = uimenu(FigureHandle, 'Text', 'E&xternal');
 in_addmenu(m_extn, 0, @gui.i_setextwd, 'Set External Program Working Root Directory...');
 in_addmenu(m_extn, 1, @gui.i_setrenv, 'Set up R (ℝ) Environment');
 in_addmenu(m_extn, 0, @gui.i_setpyenv, 'Set up Python (🐍) Environment');
-
-in_addmenu(m_extn, 1, @gui.callback_RunEnrichr, 'Run Enrichr Analysis...');
 in_addmenu(m_extn, 1, @in_DecontX, 'Detect Ambient RNA Contamination (DecontX/ℝ) [PMID:32138770]...');
 in_addmenu(m_extn, 0, @in_RunSeuratWorkflow, 'Run Seurat Workflow (Seurat/ℝ) [PMID:25867923]...');
 in_addmenu(m_extn, 0, @in_RunMonocle3, 'Pseudotime Analysis (Monocle3/ℝ) [PMID:28825705]...');
