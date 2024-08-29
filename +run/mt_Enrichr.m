@@ -1,7 +1,8 @@
-function [output] = mt_Enrichr(genelist, backgroundlist, genesets, minumgene)
+function [output] = mt_Enrichr(genelist, backgroundlist, genesets, minumgene, pvaluecutoff)
 
 output = [];
 
+if nargin < 5, pvaluecutoff = 0.1; end
 if nargin < 4, minumgene = 5; end
 
 if nargin < 3
@@ -148,30 +149,36 @@ end
 
 end
 
-function [T2] = in_response2T(response, gene_set_library, minumgene)
+function [T] = in_response2T(response, gene_set_library, minumgene)
+        
+        T = table;
 
-headertxt = ["Rank", "Term name", "P-value", "Odds ratio", "Combined score", "Overlapping genes", "Adjusted p-value", "Old p-value", "Old adjusted p-value"];
-headertxt = matlab.lang.makeValidName(headertxt);
+        headertxt = ["Rank", "Term name", "P-value", "Odds ratio", "Combined score",...
+            "Overlapping genes", "Adjusted p-value", "Old p-value", "Old adjusted p-value"];
+        headertxt = matlab.lang.makeValidName(headertxt);
 
         res = response.(gene_set_library);
         isok = false(length(res),1);
         for k = 1:length(res)
-            if size(res{k}{6},1) >= minumgene
+            if size(res{k}{6},1) >= minumgene && res{k}{3} < pvaluecutoff
                 isok(k) = true;
             end
         end
         res = res(isok);
-        T = table;
+        
         for k = 1:length(res)
             t = cell2table(res{k}', 'VariableNames', headertxt);
-            t.OverlappingGenes{1} = sprintf("%s,", t.OverlappingGenes{1}{:});
+            s = sprintf("%s,", t.OverlappingGenes{1}{:});
+            t.OverlappingGenes{1} = extractBefore(s, strlength(s));
             T = [T; t];
         end
         Ta = table(repmat(gene_set_library, size(T,1), 1), ...
                 'VariableNames',{'GeneSetLibrary'});
-        T2 = [Ta T];
-        T2.TermName=string(T2.TermName);
-        T2(:,end-1:end)=[];
+        T = [Ta T];
+        if ~isempty(T)
+            T.TermName = string(T.TermName);
+            T(:,end-1:end)=[];
+        end
 end
 
 
