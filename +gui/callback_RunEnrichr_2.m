@@ -55,7 +55,7 @@ if nargin < 3, predefinedlist = []; end
                            minugenes, pvaluecut);
 
     T=table;
-    for k = 1:size(Tlist, 1)
+    for k = 1:length(size(Tlist, 1))
         if ~isempty(Tlist{k, 1}) && istable(Tlist{k, 1})
             T = [T; Tlist{k, 1}];
         end
@@ -69,14 +69,6 @@ if nargin < 3, predefinedlist = []; end
 
     function [genesets] = in_selDataSources
         genesets = [];
-<<<<<<< Updated upstream
-        dsv = ["GO_Biological_Process_2023", "GO_Molecular_Function_2023", ...
-               "KEGG_2019_Mouse", "KEGG_2021_Human", "Reactome_2022", ... 
-               "WikiPathways_2019_Mouse", "WikiPathways_2019_Human", ...
-               "TRANSFAC_and_JASPAR_PWMs", "TRRUST_Transcription_Factors_2019", ...
-               "miRTarBase_2017"];
-        [idx] = gui.i_selmultidlg(dsv, ["GO_Biological_Process_2023", ...
-=======
         % dsv = ["GO_Biological_Process_2023", "GO_Molecular_Function_2023", ...
         %        "KEGG_2019_Mouse", "KEGG_2021_Human", "Reactome_2022", ... 
         %        "WikiPathways_2019_Mouse", "WikiPathways_2023_Human", ...
@@ -84,7 +76,6 @@ if nargin < 3, predefinedlist = []; end
         %        "miRTarBase_2017"];
         dsv = pkg.i_get_enrichr_libraries;
         [idx1] = gui.i_selmultidlg(dsv, ["GO_Biological_Process_2023", ...
->>>>>>> Stashed changes
             "GO_Molecular_Function_2023"], FigureHandle);
         if isempty(idx1), return; end
         if idx1 == 0, return; end
