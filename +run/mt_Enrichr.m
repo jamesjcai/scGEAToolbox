@@ -1,8 +1,8 @@
-function [output] = mt_Enrichr(genelist, backgroundlist, genesets, minumgene, pvaluecutoff)
+function [output] = mt_Enrichr(genelist, backgroundlist, genesets, minumgene, pvaluecut)
 
 output = [];
 
-if nargin < 5, pvaluecutoff = 0.1; end
+if nargin < 5, pvaluecut = 0.1; end
 if nargin < 4, minumgene = 5; end
 
 if nargin < 3
@@ -88,7 +88,7 @@ if isempty(backgroundlist)
         %     T = [T; cell2table(res{k}','VariableNames', headertxt)];
         % end
 
-        [T] = in_response2T(response, gene_set_library, minumgene);
+        [T] = in_response2T(response, gene_set_library, minumgene, pvaluecut);
         output{id, 1} = T;
     end
 
@@ -142,14 +142,14 @@ else    % using background
         T2(:,end-1:end)=[];
 
         %} 
-        T2 = in_response2T(response, gene_set_library, minumgene);
+        T2 = in_response2T(response, gene_set_library, minumgene, pvaluecut);
         output{id, 1} = T2;
     end
 end
 
 end
 
-function [T] = in_response2T(response, gene_set_library, minumgene)
+function [T] = in_response2T(response, gene_set_library, minumgene, pvaluecut)
         
         T = table;
 
@@ -157,10 +157,12 @@ function [T] = in_response2T(response, gene_set_library, minumgene)
             "Overlapping genes", "Adjusted p-value", "Old p-value", "Old adjusted p-value"];
         headertxt = matlab.lang.makeValidName(headertxt);
 
+        disp(gene_set_library)
+        
         res = response.(gene_set_library);
         isok = false(length(res),1);
         for k = 1:length(res)
-            if size(res{k}{6},1) >= minumgene && res{k}{3} < pvaluecutoff
+            if size(res{k}{6}, 1) >= minumgene && res{k}{3} < pvaluecut
                 isok(k) = true;
             end
         end
