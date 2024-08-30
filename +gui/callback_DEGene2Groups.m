@@ -223,14 +223,15 @@ end
     %     end
 
     if tf == 1
-        disp('To run pathway analysis, type:');
-        disp('t=run.r_SPIA(T);');
+        %disp('To run pathway analysis, type:');
+        %disp('t=run.r_SPIA(T);');
         disp('To run enrichment analysis, type:');
         disp('run.web_Enrichr(Tup.gene(1:200))');
         disp('run.web_Enrichr(Tdn.gene(1:200))');
 
        gui.gui_enrichr(Tup.gene, sce.g,... 
            'Run enrichment analysis with up-regulated DE genes?');
+       
        % answer = questdlg('Run enrichment analysis with top K (=200 by default) up-regulated DE genes?');
        % if strcmp(answer, 'Yes')
        %     gui.i_enrichtest(Tup.gene(1:min(numel(Tup.gene), 200)), sce.g);

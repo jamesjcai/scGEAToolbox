@@ -18,5 +18,9 @@ else
     return;
 end
 
+fw = gui.gui_waitbar([], false, 'Sending genes to web browser...');
 gui.i_enrichtest(genelist, backgroundlist, numel(genelist));
+gui.gui_waitbar(fw, false, 'Check web browser & submit genes to Enrichr.');
+
+end
 
