@@ -135,8 +135,10 @@ set([hAx1, hAx2], 'Ylim', ylnew);
 in_ExportTable;
 
 
-[answer]=questdlg('Explore DV genes?','');
+
+[answer]=questdlg('Explore DV expression profile of genes?','');
 if strcmp(answer, 'Yes'), hFig.Visible=true; end
+
 
     function in_Enrichr(~, ~)
         answer = questdlg('Enrichr test with top DV genes. Continue?','');
@@ -342,13 +344,11 @@ if strcmp(answer, 'Yes'), hFig.Visible=true; end
     function ChangeAlphaValue(~, ~)
         if h1.MarkerFaceAlpha <= 0.05
             h1.MarkerFaceAlpha = 1;
-            h2.MarkerFaceAlpha = 1;
- 
+            h2.MarkerFaceAlpha = 1; 
         else
             h1.MarkerFaceAlpha = h1.MarkerFaceAlpha - 0.1;
-            h2.MarkerFaceAlpha = h2.MarkerFaceAlpha - 0.1;
- 
+            h2.MarkerFaceAlpha = h2.MarkerFaceAlpha - 0.1; 
         end
-    end   
+    end
 
 end
