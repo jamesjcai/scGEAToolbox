@@ -18,8 +18,21 @@ else
     return;
 end
 
+answer = questdlg('Enrichr with background?','');
+if strcmp(answer, 'Yes')
+    needbckg = true;
+elseif strcmp(answer, 'No')
+    needbckg = false;
+else
+    return;
+end
 fw = gui.gui_waitbar([], false, 'Sending genes to web browser...');
-gui.i_enrichtest(genelist, backgroundlist, numel(genelist));
+% gui.i_enrichtest(genelist, backgroundlist, numel(genelist));
+    if needbckg
+        run.web_Enrichr_bkg(genelist, backgroundlist, numel(genelist));
+    else
+        run.web_Enrichr(genelist, numel(genelist));
+    end
 gui.gui_waitbar(fw, false, 'Check web browser & submit genes to Enrichr.');
 
 end

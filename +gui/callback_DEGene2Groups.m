@@ -24,6 +24,9 @@ switch answer
 end
 % ----------
 
+methodtag = "ranksum";
+
+%{
 answer = questdlg('Which method?', ...
     'Select Method', 'Wilcoxon rank-sum test 🐇', ...
     'DESeq 2 (R required) 🐢', ...
@@ -48,7 +51,7 @@ elseif strcmpi(answer, 'MAST (R required) 🐢')
 else
     return;
 end
-
+%}
 
     try
         switch methodtag
