@@ -112,8 +112,8 @@ d = [d; d2];
 needcorrect = false;
 try
     if ~isdeployed
-        a = datestr(datetime("today"), 'yy.mm.dd');
-        % a = string(datetime("today",'Format','uu.MM.dd'))
+        % a = datestr(datetime("today"), 'yy.mm.dd');
+        a = string(datetime("today",'Format','yy.MM.dd'));
         compiler.build.standaloneWindowsApplication('scgeatool.m', ...
             'ExecutableName', 'scgeatool', 'Verbose', 'On', ...
             'OutputDir', outdir, 'AdditionalFiles', d, ...
@@ -138,7 +138,7 @@ end
 
 %%
 
-copyfile('resources/700813831-hero-1536x1536.png',fullfile(outdir,"splash.png"));
+copyfile('resources/Images/700813831-hero-1536x1536.png',fullfile(outdir,"splash.png"));
 cd(outdir);
 % if needcorrect
 %     a = readmatrix('requiredMCRProducts.txt');

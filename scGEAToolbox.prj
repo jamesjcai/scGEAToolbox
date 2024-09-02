@@ -6,8 +6,8 @@
     <param.company>Texas A&amp;M University</param.company>
     <param.summary>Single-cell Gene Expression Analysis Toolbox</param.summary>
     <param.description>scRNAseq data analysis toolbox</param.description>
-    <param.screenshot>${PROJECT_ROOT}\resources\scgeatool.png</param.screenshot>
-    <param.version>24.5.6</param.version>
+    <param.screenshot />
+    <param.version>24.5.7</param.version>
     <param.output>${PROJECT_ROOT}\scGEAToolbox.mltbx</param.output>
     <param.products.name>
       <item>Statistics and Machine Learning Toolbox</item>
@@ -87,6 +87,7 @@ TIMESTAMP</param.exclude.filters>
       <param.authnamewatermark />
       <param.email />
       <param.company />
+      <param.screenshot />
       <param.output />
       <param.platforms />
       <param.exclude.pcodedmfiles />
