@@ -38,7 +38,7 @@ title(titxt);
 tb = uitoolbar(hFig);
 tt = uitoggletool(tb, 'Separator', 'on');
 [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
-    '..', 'resources', 'tool_ellipse.gif'));
+    '..', 'resources', 'Images', 'tool_ellipse.gif'));
 %  [img,map] = imread(fullfile(matlabroot,...
 %              'toolbox','matlab','icons','tool_ellipse.gif'));
 ptImage = ind2rgb(img, map);

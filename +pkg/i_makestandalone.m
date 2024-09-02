@@ -60,17 +60,17 @@ outdir = fullfile(pw1, '..', 'SCGEATOOL_StandaloneApplication');
 if ~exist(outdir, "dir"), mkdir(outdir); end
 
 %%
-c = dir('resources/*.gif');
+c = dir('resources/Images/*.gif');
 d1 = strings(length(c), 1);
 for k = 1:length(c)
     d1(k) = string(fullfile(c(k).folder, c(k).name));
 end
-c = dir('resources/*.png');
+c = dir('resources/Images/*.png');
 d2 = strings(length(c), 1);
 for k = 1:length(c)
     d2(k) = string(fullfile(c(k).folder, c(k).name));
 end
-c = dir('resources/*.jpg');
+c = dir('resources/Images/*.jpg');
 d3 = strings(length(c), 1);
 for k = 1:length(c)
     d3(k) = string(fullfile(c(k).folder, c(k).name));
@@ -86,9 +86,9 @@ d = [d1;d2;d3;d4];
 % d = [d; fullfile(pw1, '+run', 'external', 'mt_UMAP', 'umap.jar')];
 d = [d; fullfile(pw1, 'resources', 'refinfo.txt')];
 d = [d; fullfile(pw1, 'resources', 'TFome', 'tfome_tfgenes.mat')];
-d = [d; fullfile(pw1, 'resources', 'cellcyclegenes.xlsx')];
-d = [d; fullfile(pw1, 'resources', 'cellscores.xlsx')];
-d = [d; fullfile(pw1, 'resources', 'cellscores.txt')];
+d = [d; fullfile(pw1, 'resources', 'CellScores', 'cellcyclegenes.xlsx')];
+d = [d; fullfile(pw1, 'resources', 'CellScores', 'cellscores.xlsx')];
+d = [d; fullfile(pw1, 'resources', 'CellScores', 'cellscores.txt')];
 d = [d; fullfile(pw1, 'resources', 'ScTypeDB', 'ScTypeDB_full.xlsx')];
 d = [d; fullfile(pw1, 'resources', 'PanglaoDB', 'celltypes.xlsx')];
 %d = [d; fullfile(pw1, 'resources', 'Ligand_Receptor.mat')];

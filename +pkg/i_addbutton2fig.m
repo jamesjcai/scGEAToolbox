@@ -13,7 +13,7 @@ end
 
 pt = uipushtool(toolbarHdl, 'Separator', sepTag);
 try
-    [img, map] = imread(fullfile(mfolder, '..', 'resources', imgFil));
+    [img, map] = imread(fullfile(mfolder, '..', 'resources', 'Images', imgFil));
     ptImage = ind2rgb(img, map);
 catch
     ptImage = rand(16, 16, 3);

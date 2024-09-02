@@ -506,7 +506,7 @@ if ~showuseronboarding, set(UserToolbarHandle, 'Visible', 'off'); end
         pt = uipushtool(barhandle, 'Separator', sepTag);
         
         if ~isempty(imgFil)
-            %pt.Icon = fullfile(mfolder,'..','resources',imgFil);
+            %pt.Icon = fullfile(mfolder,'..','resources','Images',imgFil);
             pt.CData = in_getPtImage(imgFil);
             pt.Tooltip = tooltipTxt;
             pt.ClickedCallback = callbackFnc;
@@ -555,7 +555,7 @@ if ~showuseronboarding, set(UserToolbarHandle, 'Visible', 'off'); end
 
     function [ptImage] = in_getPtImage(imgFil)
         try
-            [img, map] = imread(fullfile(mfolder, 'resources', imgFil));
+            [img, map] = imread(fullfile(mfolder, 'resources', 'Images', imgFil));
             ptImage = ind2rgb(img, map);
         catch
             try

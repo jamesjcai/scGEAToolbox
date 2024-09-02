@@ -51,7 +51,7 @@ pkg.i_addbutton2fig(tb, 'off', @gui.i_linksubplots, "plottypectl-rlocusplot.gif"
 
 % pt = uipushtool(tb, 'Separator', 'off');
 % [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
-%     '..', 'resources', 'plottypectl-rlocusplot.gif')); % plotpicker-pie
+%     '..', 'resources','Images', 'plottypectl-rlocusplot.gif')); % plotpicker-pie
 % ptImage = ind2rgb(img, map);
 % pt.CData = ptImage;
 % pt.Tooltip = 'Link subplots';
@@ -62,7 +62,7 @@ pkg.i_addbutton2fig(tb, 'off', @i_showclustlabel, "plotpicker-scatter.gif", "Sho
 
 % pt = uipushtool(tb, 'Separator', 'off');
 %[img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
-%                             '..','resources', 'plottypectl-rlocusplot.gif'));  % plotpicker-pie
+%                             '..','resources', 'Images', 'plottypectl-rlocusplot.gif'));  % plotpicker-pie
 % [img, map] = imread(fullfile(matlabroot, ...
 %     'toolbox', 'matlab', 'icons', 'plotpicker-scatter.gif'));
 % 

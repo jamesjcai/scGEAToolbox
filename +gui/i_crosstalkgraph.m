@@ -54,7 +54,7 @@ if ~isempty(sce)
     tb = uitoolbar(hFig);
     pt5pickcolr = uipushtool(tb, 'Separator', 'off');
     [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
-        '../', 'resources', 'fvtool_fdalinkbutton.gif')); % plotpicker-pie
+        '../', 'resources', 'Images', 'fvtool_fdalinkbutton.gif')); % plotpicker-pie
     ptImage = ind2rgb(img, map);
     pt5pickcolr.CData = ptImage;
     pt5pickcolr.Tooltip = 'Link subplots';

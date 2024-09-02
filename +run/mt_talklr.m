@@ -56,9 +56,9 @@ function [M, OUT] = ii_talkr(X, g, c)
 n = numel(cL);
 
 pw = fileparts(mfilename('fullpath'));
-%dbfile=fullfile(pw,'..','resources','Ligand_Receptor.mat');
+%dbfile=fullfile(pw,'..','resources','Ligand_Receptor','Ligand_Receptor.mat');
 %load(dbfile,'ligand','receptor','T');
-dbfile = fullfile(pw, '..', 'resources', 'Ligand_Receptor_more.mat');
+dbfile = fullfile(pw, '..', 'resources','Ligand_Receptor', 'Ligand_Receptor_more.mat');
 load(dbfile, 'ligand', 'receptor');
 
 

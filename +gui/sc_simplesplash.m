@@ -4,7 +4,7 @@ function [fx] = sc_simplesplash(fx,r)
     mfolder = fileparts(mfilename('fullpath'));
     splashpng = '700813831-hero-1536x1536.png';
    
-    [im] = imread(fullfile(mfolder,'..','resources', splashpng));
+    [im] = imread(fullfile(mfolder, '..', 'resources', 'Images', splashpng));
 
     
 

@@ -12,7 +12,7 @@ function [sce] = sc_csubtypeanno(sce, cell_type_target, formatid, speciestag)
     pw1 = fileparts(mfilename('fullpath'));
     
 
-    pth2 = fullfile(pw1, 'resources', 'cellsubtypes.xlsx');
+    pth2 = fullfile(pw1, 'resources', 'PanglaoDB', 'cellsubtypes.xlsx');
     T = readtable(pth2);
     if ~ismember(upper(cell_type_target), upper(string(unique(T.CellType))))
         error('Target cell type is not a primary cell type in cellsubtype.xlsx.');

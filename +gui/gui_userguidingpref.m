@@ -3,10 +3,10 @@ function [Button] = gui_userguidingpref(onlyinfo)
 if nargin < 1, onlyinfo = true; end
 
 mfolder = fileparts(mfilename('fullpath'));
-%fullfile(mfolder,'..', 'resources', 'userguiding.png')
+%fullfile(mfolder,'..', 'resources', 'Images', 'userguiding.png')
 
 try
-    [imgx, mapx] = imread(fullfile(mfolder, '..', 'resources', 'userguiding.gif'));
+    [imgx, mapx] = imread(fullfile(mfolder, '..', 'resources', 'Images', 'userguiding.gif'));
     ptImagex = ind2rgb(imgx, mapx);
     S.IconData = ptImagex;
 catch

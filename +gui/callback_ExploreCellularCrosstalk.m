@@ -96,7 +96,7 @@ if ~gui.gui_showrefinfo('talklr [DOI:10.1101/2020.02.01.930602]'), return; end
                         tb = uitoolbar(hFig);
                         pt5pickcolr = uipushtool(tb, 'Separator', 'off');
                         [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
-                            '../', 'resources', 'fvtool_fdalinkbutton.gif')); % plotpicker-pie
+                            '../', 'resources', 'Images', 'fvtool_fdalinkbutton.gif')); % plotpicker-pie
                         % map(map(:,1)+map(:,2)+map(:,3)==3) = NaN;  % Convert white pixels => transparent background
                         ptImage = ind2rgb(img, map);
                         pt5pickcolr.CData = ptImage;

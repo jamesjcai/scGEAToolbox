@@ -60,7 +60,7 @@ function [T, iscomplete] = py_scTenifoldXct2(sce1, sce2, celltype1, celltype2, .
     
     if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
     
-    % load(fullfile(pw1,'..','resources','Ligand_Receptor.mat'), ...
+    % load(fullfile(pw1,'..','resources','Ligand_Receptor','Ligand_Receptor.mat'), ...
     %     'ligand','receptor');
     % validg=unique([ligand receptor]);
     % [y]=ismember(upper(sce.g),validg);

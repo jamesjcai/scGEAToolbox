@@ -3,7 +3,7 @@ function [ScoreV, T] = sc_cellcyclescore(X, g)
     
     % [~,sgenes,g2mgenes]=pkg.i_get_cellcyclegenes;
     pw1 = fileparts(mfilename('fullpath'));
-    wrkpth = fullfile(pw1, 'resources', 'cellcyclegenes.xlsx');
+    wrkpth = fullfile(pw1, 'resources', 'CellScores', 'cellcyclegenes.xlsx');
     
     T = readtable(wrkpth, ...
         'ReadVariableNames', true, 'FileType', 'spreadsheet', ...
