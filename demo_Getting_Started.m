@@ -26,7 +26,7 @@ pause % Press any key to continue...
 
 %% (3/4) Make a SingleCellExperiment object SCE
 
-% sce=SingleCellExperiment(X,g,s);   % s is optional
+% sce = SingleCellExperiment(X, g, s);   % s is optional
 sce = SingleCellExperiment(X, g);
 
 pause % Press any key to continue...
