@@ -3,7 +3,7 @@ function i_export2pptx(F, glist)
 if nargin < 2, glist = {[]}; end
 
 pw1 = fileparts(mfilename('fullpath'));
-pth = fullfile(pw1, '..', 'resources', 'myTemplate.pptx');
+pth = fullfile(pw1, '..', 'resources', 'Misc', 'myTemplate.pptx');
 %dbfile1 = fullfile(pw1, '+run', 'external', 'stringdb', 'stringdb_human.mat');
 
 import mlreportgen.ppt.*;

@@ -5,7 +5,7 @@ if nargin < 2, rmthem = false; end
 import mlreportgen.ppt.*;
 %try
     pw1 = fileparts(mfilename('fullpath'));
-    pth = fullfile(pw1, '..', 'resources', 'myTemplate2.pptx');
+    pth = fullfile(pw1, '..', 'resources', 'Misc', 'myTemplate2.pptx');
 
     fw = gui.gui_waitbar;
     OUTppt = [tempname, '.pptx'];

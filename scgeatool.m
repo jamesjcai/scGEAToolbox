@@ -270,7 +270,7 @@ in_addbuttonpush(0, 1, {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure t
 gui.gui_3dcamera(DeftToolbarHandle, 'AllCells');
 pt = uitoggletool(DeftToolbarHandle);
 try
-    load(fullfile(mfolder, 'resources', 'colorbarcdata.mat'),'CData');
+    load(fullfile(mfolder, 'resources', 'Misc', 'colorbarcdata.mat'),'CData');
     pt.CData = CData;
 catch
     pt.CData = in_getPtImage('aaa');

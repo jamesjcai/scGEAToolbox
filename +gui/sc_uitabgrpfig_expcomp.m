@@ -12,7 +12,7 @@ if ismcc || isdeployed, makePPTCompilable(); end
 import mlreportgen.ppt.*;
 
 pw1 = fileparts(mfilename('fullpath'));
-pth = fullfile(pw1, '..', 'resources', 'myTemplate.pptx');
+pth = fullfile(pw1, '..', 'resources', 'Misc', 'myTemplate.pptx');
 
 hFig = figure("Visible","off", 'MenuBar','none', ...
     'DockControls','off','ToolBar','figure');

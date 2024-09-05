@@ -15,7 +15,7 @@ colorit = true;
 
 import mlreportgen.ppt.*;
 pw1 = fileparts(mfilename('fullpath'));
-pth = fullfile(pw1, '..', 'resources', 'myTemplate.pptx');
+pth = fullfile(pw1, '..', 'resources', 'Misc', 'myTemplate.pptx');
 
 hFig = figure("Visible","off",'MenuBar','none', ...
     'ToolBar','figure', 'DockControls', 'off');

@@ -37,7 +37,7 @@ if ~isempty(drdistin) && length(genelist) == length(drdistin)
 else    
     [pw1, pw0] = cdgea;
     cd(pw0);
-    dfile=fullfile(pw1,'resources','value_template_pos.txt');
+    dfile=fullfile(pw1,'resources','Misc','value_template_pos.txt');
     v = readmatrix(dfile);
     N = min([length(v), length(genelist)]);
     genelist = genelist(1:N);
