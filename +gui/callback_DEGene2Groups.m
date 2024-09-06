@@ -157,6 +157,9 @@ end
     tf = 0;
     if ~(ismcc || isdeployed) && strcmp(filetype, 'Workspace')
         [Tup, Tdn] = pkg.e_processDETable(T, true);
+        if isempty(Tup) && isempty(Tdn)
+            return;
+        end
         labels = {'Save DE results (selected up-regulated) to variable named:', ...
             'Save DE results (selected down-regulated) to variable named:'};
         vars = {'Tup', 'Tdn'};
@@ -173,8 +176,12 @@ end
             if strcmp(answer, 'Yes')
                 [Tup, Tdn] = pkg.e_processDETable(T, true);
                 % strcmp(extractAfter(filesaved,strlength(filesaved)-4),'xlsx')
-                writetable(Tup, filesaved, "FileType", "spreadsheet", 'Sheet', 'Up-regulated');
-                writetable(Tdn, filesaved, "FileType", "spreadsheet", 'Sheet', 'Down-regulated');
+                if ~isempty(Tup)
+                    writetable(Tup, filesaved, "FileType", "spreadsheet", 'Sheet', 'Up-regulated');
+                end
+                if ~isempty(Tdn)
+                    writetable(Tdn, filesaved, "FileType", "spreadsheet", 'Sheet', 'Down-regulated');
+                end
                 waitfor(helpdlg(sprintf('Result has been saved in %s', filesaved), ''));
                 %writetable(Tup,fullfile(tempdir,sprintf('%s_up.xlsx',outfile)),'FileType','spreadsheet',);
                 %writetable(Tdn,fullfile(tempdir,sprintf('%s_up.xlsx',outfile)),'FileType','spreadsheet');
@@ -184,8 +191,12 @@ end
             answer = questdlg('Save up- and down-regulated genes to seperate files?');
             if strcmp(answer, 'Yes')
                 [Tup, Tdn] = pkg.e_processDETable(T, true);
-                [~, ~] = gui.i_exporttable(Tup, true, 'Tup', 'Upregulated', 'Text file');
-                [~, ~] = gui.i_exporttable(Tdn, true, 'Tdn', 'Downregulated', 'Text file');
+                if ~isempty(Tup)
+                    [~, ~] = gui.i_exporttable(Tup, true, 'Tup', 'Upregulated', 'Text file');
+                end
+                if ~isempty(Tdn)
+                    [~, ~] = gui.i_exporttable(Tdn, true, 'Tdn', 'Downregulated', 'Text file');
+                end
             end
         end
     end

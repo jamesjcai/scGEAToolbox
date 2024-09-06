@@ -10,7 +10,7 @@ function [T, Tup, Tdn] = sc_deg(X, Y, genelist, methodid, guiwaitbar)
 %
 % SEE ALSO: [T]=run.r_MAST(X,Y,genelist);
 
-if nargin < 2, error("USAGE: sc_deg(X,Y)\n"); end
+if nargin < 2, error("USAGE: sc_deg(X, Y)\n"); end
 if nargin < 3, genelist = string(1:size(X, 1))'; end
 if nargin < 4, methodid = 1; end
 if nargin < 5, guiwaitbar = false; end
