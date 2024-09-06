@@ -28,10 +28,30 @@ if nargin < 3, predefinedlist = []; end
             return;
     end
 
+answer1 = questdlg("Select Enrichr.","", ...
+     "Matlab Enrichr", "Web Enrichr", "Matlab Enrichr");
+
+switch answer1 
+    case "Matlab Enrichr"
+
+    case "Web Enrichr"
+        fw = gui.gui_waitbar([], false, 'Sending genes to web browser...');
+        % gui.i_enrichtest(genelist, backgroundlist, numel(genelist));
+            if ~isempty(backgroundlist)
+                run.web_Enrichr_bkg(ingenelist, backgroundlist, numel(ingenelist));
+            else
+                run.web_Enrichr(ingenelist, numel(ingenelist));
+            end
+        gui.gui_waitbar(fw, false, 'Check web browser & submit genes to Enrichr.');
+        return;   
+    otherwise
+        return;
+end
+
     [genesets] = in_selDataSources;
     if isempty(genesets), return; end
 
-     definput = {'5', '0.1'};
+    definput = {'5', '0.1'};
     prompt = {'Min # of overlapping genes:', ...
               'P-value cutoff:'};
     dlgtitle = 'Enrichr Result Filter';
@@ -70,11 +90,19 @@ if nargin < 3, predefinedlist = []; end
     function [genesets] = in_selDataSources
         genesets = [];
         dsv = pkg.i_get_enrichr_libraries;
-        [idx1] = gui.i_selmultidlg(dsv, ["GO_Biological_Process_2023", ...
-            "GO_Molecular_Function_2023"], FigureHandle);
+        % if ~ispref('scgeatoolbox', 'enrichrlibraries')
+        %     setpref('scgeatoolbox', 'enrichrlibraries', ["GO_Biological_Process_2023", ...
+        %                 "GO_Molecular_Function_2023"]);
+        % end
+        enrichrlibraries = getpref('scgeatoolbox', 'enrichrlibraries', ...
+                                ["GO_Biological_Process_2023", ...
+                                    "GO_Molecular_Function_2023"]);
+
+        [idx1] = gui.i_selmultidlg(dsv, enrichrlibraries, FigureHandle);
         if isempty(idx1), return; end
         if idx1 == 0, return; end
-        genesets = dsv(idx1);        
+        genesets = dsv(idx1);
+        setpref('scgeatoolbox', 'enrichrlibraries', genesets);    
     end
 
 end

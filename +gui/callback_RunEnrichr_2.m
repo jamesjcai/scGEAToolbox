@@ -1,4 +1,4 @@
-function callback_RunEnrichr(src, ~, predefinedlist)
+function callback_RunEnrichr_2(src, ~, predefinedlist)
 
 if nargin < 3, predefinedlist = []; end
 
@@ -55,7 +55,7 @@ if nargin < 3, predefinedlist = []; end
                            minugenes, pvaluecut);
 
     T=table;
-    for k = 1:length(size(Tlist, 1))
+    for k = 1:size(Tlist, 1)
         if ~isempty(Tlist{k, 1}) && istable(Tlist{k, 1})
             T = [T; Tlist{k, 1}];
         end

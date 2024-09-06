@@ -62,6 +62,8 @@ switch answer1
             otherwise
                 return;
         end
+        otherwise
+           return;
 end
 
 

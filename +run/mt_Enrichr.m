@@ -1,6 +1,6 @@
 function [output] = mt_Enrichr(genelist, backgroundlist, genesets, minumgene, pvaluecut)
 
-output = [];
+
 
 if nargin < 5, pvaluecut = 0.1; end
 if nargin < 4, minumgene = 5; end
@@ -44,6 +44,8 @@ if nargin < 1
          "ZNF302", "CUX1", "MOB2", "CYTH2", "SEC22C", "EIF4E3", "ROBO2", ...
          "ADAMTS9-AS2", "CXXC1", "LINC01314", "ATF7", "ATP5F1"];
 end
+
+output = [];
 
 import matlab.net.URI
 import matlab.net.http.RequestMessage

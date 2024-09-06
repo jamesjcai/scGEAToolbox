@@ -26,14 +26,26 @@ elseif strcmp(answer, 'No')
 else
     return;
 end
-fw = gui.gui_waitbar([], false, 'Sending genes to web browser...');
-% gui.i_enrichtest(genelist, backgroundlist, numel(genelist));
-    if needbckg
-        run.web_Enrichr_bkg(genelist, backgroundlist, numel(genelist));
-    else
-        run.web_Enrichr(genelist, numel(genelist));
-    end
-gui.gui_waitbar(fw, false, 'Check web browser & submit genes to Enrichr.');
 
+
+%answer1 = questdlg("Select Enrichr.","", ...
+%     "Matlab Enrichr", "Web Enrichr", "Matlab Enrichr");
+answer1 = "Web Enrichr";
+switch answer1 
+    case "Matlab Enrichr"
+
+
+
+    case "Web Enrichr"
+        fw = gui.gui_waitbar([], false, 'Sending genes to web browser...');
+        % gui.i_enrichtest(genelist, backgroundlist, numel(genelist));
+            if needbckg
+                run.web_Enrichr_bkg(genelist, backgroundlist, numel(genelist));
+            else
+                run.web_Enrichr(genelist, numel(genelist));
+            end
+        gui.gui_waitbar(fw, false, 'Check web browser & submit genes to Enrichr.');
+    otherwise
+        return;
 end
 
