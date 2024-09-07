@@ -155,8 +155,11 @@ if strcmp(answer, 'Yes'), hFig.Visible=true; end
                 Tdn = T(T.DiffSign < 0, :);
                 Tin = Tdn;
         end
-       gui.gui_enrichr(Tin.gene(1:250), Tin.gene,... 
-           sprintf('Run enrichment analysis with %s DV genes?', lower(answer)));
+
+        [outgenelist, outbackgroundlist, enrichrtype] = gui.gui_prepenrichr(Tin.gene(1:250), Tin.gene,... 
+                sprintf('Run enrichment analysis with %s DV genes?', lower(answer)));
+        gui.callback_RunEnrichr(src, [], outgenelist, enrichrtype, outbackgroundlist);
+                
     end
 
     function in_viewTable(~, ~)

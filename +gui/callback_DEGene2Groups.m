@@ -243,8 +243,10 @@ end
         disp('run.web_Enrichr(Tup.gene(1:200))');
         disp('run.web_Enrichr(Tdn.gene(1:200))');
 
-        gui.gui_enrichr(Tup.gene, sce.g,... 
+        [outgenelist, outbackgroundlist, enrichrtype] = gui.gui_prepenrichr(Tup.gene, sce.g,... 
            'Run enrichment analysis with up-regulated DE genes?');
+        gui.callback_RunEnrichr(src, [], outgenelist, enrichrtype, outbackgroundlist)
+        
        
        % answer = questdlg('Run enrichment analysis with top K (=200 by default) up-regulated DE genes?');
        % if strcmp(answer, 'Yes')
@@ -253,9 +255,10 @@ end
        %     return;
        % end
 
-        gui.gui_enrichr(Tdn.gene, sce.g,... 
+        [outgenelist, outbackgroundlist, enrichrtype] = gui.gui_prepenrichr(Tdn.gene, sce.g,... 
            'Run enrichment analysis with down-regulated DE genes?');
-       
+        gui.callback_RunEnrichr(src, [], outgenelist, enrichrtype, outbackgroundlist)
+
        % answer = questdlg('Run enrichment analysis with top K (=200 by default) down-regulated DE genes?');
        % if strcmp(answer, 'Yes')
        %     gui.i_enrichtest(Tdn.gene(1:min(numel(Tdn.gene), 200)), sce.g);

@@ -1,6 +1,13 @@
-function callback_RunEnrichr(src, ~, predefinedlist)
+function callback_RunEnrichr(src, ~, predefinedlist, enrichrtype, backgroundlist)
 
 if nargin < 3, predefinedlist = []; end
+if nargin < 4, enrichrtype = []; end
+if nargin < 5
+    askbackground = true;
+    backgroundlist = []; 
+else
+    askbackground = false;
+end
 
     FigureHandle = src.Parent.Parent;
     sce = guidata(FigureHandle);
@@ -15,26 +22,31 @@ if nargin < 3, predefinedlist = []; end
     end
     if isempty(ingenelist), return; end
 
-    answer = questdlg('Add background list?','');
-    switch answer
-        case 'Yes'
-            [idx] = gui.i_selmultidlg(sce.g, sce.g, FigureHandle);
-            if isempty(idx), return; end
-            if idx == 0, return; end
-            backgroundlist = sce.g(idx);
-        case 'No'
-            backgroundlist = [];
-        case 'Cancel'
-            return;
+    if askbackground
+        answer = questdlg('Add background list?','');
+        switch answer
+            case 'Yes'
+                [idx] = gui.i_selmultidlg(sce.g, sce.g, FigureHandle);
+                if isempty(idx), return; end
+                if idx == 0, return; end
+                backgroundlist = sce.g(idx);
+            case 'No'
+                backgroundlist = [];
+            case 'Cancel'
+                return;
+        end
     end
 
-answer1 = questdlg("Select Enrichr.","", ...
-     "Matlab Enrichr", "Web Enrichr", "Matlab Enrichr");
+    if isempty(enrichrtype)
+        answer1 = questdlg("Select the type of Enrichr application.","", ...
+             "Web-based", "API-based", "API-based");
+        enrichrtype = answer1;
+    end
 
-switch answer1 
-    case "Matlab Enrichr"
-
-    case "Web Enrichr"
+switch enrichrtype 
+    case "API-based"
+        % do nothing here
+    case "Web-based"
         fw = gui.gui_waitbar([], false, 'Sending genes to web browser...');
         % gui.i_enrichtest(genelist, backgroundlist, numel(genelist));
             if ~isempty(backgroundlist)
@@ -47,6 +59,8 @@ switch answer1
     otherwise
         return;
 end
+
+
 
     [genesets] = in_selDataSources;
     if isempty(genesets), return; end
@@ -84,7 +98,7 @@ end
     gui.gui_waitbar(fw);
     
     [filetype, filesaved] = gui.i_exporttable(T, true, 'Tenrichrres', 'Enrichr_Results');
-    gui.i_viewtable(T, FigureHandle);
+    % gui.i_viewtable(T, FigureHandle);
 
 
     function [genesets] = in_selDataSources
