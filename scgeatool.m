@@ -261,9 +261,9 @@ in_addbuttonpush(0, 0, [], [], "");
 in_addbuttonpush(0, 1, @in_SingleClickSolution, "icon-mat-fingerprint-10.gif", "Single-click cell type annotation")
 in_addbuttonpush(0, 0, @in_CompareCellScoreBtwCls, "cellscore2.gif", "Cell score analysis--obtaining gene signature score for each cell");
 in_addbuttonpush(0, 0, @gui.callback_GetCellSignatureMatrix, "icon-fa-connectdevelop-20.gif", "Cell state analysis--obtaining multiple gene signature scores to reveal functional state of cells");
-in_addbuttonpush(0, 1, @in_EnrichrHVGs, "plotpicker-andrewsplot.gif", "Functional enrichment analysis with HVGs");
-in_addbuttonpush(0, 0, @gui.callback_DEGene2Groups, "plotpicker-boxplot.gif", "Differential expression (DE) analysis)");
-in_addbuttonpush(0, 0, @gui.callback_DPGene2Groups, "plotpicker_noisepsd.gif", "Differential program (DP) analysis)");
+in_addbuttonpush(0, 1, @gui.callback_DEGene2Groups, "plotpicker-boxplot.gif", "Differential expression (DE) analysis");
+in_addbuttonpush(0, 0, @gui.callback_DVGene2Groups, "plotpicker-andrewsplot.gif", "Differential variability (DV) analysis");
+in_addbuttonpush(0, 0, @gui.callback_DPGene2Groups, "plotpicker_noisepsd.gif", "Differential program (DP) analysis");
 in_addbuttonpush(0, 1, @gui.callback_BuildGeneNetwork, "noun_Network_691907.gif", "Build gene regulatory network");
 in_addbuttonpush(0, 0, @gui.callback_CompareGeneNetwork, "noun_Deep_Learning_2424485.gif", "Compare two scGRNs");
 in_addbuttonpush(0, 1, {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
@@ -881,6 +881,12 @@ if ~showuseronboarding, set(UserToolbarHandle, 'Visible', 'off'); end
     end
 
     function in_SingleClickSolution(src, ~)
+        if ~all(sce.c_cell_type_tx == "undetermined")
+            answer = questdlg("Your data has been embedded and annotated. Single Click Solution will re-embed and annotate cells. Current embedding and annotation will be overwritten. Continue?", "");
+            if ~strcmp(answer, 'Yes'), return; end
+        else
+            if ~gui.gui_showrefinfo('Single Click Solution'), return; end
+        end
         speciestag = gui.i_selectspecies(2);
         if isempty(speciestag), return; end
 
