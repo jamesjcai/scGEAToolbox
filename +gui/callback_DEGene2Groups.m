@@ -243,8 +243,10 @@ end
         disp('run.web_Enrichr(Tup.gene(1:200))');
         disp('run.web_Enrichr(Tdn.gene(1:200))');
 
+        % [outgenelist, outbackgroundlist, enrichrtype] = gui.gui_prepenrichr_dlg(Tup.gene, sce.g,... 
+        %    'Run enrichment analysis with up-regulated DE genes?', FigureHandle);
         [outgenelist, outbackgroundlist, enrichrtype] = gui.gui_prepenrichr(Tup.gene, sce.g,... 
-           'Run enrichment analysis with up-regulated DE genes?');
+           'Run enrichment analysis with up-regulated DE genes?');        
         gui.callback_RunEnrichr(src, [], outgenelist, enrichrtype, outbackgroundlist)
         
        
