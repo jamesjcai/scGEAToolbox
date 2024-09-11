@@ -15,6 +15,7 @@ if nargin<3, parentfig=[]; end
     end
 
     % [Xt] = gui.i_transformx(sce.X);
+    % if isempty(Xt), return; end
 
     answer = questdlg('Select method:','','Spearman Correlation','Distance Correlation','Cancel','Spearman Correlation');
     switch answer

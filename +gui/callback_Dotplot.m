@@ -38,6 +38,7 @@ if isempty(glist)
     return;
 end
 [Xt] = gui.i_transformx(sce.X);
+if isempty(Xt), return; end
 glist = glist(end:-1:1);
 
 if length(glist) > 50

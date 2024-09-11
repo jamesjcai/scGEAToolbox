@@ -35,6 +35,7 @@ function callback_Violinplot(src, ~)
             end
 
             [Xt] = gui.i_transformx(sce.X);
+            if isempty(Xt), return; end
             n = length(glist);
             thisyv = cell(n,1);
             for k=1:n

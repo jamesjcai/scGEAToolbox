@@ -20,6 +20,7 @@ gidx = gidx(y);
 glist = glist(y);
 
 %[Xt]=gui.i_transformx(sce.X);
+%if isempty(Xt), return; end
 Xt = sc_norm(sce.X);
 Xt = log(Xt+1);
 

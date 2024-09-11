@@ -4,6 +4,7 @@ function sc_uitabgrpfig_scatter(sce, glist, thisx, xlabelv, parentfig)
 if nargin<4, parentfig = []; end
 
 [Xt] = gui.i_transformx(sce.X);
+if isempty(Xt), return; end
 n = length(glist);
 y=cell(n,1);
 for k=1:n

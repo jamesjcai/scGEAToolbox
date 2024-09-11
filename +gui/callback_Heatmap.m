@@ -16,6 +16,7 @@ end
 [~, gidx] = ismember(glist, sce.g);
 
 %[Xt]=gui.i_transformx(sce.X);
+%if isempty(Xt), return; end
 Xt = sc_norm(sce.X);
 Xt = log(Xt+1);
 
