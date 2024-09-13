@@ -6,8 +6,12 @@ function [done] = i_setpyenv(~, ~)
 x = pyenv;
 if x.Version == "" %strlength(x.Executable)==0
     answer = questdlg('Python environment has not been set up. Locate python.exe?');
-    if strcmp('Yes', answer)
+    if strcmp('Yes', answer) 
         [done] = ix_setpyenv(x.Executable);
+        if ~done
+            return;
+        end
+        waitfor(helpdlg('Python environment is set successfully.', ''));
     else
         return;
     end
@@ -21,9 +25,9 @@ else
         case 'Use another'
             if ~ix_setpyenv(x.Executable)
                 return;
-            else
-                done = true;
             end
+            done = true;
+            waitfor(helpdlg('Python environment is set successfully.', ''));
         case {'Cancel', ''}
             return;
         otherwise
