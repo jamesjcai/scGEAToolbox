@@ -58,7 +58,8 @@ end
             try
                 pyenv('Version', fullfile(path, file));
             catch ME
-                errordlg(ME.message);
+                content = regexprep(ME.message, '<.*?>', '' ) ;
+                waitfor(errordlg(content,''));
                 return;
             end
             done = true;
