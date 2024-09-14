@@ -17,6 +17,7 @@ if nargin < 3 || isempty(methodid)
     %     otherwise
     %         return;
     % end
+    if isempty(methodid), return; end
 end
 
 if showwaitbar, fw = gui.gui_waitbar; end

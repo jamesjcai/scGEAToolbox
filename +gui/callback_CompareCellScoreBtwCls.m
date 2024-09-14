@@ -103,6 +103,7 @@ bb = 'No, just show values';
                     n = length(posg);
                     y = cell(n,1);                    
                     [~, methodid] = gui.i_pickscoremethod;
+                    if isempty(methodid), return; end
 
                     fw=gui.gui_waitbar;
                     for k=1:n
