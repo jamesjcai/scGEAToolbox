@@ -24,6 +24,7 @@ avg_1 = zeros(ng, 1);
 avg_2 = zeros(ng, 1);
 pct_1 = ones(ng, 1);
 pct_2 = ones(ng, 1);
+stats = zeros(ng, 1);
 
 nx = size(X, 2);
 ny = size(Y, 2);
@@ -46,10 +47,13 @@ for k = 1:ng
         case 1
             % “wilcox” : Wilcoxon rank sum test (default)
             % i.e., Mann–Whitney U test
-            p_val(k) = ranksum(x, y);
+            [px, ~, tx] = ranksum(x, y);
+            p_val(k) = px;
+            stats(k) = tx.ranksum;
         case 2
-            [~, p] = ttest2(x, y);
-            p_val(k) = p;
+            [~, px, ~, tx] = ttest2(x, y);
+            p_val(k) = px;
+            stats(k) = tx.tstat;
         otherwise
             error('Unknown option');
     end
@@ -75,7 +79,7 @@ else
 end
 abs_log2FC = abs(avg_log2FC);
 T = table(gene, p_val, avg_log2FC, abs_log2FC, avg_1, avg_2, ...
-    pct_1, pct_2, p_val_adj);
+    pct_1, pct_2, p_val_adj, stats);
 if nargout > 1
     [Tup, Tdn] = pkg.e_processDETable(T);
 end
