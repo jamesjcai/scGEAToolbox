@@ -21,7 +21,15 @@ switch answer
 
         OUTppt = [tempname, '.pptx'];
         ppt = Presentation(OUTppt, pth);
-        open(ppt);
+        try
+            open(ppt);
+        catch ME
+            pause(0.5);
+            gui.gui_waitbar(fw, true);
+            pause(0.5);
+            waitfor(errordlg(ME.message,''));
+            return;
+        end
         
         warning off
         for k = 1:N
