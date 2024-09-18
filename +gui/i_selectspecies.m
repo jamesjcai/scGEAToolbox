@@ -1,35 +1,44 @@
 function [speciestag] = i_selectspecies(n, shorttag)
 
-if nargin < 2, shorttag = false; end
-if nargin < 1, n = 2; end
-
-if n == 3
-    answer = questdlg('Which species?', ...
-        'Select Species', 'Human', 'Mouse', 'Zebrafish', 'Human');
-elseif n == 2
-    answer = questdlg('Which species?', ...
-        'Select Species', 'Human', 'Mouse', 'Human');
-end
-
-switch answer
-    case 'Human'
-        speciestag = "human";
-    case 'Mouse'
-        speciestag = "mouse";
-    case 'Zebrafish'
-        speciestag = "zebrafish";
-    otherwise
-        speciestag = [];
-        % helpdlg('Action cancelled.','');
-        return;
-end
-
-if shorttag
-    switch lower(speciestag)
-        case 'human'
-            speciestag = 'hs';
-        case 'mouse'
-            speciestag = 'mm';
+    if nargin < 2, shorttag = false; end
+    if nargin < 1, n = 2; end
+    
+    if ~ispref('scgeatoolbox', 'preferredspecies')
+        setpref('scgeatoolbox', 'preferredspecies', 'Human');
     end
-end
+    preferredspecies = getpref('scgeatoolbox', 'preferredspecies', 'Human');
+    
+    if n == 3
+        answer = questdlg('Which species?', ...
+            'Select Species', 'Human', 'Mouse', 'Zebrafish', preferredspecies);
+    elseif n == 2
+        answer = questdlg('Which species?', ...
+            'Select Species', 'Human', 'Mouse', preferredspecies);
+    end
+    
+    switch answer
+        case 'Human'
+            speciestag = "human";
+            setpref('scgeatoolbox', 'preferredspecies', 'Human');
+        case 'Mouse'
+            speciestag = "mouse";
+            setpref('scgeatoolbox', 'preferredspecies', 'Mouse');
+        case 'Zebrafish'
+            speciestag = "zebrafish";
+            setpref('scgeatoolbox', 'preferredspecies', 'Zebrafish');
+        otherwise
+            speciestag = "";
+            % helpdlg('Action cancelled.','');
+            return;
+    end
+    
+    if shorttag
+        switch lower(speciestag)
+            case 'human'
+                speciestag = 'hs';
+            case 'mouse'
+                speciestag = 'mm';
+        end
+    end
+
 end
