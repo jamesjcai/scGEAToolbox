@@ -12,7 +12,7 @@ lcolor2 = lcolors(2,:);
     b=sce.NumGenes;
     fprintf('%d genes removed.\n', a-b);
     
-    [i1, i2, cL1, cL2] = gui.i_select2grps(sce, false);
+    [i1, i2, cL1, cL2] = gui.i_select2smplgrps(sce, false);
     if isscalar(i1) || isscalar(i2), return; end
 
     fw = gui.gui_waitbar;

@@ -9,7 +9,7 @@ function callback_MultiGroupingView(src, ~)
         % case 'Two-group'
         % 
         %     if matlab.ui.internal.isUIFigure(FigureHandle), focus(FigureHandle); end
-        %     [thisc1, clabel1, thisc2, clabel2] = gui.i_select2state_new(sce);
+        %     [thisc1, clabel1, thisc2, clabel2] = gui.i_select2states_new(sce);
         %     if isempty(thisc1) || isempty(thisc2), return; end
         % 
         %     if matlab.ui.internal.isUIFigure(FigureHandle), focus(FigureHandle); end    

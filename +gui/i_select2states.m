@@ -1,4 +1,4 @@
-function [thisc1, clabel1, thisc2, clabel2] = i_select2state(sce)
+function [thisc1, clabel1, thisc2, clabel2] = i_select2states(sce)
 
 thisc1 = [];
 clabel1 = '';

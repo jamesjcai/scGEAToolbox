@@ -79,7 +79,7 @@ switch answer
         gui.gui_waitbar(fw);
 
     case 'Construct de novo'
-        [i1, i2] = gui.i_select2grps(sce, false);
+        [i1, i2] = gui.i_select2smplgrps(sce, false);
         if isscalar(i1) || isscalar(i2), return; end
 
         [nsubsmpl, csubsmpl, savegrn] = gui.i_tenifoldnetpara;

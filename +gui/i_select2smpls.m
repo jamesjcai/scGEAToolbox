@@ -1,4 +1,4 @@
-function [i1, i2, cL1, cL2] = i_select2grps(sce, needreorder, parentfig)
+function [i1, i2, cL1, cL2] = i_select2smpls(sce, needreorder, parentfig)
 if nargin < 3, parentfig = []; end
 if nargin < 2, needreorder = true; end
 i1 = 0;
