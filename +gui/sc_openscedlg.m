@@ -453,6 +453,7 @@ function [y] = in_multifilesgo
     switch answer
         case 'Yes'
             y=true;
+            return;
     end
     y=false;
 end
