@@ -1,6 +1,7 @@
 function [answer, filename] = i_exporttable(T, needwait, TName, ...
-    deffilename, outtype)
+    deffilename, outtype, sheetname)
 
+if nargin < 6 || isempty(sheetname), sheetname = []; end
 if nargin < 5 || isempty(outtype), outtype = []; end
 if nargin < 4 || isempty(deffilename), deffilename = []; end
 if nargin < 3 || isempty(TName), TName = 'T'; end
@@ -75,7 +76,14 @@ switch answer
                 T.(variables{k}) = xx;
             end
         end
-        writetable(T, filename, 'FileType', 'spreadsheet','WriteRowNames',true);
+        
+        if isempty(sheetname)
+            writetable(T, filename, 'FileType', 'spreadsheet', ...
+                'WriteRowNames', true);
+        else
+            writetable(T, filename, 'FileType', 'spreadsheet', ...
+                'WriteRowNames', true, 'Sheet', sheetname);
+        end
         pause(1)
         if needwait
             waitfor(helpdlg(sprintf('Result has been saved in %s', filename), ''));

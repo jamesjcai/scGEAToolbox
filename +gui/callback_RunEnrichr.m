@@ -1,13 +1,15 @@
-function callback_RunEnrichr(src, ~, predefinedlist, enrichrtype, backgroundlist)
+function callback_RunEnrichr(src, ~, predefinedlist, enrichrtype, ...
+    backgroundlist, outfiletag)
 
-if nargin < 3, predefinedlist = []; end
-if nargin < 4, enrichrtype = []; end
+if nargin < 6, outfiletag = ""; end
 if nargin < 5
     askbackground = true;
     backgroundlist = []; 
 else
     askbackground = false;
 end
+if nargin < 4, enrichrtype = []; end
+if nargin < 3, predefinedlist = []; end
 
     FigureHandle = src.Parent.Parent;
     sce = guidata(FigureHandle);
@@ -97,7 +99,9 @@ end
 
     gui.gui_waitbar(fw);
     
-    [filetype, filesaved] = gui.i_exporttable(T, true, 'Tenrichrres', 'Enrichr_Results');
+    [filetype, filesaved] = gui.i_exporttable(T, true, 'Tenrichrres', ...
+        sprintf('Enrichr_Results_%s', outfiletag));
+
     % gui.i_viewtable(T, FigureHandle);
 
 

@@ -53,7 +53,7 @@ for k=1:length(CellTypeList)
         
         [Tup, Tdn] = pkg.e_processDETable(T);
         try
-            writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All genes');
+            writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All_genes');
             writetable(Tup, filesaved, "FileType", "spreadsheet", 'Sheet', 'Up-regulated');
             writetable(Tdn, filesaved, "FileType", "spreadsheet", 'Sheet', 'Down-regulated');
             writetable(Tnt, filesaved, "FileType", "spreadsheet", 'Sheet', 'Note');

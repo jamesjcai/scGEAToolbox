@@ -149,7 +149,8 @@ end
         matlab.lang.makeValidName(string(cL1)), matlab.lang.makeValidName(string(cL2)));
     if isatac, T.gene = "chr" + T.gene; end
 
-    [filetype, filesaved] = gui.i_exporttable(T, true, 'Tdegenelist', outfile);
+    [filetype, filesaved] = gui.i_exporttable(T, true, 'Tdegenelist', ...
+        outfile, [], "All_genes");
 
     % 'Tviolindata','ViolinPlotTable'
     % 'Tdegenelist'
@@ -185,6 +186,7 @@ end
                 waitfor(helpdlg(sprintf('Result has been saved in %s', filesaved), ''));
                 %writetable(Tup,fullfile(tempdir,sprintf('%s_up.xlsx',outfile)),'FileType','spreadsheet',);
                 %writetable(Tdn,fullfile(tempdir,sprintf('%s_up.xlsx',outfile)),'FileType','spreadsheet');
+                tf = 1;
             end
         elseif strcmp(filetype, 'Text file')
             % strcmp(extractAfter(filesaved,strlength(filesaved)-3),'txt')
@@ -197,6 +199,7 @@ end
                 if ~isempty(Tdn)
                     [~, ~] = gui.i_exporttable(Tdn, true, 'Tdn', 'Downregulated', 'Text file');
                 end
+                tf = 1;
             end
         end
     end
@@ -245,9 +248,12 @@ end
 
         % [outgenelist, outbackgroundlist, enrichrtype] = gui.gui_prepenrichr_dlg(Tup.gene, sce.g,... 
         %    'Run enrichment analysis with up-regulated DE genes?', FigureHandle);
-        [outgenelist, outbackgroundlist, enrichrtype] = gui.gui_prepenrichr(Tup.gene, sce.g,... 
-           'Run enrichment analysis with up-regulated DE genes?');        
-        gui.callback_RunEnrichr(src, [], outgenelist, enrichrtype, outbackgroundlist)
+        [outgenelist, outbackgroundlist, enrichrtype] = ...
+            gui.gui_prepenrichr(Tup.gene, sce.g,... 
+           'Run enrichment analysis with up-regulated DE genes?');
+
+        gui.callback_RunEnrichr(src, [], outgenelist, enrichrtype, ...
+            outbackgroundlist, "Up");
         
        
        % answer = questdlg('Run enrichment analysis with top K (=200 by default) up-regulated DE genes?');
@@ -257,9 +263,12 @@ end
        %     return;
        % end
 
-        [outgenelist, outbackgroundlist, enrichrtype] = gui.gui_prepenrichr(Tdn.gene, sce.g,... 
+        [outgenelist, outbackgroundlist, enrichrtype] = ...
+            gui.gui_prepenrichr(Tdn.gene, sce.g,... 
            'Run enrichment analysis with down-regulated DE genes?');
-        gui.callback_RunEnrichr(src, [], outgenelist, enrichrtype, outbackgroundlist)
+
+        gui.callback_RunEnrichr(src, [], outgenelist, enrichrtype, ...
+            outbackgroundlist, "Down");
 
        % answer = questdlg('Run enrichment analysis with top K (=200 by default) down-regulated DE genes?');
        % if strcmp(answer, 'Yes')
