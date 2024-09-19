@@ -53,7 +53,7 @@ lcolor2 = lcolors(2,:);
 
     gui.gui_waitbar(fw);
 
-    outfile = sprintf('%s_vs_%s', ...
+    outfile = sprintf('%s_vs_%s_DV_results', ...
         matlab.lang.makeValidName(string(cL1)), matlab.lang.makeValidName(string(cL2)));
 
 pause(1);

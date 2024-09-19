@@ -53,9 +53,13 @@ function [sce, hasidoverlap] = i_merge2sces(sce1, sce2, method)
     
     
     if ~isempty(sce1.c_batch_id) && ~isempty(sce2.c_batch_id)
+        if ~isstring(sce1.c_batch_id)
+            sce1.c_batch_id = string(sce1.c_batch_id);
+        end
+        if ~isstring(sce2.c_batch_id)
+            sce2.c_batch_id = string(sce2.c_batch_id);
+        end
         sce.c_batch_id = [sce1.c_batch_id; sce2.c_batch_id];
-        % assignin("base","a",sce1.c_batch_id)
-        % assignin("base","b",sce2.c_batch_id)
         % intersect(sce1.c_batch_id, sce2.c_batch_id)
         % pause
         hasidoverlap = ~isempty(intersect(sce1.c_batch_id, sce2.c_batch_id));

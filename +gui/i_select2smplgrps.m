@@ -101,16 +101,32 @@ end
          for k = 1:length(newidx1)
              ci(cx == newidx1(k)) = 1;
          end
+         newgrp1name = inputdlg('Input a name for group 1', '', ...
+            [1, 50], {'Group1'});
+            if ~isempty(newgrp1name)
+                cL1 = newgrp1name;
+            else
+                return;
+            end
+
          answer = questdlg('Select samples in group 2?','');
          if ~strcmp(answer, 'Yes'), return; end
          [newidx2] = gui.i_selmultidlg(cLi);
          for k = 1:length(newidx2)
              ci(cx == newidx2(k)) = 2;
          end
+         newgrp2name = inputdlg('Input a name for group 2', '', ...
+            [1, 50], {'Group2'});
+            if ~isempty(newgrp2name)
+                cL2 = newgrp2name;
+            else
+                return;
+            end
+         
          i1 = ci == 1;
          i2 = ci == 2;
-         cL1 = {'Group1'};
-         cL2 = {'Group2'};
+         % cL1 = {'Group1'};
+         % cL2 = {'Group2'};
      otherwise
          return;
  end
