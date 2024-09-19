@@ -243,8 +243,8 @@ end
         %disp('To run pathway analysis, type:');
         %disp('t=run.r_SPIA(T);');
         disp('To run enrichment analysis, type:');
-        disp('run.web_Enrichr(Tup.gene(1:200))');
-        disp('run.web_Enrichr(Tdn.gene(1:200))');
+        disp('run.web_Enrichr(Tup.gene(1:250))');
+        disp('run.web_Enrichr(Tdn.gene(1:250))');
 
         % [outgenelist, outbackgroundlist, enrichrtype] = gui.gui_prepenrichr_dlg(Tup.gene, sce.g,... 
         %    'Run enrichment analysis with up-regulated DE genes?', FigureHandle);

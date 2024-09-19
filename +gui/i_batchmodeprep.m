@@ -1,5 +1,5 @@
 function [done, CellTypeList, i1, i2, cL1, cL2,...
-    outdir] = i_batchmodeprep(sce, prefixtag)
+          outdir] = i_batchmodeprep(sce, prefixtag)
 
 done = false;
 CellTypeList=[]; i1=[]; i2=[]; cL1=[]; cL2=[]; outdir=[];
@@ -161,7 +161,7 @@ function [thisc, clabel] = in_select1class(sce, allowunique)
 end
 
 
-function [i1, i2, cL1, cL2]=in_twogrpsencoding(thisc)
+function [i1, i2, cL1, cL2] = in_twogrpsencoding(thisc)
     [ci, cLi] = grp2idx(thisc);
     listitems = natsort(string(cLi));
     n = length(listitems);

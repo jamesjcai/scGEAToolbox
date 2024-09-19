@@ -10,7 +10,7 @@ prefixtag = 'DE';
 if ~done, return; end
 
 %[runenrichr] = gui.i_enrichrprep;
-[runenrichr] = questdlg('Run Enrichr (Python required) with top 250 DE genes? Results will be saved in the output Excel files.','');
+[runenrichr] = questdlg('Run Enrichr with top 250 DE genes? Results will be saved in the output Excel files.','');
 if strcmp(runenrichr,'Cancel'), return; end
 
 fw = gui.gui_waitbar_adv;

@@ -14,7 +14,7 @@ answer = questdlg(sprintf('Input list contains %d genes. Run enrichment analysis
 if strcmp(answer, 'Yes, use all genes')
     outgenelist = genelist;
 elseif strcmp(answer, 'No, pick top k genes')
-    k = gui.i_inputnumk(min([200, numel(genelist)]), 10, numel(genelist));
+    k = gui.i_inputnumk(min([250, numel(genelist)]), 10, numel(genelist));
     if isempty(k), return; end
     outgenelist = genelist(1:k);
 else
