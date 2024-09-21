@@ -14,6 +14,7 @@ answer = inputdlg(prompt, dlgtitle, dims, definput);
 if isempty(answer), return; end
 
 if ~(ismcc || isdeployed)
+    %#exclude urldecode
     answer1 = urldecode(answer{1});
 else
     answer1 = pkg.urldecoding(answer{1});

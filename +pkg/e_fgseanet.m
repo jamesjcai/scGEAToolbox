@@ -88,7 +88,10 @@ fclose(fid);
 if shownotepad
     [status] = system(['notepad "', tmpName, '" &']);
     if status ~= 0
-        edit(tmpName);
+        if ~(ismcc || isdeployed)
+            %#exclude edit
+            edit(tmpName);
+        end
     end
 end
 end

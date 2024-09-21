@@ -89,6 +89,7 @@ if shownotepad
     [status] = system(['notepad "', tmpName, '" &']);
     if status ~= 0
         if ~(ismcc || isdeployed)
+            %#exclude edit
             edit(tmpName);
         end
     end

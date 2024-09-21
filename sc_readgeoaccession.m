@@ -128,6 +128,7 @@ function f = i_setupfile(c)
         x = string(textscan(x, '<a href="ftp://%s'));
         x = append("https://", extractBefore(x, strlength(x)-5));
         if ~(ismcc || isdeployed)
+            %#exclude urldecode
             x = urldecode(x);
         else
             x = pkg.urldecoding(x);
@@ -155,6 +156,7 @@ function f = i_setupfile2(c)
         x = string(textscan(x, '<a href="ftp://%s'));
         x = append("https://", extractBefore(x, strlength(x)-5));
         if ~(ismcc || isdeployed)
+            %#exclude urldecode
             x = urldecode(x);
         else
             x = pkg.urldecoding(x);

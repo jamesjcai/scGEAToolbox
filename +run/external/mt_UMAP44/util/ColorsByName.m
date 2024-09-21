@@ -330,7 +330,10 @@ classdef ColorsByName <handle
             else
                 bak=this.backupFile;
             end
-            visdiff(this.file, bak);
+            if ~isdeployed
+                %#exclude visdiff
+                visdiff(this.file, bak);
+            end
         end
         
         function [ok, names, colors]=restoreBackup(this, pick)

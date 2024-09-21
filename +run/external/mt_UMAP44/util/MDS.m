@@ -1272,7 +1272,10 @@ classdef MDS< handle
                         else
                             MatBasics.DoLater(@(h,e)flashThem, .4);
                         end
+        if ~(ismcc || isdeployed)
+            %#exclude edit                        
                         edit
+        end
                         flashThem;
                     else
                         flashThem
@@ -1281,7 +1284,11 @@ classdef MDS< handle
                 else
                     if hasEditNameFnc
                         MatBasics.DoLater(@(h,e)flashIt, .4);
+        if ~(ismcc || isdeployed)
+            %#exclude edit
+                        
                         edit
+        end
                     else
                         flashIt;
                     end
