@@ -16,7 +16,7 @@ if tf1 ~= 1, return; end
 selectedtissue = utissuelist(indx1);
 Tm = T(ismember(T.tissueType, selectedtissue), :);
 txt = '';
-for k = 1:size(Tm, 1)
+for k = 1:height(Tm)
     txt = sprintf('%s\n%s\t%s', txt, ...
         strtrim(Tm.cellName{k}), ...
         strtrim(Tm.geneSymbolmore1{k}));

@@ -100,7 +100,7 @@ T=T(T.p_val_adj<0.01 & T.gsetsize>=5,:);
 
     gui.gui_waitbar(fw);
 
-    if size(T,1)==0
+    if height(T)==0
         waitfor(helpdlg('No significant results.',''));
         return;
     else
@@ -153,7 +153,7 @@ images = {};
  fw = gui.gui_waitbar_adv;
  success=false;
 
- for kk=1:numel(idxneedplot) % size(T,1)
+ for kk=1:numel(idxneedplot)
      k=idxneedplot(kk);
      if ~ismember(k,idxneedplot), continue; end
      idx=T.setnames(k)==setnames;
@@ -173,7 +173,7 @@ images = {};
         % assignin("base","cL",cL);
         % assignin("base","posg",posg);
         
-        % gui.gui_waitbar_adv(fw,(k-1)./size(T,1));
+        % gui.gui_waitbar_adv(fw,(k-1)./height(T));
         gui.gui_waitbar_adv(fw,(kk-1)./numel(idxneedplot));
         
     suc1=false;

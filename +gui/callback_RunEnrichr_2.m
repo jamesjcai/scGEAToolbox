@@ -55,7 +55,7 @@ if nargin < 3, predefinedlist = []; end
                            minugenes, pvaluecut);
 
     T=table;
-    for k = 1:size(Tlist, 1)
+    for k = 1:height(Tlist)
         if ~isempty(Tlist{k, 1}) && istable(Tlist{k, 1})
             T = [T; Tlist{k, 1}];
         end

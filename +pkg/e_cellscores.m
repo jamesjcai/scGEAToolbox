@@ -35,7 +35,7 @@ if isempty(idx)
     score = [];
     return;
 end
-if ~(idx <= size(T, 1) && idx > 0 && idx == floor(idx))
+if ~(idx <= height(T) && idx > 0 && idx == floor(idx))
     score = [];
     return;
 end

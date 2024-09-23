@@ -9,7 +9,7 @@ parse(p, varargin{:});
 jaccardcutoff = p.Results.JaccardCutoff;
 plotnetwork = p.Results.PlotNetwork;
 shownotepad = p.Results.ShowNotepad;
-if size(Tf, 1) < 5
+if height(Tf) < 5
     error('fGSEA output table is too short.')
 end
 

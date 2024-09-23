@@ -55,7 +55,7 @@ switch option
     case {3,'Predefined'}
         [~, T] = pkg.e_cellscores([], [], 0);
         glist=[];
-        for k=1:size(T,1)
+        for k=1:height(T)
             tgsPos = unique(strsplit(string(T.PositiveMarkers(k)), ','));
             glist=[glist;tgsPos'];
         end

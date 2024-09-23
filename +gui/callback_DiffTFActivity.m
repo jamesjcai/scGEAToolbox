@@ -45,7 +45,7 @@ cs2 = cs(tfexpressed, :);
 outfile = sprintf('DiffTFActivity_%s', matlab.lang.makeValidName(clabel));
 
 answer = questdlg(sprintf('%d out of %d TFs expressed in cells. Keep only %d expressed TFs?', ...
-    size(T2, 1), size(T, 1), size(T2, 1)));
+    height(T2), height(T), height(T2)));
 switch answer
     case 'Yes'
         T = T2;

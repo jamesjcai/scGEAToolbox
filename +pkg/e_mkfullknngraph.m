@@ -21,7 +21,7 @@ end
 DG = graph(D+D');
 T = minspantree(DG);
 Te = T.Edges;
-for k = 1:size(Te, 1)
+for k = 1:height(Te)
     x = Te.EndNodes(k, 1);
     y = Te.EndNodes(k, 2);
     a = Didx{x, y}(1);

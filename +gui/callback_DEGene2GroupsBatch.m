@@ -64,22 +64,22 @@ for k=1:length(CellTypeList)
         % - start of enrichr
         if ~isempty(runenrichr) && strcmp(runenrichr, 'Yes')
             try
-                % [Tbp1, Tmf1]= run.r_enrichR(Tup.gene(1:min([250 size(Tup, 1)])));
-                %[Tbp1, Tmf1] = run.py_GSEApy_enr(Tup.gene(1:min([250 size(Tup, 1)])), ...
+                % [Tbp1, Tmf1]= run.r_enrichR(Tup.gene(1:min([250 height(Tup)])));
+                %[Tbp1, Tmf1] = run.py_GSEApy_enr(Tup.gene(1:min([250 height(Tup)])), ...
                 %    T.gene, tempdir);
 
-                [Tlist] = run.mt_Enrichr(Tup.gene(1:min([250 size(Tup, 1)])), ...
+                [Tlist] = run.mt_Enrichr(Tup.gene(1:min([250 height(Tup)])), ...
                             T.gene, ["GO_Biological_Process_2023", ...
                                      "GO_Molecular_Function_2023"]);
                 Tbp1 = Tlist{1,1};
                 Tmf1 = Tlist{2,1};
                 in_writetable(Tbp1, filesaved, 'Up_250_GO_BP');
                 in_writetable(Tmf1, filesaved, 'Up_250_GO_MF');
-                % [Tbp2, Tmf2] = run.r_enrichR(Tdn.gene(1:min([250 size(Tdn, 1)])));
-                % [Tbp2, Tmf2] = run.py_GSEApy_enr(Tdn.gene(1:min([250 size(Tup, 1)])), ...
+                % [Tbp2, Tmf2] = run.r_enrichR(Tdn.gene(1:min([250 height(Tdn)])));
+                % [Tbp2, Tmf2] = run.py_GSEApy_enr(Tdn.gene(1:min([250 height(Tdn)])), ...
                 %    T.gene, tempdir);
 
-                [Tlist] = run.mt_Enrichr(Tdn.gene(1:min([250 size(Tup, 1)])), ...
+                [Tlist] = run.mt_Enrichr(Tdn.gene(1:min([250 height(Tdn)])), ...
                             T.gene, ["GO_Biological_Process_2023", ...
                                      "GO_Molecular_Function_2023"]);
                 Tbp2 = Tlist{1,1};
@@ -100,7 +100,7 @@ answer=questdlg(sprintf('Result files saved. Open the folder %s?', outdir), '');
 if strcmp(answer,'Yes'), winopen(outdir); end
 
     function in_writetable(Tmf1, filesaved, shtname)
-        if ~isempty(Tmf1) && istable(Tmf1) && size(Tmf1, 1) > 0
+        if ~isempty(Tmf1) && istable(Tmf1) && height(Tmf1) > 0
             writetable(Tmf1, filesaved, "FileType", "spreadsheet", 'Sheet', shtname);
         end
     end
