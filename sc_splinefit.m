@@ -58,11 +58,12 @@ xyz1 = ppval(pp1, s)';
 
 
 [nearidx, d] = dsearchn(xyz1, xyz);
-%fitmeanv=xyz1(:,1);
-%x=xyz(:,1); y=xyz(:,2);
-%d(x>max(fitmeanv))=d(x>max(fitmeanv))./100;
-%d(x<min(fitmeanv))=d(x<min(fitmeanv))./10;
-%d((y-xyz1(:, 2))<0)=d((y-xyz1(:, 2))<0)./100;
+
+fitmeanv=xyz1(:,1);
+x=xyz(:,1); y=xyz(:,2);
+d(x>max(fitmeanv))=d(x>max(fitmeanv))./100;
+d(x<min(fitmeanv))=d(x<min(fitmeanv))./10;
+d((y-xyz1(:, 2))<0)=d((y-xyz1(:, 2))<0)./100;
 
 
 %D = pdist2(xyz, xyz1);

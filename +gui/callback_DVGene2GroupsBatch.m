@@ -149,22 +149,22 @@ for k=1:length(CellTypeList)
                 %[Tbp1, Tmf1] = run.py_GSEApy_enr(Tup.gene(1:min([250 size(Tup, 1)])), ...
                 %    T.gene, tempdir);
 
-                [Tlist] = run.mt_Enrichr(Tup.gene(1:min([250 height(Tup)])), ...
+                [Tlist1] = run.mt_Enrichr(Tup.gene(1:min([250 height(Tup)])), ...
                             T.gene, ["GO_Biological_Process_2023", ...
                                      "GO_Molecular_Function_2023"]);
-                Tbp1 = Tlist{1,1};
-                Tmf1 = Tlist{2,1};
+                Tbp1 = Tlist1{1};
+                Tmf1 = Tlist1{2};
                 in_writetable(Tbp1, filesaved, 'Up_250_GO_BP');
                 in_writetable(Tmf1, filesaved, 'Up_250_GO_MF');
                 % [Tbp2, Tmf2] = run.r_enrichR(Tdn.gene(1:min([250 height(Tdn)])));
                 % [Tbp2, Tmf2] = run.py_GSEApy_enr(Tdn.gene(1:min([250 height(Tdn)])), ...
                 %    T.gene, tempdir);
 
-                [Tlist] = run.mt_Enrichr(Tdn.gene(1:min([250 height(Tdn)])), ...
+                [Tlist2] = run.mt_Enrichr(Tdn.gene(1:min([250 height(Tdn)])), ...
                             T.gene, ["GO_Biological_Process_2023", ...
                                      "GO_Molecular_Function_2023"]);
-                Tbp2 = Tlist{1,1};
-                Tmf2 = Tlist{2,1};
+                Tbp2 = Tlist2{1};
+                Tmf2 = Tlist2{2};
                 in_writetable(Tbp2, filesaved, 'Dn_250_GO_BP');
                 in_writetable(Tmf2, filesaved, 'Dn_250_GO_MF');
             catch ME

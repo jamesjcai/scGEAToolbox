@@ -56,8 +56,8 @@ if nargin < 3, predefinedlist = []; end
 
     T=table;
     for k = 1:height(Tlist)
-        if ~isempty(Tlist{k, 1}) && istable(Tlist{k, 1})
-            T = [T; Tlist{k, 1}];
+        if ~isempty(Tlist{k}) && istable(Tlist{k})
+            T = [T; Tlist{k}];
         end
     end
 
