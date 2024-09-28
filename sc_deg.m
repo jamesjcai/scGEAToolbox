@@ -29,7 +29,7 @@ stats = zeros(ng, 1);
 nx = size(X, 2);
 ny = size(Y, 2);
 
-Z = log(1+sc_norm([X, Y]));
+Z = log1p(sc_norm([X, Y]));
 X = Z(:, 1:nx);
 Y = Z(:, nx+1:end);
 

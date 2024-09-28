@@ -1,7 +1,7 @@
 function [A] = sc_pcnet(X, ncom, fastersvd, dozscore, guiwaitbar)
 %Construct GRN network A using PC regression (pcnet)
 %
-% [X]=log(1+sc_norm(X));     % pcnet input should be LogNormalized
+% [X]=log1p(sc_norm(X));     % pcnet input should be LogNormalized
 % [A]=sc_pcnet(X,ncom);      % X = expression matrix of genes x cells
 % ncom - number of components used (default=3)
 % ref: https://rdrr.io/cran/dna/man/PCnet.html

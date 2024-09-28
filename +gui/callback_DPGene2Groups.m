@@ -46,7 +46,7 @@ fw = gui.gui_waitbar;
 setgenes=setgenes(ix);
 setmatrx=setmatrx(:,ix);      % s x g
 
-sceX = log(1+sc_norm(sce.X));
+sceX = log1p(sc_norm(sce.X));
 X = sceX(iy,:);              % g x c
 
 
@@ -147,7 +147,7 @@ end
 if ~isfolder(outdir), return; end
 %}
 
-Xt=log(1+sc_norm(sce.X));
+Xt=log1p(sc_norm(sce.X));
 images = {};
 
  fw = gui.gui_waitbar_adv;

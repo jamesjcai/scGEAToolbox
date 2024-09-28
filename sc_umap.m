@@ -16,8 +16,8 @@ if donorm
     disp('Library-size normalization...done.')
 end
 if dolog1p
-    X = log(X+1);
-    disp('Log(x+1) transformation...done.')
+    X = log1p();
+    disp('log1p transformation...done.')
 end
 s = run.mt_UMAP(X, ndim);
 end

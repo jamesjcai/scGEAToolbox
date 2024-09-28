@@ -17,7 +17,7 @@ opts.maxit = 150;
 %     if ~(ismcc || isdeployed), addpath(pth); end
 % end
 
-% X is supposed to be LogNormalized, i.e., [X]=log(1+sc_norm(X));
+% X is supposed to be LogNormalized, i.e., [X]=log1p(sc_norm(X));
 X = X';
 if dozscore
     X = zscore(X);

@@ -4,7 +4,7 @@ if nargin<5, setnames=[]; end
 if nargin<4, setmatrx=[]; end
 
 
-%X = log(1+sc_norm(X));
+%X = log1p(sc_norm(X));
 if isempty(setmatrx)
     [setmatrx, setnames, setgenes] = pkg.e_getgenesets;
 end

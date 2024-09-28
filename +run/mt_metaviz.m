@@ -27,7 +27,7 @@ catch ME
 end
 
 if showwaitbar, fw = gui.gui_waitbar_adv; end
-Xn = log(1+sc_norm(X))';
+Xn = log1p(sc_norm(X))';
 try
     data = svdpca(Xn, 300, 'random');
 catch

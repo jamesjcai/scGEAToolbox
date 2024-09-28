@@ -71,7 +71,7 @@ methodid = 1;
 switch methodid
     case 1
         X = sc_norm(X);
-        X = log(X+1);
+        X = log1p(X);
         X = sc_transform(X, 'type', 'kNNSmoothing');
         [Xm] = pkg.i_grpmean(X, cx);
         cutoff = 1.0;

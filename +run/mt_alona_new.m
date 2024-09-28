@@ -55,7 +55,7 @@ wgene = string(upper(Tw.Var1));
 
 genelist = genelist(idx1);
 X = sc_norm(X(idx1, :));
-X = log(X+1);
+X = log1p(X);
 
 wvalu = wvalu(idx2);
 wgene = wgene(idx2);

@@ -24,7 +24,7 @@ if nargin<3, parentfig=[]; end
             r = corr(t, sce.X.', 'type', 'spearman'); % Calculate linear correlation between gene expression profile and T
             gui.gui_waitbar(fw);
         case 'Distance Correlation'
-            X = log(1+sc_norm(sce.X));
+            X = log1p(sc_norm(sce.X));
             r = zeros(size(X,1),1);
             n = length(r);
             if n > 100

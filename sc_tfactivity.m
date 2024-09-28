@@ -36,7 +36,7 @@ end
 
     if methodid ~= 1 % method 1 UCell is rank-based, normalization is unnecessary
         [X] = sc_norm(X);
-        [X] = log(X+1);
+        [X] = log1p(X);
     end
 
     [gid, gnlist] = grp2idx(Ttfgn.target);

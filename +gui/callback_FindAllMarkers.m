@@ -102,7 +102,7 @@ for k = 1:length(cL)
     idcl = [idcl; c(i)];
 end
 X = sc_norm(X);
-X = log(X+1);
+X = log1p(X);
 
 % ===========
 Y = [];

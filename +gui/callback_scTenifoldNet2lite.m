@@ -14,7 +14,7 @@ if isscalar(i1) || isscalar(i2), return; end
 fw = gui.gui_waitbar;
 disp('Constructing networks (1/2) ...')
 X = sc_norm(sce.X);
-X = log(X+1);
+X = log1p(X);
 X0 = X(:, i1);
 X1 = X(:, i2);
 A0 = sc_pcnetpar(X0);

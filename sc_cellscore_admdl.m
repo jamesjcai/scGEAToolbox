@@ -37,7 +37,7 @@ function [score] = sc_cellscore_admdl(X, genelist, tgsPos, tgsNeg, nbin, ctrl)
     
     X = sc_norm(X);
     %disp('Library-size normalization...done.')
-    X = log(X+1);
+    X = log1p(X);
     %disp('Log(x+1) transformation...done.')
     
     %idx=matches(genelist, tgsPos, 'IgnoreCase',true);

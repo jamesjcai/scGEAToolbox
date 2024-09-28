@@ -44,10 +44,10 @@ if tf == 1
             case 1
                 X = sc_norm(X);
             case 2
-                X = log(X+1);
+                X = log1p(X);
             case 3
                 X = sc_norm(X);
-                X = log(X+1);
+                X = log1p(X);
             case 4
                 X = sc_norm(X, 'type', 'deseq');
             case 5

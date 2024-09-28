@@ -10,7 +10,7 @@ if isempty(cL)
     [c, cL] = grp2idx(c);
 end
 
-X = log(1+sc_norm(X));
+X = log1p(sc_norm(X));
 T = table();
 if guiwaitbar
     fw = gui.gui_waitbar_adv;

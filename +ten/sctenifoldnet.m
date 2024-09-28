@@ -65,8 +65,8 @@ genelist = genelist(validg);
 X0 = sc_norm(X0(validg, :), "type", "libsize");
 X1 = sc_norm(X1(validg, :), "type", "libsize");
 
-X0 = log(X0+1);
-X1 = log(X1+1);
+X0 = log1p(X0);
+X1 = log1p(X1);
 
 %X0=sc_transform(X0);
 %X1=sc_transform(X1);

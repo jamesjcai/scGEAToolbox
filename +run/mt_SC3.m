@@ -16,7 +16,7 @@ else
 end
 
 if donorm, [X] = sc_norm(X); end
-if dolog1, [X] = log(X+1); end
+if dolog1, [X] = log1p(X); end
 
 
 drange = get_drange(X);

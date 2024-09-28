@@ -53,7 +53,7 @@ if exist('@tensor/tensor.m', 'file') ~= 2
 
     if donorm
         X = sc_norm(X, "type", "libsize");
-        X = log(1+X);
+        X = log1p(X);
         %X=sc_transform(X);
     end
 

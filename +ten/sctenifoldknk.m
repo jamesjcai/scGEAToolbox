@@ -58,7 +58,7 @@ end
     %    end
 
     X = sc_norm(X, "type", "libsize");
-    X = log(X+1);
+    X = log1p(X);
 
     [XM] = i_nc(X, nsubsmpl, 3, csubsmpl, usebootstrp);
     [A0] = i_td1(XM, tdmethod);

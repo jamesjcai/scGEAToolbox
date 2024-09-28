@@ -28,8 +28,8 @@ end
 X(isnan(X)) = 0; % empty cells will be retained to keep spots
 
 if dolog1p
-    X = log(X+1);
-    disp('Log(x+1) transformation...done.')
+    X = log1p(X);
+    disp('log1p transformation...done.')
 end
 
 if issparse(X), X = full(X); end

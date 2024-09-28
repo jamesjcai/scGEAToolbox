@@ -3,11 +3,14 @@ function varargout = scgeatool(sce, varargin)
 if usejava('jvm') && ~feature('ShowFigureWindows')
     error('MATLAB is in a text mode. This function requires a GUI-mode.');
 end
-if isempty(which('grp2idx.m'))
+
+
+if ~license('test','statistics_toolbox')  % isempty(which('grp2idx.m'))
     uiwait(warndlg('SCGEATOOL requires Statistics and Machine Learning Toolbox.','Missing Dependencies'));
     answer3 = questdlg('Learn how to install Statistics and Machine Learning Toolbox?','');
     if strcmp(answer3,'Yes')
         web('https://www.mathworks.com/help/matlab/matlab_env/get-add-ons.html');
+        web('https://www.mathworks.com/videos/add-on-explorer-106745.html');
     end
     return;
 end
@@ -858,7 +861,7 @@ if ~showuseronboarding, set(UserToolbarHandle, 'Visible', 'off'); end
         elseif methodoption == 2
             if ~gui.gui_showrefinfo('Geometric Sketching [PMID:31176620]'), return; end
             fw = gui.gui_waitbar;
-            Xn = log(1+sc_norm(sce.X))';
+            Xn = log1p(sc_norm(sce.X))';
             [~, Xn] = pca(Xn, 'NumComponents', 300);
             gui.gui_waitbar(fw);
             try

@@ -22,7 +22,7 @@ glist = glist(y);
 %[Xt]=gui.i_transformx(sce.X);
 %if isempty(Xt), return; end
 Xt = sc_norm(sce.X);
-Xt = log(Xt+1);
+Xt = log1p(Xt);
 
 Y = Xt(gidx, :);
 [~, cidx] = sort(c);

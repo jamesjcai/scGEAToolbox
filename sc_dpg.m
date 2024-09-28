@@ -1,6 +1,6 @@
 function [T] = sc_dpg(X, Y, g, setmatrx, setnames, setgenes)
 
-%X = log(1+sc_norm(X));
+%X = log1p(sc_norm(X));
 if nargin<6
     [setmatrx, setnames, setgenes] = pkg.e_getgenesets;
 end

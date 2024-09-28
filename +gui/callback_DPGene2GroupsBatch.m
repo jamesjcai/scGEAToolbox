@@ -19,7 +19,7 @@ function callback_DPGene2GroupsBatch(src, ~)
     
     fw = gui.gui_waitbar_adv;
     
-    sceX = log(1+sc_norm(sce.X));
+    sceX = log1p(sc_norm(sce.X));
     for k=1:length(CellTypeList)
         gui.gui_waitbar_adv(fw, ...
             (k-1)/length(CellTypeList), ...

@@ -36,7 +36,7 @@ end
     try
         disp('>> [A]=sc_pcnet(sce.X);');
         X = sc_norm(sce.X);
-        X = log(X+1);
+        X = log1p(X);
         if useparallel
             fw = gui.gui_waitbar;
             [A] = sc_pcnetpar(X);

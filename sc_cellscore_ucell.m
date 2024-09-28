@@ -40,7 +40,7 @@ switch methodid
     case 2
         X = sc_norm(X);
         disp('Library-size normalization...done.')
-        X = log(X+1);
+        X = log1p(X);
         disp('Log(x+1) transformation...done.')
         data_avg = mean(X, 2);
         idx1 = matches(genelist, tgsPos, 'IgnoreCase', true);
