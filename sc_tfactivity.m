@@ -32,7 +32,11 @@ if nargin < 3 || isempty(Ttfgn) % tf-by-gene matrix T from database
             fprintf('Only positive regulatory relationships are used.\n');
 end
 
-
+try
+    if issparse(X), X = full(X); end
+catch
+    warning('Keep using sparse X.');
+end
 
     if methodid ~= 1 % method 1 UCell is rank-based, normalization is unnecessary
         [X] = sc_norm(X);
@@ -67,6 +71,7 @@ end
 
     switch methodid
         case 1 % UCell method  see also: sc_cellscore_ucell
+
             cs = zeros(size(t, 1), size(X, 2));
             R = tiedrank(-X);
             R(R > 1500) = 1500 + 1;

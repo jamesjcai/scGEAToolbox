@@ -28,6 +28,12 @@ idx2 = matches(genelist, tgsNeg, 'IgnoreCase', true);
 
 n1 = sum(idx1);
 
+try
+    if issparse(X), X = full(X); end
+catch
+    warning('Keep using sparse X.');
+end
+
 methodid = 1;
 switch methodid
     case 1
