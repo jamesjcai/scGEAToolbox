@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.toolbox" plugin-version="1.0">
-  <configuration build-checksum="3248086692" file="C:\Users\jcai\Documents\GitHub\scGEAToolbox\scGEAToolbox.prj" location="C:\Users\jcai\Documents\GitHub\scGEAToolbox" name="scGEAToolbox" target="target.toolbox" target-name="Package Toolbox">
+  <configuration build-checksum="3248086692" file="Z:\Cailab\GitHub\scGEAToolbox\scGEAToolbox.prj" location="Z:\Cailab\GitHub\scGEAToolbox" name="scGEAToolbox" target="target.toolbox" target-name="Package Toolbox">
     <param.appname>scGEAToolbox</param.appname>
     <param.authnamewatermark>James Cai</param.authnamewatermark>
     <param.email>jcai@tamu.edu</param.email>
@@ -7,20 +7,11 @@
     <param.summary>Single-cell Gene Expression Analysis Toolbox</param.summary>
     <param.description>scRNAseq data analysis toolbox</param.description>
     <param.screenshot>${PROJECT_ROOT}\resources\Images\scgeatool.png</param.screenshot>
-    <param.version>24.6.0</param.version>
+    <param.version>24.6.1</param.version>
     <param.output>${PROJECT_ROOT}\scGEAToolbox.mltbx</param.output>
-    <param.products.name>
-      <item>MATLAB Report Generator</item>
-      <item>Statistics and Machine Learning Toolbox</item>
-    </param.products.name>
-    <param.products.id>
-      <item>44</item>
-      <item>19</item>
-    </param.products.id>
-    <param.products.version>
-      <item>24.2</item>
-      <item>24.2</item>
-    </param.products.version>
+    <param.products.name />
+    <param.products.id />
+    <param.products.version />
     <param.platforms />
     <param.guid>6597c9c8-34b6-4fe4-a150-99bf81bbb77f</param.guid>
     <param.exclude.filters>% List files contained in your toolbox folder that you would like to exclude
@@ -60,15 +51,11 @@ TIMESTAMP</param.exclude.filters>
     <param.examples />
     <param.demosxml />
     <param.apps />
-    <param.registered.apps>
-      <file>${PROJECT_ROOT}\SCGEATOOL.mlapp</file>
-    </param.registered.apps>
+    <param.registered.apps />
     <param.docs>${PROJECT_ROOT}\info.xml</param.docs>
     <param.getting.started.guide>${PROJECT_ROOT}\doc\GettingStarted.mlx</param.getting.started.guide>
     <param.matlabpath.excludes />
-    <param.javaclasspath.excludes>
-      <item>/+run/thirdparty/umapFileExchange/webDownload.jar</item>
-    </param.javaclasspath.excludes>
+    <param.javaclasspath.excludes />
     <param.exported.on.package>false</param.exported.on.package>
     <param.required.addons />
     <param.matlab.project.id />
@@ -91,12 +78,17 @@ TIMESTAMP</param.exclude.filters>
       <param.email />
       <param.company />
       <param.output />
+      <param.products.name />
+      <param.products.id />
+      <param.products.version />
       <param.platforms />
       <param.exclude.pcodedmfiles />
       <param.examples />
       <param.demosxml />
       <param.apps />
+      <param.registered.apps />
       <param.matlabpath.excludes />
+      <param.javaclasspath.excludes />
       <param.exported.on.package />
       <param.required.addons />
       <param.matlab.project.id />
@@ -215,11 +207,11 @@ TIMESTAMP</param.exclude.filters>
     <fileset.depfun.excluded />
     <fileset.package />
     <build-deliverables>
-      <file location="${PROJECT_ROOT}" name="scGEAToolbox.mltbx" optional="false">C:\Users\jcai\Documents\GitHub\scGEAToolbox\scGEAToolbox.mltbx</file>
+      <file location="${PROJECT_ROOT}" name="scGEAToolbox.mltbx" optional="false">Z:\Cailab\GitHub\scGEAToolbox\scGEAToolbox.mltbx</file>
     </build-deliverables>
     <workflow />
     <matlab>
-      <root>C:\Program Files\MATLAB\R2024b</root>
+      <root>D:\MATLAB\R2024b</root>
       <toolboxes>
         <toolbox name="matlabcoder" />
         <toolbox name="neuralnetwork" />

@@ -10,12 +10,15 @@ import mlreportgen.ppt.*;
 answer = questdlg('Export to PowerPoint?');
 switch answer
     case 'Yes'
-        fw = gui.gui_waitbar;
+        if ~usejava('desktop')
+           warndlg('This function is not supported in MATLAB Online and may not work properly in standalone applications.', '');
+           return;
+        end        
         if ismcc || isdeployed
             makePPTCompilable();
             warndlg('This function may not work properly in standalone applications.', '');
-        end        
-
+        end
+        fw = gui.gui_waitbar;
         N = length(F);
         images = cell(N, 1);
 
@@ -51,15 +54,18 @@ switch answer
         end
         warning on
         close(ppt);
-        rptview(ppt);
         len = length(images);
         for i = 1:len
             delete(images{i});
         end
-        gui.gui_waitbar(fw);  
+        gui.gui_waitbar(fw);
+        try
+           rptview(ppt);
+        catch ME
+            warndlg(ME.message,'');
+        end
     otherwise
        
 end
-
 
 end
