@@ -203,7 +203,35 @@ TIMESTAMP</param.exclude.filters>
       <file>${PROJECT_ROOT}\scgeatool.m</file>
       <file>${PROJECT_ROOT}\tensor_toolbox</file>
     </fileset.rootfiles>
-    <fileset.depfun.included />
+    <fileset.depfun.included>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\+quantum\+internal\+optimization\+tabusearch\@MultiCallTabuSearch\callTabuOnTransformedProblem.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\+quantum\+internal\+optimization\+tabusearch\@MultiCallTabuSearch\callTabuOnTransformedProblemCpp.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\+quantum\+internal\+optimization\+tabusearch\@MultiCallTabuSearch\initializeRunTimeDefaults.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\+quantum\+internal\+optimization\+tabusearch\@MultiCallTabuSearch\initialPoint.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\+quantum\+internal\+optimization\+tabusearch\@MultiCallTabuSearch\localsearch.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\+quantum\+internal\+optimization\+tabusearch\@MultiCallTabuSearch\moveDiagonal2Linear.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\+quantum\+internal\+optimization\+tabusearch\@MultiCallTabuSearch\MultiCallTabuSearch.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\+quantum\+internal\+optimization\+tabusearch\@MultiCallTabuSearch\mustBeDouble.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\+quantum\+internal\+optimization\+tabusearch\@MultiCallTabuSearch\neigborhoodsearch.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\+quantum\+internal\+optimization\+tabusearch\@MultiCallTabuSearch\prepareQuboForTabu.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\+quantum\+internal\+optimization\+tabusearch\@MultiCallTabuSearch\search.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\+quantum\+internal\+optimization\+tabusearch\@MultiCallTabuSearch\transformProblem.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\+quantum\+internal\+optimization\+tabusearch\@MultiCallTabuSearch\updateIterativeDisplay.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\+quantum\+internal\+optimization\+tabusearch\@MultiCallTabuSearch\updatemodel.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\+quantum\+internal\+optimization\+tabusearch\DenseFixedPositionSymmetric.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\+quantum\+internal\+optimization\+tabusearch\FixedPositionSymmetric.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\+quantum\+internal\+optimization\+tabusearch\mx_simpletabusearch.mexw64</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\+quantum\+internal\+optimization\+tabusearch\SparseFixedPositionSymmetric.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\+quantum\+internal\+optimization\AbstractAlgorithm.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\+quantum\+internal\+optimization\AbstractAlgorithmResult.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\@qubo\qubo.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\@quboResult\quboResult.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\@tabuSearch\generateNextCallState.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\@tabuSearch\tabuSearch.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\@tabuSearchResult\tabuSearchResult.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\quantum\+quantum\+internal\+aws\addDLLLocationToSystemPathIfNecessary.m</file>
+      <file>${MATLAB_ROOT}\toolbox\local\userpath.m</file>
+    </fileset.depfun.included>
     <fileset.depfun.excluded />
     <fileset.package />
     <build-deliverables>
