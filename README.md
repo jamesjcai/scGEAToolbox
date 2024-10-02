@@ -67,4 +67,4 @@ If you have any questions or require assistance using scGEAToolbox, please [cont
 
 ## Usage
 
-![visits](https://visit-counter.vercel.app/counter.png?page=https%3A%2F%2Fraw.githubusercontent.com%2Fjamesjcai%2FscGEAToolbox%2Fmain%2FscGEAToolbox.prj&s=40&c=00ff00&bg=00000000&no=2&ff=digi&tb=&ta=)
+![visits](https://visit-counter.vercel.app/counter.png?page=https%3A%2F%2Fraw.githubusercontent.com%2Fjamesjcai%2FscGEAToolbox%2Fmain%2FscGEAToolbox.prj&s=28&c=00ff00&bg=00000000&no=2&ff=digi&tb=Count%3A&ta=)
