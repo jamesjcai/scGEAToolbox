@@ -1,7 +1,7 @@
 function [hFig] = i_dotplot(X, g, c, cL, tgene, uselog, ttxt, parentfig)
 
 if nargin < 8, parentfig = []; end
-if nargin < 7, ttxt=[]; end
+if nargin < 7, ttxt = []; end
 DOTSIZE = 0.5;
 cL=cL(:);
 
@@ -133,7 +133,8 @@ if ~isempty(ttxt)
     title(ttxt);
 end
 
-tb = findall(hFig, 'Tag', 'FigureToolBar'); 
+%  tb = findall(hFig, 'Tag', 'FigureToolBar');  % does not work MATLAB online
+tb = uitoolbar(hFig);
 uipushtool(tb, 'Separator', 'off');
 
 %tb = uitoolbar('Parent', hFig);

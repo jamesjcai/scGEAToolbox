@@ -4,8 +4,8 @@ FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
 
 answer = questdlg('Select Method', ...
-    '', 'Find All Markers', 'Marker Gene Heatmap', ...
-    'Find All Markers');
+    '', 'Marker Gene Heatmap', 'Find All Markers', ...
+    'Marker Gene Heatmap');
 switch answer
     case 'Find All Markers'
 
@@ -41,6 +41,8 @@ if ~isempty(T)
 else
     helpdlg('No results.', '');
 end
+
+
 end
 
 
@@ -168,7 +170,8 @@ set(gca, 'TickLength', [0, 0])
 % ======= customized heatmap - end
 
 % tb1 = uitoolbar(hFig);
-tb1 = findall(hFig, 'Tag', 'FigureToolBar');
+% tb1 = findall(hFig, 'Tag', 'FigureToolBar');
+tb1 = uitoolbar('Parent', hFig);
 uipushtool(tb1, 'Separator', 'off');
 
 pkg.i_addbutton2fig(tb1, 'off', {@i_saveM, M}, 'greencircleicon.gif', 'Save marker gene map...');

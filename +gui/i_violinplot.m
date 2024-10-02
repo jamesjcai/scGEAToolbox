@@ -21,7 +21,8 @@ title(strrep(ttxt, '_', '\_'));
 
 
 % tb = uitoolbar(hFig);
-tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
+% tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
+tb = uitoolbar('Parent', hFig);
 uipushtool(tb, 'Separator', 'off');
 
 pkg.i_addbutton2fig(tb, 'off', @i_savedata, 'export.gif', 'Export data...');

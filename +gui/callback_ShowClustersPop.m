@@ -82,7 +82,8 @@ for nf = 1:numfig
     end
     colormap(para.oldColorMap);
 end
-tb = findall(hFig, 'Tag', 'FigureToolBar');
+% tb = findall(hFig, 'Tag', 'FigureToolBar');
+tb = uitoolbar('Parent', hFig);
 uipushtool(tb, 'Separator', 'off');
 pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 pkg.i_addbutton2fig(tb, 'off', @in_scgeatoolsce, "icon-mat-touch-app-10.gif", 'Extract and Work on Separate SCEs...');

@@ -23,7 +23,8 @@ end
     hBr = brush(hFig);
     hBr.ActionPostCallback = {@onBrushAction, axesv};
 
-    tb = findall(hFig, 'Tag', 'FigureToolBar');
+    % tb = findall(hFig, 'Tag', 'FigureToolBar');
+    tb = uitoolbar('Parent', hFig);
     uipushtool(tb, 'Separator', 'off');
     pkg.i_addbutton2fig(tb, 'on',  @in_showgeneexp, 'list.gif', 'Select a gene to show expression...');
     pkg.i_addbutton2fig(tb, 'off',  @in_showcellstate, 'list2.gif', 'Select a gene to show expression...');

@@ -14,8 +14,9 @@ if isempty(thisc1), return; end
 
 if isempty(thisc2)
     hFig = figure("Visible","off", "DockControls", "off");
-    tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
-        % tb = uitoolbar(hFig);
+    % tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
+    
+        tb = uitoolbar(hFig);
         uipushtool(tb, 'Separator', 'off');
         % pkg.i_addbutton2fig(tb, 'off', [], "IMG00107.GIF", " ");
         %pkg.i_addbutton2fig(tb, 'off', @i_saveCrossTable, "export.gif", 'Save cross-table');
@@ -87,8 +88,8 @@ for k=1:2
     in_plot2;
 end
 
-tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
-    % tb = uitoolbar(hFig);
+% tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
+    tb = uitoolbar(hFig);
     uipushtool(tb, 'Separator', 'off');
     % pkg.i_addbutton2fig(tb, 'off', [], "IMG00107.GIF", " ");
     pkg.i_addbutton2fig(tb, 'off', @i_saveCrossTable, "export.gif", 'Save cross-table');

@@ -59,7 +59,8 @@ for k = 1:length(szc)
     xline(szc(k)+0.5, 'y-');
 end
 
-tb = findall(hFig, 'Tag', 'FigureToolBar');
+% tb = findall(hFig, 'Tag', 'FigureToolBar');
+tb = uitoolbar('Parent', hFig);
 uipushtool(tb, 'Separator', 'off');
 pkg.i_addbutton2fig(tb, 'on', {@gui.i_pickcolormap, c}, 'plotpicker-compass.gif', 'Pick new color map...');
 pkg.i_addbutton2fig(tb, 'off', @gui.i_changefontsize, 'noun_font_size_591141.gif', 'ChangeFontSize');

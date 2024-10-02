@@ -155,7 +155,8 @@ CC.setSquareT_Prop('FaceColor',[0,0,0])
 % CC.setSquareT_N(2,'FaceColor',[.8,0,0])
 % CC.tickState('on')
 
-tb = findall(hFig, 'Tag', 'FigureToolBar');
+% tb = findall(hFig, 'Tag', 'FigureToolBar');
+tb = uitoolbar('Parent', hFig);
 uipushtool(tb, 'Separator', 'off');
 pkg.i_addbutton2fig(tb, 'off', @in_savedata, 'export.gif', 'Export data...');
 pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');

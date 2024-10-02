@@ -100,7 +100,7 @@ tabgp.SelectionChangedFcn=@displaySelection;
 %uipushtool(tb, 'Separator', 'off');
 
 % b=allchild(tb0)
-tb = uitoolbar(hFig);
+tb = uitoolbar('Parent', hFig);
 % copyobj(b(4),tb);
 % delete(tb0);
 

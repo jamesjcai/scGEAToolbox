@@ -54,7 +54,7 @@ tabgp.SelectionChangedFcn = @displaySelection;
 
 % tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
 % uipushtool(tb, 'Separator', 'off');
-tb = uitoolbar(hFig);
+tb = uitoolbar('Parent', hFig);
 pkg.i_addbutton2fig(tb, 'off',  @i_genecards, 'fvtool_fdalinkbutton.gif', 'GeneCards...');
 % pkg.i_addbutton2fig(tb, 'on', {@i_PickColorMap, c}, 'plotpicker-compass.gif', 'Pick new color map...');
 pkg.i_addbutton2fig(tb, 'off', @i_showbarplot, "plotpicker-priceandvol.gif", 'Switch to Bar Plot');

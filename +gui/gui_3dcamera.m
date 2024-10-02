@@ -4,7 +4,8 @@ if nargin < 3, flatview = false; end
 if nargin < 2, prefix = ''; end
 if nargin < 1
     hFig = gcf;
-    tb = findall(hFig, 'Type', 'uitoolbar');
+    %tb = findall(hFig, 'Type', 'uitoolbar');
+    tb = uitoolbar('Parent', hFig);
     if isscalar(tb)
         tb = uitoolbar(hFig);
     else

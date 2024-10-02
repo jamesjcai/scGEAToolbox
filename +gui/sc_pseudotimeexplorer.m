@@ -26,7 +26,7 @@ end
 
 %defaultToolbar = findall(hFig,'Type','uitoolbar');
 %pt = uipushtool(defaultToolbar);
-tb = uitoolbar(hFig);
+tb = uitoolbar('Parent', hFig);
 pt = uipushtool(tb, 'Separator', 'off');
 [img, map] = imread(fullfile(matlabroot, ...
     'toolbox', 'matlab', 'icons', 'plotpicker-plot.gif'));

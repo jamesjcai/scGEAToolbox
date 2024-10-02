@@ -100,7 +100,8 @@ end
   
 tabgp.SelectionChangedFcn=@displaySelection;
 
-tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
+% tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
+tb = uitoolbar('Parent', hFig);
 uipushtool(tb, 'Separator', 'off');
 
 % b=allchild(tb0)

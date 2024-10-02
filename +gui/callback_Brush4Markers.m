@@ -34,10 +34,10 @@ ptsSelected = logical(h.BrushData.');
 
 
 if ~any(ptsSelected)
-    warndlg("No cells are brushed/selected.",'','modal');
-    answer=questdlg('Select cells by a grouping variable?','');
+    % warndlg("No cells are brushed/selected.",'','modal');
+    answer=questdlg('No cells are brushed/selected. You can select cells by a grouping variable. Continue?','');
     if ~strcmp(answer,'Yes'), return; end
-    [ptsSelected] = gui.i_select1classcells(sce, false);    
+    [ptsSelected] = gui.i_select1classcells(sce, false);
     if isempty(ptsSelected), return; end
     if all(ptsSelected)
         warndlg("All cells are in the same group.",'');

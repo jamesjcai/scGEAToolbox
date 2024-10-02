@@ -11,7 +11,8 @@ dt = datacursormode;
 dt.UpdateFcn = {@i_myupdatefcn1x, T.genelist(idx)};
 
 
-tb = findall(hFig, 'Tag', 'FigureToolBar'); 
+% tb = findall(hFig, 'Tag', 'FigureToolBar'); 
+tb = uitoolbar('Parent', hFig);
 uipushtool(tb, 'Separator', 'off');
 
 %tb = uitoolbar('Parent', hFig);

@@ -58,7 +58,8 @@ function callback_MultiGroupingView(src, ~)
             hBr = brush(hFig);
             hBr.ActionPostCallback = {@onBrushAction, axesv};
 
-            tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
+            % tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
+            tb = uitoolbar('Parent', hFig);
             uipushtool(tb, 'Separator', 'off');
 
             pkg.i_addbutton2fig(tb, 'on', @in_showclustlabel, "plotpicker-scatter.gif", "Show cluster labels");
