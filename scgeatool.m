@@ -377,7 +377,18 @@ end
 showuseronboarding = getpref('scgeatoolbox', 'useronboardingtoolbar', false);
 if ~showuseronboarding, set(UserToolbarHandle, 'Visible', 'off'); end
 
-
+% ----------------------------------
+try
+    [majneedupdate, v1, v2] = pkg.i_majvercheck;
+catch ME    
+    % return;
+    majneedupdate = false;
+end
+if majneedupdate
+    fprintf('There is a new version of scGEAToolbox (%s vs. %s). To install, type:\n\n', v2, v1);
+    fprintf('unzip(''https://github.com/jamesjcai/scGEAToolbox/archive/main.zip'');\n');
+    fprintf('addpath(''./scGEAToolbox-main'');\n');
+end
 % ----------------------------------
 
     function in_sc_openscedlg(~, event)        
