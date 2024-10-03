@@ -2,6 +2,11 @@ function i_export2pptx(F, glist)
 
 if nargin < 2, glist = {[]}; end
 
+if ~license('test','MATLAB_Report_Generator')
+    warndlg('Unable to check out a Report Generator license. This function requires MATLAB Report Generator.', '');
+    return;
+end
+
 pw1 = fileparts(mfilename('fullpath'));
 pth = fullfile(pw1, '..', 'resources', 'Misc', 'myTemplate.pptx');
 %dbfile1 = fullfile(pw1, '+run', 'external', 'stringdb', 'stringdb_human.mat');
@@ -24,15 +29,15 @@ switch answer
 
         OUTppt = [tempname, '.pptx'];
         ppt = Presentation(OUTppt, pth);
-        try
+        %try
             open(ppt);
-        catch ME
-            pause(0.5);
-            gui.gui_waitbar(fw, true);
-            pause(0.5);
-            waitfor(errordlg(ME.message,''));
-            return;
-        end
+        % catch ME
+        %     pause(0.5);
+        %     gui.gui_waitbar(fw, true);
+        %     pause(0.5);
+        %     waitfor(errordlg(ME.message,''));
+        %     return;
+        % end
         
         warning off
         for k = 1:N
@@ -59,11 +64,11 @@ switch answer
             delete(images{i});
         end
         gui.gui_waitbar(fw);
-        try
+        %try
            rptview(ppt);
-        catch ME
-            warndlg(ME.message,'');
-        end
+        %catch ME
+        %    warndlg(ME.message,'');
+        %end
     otherwise
        
 end

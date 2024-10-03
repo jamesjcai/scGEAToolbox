@@ -35,6 +35,7 @@ if isempty(idx)
     score = [];
     return;
 end
+idx = idx(1);    % in case there is duplicate in the score name list
 if ~(idx <= height(T) && idx > 0 && idx == floor(idx))
     score = [];
     return;

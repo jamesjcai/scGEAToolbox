@@ -384,9 +384,9 @@ try
 catch
 end
 if majneedupdate
-    fprintf('There is a new version of scGEAToolbox (%s vs. %s). To install, type:\n\n', v2, v1);
-    fprintf('unzip(''https://github.com/jamesjcai/scGEAToolbox/archive/main.zip'');\n');
-    fprintf('addpath(''./scGEAToolbox-main'');\n');
+    %fprintf('There is a new version of scGEAToolbox (%s vs. %s). To install, type:\n\n', v2, v1);
+    %fprintf('unzip(''https://github.com/jamesjcai/scGEAToolbox/archive/main.zip'');\n');
+    %fprintf('addpath(''./scGEAToolbox-main'');\n');
 end
 in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGEATOOL');
 
