@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.toolbox" plugin-version="1.0">
-  <configuration build-checksum="3248086692" file="Z:\Cailab\GitHub\scGEAToolbox\scGEAToolbox.prj" location="Z:\Cailab\GitHub\scGEAToolbox" name="scGEAToolbox" target="target.toolbox" target-name="Package Toolbox">
+  <configuration build-checksum="3813726369" file="Z:\Cailab\GitHub\scGEAToolbox\scGEAToolbox.prj" location="Z:\Cailab\GitHub\scGEAToolbox" name="scGEAToolbox" target="target.toolbox" target-name="Package Toolbox">
     <param.appname>scGEAToolbox</param.appname>
     <param.authnamewatermark>James Cai</param.authnamewatermark>
     <param.email>jcai@tamu.edu</param.email>
@@ -7,11 +7,23 @@
     <param.summary>Single-cell Gene Expression Analysis Toolbox</param.summary>
     <param.description>scRNAseq data analysis toolbox</param.description>
     <param.screenshot>${PROJECT_ROOT}\resources\Images\scgeatool.png</param.screenshot>
-    <param.version>24.6.3</param.version>
+    <param.version>24.6.4</param.version>
     <param.output>${PROJECT_ROOT}\scGEAToolbox.mltbx</param.output>
-    <param.products.name />
-    <param.products.id />
-    <param.products.version />
+    <param.products.name>
+      <item>MATLAB</item>
+      <item>MATLAB Report Generator</item>
+      <item>Statistics and Machine Learning Toolbox</item>
+    </param.products.name>
+    <param.products.id>
+      <item>1</item>
+      <item>44</item>
+      <item>19</item>
+    </param.products.id>
+    <param.products.version>
+      <item>24.2</item>
+      <item>24.2</item>
+      <item>24.2</item>
+    </param.products.version>
     <param.platforms />
     <param.guid>6597c9c8-34b6-4fe4-a150-99bf81bbb77f</param.guid>
     <param.exclude.filters>% List files contained in your toolbox folder that you would like to exclude
@@ -33,6 +45,7 @@
 % All files matching a pattern in all subfolders of the toolbox folder:
 % **/*.bak
 %
+**/*.asv
 **/.git
 **/.github
 .git/*
@@ -46,6 +59,7 @@ resources/STRING/stringdb_mouse.mat
 **/docs
 **/scgeatoolstandaloneApplication
 **/ui
+**/+qtm
 TIMESTAMP</param.exclude.filters>
     <param.exclude.pcodedmfiles>true</param.exclude.pcodedmfiles>
     <param.examples />
@@ -54,7 +68,9 @@ TIMESTAMP</param.exclude.filters>
     <param.registered.apps />
     <param.docs>${PROJECT_ROOT}\info.xml</param.docs>
     <param.getting.started.guide>${PROJECT_ROOT}\doc\GettingStarted.mlx</param.getting.started.guide>
-    <param.matlabpath.excludes />
+    <param.matlabpath.excludes>
+      <item>/D__/MATLAB/R2024b/toolbox/local</item>
+    </param.matlabpath.excludes>
     <param.javaclasspath.excludes />
     <param.exported.on.package>false</param.exported.on.package>
     <param.required.addons />
@@ -78,16 +94,12 @@ TIMESTAMP</param.exclude.filters>
       <param.email />
       <param.company />
       <param.output />
-      <param.products.name />
-      <param.products.id />
-      <param.products.version />
       <param.platforms />
       <param.exclude.pcodedmfiles />
       <param.examples />
       <param.demosxml />
       <param.apps />
       <param.registered.apps />
-      <param.matlabpath.excludes />
       <param.javaclasspath.excludes />
       <param.exported.on.package />
       <param.required.addons />
@@ -112,7 +124,6 @@ TIMESTAMP</param.exclude.filters>
     <fileset.rootfiles>
       <file>${PROJECT_ROOT}\+gui</file>
       <file>${PROJECT_ROOT}\+pkg</file>
-      <file>${PROJECT_ROOT}\+qtm</file>
       <file>${PROJECT_ROOT}\+run</file>
       <file>${PROJECT_ROOT}\+ten</file>
       <file>${PROJECT_ROOT}\@SingleCellExperiment</file>
@@ -204,32 +215,6 @@ TIMESTAMP</param.exclude.filters>
       <file>${PROJECT_ROOT}\tensor_toolbox</file>
     </fileset.rootfiles>
     <fileset.depfun.included>
-      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\+quantum\+internal\+optimization\+tabusearch\@MultiCallTabuSearch\callTabuOnTransformedProblem.m</file>
-      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\+quantum\+internal\+optimization\+tabusearch\@MultiCallTabuSearch\callTabuOnTransformedProblemCpp.m</file>
-      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\+quantum\+internal\+optimization\+tabusearch\@MultiCallTabuSearch\initializeRunTimeDefaults.m</file>
-      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\+quantum\+internal\+optimization\+tabusearch\@MultiCallTabuSearch\initialPoint.m</file>
-      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\+quantum\+internal\+optimization\+tabusearch\@MultiCallTabuSearch\localsearch.m</file>
-      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\+quantum\+internal\+optimization\+tabusearch\@MultiCallTabuSearch\moveDiagonal2Linear.m</file>
-      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\+quantum\+internal\+optimization\+tabusearch\@MultiCallTabuSearch\MultiCallTabuSearch.m</file>
-      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\+quantum\+internal\+optimization\+tabusearch\@MultiCallTabuSearch\mustBeDouble.m</file>
-      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\+quantum\+internal\+optimization\+tabusearch\@MultiCallTabuSearch\neigborhoodsearch.m</file>
-      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\+quantum\+internal\+optimization\+tabusearch\@MultiCallTabuSearch\prepareQuboForTabu.m</file>
-      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\+quantum\+internal\+optimization\+tabusearch\@MultiCallTabuSearch\search.m</file>
-      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\+quantum\+internal\+optimization\+tabusearch\@MultiCallTabuSearch\transformProblem.m</file>
-      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\+quantum\+internal\+optimization\+tabusearch\@MultiCallTabuSearch\updateIterativeDisplay.m</file>
-      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\+quantum\+internal\+optimization\+tabusearch\@MultiCallTabuSearch\updatemodel.m</file>
-      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\+quantum\+internal\+optimization\+tabusearch\DenseFixedPositionSymmetric.m</file>
-      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\+quantum\+internal\+optimization\+tabusearch\FixedPositionSymmetric.m</file>
-      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\+quantum\+internal\+optimization\+tabusearch\mx_simpletabusearch.mexw64</file>
-      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\+quantum\+internal\+optimization\+tabusearch\SparseFixedPositionSymmetric.m</file>
-      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\+quantum\+internal\+optimization\AbstractAlgorithm.m</file>
-      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\+quantum\+internal\+optimization\AbstractAlgorithmResult.m</file>
-      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\@qubo\qubo.m</file>
-      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\@quboResult\quboResult.m</file>
-      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\@tabuSearch\generateNextCallState.m</file>
-      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\@tabuSearch\tabuSearch.m</file>
-      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\optimization\@tabuSearchResult\tabuSearchResult.m</file>
-      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\quantum\+quantum\+internal\+aws\addDLLLocationToSystemPathIfNecessary.m</file>
       <file>${MATLAB_ROOT}\toolbox\local\userpath.m</file>
     </fileset.depfun.included>
     <fileset.depfun.excluded />
