@@ -45,7 +45,7 @@ ax0=cell(n,1);
 h0=cell(n,1);
 
 OldTitle = cell(n,1);
-for k=1:n
+for k = 1:n
     tab{k} = uitab(tabgp, 'Title', sprintf('%s',tabnamelist(k)));
     ax0{k} = axes('parent',tab{k});
     h0{k} = scatter(ax0{k}, thisx(:), y{k}(:));
@@ -90,7 +90,7 @@ pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resiz
 ybox = false;
 
 if ~(ismcc || isdeployed)
-    if ~isempty(which('curveFitter'))
+    if license('test','Curve_Fitting_Toolbox') && ~isempty(which('curveFitter'))
         pkg.i_addbutton2fig(tb, 'on', @in_curvefitter, 'icon-fa-stack-exchange-10.gif', 'Invoke curveFitter');
     end
 end

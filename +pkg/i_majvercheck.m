@@ -49,7 +49,7 @@ if nargout > 2, v2web = v2web{1}; end
 if nargout > 3
     im = [];
     try
-        im = webread('https://visit-counter.vercel.app/counter.png?page=https%3A%2F%2Fgithub.com%2Fjamesjcai%2FscGEAToolbox%2F&s=20&c=ffffff&bg=00000000&no=2&ff=digi&tb=&ta=');
+        im = webread('https://visit-counter.vercel.app/counter.png?page=https%3A%2F%2Fgithub.com%2Fjamesjcai%2FscGEAToolbox%2F&s=15&c=ffffff&bg=00000000&no=2&ff=digi&tb=&ta=');
     catch
     end
 end
