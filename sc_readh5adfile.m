@@ -36,10 +36,18 @@ if isequal(data(1:5), round(data(1:5)))
     indices = pkg.e_guessh5field(filenm, {'/X/'}, {'indices'}, true);
     indptr = pkg.e_guessh5field(filenm, {'/X/'}, {'indptr'}, true);
 else
-    disp('/X has been transformed/normalized, but SCGEATOOL needs raw counts. Reading /raw/X');
-    data = pkg.e_guessh5field(filenm, {'/raw/X/'}, {'data'}, true);
-    indices = pkg.e_guessh5field(filenm, {'/raw/X/'}, {'indices'}, true);
-    indptr = pkg.e_guessh5field(filenm, {'/raw/X/'}, {'indptr'}, true);
+    disp('/X has been transformed/normalized. Try to read /raw/X...');
+    try
+        data = pkg.e_guessh5field(filenm, {'/raw/X/'}, {'data'}, true);
+        indices = pkg.e_guessh5field(filenm, {'/raw/X/'}, {'indices'}, true);
+        indptr = pkg.e_guessh5field(filenm, {'/raw/X/'}, {'indptr'}, true);
+        disp('/raw/X is read.');
+    catch ME
+        disp(ME.message)
+        indices = pkg.e_guessh5field(filenm, {'/X/'}, {'indices'}, true);
+        indptr = pkg.e_guessh5field(filenm, {'/X/'}, {'indptr'}, true);
+        disp('Reading transformed/normalized /X instead.');
+    end
 end
 
 
