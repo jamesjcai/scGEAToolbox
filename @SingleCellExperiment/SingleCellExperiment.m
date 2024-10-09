@@ -331,6 +331,15 @@ methods
         obj.metadata = [obj.metadata; infostr];
     end
 
+    function obj = setbatchid(obj, id)
+        if ischar(id), id = string(id); end
+        if isscalar(id)
+            obj.c_batch_id = repmat(id, obj.NumCells, 1);
+        elseif numel(id) == obj.NumCells
+            obj.c_batch_id = id;
+        end
+    end
+
     function c_check(obj)
         assert(~isempty(obj.c), 'SCE.C must be defined!');
     end

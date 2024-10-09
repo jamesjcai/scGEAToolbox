@@ -12,8 +12,8 @@ if nargin < 3 || isempty(libszcutoff), libszcutoff = 500; end % 1000
 try
     [X, keptidx] = sc_rmmtcells(X, genelist, mtratio);
 
-catch
-
+catch ME
+    warning(ME.message);
     Xobj = pkg.refwrap(X);
     clear X
     [keptidx] = obj_rmmtcells(Xobj, genelist, mtratio);

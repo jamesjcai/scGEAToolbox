@@ -23,8 +23,10 @@ if sum(idx) > 0
                 sum(~keptidx), mtratio, mtratio*100);
         end
     else
-        fprintf('No cells with mt-read ratio >=%f (or %f%%) are removed.\n', ...
-            mtratio, mtratio*100);
+        if vebrose
+            fprintf('No cells with mt-read ratio >=%f (or %f%%) are removed.\n', ...
+                mtratio, mtratio*100);
+        end
     end
 else
     if vebrose

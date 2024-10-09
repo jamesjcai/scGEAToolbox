@@ -69,7 +69,8 @@
 	"inputs":
 	[
 		{"name":"sces", "kind":"required", "type":"cell"},
-        {"name":"method", "kind":"positional", "type":["string","char"]}        
+        {"name":"method", "kind":"positional","type":["char", "choices={'intersect', 'union'}"]},
+        {"name":"keepbatchid", "kind":"positional", "type":["logical","scalar"]}
 	]
 },
 "sc_splinefit2":
