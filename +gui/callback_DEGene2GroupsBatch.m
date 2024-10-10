@@ -47,8 +47,10 @@ for k=1:length(CellTypeList)
             'average expression in sample 2';...
             'percentage of cells expressing the gene in sample 1';...
             'percentage of cells expressing the gene in sample 2';...
-            'adjusted p-value';...
+            'adjusted p-value'; 'test statistic'; ...
              sprintf('%d',sum(i1&idx)); sprintf('%d',sum(i2&idx))};
+        %assignin('base','Item', Item);
+        %assignin('base','Description', Description);        
         Tnt = table(Item, Description);
         
         [Tup, Tdn] = pkg.e_processDETable(T);
@@ -107,7 +109,7 @@ if strcmp(answer,'Yes'), winopen(outdir); end
 
 end
 
-function [T]=in_DETableProcess(T,cL1,cL2)
+function [T] = in_DETableProcess(T, cL1, cL2)
     try
         T = sortrows(T, 'p_val_adj', 'ascend');
         T = sortrows(T, 'pct_1', 'ascend');

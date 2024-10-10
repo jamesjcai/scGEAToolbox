@@ -58,7 +58,7 @@ try
 
 % -------------
 
-hFig = figure('visible', 'off','Position',FigureHandle.Position);
+hFig = figure('visible', 'off', 'Position', FigureHandle.Position);
 tabgp = uitabgroup();
 for nf = 1:numfig
     tab{nf} = uitab(tabgp, 'Title', sprintf('Tab%d',nf));

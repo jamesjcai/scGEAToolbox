@@ -15,7 +15,7 @@ fprintf('%d genes removed.\n', a-b);
 if ~done, return; end
 
 %[runenrichr] = gui.i_enrichrprep;
-[runenrichr] = questdlg('Run Enrichr (Python required) with top 250 DE genes? Results will be saved in the output Excel files.','');
+[runenrichr] = questdlg('Run Enrichr (Python required) with top 250 DV genes? Results will be saved in the output Excel files.','');
 if strcmp(runenrichr,'Cancel'), return; end
 
 fw = gui.gui_waitbar_adv;
@@ -116,6 +116,7 @@ for k=1:length(CellTypeList)
             'Sign of difference';...
             sprintf('%d',sce1.NumCells); sprintf('%d',sce2.NumCells)};
         Tnt = table(Item, Description);
+
         try
             writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All genes');
             writetable(Tup, filesaved, "FileType", "spreadsheet", 'Sheet', 'Up-regulated');
