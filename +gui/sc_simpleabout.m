@@ -4,7 +4,7 @@ function [hFig] = sc_simpleabout(parentfig, im2)
     mfolder = fileparts(mfilename('fullpath'));
     splashpng = '700813831-hero-1536x1536.png';
     [im] = imread(fullfile(mfolder,'..','resources', 'Images', splashpng));
-    if ~isempty(im2) && ~isempty(which('imfuse')) && license('test','image_toolbox')`
+    if ~isempty(im2) && ~isempty(which('imfuse')) && license('test','image_toolbox')
         im = imfuse(im, im2, 'blend');
     end
 if nargin<1
