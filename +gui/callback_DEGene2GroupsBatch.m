@@ -13,6 +13,8 @@ if ~done, return; end
 [runenrichr] = questdlg('Run Enrichr with top 250 DE genes? Results will be saved in the output Excel files.','');
 if strcmp(runenrichr,'Cancel'), return; end
 
+[paramset] = gui.i_degparamset;
+
 fw = gui.gui_waitbar_adv;
 for k=1:length(CellTypeList)
    
@@ -30,7 +32,8 @@ for k=1:length(CellTypeList)
     idx = sce.c_cell_type_tx == CellTypeList{k};
     T = [];
     try
-        T = sc_deg(sce.X(:, i1&idx), sce.X(:, i2&idx), sce.g, 1, false);
+        T = sc_deg(sce.X(:, i1&idx), sce.X(:, i2&idx), ...
+                   sce.g, 1, false);
     catch ME
         disp(ME.message);
     end
@@ -53,7 +56,7 @@ for k=1:length(CellTypeList)
         %assignin('base','Description', Description);        
         Tnt = table(Item, Description);
         
-        [Tup, Tdn] = pkg.e_processDETable(T);
+        [Tup, Tdn] = pkg.e_processDETable(T, paramset);
         try
             writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All_genes');
             writetable(Tup, filesaved, "FileType", "spreadsheet", 'Sheet', 'Up-regulated');
@@ -106,8 +109,9 @@ if strcmp(answer,'Yes'), winopen(outdir); end
             writetable(Tmf1, filesaved, "FileType", "spreadsheet", 'Sheet', shtname);
         end
     end
+end   % end of function
 
-end
+
 
 function [T] = in_DETableProcess(T, cL1, cL2)
     try

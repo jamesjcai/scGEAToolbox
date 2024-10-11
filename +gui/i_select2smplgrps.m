@@ -62,9 +62,12 @@ end
 
 
 % [ci, cLi] = grp2idx(thisc);
- 
- [answer] = questdlg('Select two samples or two sample groups?', '', ...
-         'Two Samples', 'Two Sample Groups', 'Cancel', 'Two Samples');
+ if n == 2
+     answer = 'Two Samples';
+ elseif n > 2
+     [answer] = questdlg('Select two samples or two sample groups?', '', ...
+             'Two Samples', 'Two Sample Groups', 'Cancel', 'Two Samples');
+ end
  if isempty(answer), return; end
  switch answer
      case 'Two Samples'

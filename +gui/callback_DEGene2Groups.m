@@ -157,7 +157,7 @@ end
 
     tf = 0;
     if ~(ismcc || isdeployed) && strcmp(filetype, 'Workspace')
-        [Tup, Tdn] = pkg.e_processDETable(T, true);
+        [Tup, Tdn] = pkg.e_processDETable(T);
         if isempty(Tup) && isempty(Tdn)
             return;
         end
@@ -175,7 +175,7 @@ end
         if strcmp(filetype, 'Excel file')
             answer = questdlg('Save up- and down-regulated genes to seperate sheets?');
             if strcmp(answer, 'Yes')
-                [Tup, Tdn] = pkg.e_processDETable(T, true);
+                [Tup, Tdn] = pkg.e_processDETable(T);
                 % strcmp(extractAfter(filesaved,strlength(filesaved)-4),'xlsx')
                 if ~isempty(Tup)
                     writetable(Tup, filesaved, "FileType", "spreadsheet", 'Sheet', 'Up-regulated');
@@ -192,7 +192,7 @@ end
             % strcmp(extractAfter(filesaved,strlength(filesaved)-3),'txt')
             answer = questdlg('Save up- and down-regulated genes to seperate files?');
             if strcmp(answer, 'Yes')
-                [Tup, Tdn] = pkg.e_processDETable(T, true);
+                [Tup, Tdn] = pkg.e_processDETable(T);
                 if ~isempty(Tup)
                     [~, ~] = gui.i_exporttable(Tup, true, 'Tup', 'Upregulated', 'Text file');
                 end
