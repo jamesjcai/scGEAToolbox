@@ -401,5 +401,20 @@
         {"name":"min_cells_nonzero", "kind":"namevalue","type":["scalar","choices=[0.01,0.05]"]},
         {"name":"removemtgenes", "kind":"namevalue", "type":["logical","scalar"]}
 	]
+},
+"sc_deg": {
+"inputs": [
+  {"name": "X", "kind": "required", "type": "double", "rank": 2, "dimensions": "dynamic", "description": "Matrix for group 1 (genes x cells)"},
+  {"name": "Y", "kind": "required", "type": "double", "rank": 2, "dimensions": "dynamic", "description": "Matrix for group 2 (genes x cells)"},
+  {"name": "genelist", "kind": "optional", "type": "string", "rank": 1, "dimensions": "dynamic", "defaultValue": "string(1:size(X, 1))'", "description": "List of gene names"},
+  {"name": "methodid", "kind": "optional", "type": "double", "rank": 0, "defaultValue": "1", "description": "Method choice: 1 for Mann–Whitney U test, 2 for t-test"},
+  {"name": "guiwaitbar", "kind": "optional", "type": "logical", "rank": 0, "defaultValue": "false", "description": "Show waitbar"}
+],
+"outputs": [
+  {"name": "T", "kind": "required", "type": "table", "rank": 2, "dimensions": "dynamic", "description": "Table with DEG analysis results"},
+  {"name": "Tup", "kind": "optional", "type": "table", "rank": 2, "dimensions": "dynamic", "description": "Processed table for up-regulated genes"},
+  {"name": "Tdn", "kind": "optional", "type": "table", "rank": 2, "dimensions": "dynamic", "description": "Processed table for down-regulated genes"}
+],
+"description": "DEG analysis using Mann–Whitney U test or t-test"
 }
 }
