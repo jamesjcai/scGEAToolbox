@@ -16,7 +16,7 @@ if guiwaitbar
     gui.gui_waitbar_adv(fw, 0.15);
 end
 for k = 1:length(accv)
-    [sce] = sc_readgeoaccession(strtrim(accv(k)));
+    [sce] = sc_readgeoaccess(strtrim(accv(k)));
     if guiwaitbar
         gui.gui_waitbar_adv(fw, 0.15+0.75*(k / length(accv)));
     end

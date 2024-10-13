@@ -1,4 +1,4 @@
-function [sce] = sc_readgeoaccession(acc)
+function [sce] = sc_readgeoaccess(acc)
 
 % if length(strsplit(acc,{',',';',' '}))>1
 % end

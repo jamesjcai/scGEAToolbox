@@ -317,7 +317,7 @@ function [sce] = sc_openscedlg(~, ~)
                 else                        
                     try
                         fw = gui.gui_waitbar;
-                        [sce] = sc_readgeoaccession(acc);
+                        [sce] = sc_readgeoaccess(acc);
                         gui.gui_waitbar(fw);
                     catch ME
                         gui.gui_waitbar(fw);

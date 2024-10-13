@@ -5,8 +5,13 @@ value = webread('https://maayanlab.cloud/Enrichr/geneSetLibrary?mode=meta');
 n = length(value.libraries);
 GeneSetLibrary = strings(n, 1);
 for k = 1:n
-    GeneSetLibrary(k) = string(value.libraries{k}.libraryName);
+    try
+        GeneSetLibrary(k) = string(value.libraries{k}.libraryName);
+    catch ME
+        warning(ME.message);
+    end
 end
+GeneSetLibrary(GeneSetLibrary == "") = [];
 GeneSetLibrary = sort(GeneSetLibrary);
 
 

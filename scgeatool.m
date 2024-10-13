@@ -599,7 +599,7 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
 
     function in_closeRequest(hObject, ~)
         if ~(ismcc || isdeployed)
-            if isempty(sce)||sce.NumCells==0
+            if isempty(sce) || sce.NumCells==0
                 ButtonName = 'no';
             else
                 ButtonName = questdlg('Save SCE before closing SCGEATOOL?');
@@ -615,22 +615,10 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
                             pause(1);
                             delete(hObject);
                         end
-                        % labels = {'Save SCE to variable named:'};
-                        % vars = {'sce'};
-                        % sce = guidata(FigureHandle);
-                        % values = {sce};
-                        % [~, tf] = export2wsdlg(labels, vars, values, ...
-                        %     'Save Data to Workspace');
-                        % if tf
-                        %     delete(hObject);
-                        % else
-                        %     return;
-                        % end
                     end
                 case 'cancel'
                     return;
                 case 'no'
-                    % delete(hObject);
                     delete(FigureHandle);
                 otherwise
                     return;
@@ -640,68 +628,9 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
         end
     end
 
-    % function in_SimulateSCE(src, ~)
-    %     if ~isempty(sce) && sce.NumCells>0
-    %         answer = questdlg('Current SCE will be replaced. Continue?');
-    %         if ~strcmp(answer, 'Yes'), return; end
-    %     end
-    %     definput = {'3000', '5000'};
-    %     prompt = {'Number of genes:', ...
-    %         'Number of cells:'};
-    %     dlgtitle = 'Simulation Settings';
-    %     answer = inputdlg(prompt, dlgtitle, [1, 50], definput);
-    % 
-    %     if isempty(answer), return; end
-    %     try
-    %         numgenes = str2double(answer{1});
-    %         numcells = str2double(answer{2});
-    %         assert(isfinite(numgenes) & numgenes==floor(numgenes));
-    %         assert(isfinite(numcells) & numcells==floor(numcells));
-    %         assert((numgenes >= 1) && (numgenes <= 30000));
-    %         assert((numcells >= 1) && (numcells <= 30000));
-    %     catch
-    %         errordlg('Invalid parameter values.','');
-    %         return;
-    %     end
-    % 
-    %     try
-    %         fw = gui.gui_waitbar;
-    %         [X] = sc_simudata(numgenes, numcells,'lun');
-    %         [sce] = SingleCellExperiment(X);
-    %         [c, cL] = grp2idx(sce.c);
-    %         gui.gui_waitbar(fw);            
-    %         in_RefreshAll(src, [], false, false);
-    %     catch ME
-    %         gui.gui_waitbar(fw);
-    %         errordlg(ME.message,'');
-    %     end
-    % end
-
     function in_qcviolin(~, ~)
         gui.i_qcviolin(sce.X, sce.g, FigureHandle);
     end
-
-    % function in_GEOAccessionToSCE(src, ~)
-    %     answer = questdlg('Current SCE will be replaced. Continue?');
-    %     if ~strcmp(answer, 'Yes'), return; end
-    %     acc = inputdlg({'Input Number(s) (e.g., GSM3308547,GSM3308548):'}, ...
-    %         'GEO Accession', [1, 50], {'GSM3308547'});
-    %     if isempty(acc), return; end
-    %     acc = acc{1};
-    %     if strlength(acc) > 4 && ~isempty(regexp(acc, 'G.+', 'once'))
-    %         try
-    %             fw = gui.gui_waitbar;
-    %             [sce] = sc_readgeoaccession(acc);
-    %             [c, cL] = grp2idx(sce.c);
-    %             gui.gui_waitbar(fw);
-    %             guidata(FigureHandle, sce);
-    %             in_RefreshAll(src, [], false, false);
-    %         catch ME
-    %             gui.gui_waitbar(fw);
-    %             errordlg(ME.message,'');
-    %         end
-    %     end
-    % end
 
     function in_RunDataMapPlot(src, ~)
         if ~pkg.i_checkpython
