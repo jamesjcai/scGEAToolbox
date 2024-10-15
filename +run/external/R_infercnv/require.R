@@ -20,6 +20,8 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
 BiocManager::install("infercnv")
 
 
+
+
 checkPkg <- function(pkg){
     return(requireNamespace(pkg, quietly = TRUE))
 }
