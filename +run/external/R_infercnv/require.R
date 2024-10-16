@@ -1,10 +1,16 @@
 #setwd(getSrcDirectory()[1])
+checkPkg <- function(pkg){
+    return(requireNamespace(pkg, quietly = TRUE))
+}
+if(!checkPkg("BiocManager")) install.packages("BiocManager")
+if(!checkPkg("infercnv")) BiocManager::install("infercnv")
 
-if (!requireNamespace("DESeq2", quietly = TRUE)){
+
+if (!requireNamespace("infercnv", quietly = TRUE)){
 if (!requireNamespace("BiocManager", quietly = TRUE)){
     install.packages("BiocManager", repo="http://cran.rstudio.com/")
 }
-    BiocManager::install("SPIA")
+    BiocManager::install("infercnv")
 }
 
 if (!requireNamespace("rhdf5", quietly = TRUE)){

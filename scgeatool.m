@@ -952,7 +952,7 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
         if isempty(ndim), return; end
         fw = gui.gui_waitbar;
         try
-            [sce] = run.r_seurat(sce, ndim, wkdir);
+            [sce] = run.r_seurat(sce, ndim, wkdir, true);
             [c, cL] = grp2idx(sce.c);
         catch
             gui.gui_waitbar(fw);

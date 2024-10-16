@@ -24,11 +24,27 @@ FigureHandle = src.Parent.Parent;
 a = findall(FigureHandle, 'type', 'axes');
 h = findall(a, 'type', 'scatter');
 ptsSelected = logical(h.BrushData.');
-if ~any(ptsSelected)
-    helpdlg('Please use the brush in the axes toolbar to select root cell(s).', '');
-    return;
+if ~any(ptsSelected)    
+    % helpdlg('Please use the brush in the axes toolbar to select root cell(s).', '');
+    answer = questdlg('Use brush to select root cell(s). Ready?','');
+    if ~strcmp(answer, 'Yes'), return; end
+    b = brush(FigureHandle);
+    b.ActionPostCallback=@in_checkselected;
+    b.Enable="on";
+    disp('Waiting for user to finish brushing...');
+    uiwait(FigureHandle);  % Pauses the execution until uiresume is called
+    disp('User finished brushing!');  
+    b.Enable="off";
+    if any(ptsSelected)
+        answer = questdlg('Root cell(s) selected. Continue?','');
+        if ~strcmp(answer, 'Yes'), return; end
+    else
+        helpdlg('No root cell(s) are selected.','');
+        return;
+    end
 end
 idx = find(ptsSelected);
+if isempty(idx), warndlg('Root cell(s) is missing.',''); return; end
 
 [ndim] = gui.i_choose2d3d;
 if isempty(ndim), return; end
@@ -125,4 +141,9 @@ end
     %         return;
     % end
 
+    function in_checkselected(~, ~)
+        ptsSelected = logical(h.BrushData.');
+        uiresume(FigureHandle);
+    end
 end
+
