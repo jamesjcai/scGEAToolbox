@@ -101,7 +101,7 @@ bb = 'No, just show values';
                     if isempty(posg) || isempty(ctselected), return; end
 
                     n = length(posg);
-                    y = cell(n,1);                    
+                    y = cell(n,1);
                     [~, methodid] = gui.i_pickscoremethod;
                     if isempty(methodid), return; end
 
@@ -324,12 +324,16 @@ bb = 'No, just show values';
                 %     [h1]=sc_scattermarker(sce.X,sce.g,...
                 %                  sce.s,g,methodid);
                 if iscell(y)
+                    % t=array2table(cell2mat({rand(10,1),rand(10,1),rand(10,1)}),'VariableNames',{'aa','bb','cc'});
+                    assignin("base",'y',y);
+                    assignin("base",'ttxt',ttxt);
+                    
+                    %figure; figure; imagesc(cell2mat(y')')
+                    %heatmap(cell2mat(y'),'XDisplayLabels',strrep(ttxt,'_','\_'));
                     for k=1:length(y)
                         gui.i_heatscatterfig(sce, y{k}, posg, ttxt{k}, FigureHandle);
                     end
-
                     % gui.sc_uitabgrpfig_expplot(y, markerlist, sce.s, FigureHandle, [axx, bxx]);
-
                 else
                     gui.i_heatscatterfig(sce, y, posg, ttxt, FigureHandle);
                 end
