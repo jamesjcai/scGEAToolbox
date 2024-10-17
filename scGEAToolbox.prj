@@ -7,7 +7,7 @@
     <param.summary>Single-cell Gene Expression Analysis Toolbox</param.summary>
     <param.description>scRNAseq data analysis toolbox</param.description>
     <param.screenshot>${PROJECT_ROOT}\resources\Images\scgeatool.png</param.screenshot>
-    <param.version>24.6.6</param.version>
+    <param.version>24.6.7</param.version>
     <param.output>${PROJECT_ROOT}\scGEAToolbox.mltbx</param.output>
     <param.products.name />
     <param.products.id />
@@ -56,7 +56,9 @@ TIMESTAMP</param.exclude.filters>
     <param.registered.apps />
     <param.docs>${PROJECT_ROOT}\info.xml</param.docs>
     <param.getting.started.guide>${PROJECT_ROOT}\doc\GettingStarted.mlx</param.getting.started.guide>
-    <param.matlabpath.excludes />
+    <param.matlabpath.excludes>
+      <item>/+run/external/mt_PHATE</item>
+    </param.matlabpath.excludes>
     <param.javaclasspath.excludes />
     <param.exported.on.package>false</param.exported.on.package>
     <param.required.addons />
@@ -89,7 +91,6 @@ TIMESTAMP</param.exclude.filters>
       <param.demosxml />
       <param.apps />
       <param.registered.apps />
-      <param.matlabpath.excludes />
       <param.javaclasspath.excludes />
       <param.exported.on.package />
       <param.required.addons />
@@ -158,6 +159,7 @@ TIMESTAMP</param.exclude.filters>
       <file>${PROJECT_ROOT}\sc_mergesces.m</file>
       <file>${PROJECT_ROOT}\sc_mtratio.m</file>
       <file>${PROJECT_ROOT}\sc_multiembed.m</file>
+      <file>${PROJECT_ROOT}\sc_nnmf.m</file>
       <file>${PROJECT_ROOT}\sc_norm.m</file>
       <file>${PROJECT_ROOT}\sc_pcnet.m</file>
       <file>${PROJECT_ROOT}\sc_pcnetbat.m</file>
@@ -170,8 +172,7 @@ TIMESTAMP</param.exclude.filters>
       <file>${PROJECT_ROOT}\sc_read10xdir.m</file>
       <file>${PROJECT_ROOT}\sc_read10xh5file.m</file>
       <file>${PROJECT_ROOT}\sc_readfile.m</file>
-      <file>${PROJECT_ROOT}\sc_readgeoaccession.m</file>
-      <file>${PROJECT_ROOT}\sc_readgeoaccessions.m</file>
+      <file>${PROJECT_ROOT}\sc_readgeoaccess.m</file>
       <file>${PROJECT_ROOT}\sc_readh5adfile.m</file>
       <file>${PROJECT_ROOT}\sc_readhdf5file.m</file>
       <file>${PROJECT_ROOT}\sc_readloomfile.m</file>
@@ -193,6 +194,7 @@ TIMESTAMP</param.exclude.filters>
       <file>${PROJECT_ROOT}\sc_snndpc.m</file>
       <file>${PROJECT_ROOT}\sc_splinefit.m</file>
       <file>${PROJECT_ROOT}\sc_splinefit2.m</file>
+      <file>${PROJECT_ROOT}\sc_stemsig.m</file>
       <file>${PROJECT_ROOT}\sc_tenifoldnet.m</file>
       <file>${PROJECT_ROOT}\sc_tfactivity.m</file>
       <file>${PROJECT_ROOT}\sc_trajectory.m</file>

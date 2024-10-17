@@ -136,8 +136,9 @@ in_addmenu(m_view, 0, @in_Switch2D3D, 'Switch Between 2D/3D Embeddings...');
 in_addmenu(m_view, 1, @in_ClusterCellsS, "Cluster Cells Using Cell Embedding (S)", 'C');
 in_addmenu(m_view, 0, @in_ClusterCellsX, "Cluster Cells Using Expression Matrix (X) 🐢 ...");
 in_addmenu(m_view, 1, @gui.callback_ShowGeneExpr, 'Gene Expression...', 'E');
-in_addmenu(m_view, 0, @in_ShowCellStates, 'Cell States...', 'T');
-in_addmenu(m_view, 0, @in_labelcellgroups, 'Cell Groups...', 'G');
+in_addmenu(m_view, 0, @in_ShowCellStates, 'Show Cell States...', 'T');
+in_addmenu(m_view, 0, @in_labelcellgroups, 'Label Cell Groups...', 'G');
+in_addmenu(m_view, 0, @in_highlightcellgroups, 'Highlight Cell Groups...');
 in_addmenu(m_view, 0, @gui.callback_MultiGroupingView, 'Multi-Grouping View...');
 in_addmenu(m_view, 0, @gui.callback_CrossTabulation, 'Cross Tabulation');
 in_addmenu(m_view, 1, @gui.callback_ViewMetaData, 'View Metadata...', 'M');
@@ -287,7 +288,7 @@ in_addbuttonpush(0, 0, {@gui.i_resizewin, FigureHandle}, 'HDF_pointx.gif', 'Resi
 
 in_addbuttontoggle(1, 0, {@in_togglebtfun, @in_turnoffuserguiding, "icon-mat-unfold-more-10.gif", "icon-mat-unfold-less-10.gif", false, "Turn on/off user onboarding toolbar"});
 in_addbuttonpush(1, 0, @gui.callback_ShowGeneExpr, "list.gif", "Select genes to show expression")
-in_addbuttonpush(1, 0, @in_ShowCellStates, "list2.gif", "Show cell state")
+in_addbuttonpush(1, 0, @in_ShowCellStates, "list2.gif", "Show cell states")
 in_addbuttonpush(1, 0, @in_SelectCellsByQC, "plotpicker-effects.gif", "Filter genes & cells")
 
 in_addbuttonpush(1, 1, @in_labelcellgroups, "icon-fa-tags-10b.gif", "Label cell groups");
@@ -974,19 +975,24 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
         %if ~ok, return; end
 
         fw = gui.gui_waitbar;
-        %try
+        try
             [Xdecon, ~] = run.r_decontX(sce, wkdir);
-        %catch
-        %    gui.gui_waitbar(fw);
-        %    errordlg('Runtime error.','');
-        %    return;
-        %end
+        catch
+           gui.gui_waitbar(fw);
+           errordlg('DecontX runtime error.','');
+           return;
+        end
         gui.gui_waitbar(fw);
-        
-%        figure('WindowStyle', 'modal');
-%        gui.i_stemscatter(sce.s, contamination);
-%        zlabel('Contamination rate')
-%        title('Ambient RNA contamination')
+
+        if ~(size(Xdecon, 1) == sce.NumGenes && size(Xdecon, 2) == sce.NumCells)
+           errordlg('DecontX runtime error.','');
+           return;
+        end
+
+%       figure('WindowStyle', 'modal');
+%       gui.i_stemscatter(sce.s, contamination);
+%       zlabel('Contamination rate')
+%       title('Ambient RNA contamination')
 
         answer = questdlg("Remove contamination? Click ''No'' to keep data unchanged.");
         if strcmp(answer, 'Yes')
@@ -1993,6 +1999,23 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
         sce.c = c;
         in_RefreshAll(src, [], true, false);
         guidata(FigureHandle, sce);
+    end
+
+    function in_highlightcellgroups(src, ~)
+        answer = questdlg('Before highlighting cell groups, the grouping colormap will be reset. Continue?','');
+        if ~strcmp(answer, 'Yes'), return; end
+        in_RefreshAll(src, [], true, true);
+        answer = questdlg('Select one or more cell groups to be highlighted. Continue?','');
+        if ~strcmp(answer, 'Yes'), return; end
+        [idx] = gui.i_selmultidlg(cL, [], FigureHandle);
+        if isempty(idx), return; end
+        if idx == 0, return; end
+        cm = colormap(hAx);
+        cm_new = ones(size(cm))*0.9;
+        if numel(cL) == height(cm)
+            cm_new(idx, :) = cm(idx, :);
+        end
+        colormap(hAx, cm_new);
     end
 
     function in_labelcellgroups(src, ~)
