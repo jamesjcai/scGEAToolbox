@@ -405,7 +405,7 @@ if rowcol(2) == 5 % Users provided a sequence index e.g. Datenum
         'XMinorGrid', 'on');
     box('on');
     grid('on');
-    hold('all');
+    hold('on');
 
     line(oldxy(:, 1), oldxy(:, 3), 'LineStyle', 'none', ...
         'Marker', 'o', 'MarkerSize', 7, ...
@@ -468,7 +468,7 @@ end
 
 box('on');
 grid('on');
-hold('all');
+hold('on');
 
 x = lws(:, 1);
 y = lws(:, 2);

@@ -1,4 +1,4 @@
-function callback_RunEnrichr(src, ~, predefinedlist)
+function callback_RunEnrichr_old(src, ~, predefinedlist)
 
 if nargin < 3, predefinedlist = []; end
 
@@ -62,7 +62,7 @@ if nargin < 3, predefinedlist = []; end
             end
     end
     T = [Tbp; Tmf];
-    [filetype, filesaved] = gui.i_exporttable(T, true, 'Tenrichrres', 'Enrichr_Results');
+    [~, ~] = gui.i_exporttable(T, true, 'Tenrichrres', 'Enrichr_Results');
     gui.i_viewtable(T, FigureHandle);
 
 

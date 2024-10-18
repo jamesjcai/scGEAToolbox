@@ -894,7 +894,7 @@ classdef MDS< handle
             end
             cla(ax_, 'reset');
             
-            hold(ax_, 'all');            
+            hold(ax_, 'on');            
             P=Gui.GetPixels(ax_);
             pixelWidth=P(3);
             MIN=60; % 5 pixels ( sqrt(100)==10 )

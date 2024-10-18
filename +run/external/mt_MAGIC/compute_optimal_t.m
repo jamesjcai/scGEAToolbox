@@ -34,7 +34,7 @@ if make_plot
     t_opt = find(error_vec < th, 1, 'first');
 
     figure;
-    hold all;
+    hold on;
     plot(1:t_max, error_vec, '*-');
     plot(t_opt, error_vec(t_opt), 'or', 'markersize', 10);
     xlabel 't'

@@ -54,7 +54,7 @@ for iname = 1:length(cnames)
     for icol = 1:ncol
         X2 = X + fg .* (icol - 1);
         fill(X2, Y, F(icol, :), 'linestyle', 'none')
-        hold all
+        hold on
     end % icol
     text(-0.1, mean(Y), cnames{iname}, 'HorizontalAlignment', 'right', 'FontWeight', 'bold', 'FontSize', 10, 'FontName', 'AvantGarde')
     xlim([-0.4, 1])

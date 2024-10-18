@@ -99,7 +99,7 @@ end
 
     gui.gui_waitbar(fw);
     
-    [filetype, filesaved] = gui.i_exporttable(T, true, 'Tenrichrres', ...
+    [~, ~] = gui.i_exporttable(T, true, 'Tenrichrres', ...
         sprintf('Enrichr_Results_%s', outfiletag));
 
     % gui.i_viewtable(T, FigureHandle);

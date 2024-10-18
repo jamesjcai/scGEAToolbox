@@ -35,7 +35,7 @@ for itype = 1:3
             fill(X2, Y, F(icol, :), 'linestyle', 'none')
             text(-0.1, mean(Y), cnames{itype}{iname}, 'HorizontalAlignment', 'right', 'FontWeight', 'bold', 'FontSize', 10, 'FontName', 'AvantGarde')
             xlim([-0.4, 1])
-            hold all
+            hold on
         end % icol
         %set(gca, 'box', 'off')
         title(ctypes_title{itype}, 'FontWeight', 'bold', 'FontSize', 16, 'FontName', 'AvantGarde')

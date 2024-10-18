@@ -63,7 +63,7 @@ if nargin < 3, predefinedlist = []; end
 
     gui.gui_waitbar(fw);
     
-    [filetype, filesaved] = gui.i_exporttable(T, true, 'Tenrichrres', 'Enrichr_Results');
+    [~, ~] = gui.i_exporttable(T, true, 'Tenrichrres', 'Enrichr_Results');
     gui.i_viewtable(T, FigureHandle);
 
 

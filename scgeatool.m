@@ -381,7 +381,7 @@ if ~showuseronboarding, set(UserToolbarHandle, 'Visible', 'off'); end
 % ----------------------------------
 majneedupdate = false;
 try
-    [majneedupdate, v1, v2, im] = pkg.i_majvercheck;
+    [majneedupdate, ~, ~, im] = pkg.i_majvercheck;
 catch
 end
 if majneedupdate

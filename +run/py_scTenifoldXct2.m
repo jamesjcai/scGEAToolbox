@@ -1,5 +1,5 @@
 function [T, iscomplete] = py_scTenifoldXct2(sce1, sce2, celltype1, celltype2, ...
-                           twosided, wkdir, useexist, isdebug)
+                           twosided, wkdir, ~, isdebug)
     % A1s, A1t, A2s, A2t)
     T = [];
     iscomplete = false;
