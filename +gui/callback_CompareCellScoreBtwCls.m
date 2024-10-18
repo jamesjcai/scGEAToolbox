@@ -325,15 +325,16 @@ bb = 'No, just show values';
                 %                  sce.s,g,methodid);
                 if iscell(y)
                     % t=array2table(cell2mat({rand(10,1),rand(10,1),rand(10,1)}),'VariableNames',{'aa','bb','cc'});
-                    assignin("base",'y',y);
-                    assignin("base",'ttxt',ttxt);
                     
-                    %figure; figure; imagesc(cell2mat(y')')
-                    %heatmap(cell2mat(y'),'XDisplayLabels',strrep(ttxt,'_','\_'));
-                    for k=1:length(y)
+                    %assignin("base",'y',y);
+                    %assignin("base",'ttxt',ttxt);                    
+                    if length(y)>1
+                        pause(1);
+                        gui.i_scoreheatmap(cell2mat(y').', strrep(ttxt,'_','\_'), sce, FigureHandle);
+                    else
                         gui.i_heatscatterfig(sce, y{k}, posg, ttxt{k}, FigureHandle);
                     end
-                    % gui.sc_uitabgrpfig_expplot(y, markerlist, sce.s, FigureHandle, [axx, bxx]);
+                        % gui.sc_uitabgrpfig_expplot(y, markerlist, sce.s, FigureHandle, [axx, bxx]);
                 else
                     gui.i_heatscatterfig(sce, y, posg, ttxt, FigureHandle);
                 end

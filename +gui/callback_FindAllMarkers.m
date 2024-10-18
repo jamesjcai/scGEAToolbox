@@ -215,33 +215,29 @@ fliped = false;
             set(gca, 'TickLength', [0, 0])
 
         end
-end
-
-
-        function i_renamecat(~, ~)
-            tg = gui.i_inputgenelist(string(cL), true);
-            if isempty(tg), return; end
-            if length(tg) == length(cL)
-                set(gca, 'XTick', a-b);
-                set(gca, 'XTickLabel', tg(:))
-                cL = tg;
-            else
-                errordlg('Wrong input.');
-            end
     end
 
-            function i_resetcolor(~, ~)
-                set(gca, 'FontSize', 10);
-                colormap default
+    function i_renamecat(~, ~)
+        tg = gui.i_inputgenelist(string(cL), true);
+        if isempty(tg), return; end
+        if length(tg) == length(cL)
+            set(gca, 'XTick', a-b);
+            set(gca, 'XTickLabel', tg(:))
+            cL = tg;
+        else
+            errordlg('Wrong input.');
         end
+    end
 
-                
+    function i_resetcolor(~, ~)
+        set(gca, 'FontSize', 10);
+        colormap default
+    end      
+               
     function i_invertcolor(~, ~)
         cm = colormap();
         colormap(flipud(cm));
     end
-
-
                     
     function i_dotplotx(~, ~)
         try
@@ -253,7 +249,6 @@ end
             errordlg(ME.message);
         end
     end
-
 
     function i_summarymap(~, ~, thisZ)
         f = figure;
@@ -280,7 +275,6 @@ end
         end
     end
 
-
     function i_saveM(~, ~, M)
         if ~(ismcc || isdeployed)
             labels = {'Save marker gene map M to variable named:', ...
@@ -294,7 +288,6 @@ end
         end        
     end
 
-
     function i_savetable(~, ~, c)
         answer = questdlg('Export & save data to:', '', ...
             'Workspace', 'TXT/CSV file', 'Excel file', 'Workspace');
@@ -302,7 +295,7 @@ end
             T = table();
             T.genes = cat(1, M{:, 2});
             assert(isequal(T.genes, MX))
-
+    
             T = [T, array2table(c)];
             switch answer
                 case 'Workspace'
@@ -323,7 +316,7 @@ end
                         gui.gui_waitbar(fw);
                     end
                 case 'Excel file'
-
+    
                     [file, path] = uiputfile({'*.xlsx'; '*.*'}, 'Save as');
                     if isequal(file, 0) || isequal(path, 0)
                         return;
