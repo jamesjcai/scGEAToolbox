@@ -115,12 +115,14 @@ bb = 'No, just show values';
 
                 case 'PanglaoDB Cell Type Markers'
                     speciestag = gui.i_selectspecies(2, true);
+
+
                     if isempty(speciestag), return; end
 
                     oldpth = pwd;
                     pw1 = fileparts(mfilename('fullpath'));
                     pth = fullfile(pw1, '..', '+run', 'thirdparty', 'alona_panglaodb');
-                    cd(pth);
+                    cd(pth);                    
 
                     markerfile = sprintf('marker_%s.mat', speciestag);
                     if exist(markerfile, 'file')
@@ -148,7 +150,9 @@ bb = 'No, just show values';
                     posg(strlength(posg) == 0) = [];
                     ttxt = ctselected;
                     if isempty(posg) || isempty(ctselected), return; end
+                    
                     [y] = gui.e_cellscore(sce, posg);
+                    
 
                 % case 'Differentiation Potency [PMID:33244588]'
                 % 

@@ -292,6 +292,22 @@ methods
         end
     end
 
+    function obj = rmlncrnagenes(obj)
+        glist = pkg.i_get_lncrnagenes;
+        [idx] = ismember(upper(obj.g), glist);
+        obj.X = obj.X(~idx, :);
+        obj.g = obj.g(~idx);
+        fprintf('%d lncRNA genes found and removed.\n', ...
+            sum(idx));
+            try
+                for k = 2:2:length(obj.list_gene_attributes)
+                    obj.list_gene_attributes{k}(idx) = [];
+                end
+            catch ME
+                warning(ME.message);
+            end
+    end
+
     function obj = rmribosomalgenes(obj)
         ribog = pkg.i_get_ribosomalgenes;
         [idx] = ismember(upper(obj.g), ribog);

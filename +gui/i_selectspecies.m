@@ -28,8 +28,6 @@ function [speciestag] = i_selectspecies(n, shorttag)
             setpref('scgeatoolbox', 'preferredspecies', 'Zebrafish');
         otherwise
             speciestag = "";
-            % helpdlg('Action cancelled.','');
-            return;
     end
     
     if shorttag
