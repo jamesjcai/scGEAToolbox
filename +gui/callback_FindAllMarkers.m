@@ -8,7 +8,7 @@ function callback_FindAllMarkers(src, ~)
         'Marker Gene Heatmap');
     switch answer
         case 'Find All Markers'
-    
+            in_findAllMarkers(sce);
         case 'Marker Gene Heatmap'
             in_MarkerGeneHeatmap(src);
             return;
@@ -16,13 +16,16 @@ function callback_FindAllMarkers(src, ~)
             return;
     end
     
+
+end
+
+function in_findAllMarkers(sce)
     [thisc, ~] = gui.i_select1class(sce);
     if isempty(thisc), return; end
     if isscalar(unique(thisc))
         warndlg("All cells are in the same group.",'');
         return;
-    end
-    
+    end    
     [T] = pkg.e_findallmarkers(sce.X, sce.g, thisc, [], [], [], true);
     if ~isempty(T)
         needwait = true;
@@ -42,7 +45,6 @@ function callback_FindAllMarkers(src, ~)
         helpdlg('No results.', '');
     end
 end
-
 
 function in_MarkerGeneHeatmap(src, ~, sce)
     mfolder = fileparts(mfilename('fullpath'));
@@ -277,7 +279,7 @@ function in_MarkerGeneHeatmap(src, ~, sce)
             h.Title = 'Marker Gene Heatmap';
             h.XLabel = 'Group';
             h.YLabel = 'Marker Gene';
-            h.Colormap = parula(256);
+            % h.Colormap = parula(256);
             h.GridVisible = 'off';
             h.CellLabelColor = 'none';
             tb = uitoolbar('Parent', f);
