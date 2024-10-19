@@ -350,8 +350,8 @@ if ~isempty(fx) && isvalid(fx), set(fx, 'visible', 'off'); end
 pause(0.2);
 set(FigureHandle, 'visible', 'on');
 delete(fx);
-drawnow;
 uicontrol(button1);
+drawnow;
 
 in_fixfield('tsne','tsne3d');
 in_fixfield('umap','umap3d');
