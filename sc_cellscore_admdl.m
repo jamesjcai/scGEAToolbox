@@ -34,7 +34,12 @@ function [score] = sc_cellscore_admdl(X, genelist, tgsPos, tgsNeg, nbin, ctrl)
     %genelist=upper(genelist);
     %tgsPos=upper(tgsPos);
     %tgsNeg=upper(tgsNeg);    
-    
+    try
+        if issparse(X), X = full(X); end
+    catch
+        warning('Keep using sparse X.');
+    end
+
     X = sc_norm(X);
     %disp('Library-size normalization...done.')
     X = log1p(X);
@@ -59,7 +64,8 @@ function [score] = i_calculate_score(X, genelist, tgs, directtag, nbin, ctrl)
     if nargin < 5, nbin = 25; end
     if nargin < 4, directtag = 1; end
     
-    rng default
+    %rng default
+    
     % Initial stats
     cluster_lenght = size(X, 1);
     data_avg = mean(X, 2);

@@ -1,4 +1,4 @@
-function [needupdatesce]=callback_CompareCellScoreBtwCls(src, ~)
+function [needupdatesce] = callback_CompareCellScoreBtwCls(src, ~)
 
 FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
