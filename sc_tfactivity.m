@@ -1,4 +1,4 @@
-function [cs, tflist, gcommon, numtargetgenes] = sc_tfactivity(X, g, Ttfgn, species, methodid)
+function [cs, tflist, gcommon, numtargetgenes] = sc_tfactivity(X, g, Ttfgn, speciestag, methodid)
 % The activity level of a transcription factor (TF) in a given cell is the
 % extent to which it is exerting its regulatory potential on its target
 % genes.
@@ -10,12 +10,12 @@ function [cs, tflist, gcommon, numtargetgenes] = sc_tfactivity(X, g, Ttfgn, spec
 
 if nargin < 2, error('USAGE: [cs,tflist]=sc_tfactivity(X,g);'); end
 if nargin < 5 || isempty(methodid), methodid = 4; end
-if nargin < 4 || isempty(species), species = 'hs'; end
+if nargin < 4 || isempty(speciestag), speciestag = 'hs'; end
 if nargin < 3 || isempty(Ttfgn) % tf-by-gene matrix T from database
     %folder=fileparts(mfilename('fullpath'));
     %wrkpth=fullfile(folder,'resources',filesep,'DoRothEA_TF_Target_DB',filesep);
     pw1 = fileparts(mfilename('fullpath'));
-    switch lower(species)
+    switch lower(speciestag)
         case {'hs', 'human'}
             %fname=[wrkpth 'dorothea_hs.mat'];
             fname = fullfile(pw1, 'resources', 'DoRothEA_TF_Target_DB', 'dorothea_hs.mat');

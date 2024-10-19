@@ -17,6 +17,8 @@ end
 % rng("shuffle");
 % rng("default");
 
+persistent speciestag
+
 import pkg.*
 import gui.*
 
@@ -833,7 +835,9 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
         else
             if ~gui.gui_showrefinfo('Single Click Solution'), return; end
         end
-        speciestag = gui.i_selectspecies(2);
+        if isempty(speciestag)
+            speciestag = gui.i_selectspecies(2);
+        end
         if isempty(speciestag), return; end
 
         prompt = {
@@ -1445,7 +1449,9 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
             organtag = "all";
             databasetag = "panglaodb";
             if ~gui.gui_showrefinfo('PanglaoDB [PMID:30951143]'), return; end
-            speciestag = gui.i_selectspecies(2);
+            if isempty(speciestag)
+                speciestag = gui.i_selectspecies(2);
+            end
             if isempty(speciestag), return; end
         else
             [Tm, Tw] = pkg.i_markerlist2weight(sce);
@@ -1636,7 +1642,9 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
         if ~strcmp(answer, 'Yes')
             return;
         end
-        speciestag = gui.i_selectspecies;
+        if isempty(speciestag)
+            speciestag = gui.i_selectspecies;
+        end
         if isempty(speciestag), return; end
         fw = gui.gui_waitbar;
         [Tct] = pkg.local_celltypebrushed(sce.X, sce.g, sce.s, ...

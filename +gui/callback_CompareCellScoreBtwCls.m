@@ -73,7 +73,7 @@ bb = 'No, just show values';
 
             % ------------------------------------------------
 
-            [selecteditem, speciesid] = gui.i_selgenesetcollection;
+            [selecteditem, speciestag] = gui.i_selgenesetcollection;
             if isempty(selecteditem), return; end
             %try
 
@@ -92,7 +92,7 @@ bb = 'No, just show values';
                     % speciestag = gui.i_selectspecies(2, true);
                     % if isempty(speciestag), return; end
                     try
-                        [posg, ctselected] = gui.i_selectMSigDBGeneSets(speciesid);
+                        [posg, ctselected] = gui.i_selectMSigDBGeneSets(speciestag);
                     catch ME
                         errordlg(ME.message);
                         return;
@@ -114,22 +114,31 @@ bb = 'No, just show values';
                     
 
                 case 'PanglaoDB Cell Type Markers'
-                    speciestag = gui.i_selectspecies(2, true);
-
-
+                    if isempty(speciestag)
+                        speciestag = gui.i_selectspecies(2, true);
+                    end
                     if isempty(speciestag), return; end
 
                     oldpth = pwd;
                     pw1 = fileparts(mfilename('fullpath'));
                     pth = fullfile(pw1, '..', '+run', 'thirdparty', 'alona_panglaodb');
-                    cd(pth);                    
+                    cd(pth);
+                    switch lower(speciestag)
+                        case {'human', 'hs'}
+                            speciestag_short = 'hs';
+                        case {'mouse', 'mm'}
+                            speciestag_short = 'mm';
+                        otherwise
+                            speciestag_short = 'hs';
+                    end
 
-                    markerfile = sprintf('marker_%s.mat', speciestag);
+
+                    markerfile = sprintf('marker_%s.mat', speciestag_short);
                     if exist(markerfile, 'file')
                         load(markerfile, 'Tm');
                     else
                         % Tw=readtable(sprintf('markerweight_%s.txt',stag));
-                        Tm = readtable(sprintf('markerlist_%s.txt', speciestag), ...
+                        Tm = readtable(sprintf('markerlist_%s.txt', speciestag_short), ...
                             'ReadVariableNames', false, 'Delimiter', '\t');
                         % save(markerfile,'Tw','Tm');
                     end
@@ -276,7 +285,7 @@ bb = 'No, just show values';
                     if methodid ~= 4, fw = gui.gui_waitbar; end
                     try
                         [cs, tflist] = sc_tfactivity(sce.X, sce.g, [], ...
-                            speciesid, methodid);
+                            speciestag, methodid);
                     catch ME
                         if methodid ~= 4, gui.gui_waitbar(fw,true); end
                         errordlg(ME.message);
