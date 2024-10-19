@@ -16,15 +16,22 @@ if nargin<3, parentfig=[]; end
 
     % [Xt] = gui.i_transformx(sce.X);
     % if isempty(Xt), return; end
+    X = sce.X;
+    try
+        if issparse(X), X = full(X); end
+    catch ME
+        disp(ME.message);
+        disp('Keep using sparse X.');
+    end
 
     answer = questdlg('Select method:','','Spearman Correlation','Distance Correlation','Cancel','Spearman Correlation');
     switch answer
         case 'Spearman Correlation'
             fw = gui.gui_waitbar;
-            r = corr(t, sce.X.', 'type', 'spearman'); % Calculate linear correlation between gene expression profile and T
+            r = corr(t, X.', 'type', 'spearman'); % Calculate linear correlation between gene expression profile and T
             gui.gui_waitbar(fw);
         case 'Distance Correlation'
-            X = log1p(sc_norm(sce.X));
+            Xn = log1p(sc_norm(X));
             r = zeros(size(X,1),1);
             n = length(r);
             if n > 100
@@ -32,13 +39,13 @@ if nargin<3, parentfig=[]; end
                 gui.gui_waitbar_adv(fw,100/n);
                 for k=1:length(r)
                     if mod(k,100) == 0, gui.gui_waitbar_adv(fw,k/length(r)); end
-                    r(k) = pkg.distcorr(X(k,:).', t(:)); % Calculate linear correlation between gene expression profile and T
+                    r(k) = pkg.distcorr(Xn(k,:).', t(:)); % Calculate linear correlation between gene expression profile and T
                 end
                 gui.gui_waitbar_adv(fw);
             else
                 fw = gui.gui_waitbar;
                 for k=1:length(r)
-                    r(k) = pkg.distcorr(X(k,:).', t(:)); % Calculate linear correlation between gene expression profile and T
+                    r(k) = pkg.distcorr(Xn(k,:).', t(:)); % Calculate linear correlation between gene expression profile and T
                 end
                 gui.gui_waitbar(fw);
             end
@@ -51,12 +58,12 @@ if nargin<3, parentfig=[]; end
     [~, idxp] = maxk(r, 10); 
     selectedg = sce.g(idxp);
     try
-        hFig = figure('WindowStyle', 'modal', 'Visible','off');
+        hFig = figure('Visible','off');
         hFig.Position(3) = hFig.Position(3) * 1.8;
         gui.i_movegui2parent(hFig, parentfig);
 
         figure(hFig);
-        pkg.i_plot_pseudotimeseries(log2(sce.X+1), ...
+        pkg.i_plot_pseudotimeseries(log1p(X), ...
             sce.g, t, selectedg);
         hFig.Visible = true;
     catch ME

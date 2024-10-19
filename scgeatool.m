@@ -37,7 +37,7 @@ if nargin < 1
     sce = SingleCellExperiment;
 else
     if ~isa(sce, 'SingleCellExperiment')
-        error('requires sce = SingleCellExperiment(); scgeatool(sce)');
+        error('requires >> sce = SingleCellExperiment(); scgeatool(sce)');
     end
     v1 = pkg.i_getversionnum;
 end
@@ -396,8 +396,9 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
 % ----------------------------------
 
     function in_sc_openscedlg(src, event)
-        set(src,'Enable','off');
-        if strcmp(event.EventName,'KeyPress') && ~ismember(event.Key,{'return','space','i','I'}) 
+        % set(src,'Enable','off');
+        if strcmp(event.EventName,'KeyPress') && ...
+            ~ismember(event.Key,{'return','space','i','I'})
             return;
         end
         clickType = get(FigureHandle, 'SelectionType');
@@ -406,7 +407,10 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
         set(button1,'Enable','off');
         if ~isempty(sce) && sce.NumCells > 0
             answer=questdlg('Current SCE will be replaced. Continue?'.'');
-            if ~strcmp(answer,'Yes'), return; end
+            if ~strcmp(answer,'Yes') 
+                set(button1,'Enable','on');
+                return; 
+            end
         end
         [sce] = gui.sc_openscedlg;
         if ~isempty(sce) && sce.NumCells > 0 && sce.NumGenes > 0
@@ -1879,7 +1883,6 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
                 'fontsize', 10, 'FontWeight', 'bold', 'BackgroundColor', 'w', 'EdgeColor', 'k');
         end
 
-
         hold off;
         % pseudotimemethod
         answer = questdlg('Swap ''Start'' and ''End''?','');
@@ -1887,6 +1890,7 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
             case 'Yes'
                 t1.String = 'End';
                 t2.String = 'Start';
+                t = 1 - t;
         end
 
         tag = sprintf('%s_pseudotime', pseudotimemethod);
