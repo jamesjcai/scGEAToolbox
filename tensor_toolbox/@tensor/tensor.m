@@ -180,7 +180,7 @@ if (nargin <= 2)
         siz = size(data);
     else
         siz = varargin{2};
-        if ~isempty(siz) && ndims(siz) ~= 2 && size(siz, 1) ~= 1
+        if ~isempty(siz) && ~ismatrix(siz) && size(siz, 1) ~= 1
             error('Second argument must be a row vector.');
         end
     end

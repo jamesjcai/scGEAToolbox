@@ -213,7 +213,7 @@ function [handles,levels,parentIdx,listing] = findjobj(container,varargin) %#ok<
                 origContainer = handle(container);
                 if isa(origContainer,'uimenu') || isa(origContainer,'matlab.ui.container.Menu')
                     % getpixelposition doesn't work for menus... - damn!
-                    varargin = {'class','MenuPeer', 'property',{'Label',strrep(get(container,'Label'),'&','')}, varargin{:}};
+                    varargin = [{'class'},{'MenuPeer'}, {'property'},{{'Label',strrep(get(container,'Label'),'&','')}}, varargin(:)'];
                 elseif ~isa(origContainer, 'figure') && ~isempty(hFig) && ~isa(origContainer, 'matlab.ui.Figure')
                     % For a single input & output, try using the fast variant
                     if nargin==1 && nargout==1
@@ -265,7 +265,7 @@ function [handles,levels,parentIdx,listing] = findjobj(container,varargin) %#ok<
                             pos(4) = 20;
                         end
                         %varargin = {'position',pos(1:2), 'size',size(3:4)-size(1:2)-10, 'not','class','java.awt.Panel', varargin{:}};
-                        varargin = {'position',pos(1:2)+[0,pos(4)], 'size',pos(3:4), 'not','class','java.awt.Panel', 'nomenu', varargin{:}};
+                        varargin = [{'position'},{pos(1:2)+[0,pos(4)]}, {'size'},{pos(3:4)}, {'not'},{'class'},{'java.awt.Panel'}, {'nomenu'}, varargin(:)'];
                     end
                 elseif isempty(hFig)
                     hFig = handle(container);
@@ -2128,7 +2128,7 @@ function [handles,levels,parentIdx,listing] = findjobj(container,varargin) %#ok<
                                     [cbNames, cbIdx, cb2Idx] = intersect(cbNames,newCbNames);  %#ok cb2Idx unused
                                     cbData = cbData(cbIdx,:);
                                     for cbIdx = 1 : length(cbNames)
-                                        newIdx = find(strcmp(cbNames{cbIdx},newCbNames));
+                                        newIdx = strcmp(cbNames{cbIdx},newCbNames);
                                         if ~isequal(cbData2,cbData) && ~isequal(cbData2{newIdx,2}, cbData{cbIdx,2})
                                             cbData{cbIdx,2} = '<different values>';
                                         end
@@ -3222,7 +3222,7 @@ function [handles,levels,parentIdx,listing] = findjobj(container,varargin) %#ok<
           menuItem0.setEnabled(false);
           menuItem0.setArmed(false);
           %menuItem1 = JMenuItem('Export handle to findjobj_hdls');
-          if isjava(obj), prefix = 'j';  else,  prefix = 'h';  end  %#ok<NOCOM>
+          if isjava(obj), prefix = 'j';  else,  prefix = 'h';  end  
           varname = strrep([prefix strtok(char(node.getName))], '$','_');
           varname = genvarname(varname);
           varname(2) = upper(varname(2));  % ensure lowerCamelCase

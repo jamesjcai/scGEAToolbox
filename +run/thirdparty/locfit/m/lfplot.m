@@ -47,7 +47,7 @@ while na <= length(varargin)
         inc = 1;
     end
     if (strcmp(varargin{na}, 'what'))
-        ppargs = {ppargs{:}, 'what', varargin{na+1}};
+        ppargs = [ppargs(:)', {'what'}, {varargin{na+1}}];
         showdata = 0;
         inc = 2;
     end
@@ -56,11 +56,11 @@ while na <= length(varargin)
         inc = 1;
     end
     if (strcmp(varargin{na}, 'direct'))
-        ppargs = {ppargs{:}, 'direct'};
+        ppargs = [ppargs(:)', {'direct'}];
         inc = 1;
     end
     if (inc == 0)
-        plotargs = {plotargs{:}, varargin{na}};
+        plotargs = [plotargs(:)', {varargin{na}}];
         inc = 1;
     end
     na = na + inc;

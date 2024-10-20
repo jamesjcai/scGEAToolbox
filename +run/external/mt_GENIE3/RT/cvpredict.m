@@ -41,7 +41,7 @@ for t = 1:nbfolds
         cvls = int32(ro(1:((t - 1) * cvsize)));
     else
         cvts = int32(ro(((t - 1) * cvsize + 1):(t * cvsize)));
-        cvls = int32(ro([[1:((t - 1) * cvsize)], [(t * cvsize + 1):N]]));
+        cvls = int32(ro([1:((t - 1) * cvsize), (t * cvsize + 1):N]));
     end
 
     if (verbose)

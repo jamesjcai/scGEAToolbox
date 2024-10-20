@@ -82,7 +82,7 @@ elseif strcmp(param_CSC.lap_type, 'combinatorial')
     G.L = param_CSC.lap;
     % G.L = create_laplacian(G.W,G.lap_type);
 else
-    error(['CSC.m : param_CSC.lap_type should be ''normalized'' or ''combinatorial''']);
+    error('CSC.m : param_CSC.lap_type should be ''normalized'' or ''combinatorial''');
 end
 
 %%%
@@ -133,7 +133,7 @@ if strcmp(param_CSC.sampling, 'uniform')
     weight = ones(G.N, 1) / (G.N); % Uniform density
 elseif strcmp(param_CSC.sampling, 'VD')
     weight = weight_VD; % Variable density
-else error(['CSC: param_CSC.sampling must be either set to ''uniform'' or to ''VD''']);
+else error('CSC: param_CSC.sampling must be either set to ''uniform'' or to ''VD''');
 end
 
 % ind_obs = datasample(1:G.N, n, 'Replace', false, 'Weights', weight);

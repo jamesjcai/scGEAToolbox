@@ -15,5 +15,5 @@ end
 if n > 1 %For subscripted indexing
     e = X.size(k); %For subscripted indexing
 else %Linear indexing, or X is a vector
-    e = prod(size(X)); %if X is a vector, this equals X.size(1) so works
+    e = numel(X); %if X is a vector, this equals X.size(1) so works
 end

@@ -9,8 +9,8 @@ function Z = minus(X, Y)
 fun = @minus;
 
 % One argument is a scalar
-if ((prod(size(X)) == 1 || prod(size(Y)) == 1))
-    if (prod(size(Y)) == 1) && isa(X, 'tenmat')
+if ((isscalar(X) || isscalar(Y)))
+    if (isscalar(Y)) && isa(X, 'tenmat')
         Z = X;
         Z.data = fun(Z.data, Y);
     else

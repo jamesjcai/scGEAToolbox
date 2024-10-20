@@ -13,4 +13,4 @@ if (tbefore ~= 0)
     s = round(s.*(tafter / tbefore));
 end
 
-p = 1 - sum(sum(s > 0)) / prod(size(s));
+p = 1 - sum(sum(s > 0)) / numel(s);

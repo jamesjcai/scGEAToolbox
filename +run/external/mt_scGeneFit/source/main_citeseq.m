@@ -2,7 +2,7 @@ data_filename = '../data/CITEseq.mat';
 label_filename = '../data/CITEseq-labels.mat';
 names_filename = '../data/CITEseq_names.mat';
 
-opt.samples_fraction = [0.15];
+opt.samples_fraction = 0.15;
 opt.constraints_neighbors = 3;
 opt.hinge_scale = 7;
 num_markers = 10;

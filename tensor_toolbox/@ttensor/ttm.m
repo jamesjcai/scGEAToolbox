@@ -82,7 +82,7 @@ end
 
 % Check that each multiplicand is the right size.
 for i = 1:numel(dims)
-    if (ndims(V) ~= 2) || (size(V{vidx(i)}, j) ~= size(X, dims(i)))
+    if (~ismatrix(V)) || (size(V{vidx(i)}, j) ~= size(X, dims(i)))
         error('Multiplicand is wrong size');
     end
 end

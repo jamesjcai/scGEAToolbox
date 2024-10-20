@@ -102,7 +102,7 @@ end
 if (nargin == 4)
 
     data = varargin{1};
-    if ~isnumeric(data) || (ndims(data) ~= 2)
+    if ~isnumeric(data) || (~ismatrix(data))
         error('A must be a matrix.');
     end
     rdims = varargin{2};

@@ -39,7 +39,7 @@ for m = 1:maxiter
     XBt = X * B';
     cA = true;
     r = 0;
-    while cA & r < iiter
+    while cA && r < iiter
         r = r + 1;
         gA = A * BBt - XBt;
         aA = A ~= 0 | gA < 0;
@@ -56,7 +56,7 @@ for m = 1:maxiter
     AtX = A' * X;
     cB = true;
     r = 0;
-    while cB & r < iiter
+    while cB && r < iiter
         r = r + 1;
         gB = AtA * B - AtX;
         aB = B ~= 0 | gB < 0;

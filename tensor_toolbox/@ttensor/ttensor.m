@@ -91,7 +91,7 @@ end
 
 % Check that each Um is indeed a matrix
 for i = 1:length(t.u)
-    if ndims(t.u{i}) ~= 2
+    if ~ismatrix(t.u{i})
         error(['Matrix U', int2str(i), ' is not a matrix!']);
     end
 end

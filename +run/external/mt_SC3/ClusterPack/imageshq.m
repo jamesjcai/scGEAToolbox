@@ -21,12 +21,12 @@ if (sum(sum((map(:, 1) ~= map(:, 2))+(map(:, 1) ~= map(:, 3))) == 0))
     cols = size(map, 1);
     range = 0:1 / (cols - 1):1;
 
-    c = hist(reshape(s, prod(size(s)), 1), range);
+    c = hist(reshape(s, numel(s), 1), range);
     ca = cumsum(c);
     badones = find(ca == 0);
     ca(badones) = ones(size(badones));
 
-    cb = prod(size(s)) * range;
+    cb = numel(s) * range;
     badones = find(cb == 0);
     cb(badones) = ones(size(badones));
 

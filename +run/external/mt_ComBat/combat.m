@@ -29,7 +29,7 @@ n_array = sum(n_batches);
 design = [batchmod, mod];
 intercept = ones(1, n_array)';
 wh = cellfun(@(x) isequal(x, intercept), num2cell(design, 1));
-bad = find(wh == 1);
+bad = wh == 1;
 design(:, bad) = [];
 
 
@@ -101,9 +101,9 @@ fprintf('[combat] Adjusting for %d covariate(s) of covariate level(s)\n', size(d
     j = 1;
     for i = 1:n_batch
         indices = batches{i};
-        bayesdata(:, indices) = (bayesdata(:, indices) - (batch_design(indices, :) * gamma_star)') ./ (sqrt(delta_star(j, :))' * repmat(1, 1, n_batches(i)));
+        bayesdata(:, indices) = (bayesdata(:, indices) - (batch_design(indices, :) * gamma_star)') ./ (sqrt(delta_star(j, :))' * ones(1, n_batches(i)));
         j = j + 1;
     end
-    bayesdata = (bayesdata .* (sqrt(var_pooled) * repmat(1, 1, n_array))) + stand_mean;
+    bayesdata = (bayesdata .* (sqrt(var_pooled) * ones(1, n_array))) + stand_mean;
 
 end

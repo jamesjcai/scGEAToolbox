@@ -10,7 +10,7 @@ function cls = eval_fast_Specter(fea, n_clusters, ensemble_size, mingamma, n_nei
 % cls: clusters of cells
 
 [m, ~] = size(fea);
-samples_size = [n_clusters * 100.0 / sqrt(m)];
+samples_size = n_clusters * 100.0 / sqrt(m);
 % apply pre-processing
 params.HV = 1; % use highly variable genes selection: 1: yes, 0: no
 params.PCA = 1; % apply PCA: 1: yes, 0: no
@@ -59,7 +59,7 @@ model = fitcknn(trainData, ensemble, 'NumNeighbors', n_neighbors); % nn = 5
 testData = fea(unlabel_cl, :);
 prediction = predict(model, testData);
 ensemble = [ensemble; prediction];
-ensemble = sortrows([baseCL', ensemble], [1]);
+ensemble = sortrows([baseCL', ensemble], 1);
 ensemble = ensemble(:, 2);
 
 clear clusters baseCL cl optsVec prediction selective_clusters testData trainClass trainData unlabel_cl;

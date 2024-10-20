@@ -13,7 +13,7 @@ function p = evalmutual(trueclass, cl, ~, ~)
 remappedcl = zeros(size(cl));
 A = zeros(max(cl), 2+max(trueclass));
 for i = 1:max(cl)
-    activepoints = find(cl == i);
+    activepoints = cl == i;
     composition = hist(trueclass(activepoints), 1:max(trueclass));
     j = find(composition == max(composition));
     j = j(1);

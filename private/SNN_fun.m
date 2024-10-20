@@ -28,7 +28,7 @@ switch nargin
                 nnj = IDX(j, :);
                 shared = intersect(nni, nnj);
                 % the closeness depend on the rank of the shared knn in both list
-                s = [0];
+                s = 0;
                 for l = 1:length(shared)
                     s = [s, k - 0.5 * (find(nni == shared(l)) + find(nnj == shared(l)))];
                 end

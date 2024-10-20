@@ -11,20 +11,20 @@ errorid = '';
 errormsg = '';
 
 % Determine the protocol (before the ":").
-protocol = urlChar(1:min(find(urlChar == ':'))-1);
+protocol = urlChar(1:find(urlChar == ':', 1 )-1);
 
 % Try to use the native handler, not the ice.* classes.
 switch protocol
     case 'http'
         try
             handler = sun.net.www.protocol.http.Handler;
-        catch exception %#ok
+        catch exception 
             handler = [];
         end
     case 'https'
         try
             handler = sun.net.www.protocol.https.Handler;
-        catch exception %#ok
+        catch exception 
             handler = [];
         end
     otherwise
@@ -38,7 +38,7 @@ try
     else
         url = java.net.URL([], urlChar, handler);
     end
-catch exception %#ok
+catch exception 
     errorid = ['MATLAB:', fcn, ':InvalidUrl'];
     errormsg = 'Either this URL could not be parsed or the protocol is not supported.';
     return

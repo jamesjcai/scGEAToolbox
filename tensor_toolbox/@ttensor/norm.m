@@ -6,7 +6,7 @@ function nrm = norm(X)
 %Tensor Toolbox for MATLAB: <a href="https://www.tensortoolbox.org">www.tensortoolbox.org</a>
 
 
-if prod(size(X)) > prod(size(X.core))
+if numel(X) > numel(X.core)
     V = cell(ndims(X), 1);
     for n = 1:ndims(X)
         V{n} = X.u{n}' * X.u{n};

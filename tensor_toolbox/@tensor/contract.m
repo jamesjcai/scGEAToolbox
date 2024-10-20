@@ -29,7 +29,7 @@ if i == j
 end
 
 % Easy case - returns a scalar
-if ndims(x) == 2
+if ismatrix(x)
     y = trace(x.data);
     return;
 end

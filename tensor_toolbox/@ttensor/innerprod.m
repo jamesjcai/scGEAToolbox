@@ -18,7 +18,7 @@ switch class(Y)
         if ~isequal(size(X), size(Y))
             error('X and Y must be the same size.');
         end
-        if prod(size(X.core)) > prod(size(Y.core))
+        if numel(X.core) > numel(Y.core)
             % Reverse argument and call this function again so that the
             % tensor with the smaller core is the first argument.
             res = innerprod(Y, X);
@@ -36,7 +36,7 @@ switch class(Y)
         if ~isequal(size(X), size(Y))
             error('X and Y must be the same size.');
         end
-        if (prod(size(X)) < prod(size(X.core)))
+        if (numel(X) < numel(X.core))
             Z = full(X);
             res = innerprod(Z, Y);
             return;

@@ -27,9 +27,9 @@ for i = 1:numel(s)
     fprintf('\t%s', name);
     if ndims(X) == 1
         fprintf('(:)');
-    elseif ndims(X) == 2
+    elseif ismatrix(X)
         fprintf('(:,:)');
-    elseif ndims(X) > 2
+    elseif ~ismatrix(X)
         fprintf('(:,:');
         fprintf(',%d', tt_ind2sub(X.size(3:end), i));
         fprintf(')');

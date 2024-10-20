@@ -59,7 +59,7 @@ D = sparse(1:nSmp, 1:nSmp, D, nSmp, nSmp);
 DPrime = sum((X' * D)'.*X) - tmp1 .* tmp1 / sum(diag(D));
 LPrime = sum((X' * L)'.*X) - tmp1 .* tmp1 / sum(diag(D));
 
-DPrime(find(DPrime < 1e-12)) = 10000;
+DPrime(DPrime < 1e-12) = 10000;
 
 Y = LPrime ./ DPrime;
 Y = Y';

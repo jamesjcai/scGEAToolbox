@@ -25,7 +25,7 @@
 %     [ArXiv:1602.02018]
 
 
-clear all; close all;
+% clear all; close all;
 addpath('codes');
 addpath('third_party');
 addpath('amazon_graph');

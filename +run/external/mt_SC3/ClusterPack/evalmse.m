@@ -15,4 +15,4 @@ for i = 1:max(cl)
     e = x(ins, :) - (ones(length(ins), 1) * c(i, :));
     sse = sse + sum(sum(e.*e));
 end
-p = exp(-sse/prod(size(x)));
+p = exp(-sse/numel(x));

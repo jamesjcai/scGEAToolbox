@@ -395,7 +395,7 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
 
 % ----------------------------------
 
-    function in_sc_openscedlg(src, event)
+    function in_sc_openscedlg(~, event)
         % set(src,'Enable','off');
         if strcmp(event.EventName,'KeyPress') && ...
             ~ismember(event.Key,{'return','space','i','I'})

@@ -95,7 +95,7 @@ while (~isempty(find(NotOptCols, 1)))
     if ~isempty(Cols3Ix)
         for i = 1:length(Cols3Ix)
             Ix = Cols3Ix(i);
-            toChange = max(find(NonOptSet(:, Ix) | InfeaSet(:, Ix)));
+            toChange = find(NonOptSet(:, Ix) | InfeaSet(:, Ix), 1, 'last' );
             if PassiveSet(toChange, Ix)
                 PassiveSet(toChange, Ix) = false;
             else

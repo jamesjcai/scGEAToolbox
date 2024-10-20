@@ -92,7 +92,7 @@ for i = 1:M
     %d=round(gamma/(1-sol1(1)));
     dvec(i) = gamma / (1 - sol1(1));
 
-    if ((kneighbors <= size(beta_hat, 2)) & (round(dvec(i)) <= size(beta_hat, 1) + 1) & (round(dvec(i)) > 1))
+    if ((kneighbors <= size(beta_hat, 2)) && (round(dvec(i)) <= size(beta_hat, 1) + 1) && (round(dvec(i)) > 1))
         % assumes gamma = 1
         %H=((sol1(2)-log(beta_hat(d-1,kneighbors)))/(1-sol1(1)))*log2(exp(1)); % express in terms of bits
         Hvec(i) = (dvec(i) / gamma) * (sol1(2) - log(beta_hat(round(dvec(i))-1, kneighbors))) * log2(exp(1)); % express in terms of bits

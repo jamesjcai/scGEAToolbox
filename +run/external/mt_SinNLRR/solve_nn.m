@@ -11,7 +11,7 @@ function [X, s] = solve_nn(Y, tau)
 [U, S, V] = svd(Y, 'econ');
 s = diag(S);
 
-ind = find(s <= tau);
+ind = s <= tau;
 s(ind) = 0;
 
 ind = find(s > tau);
