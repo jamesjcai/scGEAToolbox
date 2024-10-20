@@ -41,7 +41,6 @@ lcolor2 = lcolors(2,:);
     sce2 = sce.selectcells(i2);
     sce2 = sce2.qcfilter;
 
-
     if sce1.NumCells < 10 || sce2.NumCells < 10 || sce1.NumGenes < 10 || sce2.NumGenes < 10
         errordlg('Filtered SCE contains too few cells (n < 10) or genes (n < 10).','','modal');
         return;
@@ -90,8 +89,8 @@ h2 = scatter3(hAx0, px2, py2, pz2, 'filled', 'MarkerFaceAlpha', .1);
 plot3(hAx0, xyz1(:, 1), xyz1(:, 2), xyz1(:, 3), '-', 'linewidth', 4, 'Color',lcolor1);
 plot3(hAx0, xyz2(:, 1), xyz2(:, 2), xyz2(:, 3), '-', 'linewidth', 4, 'Color',lcolor2);
 
-xlabel(hAx0,'Mean+1, log');
-ylabel(hAx0,'CV+1, log');
+xlabel(hAx0,'Mean, log1p');
+ylabel(hAx0,'CV, log1p');
 zlabel(hAx0,'Dropout rate (% of zeros)');
 
 
@@ -223,7 +222,7 @@ if strcmp(answer, 'Yes'), hFig.Visible=true; end
 
             x2 = X2(idx, :);
             if ~isempty(sh2) && isvalid(sh2), delete(sh2); end
-            sh1 = plot(hAx2, 1:length(x2), x2, 'Color',lcolor2);
+            sh1 = plot(hAx2, 1:length(x2), x2, 'Color', lcolor2);
             xlim(hAx2,[1 size(X2,2)]);
             title(hAx2, strrep(sprintf('%s',g(idx)),'_','\_'));
             [titxt] = gui.i_getsubtitle(x2, cL2{1});
