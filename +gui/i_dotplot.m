@@ -77,9 +77,7 @@ T = table(GeneList, GroupList, AvgExpr, PrtExpr);
 
 
 % sz(sz<0.05)=0;
-if uselog
-    vl = log2(vl+1);
-end
+if uselog, vl = log1p(vl); end
 
 txgene = [" "; tgene(:)];
 
