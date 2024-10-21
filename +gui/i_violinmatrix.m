@@ -16,6 +16,7 @@ tgene = tgene(yes);
 M = length(tgene);
 % N=length(cL);
 
+if issparse(X), X = full(X); end
 if uselog, X = log1p(X); end
 cL = strrep(cL(:),'_','\_');
 xgroupdata = categorical(cL(c));
