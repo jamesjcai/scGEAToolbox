@@ -3,6 +3,7 @@ function [needupdate, v1local, v2web, im] = i_majvercheck
 % major version update check
 needupdate = false;
 v2web = [];
+im = [];
 try    
     % fid = fopen(xfilelocal, 'r');
     % C = textscan(fid, '%s', 'delimiter', '\n');
@@ -47,7 +48,11 @@ end
 if nargout > 1, v1local = v1local{1}; end
 if nargout > 2
     if ~isempty(v2web)
-        v2web = v2web{1}; 
+        try
+            v2web = v2web{1};
+        catch
+            v2web = [];
+        end
     end
 end
 if nargout > 3
