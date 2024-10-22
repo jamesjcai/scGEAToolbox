@@ -4,6 +4,9 @@ function callback_Scatterplot(src, ~)
     sce = guidata(FigureHandle);
     %[axx, bxx] = view(findall(FigureHandle,'type','axes'));
 
+    answer = questdlg('Select an independent variable. Continue?','');
+    if ~strcmp(answer,'Yes'), return; end
+
     [thisx, xlabelv] = gui.i_select1state(sce, false, false, false, true);
     if isempty(thisx), return; end
     if ~isnumeric(thisx)
@@ -11,9 +14,7 @@ function callback_Scatterplot(src, ~)
         return;
     end
 
-
-
-    answer = questdlg("Violinplot for gene expression or cell state variables?","", ...
+    answer = questdlg("Select a dependent variable from gene expression or cell state?","", ...
         'Gene Expression', 'Cell State','Gene Expression');
 
     switch answer
@@ -55,5 +56,5 @@ function callback_Scatterplot(src, ~)
                 waitfor(helpdlg('No valid cell state variables.',''));
             end            
     end
-end
     
+end    

@@ -40,12 +40,15 @@ if showwaitbar
     fprintf('\n=============\n%s\n-------------\n', 'Genes');
     for k = 1:length(posg)
         if isexpressed(k)
-            fprintf('%s\t*\n', posg(k));
+            fprintf('%s*, ', posg(k));
         else
-            fprintf('%s\t\n', posg(k));
+            fprintf('%s, ', posg(k));
+        end
+        if mod(k, 10) == 0 || k == length(posg)
+            fprintf('\n');
         end
     end
-    fprintf('=============\n*expressed genes (n=%d)\n', ...
+    fprintf('=============\n*Expressed genes (n = %d)\n', ...
         sum(isexpressed));
 end
 

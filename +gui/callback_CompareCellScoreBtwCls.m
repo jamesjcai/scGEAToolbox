@@ -105,8 +105,8 @@ bb = 'No, just show values';
                     [~, methodid] = gui.i_pickscoremethod;
                     if isempty(methodid), return; end
 
-                    fw=gui.gui_waitbar;
-                    for k=1:n
+                    fw = gui.gui_waitbar;
+                    for k = 1:n
                         y{k} = gui.e_cellscore(sce, posg{k}, ...
                             methodid, false);
                     end
@@ -243,7 +243,7 @@ bb = 'No, just show values';
                     [~, methodid] = gui.i_pickscoremethod;
 
                     fw=gui.gui_waitbar;
-                    for k=1:n
+                    for k = 1:n
                         [y{k}, ~, posg] = pkg.e_cellscores(sce.X, sce.g, ...
                             indx2(k), methodid, false);
                         ttxt{k} = T.ScoreType(indx2(k));
@@ -337,15 +337,17 @@ bb = 'No, just show values';
                 %     [h1]=sc_scattermarker(sce.X,sce.g,...
                 %                  sce.s,g,methodid);
                 if iscell(y)
-                    % t=array2table(cell2mat({rand(10,1),rand(10,1),rand(10,1)}),'VariableNames',{'aa','bb','cc'});
-                    
-                    %assignin("base",'y',y);
-                    %assignin("base",'ttxt',ttxt);                    
+                    % t=array2table(cell2mat({rand(10,1),rand(10,1),rand(10,1)}),'VariableNames',{'aa','bb','cc'});                    
+                    % assignin("base",'y',y);
+                    % assignin("base",'ttxt',ttxt);
+                    % assignin("base",'k',k);
+                   
+
                     if length(y)>1
                         pause(1);
-                        gui.i_scoreheatmap(cell2mat(y').', strrep(ttxt,'_','\_'), sce, FigureHandle);
-                    else
-                        gui.i_heatscatterfig(sce, y{k}, posg, ttxt{k}, FigureHandle);
+                        gui.i_scoreheatmap(cell2mat(y').', ttxt, sce, FigureHandle);
+                    elseif isscalar(y)
+                        gui.i_heatscatterfig(sce, y{1}, posg, ttxt{1}, FigureHandle);
                     end
                         % gui.sc_uitabgrpfig_expplot(y, markerlist, sce.s, FigureHandle, [axx, bxx]);
                 else
