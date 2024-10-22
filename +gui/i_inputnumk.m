@@ -9,7 +9,11 @@ prompt = {sprintf('%s (%d..%d):', ...
     descstr, a, b)};
 dlgtitle = '';
 dims = [1, 50];
-definput = {sprintf('%d', defaultk)};
+if isnumeric(defaultk)
+    definput = {sprintf('%d', defaultk)};
+else
+    definput = {defaultk};
+end
 answer = inputdlg(prompt, dlgtitle, dims, definput);
 if isempty(answer), return; end
 k = round(str2double(cell2mat(answer)));

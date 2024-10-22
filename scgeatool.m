@@ -14,7 +14,7 @@ if ~license('test','statistics_toolbox')  % isempty(which('grp2idx.m'))
     end
     return;
 end
-% rng("shuffle");
+rng("shuffle");
 % rng("default");
 
 persistent speciestag
@@ -200,6 +200,7 @@ in_addmenu(m_ntwk, 1, @gui.callback_scTenifoldKnk1, 'Virtual Gene Knockout - scT
 %in_addmenu(m_ntwk, 1, @gui.callback_scTenifoldXct, 'Cell-Cell Communication (scTenifoldXct/🐍) [PMID:36787742] 🐢 ...');
 
 m_extn = uimenu(FigureHandle, 'Text', 'E&xternal');
+in_addmenu(m_extn, 0, @gui.i_resetrngseed, 'Set Random Seed...');
 in_addmenu(m_extn, 0, @gui.i_setextwd, 'Set External Program Working Root Directory...');
 in_addmenu(m_extn, 1, @gui.i_setrenv, 'Set up R (ℝ) Environment');
 in_addmenu(m_extn, 0, @gui.i_setpyenv, 'Set up Python (🐍) Environment');
