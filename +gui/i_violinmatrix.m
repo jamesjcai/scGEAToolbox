@@ -23,6 +23,7 @@ xgroupdata = categorical(cL(c));
 
 hFig = figure('Visible', 'off', 'DockControls', 'off');
 for k = 1:M
+    %gui.gui_waitbar_adv(fw, k / M);
     ydata = X(g == tgene(k), :);
     nexttile;   % subplot(M, 1, ct)
     pkg.violinplot(ydata.', xgroupdata, 'showdata', false);
