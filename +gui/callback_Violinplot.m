@@ -40,8 +40,11 @@ function callback_Violinplot(src, ~)
             answer = questdlg('Plot all in the same figure?','');
             if strcmp(answer, 'Yes')
                 [c, cL] = grp2idx(thisc);
+                fw = gui.gui_waitbar;
                 gui.i_violinmatrix(full(Xt), sce.g, c, cL, glist, ...
                         false, '', FigureHandle);
+                gui.gui_waitbar(fw);
+
                 return;
             end
 
