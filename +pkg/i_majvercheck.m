@@ -2,7 +2,7 @@ function [needupdate, v1local, v2web, im] = i_majvercheck
 
 % major version update check
 needupdate = false;
-
+v2web = [];
 try    
     % fid = fopen(xfilelocal, 'r');
     % C = textscan(fid, '%s', 'delimiter', '\n');
@@ -45,12 +45,16 @@ catch ME
     disp(ME.message);
 end
 if nargout > 1, v1local = v1local{1}; end
-if nargout > 2, v2web = v2web{1}; end
+if nargout > 2
+    if ~isempty(v2web)
+        v2web = v2web{1}; 
+    end
+end
 if nargout > 3
-    im = [];
     try
         im = webread('https://visit-counter.vercel.app/counter.png?page=https%3A%2F%2Fgithub.com%2Fjamesjcai%2FscGEAToolbox%2F&s=15&c=ffffff&bg=00000000&no=2&ff=digi&tb=&ta=');
     catch
+        im = [];
     end
 end
 
