@@ -152,6 +152,7 @@ for ix = 1:size(df1, 1)
 end
 
 CC.setSquareT_Prop('FaceColor',[0,0,0])
+
 % CC.setSquareT_N(2,'FaceColor',[.8,0,0])
 % CC.tickState('on')
 

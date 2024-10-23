@@ -27,7 +27,7 @@ function callback_MultiGroupingView(src, ~)
 
         case 'Multigrouping'
             if matlab.ui.internal.isUIFigure(FigureHandle), focus(FigureHandle); end
-            [thiscv, clabelv] = gui.i_selectnstates(sce);
+            [thiscv, clabelv] = gui.i_selectnstates(sce, false, [4, 5]);
             if isempty(thiscv) || isempty(clabelv), return; end
 
             hFig = figure('Visible','off');

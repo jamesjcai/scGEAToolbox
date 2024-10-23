@@ -17,8 +17,10 @@ import mlreportgen.ppt.*;
 pw1 = fileparts(mfilename('fullpath'));
 pth = fullfile(pw1, '..', 'resources', 'Misc', 'myTemplate.pptx');
 
-hFig = figure("Visible","off",'MenuBar','none', ...
-    'ToolBar','figure', 'DockControls', 'off');
+% hFig = figure("Visible","off",'MenuBar','none', ...
+%     'ToolBar','figure', 'DockControls', 'off');
+
+hFig = figure("Visible","off",'DockControls', 'off');
 hFig.Position(3) = hFig.Position(3) * 1.8;
 
 delete(findall(hFig, 'Tag', 'FigureToolBar'));

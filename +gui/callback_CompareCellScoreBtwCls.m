@@ -347,11 +347,11 @@ bb = 'No, just show values';
                         pause(1);
                         gui.i_scoreheatmap(cell2mat(y').', ttxt, sce, FigureHandle);
                     elseif isscalar(y)
-                        gui.i_heatscatterfig(sce, y{1}, posg, ttxt{1}, FigureHandle);
+                        gui.i_stemscatterfig(sce, y{1}, posg, ttxt{1}, FigureHandle);
                     end
                         % gui.sc_uitabgrpfig_expplot(y, markerlist, sce.s, FigureHandle, [axx, bxx]);
                 else
-                    gui.i_heatscatterfig(sce, y, posg, ttxt, FigureHandle);
+                    gui.i_stemscatterfig(sce, y, posg, ttxt, FigureHandle);
                 end
                 % answer = questdlg('Also show stem plot?', '');
                 % if answer == "Yes"

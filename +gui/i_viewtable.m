@@ -14,8 +14,6 @@ if nargin < 2, ParentFigureHandle = []; end
 % T = table(Age,Height,Weight,'RowNames',LastName);
 
 hFig = uifigure('Visible', false);
-%set(hFigure, 'MenuBar', 'none');
-%set(hFigure, 'ToolBar', 'none');
 uitable(hFig, 'Data', T, 'ColumnName', T.Properties.VariableNames, ...
     'RowName', T.Properties.RowNames, 'Units', ...
     'Normalized', 'Position', [0.05, 0.05, 0.92, 0.90]);

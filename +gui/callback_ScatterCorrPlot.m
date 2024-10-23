@@ -1,4 +1,4 @@
-function callback_Scatterplot(src, ~)
+function callback_ScatterCorrPlot(src, ~)
 
     FigureHandle = src.Parent.Parent;
     sce = guidata(FigureHandle);

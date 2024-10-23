@@ -1,4 +1,4 @@
-function callback_Violinplot(src, ~)
+function callback_ScatterStemPlot(src, ~)
 
     if isa(src,"SingleCellExperiment")
         sce = src;
@@ -8,24 +8,18 @@ function callback_Violinplot(src, ~)
         sce = guidata(FigureHandle);
     end
     
-    [thisc, ~] = gui.i_select1class(sce);
-    if isempty(thisc), return; end
-
-
-    [~, cLorder] = grp2idx(thisc);
-    [newidx] = gui.i_selmultidlg(cLorder, cLorder, FigureHandle);
-    if isempty(newidx), return; end
-    picked = ismember(thisc, cLorder(newidx));
-    % cLorderx = cLorder(ismember(cLorder,cLorder(newidx)));
-    if ~all(picked), thisc = thisc(picked); end
+    %[thisc, ~] = gui.i_select1class(sce);
+    %if isempty(thisc), return; end
+    %[~, cLorder] = grp2idx(thisc);
+    %[newidx] = gui.i_selmultidlg(cLorder, cLorder, FigureHandle);
+    %if isempty(newidx), return; end
+    %picked = ismember(thisc, cLorder(newidx));
+    %if ~all(picked), thisc = thisc(picked); end
     
-    answer = questdlg("Violinplot for gene expression or cell state variables?","", ...
-        'Gene Expression', 'Cell State','Gene Expression');
+    answer = questdlg("Scatter-stem plot for gene expression or cell state variables?","", ...
+        'Gene Expression', 'Cell State', 'Gene Expression');
     switch answer
         case 'Gene Expression'
-            % [c, cL] = grp2idx(thisc);
-            % [c, cL, noanswer] = gui.i_reordergroups(thisc);
-            % if noanswer, return; end
             [glist] = gui.i_selectngenes(sce, [], FigureHandle);
             if isempty(glist)
                 helpdlg('No gene selected.', '');
@@ -35,24 +29,21 @@ function callback_Violinplot(src, ~)
             [Xt] = gui.i_transformx(sce.X);
             if isempty(Xt), return; end
 
-            answer = questdlg('Plot all in the same figure?','');
-            if strcmp(answer, 'Yes')
-                [c, cL] = grp2idx(thisc);
-                fw = gui.gui_waitbar;
-                gui.i_violinmatrix(full(Xt), sce.g, c, cL, glist, ...
-                        false, '', FigureHandle);
-                gui.gui_waitbar(fw);
-
-                return;
-            end
+            % answer = questdlg('Plot all in the same figure?','');
+            % if strcmp(answer, 'Yes')                
+            %     fw = gui.gui_waitbar;                
+            %     gui.i_violinmatrix(full(Xt), sce.g, c, cL, glist, ...
+            %             false, '', FigureHandle);
+            % 
+            %     gui.gui_waitbar(fw);
+            % 
+            %     return;
+            % end
 
             n = length(glist);
             thisyv = cell(n,1);
             for k=1:n
                 thisyv{k} = full(Xt(upper(sce.g) == upper(glist(k)), :));
-                if ~all(picked)
-                    thisyv{k} = thisyv{k}(picked);
-                end
             end
             ylabelv = glist;
 
@@ -61,7 +52,6 @@ function callback_Violinplot(src, ~)
 
             a = false(length(thisyv), 1);
             for k = 1:length(thisyv)
-                thisyv{k} = thisyv{k}(picked);
                 a(k) = isnumeric(thisyv{k});
             end
             if any(a)
@@ -76,9 +66,14 @@ function callback_Violinplot(src, ~)
         otherwise
             return;
     end
-
-    gui.sc_uitabgrpfig_vioplot(thisyv, ylabelv, thisc, FigureHandle);
-
-
-
+    fw = gui.gui_waitbar;
+    for k = 1:length(thisyv)
+        hFig = figure('Visible','off');
+        gui.i_stemscatter(sce.s, thisyv{k});
+        zlabel(strrep(ylabelv{k},'_','\_'));
+        gui.i_movegui2parent(hFig, FigureHandle);
+        hFig.Visible = "on";
+    end
+    gui.gui_waitbar(fw);
+    % gui.sc_uitabgrpfig_vioplot(thisyv, ylabelv, thisc, FigureHandle);
 end

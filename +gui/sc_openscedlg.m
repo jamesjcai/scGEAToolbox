@@ -459,7 +459,7 @@ function [y] = in_multifilesgo
 end
 
 
-    function [sce]=in_simulatedata
+    function [sce] = in_simulatedata
         sce=[];
         definput = {'3000', '5000'};
         prompt = {'Number of genes:', ...
