@@ -72,4 +72,5 @@ end
 
     T.DiffDist(idxx) = 0;
     T = sortrows(T,"DiffDist","descend");
-    
+    T = T(T.pval <= 0.05,:);
+    T = T(T.DiffDist > 0,:);
