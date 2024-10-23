@@ -53,6 +53,12 @@ end
     DiffDist = vecnorm(v1 - v2, 2, 2);
     DiffSign = sign(vecnorm(v1,2,2)-vecnorm(v2,2,2));
 
+    % Standardize distances
+    ddz = zscore(DiffDist);
+    % Assume Gaussian normal distribution for errors for p-values
+    pval = 1 - normcdf(ddz);
+    clear ddz;
+
     T1.Properties.VariableNames = append(T1.Properties.VariableNames, sprintf('_%s', cL1{1}));
     T2.Properties.VariableNames = append(T2.Properties.VariableNames, sprintf('_%s', cL2{1}));
     idxx = T1.(8)==1 | T2.(8)==1 | T1.(8) == max(T1.(8)) | T2.(8) == max(T2.(8));
@@ -62,7 +68,7 @@ end
 
     T1.Properties.VariableNames{1} = 'gene';
 
-    T = [T1 T2 table(DiffDist) table(DiffSign)];
+    T = [T1 T2 table(DiffDist) table(DiffSign) table(pval)];
 
     T.DiffDist(idxx) = 0;
     T = sortrows(T,"DiffDist","descend");
