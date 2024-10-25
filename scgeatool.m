@@ -262,7 +262,7 @@ UserToolbarHandle = uitoolbar('Parent', FigureHandle);
 in_addbuttonpush(0, 0, [], [], "");
 in_addbuttonpush(0, 0, @gui.callback_MultiGroupingView, "plotpicker-arxtimeseries.gif", "Multi-grouping View...");
 in_addbuttonpush(0, 0, @gui.callback_CrossTabulation, "plotpicker-comet.gif", "Cross tabulation");
-in_addbuttonpush(0, 0, @gui.callback_ShowGeneExprGroup, "PlotPoints.gif", "Gene expression in groups");
+in_addbuttonpush(0, 0, @gui.callback_ShowGeneExprGroup, "NewPoints.gif", "Gene expression in groups");
 in_addbuttonpush(0, 1, @gui.callback_Dotplot, "icon-mat-blur-linear-10.gif", "Gene Expression Dot Plot...");
 in_addbuttonpush(0, 0, @gui.callback_Heatmap, "icon-mat-apps-20.gif", "Gene Expression Heatmap...");
 in_addbuttonpush(0, 0, @gui.callback_ScatterStemPlot, "NewPoly.gif", "Gene Expression/Cell State Stem Plot...");
