@@ -7,9 +7,6 @@ function callback_ShowGeneExprCompr(src, ~)
     [glist] = gui.i_selectngenes(sce, [], FigureHandle);
     if isempty(glist), return; end
 
-
-
-
         allowunique = false;
         [thisc] = gui.i_select1class(sce, allowunique);
         if isempty(thisc), return; end

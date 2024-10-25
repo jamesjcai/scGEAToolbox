@@ -1,7 +1,4 @@
-function [hFig] = i_violinarray(X, g, c, cL, tgene, uselog, titletxt, parentfig)
-
-% this function uses violinplot.m which availble since MATLAB v2024b.
-% see also: i_violinmatrix 
+function [hFig] = i_featureplotarray(X, g, c, cL, tgene, uselog, titletxt, parentfig)
 
 if nargin < 8, parentfig = []; end
 if nargin < 7, titletxt = []; end
