@@ -11,13 +11,9 @@ function callback_FindAllMarkers(src, ~)
             in_findAllMarkers(sce);
         case 'Marker Gene Heatmap'
             in_MarkerGeneHeatmap(src);
-            return;
-        otherwise
-            return;
     end
-    
-
 end
+
 
 function in_findAllMarkers(sce)
     [thisc, ~] = gui.i_select1class(sce);
@@ -53,6 +49,23 @@ function in_MarkerGeneHeatmap(src, ~, sce)
         sce = guidata(FigureHandle);
     end
     % unique(sce.c_cluster_id)
+
+    
+    answer = questdlg("Only consider known (PangloaDB) marker genes?","");
+    if strcmp(answer, 'Yes')
+
+        markergenes = pkg.i_get_panglaodbmarkers;
+        idx = ismember(upper(sce.g), upper(markergenes));
+        if sum(idx) > 2000
+            fprintf('%d genes x %d cells\n', sce.NumGenes, sce.NumCells);
+            sce.X = sce.X(idx, :);
+            sce.g = sce.g(idx);            
+            sce = sce.qcfilter;
+            fprintf('%d genes x %d cells\n', sce.NumGenes, sce.NumCells);
+        else
+            uiwait(helpdlg("Not enough marker genes (n < 2000). Use all genes to search for markers.",""));
+        end
+    end
     
     [thisc, ~] = gui.i_select1class(sce);
     if isempty(thisc), return; end
@@ -97,6 +110,7 @@ function in_MarkerGeneHeatmap(src, ~, sce)
         sce.g(idx) = [];
         sce.X(idx, :) = [];
     end
+    fprintf('%d genes x %d cells\n', sce.NumGenes, sce.NumCells);
     try
         [markerlist] = sc_pickmarkers(sce.X, sce.g, c, 10, methodid);
     catch ME
@@ -116,11 +130,13 @@ function in_MarkerGeneHeatmap(src, ~, sce)
     X = [];
     szcl = [];
     idcl = [];
-    for k = 1:length(cL)
-        i = c == k;
-        X = [X, sce.X(:, i)];
-        szcl = [szcl, sum(i)];
-        idcl = [idcl; c(i)];
+    for k = 1:numel(cL)
+        ix = c == k;
+        X = [X, sce.X(:, ix)];
+        szcl = [szcl, sum(ix)];
+        idcl = [idcl; c(ix)];
+        %cL{k}
+        %sum(ix)        
     end
     X = sc_norm(X);
     X = log1p(X);
@@ -168,7 +184,7 @@ function in_MarkerGeneHeatmap(src, ~, sce)
     szc = cumsum(szgn);
     for kx = 1:max(idcl) - 1
         xline(sum(idcl < kx+1)+0.5, 'r-');
-        yline(szc(kx)+0.5, 'r-');
+        yline(szc(kx) + 0.5, 'r-');
     end
     
     set(gca, 'YTick', 1:size(Y, 1));
@@ -279,7 +295,7 @@ function in_MarkerGeneHeatmap(src, ~, sce)
             h.Title = 'Marker Gene Heatmap';
             h.XLabel = 'Group';
             h.YLabel = 'Marker Gene';
-            % h.Colormap = parula(256);
+            h.Colormap = parula(256);
             h.GridVisible = 'off';
             h.CellLabelColor = 'none';
             tb = uitoolbar('Parent', f);

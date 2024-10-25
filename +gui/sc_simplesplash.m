@@ -48,7 +48,7 @@ if nargin < 1 || isempty(fx)
     % set(fa,'Color','k','XColor','k','YColor','k');
     text(fa,20, 50,'SCGEATOOL','Color','w','FontSize',16);
 
-    v1  = pkg.i_getversionnum;
+    v1  = pkg.i_get_versionnum;
     text(fa,20, 80, v1, 'Color',[.7 .7 .7],'FontSize',12);
     text(fa,20, 270,'Loading...','Color',[.7 .7 .7],'FontSize',12);
     fx.Visible=true;

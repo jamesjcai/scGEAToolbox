@@ -5,7 +5,7 @@ if nargin<3, showloading=true; end
 if nargin<2, r = 0.0; end
 if nargin<1
     mfolder = fileparts(mfilename('fullpath'));
-    v1 = pkg.i_getversionnum;
+    v1 = pkg.i_get_versionnum;
     %pngfilename = 'dna-adn-black-background-1080P-wallpaper.jpg';
     %pngfilename = 'OIP (1).jpg';
     %pngfilename = 'wave-white-particles-abstract-technology-flow-background-future-vector-illustration_435055-172.jpg';

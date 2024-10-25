@@ -1,4 +1,4 @@
-function [v1] = i_getversionnum
+function [v1] = i_get_versionnum
 
     mfolder = fileparts(mfilename('fullpath'));
     xfile = 'scGEAToolbox.prj';

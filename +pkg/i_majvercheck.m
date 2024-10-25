@@ -14,7 +14,7 @@ try
     % a2 = strfind(x, '</param.version>');
     % v1local = extractBetween(x, a1{1}+length('<param.version>'), a2{1}-1)
 
-    v1local = {pkg.i_getversionnum};
+    v1local = {pkg.i_get_versionnum};
 
     xfile = 'scGEAToolbox.prj';
     url = sprintf('https://raw.githubusercontent.com/jamesjcai/scGEAToolbox/main/%s',xfile);

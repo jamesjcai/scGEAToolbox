@@ -4,7 +4,6 @@ if usejava('jvm') && ~feature('ShowFigureWindows')
     error('MATLAB is in a text mode. This function requires a GUI-mode.');
 end
 
-
 if ~license('test','statistics_toolbox')  % isempty(which('grp2idx.m'))
     uiwait(warndlg('SCGEATOOL requires Statistics and Machine Learning Toolbox.','Missing Dependencies'));
     answer3 = questdlg('Learn how to install Statistics and Machine Learning Toolbox?','');
@@ -32,14 +31,14 @@ if nargin < 1
     catch
         fxfun = @gui.sc_simplesplash;
         fx = fxfun();
-        v1 = pkg.i_getversionnum;
+        v1 = pkg.i_get_versionnum;
     end
     sce = SingleCellExperiment;
 else
     if ~isa(sce, 'SingleCellExperiment')
         error('requires >> sce = SingleCellExperiment(); scgeatool(sce)');
     end
-    v1 = pkg.i_getversionnum;
+    v1 = pkg.i_get_versionnum;
 end
 
 mfolder = fileparts(mfilename('fullpath'));
@@ -303,11 +302,8 @@ in_addbuttonpush(1, 1, @in_labelcellgroups, "icon-fa-tags-10b.gif", "Label cell 
 in_addbuttonpush(1, 0, @in_Brushed2NewCluster, "plotpicker-glyplot-face.gif", "Add brushed cells to a new group")
 in_addbuttonpush(1, 0, @in_Brushed2MergeClusters, "plotpicker-pzmap.gif", "Merge brushed cells to same group")
 in_addbuttonpush(1, 0, @in_RenameCellTypeBatchID, "plotpicker-scatterhist.gif", "Rename cell type or batch ID");
-%in_addbuttonpush(1, 0, [], [], "");
-
+in_addbuttonpush(1, 0, @in_SingleClickSolution, "icon-mat-fingerprint-10.gif", "Single-click cell type annotation")
 in_addbuttonpush(1, 0, [], [], "");
-in_addbuttonpush(1, 1, @in_SingleClickSolution, "icon-mat-fingerprint-10.gif", "Single-click cell type annotation")
-
 in_addbuttonpush(1, 1, @in_ClusterCellsS, "plotpicker-dendrogram.gif", "Clustering using cell embedding (S)")
 % in_addbuttonpush(1, 0, @in_ClusterCellsX, "icon-mw-cluster-10.gif", "Clustering using expression matrix (X)")
 in_addbuttonpush(1, 0, {@in_DetermineCellTypeClustersGeneral, true}, "plotpicker-contour.gif", "Assign cell types to groups")

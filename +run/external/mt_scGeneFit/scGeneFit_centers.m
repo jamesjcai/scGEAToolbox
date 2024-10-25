@@ -67,7 +67,7 @@ if nargin > 3
     end
 end
 tic
-rng default %for reproducibility
+% rng default %for reproducibility
 
 %Select constraints from the top level
 [Delta, smallest, lambda] = select_center_constraints(data, labels{1}, samples_fraction(1), 95);
@@ -88,7 +88,7 @@ end
 
 toc
 disp('Size of the linear program constraints: ')
-size(Delta)
+% size(Delta)
 M = sqz_hinge(Delta, hinge_scale*smallest, num_markers, lambda);
 [~, aux] = maxk(M, num_markers);
 markers = M * 0;
