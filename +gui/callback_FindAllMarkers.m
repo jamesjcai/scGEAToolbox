@@ -53,7 +53,6 @@ function in_MarkerGeneHeatmap(src, ~, sce)
     
     answer = questdlg("Only consider known (PangloaDB) marker genes?","");
     if strcmp(answer, 'Yes')
-
         markergenes = pkg.i_get_panglaodbmarkers;
         idx = ismember(upper(sce.g), upper(markergenes));
         if sum(idx) > 2000
@@ -65,6 +64,10 @@ function in_MarkerGeneHeatmap(src, ~, sce)
         else
             uiwait(helpdlg("Not enough marker genes (n < 2000). Use all genes to search for markers.",""));
         end
+    elseif strcmp(answer, 'No')
+        disp('Consider all genes for marker gene search.');
+    else
+        return;
     end
     
     [thisc, ~] = gui.i_select1class(sce);
