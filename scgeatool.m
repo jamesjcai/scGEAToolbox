@@ -466,7 +466,6 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
         end
     end
 
-
     function in_turnonuserguiding(~, ~)
         % setpref('scgeatoolbox','useronboardingtoolbar',true);
         % set(UserToolbarHandle, 'Visible', 'on');
@@ -959,7 +958,7 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
         extprogname = 'R_Seurat';
         preftagname = 'externalwrkpath';
         [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
-
+        if isempty(wkdir), return; end
         [ok] = gui.i_confirmscript('Run Seurat Workflow (Seurat/R)?', ...
             'R_Seurat', 'r');
         if ~ok, return; end
@@ -984,17 +983,13 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
         extprogname = 'R_decontX';
         preftagname = 'externalwrkpath';
         [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
-
-        %[ok] = gui.i_confirmscript('Detect Ambient RNA Contamination (decontX)', ...
-        %    'R_decontX', 'r');
-        %if ~ok, return; end
-
+        if isempty(wkdir), return; end
         fw = gui.gui_waitbar;
         try
             [Xdecon, ~] = run.r_decontX(sce, wkdir);
-        catch
+        catch ME
            gui.gui_waitbar(fw);
-           errordlg('DecontX runtime error.','');
+           errordlg(ME.message,'');
            return;
         end
         gui.gui_waitbar(fw);
