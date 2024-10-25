@@ -3,8 +3,8 @@ function i_feaplotarray(sce, tgene, thisc, uselog, parentfig)
 if nargin < 5, parentfig = []; end
 if nargin < 4, uselog = false; end
 
-    [Xt] = gui.i_transformx(sce.X);
-    if isempty(Xt), return; end
+[Xt] = gui.i_transformx(sce.X);
+if isempty(Xt), return; end
 
 X = Xt;
 g = sce.g;
@@ -12,8 +12,14 @@ s = sce.s;
 
 %[c, cL] = grp2idx(sce.c_batch_id);
 %[c, cL] = grp2idx(sce.c_cell_type_tx);
-[c, cL] = grp2idx(thisc);
 
+if max(grp2idx(thisc))>50
+    answer = questdlg('Too many groups. Continue?','');
+    if ~strcmp(answer, 'Yes'), return; end
+end
+
+[c, cL, noanswer] = gui.i_reordergroups(thisc);
+if noanswer, return; end
 
 cL = strrep(cL(:),'_','\_');
 [yes] = ismember(tgene, g);
