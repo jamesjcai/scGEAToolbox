@@ -1,3 +1,5 @@
+% https://github.com/solevillar/scGeneFit
+
 data_filename = '../data/zeisel_data.mat';
 label1_filename = '../data/zeisel_labels1.mat';
 label2_filename = '../data/zeisel_labels2.mat';
