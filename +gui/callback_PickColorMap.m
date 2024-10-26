@@ -9,7 +9,7 @@ n = max([n, 3]);
 folder = fileparts(mfilename('fullpath'));
 a = strfind(folder, filesep);
 folder = extractBefore(folder, a(end)+1);
-wrkpth = fullfile(folder, '+run', 'external', 'mt_cbrewer');
+wrkpth = fullfile(folder, '+run', 'external', 'ml_cbrewer');
 if ~(ismcc || isdeployed)
     addpath(wrkpth);
 end

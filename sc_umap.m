@@ -19,5 +19,5 @@ if dolog1p
     X = log1p(X);
     disp('log1p transformation...done.')
 end
-s = run.mt_UMAP(X, ndim);
+s = run.ml_UMAP(X, ndim);
 end

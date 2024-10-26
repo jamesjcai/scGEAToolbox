@@ -8,11 +8,11 @@ pw1 = fileparts(mfilename('fullpath'));
 if ~(ismcc || isdeployed)
     pth = fullfile(pw1, 'external', 'mt_PHATE'); % for calling randmds.m
     addpath(pth);
-    pth1 = fullfile(pw1, 'external', 'mt_cbrewer');
+    pth1 = fullfile(pw1, 'external', 'ml_cbrewer');
     addpath(pth1);
-    pth1 = fullfile(pw1, 'external', 'mt_UMAP44');
+    pth1 = fullfile(pw1, 'external', 'ml_UMAP44');
     addpath(pth1);
-%    pth3 = fullfile(pw1, 'external', 'mt_UMAP', 'umap.jar');
+%    pth3 = fullfile(pw1, 'external', 'ml_UMAP', 'umap.jar');
 %    javaaddpath(pth3);
 end
 

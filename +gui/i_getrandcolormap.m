@@ -3,7 +3,7 @@ function [c] = i_getrandcolormap
 folder = fileparts(mfilename('fullpath'));
 a = strfind(folder, filesep);
 folder = extractBefore(folder, a(end)+1);
-wrkpth = fullfile(folder, '+run', 'external', 'mt_cbrewer');
+wrkpth = fullfile(folder, '+run', 'external', 'ml_cbrewer');
 if ~(ismcc || isdeployed)
     addpath(wrkpth);
 end
