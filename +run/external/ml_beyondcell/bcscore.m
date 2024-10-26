@@ -1,81 +1,14 @@
 function bc = bcscore(sc, gs, expr_thres)
-    if nargin < 3
-        expr_thres = 0.1;
-    end
+
+    if nargin < 3, expr_thres = 0.1; end
     % gs - gene set    
     % gs.mode - gene set of up- and down- regulated genes
     
-    % --- Checks ---
-    % Check if sc is a Seurat object or expression matrix.
-    if isfield(sc, 'meta.data') && isfield(sc, 'assays')
-        input = 'Seurat object';
-        default = sc.assays.DefaultAssay;
-        if ismember(default, {'RNA', 'SCT', 'Spatial'})
-            disp(['Using ', default, ' assay as input.']);
-            if isequal(sc.assays.(default).counts, sc.assays.(default).data)
-                error('@counts and @data matrices are identical. Is @data normalized?');
-            else
-                expr_matrix = sc.assays.(default).data;
-            end
-        else
-            error('Seurat default assay must be either RNA, Spatial, or SCT.');
-        end
-    elseif isnumeric(sc) && ismatrix(sc)
-        input = 'expression matrix';
-        default = {};
-        warning('Using count matrix as input. Please, check that this matrix is normalized and unscaled.');
-        expr_matrix = sc;
-        sc = CreateSeuratObject(expr_matrix);
-    else
-        error('sc must be either a Seurat object or a single-cell expression matrix.');
-    end
-    
-    % Check if gs is a geneset object.
-    if ~isa(gs, 'geneset')
-        error('gs must be a geneset object.');
-    end
-    
-    % Check expr_thres.
-    if length(expr_thres) ~= 1 || expr_thres < 0 || expr_thres > 1
-        error('expr.thres must be a positive number between 0 and 1.');
-    end
-    
-    % Check gene case format
-    sc_gene_case = names(CaseFraction(rownames(expr_matrix)));
-    gs_gene_case = names(CaseFraction(unique(unlist({gs.genelist}))));
-    if ~strcmp(sc_gene_case, gs_gene_case)
-        warning(['gs genes are ', gs_gene_case, ' and sc genes are ', sc_gene_case, '. Please check your ', input, ' and translate the genes if necessary.']);
-    end
-    
     % --- Code ---
     % Create beyondcell object.
-    bc = beyondcell(expr_matrix, sc.meta.data, sc.reductions, gs.n_genes, gs.mode, expr_thres);
+    bc = beyondcell(expr_matrix, sc.meta.data, sc.reductions, ...
+        gs.n_genes, gs.mode, expr_thres);
     
-    % Check spatial object
-    if isfield(sc, 'images')
-        bc.SeuratInfo.images = sc.images;
-    end
-    
-    % Convert gene names in expr_matrix and gs to lowercase.
-    expr_matrix = lower(rownames(expr_matrix));
-    gs.genelist = cellfun(@(x) struct('up', lower(x.up), 'down', lower(x.down)), gs.genelist, 'UniformOutput', false);
-    
-    % Genes in expr_matrix.
-    genes = rownames(expr_matrix);
-    
-    % Filter out signatures that do not share any genes with sc.
-    in_sc = cellfun(@(x) any(ismember(genes, x)), gs.genelist);
-    if all(~in_sc)
-        error('No common genes between gs and sc were found. Stopping the execution.');
-    elseif any(~in_sc)
-        warning(['The following signatures do not share any genes with sc and will be removed: ', strjoin(gs.genelist(~in_sc), ', ')]);
-        gs.genelist = gs.genelist(in_sc);
-    end
-    
-    % Progress bar setup
-    len_gs = length(gs.genelist);
-    total = len_gs + (length(gs.mode) * len_gs);
-    bins = ceil(total / 100);
     
     % Expression threshold calculation
     below_thres = false(len_gs, size(expr_matrix, 2));
