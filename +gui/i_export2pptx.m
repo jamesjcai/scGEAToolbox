@@ -1,11 +1,11 @@
 function i_export2pptx(F, glist)
 
 if nargin < 2, glist = {[]}; end
-
-if ~license('test','MATLAB_Report_Generator')
-    warndlg('Unable to check out a Report Generator license. This function requires MATLAB Report Generator.', '');
-    return;
-end
+% 
+% if ~license('test','MATLAB_Report_Generator')
+%     warndlg('Unable to check out a Report Generator license. This function requires MATLAB Report Generator.', '');
+%     return;
+% end
 
 pw1 = fileparts(mfilename('fullpath'));
 pth = fullfile(pw1, '..', 'resources', 'Misc', 'myTemplate.pptx');
