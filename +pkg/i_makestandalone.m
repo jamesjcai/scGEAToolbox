@@ -3,11 +3,9 @@
 pw1 = cdgea;
 wrkpth = fullfile(pw1, 'tensor_toolbox');
 addpath(wrkpth);
-wrkpth = fullfile(pw1, '+run', 'external', 'mt_scGeneFit');
+wrkpth = fullfile(pw1, '+run', 'external', 'ml_scGeneFit');
 addpath(wrkpth);
 wrkpth = fullfile(pw1, '+run', 'external', 'ml_MAGIC');
-%addpath(wrkpth);
-%wrkpth = fullfile(pw1, '+run', 'external', 'ml_DESeq2');
 addpath(wrkpth);
 wrkpth = fullfile(pw1, '+run', 'external', 'ml_cbrewer');
 addpath(wrkpth);

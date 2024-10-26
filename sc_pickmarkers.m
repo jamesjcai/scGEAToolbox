@@ -6,14 +6,14 @@ function [markerlist] = sc_pickmarkers(X, genelist, c, topn, methodid)
     
     switch methodid
         case 1 % Fast method
-            [idxv] = run.mt_PickMarkers(X, genelist, c, topn);
+            [idxv] = run.ml_PickMarkers(X, genelist, c, topn);
             for k = 1:max(c)
                 idx = idxv(1+(k - 1)*topn:k*topn);
                 markerlist{k} = genelist(idx(~isnan(idx)));
             end
         case 2
             num_markers = topn * numel(unique(c));
-            markerlist = run.mt_scGeneFit(X, genelist, c, num_markers);
+            markerlist = run.ml_scGeneFit(X, genelist, c, num_markers);
         case 3 % LASSO (slower method)
             for k = 1:max(c)
                 fprintf('Processing cell group ... %d of %d\n', k, max(c));

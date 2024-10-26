@@ -1,4 +1,4 @@
-function [output] = mt_Enrichr(genelist, backgroundlist, genesets, minumgene, pvaluecut)
+function [output] = ml_Enrichr(genelist, backgroundlist, genesets, minumgene, pvaluecut)
 
 if nargin < 5, pvaluecut = 0.1; end
 if nargin < 4, minumgene = 5; end

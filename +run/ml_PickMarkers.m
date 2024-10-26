@@ -1,4 +1,4 @@
-function [gene_idxv, T] = mt_PickMarkers(X, genelist, c, topn, plotit)
+function [gene_idxv, T] = ml_PickMarkers(X, genelist, c, topn, plotit)
 %PICKMARKERS - adapted from GC_htmp_DE.m
 
 % This is a support function for SC_PICKMARKERS

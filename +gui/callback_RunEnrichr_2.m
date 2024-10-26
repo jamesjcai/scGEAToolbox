@@ -51,7 +51,7 @@ if nargin < 3, predefinedlist = []; end
     
 
     fw = gui.gui_waitbar;
-    Tlist = run.mt_Enrichr(ingenelist, backgroundlist, genesets,...
+    Tlist = run.ml_Enrichr(ingenelist, backgroundlist, genesets,...
                            minugenes, pvaluecut);
 
     T=table;
