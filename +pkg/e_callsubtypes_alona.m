@@ -33,7 +33,7 @@ switch targettype
 end
 
 for ix = 1:max(clusterid)
-    [T] = run.mt_alona(sce2.X(:, clusterid == ix), sce2.g, [], ...
+    [T] = run.ml_alona_new(sce2.X(:, clusterid == ix), sce2.g, [], ...
         'subtype', targettag);
     ctxt = sprintf('%s_{%d}', T.C1_Cell_Type{1}, ix);
     annolabels(clusterid == ix) = ctxt;

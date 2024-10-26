@@ -1,4 +1,4 @@
-function [c, cls] = mt_SC3(X, k, plotit, donorm, dolog1)
+function [c, cls] = ml_SC3(X, k, plotit, donorm, dolog1)
 % SC3 - consensus clustering of single-cell RNA-seq data
 % Ref: https://www.nature.com/articles/nmeth.4236
 
@@ -34,7 +34,7 @@ Dis = 1 - corr(X, 'type', 'p');
 
 oldpath = pwd;
 pw1 = fileparts(mfilename('fullpath'));
-pth = fullfile(pw1, 'external', 'mt_SC3', 'ClusterPack');
+pth = fullfile(pw1, 'external', 'ml_SC3', 'ClusterPack');
 if ~(ismcc || isdeployed), addpath(pth); end
 cd(pth);
 cls = [cls1; cls2; cls3];

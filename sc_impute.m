@@ -17,7 +17,7 @@ switch upper(p.Results.type)
     case 'MAGIC'
         [X] = run.ml_MAGIC(X, true);
     case 'MCIMPUTE'
-        [X] = run.mt_McImpute(X, true);
+        [X] = run.ml_McImpute(X, true);
     case 'SAVER'
         [X] = run.r_SAVER(X);
 end

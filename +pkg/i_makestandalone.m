@@ -39,7 +39,7 @@ wrkpth = fullfile(pw1, '+run', 'external', 'mt_SinNLRR');
 addpath(wrkpth);
 wrkpth = fullfile(pw1, '+run', 'external', 'mt_SNNDPC');
 addpath(wrkpth);
-wrkpth = fullfile(pw1, '+run', 'external', 'mt_SC3', 'ClusterPack');
+wrkpth = fullfile(pw1, '+run', 'external', 'ml_SC3', 'ClusterPack');
 addpath(wrkpth);
 wrkpth = fullfile(pw1, '+run', 'thirdparty', 'locfit', 'm');
 addpath(wrkpth);
