@@ -1,8 +1,8 @@
-function [T, Tup, Tdn] = mt_DESeq2(X, Y, gene)
+function [T, Tup, Tdn] = ml_DESeq2(X, Y, gene)
 
 if nargin < 3, gene = (1:size(X, 1))'; end
 pw1 = fileparts(mfilename('fullpath'));
-pth = fullfile(pw1, 'external', 'mt_DESeq2');
+pth = fullfile(pw1, 'external', 'ml_DESeq2');
 if ~(ismcc || isdeployed)
     addpath(pth);
 end

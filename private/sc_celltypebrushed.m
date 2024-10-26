@@ -16,4 +16,4 @@ else
 end
 Xi = X(:, i);
 [Xi, gi] = sc_selectg(Xi, genelist);
-[Tct] = run.mt_alona_new(Xi, gi, [], 'species', species);
+[Tct] = run.ml_alona_new(Xi, gi, [], 'species', species);

@@ -57,7 +57,7 @@ if tf == 1
             case 7
                 X = sc_transform(X, 'type', 'FreemanTukey');
             case 8
-                X = run.mt_MAGIC(X, true);
+                X = run.ml_MAGIC(X, true);
         end
     catch ME
         gui.gui_waitbar(fw);

@@ -1,4 +1,4 @@
-function [T] = mt_alona_new(X, genelist, clusterid, varargin)
+function [T] = ml_alona_new(X, genelist, clusterid, varargin)
 
 % https://alona.panglaodb.se/
 % https://academic.oup.com/database/article/doi/10.1093/database/baz046/5427041

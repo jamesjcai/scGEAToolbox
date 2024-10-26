@@ -28,7 +28,7 @@ data = transpose(X);
 ncells = size(data, 1);
 if ncells > 500
     if ~(ismcc || isdeployed)
-        pth = fullfile(pw1, 'external', 'mt_PHATE');
+        pth = fullfile(pw1, 'external', 'ml_PHATE');
         addpath(pth);
     end
     data = svdpca(data, 50, 'random');

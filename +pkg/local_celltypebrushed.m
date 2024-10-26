@@ -26,7 +26,7 @@ elseif strcmpi(database, 'panglaodb')
 %        'bestonly', bestonly, 'subtype', subtype);
     
     
-    [Tct] = run.mt_alona_new(Xi, gi, [], 'species', species, ...
+    [Tct] = run.ml_alona_new(Xi, gi, [], 'species', species, ...
         'bestonly', bestonly);
     
 

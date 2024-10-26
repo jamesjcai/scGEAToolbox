@@ -1,4 +1,4 @@
-function s = mt_PHATE(X, ndim, plotit, bygene, genelist)
+function s = ml_PHATE(X, ndim, plotit, bygene, genelist)
 %RUN_PHATE
 %
 % PHATE is a data reduction method specifically designed for visualizing
@@ -21,7 +21,7 @@ if nargin < 4, bygene = false; end
 if nargin < 5, genelist = []; end
 
 pw1 = fileparts(mfilename('fullpath'));
-pth = fullfile(pw1, 'external', 'mt_PHATE');
+pth = fullfile(pw1, 'external', 'ml_PHATE');
 if ~(ismcc || isdeployed)
     addpath(pth);
 end

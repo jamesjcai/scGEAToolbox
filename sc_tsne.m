@@ -16,7 +16,7 @@ if nargin < 4, dolog1p = true; end
 % if nargin<6, genelist=[]; end
 
 pw1 = fileparts(mfilename('fullpath'));
-pth = fullfile(pw1, '+run', 'external', 'mt_PHATE');
+pth = fullfile(pw1, '+run', 'external', 'ml_PHATE');
 if ~(ismcc || isdeployed), addpath(pth); end
 
 %if bygene, X=X.'; end

@@ -6,7 +6,7 @@ if nargin < 2 || isempty(ndim), ndim = 2; end
 S = [];
 pw1 = fileparts(mfilename('fullpath'));
 if ~(ismcc || isdeployed)
-    pth = fullfile(pw1, 'external', 'mt_PHATE'); % for calling randmds.m
+    pth = fullfile(pw1, 'external', 'ml_PHATE'); % for calling randmds.m
     addpath(pth);
     pth1 = fullfile(pw1, 'external', 'ml_cbrewer');
     addpath(pth1);
