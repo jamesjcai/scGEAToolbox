@@ -1,8 +1,8 @@
-function [pseudotime] = mt_CCPE(X)
+function [pseudotime] = ml_CCPE(X)
 
     pw1 = fileparts(mfilename('fullpath'));
     if ~(ismcc || isdeployed)
-        addpath(fullfile(pw1, 'external', 'mt_CCPE'));
+        addpath(fullfile(pw1, 'external', 'ml_CCPE'));
     end
     
     X = sc_transform(X,"type","PearsonResiduals");
