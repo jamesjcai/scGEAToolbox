@@ -4,27 +4,35 @@ function s = sc_stemsig(X, g)
     %end
    % https://www.nature.com/articles/sdata201730
    % https://github.com/wguo-research/scCancer/tree/master/inst/txt
-    
+   % https://academic.oup.com/bib/article/22/3/bbaa127/5867555?login=false
+
+pw1 = fileparts(mfilename('fullpath'));
+dbfile1 = fullfile(pw1, 'resources', 'scCancer', 'pcbc_stemsig.tsv');
+if ~exist(dbfile1, 'file'), error('Missing file.'); end
+   
     % Load default stemness signature if not provided
-    T = readtable('pcbc-stemsig.tsv', 'FileType', 'text', 'ReadVariableNames', false);
+    T = readtable(dbfile1, 'FileType', 'text', 'ReadVariableNames', false);
         
     % Ensure common genes between stem signature and input matrix
     [~, ix, iy] = intersect(T.Var1, g);
-
-    X_common = X(iy, :);
-    if issparse(X_common), X_common = full(X_common); end
+    %X = sc_norm(X);
+    %X = log1p(X);
+    X = X(iy, :);
+    if issparse(X), X = full(X); end
     stem_sig_common = T.Var2(ix, :);
     
     % Initialize the stemness score array
-    s = zeros(size(X, 2), 1);
+    % s = zeros(size(X, 2), 1);
     
     % Calculate Spearman correlation for each cell (column in X)
-    for i = 1:width(X_common)
-        s(i) = corr(X_common(:, i), stem_sig_common, ...
-            'Type', 'Spearman');
-    end
+    % for i = 1:width(X_common)
+    %     s(i) = corr(X_common(:, i), stem_sig_common(:), ...
+    %         'Type', 'Spearman');
+    % end
     
-    s = corr(stem_sig_common, X_common)';
+    s = corr(X, stem_sig_common, ...
+        "Type","Spearman");
+    
     % Normalize the stemness scores between 0 and 1
     %s = s - min(s);
     %s = s / max(s);

@@ -1,0 +1,1 @@
+Except these common metrics, considering that solid tumor cells were easier to produce stress response during sample dissociation process, we took advantage of the results of van den Brink et al. [16] and set a dissociation-associated gene list. By calculating these genes expression percentage, we defined an extra metric to remove cells seriously affected by dissociation process.
