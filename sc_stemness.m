@@ -1,4 +1,4 @@
-function s = sc_stemsig(X, g)
+function s = sc_stemness(X, g)
     %arguments
     %    X double {mustBeNonempty}  % Ensure the gene expression matrix is a non-empty numeric array
     %end

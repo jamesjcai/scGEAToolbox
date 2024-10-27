@@ -176,6 +176,7 @@ in_addmenu(m_anno, 0, @gui.callback_Brush4Markers, "Find Marker Genes for Brushe
 in_addmenu(m_anno, 0, @gui.callback_FindAllMarkers, "Make Marker Gene Heatmap");
 in_addmenu(m_anno, 1, {@in_CellCyclePotency, 1}, 'Estimate Cell Cycle Phase...');
 in_addmenu(m_anno, 0, {@in_CellCyclePotency, 2}, 'Estimate Differentiation Potency...');
+in_addmenu(m_anno, 0, {@in_CellCyclePotency, 3}, 'Estimate Stemness...');
 in_addmenu(m_anno, 1, @in_SingleClickSolution, 'Single Click Solution (from Raw Data to Annotation)...');
 
 m_tool = uimenu(FigureHandle, 'Text', '&Analyze');

@@ -12,6 +12,8 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
             answer = questdlg('This function assigns cell cycle phase to each cell, continue?', '');
         case 2
             answer = questdlg('This function assigns differentiation potency [PMID:33244588] to each cell, continue?', '');
+        case 3
+            answer = questdlg('This function calculates stemness index [PMID:29625051] for each cell, continue?', '');
     end
     if ~strcmp(answer, 'Yes'), return; end
 
@@ -76,10 +78,43 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
             end
             y =  sce.list_cell_attributes{idx+1};
             fealabels = "cell_potency";
+        case 3
+            [yes, idx] = ismember('stemness_index', sce.list_cell_attributes(1:2:end));
+            if ~yes
+                needestimate = true;
+            else
+                answer1 = questdlg('Use existing stemness index estimation or re-compute new estimation?', ...
+                    '', 'Use existing', 'Re-compute', 'Cancel', 'Use existing');
+                switch answer1
+                    case 'Re-compute'
+                        needestimate = true;
+                    case 'Cancel'
+                        return;
+                end
+            end
+            if needestimate
+                fw = gui.gui_waitbar;
+                s = sc_stemness(sce.X, sce.g);
+                needupdate = true;
+                [yesx, idx] = ismember('stemness_index', sce.list_cell_attributes(1:2:end));
+                if yesx
+                    sce.list_cell_attributes{idx*2} = s;
+                else
+                    sce.list_cell_attributes = [sce.list_cell_attributes, ...
+                        {'stemness_index', s}];
+                end
+                gui.gui_waitbar(fw);
+                guidata(FigureHandle, sce);
+                % uiwait(helpdlg('Cell differentiation potency added. To see it, use View -> Cell State (Ctrl + T)...', ''));
+                uiwait(helpdlg('Cell stemness index added.', ''));
+            end
+            y =  sce.list_cell_attributes{idx+1};
+            fealabels = "stemness_index";            
     end
     % gui.sc_uitabgrpfig_feaplot({y}, fealabels, sce.s, FigureHandle);
-    if fealabels=="cell_potency"
-        uiwait(helpdlg('To see the result, use View -> Cell State (Ctrl + T). Then select "cell_potency"',''));
+    if ismember(fealabels, ["cell_potency", "stemness_index"])
+        uiwait(helpdlg(sprintf('To see the result, use View -> Cell State (Ctrl + T). Then select "%s"', ...
+            fealabels),''));
     else
         uiwait(helpdlg('To see the result, use View -> Cell State (Ctrl + T). Then select "Cell Cycle Phase"',''));
     end
