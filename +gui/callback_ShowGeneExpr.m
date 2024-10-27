@@ -12,26 +12,42 @@ function callback_ShowGeneExpr(src, ~)
     [Xt] = gui.i_transformx(sce.X);
     if isempty(Xt), return; end
 
-    % answer = requestdlg("Plot on the same figure?","", "Yes, same figure", ...
-    %     "No, different figures", "Cancel", "Yes, same figure");
-    % if strcmp(answer, "Cancel"), return; end
+    answer = questdlg("Plot on the same figure?","", "Yes, same figure", ...
+        "No, different figures", "Cancel", "Yes, same figure");
+    if strcmp(answer, "Cancel"), return; end
 
     fw=gui.gui_waitbar;
-        n = length(glist);
-        y = cell(n,1);
-        for k=1:n
-            y{k} = Xt(sce.g == glist(k), :);
-        end
-        gui.sc_uitabgrpfig_expplot(y, glist, sce.s, FigureHandle, [axx, bxx]);
+    n = length(glist);
 
-        % switch answer
-        %     case "No, different figures"
-        %         gui.sc_uitabgrpfig_expplot(y, glist, sce.s, FigureHandle, [axx, bxx]);
-        %     case "Yes, same figure"
-        %         figure;
-        %         nexttile
-        % 
-        % 
-        % end
+    switch answer
+        case "No, different figures"
+            y = cell(n,1);
+            for k = 1:n
+                y{k} = Xt(sce.g == glist(k), :);
+            end
+            gui.sc_uitabgrpfig_expplot(y, glist, sce.s, FigureHandle, [axx, bxx]);
+        case "Yes, same figure"
+            hFig = figure(Visible="off");
+            maxy = 0;
+            for k = 1:n
+                nexttile
+                sc_scattermarker(Xt, sce.g, sce.s, glist(k), 2, 5, false);
+                colorbar;
+                maxy = max([maxy, max(Xt(sce.g == glist(k)))]);
+            end
+            gui.i_movegui2parent(hFig, FigureHandle);
+            % tb = uitoolbar(hFig);
+            % uipushtool(tb, 'Separator', 'off');
+            % pkg.i_addbutton2fig(tb, 'off', {@in_rescale, maxy}, 'networkcomp.gif', 'Normalize scales...');
+            hFig.Visible = "on";
+    end
     gui.gui_waitbar(fw);
+
+    
+    % function in_rescale(~, ~, maxy)
+    %        clim([0 maxy]);
+    % end
+
 end
+
+
