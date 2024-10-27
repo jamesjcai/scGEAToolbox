@@ -8,7 +8,7 @@ function s = sc_stemness(X, g)
 
 pw1 = fileparts(mfilename('fullpath'));
 dbfile1 = fullfile(pw1, 'resources', 'scCancer', 'pcbc_stemsig.txt');
-if ~exist(dbfile1, 'file'), error('Missing file.'); end
+if ~exist(dbfile1, 'file'), error('Missing file pcbc_stemsig.txt.'); end
    
     % Load default stemness signature if not provided
     T = readtable(dbfile1, 'FileType', 'text', 'ReadVariableNames', false);
