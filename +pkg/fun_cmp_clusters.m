@@ -15,15 +15,15 @@ parse(p, true_labels, varargin{:})
 pw1 = fileparts(mfilename('fullpath'));
 switch p.Results.type
     case 'nmi'
-        pth = fullfile(pw1, 'external', 'mt_SIMLR');
+        pth = fullfile(pw1, 'external', 'ml_SIMLR');
         if ~(ismcc || isdeployed), addpath(pth); end
-        pth = fullfile(pw1, 'external', 'mt_SIMLR', 'src');
+        pth = fullfile(pw1, 'external', 'ml_SIMLR', 'src');
         if ~(ismcc || isdeployed), addpath(pth); end
         score = Cal_NMI(true_labels, cluster_labels);
         fprintf('The NMI value is %f\n', score);
     case 'ari'
         % ----
-        pth = fullfile(pw1, '+run', 'external', 'mt_SinNLRR');
+        pth = fullfile(pw1, '+run', 'external', 'ml_SinNLRR');
         if ~(ismcc || isdeployed), addpath(pth); end
         [AR, ~, ~, ~] = Cal_ARI(true_labels, cluster_labels);
         score = AR;

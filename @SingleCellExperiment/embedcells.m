@@ -71,7 +71,7 @@ if isempty(obj.s) || forced
         case {'phate','phate2d','phate3d'}
             obj.s = sc_phate(X, ndim);
         case {'metaviz','metaviz2d','metaviz3d'}
-            obj.s = run.mt_metaviz(X, ndim, showwaitbar);
+            obj.s = run.ml_metaviz(X, ndim, showwaitbar);
     end
 
     if contains(methodtag,'2d') || contains(methodtag,'3d')

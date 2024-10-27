@@ -1,4 +1,4 @@
-https://raw.githubusercontent.com/wguo-research/scCancer/refs/heads/master/R/cnvFunction.R
+% https://raw.githubusercontent.com/wguo-research/scCancer/refs/heads/master/R/cnvFunction.R
 
 
 function cnvList = prepareCNV(exprData, geneManifest, cellAnnotation, refData, species, genome)

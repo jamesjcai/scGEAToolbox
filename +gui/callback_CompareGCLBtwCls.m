@@ -34,7 +34,7 @@ if ~gui.gui_showrefinfo('GCL Analysis [PMID:33139959]'), return; end
         for k = 1:n
             fprintf('Working on %s: %s ... %d of %d\n', clabel, cL{k}, k, n);
             idx = (k - 1) * N + 1:k * N;
-            [v] = run.mt_GCL(sce.X(:, k == c), N);
+            [v] = run.ml_GCL(sce.X(:, k == c), N);
             t(idx, :) = k;
             V(idx, :) = v;
         end
@@ -44,3 +44,4 @@ if ~gui.gui_showrefinfo('GCL Analysis [PMID:33139959]'), return; end
         thisc = cL(t);
         ttxt = 'GCL';
         gui.i_violinplot(y, thisc, ttxt);
+end

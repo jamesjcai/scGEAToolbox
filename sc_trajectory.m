@@ -16,7 +16,7 @@ switch p.Results.type
         s = run.ml_PHATE(X, 3, plotit, false);
         [t] = pkg.i_pseudotime_by_splinefit(s, 1, plotit);
     case 'tscan'
-        t = run.mt_TSCAN(X, 'plotit', true);
+        t = run.ml_TSCAN(X, 'plotit', true);
 end
 if size(t, 2) ~= 1, t = t'; end
 end
