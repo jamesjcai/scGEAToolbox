@@ -2,7 +2,7 @@ function [T, Tf, OUT] = sc_tenifoldnet(X0, X1, genelist)
 %scTenifoldNet pipeline for constructing scGRNs from scRNAseq data X0 and
 %X1 and comparing two constructed networks
 %
-% [T,Tf,OUT]=sc_tenifoldnet(X0,X1,genelist)
+% [T, Tf, OUT]=sc_tenifoldnet(X0, X1, genelist)
 %
 % X0 and X1 are two gene-by-cell matrices
 %
