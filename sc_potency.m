@@ -59,6 +59,8 @@ load(ppinetfile, 'G');
 G.Edges.Weight = double(G.Edges.Weight > 0);
 GNodes = upper(string(table2array(G.Nodes)));
 Gdegree = G.degree;
+
+if issparse(X), X = full(X); end
 X = log2(X+1.1);
 
 [~, i, j] = intersect(genelist, GNodes);

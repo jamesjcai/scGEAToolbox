@@ -1,37 +1,34 @@
-function s = sc_stemsig(X, stem_sig, species)
-    arguments
-        X double {mustBeNonempty}  % Ensure the gene expression matrix is a non-empty numeric array
-        stem_sig double = []       % Default is empty, optional argument
-        species (1,:) char {mustBeMember(species, ["human", "mouse"])} = "human"  % Either 'human' or 'mouse'
-    end    
+function s = sc_stemsig(X, g)
+    %arguments
+    %    X double {mustBeNonempty}  % Ensure the gene expression matrix is a non-empty numeric array
+    %end
+   % https://www.nature.com/articles/sdata201730
+   % https://github.com/wguo-research/scCancer/tree/master/inst/txt
     
     % Load default stemness signature if not provided
-    if isempty(stem_sig)
-        stem_sig = readtable('pcbc-stemsig.tsv', 'FileType', 'text', 'ReadVariableNames', false, 'RowNames', true);
-        if strcmp(species, 'mouse')
-            % Convert human genes to mouse equivalents (assuming getMouseGene is implemented)
-            sig_genes = getMouseGene(stem_sig.Properties.RowNames, true);
-            stem_sig = stem_sig(sig_genes, :);
-            stem_sig.Properties.RowNames = sig_genes;
-        end
-    end
-    
+    T = readtable('pcbc-stemsig.tsv', 'FileType', 'text', 'ReadVariableNames', false);
+        
     % Ensure common genes between stem signature and input matrix
-    common_genes = intersect(stem_sig.Properties.RowNames, X.Properties.RowNames);
-    X_common = X(common_genes, :);
-    stem_sig_common = stem_sig(common_genes, :);
+    [~, ix, iy] = intersect(T.Var1, g);
+
+    X_common = X(iy, :);
+    if issparse(X_common), X_common = full(X_common); end
+    stem_sig_common = T.Var2(ix, :);
     
     % Initialize the stemness score array
-    s = zeros(1, width(X_common));
+    s = zeros(size(X, 2), 1);
     
     % Calculate Spearman correlation for each cell (column in X)
     for i = 1:width(X_common)
-        s(i) = corr(X_common{:, i}, stem_sig_common{:, 1}, 'Type', 'Spearman', 'Rows', 'complete');
+        s(i) = corr(X_common(:, i), stem_sig_common, ...
+            'Type', 'Spearman');
     end
     
+    s = corr(stem_sig_common, X_common)';
     % Normalize the stemness scores between 0 and 1
-    s = s - min(s);
-    s = s / max(s);
+    %s = s - min(s);
+    %s = s / max(s);
+    s = normalize(s, "range");
 end
 
 % https://github.com/wguo-research/scCancer/blob/master/R/scAnnotation.R#L1058
