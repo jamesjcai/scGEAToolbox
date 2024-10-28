@@ -3,10 +3,11 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
     if nargin < 3, typeid = 1; end
 
     needupdate = false;
+    needestimt = false;
+
     FigureHandle = src.Parent.Parent;
     sce = guidata(FigureHandle);
-    needestimate = false;
-
+    
     switch typeid
         case 1
             answer = questdlg('This function assigns cell cycle phase to each cell, continue?', '');
@@ -19,21 +20,22 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
     end
     if ~strcmp(answer, 'Yes'), return; end
 
+
     switch typeid
         case 1
             if isempty(sce.c_cell_cycle_tx) || all(strcmp(unique(sce.c_cell_cycle_tx), "undetermined"))
-                needestimate = true;
+                needestimt = true;
             else
                 answer1 = questdlg('Use existing cell cycle estimation or re-compute new estimation?', ...
                     '', 'Use existing', 'Re-compute', 'Cancel', 'Use existing');
                 switch answer1
                     case 'Re-compute'
-                        needestimate = true;
+                        needestimt = true;
                     case 'Cancel'
                         return;
                 end
             end
-            if needestimate
+            if needestimt
                 fw = gui.gui_waitbar;
                 sce = sce.estimatecellcycle(true, 1);
                 needupdate = true;
@@ -43,103 +45,34 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
             end
             y = sce.c_cell_cycle_tx;
             attribtag = "cell_cycle";
+            uiwait(helpdlg('To see the result, use View -> Cell State (Ctrl + T). Then select "Cell Cycle Phase"',''));
+            
         case 2
-            %{
-            [yes, idx] = ismember('cell_potency', sce.list_cell_attributes(1:2:end));
-            if ~yes
-                needestimate = true;
-            else
-                answer1 = questdlg('Use existing differentiation potency estimation or re-compute new estimation?', ...
-                    '', 'Use existing', 'Re-compute', 'Cancel', 'Use existing');
-                switch answer1
-                    case 'Re-compute'
-                        needestimate = true;
-                    case 'Cancel'
-                        return;
-                end
-            end
-            if needestimate
-                speciestag = gui.i_selectspecies(2, true);
-                if isempty(speciestag), return; end
-                switch speciestag
-                    case 'hs'
-                        speciesname = 'human';
-                    case 'mm'
-                        speciesname = 'mouse';
-                    otherwise
-                        error('Unknown species.');
-                end
-                fw = gui.gui_waitbar;
-                sce = sce.estimatepotency(speciesname);
-                needupdate = true;
-                [yesx, idx] = ismember('cell_potency', sce.list_cell_attributes(1:2:end));
-                assert(yesx);
-                gui.gui_waitbar(fw);
-                guidata(FigureHandle, sce);
-                % uiwait(helpdlg('Cell differentiation potency added. To see it, use View -> Cell State (Ctrl + T)...', ''));
-                uiwait(helpdlg('Cell differentiation potency added.', ''));
-            end
-            y =  sce.list_cell_attributes{idx+1};
-            %}
             attribtag = "cell_potency";
             y = in_aaa(attribtag);
         case 3
-            % [yes, idx] = ismember('stemness_index', sce.list_cell_attributes(1:2:end));
-            % if ~yes
-            %     needestimate = true;
-            % else
-            %     answer1 = questdlg('Use existing stemness index estimation or re-compute new estimation?', ...
-            %         '', 'Use existing', 'Re-compute', 'Cancel', 'Use existing');
-            %     switch answer1
-            %         case 'Re-compute'
-            %             needestimate = true;
-            %         case 'Cancel'
-            %             return;
-            %     end
-            % end
-            % if needestimate
-            %     fw = gui.gui_waitbar;
-            %     s = sc_stemness(sce.X, sce.g);
-            %     needupdate = true;
-            %     [yesx, idx] = ismember('stemness_index', sce.list_cell_attributes(1:2:end));
-            %     if yesx
-            %         sce.list_cell_attributes{idx*2} = s;
-            %     else
-            %         sce.list_cell_attributes = [sce.list_cell_attributes, ...
-            %             {'stemness_index', s}];
-            %     end
-            %     gui.gui_waitbar(fw);
-            %     guidata(FigureHandle, sce);
-            %     % uiwait(helpdlg('Cell differentiation potency added. To see it, use View -> Cell State (Ctrl + T)...', ''));
-            %     uiwait(helpdlg('Cell stemness index added.', ''));
-            % end
-            % y =  sce.list_cell_attributes{idx+1};
-
             attribtag = "stemness_index";
             y =in_aaa(attribtag);
         case 4
             attribtag = 'dissocation_ratio';
             y = in_aaa(attribtag);
     end
-    % gui.sc_uitabgrpfig_feaplot({y}, attribtag, sce.s, FigureHandle);
-    if strcmp(attribtag, "cell_cycle")
-        uiwait(helpdlg('To see the result, use View -> Cell State (Ctrl + T). Then select "Cell Cycle Phase"',''));
-    end
+
 
     function [s] = in_aaa(attribtag)        
         if ~ismember(attribtag, sce.list_cell_attributes(1:2:end))
-            needestimate = true;
+            needestimt = true;
         else
             answer1 = questdlg(sprintf('Use existing %s estimation or re-compute new estimation?', ...
                 attribtag), '', 'Use existing', 'Re-compute', 'Cancel', 'Use existing');
             switch answer1
                 case 'Re-compute'
-                    needestimate = true;
+                    needestimt = true;
                 case 'Cancel'
                     return;
             end
         end
-        if needestimate
+        if needestimt
             switch attribtag
                 case 'cell_potency'
                     speciestag = gui.i_selectspecies(2, false);
@@ -161,7 +94,6 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
                 otherwise
                     error('Invalid attribtag');
             end
-            needupdate = true;
             [yesx, idx] = ismember(attribtag, sce.list_cell_attributes(1:2:end));
             if yesx
                 sce.list_cell_attributes{idx*2} = s;
@@ -171,13 +103,11 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
             end
             gui.gui_waitbar(fw);
             guidata(FigureHandle, sce);
-            % uiwait(helpdlg('Cell differentiation potency added. To see it, use View -> Cell State (Ctrl + T)...', ''));
+            needupdate = true;
             uiwait(helpdlg(sprintf('%s added.', attribtag), ''));
         end
-        if ismember(attribtag, ["cell_potency", "stemness_index", "dissociation_ratio"])
-            uiwait(helpdlg(sprintf('To see the result, use View -> Cell State (Ctrl + T). Then select "%s"', ...
+        uiwait(helpdlg(sprintf('To see the result, use View -> Cell State (Ctrl + T). Then select "%s"', ...
                 attribtag),''));
-        end
     end
 
 end
