@@ -1,9 +1,17 @@
-function [status] = r_copykat(sce, filename, wkdir)
+function [status] = r_copykat(sce, wkdir)
 
-if nargin < 3, wkdir = tempdir; end
+if nargin < 2
+    wkdir = tempdir; 
+    preftagname = 'externalwrkpath';
+    [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
+    if isempty(wkdir), return; end
+end
+
+extprogname = 'R_copykat';
+
 [status] = 0;
-isdebug = false;
-if nargin < 2, error('run.r_copykat(sce)'); end
+isdebug = true;
+
 oldpth = pwd();
 [isok, msg, codepath] = commoncheck_R('R_copykat');
 if ~isok, error(msg);
@@ -11,11 +19,9 @@ if ~isok, error(msg);
 end
 if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
 
-tmpfilelist = {'input.h5', 'output.Rds'};
+tmpfilelist = {'input.h5'};
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 pkg.e_writeh5(full(sce.X), sce.g, 'input.h5');
-%sc_writefile('input.txt',sce.X,sce.g);
-%    if isdebug, return; end
 Rpath = getpref('scgeatoolbox', 'rexecutablepath',[]);
 if isempty(Rpath)
     error('R environment has not been set up.');
@@ -23,7 +29,6 @@ end
 codefullpath = fullfile(codepath,'script.R');
 pkg.RunRcode(codefullpath, Rpath);
 
-[status] = copyfile('output.Rds', filename, 'f');
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 cd(oldpth);
 end
