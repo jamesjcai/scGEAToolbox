@@ -1,4 +1,4 @@
-function [X, g, b, filenm] = sc_read10xh5file(filenm)
+function [X, g, b, c, filenm] = sc_read10xh5file(filenm)
 %Read 10x Genomics H5 file
 % https://www.mathworks.com/help/matlab/hdf5-files.html
 % http://scipy-lectures.org/advanced/scipy_sparse/csc_matrix.html
@@ -7,9 +7,10 @@ function [X, g, b, filenm] = sc_read10xh5file(filenm)
 % https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM3489183
 % h5file='GSM3489183_IPF_01_filtered_gene_bc_matrices_h5.h5';
 
-X = [];
-g = [];
-b = [];
+X = []; % expression matrix
+g = []; % gene names
+b = []; % barcode of cells
+c = []; % batch id
 if nargin < 1 || isempty(filenm)
     [filenm, pathname] = uigetfile( ...
         {'*.h5;*.hdf5', 'HDF5 Files (*.h5)'; ...
@@ -107,6 +108,13 @@ g = deblank(string(g));
 % end
 %gui.gui_waitbar(fw);
 %gui.gui_waitbar_adv(fw);
+
+if all(contains(b,'-'))
+    try
+        c = extractAfter(b, 25);
+    catch
+    end
+end
 
 end
 
