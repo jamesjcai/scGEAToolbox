@@ -111,7 +111,8 @@ g = deblank(string(g));
 
 if all(contains(b,'-'))
     try
-        c = extractAfter(b, 25);
+        % c = extractAfter(b, 25);
+        c = extractAfter(b, cell2mat(strfind(b,"-")));
     catch
     end
 end
