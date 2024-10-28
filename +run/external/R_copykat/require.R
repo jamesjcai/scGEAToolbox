@@ -6,13 +6,6 @@ if(!checkPkg("devtools")) install.packages("devtools")
 library(devtools)
 if(!checkPkg("copykat")) install_github("navinlabcode/copykat")
 
-if (!requireNamespace("Matrix", quietly = TRUE)){
-    install.packages("Matrix", repo="http://cran.rstudio.com/")
-}
-if (!requireNamespace("Seurat", quietly = TRUE)){
-    install.packages("Seurat", repo="http://cran.rstudio.com/")
-}
-
 if (!requireNamespace("rhdf5", quietly = TRUE)){
 if (!requireNamespace("BiocManager", quietly = TRUE)){
     install.packages("BiocManager", repo="http://cran.rstudio.com/")
