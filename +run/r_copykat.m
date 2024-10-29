@@ -1,17 +1,13 @@
-function [status] = r_copykat(sce, wkdir)
+function [y] = r_copykat(sce, wkdir)
 
-if nargin < 2
-    wkdir = tempdir; 
-    preftagname = 'externalwrkpath';
-    [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
-    if isempty(wkdir), return; end
-end
 
-extprogname = 'R_copykat';
+%    extprogname = 'R_copykat';
+%    preftagname = 'externalwrkpath';
+%    [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
+%    if isempty(wkdir), return; end
 
-[status] = 0;
+if nargin < 2, wkdir = tempdir; end
 isdebug = true;
-
 oldpth = pwd();
 [isok, msg, codepath] = commoncheck_R('R_copykat');
 if ~isok, error(msg);
@@ -28,44 +24,21 @@ if isempty(Rpath)
 end
 codefullpath = fullfile(codepath,'script.R');
 pkg.RunRcode(codefullpath, Rpath);
-
+pause(3);
+if exist("test_copykat_prediction.txt",'file')
+    t = readtable("test_copykat_prediction.txt");
+    assert(height(t)==sce.NumCells);
+    idx = str2double(extractAfter(string(t.cell_names),1));
+    [~, sortid] = sort(idx);
+    pred = string(t.copykat_pred);
+    y = zeros(sce.NumCells, 1);
+    y(pred == "aneuploid") = 1;
+    y(pred == "diploid") = 0;
+    y = y(sortid);
+end
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 cd(oldpth);
 end
 
 
 
-
-
-
-function [indptr, indices, data] = convert_sparse_to_indptr(X)
-
-% Check if X is sparse
-if ~issparse(X)
-    error('Input matrix X must be a sparse matrix');
-end
-
-% Get matrix dimensions
-[~, n] = size(X);
-
-% Initialize indptr with 1 and n+1
-indptr = [1, n+1];
-
-% Find non-zero elements and their indices
-[row, col] = find(X);
-
-% Sort by columns for efficient construction
-[~, sort_idx] = sort(col);
-row = row(sort_idx);
-col = col(sort_idx);
-
-% Accumulate column counts for indptr
-for i = 1:n
-    indptr(i+1) = indptr(i) + sum(col == i);
-end
-
-% Assign indices and data
-indices = row;
-data = full(X(row, col));  % Extract non-zero values
-
-end
