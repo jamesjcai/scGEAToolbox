@@ -19,6 +19,10 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
             answer = questdlg('This function calculates the expression ratio of dissociation-associated genes [PMID:34020534] for each cell, continue?', '');
         case 5
             answer = questdlg('This function predicts tumor (aneuploid) and normal (diploid) cells using copykat [PMID:33462507], continue?', '');
+            extprogname = 'R_copykat';
+            preftagname = 'externalwrkpath';
+            [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
+            if isempty(wkdir), return; end
     end
     if ~strcmp(answer, 'Yes'), return; end
 
@@ -45,11 +49,13 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
                 guidata(FigureHandle, sce);
                 uiwait(helpdlg('Cell cycle phase (c_cell_cycle_tx) added.', ''));
             end
-            y = sce.c_cell_cycle_tx;
-            attribtag = "cell_cycle";
+            % y = sce.c_cell_cycle_tx;
+            % attribtag = "cell_cycle";
             uiwait(helpdlg('To see the result, use View -> Cell State (Ctrl + T). Then select "Cell Cycle Phase"',''));
-            
+            return;
         case 2
+            speciestag = gui.i_selectspecies(2, false);
+            if isempty(speciestag), return; end
             attribtag = "cell_potency";
             y = in_aaa(attribtag);
         case 3
@@ -78,43 +84,47 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
             end
         end
         if needestimt
-            switch attribtag
-                case 'cell_potency'
-                    speciestag = gui.i_selectspecies(2, false);
-                    if isempty(speciestag), return; end
-            end
-
             fw = gui.gui_waitbar;            
             switch attribtag
                 case 'cell_potency'
-                    sce = sce.estimatepotency(speciestag);
-                    needupdate = true;
-                    [yesx, idx] = ismember('cell_potency', sce.list_cell_attributes(1:2:end));
-                    assert(yesx);
-                    s =  sce.list_cell_attributes{idx+1};
+                    % sce = sce.estimatepotency(speciestag);
+                    % needupdate = true;
+                    % [yesx, idx] = ismember('cell_potency', sce.list_cell_attributes(1:2:end));
+                    % assert(yesx);
+                    % s =  sce.list_cell_attributes{idx+1};
+                    s = sc_potency(sce.X, sce.g, speciestag);
                 case 'stemness_index'
                     s = sc_stemness(sce.X, sce.g);
                 case 'dissocation_ratio'
                     s = pkg.sc_dissratio(sce.X, sce.g, true);
                 case 'copykat_prediction'
-                    s = run.r_copykat(sce);
+                    s = run.r_copykat(sce, wkdir);
                 otherwise
                     error('Invalid attribtag');
+            end
+            if isempty(s)
+                gui.gui_waitbar(fw, true);
+                errordlg(sprintf("%s runtime error.", attribtag),"")
+                return; 
             end
             [yesx, idx] = ismember(attribtag, sce.list_cell_attributes(1:2:end));
             if yesx
                 sce.list_cell_attributes{idx*2} = s;
             else
                 sce.list_cell_attributes = [sce.list_cell_attributes, ...
-                    {attribtag, s}];
+                    {char(attribtag), s}];
             end
             gui.gui_waitbar(fw);
             guidata(FigureHandle, sce);
             needupdate = true;
-            uiwait(helpdlg(sprintf('%s added.', attribtag), ''));
-        end
-        uiwait(helpdlg(sprintf('To see the result, use View -> Cell State (Ctrl + T). Then select "%s"', ...
+            uiwait(helpdlg(sprintf(['%s added. To see the result, ' ...
+                'use View -> Cell State (Ctrl + T). Then select "%s"'], ...
+                attribtag, attribtag), ''));
+        else
+            uiwait(helpdlg(sprintf(['To see the result, use View -> ' ...
+                'Cell State (Ctrl + T). Then select "%s"'], ...
                 attribtag),''));
+        end
     end
 
 end
