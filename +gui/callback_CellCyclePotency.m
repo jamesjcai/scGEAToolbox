@@ -17,6 +17,8 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
             answer = questdlg('This function calculates stemness index [PMID:29625051] for each cell, continue?', '');
         case 4
             answer = questdlg('This function calculates the expression ratio of dissociation-associated genes [PMID:34020534] for each cell, continue?', '');
+        case 5
+            answer = questdlg('This function predicts tumor (aneuploid) and normal (diploid) cells using copykat [PMID:33462507], continue?', '');
     end
     if ~strcmp(answer, 'Yes'), return; end
 
@@ -56,6 +58,9 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
         case 4
             attribtag = 'dissocation_ratio';
             y = in_aaa(attribtag);
+        case 5
+            attribtag = 'copykat_prediction';
+            y = in_aaa(attribtag);
     end
 
 
@@ -91,6 +96,8 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
                     s = sc_stemness(sce.X, sce.g);
                 case 'dissocation_ratio'
                     s = pkg.sc_dissratio(sce.X, sce.g, true);
+                case 'copykat_prediction'
+                    s = run.r_copykat(sce);
                 otherwise
                     error('Invalid attribtag');
             end

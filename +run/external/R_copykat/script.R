@@ -17,11 +17,11 @@ sam.name="test", distance="euclidean",
 norm.cell.names="",output.seg="FLASE", 
 plot.genes="FLASE", genome="hg20", n.cores=1)
 
-pred.test <- data.frame(copykat.test$prediction)
-pred1.test <- pred.test[which(pred.test$copykat.pred %in% c("aneuploid","diploid")),]  ##keep defined cells
-CNA.test <- data.frame(copykat.test$CNAmat)
+#pred.test <- data.frame(copykat.test$prediction)
+#pred1.test <- pred.test[which(pred.test$copykat.pred %in% c("aneuploid","diploid")),]  ##keep defined cells
+#CNA.test <- data.frame(copykat.test$CNAmat)
 
-write.csv(pred.test,'output1.txt')
-write.csv(pred1.test,'output2.txt')
-write.csv(CNA.test,'output3.txt')
+#write.csv(pred.test,'output1.txt')
+#write.csv(pred1.test,'output2.txt')
+#write.csv(CNA.test,'output3.txt')
 

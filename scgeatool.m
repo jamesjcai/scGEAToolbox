@@ -207,14 +207,17 @@ in_addmenu(m_extn, 0, @gui.i_resetrngseed, 'Set Random Seed...');
 in_addmenu(m_extn, 0, @gui.i_setextwd, 'Set External Program Working Root Directory...');
 in_addmenu(m_extn, 1, @gui.i_setrenv, 'Set up R (ℝ) Environment');
 in_addmenu(m_extn, 0, @gui.i_setpyenv, 'Set up Python (🐍) Environment');
-in_addmenu(m_extn, 1, @in_DecontX, 'Detect Ambient RNA Contamination (DecontX/ℝ) [PMID:32138770]...');
-in_addmenu(m_extn, 0, @in_RunSeuratWorkflow, 'Run Seurat Workflow (Seurat/ℝ) [PMID:25867923]...');
+in_addmenu(m_extn, 1, @in_RunSeuratWorkflow, 'Run Seurat Workflow (Seurat/ℝ) [PMID:25867923]...');
 in_addmenu(m_extn, 0, @in_RunMonocle3, 'Pseudotime Analysis (Monocle3/ℝ) [PMID:28825705]...');
-in_addmenu(m_extn, 1, @gui.callback_MELDPerturbationScore, 'MELD Perturbation Score (MELD/🐍) [PMID:33558698]...');
-in_addmenu(m_extn, 0, {@in_SubsampleCells, 2}, 'Geometric Sketching (geosketch/🐍) [PMID:31176620]...');
-in_addmenu(m_extn, 0, @in_HarmonyPy, 'Batch Integration (Harmony/🐍) [PMID:31740819]...');
+in_addmenu(m_extn, 0, {@in_CellCyclePotency, 5}, 'Aneuploid/Diploid Analysis (copykat/ℝ) [PMID:33462507]...');
+in_addmenu(m_extn, 0, @in_DecontX, 'Detect Ambient RNA Contamination (DecontX/ℝ) [PMID:32138770]...');
+
+in_addmenu(m_extn, 1, @in_RunDataMapPlot, 'Run DataMapPlot (datamapplot/🐍)...');
 in_addmenu(m_extn, 0, @in_DoubletDetection, 'Detect Doublets (Scrublet/🐍) [PMID:30954476]...');
-in_addmenu(m_extn, 0, @in_RunDataMapPlot, 'Run DataMapPlot (datamapplot/🐍)...');
+in_addmenu(m_extn, 0, @in_HarmonyPy, 'Batch Integration (Harmony/🐍) [PMID:31740819]...');
+in_addmenu(m_extn, 0, {@in_SubsampleCells, 2}, 'Geometric Sketching (geosketch/🐍) [PMID:31176620]...');
+in_addmenu(m_extn, 0, @gui.callback_MELDPerturbationScore, 'MELD Perturbation Score (MELD/🐍) [PMID:33558698]...');
+
 in_addmenu(m_extn, 1, @gui.callback_scTenifoldXct, 'One-Sample Cell-Cell Communication (scTenifoldXct/🐍) [PMID:36787742]...');
 in_addmenu(m_extn, 0, @gui.callback_scTenifoldXct2, 'Two-Sample Cell-Cell Communication (scTenifoldXct2/🐍) [PMID:36787742]...');
 in_addmenu(m_extn, 1, @gui.callback_VirtualKOGenKI, 'Virtual Gene Knockout (GenKI/🐍) [PMID:37246643] ...');
