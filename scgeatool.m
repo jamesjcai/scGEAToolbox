@@ -1071,6 +1071,10 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
             return;
         end
         if ~gui.gui_showrefinfo('Scrublet [PMID:30954476]'), return; end
+        if numel(unique(sce.c_batch_id)) > 1
+            answer = questdlg('"When working with data from multiple samples, run Scrublet on each sample separately." Your data contains multiple samples (cells with different c_batch_id). Continue?','');
+            if ~strcmp(answer, 'Yes'), return; end
+        end
         [isDoublet, doubletscore, methodtag, done] = gui.callback_DoubletDetection(src);
         if done && ~any(isDoublet)
             uiwait(helpdlg('No doublet detected.', ''));
