@@ -209,7 +209,7 @@ in_addmenu(m_extn, 1, @gui.i_setrenv, 'Set up R (ℝ) Environment');
 in_addmenu(m_extn, 0, @gui.i_setpyenv, 'Set up Python (🐍) Environment');
 in_addmenu(m_extn, 1, @in_RunSeuratWorkflow, 'Run Seurat Workflow (Seurat/ℝ) [PMID:25867923]...');
 in_addmenu(m_extn, 0, @in_RunMonocle3, 'Pseudotime Analysis (Monocle3/ℝ) [PMID:28825705]...');
-in_addmenu(m_extn, 0, {@in_CellCyclePotency, 5}, 'Aneuploid/Diploid Analysis (copykat/ℝ) [PMID:33462507]...');
+in_addmenu(m_extn, 0, {@in_CellCyclePotency, 5}, 'Aneuploid/Diploid Analysis (copykat/ℝ) [PMID:33462507] 🐢 ...');
 in_addmenu(m_extn, 0, @in_DecontX, 'Detect Ambient RNA Contamination (DecontX/ℝ) [PMID:32138770]...');
 
 in_addmenu(m_extn, 1, @in_RunDataMapPlot, 'Run DataMapPlot (datamapplot/🐍)...');
