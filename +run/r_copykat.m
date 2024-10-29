@@ -30,10 +30,13 @@ end
 codefullpath = fullfile(codepath,'script.R');
 pkg.RunRcode(codefullpath, Rpath);
 pause(3);
-if exist("test_copykat_prediction.txt",'file')
-    t = readtable("test_copykat_prediction.txt", ...
+outfile = "test_copykat_prediction.txt";
+if exist(outfile,'file')
+    warning off
+    t = readtable(outfile, ...
         "ReadVariableNames", true, "Delimiter",'\t',...
         "VariableNamingRule", "modify");
+    warning on
     assert(height(t)==sce.NumCells);
     idx = str2double(extractAfter(string(t.cell_names),1));
     [~, sortid] = sort(idx);
