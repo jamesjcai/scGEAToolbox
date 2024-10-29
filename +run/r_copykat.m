@@ -16,6 +16,7 @@ end
 if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
 
 tmpfilelist = {'input.h5'};
+pkg.i_deletefiles(tmpfilelist);
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 pkg.e_writeh5(full(sce.X), sce.g, 'input.h5');
 Rpath = getpref('scgeatoolbox', 'rexecutablepath',[]);
