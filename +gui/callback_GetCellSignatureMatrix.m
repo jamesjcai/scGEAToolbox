@@ -38,6 +38,7 @@ n = length(indx2);
 Y = zeros(sce.NumCells, n);
 
 [~, methodid] = gui.i_pickscoremethod([]);
+if isempty(methodid), return; end
 
 fw = gui.gui_waitbar_adv;
 for k = 1:n

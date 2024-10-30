@@ -36,9 +36,16 @@ function callback_ShowGeneExpr(src, ~)
                 maxy = max([maxy, max(Xt(sce.g == glist(k)))]);
             end
             gui.i_movegui2parent(hFig, FigureHandle);
-            % tb = uitoolbar(hFig);
-            % uipushtool(tb, 'Separator', 'off');
             % pkg.i_addbutton2fig(tb, 'off', {@in_rescale, maxy}, 'networkcomp.gif', 'Normalize scales...');
+            % tb = uitoolbar('Parent', hFig);
+            tb = findall(hFig, 'Type', 'uitoolbar', 'Tag', 'FigureToolBar');
+            if ~isempty(tb)
+                uipushtool(tb, 'Separator', 'off');
+                pkg.i_addbutton2fig(tb, 'off', @gui.i_changefontsize, 'noun_font_size_591141.gif', 'ChangeFontSize');            
+                pkg.i_addbutton2fig(tb, 'on', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
+                pkg.i_addbutton2fig(tb, 'on', @gui.i_invertcolor, 'plotpicker-comet.gif', 'Invert colors');            
+                pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
+            end
             hFig.Visible = "on";
     end
     gui.gui_waitbar(fw);
