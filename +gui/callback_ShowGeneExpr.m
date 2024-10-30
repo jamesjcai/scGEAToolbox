@@ -12,13 +12,17 @@ function callback_ShowGeneExpr(src, ~)
     [Xt] = gui.i_transformx(sce.X);
     if isempty(Xt), return; end
 
-    answer = questdlg("Plot on the same figure?","", "Yes, same figure", ...
-        "No, different figures", "Cancel", "Yes, same figure");
-    if strcmp(answer, "Cancel"), return; end
-
-    fw=gui.gui_waitbar;
     n = length(glist);
+    if n > 1
+        answer = questdlg("Plot on the same figure?","", "Yes, same figure", ...
+            "No, different figures", "Cancel", "Yes, same figure");
+        if strcmp(answer, "Cancel"), return; end
+    else
+        answer = "No, different figures";
+    end
 
+    
+    fw=gui.gui_waitbar;
     switch answer
         case "No, different figures"
             y = cell(n,1);
