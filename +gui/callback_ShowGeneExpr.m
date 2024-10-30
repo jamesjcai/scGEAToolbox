@@ -41,13 +41,13 @@ function callback_ShowGeneExpr(src, ~)
                         sc_scattermarker(Xt, sce.g, sce.s, glist(k), 2, 5, false);
                         colorbar;
                     case "stem plot"
-                        sc_scattermarker(Xt, sce.g, sce.s, glist(k), 1, 5, false);
+                        sc_scattermarker(Xt, sce.g, sce.s, glist(k), 1, 5, false);                        
                 end
                 maxy = max([maxy, max(Xt(sce.g == glist(k)))]);
             end
             gui.i_movegui2parent(hFig, FigureHandle);
             
-            evalin('base', 'linkprop(findobj(gcf,''type'',''axes''), {''CameraPosition'',''CameraUpVector''});');
+            % evalin('base', 'linkprop(findobj(gcf,''type'',''axes''), {''CameraPosition'',''CameraUpVector''});');
 
             % pkg.i_addbutton2fig(tb, 'off', {@in_rescale, maxy}, 'networkcomp.gif', 'Normalize scales...');
             % tb = uitoolbar('Parent', hFig);
@@ -57,7 +57,8 @@ function callback_ShowGeneExpr(src, ~)
                 pkg.i_addbutton2fig(tb, 'off', @gui.i_changefontsize, 'noun_font_size_591141.gif', 'ChangeFontSize');            
                 pkg.i_addbutton2fig(tb, 'off', @gui.i_setboxon, 'RectGate.gif', 'Box on/off');            
                 pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-                pkg.i_addbutton2fig(tb, 'off', @gui.i_invertcolor, 'plotpicker-comet.gif', 'Invert colors');            
+                pkg.i_addbutton2fig(tb, 'off', @gui.i_invertcolor, 'plotpicker-comet.gif', 'Invert colors');     
+                pkg.i_addbutton2fig(tb, 'off', @gui.i_linksubplots, "plottypectl-rlocusplot.gif", "Link subplots");
                 pkg.i_addbutton2fig(tb, 'off', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
                 gui.gui_3dcamera(tb, 'AllCells');
             end
