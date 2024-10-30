@@ -13,7 +13,13 @@ if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
 
 tmpfilelist = {'input.h5', 'output.Rds'};
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-pkg.e_writeh5(full(sce.X), sce.g, 'input.h5');
+
+%if ~strcmp(unique(sce.c_cell_type_tx), "undetermined")
+    pkg.e_writeh5(full(sce.X), sce.g, 'input.h5', sce.c_cell_type_tx);
+%else
+%    pkg.e_writeh5(full(sce.X), sce.g, 'input.h5');
+%end
+
 %sc_writefile('input.txt',sce.X,sce.g);
 %    if isdebug, return; end
 Rpath = getpref('scgeatoolbox', 'rexecutablepath',[]);

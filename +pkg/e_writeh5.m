@@ -1,5 +1,6 @@
-function e_writeh5(X, genelist, filename)
+function e_writeh5(X, genelist, filename, celltype)
 
+if nargin < 4, celltype = []; end
 % if isa(X,'SingleCellExperiment')
 %     genelist=X.g;
 %     X=X.X;
@@ -37,6 +38,11 @@ end
 if ~isempty(genelist)
     h5create(filename, '/g', size(genelist), 'Datatype', 'string');
     h5write(filename, '/g', genelist);
+end
+
+if ~isempty(celltype)
+    h5create(filename, '/celltype', size(celltype), 'Datatype', 'string');
+    h5write(filename, '/celltype', celltype);
 end
 
 
