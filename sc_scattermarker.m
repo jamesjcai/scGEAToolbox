@@ -12,7 +12,7 @@ import gui.*
 h1 = [];
 h2 = [];
 if nargin < 4
-    error('sc_scattermarker(X,genelist,s,g)');
+    error('sc_scattermarker(X, genelist, s, g)');
 end
 if isvector(s) || isscalar(s)
     error('S should be a matrix.');
@@ -49,6 +49,9 @@ elseif isStringScalar(targetg) || ischar(targetg)
         switch methodid
             case 1
                 % within_stemscatter(x, y, c);
+                % assignin("base","x",x)
+                % assignin("base","y",y)
+                % assignin("base","c",c)
                 gui.i_stemscatter([x, y], c);
                 h1 = gca;
                 grid on
