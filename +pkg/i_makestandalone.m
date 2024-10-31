@@ -138,7 +138,7 @@ end
 
 %%
 
-copyfile('resources/Images/700813831-hero-1536x1536.png',fullfile(outdir,"splash.png"));
+copyfile('resources/Images/700813831-hero-1536x1536.png', fullfile(outdir,"splash.png"));
 cd(outdir);
 % if needcorrect
 %     a = readmatrix('requiredMCRProducts.txt');
