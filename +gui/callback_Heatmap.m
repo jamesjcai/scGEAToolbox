@@ -8,7 +8,7 @@ if isempty(thisc), return; end
 [c, cL, noanswer] = gui.i_reordergroups(thisc);
 if noanswer, return; end
 
-[glist] = gui.i_selectngenes(sce,[],FigureHandle);
+[glist] = gui.i_selectngenes(sce, [], FigureHandle);
 if isempty(glist)
     helpdlg('No gene selected.', '');
     return;
@@ -25,7 +25,10 @@ if isempty(Xt), return; end
 Y = Xt(gidx, :);
 [~, cidx] = sort(c);
 Yori = Y(:, cidx);
-[Y] = gui.i_norm4heatmap(Yori);
+
+[methodid, dim] = gui.i_selnormmethod;
+if isempty(dim) || isempty(methodid), return; end
+[Y] = gui.i_norm4heatmap(Yori, dim, methodid);
 
 szgn = grpstats(c, c, @numel);
 a = zeros(1, max(c));
@@ -111,6 +114,7 @@ end
 % h2.ColorLimits=[min(Z(:)), max(Z(:))];
 
     function in_changenorm(~, ~)
+        [methodid, dim] = gui.i_selnormmethod;
 
         % [Xt] = gui.i_transformx(sce.X, true, 8);
         % if isempty(Xt), return; end
@@ -118,7 +122,7 @@ end
         %  [~, cidx] = sort(c);
         %  Yori = Yt(:, cidx);
 
-        [Y] = gui.i_norm4heatmap(Yori);
+        [Y] = gui.i_norm4heatmap(Yori, dim, methodid);
         % Y = log1p(Y);
         delete(h);        
         h = imagesc(Y);

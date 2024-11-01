@@ -7,7 +7,8 @@ if n < 20
 else
     deft = 'Numerical/Continuous';
 end
-answer = questdlg('What is the variable type?', '', 'Categorical/Discrete', ...
+answer = questdlg('What is the variable type?', '', ...
+    'Categorical/Discrete', ...
     'Numerical/Continuous', 'Unknown', deft);
 
 
