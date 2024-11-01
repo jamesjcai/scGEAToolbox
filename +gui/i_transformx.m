@@ -1,5 +1,6 @@
-function [X] = i_transformx(X, donorm)
+function [X] = i_transformx(X, donorm, methodid)
 
+if nargin < 3, methodid = 3; end
 if nargin < 2, donorm = false; end
 
 if nargin < 1
@@ -36,7 +37,7 @@ listitems = {'(a): Library Size Normalization', ...
 [indx, tf] = listdlg('PromptString', {'Select Method'}, ...
     'SelectionMode', 'single', ...
     'ListString', listitems, 'ListSize', [220, 300], ...
-    'InitialValue', 3);
+    'InitialValue', methodid);
 if tf == 1
     fw = gui.gui_waitbar;
     try

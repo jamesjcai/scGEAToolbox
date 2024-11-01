@@ -16,10 +16,11 @@ end
 
 [~, gidx] = ismember(glist, sce.g);
 
-%[Xt]=gui.i_transformx(sce.X);
-%if isempty(Xt), return; end
-Xt = sc_norm(sce.X);
-Xt = log1p(Xt);
+[Xt]=gui.i_transformx(sce.X, false, 3);
+if isempty(Xt), return; end
+
+%Xt = sc_norm(sce.X);
+%Xt = log1p(Xt);
 
 Y = Xt(gidx, :);
 [~, cidx] = sort(c);

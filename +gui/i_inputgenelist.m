@@ -16,6 +16,7 @@ if iscell(answer)
     try
         glist = string(answer{1});
         glist = strrep(glist, '"', '');
+        glist = strrep(glist, '''', '');
         glist = strip(glist, 'both', '"');
         glist = strtrim(glist);
 

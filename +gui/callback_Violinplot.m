@@ -32,7 +32,7 @@ function callback_Violinplot(src, ~)
                 return;
             end
 
-            [Xt] = gui.i_transformx(sce.X);
+            [Xt] = gui.i_transformx(sce.X, false, 8);
             if isempty(Xt), return; end
 
             answer = questdlg('Plot all in the same figure?','');
