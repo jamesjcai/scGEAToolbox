@@ -143,13 +143,6 @@ elseif isStringScalar(targetg) || ischar(targetg)
 
         a = getpref('scgeatoolbox', 'prefcolormapname', 'autumn');
         gui.i_setautumncolor(c, a, true, any(c==0));
-        %cb = colorbar(h1);
-        %cb.Label.String = 'Expression Level';
-
-        % cb.LineWidth = 1.5;
-        % pos = get(cb, 'Position');
-        % pos(4) = pos(4) / 2;
-        % set(cb, 'Position', pos);
 
         ori_c = c;
         title(targetg);

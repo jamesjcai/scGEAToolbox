@@ -7,4 +7,3 @@ h1 = stem3(x, y, c, 'marker', 'none', 'color', 'm');
 hold on;
 h2 = scatter3(x, y, zeros(size(y)), 5, c, 'filled');
 gui.i_setautumncolor(c);
-% disp('xxx')

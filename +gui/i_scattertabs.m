@@ -53,8 +53,6 @@ for k = 1:n
     ylabel(ax0{k}, strrep(tabnamelist(k), '_', '\_'));
     % pkg.i_violinplot(y{k}, thisx, true, cLorder);
     title(ax0{k}, strrep(tabnamelist(k), '_', '\_'));
-    % subtitle(ax0{k}, gui.i_getsubtitle(c));
-    % gui.i_setautumncolor(c, a, true, any(c==0));
 end
   
 tabgp.SelectionChangedFcn=@displaySelection;

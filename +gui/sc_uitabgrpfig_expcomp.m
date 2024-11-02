@@ -89,9 +89,6 @@ for k=1:n
     subtitle(ax{k,1}, gui.i_getsubtitle(c1));
     title(ax{k,2}, glist(k)+" "+string(cL{2}));
     subtitle(ax{k,2}, gui.i_getsubtitle(c2));
-
-
-    % gui.i_setautumncolor(c, a, true, any(c==0));
 end
   
 tabgp.SelectionChangedFcn=@displaySelection;
