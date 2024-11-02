@@ -41,7 +41,7 @@ switch methodid
     case 7
         Y = normalize(Y, dim, 'scale', 'first');
     case 8
-        Y = normalize(Y, dim, 'scale', '1qr');       
+        Y = normalize(Y, dim, 'scale', 'iqr');       
     case 9
         Y = normalize(Y, dim, 'range', [0 1]);
     case 10

@@ -96,12 +96,15 @@ set(hFig, 'visible', 'on');
 fliped = false;
 
 MX = glist;
-Z = zeros(length(glist), length(cL));
+
 c = c(cidx);
-for k = 1:length(cL)
-    Z(:, k) = median(Yori(:, c == k), 2);
-end
-[Z] = gui.i_norm4heatmap(Z);
+Z = zeros(length(glist), length(cL));
+
+% for k = 1:length(cL)
+%     Z(:, k) = mean(Y(:, c == k), 2);
+% end
+
+%[Z] = gui.i_norm4heatmap(Z);
 
 % figure;
 % h2=heatmap(strrep(cL,'_','\_'),MX,Z);
@@ -176,6 +179,10 @@ end
     end        
 
     function i_summarymap(~, ~)
+        for k = 1:length(cL)
+            Z(:, k) = mean(Y(:, c == k), 2);
+        end
+        
         f = figure;
         h = heatmap(strrep(cL, '_', '\_'), MX, Z);
         h.Title = 'Marker Gene Heatmap';
@@ -196,7 +203,7 @@ end
         pkg.i_addbutton2fig(tb, 'on', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
         pkg.i_addbutton2fig(tb, 'on', @gui.i_invertcolor, 'plotpicker-comet.gif', 'Invert colors');
         pkg.i_addbutton2fig(tb, 'off', @i_resetcolor, 'plotpicker-geobubble2.gif', 'Reset color map');
-        disp('https://software.broadinstitute.org/morpheus/')
+        % disp('https://software.broadinstitute.org/morpheus/')
     end
 
     function in_savetable(~, ~)
@@ -236,6 +243,10 @@ end
     end
 
     function i_summarymapT(~, ~)
+            for k = 1:length(cL)
+                Z(:, k) = mean(Y(:, c == k), 2);
+            end
+        
         f = figure;
         h = heatmap(MX, strrep(cL, '_', '\_'), Z.');
         h.Title = 'Marker Gene Heatmap';
