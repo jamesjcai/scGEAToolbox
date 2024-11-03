@@ -15,7 +15,7 @@ cnames{2, :} = {'Blues', 'BuGn', 'BuPu', 'GnBu', 'Greens', 'Greys', 'Oranges', '
     'Purples', 'RdPu', 'Reds', 'YlGn', 'YlGnBu', 'YlOrBr', 'YlOrRd'};
 cnames{3, :} = {'Accent', 'Dark2', 'Paired', 'Pastel1', 'Pastel2', 'Set1', 'Set2', 'Set3'};
 
-figure('position', [314, 327, 807, 420])
+figure;
 for itype = 1:3
 
     %fh(itype)=figure();

@@ -1,3 +1,5 @@
+import os
+os.chdir("./")
 import pandas as pd 
 #import scanpy as sc 
 #import scipy.io as spio

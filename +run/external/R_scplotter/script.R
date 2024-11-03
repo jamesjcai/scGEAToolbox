@@ -2,10 +2,10 @@ library(Seurat)
 library(Matrix)
 library(rhdf5)
 library(scplotter)
-
+setwd("C:\\Users\\jcai\\Documents\\GitHub\\scGEAToolbox\\+run\\external\\R_scplotter")
 X <- h5read(file = "input.h5", name = "/X")
 g <- h5read(file = "input.h5", name = "/g")
-# s <- h5read(file = "input.h5", name = "/s")
+s <- h5read(file = "input.h5", name = "/s")
 celltype <- h5read(file = "input.h5", name = "/celltype")
 
 
@@ -28,8 +28,7 @@ countMatrix <- CreateSeuratObject(countMatrix)
 sce <- NormalizeData(countMatrix)
 sce <- SCTransform(sce)
 sce <- RunPCA(object = sce)
-sce <- RunUMAP(object = sce, dims = 1:30)
-
+# sce <- RunUMAP(object = sce, dims = 1:30)
 
 #celltype <- as.data.frame(celltype)
 #rownames(celltype) <- colnames(x = sce)
@@ -38,6 +37,11 @@ sce <- RunUMAP(object = sce, dims = 1:30)
 
 celltype <- data.frame(strings = celltype)
 rownames(celltype) <- colnames(x = sce)
+
+s<-as.data.frame(s)
+rownames(s) <- colnames(x = sce)
+sce@reductions[['umap']] <- CreateDimReducObject(embeddings = s, key = 'Umap_', assay = 'RNA')
+
 
 sce <- AddMetaData(
   object = sce,
@@ -58,5 +62,6 @@ dev.off()
 #png(filename="output2.png")
 #plot(b)
 #dev.off()
-#saveRDS(sce, file = "output.Rds")
+
+saveRDS(sce, file = "output.Rds")
 
