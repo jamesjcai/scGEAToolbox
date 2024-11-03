@@ -5,6 +5,7 @@ library(scplotter)
 
 X <- h5read(file = "input.h5", name = "/X")
 g <- h5read(file = "input.h5", name = "/g")
+# s <- h5read(file = "input.h5", name = "/s")
 celltype <- h5read(file = "input.h5", name = "/celltype")
 
 
@@ -48,9 +49,7 @@ sce <- AddMetaData(
 a<-CellDimPlot(sce, group_by = "CellType", reduction = "umap",
             label = TRUE)
 
-
-
-png(filename="output.png")
+png(filename="output.png", width = 800, height = 600)
 plot(a)
 dev.off()
 
@@ -59,3 +58,5 @@ dev.off()
 #png(filename="output2.png")
 #plot(b)
 #dev.off()
+#saveRDS(sce, file = "output.Rds")
+
