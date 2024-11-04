@@ -1,4 +1,4 @@
-function [c_clustid] = sc_cluster_x(X, k, varargin)
+function [c] = sc_cluster_x(X, k, varargin)
 %sc_cluster_x - cluster cells using UMI matrix X
 %
 %see also: sc_cluster_s
@@ -26,20 +26,20 @@ end
 switch p.Results.type
     case 'simlr'
         % disp('To specify k, use RUN_SIMLR(X,k).');
-        [c_clustid] = run.ml_SIMLR(X, k, true);
+        [c] = run.ml_SIMLR(X, k, true);
     case 'soptsc'
         % Symmetric NMF for cell clustering
         % https://www.biorxiv.org/content/biorxiv/early/2019/01/01/168922.full.pdf
         %disp('To specify k, use RUN_SOPTSC(X,''k'',k).');
-        [c_clustid] = run.ml_SoptSC(X, 'k', k, 'donorm', true);
+        [c] = run.ml_SoptSC(X, 'k', k, 'donorm', true);
     case 'sc3'
         %disp('To specify k, use SC_SC3(X,k).');
-        [c_clustid] = run.ml_SC3(X, k);
+        [c] = run.ml_SC3(X, k);
     case 'sinnlrr'
         % disp('To specify k, use RUN_SINNLRR(X,k).');
-        [c_clustid] = run.ml_SinNLRR(X, k);
+        [c] = run.ml_SinNLRR(X, k);
     case 'specter'
-        [c_clustid] = run.ml_Specter(X, k);
+        [c] = run.ml_Specter(X, k);
     case 'alona'
         warning('In development.');
         % [C]=sc_alona(X);
