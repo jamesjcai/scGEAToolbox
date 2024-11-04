@@ -1,9 +1,10 @@
-function [Y] = i_norm4heatmap(Y, dim, methodid)
+function [Y] = i_norm4heatmap(Y, dim, methodid, doclip)
 
 % Y - gene-by-cell matrix
 % dim = 2 - by row
-if nargin<2, dim = 2; end
-if nargin<3, methodid = 1; end
+if nargin < 4, doclip = true; end
+if nargin < 3, methodid = 1; end
+if nargin < 2, dim = 2; end
 
 % listitems = {'zscore std', ...
 %     'zscore robust', ...
@@ -57,11 +58,11 @@ switch methodid
 end
 
 
-        % Y = normalize(Y, dim, "center","median","scale","mad");
-        qx = quantile(Y(:), 0.90);
-        Y(Y > qx) = qx;
-        qx = quantile(Y(:), 0.10);
-        %Y(Y<qx)=qx;
-        Y(Y < qx) = 0;
-
-
+% qx = quantile(Y(:), 0.90);
+% Y(Y > qx) = qx;
+% qx = quantile(Y(:), 0.10);
+% %Y(Y<qx)=qx;
+% Y(Y < qx) = 0;
+if doclip
+    Y = clip(X, quantile(Y(:), 0.05), quantile(Y(:), 0.95));
+end

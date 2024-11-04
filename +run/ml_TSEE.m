@@ -20,13 +20,16 @@ X = sc_transform(X)';
 % Y = double(Y);
 %Y = Y - min(Y(:));
 %Y = Y ./ max(Y(:));
+X = rescale(X);
 
 X = reshape(normalize(X(:), 'range'), size(X));
 
 % input the time of cells as y_time;
 % y_time = double(y_time);
 % y_time = (y_time - min(y_time)) / (max(y_time) - min(y_time));
-t = normalize(t,'range');
+% t = normalize(t,'range');
+
+t = rescale(t);
 
 % calculate two weight matrices
 N = size(X, 1);
