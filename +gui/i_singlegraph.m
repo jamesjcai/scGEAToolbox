@@ -41,6 +41,7 @@ pkg.i_addbutton2fig(tb, 'off', @SaveAdj, 'export.gif', 'Export & save data');
 pkg.i_addbutton2fig(tb, 'on', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
 pkg.i_addbutton2fig(tb, 'on', @in_RefreshAll, "icon-mat-refresh-20.gif", "Refresh");
+pkg.i_addbutton2fig(tb, 'on', @in_NetworkVis, "xxicon-mat-refresh-20.gif", "Refresh");
 
 title(h1,figname);
 
@@ -52,6 +53,16 @@ gui.gui_showrefinfo('Network Legend');
 
 oldG1=[];
 axistrig = true;
+
+    function in_NetworkVis(~, ~)
+        net = gui.networkvisualizer(G1.adjacency);
+        net.setNodeLabels(G1.Nodes.Name);
+        net.setNodeSizes('auto');
+        net.X = p1.XData';
+        net.Y = p1.YData';
+        figure;
+        plot(net);
+    end
 
     function in_RefreshAll(~, ~)
         if ~isempty(oldG1)
@@ -330,8 +341,13 @@ axistrig = true;
         % Update the y-data of the nearest point
         yData = get(hObj, 'YData');
         xData = get(hObj, 'XData');
-        [~, idx] = min(abs(xData - cp(1,1))); % Find closest x to mouse
-        yData(idx) = cp(1,2); % Update y value
+%       [~, idx] = min(abs(xData - cp(1,1))); % Find closest x to mouse
+%       yData(idx) = cp(1,2); % Update y value
+%       set(hObj, 'YData', yData);
+        idx = dsearchn([xData' yData'], [cp(1,1) cp(1,2)]);
+        xData(idx) = cp(1,1);
+        yData(idx) = cp(1,2);
+        set(hObj, 'XData', xData); % Update y value
         set(hObj, 'YData', yData);
     end
     
