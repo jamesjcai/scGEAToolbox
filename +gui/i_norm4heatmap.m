@@ -64,5 +64,5 @@ end
 % %Y(Y<qx)=qx;
 % Y(Y < qx) = 0;
 if doclip
-    Y = clip(X, quantile(Y(:), 0.05), quantile(Y(:), 0.95));
+    Y = clip(Y, quantile(Y(:), 0.05), quantile(Y(:), 0.95));
 end
