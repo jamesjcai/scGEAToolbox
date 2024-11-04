@@ -126,7 +126,6 @@ axistrig = true;
         end
     end
 
-
     function ChangeWeight(~, ~)
         %a=3:10;
         %w=a(randi(length(a),1));
@@ -173,7 +172,6 @@ axistrig = true;
             p.YData = y;
         end
     end
-
                             
     function ChangeCutoff(~, ~)
         list = {'0.00 (show all edges)', ...
@@ -198,7 +196,7 @@ axistrig = true;
     end
 
     function [p] = drawnetwork(G, h)
-        p = plot(h, G);
+        p = plot(h, G, 'ButtonDownFcn', @startDragFcn);
         box off
         %layout(p,'force');
         %         if isa(G,'digraph')
@@ -243,7 +241,6 @@ axistrig = true;
         end
     end
 
-
     function AnimateCutoff(~, ~)
         listc = 0.05:0.05:0.95;
         f = waitbar(0, 'Cutoff = 0.05', 'Name', 'Edge Pruning...', ...
@@ -270,7 +267,6 @@ axistrig = true;
         delete(f)
     end
 
-
     function [p, G] = i_replotg(p, G, h, cutoff)
         a = h.Title.String;
         x = p.XData;
@@ -289,6 +285,64 @@ axistrig = true;
         % h=gca;
         title(a)
     end
+
+    %{
+    % Callback to initiate dragging
+    function startDragFcn(hObj, ~)
+        % Get data for the clicked point
+        fig = ancestor(hObj, 'figure');
+        set(fig, 'WindowButtonMotionFcn', {@draggingFcn, hObj});
+        set(fig, 'WindowButtonUpFcn', @stopDragFcn);
+    end
+    
+    % Function to drag the point
+    function draggingFcn(~, ~, hObj)
+        % Current cursor position in data coordinates
+        cp = get(gca, 'CurrentPoint');
+        % Update the y-data of the nearest point
+        yData = get(hObj, 'YData');
+        xData = get(hObj, 'XData');
+        [~, idx] = min(abs(xData - cp(1,1))); % Find closest x to mouse
+        yData(idx) = cp(1,2); % Update y value
+        set(hObj, 'YData', yData);
+    end
+    
+    % Function to stop dragging
+    function stopDragFcn(~, ~)
+        fig = gcbf;
+        set(fig, 'WindowButtonMotionFcn', '');
+        set(fig, 'WindowButtonUpFcn', '');
+    end
+    %}
+
+    % Callback to initiate dragging
+    function startDragFcn(hObj, ~)
+        % Get data for the clicked point
+        % fig = ancestor(hObj, 'figure');
+        set(hFig, 'WindowButtonMotionFcn', {@draggingFcn, hObj});
+        set(hFig, 'WindowButtonUpFcn', @stopDragFcn);
+    end
+    
+    % Function to drag the point
+    function draggingFcn(~, ~, hObj)
+        % Current cursor position in data coordinates
+        cp = get(gca, 'CurrentPoint');
+        % Update the y-data of the nearest point
+        yData = get(hObj, 'YData');
+        xData = get(hObj, 'XData');
+        [~, idx] = min(abs(xData - cp(1,1))); % Find closest x to mouse
+        yData(idx) = cp(1,2); % Update y value
+        set(hObj, 'YData', yData);
+    end
+    
+    % Function to stop dragging
+    function stopDragFcn(~, ~)
+        % fig = gcbf;
+        set(hFig, 'WindowButtonMotionFcn', '');
+        set(hFig, 'WindowButtonUpFcn', '');
+    end
+
+
 end
 
 
