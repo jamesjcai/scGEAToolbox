@@ -15,6 +15,7 @@ addRequired(p, 'X', @isnumeric);
 addOptional(p, 'type', defaultType, checkType)
 parse(p, X, varargin{:})
 
+if issparse(X), X = full(X); end
 
 switch lower(p.Results.type)
     case 'pearsonresiduals'

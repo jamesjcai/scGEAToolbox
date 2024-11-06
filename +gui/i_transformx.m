@@ -8,15 +8,14 @@ if nargin < 1
     disp('Using simulated X.');
 end
 if donorm
-    answer = questdlg('Normalize, transform or impute X?', ...
-        '', 'Yes', 'No', 'Cancel', 'Yes');
+    defaultans = 'Yes';
 else
-    answer = questdlg('Normalize, transform or impute X?', ...
-        '', 'Yes', 'No', 'Cancel', 'No');
+    defaultans = 'No';
 end
-
+answer = questdlg('Normalize, transform or impute X? Select No to use untouched X', ...
+    '', 'Yes', 'No', 'Cancel', defaultans);
 if strcmp(answer, 'Yes')
-    %
+
 elseif strcmp(answer, 'No')
     return;
 elseif strcmp(answer, 'Cancel')
