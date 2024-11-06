@@ -1,30 +1,12 @@
-function callback_Heatmap(src, ~)
+function i_heatmap(sce, glist, thisc, FigureHandle)
 
-FigureHandle = src.Parent.Parent;
-sce = guidata(FigureHandle);
-[thisc, ~] = gui.i_select1class(sce);
-if isempty(thisc), return; end
+if nargin<4, FigureHandle = []; end
 
-% [c, cL, noanswer] = gui.i_reordergroups(thisc);
-% if noanswer, return; end
-
-[glist] = gui.i_selectngenes(sce, [], FigureHandle);
-if isempty(glist)
-    helpdlg('No gene selected.', '');
-    return;
-end
-gui.i_heatmap(sce, glist, thisc, FigureHandle);
-
-end
-
-%{
+[c, cL, noanswer] = gui.i_reordergroups(thisc);
+if noanswer, return; end
 [~, gidx] = ismember(glist, sce.g);
-
 [Xt] = gui.i_transformx(sce.X, true, 8);
 if isempty(Xt), return; end
-
-%Xt = sc_norm(sce.X);
-%Xt = log1p(Xt);
 
 Y = Xt(gidx, :);
 [~, cidx] = sort(c);
@@ -83,19 +65,20 @@ pkg.i_addbutton2fig(tb, 'off', @i_summarymapT, 'HDF_object02.gif', 'Summary map,
 pkg.i_addbutton2fig(tb, 'on', @in_savetable, 'export.gif', 'Export data...');
 pkg.i_addbutton2fig(tb, 'off', @in_changenorm, 'explorer1.gif', 'Change normalization method...');
 pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
+pkg.i_addbutton2fig(tb, 'off', @i_dotplotx, 'HDF_object03.gif', 'Dot plot...');
 
+% try
+%     [px_new] = gui.i_getchildpos(FigureHandle, hFig);
+%     if ~isempty(px_new)
+%         movegui(hFig, px_new);
+%     else
+%         movegui(hFig, 'center');
+%     end
+% catch
+%     movegui(hFig, 'center');
+% end
 
-try
-    [px_new] = gui.i_getchildpos(FigureHandle, hFig);
-    if ~isempty(px_new)
-        movegui(hFig, px_new);
-    else
-        movegui(hFig, 'center');
-    end
-catch
-    movegui(hFig, 'center');
-end
-        
+gui.i_movegui2parent(hFig, FigureHandle);        
 set(hFig, 'visible', 'on');
 fliped = false;
 
@@ -274,5 +257,12 @@ Z = zeros(length(glist), length(cL));
         pkg.i_addbutton2fig(tb, 'off', @i_resetcolor, 'plotpicker-geobubble2.gif', 'Reset color map');
     end
 
+    function i_dotplotx(~, ~)
+        try
+            gui.i_dotplot(sce.X, sce.g, c, cL, MX);
+        catch ME
+            errordlg(ME.message);
+        end
+    end
+    
 end
-%}

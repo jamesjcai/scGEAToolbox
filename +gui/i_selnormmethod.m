@@ -4,11 +4,11 @@ methodid = [];
 dim =[];
 if nargout > 1
     answer = questdlg('Specify the dimension to operate on:', ...
-        '', 'Column-wise (1)', 'Row-wise (2)', 'Row-wise (2)');
+        '', 'Row-wise', 'Column-wise', 'Row-wise');
     switch answer
-        case 'Column-wise (1)'
+        case 'Column-wise'
             dim = 1;
-        case 'Row-wise (2)'
+        case 'Row-wise'
             dim = 2;
         otherwise
             return;

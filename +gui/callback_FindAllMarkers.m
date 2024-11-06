@@ -56,11 +56,11 @@ function in_MarkerGeneHeatmap(src, ~, sce)
         markergenes = pkg.i_get_panglaodbmarkers;
         idx = ismember(upper(sce.g), upper(markergenes));
         if sum(idx) > 2000
-            fprintf('%d genes x %d cells\n', sce.NumGenes, sce.NumCells);
+            fprintf('Size of input matrix: %d genes x %d cells\n', sce.NumGenes, sce.NumCells);
             sce.X = sce.X(idx, :);
             sce.g = sce.g(idx);            
             sce = sce.qcfilter;
-            fprintf('%d genes x %d cells\n', sce.NumGenes, sce.NumCells);
+            fprintf('Size of filtered matrix: %d genes x %d cells\n', sce.NumGenes, sce.NumCells);
         else
             uiwait(helpdlg("Not enough marker genes (n < 2000). Use all genes to search for markers.",""));
         end
@@ -76,9 +76,10 @@ function in_MarkerGeneHeatmap(src, ~, sce)
         warndlg("All cells are in the same group.",'');
         return;
     end
-    [c, cL, noanswer] = gui.i_reordergroups(thisc);
-    if noanswer, return; end
+    % [c, cL, noanswer] = gui.i_reordergroups(thisc);
+    % if noanswer, return; end
     
+    [c] = grp2idx(thisc);
     answer = questdlg('Generate marker gene heatmap', ...
         'Select Method', 'Method 1 (DE 🐇)', 'Method 2 (scGeneFit 🐢)', ...
         'Method 3 (LASSO 🐢🐢)', 'Method 1 (DE 🐇)');
@@ -113,7 +114,9 @@ function in_MarkerGeneHeatmap(src, ~, sce)
         sce.g(idx) = [];
         sce.X(idx, :) = [];
     end
-    fprintf('%d genes x %d cells\n', sce.NumGenes, sce.NumCells);
+    
+    fprintf('Size of used matrix*: %d genes x %d cells\n', sce.NumGenes, sce.NumCells);
+
     try
         [markerlist] = sc_pickmarkers(sce.X, sce.g, c, 10, methodid);
     catch ME
@@ -122,6 +125,17 @@ function in_MarkerGeneHeatmap(src, ~, sce)
         return;
     end
     
+    glist = string(markerlist{1}(:));
+    for k = 2:length(markerlist)
+        glist = [glist; string(markerlist{k}(:))];
+    end
+    gui.gui_waitbar(fw);
+    gui.i_heatmap(sce, glist, thisc, FigureHandle);    
+end
+
+
+%{
+
     M = cell(numel(cL), 2);
     for k = 1:numel(cL)
         %cLk=matlab.lang.makeValidName(cL{k});
@@ -369,3 +383,4 @@ function in_MarkerGeneHeatmap(src, ~, sce)
             end
         end
 end
+%}
