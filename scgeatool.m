@@ -1746,15 +1746,30 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
                 cb = colorbar(target{1}, 'Ticks', f, 'TickLabels', ...
                     strrep(cellstr(cL), '_', '\_'));
             case {'Numerical/Continuous','Unknown'}
-                in_RefreshAll(src, [], true, false);
-                target{1} = hAx;
-                target{2} = h;
-                if isnumeric(thisc)
-                    set(target{2}, 'CData', thisc);
-                else
-                    set(target{2}, 'CData', c);
+                answer = questdlg('In-figure show?','');
+                switch answer
+                    case 'Yes'
+                        in_RefreshAll(src, [], true, false);
+                        target{1} = hAx;
+                        target{2} = h;
+                        if isnumeric(thisc)
+                            set(target{2}, 'CData', thisc);
+                        else
+                            set(target{2}, 'CData', c);
+                        end
+                        cb = colorbar(target{1});
+                    case 'No'
+                        hFig = figure('Visible','off');
+                        stem3(sce.s(:,1), sce.s(:,2), c, 'marker', 'none', 'color', 'm');
+                        hold on;
+                        scatter3(sce.s(:,1), sce.s(:,2), zeros(sce.NumCells,1), 5, c, 'filled');
+                        gui.i_setautumncolor(c);
+                        gui.i_movegui2parent(hFig, parentfig);
+                        hFig.Visible = "on";
+                        return;
+                    otherwise
+                        return;
                 end
-                cb = colorbar(target{1});
         end
         cb.Label.String = strrep(clabel, '_', '\_');
         cbtogg = findall(FigureHandle, 'Tag', 'figToglColorbar');

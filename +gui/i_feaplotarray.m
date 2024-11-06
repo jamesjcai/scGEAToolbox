@@ -54,7 +54,7 @@ for kx = 1:length(tgene)
         end
         gui.i_setautumncolor(ydata, a, true, any(ydata==0));
         clim([min(z) max(z)]);  % Adjust color axis to data range
-        title(cL{ky});
+        ctitle(cL{ky});
     end
     sgtitle(tgene(kx));
     gui.i_movegui2parent(hFig, parentfig);

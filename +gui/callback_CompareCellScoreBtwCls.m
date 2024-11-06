@@ -194,7 +194,7 @@ bb = 'No, just show values';
                 %     if ~yes, return; end
                 %     sce=sce.estimatepotency(specisid);
                 % end
-                % [yes,idx]=ismember({'cell_potency'},sce.list_cell_attributes(1:2:end));
+                % [yes, idx]=ismember({'cell_potency'},sce.list_cell_attributes(1:2:end));
                 % if yes
                 %     y=sce.list_cell_attributes{idx*2};
                 %     ttxt='Differentiation Potency';
@@ -351,6 +351,13 @@ bb = 'No, just show values';
                     end
                         % gui.sc_uitabgrpfig_expplot(y, markerlist, sce.s, FigureHandle, [axx, bxx]);
                 else
+
+                    if sum(strcmp(ttxt, sce.list_cell_attributes)) == 0
+                        sce.list_cell_attributes = [sce.list_cell_attributes, ...
+                            {ttxt, y(:)}];
+                    end
+                    needupdatesce = true;
+                    guidata(FigureHandle, sce);
                     gui.i_stemscatterfig(sce, y, posg, ttxt, FigureHandle);
                 end
                 % answer = questdlg('Also show stem plot?', '');
