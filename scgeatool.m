@@ -1131,14 +1131,14 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
         % for k=1:length(pushbuttonV)
         %     set(pushbuttonV(k),'Enable',entag);
         % end
-        if strcmpi(entag,'on')
+        %if strcmpi(entag,'on')
             %set(tb1,'Visible','off');
             %set(tb2,'Visible','off');
             
             %px=FigureHandle.Position;
             %px(4)=px(4)-50;
             %FigureHandle.Position=px;
-        end
+        %end
         set(DeftToolbarHandle,'Visible',entag);
         set(MainToolbarHandle,'Visible',entag);
         showuseronboarding = getpref('scgeatoolbox', ...
@@ -1164,12 +1164,12 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
         end
         a=allchild(m_file);
         a(end).Enable='on';
-        a(end-1).Enable='on';
-        % a(end-6).Enable='on';
+        a(end-1).Enable='on';        
         a=allchild(m_extn);
         a(end).Enable='on';
         a(end-1).Enable='on';
         a(end-2).Enable='on';
+        a(end-3).Enable='on';
     end
 
     function in_RefreshAll(src, ~, keepview, keepcolr)
@@ -1745,10 +1745,11 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
         [answer] = gui.i_selvariabletype(thisc);
         if isempty(answer), return; end
 
-        [c, cL] = grp2idx(thisc);
-        sce.c = c;
+
         switch answer
             case 'Categorical/Discrete'
+                [c, cL] = grp2idx(thisc);
+                sce.c = c;
                 in_RefreshAll(src, [], true, false);
                 target{1} = hAx;
                 n = max(c);
@@ -1756,7 +1757,11 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
                 f = 1 + f .* (1:2:2 * n);
                 cb = colorbar(target{1}, 'Ticks', f, 'TickLabels', ...
                     strrep(cellstr(cL), '_', '\_'));
+                cb.Label.String = strrep(clabel, '_', '\_');
+                cbtogg = findall(FigureHandle, 'Tag', 'figToglColorbar');
+                set(cbtogg,'State','on');
             case {'Numerical/Continuous','Unknown'}
+                sce.c = thisc;
                 answer = questdlg('Show scores in new figure?','', ...
                     'Yes, new figure', 'No, current figure', ...
                     'Cancel', 'Yes, new figure');
@@ -1768,20 +1773,21 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
                         if isnumeric(thisc)
                             set(target{2}, 'CData', thisc);
                         else
+                            [c, cL] = grp2idx(thisc);
                             set(target{2}, 'CData', c);
                         end
                         cb = colorbar(target{1});
+                        cb.Label.String = strrep(clabel, '_', '\_');
+                        cbtogg = findall(FigureHandle, 'Tag', 'figToglColorbar');
+                        set(cbtogg,'State','on');
                     case 'Yes, new figure'
-                        gui.i_stemscatterfig(sce, c, [], clabel, ...
+                        gui.i_stemscatterfig(sce, thisc, [], clabel, ...
                             FigureHandle);
                         return;
                     otherwise
                         return;
                 end
         end
-        cb.Label.String = strrep(clabel, '_', '\_');
-        cbtogg = findall(FigureHandle, 'Tag', 'figToglColorbar');
-        set(cbtogg,'State','on');
         guidata(FigureHandle, sce);
     end
 

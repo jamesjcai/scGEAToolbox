@@ -82,12 +82,34 @@ bb = 'No, just show values';
 
                 case 'Define a New Score...'
                     ttxt = 'Customized Score';
-                    [posg] = gui.i_selectngenes(sce.g,[],FigureHandle);
+                    newcstype = inputdlg('Name of the new cell score:', '', ...
+                            [1, 50], {ttxt});
+                    if isempty(newcstype), return; end
+                    ttxt = newcstype;
+                    [posg] = gui.i_selectngenes(sce.g, [], FigureHandle);
                     if isempty(posg)
                         helpdlg('No feature genes selected.', '')
                         return;
                     end
                     [y] = gui.e_cellscore(sce, posg);
+                    answer = questdlg('Save score to cell attribute list?', ...
+                        '','Yes, save','No, skip','Cancel','Yes, save');
+                    switch answer
+                        case 'Yes, save'
+                            ttxt = string(ttxt);
+                            if any(strcmp(ttxt, sce.list_cell_attributes(1:2:end)))                            
+                                fprintf("Duplicate found: %s is renamed to ", ttxt); 
+                                a = matlab.lang.makeUniqueStrings([string(sce.list_cell_attributes(1:2:end)) ttxt]);
+                                ttxt = a(end);
+                                fprintf("%s.\n", ttxt);
+                            else
+                                sce.list_cell_attributes = [sce.list_cell_attributes, ...
+                                    {ttxt, y(:)}];
+                            end
+                        case 'No, skip'
+                        otherwise
+                            return;
+                    end
                 case 'MSigDB Molecular Signatures'
                     % speciestag = gui.i_selectspecies(2, true);
                     % if isempty(speciestag), return; end
@@ -340,8 +362,7 @@ bb = 'No, just show values';
                     % t=array2table(cell2mat({rand(10,1),rand(10,1),rand(10,1)}),'VariableNames',{'aa','bb','cc'});                    
                     % assignin("base",'y',y);
                     % assignin("base",'ttxt',ttxt);
-                    % assignin("base",'k',k);
-                   
+                    % assignin("base",'k',k);                  
 
                     if length(y)>1
                         pause(1);
