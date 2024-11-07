@@ -165,6 +165,7 @@ in_addmenu(m_plot, 0, @in_DrawKNNNetwork, 'Cell kNN Network...');
 in_addmenu(m_plot, 0, @in_DrawTrajectory, 'Cell Trajectory...');
 in_addmenu(m_plot, 1, @gui.callback_PickPlotMarker,'Next Marker Type');
 in_addmenu(m_plot, 0 ,@gui.callback_PickColorMap,'Next Colormap');
+in_addmenu(m_plot, 1 ,@in_cleanumap,'Clean tSNE/UMAP/PHATE Plot');
 
 m_anno = uimenu(FigureHandle, 'Text', 'Ann&otate');
 in_addmenu(m_anno, 0, {@in_DetermineCellTypeClustersGeneral, true}, "Annotate Cell Types Using PanglaoDB Marker Genes");
@@ -450,6 +451,17 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
                 sce.struct_cell_embeddings = rmfield(sce.struct_cell_embeddings,oldf);
             end
         end
+    end
+
+    function in_cleanumap(~, ~)
+        answer = questdlg('This function works best with 2D plot. Continue?','');
+        if ~strcmp(answer, 'Yes'), return; end
+        answer = questdlg('Select embedding method label.', ...
+            '','tSNE','UMAP','PHATE','tSNE');
+        if isempty(answer), return; end
+        a = colormap;
+        gui.i_baredrplot(hAx, [], answer, FigureHandle);
+        colormap(a);
     end
 
     function in_CompareCellScoreBtwCls(src, events)
@@ -1266,7 +1278,7 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
                     return;
                 case 'Embed Cells to 2D'
                     in_EmbeddingAgain(src, [], 2);
-                case 'Project Current 3D Embedding to 2D'
+                case {'Project Current 3D Embedding to 2D', 'Reduce current 3D'}
                     [ax, bx] = view(hAx);
                     answer2 = questdlg('Which view to be used to project 3D to 2D?', '', ...
                         'X-Y Plane', 'Screen/Camera', 'PCA-Rotated', 'X-Y Plane');
@@ -1292,8 +1304,7 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
                     [sx] = gui.i_pickembedvalues(sce, 2);
                     if ~isempty(sx) && size(sx,1) == sce.NumCells
                         sce.s = sx;
-                    else
-                        warning('Running error.');
+                    else                        
                         return;
                     end
             end
@@ -1746,9 +1757,11 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
                 cb = colorbar(target{1}, 'Ticks', f, 'TickLabels', ...
                     strrep(cellstr(cL), '_', '\_'));
             case {'Numerical/Continuous','Unknown'}
-                answer = questdlg('In-figure show?','');
+                answer = questdlg('Show scores in new figure?','', ...
+                    'Yes, new figure', 'No, current figure', ...
+                    'Cancel', 'Yes, new figure');
                 switch answer
-                    case 'Yes'
+                    case 'No, current figure'
                         in_RefreshAll(src, [], true, false);
                         target{1} = hAx;
                         target{2} = h;
@@ -1758,14 +1771,9 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
                             set(target{2}, 'CData', c);
                         end
                         cb = colorbar(target{1});
-                    case 'No'
-                        hFig = figure('Visible','off');
-                        stem3(sce.s(:,1), sce.s(:,2), c, 'marker', 'none', 'color', 'm');
-                        hold on;
-                        scatter3(sce.s(:,1), sce.s(:,2), zeros(sce.NumCells,1), 5, c, 'filled');
-                        gui.i_setautumncolor(c);
-                        gui.i_movegui2parent(hFig, parentfig);
-                        hFig.Visible = "on";
+                    case 'Yes, new figure'
+                        gui.i_stemscatterfig(sce, c, [], clabel, ...
+                            FigureHandle);
                         return;
                     otherwise
                         return;

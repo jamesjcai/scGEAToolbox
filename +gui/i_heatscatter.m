@@ -12,7 +12,7 @@ else
     is2d = true;
 end
 
-c(c < 0) = 0;
+% c(c < 0) = 0;
 sz = 5;
 h1 = scatter3(x, y, z, sz, c, 'filled');
 grid on
