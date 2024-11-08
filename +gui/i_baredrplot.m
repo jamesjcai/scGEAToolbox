@@ -35,45 +35,84 @@ set(gca, 'XColor', 'none', 'YColor', 'none');
 set(gca, 'ZColor', 'none');
 % Get axis limits and figure position
 ax = gca;
-
 xLimits = ax.XLim;
 yLimits = ax.YLim;
-ax.Units = "pixels";
-r = ax.Position(3)/ax.Position(4);
+zLimits = ax.ZLim;
 
-ax.Units = "normalized";
-axPos = ax.Position;
+%width(s)
+%is3d = width(s)>2;
+is3d = false;
 
-% Convert data limits to figure normalized units
-xArrowPos = [0, 1]; % normalized from left to right of the axes
-yArrowPos = [0, 1]; % normalized from bottom to top of the axes
+if is3d    % ======================================== 3D
 
-% Draw x-axis arrow
-annotation('arrow', ...
-    [axPos(1), axPos(1) + axPos(3)/7], ... % x positions
-    [axPos(2), axPos(2)], ...            % y positions
-    'Color', 'k', 'LineWidth', .5);
+    % Create a sample 3D plot
+    %[X, Y, Z] = sphere;
+    hold on;
+   
+    % Turn off the default axis display
+    %set(gca, 'Visible', 'off');
+
+    % xlim([-1.5 1.5]);
+    % ylim([-1.5 1.5]);
+    % zlim([-1.5 1.5]);
+    
+    a = xLimits(1); b = yLimits(1); c = zLimits(1);
+    % Draw custom arrows as axes using quiver3
+    quiver3(a, b, c, 20, 0, 0, 'k', 'LineWidth', 1); % X-axis
+    quiver3(a, b, c, 0, 20, 0, 'k', 'LineWidth', 1); % Y-axis
+    quiver3(a, b, c, 0, 0, 20, 'k', 'LineWidth', 1); % Z-axis
+
+    axis_length = 20;
+%    quiver3(0, 0, 0, axis_length, 0, 0, 'k', 'LineWidth', 1); % X-axis
+%    quiver3(0, 0, 0, 0, axis_length, 0, 'k', 'LineWidth', 1); % Y-axis
+%    quiver3(0, 0, 0, 0, 0, axis_length, 'k', 'LineWidth', 1); % Z-axis
+    
+    % Label each arrow for clarity
+    text(a+axis_length, b, c, 'tSNE_1', 'Color', 'k', 'FontSize', 12);
+    text(a, b+axis_length, c, 'tSNE_2', 'Color', 'k', 'FontSize', 12);
+    text(a, b, c+axis_length, 'tSNE_3', 'Color', 'k', 'FontSize', 12);
+    hold off;
+    
+
+else          % ======================================== 2D
+    ax.Units = "pixels";
+    r = ax.Position(3)/ax.Position(4);
+    
+    ax.Units = "normalized";
+    axPos = ax.Position;
+    
+    % Convert data limits to figure normalized units
+    % xArrowPos = [0, 1]; % normalized from left to right of the axes
+    % yArrowPos = [0, 1]; % normalized from bottom to top of the axes
+    
+    % Draw x-axis arrow
+    annotation('arrow', ...
+        [axPos(1), axPos(1) + axPos(3)/7], ... % x positions
+        [axPos(2), axPos(2)], ...            % y positions
+        'Color', 'k', 'LineWidth', .5);
+    
+    % Draw y-axis arrow
+    annotation('arrow', ...
+        [axPos(1), axPos(1)], ...            % x positions
+        [axPos(2), axPos(2) + r*(axPos(4)/7)], ... % y positions
+        'Color', 'k', 'LineWidth', .5);
+    %axis off
+    
+    txt1 = sprintf('%s\\_1', t);
+    txt2 = sprintf('%s\\_2', t);
+    
+    [~, b] = measureText(txt1);
+    text(xLimits(1), yLimits(1) - 2*b, txt1);
+    
+    [~, b] = measureText(txt2);
+    text(xLimits(1) - 2*b, yLimits(1), txt2,'Rotation',90);
+    title('')
+    subtitle('')
+    hold off;
+end
 
 
 
-% Draw y-axis arrow
-annotation('arrow', ...
-    [axPos(1), axPos(1)], ...            % x positions
-    [axPos(2), axPos(2) + r*(axPos(4)/7)], ... % y positions
-    'Color', 'k', 'LineWidth', .5);
-%axis off
-
-txt1 = sprintf('%s\\_1', t);
-txt2 = sprintf('%s\\_2', t);
-
-[~, b] = measureText(txt1);
-text(xLimits(1), yLimits(1) - 2*b, txt1);
-
-[~, b] = measureText(txt2);
-text(xLimits(1) - 2*b, yLimits(1), txt2,'Rotation',90);
-title('')
-subtitle('')
-hold off;
 gui.i_movegui2parent(hFig, parentfig);
 hFig.Visible = "on";
 
