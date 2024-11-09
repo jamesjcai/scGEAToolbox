@@ -24,6 +24,7 @@ switch answer
     case 'Cancel'
         return;
     case 'Paste'
+        rng("default");
         rng("shuffle");
         n = length(gsorted);
         if isempty(predefinedlist)

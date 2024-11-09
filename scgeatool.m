@@ -13,7 +13,7 @@ if ~license('test','statistics_toolbox')  % isempty(which('grp2idx.m'))
     end
     return;
 end
-rng("shuffle");
+% rng("shuffle");
 % rng("default");
 
 persistent speciestag

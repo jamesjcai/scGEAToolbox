@@ -41,7 +41,8 @@ pkg.i_addbutton2fig(tb, 'off', @SaveAdj, 'export.gif', 'Export & save data');
 pkg.i_addbutton2fig(tb, 'on', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
 pkg.i_addbutton2fig(tb, 'on', @in_RefreshAll, "icon-mat-refresh-20.gif", "Refresh");
-pkg.i_addbutton2fig(tb, 'on', @in_NetworkVis, "xxicon-mat-refresh-20.gif", "Refresh");
+pkg.i_addbutton2fig(tb, 'on', @in_NetworkVis, "xxicon-mat-refresh-20.gif", "NetworkVis");
+pkg.i_addbutton2fig(tb, 'on', @in_NetworkVis2, "xxicon-mat-refresh-20.gif", "NetworkVis2");
 
 title(h1,figname);
 
@@ -53,6 +54,21 @@ gui.gui_showrefinfo('Network Legend');
 
 oldG1=[];
 axistrig = true;
+
+    function in_NetworkVis2(~, ~)
+        figure;
+        gplot(G1.adjacency, [p1.XData' p1.YData'], ...
+            '-k');
+        hold on
+        scatter(p1.XData', p1.YData', 300, ...
+            'MarkerEdgeColor','k', ...
+            'MarkerFaceColor',[.8 .8 .8]);
+        for k=1:length(G1.Nodes.Name)
+            [wx,hx]=measureText(G1.Nodes.Name{k});
+            text(p1.XData(k)-wx, p1.YData(k), ...
+                G1.Nodes.Name{k},'FontSize',20);
+        end
+    end
 
     function in_NetworkVis(~, ~)
         net = gui.networkvisualizer(G1.adjacency);
@@ -391,3 +407,20 @@ function h = WattsStrogatz(N, K, beta)
         h = graph(s, t);
 end
 
+ function [width, height] = measureText(txt, textOpts, axis)
+    if(nargin < 3)
+       axis = gca(); 
+    end
+    if nargin < 2
+        textOpts = struct();
+        textOpts.HorizontalAlignment = 'center';
+        textOpts.VerticalAlignment = 'middle';
+        textOpts.FontSize = 10;
+        textOpts.FontWeight = 'normal';
+    end
+    hTest = text(axis, 0, 0, txt, textOpts);
+    textExt = get(hTest, 'Extent');
+    delete(hTest);
+    height = textExt(4)/3;    %Height
+    width = textExt(3)/3;     %Width
+end
