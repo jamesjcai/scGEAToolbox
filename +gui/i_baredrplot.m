@@ -30,47 +30,47 @@ end
 grid off
 hold on;
 
-% Turn off default x and y axes
-set(gca, 'XColor', 'none', 'YColor', 'none');
-set(gca, 'ZColor', 'none');
+set(hAx, 'XColor', 'none', 'YColor', 'none', 'ZColor', 'none');
 % Get axis limits and figure position
 ax = gca;
 xLimits = ax.XLim;
 yLimits = ax.YLim;
 zLimits = ax.ZLim;
 
-%width(s)
-%is3d = width(s)>2;
-is3d = false;
+assert(isequal(ax, hAx));
+
+is3d1 = isprop(hAx, 'ZLim');
+h = get(hAx, 'Children');
+is3d2 = any(arrayfun(@(x) ~isempty(get(x, 'ZData')), h));
+is3d = is3d1 & is3d2;
 
 if is3d    % ======================================== 3D
-
-    % Create a sample 3D plot
-    %[X, Y, Z] = sphere;
     hold on;
-   
     % Turn off the default axis display
     %set(gca, 'Visible', 'off');
-
-    % xlim([-1.5 1.5]);
-    % ylim([-1.5 1.5]);
-    % zlim([-1.5 1.5]);
-    
+ 
     a = xLimits(1); b = yLimits(1); c = zLimits(1);
+    la = xLimits(2)-a;
+    lb = yLimits(2)-b;
+    lc = zLimits(2)-c;
+
     % Draw custom arrows as axes using quiver3
-    quiver3(a, b, c, 20, 0, 0, 'k', 'LineWidth', 1); % X-axis
-    quiver3(a, b, c, 0, 20, 0, 'k', 'LineWidth', 1); % Y-axis
-    quiver3(a, b, c, 0, 0, 20, 'k', 'LineWidth', 1); % Z-axis
+    quiver3(a, b, c, la/5, 0, 0, 'k', 'LineWidth', 1); % X-axis
+    quiver3(a, b, c, 0, lb/5, 0, 'k', 'LineWidth', 1); % Y-axis
+    quiver3(a, b, c, 0, 0, lc/5, 'k', 'LineWidth', 1); % Z-axis
 
     axis_length = 20;
 %    quiver3(0, 0, 0, axis_length, 0, 0, 'k', 'LineWidth', 1); % X-axis
 %    quiver3(0, 0, 0, 0, axis_length, 0, 'k', 'LineWidth', 1); % Y-axis
 %    quiver3(0, 0, 0, 0, 0, axis_length, 'k', 'LineWidth', 1); % Z-axis
+    txt1 = sprintf('%s\\_1', t);
+    txt2 = sprintf('%s\\_2', t);
+    txt3 = sprintf('%s\\_3', t);
     
     % Label each arrow for clarity
-    text(a+axis_length, b, c, 'tSNE_1', 'Color', 'k', 'FontSize', 12);
-    text(a, b+axis_length, c, 'tSNE_2', 'Color', 'k', 'FontSize', 12);
-    text(a, b, c+axis_length, 'tSNE_3', 'Color', 'k', 'FontSize', 12);
+    text(a+la/5, b, c, txt1);
+    text(a, b+lb/5, c, txt2);
+    text(a, b, c+lc/5, txt3);
     hold off;
     
 

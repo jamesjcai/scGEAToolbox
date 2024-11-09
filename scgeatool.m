@@ -454,8 +454,8 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
     end
 
     function in_cleanumap(~, ~)
-        answer = questdlg('This function works best with 2D plot. Continue?','');
-        if ~strcmp(answer, 'Yes'), return; end
+        %answer = questdlg('This function works best with 2D plot. Continue?','');
+        %if ~strcmp(answer, 'Yes'), return; end
         answer = questdlg('Select embedding method label.', ...
             '','tSNE','UMAP','PHATE','tSNE');
         if isempty(answer), return; end
