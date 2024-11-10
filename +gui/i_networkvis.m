@@ -9,11 +9,11 @@ textOpts.FontWeight = 'normal';
 
 hFig = figure("Visible","off");
 
-if ~curved
-    gplot(G.adjacency, xy, '-k');
-else
-    curve_gplot(G.adjacency, xy);
-end
+%if ~curved
+%    gplot(G.adjacency, xy, '-k');
+%else
+    curve_gplot(G.adjacency, xy, curved);
+%end
     
     hold on
     scatter(xy(:,1), xy(:,2), 300, ...
@@ -52,7 +52,8 @@ end
  end
 
 
- function curve_gplot(sbeG, xy)
+ function curve_gplot(sbeG, xy, curved)
+ if nargin<3, curved = false; end
 
     [i, j] = find(sbeG);
     [~, p] = sort(max(i, j));
@@ -71,20 +72,25 @@ end
     
     
     M = zeros(1, 4);
+    hold on
     for k = 1:length(X) - 1
         if ~(isnan(X(k)) || isnan(X(k+1)))
-            p1 = [X(k), Y(k)];
-            p2 = [X(k+1), Y(k+1)];
-    
-            if ~ismember([p1, p2], M, 'rows')
-                [a, b] = quadraticcurveto(p1, p2);
-                plot(a, b, '-', ...
-                    'color', [.6, .6, .6], 'linewidth', 1);
-                hold on;
-                M = [M; [p1, p2]];
-                M = [M; [p2, p1]];
+            if curved
+                p1 = [X(k), Y(k)];
+                p2 = [X(k+1), Y(k+1)];
+        
+                if ~ismember([p1, p2], M, 'rows')
+                    [a, b] = quadraticcurveto(p1, p2);
+                    plot(a, b, '-', ...
+                        'color', [.6, .6, .6], 'linewidth', 1);
+                    
+                    M = [M; [p1, p2]];
+                    M = [M; [p2, p1]];
+                end
+            else
+                
+                plot([X(k),X(k+1)],[Y(k),Y(k+1)],'r:');
             end
-            %plot([X(k),X(k+1)],[Y(k),Y(k+1)],'r:');
         end
     end
  end
