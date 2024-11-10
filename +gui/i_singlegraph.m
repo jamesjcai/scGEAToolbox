@@ -25,6 +25,7 @@ hFig = figure('Visible', 'off');
 %hFig.Position(4)=hFig.Position(4)*1.2;
 
 h1 = axes(hFig);
+xy = [];
 [p1] = drawnetwork(G1, h1);
 
 % tb = findall(hFig, 'Tag', 'FigureToolBar');
@@ -42,7 +43,8 @@ pkg.i_addbutton2fig(tb, 'on', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save F
 pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
 pkg.i_addbutton2fig(tb, 'on', @in_RefreshAll, "icon-mat-refresh-20.gif", "Refresh");
 pkg.i_addbutton2fig(tb, 'on', @in_NetworkVis, "xxicon-mat-refresh-20.gif", "NetworkVis");
-pkg.i_addbutton2fig(tb, 'on', @in_NetworkVis2, "xxicon-mat-refresh-20.gif", "NetworkVis2");
+pkg.i_addbutton2fig(tb, 'off', @in_NetworkVis2, "xxicon-mat-refresh-20.gif", "NetworkVis2");
+pkg.i_addbutton2fig(tb, 'off', @ix_networkvis, "xxicon-mat-refresh-20.gif", "NetworkVis2");
 
 title(h1,figname);
 
@@ -50,10 +52,19 @@ gui.i_movegui2parent(hFig, parentfig);
 
 drawnow;
 hFig.Visible=true;
-gui.gui_showrefinfo('Network Legend');
+% gui.gui_showrefinfo('Network Legend');
 
 oldG1=[];
 axistrig = true;
+
+
+    function [xy]=getxy
+        xy = [p1.XData' p1.YData'];
+    end
+
+    function ix_networkvis(~,~)
+        gui.i_networkvis(G1,getxy);
+    end
 
     function in_NetworkVis2(~, ~)
         figure;
@@ -64,9 +75,19 @@ axistrig = true;
             'MarkerEdgeColor','k', ...
             'MarkerFaceColor',[.8 .8 .8]);
         for k=1:length(G1.Nodes.Name)
-            [wx,hx]=measureText(G1.Nodes.Name{k});
-            text(p1.XData(k)-wx, p1.YData(k), ...
-                G1.Nodes.Name{k},'FontSize',20);
+            textOpts.FontSize = 15;
+        textOpts.HorizontalAlignment = 'center';
+        textOpts.VerticalAlignment = 'middle';
+        textOpts.FontWeight = 'normal';
+
+            [wx,hx]=measureText(G1.Nodes.Name{k}, textOpts);
+            text(p1.XData(k)-wx/2, p1.YData(k), ...
+                G1.Nodes.Name{k},'FontSize',15,...
+                'BackgroundColor','w', ...
+                'FontWeight','normal', ...
+                'HorizontalAlignment','center', ...
+                'VerticalAlignment','middle');
+
         end
     end
 
@@ -217,7 +238,15 @@ axistrig = true;
             else
                 cutoff = str2double(list(indx));
             end
+            answer = questdlg("Keep original network?","");
+            switch answer
+                case 'Yes'
             [p1] = i_replotg(p1, G1, h1, cutoff);
+                case 'No'
+            [p1, G1] = i_replotg(p1, G1, h1, cutoff);
+                otherwise
+                    return;
+            end
             %[p2]=i_replotg(p2,G2,h2,cutoff);
         end
     end
@@ -266,6 +295,7 @@ axistrig = true;
             G.Edges.LWidths = abs(w*G.Edges.Weight/max(G.Edges.Weight));
             p.LineWidth = G.Edges.LWidths;
         end
+        xy = [p.XData' p.YData'];
     end
 
     function AnimateCutoff(~, ~)
@@ -415,7 +445,7 @@ end
         textOpts = struct();
         textOpts.HorizontalAlignment = 'center';
         textOpts.VerticalAlignment = 'middle';
-        textOpts.FontSize = 10;
+        textOpts.FontSize = 20;
         textOpts.FontWeight = 'normal';
     end
     hTest = text(axis, 0, 0, txt, textOpts);
