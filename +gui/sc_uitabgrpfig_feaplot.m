@@ -1,4 +1,5 @@
-function sc_uitabgrpfig_feaplot(feays, fealabels, sce_s, parentfig, cazcel)
+function sc_uitabgrpfig_feaplot(feays, fealabels, sce_s, ...
+    parentfig, cazcel)
 
 if nargin < 5, cazcel = []; end
 if nargin < 4, parentfig = []; end

@@ -1,7 +1,7 @@
 function sc_uitabgrpfig_expplot(y, glist, s, parentfig, cazcel)
 
-if nargin < 4, cazcel = []; end
-if nargin < 3, parentfig = []; end
+if nargin < 5, cazcel = []; end
+if nargin < 4, parentfig = []; end
 % if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 
 %     p = parentfig.Position;
 %     cx = [p(1)+p(3)/2 p(2)+p(4)/2];

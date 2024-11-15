@@ -34,8 +34,7 @@ function callback_ScatterCorrPlot(src, ~)
             gui.i_scattertabs(y, glist, thisx, xlabelv, FigureHandle);
 
 
-            % gui.sc_uitabgrpfig_scatter(sce, glist, thisx, xlabelv, FigureHandle);
-        
+       
            % i_plot_pseudotimeseries(X, genelist, t, genes)
            % %Plot pseudotime series
 
