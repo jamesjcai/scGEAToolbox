@@ -1264,6 +1264,7 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
             ansx = questdlg('Switch to 2D?');
             if ~strcmp(ansx, 'Yes'), return; end
             [vslist] = gui.i_checkexistingembed(sce, 2);
+            
             if ~isempty(vslist)
                 answer = questdlg('How to make 2D embedding?','', ...
                     'Pick existing 2D','Re-embed cells', ...
@@ -1276,7 +1277,7 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
             switch answer
                 case 'Cancel'
                     return;
-                case 'Embed Cells to 2D'
+                case 'Re-embed cells'
                     in_EmbeddingAgain(src, [], 2);
                 case {'Project Current 3D Embedding to 2D', 'Reduce current 3D'}
                     [ax, bx] = view(hAx);
@@ -1403,26 +1404,6 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
                 otherwise
                     return;
             end
-            %if ~isfield(sce.struct_cell_embeddings, methoddimtag)
-            %    sce.struct_cell_embeddings = setfield(sce.struct_cell_embeddings,methoddimtag,[]);
-            %end
-
-            % if ~isempty(sce.struct_cell_embeddings.(methoddimtag))
-            %     answer1 = questdlg(sprintf('Use existing %s embedding or re-compute new embedding?', ...
-            %         upper(methoddimtag)), '', ...
-            %         'Use existing', 'Re-compute', 'Cancel', 'Use existing');
-            %     switch answer1
-            %         case 'Use existing'
-            %             sce.s = sce.struct_cell_embeddings.(methoddimtag);
-            %             usingold = true;
-            %         case 'Re-compute'
-            %             usingold = false;
-            %         case {'Cancel', ''}
-            %             return;
-            %     end
-            % end
-
-            % whitelist = [];
             
             [K, usehvgs] = gui.i_gethvgnum(sce);
             if isempty(K), return; end                
