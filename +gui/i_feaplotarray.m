@@ -45,6 +45,9 @@ for kx = 1:length(tgene)
     for ky = 1:length(cL)
         cellidx = c==ky;
         nexttile;
+
+        % sc_scattermarker(Xt, sce.g, sce.s, glist(k), 1, 5, false);   
+
         ydata = X(g == tgene(kx), cellidx);
     
         if size(s,2)>2
@@ -54,7 +57,7 @@ for kx = 1:length(tgene)
         end
         gui.i_setautumncolor(ydata, a, true, any(ydata==0));
         clim([min(z) max(z)]);  % Adjust color axis to data range
-        %ctitle(cL{ky});
+        title(cL{ky});
     end
     sgtitle(tgene(kx));
     gui.i_movegui2parent(hFig, parentfig);

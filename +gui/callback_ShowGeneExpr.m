@@ -24,21 +24,28 @@ function callback_ShowGeneExpr(src, ~)
     
     switch answer
         case "No, different figures"
+            fw = gui.gui_waitbar;
             y = cell(n,1);
             for k = 1:n
                 y{k} = Xt(sce.g == glist(k), :);
             end
             gui.sc_uitabgrpfig_expplot(y, glist, sce.s, FigureHandle, [axx, bxx]);
+            gui.gui_waitbar(fw);
         case "Yes, same figure"
-            answer2 = questdlg("Type of plot:","", "feature plot", "stem plot", "feature plot");
+            answer2 = questdlg("Type of plot:","", "stem plot", "feature plot", "stem plot");
             if isempty(answer2), return; end
+            fw = gui.gui_waitbar; 
             hFig = figure(Visible="off");
             maxy = 0;
+            a = getpref('scgeatoolbox', 'prefcolormapname', 'autumn');
+
             for k = 1:n
                 nexttile
                 switch answer2
                     case "feature plot"
                         sc_scattermarker(Xt, sce.g, sce.s, glist(k), 2, 5, false);
+                        c = Xt(sce.g == glist(k), :);
+                        gui.i_setautumncolor(c, a, true, any(c==0));
                         colorbar;
                     case "stem plot"
                         sc_scattermarker(Xt, sce.g, sce.s, glist(k), 1, 5, false);                        
@@ -62,16 +69,7 @@ function callback_ShowGeneExpr(src, ~)
                 pkg.i_addbutton2fig(tb, 'off', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
                 gui.gui_3dcamera(tb, 'AllCells');
             end
+            gui.gui_waitbar(fw);
             hFig.Visible = "on";
     end
-
-    %    gui.gui_waitbar(fw);
-
-    
-    % function in_rescale(~, ~, maxy)
-    %        clim([0 maxy]);
-    % end
-
 end
-
-
