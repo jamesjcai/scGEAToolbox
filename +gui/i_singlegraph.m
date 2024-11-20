@@ -62,32 +62,51 @@ axistrig = true;
         xy = [p1.XData' p1.YData'];
     end
 
-    function ix_networkvis(~,~)
-        gui.i_networkvis(G1,getxy);
+    function ix_networkvis(~, ~)
+        gui.i_networkvis(G1, getxy, true);
+        gui.i_networkvis(G1, getxy, false);
     end
 
     function in_NetworkVis2(~, ~)
-        figure;
+        figure('SizeChangedFcn', @sbar);
         gplot(G1.adjacency, [p1.XData' p1.YData'], ...
             '-k');
         hold on
         scatter(p1.XData', p1.YData', 300, ...
             'MarkerEdgeColor','k', ...
             'MarkerFaceColor',[.8 .8 .8]);
-        for k=1:length(G1.Nodes.Name)
-            textOpts.FontSize = 15;
+        textOpts.FontSize = 15;
         textOpts.HorizontalAlignment = 'center';
         textOpts.VerticalAlignment = 'middle';
         textOpts.FontWeight = 'normal';
-
-            [wx,hx]=measureText(G1.Nodes.Name{k}, textOpts);
-            text(p1.XData(k)-wx/2, p1.YData(k), ...
+        
+        tz = cell(length(G1.Nodes.Name),1);
+        for k = 1:length(G1.Nodes.Name)            
+            [wx, hx] = measureText(G1.Nodes.Name{k}, textOpts);
+            tz{k} = text(p1.XData(k)-wx/2, p1.YData(k), ...
                 G1.Nodes.Name{k},'FontSize',15,...
                 'BackgroundColor','w', ...
                 'FontWeight','normal', ...
                 'HorizontalAlignment','center', ...
-                'VerticalAlignment','middle');
+                'VerticalAlignment','middle');             
+        end
 
+        function sbar(~, ~)
+                textOpts.FontSize = 15;
+                textOpts.HorizontalAlignment = 'center';
+                textOpts.VerticalAlignment = 'middle';
+                textOpts.FontWeight = 'normal';
+                textHandles = findall(gcf, 'Type', 'text'); % Find all text objects in the current figure
+                delete(textHandles); % Delete all found text objects
+            for k = 1:length(G1.Nodes.Name)                
+                [wx, hx] = measureText(G1.Nodes.Name{k}, textOpts);
+                t{k} = text(p1.XData(k)-wx/2, p1.YData(k), ...
+                    G1.Nodes.Name{k},'FontSize',15,...
+                    'BackgroundColor','w', ...
+                    'FontWeight','normal', ...
+                    'HorizontalAlignment','center', ...
+                    'VerticalAlignment','middle');             
+            end
         end
     end
 
@@ -149,13 +168,13 @@ axistrig = true;
     function ChangeFontSize(~, ~)
         i_changefontsize(p1);
         %i_changefontsize(p2);
-            function i_changefontsize(p)
-                if p.NodeFontSize >= 20
-                    p.NodeFontSize = 7;
-                else
-                    p.NodeFontSize = p.NodeFontSize + 1;
-                end
-        end
+        function i_changefontsize(p)
+            if p.NodeFontSize >= 20
+                p.NodeFontSize = 7;
+            else
+                p.NodeFontSize = p.NodeFontSize + 1;
+            end
+        end            
     end
 
     function ChangeBox(~, ~)
