@@ -110,15 +110,15 @@ axistrig = true;
         end
     end
 
-    function in_NetworkVis(~, ~)
-        net = gui.networkvisualizer(G1.adjacency);
-        net.setNodeLabels(G1.Nodes.Name);
-        net.setNodeSizes('auto');
-        net.X = p1.XData';
-        net.Y = p1.YData';
-        figure;
-        plot(net);
-    end
+    % function in_NetworkVis(~, ~)
+    %     net = gui.networkvisualizer(G1.adjacency);
+    %     net.setNodeLabels(G1.Nodes.Name);
+    %     net.setNodeSizes('auto');
+    %     net.X = p1.XData';
+    %     net.Y = p1.YData';
+    %     figure;
+    %     plot(net);
+    % end
 
     function in_RefreshAll(~, ~)
         if ~isempty(oldG1)
