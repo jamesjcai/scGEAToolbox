@@ -19,14 +19,14 @@ M = length(tgene);
 if issparse(X), X = full(X); end
 if uselog, X = log1p(X); end
 cL = strrep(cL(:),'_','\_');
-xgroupdata = categorical(cL(c));
-
+% xgroupdata = categorical(cL(c));
+xgroupdata = cL(c);
 hFig = figure('Visible', 'off', 'DockControls', 'off');
 for k = 1:M
     %gui.gui_waitbar_adv(fw, k / M);
     ydata = X(g == tgene(k), :);
     nexttile;   % subplot(M, 1, ct)
-    pkg.violinplot(ydata.', xgroupdata, 'showdata', false);
+    pkg.violinplot(ydata.', xgroupdata, 'showdata', false, 'GroupOrder', cL);
     box on;
     title(tgene(k));    
 end

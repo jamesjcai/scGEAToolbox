@@ -37,7 +37,10 @@ function callback_Violinplot(src, ~)
 
             answer = questdlg('Plot all in the same figure?','');
             if strcmp(answer, 'Yes')
-                [c, cL] = grp2idx(thisc);
+
+                [c, cL, noanswer] = gui.i_reordergroups(thisc, [], FigureHandle);
+                if noanswer, return; end
+                % [c, cL] = grp2idx(thisc);
                 fw = gui.gui_waitbar;
                 gui.i_violinmatrix(full(Xt), sce.g, c, cL, glist, ...
                         false, '', FigureHandle);
@@ -76,9 +79,5 @@ function callback_Violinplot(src, ~)
         otherwise
             return;
     end
-
     gui.sc_uitabgrpfig_vioplot(thisyv, ylabelv, thisc, FigureHandle);
-
-
-
 end

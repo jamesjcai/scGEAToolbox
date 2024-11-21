@@ -133,10 +133,9 @@ end
 
 %  tb = findall(hFig, 'Tag', 'FigureToolBar');  % does not work MATLAB online
 tb = uitoolbar(hFig);
-uipushtool(tb, 'Separator', 'off');
-
+% uipushtool(tb, 'Separator', 'off');
 %tb = uitoolbar('Parent', hFig);
-pkg.i_addbutton2fig(tb, 'on', {@gui.i_pickmonocolor, true}, 'plotpicker-compass.gif', 'Pick new color map...');
+pkg.i_addbutton2fig(tb, 'off', {@gui.i_pickmonocolor, true}, 'plotpicker-compass.gif', 'Pick new color map...');
 pkg.i_addbutton2fig(tb, 'off', @gui.i_changefontsize, 'noun_font_size_591141.gif', 'ChangeFontSize');
 pkg.i_addbutton2fig(tb, 'off', @i_resizedot, 'networkcomp.gif', 'Resize dots...');
 pkg.i_addbutton2fig(tb, 'on', @i_renamecat, 'guideicon.gif', 'Rename groups...');
