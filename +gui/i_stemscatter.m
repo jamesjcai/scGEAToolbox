@@ -6,4 +6,5 @@ y = s(:, 2);
 h1 = stem3(x, y, c, 'marker', 'none', 'color', 'm');
 hold on;
 h2 = scatter3(x, y, zeros(size(y)), 5, c, 'filled');
-gui.i_setautumncolor(c);
+a = getpref('scgeatoolbox', 'prefcolormapname', 'autumn');
+gui.i_setautumncolor(c, a, true, any(c==0));
