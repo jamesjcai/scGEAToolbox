@@ -59,7 +59,8 @@ end
 idx2 = find(strcmp(strtrim(string(char(hinfo.Groups(idx).Attributes.Name))), "shape"));
 shape = double(hinfo.Groups(idx).Attributes(idx2).Value);
 
-g = pkg.e_guessh5field(filenm, {'/var/'}, {'_index', 'gene_ids', 'gene_name'}, false);
+g = pkg.e_guessh5field(filenm, {'/var/'}, {'_index', 'gene_ids', ...
+    'gene_name','symbol'}, false);
 
 if isempty(g) || isscalar(unique(strlength(g))) % suggesting ENSEMBLE ID
     disp('Reading /var/feature_name/categories');
