@@ -85,3 +85,4 @@ TIMESTAMP
 resources/Images/Thumbs.db
 +run/external/R_scplotter/Thumbs.db
 +run/external/py_scimilarity/test/input.h5ad
++run/external/py_scimilarity/test/output.h5ad
