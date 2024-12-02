@@ -11,33 +11,7 @@ from scipy.sparse import csr_matrix
 import h5py
 import anndata
 
-f = h5py.File("X.mat",'r')
-counts = csr_matrix(f.get('X'))
-f.close()
 
-f = h5py.File("Xnorm.mat",'r')
-Xnorm = csr_matrix(f.get('Xnorm'))
-f.close()
-
-# counts = csr_matrix(f.get('X'), dtype=np.float64)
-# counts = np.array(f.get('X'), dtype=np.float64)
-# N = f.get('n')    # or f['n']
-# n=N[()].astype(int).item()
-# data = f.get('/X')[()]
-# sample_labels=f.get('/batchid')[:,0].astype(int)
-
-adata = anndata.AnnData(X=Xnorm)
-adata.layers["counts"] = counts
-
-# adata = anndata.AnnData(X=X.transpose().tocsr())
-metadata = pd.read_csv("c.csv")
-with open("g.csv",'r') as f:
-          gene_names = f.read().splitlines()
-
-adata.obs = metadata
-adata.obs.index = adata.obs['CellID'].tolist()
-adata.var.index = gene_names
-adata.write("input.h5ad")
 
 
 # ==============================

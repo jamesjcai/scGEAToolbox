@@ -73,7 +73,7 @@ end
 if isvalid(fw)
     gui.gui_waitbar(fw, [], [], 'Checking Python environment is complete');
     pause(0.5);
-    gui.gui_waitbar(fw, [], [], sprintf('Running %s...', 'py_scimilarity'));
+    gui.gui_waitbar(fw, [], [], sprintf('Running %s...', 'py\_scimilarity'));
 end
 
 codefullpath = fullfile(codepth,'script.py');
