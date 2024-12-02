@@ -1,7 +1,13 @@
-function [s] = py_scimilarity(sce, wkdir, isdebug)
+function [s] = py_scimilarity(sce, modeldir, wkdir, isdebug)
 s = [];
-if nargin < 3, isdebug = true; end
-if nargin < 2, wkdir = tempdir; end
+if nargin < 4, isdebug = true; end
+if nargin < 3, wkdir = tempdir; end
+if nargin < 2
+    modeldir = selectFolder;    
+end
+if isempty(modeldir) || ~exist(modeldir, 'dir')
+    error('Model folder does not exist or is invalid.');
+end
 
 oldpth = pwd();
 pw1 = fileparts(mfilename('fullpath'));
@@ -51,7 +57,7 @@ try
     end
     save('X.mat', '-v7.3', 'X');
     Xnorm = single(sc_norm(full(sce.X)));
-    save('Xnorm.mat','-v7.3',"Xnorm");
+    save('Xnorm.mat','-v7.3',"Xnorm","modeldir");
     g = sce.g;
     writetable(table(g),'g.csv','WriteVariableNames',false);
     sce.c_cell_id = matlab.lang.makeUniqueStrings(sce.c_cell_id);
@@ -79,13 +85,44 @@ disp(cmdlinestr)
 if status == 0 && isvalid(fw)
     gui.gui_waitbar(fw, [], 'output.h5ad is written.');
 end
-if status == 0 && exist('output.h5ad', 'file')
-    % adams.obs["predictions_unconstrained"]
-    s = h5read('output.h5ad','/obs/predictions_unconstrained');
-    sce.c_celltype_tx = s;
+if status == 0 && exist('output.h5ad', 'file')        
+    cL = h5read('output.h5ad','/obs/predictions_unconstrained/categories');
+    c = h5read('output.h5ad','/obs/predictions_unconstrained/codes');
+    if any(c==0)
+        cL = [cL; "undetermined"];
+        c(c==0) = numel(cL);
+    end
+    assert(sce.NumCells==numel(c));
+    if ~(isscalar(unique(sce.c_cell_type_tx)) && unique(sce.c_cell_type_tx)=="undetermined")
+        sce.list_cell_attributes = [sce.list_cell_attributes, {'old_cell_type', sce.c_cell_type_tx}];
+    end
+    sce.c_cell_type_tx = cL(c);
 end
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 cd(oldpth);
 
+end
+
+
+function selectedDir = selectFolder()
+    % selectFolder - Prompts the user to select a folder and returns the folder path
+    %
+    % Output:
+    %   selectedDir - The full path of the selected folder as a string. 
+    %                 If the user cancels the selection, it returns an empty string.
+
+    % Prompt title for folder selection
+    promptTitle = 'Select a folder that contains the model';
+
+    % Open a folder selection dialog box
+    selectedDir = uigetdir(pwd, promptTitle);
+
+    % Check if the user canceled the selection
+    if selectedDir == 0
+        fprintf('Folder selection canceled.\n');
+        selectedDir = '';
+    else
+        fprintf('Selected folder: %s\n', selectedDir);
+    end
 end

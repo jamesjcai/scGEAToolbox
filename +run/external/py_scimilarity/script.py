@@ -14,6 +14,9 @@ f.close()
 
 f = h5py.File("Xnorm.mat",'r')
 Xnorm = csr_matrix(f.get('Xnorm'))
+# modeldir = f.get('modeldir')[()]
+modeldir = f['modeldir'][()]
+modeldir = modeldir.tobytes().decode('utf-16')
 f.close()
 
 # counts = csr_matrix(f.get('X'), dtype=np.float64)
@@ -56,8 +59,9 @@ from scimilarity import CellAnnotation
 # Instantiate the CellAnnotation object
 # Set model_path to the location of the uncompressed model
 
+model_path = modeldir
 # model_path = "/models/model_v1.1"
-model_path = "D:\\downloads\\shetty_09_24\\scimlarity\\models\\model_v1.1"
+# model_path = "D:\\downloads\\shetty_09_24\\scimlarity\\models\\model_v1.1"
 ca = CellAnnotation(model_path=model_path)
 
 # Load the tutorial data
