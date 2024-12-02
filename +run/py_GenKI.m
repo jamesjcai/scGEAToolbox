@@ -122,7 +122,7 @@ disp(cmdlinestr)
 [status] = system(cmdlinestr, '-echo');
 
 if status == 0 && isvalid(fw)
-    gui.gui_waitbar(fw, [], 'DataMapPlot is complete');
+    gui.gui_waitbar(fw, [], 'py_GenKI is complete');
 end
 
 
