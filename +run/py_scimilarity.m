@@ -57,8 +57,10 @@ try
         X = single(full(sce.X));         
     else
         X = single(sce.X);
-    end    
-    Xnorm = single(sc_norm(full(sce.X)));
+    end
+    [Xnorm] = pkg.norm_libsize(sce.X, 10000);
+    Xnorm = log1p(full(Xnorm));
+    Xnorm = single(Xnorm);
     save('X.mat','-v7.3',"X","Xnorm","modeldir");
     g = sce.g;
     writetable(table(g),'g.csv','WriteVariableNames',false);
