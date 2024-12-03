@@ -1,9 +1,12 @@
-function [s] = py_scimilarity(sce, modeldir, wkdir, isdebug)
-s = [];
+function [t] = py_scimilarity(sce, modeldir, wkdir, isdebug)
+
+% t = run.py_scimilarity(sce, 'Y:\jcai\models\model_v1.1', 'C:\Users\jcai\Downloads');
+
+t = [];
 if nargin < 4, isdebug = true; end
 if nargin < 3, wkdir = tempdir; end
 if nargin < 2
-    modeldir = selectFolder;    
+    modeldir = selectFolder;
 end
 if isempty(modeldir) || ~exist(modeldir, 'dir')
     error('Model folder does not exist or is invalid.');
@@ -54,10 +57,9 @@ try
         X = single(full(sce.X));         
     else
         X = single(sce.X);
-    end
-    save('X.mat', '-v7.3', 'X');
+    end    
     Xnorm = single(sc_norm(full(sce.X)));
-    save('Xnorm.mat','-v7.3',"Xnorm","modeldir");
+    save('X.mat','-v7.3',"X","Xnorm","modeldir");
     g = sce.g;
     writetable(table(g),'g.csv','WriteVariableNames',false);
     sce.c_cell_id = matlab.lang.makeUniqueStrings(sce.c_cell_id);
@@ -83,20 +85,21 @@ disp(cmdlinestr)
 [status] = system(cmdlinestr, '-echo');
 % [status2] = movefile('output.h5ad',fname);
 if status == 0 && isvalid(fw)
-    gui.gui_waitbar(fw, [], 'output.h5ad is written.');
+    gui.gui_waitbar(fw, [], 'output.csv is written.');
 end
-if status == 0 && exist('output.h5ad', 'file')        
-    cL = h5read('output.h5ad','/obs/predictions_unconstrained/categories');
-    c = h5read('output.h5ad','/obs/predictions_unconstrained/codes');
-    if any(c==0)
-        cL = [cL; "undetermined"];
-        c(c==0) = numel(cL);
-    end
-    assert(sce.NumCells==numel(c));
-    if ~(isscalar(unique(sce.c_cell_type_tx)) && unique(sce.c_cell_type_tx)=="undetermined")
-        sce.list_cell_attributes = [sce.list_cell_attributes, {'old_cell_type', sce.c_cell_type_tx}];
-    end
-    sce.c_cell_type_tx = cL(c);
+if status == 0 && exist('output.csv', 'file')
+    t = readtable('output.csv');
+    % cL = h5read('output.h5ad','/obs/predictions_unconstrained/categories');
+    % c = h5read('output.h5ad','/obs/predictions_unconstrained/codes');
+    % if any(c==0)
+    %     cL = [cL; "undetermined"];
+    %     c(c==0) = numel(cL);
+    % end
+    % assert(sce.NumCells==numel(c));
+    % if ~(isscalar(unique(sce.c_cell_type_tx)) && unique(sce.c_cell_type_tx)=="undetermined")
+    %     sce.list_cell_attributes = [sce.list_cell_attributes, {'old_cell_type', sce.c_cell_type_tx}];
+    % end
+    % sce.c_cell_type_tx = cL(c);
 end
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end

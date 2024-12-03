@@ -1,8 +1,5 @@
 import os
-# os.chdir("C:\\Users\\jcai\\AppData\\Local\\Temp\\")
-os.chdir("Z:\\Cailab\\GitHub\\scGEAToolbox\\+run\\external\\py_scimilarity\\test")
-#import os
-#os.chdir("./")
+os.chdir("./")
 import pandas as pd 
 #import scanpy as sc 
 #import scipy.io as spio
@@ -11,7 +8,36 @@ from scipy.sparse import csr_matrix
 import h5py
 import anndata
 
+f = h5py.File("X.mat",'r')
+counts = csr_matrix(f.get('X'))
+f.close()
 
+f = h5py.File("Xnorm.mat",'r')
+Xnorm = csr_matrix(f.get('Xnorm'))
+# modeldir = f.get('modeldir')[()]
+modeldir = f['modeldir'][()]
+modeldir = modeldir.tobytes().decode('utf-16')
+f.close()
+
+# counts = csr_matrix(f.get('X'), dtype=np.float64)
+# counts = np.array(f.get('X'), dtype=np.float64)
+# N = f.get('n')    # or f['n']
+# n=N[()].astype(int).item()
+# data = f.get('/X')[()]
+# sample_labels=f.get('/batchid')[:,0].astype(int)
+
+adata = anndata.AnnData(X=Xnorm)
+adata.layers["counts"] = counts
+
+# adata = anndata.AnnData(X=X.transpose().tocsr())
+metadata = pd.read_csv("c.csv")
+with open("g.csv",'r') as f:
+          gene_names = f.read().splitlines()
+
+adata.obs = metadata
+adata.obs.index = adata.obs['CellID'].tolist()
+adata.var.index = gene_names
+adata.write("input.h5ad")
 
 
 # ==============================
@@ -33,9 +59,9 @@ from scimilarity import CellAnnotation
 # Instantiate the CellAnnotation object
 # Set model_path to the location of the uncompressed model
 
+model_path = modeldir
 # model_path = "/models/model_v1.1"
-model_path = "D:\\downloads\\shetty_09_24\\scimlarity\\models\\model_v1.1"
-model_path = "Y:\\jcai\\models\\model_v1.1"
+# model_path = "D:\\downloads\\shetty_09_24\\scimlarity\\models\\model_v1.1"
 ca = CellAnnotation(model_path=model_path)
 
 # Load the tutorial data
@@ -57,8 +83,8 @@ predictions, nn_idxs, nn_dists, nn_stats = ca.get_predictions_knn(
 )
 adams.obs["predictions_unconstrained"] = predictions.values
 
-#celltype_counts = adams.obs.predictions_unconstrained.value_counts()
-#well_represented_celltypes = celltype_counts[celltype_counts > 20].index
+celltype_counts = adams.obs.predictions_unconstrained.value_counts()
+well_represented_celltypes = celltype_counts[celltype_counts > 20].index
 
 #sc.pl.umap(
 #    adams[adams.obs.predictions_unconstrained.isin(well_represented_celltypes)],
