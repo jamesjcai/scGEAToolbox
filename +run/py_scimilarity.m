@@ -1,8 +1,8 @@
-function [t] = py_scimilarity(sce, modeldir, wkdir, isdebug)
+function [c] = py_scimilarity(sce, modeldir, wkdir, isdebug)
 
 % t = run.py_scimilarity(sce, 'Y:\jcai\models\model_v1.1', 'C:\Users\jcai\Downloads');
 
-t = [];
+c = [];
 if nargin < 4, isdebug = true; end
 if nargin < 3, wkdir = tempdir; end
 if nargin < 2
@@ -90,7 +90,8 @@ if status == 0 && isvalid(fw)
     gui.gui_waitbar(fw, [], 'output.csv is written.');
 end
 if status == 0 && exist('output.csv', 'file')
-    t = readtable('output.csv');
+    t = readtable('output.csv','ReadVariableNames',true);
+    c = string(t.x0);
     % cL = h5read('output.h5ad','/obs/predictions_unconstrained/categories');
     % c = h5read('output.h5ad','/obs/predictions_unconstrained/codes');
     % if any(c==0)

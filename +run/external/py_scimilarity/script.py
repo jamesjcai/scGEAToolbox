@@ -28,6 +28,19 @@ model_path = modeldir
 ca = CellAnnotation(model_path=model_path)
 print("Model read.")
 
+#target_celltypes = [
+#    "glutamatergic neuron",
+#    "microglial cell",
+#    "radial glial cell",
+#    "neuron",
+#    "astrocyte",
+#    "glial cell",
+#    "progenitor cell",
+#    "oligodendrocyte"
+#]
+#ca.safelist_celltypes(target_celltypes)
+#print("Model constraining...done.")
+
 adata = align_dataset(adata, ca.gene_order)
 adata = lognorm_counts(adata)
 embeddings = ca.get_embeddings(adata.X)
