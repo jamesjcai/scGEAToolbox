@@ -4,9 +4,9 @@ function [speciestag] = i_selectspecies(n, shorttag)
     if nargin < 1, n = 2; end
     
     if ~ispref('scgeatoolbox', 'preferredspecies')
-        setpref('scgeatoolbox', 'preferredspecies', 'Human');
+        setpref('scgeatoolbox', 'preferredspecies', 'human');
     end
-    preferredspecies = getpref('scgeatoolbox', 'preferredspecies', 'Human');
+    preferredspecies = getpref('scgeatoolbox', 'preferredspecies', 'human');
     
     if n == 3
         answer = questdlg('Which species?', ...

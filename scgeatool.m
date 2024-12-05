@@ -17,6 +17,7 @@ end
 % rng("default");
 
 persistent speciestag
+% speciestag = getpref('scgeatoolbox', 'preferredspecies', 'human');
 
 import pkg.*
 import gui.*
@@ -860,9 +861,9 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
         else
             if ~gui.gui_showrefinfo('Single Click Solution'), return; end
         end
-        if isempty(speciestag)
+        %if isempty(speciestag)
             speciestag = gui.i_selectspecies(2);
-        end
+        %end
         if isempty(speciestag), return; end
 
         prompt = {
@@ -1454,9 +1455,9 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
             organtag = "all";
             databasetag = "panglaodb";
             if ~gui.gui_showrefinfo('PanglaoDB [PMID:30951143]'), return; end
-            if isempty(speciestag)
+            %if isempty(speciestag)
                 speciestag = gui.i_selectspecies(2);
-            end
+            %end
             if isempty(speciestag), return; end
         else
             [Tm, Tw] = pkg.i_markerlist2weight(sce);
@@ -1648,7 +1649,7 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
             return;
         end
         if isempty(speciestag)
-            speciestag = gui.i_selectspecies;
+            speciestag = gui.i_selectspecies(2);
         end
         if isempty(speciestag), return; end
         fw = gui.gui_waitbar;

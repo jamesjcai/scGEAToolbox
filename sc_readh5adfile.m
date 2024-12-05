@@ -57,6 +57,9 @@ end
 % indptr=h5read(filenm,[hinfo.Groups(idx).Groups(1).Name,'/indptr']);
 
 idx2 = find(strcmp(strtrim(string(char(hinfo.Groups(idx).Attributes.Name))), "shape"));
+if isempty(idx2)
+idx2 = find(strcmp(strtrim(string(char(hinfo.Groups(idx).Attributes.Name))), "h5sparse_shape"));
+end
 shape = double(hinfo.Groups(idx).Attributes(idx2).Value);
 
 g = pkg.e_guessh5field(filenm, {'/var/'}, {'_index', 'gene_ids', ...
