@@ -1,6 +1,13 @@
 function [c] = py_scimilarity(sce, modeldir, wkdir, isdebug)
 
-% t = run.py_scimilarity(sce, 'Y:\jcai\models\model_v1.1', 'C:\Users\jcai\Downloads');
+% cell_type = run.py_scimilarity(sce, 'Y:\jcai\models\model_v1.1', 'C:\Users\jcai\Downloads');
+
+[~, sys] = memory;
+totalMemoryGB = sys.PhysicalMemory.Total / (1024^3);
+fprintf('Total Physical Memory: %.2f GB\n', totalMemoryGB);
+if totalMemoryGB < 32
+    warning('The computer has less than 32 GB of memory. Proceed with caution.');
+end
 
 c = [];
 if nargin < 4, isdebug = true; end
