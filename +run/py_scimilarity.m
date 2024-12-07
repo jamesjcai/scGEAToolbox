@@ -1,16 +1,10 @@
-function [c] = py_scimilarity(sce, modeldir, wkdir, isdebug)
+function [celltypes] = py_scimilarity(sce, modeldir, wkdir, target_celltypes, isdebug)
 
 % cell_type = run.py_scimilarity(sce, 'Y:\jcai\models\model_v1.1', 'C:\Users\jcai\Downloads');
 
-[~, sys] = memory;
-totalMemoryGB = sys.PhysicalMemory.Total / (1024^3);
-fprintf('Total Physical Memory: %.2f GB\n', totalMemoryGB);
-if totalMemoryGB < 32
-    warning('The computer has less than 32 GB of memory. Proceed with caution.');
-end
-
-c = [];
-if nargin < 4, isdebug = true; end
+celltypes = [];
+if nargin < 5, isdebug = true; end
+if nargin < 4, target_celltypes = ''; end
 if nargin < 3, wkdir = tempdir; end
 if nargin < 2
     modeldir = selectFolder;
@@ -98,18 +92,13 @@ if status == 0 && isvalid(fw)
 end
 if status == 0 && exist('output.csv', 'file')
     t = readtable('output.csv','ReadVariableNames',true);
-    c = string(t.x0);
+    celltypes = string(t.x0);
     % cL = h5read('output.h5ad','/obs/predictions_unconstrained/categories');
     % c = h5read('output.h5ad','/obs/predictions_unconstrained/codes');
     % if any(c==0)
     %     cL = [cL; "undetermined"];
     %     c(c==0) = numel(cL);
     % end
-    % assert(sce.NumCells==numel(c));
-    % if ~(isscalar(unique(sce.c_cell_type_tx)) && unique(sce.c_cell_type_tx)=="undetermined")
-    %     sce.list_cell_attributes = [sce.list_cell_attributes, {'old_cell_type', sce.c_cell_type_tx}];
-    % end
-    % sce.c_cell_type_tx = cL(c);
 end
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end

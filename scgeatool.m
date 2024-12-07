@@ -170,7 +170,7 @@ in_addmenu(m_plot, 1 ,@in_cleanumap,'Clean tSNE/UMAP/PHATE Plot');
 
 m_anno = uimenu(FigureHandle, 'Text', 'Ann&otate');
 in_addmenu(m_anno, 0, {@in_DetermineCellTypeClustersGeneral, true}, "Annotate Cell Types Using PanglaoDB Marker Genes");
-in_addmenu(m_anno, 0, {@in_DetermineCellTypeClustersGeneral, false}, 'Annotate Cell Type Using Customized Marker Genes...');
+in_addmenu(m_anno, 0, {@in_DetermineCellTypeClustersGeneral, false}, 'Annotate Cell Types Using Customized Marker Genes...');
 in_addmenu(m_anno, 1, {@in_MergeCellSubtypes, 1}, 'Import Cell Annotation from SCE in Workspace...');
 in_addmenu(m_anno, 0, {@in_MergeCellSubtypes, 2}, 'Import Cell Annotation from SCE Data File...');
 in_addmenu(m_anno, 1, @in_Brush4Celltypes, "Annotate Cell Types for Brushed Cells");
@@ -217,6 +217,7 @@ in_addmenu(m_extn, 0, @in_DecontX, 'Detect Ambient RNA Contamination (DecontX/�
 in_addmenu(m_extn, 1, @in_RunDataMapPlot, 'Run DataMapPlot (datamapplot/🐍)...');
 in_addmenu(m_extn, 0, @in_DoubletDetection, 'Detect Doublets (Scrublet/🐍) [PMID:30954476]...');
 in_addmenu(m_extn, 0, @in_HarmonyPy, 'Batch Integration (Harmony/🐍) [PMID:31740819]...');
+in_addmenu(m_extn, 0, @in_SCimilarity, 'Annotate Cell Types (SCimilarity/🐍) [PMID:39566551]...');
 in_addmenu(m_extn, 0, {@in_SubsampleCells, 2}, 'Geometric Sketching (geosketch/🐍) [PMID:31176620]...');
 in_addmenu(m_extn, 0, @gui.callback_MELDPerturbationScore, 'MELD Perturbation Score (MELD/🐍) [PMID:33558698]...');
 
@@ -905,7 +906,7 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
 
         gui.gui_waitbar_adv(fw,3/8, 'Clustering Cells Using K-means...');
         sce = sce.clustercells([], [], true);
-        gui.gui_waitbar_adv(fw,4/8, 'Annotating Cell Type Using PanglaoDB...');
+        gui.gui_waitbar_adv(fw,4/8, 'Annotating Cell Types Using PanglaoDB...');
         sce = sce.assigncelltype(speciestag, false);
 
         count = count + 1;
@@ -1026,6 +1027,19 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
             sce.X = round(Xdecon);
             guidata(FigureHandle, sce);
             uiwait(helpdlg('Contamination removed.', ''));
+        end
+    end
+
+    function in_SCimilarity(src, events)
+        if ~pkg.i_checkpython
+            uiwait(warndlg('Python not installed.',''));
+            return;
+        end
+        if ~gui.gui_showrefinfo('SCimilarity [PMID:39566551]'), return; end
+        if gui.callback_RunScimilarity(src, events)
+            sce = guidata(FigureHandle);
+            [c, cL] = grp2idx(sce.c_cell_type_tx);
+            in_RefreshAll(src, [], true, false);            
         end
     end
 

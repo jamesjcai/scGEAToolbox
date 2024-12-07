@@ -1,71 +1,59 @@
-function [done] = i_setscimilaritymodelpath(~, ~)
-% selpath = uigetdir;
-%see also: I_SETRENV
-[done] = false;
+function [selectedDir] = i_setscimilaritymodelpath
 
+selectedDir = '';
 preftagname = 'scimilmodelpath';
 if ispref('scgeatoolbox', preftagname)
-    x = getpref('scgeatoolbox', preftagname);
-else
-    x = '';
+    selectedDir = getpref('scgeatoolbox', preftagname);
 end
 
-if isempty(x) || ~isfolder(x)
+if isempty(selectedDir) || ~isfolder(selectedDir)
     answer = questdlg('Scimilarity model path has not been set up. Locate it?');
-    if strcmp('Yes', answer) 
-        [done] = ix_setpyenv;
+    if strcmp('Yes', answer)
+        [done] = ix_setpath;
         if ~done, return; end
         waitfor(helpdlg('Scimilarity model path is set successfully.', ''));
     else
         return;
     end
 else
-    answer = questdlg(sprintf('%s', x), ...
+    answer = questdlg(sprintf('%s', selectedDir), ...
         'Model Path', ...
         'Use this', 'Use another', 'Cancel', 'Use this');
     switch answer
         case 'Use this'
             done = true;
         case 'Use another'
-            if ~ix_setpyenv
+            if ~ix_setpath
                 return;
             end
             done = true;
             waitfor(helpdlg('Scimilarity model path is set successfully.', ''));
         case {'Cancel', ''}
-            return;
+            selectedDir = '';
+            done = false;
         otherwise
-            return;
+            selectedDir = '';
+            done = false;
     end
 end
+
 if ~done
-    warndlg('Scimilarity model path is not set.', '');
+    warndlg('SCimilarity model path is not set.', '');
 end
 
-end
 
-
-    function [done] = ix_setpyenv(deflt)
-    % selpath = uigetdir;
+    function [done] = ix_setpath
         done = false;
-    
-        if ispc
-            [file, path] = uigetfile('python.exe', 'Select Python Interpreter', deflt);
+        promptTitle = 'Select a folder that contains the model';
+        selectedDir = uigetdir(pwd, promptTitle);
+        if selectedDir == 0
+            fprintf('Folder selection canceled.\n');
+            selectedDir = '';            
         else
-            [file, path] = uigetfile('python', 'Select Python Interpreter', deflt);
-        end
-        if isequal(file, 0)
-            %disp('User selected Cancel');
-            return;
-        else
-            disp(['User selected: ', fullfile(path, file)]);
-            try
-                pyenv('Version', fullfile(path, file));
-            catch ME
-                content = regexprep(ME.message, '<.*?>', '' ) ;
-                waitfor(errordlg(content,''));
-                return;
-            end
+            fprintf('Selected folder: %s\n', selectedDir);
             done = true;
+            setpref('scgeatoolbox', preftagname, selectedDir);
         end
     end
+
+end

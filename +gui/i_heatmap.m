@@ -5,7 +5,7 @@ if nargin<4, FigureHandle = []; end
 [c, cL, noanswer] = gui.i_reordergroups(thisc);
 if noanswer, return; end
 [~, gidx] = ismember(glist, sce.g);
-[Xt] = gui.i_transformx(sce.X, true, 8);
+[Xt] = gui.i_transformx(sce.X, true, 3);
 if isempty(Xt), return; end
 
 Y = Xt(gidx, :);
