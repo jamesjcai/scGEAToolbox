@@ -23,7 +23,7 @@ import pkg.*
 import gui.*
 
 fx = [];
-v1 = [];
+% v1 = [];
 
 if nargin < 1
     try        

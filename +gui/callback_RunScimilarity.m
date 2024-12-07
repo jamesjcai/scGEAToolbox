@@ -1,18 +1,12 @@
-function [needupdatesce] = callback_RunCopyKat(src, ~)
-
-FigureHandle = src.Parent.Parent;
-sce = guidata(FigureHandle);
+function [needupdatesce] = callback_RunScimilarity(~, ~)
 
 needupdatesce = false;
-extprogname = 'R_copykat';
+extprogname = 'py_scimilarity';
 preftagname = 'externalwrkpath';
 [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
 if isempty(wkdir), return; end
 
 
-        [ok] = gui.i_confirmscript('Run R_copykat?', ...
-            'R_copykat', 'r');
-        if ~ok, return; end
 
         [ndim] = gui.i_choose2d3d;
         if isempty(ndim), return; end
