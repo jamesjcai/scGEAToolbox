@@ -42,8 +42,8 @@ if ~done
 end
 
 
-    function [done] = ix_setpath
-        done = false;
+    function [y] = ix_setpath
+        y = false;
         promptTitle = 'Select a folder that contains the model';
         selectedDir = uigetdir(pwd, promptTitle);
         if selectedDir == 0
@@ -51,8 +51,13 @@ end
             selectedDir = '';            
         else
             fprintf('Selected folder: %s\n', selectedDir);
-            done = true;
+            y = true;
             setpref('scgeatoolbox', preftagname, selectedDir);
+        end
+
+        label_ints_file = fullfile(selectedDir, 'label_ints.csv');
+        if ~exist(label_ints_file, "file")
+            y = false;
         end
     end
 
