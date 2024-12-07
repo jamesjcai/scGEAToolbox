@@ -2,6 +2,8 @@ import pandas as pd
 from scipy.sparse import csr_matrix
 import h5py
 import anndata
+import os.path
+
 
 f = h5py.File("X.mat",'r')
 counts = csr_matrix(f.get('X'))
@@ -27,6 +29,15 @@ from scimilarity import CellAnnotation
 model_path = modeldir
 ca = CellAnnotation(model_path=model_path)
 print("Model read.")
+
+
+if os.path.exists("tg.csv"):    
+    with open("tg.csv",'r') as f:
+          target_celltypes = f.read().splitlines()
+    ca.safelist_celltypes(target_celltypes)
+    print("Constrained annotation.")
+else:
+    print("Unconstrained annotation.")
 
 #target_celltypes = [
 #    "glutamatergic neuron",

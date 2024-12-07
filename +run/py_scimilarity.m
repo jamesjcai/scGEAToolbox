@@ -50,12 +50,12 @@ else
 end
 
 try
-    pkg.i_deletefiles({'input.h5ad', 'output.h5ad'});
-    tmpfilelist = {'Xnorm.mat', 'X.mat', 'g.csv', 'c.csv', ...
+    pkg.i_deletefiles({'input.h5ad', 'output.h5ad','tg.csv'});
+    tmpfilelist = {'Xnorm.mat', 'X.mat', 'g.csv', 'c.csv', 'tg.csv', ...
         'input.h5ad', 'output.h5ad'};
-    if ~isdebug, pkg.i_deletefiles(tmpfilelist); end    
+    if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
     if issparse(sce.X)
-        X = single(full(sce.X));         
+        X = single(full(sce.X));
     else
         X = single(sce.X);
     end
@@ -63,6 +63,10 @@ try
     Xnorm = log1p(full(Xnorm));
     Xnorm = single(Xnorm);
     save('X.mat','-v7.3',"X","Xnorm","modeldir");
+
+    if ~isempty(target_celltypes)
+       writetable(table(target_celltypes),'tg.csv','WriteVariableNames',false);
+    end
     g = sce.g;
     writetable(table(g),'g.csv','WriteVariableNames',false);
     sce.c_cell_id = matlab.lang.makeUniqueStrings(sce.c_cell_id);

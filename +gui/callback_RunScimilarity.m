@@ -59,7 +59,7 @@ function [needupdatesce] = callback_RunScimilarity(src, ~)
     
     try
         sce.g = upper(sce.g);
-        [c] = run.py_scimilarity(sce, modeldir, wkdir);
+        [c] = run.py_scimilarity(sce, modeldir, wkdir, target_celltypes);
         assert(sce.NumCells==numel(c));
         if ~(isscalar(unique(sce.c_cell_type_tx)) && unique(sce.c_cell_type_tx)=="undetermined")
             sce.list_cell_attributes = [sce.list_cell_attributes, ...
