@@ -1,4 +1,4 @@
-function [fx] = sc_simplesplash(fx,r)
+function [fx, v1] = sc_simplesplash(fx,r)
 
 % https://www.mathworks.com/matlabcentral/answers/92259-how-do-i-make-a-splash-screen-for-my-matlab-gui-application
     mfolder = fileparts(mfilename('fullpath'));

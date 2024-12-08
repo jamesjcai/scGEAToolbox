@@ -28,12 +28,10 @@ fx = [];
 if nargin < 1
     try        
         fxfun = @gui.sc_splashscreen;
-        [fx, v1] = fxfun();            
     catch
         fxfun = @gui.sc_simplesplash;
-        fx = fxfun();
-        v1 = pkg.i_get_versionnum;
     end
+    [fx, v1] = fxfun();
     sce = SingleCellExperiment;
 else
     if ~isa(sce, 'SingleCellExperiment')
@@ -366,10 +364,11 @@ delete(fx);
 uicontrol(button1);
 drawnow;
 
-in_fixfield('tsne','tsne3d');
-in_fixfield('umap','umap3d');
-in_fixfield('phate','phate3d');
-in_fixfield('metaviz','metaviz3d');
+%{ 
+ in_fixfield('tsne','tsne3d');
+ in_fixfield('umap','umap3d');
+ in_fixfield('phate','phate3d');
+ in_fixfield('metaviz','metaviz3d');
 
 avx = fieldnames(sce.struct_cell_embeddings);
 bvx = fieldnames(pkg.e_makeembedstruct);
@@ -378,6 +377,7 @@ for kx=1:length(cvx)
     sce.struct_cell_embeddings = setfield(sce.struct_cell_embeddings,cvx{kx},[]);
 end
 sce.struct_cell_embeddings = orderfields(sce.struct_cell_embeddings);
+%}
 
 guidata(FigureHandle, sce);
 set(FigureHandle, 'CloseRequestFcn', @in_closeRequest);
