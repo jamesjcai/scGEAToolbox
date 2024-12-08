@@ -6,7 +6,7 @@ load test\testdata.mat
 [y, idx] = ismember(sce.g, targetg);
 X = zeros(numel(targetg), size(sce.X, 2));
 idx = idx(y);
-x = sce.X(y,:);
+x = full(sce.X(y,:));
 X(idx,:) = x;
 X = single(log1p(pkg.norm_libsize(X, 10000)));
 
@@ -14,4 +14,4 @@ pyrun("from scipy.sparse import csr_matrix")
 pyrun("X = csr_matrix(a)", a=X');
 embeddings = pyrun("embeddings = ca.get_embeddings(X)", "embeddings");
     
-pyrun("predictions = ca.get_predictions_knn(embeddings)")
+% pyrun("predictions = ca.get_predictions_knn(embeddings)")
