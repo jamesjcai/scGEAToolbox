@@ -62,7 +62,7 @@ try
     [Xnorm] = pkg.norm_libsize(sce.X, 10000);
     Xnorm = log1p(full(Xnorm));
     Xnorm = single(Xnorm);
-    save('X.mat','-v7.3',"X","Xnorm","modeldir");
+    % save('X.mat','-v7.3',"X","Xnorm","modeldir");
 
     if ~isempty(target_celltypes)
        writetable(table(target_celltypes),'tg.csv','WriteVariableNames',false);
@@ -72,6 +72,9 @@ try
     sce.c_cell_id = matlab.lang.makeUniqueStrings(sce.c_cell_id);
     T = pkg.makeattributestable(sce);
     writetable(T,'c.csv');
+    tg = cellstr(target_celltypes);
+    g = cellstr(sce.g); 
+    save('X.mat','-v7.3',"Xnorm","modeldir","tg","g");
 catch ME
     if isvalid(fw)
          gui.gui_waitbar(fw, true);
@@ -85,7 +88,7 @@ if isvalid(fw)
     gui.gui_waitbar(fw, [], [], sprintf('Running %s...', 'py\_scimilarity'));
 end
 
-codefullpath = fullfile(codepth,'script.py');
+codefullpath = fullfile(codepth,'script_mat.py');
 pkg.i_addwd2script(codefullpath, wkdir, 'python');
 cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);
 disp(cmdlinestr)
