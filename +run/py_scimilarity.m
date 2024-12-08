@@ -6,9 +6,7 @@ celltypes = [];
 if nargin < 5, isdebug = true; end
 if nargin < 4, target_celltypes = ''; end
 if nargin < 3, wkdir = tempdir; end
-if nargin < 2
-    modeldir = selectFolder;
-end
+if nargin < 2, modeldir = selectFolder; end
 if isempty(modeldir) || ~exist(modeldir, 'dir')
     error('Model folder does not exist or is invalid.');
 end
@@ -25,7 +23,7 @@ else
 end
 winopen(wkdir);
 
-fw = gui.gui_waitbar([], [], 'Checking Python environment...');
+% fw = gui.gui_waitbar([], [], 'Checking Python environment...');
 
 x = pyenv;
 try
@@ -41,24 +39,24 @@ disp(cmdlinestr)
 [status, cmdout] = system(cmdlinestr, '-echo');
 if status ~= 0
     cd(oldpth);
-    if isvalid(fw)
-         gui.gui_waitbar(fw, true);
-    end
+    % if isvalid(fw)
+    %      gui.gui_waitbar(fw, true);
+    % end
     error(cmdout);
 else 
     disp('Code requirement check is done.')
 end
 
-try
+%try
     pkg.i_deletefiles({'input.h5ad', 'output.h5ad','tg.csv'});
     tmpfilelist = {'Xnorm.mat', 'X.mat', 'g.csv', 'c.csv', 'tg.csv', ...
         'input.h5ad', 'output.h5ad'};
     if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-    if issparse(sce.X)
-        X = single(full(sce.X));
-    else
-        X = single(sce.X);
-    end
+    % if issparse(sce.X)
+    %     X = single(full(sce.X));
+    % else
+    %     X = single(sce.X);
+    % end
     [Xnorm] = pkg.norm_libsize(sce.X, 10000);
     Xnorm = log1p(full(Xnorm));
     Xnorm = single(Xnorm);
@@ -75,18 +73,18 @@ try
     tg = cellstr(target_celltypes);
     g = cellstr(sce.g); 
     save('X.mat','-v7.3',"Xnorm","modeldir","tg","g");
-catch ME
-    if isvalid(fw)
-         gui.gui_waitbar(fw, true);
-    end
-    errordlg(ME.message,'');
-    return;
-end
-if isvalid(fw)
-    gui.gui_waitbar(fw, [], [], 'Checking Python environment is complete');
-    pause(0.5);
-    gui.gui_waitbar(fw, [], [], sprintf('Running %s...', 'py\_scimilarity'));
-end
+% catch ME
+%     if isvalid(fw)
+%          gui.gui_waitbar(fw, true);
+%     end
+%     errordlg(ME.message,'');
+%     return;
+% end
+% if isvalid(fw)
+%     gui.gui_waitbar(fw, [], [], 'Checking Python environment is complete');
+%     pause(0.5);
+%     gui.gui_waitbar(fw, [], [], sprintf('Running %s...', 'py\_scimilarity'));
+% end
 
 codefullpath = fullfile(codepth,'script_mat.py');
 pkg.i_addwd2script(codefullpath, wkdir, 'python');
@@ -94,9 +92,9 @@ cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);
 disp(cmdlinestr)
 [status] = system(cmdlinestr, '-echo');
 % [status2] = movefile('output.h5ad',fname);
-if status == 0 && isvalid(fw)
-    gui.gui_waitbar(fw, [], 'output.csv is written.');
-end
+% if status == 0 && isvalid(fw)
+%     gui.gui_waitbar(fw, [], 'output.csv is written.');
+% end
 if status == 0 && exist('output.csv', 'file')
     t = readtable('output.csv','ReadVariableNames',true);
     celltypes = string(t.x0);
