@@ -100,7 +100,7 @@ d = [d; fullfile(pw1, 'resources', 'Misc', 'value_template_std.txt')];
 d = [d; fullfile(pw1, 'resources', 'DoRothEA_TF_Target_DB', 'dorothea_hs.mat')];
 d = [d; fullfile(pw1, 'resources', 'DoRothEA_TF_Target_DB', 'dorothea_mm.mat')];
 d = [d; fullfile(pw1, 'example_data', 'testXgs.mat')];
-d = [d; fullfile(pw1, 'example_data', 'workshop_example.mat')];
+d = [d; fullfile(pw1, 'example_data', 'new_example_sce.mat')];
 d = [d; fullfile(pw1, 'scGEAToolbox.prj')];
 
 % d=[d;fullfile(matlabroot,'toolbox','rptgen','rptgen','makePPTCompilable.p')];
