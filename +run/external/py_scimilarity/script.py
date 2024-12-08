@@ -30,7 +30,6 @@ model_path = modeldir
 ca = CellAnnotation(model_path=model_path)
 print("Model read.")
 
-
 if os.path.exists("tg.csv"):    
     with open("tg.csv",'r') as f:
           target_celltypes = f.read().splitlines()

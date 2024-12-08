@@ -17,7 +17,7 @@ function [needupdatesce] = callback_RunScimilarity(src, ~)
     if isempty(modeldir), return; end
 
     label_ints_file = fullfile(modeldir, 'label_ints.csv');
-    if exist(label_ints_file, "file")        
+    if exist(label_ints_file, "file")
         answer = questdlg('Unconstrained or constrained annotation','', ...
             'Unconstrained','Constrained','Unconstrained');
         switch answer
