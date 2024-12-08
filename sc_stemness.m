@@ -3,6 +3,7 @@ function s = sc_stemness(X, g)
     %    X double {mustBeNonempty}  % Ensure the gene expression matrix is a non-empty numeric array
     %end
    % https://www.nature.com/articles/sdata201730
+   % https://github.com/czythu/scCancer
    % https://github.com/wguo-research/scCancer/tree/master/inst/txt
    % https://academic.oup.com/bib/article/22/3/bbaa127/5867555?login=false
 

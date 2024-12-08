@@ -1,5 +1,4 @@
-function [needupdatesce] = callback_RunScimilarity(src, ~)
-
+function [needupdatesce] = callback_RunSCimilarity(src, ~)
 
     needupdatesce = false;
     [~, sys] = memory;

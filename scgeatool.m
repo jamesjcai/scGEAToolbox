@@ -1036,7 +1036,7 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
             return;
         end
         if ~gui.gui_showrefinfo('SCimilarity [PMID:39566551]'), return; end
-        if gui.callback_RunScimilarity(src, events)
+        if gui.callback_RunSCimilarity(src, events)
             sce = guidata(FigureHandle);
             [c, cL] = grp2idx(sce.c_cell_type_tx);
             in_RefreshAll(src, [], true, false);            
