@@ -418,9 +418,8 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
         if strcmp(clickType,'alt'), return; end
         
         set(button1,'Enable','off');
-        if ~isempty(sce) && sce.NumCells > 0
-            answer=questdlg('Current SCE will be replaced. Continue?'.'');
-            if ~strcmp(answer,'Yes') 
+        if ~isempty(sce) && sce.NumCells > 0            
+            if ~strcmp(questdlg('Current SCE will be replaced. Continue?',''),'Yes') 
                 set(button1,'Enable','on');
                 return; 
             end
@@ -456,8 +455,6 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
     end
 
     function in_cleanumap(~, ~)
-        %answer = questdlg('This function works best with 2D plot. Continue?','');
-        %if ~strcmp(answer, 'Yes'), return; end
         answer = questdlg('Select embedding method label.', ...
             '','tSNE','UMAP','PHATE','tSNE');
         if isempty(answer), return; end
@@ -754,8 +751,6 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
 
         switch type
             case 'hvg'
-                %         answer=questdlg('Input the number of HVGs. Continue?');
-                %         if ~strcmp(answer,'Yes'), return; end
                 k = gui.i_inputnumk(2000, 1, sce.NumGenes, 'the number of HVGs');
                 if isempty(k), return; end
                 answer = questdlg('Which HVG detecting method to use?', '', ...
@@ -787,9 +782,8 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
                     errordlg('Runtime error: No gene left after selection.','');
                     return;
                 end
-                if sum(idx) < 50
-                    answer = questdlg('Few genes (n < 50) selected. Continue?','');
-                    if ~strcmp(answer, 'Yes'), return; end
+                if sum(idx) < 50                    
+                    if ~strcmp(questdlg('Few genes (n < 50) selected. Continue?',''), 'Yes'), return; end
                 end
         end
         sce.g = sce.g(idx);
@@ -799,14 +793,10 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
     end
 
     function in_SubsampleCells(src, ~, methodoption)
-        if nargin < 3
-            methodoption = [];
-        end
-        answer1 = questdlg('This function subsamples 50% of cells. Continue?');
-        if ~strcmp(answer1, 'Yes')
+        if nargin < 3, methodoption = []; end        
+        if ~strcmp(questdlg('This function subsamples 50% of cells. Continue?',''), 'Yes')
             return;
         end
-
         if isempty(methodoption)
             answer = questdlg('Select method:', '', ...
                 'Uniform Sampling', ...
@@ -856,9 +846,8 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
     end
 
     function in_SingleClickSolution(src, ~)
-        if ~all(sce.c_cell_type_tx == "undetermined")
-            answer = questdlg("Your data has been embedded and annotated. Single Click Solution will re-embed and annotate cells. Current embedding and annotation will be overwritten. Continue?", "");
-            if ~strcmp(answer, 'Yes'), return; end
+        if ~all(sce.c_cell_type_tx == "undetermined")            
+            if ~strcmp(questdlg("Your data has been embedded and annotated. Single Click Solution will re-embed and annotate cells. Current embedding and annotation will be overwritten. Continue?", ""), 'Yes'), return; end
         else
             if ~gui.gui_showrefinfo('Single Click Solution'), return; end
         end
@@ -1098,9 +1087,8 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
             return;
         end
         if ~gui.gui_showrefinfo('Scrublet [PMID:30954476]'), return; end
-        if numel(unique(sce.c_batch_id)) > 1
-            answer = questdlg('"When working with data from multiple samples, run Scrublet on each sample separately." Your data contains multiple samples (cells with different c_batch_id). Continue?','');
-            if ~strcmp(answer, 'Yes'), return; end
+        if numel(unique(sce.c_batch_id)) > 1            
+            if ~strcmp(questdlg('"When working with data from multiple samples, run Scrublet on each sample separately." Your data contains multiple samples (cells with different c_batch_id). Continue?',''), 'Yes'), return; end
         end
         [isDoublet, doubletscore, methodtag, done] = gui.callback_DoubletDetection(src);
         if done && ~any(isDoublet)
@@ -1242,9 +1230,8 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
         [para] = gui.i_getoldsettings(src);
         [ax, bx]=view(hAx);
 
-        if bx == 90   % isempty(h.ZData)               % current 2D
-            ansx = questdlg('Switch to 3D?');
-            if ~strcmp(ansx, 'Yes'), return; end
+        if bx == 90   % isempty(h.ZData)               % current 2D            
+            if ~strcmp(questdlg('Switch to 3D?',''), 'Yes'), return; end
             figure(FigureHandle);
             if size(sce.s, 2) >= 3
                 h = gui.i_gscatter3(sce.s, c, methodid, hAx);
@@ -1276,8 +1263,7 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
                 end
             end
         else        % current 3D do following
-            ansx = questdlg('Switch to 2D?');
-            if ~strcmp(ansx, 'Yes'), return; end
+            if ~strcmp(questdlg('Switch to 2D?',''), 'Yes'), return; end
             [vslist] = gui.i_checkexistingembed(sce, 2);
             
             if ~isempty(vslist)
@@ -1657,9 +1643,8 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
         if ~any(ptsSelected)
             uiwait(helpdlg("No cells are selected. Please use the data brush tool to select cells for cell type assignment.", ''));
             return;
-        end
-        answer = questdlg('This is a one-time analysis. Cell type labels will not be saved. Continue?');
-        if ~strcmp(answer, 'Yes')
+        end        
+        if ~strcmp(questdlg('This is a one-time analysis. Cell type labels will not be saved. Continue?',''), 'Yes')
             return;
         end
         if isempty(speciestag)
@@ -1789,22 +1774,18 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
 
     function in_EnrichrHVGs(src, events)
         if ~gui.gui_showrefinfo('HVG Functional Analysis [PMID:31861624]'), return; end
-        %answer = questdlg('This function applies to a homogeneous group of cells. Remove lowly expressed genes before applying. Continue?');
-        %if ~strcmp(answer, 'Yes'), return; end
         ptsSelected = logical(h.BrushData.');
         if any(ptsSelected)
             [ptsSelected, letdoit] = gui.i_expandbrushed(ptsSelected, sce);
             if ~letdoit, return; end
-            if sum(ptsSelected) < 200
-                answer = questdlg(sprintf('Too few cells (n = %d) selected, continue?', sum(ptsSelected)));
-                if ~strcmp(answer, 'Yes'), return; end
+            if sum(ptsSelected) < 200                
+                if ~strcmp(questdlg(sprintf('Too few cells (n = %d) selected, continue?', sum(ptsSelected))), 'Yes'), return; end
             end
             scetmp = sce.removecells(~ptsSelected);
             scetmp = scetmp.qcfilter(1000, 0.15, 15);
             gui.callback_EnrichrHVGs(src, events, scetmp);
-        else
-            answer = questdlg(sprintf('All cells (n = %d) included, continue?', sce.NumCells));
-            if ~strcmp(answer, 'Yes'), return; end
+        else            
+            if ~strcmp(questdlg(sprintf('All cells (n = %d) included, continue?', sce.NumCells),''), 'Yes'), return; end
             gui.callback_EnrichrHVGs(src, events);
         end
     end
@@ -1846,9 +1827,8 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
     end
 
     function in_scTenifoldNet(src, events, methodtag)
-        if numel(unique(sce.c_cell_type_tx))>1
-            answer=questdlg('This analysis is cell type-specific; however, current SCE contains multiple cell types. Continue?');
-            if ~strcmp(answer,'Yes'), return; end
+        if numel(unique(sce.c_cell_type_tx))>1            
+            if ~strcmp(questdlg('This analysis is cell type-specific; however, current SCE contains multiple cell types. Continue?',''),'Yes'), return; end
         end
         answer=questdlg('Subsample cells?','','Yes 🐢','No 🐇','Cancel','No 🐇');
         switch answer
@@ -1889,8 +1869,13 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
                     return;
             end
         end
-        answer = questdlg('Which method?', '', 'splinefit', 'princurve', ...
-            'Cancel', 'splinefit');
+        if license('test', 'curve_fitting_toolbox')
+            answer = questdlg('Which method?', '', 'splinefit', 'princurve', ...
+                'manual', 'splinefit');            
+        else
+            answer = questdlg('Which method?', '', 'splinefit', 'princurve', ...
+                'Cancel', 'splinefit');
+        end
         switch answer
             case 'splinefit'
                 dim = 1;
@@ -1899,6 +1884,43 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
             case 'princurve'
                 [t, xyz1] = pkg.i_pseudotime_by_princurve(sce.s, false);
                 pseudotimemethod = 'princurve';
+            case 'manual'
+                if license('test', 'curve_fitting_toolbox')
+                if ~isempty(h.ZData)
+                    answer=questdlg('This function does not work for 3D embedding. Continue to switch to 2D?');
+                    switch answer
+                        case 'Yes'
+                            in_Switch2D3D(src,[]);
+                        otherwise
+                            return;
+                    end
+                end
+                if ~isempty(h.ZData), return; end
+                    % Collect points interactively
+                    % [x, y] = ginput; % Click on the figure to select points, press Enter to finish
+                    x = []; y = [];
+                    hold on
+                    while true
+                        % Get a single point
+                        [xi, yi, button] = ginput(1);                        
+                        % Exit the loop if Enter (ASCII 13) is pressed
+                        if isempty(button) || button == 13
+                            break;
+                        end               
+                        x = [x; xi];
+                        y = [y; yi];                        
+                        plot(xi, yi, 'ro', 'MarkerSize', 8, 'LineWidth', 2);
+                    end
+                    hold off
+                    % Fit and plot the spline curve
+                    splineCurve = cscvn([x'; y']);
+                    [xyz1] = fnplt(splineCurve);  % Plot the spline curve in red
+                    xyz1 = xyz1';
+                    [t] = dsearchn(xyz1, sce.s);
+                    t = (t + randn(size(t)))';
+                    t = normalize(t, 'range');
+                    pseudotimemethod = 'manual';
+                end
             otherwise
                 return;
         end
@@ -1919,12 +1941,16 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
 
         hold off;
         % pseudotimemethod
-        answer = questdlg('Swap ''Start'' and ''End''?','');
-        switch answer
-            case 'Yes'
-                t1.String = 'End';
-                t2.String = 'Start';
-                t = 1 - t;
+
+        if ~strcmp(answer, 'manual')
+            switch questdlg('Swap ''Start'' and ''End''?','')
+                case 'Yes'
+                    t1.String = 'End';
+                    t2.String = 'Start';
+                    t = 1 - t;
+                case 'Cancel'
+                    return;
+            end
         end
 
         tag = sprintf('%s_pseudotime', pseudotimemethod);
@@ -1945,21 +1971,14 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
         end
         guidata(FigureHandle, sce);
 
-        answer = questdlg('View expression of selected genes', ...
-            'Pseudotime Function', ...
-            'Yes', 'No', 'Yes');
-        switch answer
+        switch questdlg('View expression of selected genes','')
             case 'Yes'
                 gui.sc_pseudotimegenes(sce, t, FigureHandle);
-            case 'No'
-                return;
         end
     end
 
-    function in_ClusterCellsS(src, ~)
-        answer = questdlg('Cluster cells using embedding S?');
-        if ~strcmp(answer, 'Yes'), return; end
-
+    function in_ClusterCellsS(src, ~)        
+        if ~strcmp(questdlg('Cluster cells using embedding S?',''), 'Yes'), return; end
         [sx] = gui.i_pickembedvalues(sce);
         if isempty(sx), return; end
 
@@ -1978,8 +1997,7 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
     end
 
     function in_ClusterCellsX(src, ~)
-        answer = questdlg('Cluster cells using expression matrix X?');
-        if ~strcmp(answer, 'Yes'), return; end
+        if ~strcmp(questdlg('Cluster cells using expression matrix X?',''), 'Yes'), return; end
         % methodtagvx = {'specter (31 secs) 🐇', 'sc3 (77 secs) 🐇', ...
         %     'simlr (400 secs) 🐢', ...
         %     'soptsc (1,182 secs) 🐢🐢', 'sinnlrr (8,307 secs) 🐢🐢🐢',};
@@ -2048,12 +2066,10 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
         guidata(FigureHandle, sce);
     end
 
-    function in_highlightcellgroups(src, ~)
-        answer = questdlg('Before highlighting cell groups, the grouping colormap will be reset. Continue?','');
-        if ~strcmp(answer, 'Yes'), return; end
-        in_RefreshAll(src, [], true, true);
-        answer = questdlg('Select one or more cell groups to be highlighted. Continue?','');
-        if ~strcmp(answer, 'Yes'), return; end
+    function in_highlightcellgroups(src, ~)        
+        if ~strcmp(questdlg('Before highlighting cell groups, the grouping colormap will be reset. Continue?',''), 'Yes'), return; end
+        in_RefreshAll(src, [], true, true);        
+        if ~strcmp(questdlg('Select one or more cell groups to be highlighted. Continue?',''), 'Yes'), return; end
         [idx] = gui.i_selmultidlg(cL, [], FigureHandle);
         if isempty(idx), return; end
         if idx == 0, return; end

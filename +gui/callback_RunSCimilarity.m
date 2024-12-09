@@ -12,6 +12,10 @@ function [needupdatesce] = callback_RunSCimilarity(src, ~)
     FigureHandle = src.Parent.Parent;
     sce = guidata(FigureHandle);
 
+    % https://genentech.github.io/scimilarity/notebooks/cell_annotation_tutorial.html
+    % SCimilarity trained model. Download SCimilarity models. 
+    % Note, this is a large tarball - downloading and uncompressing can take a several minutes.
+    
     [modeldir] = gui.i_setscimilaritymodelpath;
     if isempty(modeldir), return; end
 

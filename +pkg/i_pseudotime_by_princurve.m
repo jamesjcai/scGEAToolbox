@@ -39,7 +39,7 @@ function [t, xyz1] = i_pseudotime_by_princurve(s, plotit)
     
     t = (I + randn(size(I)))';
     xyz1 = yfinal;
-    t = normalize(t, 'range');    
+    t = normalize(t, 'range');
     
     if plotit
         hold on
