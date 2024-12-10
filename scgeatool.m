@@ -1885,7 +1885,7 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
                 [t, xyz1] = pkg.i_pseudotime_by_princurve(sce.s, false);
                 pseudotimemethod = 'princurve';
             case 'manual'
-                if license('test', 'curve_fitting_toolbox')
+                if license('test', 'curve_fitting_toolbox') && ~isempty(which('cscvn'))
                 if ~isempty(h.ZData)
                     answer=questdlg('This function does not work for 3D embedding. Continue to switch to 2D?');
                     switch answer
