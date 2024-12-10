@@ -1919,6 +1919,7 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
                     [t] = dsearchn(xyz1, sce.s);
                     t = (t + randn(size(t)))';
                     t = normalize(t, 'range');
+                    t = t(:);
                     pseudotimemethod = 'manual';
                 end
             otherwise

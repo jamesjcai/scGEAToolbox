@@ -1,9 +1,9 @@
 function sc_pseudotimegenes(sce, t, parentfig)
 
 if nargin<3, parentfig=[]; end
+t = t(:);
 
-
-    [K,usehvgs] = gui.i_gethvgnum(sce);
+    [K, usehvgs] = gui.i_gethvgnum(sce);
     
     if usehvgs
         T = sc_splinefit(sce.X, sce.g);
