@@ -4,7 +4,7 @@ if usejava('jvm') && ~feature('ShowFigureWindows')
     error('MATLAB is in a text mode. This function requires a GUI-mode.');
 end
 
-if ~license('test','statistics_toolbox')  % isempty(which('grp2idx.m'))
+if ~license('test','statistics_toolbox') || isempty(which('grp2idx.m'))
     uiwait(warndlg('SCGEATOOL requires Statistics and Machine Learning Toolbox.','Missing Dependencies'));
     answer3 = questdlg('Learn how to install Statistics and Machine Learning Toolbox?','');
     if strcmp(answer3,'Yes')
@@ -13,6 +13,7 @@ if ~license('test','statistics_toolbox')  % isempty(which('grp2idx.m'))
     end
     return;
 end
+
 % rng("shuffle");
 % rng("default");
 
@@ -1869,7 +1870,7 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
                     return;
             end
         end
-        if license('test', 'curve_fitting_toolbox')
+        if license('test', 'curve_fitting_toolbox') && ~isempty(which('cscvn'))
             answer = questdlg('Which method?', '', 'splinefit', 'princurve', ...
                 'manual', 'splinefit');            
         else

@@ -39,7 +39,7 @@ curve = @(a,b,x) (1./(1 + a*x.^(2*b)));
     xv = linspace(0, 3*spread, 300);
     yv = (xv < min_dist) + ~(xv < min_dist).*exp(-(xv - min_dist) / spread);
     params=[];
-    if license('test','curve_fitting_toolbox')
+    if license('test','curve_fitting_toolbox') && ~isempty(which('curveFitter'))
         try
             f = fit(xv', yv', curve, 'StartPoint', [1 1]);
             params = coeffvalues(f);
