@@ -48,7 +48,8 @@ waitfor(fh);
         idxx = idx;
         % delete(fh);
         closereq;
-end
+    end
+
 
         function i_SetValues(figHandle, varargin)
             prompt = {'X-variable cutoff (lower bound):', 'X-variable cutoff (upper bound):', ...

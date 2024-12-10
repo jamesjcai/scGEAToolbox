@@ -22,6 +22,8 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
         '(d) Remove Genes Without Approved Symbols', ...
         'Remove Genes (a)+(b)+(c)+(d)', ...
         '------------------------------------------------', ...
+        'Remove Cells with No MALAT1 Expression',...
+        '------------------------------------------------', ...
         'Library Size vs. Mt-reads Ratio', ...
         'Library Size vs. Number of Genes', ...
         'Abundant lncRNAs vs. Number of Genes'};
@@ -324,6 +326,25 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
         case '------------------------------------------------'
             requirerefresh = false;
             return;
+        case 'Remove Cells with No MALAT1 Expression'
+            disp('MALAT1 expression indicates cell quality in single-cell RNA sequencing data');
+            disp('Zoe A. Clarke, Gary D. Bader');
+            disp('bioRxiv 2024.07.14.603469; doi: https://doi.org/10.1101/2024.07.14.603469');
+            idx = startsWith(sce.g, 'MALAT1', 'IgnoreCase', true);
+            if ~any(idx)
+                disp('MALAT1 is not found.');
+                return;
+            end
+            if sum(idx) ~= 1, return; end
+            idx = sce.X(idx, :)==0;
+            if ~any(idx)
+                disp('All cells express MALAT1.');
+                needremove = false;
+            else
+                fprintf('\n%d cells lacking MALAT1 exprssion.\n', sum(idx));
+                needremove = true;
+                idx = ~idx;
+            end
         case 'Library Size vs. Mt-reads Ratio' % mt-ratio vs. library size
             idx = startsWith(sce.g, 'mt-', 'IgnoreCase', true);
             if ~any(idx)
