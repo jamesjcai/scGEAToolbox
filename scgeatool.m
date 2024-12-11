@@ -1859,15 +1859,17 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
     end
 
     function in_DrawTrajectory(src, ~)
+        justload = false;
         % waitfor(warndlg('This function should not be applied to tSNE and UMAP embeddings, as they "encourage a representation of the data as disjoint clusters, which is less meaningful for modeling continuous developmental trajectories" [PMID:25664528].', ''));
-        if ~isempty(f_traj)
-            answer = questdlg('Remove existing trajectory curve?');
-            switch answer
-                case 'Yes'
-                    in_RefreshAll(src, [], true, true);  % keepview, keepcolr
-                case 'No'
-                otherwise
-                    return;
+        if ~isempty(f_traj) && isvalid(f_traj) && isgraphics(f_traj, 'line')
+            if strcmp({f_traj.Visible}, 'on')
+                switch questdlg('Remove existing trajectory curve?','')
+                    case 'Yes'
+                        in_RefreshAll(src, [], true, true);  % keepview, keepcolr
+                    case 'No'
+                    otherwise
+                        return;
+                end
             end
         end
         if license('test', 'curve_fitting_toolbox') && ~isempty(which('cscvn'))
@@ -1887,41 +1889,68 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
                 pseudotimemethod = 'princurve';
             case 'manual'
                 if license('test', 'curve_fitting_toolbox') && ~isempty(which('cscvn'))
-                if ~isempty(h.ZData)
-                    answer=questdlg('This function does not work for 3D embedding. Continue to switch to 2D?');
-                    switch answer
-                        case 'Yes'
-                            in_Switch2D3D(src,[]);
+                    if ~isempty(h.ZData)                    
+                        switch questdlg('This function does not work for 3D embedding. Continue to switch to 2D?')
+                            case 'Yes'
+                                in_Switch2D3D(src,[]);
+                            otherwise
+                                return;
+                        end
+                    end
+                    if ~isempty(h.ZData), return; end
+
+                    answer2 = questdlg('Draw trajectory curve or load saved curve and pseudotime?', ...
+                        '','Draw Curve', 'Load Saved', 'Cancel', 'Draw Curve');
+
+                    switch answer2
+                        case 'Load Saved'
+                            [file, path] = uigetfile('*.mat', 'Select a MAT-file to Load');
+                            if isequal(file, 0)
+                                disp('User canceled the file selection.');
+                                return;
+                            end                            
+                            fullFileName = fullfile(path, file);
+                            loadedData = load(fullFileName);
+                            if isfield(loadedData, 't') && isfield(loadedData, 'xyz1') && isfield(loadedData, 'pseudotimemethod')
+                                t=loadedData.t;
+                                xyz1=loadedData.xyz1;
+                                pseudotimemethod=loadedData.pseudotimemethod;
+                            else
+                                errordlg('Not a valid .mat file.','');
+                                return;
+                            end
+                            justload = true;
+                        case 'Draw Curve'
+                            % Collect points interactively
+                            % [x, y] = ginput; % Click on the figure to select points, press Enter to finish
+                            x = []; y = [];
+                            hold on
+                            while true
+                                % Get a single point
+                                [xi, yi, button] = ginput(1);                        
+                                % Exit the loop if Enter (ASCII 13) is pressed
+                                if isempty(button) || button == 13
+                                    break;
+                                end               
+                                x = [x; xi];
+                                y = [y; yi];                        
+                                plot(xi, yi, 'ro', 'MarkerSize', 8, 'LineWidth', 2);
+                            end
+                            hold off
+                            % Fit and plot the spline curve
+                            splineCurve = cscvn([x'; y']);
+                            [xyz1] = fnplt(splineCurve);  % Plot the spline curve in red
+                            xyz1 = xyz1';
+                            [t] = dsearchn(xyz1, sce.s);
+                            t = (t + randn(size(t)))';
+                            t = normalize(t, 'range');
+                            t = t(:);
+                            pseudotimemethod = 'manual';                            
+                        case 'Cancel'
+                            return;
                         otherwise
                             return;
                     end
-                end
-                if ~isempty(h.ZData), return; end
-                    % Collect points interactively
-                    % [x, y] = ginput; % Click on the figure to select points, press Enter to finish
-                    x = []; y = [];
-                    hold on
-                    while true
-                        % Get a single point
-                        [xi, yi, button] = ginput(1);                        
-                        % Exit the loop if Enter (ASCII 13) is pressed
-                        if isempty(button) || button == 13
-                            break;
-                        end               
-                        x = [x; xi];
-                        y = [y; yi];                        
-                        plot(xi, yi, 'ro', 'MarkerSize', 8, 'LineWidth', 2);
-                    end
-                    hold off
-                    % Fit and plot the spline curve
-                    splineCurve = cscvn([x'; y']);
-                    [xyz1] = fnplt(splineCurve);  % Plot the spline curve in red
-                    xyz1 = xyz1';
-                    [t] = dsearchn(xyz1, sce.s);
-                    t = (t + randn(size(t)))';
-                    t = normalize(t, 'range');
-                    t = t(:);
-                    pseudotimemethod = 'manual';
                 end
             otherwise
                 return;
@@ -1940,10 +1969,8 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
             t2 = text(xyz1(end, 1), xyz1(end, 2), 'End', ...
                 'fontsize', 10, 'FontWeight', 'bold', 'BackgroundColor', 'w', 'EdgeColor', 'k');
         end
-
         hold off;
         % pseudotimemethod
-
         if ~strcmp(answer, 'manual')
             switch questdlg('Swap ''Start'' and ''End''?','')
                 case 'Yes'
@@ -1972,7 +1999,27 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
             fprintf('%s is saved.\n', upper(tag));
         end
         guidata(FigureHandle, sce);
-
+        
+        % -----------
+        if strcmp(answer, 'manual') && ~justload
+            switch questdlg('Save manual trajectory curve and pseudotime to an .mat file?','')
+                case 'Yes'
+                    [file, path] = uiputfile('*.mat', 'Save as');
+                    if isequal(file, 0) || isequal(path, 0)
+                        disp('User canceled the file selection.');
+                        return;
+                    end                                                                        
+                    fullFileName = fullfile(path, file);
+                    save(fullFileName, 'xyz1', 't', 'pseudotimemethod');
+                    disp(['Variables saved to ', fullFileName]);
+                case 'No'
+                case 'Cancel'
+                    return;
+                otherwise
+                    return;
+            end
+        end
+        % --------------
         switch questdlg('View expression of selected genes','')
             case 'Yes'
                 gui.sc_pseudotimegenes(sce, t, FigureHandle);
