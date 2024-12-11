@@ -23,7 +23,6 @@ function [OKPressed] = sc_savescedlg(sce)
     ButtonName = list{indx};
     switch ButtonName
         case 'SCE Data File (*.mat)...'
-
             if ~isempty(a)
                 [file, path] = uiputfile({'*.mat'; '*.*'}, 'Save as', a);
             else

@@ -6,8 +6,7 @@ end
 
 if ~license('test','statistics_toolbox') || isempty(which('grp2idx.m'))
     uiwait(warndlg('SCGEATOOL requires Statistics and Machine Learning Toolbox.','Missing Dependencies'));
-    answer3 = questdlg('Learn how to install Statistics and Machine Learning Toolbox?','');
-    if strcmp(answer3,'Yes')
+    if strcmp(questdlg('Learn how to install Statistics and Machine Learning Toolbox?'),'Yes')
         web('https://www.mathworks.com/help/matlab/matlab_env/get-add-ons.html');
         web('https://www.mathworks.com/videos/add-on-explorer-106745.html');
     end
@@ -409,12 +408,8 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
 
 % ----------------------------------
 
-    function in_sc_openscedlg(~, event)
-        % set(src,'Enable','off');
-        if strcmp(event.EventName,'KeyPress') && ...
-            ~ismember(event.Key,{'return','space','i','I'})
-            return;
-        end
+    function in_sc_openscedlg(~, event)        
+        if strcmp(event.EventName,'KeyPress') && ~ismember(event.Key,{'return','space','i','I'}), return; end
         clickType = get(FigureHandle, 'SelectionType');
         if strcmp(clickType,'alt'), return; end
         
@@ -663,16 +658,15 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
 
     function in_RunDataMapPlot(src, ~)
         if ~pkg.i_checkpython
-            uiwait(warndlg('Python not installed.',''));
+            uiwait(warndlg('Python is not installed.',''));
             return;
         end
         ndim = 2;
         [vslist] = gui.i_checkexistingembed(sce, ndim);
         if isempty(h.ZData) && size(sce.s,2)==2 && length(vslist) <= 1
             gui.callback_RunDataMapPlot(src, []);
-        elseif isempty(h.ZData) && size(sce.s,2)==2 && length(vslist) > 1
-            answer = questdlg('Using current 2D embedding?');
-            switch answer
+        elseif isempty(h.ZData) && size(sce.s,2)==2 && length(vslist) > 1            
+            switch questdlg('Using current 2D embedding?')
                 case 'Yes'
                     gui.callback_RunDataMapPlot(src, []);
                 case 'No'
@@ -689,13 +683,7 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
                     return;
             end
         elseif ~isempty(h.ZData)
-            answer=questdlg('This function requires 2D embedding. Continue?');
-            switch answer
-                case 'Yes'
-                    in_Switch2D3D(src,[]);
-                otherwise
-                    return;
-            end
+            if strcmp(questdlg('This function requires 2D embedding. Continue?'), 'Yes'), in_Switch2D3D(src,[]); end
         end
     end
 
@@ -711,14 +699,15 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
 
     function in_MergeCellSubtypes(src, ~, sourcetag, allcell)
         if nargin < 4
-            answer = questdlg('Import annotation for all cells or just cells of a subtype?', '', ...
-                'All Cells', 'Subtype Cells', 'Cancel', 'All Cells');
-            switch answer
+            switch questdlg('Import annotation for all cells or just cells of a subtype?', '', ...
+                'All Cells', 'Subtype Cells', 'Cancel', 'All Cells')
                 case 'All Cells'
                     allcell = true;
                 case 'Subtype Cells'
                     allcell = false;
                 case 'Cancel'
+                    return;
+                otherwise
                     return;
             end
         end
@@ -757,8 +746,7 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
                 answer = questdlg('Which HVG detecting method to use?', '', ...
                     'Splinefit Method [PMID:31697351]', ...
                     'Brennecke et al. (2013) [PMID:24056876]', ...
-                    'Splinefit Method [PMID:31697351]');
-                
+                    'Splinefit Method [PMID:31697351]');                
                 fw = gui.gui_waitbar;
                 switch answer
                     case 'Brennecke et al. (2013) [PMID:24056876]'
@@ -795,9 +783,7 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
 
     function in_SubsampleCells(src, ~, methodoption)
         if nargin < 3, methodoption = []; end        
-        if ~strcmp(questdlg('This function subsamples 50% of cells. Continue?',''), 'Yes')
-            return;
-        end
+        if ~strcmp(questdlg('This function subsamples 50% of cells. Continue?',''), 'Yes'), return; end
         if isempty(methodoption)
             answer = questdlg('Select method:', '', ...
                 'Uniform Sampling', ...
@@ -1010,10 +996,8 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
 %       figure('WindowStyle', 'modal');
 %       gui.i_stemscatter(sce.s, contamination);
 %       zlabel('Contamination rate')
-%       title('Ambient RNA contamination')
-
-        answer = questdlg("Remove contamination? Click ''No'' to keep data unchanged.");
-        if strcmp(answer, 'Yes')
+%       title('Ambient RNA contamination')        
+        if strcmp(questdlg("Remove contamination? Click ''No'' to keep data unchanged."), 'Yes')
             sce.X = round(Xdecon);
             guidata(FigureHandle, sce);
             uiwait(helpdlg('Contamination removed.', ''));
@@ -1035,7 +1019,7 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
 
     function in_HarmonyPy(src, ~)
         if ~pkg.i_checkpython
-            uiwait(warndlg('Python not installed.',''));
+            uiwait(warndlg('Python is not installed.',''));
             return;
         end        
         if ~gui.gui_showrefinfo('Harmony [PMID:31740819]'), return; end
@@ -1101,16 +1085,14 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
             gui.i_stemscatter(sce.s, doubletscore);
             zlabel('Doublet Score')
             title(sprintf('Doublet Detection (%s)', methodtag))
-            answer = questdlg(sprintf("Remove %d doublets?", sum(isDoublet)));
-            switch answer
-                case 'Yes'
-                    close(tmpf_doubletdetection);
-                    % i_deletecells(isDoublet);
-                    sce = sce.removecells(isDoublet);
-                    guidata(FigureHandle, sce);
-                    [c, cL] = grp2idx(sce.c);
-                    in_RefreshAll(src, [], true, false);
-                    uiwait(helpdlg('Doublets deleted.', ''));
+            if strcmp(questdlg(sprintf("Remove %d doublets?", sum(isDoublet))),'Yes')
+                close(tmpf_doubletdetection);
+                % i_deletecells(isDoublet);
+                sce = sce.removecells(isDoublet);
+                guidata(FigureHandle, sce);
+                [c, cL] = grp2idx(sce.c);
+                in_RefreshAll(src, [], true, false);
+                uiwait(helpdlg('Doublets deleted.', ''));
             end
         end
     end
@@ -1316,10 +1298,8 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
         in_RefreshAll(src, [], true, true);   % keepview, keepcolr
     end
 
-    function in_AddEditCellAttribs(~,~)
-        answer = questdlg('Add or edit cell attribute?','', ...
-            'Add','Edit','Cancel','Add');
-        switch answer
+    function in_AddEditCellAttribs(~,~)        
+        switch questdlg('Add or edit cell attribute?','','Add','Edit','Cancel','Add')
             case 'Edit'
                 addnew = false;
             case 'Add'
@@ -1397,8 +1377,7 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
             %if isempty(ndim), [ndim] = gui.i_choose2d3dnmore; end
             %if isempty(ndim), return; end
             %methoddimtag = sprintf('%s%dd',methodtag, ndim);            
-            answer = questdlg('Overwritten existing embeddings, if any?','');
-            switch answer
+            switch questdlg('Overwritten existing embeddings, if any?')
                 case 'Yes'
                     overwrittenold = true;
                 case 'No'
@@ -1442,9 +1421,8 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
         end
         guidata(FigureHandle, sce);
         in_RefreshAll(src, [], true, false);   % keepview, keepcolr
-        if readytoshow
-            answer = questdlg('Show all avaiable embeddings?','');
-            if strcmp(answer, 'Yes')
+        if readytoshow            
+            if strcmp(questdlg('Show all avaiable embeddings?'), 'Yes')
                 gui.sc_multiembeddingview(sce, [], FigureHandle);
             end
         end
@@ -1534,9 +1512,8 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
         nx = length(unique(sce.c_cell_type_tx));
         if nx > 1
             newtx = erase(sce.c_cell_type_tx, "_{"+digitsPattern+"}");
-            if length(unique(newtx)) ~= nx
-                answer = questdlg('Merge subclusters of same cell type?');
-                if strcmp(answer, 'Yes')
+            if length(unique(newtx)) ~= nx                
+                if strcmp(questdlg('Merge subclusters of same cell type?'), 'Yes')
                     in_MergeSubCellTypes(src);
                 end
             end
@@ -1544,10 +1521,8 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
         guidata(FigureHandle, sce);
     end
 
-    function [iscelltype] = in_pickcelltypeclusterid(a)
-        answer = questdlg(a, '', ...
-            'Cluster', 'Cell Type', 'Cluster');
-        switch answer
+    function [iscelltype] = in_pickcelltypeclusterid(a)        
+        switch questdlg(a, '', 'Cluster', 'Cell Type', 'Cluster')
             case 'Cluster'
                 iscelltype = false;
             case 'Cell Type'
@@ -1645,9 +1620,7 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
             uiwait(helpdlg("No cells are selected. Please use the data brush tool to select cells for cell type assignment.", ''));
             return;
         end        
-        if ~strcmp(questdlg('This is a one-time analysis. Cell type labels will not be saved. Continue?',''), 'Yes')
-            return;
-        end
+        if ~strcmp(questdlg('This is a one-time analysis. Cell type labels will not be saved. Continue?',''), 'Yes'), return; end
         if isempty(speciestag)
             speciestag = gui.i_selectspecies(2);
         end
@@ -1684,12 +1657,10 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
 
     function in_ShowCellStates(src, ~)        
         [thisc, clabel, ~, newpickclabel] = gui.i_select1state(sce);
-        if strcmp(clabel, 'Cell Cycle Phase')
-            if ~all(strcmp(unique(thisc), "undetermined"))
-                sce.c_cell_cycle_tx = thisc;
-            end
-        end
         if isempty(thisc), return; end
+        if strcmp(clabel, 'Cell Cycle Phase') && ~all(strcmp(unique(thisc), "undetermined"))
+            sce.c_cell_cycle_tx = thisc;
+        end        
         if strcmp(clabel, 'Workspace Variable...')
             clabel = gui.i_renamec(clabel, sce, newpickclabel);
             sce.list_cell_attributes = [sce.list_cell_attributes, clabel];
@@ -1831,8 +1802,7 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
         if numel(unique(sce.c_cell_type_tx))>1            
             if ~strcmp(questdlg('This analysis is cell type-specific; however, current SCE contains multiple cell types. Continue?',''),'Yes'), return; end
         end
-        answer=questdlg('Subsample cells?','','Yes 🐢','No 🐇','Cancel','No 🐇');
-        switch answer
+        switch questdlg('Subsample cells?','','Yes 🐢','No 🐇','Cancel','No 🐇')
             case 'No 🐇'
                 if methodtag==1
                     gui.callback_scPCNet1(src,events);
@@ -1874,10 +1844,10 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
         end
         if license('test', 'curve_fitting_toolbox') && ~isempty(which('cscvn'))
             answer = questdlg('Which method?', '', 'splinefit', 'princurve', ...
-                'manual', 'splinefit');            
+                'manual', 'splinefit');
         else
             answer = questdlg('Which method?', '', 'splinefit', 'princurve', ...
-                'Cancel', 'splinefit');
+                'splinefit');
         end
         switch answer
             case 'splinefit'
@@ -1889,7 +1859,7 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
                 pseudotimemethod = 'princurve';
             case 'manual'
                 if license('test', 'curve_fitting_toolbox') && ~isempty(which('cscvn'))
-                    if ~isempty(h.ZData)                    
+                    if ~isempty(h.ZData)
                         switch questdlg('This function does not work for 3D embedding. Continue to switch to 2D?')
                             case 'Yes'
                                 in_Switch2D3D(src,[]);
@@ -1922,16 +1892,16 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
                             justload = true;
                         case 'Draw Curve'
                             % Collect points interactively
-                            % [x, y] = ginput; % Click on the figure to select points, press Enter to finish
+                            % [x, y] = ginput; % 
+                            if ~strcmp(questdlg('Click on the figure to select points, press Enter to finish.'),'Yes'), return; end
                             x = []; y = [];
                             hold on
                             while true
-                                % Get a single point
                                 [xi, yi, button] = ginput(1);                        
                                 % Exit the loop if Enter (ASCII 13) is pressed
                                 if isempty(button) || button == 13
                                     break;
-                                end               
+                                end
                                 x = [x; xi];
                                 y = [y; yi];                        
                                 plot(xi, yi, 'ro', 'MarkerSize', 8, 'LineWidth', 2);
@@ -1946,8 +1916,6 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
                             t = normalize(t, 'range');
                             t = t(:);
                             pseudotimemethod = 'manual';                            
-                        case 'Cancel'
-                            return;
                         otherwise
                             return;
                     end
@@ -2242,9 +2210,7 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
     end
 end
 
-
-
-function myResizeFun(src, ~, butt,butt2)
+function myResizeFun(src, ~, butt, butt2)
     fig_pos = get(src, 'Position'); % [left bottom width height]
     fig_width = fig_pos(3);
     fig_height = fig_pos(4);
