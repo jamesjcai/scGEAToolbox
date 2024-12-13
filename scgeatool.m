@@ -4,7 +4,8 @@ if usejava('jvm') && ~feature('ShowFigureWindows')
     error('MATLAB is in a text mode. This function requires a GUI-mode.');
 end
 
-if ispc && (~license('test','statistics_toolbox') || isempty(which('grp2idx.m')))
+if (ispc && (~license('test','statistics_toolbox') || isempty(which('grp2idx.m')))) || ...
+   (~ispc && ~any(strcmp('Statistics and Machine Learning Toolbox', {ver().Name})))
     uiwait(warndlg('SCGEATOOL requires Statistics and Machine Learning Toolbox.', ...
         'Missing Dependencies'));
     if strcmp(questdlg('Learn how to install Statistics and Machine Learning Toolbox?'),'Yes')
@@ -2140,24 +2141,12 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
         isdone = false;
         if ~isempty(cL)
             if notasking
-                % stxtyes = c;
                 stxtyes = cL(c);
             else
                 [~, cLx] = grp2idx(c);
                 if isequal(cL, cLx)
                     stxtyes = c;
                 else
-                    % answer = questdlg(sprintf('Label %d groups with index or text?', ...
-                    %     numel(cL)), 'Select Format', 'Index', ...
-                    %     'Text', 'Cancel', 'Text');
-                    % switch answer
-                    %     case 'Text'
-                    %         stxtyes = cL(c);
-                    %     case 'Index'
-                    %         stxtyes = c;
-                    %     otherwise
-                    %         return;
-                    % end
                     stxtyes = cL(c);
                 end
             end
