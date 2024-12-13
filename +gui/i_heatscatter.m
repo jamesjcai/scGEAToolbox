@@ -14,6 +14,11 @@ end
 
 % c(c < 0) = 0;
 sz = 5;
-h1 = scatter3(x, y, z, sz, c, 'filled');
+
+if is2d
+    h1 = scatter(x, y, sz, c, 'filled');
+else
+    h1 = scatter3(x, y, z, sz, c, 'filled');
+end
 grid on
 

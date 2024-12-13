@@ -75,7 +75,6 @@ adata = align_dataset(adata, ca.gene_order)
 embeddings = ca.get_embeddings(adata.X)
 print("Get_embeddings...done.")
 
-#predictions = ca.get_predictions_knn(embeddings)
+predictions = ca.get_predictions_knn(embeddings)
 print("Prediction...done.")
-
-#predictions.to_csv("output.csv", index=True)
+predictions.to_csv("output.csv", index=True)

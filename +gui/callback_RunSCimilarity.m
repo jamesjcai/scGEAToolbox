@@ -5,9 +5,19 @@ function [needupdatesce] = callback_RunSCimilarity(src, ~)
     totalMemoryGB = sys.PhysicalMemory.Total / (1024^3);
     fprintf('Total Physical Memory: %.2f GB\n', totalMemoryGB);
     if totalMemoryGB < 32
-        answer = questdlg('>=64 GB of memory is recommanded. The computer has less than 32 GB. Continue?','');
-        if ~strcmp(answer, 'Yes'), return; end
-    end   
+        answer = questdlg('>=64 GB of memory is recommanded. The computer has less than 32 GB. Continue?', ...
+            '', 'Yes, still run', 'No, prepare input only', 'Cancel', 'Yes, still run');
+        switch answer
+            case 'Yes, still run'
+                prepare_input_only = false;
+            case 'No, prepare input only'
+                prepare_input_only = true;
+            case 'Cancel'
+                return;
+            otherwise
+                return;
+        end
+    end
     
     FigureHandle = src.Parent.Parent;
     sce = guidata(FigureHandle);
@@ -51,30 +61,44 @@ function [needupdatesce] = callback_RunSCimilarity(src, ~)
         return;
     end
 
-
     extprogname = 'py_scimilarity';
     preftagname = 'externalwrkpath';
     [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
     if isempty(wkdir), return; end
-
-    fw = gui.gui_waitbar;
+    sce.g = upper(sce.g);
 
     
-    try
-        sce.g = upper(sce.g);
-        [c] = run.py_scimilarity(sce, modeldir, wkdir, target_celltypes);
-        assert(sce.NumCells==numel(c));
-        if ~(isscalar(unique(sce.c_cell_type_tx)) && unique(sce.c_cell_type_tx)=="undetermined")
-            sce.list_cell_attributes = [sce.list_cell_attributes, ...
-                {'old_cell_type', sce.c_cell_type_tx}];
+    if prepare_input_only
+        try
+            fw = gui.gui_waitbar;
+            run.py_scimilarity(sce, modeldir, wkdir, target_celltypes, true, prepare_input_only);
+            gui.gui_waitbar(fw);
+            if strcmp(questdlg('Input files prepared. Open the working folder?'),'Yes')
+                winopen(wkdir);
+            end            
+        catch ME
+            gui.gui_waitbar(fw, true);
+            errordlg(ME.message);
+            return;
         end
-        sce.c_cell_type_tx = c;
-    catch ME
-        gui.gui_waitbar(fw, true);
-        errordlg(ME.message);
-        return;
+        needupdatesce = false;        
+    else    
+        fw = gui.gui_waitbar;
+        try
+            [c] = run.py_scimilarity(sce, modeldir, wkdir, target_celltypes, true);
+            assert(sce.NumCells==numel(c));
+            if ~(isscalar(unique(sce.c_cell_type_tx)) && unique(sce.c_cell_type_tx)=="undetermined")
+                sce.list_cell_attributes = [sce.list_cell_attributes, ...
+                    {'old_cell_type', sce.c_cell_type_tx}];
+            end
+            sce.c_cell_type_tx = c;
+        catch ME
+            gui.gui_waitbar(fw, true);
+            errordlg(ME.message);
+            return;
+        end    
+        guidata(FigureHandle, sce);
+        needupdatesce = true;
+        gui.gui_waitbar(fw);
     end
-    gui.gui_waitbar(fw);
-    guidata(FigureHandle, sce);
-    needupdatesce = true;
 end

@@ -1667,39 +1667,7 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
             sce.list_cell_attributes = [sce.list_cell_attributes, thisc];
         end
 
-
-        %{
-        answer1 = questdlg('Display in place or in new figure?', '', ...
-            'In place', 'New figure','Cancel','In place');
-        switch answer1
-            case 'In place'
-                % in_RefreshAll(src, [], true, false);
-                target{1} = hAx;
-                target{2} = h;
-            case 'New figure'
-                hFig = figure('Visible','off');
-                hFigAx = axes('Parent', hFig);
-                h2 = gui.i_gscatter3(sce.s, c, 1, 1, hFigAx);
-                title(hFigAx, sce.title);
-                subtitle(hFigAx, '[genes x cells]');
-                target{1} = hFigAx;
-                target{2} = h2;
-                dp = get(hFig, 'Position');
-                pp = get(FigureHandle, 'Position');
-                cpx = pp(1) + pp(3)/2 - dp(3)/2;
-                cpy = pp(2) + pp(4)/2 - dp(4)/2;
-                movegui(hFig, [cpx cpy]);
-                set(hFig,'Visible','on');
-            otherwise
-                return;
-        end
-        %}
-
-        [answer] = gui.i_selvariabletype(thisc);
-        if isempty(answer), return; end
-
-
-        switch answer
+        switch gui.i_selvariabletype(thisc)
             case 'Categorical/Discrete'
                 [c, cL] = grp2idx(thisc);
                 sce.c = c;
@@ -1714,11 +1682,8 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
                 cbtogg = findall(FigureHandle, 'Tag', 'figToglColorbar');
                 set(cbtogg,'State','on');
             case {'Numerical/Continuous','Unknown'}
-                sce.c = thisc;
-                answer = questdlg('Show scores in new figure?','', ...
-                    'Yes, new figure', 'No, current figure', ...
-                    'Cancel', 'Yes, new figure');
-                switch answer
+                sce.c = thisc;                
+                switch questdlg('Show scores in new figure?','','Yes, new figure', 'No, current figure', 'Cancel', 'Yes, new figure')
                     case 'No, current figure'
                         in_RefreshAll(src, [], true, false);
                         target{1} = hAx;
@@ -1734,12 +1699,21 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
                         cbtogg = findall(FigureHandle, 'Tag', 'figToglColorbar');
                         set(cbtogg,'State','on');
                     case 'Yes, new figure'
-                        gui.i_stemscatterfig(sce, thisc, [], clabel, ...
-                            FigureHandle);
+                        switch questdlg('Plot scatter plot type:','','Heat','Stem','Heat')
+                            case 'Heat'
+                                figfun = @gui.i_heatscatterfig;
+                            case 'Stem'
+                                figfun = @gui.i_stemscatterfig;
+                            otherwise
+                                return;
+                        end
+                        figfun(sce, thisc, [], clabel, FigureHandle);
                         return;
                     otherwise
                         return;
                 end
+            otherwise
+                return;
         end
         guidata(FigureHandle, sce);
     end

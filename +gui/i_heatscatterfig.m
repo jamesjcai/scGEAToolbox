@@ -1,5 +1,7 @@
 function [hFig] = i_heatscatterfig(sce, cs, posg, csname, parentfig)
 
+%see also: gui.i_stemscatterfig
+
 if nargin < 5, parentfig = []; end
 if nargin < 4 || isempty(csname), csname = "CellScore"; end
 
