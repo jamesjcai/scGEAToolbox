@@ -4,8 +4,9 @@ if usejava('jvm') && ~feature('ShowFigureWindows')
     error('MATLAB is in a text mode. This function requires a GUI-mode.');
 end
 
-if ~license('test','statistics_toolbox') || isempty(which('grp2idx.m'))
-    uiwait(warndlg('SCGEATOOL requires Statistics and Machine Learning Toolbox.','Missing Dependencies'));
+if ispc && (~license('test','statistics_toolbox') || isempty(which('grp2idx.m')))
+    uiwait(warndlg('SCGEATOOL requires Statistics and Machine Learning Toolbox.', ...
+        'Missing Dependencies'));
     if strcmp(questdlg('Learn how to install Statistics and Machine Learning Toolbox?'),'Yes')
         web('https://www.mathworks.com/help/matlab/matlab_env/get-add-ons.html');
         web('https://www.mathworks.com/videos/add-on-explorer-106745.html');
