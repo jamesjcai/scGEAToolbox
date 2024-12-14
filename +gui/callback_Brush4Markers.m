@@ -1,5 +1,6 @@
 function callback_Brush4Markers(src, event)
-if exist('lasso', 'file')
+
+if any(strcmp('Statistics and Machine Learning Toolbox', {ver().Name})) && ~isempty(which('lasso.m'))
     % disp('using LASSO')
     i_Brush4MarkersLASSO(src, event);
     return;
@@ -56,18 +57,30 @@ fw = gui.gui_waitbar;
 y = double(ptsSelected);
 sce.c = 1 + ptsSelected;
 X = sce.X';
+
+uselasso = true;
+
 try
     if issparse(X), X = full(X); end
-    [B] = lasso(X, y, 'DFmax', numfig*3, 'MaxIter', 1e3);
+    assignin("base","X",X);
+    assignin("base","y",y);
+    if uselasso
+        [B] = lasso(X, y, 'DFmax', numfig*3, 'MaxIter', 1e3);
+        [~, ix] = min(abs(sum(B > 0)-numfig));
+        b = B(:, ix);
+        idx = b > 0;
+    else
+        mdl = fitglm(X, y, 'Distribution', 'binomial', 'Link', 'logit');
+        B = mdl.Coefficients.Estimate;
+        [~, idx] = mink(B, numfig);
+    end
 catch ME
     gui.gui_waitbar(fw);
     errordlg(ME.message);
     rethrow(ME);
 end
 
-[~, ix] = min(abs(sum(B > 0)-numfig));
-b = B(:, ix);
-idx = b > 0;
+
 gui.gui_waitbar(fw);
 
 if ~any(idx)
@@ -75,10 +88,13 @@ if ~any(idx)
     return;
 end
 
-
+if uselasso
     markerlist = sce.g(idx);
     [~, jx] = sort(b(idx), 'descend');
     markerlist = markerlist(jx);
+else
+    markerlist = sce.g(idx);
+end
 
     fprintf('%d marker genes: ', length(markerlist));
     fprintf('%s ', markerlist)
