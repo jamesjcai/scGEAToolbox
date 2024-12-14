@@ -9,8 +9,8 @@ In MATLAB, scgeatool function can be used to start SCGEATOOL to visualize `SCE` 
 
 |Overview of scgeatool|
 
-.. |Overview of scgeatool| image:: https://github.com/jamesjcai/scGEAToolbox/raw/main/resources/Tooltips.png
-   :target: https://github.com/jamesjcai/scGEAToolbox/raw/main/resources/Tooltips.png
+.. |Overview of scgeatool| image:: https://github.com/jamesjcai/scGEAToolbox/raw/main/resources/Images/Tooltips.png
+   :target: https://github.com/jamesjcai/scGEAToolbox/raw/main/resources/Images/Tooltips.png
   
 Using SCGEATOOL to explore
 -----------------------------
@@ -47,9 +47,9 @@ Making scRNA-seq data into `SCE`
   sce=SingleCellExperiment(X,g,s);
   scgeatool(sce)
   
-.. |gui| image:: https://raw.githubusercontent.com/jamesjcai/scGEAToolbox/main/resources/scgeatool.png
+.. |gui| image:: https://raw.githubusercontent.com/jamesjcai/scGEAToolbox/main/resources/Images/scgeatool.png
    :width: 250
-   :target: https://raw.githubusercontent.com/jamesjcai/scGEAToolbox/main/resources/scgeatool.png
+   :target: https://raw.githubusercontent.com/jamesjcai/scGEAToolbox/main/resources/Images/scgeatool.png
 
 SCGEATOOL standalone for Windows
 --------------------------------
