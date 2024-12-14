@@ -162,7 +162,7 @@ Here is what you should get:
   
 |sixdview|
 
-.. |sixdview| image:: https://github.com/jamesjcai/scGEAToolbox/raw/main/resources/six_d.png
+.. |sixdview| image:: https://github.com/jamesjcai/scGEAToolbox/raw/main/resources/Images/six_d.png
    :width: 250
-   :target: https://github.com/jamesjcai/scGEAToolbox/raw/main/resources/six_d.png
+   :target: https://github.com/jamesjcai/scGEAToolbox/raw/main/resources/Images/six_d.png
   
