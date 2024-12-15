@@ -3,21 +3,9 @@ function varargout = scgeatool(sce, varargin)
 if usejava('jvm') && ~feature('ShowFigureWindows')
     error('MATLAB is in a text mode. This function requires a GUI-mode.');
 end
-
-if (ispc && (~license('test','statistics_toolbox') || isempty(which('grp2idx.m')))) || ...
-   (~ispc && ~any(strcmp('Statistics and Machine Learning Toolbox', {ver().Name})))
-    uiwait(warndlg('SCGEATOOL requires Statistics and Machine Learning Toolbox.', ...
-        'Missing Dependencies'));
-    if strcmp(questdlg('Learn how to install Statistics and Machine Learning Toolbox?'),'Yes')
-        web('https://www.mathworks.com/help/matlab/matlab_env/get-add-ons.html');
-        web('https://www.mathworks.com/videos/add-on-explorer-106745.html');
-    end
-    return;
-end
-
+if ~gui.i_installed('stats'), return; end
 % rng("shuffle");
 % rng("default");
-
 persistent speciestag
 % speciestag = getpref('scgeatoolbox', 'preferredspecies', 'human');
 

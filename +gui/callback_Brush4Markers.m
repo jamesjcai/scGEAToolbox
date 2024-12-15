@@ -1,18 +1,27 @@
 function callback_Brush4Markers(src, event)
 
-if any(strcmp('Statistics and Machine Learning Toolbox', {ver().Name})) && ~isempty(which('lasso.m'))
-    % disp('using LASSO')
-    i_Brush4MarkersLASSO(src, event);
-    return;
-end
+    FigureHandle = src.Parent.Parent;
+    sce = guidata(FigureHandle);
+
+    if ~gui.i_installed('stats'), return; end
+
+    switch questdlg('Select method:','',"Lasso Regression","Logistic Regression 🐢 ","Lasso Regression")
+        case "Lasso Regression"
+            uselasso=true;
+        case "Logistic Regression 🐢 "
+            uselasso=false;
+        otherwise
+            return;
+    end
+    i_Brush4MarkersLASSO(src, event, sce, uselasso);
 end
 
 
-function i_Brush4MarkersLASSO(src, ~, sce)
+function i_Brush4MarkersLASSO(src, ~, sce, uselasso)
 FigureHandle = src.Parent.Parent;
 
 if nargin < 3
-    sce = guidata(FigureHandle);
+    uselasso = true; 
 end
 
 %    FigureHandle=src.Parent.Parent;
@@ -53,37 +62,38 @@ end
 
 [numfig] = gui.i_inputnumg(500);
 if isempty(numfig), return; end
-fw = gui.gui_waitbar;
+
+
+if uselasso, fw = gui.gui_waitbar; end
 y = double(ptsSelected);
 sce.c = 1 + ptsSelected;
 X = sce.X';
 
-uselasso = true;
+% uselasso = true;
 
 try
     if issparse(X), X = full(X); end
-    assignin("base","X",X);
-    assignin("base","y",y);
+%    assignin("base","X",X);
+%    assignin("base","y",y);
     if uselasso
         [B] = lasso(X, y, 'DFmax', numfig*3, 'MaxIter', 1e3);
         [~, ix] = min(abs(sum(B > 0)-numfig));
         b = B(:, ix);
         idx = b > 0;
     else
-        mdl = fitglm(X, y, 'Distribution', 'binomial', 'Link', 'logit');
-        B = mdl.Coefficients.Estimate;
-        [~, idx] = mink(B, numfig);
+        %mdl = fitglm(X, y, 'Distribution', 'binomial', 'Link', 'logit');
+        %B = mdl.Coefficients.Estimate;
+        %[~, idx] = mink(B, numfig);
+        idx = LRDETest(X, y, numfig);
     end
 catch ME
-    gui.gui_waitbar(fw);
+    if uselasso, gui.gui_waitbar(fw, true); end
     errordlg(ME.message);
     rethrow(ME);
 end
 
-
-gui.gui_waitbar(fw);
-
 if ~any(idx)
+   if uselasso, gui.gui_waitbar(fw); end
     warndlg('No marker found','')
     return;
 end
@@ -100,26 +110,6 @@ end
     fprintf('%s ', markerlist)
     fprintf('\n')
 
-%    gui.i_exporttable(table(markerlist), true, ...
-%        'Tmarkerlist','MarkerListTable');
-
-    % 'Tviolindata','ViolinPlotTable'
-    % 'Tmarkerlist','MarkerListTable'
-
-%    [answer] = questdlg('Plot expression of markers?');
-%    if isempty(answer), return; end
-%    switch answer
-%        case 'Yes'
-            % [methodid] = gui.i_pickscatterstem('Scatter');
-            % if isempty(methodid), return; end
-            % F = cell(length(markerlist), 1);
-            % for kk = 1:length(markerlist)
-            %     F{kk} = gui.i_cascadefig(sce, markerlist(end-(kk - 1)), ...
-            %         ax, bx, kk, methodid);
-            % end
-            % gui.i_export2pptx(F, flipud(markerlist(:)));
-%        fw=gui.gui_waitbar;
-
         n = length(markerlist);
         y = cell(n,1);
         for k=1:n
@@ -127,83 +117,28 @@ end
         end
 
         gui.sc_uitabgrpfig_expplot(y, markerlist, sce.s, FigureHandle, [axx, bxx]);
-        gui.gui_waitbar(fw);    
-%    end
-%end
+        if uselasso, gui.gui_waitbar(fw); end
 
-%     pause(2);
-%     export2wsdlg({'Save marker list to variable named:'},...
-%             {'g_markerlist'},{markerlist});
 end
 
-
-%{
-
-
-FigureHandle=src.Parent.Parent;
-sce=guidata(FigureHandle);
-%     assert(isequal(FigureHandle.Children, FigureHandle.findobj('type','Axes')))
-%
-%     axesh=FigureHandle.Children(1);
-axesh=FigureHandle.findobj('type','Axes');
-[ax,bx]=view(axesh);
-assert(isequal(axesh.findobj('type','Scatter'),...
-    FigureHandle.findobj('type','Scatter')))
-h=axesh.Children(1);
-ptsSelected = logical(h.BrushData.');
-
-if ~any(ptsSelected)
-    warndlg("No cells are selected.");
-    return;
-end
-assignin('base','ptsSelected',ptsSelected);
-
-[c,cL]=grp2idx(sce.c);
-if isscalar(unique(c))
-    methodtag=1;
-else
-    answer = questdlg('Select brushed cell group?');
-    if strcmp(answer,'Yes')
-        if isscalar(unique(c(ptsSelected)))
-            methodtag=2;
-        else
-            errordlg('More than one group of brushed cells');
-            return;
+function idx = LRDETest(X, y, k)
+    n = size(X, 1);
+    p_val = zeros(n, 1);
+    fw = gui.gui_waitbar_adv;
+    % Calculate p-values for each row of data_use
+    for x = 1:size(X, 1)
+        if mod(x,5)==0
+            gui.gui_waitbar_adv(fw, x/n);
         end
-    elseif strcmp(answer,'No')
-        methodtag=1;
-    else
-        return;
+        model_data = table(X(:,x), y(:), 'VariableNames', {'GENE', 'Group'});
+        fmla = 'Group ~ GENE';
+        fmla2 = 'Group ~ 1';
+        % Fit models and compute likelihood ratio test
+        model1 = fitglm(model_data, fmla, 'Distribution', 'binomial');
+        model2 = fitglm(model_data, fmla2, 'Distribution', 'binomial');
+        lrtest_stat = 2 * (model1.LogLikelihood - model2.LogLikelihood);
+        p_val(x) = chi2cdf(lrtest_stat, model1.NumPredictors - model2.NumPredictors, 'upper');
     end
+    [~, idx] = mink(p_val, k);
+    gui.gui_waitbar_adv(fw);
 end
-[numfig]=gui.i_inputnumg;
-if isempty(numfig), return; end
-fw=gui.gui_waitbar;
-
-switch methodtag
-    case 1
-        [markerlist]=sc_pickmarkers(sce.X,sce.g,1+ptsSelected,2);
-        sce.c=1+ptsSelected;
-        markerlist=markerlist{2};
-        % disp('xxx')
-    case 2
-        ptsSelected=c==unique(c(ptsSelected));
-        % h.BrushData=double(ptsSelected);
-        %[markerlist]=sc_pickmarkers(sce.X,sce.g,c,unique(c(ptsSelected)));
-        [markerlist]=sc_pickmarkers(sce.X,sce.g,1+ptsSelected,2);
-        sce.c=1+ptsSelected;
-        markerlist=markerlist{2};
-end
-gui.gui_waitbar(fw);
-% assignin('base','A',A);
-[numfig]=gui.i_inputnumg;
-fw=gui.gui_waitbar;
-htmlfilename=cL{unique(c(ptsSelected))};
-pkg.i_markergeneshtml(sce,markerlist,numfig,...
-    [ax bx],htmlfilename,ptsSelected);
-gui.gui_waitbar(fw);
-%     pause(2);
-%     export2wsdlg({'Save marker list to variable named:'},...
-%             {'g_markerlist'},{markerlist});
-end
-%}
