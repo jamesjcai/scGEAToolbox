@@ -1,9 +1,9 @@
 function [T] = py_scTenifoldXct(sce, celltype1, celltype2, twosided, ...
                                 wkdir, isdebug, prepare_input_only)
 
+T = [];
 if nargin < 7, prepare_input_only = false; end
 if nargin < 6, isdebug = true; end
-T = [];
 if nargin < 5, wkdir = []; end
 if nargin < 4, twosided = true; end
 if nargin < 3, error('Usage: [T] = py_scTenifoldXct(sce, celltype1, celltype2)'); end
@@ -20,34 +20,35 @@ else
 end
 
 
-
-fw = gui.gui_waitbar([], [], 'Checking Python environment...');
-
-x = pyenv;
-try
-    pkg.i_add_conda_python_path;
-catch
-
-end
-
-codefullpath = fullfile(codepth,'require.py');
-%cmdlinestr = sprintf('"%s" "%s%srequire.py"', ...
-%    x.Executable, codepth, filesep);
-cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);
-
-disp(cmdlinestr)
-[status, cmdout] = system(cmdlinestr, '-echo');
-if status ~= 0
-    cd(oldpth);
-
-    if isvalid(fw)
-        gui.gui_waitbar(fw, true);
+if ~prepare_input_only
+    fw = gui.gui_waitbar([], [], 'Checking Python environment...');
+    
+    x = pyenv;
+    try
+        pkg.i_add_conda_python_path;
+    catch
+    
     end
-    %waitfor(errordlg(sprintf('%s',cmdout)));
-    error(cmdout);
-    %error('Python scTenifoldXct has not been installed properly.');
+    
+    codefullpath = fullfile(codepth,'require.py');
+    %cmdlinestr = sprintf('"%s" "%s%srequire.py"', ...
+    %    x.Executable, codepth, filesep);
+    cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);
+    
+    disp(cmdlinestr)
+    [status, cmdout] = system(cmdlinestr, '-echo');
+    if status ~= 0
+        cd(oldpth);
+    
+        if isvalid(fw)
+            gui.gui_waitbar(fw, true);
+        end
+        %waitfor(errordlg(sprintf('%s',cmdout)));
+        error(cmdout);
+        %error('Python scTenifoldXct has not been installed properly.');
+    end
+    if isvalid(fw), gui.gui_waitbar(fw, [], 'Checking Python environment is complete'); end
 end
-
 
 tmpfilelist = {'X.mat', 'X.txt', 'g.txt', 'c.txt', 'output.txt', ...
     'output1.txt', 'output2.txt', ...
@@ -88,14 +89,11 @@ writetable(t, 'gene_name_Source.tsv', 'filetype', 'text', 'Delimiter', '\t');
 writetable(t, 'gene_name_Target.tsv', 'filetype', 'text', 'Delimiter', '\t');
 disp('Input gene_names written.');
 
-if isvalid(fw)
-    gui.gui_waitbar(fw, [], 'Checking Python environment is complete');
-end
-
 useexist = false;
 if exist("pcnet_Source.mat", 'file')
     answer = gui.i_questdlgtimer(10, ...
-        'pcnet_Source.mat existing. Use it?','', 'Yes, use pcnet_Source', 'No, reconstruct pcnet_Source', ...
+        'pcnet_Source.mat existing. Use it?','', 'Yes, use pcnet_Source', ...
+        'No, reconstruct pcnet_Source', ...
         'Cancel', 'Yes, use pcnet_Source');
     switch answer
         case 'Yes, use pcnet_Source'
@@ -116,12 +114,8 @@ if ~useexist
     A = ten.e_filtadjc(A1, 0.75, false);
     save('pcnet_Source.mat', 'A', '-v7.3');
     disp('pcnet_Source.mat saved.');
+    if isvalid(fw), gui.gui_waitbar(fw, [], 'Building pcnet\_Source is complete'); end
 end
-
-if isvalid(fw)
-    gui.gui_waitbar(fw, [], 'Building pcnet_Source is complete');
-end
-
 
 useexist = false;
 if exist("pcnet_Target.mat", 'file')
@@ -147,11 +141,9 @@ if ~useexist
     A = ten.e_filtadjc(A2, 0.75, false);
     save('pcnet_Target.mat', 'A', '-v7.3');
     disp('pcnet_Target network saved.')
+    if isvalid(fw), gui.gui_waitbar(fw, [], 'Building pcnet\_Target is complete'); end
 end
 
-if isvalid(fw)
-    gui.gui_waitbar(fw, [], 'Building pcnet\_Target is complete');
-end
 
 if twosided
     twosidedtag = 2;
@@ -159,19 +151,17 @@ else
     twosidedtag = 1;
 end
 
-fw = gui.gui_waitbar([], [], 'Step 3 of 3: Running scTenifoldXct.py...');
+if ~prepare_input_only
+    fw = gui.gui_waitbar([], [], 'Step 3 of 3: Running scTenifoldXct.py...');
+else
+    fw = gui.gui_waitbar([], [], 'Step 3 of 3: Finishing input preparation...');
+end
 
 codefullpath = fullfile(codepth,'script.py');
 pkg.i_addwd2script(codefullpath, wkdir, 'python');
 
 if ~prepare_input_only
     cmdlinestr = sprintf('"%s" "%s" %d', x.Executable, codefullpath, twosidedtag);
-    
-    % 
-    % cmdlinestr = sprintf('"%s" "%s%sscript.py" %d', ...
-    %     x.Executable, codepth, filesep, tag);
-    
-    
     disp(cmdlinestr)
     [status] = system(cmdlinestr, '-echo');
 end

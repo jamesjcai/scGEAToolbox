@@ -2,8 +2,16 @@ function callback_scTenifoldXct(src, ~)
 
 if ~gui.gui_showrefinfo('scTenifoldXct [PMID:36787742]'), return; end
 
-[y, prepare_input_only] = gui.i_memorychecked(96);
+FigureHandle = src.Parent.Parent;
+sce = guidata(FigureHandle);
+
+numglist = [1 3000 5000];
+memmlist = [16 32 64 128];
+neededmem = memmlist(sum(sce.NumGenes > numglist));
+neededmem = 32
+[y, prepare_input_only] = gui.i_memorychecked(neededmem);
 if ~y, return; end
+
     
 extprogname = 'py_scTenifoldXct';
 preftagname = 'externalwrkpath';
@@ -11,10 +19,9 @@ preftagname = 'externalwrkpath';
 if isempty(wkdir), return; end
 
 
-FigureHandle = src.Parent.Parent;
-sce = guidata(FigureHandle);
-
-if ~gui.i_setpyenv, return; end
+if ~prepare_input_only
+    if ~gui.i_setpyenv, return; end
+end
 
 [thisc, ~] = gui.i_select1class(sce, false);
 if isempty(thisc), return; end
@@ -96,11 +103,11 @@ sce = sce.selectcells(idx);
 
 %sce.c_batch_id(thisc==cL{x1})="Source";
 %sce.c_batch_id(thisc==cL{x2})="Target";
-
-try
+T = [];
+try    
     if twosided
         [Tcell] = run.py_scTenifoldXct(sce, cL{x1}, cL{x2}, true, ...
-            wkdir, true, prepare_input_only);
+            wkdir, true, prepare_input_only);        
         if ~isempty(Tcell)
             [T1] = Tcell{1};
             [T2] = Tcell{2};
@@ -139,7 +146,6 @@ if ~isempty(T)
     else
         answerx = 'Yes';
     end
-
     if isempty(wkdir) || ~isfolder(wkdir) || ~strcmp(answerx, 'Yes')
         [b, a] = pkg.i_tempfile("sctendifoldxct");
         writetable(T, b);
@@ -161,7 +167,11 @@ if ~isempty(T)
         waitfor(helpdlg(sprintf('Result has been saved in %s', outfile), ''));
     end
 else
-    helpdlg('No ligand-receptor pairs are identified.', '');
+    if ~prepare_input_only
+        helpdlg('No ligand-receptor pairs are identified.', '');
+    else
+        helpdlg('Input files are prepared successfully.', '');
+    end
 end
 
 
