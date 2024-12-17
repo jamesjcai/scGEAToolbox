@@ -8,7 +8,6 @@ sce = guidata(FigureHandle);
 numglist = [1 3000 5000];
 memmlist = [16 32 64 128];
 neededmem = memmlist(sum(sce.NumGenes > numglist));
-neededmem = 32
 [y, prepare_input_only] = gui.i_memorychecked(neededmem);
 if ~y, return; end
 
@@ -139,6 +138,17 @@ catch ME
 end
 
 if ~isempty(T)
+
+    load(fullfile(mfolder, '..', 'resources', 'Ligand_Receptor', ...
+         'Ligand_Receptor_more.mat'), 'ligand','receptor');
+    % knownpair = false(height(T), 1);
+    A = [string(T.ligand) string(T.receptor)];
+    B = [ligand receptor];
+    [knownpair]= ismember(A, B, 'rows');
+    assert(length(knownpair)==height(T));
+
+    T=[T, table(knownpair)];
+    
     outfile = fullfile(wkdir,"outfile.csv");
 
     if isfile(outfile)

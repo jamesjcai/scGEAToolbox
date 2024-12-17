@@ -8,6 +8,11 @@ import h5py
 import scipy
 from scipy import sparse
 
+twosided = 1
+with h5py.File('file.h5', 'r') as f:
+    if 'twosided' in f:
+        twosided = f['twosided'][0][0]
+
 #f = h5py.File('A1.mat','r')
 #A = np.array(f.get('A'))
 #A = sparse.csc_matrix(A)
@@ -29,10 +34,11 @@ xct = st.scTenifoldXct(data = adata,
                     verbose = True)
 emb = xct.get_embeds(train = True)
 xct_pairs = xct.null_test(pval = 1.0)
-print(xct_pairs)
+# print(xct_pairs)
 pd.DataFrame(xct_pairs).to_csv('output1.txt',index=False,header=True)
 
-if sys.argv[1]=="2":
+#if sys.argv[1]=="1":
+if twosided==1
     xct = st.scTenifoldXct(data = adata, 
                         source_celltype = 'Target',
                         target_celltype = 'Source',
@@ -42,5 +48,5 @@ if sys.argv[1]=="2":
                         verbose = True)
     emb = xct.get_embeds(train = True)
     xct_pairs = xct.null_test(pval = 1.0)
-    print(xct_pairs)
+    # print(xct_pairs)
     pd.DataFrame(xct_pairs).to_csv('output2.txt',index=False,header=True)

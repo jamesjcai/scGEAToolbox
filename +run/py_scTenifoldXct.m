@@ -79,7 +79,7 @@ if issparse(sce.X)
 else
     X = single(sce.X);
 end
-save('X.mat', '-v7.3', 'X');
+save('X.mat', '-v7.3', 'X', 'twosided');
 writematrix(sce.g, 'g.txt');
 writematrix(sce.c_batch_id, 'c.txt');
 disp('Input X g c written.');
@@ -146,9 +146,9 @@ end
 
 
 if twosided
-    twosidedtag = 2;
-else
     twosidedtag = 1;
+else
+    twosidedtag = 0;
 end
 
 if ~prepare_input_only
