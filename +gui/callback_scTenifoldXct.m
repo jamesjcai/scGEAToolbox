@@ -2,6 +2,9 @@ function callback_scTenifoldXct(src, ~)
 
 if ~gui.gui_showrefinfo('scTenifoldXct [PMID:36787742]'), return; end
 
+[y, prepare_input_only] = gui.i_memorychecked(96);
+if ~y, return; end
+    
 extprogname = 'py_scTenifoldXct';
 preftagname = 'externalwrkpath';
 [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
