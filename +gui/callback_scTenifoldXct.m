@@ -99,22 +99,26 @@ sce = sce.selectcells(idx);
 
 try
     if twosided
-        [Tcell] = run.py_scTenifoldXct(sce, cL{x1}, cL{x2}, true, wkdir);
-        [T1] = Tcell{1};
-        [T2] = Tcell{2};
-        if ~isempty(T1)
-            a = sprintf('%s -> %s', cL{x1}, cL{x2});
-            T1 = addvars(T1, repelem(a, height(T1), 1), 'Before', 1);
-            T1.Properties.VariableNames{'Var1'} = 'direction';
+        [Tcell] = run.py_scTenifoldXct(sce, cL{x1}, cL{x2}, true, ...
+            wkdir, true, prepare_input_only);
+        if ~isempty(Tcell)
+            [T1] = Tcell{1};
+            [T2] = Tcell{2};
+            if ~isempty(T1)
+                a = sprintf('%s -> %s', cL{x1}, cL{x2});
+                T1 = addvars(T1, repelem(a, height(T1), 1), 'Before', 1);
+                T1.Properties.VariableNames{'Var1'} = 'direction';
+            end
+            if ~isempty(T2)
+                a = sprintf('%s -> %s', cL{x2}, cL{x1});
+                T2 = addvars(T2, repelem(a, height(T2), 1), 'Before', 1);
+                T2.Properties.VariableNames{'Var1'} = 'direction';
+            end
+            T = [T1; T2];
         end
-        if ~isempty(T2)
-            a = sprintf('%s -> %s', cL{x2}, cL{x1});
-            T2 = addvars(T2, repelem(a, height(T2), 1), 'Before', 1);
-            T2.Properties.VariableNames{'Var1'} = 'direction';
-        end
-        T = [T1; T2];
     else
-        [T] = run.py_scTenifoldXct(sce, cL{x1}, cL{x2}, false, wkdir);
+        [T] = run.py_scTenifoldXct(sce, cL{x1}, cL{x2}, false, wkdir, ...
+            true, prepare_input_only);
         %T=readtable('output1.txt');
         if ~isempty(T)
             a = sprintf('%s -> %s', cL{x1}, cL{x2});
@@ -162,8 +166,7 @@ end
 
 
 function reshowdlg
-    answer = questdlg('Export result to other format?', '');
-    switch answer
+    switch questdlg('Export result to other format?')
         case 'Yes'
             gui.i_exporttable(T, false, 'Ttenifldxct', 'TenifldXctTable');
         otherwise

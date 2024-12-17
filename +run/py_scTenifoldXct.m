@@ -1,11 +1,12 @@
 function [T] = py_scTenifoldXct(sce, celltype1, celltype2, twosided, ...
-                                wkdir, isdebug)
+                                wkdir, isdebug, prepare_input_only)
 
-if nargin<6, isdebug = true; end
-
+if nargin < 7, prepare_input_only = false; end
+if nargin < 6, isdebug = true; end
 T = [];
 if nargin < 5, wkdir = []; end
 if nargin < 4, twosided = true; end
+if nargin < 3, error('Usage: [T] = py_scTenifoldXct(sce, celltype1, celltype2)'); end
 
 oldpth = pwd();
 pw1 = fileparts(mfilename('fullpath'));
@@ -162,18 +163,25 @@ fw = gui.gui_waitbar([], [], 'Step 3 of 3: Running scTenifoldXct.py...');
 
 codefullpath = fullfile(codepth,'script.py');
 pkg.i_addwd2script(codefullpath, wkdir, 'python');
-cmdlinestr = sprintf('"%s" "%s" %d', x.Executable, codefullpath, twosidedtag);
 
-% 
-% cmdlinestr = sprintf('"%s" "%s%sscript.py" %d', ...
-%     x.Executable, codepth, filesep, tag);
-
-
-disp(cmdlinestr)
-[status] = system(cmdlinestr, '-echo');
+if ~prepare_input_only
+    cmdlinestr = sprintf('"%s" "%s" %d', x.Executable, codefullpath, twosidedtag);
+    
+    % 
+    % cmdlinestr = sprintf('"%s" "%s%sscript.py" %d', ...
+    %     x.Executable, codepth, filesep, tag);
+    
+    
+    disp(cmdlinestr)
+    [status] = system(cmdlinestr, '-echo');
+end
 % https://www.mathworks.com/matlabcentral/answers/334076-why-does-externally-called-exe-using-the-system-command-freeze-on-the-third-call
 if isvalid(fw)
-    gui.gui_waitbar(fw, [], 'Running scTenifoldXct.py is complete');
+    if prepare_input_only
+        gui.gui_waitbar(fw, [], 'Input preparation is complete.');
+    else
+        gui.gui_waitbar(fw, [], 'Running scTenifoldXct.py is complete.');
+    end
 end
 
 % rt=java.lang.Runtime.getRuntime();
@@ -187,16 +195,18 @@ end
 %         T={T1,T2};
 %     end
 % else
-if status == 0 && exist('output1.txt', 'file')
-    T = readtable('output1.txt');
-    if twosided && exist('output2.txt', 'file')
-        T2 = readtable('output2.txt');
-        T = {T, T2};
+if ~prepare_input_only
+    if status == 0 && exist('output1.txt', 'file')
+        T = readtable('output1.txt');
+        if twosided && exist('output2.txt', 'file')
+            T2 = readtable('output2.txt');
+            T = {T, T2};
+        end
+    else
+        if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+        cd(oldpth);
+        error('scTenifoldXct runtime error.');
     end
-else
-    if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-    cd(oldpth);
-    error('scTenifoldXct runtime error.');
 end
 %end
 
