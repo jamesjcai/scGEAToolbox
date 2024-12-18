@@ -62,7 +62,7 @@ axistrig = true;
     end
 
     function ix_networkvis(~, ~)
-        gui.i_networkvis(G1, getxy, true);
+        gui.i_networkvis(G1, getxy, true, p1.NodeFontSize);
         % gui.i_networkvis(G1, getxy, false);
     end
 

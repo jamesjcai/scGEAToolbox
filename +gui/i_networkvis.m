@@ -1,8 +1,9 @@
-function i_networkvis(G, xy, curved)
+function i_networkvis(G, xy, curved, fontsize)
 
 if nargin < 3, curved = true; end
+if nargin < 4, fontsize = 15; end
 
-textOpts.FontSize = 15;
+textOpts.FontSize = fontsize;
 textOpts.HorizontalAlignment = 'center';
 textOpts.VerticalAlignment = 'middle';
 textOpts.FontWeight = 'normal';
@@ -39,7 +40,7 @@ hFig = figure("Visible","off", 'SizeChangedFcn', @in_addtext);
         for k=1:length(G.Nodes.Name)
             [wx, hx] = measureText(G.Nodes.Name{k}, textOpts);
             text(xy(k,1)-wx/2, xy(k,2), ...
-                G.Nodes.Name{k},'FontSize',15,...
+                G.Nodes.Name{k},'FontSize',textOpts.FontSize,...
                 'BackgroundColor','w', ...
                 'FontWeight','normal', ...
                 'HorizontalAlignment','center', ...
