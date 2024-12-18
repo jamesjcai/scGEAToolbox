@@ -1,4 +1,5 @@
 function i_singlegraph(G1, figname, parentfig)
+
 if nargin < 3, parentfig = []; end
 if nargin < 2, figname = ''; end
 if nargin < 1
@@ -30,7 +31,7 @@ xy = [];
 
 % tb = findall(hFig, 'Tag', 'FigureToolBar');
 tb = uitoolbar('Parent', hFig);
-uipushtool(tb, 'Separator', 'off');
+%uipushtool(tb, 'Separator', 'off');
 pkg.i_addbutton2fig(tb, 'off', @ChangeFontSize, 'noun_font_size_591141.gif', 'ChangeFontSize');
 pkg.i_addbutton2fig(tb, 'off', @ChangeWeight, 'noun_Weight_2243621.gif', 'ChangeWeight');
 pkg.i_addbutton2fig(tb, 'off', @ChangeLayout, 'noun_Layout_792775.gif', 'ChangeLayout');
@@ -74,7 +75,7 @@ axistrig = true;
         scatter(p1.XData', p1.YData', 300, ...
             'MarkerEdgeColor','k', ...
             'MarkerFaceColor',[.8 .8 .8]);
-        textOpts.FontSize = 15;
+        textOpts.FontSize = p1.NodeFontSize;
         textOpts.HorizontalAlignment = 'center';
         textOpts.VerticalAlignment = 'middle';
         textOpts.FontWeight = 'normal';
@@ -82,8 +83,8 @@ axistrig = true;
         tz = cell(length(G1.Nodes.Name),1);
         for k = 1:length(G1.Nodes.Name)            
             [wx, hx] = measureText(G1.Nodes.Name{k}, textOpts);
-            tz{k} = text(p1.XData(k)-wx/2, p1.YData(k), ...
-                G1.Nodes.Name{k},'FontSize',15,...
+            tz{k} = text(p1.XData(k)-floor(wx/2), p1.YData(k), ...
+                G1.Nodes.Name{k},'FontSize',textOpts.FontSize,...
                 'BackgroundColor','w', ...
                 'FontWeight','normal', ...
                 'HorizontalAlignment','center', ...
