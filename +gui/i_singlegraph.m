@@ -42,7 +42,6 @@ pkg.i_addbutton2fig(tb, 'off', @SaveAdj, 'export.gif', 'Export & save data');
 pkg.i_addbutton2fig(tb, 'on', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
 pkg.i_addbutton2fig(tb, 'on', @in_RefreshAll, "icon-mat-refresh-20.gif", "Refresh");
-pkg.i_addbutton2fig(tb, 'on', @in_NetworkVis, "xxicon-mat-refresh-20.gif", "NetworkVis");
 pkg.i_addbutton2fig(tb, 'off', @in_NetworkVis2, "xxicon-mat-refresh-20.gif", "NetworkVis2");
 pkg.i_addbutton2fig(tb, 'off', @ix_networkvis, "xxicon-mat-refresh-20.gif", "NetworkVis2");
 
@@ -64,7 +63,7 @@ axistrig = true;
 
     function ix_networkvis(~, ~)
         gui.i_networkvis(G1, getxy, true);
-        gui.i_networkvis(G1, getxy, false);
+        % gui.i_networkvis(G1, getxy, false);
     end
 
     function in_NetworkVis2(~, ~)

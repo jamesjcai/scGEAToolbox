@@ -1,4 +1,4 @@
-    function callback_BuildGeneNetwork(src, ~)
+function callback_BuildGeneNetwork(src, ~)
     FigureHandle = src.Parent.Parent;
     sce = guidata(FigureHandle);
     
