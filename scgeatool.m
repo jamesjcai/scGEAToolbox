@@ -183,7 +183,7 @@ in_addmenu(m_tool, 1, @gui.callback_RunEnrichr, 'Enrichr Analysis...');
 
 m_ntwk = uimenu(FigureHandle, 'Text', '&Network');
 in_addmenu(m_ntwk, 0, @in_Select5000Genes, 'Remove Less Informative Genes to Reduce Gene Space...');
-in_addmenu(m_ntwk, 0, @gui.callback_DrawNetwork, 'Display a Network...');
+in_addmenu(m_ntwk, 0, @gui.callback_DrawNetwork, 'Plot GRN from Edge (Gene Pair) List...');
 in_addmenu(m_ntwk, 1, @gui.callback_BuildGeneNetwork, 'Build GRN with Selected Genes...');
 in_addmenu(m_ntwk, 0, @gui.callback_CompareGeneNetwork, 'Build & Compare GRNs...');
 in_addmenu(m_ntwk, 1, {@in_scTenifoldNet,1}, 'Construct GRN with All Genes - scTenifoldNet [PMID:33336197] 🐢...');
@@ -1751,9 +1751,7 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
     function in_deletecells(src, ptsSelected)
         needprogressbar = false;
         if sce.NumCells > 8000, needprogressbar = true; end
-        if needprogressbar
-            fw = gui.gui_waitbar;
-        end
+        if needprogressbar, fw = gui.gui_waitbar; end
         sce = sce.removecells(ptsSelected);
         if needprogressbar
             gui.gui_waitbar(fw);
