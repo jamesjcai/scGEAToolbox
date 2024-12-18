@@ -58,13 +58,12 @@ oldG1=[];
 axistrig = true;
 
 
-    function [xy]=getxy
+    function [xy] = getxy
         xy = [p1.XData' p1.YData'];
     end
 
     function ix_networkvis(~, ~)
         gui.i_networkvis(G1, getxy, true, p1.NodeFontSize);
-        % gui.i_networkvis(G1, getxy, false);
     end
 
     function in_NetworkVis2(~, ~)
@@ -273,7 +272,7 @@ axistrig = true;
     function [p] = drawnetwork(G, h)
         p = plot(h, G, 'ButtonDownFcn', @startDragFcn);
         box off
-        %layout(p,'force');
+        layout(p,'force');
         %         if isa(G,'digraph')
         %             G.Nodes.NodeColors = outdegree(G)-indegree(G);
         %         else
@@ -295,7 +294,7 @@ axistrig = true;
             p.NodeLabelColor = cc;
         end
 
-        p.NodeFontSize = 2 * p.NodeFontSize;
+        %p.NodeFontSize = 2 * p.NodeFontSize;
 
         %title(h,sprintf('%d nodes',G.numnodes));
         % https://www.mathworks.com/matlabcentral/answers/296070-change-label-font-in-graph-plots
