@@ -138,7 +138,7 @@ catch ME
 end
 
 if ~isempty(T)
-
+    mfolder = fileparts(mfilename('fullpath'));
     load(fullfile(mfolder, '..', 'resources', 'Ligand_Receptor', ...
          'Ligand_Receptor_more.mat'), 'ligand','receptor');
     % knownpair = false(height(T), 1);
