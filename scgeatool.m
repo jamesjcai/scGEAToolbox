@@ -736,9 +736,7 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
                 answer = questdlg('Which HVG detecting method to use?', '', ...
                     'Splinefit Method [PMID:31697351]', ...
                     'Brennecke et al. (2013) [PMID:24056876]', ...
-                    'Splinefit Method [PMID:31697351]');
-
-                
+                    'Splinefit Method [PMID:31697351]');                
                 switch answer
                     case 'Brennecke et al. (2013) [PMID:24056876]'
                         fw = gui.gui_waitbar;
