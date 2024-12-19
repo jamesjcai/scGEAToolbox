@@ -736,12 +736,15 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
                 answer = questdlg('Which HVG detecting method to use?', '', ...
                     'Splinefit Method [PMID:31697351]', ...
                     'Brennecke et al. (2013) [PMID:24056876]', ...
-                    'Splinefit Method [PMID:31697351]');                
-                fw = gui.gui_waitbar;
+                    'Splinefit Method [PMID:31697351]');
+
+                
                 switch answer
                     case 'Brennecke et al. (2013) [PMID:24056876]'
+                        fw = gui.gui_waitbar;
                         T = sc_hvg(sce.X, sce.g);
                     case 'Splinefit Method [PMID:31697351]'
+                        fw = gui.gui_waitbar;
                         T = sc_splinefit(sce.X, sce.g);
                     otherwise
                         return;
@@ -768,6 +771,7 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
         sce.g = sce.g(idx);
         sce.X = sce.X(idx, :);
         gui.gui_waitbar(fw);
+        guidata(FigureHandle, sce);
         in_RefreshAll(src, [], true, false);
     end
 
