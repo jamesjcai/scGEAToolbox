@@ -9,7 +9,7 @@ import scipy
 from scipy import sparse
 
 twosided = 1
-with h5py.File('file.h5', 'r') as f:
+with h5py.File('X.mat', 'r') as f:
     if 'twosided' in f:
         twosided = f['twosided'][0][0]
 
