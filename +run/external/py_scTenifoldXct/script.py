@@ -38,7 +38,7 @@ xct_pairs = xct.null_test(pval = 1.0)
 pd.DataFrame(xct_pairs).to_csv('output1.txt',index=False,header=True)
 
 #if sys.argv[1]=="1":
-if twosided==1
+if twosided==1:
     xct = st.scTenifoldXct(data = adata, 
                         source_celltype = 'Target',
                         target_celltype = 'Source',
