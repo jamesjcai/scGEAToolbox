@@ -35,9 +35,13 @@ function callback_Violinplot(src, ~)
             [Xt] = gui.i_transformx(sce.X, true, 8);
             if isempty(Xt), return; end
 
-            answer = questdlg('Plot all in the same figure?','');
-            if strcmp(answer, 'Yes')
+            if isscalar(glist)
+                answer='No';
+            else
+                answer = questdlg('Plot all in the same figure?','');
+            end
 
+            if strcmp(answer, 'Yes')
                 [c, cL, noanswer] = gui.i_reordergroups(thisc, [], FigureHandle);
                 if noanswer, return; end
                 % [c, cL] = grp2idx(thisc);
