@@ -116,9 +116,9 @@ in_addmenu(m_edit, 0, @in_MergeSubCellTypes, 'Merge Subclusters of Same Cell Typ
 in_addmenu(m_edit, 1, {@in_WorkonSelectedGenes, 'hvg'}, 'Select Highly Variable Genes (HVGs) to Work on...');
 in_addmenu(m_edit, 0, {@in_WorkonSelectedGenes, 'ligandreceptor'}, 'Select Ligand Receptor Genes to Work on...');
 in_addmenu(m_edit, 0, @in_SubsampleCells, 'Subsample 50% Cells to Work on...');
-in_addmenu(m_edit, 1, {@in_DeleteOrKeepBrushedCells, 'delete'}, 'Delete Brushed Cells...');
-in_addmenu(m_edit, 0, {@in_DeleteOrKeepBrushedCells, 'keep'}, 'Keep Brushed Cells...');
-in_addmenu(m_edit, 1, @gui.callback_SelectCellsByClass, 'Select Cells by Class/Group...');
+in_addmenu(m_edit, 1, {@in_DeleteBrushedOrUnbrushedCells, 'brushed'}, 'Delete Brushed Cells...');
+in_addmenu(m_edit, 0, {@in_DeleteBrushedOrUnbrushedCells, 'unbrushed'}, 'Delete Unbrushed Cells...');
+in_addmenu(m_edit, 1, @gui.callback_SelectCellsByClass, 'Select Cells by Class && Open in New Window...');
 
 m_view = uimenu(FigureHandle, 'Text', '&View');
 in_addmenu(m_view, 0, @in_EmbeddingAgain, 'Embed Cells Using tSNE, UMP, PHATE...', 'B');
@@ -310,7 +310,7 @@ in_addbuttonpush(1, 1, @gui.callback_Brush4Markers, "plotpicker-kagi.gif", "Mark
 in_addbuttonpush(1, 0, @gui.callback_FindAllMarkers, "plotpicker-plotmatrix.gif", "Marker gene heatmap");
 in_addbuttonpush(1, 0, [], [], "");
 in_addbuttonpush(1, 1, @gui.callback_ShowClustersPop, "plotpicker-geoscatter.gif", "Show cell clusters/groups individually");
-in_addbuttonpush(1, 0, @gui.callback_SelectCellsByClass, "plotpicker-pointfig.gif", "Select cells by class/group");
+in_addbuttonpush(1, 0, @gui.callback_SelectCellsByClass, "plotpicker-pointfig.gif", "Select cells by class/group && open in new window");
 in_addbuttonpush(1, 0, @in_DeleteSelectedCells, "plotpicker-qqplot.gif", "Delete brushed/selected cells");
 in_addbuttonpush(1, 0, @gui.callback_SaveX, "export.gif", "Export & save data");
 in_addbuttonpush(1, 1, @in_EmbeddingAgain, "plotpicker-geobubble.gif", "Embedding (tSNE, UMP, PHATE)");
@@ -1751,8 +1751,8 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
         guidata(FigureHandle, sce);
     end
 
-    function in_DeleteOrKeepBrushedCells(src, ~, action)
-        if nargin<3, action='keep'; end
+    function in_DeleteBrushedOrUnbrushedCells(src, ~, action)
+        if nargin<3, action='brushed'; end
 
         ptsSelected = logical(h.BrushData.');
         if ~any(ptsSelected)
@@ -1763,13 +1763,13 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
         if ~letdoit, return; end
         
         switch lower(action)
-            case 'keep'
-                if strcmp(questdlg('Brushed/Selected cells will be retained. Unselected cells will be deleted. Continue?'),'Yes')
+            case 'unbrushed'
+                if strcmp(questdlg('Unbrushed/Unselected cells will be deleted. Continue?'),'Yes')
                     in_deletecells(src, ~ptsSelected);
                 else
                     return;
                 end
-            case 'delete'
+            case 'brushed'
                 if strcmp(questdlg('Brushed/Selected cells will be deleted. Continue?'),'Yes')
                     in_deletecells(src, ptsSelected);
                 else
