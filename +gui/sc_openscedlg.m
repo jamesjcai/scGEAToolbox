@@ -1,5 +1,6 @@
-function [sce] = sc_openscedlg(~, ~)
+function [sce, filename] = sc_openscedlg(~, ~)
     sce = [];
+    filename = [];
     list = {'SCE Data File(s) (*.mat)...', ...
         'TXT/TSV/CSV File (*.txt)...', ...
         'Seurat/Rds File (*.rds)...', ...
@@ -135,22 +136,33 @@ function [sce] = sc_openscedlg(~, ~)
                 gui.gui_waitbar(fw);
             end
         case 'AnnData/H5ad File (*.h5ad)...'
+
+            [filenm, pathname] = uigetfile( ...
+                {'*.h5ad', 'H5AD Files (*.h5ad)'; ...
+                '*.*', 'All Files (*.*)'}, ...
+                'Pick a H5AD file');
+            if isequal(filenm, 0), return; end
+            filename = fullfile(pathname, filenm);
+            fw = gui.gui_waitbar;
             try
-                [X, g, b, filename] = sc_readh5adfile;
+                [X, g, b, filename] = sc_readh5adfile(filename);
                 if ~isempty(X)
                     sce = SingleCellExperiment(X, g);
                     metainfo = sprintf("Source: %s", filename);
                     sce = sce.appendmetainfo(metainfo);
                     if ~isempty(b), sce.c_cell_id = b; end
+                    gui.gui_waitbar(fw);
                 else
+                    gui.gui_waitbar(fw, true);
+                    errordlg('File Import Failure.','','modal');
                     return;
                 end
             catch ME
                 disp(ME.message);
+                gui.gui_waitbar(fw, true);
                 errordlg(ME.message,ME.identifier,'modal');
                 return;
-            end
-
+            end            
         case '10x Genomics H5 File(s) (*.h5)...'
             [filenm, pathname] = uigetfile( ...
                 {'*.h5;*.hdf5', 'HDF5 Files (*.h5)'; ...

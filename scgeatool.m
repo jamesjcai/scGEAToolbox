@@ -411,7 +411,7 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
                 return; 
             end
         end
-        [sce] = gui.sc_openscedlg;
+        [sce, filename] = gui.sc_openscedlg;
         if ~isempty(sce) && sce.NumCells > 0 && sce.NumGenes > 0
             guidata(FigureHandle, sce);
             c=[];
@@ -423,7 +423,20 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
                 uiwait(warndlg('Imported SCE contains no cells.',''));
             end
         end
+        sprintf('Read data from %s.\n', filename);
+        try
+            [~, ~, ext] = fileparts(filename);
+            if strcmp(ext, '.h5ad')
+                % if strcmp('.h5ad', extractAfter(filename, strlength(filename)-5))
+                switch questdlg('Read more cell info, e.g., cell type or batch id (if any) from .h5ad file')
+                    case 'Yes'
+                        [sce] = gui.gui_readh5adinfo(filename, sce);
+                end
+            end
+        catch
+        end
     end
+
 
     function in_fixfield(oldf, newf)
         if ~isfield(sce.struct_cell_embeddings,newf) && isfield(sce.struct_cell_embeddings,oldf)
