@@ -116,12 +116,12 @@ if isempty(A0)
     isreconstructed = true;
 else
     doit = false;
-    if sum(A0(idx, :) ~= 0) == 0
+    if nnz(A0(idx, :) ~= 0) == 0
         s = sprintf('KO gene (%s) has no link or too few links (n<50) with other genes.', ...
             sce.g(idx));
         warndlg(s);
         return;
-    elseif sum(A0(idx, :) ~= 0) < 50
+    elseif nnz(A0(idx, :) ~= 0) < 50
         s = sprintf('KO gene (%s) has too few links (n=%d) with other genes. Continue?', ...
             sce.g(idx), sum(A0(idx, :) ~= 0));
         answer11 = questdlg(s);

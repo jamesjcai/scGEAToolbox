@@ -1,6 +1,6 @@
-function callback_scTenifoldXct(src, ~)
+function callback_scTenifoldCko(src, ~)
 
-if ~gui.gui_showrefinfo('scTenifoldXct [PMID:36787742]'), return; end
+% if ~gui.gui_showrefinfo('scTenifoldCko [PMID:36787742]'), return; end
 FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
 
@@ -11,7 +11,7 @@ neededmem = memmlist(sum(sce.NumGenes > numglist));
 if ~yesgohead, return; end
 
     
-extprogname = 'py_scTenifoldXct';
+extprogname = 'scTenifoldCko';
 preftagname = 'externalwrkpath';
 [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
 if isempty(wkdir), return; end
@@ -21,7 +21,7 @@ if ~prepare_input_only
     if ~gui.i_setpyenv, return; end
 end
 
-[thisc, clabel] = gui.i_select1class(sce, false);
+[thisc, ~] = gui.i_select1class(sce, false);
 if isempty(thisc), return; end
 
 if ~strcmp(clabel, 'Cell Type')
@@ -63,10 +63,10 @@ else
 end
 %}
 
-
 a1 = sprintf('%s -> %s', cL{i1}, cL{i2});
 a2 = sprintf('%s -> %s', cL{i2}, cL{i1});
 
+%{
 twosided = false;
 answer = questdlg('Select direction: Source (ligand) -> Target (receptor)', '', 'Both', a1, a2, 'Both');
 switch answer
@@ -83,6 +83,11 @@ switch answer
     otherwise
         return;
 end
+%}
+
+        x1 = i1;
+        x2 = i2;
+        twosided = true;
 
 %{
 idx=sce.c_cell_type_tx==cL{x1} | sce.c_cell_type_tx==cL{x2};
@@ -152,19 +157,19 @@ if ~isempty(T)
     assert(length(knownpair)==height(T));
 
     T=[T, table(knownpair)];
-    %T(:,[4 5 6 7 11])=[];
+    % T(:,[4 5 6 7 11])=[];
     
     outfile = fullfile(wkdir,"outfile.csv");
 
     if isfile(outfile)
-        answerx = questdlg(sprintf('Overwrite %s? Select No to save in a temporary file.', outfile));
+        answerx = questdlg('Overwrite outfile.txt? Select No to save in a temporary file.');
     else
         answerx = 'Yes';
     end
     if isempty(wkdir) || ~isfolder(wkdir) || ~strcmp(answerx, 'Yes')
         [b, a] = pkg.i_tempfile("sctendifoldxct");
         writetable(T, b);
-   
+    
         answer = questdlg(sprintf('Result has been saved in %s', b), ...
             '', 'Export result...', 'Locate result file...', 'Export result...');
         switch answer
@@ -181,9 +186,7 @@ if ~isempty(T)
         end
     else
         writetable(T, outfile);
-        if strcmp(questdlg(sprintf('Result has been saved in %s. Open the working folder?', outfile)), 'Yes')
-            winopen(wkdir);
-        end
+        waitfor(helpdlg(sprintf('Result has been saved in %s', outfile), ''));
     end
 else
     if ~prepare_input_only
