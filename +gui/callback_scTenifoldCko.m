@@ -1,8 +1,18 @@
 function callback_scTenifoldCko(src, ~)
 
 % if ~gui.gui_showrefinfo('scTenifoldCko [PMID:36787742]'), return; end
-FigureHandle = src.Parent.Parent;
-sce = guidata(FigureHandle);
+if isa(src, "SingleCellExperiment")
+    sce = src;
+    FigureHandle = [];
+else
+    FigureHandle = src.Parent.Parent;
+    sce = guidata(FigureHandle);
+end
+
+if ~(isscalar(unique(sce.c_batch_id)) && numel(unique(sce.c_cell_type_tx))==2)
+    errordlg(sprintf('This function requires data in one batch and has two cell types.\nisscalar(unique(sce.c_batch_id)) && numel(unique(sce.c_cell_type_tx))==2'),'');
+    return;
+end
 
 numglist = [1 3000 5000];
 memmlist = [16 32 64 128];
@@ -21,7 +31,7 @@ if ~prepare_input_only
     if ~gui.i_setpyenv, return; end
 end
 
-[thisc, ~] = gui.i_select1class(sce, false);
+[thisc, clabel] = gui.i_select1class(sce, false, 'Select grouping variable (cell type):', 'Cell Type');
 if isempty(thisc), return; end
 
 if ~strcmp(clabel, 'Cell Type')
@@ -108,38 +118,42 @@ sce.c_cell_type_tx = string(cL(c));
 idx = c == x1 | c == x2;
 sce = sce.selectcells(idx);
 
+% -------
 
+gsorted = natsort(sce.g);
+if isempty(gsorted), return; end
+[indx2, tf] = listdlg('PromptString', {'Select a KO gene'}, ...
+    'SelectionMode', 'single', 'ListString', gsorted, 'ListSize', [220, 300]);
+if tf == 1
+    [~, idx] = ismember(gsorted(indx2), sce.g);
+else
+    return;
+end
+targetg = sce.g(idx);
+
+return;
+
+% -------
 %sce.c_batch_id(thisc==cL{x1})="Source";
 %sce.c_batch_id(thisc==cL{x2})="Target";
 T = [];
 try
-    if twosided
-        [Tcell] = run.py_scTenifoldXct(sce, cL{x1}, cL{x2}, true, ...
-            wkdir, true, prepare_input_only);
-        if ~isempty(Tcell)
-            [T1] = Tcell{1};
-            [T2] = Tcell{2};
-            if ~isempty(T1)
-                a = sprintf('%s -> %s', cL{x1}, cL{x2});
-                T1 = addvars(T1, repelem(a, height(T1), 1), 'Before', 1);
-                T1.Properties.VariableNames{'Var1'} = 'direction';
-            end
-            if ~isempty(T2)
-                a = sprintf('%s -> %s', cL{x2}, cL{x1});
-                T2 = addvars(T2, repelem(a, height(T2), 1), 'Before', 1);
-                T2.Properties.VariableNames{'Var1'} = 'direction';
-            end
-            T = [T1; T2];
-        end
-    else
-        [T] = run.py_scTenifoldXct(sce, cL{x1}, cL{x2}, false, wkdir, ...
-            true, prepare_input_only);
-        %T=readtable('output1.txt');
-        if ~isempty(T)
+    [Tcell] = run.py_scTenifoldCko(sce, cL{x1}, cL{x2}, targetg, ...
+        wkdir, true, prepare_input_only);
+    if ~isempty(Tcell)
+        [T1] = Tcell{1};
+        [T2] = Tcell{2};
+        if ~isempty(T1)
             a = sprintf('%s -> %s', cL{x1}, cL{x2});
-            T = addvars(T, repelem(a, height(T), 1), 'Before', 1);
-            T.Properties.VariableNames{'Var1'} = 'direction';
+            T1 = addvars(T1, repelem(a, height(T1), 1), 'Before', 1);
+            T1.Properties.VariableNames{'Var1'} = 'direction';
         end
+        if ~isempty(T2)
+            a = sprintf('%s -> %s', cL{x2}, cL{x1});
+            T2 = addvars(T2, repelem(a, height(T2), 1), 'Before', 1);
+            T2.Properties.VariableNames{'Var1'} = 'direction';
+        end
+        T = [T1; T2];
     end
 catch ME
     errordlg(ME.message);

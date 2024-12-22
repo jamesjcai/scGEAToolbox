@@ -1,5 +1,7 @@
-function [thisc, clabel] = i_select1class(sce, allowsingle)
+function [thisc, clabel] = i_select1class(sce, allowsingle, promptstr, prefersel)
 
+if nargin < 4, prefersel = ''; end
+if nargin < 3, promptstr = 'Select grouping variable:'; end
 if nargin < 2, allowsingle = true; end
 thisc = [];
 clabel = '';
@@ -59,10 +61,21 @@ end
 
 % listitems={'Current Class (C)','Cluster ID','Batch ID',...
 %            'Cell Type','Cell Cycle Phase'};
-[indx2, tf2] = listdlg('PromptString', ...
-    {'Select grouping variable:'}, ...
-    'SelectionMode', 'single', 'ListString', listitems, ...
-    'ListSize', [220 300]);
+
+if ~isempty(prefersel)
+    [y,idx]=ismember(prefersel,listitems);
+end
+if y
+    [indx2, tf2] = listdlg('PromptString', ...
+        {promptstr}, ...
+        'SelectionMode', 'single', 'ListString', listitems, ...
+        'ListSize', [220 300], 'InitialValue', idx);
+else   
+    [indx2, tf2] = listdlg('PromptString', ...
+        {promptstr}, ...
+        'SelectionMode', 'single', 'ListString', listitems, ...
+        'ListSize', [220 300]);
+end
 if tf2 == 1
     clabel = listitems{indx2};
     switch clabel
