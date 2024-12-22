@@ -17,10 +17,11 @@ fx = [];
 if nargin < 1
     try        
         fxfun = @gui.sc_splashscreen;
+        [fx, v1] = fxfun();
     catch
         fxfun = @gui.sc_simplesplash;
+        [fx, v1] = fxfun();
     end
-    [fx, v1] = fxfun();
     sce = SingleCellExperiment;
 else
     if ~isa(sce, 'SingleCellExperiment')
