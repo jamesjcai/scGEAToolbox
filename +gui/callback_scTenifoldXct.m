@@ -1,15 +1,14 @@
 function callback_scTenifoldXct(src, ~)
 
 if ~gui.gui_showrefinfo('scTenifoldXct [PMID:36787742]'), return; end
-
 FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
 
 numglist = [1 3000 5000];
 memmlist = [16 32 64 128];
 neededmem = memmlist(sum(sce.NumGenes > numglist));
-[y, prepare_input_only] = gui.i_memorychecked(neededmem);
-if ~y, return; end
+[yesgohead, prepare_input_only] = gui.i_memorychecked(neededmem);
+if ~yesgohead, return; end
 
     
 extprogname = 'py_scTenifoldXct';
@@ -103,7 +102,7 @@ sce = sce.selectcells(idx);
 %sce.c_batch_id(thisc==cL{x1})="Source";
 %sce.c_batch_id(thisc==cL{x2})="Target";
 T = [];
-try    
+try
     if twosided
         [Tcell] = run.py_scTenifoldXct(sce, cL{x1}, cL{x2}, true, ...
             wkdir, true, prepare_input_only);        
@@ -148,6 +147,7 @@ if ~isempty(T)
     assert(length(knownpair)==height(T));
 
     T=[T, table(knownpair)];
+    T(:,[4 5 6 7 11])=[];
     
     outfile = fullfile(wkdir,"outfile.csv");
 
@@ -166,9 +166,11 @@ if ~isempty(T)
             case 'Locate result file...'
                 winopen(a);
                 pause(2)
-                reshowdlg;
+                if strcmp(questdlg('Export result to other format?'), 'Yes')
+                    gui.i_exporttable(T, false, 'Ttenifldxct', 'TenifldXctTable');
+                end
             case 'Export result...'
-                gui.i_exporttable(T);
+                gui.i_exporttable(T, false, 'Ttenifldxct', 'TenifldXctTable');
             otherwise
                 winopen(a);
         end
@@ -180,17 +182,9 @@ else
     if ~prepare_input_only
         helpdlg('No ligand-receptor pairs are identified.', '');
     else
-        helpdlg('Input files are prepared successfully.', '');
-    end
-end
-
-
-function reshowdlg
-    switch questdlg('Export result to other format?')
-        case 'Yes'
-            gui.i_exporttable(T, false, 'Ttenifldxct', 'TenifldXctTable');
-        otherwise
-            return;
+        if strcmp(questdlg('Input files are prepared successfully. Open working folder?',''), 'Yes')
+            winopen(wkdir);
+        end
     end
 end
 

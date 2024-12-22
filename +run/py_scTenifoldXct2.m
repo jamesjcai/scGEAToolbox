@@ -1,17 +1,13 @@
 function [T, iscomplete] = py_scTenifoldXct2(sce1, sce2, celltype1, celltype2, ...
-                           twosided, wkdir, ~, isdebug)
-    % A1s, A1t, A2s, A2t)
+                           twosided, wkdir, isdebug, prepare_input_only)
+
     T = [];
     iscomplete = false;
-    % if nargin < 8, A2t = []; end
-    % if nargin < 7, A2s = []; end
-    % if nargin < 6, A1t = []; end
-    % if nargin < 5, A1s = []; end
-    if nargin < 8, isdebug = true; end
-    if nargin < 7, useexist = false; end
+    if nargin < 8, prepare_input_only = false; end
+    if nargin < 7, isdebug = true; end
     if nargin < 6, wkdir = []; end
     if nargin < 5, twosided = true; end
-    
+   
     oldpth = pwd();
     pw1 = fileparts(mfilename('fullpath'));
     codepth = fullfile(pw1, 'external', 'py_scTenifoldXct2');
@@ -23,6 +19,7 @@ function [T, iscomplete] = py_scTenifoldXct2(sce1, sce2, celltype1, celltype2, .
         cd(wkdir);
     end
     
+if ~prepare_input_only
 
     fw = gui.gui_waitbar([], [], 'Checking Python environment...');
 
@@ -51,6 +48,12 @@ function [T, iscomplete] = py_scTenifoldXct2(sce1, sce2, celltype1, celltype2, .
         %error('Python scTenifoldXct has not been installed properly.');
     end
 
+    if isvalid(fw)
+        gui.gui_waitbar(fw, [], 'Checking Python environment is complete');
+    end
+    
+end
+
     
     tmpfilelist = {'X1.mat', 'X2.mat', 'g1.txt', 'c1.txt', 'g2.txt', 'c2.txt', 'output.txt', ...
         '1/gene_name_Source.tsv', '1/gene_name_Target.tsv', ...
@@ -68,9 +71,6 @@ function [T, iscomplete] = py_scTenifoldXct2(sce1, sce2, celltype1, celltype2, .
     % g=sce.g(y);
     % writematrix(sce.X,'X.txt');
     
-    if isvalid(fw)
-        gui.gui_waitbar(fw, [], 'Checking Python environment is complete');
-    end
 
     in_prepareX(sce1, 1);
     in_prepareX(sce2, 2);
@@ -109,12 +109,11 @@ if twosided
 else
     twosidedtag = 1;
 end
-cmdlinestr = sprintf('"%s" "%s" %d', x.Executable, codefullpath, twosidedtag);
-    
-%    cmdlinestr = sprintf('"%s" "%s%sscript.py"', ...
-%        x.Executable, wkdir, filesep);
-    disp(cmdlinestr)
 
+if ~prepare_input_only
+
+    cmdlinestr = sprintf('"%s" "%s" %d', x.Executable, codefullpath, twosidedtag);
+    disp(cmdlinestr)
     try
         [status] = system(cmdlinestr, '-echo');
         % https://www.mathworks.com/matlabcentral/answers/334076-why-does-externally-called-exe-using-the-system-command-freeze-on-the-third-call
@@ -125,14 +124,20 @@ cmdlinestr = sprintf('"%s" "%s" %d', x.Executable, codefullpath, twosidedtag);
         errordlg(ME.message);
         return;
     end
-
+end
     % rt=java.lang.Runtime.getRuntime();
     % pr = rt.exec(cmdlinestr);
     % [status]=pr.waitFor();
 
     if isvalid(fw)
-        gui.gui_waitbar(fw, [], 'Running scTenifoldXct2.py is complete');
-    end
+        if prepare_input_only
+            gui.gui_waitbar(fw, [], 'Input preparation is complete.');
+        else
+            gui.gui_waitbar(fw, [], 'Running scTenifoldXct2.py is complete.');
+        end
+    end    
+
+    if ~prepare_input_only
 
     if status == 0 && exist('output1.txt', 'file')
         T = readtable('output1.txt');
@@ -146,7 +151,7 @@ cmdlinestr = sprintf('"%s" "%s" %d', x.Executable, codefullpath, twosidedtag);
         cd(oldpth);
         error('scTenifoldXct2 runtime error.');
     end
-    
+    end
 
     % if status == 0 && exist('output.txt', 'file')
     %     T = readtable('output.txt');
@@ -175,7 +180,7 @@ cmdlinestr = sprintf('"%s" "%s" %d', x.Executable, codefullpath, twosidedtag);
         else
             X = single(sce.X);
         end
-        save(sprintf('X%d.mat', id), '-v7.3', 'X');
+        save(sprintf('X%d.mat', id), '-v7.3', 'X', 'twosided');
         writematrix(sce.g, sprintf('g%d.txt', id));
         writematrix(sce.c_batch_id, sprintf('c%d.txt', id));
         fprintf('Input X%d g%d c%d written.\n', id, id, id);

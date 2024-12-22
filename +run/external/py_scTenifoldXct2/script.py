@@ -15,6 +15,11 @@ import h5py
 import scipy
 from scipy import sparse
 
+twosided = 1
+with h5py.File('X1.mat', 'r') as f:
+    if 'twosided' in f:
+        twosided = f['twosided'][0][0]
+
 #f = h5py.File('A1.mat','r')
 #A = np.array(f.get('A'))
 #A = sparse.csc_matrix(A)
@@ -51,7 +56,8 @@ XCTs.nn_aligned_diff(emb)
 xcts_pairs_diff = XCTs.chi2_diff_test(pval = 1.0)
 pd.DataFrame(xcts_pairs_diff).to_csv('output1.txt',index=False,header=True)
 
-if sys.argv[1]=="2":
+# if sys.argv[1]=="2":
+if twosided==1:    
     xct1 = st.scTenifoldXct(data = adata1, 
                         source_celltype = 'Target',
                         target_celltype = 'Source',

@@ -1,16 +1,33 @@
 function callback_scTenifoldXct2(src, ~)
 
-if ~gui.gui_showrefinfo('scTenifoldXct [PMID:36787742]'), return; end
-[y, prepare_input_only] = gui.i_memorychecked(128);
-if ~y, return; end
+% if ~gui.gui_showrefinfo('scTenifoldXct [PMID:36787742]'), return; end
+% [y, prepare_input_only] = gui.i_memorychecked(128);
+% if ~y, return; end
+% 
+% extprogname = 'py_scTenifoldXct2';
+% preftagname = 'externalwrkpath';
+% [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
+% if isempty(wkdir), return; end
+% 
+% FigureHandle = src.Parent.Parent;
+% sce = guidata(FigureHandle);
 
-extprogname = 'py_scTenifoldXct2';
+if ~gui.gui_showrefinfo('scTenifoldXct [PMID:36787742]'), return; end
+FigureHandle = src.Parent.Parent;
+sce = guidata(FigureHandle);
+
+numglist = [1 3000 5000];
+memmlist = [16 32 64 128];
+neededmem = memmlist(sum(sce.NumGenes > numglist));
+[yesgohead, prepare_input_only] = gui.i_memorychecked(neededmem);
+if ~yesgohead, return; end
+    
+extprogname = 'py_scTenifoldXct';
 preftagname = 'externalwrkpath';
 [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
 if isempty(wkdir), return; end
 
-FigureHandle = src.Parent.Parent;
-sce = guidata(FigureHandle);
+
 
 [~, cL] = grp2idx(sce.c_batch_id);
 [j1, j2, ~, ~] = aaa(cL, sce.c_batch_id);
@@ -22,8 +39,7 @@ sce1 = sce.selectcells(j1);
 sce2 = sce.selectcells(j2);
 
 if sce1.NumCells < 50 || sce2.NumCells < 50
-    [answer] = questdlg('One of samples contains too few cells (n < 50). Continue?','');
-    if ~strcmp(answer, 'Yes'), return; end
+    if ~strcmp(questdlg('One of samples contains too few cells (n < 50). Continue?'), 'Yes'), return; end
 end
 
 
@@ -57,9 +73,14 @@ switch answer
         return;
 end
 
-[Tcell, iscomplete] = run.py_scTenifoldXct2(sce1, sce2, ct1, ct2, twosided, wkdir);
+if ~prepare_input_only
+    if ~gui.i_setpyenv, return; end
+end
 
+[Tcell, iscomplete] = run.py_scTenifoldXct2(sce1, sce2, ct1, ct2, twosided, ...
+    wkdir, true, prepare_input_only);
 
+T = [];
 if twosided && iscell(Tcell)
     [T1] = Tcell{1};
     [T2] = Tcell{2};
@@ -84,13 +105,27 @@ else
 end
 
 % ---- export result
-if ~iscomplete
+if ~prepare_input_only && ~iscomplete
     errordlg('Running time error.', '');
 end
+
 if ~isempty(T)
+
+    mfolder = fileparts(mfilename('fullpath'));
+    load(fullfile(mfolder, '..', 'resources', 'Ligand_Receptor', ...
+         'Ligand_Receptor_more.mat'), 'ligand','receptor');
+    % knownpair = false(height(T), 1);
+    A = [string(T.ligand) string(T.receptor)];
+    B = [ligand receptor];
+    [knownpair]= ismember(A, B, 'rows');
+    assert(length(knownpair)==height(T));
+    T=[T, table(knownpair)];
+
     [b, a] = pkg.i_tempfile("sctendifoldxct");
     writetable(T, b);
 
+    T(:,[4 5 6 7 11])=[];
+    
     [answer] = questdlg(sprintf('Result has been saved in %s', b), ...
         '', 'Export result...', 'Locate result file...', ...
         'Export result...');
@@ -98,55 +133,43 @@ if ~isempty(T)
         case 'Locate result file...'
             winopen(a);
             pause(2)
-            reshowdlg;
+            if strcmp(questdlg('Export result to other format?'), 'Yes')
+                gui.i_exporttable(T, false, 'Ttenifldxt2', 'TenifldXt2Table');
+            end
         case 'Export result...'
             gui.i_exporttable(T, false, 'Ttenifldxt2', 'TenifldXt2Table');
         otherwise
             winopen(a);
     end
 else
-    helpdlg('No ligand-receptor pairs are identified.', '');
+    if ~prepare_input_only
+        helpdlg('No ligand-receptor pairs are identified.', '');
+    else
+        if strcmp(questdlg('Input files are prepared successfully. Open working folder?',''), 'Yes')
+            winopen(wkdir);
+        end
+    end    
 end
 
-
-function reshowdlg
-    [answerx] = questdlg('Export result to other format?', '');
-    switch answerx
-        case 'Yes'
-            gui.i_exporttable(T, false, 'Ttenifldxt2', 'TenifldXt2Table');
-        otherwise
-            return;
-    end
 end
-
-
-end
-
 
 function [i1, i2, cL1, cL2] = aaa(listitems, ci)
-i1 = [];
-i2 = [];
-cL1 = [];
-cL2 = [];
-n = length(listitems);
-if n < 2, return; end
-[indxx, tfx] = listdlg('PromptString', {'Select two groups:'}, ...
-    'SelectionMode', 'multiple', ...
-    'ListString', listitems, ...
-    'InitialValue', [n - 1, n], 'ListSize', [220, 300]);
-if tfx == 1
-    if numel(indxx) ~= 2
-        errordlg('Please select 2 groups');
-        return;
+    i1 = []; i2 = [];
+    cL1 = []; cL2 = [];
+    n = length(listitems);
+    if n < 2, return; end
+    [indx, tf] = listdlg('PromptString', {'Select two groups:'}, ...
+        'SelectionMode', 'multiple', ...
+        'ListString', listitems, ...
+        'InitialValue', [n - 1, n], 'ListSize', [220, 300]);
+    if tf == 1
+        if numel(indx) ~= 2
+            errordlg('Please select 2 groups');
+            return;
+        end
+        cL1 = listitems(indx(1));
+        cL2 = listitems(indx(2));
+        i1 = ci == cL1;
+        i2 = ci == cL2;
     end
-    cL1 = listitems(indxx(1));
-    cL2 = listitems(indxx(2));
-    i1 = ci == cL1;
-    i2 = ci == cL2;
 end
-
-
-
-end
-
-
