@@ -52,6 +52,10 @@ xct2 = st.scTenifoldXct(data = adata2,
 
 XCTs = st.merge_scTenifoldXct(xct1, xct2)
 emb = XCTs.get_embeds(train = True)
+
+with h5py.File('merged_embeds.h5', 'w') as h5file:
+    h5file.create_dataset('embeds', data=emb)
+
 XCTs.nn_aligned_diff(emb) 
 xcts_pairs_diff = XCTs.chi2_diff_test(pval = 1.0)
 pd.DataFrame(xcts_pairs_diff).to_csv('output1.txt',index=False,header=True)

@@ -225,3 +225,37 @@ else
 end
 
 end
+
+
+%{
+
+eb = h5read('merged_embeds.h5','/embeds')';
+
+n = height(eb);
+sl = n / 4;
+
+% Split the eb into four equal-length sub-ebs
+a = eb(1:sl,:);
+b = eb(sl+1:2*sl,:);
+c = eb(2*sl+1:3*sl,:);
+d = eb(3*sl+1:4*sl,:);
+
+dx = abs(pdist2(a,b)-pdist2(c,d));
+
+[x,y]=maxij(dx, 1050);
+[sce.g(x) sce.g(y)]
+
+
+function [row,col]=maxij(matrix,k)
+    % Flatten the matrix and find the top 10 maximum values
+    [sorted_values, sorted_indices] = sort(matrix(:), 'descend');
+    top_10_values = sorted_values(1:k);
+    top_10_indices = sorted_indices(1:k);
+    % Convert linear indices to row and column subscripts
+    [row, col] = ind2sub(size(matrix), top_10_indices);
+end
+dx1 = pdist2(a,c);
+dx1 = pdist2(b,d);
+[x,y]=maxij(dx1, 50);
+[sce.g(x) sce.g(y)]
+%}
