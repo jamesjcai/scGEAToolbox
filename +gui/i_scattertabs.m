@@ -194,11 +194,12 @@ hFig.Visible=true;
             %[y_fit2] = malowess(thisx(:), thisy(:));
 
             if license('test','Curve_Fitting_Toolbox') && ~isempty(which('curveFitter'))
-               y_fit2 = curvefit.fit(thisx(:), thisy(:), 'lowess', 'Span', 0.2);
-                assignin("base",'y',thisy(:))
-                assignin("base",'x',thisx(:))
-                assignin("base",'y_fit1',y_fit)
-                assignin("base",'y_fit2',y_fit2)
+                y_fit2 = smooth(thisx(:), thisy(:), 0.5, 'lowess');
+                %y_fit2 = fit([thisx(:), thisy(:)], 'lowess', 'Span', 0.2);
+                % assignin("base",'y',thisy(:))
+                % assignin("base",'x',thisx(:))
+                % assignin("base",'y_fit1',y_fit)
+                %assignin("base",'y_fit2',y_fit2)
             end
             
 
@@ -206,8 +207,7 @@ hFig.Visible=true;
             hold(thisax,"on");
             [sortedx, idxx]=sort(thisx(:));
             plot(thisax, sortedx, y_fit(idxx), '-','LineWidth', 2);
-
-            plot(thisax, sortedx, y_fit2(idxx), '-r','LineWidth', 2);
+            plot(thisax, sortedx, y_fit2(idxx), '-','LineWidth', 2);
             hold(thisax,"off");
         end
         [~,tabidx]=ismember(focalg, tabnamelist);
