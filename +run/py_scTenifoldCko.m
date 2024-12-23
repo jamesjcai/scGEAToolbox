@@ -1,30 +1,54 @@
 function [T] = py_scTenifoldCko(sce, celltype1, celltype2, targetg, ...
-                                wkdir, isdebug, prepare_input_only)
+                                targetcelltype, wkdir, ...
+                                isdebug, prepare_input_only)
 
 T = [];
-if nargin < 7, prepare_input_only = false; end
-if nargin < 6, isdebug = true; end
-if nargin < 5, wkdir = []; end
-if nargin < 4, targetg = sce.g(1); end
+if nargin < 8, prepare_input_only = false; end
+if nargin < 7, isdebug = true; end
+if nargin < 6, wkdir = []; end
+if nargin < 5 || isempty(targetcelltype), targetcelltype=sprintf('%s+%s', celltype1, celltype2); end
+if nargin < 4 || isempty(targetg), targetg = sce.g(1); end
 if nargin < 3, error('Usage: [T] = py_scTenifoldCko(sce, celltype1, celltype2, targetg)'); end
 
 twosided = true;
 
+sce1 = sce;
+sce2 = sce;
+
+if targetcelltype==sprintf('%s+%s', celltype1, celltype2)
+    sce2.X(sce2.g==targetg, :)=0;
+elseif targetcelltype==celltype1
+    sce2.X(sce2.g==targetg, sce2.c_cell_type_tx==celltype1)=0;
+elseif targetcelltype==celltype2
+    sce2.X(sce2.g==targetg, sce2.c_cell_type_tx==celltype2)=0;
+else
+    error('py_scTenifoldCko error.');
+end
+
+%[Tcell, iscomplete] = py_scTenifoldXct2(sce1, sce2, celltype1, celltype2, ...
+%                         twosided, wkdir, isdebug, prepare_input_only);
+
+
+% -----------------
+
 oldpth = pwd();
 pw1 = fileparts(mfilename('fullpath'));
-codepth = fullfile(pw1, 'external', 'py_scTenifoldXct');
+codepth = fullfile(pw1, 'external', 'py_scTenifoldXct2');
 
 if isempty(wkdir) || ~isfolder(wkdir)
-    cd(codepth);
+    % cd(codepth);
+    wkdir=tempdir;
+    cd(wkdir);
 else
     disp('Using working directory provided.');
     cd(wkdir);
 end
 
-
 if ~prepare_input_only
+ x = pyenv;
+    %{
     fw = gui.gui_waitbar([], [], 'Checking Python environment...');
-    
+
     x = pyenv;
     try
         pkg.i_add_conda_python_path;
@@ -40,8 +64,7 @@ if ~prepare_input_only
     disp(cmdlinestr)
     [status, cmdout] = system(cmdlinestr, '-echo');
     if status ~= 0
-        cd(oldpth);
-    
+        cd(oldpth);    
         if isvalid(fw)
             gui.gui_waitbar(fw, true);
         end
@@ -49,159 +72,202 @@ if ~prepare_input_only
         error(cmdout);
         %error('Python scTenifoldXct has not been installed properly.');
     end
-    if isvalid(fw), gui.gui_waitbar(fw, [], 'Checking Python environment is complete'); end
-end
 
-tmpfilelist = {'X.mat', 'X.txt', 'g.txt', 'c.txt', 'output.txt', ...
-    'output1.txt', 'output2.txt', ...
-    'gene_name_Source.tsv', 'gene_name_Target.tsv', ...
-    'pcnet_Source.npz', 'pcnet_Target.npz', ...
-    'A1.mat', 'A2.mat', 'pcnet_Source.mat', 'pcnet_Target.mat'};
-
-if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-
-% load(fullfile(pw1,'..','resources','Ligand_Receptor','Ligand_Receptor.mat'), ...
-%     'ligand','receptor');
-% validg=unique([ligand receptor]);
-% [y]=ismember(upper(sce.g),validg);
-% X=sce.X(y,:);
-% g=sce.g(y);
-% writematrix(sce.X,'X.txt');
-
-idx = sce.c_cell_type_tx == celltype1 | sce.c_cell_type_tx == celltype2;
-sce = sce.selectcells(idx);
-sce.c_batch_id = sce.c_cell_type_tx;
-sce.c_batch_id(sce.c_cell_type_tx == celltype1) = "Source";
-sce.c_batch_id(sce.c_cell_type_tx == celltype2) = "Target";
-% sce=sce.qcfilter;
-
-
-if issparse(sce.X)
-    X = single(full(sce.X)); 
-else
-    X = single(sce.X);
-end
-save('X.mat', '-v7.3', 'X', 'twosided');
-writematrix(sce.g, 'g.txt');
-writematrix(sce.c_batch_id, 'c.txt');
-disp('Input X g c written.');
-
-t = table(sce.g, sce.g, 'VariableNames', {' ', 'gene_name'});
-writetable(t, 'gene_name_Source.tsv', 'filetype', 'text', 'Delimiter', '\t');
-writetable(t, 'gene_name_Target.tsv', 'filetype', 'text', 'Delimiter', '\t');
-disp('Input gene_names written.');
-
-useexist = false;
-if exist("pcnet_Source.mat", 'file')
-    answer = gui.i_questdlgtimer(10, ...
-        'pcnet_Source.mat existing. Use it?','', 'Yes, use pcnet_Source', ...
-        'No, reconstruct pcnet_Source', ...
-        'Cancel', 'Yes, use pcnet_Source');
-    switch answer
-        case 'Yes, use pcnet_Source'
-            useexist = true;
-        case 'No, reconstruct pcnet_Source'
-            useexist = false;
-        case 'Cancel'
-            return;
-        otherwise
-            return;
+    if isvalid(fw)
+        gui.gui_waitbar(fw, [], 'Checking Python environment is complete');
     end
-end
-if ~useexist
-    fw = gui.gui_waitbar([], [], 'Step 1 of 3: Building pcnet\_Source network...');
-    disp('Building pcnet_Source network...');
-    A1 = sc_pcnetpar(sce.X(:, sce.c_cell_type_tx == celltype1));
-    A1 = A1 ./ max(abs(A1(:)));
-    A = ten.e_filtadjc(A1, 0.75, false);
-    save('pcnet_Source.mat', 'A', '-v7.3');
-    disp('pcnet_Source.mat saved.');
-    if isvalid(fw), gui.gui_waitbar(fw, [], 'Building pcnet\_Source is complete'); end
+    %}
 end
 
-useexist = false;
-if exist("pcnet_Target.mat", 'file')
-    answer = gui.i_questdlgtimer(10, ...
-        'pcnet\_Target.mat existing. Use it?','', 'Yes, use pcnet_Target', 'No, reconstruct pcnet_Target', ...
-        'Cancel', 'Yes, use pcnet_Target');
-    switch answer
-        case 'Yes, use pcnet_Target'
-            useexist = true;
-        case 'No, reconstruct pcnet_Target'
-            useexist = false;
-        case 'Cancel'
-            return;
-        otherwise
-            return;
-    end
-end
-if ~useexist
-    fw = gui.gui_waitbar([], [], 'Step 2 of 3: Building pcnet\_Target network...');
-    disp('Building pcnet_Target network...')
-    A2 = sc_pcnetpar(sce.X(:, sce.c_cell_type_tx == celltype2));
-    A2 = A2 ./ max(abs(A2(:)));
-    A = ten.e_filtadjc(A2, 0.75, false);
-    save('pcnet_Target.mat', 'A', '-v7.3');
-    disp('pcnet_Target network saved.')
-    if isvalid(fw), gui.gui_waitbar(fw, [], 'Building pcnet\_Target is complete'); end
-end
+    
+    tmpfilelist = {'X1.mat', 'X2.mat', 'g1.txt', 'c1.txt', 'g2.txt', 'c2.txt', 'output.txt', ...
+        '1/gene_name_Source.tsv', '1/gene_name_Target.tsv', ...
+        '2/gene_name_Source.tsv', '2/gene_name_Target.tsv', ...
+        '1/pcnet_Source.mat', '1/pcnet_Target.mat', ...
+        '2/pcnet_Source.mat', '2/pcnet_Target.mat'};
+    
+    if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+    
+    % load(fullfile(pw1,'..','resources','Ligand_Receptor','Ligand_Receptor.mat'), ...
+    %     'ligand','receptor');
+    % validg=unique([ligand receptor]);
+    % [y]=ismember(upper(sce.g),validg);
+    % X=sce.X(y,:);
+    % g=sce.g(y);
+    % writematrix(sce.X,'X.txt');
+    
 
+    in_prepareX(sce1, 1);
+    in_prepareX(sce2, 2);
 
-if twosided
-    twosidedtag = 1;
-else
-    twosidedtag = 0;
-end
+    fw = gui.gui_waitbar([], [], 'Step 2 of 4: Building S1 networks...');
+    %try
+        in_prepareA12(sce1, targetg);
+    % catch ME
+    %     if isvalid(fw)
+    %         gui.gui_waitbar(fw, [], 'Building S1 networks is incomplete');
+    %     end
+    %     errordlg(ME.message);
+    %     return;
+    % end
+    gui.gui_waitbar(fw, [], 'Building S1 networks is complete');
 
-if ~prepare_input_only
-    fw = gui.gui_waitbar([], [], 'Step 3 of 3: Running scTenifoldXct.py...');
-else
-    fw = gui.gui_waitbar([], [], 'Step 3 of 3: Finishing input preparation...');
-end
+    fw = gui.gui_waitbar([], [], 'Step 3 of 4: Building S2 networks...');
+    % try
+    %     in_prepareA(sce2, 2);
+    % catch ME
+    %     if isvalid(fw)
+    %         gui.gui_waitbar(fw, [], 'Building S2 network is incomplete');
+    %     end
+    %     errordlg(ME.message);
+    %     return;
+    % end
+    pause(3);
+    gui.gui_waitbar(fw, [], 'Building S2 network is complete');
+
+    fw = gui.gui_waitbar([], [], 'Step 4 of 4: Running scTenifoldXct.py...');
 
 codefullpath = fullfile(codepth,'script.py');
 pkg.i_addwd2script(codefullpath, wkdir, 'python');
 
+
 if ~prepare_input_only
+    twosidedtag = 2;
     cmdlinestr = sprintf('"%s" "%s" %d', x.Executable, codefullpath, twosidedtag);
     disp(cmdlinestr)
-    [status] = system(cmdlinestr, '-echo');
-end
-% https://www.mathworks.com/matlabcentral/answers/334076-why-does-externally-called-exe-using-the-system-command-freeze-on-the-third-call
-if isvalid(fw)
-    if prepare_input_only
-        gui.gui_waitbar(fw, [], 'Input preparation is complete.');
-    else
-        gui.gui_waitbar(fw, [], 'Running scTenifoldXct.py is complete.');
+    try
+        % [status] = system(cmdlinestr, '-echo');
+        [status] = system(cmdlinestr);
+        % https://www.mathworks.com/matlabcentral/answers/334076-why-does-externally-called-exe-using-the-system-command-freeze-on-the-third-call
+    catch ME
+        if isvalid(fw)
+            gui.gui_waitbar(fw, [], 'Running scTenifoldCko.py is incomplete.');
+        end
+        errordlg(ME.message);
+        return;
     end
 end
+    if isvalid(fw)
+        if prepare_input_only
+            gui.gui_waitbar(fw, [], 'Input preparation is complete.');
+        else
+            gui.gui_waitbar(fw, [], 'Running scTenifoldCko.py is complete.');
+        end
+    end    
 
-% rt=java.lang.Runtime.getRuntime();
-% pr = rt.exec(cmdlinestr);
-% [status]=pr.waitFor();
+    if ~prepare_input_only
 
-% if twosided
-%     if status==0 && exist('output1.txt','file') && exist('output2.txt','file')
-%         T1=readtable('output1.txt');
-%         T2=readtable('output2.txt');
-%         T={T1,T2};
-%     end
-% else
-if ~prepare_input_only
     if status == 0 && exist('output1.txt', 'file')
         T = readtable('output1.txt');
         if twosided && exist('output2.txt', 'file')
             T2 = readtable('output2.txt');
             T = {T, T2};
-        end
+        end        
     else
         if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
         cd(oldpth);
-        error('scTenifoldXct runtime error.');
+        error('scTenifoldCko runtime error.');
     end
-end
-%end
+    end
 
-if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-cd(oldpth);
+    % if status == 0 && exist('output.txt', 'file')
+    %     T = readtable('output.txt');
+    %     iscomplete = true;
+    % end
+    if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+    cd(oldpth);
+
+
+% --------------------------------------------------
+% --------------------------------------------------
+% --------------------------------------------------
+
+    function in_prepareX(sce, id)
+        if ~exist(sprintf('%d', id), 'dir')
+            mkdir(sprintf('%d', id));
+        end
+        idx = sce.c_cell_type_tx == celltype1 | sce.c_cell_type_tx == celltype2;
+        sce = sce.selectcells(idx);
+        sce.c_batch_id = sce.c_cell_type_tx;
+        sce.c_batch_id(sce.c_cell_type_tx == celltype1) = "Source";
+        sce.c_batch_id(sce.c_cell_type_tx == celltype2) = "Target";
+        % sce=sce.qcfilter;
+        if issparse(sce.X)
+            X = single(full(sce.X)); 
+        else
+            X = single(sce.X);
+        end
+        twosided = true;
+        save(sprintf('X%d.mat', id), '-v7.3', 'X', 'twosided');
+        writematrix(sce.g, sprintf('g%d.txt', id));
+        writematrix(sce.c_batch_id, sprintf('c%d.txt', id));
+        fprintf('Input X%d g%d c%d written.\n', id, id, id);
+        t = table(sce.g, sce.g, 'VariableNames', {' ', 'gene_name'});
+        writetable(t, sprintf('%d/gene_name_Source.tsv', id), ...
+            'filetype', 'text', 'Delimiter', '\t');
+        writetable(t, sprintf('%d/gene_name_Target.tsv', id), ...
+            'filetype', 'text', 'Delimiter', '\t');
+        disp('Input gene_names written.');
+    end
+
+    function in_prepareA12(sce, targetg)
+
+        idx = find(sce.g==targetg);
+        assert(isscalar(idx));
+
+        disp('Building A1 network...')
+        A1 = sc_pcnetpar(sce.X(:, sce.c_cell_type_tx == celltype1));
+        disp('A1 network built.')
+        A1 = A1 ./ max(abs(A1(:)));
+        % A=0.5*(A1+A1.');
+        A = ten.e_filtadjc(A1, 0.75, false);
+        save(sprintf('%d/pcnet_Source.mat', 1), 'A', '-v7.3');
+
+        if contains(targetcelltype, celltype1)
+            fprintf('\nKO gene in %s.\n', celltype1);
+            if nnz(A(idx, :) ~= 0) < 10
+                warning('KO gene (%s) has no link or too few links with other genes.', ...
+                    targetg);
+            end
+            A(idx,:)=0;
+        end
+        save(sprintf('%d/pcnet_Source.mat', 2), 'A', '-v7.3');
+
+
+        disp('Building A2 network...');
+        A2 = sc_pcnetpar(sce.X(:, sce.c_cell_type_tx == celltype2));
+        disp('A2 network built.');
+        A2 = A2 ./ max(abs(A2(:)));
+        A = ten.e_filtadjc(A2, 0.75, false);
+        save(sprintf('%d/pcnet_Target.mat', 1), 'A', '-v7.3');
+
+        if contains(targetcelltype, celltype2)
+            fprintf('\nKO gene in %s.\n', celltype2);
+            if nnz(A(idx, :) ~= 0) < 10
+                warning('KO gene (%s) has no link or too few links with other genes.', ...
+                    targetg);
+            end
+            A(idx,:)=0;
+        end
+        save(sprintf('%d/pcnet_Target.mat', 2), 'A', '-v7.3');
+    end
+     
+    % function in_prepareA(sce, id)
+    %     disp('Building A1 network...')
+    %     A1 = sc_pcnetpar(sce.X(:, sce.c_cell_type_tx == celltype1));
+    %     disp('A1 network built.')
+    %     A1 = A1 ./ max(abs(A1(:)));
+    %     % A=0.5*(A1+A1.');
+    %     A = ten.e_filtadjc(A1, 0.75, false);
+    %     save(sprintf('%d/pcnet_Source.mat', id), 'A', '-v7.3');
+    % 
+    %     disp('Building A2 network...');
+    %     A2 = sc_pcnetpar(sce.X(:, sce.c_cell_type_tx == celltype2));
+    %     disp('A2 network built.');
+    %     A2 = A2 ./ max(abs(A2(:)));
+    %     % A=0.5*(A2+A2.');
+    %     A = ten.e_filtadjc(A2, 0.75, false);
+    %     save(sprintf('%d/pcnet_Target.mat', id), 'A', '-v7.3');
+    % end
+
 end

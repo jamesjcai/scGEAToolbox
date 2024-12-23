@@ -10,8 +10,8 @@ else
 end
 
 if ~(isscalar(unique(sce.c_batch_id)) && numel(unique(sce.c_cell_type_tx))==2)
-    errordlg(sprintf('This function requires data in one batch and has two cell types.\nisscalar(unique(sce.c_batch_id)) && numel(unique(sce.c_cell_type_tx))==2'),'');
-    return;
+    %errordlg(sprintf('This function requires data in one batch and has two cell types.\nisscalar(unique(sce.c_batch_id)) && numel(unique(sce.c_cell_type_tx))==2'),'');
+    %return;
 end
 
 numglist = [1 3000 5000];
@@ -73,8 +73,8 @@ else
 end
 %}
 
-a1 = sprintf('%s -> %s', cL{i1}, cL{i2});
-a2 = sprintf('%s -> %s', cL{i2}, cL{i1});
+%a1 = sprintf('%s -> %s', cL{i1}, cL{i2});
+%a2 = sprintf('%s -> %s', cL{i2}, cL{i1});
 
 %{
 twosided = false;
@@ -95,9 +95,8 @@ switch answer
 end
 %}
 
-        x1 = i1;
-        x2 = i2;
-        twosided = true;
+    x1 = i1;
+    x2 = i2;
 
 %{
 idx=sce.c_cell_type_tx==cL{x1} | sce.c_cell_type_tx==cL{x2};
@@ -131,15 +130,28 @@ else
 end
 targetg = sce.g(idx);
 
-return;
+a1 = cL{i1};
+a2 = cL{i2};
 
+answer = questdlg(sprintf('Knockout %s in which cell type?',targetg), '', 'Both', a1, a2, 'Both');
+switch answer
+    case 'Both'
+        targetcelltype=sprintf('%s+%s', a1, a2);
+    case a1
+        targetcelltype=a1;
+    case a2
+        targetcelltype=a2;
+    otherwise
+        return;
+end
 % -------
 %sce.c_batch_id(thisc==cL{x1})="Source";
 %sce.c_batch_id(thisc==cL{x2})="Target";
 T = [];
-try
+
+%try
     [Tcell] = run.py_scTenifoldCko(sce, cL{x1}, cL{x2}, targetg, ...
-        wkdir, true, prepare_input_only);
+        targetcelltype, wkdir, true, prepare_input_only);
     if ~isempty(Tcell)
         [T1] = Tcell{1};
         [T2] = Tcell{2};
@@ -155,10 +167,10 @@ try
         end
         T = [T1; T2];
     end
-catch ME
-    errordlg(ME.message);
-    return;
-end
+% catch ME
+%     errordlg(ME.message);
+%     return;
+% end
 
 if ~isempty(T)
     mfolder = fileparts(mfilename('fullpath'));

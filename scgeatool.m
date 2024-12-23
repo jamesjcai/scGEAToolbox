@@ -191,6 +191,8 @@ in_addmenu(m_ntwk, 0, @gui.callback_CompareGeneNetwork, 'Build & Compare GRNs...
 in_addmenu(m_ntwk, 1, {@in_scTenifoldNet,1}, 'Construct GRN with All Genes - scTenifoldNet [PMID:33336197] 🐢...');
 in_addmenu(m_ntwk, 0, {@in_scTenifoldNet,2}, 'Construct & Compare GRNs - scTenifoldNet [PMID:33336197] 🐢...');
 in_addmenu(m_ntwk, 1, @gui.callback_scTenifoldKnk1, 'Virtual Gene Knockout - scTenifoldKnk [PMID:35510185] 🐢 ...');
+in_addmenu(m_ntwk, 0, @gui.callback_scTenifoldCko, 'Virtual Cell-Cell Communication Knockout - scTenifoldCko/🐍 [Experimental] 🐢 ...');
+
 %in_addmenu(m_ntwk, 0, @gui.callback_VirtualKOGenKI, 'Virtual Gene Knockout (GenKI/🐍) [PMID:37246643] 🐢 ...');
 %in_addmenu(m_ntwk, 1, @gui.callback_scTenifoldXct, 'Cell-Cell Communication (scTenifoldXct/🐍) [PMID:36787742] 🐢 ...');
 
