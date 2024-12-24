@@ -121,7 +121,7 @@ if ~isempty(T)
     assert(length(knownpair)==height(T));
     T=[T, table(knownpair)];
 
-    [b, a] = pkg.i_tempfile("sctendifoldxct");
+    [a, b] = pkg.i_tempdirfile("sctendifoldxct");
     writetable(T, b);
 
     T(:,[4 5 6 7 11])=[];

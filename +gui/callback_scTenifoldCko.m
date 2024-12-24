@@ -51,8 +51,8 @@ if numel(idx) ~= 2
     return;
 end
 
-i1 = idx(1);
-i2 = idx(2);
+x1 = idx(1);
+x2 = idx(2);
 
 %{
 [~,cL]=grp2idx(sce.c_cell_type_tx);
@@ -66,39 +66,34 @@ if tf2==1
         errordlg('Please select 2 cell types');
         return;
     end
-    i1=indxx(1);
-    i2=indxx(2);
+    x1=indxx(1);
+    x2=indxx(2);
 else
     return;
 end
 %}
 
-%a1 = sprintf('%s -> %s', cL{i1}, cL{i2});
-%a2 = sprintf('%s -> %s', cL{i2}, cL{i1});
+%celltype1 = sprintf('%s -> %s', cL{x1}, cL{x2});
+%celltype2 = sprintf('%s -> %s', cL{x2}, cL{x1});
 
 %{
 twosided = false;
-answer = questdlg('Select direction: Source (ligand) -> Target (receptor)', '', 'Both', a1, a2, 'Both');
+answer = questdlg('Select direction: Source (ligand) -> Target (receptor)', '', 'Both', celltype1, celltype2, 'Both');
 switch answer
     case 'Both'
-        x1 = i1;
-        x2 = i2;
+        x1 = x1;
+        x2 = x2;
         twosided = true;
-    case a1
-        x1 = i1;
-        x2 = i2;
-    case a2
-        x1 = i2;
-        x2 = i1;
+    case celltype1
+        x1 = x1;
+        x2 = x2;
+    case celltype2
+        x1 = x2;
+        x2 = x1;
     otherwise
         return;
 end
-%}
 
-    x1 = i1;
-    x2 = i2;
-
-%{
 idx=sce.c_cell_type_tx==cL{x1} | sce.c_cell_type_tx==cL{x2};
 sce=sce.selectcells(idx);
 
@@ -130,25 +125,25 @@ else
 end
 targetg = sce.g(idx);
 
-a1 = cL{i1};
-a2 = cL{i2};
+celltype1 = cL{x1};
+celltype2 = cL{x2};
 
-answer = questdlg(sprintf('Knockout %s in which cell type?',targetg), '', 'Both', a1, a2, 'Both');
+answer = questdlg(sprintf('Knockout %s in which cell type?',targetg), '', 'Both', celltype1, celltype2, 'Both');
 switch answer
     case 'Both'
-        targetcelltype=sprintf('%s+%s', a1, a2);
-    case a1
-        targetcelltype=a1;
-    case a2
-        targetcelltype=a2;
+        targetcelltype=sprintf('%s+%s', celltype1, celltype2);
+    case celltype1
+        targetcelltype=celltype1;
+    case celltype2
+        targetcelltype=celltype2;
     otherwise
         return;
 end
 % -------
 %sce.c_batch_id(thisc==cL{x1})="Source";
 %sce.c_batch_id(thisc==cL{x2})="Target";
-T = [];
 
+T = [];
 %try
     [Tcell] = run.py_scTenifoldCko(sce, cL{x1}, cL{x2}, targetg, ...
         targetcelltype, wkdir, true, prepare_input_only);
@@ -176,7 +171,6 @@ if ~isempty(T)
     mfolder = fileparts(mfilename('fullpath'));
     load(fullfile(mfolder, '..', 'resources', 'Ligand_Receptor', ...
          'Ligand_Receptor_more.mat'), 'ligand','receptor');
-    % knownpair = false(height(T), 1);
     A = [string(T.ligand) string(T.receptor)];
     B = [ligand receptor];
     [knownpair]= ismember(A, B, 'rows');
@@ -186,14 +180,13 @@ if ~isempty(T)
     % T(:,[4 5 6 7 11])=[];
     
     outfile = fullfile(wkdir,"outfile.csv");
-
     if isfile(outfile)
-        answerx = questdlg('Overwrite outfile.txt? Select No to save in a temporary file.');
+        answerx = questdlg('Overwrite outfile.csv? Select No to save in a temporary file.');
     else
         answerx = 'Yes';
     end
     if isempty(wkdir) || ~isfolder(wkdir) || ~strcmp(answerx, 'Yes')
-        [b, a] = pkg.i_tempfile("sctendifoldxct");
+        [a, b] = pkg.i_tempdirfile("sctendifoldcko");
         writetable(T, b);
     
         answer = questdlg(sprintf('Result has been saved in %s', b), ...
@@ -203,10 +196,10 @@ if ~isempty(T)
                 winopen(a);
                 pause(2)
                 if strcmp(questdlg('Export result to other format?'), 'Yes')
-                    gui.i_exporttable(T, false, 'Ttenifldxct', 'TenifldXctTable');
+                    gui.i_exporttable(T, false, 'Ttenifldcko', 'TenifldCkoTable');
                 end
             case 'Export result...'
-                gui.i_exporttable(T, false, 'Ttenifldxct', 'TenifldXctTable');
+                gui.i_exporttable(T, false, 'Ttenifldcko', 'TenifldCkoTable');
             otherwise
                 winopen(a);
         end
@@ -224,12 +217,9 @@ else
     end
 end
 
-end
 
 
-%{
-
-eb = h5read('merged_embeds.h5','/embeds')';
+eb = h5read('merged_embeds.h5','/data')';
 
 n = height(eb);
 sl = n / 4;
@@ -240,22 +230,20 @@ b = eb(sl+1:2*sl,:);
 c = eb(2*sl+1:3*sl,:);
 d = eb(3*sl+1:4*sl,:);
 
-dx = abs(pdist2(a,b)-pdist2(c,d));
+%dx = abs(pdist2(a,b)-pdist2(c,d));
+%[x,y]=pkg.i_maxij(dx, 1050);
+%[sce.g(x) sce.g(y)]
+%dx1 = pdist2(a,c);
+%dx1 = pdist2(b,d);
+%[x,y]=maxij(dx1, 50);
+%[sce.g(x) sce.g(y)]
 
-[x,y]=maxij(dx, 1050);
-[sce.g(x) sce.g(y)]
+[T] = ten.i_dr(a, c, sce.g, true);
+outfile = sprintf('outfile_%s_expression_changes.csv',celltype1);
+writetable(T, outfile);
 
+[T] = ten.i_dr(b, d, sce.g, true);
+outfile = sprintf('outfile_%s_expression_changes.csv',celltype1);
+writetable(T, outfile);
 
-function [row,col]=maxij(matrix,k)
-    % Flatten the matrix and find the top 10 maximum values
-    [sorted_values, sorted_indices] = sort(matrix(:), 'descend');
-    top_10_values = sorted_values(1:k);
-    top_10_indices = sorted_indices(1:k);
-    % Convert linear indices to row and column subscripts
-    [row, col] = ind2sub(size(matrix), top_10_indices);
 end
-dx1 = pdist2(a,c);
-dx1 = pdist2(b,d);
-[x,y]=maxij(dx1, 50);
-[sce.g(x) sce.g(y)]
-%}

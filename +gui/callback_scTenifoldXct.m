@@ -162,7 +162,7 @@ if ~isempty(T)
         answerx = 'Yes';
     end
     if isempty(wkdir) || ~isfolder(wkdir) || ~strcmp(answerx, 'Yes')
-        [b, a] = pkg.i_tempfile("sctendifoldxct");
+        [a, b] = pkg.i_tempdirfile("sctendifoldxct");
         writetable(T, b);
    
         answer = questdlg(sprintf('Result has been saved in %s', b), ...
