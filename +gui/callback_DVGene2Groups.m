@@ -15,7 +15,6 @@ lcolor2 = lcolors(2,:);
     [i1, i2, cL1, cL2] = gui.i_select2smplgrps(sce, false);
     if isscalar(i1) || isscalar(i2), return; end
 
-    fw = gui.gui_waitbar;
     
     c=zeros(size(i1));
     c(i1)=1; c(i2)=2;
@@ -46,102 +45,120 @@ lcolor2 = lcolors(2,:);
         return;
     end
 
-    assignin('base', "sce1", sce1);
-    assignin('base', "sce2", sce2);
-    assignin('base', "cL1", cL1);
-    assignin('base', "cL2", cL2);
-    
-    [T, X1, X2, g, xyz1, xyz2,...
-        px1, py1, pz1,...
-        px2, py2, pz2] = gui.e_dvanalysis(sce1, sce2, cL1, cL2);
+    % assignin('base', "sce1", sce1);
+    % assignin('base', "sce2", sce2);
+    % assignin('base', "cL1", cL1);
+    % assignin('base', "cL2", cL2);
 
+            answerx = questdlg('Which HVG detecting method to use?', '', ...
+                'Splinefit Method [PMID:31697351]', ...
+                'Brennecke et al. (2013) [PMID:24056876]', ...
+                'Splinefit Method [PMID:31697351]');                
+
+            switch answerx
+                case 'Brennecke et al. (2013) [PMID:24056876]'
+                        fw = gui.gui_waitbar;
+
+                    T = gui.e_dvanalysis_brennecke(sce1, sce2, cL1, cL2);
+                    methodtag='brennecke';
+                case 'Splinefit Method [PMID:31697351]'
+                        fw = gui.gui_waitbar;
+
+                    [T, X1, X2, g, xyz1, xyz2,...
+                        px1, py1, pz1,...
+                        px2, py2, pz2] = gui.e_dvanalysis_splinefit(sce1, sce2, cL1, cL2);
+                    methodtag='splinefit';
+                otherwise
+                    return;
+            end
+    
     gui.gui_waitbar(fw);
 
-    outfile = sprintf('%s_vs_%s_DV_results', ...
-        matlab.lang.makeValidName(string(cL1)), matlab.lang.makeValidName(string(cL2)));
+    outfile = sprintf('%s_vs_%s_DV_%s_results', ...
+        matlab.lang.makeValidName(string(cL1)), ...
+        matlab.lang.makeValidName(string(cL2)), ...
+        methodtag);
 
 pause(1);
-hFig = figure('Visible','off');
-hFig.Position(3) = hFig.Position(3)*1.8;
-gui.i_movegui2parent(hFig, FigureHandle);
-
-delete(findall(hFig, 'Tag', 'FigureToolBar'))
-tb = uitoolbar('Parent', hFig);
-% tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
-% uipushtool(tb, 'Separator', 'off');
-
-
-pkg.i_addbutton2fig(tb, 'off', {@in_HighlightSelectedGenes, 1}, 'list.gif', 'Selet a gene to show expression profile');
-% pkg.i_addbutton2fig(tb, 'off', @in_HighlightSelectedGenes, 'xplotpicker-qqplot.gif', 'Highlight selected genes');
-pkg.i_addbutton2fig(tb, 'off', {@in_HighlightSelectedGenes, 2}, 'list2.gif', 'Selet a gene from sorted list');
-pkg.i_addbutton2fig(tb, 'off', @in_viewTable, 'icon-fa-stack-exchange-10.gif', 'View DV gene table...');
-
-pkg.i_addbutton2fig(tb, 'on', @in_EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Select top n genes to perform web-based enrichment analysis...');
-pkg.i_addbutton2fig(tb, 'off', @in_Enrichr, 'plotpicker-andrewsplot.gif', 'Enrichr test...');
-pkg.i_addbutton2fig(tb, 'off', @in_genecards, 'fvtool_fdalinkbutton.gif', 'GeneCards...');
-pkg.i_addbutton2fig(tb, 'off', @in_ExportTable, 'export.gif', 'Export HVG Table...');
-
-pkg.i_addbutton2fig(tb, 'on', @ChangeAlphaValue, 'plotpicker-rose.gif', 'Change MarkerFaceAlpha value');
-pkg.i_addbutton2fig(tb, 'off', @in_changeMarkerSize, 'icon-mat-text-fields-10.gif', 'ChangeFontSize');
-gui.gui_3dcamera(tb, 'DV_Results');
-pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
-
-
-hAx0 = subplot(2,2,[1 3]);
-h1 = scatter3(hAx0, px1, py1, pz1, 'filled', 'MarkerFaceAlpha', .1);
-hold on
-h2 = scatter3(hAx0, px2, py2, pz2, 'filled', 'MarkerFaceAlpha', .1);
-plot3(hAx0, xyz1(:, 1), xyz1(:, 2), xyz1(:, 3), '-', 'linewidth', 4, 'Color',lcolor1);
-plot3(hAx0, xyz2(:, 1), xyz2(:, 2), xyz2(:, 3), '-', 'linewidth', 4, 'Color',lcolor2);
-
-xlabel(hAx0,'Mean, log1p');
-ylabel(hAx0,'CV, log1p');
-zlabel(hAx0,'Dropout rate (% of zeros)');
-
-
-if ~isempty(g)
-    dt = datacursormode(hFig);
-    datacursormode(hFig, 'on');
-    dt.UpdateFcn = {@in_myupdatefcn3, g};
-end
-
-
-idx = find(g==table2array(T(1,1)));
-
-
-hAx1 = subplot(2,2,2);
-x1 = X1(idx,:);
-sh1 = plot(hAx1, 1:length(x1), x1, 'Color',lcolor1);
-xlim(hAx1,[1 size(X1,2)]);
-
-title(hAx1, strrep(sprintf('%s',g(idx)),'_','\_') );
-[titxt] = gui.i_getsubtitle(x1, cL1{1});
-subtitle(hAx1, titxt);
-xlabel(hAx1,'Cell Index');
-ylabel(hAx1,'Expression Level');
-
-hAx2 = subplot(2,2,4);
-x2 = X2(idx,:);
-sh2 = plot(hAx2, 1:length(x2), x2, 'Color',lcolor2);
-xlim(hAx2,[1 size(X2,2)]);
-
-title(hAx2, strrep(sprintf('%s',g(idx)),'_','\_'));
-[titxt] = gui.i_getsubtitle(x2, cL2{1});
-subtitle(hAx2, titxt);
-xlabel(hAx2,'Cell Index');
-ylabel(hAx2,'Expression Level');
-h3 = []; h4 = []; h5 = [];
-h3a = []; h3b = [];
-yl = cell2mat(get([hAx1, hAx2], 'Ylim'));
-ylnew = [min(yl(:, 1)), max(yl(:, 2))];
-set([hAx1, hAx2], 'Ylim', ylnew);
-
 in_ExportTable;
 
-
-
-[answer]=questdlg('Explore DV expression profile of genes?','');
-if strcmp(answer, 'Yes'), hFig.Visible=true; end
+if strcmp(answerx, 'Splinefit Method [PMID:31697351]')
+    hFig = figure('Visible','off');
+    hFig.Position(3) = hFig.Position(3)*1.8;
+    gui.i_movegui2parent(hFig, FigureHandle);
+    
+    delete(findall(hFig, 'Tag', 'FigureToolBar'))
+    tb = uitoolbar('Parent', hFig);
+    % tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
+    % uipushtool(tb, 'Separator', 'off');
+    
+    
+    pkg.i_addbutton2fig(tb, 'off', {@in_HighlightSelectedGenes, 1}, 'list.gif', 'Selet a gene to show expression profile');
+    % pkg.i_addbutton2fig(tb, 'off', @in_HighlightSelectedGenes, 'xplotpicker-qqplot.gif', 'Highlight selected genes');
+    pkg.i_addbutton2fig(tb, 'off', {@in_HighlightSelectedGenes, 2}, 'list2.gif', 'Selet a gene from sorted list');
+    pkg.i_addbutton2fig(tb, 'off', @in_viewTable, 'icon-fa-stack-exchange-10.gif', 'View DV gene table...');
+    
+    pkg.i_addbutton2fig(tb, 'on', @in_EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Select top n genes to perform web-based enrichment analysis...');
+    pkg.i_addbutton2fig(tb, 'off', @in_Enrichr, 'plotpicker-andrewsplot.gif', 'Enrichr test...');
+    pkg.i_addbutton2fig(tb, 'off', @in_genecards, 'fvtool_fdalinkbutton.gif', 'GeneCards...');
+    pkg.i_addbutton2fig(tb, 'off', @in_ExportTable, 'export.gif', 'Export HVG Table...');
+    
+    pkg.i_addbutton2fig(tb, 'on', @ChangeAlphaValue, 'plotpicker-rose.gif', 'Change MarkerFaceAlpha value');
+    pkg.i_addbutton2fig(tb, 'off', @in_changeMarkerSize, 'icon-mat-text-fields-10.gif', 'ChangeFontSize');
+    gui.gui_3dcamera(tb, 'DV_Results');
+    pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
+    
+    
+    hAx0 = subplot(2,2,[1 3]);
+    h1 = scatter3(hAx0, px1, py1, pz1, 'filled', 'MarkerFaceAlpha', .1);
+    hold on
+    h2 = scatter3(hAx0, px2, py2, pz2, 'filled', 'MarkerFaceAlpha', .1);
+    plot3(hAx0, xyz1(:, 1), xyz1(:, 2), xyz1(:, 3), '-', 'linewidth', 4, 'Color',lcolor1);
+    plot3(hAx0, xyz2(:, 1), xyz2(:, 2), xyz2(:, 3), '-', 'linewidth', 4, 'Color',lcolor2);
+    
+    xlabel(hAx0,'Mean, log1p');
+    ylabel(hAx0,'CV, log1p');
+    zlabel(hAx0,'Dropout rate (% of zeros)');
+    
+    
+    if ~isempty(g)
+        dt = datacursormode(hFig);
+        datacursormode(hFig, 'on');
+        dt.UpdateFcn = {@in_myupdatefcn3, g};
+    end
+    
+    
+    idx = find(g==table2array(T(1,1)));
+    
+    
+    hAx1 = subplot(2,2,2);
+    x1 = X1(idx,:);
+    sh1 = plot(hAx1, 1:length(x1), x1, 'Color',lcolor1);
+    xlim(hAx1,[1 size(X1,2)]);
+    
+    title(hAx1, strrep(sprintf('%s',g(idx)),'_','\_') );
+    [titxt] = gui.i_getsubtitle(x1, cL1{1});
+    subtitle(hAx1, titxt);
+    xlabel(hAx1,'Cell Index');
+    ylabel(hAx1,'Expression Level');
+    
+    hAx2 = subplot(2,2,4);
+    x2 = X2(idx,:);
+    sh2 = plot(hAx2, 1:length(x2), x2, 'Color',lcolor2);
+    xlim(hAx2,[1 size(X2,2)]);
+    
+    title(hAx2, strrep(sprintf('%s',g(idx)),'_','\_'));
+    [titxt] = gui.i_getsubtitle(x2, cL2{1});
+    subtitle(hAx2, titxt);
+    xlabel(hAx2,'Cell Index');
+    ylabel(hAx2,'Expression Level');
+    h3 = []; h4 = []; h5 = [];
+    h3a = []; h3b = [];
+    yl = cell2mat(get([hAx1, hAx2], 'Ylim'));
+    ylnew = [min(yl(:, 1)), max(yl(:, 2))];
+    set([hAx1, hAx2], 'Ylim', ylnew);
+    if strcmp(questdlg('Explore DV expression profile of genes?'), 'Yes'), hFig.Visible=true; end
+end
 
 
     function in_Enrichr(~, ~)
