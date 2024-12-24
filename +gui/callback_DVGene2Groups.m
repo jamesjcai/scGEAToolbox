@@ -46,6 +46,11 @@ lcolor2 = lcolors(2,:);
         return;
     end
 
+    assignin('base', "sce1", sce1);
+    assignin('base', "sce2", sce2);
+    assignin('base', "cL1", cL1);
+    assignin('base', "cL2", cL2);
+    
     [T, X1, X2, g, xyz1, xyz2,...
         px1, py1, pz1,...
         px2, py2, pz2] = gui.e_dvanalysis(sce1, sce2, cL1, cL2);

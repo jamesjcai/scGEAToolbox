@@ -25,6 +25,9 @@ end
     X1_ori = sc_norm(X1_ori,'type','libsize');
     X2_ori = sc_norm(X2_ori,'type','libsize');
 
+    % [T, Xsorted, gsorted] = sc_hvg(X, g, sortit, plotit, ...
+    %     normit, ignorehigh, ignorelow)
+
     [T1, X1, g1, xyz1] = sc_splinefit(X1_ori, g_ori, true, false);
     [T1, idx1] = sortrows(T1,'genes','ascend');
     X1 = X1(idx1, :);

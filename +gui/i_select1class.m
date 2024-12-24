@@ -62,8 +62,9 @@ end
 % listitems={'Current Class (C)','Cluster ID','Batch ID',...
 %            'Cell Type','Cell Cycle Phase'};
 
+y = false;
 if ~isempty(prefersel)
-    [y,idx]=ismember(prefersel,listitems);
+    [y, idx]=ismember(prefersel,listitems);
 end
 if y
     [indx2, tf2] = listdlg('PromptString', ...

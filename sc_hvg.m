@@ -120,7 +120,7 @@ if sortit
     %end
 else
     %if nargout > 1
-        error('SORTIT was not required.');
+    %    error('SORTIT was not required.');
     %end
 end
 % T=T(removedidx,:);
