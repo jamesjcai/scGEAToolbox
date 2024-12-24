@@ -1,3 +1,5 @@
+import os
+os.chdir("C:\\Users\\jcai\\Downloads\\scTenifoldCko_workingfolder")
 #import os
 import sys
 #abspath = os.path.abspath(__file__)
@@ -20,6 +22,16 @@ with h5py.File('X1.mat', 'r') as f:
     if 'twosided' in f:
         twosided = f['twosided'][0][0]
 
+#f = h5py.File('A1.mat','r')
+#A = np.array(f.get('A'))
+#A = sparse.csc_matrix(A)
+#sparse.save_npz("pcnet_Source.npz", A)
+
+#f = h5py.File('A2.mat','r')
+#A = np.array(f.get('A'))
+#A = sparse.csc_matrix(A)
+#sparse.save_npz("pcnet_Target.npz", A)
+
 adata1 = build_adata("X1.mat", "g1.txt", "c1.txt", delimiter=',', meta_cell_cols=['cell_type'], transpose=False)
 print('Input read.............1')
 xct1 = st.scTenifoldXct(data = adata1, 
@@ -41,7 +53,24 @@ xct2 = st.scTenifoldXct(data = adata2,
                     verbose = True)
 
 XCTs = st.merge_scTenifoldXct(xct1, xct2)
+
+
+
+with h5py.File('xct1w.h5','w') as h5file:
+    h5file.create_dataset('data', data=xct1.w.toarray())
+
+with h5py.File('xct2w.h5','w') as h5file:
+    h5file.create_dataset('data', data=xct2.w.toarray())
+
+with h5py.File('merged_xct12w.h5','w') as h5file:
+    h5file.create_dataset('data', data=XCTs.w.toarray())
+                              
+
 emb = XCTs.get_embeds(train = True)
+
+with h5py.File('merged_embeds.h5', 'w') as h5file:
+    h5file.create_dataset('embeds', data=emb)
+
 XCTs.nn_aligned_diff(emb) 
 xcts_pairs_diff = XCTs.chi2_diff_test(pval = 1.0)
 pd.DataFrame(xcts_pairs_diff).to_csv('output1.txt',index=False,header=True)
