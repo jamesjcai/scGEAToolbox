@@ -10,8 +10,8 @@ else
 end
 
 if ~(isscalar(unique(sce.c_batch_id)) && numel(unique(sce.c_cell_type_tx))==2)
-    %errordlg(sprintf('This function requires data in one batch and has two cell types.\nisscalar(unique(sce.c_batch_id)) && numel(unique(sce.c_cell_type_tx))==2'),'');
-    %return;
+    errordlg(sprintf('This function requires data in one batch and has two cell types.\nisscalar(unique(sce.c_batch_id)) && numel(unique(sce.c_cell_type_tx))==2'),'');
+    return;
 end
 
 numglist = [1 3000 5000];
