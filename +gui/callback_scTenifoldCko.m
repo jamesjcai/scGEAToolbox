@@ -1,6 +1,6 @@
 function callback_scTenifoldCko(src, ~)
 
-% if ~gui.gui_showrefinfo('scTenifoldCko [PMID:36787742]'), return; end
+if ~gui.gui_showrefinfo('scTenifoldCko [Unpublished]'), return; end
 if isa(src, "SingleCellExperiment")
     sce = src;
     FigureHandle = [];
@@ -26,14 +26,15 @@ preftagname = 'externalwrkpath';
 [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
 if isempty(wkdir), return; end
 
-
 if ~prepare_input_only
     if ~gui.i_setpyenv, return; end
 end
 
+
+
+
 [thisc, clabel] = gui.i_select1class(sce, false, 'Select grouping variable (cell type):', 'Cell Type');
 if isempty(thisc), return; end
-
 if ~strcmp(clabel, 'Cell Type')
     if ~strcmp(questdlg('You selected grouping varible other than ''Cell Type''. Continue?'), 'Yes'), return; end
 end
@@ -73,8 +74,6 @@ else
 end
 %}
 
-%celltype1 = sprintf('%s -> %s', cL{x1}, cL{x2});
-%celltype2 = sprintf('%s -> %s', cL{x2}, cL{x1});
 
 %{
 twosided = false;
@@ -111,61 +110,103 @@ sce.c_cell_type_tx = string(cL(c));
 % idx=thisc==cL{x1} | thisc==cL{x2};
 idx = c == x1 | c == x2;
 sce = sce.selectcells(idx);
-
-% -------
-
-gsorted = natsort(sce.g);
-if isempty(gsorted), return; end
-[indx2, tf] = listdlg('PromptString', {'Select a KO gene'}, ...
-    'SelectionMode', 'single', 'ListString', gsorted, 'ListSize', [220, 300]);
-if tf == 1
-    [~, idx] = ismember(gsorted(indx2), sce.g);
-else
-    return;
-end
-targetg = sce.g(idx);
-
 celltype1 = cL{x1};
 celltype2 = cL{x2};
 
-answer = questdlg(sprintf('Knockout %s in which cell type?',targetg), '', 'Both', celltype1, celltype2, 'Both');
-switch answer
-    case 'Both'
-        targetcelltype=sprintf('%s+%s', celltype1, celltype2);
-    case celltype1
-        targetcelltype=celltype1;
-    case celltype2
-        targetcelltype=celltype2;
-    otherwise
-        return;
-end
-% -------
-%sce.c_batch_id(thisc==cL{x1})="Source";
-%sce.c_batch_id(thisc==cL{x2})="Target";
+gsorted = natsort(sce.g);
+if isempty(gsorted), return; end
 
-T = [];
-%try
-    [Tcell] = run.py_scTenifoldCko(sce, cL{x1}, cL{x2}, targetg, ...
-        targetcelltype, wkdir, true, prepare_input_only);
-    if ~isempty(Tcell)
-        [T1] = Tcell{1};
-        [T2] = Tcell{2};
-        if ~isempty(T1)
-            a = sprintf('%s -> %s', cL{x1}, cL{x2});
-            T1 = addvars(T1, repelem(a, height(T1), 1), 'Before', 1);
-            T1.Properties.VariableNames{'Var1'} = 'direction';
+
+
+
+
+
+
+Cko_approach = questdlg('Select CKO approach:','','Block Ligand-Receptor','Complete Gene Knockout','Block Ligand-Receptor');
+if ~ismember(Cko_approach, {'Block Ligand-Receptor','Complete Gene Knockout'}), return; end
+
+
+switch Cko_approach
+    case 'Block Ligand-Receptor'
+        [indx2, tf] = listdlg('PromptString', {'Select a ligand-receptor pair (two genes)'}, ...
+            'SelectionMode', 'multiple', 'ListString', gsorted, 'ListSize', [220, 300]);
+        if tf == 1
+            if numel(indx2)==2
+                [~, idx] = ismember(gsorted(indx2), sce.g);
+            else
+                return;
+            end
+        else
+            return;
         end
-        if ~isempty(T2)
-            a = sprintf('%s -> %s', cL{x2}, cL{x1});
-            T2 = addvars(T2, repelem(a, height(T2), 1), 'Before', 1);
-            T2.Properties.VariableNames{'Var1'} = 'direction';
+        targetg = sce.g(idx);
+        
+        targetpath = ...
+        [sprintf('%s (%s) -> %s (%s)', celltype1, targetg(1), celltype2, targetg(2));...
+        sprintf('%s (%s) -> %s (%s)', celltype1, targetg(2), celltype2, targetg(1));...
+        sprintf('%s (%s) <- %s (%s)', celltype1, targetg(1), celltype2, targetg(2));...
+        sprintf('%s (%s) <- %s (%s)', celltype1, targetg(2), celltype2, targetg(1))];
+        
+        [indx2, tf] = listdlg('PromptString', {'Select path(s) to block:'}, ...
+            'SelectionMode', 'multiple', 'ListString', targetpath, 'ListSize', [220, 300]);
+        
+        if tf == 1
+            targetpath = targetpath(indx2);
+        else
+            return;
         end
-        T = [T1; T2];
+        [Tcell] = run.py_scTenifoldCko(sce, celltype1, celltype2, targetg, ...
+            targetpath, wkdir, true, prepare_input_only);
+        
+
+    case 'Complete Gene Knockout'
+        [indx2, tf] = listdlg('PromptString', {'Select a KO gene'}, ...
+            'SelectionMode', 'single', 'ListString', gsorted, 'ListSize', [220, 300]);
+        if tf == 1
+            [~, idx] = ismember(gsorted(indx2), sce.g);
+        else
+            return;
+        end
+        targetg = sce.g(idx);
+        
+        answer = questdlg(sprintf('Knockout %s in which cell type?',targetg), '', 'Both', celltype1, celltype2, 'Both');
+        switch answer
+            case 'Both'
+                targettype=sprintf('%s+%s', celltype1, celltype2);
+            case celltype1
+                targettype=celltype1;
+            case celltype2
+                targettype=celltype2;
+            otherwise
+                return;
+        end
+        
+        T = [];
+        [Tcell] = run.py_scTenifoldCko_type(sce, celltype1, celltype2, targetg, ...
+            targettype, wkdir, true, prepare_input_only);
+    otherwise
+
+end
+
+    
+    
+
+    
+if ~isempty(Tcell)
+    [T1] = Tcell{1};
+    [T2] = Tcell{2};
+    if ~isempty(T1)
+        a = sprintf('%s -> %s', celltype1, celltype2);
+        T1 = addvars(T1, repelem(a, height(T1), 1), 'Before', 1);
+        T1.Properties.VariableNames{'Var1'} = 'direction';
     end
-% catch ME
-%     errordlg(ME.message);
-%     return;
-% end
+    if ~isempty(T2)
+        a = sprintf('%s -> %s', celltype2, celltype1);
+        T2 = addvars(T2, repelem(a, height(T2), 1), 'Before', 1);
+        T2.Properties.VariableNames{'Var1'} = 'direction';
+    end
+    T = [T1; T2];
+end
 
 if ~isempty(T)
     mfolder = fileparts(mfilename('fullpath'));
