@@ -1,12 +1,12 @@
-function [T] = py_scTenifoldCko(sce, celltype1, celltype2, targetg, ...
-                                targetcelltype, wkdir, ...
+function [T] = py_scTenifoldCko_type(sce, celltype1, celltype2, targetg, ...
+                                targettype, wkdir, ...
                                 isdebug, prepare_input_only)
 
 T = [];
 if nargin < 8, prepare_input_only = false; end
 if nargin < 7, isdebug = true; end
 if nargin < 6, wkdir = []; end
-if nargin < 5 || isempty(targetcelltype), targetcelltype=sprintf('%s+%s', celltype1, celltype2); end
+if nargin < 5 || isempty(targettype), targettype=sprintf('%s+%s', celltype1, celltype2); end
 if nargin < 4 || isempty(targetg), targetg = sce.g(1); end
 if nargin < 3, error('Usage: [T] = py_scTenifoldCko(sce, celltype1, celltype2, targetg)'); end
 
@@ -15,11 +15,11 @@ twosided = true;
 sce1 = sce;
 sce2 = sce;
 
-if targetcelltype==sprintf('%s+%s', celltype1, celltype2)
+if targettype==sprintf('%s+%s', celltype1, celltype2)
     sce2.X(sce2.g==targetg, :)=0;
-elseif targetcelltype==celltype1
+elseif targettype==celltype1
     sce2.X(sce2.g==targetg, sce2.c_cell_type_tx==celltype1)=0;
-elseif targetcelltype==celltype2
+elseif targettype==celltype2
     sce2.X(sce2.g==targetg, sce2.c_cell_type_tx==celltype2)=0;
 else
     error('py_scTenifoldCko error.');
@@ -223,7 +223,7 @@ end
         A = ten.e_filtadjc(A1, 0.75, false);
         save(sprintf('%d/pcnet_Source.mat', 1), 'A', '-v7.3');
 
-        if contains(targetcelltype, celltype1)
+        if contains(targettype, celltype1)
             fprintf('\nKO gene in %s.\n', celltype1);
             if nnz(A(idx, :) ~= 0) < 10
                 warning('KO gene (%s) has no link or too few links with other genes.', ...
@@ -241,7 +241,7 @@ end
         A = ten.e_filtadjc(A2, 0.75, false);
         save(sprintf('%d/pcnet_Target.mat', 1), 'A', '-v7.3');
 
-        if contains(targetcelltype, celltype2)
+        if contains(targettype, celltype2)
             fprintf('\nKO gene in %s.\n', celltype2);
             if nnz(A(idx, :) ~= 0) < 10
                 warning('KO gene (%s) has no link or too few links with other genes.', ...
