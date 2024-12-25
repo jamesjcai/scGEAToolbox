@@ -217,9 +217,9 @@ else
     end
 end
 
+fn=fullfile(wkdir, 'merged_embeds.h5');
 
-
-eb = h5read('merged_embeds.h5','/data')';
+eb = h5read(fn,'/data')';
 
 n = height(eb);
 sl = n / 4;

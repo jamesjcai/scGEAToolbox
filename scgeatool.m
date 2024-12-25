@@ -916,6 +916,7 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
     end
 
     function in_SelectCellsByQC(src, ~)
+        oldsce = sce;
         oldn = sce.NumCells;
         oldm = sce.NumGenes;
         sce.c = c;
@@ -926,15 +927,21 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
         catch ME
             errordlg(ME.message,'');
             return;
-        end        
+        end
         if requirerefresh
             sce = guidata(FigureHandle);
             [c, cL] = grp2idx(sce.c);
             in_RefreshAll(src, [], true, false);
             newn = sce.NumCells;
             newm = sce.NumGenes;
-            uiwait(helpdlg(sprintf('%d cells removed; %d genes removed.', ...
-                oldn-newn, oldm-newm), ''));
+            answer = questdlg(sprintf('%d cells removed; %d genes removed.', ...
+                    oldn-newn, oldm-newm),'','Accept Changes', 'Undo Changes', 'Accept Changes');
+            if ~strcmp(answer, 'Accept Changes')
+                sce = oldsce;
+                [c, cL] = grp2idx(sce.c);
+                in_RefreshAll(src, [], true, false);
+                guidata(FigureHandle, sce);
+            end
         end
         if ~isempty(highlightindex)
             h.BrushData = highlightindex;
@@ -1203,11 +1210,17 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
             end
         end
         if keepview
-            h.Marker = para.oldMarker;
-            h.SizeData = para.oldSizeData;
+            if isfield(para,'oldMarker')
+                h.Marker = para.oldMarker;
+            end
+            if isfield(para,'oldSizeData')
+                h.SizeData = para.oldSizeData;
+            end
         end
         if keepcolr
-            colormap(para.oldColorMap);
+            if isfield(para, 'oldColorMap')
+                colormap(para.oldColorMap);
+            end
         else
             kc = numel(unique(sce.c));
             colormap(pkg.i_mycolorlines(kc));
