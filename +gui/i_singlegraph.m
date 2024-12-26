@@ -455,8 +455,8 @@ function h = WattsStrogatz(N, K, beta)
         h = graph(s, t);
 end
 
- function [width, height] = measureText(txt, textOpts, axis)
-    if(nargin < 3)
+function [width, height] = measureText(txt, textOpts, axis)
+    if nargin < 3
        axis = gca(); 
     end
     if nargin < 2
