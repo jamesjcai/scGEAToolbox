@@ -916,9 +916,9 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
     end
 
     function in_SelectCellsByQC(src, ~)
-        oldsce = sce;
-        oldn = sce.NumCells;
-        oldm = sce.NumGenes;
+        %oldsce = sce;
+        % oldn = sce.NumCells;
+        % oldm = sce.NumGenes;
         sce.c = c;
         guidata(FigureHandle, sce);
         try
@@ -932,16 +932,16 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
             sce = guidata(FigureHandle);
             [c, cL] = grp2idx(sce.c);
             in_RefreshAll(src, [], true, false);
-            newn = sce.NumCells;
-            newm = sce.NumGenes;
-            answer = questdlg(sprintf('%d cells removed; %d genes removed.', ...
-                    oldn-newn, oldm-newm),'','Accept Changes', 'Undo Changes', 'Accept Changes');
-            if ~strcmp(answer, 'Accept Changes')
-                sce = oldsce;
-                [c, cL] = grp2idx(sce.c);
-                in_RefreshAll(src, [], true, false);
-                guidata(FigureHandle, sce);
-            end
+            % newn = sce.NumCells;
+            % newm = sce.NumGenes;
+            % answer = questdlg(sprintf('%d cells removed; %d genes removed.', ...
+            %         oldn-newn, oldm-newm),'','Accept Changes', 'Undo Changes', 'Accept Changes');
+            % if ~strcmp(answer, 'Accept Changes')
+            %     sce = oldsce;
+            %     [c, cL] = grp2idx(sce.c);
+            %     in_RefreshAll(src, [], true, false);
+            %     guidata(FigureHandle, sce);
+            % end
         end
         if ~isempty(highlightindex)
             h.BrushData = highlightindex;

@@ -116,12 +116,6 @@ celltype2 = cL{x2};
 gsorted = natsort(sce.g);
 if isempty(gsorted), return; end
 
-
-
-
-
-
-
 Cko_approach = questdlg('Select CKO approach:','','Block Ligand-Receptor','Complete Gene Knockout','Block Ligand-Receptor');
 if ~ismember(Cko_approach, {'Block Ligand-Receptor','Complete Gene Knockout'}), return; end
 
@@ -142,27 +136,24 @@ switch Cko_approach
         targetpath = ...
         string([sprintf('%s (%s) -> %s (%s)', celltype1, targetg(1), celltype2, targetg(2));...
         sprintf('%s (%s) -> %s (%s)', celltype1, targetg(2), celltype2, targetg(1));...
-        sprintf('%s (%s) <- %s (%s)', celltype1, targetg(1), celltype2, targetg(2));...
-        sprintf('%s (%s) <- %s (%s)', celltype1, targetg(2), celltype2, targetg(1))]);
+        sprintf('%s (%s) <- %s (%s)', celltype1, targetg(2), celltype2, targetg(1));...
+        sprintf('%s (%s) <- %s (%s)', celltype1, targetg(1), celltype2, targetg(2))]);
         [width] = min([max(strlength(targetpath))*6, 500]);
-        [indx2, tf] = listdlg('PromptString', {'Select path(s) to block:'}, ...
+        [targetpathid, tf] = listdlg('PromptString', {'Select path(s) to block:'}, ...
             'SelectionMode', 'multiple', 'ListString', targetpath, 'ListSize', [width, 300]);
-        if tf == 1
-            targetpath = targetpath(indx2);
-        else
-            return;
-        end
-        celltype1
-        celltype2
-        targetg
-        targetpath
+        if tf ~= 1, return; end
 
-
-        return;
-        %[Tcell] = run.py_scTenifoldCko_path(sce, celltype1, celltype2, targetg, ...
-        %    targetpath, wkdir, true, prepare_input_only);
+        % assignin("base","sce",sce)
+        % assignin("base","celltype1",celltype1)
+        % assignin("base","celltype2",celltype2)
+        % assignin("base","targetg",targetg)
+        % assignin("base","targetpathid",targetpathid)
+        % prepare_input_only = true;
         
-
+        [Tcell] = run.py_scTenifoldCko_path(sce, celltype1, celltype2, targetg, ...
+            targetpathid, wkdir, true, prepare_input_only);
+        
+        % return;
     case 'Complete Gene Knockout'
         [indx2, tf] = listdlg('PromptString', {'Select a KO gene'}, ...
             'SelectionMode', 'single', 'ListString', gsorted, 'ListSize', [220, 300]);
@@ -186,13 +177,12 @@ switch Cko_approach
         end
         
         T = [];
-        [Tcell] = run.py_scTenifoldCko_type(sce, celltype1, celltype2, targetg, ...
+        [Tcell] = run.py_scTenifoldCko_gene(sce, celltype1, celltype2, targetg, ...
             targettype, wkdir, true, prepare_input_only);
     otherwise
         errordlg('Invalid option.','');
         return;
 end
-
     
     if ~isempty(Tcell)
         [T1] = Tcell{1};
@@ -222,9 +212,9 @@ end
         T=[T, table(knownpair)];
         % T(:,[4 5 6 7 11])=[];
         
-        outfile = fullfile(wkdir,"outfile.csv");
+        outfile = fullfile(wkdir,"outfile_interaction_changes.csv");
         if isfile(outfile)
-            answerx = questdlg('Overwrite outfile.csv? Select No to save in a temporary file.');
+            answerx = questdlg('Overwrite file? Select No to save in a temporary file.');
         else
             answerx = 'Yes';
         end
@@ -260,13 +250,10 @@ end
         end
     end
     
-    fn=fullfile(wkdir, 'merged_embeds.h5');
-    
-    eb = h5read(fn,'/data')';
-    
+    fn=fullfile(wkdir, 'merged_embeds.h5');    
+    eb = h5read(fn,'/data')';    
     n = height(eb);
-    sl = n / 4;
-    
+    sl = n / 4;    
     % Split the eb into four equal-length sub-ebs
     a = eb(1:sl,:);
     b = eb(sl+1:2*sl,:);
@@ -282,11 +269,16 @@ end
     %[sce.g(x) sce.g(y)]
     
     [T] = ten.i_dr(a, c, sce.g, true);
-    outfile = sprintf('outfile_%s_expression_changes.csv',celltype1);
+    T = addvars(T, repelem(celltype1, height(T), 1), 'Before', 1);
+    T.Properties.VariableNames{'Var1'} = 'celltype';
+    outfile = sprintf('outfile_expression_changes_in_%s.csv', ...
+        matlab.lang.makeValidName(celltype1));
     writetable(T, outfile);
     
     [T] = ten.i_dr(b, d, sce.g, true);
-    outfile = sprintf('outfile_%s_expression_changes.csv',celltype1);
+    T = addvars(T, repelem(celltype2, height(T), 1), 'Before', 1);
+    T.Properties.VariableNames{'Var1'} = 'celltype';   
+    outfile = sprintf('outfile_expression_changes_in_%s.csv', ...
+        matlab.lang.makeValidName(celltype2));
     writetable(T, outfile);
-
 end

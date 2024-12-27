@@ -10,6 +10,9 @@ FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
 % 'SC_QCFILTER (QC Preserves Lowly-expressed Cells/Genes)',...
 
+oldcn = sce.NumCells;
+oldgn = sce.NumGenes;
+
 listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
         'SC_QCFILTER (Enabling Whitelist Genes)', ...
         '------------------------------------------------', ...
@@ -444,6 +447,30 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
             requirerefresh = false;
             return;
         end
+    end
+
+    newcn = sce.NumCells;
+    newgn = sce.NumGenes;
+    if newgn==0
+        helpdlg("All genes are removed. Opertaion is cancelled.",'');
+        requirerefresh = false;
+        return;
+    end
+    if newcn==0
+        helpdlg("All cells are removed. Opertaion is cancelled.",'');
+        requirerefresh = false;
+        return;
+    end
+    if oldcn-newcn==0 && oldgn-newgn==0
+        helpdlg("No cells and genes are removed.",'');
+        requirerefresh = false;
+        return;
+    end
+    answer = questdlg(sprintf('%d cells will be removed; %d genes will be removed.', ...
+            oldcn-newcn, oldgn-newgn),'','Accept Changes', 'Cancel Changes', 'Accept Changes');
+    if ~strcmp(answer, 'Accept Changes')
+        requirerefresh = false;
+        return;
     end
     guidata(FigureHandle, sce);
 end

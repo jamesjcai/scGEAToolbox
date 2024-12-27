@@ -1,4 +1,4 @@
-function [T] = py_scTenifoldCko_type(sce, celltype1, celltype2, targetg, ...
+function [T] = py_scTenifoldCko_gene(sce, celltype1, celltype2, targetg, ...
                                 targettype, wkdir, ...
                                 isdebug, prepare_input_only)
 
@@ -127,7 +127,7 @@ end
 
     fw = gui.gui_waitbar([], [], 'Step 4 of 4: Running scTenifoldXct.py...');
 
-codefullpath = fullfile(codepth,'script.py');
+codefullpath = fullfile(codepth,'script_gene.py');
 pkg.i_addwd2script(codefullpath, wkdir, 'python');
 
 

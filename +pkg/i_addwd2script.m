@@ -5,16 +5,17 @@ function i_addwd2script(scriptfile, targetdir, ftype)
     if ~exist(targetdir, 'dir'), error('pkg.i_addwd2script error.'); end
     
     S = fileread(scriptfile);
-    
+    [~,b,c]=fileparts(scriptfile);
+
     switch ftype
         case 'R'
             x = sprintf('setwd("%s")', strrep(targetdir,'\','\\'));
             S = [x, newline, S];
-            outscriptfile = fullfile(targetdir,'script.R');
+            outscriptfile = fullfile(targetdir, [b,c]);
         case 'python'
             x = sprintf('os.chdir("%s")', strrep(targetdir,'\','\\'));
             S = ['import os', newline, x, newline, S];
-            outscriptfile = fullfile(targetdir,'script.py');
+            outscriptfile = fullfile(targetdir, [b,c]);
     end
     
     
