@@ -130,8 +130,7 @@ switch Cko_approach
         else
             return;
         end
-        targetg = sce.g(idx);
-        
+        targetg = sce.g(idx);        
 
         targetpath = ...
         string([sprintf('%s (%s) -> %s (%s)', celltype1, targetg(1), celltype2, targetg(2));...
@@ -183,6 +182,7 @@ switch Cko_approach
         errordlg('Invalid option.','');
         return;
 end
+
     
     if ~isempty(Tcell)
         [T1] = Tcell{1};
@@ -210,36 +210,36 @@ end
         assert(length(knownpair)==height(T));
     
         T=[T, table(knownpair)];
-        % T(:,[4 5 6 7 11])=[];
+        % T(:,[4 5 6 7 11]) = [];
         
         outfile = fullfile(wkdir,"outfile_interaction_changes.csv");
-        if isfile(outfile)
-            answerx = questdlg('Overwrite file? Select No to save in a temporary file.');
-        else
-            answerx = 'Yes';
-        end
-        if isempty(wkdir) || ~isfolder(wkdir) || ~strcmp(answerx, 'Yes')
-            [a, b] = pkg.i_tempdirfile("sctendifoldcko");
-            writetable(T, b);
-        
-            answer = questdlg(sprintf('Result has been saved in %s', b), ...
-                '', 'Export result...', 'Locate result file...', 'Export result...');
-            switch answer
-                case 'Locate result file...'
-                    winopen(a);
-                    pause(2)
-                    if strcmp(questdlg('Export result to other format?'), 'Yes')
-                        gui.i_exporttable(T, false, 'Ttenifldcko', 'TenifldCkoTable');
-                    end
-                case 'Export result...'
-                    gui.i_exporttable(T, false, 'Ttenifldcko', 'TenifldCkoTable');
-                otherwise
-                    winopen(a);
-            end
-        else
-            writetable(T, outfile);
-            waitfor(helpdlg(sprintf('Result has been saved in %s', outfile), ''));
-        end
+        % if isfile(outfile)
+        %     answerx = questdlg('Overwrite file? Select No to save in a temporary file.');
+        % else
+        %     answerx = 'Yes';
+        % end
+        % if isempty(wkdir) || ~isfolder(wkdir) || ~strcmp(answerx, 'Yes')
+        %     [a, b] = pkg.i_tempdirfile("sctendifoldcko");
+        %     writetable(T, b);
+        % 
+        %     answer = questdlg(sprintf('Result has been saved in %s', b), ...
+        %         '', 'Export result...', 'Locate result file...', 'Export result...');
+        %     switch answer
+        %         case 'Locate result file...'
+        %             winopen(a);
+        %             pause(2)
+        %             if strcmp(questdlg('Export result to other format?'), 'Yes')
+        %                 gui.i_exporttable(T, false, 'Ttenifldcko', 'TenifldCkoTable');
+        %             end
+        %         case 'Export result...'
+        %             gui.i_exporttable(T, false, 'Ttenifldcko', 'TenifldCkoTable');
+        %         otherwise
+        %             winopen(a);
+        %     end
+        % else
+        writetable(T, outfile);
+        waitfor(helpdlg(sprintf('Result of cell-cell interaction changes has been saved in %s', outfile), ''));
+        %end
     else
         if ~prepare_input_only
             helpdlg('No ligand-receptor pairs are identified.', '');
@@ -250,35 +250,40 @@ end
         end
     end
     
-    fn=fullfile(wkdir, 'merged_embeds.h5');    
-    eb = h5read(fn,'/data')';    
-    n = height(eb);
-    sl = n / 4;    
-    % Split the eb into four equal-length sub-ebs
-    a = eb(1:sl,:);
-    b = eb(sl+1:2*sl,:);
-    c = eb(2*sl+1:3*sl,:);
-    d = eb(3*sl+1:4*sl,:);
-    
-    %dx = abs(pdist2(a,b)-pdist2(c,d));
-    %[x,y]=pkg.i_maxij(dx, 1050);
-    %[sce.g(x) sce.g(y)]
-    %dx1 = pdist2(a,c);
-    %dx1 = pdist2(b,d);
-    %[x,y]=maxij(dx1, 50);
-    %[sce.g(x) sce.g(y)]
-    
-    [T] = ten.i_dr(a, c, sce.g, true);
-    T = addvars(T, repelem(celltype1, height(T), 1), 'Before', 1);
-    T.Properties.VariableNames{'Var1'} = 'celltype';
-    outfile = sprintf('outfile_expression_changes_in_%s.csv', ...
-        matlab.lang.makeValidName(celltype1));
-    writetable(T, outfile);
-    
-    [T] = ten.i_dr(b, d, sce.g, true);
-    T = addvars(T, repelem(celltype2, height(T), 1), 'Before', 1);
-    T.Properties.VariableNames{'Var1'} = 'celltype';   
-    outfile = sprintf('outfile_expression_changes_in_%s.csv', ...
-        matlab.lang.makeValidName(celltype2));
-    writetable(T, outfile);
+    if exist("merged_embeds.h5",'file') && strcmp('Yes', questdlg('In addtion to cell-cell interaction changes, scTenifoldCko also gives the result of gene expression changes. Continue?'))
+        fn=fullfile(wkdir, 'merged_embeds.h5');
+        eb = h5read(fn,'/data')';    
+        n = height(eb);
+        sl = n / 4;    
+        % Split the eb into four equal-length sub-ebs
+        a = eb(1:sl,:);
+        b = eb(sl+1:2*sl,:);
+        c = eb(2*sl+1:3*sl,:);
+        d = eb(3*sl+1:4*sl,:);
+        
+        %dx = abs(pdist2(a,b)-pdist2(c,d));
+        %[x,y]=pkg.i_maxij(dx, 1050);
+        %[sce.g(x) sce.g(y)]
+        %dx1 = pdist2(a,c);
+        %dx1 = pdist2(b,d);
+        %[x,y]=maxij(dx1, 50);
+        %[sce.g(x) sce.g(y)]
+        
+        [T] = ten.i_dr(a, c, sce.g, true);
+        T = addvars(T, repelem(celltype1, height(T), 1), 'Before', 1);
+        T.Properties.VariableNames{'Var1'} = 'celltype';
+        outfile1 = sprintf('outfile_expression_changes_in_%s.csv', ...
+            matlab.lang.makeValidName(celltype1));
+        writetable(T, outfile1);
+        
+        [T] = ten.i_dr(b, d, sce.g, true);
+        T = addvars(T, repelem(celltype2, height(T), 1), 'Before', 1);
+        T.Properties.VariableNames{'Var1'} = 'celltype';   
+        outfile2 = sprintf('outfile_expression_changes_in_%s.csv', ...
+            matlab.lang.makeValidName(celltype2));
+        writetable(T, outfile2);
+        waitfor(helpdlg({'Result of gene expression changes has been saved in:', ...
+            sprintf('%s', outfile1), ...
+            sprintf('%s', outfile2)},''));
+    end
 end

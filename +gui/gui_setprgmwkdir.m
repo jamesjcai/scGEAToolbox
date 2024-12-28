@@ -14,11 +14,15 @@ wkdir = fullfile(s, s1);
 if ~exist(wkdir,"dir")
     mkdir(wkdir);
 else
-    answer = questdlg(sprintf('%s existing. Overwrite?', ...
-        wkdir));
+    answer = questdlg(sprintf('%s existing. Overwrite?', wkdir));
     if ~strcmp(answer,'Yes')
         wkdir = '';
         return;
+    else
+        if ~strcmp('Yes', questdlg('Existing files in the working folder will be overwritten or deleted. Continue?'))
+            wkdir = '';
+            return;          
+        end
     end
 end
    
