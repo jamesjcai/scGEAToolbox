@@ -841,7 +841,7 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
         end
     end
 
-    function in_SingleClickSolution(src, ~)
+    function in_SingleClickSolution(src, ~)        
         if ~all(sce.c_cell_type_tx == "undetermined")            
             if ~strcmp(questdlg("Your data has been embedded and annotated. Single Click Solution will re-embed and annotate cells. Current embedding and annotation will be overwritten. Continue?", ""), 'Yes'), return; end
         else
