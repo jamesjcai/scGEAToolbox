@@ -164,6 +164,7 @@ pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save 
 pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 2}, "xpowerpoint.gif", 'Save Figure as Graphic File...');
 pkg.i_addbutton2fig(tb, 'off', @in_resizefont, "noun_font_size_591141.gif", 'Change Font Size');
 pkg.i_addbutton2fig(tb, 'off', @in_PickColorMap, "plotpicker-compass.gif", "Pick new color map");
+pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
 
 hFig.Visible=true;
 sz = 10;

@@ -66,15 +66,5 @@ function callback_ScatterStemPlot(src, ~)
         otherwise
             return;
     end
-    % fw = gui.gui_waitbar;
-    % for k = 1:length(thisyv)
-    %     hFig = figure('Visible','off');
-    %     gui.i_stemscatter(sce.s, thisyv{k});
-    %     zlabel(strrep(ylabelv{k},'_','\_'));
-    %     gui.i_movegui2parent(hFig, FigureHandle);
-    %     hFig.Visible = "on";
-    % end
-    % gui.gui_waitbar(fw);
-    % gui.sc_uitabgrpfig_vioplot(thisyv, ylabelv, thisc, FigureHandle);
     gui.sc_uitabgrpfig_feaplot(thisyv, ylabelv, sce.s, FigureHandle, 2);    
 end

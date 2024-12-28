@@ -16,10 +16,12 @@ if nargin < 2, c = []; end
 %     is2d = true;
 % end
 isAxesHandle = isa(s, 'matlab.graphics.axis.Axes'); %isgraphics(s, 'axes');
-if ~isAxesHandle && isempty(c), error('xxx'); end
+if ~isAxesHandle && isempty(c), error('Empty handle.'); end
 
 
 hFig = figure("Visible","off");
+tb = uitoolbar('Parent', hFig);
+pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
 
 if isAxesHandle
     hAx = copyobj(s, hFig);

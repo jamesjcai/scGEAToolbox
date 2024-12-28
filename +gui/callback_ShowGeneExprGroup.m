@@ -45,6 +45,10 @@ function callback_ShowGeneExprGroup(src, ~)
                 title(cL{ky});
             end
             sgtitle(strrep(ylabelv,'_','\_'));
+            tb = uitoolbar('Parent', hFig);
+            pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, ...
+                'HDF_pointx.gif', 'Resize Plot Window');
+
             gui.i_movegui2parent(hFig, FigureHandle);
             hFig.Visible = "on";
     end

@@ -22,8 +22,11 @@ idx = idx1 | idx2 | idx3;
 if any(idx)
     ttxt = sprintf("%s+", sce.g(idx));
     ci = full(sum(sce.X(idx, :), 1));
-    % hFig = figure("WindowStyle", "modal");
     hFig = figure;
+    tb = uitoolbar('Parent', hFig);
+    pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, ...
+        'HDF_pointx.gif', 'Resize Plot Window');
+    
 
     cm = uicontextmenu(hFig);
     m1 = uimenu(cm, 'Text', 'Save HgBGeneExpression...', "MenuSelectedFcn", {@i_saveM, ci});
@@ -33,7 +36,8 @@ if any(idx)
 
     title(ttxt);
     tb1 = uitoolbar(hFig);
-    pkg.i_addbutton2fig(tb1, 'off', {@i_saveM, ci}, 'greencircleicon.gif', 'Save marker gene map...');
+    pkg.i_addbutton2fig(tb1, 'off', {@i_saveM, ci}, 'greencircleicon.gif', ...
+        'Save marker gene map...');
 else
     warndlg('No Hgb-genes found');
 end
@@ -47,7 +51,8 @@ end
             values = {sce.c_cell_id, ci(:)};
             export2wsdlg(labels, vars, values);
         else
-            errordlg('This function is not available for standalone application. Run scgeatool.m in MATLAB to use this function.');                
+            errordlg(['This function is not available for standalone application.' ...
+                ' Run scgeatool.m in MATLAB to use this function.']);                
         end            
     end
 end

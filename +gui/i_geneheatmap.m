@@ -81,6 +81,7 @@ pkg.i_addbutton2fig(tb, 'on', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save F
 pkg.i_addbutton2fig(tb, 'on', @gui.i_invertcolor, 'plotpicker-comet.gif', 'Invert colors');
 pkg.i_addbutton2fig(tb, 'off', @i_resetcolor, 'plotpicker-geobubble2.gif', 'Reset color map');
 pkg.i_addbutton2fig(tb, 'off', @i_flipxy, 'xplotpicker-geobubble2.gif', 'Flip XY');
+pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
 
 set(f, 'visible', 'on');
 drawnow;

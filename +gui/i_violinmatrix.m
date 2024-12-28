@@ -22,6 +22,10 @@ cL = strrep(cL(:),'_','\_');
 % xgroupdata = categorical(cL(c));
 xgroupdata = cL(c);
 hFig = figure('Visible', 'off', 'DockControls', 'off');
+tb = uitoolbar('Parent', hFig);
+pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
+
+
 for k = 1:M
     %gui.gui_waitbar_adv(fw, k / M);
     ydata = X(g == tgene(k), :);

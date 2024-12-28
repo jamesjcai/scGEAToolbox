@@ -60,7 +60,8 @@ function [hFig] = i_crosstalkgraph(OUT, k, sce)
         pt5pickcolr.ClickedCallback = @gui.i_linksubplots;
         pkg.i_addbutton2fig(tb, 'on', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
         sgtitle(figname);
-    
+        pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
+
         %             hFig.Position(3) = hFig.Position(3) * 1.5;
         %             hFig.Position(4) = hFig.Position(4) * 1.5;
         colormap(ax1, 'default');
