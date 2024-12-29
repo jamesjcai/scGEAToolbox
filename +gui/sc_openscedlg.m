@@ -109,10 +109,24 @@ function [sce, filename] = sc_openscedlg(~, ~)
                 'Pick a tsv/csv/txt format file');
             if isequal(fname, 0), return; end
             filename = fullfile(pathname, fname);
-            [X, g] = sc_readtsvfile(filename);
-            sce = SingleCellExperiment(X, g);
-            metainfo = sprintf("Source: %s", filename);
-            sce = sce.appendmetainfo(metainfo);
+            fw = gui.gui_waitbar;
+            try
+                [X, g] = sc_readtsvfile(filename);
+                sce = SingleCellExperiment(X, g);
+                metainfo = sprintf("Source: %s", filename);
+                sce = sce.appendmetainfo(metainfo);
+            catch ME
+                gui.gui_waitbar(fw, true);
+                errordlg(ME.message,'','modal');
+                return;
+            end
+            if isempty(sce)
+                gui.gui_waitbar(fw, true);
+                errordlg('File Import Failure.','','modal');
+                return;
+            else
+                gui.gui_waitbar(fw);
+            end
         case 'Seurat/Rds File (*.rds)...'
             [fname, pathname] = uigetfile( ...
                 {'*.rds', 'Seurat/Rds Format Files (*.rds)'; ...
