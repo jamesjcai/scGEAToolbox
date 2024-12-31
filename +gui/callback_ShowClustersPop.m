@@ -58,7 +58,8 @@ try
 
 % -------------
 
-hFig = figure('visible', 'off', 'Position', FigureHandle.Position);
+% hFig = figure('visible', 'off', 'Position', FigureHandle.Position);
+hFig = figure('visible', 'off');
 tabgp = uitabgroup();
 for nf = 1:numfig
     tab{nf} = uitab(tabgp, 'Title', sprintf('Tab%d',nf));
@@ -84,10 +85,11 @@ for nf = 1:numfig
 end
 % tb = findall(hFig, 'Tag', 'FigureToolBar');
 tb = uitoolbar('Parent', hFig);
-uipushtool(tb, 'Separator', 'off');
+%uipushtool(tb, 'Separator', 'off');
 pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 pkg.i_addbutton2fig(tb, 'off', @in_scgeatoolsce, "icon-mat-touch-app-10.gif", 'Extract and Work on Separate SCEs...');
 pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
+gui.i_movegui2parent(hFig, FigureHandle);
 drawnow;
 set(hFig, 'visible', 'on');
 
@@ -139,13 +141,26 @@ end
                 return;
             case {'Yes','View SCEs'}
                 [idx] = in_selectcellgrps(cL(idxx));                
-                if isempty(idx), return; end 
+                if isempty(idx), return; end
+                cL2=cL(idxx);
+                % currentColormap = colormap;
+                % figure(FigureHandle)
+                % colormap(currentColormap);
+                
+                s=0;
                 for ik=1:length(idx)
                     % scev = SCEV{idx(ik)};
                     scev = sce.selectcells(SCEV{idx(ik)});
-                    scgeatool(scev);
+                    p=scgeatool(scev);
+                    p.Name=matlab.lang.makeValidName(cL2{idx(ik)});
+                    % p.Position([2])=p.Position([2])-s*30;
+                    % p.Position([1])=p.Position([1])+s*30;
+                    % p.Position([3 4])=p.Position([3 4])*0.8;
+                    s=s+1;
                     pause(0.5);
                 end
+                close(hFig);
+                
            case 'Save SCEs'
                 answer2=questdlg('Where to save files?','','Use Temporary Folder', ...
                     'Select a Folder','Cancel','Use Temporary Folder');
@@ -166,6 +181,8 @@ end
                 end
                
                 [idx] = in_selectcellgrps(cL(idxx));
+
+
                 cL2=cL(idxx);
                 if isempty(idx), return; end 
                 for ik=1:length(idx)
