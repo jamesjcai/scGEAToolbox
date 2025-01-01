@@ -13,12 +13,23 @@ if nargin < 1
     end
 end
 pt = uipushtool(tb, 'Separator', 'on');
-folder = fileparts(mfilename('fullpath'));
-a = strfind(folder, filesep);
-folder = extractBefore(folder, a(end)+1);
-wrkpth = fullfile(folder, 'resources', 'Images', 'camera.gif');
-[img, map] = imread(wrkpth);
-ptImage = ind2rgb(img, map);
+
+try
+    mfolder = fileparts(mfilename('fullpath'));
+    [img, map] = imread(fullfile(mfolder, '..', 'resources', 'Images', 'camera.gif'));
+    ptImage = ind2rgb(img, map);
+catch
+    ptImage = rand(16, 16, 3);
+end
+
+%folder = fileparts(mfilename('fullpath'));
+%a = strfind(folder, filesep);
+%folder = extractBefore(folder, a(end)+1);
+%wrkpth = fullfile(folder, 'resources', 'Images', 'camera.gif');
+%[img, map] = imread(wrkpth);
+%ptImage = ind2rgb(img, map);
+
+
 pt.CData = ptImage;
 pt.Tooltip = 'Make video snapshot';
 pt.ClickedCallback = @camera3dmp4;
