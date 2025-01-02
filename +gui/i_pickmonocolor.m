@@ -1,4 +1,6 @@
-function i_pickmonocolor(~, ~, revcolor)
+function i_pickmonocolor(~, ~, revcolor,hFig)
+
+if nargin < 4, hFig = gcf; end
 if nargin < 3, revcolor = true; end
 list = {'spring', ...
     'summer', 'autumn', ...
@@ -8,9 +10,9 @@ list = {'spring', ...
 if tf == 1
     a = colormap(list{indx});
     if revcolor
-        colormap(flipud(a));
+        colormap(hFig, flipud(a));
     else
-        colormap(a);
+        colormap(hFig, a);
     end
 end
 end
