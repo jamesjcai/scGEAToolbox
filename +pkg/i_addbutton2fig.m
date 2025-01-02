@@ -1,4 +1,4 @@
-function i_addbutton2fig(toolbarHdl, sepTag, callbackFnc, imgFil, tooltipTxt)
+function [pt] = i_addbutton2fig(toolbarHdl, sepTag, callbackFnc, imgFil, tooltipTxt)
 
 mfolder = fileparts(mfilename('fullpath'));
 
