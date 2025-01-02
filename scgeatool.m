@@ -859,7 +859,7 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
             'Estimate Differentiation Potency of Cells?'};
         dlgtitle = '';
         dims = [1, 85];        
-        definput = {'Yes', 'No', 'No', 'Yes', 'Yes'};
+        definput = {'Yes', 'No', 'No', 'Yes', 'No'};
         answer = inputdlg(prompt, dlgtitle, dims, definput);
         if isempty(answer)
             return;

@@ -12,6 +12,7 @@ classdef myFigure < handle
             else
                 tb = findall(obj.FigureHandle, 'Type', 'uitoolbar');
             end
+            uipushtool(tb, 'Separator', 'off');
             pkg.i_addbutton2fig(tb, 'off', @gui.i_invertcolor, 'plotpicker-comet.gif', 'Invert colors');     
             pkg.i_addbutton2fig(tb, 'off', @gui.i_linksubplots, "plottypectl-rlocusplot.gif", "Link subplots");
             pkg.i_addbutton2fig(tb, 'off', @gui.i_setboxon, 'RectGate.gif', 'Box on/off'); 
