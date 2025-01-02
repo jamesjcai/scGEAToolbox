@@ -9,11 +9,22 @@ function i_changefontsize(~, ~, hFig)
     %}
     if nargin < 3, hFig = gcf; end
     axesHandles = findall(hFig, 'Type', 'axes');
-    for k = 1:length(axesHandles)
-        ax = axesHandles(k);
-        fz = get(ax, 'FontSize') - 1;
-        if fz <= 5, fz = 15; end
-        set(ax, 'FontSize', fz);
-    end
+    if ~isempty(axesHandles)
+        hasax = false;
 
+        for k = 1:length(axesHandles)
+            ax = axesHandles(k);
+            if ~isempty(ax)
+                fz = get(ax, 'FontSize') - 1;
+                if fz <= 5, fz = 15; end
+                set(ax, 'FontSize', fz);
+                hasax = true;
+            end
+        end
+        if ~hasax
+            helpdlg('No plots available in the current window. Unable to change the font size', '');
+        end
+    else
+        helpdlg('No figures available in the current window. Unable to change the font size.', '');
+    end
 end

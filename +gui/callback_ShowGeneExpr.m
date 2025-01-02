@@ -14,8 +14,8 @@ function callback_ShowGeneExpr(src, ~)
 
     n = length(glist);
     if n > 1
-        answer = questdlg("Plot on the same figure?","", "Yes, same figure", ...
-            "No, different figures", "Cancel", "Yes, same figure");
+        answer = questdlg("Plot on all genes in the same figure?","", "Yes, same figure", ...
+            "No, different tabs", "Cancel", "Yes, same figure");
         if isempty(answer), return; end
         if strcmp(answer, "Cancel"), return; end
     else
@@ -23,7 +23,7 @@ function callback_ShowGeneExpr(src, ~)
     end
     
     switch answer
-        case "No, different figures"
+        case "No, different tabs"
             fw = gui.gui_waitbar;
             y = cell(n,1);
             for k = 1:n
