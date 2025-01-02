@@ -6,7 +6,7 @@ classdef myFigure < handle
     methods
         % Constructor
         function obj = myFigure()
-            obj.FigureHandle = figure('Name', 'My Custom Figure', 'NumberTitle', 'off');
+            obj.FigureHandle = figure('Name', 'My Custom Figure', 'NumberTitle', 'off', 'Visible',"off");
             if isempty(findall(obj.FigureHandle, 'Type', 'uitoolbar'))
                 tb = uitoolbar(obj.FigureHandle);
             else
@@ -24,6 +24,27 @@ classdef myFigure < handle
             pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, obj.FigureHandle}, 'HDF_pointx.gif', 'Resize Plot Window');
             gui.gui_3dcamera(tb, 'AllCells');
             
+        end
+
+        function centerto(obj, parentfig)
+            try
+                if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 
+                    [px_new] = gui.i_getchildpos(parentfig, obj.FigureHandle);
+                    if ~isempty(px_new)
+                        movegui(obj.FigureHandle, px_new);
+                    else
+                        movegui(obj.FigureHandle, 'center');
+                    end
+                else
+                    movegui(obj.FigureHandle, 'center');
+                end
+            catch
+                movegui(obj.FigureHandle, 'center');
+            end        
+        end
+
+        function show(obj)
+            obj.FigureHandle.Visible = true;
         end
         
         % Method to add a custom toolbar button

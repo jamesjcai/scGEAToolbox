@@ -135,6 +135,26 @@ df1 = reshape(df,[length(terms),length(allg)]);
 df1 = cell2table(df1,'VariableNames',allg);
 df1 = table2array(df1);
 
+hFig2 = gui.myFigure;
+hFig2.centerto(FigureHandle);
+hFig2.addCustomButton('in_savedata', @in_savedata);
+
+CC = gui.chordChart(df1,'Arrow','off','rowName',terms,'colName',allg);
+CC = CC.draw();
+CC.setFont('FontName','Arial','FontSize',10)
+CC.labelRotate('on');
+CC.setLabelRadius(1.2);
+CListC = lines(size(df1, 2));
+for ix = 1:size(df1, 1)
+    for jx = 1:size(df1, 2)
+        CC.setChordMN(ix, jx, 'FaceColor',CListC(jx,:), 'FaceAlpha',.4)
+    end
+end
+CC.setSquareT_Prop('FaceColor',[0,0,0])
+hFig2.show;
+
+
+%{
 hFig = figure('Visible',"off");
 % ax0 = hFig.CurrentAxes;
 gui.i_movegui2parent(hFig, FigureHandle);
@@ -167,6 +187,8 @@ pkg.i_addbutton2fig(tb, 'off', @in_PickColorMap, "plotpicker-compass.gif", "Pick
 pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
 
 hFig.Visible=true;
+
+%}
 sz = 10;
     function in_savedata(~,~)
         gui.i_exporttable(tab(indx2,:), true, ...
