@@ -31,20 +31,18 @@ classdef myFigure < handle
             obj.tbv{11} = gui.gui_3dcamera(obj.tb, 'AllCells');            
         end
 
-        function ptvkeep(obj, flag)
-            delete(obj.tbv{~flag});
-        end
+        % function ptvkeep(obj, flag)
+        %     delete(obj.tbv{~flag});
+        % end
 
         function ptvshow(obj, flag)
-            for k=1:11
-                set(obj.tbv{k},'Visible', flag(k));
-            end
+            set([obj.tbv{flag}],'Visible','on');
+            set([obj.tbv{~flag}],'Visible','off');
         end
 
         function ptvenable(obj, flag)
-            for k=1:11
-                set(obj.tbv{k},'Enable', flag(k));
-            end
+            set([obj.tbv{flag}],'Enable','on');
+            set([obj.tbv{~flag}],'Enable','off');
         end        
 
         function centerto(obj, parentfig)
@@ -68,34 +66,14 @@ classdef myFigure < handle
             obj.FigureHandle.Visible = true;
         end
         
-        % Method to add a custom toolbar button
         function addCustomButton(obj, sepTag, callback, imgFil, buttonLabel)
             pkg.i_addbutton2fig(obj.tb, sepTag, callback, imgFil, buttonLabel); 
-
-            %{
-            if isempty(findall(obj.FigureHandle, 'Type', 'uitoolbar'))
-                tb = uitoolbar(obj.FigureHandle);
-            else
-                tb = findall(obj.FigureHandle, 'Type', 'uitoolbar');
-            end
-            
-            % Create a push tool
-            pt = uipushtool(tb, 'TooltipString', buttonLabel);
-            
-            % Set the icon (optional)
-            % pt.CData = imread('icon.png'); % Ensure the icon is a 16x16 RGB image
-            pt.CData = rand(16, 16, 3);
-            % Set the callback function
-            pt.ClickedCallback = callback;
-            %}
         end
-        
-        % Method to set the figure title
+
         function setTitle(obj, titleStr)
             obj.FigureHandle.Name = titleStr;
         end
         
-        % Method to close the figure
         function closeFigure(obj)
             close(obj.FigureHandle);
         end
