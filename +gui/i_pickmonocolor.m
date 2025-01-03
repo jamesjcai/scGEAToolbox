@@ -1,4 +1,4 @@
-function i_pickmonocolor(~, ~, revcolor,hFig)
+function i_pickmonocolor(~, ~, revcolor, hFig)
 
 if nargin < 4, hFig = gcf; end
 if nargin < 3, revcolor = true; end

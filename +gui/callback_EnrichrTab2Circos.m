@@ -137,7 +137,7 @@ df1 = table2array(df1);
 
 hFig2 = gui.myFigure;
 hFig2.centerto(FigureHandle);
-hFig2.addCustomButton('in_savedata', @in_savedata);
+hFig2.addCustomButton('on', @in_savedata, 'export.gif', 'Export data...');
 
 CC = gui.chordChart(df1,'Arrow','off','rowName',terms,'colName',allg);
 CC = CC.draw();

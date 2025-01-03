@@ -2,8 +2,8 @@ function e_mkqqplot(T)
 
 pd = makedist('Gamma', 'a', 0.5, 'b', 2);
 
-hFig=figure;
-a=gca(hFig);
+hFig = figure;
+a = gca(hFig);
 qqplot(a, T.FC, pd);
 
 [~, idx] = sort(T.FC);

@@ -13,17 +13,18 @@ sce = guidata(FigureHandle);
 if isempty(thisc1), return; end
 
 if isempty(thisc2)
-    hFig = figure("Visible","off", "DockControls", "off");
+    hFig = gui.myFigure;
+    % figure("Visible","off", "DockControls", "off");
     % tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
     
-        tb = uitoolbar(hFig);
-        uipushtool(tb, 'Separator', 'off');
+    %    tb = uitoolbar(hFig);
+    %    uipushtool(tb, 'Separator', 'off');
         % pkg.i_addbutton2fig(tb, 'off', [], "IMG00107.GIF", " ");
         %pkg.i_addbutton2fig(tb, 'off', @i_saveCrossTable, "export.gif", 'Save cross-table');
-        pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-        pkg.i_addbutton2fig(tb, 'on', @gui.i_pickcolormap, 'plotpicker-compass.gif', 'Pick new color map...');
+    %    pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
+    %    pkg.i_addbutton2fig(tb, 'on', @gui.i_pickcolormap, 'plotpicker-compass.gif', 'Pick new color map...');
         %pkg.i_addbutton2fig(tb, 'on', @gui.i_invertcolor, 'plotpicker-comet.gif', 'Invert colors');
-        pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
+    %    pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
         % pkg.i_addbutton2fig(tb,'off',@i_reordersamples, ...
         %     "xpowerpoint.gif",'Reorder Samples');
         % pkg.i_addbutton2fig(tb, 'off', @i_sortbymean, ...
@@ -39,10 +40,12 @@ if isempty(thisc2)
         xticks(1:length(labelsx));
         labelsx1 = strrep(labelsx, '_', '\_');
         xticklabels(labelsx1);
-    gui.i_movegui2parent(hFig, FigureHandle);
+    % gui.i_movegui2parent(hFig, FigureHandle);
     
-    drawnow;    
-    hFig.Visible=true;
+    %drawnow;    
+    %hFig.Visible=true;
+    hFig.centerto(FigureHandle);
+    hFig.show;
     return;
 end
 
@@ -56,7 +59,8 @@ labelsx='';
 labelsy='';
 T=[];
 
-hFig = figure("Visible","off", "DockControls", "off");
+% hFig = figure("Visible","off", "DockControls", "off");
+hFig = gui.myFigure;
 
 % [px_new] = gui.i_getchildpos(FigureHandle, hFig);
 tab=cell(2,1);
@@ -88,27 +92,26 @@ for k=1:2
     in_plot2;
 end
 
-% tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
-    tb = uitoolbar(hFig);
-    uipushtool(tb, 'Separator', 'off');
-    % pkg.i_addbutton2fig(tb, 'off', [], "IMG00107.GIF", " ");
-    pkg.i_addbutton2fig(tb, 'off', @i_saveCrossTable, "export.gif", 'Save cross-table');
-    pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-    pkg.i_addbutton2fig(tb, 'on', @gui.i_pickcolormap, 'plotpicker-compass.gif', 'Pick new color map...');
-    pkg.i_addbutton2fig(tb, 'on', @gui.i_invertcolor, 'plotpicker-comet.gif', 'Invert colors');
-    pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
+%    tb = uitoolbar(hFig);
+%    uipushtool(tb, 'Separator', 'off');
+hFig.addCustomButton('off', @i_saveCrossTable, "export.gif", 'Save cross-table');
+% pkg.i_addbutton2fig(tb, 'off', @i_saveCrossTable, "export.gif", 'Save cross-table');
+%    pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
+%    pkg.i_addbutton2fig(tb, 'on', @gui.i_pickcolormap, 'plotpicker-compass.gif', 'Pick new color map...');
+%    pkg.i_addbutton2fig(tb, 'on', @gui.i_invertcolor, 'plotpicker-comet.gif', 'Invert colors');
+%    pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
     % pkg.i_addbutton2fig(tb,'off',@i_reordersamples, ...
     %     "xpowerpoint.gif",'Reorder Samples');
     % pkg.i_addbutton2fig(tb, 'off', @i_sortbymean, ...
     %     "xpowerpoint.gif", 'Sort Samples by Size');
 
 
-gui.i_movegui2parent(hFig, FigureHandle);
+%gui.i_movegui2parent(hFig, FigureHandle);
 
-drawnow;
 gui.gui_waitbar(fw);
-hFig.Visible=true;
-
+%hFig.Visible=true;
+hFig.centerto(FigureHandle);
+hFig.show;
 
 
     function in_crossplot(thiscA,thiscB)
