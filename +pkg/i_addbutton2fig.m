@@ -21,6 +21,12 @@ catch
     ptImage = rand(16, 16, 3);
 end
 
+if size(ptImage, 3) == 1
+%     colormapName = gray(256);
+%     ptImage = ind2rgb(uint8(ptImage * 255), colormapName);
+ptImage = cat(3, ptImage, ptImage, ptImage);
+end
+
 pt.CData = ptImage;
 pt.Tooltip = tooltipTxt;
 pt.ClickedCallback = callbackFnc;
