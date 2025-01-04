@@ -1,5 +1,6 @@
-function i_networkvis(G, xy, curved, fontsize)
+function i_networkvis(G, xy, curved, fontsize, parentfig)
 
+if nargin < 5, parentfig = []; end
 if nargin < 3, curved = true; end
 if nargin < 4, fontsize = 15; end
 
@@ -8,7 +9,9 @@ textOpts.HorizontalAlignment = 'center';
 textOpts.VerticalAlignment = 'middle';
 textOpts.FontWeight = 'normal';
 
-hFig = figure("Visible","off", 'SizeChangedFcn', @in_addtext);
+% hFig = figure("Visible","off", 'SizeChangedFcn', @in_addtext);
+
+hFig = gui.myFigure;
 
 %if ~curved
 %    gplot(G.adjacency, xy, '-k');
@@ -31,7 +34,10 @@ hFig = figure("Visible","off", 'SizeChangedFcn', @in_addtext);
     %         'VerticalAlignment','middle','Margin',0.2);
     % end
     in_addtext([],[]);
-    hFig.Visible='on';
+    %hFig.Visible='on';
+    hFig.centerto(parentfig);
+    hFig.show;
+
 
 
     function in_addtext(~, ~)

@@ -67,13 +67,15 @@ axistrig = true;
     end
 
     function ix_networkvis(~, ~)
-        gui.i_networkvis(G1, getxy, true, p1.NodeFontSize);
+        gui.i_networkvis(G1, getxy, true, p1.NodeFontSize, hFig.FigureHandle);
     end
 
+
     function in_NetworkVis2(~, ~)
-        figure('SizeChangedFcn', @sbar);
-        gplot(G1.adjacency, [p1.XData' p1.YData'], ...
-            '-k');
+        %figure('SizeChangedFcn', @sbar);
+        h = gui.myFigure;
+        h.centerto(hFig.FigureHandle);
+        gplot(G1.adjacency, [p1.XData' p1.YData'], '-k');
         hold on
         scatter(p1.XData', p1.YData', 300, ...
             'MarkerEdgeColor','k', ...
@@ -85,7 +87,7 @@ axistrig = true;
         
         tz = cell(length(G1.Nodes.Name),1);
         for k = 1:length(G1.Nodes.Name)            
-            [wx, hx] = measureText(G1.Nodes.Name{k}, textOpts);
+            [wx] = measureText(G1.Nodes.Name{k}, textOpts);
             tz{k} = text(p1.XData(k)-floor(wx/2), p1.YData(k), ...
                 G1.Nodes.Name{k},'FontSize',textOpts.FontSize,...
                 'BackgroundColor','w', ...
@@ -93,24 +95,25 @@ axistrig = true;
                 'HorizontalAlignment','center', ...
                 'VerticalAlignment','middle');             
         end
+        h.show;
 
-        function sbar(~, ~)
-                textOpts.FontSize = 15;
-                textOpts.HorizontalAlignment = 'center';
-                textOpts.VerticalAlignment = 'middle';
-                textOpts.FontWeight = 'normal';
-                textHandles = findall(gcf, 'Type', 'text'); % Find all text objects in the current figure
-                delete(textHandles); % Delete all found text objects
-            for k = 1:length(G1.Nodes.Name)                
-                [wx, hx] = measureText(G1.Nodes.Name{k}, textOpts);
-                t{k} = text(p1.XData(k)-wx/2, p1.YData(k), ...
-                    G1.Nodes.Name{k},'FontSize',15,...
-                    'BackgroundColor','w', ...
-                    'FontWeight','normal', ...
-                    'HorizontalAlignment','center', ...
-                    'VerticalAlignment','middle');             
-            end
-        end
+        % function sbar(~, ~)
+        %         textOpts.FontSize = 15;
+        %         textOpts.HorizontalAlignment = 'center';
+        %         textOpts.VerticalAlignment = 'middle';
+        %         textOpts.FontWeight = 'normal';
+        %         textHandles = findall(gcf, 'Type', 'text'); % Find all text objects in the current figure
+        %         delete(textHandles); % Delete all found text objects
+        %     for k = 1:length(G1.Nodes.Name)                
+        %         [wx, hx] = measureText(G1.Nodes.Name{k}, textOpts);
+        %         t{k} = text(p1.XData(k)-wx/2, p1.YData(k), ...
+        %             G1.Nodes.Name{k},'FontSize',15,...
+        %             'BackgroundColor','w', ...
+        %             'FontWeight','normal', ...
+        %             'HorizontalAlignment','center', ...
+        %             'VerticalAlignment','middle');             
+        %     end
+        % end
     end
 
     % function in_NetworkVis(~, ~)
