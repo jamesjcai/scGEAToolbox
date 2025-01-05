@@ -18,10 +18,13 @@ if nargin < 2, c = []; end
 isAxesHandle = isa(s, 'matlab.graphics.axis.Axes'); %isgraphics(s, 'axes');
 if ~isAxesHandle && isempty(c), error('Empty handle.'); end
 
+hx=gui.myFigure;
+hFig = hx.FigureHandle;
+%hFig = figure("Visible","off");
 
-hFig = figure("Visible","off");
-tb = uitoolbar('Parent', hFig);
-pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
+
+%tb = uitoolbar('Parent', hFig);
+%pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
 
 if isAxesHandle
     hAx = copyobj(s, hFig);
@@ -43,7 +46,20 @@ assert(isequal(ax, hAx));
 
 is3d1 = isprop(hAx, 'ZLim');
 h = get(hAx, 'Children');
-is3d2 = any(arrayfun(@(x) ~isempty(get(x, 'ZData')), h));
+
+%assignin('base',"h",h);
+is3d2=false;
+if isscalar(h) 
+    if isprop(h, 'ZData')  % ismember('ZData', properties(h))
+        is3d2 = any(arrayfun(@(x) ~isempty(get(x, 'ZData')), h));
+    end
+else    
+    for k=1:numel(h)
+        if isa(h(k), 'matlab.graphics.chart.primitive.Scatter')
+            is3d2 = any(arrayfun(@(x) ~isempty(get(x, 'ZData')), h(k)));
+        end
+    end
+end
 is3d = is3d1 & is3d2;
 
 if is3d    % ======================================== 3D
@@ -107,16 +123,17 @@ else          % ======================================== 2D
     text(xLimits(1), yLimits(1) - 2*b, txt1);
     
     [~, b] = measureText(txt2);
-    text(xLimits(1) - 2*b, yLimits(1), txt2,'Rotation',90);
+    text(xLimits(1)-3*b, yLimits(1), txt2,'Rotation',90);
     title('')
     subtitle('')
     hold off;
 end
 
 
-
-gui.i_movegui2parent(hFig, parentfig);
-hFig.Visible = "on";
+hx.centerto(parentfig);
+hx.show;
+%gui.i_movegui2parent(hFig, parentfig);
+%hFig.Visible = "on";
 
 
 

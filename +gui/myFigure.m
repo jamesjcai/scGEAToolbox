@@ -21,15 +21,15 @@ classdef myFigure < handle
             end
             uipushtool(obj.tb, 'Separator', 'off');
             obj.tbv{1} = pkg.i_addbutton2fig(obj.tb, 'on', @gui.i_invertcolor, 'INVERT.gif', 'Invert colors');     
-            obj.tbv{2} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_linksubplots, "plottypectl-rlocusplot.gif", "Link subplots");
-            obj.tbv{3} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_setboxon, 'RectGate.gif', 'Box on/off'); 
-            obj.tbv{4} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_renametitle, "icon-mat-touch-app-10.gif", 'Change Plot Title');
-            obj.tbv{5} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_pickmonocolor, true}, 'plotpicker-compass.gif', 'Pick new color map...');
-            obj.tbv{6} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_changefontsize, 'noun_font_size_591141.gif', 'ChangeFontSize');
+            obj.tbv{2} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_linksubplots, "union.jpg", "Link subplots");
+            obj.tbv{3} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_setboxon, 'package2.jpg', 'Box on/off'); 
+            obj.tbv{4} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_renametitle, "align-top-box-solid.jpg", 'Change Plot Title');
+            obj.tbv{5} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_pickmonocolor, true}, 'color-wheel.jpg', 'Pick new color map...');
+            obj.tbv{6} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_changefontsize, 'text-size.jpg', 'ChangeFontSize');
             obj.tbv{7} = pkg.i_addbutton2fig(obj.tb, 'on', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-            obj.tbv{8} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_savemainfig, 2}, "jpeg.gif", 'Save Figure as Graphic File...');
-            obj.tbv{9} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_savemainfig, 1}, "svg.gif", 'Save Figure as SVG File...');
-            obj.tbv{10} = pkg.i_addbutton2fig(obj.tb, 'on', {@gui.i_resizewin, obj.FigureHandle}, 'HDF_pointx.gif', 'Resize Plot Window');
+            obj.tbv{8} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_savemainfig, 2}, "File-Jpg--Streamline-Core-Gradient.png", 'Save Figure as Graphic File...');
+            obj.tbv{9} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_savemainfig, 1}, "svg.png", 'Save Figure as SVG File...');
+            obj.tbv{10} = pkg.i_addbutton2fig(obj.tb, 'on', {@gui.i_resizewin, obj.FigureHandle}, 'scale-frame-enlarge.jpg', 'Resize Plot Window');
             obj.tbv{11} = gui.gui_3dcamera(obj.tb, 'AllCells');            
         end
 
