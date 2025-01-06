@@ -30,7 +30,6 @@ function callback_MultiGroupingView(src, ~)
             [thiscv, clabelv] = gui.i_selectnstates(sce, false, [4, 5]);
             if isempty(thiscv) || isempty(clabelv), return; end
 
-            % hFig = figure('Visible','off');
             hx=gui.myFigure;
             hFig = hx.FigureHandle;
             hFig.Position(3) = hFig.Position(3) * 1.8;
@@ -50,8 +49,7 @@ function callback_MultiGroupingView(src, ~)
             %drawnow;
             %hFig.Visible=true;
             hx.addCustomButton('on', @in_showclustlabel, "plotpicker-scatter.gif", "Show cluster labels");
-            hx.centerto(FigureHandle);
-            hx.show;
+            hx.show(FigureHandle);
             dt = datacursormode(hFig);
             dt.UpdateFcn = {@in_myupdatefcnx12};
             %evalin('base', 'h = findobj(gcf,''type'',''axes'');');
@@ -62,14 +60,6 @@ function callback_MultiGroupingView(src, ~)
             rotate3d(hFig,'on');
             hBr = brush(hFig);
             hBr.ActionPostCallback = {@onBrushAction, axesv};
-
-            % tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
-         %   tb = uitoolbar('Parent', hFig);
-         %   uipushtool(tb, 'Separator', 'off');
-         %   pkg.i_addbutton2fig(tb, 'on', @in_showclustlabel, "plotpicker-scatter.gif", "Show cluster labels");
-         %   pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');            
-         %   pkg.i_addbutton2fig(tb, 'off', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
-         %   gui.gui_3dcamera(tb, 'AllCells');
 
             for k = 1:length(thiscv)
                colormap(axesv{k}, cmapv{k});

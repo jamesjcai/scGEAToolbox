@@ -5,7 +5,8 @@ function [hFig] = i_heatscatterfig(sce, cs, posg, csname, parentfig)
 if nargin < 5, parentfig = []; end
 if nargin < 4 || isempty(csname), csname = "CellScore"; end
 
-hFig = figure('Visible', false);
+hx=gui.myFigure;
+hFig = hx.FigureHandle;
 
 gui.i_heatscatter(sce.s, cs);
 colorbar;
@@ -18,19 +19,13 @@ title(strrep(csname, '_', '\_'));
 % tb = findall(hFig, 'Tag', 'FigureToolBar');
 tb = uitoolbar('Parent', hFig);
 % uipushtool(tb, 'Separator', 'off');
-pkg.i_addbutton2fig(tb, 'off', @in_saveScoreTable, "export.gif", 'Save cell score/gene expression to table');
-pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-pkg.i_addbutton2fig(tb, 'on', @gui.i_pickcolormap, 'plotpicker-compass.gif', 'Pick new color map...');
-pkg.i_addbutton2fig(tb, 'on', @gui.i_invertcolor, 'plotpicker-comet.gif', 'Invert colors');
-pkg.i_addbutton2fig(tb, 'on', @in_geneheatmapx, 'greenarrowicon.gif', 'Heatmap');
-pkg.i_addbutton2fig(tb, 'off', @in_genedotplot, 'greencircleicon.gif', 'Dot plot');
-pkg.i_addbutton2fig(tb, 'on', @in_viewgenenames, 'HDF_point.gif', 'Show gene names');
+hx.addCustomButton('off', @in_saveScoreTable, "export.gif", 'Save cell score/gene expression to table');
+hx.addCustomButton('on', @in_geneheatmapx, 'greenarrowicon.gif', 'Heatmap');
+hx.addCustomButton('off', @in_genedotplot, 'greencircleicon.gif', 'Dot plot');
+hx.addCustomButton('on', @in_viewgenenames, 'HDF_point.gif', 'Show gene names');
 pkg.i_addbutton2fig(tb,'on', @in_stemplot,'icon-mat-blur-on-10.gif','Show stem plot');
 %pkg.i_addbutton2fig(tb,'on',@i_viewscatter3,'icon-mat-blur-on-10.gif','Show scatter plot');
-pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
-
-gui.i_movegui2parent(hFig, parentfig);
-set(hFig, 'Visible', true);
+hx.show(parentfig);
 
     function in_stemplot(~,~)
         gui.i_stemscatterfig(sce, cs, posg, csname);

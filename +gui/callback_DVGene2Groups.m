@@ -86,32 +86,18 @@ if strcmp(answerx, 'Splinefit Method [PMID:31697351]')
     if strcmp(questdlg('Explore DV expression profile of genes?'), 'Yes')
         hx = gui.myFigure;
         hFig = hx.FigureHandle;
-        % hFig = figure('Visible','off');
         hFig.Position(3) = hFig.Position(3)*1.8;
-        % gui.i_movegui2parent(hFig, FigureHandle);
         hx.centerto(FigureHandle);
         
-        %delete(findall(hFig, 'Tag', 'FigureToolBar'))
-        % tb = uitoolbar('Parent', hFig);
-        % tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
-        % uipushtool(tb, 'Separator', 'off');
-        
-        
         hx.addCustomButton( 'off', {@in_HighlightSelectedGenes, 1}, 'list.gif', 'Selet a gene to show expression profile');
-        % pkg.i_addbutton2fig(tb, 'off', @in_HighlightSelectedGenes, 'xplotpicker-qqplot.gif', 'Highlight selected genes');
         hx.addCustomButton( 'off', {@in_HighlightSelectedGenes, 2}, 'list2.gif', 'Selet a gene from sorted list');
         hx.addCustomButton( 'off', @in_viewTable, 'icon-fa-stack-exchange-10.gif', 'View DV gene table...');
-        
         hx.addCustomButton( 'on', @in_EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Select top n genes to perform web-based enrichment analysis...');
         hx.addCustomButton( 'off', @in_Enrichr, 'plotpicker-andrewsplot.gif', 'Enrichr test...');
         hx.addCustomButton( 'off', @in_genecards, 'fvtool_fdalinkbutton.gif', 'GeneCards...');
         hx.addCustomButton( 'off', @in_ExportTable, 'export.gif', 'Export HVG Table...');
-        
         hx.addCustomButton( 'on', @ChangeAlphaValue, 'plotpicker-rose.gif', 'Change MarkerFaceAlpha value');
         hx.addCustomButton( 'off', @in_changeMarkerSize, 'icon-mat-text-fields-10.gif', 'ChangeFontSize');
-        % gui.gui_3dcamera(tb, 'DV_Results');
-        %pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
-        
         
         hAx0 = subplot(2,2,[1 3]);
         h1 = scatter3(hAx0, px1, py1, pz1, 'filled', 'MarkerFaceAlpha', .1);
@@ -163,7 +149,6 @@ if strcmp(answerx, 'Splinefit Method [PMID:31697351]')
         set([hAx1, hAx2], 'Ylim', ylnew);
         subplot(hAx0);
         hx.show;
-            % hFig.Visible=true; 
     end
 end
 

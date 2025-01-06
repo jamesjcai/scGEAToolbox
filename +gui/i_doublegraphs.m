@@ -22,7 +22,9 @@ load(fullfile(mfolder, ...
 w = 3;
 l = 1;
 
-hFig = figure('Visible', 'off');
+hx=gui.myFigure;
+
+hFig = hx.FigureHandle;
 set(0, 'CurrentFigure', hFig);
 
 tiledlayout(1, 2, 'TileSpacing', 'compact', ...
@@ -38,20 +40,14 @@ h2 = nexttile;
 p2.XData = p1.XData;
 p2.YData = p1.YData;
 
-% tb = findall(hFig, 'Tag', 'FigureToolBar');
-tb = uitoolbar('Parent', hFig);
-uipushtool(tb, 'Separator', 'off');
-pkg.i_addbutton2fig(tb, 'off', @ChangeFontSize, 'noun_font_size_591141.gif', 'ChangeFontSize');
-pkg.i_addbutton2fig(tb, 'off', @ChangeWeight, 'noun_Weight_2243621.gif', 'ChangeWeight');
-pkg.i_addbutton2fig(tb, 'off', @ChangeLayout, 'noun_Layout_792775.gif', 'ChangeLayout');
-pkg.i_addbutton2fig(tb, 'off', @ChangeDirected, 'noun_directional_arrows_3497928.gif', 'ChangeDirected');
-pkg.i_addbutton2fig(tb, 'off', @ChangeBox, 'PlotPoly.gif', 'Box on/off');
-pkg.i_addbutton2fig(tb, 'off', @AnimateCutoff, 'noun_trim_3665385.gif', 'AnimateCutoff');
-pkg.i_addbutton2fig(tb, 'off', @ChangeCutoff, 'noun_Pruners_2469297.gif', 'ChangeCutoff');
-pkg.i_addbutton2fig(tb, 'off', @SaveAdj, 'export.gif', 'Export & save data');
-pkg.i_addbutton2fig(tb, 'on', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
-pkg.i_addbutton2fig(tb, 'on', @in_RefreshAll, "icon-mat-refresh-20.gif", "Refresh");
+hx.addCustomButton('off', @ChangeFontSize, 'noun_font_size_591141.gif', 'ChangeFontSize');
+hx.addCustomButton('off', @ChangeWeight, 'noun_Weight_2243621.gif', 'ChangeWeight');
+hx.addCustomButton('off', @ChangeLayout, 'noun_Layout_792775.gif', 'ChangeLayout');
+hx.addCustomButton('off', @ChangeDirected, 'noun_directional_arrows_3497928.gif', 'ChangeDirected');
+hx.addCustomButton('off', @AnimateCutoff, 'noun_trim_3665385.gif', 'AnimateCutoff');
+hx.addCustomButton('off', @ChangeCutoff, 'noun_Pruners_2469297.gif', 'ChangeCutoff');
+hx.addCustomButton('off', @SaveAdj, 'export.gif', 'Export & save data');
+hx.addCustomButton('on', @in_RefreshAll, "icon-mat-refresh-20.gif", "Refresh");
 
 %if exist('suptitle.m', 'file')
 %    hFig.Position(3) = hFig.Position(3) * 1.8;
@@ -64,10 +60,7 @@ pkg.i_addbutton2fig(tb, 'on', @in_RefreshAll, "icon-mat-refresh-20.gif", "Refres
     end
 %end
 
-gui.i_movegui2parent(hFig, parentfig);
-
-drawnow;
-hFig.Visible=true;
+hx.show(parentfig);
 
 oldG1=[];
 oldG2=[];
@@ -110,25 +103,25 @@ axistrig = true;
         end
     end
 
-    function ChangeBox(~, ~)
-        if h1.Box
-            box(h1, 'off');
-            box(h2, 'off');
-            if axistrig
-                axis(h1, 'on');
-                axis(h2, 'on');
-                axistrig = ~axistrig;
-            else
-                axis(h1, 'off');
-                axis(h2, 'off');
-            end
-        else
-            box(h1, 'on');
-            box(h2, 'on');
-            axis(h1, 'on');
-            axis(h2, 'on');
-        end
-    end
+    % function ChangeBox(~, ~)
+    %     if h1.Box
+    %         box(h1, 'off');
+    %         box(h2, 'off');
+    %         if axistrig
+    %             axis(h1, 'on');
+    %             axis(h2, 'on');
+    %             axistrig = ~axistrig;
+    %         else
+    %             axis(h1, 'off');
+    %             axis(h2, 'off');
+    %         end
+    %     else
+    %         box(h1, 'on');
+    %         box(h2, 'on');
+    %         axis(h1, 'on');
+    %         axis(h2, 'on');
+    %     end
+    % end
 
     function ChangeFontSize(~, ~)
         i_changefontsize(p1);

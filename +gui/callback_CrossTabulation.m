@@ -59,10 +59,7 @@ labelsx='';
 labelsy='';
 T=[];
 
-% hFig = figure("Visible","off", "DockControls", "off");
 hx = gui.myFigure;
-
-% [px_new] = gui.i_getchildpos(FigureHandle, hFig);
 tab=cell(2,1);
 ax0=cell(2,1);
 ax=cell(2,2);
@@ -95,21 +92,7 @@ end
 %    tb = uitoolbar(hFig);
 %    uipushtool(tb, 'Separator', 'off');
 hx.addCustomButton('off', @i_saveCrossTable, "export.gif", 'Save cross-table');
-% pkg.i_addbutton2fig(tb, 'off', @i_saveCrossTable, "export.gif", 'Save cross-table');
-%    pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-%    pkg.i_addbutton2fig(tb, 'on', @gui.i_pickcolormap, 'plotpicker-compass.gif', 'Pick new color map...');
-%    pkg.i_addbutton2fig(tb, 'on', @gui.i_invertcolor, 'plotpicker-comet.gif', 'Invert colors');
-%    pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
-    % pkg.i_addbutton2fig(tb,'off',@i_reordersamples, ...
-    %     "xpowerpoint.gif",'Reorder Samples');
-    % pkg.i_addbutton2fig(tb, 'off', @i_sortbymean, ...
-    %     "xpowerpoint.gif", 'Sort Samples by Size');
-
-
-%gui.i_movegui2parent(hFig, FigureHandle);
-
 gui.gui_waitbar(fw);
-%hFig.Visible=true;
 hFig.centerto(FigureHandle);
 hFig.show;
 
@@ -187,48 +170,7 @@ hFig.show;
         title(lgd, llabel);
     end        
 
-    % function i_sortbymean(~, ~)
-    %     if ~sizesorted
-    %         [~, idx] = sort(sum(T, 2), 'descend');
-    %         T = T(idx, :);
-    %         labelsx = labelsx(idx);
-    %         sizesorted = true;
-    %     else
-    %         [idx] = gui.i_selmultidlg(labelsx, natsort(labelsx));
-    %         % [~, idx] = sort(labelsx);
-    %         T = T(idx, :);
-    %         labelsx = labelsx(idx);
-    %         sizesorted = false;
-    %     end
-    %     subplot(211)
-    %     cla
-    %     in_plot1;
-    %     subplot(212)
-    %     cla
-    %     in_plot2;
-    % end
-
     function i_saveCrossTable(~, ~)
         gui.i_exporttable(T, false, 'Tcrosstabul','CrosstabulTable');
     end
-
-
 end
-
-
-
-
-
-
-                % function [thisc1,thisc2]=i_sortc(thisc1,thisc2)
-                %         [~,idx]=unique(thisc1);
-                %         thisc1a=thisc1(idx);
-                %         thisc1b=thisc1;
-                %         thisc1b(idx)=[];
-                %         thisc1=[thisc1a; thisc1b];
-                %
-                %         thisc2a=thisc2(idx);
-                %         thisc2b=thisc2;
-                %         thisc2b(idx)=[];
-                %         thisc2=[thisc2a; thisc2b];
-                % end

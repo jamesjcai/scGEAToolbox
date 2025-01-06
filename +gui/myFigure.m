@@ -64,7 +64,9 @@ classdef myFigure < handle
             end        
         end
 
-        function show(obj)
+        function show(obj, parentfig)
+            if nargin<2, parentfig = []; end
+            centerto(obj, parentfig);
             obj.FigureHandle.Visible = true;
         end
         

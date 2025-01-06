@@ -9,8 +9,8 @@ lbsz_mt = full(sum(X(i, :), 1));
 cj = 100 * (lbsz_mt ./ lbsz);
 
 
-hFig = figure('Visible','off', 'DockControls', 'off');
 
+hx=gui.myFigure;
 % if ~isempty(parentfig)
 %     px_new = gui.i_getchildpos(parentfig, hFig);
 % else
@@ -32,7 +32,4 @@ pkg.violinplot(cj, [], 'showdata', false);
 title(sprintf('percent.mt\n(mitochondrial content)'));
 box on;
 
-gui.i_movegui2parent(hFig, parentfig);
-
-
-hFig.Visible=true;
+hx.show(parentfig);

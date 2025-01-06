@@ -12,7 +12,8 @@ function [hFig] = i_crosstalkgraph(OUT, k, sce)
     if ~isempty(sce)
         [c, cL] = grp2idx(sce.c_cell_type_tx);
         
-        hFig = figure;
+        hx=gui.myFigure;
+        hFig = hx.FigureHandle;
         ax1 = subplot(2, 2, 1);
         gui.i_gscatter3(sce.s(:, 1:2), c);
         title('Cell Types')
@@ -50,21 +51,11 @@ function [hFig] = i_crosstalkgraph(OUT, k, sce)
         sc_scattermarker(sce.X, upper(sce.g), sce.s, OUT.receptorok(k), 1, [], false);
         box on
     
-        tb = uitoolbar(hFig);
-        pt5pickcolr = uipushtool(tb, 'Separator', 'off');
-        [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
-            '../', 'resources', 'Images', 'fvtool_fdalinkbutton.gif')); % plotpicker-pie
-        ptImage = ind2rgb(img, map);
-        pt5pickcolr.CData = ptImage;
-        pt5pickcolr.Tooltip = 'Link subplots';
-        pt5pickcolr.ClickedCallback = @gui.i_linksubplots;
-        pkg.i_addbutton2fig(tb, 'on', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
+        
         sgtitle(figname);
-        pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
-
-        %             hFig.Position(3) = hFig.Position(3) * 1.5;
-        %             hFig.Position(4) = hFig.Position(4) * 1.5;
+        
         colormap(ax1, 'default');
+        hx.show;
     else
         ligand_mat = OUT.ligand_mat;
         receptor_mat = OUT.receptor_mat;

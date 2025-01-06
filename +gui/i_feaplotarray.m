@@ -38,10 +38,9 @@ for kx = 1:length(tgene)
     z =[z, X(g == tgene(kx), :)];
 end
 
-% xgroupdata = categorical(cL(c));
-% hFig = figure('Visible', 'off', 'DockControls', 'off');
 for kx = 1:length(tgene)
-    hFig = figure('Visible','off');
+
+    hx=gui.myFigure;
     for ky = 1:length(cL)
         cellidx = c==ky;
         nexttile;
@@ -60,6 +59,5 @@ for kx = 1:length(tgene)
         title(cL{ky});
     end
     sgtitle(tgene(kx));
-    gui.i_movegui2parent(hFig, parentfig);
-    hFig.Visible = "on";
+    hx.show(parentfig);
 end

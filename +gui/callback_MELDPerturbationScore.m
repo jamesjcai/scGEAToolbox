@@ -1,6 +1,6 @@
 function callback_MELDPerturbationScore(src, ~)
 
-hFig = src.Parent.Parent;
+FigureHandle = src.Parent.Parent;
 if ~gui.gui_showrefinfo('MELD [PMID:33558698]'), return; end
 
 [ok] = gui.i_confirmscript('Run MELD Perturbation Score (MELD)?', ...
@@ -8,7 +8,7 @@ if ~gui.gui_showrefinfo('MELD [PMID:33558698]'), return; end
 if ~ok, return; end
 
 
-sce = guidata(hFig);
+sce = guidata(FigureHandle);
 if numel(unique(sce.c_batch_id)) < 2
     warndlg('No batch effect (SCE.C_BATCH_ID is empty)');
     return;
@@ -38,14 +38,14 @@ catch ME
 end
 % gui.gui_waitbar(fw);
 
-hFig = figure;
+hx=gui.myFigure;
 gui.i_gscatter3(sce.s, score(:, 2));
 colorbar
 % tb = findall(hFig, 'tag', 'FigureToolBar'); % get the figure's toolbar handle
-tb = uitoolbar('Parent', hFig);
-pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
-gui.gui_3dcamera(tb, 'MELD_Scores');
-
+%tb = uitoolbar('Parent', hFig);
+%pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
+%gui.gui_3dcamera(tb, 'MELD_Scores');
+hx.show(FigureHandle);
 
 if ~(ismcc || isdeployed)
     labels = {'Save score values to variable named:', 'Save score table to variable named:'};

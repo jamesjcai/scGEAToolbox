@@ -135,9 +135,8 @@ df1 = reshape(df,[length(terms),length(allg)]);
 df1 = cell2table(df1,'VariableNames',allg);
 df1 = table2array(df1);
 
-hFig2 = gui.myFigure;
-hFig2.centerto(FigureHandle);
-hFig2.addCustomButton('on', @in_savedata, 'export.gif', 'Export data...');
+hx = gui.myFigure;
+hx.addCustomButton('on', @in_savedata, 'export.gif', 'Export data...');
 
 CC = gui.chordChart(df1,'Arrow','off','rowName',terms,'colName',allg);
 CC = CC.draw();
@@ -151,44 +150,9 @@ for ix = 1:size(df1, 1)
     end
 end
 CC.setSquareT_Prop('FaceColor',[0,0,0])
-hFig2.show;
+hx.show(FigureHandle);
 
 
-%{
-hFig = figure('Visible',"off");
-% ax0 = hFig.CurrentAxes;
-gui.i_movegui2parent(hFig, FigureHandle);
-
-CC = gui.chordChart(df1,'Arrow','off','rowName',terms,'colName',allg);
-CC = CC.draw();
-CC.setFont('FontName','Arial','FontSize',10)
-CC.labelRotate('on');
-CC.setLabelRadius(1.2);
-CListC = lines(size(df1, 2));
-for ix = 1:size(df1, 1)
-    for jx = 1:size(df1, 2)
-        CC.setChordMN(ix, jx, 'FaceColor',CListC(jx,:), 'FaceAlpha',.4)
-    end
-end
-
-CC.setSquareT_Prop('FaceColor',[0,0,0])
-
-% CC.setSquareT_N(2,'FaceColor',[.8,0,0])
-% CC.tickState('on')
-
-% tb = findall(hFig, 'Tag', 'FigureToolBar');
-tb = uitoolbar('Parent', hFig);
-uipushtool(tb, 'Separator', 'off');
-pkg.i_addbutton2fig(tb, 'off', @in_savedata, 'export.gif', 'Export data...');
-pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 2}, "xpowerpoint.gif", 'Save Figure as Graphic File...');
-pkg.i_addbutton2fig(tb, 'off', @in_resizefont, "noun_font_size_591141.gif", 'Change Font Size');
-pkg.i_addbutton2fig(tb, 'off', @in_PickColorMap, "plotpicker-compass.gif", "Pick new color map");
-pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
-
-hFig.Visible=true;
-
-%}
 sz = 10;
     function in_savedata(~,~)
         gui.i_exporttable(tab(indx2,:), true, ...

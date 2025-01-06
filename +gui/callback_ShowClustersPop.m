@@ -58,8 +58,8 @@ try
 
 % -------------
 
-% hFig = figure('visible', 'off', 'Position', FigureHandle.Position);
-hFig = figure('visible', 'off');
+hx = gui.myFigure;
+
 tabgp = uitabgroup();
 for nf = 1:numfig
     tab{nf} = uitab(tabgp, 'Title', sprintf('Tab%d',nf));
@@ -83,15 +83,8 @@ for nf = 1:numfig
     end
     colormap(para.oldColorMap);
 end
-% tb = findall(hFig, 'Tag', 'FigureToolBar');
-tb = uitoolbar('Parent', hFig);
-%uipushtool(tb, 'Separator', 'off');
-pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-pkg.i_addbutton2fig(tb, 'off', @in_scgeatoolsce, "icon-mat-touch-app-10.gif", 'Extract and Work on Separate SCEs...');
-pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
-gui.i_movegui2parent(hFig, FigureHandle);
-drawnow;
-set(hFig, 'visible', 'on');
+hx.addCustomButton('off', @in_scgeatoolsce, "icon-mat-touch-app-10.gif", 'Extract and Work on Separate SCEs...');
+hx.show(FigureHandle);
 
 %{ 
 --------------------------------------------    

@@ -80,7 +80,9 @@ if ~gui.gui_showrefinfo('talklr [DOI:10.1101/2020.02.01.930602]'), return; end
                     [y1, idx1] = ismember(upper(OUT.ligandok(kk)), upper(sce.g));
                     [y2, idx2] = ismember(upper(OUT.receptorok(kk)), upper(sce.g));
                     if y1 && y2
-                        hFig = figure;
+
+                        hx = gui.myFigure;
+                        hFig = hx.FigureHandle;
                         hFig.Position(3) = hFig.Position(3) * 2.2;
 
                         %subplot(1, 2, 1)
@@ -93,15 +95,15 @@ if ~gui.gui_showrefinfo('talklr [DOI:10.1101/2020.02.01.930602]'), return; end
                         sc_scattermarker(sce.X, sce.g, sce.s, sce.g(idx2), 1, [], false);
                         title(sce.g(idx2));
                         
-                        tb = uitoolbar(hFig);
-                        pt5pickcolr = uipushtool(tb, 'Separator', 'off');
-                        [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
-                            '../', 'resources', 'Images', 'fvtool_fdalinkbutton.gif')); % plotpicker-pie
-                        % map(map(:,1)+map(:,2)+map(:,3)==3) = NaN;  % Convert white pixels => transparent background
-                        ptImage = ind2rgb(img, map);
-                        pt5pickcolr.CData = ptImage;
-                        pt5pickcolr.Tooltip = 'Link subplots';
-                        pt5pickcolr.ClickedCallback = @gui.i_linksubplots;
+                        % tb = uitoolbar(hFig);
+                        % pt5pickcolr = uipushtool(tb, 'Separator', 'off');
+                        % [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
+                        %     '../', 'resources', 'Images', 'fvtool_fdalinkbutton.gif')); % plotpicker-pie
+                        % % map(map(:,1)+map(:,2)+map(:,3)==3) = NaN;  % Convert white pixels => transparent background
+                        % ptImage = ind2rgb(img, map);
+                        % pt5pickcolr.CData = ptImage;
+                        % pt5pickcolr.Tooltip = 'Link subplots';
+                        % pt5pickcolr.ClickedCallback = @gui.i_linksubplots;
 
                         nexttile
                         
@@ -129,7 +131,7 @@ if ~gui.gui_showrefinfo('talklr [DOI:10.1101/2020.02.01.930602]'), return; end
                             p.LineWidth = G.Edges.LWidths;
                         end    
                         % sc_grnview(m, OUT.cL, figname);
-
+                        hx.show(FigureHandle);
                     end
 
                     % gui.i_crosstalkgraph(OUT, kk);

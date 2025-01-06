@@ -9,9 +9,8 @@ textOpts.HorizontalAlignment = 'center';
 textOpts.VerticalAlignment = 'middle';
 textOpts.FontWeight = 'normal';
 
-% hFig = figure("Visible","off", 'SizeChangedFcn', @in_addtext);
 
-hFig = gui.myFigure;
+hx = gui.myFigure;
 
 %if ~curved
 %    gplot(G.adjacency, xy, '-k');
@@ -34,10 +33,7 @@ hFig = gui.myFigure;
     %         'VerticalAlignment','middle','Margin',0.2);
     % end
     in_addtext([],[]);
-    %hFig.Visible='on';
-    hFig.centerto(parentfig);
-    hFig.show;
-
+    hx.show(parentfig);
 
 
     function in_addtext(~, ~)

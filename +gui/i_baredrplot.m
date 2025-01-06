@@ -20,11 +20,6 @@ if ~isAxesHandle && isempty(c), error('Empty handle.'); end
 
 hx=gui.myFigure;
 hFig = hx.FigureHandle;
-%hFig = figure("Visible","off");
-
-
-%tb = uitoolbar('Parent', hFig);
-%pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
 
 if isAxesHandle
     hAx = copyobj(s, hFig);
@@ -128,12 +123,7 @@ else          % ======================================== 2D
     subtitle('')
     hold off;
 end
-
-
-hx.centerto(parentfig);
-hx.show;
-%gui.i_movegui2parent(hFig, parentfig);
-%hFig.Visible = "on";
+hx.show(parentfig);
 
 
 

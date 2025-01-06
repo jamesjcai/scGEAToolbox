@@ -86,7 +86,6 @@ txgene = [" "; tgene(:)];
 %scatter([-.5 .5],[-1 -1],[1 500],'k','filled');
 %hold on
 
-% hFig = figure('Visible', 'off', 'DockControls', 'off');
 hx=gui.myFigure;
 hFig = hx.FigureHandle;
 
@@ -158,14 +157,9 @@ hx.addCustomButton('off', @i_resetcolor, 'plotpicker-geobubble2.gif', 'Reset Col
 % x2(3)=x2(3)*0.5;
 % x2(4)=x2(4)*0.5;
 % set(cb,'Position',x2);
-
-% cb.Label.String ="Average Expression";
-%gui.i_movegui2parent(hFig, parentfig);
-hx.centerto(parentfig);
-
 if nargout > 0, return; end
-%set(hFig, 'visible', 'on');
-hx.show;
+hx.show(parentfig);
+
 
     function i_savetable(~, ~)
         answer = questdlg('Export & save data to:', '', ...

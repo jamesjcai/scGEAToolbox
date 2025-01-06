@@ -33,9 +33,9 @@ end
 %     'GridVisible',false,'ColorScaling','scaled',...
 %     'ColorbarVisible',false)
 
-hFig = figure('Visible', 'off');
+hx=gui.myFigure;
+hFig=hx.FigureHandle;
 h = imagesc(Y);
-% hFig.Colormap = repmat(linspace(0, 1, 25).', 1, 3);
 set(gca, 'XTick', a-b);
 set(gca, 'XTickLabel', strrep(cL, '_', '\_'));
 %set(gca,'XTickLabelRotation',0);
@@ -50,36 +50,18 @@ for k = 1:length(szc)
     xline(szc(k)+0.5, 'y-');
 end
 
-% tb = findall(hFig, 'Tag', 'FigureToolBar');
-tb = uitoolbar('Parent', hFig);
-uipushtool(tb, 'Separator', 'off');
-pkg.i_addbutton2fig(tb, 'on', {@gui.i_pickcolormap, c}, 'plotpicker-compass.gif', 'Pick new color map...');
-pkg.i_addbutton2fig(tb, 'off', @gui.i_changefontsize, 'noun_font_size_591141.gif', 'ChangeFontSize');
-pkg.i_addbutton2fig(tb, 'on', @i_renamecat, 'guideicon.gif', 'Rename groups...');
-pkg.i_addbutton2fig(tb, 'on', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-pkg.i_addbutton2fig(tb, 'on', @gui.i_invertcolor, 'plotpicker-comet.gif', 'Invert colors');
-pkg.i_addbutton2fig(tb, 'off', @i_resetcolor, 'plotpicker-geobubble2.gif', 'Reset color map');
-pkg.i_addbutton2fig(tb, 'off', @i_flipxy, 'xplotpicker-geobubble2.gif', 'Flip XY');
-pkg.i_addbutton2fig(tb, 'on', @i_summarymap, 'HDF_object01.gif', 'Summary map...');
-pkg.i_addbutton2fig(tb, 'off', @i_summarymapT, 'HDF_object02.gif', 'Summary map, transposed...');
-pkg.i_addbutton2fig(tb, 'on', @in_savetable, 'export.gif', 'Export data...');
-pkg.i_addbutton2fig(tb, 'off', @in_changenorm, 'explorer1.gif', 'Change normalization method...');
-pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
-pkg.i_addbutton2fig(tb, 'off', @i_dotplotx, 'HDF_object03.gif', 'Dot plot...');
 
-% try
-%     [px_new] = gui.i_getchildpos(FigureHandle, hFig);
-%     if ~isempty(px_new)
-%         movegui(hFig, px_new);
-%     else
-%         movegui(hFig, 'center');
-%     end
-% catch
-%     movegui(hFig, 'center');
-% end
+hx.addCustomButton('on', @i_renamecat, 'guideicon.gif', 'Rename groups...');
+hx.addCustomButton('off', @i_resetcolor, 'plotpicker-geobubble2.gif', 'Reset color map');
+hx.addCustomButton('off', @i_flipxy, 'mat-wrap-text.jpg', 'Flip XY');
 
-gui.i_movegui2parent(hFig, FigureHandle);        
-set(hFig, 'visible', 'on');
+hx.addCustomButton('on', @i_summarymap, 'HDF_object01.gif', 'Summary map...');
+hx.addCustomButton('off', @i_summarymapT, 'HDF_object02.gif', 'Summary map, transposed...');
+hx.addCustomButton('on', @in_savetable, 'export.gif', 'Export data...');
+hx.addCustomButton('off', @in_changenorm, 'mw-pickaxe-mining.jpg', 'Change normalization method...');
+hx.addCustomButton('off', @i_dotplotx, 'icon-mat-blur-linear-10.gif', 'Dot plot...');
+
+hx.show(FigureHandle);        
 fliped = false;
 
 MX = glist;
@@ -170,7 +152,7 @@ Z = zeros(length(glist), length(cL));
             Z(:, k) = mean(Y(:, c == k), 2);
         end
         
-        f = figure;
+        hx1=gui.myFigure;
         h = heatmap(strrep(cL, '_', '\_'), MX, Z);
         h.Title = 'Marker Gene Heatmap';
         h.XLabel = 'Group';
@@ -178,19 +160,12 @@ Z = zeros(length(glist), length(cL));
         h.Colormap = parula;
         h.GridVisible = 'off';
         h.CellLabelColor = 'none';
-        tb = uitoolbar('Parent', f);
-
         t = array2table(Z, 'VariableNames', cL, 'RowNames', MX);
-
         % writetable(t,'aaa.csv','WriteRowNames',true);
-        pkg.i_addbutton2fig(tb, 'off', {@i_exporttable, t}, 'export.gif', 'Save table...');
-
-        pkg.i_addbutton2fig(tb, 'on', {@gui.i_pickcolormap, c}, 'plotpicker-compass.gif', 'Pick new color map...');
-        pkg.i_addbutton2fig(tb, 'off', @gui.i_changefontsize, 'noun_font_size_591141.gif', 'ChangeFontSize');
-        pkg.i_addbutton2fig(tb, 'on', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-        pkg.i_addbutton2fig(tb, 'on', @gui.i_invertcolor, 'plotpicker-comet.gif', 'Invert colors');
-        pkg.i_addbutton2fig(tb, 'off', @i_resetcolor, 'plotpicker-geobubble2.gif', 'Reset color map');
+        hx1.addCustomButton('off', {@i_exporttable, t}, 'export.gif', 'Save table...');
+        hx1.addCustomButton('off', @i_resetcolor, 'plotpicker-geobubble2.gif', 'Reset color map');
         % disp('https://software.broadinstitute.org/morpheus/')
+        hx1.show(hFig);
     end
 
     function in_savetable(~, ~)
@@ -234,7 +209,7 @@ Z = zeros(length(glist), length(cL));
                 Z(:, k) = mean(Y(:, c == k), 2);
             end
         
-        f = figure;
+        hx2=gui.myFigure;
         h = heatmap(MX, strrep(cL, '_', '\_'), Z.');
         h.Title = 'Marker Gene Heatmap';
         h.YLabel = 'Group';
@@ -242,19 +217,14 @@ Z = zeros(length(glist), length(cL));
         h.Colormap = parula;
         h.GridVisible = 'off';
         h.CellLabelColor = 'none';
+        t = array2table(Z.', 'VariableNames', MX, 'RowNames', cL);
         %         s = struct(h);
         %         s.XAxis.TickLabelRotation=45;
-        tb = uitoolbar('Parent', f);
-
-        t = array2table(Z.', 'VariableNames', MX, 'RowNames', cL);
         % writetable(t,'aaa.csv','WriteRowNames',true);
-        pkg.i_addbutton2fig(tb, 'off', {@i_exporttable, t}, 'export.gif', 'Save table...');
-
-        pkg.i_addbutton2fig(tb, 'on', {@gui.i_pickcolormap, c}, 'plotpicker-compass.gif', 'Pick new color map...');
-        pkg.i_addbutton2fig(tb, 'off', @gui.i_changefontsize, 'noun_font_size_591141.gif', 'ChangeFontSize');
-        pkg.i_addbutton2fig(tb, 'on', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-        pkg.i_addbutton2fig(tb, 'on', @gui.i_invertcolor, 'plotpicker-comet.gif', 'Invert colors');
-        pkg.i_addbutton2fig(tb, 'off', @i_resetcolor, 'plotpicker-geobubble2.gif', 'Reset color map');
+        hx2.addCustomButton('off', {@i_exporttable, t}, 'export.gif', 'Save table...');
+        hx2.addCustomButton('on', {@gui.i_pickcolormap, c}, 'plotpicker-compass.gif', 'Pick new color map...');
+        hx2.addCustomButton('off', @i_resetcolor, 'plotpicker-geobubble2.gif', 'Reset color map');
+        hx2.show(hFig);
     end
 
     function i_dotplotx(~, ~)
