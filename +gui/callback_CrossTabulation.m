@@ -44,8 +44,8 @@ if isempty(thisc2)
     
     %drawnow;    
     %hFig.Visible=true;
-    hFig.centerto(FigureHandle);
-    hFig.show;
+    hx.centerto(FigureHandle);
+    hx.show;
     return;
 end
 
@@ -60,7 +60,7 @@ labelsy='';
 T=[];
 
 % hFig = figure("Visible","off", "DockControls", "off");
-hFig = gui.myFigure;
+hx = gui.myFigure;
 
 % [px_new] = gui.i_getchildpos(FigureHandle, hFig);
 tab=cell(2,1);
@@ -94,7 +94,7 @@ end
 
 %    tb = uitoolbar(hFig);
 %    uipushtool(tb, 'Separator', 'off');
-hFig.addCustomButton('off', @i_saveCrossTable, "export.gif", 'Save cross-table');
+hx.addCustomButton('off', @i_saveCrossTable, "export.gif", 'Save cross-table');
 % pkg.i_addbutton2fig(tb, 'off', @i_saveCrossTable, "export.gif", 'Save cross-table');
 %    pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 %    pkg.i_addbutton2fig(tb, 'on', @gui.i_pickcolormap, 'plotpicker-compass.gif', 'Pick new color map...');

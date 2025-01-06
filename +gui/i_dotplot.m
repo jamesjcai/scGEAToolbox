@@ -86,7 +86,9 @@ txgene = [" "; tgene(:)];
 %scatter([-.5 .5],[-1 -1],[1 500],'k','filled');
 %hold on
 
-hFig = figure('Visible', 'off', 'DockControls', 'off');
+% hFig = figure('Visible', 'off', 'DockControls', 'off');
+hx=gui.myFigure;
+hFig = hx.FigureHandle;
 
 dotsz = DOTSIZE;
 sz(sz == 0) = eps;
@@ -132,20 +134,20 @@ if ~isempty(ttxt)
 end
 
 %  tb = findall(hFig, 'Tag', 'FigureToolBar');  % does not work MATLAB online
-tb = uitoolbar(hFig);
+%tb = uitoolbar(hFig);
 % uipushtool(tb, 'Separator', 'off');
 %tb = uitoolbar('Parent', hFig);
-pkg.i_addbutton2fig(tb, 'off', {@gui.i_pickmonocolor, true}, 'plotpicker-compass.gif', 'Pick new color map...');
-pkg.i_addbutton2fig(tb, 'off', @gui.i_changefontsize, 'noun_font_size_591141.gif', 'ChangeFontSize');
-pkg.i_addbutton2fig(tb, 'off', @i_resizedot, 'networkcomp.gif', 'Resize dots...');
-pkg.i_addbutton2fig(tb, 'on', @i_renamecat, 'guideicon.gif', 'Rename groups...');
-pkg.i_addbutton2fig(tb, 'on', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 2}, "svg.gif", 'Save Figure as Graphic File...');
-pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 1}, "svg.gif", 'Save Figure as SVG File...');
-pkg.i_addbutton2fig(tb, 'on', @i_savetable, 'export.gif', 'Export data...');
-pkg.i_addbutton2fig(tb, 'on', @gui.i_invertcolor, 'plotpicker-comet.gif', 'Invert Colors');
-pkg.i_addbutton2fig(tb, 'off', @i_resetcolor, 'plotpicker-geobubble2.gif', 'Reset Colormap');
-pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
+hx.addCustomButton('off', {@gui.i_pickmonocolor, true}, 'plotpicker-compass.gif', 'Pick new color map...');
+%pkg.i_addbutton2fig(tb, 'off', @gui.i_changefontsize, 'noun_font_size_591141.gif', 'ChangeFontSize');
+%pkg.i_addbutton2fig(tb, 'off', @i_resizedot, 'networkcomp.gif', 'Resize dots...');
+hx.addCustomButton('on', @i_renamecat, 'guideicon.gif', 'Rename groups...');
+%pkg.i_addbutton2fig(tb, 'on', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
+%pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 2}, "svg.gif", 'Save Figure as Graphic File...');
+%pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 1}, "svg.gif", 'Save Figure as SVG File...');
+hx.addCustomButton('on', @i_savetable, 'export.gif', 'Export data...');
+%pkg.i_addbutton2fig(tb, 'on', @gui.i_invertcolor, 'plotpicker-comet.gif', 'Invert Colors');
+hx.addCustomButton('off', @i_resetcolor, 'plotpicker-geobubble2.gif', 'Reset Colormap');
+%pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
 
 % %set(cb, 'Position', get(gca,'position')); pause(1);
 % cb.Position = cb.Position + 1e-10;
@@ -158,12 +160,12 @@ pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resiz
 % set(cb,'Position',x2);
 
 % cb.Label.String ="Average Expression";
-gui.i_movegui2parent(hFig, parentfig);
-
+%gui.i_movegui2parent(hFig, parentfig);
+hx.centerto(parentfig);
 
 if nargout > 0, return; end
-set(hFig, 'visible', 'on');
-
+%set(hFig, 'visible', 'on');
+hx.show;
 
     function i_savetable(~, ~)
         answer = questdlg('Export & save data to:', '', ...

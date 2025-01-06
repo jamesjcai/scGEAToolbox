@@ -35,10 +35,9 @@ function callback_ShowGeneExpr(src, ~)
             answer2 = questdlg("Type of plot:","", "stem plot", "feature plot", "stem plot");
             if isempty(answer2), return; end
             fw = gui.gui_waitbar; 
-            hFig = figure(Visible="off");
+            hx = gui.myFigure;
             maxy = 0;
             a = getpref('scgeatoolbox', 'prefcolormapname', 'autumn');
-
             for k = 1:n
                 nexttile
                 switch answer2
@@ -52,24 +51,8 @@ function callback_ShowGeneExpr(src, ~)
                 end
                 maxy = max([maxy, max(Xt(sce.g == glist(k)))]);
             end
-            gui.i_movegui2parent(hFig, FigureHandle);
-            
-            % evalin('base', 'linkprop(findobj(gcf,''type'',''axes''), {''CameraPosition'',''CameraUpVector''});');
-
-            % pkg.i_addbutton2fig(tb, 'off', {@in_rescale, maxy}, 'networkcomp.gif', 'Normalize scales...');
-            % tb = uitoolbar('Parent', hFig);
-            tb = findall(hFig, 'Type', 'uitoolbar', 'Tag', 'FigureToolBar');
-            if ~isempty(tb)
-                uipushtool(tb, 'Separator', 'off');
-                pkg.i_addbutton2fig(tb, 'off', @gui.i_changefontsize, 'noun_font_size_591141.gif', 'ChangeFontSize');            
-                pkg.i_addbutton2fig(tb, 'off', @gui.i_setboxon, 'RectGate.gif', 'Box on/off');            
-                pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-                pkg.i_addbutton2fig(tb, 'off', @gui.i_invertcolor, 'plotpicker-comet.gif', 'Invert colors');     
-                pkg.i_addbutton2fig(tb, 'off', @gui.i_linksubplots, "plottypectl-rlocusplot.gif", "Link subplots");
-                pkg.i_addbutton2fig(tb, 'off', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
-                gui.gui_3dcamera(tb, 'AllCells');
-            end
+            hx.centerto(FigureHandle);
             gui.gui_waitbar(fw);
-            hFig.Visible = "on";
+            hx.show;
     end
 end

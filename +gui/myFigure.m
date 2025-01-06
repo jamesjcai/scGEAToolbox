@@ -30,7 +30,7 @@ classdef myFigure < handle
             obj.tbv{8} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_savemainfig, 2}, "File-Jpg--Streamline-Core-Gradient.png", 'Save Figure as Graphic File...');
             obj.tbv{9} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_savemainfig, 1}, "svg.png", 'Save Figure as SVG File...');
             obj.tbv{10} = pkg.i_addbutton2fig(obj.tb, 'on', {@gui.i_resizewin, obj.FigureHandle}, 'scale-frame-enlarge.jpg', 'Resize Plot Window');
-            obj.tbv{11} = gui.gui_3dcamera(obj.tb, 'AllCells');            
+            obj.tbv{11} = gui.gui_3dcamera(obj.tb, 'AllCells');
         end
 
         % function ptvkeep(obj, flag)

@@ -22,10 +22,12 @@ idx = idx1 | idx2 | idx3;
 if any(idx)
     ttxt = sprintf("%s+", sce.g(idx));
     ci = full(sum(sce.X(idx, :), 1));
-    hFig = figure;
-    tb = uitoolbar('Parent', hFig);
-    pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, ...
-        'HDF_pointx.gif', 'Resize Plot Window');
+
+    hx = gui.myFigure;
+    hFig = hx.FigureHandle;
+    %tb = uitoolbar('Parent', hFig);
+    %pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, ...
+    %    'HDF_pointx.gif', 'Resize Plot Window');
     
 
     cm = uicontextmenu(hFig);
@@ -35,9 +37,11 @@ if any(idx)
     gui.i_stemscatter(sce.s, ci);
 
     title(ttxt);
-    tb1 = uitoolbar(hFig);
-    pkg.i_addbutton2fig(tb1, 'off', {@i_saveM, ci}, 'greencircleicon.gif', ...
+    %tb1 = uitoolbar(hFig);
+    hx.addCustomButton('off', {@i_saveM, ci}, 'greencircleicon.gif', ...
         'Save marker gene map...');
+    hx.centerto(FigureHandle);
+    hx.show;    
 else
     warndlg('No Hgb-genes found');
 end
