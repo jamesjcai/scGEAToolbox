@@ -18,7 +18,8 @@ if nargin < 3, predefinedlist = []; end
     rng("shuffle");
     n = length(gsorted);
     if isempty(predefinedlist)
-        ingenelist = gui.i_inputgenelist(gsorted(randperm(n, min([200, length(gsorted)]))));
+        error('No input gene list.');
+        % ingenelist = gui.i_inputgenelist(gsorted(randperm(n, min([200, length(gsorted)]))));
     else
         ingenelist = gui.i_inputgenelist(predefinedlist);
     end

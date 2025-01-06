@@ -56,9 +56,7 @@ end
     try
         switch methodtag
             case 'ranksum'
-                %fw=gui.gui_waitbar;
-                T = sc_deg(sce.X(:, i1), sce.X(:, i2), ...
-                    sce.g, 1, true);
+                T = sc_deg(sce.X(:, i1), sce.X(:, i2), sce.g, 1, true);
             case 'deseq2'
                 [ok] = gui.i_confirmscript('DE analysis (DESeq2)', ...
                     'R_DESeq2', 'r');
@@ -67,8 +65,7 @@ end
                 T = run.r_DESeq2(sce.X(:, i1), sce.X(:, i2), sce.g);
                 gui.gui_waitbar(fw);
             case 'mast'
-                [ok] = gui.i_confirmscript('DE analysis (MAST)', ...
-                    'R_MAST', 'r');
+                [ok] = gui.i_confirmscript('DE analysis (MAST)', 'R_MAST', 'r');
                 if ~ok, return; end
                 fw = gui.gui_waitbar;
                 T = run.r_MAST(sce.X(:, i1), sce.X(:, i2), sce.g);
@@ -76,9 +73,6 @@ end
         end
 
     catch ME
-        %if isvalid(fw)
-        %    gui.gui_waitbar(fw, true);
-        %end
         errordlg(ME.message);
         return;
     end
@@ -88,7 +82,6 @@ end
     % gui.i_volcanoplot(T);
     % title(sprintf('%s vs. %s', ...
     %     matlab.lang.makeValidName(string(cL1)),matlab.lang.makeValidName(string(cL2))));
-
 
     % T2=T;
     % T2.avg_log2FC(T.avg_log2FC>10)=10;
@@ -149,8 +142,7 @@ end
         matlab.lang.makeValidName(string(cL1)), matlab.lang.makeValidName(string(cL2)));
     if isatac, T.gene = "chr" + T.gene; end
 
-    [filetype, filesaved] = gui.i_exporttable(T, true, 'Tdegenelist', ...
-        outfile, [], "All_genes");
+    [filetype, filesaved] = gui.i_exporttable(T, true, 'Tdegenelist', outfile, [], "All_genes");
 
     % 'Tviolindata','ViolinPlotTable'
     % 'Tdegenelist'
@@ -158,17 +150,13 @@ end
     tf = 0;
     if ~(ismcc || isdeployed) && strcmp(filetype, 'Workspace')
         [Tup, Tdn] = pkg.e_processDETable(T);
-        if isempty(Tup) && isempty(Tdn)
-            return;
-        end
+        if isempty(Tup) && isempty(Tdn), return; end
         labels = {'Save DE results (selected up-regulated) to variable named:', ...
             'Save DE results (selected down-regulated) to variable named:'};
         vars = {'Tup', 'Tdn'};
         values = {Tup, Tdn};
         [~, tf] = export2wsdlg(labels, vars, values);
-        if tf ~= 1
-            return;
-        end
+        if tf ~= 1, return; end
     end
 
     if ~isempty(filesaved)
@@ -204,104 +192,26 @@ end
         end
     end
 
-
-    %    if ~(ismcc || isdeployed)
-    % answer = questdlg('Save up- and down-regulated genes for enrichment analysis?');
-    %
-    % if strcmp(answer,'Yes')
-    %     [Tup,Tdn]=pkg.e_processDETable(T,true);
-    %     tf=0;
-    %     if ~(ismcc || isdeployed) && strcmp(filetype,'Workspace')
-    %         labels = {'Save DE results (selected up-regulated) to variable named:',...
-    %             'Save DE results (selected down-regulated) to variable named:'};
-    %         vars = {'Tup','Tdn'}; values = {Tup,Tdn};
-    %         [~,tf]=export2wsdlg(labels,vars,values);
-    %     end
-    %
-    %     if ~isempty(filesaved)
-    %         if strcmp(filetype,'Excel file')
-    %             % strcmp(extractAfter(filesaved,strlength(filesaved)-4),'xlsx')
-    %             writetable(Tup,filesaved,"FileType","spreadsheet",'Sheet','Up-regulated');
-    %             writetable(Tdn,filesaved,"FileType","spreadsheet",'Sheet','Down-regulated');
-    %             %waitfor(helpdlg(sprintf('Result has been saved in %s',filesaved),''));
-    %             %writetable(Tup,fullfile(tempdir,sprintf('%s_up.xlsx',outfile)),'FileType','spreadsheet',);
-    %             %writetable(Tdn,fullfile(tempdir,sprintf('%s_up.xlsx',outfile)),'FileType','spreadsheet');
-    %         elseif strcmp(filetype,'Text file')
-    %             % strcmp(extractAfter(filesaved,strlength(filesaved)-3),'txt')
-    %             [~,filesaved1]=gui.i_exporttable(Tup,true,'Tup');
-    %             if ~isempty(filesaved1)
-    %                 waitfor(helpdlg(sprintf('Result has been saved in %s',filesaved1),''));
-    %             end
-    %             [~,filesaved2]=gui.i_exporttable(Tdn,true,'Tdn');
-    %             if ~isempty(filesaved2)
-    %                 waitfor(helpdlg(sprintf('Result has been saved in %s',filesaved2),''));
-    %             end
-    %         end
-    %     end
-
     if tf == 1
-        %disp('To run pathway analysis, type:');
-        %disp('t=run.r_SPIA(T);');
         disp('To run enrichment analysis, type:');
         disp('run.web_Enrichr(Tup.gene(1:250))');
         disp('run.web_Enrichr(Tdn.gene(1:250))');
-
-        % [outgenelist, outbackgroundlist, enrichrtype] = gui.gui_prepenrichr_dlg(Tup.gene, sce.g,... 
-        %    'Run enrichment analysis with up-regulated DE genes?', FigureHandle);
         [outgenelist, outbackgroundlist, enrichrtype] = ...
             gui.gui_prepenrichr(Tup.gene, sce.g,... 
            'Run enrichment analysis with up-regulated DE genes?');
 
-        gui.callback_RunEnrichr(src, [], outgenelist, enrichrtype, ...
-            outbackgroundlist, "Up");
+        if ~isempty(outbackgroundlist)
+            gui.callback_RunEnrichr(src, [], outgenelist, enrichrtype, ...
+                outbackgroundlist, "Up");
+        end
         
-       
-       % answer = questdlg('Run enrichment analysis with top K (=200 by default) up-regulated DE genes?');
-       % if strcmp(answer, 'Yes')
-       %     gui.i_enrichtest(Tup.gene(1:min(numel(Tup.gene), 200)), sce.g);
-       % else
-       %     return;
-       % end
-
         [outgenelist, outbackgroundlist, enrichrtype] = ...
             gui.gui_prepenrichr(Tdn.gene, sce.g,... 
            'Run enrichment analysis with down-regulated DE genes?');
+        if ~isempty(outbackgroundlist)
+            gui.callback_RunEnrichr(src, [], outgenelist, enrichrtype, ...
+                outbackgroundlist, "Down");
+        end
 
-        gui.callback_RunEnrichr(src, [], outgenelist, enrichrtype, ...
-            outbackgroundlist, "Down");
-
-       % answer = questdlg('Run enrichment analysis with top K (=200 by default) down-regulated DE genes?');
-       % if strcmp(answer, 'Yes')
-       %     gui.i_enrichtest(Tdn.gene(1:min(numel(Tdn.gene), 200)), sce.g);
-       % else
-       %     return;
-       % end
     end
-
-    %    end
-
-    %     pause(3);
-    %
-    %     %Tf=run.fgsea(T.gene);
-    %     %pkg.e_fgseanet(Tf);
-
-    %     answer = questdlg('Violin plots (top 16 DE genes)?');
-    %     if strcmp(answer,'Yes')
-    %         figure;
-    %         for k=1:16
-    %             subplot(4,4,k)
-    %             i=sce.g==T.gene(k);
-    %             pkg.i_violinplot(log2(1+sce.X(i,:)),...
-    %                 sce.c_batch_id);
-    %             title(T.gene(k));
-    %             ylabel('log2(UMI+1)')
-    %         end
-    %     end
-
-    %     answer = questdlg('Volcano plot?');
-    %     if strcmp(answer,'Yes')
-    %         figure;
-    %         gui.i_volcanoplot(T,isok);
-    %     end
-
 end

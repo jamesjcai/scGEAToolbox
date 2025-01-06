@@ -1,10 +1,20 @@
-function [paramset] = i_degparamset
+function [paramset] = i_degparamset(nogui)
 
-paramset = [];
-    definput = {'0.05', '1.0', '0.01'};
-    prompt = {'Min. abs(diff(pct)):', ...
-              'Min. abs(log2(FC)):', ...
-              'Adjusted P-value cutoff:'};
+if nargin<1, nogui=false; end
+% preftagname ='scimilmodelpath'
+% preftagname ='openscedlgindex';
+preftagname ='degtestparamset';
+defaultset = getpref('scgeatoolbox', preftagname, {0.05, 1.0, 0.01, 'Adjusted P-value'});
+
+if nogui
+    paramset = {0.05, 1.0, 0.01, 'Adjusted P-value'};    
+else
+    paramset = [];
+    definput = {num2str(defaultset{1}), num2str(defaultset{2}), num2str(defaultset{3})};
+    % definput = {'0.05', '1.0', '0.01'};
+    prompt = {'Min. abs(diff(pct)): e.g., 0.05=5% (default)', ...
+              'Min. abs(log2(FC)): e.g., 1.0=2x (default), 0.59=1.5x, 0.26=1.2x, 1.5=2.83x:', ...
+              'Adjusted P-value cutoff: e.g., 0.01 (default)'};
     dlgtitle = 'DE Result Filter';
     dims = [1, 80];
     answer = inputdlg(prompt, dlgtitle, dims, definput);
@@ -22,14 +32,17 @@ paramset = [];
         return;
     end
     answer = questdlg('Sort DE genes by adjusted P-value or fold change?','',...
-        'Adjusted P-value','Fold Change','Adjusted P-value');
-switch answer
-    case 'Adjusted P-value'
-        sortbywhat = 'Adjusted P-value';
-    case 'Fold Change'
-        sortbywhat = 'Fold Change';
-        % disp('DE genes are sorted by absolute fold change (FC).');
-    otherwise
-        sortbywhat = [];
-end    
-paramset = {mindiffpct, minabsolfc, apvaluecut, sortbywhat};
+        'Adjusted P-value','Fold Change', defaultset{4});
+    switch answer
+        case 'Adjusted P-value'
+            sortbywhat = 'Adjusted P-value';
+        case 'Fold Change'
+            sortbywhat = 'Fold Change';
+            % disp('DE genes are sorted by absolute fold change (FC).');
+        otherwise
+            sortbywhat = [];
+    end    
+    paramset = {mindiffpct, minabsolfc, apvaluecut, sortbywhat};
+end
+setpref('scgeatoolbox', preftagname, paramset);
+

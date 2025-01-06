@@ -46,14 +46,16 @@ end
 % end
 
 %a=T.pct_2-T.pct_1;
+
 a = T.(T.Properties.VariableNames{8}) - T.(T.Properties.VariableNames{7});
 % if isatac
 %     isok = T.p_val_adj <= 0.1;
 % else
-isok = (abs(a) >= mindiffpct | abs(T.avg_log2FC) >= minabsolfc) & ...
-           T.p_val_adj <= apvaluecut;
+isok = abs(a) >= mindiffpct & abs(T.avg_log2FC) >= minabsolfc & T.p_val_adj <= apvaluecut;
 
-disp('DE genes with > 5% difference in expression percentages, abs(log2FC) >= 1, and adjusted P-value < 0.01 are retained.');
+fprintf('\nDE genes with > %.2f%% difference in expression percentages, abs(log2FC) >= %.2f, and adjusted P-value < %.3f are retained.\n', ...
+    mindiffpct*100,...
+    minabsolfc, apvaluecut);
 
 Tup = T(T.avg_log2FC > 0 & isok, :);
 Tdn = T(T.avg_log2FC < 0 & isok, :);
