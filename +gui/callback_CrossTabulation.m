@@ -86,15 +86,7 @@ hx.show(FigureHandle);
         labelsx = labelsx(~cellfun('isempty', labelsx));
         labelsy = labelsxy(:, 2);
         labelsy = labelsy(~cellfun('isempty', labelsy));
-
-
-    % f0 = figure('Visible', false);
-    % sizesorted = false;
-    % subplot(211)
-    % in_plot1;
-    % subplot(212)
-    % in_plot2;
-    
+  
     end
 
 

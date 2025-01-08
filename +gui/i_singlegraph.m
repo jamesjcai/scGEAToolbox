@@ -21,29 +21,33 @@ load(fullfile(mfolder, ...
 w = 3;
 l = 1;
 
+
 hx=gui.myFigure;
 hFig=hx.FigureHandle;
 
-h1 = axes(hFig);
+h1=axes(hFig);
 xy = [];
 [p1] = drawnetwork(G1, h1);
 
-hx.addCustomButton('off', @ChangeFontSize, 'noun_font_size_591141.gif', 'ChangeFontSize');
+
+%hx.ptvenable(logical([1 1 1 1 1 0 1 1 1 1 0]));
 hx.addCustomButton('off', @ChangeWeight, 'noun_Weight_2243621.gif', 'ChangeWeight');
+hx.addCustomButton('off', @ChangeFontSize, 'noun_font_size_591141.gif', 'ChangeFontSize');
+%pkg.i_addbutton2fig(tb, 'off', @ChangeWeight, 'noun_Weight_2243621.gif', 'ChangeWeight');
 hx.addCustomButton('off', @ChangeLayout, 'noun_Layout_792775.gif', 'ChangeLayout');
 hx.addCustomButton('off', @ChangeDirected, 'noun_directional_arrows_3497928.gif', 'ChangeDirected');
-hx.addCustomButton('off', @ChangeBox, 'PlotPoly.gif', 'Box on/off');
+%pkg.i_addbutton2fig(tb, 'off', @ChangeBox, 'PlotPoly.gif', 'Box on/off');
 hx.addCustomButton('off', @AnimateCutoff, 'noun_trim_3665385.gif', 'AnimateCutoff');
 hx.addCustomButton('off', @ChangeCutoff, 'noun_Pruners_2469297.gif', 'ChangeCutoff');
 hx.addCustomButton('off', @SaveAdj, 'export.gif', 'Export & save data');
+%pkg.i_addbutton2fig(tb, 'on', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
+%pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hx}, 'HDF_pointx.gif', 'Resize Plot Window');
 hx.addCustomButton('on', @in_RefreshAll, "icon-mat-refresh-20.gif", "Refresh");
-hx.addCustomButton('off', @in_NetworkVis2, "xxicon-mat-refresh-20.gif", "NetworkVis2");
-hx.addCustomButton('off', @ix_networkvis, "xxicon-mat-refresh-20.gif", "NetworkVis2");
+hx.addCustomButton( 'off', @in_NetworkVis2, "xxicon-mat-refresh-20.gif", "NetworkVis2");
+hx.addCustomButton( 'off', @ix_networkvis, "xxicon-mat-refresh-20.gif", "NetworkVis2");
 
 title(h1,figname);
-
 hx.show(parentfig);
-
 % gui.gui_showrefinfo('Network Legend');
 
 oldG1=[];
@@ -55,13 +59,14 @@ axistrig = true;
     end
 
     function ix_networkvis(~, ~)
-        gui.i_networkvis(G1, getxy, true, p1.NodeFontSize);
+        gui.i_networkvis(G1, getxy, true, p1.NodeFontSize, hFig);
     end
 
+
     function in_NetworkVis2(~, ~)
-        figure('SizeChangedFcn', @sbar);
-        gplot(G1.adjacency, [p1.XData' p1.YData'], ...
-            '-k');
+        %figure('SizeChangedFcn', @sbar);
+        h = gui.myFigure;        
+        gplot(G1.adjacency, [p1.XData' p1.YData'], '-k');
         hold on
         scatter(p1.XData', p1.YData', 300, ...
             'MarkerEdgeColor','k', ...
@@ -81,24 +86,25 @@ axistrig = true;
                 'HorizontalAlignment','center', ...
                 'VerticalAlignment','middle');             
         end
+        h.show(hFig);
 
-        function sbar(~, ~)
-                textOpts.FontSize = 15;
-                textOpts.HorizontalAlignment = 'center';
-                textOpts.VerticalAlignment = 'middle';
-                textOpts.FontWeight = 'normal';
-                textHandles = findall(gcf, 'Type', 'text'); % Find all text objects in the current figure
-                delete(textHandles); % Delete all found text objects
-            for k = 1:length(G1.Nodes.Name)                
-                [wx] = measureText(G1.Nodes.Name{k}, textOpts);
-                t{k} = text(p1.XData(k)-wx/2, p1.YData(k), ...
-                    G1.Nodes.Name{k},'FontSize',15,...
-                    'BackgroundColor','w', ...
-                    'FontWeight','normal', ...
-                    'HorizontalAlignment','center', ...
-                    'VerticalAlignment','middle');             
-            end
-        end
+        % function sbar(~, ~)
+        %         textOpts.FontSize = 15;
+        %         textOpts.HorizontalAlignment = 'center';
+        %         textOpts.VerticalAlignment = 'middle';
+        %         textOpts.FontWeight = 'normal';
+        %         textHandles = findall(gcf, 'Type', 'text'); % Find all text objects in the current figure
+        %         delete(textHandles); % Delete all found text objects
+        %     for k = 1:length(G1.Nodes.Name)                
+        %         [wx, hx] = measureText(G1.Nodes.Name{k}, textOpts);
+        %         t{k} = text(p1.XData(k)-wx/2, p1.YData(k), ...
+        %             G1.Nodes.Name{k},'FontSize',15,...
+        %             'BackgroundColor','w', ...
+        %             'FontWeight','normal', ...
+        %             'HorizontalAlignment','center', ...
+        %             'VerticalAlignment','middle');             
+        %     end
+        % end
     end
 
     % function in_NetworkVis(~, ~)

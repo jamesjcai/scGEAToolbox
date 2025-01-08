@@ -44,6 +44,6 @@ switch answer
 end
 weights = ones(height(tab), 1);
 G = digraph(tab.Var1, tab.Var2, weights);
-gui.i_singlegraph_new(G, '', FigureHandle);
+gui.i_singlegraph(G, '', FigureHandle);
 gui.gui_waitbar(fw);
 end

@@ -21,9 +21,6 @@ load(fullfile(mfolder, ...
 w = 3;
 l = 1;
 
-%hFig = figure('Visible', 'off');
-%hFig.Position(3)=hFig.Position(3)*1.2;
-%hFig.Position(4)=hFig.Position(4)*1.2;
 
 hx=gui.myFigure;
 hFig=hx.FigureHandle;

@@ -70,18 +70,8 @@ function callback_Dotplot(src, ~)
     % 
     % else
         try
-            %hFig = 
             gui.i_dotplot(Xt, sce.g, c, cL, glist, true, 'Dotplot', FigureHandle);
-            
-            %p = hFig.Position;
-            %p(4) = p(4) * 1.5;
-            %hFig.Position = p;    
-            %gui.i_movegui2parent(hFig, FigureHandle);
-            %set(hFig, 'visible', 'on');    
         catch ME
-            %if exist('f', 'var') && ishandle(hFig)
-            %    close(hFig);
-            %end
             errordlg(ME.message);
         end
     % end

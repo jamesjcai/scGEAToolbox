@@ -32,7 +32,7 @@ hx=gui.myFigure;
     %         'VerticalAlignment','middle','Margin',0.2);
     % end
     in_addtext([],[]);
-hx.show();    
+    hx.show(parentfig);    
 
 
     function in_addtext(~, ~)

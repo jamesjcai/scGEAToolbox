@@ -22,7 +22,6 @@ A = blkdiag(adjacency(G1, 'weighted'), adjacency(G2, 'weighted'));
 n = matlab.lang.makeUniqueStrings([table2cell(G1.Nodes); table2cell(G2.Nodes)]);
 G = digraph(A, n);
 
-% gui.i_singlegraph(G);
 hx=gui.myFigure;
 hFig = hx.FigureHandle;
 [~] = drawnetwork(G);

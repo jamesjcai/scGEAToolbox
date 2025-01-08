@@ -17,8 +17,6 @@ import mlreportgen.ppt.*;
 pw1 = fileparts(mfilename('fullpath'));
 pth = fullfile(pw1, '..', 'resources', 'Misc', 'myTemplate.pptx');
 
-% hFig = figure("Visible","off",'MenuBar','none', ...
-%     'ToolBar','figure', 'DockControls', 'off');
 
 hx=gui.myFigure;
 hFig=hx.FigureHandle;

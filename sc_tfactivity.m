@@ -183,27 +183,8 @@ end
         % iterative computation
         for iter = 1:Niter
 
-
-            %     % plot actual and reconstructed spectrogram
-            %     figure(22)
-            %     subplot(211)
-            %     imagesc(db(V))
-            %     axis xy
-            %     title('actual')
-            %     subplot(212)
-            %     imagesc(db(Lambda))
-            %     axis xy
-            %     title('reconstructed')
-            %     drawnow;
-
             %     % compute beta divergence and plot its evolution
             bDsave(iter) = betaDiv(V+eps, Lambda+eps, beta);
-            %     figure(23)
-            %     semilogy(bDsave,'-o')
-            %     title(['Evolution of beta divergence (dB) beta = ' num2str(beta) ' eta = ' num2str(eta)])
-            %     xlabel('iteration')
-            %     drawnow;
-
 
             % update of W
             if not(WRfixed)
