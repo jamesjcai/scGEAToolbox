@@ -35,8 +35,7 @@ if any(idx)
     title(ttxt);
     hx.addCustomButton('off', {@i_saveM, ci}, 'greencircleicon.gif', ...
         'Save marker gene map...');
-    hx.centerto(FigureHandle);
-    hx.show;    
+    hx.show(FigureHandle);    
 else
     warndlg('No Hgb-genes found');
 end

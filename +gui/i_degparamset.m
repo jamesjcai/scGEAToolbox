@@ -24,9 +24,9 @@ else
         mindiffpct = str2double(answer{1});
         minabsolfc = str2double(answer{2});
         apvaluecut = str2double(answer{3});
-        assert((mindiffpct > 0) && (mindiffpct < 1));
-        assert((minabsolfc >= 1) && (minabsolfc < 100));
-        assert((apvaluecut >= 0.0) && (apvaluecut <= 1.0));
+        assert((mindiffpct >= 0) && (mindiffpct <= 1));
+        assert((minabsolfc >= 0) && (minabsolfc <= 100));
+        assert((apvaluecut >= 0) && (apvaluecut <= 1));
     catch
         errordlg('Invalid input.');
         return;

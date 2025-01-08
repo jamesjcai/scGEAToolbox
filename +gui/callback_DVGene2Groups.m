@@ -87,7 +87,7 @@ if strcmp(answerx, 'Splinefit Method [PMID:31697351]')
         hx = gui.myFigure;
         hFig = hx.FigureHandle;
         hFig.Position(3) = hFig.Position(3)*1.8;
-        hx.centerto(FigureHandle);
+        
         
         hx.addCustomButton( 'off', {@in_HighlightSelectedGenes, 1}, 'list.gif', 'Selet a gene to show expression profile');
         hx.addCustomButton( 'off', {@in_HighlightSelectedGenes, 2}, 'list2.gif', 'Selet a gene from sorted list');
@@ -148,7 +148,7 @@ if strcmp(answerx, 'Splinefit Method [PMID:31697351]')
         ylnew = [min(yl(:, 1)), max(yl(:, 2))];
         set([hAx1, hAx2], 'Ylim', ylnew);
         subplot(hAx0);
-        hx.show;
+        hx.show(FigureHandle);
     end
 end
 

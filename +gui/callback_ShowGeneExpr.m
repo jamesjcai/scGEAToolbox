@@ -50,9 +50,8 @@ function callback_ShowGeneExpr(src, ~)
                         sc_scattermarker(Xt, sce.g, sce.s, glist(k), 1, 5, false);                        
                 end
                 maxy = max([maxy, max(Xt(sce.g == glist(k)))]);
-            end
-            hx.centerto(FigureHandle);
+            end            
             gui.gui_waitbar(fw);
-            hx.show;
+            hx.show(FigureHandle);
     end
 end
