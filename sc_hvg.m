@@ -127,21 +127,21 @@ end
 if plotit
     %[~,~]=maxk(fitratio,100);
     %    figure;
-    hFig = figure;
+    hx=gui.myFigure;
+
+    hFig = hx.FigureHandle;
     hFig.Position(3)=hFig.Position(3)*1.8;
     %hAx = axes('Parent', FigureHandle);
     hAx1 = subplot(2,2,[1 3]);
     % tb = findall(hFig, 'Tag', 'FigureToolBar');
-    tb = uitoolbar('Parent', hFig);
-    uipushtool(tb, 'Separator', 'off');
-    pkg.i_addbutton2fig(tb, 'off', @HighlightGenes, 'plotpicker-qqplot.gif', 'Highlight top HVGs');
-    pkg.i_addbutton2fig(tb, 'off', @in_HighlightSelectedGenes, 'xplotpicker-qqplot.gif', 'Highlight selected genes');
-    pkg.i_addbutton2fig(tb, 'off', @ExportGeneNames, 'export.gif', 'Export Selected HVG gene names...');
-    pkg.i_addbutton2fig(tb, 'off', @ExportTable, 'xexport.gif', 'Export HVG Table...');
-    pkg.i_addbutton2fig(tb, 'off', @EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Enrichment analysis...');
-    pkg.i_addbutton2fig(tb, 'off', @ChangeAlphaValue, 'xplotpicker-andrewsplot.gif', 'Change MarkerFaceAlpha value');
-    pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-    pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
+    hx.addCustomButton('off', @HighlightGenes, 'plotpicker-qqplot.gif', 'Highlight top HVGs');
+    hx.addCustomButton('off', @in_HighlightSelectedGenes, 'xplotpicker-qqplot.gif', 'Highlight selected genes');
+    hx.addCustomButton('off', @ExportGeneNames, 'export.gif', 'Export Selected HVG gene names...');
+    hx.addCustomButton('off', @ExportTable, 'xexport.gif', 'Export HVG Table...');
+    hx.addCustomButton('off', @EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Enrichment analysis...');
+    hx.addCustomButton('off', @ChangeAlphaValue, 'xplotpicker-andrewsplot.gif', 'Change MarkerFaceAlpha value');
+    %hx.addCustomButton('off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
+    %hx.addCustomButton('on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
     h = scatter(hAx1, log(u), log(cv2), 'filled', 'MarkerFaceAlpha', .1);
     hold on
     % scatter(log(u(top100idx)),log(cv2(top100idx)),'x');
@@ -177,7 +177,7 @@ if plotit
     subtitle(hAx2, titxt);
     xlabel(hAx2,'Cell Index');
     ylabel(hAx2,'Expression Level');
-    
+    hx.show;
 end
 
 

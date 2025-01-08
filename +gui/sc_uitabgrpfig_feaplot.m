@@ -71,7 +71,7 @@ end
 tabgp.SelectionChangedFcn=@displaySelection;
 
 hx.addCustomButton('off',  @i_genecards, 'fvtool_fdalinkbutton.gif', 'GeneCards...');
-hx.addCustomButton('on', {@i_PickColorMap, c}, 'plotpicker-compass.gif', 'Pick new color map...');
+%hx.addCustomButton('on', {@i_PickColorMap, c}, 'plotpicker-compass.gif', 'Pick new color map...');
 
 %hx.addCustomButton('off', @i_RescaleExpr, 'IMG00074.GIF', 'Rescale expression level [log2(x+1)]');
 %hx.addCustomButton('off', @i_ResetExpr, 'plotpicker-geobubble2.gif', 'Reset expression level');

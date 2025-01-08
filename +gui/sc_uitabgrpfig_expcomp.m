@@ -100,8 +100,8 @@ hx.addCustomButton('off',  @i_genecards, 'fvtool_fdalinkbutton.gif', 'GeneCards.
 %hx.addCustomButton('off', @i_RescaleExpr, 'IMG00074.GIF', 'Rescale expression level [log2(x+1)]');
 %hx.addCustomButton('off', @i_ResetExpr, 'plotpicker-geobubble2.gif', 'Reset expression level');
 hx.addCustomButton('off', @in_savedata, "powerpointx.gif", 'Save Gene List...');
-hx.addCustomButton('off', @i_savemainfig, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-hx.addCustomButton('off', @i_savemainfigx, "xpowerpoint.gif", 'Save Figure as Graphic File...');
+%hx.addCustomButton('off', @i_savemainfig, "powerpoint.gif", 'Save Figure to PowerPoint File...');
+%hx.addCustomButton('off', @i_savemainfigx, "xpowerpoint.gif", 'Save Figure as Graphic File...');
 
 hx.show(parentfig);
 
