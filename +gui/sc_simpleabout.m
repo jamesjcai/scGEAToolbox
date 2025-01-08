@@ -7,9 +7,7 @@ function [hFig] = sc_simpleabout(parentfig, im2)
     if ~isempty(im2) && license('test','image_toolbox') && ~isempty(which('imfuse')) 
         im = imfuse(im, im2, 'blend');
     end
-if nargin<1
-    parentfig=[];
-end
+    if nargin<1, parentfig=[]; end
 
     hFig = figure('MenuBar','none','ToolBar','none', ...
         'Name','About','NumberTitle','off','Color','k', ...

@@ -14,32 +14,30 @@ y = lgcv;
 z = dropr;
 
 fw = gui.gui_waitbar;
-hFig = figure('Visible','off');
+
+
+hx=gui.myFigure;
+hFig=hx.FigureHandle;
 hFig.Position(3) = hFig.Position(3)*1.8;
-
-
-gui.i_movegui2parent(hFig, parentfig);
 
 
 % hAx = axes('Parent', hFig);
 % tb = findall(hFig, 'Tag', 'FigureToolBar');
-tb = uitoolbar('Parent', hFig);
-uipushtool(tb, 'Separator', 'off');
-%pkg.i_addbutton2fig(tb, 'off', @in_ShowProfile, 'plotpicker-qqplotx.gif', 'Show Profile of Genes');
-pkg.i_addbutton2fig(tb, 'off', @in_HighlightTopHVGs, 'plotpicker-qqplot.gif', 'Highlight top HVGs');
-pkg.i_addbutton2fig(tb, 'off', {@in_HighlightSelectedGenes,2}, 'xplotpicker-qqplot.gif', 'Highlight top HVGs');
+%tb = uitoolbar('Parent', hFig);
+%uipushtool(tb, 'Separator', 'off');
+%hx.addCustomButton('off', @in_ShowProfile, 'plotpicker-qqplotx.gif', 'Show Profile of Genes');
 
-pkg.i_addbutton2fig(tb, 'off', {@in_HighlightSelectedGenes,1}, 'xplotpicker-qqplot.gif', 'Highlight selected genes');
+hx.addCustomButton('off', @in_HighlightTopHVGs, 'plotpicker-qqplot.gif', 'Highlight top HVGs');
+hx.addCustomButton('off', {@in_HighlightSelectedGenes,2}, 'xplotpicker-qqplot.gif', 'Highlight top HVGs');
+
+hx.addCustomButton('off', {@in_HighlightSelectedGenes,1}, 'xplotpicker-qqplot.gif', 'Highlight selected genes');
 
 
-pkg.i_addbutton2fig(tb, 'on', @ExportTable, 'export.gif', 'Export HVG Table...');
-pkg.i_addbutton2fig(tb, 'off', @ExportGeneNames, 'xexport.gif', 'Export selected HVG gene names...');
+hx.addCustomButton('on', @ExportTable, 'export.gif', 'Export HVG Table...');
+hx.addCustomButton('off', @ExportGeneNames, 'xexport.gif', 'Export selected HVG gene names...');
 
-pkg.i_addbutton2fig(tb, 'off', @EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Enrichment analysis...');
-pkg.i_addbutton2fig(tb, 'off', @ChangeAlphaValue, 'xplotpicker-andrewsplot.gif', 'Change MarkerFaceAlpha value');
-gui.gui_3dcamera(tb, 'HVGs');
-pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
+hx.addCustomButton('off', @EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Enrichment analysis...');
+hx.addCustomButton('off', @ChangeAlphaValue, 'xplotpicker-andrewsplot.gif', 'Change MarkerFaceAlpha value');
 
 if showdata
     %h=scatter3(hAx,x,y,z);  % 'filled','MarkerFaceAlpha',.5);
@@ -140,10 +138,8 @@ ylabel(hAx2,'Expression Level');
 if showdata && ~isempty(dt)
     dt.UpdateFcn = {@in_myupdatefcn3, gsorted};
 end
-
 gui.gui_waitbar(fw);
-hFig.Visible = true;
-drawnow;
+hx.show(parentfig);
 
 
     % function in_ShowProfile(~, ~)

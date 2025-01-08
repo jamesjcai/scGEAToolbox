@@ -10,8 +10,7 @@ textOpts.VerticalAlignment = 'middle';
 textOpts.FontWeight = 'normal';
 
 
-hx = gui.myFigure;
-
+hx=gui.myFigure;
 %if ~curved
 %    gplot(G.adjacency, xy, '-k');
 %else
@@ -33,14 +32,14 @@ hx = gui.myFigure;
     %         'VerticalAlignment','middle','Margin',0.2);
     % end
     in_addtext([],[]);
-    hx.show(parentfig);
+hx.show();    
 
 
     function in_addtext(~, ~)
         textHandles = findall(gcf, 'Type', 'text'); % Find all text objects in the current figure
         delete(textHandles); % Delete all found text objects        
         for k=1:length(G.Nodes.Name)
-            [wx, hx] = measureText(G.Nodes.Name{k}, textOpts);
+            [wx] = measureText(G.Nodes.Name{k}, textOpts);
             text(xy(k,1)-floor(wx/2), xy(k,2), ...
                 G.Nodes.Name{k},'FontSize',textOpts.FontSize,...
                 'BackgroundColor','w', ...

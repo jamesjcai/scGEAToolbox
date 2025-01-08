@@ -8,7 +8,9 @@ if nargin < 4, colorit = true; end
 if nargin < 3, ttxt = ''; end
 
 if matlab.ui.internal.isUIFigure(parentfig), focus(parentfig); end
-hFig = figure('visible', 'off', 'DockControls', 'off');
+hx=gui.myFigure;
+hFig=hx.FigureHandle;
+
 
 isdescend = false;
 OldTitle = [];
@@ -20,32 +22,21 @@ title(strrep(ttxt, '_', '\_'));
 %ylabel(selitems{indx1});
 
 
-% tb = uitoolbar(hFig);
-% tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
-tb = uitoolbar('Parent', hFig);
-uipushtool(tb, 'Separator', 'off');
+hx.addCustomButton('off', @i_savedata, 'export.gif', 'Export data...');
+hx.addCustomButton('off', @i_testdata, 'icon-fa-stack-exchange-10.gif', 'ANOVA/T-test...');
+hx.addCustomButton('off', @i_addsamplesize, "icon-mat-blur-linear-10.gif", 'Add Sample Size');
+hx.addCustomButton('off', @i_invertcolor, "plotpicker-pie.gif", 'Switch BW/Color');
+hx.addCustomButton('off', @i_reordersamples, "plotpicker-errorbar.gif", 'Reorder Samples');
+hx.addCustomButton('off', @i_selectsamples, "plotpicker-errorbarx.gif", 'Select Samples');
+hx.addCustomButton('off', @i_sortbymean, "plotpicker-cra.gif", 'Sort Samples by Median');
+hx.addCustomButton('on', @i_viewgenenames, 'HDF_point.gif', 'Show Gene Names');
 
-pkg.i_addbutton2fig(tb, 'off', @i_savedata, 'export.gif', 'Export data...');
-pkg.i_addbutton2fig(tb, 'off', @i_testdata, 'icon-fa-stack-exchange-10.gif', 'ANOVA/T-test...');
-pkg.i_addbutton2fig(tb, 'off', @i_addsamplesize, "icon-mat-blur-linear-10.gif", 'Add Sample Size');
-pkg.i_addbutton2fig(tb, 'on', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-pkg.i_addbutton2fig(tb, 'off', @i_invertcolor, "plotpicker-pie.gif", 'Switch BW/Color');
-pkg.i_addbutton2fig(tb, 'off', @i_reordersamples, "plotpicker-errorbar.gif", 'Reorder Samples');
-pkg.i_addbutton2fig(tb, 'off', @i_selectsamples, "plotpicker-errorbarx.gif", 'Select Samples');
-pkg.i_addbutton2fig(tb, 'off', @i_sortbymean, "plotpicker-cra.gif", 'Sort Samples by Median');
-pkg.i_addbutton2fig(tb, 'off', @gui.i_renametitle, "icon-mat-touch-app-10.gif", 'Change Plot Title');
-pkg.i_addbutton2fig(tb, 'on', @i_viewgenenames, 'HDF_point.gif', 'Show Gene Names');
-pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
 
 %i_addsamplesize([],[]);
 %i_testdata([],[]);
-if nargout > 0
-    return;
-end
 
-gui.i_movegui2parent(hFig, parentfig);
-
-set(hFig, 'visible', 'on');
+if nargout > 0, return; end
+hx.show(parentfig);
 
 %catch ME
 %    errordlg(ME.message);

@@ -58,14 +58,13 @@ t = t(:);
     [~, idxp] = maxk(r, 10); 
     selectedg = sce.g(idxp);
     try
-        hFig = figure('Visible','off');
+        hx=gui.myFigure;
+        hFig=hx.FigureHandle;
         hFig.Position(3) = hFig.Position(3) * 1.8;
-        gui.i_movegui2parent(hFig, parentfig);
-
+        hx.show(parentfig);
         figure(hFig);
         pkg.i_plot_pseudotimeseries(log1p(X), ...
-            sce.g, t, selectedg);
-        hFig.Visible = true;
+            sce.g, t, selectedg);        
     catch ME
         if exist('psf1', 'var') && ishandle(hFig)
             close(hFig);

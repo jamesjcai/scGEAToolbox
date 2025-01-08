@@ -93,5 +93,4 @@ function [T, Tup, Tdn] = sc_deg(X, Y, genelist, methodid, guiwaitbar)
         [paramset] = gui.i_degparamset(true);
         [Tup, Tdn] = pkg.e_processDETable(T, paramset);
     end
-
 end

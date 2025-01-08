@@ -21,9 +21,9 @@ if uselog, X = log1p(X); end
 cL = strrep(cL(:),'_','\_');
 % xgroupdata = categorical(cL(c));
 xgroupdata = cL(c);
-hFig = figure('Visible', 'off', 'DockControls', 'off');
-tb = uitoolbar('Parent', hFig);
-pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
+
+hx=gui.myFigure;
+hFig=hx.FigureHandle;
 
 
 for k = 1:M
@@ -38,7 +38,4 @@ if ~isempty(titletxt)
     titletxt = strrep(titletxt,'_','\_');
     sgtitle(titletxt);
 end
-gui.i_movegui2parent(hFig, parentfig);
-if nargout < 1
-    set(hFig, 'visible', 'on');
-end
+if nargout < 1, hx.show(parentfig); end

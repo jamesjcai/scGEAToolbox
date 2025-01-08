@@ -25,7 +25,10 @@ end
 %ctexplorer_celltypeid=0;
 titxt = sprintf('Cell Type Explorer\n[species: %s; method: %s]', ...
     species, method);
-hFig = figure('Name', 'Cell Type Explorer');
+
+hx=gui.myFigure;
+hFig=hx.FigureHandle;
+
 hAx = axes('Parent', hFig);
 if size(s, 2) >= 3
     scatter3(hAx, s(:, 1), s(:, 2), s(:, 3), 10);
@@ -34,17 +37,8 @@ elseif size(s, 2) == 2
 end
 title(titxt);
 
+hx.addCustomButton('off',  @MenuSelected1, 'tool_ellipse.gif', 'Click and then brush/select cells');
 
-tb = uitoolbar(hFig);
-tt = uitoggletool(tb, 'Separator', 'on');
-[img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
-    '..', 'resources', 'Images', 'tool_ellipse.gif'));
-%  [img,map] = imread(fullfile(matlabroot,...
-%              'toolbox','matlab','icons','tool_ellipse.gif'));
-ptImage = ind2rgb(img, map);
-tt.CData = ptImage;
-tt.Tooltip = 'Click and then brush/select cells';
-tt.ClickedCallback = @MenuSelected1;
 
     function MenuSelected1(src, ~)
         state = src.State;
@@ -55,7 +49,8 @@ tt.ClickedCallback = @MenuSelected1;
             hBr.Enable = 'off';
             % tt.CData = ptImage;
         end
-end
+    end
+
 
 
     hBr = brush(hFig);
@@ -64,8 +59,8 @@ end
     hBr.ActionPostCallback = {@onBrushAction, X, genelist, s, ...
         species, organ, method};
 
-    gui.gui_3dcamera(tb);
-
+    hx.show;
+    
 end
 
 

@@ -14,8 +14,9 @@ import mlreportgen.ppt.*;
 pw1 = fileparts(mfilename('fullpath'));
 pth = fullfile(pw1, '..', 'resources', 'Misc', 'myTemplate.pptx');
 
-hFig = figure("Visible","off", 'MenuBar','none', ...
-    'DockControls','off','ToolBar','figure');
+
+hx=gui.myFigure;
+hFig=hx.FigureHandle;
 hFig.Position(3) = hFig.Position(3) * 1.8;
 
 % if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 
@@ -101,23 +102,16 @@ tb = uitoolbar('Parent', hFig);
 % copyobj(b(4),tb);
 % delete(tb0);
 
-% pkg.i_addbutton2fig(tb, 'off', [], "IMG00107.GIF", " ");
-% pkg.i_addbutton2fig(tb, 'off', @i_linksubplots, 'plottypectl-rlocusplot.gif', 'Link subplots');
-pkg.i_addbutton2fig(tb, 'off',  @i_genecards, 'fvtool_fdalinkbutton.gif', 'GeneCards...');
-pkg.i_addbutton2fig(tb, 'on', {@i_PickColorMap, c}, 'plotpicker-compass.gif', 'Pick new color map...');
-%pkg.i_addbutton2fig(tb, 'off', @i_RescaleExpr, 'IMG00074.GIF', 'Rescale expression level [log2(x+1)]');
-%pkg.i_addbutton2fig(tb, 'off', @i_ResetExpr, 'plotpicker-geobubble2.gif', 'Reset expression level');
-% pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
+% hx.addCustomButton('off', [], "IMG00107.GIF", " ");
+% hx.addCustomButton('off', @i_linksubplots, 'plottypectl-rlocusplot.gif', 'Link subplots');
+hx.addCustomButton('off',  @i_genecards, 'fvtool_fdalinkbutton.gif', 'GeneCards...');
+%hx.addCustomButton('off', @i_RescaleExpr, 'IMG00074.GIF', 'Rescale expression level [log2(x+1)]');
+%hx.addCustomButton('off', @i_ResetExpr, 'plotpicker-geobubble2.gif', 'Reset expression level');
+hx.addCustomButton('off', @in_savedata, "powerpointx.gif", 'Save Gene List...');
+hx.addCustomButton('off', @i_savemainfig, "powerpoint.gif", 'Save Figure to PowerPoint File...');
+hx.addCustomButton('off', @i_savemainfigx, "xpowerpoint.gif", 'Save Figure as Graphic File...');
 
-pkg.i_addbutton2fig(tb, 'off', @in_savedata, "powerpointx.gif", 'Save Gene List...');
-pkg.i_addbutton2fig(tb, 'off', @i_savemainfig, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-pkg.i_addbutton2fig(tb, 'off', @i_savemainfigx, "xpowerpoint.gif", 'Save Figure as Graphic File...');
-pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
-
-gui.i_movegui2parent(hFig, parentfig);
-
-drawnow;
-hFig.Visible=true;
+hx.show(parentfig);
 
 
     function in_savedata(~,~)

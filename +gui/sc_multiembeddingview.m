@@ -3,7 +3,8 @@ function sc_multiembeddingview(sce, embeddingtags, parentfig)
 if isempty(embeddingtags)
     embeddingtags = fieldnames(sce.struct_cell_embeddings);
 end
-    hFig = figure('Visible', 'off');
+    hx=gui.myFigure;
+    hFig=hx.FigureHandle;
     hFig.Position(3) = hFig.Position(3) * 1.8;
     axesv = cell(length(embeddingtags),1);
     for k=1:length(embeddingtags)
@@ -15,21 +16,16 @@ end
         end
     end
 
-    gui.i_movegui2parent(hFig, parentfig);
-
-    drawnow;
-    hFig.Visible=true;
-    evalin('base', 'linkprop(findobj(gcf,''type'',''axes''), {''CameraPosition'',''CameraUpVector''});');
+   
+   % evalin('base', 'linkprop(findobj(gcf,''type'',''axes''), {''CameraPosition'',''CameraUpVector''});');
     hBr = brush(hFig);
     hBr.ActionPostCallback = {@onBrushAction, axesv};
 
-    % tb = findall(hFig, 'Tag', 'FigureToolBar');
-    tb = uitoolbar('Parent', hFig);
-    uipushtool(tb, 'Separator', 'off');
-    pkg.i_addbutton2fig(tb, 'on',  @in_showgeneexp, 'list.gif', 'Select a gene to show expression...');
-    pkg.i_addbutton2fig(tb, 'off',  @in_showcellstate, 'list2.gif', 'Select a gene to show expression...');
-    pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
-    gui.gui_3dcamera(tb, 'AllCells');    
+    hx.addCustomButton('off',  @in_showgeneexp, 'list.gif', 'Select a gene to show expression...');
+    hx.addCustomButton('off',  @in_showcellstate, 'list2.gif', 'Select a gene to show expression...');
+        
+    hx.show(parentfig);
+
      
     function in_showcellstate(~, ~)
         [thisc, clabel] = gui.i_select1state(sce);

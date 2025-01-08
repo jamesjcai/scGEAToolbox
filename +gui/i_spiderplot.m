@@ -21,32 +21,23 @@ else
     titlex = '';
 end
 
-hFig = figure('visible', 'off', 'DockControls', 'off');
-% tb = uitoolbar(hFig);
+hx=gui.myFigure;
+hFig=hx.FigureHandle;
 
-% tb = findall(hFig, 'Tag', 'FigureToolBar');
-tb = uitoolbar('Parent', hFig);
-uipushtool(tb, 'Separator', 'off');
-
-pkg.i_addbutton2fig(tb, 'off', {@i_savedata}, ...
+hx.addCustomButton('off', {@i_savedata}, ...
     'export.gif', 'Export data...');
 % pkg.i_addbutton2fig(tb,'off',{@i_testdata,P,thisc}, ...
 %     'icon-fa-stack-exchange-10.gif','ANOVA/T-test...');
 % pkg.i_addbutton2fig(tb,'off',@i_addsamplesize, ...
 %     "icon-mat-blur-linear-10.gif",'Add Sample Size');
-pkg.i_addbutton2fig(tb, 'on', {@gui.i_savemainfig, 3}, ...
-    "powerpoint.gif", 'Save Figure to PowerPoint File...');
-pkg.i_addbutton2fig(tb, 'off', @i_invertcolor, ...
+hx.addCustomButton('off', @i_invertcolor, ...
     "plotpicker-pie.gif", 'Switch Values ON/OFF');
-pkg.i_addbutton2fig(tb, 'off', @i_reordersamples, ...
+hx.addCustomButton('off', @i_reordersamples, ...
     "plotpicker-errorbar.gif", 'Switch Legend ON/OFF');
 % pkg.i_addbutton2fig(tb,'off',@i_sortbymean, ...
 %     "plotpicker-cra.gif",'Sort Samples by Median');
-pkg.i_addbutton2fig(tb, 'off', @gui.i_renametitle, ...
-    "icon-mat-touch-app-10.gif", 'Change Plot Title');
-pkg.i_addbutton2fig(tb, 'on', @i_viewgenenames, ...
+hx.addCustomButton('on', @i_viewgenenames, ...
     'HDF_point.gif', 'Rename Group Names');
-pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
 
 showaxes = true;
 showlegend = true;
@@ -58,9 +49,8 @@ cL = strrep(cL, '_', '\_');
 legend(cL, 'Location', 'best');
 if ~isempty(titlex), title(titlex); end
 
-gui.i_movegui2parent(hFig, parentfig);
+hx.show(parentfig);
 
-set(hFig, 'visible', 'on');
 
 %catch ME
 %    errordlg(ME.message);

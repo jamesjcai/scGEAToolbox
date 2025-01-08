@@ -10,7 +10,8 @@ cL1 = cx1.cL;
 c2 = cx2.c;
 cL2 = cx2.cL;
 
-hFig = figure('Visible', false);
+hx=gui.myFigure;
+hFig=hx.FigureHandle;
 
 ax1 = subplot(1, 2, 1);
 h1 = gui.i_gscatter3(sce.s, c1, 1, 1);
@@ -38,47 +39,14 @@ evalin('base', 'hlink = linkprop(h,{''CameraPosition'',''CameraUpVector''});');
 
 % h=findobj(hFig,'type','axes');
 % linkprop(h,{'CameraPosition','CameraUpVector'});
+
 rotate3d(hFig, 'on');
 hFig.Position(3) = hFig.Position(3) * 2;
-
 hBr = brush(hFig);
 hBr.ActionPostCallback = {@onBrushAction, h1, h2};
+hx.addCustomButton('off', @i_showclustlabel, "plotpicker-scatter.gif", "Show cluster labels");
 
-% tb = findall(hFig, 'Tag', 'FigureToolBar');
-tb = uitoolbar('Parent', hFig);
-uipushtool(tb, 'Separator', 'off');
-
-pkg.i_addbutton2fig(tb, 'off', @gui.i_linksubplots, "plottypectl-rlocusplot.gif", "Link subplots");
-
-% pt = uipushtool(tb, 'Separator', 'off');
-% [img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
-%     '..', 'resources','Images', 'plottypectl-rlocusplot.gif')); % plotpicker-pie
-% ptImage = ind2rgb(img, map);
-% pt.CData = ptImage;
-% pt.Tooltip = 'Link subplots';
-% pt.ClickedCallback = @gui.i_linksubplots;
-
-pkg.i_addbutton2fig(tb, 'off', @i_showclustlabel, "plotpicker-scatter.gif", "Show cluster labels");
-
-
-% pt = uipushtool(tb, 'Separator', 'off');
-%[img, map] = imread(fullfile(fileparts(mfilename('fullpath')), ...
-%                             '..','resources', 'Images', 'plottypectl-rlocusplot.gif'));  % plotpicker-pie
-% [img, map] = imread(fullfile(matlabroot, ...
-%     'toolbox', 'matlab', 'icons', 'plotpicker-scatter.gif'));
-% 
-% ptImage = ind2rgb(img, map);
-% pt.CData = ptImage;
-% pt.Tooltip = 'Show cluster labels';
-% pt.ClickedCallback = @i_showclustlabel;
-
-pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
-gui.gui_3dcamera(tb);
-
-gui.i_movegui2parent(hFig, parentfig);
-
-set(hFig, 'Visible', true);
+hx.show(parentfig);
 
 
     function [txt] = i_myupdatefcnx12(Target, event_obj)

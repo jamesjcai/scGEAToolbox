@@ -17,7 +17,11 @@ if issparse(X), X = full(X); end
 if uselog, X = log1p(X); end
 
 xgroupdata = categorical(cL(c));
-hFig = figure('Visible', 'off', 'DockControls', 'off');
+
+
+hx=gui.myFigure;
+hFig=hx.FigureHandle;
+
 for kx = 1:length(tgene)
     nexttile;
     ydata = X(g == tgene(kx), :);
@@ -30,7 +34,4 @@ if ~isempty(titletxt)
     sgtitle(titletxt);
 end
 
-gui.i_movegui2parent(hFig, parentfig);
-if nargout < 1
-    set(hFig, 'visible', 'on');
-end
+if nargout < 1, hx.show(parentfig); end
