@@ -24,20 +24,10 @@ end
 hx=gui.myFigure;
 hFig=hx.FigureHandle;
 
-hx.addCustomButton('off', {@i_savedata}, ...
-    'export.gif', 'Export data...');
-% pkg.i_addbutton2fig(tb,'off',{@i_testdata,P,thisc}, ...
-%     'icon-fa-stack-exchange-10.gif','ANOVA/T-test...');
-% pkg.i_addbutton2fig(tb,'off',@i_addsamplesize, ...
-%     "icon-mat-blur-linear-10.gif",'Add Sample Size');
-hx.addCustomButton('off', @i_invertcolor, ...
-    "plotpicker-pie.gif", 'Switch Values ON/OFF');
-hx.addCustomButton('off', @i_reordersamples, ...
-    "plotpicker-errorbar.gif", 'Switch Legend ON/OFF');
-% pkg.i_addbutton2fig(tb,'off',@i_sortbymean, ...
-%     "plotpicker-cra.gif",'Sort Samples by Median');
-hx.addCustomButton('on', @i_viewgenenames, ...
-    'HDF_point.gif', 'Rename Group Names');
+hx.addCustomButton('off', {@i_savedata}, 'export.gif', 'Export data...');
+hx.addCustomButton('off', @i_invertcolor, "plotpicker-pie.gif", 'Switch Values ON/OFF');
+hx.addCustomButton('off', @i_reordersamples, "plotpicker-errorbar.gif", 'Switch Legend ON/OFF');
+hx.addCustomButton('on', @i_viewgenenames, 'HDF_point.gif', 'Rename Group Names');
 
 showaxes = true;
 showlegend = true;

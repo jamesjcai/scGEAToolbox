@@ -132,31 +132,11 @@ if ~isempty(ttxt)
     title(ttxt);
 end
 
-%  tb = findall(hFig, 'Tag', 'FigureToolBar');  % does not work MATLAB online
-%tb = uitoolbar(hFig);
-% uipushtool(tb, 'Separator', 'off');
-%tb = uitoolbar('Parent', hFig);
 hx.addCustomButton('off', {@gui.i_pickmonocolor, true}, 'plotpicker-compass.gif', 'Pick new color map...');
-%pkg.i_addbutton2fig(tb, 'off', @gui.i_changefontsize, 'noun_font_size_591141.gif', 'ChangeFontSize');
-%pkg.i_addbutton2fig(tb, 'off', @i_resizedot, 'networkcomp.gif', 'Resize dots...');
 hx.addCustomButton('on', @i_renamecat, 'guideicon.gif', 'Rename groups...');
-%pkg.i_addbutton2fig(tb, 'on', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-%pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 2}, "svg.gif", 'Save Figure as Graphic File...');
-%pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 1}, "svg.gif", 'Save Figure as SVG File...');
 hx.addCustomButton('on', @i_savetable, 'export.gif', 'Export data...');
-%pkg.i_addbutton2fig(tb, 'on', @gui.i_invertcolor, 'plotpicker-comet.gif', 'Invert Colors');
 hx.addCustomButton('off', @i_resetcolor, 'plotpicker-geobubble2.gif', 'Reset Colormap');
-%pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
 
-% %set(cb, 'Position', get(gca,'position')); pause(1);
-% cb.Position = cb.Position + 1e-10;
-% set(cb, 'Position', cb.Position);
-% pause(1);
-% x2=get(cb,'Position');
-% % % %  %x2(1)=x2(1)*1.025;
-% x2(3)=x2(3)*0.5;
-% x2(4)=x2(4)*0.5;
-% set(cb,'Position',x2);
 if nargout > 0, return; end
 hx.show(parentfig);
 

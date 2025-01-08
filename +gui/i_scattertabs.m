@@ -21,12 +21,11 @@ import mlreportgen.ppt.*;
 pw1 = fileparts(mfilename('fullpath'));
 pth = fullfile(pw1, '..', 'resources', 'Misc', 'myTemplate.pptx');
 
-hFig = figure("Visible","off",'MenuBar','none', ...
-    'ToolBar','figure', 'DockControls', 'off');
+hx = gui.myFigure;
+hFig=hx.FigureHandle;
 hFig.Position(3) = hFig.Position(3) * 1.8;
 
-delete(findall(hFig, 'Tag', 'FigureToolBar'));
-
+%delete(findall(hFig, 'Tag', 'FigureToolBar'));
 % if ~isempty(cx)
 %     px = hFig.Position;
 %     px_new = [cx(1)-px(3)/2 cx(2)-px(4)/2];
@@ -57,47 +56,35 @@ end
   
 tabgp.SelectionChangedFcn=@displaySelection;
 
-% tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
-% uipushtool(tb, 'Separator', 'off');
-tb = uitoolbar(hFig);
-% pkg.i_addbutton2fig(tb, 'off',  @i_genecards, 'fvtool_fdalinkbutton.gif', 'GeneCards...');
-% pkg.i_addbutton2fig(tb, 'on', {@i_PickColorMap, c}, 'plotpicker-compass.gif', 'Pick new color map...');
+hx.addCustomButton('off', @in_savedata, 'export.gif', 'Export data...');
+hx.addCustomButton('off', @in_addregress, 'plotpicker-renko.gif', 'Add Regression Line...');
+hx.addCustomButton('off', @in_addlocfitx, 'plotpicker-renkox.gif', 'Add Locfit Local Regression...');
 
-pkg.i_addbutton2fig(tb, 'off', @in_savedata, 'export.gif', 'Export data...');
-pkg.i_addbutton2fig(tb, 'off', @in_addregress, 'plotpicker-renko.gif', 'Add Regression Line...');
-pkg.i_addbutton2fig(tb, 'off', @in_addlocfitx, 'plotpicker-renkox.gif', 'Add Locfit Local Regression...');
-
-pkg.i_addbutton2fig(tb, 'off', @in_addlocfit, 'plotpicker-renko.gif', 'Add Locfit Local Regression...');
+hx.addCustomButton('off', @in_addlocfit, 'plotpicker-renko.gif', 'Add Locfit Local Regression...');
 
 
-% pkg.i_addbutton2fig(tb, 'off', @i_addsamplesize, "icon-mat-blur-linear-10.gif", 'Add Sample Size');
-pkg.i_addbutton2fig(tb, 'off', @i_savemainfig, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-pkg.i_addbutton2fig(tb, 'off', @i_savemainfigx, "xpowerpoint.gif", 'Save Figure as Graphic File...');
+% hx.addCustomButton('off', @i_addsamplesize, "icon-mat-blur-linear-10.gif", 'Add Sample Size');
+hx.addCustomButton('off', @i_savemainfig, "powerpoint.gif", 'Save Figure to PowerPoint File...');
+hx.addCustomButton('off', @i_savemainfigx, "xpowerpoint.gif", 'Save Figure as Graphic File...');
 
-%pkg.i_addbutton2fig(tb, 'off', @i_invertcolor, "plotpicker-pie.gif", 'Switch BW/Color');
-%pkg.i_addbutton2fig(tb, 'off', @i_reordersamples, "plotpicker-errorbar.gif", 'Reorder Samples');
+%hx.addCustomButton('off', @i_invertcolor, "plotpicker-pie.gif", 'Switch BW/Color');
+%hx.addCustomButton('off', @i_reordersamples, "plotpicker-errorbar.gif", 'Reorder Samples');
 
-%pkg.i_addbutton2fig(tb, 'off', @i_selectsamples, "plotpicker-errorbarx.gif", 'Select Samples');
-%pkg.i_addbutton2fig(tb, 'off', @i_sortbymean, "plotpicker-cra.gif", 'Sort Samples by Median');
-
-pkg.i_addbutton2fig(tb, 'off', @gui.i_renametitle, "icon-mat-touch-app-10.gif", 'Change Plot Title');
-pkg.i_addbutton2fig(tb, 'on', @in_PickPlotMarker, 'plotpicker-rose.gif', 'Switch scatter plot marker type');
-pkg.i_addbutton2fig(tb, 'off', @in_BoxOnOff, 'RectGate.gif', 'Switch box on/off');
-pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
+%hx.addCustomButton('off', @i_selectsamples, "plotpicker-errorbarx.gif", 'Select Samples');
+%hx.addCustomButton('off', @i_sortbymean, "plotpicker-cra.gif", 'Sort Samples by Median');
+hx.addCustomButton('on', @in_PickPlotMarker, 'plotpicker-rose.gif', 'Switch scatter plot marker type');
+hx.addCustomButton('off', @in_BoxOnOff, 'RectGate.gif', 'Switch box on/off');
 
 ybox = false;
 
 if ~(ismcc || isdeployed)
     if license('test','Curve_Fitting_Toolbox') && ~isempty(which('curveFitter'))
-        pkg.i_addbutton2fig(tb, 'on', @in_curvefitter, 'icon-fa-stack-exchange-10.gif', 'Invoke curveFitter');
+        hx.addCustomButton('on', @in_curvefitter, 'icon-fa-stack-exchange-10.gif', 'Invoke curveFitter');
     end
 end
 
-gui.i_movegui2parent(hFig, parentfig);
-
 gui.gui_waitbar(fw);
-hFig.Visible=true;
-
+hx.show(parentfig);
 
      function in_curvefitter(~, ~)
          if ~(ismcc || isdeployed)

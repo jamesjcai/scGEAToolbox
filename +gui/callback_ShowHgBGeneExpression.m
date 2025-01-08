@@ -25,10 +25,6 @@ if any(idx)
 
     hx = gui.myFigure;
     hFig = hx.FigureHandle;
-    %tb = uitoolbar('Parent', hFig);
-    %pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, ...
-    %    'HDF_pointx.gif', 'Resize Plot Window');
-    
 
     cm = uicontextmenu(hFig);
     m1 = uimenu(cm, 'Text', 'Save HgBGeneExpression...', "MenuSelectedFcn", {@i_saveM, ci});
@@ -37,7 +33,6 @@ if any(idx)
     gui.i_stemscatter(sce.s, ci);
 
     title(ttxt);
-    %tb1 = uitoolbar(hFig);
     hx.addCustomButton('off', {@i_saveM, ci}, 'greencircleicon.gif', ...
         'Save marker gene map...');
     hx.centerto(FigureHandle);

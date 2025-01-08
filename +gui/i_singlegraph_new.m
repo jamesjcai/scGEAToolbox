@@ -32,9 +32,7 @@ h1=axes(hFig);
 xy = [];
 [p1] = drawnetwork(G1, h1);
 
-% tb = findall(hFig, 'Tag', 'FigureToolBar');
-%tb = uitoolbar('Parent', hFig);
-%uipushtool(tb, 'Separator', 'off');
+
 hx.ptvenable(logical([1 1 1 1 1 0 1 1 1 1 0]));
 hx.addCustomButton('off', @ChangeWeight, 'noun_Weight_2243621.gif', 'ChangeWeight');
 hx.addCustomButton('off', @ChangeFontSize, 'noun_font_size_591141.gif', 'ChangeFontSize');

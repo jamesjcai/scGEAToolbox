@@ -62,8 +62,7 @@ set(hFig,'Position',figpos);
     end
     %text(fa,1.0,0.2,'James Cai (jcai@tamu.edu)','Color',[.7 .7 .7],'FontSize',14);
 
-gui.i_movegui2parent(hFig, parentfig);
-
+    gui.i_movegui2parent(hFig, parentfig);
     hFig.Visible=true;
     
 % for k = 3:10

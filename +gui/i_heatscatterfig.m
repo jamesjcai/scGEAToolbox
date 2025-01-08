@@ -15,16 +15,11 @@ colorbar;
 
 zlabel('Score value')
 title(strrep(csname, '_', '\_'));
-
-% tb = findall(hFig, 'Tag', 'FigureToolBar');
-tb = uitoolbar('Parent', hFig);
-% uipushtool(tb, 'Separator', 'off');
 hx.addCustomButton('off', @in_saveScoreTable, "export.gif", 'Save cell score/gene expression to table');
 hx.addCustomButton('on', @in_geneheatmapx, 'greenarrowicon.gif', 'Heatmap');
 hx.addCustomButton('off', @in_genedotplot, 'greencircleicon.gif', 'Dot plot');
 hx.addCustomButton('on', @in_viewgenenames, 'HDF_point.gif', 'Show gene names');
-pkg.i_addbutton2fig(tb,'on', @in_stemplot,'icon-mat-blur-on-10.gif','Show stem plot');
-%pkg.i_addbutton2fig(tb,'on',@i_viewscatter3,'icon-mat-blur-on-10.gif','Show scatter plot');
+hx.addCustomButton('on', @in_stemplot,'icon-mat-blur-on-10.gif','Show stem plot');
 hx.show(parentfig);
 
     function in_stemplot(~,~)

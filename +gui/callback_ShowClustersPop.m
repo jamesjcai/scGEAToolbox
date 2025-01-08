@@ -85,42 +85,6 @@ for nf = 1:numfig
 end
 hx.addCustomButton('off', @in_scgeatoolsce, "icon-mat-touch-app-10.gif", 'Extract and Work on Separate SCEs...');
 hx.show(FigureHandle);
-
-%{ 
---------------------------------------------    
-    for nf = 1:numfig
-        f = figure('visible', 'off');
-        for k = 1:9
-            kk = (nf - 1) * 9 + k;
-            if kk <= totaln
-                %subplot(3, 3, k);
-                nexttile;
-                gui.i_gscatter3(sces, c, 3, cmv(idxx(kk)));
-                set(gca, 'XTick', []);
-                set(gca, 'YTick', []);
-                b = cL{idxx(kk)};
-                title(strrep(b, '_', "\_"));
-                a = sprintf('%d cells (%.2f%%)', ...
-                    cmx(idxx(kk)), ...
-                    100*cmx(idxx(kk))/length(c));
-                fprintf('%s in %s\n', a, b);
-                subtitle(a);
-                box on
-            end
-            colormap(para.oldColorMap);
-        end
-        P = get(f, 'Position');
-        set(f, 'Position', [P(1) - 20 * nf, P(2) - 20 * nf, P(3), P(4)]);        
-        tb = uitoolbar(f);
-        pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-        if nf==1
-            pkg.i_addbutton2fig(tb, 'off', @in_scgeatoolsce, "icon-mat-touch-app-10.gif", 'Extract and Work on Separate SCEs...');
-        end
-        drawnow;
-        set(f, 'visible', 'on');
-    end
-%} 
-
 catch ME
     errordlg(ME.message);
 end

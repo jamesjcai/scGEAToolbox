@@ -23,7 +23,6 @@ w = 3;
 l = 1;
 
 hx=gui.myFigure;
-
 hFig = hx.FigureHandle;
 set(0, 'CurrentFigure', hFig);
 

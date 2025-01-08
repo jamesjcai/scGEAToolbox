@@ -1,4 +1,5 @@
 function callback_CrossTabulation(src, ~)
+
 FigureHandle = src.Parent.Parent;
 sce = guidata(FigureHandle);
 
@@ -13,39 +14,18 @@ sce = guidata(FigureHandle);
 if isempty(thisc1), return; end
 
 if isempty(thisc2)
-    hFig = gui.myFigure;
-    % figure("Visible","off", "DockControls", "off");
-    % tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
-    
-    %    tb = uitoolbar(hFig);
-    %    uipushtool(tb, 'Separator', 'off');
-        % pkg.i_addbutton2fig(tb, 'off', [], "IMG00107.GIF", " ");
-        %pkg.i_addbutton2fig(tb, 'off', @i_saveCrossTable, "export.gif", 'Save cross-table');
-    %    pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-    %    pkg.i_addbutton2fig(tb, 'on', @gui.i_pickcolormap, 'plotpicker-compass.gif', 'Pick new color map...');
-        %pkg.i_addbutton2fig(tb, 'on', @gui.i_invertcolor, 'plotpicker-comet.gif', 'Invert colors');
-    %    pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
-        % pkg.i_addbutton2fig(tb,'off',@i_reordersamples, ...
-        %     "xpowerpoint.gif",'Reorder Samples');
-        % pkg.i_addbutton2fig(tb, 'off', @i_sortbymean, ...
-        %     "xpowerpoint.gif", 'Sort Samples by Size');
-    
-        T=tabulate(thisc1);
-        y = T(:,2);
-        if iscell(y), y = cell2mat(y); end
-        bar(y,'FaceColor', "flat");    
-        colormap("turbo")
-        labelsx=string(T(:,1));
+    hx = gui.myFigure;
+    T=tabulate(thisc1);
+    y = T(:,2);
+    if iscell(y), y = cell2mat(y); end
+    bar(y,'FaceColor', "flat");    
+    colormap("turbo")
+    labelsx=string(T(:,1));
 
-        xticks(1:length(labelsx));
-        labelsx1 = strrep(labelsx, '_', '\_');
-        xticklabels(labelsx1);
-    % gui.i_movegui2parent(hFig, FigureHandle);
-    
-    %drawnow;    
-    %hFig.Visible=true;
-    hx.centerto(FigureHandle);
-    hx.show;
+    xticks(1:length(labelsx));
+    labelsx1 = strrep(labelsx, '_', '\_');
+    xticklabels(labelsx1);
+    hx.show(FigureHandle);
     return;
 end
 
@@ -63,7 +43,6 @@ hx = gui.myFigure;
 tab=cell(2,1);
 ax0=cell(2,1);
 ax=cell(2,2);
-
 
 tabgp = uitabgroup();
 for k=1:2
@@ -89,12 +68,9 @@ for k=1:2
     in_plot2;
 end
 
-%    tb = uitoolbar(hFig);
-%    uipushtool(tb, 'Separator', 'off');
 hx.addCustomButton('off', @i_saveCrossTable, "export.gif", 'Save cross-table');
 gui.gui_waitbar(fw);
-hFig.centerto(FigureHandle);
-hFig.show;
+hx.show(FigureHandle);
 
 
     function in_crossplot(thiscA,thiscB)

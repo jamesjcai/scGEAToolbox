@@ -5,48 +5,27 @@ function [hFig] = i_stemscatterfig(sce, cs, posg, csname, parentfig)
 if nargin < 5, parentfig = []; end
 if nargin < 4 || isempty(csname), csname = "CellScore"; end
 
-[hFig] = figure('Visible', false);
+hx = gui.myFigure;
+hFig = hx.FigureHandle;
 gui.i_stemscatter(sce.s, cs);
 
 zlabel('Score value')
 title(strrep(csname, '_', '\_'));
 
-
-tb = uitoolbar(hFig);
-pkg.i_addbutton2fig(tb, 'off', @i_saveCrossTable, "export.gif", 'Save cross-table');
-pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-pkg.i_addbutton2fig(tb, 'on', @gui.i_pickcolormap, 'plotpicker-compass.gif', 'Pick new color map...');
-pkg.i_addbutton2fig(tb, 'on', @gui.i_invertcolor, 'plotpicker-comet.gif', 'Invert colors');
-pkg.i_addbutton2fig(tb, 'on', @i_geneheatmapx, 'greenarrowicon.gif', 'Heatmap');
-pkg.i_addbutton2fig(tb, 'on', @i_genedotplot, 'greencircleicon.gif', 'Dot plot');
-pkg.i_addbutton2fig(tb, 'on', @i_viewgenenames, 'HDF_point.gif', 'Show gene names');
+hx.addCustomButton('off', @i_saveCrossTable, "export.gif", 'Save cross-table');
+hx.addCustomButton('on', @in_geneheatmapx, 'greenarrowicon.gif', 'Heatmap');
+hx.addCustomButton('on', @i_genedotplot, 'greencircleicon.gif', 'Dot plot');
+hx.addCustomButton('on', @i_viewgenenames, 'HDF_point.gif', 'Show gene names');
 %pkg.i_addbutton2fig(tb,'on',@i_viewscatter3,'icon-mat-blur-on-10.gif','Show scatter plot');
-pkg.i_addbutton2fig(tb,'on', @in_heatscatterplot,'icon-mat-blur-on-10.gif','Show heat scatter plot');
-pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
-
-gui.i_movegui2parent(hFig, parentfig);
-set(hFig, 'Visible', true);
+hx.addCustomButton('on', @in_heatscatterplot,'icon-mat-blur-on-10.gif','Show heat scatter plot');
+hx.show(parentfig);
 
     function in_heatscatterplot(~, ~)
-        gui.i_heatscatterfig(sce, cs, posg, csname, parentfig);
+        gui.i_heatscatterfig(sce, cs, posg, csname, hFig);
         % delete(h1);
         % h1 = gui.i_stemscatter(sce.s, cs);
     end
 
-%     function i_viewscatter3(~,~)
-%         figure;
-%         s=sce.s;
-%         x = s(:, 1); y = s(:, 2);
-%         if size(s, 2) >= 3
-%             z = s(:, 3);
-%             is2d=false;
-%         else
-%             z = zeros(size(x));
-%             is2d=true;
-%         end
-%         scatter3(x,y,z, 10, cs, 'filled');
-%         if is2d, view(2); end
-%     end
 
     function i_viewgenenames(~, ~)
         [passed] = i_checkposg;
@@ -68,7 +47,7 @@ set(hFig, 'Visible', true);
             char(matlab.lang.makeValidName(string(csname))));
     end
 
-    function i_geneheatmapx(~, ~)
+    function in_geneheatmapx(~, ~)
         [passed] = i_checkposg;
         if ~passed, return; end
 
@@ -100,4 +79,5 @@ set(hFig, 'Visible', true);
             passed = true;
         end
     end
+
 end

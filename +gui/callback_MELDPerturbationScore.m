@@ -41,10 +41,6 @@ end
 hx=gui.myFigure;
 gui.i_gscatter3(sce.s, score(:, 2));
 colorbar
-% tb = findall(hFig, 'tag', 'FigureToolBar'); % get the figure's toolbar handle
-%tb = uitoolbar('Parent', hFig);
-%pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
-%gui.gui_3dcamera(tb, 'MELD_Scores');
 hx.show(FigureHandle);
 
 if ~(ismcc || isdeployed)

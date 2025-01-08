@@ -21,21 +21,11 @@ hFig=hx.FigureHandle;
 hFig.Position(3) = hFig.Position(3)*1.8;
 
 
-% hAx = axes('Parent', hFig);
-% tb = findall(hFig, 'Tag', 'FigureToolBar');
-%tb = uitoolbar('Parent', hFig);
-%uipushtool(tb, 'Separator', 'off');
-%hx.addCustomButton('off', @in_ShowProfile, 'plotpicker-qqplotx.gif', 'Show Profile of Genes');
-
 hx.addCustomButton('off', @in_HighlightTopHVGs, 'plotpicker-qqplot.gif', 'Highlight top HVGs');
 hx.addCustomButton('off', {@in_HighlightSelectedGenes,2}, 'xplotpicker-qqplot.gif', 'Highlight top HVGs');
-
 hx.addCustomButton('off', {@in_HighlightSelectedGenes,1}, 'xplotpicker-qqplot.gif', 'Highlight selected genes');
-
-
 hx.addCustomButton('on', @ExportTable, 'export.gif', 'Export HVG Table...');
 hx.addCustomButton('off', @ExportGeneNames, 'xexport.gif', 'Export selected HVG gene names...');
-
 hx.addCustomButton('off', @EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Enrichment analysis...');
 hx.addCustomButton('off', @ChangeAlphaValue, 'xplotpicker-andrewsplot.gif', 'Change MarkerFaceAlpha value');
 

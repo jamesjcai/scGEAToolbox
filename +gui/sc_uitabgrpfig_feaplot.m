@@ -70,13 +70,6 @@ end
   
 tabgp.SelectionChangedFcn=@displaySelection;
 
-% b=allchild(tb0)
-% tb = uitoolbar(hFig);
-% copyobj(b(4),tb);
-% delete(tb0);
-%hx.addCustomButton('off', [], "IMG00107.GIF", " ");
-%hx.addCustomButton('off', @i_linksubplots, 'plottypectl-rlocusplot.gif', 'Link subplots');
-
 hx.addCustomButton('off',  @i_genecards, 'fvtool_fdalinkbutton.gif', 'GeneCards...');
 hx.addCustomButton('on', {@i_PickColorMap, c}, 'plotpicker-compass.gif', 'Pick new color map...');
 

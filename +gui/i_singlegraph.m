@@ -21,37 +21,29 @@ load(fullfile(mfolder, ...
 w = 3;
 l = 1;
 
-hFig = figure('Visible', 'off');
-%hFig.Position(3)=hFig.Position(3)*1.2;
-%hFig.Position(4)=hFig.Position(4)*1.2;
+hx=gui.myFigure;
+hFig=hx.FigureHandle;
 
 h1 = axes(hFig);
 xy = [];
 [p1] = drawnetwork(G1, h1);
 
-% tb = findall(hFig, 'Tag', 'FigureToolBar');
-tb = uitoolbar('Parent', hFig);
-%uipushtool(tb, 'Separator', 'off');
-pkg.i_addbutton2fig(tb, 'off', @ChangeFontSize, 'noun_font_size_591141.gif', 'ChangeFontSize');
-pkg.i_addbutton2fig(tb, 'off', @ChangeWeight, 'noun_Weight_2243621.gif', 'ChangeWeight');
-pkg.i_addbutton2fig(tb, 'off', @ChangeLayout, 'noun_Layout_792775.gif', 'ChangeLayout');
-pkg.i_addbutton2fig(tb, 'off', @ChangeDirected, 'noun_directional_arrows_3497928.gif', 'ChangeDirected');
-pkg.i_addbutton2fig(tb, 'off', @ChangeBox, 'PlotPoly.gif', 'Box on/off');
-pkg.i_addbutton2fig(tb, 'off', @AnimateCutoff, 'noun_trim_3665385.gif', 'AnimateCutoff');
-pkg.i_addbutton2fig(tb, 'off', @ChangeCutoff, 'noun_Pruners_2469297.gif', 'ChangeCutoff');
-pkg.i_addbutton2fig(tb, 'off', @SaveAdj, 'export.gif', 'Export & save data');
-pkg.i_addbutton2fig(tb, 'on', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
-pkg.i_addbutton2fig(tb, 'on', @in_RefreshAll, "icon-mat-refresh-20.gif", "Refresh");
-pkg.i_addbutton2fig(tb, 'off', @in_NetworkVis2, "xxicon-mat-refresh-20.gif", "NetworkVis2");
-pkg.i_addbutton2fig(tb, 'off', @ix_networkvis, "xxicon-mat-refresh-20.gif", "NetworkVis2");
+hx.addCustomButton('off', @ChangeFontSize, 'noun_font_size_591141.gif', 'ChangeFontSize');
+hx.addCustomButton('off', @ChangeWeight, 'noun_Weight_2243621.gif', 'ChangeWeight');
+hx.addCustomButton('off', @ChangeLayout, 'noun_Layout_792775.gif', 'ChangeLayout');
+hx.addCustomButton('off', @ChangeDirected, 'noun_directional_arrows_3497928.gif', 'ChangeDirected');
+hx.addCustomButton('off', @ChangeBox, 'PlotPoly.gif', 'Box on/off');
+hx.addCustomButton('off', @AnimateCutoff, 'noun_trim_3665385.gif', 'AnimateCutoff');
+hx.addCustomButton('off', @ChangeCutoff, 'noun_Pruners_2469297.gif', 'ChangeCutoff');
+hx.addCustomButton('off', @SaveAdj, 'export.gif', 'Export & save data');
+hx.addCustomButton('on', @in_RefreshAll, "icon-mat-refresh-20.gif", "Refresh");
+hx.addCustomButton('off', @in_NetworkVis2, "xxicon-mat-refresh-20.gif", "NetworkVis2");
+hx.addCustomButton('off', @ix_networkvis, "xxicon-mat-refresh-20.gif", "NetworkVis2");
 
 title(h1,figname);
 
-gui.i_movegui2parent(hFig, parentfig);
+hx.show(parentfig);
 
-drawnow;
-hFig.Visible=true;
 % gui.gui_showrefinfo('Network Legend');
 
 oldG1=[];
@@ -81,7 +73,7 @@ axistrig = true;
         
         tz = cell(length(G1.Nodes.Name),1);
         for k = 1:length(G1.Nodes.Name)            
-            [wx, hx] = measureText(G1.Nodes.Name{k}, textOpts);
+            [wx] = measureText(G1.Nodes.Name{k}, textOpts);
             tz{k} = text(p1.XData(k)-floor(wx/2), p1.YData(k), ...
                 G1.Nodes.Name{k},'FontSize',textOpts.FontSize,...
                 'BackgroundColor','w', ...
@@ -98,7 +90,7 @@ axistrig = true;
                 textHandles = findall(gcf, 'Type', 'text'); % Find all text objects in the current figure
                 delete(textHandles); % Delete all found text objects
             for k = 1:length(G1.Nodes.Name)                
-                [wx, hx] = measureText(G1.Nodes.Name{k}, textOpts);
+                [wx] = measureText(G1.Nodes.Name{k}, textOpts);
                 t{k} = text(p1.XData(k)-wx/2, p1.YData(k), ...
                     G1.Nodes.Name{k},'FontSize',15,...
                     'BackgroundColor','w', ...

@@ -98,15 +98,6 @@ end
   
 tabgp.SelectionChangedFcn=@displaySelection;
 
-% tb = findall(hFig, 'Tag', 'FigureToolBar'); % get the figure's toolbar handle
-%tb = uitoolbar('Parent', hFig);
-%uipushtool(tb, 'Separator', 'off');
-
-% b=allchild(tb0)
-% tb = uitoolbar(hFig);
-% copyobj(b(4),tb);
-% delete(tb0);
-
 % hx.addCustomButton('off', [], "IMG00107.GIF", " ");
 % hx.addCustomButton('off', @i_linksubplots, 'plottypectl-rlocusplot.gif', 'Link subplots');
 hx.addCustomButton('off',  @in_genecards, 'fvtool_fdalinkbutton.gif', 'GeneCards...');

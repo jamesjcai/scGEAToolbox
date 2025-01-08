@@ -64,22 +64,11 @@ hx.addCustomButton('off', @i_savedata_alltab, 'export.gif', 'Export individual c
 
 hx.addCustomButton('on', @in_testdata, 'icon-fa-stack-exchange-10.gif', 'ANOVA/T-test...');
 hx.addCustomButton('off', @i_addsamplesize, "icon-mat-blur-linear-10.gif", 'Add Sample Size');
-hx.addCustomButton('off', @i_savemainfig, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-hx.addCustomButton('off', @i_savemainfigx, "xpowerpoint.gif", 'Save Figure as Graphic File...');
 hx.addCustomButton('off', @i_invertcolor, "plotpicker-pie.gif", 'Switch BW/Color');
 hx.addCustomButton('off', @i_reordersamples, "plotpicker-errorbar.gif", 'Reorder Samples');
-
 hx.addCustomButton('off', @i_selectsamples, "plotpicker-errorbarx.gif", 'Select Samples');
 hx.addCustomButton('off', @i_sortbymean, "plotpicker-cra.gif", 'Sort Samples by Median');
 %hx.addCustomButton('on', @i_viewgenenames, 'HDF_point.gif', 'Show Gene Names');
-
-
-
-% if isempty(px_new)
-%     movegui(hFig,'center');
-% else    
-%     movegui(hFig, px_new);
-% end
 
 hx.show(parentfig);
 gui.gui_waitbar(fw);

@@ -1,4 +1,5 @@
 function callback_MultiGroupingView(src, ~)
+    
     FigureHandle = src.Parent.Parent;
     sce = guidata(FigureHandle);
     
@@ -43,13 +44,9 @@ function callback_MultiGroupingView(src, ~)
                 title(strrep(clabelv{k},'_','\_'));
                 cmapv{k} = colormap;
             end
-
-            %gui.i_movegui2parent(hFig, FigureHandle);
-
-            %drawnow;
-            %hFig.Visible=true;
             hx.addCustomButton('on', @in_showclustlabel, "plotpicker-scatter.gif", "Show cluster labels");
             hx.show(FigureHandle);
+
             dt = datacursormode(hFig);
             dt.UpdateFcn = {@in_myupdatefcnx12};
             %evalin('base', 'h = findobj(gcf,''type'',''axes'');');

@@ -381,12 +381,6 @@ bb = 'No, just show values';
                     guidata(FigureHandle, sce);
                     gui.i_stemscatterfig(sce, y, posg, ttxt, FigureHandle);
                 end
-                % answer = questdlg('Also show stem plot?', '');
-                % if answer == "Yes"
-                %     gui.i_stemscatterfig(sce, y, posg, ttxt);
-                % else
-                %     return;
-                % end
             end
             % guidata(FigureHandle, sce);
 

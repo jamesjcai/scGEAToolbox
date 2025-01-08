@@ -46,18 +46,7 @@ end
 %     'GridVisible',false,'ColorScaling','scaled',...
 %     'ColorbarVisible',false)
 
-f = figure('Visible', 'off');
-
-if ~isempty(parentfig)   
-    p = parentfig.Position;
-    cx = [p(1)+p(3)/2 p(2)+p(4)/2];
-    px = f.Position;
-    px_new = [cx(1)-px(3)/2 cx(2)-px(4)/2];
-    movegui(f, px_new);
-else
-    movegui(f, 'center');
-end
-
+hx=gui.myFigure;
 h = imagesc(Y);
 % hFig.Colormap = repmat(linspace(0, 1, 25).', 1, 3);
 set(gca, 'XTick', a-b);
@@ -70,21 +59,18 @@ set(gca, 'TickLength', [0, 0]);
 box on
 
 szc = cumsum(szgn);
-for k = 1:length(szc)
-    xline(szc(k)+0.5, 'y-');
-end
-tb = uitoolbar('Parent', f);
-pkg.i_addbutton2fig(tb, 'on', {@gui.i_pickcolormap, c}, 'plotpicker-compass.gif', 'Pick new color map...');
-pkg.i_addbutton2fig(tb, 'off', @gui.i_changefontsize, 'noun_font_size_591141.gif', 'ChangeFontSize');
-pkg.i_addbutton2fig(tb, 'on', @i_renamecat, 'guideicon.gif', 'Rename groups...');
-pkg.i_addbutton2fig(tb, 'on', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-pkg.i_addbutton2fig(tb, 'on', @gui.i_invertcolor, 'plotpicker-comet.gif', 'Invert colors');
-pkg.i_addbutton2fig(tb, 'off', @i_resetcolor, 'plotpicker-geobubble2.gif', 'Reset color map');
-pkg.i_addbutton2fig(tb, 'off', @i_flipxy, 'xplotpicker-geobubble2.gif', 'Flip XY');
-pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
+for k = 1:length(szc), xline(szc(k)+0.5, 'y-'); end
 
-set(f, 'visible', 'on');
-drawnow;
+hx.addCustomButton('on', {@gui.i_pickcolormap, c}, 'plotpicker-compass.gif', 'Pick new color map...');
+hx.addCustomButton('off', @gui.i_changefontsize, 'noun_font_size_591141.gif', 'ChangeFontSize');
+hx.addCustomButton('on', @i_renamecat, 'guideicon.gif', 'Rename groups...');
+hx.addCustomButton('on', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
+hx.addCustomButton('on', @gui.i_invertcolor, 'plotpicker-comet.gif', 'Invert colors');
+hx.addCustomButton('off', @i_resetcolor, 'plotpicker-geobubble2.gif', 'Reset color map');
+hx.addCustomButton('off', @i_flipxy, 'xplotpicker-geobubble2.gif', 'Flip XY');
+hx.addCustomButton('on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
+
+hx.show(parentfig);
 
 fliped = false;
 
