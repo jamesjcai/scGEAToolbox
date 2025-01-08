@@ -48,7 +48,11 @@ pt.ClickedCallback = @camera3dmp4;
         else
             ax = [-20, 10; -110, 10; -190, 80; -290, 10; -380, 10];
         end
-        CaptureFigVid(ax, fname, OptionZ);
+        try
+            CaptureFigVid(ax, fname, OptionZ);
+        catch
+           
+        end
         view(caz,cel);
         warning on
         pause(1);
