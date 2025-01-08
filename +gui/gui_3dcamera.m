@@ -21,15 +21,6 @@ try
 catch
     ptImage = rand(16, 16, 3);
 end
-
-%folder = fileparts(mfilename('fullpath'));
-%a = strfind(folder, filesep);
-%folder = extractBefore(folder, a(end)+1);
-%wrkpth = fullfile(folder, 'resources', 'Images', 'camera.gif');
-%[img, map] = imread(wrkpth);
-%ptImage = ind2rgb(img, map);
-
-
 pt.CData = ptImage;
 pt.Tooltip = 'Make video snapshot';
 pt.ClickedCallback = @camera3dmp4;
@@ -38,6 +29,9 @@ pt.ClickedCallback = @camera3dmp4;
     function camera3dmp4(~, ~)
         answer = questdlg('Make video snapshot?');
         if ~strcmp(answer, 'Yes'), return; end
+
+        [caz,cel] = view;
+
         OptionZ.FrameRate = 15;
         OptionZ.Duration = 5.5;
         OptionZ.Periodic = true;
@@ -55,7 +49,7 @@ pt.ClickedCallback = @camera3dmp4;
             ax = [-20, 10; -110, 10; -190, 80; -290, 10; -380, 10];
         end
         CaptureFigVid(ax, fname, OptionZ);
-    
+        view(caz,cel);
         warning on
         pause(1);
         winopen(tempdir);
@@ -69,8 +63,8 @@ pt.ClickedCallback = @camera3dmp4;
                 winopen(vfile);
             end
         end
+        
     end
-
 end
 
 function CaptureFigVid(ViewZ, FileName, OptionZ)

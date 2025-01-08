@@ -131,12 +131,9 @@ if ~isempty(ttxt)
     ttxt=strrep(ttxt,'_','\_');
     title(ttxt);
 end
-
-hx.addCustomButton('off', {@gui.i_pickmonocolor, true}, 'plotpicker-compass.gif', 'Pick new color map...');
-hx.addCustomButton('on', @i_renamecat, 'guideicon.gif', 'Rename groups...');
+hx.addCustomButton('off', @i_renamecat, 'guideicon.gif', 'Rename groups...');
 hx.addCustomButton('on', @i_savetable, 'export.gif', 'Export data...');
 hx.addCustomButton('off', @i_resetcolor, 'plotpicker-geobubble2.gif', 'Reset Colormap');
-
 if nargout > 0, return; end
 hx.show(parentfig);
 
