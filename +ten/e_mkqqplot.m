@@ -11,19 +11,7 @@ qqplot(a, T.FC, pd);
 [~, idx] = sort(T.FC);
 dt = datacursormode;
 dt.UpdateFcn = {@i_myupdatefcn1x, T.genelist(idx)};
-
-
-% tb = findall(hFig, 'Tag', 'FigureToolBar'); 
-%tb = uitoolbar('Parent', hFig);
-%uipushtool(tb, 'Separator', 'off');
-
-%tb = uitoolbar('Parent', hFig);
-%hx.addCustomButton('off', @gui.i_changefontsize, 'noun_font_size_591141.gif', 'ChangeFontSize');
-%hx.addCustomButton('on', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-%hx.addCustomButton('off', {@gui.i_savemainfig, 2}, "svg.gif", 'Save Figure as Graphic File...');
-%hx.addCustomButton('off', {@gui.i_savemainfig, 1}, "svg.gif", 'Save Figure as SVG File...');
-hx.addCustomButton('on', @i_savetable, 'export.gif', 'Export data...');
-%hx.addCustomButton('on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
+hx.addCustomButton('off', @i_savetable, 'export.gif', 'Export data...');
 hx.show();
 
 

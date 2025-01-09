@@ -16,7 +16,6 @@ hx.addCustomButton('off', @i_saveCrossTable, "export.gif", 'Save cross-table');
 hx.addCustomButton('on', @in_geneheatmapx, 'greenarrowicon.gif', 'Heatmap');
 hx.addCustomButton('on', @i_genedotplot, 'greencircleicon.gif', 'Dot plot');
 hx.addCustomButton('on', @i_viewgenenames, 'HDF_point.gif', 'Show gene names');
-%pkg.i_addbutton2fig(tb,'on',@i_viewscatter3,'icon-mat-blur-on-10.gif','Show scatter plot');
 hx.addCustomButton('on', @in_heatscatterplot,'icon-mat-blur-on-10.gif','Show heat scatter plot');
 hx.show(parentfig);
 

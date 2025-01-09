@@ -10,7 +10,9 @@ for k = 1:length(glist)
     y = full(Xt(idx, :));
     ttxt = sce.g(idx);
 
-    f = figure('visible', 'off');
+
+    hx=gui.myFigure;
+    hFig = hx.FigureHandle;
     ax1 = subplot(1, 2, 1);
     pkg.i_violinplot(y, thisc, colorit, grouporder);
     assignin('base', 'y', y);
@@ -21,18 +23,15 @@ for k = 1:length(glist)
     subplot(1, 2, 2)
     sc_scattermarker(sce.X, sce.g, ...
         sce.s, glist(k), 2);
-
-    tb = uitoolbar(f);
-    pkg.i_addbutton2fig(tb, 'off', {@in_savedata, y, thisc}, ...
+    hx.addCustomButton('off', {@in_savedata, y, thisc}, ...
         'export.gif', 'Export data...');
-    pkg.i_addbutton2fig(tb, 'off', {@i_invertcolor, ax1, colorit, y, thisc, grouporder}, ...
+    hx.addCustomButton('off', {@i_invertcolor, ax1, colorit, y, thisc, grouporder}, ...
         "xpowerpoint.gif", 'Switch to BW');
-    P = get(f, 'Position');
-    set(f, 'Position', [P(1) - 20 * k, P(2) - 20 * k, P(3), P(4)]);
-    set(f, 'visible', 'on');
-    f.Position(3) = f.Position(3) * 2.2;
-    drawnow;
-    F{k} = f;
+    P = get(hFig, 'Position');
+    set(hFig, 'Position', [P(1) - 20 * k, P(2) - 20 * k, P(3), P(4)]);
+    hFig.Position(3) = hFig.Position(3) * 2.2;
+    hx.show;
+    F{k} = hFig;
 end
 gui.i_export2pptx(F, glist);
 
