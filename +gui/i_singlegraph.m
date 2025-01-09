@@ -36,15 +36,13 @@ hx.addCustomButton('off', @ChangeFontSize, 'noun_font_size_591141.gif', 'ChangeF
 %pkg.i_addbutton2fig(tb, 'off', @ChangeWeight, 'noun_Weight_2243621.gif', 'ChangeWeight');
 hx.addCustomButton('off', @ChangeLayout, 'noun_Layout_792775.gif', 'ChangeLayout');
 hx.addCustomButton('off', @ChangeDirected, 'noun_directional_arrows_3497928.gif', 'ChangeDirected');
-%pkg.i_addbutton2fig(tb, 'off', @ChangeBox, 'PlotPoly.gif', 'Box on/off');
 hx.addCustomButton('off', @AnimateCutoff, 'noun_trim_3665385.gif', 'AnimateCutoff');
 hx.addCustomButton('off', @ChangeCutoff, 'noun_Pruners_2469297.gif', 'ChangeCutoff');
 hx.addCustomButton('off', @SaveAdj, 'export.gif', 'Export & save data');
-%pkg.i_addbutton2fig(tb, 'on', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-%pkg.i_addbutton2fig(tb, 'on', {@gui.i_resizewin, hx}, 'HDF_pointx.gif', 'Resize Plot Window');
 hx.addCustomButton('on', @in_RefreshAll, "icon-mat-refresh-20.gif", "Refresh");
-hx.addCustomButton( 'off', @in_NetworkVis2, "xxicon-mat-refresh-20.gif", "NetworkVis2");
-hx.addCustomButton( 'off', @ix_networkvis, "xxicon-mat-refresh-20.gif", "NetworkVis2");
+hx.addCustomButton('on', @in_RefreshAll, "refresh.jpg", "Refresh");
+hx.addCustomButton( 'off', @in_NetworkVis2, "curve-array.jpg", "NetworkVis2");
+hx.addCustomButton( 'off', @ix_networkvis, "ease-curve-control-points.jpg", "NetworkVis2");
 
 title(h1,figname);
 hx.show(parentfig);
@@ -52,6 +50,9 @@ hx.show(parentfig);
 
 oldG1=[];
 axistrig = true;
+% dataengated = false;
+oldidx = 0;
+
 
 
     function [xy] = getxy
@@ -398,19 +399,26 @@ axistrig = true;
     
     % Function to drag the point
     function draggingFcn(~, ~, hObj)
-        % Current cursor position in data coordinates
-        cp = get(gca, 'CurrentPoint');
-        % Update the y-data of the nearest point
-        yData = get(hObj, 'YData');
-        xData = get(hObj, 'XData');
-%       [~, idx] = min(abs(xData - cp(1,1))); % Find closest x to mouse
-%       yData(idx) = cp(1,2); % Update y value
-%       set(hObj, 'YData', yData);
-        idx = dsearchn([xData' yData'], [cp(1,1) cp(1,2)]);
-        xData(idx) = cp(1,1);
-        yData(idx) = cp(1,2);
-        set(hObj, 'XData', xData); % Update y value
-        set(hObj, 'YData', yData);
+
+            % Current cursor position in data coordinates
+            cp = get(gca, 'CurrentPoint');
+            % Update the y-data of the nearest point
+            yData = get(hObj, 'YData');
+            xData = get(hObj, 'XData');
+    %       [~, idx] = min(abs(xData - cp(1,1))); % Find closest x to mouse
+    %       yData(idx) = cp(1,2); % Update y value
+    %       set(hObj, 'YData', yData);
+            if oldidx == 0 % ~dataengated
+                idx = dsearchn([xData' yData'], [cp(1,1) cp(1,2)]);
+                oldidx = idx;
+                % dataengated = true;
+            else
+                idx = oldidx;
+            end
+            xData(idx) = cp(1,1);
+            yData(idx) = cp(1,2);
+            set(hObj, 'XData', xData); % Update y value
+            set(hObj, 'YData', yData);
     end
     
     % Function to stop dragging
@@ -418,6 +426,8 @@ axistrig = true;
         % fig = gcbf;
         set(hFig, 'WindowButtonMotionFcn', '');
         set(hFig, 'WindowButtonUpFcn', '');
+        % dataengated = false;
+        oldidx = 0;
     end
 
 
