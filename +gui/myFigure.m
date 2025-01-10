@@ -14,7 +14,7 @@ classdef myFigure < handle
         function obj = myFigure()
             obj.FigureHandle = figure('Name', '', ...
                 'NumberTitle', 'on', 'Visible',"off", ...
-                "DockControls", "off");
+                "DockControls", "off", 'ToolBar', 'figure');
             obj.tb = findall(obj.FigureHandle, 'Type', 'uitoolbar');
             if isempty(obj.tb)
                 obj.tb = uitoolbar(obj.FigureHandle);

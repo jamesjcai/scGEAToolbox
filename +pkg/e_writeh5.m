@@ -46,7 +46,7 @@ if ~isempty(celltype)
     h5write(filename, '/celltype', celltype);
 end
 
-if ~isempty(celltype)
+if ~isempty(s)
     h5create(filename, '/s', size(s), 'Datatype', 'double');
     h5write(filename, '/s', s);
 end
