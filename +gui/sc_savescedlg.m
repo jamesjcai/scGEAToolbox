@@ -70,6 +70,7 @@ function [OKPressed] = sc_savescedlg(sce)
                 sc_sce2rds(sce, filename);
                 gui.gui_waitbar(fw);
                 fprintf("\nTo read file, in R:\n");
+                fprintf("library(Seurat)\n");
                 fprintf("A<-readRDS(""%s"")\n", file);
                 OKPressed = true;
             end

@@ -1,7 +1,36 @@
 function e_writeh5(X, genelist, filename, celltype, s)
 
+% This function writes a sparse or dense matrix (X) along with optional metadata 
+% (genelist, celltype, and s) into an HDF5 file.
+% Parameters:
+%   X         - Input matrix (can be sparse or dense)
+%   genelist  - List of gene names (string array)
+%   filename  - Output HDF5 filename (string)
+%   celltype  - Cell type information (string array)
+%   s         - Additional numeric metadata
+%
+% Example:
+% X = sparse([1 0; 0 2]);
+% genelist = ["Gene1", "Gene2"];
+% e_writeh5(X, genelist, 'output.h5');
+
+
 if nargin < 5, s = []; end
 if nargin < 4, celltype = []; end
+
+
+if ~ischar(filename) || isempty(filename)
+    error('Filename must be a non-empty string.');
+end
+if ~ismatrix(X)
+    error('X must be a 2D matrix.');
+end
+
+if nnz(X) == 0
+    warning('X is an empty sparse matrix. The output file may not contain meaningful data.');
+end
+
+
 % if isa(X,'SingleCellExperiment')
 %     genelist=X.g;
 %     X=X.X;
@@ -16,40 +45,44 @@ if nargin < 4, celltype = []; end
 % https://www.10xgenomics.com/support/software/space-ranger/advanced/hdf5-feature-barcode-matrix-format
 % http://scipy-lectures.org/advanced/scipy_sparse/csc_matrix.html
 
-if issparse(X)
-    disp('writing sparse...');
-    [indptr, indices, data] = convert_sparse_to_indptr(X);
-    h5create(filename, '/shape', size(size(X)));
-    h5write(filename, '/shape', size(X));
+try
+    if issparse(X)
+        disp('writing sparse...');
+        [indptr, indices, data] = convert_sparse_to_indptr(X);
+        h5create(filename, '/shape', size(size(X)));
+        h5write(filename, '/shape', size(X));
+        
+        h5create(filename, '/data', size(data));
+        h5write(filename, '/data', data);
     
-    h5create(filename, '/data', size(data));
-    h5write(filename, '/data', data);
-
-    h5create(filename, '/indptr', size(indptr));
-    h5write(filename, '/indptr', indptr);
+        h5create(filename, '/indptr', size(indptr));
+        h5write(filename, '/indptr', indptr);
+        
+        h5create(filename, '/indices', size(indices));
+        h5write(filename, '/indices', indices);
+    else
     
-    h5create(filename, '/indices', size(indices));
-    h5write(filename, '/indices', indices);
+        h5create(filename, '/X', size(X));
+        h5write(filename, '/X', X);
+    end
+    catch ME
+        error('Failed to write matrix X to HDF5 file: %s', ME.message);
+    end
 
-else
-    h5create(filename, '/X', size(X));
-    h5write(filename, '/X', X);
-end
-
-if ~isempty(genelist)
-    h5create(filename, '/g', size(genelist), 'Datatype', 'string');
-    h5write(filename, '/g', genelist);
-end
-
-if ~isempty(celltype)
-    h5create(filename, '/celltype', size(celltype), 'Datatype', 'string');
-    h5write(filename, '/celltype', celltype);
-end
-
-if ~isempty(s)
-    h5create(filename, '/s', size(s), 'Datatype', 'double');
-    h5write(filename, '/s', s);
-end
+    if ~isempty(genelist)
+        h5create(filename, '/g', size(genelist), 'Datatype', 'string');
+        h5write(filename, '/g', genelist);
+    end
+    
+    if ~isempty(celltype)
+        h5create(filename, '/celltype', size(celltype), 'Datatype', 'string');
+        h5write(filename, '/celltype', celltype);
+    end
+    
+    if ~isempty(s)
+        h5create(filename, '/s', size(s), 'Datatype', 'double');
+        h5write(filename, '/s', s);
+    end
 
 
 end
