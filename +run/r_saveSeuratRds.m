@@ -1,8 +1,10 @@
 function [status] = r_saveSeuratRds(sce, filename, wkdir)
 
 if nargin < 3, wkdir = tempdir; end
+wkdir = 'e:/'
 [status] = 0;
 isdebug = false;
+
 if nargin < 2, error('run.saveSeuratRds(sce,filename)'); end
 oldpth = pwd();
 [isok, msg, codepath] = commoncheck_R('R_SeuratSaveRds');
@@ -15,7 +17,7 @@ tmpfilelist = {'input.h5', 'output.Rds'};
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 
 %if ~strcmp(unique(sce.c_cell_type_tx), "undetermined")
-    pkg.e_writeh5(full(sce.X), sce.g, 'input.h5', sce.c_cell_type_tx);
+    pkg.e_writeh5(full(sce.X), sce.g, 'input.h5', sce.c_cell_type_tx, sce.c_batch_id);
 %else
 %    pkg.e_writeh5(full(sce.X), sce.g, 'input.h5');
 %end

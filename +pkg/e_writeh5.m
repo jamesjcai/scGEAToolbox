@@ -1,4 +1,4 @@
-function e_writeh5(X, genelist, filename, celltype, s)
+function e_writeh5(X, genelist, filename, celltype, batchid)
 
 % This function writes a sparse or dense matrix (X) along with optional metadata 
 % (genelist, celltype, and s) into an HDF5 file.
@@ -14,10 +14,8 @@ function e_writeh5(X, genelist, filename, celltype, s)
 % genelist = ["Gene1", "Gene2"];
 % e_writeh5(X, genelist, 'output.h5');
 
-
-if nargin < 5, s = []; end
+if nargin < 5, batchid = []; end
 if nargin < 4, celltype = []; end
-
 
 if ~ischar(filename) || isempty(filename)
     error('Filename must be a non-empty string.');
@@ -64,10 +62,16 @@ try
     
         h5create(filename, '/X', size(X));
         h5write(filename, '/X', X);
-    end
-    catch ME
+    end       
+catch ME
         error('Failed to write matrix X to HDF5 file: %s', ME.message);
-    end
+end
+
+[n, m] = size(X);
+
+if isempty(genelist), genelist = "G"+string(1:n); end
+if isempty(celltype), celltype = repmat("undetermined", m, 1); end
+if isempty(batchid), batchid = string(ones(m,1)); end
 
     if ~isempty(genelist)
         h5create(filename, '/g', size(genelist), 'Datatype', 'string');
@@ -79,9 +83,12 @@ try
         h5write(filename, '/celltype', celltype);
     end
     
-    if ~isempty(s)
-        h5create(filename, '/s', size(s), 'Datatype', 'double');
-        h5write(filename, '/s', s);
+    if ~isempty(batchid)
+        if ~isstring(batchid)
+            batchid = string(batchid);
+        end
+        h5create(filename, '/batchid', size(batchid), 'Datatype', 'string');
+        h5write(filename, '/batchid', batchid);
     end
 
 
