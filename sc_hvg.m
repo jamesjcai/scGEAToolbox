@@ -32,17 +32,10 @@ if normit
     %[X]=pkg.norm_deseq(X);
     [X] = pkg.norm_libsize(X);
 end
-if any(isnan(X(:)))
-    u = mean(X, 2, 'omitnan');
-    vx = var(X, 0, 2, 'omitnan');
-    cv2 = vx ./ u.^2;
-else
-    % issparse(X)
-    u = mean(X, 2);
-    vx = var(X, 0, 2);
-    % vx=sum(abs(X-mean(X,2)).^2,2)./(size(X,2)-1);
-    cv2 = vx ./ u.^2;    
-end
+
+u = mean(X, 2, 'omitnan');
+vx = var(X, 0, 2, 'omitnan');
+cv2 = vx ./ u.^2;
 
 if issparse(u), u = full(u); end
 if issparse(vx), vx = full(vx); end
