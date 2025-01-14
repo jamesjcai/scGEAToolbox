@@ -2,6 +2,7 @@ function [sce] = r_readSeuratRds(filename, wkdir)
 
 if nargin < 2, wkdir = tempdir; end
 sce = [];
+
 if nargin < 1, error('run.r_readSeuratRds(filename)'); end
 oldpth = pwd();
 [isok, msg, codepth] = commoncheck_R('R_SeuratReadRds');
@@ -15,6 +16,7 @@ isdebug = false;
 tmpfilelist = {'inputrdsfile.txt', 'output.h5', ...
     'g.csv', 'X.csv', 'umap.csv', 'barcodes.csv', 'annotation.csv'};
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+
 
 writematrix(filename, 'inputrdsfile.txt');
 Rpath = getpref('scgeatoolbox', 'rexecutablepath',[]);
@@ -49,6 +51,7 @@ if exist('output.h5', 'file')
     if isequal(size(X), shape)
         warning('Matrix size changed.');
     end
+    disp('X is read.');
 end
 
 X = pkg.e_uint2sparse(X);
@@ -81,23 +84,25 @@ end
 
 
 
-if exist('annotation.csv', 'file')
-    disp('Reading celltype from annotation.csv');
-    t = readtable('annotation.csv', 'Delimiter', ',');
-    if ~isempty(t) && contains(t.Properties.VariableNames,'x')
-        if sce.NumCells == length(string(t.x))
-            sce.c_cell_type_tx = string(t.x);
-        end
-    end
-elseif exist('celltype.csv', 'file')
+% if exist('annotation.csv', 'file')
+%     disp('Reading celltype from annotation.csv');
+%     t = readtable('annotation.csv', 'Delimiter', ',');
+%     if ~isempty(t) && ismember('x', text.Properties.VariableNames)
+%         if sce.NumCells == length(string(t.x))
+%             sce.c_cell_type_tx = string(t.x);
+%         end
+%     end
+% else
+if exist('celltype.csv', 'file')
     disp('Reading celltype from celltype.csv');
     t = readtable('celltype.csv', 'Delimiter', ',');
-    if ~isempty(t) && contains(t.Properties.VariableNames,'x')
+    if ~isempty(t) && ismember('x', t.Properties.VariableNames)
         if sce.NumCells == length(string(t.x))
             sce.c_cell_type_tx = string(t.x);
         end
     end    
 end
+
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 cd(oldpth);

@@ -42,8 +42,8 @@ colnames(countMatrix) <- paste0("C", seq_len(ncol(countMatrix)))
 
 countMatrix <- CreateSeuratObject(countMatrix)
 sce <- NormalizeData(countMatrix)
-sce <- SCTransform(sce)
-sce <- RunPCA(object = sce)
+#sce <- SCTransform(sce)
+#sce <- RunPCA(object = sce)
 
 #sce <- RunUMAP(object = sce, dims = 1:30)
 

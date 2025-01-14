@@ -1,8 +1,9 @@
-suppressMessages(library(Seurat))
-suppressMessages(library(Matrix))
-suppressMessages(library(rhdf5))
+library(Seurat)
+library(Matrix)
+library(rhdf5)
 
 filename<-readLines("inputrdsfile.txt")
+filename
 A<-readRDS(filename)
 
 # counts_matrix = GetAssayData(seurat_obj, slot="counts")
@@ -35,12 +36,23 @@ tryCatch(
     #X=A@assays$RNA@counts
     #X=A@assays$RNA$counts
     X<-GetAssayData(A, layer="counts")
+
+#    h5createDataset(file = ex_file, dataset = "counts_chunked", 
+#                    dims = dim(m1), storage.mode = "integer", 
+#                    chunk = c(100,100), level = 6)
+#    h5write(obj = m1, file = ex_file, name = "counts_chunked")
+
+    h5createFile("output.h5")
     # X is a dgCMatrix
-    h5createFile("output.h5")    
     h5write(X@x, "output.h5", "data")
     h5write(X@i, "output.h5", "indices")
     h5write(X@p, "output.h5", "indptr")
     h5write(X@Dim, "output.h5", "shape")
+
+    # Define chunk size
+    #chunk_size_x <- c(1000)  # Adjust the chunk size as needed
+    #h5write(X_matrix, "output.h5", "data", chunk = chunk_size_x)
+
     h5closeAll()
 
     gname <- rownames(X)
@@ -51,7 +63,6 @@ error = function(msg){
 
 	}
 )
-
 
 
 
@@ -70,42 +81,44 @@ tryCatch(
 
 tryCatch(
     {
-         write.csv(A@reductions$umap@cell.embeddings, file = 'umap.csv')
+        if (is.null(A@reductions$umap@cell.embeddings)) {
+            write.csv(A@reductions$umap@cell.embeddings, file = 'umap.csv')
+        }
     },
     error = function(e){ 
-        # (Optional)
         # Do this if an error is caught...
     }
 )
 
 
+#tryCatch(
+#    {
+#         write.csv(A@meta.data$annotation, file = 'annotation.csv')
+#    },
+#    error = function(e){ 
+        # (Optional)
+        # Do this if an error is caught...
+#    }
+#)
+
+
 tryCatch(
     {
-         write.csv(A@meta.data$annotation, file = 'annotation.csv')
+        if (is.null(A@meta.data$BatchID)) {
+            write.csv(A@meta.data$BatchID, file = 'batch.csv')
+        }
     },
     error = function(e){ 
-        # (Optional)
         # Do this if an error is caught...
     }
 )
 
-
 tryCatch(
     {
-         write.csv(A@meta.data$BatchID, file = 'batch.csv')
+        if (is.null(A@meta.data$CellType)) {
+            write.csv(A@meta.data$CellType, file = 'celltype.csv')
     },
     error = function(e){ 
-        # (Optional)
-        # Do this if an error is caught...
-    }
-)
-
-tryCatch(
-    {
-         write.csv(A@meta.data$CellType, file = 'celltype.csv')
-    },
-    error = function(e){ 
-        # (Optional)
         # Do this if an error is caught...
     }
 )
