@@ -3,7 +3,7 @@ library(Matrix)
 library(rhdf5)
 
 filename<-readLines("inputrdsfile.txt")
-filename
+
 A<-readRDS(filename)
 
 # counts_matrix = GetAssayData(seurat_obj, slot="counts")
@@ -71,7 +71,9 @@ error = function(msg){
 
 tryCatch(
     {
+        if (!is.null(rownames(A@meta.data))) {
          write.csv(rownames(A@meta.data), file='barcodes.csv')
+        }
     },
     error = function(e){ 
         # (Optional)
@@ -81,7 +83,7 @@ tryCatch(
 
 tryCatch(
     {
-        if (is.null(A@reductions$umap@cell.embeddings)) {
+        if (!is.null(A@reductions$umap@cell.embeddings)) {
             write.csv(A@reductions$umap@cell.embeddings, file = 'umap.csv')
         }
     },
@@ -104,7 +106,7 @@ tryCatch(
 
 tryCatch(
     {
-        if (is.null(A@meta.data$BatchID)) {
+        if (!is.null(A@meta.data$BatchID)) {
             write.csv(A@meta.data$BatchID, file = 'batch.csv')
         }
     },
@@ -115,8 +117,9 @@ tryCatch(
 
 tryCatch(
     {
-        if (is.null(A@meta.data$CellType)) {
+        if (!is.null(A@meta.data$CellType)) {
             write.csv(A@meta.data$CellType, file = 'celltype.csv')
+        }
     },
     error = function(e){ 
         # Do this if an error is caught...

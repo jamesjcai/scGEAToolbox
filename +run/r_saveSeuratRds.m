@@ -2,7 +2,7 @@ function [status] = r_saveSeuratRds(sce, filename, wkdir)
 
 if nargin < 3, wkdir = tempdir; end
 [status] = 0;
-isdebug = true;
+isdebug = false;
 
 if nargin < 2, error('run.saveSeuratRds(sce,filename)'); end
 oldpth = pwd();

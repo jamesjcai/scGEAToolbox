@@ -61,8 +61,10 @@ sce = SingleCellExperiment(X, g);
 if exist('barcodes.csv', 'file')
     disp('Reading c_cell_id from barcodes.csv');
     t = readtable('barcodes.csv', 'Delimiter', ',');
-    id = string(t.x);
-    if length(id) == sce.NumCells, sce.c_cell_id = id; end
+    if ~isempty(t) && ismember('x', t.Properties.VariableNames)
+        id = string(t.x);
+        if length(id) == sce.NumCells, sce.c_cell_id = id; end
+    end
 end
 
 if exist('umap.csv', 'file')
