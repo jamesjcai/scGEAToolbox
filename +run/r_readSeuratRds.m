@@ -55,13 +55,15 @@ X = pkg.e_uint2sparse(X);
 sce = SingleCellExperiment(X, g);
 
 
-if exist('barcodes.csv', 'file') && ~isempty(sce)
+if exist('barcodes.csv', 'file')
+    disp('Reading c_cell_id from barcodes.csv');
     t = readtable('barcodes.csv', 'Delimiter', ',');
     id = string(t.x);
-    sce.c_cell_id = id;
+    if length(id) == sce.NumCells, sce.c_cell_id = id; end
 end
 
-if exist('umap.csv', 'file') && ~isempty(sce) && ~isempty(sce.c_cell_id)   
+if exist('umap.csv', 'file')
+    disp('Reading s from umap.csv');
     t = readtable('umap.csv', 'Delimiter', ',');
     [y, idx] = ismember(string(t.Var1), sce.c_cell_id);
     if all(y)
@@ -69,20 +71,32 @@ if exist('umap.csv', 'file') && ~isempty(sce) && ~isempty(sce.c_cell_id)
         sce.s = s(idx, :);
     end
 end
-%     if exist('batchid.csv','file') && ~isempty(sce)
-%         t=readtable('batchid.csv');
-%         id=string(t.x);
-%         sce.c_batch_id=id;
-%     end
+
+     if exist('batch.csv','file')
+         disp('Reading batchid from batch.csv');
+         t=readtable('batch.csv');
+         id=string(t.x);
+         if length(id) == sce.NumCells, sce.c_batch_id = id; end
+     end
 
 
-if exist('annotation.csv', 'file') && ~isempty(sce) && ~isempty(sce.c_cell_id)
+
+if exist('annotation.csv', 'file')
+    disp('Reading celltype from annotation.csv');
     t = readtable('annotation.csv', 'Delimiter', ',');
     if ~isempty(t) && contains(t.Properties.VariableNames,'x')
         if sce.NumCells == length(string(t.x))
             sce.c_cell_type_tx = string(t.x);
         end
     end
+elseif exist('celltype.csv', 'file')
+    disp('Reading celltype from celltype.csv');
+    t = readtable('celltype.csv', 'Delimiter', ',');
+    if ~isempty(t) && contains(t.Properties.VariableNames,'x')
+        if sce.NumCells == length(string(t.x))
+            sce.c_cell_type_tx = string(t.x);
+        end
+    end    
 end
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end

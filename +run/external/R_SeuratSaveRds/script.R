@@ -53,11 +53,11 @@ sce <- RunPCA(object = sce)
 #celltype <- setNames(celltype, colnames(x = sce))
 
 
-sce <- AddMetaData(
-  object = sce,
-  metadata = celltype,
-  col.name = 'CellType'
-)
+#sce <- AddMetaData(
+#  object = sce,
+#  metadata = celltype,
+#  col.name = 'CellType'
+#)
 
 # Add metadata for CellType
 celltype <- data.frame(CellType = celltype)

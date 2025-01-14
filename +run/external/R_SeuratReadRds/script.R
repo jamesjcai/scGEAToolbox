@@ -89,3 +89,23 @@ tryCatch(
     }
 )
 
+
+tryCatch(
+    {
+         write.csv(A@meta.data$BatchID, file = 'batch.csv')
+    },
+    error = function(e){ 
+        # (Optional)
+        # Do this if an error is caught...
+    }
+)
+
+tryCatch(
+    {
+         write.csv(A@meta.data$CellType, file = 'celltype.csv')
+    },
+    error = function(e){ 
+        # (Optional)
+        # Do this if an error is caught...
+    }
+)
