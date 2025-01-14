@@ -1,7 +1,6 @@
 function [status] = r_saveSeuratRds(sce, filename, wkdir)
 
 if nargin < 3, wkdir = tempdir; end
-wkdir = 'e:/'
 [status] = 0;
 isdebug = true;
 
