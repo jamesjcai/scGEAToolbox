@@ -7,6 +7,19 @@ function [h1, h2] = sc_scattermarker(X, genelist, ...
 % s=sc_tsne(X,3);
 % g=["AGER","SFTPC","SCGB3A2","TPPP3"];
 % sc_scattermarker(X,genelist,s,genelist(1));
+%
+% INPUTS:
+% X: Numeric matrix of gene expression data (genes x cells).
+% genelist: Cell array or string array of gene names (length = rows of X).
+% s: Matrix of 2D or 3D coordinates for cells (cells x 2 or cells x 3).
+% targetg: Gene(s) to visualize (string, char, or cell array).
+% methodid: (Optional) Visualization method (1 to 5).
+% sz: (Optional) Marker size for scatter plots (default = 5).
+% showcam: (Optional) Enable/disable camera controls (default = true).
+%
+% OUTPUTS:
+% h1: Handle to the primary axes.
+% h2: Handle to the secondary axes (if applicable).
 
 import gui.*
 h1 = [];
@@ -14,6 +27,16 @@ h2 = [];
 if nargin < 4
     error('sc_scattermarker(X, genelist, s, g)');
 end
+
+if ~isnumeric(X) || ~ismatrix(X)
+    error('Input X must be a numeric matrix.');
+end
+
+if size(X, 1) ~= length(genelist)
+    error('The number of rows in X must match the length of genelist.');
+end
+
+
 if isvector(s) || isscalar(s)
     error('S should be a matrix.');
 end
@@ -40,11 +63,10 @@ elseif isStringScalar(targetg) || ischar(targetg)
             z = s(:, 3);
         end
         %        c=log2(1+X(genelist==targetg,:));
-        c = X(genelist == targetg, :);
-        if issparse(c)
-            c = full(c);
-        end
-
+        % c = X(genelist == targetg, :);
+        idx = strcmp(genelist, targetg);
+        c = full(X(idx, :));
+        
         titxt = '';
         switch methodid
             case 1

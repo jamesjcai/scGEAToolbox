@@ -13,14 +13,26 @@ function [T, Xsorted, gsorted] = sc_hvg(X, g, sortit, plotit, ...
 %
 % See also: SC_SPLINEFIT, SC_VEG
 
-if nargin < 2 || isempty(g)
-    g = strcat("G", string(1:size(X, 1)))';
+if ~isnumeric(X) || ~ismatrix(X)
+    error('Input X must be a numeric matrix.');
 end
+
+if nargin < 2 || isempty(g)
+    % g = strcat("G", string(1:size(X, 1)))';
+    g = "G" + string((1:size(X, 1))');
+end
+
+if size(X, 1) ~= length(g)
+    error('The number of rows in X must match the length of g.');
+end
+
 if nargin < 3, sortit = true; end
 if nargin < 4, plotit = false; end
 if nargin < 5, normit = true; end
 if nargin < 6, ignorehigh = true; end
 if nargin < 7, ignorelow = true; end
+
+
 
 %if nargout > 1, 
     Xori = X; 
@@ -152,16 +164,17 @@ if plotit
     %    plot(log(xi),log(yifit),'.','markersize',10);
     %    plot(log(xi),log(yifit*chi2inv(0.975,df)./df),'.k');
     %    plot(log(xi),log(yifit*chi2inv(0.025,df)./df),'.k');
+    xlabel(hAx1, 'Mean Expression (log)');
+    ylabel(hAx1, 'CV² (log)');
+    legend(hAx1, {'Data Points', 'Fitted Curve'}, 'Location', 'best');
 
-    xlabel(hAx1,'Mean expression, log')
-    ylabel(hAx1,'CV^2, log')
     if ~isempty(g)
         dt = datacursormode(hFig);
         dt.UpdateFcn = {@in_myupdatefcn3, g};
     end
     hold(hAx1,'off');
 
-    hAx2=subplot(2,2,2);
+    hAx2 = subplot(2,2,2);
     x1 = Xsorted(1,:);
     sh = plot(hAx2, 1:length(x1), x1);
     xlim(hAx2,[1 size(X,2)]);
