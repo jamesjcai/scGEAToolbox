@@ -1,20 +1,6 @@
 function callback_scTenifoldXct2(src, ~)
 
-% if ~gui.gui_showrefinfo('scTenifoldXct [PMID:36787742]'), return; end
-% [y, prepare_input_only] = gui.i_memorychecked(128);
-% if ~y, return; end
-% 
-% extprogname = 'py_scTenifoldXct2';
-% preftagname = 'externalwrkpath';
-% [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
-% if isempty(wkdir), return; end
-% 
-% FigureHandle = src.Parent.Parent;
-% sce = guidata(FigureHandle);
-
-if ~gui.gui_showrefinfo('scTenifoldXct [PMID:36787742]'), return; end
-FigureHandle = src.Parent.Parent;
-sce = guidata(FigureHandle);
+[~, sce] = gui.gui_getfigsce(src);
 
 numglist = [1 3000 5000];
 memmlist = [16 32 64 128];

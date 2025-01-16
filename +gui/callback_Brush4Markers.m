@@ -1,7 +1,7 @@
 function callback_Brush4Markers(src, event)
 
-    FigureHandle = src.Parent.Parent;
-    sce = guidata(FigureHandle);
+
+    [~, sce] = gui.gui_getfigsce(src);
 
     if ~gui.i_installed('stats'), return; end
 
@@ -18,107 +18,100 @@ end
 
 
 function i_Brush4MarkersLASSO(src, ~, sce, uselasso)
-FigureHandle = src.Parent.Parent;
+    [FigureHandle] = gui.gui_getfigsce(src);
 
-if nargin < 3
-    uselasso = true; 
-end
-
-%    FigureHandle=src.Parent.Parent;
-%    sce=guidata(FigureHandle);
-%   assert(isequal(FigureHandle.Children,...
-%         FigureHandle.findobj('type','Axes')))
-
-% axesh=FigureHandle.Children(1)
-axesh = FigureHandle.findobj('type', 'Axes');
-[axx, bxx] = view(axesh);
-
-% [axx, bxx] = view(findall(FigureHandle,'type','axes'));
-
-assert(isequal(axesh.findobj('type', 'Scatter'), ...
-    FigureHandle.findobj('type', 'Scatter')))
-%axesh.Children(1)
-%isequal(axesh.findobj('type','Scatter'),axesh.Children(2))
-h = axesh.findobj('type', 'Scatter');
-ptsSelected = logical(h.BrushData.');
-
-
-if ~any(ptsSelected)
-    % warndlg("No cells are brushed/selected.",'','modal');
-    answer=questdlg('No cells are brushed/selected. You can select cells by a grouping variable. Continue?','');
-    if ~strcmp(answer,'Yes'), return; end
-    [ptsSelected] = gui.i_select1classcells(sce, false);
-    if isempty(ptsSelected), return; end
-    if all(ptsSelected)
-        warndlg("All cells are in the same group.",'');
+    if nargin < 3
+        uselasso = true; 
+    end
+    
+    axesh = FigureHandle.findobj('type', 'Axes');
+    [axx, bxx] = view(axesh);
+    
+    % [axx, bxx] = view(findall(FigureHandle,'type','axes'));
+    
+    assert(isequal(axesh.findobj('type', 'Scatter'), ...
+        FigureHandle.findobj('type', 'Scatter')))
+    %axesh.Children(1)
+    %isequal(axesh.findobj('type','Scatter'),axesh.Children(2))
+    h = axesh.findobj('type', 'Scatter');
+    ptsSelected = logical(h.BrushData.');
+    
+    
+    if ~any(ptsSelected)
+        % warndlg("No cells are brushed/selected.",'','modal');
+        answer=questdlg('No cells are brushed/selected. You can select cells by a grouping variable. Continue?','');
+        if ~strcmp(answer,'Yes'), return; end
+        [ptsSelected] = gui.i_select1classcells(sce, false);
+        if isempty(ptsSelected), return; end
+        if all(ptsSelected)
+            warndlg("All cells are in the same group.",'');
+            return;
+        end
+    else
+        % assignin('base', 'ptsSelected', ptsSelected);
+        [ptsSelected, letdoit] = gui.i_expandbrushed(ptsSelected, sce);
+        if ~letdoit, return; end
+    end
+    
+    
+    [numfig] = gui.i_inputnumg(500);
+    if isempty(numfig), return; end
+    
+    
+    if uselasso, fw = gui.gui_waitbar; end
+    y = double(ptsSelected);
+    sce.c = 1 + ptsSelected;
+    X = sce.X';
+    
+    % uselasso = true;
+    
+    try
+        if issparse(X), X = full(X); end
+    %    assignin("base","X",X);
+    %    assignin("base","y",y);
+        if uselasso
+            [B] = lasso(X, y, 'DFmax', numfig*3, 'MaxIter', 1e3);
+            [~, ix] = min(abs(sum(B > 0)-numfig));
+            b = B(:, ix);
+            idx = b > 0;
+        else
+            %mdl = fitglm(X, y, 'Distribution', 'binomial', 'Link', 'logit');
+            %B = mdl.Coefficients.Estimate;
+            %[~, idx] = mink(B, numfig);
+            idx = LRDETest(X, y, numfig);
+        end
+    catch ME
+        if uselasso, gui.gui_waitbar(fw, true); end
+        errordlg(ME.message);
+        rethrow(ME);
+    end
+    
+    if ~any(idx)
+       if uselasso, gui.gui_waitbar(fw); end
+        warndlg('No marker found','')
         return;
     end
-else
-    % assignin('base', 'ptsSelected', ptsSelected);
-    [ptsSelected, letdoit] = gui.i_expandbrushed(ptsSelected, sce);
-    if ~letdoit, return; end
-end
-
-
-[numfig] = gui.i_inputnumg(500);
-if isempty(numfig), return; end
-
-
-if uselasso, fw = gui.gui_waitbar; end
-y = double(ptsSelected);
-sce.c = 1 + ptsSelected;
-X = sce.X';
-
-% uselasso = true;
-
-try
-    if issparse(X), X = full(X); end
-%    assignin("base","X",X);
-%    assignin("base","y",y);
+    
     if uselasso
-        [B] = lasso(X, y, 'DFmax', numfig*3, 'MaxIter', 1e3);
-        [~, ix] = min(abs(sum(B > 0)-numfig));
-        b = B(:, ix);
-        idx = b > 0;
+        markerlist = sce.g(idx);
+        [~, jx] = sort(b(idx), 'descend');
+        markerlist = markerlist(jx);
     else
-        %mdl = fitglm(X, y, 'Distribution', 'binomial', 'Link', 'logit');
-        %B = mdl.Coefficients.Estimate;
-        %[~, idx] = mink(B, numfig);
-        idx = LRDETest(X, y, numfig);
+        markerlist = sce.g(idx);
     end
-catch ME
-    if uselasso, gui.gui_waitbar(fw, true); end
-    errordlg(ME.message);
-    rethrow(ME);
-end
-
-if ~any(idx)
-   if uselasso, gui.gui_waitbar(fw); end
-    warndlg('No marker found','')
-    return;
-end
-
-if uselasso
-    markerlist = sce.g(idx);
-    [~, jx] = sort(b(idx), 'descend');
-    markerlist = markerlist(jx);
-else
-    markerlist = sce.g(idx);
-end
-
+    
     fprintf('%d marker genes: ', length(markerlist));
     fprintf('%s ', markerlist)
     fprintf('\n')
 
-        n = length(markerlist);
-        y = cell(n,1);
-        for k=1:n
-            y{k} = sce.X(sce.g == markerlist(k), :);
-        end
+    n = length(markerlist);
+    y = cell(n,1);
+    for k=1:n
+        y{k} = sce.X(sce.g == markerlist(k), :);
+    end
 
-        gui.sc_uitabgrpfig_expplot(y, markerlist, sce.s, FigureHandle, [axx, bxx]);
-        if uselasso, gui.gui_waitbar(fw); end
-
+    gui.sc_uitabgrpfig_expplot(y, markerlist, sce.s, FigureHandle, [axx, bxx]);
+    if uselasso, gui.gui_waitbar(fw); end
 end
 
 function idx = LRDETest(X, y, k)

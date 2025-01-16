@@ -1,6 +1,7 @@
 function i_savemainfig(src, ~, tag)
     
-    FigureHandle = src.Parent.Parent;
+    [FigureHandle] = gui.gui_getfigsce(src);
+    
     axesHandles = findall(FigureHandle, 'Type', 'axes');
     if isempty(axesHandles)    
         helpdlg('No figures available in the current window. Unable to save figure.', '');

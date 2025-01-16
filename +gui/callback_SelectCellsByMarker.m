@@ -1,6 +1,7 @@
 function callback_SelectCellsByMarker(src, ~)
-FigureHandle = src.Parent.Parent;
-sce = guidata(FigureHandle);
+
+
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 
 answer1 = questdlg('Use single or mulitple markers?', ...
     'Single/Multiple Markers', 'Single', 'Multiple', 'Cancel', 'Single');

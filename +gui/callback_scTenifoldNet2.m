@@ -17,10 +17,10 @@ end
 %         return;
 %     end
 
-FigureHandle = src.Parent.Parent;
+[~, sce] = gui.gui_getfigsce(src);
 if ~gui.gui_showrefinfo('scTenifoldNet [PMID:33336197]'), return; end
     
-sce = guidata(FigureHandle);
+
 
 extprogname = 'scTenifoldNet';
 preftagname = 'externalwrkpath';

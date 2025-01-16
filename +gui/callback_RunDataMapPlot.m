@@ -1,8 +1,7 @@
 function callback_RunDataMapPlot(src, ~)
 
 if ~isa(src,'SingleCellExperiment')
-    FigureHandle = src.Parent.Parent;
-    sce = guidata(FigureHandle);
+    [~, sce] = gui.gui_getfigsce(src);
 end
 if size(sce.s, 2) ~= 2
     warndlg('This function only works for 2D embedding.');

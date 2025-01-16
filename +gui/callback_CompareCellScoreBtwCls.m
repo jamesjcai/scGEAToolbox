@@ -1,7 +1,6 @@
 function [needupdatesce] = callback_CompareCellScoreBtwCls(src, ~)
 
-FigureHandle = src.Parent.Parent;
-sce = guidata(FigureHandle);
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 needupdatesce = false;
 
 aa = 'Yes, compare scores';

@@ -20,7 +20,8 @@ if isempty(wkdir), return; end
 % 
 % fprintf('CURRENTWDIR = "%s"\n', wkdir);
 
-FigureHandle = src.Parent.Parent;
+[FigureHandle] = gui.gui_getfigsce(src);
+
 a = findall(FigureHandle, 'type', 'axes');
 h = findall(a, 'type', 'scatter');
 ptsSelected = logical(h.BrushData.');

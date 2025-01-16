@@ -1,7 +1,6 @@
 function callback_CrossTabulation(src, ~)
 
-FigureHandle = src.Parent.Parent;
-sce = guidata(FigureHandle);
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 
 [thisc1, clabel1, thisc2, clabel2] = gui.i_select2class(sce, true);
 

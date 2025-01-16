@@ -1,6 +1,6 @@
 function callback_SelectCellsByClass(src, ~)
-FigureHandle = src.Parent.Parent;
-sce = guidata(FigureHandle);
+
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 
 
 [ptsSelected] = gui.i_select1classcells(sce, true);

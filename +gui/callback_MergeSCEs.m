@@ -3,7 +3,7 @@ requirerefresh = false;
 s = "";
 answer = questdlg('Current SCE will be replaced. Continue?');
 if ~strcmp(answer, 'Yes'), return; end
-FigureHandle = src.Parent.Parent;
+[FigureHandle] = gui.gui_getfigsce(src);
 
 keepbatchid=true;
 answer = questdlg('Keep original batch IDs of cells in the input SCEs?','');

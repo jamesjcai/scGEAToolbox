@@ -1,6 +1,6 @@
 function callback_CellCycleLibrarySize(src, ~)
-FigureHandle = src.Parent.Parent;
-sce = guidata(FigureHandle);
+
+[~, sce] = gui.gui_getfigsce(src);
 % if isempty(sce.c_cell_cycle_tx)
 %     warndlg('No cell cycle phase (SCE.C_CELL_CYCLE_TX is empty.)');
 %     return;

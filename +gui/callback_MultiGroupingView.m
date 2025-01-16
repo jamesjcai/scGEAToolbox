@@ -1,7 +1,6 @@
 function callback_MultiGroupingView(src, ~)
     
-    FigureHandle = src.Parent.Parent;
-    sce = guidata(FigureHandle);
+    [FigureHandle, sce] = gui.gui_getfigsce(src);
     
     answer = questdlg('Select type of multi-view:','', ...
         'Multigrouping','Multiembedding','Multigrouping');

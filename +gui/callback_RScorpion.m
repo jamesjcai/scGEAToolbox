@@ -1,6 +1,6 @@
 function callback_RScorpion(src, ~)
 
-FigureHandle = src.Parent.Parent;
+[~, sce] = gui.gui_getfigsce(src);
 if ~gui.gui_showrefinfo('SCORPION [PMID:38438786]'), return; end
 
 extprogname = 'R_SCORPION';
@@ -11,8 +11,6 @@ preftagname = 'externalwrkpath';
     extprogname, 'r');
 if ~ok, return; end
 
-
-sce = guidata(FigureHandle);
 
 fw = gui.gui_waitbar;
 try

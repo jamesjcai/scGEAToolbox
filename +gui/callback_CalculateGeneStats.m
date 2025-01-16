@@ -2,8 +2,7 @@ function callback_CalculateGeneStats(src, ~)
 answer = questdlg('Calculate gene expression mean, CV, and dropout rate. Save output to a table.', '');
 if ~strcmp(answer, 'Yes'), return; end
 
-FigureHandle = src.Parent.Parent;
-sce = guidata(FigureHandle);
+[~, sce] = gui.gui_getfigsce(src);
 
 [Xt] = gui.i_transformx(sce.X);
 if isempty(Xt), return; end

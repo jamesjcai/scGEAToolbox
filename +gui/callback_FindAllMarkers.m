@@ -1,7 +1,6 @@
 function callback_FindAllMarkers(src, ~)
 
-    FigureHandle = src.Parent.Parent;
-    sce = guidata(FigureHandle);
+[~, sce] = gui.gui_getfigsce(src);
 
     answer = questdlg('Select Method', ...
         '', 'Marker Gene Heatmap', 'Find All Markers', ...
@@ -45,8 +44,7 @@ end
 function in_MarkerGeneHeatmap(src, ~, sce)
     mfolder = fileparts(mfilename('fullpath'));
     if nargin < 3
-        FigureHandle = src.Parent.Parent;
-        sce = guidata(FigureHandle);
+        [FigureHandle, sce] = gui.gui_getfigsce(src);
     end
     % unique(sce.c_cluster_id)
 

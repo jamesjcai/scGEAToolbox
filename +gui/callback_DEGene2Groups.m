@@ -2,8 +2,7 @@ function callback_DEGene2Groups(src, ~)
 
 isatac = false;
 
-FigureHandle = src.Parent.Parent;
-sce = guidata(FigureHandle);
+[~, sce] = gui.gui_getfigsce(src);
 if ~gui.gui_showrefinfo('DE Analysis'), return; end
 
 

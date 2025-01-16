@@ -3,10 +3,11 @@ function [OKPressed] = callback_SaveX(src, ~)
 % OKPressed = false;
 if isa(src, 'matlab.ui.Figure')
     FigureHandle = src;
+    sce = guidata(FigureHandle);
 else
-    FigureHandle = src.Parent.Parent;
+    [~, sce] = gui.gui_getfigsce(src);
 end
-sce = guidata(FigureHandle);
+
 
 [OKPressed] = gui.sc_savescedlg(sce);
 end

@@ -18,8 +18,7 @@ if isfolder(wkdir)
 end
 import ten.*
 
-FigureHandle = src.Parent.Parent;
-sce = guidata(FigureHandle);
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 
 answer = questdlg('Construct network de novo or use existing network in Workspace?', ...
     'Input Network', 'Construct de novo', 'Use existing', 'Construct de novo');

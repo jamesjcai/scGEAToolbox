@@ -1,9 +1,6 @@
 function callback_VirtualKOGenKI(src, ~)
 
-FigureHandle = src.Parent.Parent;
-if ~gui.gui_showrefinfo('GenKI [PMID:37246643]'), return; end
-
-sce = guidata(FigureHandle);
+[~, sce] = gui.gui_getfigsce(src);
 
 gsorted = natsort(sce.g);
 if isempty(gsorted), return; end

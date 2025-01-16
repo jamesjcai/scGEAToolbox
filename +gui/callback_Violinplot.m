@@ -4,8 +4,7 @@ function callback_Violinplot(src, ~)
         sce = src;
         FigureHandle = [];
     else
-        FigureHandle = src.Parent.Parent;
-        sce = guidata(FigureHandle);
+        [FigureHandle, sce] = gui.gui_getfigsce(src);
     end
     
     [thisc, ~] = gui.i_select1class(sce);
