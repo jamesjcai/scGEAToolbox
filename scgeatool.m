@@ -119,7 +119,7 @@ in_addmenu(m_edit, 0, {@in_WorkonSelectedGenes, 'ligandreceptor'}, 'Select Ligan
 in_addmenu(m_edit, 0, @in_SubsampleCells, 'Subsample 50% Cells to Work on...');
 in_addmenu(m_edit, 1, {@in_DeleteBrushedOrUnbrushedCells, 'brushed'}, 'Delete Brushed Cells...');
 in_addmenu(m_edit, 0, {@in_DeleteBrushedOrUnbrushedCells, 'unbrushed'}, 'Delete Unbrushed Cells...');
-in_addmenu(m_edit, 1, @gui.callback_SelectCellsByClass, 'Select Cells by Class && Open in New Window...');
+in_addmenu(m_edit, 1, @gui.callback_SelectCellsByClass, 'Select Cells by Class & Open in New Window...');
 
 m_view = uimenu(FigureHandle, 'Text', '&View');
 in_addmenu(m_view, 0, @in_EmbeddingAgain, 'Embed Cells Using tSNE, UMP, PHATE...', 'B');
@@ -268,19 +268,27 @@ in_addbuttonpush(0, 0, @gui.callback_Violinplot, "violinplot.gif", "Gene Express
 in_addbuttonpush(0, 0, @gui.callback_ScatterCorrPlot, "icon-mat-blur-off-10a.gif", "Correlation Plot...");
 
 in_addbuttonpush(0, 0, [], [], "");
-in_addbuttonpush(0, 1, @in_CompareCellScoreBtwCls, "cellscore2.gif", "Cell score analysis--obtaining gene signature score for each cell");
-in_addbuttonpush(0, 0, @gui.callback_GetCellSignatureMatrix, "icon-fa-connectdevelop-20.gif", "Cell state analysis--obtaining multiple gene signature scores to reveal functional state of cells");
+
+
+%in_addbuttonpush(0, 1, @in_CompareCellScoreBtwCls, "cellscore2.gif", "Cell score analysis--obtaining gene signature score for each cell");
+in_addbuttonpush(0, 1, @in_CompareCellScoreBtwCls, "barcode.jpg", "Cell score analysis--obtaining gene signature score for each cell");
+
+%in_addbuttonpush(0, 0, @gui.callback_GetCellSignatureMatrix, "icon-fa-connectdevelop-20.gif", "Cell state analysis--obtaining multiple gene signature scores to reveal functional state of cells");
+in_addbuttonpush(0, 0, @gui.callback_GetCellSignatureMatrix, "hexagon-dice.jpg", "Cell state analysis--obtaining multiple gene signature scores to reveal functional state of cells");
+
 in_addbuttonpush(0, 1, @gui.callback_DEGene2Groups, "plotpicker-boxplot.gif", "Differential expression (DE) analysis");
 in_addbuttonpush(0, 0, @gui.callback_DVGene2Groups, "plotpicker-andrewsplot.gif", "Differential variability (DV) analysis");
 in_addbuttonpush(0, 0, @gui.callback_DPGene2Groups, "plotpicker_noisepsd.gif", "Differential program (DP) analysis");
 in_addbuttonpush(0, 0, [], [], "");
-in_addbuttonpush(0, 1, @gui.callback_BuildGeneNetwork, "noun_Network_691907.gif", "Build gene regulatory network");
+
+in_addbuttonpush(0, 1, @gui.callback_BuildGeneNetwork, "mw-neural-net.jpg", "Build gene regulatory network");
+% in_addbuttonpush(0, 1, @gui.callback_BuildGeneNetwork, "noun_Network_691907.gif", "Build gene regulatory network");
 in_addbuttonpush(0, 0, @gui.callback_CompareGeneNetwork, "noun_Deep_Learning_2424485.gif", "Compare two scGRNs");
 in_addbuttonpush(0, 1, {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 gui.gui_3dcamera(DeftToolbarHandle, 'AllCells');
 pt = uitoggletool(DeftToolbarHandle);
 try
-    load(fullfile(mfolder, 'resources', 'Misc', 'colorbarcdata.mat'),'CData');
+    load(fullfile(mfolder, 'resources', 'Misc', 'colorbarcdata.mat'), 'CData');
     pt.CData = CData;
 catch
     pt.CData = in_getPtImage('aaa');
@@ -293,34 +301,64 @@ in_addbuttonpush(0, 0, {@gui.i_resizewin, FigureHandle}, 'HDF_pointx.gif', 'Resi
 
 
 in_addbuttontoggle(1, 0, {@in_togglebtfun, @in_turnoffuserguiding, "icon-mat-unfold-more-10.gif", "icon-mat-unfold-less-10.gif", false, "Turn on/off user onboarding toolbar"});
-in_addbuttonpush(1, 0, @gui.callback_ShowGeneExpr, "list.gif", "Select genes to show expression")
-in_addbuttonpush(1, 0, @gui.callback_ShowGeneExpr, "orthogonal-view.jpg", "Select genes to show expression")
+% in_addbuttonpush(1, 0, @gui.callback_ShowGeneExpr, "list.gif", "Select genes to show expression")
+% in_addbuttonpush(1, 0, @gui.callback_ShowGeneExpr, "perspective-view.jpg", "Select genes to show expression")
+
+in_addbuttonpush(1, 0, @gui.callback_ShowGeneExpr, "google-docs.jpg", "Select genes to show expression")
+
+%in_addbuttonpush(1, 0, @gui.callback_ShowGeneExpr, "orthogonal-view.jpg", "Select genes to show expression")
+in_addbuttonpush(1, 0, @in_ShowCellStates, "bookmark-book.jpg", "Show cell states")
+%in_addbuttonpush(1, 0, @in_ShowCellStates, "list2.gif", "Show cell states")
+% in_addbuttonpush(1, 0, @in_SelectCellsByQC, "plotpicker-effects.gif", "Filter genes & cells")
+in_addbuttonpush(1, 0, @in_SelectCellsByQC, "filter-alt.jpg", "Filter genes & cells")
 
 
-in_addbuttonpush(1, 0, @in_ShowCellStates, "list2.gif", "Show cell states")
-in_addbuttonpush(1, 0, @in_SelectCellsByQC, "plotpicker-effects.gif", "Filter genes & cells")
-
-in_addbuttonpush(1, 1, @in_labelcellgroups, "icon-fa-tags-10b.gif", "Label cell groups");
+in_addbuttonpush(1, 1, @in_labelcellgroups, "label.jpg", "Label cell groups");
 % in_addbuttontoggle(1, 1, {@in_togglebtfun, @in_labelcellgroups, "icon-fa-tag-10b.gif", "icon-fa-tags-10b.gif", false, "Label cell groups"});
 in_addbuttonpush(1, 0, @in_Brushed2NewCluster, "plotpicker-glyplot-face.gif", "Add brushed cells to a new group")
 in_addbuttonpush(1, 0, @in_Brushed2MergeClusters, "plotpicker-pzmap.gif", "Merge brushed cells to same group")
 in_addbuttonpush(1, 0, @in_RenameCellTypeBatchID, "plotpicker-scatterhist.gif", "Rename cell type or batch ID");
-in_addbuttonpush(1, 0, @in_SingleClickSolution, "icon-mat-fingerprint-10.gif", "Single-click cell type annotation")
+% in_addbuttonpush(1, 0, @in_SingleClickSolution, "icon-mat-fingerprint-10.gif", "Single-click cell type annotation")
+in_addbuttonpush(1, 0, @in_SingleClickSolution, "apple-swift.jpg", "Single-click cell type annotation")
+
+
 in_addbuttonpush(1, 0, [], [], "");
-in_addbuttonpush(1, 1, @in_ClusterCellsS, "plotpicker-dendrogram.gif", "Clustering using cell embedding (S)")
+
+in_addbuttonpush(1, 1, @in_ClusterCellsS, "spiral.jpg", "Clustering using cell embedding (S)")
+
+%in_addbuttonpush(1, 1, @in_ClusterCellsS, "plotpicker-dendrogram.gif", "Clustering using cell embedding (S)")
 % in_addbuttonpush(1, 0, @in_ClusterCellsX, "icon-mw-cluster-10.gif", "Clustering using expression matrix (X)")
-in_addbuttonpush(1, 0, {@in_DetermineCellTypeClustersGeneral, true}, "plotpicker-contour.gif", "Assign cell types to groups")
-in_addbuttonpush(1, 0, @in_Brush4Celltypes, "brush.gif", "Assign cell type to selected cells");
-in_addbuttonpush(1, 1, @gui.callback_Brush4Markers, "plotpicker-kagi.gif", "Marker genes of brushed cells");
+
+
+in_addbuttonpush(1, 0, {@in_DetermineCellTypeClustersGeneral, true}, "flower.jpg", "Assign cell types to groups")
+
+%in_addbuttonpush(1, 0, {@in_DetermineCellTypeClustersGeneral, true}, "plotpicker-contour.gif", "Assign cell types to groups")
+in_addbuttonpush(1, 0, @in_Brush4Celltypes, "color-picker.jpg", "Assign cell type to selected cells");
+
+
+in_addbuttonpush(1, 1, @gui.callback_Brush4Markers, "medal1st.jpg", "Marker genes of brushed cells");
+%in_addbuttonpush(1, 1, @gui.callback_Brush4Markers, "plotpicker-kagi.gif", "Marker genes of brushed cells");
 in_addbuttonpush(1, 0, @gui.callback_FindAllMarkers, "plotpicker-plotmatrix.gif", "Marker gene heatmap");
 in_addbuttonpush(1, 0, [], [], "");
-in_addbuttonpush(1, 1, @gui.callback_ShowClustersPop, "plotpicker-geoscatter.gif", "Show cell clusters/groups individually");
+in_addbuttonpush(1, 1, @gui.callback_ShowClustersPop, "view-grid.jpg", "Show cell clusters/groups individually");
 in_addbuttonpush(1, 0, @gui.callback_SelectCellsByClass, "plotpicker-pointfig.gif", "Select cells by class/group && open in new window");
-in_addbuttonpush(1, 0, @in_DeleteSelectedCells, "plotpicker-qqplot.gif", "Delete brushed/selected cells");
-in_addbuttonpush(1, 0, @gui.callback_SaveX, "export.gif", "Export & save data");
-in_addbuttonpush(1, 1, @in_EmbeddingAgain, "plotpicker-geobubble.gif", "Embedding (tSNE, UMP, PHATE)");
-in_addbuttonpush(1, 0, @in_Switch2D3D, "plotpicker-image.gif", "Switch 2D/3D");
-in_addbuttonpush(1, 1, @gui.callback_CloseAllOthers, "icon-fa-cut-10.gif", "Close all other figures");
+
+in_addbuttonpush(1, 0, @in_DeleteSelectedCells, "trash.jpg", "Delete brushed/selected cells");
+
+%in_addbuttonpush(1, 0, @in_DeleteSelectedCells, "plotpicker-qqplot.gif", "Delete brushed/selected cells");
+%in_addbuttonpush(1, 0, @gui.callback_SaveX, "export.gif", "Export & save data");
+in_addbuttonpush(1, 0, @gui.callback_SaveX, "floppy-disk.jpg", "Export & save data");
+
+in_addbuttonpush(1, 1, @in_EmbeddingAgain, "cinema-old.jpg", "Embedding (tSNE, UMP, PHATE)");
+
+%in_addbuttonpush(1, 1, @in_EmbeddingAgain, "plotpicker-geobubble.gif", "Embedding (tSNE, UMP, PHATE)");
+
+in_addbuttonpush(1, 0, @in_Switch2D3D, "perspective-view.jpg", "Switch 2D/3D");
+%in_addbuttonpush(1, 0, @in_Switch2D3D, "plotpicker-image.gif", "Switch 2D/3D");
+
+in_addbuttonpush(1, 1, @gui.callback_CloseAllOthers, "xmark-square.jpg", "Close all other figures");
+
+%in_addbuttonpush(1, 1, @gui.callback_CloseAllOthers, "icon-fa-cut-10.gif", "Close all other figures");
 in_addbuttonpush(1, 0, @gui.callback_PickPlotMarker, "plotpicker-rose.gif", "Switch scatter plot marker type");
 in_addbuttonpush(1, 0, @gui.callback_PickColorMap, "plotpicker-compass.gif", "Pick new color map");
 in_addbuttonpush(1, 0, @in_RefreshAll, "icon-mat-refresh-20.gif", "Refresh");
@@ -328,11 +366,11 @@ in_addbuttonpush(1, 0, @in_RefreshAll, "icon-mat-refresh-20.gif", "Refresh");
 if ~isempty(fx) && isvalid(fx), fxfun(fx, 0.6); end
 
 in_addbuttonpush(2, 0, @in_turnonuserguiding, "icon-fa-thumb-tack-10.gif", "Turn on user guiding toolbar");
-in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_SelectCellsByQC, "icon-mat-filter-1-10.gif", "plotpicker-effects.gif", true, "Filter genes & cells"});
-in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_EmbeddingAgain, "icon-mat-filter-2-10.gif", "plotpicker-geobubble.gif", true, "Embedding (tSNE, UMP, PHATE)"});
-in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_ClusterCellsS, "icon-mat-filter-3-10.gif", "plotpicker-dendrogram.gif", true, "Clustering using embedding S"});
-in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_DetermineCellTypeClustersGeneral, "icon-mat-filter-4-10.gif", "plotpicker-contour.gif", true, "Assign cell types to groups"});
-in_addbuttontoggle(2, 0, {@in_togglebtfun, @gui.callback_SaveX, "icon-mat-filter-5-10.gif", "export.gif", true, "Export & save data"});
+in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_SelectCellsByQC, "icon-mat-filter-1-10.gif", "filter-alt.jpg", true, "Filter genes & cells"});
+in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_EmbeddingAgain, "icon-mat-filter-2-10.gif", "cinema-old.jpg", true, "Embedding (tSNE, UMP, PHATE)"});
+in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_ClusterCellsS, "icon-mat-filter-3-10.gif", "spiral.jpg", true, "Clustering using embedding S"});
+in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_DetermineCellTypeClustersGeneral, "icon-mat-filter-4-10.gif", "flower.jpg", true, "Assign cell types to groups"});
+in_addbuttontoggle(2, 0, {@in_togglebtfun, @gui.callback_SaveX, "icon-mat-filter-5-10.gif", "floppy-disk.jpg", true, "Export & save data"});
 
 if ~isempty(fx) && isvalid(fx), fxfun(fx, 0.8); end
 
@@ -586,7 +624,7 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
         %callbackFnc =
         %    1×6 cell array
         %    {function_handle}    {function_handle}    {["icon-mat-filt…"]}    {["plotpicker-co…"]}    {[1]}    {["Assign cell t…"]}
-        pt.Tag = "figTogl" + matlab.lang.makeValidName(tooltipTxt);
+        %pt.Tag = "figTogl" + matlab.lang.makeValidName(tooltipTxt);
     end
 
     function in_togglebtfun(src, ~, func, ~, imgFil, ...
@@ -606,18 +644,20 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
     end
 
     function [ptImage] = in_getPtImage(imgFil)
+
         try
-            [img, map] = imread(fullfile(mfolder, 'resources', 'Images', imgFil));
-            ptImage = ind2rgb(img, map);
+            [ptImage, map] = imread(fullfile(mfolder, 'resources', 'Images', imgFil));
         catch
             try
-                [img, map] = imread(fullfile(matlabroot,'toolbox', ...
+                [ptImage, map] = imread(fullfile(matlabroot,'toolbox', ...
                     'matlab','icons', imgFil));
-                ptImage = ind2rgb(img, map);
             catch
-                ptImage = rand(16, 16, 3);
+                map = [];
+                ptImage = rand(16, 16, 3); 
             end
         end
+        if ~isempty(map), ptImage = ind2rgb(ptImage, map); end
+        if size(ptImage, 3) == 1, ptImage = cat(3, ptImage, ptImage, ptImage); end
     end
 
 % ------------------------
