@@ -257,7 +257,7 @@ DeftToolbarHandle = uitoolbar('Parent', FigureHandle);
 MainToolbarHandle = uitoolbar('Parent', FigureHandle);
 UserToolbarHandle = uitoolbar('Parent', FigureHandle);
 
-%in_addbuttonpush(0, 0, [], "blank.jpg", "");
+in_addbuttonpush(0, 0, [], "blank.jpg", "");
 %pkg.i_addbutton2fig(MainToolbarHandle, 'off', [], "blank.jpg", "");
 
 in_addbuttonpush(0, 0, @gui.callback_MultiGroupingView, "plotpicker-arxtimeseries.gif", "Multi-grouping View...");
