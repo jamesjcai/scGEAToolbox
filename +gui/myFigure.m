@@ -14,12 +14,20 @@ classdef myFigure < handle
         function obj = myFigure()
             obj.FigureHandle = figure('Name', '', ...
                 'NumberTitle', 'on', 'Visible',"off", ...
-                "DockControls", "off", 'ToolBar', 'figure');
+                "DockControls", "off", 'ToolBar', 'figure', ...
+                'Position', [1, 1, 560, 420]);
             obj.tb = findall(obj.FigureHandle, 'Type', 'uitoolbar');
             if isempty(obj.tb)
                 obj.tb = uitoolbar(obj.FigureHandle);
             end
-            uipushtool(obj.tb, 'Separator', 'off');
+
+            linkTool = findall(obj.FigureHandle, 'Tag', 'DataManager.Linking');
+            if ~isempty(linkTool), delete(linkTool); end
+            linkTool = findall(obj.FigureHandle, 'Tag', 'Standard.OpenInspector');
+            if ~isempty(linkTool), delete(linkTool); end
+
+            % uipushtool(obj.tb, 'Separator', 'off');
+            pkg.i_addbutton2fig(obj.tb, 'on', [], [], '');  
             obj.tbv{1} = pkg.i_addbutton2fig(obj.tb, 'on', @gui.i_invertcolor, 'INVERT.gif', 'Invert colors');     
             obj.tbv{2} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_linksubplots, "union.jpg", "Link subplots");
             obj.tbv{3} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_setboxon, 'package2.jpg', 'Box on/off'); 

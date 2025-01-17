@@ -24,7 +24,8 @@ end
 
 
 hFig = figure('Visible', 'off', ...
-    'WindowStyle', 'modal', 'NumberTitle', 'off');
+    'WindowStyle', 'modal', 'NumberTitle', 'off', ...
+    'Position', [1, 1, 560, 420]);
 % ax = axes(f);
 % ax.Units = 'pixels';
 % ax.Position = [75 75 325 280]
