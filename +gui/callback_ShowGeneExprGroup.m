@@ -1,7 +1,6 @@
 function callback_ShowGeneExprGroup(src, ~)
 
-    FigureHandle = src.Parent.Parent;
-    sce = guidata(FigureHandle);
+    [FigureHandle, sce] = gui.gui_getfigsce(src);
     % [axx, bxx] = view(findall(FigureHandle,'type','axes'));    
 
     allowunique = false;

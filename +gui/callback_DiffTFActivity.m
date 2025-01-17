@@ -1,7 +1,6 @@
 function callback_DiffTFActivity(src, ~)
 
-FigureHandle = src.Parent.Parent;
-sce = guidata(FigureHandle);
+[~, sce] = gui.gui_getfigsce(src);
 
 [thisc, clabel] = gui.i_select1class(sce, false);
 if isempty(thisc), return; end

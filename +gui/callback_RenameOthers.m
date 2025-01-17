@@ -2,8 +2,8 @@ function [requirerefresh, renamedwhat] = callback_RenameOthers(src, ~)
 
 requirerefresh = false;
 renamedwhat = [];
-FigureHandle = src.Parent.Parent;
-sce = guidata(FigureHandle);
+
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 
 listitems = {'Gene name','Cluster ID'};
     [indx2, tf2] = listdlg('PromptString', ...

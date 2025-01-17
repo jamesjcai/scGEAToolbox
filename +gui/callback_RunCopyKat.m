@@ -1,7 +1,6 @@
 function [needupdatesce] = callback_RunCopyKat(src, ~)
 
-FigureHandle = src.Parent.Parent;
-sce = guidata(FigureHandle);
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 
 needupdatesce = false;
 extprogname = 'R_copykat';

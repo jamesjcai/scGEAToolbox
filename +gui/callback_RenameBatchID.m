@@ -1,8 +1,8 @@
 function [requirerefresh] = callback_RenameBatchID(src, ~)
 
 requirerefresh = false;
-FigureHandle = src.Parent.Parent;
-sce = guidata(FigureHandle);
+
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 
 if isempty(sce.c_batch_id)
     sce.c_batch_id = string(ones(sce.NumCells, 1));

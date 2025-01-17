@@ -1,9 +1,7 @@
 function [sceg, scep] = callback_SplitAtacGex(src, ~)
 
 
-FigureHandle = src.Parent.Parent;
-sce = guidata(FigureHandle);
-
+[~, sce] = gui.gui_getfigsce(src);
 if ~any(contains(sce.g, ':'))
     warndlg('Not a multiome ATAC+GEX matrix.');
     return;

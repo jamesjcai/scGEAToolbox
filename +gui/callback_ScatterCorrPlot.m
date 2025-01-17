@@ -1,7 +1,6 @@
 function callback_ScatterCorrPlot(src, ~)
 
-    FigureHandle = src.Parent.Parent;
-    sce = guidata(FigureHandle);
+    [FigureHandle, sce] = gui.gui_getfigsce(src);
     %[axx, bxx] = view(findall(FigureHandle,'type','axes'));
 
     answer = questdlg('Select an independent variable. Continue?','');

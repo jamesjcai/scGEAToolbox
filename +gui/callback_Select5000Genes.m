@@ -3,8 +3,7 @@ function [requirerefresh, scenew] = callback_Select5000Genes(src)
 requirerefresh = false;
 scenew = [];
 
-FigureHandle = src.Parent.Parent;
-sce = guidata(FigureHandle);
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 
 if sce.NumGenes<=500
     warndlg('Number of cells is too small.');

@@ -5,7 +5,7 @@ import mlreportgen.ppt.*;
 %pw1 = fileparts(mfilename('fullpath'));
 %pth = fullfile(pw1, '..', 'resources', 'myTemplate.pptx');
 
-FigureHandle = src.Parent.Parent;
+[FigureHandle] = gui.gui_getfigsce(src);
 
 answer1 = questdlg("Select the source of Enrichr result table.","", ...
     "Web Enrichr", "Matlab Enrichr", "Web Enrichr");

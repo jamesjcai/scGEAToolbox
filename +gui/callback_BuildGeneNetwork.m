@@ -1,6 +1,5 @@
 function callback_BuildGeneNetwork(src, ~)
-    FigureHandle = src.Parent.Parent;
-    sce = guidata(FigureHandle);
+    [FigureHandle, sce] = gui.gui_getfigsce(src);
     
     [glist] = gui.i_selectngenes(sce, [], FigureHandle);
     if isempty(glist), return; end

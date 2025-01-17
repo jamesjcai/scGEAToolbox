@@ -4,8 +4,7 @@ lcolors = lines(2);
 lcolor1 = lcolors(1,:);
 lcolor2 = lcolors(2,:);
 
-    FigureHandle = src.Parent.Parent;
-    sce = guidata(FigureHandle);
+[FigureHandle, sce] = gui.gui_getfigsce(src);
     if ~gui.gui_showrefinfo('DV Analysis'), return; end
     a=sce.NumGenes;
     [sce] = gui.i_selectinfogenes(sce);

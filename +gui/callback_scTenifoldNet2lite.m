@@ -3,10 +3,11 @@ function callback_scTenifoldNet2lite(src, ~)
 import ten.*
 import pkg.*
 
-FigureHandle = src.Parent.Parent;
+[~, sce] = gui.gui_getfigsce(src);
+    
 if ~gui.gui_showrefinfo('scTenifoldNet [PMID:33336197]'), return; end
 
-sce = guidata(FigureHandle);
+
 
 [i1, i2] = gui.i_select2smplgrps(sce, false);
 if isscalar(i1) || isscalar(i2), return; end

@@ -1,7 +1,7 @@
 function callback_ShowHgBGeneExpression(src, ~)
 
-FigureHandle = src.Parent.Parent;
-sce = guidata(FigureHandle);
+
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 
 species = gui.i_selectspecies(2);
 if isempty(species), return; end

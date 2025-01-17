@@ -9,8 +9,7 @@ methodtag = [];
 %    'py_scrublet', 'python');
 %if ~ok, return; end
 
-FigureHandle = src.Parent.Parent;
-sce = guidata(FigureHandle);
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 
 
 extprogname = 'py_scrublet';

@@ -3,11 +3,9 @@ function [requirerefresh, highlightindex] = callback_SelectCellsByQC(src)
 mfolder = fileparts(mfilename('fullpath'));
 
 
-needremove = false;
-requirerefresh = true;
-highlightindex = [];
-FigureHandle = src.Parent.Parent;
-sce = guidata(FigureHandle);
+[FigureHandle, sce] = gui.gui_getfigsce(src);
+
+
 % 'SC_QCFILTER (QC Preserves Lowly-expressed Cells/Genes)',...
 
 oldcn = sce.NumCells;

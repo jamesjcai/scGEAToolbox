@@ -5,8 +5,7 @@ if isa(src, "SingleCellExperiment")
     sce = src;
     FigureHandle = [];
 else
-    FigureHandle = src.Parent.Parent;
-    sce = guidata(FigureHandle);
+    [FigureHandle, sce] = gui.gui_getfigsce(src);
 end
 
 if ~(isscalar(unique(sce.c_batch_id)) && numel(unique(sce.c_cell_type_tx))==2)

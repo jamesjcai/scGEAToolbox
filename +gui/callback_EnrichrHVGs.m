@@ -2,8 +2,7 @@ function callback_EnrichrHVGs(src, ~, sce)
 
 FigureHandle = [];
 if nargin < 3 || isempty(sce)
-    FigureHandle = src.Parent.Parent;
-    sce = guidata(FigureHandle);    
+    [FigureHandle, sce] = gui.gui_getfigsce(src);
 end
 
 answer = questdlg('Which HVG detecting method to use?', '', ...

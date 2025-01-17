@@ -1,7 +1,6 @@
 function callback_DPGene2GroupsBatch(src, ~)
 
-    FigureHandle = src.Parent.Parent;
-    sce = guidata(FigureHandle);
+    [~, sce] = gui.gui_getfigsce(src);
     if ~gui.gui_showrefinfo('DP in Batch Mode'), return; end
     prefixtag = 'DP';
     

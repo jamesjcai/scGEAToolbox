@@ -5,8 +5,7 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
     needupdate = false;
     needestimt = false;
 
-    FigureHandle = src.Parent.Parent;
-    sce = guidata(FigureHandle);
+    [FigureHandle, sce] = gui.gui_getfigsce(src);
     
     switch typeid
         case 1

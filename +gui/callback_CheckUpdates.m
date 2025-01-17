@@ -1,6 +1,6 @@
 function callback_CheckUpdates(src, ~)
 % Check for updates.
-FigureHandle = src.Parent.Parent;
+[FigureHandle] = gui.gui_getfigsce(src);
 % Col = webread('https://api.github.com/repos/jamesjcai/scGEAToolbox')
 try
     [majneedupdate, v1, v2] = pkg.i_majvercheck;

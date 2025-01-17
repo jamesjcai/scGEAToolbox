@@ -1,6 +1,5 @@
 function callback_Dotplot(src, ~)
-    FigureHandle = src.Parent.Parent;
-    sce = guidata(FigureHandle);
+    [FigureHandle, sce] = gui.gui_getfigsce(src);
     [thisc, ~] = gui.i_select1class(sce);
     if isempty(thisc), return; end
     

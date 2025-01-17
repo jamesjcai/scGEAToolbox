@@ -1,7 +1,6 @@
 function callback_PickColorMap(src, ~, showzero)
 
-FigureHandle = src.Parent.Parent;
-sce = guidata(FigureHandle);
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 if nargin < 3, showzero = false; end
 n = numel(unique(sce.c));
 % disp(sprintf('Using %d colors',n));

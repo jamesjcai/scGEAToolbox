@@ -1,7 +1,7 @@
 function [requirerefresh] = callback_RenameGenes(src)
 requirerefresh = false;
-FigureHandle = src.Parent.Parent;
-sce = guidata(FigureHandle);
+
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 
 answer = questdlg('Select genes to be renamed?');
 if ~strcmp(answer, 'Yes'), return; end

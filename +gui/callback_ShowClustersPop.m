@@ -2,8 +2,8 @@ function callback_ShowClustersPop(src, ~)
 answer = questdlg('Select a grouping variable and show cell groups in new figures individually?');
 if ~strcmp(answer, 'Yes'), return; end
 
-FigureHandle = src.Parent.Parent;
-sce = guidata(FigureHandle);
+
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 [thisc, ~] = gui.i_select1class(sce);
 if isempty(thisc), return; end
 [c, cL] = grp2idx(thisc);

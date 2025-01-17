@@ -1,8 +1,8 @@
 function callback_scTenifoldXct(src, ~)
 
 if ~gui.gui_showrefinfo('scTenifoldXct [PMID:36787742]'), return; end
-FigureHandle = src.Parent.Parent;
-sce = guidata(FigureHandle);
+
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 
 numglist = [1 3000 5000];
 memmlist = [16 32 64 128];

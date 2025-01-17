@@ -11,8 +11,7 @@ end
 if nargin < 4, enrichrtype = []; end
 if nargin < 3, predefinedlist = []; end
 
-    FigureHandle = src.Parent.Parent;
-    sce = guidata(FigureHandle);
+    [FigureHandle, sce] = gui.gui_getfigsce(src);
     gsorted = natsort(sce.g);
 
     rng("shuffle");

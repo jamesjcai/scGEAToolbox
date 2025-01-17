@@ -22,8 +22,8 @@ end
 %         disp('addpath(''./scTenifoldNet-master/MATLAB'');');
 %         return;
 %     end
-FigureHandle = src.Parent.Parent;
-sce = guidata(FigureHandle);
+
+[~, sce] = gui.gui_getfigsce(src);
 
 answer = questdlg('Construct gene regulatory network (GRN) for all cells or selected cells?', ...
         '', 'All Cells', 'Select Cells...', 'Cancel', ...

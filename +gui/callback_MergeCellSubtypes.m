@@ -15,8 +15,7 @@ switch sourcetag
         end
 end
 
-FigureHandle = src.Parent.Parent;
-sce = guidata(FigureHandle);
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 
 
 if ~allcell
