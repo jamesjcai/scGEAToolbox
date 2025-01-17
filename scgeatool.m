@@ -258,8 +258,8 @@ MainToolbarHandle = uitoolbar('Parent', FigureHandle);
 UserToolbarHandle = uitoolbar('Parent', FigureHandle);
 
 in_addbuttonpush(0, 0, [], [], "");
-in_addbuttonpush(0, 0, @gui.callback_MultiGroupingView, "plotpicker-arxtimeseries.gif", "Multi-grouping View...");
-in_addbuttonpush(0, 0, @gui.callback_CrossTabulation, "plotpicker-comet.gif", "Cross tabulation");
+in_addbuttonpush(0, 0, @gui.callback_MultiGroupingView, "visibility_18dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Multi-grouping View...");
+in_addbuttonpush(0, 0, @gui.callback_CrossTabulation, "analytics_18dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Cross tabulation");
 in_addbuttonpush(0, 0, @gui.callback_ShowGeneExprGroup, "NewPoints.gif", "Gene expression in groups");
 in_addbuttonpush(0, 1, @gui.callback_Dotplot, "icon-mat-blur-linear-10.gif", "Gene Expression Dot Plot...");
 in_addbuttonpush(0, 0, @gui.callback_Heatmap, "icon-mat-apps-20.gif", "Gene Expression Heatmap...");
@@ -281,9 +281,9 @@ in_addbuttonpush(0, 0, @gui.callback_DVGene2Groups, "plotpicker-andrewsplot.gif"
 in_addbuttonpush(0, 0, @gui.callback_DPGene2Groups, "plotpicker_noisepsd.gif", "Differential program (DP) analysis");
 in_addbuttonpush(0, 0, [], [], "");
 
-in_addbuttonpush(0, 1, @gui.callback_BuildGeneNetwork, "mw-neural-net.jpg", "Build gene regulatory network");
+in_addbuttonpush(0, 1, @gui.callback_BuildGeneNetwork, "graph_3_18dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Build gene regulatory network");
 % in_addbuttonpush(0, 1, @gui.callback_BuildGeneNetwork, "noun_Network_691907.gif", "Build gene regulatory network");
-in_addbuttonpush(0, 0, @gui.callback_CompareGeneNetwork, "noun_Deep_Learning_2424485.gif", "Compare two scGRNs");
+in_addbuttonpush(0, 0, @gui.callback_CompareGeneNetwork, "graph_5_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Compare two scGRNs");
 in_addbuttonpush(0, 1, {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 gui.gui_3dcamera(DeftToolbarHandle, 'AllCells');
 pt = uitoggletool(DeftToolbarHandle);
@@ -317,7 +317,10 @@ in_addbuttonpush(1, 1, @in_labelcellgroups, "label.jpg", "Label cell groups");
 % in_addbuttontoggle(1, 1, {@in_togglebtfun, @in_labelcellgroups, "icon-fa-tag-10b.gif", "icon-fa-tags-10b.gif", false, "Label cell groups"});
 in_addbuttonpush(1, 0, @in_Brushed2NewCluster, "plotpicker-glyplot-face.gif", "Add brushed cells to a new group")
 in_addbuttonpush(1, 0, @in_Brushed2MergeClusters, "plotpicker-pzmap.gif", "Merge brushed cells to same group")
-in_addbuttonpush(1, 0, @in_RenameCellTypeBatchID, "plotpicker-scatterhist.gif", "Rename cell type or batch ID");
+
+
+in_addbuttonpush(1, 0, @in_RenameCellTypeBatchID, "rebase_edit_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Rename cell type or batch ID");
+%in_addbuttonpush(1, 0, @in_RenameCellTypeBatchID, "plotpicker-scatterhist.gif", "Rename cell type or batch ID");
 % in_addbuttonpush(1, 0, @in_SingleClickSolution, "icon-mat-fingerprint-10.gif", "Single-click cell type annotation")
 in_addbuttonpush(1, 0, @in_SingleClickSolution, "apple-swift.jpg", "Single-click cell type annotation")
 
@@ -341,9 +344,9 @@ in_addbuttonpush(1, 1, @gui.callback_Brush4Markers, "medal1st.jpg", "Marker gene
 in_addbuttonpush(1, 0, @gui.callback_FindAllMarkers, "plotpicker-plotmatrix.gif", "Marker gene heatmap");
 in_addbuttonpush(1, 0, [], [], "");
 in_addbuttonpush(1, 1, @gui.callback_ShowClustersPop, "view-grid.jpg", "Show cell clusters/groups individually");
-in_addbuttonpush(1, 0, @gui.callback_SelectCellsByClass, "plotpicker-pointfig.gif", "Select cells by class/group && open in new window");
+in_addbuttonpush(1, 0, @gui.callback_SelectCellsByClass, "checklist_rtl_18dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Select cells by class/group && open in new window");
 
-in_addbuttonpush(1, 0, @in_DeleteSelectedCells, "trash.jpg", "Delete brushed/selected cells");
+in_addbuttonpush(1, 0, @in_DeleteSelectedCells, "variable_remove_18dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Delete brushed/selected cells");
 
 %in_addbuttonpush(1, 0, @in_DeleteSelectedCells, "plotpicker-qqplot.gif", "Delete brushed/selected cells");
 %in_addbuttonpush(1, 0, @gui.callback_SaveX, "export.gif", "Export & save data");
@@ -361,7 +364,7 @@ in_addbuttonpush(1, 1, @gui.callback_CloseAllOthers, "xmark-square.jpg", "Close 
 %in_addbuttonpush(1, 1, @gui.callback_CloseAllOthers, "icon-fa-cut-10.gif", "Close all other figures");
 in_addbuttonpush(1, 0, @gui.callback_PickPlotMarker, "plotpicker-rose.gif", "Switch scatter plot marker type");
 in_addbuttonpush(1, 0, @gui.callback_PickColorMap, "plotpicker-compass.gif", "Pick new color map");
-in_addbuttonpush(1, 0, @in_RefreshAll, "icon-mat-refresh-20.gif", "Refresh");
+in_addbuttonpush(1, 0, @in_RefreshAll, "refresh_18dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Refresh");
 
 if ~isempty(fx) && isvalid(fx), fxfun(fx, 0.6); end
 
