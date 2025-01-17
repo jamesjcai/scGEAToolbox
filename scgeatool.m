@@ -257,7 +257,9 @@ DeftToolbarHandle = uitoolbar('Parent', FigureHandle);
 MainToolbarHandle = uitoolbar('Parent', FigureHandle);
 UserToolbarHandle = uitoolbar('Parent', FigureHandle);
 
-in_addbuttonpush(0, 0, [], [], "");
+%in_addbuttonpush(0, 0, [], "blank.jpg", "");
+%pkg.i_addbutton2fig(MainToolbarHandle, 'off', [], "blank.jpg", "");
+
 in_addbuttonpush(0, 0, @gui.callback_MultiGroupingView, "plotpicker-arxtimeseries.gif", "Multi-grouping View...");
 in_addbuttonpush(0, 0, @gui.callback_CrossTabulation, "plotpicker-comet.gif", "Cross tabulation");
 in_addbuttonpush(0, 0, @gui.callback_ShowGeneExprGroup, "NewPoints.gif", "Gene expression in groups");
@@ -548,15 +550,19 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
         elseif toolbarHdl == 2
             barhandle = UserToolbarHandle;
         end
-        pt = uipushtool(barhandle, 'Separator', sepTag);
-        
-        if ~isempty(imgFil)
-            %pt.Icon = fullfile(mfolder,'..','resources','Images',imgFil);
-            pt.CData = in_getPtImage(imgFil);
-            pt.Tooltip = tooltipTxt;
-            pt.ClickedCallback = callbackFnc;
-            pt.Tag = "figPush" + matlab.lang.makeValidName(tooltipTxt);
-        end
+
+        pt = pkg.i_addbutton2fig(barhandle, sepTag, ...
+            callbackFnc, imgFil, tooltipTxt);
+
+        % pt = uipushtool(barhandle, 'Separator', sepTag);
+        % 
+        % if ~isempty(imgFil)
+        %     %pt.Icon = fullfile(mfolder,'..','resources','Images',imgFil);
+        %     pt.CData = in_getPtImage(imgFil);
+        %     pt.Tooltip = tooltipTxt;
+        %     pt.ClickedCallback = callbackFnc;
+        %     pt.Tag = "figPush" + matlab.lang.makeValidName(tooltipTxt);
+        % end
     end
 
     function in_addbuttontoggle(toolbarHdl, sepTag, callbackFnc)
