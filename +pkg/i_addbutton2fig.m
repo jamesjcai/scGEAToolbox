@@ -38,21 +38,44 @@ end
         pt = uipushtool(toolbarHdl, 'Separator', sepTag);
         try
             [ptImage, map] = imread(fullfile(mfolder, '..', 'resources', 'Images', imgFil));
-            if ~isempty(map)
-                ptImage = ind2rgb(ptImage, map);
-            end
+            if ~isempty(map), ptImage = ind2rgb(ptImage, map); end
         catch
             ptImage = rand(16, 16, 3);
         end
+        if size(ptImage, 3) == 1, ptImage = cat(3, ptImage, ptImage, ptImage); end
         
-        if size(ptImage, 3) == 1
-        %     colormapName = gray(256);
-        %     ptImage = ind2rgb(uint8(ptImage * 255), colormapName);
-        ptImage = cat(3, ptImage, ptImage, ptImage);
-        end
-        
-        pt.CData = ptImage;
+        pt.CData = resizeTo16x16(ptImage);
         pt.Tooltip = tooltipTxt;
         pt.ClickedCallback = callbackFnc;
+    end
+end
+
+
+function resizedImage = resizeTo16x16(ptImage)
+    % Resize an input image to 16x16 using interpolation
+    % Input: 
+    %   ptImage - RGB image (MxNx3) or grayscale image (MxN)
+    % Output: 
+    %   resizedImage - Resized image (16x16x3 or 16x16)
+    
+    % Get the size of the input image
+    [rows, cols, channels] = size(ptImage);
+    
+    % Create the original grid
+    [x, y] = meshgrid(1:cols, 1:rows);
+    
+    % Create the target grid for 16x16 resizing
+    [xq, yq] = meshgrid(linspace(1, cols, 16), linspace(1, rows, 16));
+    
+    % Initialize the resized image
+    if channels == 1
+        % Grayscale image
+        resizedImage = interp2(x, y, ptImage, xq, yq, 'linear');
+    else
+        % RGB image
+        resizedImage = zeros(16, 16, channels);
+        for channel = 1:channels
+            resizedImage(:, :, channel) = interp2(x, y, ptImage(:, :, channel), xq, yq, 'linear');
+        end
     end
 end
