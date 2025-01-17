@@ -294,6 +294,9 @@ in_addbuttonpush(0, 0, {@gui.i_resizewin, FigureHandle}, 'HDF_pointx.gif', 'Resi
 
 in_addbuttontoggle(1, 0, {@in_togglebtfun, @in_turnoffuserguiding, "icon-mat-unfold-more-10.gif", "icon-mat-unfold-less-10.gif", false, "Turn on/off user onboarding toolbar"});
 in_addbuttonpush(1, 0, @gui.callback_ShowGeneExpr, "list.gif", "Select genes to show expression")
+in_addbuttonpush(1, 0, @gui.callback_ShowGeneExpr, "orthogonal-view.jpg", "Select genes to show expression")
+
+
 in_addbuttonpush(1, 0, @in_ShowCellStates, "list2.gif", "Show cell states")
 in_addbuttonpush(1, 0, @in_SelectCellsByQC, "plotpicker-effects.gif", "Filter genes & cells")
 

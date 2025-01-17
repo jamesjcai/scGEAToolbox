@@ -44,7 +44,7 @@ end
         end
         if size(ptImage, 3) == 1, ptImage = cat(3, ptImage, ptImage, ptImage); end
         
-        pt.CData = resizeTo16x16(ptImage);
+        pt.CData = ptImage;
         pt.Tooltip = tooltipTxt;
         pt.ClickedCallback = callbackFnc;
     end
