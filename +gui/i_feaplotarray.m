@@ -41,6 +41,7 @@ end
 for kx = 1:length(tgene)
 
     hx=gui.myFigure;
+    %hx = figure;
     for ky = 1:length(cL)
         cellidx = c==ky;
         nexttile;

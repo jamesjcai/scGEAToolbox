@@ -61,11 +61,23 @@ else
     figname = 'SCGEATOOL';
 end
 
-FigureHandle = figure('Name', figname, ...
-    'position', round(1.2*[0, 0, 560, 420]), ...
-    'visible', 'off', 'NumberTitle', 'off', ...
-    'DockControls','off','MenuBar','none','ToolBar','figure');
+defaultPosition = get(groot, 'DefaultFigurePosition');
+defaultWidth = defaultPosition(3);  % Width is the 3rd element
+defaultHeight = defaultPosition(4); % Height is the 4th element
+
+
+if defaultWidth==560 && defaultHeight==420
+    FigureHandle = figure('Name', figname, ...
+        'position', round(1.2*[0, 0, 560, 420]), ...
+        'visible', 'off', 'NumberTitle', 'off', ...
+        'DockControls','off','MenuBar','none','ToolBar','figure');
+else
+    FigureHandle = figure('Name', figname, ...    
+        'visible', 'off', 'NumberTitle', 'off', ...
+        'DockControls','off','MenuBar','none','ToolBar','figure');    
+end
 movegui(FigureHandle, 'center');
+
 
 fig_pos = get(FigureHandle, 'Position'); 
 fig_width = fig_pos(3);
@@ -93,6 +105,7 @@ button2 = uicontrol('style','text',...
     'string','Ready to explore.');
 
 set(FigureHandle,'resizefcn',{@myResizeFun, button1, button2});
+drawnow;
 
 m_file = uimenu(FigureHandle, 'Text', '&File');
 in_addmenu(m_file, 0, @in_sc_openscedlg, '&Import Data... ','I');
@@ -231,6 +244,7 @@ in_addmenu(m_help, 1, @gui.callback_CheckUpdates, 'Check for Updates...');
 %in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle)}, 'About SCGEATOOL');
 
 if ~isempty(fx) && isvalid(fx), fxfun(fx, 0.4); end
+
 
 hAx = axes('Parent', FigureHandle, 'Visible', 'off');
 if ~isempty(sce) && sce.NumCells>0
@@ -395,12 +409,12 @@ if ~isempty(fx) && isvalid(fx), fxfun(fx, 1.0); end
 pause(1);
 
 if ~isempty(fx) && isvalid(fx), set(fx, 'visible', 'off'); end
-pause(0.2);
+%pause(0.2);
 set(FigureHandle, 'visible', 'on');
 delete(fx);
 uicontrol(button1);
-drawnow;
 
+% drawnow;
 %{ 
  in_fixfield('tsne','tsne3d');
  in_fixfield('umap','umap3d');
