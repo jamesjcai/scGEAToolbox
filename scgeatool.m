@@ -309,7 +309,11 @@ end
 pt.Tooltip = 'Insert Colorbar';
 pt.ClickedCallback = @in_addcolorbar;
 pt.Tag = "figToglColorbar";
-in_addbuttonpush(0, 0, {@gui.i_resizewin, FigureHandle}, 'HDF_pointx.gif', 'Resize Plot Window')
+
+in_addbuttonpush(0, 0, @gui.callback_CloseAllOthers, "xmark-square.jpg", "Close all other figures");
+
+in_addbuttonpush(0, 0, {@gui.i_resizewin, FigureHandle}, 'scale-frame-enlarge.jpg', 'Resize Plot Window')
+% in_addbuttonpush(0, 0, {@gui.i_resizewin, FigureHandle}, 'HDF_pointx.gif', 'Resize Plot Window')
 
 
 
@@ -372,7 +376,6 @@ in_addbuttonpush(1, 1, @in_EmbeddingAgain, "cinema-old.jpg", "Embedding (tSNE, U
 in_addbuttonpush(1, 0, @in_Switch2D3D, "perspective-view.jpg", "Switch 2D/3D");
 %in_addbuttonpush(1, 0, @in_Switch2D3D, "plotpicker-image.gif", "Switch 2D/3D");
 
-in_addbuttonpush(1, 1, @gui.callback_CloseAllOthers, "xmark-square.jpg", "Close all other figures");
 
 %in_addbuttonpush(1, 1, @gui.callback_CloseAllOthers, "icon-fa-cut-10.gif", "Close all other figures");
 in_addbuttonpush(1, 0, @gui.callback_PickPlotMarker, "palette.jpg", "Switch scatter plot marker type");
