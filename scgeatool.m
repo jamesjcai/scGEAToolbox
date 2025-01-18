@@ -652,7 +652,10 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
                 func(src);
             else
                 s = 'To execute the function, click the button again or locate and click the same button in the toolbar above. Hover over the button to view a description of its function.';
+                try
                 uiwait(helpdlg(sprintf('%s\n%s', upper(tooltipTxt), s), ''));
+                catch
+                end
             end
         else
             func(src);
