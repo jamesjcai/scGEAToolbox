@@ -30,7 +30,7 @@ classdef myFigure < handle
             pkg.i_addbutton2fig(obj.tb, 'on', [], [], '');  
             obj.tbv{1} = pkg.i_addbutton2fig(obj.tb, 'on', @gui.i_invertcolor, 'INVERT.gif', 'Invert colors');     
             obj.tbv{2} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_linksubplots, "union.jpg", "Link subplots");
-            obj.tbv{3} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_setboxon, 'package2.jpg', 'Box on/off'); 
+            obj.tbv{3} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_setboxon, 'border-out.jpg', 'Box on/off'); 
             obj.tbv{4} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_renametitle, "align-top-box-solid.jpg", 'Change Plot Title');
             obj.tbv{5} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_pickmonocolor, true}, 'color-wheel.jpg', 'Pick new color map...');
             obj.tbv{6} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_changefontsize, 'text-size.jpg', 'ChangeFontSize');

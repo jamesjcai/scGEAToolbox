@@ -286,7 +286,6 @@ in_addbuttonpush(0, 0, [], [], "");
 
 %in_addbuttonpush(0, 1, @in_CompareCellScoreBtwCls, "cellscore2.gif", "Cell score analysis--obtaining gene signature score for each cell");
 in_addbuttonpush(0, 1, @in_CompareCellScoreBtwCls, "barcode.jpg", "Cell score analysis--obtaining gene signature score for each cell");
-
 %in_addbuttonpush(0, 0, @gui.callback_GetCellSignatureMatrix, "icon-fa-connectdevelop-20.gif", "Cell state analysis--obtaining multiple gene signature scores to reveal functional state of cells");
 in_addbuttonpush(0, 0, @gui.callback_GetCellSignatureMatrix, "hexagon-dice.jpg", "Cell state analysis--obtaining multiple gene signature scores to reveal functional state of cells");
 
@@ -329,11 +328,11 @@ in_addbuttonpush(1, 0, @in_SelectCellsByQC, "filter-alt.jpg", "Filter genes & ce
 
 in_addbuttonpush(1, 1, @in_labelcellgroups, "label.jpg", "Label cell groups");
 % in_addbuttontoggle(1, 1, {@in_togglebtfun, @in_labelcellgroups, "icon-fa-tag-10b.gif", "icon-fa-tags-10b.gif", false, "Label cell groups"});
-in_addbuttonpush(1, 0, @in_Brushed2NewCluster, "plotpicker-glyplot-face.gif", "Add brushed cells to a new group")
-in_addbuttonpush(1, 0, @in_Brushed2MergeClusters, "plotpicker-pzmap.gif", "Merge brushed cells to same group")
+in_addbuttonpush(1, 0, @in_Brushed2NewCluster, "substract.jpg", "Add brushed cells to a new group")
+in_addbuttonpush(1, 0, @in_Brushed2MergeClusters, "union.jpg", "Merge brushed cells to same group")
 
 
-in_addbuttonpush(1, 0, @in_RenameCellTypeBatchID, "rebase_edit_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Rename cell type or batch ID");
+in_addbuttonpush(1, 0, @in_RenameCellTypeBatchID, "edit.jpg", "Rename cell type or batch ID");
 %in_addbuttonpush(1, 0, @in_RenameCellTypeBatchID, "plotpicker-scatterhist.gif", "Rename cell type or batch ID");
 % in_addbuttonpush(1, 0, @in_SingleClickSolution, "icon-mat-fingerprint-10.gif", "Single-click cell type annotation")
 in_addbuttonpush(1, 0, @in_SingleClickSolution, "apple-swift.jpg", "Single-click cell type annotation")
@@ -341,13 +340,13 @@ in_addbuttonpush(1, 0, @in_SingleClickSolution, "apple-swift.jpg", "Single-click
 
 in_addbuttonpush(1, 0, [], [], "");
 
-in_addbuttonpush(1, 1, @in_ClusterCellsS, "spiral.jpg", "Clustering using cell embedding (S)")
+in_addbuttonpush(1, 1, @in_ClusterCellsS, "bubble_chart_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Clustering using cell embedding (S)")
 
 %in_addbuttonpush(1, 1, @in_ClusterCellsS, "plotpicker-dendrogram.gif", "Clustering using cell embedding (S)")
 % in_addbuttonpush(1, 0, @in_ClusterCellsX, "icon-mw-cluster-10.gif", "Clustering using expression matrix (X)")
 
 
-in_addbuttonpush(1, 0, {@in_DetermineCellTypeClustersGeneral, true}, "flower.jpg", "Assign cell types to groups")
+in_addbuttonpush(1, 0, {@in_DetermineCellTypeClustersGeneral, true}, "auto_transmission_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Assign cell types to groups")
 
 %in_addbuttonpush(1, 0, {@in_DetermineCellTypeClustersGeneral, true}, "plotpicker-contour.gif", "Assign cell types to groups")
 in_addbuttonpush(1, 0, @in_Brush4Celltypes, "color-picker.jpg", "Assign cell type to selected cells");
@@ -355,7 +354,7 @@ in_addbuttonpush(1, 0, @in_Brush4Celltypes, "color-picker.jpg", "Assign cell typ
 
 in_addbuttonpush(1, 1, @gui.callback_Brush4Markers, "medal1st.jpg", "Marker genes of brushed cells");
 %in_addbuttonpush(1, 1, @gui.callback_Brush4Markers, "plotpicker-kagi.gif", "Marker genes of brushed cells");
-in_addbuttonpush(1, 0, @gui.callback_FindAllMarkers, "plotpicker-plotmatrix.gif", "Marker gene heatmap");
+in_addbuttonpush(1, 0, @gui.callback_FindAllMarkers, "grain_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Marker gene heatmap");
 in_addbuttonpush(1, 0, [], [], "");
 in_addbuttonpush(1, 1, @gui.callback_ShowClustersPop, "view-grid.jpg", "Show cell clusters/groups individually");
 in_addbuttonpush(1, 0, @gui.callback_SelectCellsByClass, "checklist_rtl_18dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Select cells by class/group && open in new window");
@@ -376,9 +375,9 @@ in_addbuttonpush(1, 0, @in_Switch2D3D, "perspective-view.jpg", "Switch 2D/3D");
 in_addbuttonpush(1, 1, @gui.callback_CloseAllOthers, "xmark-square.jpg", "Close all other figures");
 
 %in_addbuttonpush(1, 1, @gui.callback_CloseAllOthers, "icon-fa-cut-10.gif", "Close all other figures");
-in_addbuttonpush(1, 0, @gui.callback_PickPlotMarker, "plotpicker-rose.gif", "Switch scatter plot marker type");
-in_addbuttonpush(1, 0, @gui.callback_PickColorMap, "plotpicker-compass.gif", "Pick new color map");
-in_addbuttonpush(1, 0, @in_RefreshAll, "refresh_18dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Refresh");
+in_addbuttonpush(1, 0, @gui.callback_PickPlotMarker, "palette.jpg", "Switch scatter plot marker type");
+in_addbuttonpush(1, 0, @gui.callback_PickColorMap, "color-wheel.jpg", "Pick new color map");
+in_addbuttonpush(1, 0, @in_RefreshAll, "refresh_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Refresh");
 
 if ~isempty(fx) && isvalid(fx), fxfun(fx, 0.6); end
 
