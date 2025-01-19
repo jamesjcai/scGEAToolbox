@@ -12,7 +12,7 @@ gui.i_stemscatter(sce.s, cs);
 zlabel('Score value')
 title(strrep(csname, '_', '\_'));
 
-hx.addCustomButton('off', @i_saveCrossTable, "export.gif", 'Save cross-table');
+hx.addCustomButton('off', @i_saveCrossTable, "floppy-disk-arrow-in.jpg", 'Save cross-table');
 hx.addCustomButton('on', @in_geneheatmapx, 'greenarrowicon.gif', 'Heatmap');
 hx.addCustomButton('on', @i_genedotplot, 'greencircleicon.gif', 'Dot plot');
 hx.addCustomButton('on', @i_viewgenenames, 'HDF_point.gif', 'Show gene names');

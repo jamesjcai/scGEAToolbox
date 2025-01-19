@@ -24,7 +24,7 @@ end
 hx=gui.myFigure;
 hFig=hx.FigureHandle;
 
-hx.addCustomButton('off', {@i_savedata}, 'export.gif', 'Export data...');
+hx.addCustomButton('off', {@i_savedata}, 'floppy-disk-arrow-in.jpg', 'Export data...');
 hx.addCustomButton('off', @i_invertcolor, "plotpicker-pie.gif", 'Switch Values ON/OFF');
 hx.addCustomButton('off', @i_reordersamples, "plotpicker-errorbar.gif", 'Switch Legend ON/OFF');
 hx.addCustomButton('on', @i_viewgenenames, 'HDF_point.gif', 'Rename Group Names');

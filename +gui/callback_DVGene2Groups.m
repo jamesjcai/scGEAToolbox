@@ -93,8 +93,8 @@ if strcmp(answerx, 'Splinefit Method [PMID:31697351]')
         hx.addCustomButton( 'off', @in_viewTable, 'icon-fa-stack-exchange-10.gif', 'View DV gene table...');
         hx.addCustomButton( 'on', @in_EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Select top n genes to perform web-based enrichment analysis...');
         hx.addCustomButton( 'off', @in_Enrichr, 'plotpicker-andrewsplot.gif', 'Enrichr test...');
-        hx.addCustomButton( 'off', @in_genecards, 'fvtool_fdalinkbutton.gif', 'GeneCards...');
-        hx.addCustomButton( 'off', @in_ExportTable, 'export.gif', 'Export HVG Table...');
+        hx.addCustomButton( 'off', @in_genecards, 'www.jpg', 'GeneCards...');
+        hx.addCustomButton( 'off', @in_ExportTable, 'floppy-disk-arrow-in.jpg', 'Export HVG Table...');
         hx.addCustomButton( 'on', @ChangeAlphaValue, 'plotpicker-rose.gif', 'Change MarkerFaceAlpha value');
         hx.addCustomButton( 'off', @in_changeMarkerSize, 'icon-mat-text-fields-10.gif', 'ChangeFontSize');
         

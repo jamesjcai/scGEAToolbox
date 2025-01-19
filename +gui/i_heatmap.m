@@ -57,7 +57,7 @@ hx.addCustomButton('off', @i_flipxy, 'mat-wrap-text.jpg', 'Flip XY');
 
 hx.addCustomButton('on', @i_summarymap, 'HDF_object01.gif', 'Summary map...');
 hx.addCustomButton('off', @i_summarymapT, 'HDF_object02.gif', 'Summary map, transposed...');
-hx.addCustomButton('on', @in_savetable, 'export.gif', 'Export data...');
+hx.addCustomButton('on', @in_savetable, 'floppy-disk-arrow-in.jpg', 'Export data...');
 hx.addCustomButton('off', @in_changenorm, 'mw-pickaxe-mining.jpg', 'Change normalization method...');
 hx.addCustomButton('off', @i_dotplotx, 'icon-mat-blur-linear-10.gif', 'Dot plot...');
 
@@ -162,7 +162,7 @@ Z = zeros(length(glist), length(cL));
         h.CellLabelColor = 'none';
         t = array2table(Z, 'VariableNames', cL, 'RowNames', MX);
         % writetable(t,'aaa.csv','WriteRowNames',true);
-        hx1.addCustomButton('off', {@i_exporttable, t}, 'export.gif', 'Save table...');
+        hx1.addCustomButton('off', {@i_exporttable, t}, 'floppy-disk-arrow-in.jpg', 'Save table...');
         hx1.addCustomButton('off', @i_resetcolor, 'plotpicker-geobubble2.gif', 'Reset color map');
         % disp('https://software.broadinstitute.org/morpheus/')
         hx1.show(hFig);
@@ -221,7 +221,7 @@ Z = zeros(length(glist), length(cL));
         %         s = struct(h);
         %         s.XAxis.TickLabelRotation=45;
         % writetable(t,'aaa.csv','WriteRowNames',true);
-        hx2.addCustomButton('off', {@i_exporttable, t}, 'export.gif', 'Save table...');
+        hx2.addCustomButton('off', {@i_exporttable, t}, 'floppy-disk-arrow-in.jpg', 'Save table...');
         hx2.addCustomButton('on', {@gui.i_pickcolormap, c}, 'plotpicker-compass.gif', 'Pick new color map...');
         hx2.addCustomButton('off', @i_resetcolor, 'plotpicker-geobubble2.gif', 'Reset color map');
         hx2.show(hFig);

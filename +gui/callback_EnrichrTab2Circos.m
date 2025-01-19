@@ -136,7 +136,7 @@ df1 = cell2table(df1,'VariableNames',allg);
 df1 = table2array(df1);
 
 hx = gui.myFigure;
-hx.addCustomButton('on', @in_savedata, 'export.gif', 'Export data...');
+hx.addCustomButton('on', @in_savedata, 'floppy-disk-arrow-in.jpg', 'Export data...');
 
 CC = gui.chordChart(df1,'Arrow','off','rowName',terms,'colName',allg);
 CC = CC.draw();

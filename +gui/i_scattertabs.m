@@ -56,7 +56,7 @@ end
   
 tabgp.SelectionChangedFcn=@displaySelection;
 
-hx.addCustomButton('off', @in_savedata, 'export.gif', 'Export data...');
+hx.addCustomButton('off', @in_savedata, 'floppy-disk-arrow-in.jpg', 'Export data...');
 hx.addCustomButton('off', @in_addregress, 'plotpicker-renko.gif', 'Add Regression Line...');
 hx.addCustomButton('off', @in_addlocfitx, 'plotpicker-renkox.gif', 'Add Locfit Local Regression...');
 

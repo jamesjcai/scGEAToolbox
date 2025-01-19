@@ -95,8 +95,8 @@ end
 tabgp.SelectionChangedFcn=@displaySelection;
 
 % hx.addCustomButton('off', [], "IMG00107.GIF", " ");
-% hx.addCustomButton('off', @i_linksubplots, 'plottypectl-rlocusplot.gif', 'Link subplots');
-hx.addCustomButton('off',  @i_genecards, 'fvtool_fdalinkbutton.gif', 'GeneCards...');
+% hx.addCustomButton('off', @i_linksubplots, 'keyframes-minus.jpg', 'Link subplots');
+hx.addCustomButton('off',  @i_genecards, 'www.jpg', 'GeneCards...');
 %hx.addCustomButton('off', @i_RescaleExpr, 'IMG00074.GIF', 'Rescale expression level [log2(x+1)]');
 %hx.addCustomButton('off', @i_ResetExpr, 'plotpicker-geobubble2.gif', 'Reset expression level');
 hx.addCustomButton('off', @in_savedata, "powerpointx.gif", 'Save Gene List...');

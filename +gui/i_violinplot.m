@@ -22,7 +22,7 @@ title(strrep(ttxt, '_', '\_'));
 %ylabel(selitems{indx1});
 
 
-hx.addCustomButton('off', @i_savedata, 'export.gif', 'Export data...');
+hx.addCustomButton('off', @i_savedata, 'floppy-disk-arrow-in.jpg', 'Export data...');
 hx.addCustomButton('off', @i_testdata, 'icon-fa-stack-exchange-10.gif', 'ANOVA/T-test...');
 hx.addCustomButton('off', @i_addsamplesize, "icon-mat-blur-linear-10.gif", 'Add Sample Size');
 hx.addCustomButton('off', @i_invertcolor, "plotpicker-pie.gif", 'Switch BW/Color');

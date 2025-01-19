@@ -141,8 +141,8 @@ if plotit
     % tb = findall(hFig, 'Tag', 'FigureToolBar');
     hx.addCustomButton('off', @HighlightGenes, 'plotpicker-qqplot.gif', 'Highlight top HVGs');
     hx.addCustomButton('off', @in_HighlightSelectedGenes, 'xplotpicker-qqplot.gif', 'Highlight selected genes');
-    hx.addCustomButton('off', @ExportGeneNames, 'export.gif', 'Export Selected HVG gene names...');
-    hx.addCustomButton('off', @ExportTable, 'xexport.gif', 'Export HVG Table...');
+    hx.addCustomButton('off', @ExportGeneNames, 'floppy-disk-arrow-in.jpg', 'Export Selected HVG gene names...');
+    hx.addCustomButton('off', @ExportTable, 'xfloppy-disk-arrow-in.jpg', 'Export HVG Table...');
     hx.addCustomButton('off', @EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Enrichment analysis...');
     hx.addCustomButton('off', @ChangeAlphaValue, 'xplotpicker-andrewsplot.gif', 'Change MarkerFaceAlpha value');
     %hx.addCustomButton('off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');

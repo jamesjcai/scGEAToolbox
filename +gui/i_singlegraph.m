@@ -37,7 +37,7 @@ hx.addCustomButton('off', @ChangeLayout, 'noun_Layout_792775.gif', 'ChangeLayout
 hx.addCustomButton('off', @ChangeDirected, 'noun_directional_arrows_3497928.gif', 'ChangeDirected');
 hx.addCustomButton('off', @AnimateCutoff, 'noun_trim_3665385.gif', 'AnimateCutoff');
 hx.addCustomButton('off', @ChangeCutoff, 'noun_Pruners_2469297.gif', 'ChangeCutoff');
-hx.addCustomButton('off', @SaveAdj, 'export.gif', 'Export & save data');
+hx.addCustomButton('off', @SaveAdj, 'floppy-disk-arrow-in.jpg', 'Export & save data');
 hx.addCustomButton('on', @in_RefreshAll, "icon-mat-refresh-20.gif", "Refresh");
 hx.addCustomButton('on', @in_RefreshAll, "refresh.jpg", "Refresh");
 hx.addCustomButton( 'off', @in_NetworkVis2, "curve-array.jpg", "NetworkVis2");

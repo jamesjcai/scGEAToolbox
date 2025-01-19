@@ -132,7 +132,7 @@ if ~isempty(ttxt)
     title(ttxt);
 end
 hx.addCustomButton('off', @i_renamecat, 'guideicon.gif', 'Rename groups...');
-hx.addCustomButton('on', @i_savetable, 'export.gif', 'Export data...');
+hx.addCustomButton('on', @i_savetable, 'floppy-disk-arrow-in.jpg', 'Export data...');
 hx.addCustomButton('off', @i_resetcolor, 'plotpicker-geobubble2.gif', 'Reset Colormap');
 if nargout > 0, return; end
 hx.show(parentfig);

@@ -273,11 +273,11 @@ UserToolbarHandle = uitoolbar('Parent', FigureHandle);
 
 in_addbuttonpush(0, 0, [], [], "");
 in_addbuttonpush(0, 0, @gui.callback_MultiGroupingView, "visibility_18dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Multi-grouping View...");
-in_addbuttonpush(0, 0, @gui.callback_CrossTabulation, "analytics_18dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Cross tabulation");
-in_addbuttonpush(0, 0, @gui.callback_ShowGeneExprGroup, "NewPoints.gif", "Gene expression in groups");
+in_addbuttonpush(0, 0, @gui.callback_CrossTabulation, "full_stacked_bar_chart_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Cross tabulation");
+in_addbuttonpush(0, 0, @gui.callback_ShowGeneExprGroup, "dataset_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Gene expression in groups");
 in_addbuttonpush(0, 1, @gui.callback_Dotplot, "icon-mat-blur-linear-10.gif", "Gene Expression Dot Plot...");
 in_addbuttonpush(0, 0, @gui.callback_Heatmap, "icon-mat-apps-20.gif", "Gene Expression Heatmap...");
-in_addbuttonpush(0, 0, @gui.callback_ScatterStemPlot, "NewPoly.gif", "Gene Expression/Cell State Stem Plot...");
+in_addbuttonpush(0, 0, @gui.callback_ScatterStemPlot, "signal_cellular_pause_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Gene Expression/Cell State Stem Plot...");
 in_addbuttonpush(0, 0, @gui.callback_Violinplot, "violinplot.gif", "Gene Expression/Cell State Violin Plot...");
 in_addbuttonpush(0, 0, @gui.callback_ScatterCorrPlot, "icon-mat-blur-off-10a.gif", "Correlation Plot...");
 
@@ -285,19 +285,19 @@ in_addbuttonpush(0, 0, [], [], "");
 
 
 %in_addbuttonpush(0, 1, @in_CompareCellScoreBtwCls, "cellscore2.gif", "Cell score analysis--obtaining gene signature score for each cell");
-in_addbuttonpush(0, 1, @in_CompareCellScoreBtwCls, "barcode.jpg", "Cell score analysis--obtaining gene signature score for each cell");
+in_addbuttonpush(0, 1, @in_CompareCellScoreBtwCls, "barcode_scanner_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Cell score analysis--obtaining gene signature score for each cell");
 %in_addbuttonpush(0, 0, @gui.callback_GetCellSignatureMatrix, "icon-fa-connectdevelop-20.gif", "Cell state analysis--obtaining multiple gene signature scores to reveal functional state of cells");
-in_addbuttonpush(0, 0, @gui.callback_GetCellSignatureMatrix, "hexagon-dice.jpg", "Cell state analysis--obtaining multiple gene signature scores to reveal functional state of cells");
+in_addbuttonpush(0, 0, @gui.callback_GetCellSignatureMatrix, "hexagon_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Cell state analysis--obtaining multiple gene signature scores to reveal functional state of cells");
 
-in_addbuttonpush(0, 1, @gui.callback_DEGene2Groups, "plotpicker-boxplot.gif", "Differential expression (DE) analysis");
-in_addbuttonpush(0, 0, @gui.callback_DVGene2Groups, "plotpicker-andrewsplot.gif", "Differential variability (DV) analysis");
-in_addbuttonpush(0, 0, @gui.callback_DPGene2Groups, "plotpicker_noisepsd.gif", "Differential program (DP) analysis");
+in_addbuttonpush(0, 1, @gui.callback_DEGene2Groups, "graphic_eq_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Differential expression (DE) analysis");
+in_addbuttonpush(0, 0, @gui.callback_DVGene2Groups, "edit_audio_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Differential variability (DV) analysis");
+in_addbuttonpush(0, 0, @gui.callback_DPGene2Groups, "data_exploration_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Differential program (DP) analysis");
 in_addbuttonpush(0, 0, [], [], "");
 
 in_addbuttonpush(0, 1, @gui.callback_BuildGeneNetwork, "graph_3_18dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Build gene regulatory network");
 % in_addbuttonpush(0, 1, @gui.callback_BuildGeneNetwork, "noun_Network_691907.gif", "Build gene regulatory network");
 in_addbuttonpush(0, 0, @gui.callback_CompareGeneNetwork, "graph_5_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Compare two scGRNs");
-in_addbuttonpush(0, 1, {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
+in_addbuttonpush(0, 1, {@gui.i_savemainfig, 3}, "presentation.jpg", 'Save Figure to PowerPoint File...');
 gui.gui_3dcamera(DeftToolbarHandle, 'AllCells');
 pt = uitoggletool(DeftToolbarHandle);
 try
@@ -312,7 +312,7 @@ pt.Tag = "figToglColorbar";
 
 in_addbuttonpush(0, 0, @gui.callback_CloseAllOthers, "xmark-square.jpg", "Close all other figures");
 
-in_addbuttonpush(0, 0, {@gui.i_resizewin, FigureHandle}, 'scale-frame-enlarge.jpg', 'Resize Plot Window')
+in_addbuttonpush(0, 0, {@gui.i_resizewin, FigureHandle}, 'scale-frame-reduce.jpg', 'Resize Plot Window')
 % in_addbuttonpush(0, 0, {@gui.i_resizewin, FigureHandle}, 'HDF_pointx.gif', 'Resize Plot Window')
 
 
@@ -322,34 +322,20 @@ in_addbuttontoggle(1, 0, {@in_togglebtfun, @in_turnoffuserguiding, "icon-mat-unf
 % in_addbuttonpush(1, 0, @gui.callback_ShowGeneExpr, "perspective-view.jpg", "Select genes to show expression")
 
 in_addbuttonpush(1, 0, @gui.callback_ShowGeneExpr, "google-docs.jpg", "Select genes to show expression")
-
-%in_addbuttonpush(1, 0, @gui.callback_ShowGeneExpr, "orthogonal-view.jpg", "Select genes to show expression")
 in_addbuttonpush(1, 0, @in_ShowCellStates, "bookmark-book.jpg", "Show cell states")
-%in_addbuttonpush(1, 0, @in_ShowCellStates, "list2.gif", "Show cell states")
-% in_addbuttonpush(1, 0, @in_SelectCellsByQC, "plotpicker-effects.gif", "Filter genes & cells")
 in_addbuttonpush(1, 0, @in_SelectCellsByQC, "filter-alt.jpg", "Filter genes & cells")
 
-
 in_addbuttonpush(1, 1, @in_labelcellgroups, "label.jpg", "Label cell groups");
-% in_addbuttontoggle(1, 1, {@in_togglebtfun, @in_labelcellgroups, "icon-fa-tag-10b.gif", "icon-fa-tags-10b.gif", false, "Label cell groups"});
 in_addbuttonpush(1, 0, @in_Brushed2NewCluster, "substract.jpg", "Add brushed cells to a new group")
 in_addbuttonpush(1, 0, @in_Brushed2MergeClusters, "union.jpg", "Merge brushed cells to same group")
 
-
 in_addbuttonpush(1, 0, @in_RenameCellTypeBatchID, "edit.jpg", "Rename cell type or batch ID");
-%in_addbuttonpush(1, 0, @in_RenameCellTypeBatchID, "plotpicker-scatterhist.gif", "Rename cell type or batch ID");
-% in_addbuttonpush(1, 0, @in_SingleClickSolution, "icon-mat-fingerprint-10.gif", "Single-click cell type annotation")
 in_addbuttonpush(1, 0, @in_SingleClickSolution, "apple-swift.jpg", "Single-click cell type annotation")
 
 
 in_addbuttonpush(1, 0, [], [], "");
 
 in_addbuttonpush(1, 1, @in_ClusterCellsS, "bubble_chart_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Clustering using cell embedding (S)")
-
-%in_addbuttonpush(1, 1, @in_ClusterCellsS, "plotpicker-dendrogram.gif", "Clustering using cell embedding (S)")
-% in_addbuttonpush(1, 0, @in_ClusterCellsX, "icon-mw-cluster-10.gif", "Clustering using expression matrix (X)")
-
-
 in_addbuttonpush(1, 0, {@in_DetermineCellTypeClustersGeneral, true}, "auto_transmission_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Assign cell types to groups")
 
 %in_addbuttonpush(1, 0, {@in_DetermineCellTypeClustersGeneral, true}, "plotpicker-contour.gif", "Assign cell types to groups")
@@ -366,7 +352,6 @@ in_addbuttonpush(1, 0, @gui.callback_SelectCellsByClass, "checklist_rtl_18dp_000
 in_addbuttonpush(1, 0, @in_DeleteSelectedCells, "variable_remove_18dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Delete brushed/selected cells");
 
 %in_addbuttonpush(1, 0, @in_DeleteSelectedCells, "plotpicker-qqplot.gif", "Delete brushed/selected cells");
-%in_addbuttonpush(1, 0, @gui.callback_SaveX, "export.gif", "Export & save data");
 in_addbuttonpush(1, 0, @gui.callback_SaveX, "floppy-disk.jpg", "Export & save data");
 
 in_addbuttonpush(1, 1, @in_EmbeddingAgain, "cinema-old.jpg", "Embedding (tSNE, UMP, PHATE)");
@@ -387,8 +372,8 @@ if ~isempty(fx) && isvalid(fx), fxfun(fx, 0.6); end
 in_addbuttonpush(2, 0, @in_turnonuserguiding, "icon-fa-thumb-tack-10.gif", "Turn on user guiding toolbar");
 in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_SelectCellsByQC, "icon-mat-filter-1-10.gif", "filter-alt.jpg", true, "Filter genes & cells"});
 in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_EmbeddingAgain, "icon-mat-filter-2-10.gif", "cinema-old.jpg", true, "Embedding (tSNE, UMP, PHATE)"});
-in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_ClusterCellsS, "icon-mat-filter-3-10.gif", "spiral.jpg", true, "Clustering using embedding S"});
-in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_DetermineCellTypeClustersGeneral, "icon-mat-filter-4-10.gif", "flower.jpg", true, "Assign cell types to groups"});
+in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_ClusterCellsS, "icon-mat-filter-3-10.gif", "bubble_chart_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", true, "Clustering using embedding S"});
+in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_DetermineCellTypeClustersGeneral, "icon-mat-filter-4-10.gif", "auto_transmission_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", true, "Assign cell types to groups"});
 in_addbuttontoggle(2, 0, {@in_togglebtfun, @gui.callback_SaveX, "icon-mat-filter-5-10.gif", "floppy-disk.jpg", true, "Export & save data"});
 
 if ~isempty(fx) && isvalid(fx), fxfun(fx, 0.8); end
@@ -1622,14 +1607,21 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
         end
     end
 
-    function in_Brushed2NewCluster(~, ~)
-        [iscelltype] = in_pickcelltypeclusterid('Make a new cluster or new cell type group out of brushed cells?');
-        if isempty(iscelltype), return; end
+    function [hasbrushed] = i_checkbrusheddata
         ptsSelected = logical(h.BrushData.');
         if ~any(ptsSelected)
+            hasbrushed = false;
             uiwait(warndlg("No cells are selected.",''));
-            return;
+        else
+            hasbrushed = true;
         end
+    end
+
+    function in_Brushed2NewCluster(~, ~)
+        [hasbrushed] = i_checkbrusheddata;
+        if ~hasbrushed, return; end
+        [iscelltype] = in_pickcelltypeclusterid('Make a new cluster or new cell type group out of brushed cells?');
+        if isempty(iscelltype), return; end
         if iscelltype
             n = sum(contains(unique(sce.c_cell_type_tx), "New cell type"));
             if n > 0
@@ -1657,13 +1649,10 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
     end
 
     function in_Brushed2MergeClusters(~, ~)
+        [hasbrushed] = i_checkbrusheddata;
+        if ~hasbrushed, return; end
         [iscelltype] = in_pickcelltypeclusterid('Merge brushed cells into same cluster or same cell type?');
         if isempty(iscelltype), return; end
-        ptsSelected = logical(h.BrushData.');
-        if ~any(ptsSelected)
-            uiwait(warndlg("No cells are brushed.",''));
-            return;
-        end
         if iscelltype
             c_members = unique(sce.c_cell_type_tx(ptsSelected));
         else

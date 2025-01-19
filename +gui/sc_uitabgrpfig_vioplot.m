@@ -53,12 +53,12 @@ end
 tabgp.SelectionChangedFcn = @displaySelection;
 
 
-hx.addCustomButton('off',  @i_genecards, 'fvtool_fdalinkbutton.gif', 'GeneCards...');
+hx.addCustomButton('off',  @i_genecards, 'www.jpg', 'GeneCards...');
 % hx.addCustomButton('on', {@i_PickColorMap, c}, 'plotpicker-compass.gif', 'Pick new color map...');
 hx.addCustomButton('off', @i_showbarplot, "plotpicker-priceandvol.gif", 'Switch to Bar Plot');
 
-hx.addCustomButton('on', @in_savedata, 'export.gif', 'Export summary data...');
-hx.addCustomButton('off', @i_savedata_alltab, 'export.gif', 'Export individual cell data... (new format)');
+hx.addCustomButton('on', @in_savedata, 'floppy-disk-arrow-in.jpg', 'Export summary data...');
+hx.addCustomButton('off', @i_savedata_alltab, 'floppy-disk-arrow-in.jpg', 'Export individual cell data... (new format)');
 
 hx.addCustomButton('on', @in_testdata, 'icon-fa-stack-exchange-10.gif', 'ANOVA/T-test...');
 hx.addCustomButton('off', @i_addsamplesize, "icon-mat-blur-linear-10.gif", 'Add Sample Size');

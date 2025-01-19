@@ -67,7 +67,7 @@ for k=1:2
     in_plot2;
 end
 
-hx.addCustomButton('off', @i_saveCrossTable, "export.gif", 'Save cross-table');
+hx.addCustomButton('off', @i_saveCrossTable, "floppy-disk-arrow-in.jpg", 'Save cross-table');
 gui.gui_waitbar(fw);
 hx.show(FigureHandle);
 

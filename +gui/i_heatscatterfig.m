@@ -15,7 +15,7 @@ colorbar;
 
 zlabel('Score value')
 title(strrep(csname, '_', '\_'));
-hx.addCustomButton('off', @in_saveScoreTable, "export.gif", 'Save cell score/gene expression to table');
+hx.addCustomButton('off', @in_saveScoreTable, "floppy-disk-arrow-in.jpg", 'Save cell score/gene expression to table');
 hx.addCustomButton('on', @in_geneheatmapx, 'greenarrowicon.gif', 'Heatmap');
 hx.addCustomButton('off', @in_genedotplot, 'greencircleicon.gif', 'Dot plot');
 hx.addCustomButton('on', @in_viewgenenames, 'HDF_point.gif', 'Show gene names');

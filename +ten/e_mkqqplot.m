@@ -11,7 +11,7 @@ qqplot(a, T.FC, pd);
 [~, idx] = sort(T.FC);
 dt = datacursormode;
 dt.UpdateFcn = {@i_myupdatefcn1x, T.genelist(idx)};
-hx.addCustomButton('off', @i_savetable, 'export.gif', 'Export data...');
+hx.addCustomButton('off', @i_savetable, 'floppy-disk-arrow-in.jpg', 'Export data...');
 hx.show();
 
 
