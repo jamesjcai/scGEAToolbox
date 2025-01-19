@@ -46,6 +46,7 @@ end
 
         bgColor = get(toolbarHdl.Parent, 'Color');
 
+        % bgColor = [0.9569    0.9569    0.9569];
         % bgColor = [0.9400    0.9400    0.9400];
         % transparentIcon = zeros([iconSize, 3]); % RGB values all set to zero (black)
         transparentIcon = repmat(reshape(bgColor, [1, 1, 3]), iconSize); % Match background
