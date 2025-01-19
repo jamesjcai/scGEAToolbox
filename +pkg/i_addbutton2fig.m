@@ -1,5 +1,20 @@
 function [pt] = i_addbutton2fig(toolbarHdl, sepTag, callbackFnc, imgFil, tooltipTxt)
 
+% i_addbutton2fig - Add a button to a figure toolbar
+%
+% Syntax:
+%   pt = i_addbutton2fig(toolbarHdl, sepTag, callbackFnc, imgFil, tooltipTxt)
+%
+% Inputs:
+%   toolbarHdl - Handle to the target toolbar
+%   sepTag - (Optional) 'on' or 'off' for visual separation (default: 'off')
+%   callbackFnc - (Optional) Callback function or name (default: "version")
+%   imgFil - (Optional) Image filename for button icon (default: empty)
+%   tooltipTxt - (Optional) Tooltip text for the button (default: "Test")
+%
+% Outputs:
+%   pt - Handle to the created push tool
+
 mfolder = fileparts(mfilename('fullpath'));
 
 if nargin < 2 || isempty(sepTag), sepTag = 'off'; end
@@ -10,6 +25,7 @@ if nargin < 5 || isempty(tooltipTxt), tooltipTxt = "Test"; end
 if ischar(callbackFnc) || isstring(callbackFnc)
     callbackFnc = str2func(callbackFnc);
 end
+
 
     if isempty(imgFil)
         % % Add a "spacer" by using an invisible push tool
@@ -28,7 +44,9 @@ end
         
         % bgColor = get(hFig, 'Color'); % Figure background color matches toolbar
 
-        bgColor = [0.9400    0.9400    0.9400];
+        bgColor = get(toolbarHdl.Parent, 'Color');
+
+        % bgColor = [0.9400    0.9400    0.9400];
         % transparentIcon = zeros([iconSize, 3]); % RGB values all set to zero (black)
         transparentIcon = repmat(reshape(bgColor, [1, 1, 3]), iconSize); % Match background
         pt = uipushtool(toolbarHdl, ...
@@ -36,12 +54,27 @@ end
             'TooltipString', '');
     else
         pt = uipushtool(toolbarHdl, 'Separator', sepTag);
+
+        imgPath = fullfile(mfolder, '..', 'resources', 'Images', imgFil);
+        if ~isfile(imgPath)
+            warning('Image file "%s" not found. Using a random icon.', imgPath);
+        end
+
         try
-            [ptImage, map] = imread(fullfile(mfolder, '..', 'resources', 'Images', imgFil));
+            [ptImage, map] = imread(imgPath);
             if ~isempty(map), ptImage = ind2rgb(ptImage, map); end
-        catch
+        catch ME
+            warning('Failed to load image "%s". Using random icon instead.\nError: %s', imgPath, ME.message);
             ptImage = rand(16, 16, 3);
         end
+        
+        
+        % try
+        %     [ptImage, map] = imread(fullfile(mfolder, '..', 'resources', 'Images', imgFil));
+        %     if ~isempty(map), ptImage = ind2rgb(ptImage, map); end
+        % catch
+        %     ptImage = rand(16, 16, 3);
+        % end
         if size(ptImage, 3) == 1, ptImage = cat(3, ptImage, ptImage, ptImage); end
         
         pt.CData = ptImage;
