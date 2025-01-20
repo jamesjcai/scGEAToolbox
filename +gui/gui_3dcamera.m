@@ -15,10 +15,7 @@ end
 pt = uipushtool(tb, 'Separator', 'on');
 
 try
-    mfolder = fileparts(mfilename('fullpath'));
-    % [ptImage, map] = imread(fullfile(mfolder, '..', 'resources', 'Images', 'camera.gif'));
-
-           
+    mfolder = fileparts(mfilename('fullpath')); 
     [ptImage, map] = imread(fullfile(mfolder, '..', 'resources', 'Images', 'camera.jpg'));
     if ~isempty(map), ptImage = ind2rgb(ptImage, map); end
 catch

@@ -31,16 +31,27 @@ xy = [];
 
 
 %hx.ptvenable(logical([1 1 1 1 1 0 1 1 1 1 0]));
-hx.addCustomButton('off', @ChangeWeight, 'noun_Weight_2243621.gif', 'ChangeWeight');
+
 hx.addCustomButton('off', @ChangeFontSize, 'noun_font_size_591141.gif', 'ChangeFontSize');
+hx.addCustomButton('off', @ChangeWeight, 'weight_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'ChangeWeight');
 hx.addCustomButton('off', @ChangeLayout, 'noun_Layout_792775.gif', 'ChangeLayout');
 hx.addCustomButton('off', @ChangeDirected, 'noun_directional_arrows_3497928.gif', 'ChangeDirected');
 hx.addCustomButton('off', @AnimateCutoff, 'noun_trim_3665385.gif', 'AnimateCutoff');
-hx.addCustomButton('off', @ChangeCutoff, 'noun_Pruners_2469297.gif', 'ChangeCutoff');
+hx.addCustomButton('off', @ChangeCutoff, 'filter-alt.jpg', 'ChangeCutoff');
 hx.addCustomButton('off', @SaveAdj, 'floppy-disk-arrow-in.jpg', 'Export & save data');
-hx.addCustomButton('on', @in_RefreshAll, "icon-mat-refresh-20.gif", "Refresh");
 hx.addCustomButton('on', @in_RefreshAll, "refresh.jpg", "Refresh");
-hx.addCustomButton( 'off', @in_NetworkVis2, "curve-array.jpg", "NetworkVis2");
+
+
+%hx.addCustomButton('off', @ChangeWeight, 'noun_Weight_2243621.gif', 'ChangeWeight');
+%hx.addCustomButton('off', @ChangeFontSize, 'noun_font_size_591141.gif', 'ChangeFontSize');
+%hx.addCustomButton('off', @ChangeLayout, 'noun_Layout_792775.gif', 'ChangeLayout');
+%hx.addCustomButton('off', @ChangeDirected, 'noun_directional_arrows_3497928.gif', 'ChangeDirected');
+%hx.addCustomButton('off', @AnimateCutoff, 'noun_trim_3665385.gif', 'AnimateCutoff');
+%hx.addCustomButton('off', @ChangeCutoff, 'noun_Pruners_2469297.gif', 'ChangeCutoff');
+%hx.addCustomButton('off', @SaveAdj, 'floppy-disk-arrow-in.jpg', 'Export & save data');
+%hx.addCustomButton('on', @in_RefreshAll, "icon-mat-refresh-20.gif", "Refresh");
+%hx.addCustomButton('on', @in_RefreshAll, "refresh.jpg", "Refresh");
+hx.addCustomButton( 'on', @in_NetworkVis2, "curve-array.jpg", "NetworkVis2");
 hx.addCustomButton( 'off', @ix_networkvis, "ease-curve-control-points.jpg", "NetworkVis2");
 
 title(h1,figname);

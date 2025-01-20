@@ -61,14 +61,9 @@ box on
 szc = cumsum(szgn);
 for k = 1:length(szc), xline(szc(k)+0.5, 'y-'); end
 
-%hx.addCustomButton('on', {@gui.i_pickcolormap, c}, 'plotpicker-compass.gif', 'Pick new color map...');
-%hx.addCustomButton('off', @gui.i_changefontsize, 'noun_font_size_591141.gif', 'ChangeFontSize');
 hx.addCustomButton('on', @i_renamecat, 'guideicon.gif', 'Rename groups...');
-%hx.addCustomButton('on', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-%hx.addCustomButton('on', @gui.i_invertcolor, 'plotpicker-comet.gif', 'Invert colors');
 hx.addCustomButton('off', @i_resetcolor, 'plotpicker-geobubble2.gif', 'Reset color map');
 hx.addCustomButton('off', @i_flipxy, 'xplotpicker-geobubble2.gif', 'Flip XY');
-%hx.addCustomButton('on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
 
 hx.show(parentfig);
 

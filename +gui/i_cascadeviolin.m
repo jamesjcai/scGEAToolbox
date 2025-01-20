@@ -26,7 +26,7 @@ for k = 1:length(glist)
     hx.addCustomButton('off', {@in_savedata, y, thisc}, ...
         'floppy-disk-arrow-in.jpg', 'Export data...');
     hx.addCustomButton('off', {@i_invertcolor, ax1, colorit, y, thisc, grouporder}, ...
-        "xpowerpoint.gif", 'Switch to BW');
+        "gradient_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", 'Switch to BW');
     P = get(hFig, 'Position');
     set(hFig, 'Position', [P(1) - 20 * k, P(2) - 20 * k, P(3), P(4)]);
     hFig.Position(3) = hFig.Position(3) * 2.2;

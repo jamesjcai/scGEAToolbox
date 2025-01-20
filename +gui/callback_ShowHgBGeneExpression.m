@@ -33,7 +33,7 @@ if any(idx)
     gui.i_stemscatter(sce.s, ci);
 
     title(ttxt);
-    hx.addCustomButton('off', {@i_saveM, ci}, 'greencircleicon.gif', ...
+    hx.addCustomButton('off', {@i_saveM, ci}, 'floppy-disk-arrow-in.jpg', ...
         'Save marker gene map...');
     hx.show(FigureHandle);    
 else

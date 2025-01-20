@@ -347,7 +347,7 @@ in_addbuttonpush(1, 1, @gui.callback_Brush4Markers, "medal1st.jpg", "Marker gene
 in_addbuttonpush(1, 0, @gui.callback_FindAllMarkers, "grain_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Marker gene heatmap");
 in_addbuttonpush(1, 0, [], [], "");
 in_addbuttonpush(1, 1, @gui.callback_ShowClustersPop, "view-grid.jpg", "Show cell clusters/groups individually");
-in_addbuttonpush(1, 0, @gui.callback_SelectCellsByClass, "checklist_rtl_18dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Select cells by class/group && open in new window");
+in_addbuttonpush(1, 0, @gui.callback_SelectCellsByClass, "checklist_rtl_18dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Select cells by class/group & open in new window");
 
 in_addbuttonpush(1, 0, @in_DeleteSelectedCells, "variable_remove_18dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Delete brushed/selected cells");
 
