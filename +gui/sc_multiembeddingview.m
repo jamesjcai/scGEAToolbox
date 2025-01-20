@@ -21,8 +21,8 @@ end
     hBr = brush(hFig);
     hBr.ActionPostCallback = {@onBrushAction, axesv};
 
-    hx.addCustomButton('off',  @in_showgeneexp, 'list.gif', 'Select a gene to show expression...');
-    hx.addCustomButton('off',  @in_showcellstate, 'list2.gif', 'Select a gene to show expression...');
+    hx.addCustomButton('off',  @in_showgeneexp, 'google-docs.jpg', 'Select a gene to show expression...');
+    hx.addCustomButton('off',  @in_showcellstate, 'bookmark-book.jpg', 'Show cell state...');
         
     hx.show(parentfig);
 

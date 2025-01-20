@@ -54,19 +54,15 @@ tabgp.SelectionChangedFcn = @displaySelection;
 
 
 hx.addCustomButton('off',  @i_genecards, 'www.jpg', 'GeneCards...');
-% hx.addCustomButton('on', {@i_PickColorMap, c}, 'plotpicker-compass.gif', 'Pick new color map...');
-hx.addCustomButton('off', @i_showbarplot, "plotpicker-priceandvol.gif", 'Switch to Bar Plot');
-
-hx.addCustomButton('on', @in_savedata, 'floppy-disk-arrow-in.jpg', 'Export summary data...');
+hx.addCustomButton('off', @i_showbarplot, "bar_chart_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", 'Switch to Bar Plot');
+hx.addCustomButton('on', @in_savedata, 'floppy-disk.jpg', 'Export summary data...');
 hx.addCustomButton('off', @i_savedata_alltab, 'floppy-disk-arrow-in.jpg', 'Export individual cell data... (new format)');
-
-hx.addCustomButton('on', @in_testdata, 'icon-fa-stack-exchange-10.gif', 'ANOVA/T-test...');
-hx.addCustomButton('off', @i_addsamplesize, "icon-mat-blur-linear-10.gif", 'Add Sample Size');
-hx.addCustomButton('off', @i_invertcolor, "plotpicker-pie.gif", 'Switch BW/Color');
-hx.addCustomButton('off', @i_reordersamples, "plotpicker-errorbar.gif", 'Reorder Samples');
-hx.addCustomButton('off', @i_selectsamples, "plotpicker-errorbarx.gif", 'Select Samples');
-hx.addCustomButton('off', @i_sortbymean, "plotpicker-cra.gif", 'Sort Samples by Median');
-%hx.addCustomButton('on', @i_viewgenenames, 'HDF_point.gif', 'Show Gene Names');
+hx.addCustomButton('on', @in_testdata, 'mw-pickaxe-mining.jpg', 'ANOVA/T-test...');
+hx.addCustomButton('off', @i_addsamplesize, "unjoin3d.jpg", 'Add Sample Size');
+hx.addCustomButton('off', @i_invertcolor, "align-top-box-solid.jpg", 'Switch BW/Color');
+hx.addCustomButton('off', @i_reordersamples, "rebase_edit_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", 'Reorder Samples');
+hx.addCustomButton('off', @i_selectsamples, "edit.jpg", 'Select Samples');
+hx.addCustomButton('off', @i_sortbymean, "reorder.jpg", 'Sort Samples by Median');
 
 hx.show(parentfig);
 gui.gui_waitbar(fw);
@@ -251,6 +247,7 @@ ccx = true;
     function i_sortbymean(~, ~)
         [~,idx]=ismember(focalg, tabnamelist);       
         [cx, cLx] = grp2idx(thisc);
+
         a = zeros(max(cx), 1);
         for ks = 1:max(cx)
             a(ks) = median(y{idx}(cx == ks));
@@ -263,11 +260,34 @@ ccx = true;
             isdescend = true;
         end
         cLx_sorted = cLx(idxx);
-        delete(ax0{idx});
-        ax0{idx} = axes('parent',tab{idx});       
-        cLorder = cLx_sorted;
-        pkg.i_violinplot(y{idx}, thisc, colorit, cLorder);
-        title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));  
+        
+        if isequal(cLx, cLx_sorted)
+           helpdlg('Groups has already been sorted.', '');
+            %     a = zeros(max(cx), 1);
+            %     for ks = 1:max(cx)
+            %         a(ks) = max(y{idx}(cx == ks));
+            %     end
+            %     if isdescend
+            %         [~, idxx] = sort(a, 'ascend');
+            %         isdescend = false;
+            %     else
+            %         [~, idxx] = sort(a, 'descend');
+            %         isdescend = true;
+            %     end
+            %     cLx_sorted = cLx(idxx);
+            % 
+            % delete(ax0{idx});
+            % ax0{idx} = axes('parent',tab{idx});       
+            % cLorder = cLx_sorted;
+            % pkg.i_violinplot(y{idx}, thisc, colorit, cLorder);
+            % title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));
+        else
+            delete(ax0{idx});
+            ax0{idx} = axes('parent',tab{idx});       
+            cLorder = cLx_sorted;
+            pkg.i_violinplot(y{idx}, thisc, colorit, cLorder);
+            title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));
+        end
     end
 
     function i_reordersamples(~, ~)

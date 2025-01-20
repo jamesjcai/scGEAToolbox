@@ -1,7 +1,9 @@
 function [requirerefresh, highlightindex] = callback_SelectCellsByQC(src)
 
 mfolder = fileparts(mfilename('fullpath'));
-
+highlightindex = [];
+needremove = false;
+requirerefresh = false;
 
 [FigureHandle, sce] = gui.gui_getfigsce(src);
 
@@ -288,7 +290,7 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
             ApprovedSymbol = string(T.GeneName);
             [idx] = ~ismember(upper(sce.g), upper(ApprovedSymbol));
             if any(idx)
-                answer=questdlg(sprintf('Remove %d genes lacking approved symbols?', sum(idx)));
+                answer = questdlg(sprintf('Remove %d genes lacking approved symbols?', sum(idx)));
                 switch answer
                     case 'Yes'
                         fw = gui.gui_waitbar;

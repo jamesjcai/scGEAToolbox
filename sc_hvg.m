@@ -145,8 +145,6 @@ if plotit
     hx.addCustomButton('off', @ExportTable, 'xfloppy-disk-arrow-in.jpg', 'Export HVG Table...');
     hx.addCustomButton('off', @EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Enrichment analysis...');
     hx.addCustomButton('off', @ChangeAlphaValue, 'xplotpicker-andrewsplot.gif', 'Change MarkerFaceAlpha value');
-    %hx.addCustomButton('off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-    %hx.addCustomButton('on', {@gui.i_resizewin, hFig}, 'HDF_pointx.gif', 'Resize Plot Window');
     h = scatter(hAx1, log(u), log(cv2), 'filled', 'MarkerFaceAlpha', .1);
     hold on
     % scatter(log(u(top100idx)),log(cv2(top100idx)),'x');

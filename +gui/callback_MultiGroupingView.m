@@ -43,7 +43,8 @@ function callback_MultiGroupingView(src, ~)
                 title(strrep(clabelv{k},'_','\_'));
                 cmapv{k} = colormap;
             end
-            hx.addCustomButton('on', @in_showclustlabel, "plotpicker-scatter.gif", "Show cluster labels");
+
+            hx.addCustomButton('off', @in_showclustlabel, "label.jpg", "Show cluster labels");
             hx.show(FigureHandle);
 
             dt = datacursormode(hFig);

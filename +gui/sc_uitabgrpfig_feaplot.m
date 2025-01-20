@@ -72,13 +72,11 @@ tabgp.SelectionChangedFcn=@displaySelection;
 
 hx.addCustomButton('off',  @i_genecards, 'www.jpg', 'GeneCards...');
 %hx.addCustomButton('on', {@i_PickColorMap, c}, 'plotpicker-compass.gif', 'Pick new color map...');
-
 %hx.addCustomButton('off', @i_RescaleExpr, 'IMG00074.GIF', 'Rescale expression level [log2(x+1)]');
 %hx.addCustomButton('off', @i_ResetExpr, 'plotpicker-geobubble2.gif', 'Reset expression level');
 %hx.addCustomButton('off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 
-hx.addCustomButton('off', @in_savedata, "powerpointx.gif", 'Save Gene List...');
-
+hx.addCustomButton('off', @in_savedata, "floppy-disk-arrow-in.jpg", 'Save Gene List...');
 hx.show(parentfig);
 
 

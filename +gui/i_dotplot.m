@@ -131,9 +131,9 @@ if ~isempty(ttxt)
     ttxt=strrep(ttxt,'_','\_');
     title(ttxt);
 end
-hx.addCustomButton('off', @i_renamecat, 'guideicon.gif', 'Rename groups...');
-hx.addCustomButton('on', @i_savetable, 'floppy-disk-arrow-in.jpg', 'Export data...');
-hx.addCustomButton('off', @i_resetcolor, 'plotpicker-geobubble2.gif', 'Reset Colormap');
+hx.addCustomButton('off', @i_renamecat, 'edit.jpg', 'Rename groups...');
+hx.addCustomButton('off', @i_savetable, 'floppy-disk-arrow-in.jpg', 'Export data...');
+hx.addCustomButton('off', @i_resetcolor, 'refresh_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'Reset Colormap');
 if nargout > 0, return; end
 hx.show(parentfig);
 

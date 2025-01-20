@@ -51,10 +51,9 @@ for k = 1:length(szc)
 end
 
 
-hx.addCustomButton('on', @i_renamecat, 'guideicon.gif', 'Rename groups...');
-hx.addCustomButton('off', @i_resetcolor, 'plotpicker-geobubble2.gif', 'Reset color map');
+hx.addCustomButton('off', @i_renamecat, 'edit.jpg', 'Rename groups...');
+hx.addCustomButton('off', @i_resetcolor, 'refresh_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'Reset color map');
 hx.addCustomButton('off', @i_flipxy, 'mat-wrap-text.jpg', 'Flip XY');
-
 hx.addCustomButton('on', @i_summarymap, 'HDF_object01.gif', 'Summary map...');
 hx.addCustomButton('off', @i_summarymapT, 'HDF_object02.gif', 'Summary map, transposed...');
 hx.addCustomButton('on', @in_savetable, 'floppy-disk-arrow-in.jpg', 'Export data...');
@@ -163,7 +162,7 @@ Z = zeros(length(glist), length(cL));
         t = array2table(Z, 'VariableNames', cL, 'RowNames', MX);
         % writetable(t,'aaa.csv','WriteRowNames',true);
         hx1.addCustomButton('off', {@i_exporttable, t}, 'floppy-disk-arrow-in.jpg', 'Save table...');
-        hx1.addCustomButton('off', @i_resetcolor, 'plotpicker-geobubble2.gif', 'Reset color map');
+        hx1.addCustomButton('off', @i_resetcolor, 'refresh_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'Reset color map');
         % disp('https://software.broadinstitute.org/morpheus/')
         hx1.show(hFig);
     end
@@ -222,8 +221,8 @@ Z = zeros(length(glist), length(cL));
         %         s.XAxis.TickLabelRotation=45;
         % writetable(t,'aaa.csv','WriteRowNames',true);
         hx2.addCustomButton('off', {@i_exporttable, t}, 'floppy-disk-arrow-in.jpg', 'Save table...');
-        hx2.addCustomButton('on', {@gui.i_pickcolormap, c}, 'plotpicker-compass.gif', 'Pick new color map...');
-        hx2.addCustomButton('off', @i_resetcolor, 'plotpicker-geobubble2.gif', 'Reset color map');
+        hx2.addCustomButton('off', {@gui.i_pickcolormap, c}, 'color-wheel.jpg', 'Pick new color map...');
+        hx2.addCustomButton('off', @i_resetcolor, 'refresh_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'Reset color map');
         hx2.show(hFig);
     end
 

@@ -280,22 +280,14 @@ in_addbuttonpush(0, 0, @gui.callback_Heatmap, "icon-mat-apps-20.gif", "Gene Expr
 in_addbuttonpush(0, 0, @gui.callback_ScatterStemPlot, "signal_cellular_pause_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Gene Expression/Cell State Stem Plot...");
 in_addbuttonpush(0, 0, @gui.callback_Violinplot, "violinplot.gif", "Gene Expression/Cell State Violin Plot...");
 in_addbuttonpush(0, 0, @gui.callback_ScatterCorrPlot, "icon-mat-blur-off-10a.gif", "Correlation Plot...");
-
 in_addbuttonpush(0, 0, [], [], "");
-
-
-%in_addbuttonpush(0, 1, @in_CompareCellScoreBtwCls, "cellscore2.gif", "Cell score analysis--obtaining gene signature score for each cell");
 in_addbuttonpush(0, 1, @in_CompareCellScoreBtwCls, "barcode_scanner_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Cell score analysis--obtaining gene signature score for each cell");
-%in_addbuttonpush(0, 0, @gui.callback_GetCellSignatureMatrix, "icon-fa-connectdevelop-20.gif", "Cell state analysis--obtaining multiple gene signature scores to reveal functional state of cells");
 in_addbuttonpush(0, 0, @gui.callback_GetCellSignatureMatrix, "hexagon_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Cell state analysis--obtaining multiple gene signature scores to reveal functional state of cells");
-
 in_addbuttonpush(0, 1, @gui.callback_DEGene2Groups, "graphic_eq_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Differential expression (DE) analysis");
 in_addbuttonpush(0, 0, @gui.callback_DVGene2Groups, "edit_audio_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Differential variability (DV) analysis");
 in_addbuttonpush(0, 0, @gui.callback_DPGene2Groups, "data_exploration_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Differential program (DP) analysis");
 in_addbuttonpush(0, 0, [], [], "");
-
 in_addbuttonpush(0, 1, @gui.callback_BuildGeneNetwork, "graph_3_18dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Build gene regulatory network");
-% in_addbuttonpush(0, 1, @gui.callback_BuildGeneNetwork, "noun_Network_691907.gif", "Build gene regulatory network");
 in_addbuttonpush(0, 0, @gui.callback_CompareGeneNetwork, "graph_5_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Compare two scGRNs");
 in_addbuttonpush(0, 1, {@gui.i_savemainfig, 3}, "presentation.jpg", 'Save Figure to PowerPoint File...');
 gui.gui_3dcamera(DeftToolbarHandle, 'AllCells');
@@ -313,14 +305,7 @@ pt.Tag = "figToglColorbar";
 in_addbuttonpush(0, 0, @gui.callback_CloseAllOthers, "xmark-square.jpg", "Close all other figures");
 
 in_addbuttonpush(0, 0, {@gui.i_resizewin, FigureHandle}, 'scale-frame-reduce.jpg', 'Resize Plot Window')
-% in_addbuttonpush(0, 0, {@gui.i_resizewin, FigureHandle}, 'HDF_pointx.gif', 'Resize Plot Window')
-
-
-
 in_addbuttontoggle(1, 0, {@in_togglebtfun, @in_turnoffuserguiding, "icon-mat-unfold-more-10.gif", "icon-mat-unfold-less-10.gif", false, "Turn on/off user onboarding toolbar"});
-% in_addbuttonpush(1, 0, @gui.callback_ShowGeneExpr, "list.gif", "Select genes to show expression")
-% in_addbuttonpush(1, 0, @gui.callback_ShowGeneExpr, "perspective-view.jpg", "Select genes to show expression")
-
 in_addbuttonpush(1, 0, @gui.callback_ShowGeneExpr, "google-docs.jpg", "Select genes to show expression")
 in_addbuttonpush(1, 0, @in_ShowCellStates, "bookmark-book.jpg", "Show cell states")
 in_addbuttonpush(1, 0, @in_SelectCellsByQC, "filter-alt.jpg", "Filter genes & cells")
@@ -340,8 +325,6 @@ in_addbuttonpush(1, 0, {@in_DetermineCellTypeClustersGeneral, true}, "auto_trans
 
 %in_addbuttonpush(1, 0, {@in_DetermineCellTypeClustersGeneral, true}, "plotpicker-contour.gif", "Assign cell types to groups")
 in_addbuttonpush(1, 0, @in_Brush4Celltypes, "color-picker.jpg", "Assign cell type to selected cells");
-
-
 in_addbuttonpush(1, 1, @gui.callback_Brush4Markers, "medal1st.jpg", "Marker genes of brushed cells");
 %in_addbuttonpush(1, 1, @gui.callback_Brush4Markers, "plotpicker-kagi.gif", "Marker genes of brushed cells");
 in_addbuttonpush(1, 0, @gui.callback_FindAllMarkers, "grain_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Marker gene heatmap");
