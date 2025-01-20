@@ -70,11 +70,14 @@ oldidx = 0;
     end
 
     function ix_networkvis(~, ~)
+        fw=gui.gui_waitbar;
         gui.i_networkvis(G1, getxy, true, p1.NodeFontSize, hFig);
+        gui.gui_waitbar(fw);
     end
 
 
     function in_NetworkVis2(~, ~)
+        fw=gui.gui_waitbar;
         %figure('SizeChangedFcn', @sbar);
         h = gui.myFigure;        
         gplot(G1.adjacency, [p1.XData' p1.YData'], '-k');
@@ -97,6 +100,7 @@ oldidx = 0;
                 'HorizontalAlignment','center', ...
                 'VerticalAlignment','middle');             
         end
+        gui.gui_waitbar(fw);
         h.show(hFig);
 
         % function sbar(~, ~)

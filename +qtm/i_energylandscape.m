@@ -13,7 +13,7 @@ for i = 1:numPoints
 end
 
 % Step 4: Build KNN graph
-k = 3; % Number of nearest neighbors
+k = 6; % Number of nearest neighbors
 knnGraph = zeros(numPoints); % Adjacency matrix for KNN graph
 for i = 1:numPoints
     [~, sortedIndices] = sort(distanceMatrix(i, :)); % Sort by distance
