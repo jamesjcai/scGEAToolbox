@@ -3,6 +3,7 @@ function [hFig] = sc_simpleabout(parentfig, im2)
 
     mfolder = fileparts(mfilename('fullpath'));
     splashpng = '700813831-hero-1536x1536.png';
+    % splashpng = 'thumbnail_IMG_3621.jpg';
     [im] = imread(fullfile(mfolder,'..','resources', 'Images', splashpng));
     if ~isempty(im2) && license('test','image_toolbox') && ~isempty(which('imfuse')) 
         im = imfuse(im, im2, 'blend');
@@ -18,7 +19,7 @@ function [hFig] = sc_simpleabout(parentfig, im2)
         'WindowButtonDownFcn',@(src, ~) close(src),...
         'WindowKeyPressFcn',@(src, ~) close(src));
     
-    fa = axes('Parent',hFig,'Color','k', ...
+    fa = axes('Parent', hFig, 'Color','k', ...
         'XColor','k','YColor','k','Visible','off');
     %    'Units','Normalize','Position',[0 0 1 1]);    
     % set(gcf, 'WindowButtonDownFcn', @(src, event) close(gcf));
@@ -28,12 +29,12 @@ function [hFig] = sc_simpleabout(parentfig, im2)
     ih = image(im,'Parent',fa);
     %colormap(map)
     
-imxpos = get(ih,'XData');
-imypos = get(ih,'YData');
-set(fa,'Unit','Normalized','Position',[0,0,1,1]);
-figpos = get(hFig,'Position');
-figpos(3:4) = [imxpos(2) imypos(2)];
-set(hFig,'Position',figpos);
+    imxpos = get(ih,'XData');
+    imypos = get(ih,'YData');
+    set(fa,'Unit','Normalized','Position',[0,0,1,1]);
+    figpos = get(hFig,'Position');
+    figpos(3:4) = [imxpos(2) imypos(2)];
+    set(hFig,'Position',figpos);
 
     % [~, v1] = pkg.i_majvercheck;
     v1 = pkg.i_get_versionnum;

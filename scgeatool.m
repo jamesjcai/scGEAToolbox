@@ -303,55 +303,33 @@ pt.ClickedCallback = @in_addcolorbar;
 pt.Tag = "figToglColorbar";
 
 in_addbuttonpush(0, 0, @gui.callback_CloseAllOthers, "xmark-square.jpg", "Close all other figures");
-
 in_addbuttonpush(0, 0, {@gui.i_resizewin, FigureHandle}, 'scale-frame-reduce.jpg', 'Resize Plot Window')
 in_addbuttontoggle(1, 0, {@in_togglebtfun, @in_turnoffuserguiding, "icon-mat-unfold-more-10.gif", "icon-mat-unfold-less-10.gif", false, "Turn on/off user onboarding toolbar"});
 in_addbuttonpush(1, 0, @gui.callback_ShowGeneExpr, "google-docs.jpg", "Select genes to show expression")
 in_addbuttonpush(1, 0, @in_ShowCellStates, "bookmark-book.jpg", "Show cell states")
 in_addbuttonpush(1, 0, @in_SelectCellsByQC, "filter-alt.jpg", "Filter genes & cells")
-
 in_addbuttonpush(1, 1, @in_labelcellgroups, "label.jpg", "Label cell groups");
 in_addbuttonpush(1, 0, @in_Brushed2NewCluster, "substract.jpg", "Add brushed cells to a new group")
 in_addbuttonpush(1, 0, @in_Brushed2MergeClusters, "union.jpg", "Merge brushed cells to same group")
-
 in_addbuttonpush(1, 0, @in_RenameCellTypeBatchID, "edit.jpg", "Rename cell type or batch ID");
 in_addbuttonpush(1, 0, @in_SingleClickSolution, "apple-swift.jpg", "Single-click cell type annotation")
-
-
 in_addbuttonpush(1, 0, [], [], "");
-
 in_addbuttonpush(1, 1, @in_ClusterCellsS, "bubble_chart_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Clustering using cell embedding (S)")
 in_addbuttonpush(1, 0, {@in_DetermineCellTypeClustersGeneral, true}, "auto_transmission_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Assign cell types to groups")
-
-%in_addbuttonpush(1, 0, {@in_DetermineCellTypeClustersGeneral, true}, "plotpicker-contour.gif", "Assign cell types to groups")
 in_addbuttonpush(1, 0, @in_Brush4Celltypes, "color-picker.jpg", "Assign cell type to selected cells");
 in_addbuttonpush(1, 1, @gui.callback_Brush4Markers, "medal1st.jpg", "Marker genes of brushed cells");
-%in_addbuttonpush(1, 1, @gui.callback_Brush4Markers, "plotpicker-kagi.gif", "Marker genes of brushed cells");
 in_addbuttonpush(1, 0, @gui.callback_FindAllMarkers, "grain_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Marker gene heatmap");
 in_addbuttonpush(1, 0, [], [], "");
 in_addbuttonpush(1, 1, @gui.callback_ShowClustersPop, "view-grid.jpg", "Show cell clusters/groups individually");
 in_addbuttonpush(1, 0, @gui.callback_SelectCellsByClass, "checklist_rtl_18dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Select cells by class/group & open in new window");
-
 in_addbuttonpush(1, 0, @in_DeleteSelectedCells, "variable_remove_18dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Delete brushed/selected cells");
-
-%in_addbuttonpush(1, 0, @in_DeleteSelectedCells, "plotpicker-qqplot.gif", "Delete brushed/selected cells");
 in_addbuttonpush(1, 0, @gui.callback_SaveX, "floppy-disk.jpg", "Export & save data");
-
 in_addbuttonpush(1, 1, @in_EmbeddingAgain, "cinema-old.jpg", "Embedding (tSNE, UMP, PHATE)");
-
-%in_addbuttonpush(1, 1, @in_EmbeddingAgain, "plotpicker-geobubble.gif", "Embedding (tSNE, UMP, PHATE)");
-
 in_addbuttonpush(1, 0, @in_Switch2D3D, "perspective-view.jpg", "Switch 2D/3D");
-%in_addbuttonpush(1, 0, @in_Switch2D3D, "plotpicker-image.gif", "Switch 2D/3D");
-
-
-%in_addbuttonpush(1, 1, @gui.callback_CloseAllOthers, "icon-fa-cut-10.gif", "Close all other figures");
 in_addbuttonpush(1, 0, @gui.callback_PickPlotMarker, "palette.jpg", "Switch scatter plot marker type");
 in_addbuttonpush(1, 0, @gui.callback_PickColorMap, "color-wheel.jpg", "Pick new color map");
 in_addbuttonpush(1, 0, @in_RefreshAll, "refresh_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Refresh");
-
 if ~isempty(fx) && isvalid(fx), fxfun(fx, 0.6); end
-
 in_addbuttonpush(2, 0, @in_turnonuserguiding, "icon-fa-thumb-tack-10.gif", "Turn on user guiding toolbar");
 in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_SelectCellsByQC, "icon-mat-filter-1-10.gif", "filter-alt.jpg", true, "Filter genes & cells"});
 in_addbuttontoggle(2, 0, {@in_togglebtfun, @in_EmbeddingAgain, "icon-mat-filter-2-10.gif", "cinema-old.jpg", true, "Embedding (tSNE, UMP, PHATE)"});
