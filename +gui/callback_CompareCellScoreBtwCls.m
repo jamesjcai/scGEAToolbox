@@ -3,8 +3,8 @@ function [needupdatesce] = callback_CompareCellScoreBtwCls(src, ~)
 [FigureHandle, sce] = gui.gui_getfigsce(src);
 needupdatesce = false;
 
-aa = 'Yes, compare scores';
-bb = 'No, just show values';
+aa = 'Yes, compare scores (violinplot)';
+bb = 'No, just show values (heatmap)';
     answer2 = questdlg(sprintf(['This function will calculates a score for each cell. After the scores are calculated, do you want to ', ...
                 'compare score values between different cell groups?']), '', ...
                 bb, aa, bb);

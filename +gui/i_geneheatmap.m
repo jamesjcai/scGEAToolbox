@@ -63,7 +63,7 @@ for k = 1:length(szc), xline(szc(k)+0.5, 'y-'); end
 
 hx.addCustomButton('on', @i_renamecat, 'guideicon.gif', 'Rename groups...');
 hx.addCustomButton('off', @i_resetcolor, 'plotpicker-geobubble2.gif', 'Reset color map');
-hx.addCustomButton('off', @i_flipxy, 'xplotpicker-geobubble2.gif', 'Flip XY');
+hx.addCustomButton('off', @i_flipxy, 'mat-wrap-text.jpg', 'Flip XY');
 
 hx.show(parentfig);
 
