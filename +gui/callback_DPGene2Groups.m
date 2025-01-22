@@ -1,6 +1,6 @@
 function callback_DPGene2Groups(src, ~)
 
-[FigureHandle, sce] = gui.gui_getfigsce(src);
+[~, sce] = gui.gui_getfigsce(src);
 if ~gui.gui_showrefinfo('DP Analysis'), return; end
 
 [i1, i2, cL1, cL2] = gui.i_select2smplgrps(sce, false);
@@ -35,8 +35,12 @@ end
 if isempty(indx1), return; end
 [setmatrx, setnames, setgenes] = pkg.e_getgenesets(indx1, speciesid); %(indx1);
 if isempty(setmatrx) || isempty(setnames) || isempty(setgenes) 
-    return; 
+    return;
 end
+
+assignin("base", "setmatrx", setmatrx);
+assignin("base", "setnames", setnames);
+assignin("base", "setgenes", setgenes);
 
 fw = gui.gui_waitbar;
 
@@ -99,6 +103,7 @@ T=T(T.p_val_adj<0.01 & T.gsetsize>=5,:);
 
     gui.gui_waitbar(fw);
 
+
     if height(T)==0
         waitfor(helpdlg('No significant results.',''));
         return;
@@ -113,7 +118,6 @@ T=T(T.p_val_adj<0.01 & T.gsetsize>=5,:);
             % "Tcrosstabul","CrosstabulTable"
             % "Tcellsignmt","CellSignatTable"
             % "Tdpgenesres","DPGenesResTable"
-
         if ~isempty(filesaved)
            waitfor(helpdlg(sprintf('Result has been saved in %s',filesaved),''));
         end

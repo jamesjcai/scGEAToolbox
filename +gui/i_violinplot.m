@@ -23,12 +23,12 @@ title(strrep(ttxt, '_', '\_'));
 
 
 hx.addCustomButton('off', @i_savedata, 'floppy-disk-arrow-in.jpg', 'Export data...');
-hx.addCustomButton('off', @i_testdata, 'icon-fa-stack-exchange-10.gif', 'ANOVA/T-test...');
-hx.addCustomButton('off', @i_addsamplesize, "icon-mat-blur-linear-10.gif", 'Add Sample Size');
-hx.addCustomButton('off', @i_invertcolor, "plotpicker-pie.gif", 'Switch BW/Color');
-hx.addCustomButton('off', @i_reordersamples, "plotpicker-errorbar.gif", 'Reorder Samples');
-hx.addCustomButton('off', @i_selectsamples, "plotpicker-errorbarx.gif", 'Select Samples');
-hx.addCustomButton('off', @i_sortbymean, "plotpicker-cra.gif", 'Sort Samples by Median');
+hx.addCustomButton('off', @i_testdata, 'mw-pickaxe-mining.jpg', 'ANOVA/T-test...');
+hx.addCustomButton('off', @i_addsamplesize, "unjoin3d.jpg", 'Add Sample Size');
+hx.addCustomButton('off', @i_invertcolor, "align-top-box-solid.jpg", 'Switch BW/Color');
+hx.addCustomButton('off', @i_reordersamples, "rebase_edit_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", 'Reorder Samples');
+hx.addCustomButton('off', @i_selectsamples, "edit.jpg", 'Select Samples');
+hx.addCustomButton('off', @i_sortbymean, "reorder.jpg", 'Sort Samples by Median');
 hx.addCustomButton('on', @i_viewgenenames, 'HDF_point.gif', 'Show Gene Names');
 
 

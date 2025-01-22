@@ -14,9 +14,8 @@ thisc = strrep(string(thisc), '_', '\_');
 colorit = true;
 
 import mlreportgen.ppt.*;
-pw1 = fileparts(mfilename('fullpath'));
-pth = fullfile(pw1, '..', 'resources', 'Misc', 'myTemplate.pptx');
-
+% pw1 = fileparts(mfilename('fullpath'));
+% pth = fullfile(pw1, '..', 'resources', 'Misc', 'myTemplate.pptx');
 
 hx=gui.myFigure;
 hFig=hx.FigureHandle;
@@ -125,39 +124,39 @@ ccx = true;
         end    
     end
 
-    function i_savemainfigx(~,~)
-        [~,idx]=ismember(focalg, tabnamelist);     
-        filter = {'*.jpg'; '*.png'; '*.tif'; '*.pdf'; '*.eps'};
-        [filename, filepath] = uiputfile(filter,'Save Violin Plot', ...
-            sprintf('ViolinPlot_%s',focalg));
-        if ischar(filename)
-            exportgraphics(ax0{idx}, [filepath, filename]);
-        end
-    end
+    % function i_savemainfigx(~,~)
+    %     [~,idx]=ismember(focalg, tabnamelist);     
+    %     filter = {'*.jpg'; '*.png'; '*.tif'; '*.pdf'; '*.eps'};
+    %     [filename, filepath] = uiputfile(filter,'Save Violin Plot', ...
+    %         sprintf('ViolinPlot_%s',focalg));
+    %     if ischar(filename)
+    %         exportgraphics(ax0{idx}, [filepath, filename]);
+    %     end
+    % end
 
-    function i_savemainfig(~,~)
-        answer = questdlg('Export to PowerPoint?');
-        if ~strcmp(answer,'Yes'), return; end
-
-        fw=gui.gui_waitbar_adv;
-            OUTppt = [tempname, '.pptx'];
-            ppt = Presentation(OUTppt, pth);
-            open(ppt);
-            images=cell(n,1);
-            warning off
-        for kx=1:n
-            gui.gui_waitbar_adv(fw,kx./n,"Processing "+tabnamelist(kx)+" ...");
-            images{kx} = [tempname, '.png'];
-            tabgp.SelectedTab=tab{kx};
-            saveas(tab{kx},images{kx});
-            slide3 = add(ppt, 'Small Title and Content');
-            replace(slide3, 'Title', tabnamelist(kx));
-            replace(slide3, 'Content', Picture(images{kx}));        
-        end
-            close(ppt);
-            rptview(ppt);      
-            gui.gui_waitbar_adv(fw);
-    end
+    % function i_savemainfig(~,~)
+    %     answer = questdlg('Export to PowerPoint?');
+    %     if ~strcmp(answer,'Yes'), return; end
+    % 
+    %     fw=gui.gui_waitbar_adv;
+    %         OUTppt = [tempname, '.pptx'];
+    %         ppt = Presentation(OUTppt, pth);
+    %         open(ppt);
+    %         images=cell(n,1);
+    %         warning off
+    %     for kx=1:n
+    %         gui.gui_waitbar_adv(fw,kx./n,"Processing "+tabnamelist(kx)+" ...");
+    %         images{kx} = [tempname, '.png'];
+    %         tabgp.SelectedTab=tab{kx};
+    %         saveas(tab{kx},images{kx});
+    %         slide3 = add(ppt, 'Small Title and Content');
+    %         replace(slide3, 'Title', tabnamelist(kx));
+    %         replace(slide3, 'Content', Picture(images{kx}));        
+    %     end
+    %         close(ppt);
+    %         rptview(ppt);      
+    %         gui.gui_waitbar_adv(fw);
+    % end
 
     % function i_linksubplots(~,~)        
     %     hlink = linkprop([ax{idx,1},ax{idx,2}],{'CameraPosition','CameraUpVector'});
@@ -433,24 +432,24 @@ ccx = true;
     %     end
     % end
 
-     function i_savedata_thistab(~, ~)
-         [~,idx]=ismember(focalg, tabnamelist);
-         thisy = y{idx};
-         T = table(thisy(:), thisc(:));
-         T.Properties.VariableNames = {'ScoreLevel', 'GroupID'};
-         %T=sortrows(T,'ScoreLevel','descend');
-         %T=sortrows(T,'GroupID');
-         gui.i_exporttable(T, true, 'Tviolindata','ViolinPlotTable');
-     end
+     % function i_savedata_thistab(~, ~)
+     %     [~,idx]=ismember(focalg, tabnamelist);
+     %     thisy = y{idx};
+     %     T = table(thisy(:), thisc(:));
+     %     T.Properties.VariableNames = {'ScoreLevel', 'GroupID'};
+     %     %T=sortrows(T,'ScoreLevel','descend');
+     %     %T=sortrows(T,'GroupID');
+     %     gui.i_exporttable(T, true, 'Tviolindata','ViolinPlotTable');
+     % end
 
 
      function i_savedata_alltab(~, ~)
 %         [~,idx]=ismember(focalg, tabnamelist);
 %         thisy = y{idx};
      
-        T=table();
+        T = table();
         for tabidx=1:n
-            g = tabnamelist(tabidx);
+            % g = tabnamelist(tabidx);
             thisy = y{tabidx};
             t = table(thisy(:));
             t.Properties.VariableNames = matlab.lang.makeValidName(tabnamelist(tabidx));

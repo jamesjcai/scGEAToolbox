@@ -25,9 +25,9 @@ hx=gui.myFigure;
 hFig=hx.FigureHandle;
 
 hx.addCustomButton('off', {@i_savedata}, 'floppy-disk-arrow-in.jpg', 'Export data...');
-hx.addCustomButton('off', @i_invertcolor, "plotpicker-pie.gif", 'Switch Values ON/OFF');
-hx.addCustomButton('off', @i_reordersamples, "plotpicker-errorbar.gif", 'Switch Legend ON/OFF');
-hx.addCustomButton('on', @i_viewgenenames, 'HDF_point.gif', 'Rename Group Names');
+hx.addCustomButton('off', @i_showvalues, "heap_snapshot_large_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", 'Switch Values ON/OFF');
+hx.addCustomButton('off', @i_reordersamples, "keyframe-plus-in.jpg", 'Switch Legend ON/OFF');
+hx.addCustomButton('on', @i_editgrpnames, 'edit.jpg', 'Rename Group Names');
 
 showaxes = true;
 showlegend = true;
@@ -47,7 +47,7 @@ hx.show(parentfig);
 %end
 
 
-    function i_invertcolor(~, ~)
+    function i_showvalues(~, ~)
         showaxes = ~showaxes;
         cla;
         if showaxes
@@ -114,7 +114,7 @@ hx.show(parentfig);
     end
 
 
-    function i_viewgenenames(~, ~)
+    function i_editgrpnames(~, ~)
         [indxx, tfx] = listdlg('PromptString', ...
             {'Select group name'}, ...
             'SelectionMode', 'single', ...

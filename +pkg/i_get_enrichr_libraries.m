@@ -8,7 +8,7 @@ for k = 1:n
     try
         GeneSetLibrary(k) = string(value.libraries{k}.libraryName);
     catch ME
-        warning(ME.message);
+        % warning(ME.message);
     end
 end
 GeneSetLibrary(GeneSetLibrary == "") = [];
