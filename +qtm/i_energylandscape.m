@@ -1,4 +1,12 @@
+nchoosek(20, 3)
+X = zeros(35);
+%%
+[X,Y] = meshgrid(1:35, 1:35);
+Z = reshape(randn(35.^2, 1), 35, 35);
+surface(X,Y,Z)
+view(3)
 
+%%
 C = nchoosek(1:20, 3);
 v = randn(length(C), 1);
 
