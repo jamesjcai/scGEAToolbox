@@ -10,8 +10,8 @@ if nargin<1
     %pngfilename = 'OIP (1).jpg';
     %pngfilename = 'wave-white-particles-abstract-technology-flow-background-future-vector-illustration_435055-172.jpg';
     %pngfilename = '0321efeecd4da13290687593d55674cf.png';
-    pngfilename = '700813831-hero-1536x1536.png';
-    % pngfilename = 'thumbnail_IMG_3621.jpg';
+    %pngfilename = '700813831-hero-1536x1536.png';
+    pngfilename = 'splash.jpg';
     splashpng = fullfile(mfolder,'..','resources', 'Images', pngfilename);
     %splashpng = '09-small.jpg';
     %splashpng = 'Untitled.png';

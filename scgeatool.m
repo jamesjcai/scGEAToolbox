@@ -409,10 +409,7 @@ if majneedupdate
     %fprintf('addpath(''./scGEAToolbox-main'');\n');
 end
 in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGEATOOL');
-
 if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
-
-% ptImgCell
 
 
 % ----------------------------------
