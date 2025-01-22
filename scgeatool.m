@@ -7,6 +7,9 @@ if ~gui.i_installed('stats'), return; end
 % rng("shuffle");
 % rng("default");
 persistent speciestag
+ptimgidx = 1;
+ptImgCell = {};
+
 % speciestag = getpref('scgeatoolbox', 'preferredspecies', 'human');
 
 import pkg.*
@@ -31,6 +34,8 @@ else
 end
 
 mfolder = fileparts(mfilename('fullpath'));
+ptImgFile = fullfile(mfolder, 'resources', 'Images', 'ptImgFile.mat');
+if exist(ptImgFile, 'file'), load(ptImgFile, 'ptImgCell'); end
 
 p = inputParser;
 checkCS = @(x) isempty(x) | size(sce.X, 2) == length(x);
@@ -65,7 +70,6 @@ defaultPosition = get(groot, 'DefaultFigurePosition');
 defaultWidth = defaultPosition(3);  % Width is the 3rd element
 defaultHeight = defaultPosition(4); % Height is the 4th element
 
-
 if defaultWidth==560 && defaultHeight==420
     FigureHandle = figure('Name', figname, ...
         'position', round(1.2*[0, 0, 560, 420]), ...
@@ -77,6 +81,7 @@ else
         'DockControls','off','MenuBar','none','ToolBar','figure');    
 end
 movegui(FigureHandle, 'center');
+
 
 
 fig_pos = get(FigureHandle, 'Position'); 
@@ -405,6 +410,11 @@ if majneedupdate
 end
 in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGEATOOL');
 
+if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
+
+% ptImgCell
+
+
 % ----------------------------------
 
     function in_sc_openscedlg(~, event)        
@@ -554,19 +564,15 @@ in_addmenu(m_help, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGE
         elseif toolbarHdl == 2
             barhandle = UserToolbarHandle;
         end
-
-        pt = pkg.i_addbutton2fig(barhandle, sepTag, ...
-            callbackFnc, imgFil, tooltipTxt);
-
-        % pt = uipushtool(barhandle, 'Separator', sepTag);
-        % 
-        % if ~isempty(imgFil)
-        %     %pt.Icon = fullfile(mfolder,'..','resources','Images',imgFil);
-        %     pt.CData = in_getPtImage(imgFil);
-        %     pt.Tooltip = tooltipTxt;
-        %     pt.ClickedCallback = callbackFnc;
-        %     pt.Tag = "figPush" + matlab.lang.makeValidName(tooltipTxt);
-        % end
+       
+        if numel(ptImgCell) >= ptimgidx && ~isempty(ptImgCell{ptimgidx})
+            [pt] = pkg.i_addbutton2fig(barhandle, sepTag, ...
+                callbackFnc, ptImgCell{ptimgidx}, tooltipTxt);
+        else
+            [pt, ptImgCell{ptimgidx}] = pkg.i_addbutton2fig(barhandle, ...
+                sepTag, callbackFnc, imgFil, tooltipTxt);
+        end
+        ptimgidx = ptimgidx + 1;
     end
 
     function in_addbuttontoggle(toolbarHdl, sepTag, callbackFnc)

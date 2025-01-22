@@ -1,4 +1,4 @@
-function [pt] = i_addbutton2fig(toolbarHdl, sepTag, callbackFnc, imgFil, tooltipTxt)
+function [pt, ptImage] = i_addbutton2fig(toolbarHdl, sepTag, callbackFnc, imgFil, tooltipTxt)
 
 % i_addbutton2fig - Add a button to a figure toolbar
 %
@@ -49,38 +49,38 @@ end
         % bgColor = [0.9569    0.9569    0.9569];
         % bgColor = [0.9400    0.9400    0.9400];
         % transparentIcon = zeros([iconSize, 3]); % RGB values all set to zero (black)
-        transparentIcon = repmat(reshape(bgColor, [1, 1, 3]), iconSize); % Match background
+        ptImage = repmat(reshape(bgColor, [1, 1, 3]), iconSize); % Match background
         pt = uipushtool(toolbarHdl, ...
-            'CData', transparentIcon, ...
+            'CData', ptImage, ...
             'TooltipString', '');
     else
-        pt = uipushtool(toolbarHdl, 'Separator', sepTag);
+%        pt = uipushtool(toolbarHdl, 'Separator', sepTag);
 
-        imgPath = fullfile(mfolder, '..', 'resources', 'Images', imgFil);
-        if ~isfile(imgPath)
-            warning('Image file "%s" not found. Using a random icon.', imgPath);
+        if ischar(imgFil) || isstring(imgFil)
+            imgPath = fullfile(mfolder, '..', 'resources', 'Images', imgFil);
+            if ~isfile(imgPath)
+                warning('Image file "%s" not found. Using a random icon.', imgPath);
+            end
+            try
+                [ptImage, map] = imread(imgPath);
+                if ~isempty(map), ptImage = ind2rgb(ptImage, map); end
+            catch ME
+                warning('Failed to load image "%s". Using random icon instead.\nError: %s', imgPath, ME.message);
+                ptImage = rand(16, 16, 3);
+            end
+            if size(ptImage, 3) == 1, ptImage = cat(3, ptImage, ptImage, ptImage); end
+        else
+            ptImage = imgFil;
         end
 
-        try
-            [ptImage, map] = imread(imgPath);
-            if ~isempty(map), ptImage = ind2rgb(ptImage, map); end
-        catch ME
-            warning('Failed to load image "%s". Using random icon instead.\nError: %s', imgPath, ME.message);
-            ptImage = rand(16, 16, 3);
-        end
-        
-        
-        % try
-        %     [ptImage, map] = imread(fullfile(mfolder, '..', 'resources', 'Images', imgFil));
-        %     if ~isempty(map), ptImage = ind2rgb(ptImage, map); end
-        % catch
-        %     ptImage = rand(16, 16, 3);
-        % end
-        if size(ptImage, 3) == 1, ptImage = cat(3, ptImage, ptImage, ptImage); end
-        
-        pt.CData = ptImage;
-        pt.Tooltip = tooltipTxt;
-        pt.ClickedCallback = callbackFnc;
+        pt = uipushtool(toolbarHdl, ...
+            'CData', ptImage, ...
+            'TooltipString', tooltipTxt, ...
+            'Separator', sepTag, 'ClickedCallback', callbackFnc);
+
+        %        pt.CData = ptImage;
+        %        pt.Tooltip = tooltipTxt;
+        %        pt.ClickedCallback = callbackFnc;
     end
 end
 
