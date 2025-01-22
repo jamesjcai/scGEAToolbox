@@ -6,6 +6,13 @@ if nargin < 4 || isempty(min_cells_nonzero), min_cells_nonzero = 15; end
 if nargin < 3 || isempty(mtratio), mtratio = 0.15; end
 if nargin < 2 || isempty(libszcutoff), libszcutoff = 1000; end
 
+if issparse(obj.X)
+    try
+        obj.X = full(obj.X);
+    catch
+    end
+end
+
 if ~isempty(whitelist)
     assert(all(ismember(whitelist, obj.g)));
     [~, idxx] = ismember(whitelist, obj.g);

@@ -257,7 +257,8 @@ function [sce, filename] = sc_openscedlg(~, ~)
                 return;
             end
         case '10x Genomics ''outs'' Folder...'
-            selpath = uigetdir;
+            disp('Open 10x Genomics outs folder...');
+            selpath = uigetdir;            
             if selpath == 0, return; end
             try
                 fw = gui.gui_waitbar;
