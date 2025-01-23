@@ -857,7 +857,11 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         end
     end
 
-    function in_SingleClickSolution(src, ~)        
+    function in_SingleClickSolution(src, ~)
+        if ~isprop(sce, 'c_cell_type_tx')
+            disp('The sce object does not have the property c_cell_type_tx.');
+            return;
+        end
         if ~all(sce.c_cell_type_tx == "undetermined")            
             if ~strcmp(questdlg("Your data has been embedded and annotated. Single Click Solution will re-embed and annotate cells. Current embedding and annotation will be overwritten. Continue?", ""), 'Yes'), return; end
         else
@@ -1570,7 +1574,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         end
     end
 
-    function [hasbrushed] = i_checkbrusheddata
+    function [hasbrushed, ptsSelected] = i_checkbrusheddata
         ptsSelected = logical(h.BrushData.');
         if ~any(ptsSelected)
             hasbrushed = false;
@@ -1581,7 +1585,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
     end
 
     function in_Brushed2NewCluster(~, ~)
-        [hasbrushed] = i_checkbrusheddata;
+        [hasbrushed, ptsSelected] = i_checkbrusheddata;
         if ~hasbrushed, return; end
         [iscelltype] = in_pickcelltypeclusterid('Make a new cluster or new cell type group out of brushed cells?');
         if isempty(iscelltype), return; end
@@ -1612,7 +1616,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
     end
 
     function in_Brushed2MergeClusters(~, ~)
-        [hasbrushed] = i_checkbrusheddata;
+        [hasbrushed, ptsSelected] = i_checkbrusheddata;
         if ~hasbrushed, return; end
         [iscelltype] = in_pickcelltypeclusterid('Merge brushed cells into same cluster or same cell type?');
         if isempty(iscelltype), return; end
