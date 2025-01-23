@@ -36,7 +36,7 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
         'ListString', listitems, ...
         'ListSize', [260, 300]);
     if tf ~= 1
-        requirerefresh = false;
+       % requirerefresh = false;
         return;
     end
 
@@ -49,7 +49,7 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
                 [whitelist]=gui.i_selectwhitelist(sce, FigureHandle);
                 if isnumeric(whitelist)
                     if whitelist==0
-                        requirerefresh=false;
+                        % requirerefresh=false;
                         return;
                     end
                 end
@@ -68,7 +68,7 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
                 case 'Strigent (remove more cells/genes)'
                     definput = {'1000', '0.15', '15', '500'};
                 otherwise
-                    requirerefresh = false;
+                    % requirerefresh = false;
                     return;
             end
 
@@ -80,7 +80,7 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
             dims = [1, 80];
             answer = inputdlg(prompt, dlgtitle, dims, definput);
             if isempty(answer)
-                requirerefresh = false;
+                % requirerefresh = false;
                 return;
             end
             try
@@ -93,7 +93,7 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
                 assert((min_cells_nonzero >= 0 && min_cells_nonzero <= 1) || (min_cells_nonzero > 1 && min_cells_nonzero < sce.NumCells));
                 assert((numgenes > 0) && (numgenes < intmax));
             catch
-                requirerefresh = false;
+                % requirerefresh = false;
                 errordlg('Invalid input(s).');
                 return;
             end
@@ -110,7 +110,7 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
                 if issparse(sce.X)
                     gui.gui_waitbar(fw, true);
                     errordlg(ME.message);
-                    requirerefresh = false;
+                    % requirerefresh = false;
                     return;
                 else
                     memerror = true;
@@ -144,7 +144,7 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
                 catch ME
                     gui.gui_waitbar(fw, true);
                     errordlg(ME.message);
-                    requirerefresh = false;
+                    % requirerefresh = false;
                     return;
                 end
             end
@@ -282,7 +282,7 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
         case '(d) Remove Genes Without Approved Symbols'
             speciestag = gui.i_selectspecies(2);
             if isempty(speciestag)
-                requirerefresh = false;
+                % requirerefresh = false;
                 return;
             end
             load(fullfile(mfolder, ...
@@ -298,12 +298,12 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
                         sce.X(idx, :) = [];
                         gui.gui_waitbar(fw);
                     otherwise
-                        requirerefresh = false;
+                        % requirerefresh = false;
                         return;
                 end
             else
                 waitfor(helpdlg('No genes found.'));
-                requirerefresh = false;
+                % requirerefresh = false;
                 return;
             end
             % Filter protein-coding genes based on HGNC approval status and remove all non-coding genes and pseudogenes.
@@ -312,7 +312,7 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
         case 'Remove Genes (a)+(b)+(c)+(d)'
             speciestag = gui.i_selectspecies(2);
             if isempty(speciestag)
-                requirerefresh = false;
+                % requirerefresh = false;
                 return;
             end
             load(fullfile(mfolder, ...
@@ -327,7 +327,7 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
                 sce.X(idx, :) = [];
             end
         case '------------------------------------------------'
-            requirerefresh = false;
+            % requirerefresh = false;
             return;
         case 'Remove Cells with No MALAT1 Expression'
             disp('MALAT1 expression indicates cell quality in single-cell RNA sequencing data');
@@ -403,7 +403,7 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
             needremove = true;
         case 'QC Metrics in Violin Plots' % view QC metrics violin
             gui.i_qcviolin(sce.X, sce.g, FigureHandle);
-            requirerefresh = false;
+            % requirerefresh = false;
             return;
             %         case 11
             %             fw = gui.gui_waitbar;
@@ -420,7 +420,7 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
             %             requirerefresh=false;
             %             return;
         otherwise
-            requirerefresh = false;
+            % requirerefresh = false;
             return;
     end
             
@@ -437,14 +437,14 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
                 case 'Highlight'
                     highlightindex = zeros(1, length(idx));
                     highlightindex(~idx) = 1;
-                    requirerefresh = false;
+                    % requirerefresh = false;
                 case 'Cancel'
                     return;
                 otherwise
                     return;
             end
         else
-            requirerefresh = false;
+            % requirerefresh = false;
             return;
         end
     end
@@ -453,17 +453,17 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
     newgn = sce.NumGenes;
     if newgn==0
         helpdlg("All genes are removed. Opertaion is cancelled.",'');
-        requirerefresh = false;
+        % requirerefresh = false;
         return;
     end
     if newcn==0
         helpdlg("All cells are removed. Opertaion is cancelled.",'');
-        requirerefresh = false;
+        % requirerefresh = false;
         return;
     end
     if oldcn-newcn==0 && oldgn-newgn==0
         helpdlg("No cells and genes are removed.",'');
-        requirerefresh = false;
+        % requirerefresh = false;
         return;
     end
     
@@ -471,7 +471,7 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
             oldgn-newgn, oldcn-newcn, oldgn, oldcn, newgn, newcn),'', ...
             'Accept Changes', 'Cancel Changes', 'Accept Changes');
     if ~strcmp(answer, 'Accept Changes')
-        requirerefresh = false;
+        % requirerefresh = false;
         return;
     end
     requirerefresh = true;

@@ -82,8 +82,6 @@ else
 end
 movegui(FigureHandle, 'center');
 
-
-
 fig_pos = get(FigureHandle, 'Position'); 
 fig_width = fig_pos(3);
 fig_height = fig_pos(4);
@@ -110,7 +108,7 @@ button2 = uicontrol('style','text',...
     'string','Ready to explore.');
 
 set(FigureHandle,'resizefcn',{@myResizeFun, button1, button2});
-drawnow;
+% drawnow;
 
 m_file = uimenu(FigureHandle, 'Text', '&File');
 in_addmenu(m_file, 0, @in_sc_openscedlg, '&Import Data... ','I');
@@ -363,8 +361,9 @@ pause(1);
 
 if ~isempty(fx) && isvalid(fx), set(fx, 'visible', 'off'); end
 %pause(0.2);
-set(FigureHandle, 'visible', 'on');
+
 delete(fx);
+set(FigureHandle, 'visible', 'on');
 uicontrol(button1);
 
 % drawnow;
