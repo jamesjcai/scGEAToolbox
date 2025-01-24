@@ -39,19 +39,9 @@ hx.addCustomButton('off', @ChangeDirected, 'noun_directional_arrows_3497928.gif'
 hx.addCustomButton('off', @AnimateCutoff, 'noun_trim_3665385.gif', 'AnimateCutoff');
 hx.addCustomButton('off', @ChangeCutoff, 'filter-alt.jpg', 'ChangeCutoff');
 hx.addCustomButton('off', @SaveAdj, 'floppy-disk-arrow-in.jpg', 'Export & save data');
-hx.addCustomButton('on', @in_RefreshAll, "refresh.jpg", "Refresh");
-
-%hx.addCustomButton('off', @ChangeWeight, 'noun_Weight_2243621.gif', 'ChangeWeight');
-%hx.addCustomButton('off', @ChangeFontSize, 'noun_font_size_591141.gif', 'ChangeFontSize');
-%hx.addCustomButton('off', @ChangeLayout, 'noun_Layout_792775.gif', 'ChangeLayout');
-%hx.addCustomButton('off', @ChangeDirected, 'noun_directional_arrows_3497928.gif', 'ChangeDirected');
-%hx.addCustomButton('off', @AnimateCutoff, 'noun_trim_3665385.gif', 'AnimateCutoff');
-%hx.addCustomButton('off', @ChangeCutoff, 'noun_Pruners_2469297.gif', 'ChangeCutoff');
-%hx.addCustomButton('off', @SaveAdj, 'floppy-disk-arrow-in.jpg', 'Export & save data');
-%hx.addCustomButton('on', @in_RefreshAll, "icon-mat-refresh-20.gif", "Refresh");
-%hx.addCustomButton('on', @in_RefreshAll, "refresh.jpg", "Refresh");
-hx.addCustomButton( 'on', @in_NetworkVis2, "curve-array.jpg", "NetworkVis2");
-hx.addCustomButton( 'off', @ix_networkvis, "ease-curve-control-points.jpg", "NetworkVis2");
+hx.addCustomButton('on',  @in_RefreshAll, "refresh.jpg", "Refresh");
+hx.addCustomButton( 'on', @in_networkvis_linear, "linear.jpg", "Network Vis");
+hx.addCustomButton( 'off', @in_networkvis_curvy, "curve-array.jpg", "Curvy Network Vis");
 
 title(h1,figname);
 hx.show(parentfig);
@@ -68,14 +58,14 @@ oldidx = 0;
         xy = [p1.XData' p1.YData'];
     end
 
-    function ix_networkvis(~, ~)
+    function in_networkvis_curvy(~, ~)
         fw=gui.gui_waitbar;
         gui.i_networkvis(G1, getxy, true, p1.NodeFontSize, hFig);
         gui.gui_waitbar(fw);
     end
 
 
-    function in_NetworkVis2(~, ~)
+    function in_networkvis_linear(~, ~)
         fw=gui.gui_waitbar;
         %figure('SizeChangedFcn', @sbar);
         h = gui.myFigure;        
@@ -102,26 +92,8 @@ oldidx = 0;
         set(gca, 'XTick', [], 'YTick', []);
         axis off
         gui.gui_waitbar(fw);
-        h.show(hFig);        
-        set(gcf, 'Color', 'white')
-
-        % function sbar(~, ~)
-        %         textOpts.FontSize = 15;
-        %         textOpts.HorizontalAlignment = 'center';
-        %         textOpts.VerticalAlignment = 'middle';
-        %         textOpts.FontWeight = 'normal';
-        %         textHandles = findall(gcf, 'Type', 'text'); % Find all text objects in the current figure
-        %         delete(textHandles); % Delete all found text objects
-        %     for k = 1:length(G1.Nodes.Name)                
-        %         [wx, hx] = measureText(G1.Nodes.Name{k}, textOpts);
-        %         t{k} = text(p1.XData(k)-wx/2, p1.YData(k), ...
-        %             G1.Nodes.Name{k},'FontSize',15,...
-        %             'BackgroundColor','w', ...
-        %             'FontWeight','normal', ...
-        %             'HorizontalAlignment','center', ...
-        %             'VerticalAlignment','middle');             
-        %     end
-        % end
+        h.show(hFig);
+        set(gcf, 'Color', 'white');
     end
 
     % function in_NetworkVis(~, ~)
