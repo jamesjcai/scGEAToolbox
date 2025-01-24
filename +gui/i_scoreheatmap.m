@@ -44,7 +44,7 @@ function [h] = i_scoreheatmap(Y, rowlabels, sce, parentfig)
     end
 
     hx.addCustomButton('off', @i_renamecat, 'edit.jpg', 'Rename groups...');
-    hx.addCustomButton('off', @i_resetcolor, 'refresh2.jpg', 'Reset color map');
+    hx.addCustomButton('off', @i_resetcolor, 'refresh.jpg', 'Reset color map');
     hx.addCustomButton('off', @i_flipxy, 'mat-wrap-text.jpg', 'Flip XY');
     hx.show(parentfig);
     fliped = false;

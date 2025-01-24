@@ -41,7 +41,6 @@ hx.addCustomButton('off', @ChangeCutoff, 'filter-alt.jpg', 'ChangeCutoff');
 hx.addCustomButton('off', @SaveAdj, 'floppy-disk-arrow-in.jpg', 'Export & save data');
 hx.addCustomButton('on', @in_RefreshAll, "refresh.jpg", "Refresh");
 
-
 %hx.addCustomButton('off', @ChangeWeight, 'noun_Weight_2243621.gif', 'ChangeWeight');
 %hx.addCustomButton('off', @ChangeFontSize, 'noun_font_size_591141.gif', 'ChangeFontSize');
 %hx.addCustomButton('off', @ChangeLayout, 'noun_Layout_792775.gif', 'ChangeLayout');
@@ -100,8 +99,11 @@ oldidx = 0;
                 'HorizontalAlignment','center', ...
                 'VerticalAlignment','middle');             
         end
+        set(gca, 'XTick', [], 'YTick', []);
+        axis off
         gui.gui_waitbar(fw);
-        h.show(hFig);
+        h.show(hFig);        
+        set(gcf, 'Color', 'white')
 
         % function sbar(~, ~)
         %         textOpts.FontSize = 15;

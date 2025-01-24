@@ -18,7 +18,7 @@ hx=gui.myFigure;
 %end
     
     hold on
-    scatter(xy(:,1), xy(:,2), 300, ...
+    scatter(xy(:,1), xy(:,2), 100, ...
         'MarkerEdgeColor','k', ...
         'MarkerFaceColor',[.8 .8 .8]);
 
@@ -32,7 +32,11 @@ hx=gui.myFigure;
     %         'VerticalAlignment','middle','Margin',0.2);
     % end
     in_addtext([],[]);
-    hx.show(parentfig);    
+    set(gca, 'XTick', [], 'YTick', []);
+    axis off
+    
+    hx.show(parentfig);
+    set(gcf, 'Color', 'white')
 
 
     function in_addtext(~, ~)

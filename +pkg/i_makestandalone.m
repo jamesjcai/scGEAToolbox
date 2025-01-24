@@ -73,7 +73,7 @@ d3 = strings(length(c), 1);
 for k = 1:length(c)
     d3(k) = string(fullfile(c(k).folder, c(k).name));
 end
-c = dir('resources/*.mat');
+c = dir('resources/Images/*.mat');
 d4 = strings(length(c), 1);
 for k = 1:length(c)
     d4(k) = string(fullfile(c(k).folder, c(k).name));
@@ -82,7 +82,6 @@ d = [d1;d2;d3;d4];
 %    d=[d;fullfile(pw1, 'resources', 'STRING', 'stringdb_human.mat')];
 %    d=[d;fullfile(pw1, 'resources', 'STRING', 'stringdb_mouse.mat')];
 % d = [d; fullfile(pw1, '+run', 'external', 'ml_UMAP', 'umap.jar')];
-d = [d; fullfile(pw1, 'resources', 'Misc', 'colorbarcdata.mat')];
 d = [d; fullfile(pw1, 'resources', 'Misc', 'refinfo.txt')];
 d = [d; fullfile(pw1, 'resources', 'TFome', 'tfome_tfgenes.mat')];
 d = [d; fullfile(pw1, 'resources', 'CellScores', 'cellcyclegenes.xlsx')];
@@ -138,7 +137,7 @@ end
 
 %%
 
-copyfile('resources/Images/700813831-hero-1536x1536.png', fullfile(outdir,"splash.png"));
+copyfile('resources/Images/splash.png', fullfile(outdir,"splash.png"));
 cd(outdir);
 % if needcorrect
 %     a = readmatrix('requiredMCRProducts.txt');
