@@ -32,15 +32,15 @@ xy = [];
 
 %hx.ptvenable(logical([1 1 1 1 1 0 1 1 1 1 0]));
 
-hx.addCustomButton('off', @ChangeFontSize, 'noun_font_size_591141.gif', 'ChangeFontSize');
-hx.addCustomButton('off', @ChangeWeight, 'weight_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'ChangeWeight');
-hx.addCustomButton('off', @ChangeLayout, 'noun_Layout_792775.gif', 'ChangeLayout');
-hx.addCustomButton('off', @ChangeDirected, 'noun_directional_arrows_3497928.gif', 'ChangeDirected');
-hx.addCustomButton('off', @AnimateCutoff, 'noun_trim_3665385.gif', 'AnimateCutoff');
-hx.addCustomButton('off', @ChangeCutoff, 'filter-alt.jpg', 'ChangeCutoff');
-hx.addCustomButton('off', @SaveAdj, 'floppy-disk-arrow-in.jpg', 'Export & save data');
-hx.addCustomButton('on',  @in_RefreshAll, "refresh.jpg", "Refresh");
-hx.addCustomButton( 'on', @in_networkvis_linear, "linear.jpg", "Network Vis");
+hx.addCustomButton('off', @ChangeFontSize, 'noun_font_size_591141.gif', 'Change Font Size of Nodes');
+hx.addCustomButton('off', @ChangeWeight, 'weight_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'Change Width of Edges');
+hx.addCustomButton('off', @ChangeLayout, 'group_work_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'Change Network Layout');
+hx.addCustomButton('off', @ChangeDirected, 'turn_sharp_right_17dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'Change to Undirected Network');
+hx.addCustomButton('off', @AnimateCutoff, 'movie.jpg', 'Animate Change and Select a Cutoff for Linked Edges');
+hx.addCustomButton('off', @ChangeCutoff, 'carpenter_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'Change Cutoff to Trim Network');
+hx.addCustomButton('off', @SaveAdj, 'floppy-disk-arrow-in.jpg', 'Export & Save Data');
+hx.addCustomButton('on',  @in_RefreshAll, "refresh.jpg", "Refresh View");
+hx.addCustomButton( 'on', @in_networkvis_linear, "linear.jpg", "Stright Network Vis");
 hx.addCustomButton( 'off', @in_networkvis_curvy, "curve-array.jpg", "Curvy Network Vis");
 
 title(h1,figname);
