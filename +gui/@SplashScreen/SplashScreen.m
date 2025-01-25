@@ -257,7 +257,8 @@ classdef SplashScreen < matlab.mixin.SetGet
             imgHeight = obj.Icon.getIconHeight();
             imgWidth = obj.Icon.getIconWidth();
             obj.Frame.setLocation((screenWidth-imgWidth)/2,(screenHeight-imgHeight)/2);
-            
+            obj.Frame.toFront();
+            obj.Frame.setAlwaysOnTop(true);
         end % createInterfaceComponents
         
         function updateAll( obj )
