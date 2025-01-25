@@ -116,8 +116,7 @@ end
                     s=s+1;
                     pause(0.5);
                 end
-                close(hFig);
-                
+                hx.closeFigure;                
            case 'Save SCEs'
                 answer2=questdlg('Where to save files?','','Use Temporary Folder', ...
                     'Select a Folder','Cancel','Use Temporary Folder');
