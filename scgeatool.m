@@ -320,18 +320,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 in_addmenu(menus, 1, {@(~, ~) web('https://scgeatool.github.io/')}, 'Visit SCGEATOOL-Standalone Website...');
                 in_addmenu(menus, 0, {@(~, ~) web('https://matlab.mathworks.com/open/github/v1?repo=jamesjcai/scGEAToolbox&file=online_landing.m')}, 'Run SCGEATOOL in MATLAB Online...');
                 in_addmenu(menus, 1, @gui.callback_CheckUpdates, 'Check for Updates...');
-                %in_addmenu(menus, 1, {@(~,~) gui.sc_simpleabout(FigureHandle)}, 'About SCGEATOOL');
-                majneedupdate = false;
-                try
-                    [majneedupdate, ~, ~, im] = pkg.i_majvercheck;
-                catch
-                end
-                if majneedupdate
-                    %fprintf('There is a new version of scGEAToolbox (%s vs. %s). To install, type:\n\n', v2, v1);
-                    %fprintf('unzip(''https://github.com/jamesjcai/scGEAToolbox/archive/main.zip'');\n');
-                    %fprintf('addpath(''./scGEAToolbox-main'');\n');
-                end
-                in_addmenu(menus, 1, {@(~,~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGEATOOL');                
+                in_addmenu(menus, 1, {@(~, ~) gui.sc_simpleabout(FigureHandle)}, 'About SCGEATOOL');
         end
     end
 
