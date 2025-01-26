@@ -35,9 +35,10 @@ end
 
 grouptag = "/matrix/";
 try
-    h=h5info(filenm);
-    grouptag = h.Groups(1).Name + "/";
+    h = h5info(filenm);
+    grouptag = strcat(h.Groups(1).Name, "/");
 catch
+    warning('Failed to read HDF5 file info. Using default group tag.');
 end
 
 data = pkg.e_guessh5field(filenm, {grouptag}, {'data'}, true);
@@ -47,7 +48,9 @@ shape = pkg.e_guessh5field(filenm, {grouptag}, {'shape'}, true);
 
 
 g = pkg.e_guessh5field(filenm, {grouptag, '/matrix/features/'}, {'gene_names', 'name'}, false);
-if isempty(g), warning('G is not assigned.'); end
+if isempty(g)
+    warning('Gene names or feature names are not assigned.');
+end
 
 % try
 % g=h5read(filenm,[h.Groups.Groups(1).Name,'/gene_names']);
