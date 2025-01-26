@@ -39,14 +39,15 @@ h2 = nexttile;
 p2.XData = p1.XData;
 p2.YData = p1.YData;
 
-hx.addCustomButton('off', @ChangeFontSize, 'noun_font_size_591141.gif', 'ChangeFontSize');
-hx.addCustomButton('off', @ChangeWeight, 'weight_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'ChangeWeight');
-hx.addCustomButton('off', @ChangeLayout, 'noun_Layout_792775.gif', 'ChangeLayout');
-hx.addCustomButton('off', @ChangeDirected, 'noun_directional_arrows_3497928.gif', 'ChangeDirected');
-hx.addCustomButton('off', @AnimateCutoff, 'noun_trim_3665385.gif', 'AnimateCutoff');
-hx.addCustomButton('off', @ChangeCutoff, 'filter-alt.jpg', 'ChangeCutoff');
-hx.addCustomButton('off', @SaveAdj, 'floppy-disk-arrow-in.jpg', 'Export & save data');
-hx.addCustomButton('on', @in_RefreshAll, "refresh.jpg", "Refresh");
+
+hx.addCustomButton('off', @ChangeFontSize, 'noun_font_size_591141.gif', 'Change Font Size of Nodes');
+hx.addCustomButton('off', @ChangeWeight, 'weight_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'Change Width of Edges');
+hx.addCustomButton('off', @ChangeLayout, 'group_work_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'Change Network Layout');
+hx.addCustomButton('off', @ChangeDirected, 'turn_sharp_right_17dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'Change to Undirected Network');
+hx.addCustomButton('off', @AnimateCutoff, 'movie.jpg', 'Animate Change and Select a Cutoff for Linked Edges');
+hx.addCustomButton('off', @ChangeCutoff, 'carpenter_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'Change Cutoff to Trim Network');
+hx.addCustomButton('off', @SaveAdj, 'floppy-disk-arrow-in.jpg', 'Export & Save Data');
+hx.addCustomButton('on',  @in_RefreshAll, "refresh.jpg", "Refresh View");
 
 %if exist('suptitle.m', 'file')
 %    hFig.Position(3) = hFig.Position(3) * 1.8;
