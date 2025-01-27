@@ -1,5 +1,5 @@
 function [T, X1, X2, g, xyz1, xyz2,...
-    px1, py1, pz1, px2, py2, pz2] = e_dvanalysis_brennecke(sce1, sce2, cL1, cL2)
+    px1, py1, pz1, px2, py2, pz2] = e_dvanalysis_brennecke(sce1, sce2, ~, ~)
 
 if nargin<3
     cL1 = {'1'};

@@ -1,6 +1,6 @@
 function callback_PickColorMap(src, ~, showzero)
 
-[FigureHandle, sce] = gui.gui_getfigsce(src);
+[~, sce] = gui.gui_getfigsce(src);
 if nargin < 3, showzero = false; end
 n = numel(unique(sce.c));
 % disp(sprintf('Using %d colors',n));

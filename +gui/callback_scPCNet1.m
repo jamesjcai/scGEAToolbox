@@ -1,6 +1,6 @@
 function callback_scPCNet1(src, events)
 
-[FigureHandle, sce] = gui.gui_getfigsce(src);
+[~, sce] = gui.gui_getfigsce(src);
 
 if numel(unique(sce.c_cell_type_tx))>1
     answer = questdlg('Construct gene regulatory network (GRN) for all cells or selected cells?', ...

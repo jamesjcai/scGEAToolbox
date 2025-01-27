@@ -333,7 +333,7 @@ function varargout = venn (varargin)
         %Search!
         pp = fminsearch(@chowRodgersErr, guessParams, fminOpts(2));  
         
-        [r(1) x(2) r(2) x(3) y(3) r(3)] = deal(pp(1), pp(2), pp(3), pp(4), pp(5), pp(6));
+        [r(1), x(2), r(2), x(3), y(3), r(3)] = deal(pp(1), pp(2), pp(3), pp(4), pp(5), pp(6));
         
         
         function err = chowRodgersErr (p)
@@ -622,11 +622,11 @@ function [Cx, Cy, aiz] = centroid2CI (x, y, r)
     %Angle (xp,yp) (X1,Y1) (xp,-yp)
     alpha = 2*acos(xp./r(:,1));
     %Area and centroid of the right side of the inner zone
-    [xic(:,1) az(:,1)] = circleChordVals (r(:,1), alpha);
+    [xic(:,1), az(:,1)] = circleChordVals (r(:,1), alpha);
     %Angle (xp,yp) (X2,Y2) (xp,-yp)
     alpha = 2*acos((d-xp)./r(:,2));
     %Area and centroid of the left side of the inner zone
-    [xic(:,2) az(:,2)] = circleChordVals (r(:,2), alpha);
+    [xic(:,2), az(:,2)] = circleChordVals (r(:,2), alpha);
     xic(:,2) = d - xic(:,2);
     %Thus the overall centroid  & area of the inner zone
     aiz = sum(az,2);
@@ -834,7 +834,7 @@ function [A0, I0, Z0, nCircles, fminOpts, vennOpts, patchOpts] = parseArgsIn (ar
         patchOpts = struct('Parameters', [], 'Values', []);
     end
 end %parseArgsIn
-function [vennOpts, patchOpts] = parsePVPairs (p, v, nZones)
+function [vennOpts, patchOpts] = parsePVPairs (p, v, ~)
     p = lower(p);
     %Break up P/V list into Venn parameters and patch parameters
     vennParamNames = {'plot', 'errminmode', 'parent'};

@@ -1,4 +1,4 @@
-function i_pickcolormap(~, ~, c, setzerocolor)
+function i_pickcolormap(~, ~, ~, setzerocolor)
 if nargin < 4, setzerocolor = false; end
 if nargin < 3, c = []; end
 a = colormap;

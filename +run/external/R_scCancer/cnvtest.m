@@ -1,7 +1,7 @@
 % https://raw.githubusercontent.com/wguo-research/scCancer/refs/heads/master/R/cnvFunction.R
 
 
-function cnvList = prepareCNV(exprData, geneManifest, cellAnnotation, refData, species, genome)
+function cnvList = cnvtest(exprData, geneManifest, cellAnnotation, refData, species, genome)
     % Set default values for optional arguments
     if nargin < 4, refData = []; end
     if nargin < 5, species = 'human'; end
