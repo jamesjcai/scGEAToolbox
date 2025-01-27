@@ -1,7 +1,9 @@
-function [needupdate, v1local, v2web, im] = i_majvercheck
+function [needupdate, v1local, v2web, im] = i_majvercheck(needed)
 
+if nargin<1, needed = [true true true true]; end
 % major version update check
 needupdate = false;
+v1local = [];
 v2web = [];
 im = [];
 try    
@@ -13,18 +15,19 @@ try
     % a1 = strfind(x, '<param.version>');
     % a2 = strfind(x, '</param.version>');
     % v1local = extractBetween(x, a1{1}+length('<param.version>'), a2{1}-1)
-
-    v1local = {pkg.i_get_versionnum};
-
-    xfile = 'scGEAToolbox.prj';
-    url = sprintf('https://raw.githubusercontent.com/jamesjcai/scGEAToolbox/main/%s',xfile);
-    a = webread(url);
-    a = strsplit(a, '\n')';
-    x = a(contains(a, '<param.version>'));
-    a1 = strfind(x, '<param.version>');
-    a2 = strfind(x, '</param.version>');
-    v2web = extractBetween(x, a1{1}+length('<param.version>'), a2{1}-1);
-
+    if needed(2)
+        v1local = {pkg.i_get_versionnum};
+    end
+    if needed(3)
+        xfile = 'scGEAToolbox.prj';
+        url = sprintf('https://raw.githubusercontent.com/jamesjcai/scGEAToolbox/main/%s',xfile);
+        a = webread(url);
+        a = strsplit(a, '\n')';
+        x = a(contains(a, '<param.version>'));
+        a1 = strfind(x, '<param.version>');
+        a2 = strfind(x, '</param.version>');
+        v2web = extractBetween(x, a1{1}+length('<param.version>'), a2{1}-1);
+    end
     %{
     a=textread('scGEAToolbox.prj','%s');
     x=a(contains(a,'<param.version>'));
@@ -45,22 +48,20 @@ try
 catch ME
     disp(ME.message);
 end
-if nargout > 1, v1local = v1local{1}; end
-if nargout > 2
-    if ~isempty(v2web)
-        try
-            v2web = v2web{1};
-        catch
-            v2web = [];
+    if nargout > 1 && needed(2), v1local = v1local{1}; end
+    if nargout > 2 && needed(3)
+        if ~isempty(v2web)
+            try
+                v2web = v2web{1};
+            catch
+                v2web = [];
+            end
         end
     end
-end
-if nargout > 3
-    try
-        im = webread('https://visit-counter.vercel.app/counter.png?page=https%3A%2F%2Fgithub.com%2Fjamesjcai%2FscGEAToolbox%2F&s=15&c=ffffff&bg=00000000&no=2&ff=digi&tb=&ta=');
-    catch
-        im = [];
+    if nargout > 3 && needed(4)
+        try
+            im = webread('https://visit-counter.vercel.app/counter.png?page=https%3A%2F%2Fgithub.com%2Fjamesjcai%2FscGEAToolbox%2F&s=15&c=ffffff&bg=00000000&no=2&ff=digi&tb=&ta=');
+        catch
+        end
     end
-end
-
 end
