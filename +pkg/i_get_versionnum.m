@@ -55,5 +55,8 @@ function [v1] = i_get_versionnum
             warning(ME.identifier, 'Error reading file content: %s', ME.message);
         end
     end
-    if ~exist(vfile,"file"), save(vfile, 'v1'); end    
+    % Save to VERSION.mat if v1 is non-empty
+    if ~isempty(v1) && ~exist(vfile,"file")
+        save(vfile, 'v1'); 
+    end    
 end
