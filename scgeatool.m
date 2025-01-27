@@ -115,10 +115,7 @@ if ~isempty(fx) && isvalid(fx), set(fx, 'visible', 'off'); end
 pause(0.2);
 delete(fx);
 set(FigureHandle, 'visible', 'on');
-try
-    FigureHandle.focus;
-catch
-end
+if matlab.ui.internal.isUIFigure(FigureHandle), focus(FigureHandle); end
 uicontrol(button1);
 
 guidata(FigureHandle, sce);
