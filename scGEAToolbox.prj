@@ -7,7 +7,7 @@
     <param.summary>Single-cell Gene Expression Analysis Toolbox</param.summary>
     <param.description>scRNAseq data analysis toolbox</param.description>
     <param.screenshot>${PROJECT_ROOT}\resources\Images\scgeatool.png</param.screenshot>
-    <param.version>25.1.6</param.version>
+    <param.version>25.1.7</param.version>
     <param.output>${PROJECT_ROOT}\scGEAToolbox.mltbx</param.output>
     <param.products.name>
       <item>MATLAB</item>
@@ -60,7 +60,8 @@ resources/STRING/stringdb_mouse.mat
 **/scgeatoolstandaloneApplication
 **/ui
 **/+qtm
-TIMESTAMP</param.exclude.filters>
+TIMESTAMP
+VERSION.mat</param.exclude.filters>
     <param.exclude.pcodedmfiles>true</param.exclude.pcodedmfiles>
     <param.examples />
     <param.demosxml />
