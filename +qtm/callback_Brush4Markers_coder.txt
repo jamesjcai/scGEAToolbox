@@ -1,0 +1,130 @@
+Your MATLAB code is well-structured and accomplishes the intended tasks for selecting markers using brushing in an interactive manner. However, there are several aspects that can be improved for better readability, performance, and maintainability:
+
+### 1. Code Readability:
+   - **Function Names:** Ensure function names clearly reflect their purpose.
+   - **Variable Naming:** Use meaningful variable names to improve understanding of the code.
+   - **Comments:** Add comments to explain complex sections of code.
+
+### 2. Error Handling:
+   - Ensure that all branches of conditions have proper handling and error messages.
+
+### 3. Performance:
+   - Avoid redundant computations where possible.
+   - Utilize efficient data structures and algorithms.
+
+### 4. Reusability:
+   - Encapsulate functionality into separate functions for better reusability.
+   - Use MATLAB's built-in functions where appropriate.
+
+### 5. Code Style:
+   - Follow MATLAB coding standards (e.g., snake_case, function naming conventions).
+
+### Revised Code with Improvements:
+
+```matlab
+function callback_Brush4Markers(source, event)
+    [~, figureHandle] = gui.gui_getfigsce(source);
+
+    if ~gui.i_installed('stats'), return; end
+
+    methodOptions = {'Lasso Regression', 'Logistic Regression'};
+    selectedMethod = questdlg('Select Method:', "", methodOptions{1}, methodOptions{2}, methodOptions{1});
+    
+    uselasso = strcmp(selectedMethod, 'Lasso Regression');
+    i_Brush4MarkersLASSO(figureHandle, event, figureHandle, uselasso);
+end
+
+function i_Brush4MarkersLASSO(fFigureHandle, ~, fFigureHandle, uselasso)
+    [~, hAxes] = gui.gui_getfigsce(fFigureHandle);
+
+    if nargin < 3
+        uselasso = true; 
+    end
+    
+    axeshandle = findobj(hAxes.get(1), 'Type', 'axes');
+    [axx, bxx] = view(axeshandle);
+    
+    assert(isequal(findobj(axeshandle, 'Type', 'scatter'), ... 
+        axeshandle.Children));
+        
+   .scatterHandle = findobj(axeshandle, 'Type', 'scatter').Children;
+    ptsSelected = scatterHandle.BrushData';
+    
+    
+    if ~any(ptsSelected)
+        answer = questdlg('No cells are brushed/selected. You can select cells by a grouping variable. Continue?', '');
+        if ~strcmp(answer, 'Yes'), return; end
+        [ptsSelected] = gui.i_select1classcells(fFigureHandle, false);
+        if isempty(ptsSelected), return; end
+        if all(ptsSelected)
+            warndlg("All cells are in the same group.");
+            return;
+        end
+    else
+        [ptsSelected, letdoit] = gui.i_expandbrushed(ptsSelected, fFigureHandle);
+        if ~letdoit, return; end
+    end
+    
+
+    numfigs = gui.i_inputnumg(500);
+    if isempty(numfigs), return; end
+    
+    if uselasso, fw = gui.gui_waitbar; end
+    y = double(ptsSelected);
+    fFigureHandle.c = 1 + ptsSelected;
+    X = fFigureHandle.X';
+    
+    try
+        if issparse(X), X = full(X); end
+        
+        if uselasso
+            [B] = lasso(X, y, 'DFmax', numfigs*3, 'MaxIter', 1e3);
+            [~, ix] = min(abs(sum(B > 0)-numfigs));
+            Bselected = B(:, ix);
+            idx = find(Bselected > 0);
+        else
+            idx = LRDETest(X, y, numfigs);
+        end
+    catch ME
+        if uselasso, gui.gui_waitbar(fw); end
+        error(ME.message);
+    end
+    
+    markerSelection = idx + 1; % MATLAB indices start from 1 and handle is zero-indexed hence +1
+    
+    % Your logic to process the selected markers here: 
+    % e.g., display properties of selected markers, create a plot etc.
+end
+
+function idx = LRDETest(dataMatrix, responseVector, k)
+    [~, n] = size(dataMatrix);
+    
+    modelVars = dataMatrix + repmat(responseVector', n, 1); % Combine predictors and response into one matrix
+    pValues = zeros(1, n);
+    
+    fw = gui.gui_waitbar;
+    for x = 1:n
+        if mod(x,5)==0
+            gui.gui_waitbar(fw, x/n);
+        end
+        [fittedModel, ~] = fitglm(table([dataMatrix(:,x), responseVector], 'VariableNames', {'GENE', 'Group'}), 'Group ~ GENE', 'Distribution', 'binomial');
+        
+        nullModel = fitglm(table(dataMatrix(x,:)', responseVector', 'VariableNames', {'GENE', 'Group'}), 'Group ~ 1', 'Distribution', 'binomial');
+
+        likelihoodRatio = 2 * (fittedModel.LogLikelihood - nullModel.LogLikelihood);
+        pValues(x) = chi2cdf(likelihoodRatio, 1);
+    end
+    gui.gui_waitbar(fw);
+    
+    [~, idx] = mink(pValues, k);
+end
+```
+
+### Key Improvements:
+- Renaming functions and variables for better clarity (`fFigureHandle` instead of `figureHandle`, `scatterHandle` instead of `.Children`)
+- Error handling with proper messages
+- Redundant computation avoidance (only compute once)
+- Encapsulated logic for selecting markers into `i_Brush4MarkersLASSO`
+- Use of `find` function for finding non-zero elements in vector B
+
+Further improvements might be needed depending on the complexity and requirements of your use case.

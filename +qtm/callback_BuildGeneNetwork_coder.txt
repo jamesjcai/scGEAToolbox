@@ -1,0 +1,96 @@
+Your MATLAB code is well-structured and accomplishes its task of building a gene network. However, there are some areas where improvements can be made for better performance, readability, and robustness. Below are the recommended changes:
+
+### 1. Error Handling Improvements
+Currently, your error handling is quite simplistic. Instead of using `error('xxx')`, you might want to provide more informative error messages that help debug issues.
+
+### 2. Function Separation
+Separating the GUI interaction logic into separate functions can make the code more modular and easier to maintain.
+
+### 3. Vectorization
+Some parts of your code can be vectorized for better performance, avoiding loops where possible.
+
+### 4. Code Readability
+Improving variable names and adding comments can enhance readability.
+
+### Revised Code
+
+```matlab
+function callback_BuildGeneNetwork(src, ~)
+    [FigureHandle, sce] = gui.gui_getfigsce(src);
+    
+    % Select genes
+    glist = gui.i_selectngenes(sce, [], FigureHandle);
+    if isempty(glist), return; end
+    
+    % Validate gene selection against available gene list
+    validGenes = ismember(upper(glist), upper(sce.g));
+    if ~all(validGenes)
+        error('One or more selected genes are not part of the available gene list.');
+    end
+    
+    fprintf('%s\n', glist);
+    
+    % Transform data
+    Xt = gui.i_transformx(sce.X, true, 5);
+    if isempty(Xt), return; end
+    
+    x = Xt(validGenes, :);
+
+    % Select algorithm
+    algorithm = questdlg('Select algorithm:', 'Algorithms', {'PC Regression', 'Chaterjee.Correlation'}, 1);
+    
+    % Run algorithm and build network
+    switch lower(algorithm)
+        case 'pc regression'
+            A = pc_regression(x);
+        case 'chaterjee.correlation'
+            A = chaterjee_correlation(x, validGenes);
+        otherwise
+            error('Invalid algorithm selected.');
+    end
+    
+    % Display network
+    sc_grnview(A, glist, [], FigureHandle);
+end
+
+% Helper functions for specific algorithms
+function A = pc_regression(x)
+    fw = gui.gui_waitbar;
+    [numVars, ~] = size(x);
+    A = zeros(numVars);
+    
+    for k=1:numVars
+        [~, maxIdx, ~, sign] = corrcoef(x(:, k), x(:, 1:k-1));
+        A(k, :) = max(sign .* abs(maxIdx)).';
+        gui.gui_waitbar(fw, (k-1)/numVars);
+    end
+    gui.gui_waitbar(fw);
+end
+
+function A = chaterjee_correlation(x, validGenes)
+    fw = gui.gui_waitbar_adv;
+    n = size(x, 2); % Number of variables after transformation
+    A = zeros(n);
+    
+    for k=1:n
+        gui.gui_waitbar_adv(fw, (k-1)/n);
+        
+        for l=k+1:n
+            A(k,l) = pkg.e_xicor(x(:, validGenes(k)), x(:, validGenes(l)));
+        end
+        
+        % Symmetrize the matrix (optional)
+        A(l,k) = A(k,l);
+    end
+    gui.gui_waitbar_adv(fw);
+end
+```
+
+### Explanation of Changes
+
+1. **Error Handling**: Improved error messages for better debugging.
+2. **Function Separation**: The algorithm-specific logic is now separated into helper functions (`pc_regression` and `chaterjee_correlation`). This makes the main function cleaner and easier to maintain.
+3. **Vectorization and Optimization**: While your original code was already using logical indexing for `validGenes`, which is efficient, further vectorizations are possible in certain parts of the algorithms.
+4. **Readability**: Added more descriptive comments and variable names.
+
+These changes should help improve the overall quality and performance of your MATLAB code.
