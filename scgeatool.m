@@ -24,6 +24,7 @@ if nargin < 1
     end
     sce = SingleCellExperiment;
 else
+    if isempty(sce), sce = SingleCellExperiment; end
     if ~isa(sce, 'SingleCellExperiment')
         error('requires >> sce = SingleCellExperiment(); scgeatool(sce)');
     end
@@ -31,8 +32,6 @@ else
 end
 
 mfolder = fileparts(mfilename('fullpath'));
-ptImgFile = fullfile(mfolder, 'resources', 'Images', 'ptImgFile.mat');
-if exist(ptImgFile, 'file'), load(ptImgFile, 'ptImgCell'); end
 
 p = inputParser;
 checkCS = @(x) isempty(x) | size(sce.X, 2) == length(x);
@@ -40,6 +39,7 @@ addRequired(p, 'sce', @(x) isa(x, 'SingleCellExperiment'));
 addOptional(p, 'c', sce.c, checkCS);
 addOptional(p, 's', [], checkCS);
 addOptional(p, 'methodid', 1, @isnumeric);
+addOptional(p, 'legacy', false, @islogical);
 addOptional(p, 'callinghandle', []);
 parse(p, sce, varargin{:});
 callinghandle = p.Results.callinghandle;
@@ -48,6 +48,14 @@ c_in = p.Results.c;
 s_in = p.Results.s;
 
 methodid = p.Results.methodid;
+legacy = p.Results.legacy;
+
+if legacy
+    ptImgFile = fullfile(mfolder, 'resources', 'Images', 'ptImgFile_legacy.mat');
+else
+    ptImgFile = fullfile(mfolder, 'resources', 'Images', 'ptImgFile.mat');
+end
+if exist(ptImgFile, 'file'), load(ptImgFile, 'ptImgCell'); end
 
 f_traj = [];   % trajectory curve
 ax = []; bx = [];
