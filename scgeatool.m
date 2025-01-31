@@ -8,7 +8,7 @@ if ~gui.i_installed('stats'), return; end
 persistent speciestag
 
 ptimgidx = 1;
-ptImgCell = {};
+ptImgCell = cell(2, 50);
 
 import pkg.*
 import gui.*
@@ -546,12 +546,13 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             barhandle = UserToolbarHandle;
         end
        
-        if numel(ptImgCell) >= ptimgidx && ~isempty(ptImgCell{ptimgidx})
+        if numel(ptImgCell) >= ptimgidx && ~isempty(ptImgCell{1, ptimgidx})
             pkg.i_addbutton2fig(barhandle, sepTag, ...
-                callbackFnc, ptImgCell{ptimgidx}, tooltipTxt);
+                callbackFnc, ptImgCell{1, ptimgidx}, tooltipTxt);
         else
-            [~, ptImgCell{ptimgidx}] = pkg.i_addbutton2fig(barhandle, ...
+            [~, ptImgCell{1, ptimgidx}] = pkg.i_addbutton2fig(barhandle, ...
                 sepTag, callbackFnc, imgFil, tooltipTxt);
+            ptImgCell{2, ptimgidx} = tooltipTxt;
         end
         ptimgidx = ptimgidx + 1;
     end
