@@ -14,8 +14,12 @@ function i_setboxon(~, ~, hFig)
             ax = axesHandles(k);
             if strcmp(ax.Box, 'on')
                 box(ax, 'off');
+                %ax.XAxis.Visible="off";
+                %ax.YAxis.Visible="off";
             else
                 box(ax,'on');
+                %ax.XAxis.Visible="on";
+                %ax.YAxis.Visible="on";
             end
         end
     else
