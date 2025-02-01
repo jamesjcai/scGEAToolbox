@@ -1419,13 +1419,16 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 forced = true;
                 %if contains(methoddimtag, 'tsne'), disp('tSNE perplexity = 30'); end
                 for k=1:length(methodtag)
-
-                    if ~overwrittenold && isfield(sce.struct_cell_embeddings, methodtag{k}) && ~isempty(sce.struct_cell_embeddings.(methodtag{k}))
-                        fprintf('Embedding cells using %s - skipping...\n', upper(methodtag{k}));
+                    if ~overwrittenold && ...
+                        isfield(sce.struct_cell_embeddings, methodtag{k}) && ...
+                        ~isempty(sce.struct_cell_embeddings.(methodtag{k}))
+                        fprintf('Embedding cells using %s - skipping...\n', ...
+                            upper(methodtag{k}));
                         continue;
                     else
                         gui.gui_waitbar_adv(fw,(k-1)/length(methodtag), ...
-                            sprintf('Embedding cells using %s', upper(methodtag{k})));          
+                            sprintf('Embedding cells using %s', ...
+                            upper(methodtag{k})));
                     end
                     ndim = 2 + contains(methodtag{k},'3d');
                     sce = sce.embedcells(methodtag{k}, forced, ...
