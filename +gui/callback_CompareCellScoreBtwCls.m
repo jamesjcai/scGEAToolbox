@@ -1,5 +1,16 @@
 function [needupdatesce] = callback_CompareCellScoreBtwCls(src, ~)
 
+%{
+1. Input:
+   - `sce`: An object containing the cellular data.
+   - `glist`: A list of gene/region names (optional).
+   - `thisc`: The current cell group being analyzed.
+   - `selecteditem`: Determines which type of score to calculate or display.
+
+2. Output:
+    - Displays a graph showing the calculated scores along with labels for each dataset.
+%}
+
 [FigureHandle, sce] = gui.gui_getfigsce(src);
 needupdatesce = false;
 

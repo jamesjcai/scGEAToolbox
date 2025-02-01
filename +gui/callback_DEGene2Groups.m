@@ -1,57 +1,56 @@
 function callback_DEGene2Groups(src, ~)
 
-isatac = false;
-
-[~, sce] = gui.gui_getfigsce(src);
-if ~gui.gui_showrefinfo('DE Analysis'), return; end
-
-
-[i1, i2, cL1, cL2] = gui.i_select2smplgrps(sce, false);
-if isscalar(i1) || isscalar(i2), return; end
-
-% --------
-a=sprintf('%s vs. %s',cL1{1}, cL2{1});
-b=sprintf('%s vs. %s',cL2{1}, cL1{1});
-answer = questdlg('Which vs. which?','',a,b,a);
-switch answer
-    case a
-    case b
-        i3=i1; i1=i2; i2=i3;
-        cL3=cL1; cL1=cL2; cL2=cL3;
-    otherwise
-        return;
-end
-% ----------
-
-methodtag = "ranksum";
-
-%{
-answer = questdlg('Which method?', ...
-    'Select Method', 'Wilcoxon rank-sum test 🐇', ...
-    'DESeq 2 (R required) 🐢', ...
-    'Wilcoxon rank-sum test 🐇');
-
-if strcmpi(answer, 'Wilcoxon rank-sum test 🐇')
-    methodtag = "ranksum";
-elseif strcmpi(answer, 'DESeq 2 (R required) 🐢')
-    methodtag = "deseq2";
-    %         if ~(ismcc || isdeployed)
-    %             if ~exist('nbintest.m', 'file')
-    %                 errordlg('This option requires Bioinformatics toolbox.');
-    %                 return;
-    %             end
-    %         end
-elseif strcmpi(answer, 'MAST (R required) 🐢')
-    methodtag = "mast";
-    if isempty(pkg.FindRpath)
-        warndlg('This function requires R environment.')
+    isatac = false;
+    [~, sce] = gui.gui_getfigsce(src);
+    if ~gui.gui_showrefinfo('DE Analysis'), return; end
+    
+    
+    [i1, i2, cL1, cL2] = gui.i_select2smplgrps(sce, false);
+    if isscalar(i1) || isscalar(i2), return; end
+    
+    % --------
+    a=sprintf('%s vs. %s',cL1{1}, cL2{1});
+    b=sprintf('%s vs. %s',cL2{1}, cL1{1});
+    answer = questdlg('Which vs. which?','',a,b,a);
+    switch answer
+        case a
+        case b
+            i3=i1; i1=i2; i2=i3;
+            cL3=cL1; cL1=cL2; cL2=cL3;
+        otherwise
             return;
     end
-else
-    return;
-end
-%}
-
+    % ----------
+    
+    methodtag = "ranksum";
+    
+    %{
+    answer = questdlg('Which method?', ...
+        'Select Method', 'Wilcoxon rank-sum test 🐇', ...
+        'DESeq 2 (R required) 🐢', ...
+        'Wilcoxon rank-sum test 🐇');
+    
+    if strcmpi(answer, 'Wilcoxon rank-sum test 🐇')
+        methodtag = "ranksum";
+    elseif strcmpi(answer, 'DESeq 2 (R required) 🐢')
+        methodtag = "deseq2";
+        %         if ~(ismcc || isdeployed)
+        %             if ~exist('nbintest.m', 'file')
+        %                 errordlg('This option requires Bioinformatics toolbox.');
+        %                 return;
+        %             end
+        %         end
+    elseif strcmpi(answer, 'MAST (R required) 🐢')
+        methodtag = "mast";
+        if isempty(pkg.FindRpath)
+            warndlg('This function requires R environment.')
+                return;
+        end
+    else
+        return;
+    end
+    %}
+    
     try
         switch methodtag
             case 'ranksum'
@@ -74,9 +73,8 @@ end
     catch ME
         errordlg(ME.message);
         return;
-    end
-
-
+    end   
+    
     % figure;
     % gui.i_volcanoplot(T);
     % title(sprintf('%s vs. %s', ...
@@ -91,9 +89,7 @@ end
     % xline(0); xline(-1); xline(1);
     % yline(2);
     % colormap(gca,lines(2));
-
     % mavolcanoplot(sce.X(:,i1),sce.X(:,i2),T.p_val_adj,'Labels',T.gene)
-
     try
         T = sortrows(T, 'p_val_adj', 'ascend');
         T = sortrows(T, 'pct_1', 'ascend');
@@ -104,12 +100,10 @@ end
     end
 
     try
-
         % avg_1 = mean(X,2);
         % avg_2 = mean(Y,2);
         % pct_1 = sum(X>0,2)./size(X,2);
         % pct_2 = sum(Y>0,2)./size(Y,2);
-
         if contains(T.Properties.VariableNames{5}, 'avg_1')
             T.Properties.VariableNames{5} = sprintf('%s_%s', ...
                 T.Properties.VariableNames{5}, ...
@@ -141,10 +135,8 @@ end
         matlab.lang.makeValidName(string(cL1)), matlab.lang.makeValidName(string(cL2)));
     if isatac, T.gene = "chr" + T.gene; end
 
-    [filetype, filesaved] = gui.i_exporttable(T, true, 'Tdegenelist', outfile, [], "All_genes");
-
-    % 'Tviolindata','ViolinPlotTable'
-    % 'Tdegenelist'
+    [filetype, filesaved] = gui.i_exporttable(T, true, ...
+        'Tdegenelist', outfile, [], "All_genes");
 
     tf = 0;
     if ~(ismcc || isdeployed) && strcmp(filetype, 'Workspace')
@@ -191,26 +183,27 @@ end
         end
     end
 
-    if tf == 1
-        disp('To run enrichment analysis, type:');
-        disp('run.web_Enrichr(Tup.gene(1:250))');
-        disp('run.web_Enrichr(Tdn.gene(1:250))');
-        [outgenelist, outbackgroundlist, enrichrtype] = ...
-            gui.gui_prepenrichr(Tup.gene, sce.g,... 
-           'Run enrichment analysis with up-regulated DE genes?');
+    if tf ~= 1, return; end
+    disp('To run enrichment analysis, type:');
+    disp('run.web_Enrichr(Tup.gene(1:250))');
+    disp('run.web_Enrichr(Tdn.gene(1:250))');
 
-        if ~isempty(outbackgroundlist)
-            gui.callback_RunEnrichr(src, [], outgenelist, enrichrtype, ...
-                outbackgroundlist, "Up");
-        end
-        
-        [outgenelist, outbackgroundlist, enrichrtype] = ...
-            gui.gui_prepenrichr(Tdn.gene, sce.g,... 
-           'Run enrichment analysis with down-regulated DE genes?');
-        if ~isempty(outbackgroundlist)
-            gui.callback_RunEnrichr(src, [], outgenelist, enrichrtype, ...
-                outbackgroundlist, "Down");
-        end
+    [outgenelist, outbackgroundlist, enrichrtype] = ...
+        gui.gui_prepenrichr(Tup.gene, sce.g,... 
+       'Run enrichment analysis with up-regulated DE genes?');
 
+    if ~isempty(outbackgroundlist)
+        gui.callback_RunEnrichr(src, [], outgenelist, enrichrtype, ...
+            outbackgroundlist, "Up");
     end
+    
+    [outgenelist, outbackgroundlist, enrichrtype] = ...
+        gui.gui_prepenrichr(Tdn.gene, sce.g,... 
+       'Run enrichment analysis with down-regulated DE genes?');
+
+    if ~isempty(outbackgroundlist)
+        gui.callback_RunEnrichr(src, [], outgenelist, enrichrtype, ...
+            outbackgroundlist, "Down");
+    end
+    
 end

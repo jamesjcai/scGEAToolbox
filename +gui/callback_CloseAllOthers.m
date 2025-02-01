@@ -1,4 +1,47 @@
 function callback_CloseAllOthers(~, ~)
+    % Callback function that closes all other MATLAB figures except the current one.
+    
+    % Get the handle of the currently active figure
+    currentFigureHandle = gcf;
+    
+    % Find all open figure handles in the workspace
+    allFigures = findobj(0, 'type', 'figure');
+    
+    % Check if the current figure is in the list of all figures and there's more than one figure
+    [isCurrentInList, currentIndex] = ismember(currentFigureHandle, allFigures);
+    
+    if isCurrentInList && length(allFigures) > 1
+        % Ask the user to confirm before closing other figures
+        confirmation = questdlg('Close all other figures?', 'Confirmation');
+        
+        % If the user does not confirm, exit the function
+        if ~strcmp(confirmation, 'Yes')
+            return;
+        end
+        
+        % Loop through all figure handles and close the ones that are not the current one
+        for index = 1:length(allFigures)
+            if index ~= currentIndex
+                try
+                    % Attempt to close the figure
+                    close(allFigures(index));
+                    
+                catch closeError
+                    % Handle any exceptions that occur during closing a figure
+                    disp(['Failed to close figure ', num2str(allFigures(index)), ': ', closeError.message]);
+                end
+            end
+        end
+        
+        disp('All other figures have been closed.');
+        
+    else
+        disp('Either there is only one figure or the current figure is part of another application group. Nothing has been done.');
+    end
+end
+
+%{
+function callback_CloseAllOthers(~, ~)
 a = gcf;
 all_figs = findobj(0, 'type', 'figure');
 [y, idx] = ismember(a, all_figs);
@@ -15,3 +58,4 @@ if y && length(all_figs) > 1
     end
 end
 end
+%}
