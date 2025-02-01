@@ -11,22 +11,29 @@ file_links = unique(file_links);
 
 base_url = 'https://raw.githubusercontent.com/jamesjcai/scGEAToolbox/main/%2Bgui/';
 
-for i = 1:2 %length(file_links)
-    filename = extractAfter(file_links{i}, '%2Bgui/')
+N = length(file_links);
+fw = gui.gui_waitbar_adv;
+for i = 51:N
+    gui.gui_waitbar_adv(fw, i/N);
+    filename = extractAfter(file_links{i}, '%2Bgui/');
     file_url = [base_url filename];
     outfile = filename(1:end-2) + "_coder.txt";
-    fid = fopen(outfile, 'w');
-    try
-        code = webread(file_url);
-        prompt = "Review this MATLAB code for professional feedback: " + code;
-        feedbk = generate(chat, prompt);        
-        fprintf(fid, '%s', feedbk);
-    catch
-        fprintf('Failed to read %s\n', filename);
+    if ~exist(outfile, 'file')
+        fid = fopen(outfile, 'w');
+        try
+            code = webread(file_url);
+            prompt = "Review this MATLAB code for professional feedback: " + code;
+            feedbk = generate(chat, prompt);        
+            fprintf(fid, '%s', feedbk);
+        catch
+            fprintf('Failed to read %s\n', filename);
+        end
+        fclose(fid);
+        
     end
-    fclose(fid);
+    
 end
-
+gui.gui_waitbar_adv(fw);
 %{
 chat = ollamaChat("deepseek-r1", StreamFun=@printToken);
 prompt = "What is Model-Based Design?";

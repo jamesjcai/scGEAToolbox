@@ -7,6 +7,8 @@
 # Compiled MEX binaries (all platforms)
 # *.mex*
 
+*_coder.txt
+
 thirdparty/GOrilla/input_page.html
 
 input_page.html
