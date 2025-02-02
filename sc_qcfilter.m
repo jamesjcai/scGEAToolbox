@@ -12,7 +12,9 @@ if nargin < 3 || isempty(libszcutoff), libszcutoff = 500; end % 1000
 try
     [X, keptidx] = sc_rmmtcells(X, genelist, mtratio);
 catch ME
-    warning(ME.message);
+    warning(ME.identifier, ...
+        'Error in sc_rmmtcells: %s. Attempting alternative method.', ...
+        ME.message);
     Xobj = pkg.refwrap(X);
     clear X
     [keptidx] = obj_rmmtcells(Xobj, genelist, mtratio);
@@ -41,17 +43,17 @@ end
 end
 
 
-function [keptidx] = obj_rmmtcells(Xobj, genelist, mtratio, mtgenenamepat, vebrose)
+function [keptidx] = obj_rmmtcells(Xobj, genelist, mtratio, mtgenenamepat, verbose)
 %Remove cells with high mtDNA ratio
 if nargin < 3, mtratio = 0.1; end
 if nargin < 4, mtgenenamepat = "mt-"; end
-if nargin < 5, vebrose = false; end
+if nargin < 5, verbose = false; end
 
 assert(isa(Xobj, 'pkg.refwrap'))
 assert(size(Xobj.data, 1) == length(genelist))
 idx = startsWith(genelist, mtgenenamepat, 'IgnoreCase', true);
 if sum(idx) > 0
-    if vebrose
+    if verbose
         fprintf('%d mt-genes found.\n', sum(idx));
     end
     lbsz = sum(Xobj.data, 1);
@@ -61,7 +63,7 @@ if sum(idx) > 0
     if sum(~keptidx) > 0
         %Xobj.data=Xobj.data(:,keptidx);
         Xobj.data(:, ~keptidx) = [];
-        if vebrose
+        if verbose
             fprintf('%d cells with mt-read ratio >=%f (or %f%%) are removed.\n', ...
                 sum(~keptidx), mtratio, mtratio*100);
         end
@@ -70,7 +72,7 @@ if sum(idx) > 0
             mtratio, mtratio*100);
     end
 else
-    if vebrose
+    if verbose
         fprintf('No mt-genes found.\n');
         fprintf('No cells with mt-read ratio >=%f (or %f%%) are removed.\n', ...
             mtratio, mtratio*100);
