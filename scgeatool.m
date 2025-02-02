@@ -2134,8 +2134,8 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
     end
 
     function in_labelcellgroups(src, ~)
-        a=findall(FigureHandle,'tag','figMenuCellGroups___');
-        b=findall(FigureHandle,'tag','figToglLabelCellGroups');        
+        %a = findall(FigureHandle, 'tag', 'figMenuCellGroups___');
+        %b = findall(FigureHandle, 'tag', 'figToglLabelCellGroups');
         switch src.Type            
             case 'uitoggletool'
                 statetag = 'State';
@@ -2152,10 +2152,10 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             delete(dtp);
 
             if ~isempty(statetag), set(src, statetag, 'off'); end
-            if ~isempty(a), set(a,'Checked','off'); end
-            if ~isempty(b), set(b,'State','off'); end
+         %   if ~isempty(a), set(a, 'Checked', 'off'); end
+         %   if ~isempty(b), set(b, 'State', 'off'); end
         else
-            [thisc, clabel] = gui.i_select1class(sce,true);
+            [thisc, clabel] = gui.i_select1class(sce, true);
             if isempty(thisc)
                 if ~isempty(statetag), set(src, statetag, 'off'); end
                 return;
@@ -2167,17 +2167,17 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             if max(c) <= 200
                 if ix_labelclusters(true)
                     if ~isempty(statetag), set(src, statetag, 'on'); end
-                    if ~isempty(a), set(a,'Checked','on'); end
-                    if ~isempty(b), set(b,'State','on'); end
+                    %if ~isempty(a), set(a,'Checked','on'); end
+                    %if ~isempty(b), set(b,'State','on'); end
                 else
                     if ~isempty(statetag), set(src, statetag, 'off'); end
-                    if ~isempty(a), set(a,'Checked','off'); end
-                    if ~isempty(b), set(b,'State','off'); end
+                    %if ~isempty(a), set(a,'Checked','off'); end
+                    %if ~isempty(b), set(b,'State','off'); end
                 end
             else
                 if ~isempty(statetag), set(src, statetag, 'off'); end
-                if ~isempty(a), set(a,'Checked','off'); end
-                if ~isempty(b), set(b,'State','off'); end
+                %if ~isempty(a), set(a,'Checked','off'); end
+                %if ~isempty(b), set(b,'State','off'); end
                 uiwait(warndlg('Labels are not showing. Too many categories (n>200).',''));
             end
             % setappdata(FigureHandle, 'cL', cL);
