@@ -23,7 +23,7 @@ function [T] = e_findallmarkers(X, g, c, cL, logfc, minpct, showwaitbar, ...
             if kc ~= mC
                 gui.gui_waitbar_adv(fw, kc/mC, sprintf('Processing %s', cL{kc}));
             else
-                gui.gui_waitbar_adv(fw, kc-1/mC, sprintf('Processing %s', cL{kc}));
+                gui.gui_waitbar_adv(fw, (kc-1)/mC, sprintf('Processing %s', cL{kc}));
             end
         end
         [t] = in_findmarkers(X(:, c == kc), X(:, c ~= kc), cL(kc));
