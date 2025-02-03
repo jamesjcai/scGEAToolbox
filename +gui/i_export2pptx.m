@@ -29,15 +29,28 @@ switch answer
 
         OUTppt = [tempname, '.pptx'];
         ppt = Presentation(OUTppt, pth);
-        %try
+
+%         try
+%     import mlreportgen.report.*; % Example usage of Report Generator
+%     rpt = Report('MyReport', 'pdf');
+%     fprintf('MATLAB Report Generator is working correctly.\n');
+% catch ME
+%     if contains(ME.message, 'MATLAB Report Generator is not installed')
+%         warning('MATLAB Report Generator is not installed or licensed.');
+%     else
+%         rethrow(ME); % If it's another error, rethrow it
+%     end
+% end
+
+        try
             open(ppt);
-        % catch ME
-        %     pause(0.5);
-        %     gui.gui_waitbar(fw, true);
-        %     pause(0.5);
-        %     waitfor(errordlg(ME.message,''));
-        %     return;
-        % end
+        catch ME
+            pause(0.5);
+            gui.gui_waitbar(fw, true);
+            pause(0.5);
+            waitfor(errordlg(ME.message,''));
+            return;
+        end
         
         warning off
         for k = 1:N
