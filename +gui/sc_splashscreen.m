@@ -36,8 +36,8 @@ if nargin<1
     fx.addText(30, 73, sprintf('Version %s', v1), ...
         'FontSize', 14, 'Color', [0.7 0.7 0.7] )
     if showloading
-        fx.addText(307, 277, 'Loading...', ...
-            'FontSize', 14, 'Color', 'white')
+        fx.addText(350, 280, 'Loading...', ...
+            'FontSize', 13, 'Color', 'white')
     end
 end
 if nargin == 2
