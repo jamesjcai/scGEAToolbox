@@ -47,7 +47,8 @@ end
 idx = find(ptsSelected);
 if isempty(idx), warndlg('Root cell(s) is missing.',''); return; end
 
-[ndim] = gui.i_choose2d3d;
+% [ndim] = gui.i_choose2d3d;
+ndim = 2;
 if isempty(ndim), return; end
 
 answer = questdlg('Keep temporary working files?');
@@ -102,24 +103,27 @@ end
 
 if ndim == 2
     sce.struct_cell_embeddings.('monocle2d') = s_mono3;
-else
+elseif ndim == 3
     sce.struct_cell_embeddings.('monocle3d') = s_mono3;
+else
+    error('Invalid ndim. (Valid options: 2 or 3)');
 end
 
 guidata(FigureHandle, sce);
 needupdatesce = true;
 
+waitfor(helpdlg('Monocle3 pseudotime T and embedding S have been saved in SCE.',''));
 
-if ~(ismcc || isdeployed)
-    labels = {'Save pseudotime T to variable named:'};
-    vars = {'Tmonocleout'};
-    values = {t_mono3};
-    msgfig = export2wsdlg(labels, vars, values);
-    uiwait(msgfig)
-else
-    gui.i_exporttable(table(t_mono3), true, 'Tmonocleout', ...
-        'MonocleResTable');
-end
+% if ~(ismcc || isdeployed)
+%     labels = {'Save pseudotime T to variable named:'};
+%     vars = {'Tmonocleout'};
+%     values = {t_mono3};
+%     msgfig = export2wsdlg(labels, vars, values);
+%     uiwait(msgfig)
+% else
+%     gui.i_exporttable(table(t_mono3), true, 'Tmonocleout', ...
+%         'MonocleResTable');
+% end
 
 
     % answer = questdlg('View Monocle3 Minimum Spanning Tree (MST)?');

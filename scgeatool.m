@@ -477,8 +477,30 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
     function in_RunMonocle3(src, events)
         if gui.callback_RunMonocle3(src, events)
             sce = guidata(FigureHandle);
+            [y, idx] = ismember({'monocle3_pseudotime'}, ...
+                 sce.list_cell_attributes(1:2:end));
+            if y
+                answer = questdlg('Color cells using pseudotime T and show Monocle3 embedding S?',...
+                    '','Yes','Color cells only','Show embedding only','Yes');
+                switch answer
+                    case 'Yes'
+                        sce.c = sce.list_cell_attributes{idx*2};
+                        sce.s = sce.struct_cell_embeddings.('monocle2d');
+                        [c, cL] = grp2idx(sce.c);
+                        in_RefreshAll(src, [], true, false);
+                    case 'Color cells only'
+                        sce.c = sce.list_cell_attributes(idx*2);
+                        [c, cL] = grp2idx(sce.c);
+                        in_RefreshAll(src, [], true, false);
+                    case 'Show embedding only'
+                        sce.s = sce.struct_cell_embeddings.('monocle2d');
+                        in_RefreshAll(src, [], true, false);
+                    otherwise
+                end                
+            end
         end
     end
+
 
     function in_turnonuserguiding(~, ~)
         % setpref('scgeatoolbox','useronboardingtoolbar',true);
