@@ -32,6 +32,11 @@ ps_tim <- pseudotime(cds)
 ss_mat <- SingleCellExperiment::reducedDims(cds)[["UMAP"]]
 dp_mst <- cds@principal_graph_aux[["UMAP"]]$dp_mst
 
+# Check if the file exists and remove it if it does
+if (file.exists("output.h5")) {
+  file.remove("output.h5")
+}
+
 h5write(ps_tim, "output.h5", "t")
 h5write(ss_mat, "output.h5", "s")
 h5write(dp_mst, "output.h5", "m")
