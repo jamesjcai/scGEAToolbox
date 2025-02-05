@@ -10,6 +10,11 @@ sc <- h5read(file = "input.mat", name = "/X")
 res <- decontX(x = sc)
 X = res$decontXcounts
 contamination = res$contamination
+
+if (file.exists("output.h5")) {
+  file.remove("output.h5")
+}
+
 h5createFile("output.h5")
 h5write(as.matrix(X), "output.h5", "/X")
 h5write(contamination, "output.h5", "/contamination")

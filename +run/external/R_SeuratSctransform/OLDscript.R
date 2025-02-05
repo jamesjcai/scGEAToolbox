@@ -42,6 +42,11 @@ X2<-as.matrix(pbmc@assays$SCT@counts)
 library(rhdf5)
 
 tryCatch({
+
+if (file.exists("output.h5")) {
+  file.remove("output.h5")
+}
+
 # writeMat("output.mat",X2=X2)
 h5write(as.matrix(X2),"output.h5","X2")
 },

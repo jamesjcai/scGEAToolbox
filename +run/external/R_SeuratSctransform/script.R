@@ -34,7 +34,10 @@ sce <- SCTransform(sce, vars.to.regress = "percent.mt", verbose = FALSE)
 X<-as.matrix(sce@assays$SCT@counts)
 
 
-tryCatch({    
+tryCatch({
+    if (file.exists("output.h5")) {
+      file.remove("output.h5")
+    }
     h5write(as.matrix(X),"output.h5","X")
 },
 error = function(err){

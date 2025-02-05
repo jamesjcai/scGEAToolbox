@@ -18,6 +18,9 @@ scorpionOutput <- scorpion(tfMotifs = hsaTF,
                            ppiNet = hsaPPI,
                            alphaValue = 0.1)
 
+if (file.exists("output.h5")) {
+  file.remove("output.h5")
+}
 
 h5_file <- "output.h5"
 h5createFile(h5_file)

@@ -37,6 +37,10 @@ tryCatch(
     #X=A@assays$RNA$counts
     X<-GetAssayData(A, layer="counts")
 
+if (file.exists("output.h5")) {
+  file.remove("output.h5")
+}
+
 #    h5createDataset(file = ex_file, dataset = "counts_chunked", 
 #                    dims = dim(m1), storage.mode = "integer", 
 #                    chunk = c(100,100), level = 6)
