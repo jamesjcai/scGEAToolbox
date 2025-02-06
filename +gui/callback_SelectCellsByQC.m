@@ -156,8 +156,10 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
                 a = sprintf('%d', min_cells_nonzero);
             end
 
-fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total detected molecules (library size) were excluded. Additionally, cells expressing fewer than %d genes and genes detected in fewer than %d cells were removed from the UMI count matrix, resulting in %d genes across %d cells.\n', ...
+fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total detected molecules (library size) were excluded. Additionally, cells expressing fewer than %d genes and genes detected in fewer than %s cells were removed from the UMI count matrix, resulting in %d genes across %d cells.\n', ...
             mtratio*100, libsize, numgenes, a, sce.NumGenes, sce.NumCells);
+
+
 
 %            fprintf(['\n"We removed cells with more than %.f%% mitochondrial reads and ', ...
 %                'with less than %d the total number of detected molecules (library size). '], );
@@ -349,7 +351,7 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
                 return;
             end
             if sum(idx) ~= 1, return; end
-            idx = sce.X(idx, :)==0;
+            idx = full(sce.X(idx, :) == 0);
             if ~any(idx)
                 disp('All cells express MALAT1.');
                 needremove = false;
@@ -438,6 +440,7 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
     %if ismember(indx,[7 8 9])
     %if ismember(listitems{idx},{'','',''})
     if needremove
+        if issparse(idx), idx = full(idx); end
         if ~isempty(idx) && any(~idx)
             answer = questdlg(sprintf('Remove or highlight %d cells?', sum(~idx)), ...
                 '', 'Remove', 'Highlight', 'Cancel', 'Remove');

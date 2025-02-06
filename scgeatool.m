@@ -2029,7 +2029,8 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         if strcmp(answer, 'manual') && ~justload
             switch questdlg('Save manual trajectory curve and pseudotime to an .mat file?','')
                 case 'Yes'
-                    [file, path] = uiputfile('*.mat', 'Save as');
+                    [file, path] = uiputfile('*.mat', 'Save as', ...
+                        'pseudotime_manual_trajectory.mat');
                     if isequal(file, 0) || isequal(path, 0)
                         disp('User canceled the file selection.');
                         return;
@@ -2045,6 +2046,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             end
         end
         % --------------
+        
         switch questdlg('View expression of selected genes','')
             case 'Yes'
                 gui.sc_pseudotimegenes(sce, t, FigureHandle);

@@ -24,7 +24,10 @@ t = t(:);
         disp('Keep using sparse X.');
     end
 
-    answer = questdlg('Select method:','','Spearman Correlation','Distance Correlation','Cancel','Spearman Correlation');
+    
+
+    answer = questdlg('Select method:','','Spearman Correlation', ...
+        'Distance Correlation','Cancel','Spearman Correlation');
     switch answer
         case 'Spearman Correlation'
             fw = gui.gui_waitbar;
