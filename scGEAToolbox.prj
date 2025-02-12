@@ -1,25 +1,28 @@
 <deployment-project plugin="plugin.toolbox" plugin-version="1.0">
-  <configuration build-checksum="1648009621" file="E:\GitHub\scGEAToolbox\scGEAToolbox.prj" location="E:\GitHub\scGEAToolbox" name="scGEAToolbox" target="target.toolbox" target-name="Package Toolbox">
+  <configuration build-checksum="1648009621" file="D:\GitHub\scGEAToolbox\scGEAToolbox.prj" location="D:\GitHub\scGEAToolbox" name="scGEAToolbox" target="target.toolbox" target-name="Package Toolbox">
     <param.appname>scGEAToolbox</param.appname>
     <param.authnamewatermark>James Cai</param.authnamewatermark>
     <param.email>jcai@tamu.edu</param.email>
     <param.company>Texas A&amp;M University</param.company>
     <param.summary>Single-cell Gene Expression Analysis Toolbox</param.summary>
     <param.description>scRNAseq data analysis toolbox</param.description>
-    <param.screenshot>${PROJECT_ROOT}\resources\Images\scgeatool.png</param.screenshot>
-    <param.version>25.1.7</param.version>
+    <param.screenshot>C:\Users\jcai\Pictures\Screenshots\Screenshot 2025-02-05 115308.png</param.screenshot>
+    <param.version>25.2.1</param.version>
     <param.output>${PROJECT_ROOT}\scGEAToolbox.mltbx</param.output>
     <param.products.name>
       <item>MATLAB</item>
       <item>Curve Fitting Toolbox</item>
+      <item>MATLAB Report Generator</item>
       <item>Statistics and Machine Learning Toolbox</item>
     </param.products.name>
     <param.products.id>
       <item>1</item>
       <item>60</item>
+      <item>44</item>
       <item>19</item>
     </param.products.id>
     <param.products.version>
+      <item>24.2</item>
       <item>24.2</item>
       <item>24.2</item>
       <item>24.2</item>
@@ -221,19 +224,25 @@ VERSION.mat</param.exclude.filters>
     <fileset.depfun.excluded />
     <fileset.package />
     <build-deliverables>
-      <file location="${PROJECT_ROOT}" name="scGEAToolbox.mltbx" optional="false">E:\GitHub\scGEAToolbox\scGEAToolbox.mltbx</file>
+      <file location="${PROJECT_ROOT}" name="scGEAToolbox.mltbx" optional="false">D:\GitHub\scGEAToolbox\scGEAToolbox.mltbx</file>
     </build-deliverables>
     <workflow />
     <matlab>
-      <root>D:\MATLAB\R2024b</root>
+      <root>C:\Program Files\MATLAB\R2024b</root>
       <toolboxes>
         <toolbox name="matlabcoder" />
+        <toolbox name="gpucoder" />
         <toolbox name="neuralnetwork" />
       </toolboxes>
       <toolbox>
         <matlabcoder>
           <enabled>true</enabled>
         </matlabcoder>
+      </toolbox>
+      <toolbox>
+        <gpucoder>
+          <enabled>true</enabled>
+        </gpucoder>
       </toolbox>
       <toolbox>
         <neuralnetwork>
