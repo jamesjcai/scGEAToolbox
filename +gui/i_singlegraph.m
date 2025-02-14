@@ -68,12 +68,30 @@ oldidx = 0;
     function in_networkvis_linear(~, ~)
         fw=gui.gui_waitbar;
         %figure('SizeChangedFcn', @sbar);
-        h = gui.myFigure;        
-        gplot(G1.adjacency, [p1.XData' p1.YData'], '-k');
+        h = gui.myFigure;
+
+        %assignin('base',"XYCoords",[p1.XData' p1.YData']);
+        
+        [x,y]=gplot(G1.adjacency, [p1.XData' p1.YData']);
+        XY=[x,y];
+        d = XY(1:end-1,:) - XY(2:end,:);
+        slopex = d(:,2)./d(:,1);
+        theta = atan(slopex); % Angle in radians
+        theta_deg = rad2deg(theta); % Convert to degrees
+
+        p = XY(1:end-1,:) - 0.5*d;
+        %assignin('base',"XY",[x, y]);
+        %gplot(G1.adjacency, [p1.XData' p1.YData'], '-k');
+        plot(x,y,'k-');
         hold on
+        %plot(p(:,1), p(:,2),'k^');
+        quiver(p(4,1),p(4,2),p(4,1)+0.1,p(4,2)+0.1,'r')
+        quiver(p(1,1),p(1,2),p(1,1)+0.1,p(1,2)+0.1,'r')
+
         scatter(p1.XData', p1.YData', 300, ...
             'MarkerEdgeColor','k', ...
             'MarkerFaceColor',[.8 .8 .8]);
+
         textOpts.FontSize = p1.NodeFontSize;
         textOpts.HorizontalAlignment = 'center';
         textOpts.VerticalAlignment = 'middle';
