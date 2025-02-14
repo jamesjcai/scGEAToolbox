@@ -2,7 +2,13 @@ function callback_scPCNet1(src, events)
 
 [~, sce] = gui.gui_getfigsce(src);
 
-if numel(unique(sce.c_cell_type_tx))>1
+extprogname = 'ml_scTenifoldNet';
+preftagname = 'externalwrkpath';
+[wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
+if isempty(wkdir), return; end
+
+
+if numel(unique(sce.c_cell_type_tx)) > 1
     answer = questdlg('Construct gene regulatory network (GRN) for all cells or selected cells?', ...
             '', 'All Cells', 'Select Cells...', 'Cancel', ...
             'All Cells');
@@ -53,7 +59,8 @@ end
 
 
     try
-        tmpmat = tempname;
+        cd(wkdir);
+        [~, tmpmat] = fileparts(tempname);
         g = sce.g;
         fprintf('Saving network (A) to %s.mat\n', tmpmat);
         save(tmpmat, 'A', 'g', '-v7.3');

@@ -7,6 +7,10 @@ import pkg.*
     
 if ~gui.gui_showrefinfo('scTenifoldNet [PMID:33336197]'), return; end
 
+extprogname = 'ml_scTenifoldNet';
+preftagname = 'externalwrkpath';
+[wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
+if isempty(wkdir), return; end
 
 
 [i1, i2] = gui.i_select2smplgrps(sce, false);
@@ -34,14 +38,14 @@ gui.gui_waitbar(fw);
 tstr = matlab.lang.makeValidName(string(datetime));
 b = 'sctenifoldnet_outs';
 a = sprintf('output_%s', tstr);
-if ~exist(fullfile(tempdir, b), 'dir')
-    mkdir(fullfile(tempdir, b));
+if ~exist(fullfile(wkdir, b), 'dir')
+    mkdir(fullfile(wkdir, b));
     pause(1);
 end
-f1 = fullfile(tempdir, b, a);
+f1 = fullfile(wkdir, b, a);
 save(f1, 'T');
 a = sprintf('output_%s.xlsx', tstr);
-f1 = fullfile(tempdir, b, a);
+f1 = fullfile(wkdir, b, a);
 writetable(T, f1, 'FileType', 'spreadsheet');
 fprintf('The result has been saved in %s\n', f1);
 bx = sprintf('The result has been saved in %s. Open the folder to locate it?', f1);

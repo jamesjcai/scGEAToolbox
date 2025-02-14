@@ -1856,21 +1856,21 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
     end
 
     function in_scTenifoldNet(src, events, methodtag)
-        if numel(unique(sce.c_cell_type_tx))>1            
+        if numel(unique(sce.c_cell_type_tx)) > 1
             if ~strcmp(questdlg('This analysis is cell type-specific; however, current SCE contains multiple cell types. Continue?',''),'Yes'), return; end
         end
-        switch questdlg('Subsample cells?','','Yes 🐢','No 🐇','Cancel','No 🐇')
+        switch questdlg('Perform 10-fold bootstrapping of cells?','','Yes 🐢','No 🐇','Cancel','No 🐇')
             case 'No 🐇'
                 if methodtag==1
-                    gui.callback_scPCNet1(src,events);
+                    gui.callback_scPCNet1(src, events);
                 elseif methodtag==2
-                    gui.callback_scTenifoldNet2lite(src,events);
+                    gui.callback_scTenifoldNet2lite(src, events);
                 end
             case 'Yes 🐢'
                 if methodtag==1
-                    gui.callback_scTenifoldNet1(src,events);
+                    gui.callback_scTenifoldNet1(src, events);
                 elseif methodtag==2
-                    gui.callback_scTenifoldNet2(src,events);
+                    gui.callback_scTenifoldNet2(src, events);
                 end
         end
     end
