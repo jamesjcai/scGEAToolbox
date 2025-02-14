@@ -107,7 +107,9 @@ if ~isempty(T)
     assert(length(knownpair)==height(T));
     T=[T, table(knownpair)];
 
-    [a, b] = pkg.i_tempdirfile("sctendifoldxct");
+    % [a, b] = pkg.i_tempdirfile("sctendifoldxct");
+    b = matlab.lang.makeValidName(string(datetime));
+    b = fullfile(wkdir, b+".txt");
     writetable(T, b);
 
     T(:,[4 5 6 7 11])=[];
