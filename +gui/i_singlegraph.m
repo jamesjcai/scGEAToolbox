@@ -22,10 +22,9 @@ w = 3;
 l = 1;
 
 
-hx=gui.myFigure;
-hFig=hx.FigureHandle;
-
-h1=axes(hFig);
+hx = gui.myFigure;
+hFig = hx.FigureHandle;
+h1 = axes(hFig);
 xy = [];
 [p1] = drawnetwork(G1, h1);
 
@@ -68,29 +67,22 @@ oldidx = 0;
     function in_networkvis_linear(~, ~)
         fw=gui.gui_waitbar;
         %figure('SizeChangedFcn', @sbar);
-        h = gui.myFigure;
-
+        h = gui.myFigure;        
         %assignin('base',"XYCoords",[p1.XData' p1.YData']);
         
-        [x,y]=gplot(G1.adjacency, [p1.XData' p1.YData']);
-        XY=[x,y];
-        d = XY(1:end-1,:) - XY(2:end,:);
-        slopex = d(:,2)./d(:,1);
-        theta = atan(slopex); % Angle in radians
-        theta_deg = rad2deg(theta); % Convert to degrees
-
-        p = XY(1:end-1,:) - 0.5*d;
-        %assignin('base',"XY",[x, y]);
+        [x, y] = gplot(G1.adjacency, [p1.XData' p1.YData']);
         %gplot(G1.adjacency, [p1.XData' p1.YData'], '-k');
-        plot(x,y,'k-');
+        plot(x, y,'k-');
         hold on
-        %plot(p(:,1), p(:,2),'k^');
-        quiver(p(4,1),p(4,2),p(4,1)+0.1,p(4,2)+0.1,'r')
-        quiver(p(1,1),p(1,2),p(1,1)+0.1,p(1,2)+0.1,'r')
+        % plot(p(:,1), p(:,2),'k^');
+        % quiver(p(4,1),p(4,2),p(4,1)+0.1,p(4,2)+0.1,'r')
+        % quiver(p(1,1),p(1,2),p(1,1)+0.1,p(1,2)+0.1,'r')         
+        % customeMarker_1(p(:,1), p(:,2), theta_deg, h.FigureHandle);
+        customeMarker_2(x, y, h.FigureHandle);
 
-        scatter(p1.XData', p1.YData', 300, ...
-            'MarkerEdgeColor','k', ...
-            'MarkerFaceColor',[.8 .8 .8]);
+        % scatter(p1.XData', p1.YData', 300, ...
+        %     'MarkerEdgeColor','k', ...
+        %     'MarkerFaceColor',[.8 .8 .8]);
 
         textOpts.FontSize = p1.NodeFontSize;
         textOpts.HorizontalAlignment = 'center';
@@ -230,6 +222,7 @@ oldidx = 0;
             oldG1 = G1;
         end
         [p1, G1] = i_changedirected(p1, G1, h1);
+
         function [p, G] = i_changedirected(p, G, h)
             x = p.XData;
             y = p.YData;
@@ -485,4 +478,187 @@ function [width, height] = measureText(txt, textOpts, axis)
     delete(hTest);
     height = textExt(4)/3;    %Height
     width = textExt(3)/3;     %Width
+end
+
+function customeMarker_2(x, y, f)
+    XY = [x, y];
+    d = XY(1:end-1,:) - XY(2:end,:);
+    slopex = d(:,2)./d(:,1);
+    theta = atan(slopex); % Angle in radians
+    theta = rad2deg(theta); % Convert to degrees
+    p = XY(1:end-1,:) - 0.5*d;
+    x0=p(:,1); y0=p(:,2);
+
+    %ax = axes(f);
+    % Triangle marker definition (relative size)
+    markerSize = 0.08; % Keep this small so it doesn't scale with the figure
+    %X_ = markerSize * [-1, 1, 0];  % X-coordinates (relative to center)
+    %Y_ = markerSize * [-1, -1, 1]; % Y-coordinates 
+
+    baseLength = 1;  % Length of the base
+    height = 2;      % Height of the triangle
+    X_ = markerSize * [-baseLength/2, baseLength/2, 0]; % X-coordinates (before rotation)
+    Y_ = markerSize * [0, 0, height]; % Y-coordinates (before rotation)
+
+    px = cell(length(x0),1);
+    for k = 1:length(x0)
+        if isnan(x0(k)), continue; end
+        t = theta(k)-90;
+        R = [cosd(t), -sind(t); sind(t), cosd(t)];
+        rotatedXY = R * [X_; Y_]; % Apply rotation
+        % Adjust for data point position
+        %X = X_ + x0(k);
+        %Y = Y_ + y0(k);        
+        X = rotatedXY(1, :) + x0(k);
+        Y = rotatedXY(2, :) + y0(k);        
+        
+        p = patch(X, Y, 'k', 'EdgeColor', 'k', 'LineWidth', .1);
+        px{k} = p;
+
+        %plot(x0, y0, 'k.', 'MarkerSize', 1); % Invisible anchor for reference        
+        % addlistener(ax, 'MarkedClean', @(~,~) updatePatchSize(ax, p, x0(k), y0(k), markerSize));
+    end
+    % set(f, 'SizeChangedFcn', @(src,event) updatePatchSize(px, x0, y0, theta, markerSize));
+    set(f, 'SizeChangedFcn', @(src,event) updatePatchSize_2(px, x, y, markerSize));
+end
+
+
+
+
+function customeMarker_1(x0, y0, theta, f)
+    %ax = axes(f);
+    % Triangle marker definition (relative size)
+    markerSize = 0.08; % Keep this small so it doesn't scale with the figure
+    %X_ = markerSize * [-1, 1, 0];  % X-coordinates (relative to center)
+    %Y_ = markerSize * [-1, -1, 1]; % Y-coordinates 
+
+    baseLength = 1;  % Length of the base
+    height = 2;      % Height of the triangle
+    X_ = markerSize * [-baseLength/2, baseLength/2, 0]; % X-coordinates (before rotation)
+    Y_ = markerSize * [0, 0, height]; % Y-coordinates (before rotation)
+
+    px = cell(length(x0),1);
+    for k = 1:length(x0)
+        if isnan(x0(k)), continue; end
+        t = theta(k)-90;
+        R = [cosd(t), -sind(t); sind(t), cosd(t)];
+        rotatedXY = R * [X_; Y_]; % Apply rotation
+        % Adjust for data point position
+        %X = X_ + x0(k);
+        %Y = Y_ + y0(k);        
+        X = rotatedXY(1, :) + x0(k);
+        Y = rotatedXY(2, :) + y0(k);        
+        
+        p = patch(X, Y, 'r', 'EdgeColor', 'k', 'LineWidth', .5);
+        px{k} = p;
+
+        %plot(x0, y0, 'k.', 'MarkerSize', 1); % Invisible anchor for reference        
+        % addlistener(ax, 'MarkedClean', @(~,~) updatePatchSize(ax, p, x0(k), y0(k), markerSize));
+    end
+    set(f, 'SizeChangedFcn', @(src,event) updatePatchSize(px, x0, y0, theta, markerSize));
+end
+
+
+function customeMarker(x0, y0, theta)
+    
+    % Define triangle dimensions
+    baseLength = .3;  % Length of the base
+    height = .4;      % Height of the triangle
+    % Define vertices relative to the base center
+    X = [-baseLength/2, baseLength/2, 0]; % X-coordinates (before rotation)
+    Y = [0, 0, height]; % Y-coordinates (before rotation)
+    
+    for k = 1:length(x0)
+        if isnan(x0(k)), continue; end
+        % Rotation matrix
+        t = theta(k);        
+        R = [cosd(t), -sind(t); sind(t), cosd(t)];
+        rotatedXY = R * [X; Y]; % Apply rotation
+        % Shift the rotated triangle to (x0, y0)
+        X_rot = rotatedXY(1, :) + x0;
+        Y_rot = rotatedXY(2, :) + y0;        
+        patch(X_rot, Y_rot, 'r', 'EdgeColor', 'k', 'LineWidth', 1);
+        %plot(x0, y0, 'k.', 'MarkerSize', 1); % Invisible anchor for reference
+    end
+end
+
+% Callback function to update marker size when zooming
+function updatePatchSize(patchObj, x0, y0, theta, markerSize)
+    % fig = gcf;
+    ax = gca;
+    originalUnits = ax.Units; % Store original unit
+    ax.Units = 'pixels';
+    axPos = ax.Position;
+    xLimits = xlim(ax);
+    yLimits = ylim(ax);    
+    dx = (xLimits(2) - xLimits(1)) * markerSize / axPos(3);
+    dy = (yLimits(2) - yLimits(1)) * markerSize / axPos(4);
+    ax.Units = originalUnits; % Restore original units (important!)
+
+    dx = 1000*dx;
+    dy = 1000*dy;
+
+    baseLength = 1;  % Length of the base
+    height = 2;      % Height of the triangle
+    
+    X_ = markerSize * [-baseLength/2, baseLength/2, 0]; % X-coordinates (before rotation)
+    Y_ = markerSize * [0, 0, height]; % Y-coordinates (before rotation)
+    
+    fprintf('dx=%f dy=%f\n', dx, dy);
+
+    for k = 1:length(x0)
+        if isnan(x0(k)), continue; end
+        t = theta(k)-90;
+        R = [cosd(t), -sind(t); sind(t), cosd(t)];
+        rotatedXY = R * [X_; Y_]; % Apply rotation
+
+        X = rotatedXY(1, :) * dx + x0(k);
+        Y = rotatedXY(2, :) * dy + y0(k);        
+        
+        %X = [-1 1 0] * dx + x0(k);
+        %Y = [-1 -1 1] * dy + y0(k);
+        set(patchObj{k}, 'XData', X, 'YData', Y);
+    end
+end
+
+
+% Callback function to update marker size when zooming
+function updatePatchSize_2(patchObj, x, y, markerSize)
+
+    XY = [x, y];
+    d = XY(1:end-1,:) - XY(2:end,:);
+    slopex = d(:,2)./d(:,1);
+    theta = atan(slopex); % Angle in radians
+    theta = rad2deg(theta); % Convert to degrees
+    p = XY(1:end-1,:) - 0.5*d;
+    x0=p(:,1); y0=p(:,2);
+
+    ax = gca;
+    originalUnits = ax.Units; % Store original unit
+    ax.Units = 'pixels';
+    axPos = ax.Position;
+    xLimits = xlim(ax);
+    yLimits = ylim(ax);    
+    dx = (xLimits(2) - xLimits(1)) * markerSize / axPos(3);
+    dy = (yLimits(2) - yLimits(1)) * markerSize / axPos(4);
+    ax.Units = originalUnits; % Restore original units (important!)
+
+    dx = 1000*dx;
+    dy = 1000*dy;
+
+    baseLength = 1;       % Length of the base
+    height = 2;           % Height of the triangle
+    
+    X_ = dx *  markerSize * [-baseLength/2, baseLength/2, 0]; % X-coordinates (before rotation)
+    Y_ = dy * markerSize * [0, 0, height]; % Y-coordinates (before rotation)   
+    
+    for k = 1:length(x0)
+        if isnan(x0(k)), continue; end
+        t = theta(k)-90;
+        R = [cosd(t), -sind(t); sind(t), cosd(t)];
+        rotatedXY = R * [X_; Y_];
+        X = rotatedXY(1, :) + x0(k);
+        Y = rotatedXY(2, :) + y0(k);        
+        set(patchObj{k}, 'XData', X, 'YData', Y);
+    end
 end
