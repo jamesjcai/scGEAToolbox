@@ -46,12 +46,11 @@ title(h1,figname);
 hx.show(parentfig);
 % gui.gui_showrefinfo('Network Legend');
 
-oldG1=[];
-axistrig = true;
-% dataengated = false;
 oldidx = 0;
+oldG1 = [];
 
-
+% axistrig = true;
+% dataengated = false;
 
     function [xy] = getxy
         xy = [p1.XData' p1.YData'];
@@ -200,13 +199,15 @@ oldidx = 0;
         %w=a(randi(length(a),1));
         w = w + 1;
         if w > 10, w = 2; end
-        i_changeweight(p1, w);
+        p1.LineWidth = rescale(p1.LineWidth, 1, w);
+        
+        % i_changeweight(p1, w);
         %i_changeweight(p2,G2,w);
-        function i_changeweight(p, b)
-            %G.Edges.LWidths = abs(b*G.Edges.Weight/max(abs(G.Edges.Weight)));
-            %p.LineWidth = G.Edges.LWidths;
-            p.LineWidth = abs(b*p.LineWidth/max(abs(p.LineWidth)));
-        end
+        % function i_changeweight(p, b)
+        %     %G.Edges.LWidths = abs(b*G.Edges.Weight/max(abs(G.Edges.Weight)));
+        %     %p.LineWidth = G.Edges.LWidths;
+        %     p.LineWidth = abs(b*p.LineWidth/max(abs(p.LineWidth)));
+        % end
     end
 
     function ChangeLayout(~, ~)
@@ -230,11 +231,10 @@ oldidx = 0;
             [p1, G1] = i_changedirected(p1, G1, h1);
         elseif isa(G1, 'graph') && ~isempty(oldG1) && isa(oldG1, 'digraph') 
             G1 = oldG1;
-            
+            p1 = drawnetwork(G1, h1);
             % [p1, G1] = i_changedirected(p1, oldG1, h1);
         end
-        issymmetric(G1.adjacency)
-
+        % issymmetric(G1.adjacency)
 
         function [p, G] = i_changedirected(p, G, h)
             x = p.XData;
@@ -281,8 +281,8 @@ oldidx = 0;
     end
 
     function [p] = drawnetwork(G, h)
+        %G.Edges.Weight = rand(length(G.Edges.Weight),1);
         p = plot(h, G, 'ButtonDownFcn', @startDragFcn);
-        box off
         layout(p,'force');
         %         if isa(G,'digraph')
         %             G.Nodes.NodeColors = outdegree(G)-indegree(G);
@@ -321,7 +321,8 @@ oldidx = 0;
             'BackgroundColor','w','Margin',0.1);
         %}
         if ~isempty(G.Edges.Weight)
-            G.Edges.LWidths = abs(w*G.Edges.Weight/max(G.Edges.Weight));
+            % G.Edges.LWidths = abs(w*G.Edges.Weight/max(G.Edges.Weight));
+            G.Edges.LWidths = rescale(G.Edges.Weight, 1, w);
             p.LineWidth = G.Edges.LWidths;
         end
         xy = [p.XData' p.YData'];
