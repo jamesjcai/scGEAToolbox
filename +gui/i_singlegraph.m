@@ -70,7 +70,11 @@ oldidx = 0;
         h = gui.myFigure;        
         %assignin('base',"XYCoords",[p1.XData' p1.YData']);
         
+        
+
         [x, y] = gplot(G1.adjacency, [p1.XData' p1.YData']);
+
+
         %gplot(G1.adjacency, [p1.XData' p1.YData'], '-k');
         plot(x, y,'k-');
         hold on
@@ -78,7 +82,9 @@ oldidx = 0;
         % quiver(p(4,1),p(4,2),p(4,1)+0.1,p(4,2)+0.1,'r')
         % quiver(p(1,1),p(1,2),p(1,1)+0.1,p(1,2)+0.1,'r')         
         % customeMarker_1(p(:,1), p(:,2), theta_deg, h.FigureHandle);
-        customeMarker_2(x, y, h.FigureHandle);
+        if ~issymmetric(G1.adjacency)
+            customeMarker_2(x, y, h.FigureHandle);
+        end
 
         % scatter(p1.XData', p1.YData', 300, ...
         %     'MarkerEdgeColor','k', ...
@@ -173,21 +179,21 @@ oldidx = 0;
         end            
     end
 
-    function ChangeBox(~, ~)
-        if h1.Box
-            box(h1, 'off');
-            if axistrig
-                axis(h1, 'off');
-            else
-                axis(h1, 'on');
-            end
-            axistrig = ~axistrig;
-            
-        else
-            box(h1, 'on');
-            axis(h1, 'on');
-        end
-    end
+    % function ChangeBox(~, ~)
+    %     if h1.Box
+    %         box(h1, 'off');
+    %         if axistrig
+    %             axis(h1, 'off');
+    %         else
+    %             axis(h1, 'on');
+    %         end
+    %         axistrig = ~axistrig;
+    % 
+    %     else
+    %         box(h1, 'on');
+    %         axis(h1, 'on');
+    %     end
+    % end
 
     function ChangeWeight(~, ~)
         %a=3:10;
@@ -218,10 +224,17 @@ oldidx = 0;
     end
 
     function ChangeDirected(~, ~)
-        if isempty(oldG1)
+        if isempty(oldG1), oldG1 = G1; end
+        if isa(G1, 'digraph')
             oldG1 = G1;
+            [p1, G1] = i_changedirected(p1, G1, h1);
+        elseif isa(G1, 'graph') && ~isempty(oldG1) && isa(oldG1, 'digraph') 
+            G1 = oldG1;
+            
+            % [p1, G1] = i_changedirected(p1, oldG1, h1);
         end
-        [p1, G1] = i_changedirected(p1, G1, h1);
+        issymmetric(G1.adjacency)
+
 
         function [p, G] = i_changedirected(p, G, h)
             x = p.XData;
