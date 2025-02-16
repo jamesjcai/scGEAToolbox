@@ -28,6 +28,7 @@ h1 = axes(hFig);
 xy = [];
 [p1] = drawnetwork(G1, h1);
 
+g = G1.Nodes.Name;
 
 %hx.ptvenable(logical([1 1 1 1 1 0 1 1 1 1 0]));
 
@@ -94,7 +95,7 @@ oldG1 = [];
             %         dflag(k) = false;
             %     end
             % end
-            customeMarker_2(x, y, h.FigureHandle, dflagx, A);
+            customeMarker_2(x, y, h.FigureHandle, dflagx, A, g);
         end
 
         % scatter(p1.XData', p1.YData', 300, ...
@@ -506,12 +507,12 @@ function [width, height] = measureText(txt, textOpts, axis)
     width = textExt(3)/3;     %Width
 end
 
-function customeMarker_2(x, y, f, dflagx, A)
+function customeMarker_2(x, y, f, dflagx, A, g)
     XY = [x, y];
     d = XY(1:end-1,:) - XY(2:end,:);
     slopex = d(:,2)./d(:,1);
-    theta = atan(slopex); % Angle in radians
-    theta = rad2deg(theta); % Convert to degrees
+    theta = atan(slopex);        % Angle in radians
+    theta = rad2deg(theta) + 90; % Convert to degrees
     p = XY(1:end-1,:) - 0.5*d;
     x0 = p(:,1); y0 = p(:,2);
 
@@ -526,20 +527,26 @@ function customeMarker_2(x, y, f, dflagx, A)
     X_ = markerSize * [-baseLength/2, baseLength/2, 0]; % X-coordinates (before rotation)
     Y_ = markerSize * [0, 0, height]; % Y-coordinates (before rotation)
 
-    assignin("base", "A", A);
+    % assignin("base", "A", A);
     px = cell(length(x0),1);
     for k = 1:length(x0)
         if isnan(x0(k)), continue; end
         
-        A(dflagx(k, 1), dflagx(k, 2))
-        A(dflagx(k, 2), dflagx(k, 1))
-        if A(dflagx(k, 1), dflagx(k, 2)) - A(dflagx(k, 2), dflagx(k, 1)) > 0
-            disp('++')
-            t = theta(k) + 90;
-        else
-            disp('--')
-            t = theta(k) - 90;
-        end
+         %[dflagx(k, 1), dflagx(k, 2)]
+         %[A(dflagx(k, 1), dflagx(k, 2))        A(dflagx(k, 2), dflagx(k, 1))]
+         % [g(dflagx(k, 1)) g(dflagx(k, 2))]
+         % sign(slopex(k))
+         % pause
+        
+        %if x(dflagx(k, 1)) > x(dflagx(k, 2))
+        %    disp('++')
+        %    t = theta(k) - 90;
+        %else
+        %    disp('--')
+        %    t = theta(k) + 90;
+        %end
+        t = theta(k);
+
         R = [cosd(t), -sind(t); sind(t), cosd(t)];
         rotatedXY = R * [X_; Y_]; % Apply rotation
         % Adjust for data point position
@@ -555,7 +562,7 @@ function customeMarker_2(x, y, f, dflagx, A)
         % addlistener(ax, 'MarkedClean', @(~,~) updatePatchSize(ax, p, x0(k), y0(k), markerSize));
     end
     % set(f, 'SizeChangedFcn', @(src,event) updatePatchSize(px, x0, y0, theta, markerSize));
-    set(f, 'SizeChangedFcn', @(src,event) updatePatchSize_2(px, x, y, markerSize));
+    % set(f, 'SizeChangedFcn', @(src,event) updatePatchSize_2(px, x, y, markerSize));
 end
 
 
