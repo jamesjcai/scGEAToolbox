@@ -487,7 +487,7 @@ function customeMarker_2(x, y, f)
     theta = atan(slopex); % Angle in radians
     theta = rad2deg(theta); % Convert to degrees
     p = XY(1:end-1,:) - 0.5*d;
-    x0=p(:,1); y0=p(:,2);
+    x0 = p(:,1); y0 = p(:,2);
 
     %ax = axes(f);
     % Triangle marker definition (relative size)
