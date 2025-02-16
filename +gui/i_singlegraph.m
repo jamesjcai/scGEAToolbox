@@ -67,11 +67,14 @@ oldG1 = [];
         fw=gui.gui_waitbar;
         %figure('SizeChangedFcn', @sbar);
         h = gui.myFigure;        
+        
         %assignin('base',"XYCoords",[p1.XData' p1.YData']);
-        
-        
-
         [x, y] = gplot(G1.adjacency, [p1.XData' p1.YData']);
+        %assignin('base',"xy",[x, y]);
+
+        [~, dflag] = ismember([x, y], [p1.XData' p1.YData'], 'rows');
+        dflagx =  [dflag(1:end-1,:)  dflag(2:end,:)];
+        A = full(G1.adjacency);
 
 
         %gplot(G1.adjacency, [p1.XData' p1.YData'], '-k');
@@ -82,7 +85,16 @@ oldG1 = [];
         % quiver(p(1,1),p(1,2),p(1,1)+0.1,p(1,2)+0.1,'r')         
         % customeMarker_1(p(:,1), p(:,2), theta_deg, h.FigureHandle);
         if ~issymmetric(G1.adjacency)
-            customeMarker_2(x, y, h.FigureHandle);
+            % A = G1.adjacency;
+            % dflag = true(length(G1.Edges.EndNodes), 1);
+            % [~, idx] = ismember(G1.Edges.EndNodes, G1.Nodes.Name);
+            % % dflag = idx(:,1) > idx(:,2);
+            % for k = 1:length(dflag)                
+            %     if A(idx(k,1),idx(k,2))>A(idx(k,2),idx(k,1))
+            %         dflag(k) = false;
+            %     end
+            % end
+            customeMarker_2(x, y, h.FigureHandle, dflagx, A);
         end
 
         % scatter(p1.XData', p1.YData', 300, ...
@@ -494,7 +506,7 @@ function [width, height] = measureText(txt, textOpts, axis)
     width = textExt(3)/3;     %Width
 end
 
-function customeMarker_2(x, y, f)
+function customeMarker_2(x, y, f, dflagx, A)
     XY = [x, y];
     d = XY(1:end-1,:) - XY(2:end,:);
     slopex = d(:,2)./d(:,1);
@@ -514,10 +526,20 @@ function customeMarker_2(x, y, f)
     X_ = markerSize * [-baseLength/2, baseLength/2, 0]; % X-coordinates (before rotation)
     Y_ = markerSize * [0, 0, height]; % Y-coordinates (before rotation)
 
+    assignin("base", "A", A);
     px = cell(length(x0),1);
     for k = 1:length(x0)
         if isnan(x0(k)), continue; end
-        t = theta(k)-90;
+        
+        A(dflagx(k, 1), dflagx(k, 2))
+        A(dflagx(k, 2), dflagx(k, 1))
+        if A(dflagx(k, 1), dflagx(k, 2)) - A(dflagx(k, 2), dflagx(k, 1)) > 0
+            disp('++')
+            t = theta(k) + 90;
+        else
+            disp('--')
+            t = theta(k) - 90;
+        end
         R = [cosd(t), -sind(t); sind(t), cosd(t)];
         rotatedXY = R * [X_; Y_]; % Apply rotation
         % Adjust for data point position
