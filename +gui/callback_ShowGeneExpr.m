@@ -25,30 +25,62 @@ function callback_ShowGeneExpr(src, ~)
     
     switch answer
         case an1
-            answer2 = questdlg("Type of plot:","", "stem plot", "feature plot", "stem plot");
-            if isempty(answer2), return; end
             fw = gui.gui_waitbar; 
             hx = gui.myFigure;
-            maxy = 0;
+            tabgp = uitabgroup();
+            nf = 1;
+            tab{nf} = uitab(tabgp, 'Title', sprintf('Tab%d',nf));
+            axes('parent',tab{nf});
             if ~ispref('scgeatoolbox', 'prefcolormapname')
                 setpref('scgeatoolbox', 'prefcolormapname', 'autumn');
             end
             a = getpref('scgeatoolbox', 'prefcolormapname');
+            maxy = 0;
             for k = 1:n
                 nexttile
-                switch answer2
-                    case "feature plot"
-                        sc_scattermarker(Xt, sce.g, sce.s, glist(k), 2, 5, false);
-                        c = Xt(sce.g == glist(k), :);
-                        gui.i_setautumncolor(c, a, true, any(c==0));
-                        colorbar;
-                    case "stem plot"
-                        sc_scattermarker(Xt, sce.g, sce.s, glist(k), 1, 5, false);                        
-                end
-                maxy = max([maxy, max(Xt(sce.g == glist(k)))]);
+                    sc_scattermarker(Xt, sce.g, sce.s, glist(k), 2, 5, false);
+                    c = Xt(sce.g == glist(k), :);
+                    gui.i_setautumncolor(c, a, true, any(c==0));
+                    colorbar;
+                    maxy = max([maxy, max(Xt(sce.g == glist(k)))]);
+            end
+
+            nf = 2;
+            tab{nf} = uitab(tabgp, 'Title', sprintf('Tab%d',nf));
+            axes('parent',tab{nf});
+            
+            for k = 1:n
+                nexttile
+                sc_scattermarker(Xt, sce.g, sce.s, glist(k), 1, 5, false);                        
             end
             gui.gui_waitbar(fw);
-            hx.show(FigureHandle);
+            hx.show(FigureHandle);            
+
+        % case an1    % same figure;
+        %     answer2 = questdlg("Type of plot:","", "stem plot", "feature plot", "stem plot");
+        %     if isempty(answer2), return; end
+        %     fw = gui.gui_waitbar; 
+        %     hx = gui.myFigure;
+        %     maxy = 0;
+        %     if ~ispref('scgeatoolbox', 'prefcolormapname')
+        %         setpref('scgeatoolbox', 'prefcolormapname', 'autumn');
+        %     end
+        %     a = getpref('scgeatoolbox', 'prefcolormapname');
+        %     for k = 1:n
+        %         nexttile
+        %         switch answer2
+        %             case "feature plot"
+        %                 sc_scattermarker(Xt, sce.g, sce.s, glist(k), 2, 5, false);
+        %                 c = Xt(sce.g == glist(k), :);
+        %                 gui.i_setautumncolor(c, a, true, any(c==0));
+        %                 colorbar;
+        %             case "stem plot"
+        %                 sc_scattermarker(Xt, sce.g, sce.s, glist(k), 1, 5, false);                        
+        %         end
+        %         maxy = max([maxy, max(Xt(sce.g == glist(k)))]);
+        %     end
+        %     gui.gui_waitbar(fw);
+        %     hx.show(FigureHandle);
         case an2
             fw = gui.gui_waitbar;
             y = cell(n,1);

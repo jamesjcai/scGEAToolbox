@@ -218,7 +218,8 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 in_addmenu(menus, 0, @in_ExportCellAttribTable, 'Export Cell Attribute Table...');
                 in_addmenu(menus, 1, @gui.callback_SelectCellsByMarker, 'Extract Cells by Marker (+/-) Expression...');
                 in_addmenu(menus, 0, @in_MergeSubCellTypes, 'Merge Subclusters of Same Cell Type');
-                in_addmenu(menus, 1, {@in_WorkonSelectedGenes, 'hvg'}, 'Select Highly Variable Genes (HVGs) to Work on...');
+                in_addmenu(menus, 1, {@in_WorkonSelectedGenes, 'name'}, 'Select Genes to Work on...');
+                in_addmenu(menus, 0, {@in_WorkonSelectedGenes, 'hvg'}, 'Select Highly Variable Genes (HVGs) to Work on...');
                 in_addmenu(menus, 0, {@in_WorkonSelectedGenes, 'ligandreceptor'}, 'Select Ligand Receptor Genes to Work on...');
                 in_addmenu(menus, 0, @in_SubsampleCells, 'Subsample 50% Cells to Work on...');
                 in_addmenu(menus, 1, {@in_DeleteBrushedOrUnbrushedCells, 'brushed'}, 'Delete Brushed Cells...');
@@ -766,9 +767,17 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
     end
 
     function in_WorkonSelectedGenes(src, ~, type)
-        if nargin < 1, type = 'hvg'; end
+        if nargin < 1, type = 'name'; end
 
         switch type
+            case 'name'
+                [glist] = gui.i_selectngenes(sce, [], FigureHandle);
+                if isempty(glist), return; end
+                [y, idx] = ismember(glist, sce.g);
+                if ~all(y)
+                    errordlg('Runtime error.','');
+                    return;
+                end
             case 'hvg'
                 k = gui.i_inputnumk(2000, 1, sce.NumGenes, 'the number of HVGs');
                 if isempty(k), return; end
@@ -805,6 +814,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                     if ~strcmp(questdlg('Few genes (n < 50) selected. Continue?',''), 'Yes'), return; end
                 end
         end
+
         sce.g = sce.g(idx);
         sce.X = sce.X(idx, :);
         gui.gui_waitbar(fw);
