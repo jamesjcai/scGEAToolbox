@@ -5,6 +5,7 @@ function [done] = i_setwrkdir(preftagname)
 
 % preftagname = 'externalwrkpath';    i_setextwd
 % preftagname = 'netanalywrkpath';    i_setnetwd
+if nargin < 1, preftagname = 'externalwrkpath'; end
 
 if ~ispref('scgeatoolbox', preftagname)
     answer = questdlg('Working directory has not been set up. Locate a folder?');

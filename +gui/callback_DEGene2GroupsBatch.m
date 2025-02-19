@@ -2,10 +2,15 @@ function callback_DEGene2GroupsBatch(src, ~)
 
 [~, sce] = gui.gui_getfigsce(src);
 if ~gui.gui_showrefinfo('DE in Batch Mode'), return; end
-prefixtag = 'DE';
 
+    extprogname = 'scgeatool_DEAnalysis_Batch';
+    preftagname = 'externalwrkpath';
+    [wrkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
+    if isempty(wrkdir), return; end
+
+prefixtag = 'DE';
 [done, CellTypeList, i1, i2, cL1, cL2,... 
-    outdir] = gui.i_batchmodeprep(sce, prefixtag);
+    outdir] = gui.i_batchmodeprep(sce, prefixtag, wrkdir);
 if ~done, return; end
 
 %[runenrichr] = gui.i_enrichrprep;

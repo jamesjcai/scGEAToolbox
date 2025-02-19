@@ -2,11 +2,17 @@ function callback_DPGene2GroupsBatch(src, ~)
 
     [~, sce] = gui.gui_getfigsce(src);
     if ~gui.gui_showrefinfo('DP in Batch Mode'), return; end
+
+    extprogname = 'scgeatool_DPAnalysis_Batch';
+    preftagname = 'externalwrkpath';
+    [wrkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
+    if isempty(wrkdir), return; end
+
     prefixtag = 'DP';
     
     [sce] = gui.i_selectinfogenes(sce);
     [done, CellTypeList, i1, i2, cL1, cL2,... 
-        outdir] = gui.i_batchmodeprep(sce, prefixtag);
+        outdir] = gui.i_batchmodeprep(sce, prefixtag, wrkdir);
     if ~done, return; end
     
     [indx1,species] = gui.i_selgenecollection;

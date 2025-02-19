@@ -6,6 +6,13 @@ lcolor2 = lcolors(2,:);
 
 [FigureHandle, sce] = gui.gui_getfigsce(src);
     if ~gui.gui_showrefinfo('DV Analysis'), return; end
+
+    extprogname = 'scgeatool_DVAnalysis';
+    preftagname = 'externalwrkpath';
+    [wrkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
+    if isempty(wrkdir), return; end
+
+
     a=sce.NumGenes;
     [sce] = gui.i_selectinfogenes(sce);
     b=sce.NumGenes;

@@ -2,9 +2,13 @@ function [needupdatesce] = callback_RunMonocle3(src, ~)
 
 needupdatesce = false;
 extprogname = 'R_monocle3';
-preftagname = 'externalwrkpath';
-[wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
-if isempty(wkdir), return; end
+
+[wrkdir] = gui.i_getwrkdir;
+if isempty(wrkdir)
+    preftagname = 'externalwrkpath';
+    [wrkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
+    if isempty(wrkdir), return; end
+end
 
 % if ~gui.i_setwrkdir(preftagname), return; end
 % s = getpref('scgeatoolbox', preftagname);
@@ -71,7 +75,7 @@ sce = guidata(FigureHandle);
 fw = gui.gui_waitbar;
 
 try
-    [t_mono3, s_mono3, ~, q_mono3] = run.r_monocle3(sce.X, idx, ndim, wkdir, isdebug);
+    [t_mono3, s_mono3, ~, q_mono3] = run.r_monocle3(sce.X, idx, ndim, wrkdir, isdebug);
 catch ME
     gui.gui_waitbar(fw, true);
     errordlg(ME.message);

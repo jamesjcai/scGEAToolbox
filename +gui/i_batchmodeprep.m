@@ -1,6 +1,7 @@
 function [done, CellTypeList, i1, i2, cL1, cL2,...
-          outdir] = i_batchmodeprep(sce, prefixtag)
+          outdir] = i_batchmodeprep(sce, prefixtag, wrkdir)
 
+if nargin<3, wrkdir = []; end
 done = false;
 CellTypeList=[]; i1=[]; i2=[]; cL1=[]; cL2=[]; outdir=[];
 
@@ -31,8 +32,12 @@ if isscalar(i1) || isscalar(i2), return; end
 answer=questdlg('Select a folder to save the outupt Excel files. Continue?','');
 if ~strcmp(answer,'Yes'), return; end
 
-outdir = uigetdir;
-if ~isfolder(outdir), return; end
+if ~isempty(wrkdir) && isfolder(wrkdir)
+    outdir = wrkdir;
+else
+    outdir = uigetdir;
+    if ~isfolder(outdir), return; end
+end
 
 needoverwritten=false;
 for k=1:length(CellTypeList)
@@ -47,7 +52,7 @@ for k=1:length(CellTypeList)
     end
 end
 if needoverwritten
-    answer=questdlg(sprintf('Overwrite existing result file(s) in %s?',outdir),'');    
+    answer=questdlg(sprintf('Overwrite existing result file(s) in %s?', outdir),'');    
 else
     answer=questdlg(sprintf('Result files will be save in %s. Continue?', outdir), '');
 end

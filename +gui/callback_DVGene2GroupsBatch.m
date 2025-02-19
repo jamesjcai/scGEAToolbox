@@ -2,6 +2,12 @@ function callback_DVGene2GroupsBatch(src, ~)
 
 [~, sce] = gui.gui_getfigsce(src);
 if ~gui.gui_showrefinfo('DV in Batch Mode'), return; end
+    
+    extprogname = 'scgeatool_DVAnalysis_Batch';
+    preftagname = 'externalwrkpath';
+    [wrkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
+    if isempty(wrkdir), return; end
+
 prefixtag = 'DV';
 
 a=sce.NumGenes;
@@ -10,11 +16,11 @@ b=sce.NumGenes;
 fprintf('%d genes removed.\n', a-b);
 
 [done, CellTypeList, i1, i2, cL1, cL2, ...
-    outdir] = gui.i_batchmodeprep(sce, prefixtag);
+    outdir] = gui.i_batchmodeprep(sce, prefixtag, wrkdir);
 if ~done, return; end
 
 %[runenrichr] = gui.i_enrichrprep;
-[runenrichr] = questdlg('Run Enrichr (Python required) with top 250 DV genes? Results will be saved in the output Excel files.','');
+[runenrichr] = questdlg('Run Enrichr with top 250 DV genes? Results will be saved in the output Excel files.','');
 if strcmp(runenrichr,'Cancel'), return; end
 
 fw = gui.gui_waitbar_adv;
@@ -105,6 +111,7 @@ for k=1:length(CellTypeList)
 
         Item = T.Properties.VariableNames';
         Item = [Item; {'# of cells in sample 1';'# of cells in sample 2'}];
+        
         Description = {'gene name';'log mean in sample 1';...
             'log CV in sample 1'; 'dropout rate in sample 1';...
             'distance to curve 1';'p-value of distance in sample 1';...
@@ -112,9 +119,16 @@ for k=1:length(CellTypeList)
             'log CV in sample 2'; 'dropout rate in sample 2';...
             'distance to curve 2'; 'p-value of distance in sample 2';...
             'FDR of distance in sample 2'; 'Difference in distances';...
-            'Sign of difference';...
+            'Sign of difference','p-value of DV test';...
             sprintf('%d',sce1.NumCells); sprintf('%d',sce2.NumCells)};
-        Tnt = table(Item, Description);
+        if length(Item) == length(Description)
+            Tnt = table(Item, Description);
+        else
+            assignin("base","Item", Item);
+            assignin("base","Description", Description);
+            Tnt = table(Item);
+            warning('Variables must have the same number of rows.');
+        end
 
         try
             writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All genes');

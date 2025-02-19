@@ -3,6 +3,12 @@ function callback_DPGene2Groups(src, ~)
 [~, sce] = gui.gui_getfigsce(src);
 if ~gui.gui_showrefinfo('DP Analysis'), return; end
 
+    extprogname = 'scgeatool_DPAnalysis';
+    preftagname = 'externalwrkpath';
+    [wrkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
+    if isempty(wrkdir), return; end
+
+
 [i1, i2, cL1, cL2] = gui.i_select2smplgrps(sce, false);
 if isscalar(i1) || isscalar(i2), return; end
 
