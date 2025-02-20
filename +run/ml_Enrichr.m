@@ -127,7 +127,7 @@ function [T] = in_response2T(response, gene_set_library, minumgene, pvaluecut)
             "Overlapping genes", "Adjusted p-value", "Old p-value", "Old adjusted p-value"];
         headertxt = matlab.lang.makeValidName(headertxt);
 
-        disp(gene_set_library)
+        % disp(gene_set_library)
         
         res = response.(gene_set_library);
         isok = false(length(res),1);

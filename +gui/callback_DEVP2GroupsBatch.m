@@ -8,7 +8,7 @@ preftagname = 'externalwrkpath';
 if isempty(wrkdir), return; end
 
 prefixtag = 'DEVP';
-[done, CellTypeList, i1, i2, cL1, cL2,... 
+[done, CellTypeList, i1, i2, cL1, cL2, ... 
     outdir] = gui.i_batchmodeprep(sce, prefixtag, wrkdir);
 if ~done, return; end
 
@@ -32,7 +32,8 @@ for k=1:length(CellTypeList)
     idx = sce.c_cell_type_tx == CellTypeList{k};
     T = [];
     try
-        T = sc_deg(sce.X(:, i1&idx), sce.X(:, i2&idx), ...
+        T = sc_deg(sce.X(:, i1&idx), ...
+                   sce.X(:, i2&idx), ...
                    sce.g, 1, false);
     catch ME
         disp(ME.message);
@@ -40,7 +41,6 @@ for k=1:length(CellTypeList)
 
     if ~isempty(T)
         T = in_DETableProcess(T, cL1, cL2);
-
         Item = T.Properties.VariableNames';
         Item = [Item; {'# of cells in sample 1';'# of cells in sample 2'}];
         Description = {'gene name';'p-value';...
@@ -68,25 +68,24 @@ for k=1:length(CellTypeList)
             warning(ME.message);
         end
         
-        % - start of enrichr
-            try
-                [Tlist1] = run.ml_Enrichr(Tup.gene(1:min([250 height(Tup)])), ...
-                            T.gene, ["GO_Biological_Process_2023", ...
-                                     "GO_Molecular_Function_2023"]);
-                Tbp1 = Tlist1{1};
-                Tmf1 = Tlist1{2};
-                in_writetable(Tbp1, filesaved, 'Up_250_GO_BP');
-                in_writetable(Tmf1, filesaved, 'Up_250_GO_MF');
-                [Tlist2] = run.ml_Enrichr(Tdn.gene(1:min([250 height(Tdn)])), ...
-                            T.gene, ["GO_Biological_Process_2023", ...
-                                     "GO_Molecular_Function_2023"]);
-                Tbp2 = Tlist2{1};
-                Tmf2 = Tlist2{2};
-                in_writetable(Tbp2, filesaved, 'Dn_250_GO_BP');
-                in_writetable(Tmf2, filesaved, 'Dn_250_GO_MF');
-            catch ME
-                warning(ME.message);
-            end
+        try
+            [Tlist1] = run.ml_Enrichr(Tup.gene(1:min([250 height(Tup)])), ...
+                        T.gene, ["GO_Biological_Process_2023", ...
+                                 "GO_Molecular_Function_2023"]);
+            Tbp1 = Tlist1{1};
+            Tmf1 = Tlist1{2};
+            in_writetable(Tbp1, filesaved, 'Up_250_GO_BP');
+            in_writetable(Tmf1, filesaved, 'Up_250_GO_MF');
+            [Tlist2] = run.ml_Enrichr(Tdn.gene(1:min([250 height(Tdn)])), ...
+                        T.gene, ["GO_Biological_Process_2023", ...
+                                 "GO_Molecular_Function_2023"]);
+            Tbp2 = Tlist2{1};
+            Tmf2 = Tlist2{2};
+            in_writetable(Tbp2, filesaved, 'Dn_250_GO_BP');
+            in_writetable(Tmf2, filesaved, 'Dn_250_GO_MF');
+        catch ME
+            warning(ME.message);
+        end
     end
 end
 gui.gui_waitbar_adv(fw);
@@ -97,9 +96,7 @@ for k=1:length(CellTypeList)
     gui.gui_waitbar_adv(fw, ...
         (k-1)/length(CellTypeList), ...
         sprintf('Processing %s ...', CellTypeList{k}));
-
     idx = sce.c_cell_type_tx == CellTypeList{k};
-
     sce1 = sce.selectcells(i1&idx);
     sce1 = sce1.qcfilter;
 
@@ -152,34 +149,32 @@ for k=1:length(CellTypeList)
             warning(ME.message);
         end
 
-            try
-                % [Tbp1, Tmf1]= run.r_enrichR(Tup.gene(1:min([250 size(Tup, 1)])));
-                %[Tbp1, Tmf1] = run.py_GSEApy_enr(Tup.gene(1:min([250 size(Tup, 1)])), ...
-                %    T.gene, tempdir);
+        try
 
-                [Tlist1] = run.ml_Enrichr(Tup.gene(1:min([250 height(Tup)])), ...
-                            T.gene, ["GO_Biological_Process_2023", ...
-                                     "GO_Molecular_Function_2023"]);
-                Tbp1 = Tlist1{1};
-                Tmf1 = Tlist1{2};
-                in_writetable(Tbp1, filesaved, 'Up_250_GO_BP');
-                in_writetable(Tmf1, filesaved, 'Up_250_GO_MF');
-                [Tlist2] = run.ml_Enrichr(Tdn.gene(1:min([250 height(Tdn)])), ...
-                            T.gene, ["GO_Biological_Process_2023", ...
-                                     "GO_Molecular_Function_2023"]);
-                Tbp2 = Tlist2{1};
-                Tmf2 = Tlist2{2};
-                in_writetable(Tbp2, filesaved, 'Dn_250_GO_BP');
-                in_writetable(Tmf2, filesaved, 'Dn_250_GO_MF');
-            catch ME
-                warning(ME.message);
-            end
+            [Tlist1] = run.ml_Enrichr(Tup.gene(1:min([250 height(Tup)])), ...
+                        T.gene, ["GO_Biological_Process_2023", ...
+                                 "GO_Molecular_Function_2023",...
+                                 "Reactome_Pathways_2024",...
+                                 "KEGG_2021_Human"]);
+                                 % KEGG_2019_Mouse
+            Tbp1 = Tlist1{1};
+            Tmf1 = Tlist1{2};
+            in_writetable(Tbp1, filesaved, 'Up_250_GO_BP');
+            in_writetable(Tmf1, filesaved, 'Up_250_GO_MF');
+            [Tlist2] = run.ml_Enrichr(Tdn.gene(1:min([250 height(Tdn)])), ...
+                        T.gene, ["GO_Biological_Process_2023", ...
+                                 "GO_Molecular_Function_2023"]);
+            Tbp2 = Tlist2{1};
+            Tmf2 = Tlist2{2};
+            in_writetable(Tbp2, filesaved, 'Dn_250_GO_BP');
+            in_writetable(Tmf2, filesaved, 'Dn_250_GO_MF');
+        catch ME
+            warning(ME.message);
+        end
 end
 gui.gui_waitbar_adv(fw);
 
 % ----------------------------- DP
-
-
 ctag = {"H", "C2", "C5", "C6", "C7"};
 pw1 = fileparts(mfilename('fullpath'));
 
@@ -220,17 +215,14 @@ end
 
 answer=questdlg(sprintf('Result files saved. Open the folder %s?', outdir), '');
 if strcmp(answer,'Yes'), winopen(outdir); end
-
-    function in_writetable(Tmf1, filesaved, shtname)
-        if ~isempty(Tmf1) && istable(Tmf1) && height(Tmf1) > 0
-            writetable(Tmf1, filesaved, "FileType", "spreadsheet", 'Sheet', shtname);
-        end
-    end
-
 end   % end of function
 
 
-
+function in_writetable(Tmf1, filesaved, shtname)
+    if ~isempty(Tmf1) && istable(Tmf1) && height(Tmf1) > 0
+        writetable(Tmf1, filesaved, "FileType", "spreadsheet", 'Sheet', shtname);
+    end
+end
 
 function [T] = in_DETableProcess(T, cL1, cL2)
     try
