@@ -19,8 +19,8 @@ fw = gui.gui_waitbar_adv;
 for k=1:length(CellTypeList)
    
     gui.gui_waitbar_adv(fw, ...
-        (k-1)/length(CellTypeList), ...
-        sprintf('Processing %s ...', CellTypeList{k}));
+        (k-0.5)/length(CellTypeList), ...
+        sprintf('DE - Processing %s ...', CellTypeList{k}));
 
     outfile = sprintf('%s_DE_%s_vs_%s_%s.xlsx', ...
         prefixtag, ...
@@ -76,6 +76,7 @@ for k=1:length(CellTypeList)
             Tmf1 = Tlist1{2};
             in_writetable(Tbp1, filesaved, 'Up_250_GO_BP');
             in_writetable(Tmf1, filesaved, 'Up_250_GO_MF');
+
             [Tlist2] = run.ml_Enrichr(Tdn.gene(1:min([250 height(Tdn)])), ...
                         T.gene, ["GO_Biological_Process_2023", ...
                                  "GO_Molecular_Function_2023"]);
@@ -87,15 +88,34 @@ for k=1:length(CellTypeList)
             warning(ME.message);
         end
     end
+    
+    % try
+    %     [done] = gui.e_llmsummarizer(Tbp1,Tmf1,Tbp2,Tmf2, ...
+    %         sprintf('DE_%s', CellTypeList{k}));
+    % catch
+    % 
+    % end
+    
 end
 gui.gui_waitbar_adv(fw);
+
+%fw=gui.gui_waitbar;
+%try
+assignin('base',"TbpUp",Tbp1);
+assignin('base',"TmfUp",Tmf1);
+assignin('base',"TbpDn",Tbp2);
+assignin('base',"TmfDn",Tmf2);
+assignin('base',"CellType",CellTypeList{k});
+disp('[done] = gui.e_llmsummarizer(TbpUp,TmfUp,TbpDn,TmfDn,CellType);');
+%catch
+%gui.gui_waitbar(fw);
 
 % ------------------------------------------ DV
 fw = gui.gui_waitbar_adv;
 for k=1:length(CellTypeList)
     gui.gui_waitbar_adv(fw, ...
-        (k-1)/length(CellTypeList), ...
-        sprintf('Processing %s ...', CellTypeList{k}));
+        (k-0.5)/length(CellTypeList), ...
+        sprintf('DV - Processing %s ...', CellTypeList{k}));
     idx = sce.c_cell_type_tx == CellTypeList{k};
     sce1 = sce.selectcells(i1&idx);
     sce1 = sce1.qcfilter;
@@ -150,7 +170,6 @@ for k=1:length(CellTypeList)
         end
 
         try
-
             [Tlist1] = run.ml_Enrichr(Tup.gene(1:min([250 height(Tup)])), ...
                         T.gene, ["GO_Biological_Process_2023", ...
                                  "GO_Molecular_Function_2023",...
@@ -171,6 +190,13 @@ for k=1:length(CellTypeList)
         catch ME
             warning(ME.message);
         end
+
+        % try
+        %     [done] = gui.e_llmsummarizer(Tbp1,Tmf1,Tbp2,Tmf2, ...
+        %         sprintf('DV_%s', CellTypeList{k}));
+        % catch
+        % 
+        % end
 end
 gui.gui_waitbar_adv(fw);
 
@@ -187,8 +213,8 @@ for c = 1:length(ctag)
     sceX = log1p(sc_norm(sce.X));
     for k=1:length(CellTypeList)
         gui.gui_waitbar_adv(fw, ...
-            (k-1)/length(CellTypeList), ...
-            sprintf('Processing %s ...', CellTypeList{k}));
+            (k-0.5)/length(CellTypeList), ...
+            sprintf('DP - Processing %s ...', CellTypeList{k}));
     
         outfile = sprintf('%s_DP_%s_%s_vs_%s_%s.xlsx', ...
             prefixtag, ctag{c}, ...
