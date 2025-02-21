@@ -77,6 +77,7 @@ m_anno = createMenus(FigureHandle, 5);
 m_tool = createMenus(FigureHandle, 6);
 m_ntwk = createMenus(FigureHandle, 7);
 m_extn = createMenus(FigureHandle, 8);
+m_optn = createMenus(FigureHandle, 9);
 
 if ~isempty(fx) && isvalid(fx), fxfun(fx, 0.4); end
 hAx = axes('Parent', FigureHandle, 'Visible', 'off');
@@ -116,7 +117,7 @@ end
 
 if ~isempty(sce) && sce.NumCells>0, hAx.Visible="on"; end
 
-createMenus(FigureHandle, 9);
+createMenus(FigureHandle, 10);
 if ~isempty(fx) && isvalid(fx), fxfun(fx, 1.0); end
 pause(1);
 if ~isempty(fx) && isvalid(fx), set(fx, 'visible', 'off'); end
@@ -261,7 +262,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 in_addmenu(menus, 0 ,@gui.callback_PickColorMap,'Next Colormap');
                 in_addmenu(menus, 1 ,@in_cleanumap,'Clean tSNE/UMAP/PHATE Plot');
             case 5
-                menus = uimenu(FigureHandle, 'Text', 'Ann&otate');
+                menus = uimenu(FigureHandle, 'Text', 'Anno&tate');
                 in_addmenu(menus, 0, {@in_DetermineCellTypeClustersGeneral, true}, "Annotate Cell Types Using PanglaoDB Marker Genes");
                 in_addmenu(menus, 0, {@in_DetermineCellTypeClustersGeneral, false}, 'Annotate Cell Types Using Customized Marker Genes...');
                 in_addmenu(menus, 1, {@in_MergeCellSubtypes, 1}, 'Import Cell Annotation from SCE in Workspace...');
@@ -304,9 +305,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 in_addmenu(menus, 0, @gui.callback_scTenifoldCko, 'Virtual Cell-Cell Communication Knockout - scTenifoldCko/🐍 [Experimental] 🐢 ...');
             case 8
                 menus = uimenu(FigureHandle, 'Text', 'E&xternal');
-                in_addmenu(menus, 0, @gui.i_resetrngseed, 'Set Random Seed...');
-                in_addmenu(menus, 0, @gui.i_setextwd, 'Set External Program Working Root Directory...');
-                in_addmenu(menus, 1, @gui.i_setrenv, 'Set up R (ℝ) Environment');
+                in_addmenu(menus, 0, @gui.i_setrenv, 'Set up R (ℝ) Environment');
                 in_addmenu(menus, 0, @gui.i_setpyenv, 'Set up Python (🐍) Environment');
                 in_addmenu(menus, 1, @in_RunSeuratWorkflow, 'Run Seurat Workflow (Seurat/ℝ) [PMID:25867923]...');
                 in_addmenu(menus, 0, @in_RunMonocle3, 'Pseudotime Analysis (Monocle3/ℝ) [PMID:28825705]...');
@@ -320,7 +319,12 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 in_addmenu(menus, 0, @gui.callback_MELDPerturbationScore, 'MELD Perturbation Score (MELD/🐍) [PMID:33558698]...');
                 % in_addmenu(menus, 1, @gui.callback_ExploreCellularCrosstalk, 'Talklr Intercellular Crosstalk [DOI:10.1101/2020.02.01.930602]...');
             case 9
-                menus = uimenu(FigureHandle, 'Text', '&Help ');
+                menus = uimenu(FigureHandle, 'Text', '&Options');
+                in_addmenu(menus, 0, @gui.i_resetrngseed, 'Set Random Seed...');
+                in_addmenu(menus, 0, @gui.i_setextwd, 'Set Working Folder...');
+                in_addmenu(menus, 1, @gui.i_setllmmodel, 'Set LLM Provider & Model...');
+            case 10
+                menus = uimenu(FigureHandle, 'Text', '&Help');
                 in_addmenu(menus, 0, {@(~, ~) web('https://scgeatoolbox.readthedocs.io/en/latest/')}, 'Online Documentation...');
                 in_addmenu(menus, 0, {@(~, ~) gui.gui_uishowrefinfo('Quick Installation',FigureHandle)}, 'Quick Installation Guide...');
                 in_addmenu(menus, 0, {@(~, ~) gui.gui_uishowrefinfo('Shortcuts Guide',FigureHandle)}, 'Shortcuts User Guide...');
@@ -1194,7 +1198,8 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             case 'off'
                 set(UserToolbarHandle,'Visible','off');
         end
-        menusv={m_file, m_edit, m_view, m_plot, m_anno, m_tool, m_ntwk, m_extn};
+        menusv={m_file, m_edit, m_view, m_plot, m_anno, m_tool, m_ntwk,...
+            m_extn, m_optn};
         for j=1:length(menusv)
             a=allchild(menusv{j});
             for k=1:length(a)
@@ -1207,8 +1212,12 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         a=allchild(m_extn);
         a(end).Enable='on';
         a(end-1).Enable='on';
+        %a(end-2).Enable='on';
+        %a(end-3).Enable='on';
+        a=allchild(m_optn);
+        a(end).Enable='on';
+        a(end-1).Enable='on';
         a(end-2).Enable='on';
-        a(end-3).Enable='on';
     end
 
     function in_RefreshAll(src, ~, keepview, keepcolr)

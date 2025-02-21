@@ -15,8 +15,8 @@ if majneedupdate
     end
 else
     waitfor(helpdlg(sprintf('scGEAToolbox (%s) is up to date.', v1), ''));
-    answer=questdlg('Check for minor updates?','');
-    if strcmp(answer,'Yes')
-        pkg.i_minvercheck(FigureHandle);
-    end
+    %answer=questdlg('Check for minor updates?','');
+    %if strcmp(answer,'Yes')
+    %    pkg.i_minvercheck(FigureHandle);
+    %end
 end
