@@ -1,5 +1,6 @@
 function [done] = i_setllmmodel(~, ~)
 
+done = false;
 preftagname = 'llmodelprovider';
 if ~ispref('scgeatoolbox', preftagname)
     % answer = questdlg('LLM model has not been set up. Set it up?');
@@ -21,8 +22,6 @@ else
     end
 end
 
-
-
 listItems = {'Ollama', 'OpenAI', 'DeepSeek', 'xAI'};
 [selectedIndex, ok] = listdlg('PromptString', 'Select a LLM provider:', ...
                               'SelectionMode', 'single', ...
@@ -34,7 +33,11 @@ if ok
     % fprintf('You selected: %s\n', selectedProvider);
     switch selectedProvider
         case 'Ollama'
-            a = webread("http://localhost:11434");
+            a = '';
+            try 
+                a = webread("http://localhost:11434");
+            catch
+            end
             if strcmp(a, 'Ollama is running')
                 [a,str]=dos('Ollama list');
                 if a == 0
@@ -58,7 +61,8 @@ if ok
                 return;
             end
         otherwise
-            helpdlg('The function supporting API is under development.','');
+            warndlg(sprintf('The function supporting %s API is under development.', ...
+                selectedProvider),'');
             return;
     end
 else    
