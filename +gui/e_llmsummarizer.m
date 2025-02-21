@@ -1,5 +1,11 @@
 function [done] = e_llmsummarizer(TbpUp, TmfUp, TbpDn, TmfDn, infotagstr)
 
+if isempty(which('ollamaChat'))
+    error('Needs the Add-On of Large Language Models (LLMs) with MATLAB');
+end
+% https://www.mathworks.com/matlabcentral/fileexchange/163796-large-language-models-llms-with-matlab/
+% Add-On “Large Language Models (LLMs) with MATLAB”.
+
 if nargin<4
     chars = ['A':'Z' 'a':'z' '0':'9']; % Alphanumeric character set
     strLength = 10; % Define desired string length
@@ -11,6 +17,21 @@ done = false;
 
 wrkdir = getpref('scgeatoolbox', 'externalwrkpath');
 if isempty(wrkdir), return; end
+
+
+preftagname = 'llmodelprovider';
+s = getpref('scgeatoolbox', preftagname);
+a = strsplit(s,':');
+assert(strcmp(a{1}, 'Ollama'))
+
+try
+    a=webread("http://localhost:11434");
+    disp(a)
+catch ME
+    disp('Ollama is not running.');
+    return;
+end
+
 
 warning off
 s_up = ''; 
@@ -37,14 +58,10 @@ if ~isempty(TbpDn) || ~isempty(TmfDn)
 end
 warning on
 
-
-
 if isempty(s_up) && isempty(s_dn), return; end
 
-preftagname = 'llmodelprovider';
-s = getpref('scgeatoolbox', preftagname);
-a = strsplit(s,':');
-assert(strcmp(a{1}, 'Ollama'))
+
+
 
 chat = ollamaChat(a{2}, TimeOut = 1200);
 prompt1 = "Imagin that you are a researcher or student working on gene expression data, trying to find meaningful pathways or functions their dataset is linked to. You are using Enrichr. " + ...
