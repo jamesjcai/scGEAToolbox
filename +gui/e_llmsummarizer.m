@@ -1,5 +1,14 @@
 function [done] = e_llmsummarizer(TbpUp, TmfUp, TbpDn, TmfDn, infotagstr)
 
+% Steps to test this function:
+%
+% (1) Download and install Ollama https://ollama.com/
+% (2) Use Ollama to pull a model, e.g., Ollama pull deepseek-r1
+% (3) In MATLAB, install the Add-On, Large Language Models (LLMs) with MATLAB
+% (4) In SCGEATOOL, click menu Options -> Set LLM Provider & Model...
+% (5) In SCGEATOOL, click menu Analysis -> All (DE, DV, DP) Analysis in Cell Type Batch Mode...
+% (6) In MATLAB Command Window, run gui.e_llmsummarizer(TbpUp, TmfUp, TbpDn, TmfDn, CellType)
+
 if isempty(which('ollamaChat'))
     error('Needs the Add-On of Large Language Models (LLMs) with MATLAB');
 end
