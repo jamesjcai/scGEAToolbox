@@ -23,7 +23,7 @@ function sc_llm_enrichr2word(selpath)
     fw = gui.gui_waitbar_adv;              
     for k = 1:length(selectedfiles)
         gui.gui_waitbar_adv(fw, (k-0.5)/length(selectedfiles), ...
-            sprintf('%s', selectedfiles(k));
+            sprintf('%s', selectedfiles(k)));
         infile = fullfile(selpath, selectedfiles(k));
         [TbpUp, TmfUp, TbpDn, TmfDn] = in_gettables(infile);
         % assignin("base","TbpUp",TbpUp);
