@@ -30,12 +30,12 @@ if isempty(wrkdir), return; end
 
 preftagname = 'llmodelprovider';
 s = getpref('scgeatoolbox', preftagname);
-a = strsplit(s,':');
-assert(strcmp(a{1}, 'Ollama'))
+providermodel = strsplit(s,':');
+assert(strcmp(providermodel{1}, 'Ollama'))
 
 try
-    a=webread("http://localhost:11434");
-    disp(a)
+    aa=webread("http://localhost:11434");
+    disp(aa)
 catch ME
     disp('Ollama is not running.');
     return;
@@ -72,7 +72,7 @@ if isempty(s_up) && isempty(s_dn), return; end
 
 
 
-chat = ollamaChat(a{2}, TimeOut = 1200);
+chat = ollamaChat(providermodel{2}, TimeOut = 1200);
 prompt1 = "Imagin that you are a researcher or student working on gene expression data, trying to find meaningful pathways or functions their dataset is linked to. You are using Enrichr. " + ...
     "Enrichr is a gene function enrichment analysis tool. I will give you an output of Enrichr analysis below, which is a list of gene ontology (GO) terms and their associated genes. The GO terms are a mix of enriched terms of biological processes and molecular functions. Please summarize the results in text. " + ...
     "Please provide an analysis of the output, highlighting key biological processes and molecular functions, along with their associated genes. " + ...

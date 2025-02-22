@@ -21,9 +21,16 @@ else
 end
 
 import mlreportgen.dom.*
-
+fw = gui.gui_w              
 for k = 1:2  % length(selectedfiles)
-    [TbpUp, TmfUp, TbpDn, TmfDn] = in_gettables(selectedfiles(k));
+    infile = fullfile(selpath, selectedfiles(k));
+    [TbpUp, TmfUp, TbpDn, TmfDn] = in_gettables(infile);
+
+    % assignin("base","TbpUp",TbpUp);
+    % assignin("base","TmfUp",TmfUp);
+    % assignin("base","TbpDn",TbpDn);
+    % assignin("base","TmfDn",TmfDn);
+
     [~, wordfilename] = fileparts(selectedfiles(k));
     [done, outfile] = gui.e_llmsummarizer(TbpUp, TmfUp, TbpDn, TmfDn, wordfilename);
     if done
@@ -42,8 +49,8 @@ function [TbpUp, TmfUp, TbpDn, TmfDn] = in_gettables(excelfile)
 end
 
 function [T] = in_readexceltable(excelfile, sheetname)
-    t = readtable(excelfile,'Sheet', sheetname);
-    T = t(:, [3 7]);
-    T.Properties.VariableNames={'Function Term','Genes'};
-    T.Genes = strrep(T.Genes,',', ', ');
+    T = readtable(excelfile,'Sheet', sheetname);
+    %T = t(:, [3 7]);
+    %T.Properties.VariableNames={'Function Term','Genes'};
+    %T.Genes = strrep(T.Genes,',', ', ');
 end
