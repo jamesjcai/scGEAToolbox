@@ -105,7 +105,7 @@ function callback_DEVP2GroupsBatch(src, ~)
     assignin('base',"TbpDn",Tbp2);
     assignin('base',"TmfDn",Tmf2);
     assignin('base',"CellType",CellTypeList{k});
-    disp('[done] = gui.e_llmsummarizer(TbpUp,TmfUp,TbpDn,TmfDn,CellType);');
+    disp('[done] = gui.e_llmsummarizer(TbpUp, TmfUp, TbpDn, TmfDn, CellType);');
     %catch
     %gui.gui_waitbar(fw);
     
