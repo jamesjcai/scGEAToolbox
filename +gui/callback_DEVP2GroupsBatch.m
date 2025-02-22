@@ -241,11 +241,10 @@ function callback_DEVP2GroupsBatch(src, ~)
     answer = questdlg(sprintf('Result files saved. Open the folder %s?', outdir), '');
     if strcmp(answer,'Yes'), winopen(outdir); end
 
-    answer = questdlg('Use LLM (AI) to generate enrichment analysis%s?', '');
-    if strcmp(answer,'Yes') 
-        sc_llm_enrichr2word(outdir);
+    answer = questdlg('Use LLM to generate enrichment analysis report?', '');
+    if strcmp(answer,'Yes')
+        gui.sc_llm_enrichr2word(outdir);
     end
-
 
     function in_writetable(Tmf1, filesaved, shtname)
         if ~isempty(Tmf1) && istable(Tmf1) && height(Tmf1) > 0
@@ -253,6 +252,9 @@ function callback_DEVP2GroupsBatch(src, ~)
         end
     end
     
+end
+
+
     function [T] = in_DETableProcess(T, cL1, cL2)
         try
             T = sortrows(T, 'p_val_adj', 'ascend');
@@ -300,5 +302,3 @@ function callback_DEVP2GroupsBatch(src, ~)
                 end
             end
     end
-
-end
