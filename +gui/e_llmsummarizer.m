@@ -1,4 +1,4 @@
-function [done] = e_llmsummarizer(TbpUp, TmfUp, TbpDn, TmfDn, infotagstr)
+function [done, outfile] = e_llmsummarizer(TbpUp, TmfUp, TbpDn, TmfDn, infotagstr)
 
 % Steps to test this function:
 %
@@ -104,4 +104,4 @@ para = Paragraph(feedbk_dn);
 append(doc, para);
 
 close(doc);
-rptview(outfile, 'docx');
+%rptview(outfile, 'docx');
