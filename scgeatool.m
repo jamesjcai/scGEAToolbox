@@ -307,9 +307,9 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 menus = uimenu(FigureHandle, 'Text', 'E&xternal');
                 in_addmenu(menus, 0, @gui.i_resetrngseed, 'Set Random Seed...');
                 in_addmenu(menus, 0, @gui.i_setextwd, 'Set Working Folder...');
-                in_addmenu(menus, 1, @gui.i_setllmmodel, 'Set up AI (LLM) Environment...');
-                in_addmenu(menus, 1, @gui.i_setrenv, 'Set up R (ℝ) Environment');
-                in_addmenu(menus, 0, @gui.i_setpyenv, 'Set up Python (🐍) Environment');
+                in_addmenu(menus, 1, @gui.i_setllmmodel, 'Set Up AI (LLM) Environment...');
+                in_addmenu(menus, 1, @gui.i_setrenv, 'Set Up R (ℝ) Environment');
+                in_addmenu(menus, 0, @gui.i_setpyenv, 'Set Up Python (🐍) Environment');
                 in_addmenu(menus, 1, @in_RunSeuratWorkflow, 'Run Seurat Workflow (Seurat/ℝ) [PMID:25867923]...');
                 in_addmenu(menus, 0, @in_RunMonocle3, 'Pseudotime Analysis (Monocle3/ℝ) [PMID:28825705]...');
                 in_addmenu(menus, 0, {@in_CellCyclePotency, 5}, 'Aneuploid/Diploid Analysis (copykat/ℝ) [PMID:33462507] 🐢 ...');
