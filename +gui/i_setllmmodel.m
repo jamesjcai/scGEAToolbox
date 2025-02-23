@@ -57,7 +57,7 @@ if ok
                     end
                 end
             else
-                helpdlg('Ollama is not running.');
+                helpdlg('Ollama is not running.','');
                 return;
             end
         otherwise

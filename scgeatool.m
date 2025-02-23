@@ -322,7 +322,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 menus = uimenu(FigureHandle, 'Text', '&Options');
                 in_addmenu(menus, 0, @gui.i_resetrngseed, 'Set Random Seed...');
                 in_addmenu(menus, 0, @gui.i_setextwd, 'Set Working Folder...');
-                in_addmenu(menus, 1, @gui.i_setllmmodel, 'Set LLM Provider & Model...');
+                in_addmenu(menus, 1, @gui.i_setllmmodel, 'Set LLM Provider && Model...');
             case 10
                 menus = uimenu(FigureHandle, 'Text', '&Help');
                 in_addmenu(menus, 0, {@(~, ~) web('https://scgeatoolbox.readthedocs.io/en/latest/')}, 'Online Documentation...');
