@@ -1,8 +1,8 @@
 function [Y] = sc_diffumap(X)
-
+    %X = sc_transform(X);
     X = X.';
-    % n-p 
-    [Y] = standardDiffusionMap(X);
+    % n-p
+    [Y] = standardDiffusionMap(X, 0.01, 1000, 10);
 end
 
 % Implementation of both Standard and Fokker-Planck Diffusion Maps
