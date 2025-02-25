@@ -8,7 +8,11 @@ D = squareform(pdist(X', 'cosine'));
 % addpath(fullfile(pw1,'thirdparty\DiffusionMap\'));
 [C, eigenvals] = i_diffuse(D, 0.05, 10);
 if plotit
+    figure;
+    nexttile
     scatter(C(:, 1), C(:, 2));
+    nexttile
+    scatter3(C(:, 1), C(:, 2), C(:, 3));
 end
 end
 

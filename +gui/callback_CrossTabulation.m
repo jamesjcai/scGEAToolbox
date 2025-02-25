@@ -115,6 +115,19 @@ hx.show(FigureHandle);
 
     function in_plot2
         y = T ./ sum(T, 2);
+
+        % A = ceil(y*100)';
+        % a1=[]; a2=[];
+        % for kx=1:size(A,1)
+        %     a1 = [a1; repmat(labelsy(kx),A(kx,1),1)];
+        %     a2 = [a2; repmat(labelsy(kx),A(kx,2),1)];
+        % end
+        % m=min([length(a1) length(a2)]);
+        % a1=a1(1:m);
+        % a2=a2(1:m);
+        % Tx = table(categorical(a1), categorical(a2));
+        % assignin("base","Tx",Tx);
+
         b = bar(y, 'stacked', 'FaceColor', "flat");
         %colormap(prism(size(y,2)));
         colormap(turbo);

@@ -2,7 +2,7 @@ function [Y] = sc_diffumap(X)
     %X = sc_transform(X);
     X = X.';
     % n-p
-    [Y] = standardDiffusionMap(X, 0.01, 1000, 10);
+    [Y] = standardDiffusionMap(X, 0.05, 100, 2);
 end
 
 % Implementation of both Standard and Fokker-Planck Diffusion Maps
@@ -15,7 +15,7 @@ function [phi, lambda] = standardDiffusionMap(X, epsilon, t, n_components)
     % n_components: number of components to return
     
     % Compute pairwise distances
-    D = pdist2(X, X, 'euclidean');
+    D = pdist2(X, X, 'cosine');
     
     % Construct kernel matrix
     K = exp(-D.^2 / (2*epsilon));

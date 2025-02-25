@@ -44,7 +44,8 @@ if guiwaitbar, gui.gui_waitbar_adv(fw); end
 answerstruced = questdlg('Process merged SCE data (tSNE, clustering, and cell type annotation)?', ...
     '', 'Yes', 'Skip', 'Yes');
 if strcmp(answerstruced, 'Yes')
-    [ndim] = gui.i_choose2d3d;
+    % [ndim] = gui.i_choose2d3d;
+    ndim = 3;
     if ~isempty(ndim)        
         [speciestag] = gui.i_selectspecies(2);
         if ~isempty(speciestag)
