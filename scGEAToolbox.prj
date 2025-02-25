@@ -7,7 +7,7 @@
     <param.summary>Single-cell Gene Expression Analysis Toolbox</param.summary>
     <param.description>scRNAseq data analysis toolbox</param.description>
     <param.screenshot>C:\Users\jcai\Pictures\Screenshots\Screenshot 2025-02-05 115308.png</param.screenshot>
-    <param.version>25.2.1</param.version>
+    <param.version>25.2.2</param.version>
     <param.output>${PROJECT_ROOT}\scGEAToolbox.mltbx</param.output>
     <param.products.name>
       <item>MATLAB</item>
@@ -157,6 +157,7 @@ VERSION.mat</param.exclude.filters>
       <file>${PROJECT_ROOT}\sc_cluster_x.m</file>
       <file>${PROJECT_ROOT}\sc_csubtypeanno.m</file>
       <file>${PROJECT_ROOT}\sc_deg.m</file>
+      <file>${PROJECT_ROOT}\sc_diffumap.m</file>
       <file>${PROJECT_ROOT}\sc_distcorr.m</file>
       <file>${PROJECT_ROOT}\sc_dpg.m</file>
       <file>${PROJECT_ROOT}\sc_filterc.m</file>
@@ -168,6 +169,8 @@ VERSION.mat</param.exclude.filters>
       <file>${PROJECT_ROOT}\sc_grnview.m</file>
       <file>${PROJECT_ROOT}\sc_grnview2.m</file>
       <file>${PROJECT_ROOT}\sc_hvg.m</file>
+      <file>${PROJECT_ROOT}\sc_ifft.m</file>
+      <file>${PROJECT_ROOT}\sc_ifft_dev.m</file>
       <file>${PROJECT_ROOT}\sc_impute.m</file>
       <file>${PROJECT_ROOT}\sc_knngraph.m</file>
       <file>${PROJECT_ROOT}\sc_mergedata.m</file>
