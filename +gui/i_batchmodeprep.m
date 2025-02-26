@@ -23,7 +23,8 @@ end
 
 %[i1, i2, cL1, cL2] = gui.i_select2smplgrps(sce, false);
 
-[i1, i2, cL1, cL2] = in_twogrpsencoding(thisc);
+[i1, i2, cL1, cL2, done] = in_twogrpsencoding(thisc);
+if ~done, returne; end
 if isempty(i1) || isempty(i2) || isempty(cL1) || isempty(cL2)
     return;
 end
@@ -166,7 +167,8 @@ function [thisc, clabel] = in_select1class(sce, allowunique)
 end
 
 
-function [i1, i2, cL1, cL2] = in_twogrpsencoding(thisc)
+function [i1, i2, cL1, cL2, done] = in_twogrpsencoding(thisc)
+    done = false;
     [ci, cLi] = grp2idx(thisc);
     listitems = natsort(string(cLi));
     n = length(listitems);
@@ -191,6 +193,22 @@ function [i1, i2, cL1, cL2] = in_twogrpsencoding(thisc)
         i2 = ci == idx2;
         cL1 = cLi(idx1);
         cL2 = cLi(idx2);
+        if isscalar(i1) || isscalar(i2), return; end
+
+        % --------
+        a=sprintf('%s vs. %s',cL1{1}, cL2{1});
+        b=sprintf('%s vs. %s',cL2{1}, cL1{1});
+        answer = questdlg('Which vs. which?','', a, b, a);
+        switch answer
+            case a
+            case b
+                i3=i1; i1=i2; i2=i3;
+                cL3=cL1; cL1=cL2; cL2=cL3;
+            otherwise             
+                return;
+        end
+        % ----------
+        done = true;
     else
         i1=[]; i2=[]; cL1=[]; cL2=[];
     end

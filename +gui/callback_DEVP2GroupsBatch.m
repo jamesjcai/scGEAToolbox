@@ -100,12 +100,12 @@ function callback_DEVP2GroupsBatch(src, ~)
     
     %fw=gui.gui_waitbar;
     %try
-    assignin('base',"TbpUp",Tbp1);
-    assignin('base',"TmfUp",Tmf1);
-    assignin('base',"TbpDn",Tbp2);
-    assignin('base',"TmfDn",Tmf2);
-    assignin('base',"CellType",CellTypeList{k});
-    disp('[done] = gui.e_llmsummarizer(TbpUp, TmfUp, TbpDn, TmfDn, CellType);');
+    % assignin('base',"TbpUp",Tbp1);
+    % assignin('base',"TmfUp",Tmf1);
+    % assignin('base',"TbpDn",Tbp2);
+    % assignin('base',"TmfDn",Tmf2);
+    % assignin('base',"CellType",CellTypeList{k});
+    % disp('[done] = gui.e_llmsummarizer(TbpUp, TmfUp, TbpDn, TmfDn, CellType);');
     %catch
     %gui.gui_waitbar(fw);
     
@@ -121,11 +121,29 @@ function callback_DEVP2GroupsBatch(src, ~)
     
         sce2 = sce.selectcells(i2&idx);
         sce2 = sce2.qcfilter;
-    
-        if sce1.NumCells < 10 || sce2.NumCells < 10 || sce1.NumGenes < 10 || sce2.NumGenes < 10
-            warning('Filtered SCE contains too few cells (n < 10) or genes (n < 10).');
-            continue;
+        
+        notok = false;
+        if sce1.NumCells < 10
+            disp(CellTypeList{k})
+            warning('Filtered SCE 1 contains too few cells (NumCells < 10)');
+            notok = true;
         end
+        if  sce2.NumCells < 10
+            disp(CellTypeList{k})
+            warning('Filtered SCE 2 contains too few cells (NumCells < 10)');
+            notok = true;
+        end
+        if sce1.NumGenes < 10
+            disp(CellTypeList{k})
+            warning('Filtered SCE 1 contains too few genes (NumGenes < 10)');
+            notok = true;
+        end
+        if sce2.NumGenes < 10
+            disp(CellTypeList{k})
+            warning('Filtered SCE 2 contains too few genes (NumGenes < 10)');
+            notok = true;
+        end
+        if notok, continue; end
     
         [T] = gui.e_dvanalysis_splinefit(sce1, sce2, cL1, cL2);
         outfile = sprintf('%s_DV_%s_vs_%s_%s.xlsx', ...
@@ -226,11 +244,17 @@ function callback_DEVP2GroupsBatch(src, ~)
             try
                 T = sc_dpg(sceX(:, i1&idx), sceX(:, i2&idx), sce.g, ...
                     setmatrx, setnames, setgenes);
-                Tup = T(T.avg_log2FC > 0, :);
-                Tdn = T(T.avg_log2FC < 0, :);
-                writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All programs');
-                writetable(Tup, filesaved, "FileType", "spreadsheet", 'Sheet', 'Up-regulated');
-                writetable(Tdn, filesaved, "FileType", "spreadsheet", 'Sheet', 'Down-regulated');
+                if ~isempty(T)
+                    writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All programs');
+                    Tup = T(T.avg_log2FC > 0, :);                    
+                    Tdn = T(T.avg_log2FC < 0, :);
+                    if ~isempty(Tup)
+                        writetable(Tup, filesaved, "FileType", "spreadsheet", 'Sheet', 'Up-regulated');
+                    end
+                    if ~isempty(Tdn)
+                        writetable(Tdn, filesaved, "FileType", "spreadsheet", 'Sheet', 'Down-regulated');
+                    end
+                end
             catch ME
                 warning(ME.message);
             end

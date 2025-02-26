@@ -1,7 +1,9 @@
 function sc_llm_enrichr2word(selpath)
 
-    if nargin < 1, selpath = uigetdir; end
-    
+    if nargin < 1, selpath = uigetdir; end     
+    if isempty(selpath), return; end
+    if ~isfolder(selpath), return; end
+
     files = dir(fullfile(selpath, '*_DE_*.xlsx'));
     fileNames1 = string({files(~[files.isdir]).name});
     files = dir(fullfile(selpath, '*_DV_*.xlsx'));
@@ -32,14 +34,46 @@ function sc_llm_enrichr2word(selpath)
         % assignin("base","TmfDn",TmfDn);
         [~, wordfilename] = fileparts(selectedfiles(k));
         [done, outfile] = gui.e_llmsummarizer(TbpUp, TmfUp, TbpDn, TmfDn, wordfilename);
+
+
+        % files = dir(fullfile(selpath, '*_DP_*.xlsx'));
+        % fileNames = string({files(~[files.isdir]).name});
+        % doc = Document(outfile, 'docx');
+        % open(doc);
+        % para = Paragraph("AI generated text");
+        % append(doc, para);
+        % close(doc);
+
+
         if done, rptview(outfile, 'docx'); end
     end
     gui.gui_waitbar_adv(fw);    
    
     function [TbpUp, TmfUp, TbpDn, TmfDn] = in_gettables(excelfile)
-        TbpUp = readtable(excelfile, 'Sheet', 'Up_250_GO_BP');
-        TmfUp = readtable(excelfile, 'Sheet', 'Up_250_GO_MF');
-        TbpDn = readtable(excelfile, 'Sheet', 'Dn_250_GO_BP');
-        TmfDn = readtable(excelfile, 'Sheet', 'Dn_250_GO_MF');
+        TbpUp = [];
+        TmfUp = [];
+        TbpDn = [];
+        TmfDn = [];
+        sheetList = sheetnames(excelfile);
+        
+        sheetToRead = 'Up_250_GO_BP';
+        if any(strcmp(sheetList, sheetToRead))
+            TbpUp = readtable(excelfile, 'Sheet', sheetToRead);
+        end
+
+        sheetToRead = 'Up_250_GO_MF';
+        if any(strcmp(sheetList, sheetToRead))
+            TmfUp = readtable(excelfile, 'Sheet', sheetToRead);
+        end
+
+        sheetToRead = 'Dn_250_GO_BP';
+        if any(strcmp(sheetList, sheetToRead))
+            TbpDn = readtable(excelfile, 'Sheet', sheetToRead);
+        end
+
+        sheetToRead = 'Dn_250_GO_MF';
+        if any(strcmp(sheetList, sheetToRead))
+            TmfDn = readtable(excelfile, 'Sheet', sheetToRead);
+        end        
     end
 end

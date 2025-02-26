@@ -1,5 +1,8 @@
 function [done, outfile] = e_llmsummarizer(TbpUp, TmfUp, TbpDn, TmfDn, infotagstr)
-
+    
+    done = false;
+    outfile = [];
+    
     % Steps to test this function:
     %
     % (1) Download and install Ollama https://ollama.com/
@@ -22,7 +25,6 @@ function [done, outfile] = e_llmsummarizer(TbpUp, TmfUp, TbpDn, TmfDn, infotagst
         infotagstr = randomStr; 
     end
     
-    done = false;
     
     wrkdir = getpref('scgeatoolbox', 'externalwrkpath');
     if isempty(wrkdir), return; end
@@ -45,7 +47,14 @@ function [done, outfile] = e_llmsummarizer(TbpUp, TmfUp, TbpDn, TmfDn, infotagst
     s_up = ''; 
     s_dn = '';
     if ~isempty(TbpUp) || ~isempty(TmfUp)
-        T = [TbpUp(:,[1 3 7]); TmfUp(:,[1 3 7])];
+        T1 = []; T2 = [];
+        if ~isempty(TbpUp)
+            T1 = TbpUp(:,[1 3 7]);
+        end
+        if ~isempty(TmfUp)
+            T2 = TmfUp(:,[1 3 7]);
+        end        
+        T = [T1; T2];
         T.Properties.VariableNames={'Library Name','Function Term','Genes'};
         
         % T.Genes = strrep(T.Genes,',', ', ');
@@ -57,7 +66,14 @@ function [done, outfile] = e_llmsummarizer(TbpUp, TmfUp, TbpDn, TmfDn, infotagst
     end
     
     if ~isempty(TbpDn) || ~isempty(TmfDn)
-        T = [TbpDn(:,[1 3 7]); TmfDn(:,[1 3 7])];
+        T1 = []; T2 = [];
+        if ~isempty(TbpDn)
+            T1 = TbpDn(:,[1 3 7]);
+        end
+        if ~isempty(TmfDn)
+            T2 = TmfDn(:,[1 3 7]);
+        end
+        T = [T1; T2];
         T.Properties.VariableNames={'Library Name','Function Term','Genes'};
         C = T.Genes;
         C_new = cellfun(@(x) strrep(x, ',', ', '), C, 'UniformOutput', false);
