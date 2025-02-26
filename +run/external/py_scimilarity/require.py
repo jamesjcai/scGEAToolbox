@@ -10,3 +10,5 @@ missing   = required - installed
 
 if missing:
     subprocess.check_call([sys.executable, '-m', 'pip', 'install', *missing])
+
+# conda install conda-forge::hnswlib 

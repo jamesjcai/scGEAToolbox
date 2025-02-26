@@ -1,6 +1,6 @@
 pyrun("from scimilarity import CellAnnotation")
-pyrun("ca = CellAnnotation(model_path=a)", a='y:\jcai\models\model_v1.1');
-% pyrun("ca = CellAnnotation(model_path = 'y:\\jcai\\models\\model_v1.1')")
+pyrun("ca = CellAnnotation(model_path=a)", a='D:\SCimilarity_models\model_v1.1');
+% Or pyrun("ca = CellAnnotation(model_path = 'y:\\jcai\\models\\model_v1.1')")
 targetg = string(pyrun("a = ca.gene_order","a"))';
 load test\testdata.mat
 [y, idx] = ismember(sce.g, targetg);
@@ -13,5 +13,7 @@ X = single(log1p(pkg.norm_libsize(X, 10000)));
 pyrun("from scipy.sparse import csr_matrix")
 pyrun("X = csr_matrix(a)", a=X');
 embeddings = pyrun("embeddings = ca.get_embeddings(X)", "embeddings");
-    
+s = single(embeddings);
+
 % pyrun("predictions = ca.get_predictions_knn(embeddings)")
+% cd 'D:\miniconda3\Lib\site-packages\scimilarity'

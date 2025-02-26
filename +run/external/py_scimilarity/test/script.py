@@ -1,6 +1,5 @@
 import os
-# os.chdir("C:\\Users\\jcai\\AppData\\Local\\Temp\\")
-os.chdir("Z:\\Cailab\\GitHub\\scGEAToolbox\\+run\\external\\py_scimilarity\\test")
+os.chdir("d:\\GitHub\\scGEAToolbox\\+run\\external\\py_scimilarity\\test")
 #import os
 #os.chdir("./")
 import pandas as pd 
@@ -15,7 +14,6 @@ import anndata
 
 
 # ==============================
-
 
 import scanpy as sc
 from matplotlib import pyplot as plt

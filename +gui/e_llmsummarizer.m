@@ -49,13 +49,13 @@ function [done, outfile] = e_llmsummarizer(TbpUp, TmfUp, TbpDn, TmfDn, infotagst
     if ~isempty(TbpUp) || ~isempty(TmfUp)
         T1 = []; T2 = [];
         if ~isempty(TbpUp)
-            T1 = TbpUp(:,[1 3 7]);
+            T1 = TbpUp(:, [3 7]);
         end
         if ~isempty(TmfUp)
-            T2 = TmfUp(:,[1 3 7]);
+            T2 = TmfUp(:, [3 7]);
         end        
         T = [T1; T2];
-        T.Properties.VariableNames={'Library Name','Function Term','Genes'};
+        T.Properties.VariableNames={'Gene Ontology Term','Genes'};
         
         % T.Genes = strrep(T.Genes,',', ', ');
         C = T.Genes;
@@ -68,13 +68,13 @@ function [done, outfile] = e_llmsummarizer(TbpUp, TmfUp, TbpDn, TmfDn, infotagst
     if ~isempty(TbpDn) || ~isempty(TmfDn)
         T1 = []; T2 = [];
         if ~isempty(TbpDn)
-            T1 = TbpDn(:,[1 3 7]);
+            T1 = TbpDn(:, [3 7]);
         end
         if ~isempty(TmfDn)
-            T2 = TmfDn(:,[1 3 7]);
+            T2 = TmfDn(:, [3 7]);
         end
         T = [T1; T2];
-        T.Properties.VariableNames={'Library Name','Function Term','Genes'};
+        T.Properties.VariableNames={'Gene Ontology Term','Genes'};
         C = T.Genes;
         C_new = cellfun(@(x) strrep(x, ',', ', '), C, 'UniformOutput', false);
         T.Genes = C_new;
@@ -85,10 +85,10 @@ function [done, outfile] = e_llmsummarizer(TbpUp, TmfUp, TbpDn, TmfDn, infotagst
     if isempty(s_up) && isempty(s_dn), return; end
        
     chat = ollamaChat(providermodel{2}, TimeOut = 1200);
-    prompt1 = "Imagin that you are a researcher or student working on gene expression data, trying to find meaningful pathways or functions their dataset is linked to. You are using Enrichr. " + ...
-        "Enrichr is a gene function enrichment analysis tool. I will give you an output of Enrichr analysis below, which is a list of gene ontology (GO) terms and their associated genes. The GO terms are a mix of enriched terms of biological processes and molecular functions. Please summarize the results in text. " + ...
+    prompt1 = "You are a researcher working on gene function enrichment analysis try to find biological processes and molecular functions of a given gene sets. You are using Enrichr to do this. " + ...
+        "Enrichr is a gene function enrichment analysis tool. You will be given the output of Enrichr analysis below, which contains a list of gene ontology (GO) terms and associated genes. The GO terms are a mix of enriched terms of biological processes and molecular functions. Please summarize the results in text. " + ...
         "Please provide an analysis of the output, highlighting key biological processes and molecular functions, along with their associated genes. " + ...
-        "Write an executive summary to report the results of your analysis. ";
+        "Please write an executive summary to report the results of your analysis. ";
     prompt2 = "Here is the output of Enrichr: " + s_up;
     feedbk_up = generate(chat, prompt1 + prompt2);
     
@@ -102,6 +102,7 @@ function [done, outfile] = e_llmsummarizer(TbpUp, TmfUp, TbpDn, TmfDn, infotagst
     open(doc);
     
     para = Paragraph(sprintf('%s Up-regulation', infotagstr));
+    para.Style = {Bold(true), FontSize('14pt'), Color('blue')};
     append(doc, para);
     
     feedbk_up = regexprep(feedbk_up, '<think>.*?</think>', '');
@@ -109,6 +110,7 @@ function [done, outfile] = e_llmsummarizer(TbpUp, TmfUp, TbpDn, TmfDn, infotagst
     append(doc, para);
     
     para = Paragraph(sprintf('%s Down-regulation', infotagstr));
+    para.Style = {Bold(true), FontSize('14pt'), Color('blue')};
     append(doc, para);
     
     feedbk_dn = regexprep(feedbk_dn, '<think>.*?</think>', '');
