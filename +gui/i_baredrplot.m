@@ -18,7 +18,7 @@ if nargin < 2, c = []; end
 isAxesHandle = isa(s, 'matlab.graphics.axis.Axes'); %isgraphics(s, 'axes');
 if ~isAxesHandle && isempty(c), error('Empty handle.'); end
 
-hx=gui.myFigure;
+hx = gui.myFigure;
 hFig = hx.FigureHandle;
 
 if isAxesHandle

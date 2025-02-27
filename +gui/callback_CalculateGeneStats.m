@@ -7,7 +7,7 @@ function callback_CalculateGeneStats(src, ~)
     if ~strcmp(answer, 'Yes'), return; end
 
     % Retrieve single-cell experiment data
-    [~, sce] = gui.gui_getfigsce(src);
+    [FigureHandle, sce] = gui.gui_getfigsce(src);
     Xt = gui.i_transformx(sce.X);
     if isempty(Xt), return; end
 
@@ -18,7 +18,7 @@ function callback_CalculateGeneStats(src, ~)
         if isempty(thisc), return; end
         [c, cL] = grp2idx(thisc);
 
-        newidx = gui.i_selmultidlg(cL, natsort(cL));
+        newidx = gui.i_selmultidlg(cL, natsort(cL), FigureHandle);
         if isempty(newidx), return; end
 
         cx = c;
@@ -78,7 +78,7 @@ if strcmp(answer, 'Yes')
     if isempty(thisc), return; end
     [c, cL] = grp2idx(thisc);
 
-    [newidx] = gui.i_selmultidlg(cL, natsort(cL));
+    [newidx] = gui.i_selmultidlg(cL, natsort(cL), FigureHandle);
     if isempty(newidx), return; end
     cx = c;
     c = zeros(size(c));

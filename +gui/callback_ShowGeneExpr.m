@@ -30,24 +30,27 @@ function callback_ShowGeneExpr(src, ~)
             tabgp = uitabgroup();
             nf = 1;
             tab{nf} = uitab(tabgp, 'Title', sprintf('Tab%d',nf));
-            axes('parent',tab{nf});
+            axes('parent', tab{nf});
+            
+            hx.addCustomButton('off', @in_xxx, 'HDF_point.gif', 'Show gene names');
+
             if ~ispref('scgeatoolbox', 'prefcolormapname')
                 setpref('scgeatoolbox', 'prefcolormapname', 'autumn');
             end
             a = getpref('scgeatoolbox', 'prefcolormapname');
-            maxy = 0;
+            maxy = 0;            
             for k = 1:n
                 nexttile
-                    sc_scattermarker(Xt, sce.g, sce.s, glist(k), 2, 5, false);
-                    c = Xt(sce.g == glist(k), :);
-                    gui.i_setautumncolor(c, a, true, any(c==0));
-                    colorbar;
-                    maxy = max([maxy, max(Xt(sce.g == glist(k)))]);
+                sc_scattermarker(Xt, sce.g, sce.s, glist(k), 2, 5, false);
+                c = Xt(sce.g == glist(k), :);
+                gui.i_setautumncolor(c, a, true, any(c==0));
+                colorbar;
+                maxy = max([maxy, max(Xt(sce.g == glist(k)))]);
             end
 
             nf = 2;
             tab{nf} = uitab(tabgp, 'Title', sprintf('Tab%d',nf));
-            axes('parent',tab{nf});
+            axes('parent', tab{nf});
             
             for k = 1:n
                 nexttile
@@ -90,4 +93,19 @@ function callback_ShowGeneExpr(src, ~)
             gui.sc_uitabgrpfig_expplot(y, glist, sce.s, FigureHandle, [axx, bxx]);
             gui.gui_waitbar(fw);            
     end
+
+ function in_xxx(~,~)
+     % ancestor(ax1, 'figure')
+     for l = 1:2
+     ax = findall(tab{l}, 'Type', 'axes');
+     for kk = 1:length(ax)
+         % gui.i_export2pptx({ancestor(ax, 'figure')}, {''});
+         colorbar(ax(kk),"off");
+         box(ax(kk),"on");
+         grid(ax(kk),"off");
+         subtitle(ax(kk),'');
+     end
+     end
+ end
+
 end

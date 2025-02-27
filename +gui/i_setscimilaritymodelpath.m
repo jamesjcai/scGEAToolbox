@@ -1,4 +1,4 @@
-function [selectedDir] = i_setscimilaritymodelpath
+function [selectedDir] = i_setscimilaritymodelpath(~, ~)
 
 selectedDir = '';
 preftagname = 'scimilmodelpath';

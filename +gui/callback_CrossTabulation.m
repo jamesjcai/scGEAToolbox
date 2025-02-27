@@ -4,22 +4,26 @@ function callback_CrossTabulation(src, ~)
 
 [thisc1, clabel1, thisc2, clabel2] = gui.i_select2class(sce, true);
 
+%[answer] = questdlg('Manually order groups?', '');
+%if isempty(answer), return; end
 
-% [c, cL, noanswer] = gui.i_reordergroups(thisc1, [], FigureHandle);
-% thisc1=cL(c);
-% [c, cL, noanswer] = gui.i_reordergroups(thisc2, [], FigureHandle);
-% thisc2=cL(c);
+[~, cL1, noanswer] = gui.i_reordergroups(thisc1, [], FigureHandle);
+if noanswer, return; end
+thisc1 = categorical(thisc1, cL1);
+ 
+[~, cL2, noanswer] = gui.i_reordergroups(thisc2, [], FigureHandle);
+if noanswer, return; end
+thisc2 = categorical(thisc2, cL2);
 
 if isempty(thisc1), return; end
-
 if isempty(thisc2)
     hx = gui.myFigure;
-    T=tabulate(thisc1);
+    T = tabulate(thisc1);
     y = T(:,2);
     if iscell(y), y = cell2mat(y); end
-    bar(y,'FaceColor', "flat");    
+    bar(y, 'FaceColor', "flat");    
     colormap("turbo")
-    labelsx=string(T(:,1));
+    labelsx = string(T(:,1));
 
     xticks(1:length(labelsx));
     labelsx1 = strrep(labelsx, '_', '\_');
@@ -27,8 +31,6 @@ if isempty(thisc2)
     hx.show(FigureHandle);
     return;
 end
-
-
 
 
 fw = gui.gui_waitbar;
@@ -57,7 +59,7 @@ for k=1:2
             clabel = clabel2;
             llabel = clabel1;
     end
-    in_crossplot(thiscA,thiscB);
+    in_crossplot(thiscA, thiscB);
     tab{k} = uitab(tabgp, 'Title', sprintf('Tab%d',k));
     %tab{k} = uitab(tabgp, 'Title', sprintf('%s-%s',clabel,llabel));
     ax0{k} = axes('parent',tab{k});
@@ -72,13 +74,19 @@ gui.gui_waitbar(fw);
 hx.show(FigureHandle);
 
 
-    function in_crossplot(thiscA,thiscB)
-
-        t = table(thiscA, thiscB);
-        t = sortrows(t, [1, 2]);
-        thiscA = t.thiscA;
-        thiscB = t.thiscB;
+    function in_crossplot(thiscA, thiscB)
+        %t = table(thiscA, thiscB);
+        %t = sortrows(t, [1, 2]);
+        %thiscA = t.thiscA;
+        %thiscB = t.thiscB;
         
+        %iscategorical(thiscA)
+        %iscategorical(thiscB)
+        %categories(thiscA)
+        %categories(thiscB)
+
+        thiscB = reordercats(thiscB, flipud(categories(thiscB)));
+
         [T, ~, ~, labelsxy] = crosstab(thiscA, thiscB);
         
         labelsx = labelsxy(:, 1);

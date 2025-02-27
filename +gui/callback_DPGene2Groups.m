@@ -1,6 +1,6 @@
 function callback_DPGene2Groups(src, ~)
 
-[~, sce] = gui.gui_getfigsce(src);
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 if ~gui.gui_showrefinfo('DP Analysis'), return; end
 
     extprogname = 'scgeatool_DPAnalysis';
@@ -133,7 +133,7 @@ answer=questdlg('Select gene sets and plot results?','');
 if ~strcmp(answer,'Yes')
     return;
 else
-    [idxneedplot] = gui.i_selmultidlg(T.setnames);
+    [idxneedplot] = gui.i_selmultidlg(T.setnames, [], FigureHandle);
 end
 if isempty(idxneedplot), return; end
 

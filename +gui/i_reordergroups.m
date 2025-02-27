@@ -4,7 +4,7 @@ if nargin < 3, parentfig = []; end
 if nargin < 2, preorderedcL = []; end
 noanswer = true;
 [c, cL] = grp2idx(thisc);
-newidx=1:numel(cL);
+newidx = 1:numel(cL);
 if isscalar(cL)
     %errordlg('Only one cell type or cluster.');
     noanswer = false;
@@ -34,5 +34,7 @@ if isempty(answer), return; end
             noanswer = false;
         case 'No'
             noanswer = false;
+        case 'Cancel'
+            noanswer = true;
     end
 end

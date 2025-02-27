@@ -1,7 +1,7 @@
 function callback_DEGene2Groups(src, ~)
 
     isatac = false;
-    [~, sce] = gui.gui_getfigsce(src);
+    [FigureHandle, sce] = gui.gui_getfigsce(src);
     % if ~gui.gui_showrefinfo('DE Analysis'), return; end
 
     %[wkdir] = gui.i_getwrkdir;
@@ -11,7 +11,7 @@ function callback_DEGene2Groups(src, ~)
     [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
     if isempty(wkdir), return; end    
     
-    [i1, i2, cL1, cL2] = gui.i_select2smplgrps(sce, false);
+    [i1, i2, cL1, cL2] = gui.i_select2smplgrps(sce, false, FigureHandle);
     if isscalar(i1) || isscalar(i2), return; end
     
     % --------
