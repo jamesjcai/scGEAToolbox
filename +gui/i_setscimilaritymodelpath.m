@@ -37,7 +37,7 @@ else
     end
 end
 
-if ~done
+if ~done && (isempty(selectedDir) || ~isfolder(selectedDir))
     warndlg('SCimilarity model path is not set.', '');
 end
 
