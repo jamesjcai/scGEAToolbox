@@ -27,7 +27,8 @@ if ~isempty(s)
         s(s > 1) = 1;
         disp('checks: bounded');
     end
-    if sum(sum(isinf(s) || isnan(s)))
+    % assignin("base",'s',s)
+    if sum(sum(isinf(s) | isnan(s)))
         disp('checks: non-finite similarity detected !!! (serious)');
         if 0
             s(find(isinf(s) || isnan(s))) = 0; % hangs the computer - no idea why...
