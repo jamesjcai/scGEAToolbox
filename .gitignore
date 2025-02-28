@@ -90,3 +90,4 @@ resources/Images/Thumbs.db
 +run/external/py_scimilarity/test/output.h5ad
 +run/external/py_scrublet/input.mat
 VERSION.mat
+DEVMODE.txt

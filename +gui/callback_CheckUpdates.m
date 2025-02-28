@@ -19,6 +19,12 @@ function callback_CheckUpdates(src, ~)
                 errordlg("Toolbox not found on MATLAB path!", "Update Error");
                 return;
             end
+
+            if isfile(fullfile(toolboxPath, 'DEVMODE.txt'))
+                errordlg("Upgrade is disabled in development mode.", "Update Blocked");
+                return;
+            end
+
             if upgradeToolbox
                 if strcmp('Yes', questdlg('Restart SCGEATOOL?'))
                     close(FigureHandle);
