@@ -17,3 +17,10 @@ s = single(embeddings);
 
 % pyrun("predictions = ca.get_predictions_knn(embeddings)")
 % cd 'D:\miniconda3\Lib\site-packages\scimilarity'
+
+
+%pyrun('import whisper')
+%pyrun('model = whisper.load_model("tiny")')
+%model = whisper.load_model("small")  # You can use "tiny", "small", or "large" based on your system
+%result = model.transcribe(audio_file)
+%text = result["text"]

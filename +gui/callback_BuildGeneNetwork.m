@@ -31,6 +31,15 @@ function callback_BuildGeneNetwork(src, ~)
                 end
             end
             gui.gui_waitbar_adv(fw);
-    end    
+        otherwise
+            return;
+    end
+%    [~, systemView] = memory;
+% disp(systemView.PhysicalMemory.Available)
+%    bytesPerElement = 8;    % For double precision
+%    maxElements = systemView.PhysicalMemory.Available / bytesPerElement;
+%    maxSize = floor(sqrt(maxElements));  % If square matrix is needed
+
+
     sc_grnview(A, glist, [], FigureHandle);
 end

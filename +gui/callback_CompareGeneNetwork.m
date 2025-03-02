@@ -16,12 +16,37 @@ function callback_CompareGeneNetwork(src, ~)
     [Xt] = gui.i_transformx(sce.X, true, 5);
     if isempty(Xt), return; end
     
-    fw=gui.gui_waitbar;
     x1 = Xt(i, i1);
     x2 = Xt(i, i2);
-    A1 = sc_pcnet(x1, 3, false, true, false);
-    A2 = sc_pcnet(x2, 3, false, true, false);
-    gui.gui_waitbar(fw);
+    switch questdlg("Select algorithm:",'',"PC Regression","Chaterjee Correlation","PC Regression")
+        case "PC Regression"
+            fw = gui.gui_waitbar;
+            A1 = sc_pcnet(x1, 3, false, true, false);
+            A2 = sc_pcnet(x2, 3, false, true, false);
+            gui.gui_waitbar(fw);
+        case "Chaterjee Correlation"
+            fw = gui.gui_waitbar_adv;
+            n1 = size(x1,1);
+            A1 = zeros(n1);
+            n2 = size(x2,1);
+            A2 = zeros(n2);
+            for k=1:n1
+                gui.gui_waitbar_adv(fw,k/n1);
+                for l=1:n1
+                    if k~=l
+                        A1(k,l) = pkg.e_xicor(x1(k,:),x1(l,:));
+                    end
+                end
+                for l=1:n2
+                    if k~=l
+                        A2(k,l) = pkg.e_xicor(x2(k,:),x2(l,:));
+                    end
+                end
+            end
+            gui.gui_waitbar_adv(fw);
+        otherwise
+            return;
+    end
     pause(1)
     stitle = sprintf('%s vs. %s', cL1{1}, cL2{1});
     sc_grnview2(A1, A2, glist, stitle, FigureHandle);

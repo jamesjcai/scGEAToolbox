@@ -9,12 +9,11 @@ function callback_CheckUpdates(src, ~)
         return;
     end
     if majneedupdate
-        answer = questdlg(sprintf('There is a new version of scGEAToolbox (%s vs. %s). Upgrade?', v2, v1));
+        answer = questdlg(sprintf('There is a new version of scGEAToolbox (%s vs. %s). Learn how to upgrade?', v2, v1));
         if strcmp(answer, 'Yes')
-            % gui.gui_uishowrefinfo('Quick Installation', FigureHandle);
-            % elseif strcmp(answer, 'No')
+            gui.gui_uishowrefinfo('Quick Installation', FigureHandle);
+            %{
             toolboxPath = fileparts(fileparts(mfilename('fullpath')));
-            % disp(toolboxPath);
             if isempty(toolboxPath)
                 errordlg("Toolbox not found on MATLAB path!", "Update Error");
                 return;
@@ -32,9 +31,7 @@ function callback_CheckUpdates(src, ~)
                     run("scgeatool.m");
                 end
             end
-        else
-            disp("Upgrade canceled.");
-            return;
+            %}
         end
     else
         waitfor(helpdlg(sprintf('scGEAToolbox (%s) is up to date.', v1), ''));
@@ -44,10 +41,12 @@ function callback_CheckUpdates(src, ~)
         %end
     end
 
+    %{
     function [done] = upgradeToolbox()
         done = false;
         backupDir = fullfile(tempdir, "ToolboxBackup"); % Backup location
-        zipURL = sprintf('https://github.com/jamesjcai/scGEAToolbox/releases/download/v%s/scGEAToolbox.mltbx', v2); % Update with actual URL
+        % zipURL = sprintf('https://github.com/jamesjcai/scGEAToolbox/releases/download/v%s/scGEAToolbox.mltbx', v2); % Update with actual URL
+        zipURL = sprintf('https://github.com/jamesjcai/scGEAToolbox/archive/refs/tags/v%s.zip',v2);
         tempZip = fullfile(tempdir, "ToolboxUpdate.zip");
     
         try
@@ -97,5 +96,6 @@ function callback_CheckUpdates(src, ~)
             end
         end
     end
-
+    %}
+    
 end
