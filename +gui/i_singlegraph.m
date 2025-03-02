@@ -108,8 +108,7 @@ oldG1 = [];
             answer = questdlg('Export & save network to:', '', ...
                 'Workspace', 'File', 'Workspace');
         else
-            a = questdlg('Export & save network to file?');
-            if strcmp(a, 'Yes')
+            if strcmp('Yes', questdlg('Export & save network to file?'))
                 answer = 'File';
             else
                 return;

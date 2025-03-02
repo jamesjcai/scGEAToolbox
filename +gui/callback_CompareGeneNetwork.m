@@ -13,18 +13,25 @@ function callback_CompareGeneNetwork(src, ~)
     if ~all(y), error('Selected gene(s) not in the gene list of data.'); end
     fprintf("%s\n", glist)
     
-    [Xt] = gui.i_transformx(sce.X, true, 5);
-    if isempty(Xt), return; end
-    
-    x1 = Xt(i, i1);
-    x2 = Xt(i, i2);
     switch questdlg("Select algorithm:",'',"PC Regression","Chaterjee Correlation","PC Regression")
         case "PC Regression"
+            [Xt] = gui.i_transformx(sce.X, true, 5);
+            if isempty(Xt), return; end
+            
+            x1 = Xt(i, i1);
+            x2 = Xt(i, i2);
+            
             fw = gui.gui_waitbar;
             A1 = sc_pcnet(x1, 3, false, true, false);
             A2 = sc_pcnet(x2, 3, false, true, false);
             gui.gui_waitbar(fw);
         case "Chaterjee Correlation"
+            [Xt] = gui.i_transformx(sce.X, true, 3);
+            if isempty(Xt), return; end
+            
+            x1 = Xt(i, i1);
+            x2 = Xt(i, i2);
+
             fw = gui.gui_waitbar_adv;
             n1 = size(x1,1);
             A1 = zeros(n1);
@@ -49,5 +56,9 @@ function callback_CompareGeneNetwork(src, ~)
     end
     pause(1)
     stitle = sprintf('%s vs. %s', cL1{1}, cL2{1});
-    sc_grnview2(A1, A2, glist, stitle, FigureHandle);
+    try
+        sc_grnview2(A1, A2, glist, stitle, FigureHandle);
+    catch ME
+        errordlg(ME.message);
+    end
 end
