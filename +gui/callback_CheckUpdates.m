@@ -49,6 +49,12 @@ function callback_CheckUpdates(src, ~)
         zipURL = sprintf('https://github.com/jamesjcai/scGEAToolbox/archive/refs/tags/v%s.zip',v2);
         tempZip = fullfile(tempdir, "ToolboxUpdate.zip");
     
+%        zipURL = sprintf('https://github.com/jamesjcai/scGEAToolbox/releases/download/v%s/scGEAToolbox.mltbx', v2); % Update with actual URL
+%        tempZip = fullfile(tempdir, "ToolboxUpdate.mltbx");
+%        websave(tempZip, zipURL);    
+%        matlab.addons.install(tempZip);
+
+
         try
             % Step 1: Backup the existing toolbox
             disp("Backing up current version...");
