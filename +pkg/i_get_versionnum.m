@@ -12,25 +12,27 @@ function [v1] = i_get_versionnum
     end
 
     tag_version = 'param.version';    
-    try
-        xfilelocal = fullfile(mfolder,'..', 'scGEAToolbox.prj');
-        fid = fopen(xfilelocal, 'r');
-        C = textscan(fid, '%s', 'delimiter', '\n');
-        fclose(fid);
-        a = C{1};
-        x = a(contains(a, sprintf('<%s>',tag_version)));
-        a1 = strfind(x, sprintf('<%s>',tag_version));
-        a2 = strfind(x, sprintf('</%s>',tag_version));
-        v1 = extractBetween(x, a1{1}+length(sprintf('<%s>',tag_version)), a2{1}-1);
-        % v1 = strrep(v1{1}, 'scGEAToolbox ', '');
-        v1 = v1{1};
-    catch ME
-        warning(ME.identifier, 'Error reading project file: %s', ME.message);
+    xfilelocal = fullfile(mfolder,'..', 'scGEAToolbox.prj');
+    if exist(xfilelocal, 'file')
+        try            
+            fid = fopen(xfilelocal, 'r');
+            C = textscan(fid, '%s', 'delimiter', '\n');
+            fclose(fid);
+            a = C{1};
+            x = a(contains(a, sprintf('<%s>',tag_version)));
+            a1 = strfind(x, sprintf('<%s>',tag_version));
+            a2 = strfind(x, sprintf('</%s>',tag_version));
+            v1 = extractBetween(x, a1{1}+length(sprintf('<%s>',tag_version)), a2{1}-1);
+            % v1 = strrep(v1{1}, 'scGEAToolbox ', '');
+            v1 = v1{1};
+        catch ME
+            warning(ME.identifier, 'Error reading project file: %s', ME.message);
+        end
     end
-    if isempty(v1)
-    
+    if isempty(v1)    
         xfilelocal = fullfile(mfolder,'..', 'info.xml');
         fid = fopen(xfilelocal, 'r');
+        
         if fid == -1
             warning('Could not open file: %s', xfilelocal);
             return;

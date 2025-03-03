@@ -1,5 +1,7 @@
 function callback_CheckUpdates(src, ~)
-    % Check for updates.
+    
+
+    toolboxPath = fileparts(fileparts(mfilename('fullpath')));
     [FigureHandle] = gui.gui_getfigsce(src);
     % Col = webread('https://api.github.com/repos/jamesjcai/scGEAToolbox')
     try
@@ -11,7 +13,32 @@ function callback_CheckUpdates(src, ~)
     if majneedupdate
         answer = questdlg(sprintf('There is a new version of scGEAToolbox (%s vs. %s). Learn how to upgrade?', v2, v1));
         if strcmp(answer, 'Yes')
-            gui.gui_uishowrefinfo('Quick Installation', FigureHandle);
+            if ~pkg.e_runningasaddons
+                gui.gui_uishowrefinfo('Quick Installation', FigureHandle);
+            else
+
+                try
+                    toolboxURL = sprintf('https://github.com/jamesjcai/scGEAToolbox/releases/download/v%s/scGEAToolbox.mltbx', v2);
+                    tempZip = fullfile(tempdir, "ToolboxUpdate.mltbx");
+                    websave(tempZip, toolboxURL);
+                    matlab.addons.install(tempZip);
+
+                    versionfile = fullfile(toolboxPath, 'VERSION.mat');
+                    if exist(versionfile,'file')
+                        delete(versionfile);
+                    end
+                    
+                catch ME
+                    errordlg(ME.message,'');
+                    return;   
+                end
+                waitfor(msgbox("Update complete!", "Update Successful"));
+                if strcmp('Yes', questdlg('Restart SCGEATOOL?'))
+                    close(FigureHandle);
+                    pause(1);
+                    run("scgeatool.m");
+                end
+            end
             %{
             toolboxPath = fileparts(fileparts(mfilename('fullpath')));
             if isempty(toolboxPath)
