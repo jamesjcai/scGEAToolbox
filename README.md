@@ -1,14 +1,61 @@
 scGEAToolbox - a Matlab toolbox for single-cell RNA-seq data analyses
 ---------------------------------------------------------------------
-[View scGEAToolbox on File Exchange](https://www.mathworks.com/matlabcentral/fileexchange/72917-scgeatoolbox)
-## Quick Installation
-Run the following code in MATLAB:
-```matlab
-unzip('https://github.com/jamesjcai/scGEAToolbox/archive/main.zip');
-addpath('./scGEAToolbox-main');
-```
+[View scGEAToolbox on File Exchange](https://www.mathworks.com/matlabcentral/fileexchange/72917-scgeatoolbox-single-cell-gene-expression-analysis-toolbox)
+
+---
+
+## 📌 Installation Guide
+
+There are three ways to install `scGEAToolbox`:  
+
+### 🔹 Method 1: Install via MATLAB Add-On (`.mltbx`) (Recommended)  
+1. **Download** `scGEAToolbox.mltbx` from:  
+   - 🔗 [GitHub Releases](https://github.com/jamesjcai/scGEAToolbox/releases)  
+   - 🔗 [MATLAB File Exchange](https://www.mathworks.com/matlabcentral/fileexchange/72917-scgeatoolbox-single-cell-gene-expression-analysis-toolbox)  
+
+2. **Install** the toolbox:  
+   - **Double-click** `scGEAToolbox.mltbx`  
+   - MATLAB will open the **Add-On Manager**  
+   - Click **Install**  
+
+3. **Verify the installation** by running:  
+   ```matlab
+   matlab.addons.installedAddons
+   ```
+   Ensure scGEAToolbox appears in the list.
+
+### 🔹 Method 2: Install from Source (ZIP File)
+1. **Download** the latest version from GitHub:  
+   - 🔗 [GitHub Releases](https://github.com/jamesjcai/scGEAToolbox/releases)  
+
+2. **Extract** the ZIP file to your desired location, e.g.:  
+   ```makefile
+   C:\Users\yourusername\Documents\MATLAB\scGEAToolbox
+   ```
+   
+4. **Add** the toolbox to the MATLAB path
+   ```matlab
+   addpath('C:\Users\yourusername\Documents\MATLAB\scGEAToolbox')
+   savepath
+   ```
+5. **Verify the installation** by running:  
+   ```matlab
+   scgeatool
+   ```
+### 🔹 Method 3: Install via GitHub (For Developers)   
+1. **Run** the following code in MATLAB:  
+    ```matlab
+    unzip('https://github.com/jamesjcai/scGEAToolbox/archive/main.zip');  
+    ```
+2. **Add** the toolbox to the MATLAB path
+     ```matlab
+     addpath('./scGEAToolbox-main');
+     savepath(fullfile(userpath,'pathdef.m'));
+     % savepath;
+     ```
+
 ## Getting Started Quickly Using the SCGEATOOL App
-Run the following code in MATLAB to start:
+Run the following code in MATLAB to start
 ```matlab
 scgeatool
 ```
