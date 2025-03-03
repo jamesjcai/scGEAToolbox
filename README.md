@@ -22,7 +22,12 @@ There are three ways to install `scGEAToolbox`:
    ```matlab
    matlab.addons.installedAddons
    ```
-   Ensure scGEAToolbox appears in the list.
+   Ensure scGEAToolbox appears in the list and added to the MATLAB path.
+
+4. **Verify the installation** by running:  
+   ```matlab
+   scgeatool
+   ```
 
 ### 🔹 Method 2: Install from Source (ZIP File)
 1. **Download** the latest version from GitHub:  
@@ -33,15 +38,16 @@ There are three ways to install `scGEAToolbox`:
    C:\Users\yourusername\Documents\MATLAB\scGEAToolbox
    ```
    
-4. **Add** the toolbox to the MATLAB path
+3. **Add** the toolbox to the MATLAB path
    ```matlab
    addpath('C:\Users\yourusername\Documents\MATLAB\scGEAToolbox')
    savepath
    ```
-5. **Verify the installation** by running:  
+4. **Verify the installation** by running:  
    ```matlab
    scgeatool
    ```
+
 ### 🔹 Method 3: Install via GitHub (For Developers)   
 1. **Run** the following code in MATLAB:  
     ```matlab
