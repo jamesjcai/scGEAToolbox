@@ -1,6 +1,6 @@
 scGEAToolbox - a Matlab toolbox for single-cell RNA-seq data analyses
 ---------------------------------------------------------------------
-[View scGEAToolbox on File Exchange](https://www.mathworks.com/matlabcentral/fileexchange/72917-scgeatoolbox)
+[View scGEAToolbox on File Exchange](https://www.mathworks.com/matlabcentral/fileexchange/72917-scgeatoolbox-single-cell-gene-expression-analysis-toolbox)
 
 ---
 
