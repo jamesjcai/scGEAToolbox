@@ -1,4 +1,4 @@
-Install via MATLAB Add-On (`.mltbx`) (Recommended)  
+Install via MATLAB Add-On (`.mltbx`) (Recommended)
 ==================================================
 1. **Download** `scGEAToolbox.mltbx` from:  
    - 🔗 [GitHub Releases](https://github.com/jamesjcai/scGEAToolbox/releases)  
@@ -18,8 +18,8 @@ Install via MATLAB Add-On (`.mltbx`) (Recommended)
 Ensure scGEAToolbox appears in the list.
 
 
-Quick installation
-==================
+Quick Installation (For Developers)
+==================================
 
 Run the following code in `MATLAB`:
 
