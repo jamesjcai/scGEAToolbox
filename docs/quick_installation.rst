@@ -1,3 +1,23 @@
+Install via MATLAB Add-On (`.mltbx`) (Recommended)  
+==================================================
+1. **Download** `scGEAToolbox.mltbx` from:  
+   - 🔗 [GitHub Releases](https://github.com/jamesjcai/scGEAToolbox/releases)  
+   - 🔗 [MATLAB File Exchange](https://www.mathworks.com/matlabcentral/fileexchange/72917-scgeatoolbox-single-cell-gene-expression-analysis-toolbox)  
+
+2. **Install** the toolbox:  
+   - **Double-click** `scGEAToolbox.mltbx`  
+   - MATLAB will open the **Add-On Manager**  
+   - Click **Install**  
+
+3. **Verify the installation** by running:  
+  
+.. code-block:: matlab
+  
+  matlab.addons.installedAddons
+  
+Ensure scGEAToolbox appears in the list.
+
+
 Quick installation
 ==================
 
