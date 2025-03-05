@@ -1,7 +1,7 @@
 scGEAToolbox - a Matlab toolbox for single-cell RNA-seq data analyses
 ---------------------------------------------------------------------
 
-[View scGEAToolbox on File Exchange](https://www.mathworks.com/matlabcentral/fileexchange/72917-scgeatoolbox-single-cell-gene-expression-analysis-toolbox)
+[![View scGEAToolbox on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/72917-scgeatoolbox-single-cell-gene-expression-analysis-toolbox)
 
 ## 📌 Installation Guide
 
@@ -92,7 +92,7 @@ scgeatool
 ```
 
 [![Open in MATLAB Online](https://www.mathworks.com/images/responsive/global/open-in-matlab-online.svg)](https://matlab.mathworks.com/open/github/v1?repo=jamesjcai/scGEAToolbox&file=online_landing.m)
-
+ 
 ## Read Documentation
 
 [scGEAToolbox Documentation](https://scgeatoolbox.readthedocs.io/)
@@ -123,7 +123,7 @@ After installing the toolbox, the main GUI can be run by calling `scGEApp`.
 [![scGEAToolbox sc_celltypeexplorer - interactive cell type annotation](https://img.youtube.com/vi/HRQiXX3Jwpg/0.jpg)](https://youtu.be/HRQiXX3Jwpg)
 -->
 
-## SEE ALSO - Standalone Application SCGEATOOL :: Single-Cell Gene Expression Analysis Tool
+## SEE ALSO - Standalone Application
 
 [SCGEATOOL.exe](https://scgeatool.github.io/) is a standalone application running on Windows machines that do not have MATLAB installed. SCGEATOOL is a lightweight and blazing fast desktop application that provides interactive visualization functionality to analyze single-cell transcriptomic data. SCGEATOOL allows you to easily interrogate different views of your scRNA-seq data to quickly gain insights into the underlying biology. SCGEATOOL is a pre-compiled standalone application developed in MATLAB. Pre-compiled standalone releases are meant for those environments without access to MATLAB licenses. Standalone releases provide access to all of the functionality of the SCGEATOOL standard MATLAB release encapsulated in a single application. SCGEATOOL is open-sourced to allow you to experience the added flexibility and speed of the MATLAB environment when needed.
 
