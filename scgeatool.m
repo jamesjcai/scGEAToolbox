@@ -330,7 +330,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             case 10
                 menus = uimenu(FigureHandle, 'Text', '&Help');
                 in_addmenu(menus, 0, {@(~, ~) web('https://scgeatoolbox.readthedocs.io/en/latest/')}, 'Online Documentation...');
-                in_addmenu(menus, 0, {@(~, ~) gui.gui_uishowrefinfo('Quick Installation',FigureHandle)}, 'Quick Installation Guide...');
+                % in_addmenu(menus, 0, {@(~, ~) gui.gui_uishowrefinfo('Quick Installation',FigureHandle)}, 'Quick Installation Guide...');
                 in_addmenu(menus, 0, {@(~, ~) gui.gui_uishowrefinfo('Shortcuts Guide',FigureHandle)}, 'Shortcuts User Guide...');
                 in_addmenu(menus, 1, {@(~, ~) web('https://www.mathworks.com/matlabcentral/fileexchange/72917-scgeatoolbox-single-cell-gene-expression-analysis-toolbox')}, 'View scGEAToolbox on File Exchange...');
                 in_addmenu(menus, 0, {@(~, ~) web('https://pubmed.ncbi.nlm.nih.gov/31697351/')}, 'Cite scGEAToolbox Paper...');
