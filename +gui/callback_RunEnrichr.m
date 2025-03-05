@@ -17,12 +17,16 @@ if nargin < 3, predefinedlist = []; end
     rng("shuffle");
     n = length(gsorted);
     if isempty(predefinedlist)
-        % error('No input gene list.');
-        ingenelist = gui.i_inputgenelist(gsorted(randperm(n, min([200, length(gsorted)]))));
+        if isempty(gsorted)
+            disp('No input gene list.');
+         ingenelist = gui.i_inputgenelist(gsorted(randperm(n, min([200, length(gsorted)]))));
+        end
     else
         ingenelist = gui.i_inputgenelist(predefinedlist);
     end
-    if isempty(ingenelist), return; end
+    if isempty(ingenelist) || strlength(ingenelist)
+        return;
+    end
 
     if askbackground
         answer = questdlg('Add background list?','');

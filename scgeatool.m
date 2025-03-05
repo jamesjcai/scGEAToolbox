@@ -287,7 +287,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 in_addmenu(menus, 0, @gui.callback_DVGene2GroupsBatch, 'DV Analysis in Cell Type Batch Mode...');
                 in_addmenu(menus, 0, @gui.callback_DPGene2GroupsBatch, 'DP Analysis in Cell Type Batch Mode...');
                 in_addmenu(menus, 1, @gui.callback_DEVP2GroupsBatch, 'All (DE, DV, DP) Analysis in Cell Type Batch Mode...');                
-                in_addmenu(menus, 1, @gui.callback_RunEnrichr, 'Enrichr Analysis...');                
+                % in_addmenu(menus, 1, @gui.callback_RunEnrichr, 'Enrichr Analysis...');                
             case 7
                 menus = uimenu(FigureHandle, 'Text', '&Network');
                 in_addmenu(menus, 0, @in_Select5000Genes, 'Remove Less Informative Genes to Reduce Gene Space...');
@@ -307,8 +307,9 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 menus = uimenu(FigureHandle, 'Text', 'E&xternal');
                 in_addmenu(menus, 0, @gui.i_resetrngseed, 'Set Random Seed...');
                 in_addmenu(menus, 0, @gui.i_setextwd, 'Set Working Folder...');
-                in_addmenu(menus, 1, @gui.i_setscimilaritymodelpath, 'Set Scimilarity Model...');
-                in_addmenu(menus, 0, @gui.i_setllmmodel, 'Set Large Language Model...');
+                in_addmenu(menus, 1, @gui.i_setscimilaritymodelpath, '🔢 - Set Scimilarity Model...');
+                in_addmenu(menus, 0, @gui.i_setllmmodel, '🤖 - Set Large Language Model...');
+                in_addmenu(menus, 1, @gui.callback_RunEnrichr, '🌐 - Enrichr Analysis...')
                 in_addmenu(menus, 1, @gui.i_setrenv, 'Set Up R (ℝ) Environment');
                 in_addmenu(menus, 0, @gui.i_setpyenv, 'Set Up Python (🐍) Environment');
                 in_addmenu(menus, 1, @in_RunSeuratWorkflow, 'ℝ - Run Seurat Workflow (Seurat) [PMID:25867923]...');
@@ -1220,6 +1221,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         a(end-3).Enable='on';
         a(end-4).Enable='on';
         a(end-5).Enable='on';
+        a(end-6).Enable='on';
         %a=allchild(m_optn);
         %a(end).Enable='on';
         %a(end-1).Enable='on';
