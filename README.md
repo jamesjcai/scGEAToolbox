@@ -5,9 +5,35 @@ scGEAToolbox - a Matlab toolbox for single-cell RNA-seq data analyses
 
 ## 📌 Installation Guide
 
-There are three ways to install `scGEAToolbox`:  
+There are four ways to install `scGEAToolbox`:  
 
-### 🔹 Method 1: Install via MATLAB Add-On (`.mltbx`) (Recommended)  
+### 🔹 Method 1: Install as a MATLAB Add-On (Recommended)  
+1. **Open the Add-On Explorer**  
+   - In MATLAB, go to the **Home** tab.  
+   - Click on the **Add-Ons** icon to open the Add-On Explorer.
+
+2. **Search for scGEAToolbox**  
+   - In the search bar, type **"scGEAToolbox"** and press Enter.
+
+3. **Select and Install**  
+   - Find **"scGEAToolbox (single-cell Gene Expression Analysis Toolbox)"** in the results.  
+   - Click the **Add** button to install the toolbox.
+
+4. **Verify Installation**  
+   - In MATLAB, type the following command in the Command Window to check installed toolboxes:
+     ```matlab
+     ver
+     ```
+   - Look for **scGEAToolbox** in the list.
+
+5. **Launch scGEAToolbox**  
+   - To start using scGEAToolbox, enter:
+     ```matlab
+     scgeatool
+     ```
+   - This will open the graphical user interface for single-cell transcriptomic data analysis.
+
+### 🔹 Method 2: Install via MATLAB Add-On (`.mltbx`)  
 1. **Download** `scGEAToolbox.mltbx` from:  
    - 🔗 [GitHub Releases](https://github.com/jamesjcai/scGEAToolbox/releases)  
    - 🔗 [MATLAB File Exchange](https://www.mathworks.com/matlabcentral/fileexchange/72917-scgeatoolbox-single-cell-gene-expression-analysis-toolbox)  
@@ -28,7 +54,7 @@ There are three ways to install `scGEAToolbox`:
    scgeatool
    ```
 
-### 🔹 Method 2: Install from Source (ZIP File)
+### 🔹 Method 3: Install from Source (ZIP File)
 1. **Download** the latest version from GitHub:  
    - 🔗 [GitHub Releases](https://github.com/jamesjcai/scGEAToolbox/releases)  
 
@@ -47,7 +73,7 @@ There are three ways to install `scGEAToolbox`:
    scgeatool
    ```
 
-### 🔹 Method 3: Install via GitHub (For Developers)   
+### 🔹 Method 4: Install via GitHub (For Developers)   
 1. **Run** the following code in MATLAB:  
     ```matlab
     unzip('https://github.com/jamesjcai/scGEAToolbox/archive/main.zip');  
@@ -66,14 +92,6 @@ scgeatool
 ```
 
 [![Open in MATLAB Online](https://www.mathworks.com/images/responsive/global/open-in-matlab-online.svg)](https://matlab.mathworks.com/open/github/v1?repo=jamesjcai/scGEAToolbox&file=online_landing.m)
-
-
-<!-- ## ICIBM 2023 Workshop Event-specific Information
-URL for event page: [www.mathworks.com/licensecenter/classroom/4065650/](https://www.mathworks.com/licensecenter/classroom/4065650/)\
-Activation Key: 89355-04019-19254-51485-58564\
-Workshop Trial Label: 4065650\
-Trial Expiration Date: 2023-July-20
--->
 
 ## Read Documentation
 
