@@ -1,5 +1,6 @@
-function callback_EnrichrTab2Circos(src, ~)
+function callback_EnrichrTab2Circos(src, ~, tab)
 
+if nargin<3, tab = []; end
 
 import mlreportgen.ppt.*;
 %pw1 = fileparts(mfilename('fullpath'));
@@ -7,6 +8,7 @@ import mlreportgen.ppt.*;
 
 [FigureHandle] = gui.gui_getfigsce(src);
 
+if isempty(tab)
 answer1 = questdlg("Select the source of Enrichr result table.","", ...
     "Web Enrichr", "Matlab Enrichr", "Web Enrichr");
 
@@ -65,6 +67,8 @@ switch answer1
         otherwise
            return;
 end
+end
+
 
 
     if all(ismember({'Term','Genes'}, tab.Properties.VariableNames))
