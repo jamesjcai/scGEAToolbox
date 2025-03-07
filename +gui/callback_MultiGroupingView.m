@@ -8,11 +8,9 @@ function callback_MultiGroupingView(src, ~)
     switch answer
         % case 'Two-group'
         % 
-        %     if matlab.ui.internal.isUIFigure(FigureHandle), focus(FigureHandle); end
         %     [thisc1, clabel1, thisc2, clabel2] = gui.i_select2states_new(sce);
         %     if isempty(thisc1) || isempty(thisc2), return; end
-        % 
-        %     if matlab.ui.internal.isUIFigure(FigureHandle), focus(FigureHandle); end    
+        %         
         %     fw=gui.gui_waitbar;    
         %     [c, cL] = grp2idx(thisc1);
         %     cx1.c = c;
@@ -23,10 +21,10 @@ function callback_MultiGroupingView(src, ~)
         %     gui.sc_multigroupings(sce, cx1, cx2, clabel1, clabel2, FigureHandle);
         %     gui.gui_waitbar(fw);
         % 
-        %     if matlab.ui.internal.isUIFigure(FigureHandle), focus(FigureHandle); end
+        
 
         case 'Multigrouping'
-            if matlab.ui.internal.isUIFigure(FigureHandle), focus(FigureHandle); end
+            if gui.i_isuifig(FigureHandle), focus(FigureHandle); end
             [thiscv, clabelv] = gui.i_selectnstates(sce, false, [4, 5]);
             if isempty(thiscv) || isempty(clabelv), return; end
 

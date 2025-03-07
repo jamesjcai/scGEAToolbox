@@ -65,7 +65,10 @@ if ~isempty(c_in), sce.c = c_in; end
 if ~isempty(s_in), sce.s = s_in; end
 [c, cL] = grp2idx(sce.c);
 
-[FigureHandle] = gui.gui_createmainfigure(v1);
+
+[FigureHandle,hAx] = gui.gui_createmainfigure(v1);
+% FigureHandle=uifigure; hAx=uiaxes(FigureHandle);
+
 if ~isempty(fx) && isvalid(fx), fxfun(fx,0.2); end
 [button1, button2] = gui.gui_createbuttons(FigureHandle, @in_sc_openscedlg);
 
@@ -80,17 +83,18 @@ m_extn = createMenus(FigureHandle, 8);
 % m_optn = createMenus(FigureHandle, 9);
 
 if ~isempty(fx) && isvalid(fx), fxfun(fx, 0.4); end
-hAx = axes('Parent', FigureHandle, 'Visible', 'off');
+
 % axtoolbar(hAx, 'default');
 if ~isempty(sce) && sce.NumCells>0
-    h = gui.i_gscatter3(sce.s, c, methodid, 1, hAx);
+    h = gui.i_gscatter3(sce.s, c, methodid, 1, hAx);    
+    % h = scatter3(hAx,rand(1,100),rand(1,100),rand(1,100));
     title(hAx, sce.title);
     if sce.s>2
         rotate3d(hAx,'on');
     else
         brush(hAx,'on');
     end
-    subtitle(hAx,'[genes x cells]');
+    subtitle(hAx,'[genes x cells]');    
 else
     h = [];
     hAx.Toolbar.Visible = 'off';
@@ -101,12 +105,13 @@ MainToolbarHandle = uitoolbar('Parent', FigureHandle);
 UserToolbarHandle = uitoolbar('Parent', FigureHandle);
 createPushButtons(FigureHandle);
 
+
 if ~isempty(fx) && isvalid(fx), fxfun(fx, 0.6); end
 pause(0.5);
 if ~isempty(fx) && isvalid(fx), fxfun(fx, 0.8); end
 if ~isempty(c)
     kc = numel(unique(c));
-    colormap(pkg.i_mycolorlines(kc));
+    colormap(hAx, pkg.i_mycolorlines(kc));
 end
 
 if ~isempty(sce) && sce.NumCells>0
@@ -124,7 +129,7 @@ if ~isempty(fx) && isvalid(fx), set(fx, 'visible', 'off'); end
 pause(0.2);
 delete(fx);
 set(FigureHandle, 'visible', 'on');
-if matlab.ui.internal.isUIFigure(FigureHandle), focus(FigureHandle); end
+if gui.i_isuifig(FigureHandle), focus(FigureHandle); end
 uicontrol(button1);
 
 guidata(FigureHandle, sce);
@@ -142,60 +147,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
 % ------------------------
 % GUI Making Functions
 % ------------------------
-
-    % function [FigureHandle] = createMainFigure(v1)
-    %     if ~isempty(v1)
-    %         figname = sprintf('SCGEATOOL v%s', v1);
-    %     else
-    %         figname = 'SCGEATOOL';
-    %     end        
-    %     defaultPosition = get(groot, 'DefaultFigurePosition');
-    %     defaultWidth = defaultPosition(3);
-    %     defaultHeight = defaultPosition(4);        
-    %     if defaultWidth==560 && defaultHeight==420
-    %         FigureHandle = figure('Name', figname, ...
-    %             'position', round(1.2*[0, 0, 560, 420]), ...
-    %             'visible', 'off', 'NumberTitle', 'off', ...
-    %             'DockControls','off','MenuBar','none','ToolBar','Figure');
-    %     else
-    %         FigureHandle = figure('Name', figname, ...    
-    %             'visible', 'off', 'NumberTitle', 'off', ...
-    %             'DockControls','off','MenuBar','none','ToolBar','Figure');
-    %     end
-    %     delete(findall(FigureHandle, 'Tag', 'FigureToolBar'));
-    %     movegui(FigureHandle, 'center');
-    %     dt = datacursormode(FigureHandle);
-    %     dt.Enable = 'off';
-    %     dt.UpdateFcn = {@i_myupdatefcnx};
-    % end
-
-    % function [button1, button2]= createButtons(FigureHandle)
-    %     fig_pos = get(FigureHandle, 'Position'); 
-    %     fig_width = fig_pos(3);
-    %     fig_height = fig_pos(4);
-    %     btn_width = 100; 
-    %     btn_height = 25;
-    %     btn_x = (fig_width - btn_width) / 2;
-    %     btn_y = (fig_height - btn_height) / 1.618;
-    % 
-    %     button1 = uicontrol('Parent', FigureHandle,...
-    %         'Style', 'pushbutton',...
-    %         'Units', 'pixels',...
-    %         'Position', [btn_x btn_y btn_width btn_height],...
-    %         'String', 'Import Data...',...
-    %         'Callback', @in_sc_openscedlg,...
-    %         'ButtonDownFcn', @in_sc_openscedlg,...
-    %         'KeyPressFcn', @in_sc_openscedlg, 'Tooltip','Click or Press i');
-    % 
-    %     button2 = uicontrol('Parent', FigureHandle,...
-    %         'style','text',...
-    %         'Units', 'pixels',...
-    %         'position', [btn_x btn_y+25 btn_width btn_height],...
-    %         'FontSize', 9,...    
-    %         'string','Ready to explore.');        
-    %     set(FigureHandle,'resizefcn',{@gui.gui_myresizefun, button1, button2});
-    % end
-    
+   
     function menus = createMenus(FigureHandle, id)
         switch id
             case 1

@@ -3,7 +3,15 @@ function callback_ShowGeneExpr(src, ~)
     [FigureHandle, sce] = gui.gui_getfigsce(src);
     [axx, bxx] = view(findall(FigureHandle,'type','axes'));
     [glist] = gui.i_selectngenes(sce, [], FigureHandle);
-    if isempty(glist), return; end
+    if isempty(glist) 
+        
+        if gui.i_isuifig(FigureHandle)
+            uialert(FigureHandle, 'No genes is selected or found.', 'Information', 'Icon', 'info');
+        else
+            helpdlg('No genes is selected or found.','');
+        end
+        return;
+    end
 
     % answer = questdlg("Select the type of expression values","",...
     %     "Raw UMI Counts","Library Size-Normalized",)

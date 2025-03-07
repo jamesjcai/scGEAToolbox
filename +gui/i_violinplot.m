@@ -7,7 +7,7 @@ if nargin < 5 || isempty(cLorder), [~, cLorder] = grp2idx(thisc); end
 if nargin < 4, colorit = true; end
 if nargin < 3, ttxt = ''; end
 
-if matlab.ui.internal.isUIFigure(parentfig), focus(parentfig); end
+if gui.i_isuifig(parentfig), focus(parentfig); end
 hx=gui.myFigure;
 hFig=hx.FigureHandle;
 

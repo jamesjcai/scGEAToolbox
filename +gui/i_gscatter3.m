@@ -53,6 +53,12 @@ switch methodid
         hold off
 end
 
-grid on
-colormap(pkg.i_mycolorlines(kc));
+
+if isempty(hAx)
+    grid on
+    colormap(pkg.i_mycolorlines(kc));
+else
+    grid(hAx,'on');
+    colormap(hAx,pkg.i_mycolorlines(kc));
+end
 end

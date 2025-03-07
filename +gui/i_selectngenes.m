@@ -15,7 +15,8 @@ end
 
 
 if ~isempty(predefinedlist)
-    predefinedlist = gsorted(matches(gsorted, predefinedlist, 'IgnoreCase', true));
+    predefinedlist = gsorted(matches(gsorted, predefinedlist, ...
+        'IgnoreCase', true));
 end
 
 answer = questdlg('Select genes from list or paste gene names?', ...
@@ -36,7 +37,7 @@ switch answer
         if length(tg) >= 1
             [y, ix] = ismember(upper(tg), upper(gsorted));
             % i=i(y);
-            %glist=tg(y);
+            % glist=tg(y);
             glist = gsorted(ix(y));
             a = length(glist) - length(tg);
             if a ~= 0
@@ -57,7 +58,9 @@ switch answer
     case 'Select'
 
         if isa(sce, 'SingleCellExperiment')
+            %fw=gui.gui_waitbar;
             [gsorted] = gui.i_sortgenenames(sce);
+            %gui.gui_waitbar(fw);
             if isempty(gsorted), return; end
         end
 

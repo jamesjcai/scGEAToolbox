@@ -6,6 +6,12 @@ if isa(X, 'SingleCellExperiment')
 else
     if nargin < 2 || isempty(g), g = "Gene"+string(1:size(X, 1)).'; end
 end
+if issparse(X)
+    try
+        X=full(X);
+    catch
+    end
+end
 
 dropr = 1 - sum(X > 0, 2) ./ size(X, 2);
 u = mean(X, 2, 'omitnan');

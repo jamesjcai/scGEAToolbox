@@ -6,8 +6,8 @@ import os.path
 
 
 f = h5py.File("X.mat",'r')
-# counts = csr_matrix(f.get('X'))
 Xnorm = csr_matrix(f.get('Xnorm'))
+#Xnorm = csr_matrix(f['Xnorm'][:])  # Convert dataset to NumPy array first
 modeldir = f['modeldir'][()]
 modeldir = modeldir.tobytes().decode('utf-16')
 g = f['g']
@@ -18,12 +18,13 @@ for r in g:
         gene_names.append(str_data)
 
 target_celltypes = []        
-if 'tg' in f:        
+if 'tg' in f:
     g = f['tg']
     for r in g:
         for ref in r:
             str_data = ''.join(chr(c[0]) for c in f[ref][:])
             target_celltypes.append(str_data)
+
 f.close()
 
 adata = anndata.AnnData(X=Xnorm)

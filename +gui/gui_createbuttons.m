@@ -21,6 +21,8 @@
             'Units', 'pixels',...
             'position', [btn_x btn_y+25 btn_width btn_height],...
             'FontSize', 9,...    
-            'string','Ready to explore.');        
-        set(FigureHandle,'resizefcn',{@gui.gui_myresizefun, button1, button2});
+            'string','Ready to explore.');
+        if get(FigureHandle,'AutoResizeChildren')==0
+            set(FigureHandle,'resizefcn',{@gui.gui_myresizefun, button1, button2});
+        end
     end
