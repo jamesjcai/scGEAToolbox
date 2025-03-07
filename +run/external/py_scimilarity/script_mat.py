@@ -78,4 +78,5 @@ print("Get_embeddings...done.")
 
 predictions = ca.get_predictions_knn(embeddings)
 print("Prediction...done.")
-predictions.to_csv("output.csv", index=True)
+predictions[0].to_csv("output.csv", index=True)
+print("Output written.")
