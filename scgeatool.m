@@ -1,7 +1,5 @@
 function varargout = scgeatool(sce, varargin)
 
-useuifig = false; 
-
 if usejava('jvm') && ~feature('ShowFigureWindows')
     error('MATLAB is in a text mode. This function requires a GUI-mode.');
 end
@@ -42,6 +40,7 @@ addOptional(p, 'c', sce.c, checkCS);
 addOptional(p, 's', [], checkCS);
 addOptional(p, 'methodid', 1, @isnumeric);
 addOptional(p, 'legacy', false, @islogical);
+addOptional(p, 'useuifig', false, @islogical);
 addOptional(p, 'callinghandle', []);
 parse(p, sce, varargin{:});
 callinghandle = p.Results.callinghandle;
@@ -51,6 +50,7 @@ s_in = p.Results.s;
 
 methodid = p.Results.methodid;
 legacy = p.Results.legacy;
+useuifig = p.Results.useuifig; 
 
 if legacy
     ptImgFile = fullfile(mfolder, 'resources', 'Images', 'ptImgFile_legacy.mat');

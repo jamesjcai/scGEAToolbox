@@ -443,8 +443,15 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
             end
             promotesave = false;
         case 'Load Example Data...'
-            answerstruced = questdlg('Load processed or raw data?', ...
-                '', 'Processed', 'Raw', 'Cancel', 'Processed');
+            if gui.i_isuifig(FigureHandle)
+                answerstruced = uiconfirm(FigureHandle, 'Load processed or raw data?', '', ...
+                    'Options', {'Processed', 'Raw', 'Cancel'}, ...
+                    'DefaultOption', 'Processed', ...
+                    'Icon', 'question');
+            else
+                answerstruced = questdlg('Load processed or raw data?', ...
+                    '', 'Processed', 'Raw', 'Cancel', 'Processed');
+            end
             if ~(strcmp(answerstruced, 'Processed') || strcmp(answerstruced, 'Raw'))
                 return;
             end
