@@ -1,5 +1,7 @@
 function varargout = scgeatool(sce, varargin)
 
+useuifig = false; 
+
 if usejava('jvm') && ~feature('ShowFigureWindows')
     error('MATLAB is in a text mode. This function requires a GUI-mode.');
 end
@@ -66,7 +68,7 @@ if ~isempty(s_in), sce.s = s_in; end
 [c, cL] = grp2idx(sce.c);
 
 
-[FigureHandle,hAx] = gui.gui_createmainfigure(v1,true);
+[FigureHandle,hAx] = gui.gui_createmainfigure(v1,useuifig);
 % FigureHandle=uifigure; hAx=uiaxes(FigureHandle);
 
 if ~isempty(fx) && isvalid(fx), fxfun(fx,0.2); end
@@ -374,7 +376,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 return; 
             end
         end
-        [sce, filename] = gui.sc_openscedlg;
+        [sce, filename] = gui.sc_openscedlg([],[],FigureHandle);
         if ~isempty(sce) && sce.NumCells > 0 && sce.NumGenes > 0
             guidata(FigureHandle, sce);
             c=[];
@@ -422,7 +424,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         if isempty(answer), return; end
         a = colormap;
         gui.i_baredrplot(hAx, [], answer, FigureHandle);
-        colormap(a);
+        colormap(hAx,a);
     end
 
     function in_CompareCellScoreBtwCls(src, events)
@@ -1198,6 +1200,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         %        if isvalid(button1), set(button1,'Visible','off'); end
         %        if isvalid(button2), set(button2,'Visible','off'); end
         figure(FigureHandle);
+        
         % [c,cL]=grp2idx(sce.c);
         % was3d = ~isempty(h.ZData);
 
@@ -1226,11 +1229,11 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         end
         if keepcolr
             if isfield(para, 'oldColorMap')
-                colormap(para.oldColorMap);
+                colormap(hAx,para.oldColorMap);
             end
         else
             kc = numel(unique(sce.c));
-            colormap(pkg.i_mycolorlines(kc));
+            colormap(hAx,pkg.i_mycolorlines(kc));
         end
         title(hAx, sce.title);
         subtitle(hAx, '[genes x cells]');
@@ -1312,7 +1315,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                     subtitle(hAx, '[genes x cells]');
                     h.Marker = para.oldMarker;
                     h.SizeData = para.oldSizeData;
-                    colormap(para.oldColorMap);
+                    colormap(hAx,para.oldColorMap);
                     return;
                 case 'Pick existing 2D'
                     [sx] = gui.i_pickembedvalues(sce, 2);

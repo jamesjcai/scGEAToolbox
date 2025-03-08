@@ -99,7 +99,9 @@ if ~prepare_input_only
     %     gui.gui_waitbar(fw, [], 'output.csv is written.');
     % end
     if status == 0 && exist('output.csv', 'file')
+        warning off
         t = readtable('output.csv','ReadVariableNames',true);
+        warning on
         celltypes = string(t.x0);
         % cL = h5read('output.h5ad','/obs/predictions_unconstrained/categories');
         % c = h5read('output.h5ad','/obs/predictions_unconstrained/codes');

@@ -13,7 +13,8 @@ function [FigureHandle,hAx] = gui_createmainfigure(v1,useuifigure)
                 'position', [0, 0, a], ...
                 'visible', 'off');
         %p = uipanel(FigureHandle,'Position',[0 0 a-5]);
-        hAx = uiaxes(FigureHandle,'Position',[65 50 a(1)-120 a(2)-60], 'Visible','on');
+        hAx = uiaxes(FigureHandle,'Position',[65 50 a(1)-120 a(2)-60], ...
+            'Visible','off');
     else
         defaultPosition = get(groot, 'DefaultFigurePosition');
         defaultWidth = defaultPosition(3);
