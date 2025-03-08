@@ -24,6 +24,7 @@ switch methodid
                 h = scatter(hAx, x, y, 10, c);
             end
         elseif size(s, 2) >= 3
+            
             if isempty(hAx)
                 h = scatter3(x, y, z, 10, c);
             else

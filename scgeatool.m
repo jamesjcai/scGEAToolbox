@@ -66,7 +66,7 @@ if ~isempty(s_in), sce.s = s_in; end
 [c, cL] = grp2idx(sce.c);
 
 
-[FigureHandle,hAx] = gui.gui_createmainfigure(v1);
+[FigureHandle,hAx] = gui.gui_createmainfigure(v1,true);
 % FigureHandle=uifigure; hAx=uiaxes(FigureHandle);
 
 if ~isempty(fx) && isvalid(fx), fxfun(fx,0.2); end
@@ -86,7 +86,7 @@ if ~isempty(fx) && isvalid(fx), fxfun(fx, 0.4); end
 
 % axtoolbar(hAx, 'default');
 if ~isempty(sce) && sce.NumCells>0
-    h = gui.i_gscatter3(sce.s, c, methodid, 1, hAx);    
+    h = gui.i_gscatter3(sce.s, c, methodid, [], hAx);    
     % h = scatter3(hAx,rand(1,100),rand(1,100),rand(1,100));
     title(hAx, sce.title);
     if sce.s>2
@@ -1204,13 +1204,14 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         if isempty(c), [c,cL] = grp2idx(sce.c); end
         if size(sce.s, 2) >= 3
             if keepview, [ax, bx] = view(hAx); end
-            h = gui.i_gscatter3(sce.s, c, methodid, hAx);
+            h = gui.i_gscatter3(sce.s, c, methodid, [], hAx);
+            %h=scatter3(hAx,rand(100,1),rand(100,1),rand(100,1));
             if keepview && bx~=90
                 view(hAx, ax, bx);
             end
         else        % otherwise going to show 2D
             if keepview, [ax, bx] = view(hAx); end
-            h = gui.i_gscatter3(sce.s(:, 1:2), c, methodid, hAx);
+            h = gui.i_gscatter3(sce.s(:, 1:2), c, methodid, [], hAx);
             if keepview && bx==90
                 view(hAx, ax, bx);
             end
@@ -1245,7 +1246,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             if ~strcmp(questdlg('Switch to 3D?',''), 'Yes'), return; end
             figure(FigureHandle);
             if size(sce.s, 2) >= 3
-                h = gui.i_gscatter3(sce.s, c, methodid, hAx);
+                h = gui.i_gscatter3(sce.s, c, methodid, [], hAx);
                 if ~isempty(ax) && ~isempty(bx) && ~any([ax, bx] == 0)
                     view(hAx, ax, bx);
                 else
@@ -1305,7 +1306,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                         otherwise
                             return;
                     end
-                    h = gui.i_gscatter3(sx(:, 1:2), c, methodid, hAx);
+                    h = gui.i_gscatter3(sx(:, 1:2), c, methodid, [], hAx);
                     sce.s = sx(:, 1:2);
                     title(hAx, sce.title);
                     subtitle(hAx, '[genes x cells]');
@@ -1596,7 +1597,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         end
         sce.c = c;
         [ax, bx] = view(hAx);
-        [h] = gui.i_gscatter3(sce.s, c, methodid, hAx);
+        [h] = gui.i_gscatter3(sce.s, c, methodid, [], hAx);
         title(hAx, sce.title);
         subtitle(hAx, '[genes x cells]');
         view(ax, bx);
@@ -1640,7 +1641,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             sce.c_cluster_id = c;
         end
         [ax, bx] = view(hAx);
-        [h] = gui.i_gscatter3(sce.s, c, methodid, hAx);
+        [h] = gui.i_gscatter3(sce.s, c, methodid, [], hAx);
         title(hAx, sce.title);
         subtitle(hAx, '[genes x cells]');
         view(ax, bx);
