@@ -1,5 +1,8 @@
 function y = i_isuifig(FigureHandle)
 % https://www.mathworks.com/matlabcentral/answers/348387-distinguish-uifigure-from-figure-programmatically?utm_source=chatgpt.com
+y = false;
+if isempty(FigureHandle), return; end
+
 y = isprop(FigureHandle,'isUIFigure');
 
 % matlab.ui.internal.isUIFigure

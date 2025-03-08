@@ -4,6 +4,8 @@ function [glist] = i_selectngenes(sce, predefinedlist, parentfig)
 if nargin < 2, predefinedlist = []; end
 if nargin < 3, parentfig = []; end
 
+isui = gui.i_isuifig(parentfig);
+
 % internal function used by callback_BuildGeneNetwork
 glist = [];
 if isa(sce, 'SingleCellExperiment')
@@ -19,8 +21,16 @@ if ~isempty(predefinedlist)
         'IgnoreCase', true));
 end
 
-answer = questdlg('Select genes from list or paste gene names?', ...
-    'Select/Paste Genes', 'Select', 'Paste', 'Cancel', 'Select');
+if isui
+    answer = uiconfirm(parentfig, 'Select genes from list or paste gene names?', ...
+        'Select/Paste Genes', ...
+        'Options', {'Select', 'Paste', 'Cancel'}, ...
+        'DefaultOption', 'Select', ...
+        'Icon', 'question');
+else
+    answer = questdlg('Select genes from list or paste gene names?', ...
+        'Select/Paste Genes', 'Select', 'Paste', 'Cancel', 'Select');
+end
 switch answer
     case 'Cancel'
         return;
