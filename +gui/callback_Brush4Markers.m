@@ -1,7 +1,7 @@
 function callback_Brush4Markers(src, event)
 
 
-    [~, sce] = gui.gui_getfigsce(src);
+    [~, sce, isui] = gui.gui_getfigsce(src);
 
     if ~gui.i_installed('stats'), return; end
 

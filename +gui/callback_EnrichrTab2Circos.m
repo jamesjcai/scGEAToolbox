@@ -6,7 +6,7 @@ import mlreportgen.ppt.*;
 %pw1 = fileparts(mfilename('fullpath'));
 %pth = fullfile(pw1, '..', 'resources', 'myTemplate.pptx');
 
-[FigureHandle] = gui.gui_getfigsce(src);
+[FigureHandle, ~, isui] = gui.gui_getfigsce(src);
 
 if isempty(tab)
 answer1 = questdlg("Select the source of Enrichr result table.","", ...

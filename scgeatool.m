@@ -376,12 +376,12 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         
         set(button1,'Enable','off');
         if ~isempty(sce) && sce.NumCells > 0            
-            if ~strcmp(questdlg('Current SCE will be replaced. Continue?',''),'Yes') 
+            if ~strcmp(gui.myQuestdlg(FigureHandle,'Current SCE will be replaced. Continue?',''),'Yes') 
                 set(button1,'Enable','on');
-                return; 
+                return;
             end
         end
-        [sce, filename] = gui.sc_openscedlg([],[],FigureHandle);
+        [sce] = gui.sc_openscedlg([],[],FigureHandle);
         if ~isempty(sce) && sce.NumCells > 0 && sce.NumGenes > 0
             guidata(FigureHandle, sce);
             c=[];
@@ -392,18 +392,6 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             if ~isempty(sce)
                 uiwait(warndlg('Imported SCE contains no cells.',''));
             end
-        end
-        sprintf('Read data from %s.\n', filename);
-        try
-            [~, ~, ext] = fileparts(filename);
-            if strcmp(ext, '.h5ad')
-                % if strcmp('.h5ad', extractAfter(filename, strlength(filename)-5))
-                switch questdlg('Read more cell info, e.g., cell type or batch id (if any) from .h5ad file')
-                    case 'Yes'
-                        [sce] = gui.gui_readh5adinfo(filename, sce);
-                end
-            end
-        catch
         end
     end
 
@@ -424,8 +412,8 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
     end
 
     function in_cleanumap(~, ~)
-        answer = questdlg('Select embedding method label.', ...
-            '','tSNE','UMAP','PHATE','tSNE');
+        answer = gui.myQuestdlg(FigureHandle,'Select embedding method label.', ...
+            '',{'tSNE','UMAP','PHATE'},'tSNE');
         if isempty(answer), return; end
         a = colormap;
         gui.i_baredrplot(hAx, [], answer, FigureHandle);
@@ -450,8 +438,8 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             [y, idx] = ismember({'monocle3_pseudotime'}, ...
                  sce.list_cell_attributes(1:2:end));
             if y
-                answer = questdlg('Color cells using pseudotime T and show Monocle3 embedding S?',...
-                    '','Yes','Color cells only','Show embedding only','Yes');
+                answer = gui.myQuestdlg(FigureHandle,'Color cells using pseudotime T and show Monocle3 embedding S?',...
+                    '',{'Yes','Color cells only','Show embedding only'},'Yes');
                 switch answer
                     case 'Yes'
                         sce.c = sce.list_cell_attributes{idx*2};
@@ -499,7 +487,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
 
         if askpref
             %  gui.gui_userguidingpref(false);
-            %answer=questdlg('Show User Onboarding Toolbar again next time?','');
+            %answer=gui.myQuestdlg(FigureHandle, 'Show User Onboarding Toolbar again next time?','');
             %switch answer
             %    case 'Yes'
             %        setpref('scgeatoolbox','useronboardingtoolbar',true);
@@ -625,7 +613,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             if isempty(sce) || sce.NumCells==0
                 ButtonName = 'no';
             else
-                ButtonName = questdlg('Save SCE before closing SCGEATOOL?');
+                ButtonName = gui.myQuestdlg(FigureHandle, 'Save SCE before closing SCGEATOOL?');
             end
             switch lower(ButtonName)
                 case 'yes'
@@ -665,7 +653,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         if isempty(h.ZData) && size(sce.s,2)==2 && length(vslist) <= 1
             gui.callback_RunDataMapPlot(src, []);
         elseif isempty(h.ZData) && size(sce.s,2)==2 && length(vslist) > 1            
-            switch questdlg('Using current 2D embedding?')
+            switch gui.myQuestdlg(FigureHandle, 'Using current 2D embedding?')
                 case 'Yes'
                     gui.callback_RunDataMapPlot(src, []);
                 case 'No'
@@ -682,7 +670,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                     return;
             end
         elseif ~isempty(h.ZData)
-            if strcmp(questdlg('This function requires 2D embedding. Continue?'), 'Yes'), in_Switch2D3D(src,[]); end
+            if strcmp(gui.myQuestdlg(FigureHandle, 'This function requires 2D embedding. Continue?'), 'Yes'), in_Switch2D3D(src,[]); end
         end
     end
 
@@ -698,8 +686,8 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
 
     function in_MergeCellSubtypes(src, ~, sourcetag, allcell)
         if nargin < 4
-            switch questdlg('Import annotation for all cells or just cells of a subtype?', '', ...
-                'All Cells', 'Subtype Cells', 'Cancel', 'All Cells')
+            switch gui.myQuestdlg(FigureHandle, 'Import annotation for all cells or just cells of a subtype?', '', ...
+                {'All Cells', 'Subtype Cells', 'Cancel'}, 'All Cells')
                 case 'All Cells'
                     allcell = true;
                 case 'Subtype Cells'
@@ -750,9 +738,9 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             case 'hvg'
                 k = gui.i_inputnumk(2000, 1, sce.NumGenes, 'the number of HVGs');
                 if isempty(k), return; end
-                answer = questdlg('Which HVG detecting method to use?', '', ...
-                    'Splinefit Method [PMID:31697351]', ...
-                    'Brennecke et al. (2013) [PMID:24056876]', ...
+                answer = gui.myQuestdlg(FigureHandle, 'Which HVG detecting method to use?', '', ...
+                    {'Splinefit Method [PMID:31697351]', ...
+                    'Brennecke et al. (2013) [PMID:24056876]'}, ...
                     'Splinefit Method [PMID:31697351]');                
                 switch answer
                     case 'Brennecke et al. (2013) [PMID:24056876]'
@@ -780,7 +768,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                     return;
                 end
                 if sum(idx) < 50                    
-                    if ~strcmp(questdlg('Few genes (n < 50) selected. Continue?',''), 'Yes'), return; end
+                    if ~strcmp(gui.myQuestdlg(FigureHandle, 'Few genes (n < 50) selected. Continue?',''), 'Yes'), return; end
                 end
         end
 
@@ -793,11 +781,11 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
 
     function in_SubsampleCells(src, ~, methodoption)
         if nargin < 3, methodoption = []; end        
-        if ~strcmp(questdlg('This function subsamples 50% of cells. Continue?',''), 'Yes'), return; end
+        if ~strcmp(gui.myQuestdlg(FigureHandle, 'This function subsamples 50% of cells. Continue?',''), 'Yes'), return; end
         if isempty(methodoption)
-            answer = questdlg('Select method:', '', ...
-                'Uniform Sampling', ...
-                'Geometric Sketching [PMID:31176620]', 'Uniform Sampling');
+            answer = gui.myQuestdlg(FigureHandle, 'Select method:', '', ...
+                {'Uniform Sampling', ...
+                'Geometric Sketching [PMID:31176620]'}, 'Uniform Sampling');
             switch answer
                 case 'Uniform Sampling'
                     methodoption = 1;
@@ -848,7 +836,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             return;
         end
         if ~all(sce.c_cell_type_tx == "undetermined")            
-            if ~strcmp(questdlg("Your data has been embedded and annotated. Single Click Solution will re-embed and annotate cells. Current embedding and annotation will be overwritten. Continue?", ""), 'Yes'), return; end
+            if ~strcmp(gui.myQuestdlg(FigureHandle, "Your data has been embedded and annotated. Single Click Solution will re-embed and annotate cells. Current embedding and annotation will be overwritten. Continue?", ""), 'Yes'), return; end
         else
             if ~gui.gui_showrefinfo('Single Click Solution'), return; end
         end
@@ -939,7 +927,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             in_RefreshAll(src, [], true, false);
             % newn = sce.NumCells;
             % newm = sce.NumGenes;
-            % answer = questdlg(sprintf('%d cells removed; %d genes removed.', ...
+            % answer = gui.myQuestdlg(FigureHandle, sprintf('%d cells removed; %d genes removed.', ...
             %         oldn-newn, oldm-newm),'','Accept Changes', 'Undo Changes', 'Accept Changes');
             % if ~strcmp(answer, 'Accept Changes')
             %     sce = oldsce;
@@ -1018,7 +1006,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
 %       gui.i_stemscatter(sce.s, contamination);
 %       zlabel('Contamination rate')
 %       title('Ambient RNA contamination')        
-        if strcmp(questdlg("Remove contamination? Click ''No'' to keep data unchanged."), 'Yes')
+        if strcmp(gui.myQuestdlg(FigureHandle, "Remove contamination? Click ''No'' to keep data unchanged."), 'Yes')
             sce.X = round(Xdecon);
             guidata(FigureHandle, sce);
             uiwait(helpdlg('Contamination removed.', ''));
@@ -1051,7 +1039,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         [c1] = grp2idx(sce.c);
         [c2] = grp2idx(sce.c_batch_id);
         if ~isequal(c1, c2)
-            answer = questdlg('Color cells by batch id (SCE.C_BATCH_ID)?', '');
+            answer = gui.myQuestdlg(FigureHandle, 'Color cells by batch id (SCE.C_BATCH_ID)?', '');
             switch answer
                 case 'Yes'
                     [c, cL] = grp2idx(sce.c_batch_id);
@@ -1070,7 +1058,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             [c, cL] = grp2idx(sce.c);
             in_RefreshAll(src, [], true, false);
 
-            ButtonName = questdlg('Update Saved Embedding?', '');
+            ButtonName = gui.myQuestdlg(FigureHandle, 'Update Saved Embedding?', '');
             switch ButtonName
                 case 'Yes'
                     [methodtag] = gui.i_pickembedmethod;
@@ -1094,7 +1082,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         end
         if ~gui.gui_showrefinfo('Scrublet [PMID:30954476]'), return; end
         if numel(unique(sce.c_batch_id)) > 1            
-            if ~strcmp(questdlg('"When working with data from multiple samples, run Scrublet on each sample separately." Your data contains multiple samples (cells with different c_batch_id). Continue?',''), 'Yes'), return; end
+            if ~strcmp(gui.myQuestdlg(FigureHandle, '"When working with data from multiple samples, run Scrublet on each sample separately." Your data contains multiple samples (cells with different c_batch_id). Continue?',''), 'Yes'), return; end
         end
         [isDoublet, doubletscore, methodtag, done] = gui.callback_DoubletDetection(src);
         if done && ~any(isDoublet)
@@ -1106,7 +1094,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             gui.i_stemscatter(sce.s, doubletscore);
             zlabel('Doublet Score')
             title(sprintf('Doublet Detection (%s)', methodtag))
-            if strcmp(questdlg(sprintf("Remove %d doublets?", sum(isDoublet))),'Yes')
+            if strcmp(gui.myQuestdlg(FigureHandle, sprintf("Remove %d doublets?", sum(isDoublet))),'Yes')
                 close(tmpf_doubletdetection);
                 % i_deletecells(isDoublet);
                 sce = sce.removecells(isDoublet);
@@ -1251,7 +1239,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         [ax, bx]=view(hAx);
 
         if bx == 90   % isempty(h.ZData)               % current 2D            
-            if ~strcmp(questdlg('Switch to 3D?',''), 'Yes'), return; end
+            if ~strcmp(gui.myQuestdlg(FigureHandle, 'Switch to 3D?',''), 'Yes'), return; end
             figure(FigureHandle);
             if size(sce.s, 2) >= 3
                 h = gui.i_gscatter3(sce.s, c, methodid, [], hAx);
@@ -1265,7 +1253,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 if isempty(vslist)
                     in_EmbeddingAgain(src, [], 3);
                 else
-                    ansx = questdlg('Using existing 3D embedding? Select "No" to re-embed.');
+                    ansx = gui.myQuestdlg(FigureHandle, 'Using existing 3D embedding? Select "No" to re-embed.');
                     switch ansx
                         case 'Yes'
                             [sx] = gui.i_pickembedvalues(sce, 3);
@@ -1283,17 +1271,17 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 end
             end
         else        % current 3D do following
-            if ~strcmp(questdlg('Switch to 2D?',''), 'Yes'), return; end
+            if ~strcmp(gui.myQuestdlg(FigureHandle, 'Switch to 2D?',''), 'Yes'), return; end
             [vslist] = gui.i_checkexistingembed(sce, 2);
             
             if ~isempty(vslist)
-                answer = questdlg('How to make 2D embedding?','', ...
-                    'Pick existing 2D','Re-embed cells', ...
-                    'Reduce current 3D','Pick existing 2D');
+                answer = gui.myQuestdlg(FigureHandle, 'How to make 2D embedding?','', ...
+                    {'Pick existing 2D','Re-embed cells', ...
+                    'Reduce current 3D'},'Pick existing 2D');
             else
-                answer = questdlg('How to make 2D embedding?','', ...
-                    'Embed Cells to 2D', ...
-                    'Project Current 3D Embedding to 2D','Cancel','Embed Cells to 2D');
+                answer = gui.myQuestdlg(FigureHandle, 'How to make 2D embedding?','', ...
+                    {'Embed Cells to 2D', ...
+                    'Project Current 3D Embedding to 2D','Cancel'},'Embed Cells to 2D');
             end
             switch answer
                 case 'Cancel'
@@ -1302,8 +1290,8 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                     in_EmbeddingAgain(src, [], 2);
                 case {'Project Current 3D Embedding to 2D', 'Reduce current 3D'}
                     [ax, bx] = view(hAx);
-                    answer2 = questdlg('Which view to be used to project 3D to 2D?', '', ...
-                        'X-Y Plane', 'Screen/Camera', 'PCA-Rotated', 'X-Y Plane');
+                    answer2 = gui.myQuestdlg(FigureHandle, 'Which view to be used to project 3D to 2D?', '', ...
+                        {'X-Y Plane', 'Screen/Camera', 'PCA-Rotated'}, 'X-Y Plane');
                     switch answer2
                         case 'X-Y Plane'
                             sx = sce.s;
@@ -1336,7 +1324,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
     end
 
     function in_AddEditCellAttribs(~,~)        
-        switch questdlg('Add or edit cell attribute?','','Add','Edit','Cancel','Add')
+        switch gui.myQuestdlg(FigureHandle, 'Add or edit cell attribute?','',{'Add','Edit','Cancel'},'Add')
             case 'Edit'
                 addnew = false;
             case 'Add'
@@ -1359,8 +1347,8 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
 
     function in_RenameCellTypeBatchID(src, ~, answer)
         if nargin < 3 || isempty(answer)
-            answer = questdlg('Rename cell type, batch ID, or gene name?', ...
-                '', 'Cell type', 'Batch ID', 'Others...', 'Cell type');
+            answer = gui.myQuestdlg(FigureHandle, 'Rename cell type, batch ID, or gene name?', ...
+                '',{'Cell type', 'Batch ID', 'Others...'}, 'Cell type');
         end
         switch answer
             case 'Cell type'
@@ -1401,7 +1389,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         end
         [vslist] = gui.i_checkexistingembed(sce, ndim);
         if ~isempty(vslist)
-            answer = questdlg('Using exsiting embedding?');
+            answer = gui.myQuestdlg(FigureHandle, 'Using exsiting embedding?');
         else
             answer = 'No';
         end
@@ -1414,7 +1402,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             %if isempty(ndim), [ndim] = gui.i_choose2d3dnmore; end
             %if isempty(ndim), return; end
             %methoddimtag = sprintf('%s%dd',methodtag, ndim);            
-            switch questdlg('Overwritten existing embeddings, if any?')
+            switch gui.myQuestdlg(FigureHandle, 'Overwritten existing embeddings, if any?')
                 case 'Yes'
                     overwrittenold = true;
                 case 'No'
@@ -1462,7 +1450,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         guidata(FigureHandle, sce);
         in_RefreshAll(src, [], true, false);   % keepview, keepcolr
         if readytoshow            
-            if strcmp(questdlg('Show all avaiable embeddings?'), 'Yes')
+            if strcmp(gui.myQuestdlg(FigureHandle, 'Show all avaiable embeddings?'), 'Yes')
                 gui.sc_multiembeddingview(sce, [], FigureHandle);
             end
         end
@@ -1553,7 +1541,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         if nx > 1
             newtx = erase(sce.c_cell_type_tx, "_{"+digitsPattern+"}");
             if length(unique(newtx)) ~= nx                
-                if strcmp(questdlg('Merge subclusters of same cell type?'), 'Yes')
+                if strcmp(gui.myQuestdlg(FigureHandle, 'Merge subclusters of same cell type?'), 'Yes')
                     in_MergeSubCellTypes(src);
                 end
             end
@@ -1562,7 +1550,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
     end
 
     function [iscelltype] = in_pickcelltypeclusterid(a)        
-        switch questdlg(a, '', 'Cluster', 'Cell Type', 'Cluster')
+        switch gui.myQuestdlg(FigureHandle, a, '', {'Cluster', 'Cell Type'}, 'Cluster')
             case 'Cluster'
                 iscelltype = false;
             case 'Cell Type'
@@ -1664,7 +1652,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             uiwait(helpdlg("No cells are selected. Please use the data brush tool to select cells for cell type assignment.", ''));
             return;
         end        
-        if ~strcmp(questdlg('This is a one-time analysis. Cell type labels will not be saved. Continue?',''), 'Yes'), return; end
+        if ~strcmp(gui.myQuestdlg(FigureHandle, 'This is a one-time analysis. Cell type labels will not be saved. Continue?',''), 'Yes'), return; end
         if isempty(speciestag)
             speciestag = gui.i_selectspecies(2);
         end
@@ -1727,7 +1715,8 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 set(cbtogg,'State','on');
             case {'Numerical/Continuous','Unknown'}
                 sce.c = thisc;                
-                switch questdlg('Show scores in new figure?','','Yes, new figure', 'No, current figure', 'Cancel', 'Yes, new figure')
+                switch gui.myQuestdlg(FigureHandle, 'Show scores in new figure?','', ...
+                        {'Yes, new figure', 'No, current figure', 'Cancel'}, 'Yes, new figure')
                     case 'No, current figure'
                         in_RefreshAll(src, [], true, false);
                         target{1} = hAx;
@@ -1743,7 +1732,8 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                         cbtogg = findall(FigureHandle, 'Tag', 'figToglColorbar');
                         set(cbtogg,'State','on');
                     case 'Yes, new figure'
-                        switch questdlg('Plot scatter plot type:','','Heat','Stem','Heat')
+                        switch gui.myQuestdlg(FigureHandle, 'Plot scatter plot type:','', ...
+                                {'Heat','Stem'},'Heat')
                             case 'Heat'
                                 figfun = @gui.i_heatscatterfig;
                             case 'Stem'
@@ -1769,13 +1759,13 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             [ptsSelected, letdoit] = gui.i_expandbrushed(ptsSelected, sce);
             if ~letdoit, return; end
             if sum(ptsSelected) < 200                
-                if ~strcmp(questdlg(sprintf('Too few cells (n = %d) selected, continue?', sum(ptsSelected))), 'Yes'), return; end
+                if ~strcmp(gui.myQuestdlg(FigureHandle, sprintf('Too few cells (n = %d) selected, continue?', sum(ptsSelected))), 'Yes'), return; end
             end
             scetmp = sce.removecells(~ptsSelected);
             scetmp = scetmp.qcfilter(1000, 0.15, 15);
             gui.callback_EnrichrHVGs(src, events, scetmp);
         else            
-            if ~strcmp(questdlg(sprintf('All cells (n = %d) included, continue?', sce.NumCells),''), 'Yes'), return; end
+            if ~strcmp(gui.myQuestdlg(FigureHandle, sprintf('All cells (n = %d) included, continue?', sce.NumCells),''), 'Yes'), return; end
             gui.callback_EnrichrHVGs(src, events);
         end
     end
@@ -1789,8 +1779,8 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         [ptsSelected, letdoit] = gui.i_expandbrushed(ptsSelected, sce);
         if ~letdoit, return; end
 
-        answer = questdlg('Delete selected or unselected cells?', '', ...
-            'Selected', 'Unselected', 'Selected');
+        answer = gui.myQuestdlg(FigureHandle, 'Delete selected or unselected cells?', '', ...
+            {'Selected', 'Unselected'}, 'Selected');
         if isempty(answer), return; end
         if strcmp(answer, 'Unselected')
             in_deletecells(src, ~ptsSelected);
@@ -1815,13 +1805,13 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         
         switch lower(action)
             case 'unbrushed'
-                if strcmp(questdlg('Unbrushed/Unselected cells will be deleted. Continue?'),'Yes')
+                if strcmp(gui.myQuestdlg(FigureHandle, 'Unbrushed/Unselected cells will be deleted. Continue?'),'Yes')
                     in_deletecells(src, ~ptsSelected);
                 else
                     return;
                 end
             case 'brushed'
-                if strcmp(questdlg('Brushed/Selected cells will be deleted. Continue?'),'Yes')
+                if strcmp(gui.myQuestdlg(FigureHandle, 'Brushed/Selected cells will be deleted. Continue?'),'Yes')
                     in_deletecells(src, ptsSelected);
                 else
                     return;
@@ -1846,9 +1836,9 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
 
     function in_scTenifoldNet(src, events, methodtag)
         if numel(unique(sce.c_cell_type_tx)) > 1
-            if ~strcmp(questdlg('This analysis is cell type-specific; however, current SCE contains multiple cell types. Continue?',''),'Yes'), return; end
+            if ~strcmp(gui.myQuestdlg(FigureHandle, 'This analysis is cell type-specific; however, current SCE contains multiple cell types. Continue?',''),'Yes'), return; end
         end
-        switch questdlg('Perform 10-fold bootstrapping of cells?','','Yes 🐢','No 🐇','Cancel','No 🐇')
+        switch gui.myQuestdlg(FigureHandle, 'Perform 10-fold bootstrapping of cells?','',{'Yes 🐢','No 🐇','Cancel'},'No 🐇')
             case 'No 🐇'
                 if methodtag==1
                     gui.callback_scPCNet1(src, events);
@@ -1879,7 +1869,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         % waitfor(warndlg('This function should not be applied to tSNE and UMAP embeddings, as they "encourage a representation of the data as disjoint clusters, which is less meaningful for modeling continuous developmental trajectories" [PMID:25664528].', ''));
         if ~isempty(f_traj) && isvalid(f_traj) && isgraphics(f_traj, 'line')
             if strcmp({f_traj.Visible}, 'on')
-                switch questdlg('Remove existing trajectory curve?','')
+                switch gui.myQuestdlg(FigureHandle, 'Remove existing trajectory curve?','')
                     case 'Yes'
                         in_RefreshAll(src, [], true, true);  % keepview, keepcolr
                     case 'No'
@@ -1889,10 +1879,10 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             end
         end
         if license('test', 'curve_fitting_toolbox') && ~isempty(which('cscvn'))
-            answer = questdlg('Which method?', '', 'splinefit', 'princurve', ...
-                'manual', 'splinefit');
+            answer = gui.myQuestdlg(FigureHandle, 'Which method?', '', {'splinefit', 'princurve', ...
+                'manual'}, 'splinefit');
         else
-            answer = questdlg('Which method?', '', 'splinefit', 'princurve', ...
+            answer = gui.myQuestdlg(FigureHandle, 'Which method?', '', {'splinefit', 'princurve'}, ...
                 'splinefit');
         end
         switch answer
@@ -1906,7 +1896,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             case 'manual'
                 if license('test', 'curve_fitting_toolbox') && ~isempty(which('cscvn'))
                     if ~isempty(h.ZData)
-                        switch questdlg('This function does not work for 3D embedding. Continue to switch to 2D?')
+                        switch gui.myQuestdlg(FigureHandle, 'This function does not work for 3D embedding. Continue to switch to 2D?')
                             case 'Yes'
                                 in_Switch2D3D(src,[]);
                             otherwise
@@ -1915,8 +1905,8 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                     end
                     if ~isempty(h.ZData), return; end
 
-                    answer2 = questdlg('Draw trajectory curve or load saved curve and pseudotime?', ...
-                        '','Draw Curve', 'Load Saved', 'Cancel', 'Draw Curve');
+                    answer2 = gui.myQuestdlg(FigureHandle, 'Draw trajectory curve or load saved curve and pseudotime?', ...
+                        '',{'Draw Curve', 'Load Saved', 'Cancel'}, 'Draw Curve');
 
                     switch answer2
                         case 'Load Saved'
@@ -1939,7 +1929,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                         case 'Draw Curve'
                             % Collect points interactively
                             % [x, y] = ginput; % 
-                            if ~strcmp(questdlg('Click on the figure to select points, press Enter to finish.'),'Yes'), return; end
+                            if ~strcmp(gui.myQuestdlg(FigureHandle, 'Click on the figure to select points, press Enter to finish.'),'Yes'), return; end
                             x = []; y = [];
                             hold on
                             while true
@@ -1986,7 +1976,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         hold off;
         % pseudotimemethod
         if ~strcmp(answer, 'manual')
-            switch questdlg('Swap ''Start'' and ''End''?','')
+            switch gui.myQuestdlg(FigureHandle, 'Swap ''Start'' and ''End''?','')
                 case 'Yes'
                     t1.String = 'End';
                     t2.String = 'Start';
@@ -2016,7 +2006,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         
         % -----------
         if strcmp(answer, 'manual') && ~justload
-            switch questdlg('Save manual trajectory curve and pseudotime to an .mat file?','')
+            switch gui.myQuestdlg(FigureHandle, 'Save manual trajectory curve and pseudotime to an .mat file?','')
                 case 'Yes'
                     [file, path] = uiputfile('*.mat', 'Save as', ...
                         'pseudotime_manual_trajectory.mat');
@@ -2036,19 +2026,19 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         end
         % --------------
         
-        switch questdlg('View expression of selected genes','')
+        switch gui.myQuestdlg(FigureHandle, 'View expression of selected genes','')
             case 'Yes'
                 gui.sc_pseudotimegenes(sce, t, FigureHandle);
         end
     end
 
     function in_ClusterCellsS(src, ~)        
-        if ~strcmp(questdlg('Cluster cells using embedding S?',''), 'Yes'), return; end
+        if ~strcmp(gui.myQuestdlg(FigureHandle, 'Cluster cells using embedding S?',''), 'Yes'), return; end
         [sx] = gui.i_pickembedvalues(sce);
         if isempty(sx), return; end
 
-        answer = questdlg('Which method?', 'Select Algorithm', ...
-            'K-means 🐇', 'SnnDpc [DOI:10.1016/j.ins.2018.03.031] 🐢', 'K-means 🐇');
+        answer = gui.myQuestdlg(FigureHandle, 'Which method?', 'Select Algorithm', ...
+            {'K-means 🐇', 'SnnDpc [DOI:10.1016/j.ins.2018.03.031] 🐢'}, 'K-means 🐇');
         if strcmpi(answer, 'K-means 🐇')
             methodtag = "kmeans";
         elseif strcmpi(answer, 'SnnDpc [DOI:10.1016/j.ins.2018.03.031] 🐢')
@@ -2062,7 +2052,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
     end
 
     function in_ClusterCellsX(src, ~)
-        if ~strcmp(questdlg('Cluster cells using expression matrix X?',''), 'Yes'), return; end
+        if ~strcmp(gui.myQuestdlg(FigureHandle, 'Cluster cells using expression matrix X?',''), 'Yes'), return; end
         % methodtagvx = {'specter (31 secs) 🐇', 'sc3 (77 secs) 🐇', ...
         %     'simlr (400 secs) 🐢', ...
         %     'soptsc (1,182 secs) 🐢🐢', 'sinnlrr (8,307 secs) 🐢🐢🐢',};
@@ -2093,10 +2083,10 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         methodtag = lower(methodtag);
         usingold = false;
         if ~isempty(sce.struct_cell_clusterings.(methodtag))
-            answer1 = questdlg(sprintf('Using existing %s clustering?', ...
+            answer1 = gui.myQuestdlg(FigureHandle, sprintf('Using existing %s clustering?', ...
                 upper(methodtag)), '', ...
-                'Yes, use existing', 'No, re-compute', ...
-                'Cancel', 'Yes, use existing');
+                {'Yes, use existing', 'No, re-compute', ...
+                'Cancel'}, 'Yes, use existing');
             switch answer1
                 case 'Yes, use existing'
                     sce.c_cluster_id = sce.struct_cell_clusterings.(methodtag);
@@ -2132,9 +2122,9 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
     end
 
     function in_highlightcellgroups(src, ~)        
-        if ~strcmp(questdlg('Before highlighting cell groups, the grouping colormap will be reset. Continue?',''), 'Yes'), return; end
+        if ~strcmp(gui.myQuestdlg(FigureHandle, 'Before highlighting cell groups, the grouping colormap will be reset. Continue?',''), 'Yes'), return; end
         in_RefreshAll(src, [], true, true);        
-        if ~strcmp(questdlg('Select one or more cell groups to be highlighted. Continue?',''), 'Yes'), return; end
+        if ~strcmp(gui.myQuestdlg(FigureHandle, 'Select one or more cell groups to be highlighted. Continue?',''), 'Yes'), return; end
         [idx] = gui.i_selmultidlg(cL, [], FigureHandle);
         if isempty(idx), return; end
         if idx == 0, return; end

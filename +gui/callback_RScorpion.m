@@ -1,6 +1,6 @@
 function callback_RScorpion(src, ~)
 
-[~, sce] = gui.gui_getfigsce(src);
+[~, sce, isui] = gui.gui_getfigsce(src);
 if ~gui.gui_showrefinfo('SCORPION [PMID:38438786]'), return; end
 
 extprogname = 'R_SCORPION';

@@ -1,5 +1,5 @@
 function callback_CompareGeneNetwork(src, ~)
-    [FigureHandle, sce] = gui.gui_getfigsce(src);
+    [FigureHandle, sce, isui] = gui.gui_getfigsce(src);
     
     [i1, i2, cL1, cL2] = gui.i_select2smplgrps(sce, false);
     if isscalar(i1) || isscalar(i2)

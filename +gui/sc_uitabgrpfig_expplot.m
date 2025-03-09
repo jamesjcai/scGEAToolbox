@@ -149,29 +149,29 @@ hx.show(parentfig)
         end
     end
 
-    function in_savemainfig(~,~)
-        answer = questdlg('Export to PowerPoint?');
-        if ~strcmp(answer,'Yes'), return; end
-
-        fw=gui.gui_waitbar_adv;
-            OUTppt = [tempname, '.pptx'];
-            ppt = Presentation(OUTppt, pth);
-            open(ppt);
-            images=cell(n,1);
-            warning off
-        for kx=1:n
-            gui.gui_waitbar_adv(fw,kx./n,"Processing "+glist(kx)+" ...");
-            images{kx} = [tempname, '.png'];
-            tabgp.SelectedTab=tab{kx};
-            saveas(tab{kx},images{kx});
-            slide3 = add(ppt, 'Small Title and Content');
-            replace(slide3, 'Title', glist(kx));
-            replace(slide3, 'Content', Picture(images{kx}));        
-        end
-            close(ppt);
-            rptview(ppt);      
-            gui.gui_waitbar_adv(fw);
-    end
+    % function in_savemainfig(~,~)
+    %     answer = questdlg('Export to PowerPoint?');
+    %     if ~strcmp(answer,'Yes'), return; end
+    % 
+    %     fw=gui.gui_waitbar_adv;
+    %         OUTppt = [tempname, '.pptx'];
+    %         ppt = Presentation(OUTppt, pth);
+    %         open(ppt);
+    %         images=cell(n,1);
+    %         warning off
+    %     for kx=1:n
+    %         gui.gui_waitbar_adv(fw,kx./n,"Processing "+glist(kx)+" ...");
+    %         images{kx} = [tempname, '.png'];
+    %         tabgp.SelectedTab=tab{kx};
+    %         saveas(tab{kx},images{kx});
+    %         slide3 = add(ppt, 'Small Title and Content');
+    %         replace(slide3, 'Title', glist(kx));
+    %         replace(slide3, 'Content', Picture(images{kx}));        
+    %     end
+    %         close(ppt);
+    %         rptview(ppt);      
+    %         gui.gui_waitbar_adv(fw);
+    % end
 
     % function i_linksubplots(~,~)        
     %     hlink = linkprop([ax{idx,1},ax{idx,2}],{'CameraPosition','CameraUpVector'});

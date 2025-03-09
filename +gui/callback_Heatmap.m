@@ -1,6 +1,6 @@
 function callback_Heatmap(src, ~)
 
-[FigureHandle, sce] = gui.gui_getfigsce(src);
+[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
 [thisc, ~] = gui.i_select1class(sce);
 if isempty(thisc), return; end
 

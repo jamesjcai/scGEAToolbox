@@ -1,6 +1,6 @@
 function callback_DVGene2GroupsBatch(src, ~)
 
-[~, sce] = gui.gui_getfigsce(src);
+[~, sce, isui] = gui.gui_getfigsce(src);
 if ~gui.gui_showrefinfo('DV in Batch Mode'), return; end
     
     extprogname = 'scgeatool_DVAnalysis_Batch';

@@ -1,7 +1,8 @@
-function [X] = i_transformx(X, donorm, methodid)
+function [X] = i_transformx(X, donorm, methodid, parentfig)
 
-if nargin < 3, methodid = 3; end
-if nargin < 2, donorm = false; end
+if nargin < 4, parentfig = []; end
+if nargin < 3 || isempty(methodid), methodid = 3; end
+if nargin < 2 || isempty(donorm), donorm = false; end
 
 if nargin < 1
     X = nbinrnd(20, 0.98, 1000, 200);
@@ -12,8 +13,8 @@ if donorm
 else
     defaultans = 'No';
 end
-answer = questdlg('Normalize, transform or impute X? Select No to use untouched X', ...
-    '', 'Yes', 'No', 'Cancel', defaultans);
+answer = gui.myQuestdlg(parentfig, 'Normalize, transform or impute X? Select No to use untouched X', ...
+    '', {'Yes', 'No', 'Cancel'}, defaultans);
 if strcmp(answer, 'Yes')
 
 elseif strcmp(answer, 'No')

@@ -1,6 +1,6 @@
 function callback_VirtualKOGenKI(src, ~)
 
-[~, sce] = gui.gui_getfigsce(src);
+[~, sce, isui] = gui.gui_getfigsce(src);
 
 gsorted = natsort(sce.g);
 if isempty(gsorted), return; end

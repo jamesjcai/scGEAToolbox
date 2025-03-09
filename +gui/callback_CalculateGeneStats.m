@@ -7,7 +7,7 @@ function callback_CalculateGeneStats(src, ~)
     if ~strcmp(answer, 'Yes'), return; end
 
     % Retrieve single-cell experiment data
-    [FigureHandle, sce] = gui.gui_getfigsce(src);
+    [FigureHandle, sce, isui] = gui.gui_getfigsce(src);
     Xt = gui.i_transformx(sce.X);
     if isempty(Xt), return; end
 

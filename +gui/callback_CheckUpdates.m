@@ -1,36 +1,40 @@
-function callback_CheckUpdates(src, ~)
-    
+function callback_CheckUpdates(src, ~)    
 
     toolboxPath = fileparts(fileparts(mfilename('fullpath')));
-    [FigureHandle] = gui.gui_getfigsce(src);
+    [FigureHandle, ~, isui] = gui.gui_getfigsce(src);
     % Col = webread('https://api.github.com/repos/jamesjcai/scGEAToolbox')
     try
-        [majneedupdate, v1, v2] = pkg.i_majvercheck;
+        [majneedupdate, v_old, v_new] = pkg.i_majvercheck;
     catch ME
         errordlg('Could not access server.');
         return;
     end
     if majneedupdate
-        answer = questdlg(sprintf('There is a new version of scGEAToolbox (%s vs. %s). Learn how to upgrade?', v2, v1));
-        if strcmp(answer, 'Yes')
-            if ~pkg.e_runningasaddons
+        if ~pkg.e_runningasaddons
+            answer = questdlg(sprintf('There is a new version of scGEAToolbox (%s vs. %s). Learn how to upgrade?', ...
+                v_new, v_old));
+            if strcmp(answer, 'Yes')               
                 gui.gui_uishowrefinfo('Quick Installation', FigureHandle);
-            else
+            end
+        else
+            answer = questdlg(sprintf('There is a new version of scGEAToolbox (%s vs. %s). Upgrade?', ...
+                v_new, v_old));
+            if strcmp(answer, 'Yes')
                 try
                     instURL = 'https://api.github.com/repos/jamesjcai/scGEAToolbox/releases/latest';
                     %[~, instName] = fileparts(fileparts(fileparts(instURL)));
                     instRes = webread(instURL);
                     % fprintf('Downloading %s %s\n', instName, instRes.name);
                     % websave(instRes.assets.name, instRes.assets.browser_download_url);
-
+    
                     toolboxURL = instRes.assets.browser_download_url;
                     tempZip = fullfile(tempdir, instRes.assets.name);
-
+    
                     %toolboxURL = sprintf('https://github.com/jamesjcai/scGEAToolbox/releases/download/v%s/scGEAToolbox.mltbx', v2);
                     %tempZip = fullfile(tempdir, "ToolboxUpdate.mltbx");
                     websave(tempZip, toolboxURL);
                     matlab.addons.install(tempZip);
-
+    
                     versionfile = fullfile(toolboxPath, 'VERSION.mat');
                     if exist(versionfile,'file')
                         delete(versionfile);
@@ -69,7 +73,7 @@ function callback_CheckUpdates(src, ~)
             %}
         end
     else
-        waitfor(helpdlg(sprintf('scGEAToolbox (%s) is up to date.', v1), ''));
+        waitfor(helpdlg(sprintf('scGEAToolbox (%s) is up to date.', v_old), ''));
         %answer=questdlg('Check for minor updates?','');
         %if strcmp(answer,'Yes')
         %    pkg.i_minvercheck(FigureHandle);

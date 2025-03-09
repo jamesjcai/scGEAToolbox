@@ -4,7 +4,7 @@ answer = questdlg('Select a grouping variable and show cell groups in new figure
 if ~strcmp(answer, 'Yes'), return; end
 
 
-[FigureHandle, sce] = gui.gui_getfigsce(src);
+[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
 [thisc, ~] = gui.i_select1class(sce);
 if isempty(thisc), return; end
 [c, cL] = grp2idx(thisc);

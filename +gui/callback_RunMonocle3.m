@@ -24,7 +24,7 @@ end
 % 
 % fprintf('CURRENTWDIR = "%s"\n', wkdir);
 
-[FigureHandle] = gui.gui_getfigsce(src);
+[FigureHandle, ~, isui] = gui.gui_getfigsce(src);
 
 a = findall(FigureHandle, 'type', 'axes');
 h = findall(a, 'type', 'scatter');

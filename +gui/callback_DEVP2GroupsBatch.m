@@ -1,6 +1,6 @@
 function callback_DEVP2GroupsBatch(src, ~)
 
-    [~, sce] = gui.gui_getfigsce(src);
+    [~, sce, isui] = gui.gui_getfigsce(src);
     extprogname = 'scgeatool_DEVPAnalysis_Batch';
     preftagname = 'externalwrkpath';
     [wrkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);

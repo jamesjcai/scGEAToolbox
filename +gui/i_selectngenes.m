@@ -4,7 +4,7 @@ function [glist] = i_selectngenes(sce, predefinedlist, parentfig)
 if nargin < 2, predefinedlist = []; end
 if nargin < 3, parentfig = []; end
 
-isui = gui.i_isuifig(parentfig);
+%isui = gui.i_isuifig(parentfig);
 
 % internal function used by callback_BuildGeneNetwork
 glist = [];
@@ -21,16 +21,18 @@ if ~isempty(predefinedlist)
         'IgnoreCase', true));
 end
 
-if isui
-    answer = uiconfirm(parentfig, 'Select genes from list or paste gene names?', ...
-        'Select/Paste Genes', ...
-        'Options', {'Select', 'Paste', 'Cancel'}, ...
-        'DefaultOption', 'Select', ...
-        'Icon', 'question');
-else
-    answer = questdlg('Select genes from list or paste gene names?', ...
-        'Select/Paste Genes', 'Select', 'Paste', 'Cancel', 'Select');
-end
+% if isui
+%     answer = uiconfirm(parentfig, 'Select genes from list or paste gene names?', ...
+%         'Select/Paste Genes', ...
+%         'Options', {'Select', 'Paste', 'Cancel'}, ...
+%         'DefaultOption', 'Select', ...
+%         'Icon', 'question');
+% else
+%     answer = questdlg('Select genes from list or paste gene names?', ...
+%         'Select/Paste Genes', 'Select', 'Paste', 'Cancel', 'Select');
+% end
+answer = gui.myQuestdlg(parentfig, 'Select genes from list or paste gene names?', ...
+        'Select/Paste Genes', {'Select', 'Paste', 'Cancel'}, 'Select');
 switch answer
     case 'Cancel'
         return;
@@ -69,7 +71,7 @@ switch answer
 
         if isa(sce, 'SingleCellExperiment')
             %fw=gui.gui_waitbar;
-            [gsorted] = gui.i_sortgenenames(sce);
+            [gsorted] = gui.i_sortgenenames(sce, parentfig);
             %gui.gui_waitbar(fw);
             if isempty(gsorted), return; end
         end

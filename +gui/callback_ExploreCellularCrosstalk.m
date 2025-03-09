@@ -1,6 +1,6 @@
 function callback_ExploreCellularCrosstalk(src, ~)
 
-[FigureHandle, sce] = gui.gui_getfigsce(src);
+[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
 
 if ~gui.gui_showrefinfo('talklr [DOI:10.1101/2020.02.01.930602]'), return; end
 

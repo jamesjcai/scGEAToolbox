@@ -23,7 +23,7 @@ end
 %         return;
 %     end
 
-[~, sce] = gui.gui_getfigsce(src);
+[~, sce, isui] = gui.gui_getfigsce(src);
 
 answer = questdlg('Construct gene regulatory network (GRN) for all cells or selected cells?', ...
         '', 'All Cells', 'Select Cells...', 'Cancel', ...

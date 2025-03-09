@@ -1,7 +1,7 @@
 function [sceg, scep] = callback_SplitAtacGex(src, ~)
 
 
-[~, sce] = gui.gui_getfigsce(src);
+[~, sce, isui] = gui.gui_getfigsce(src);
 if ~any(contains(sce.g, ':'))
     warndlg('Not a multiome ATAC+GEX matrix.');
     return;

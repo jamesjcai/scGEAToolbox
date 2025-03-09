@@ -1,6 +1,6 @@
 function callback_FindAllMarkers(src, ~)
 
-[~, sce] = gui.gui_getfigsce(src);
+[~, sce, isui] = gui.gui_getfigsce(src);
 
     answer = questdlg('Select Method', ...
         '', 'Marker Gene Heatmap', 'Find All Markers', ...

@@ -1,4 +1,5 @@
 function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
+    if nargin<3, FigureHandle = []; end
     sce = [];
     filename = [];
     list = {'SCE Data File(s) (*.mat)...', ...
@@ -39,7 +40,7 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
     if tf ~= 1, return; end
     ButtonName = list{indx};
     setpref('scgeatoolbox', preftagname, indx);
-    %         ButtonName = questdlg('Select Input Data Type', ...
+    %         ButtonName = gui.myQuestdlg(FigureHandle, ('Select Input Data Type', ...
     %                               'SC_SCATTER', ...
     %                               'SCE Data .mat', ...
     %                               '10x Genomics .mtx', ...
@@ -53,7 +54,7 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
                 return;
             end
         case 'SCE Data File(s) (*.mat)...'
-            promotesave = false;
+            %promotesave = false;
             [filenm, pathname] = uigetfile( ...
                 {'*.mat', 'SCE Data Files (*.mat)'; ...
                 '*.*', 'All Files (*.*)'}, ...
@@ -73,8 +74,9 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
                 gui.gui_waitbar(fw);
             else
                 if ~in_multifilesgo, return; end
-                answer = questdlg('Which set operation method to merge data?', 'Merging method', ...
-                    'Intersect', 'Union', 'Intersect');
+                answer = gui.myQuestdlg(FigureHandle, 'Which set operation method to merge data?', ...
+                'Merging method', ...
+                    {'Intersect', 'Union'}, 'Intersect');
                 if ~ismember(answer, {'Union', 'Intersect'}), return; end
                 methodtag = lower(answer);
                 fw = gui.gui_waitbar_adv;
@@ -191,8 +193,9 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
             if isequal(filenm, 0), return; end
             if iscell(filenm)
                 if ~in_multifilesgo, return; end
-                answer = questdlg('Which set operation method to merge data?', 'Merging method', ...
-                    'Intersect', 'Union', 'Intersect');
+                answer = gui.myQuestdlg(FigureHandle, 'Which set operation method to merge data?', ...
+                    'Merging method', ...
+                    {'Intersect', 'Union'}, 'Intersect');
                 if ~ismember(answer, {'Union', 'Intersect'}), return; end
                 methodtag = lower(answer);
                 fw = gui.gui_waitbar_adv;
@@ -330,8 +333,8 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
             if strlength(acc) > 4 && ~isempty(regexp(acc, 'G.+', 'once'))
                 accv = unique(strsplit(acc, {',', ';', ' '}), 'stable');
                 if length(accv) > 1
-                    dmanswer = questdlg('Download and merge data sets?', ...
-                        '', 'Yes', 'Cancel', 'Yes');
+                    dmanswer = gui.myQuestdlg(FigureHandle, 'Download and merge data sets?', ...
+                        '', {'Yes', 'Cancel'}, 'Yes');
                     if ~strcmp(dmanswer, 'Yes'), return; end
                     try
                         fw = gui.gui_waitbar;
@@ -415,8 +418,9 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
                 if isscalar(indx)
                     sce = evalin('base', a(indx).name);
                 elseif length(indx) > 1
-                    answer = questdlg('Which set operation method to merge genes?', 'Merging method', ...
-                        'Intersect', 'Union', 'Intersect');
+                    answer = gui.myQuestdlg(FigureHandle, 'Which set operation method to merge genes?', ...
+                        'Merging method', ...
+                        {'Intersect', 'Union'}, 'Intersect');
                     if ~ismember(answer, {'Union', 'Intersect'}), return; end
                     methodtag = lower(answer);
                     try
@@ -441,21 +445,21 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
             else
                 return;
             end
-            promotesave = false;
+            %promotesave = false;
         case 'Load Example Data...'
-            if gui.i_isuifig(FigureHandle)
-                answerstruced = uiconfirm(FigureHandle, 'Load processed or raw data?', '', ...
-                    'Options', {'Processed', 'Raw', 'Cancel'}, ...
-                    'DefaultOption', 'Processed', ...
-                    'Icon', 'question');
-            else
-                answerstruced = questdlg('Load processed or raw data?', ...
-                    '', 'Processed', 'Raw', 'Cancel', 'Processed');
-            end
+            % if gui.i_isuifig(FigureHandle)
+            %     answerstruced = uiconfirm(FigureHandle, 'Load processed or raw data?', '', ...
+            %         'Options', {'Processed', 'Raw', 'Cancel'}, ...
+            %         'DefaultOption', 'Processed', ...
+            %         'Icon', 'question');
+            % else
+                answerstruced = gui.myQuestdlg(FigureHandle, 'Load processed or raw data?', ...
+                    '', {'Processed', 'Raw', 'Cancel'}, 'Processed');
+            %end
             if ~(strcmp(answerstruced, 'Processed') || strcmp(answerstruced, 'Raw'))
                 return;
             end
-            promotesave = false;
+            %promotesave = false;
             pw1 = fileparts(mfilename('fullpath'));
             %fprintf('Loading SCE Data File example_data/workshop_example.mat...');
             %tic;
@@ -489,7 +493,7 @@ end
 
 
 function [y] = in_multifilesgo
-    [answer]=questdlg('Multiple files selected. After reading each file, data will be merged. Continue?','');
+    [answer]=gui.myQuestdlg(FigureHandle, 'Multiple files selected. After reading each file, data will be merged. Continue?','');
     switch answer
         case 'Yes'
             y=true;

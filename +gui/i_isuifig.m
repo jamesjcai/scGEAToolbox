@@ -5,7 +5,7 @@ if isempty(FigureHandle), return; end
 
 y = isprop(FigureHandle,'isUIFigure');
 
-% matlab.ui.internal.isUIFigure
+% y = matlab.ui.internal.isUIFigure(FigureHandle);
 
 % if ~isempty(f) && isempty(get(f,'JavaFrame_I'))
 %     bool = true;

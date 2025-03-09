@@ -1,6 +1,6 @@
 function callback_CrossTabulation(src, ~)
 
-[FigureHandle, sce] = gui.gui_getfigsce(src);
+[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
 
 [thisc1, clabel1, thisc2, clabel2] = gui.i_select2class(sce, true);
 

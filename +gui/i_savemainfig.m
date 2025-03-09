@@ -1,6 +1,6 @@
 function i_savemainfig(src, ~, tag)
     
-    [FigureHandle] = gui.gui_getfigsce(src);
+    [FigureHandle, ~, isui] = gui.gui_getfigsce(src);
     
     axesHandles = findall(FigureHandle, 'Type', 'axes');
     if isempty(axesHandles)    

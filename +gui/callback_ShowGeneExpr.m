@@ -1,6 +1,6 @@
 function callback_ShowGeneExpr(src, ~)
 
-    [FigureHandle, sce] = gui.gui_getfigsce(src);
+    [FigureHandle, sce, isui] = gui.gui_getfigsce(src);
     [axx, bxx] = view(findall(FigureHandle,'type','axes'));
     [glist] = gui.i_selectngenes(sce, [], FigureHandle);
     if isempty(glist) 
@@ -16,15 +16,15 @@ function callback_ShowGeneExpr(src, ~)
     % answer = questdlg("Select the type of expression values","",...
     %     "Raw UMI Counts","Library Size-Normalized",)
 
-    [Xt] = gui.i_transformx(sce.X);
+    [Xt] = gui.i_transformx(sce.X,[],[],FigureHandle);
     if isempty(Xt), return; end
 
     n = length(glist);
-    an1 = "Yes, same figure";
-    an2 = "No, different tabs";
+    an1 = 'Yes, same figure';
+    an2 = 'No, different tabs';
     if n > 1
-        answer = questdlg("Plot on all genes in the same figure?", "", an1, ...
-            an2, "Cancel", an1);
+        answer = gui.myQuestdlg(FigureHandle, "Plot on all genes in the same figure?", "",...
+            {an1, an2, 'Cancel'}, an1);
         if isempty(answer), return; end
         if strcmp(answer, "Cancel"), return; end
     else

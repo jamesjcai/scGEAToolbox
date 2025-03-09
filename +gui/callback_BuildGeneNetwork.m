@@ -1,5 +1,5 @@
 function callback_BuildGeneNetwork(src, ~)
-    [FigureHandle, sce] = gui.gui_getfigsce(src);
+    [FigureHandle, sce, isui] = gui.gui_getfigsce(src);
     
     [glist] = gui.i_selectngenes(sce, [], FigureHandle);
     if isempty(glist), return; end

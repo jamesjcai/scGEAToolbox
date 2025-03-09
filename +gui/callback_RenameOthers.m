@@ -3,7 +3,7 @@ function [requirerefresh, renamedwhat] = callback_RenameOthers(src, ~)
 requirerefresh = false;
 renamedwhat = [];
 
-[FigureHandle, sce] = gui.gui_getfigsce(src);
+[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
 
 listitems = {'Gene name','Cluster ID'};
     [indx2, tf2] = listdlg('PromptString', ...

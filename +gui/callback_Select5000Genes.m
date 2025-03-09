@@ -3,7 +3,7 @@ function [requirerefresh, scenew] = callback_Select5000Genes(src)
 requirerefresh = false;
 scenew = [];
 
-[~, sce] = gui.gui_getfigsce(src);
+[~, sce, isui] = gui.gui_getfigsce(src);
 
 if sce.NumGenes<=500
     warndlg('Number of cells is too small.');

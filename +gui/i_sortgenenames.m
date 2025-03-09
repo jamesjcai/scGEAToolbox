@@ -1,7 +1,9 @@
-function [gsorted] = i_sortgenenames(sce)
+function [gsorted] = i_sortgenenames(sce, parentfig)
+if nargin < 2, parentfig = []; end
 gsorted = [];
-answer2 = questdlg('How to sort genes?', 'Sort Genes', ...
-    'Alphabetic', 'Average Expression', 'Alphabetic');
+answer2 = gui.myQuestdlg(parentfig, 'How to sort genes?', 'Sort Genes', ...
+    {'Alphabetic', 'Average Expression'}, 'Alphabetic');
+
 switch answer2
     case 'Alphabetic'
         gsorted = natsort(sce.g);

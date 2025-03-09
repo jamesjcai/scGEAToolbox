@@ -4,7 +4,7 @@ function callback_ScatterStemPlot(src, ~)
         sce = src;
         FigureHandle = [];
     else
-        [FigureHandle, sce] = gui.gui_getfigsce(src);
+        [FigureHandle, sce, isui] = gui.gui_getfigsce(src);
     end
     
     %[thisc, ~] = gui.i_select1class(sce);

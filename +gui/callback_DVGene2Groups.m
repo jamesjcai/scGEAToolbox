@@ -4,7 +4,7 @@ lcolors = lines(2);
 lcolor1 = lcolors(1,:);
 lcolor2 = lcolors(2,:);
 
-[FigureHandle, sce] = gui.gui_getfigsce(src);
+[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
     if ~gui.gui_showrefinfo('DV Analysis'), return; end
 
     extprogname = 'scgeatool_DVAnalysis';

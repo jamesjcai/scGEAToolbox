@@ -5,7 +5,7 @@ if isa(src, 'matlab.ui.Figure')
     FigureHandle = src;
     sce = guidata(FigureHandle);
 else
-    [~, sce] = gui.gui_getfigsce(src);
+    [~, sce, isui] = gui.gui_getfigsce(src);
 end
 
 
