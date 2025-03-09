@@ -134,6 +134,11 @@ set(FigureHandle, 'visible', 'on');
 if gui.i_isuifig(FigureHandle), focus(FigureHandle); end
 uicontrol(button1);
 
+if useuifig
+    UI.Snackbar(FigureHandle,'Click Import Data or Press i to Start', ...
+        'type','normal','theme','success');
+end
+
 guidata(FigureHandle, sce);
 set(FigureHandle, 'CloseRequestFcn', @in_closeRequest);
 if nargout > 0, varargout{1} = FigureHandle; end

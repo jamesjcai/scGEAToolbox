@@ -16,6 +16,7 @@ classdef myFigure < handle
                 'NumberTitle', 'on', 'Visible',"off", ...
                 "DockControls", "off", 'ToolBar', 'figure', ...
                 'Position', [1, 1, 560, 420]);
+            % obj.FigureHandle = uifigure();
             obj.tb = findall(obj.FigureHandle, 'Type', 'uitoolbar');
             if isempty(obj.tb)
                 obj.tb = uitoolbar(obj.FigureHandle);

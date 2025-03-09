@@ -16,10 +16,18 @@ function callback_CheckUpdates(src, ~)
             if ~pkg.e_runningasaddons
                 gui.gui_uishowrefinfo('Quick Installation', FigureHandle);
             else
-
                 try
-                    toolboxURL = sprintf('https://github.com/jamesjcai/scGEAToolbox/releases/download/v%s/scGEAToolbox.mltbx', v2);
-                    tempZip = fullfile(tempdir, "ToolboxUpdate.mltbx");
+                    instURL = 'https://api.github.com/repos/jamesjcai/scGEAToolbox/releases/latest';
+                    %[~, instName] = fileparts(fileparts(fileparts(instURL)));
+                    instRes = webread(instURL);
+                    % fprintf('Downloading %s %s\n', instName, instRes.name);
+                    % websave(instRes.assets.name, instRes.assets.browser_download_url);
+
+                    toolboxURL = instRes.assets.browser_download_url;
+                    tempZip = fullfile(tempdir, instRes.assets.name);
+
+                    %toolboxURL = sprintf('https://github.com/jamesjcai/scGEAToolbox/releases/download/v%s/scGEAToolbox.mltbx', v2);
+                    %tempZip = fullfile(tempdir, "ToolboxUpdate.mltbx");
                     websave(tempZip, toolboxURL);
                     matlab.addons.install(tempZip);
 
