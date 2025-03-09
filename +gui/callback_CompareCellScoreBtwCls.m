@@ -121,7 +121,7 @@ bb = 'No, just show values (heatmap)';
                             return;
                     end
                 case 'MSigDB Molecular Signatures'
-                    % speciestag = gui.i_selectspecies(2, true);
+                    % speciestag = gui.i_selectspecies(2, true, FigureHandle);
                     % if isempty(speciestag), return; end
                     try
                         [posg, ctselected] = gui.i_selectMSigDBGeneSets(speciestag);
@@ -147,7 +147,7 @@ bb = 'No, just show values (heatmap)';
 
                 case 'PanglaoDB Cell Type Markers'
                     if isempty(speciestag)
-                        speciestag = gui.i_selectspecies(2, true);
+                        speciestag = gui.i_selectspecies(2, true, FigureHandle);
                     end
                     if isempty(speciestag), return; end
 
@@ -194,73 +194,6 @@ bb = 'No, just show values (heatmap)';
                     
                     [y] = gui.e_cellscore(sce, posg);
                     
-
-                % case 'Differentiation Potency [PMID:33244588]'
-                % 
-                %     if ~gui.gui_showrefinfo('Differentiation Potency [PMID:33244588]'), return; end
-                % 
-                %     % answer2=questdlg('Which species?','Select Species','Mouse','Human','Mouse');
-                %     % [yes,speciesid]=ismember(lower(answer2),{'human','mouse'});
-                %     % if ~yes, return; end
-                %     speciestag = gui.i_selectspecies(2);
-                % 
-                %     fw = gui.gui_waitbar;
-                %     y = sc_potency(sce.X, sce.g, speciestag);
-                %     if sum(strcmp('cell_potency', sce.list_cell_attributes)) == 0
-                %         sce.list_cell_attributes = [sce.list_cell_attributes, ...
-                %             {'cell_potency', y(:)}];                  
-                %     end
-                %     if ~showcomparision
-                %         needupdatesce = true;
-                %         guidata(FigureHandle, sce);
-                %     end
-                % 
-                %     ttxt = 'Differentiation Potency';
-                %     posg = [];
-                %     gui.gui_waitbar(fw);
-
-                % [a]=contains(sce.list_cell_attributes(1:2:end),'cell_potency');
-                % if ~any(a)
-                %     answer2=questdlg('Which species?','Select Species','Mouse','Human','Mouse');
-                %     [yes,specisid]=ismember(lower(answer2),{'human','mouse'});
-                %     if ~yes, return; end
-                %     sce=sce.estimatepotency(specisid);
-                % end
-                % [yes, idx]=ismember({'cell_potency'},sce.list_cell_attributes(1:2:end));
-                % if yes
-                %     y=sce.list_cell_attributes{idx*2};
-                %     ttxt='Differentiation Potency';
-                % else
-                %     return;
-                % end
-
-                % case 'Library Size of Cells'
-                %     y = sum(sce.X);
-                %     ttxt = 'Library Size';
-                %     posg = [];
-                %     if sum(strcmp('library_size', sce.list_cell_attributes)) == 0
-                %         sce.list_cell_attributes = [sce.list_cell_attributes, ...
-                %             {'library_size', y(:)}];                  
-                %     end                    
-                % 
-                % case 'Expression of Individual Genes'
-                %     [glist] = gui.i_selectngenes(sce,[],FigureHandle);
-                %     if isempty(glist)
-                %         helpdlg('No gene selected.', '');
-                %         return;
-                %     end
-                %     [Xt] = gui.i_transformx(sce.X);
-                %     [~, cL, noanswer] = gui.i_reordergroups(thisc);
-                %     if noanswer, return; end
-                %     colorit = true;
-                %     cL = strrep(cL, '_', '\_');
-                %     if isstring(thisc)
-                %         thisc = strrep(thisc, '_', '\_');
-                %     end
-                %     gui.i_cascadeviolin(sce, Xt, thisc, glist, ...
-                %         'Expression Level', cL, colorit);
-                %     return;
-
                 case 'Predefined Custom Gene Sets'
                     if ~gui.gui_showrefinfo('Predefined Cell Score'), return; end
                     [~, T] = pkg.e_cellscores(sce.X, sce.g, 0);
@@ -331,7 +264,7 @@ bb = 'No, just show values (heatmap)';
                     posg = [];
                     if methodid ~= 4, gui.gui_waitbar(fw); end
                     %         case 'TF Targets Expression Score 2'
-                    %                 species=gui.i_selectspecies(2);
+                    %                 species=gui.i_selectspecies(2, false, FigureHandle);
                     %                 if isempty(species), return; end
                     %                 [posg,ctselected]=gui.i_selectTFTargetSet(species);
                     %                 [y]=gui.e_cellscore(sce,posg);

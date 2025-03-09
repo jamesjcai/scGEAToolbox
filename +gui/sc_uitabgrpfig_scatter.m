@@ -3,7 +3,7 @@ function sc_uitabgrpfig_scatter(sce, glist, thisx, xlabelv, parentfig)
 
 if nargin < 5, parentfig = []; end
 
-[Xt] = gui.i_transformx(sce.X);
+[Xt] = gui.i_transformx(sce.X, [], [], parentfig);
 if isempty(Xt), return; end
 n = length(glist);
 y=cell(n,1);

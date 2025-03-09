@@ -3,7 +3,7 @@ function i_feaplotarray(sce, tgene, thisc, uselog, parentfig)
 if nargin < 5, parentfig = []; end
 if nargin < 4, uselog = false; end
 
-[Xt] = gui.i_transformx(sce.X);
+[Xt] = gui.i_transformx(sce.X, [], [], parentfig);
 if isempty(Xt), return; end
 
 X = Xt;

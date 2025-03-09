@@ -47,7 +47,8 @@ if strcmp(answerstruced, 'Yes')
     % [ndim] = gui.i_choose2d3d;
     ndim = 3;
     if ~isempty(ndim)        
-        [speciestag] = gui.i_selectspecies(2);
+        FigureHandle=[];
+        [speciestag] = gui.i_selectspecies(2, false, FigureHandle);
         if ~isempty(speciestag)
             if isempty(ndim), return; end
             sce = sce.embedcells('tsne3d', true, true, ndim);

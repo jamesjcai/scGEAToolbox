@@ -53,7 +53,7 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
             uiwait(helpdlg('To see the result, use View -> Cell State (Ctrl + T). Then select "Cell Cycle Phase"',''));
             return;
         case 2
-            speciestag = gui.i_selectspecies(2, false);
+            speciestag = gui.i_selectspecies(2, false, FigureHandle);
             if isempty(speciestag), return; end
             attribtag = "cell_potency";
             y = in_aaa(attribtag);

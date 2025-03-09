@@ -20,7 +20,7 @@ selitems={'MSigDB Molecular Signatures',...
     if tf1~=1, return; end
 
     if indx1==1
-        species = gui.i_selectspecies(2);
+        species = gui.i_selectspecies(2, false, FigureHandle);
     else
         species='human';
     end

@@ -841,7 +841,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             if ~gui.gui_showrefinfo('Single Click Solution'), return; end
         end
         %if isempty(speciestag)
-            speciestag = gui.i_selectspecies(2);
+            speciestag = gui.i_selectspecies(2, false, FigureHandle);
         %end
         if isempty(speciestag), return; end
 
@@ -1463,7 +1463,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             databasetag = "panglaodb";
             if ~gui.gui_showrefinfo('PanglaoDB [PMID:30951143]'), return; end
             %if isempty(speciestag)
-                speciestag = gui.i_selectspecies(2);
+                speciestag = gui.i_selectspecies(2, false, FigureHandle);
             %end
             if isempty(speciestag), return; end
         else
@@ -1654,7 +1654,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         end        
         if ~strcmp(gui.myQuestdlg(FigureHandle, 'This is a one-time analysis. Cell type labels will not be saved. Continue?',''), 'Yes'), return; end
         if isempty(speciestag)
-            speciestag = gui.i_selectspecies(2);
+            speciestag = gui.i_selectspecies(2, false, FigureHandle);
         end
         if isempty(speciestag), return; end
         fw = gui.gui_waitbar;

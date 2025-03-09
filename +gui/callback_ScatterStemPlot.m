@@ -25,7 +25,7 @@ function callback_ScatterStemPlot(src, ~)
                 return;
             end
 
-            [Xt] = gui.i_transformx(sce.X);
+            [Xt] = gui.i_transformx(sce.X, [], [], FigureHandle);
             if isempty(Xt), return; end
 
             % answer = questdlg('Plot all in the same figure?','');

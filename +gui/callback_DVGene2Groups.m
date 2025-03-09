@@ -5,16 +5,16 @@ lcolor1 = lcolors(1,:);
 lcolor2 = lcolors(2,:);
 
 [FigureHandle, sce, isui] = gui.gui_getfigsce(src);
-    if ~gui.gui_showrefinfo('DV Analysis'), return; end
+    if ~gui.gui_showrefinfo('DV Analysis',FigureHandle), return; end
 
     extprogname = 'scgeatool_DVAnalysis';
     preftagname = 'externalwrkpath';
-    [wrkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
+    [wrkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
     if isempty(wrkdir), return; end
 
 
     a=sce.NumGenes;
-    [sce] = gui.i_selectinfogenes(sce);
+    [sce] = gui.i_selectinfogenes(sce, FigureHandle);
     b=sce.NumGenes;
     fprintf('%d genes removed.\n', a-b);
     
@@ -56,9 +56,9 @@ lcolor2 = lcolors(2,:);
     % assignin('base', "cL1", cL1);
     % assignin('base', "cL2", cL2);
 
-            answerx = questdlg('Which HVG detecting method to use?', '', ...
-                'Splinefit Method [PMID:31697351]', ...
-                'Brennecke et al. (2013) [PMID:24056876]', ...
+            answerx = gui.myQuestdlg(FigureHandle, 'Which HVG detecting method to use?', '', ...
+                {'Splinefit Method [PMID:31697351]', ...
+                'Brennecke et al. (2013) [PMID:24056876]'}, ...
                 'Splinefit Method [PMID:31697351]');                
 
             switch answerx
@@ -89,7 +89,7 @@ pause(1);
 in_ExportTable;
 
 if strcmp(answerx, 'Splinefit Method [PMID:31697351]')
-    if strcmp(questdlg('Explore DV expression profile of genes?'), 'Yes')
+    if strcmp(gui.myQuestdlg(FigureHandle, 'Explore DV expression profile of genes?'), 'Yes')
         hx = gui.myFigure;
         hFig = hx.FigureHandle;
         hFig.Position(3) = hFig.Position(3)*1.8;
@@ -160,10 +160,10 @@ end
 
 
     function in_Enrichr(~, ~)
-        answer = questdlg('Enrichr test with top DV genes. Continue?','');
+        answer = gui.myQuestdlg(FigureHandle, 'Enrichr test with top DV genes. Continue?','');
         if ~strcmp(answer,'Yes'), return; end
-        answer = questdlg('Select type of DV genes.','',...
-            'Mixed','Varibility increasing','Varibility decreasing','Mixed');
+        answer = gui.myQuestdlg(FigureHandle, 'Select type of DV genes.','',...
+            {'Mixed','Varibility increasing','Varibility decreasing'},'Mixed');
         switch answer
             case 'Mixed'
                Tin = T;

@@ -13,7 +13,8 @@ if forced || sum(strcmp('cell_potency', obj.list_cell_attributes)) == 0
         % else
         %     return;
         % end
-        speciesid = gui.i_selectspecies(2);
+        FigureHandle=[];
+        speciesid = gui.i_selectspecies(2, false, FigureHandle);
 
     elseif ischar(speciesid)
         [y, idx] = ismember(lower(speciesid), {'human', 'mouse'});

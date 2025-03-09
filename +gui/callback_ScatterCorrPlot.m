@@ -23,7 +23,7 @@ function callback_ScatterCorrPlot(src, ~)
                 helpdlg('No gene selected.', '');
                 return;
             end
-            [Xt] = gui.i_transformx(sce.X);
+            [Xt] = gui.i_transformx(sce.X, [], [], FigureHandle);
             if isempty(Xt), return; end
             n = length(glist);
             y=cell(n,1);

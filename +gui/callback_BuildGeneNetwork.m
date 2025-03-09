@@ -9,9 +9,10 @@ function callback_BuildGeneNetwork(src, ~)
     fprintf("%s\n", glist)
     
 
-    switch questdlg("Select algorithm:",'',"PC Regression","Chaterjee Correlation","PC Regression")
-        case "PC Regression"
-            [Xt] = gui.i_transformx(sce.X, true, 5);
+    switch gui.myQuestdlg(FigureHandle, 'Select algorithm:','',...
+            {'PC Regression','Chaterjee Correlation'},'PC Regression')
+        case 'PC Regression'
+            [Xt] = gui.i_transformx(sce.X, true, 5, FigureHandle);
             if isempty(Xt), return; end
             
             x = Xt(i, :);
@@ -19,8 +20,8 @@ function callback_BuildGeneNetwork(src, ~)
             fw = gui.gui_waitbar;
             A = sc_pcnet(x);
             gui.gui_waitbar(fw);
-        case "Chaterjee Correlation"
-            [Xt] = gui.i_transformx(sce.X, true, 3);
+        case 'Chaterjee Correlation'
+            [Xt] = gui.i_transformx(sce.X, true, 3, FigureHandle);
             if isempty(Xt), return; end
             
             x = Xt(i, :);
@@ -56,7 +57,7 @@ function callback_BuildGeneNetwork(src, ~)
     if cannotview
         try
             G = pkg.i_makegraph(A, glist);
-            if strcmp('Yes', questdlg('Save network?'))
+            if strcmp('Yes', gui.myQuestdlg(FigureHandle, 'Save network?'))
                 [file, path] = uiputfile({'*.mat'; '*.*'}, ...
                     'Save as', 'network_file');                
                 if isequal(file, 0) || isequal(path, 0)

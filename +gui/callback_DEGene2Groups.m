@@ -29,34 +29,7 @@ function callback_DEGene2Groups(src, ~)
     % ----------
     
     methodtag = "ranksum";
-    
-    %{
-    answer = questdlg('Which method?', ...
-        'Select Method', 'Wilcoxon rank-sum test 🐇', ...
-        'DESeq 2 (R required) 🐢', ...
-        'Wilcoxon rank-sum test 🐇');
-    
-    if strcmpi(answer, 'Wilcoxon rank-sum test 🐇')
-        methodtag = "ranksum";
-    elseif strcmpi(answer, 'DESeq 2 (R required) 🐢')
-        methodtag = "deseq2";
-        %         if ~(ismcc || isdeployed)
-        %             if ~exist('nbintest.m', 'file')
-        %                 errordlg('This option requires Bioinformatics toolbox.');
-        %                 return;
-        %             end
-        %         end
-    elseif strcmpi(answer, 'MAST (R required) 🐢')
-        methodtag = "mast";
-        if isempty(pkg.FindRpath)
-            warndlg('This function requires R environment.')
-                return;
-        end
-    else
-        return;
-    end
-    %}
-    
+   
     try
         switch methodtag
             case 'ranksum'

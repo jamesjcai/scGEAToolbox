@@ -42,7 +42,7 @@ function callback_CheckUpdates(src, ~)
                     
                 catch ME
                     errordlg(ME.message,'');
-                    return;   
+                    return;
                 end
                 waitfor(msgbox("Update complete!", "Update Successful"));
                 if strcmp('Yes', questdlg('Restart SCGEATOOL?'))

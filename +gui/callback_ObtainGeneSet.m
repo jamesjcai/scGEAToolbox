@@ -1,5 +1,7 @@
 function [posg, ttxt] = callback_ObtainGeneSet(~, ~)
 
+FigureHandle = [];
+
 selitems = {'Predefined Sets...', ...
     'MSigDB Signatures...', ...
     'PanglaoDB Cell Type Markers...', ...
@@ -29,7 +31,7 @@ switch selecteditem
         posg = posg(strlength(posg) > 0);
 
     case 'MSigDB Signatures...'
-        stag = gui.i_selectspecies(2, true);
+        stag = gui.i_selectspecies(2, true, FigureHandle);
         if isempty(stag), return; end
         try
             [posg, ttxt] = gui.i_selectMSigDBGeneSet(stag);
@@ -39,7 +41,7 @@ switch selecteditem
         end
         if isempty(posg) || isempty(ttxt), return; end
     case 'PanglaoDB Cell Type Markers...'
-        stag = gui.i_selectspecies(2, true);
+        stag = gui.i_selectspecies(2, true, FigureHandle);
         if isempty(stag), return; end
 
         oldpth = pwd;

@@ -138,23 +138,6 @@ end
 if isempty(idxneedplot), return; end
 
 outdir = tempdir;
-%{
-answer=questdlg('Where to save figure files?','','Use Temporary Folder', ...
-    'Select a Folder','Cancel','Use Temporary Folder');
-switch answer
-    case 'Select a Folder'
-        outdir = uigetdir;
-        if ~isfolder(outdir), return; end
-        waitfor(helpdlg(sprintf('Figure files will be saved in %s.',outdir),''));        
-    case 'Use Temporary Folder'
-        outdir = tempdir;
-    case 'Cancel'
-        return;
-    otherwise
-        outdir = tempdir;
-end
-if ~isfolder(outdir), return; end
-%}
 
 Xt=log1p(sc_norm(sce.X));
 images = {};

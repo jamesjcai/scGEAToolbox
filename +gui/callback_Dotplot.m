@@ -35,7 +35,7 @@ function callback_Dotplot(src, ~)
         helpdlg('No gene selected.', '');
         return;
     end
-    [Xt] = gui.i_transformx(sce.X, true, 3);
+    [Xt] = gui.i_transformx(sce.X, true, 3, FigureHandle);
     if isempty(Xt), return; end
     glist = glist(end:-1:1);
     

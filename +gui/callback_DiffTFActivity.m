@@ -1,10 +1,10 @@
 function callback_DiffTFActivity(src, ~)
 
-[~, sce, isui] = gui.gui_getfigsce(src);
+[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
 
 [thisc, clabel] = gui.i_select1class(sce, false);
 if isempty(thisc), return; end
-species = gui.i_selectspecies(2);
+species = gui.i_selectspecies(2, false, FigureHandle);
 if isempty(species), return; end
 
 answer = questdlg('Select algorithm:', '', ...

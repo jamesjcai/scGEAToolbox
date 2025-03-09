@@ -19,7 +19,7 @@ if noanswer, return; end
 gidx = gidx(y);
 glist = glist(y);
 
-%[Xt]=gui.i_transformx(sce.X);
+%[Xt]=gui.i_transformx(sce.X, [], [], parentfig);
 %if isempty(Xt), return; end
 Xt = sc_norm(sce.X);
 Xt = log1p(Xt);

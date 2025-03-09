@@ -1,14 +1,16 @@
 function callback_Brush4Markers(src, event)
 
 
-    [~, sce, isui] = gui.gui_getfigsce(src);
+    [FigureHandle, sce, isui] = gui.gui_getfigsce(src);
 
     if ~gui.i_installed('stats'), return; end
 
-    switch questdlg('Select method:','',"Lasso Regression","Logistic Regression 🐢 ","Lasso Regression")
-        case "Lasso Regression"
+    switch gui.myQuestdlg(FigureHandle, 'Select method:','',...
+            {'Lasso Regression','Logistic Regression 🐢 '}, ...
+             'Lasso Regression')
+        case 'Lasso Regression'
             uselasso=true;
-        case "Logistic Regression 🐢 "
+        case 'Logistic Regression 🐢 '
             uselasso=false;
         otherwise
             return;
@@ -39,7 +41,7 @@ function i_Brush4MarkersLASSO(src, ~, sce, uselasso)
     
     if ~any(ptsSelected)
         % warndlg("No cells are brushed/selected.",'','modal');
-        answer=questdlg('No cells are brushed/selected. You can select cells by a grouping variable. Continue?','');
+        answer=gui.myQuestdlg(FigureHandle, 'No cells are brushed/selected. You can select cells by a grouping variable. Continue?','');
         if ~strcmp(answer,'Yes'), return; end
         [ptsSelected] = gui.i_select1classcells(sce, false);
         if isempty(ptsSelected), return; end

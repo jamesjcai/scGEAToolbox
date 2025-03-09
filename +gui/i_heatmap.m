@@ -5,7 +5,7 @@ if nargin<4, FigureHandle = []; end
 [c, cL, noanswer] = gui.i_reordergroups(thisc);
 if noanswer, return; end
 [~, gidx] = ismember(glist, sce.g);
-[Xt] = gui.i_transformx(sce.X, true, 3);
+[Xt] = gui.i_transformx(sce.X, true, 3, FigureHandle);
 if isempty(Xt), return; end
 
 Y = Xt(gidx, :);
@@ -87,7 +87,7 @@ Z = zeros(length(glist), length(cL));
     function in_changenorm(~, ~)
         [methodid, dim] = gui.i_selnormmethod;
 
-        % [Xt] = gui.i_transformx(sce.X, true, 8);
+        % [Xt] = gui.i_transformx(sce.X, true, 8, FigureHandle);
         % if isempty(Xt), return; end
         %  Yt = Xt(gidx, :);
         %  [~, cidx] = sort(c);

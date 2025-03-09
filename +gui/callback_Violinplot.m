@@ -31,7 +31,7 @@ function callback_Violinplot(src, ~)
                 return;
             end
 
-            [Xt] = gui.i_transformx(sce.X, true, 8);
+            [Xt] = gui.i_transformx(sce.X, true, 8, FigureHandle);
             if isempty(Xt), return; end
 
             if isscalar(glist)

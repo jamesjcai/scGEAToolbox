@@ -14,7 +14,7 @@ t = t(:);
         sce.X = sce.X(idx, :);
     end
 
-    % [Xt] = gui.i_transformx(sce.X);
+    % [Xt] = gui.i_transformx(sce.X, [], [], FigureHandle);
     % if isempty(Xt), return; end
     X = sce.X;
     try

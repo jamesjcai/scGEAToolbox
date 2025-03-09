@@ -292,7 +292,7 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
         case '(c) Remove Ribosomal Genes'
             sce = sce.rmribosomalgenes;
         case '(d) Remove Genes Without Approved Symbols'
-            speciestag = gui.i_selectspecies(2);
+            speciestag = gui.i_selectspecies(2, false, FigureHandle);
             if isempty(speciestag)
                 % requirerefresh = false;
                 return;
@@ -322,7 +322,7 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
             % Filter protein-coding genes with HGNC approved symbols and remove all remaining genes.
             % answer=questdlg('Keep all protein-coding genes with HGNC-approved symbols and remove all remaining genes, such as non-coding genes, pseudogenes, and genes that do not have approved symbols. Continue?','');
         case 'Remove Genes (a)+(b)+(c)+(d)'
-            speciestag = gui.i_selectspecies(2);
+            speciestag = gui.i_selectspecies(2, false, FigureHandle);
             if isempty(speciestag)
                 % requirerefresh = false;
                 return;

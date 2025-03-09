@@ -3,7 +3,7 @@ function callback_ShowHgBGeneExpression(src, ~)
 
 [FigureHandle, sce, isui] = gui.gui_getfigsce(src);
 
-species = gui.i_selectspecies(2);
+species = gui.i_selectspecies(2, false, FigureHandle);
 if isempty(species), return; end
 
 switch species

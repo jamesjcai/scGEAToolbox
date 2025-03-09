@@ -8,7 +8,7 @@ function callback_CalculateGeneStats(src, ~)
 
     % Retrieve single-cell experiment data
     [FigureHandle, sce, isui] = gui.gui_getfigsce(src);
-    Xt = gui.i_transformx(sce.X);
+    Xt = gui.i_transformx(sce.X, [], [], FigureHandle);
     if isempty(Xt), return; end
 
     % Grouping cells based on user input
@@ -67,7 +67,7 @@ if ~strcmp(answer, 'Yes'), return; end
 
 [~, sce] = gui.gui_getfigsce(src);
 
-[Xt] = gui.i_transformx(sce.X);
+[Xt] = gui.i_transformx(sce.X, [], [], FigureHandle);
 if isempty(Xt), return; end
 
 

@@ -1,8 +1,9 @@
-function callback_CloseAllOthers(~, ~)
+function callback_CloseAllOthers(src, ~)
     % Callback function that closes all other MATLAB figures except the current one.
     
     % Get the handle of the currently active figure
-    currentFigureHandle = gcf;
+    % currentFigureHandle = gcf;
+    [currentFigureHandle, sce, isui] = gui.gui_getfigsce(src);
     
     % Find all open figure handles in the workspace
     allFigures = findobj(0, 'type', 'figure');
@@ -12,7 +13,7 @@ function callback_CloseAllOthers(~, ~)
     
     if isCurrentInList && length(allFigures) > 1
         % Ask the user to confirm before closing other figures
-        confirmation = questdlg('Close all other figures?', 'Confirmation');
+        confirmation = gui.myQuestdlg(currentFigureHandle, 'Close all other figures?', 'Confirmation');
         
         % If the user does not confirm, exit the function
         if ~strcmp(confirmation, 'Yes')
@@ -32,11 +33,17 @@ function callback_CloseAllOthers(~, ~)
                 end
             end
         end
-        
-        disp('All other figures have been closed.');
-        
+        if isui
+            uialert(currentFigureHandle, 'All other figures have been closed.','','Icon','info');
+        else
+            disp('All other figures have been closed.');
+        end
     else
-        disp('Either there is only one figure or the current figure is part of another application group. Nothing has been done.');
+                if isui
+            uialert(currentFigureHandle, 'All other figures have been closed.','','Icon','info');
+        else
+            disp('Either there is only one figure or the current figure is part of another application group. Nothing has been done.');
+                end
     end
 end
 

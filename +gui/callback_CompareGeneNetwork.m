@@ -15,7 +15,7 @@ function callback_CompareGeneNetwork(src, ~)
     
     switch questdlg("Select algorithm:",'',"PC Regression","Chaterjee Correlation","PC Regression")
         case "PC Regression"
-            [Xt] = gui.i_transformx(sce.X, true, 5);
+            [Xt] = gui.i_transformx(sce.X, true, 5, FigureHandle);
             if isempty(Xt), return; end
             
             x1 = Xt(i, i1);
@@ -26,7 +26,7 @@ function callback_CompareGeneNetwork(src, ~)
             A2 = sc_pcnet(x2, 3, false, true, false);
             gui.gui_waitbar(fw);
         case "Chaterjee Correlation"
-            [Xt] = gui.i_transformx(sce.X, true, 3);
+            [Xt] = gui.i_transformx(sce.X, true, 3, FigureHandle);
             if isempty(Xt), return; end
             
             x1 = Xt(i, i1);

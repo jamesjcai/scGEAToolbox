@@ -1,5 +1,5 @@
-function [speciestag] = i_selectspecies(n, shorttag)
-
+function [speciestag] = i_selectspecies(n, shorttag, FigureHandle)
+if nargin<3, FigureHandle = []; end
     if nargin < 2, shorttag = false; end
     if nargin < 1, n = 2; end
     
@@ -9,11 +9,11 @@ function [speciestag] = i_selectspecies(n, shorttag)
     preferredspecies = getpref('scgeatoolbox', 'preferredspecies', 'human');
     
     if n == 3
-        answer = questdlg('Which species?', ...
-            'Select Species', 'Human', 'Mouse', 'Zebrafish', preferredspecies);
+        answer = gui.myQuestdlg(FigureHandle, 'Which species?', ...
+            'Select Species',{'Human', 'Mouse', 'Zebrafish'}, preferredspecies);
     elseif n == 2
-        answer = questdlg('Which species?', ...
-            'Select Species', 'Human', 'Mouse', preferredspecies);
+        answer = gui.myQuestdlg(FigureHandle, 'Which species?', ...
+            'Select Species',{'Human', 'Mouse'}, preferredspecies);
     end
     
     switch answer

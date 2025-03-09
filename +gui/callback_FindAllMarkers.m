@@ -94,7 +94,7 @@ function in_MarkerGeneHeatmap(src, ~, sce)
     
     fw = gui.gui_waitbar;
 
-    % speciestag = gui.i_selectspecies(2);
+    % speciestag = gui.i_selectspecies(2, false, FigureHandle);
     % if isempty(speciestag)
     %     requirerefresh = false;
     %     return;
