@@ -83,7 +83,7 @@ try
 catch
 
 end
-gui.i_exporttable(T, true, 'T', outfile);
+gui.i_exporttable(T, true, 'T', outfile,[],[], FigureHandle);
 
 answer = questdlg('Violin plot for top TFs with most variable activity between groups?');
 

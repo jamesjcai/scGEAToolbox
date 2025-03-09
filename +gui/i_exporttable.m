@@ -1,6 +1,7 @@
 function [answer, filename] = i_exporttable(T, needwait, TName, ...
-    deffilename, outtype, sheetname)
+    deffilename, outtype, sheetname, FigureHandle)
 
+if nargin < 7, FigureHandle = []; end
 if nargin < 6 || isempty(sheetname), sheetname = []; end
 if nargin < 5 || isempty(outtype), outtype = []; end
 if nargin < 4 || isempty(deffilename), deffilename = []; end
@@ -12,11 +13,11 @@ if ~isempty(outtype)
     answer = outtype;
 else
     if ~(ismcc || isdeployed)
-        answer = questdlg('Export & save data to:', '', ...
-            'Workspace', 'Text file', 'Excel file', 'Workspace');
+        answer = gui.myQuestdlg(FigureHandle, 'Export & save data to:', '', ...
+            {'Workspace', 'Text file', 'Excel file'}, 'Workspace');
     else
-        answer = questdlg('Export & save data to:', '', ...
-            'Text file', 'Excel file', 'MAT file', 'Text file');
+        answer = gui.myQuestdlg(FigureHandle, 'Export & save data to:', '', ...
+            {'Text file', 'Excel file', 'MAT file'}, 'Text file');
     end
 end
 

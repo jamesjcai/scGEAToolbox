@@ -30,7 +30,7 @@ cL2 = [];
 
 
 if isa(sce, 'SingleCellExperiment')
-    [thisc, ~] = gui.i_select1class(sce);
+    [thisc, ~] = gui.i_select1class(sce,[],[],[],parentfig);
     if isempty(thisc)
         %errordlg('Undefined');
         return;

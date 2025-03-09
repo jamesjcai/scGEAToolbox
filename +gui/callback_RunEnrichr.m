@@ -105,7 +105,7 @@ end
     gui.gui_waitbar(fw);
     
     [~, ~] = gui.i_exporttable(T, true, 'Tenrichrres', ...
-        sprintf('Enrichr_Results_%s', outfiletag));
+        sprintf('Enrichr_Results_%s', outfiletag),[],[],FigureHandle);
 
     options = {'View Table', 'Circos Plot'};
     answer = questdlg('View Enrichr Result Table or Show the Table as a Circos Plot?', ...

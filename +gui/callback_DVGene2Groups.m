@@ -188,9 +188,8 @@ end
     end
 
     function in_ExportTable(~, ~)
-        % gui.i_exporttable(T, true, 'Tsplinefitg', 'SplinefitGTable');
         [~, filesaved] = gui.i_exporttable(T, true, 'Tdvgenelist', ...
-                outfile, [], "All_genes");
+                outfile, [], "All_genes", FigureHandle);
         if ~isempty(filesaved)
             %    waitfor(helpdlg(sprintf('Result has been saved in %s',filesaved),''));
             fprintf('Result has been saved in %s\n', filesaved);

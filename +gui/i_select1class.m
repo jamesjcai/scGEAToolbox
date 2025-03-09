@@ -1,8 +1,10 @@
-function [thisc, clabel] = i_select1class(sce, allowsingle, promptstr, prefersel)
+function [thisc, clabel] = i_select1class(sce, allowsingle, promptstr, ...
+    prefersel, parentfig)
 
+if nargin < 5, parentfig = []; end
 if nargin < 4, prefersel = ''; end
-if nargin < 3, promptstr = 'Select grouping variable:'; end
-if nargin < 2, allowsingle = true; end
+if nargin < 3 || isempty(promptstr), promptstr = 'Select grouping variable:'; end
+if nargin < 2 || isempty(allowsingle), allowsingle = true; end
 thisc = [];
 clabel = '';
 

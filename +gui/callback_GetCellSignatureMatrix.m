@@ -5,7 +5,7 @@ function callback_GetCellSignatureMatrix(src, ~)
 %         ' Continue?'],'');
 %     if ~strcmp(answer,'Yes'), return; end
 
-[~, sce, isui] = gui.gui_getfigsce(src);
+[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
 preselected = [];
 
 [~, T] = pkg.e_cellscores([], [], 0);
@@ -62,7 +62,8 @@ T = array2table(Y, 'VariableNames', ...
     matlab.lang.makeUniqueStrings(c_cellid));
 T.Properties.DimensionNames{1} = 'Cell_ID';
 needwait = true;
-gui.i_exporttable(T, needwait,'Tcellsignmt','CellSignatTable');
+gui.i_exporttable(T, needwait,'Tcellsignmt','CellSignatTable', ...
+    [],[],FigureHandle);
 
         % "Tcellattrib","CellAttribTable"
         % "Tviolindata","ViolinPlotTable"

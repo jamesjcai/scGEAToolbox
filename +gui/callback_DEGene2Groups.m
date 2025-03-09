@@ -8,7 +8,7 @@ function callback_DEGene2Groups(src, ~)
     %if isempty(wkdir), return; end
     extprogname = 'scgeatool_DEAnalysis';
     preftagname = 'externalwrkpath';
-    [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
+    [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
     if isempty(wkdir), return; end    
     
     [i1, i2, cL1, cL2] = gui.i_select2smplgrps(sce, false, FigureHandle);
@@ -17,7 +17,7 @@ function callback_DEGene2Groups(src, ~)
     % --------
     a=sprintf('%s vs. %s',cL1{1}, cL2{1});
     b=sprintf('%s vs. %s',cL2{1}, cL1{1});
-    answer = questdlg('Which vs. which?','',a,b,a);
+    answer = gui.myQuestdlg(FigureHandle, 'Which vs. which?','',{a,b},a);
     switch answer
         case a
         case b
@@ -115,7 +115,7 @@ function callback_DEGene2Groups(src, ~)
     if isatac, T.gene = "chr" + T.gene; end
 
     [filetype, filesaved] = gui.i_exporttable(T, true, ...
-        'Tdegenelist', outfile, [], "All_genes");
+        'Tdegenelist', outfile, [], "All_genes", FigureHandle);
 
     tf = 0;
     if ~(ismcc || isdeployed) && strcmp(filetype, 'Workspace')
@@ -131,7 +131,7 @@ function callback_DEGene2Groups(src, ~)
 
     if ~isempty(filesaved)
         if strcmp(filetype, 'Excel file')
-            answer = questdlg('Save up- and down-regulated genes to seperate sheets?');
+            answer = gui.myQuestdlg(FigureHandle, 'Save up- and down-regulated genes to seperate sheets?');
             if strcmp(answer, 'Yes')
                 [Tup, Tdn] = pkg.e_processDETable(T);
                 % strcmp(extractAfter(filesaved,strlength(filesaved)-4),'xlsx')
@@ -148,14 +148,14 @@ function callback_DEGene2Groups(src, ~)
             end
         elseif strcmp(filetype, 'Text file')
             % strcmp(extractAfter(filesaved,strlength(filesaved)-3),'txt')
-            answer = questdlg('Save up- and down-regulated genes to seperate files?');
+            answer = gui.myQuestdlg(FigureHandle, 'Save up- and down-regulated genes to seperate files?');
             if strcmp(answer, 'Yes')
                 [Tup, Tdn] = pkg.e_processDETable(T);
                 if ~isempty(Tup)
-                    [~, ~] = gui.i_exporttable(Tup, true, 'Tup', 'Upregulated', 'Text file');
+                    [~, ~] = gui.i_exporttable(Tup, true, 'Tup', 'Upregulated', 'Text file','', FigureHandle);
                 end
                 if ~isempty(Tdn)
-                    [~, ~] = gui.i_exporttable(Tdn, true, 'Tdn', 'Downregulated', 'Text file');
+                    [~, ~] = gui.i_exporttable(Tdn, true, 'Tdn', 'Downregulated', 'Text file','', FigureHandle);
                 end
                 tf = 1;
             end

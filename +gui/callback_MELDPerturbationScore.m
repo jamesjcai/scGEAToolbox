@@ -49,7 +49,7 @@ if ~(ismcc || isdeployed)
     values = {score, T};
     export2wsdlg(labels, vars, values);
 else
-    gui.i_exporttable(T, false, 'MELDTable');
+    gui.i_exporttable(T, false, 'MELDTable',[],[],[],FigureHandle);
 end
 
 end

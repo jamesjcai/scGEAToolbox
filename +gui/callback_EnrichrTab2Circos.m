@@ -160,7 +160,7 @@ hx.show(FigureHandle);
 sz = 10;
     function in_savedata(~,~)
         gui.i_exporttable(tab(indx2,:), true, ...
-            'Tcircostabl','CircosTermTable');
+            'Tcircostabl','CircosTermTable',[],[], FigureHandle);
     end
 
     function in_resizefont(~, ~)

@@ -159,6 +159,6 @@ hx.show(FigureHandle);
     end        
 
     function i_saveCrossTable(~, ~)
-        gui.i_exporttable(T, false, 'Tcrosstabul','CrosstabulTable');
+        gui.i_exporttable(T, false, 'Tcrosstabul','CrosstabulTable',[],[], FigureHandle);
     end
 end

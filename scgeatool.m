@@ -14,7 +14,7 @@ import pkg.*
 import gui.*
 
 fx = [];
-if nargin < 1
+if nargin < 1 || isempty(sce)
     try
         fxfun = @gui.sc_splashscreen;
         [fx, v1] = fxfun();
@@ -1342,7 +1342,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
     function in_ExportCellAttribTable(~,~)        
         T = pkg.makeattributestable(sce);
         gui.i_exporttable(T,true, ...
-            "Tcellattrib","CellAttribTable");
+            "Tcellattrib","CellAttribTable",[],[],FigureHandle);
     end
 
     function in_RenameCellTypeBatchID(src, ~, answer)

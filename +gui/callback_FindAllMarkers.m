@@ -1,20 +1,21 @@
 function callback_FindAllMarkers(src, ~)
 
-[~, sce, isui] = gui.gui_getfigsce(src);
+[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
 
     answer = questdlg('Select Method', ...
         '', 'Marker Gene Heatmap', 'Find All Markers', ...
         'Marker Gene Heatmap');
     switch answer
         case 'Find All Markers'
-            in_findAllMarkers(sce);
+            in_findAllMarkers(sce,FigureHandle);
         case 'Marker Gene Heatmap'
             in_MarkerGeneHeatmap(src);
     end
 end
 
 
-function in_findAllMarkers(sce)
+function in_findAllMarkers(sce,FigureHandle)
+
     [thisc, ~] = gui.i_select1class(sce);
     if isempty(thisc), return; end
     if isscalar(unique(thisc))
@@ -25,7 +26,7 @@ function in_findAllMarkers(sce)
     if ~isempty(T)
         needwait = true;
         [answer, filename] = gui.i_exporttable(T, needwait, 'Tallmarkers', ...
-            'AllMarkersTable');
+            'AllMarkersTable',[],[], FigureHandle);
                 % "Tcellattrib","CellAttribTable"
                 % "Tviolindata","ViolinPlotTable"
                 % "Tcrosstabul","CrosstabulTable"
