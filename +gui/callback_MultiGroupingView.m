@@ -72,7 +72,7 @@ function callback_MultiGroupingView(src, ~)
             end
             listitems = listitems(valididx);
             if isempty(listitems)
-                warndlg('No embeding is available.','');
+                gui.myWarndlg(FigureHandle, 'No embeding is available.','');
                 return;
             end
             n = length(listitems);

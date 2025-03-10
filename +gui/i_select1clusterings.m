@@ -1,4 +1,5 @@
-function [thisc, clabel] = i_select1clusterings(sce)
+function [thisc, clabel] = i_select1clusterings(sce, FigureHandle)
+if nargin<2, FigureHandle = []; end
 thisc = [];
 clabel = '';
 
@@ -27,7 +28,7 @@ end
 
 listitems(1) = [];
 if isempty(listitems)
-    helpdlg('No clustering variable is available.', '');
+    gui.myHelpdlg(FigureHandle, 'No clustering variable is available.', '');
     return;
 end
 

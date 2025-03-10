@@ -6,7 +6,7 @@ function callback_CompareGCLBtwCls(src, ~)
 
 %gui.gui_showrefinfo('GCL Analysis [PMID:33139959]');
 
-    [~, sce, isui] = gui.gui_getfigsce(src);
+    [FigureHandle, sce, isui] = gui.gui_getfigsce(src);
         
     if ~gui.gui_showrefinfo('GCL Analysis [PMID:33139959]'), return; end
     answer = questdlg('This function compares GCL of genes to show differences between cell groups. Continue?', '');

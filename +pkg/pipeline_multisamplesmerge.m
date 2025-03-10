@@ -1,4 +1,4 @@
-function [sce] = pipeline_multisamplesmerge(accv, guiwaitbar)
+function [sce] = pipeline_multisamplesmerge(accv, guiwaitbar, FigureHandle)
 if nargin < 2, guiwaitbar = true; end
 % https://www.cell.com/cell/fulltext/S0092-8674(19)31178-X
 % DOI:https://doi.org/10.1016/j.cell.2019.10.028
@@ -41,8 +41,8 @@ end
 
 if guiwaitbar, gui.gui_waitbar_adv(fw); end
 
-answerstruced = questdlg('Process merged SCE data (tSNE, clustering, and cell type annotation)?', ...
-    '', 'Yes', 'Skip', 'Yes');
+answerstruced = gui.myQuestdlg(FigureHandle, 'Process merged SCE data (tSNE, clustering, and cell type annotation)?', ...
+    '', {'Yes', 'Skip'}, 'Yes');
 if strcmp(answerstruced, 'Yes')
     % [ndim] = gui.i_choose2d3d;
     ndim = 3;

@@ -40,13 +40,13 @@ function i_Brush4MarkersLASSO(src, ~, sce, uselasso)
     
     
     if ~any(ptsSelected)
-        % warndlg("No cells are brushed/selected.",'','modal');
+        % gui.myWarndlg(FigureHandle, "No cells are brushed/selected.",'','modal');
         answer=gui.myQuestdlg(FigureHandle, 'No cells are brushed/selected. You can select cells by a grouping variable. Continue?','');
         if ~strcmp(answer,'Yes'), return; end
         [ptsSelected] = gui.i_select1classcells(sce, false);
         if isempty(ptsSelected), return; end
         if all(ptsSelected)
-            warndlg("All cells are in the same group.",'');
+            gui.myWarndlg(FigureHandle, "All cells are in the same group.",'');
             return;
         end
     else
@@ -90,7 +90,7 @@ function i_Brush4MarkersLASSO(src, ~, sce, uselasso)
     
     if ~any(idx)
        if uselasso, gui.gui_waitbar(fw); end
-        warndlg('No marker found','')
+        gui.myWarndlg(FigureHandle, 'No marker found','')
         return;
     end
     

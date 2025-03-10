@@ -23,7 +23,7 @@ if any(contains(sce.c_cell_type_tx, "_{"))
 end
 if removesubscript
 
-    waitfor(helpdlg('Subscript will be removed.'));
+    waitfor(gui.myHelpdlg(FigureHandle, 'Subscript will be removed.'));
     if ~isstring(sce.c_cell_type_tx)
         sce.c_cell_type_tx = string(sce.c_cell_type_tx);
     end

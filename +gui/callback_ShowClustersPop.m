@@ -11,7 +11,7 @@ if isempty(thisc), return; end
 % [c, cL, noanswer] = gui.i_reordergroups(thisc);
 % if noanswer, return; end
 if max(c)==1
-    waitfor(helpdlg(sprintf('Only one type of cells: %s',cL{1}),''))
+    waitfor(gui.myHelpdlg(FigureHandle, sprintf('Only one type of cells: %s',cL{1}),''))
     return;
 end
 

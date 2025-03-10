@@ -1,10 +1,10 @@
 function callback_RunDataMapPlot(src, ~)
 
 if ~isa(src,'SingleCellExperiment')
-    [~, sce, isui] = gui.gui_getfigsce(src);
+    [FigureHandle, sce, isui] = gui.gui_getfigsce(src);
 end
 if size(sce.s, 2) ~= 2
-    warndlg('This function only works for 2D embedding.');
+    gui.myWarndlg(FigureHandle, 'This function only works for 2D embedding.');
     return;
 end
 

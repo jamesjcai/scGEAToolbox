@@ -33,7 +33,7 @@ function callback_DEGene2Groups(src, ~)
     try
         switch methodtag
             case 'ranksum'
-                T = sc_deg(sce.X(:, i1), sce.X(:, i2), sce.g, 1, true);
+                T = sc_deg(sce.X(:, i1), sce.X(:, i2), sce.g, 1, true, FigureHandle);
             case 'deseq2'
                 [ok] = gui.i_confirmscript('DE analysis (DESeq2)', ...
                     'R_DESeq2', 'r');
@@ -119,7 +119,7 @@ function callback_DEGene2Groups(src, ~)
 
     tf = 0;
     if ~(ismcc || isdeployed) && strcmp(filetype, 'Workspace')
-        [Tup, Tdn] = pkg.e_processDETable(T);
+        [Tup, Tdn] = pkg.e_processDETable(T, [], FigureHandle);
         if isempty(Tup) && isempty(Tdn), return; end
         labels = {'Save DE results (selected up-regulated) to variable named:', ...
             'Save DE results (selected down-regulated) to variable named:'};
@@ -133,7 +133,7 @@ function callback_DEGene2Groups(src, ~)
         if strcmp(filetype, 'Excel file')
             answer = gui.myQuestdlg(FigureHandle, 'Save up- and down-regulated genes to seperate sheets?');
             if strcmp(answer, 'Yes')
-                [Tup, Tdn] = pkg.e_processDETable(T);
+                [Tup, Tdn] = pkg.e_processDETable(T,[],FigureHandle);
                 % strcmp(extractAfter(filesaved,strlength(filesaved)-4),'xlsx')
                 if ~isempty(Tup)
                     writetable(Tup, filesaved, "FileType", "spreadsheet", 'Sheet', 'Up-regulated');
@@ -141,7 +141,7 @@ function callback_DEGene2Groups(src, ~)
                 if ~isempty(Tdn)
                     writetable(Tdn, filesaved, "FileType", "spreadsheet", 'Sheet', 'Down-regulated');
                 end
-                waitfor(helpdlg(sprintf('Result has been saved in %s', filesaved), ''));
+                waitfor(gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s', filesaved), ''));
                 %writetable(Tup,fullfile(tempdir,sprintf('%s_up.xlsx',outfile)),'FileType','spreadsheet',);
                 %writetable(Tdn,fullfile(tempdir,sprintf('%s_up.xlsx',outfile)),'FileType','spreadsheet');
                 tf = 1;
@@ -150,7 +150,7 @@ function callback_DEGene2Groups(src, ~)
             % strcmp(extractAfter(filesaved,strlength(filesaved)-3),'txt')
             answer = gui.myQuestdlg(FigureHandle, 'Save up- and down-regulated genes to seperate files?');
             if strcmp(answer, 'Yes')
-                [Tup, Tdn] = pkg.e_processDETable(T);
+                [Tup, Tdn] = pkg.e_processDETable(T,[],FigureHandle);
                 if ~isempty(Tup)
                     [~, ~] = gui.i_exporttable(Tup, true, 'Tup', 'Upregulated', 'Text file','', FigureHandle);
                 end

@@ -4,13 +4,13 @@ function callback_ExploreCellularCrosstalk(src, ~)
 
 if ~gui.gui_showrefinfo('talklr [DOI:10.1101/2020.02.01.930602]'), return; end
 
-    answer = questdlg('This function is based on an unpublished method [DOI:10.1101/2020.02.01.930602]. Continue?');
+    answer = gui.myQuestdlg(FigureHandle, 'This function is based on an unpublished method [DOI:10.1101/2020.02.01.930602]. Continue?');
         if ~strcmp(answer, 'Yes'), return; end
         
         sce = guidata(FigureHandle);
         if isempty(sce.c_cell_type_tx) || numel(unique(sce.c_cell_type_tx)) < 2
             if ~isempty(sce.c_cluster_id) && numel(unique(sce.c_cluster_id)) > 1
-                answer = questdlg(sprintf('Cell type (C_CELL_TYPE_TX) is undefined.\nWould you like to use cluster id (C_CLUSTER_ID) to define cell groups?'));
+                answer = gui.myQuestdlg(FigureHandle, sprintf('Cell type (C_CELL_TYPE_TX) is undefined.\nWould you like to use cluster id (C_CLUSTER_ID) to define cell groups?'));
                 switch answer
                     case 'Yes'
                         sce.c_cell_type_tx = strcat('Goup', string(sce.c_cluster_id));
@@ -18,7 +18,7 @@ if ~gui.gui_showrefinfo('talklr [DOI:10.1101/2020.02.01.930602]'), return; end
                         return;
                 end
             else
-                warndlg('Cell type is undefined (SCE.C_CELL_TYPE_TX is empty)');
+                gui.myWarndlg(FigureHandle, 'Cell type is undefined (SCE.C_CELL_TYPE_TX is empty)');
                 return;
             end
         end
@@ -27,7 +27,7 @@ if ~gui.gui_showrefinfo('talklr [DOI:10.1101/2020.02.01.930602]'), return; end
         [idx] = gui.i_selmultidlg(cL, [], FigureHandle);
         if isempty(idx), return; end
         if numel(idx) < 2
-            warndlg('Need at least 2 cell types');
+            gui.myWarndlg(FigureHandle, 'Need at least 2 cell types');
             return;
         end
         selected = ismember(c, idx);
@@ -45,7 +45,7 @@ if ~gui.gui_showrefinfo('talklr [DOI:10.1101/2020.02.01.930602]'), return; end
 
         n = length(OUT.ligandok);
         if n == 0
-            warndlg('Not detected.');
+            gui.myWarndlg(FigureHandle, 'Not detected.');
         end
 
         labels = {'Save OUT to variable named:'};

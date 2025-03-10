@@ -1,14 +1,14 @@
-function i_resetrngseed(~, ~)
-
+function i_resetrngseed(src, ~)
+[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
     answer = questdlg("Set random seed.","", "Default Seed", "Random Seed", "Set Seed", "Default Seed");
     switch answer
         case 'Default Seed'
             rng("default");
-            helpdlg(sprintf('Random seed set to default (%d).', 0), '');            
+            gui.myHelpdlg(FigureHandle, sprintf('Random seed set to default (%d).', 0), '');            
         case 'Random Seed'
             rng('shuffle');
             seedValue = sum(100*datevec(datetime));  % Generate a seed based on current time
-            helpdlg(sprintf('Random seed (shuffled) set to: %d', seedValue), '');
+            gui.myHelpdlg(FigureHandle, sprintf('Random seed (shuffled) set to: %d', seedValue), '');
         case 'Set Seed'
             seedValue = sum(100*datevec(datetime));  % Generate a seed based on current time
             seedValue = sprintf('%.0f', seedValue);
@@ -18,7 +18,7 @@ function i_resetrngseed(~, ~)
                 errordlg('Please enter a valid numeric seed', 'Invalid Input');
             else
                 rng(seedValue);
-                helpdlg(sprintf('Random seed set to: %d', seedValue), '');
+                gui.myHelpdlg(FigureHandle, sprintf('Random seed set to: %d', seedValue), '');
             end
     end
 

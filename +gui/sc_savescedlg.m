@@ -38,7 +38,7 @@ function [OKPressed] = sc_savescedlg(sce)
                 OKPressed = true;
             end
         % case 'TXT/TSV/CSV File (*.txt)...'
-        %     warndlg('Function is under development.');
+        %     gui.myWarndlg(FigureHandle, 'Function is under development.');
         %     return;
         %     if ~isempty(a)
         %         [file, path] = uiputfile({'*.txt'; '*.*'}, 'Save as', a);

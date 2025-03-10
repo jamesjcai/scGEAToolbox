@@ -9,15 +9,15 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
     
     switch typeid
         case 1
-            answer = questdlg('This function assigns cell cycle phase to each cell, continue?', '');
+            answer = gui.myQuestdlg(FigureHandle, 'This function assigns cell cycle phase to each cell, continue?', '');
         case 2
-            answer = questdlg('This function assigns differentiation potency [PMID:33244588] to each cell, continue?', '');
+            answer = gui.myQuestdlg(FigureHandle, 'This function assigns differentiation potency [PMID:33244588] to each cell, continue?', '');
         case 3
-            answer = questdlg('This function calculates stemness index [PMID:29625051] for each cell, continue?', '');
+            answer = gui.myQuestdlg(FigureHandle, 'This function calculates stemness index [PMID:29625051] for each cell, continue?', '');
         case 4
-            answer = questdlg('This function calculates the expression ratio of dissociation-associated genes [PMID:34020534] for each cell, continue?', '');
+            answer = gui.myQuestdlg(FigureHandle, 'This function calculates the expression ratio of dissociation-associated genes [PMID:34020534] for each cell, continue?', '');
         case 5
-            answer = questdlg('This function predicts tumor (aneuploid) and normal (diploid) cells using copykat [PMID:33462507], continue?', '');
+            answer = gui.myQuestdlg(FigureHandle, 'This function predicts tumor (aneuploid) and normal (diploid) cells using copykat [PMID:33462507], continue?', '');
             extprogname = 'R_copykat';
             preftagname = 'externalwrkpath';
             [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
@@ -31,8 +31,8 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
             if isempty(sce.c_cell_cycle_tx) || all(strcmp(unique(sce.c_cell_cycle_tx), "undetermined"))
                 needestimt = true;
             else
-                answer1 = questdlg('Use existing cell cycle estimation or re-compute new estimation?', ...
-                    '', 'Use existing', 'Re-compute', 'Cancel', 'Use existing');
+                answer1 = gui.myQuestdlg(FigureHandle, 'Use existing cell cycle estimation or re-compute new estimation?', ...
+                    '', {'Use existing', 'Re-compute', 'Cancel'}, 'Use existing');
                 switch answer1
                     case 'Re-compute'
                         needestimt = true;
@@ -46,11 +46,11 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
                 needupdate = true;
                 gui.gui_waitbar(fw);
                 guidata(FigureHandle, sce);
-                uiwait(helpdlg('Cell cycle phase (c_cell_cycle_tx) added.', ''));
+                waitfor(gui.myHelpdlg(FigureHandle, 'Cell cycle phase (c_cell_cycle_tx) added.', ''));
             end
             % y = sce.c_cell_cycle_tx;
             % attribtag = "cell_cycle";
-            uiwait(helpdlg('To see the result, use View -> Cell State (Ctrl + T). Then select "Cell Cycle Phase"',''));
+            waitfor(gui.myHelpdlg(FigureHandle, 'To see the result, use View -> Cell State (Ctrl + T). Then select "Cell Cycle Phase"',''));
             return;
         case 2
             speciestag = gui.i_selectspecies(2, false, FigureHandle);
@@ -73,8 +73,8 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
         if ~ismember(attribtag, sce.list_cell_attributes(1:2:end))
             needestimt = true;
         else
-            answer1 = questdlg(sprintf('Use existing %s estimation or re-compute new estimation?', ...
-                attribtag), '', 'Use existing', 'Re-compute', 'Cancel', 'Use existing');
+            answer1 = gui.myQuestdlg(FigureHandle, sprintf('Use existing %s estimation or re-compute new estimation?', ...
+                attribtag), '', {'Use existing', 'Re-compute', 'Cancel'}, 'Use existing');
             switch answer1
                 case 'Re-compute'
                     needestimt = true;
@@ -116,11 +116,11 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
             gui.gui_waitbar(fw);
             guidata(FigureHandle, sce);
             needupdate = true;
-            uiwait(helpdlg(sprintf(['%s added. To see the result, ' ...
+            waitfor(gui.myHelpdlg(FigureHandle, sprintf(['%s added. To see the result, ' ...
                 'use View -> Cell State (Ctrl + T). Then select "%s"'], ...
                 attribtag, attribtag), ''));
         else
-            uiwait(helpdlg(sprintf(['To see the result, use View -> ' ...
+            waitfor(gui.myHelpdlg(FigureHandle, sprintf(['To see the result, use View -> ' ...
                 'Cell State (Ctrl + T). Then select "%s"'], ...
                 attribtag),''));
         end

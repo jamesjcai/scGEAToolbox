@@ -21,8 +21,8 @@ try
         fclose(fid);
         if ~strcmp(d,Col.pushed_at)
 
-            answer=questdlg('A minor update is now available. Learn how to install it?','', ...
-                'Yes','Remind me later','Skip this update','Skip this update');
+            answer=gui.myQuestdlg(parentfig, 'A minor update is now available. Learn how to install it?','', ...
+                {'Yes','Remind me later','Skip this update'},'Skip this update');
             switch answer
                 case 'Yes'
                     gui.gui_uishowrefinfo('Quick Installation', parentfig);
@@ -36,7 +36,7 @@ try
                 otherwise
             end
         else
-            uiwait(helpdlg('No update is available.',''));
+            waitfor(gui.myHelpdlg(parentfig, 'No update is available.',''));
         end
     end
 catch ME

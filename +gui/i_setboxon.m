@@ -23,7 +23,7 @@ function i_setboxon(~, ~, hFig)
             end
         end
     else
-        helpdlg('No figures available in the current window. The ''box on/off'' command cannot be applied.', '');
+        gui.myHelpdlg(hFig, 'No figures available in the current window. The ''box on/off'' command cannot be applied.', '');
     end
 
 end

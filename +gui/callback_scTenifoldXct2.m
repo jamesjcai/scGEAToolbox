@@ -1,6 +1,6 @@
 function callback_scTenifoldXct2(src, ~)
 
-[~, sce, isui] = gui.gui_getfigsce(src);
+[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
 
 numglist = [1 3000 5000];
 memmlist = [16 32 64 128];
@@ -18,21 +18,21 @@ if isempty(wkdir), return; end
 [~, cL] = grp2idx(sce.c_batch_id);
 [j1, j2, ~, ~] = aaa(cL, sce.c_batch_id);
 if isempty(j1) || isempty(j2)
-    warndlg('All cells have the same BATCH_ID. Two samples are required.','')
+    gui.myWarndlg(FigureHandle, 'All cells have the same BATCH_ID. Two samples are required.','')
     return; 
 end
 sce1 = sce.selectcells(j1);
 sce2 = sce.selectcells(j2);
 
 if sce1.NumCells < 50 || sce2.NumCells < 50
-    if ~strcmp(questdlg('One of samples contains too few cells (n < 50). Continue?'), 'Yes'), return; end
+    if ~strcmp(gui.myQuestdlg(FigureHandle, 'One of samples contains too few cells (n < 50). Continue?'), 'Yes'), return; end
 end
 
 
 [~, cL] = grp2idx(sce.c_cell_type_tx);
 [~, ~, celltype1, celltype2] = aaa(cL, sce.c_cell_type_tx);
 if isempty(celltype1) || isempty(celltype2) 
-    warndlg('All cells are the same type. Two different cell types are required.','')
+    gui.myWarndlg(FigureHandle, 'All cells are the same type. Two different cell types are required.','')
     return; 
 end
 
@@ -43,7 +43,8 @@ a1 = sprintf('%s -> %s', celltype1, celltype2);
 a2 = sprintf('%s -> %s', celltype2, celltype1);
 
 twosided = false;
-[answer] = questdlg('Select direction: Source (ligand) -> Target (receptor)', '', 'Both', a1, a2, 'Both');
+[answer] = gui.myQuestdlg(FigureHandle, 'Select direction: Source (ligand) -> Target (receptor)', ...
+    '', {'Both', a1, a2}, 'Both');
 switch answer
     case 'Both'
         ct1 = celltype1;
@@ -114,26 +115,26 @@ if ~isempty(T)
 
     T(:,[4 5 6 7 11])=[];
     
-    [answer] = questdlg(sprintf('Result has been saved in %s', b), ...
-        '', 'Export result...', 'Locate result file...', ...
+    [answer] = gui.myQuestdlg(FigureHandle, sprintf('Result has been saved in %s', b), ...
+        '', {'Export result...', 'Locate result file...'}, ...
         'Export result...');
     switch answer
         case 'Locate result file...'
             winopen(a);
             pause(2)
-            if strcmp(questdlg('Export result to other format?'), 'Yes')
-                gui.i_exporttable(T, false, 'Ttenifldxt2', 'TenifldXt2Table');
+            if strcmp(gui.myQuestdlg(FigureHandle, 'Export result to other format?'), 'Yes')
+                gui.i_exporttable(T, false, 'Ttenifldxt2', 'TenifldXt2Table',[],[],FigureHandle);
             end
         case 'Export result...'
-            gui.i_exporttable(T, false, 'Ttenifldxt2', 'TenifldXt2Table');
+            gui.i_exporttable(T, false, 'Ttenifldxt2', 'TenifldXt2Table',[],[],FigureHandle);
         otherwise
             winopen(a);
     end
 else
     if ~prepare_input_only
-        helpdlg('No ligand-receptor pairs are identified.', '');
+        gui.myHelpdlg(FigureHandle, 'No ligand-receptor pairs are identified.', '');
     else
-        if strcmp(questdlg('Input files are prepared successfully. Open working folder?',''), 'Yes')
+        if strcmp(gui.myQuestdlg(FigureHandle, 'Input files are prepared successfully. Open working folder?',''), 'Yes')
             winopen(wkdir);
         end
     end    

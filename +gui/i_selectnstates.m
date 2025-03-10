@@ -1,4 +1,5 @@
-function [thisc, clabel] = i_selectnstates(sce, continuousonly, initialsel)
+function [thisc, clabel] = i_selectnstates(sce, continuousonly, ...
+    initialsel)
 
 if nargin < 3, initialsel = []; end
 if nargin < 2, continuousonly = false; end

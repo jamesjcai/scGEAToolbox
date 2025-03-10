@@ -20,14 +20,14 @@ import ten.*
 
 [FigureHandle, sce, isui] = gui.gui_getfigsce(src);
 
-answer = questdlg('Construct network de novo or use existing network in Workspace?', ...
-    'Input Network', 'Construct de novo', 'Use existing', 'Construct de novo');
+answer = gui.myQuestdlg(FigureHandle, 'Construct network de novo or use existing network in Workspace?', ...
+    'Input Network', {'Construct de novo', 'Use existing'}, 'Construct de novo');
 switch answer
     case 'Use existing'
         a = evalin('base', 'whos');
         b = struct2cell(a);
         % if isempty(b)
-        %     helpdlg('No variable in the WorkSpace.', '');
+        %     gui.myHelpdlg(FigureHandle, 'No variable in the WorkSpace.', '');
         % 
         %     return;
         % end
@@ -38,7 +38,7 @@ switch answer
             end
         end
         if isempty(b) || ~any(valididx)
-            [anw] = questdlg('Workspace contains no network varible. Read from .mat file?','');
+            [anw] = gui.myQuestdlg(FigureHandle, 'Workspace contains no network varible. Read from .mat file?','');
             if ~strcmp(anw, 'Yes'), return; end
             [A0] = in_readA0fromfile(sce.NumGenes);
             if isempty(A0) || size(A0, 1) ~= sce.NumGenes || size(A0, 2) ~= sce.NumGenes
@@ -70,7 +70,7 @@ switch answer
             return;
         end
         A0 = [];
-        uiwait(helpdlg("Network will be constructed. Now, select a KO gene (i.e., gene to be knocked out).", ''));
+        waitfor(gui.myHelpdlg(FigureHandle, "Network will be constructed. Now, select a KO gene (i.e., gene to be knocked out).", ''));
     otherwise
         return;
 end
@@ -86,10 +86,10 @@ end
 
 
 if isempty(A0)
-    answer = questdlg(sprintf('Ready to construct network and then knock out %s (gene #%d). Continue?', ...
+    answer = gui.myQuestdlg(FigureHandle, sprintf('Ready to construct network and then knock out %s (gene #%d). Continue?', ...
         sce.g(idx), idx));
 else
-    answer = questdlg(sprintf('Ready to knock out %s (gene #%d) from network (%s). Continue?', ...
+    answer = gui.myQuestdlg(FigureHandle, sprintf('Ready to knock out %s (gene #%d) from network (%s). Continue?', ...
         sce.g(idx), idx, a(indx).name));
 end
 
@@ -118,12 +118,12 @@ else
     if nnz(A0(idx, :) ~= 0) == 0
         s = sprintf('KO gene (%s) has no link or too few links (n<50) with other genes.', ...
             sce.g(idx));
-        warndlg(s);
+        gui.myWarndlg(FigureHandle, s);
         return;
     elseif nnz(A0(idx, :) ~= 0) < 50
         s = sprintf('KO gene (%s) has too few links (n=%d) with other genes. Continue?', ...
             sce.g(idx), sum(A0(idx, :) ~= 0));
-        answer11 = questdlg(s);
+        answer11 = gui.myQuestdlg(FigureHandle, s);
         switch answer11
             case 'Yes'
                 doit = true;

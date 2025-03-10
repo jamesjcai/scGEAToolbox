@@ -1,4 +1,5 @@
-function i_renametitle(~, ~)
+function i_renametitle(src, ~)
+[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
     ax = gca; % Get the current axes
     titleObj = ax.Title; % Access the Title property of the axes
     
@@ -20,5 +21,5 @@ function i_renametitle(~, ~)
         %     %fprintf('No title was set since the input was empty.\n');
         % end
     end
-    helpdlg('Double-click on the title to make change.', '');
+    gui.myHelpdlg(FigureHandle, 'Double-click on the title to make change.', '');
 end

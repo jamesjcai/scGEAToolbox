@@ -4,7 +4,7 @@ function i_savemainfig(src, ~, tag)
     
     axesHandles = findall(FigureHandle, 'Type', 'axes');
     if isempty(axesHandles)    
-        helpdlg('No figures available in the current window. Unable to save figure.', '');
+        gui.myHelpdlg(FigureHandle, 'No figures available in the current window. Unable to save figure.', '');
         return;
     end
     if tag == 1

@@ -11,16 +11,17 @@ function callback_CheckUpdates(src, ~)
     end
     if majneedupdate
         if ~pkg.e_runningasaddons
-            answer = questdlg(sprintf('There is a new version of scGEAToolbox (%s vs. %s). Learn how to upgrade?', ...
+            answer = gui.myQuestdlg(FigureHandle, sprintf('There is a new version of scGEAToolbox (%s vs. %s). Learn how to upgrade?', ...
                 v_new, v_old));
             if strcmp(answer, 'Yes')               
                 gui.gui_uishowrefinfo('Quick Installation', FigureHandle);
             end
         else
-            answer = questdlg(sprintf('There is a new version of scGEAToolbox (%s vs. %s). Upgrade?', ...
+            answer = gui.myQuestdlg(FigureHandle, sprintf('There is a new version of scGEAToolbox (%s vs. %s). Upgrade?', ...
                 v_new, v_old));
             if strcmp(answer, 'Yes')
                 try
+                    gui.gui_waitbar_adv(fw,1/5,'Downloading...');
                     instURL = 'https://api.github.com/repos/jamesjcai/scGEAToolbox/releases/latest';
                     %[~, instName] = fileparts(fileparts(fileparts(instURL)));
                     instRes = webread(instURL);
@@ -33,7 +34,11 @@ function callback_CheckUpdates(src, ~)
                     %toolboxURL = sprintf('https://github.com/jamesjcai/scGEAToolbox/releases/download/v%s/scGEAToolbox.mltbx', v2);
                     %tempZip = fullfile(tempdir, "ToolboxUpdate.mltbx");
                     websave(tempZip, toolboxURL);
+                    gui.gui_waitbar_adv(fw,2/5,'Installing...');
+                    warning off
                     matlab.addons.install(tempZip);
+                    gui.gui_waitbar_adv(fw,3/5,'Post-install processing...');
+                    pause(2)
     
                     versionfile = fullfile(toolboxPath, 'VERSION.mat');
                     if exist(versionfile,'file')
@@ -44,8 +49,11 @@ function callback_CheckUpdates(src, ~)
                     errordlg(ME.message,'');
                     return;
                 end
-                waitfor(msgbox("Update complete!", "Update Successful"));
-                if strcmp('Yes', questdlg('Restart SCGEATOOL?'))
+                warning on
+                gui.gui_waitbar_adv(fw,5/5,'Update complete!');
+                pause(3)
+                gui.gui_waitbar_adv(fw);
+                if strcmp('Yes', gui.myQuestdlg(FigureHandle, 'Restart SCGEATOOL?'))
                     close(FigureHandle);
                     pause(1);
                     run("scgeatool.m");
@@ -64,7 +72,7 @@ function callback_CheckUpdates(src, ~)
             end
 
             if upgradeToolbox
-                if strcmp('Yes', questdlg('Restart SCGEATOOL?'))
+                if strcmp('Yes', gui.myQuestdlg(FigureHandle, 'Restart SCGEATOOL?'))
                     close(FigureHandle);
                     pause(1);
                     run("scgeatool.m");
@@ -73,8 +81,8 @@ function callback_CheckUpdates(src, ~)
             %}
         end
     else
-        waitfor(helpdlg(sprintf('scGEAToolbox (%s) is up to date.', v_old), ''));
-        %answer=questdlg('Check for minor updates?','');
+        waitfor(gui.myHelpdlg(FigureHandle, sprintf('scGEAToolbox (%s) is up to date.', v_old), ''));
+        %answer=gui.myQuestdlg(FigureHandle, 'Check for minor updates?','');
         %if strcmp(answer,'Yes')
         %    pkg.i_minvercheck(FigureHandle);
         %end

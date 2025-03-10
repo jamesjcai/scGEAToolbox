@@ -35,18 +35,18 @@ end
 [thisc, clabel] = gui.i_select1class(sce, false, 'Select grouping variable (cell type):', 'Cell Type');
 if isempty(thisc), return; end
 if ~strcmp(clabel, 'Cell Type')
-    if ~strcmp(questdlg('You selected grouping varible other than ''Cell Type''. Continue?'), 'Yes'), return; end
+    if ~strcmp(gui.myQuestdlg(FigureHandle, 'You selected grouping varible other than ''Cell Type''. Continue?'), 'Yes'), return; end
 end
 
 [c, cL] = grp2idx(thisc);
 [idx] = gui.i_selmultidlg(cL, [], FigureHandle);
 if isempty(idx), return; end
 if numel(idx) < 2
-    warndlg('Need at least 2 cell groups to perform cell-cell interaction analysis.');
+    gui.myWarndlg(FigureHandle, 'Need at least 2 cell groups to perform cell-cell interaction analysis.');
     return;
 end
 if numel(idx) ~= 2
-    warndlg(sprintf('Need only 2 cell groups to perform cell-cell interaction analysis. You selected %d.', ...
+    gui.myWarndlg(FigureHandle, sprintf('Need only 2 cell groups to perform cell-cell interaction analysis. You selected %d.', ...
         numel(idx)));
     return;
 end
@@ -76,7 +76,7 @@ end
 
 %{
 twosided = false;
-answer = questdlg('Select direction: Source (ligand) -> Target (receptor)', '', 'Both', celltype1, celltype2, 'Both');
+answer = gui.myQuestdlg(FigureHandle, 'Select direction: Source (ligand) -> Target (receptor)', '', 'Both', celltype1, celltype2, 'Both');
 switch answer
     case 'Both'
         x1 = x1;
@@ -115,7 +115,8 @@ celltype2 = cL{x2};
 gsorted = natsort(sce.g);
 if isempty(gsorted), return; end
 
-Cko_approach = questdlg('Select CKO approach:','','Block Ligand-Receptor','Complete Gene Knockout','Block Ligand-Receptor');
+Cko_approach = gui.myQuestdlg(FigureHandle, 'Select CKO approach:','',...
+    {'Block Ligand-Receptor','Complete Gene Knockout'},'Block Ligand-Receptor');
 if ~ismember(Cko_approach, {'Block Ligand-Receptor','Complete Gene Knockout'}), return; end
 
 
@@ -162,7 +163,7 @@ switch Cko_approach
         end
         targetg = sce.g(idx);
         
-        answer = questdlg(sprintf('Knockout %s in which cell type?',targetg), '', 'Both', celltype1, celltype2, 'Both');
+        answer = gui.myQuestdlg(FigureHandle, sprintf('Knockout %s in which cell type?',targetg), '', 'Both', celltype1, celltype2, 'Both');
         switch answer
             case 'Both'
                 targettype=sprintf('%s+%s', celltype1, celltype2);
@@ -213,7 +214,7 @@ end
         
         outfile = fullfile(wkdir,"outfile_interaction_changes.csv");
         % if isfile(outfile)
-        %     answerx = questdlg('Overwrite file? Select No to save in a temporary file.');
+        %     answerx = gui.myQuestdlg(FigureHandle, 'Overwrite file? Select No to save in a temporary file.');
         % else
         %     answerx = 'Yes';
         % end
@@ -221,13 +222,13 @@ end
         %     [a, b] = pkg.i_tempdirfile("sctendifoldcko");
         %     writetable(T, b);
         % 
-        %     answer = questdlg(sprintf('Result has been saved in %s', b), ...
+        %     answer = gui.myQuestdlg(FigureHandle, sprintf('Result has been saved in %s', b), ...
         %         '', 'Export result...', 'Locate result file...', 'Export result...');
         %     switch answer
         %         case 'Locate result file...'
         %             winopen(a);
         %             pause(2)
-        %             if strcmp(questdlg('Export result to other format?'), 'Yes')
+        %             if strcmp(gui.myQuestdlg(FigureHandle, 'Export result to other format?'), 'Yes')
         %                 gui.i_exporttable(T, false, 'Ttenifldcko', 'TenifldCkoTable');
         %             end
         %         case 'Export result...'
@@ -237,19 +238,19 @@ end
         %     end
         % else
         writetable(T, outfile);
-        waitfor(helpdlg(sprintf('Result of cell-cell interaction changes has been saved in %s', outfile), ''));
+        waitfor(gui.myHelpdlg(FigureHandle, sprintf('Result of cell-cell interaction changes has been saved in %s', outfile), ''));
         %end
     else
         if ~prepare_input_only
-            helpdlg('No ligand-receptor pairs are identified.', '');
+            gui.myHelpdlg(FigureHandle, 'No ligand-receptor pairs are identified.', '');
         else
-            if strcmp(questdlg('Input files are prepared successfully. Open working folder?',''), 'Yes')
+            if strcmp(gui.myQuestdlg(FigureHandle, 'Input files are prepared successfully. Open working folder?',''), 'Yes')
                 winopen(wkdir);
             end
         end
     end
     
-    if exist("merged_embeds.h5",'file') && strcmp('Yes', questdlg('In addtion to cell-cell interaction changes, scTenifoldCko also gives the result of gene expression changes. Continue?'))
+    if exist("merged_embeds.h5",'file') && strcmp('Yes', gui.myQuestdlg(FigureHandle, 'In addtion to cell-cell interaction changes, scTenifoldCko also gives the result of gene expression changes. Continue?'))
         fn=fullfile(wkdir, 'merged_embeds.h5');
         eb = h5read(fn,'/data')';    
         n = height(eb);
@@ -281,7 +282,7 @@ end
         outfile2 = sprintf('outfile_expression_changes_in_%s.csv', ...
             matlab.lang.makeValidName(celltype2));
         writetable(T, outfile2);
-        waitfor(helpdlg({'Result of gene expression changes has been saved in:', ...
+        waitfor(gui.myHelpdlg(FigureHandle, {'Result of gene expression changes has been saved in:', ...
             sprintf('%s', outfile1), ...
             sprintf('%s', outfile2)},''));
     end

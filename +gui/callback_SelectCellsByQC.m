@@ -59,9 +59,9 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
             end
 
 
-            answer3 = questdlg('Relaxed or Strigent?', ...
-                'Cutoff Settings', 'Relaxed (keep more cells/genes)', ...
-                'Strigent (remove more cells/genes)', ...
+            answer3 = gui.myQuestdlg(FigureHandle, 'Relaxed or Strigent?', ...
+                'Cutoff Settings',{'Relaxed (keep more cells/genes)', ...
+                'Strigent (remove more cells/genes)'}, ...
                 'Strigent (remove more cells/genes)');
             switch answer3
                 case 'Relaxed (keep more cells/genes)'
@@ -195,8 +195,8 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
                 end
             end
         case 'Remove Genes by Name or Naming Pattern' % remove selected genes
-            answer2 = questdlg('Select genes to be removed.','', ...
-                'Manually Select','Select by Patterns','Manually Select');
+            answer2 = gui.myQuestdlg(FigureHandle, 'Select genes to be removed.','', ...
+                {'Manually Select','Select by Patterns'},'Manually Select');
             switch answer2
                 case 'Select by Patterns'
                     prompt = {'Remove Genes With Name Contains ''orf'' or ''-AS'' (C22orf42, C21orf58, etc.)?', ...
@@ -263,11 +263,11 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
                     if ~all(y), error('xxx'); end
                     if isempty(idx), return; end
                     if isscalar(idx) && idx == 0
-                        helpdlg('No gene selected.', '');
+                        gui.myHelpdlg(FigureHandle, 'No gene selected.', '');
                         return;
                     end
-                    answer1 = questdlg('Remove selected or unselected genes?', '', ...
-                        'Selected', 'Unselected', 'Selected');
+                    answer1 = gui.myQuestdlg(FigureHandle, 'Remove selected or unselected genes?', '', ...
+                        {'Selected', 'Unselected'}, 'Selected');
                     if isempty(answer1), return; end
                     if strcmp(answer1, 'Selected')
                         fw = gui.gui_waitbar;
@@ -302,7 +302,7 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
             ApprovedSymbol = string(T.GeneName);
             [idx] = ~ismember(upper(sce.g), upper(ApprovedSymbol));
             if any(idx)
-                answer = questdlg(sprintf('Remove %d genes lacking approved symbols?', sum(idx)));
+                answer = gui.myQuestdlg(FigureHandle, sprintf('Remove %d genes lacking approved symbols?', sum(idx)));
                 switch answer
                     case 'Yes'
                         fw = gui.gui_waitbar;
@@ -314,13 +314,13 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
                         return;
                 end
             else
-                waitfor(helpdlg('No genes found.'));
+                waitfor(gui.myHelpdlg(FigureHandle, 'No genes found.'));
                 % requirerefresh = false;
                 return;
             end
             % Filter protein-coding genes based on HGNC approval status and remove all non-coding genes and pseudogenes.
             % Filter protein-coding genes with HGNC approved symbols and remove all remaining genes.
-            % answer=questdlg('Keep all protein-coding genes with HGNC-approved symbols and remove all remaining genes, such as non-coding genes, pseudogenes, and genes that do not have approved symbols. Continue?','');
+            % answer=gui.myQuestdlg(FigureHandle, 'Keep all protein-coding genes with HGNC-approved symbols and remove all remaining genes, such as non-coding genes, pseudogenes, and genes that do not have approved symbols. Continue?','');
         case 'Remove Genes (a)+(b)+(c)+(d)'
             speciestag = gui.i_selectspecies(2, false, FigureHandle);
             if isempty(speciestag)
@@ -428,7 +428,7 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
             %             zlabel('Contamination rate')
             %             title('Ambient RNA contamination')
             %             pause(1)
-            %             helpdlg('Contamination removed.')
+            %             gui.myHelpdlg(FigureHandle, 'Contamination removed.')
             %             requirerefresh=false;
             %             return;
         otherwise
@@ -442,8 +442,8 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
     if needremove
         if issparse(idx), idx = full(idx); end
         if ~isempty(idx) && any(~idx)
-            answer = questdlg(sprintf('Remove or highlight %d cells?', sum(~idx)), ...
-                '', 'Remove', 'Highlight', 'Cancel', 'Remove');
+            answer = gui.myQuestdlg(FigureHandle, sprintf('Remove or highlight %d cells?', sum(~idx)), ...
+                '', {'Remove', 'Highlight', 'Cancel'}, 'Remove');
             switch answer
                 case 'Remove'
                     sce = sce.removecells(~idx);
@@ -465,24 +465,24 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
     newcn = sce.NumCells;
     newgn = sce.NumGenes;
     if newgn==0
-        helpdlg("All genes are removed. Opertaion is cancelled.",'');
+        gui.myHelpdlg(FigureHandle, "All genes are removed. Opertaion is cancelled.",'');
         % requirerefresh = false;
         return;
     end
     if newcn==0
-        helpdlg("All cells are removed. Opertaion is cancelled.",'');
+        gui.myHelpdlg(FigureHandle, "All cells are removed. Opertaion is cancelled.",'');
         % requirerefresh = false;
         return;
     end
     if oldcn-newcn==0 && oldgn-newgn==0
-        helpdlg("No cells and genes are removed.",'');
+        gui.myHelpdlg(FigureHandle, "No cells and genes are removed.",'');
         % requirerefresh = false;
         return;
     end
     
-    answer = questdlg(sprintf('%d genes will be removed; %d cells will be removed.\n[%d genes x %d cells] => [%d genes x %d cells]', ...
+    answer = gui.myQuestdlg(FigureHandle, sprintf('%d genes will be removed; %d cells will be removed.\n[%d genes x %d cells] => [%d genes x %d cells]', ...
             oldgn-newgn, oldcn-newcn, oldgn, oldcn, newgn, newcn),'', ...
-            'Accept Changes', 'Cancel Changes', 'Accept Changes');
+            {'Accept Changes', 'Cancel Changes'}, 'Accept Changes');
     if ~strcmp(answer, 'Accept Changes')
         % requirerefresh = false;
         return;
@@ -494,7 +494,7 @@ end
 
     % function [whitelist]=i_selectwhitelist_DEL(sce)
     %     whitelist=[];
-    %     answer = questdlg('Genes in whitelist will not be removed. Select whitelist genes?',...
+    %     answer = gui.myQuestdlg(FigureHandle, 'Genes in whitelist will not be removed. Select whitelist genes?',...
     %                 'Whitelist Genes','Yes','No','Cancel','No');
     %     switch answer
     %         case 'Yes'

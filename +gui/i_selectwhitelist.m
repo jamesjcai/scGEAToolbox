@@ -2,8 +2,8 @@ function [whitelist] = i_selectwhitelist(sce, parentfig)
 
 if nargin<2, parentfig=[]; end
 
-answer = questdlg('Genes in whitelist will not be removed. Select whitelist genes?', ...
-    'Whitelist Genes', 'Yes', 'No', 'Cancel', 'Yes');
+answer = gui.myQuestdlg(parentfig, 'Genes in whitelist will not be removed. Select whitelist genes?', ...
+    'Whitelist Genes', {'Yes', 'No', 'Cancel'}, 'Yes');
 switch answer
     case 'Yes'
         %            whitelist=0;
@@ -15,7 +15,7 @@ switch answer
         % whitelist=gsorted(idx);
         [whitelist] = gui.i_selectngenes(sce, [], parentfig);
         if isempty(whitelist)
-            waitfor(helpdlg('No whitelist gene selected. Click OK to continue.', ''));
+            waitfor(gui.myHelpdlg(parentfig, 'No whitelist gene selected. Click OK to continue.', ''));
             return;
         end
         [y] = ismember(whitelist, sce.g);
@@ -23,10 +23,10 @@ switch answer
             whitelist = whitelist(y);
         end
         if ~isempty(whitelist)
-            waitfor(helpdlg(sprintf('%d whitelist gene(s) selected. Click OK to continue.', ...
+            waitfor(gui.myHelpdlg(parentfig, sprintf('%d whitelist gene(s) selected. Click OK to continue.', ...
                 length(whitelist)), ''));
         else
-            waitfor(helpdlg('No whitelist gene selected. Click OK to continue.', ''));
+            waitfor(gui.myHelpdlg(parentfig, 'No whitelist gene selected. Click OK to continue.', ''));
         end
     case 'No'
         whitelist = []; % when isempty, continue..

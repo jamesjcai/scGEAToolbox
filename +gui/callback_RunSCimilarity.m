@@ -59,7 +59,7 @@ function [needupdatesce] = callback_RunSCimilarity(src, ~)
                 return;
         end
     else
-        warndlg("Missing label_ints.csv. Scimilarity model path is invalid.");
+        gui.myWarndlg(FigureHandle, "Missing label_ints.csv. Scimilarity model path is invalid.");
         return;
     end
 

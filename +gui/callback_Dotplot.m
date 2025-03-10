@@ -14,7 +14,7 @@ function callback_Dotplot(src, ~)
     %     case 'Yes'
     %         [newidx] = gui.i_selmultidlg(cL, natsort(cL));
     %         if length(newidx) ~= length(cL)
-    %             warndlg('Please select all group items.', '');
+    %             gui.myWarndlg(FigureHandle, 'Please select all group items.', '');
     %             return;
     %         end
     %         cx = c;
@@ -32,7 +32,7 @@ function callback_Dotplot(src, ~)
     
     [glist] = gui.i_selectngenes(sce, [], FigureHandle);
     if isempty(glist)
-        helpdlg('No gene selected.', '');
+        gui.myHelpdlg(FigureHandle, 'No gene selected.', '');
         return;
     end
     [Xt] = gui.i_transformx(sce.X, true, 3, FigureHandle);

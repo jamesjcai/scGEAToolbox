@@ -15,7 +15,7 @@ if isscalar(i1) || isscalar(i2), return; end
 % --------
 a=sprintf('%s vs. %s',cL1{1}, cL2{1});
 b=sprintf('%s vs. %s',cL2{1}, cL1{1});
-answer = questdlg('Which vs. which?','',a,b,a);
+answer = gui.myQuestdlg(FigureHandle, 'Which vs. which?','',{a,b},a);
 switch answer
     case a
     case b
@@ -111,7 +111,7 @@ T=T(T.p_val_adj<0.01 & T.gsetsize>=5,:);
 
 
     if height(T)==0
-        waitfor(helpdlg('No significant results.',''));
+        waitfor(gui.myHelpdlg(FigureHandle, 'No significant results.',''));
         return;
     else
         outfile = sprintf('%s_vs_%s_DP_results', ...
@@ -125,11 +125,11 @@ T=T(T.p_val_adj<0.01 & T.gsetsize>=5,:);
             % "Tcellsignmt","CellSignatTable"
             % "Tdpgenesres","DPGenesResTable"
         if ~isempty(filesaved)
-           waitfor(helpdlg(sprintf('Result has been saved in %s',filesaved),''));
+           waitfor(gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s',filesaved),''));
         end
     end
 
-answer=questdlg('Select gene sets and plot results?','');
+answer=gui.myQuestdlg(FigureHandle, 'Select gene sets and plot results?','');
 if ~strcmp(answer,'Yes')
     return;
 else
@@ -200,12 +200,12 @@ images = {};
  end
  gui.gui_waitbar_adv(fw);
  if ~success
-     waitfor(helpdlg('All figure files are not saved.',''));
+     waitfor(gui.myHelpdlg(FigureHandle, 'All figure files are not saved.',''));
      winopen(outdir);
  end
 
     
-    % answer = questdlg('Output to PowerPoint?','','Yes','No','Yes');
+    % answer = gui.myQuestdlg(FigureHandle, 'Output to PowerPoint?','','Yes','No','Yes');
     % switch answer
     %     case 'Yes'
     %         needpptx = true;
@@ -219,7 +219,7 @@ images = {};
         gui.i_save2pptx(images);
     % else
         % if success    
-        %     answer = questdlg(sprintf('Figure files have been saved in %s. Open the folder to view files?', outdir),'');
+        %     answer = gui.myQuestdlg(FigureHandle, sprintf('Figure files have been saved in %s. Open the folder to view files?', outdir),'');
         %     if strcmp(answer, 'Yes'), winopen(outdir); end
         % end
     % end

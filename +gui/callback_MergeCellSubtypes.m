@@ -1,4 +1,5 @@
-function [requirerefresh, s] = callback_MergeCellSubtypes(src, ~, sourcetag, allcell)
+function [requirerefresh, s] = callback_MergeCellSubtypes(src, ~, ...
+    sourcetag, allcell)
 if nargin < 4, allcell = false; end
 if nargin < 3, sourcetag = 1; end
 requirerefresh = false;

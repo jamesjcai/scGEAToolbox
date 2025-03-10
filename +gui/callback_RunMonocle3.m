@@ -30,7 +30,7 @@ a = findall(FigureHandle, 'type', 'axes');
 h = findall(a, 'type', 'scatter');
 ptsSelected = logical(h.BrushData.');
 if ~any(ptsSelected)    
-    % helpdlg('Please use the brush in the axes toolbar to select root cell(s).', '');
+    % gui.myHelpdlg(FigureHandle, 'Please use the brush in the axes toolbar to select root cell(s).', '');
     answer = questdlg('Use brush to select root cell(s). Ready?','');
     if ~strcmp(answer, 'Yes'), return; end
     b = brush(FigureHandle);
@@ -44,12 +44,12 @@ if ~any(ptsSelected)
         answer = questdlg('Root cell(s) selected. Continue?','');
         if ~strcmp(answer, 'Yes'), return; end
     else
-        helpdlg('No root cell(s) are selected.','');
+        gui.myHelpdlg(FigureHandle, 'No root cell(s) are selected.','');
         return;
     end
 end
 idx = find(ptsSelected);
-if isempty(idx), warndlg('Root cell(s) is missing.',''); return; end
+if isempty(idx), gui.myWarndlg(FigureHandle, 'Root cell(s) is missing.',''); return; end
 
 % [ndim] = gui.i_choose2d3d;
 ndim = 2;
@@ -116,14 +116,14 @@ end
 guidata(FigureHandle, sce);
 needupdatesce = true;
 
-waitfor(helpdlg('Monocle3 pseudotime T and embedding S have been saved in SCE.',''));
+waitfor(gui.myHelpdlg(FigureHandle, 'Monocle3 pseudotime T and embedding S have been saved in SCE.',''));
 
 % if ~(ismcc || isdeployed)
 %     labels = {'Save pseudotime T to variable named:'};
 %     vars = {'Tmonocleout'};
 %     values = {t_mono3};
 %     msgfig = export2wsdlg(labels, vars, values);
-%     uiwait(msgfig)
+%     waitfor(msgfig)
 % else
 %     gui.i_exporttable(table(t_mono3), true, 'Tmonocleout', ...
 %         'MonocleResTable');

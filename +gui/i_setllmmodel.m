@@ -1,5 +1,6 @@
-function [done] = i_setllmmodel(~, ~)
+function [done] = i_setllmmodel(src, ~)
 
+[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
 done = false;
 preftagname = 'llmodelprovider';
 if ~ispref('scgeatoolbox', preftagname)
@@ -57,11 +58,11 @@ if ok
                     end
                 end
             else
-                helpdlg('Ollama is not running.','');
+                gui.myHelpdlg(FigureHandle, 'Ollama is not running.','');
                 return;
             end
         otherwise
-            warndlg(sprintf('The function supporting %s API is under development.', ...
+            gui.myWarndlg(FigureHandle, sprintf('The function supporting %s API is under development.', ...
                 selectedProvider),'');
             return;
     end
@@ -71,5 +72,5 @@ else
 end
 
 if done
-     waitfor(helpdlg("LLM provider and model are set successfully.", ''));
+     waitfor(gui.myHelpdlg(FigureHandle, "LLM provider and model are set successfully.", ''));
 end

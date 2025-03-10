@@ -1,6 +1,6 @@
 function callback_DEGene2GroupsBatch(src, ~)
 
-[~, sce, isui] = gui.gui_getfigsce(src);
+[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
 if ~gui.gui_showrefinfo('DE in Batch Mode'), return; end
 
     extprogname = 'scgeatool_DEAnalysis_Batch';
@@ -14,7 +14,7 @@ prefixtag = 'DE';
 if ~done, return; end
 
 %[runenrichr] = gui.i_enrichrprep;
-[runenrichr] = questdlg('Run Enrichr with top 250 DE genes? Results will be saved in the output Excel files.','');
+[runenrichr] = gui.myQuestdlg(FigureHandle, 'Run Enrichr with top 250 DE genes? Results will be saved in the output Excel files.','');
 if strcmp(runenrichr,'Cancel'), return; end
 
 [paramset] = gui.i_degparamset;
@@ -37,7 +37,7 @@ for k=1:length(CellTypeList)
     T = [];
     try
         T = sc_deg(sce.X(:, i1&idx), sce.X(:, i2&idx), ...
-                   sce.g, 1, false);
+                   sce.g, 1, false, FigureHandle);
     catch ME
         disp(ME.message);
     end
@@ -60,7 +60,7 @@ for k=1:length(CellTypeList)
         %assignin('base','Description', Description);        
         Tnt = table(Item, Description);
         
-        [Tup, Tdn] = pkg.e_processDETable(T, paramset);
+        [Tup, Tdn] = pkg.e_processDETable(T, paramset, FigureHandle);
         try
             writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All_genes');
             writetable(Tup, filesaved, "FileType", "spreadsheet", 'Sheet', 'Up-regulated');
@@ -105,7 +105,7 @@ for k=1:length(CellTypeList)
 end
 gui.gui_waitbar_adv(fw);
 
-answer=questdlg(sprintf('Result files saved. Open the folder %s?', outdir), '');
+answer=gui.myQuestdlg(FigureHandle, sprintf('Result files saved. Open the folder %s?', outdir), '');
 if strcmp(answer,'Yes'), winopen(outdir); end
 
     function in_writetable(Tmf1, filesaved, shtname)

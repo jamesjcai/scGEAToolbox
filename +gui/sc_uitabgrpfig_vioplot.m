@@ -261,7 +261,7 @@ ccx = true;
         cLx_sorted = cLx(idxx);
         
         if isequal(cLx, cLx_sorted)
-           helpdlg('Groups has already been sorted.', '');
+           gui.myHelpdlg(parentfig, 'Groups has already been sorted.', '');
             %     a = zeros(max(cx), 1);
             %     for ks = 1:max(cx)
             %         a(ks) = max(y{idx}(cx == ks));

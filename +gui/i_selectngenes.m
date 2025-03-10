@@ -54,17 +54,17 @@ switch answer
             a = length(glist) - length(tg);
             if a ~= 0
                 if a == 1
-                    warndlg(sprintf('%d gene is not found.', a));
+                    gui.myWarndlg(parentfig, sprintf('%d gene is not found.', a));
                 elseif a > 1
-                    warndlg(sprintf('%d genes are not found.', a));
+                    gui.myWarndlg(parentfig, sprintf('%d genes are not found.', a));
                 end
             end
             %             if length(glist)<2
-            %                 warndlg('Need at leaset 2 genes');
+            %                 gui.myWarndlg(parentfig, 'Need at leaset 2 genes');
             %                 return;
             %             end
         else
-            %             warndlg('Need at least 2 genes');
+            %             gui.myWarndlg(parentfig, 'Need at least 2 genes');
             return;
         end
     case 'Select'
@@ -80,7 +80,7 @@ switch answer
         if isempty(idx), return; end
         if idx == 0, return; end
         %if length(idx)<2
-        %    warndlg('Need at least 2 genes');
+        %    gui.myWarndlg(parentfig, 'Need at least 2 genes');
         %    return;
         %else
         glist = gsorted(idx);

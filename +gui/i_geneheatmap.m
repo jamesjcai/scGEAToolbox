@@ -4,7 +4,7 @@ if nargin < 4, parentfig = []; end
 if nargin < 3
     [glist] = gui.i_selectngenes(sce);
     if isempty(glist)
-        helpdlg('No gene selected.', '');
+        gui.myHelpdlg(parentfig, 'No gene selected.', '');
         return;
     end
 end

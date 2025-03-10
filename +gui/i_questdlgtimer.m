@@ -393,12 +393,12 @@ set(IconAxes, ...
                 end
 
                 if ishghandle(QuestFig)
-                    % Go into uiwait if the figure handle is still valid.
+                    % Go into waitfor if the figure handle is still valid.
                     % This is mostly the case during regular use.
                     uiwait(QuestFig, TimeOutValue);
                 end
 
-                % Check handle validity again since we may be out of uiwait because the
+                % Check handle validity again since we may be out of waitfor because the
                 % figure was deleted.
                 if ishghandle(QuestFig)
                     if DefaultWasPressed

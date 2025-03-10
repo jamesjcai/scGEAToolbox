@@ -1,6 +1,6 @@
 function callback_VirtualKOGenKI(src, ~)
 
-[~, sce, isui] = gui.gui_getfigsce(src);
+[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
 
 gsorted = natsort(sce.g);
 if isempty(gsorted), return; end
@@ -13,7 +13,7 @@ else
 end
 
 
-answer = questdlg(sprintf('Ready to construct network and then knock out gene #%d (%s). Continue?', ...
+answer = gui.myQuestdlg(FigureHandle, sprintf('Ready to construct network and then knock out gene #%d (%s). Continue?', ...
     idx, sce.g(idx)));
 if ~strcmpi(answer, 'Yes'), return; end
 

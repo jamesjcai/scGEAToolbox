@@ -9,7 +9,7 @@ if isempty(thisc), return; end
 
 [glist] = gui.i_selectngenes(sce, [], FigureHandle);
 if isempty(glist)
-    helpdlg('No gene selected.', '');
+    gui.myHelpdlg(FigureHandle, 'No gene selected.', '');
     return;
 end
 gui.i_heatmap(sce, glist, thisc, FigureHandle);

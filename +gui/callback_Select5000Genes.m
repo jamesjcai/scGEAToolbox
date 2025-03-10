@@ -6,7 +6,7 @@ scenew = [];
 [FigureHandle, sce, isui] = gui.gui_getfigsce(src);
 
 if sce.NumGenes<=500
-    warndlg('Number of cells is too small.');
+    gui.myWarndlg(FigureHandle, 'Number of cells is too small.');
     return;
 end
 
@@ -149,7 +149,7 @@ try
     scenew.X = scenew.X(idx, :);
 catch ME
     gui.gui_waitbar(fw,true);
-    warndlg(ME.message,'');
+    gui.myWarndlg(FigureHandle, ME.message,'');
     return;
 end
 
@@ -157,13 +157,13 @@ try
     scenew = scenew.qcfilterwhitelist(1000, 0.15, 15, 500, []);
 catch ME
     gui.gui_waitbar(fw,true);
-    warndlg(ME.message,'');
+    gui.myWarndlg(FigureHandle, ME.message,'');
     return;
 end
 
 gui.gui_waitbar(fw);
 if scenew.NumCells == 0 || scenew.NumGenes==0
-    warndlg('No cells or genes left. The operation is cancelled','');
+    gui.myWarndlg(FigureHandle, 'No cells or genes left. The operation is cancelled','');
     requirerefresh = false;
 else
     requirerefresh = true;

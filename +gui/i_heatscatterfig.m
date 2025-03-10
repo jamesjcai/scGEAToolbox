@@ -48,7 +48,7 @@ hx.show(parentfig);
         [passed] = i_checkposg;
         if ~passed, return; end
         %         if isempty(posg)
-        %             helpdlg('The gene set is empty. This score may not be associated with any gene set.');
+        %             gui.myHelpdlg(FigureHandle, 'The gene set is empty. This score may not be associated with any gene set.');
         %         else
         idx = matches(sce.g, posg, 'IgnoreCase', true);
         gg = sce.g(idx);
@@ -83,14 +83,14 @@ hx.show(parentfig);
         if any(idx)
             gui.i_dotplot(sce.X, sce.g, c, cL, posg(idx));
         else
-            helpdlg('No genes in this data set.','')
+            gui.myHelpdlg(parentfig, 'No genes in this data set.','')
         end
     end
                 
     function [passed] = in_checkposg
         if isempty(posg)
             passed = false;
-            helpdlg('The gene set is empty. This score may not be associated with any gene set.','');
+            gui.myHelpdlg(parentfig, 'The gene set is empty. This score may not be associated with any gene set.','');
         else
             passed = true;
         end

@@ -14,5 +14,5 @@ if n > 0
             sce.g(idx), [], 16, ax, bx, 'Mt-genes');
     end
 else
-    warndlg('No mt-genes found');
+    gui.myWarndlg(FigureHandle, 'No mt-genes found');
 end

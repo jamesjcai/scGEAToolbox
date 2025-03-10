@@ -9,7 +9,7 @@ function callback_ScatterCorrPlot(src, ~)
     [thisx, xlabelv] = gui.i_select1state(sce, false, false, false, true);
     if isempty(thisx), return; end
     if ~isnumeric(thisx)
-        warndlg('This function works with continuous varibles only.','');
+        gui.myWarndlg(FigureHandle, 'This function works with continuous varibles only.','');
         return;
     end
 
@@ -20,7 +20,7 @@ function callback_ScatterCorrPlot(src, ~)
         case 'Gene Expression'
             [glist] = gui.i_selectngenes(sce, [], FigureHandle);
             if isempty(glist)
-                helpdlg('No gene selected.', '');
+                gui.myHelpdlg(FigureHandle, 'No gene selected.', '');
                 return;
             end
             [Xt] = gui.i_transformx(sce.X, [], [], FigureHandle);
@@ -47,11 +47,11 @@ function callback_ScatterCorrPlot(src, ~)
                 if ~all(a)
                     thisyv = thisyv(a);
                     ylabelv = ylabelv(a);
-                    waitfor(helpdlg('Only continuous variables of cell state will be shown.',''));
+                    waitfor(gui.myHelpdlg(FigureHandle, 'Only continuous variables of cell state will be shown.',''));
                 end
                 gui.i_scattertabs(thisyv, ylabelv, thisx, xlabelv, FigureHandle);
             else
-                waitfor(helpdlg('No valid cell state variables.',''));
+                waitfor(gui.myHelpdlg(FigureHandle, 'No valid cell state variables.',''));
             end            
     end
     

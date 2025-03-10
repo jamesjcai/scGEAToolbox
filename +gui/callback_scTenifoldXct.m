@@ -25,18 +25,18 @@ end
 if isempty(thisc), return; end
 
 if ~strcmp(clabel, 'Cell Type')
-    if ~strcmp(questdlg('You selected grouping varible other than ''Cell Type''. Continue?'), 'Yes'), return; end
+    if ~strcmp(gui.myQuestdlg(FigureHandle, 'You selected grouping varible other than ''Cell Type''. Continue?'), 'Yes'), return; end
 end
 
 [c, cL] = grp2idx(thisc);
 [idx] = gui.i_selmultidlg(cL, [], FigureHandle);
 if isempty(idx), return; end
 if numel(idx) < 2
-    warndlg('Need at least 2 cell groups to perform cell-cell interaction analysis.');
+    gui.myWarndlg(FigureHandle, 'Need at least 2 cell groups to perform cell-cell interaction analysis.');
     return;
 end
 if numel(idx) ~= 2
-    warndlg(sprintf('Need only 2 cell groups to perform cell-cell interaction analysis. You selected %d.', ...
+    gui.myWarndlg(FigureHandle, sprintf('Need only 2 cell groups to perform cell-cell interaction analysis. You selected %d.', ...
         numel(idx)));
     return;
 end
@@ -68,7 +68,8 @@ a1 = sprintf('%s -> %s', cL{i1}, cL{i2});
 a2 = sprintf('%s -> %s', cL{i2}, cL{i1});
 
 twosided = false;
-answer = questdlg('Select direction: Source (ligand) -> Target (receptor)', '', 'Both', a1, a2, 'Both');
+answer = gui.myQuestdlg(FigureHandle, 'Select direction: Source (ligand) -> Target (receptor)', '', ...
+    {'Both', a1, a2}, 'Both');
 switch answer
     case 'Both'
         x1 = i1;
@@ -157,7 +158,7 @@ if ~isempty(T)
     outfile = fullfile(wkdir,"outfile.csv");
 
     if isfile(outfile)
-        answerx = questdlg(sprintf('Overwrite %s? Select No to save in a temporary file.', outfile));
+        answerx = gui.myQuestdlg(FigureHandle, sprintf('Overwrite %s? Select No to save in a temporary file.', outfile));
     else
         answerx = 'Yes';
     end
@@ -165,13 +166,13 @@ if ~isempty(T)
         [a, b] = pkg.i_tempdirfile("sctendifoldxct");
         writetable(T, b);
    
-        answer = questdlg(sprintf('Result has been saved in %s', b), ...
-            '', 'Export result...', 'Locate result file...', 'Export result...');
+        answer = gui.myQuestdlg(FigureHandle, sprintf('Result has been saved in %s', b), ...
+            '', {'Export result...', 'Locate result file...'}, 'Export result...');
         switch answer
             case 'Locate result file...'
                 winopen(a);
                 pause(2)
-                if strcmp(questdlg('Export result to other format?'), 'Yes')
+                if strcmp(gui.myQuestdlg(FigureHandle, 'Export result to other format?'), 'Yes')
                     gui.i_exporttable(T, false, 'Ttenifldxct', 'TenifldXctTable');
                 end
             case 'Export result...'
@@ -181,15 +182,15 @@ if ~isempty(T)
         end
     else
         writetable(T, outfile);
-        if strcmp(questdlg(sprintf('Result has been saved in %s. Open the working folder?', outfile)), 'Yes')
+        if strcmp(gui.myQuestdlg(FigureHandle, sprintf('Result has been saved in %s. Open the working folder?', outfile)), 'Yes')
             winopen(wkdir);
         end
     end
 else
     if ~prepare_input_only
-        helpdlg('No ligand-receptor pairs are identified.', '');
+        gui.myHelpdlg(FigureHandle, 'No ligand-receptor pairs are identified.', '');
     else
-        if strcmp(questdlg('Input files are prepared successfully. Open working folder?',''), 'Yes')
+        if strcmp(gui.myQuestdlg(FigureHandle, 'Input files are prepared successfully. Open working folder?',''), 'Yes')
             winopen(wkdir);
         end
     end

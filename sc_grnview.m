@@ -146,7 +146,7 @@ labels = {'Save adjacency matrix A to variable named:',...
     'Save genelist g to variable named:'};
 vars = {'A','G','g'}; values = {A,G,g};
 msgfig=export2wsdlg(labels,vars,values);
-uiwait(msgfig);
+waitfor(msgfig);
 end
 
 function resizeui(hObject,event)

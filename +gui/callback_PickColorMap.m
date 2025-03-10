@@ -1,6 +1,6 @@
 function callback_PickColorMap(src, ~, showzero)
 
-[~, sce, isui] = gui.gui_getfigsce(src);
+[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
 if nargin < 3, showzero = false; end
 n = numel(unique(sce.c));
 % disp(sprintf('Using %d colors',n));
@@ -55,7 +55,7 @@ fprintf('Set colormap to %s.\n', cn{indx});
 %     case 'Yes'
 %         indx=randi(length(co));
 %         colormap(co{indx});
-%         % mb=helpdlg(sprintf('Using colormap: %s',cn{indx}),'');
+%         % mb=gui.myHelpdlg(FigureHandle, sprintf('Using colormap: %s',cn{indx}),'');
 %
 %     case 'No'
 %         [indx,tf] = listdlg('PromptString',{'Select a colormap'},...

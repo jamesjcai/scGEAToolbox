@@ -1,6 +1,6 @@
 function callback_DEVP2GroupsBatch(src, ~)
 
-    [~, sce, isui] = gui.gui_getfigsce(src);
+    [FigureHandle, sce, isui] = gui.gui_getfigsce(src);
     extprogname = 'scgeatool_DEVPAnalysis_Batch';
     preftagname = 'externalwrkpath';
     [wrkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
@@ -33,7 +33,7 @@ function callback_DEVP2GroupsBatch(src, ~)
         try
             T = sc_deg(sce.X(:, i1&idx), ...
                        sce.X(:, i2&idx), ...
-                       sce.g, 1, false);
+                       sce.g, 1, false, FigureHandle);
         catch ME
             disp(ME.message);
         end
@@ -57,7 +57,7 @@ function callback_DEVP2GroupsBatch(src, ~)
                 Tnt = table(Item);
             end
             
-            [Tup, Tdn] = pkg.e_processDETable(T, paramset);
+            [Tup, Tdn] = pkg.e_processDETable(T, paramset, FigureHandle);
             try
                 writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All_genes');
                 writetable(Tup, filesaved, "FileType", "spreadsheet", 'Sheet', 'Up-regulated');
@@ -262,10 +262,10 @@ function callback_DEVP2GroupsBatch(src, ~)
         gui.gui_waitbar_adv(fw);
     end
     
-    answer = questdlg(sprintf('Result files saved. Open the folder %s?', outdir), '');
+    answer = gui.myQuestdlg(FigureHandle, sprintf('Result files saved. Open the folder %s?', outdir), '');
     if strcmp(answer,'Yes'), winopen(outdir); end
 
-    answer = questdlg('Use LLM to generate enrichment analysis report?', '');
+    answer = gui.myQuestdlg(FigureHandle, 'Use LLM to generate enrichment analysis report?', '');
     if strcmp(answer,'Yes')
         gui.sc_llm_enrichr2word(outdir);
     end

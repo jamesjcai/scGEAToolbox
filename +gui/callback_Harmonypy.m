@@ -7,7 +7,7 @@ done = false;
 
 [FigureHandle, sce, isui] = gui.gui_getfigsce(src);
 if numel(unique(sce.c_batch_id)) < 2
-    warndlg('No batch effect (all cells have the same SCE.C_BATCH_ID)');
+    gui.myWarndlg(FigureHandle, 'No batch effect (all cells have the same SCE.C_BATCH_ID)');
     return;
 end
 
@@ -17,22 +17,6 @@ preftagname = 'externalwrkpath';
 if isempty(wkdir), return; end
 if ~gui.i_setpyenv, return; end
 
-%     x=pyenv;
-%     if isempty(x.Executable)
-%         i_setpyenv
-%     else
-%         answer = questdlg(sprintf('%s',x.Executable), ...
-%             'Python Executable', ...
-%             'Use this','Use another','Cancel','Use this');
-%         switch answer
-%             case 'Use this'
-%             case 'Use another'
-%                 if ~gui.i_setpyenv, return; end
-%             case {'Cancel',''}
-%                 return;
-%             otherwise
-%                 return;
-%         end
 
 
 %{

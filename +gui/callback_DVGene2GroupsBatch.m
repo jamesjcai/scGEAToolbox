@@ -1,6 +1,6 @@
 function callback_DVGene2GroupsBatch(src, ~)
 
-[~, sce, isui] = gui.gui_getfigsce(src);
+[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
 if ~gui.gui_showrefinfo('DV in Batch Mode'), return; end
     
     extprogname = 'scgeatool_DVAnalysis_Batch';
@@ -20,7 +20,7 @@ fprintf('%d genes removed.\n', a-b);
 if ~done, return; end
 
 %[runenrichr] = gui.i_enrichrprep;
-[runenrichr] = questdlg('Run Enrichr with top 250 DV genes? Results will be saved in the output Excel files.','');
+[runenrichr] = gui.myQuestdlg(FigureHandle, 'Run Enrichr with top 250 DV genes? Results will be saved in the output Excel files.','');
 if strcmp(runenrichr,'Cancel'), return; end
 
 fw = gui.gui_waitbar_adv;
@@ -44,10 +44,10 @@ for k=1:length(CellTypeList)
     end
 %{
     if sce1.NumCells < 50 || sce2.NumCells < 50
-        warndlg('One of groups contains too few cells (n < 50). The result may not be reliable.','','modal');
+        gui.myWarndlg(FigureHandle, 'One of groups contains too few cells (n < 50). The result may not be reliable.','','modal');
     end
     if sce1.NumGenes < 50 || sce2.NumGenes < 50
-        warndlg('One of groups contains too few genes (n < 50). The result may not be reliable.','','modal');
+        gui.myWarndlg(FigureHandle, 'One of groups contains too few genes (n < 50). The result may not be reliable.','','modal');
     end
 
     if ~isequal(sce1.g, sce2.g)
@@ -190,7 +190,7 @@ for k=1:length(CellTypeList)
 end
 gui.gui_waitbar_adv(fw);
 
-answer=questdlg(sprintf('Result files saved. Open the folder %s?', outdir), '');
+answer=gui.myQuestdlg(FigureHandle, sprintf('Result files saved. Open the folder %s?', outdir), '');
 if strcmp(answer,'Yes'), winopen(outdir); end
 
     function in_writetable(Tmf1, filesaved, shtname)

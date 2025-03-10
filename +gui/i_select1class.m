@@ -123,7 +123,7 @@ end
     %     return;
     % end
     % if numel(unique(thisc))==1
-    %     warndlg("Cannot compare with an unique group");
+    %     gui.myWarndlg(FigureHandle, "Cannot compare with an unique group");
     %     return;
     % end
 end

@@ -7,8 +7,8 @@ if isempty(thisc), return; end
 species = gui.i_selectspecies(2, false, FigureHandle);
 if isempty(species), return; end
 
-answer = questdlg('Select algorithm:', '', ...
-    'UCell [PMID:34285779]', 'NMF [PMID:33135076]🐢', ...
+answer = gui.myQuestdlg(FigureHandle, 'Select algorithm:', '', ...
+    {'UCell [PMID:34285779]', 'NMF [PMID:33135076]🐢'}, ...
     'UCell [PMID:34285779]');
 if isempty(answer), return; end
 
@@ -43,7 +43,7 @@ cs2 = cs(tfexpressed, :);
 
 outfile = sprintf('DiffTFActivity_%s', matlab.lang.makeValidName(clabel));
 
-answer = questdlg(sprintf('%d out of %d TFs expressed in cells. Keep only %d expressed TFs?', ...
+answer = gui.myQuestdlg(FigureHandle, sprintf('%d out of %d TFs expressed in cells. Keep only %d expressed TFs?', ...
     height(T2), height(T), height(T2)));
 switch answer
     case 'Yes'
@@ -85,7 +85,7 @@ catch
 end
 gui.i_exporttable(T, true, 'T', outfile,[],[], FigureHandle);
 
-answer = questdlg('Violin plot for top TFs with most variable activity between groups?');
+answer = gui.myQuestdlg(FigureHandle, 'Violin plot for top TFs with most variable activity between groups?');
 
     switch answer
         case 'Yes'

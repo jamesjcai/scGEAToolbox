@@ -3,7 +3,7 @@ function callback_scTenifoldNet2lite(src, ~)
 import ten.*
 import pkg.*
 
-[~, sce, isui] = gui.gui_getfigsce(src);
+[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
     
 if ~gui.gui_showrefinfo('scTenifoldNet [PMID:33336197]'), return; end
 

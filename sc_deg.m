@@ -1,4 +1,4 @@
-function [T, Tup, Tdn] = sc_deg(X, Y, genelist, methodid, guiwaitbar)
+function [T, Tup, Tdn] = sc_deg(X, Y, genelist, methodid, guiwaitbar, FigureHandle)
 %SC_DEG - DEG analysis using Mann–Whitney U test or t-test
 %
 % Inputs:
@@ -20,6 +20,7 @@ function [T, Tup, Tdn] = sc_deg(X, Y, genelist, methodid, guiwaitbar)
         genelist string = string(1:size(X, 1))'  % List of genes (optional)
         methodid (1,1) double {mustBeMember(methodid, [1, 2])} = 1  % Method choice (1: Mann–Whitney, 2: t-test)
         guiwaitbar (1,1) logical = false  % Show waitbar (optional)
+        FigureHandle (1,1) matlab.ui.Figure = []
     end
     
     ng = size(X, 1);  % Number of genes
@@ -91,6 +92,6 @@ function [T, Tup, Tdn] = sc_deg(X, Y, genelist, methodid, guiwaitbar)
     % Process up- and down-regulated genes if requested
     if nargout > 1
         [paramset] = gui.i_degparamset(true);
-        [Tup, Tdn] = pkg.e_processDETable(T, paramset);
+        [Tup, Tdn] = pkg.e_processDETable(T, paramset, FigureHandle);
     end
 end

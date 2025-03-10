@@ -17,7 +17,7 @@ end
 %         return;
 %     end
 
-[~, sce, isui] = gui.gui_getfigsce(src);
+[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
 if ~gui.gui_showrefinfo('scTenifoldNet [PMID:33336197]'), return; end
     
 
@@ -40,7 +40,7 @@ switch answer
         %valididx=ismember(b(4,:),'double');
         %a=a(valididx);
         if isempty(b)
-            helpdlg('No variable in the WorkSpace.', '');
+            gui.myHelpdlg(FigureHandle, 'No variable in the WorkSpace.', '');
             return;
         end
         [indx, tf] = listdlg('PromptString', {'Select two networks:'}, ...
@@ -48,7 +48,7 @@ switch answer
             'SelectionMode', 'multiple', ...
             'ListSize', [220, 300]);
         if tf ~= 1, return; end
-        if length(indx) ~= 2, warndlg('Need two networks.');
+        if length(indx) ~= 2, gui.myWarndlg(FigureHandle, 'Need two networks.');
             return;
         end
         A0 = evalin('base', a(indx(1)).name);

@@ -23,10 +23,10 @@ switch sourcetag
         b = struct2cell(a);
         valididx = ismember(b(4, :), 'SingleCellExperiment');
         if sum(valididx) < 1
-            warndlg('No SCE variables in Workspace.');
+            gui.myWarndlg(FigureHandle, 'No SCE variables in Workspace.');
             return;
         elseif sum(valididx) < 2
-            warndlg('Need at least two SCEs in Workspace.');
+            gui.myWarndlg(FigureHandle, 'Need at least two SCEs in Workspace.');
             return;
         end
 
@@ -42,7 +42,7 @@ switch sourcetag
             'ListSize', [220, 300]);
         if tf == 1
             if length(indx) < 2
-                warndlg('Need at least two selected SCEs.');
+                gui.myWarndlg(FigureHandle, 'Need at least two selected SCEs.');
                 return;
             end
 
@@ -73,7 +73,7 @@ switch sourcetag
             return;
         end
     case 2
-        % warndlg("This function is under development.");
+        % gui.myWarndlg(FigureHandle, "This function is under development.");
 
         [fname, pathname] = uigetfile({'*.mat', 'SCE Data Files (*.mat)'; ...
             '*.*', 'All Files (*.*)'}, ...

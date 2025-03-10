@@ -1,4 +1,5 @@
-function [c, cL, noanswer, newidx] = i_reordergroups(thisc, preorderedcL, parentfig)
+function [c, cL, noanswer, newidx] = i_reordergroups(thisc, preorderedcL, ...
+    parentfig)
 
 if nargin < 3, parentfig = []; end
 if nargin < 2, preorderedcL = []; end
@@ -23,7 +24,7 @@ if isempty(answer), return; end
             end
             if length(newidx) ~= length(cL)
                 noanswer = true;
-                warndlg('Please select all items.','','modal');
+                gui.myWarndlg(parentfig, 'Please select all items.','','modal');
                 return;
             end
             cx = c;

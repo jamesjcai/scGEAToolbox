@@ -27,7 +27,7 @@ function callback_Violinplot(src, ~)
             % if noanswer, return; end
             [glist] = gui.i_selectngenes(sce, [], FigureHandle);
             if isempty(glist)
-                helpdlg('No gene selected.', '');
+                gui.myHelpdlg(FigureHandle, 'No gene selected.', '');
                 return;
             end
 
@@ -74,10 +74,10 @@ function callback_Violinplot(src, ~)
                 if ~all(a)
                     thisyv = thisyv(a);
                     ylabelv = ylabelv(a);
-                    waitfor(helpdlg('Only continuous variables of cell state will be shown.',''));
+                    waitfor(gui.myHelpdlg(FigureHandle, 'Only continuous variables of cell state will be shown.',''));
                 end                
             else
-                waitfor(helpdlg('No valid cell state variables. Violinplot cannot be shown.',''));
+                waitfor(gui.myHelpdlg(FigureHandle, 'No valid cell state variables. Violinplot cannot be shown.',''));
             end
         otherwise
             return;

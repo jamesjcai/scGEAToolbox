@@ -37,7 +37,7 @@ if any(idx)
         'Save marker gene map...');
     hx.show(FigureHandle);    
 else
-    warndlg('No Hgb-genes found');
+    gui.myWarndlg(FigureHandle, 'No Hgb-genes found');
 end
 
 

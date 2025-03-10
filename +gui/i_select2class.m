@@ -1,4 +1,5 @@
-function [thisc1, clabel1, thisc2, clabel2] = i_select2class(sce, allowsingle)
+function [thisc1, clabel1, thisc2, clabel2] = i_select2class(sce, ...
+    allowsingle)
 
 if nargin<2, allowsingle = false; end
 

@@ -18,7 +18,7 @@ switch answer1
         b = struct2cell(a);
         valididx = ismember(b(4, :), 'table');
         if sum(valididx) < 1
-            warndlg('No table variables in Workspace.');
+            gui.myWarndlg(FigureHandle, 'No table variables in Workspace.');
             return;
         end
         b = b(:, valididx);
@@ -91,7 +91,7 @@ end
         terms = tab.TermName(indx2);
         genes = tab.OverlappingGenes(indx2);
     else
-        warndlg('Invalid input.');
+        gui.myWarndlg(FigureHandle, 'Invalid input.');
         return;
         %{
         listitems = tab.(tab.Properties.VariableNames{1});

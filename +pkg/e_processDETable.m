@@ -1,5 +1,6 @@
-function [Tup, Tdn] = e_processDETable(T, paramset)
+function [Tup, Tdn] = e_processDETable(T, paramset, FigureHandle)
 
+if nargin<3, FigureHandle = []; end
 Tup=[];
 Tdn=[];
 if nargin < 2, paramset = []; end
@@ -63,8 +64,8 @@ Tdn = T(T.avg_log2FC < 0 & isok, :);
 if ~isempty(sortbywhat) 
     answer = sortbywhat;
 else
-    answer = questdlg('Sort DE genes by adjusted P-value or fold change?','',...
-        'Adjusted P-value','Fold Change','Adjusted P-value');
+    answer = gui.myQuestdlg(FigureHandle, 'Sort DE genes by adjusted P-value or fold change?','',...
+        {'Adjusted P-value','Fold Change'},'Adjusted P-value');
 end
 
 switch answer
@@ -81,5 +82,5 @@ switch answer
         Tdn = sortrows(Tdn, 'abs_log2FC', 'descend');
         disp('DE genes are sorted by absolute fold change (FC).');
     otherwise
-        waitfor(helpdlg('Keep DE gene tables unsorted.'));
+        waitfor(gui.myHelpdlg(FigureHandle, 'Keep DE gene tables unsorted.'));
 end

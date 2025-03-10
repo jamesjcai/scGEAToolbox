@@ -191,7 +191,7 @@ end
         [~, filesaved] = gui.i_exporttable(T, true, 'Tdvgenelist', ...
                 outfile, [], "All_genes", FigureHandle);
         if ~isempty(filesaved)
-            %    waitfor(helpdlg(sprintf('Result has been saved in %s',filesaved),''));
+            %    waitfor(gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s',filesaved),''));
             fprintf('Result has been saved in %s\n', filesaved);
         end        
     end

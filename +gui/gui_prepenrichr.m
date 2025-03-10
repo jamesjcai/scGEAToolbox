@@ -4,10 +4,10 @@ enrichrtype = [];
 outgenelist = [];
 outbackgroundlist = [];
 
-answer = questdlg(questtxt);
+answer = gui.myQuestdlg(FigureHandle, questtxt);
 if ~strcmp(answer, 'Yes'), return; end
 
-answer = questdlg(sprintf('Input list contains %d genes. Run enrichment analysis with all genes?',... 
+answer = gui.myQuestdlg(FigureHandle, sprintf('Input list contains %d genes. Run enrichment analysis with all genes?',... 
             numel(genelist)),'',...
             'Yes, use all genes', 'No, pick top k genes',...
             'Cancel', 'Yes, use all genes');
@@ -22,7 +22,7 @@ else
 end
 
 if ~isempty(backgroundlist)
-    answer = questdlg('Enrichr with background?','');
+    answer = gui.myQuestdlg(FigureHandle, 'Enrichr with background?','');
     if strcmp(answer, 'Yes')
         outbackgroundlist = backgroundlist;
     elseif strcmp(answer, 'No')
@@ -32,8 +32,8 @@ if ~isempty(backgroundlist)
     end
 end
 
-enrichrtype = questdlg("Select the type of Enrichr application.","", ...
-          "Web-based", "API-based", "API-based");
+enrichrtype = gui.myQuestdlg(FigureHandle, 'Select the type of Enrichr application.','', ...
+          {'Web-based', 'API-based'}, 'API-based');
 
 % answer1 = "Web-based";
 % switch answer1 

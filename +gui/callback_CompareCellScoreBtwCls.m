@@ -16,9 +16,9 @@ needupdatesce = false;
 
 aa = 'Yes, compare scores (violinplot)';
 bb = 'No, just show values (heatmap)';
-    answer2 = questdlg(sprintf(['This function will calculates a score for each cell. After the scores are calculated, do you want to ', ...
+    answer2 = gui.myQuestdlg(FigureHandle, sprintf(['This function will calculates a score for each cell. After the scores are calculated, do you want to ', ...
                 'compare score values between different cell groups?']), '', ...
-                bb, aa, bb);
+                {bb, aa}, bb);
             switch answer2
                 case aa
                     showcomparision = true;
@@ -35,8 +35,8 @@ bb = 'No, just show values (heatmap)';
                 [thisc] = gui.i_select1class(sce, allowunique);
                 if isempty(thisc), return; end
                 if isscalar(unique(thisc))
-                    answer = questdlg("All cells are in the same group. No comparison will be made. Continue?", ...
-                        "", 'Yes', 'No', 'Cancel', 'No');
+                    answer = gui.myQuestdlg(FigureHandle, "All cells are in the same group. No comparison will be made. Continue?", ...
+                        "", {'Yes', 'No', 'Cancel'}, 'No');
                     switch answer
                         case 'Yes'
                         otherwise
@@ -98,12 +98,12 @@ bb = 'No, just show values (heatmap)';
                     ttxt = newcstype;
                     [posg] = gui.i_selectngenes(sce.g, [], FigureHandle);
                     if isempty(posg)
-                        helpdlg('No feature genes selected.', '')
+                        gui.myHelpdlg(FigureHandle, 'No feature genes selected.', '')
                         return;
                     end
                     [y] = gui.e_cellscore(sce, posg);
-                    answer = questdlg('Save score to cell attribute list?', ...
-                        '','Yes, save','No, skip','Cancel','Yes, save');
+                    answer = gui.myQuestdlg(FigureHandle, 'Save score to cell attribute list?', ...
+                        '',{'Yes, save','No, skip','Cancel'},'Yes, save');
                     switch answer
                         case 'Yes, save'
                             ttxt = string(ttxt);
@@ -217,7 +217,7 @@ bb = 'No, just show values (heatmap)';
                     % case 'Other Cell Attribute...'
                     %     [y, clabel, ~, newpickclabel] = gui.i_select1state(sce, true);
                     %     if isempty(y)
-                    %         helpdlg('No cell attribute is available.');
+                    %         gui.myHelpdlg(FigureHandle, 'No cell attribute is available.');
                     %         return;
                     %     end
                     %     if ~isempty(newpickclabel)

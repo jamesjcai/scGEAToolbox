@@ -338,7 +338,7 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
                     if ~strcmp(dmanswer, 'Yes'), return; end
                     try
                         fw = gui.gui_waitbar;
-                        [sce] = pkg.pipeline_multisamplesmerge(accv, false);
+                        [sce] = pkg.pipeline_multisamplesmerge(accv, false, FigureHandle);
                         gui.gui_waitbar(fw);
                     catch ME
                         gui.gui_waitbar(fw);
@@ -403,7 +403,7 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
             b = struct2cell(a);
             valididx = ismember(b(4, :), 'SingleCellExperiment');
             if ~valididx
-                waitfor(helpdlg('No SCE in Workspace.', ''));
+                waitfor(gui.myHelpdlg(FigureHandle, 'No SCE in Workspace.', ''));
                 return;
             end            
             a = a(valididx);
@@ -520,7 +520,7 @@ end
             assert((numgenes >= 1) && (numgenes <= 30000));
             assert((numcells >= 1) && (numcells <= 30000));
         catch
-            warndlg('Invalid parameter values.','','modal');
+            waitfor(gui.myWarndlg(FigureHandle, 'Invalid parameter values.',''));
             return;
         end        
         try

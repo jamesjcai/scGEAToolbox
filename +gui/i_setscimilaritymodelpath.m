@@ -1,5 +1,6 @@
-function [selectedDir] = i_setscimilaritymodelpath(~, ~)
+function [selectedDir] = i_setscimilaritymodelpath(~, ~, FigureHandle)
 
+if nargin<3, FigureHandle = []; end
 selectedDir = '';
 preftagname = 'scimilmodelpath';
 if ispref('scgeatoolbox', preftagname)
@@ -11,7 +12,7 @@ if isempty(selectedDir) || ~isfolder(selectedDir)
     if strcmp('Yes', answer)
         [done] = ix_setpath;
         if ~done, return; end
-        waitfor(helpdlg('Scimilarity model path is set successfully.', ''));
+        waitfor(gui.myHelpdlg(FigureHandle, 'Scimilarity model path is set successfully.', ''));
     else
         return;
     end
@@ -27,7 +28,7 @@ else
                 return;
             end
             done = true;
-            waitfor(helpdlg('Scimilarity model path is set successfully.', ''));
+            waitfor(gui.myHelpdlg(FigureHandle, 'Scimilarity model path is set successfully.', ''));
         case {'Cancel', ''}
             selectedDir = '';
             done = false;
@@ -38,7 +39,7 @@ else
 end
 
 if ~done && (isempty(selectedDir) || ~isfolder(selectedDir))
-    warndlg('SCimilarity model path is not set.', '');
+    gui.myWarndlg(FigureHandle, 'SCimilarity model path is not set.', '');
 end
 
 

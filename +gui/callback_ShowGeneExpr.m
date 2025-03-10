@@ -8,7 +8,7 @@ function callback_ShowGeneExpr(src, ~)
         if gui.i_isuifig(FigureHandle)
             uialert(FigureHandle, 'No genes is selected or found.', 'Information', 'Icon', 'info');
         else
-            helpdlg('No genes is selected or found.','');
+            gui.myHelpdlg(FigureHandle, 'No genes is selected or found.','');
         end
         return;
     end

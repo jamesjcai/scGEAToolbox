@@ -10,7 +10,7 @@ if ~ok, return; end
 
 
 if numel(unique(sce.c_batch_id)) < 2
-    warndlg('No batch effect (SCE.C_BATCH_ID is empty)');
+    gui.myWarndlg(FigureHandle, 'No batch effect (SCE.C_BATCH_ID is empty)');
     return;
 end
 

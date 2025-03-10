@@ -3,8 +3,8 @@ function callback_SelectCellsByMarker(src, ~)
 
 [FigureHandle, sce, isui] = gui.gui_getfigsce(src);
 
-answer1 = questdlg('Use single or mulitple markers?', ...
-    'Single/Multiple Markers', 'Single', 'Multiple', 'Cancel', 'Single');
+answer1 = gui.myQuestdlg(FigureHandle, 'Use single or mulitple markers?', ...
+    'Single/Multiple Markers', {'Single', 'Multiple', 'Cancel'}, 'Single');
 switch answer1
     case 'Single'
         do_single;
@@ -21,13 +21,13 @@ end
             if ~all(y), error('Unspecific running error.'); end
             ix = sum(sce.X(i, :) > 0, 1) == length(i);
             if ~any(ix)
-                helpdlg('No cells expressing all selected markers.', '');
+                gui.myHelpdlg(FigureHandle, 'No cells expressing all selected markers.', '');
                 return;
             end
 
-            answer = questdlg('Extract markers+ or markers- cells?', ...
+            answer = gui.myQuestdlg(FigureHandle, 'Extract markers+ or markers- cells?', ...
                 'Positive or Negative', ...
-                'Markers+', 'Markers-', 'Cancel', 'Markers+');
+                {'Markers+', 'Markers-', 'Cancel'}, 'Markers+');
             switch answer
                 case 'Markers+'
                     idx = ix;
@@ -60,8 +60,9 @@ end
             [ax, bx] = view(findall(FigureHandle,'type','axes'));
             tg = gsorted(indx);
             c = sce.X(sce.g == tg, :);
-            answer = questdlg(sprintf('Extract %s+ or %s- cells?', tg, tg), 'Positive or Negative', ...
-                sprintf('%s+', tg), sprintf('%s-', tg), 'Split', sprintf('%s+', tg));
+            answer = gui.myQuestdlg(FigureHandle, sprintf('Extract %s+ or %s- cells?', tg, tg), ...
+                'Positive or Negative', ...
+                {sprintf('%s+', tg), sprintf('%s-', tg), 'Split'}, sprintf('%s+', tg));
             if strcmp(answer, sprintf('%s+', tg))
                 idx = c > 0;
             elseif strcmp(answer, sprintf('%s-', tg))
@@ -76,27 +77,6 @@ end
                 scex.c_batch_id(idx2) = sprintf('%s-', tg);
                 scex.c = scex.c_batch_id;
                 scgeatool(scex);
-                %{
-                scex = selectcells(sce, idx1);
-                fx = scgeatool(scex);
-                fx.Position(3:4) = 0.8 * fx.Position(3:4);
-                movegui(fx, 'center');
-                fx.Position(1) = fx.Position(1) - 250;
-                fx = fx.CurrentAxes;
-                fx.Subtitle.String = sprintf('%s\n%s', fx.Subtitle.String, sprintf('%s+', tg));
-                view(fx, ax, bx);
-
-                answer = questdlg(sprintf('%s Cells extracted. Continue?', sprintf('%s+', tg)), '');
-                if ~strcmp(answer, 'Yes'), return; end
-                scey = selectcells(sce, idx2);
-                fy = scgeatool(scey);
-                fy.Position(3:4) = 0.8 * fy.Position(3:4);
-                movegui(fy, 'center');
-                fy.Position(1) = fy.Position(1) + 250;                
-                fy = fy.CurrentAxes;
-                fy.Subtitle.String = sprintf('%s\n%s', fy.Subtitle.String, sprintf('%s-', tg));
-                view(fy, ax, bx);
-                %}
                 return;                
             elseif strcmp(answer, 'Cancel')
                 return;

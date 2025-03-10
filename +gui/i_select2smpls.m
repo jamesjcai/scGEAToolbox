@@ -38,7 +38,7 @@ else % assume that sce input is thisc
 end
 
 if isscalar(unique(thisc))
-    warndlg("Cannot compare with an unique group");
+    gui.myWarndlg(parentfig, "Cannot compare with an unique group");
     return;
 end
 
@@ -59,7 +59,7 @@ end
 %     case 'Yes'
 %         [newidx] = gui.i_selmultidlg(cLi, natsort(cLi));
 %         if length(newidx) ~= length(cLi)
-%             warndlg('Please select all group items.', '');
+%             gui.myWarndlg(FigureHandle, 'Please select all group items.', '');
 %             return;
 %         end
 %         cx = ci;

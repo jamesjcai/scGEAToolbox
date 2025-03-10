@@ -1,6 +1,6 @@
 function callback_DPGene2GroupsBatch(src, ~)
 
-    [~, sce, isui] = gui.gui_getfigsce(src);
+    [FigureHandle, sce, isui] = gui.gui_getfigsce(src);
     if ~gui.gui_showrefinfo('DP in Batch Mode'), return; end
 
     extprogname = 'scgeatool_DPAnalysis_Batch';
@@ -52,6 +52,6 @@ function callback_DPGene2GroupsBatch(src, ~)
     end
     gui.gui_waitbar_adv(fw);
     
-    answer=questdlg(sprintf('Result files saved. Open the folder %s?', outdir), '');
+    answer=gui.myQuestdlg(FigureHandle, sprintf('Result files saved. Open the folder %s?', outdir), '');
     if strcmp(answer,'Yes'), winopen(outdir); end
 end

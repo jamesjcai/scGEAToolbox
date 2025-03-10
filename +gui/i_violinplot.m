@@ -170,7 +170,7 @@ hx.show(parentfig);
 
     function i_viewgenenames(~, ~)
         if isempty(posg)
-            helpdlg('The gene set is empty. This score may not be associated with any gene set.');
+            gui.myHelpdlg(parentfig, 'The gene set is empty. This score may not be associated with any gene set.');
         else
             %idx=matches(sce.g,posg,'IgnoreCase',true);
             %gg=sce.g(idx);

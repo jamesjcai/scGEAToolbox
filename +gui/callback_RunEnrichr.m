@@ -117,7 +117,7 @@ end
             if height(T) > 1
                 gui.callback_EnrichrTab2Circos(src, [], T);
             else
-                helpdlg('Too few enriched terms to generate circos plot.','');                
+                gui.myHelpdlg(FigureHandle, 'Too few enriched terms to generate circos plot.','');                
             end
         otherwise
 

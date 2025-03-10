@@ -19,7 +19,7 @@ function in_findAllMarkers(sce,FigureHandle)
     [thisc, ~] = gui.i_select1class(sce);
     if isempty(thisc), return; end
     if isscalar(unique(thisc))
-        warndlg("All cells are in the same group.",'');
+        gui.myWarndlg(FigureHandle, "All cells are in the same group.",'');
         return;
     end    
     [T] = pkg.e_findallmarkers(sce.X, sce.g, thisc, [], [], [], true);
@@ -35,10 +35,10 @@ function in_findAllMarkers(sce,FigureHandle)
                 % "Tallmarkers","AllMarkersTable"
         if ~isempty(answer)
             disp(filename);
-            helpdlg(sprintf('All Markers Table saved.'), '');
+            gui.myHelpdlg(FigureHandle, sprintf('All Markers Table saved.'), '');
         end
     else
-        helpdlg('No results.', '');
+        gui.myHelpdlg(FigureHandle, 'No results.', '');
     end
 end
 
@@ -61,7 +61,7 @@ function in_MarkerGeneHeatmap(src, ~, sce)
             sce = sce.qcfilter;
             fprintf('Size of filtered matrix: %d genes x %d cells\n', sce.NumGenes, sce.NumCells);
         else
-            uiwait(helpdlg("Not enough marker genes (n < 2000). Use all genes to search for markers.",""));
+            waitfor(gui.myHelpdlg(FigureHandle, "Not enough marker genes (n < 2000). Use all genes to search for markers.",""));
         end
     elseif strcmp(answer, 'No')
         disp('Consider all genes for marker gene search.');
@@ -72,7 +72,7 @@ function in_MarkerGeneHeatmap(src, ~, sce)
     [thisc, ~] = gui.i_select1class(sce);
     if isempty(thisc), return; end
     if isscalar(unique(thisc))
-        warndlg("All cells are in the same group.",'');
+        gui.myWarndlg(FigureHandle, "All cells are in the same group.",'');
         return;
     end
     % [c, cL, noanswer] = gui.i_reordergroups(thisc);

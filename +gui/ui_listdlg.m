@@ -24,7 +24,6 @@ function [indx, tf] = ui_listdlg(options, Title, parentFig)
     % Create Cancel button
     btnCancel = uibutton(d, 'Text', 'Cancel', 'Position', [160 20 80 30], ...
         'ButtonPushedFcn', @(btn,event) (close(d)));
-
     % Wait for user response
     uiwait(d);
     
