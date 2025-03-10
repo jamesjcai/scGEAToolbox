@@ -1,4 +1,6 @@
-function [sce] = i_readmtx
+function [sce] = i_readmtx(FigureHandle)
+
+if nargin<1, FigureHandle = []; end
 
 sce = [];
 
@@ -22,7 +24,7 @@ if ~exist(featurestxtfile, 'file')
     featurestxtfile = fullfile(pathname, sprintf('%sgenes.txt', prefixstr));
 end
 if ~exist(featurestxtfile, 'file')
-    answer = questdlg('Pick features.tsv file?');
+    answer = gui.myQuestdlg(FigureHandle, 'Pick features.tsv file?');
     % error('Cannot find features.tsv')
     switch answer
         case 'Yes'
@@ -40,7 +42,7 @@ if ~exist(featurestxtfile, 'file')
             return;
     end
 else
-    answer = questdlg(sprintf('Use %s?', featurestxtfile), ...
+    answer = gui.myQuestdlg(FigureHandle, sprintf('Use %s?', featurestxtfile), ...
         'Pick features/genes.tsv file');
     switch answer
         case 'Yes'
@@ -59,7 +61,7 @@ if ~exist(barcodestxtfile, 'file')
     barcodestxtfile = fullfile(pathname, sprintf('%sbarcodes.txt', prefixstr));
 end
 if ~exist(barcodestxtfile, 'file')
-    answer = questdlg('Pick barcodes.tsv file (optional)?');
+    answer = gui.myQuestdlg(FigureHandle, 'Pick barcodes.tsv file (optional)?');
     % error('Cannot find features.tsv')
     switch answer
         case 'Yes'
@@ -82,7 +84,7 @@ if ~exist(barcodestxtfile, 'file')
     end
 
 else
-    answer = questdlg(sprintf('Use %s (optional)?', barcodestxtfile), ...
+    answer = gui.myQuestdlg(FigureHandle, sprintf('Use %s (optional)?', barcodestxtfile), ...
         'Pick barcodes.tsv file');
     switch answer
         case 'Yes'
@@ -96,7 +98,7 @@ else
     end
 end
 
-answer = questdlg(sprintf('Matrix file: %s\nFeature file: %s\nBarcode file (optional): %s\nContinne?', ...
+answer = gui.myQuestdlg(FigureHandle, sprintf('Matrix file: %s\nFeature file: %s\nBarcode file (optional): %s\nContinne?', ...
     matrixmtxfile, featurestxtfile, barcodestxtfile), 'Confirm File Selection');
 if ~strcmp(answer, 'Yes'), return; end
 fw = gui.gui_waitbar;

@@ -1,4 +1,6 @@
-function [sce] = gui_readh5adinfo(filename, sce)
+function [sce] = gui_readh5adinfo(filename, sce, FigureHandle)
+
+if nargin<3, FigureHandle = []; end
 
 xobs = [];
 xvar = [];
@@ -19,7 +21,7 @@ if ~isempty(xobs)
         obsv(k) = string(xobs.Datasets(k).Name);
     end
 
-    switch questdlg('Select Cell Type?')
+    switch gui.myQuestdlg(FigureHandle, 'Select Cell Type?')
         case 'Yes'
             [indx, tf] = listdlg('PromptString', ...
                 {'Select dataset of cell type:'}, ...
@@ -31,7 +33,7 @@ if ~isempty(xobs)
             end
     end
 
-    switch questdlg('Select Batch ID?')
+    switch gui.myQuestdlg(FigureHandle, 'Select Batch ID?')
         case 'Yes'
             [indx, tf] = listdlg('PromptString', ...
                 {'Select dataset of batch id:'}, ...

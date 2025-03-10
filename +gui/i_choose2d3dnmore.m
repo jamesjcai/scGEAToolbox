@@ -1,7 +1,9 @@
-function [ndim] = i_choose2d3dnmore
+function [ndim] = i_choose2d3dnmore(FigureHandle)
+
+if nargin<1, FigureHandle = []; end
 ndim = [];
-answer = questdlg('3D or 2D?', '', ...
-    '3D', '2D', 'Other...', '3D');
+answer = gui.myQuestdlg(FigureHandle, '3D or 2D?', '', ...
+    {'3D', '2D', 'Other...'}, '3D');
 
 
 switch answer

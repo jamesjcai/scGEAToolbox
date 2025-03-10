@@ -1,8 +1,12 @@
-function [done] = i_setrenv(~, ~)
+function [done] = i_setrenv(src, ~)
 
 %see also: I_SETPYENV, I_SETEXTWD
 [done] = false;
-
+if nargin<1
+    FigureHandle = [];
+else
+    [FigureHandle, sce, isui] = gui.gui_getfigsce(src);
+end
 preftagname = 'rexecutablepath';
 
 if ismac
@@ -38,7 +42,7 @@ end
 
 %
 if ~ispref('scgeatoolbox', preftagname)
-    answer = questdlg('R environment has not been set up. Locate R executable Rscript.exe?');
+    answer = gui.myQuestdlg(FigureHandle, 'R environment has not been set up. Locate R executable Rscript.exe?');
     if ~strcmp(answer, 'Yes'), return; end
     if ispc
         rpathdefult = pkg.FindRpath;
@@ -56,9 +60,9 @@ else
         rmpref('scgeatoolbox', preftagname);
         done = false;
     else
-        answer = questdlg(sprintf('%s', s), ...
+        answer = gui.myQuestdlg(FigureHandle, sprintf('%s', s), ...
             'Path to R Executable', ...
-            'Use this', 'Use another', 'Cancel', 'Use this');
+            {'Use this', 'Use another', 'Cancel'}, 'Use this');
         switch answer
             case 'Use this'
                 done = true;
@@ -75,7 +79,7 @@ if done
         Rexec = fullfile(Rpath, 'Rscript');
     end
     if exist(Rexec, 'file')
-        helpdlg("R environment is set successfully.", '');
+        gui.myHelpdlg(FigureHandle, "R environment is set successfully.", '');
     else
         if ispc
             errordlg("R environment is set with error.", '');

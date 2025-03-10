@@ -71,9 +71,9 @@ else
     end
 end
 
-    answer = questdlg('What is the data type of attribute values?', ...
+    answer = gui.myQuestdlg(FigureHandle, 'What is the data type of attribute values?', ...
 	    'Data Type', ...
-	    'String','Numeric','Cancel','String');
+	    {'String','Numeric','Cancel'},'String');
     switch answer
         case 'String'
             if addnew

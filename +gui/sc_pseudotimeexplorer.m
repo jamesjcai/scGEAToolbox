@@ -1,7 +1,7 @@
 function sc_pseudotimeexplorer(X, genelist, s, varargin)
 %load cleandata.mat
 %s=s_tsne;
-
+parentfig = []; 
 p = inputParser;
 addRequired(p, 'X', @isnumeric);
 addRequired(p, 'genelist', @isstring);
@@ -83,7 +83,7 @@ hx.show();
                 %                  psexplorer_timeid),t);
                 uiwait(msgfig)
             end
-            answer = questdlg('View expression of selected genes', ...
+            answer = gui.myQuestdlg(parentfig, 'View expression of selected genes', ...
                 'Pseudotime Function', ...
                 'Yes', 'No', 'Yes');
             switch answer

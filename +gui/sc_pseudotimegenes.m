@@ -26,8 +26,8 @@ t = t(:);
 
     
 
-    answer = questdlg('Select method:','','Spearman Correlation', ...
-        'Distance Correlation','Cancel','Spearman Correlation');
+    answer = gui.myQuestdlg(parentfig, 'Select method:','',{'Spearman Correlation', ...
+        'Distance Correlation','Cancel'},'Spearman Correlation');
     switch answer
         case 'Spearman Correlation'
             fw = gui.gui_waitbar;

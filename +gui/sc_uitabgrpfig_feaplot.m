@@ -15,6 +15,7 @@ pth = fullfile(pw1, '..', 'resources', 'Misc', 'myTemplate.pptx');
 
 
 hx=gui.myFigure;
+hFig = hx.FigureHandle;
 % hFig.Position(3) = hFig.Position(3) * 1.8;
 
 n = length(fealabels);
@@ -96,7 +97,7 @@ hx.show(parentfig);
     end
 
     function i_savemainfig(~,~)
-        answer = questdlg('Export to PowerPoint?');
+        answer = gui.myQuestdlg(hFig, 'Export to PowerPoint?');
         if ~strcmp(answer,'Yes'), return; end
 
         fw=gui.gui_waitbar_adv;

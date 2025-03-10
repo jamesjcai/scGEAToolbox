@@ -1,8 +1,11 @@
-function [k,usehvgs] = i_gethvgnum(sce)
+function [k,usehvgs] = i_gethvgnum(sce, FigureHandle)
+
+if nargin<2, FigureHandle = []; end
+
 k=[];
 usehvgs=false;
-    answer = questdlg(sprintf('Use highly variable genes (HVGs, n=2000) or use all genes (n=%d)?', sce.NumGenes), ...
-        '', '2000 HVGs 🐇', 'All Genes 🐢', 'Other...', '2000 HVGs 🐇');
+    answer = gui.myQuestdlg(FigureHandle, sprintf('Use highly variable genes (HVGs, n=2000) or use all genes (n=%d)?', sce.NumGenes), ...
+        '', {'2000 HVGs 🐇', 'All Genes 🐢', 'Other...'}, '2000 HVGs 🐇');
     switch answer
         case 'All Genes 🐢'
             usehvgs = false;

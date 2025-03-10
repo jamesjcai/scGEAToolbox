@@ -65,8 +65,8 @@ end
  if n == 2
      answer = 'Two Samples';
  elseif n > 2
-     [answer] = questdlg('Select two samples or two sample groups?', '', ...
-             'Two Samples', 'Two Sample Groups', 'Cancel', 'Two Samples');
+     [answer] = gui.myQuestdlg(parentfig, 'Select two samples or two sample groups?', '', ...
+             {'Two Samples', 'Two Sample Groups', 'Cancel'}, 'Two Samples');
  end
  if isempty(answer), return; end
  switch answer
@@ -92,7 +92,7 @@ end
             return;
         end
      case 'Two Sample Groups'
-         answer = questdlg('Select samples in group 1?','');
+         answer = gui.myQuestdlg(parentfig, 'Select samples in group 1?','');
          if ~strcmp(answer, 'Yes'), return; end
          [newidx1] = gui.i_selmultidlg(cLi, [], parentfig);
          % if length(newidx1) == length(cLi)
@@ -112,7 +112,7 @@ end
                 return;
             end
 
-         answer = questdlg('Select samples in group 2?','');
+         answer = gui.myQuestdlg(parentfig, 'Select samples in group 2?','');
          if ~strcmp(answer, 'Yes'), return; end
          [newidx2] = gui.i_selmultidlg(cLi, [], parentfig);
          for k = 1:length(newidx2)

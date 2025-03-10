@@ -270,20 +270,7 @@ end
         gui.i_enrichtest(tgenes, g, numel(tgenes));
     end
         
-        % answer = (@(x){questdlg('Which analysis?', '', ...
-        %     'Enrichr', 'GOrilla', 'Enrichr+GOrilla', 'Enrichr')}, 15);
-        % if isempty(answer), return; end
-        % switch answer
-        %     case 'Enrichr'
-        %         run.web_Enrichr(tgenes, length(tgenes));
-        %     case 'GOrilla'
-        %         run.web_GOrilla(tgenes);
-        %     case 'Enrichr+GOrilla'
-        %         run.web_Enrichr(tgenes, length(tgenes));
-        %         run.web_GOrilla(tgenes);
-        %     otherwise
-        %         return;
-        % end
+       
     
    
     function txt = in_myupdatefcn3(src, event_obj, g)  

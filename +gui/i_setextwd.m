@@ -15,7 +15,7 @@ end
 preftagname = 'externalwrkpath';
 
 if ~ispref('scgeatoolbox', preftagname)
-    answer = questdlg('External working directory has not been set up. Locate a folder?');
+    answer = gui.myQuestdlg(FigureHandle, 'External working directory has not been set up. Locate a folder?');
     if ~strcmp(answer, 'Yes'), return; end
     if ispc
         [~,b]=system("echo %username%");
@@ -27,7 +27,7 @@ if ~ispref('scgeatoolbox', preftagname)
     % setpref('scgeatoolbox','rexecutablepath',s);
 else
     s = getpref('scgeatoolbox', preftagname);
-    answer = questdlg(sprintf('%s', s), ...
+    answer = gui.myQuestdlg(FigureHandle, sprintf('%s', s), ...
         'External Working Directory', ...
         'Use this', 'Use another', 'Cancel', 'Use this');
     switch answer

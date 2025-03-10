@@ -1,4 +1,6 @@
-function y = i_installed(name)
+function y = i_installed(name, FigureHandle)
+
+if nargin<2, FigureHandle = []; end
 
 y = false;
 switch name
@@ -6,9 +8,9 @@ switch name
     if (ispc && (~license('test','statistics_toolbox') || isempty(which('grp2idx.m')))) || ...
        (~ispc && ~any(strcmp('Statistics and Machine Learning Toolbox', {ver().Name})))
         
-        waitfor(warndlg('SCGEATOOL requires Statistics and Machine Learning Toolbox.', ...
-            'Missing Dependencies'));
-        if strcmp(questdlg('Learn how to install Statistics and Machine Learning Toolbox?'),'Yes')
+        gui.myWarndlg(FigureHandle, 'SCGEATOOL requires Statistics and Machine Learning Toolbox.', ...
+            'Missing Dependencies');
+        if strcmp(gui.myQuestdlg(FigureHandle, 'Learn how to install Statistics and Machine Learning Toolbox?'),'Yes')
             web('https://www.mathworks.com/help/matlab/matlab_env/get-add-ons.html');
             web('https://www.mathworks.com/videos/add-on-explorer-106745.html');
         end

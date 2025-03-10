@@ -1,4 +1,5 @@
-function [hFig] = i_dotplot(X, g, c, cL, tgene, uselog, ttxt, parentfig)
+function [hFig] = i_dotplot(X, g, c, cL, tgene, uselog, ...
+    ttxt, parentfig)
 
 if nargin < 8, parentfig = []; end
 if nargin < 7, ttxt = []; end
@@ -139,8 +140,8 @@ hx.show(parentfig);
 
 
     function i_savetable(~, ~)
-        answer = questdlg('Export & save data to:', '', ...
-            'Workspace', 'TXT/CSV file', 'Excel file', 'Workspace');
+        answer = gui.myQuestdlg(parentfig, 'Export & save data to:', '', ...
+            {'Workspace', 'TXT/CSV file', 'Excel file'}, 'Workspace');
         if ~isempty(answer)
             GroupList = repmat(string(cL), length(tgene), 1);
             GeneList = [];

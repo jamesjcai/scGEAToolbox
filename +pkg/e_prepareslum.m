@@ -1,8 +1,10 @@
-function e_prepareslum(sce)
+function e_prepareslum(sce, FigureHandle)
+
+if nargin<2, FigureHandle = []; end
 
 if nargin<1, sce=[]; end
 
-answer=questdlg('Select a folder to save the outupt files. Continue?','');
+answer=gui.myQuestdlg(FigureHandle, 'Select a folder to save the outupt files. Continue?');
 if ~strcmp(answer,'Yes'), return; end
 
 outdir = uigetdir;

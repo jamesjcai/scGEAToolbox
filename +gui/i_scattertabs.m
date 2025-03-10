@@ -103,7 +103,7 @@ hx.show(parentfig);
     end
 
     function i_savemainfig(~,~)
-        answer = questdlg('Export to PowerPoint?');
+        answer = gui.myQuestdlg(parentfig, 'Export to PowerPoint?');
         if ~strcmp(answer,'Yes'), return; end
 
         fw=gui.gui_waitbar_adv;
@@ -146,7 +146,7 @@ hx.show(parentfig);
     end
 
     function in_PickPlotMarker(~, ~)
-        %answer = questdlg('Box on?','');
+        %answer = gui.myQuestdlg(parentfig, 'Box on?','');
         %ybox = false;
         %if isempty(answer), return; end
         %if strcmp(answer,'Yes'), ybox = true; end
@@ -222,7 +222,7 @@ hx.show(parentfig);
             end
         end
         [Y_fit] = pkg.e_locfit(Y, thisx(:));
-        answer = questdlg('ZScore transform data?','');
+        answer = gui.myQuestdlg(parentfig, 'ZScore transform data?','');
         switch answer
             case 'Yes'
                 zs = true;

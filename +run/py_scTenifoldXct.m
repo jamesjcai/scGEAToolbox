@@ -1,7 +1,9 @@
 function [T] = py_scTenifoldXct(sce, celltype1, celltype2, twosided, ...
-                                wkdir, isdebug, prepare_input_only)
+                                wkdir, isdebug, ...
+                                prepare_input_only, parentfig)
 
 T = [];
+if nargin < 8, parentfig = []; end
 if nargin < 7, prepare_input_only = false; end
 if nargin < 6, isdebug = true; end
 if nargin < 5, wkdir = []; end
@@ -91,6 +93,7 @@ disp('Input gene_names written.');
 
 useexist = false;
 if exist("pcnet_Source.mat", 'file')
+    
     answer = gui.i_questdlgtimer(10, ...
         'pcnet_Source.mat existing. Use it?','', 'Yes, use pcnet_Source', ...
         'No, reconstruct pcnet_Source', ...
@@ -119,6 +122,8 @@ end
 
 useexist = false;
 if exist("pcnet_Target.mat", 'file')
+    %answer = gui.myQuestdlg(parentfig, 'pcnet\_Target.mat existing. Use it?','',{'Yes, use pcnet_Target', 'No, reconstruct pcnet_Target', ...
+    %    'Cancel'}, 'Yes, use pcnet_Target')
     answer = gui.i_questdlgtimer(10, ...
         'pcnet\_Target.mat existing. Use it?','', 'Yes, use pcnet_Target', 'No, reconstruct pcnet_Target', ...
         'Cancel', 'Yes, use pcnet_Target');

@@ -1,4 +1,6 @@
-function [OKPressed] = sc_savescedlg(sce)
+function [OKPressed] = sc_savescedlg(sce, parentfig)
+
+if nargin<2, parentfig = []; end
 
     OKPressed = false;
 
@@ -55,7 +57,7 @@ function [OKPressed] = sc_savescedlg(sce)
         %         OKPressed = true;
         %     end            
         case 'Seurat/Rds File (*.rds)...'
-            answer = questdlg('This function requires R. Continue?','');
+            answer = gui.myQuestdlg(parentfig, 'This function requires R. Continue?','');
             if ~strcmp(answer,'Yes'), return; end            
             if ~isempty(a)
                 [file, path] = uiputfile({'*.rds'; '*.*'}, 'Save as', a);
@@ -75,7 +77,7 @@ function [OKPressed] = sc_savescedlg(sce)
                 OKPressed = true;
             end
         case 'AnnData/H5ad File (*.h5ad)...'
-            answer = questdlg('This function requires Python. Continue?','');
+            answer = gui.myQuestdlg(parentfig, 'This function requires Python. Continue?','');
             if ~strcmp(answer,'Yes'), return; end
             if ~isempty(a)
                 [file, path] = uiputfile({'*.h5ad'; '*.*'}, 'Save as', a);

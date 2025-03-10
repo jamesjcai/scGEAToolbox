@@ -94,7 +94,7 @@ ccx = true;
         
         title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));
         if length(tab)>1
-            answer = questdlg('Apply to other tabs?','');
+            answer = gui.myQuestdlg(parentfig, 'Apply to other tabs?','');
             if ~strcmp(answer,'Yes'), return; end
             i_updatebarplot(idx);
         end
@@ -135,7 +135,7 @@ ccx = true;
     % end
 
     % function i_savemainfig(~,~)
-    %     answer = questdlg('Export to PowerPoint?');
+    %     answer = gui.myQuestdlg(parentfig, 'Export to PowerPoint?');
     %     if ~strcmp(answer,'Yes'), return; end
     % 
     %     fw=gui.gui_waitbar_adv;
@@ -196,7 +196,7 @@ ccx = true;
         tabgp.SelectedTab=tab{idx};
         drawnow;
         if length(tab)>1
-            answer = questdlg('Apply to other tabs?','');
+            answer = gui.myQuestdlg(parentfig, 'Apply to other tabs?','');
             if ~strcmp(answer,'Yes'), return; end
             i_updatealltab(idx);
         end
@@ -237,7 +237,7 @@ ccx = true;
             b.XTickLabel = cLorder;                
         end
         if length(tab)>1
-            answer = questdlg('Apply to other tabs?','');
+            answer = gui.myQuestdlg(parentfig, 'Apply to other tabs?','');
             if ~strcmp(answer,'Yes'), return; end
             i_updatesamplesizelabel(idx);
         end
@@ -299,7 +299,7 @@ ccx = true;
         title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));  
 
         if length(tab)>1
-            answer = questdlg('Apply to other tabs?','');
+            answer = gui.myQuestdlg(parentfig, 'Apply to other tabs?','');
             if ~strcmp(answer,'Yes'), return; end
             cLorder = cLorderx;
             i_updatealltab(idx);
@@ -322,7 +322,7 @@ ccx = true;
         title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));
 
         if length(tab)>1        
-            answer = questdlg('Apply to other tabs?','');
+            answer = gui.myQuestdlg(parentfig, 'Apply to other tabs?','');
             if ~strcmp(answer,'Yes'), return; end
     
             for ks=1:n

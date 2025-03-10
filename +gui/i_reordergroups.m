@@ -12,8 +12,8 @@ if isscalar(cL)
     return;
 end
 
-[answer] = questdlg('Manually order groups?', '', ...
-    'Yes', 'No', 'Cancel', 'No');
+[answer] = gui.myQuestdlg(parentfig, 'Manually order groups?', '', ...
+    {'Yes', 'No', 'Cancel'}, 'No');
 if isempty(answer), return; end
     switch answer
         case 'Yes'

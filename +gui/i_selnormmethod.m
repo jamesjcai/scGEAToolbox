@@ -1,10 +1,11 @@
-function [methodid, dim] = i_selnormmethod
+function [methodid, dim] = i_selnormmethod(FigureHandle)
+if nargin<1, FigureHandle = []; end
 
 methodid = []; 
 dim =[];
 if nargout > 1
-    answer = questdlg('Specify the dimension to operate on:', ...
-        '', 'Row-wise', 'Column-wise', 'Row-wise');
+    answer = gui.myQuestdlg(FigureHandle, 'Specify the dimension to operate on:', ...
+        '', {'Row-wise', 'Column-wise'}, 'Row-wise');
     switch answer
         case 'Column-wise'
             dim = 1;

@@ -105,10 +105,10 @@ oldG1 = [];
 
     function SaveAdj(~, ~)
         if ~(ismcc || isdeployed)
-            answer = questdlg('Export & save network to:', '', ...
-                'Workspace', 'File', 'Workspace');
+            answer = gui.myQuestdlg(parentfig, 'Export & save network to:', '', ...
+                {'Workspace', 'File'}, 'Workspace');
         else
-            if strcmp('Yes', questdlg('Export & save network to file?'))
+            if strcmp('Yes', gui.myQuestdlg(parentfig, 'Export & save network to file?'))
                 answer = 'File';
             else
                 return;
@@ -222,7 +222,7 @@ oldG1 = [];
             else
                 cutoff = str2double(list(indx));
             end
-            answer = questdlg("Keep original network?","");
+            answer = gui.myQuestdlg(parentfig, "Keep original network?","");
             switch answer
                 case 'Yes'
             [p1] = i_replotg(p1, G1, h1, cutoff);

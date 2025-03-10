@@ -22,8 +22,8 @@ hx.show();
 % end
 
     function i_savetable(~, ~)
-        answer = questdlg('Export & save data to:', '', ...
-            'Workspace', 'TXT/CSV file', 'Excel file', 'Workspace');
+        answer = gui.myQuestdlg(hFig, 'Export & save data to:', '', ...
+            {'Workspace', 'TXT/CSV file', 'Excel file'}, 'Workspace');
         if ~isempty(answer)
             switch answer
                 case 'Workspace'

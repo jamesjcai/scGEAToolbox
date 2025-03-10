@@ -151,8 +151,8 @@ end
                         matlab.lang.makeValidName(cL2{idx(ik)}));
                     outmatfile=fullfile(seltpath,outmatfile);
                     if ~exist(outmatfile,"file")
-                        q=sprintf('Save file %s?',outmatfile);
-                        answerx=gui.i_questdlgtimer(15,q,'','Yes','No','Cancel','Yes');
+                        q=sprintf('Save file %s?',outmatfile);                        
+                        answerx=gui.myQuestdlg(FigureHandle, q,'');
                     else
                         q=sprintf('Overwrite file %s?',outmatfile);
                         answerx=gui.myQuestdlg(FigureHandle, q,'');

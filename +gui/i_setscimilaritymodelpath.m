@@ -8,7 +8,7 @@ if ispref('scgeatoolbox', preftagname)
 end
 
 if isempty(selectedDir) || ~isfolder(selectedDir)
-    answer = questdlg('Scimilarity model path has not been set up. Locate it?');
+    answer = gui.myQuestdlg(FigureHandle, 'Scimilarity model path has not been set up. Locate it?');
     if strcmp('Yes', answer)
         [done] = ix_setpath;
         if ~done, return; end
@@ -17,9 +17,9 @@ if isempty(selectedDir) || ~isfolder(selectedDir)
         return;
     end
 else
-    answer = questdlg(sprintf('%s', selectedDir), ...
+    answer = gui.myQuestdlg(FigureHandle, sprintf('%s', selectedDir), ...
         'Model Path', ...
-        'Use this', 'Use another', 'Cancel', 'Use this');
+        {'Use this', 'Use another', 'Cancel'}, 'Use this');
     switch answer
         case 'Use this'
             done = true;

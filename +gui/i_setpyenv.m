@@ -1,11 +1,15 @@
-function [done] = i_setpyenv(~, ~)
+function [done] = i_setpyenv(src, ~)
 % selpath = uigetdir;
 %see also: I_SETRENV
 [done] = false;
-
+if nargin<1
+    FigureHandle = [];
+else
+    [FigureHandle] = gui.gui_getfigsce(src);
+end
 x = pyenv;
 if x.Version == "" %strlength(x.Executable)==0
-    answer = questdlg('Python environment has not been set up. Locate python.exe?');
+    answer = gui.myQuestdlg(FigureHandle, 'Python environment has not been set up. Locate python.exe?');
     if strcmp('Yes', answer) 
         [done] = ix_setpyenv(x.Executable);
         if ~done
@@ -16,9 +20,9 @@ if x.Version == "" %strlength(x.Executable)==0
         return;
     end
 else
-    answer = questdlg(sprintf('%s', x.Executable), ...
+    answer = gui.myQuestdlg(FigureHandle, sprintf('%s', x.Executable), ...
         'Python Executable', ...
-        'Use this', 'Use another', 'Cancel', 'Use this');
+        {'Use this', 'Use another', 'Cancel'}, 'Use this');
     switch answer
         case 'Use this'
             done = true;

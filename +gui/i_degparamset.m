@@ -1,4 +1,6 @@
-function [paramset] = i_degparamset(nogui)
+function [paramset] = i_degparamset(nogui,FigureHandle)
+
+if nargin<2, FigureHandle = []; end
 
 if nargin<1, nogui=false; end
 % preftagname ='scimilmodelpath'
@@ -31,8 +33,8 @@ else
         errordlg('Invalid input.');
         return;
     end
-    answer = questdlg('Sort DE genes by adjusted P-value or fold change?','',...
-        'Adjusted P-value','Fold Change', defaultset{4});
+    answer = gui.myQuestdlg(FigureHandle, 'Sort DE genes by adjusted P-value or fold change?','',...
+        {'Adjusted P-value','Fold Change'}, defaultset{4});
     switch answer
         case 'Adjusted P-value'
             sortbywhat = 'Adjusted P-value';

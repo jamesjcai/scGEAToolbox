@@ -114,7 +114,7 @@ hx.show(parentfig)
 
     function in_set3dview(~, ~)
         [aa, bb] = view(ax{idx,2});
-        answer = questdlg('Apply current view (azimuth and elevation angles) to all tabs?','');
+        answer = gui.myQuestdlg(hFig, 'Apply current view (azimuth and elevation angles) to all tabs?','');
         if strcmp(answer, 'Yes')
             for kx = 1:length(glist)
                 if kx ~= idx
@@ -130,8 +130,8 @@ hx.show(parentfig)
     end
 
     function in_savemainfigx(~,~)
-        answer = questdlg('Select Sub-plot to export:','', ...
-            'Left','Right','Cancel','Left');
+        answer = gui.myQuestdlg(hFig, 'Select Sub-plot to export:','', ...
+            {'Left','Right','Cancel'},'Left');
         switch answer
             case 'Left'
                 p = 1;
@@ -150,7 +150,7 @@ hx.show(parentfig)
     end
 
     % function in_savemainfig(~,~)
-    %     answer = questdlg('Export to PowerPoint?');
+    %     answer = gui.myQuestdlg(hFig, 'Export to PowerPoint?');
     %     if ~strcmp(answer,'Yes'), return; end
     % 
     %     fw=gui.gui_waitbar_adv;

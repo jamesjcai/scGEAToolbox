@@ -118,37 +118,6 @@ needupdatesce = true;
 
 gui.myHelpdlg(FigureHandle, 'Monocle3 pseudotime T and embedding S have been saved in SCE.');
 
-% if ~(ismcc || isdeployed)
-%     labels = {'Save pseudotime T to variable named:'};
-%     vars = {'Tmonocleout'};
-%     values = {t_mono3};
-%     msgfig = export2wsdlg(labels, vars, values);
-%     waitfor(msgfig)
-% else
-%     gui.i_exporttable(table(t_mono3), true, 'Tmonocleout', ...
-%         'MonocleResTable');
-% end
-
-
-    % answer = gui.myQuestdlg(FigureHandle, 'View Monocle3 Minimum Spanning Tree (MST)?');
-    % switch answer
-    %     case 'Yes'
-    %         f=figure;
-    %         gui.i_gscatter3(s_mono3, grp2idx(t_mono3));
-    %         hold on
-    %         if size(m_mono3,1) == 3
-    %             plot3(m_mono3(1,:), m_mono3(2,:), m_mono3(3,:),'k-');
-    %         else
-    %             plot3(m_mono3(1,:), m_mono3(2,:), 'k-');
-    %         end
-    %         colorbar
-    %         defaultToolbar = findall(f, 'tag','FigureToolBar');
-    %         gui.gui_3dcamera(defaultToolbar, 'Scores');
-    %         hc = colorbar;
-    %         hc.Label.String = 'Pseudotime';
-    %     otherwise
-    %         return;
-    % end
 
     function in_checkselected(~, ~)
         ptsSelected = logical(h.BrushData.');

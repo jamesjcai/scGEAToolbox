@@ -1,9 +1,11 @@
-function [ok, msg] = i_commoncheck_R(extprogname)
+function [ok, msg] = i_commoncheck_R(extprogname, FigureHandle)
+
+if nargin<2, FigureHandle = []; end
 if nargin < 1, extprogname = 'r_enrichR'; end
 
 ok = false;
 if ~ispref('scgeatoolbox', 'rexecutablepath')
-    answer = questdlg('Select R Interpreter?');
+    answer = gui.myQuestdlg(FigureHandle, 'Select R Interpreter?');
     if strcmp(answer, 'Yes'), gui.i_setrenv; end
     return;
 else

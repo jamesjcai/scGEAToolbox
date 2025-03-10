@@ -4,14 +4,14 @@ function [done] = i_setllmmodel(src, ~)
 done = false;
 preftagname = 'llmodelprovider';
 if ~ispref('scgeatoolbox', preftagname)
-    % answer = questdlg('LLM model has not been set up. Set it up?');
+    % answer = gui.myQuestdlg(FigureHandle, 'LLM model has not been set up. Set it up?');
     % if ~strcmp(answer, 'Yes'), return; end
     % [done] = ix_setwdpath(pathdefult);
 else
     s = getpref('scgeatoolbox', preftagname);
-    answer1 = questdlg(sprintf('%s', s), ...
+    answer1 = gui.myQuestdlg(FigureHandle, sprintf('%s', s), ...
         'LLM Model', ...
-        'Use this', 'Use another', 'Cancel', 'Use this');
+        {'Use this', 'Use another', 'Cancel'}, 'Use this');
     switch answer1
         case 'Use this'
             done = true;

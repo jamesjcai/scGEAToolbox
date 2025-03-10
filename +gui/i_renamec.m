@@ -9,7 +9,7 @@ else
 end
 
 if strcmp(clabel, 'Workspace Variable...')
-    answerxx = questdlg('Rename Workspace Variable?','');
+    answerxx = gui.myQuestdlg(FigureHandle, 'Rename Workspace Variable?','');
     if strcmp(answerxx, 'Yes')
         newclabelx = inputdlg('New name', ...
             'Rename', [1, 50], {newpickclabel});

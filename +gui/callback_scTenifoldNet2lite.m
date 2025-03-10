@@ -56,31 +56,6 @@ switch answer
 end
 
 
-%{
-figure;
-ten.e_mkqqplot(T);
-% answer223=gui.myQuestdlg(FigureHandle, 'Run GSEA analysis?');
-answer223=gui.i_questdlgtimer(15,'Run GSEA analysis?');
-if ~isempty(answer223) && strcmp(answer223,'Yes')
-    gseaok=true;
-    try
-        Tr=ten.e_fgsearun(T);
-        save(sprintf('T_GSEAres_%s',tstr),'Tr');
-    catch ME
-        warning(ME.message);
-        gseaok=false;
-    end
-    if gseaok
-        answer323=gui.i_questdlgtimer(15,'Group GSEA hits?');
-        if ~isempty(answer323) && strcmp(answer323,'Yes')
-            ten.e_fgseanet(Tr);
-        end
-    end
-end
-gui.i_exporttable(T,true,'T_DRgenes');
-if gseaok
-    gui.i_exporttable(Tr,true,'T_GSEAres');
-end
-%}
+
 
 end

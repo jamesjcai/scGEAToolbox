@@ -52,7 +52,7 @@ end
 
 % [ci, cLi] = grp2idx(thisc);
 % 
-% [answer] = questdlg('Manually order groups?', '', ...
+% [answer] = gui.myQuestdlg(FigureHandle, 'Manually order groups?', '', ...
 %     'Yes', 'No', 'Cancel', 'No');
 % if isempty(answer), return; end
 % switch answer

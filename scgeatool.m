@@ -323,7 +323,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         in_addbuttonpush(0, 1, @gui.callback_BuildGeneNetwork, "graph_3_18dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Build gene regulatory network");
         in_addbuttonpush(0, 0, @gui.callback_CompareGeneNetwork, "graph_5_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Compare two scGRNs");
         in_addbuttonpush(0, 1, {@gui.i_savemainfig, 3}, "presentation.jpg", 'Save Figure to PowerPoint File...');
-        gui.gui_3dcamera(DeftToolbarHandle);
+        gui.gui_3dcamera(DeftToolbarHandle, '', false, FigureHandle);
         pt = uitoggletool(DeftToolbarHandle);
         try
             load(fullfile(mfolder, 'resources', 'Images', 'colorbarcdata.mat'), 'CData');

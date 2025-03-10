@@ -1,5 +1,6 @@
-function [nsubsmpl, csubsmpl, savegrn] = i_tenifoldnetpara
+function [nsubsmpl, csubsmpl, savegrn] = i_tenifoldnetpara(parentfig)
 
+if nargin<1, parentfig = []; end
 %   addOptional(p,'nsubsmpl',10,@(x) fix(x)==x & x>0);
 %   addOptional(p,'csubsmpl',500,@(x) fix(x)==x & x>0);
 %   addOptional(p,'savegrn',false,@islogical);
@@ -27,7 +28,7 @@ catch
     return;
 end
 
-answer = questdlg('Save constructed networks (to current folder)?');
+answer = gui.myQuestdlg(parentfig, 'Save constructed networks (to current folder)?');
 switch answer
     case 'Yes'
         savegrn = true;

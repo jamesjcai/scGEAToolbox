@@ -1,4 +1,6 @@
-function i_export2pptx(F, glist)
+function i_export2pptx(F, glist, FigureHandle)
+
+if nargin<3, FigureHandle = []; end
 
 if nargin < 2, glist = {[]}; end
 
@@ -12,7 +14,7 @@ pth = fullfile(pw1, '..', 'resources', 'Misc', 'myTemplate.pptx');
 %dbfile1 = fullfile(pw1, '+run', 'external', 'stringdb', 'stringdb_human.mat');
 
 import mlreportgen.ppt.*;
-answer = questdlg('Export to PowerPoint?');
+answer = gui.myQuestdlg(FigureHandle, 'Export to PowerPoint?');
 switch answer
     case 'Yes'
         if ~usejava('desktop')

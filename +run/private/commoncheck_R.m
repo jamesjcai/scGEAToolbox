@@ -1,11 +1,12 @@
-function [ok, msg, codepth] = commoncheck_R(rscriptdir, externalfolder)
+function [ok, msg, codepth] = commoncheck_R(rscriptdir, externalfolder, FigureHandle)
 
+if nargin < 3, FigureHandle = []; end
 if nargin < 2, externalfolder = 'external'; end
 ok = false;
 msg = [];
 
 if ~ispref('scgeatoolbox', 'rexecutablepath')
-    answer = questdlg('Select R Interpreter?');
+    answer = gui.myQuestdlg(FigureHandle, 'Select R Interpreter?');
     if strcmp(answer, 'Yes'), gui.i_setrenv; end
     return;
 else

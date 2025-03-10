@@ -1,5 +1,8 @@
 function [done, CellTypeList, i1, i2, cL1, cL2,...
-          outdir] = i_batchmodeprep(sce, prefixtag, wrkdir)
+          outdir] = i_batchmodeprep(sce, prefixtag, ...
+          wrkdir, FigureHandle)
+
+if nargin<4, FigureHandle = []; end
 
 if nargin<3, wrkdir = []; end
 done = false;
@@ -30,7 +33,7 @@ if isempty(i1) || isempty(i2) || isempty(cL1) || isempty(cL2)
 end
 if isscalar(i1) || isscalar(i2), return; end
 
-answer=questdlg('Select a folder to save the outupt Excel files. Continue?','');
+answer=gui.myQuestdlg(FigureHandle, 'Select a folder to save the outupt Excel files. Continue?','');
 if ~strcmp(answer,'Yes'), return; end
 
 if ~isempty(wrkdir) && isfolder(wrkdir)
@@ -53,9 +56,9 @@ for k=1:length(CellTypeList)
     end
 end
 if needoverwritten
-    answer=questdlg(sprintf('Overwrite existing result file(s) in %s?', outdir),'');    
+    answer=gui.myQuestdlg(FigureHandle, sprintf('Overwrite existing result file(s) in %s?', outdir),'');    
 else
-    answer=questdlg(sprintf('Result files will be save in %s. Continue?', outdir), '');
+    answer=gui.myQuestdlg(FigureHandle, sprintf('Result files will be save in %s. Continue?', outdir), '');
 end
 if ~strcmp(answer,'Yes'), return; end
 done = true;
@@ -198,7 +201,7 @@ function [i1, i2, cL1, cL2, done] = in_twogrpsencoding(thisc)
         % --------
         a=sprintf('%s vs. %s',cL1{1}, cL2{1});
         b=sprintf('%s vs. %s',cL2{1}, cL1{1});
-        answer = questdlg('Which vs. which?','', a, b, a);
+        answer = gui.myQuestdlg(FigureHandle, 'Which vs. which?','', {a, b}, a);
         switch answer
             case a
             case b

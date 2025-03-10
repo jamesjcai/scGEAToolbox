@@ -1,5 +1,6 @@
-function [pt]=gui_3dcamera(tb, prefix, flatview)
+function [pt]=gui_3dcamera(tb, prefix, flatview, FigureHandle)
 
+if nargin < 4, FigureHandle = []; end
 if nargin < 3, flatview = false; end
 if nargin < 2, prefix = ''; end
 if nargin < 1
@@ -27,7 +28,7 @@ pt.ClickedCallback = @camera3dmp4;
 
 
     function camera3dmp4(~, ~)
-        answer = questdlg('Make video snapshot?');
+        answer = gui.myQuestdlg(FigureHandle, 'Make video snapshot?');
         if ~strcmp(answer, 'Yes'), return; end
 
         [caz,cel] = view;

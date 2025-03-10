@@ -14,7 +14,7 @@ s = sce.s;
 %[c, cL] = grp2idx(sce.c_cell_type_tx);
 
 if max(grp2idx(thisc))>50
-    answer = questdlg('Too many groups. Continue?','');
+    answer = gui.myQuestdlg(parentfig, 'Too many groups. Continue?','');
     if ~strcmp(answer, 'Yes'), return; end
 end
 

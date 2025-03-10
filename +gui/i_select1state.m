@@ -1,10 +1,11 @@
 function [thisc, clabel, listitems, newpickclabel] = i_select1state(sce, ...
-    nobaseline, nocustome, noattrib, ~)
+    nobaseline, nocustome, noattrib, continuousonly, parentfig)
 
 if nargin < 2, nobaseline = false; end
 if nargin < 3, nocustome = false; end
 if nargin < 4, noattrib = true; end
 if nargin < 5, continuousonly = false; end
+if nargin < 6, parentfig = []; end
 
 thisc = [];
 clabel = '';
@@ -88,8 +89,8 @@ if tf2 == 1
             if isempty(sce.c_cell_cycle_tx) || all(strcmp(unique(sce.c_cell_cycle_tx), "undetermined"))
                 needestimate = true;
             else
-                answer1 = questdlg('Use existing cell cycle estimation or re-compute new estimation?', ...
-                    '', 'Use existing', 'Re-compute', 'Cancel', 'Use existing');
+                answer1 = gui.myQuestdlg(parentfig, 'Use existing cell cycle estimation or re-compute new estimation?', ...
+                    '', {'Use existing', 'Re-compute', 'Cancel'}, 'Use existing');
                 switch answer1
                     case 'Re-compute'
                         needestimate = true;

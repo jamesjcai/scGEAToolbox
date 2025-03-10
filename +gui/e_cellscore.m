@@ -1,11 +1,13 @@
-function [cs] = e_cellscore(sce, posg, methodid, showwaitbar)
+function [cs] = e_cellscore(sce, posg, methodid, showwaitbar, FigureHandle)
+
+if nargin < 5, FigureHandle = []; end
 
 if nargin < 4, showwaitbar=true; end
 
 cs = [];
 if nargin < 3 || isempty(methodid)
     [~, methodid] = gui.i_pickscoremethod;
-    % answer = questdlg('Select algorithm:', ...
+    % answer = gui.myQuestdlg(FigureHandle, 'Select algorithm:', ...
     %     'Select Method', ...
     %     'UCell [PMID:34285779]', 'AddModuleScore/Seurat', ...
     %     'UCell [PMID:34285779]');

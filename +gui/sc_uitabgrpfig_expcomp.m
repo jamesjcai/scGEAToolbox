@@ -113,8 +113,8 @@ hx.show(parentfig);
 
 
     function i_savemainfigx(~,~)
-        answer = questdlg('Select Sub-plot to export:','', ...
-            'Left','Right','Cancel','Left');
+        answer = gui.myQuestdlg(parentfig, 'Select Sub-plot to export:','', ...
+            {'Left','Right','Cancel'},'Left');
         switch answer
             case 'Left'
                 p = 1;
@@ -134,7 +134,7 @@ hx.show(parentfig);
     end
 
     function i_savemainfig(~,~)
-        answer = questdlg('Export to PowerPoint?');
+        answer = gui.myQuestdlg(parentfig, 'Export to PowerPoint?');
         if ~strcmp(answer,'Yes'), return; end
 
         fw=gui.gui_waitbar_adv;
