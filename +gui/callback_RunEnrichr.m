@@ -30,7 +30,7 @@ if nargin < 3, predefinedlist = []; end
     end
 
     if askbackground
-        answer = questdlg('Add background list?','');
+        answer = gui.myQuestdlg(FigureHandle, 'Add background list?','');
         switch answer
             case 'Yes'
                 [idx] = gui.i_selmultidlg(sce.g, sce.g, FigureHandle);
@@ -45,15 +45,15 @@ if nargin < 3, predefinedlist = []; end
     end
 
     if isempty(enrichrtype)
-        answer1 = questdlg("Select the type of Enrichr application.","", ...
-             "Web-based", "API-based", "API-based");
+        answer1 = gui.myQuestdlg(FigureHandle, "Select the type of Enrichr application.","", ...
+             {'Web-based', 'API-based'}, 'API-based');
         enrichrtype = answer1;
     end
 
 switch enrichrtype 
-    case "API-based"
+    case 'API-based'
         % do nothing here
-    case "Web-based"
+    case 'Web-based'
         fw = gui.gui_waitbar([], false, 'Sending genes to web browser...');
         % gui.i_enrichtest(genelist, backgroundlist, numel(genelist));
             if ~isempty(backgroundlist)
@@ -108,8 +108,8 @@ end
         sprintf('Enrichr_Results_%s', outfiletag),[],[],FigureHandle);
 
     options = {'View Table', 'Circos Plot'};
-    answer = questdlg('View Enrichr Result Table or Show the Table as a Circos Plot?', ...
-        '',options{1}, options{2}, options{1});
+    answer = gui.myQuestdlg(FigureHandle, 'View Enrichr Result Table or Show the Table as a Circos Plot?', ...
+        '', {options{1}, options{2}}, options{1});
     switch answer
         case options{1}
             gui.i_viewtable(T, FigureHandle);

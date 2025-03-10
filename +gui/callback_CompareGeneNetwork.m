@@ -13,8 +13,9 @@ function callback_CompareGeneNetwork(src, ~)
     if ~all(y), error('Selected gene(s) not in the gene list of data.'); end
     fprintf("%s\n", glist)
     
-    switch questdlg("Select algorithm:",'',"PC Regression","Chaterjee Correlation","PC Regression")
-        case "PC Regression"
+    switch gui.myQuestdlg(FigureHandle, "Select algorithm:",'',...
+            {'PC Regression','Chaterjee Correlation'},'PC Regression')
+        case 'PC Regression'
             [Xt] = gui.i_transformx(sce.X, true, 5, FigureHandle);
             if isempty(Xt), return; end
             
@@ -25,7 +26,7 @@ function callback_CompareGeneNetwork(src, ~)
             A1 = sc_pcnet(x1, 3, false, true, false);
             A2 = sc_pcnet(x2, 3, false, true, false);
             gui.gui_waitbar(fw);
-        case "Chaterjee Correlation"
+        case 'Chaterjee Correlation'
             [Xt] = gui.i_transformx(sce.X, true, 3, FigureHandle);
             if isempty(Xt), return; end
             

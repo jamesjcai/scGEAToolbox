@@ -82,5 +82,5 @@ switch answer
         Tdn = sortrows(Tdn, 'abs_log2FC', 'descend');
         disp('DE genes are sorted by absolute fold change (FC).');
     otherwise
-        waitfor(gui.myHelpdlg(FigureHandle, 'Keep DE gene tables unsorted.'));
+        gui.myHelpdlg(FigureHandle, 'Keep DE gene tables unsorted.');
 end

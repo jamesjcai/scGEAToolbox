@@ -18,8 +18,8 @@ function callback_Violinplot(src, ~)
     % cLorderx = cLorder(ismember(cLorder,cLorder(newidx)));
     if ~all(picked), thisc = thisc(picked); end
     
-    answer = questdlg("Violinplot for gene expression or cell state variables?","", ...
-        'Gene Expression', 'Cell State','Gene Expression');
+    answer = gui.myQuestdlg(FigureHandle, "Violinplot for gene expression or cell state variables?","", ...
+        {'Gene Expression', 'Cell State'},'Gene Expression');
     switch answer
         case 'Gene Expression'
             % [c, cL] = grp2idx(thisc);
@@ -37,7 +37,7 @@ function callback_Violinplot(src, ~)
             if isscalar(glist)
                 answer='No';
             else
-                answer = questdlg('Plot all in the same figure?','');
+                answer = gui.myQuestdlg(FigureHandle, 'Plot all in the same figure?','');
             end
 
             if strcmp(answer, 'Yes')
@@ -74,10 +74,10 @@ function callback_Violinplot(src, ~)
                 if ~all(a)
                     thisyv = thisyv(a);
                     ylabelv = ylabelv(a);
-                    waitfor(gui.myHelpdlg(FigureHandle, 'Only continuous variables of cell state will be shown.',''));
+                    gui.myHelpdlg(FigureHandle, 'Only continuous variables of cell state will be shown.','');
                 end                
             else
-                waitfor(gui.myHelpdlg(FigureHandle, 'No valid cell state variables. Violinplot cannot be shown.',''));
+                gui.myHelpdlg(FigureHandle, 'No valid cell state variables. Violinplot cannot be shown.','');
             end
         otherwise
             return;

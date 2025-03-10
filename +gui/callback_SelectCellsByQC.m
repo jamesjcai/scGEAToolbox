@@ -314,7 +314,7 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
                         return;
                 end
             else
-                waitfor(gui.myHelpdlg(FigureHandle, 'No genes found.'));
+                gui.myHelpdlg(FigureHandle, 'No genes found.');
                 % requirerefresh = false;
                 return;
             end

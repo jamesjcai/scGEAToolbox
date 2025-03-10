@@ -1,12 +1,12 @@
 function [requirerefresh, s] = callback_MergeSCEs(src, sourcetag)
 requirerefresh = false;
 s = "";
-answer = questdlg('Current SCE will be replaced. Continue?');
+answer = gui.myQuestdlg(FigureHandle, 'Current SCE will be replaced. Continue?');
 if ~strcmp(answer, 'Yes'), return; end
 [FigureHandle, ~, isui] = gui.gui_getfigsce(src);
 
 keepbatchid=true;
-answer = questdlg('Keep original batch IDs of cells in the input SCEs?','');
+answer = gui.myQuestdlg(FigureHandle, 'Keep original batch IDs of cells in the input SCEs?','');
 switch answer
     case 'Yes'
         keepbatchid=true;
@@ -46,8 +46,8 @@ switch sourcetag
                 return;
             end
 
-            answer = questdlg('Which set operation method to merge genes?', 'Merging method', ...
-                'Intersect', 'Union', 'Intersect');
+            answer = gui.myQuestdlg(FigureHandle, 'Which set operation method to merge genes?', 'Merging method', ...
+                {'Intersect', 'Union'}, 'Intersect');
             if ~ismember(answer, {'Union', 'Intersect'}), return; end
             methodtag = lower(answer);
             try
@@ -84,8 +84,8 @@ switch sourcetag
             return;
         end
 
-        answer = questdlg('Which set operation method to merge genes?', 'Merging method', ...
-            'Intersect', 'Union', 'Intersect');
+        answer = gui.myQuestdlg(FigureHandle, 'Which set operation method to merge genes?', 'Merging method', ...
+            {'Intersect', 'Union'}, 'Intersect');
         if ~ismember(answer, {'Union', 'Intersect'}), return; end
         methodtag = lower(answer);
 

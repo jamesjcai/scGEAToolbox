@@ -4,7 +4,7 @@ function callback_CrossTabulation(src, ~)
 
 [thisc1, clabel1, thisc2, clabel2] = gui.i_select2class(sce, true);
 
-%[answer] = questdlg('Manually order groups?', '');
+%[answer] = gui.myQuestdlg(FigureHandle, 'Manually order groups?', '');
 %if isempty(answer), return; end
 
 [~, cL1, noanswer] = gui.i_reordergroups(thisc1, [], FigureHandle);

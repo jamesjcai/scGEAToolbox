@@ -3,14 +3,14 @@ requirerefresh = false;
 
 [FigureHandle, sce, isui] = gui.gui_getfigsce(src);
 
-answer = questdlg('Select genes to be renamed?');
+answer = gui.myQuestdlg(FigureHandle, 'Select genes to be renamed?');
 if ~strcmp(answer, 'Yes'), return; end
 [glist] = gui.i_selectngenes(sce, [], FigureHandle);
 if isempty(glist)
     gui.myHelpdlg(FigureHandle, 'No gene selected.', '');
     return;
 end
-answer = questdlg('Paste new gene names?');
+answer = gui.myQuestdlg(FigureHandle, 'Paste new gene names?');
 if ~strcmp(answer, 'Yes'), return; end
 renamedglist = gui.i_inputgenelist(glist);
 

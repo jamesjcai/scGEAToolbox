@@ -12,7 +12,7 @@ if isempty(selectedDir) || ~isfolder(selectedDir)
     if strcmp('Yes', answer)
         [done] = ix_setpath;
         if ~done, return; end
-        waitfor(gui.myHelpdlg(FigureHandle, 'Scimilarity model path is set successfully.', ''));
+        gui.myHelpdlg(FigureHandle, 'Scimilarity model path is set successfully.', '');
     else
         return;
     end
@@ -28,7 +28,7 @@ else
                 return;
             end
             done = true;
-            waitfor(gui.myHelpdlg(FigureHandle, 'Scimilarity model path is set successfully.', ''));
+            gui.myHelpdlg(FigureHandle, 'Scimilarity model path is set successfully.', '');
         case {'Cancel', ''}
             selectedDir = '';
             done = false;

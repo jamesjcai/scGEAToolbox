@@ -2,8 +2,8 @@ function callback_MultiGroupingView(src, ~)
     
     [FigureHandle, sce, isui] = gui.gui_getfigsce(src);
     
-    answer = questdlg('Select type of multi-view:','', ...
-        'Multigrouping','Multiembedding','Multigrouping');
+    answer = gui.myQuestdlg(FigureHandle, 'Select type of multi-view:','', ...
+        {'Multigrouping','Multiembedding'},'Multigrouping');
 
     switch answer
         % case 'Two-group'

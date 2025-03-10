@@ -67,8 +67,7 @@ function callback_BuildGeneNetwork(src, ~)
                     fw = gui.gui_waitbar;
                     save(filename, 'G');
                     gui.gui_waitbar(fw);
-                    waitfor(gui.myHelpdlg(FigureHandle, 'File saved.',''));
-                    % waitfor(msgbox('File saved.'));
+                    gui.myHelpdlg(FigureHandle, 'File saved.');                    
                 end
             end
         catch ME

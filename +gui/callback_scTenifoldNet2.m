@@ -31,8 +31,8 @@ if isfolder(wkdir)
 end
 
 
-answer = questdlg('Construct networks de novo or use existing networks in Workspace?', ...
-    'Input Networks', 'Construct de novo', 'Use existing', 'Construct de novo');
+answer = gui.myQuestdlg(FigureHandle, 'Construct networks de novo or use existing networks in Workspace?', ...
+    'Input Networks', {'Construct de novo', 'Use existing'}, 'Construct de novo');
 switch answer
     case 'Use existing'
         a = evalin('base', 'whos');
@@ -89,7 +89,7 @@ switch answer
             return;
         end
 
-        answer123 = questdlg('This analysis may take several hours. Continue?');
+        answer123 = gui.myQuestdlg(FigureHandle, 'This analysis may take several hours. Continue?');
         if ~strcmpi(answer123, 'Yes'), return; end
 
         fw = gui.gui_waitbar;
@@ -116,7 +116,7 @@ fprintf('The result has been saved in T_DRgenes_%s.mat\n', tstr);
 
 %figure;
 ten.e_mkqqplot(T);
-% answer223=questdlg('Run GSEA analysis?');
+% answer223=gui.myQuestdlg(FigureHandle, 'Run GSEA analysis?');
 answer223 = gui.i_questdlgtimer(15, 'Run GSEA analysis?');
 if ~isempty(answer223) && strcmp(answer223, 'Yes')
     gseaok = true;

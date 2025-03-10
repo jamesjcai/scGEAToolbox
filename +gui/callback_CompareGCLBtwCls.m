@@ -9,7 +9,7 @@ function callback_CompareGCLBtwCls(src, ~)
     [FigureHandle, sce, isui] = gui.gui_getfigsce(src);
         
     if ~gui.gui_showrefinfo('GCL Analysis [PMID:33139959]'), return; end
-    answer = questdlg('This function compares GCL of genes to show differences between cell groups. Continue?', '');
+    answer = gui.myQuestdlg(FigureHandle, 'This function compares GCL of genes to show differences between cell groups. Continue?', '');
     if ~strcmp(answer, 'Yes'), return; end
       
     [thisc, clabel] = gui.i_select1class(sce);
@@ -17,7 +17,7 @@ function callback_CompareGCLBtwCls(src, ~)
             
     n = length(unique(thisc));
     if n == 1
-        answer = questdlg("All cells are in the same group. Continue?", "");
+        answer = gui.myQuestdlg(FigureHandle, "All cells are in the same group. Continue?", "");
         switch answer
             case 'Yes'
             otherwise

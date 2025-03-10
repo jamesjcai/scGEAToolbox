@@ -20,7 +20,7 @@ end
 
 
 if ~allcell
-    answer = questdlg('Select a cell subtype, then an SCE variable that contains the subtype annotation. Continue?');
+    answer = gui.myQuestdlg(FigureHandle, 'Select a cell subtype, then an SCE variable that contains the subtype annotation. Continue?');
     if ~strcmp(answer, 'Yes'), return; end
 
     celltypelist = natsort(unique(sce.c_cell_type_tx));

@@ -11,8 +11,8 @@ function callback_ShowGeneExprCompr(src, ~)
         [thisc] = gui.i_select1class(sce, allowunique);
         if isempty(thisc), return; end
         if isscalar(unique(thisc))
-            answer = questdlg("All cells are in the same group. No comparison will be made. Continue?", ...
-                "", 'Yes', 'No', 'Cancel', 'No');
+            answer = gui.myQuestdlg(FigureHandle, "All cells are in the same group. No comparison will be made. Continue?", ...
+                "", {'Yes', 'No', 'Cancel'}, 'No');
             switch answer
                 case 'Yes'
                 otherwise

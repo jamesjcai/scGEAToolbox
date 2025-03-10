@@ -15,8 +15,8 @@ function callback_ScatterStemPlot(src, ~)
     %picked = ismember(thisc, cLorder(newidx));
     %if ~all(picked), thisc = thisc(picked); end
     
-    answer = questdlg("Scatter-stem plot for gene expression or cell state variables?","", ...
-        'Gene Expression', 'Cell State', 'Gene Expression');
+    answer = gui.myQuestdlg(FigureHandle, "Scatter-stem plot for gene expression or cell state variables?","", ...
+        {'Gene Expression', 'Cell State'}, 'Gene Expression');
     switch answer
         case 'Gene Expression'
             [glist] = gui.i_selectngenes(sce, [], FigureHandle);
@@ -28,7 +28,7 @@ function callback_ScatterStemPlot(src, ~)
             [Xt] = gui.i_transformx(sce.X, [], [], FigureHandle);
             if isempty(Xt), return; end
 
-            % answer = questdlg('Plot all in the same figure?','');
+            % answer = gui.myQuestdlg(FigureHandle, 'Plot all in the same figure?','');
             % if strcmp(answer, 'Yes')                
             %     fw = gui.gui_waitbar;                
             %     gui.i_violinmatrix(full(Xt), sce.g, c, cL, glist, ...
@@ -57,10 +57,10 @@ function callback_ScatterStemPlot(src, ~)
                 if ~all(a)
                     thisyv = thisyv(a);
                     ylabelv = ylabelv(a);
-                    waitfor(gui.myHelpdlg(FigureHandle, 'Only continuous variables of cell state will be shown.',''));
+                    gui.myHelpdlg(FigureHandle, 'Only continuous variables of cell state will be shown.');
                 end                
             else
-                waitfor(gui.myHelpdlg(FigureHandle, 'No valid cell state variables. Violinplot cannot be shown.',''));
+                gui.myHelpdlg(FigureHandle, 'No valid cell state variables. Violinplot cannot be shown.');
             end
         otherwise
             return;

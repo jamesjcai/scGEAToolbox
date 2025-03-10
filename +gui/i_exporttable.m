@@ -51,11 +51,11 @@ switch answer
                 writematrix(T, filename, 'Delimiter', '\t');
             end
             pause(1);
-            if needwait
-                waitfor(gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s', filename), ''));
-            else
-                gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s', filename), '')
-            end
+            % if needwait
+            %     gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s', filename), '');
+            % else
+                gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s', filename), '');
+%            end
         end
     case 'Excel file'
         if ~isempty(deffilename)
@@ -86,11 +86,11 @@ switch answer
                 'WriteRowNames', true, 'Sheet', sheetname);
         end
         pause(1)
-        if needwait
-            waitfor(gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s', filename), ''));
-        else
-            gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s', filename), '')
-        end
+        % if needwait
+        %     (gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s', filename), ''));
+        % else
+            gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s', filename), '');
+       % end
     case 'MAT file'
         if ~isempty(deffilename)            
             [file, path] = uiputfile({'*.mat'; '*.*'}, ...

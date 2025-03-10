@@ -9,11 +9,11 @@ import mlreportgen.ppt.*;
 [FigureHandle, ~, isui] = gui.gui_getfigsce(src);
 
 if isempty(tab)
-answer1 = questdlg("Select the source of Enrichr result table.","", ...
-    "Web Enrichr", "Matlab Enrichr", "Web Enrichr");
+answer1 = gui.myQuestdlg(FigureHandle, "Select the source of Enrichr result table.","", ...
+    {'Web Enrichr', 'Matlab Enrichr'}, 'Web Enrichr');
 
 switch answer1 
-    case "Matlab Enrichr"
+    case 'Matlab Enrichr'
         a = evalin('base', 'whos');
         b = struct2cell(a);
         valididx = ismember(b(4, :), 'table');
@@ -30,9 +30,9 @@ switch answer1
         if tf ~= 1, return; end
         tab = evalin('base', a(indx).name);
 
-    case "Web Enrichr"
-        answer = questdlg("Input Enrichr output table from:","Select Source", ...
-            'Paste Text', 'Open File', 'Cancel','Paste Text');
+    case 'Web Enrichr'
+        answer = gui.myQuestdlg(FigureHandle, "Input Enrichr output table from:","Select Source", ...
+            {'Paste Text', 'Open File', 'Cancel'},'Paste Text');
         switch answer
             case 'Paste Text'
             defaulttxt = sprintf('Term\tGenes\nPathway 1\tMDH1;AFMID;CAT;HYI;ACO1\nPathway 2\tAFMID;CAT;KMO;ALDH8A1;DHTKD1\nPathway 3\tGSTZ1;FAHD1;FAH;ADH5\nPathway 4\tGYS2;GBE1;PGM2\nPathway 5\tTHTPA;NFS1\n');

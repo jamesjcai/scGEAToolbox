@@ -3,7 +3,7 @@ function callback_CalculateGeneStats(src, ~)
     % Prompts the user to calculate gene expression statistics and export the results.
 
     % Prompt user for calculation confirmation
-    answer = questdlg('Calculate gene expression mean, CV, and dropout rate. Save output to a table.', 'Confirmation');
+    answer = gui.myQuestdlg(FigureHandle, 'Calculate gene expression mean, CV, and dropout rate. Save output to a table.', 'Confirmation');
     if ~strcmp(answer, 'Yes'), return; end
 
     % Retrieve single-cell experiment data
@@ -12,7 +12,7 @@ function callback_CalculateGeneStats(src, ~)
     if isempty(Xt), return; end
 
     % Grouping cells based on user input
-    groupingConfirmed = questdlg('Grouping cells? Select Yes to pick a grouping variable. Select No to include all cells.', 'Grouping');
+    groupingConfirmed = gui.myQuestdlg(FigureHandle, 'Grouping cells? Select Yes to pick a grouping variable. Select No to include all cells.', 'Grouping');
     if strcmp(groupingConfirmed, 'Yes')
         thisc = gui.i_select1class(sce);
         if isempty(thisc), return; end

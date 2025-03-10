@@ -8,7 +8,7 @@ function [needupdatesce] = callback_RunSCimilarity(src, ~)
     % totalMemoryGB = sys.PhysicalMemory.Total / (1024^3);
     % fprintf('Total Physical Memory: %.2f GB\n', totalMemoryGB);
     % if totalMemoryGB < 32
-    %     answer = questdlg('>=64 GB of memory is recommanded. The computer has less than 32 GB. Continue?', ...
+    %     answer = gui.myQuestdlg(FigureHandle, '>=64 GB of memory is recommanded. The computer has less than 32 GB. Continue?', ...
     %         '', 'Yes, still run', 'No, prepare input only', 'Cancel', 'Yes, still run');
     %     switch answer
     %         case 'Yes, still run'
@@ -33,8 +33,8 @@ function [needupdatesce] = callback_RunSCimilarity(src, ~)
 
     label_ints_file = fullfile(modeldir, 'label_ints.csv');
     if exist(label_ints_file, "file")
-        answer = questdlg('Unconstrained or constrained annotation','', ...
-            'Unconstrained','Constrained','Unconstrained');
+        answer = gui.myQuestdlg(FigureHandle, 'Unconstrained or constrained annotation','', ...
+            {'Unconstrained','Constrained'},'Unconstrained');
         switch answer
             case 'Unconstrained'
                 target_celltypes = '';
@@ -75,7 +75,7 @@ function [needupdatesce] = callback_RunSCimilarity(src, ~)
             fw = gui.gui_waitbar;
             run.py_scimilarity(sce, modeldir, wkdir, target_celltypes, true, prepare_input_only);
             gui.gui_waitbar(fw);
-            if strcmp(questdlg('Input files prepared. Open the working folder?'),'Yes')
+            if strcmp(gui.myQuestdlg(FigureHandle, 'Input files prepared. Open the working folder?'),'Yes')
                 winopen(wkdir);
             end            
         catch ME

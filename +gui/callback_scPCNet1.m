@@ -9,8 +9,8 @@ if isempty(wkdir), return; end
 
 
 if numel(unique(sce.c_cell_type_tx)) > 1
-    answer = questdlg('Construct gene regulatory network (GRN) for all cells or selected cells?', ...
-            '', 'All Cells', 'Select Cells...', 'Cancel', ...
+    answer = gui.myQuestdlg(FigureHandle, 'Construct gene regulatory network (GRN) for all cells or selected cells?', ...
+            '', {'All Cells', 'Select Cells...', 'Cancel'}, ...
             'All Cells');
     switch answer
         case 'Cancel'
@@ -24,11 +24,11 @@ if numel(unique(sce.c_cell_type_tx)) > 1
     end
 end
 
-    %     answer=questdlg('This analysis may take several hours. Continue?');
+    %     answer=gui.myQuestdlg(FigureHandle, 'This analysis may take several hours. Continue?');
     %     if ~strcmpi(answer,'Yes'), return; end
     %useparallel = false;
-    answer = questdlg('Use parallel computing or not?', 'Parallel Computing', ...
-        'Use parallel', 'Not use parallel', 'Use parallel');
+    answer = gui.myQuestdlg(FigureHandle, 'Use parallel computing or not?', 'Parallel Computing', ...
+        {'Use parallel', 'Not use parallel'}, 'Use parallel');
     switch answer
         case 'Use parallel'
             useparallel = true;
@@ -79,7 +79,7 @@ end
         waitfor(export2wsdlg(labels, vars, values));
     end
 
-    answer = questdlg('Save network A to MAT file?');
+    answer = gui.myQuestdlg(FigureHandle, 'Save network A to MAT file?');
     switch answer
         case 'Yes'
             [file, path] = uiputfile({'*.mat'; '*.*'}, 'Save as', ...

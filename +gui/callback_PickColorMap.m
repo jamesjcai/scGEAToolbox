@@ -50,7 +50,7 @@ indx = randi(length(co));
 colormap(abs(co{indx}));
 fprintf('Set colormap to %s.\n', cn{indx});
 
-% answer=questdlg('Random colormap?','');
+% answer=gui.myQuestdlg(FigureHandle, 'Random colormap?','');
 % switch answer
 %     case 'Yes'
 %         indx=randi(length(co));

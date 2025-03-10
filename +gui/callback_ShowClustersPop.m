@@ -1,6 +1,6 @@
 function callback_ShowClustersPop(src, ~)
 
-answer = questdlg('Select a grouping variable and show cell groups in new figures individually?');
+answer = gui.myQuestdlg(FigureHandle, 'Select a grouping variable and show cell groups in new figures individually?');
 if ~strcmp(answer, 'Yes'), return; end
 
 
@@ -11,7 +11,7 @@ if isempty(thisc), return; end
 % [c, cL, noanswer] = gui.i_reordergroups(thisc);
 % if noanswer, return; end
 if max(c)==1
-    waitfor(gui.myHelpdlg(FigureHandle, sprintf('Only one type of cells: %s',cL{1}),''))
+    gui.myHelpdlg(FigureHandle, sprintf('Only one type of cells: %s',cL{1}),'')
     return;
 end
 
@@ -42,7 +42,7 @@ end
 
 %gui.gui_waitbar_adv(fw);
 
-%answer = questdlg('Sort by size of cell groups?');
+%answer = gui.myQuestdlg(FigureHandle, 'Sort by size of cell groups?');
 %if strcmpi(answer, 'Yes')
     [~, idxx] = sort(cmx, 'descend');
     SCEV = SCEV(idxx);
@@ -91,9 +91,9 @@ catch ME
 end
 
     function in_scgeatoolsce(~,~)
-        %answer1 = questdlg('Extract cells from different groups and view new SCEs, or save new SCEs?','',...
+        %answer1 = gui.myQuestdlg(FigureHandle, 'Extract cells from different groups and view new SCEs, or save new SCEs?','',...
         %    'View SCEs','Save SCEs','Cancel','View SCEs');
-        answer1 = questdlg('Extract cells and make new SCEs?','');
+        answer1 = gui.myQuestdlg(FigureHandle, 'Extract cells and make new SCEs?','');
         switch answer1
             case {'Cancel','No'}
                 return;
@@ -119,8 +119,8 @@ end
                 end
                 hx.closeFigure;                
            case 'Save SCEs'
-                answer2=questdlg('Where to save files?','','Use Temporary Folder', ...
-                    'Select a Folder','Cancel','Use Temporary Folder');
+                answer2=gui.myQuestdlg(FigureHandle, 'Where to save files?','',{'Use Temporary Folder', ...
+                    'Select a Folder','Cancel'},'Use Temporary Folder');
                 switch answer2
                     case 'Select a Folder'
                         [seltpath] = uigetdir(deflt);
@@ -155,7 +155,7 @@ end
                         answerx=gui.i_questdlgtimer(15,q,'','Yes','No','Cancel','Yes');
                     else
                         q=sprintf('Overwrite file %s?',outmatfile);
-                        answerx=questdlg(q,'');
+                        answerx=gui.myQuestdlg(FigureHandle, q,'');
                     end
                     switch answerx
                         case 'Yes'

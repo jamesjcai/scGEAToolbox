@@ -5,7 +5,7 @@ function [done] = i_setextwd(src, ~)
 [FigureHandle, sce, isui] = gui.gui_getfigsce(src);
 [done] = gui.i_setwrkdir('externalwrkpath');
 if done
-     waitfor(gui.myHelpdlg(FigureHandle, "External program working directory is set successfully.", ''));
+     gui.myHelpdlg(FigureHandle, "External program working directory is set successfully.", '');
 end
 
 

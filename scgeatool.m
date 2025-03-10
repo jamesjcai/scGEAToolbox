@@ -390,7 +390,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             set(button1,'Enable','on');
             uicontrol(button1);
             if ~isempty(sce)
-                waitfor(gui.myWarndlg(FigureHandle, 'Imported SCE contains no cells.',''));
+                gui.myWarndlg(FigureHandle, 'Imported SCE contains no cells.','');
             end
         end
     end
@@ -570,7 +570,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             else
                 s = 'To execute the function, click the button again or locate and click the same button in the toolbar above. Hover over the button to view a description of its function.';
                 try
-                waitfor(gui.myHelpdlg(FigureHandle, sprintf('%s\n%s', upper(tooltipTxt), s), ''));
+                    gui.myHelpdlg(FigureHandle, sprintf('%s\n%s', upper(tooltipTxt), s), '');
                 catch
                 end
             end
@@ -620,7 +620,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                     if ~isempty(callinghandle)
                         guidata(callinghandle, sce);
                         delete(hObject);
-                        waitfor(gui.myHelpdlg(FigureHandle, 'SCE updated.',''));
+                        gui.myHelpdlg(FigureHandle, 'SCE updated.','');
                     else
                         if gui.callback_SaveX(FigureHandle,[])
                             pause(1);
@@ -645,7 +645,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
 
     function in_RunDataMapPlot(src, ~)
         if ~pkg.i_checkpython
-            waitfor(gui.myWarndlg(FigureHandle, 'Python is not installed.',''));
+            gui.myWarndlg(FigureHandle, 'Python is not installed.','');
             return;
         end
         ndim = 2;
@@ -714,11 +714,11 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             [c, cL] = grp2idx(sce.c_batch_id);
             sce.c = c;
             if sce.NumCells==0
-                waitfor(gui.myWarndlg(FigureHandle, 'Merged SCE contains no cells.',''));
+                gui.myWarndlg(FigureHandle, 'Merged SCE contains no cells.','');
                 return;
             else
                 in_RefreshAll(src, [], true, false);
-                waitfor(gui.myHelpdlg(FigureHandle, sprintf('%s SCEs merged.', upper(s)), ''));
+                gui.myHelpdlg(FigureHandle, sprintf('%s SCEs merged.', upper(s)), '');
             end
         end
     end
@@ -791,7 +791,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                     methodoption = 1;
                 case 'Geometric Sketching [PMID:31176620]'
                     if ~pkg.i_checkpython
-                        waitfor(gui.myWarndlg(FigureHandle, 'Python not installed.',''));
+                        gui.myWarndlg(FigureHandle, 'Python not installed.','');
                         return;
                     end
                     methodoption = 2;
@@ -948,12 +948,13 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         if requirerefresh
             sce = scenew;
             c=sce.c;
-            in_RefreshAll(src, [], true, false);
+            
             newm = sce.NumGenes;
             newn = sce.NumCells;
-            waitfor(gui.myHelpdlg(FigureHandle, sprintf('%d cells removed; %d genes removed.', ...
-                oldn-newn, oldm-newm), ''));
-            guidata(FigureHandle, sce);
+            gui.myHelpdlg(FigureHandle, sprintf('%d cells removed; %d genes removed.', ...
+                oldn-newn, oldm-newm), '');
+            guidata(FigureHandle, sce);   
+            in_RefreshAll(src, [], true, false);
         end
     end
 
@@ -1009,13 +1010,13 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         if strcmp(gui.myQuestdlg(FigureHandle, "Remove contamination? Click ''No'' to keep data unchanged."), 'Yes')
             sce.X = round(Xdecon);
             guidata(FigureHandle, sce);
-            waitfor(gui.myHelpdlg(FigureHandle, 'Contamination removed.', ''));
+            gui.myHelpdlg(FigureHandle, 'Contamination removed.', '');
         end
     end
 
     function in_SCimilarity(src, events)
         if ~pkg.i_checkpython
-            waitfor(gui.myWarndlg(FigureHandle, 'Python not installed.',''));
+            gui.myWarndlg(FigureHandle, 'Python not installed.','');
             return;
         end
         if ~gui.gui_showrefinfo('SCimilarity [PMID:39566551]'), return; end
@@ -1028,12 +1029,12 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
 
     function in_HarmonyPy(src, ~)
         if ~pkg.i_checkpython
-            waitfor(gui.myWarndlg(FigureHandle, 'Python is not installed.',''));
+            gui.myWarndlg(FigureHandle, 'Python is not installed.','');
             return;
         end        
         if ~gui.gui_showrefinfo('Harmony [PMID:31740819]'), return; end
         if numel(unique(sce.c_batch_id)) < 2
-            waitfor(gui.myWarndlg(FigureHandle, 'No batch effect (SCE.C_BATCH_ID is empty)'));
+            gui.myWarndlg(FigureHandle, 'No batch effect (SCE.C_BATCH_ID is empty)');
             return;
         end
         [c1] = grp2idx(sce.c);
@@ -1069,7 +1070,8 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                     if ismember(methoddimtag, fieldnames(sce.struct_cell_embeddings))
                         sce.struct_cell_embeddings.(methodtag) = sce.s;
                     end
-                    waitfor(gui.myHelpdlg(FigureHandle, sprintf('%s Embedding is updated.', methoddimtag), ''));
+                    gui.myHelpdlg(FigureHandle, ...
+                        sprintf('%s Embedding is updated.', methoddimtag), '');
             end
         end
         guidata(FigureHandle, sce);
@@ -1077,7 +1079,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
 
     function in_DoubletDetection(src, ~)
         if ~pkg.i_checkpython
-            waitfor(gui.myWarndlg(FigureHandle, 'Python not installed.',''));
+            gui.myWarndlg(FigureHandle, 'Python not installed.','');
             return;
         end
         if ~gui.gui_showrefinfo('Scrublet [PMID:30954476]'), return; end
@@ -1086,7 +1088,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         end
         [isDoublet, doubletscore, methodtag, done] = gui.callback_DoubletDetection(src);
         if done && ~any(isDoublet)
-            waitfor(gui.myHelpdlg(FigureHandle, 'No doublet detected.', ''));
+            gui.myHelpdlg(FigureHandle, 'No doublet detected.', '');
             return;
         end
         if done && any(isDoublet) && sce.NumCells == length(doubletscore)
@@ -1101,7 +1103,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 guidata(FigureHandle, sce);
                 [c, cL] = grp2idx(sce.c);
                 in_RefreshAll(src, [], true, false);
-                waitfor(gui.myHelpdlg(FigureHandle, 'Doublets deleted.', ''));
+                gui.myHelpdlg(FigureHandle, 'Doublets deleted.', '');
             end
         end
     end
@@ -1110,7 +1112,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         if isempty(sce.c_cell_type_tx), return; end
         newtx = erase(sce.c_cell_type_tx, "_{"+digitsPattern+"}");
         if isequal(sce.c_cell_type_tx, newtx)
-            waitfor(gui.myHelpdlg(FigureHandle, "No sub-clusters are meraged."));
+            gui.myHelpdlg(FigureHandle, "No sub-clusters are meraged.");
         else
             sce.c_cell_type_tx = newtx;
             [c, cL] = grp2idx(sce.c_cell_type_tx);
@@ -1178,6 +1180,12 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
     function in_RefreshAll(src, ~, keepview, keepcolr)
         if nargin < 4, keepcolr = false; end
         if nargin < 3, keepview = false; end
+
+        if gui.i_isuifig(FigureHandle)
+            keepcolr = false;
+            keepview = false;
+        end
+
         if keepview || keepcolr
             [para] = gui.i_getoldsettings(src);
         end
@@ -1192,10 +1200,13 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         in_EnDisableMenu('on');
         %        if isvalid(button1), set(button1,'Visible','off'); end
         %        if isvalid(button2), set(button2,'Visible','off'); end
-        figure(FigureHandle);
+        
+        if ~gui.i_isuifig(FigureHandle)
+            figure(FigureHandle);
+        end
         
         % [c,cL]=grp2idx(sce.c);
-        % was3d = ~isempty(h.ZData);
+        % was3d = ~isempty(h.ZData);        
 
         if isempty(c), [c,cL] = grp2idx(sce.c); end
         if size(sce.s, 2) >= 3
@@ -1564,7 +1575,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         ptsSelected = logical(h.BrushData.');
         if ~any(ptsSelected)
             hasbrushed = false;
-            waitfor(gui.myWarndlg(FigureHandle, "No cells are selected.",''));
+            gui.myWarndlg(FigureHandle, "No cells are selected.",'');
         else
             hasbrushed = true;
         end
@@ -1613,7 +1624,8 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         end
 
         if isscalar(c_members)
-            waitfor(gui.myWarndlg(FigureHandle, "All brushed cells are in one cluster or belong to the same cell type.",''));
+            gui.myWarndlg(FigureHandle, ...
+            "All brushed cells are in one cluster or belong to the same cell type.",'');
             return;
         end
 
@@ -1649,7 +1661,8 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
     function in_Brush4Celltypes(~, ~)
         ptsSelected = logical(h.BrushData.');
         if ~any(ptsSelected)
-            waitfor(gui.myHelpdlg(FigureHandle, "No cells are selected. Please use the data brush tool to select cells for cell type assignment.", ''));
+            gui.myHelpdlg(FigureHandle,...
+                "No cells are selected. Please use the data brush tool to select cells for cell type assignment.", '');
             return;
         end        
         if ~strcmp(gui.myQuestdlg(FigureHandle, 'This is a one-time analysis. Cell type labels will not be saved. Continue?',''), 'Yes'), return; end
@@ -1773,7 +1786,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
     function in_DeleteSelectedCells(src, ~)
         ptsSelected = logical(h.BrushData.');
         if ~any(ptsSelected)
-            waitfor(gui.myWarndlg(FigureHandle, "No cells are selected.", ''));
+            gui.myWarndlg(FigureHandle, "No cells are selected.", '');
             return;
         end
         [ptsSelected, letdoit] = gui.i_expandbrushed(ptsSelected, sce);
@@ -1797,7 +1810,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
 
         ptsSelected = logical(h.BrushData.');
         if ~any(ptsSelected)
-            waitfor(gui.myWarndlg(FigureHandle, "No cells are selected.", ''));
+            gui.myWarndlg(FigureHandle, "No cells are selected.", '');
             return;
         end
         [ptsSelected, letdoit] = gui.i_expandbrushed(ptsSelected, sce);
@@ -1866,7 +1879,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
 
     function in_DrawTrajectory(src, ~)
         justload = false;
-        % waitfor(gui.myWarndlg(FigureHandle, 'This function should not be applied to tSNE and UMAP embeddings, as they "encourage a representation of the data as disjoint clusters, which is less meaningful for modeling continuous developmental trajectories" [PMID:25664528].', ''));
+        % gui.myWarndlg(FigureHandle, 'This function should not be applied to tSNE and UMAP embeddings, as they "encourage a representation of the data as disjoint clusters, which is less meaningful for modeling continuous developmental trajectories" [PMID:25664528].', '');
         if ~isempty(f_traj) && isvalid(f_traj) && isgraphics(f_traj, 'line')
             if strcmp({f_traj.Visible}, 'on')
                 switch gui.myQuestdlg(FigureHandle, 'Remove existing trajectory curve?','')
@@ -2070,7 +2083,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         end
         if (ismcc || isdeployed)
             if strcmp(methodtag, 'sc3')
-                waitfor(gui.myWarndlg(FigureHandle, 'SC3 is not working in standalone application.', ''));
+                gui.myWarndlg(FigureHandle, 'SC3 is not working in standalone application.', '');
                 return;
             end
         end

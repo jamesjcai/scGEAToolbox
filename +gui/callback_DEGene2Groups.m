@@ -141,7 +141,7 @@ function callback_DEGene2Groups(src, ~)
                 if ~isempty(Tdn)
                     writetable(Tdn, filesaved, "FileType", "spreadsheet", 'Sheet', 'Down-regulated');
                 end
-                waitfor(gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s', filesaved), ''));
+                gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s', filesaved));
                 %writetable(Tup,fullfile(tempdir,sprintf('%s_up.xlsx',outfile)),'FileType','spreadsheet',);
                 %writetable(Tdn,fullfile(tempdir,sprintf('%s_up.xlsx',outfile)),'FileType','spreadsheet');
                 tf = 1;

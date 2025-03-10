@@ -3,7 +3,7 @@ function callback_ScatterCorrPlot(src, ~)
     [FigureHandle, sce, isui] = gui.gui_getfigsce(src);
     %[axx, bxx] = view(findall(FigureHandle,'type','axes'));
 
-    answer = questdlg('Select an independent variable. Continue?','');
+    answer = gui.myQuestdlg(FigureHandle, 'Select an independent variable. Continue?','');
     if ~strcmp(answer,'Yes'), return; end
 
     [thisx, xlabelv] = gui.i_select1state(sce, false, false, false, true);
@@ -13,8 +13,8 @@ function callback_ScatterCorrPlot(src, ~)
         return;
     end
 
-    answer = questdlg("Select a dependent variable from gene expression or cell state?","", ...
-        'Gene Expression', 'Cell State','Gene Expression');
+    answer = gui.myQuestdlg(FigureHandle, "Select a dependent variable from gene expression or cell state?","", ...
+        {'Gene Expression', 'Cell State'},'Gene Expression');
 
     switch answer
         case 'Gene Expression'
@@ -47,11 +47,11 @@ function callback_ScatterCorrPlot(src, ~)
                 if ~all(a)
                     thisyv = thisyv(a);
                     ylabelv = ylabelv(a);
-                    waitfor(gui.myHelpdlg(FigureHandle, 'Only continuous variables of cell state will be shown.',''));
+                    gui.myHelpdlg(FigureHandle, 'Only continuous variables of cell state will be shown.');
                 end
                 gui.i_scattertabs(thisyv, ylabelv, thisx, xlabelv, FigureHandle);
             else
-                waitfor(gui.myHelpdlg(FigureHandle, 'No valid cell state variables.',''));
+                gui.myHelpdlg(FigureHandle, 'No valid cell state variables.');
             end            
     end
     

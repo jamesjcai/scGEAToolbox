@@ -21,7 +21,7 @@ if ~gui.i_setpyenv, return; end
 
 % methodtag = 'scrublet';
 
-% methodtag=questdlg('Which method?','',...
+% methodtag=gui.myQuestdlg(FigureHandle, 'Which method?','',...
 %     'scrublet','doubletdetection','scrublet');
 
 %fw=gui.gui_waitbar;

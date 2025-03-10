@@ -36,7 +36,7 @@ try
                 otherwise
             end
         else
-            waitfor(gui.myHelpdlg(parentfig, 'No update is available.',''));
+            gui.myHelpdlg(parentfig, 'No update is available.','');
         end
     end
 catch ME

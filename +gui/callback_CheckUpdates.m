@@ -81,7 +81,7 @@ function callback_CheckUpdates(src, ~)
             %}
         end
     else
-        waitfor(gui.myHelpdlg(FigureHandle, sprintf('scGEAToolbox (%s) is up to date.', v_old), ''));
+        gui.myHelpdlg(FigureHandle, sprintf('scGEAToolbox (%s) is up to date.', v_old));
         %answer=gui.myQuestdlg(FigureHandle, 'Check for minor updates?','');
         %if strcmp(answer,'Yes')
         %    pkg.i_minvercheck(FigureHandle);

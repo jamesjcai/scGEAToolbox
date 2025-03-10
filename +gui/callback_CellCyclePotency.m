@@ -46,11 +46,11 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
                 needupdate = true;
                 gui.gui_waitbar(fw);
                 guidata(FigureHandle, sce);
-                waitfor(gui.myHelpdlg(FigureHandle, 'Cell cycle phase (c_cell_cycle_tx) added.', ''));
+                gui.myHelpdlg(FigureHandle, 'Cell cycle phase (c_cell_cycle_tx) added.');
             end
             % y = sce.c_cell_cycle_tx;
             % attribtag = "cell_cycle";
-            waitfor(gui.myHelpdlg(FigureHandle, 'To see the result, use View -> Cell State (Ctrl + T). Then select "Cell Cycle Phase"',''));
+            gui.myHelpdlg(FigureHandle, 'To see the result, use View -> Cell State (Ctrl + T). Then select "Cell Cycle Phase"');
             return;
         case 2
             speciestag = gui.i_selectspecies(2, false, FigureHandle);
@@ -116,13 +116,13 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
             gui.gui_waitbar(fw);
             guidata(FigureHandle, sce);
             needupdate = true;
-            waitfor(gui.myHelpdlg(FigureHandle, sprintf(['%s added. To see the result, ' ...
+            gui.myHelpdlg(FigureHandle, sprintf(['%s added. To see the result, ' ...
                 'use View -> Cell State (Ctrl + T). Then select "%s"'], ...
-                attribtag, attribtag), ''));
+                attribtag, attribtag));
         else
-            waitfor(gui.myHelpdlg(FigureHandle, sprintf(['To see the result, use View -> ' ...
+            gui.myHelpdlg(FigureHandle, sprintf(['To see the result, use View -> ' ...
                 'Cell State (Ctrl + T). Then select "%s"'], ...
-                attribtag),''));
+                attribtag));
         end
     end
 

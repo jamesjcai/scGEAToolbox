@@ -238,7 +238,8 @@ end
         %     end
         % else
         writetable(T, outfile);
-        waitfor(gui.myHelpdlg(FigureHandle, sprintf('Result of cell-cell interaction changes has been saved in %s', outfile), ''));
+        gui.myHelpdlg(FigureHandle, ...
+            sprintf('Result of cell-cell interaction changes has been saved in %s', outfile), '');
         %end
     else
         if ~prepare_input_only
@@ -282,8 +283,8 @@ end
         outfile2 = sprintf('outfile_expression_changes_in_%s.csv', ...
             matlab.lang.makeValidName(celltype2));
         writetable(T, outfile2);
-        waitfor(gui.myHelpdlg(FigureHandle, {'Result of gene expression changes has been saved in:', ...
+        gui.myHelpdlg(FigureHandle, {'Result of gene expression changes has been saved in:', ...
             sprintf('%s', outfile1), ...
-            sprintf('%s', outfile2)},''));
+            sprintf('%s', outfile2)},'');
     end
 end

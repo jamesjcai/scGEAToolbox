@@ -25,8 +25,8 @@ end
 
 [FigureHandle, sce, isui] = gui.gui_getfigsce(src);
 
-answer = questdlg('Construct gene regulatory network (GRN) for all cells or selected cells?', ...
-        '', 'All Cells', 'Select Cells...', 'Cancel', ...
+answer = gui.myQuestdlg(FigureHandle, 'Construct gene regulatory network (GRN) for all cells or selected cells?', ...
+        '', {'All Cells', 'Select Cells...', 'Cancel'}, ...
         'All Cells');
     switch answer
         case 'Cancel'
@@ -40,7 +40,7 @@ answer = questdlg('Construct gene regulatory network (GRN) for all cells or sele
             return;
     end
 
-    answer = questdlg('This analysis may take several hours. Continue?');
+    answer = gui.myQuestdlg(FigureHandle, 'This analysis may take several hours. Continue?');
     if ~strcmpi(answer, 'Yes'), return; end
     tmpmat = tempname;
     fw = gui.gui_waitbar;

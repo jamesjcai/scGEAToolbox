@@ -70,7 +70,7 @@ switch answer
             return;
         end
         A0 = [];
-        waitfor(gui.myHelpdlg(FigureHandle, "Network will be constructed. Now, select a KO gene (i.e., gene to be knocked out).", ''));
+        gui.myHelpdlg(FigureHandle, "Network will be constructed. Now, select a KO gene (i.e., gene to be knocked out).", '');
     otherwise
         return;
 end

@@ -13,7 +13,7 @@ function callback_ShowGeneExpr(src, ~)
         return;
     end
 
-    % answer = questdlg("Select the type of expression values","",...
+    % answer = gui.myQuestdlg(FigureHandle, "Select the type of expression values","",...
     %     "Raw UMI Counts","Library Size-Normalized",)
 
     [Xt] = gui.i_transformx(sce.X,[],[],FigureHandle);
@@ -68,7 +68,7 @@ function callback_ShowGeneExpr(src, ~)
             hx.show(FigureHandle);            
 
         % case an1    % same figure;
-        %     answer2 = questdlg("Type of plot:","", "stem plot", "feature plot", "stem plot");
+        %     answer2 = gui.myQuestdlg(FigureHandle, "Type of plot:","", "stem plot", "feature plot", "stem plot");
         %     if isempty(answer2), return; end
         %     fw = gui.gui_waitbar; 
         %     hx = gui.myFigure;

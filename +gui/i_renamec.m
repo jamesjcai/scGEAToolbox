@@ -22,8 +22,8 @@ if strcmp(clabel, 'Workspace Variable...')
     currentclabelx1 = matlab.lang.makeUniqueStrings(currentclabelx);
     newclabel = currentclabelx1(end);
     if ~isequal(currentclabelx1, currentclabelx)
-        waitfor(gui.myHelpdlg(FigureHandle, sprintf('Name exisiting. New name is changed to %s.', ...
-            newclabel{1}), ''));
+        gui.myHelpdlg(FigureHandle, sprintf('Name exisiting. New name is changed to %s.', ...
+            newclabel{1}), '');
     end
 end
 end

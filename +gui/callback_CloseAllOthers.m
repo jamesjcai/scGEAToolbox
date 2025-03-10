@@ -53,7 +53,7 @@ a = gcf;
 all_figs = findobj(0, 'type', 'figure');
 [y, idx] = ismember(a, all_figs);
 if y && length(all_figs) > 1
-    answer = questdlg('Close all other figures?');
+    answer = gui.myQuestdlg(FigureHandle, 'Close all other figures?');
     if ~strcmp(answer, 'Yes'), return; end
     for k = 1:length(all_figs)
         if k ~= idx

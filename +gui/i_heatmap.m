@@ -196,7 +196,8 @@ Z = zeros(length(glist), length(cL));
             end
             pause(1);
             if needwait
-                waitfor(gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s', filename), ''));
+                gui.myHelpdlg(FigureHandle,...
+                sprintf('Result has been saved in %s', filename), '');
             else
                 gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s', filename), '')
             end

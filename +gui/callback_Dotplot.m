@@ -7,7 +7,7 @@ function callback_Dotplot(src, ~)
     if noanswer, return; end
     % [c, cL] = grp2idx(thisc);
     % 
-    % [answer] = questdlg('Manually order groups?', '', ...
+    % [answer] = gui.myQuestdlg(FigureHandle, 'Manually order groups?', '', ...
     %     'Yes', 'No', 'Cancel', 'No');
     % if isempty(answer), return; end
     % switch answer
@@ -41,7 +41,7 @@ function callback_Dotplot(src, ~)
     
     % if length(glist) > 50
     % 
-    %     answer = questdlg('Output to PowerPoint?');
+    %     answer = gui.myQuestdlg(FigureHandle, 'Output to PowerPoint?');
     %     switch answer
     %         case 'Yes'
     %             needpptx = true;

@@ -57,16 +57,16 @@ if isempty(x), return; end
 
 if addnew
     if isempty(x{1})
-        waitfor(gui.myWarndlg(FigureHandle, 'Attribute Name cannot be empty.',''));
+        gui.myWarndlg(FigureHandle, 'Attribute Name cannot be empty.','');
         return; 
     end
     if isempty(x{2})
-        waitfor(gui.myWarndlg(FigureHandle, 'Attribute Values cannot be empty.',''));
+        gui.myWarndlg(FigureHandle, 'Attribute Values cannot be empty.','');
         return; 
     end
 else
     if isempty(x{1})       % when add new - x{1} is the values
-        waitfor(gui.myWarndlg(FigureHandle, 'Attribute Values cannot be empty.',''));
+        gui.myWarndlg(FigureHandle, 'Attribute Values cannot be empty.','');
         return;
     end
 end
@@ -96,12 +96,13 @@ end
 
     if addnew
         if size(newthisc,1)~=sce.NumCells
-           waitfor(gui.myWarndlg(FigureHandle, 'Attribute length is not equal to the number of cells.',''));
+           gui.myWarndlg(FigureHandle, ...
+               'Attribute length is not equal to the number of cells.','');
            return;
         end
     else
         if ~isequal(size(newthisc), size(thisc))
-           waitfor(gui.myWarndlg(FigureHandle, 'Attribute length changed.',''));
+           gui.myWarndlg(FigureHandle, 'Attribute length changed.','');
            return;
         end
     end
@@ -110,12 +111,12 @@ end
         clabel = matlab.lang.makeValidName(clabel);        
         existinglabels = sce.list_cell_attributes(1:2:end);
         if ismember(clabel, existinglabels)
-            waitfor(gui.myWarndlg(FigureHandle, 'Cell Attribute Name Existing.',''));
+            gui.myWarndlg(FigureHandle, 'Cell Attribute Name Existing.','');
             return;
         end
         sce.list_cell_attributes = [sce.list_cell_attributes, ...
                                     {clabel, newthisc(:)}];
-        waitfor(gui.myHelpdlg(FigureHandle, 'Cell Attribute Added.',''));
+        gui.myHelpdlg(FigureHandle, 'Cell Attribute Added.','');
         needupdate = true;
     else
         switch clabel
@@ -133,7 +134,7 @@ end
                 [y,idx]=ismember(clabel, sce.list_cell_attributes(1:2:end));
                 if y, sce.list_cell_attributes{idx+1} = newthisc; end
         end
-        waitfor(gui.myHelpdlg(FigureHandle, 'Cell Attribute Changed.',''));
+        gui.myHelpdlg(FigureHandle, 'Cell Attribute Changed.','');
         needupdate = true;
     end    
 end

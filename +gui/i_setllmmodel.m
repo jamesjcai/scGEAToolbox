@@ -72,5 +72,5 @@ else
 end
 
 if done
-     waitfor(gui.myHelpdlg(FigureHandle, "LLM provider and model are set successfully.", ''));
+     gui.myHelpdlg(FigureHandle, "LLM provider and model are set successfully.", '');
 end

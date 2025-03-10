@@ -111,7 +111,7 @@ T=T(T.p_val_adj<0.01 & T.gsetsize>=5,:);
 
 
     if height(T)==0
-        waitfor(gui.myHelpdlg(FigureHandle, 'No significant results.',''));
+        gui.myHelpdlg(FigureHandle, 'No significant results.');
         return;
     else
         outfile = sprintf('%s_vs_%s_DP_results', ...
@@ -125,7 +125,7 @@ T=T(T.p_val_adj<0.01 & T.gsetsize>=5,:);
             % "Tcellsignmt","CellSignatTable"
             % "Tdpgenesres","DPGenesResTable"
         if ~isempty(filesaved)
-           waitfor(gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s',filesaved),''));
+           gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s',filesaved));
         end
     end
 
@@ -200,7 +200,7 @@ images = {};
  end
  gui.gui_waitbar_adv(fw);
  if ~success
-     waitfor(gui.myHelpdlg(FigureHandle, 'All figure files are not saved.',''));
+     gui.myHelpdlg(FigureHandle, 'All figure files are not saved.');
      winopen(outdir);
  end
 

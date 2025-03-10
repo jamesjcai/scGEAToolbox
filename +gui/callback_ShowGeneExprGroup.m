@@ -7,14 +7,14 @@ function callback_ShowGeneExprGroup(src, ~)
     [thisc] = gui.i_select1class(sce, allowunique);
     if isempty(thisc), return; end
 
-    answer = questdlg("Select a dependent variable from gene expression or cell state?","", ...
-        'Gene Expression', 'Cell State','Gene Expression');
+    answer = gui.myQuestdlg(FigureHandle, "Select a dependent variable from gene expression or cell state?","", ...
+        {'Gene Expression', 'Cell State'},'Gene Expression');
 
     switch answer
         case 'Gene Expression'
             [glist] = gui.i_selectngenes(sce, [], FigureHandle);
             if isempty(glist), return; end
-            % answer = questdlg("Select the type of expression values","",...
+            % answer = gui.myQuestdlg(FigureHandle, "Select the type of expression values","",...
             %     "Raw UMI Counts","Library Size-Normalized",)            
 
             gui.i_feaplotarray(sce, glist, thisc, false, FigureHandle);

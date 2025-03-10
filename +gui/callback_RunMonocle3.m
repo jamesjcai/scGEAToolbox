@@ -18,7 +18,7 @@ end
 % if ~exist(wkdir,"dir")
 %     mkdir(wkdir);
 % else
-%     answer = questdlg('Directory existing. Overwrite?');
+%     answer = gui.myQuestdlg(FigureHandle, 'Directory existing. Overwrite?');
 %     if ~strcmp(answer,'Yes'), return; end
 % end
 % 
@@ -31,7 +31,7 @@ h = findall(a, 'type', 'scatter');
 ptsSelected = logical(h.BrushData.');
 if ~any(ptsSelected)    
     % gui.myHelpdlg(FigureHandle, 'Please use the brush in the axes toolbar to select root cell(s).', '');
-    answer = questdlg('Use brush to select root cell(s). Ready?','');
+    answer = gui.myQuestdlg(FigureHandle, 'Use brush to select root cell(s). Ready?','');
     if ~strcmp(answer, 'Yes'), return; end
     b = brush(FigureHandle);
     b.ActionPostCallback=@in_checkselected;
@@ -41,7 +41,7 @@ if ~any(ptsSelected)
     disp('User finished brushing!');  
     b.Enable="off";
     if any(ptsSelected)
-        answer = questdlg('Root cell(s) selected. Continue?','');
+        answer = gui.myQuestdlg(FigureHandle, 'Root cell(s) selected. Continue?','');
         if ~strcmp(answer, 'Yes'), return; end
     else
         gui.myHelpdlg(FigureHandle, 'No root cell(s) are selected.','');
@@ -55,7 +55,7 @@ if isempty(idx), gui.myWarndlg(FigureHandle, 'Root cell(s) is missing.',''); ret
 ndim = 2;
 if isempty(ndim), return; end
 
-answer = questdlg('Keep temporary working files?');
+answer = gui.myQuestdlg(FigureHandle, 'Keep temporary working files?');
 switch answer
     case 'Yes'
         isdebug = true;
@@ -116,7 +116,7 @@ end
 guidata(FigureHandle, sce);
 needupdatesce = true;
 
-waitfor(gui.myHelpdlg(FigureHandle, 'Monocle3 pseudotime T and embedding S have been saved in SCE.',''));
+gui.myHelpdlg(FigureHandle, 'Monocle3 pseudotime T and embedding S have been saved in SCE.');
 
 % if ~(ismcc || isdeployed)
 %     labels = {'Save pseudotime T to variable named:'};
@@ -130,7 +130,7 @@ waitfor(gui.myHelpdlg(FigureHandle, 'Monocle3 pseudotime T and embedding S have 
 % end
 
 
-    % answer = questdlg('View Monocle3 Minimum Spanning Tree (MST)?');
+    % answer = gui.myQuestdlg(FigureHandle, 'View Monocle3 Minimum Spanning Tree (MST)?');
     % switch answer
     %     case 'Yes'
     %         f=figure;

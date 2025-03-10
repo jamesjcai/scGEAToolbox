@@ -2,8 +2,8 @@ function callback_FindAllMarkers(src, ~)
 
 [FigureHandle, sce, isui] = gui.gui_getfigsce(src);
 
-    answer = questdlg('Select Method', ...
-        '', 'Marker Gene Heatmap', 'Find All Markers', ...
+    answer = gui.myQuestdlg(FigureHandle, 'Select Method', ...
+        '', {'Marker Gene Heatmap', 'Find All Markers'}, ...
         'Marker Gene Heatmap');
     switch answer
         case 'Find All Markers'
@@ -50,7 +50,7 @@ function in_MarkerGeneHeatmap(src, ~, sce)
     % unique(sce.c_cluster_id)
 
     
-    answer = questdlg("Only consider known (PangloaDB) marker genes?","");
+    answer = gui.myQuestdlg(FigureHandle, "Only consider known (PangloaDB) marker genes?","");
     if strcmp(answer, 'Yes')
         markergenes = pkg.i_get_panglaodbmarkers;
         idx = ismember(upper(sce.g), upper(markergenes));
@@ -61,7 +61,8 @@ function in_MarkerGeneHeatmap(src, ~, sce)
             sce = sce.qcfilter;
             fprintf('Size of filtered matrix: %d genes x %d cells\n', sce.NumGenes, sce.NumCells);
         else
-            waitfor(gui.myHelpdlg(FigureHandle, "Not enough marker genes (n < 2000). Use all genes to search for markers.",""));
+            gui.myHelpdlg(FigureHandle,...
+            "Not enough marker genes (n < 2000). Use all genes to search for markers.");
         end
     elseif strcmp(answer, 'No')
         disp('Consider all genes for marker gene search.');
@@ -79,9 +80,9 @@ function in_MarkerGeneHeatmap(src, ~, sce)
     % if noanswer, return; end
     
     [c] = grp2idx(thisc);
-    answer = questdlg('Generate marker gene heatmap', ...
-        'Select Method', 'Method 1 (DE 🐇)', 'Method 2 (scGeneFit 🐢)', ...
-        'Method 3 (LASSO 🐢🐢)', 'Method 1 (DE 🐇)');
+    answer = gui.myQuestdlg(FigureHandle, 'Generate marker gene heatmap', ...
+        'Select Method', {'Method 1 (DE 🐇)', 'Method 2 (scGeneFit 🐢)', ...
+        'Method 3 (LASSO 🐢🐢)'}, 'Method 1 (DE 🐇)');
     switch answer
         case 'Method 1 (DE 🐇)'
             methodid = 1;

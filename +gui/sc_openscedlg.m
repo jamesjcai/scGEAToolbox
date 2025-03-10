@@ -403,7 +403,7 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
             b = struct2cell(a);
             valididx = ismember(b(4, :), 'SingleCellExperiment');
             if ~valididx
-                waitfor(gui.myHelpdlg(FigureHandle, 'No SCE in Workspace.', ''));
+                gui.myHelpdlg(FigureHandle, 'No SCE in Workspace.', '');
                 return;
             end            
             a = a(valididx);
@@ -520,7 +520,7 @@ end
             assert((numgenes >= 1) && (numgenes <= 30000));
             assert((numcells >= 1) && (numcells <= 30000));
         catch
-            waitfor(gui.myWarndlg(FigureHandle, 'Invalid parameter values.',''));
+            gui.myWarndlg(FigureHandle, 'Invalid parameter values.','');
             return;
         end        
         try

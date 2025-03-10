@@ -9,7 +9,7 @@ if isempty(sce.c_batch_id)
     %errordlg('sce.c_batch_id undefined');
     %return;
 end
-%answer = questdlg('Rename batch ID?');
+%answer = gui.myQuestdlg(FigureHandle, 'Rename batch ID?');
 %if ~strcmp(answer, 'Yes'), return; end
 
 if ~isstring(sce.c_batch_id)

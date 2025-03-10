@@ -49,7 +49,7 @@ f1 = fullfile(wkdir, b, a);
 writetable(T, f1, 'FileType', 'spreadsheet');
 fprintf('The result has been saved in %s\n', f1);
 bx = sprintf('The result has been saved in %s. Open the folder to locate it?', f1);
-answer = questdlg(bx);
+answer = gui.myQuestdlg(FigureHandle, bx);
 switch answer
     case 'Yes'
         winopen(fullfile(tempdir, b));
@@ -59,7 +59,7 @@ end
 %{
 figure;
 ten.e_mkqqplot(T);
-% answer223=questdlg('Run GSEA analysis?');
+% answer223=gui.myQuestdlg(FigureHandle, 'Run GSEA analysis?');
 answer223=gui.i_questdlgtimer(15,'Run GSEA analysis?');
 if ~isempty(answer223) && strcmp(answer223,'Yes')
     gseaok=true;
