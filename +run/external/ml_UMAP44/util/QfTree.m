@@ -447,7 +447,7 @@ classdef QfTree < handle
                 return;
             end
             
-            [~, dsc, freq, ttl]=this.unpackNode(idx, true);
+            [~, dsc, freq, this.ttl]=this.unpackNode(idx, true);
             if isempty(dsc)
                 return;
             end
@@ -518,7 +518,7 @@ classdef QfTree < handle
                             '<br>' idTxt '</td></tr><tr><td>' img...
                             '</td></tr></table></html>'];
                     else
-                        tip=['<html><center>'  ttl '<br>' idTxt...
+                        tip=['<html><center>'  this.ttl '<br>' idTxt...
                             '<hr></center></html>'];
                     end
                     this.gt.app.closeToolTip;
@@ -617,16 +617,16 @@ classdef QfTree < handle
             branchTxt=String.Pluralize2('branch', cntBranch, 'branches');
                 
             if this.selected.size==0
-                ttl=sprintf('%d subset(s) exist', cntAllLeaf);
+                this.ttl=sprintf('%d subset(s) exist', cntAllLeaf);
                 leafTxt=['all ' num2str(cntLeaf) ' subsets'];
             else
                 leafTxt=String.Pluralize2('subset', cntLeaf);
                 if cntBranch>0
-                    ttl=sprintf('<b>Selections</b>: %s &amp; %s', ...
+                    this.ttl=sprintf('<b>Selections</b>: %s &amp; %s', ...
                         String.Pluralize2('subset', cntLeaf), ...
                         String.Pluralize2('branch', cntBranch, 'branches'));
                 else
-                    ttl=['<b>Selections</b>: ' ...
+                    this.ttl=['<b>Selections</b>: ' ...
                         String.Pluralize2(  'subset', cntLeaf)];
                 end
             end
@@ -640,7 +640,7 @@ classdef QfTree < handle
                 Html.Img('close.gif')]), [], ...
                 'blank.png');
             ml=Gui.NewMenuLabel(this.mnuOpts, ['<html>&nbsp;&nbsp;' ...
-                ttl '</html>']);
+                this.ttl '</html>']);
             ml.setEnabled(true);
             this.mnuOpts.addSeparator;
             this.getPinComponent(idx, '', '', this.mnuOpts, ids, cntLeaf);
@@ -1033,8 +1033,8 @@ classdef QfTree < handle
                 idx=idxs(i);
                 key=this.getIdOrInfix(idx);
                 img=this.getPngImg(key, [], .66, true);
-                [~, ~, ~, ttl]=this.unpackNode(idx, true);
-                html=[html ttl '<br>' img '<hr>'];
+                [~, ~, ~, this.ttl]=this.unpackNode(idx, true);
+                html=[html this.ttl '<br>' img '<hr>'];
             end
             html=[html '</html>'];
             Html.Browse(html);
@@ -1475,10 +1475,10 @@ classdef QfTree < handle
             end
             this.createImg([], false);
             grid=this.getGrid;
-            ttl=['<h2>' String.Pluralize2('1D PathFinder', length(this.nodes))...
+            this.ttl=['<h2>' String.Pluralize2('1D PathFinder', length(this.nodes))...
                 ' arranged by phenogram''s associations</h2>(<b><i>Scroll vertically ' ...
                 '& horizontally to see all)<hr>'];
-            html=[html ttl '<table border="0"  cellpadding="0" cellspacing="0">'];
+            html=[html this.ttl '<table border="0"  cellpadding="0" cellspacing="0">'];
             startHtml='<td><table border="1" cellpadding="0" cellspacing="0"><tr><td>';
             endHtml='</td></tr></table></td>';
             [R,C]=size(grid);
@@ -1492,13 +1492,13 @@ classdef QfTree < handle
                             if idx==0
                                 html=[html '<td></td>'];
                             else
-                                [~, ~, ~, ttl, key, ~]=...
+                                [~, ~, ~, this.ttl, key, ~]=...
                                     this.unpackNode(idx, true);
-                                ttl=strrep(ttl, this.app.smallStart, '<small>');
-                                ttl=strrep(ttl, this.app.smallEnd, '</small>');
+                                this.ttl=strrep(this.ttl, this.app.smallStart, '<small>');
+                                this.ttl=strrep(this.ttl, this.app.smallEnd, '</small>');
                                 img=this.getPngImg(key,[], .22, true);
                                 %if N==1
-                                    html=[html startHtml ttl '<hr>'...
+                                    html=[html startHtml this.ttl '<hr>'...
                                         img endHtml];
                                 %else
                                 %    html=[html startHtml ttl '<hr>' img endHtml];
@@ -1835,17 +1835,17 @@ classdef QfTree < handle
             end
             sz=this.qf.nodeSzs(idx);
             treeSz=this.qf.treeSz;
-            ttl=this.gt.describeForTex(id, sz, treeSz);
-            if String.Contains(ttl{1}, ' | ')
-                ttl{1}=['Gate IDs: ' strrep(ttl{1}, ' | ', ' or ')];
+            this.ttl=this.gt.describeForTex(id, sz, treeSz);
+            if String.Contains(this.ttl{1}, ' | ')
+                this.ttl{1}=['Gate IDs: ' strrep(this.ttl{1}, ' | ', ' or ')];
             end
             if idx<=length(this.leafNames)
                 who=this.gt.who(id);
-                String.IndexOf(ttl{1}, who)
-                ttl{1}=strrep(ttl{1}, who, ['\bf' this.leafNames{idx}]);
+                String.IndexOf(this.ttl{1}, who)
+                this.ttl{1}=strrep(this.ttl{1}, who, ['\bf' this.leafNames{idx}]);
             end
             ax_=get(fig1D, 'currentaxes');
-            T=title(ax_, ttl);
+            T=title(ax_, this.ttl);
             if ~isempty(colNames)
                 nD=length(colNames);
                 if nD<7
@@ -2092,9 +2092,9 @@ classdef QfTree < handle
             N=length(ids);
             if N>1 && idx>0
                 if length(this.gtMap) >= idx && ~isempty(this.gtMap{idx})
-                    ttl=String.Pluralize2('merged gate', N);
+                    this.ttl=String.Pluralize2('merged gate', N);
                     [yes, cancelled]=askYesOrNo(['Use boolean gate of ' ...
-                        ttl '?'],ttl, 'North', false, 'usePhenoBoolean');
+                        this.ttl '?'],this.ttl, 'North', false, 'usePhenoBoolean');
                     if yes
                         ids=this.gtMap(idx);
                         N=1;
@@ -2310,8 +2310,8 @@ classdef QfTree < handle
                         '" bgcolor="#FFFFDD"><hr>'];
                 end
                 for i=1:N
-                    [~, ~, ~, ttl]=this.unpackNode(idxs(i), true);
-                    html=[html '<tr>' td ttl  '</td></tr><tr><td>' ...
+                    [~, ~, ~, this.ttl]=this.unpackNode(idxs(i), true);
+                    html=[html '<tr>' td this.ttl  '</td></tr><tr><td>' ...
                         this.gt.describe(ids{i}, false, true, false, ...
                         'blue', true, true, true, true, true, numCols)...
                         '</td></tr>'];

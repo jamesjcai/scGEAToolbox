@@ -2839,7 +2839,7 @@ function [handles,levels,parentIdx,listing] = findjobj(container,varargin) %#ok<
                                 %fclose(fid);
                                 [fpath,fname,fext] = fileparts(which(mfilename));
                                 zipFileName = fullfile(fpath,'uiinspect.zip');
-                                urlwrite(fileUrl,zipFileName);
+                                websave(fileUrl,zipFileName);
                                 unzip(zipFileName,fpath);
                                 rehash;
                             catch
@@ -2959,7 +2959,7 @@ function [handles,levels,parentIdx,listing] = findjobj(container,varargin) %#ok<
                                         %fclose(fid);
                                         [fpath,fname,fext] = fileparts(thisFileName);
                                         zipFileName = fullfile(fpath,[fname '.zip']);
-                                        urlwrite(fileUrl,zipFileName);
+                                        websave(fileUrl,zipFileName);
                                         unzip(zipFileName,fpath);
                                         rehash;
                                     catch

@@ -13,7 +13,7 @@ preftagname = 'externalwrkpath';
 if isempty(wkdir), return; end
 
 
-[i1, i2] = gui.i_select2smplgrps(sce, false);
+[i1, i2] = gui.i_select2smplgrps(sce, false, FigureHandle);
 if isscalar(i1) || isscalar(i2), return; end
 
 fw = gui.gui_waitbar;

@@ -44,14 +44,14 @@ ax0=cell(n,1);
 h0=cell(n,1);
 
 OldTitle = cell(n,1);
-for k = 1:n
-    tab{k} = uitab(tabgp, 'Title', sprintf('%s',tabnamelist(k)));
-    ax0{k} = axes('parent',tab{k});
-    h0{k} = scatter(ax0{k}, thisx(:), y{k}(:));
-    xlabel(ax0{k}, xlabelv);
-    ylabel(ax0{k}, strrep(tabnamelist(k), '_', '\_'));
-    % pkg.i_violinplot(y{k}, thisx, true, cLorder);
-    title(ax0{k}, strrep(tabnamelist(k), '_', '\_'));
+for ks = 1:n
+    tab{ks} = uitab(tabgp, 'Title', sprintf('%s',tabnamelist(ks)));
+    ax0{ks} = axes('parent',tab{ks});
+    h0{ks} = scatter(ax0{ks}, thisx(:), y{ks}(:));
+    xlabel(ax0{ks}, xlabelv);
+    ylabel(ax0{ks}, strrep(tabnamelist(ks), '_', '\_'));
+    % pkg.i_violinplot(y{ks}, thisx, true, cLorder);
+    title(ax0{ks}, strrep(tabnamelist(ks), '_', '\_'));
 end
   
 tabgp.SelectionChangedFcn=@displaySelection;
@@ -92,39 +92,39 @@ hx.show(parentfig);
          end
      end
          
-    function i_savemainfigx(~,~)
-        [~,idx]=ismember(focalg, tabnamelist);     
-        filter = {'*.jpg'; '*.png'; '*.tif'; '*.pdf'; '*.eps'};
-        [filename, filepath] = uiputfile(filter,'Save Violin Plot', ...
-            sprintf('ViolinPlot_%s',focalg));
-        if ischar(filename)
-            exportgraphics(ax0{idx}, [filepath, filename]);
-        end
-    end
-
-    function i_savemainfig(~,~)
-        answer = gui.myQuestdlg(parentfig, 'Export to PowerPoint?');
-        if ~strcmp(answer,'Yes'), return; end
-
-        fw=gui.gui_waitbar_adv;
-            OUTppt = [tempname, '.pptx'];
-            ppt = Presentation(OUTppt, pth);
-            open(ppt);
-            images=cell(n,1);
-            warning off
-        for kx=1:n
-            gui.gui_waitbar_adv(fw,kx./n,"Processing "+tabnamelist(kx)+" ...");
-            images{kx} = [tempname, '.png'];
-            tabgp.SelectedTab=tab{kx};
-            saveas(tab{kx},images{kx});
-            slide3 = add(ppt, 'Small Title and Content');
-            replace(slide3, 'Title', tabnamelist(kx));
-            replace(slide3, 'Content', Picture(images{kx}));        
-        end
-            close(ppt);
-            rptview(ppt);      
-            gui.gui_waitbar_adv(fw);
-    end
+    % function i_savemainfigx(~,~)
+    %     [~,idx]=ismember(focalg, tabnamelist);     
+    %     filter = {'*.jpg'; '*.png'; '*.tif'; '*.pdf'; '*.eps'};
+    %     [filename, filepath] = uiputfile(filter,'Save Violin Plot', ...
+    %         sprintf('ViolinPlot_%s',focalg));
+    %     if ischar(filename)
+    %         exportgraphics(ax0{idx}, [filepath, filename]);
+    %     end
+    % end
+    % 
+    % function i_savemainfig(~,~)
+    %     answer = gui.myQuestdlg(parentfig, 'Export to PowerPoint?');
+    %     if ~strcmp(answer,'Yes'), return; end
+    % 
+    %     fw=gui.gui_waitbar_adv;
+    %         OUTppt = [tempname, '.pptx'];
+    %         ppt = Presentation(OUTppt, pth);
+    %         open(ppt);
+    %         images=cell(n,1);
+    %         warning off
+    %     for kx=1:n
+    %         gui.gui_waitbar_adv(fw,kx./n,"Processing "+tabnamelist(kx)+" ...");
+    %         images{kx} = [tempname, '.png'];
+    %         tabgp.SelectedTab=tab{kx};
+    %         saveas(tab{kx},images{kx});
+    %         slide3 = add(ppt, 'Small Title and Content');
+    %         replace(slide3, 'Title', tabnamelist(kx));
+    %         replace(slide3, 'Content', Picture(images{kx}));        
+    %     end
+    %         close(ppt);
+    %         rptview(ppt);      
+    %         gui.gui_waitbar_adv(fw);
+    % end
 
     function displaySelection(~,event)
         t = event.NewValue;

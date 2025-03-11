@@ -110,7 +110,7 @@ classdef RoiUtil < handle
                         'ContextMenu', [], 'SelectedColor', ...
                         RoiUtil.NEW_COLOR);
                 else
-                    roi=imellipse(ax);
+                    roi=drawcircle(ax);
                     RoiUtil.SetColor(roi, RoiUtil.NEW_COLOR);
                 end
             else
@@ -568,7 +568,7 @@ classdef RoiUtil < handle
                 if strcmp(this.type, RoiUtil.RECTANGLE)
                     H=imrect(parent, this.position);
                 elseif strcmp(this.type, RoiUtil.ELLIPSE)
-                    H=imellipse(parent, this.position(1:4));
+                    H=drawcircle(parent, this.position(1:4));
                 else
                     H=impoly(parent, this.position);
                 end

@@ -113,8 +113,8 @@ classdef PopUp < handle
             this.overallTock=tock;
             fs=11;
             try
-                app=BasicMap.Global;
-                if app.highDef
+                this.app=BasicMap.Global;
+                if this.app.highDef
                     fs=18;
                 end
             catch

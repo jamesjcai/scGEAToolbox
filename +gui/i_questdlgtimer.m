@@ -72,6 +72,7 @@ if nargout > 1
         end
 
         if nargin < 2
+
             error('MATLAB:questdlg_timer:TooFewArguments', 'Too few arguments for QUESTDLG_TIMER');
                 end
 
@@ -202,6 +203,7 @@ if nargout > 1
                         FigPos(3) - DefOffset - BtnWidth];
                     BtnXOffset(2) = (BtnXOffset(1) + BtnXOffset(3)) / 2;
                 end
+                
 
                 MsgTxtYOffset = DefOffset + BtnYOffset + BtnHeight;
                 MsgTxtWidth = FigPos(3) - DefOffset - MsgTxtXOffset - IconWidth;
@@ -313,6 +315,7 @@ if nargout > 1
                     IconYOffset = MsgTxtYOffset + (MsgTxtHeight - IconHeight) / 2;
                     FigPos(4) = MsgTxtYOffset + MsgTxtHeight + DefOffset;
                 end
+
 
                 if NumButtons == 1
                     BtnXOffset = (FigPos(3) - BtnWidth) / 2;
@@ -435,10 +438,13 @@ set(IconAxes, ...
                     end
                 end
 
+
                 function doDelete(varargin)
                     delete(QuestFig);
                 end
-            end
+
+end
+
 
             %--------------------------------------------------------------------------
 
@@ -513,7 +519,9 @@ set(IconAxes, ...
                                     % Make sure it is stacked on the bottom.
                                     uistack(h1, 'bottom');
                                 end
-                            end
+
+            end
+
 
                             %--------------------------------------------------------------------------
 

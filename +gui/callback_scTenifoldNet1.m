@@ -1,6 +1,6 @@
 function callback_scTenifoldNet1(src, events)
 
-[FigureHandle, sce] = gui.gui_getfigsce(src);
+[FigureHandle, ~] = gui.gui_getfigsce(src);
 import ten.*
 try
     ten.check_tensor_toolbox;

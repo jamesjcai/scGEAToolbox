@@ -61,6 +61,7 @@ if exist(ptImgFile, 'file'), load(ptImgFile, 'ptImgCell'); end
 
 f_traj = [];   % trajectory curve
 ax = []; bx = [];
+
 tmpcelltypev = cell(sce.NumCells, 1);
 
 if ~isempty(c_in), sce.c = c_in; end
@@ -743,12 +744,12 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                     'Brennecke et al. (2013) [PMID:24056876]'}, ...
                     'Splinefit Method [PMID:31697351]');                
                 switch answer
-                    case 'Brennecke et al. (2013) [PMID:24056876]'
-                        fw = gui.gui_waitbar;
-                        T = sc_hvg(sce.X, sce.g);
                     case 'Splinefit Method [PMID:31697351]'
                         fw = gui.gui_waitbar;
                         T = sc_splinefit(sce.X, sce.g);
+                    case 'Brennecke et al. (2013) [PMID:24056876]'
+                        fw = gui.gui_waitbar;
+                        T = sc_hvg(sce.X, sce.g);                        
                     otherwise
                         return;
                 end
@@ -1687,16 +1688,17 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             return;
         end        
         if ~strcmp(gui.myQuestdlg(FigureHandle, 'This is a one-time analysis. Cell type labels will not be saved. Continue?',''), 'Yes'), return; end
-        if isempty(speciestag)
+        if ~exist('speciestag', 'var') || isempty(speciestag)
+            % xxx
             speciestag = gui.i_selectspecies(2, false, FigureHandle);
         end
         if isempty(speciestag), return; end
-        fw = gui.gui_waitbar;
+        fw = gui.myWaitbar(FigureHandle);
         [Tct] = pkg.local_celltypebrushed(sce.X, sce.g, sce.s, ...
             ptsSelected, ...
             speciestag, "all", "panglaodb", false);
         ctxt = Tct.C1_Cell_Type;
-        gui.gui_waitbar(fw);
+        gui.myWaitbar(FigureHandle,fw);
 
         if gui.i_isuifig(FigureHandle)
             [indx, tf] = gui.myListdlg(FigureHandle, ctxt, 'Select cell type');
@@ -1712,16 +1714,17 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         end
         ctxt = strrep(ctxt, '_', '\_');
         delete(findall(FigureHandle, 'Type', 'hggroup'));
-        if ~exist('tmpcelltypev', 'var')
-            tmpcelltypev = cell(sce.NumCells, 1);
+        if ~exist('tmpcelltypev', 'var') || length(tmpcelltypev) ~= sce.NumCells
+            tmpcelltypev = cell(sce.NumCells, 1);            
         end
         siv = sce.s(ptsSelected, :);
         si = mean(sce.s(ptsSelected, :));
         [k] = dsearchn(siv, si);
         idx = find(ptsSelected);
         tmpcelltypev{idx(k)} = ctxt;
-        row = dataTipTextRow('', tmpcelltypev);
-        h.DataTipTemplate.DataTipRows = row;
+        %assignin("base","tmpcelltypev",tmpcelltypev)
+        rowx = dataTipTextRow('', tmpcelltypev);
+        h.DataTipTemplate.DataTipRows = rowx;
         datatip(h, 'DataIndex', idx(k));
     end
 

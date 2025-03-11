@@ -19,9 +19,9 @@ if isempty(dim) || isempty(methodid), return; end
 szgn = grpstats(c, c, @numel);
 a = zeros(1, max(c));
 b = zeros(1, max(c));
-for k = 1:max(c)
-    a(k) = sum(c <= k);
-    b(k) = round(sum(c == k)./2);
+for kx = 1:max(c)
+    a(kx) = sum(c <= kx);
+    b(kx) = round(sum(c == kx)./2);
 end
 
 % figure;
@@ -46,8 +46,8 @@ set(gca, 'TickLength', [0, 0]);
 box on
 
 szc = cumsum(szgn);
-for k = 1:length(szc)
-    xline(szc(k)+0.5, 'y-');
+for kx = 1:length(szc)
+    xline(szc(kx)+0.5, 'y-');
 end
 
 
@@ -147,8 +147,8 @@ Z = zeros(length(glist), length(cL));
     end        
 
     function i_summarymap(~, ~)
-        for k = 1:length(cL)
-            Z(:, k) = mean(Y(:, c == k), 2);
+        for ky = 1:length(cL)
+            Z(:, ky) = mean(Y(:, c == ky), 2);
         end
         
         hx1=gui.myFigure;
@@ -205,8 +205,8 @@ Z = zeros(length(glist), length(cL));
     end
 
     function i_summarymapT(~, ~)
-            for k = 1:length(cL)
-                Z(:, k) = mean(Y(:, c == k), 2);
+            for ky = 1:length(cL)
+                Z(:, ky) = mean(Y(:, c == ky), 2);
             end
         
         hx2=gui.myFigure;

@@ -60,39 +60,9 @@ function callback_DEVP2GroupsBatch(src, ~)
             
             [Tup, Tdn] = pkg.e_processDETable(T, paramset, FigureHandle);
             try
-                writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All_genes');
-                writetable(Tup, filesaved, "FileType", "spreadsheet", 'Sheet', 'Up-regulated');
-                writetable(Tdn, filesaved, "FileType", "spreadsheet", 'Sheet', 'Down-regulated');
+                gui.e_tupdn2xlsx(Tup,Tdn,T,filesaved);
                 writetable(Tnt, filesaved, "FileType", "spreadsheet", 'Sheet', 'Note');
-            catch ME
-                warning(ME.message);
-            end
-            
-
-            try
-                gui.e_enrichrxlsx(Tup,Tdn,T,filesaved);
-
-                % [Tlist1] = run.ml_Enrichr(Tup.gene(1:min([250 height(Tup)])), ...
-                %             T.gene, ["GO_Biological_Process_2023", ...
-                %                      "GO_Molecular_Function_2023", ...
-                %                      "KEGG_2021_Human"]);
-                % Tbp1 = Tlist1{1};
-                % Tmf1 = Tlist1{2};
-                % Keg1 = Tlist1{3};
-                % in_writetable(Tbp1, filesaved, 'Up_250_GO_BP');
-                % in_writetable(Tmf1, filesaved, 'Up_250_GO_MF');
-                % in_writetable(Keg1, filesaved, 'Up_250_KEGG');
-                % 
-                % [Tlist2] = run.ml_Enrichr(Tdn.gene(1:min([250 height(Tdn)])), ...
-                %             T.gene, ["GO_Biological_Process_2023", ...
-                %                      "GO_Molecular_Function_2023",...
-                %                      "KEGG_2021_Human"]);
-                % Tbp2 = Tlist2{1};
-                % Tmf2 = Tlist2{2};
-                % Keg2 = Tlist2{3};
-                % in_writetable(Tbp2, filesaved, 'Dn_250_GO_BP');
-                % in_writetable(Tmf2, filesaved, 'Dn_250_GO_MF');
-                % in_writetable(Keg2, filesaved, 'Dn_250_KEGG');
+                gui.e_enrichrxlsx(Tup, Tdn, T, filesaved);
             catch ME
                 warning(ME.message);
             end
@@ -107,17 +77,7 @@ function callback_DEVP2GroupsBatch(src, ~)
         
     end
     gui.gui_waitbar_adv(fw);
-    
-    %fw=gui.gui_waitbar;
-    %try
-    % assignin('base',"TbpUp",Tbp1);
-    % assignin('base',"TmfUp",Tmf1);
-    % assignin('base',"TbpDn",Tbp2);
-    % assignin('base',"TmfDn",Tmf2);
-    % assignin('base',"CellType",CellTypeList{k});
-    % disp('[done] = gui.e_llmsummarizer(TbpUp, TmfUp, TbpDn, TmfDn, CellType);');
-    %catch
-    %gui.gui_waitbar(fw);
+   
     
     % ------------------------------------------ DV
     fw = gui.gui_waitbar_adv;
@@ -188,50 +148,24 @@ function callback_DEVP2GroupsBatch(src, ~)
             end
     
             try
-                writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All genes');
-                writetable(Tup, filesaved, "FileType", "spreadsheet", 'Sheet', 'Up-regulated');
-                writetable(Tdn, filesaved, "FileType", "spreadsheet", 'Sheet', 'Down-regulated');
-                writetable(Tnt, filesaved, "FileType", "spreadsheet", 'Sheet', 'Note');
-            catch ME
-                warning(ME.message);
-            end
-    
-            try
+                gui.e_tupdn2xlsx(Tup,Tdn,T,filesaved);
+                writetable(Tnt, filesaved, "FileType", "spreadsheet", 'Sheet', 'Note');                
                 gui.e_enrichrxlsx(Tup,Tdn,T,filesaved);
-
-                % [Tlist1] = run.ml_Enrichr(Tup.gene(1:min([250 height(Tup)])), ...
-                %             T.gene, ["GO_Biological_Process_2023", ...
-                %                      "GO_Molecular_Function_2023",...
-                %                      "Reactome_Pathways_2024",...
-                %                      "KEGG_2021_Human"]);
-                %                      % KEGG_2019_Mouse
-                % Tbp1 = Tlist1{1};
-                % Tmf1 = Tlist1{2};
-                % in_writetable(Tbp1, filesaved, 'Up_250_GO_BP');
-                % in_writetable(Tmf1, filesaved, 'Up_250_GO_MF');
-                % 
-                % [Tlist2] = run.ml_Enrichr(Tdn.gene(1:min([250 height(Tdn)])), ...
-                %             T.gene, ["GO_Biological_Process_2023", ...
-                %                      "GO_Molecular_Function_2023"]);
-                % Tbp2 = Tlist2{1};
-                % Tmf2 = Tlist2{2};
-                % in_writetable(Tbp2, filesaved, 'Dn_250_GO_BP');
-                % in_writetable(Tmf2, filesaved, 'Dn_250_GO_MF');
             catch ME
                 warning(ME.message);
             end
     
-            % try
-            %     [done] = gui.e_llmsummarizer(Tbp1,Tmf1,Tbp2,Tmf2, ...
-            %         sprintf('DV_%s', CellTypeList{k}));
-            % catch
-            % 
-            % end
     end
     gui.gui_waitbar_adv(fw);
     
     % ----------------------------- DP
-    ctag = {"H", "C2", "C5", "C6", "C7"};
+    ctag = {"H", "C2", "C5", "C6", "C7"}';
+    ccat = {"H: Hallmark gene sets (broadly defined, high-quality gene signatures representing specific biological states or processes)", ...
+        "C2: Curated gene sets (pathways from KEGG, Reactome, BioCarta, and literature)",...
+        "C5: Gene Ontology (GO) gene sets (BP: biological process, CC: cellular component, MF: molecular function)",...
+        "C6: Oncogenic signatures (gene sets linked to cancer-related mutations and pathways)",...
+        "C7: Immunologic signatures (gene sets related to immune cell expression and responses)"}';
+
     pw1 = fileparts(mfilename('fullpath'));
     
     for c = 1:length(ctag)
@@ -277,6 +211,9 @@ function callback_DEVP2GroupsBatch(src, ~)
         end
         gui.gui_waitbar_adv(fw);
     end
+
+    Tnt = table(ctag, ccat);
+    writetable(Tnt, filesaved, "FileType", "spreadsheet", 'Sheet', 'Note');
     
     answer = gui.myQuestdlg(FigureHandle, sprintf('Result files saved. Open the folder %s?', outdir), '');
     if strcmp(answer,'Yes'), winopen(outdir); end
@@ -286,12 +223,6 @@ function callback_DEVP2GroupsBatch(src, ~)
         gui.sc_llm_enrichr2word(outdir);
     end
 
-    % function in_writetable(Tmf1, filesaved, shtname)
-    %     if ~isempty(Tmf1) && istable(Tmf1) && height(Tmf1) > 0
-    %         writetable(Tmf1, filesaved, "FileType", "spreadsheet", 'Sheet', shtname);
-    %     end
-    % end
-    
 end
 
 

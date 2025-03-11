@@ -12,7 +12,7 @@ if ismcc || isdeployed, makePPTCompilable(); end
 import mlreportgen.ppt.*;
 
 pw1 = fileparts(mfilename('fullpath'));
-pth = fullfile(pw1, '..', 'resources', 'Misc', 'myTemplate.pptx');
+%pth = fullfile(pw1, '..', 'resources', 'Misc', 'myTemplate.pptx');
 
 
 hx=gui.myFigure;
@@ -112,42 +112,42 @@ hx.addCustomButton('off', @in_savedata, "floppy-disk-arrow-in.jpg", 'Save Gene L
 %hx.addCustomButton('off', @in_set3dview, "tool_ellipse.gif", 'Set 3D View...');
 hx.show(parentfig)
 
-    function in_set3dview(~, ~)
-        [aa, bb] = view(ax{idx,2});
-        answer = gui.myQuestdlg(hFig, 'Apply current view (azimuth and elevation angles) to all tabs?','');
-        if strcmp(answer, 'Yes')
-            for kx = 1:length(glist)
-                if kx ~= idx
-                    view(ax{kx,2}, [aa, bb]);
-                end
-            end
-        end
-    end
+    % function in_set3dview(~, ~)
+    %     [aa, bb] = view(ax{idx,2});
+    %     answer = gui.myQuestdlg(hFig, 'Apply current view (azimuth and elevation angles) to all tabs?','');
+    %     if strcmp(answer, 'Yes')
+    %         for kx = 1:length(glist)
+    %             if kx ~= idx
+    %                 view(ax{kx,2}, [aa, bb]);
+    %             end
+    %         end
+    %     end
+    % end
 
     function in_savedata(~,~)
         gui.i_exporttable(table(glist), true, ...
             'Tmarkerlist','MarkerListTable');    
     end
 
-    function in_savemainfigx(~,~)
-        answer = gui.myQuestdlg(hFig, 'Select Sub-plot to export:','', ...
-            {'Left','Right','Cancel'},'Left');
-        switch answer
-            case 'Left'
-                p = 1;
-            case 'Right'
-                p = 2;
-            otherwise
-                return;
-        end
-        [~,idx]=ismember(focalg, glist);     
-        filter = {'*.jpg'; '*.png'; '*.tif'; '*.pdf'; '*.eps'};
-        [filename, filepath] = uiputfile(filter,'Save Feature Plot', ...
-            sprintf('FeaturePlot_%s', focalg));
-        if ischar(filename)
-            exportgraphics(ax{idx,p}, [filepath, filename]);
-        end
-    end
+    % function in_savemainfigx(~,~)
+    %     answer = gui.myQuestdlg(hFig, 'Select Sub-plot to export:','', ...
+    %         {'Left','Right','Cancel'},'Left');
+    %     switch answer
+    %         case 'Left'
+    %             p = 1;
+    %         case 'Right'
+    %             p = 2;
+    %         otherwise
+    %             return;
+    %     end
+    %     [~,idx]=ismember(focalg, glist);     
+    %     filter = {'*.jpg'; '*.png'; '*.tif'; '*.pdf'; '*.eps'};
+    %     [filename, filepath] = uiputfile(filter,'Save Feature Plot', ...
+    %         sprintf('FeaturePlot_%s', focalg));
+    %     if ischar(filename)
+    %         exportgraphics(ax{idx,p}, [filepath, filename]);
+    %     end
+    % end
 
     % function in_savemainfig(~,~)
     %     answer = gui.myQuestdlg(hFig, 'Export to PowerPoint?');
@@ -192,19 +192,19 @@ hx.show(parentfig)
 end
 
 
-function in_PickColorMap(~, ~, c)
-        list = {'parula', 'turbo', 'hsv', 'hot', 'cool', 'spring', ...
-            'summer', 'autumn (default)', ...
-            'winter', 'jet'};
-        [indx, tf] = listdlg('ListString', list, 'SelectionMode', 'single', ...
-            'PromptString', 'Select a colormap:', 'ListSize', [220, 300]);
-        if tf == 1
-            a = list{indx};
-            if strcmp(a, 'autumn (default)')
-                a = 'autumn';
-            end
-            gui.i_setautumncolor(c, a);
-            setpref('scgeatoolbox', 'prefcolormapname', a);
-        end
-    end
-
+% function in_PickColorMap(~, ~, c)
+%         list = {'parula', 'turbo', 'hsv', 'hot', 'cool', 'spring', ...
+%             'summer', 'autumn (default)', ...
+%             'winter', 'jet'};
+%         [indx, tf] = listdlg('ListString', list, 'SelectionMode', 'single', ...
+%             'PromptString', 'Select a colormap:', 'ListSize', [220, 300]);
+%         if tf == 1
+%             a = list{indx};
+%             if strcmp(a, 'autumn (default)')
+%                 a = 'autumn';
+%             end
+%             gui.i_setautumncolor(c, a);
+%             setpref('scgeatoolbox', 'prefcolormapname', a);
+%         end
+%     end
+% 

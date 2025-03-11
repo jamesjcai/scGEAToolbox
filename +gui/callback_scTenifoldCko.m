@@ -1,12 +1,14 @@
 function callback_scTenifoldCko(src, ~)
 
-if ~gui.gui_showrefinfo('scTenifoldCko [Unpublished]', FigureHandle), return; end
+
 if isa(src, "SingleCellExperiment")
     sce = src;
     FigureHandle = [];
 else
     [FigureHandle, sce] = gui.gui_getfigsce(src);
 end
+
+if ~gui.gui_showrefinfo('scTenifoldCko [Unpublished]', FigureHandle), return; end
 
 if ~(isscalar(unique(sce.c_batch_id)) && numel(unique(sce.c_cell_type_tx))==2)
     errordlg(sprintf('This function requires data in one batch and has two cell types.\nisscalar(unique(sce.c_batch_id)) && numel(unique(sce.c_cell_type_tx))==2'),'');

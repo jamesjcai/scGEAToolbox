@@ -1,8 +1,10 @@
 function callback_scTenifoldXct(src, ~)
 
+[FigureHandle, sce] = gui.gui_getfigsce(src);
+
 if ~gui.gui_showrefinfo('scTenifoldXct [PMID:36787742]', FigureHandle), return; end
 
-[FigureHandle, sce] = gui.gui_getfigsce(src);
+
 
 numglist = [1 3000 5000];
 memmlist = [16 32 64 128];

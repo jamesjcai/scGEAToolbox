@@ -2,6 +2,7 @@ function [needupdatesce] = callback_RunMonocle3(src, ~)
 
 needupdatesce = false;
 extprogname = 'R_monocle3';
+[FigureHandle] = gui.gui_getfigsce(src);
 
 [wrkdir] = gui.i_getwrkdir;
 if isempty(wrkdir)
@@ -24,7 +25,7 @@ end
 % 
 % fprintf('CURRENTWDIR = "%s"\n', wkdir);
 
-[FigureHandle] = gui.gui_getfigsce(src);
+
 
 a = findall(FigureHandle, 'type', 'axes');
 h = findall(a, 'type', 'scatter');
