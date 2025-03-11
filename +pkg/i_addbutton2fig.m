@@ -59,7 +59,7 @@ end
         if ischar(imgFil) || isstring(imgFil)
             imgPath = fullfile(mfolder, '..', 'resources', 'Images', imgFil);
             if ~isfile(imgPath)
-                warning('Image file "%s" not found. Using a random icon.', imgPath);
+                % warning('Image file "%s" not found. Using a random icon.', imgPath);
             end
             try
                 [ptImage, map] = imread(imgPath);

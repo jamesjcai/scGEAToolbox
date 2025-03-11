@@ -1,7 +1,7 @@
 function callback_CheckUpdates(src, ~)    
 
     toolboxPath = fileparts(fileparts(mfilename('fullpath')));
-    [FigureHandle, ~, isui] = gui.gui_getfigsce(src);
+    [FigureHandle] = gui.gui_getfigsce(src);
     % Col = webread('https://api.github.com/repos/jamesjcai/scGEAToolbox')
     try
         [majneedupdate, v_old, v_new] = pkg.i_majvercheck;

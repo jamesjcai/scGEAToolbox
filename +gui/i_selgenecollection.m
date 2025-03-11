@@ -1,5 +1,5 @@
-function [indx1, species] = i_selgenecollection
-
+function [indx1, species] = i_selgenecollection(FigureHandle)
+if nargin < 1, FigureHandle = []; end
 %see also: i_selectcellscore
 
 %MSigDB Molecular Signatures

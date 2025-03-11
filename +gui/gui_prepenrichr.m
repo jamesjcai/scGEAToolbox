@@ -34,10 +34,11 @@ if ~isempty(backgroundlist)
     end
 end
 
-enrichrtype = gui.myQuestdlg(FigureHandle, 'Select the type of Enrichr application.','', ...
-          {'Web-based', 'API-based'}, 'API-based');
+%enrichrtype = gui.myQuestdlg(FigureHandle, 'Select the type of Enrichr application.','', ...
+%          {'Web-based', 'API-based'}, 'API-based');
 
-% answer1 = "Web-based";
+enrichrtype = "Web-based";
+
 % switch answer1 
 %     case "API-based"
 % 

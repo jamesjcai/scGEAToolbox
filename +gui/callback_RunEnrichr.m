@@ -23,7 +23,8 @@ if nargin < 3, predefinedlist = []; end
             ingenelist = gui.i_inputgenelist(gsorted(randperm(n, min([200, length(gsorted)]))));
         end
     else
-        ingenelist = gui.i_inputgenelist(predefinedlist);
+        % ingenelist = gui.i_inputgenelist(predefinedlist);
+        ingenelist = predefinedlist;
     end
     if isempty(ingenelist) || all(strlength(ingenelist) < 1)
         return;

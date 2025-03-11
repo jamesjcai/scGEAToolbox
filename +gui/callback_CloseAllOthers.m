@@ -3,7 +3,7 @@ function callback_CloseAllOthers(src, ~)
     
     % Get the handle of the currently active figure
     % currentFigureHandle = gcf;
-    [currentFigureHandle, sce, isui] = gui.gui_getfigsce(src);
+    [currentFigureHandle] = gui.gui_getfigsce(src);
     
     % Find all open figure handles in the workspace
     allFigures = findobj(0, 'type', 'figure');

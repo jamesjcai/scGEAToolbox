@@ -3,7 +3,7 @@ function callback_DrawNetwork(src, ~)
 
 import mlreportgen.ppt.*;
 
-[FigureHandle, ~, isui] = gui.gui_getfigsce(src);
+[FigureHandle] = gui.gui_getfigsce(src);
 
 answer = gui.myQuestdlg(FigureHandle, "Input edge list from:","Select Source", ...
     {'Paste Text', 'Open File', 'Cancel'},'Paste Text');

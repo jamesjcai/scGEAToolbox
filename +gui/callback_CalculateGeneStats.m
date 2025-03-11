@@ -37,11 +37,15 @@ function callback_CalculateGeneStats(src, ~)
 
         % Calculate and merge gene stats for each group
         for k = 2:length(cL)
-            t = sc_genestats(Xt(:, c == k), sce.g);
+            t = sc_genestats(Xt(:, c == k), sce.g);            
             for j = 2:4
-                t.Properties.VariableNames{j} = sprintf('%s_%s', t.Properties.VariableNames{j}, cL{k});
+                t.Properties.VariableNames{j} = sprintf('%s_%s', ...
+                    t.Properties.VariableNames{j}, cL{k});
             end
-            T = [T; t(:, 2:4)];
+
+            %size(T)
+            %size(t)
+            T = [T, t(:, 2:4)];
         end
 
     else
@@ -50,9 +54,6 @@ function callback_CalculateGeneStats(src, ~)
     end
     
     % Export the results to a table
-    gui.i_exporttable(T, true, 'GeneStatsTable',[],[],[], FigureHandle);
-    
-    % Update the GUI with waitbar
-    gui.gui_waitbar;
+    gui.i_exporttable(T, true, 'GeneStatsTable',[],[],[], FigureHandle);    
 end
 

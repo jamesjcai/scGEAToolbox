@@ -15,7 +15,7 @@ function callback_DPGene2GroupsBatch(src, ~)
         outdir] = gui.i_batchmodeprep(sce, prefixtag, wrkdir);
     if ~done, return; end
     
-    [indx1, species] = gui.i_selgenecollection;
+    [indx1, species] = gui.i_selgenecollection(FigureHandle);
     if isempty(indx1), return; end
     [setmatrx, setnames, setgenes] = pkg.e_getgenesets(indx1, species); %(indx1);
     if isempty(setmatrx) || isempty(setnames) || isempty(setgenes) 

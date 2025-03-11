@@ -1,6 +1,6 @@
 function callback_Dotplot(src, ~)
     [FigureHandle, sce] = gui.gui_getfigsce(src);
-    [thisc, ~, isui] = gui.i_select1class(sce);
+    [thisc, ~] = gui.i_select1class(sce);
     if isempty(thisc), return; end
     
     [c, cL, noanswer] = gui.i_reordergroups(thisc, [], FigureHandle);

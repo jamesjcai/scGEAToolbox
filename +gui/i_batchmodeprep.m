@@ -24,10 +24,13 @@ if strcmp(clabel,'Cell Type')
     return;
 end
 
-[i1, i2, cL1, cL2] = gui.i_select2smplgrps(sce, false, FigureHandle);
+% [i1, i2, cL1, cL2] = gui.i_select2smplgrps(sce, false, FigureHandle);
+% if (isscalar(i1) && i1 ==0 ) || (isscalar(i2) && i2 == 0) || isempty(cL1) || isempty(cL2)
+%     return;
+% end
 
-% [i1, i2, cL1, cL2, done] = in_twogrpsencoding(thisc);
-% if ~done, return; end
+[i1, i2, cL1, cL2, done] = in_twogrpsencoding(thisc, FigureHandle);
+if ~done, return; end
 if isempty(i1) || isempty(i2) || isempty(cL1) || isempty(cL2)
     return;
 end
@@ -170,7 +173,7 @@ function [thisc, clabel] = in_select1class(sce, allowunique)
 end
 
 
-function [i1, i2, cL1, cL2, done] = in_twogrpsencoding(thisc)
+function [i1, i2, cL1, cL2, done] = in_twogrpsencoding(thisc, FigureHandle)
     done = false;
     [ci, cLi] = grp2idx(thisc);
     listitems = natsort(string(cLi));
