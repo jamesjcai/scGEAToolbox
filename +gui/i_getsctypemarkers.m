@@ -1,4 +1,5 @@
-function [txt] = i_getsctypemarkers
+function [txt] = i_getsctypemarkers(parentfig)
+if nargin < 1, parentfig = []; end
 txt = '';
 mfolder = fileparts(mfilename('fullpath'));
 infile = fullfile(mfolder, '..', 'resources', 'ScTypeDB', 'ScTypeDB_full.xlsx');
@@ -6,11 +7,17 @@ if exist(infile, "file")
     T = readtable(infile);
 end
 utissuelist = unique(T.tissueType);
-[indx1, tf1] = listdlg('PromptString', ...
-    {'Select tissue type:'}, ...
-    'SelectionMode', 'single', ...
-    'ListString', utissuelist, ...
-    'ListSize', [220, 300]);
+
+if gui.i_isuifig(parentfig)
+    [indx1, tf1] = gui.myListdlg(parentfig, utissuelist, ...
+        'Select tissue type:');
+else
+    [indx1, tf1] = listdlg('PromptString', ...
+        {'Select tissue type:'}, ...
+        'SelectionMode', 'single', ...
+        'ListString', utissuelist, ...
+        'ListSize', [220, 300]);
+end
 
 if tf1 ~= 1, return; end
 selectedtissue = utissuelist(indx1);

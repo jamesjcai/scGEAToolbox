@@ -30,12 +30,12 @@ function [indx, tf] = myListdlg(parentFig, options, Title)
     if isvalid(lb)
         selection = lb.Value;
         delete(d);
-        tf=1;
-        [~,indx]=ismember(selection,options);
+        tf = 1;
+        [~, indx]=ismember(selection, options);
     else
         selection = {};
-        tf=0;
-        indx=[];
+        tf = 0;
+        indx = [];
     end
 
 

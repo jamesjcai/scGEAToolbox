@@ -9,4 +9,4 @@ mdl = fitlm(R(:), D(:));
 res = mdl.Residuals.Raw;
 res = reshape(res, size(R));
 
-gset;
+

@@ -42,37 +42,16 @@ cn = {'autumnzero', '7lines', 'parula', 'summer', 'jet', 'copper', ...
     'greenLinespecer'};
 assert(length(co) == length(cn));
 
-
-%     co={cx,a,b,'default',summer(kc),...
-%         jet(kc),copper(kc),winter(kc)};
-
 indx = randi(length(co));
-colormap(abs(co{indx}));
+colormap(FigureHandle, abs(co{indx}));
 fprintf('Set colormap to %s.\n', cn{indx});
 
-% answer=gui.myQuestdlg(FigureHandle, 'Random colormap?','');
-% switch answer
-%     case 'Yes'
-%         indx=randi(length(co));
-%         colormap(co{indx});
-%         % mb=gui.myHelpdlg(FigureHandle, sprintf('Using colormap: %s',cn{indx}),'');
-%
-%     case 'No'
-%         [indx,tf] = listdlg('PromptString',{'Select a colormap'},...
-%             'SelectionMode','single','ListString',cn);
-%         if tf==1
-%             colormap(co{indx});
-%         end
-%     case 'Cancel'
-%         return;
-%     otherwise
-%         return;
-% end
+
 
 if showzero
     cm = colormap;
     cm(1, :) = [.8, .8, .8];
-    colormap(cm);
+    colormap(FigureHandle, cm);
 end
 
 

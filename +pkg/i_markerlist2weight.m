@@ -10,7 +10,7 @@ if nargin < 1, sce = []; end
 answer = gui.myQuestdlg(FigureHandle, 'Load scType marker gene list?');
 indata = '';
 if strcmp(answer, 'Yes')
-    indata = gui.i_getsctypemarkers;
+    indata = gui.i_getsctypemarkers(FigureHandle);
 end
 
 if isempty(indata)

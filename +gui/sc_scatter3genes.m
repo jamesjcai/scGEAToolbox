@@ -1,4 +1,5 @@
-function [xyz, xyz1, gsorted]= sc_scatter3genes(X, g, dofit, showdata, parentfig)
+function [xyz, xyz1, gsorted]= sc_scatter3genes(X, g, dofit, showdata, ...
+    parentfig)
 %Scatter3 plot for genes
 
 if nargin < 5, parentfig = []; end

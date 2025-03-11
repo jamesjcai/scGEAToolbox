@@ -54,8 +54,8 @@ function [T] = e_findallmarkers(X, g, c, cL, logfc, minpct, showwaitbar, ...
             avg_1(k) = mean(x(k, :));
             avg_2(k) = mean(y(k, :));
             avg_log2FC(k) = log2(avg_1(k)./avg_2(k));
-            pct_1(k) = sum(x(k, :) > 0) ./ nx;
-            pct_2(k) = sum(y(k, :) > 0) ./ ny;
+            pct_1(k) = nnz(x(k, :) > 0) ./ nx;
+            pct_2(k) = nnz(y(k, :) > 0) ./ ny;
         end
         if exist('mafdr.m', 'file')
             p_val_adj = mafdr(p_val, 'BHFDR', true);

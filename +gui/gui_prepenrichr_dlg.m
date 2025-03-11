@@ -11,10 +11,6 @@ answer = gui.myQuestdlg(FigureHandle, questtxt);
 if ~strcmp(answer, 'Yes'), return; end
 
 [kgene, ybkgr, methd] = inputDialogOldVersion(parentfig);
-kgene;
-ybkgr;
-methd;
-
 if isempty(kgene) || isempty(ybkgr) || isempty(methd), return; end
 outgenelist = genelist(1:kgene);
 if ybkgr

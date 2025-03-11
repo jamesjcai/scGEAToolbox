@@ -1494,7 +1494,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             markergenev = string(Tm.Var2);
         end
 
-        [manuallyselect, bestonly] = i_annotemanner;
+        [manuallyselect, bestonly] = gui.i_annotemanner(FigureHandle);
 
         dtp = findobj(h, 'Type', 'datatip');
         delete(dtp);
@@ -1517,17 +1517,24 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             end
 
             ctxt = Tct.C1_Cell_Type;
-
             if manuallyselect && length(ctxt) > 1
+
+            if gui.i_isuifig(FigureHandle)
+                [indx, tf] = gui.myListdlg(FigureHandle, ctxt, 'Select cell type');
+            else                
                 [indx, tf] = listdlg('PromptString', {'Select cell type'}, ...
                     'SelectionMode', 'single', 'ListString', ctxt, 'ListSize', [220, 300]);
-                if tf ~= 1, return; end
+            end
+
+            if tf ~= 1, return; end
                 ctxt = Tct.C1_Cell_Type{indx};
             else
                 ctxt = Tct.C1_Cell_Type{1};
             end
 
-            hold on;
+
+            hold(hAx,'on');
+
             ctxtdisp = strrep(ctxt, '_', '\_');
             ctxtdisp = sprintf('%s_{%d}', ctxtdisp, ix);
             cLdisp{ix} = ctxtdisp;
@@ -1536,7 +1543,9 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             cL{ix} = ctxt;
 
             row = dataTipTextRow('', cLdisp(c));
+
             h.DataTipTemplate.DataTipRows = row;
+          
             if size(sce.s, 2) >= 2
                 siv = sce.s(ptsSelected, :);
                 si = mean(siv, 1);
@@ -1550,7 +1559,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 %             text(si(:,1),si(:,2),sprintf('%s',ctxt),...
                 %                  'fontsize',10,'FontWeight','bold','BackgroundColor','w','EdgeColor','k');
             end
-            hold off;
+            hold(hAx,'off');
         end
         if ~manuallyselect, gui.gui_waitbar_adv(fw); end
         sce.c_cell_type_tx = string(cL(c));
@@ -1635,10 +1644,14 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             return;
         end
 
-        [indx, tf] = listdlg('PromptString', ...
-            {'Select target cluster'}, 'SelectionMode', ...
-            'single', 'ListString', string(c_members), ...
-            'ListSize', [220, 300]);
+        if gui.i_isuifig(FigureHandle)
+            [indx, tf] = gui.myListdlg(FigureHandle, c_members, 'Select target cluster');
+        else
+            [indx, tf] = listdlg('PromptString', ...
+                {'Select target cluster'}, 'SelectionMode', ...
+                'single', 'ListString', string(c_members), ...
+                'ListSize', [220, 300]);
+        end
         if tf == 1
             c_target = c_members(indx);
         else
@@ -1683,9 +1696,13 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         ctxt = Tct.C1_Cell_Type;
         gui.gui_waitbar(fw);
 
-        [indx, tf] = listdlg('PromptString', ...
-            {'Select cell type'}, 'SelectionMode', 'single', ...
-            'ListString', ctxt, 'ListSize', [220, 300]);
+        if gui.i_isuifig(FigureHandle)
+            [indx, tf] = gui.myListdlg(FigureHandle, ctxt, 'Select cell type');
+        else        
+            [indx, tf] = listdlg('PromptString', ...
+                {'Select cell type'}, 'SelectionMode', 'single', ...
+                'ListString', ctxt, 'ListSize', [220, 300]);
+        end
         if tf == 1
             ctxt = Tct.C1_Cell_Type{indx};
         else
@@ -1950,7 +1967,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                             % [x, y] = ginput; % 
                             if ~strcmp(gui.myQuestdlg(FigureHandle, 'Click on the figure to select points, press Enter to finish.'),'Yes'), return; end
                             x = []; y = [];
-                            hold on
+                            hold(hAx, 'on');
                             while true
                                 [xi, yi, button] = ginput(1);                        
                                 % Exit the loop if Enter (ASCII 13) is pressed
@@ -1961,7 +1978,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                                 y = [y; yi];                        
                                 plot(xi, yi, 'ro', 'MarkerSize', 8, 'LineWidth', 2);
                             end
-                            hold off
+                            hold(hAx, 'off');
                             % Fit and plot the spline curve
                             splineCurve = cscvn([x'; y']);
                             [xyz1] = fnplt(splineCurve);  % Plot the spline curve in red
@@ -1978,7 +1995,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             otherwise
                 return;
         end
-        hold on;
+        hold(hAx, 'on');
         if size(xyz1, 2) >= 3
             f_traj = plot3(xyz1(:, 1), xyz1(:, 2), xyz1(:, 3), '-r', 'linewidth', 2);
             t1 = text(xyz1(1, 1), xyz1(1, 2), xyz1(1, 3), 'Start', ...
@@ -1992,7 +2009,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             t2 = text(xyz1(end, 1), xyz1(end, 2), 'End', ...
                 'fontsize', 10, 'FontWeight', 'bold', 'BackgroundColor', 'w', 'EdgeColor', 'k');
         end
-        hold off;
+        hold(hAx, 'off');
         % pseudotimemethod
         if ~strcmp(answer, 'manual')
             switch gui.myQuestdlg(FigureHandle, 'Swap ''Start'' and ''End''?','')
@@ -2078,10 +2095,14 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         % methodtagv = {'specter', 'sc3', 'simlr', 'soptsc', 'sinnlrr'};
         methodtagvx = {'SC3 [PMID:28346451] 🐢🐢'};
         methodtagv = {'sc3'};
-        [indx, tf] = listdlg('PromptString', ...
-            {'Select a clustering algorithm'}, ...
-            'SelectionMode', 'single', ...
-            'ListString', methodtagvx, 'ListSize', [220, 300]);
+        if gui.i_isuifig(FigureHandle)
+            [indx, tf] = gui.myListdlg(FigureHandle, methodtagvx, 'Select a clustering algorithm');
+        else        
+            [indx, tf] = listdlg('PromptString', ...
+                {'Select a clustering algorithm'}, ...
+                'SelectionMode', 'single', ...
+                'ListString', methodtagvx, 'ListSize', [220, 300]);
+        end
         if tf == 1
             methodtag = methodtagv{indx};
         else

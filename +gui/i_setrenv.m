@@ -5,7 +5,7 @@ function [done] = i_setrenv(src, ~)
 if nargin<1
     FigureHandle = [];
 else
-    [FigureHandle, sce] = gui.gui_getfigsce(src);
+    [FigureHandle, ~] = gui.gui_getfigsce(src);
 end
 preftagname = 'rexecutablepath';
 

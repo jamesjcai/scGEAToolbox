@@ -1,5 +1,5 @@
 function i_resetrngseed(src, ~)
-[FigureHandle, sce] = gui.gui_getfigsce(src);
+[FigureHandle, ~] = gui.gui_getfigsce(src);
     answer = gui.myQuestdlg(FigureHandle, "Set random seed.","", ...
         {'Default Seed', 'Random Seed', 'Set Seed'}, 'Default Seed');
     switch answer

@@ -2,7 +2,7 @@ function [done] = i_setextwd(src, ~)
 %I_SETEXTWD - set externel workding directory
 
 %see also: I_SETPYENV, I_SETRENV 
-[FigureHandle, sce] = gui.gui_getfigsce(src);
+[FigureHandle, ~] = gui.gui_getfigsce(src);
 [done] = gui.i_setwrkdir('externalwrkpath');
 if done
      gui.myHelpdlg(FigureHandle, "External program working directory is set successfully.", '');
