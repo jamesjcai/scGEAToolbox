@@ -6,12 +6,12 @@ if nargin<4, FigureHandle = []; end
 
 if nargin<3, wrkdir = []; end
 done = false;
-CellTypeList=[]; i1=[]; i2=[]; cL1=[]; cL2=[]; outdir=[];
+CellTypeList = []; i1=[]; i2=[]; cL1=[]; cL2=[]; outdir=[];
 
-if isscalar(unique(sce.c_cell_type_tx))
-    warndlg('Only one cell type or cell type is undetermined.','');
-    return;
-end
+% if isscalar(unique(sce.c_cell_type_tx))
+%     warndlg('Only one cell type or cell type is undetermined.','');
+%     return;
+% end
 
 [CellTypeSorted]=pkg.e_sortcatbysize(sce.c_cell_type_tx);
 [CellTypeList]=in_selectcelltypes(CellTypeSorted);
@@ -24,10 +24,10 @@ if strcmp(clabel,'Cell Type')
     return;
 end
 
-%[i1, i2, cL1, cL2] = gui.i_select2smplgrps(sce, false);
+[i1, i2, cL1, cL2] = gui.i_select2smplgrps(sce, false, FigureHandle);
 
-[i1, i2, cL1, cL2, done] = in_twogrpsencoding(thisc);
-if ~done, return; end
+% [i1, i2, cL1, cL2, done] = in_twogrpsencoding(thisc);
+% if ~done, return; end
 if isempty(i1) || isempty(i2) || isempty(cL1) || isempty(cL2)
     return;
 end

@@ -10,7 +10,7 @@ if ~gui.gui_showrefinfo('DE in Batch Mode'), return; end
 
 prefixtag = 'DE';
 [done, CellTypeList, i1, i2, cL1, cL2,... 
-    outdir] = gui.i_batchmodeprep(sce, prefixtag, wrkdir);
+    outdir] = gui.i_batchmodeprep(sce, prefixtag, wrkdir, FigureHandle);
 if ~done, return; end
 
 %[runenrichr] = gui.i_enrichrprep;
