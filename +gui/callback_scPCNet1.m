@@ -4,7 +4,7 @@ function callback_scPCNet1(src, events)
 
 extprogname = 'ml_scTenifoldNet';
 preftagname = 'externalwrkpath';
-[wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
+[wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
 if isempty(wkdir), return; end
 
 

@@ -187,7 +187,7 @@ bb = 'No, just show values (heatmap)';
                     [y] = gui.e_cellscore(sce, posg);
                     
                 case 'Predefined Custom Gene Sets'
-                    if ~gui.gui_showrefinfo('Predefined Cell Score'), return; end
+                    if ~gui.gui_showrefinfo('Predefined Cell Score', FigureHandle), return; end
                     [~, T] = pkg.e_cellscores(sce.X, sce.g, 0);
                     listitems = T.ScoreType;
                     if gui.i_isuifig(FigureHandle)

@@ -6,7 +6,7 @@ extprogname = 'R_monocle3';
 [wrkdir] = gui.i_getwrkdir;
 if isempty(wrkdir)
     preftagname = 'externalwrkpath';
-    [wrkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
+    [wrkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
     if isempty(wrkdir), return; end
 end
 

@@ -1,11 +1,11 @@
 function callback_DEGene2GroupsBatch(src, ~)
 
 [FigureHandle, sce] = gui.gui_getfigsce(src);
-if ~gui.gui_showrefinfo('DE in Batch Mode'), return; end
+if ~gui.gui_showrefinfo('DE in Batch Mode', FigureHandle), return; end
 
     extprogname = 'scgeatool_DEAnalysis_Batch';
     preftagname = 'externalwrkpath';
-    [wrkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
+    [wrkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
     if isempty(wrkdir), return; end
 
 prefixtag = 'DE';

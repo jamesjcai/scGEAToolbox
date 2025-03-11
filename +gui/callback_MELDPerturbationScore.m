@@ -1,7 +1,7 @@
 function callback_MELDPerturbationScore(src, ~)
 
 [FigureHandle, sce] = gui.gui_getfigsce(src);
-if ~gui.gui_showrefinfo('MELD [PMID:33558698]'), return; end
+if ~gui.gui_showrefinfo('MELD [PMID:33558698]', FigureHandle), return; end
 
 [ok] = gui.i_confirmscript('Run MELD Perturbation Score (MELD)?', ...
     'py_MELD', 'python');

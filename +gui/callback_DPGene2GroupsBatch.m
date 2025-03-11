@@ -1,11 +1,11 @@
 function callback_DPGene2GroupsBatch(src, ~)
 
     [FigureHandle, sce] = gui.gui_getfigsce(src);
-    if ~gui.gui_showrefinfo('DP in Batch Mode'), return; end
+    if ~gui.gui_showrefinfo('DP in Batch Mode', FigureHandle), return; end
 
     extprogname = 'scgeatool_DPAnalysis_Batch';
     preftagname = 'externalwrkpath';
-    [wrkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
+    [wrkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
     if isempty(wrkdir), return; end
 
     prefixtag = 'DP';

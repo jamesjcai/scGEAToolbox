@@ -20,7 +20,7 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
             answer = gui.myQuestdlg(FigureHandle, 'This function predicts tumor (aneuploid) and normal (diploid) cells using copykat [PMID:33462507], continue?', '');
             extprogname = 'R_copykat';
             preftagname = 'externalwrkpath';
-            [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
+            [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
             if isempty(wkdir), return; end
     end
     if ~strcmp(answer, 'Yes'), return; end

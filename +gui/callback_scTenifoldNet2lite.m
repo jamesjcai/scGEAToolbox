@@ -5,11 +5,11 @@ import pkg.*
 
 [FigureHandle, sce] = gui.gui_getfigsce(src);
     
-if ~gui.gui_showrefinfo('scTenifoldNet [PMID:33336197]'), return; end
+if ~gui.gui_showrefinfo('scTenifoldNet [PMID:33336197]', FigureHandle), return; end
 
 extprogname = 'ml_scTenifoldNet';
 preftagname = 'externalwrkpath';
-[wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
+[wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
 if isempty(wkdir), return; end
 
 

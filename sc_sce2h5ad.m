@@ -10,9 +10,6 @@ if nargin < 2
     filename = [pathname, filename];
 end
 
-%extprogname = 'py_writeh5ad';
-%preftagname = 'externalwrkpath';
-%[wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
 wkdir = tempdir;
 try
     [succeeded] = run.py_writeh5ad(sce, filename, wkdir, false);

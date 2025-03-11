@@ -806,7 +806,8 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             idx = randperm(sce.NumCells);
             ids = idx(1:tn);
         elseif methodoption == 2
-            if ~gui.gui_showrefinfo('Geometric Sketching [PMID:31176620]'), return; end
+            if ~gui.gui_showrefinfo('Geometric Sketching [PMID:31176620]', ...
+                    FigureHandle), return; end
             fw = gui.gui_waitbar;
             Xn = log1p(sc_norm(sce.X))';
             [~, Xn] = pca(Xn, 'NumComponents', 300);
@@ -838,7 +839,8 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         if ~all(sce.c_cell_type_tx == "undetermined")            
             if ~strcmp(gui.myQuestdlg(FigureHandle, "Your data has been embedded and annotated. Single Click Solution will re-embed and annotate cells. Current embedding and annotation will be overwritten. Continue?", ""), 'Yes'), return; end
         else
-            if ~gui.gui_showrefinfo('Single Click Solution'), return; end
+            if ~gui.gui_showrefinfo('Single Click Solution', ...
+                    FigureHandle), return; end
         end
         %if isempty(speciestag)
             speciestag = gui.i_selectspecies(2, false, FigureHandle);
@@ -967,7 +969,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
     function in_RunSeuratWorkflow(src, ~)
         extprogname = 'R_Seurat';
         preftagname = 'externalwrkpath';
-        [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
+        [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
         if isempty(wkdir), return; end
         [ok] = gui.i_confirmscript('Run Seurat Workflow (Seurat/R)?', ...
             'R_Seurat', 'r');
@@ -989,10 +991,10 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
     end
 
     function in_DecontX(~, ~)
-        if ~gui.gui_showrefinfo('DecontX [PMID:32138770]'), return; end
+        if ~gui.gui_showrefinfo('DecontX [PMID:32138770]', FigureHandle), return; end
         extprogname = 'R_decontX';
         preftagname = 'externalwrkpath';
-        [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
+        [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
         if isempty(wkdir), return; end
         fw = gui.gui_waitbar;
         try
@@ -1025,7 +1027,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             gui.myWarndlg(FigureHandle, 'Python not installed.','');
             return;
         end
-        if ~gui.gui_showrefinfo('SCimilarity [PMID:39566551]'), return; end
+        if ~gui.gui_showrefinfo('SCimilarity [PMID:39566551]', FigureHandle), return; end
         if gui.callback_RunSCimilarity(src, events)
             sce = guidata(FigureHandle);
             [c, cL] = grp2idx(sce.c_cell_type_tx);
@@ -1038,7 +1040,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             gui.myWarndlg(FigureHandle, 'Python is not installed.','');
             return;
         end        
-        if ~gui.gui_showrefinfo('Harmony [PMID:31740819]'), return; end
+        if ~gui.gui_showrefinfo('Harmony [PMID:31740819]', FigureHandle), return; end
         if numel(unique(sce.c_batch_id)) < 2
             gui.myWarndlg(FigureHandle, 'No batch effect (SCE.C_BATCH_ID is empty)');
             return;
@@ -1088,7 +1090,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             gui.myWarndlg(FigureHandle, 'Python not installed.','');
             return;
         end
-        if ~gui.gui_showrefinfo('Scrublet [PMID:30954476]'), return; end
+        if ~gui.gui_showrefinfo('Scrublet [PMID:30954476]', FigureHandle), return; end
         if numel(unique(sce.c_batch_id)) > 1            
             if ~strcmp(gui.myQuestdlg(FigureHandle, '"When working with data from multiple samples, run Scrublet on each sample separately." Your data contains multiple samples (cells with different c_batch_id). Continue?',''), 'Yes'), return; end
         end
@@ -1478,7 +1480,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         if usedefaultdb
             organtag = "all";
             databasetag = "panglaodb";
-            if ~gui.gui_showrefinfo('PanglaoDB [PMID:30951143]'), return; end
+            if ~gui.gui_showrefinfo('PanglaoDB [PMID:30951143]', FigureHandle), return; end
             %if isempty(speciestag)
                 speciestag = gui.i_selectspecies(2, false, FigureHandle);
             %end
@@ -1789,7 +1791,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
     end
 
     function in_EnrichrHVGs(src, events)
-        if ~gui.gui_showrefinfo('HVG Functional Analysis [PMID:31861624]'), return; end
+        if ~gui.gui_showrefinfo('HVG Functional Analysis [PMID:31861624]', FigureHandle), return; end
         ptsSelected = logical(h.BrushData.');
         if any(ptsSelected)
             [ptsSelected, letdoit] = gui.i_expandbrushed(ptsSelected, sce);
@@ -2079,7 +2081,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             methodtag = "kmeans";
         elseif strcmpi(answer, 'SnnDpc [DOI:10.1016/j.ins.2018.03.031] 🐢')
             methodtag = "snndpc";
-            if ~gui.gui_showrefinfo('SnnDpc [DOI:10.1016/j.ins.2018.03.031]'), return; end
+            if ~gui.gui_showrefinfo('SnnDpc [DOI:10.1016/j.ins.2018.03.031]', FigureHandle), return; end
         else
             return;
         end
@@ -2198,7 +2200,8 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
          %   if ~isempty(a), set(a, 'Checked', 'off'); end
          %   if ~isempty(b), set(b, 'State', 'off'); end
         else
-            [thisc, clabel] = gui.i_select1class(sce, true);
+            [thisc, clabel] = gui.i_select1class(sce, true, ...
+                [], [], FigureHandle);
             if isempty(thisc)
                 if ~isempty(statetag), set(src, statetag, 'off'); end
                 return;

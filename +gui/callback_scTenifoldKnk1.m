@@ -1,6 +1,7 @@
 function callback_scTenifoldKnk1(src, ~)
 
-if ~gui.gui_showrefinfo('scTenifoldKnk [PMID:35510185]'), return; end
+[FigureHandle] = gui.gui_getfigsce(src);
+if ~gui.gui_showrefinfo('scTenifoldKnk [PMID:35510185]', FigureHandle), return; end
 
 try
     ten.check_tensor_toolbox;
@@ -11,7 +12,7 @@ end
 
 extprogname = 'scTenifoldKnk';
 preftagname = 'externalwrkpath';
-[wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
+[wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
 if isempty(wkdir), return; end
 if isfolder(wkdir)
     cd(wkdir);

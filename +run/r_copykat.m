@@ -3,10 +3,6 @@ function [pred] = r_copykat(sce, wkdir)
 pred = [];
 if nargin < 2 
    wkdir = tempdir;
-   % extprogname = 'R_copykat';
-   % preftagname = 'externalwrkpath';
-   % [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
-   % if isempty(wkdir), return; end
 end
 % PMID: 33462507
 

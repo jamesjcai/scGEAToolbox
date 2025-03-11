@@ -65,7 +65,7 @@ function [needupdatesce] = callback_RunSCimilarity(src, ~)
 
     extprogname = 'py_scimilarity';
     preftagname = 'externalwrkpath';
-    [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
+    [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
     if isempty(wkdir), return; end
     sce.g = upper(sce.g);
 

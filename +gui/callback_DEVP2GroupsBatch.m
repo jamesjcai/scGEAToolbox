@@ -3,12 +3,13 @@ function callback_DEVP2GroupsBatch(src, ~)
     [FigureHandle, sce] = gui.gui_getfigsce(src);
     extprogname = 'scgeatool_DEVPAnalysis_Batch';
     preftagname = 'externalwrkpath';
-    [wrkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
+    [wrkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
     if isempty(wrkdir), return; end
     
     prefixtag = 'DEVP';
     [done, CellTypeList, i1, i2, cL1, cL2, ... 
-        outdir] = gui.i_batchmodeprep(sce, prefixtag, wrkdir);
+        outdir] = gui.i_batchmodeprep(sce, prefixtag, ...
+        wrkdir, FigureHandle);
     if ~done, return; end
     
     [paramset] = gui.i_degparamset(true);
@@ -67,22 +68,31 @@ function callback_DEVP2GroupsBatch(src, ~)
                 warning(ME.message);
             end
             
+
             try
-                [Tlist1] = run.ml_Enrichr(Tup.gene(1:min([250 height(Tup)])), ...
-                            T.gene, ["GO_Biological_Process_2023", ...
-                                     "GO_Molecular_Function_2023"]);
-                Tbp1 = Tlist1{1};
-                Tmf1 = Tlist1{2};
-                in_writetable(Tbp1, filesaved, 'Up_250_GO_BP');
-                in_writetable(Tmf1, filesaved, 'Up_250_GO_MF');
-    
-                [Tlist2] = run.ml_Enrichr(Tdn.gene(1:min([250 height(Tdn)])), ...
-                            T.gene, ["GO_Biological_Process_2023", ...
-                                     "GO_Molecular_Function_2023"]);
-                Tbp2 = Tlist2{1};
-                Tmf2 = Tlist2{2};
-                in_writetable(Tbp2, filesaved, 'Dn_250_GO_BP');
-                in_writetable(Tmf2, filesaved, 'Dn_250_GO_MF');
+                gui.e_enrichrxlsx(Tup,Tdn,T,filesaved);
+
+                % [Tlist1] = run.ml_Enrichr(Tup.gene(1:min([250 height(Tup)])), ...
+                %             T.gene, ["GO_Biological_Process_2023", ...
+                %                      "GO_Molecular_Function_2023", ...
+                %                      "KEGG_2021_Human"]);
+                % Tbp1 = Tlist1{1};
+                % Tmf1 = Tlist1{2};
+                % Keg1 = Tlist1{3};
+                % in_writetable(Tbp1, filesaved, 'Up_250_GO_BP');
+                % in_writetable(Tmf1, filesaved, 'Up_250_GO_MF');
+                % in_writetable(Keg1, filesaved, 'Up_250_KEGG');
+                % 
+                % [Tlist2] = run.ml_Enrichr(Tdn.gene(1:min([250 height(Tdn)])), ...
+                %             T.gene, ["GO_Biological_Process_2023", ...
+                %                      "GO_Molecular_Function_2023",...
+                %                      "KEGG_2021_Human"]);
+                % Tbp2 = Tlist2{1};
+                % Tmf2 = Tlist2{2};
+                % Keg2 = Tlist2{3};
+                % in_writetable(Tbp2, filesaved, 'Dn_250_GO_BP');
+                % in_writetable(Tmf2, filesaved, 'Dn_250_GO_MF');
+                % in_writetable(Keg2, filesaved, 'Dn_250_KEGG');
             catch ME
                 warning(ME.message);
             end
@@ -187,23 +197,26 @@ function callback_DEVP2GroupsBatch(src, ~)
             end
     
             try
-                [Tlist1] = run.ml_Enrichr(Tup.gene(1:min([250 height(Tup)])), ...
-                            T.gene, ["GO_Biological_Process_2023", ...
-                                     "GO_Molecular_Function_2023",...
-                                     "Reactome_Pathways_2024",...
-                                     "KEGG_2021_Human"]);
-                                     % KEGG_2019_Mouse
-                Tbp1 = Tlist1{1};
-                Tmf1 = Tlist1{2};
-                in_writetable(Tbp1, filesaved, 'Up_250_GO_BP');
-                in_writetable(Tmf1, filesaved, 'Up_250_GO_MF');
-                [Tlist2] = run.ml_Enrichr(Tdn.gene(1:min([250 height(Tdn)])), ...
-                            T.gene, ["GO_Biological_Process_2023", ...
-                                     "GO_Molecular_Function_2023"]);
-                Tbp2 = Tlist2{1};
-                Tmf2 = Tlist2{2};
-                in_writetable(Tbp2, filesaved, 'Dn_250_GO_BP');
-                in_writetable(Tmf2, filesaved, 'Dn_250_GO_MF');
+                gui.e_enrichrxlsx(Tup,Tdn,T,filesaved);
+
+                % [Tlist1] = run.ml_Enrichr(Tup.gene(1:min([250 height(Tup)])), ...
+                %             T.gene, ["GO_Biological_Process_2023", ...
+                %                      "GO_Molecular_Function_2023",...
+                %                      "Reactome_Pathways_2024",...
+                %                      "KEGG_2021_Human"]);
+                %                      % KEGG_2019_Mouse
+                % Tbp1 = Tlist1{1};
+                % Tmf1 = Tlist1{2};
+                % in_writetable(Tbp1, filesaved, 'Up_250_GO_BP');
+                % in_writetable(Tmf1, filesaved, 'Up_250_GO_MF');
+                % 
+                % [Tlist2] = run.ml_Enrichr(Tdn.gene(1:min([250 height(Tdn)])), ...
+                %             T.gene, ["GO_Biological_Process_2023", ...
+                %                      "GO_Molecular_Function_2023"]);
+                % Tbp2 = Tlist2{1};
+                % Tmf2 = Tlist2{2};
+                % in_writetable(Tbp2, filesaved, 'Dn_250_GO_BP');
+                % in_writetable(Tmf2, filesaved, 'Dn_250_GO_MF');
             catch ME
                 warning(ME.message);
             end
@@ -233,8 +246,8 @@ function callback_DEVP2GroupsBatch(src, ~)
                 (k-0.5)/length(CellTypeList), ...
                 sprintf('DP - Processing %s ...', CellTypeList{k}));
         
-            outfile = sprintf('%s_DP_%s_%s_vs_%s_%s.xlsx', ...
-                prefixtag, ctag{c}, ...
+            outfile = sprintf('%s_DP_%s_vs_%s_%s.xlsx', ...
+                prefixtag, ...
                 matlab.lang.makeValidName(string(cL1)), ...
                 matlab.lang.makeValidName(string(cL2)), ...
                 matlab.lang.makeValidName(string(CellTypeList{k})));
@@ -245,14 +258,17 @@ function callback_DEVP2GroupsBatch(src, ~)
                 T = sc_dpg(sceX(:, i1&idx), sceX(:, i2&idx), sce.g, ...
                     setmatrx, setnames, setgenes);
                 if ~isempty(T)
-                    writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All programs');
+                    writetable(T, filesaved, 'FileType', 'spreadsheet', ...
+                        'Sheet', sprintf('All_%s', ctag{c}));
                     Tup = T(T.avg_log2FC > 0, :);                    
                     Tdn = T(T.avg_log2FC < 0, :);
                     if ~isempty(Tup)
-                        writetable(Tup, filesaved, "FileType", "spreadsheet", 'Sheet', 'Up-regulated');
+                        writetable(Tup, filesaved, "FileType", "spreadsheet", ...
+                            'Sheet', sprintf('Up_%s', ctag{c}));
                     end
                     if ~isempty(Tdn)
-                        writetable(Tdn, filesaved, "FileType", "spreadsheet", 'Sheet', 'Down-regulated');
+                        writetable(Tdn, filesaved, "FileType", "spreadsheet", ...
+                            'Sheet', sprintf('Dn_%s', ctag{c}));
                     end
                 end
             catch ME
@@ -270,11 +286,11 @@ function callback_DEVP2GroupsBatch(src, ~)
         gui.sc_llm_enrichr2word(outdir);
     end
 
-    function in_writetable(Tmf1, filesaved, shtname)
-        if ~isempty(Tmf1) && istable(Tmf1) && height(Tmf1) > 0
-            writetable(Tmf1, filesaved, "FileType", "spreadsheet", 'Sheet', shtname);
-        end
-    end
+    % function in_writetable(Tmf1, filesaved, shtname)
+    %     if ~isempty(Tmf1) && istable(Tmf1) && height(Tmf1) > 0
+    %         writetable(Tmf1, filesaved, "FileType", "spreadsheet", 'Sheet', shtname);
+    %     end
+    % end
     
 end
 

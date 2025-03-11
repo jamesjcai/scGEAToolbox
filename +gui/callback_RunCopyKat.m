@@ -5,7 +5,7 @@ function [needupdatesce] = callback_RunCopyKat(src, ~)
 needupdatesce = false;
 extprogname = 'R_copykat';
 preftagname = 'externalwrkpath';
-[wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
+[wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
 if isempty(wkdir), return; end
 
 

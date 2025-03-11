@@ -1,6 +1,6 @@
 function callback_scTenifoldCko(src, ~)
 
-if ~gui.gui_showrefinfo('scTenifoldCko [Unpublished]'), return; end
+if ~gui.gui_showrefinfo('scTenifoldCko [Unpublished]', FigureHandle), return; end
 if isa(src, "SingleCellExperiment")
     sce = src;
     FigureHandle = [];
@@ -22,7 +22,7 @@ if ~yesgohead, return; end
     
 extprogname = 'scTenifoldCko';
 preftagname = 'externalwrkpath';
-[wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
+[wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
 if isempty(wkdir), return; end
 
 if ~prepare_input_only

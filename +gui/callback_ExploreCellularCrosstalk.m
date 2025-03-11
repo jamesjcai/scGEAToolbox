@@ -2,7 +2,7 @@ function callback_ExploreCellularCrosstalk(src, ~)
 
 [FigureHandle, sce] = gui.gui_getfigsce(src);
 
-if ~gui.gui_showrefinfo('talklr [DOI:10.1101/2020.02.01.930602]'), return; end
+if ~gui.gui_showrefinfo('talklr [DOI:10.1101/2020.02.01.930602]', FigureHandle), return; end
 
     answer = gui.myQuestdlg(FigureHandle, 'This function is based on an unpublished method [DOI:10.1101/2020.02.01.930602]. Continue?');
         if ~strcmp(answer, 'Yes'), return; end

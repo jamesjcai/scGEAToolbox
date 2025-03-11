@@ -18,8 +18,8 @@ end
 
 if ~isempty(txt)
     fprintf('%s\n%s\n', reftarget, txt);
-
-     answer = gui.myQuestdlg(FigureHandle, txt,reftarget,{'Continue','Cancel'},'Continue');
+    answer = gui.myQuestdlg(FigureHandle, ...
+         txt, reftarget, {'Continue','Cancel'}, 'Continue');
      switch answer
          case 'Continue'
              y = true;

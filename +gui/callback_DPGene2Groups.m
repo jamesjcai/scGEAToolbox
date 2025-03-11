@@ -1,11 +1,11 @@
 function callback_DPGene2Groups(src, ~)
 
 [FigureHandle, sce] = gui.gui_getfigsce(src);
-if ~gui.gui_showrefinfo('DP Analysis'), return; end
+if ~gui.gui_showrefinfo('DP Analysis', FigureHandle), return; end
 
     extprogname = 'scgeatool_DPAnalysis';
     preftagname = 'externalwrkpath';
-    [wrkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
+    [wrkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
     if isempty(wrkdir), return; end
 
 

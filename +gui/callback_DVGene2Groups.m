@@ -5,7 +5,7 @@ lcolor1 = lcolors(1,:);
 lcolor2 = lcolors(2,:);
 
 [FigureHandle, sce] = gui.gui_getfigsce(src);
-    if ~gui.gui_showrefinfo('DV Analysis',FigureHandle), return; end
+    if ~gui.gui_showrefinfo('DV Analysis', FigureHandle), return; end
 
     extprogname = 'scgeatool_DVAnalysis';
     preftagname = 'externalwrkpath';
@@ -160,9 +160,9 @@ end
 
 
     function in_Enrichr(~, ~)
-        answer = gui.myQuestdlg(FigureHandle, 'Enrichr test with top DV genes. Continue?','');
+        answer = gui.myQuestdlg(hFig, 'Enrichr test with top DV genes. Continue?','');
         if ~strcmp(answer,'Yes'), return; end
-        answer = gui.myQuestdlg(FigureHandle, 'Select type of DV genes.','',...
+        answer = gui.myQuestdlg(hFig, 'Select type of DV genes.','',...
             {'Mixed','Varibility increasing','Varibility decreasing'},'Mixed');
         switch answer
             case 'Mixed'
@@ -175,8 +175,10 @@ end
                 Tin = Tdn;
         end
 
-        [outgenelist, outbackgroundlist, enrichrtype] = gui.gui_prepenrichr(Tin.gene(1:250), Tin.gene,... 
-                sprintf('Run enrichment analysis with %s DV genes?', lower(answer)));
+        [outgenelist, outbackgroundlist, enrichrtype] = ...
+            gui.gui_prepenrichr(Tin.gene(1:250), Tin.gene,... 
+                sprintf('Run enrichment analysis with %s DV genes?', lower(answer)), ...
+                hFig);
         gui.callback_RunEnrichr(src, [], outgenelist, enrichrtype, outbackgroundlist);
                 
     end
@@ -188,12 +190,12 @@ end
     end
 
     function in_ExportTable(~, ~)
-        [~, filesaved] = gui.i_exporttable(T, true, 'Tdvgenelist', ...
+        [~, filesaved] = gui.i_exporttable(T, false, 'Tdvgenelist', ...
                 outfile, [], "All_genes", FigureHandle);
-        if ~isempty(filesaved)
-            gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s',filesaved));
-            % fprintf('Result has been saved in %s\n', filesaved);
-        end        
+        %if ~isempty(filesaved)
+            %gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s',filesaved));
+            fprintf('Result has been saved in %s\n', filesaved);
+        %end
     end
 
     function txt = in_myupdatefcn3(src, event_obj, g)

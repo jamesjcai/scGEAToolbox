@@ -2,14 +2,14 @@ function callback_DEGene2Groups(src, ~)
 
     isatac = false;
     [FigureHandle, sce] = gui.gui_getfigsce(src);
-    % if ~gui.gui_showrefinfo('DE Analysis'), return; end
+    % if ~gui.gui_showrefinfo('DE Analysis', FigureHandle), return; end
 
     %[wkdir] = gui.i_getwrkdir;
     %if isempty(wkdir), return; end
     extprogname = 'scgeatool_DEAnalysis';
     preftagname = 'externalwrkpath';
     [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
-    if isempty(wkdir), return; end    
+    if isempty(wkdir), return; end
     
     [i1, i2, cL1, cL2] = gui.i_select2smplgrps(sce, false, FigureHandle);
     if isscalar(i1) || isscalar(i2), return; end
@@ -114,7 +114,7 @@ function callback_DEGene2Groups(src, ~)
         matlab.lang.makeValidName(string(cL1)), matlab.lang.makeValidName(string(cL2)));
     if isatac, T.gene = "chr" + T.gene; end
 
-    [filetype, filesaved] = gui.i_exporttable(T, true, ...
+    [filetype, filesaved] = gui.i_exporttable(T, false, ...
         'Tdegenelist', outfile, [], "All_genes", FigureHandle);
 
     tf = 0;
@@ -131,8 +131,8 @@ function callback_DEGene2Groups(src, ~)
 
     if ~isempty(filesaved)
         if strcmp(filetype, 'Excel file')
-            answer = gui.myQuestdlg(FigureHandle, 'Save up- and down-regulated genes to seperate sheets?');
-            if strcmp(answer, 'Yes')
+            %answer = gui.myQuestdlg(FigureHandle, 'Save up- and down-regulated genes to seperate sheets?');
+            %if strcmp(answer, 'Yes')
                 [Tup, Tdn] = pkg.e_processDETable(T,[],FigureHandle);
                 % strcmp(extractAfter(filesaved,strlength(filesaved)-4),'xlsx')
                 if ~isempty(Tup)
@@ -145,7 +145,7 @@ function callback_DEGene2Groups(src, ~)
                 %writetable(Tup,fullfile(tempdir,sprintf('%s_up.xlsx',outfile)),'FileType','spreadsheet',);
                 %writetable(Tdn,fullfile(tempdir,sprintf('%s_up.xlsx',outfile)),'FileType','spreadsheet');
                 tf = 1;
-            end
+            %end
         elseif strcmp(filetype, 'Text file')
             % strcmp(extractAfter(filesaved,strlength(filesaved)-3),'txt')
             answer = gui.myQuestdlg(FigureHandle, 'Save up- and down-regulated genes to seperate files?');
