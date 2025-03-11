@@ -1,5 +1,5 @@
 function i_renametitle(src, ~)
-[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
+[FigureHandle, sce] = gui.gui_getfigsce(src);
     ax = gca; % Get the current axes
     titleObj = ax.Title; % Access the Title property of the axes
     

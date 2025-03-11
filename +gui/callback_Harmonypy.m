@@ -5,7 +5,7 @@ done = false;
 %    'py_harmonypy', 'python');
 %if ~ok, return; end
 
-[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 if numel(unique(sce.c_batch_id)) < 2
     gui.myWarndlg(FigureHandle, 'No batch effect (all cells have the same SCE.C_BATCH_ID)');
     return;

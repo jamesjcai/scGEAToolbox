@@ -1,5 +1,7 @@
-function [outgenelist, outbackgroundlist, enrichrtype] = gui_prepenrichr(genelist, backgroundlist, questtxt)
+function [outgenelist, outbackgroundlist, enrichrtype] = gui_prepenrichr(genelist, ...
+    backgroundlist, questtxt, FigureHandle)
 
+if nargin<4, FigureHandle=[]; end
 enrichrtype = [];
 outgenelist = [];
 outbackgroundlist = [];
@@ -9,8 +11,8 @@ if ~strcmp(answer, 'Yes'), return; end
 
 answer = gui.myQuestdlg(FigureHandle, sprintf('Input list contains %d genes. Run enrichment analysis with all genes?',... 
             numel(genelist)),'',...
-            'Yes, use all genes', 'No, pick top k genes',...
-            'Cancel', 'Yes, use all genes');
+            {'Yes, use all genes', 'No, pick top k genes',...
+            'Cancel'}, 'Yes, use all genes');
 if strcmp(answer, 'Yes, use all genes')
     outgenelist = genelist;
 elseif strcmp(answer, 'No, pick top k genes')

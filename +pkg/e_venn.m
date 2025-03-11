@@ -802,7 +802,7 @@ function [A0, I0, Z0, nCircles, fminOpts, vennOpts, patchOpts] = parseArgsIn (ar
            
             nIn = nIn - 1;
             if nIn>0, args = args(2:end); end
-            if length(f) == 1
+            if isscalar(f)
                 %Just double up
                 fminOpts = [f f];
             elseif length(f) == 2
@@ -881,7 +881,7 @@ function [vennOpts, patchOpts] = parsePVPairs (p, v, ~)
     i = find(idx==5, 1);
     if i
         h = v{i};
-        if length(h)==1 && ishandle(h) 
+        if isscalar(h) && ishandle(h) 
             vennOpts.Parent = h;
         else
             error('venn:parsePVPairs', 'Parent must be a valid scalar handle')

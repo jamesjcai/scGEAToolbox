@@ -27,7 +27,7 @@ end
 %[i1, i2, cL1, cL2] = gui.i_select2smplgrps(sce, false);
 
 [i1, i2, cL1, cL2, done] = in_twogrpsencoding(thisc);
-if ~done, returne; end
+if ~done, return; end
 if isempty(i1) || isempty(i2) || isempty(cL1) || isempty(cL2)
     return;
 end

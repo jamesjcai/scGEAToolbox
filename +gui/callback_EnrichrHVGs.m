@@ -2,7 +2,7 @@ function callback_EnrichrHVGs(src, ~, sce)
 
 FigureHandle = [];
 if nargin < 3 || isempty(sce)
-    [FigureHandle, sce, isui] = gui.gui_getfigsce(src);
+    [FigureHandle, sce] = gui.gui_getfigsce(src);
 end
 
 answer = gui.myQuestdlg(FigureHandle, 'Which HVG detecting method to use?', '', ...

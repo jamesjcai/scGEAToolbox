@@ -5,7 +5,7 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
     needupdate = false;
     needestimt = false;
 
-    [FigureHandle, sce, isui] = gui.gui_getfigsce(src);
+    [FigureHandle, sce] = gui.gui_getfigsce(src);
     
     switch typeid
         case 1

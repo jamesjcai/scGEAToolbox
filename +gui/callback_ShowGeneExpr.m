@@ -1,6 +1,6 @@
 function callback_ShowGeneExpr(src, ~)
 
-    [FigureHandle, sce, isui] = gui.gui_getfigsce(src);
+    [FigureHandle, sce] = gui.gui_getfigsce(src);
     [axx, bxx] = view(findall(FigureHandle,'type','axes'));
     [glist] = gui.i_selectngenes(sce, [], FigureHandle);
     if isempty(glist) 

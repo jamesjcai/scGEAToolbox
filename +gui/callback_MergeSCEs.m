@@ -1,9 +1,11 @@
 function [requirerefresh, s] = callback_MergeSCEs(src, sourcetag)
 requirerefresh = false;
 s = "";
+[FigureHandle] = gui.gui_getfigsce(src);
+
 answer = gui.myQuestdlg(FigureHandle, 'Current SCE will be replaced. Continue?');
 if ~strcmp(answer, 'Yes'), return; end
-[FigureHandle, ~, isui] = gui.gui_getfigsce(src);
+
 
 keepbatchid=true;
 answer = gui.myQuestdlg(FigureHandle, 'Keep original batch IDs of cells in the input SCEs?','');

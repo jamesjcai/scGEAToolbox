@@ -1,6 +1,6 @@
 function callback_scTenifoldXct2(src, ~)
 
-[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 
 numglist = [1 3000 5000];
 memmlist = [16 32 64 128];

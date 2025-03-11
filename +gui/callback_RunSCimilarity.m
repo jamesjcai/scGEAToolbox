@@ -22,7 +22,7 @@ function [needupdatesce] = callback_RunSCimilarity(src, ~)
     %     end
     % end
     
-[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 
     % https://genentech.github.io/scimilarity/notebooks/cell_annotation_tutorial.html
     % SCimilarity trained model. Download SCimilarity models. 

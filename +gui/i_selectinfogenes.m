@@ -1,7 +1,7 @@
 function [sce] = i_selectinfogenes(sce, spciestag, FigureHandle)
 if nargin<3, FigureHandle = []; end
 % ---------------------------------
-if nargin < 2
+if nargin < 2 || isempty(spciestag)
     spciestag = gui.i_selectspecies(2, false, FigureHandle);
 end
 if isempty(spciestag), return; end

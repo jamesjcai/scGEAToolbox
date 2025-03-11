@@ -16,7 +16,7 @@ switch sourcetag
         end
 end
 
-[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 
 
 if ~allcell

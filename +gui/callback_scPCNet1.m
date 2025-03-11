@@ -1,6 +1,6 @@
 function callback_scPCNet1(src, events)
 
-[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 
 extprogname = 'ml_scTenifoldNet';
 preftagname = 'externalwrkpath';

@@ -1,6 +1,6 @@
 function callback_SelectCellsByClass(src, ~)
 
-[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 
 
 [ptsSelected] = gui.i_select1classcells(sce, true);

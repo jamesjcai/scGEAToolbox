@@ -17,7 +17,7 @@ end
 %         return;
 %     end
 
-[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 if ~gui.gui_showrefinfo('scTenifoldNet [PMID:33336197]'), return; end
     
 

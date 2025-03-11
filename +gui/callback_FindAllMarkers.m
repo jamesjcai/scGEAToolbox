@@ -1,6 +1,6 @@
 function callback_FindAllMarkers(src, ~)
 
-[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 
     answer = gui.myQuestdlg(FigureHandle, 'Select Method', ...
         '', {'Marker Gene Heatmap', 'Find All Markers'}, ...

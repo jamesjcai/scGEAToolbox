@@ -6651,11 +6651,11 @@ classdef Gui
                 font=[];
             end
             if isempty(font)
-                if BasicMap.Global.toolBarFactor >0
+                %if BasicMap.Global.toolBarFactor >0
                     font=java.awt.Font('Arial', fontAttr, fontSz);
-                else
-                    font=java.awt.Font('Arial', fontAttr, fontSz);
-                end
+                % else
+                %     font=java.awt.Font('Arial', fontAttr, fontSz);
+                % end
             end
             border2=javax.swing.BorderFactory.createTitledBorder(...
                 compoundBorder, title, just,pos,font,color);

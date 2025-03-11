@@ -7,6 +7,9 @@ if nargin < 4, noattrib = true; end
 if nargin < 5, continuousonly = false; end
 if nargin < 6, parentfig = []; end
 
+if continuousonly
+end
+
 thisc = [];
 clabel = '';
 newpickclabel = '';
@@ -62,10 +65,16 @@ if isempty(listitems), return; end
 
 % listitems={'Current Class (C)','Cluster ID','Batch ID',...
 %            'Cell Type','Cell Cycle Phase'};
-[indx2, tf2] = listdlg('PromptString', ...
-    {'Select state/grouping variable:'}, ...
-    'SelectionMode', 'single', 'ListString', listitems, ...
-    'ListSize', [220, 300]);
+
+
+ if gui.i_isuifig(parentfig)
+    [indx2, tf2] = gui.ui_listdlg(listitems, 'Select state/grouping variable:', parentfig);
+ else
+    [indx2, tf2] = listdlg('PromptString', ...
+        {'Select state/grouping variable:'}, ...
+        'SelectionMode', 'single', 'ListString', listitems, ...
+        'ListSize', [220, 300]);
+ end
 if tf2 == 1
     clabel = listitems{indx2};
     switch clabel

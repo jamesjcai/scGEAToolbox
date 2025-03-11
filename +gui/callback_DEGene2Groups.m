@@ -1,7 +1,7 @@
 function callback_DEGene2Groups(src, ~)
 
     isatac = false;
-    [FigureHandle, sce, isui] = gui.gui_getfigsce(src);
+    [FigureHandle, sce] = gui.gui_getfigsce(src);
     % if ~gui.gui_showrefinfo('DE Analysis'), return; end
 
     %[wkdir] = gui.i_getwrkdir;
@@ -169,7 +169,7 @@ function callback_DEGene2Groups(src, ~)
 
     [outgenelist, outbackgroundlist, enrichrtype] = ...
         gui.gui_prepenrichr(Tup.gene, sce.g,... 
-       'Run enrichment analysis with up-regulated DE genes?');
+       'Run enrichment analysis with up-regulated DE genes?', FigureHandle);
 
     if ~isempty(outbackgroundlist)
         gui.callback_RunEnrichr(src, [], outgenelist, enrichrtype, ...

@@ -5,7 +5,7 @@ function callback_GetCellSignatureMatrix(src, ~)
 %         ' Continue?'],'');
 %     if ~strcmp(answer,'Yes'), return; end
 
-[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 preselected = [];
 
 [~, T] = pkg.e_cellscores([], [], 0);

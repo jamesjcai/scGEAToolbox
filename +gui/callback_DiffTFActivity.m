@@ -1,6 +1,6 @@
 function callback_DiffTFActivity(src, ~)
 
-[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 
 [thisc, clabel] = gui.i_select1class(sce, false);
 if isempty(thisc), return; end

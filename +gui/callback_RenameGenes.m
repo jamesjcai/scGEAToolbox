@@ -1,7 +1,7 @@
 function [requirerefresh] = callback_RenameGenes(src)
 requirerefresh = false;
 
-[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 
 answer = gui.myQuestdlg(FigureHandle, 'Select genes to be renamed?');
 if ~strcmp(answer, 'Yes'), return; end

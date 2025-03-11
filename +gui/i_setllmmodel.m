@@ -1,6 +1,6 @@
 function [done] = i_setllmmodel(src, ~)
 
-[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 done = false;
 preftagname = 'llmodelprovider';
 if ~ispref('scgeatoolbox', preftagname)

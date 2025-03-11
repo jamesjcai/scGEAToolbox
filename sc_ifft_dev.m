@@ -1,4 +1,4 @@
-function [Y] = sc_ifft(X)
+function [Y] = sc_ifft_dev(X)
 % https://github.com/Sanofi-Public/PMCB-scGFT/blob/master/R/Core.R
 
     X = pkg.norm_libsize(X, 1e4);

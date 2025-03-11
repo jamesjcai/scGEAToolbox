@@ -2517,13 +2517,13 @@ classdef QfTree < handle
                     isLeaf=idx<=nLeaves;
                     if nNodes>25
                         if nLeafs>40
-                            if isLeaf
+                            % if isLeaf
                                 fs1='\fontsize{8}';
                                 fs2='\fontsize{6}';
-                            else
-                                fs1='\fontsize{8}';
-                                fs2='\fontsize{6}';
-                            end
+                            % else
+                            %     fs1='\fontsize{8}';
+                            %     fs2='\fontsize{6}';
+                            % end
                         elseif nLeafs>25
                             if isLeaf
                                 fs1='\fontsize{9}';

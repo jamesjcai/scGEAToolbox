@@ -1,4 +1,4 @@
-function [FigureHandle, sce, isui] = gui_getfigsce(src)
+function [FigureHandle, sce] = gui_getfigsce(src)
    if ~isprop(src, 'Parent') || ~isprop(src.Parent, 'Parent')
        error('Invalid source object: missing parent properties.');
    end

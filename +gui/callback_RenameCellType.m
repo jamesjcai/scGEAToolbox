@@ -1,7 +1,7 @@
 function [requirerefresh] = callback_RenameCellType(src)
 requirerefresh = false;
 
-[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 
 if isempty(sce.c_cell_type_tx)
     errordlg('sce.c_cell_type_tx undefined');

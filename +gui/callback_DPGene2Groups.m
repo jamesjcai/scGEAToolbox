@@ -1,6 +1,6 @@
 function callback_DPGene2Groups(src, ~)
 
-[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 if ~gui.gui_showrefinfo('DP Analysis'), return; end
 
     extprogname = 'scgeatool_DPAnalysis';

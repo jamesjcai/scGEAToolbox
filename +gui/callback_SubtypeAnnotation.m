@@ -7,7 +7,7 @@ function [requirerefresh] = callback_SubtypeAnnotation(src, ~)
     if isa(src, "SingleCellExperiment")
         sce = src;
     else
-        [FigureHandle, sce, isui] = gui.gui_getfigsce(src);
+        [FigureHandle, sce] = gui.gui_getfigsce(src);
     end
 
     pw1 = fileparts(mfilename('fullpath'));

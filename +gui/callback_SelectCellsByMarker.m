@@ -1,7 +1,7 @@
 function callback_SelectCellsByMarker(src, ~)
 
 
-[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 
 answer1 = gui.myQuestdlg(FigureHandle, 'Use single or mulitple markers?', ...
     'Single/Multiple Markers', {'Single', 'Multiple', 'Cancel'}, 'Single');

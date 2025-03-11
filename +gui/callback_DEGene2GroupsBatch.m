@@ -1,6 +1,6 @@
 function callback_DEGene2GroupsBatch(src, ~)
 
-[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 if ~gui.gui_showrefinfo('DE in Batch Mode'), return; end
 
     extprogname = 'scgeatool_DEAnalysis_Batch';

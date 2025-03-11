@@ -3,11 +3,12 @@ function callback_CalculateGeneStats(src, ~)
     % Prompts the user to calculate gene expression statistics and export the results.
 
     % Prompt user for calculation confirmation
+    [FigureHandle, sce] = gui.gui_getfigsce(src);
+
     answer = gui.myQuestdlg(FigureHandle, 'Calculate gene expression mean, CV, and dropout rate. Save output to a table.', 'Confirmation');
     if ~strcmp(answer, 'Yes'), return; end
 
     % Retrieve single-cell experiment data
-    [FigureHandle, sce, isui] = gui.gui_getfigsce(src);
     Xt = gui.i_transformx(sce.X, [], [], FigureHandle);
     if isempty(Xt), return; end
 

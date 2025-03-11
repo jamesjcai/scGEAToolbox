@@ -9,7 +9,7 @@ methodtag = [];
 %    'py_scrublet', 'python');
 %if ~ok, return; end
 
-[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 
 
 extprogname = 'py_scrublet';

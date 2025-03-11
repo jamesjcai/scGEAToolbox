@@ -1,6 +1,6 @@
 function callback_ViewMetaData(src, ~)
 
-[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 a = inputdlg('Data Info:', 'Metadata Viewer', [15, 80], {char(sce.metadata)});
 if ~isempty(a)
     newmetadata = strtrim(string(a{1}));

@@ -1,6 +1,6 @@
 function callback_ScatterCorrPlot(src, ~)
 
-    [FigureHandle, sce, isui] = gui.gui_getfigsce(src);
+    [FigureHandle, sce] = gui.gui_getfigsce(src);
     %[axx, bxx] = view(findall(FigureHandle,'type','axes'));
 
     answer = gui.myQuestdlg(FigureHandle, 'Select an independent variable. Continue?','');

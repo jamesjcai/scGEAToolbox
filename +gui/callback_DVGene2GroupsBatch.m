@@ -1,6 +1,6 @@
 function callback_DVGene2GroupsBatch(src, ~)
 
-[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 if ~gui.gui_showrefinfo('DV in Batch Mode'), return; end
     
     extprogname = 'scgeatool_DVAnalysis_Batch';
@@ -11,7 +11,7 @@ if ~gui.gui_showrefinfo('DV in Batch Mode'), return; end
 prefixtag = 'DV';
 
 a=sce.NumGenes;
-[sce] = gui.i_selectinfogenes(sce);
+[sce] = gui.i_selectinfogenes(sce, [], FigureHandle);
 b=sce.NumGenes;
 fprintf('%d genes removed.\n', a-b);
 

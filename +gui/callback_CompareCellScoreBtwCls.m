@@ -11,7 +11,7 @@ function [needupdatesce] = callback_CompareCellScoreBtwCls(src, ~)
     - Displays a graph showing the calculated scores along with labels for each dataset.
 %}
 
-[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 needupdatesce = false;
 
 aa = 'Yes, compare scores (violinplot)';

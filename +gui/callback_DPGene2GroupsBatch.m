@@ -1,6 +1,6 @@
 function callback_DPGene2GroupsBatch(src, ~)
 
-    [FigureHandle, sce, isui] = gui.gui_getfigsce(src);
+    [FigureHandle, sce] = gui.gui_getfigsce(src);
     if ~gui.gui_showrefinfo('DP in Batch Mode'), return; end
 
     extprogname = 'scgeatool_DPAnalysis_Batch';
@@ -10,7 +10,7 @@ function callback_DPGene2GroupsBatch(src, ~)
 
     prefixtag = 'DP';
     
-    [sce] = gui.i_selectinfogenes(sce);
+    [sce] = gui.i_selectinfogenes(sce, [], FigureHandle);
     [done, CellTypeList, i1, i2, cL1, cL2,... 
         outdir] = gui.i_batchmodeprep(sce, prefixtag, wrkdir);
     if ~done, return; end

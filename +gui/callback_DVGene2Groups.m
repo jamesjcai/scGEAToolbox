@@ -4,7 +4,7 @@ lcolors = lines(2);
 lcolor1 = lcolors(1,:);
 lcolor2 = lcolors(2,:);
 
-[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
+[FigureHandle, sce] = gui.gui_getfigsce(src);
     if ~gui.gui_showrefinfo('DV Analysis',FigureHandle), return; end
 
     extprogname = 'scgeatool_DVAnalysis';
@@ -14,7 +14,7 @@ lcolor2 = lcolors(2,:);
 
 
     a=sce.NumGenes;
-    [sce] = gui.i_selectinfogenes(sce, FigureHandle);
+    [sce] = gui.i_selectinfogenes(sce, [], FigureHandle);
     b=sce.NumGenes;
     fprintf('%d genes removed.\n', a-b);
     
@@ -191,7 +191,7 @@ end
         [~, filesaved] = gui.i_exporttable(T, true, 'Tdvgenelist', ...
                 outfile, [], "All_genes", FigureHandle);
         if ~isempty(filesaved)
-            gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s',filesaved);
+            gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s',filesaved));
             % fprintf('Result has been saved in %s\n', filesaved);
         end        
     end

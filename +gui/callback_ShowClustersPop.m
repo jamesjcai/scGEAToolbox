@@ -1,10 +1,12 @@
 function callback_ShowClustersPop(src, ~)
 
+
+
+[FigureHandle, sce] = gui.gui_getfigsce(src);
+
 answer = gui.myQuestdlg(FigureHandle, 'Select a grouping variable and show cell groups in new figures individually?');
 if ~strcmp(answer, 'Yes'), return; end
 
-
-[FigureHandle, sce, isui] = gui.gui_getfigsce(src);
 [thisc, ~] = gui.i_select1class(sce);
 if isempty(thisc), return; end
 [c, cL] = grp2idx(thisc);

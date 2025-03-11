@@ -1,6 +1,6 @@
 function callback_MultiGroupingView(src, ~)
     
-    [FigureHandle, sce, isui] = gui.gui_getfigsce(src);
+    [FigureHandle, sce] = gui.gui_getfigsce(src);
     
     answer = gui.myQuestdlg(FigureHandle, 'Select type of multi-view:','', ...
         {'Multigrouping','Multiembedding'},'Multigrouping');
