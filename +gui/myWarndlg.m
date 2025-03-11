@@ -4,8 +4,6 @@ function h = myWarndlg(parentFig, message, title)
     if nargin < 1, parentFig = []; end
     h = [];
     if isempty(parentFig) || ~gui.i_isuifig(parentFig)
-        % Traditional figure-based app
-        % h = warndlg(message, title);
         msgbox(message, title, 'warn', 'modal');
     else
         % UIFigure-based app

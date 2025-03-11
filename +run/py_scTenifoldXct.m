@@ -45,9 +45,9 @@ if ~prepare_input_only
         if isvalid(fw)
             gui.gui_waitbar(fw, true);
         end
-        %waitfor(errordlg(sprintf('%s',cmdout)));
-        error(cmdout);
-        %error('Python scTenifoldXct has not been installed properly.');
+        gui.myErrordlg(parentfig, sprintf('%s',cmdout));
+        % error(cmdout);
+        % error('Python scTenifoldXct has not been installed properly.');
     end
     if isvalid(fw), gui.gui_waitbar(fw, [], 'Checking Python environment is complete'); end
 end

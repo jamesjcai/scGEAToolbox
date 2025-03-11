@@ -50,7 +50,7 @@ switch answer
             pause(0.5);
             gui.gui_waitbar(fw, true);
             pause(0.5);
-            waitfor(errordlg(ME.message,''));
+            gui.myErrordlg(FigureHandle, ME.message);
             return;
         end
         

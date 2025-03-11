@@ -1,5 +1,4 @@
-function [indx, tf] = ui_listdlg(options, Title, parentFig)
-
+function [indx, tf] = myListdlg(parentFig, options, Title)
 
     parentPos = parentFig.Position;
     parentCenter = [parentPos(1) + parentPos(3)/2, parentPos(2) + parentPos(4)/2];

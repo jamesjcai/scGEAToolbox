@@ -68,7 +68,7 @@ if isempty(listitems), return; end
 
 
  if gui.i_isuifig(parentfig)
-    [indx2, tf2] = gui.ui_listdlg(listitems, 'Select state/grouping variable:', parentfig);
+    [indx2, tf2] = gui.myListdlg(parentfig, listitems, 'Select state/grouping variable:');
  else
     [indx2, tf2] = listdlg('PromptString', ...
         {'Select state/grouping variable:'}, ...

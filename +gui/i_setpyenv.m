@@ -63,7 +63,7 @@ end
                 pyenv('Version', fullfile(path, file));
             catch ME
                 content = regexprep(ME.message, '<.*?>', '' ) ;
-                waitfor(errordlg(content,''));
+                gui.myErrordlg(FigureHandle, content);
                 return;
             end
             done = true;

@@ -732,7 +732,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 if isempty(glist), return; end
                 [y, idx] = ismember(glist, sce.g);
                 if ~all(y)
-                    errordlg('Runtime error.','');
+                    gui.myErrordlg(FigureHandle, 'Runtime error.','');
                     return;
                 end
             case 'hvg'
@@ -755,7 +755,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 glist = T.genes(1:min([k, sce.NumGenes]));
                 [y, idx] = ismember(glist, sce.g);
                 if ~all(y)
-                    errordlg('Runtime error.','');
+                    gui.myErrordlg(FigureHandle, 'Runtime error.','');
                     return;
                 end
             case 'ligandreceptor'
@@ -764,7 +764,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                      'Ligand_Receptor_more.mat'), 'ligand','receptor');
                 idx = ismember(upper(sce.g), unique([ligand; receptor]));
                 if ~any(idx)
-                    errordlg('Runtime error: No gene left after selection.','');
+                    gui.myErrordlg(FigureHandle, 'Runtime error: No gene left after selection.','');
                     return;
                 end
                 if sum(idx) < 50                    
@@ -815,7 +815,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 ids = run.py_geosketch(Xn, tn);
             catch ME
                 gui.gui_waitbar(fw, true);
-                errordlg(ME.message,'');
+                gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
                 return;
             end
 
@@ -826,7 +826,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             in_RefreshAll(src, [], true, false);
             guidata(FigureHandle, sce);
         else
-            errordlg('Runtime error. No action is taken.','');
+            gui.myErrordlg(FigureHandle, 'Runtime error. No action is taken.','');
         end
     end
 
@@ -865,7 +865,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
 
         count = 1;
         if ~(strcmpi(answer{count},'Yes') || strcmpi(answer{count},'Y'))
-            errordlg('tSNE Embedding has to be included.','');
+            gui.myErrordlg(FigureHandle, 'tSNE Embedding has to be included.','');
             return;        
         end
 
@@ -880,9 +880,15 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             sce = sce.embedcells('phate3d', true, true, 3);
         end
         gui.gui_waitbar_adv(fw,2/8, 'Embeding Cells Using tSNE...');
-        sce = sce.embedcells('tsne3d', true, true, 3);
-
+        try
+            sce = sce.embedcells('tsne3d', true, true, 3);
+        catch ME
+            gui.gui_waitbar_adv(fw);
+            gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
+            return;
+        end
         gui.gui_waitbar_adv(fw,3/8, 'Clustering Cells Using K-means...');
+        
         sce = sce.clustercells([], [], true);
         gui.gui_waitbar_adv(fw,4/8, 'Annotating Cell Types Using PanglaoDB...');
         sce = sce.assigncelltype(speciestag, false);
@@ -918,7 +924,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             [requirerefresh, highlightindex] = ...
                 gui.callback_SelectCellsByQC(src);
         catch ME
-            errordlg(ME.message,'');
+            gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
             return;
         end
         if requirerefresh
@@ -993,13 +999,13 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             [Xdecon, ~] = run.r_decontX(sce, wkdir);
         catch ME
            gui.gui_waitbar(fw);
-           errordlg(ME.message,'');
+           gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
            return;
         end
         gui.gui_waitbar(fw);
 
         if ~(size(Xdecon, 1) == sce.NumGenes && size(Xdecon, 2) == sce.NumCells)
-           errordlg('DecontX runtime error.','');
+           gui.myErrordlg(FigureHandle, 'DecontX runtime error.','');
            return;
         end
 
@@ -1448,7 +1454,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 
             catch ME
                 gui.gui_waitbar_adv(fw);
-                errordlg(ME.message,'');
+                gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
                 % rethrow(ME)
                 return;
             end
@@ -1935,7 +1941,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                                 xyz1=loadedData.xyz1;
                                 pseudotimemethod=loadedData.pseudotimemethod;
                             else
-                                errordlg('Not a valid .mat file.','');
+                                gui.myErrordlg(FigureHandle, 'Not a valid .mat file.','');
                                 return;
                             end
                             justload = true;
@@ -2123,7 +2129,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 sce = sce.clustercells(k, methodtag, true, sx);
             catch ME
                 gui.gui_waitbar(fw, true);
-                errordlg(ME.message,'');
+                gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
                 return
             end
             gui.gui_waitbar(fw);

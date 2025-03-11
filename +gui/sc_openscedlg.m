@@ -28,7 +28,7 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
 
 
     if gui.i_isuifig(FigureHandle)
-        [indx, tf] = gui.ui_listdlg(list, 'Select a source',FigureHandle);
+        [indx, tf] = gui.myListdlg(FigureHandle, list, 'Select a source');
     else
         [indx, tf] = listdlg('ListString', list, ...
             'SelectionMode', 'single', ...
@@ -50,7 +50,7 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
             try
                 [sce] = in_simulatedata;
             catch ME
-                errordlg(ME.message,'','modal');
+                gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
                 return;
             end
         case 'SCE Data File(s) (*.mat)...'
@@ -68,7 +68,7 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
                     load(scefile, 'sce');
                 catch ME
                     gui.gui_waitbar(fw, true);
-                    errordlg(ME.message,'','modal');
+                    gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
                     return;
                 end
                 gui.gui_waitbar(fw);
@@ -97,7 +97,7 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
                 catch ME
                     gui.gui_waitbar_adv(fw);
                     disp(ME.message);
-                    errordlg(ME.message, ME.identifier, 'modal');
+                    gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
                     return;
                 end
                 gui.gui_waitbar_adv(fw);
@@ -107,7 +107,7 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
             try
                 [sce] = gui.i_readmtx;
             catch ME
-                errordlg(ME.message,'','modal');
+                gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
                 return;
             end
         case 'TXT/TSV/CSV File (*.txt)...'
@@ -125,12 +125,12 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
                 sce = sce.appendmetainfo(metainfo);
             catch ME
                 gui.gui_waitbar(fw, true);
-                errordlg(ME.message,'','modal');
+                gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
                 return;
             end
             if isempty(sce)
                 gui.gui_waitbar(fw, true);
-                errordlg('File Import Failure.','','modal');
+                gui.myErrordlg(FigureHandle, 'File Import Failure.');
                 return;
             else
                 gui.gui_waitbar(fw);
@@ -147,12 +147,12 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
                 [sce] = sc_readrdsfile(filename);
             catch ME
                 gui.gui_waitbar(fw, true);
-                errordlg(ME.message,'','modal');
+                gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
                 return;
             end
             if isempty(sce)
                 gui.gui_waitbar(fw, true);
-                errordlg('File Import Failure.','','modal');
+                gui.myErrordlg(FigureHandle, 'File Import Failure.');
                 return;
             else
                 gui.gui_waitbar(fw);
@@ -176,13 +176,13 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
                     gui.gui_waitbar(fw);
                 else
                     gui.gui_waitbar(fw, true);
-                    errordlg('File Import Failure.','','modal');
+                    gui.myErrordlg(FigureHandle, 'File Import Failure.');
                     return;
                 end
             catch ME
                 disp(ME.message);
                 gui.gui_waitbar(fw, true);
-                errordlg(ME.message,ME.identifier,'modal');
+                gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
                 return;
             end            
         case '10x Genomics H5 File(s) (*.h5)...'
@@ -223,9 +223,8 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
                     end                            
                     sce = sc_mergesces(insce, methodtag);
                 catch ME
-                    gui.gui_waitbar_adv(fw);
-                    disp(ME.message);
-                    errordlg(ME.message, ME.identifier, 'modal');
+                    gui.gui_waitbar_adv(fw);                    
+                    gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
                     return;
                 end
                 gui.gui_waitbar_adv(fw);
@@ -244,7 +243,7 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
                             return;
                         end
                     catch ME
-                        errordlg(ME.message,'','modal');
+                        gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
                         return;
                     end
                 end
@@ -262,7 +261,7 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
                     return;
                 end
             catch ME
-                errordlg(ME.message,'','modal');
+                gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
                 return;
             end
         case '10x Genomics ''outs'' Folder...'
@@ -275,11 +274,11 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
                 gui.gui_waitbar(fw);
             catch ME
                 gui.gui_waitbar(fw, true);
-                errordlg(ME.message,'','modal');
+                gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
                 return;
             end
             if ~ftdone
-                errordlg('Input Error','','modal');
+                gui.myErrordlg(FigureHandle, 'Input Error');
                 return;
             end
             sce = SingleCellExperiment(X, g);
@@ -304,11 +303,11 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
                 gui.gui_waitbar(fw);
             catch ME
                 gui.gui_waitbar(fw, true);
-                errordlg(ME.message,'','modal');
+                gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
                 return;
             end
             if ~ftdone
-                errordlg('Input Error.','','modal');
+                gui.myErrordlg(FigureHandle, 'Input Error.');
                 return;
             end
             sce = SingleCellExperiment(X, g);
@@ -342,7 +341,7 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
                         gui.gui_waitbar(fw);
                     catch ME
                         gui.gui_waitbar(fw);
-                        errordlg(ME.message,'','modal');
+                        gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
                         return;
                     end
                 else                        
@@ -352,7 +351,7 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
                         gui.gui_waitbar(fw);
                     catch ME
                         gui.gui_waitbar(fw);
-                        errordlg(ME.message,'','modal');
+                        gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
                         return;
                     end
                 end
@@ -437,7 +436,7 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
                     catch ME
                         gui.gui_waitbar(fw, true);
                         disp(ME.message);
-                        errordlg(ME.message, ME.identifier, 'modal');
+                        gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
                         return;
                     end
                     gui.gui_waitbar(fw);
@@ -465,7 +464,7 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
             %tic;
             file1 = fullfile(pw1, '..', 'example_data', 'new_example_sce.mat');
             if ~exist(file1, "file")
-                errordlg("Example data file does not exist.",'','modal');
+                gui.myErrordlg(FigureHandle, "Example data file does not exist.");
                 return;
             end
             load(file1, 'sce');
@@ -535,7 +534,7 @@ end
             % in_RefreshAll(src, [], false, false);
         catch ME
             gui.gui_waitbar(fw,true);
-            errordlg(ME.message,'','modal');
+            gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
         end
     end
 
