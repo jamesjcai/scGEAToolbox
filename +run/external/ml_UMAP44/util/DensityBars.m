@@ -220,7 +220,7 @@ classdef DensityBars < handle
             this.mxDataLimit=props.getNumeric('DensityBars.mxDataLimit');
             this.minOffscale=props.getNumeric('DensityBars.minOffscale');
             this.rangeOffscale=props.getNumeric('DensityBars.rangeOffscale');
-            this.offscaleIdxs=str2num(props.get('DensityBars.offscaleIdxs'));
+            this.offscaleIdxs=str2double(props.get('DensityBars.offscaleIdxs'));
             this.R=props.getNumeric('DensityBars.R');
             this.C=props.getNumeric('DensityBars.C');
         end

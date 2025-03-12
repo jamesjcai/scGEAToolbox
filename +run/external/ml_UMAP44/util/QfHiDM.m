@@ -2820,7 +2820,7 @@ classdef QfHiDM < handle
                     if isempty(sClr)
                         clr=Gui.HslColor(i,N);
                     else
-                        clr=str2num(sClr); %#ok<ST2NM> 
+                        clr=str2double(sClr); %#ok<ST2NM> 
                         if any(clr>1)
                             clr=clr/256;
                         end
@@ -3711,11 +3711,11 @@ classdef QfHiDM < handle
             lineWidths=zeros(1, N);
             for i=1:N
                 gid=num2str(qf.tIds(i));
-                clr=str2num(gtp.getNode(gid, MatchInfo.PROP_LAST_COLOR));
+                clr=str2double(gtp.getNode(gid, MatchInfo.PROP_LAST_COLOR));
                 if ~isempty(clr)
                     colors(i,:)=clr;
                 end
-                e=str2num(gtp.getNode(gid, MatchInfo.PROP_LAST_EDGE));
+                e=str2double(gtp.getNode(gid, MatchInfo.PROP_LAST_EDGE));
                 if ~isempty(clr)
                     edgeColors(i,:)=e(1:3);
                     lineWidths(i)=e(4);
@@ -4342,7 +4342,7 @@ classdef QfHiDM < handle
                     if isempty(sClr)
                         clr=Gui.HslColor(i,N);
                     else
-                        clr=str2num(sClr); %#ok<ST2NM> 
+                        clr=str2double(sClr); %#ok<ST2NM> 
                         if any(clr>1)
                             clr=clr/256;
                         end
@@ -4726,7 +4726,7 @@ classdef QfHiDM < handle
 
                 description = char(e.getDescription); % URL stri
                 et=char(e.getEventType);
-                idxs=str2num(description); %#ok<ST2NM> 
+                idxs=str2double(description); %#ok<ST2NM> 
                 mouseEvent=e.getInputEvent;
                 
                 switch char(et)

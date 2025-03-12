@@ -3773,7 +3773,7 @@ classdef Gui
         
         function op=OuterPositionArg(op)
             if ischar(op)
-                op=str2num(op); %#ok<ST2NM> 
+                op=str2double(op); %#ok<ST2NM> 
             elseif ~isnumeric(op)
                 u=get(op,'units');
                 set(op,'units','pixels');
@@ -4070,7 +4070,7 @@ classdef Gui
             num=0;
             scrMl=[];
             if ischar(fig)
-                fig=str2num(fig); %#ok<ST2NM> 
+                fig=str2double(fig); %#ok<ST2NM> 
             end
             if length(fig)~=4
                 u=get(fig,'units');
@@ -6018,7 +6018,7 @@ classdef Gui
                             pos=props.get(property);
                         end
                         if ~isempty(pos)
-                            pos=str2num(pos); %#ok<ST2NM> 
+                            pos=str2double(pos); %#ok<ST2NM> 
                             personalized=true;
                         end
                     end
@@ -6034,7 +6034,7 @@ classdef Gui
                                 pos=get(fig, 'outerposition');
                             end
                         else
-                            pos=str2num(pos); %#ok<ST2NM> 
+                            pos=str2double(pos); %#ok<ST2NM> 
                             personalized=true;
                         end
                     end
@@ -6703,7 +6703,7 @@ classdef Gui
             if ~isempty(priorPos) 
                 hasPrior=true;
                 [~, ~, ~, scrPos]=Gui.OnScreen(priorPos);
-                pos=str2num(priorPos);                %#ok<ST2NM> 
+                pos=str2double(priorPos);                %#ok<ST2NM> 
                 if pos(4)>maxHeightRatio*scrPos(4)
                     pos(4)=maxHeightRatio*scrPos(4);
                 end                

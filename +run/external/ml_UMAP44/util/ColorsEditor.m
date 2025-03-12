@@ -179,7 +179,7 @@ classdef ColorsEditor <handle
                         if ~nonDflts.contains(java.lang.String(lower(k)))
                             color=this.getDflt(k);
                             try
-                                this.colors(end+1,:)=str2num(color); %#ok<ST2NM> 
+                                this.colors(end+1,:)=str2double(color); %#ok<ST2NM> 
                                 this.names{end+1}=char(...
                                     this.cbn.spellProps.get(java.lang.String(k)));
                             catch
@@ -748,7 +748,7 @@ classdef ColorsEditor <handle
             for i=1:N_
                 mr=mrs(i);
                 name=this.names{mr};
-                dfltColor=str2num(this.getDflt(name)); %#ok<ST2NM> 
+                dfltColor=str2double(this.getDflt(name)); %#ok<ST2NM> 
                 vr=ColorsEditor.GetVisualRow(J, name);
                 this.setColor(dfltColor, mr, vr, clrs, i==N_);
                 J.setValueAt(this.getDfltStatusSym(mr), vr, vStatus);
@@ -1352,7 +1352,7 @@ classdef ColorsEditor <handle
         function [strColor, color]=getDflt(this, name)
             strColor=this.cbn.getStrColor255(name);
             if nargout>1
-                color=str2num(strColor); %#ok<ST2NM> 
+                color=str2double(strColor); %#ok<ST2NM> 
             end
         end
         
@@ -1363,7 +1363,7 @@ classdef ColorsEditor <handle
                 status=ColorsEditor.STATUS_DFLT_NEW;
                 sym=ColorsEditor.SYM_DFLT_NEW;
             else
-                color=str2num(strClr); %#ok<ST2NM> 
+                color=str2double(strClr); %#ok<ST2NM> 
                 % properties defaults and this.colors are 0 to 255
                 if all(abs(this.colors(mr,:)-color)<=1.1)
                     status=ColorsEditor.STATUS_DFLT;

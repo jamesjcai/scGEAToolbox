@@ -1234,7 +1234,7 @@ end
                 et=char(eventData.getEventType);
                 switch char(et)
                     case char(eventData.getEventType.ENTERED)
-                        col=str2num(description);
+                        col=str2double(description);
                         if isempty(col) || isnan(col)
                             app.showToolTip(btnForTip, ['<html>Flash <b>' ...
                                 description '</b> in the plots...'], ...
@@ -1284,7 +1284,7 @@ end
                             disp('NO PLOTS ....');
                             return;
                         end
-                        col=str2num(description);
+                        col=str2double(description);
                         if isempty(col) || isnan(col)
                             if startsWith(description, 'cell:')
                                 flash(description(6:end));

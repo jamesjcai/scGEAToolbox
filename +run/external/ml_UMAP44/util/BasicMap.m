@@ -192,7 +192,7 @@ classdef BasicMap < Map
             end
             nums=props.get(name, defaultNumbers);
             if ~isempty(nums)
-                nums=str2num(nums); %#ok<ST2NM> 
+                nums=str2double(nums); %#ok<ST2NM> 
             else
                 nums=[];
             end
@@ -385,7 +385,7 @@ classdef BasicMap < Map
             end
         end
         
-        function v=getMatLabVersion(this)
+        function v=getMatLabVersion(~)
             [~, v]=MatBasics.VersionAbbreviation;
         end
         
@@ -401,7 +401,7 @@ classdef BasicMap < Map
             matLabVersion=this.getMatLabVersion;
             if ~isempty(autoGateV)
                 %AutoGate code is present
-                this.appVersion=str2num(autoGateV);
+                this.appVersion=str2double(autoGateV);
                 this.appName='AutoGate';
                 [~, this.exeFile, this.versionFile]=CgSysAdmin.AppName;
                 this.remoteFolder='GetDown2/domains/FACS';
@@ -409,14 +409,14 @@ classdef BasicMap < Map
                 this.remoteFolder='GetDown2/domains/SUH';
                 this.remoteSourceCode='run_umap/umapAndEpp.zip';
                 if ~isempty(eppV) && ~isempty(umapV)
-                    this.appVersion=str2num(ArgumentClinic.VERSION);
+                    this.appVersion=str2double(ArgumentClinic.VERSION);
                     this.appName='suh_pipelines';
                 elseif isempty(eppV)
-                    this.appVersion=str2num(umapV);
+                    this.appVersion=str2double(umapV);
                     this.appName='run_umap';
                 else
                     this.appName='run_epp';
-                    this.appVersion=str2num(eppV);
+                    this.appVersion=str2double(eppV);
                 end
                 ext='.tar';
                 if ismac

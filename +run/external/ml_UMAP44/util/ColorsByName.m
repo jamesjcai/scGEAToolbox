@@ -89,7 +89,7 @@ classdef ColorsByName <handle
                     this.props.remove(java.lang.String(key));
                     if this.map.containsKey(nameLower)
                         warning('Case insensitivity: "%s"=[%s] overridden by [%s]\n', ...
-                            key, String.Num2Str(str2num(char(strColor)), ' '), ...
+                            key, String.Num2Str(str2double(char(strColor)), ' '), ...
                             String.Num2Str(floor(this.map.get(nameLower)*255), ' ')); %#ok<*ST2NM> 
                         this.props.put(jname, strColor);
                         changed=changed+1;
@@ -375,8 +375,8 @@ classdef ColorsByName <handle
             it=keys.iterator;
             while it.hasNext
                 name=it.next;
-                oldColor=round(str2num(this.props.get(java.lang.String(name))));
-                newColor=round(str2num(p.get(java.lang.String(name))));
+                oldColor=round(str2double(this.props.get(java.lang.String(name))));
+                newColor=round(str2double(p.get(java.lang.String(name))));
                 if ~isequal(oldColor, newColor)
                     names{end+1}=name;
                     if isempty(newColor)
@@ -468,9 +468,8 @@ classdef ColorsByName <handle
             if ischar(names)
                 names={names};
             end
-            N_=length(this.listeners);
-            N2=length(colors);
-            if N2==1 && N_>1
+            N_=length(this.listeners);            
+            if isscalar(colors) && N_>1
                 colors=repmat(N_,1);
             end
             if islogical(isUpdatedOrExplanation)
@@ -591,7 +590,7 @@ classdef ColorsByName <handle
         function [color255, color0to1, was255, js255, str255]=...
                 Get255(color0to1,  name, roundDown)
             if ischar(color0to1)
-                color0to1=str2num(color0to1);
+                color0to1=str2double(color0to1);
             end
             originalColor=color0to1;
             if all(color0to1<=1)

@@ -119,7 +119,9 @@ end
                     s=s+1;
                     pause(0.5);
                 end
-                hx.closeFigure;                
+                if isvalid(hx)
+                    hx.closeFigure;
+                end
            case 'Save SCEs'
                 answer2=gui.myQuestdlg(FigureHandle, 'Where to save files?','',{'Use Temporary Folder', ...
                     'Select a Folder','Cancel'},'Use Temporary Folder');

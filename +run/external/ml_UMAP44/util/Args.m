@@ -141,11 +141,11 @@ classdef Args < handle
             nNames=length(fieldNames);
             nGroups=length(this.argGroups);
             choices=cell(1,nNames+nGroups);
-            for i=1:nGroups
-                arg1=this.argGroups{i}{1};
+            for ix=1:nGroups
+                arg1=this.argGroups{ix}{1};
                 idx=StringArray.IndexOf(fieldNames, arg1);
                 if idx>0
-                    choices{i}=this.argGroupLabels{i};
+                    choices{ix}=this.argGroupLabels{ix};
                 end
             end
             for i=1:nNames
@@ -636,9 +636,8 @@ classdef Args < handle
             elseif strcmpi(meta.type, 'logical')
                 value=cmp.isSelected;
             elseif strcmpi(meta.type, 'char')
-                values=Gui.GetTextFieldStrs(cmp);
-                nNums=length(values);
-                if nNums==1
+                values=Gui.GetTextFieldStrs(cmp);                
+                if isscalar(values)
                     value=values{1};
                 else
                     value=values(~cellfun(@isempty, values));

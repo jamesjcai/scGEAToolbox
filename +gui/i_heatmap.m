@@ -196,10 +196,8 @@ Z = zeros(length(glist), length(cL));
             end
             pause(1);
             if needwait
-                gui.myHelpdlg(parentfig,...
-                sprintf('Result has been saved in %s', filename));
-            else
-                gui.myHelpdlg(parentfig, sprintf('Result has been saved in %s', filename));
+                gui.myHelpdlg(parentfig, ...
+                    sprintf('Result has been saved in %s', filename));
             end
         end
     end

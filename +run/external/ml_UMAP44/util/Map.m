@@ -86,7 +86,7 @@ classdef Map < handle
         function nums=GetNumbers(props, name)
             nums=props.get(name, []);
             if ~isempty(nums)
-                nums=str2num(nums); %#ok<ST2NM> 
+                nums=str2double(nums); %#ok<ST2NM> 
             else
                 nums=[];
             end

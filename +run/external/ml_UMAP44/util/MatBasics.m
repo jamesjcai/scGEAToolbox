@@ -140,7 +140,7 @@ classdef MatBasics
             N=size(ids,2);
             cnt=0;
             for i=1:N
-                cnt=cnt+sum(ids(:, i)>0);
+                cnt=cnt+nnz(ids(:, i)>0);
             end
         end
 
@@ -1346,20 +1346,20 @@ classdef MatBasics
 
             if R > 0
                 if iscell(A)
-                    firstRow=str2num(A{1}); %#ok<ST2NM>
+                    firstRow=str2double(A{1}); %#ok<ST2NM>
                 else
-                    firstRow=str2num(A(1)); %#ok<ST2NM>
+                    firstRow=str2double(A(1)); %#ok<ST2NM>
                 end
                 C=length(firstRow);
                 matrix(R,C)=0;
                 matrix(1,:)=firstRow;
                 if iscell(A)
                     for r=2:R
-                        matrix(r,:)=str2num(A{r}); %#ok<ST2NM> 
+                        matrix(r,:)=str2double(A{r}); %#ok<ST2NM> 
                     end
                 else
                     for r=2:R
-                        matrix(r,:)=str2num(A(r)); %#ok<ST2NM> 
+                        matrix(r,:)=str2double(A(r)); %#ok<ST2NM> 
                     end
                 end
             end
@@ -1554,10 +1554,10 @@ classdef MatBasics
             strs=strsplit(mat, '#');
             N=length(strs);
             if N>0
-                nums=str2num(strs{1}); %#ok<ST2NM> 
+                nums=str2double(strs{1}); %#ok<ST2NM> 
                 for i=2:N
                     if ~isempty(strs{i})
-                        nums(end+1,:)=str2num(strs{i}); %#ok<ST2NM> 
+                        nums(end+1,:)=str2double(strs{i}); %#ok<ST2NM> 
                     end
                 end
             else
@@ -3111,7 +3111,7 @@ classdef MatBasics
             if isempty(s)
                 xy=[];
             else
-                xy=str2num(s);%#ok<ST2NM>
+                xy=str2double(s);%#ok<ST2NM>
                 xy=reshape(xy, length(xy)/2, 2);
             end
         end

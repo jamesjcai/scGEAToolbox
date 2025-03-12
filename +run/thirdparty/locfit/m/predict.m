@@ -95,7 +95,7 @@ end
 
 [y, se, cb] = mexpp(x, fit, band, what, rest, dir, kap, level);
 if (band == 'n')
-    y = y;
+    
 else
     y = {y, se, cb};
 end

@@ -84,13 +84,13 @@ end
 cancelled=true;
 if ischar(options{1})
     jsa=javaArray('java.lang.String', nOptions);
-    for i=1:nOptions
-        jsa(i)=java.lang.String(options{i});
+    for ix=1:nOptions
+        jsa(ix)=java.lang.String(options{ix});
     end
 else
     jsa=javaArray('java.lang.Object', nOptions);
-    for i=1:nOptions
-        jsa(i)=options{i};
+    for iy=1:nOptions
+        jsa(iy)=options{iy};
     end
 end
 hasIcon=isempty(icon) || ~strcmp('none', icon);

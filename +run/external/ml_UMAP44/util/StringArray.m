@@ -985,7 +985,7 @@ classdef StringArray < handle
                  for i=1:N
                      key=keys{i};
                      if ~endsWith(key, '.color')
-                         label=str2num(key);
+                         label=str2double(key);
                          name=strtrim(char(map.get(key)));
                          if any(lbls==label)
                              list{end+1, 1}=name;

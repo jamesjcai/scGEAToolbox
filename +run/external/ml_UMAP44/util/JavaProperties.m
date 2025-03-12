@@ -311,7 +311,7 @@ classdef JavaProperties < handle
             if ischar(name)
                 num=this.get([name '.count']);
                 if ~isempty(num)
-                    N=str2num(num);
+                    N=str2double(num);
                 end
             end
         end

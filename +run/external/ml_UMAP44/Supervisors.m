@@ -466,7 +466,7 @@ classdef Supervisors < handle
                         if isempty(clr_)
                             clrs(sig_idx,:)=[.95 .9 .99];
                         else
-                            clrs(sig_idx,:)=str2num(clr_)/256; %#ok<ST2NM>
+                            clrs(sig_idx,:)=str2double(clr_)/256; %#ok<ST2NM>
                         end
                     else
                         lbls(this.labels==id)=0;
@@ -1765,7 +1765,7 @@ classdef Supervisors < handle
             Hs=zeros(1,N_);
             for i=1:N_
                 if ~isempty(this.density.clusterColors{i})
-                    clr=(str2num(this.density.clusterColors{i})/256)*.85; %#ok<ST2NM>
+                    clr=(str2double(this.density.clusterColors{i})/256)*.85; %#ok<ST2NM>
                 else
                     clr = [0 0 0];
                 end

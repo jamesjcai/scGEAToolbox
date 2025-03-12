@@ -11,7 +11,7 @@ function [Fpn, conn] = jarpat_x(X, k, j, tr1)
 Fpn = X;
 %Parameters
 n = k; %numb. of neghbours taken into account
-tr1 = tr1; %min similarity considered as a neighbour
+% tr1 = tr1; %min similarity considered as a neighbour
 tr2 = j / 10; %min similarity considered as member of the same cluster
 %Similarity matrix
 % S=[];

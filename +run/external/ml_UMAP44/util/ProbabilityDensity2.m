@@ -500,7 +500,7 @@ classdef ProbabilityDensity2 < handle
                         l=lbls==u(i);
                         colorString=char(lblMap.get(keyColor));
                         if ~isempty(colorString)
-                            clr=str2num(colorString); %#ok<ST2NM>
+                            clr=str2double(colorString); %#ok<ST2NM>
                             if any(clr>1)
                                 clr=clr/256;
                             end

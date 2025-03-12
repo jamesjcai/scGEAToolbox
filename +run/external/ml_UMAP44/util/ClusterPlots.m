@@ -94,7 +94,7 @@ classdef ClusterPlots < Plots
                 if isempty(clr_)
                     this.clr=[.95 .9 .99];
                 else
-                    this.clr=str2num(clr_)/256; %#ok<ST2NM>
+                    this.clr=str2double(clr_)/256; %#ok<ST2NM>
                 end
             else
                 ranking=find(i==this.ranks,1);

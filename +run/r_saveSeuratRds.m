@@ -39,35 +39,36 @@ end
 
 
 
-
-function [indptr, indices, data] = convert_sparse_to_indptr(X)
-
-% Check if X is sparse
-if ~issparse(X)
-    error('Input matrix X must be a sparse matrix');
-end
-
-% Get matrix dimensions
-[~, n] = size(X);
-
-% Initialize indptr with 1 and n+1
-indptr = [1, n+1];
-
-% Find non-zero elements and their indices
-[row, col] = find(X);
-
-% Sort by columns for efficient construction
-[~, sort_idx] = sort(col);
-row = row(sort_idx);
-col = col(sort_idx);
-
-% Accumulate column counts for indptr
-for i = 1:n
-    indptr(i+1) = indptr(i) + sum(col == i);
-end
-
-% Assign indices and data
-indices = row;
-data = full(X(row, col));  % Extract non-zero values
-
-end
+%{
+    function [indptr, indices, data] = convert_sparse_to_indptr(X)
+    
+        % Check if X is sparse
+        if ~issparse(X)
+            error('Input matrix X must be a sparse matrix');
+        end
+        
+        % Get matrix dimensions
+        [~, n] = size(X);
+        
+        % Initialize indptr with 1 and n+1
+        indptr = [1, n+1];
+        
+        % Find non-zero elements and their indices
+        [row, col] = find(X);
+        
+        % Sort by columns for efficient construction
+        [~, sort_idx] = sort(col);
+        row = row(sort_idx);
+        col = col(sort_idx);
+        
+        % Accumulate column counts for indptr
+        for i = 1:n
+            indptr(i+1) = indptr(i) + sum(col == i);
+        end
+        
+        % Assign indices and data
+        indices = row;
+        data = full(X(row, col));  % Extract non-zero values
+    
+    end
+%}
