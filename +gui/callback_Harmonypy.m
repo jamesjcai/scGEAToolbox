@@ -38,7 +38,7 @@ answer = gui.myQuestdlg(FigureHandle, 'Using MATLAB engine for Python or Calling
                     end
                     %}
 
-                    %fw=gui.gui_waitbar;
+                    %fw=gui.myWaitbar(FigureHandle);
 
                     %try
                         
@@ -51,18 +51,18 @@ answer = gui.myQuestdlg(FigureHandle, 'Using MATLAB engine for Python or Calling
                         % [s] = run.py_harmonypy(sce.s, id);
 
                         if isempty(s) || isequal(sce.s, s)
-                            % gui.gui_waitbar(fw);
+                            % gui.myWaitbar(FigureHandle, fw);
                             errordlg("Harmonypy Running Error");
                             return;
                         end
                         sce.s = s;
                     % catch ME
-                    %     %gui.gui_waitbar(fw,true);
+                    %     %gui.myWaitbar(FigureHandle, fw,true);
                     %     errordlg(ME.message);
                     %     %rethrow(ME);
                     %     return;
                     % end
-                    %gui.gui_waitbar(fw);
+                    %gui.myWaitbar(FigureHandle, fw);
 
                     guidata(FigureHandle, sce);
                     done = true;

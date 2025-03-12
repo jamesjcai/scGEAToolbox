@@ -4,7 +4,7 @@ pd = makedist('Gamma', 'a', 0.5, 'b', 2);
 
 hx=gui.myFigure;
 
-hFig = hx.FigureHandle;
+hFig = hx.FigHandle;
 a = gca(hFig);
 qqplot(a, T.FC, pd);
 

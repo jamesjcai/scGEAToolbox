@@ -15,7 +15,7 @@ switch answer
         % whitelist=gsorted(idx);
         [whitelist] = gui.i_selectngenes(sce, [], parentfig);
         if isempty(whitelist)
-            gui.myHelpdlg(parentfig, 'No whitelist gene selected. Click OK to continue.', '');
+            gui.myHelpdlg(parentfig, 'No whitelist gene selected. Click OK to continue.');
             return;
         end
         [y] = ismember(whitelist, sce.g);
@@ -24,9 +24,9 @@ switch answer
         end
         if ~isempty(whitelist)
             gui.myHelpdlg(parentfig, sprintf('%d whitelist gene(s) selected. Click OK to continue.', ...
-                length(whitelist)), '');
+                length(whitelist)));
         else
-            gui.myHelpdlg(parentfig, 'No whitelist gene selected. Click OK to continue.', '');
+            gui.myHelpdlg(parentfig, 'No whitelist gene selected. Click OK to continue.');
         end
     case 'No'
         whitelist = []; % when isempty, continue..

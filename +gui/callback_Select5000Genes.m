@@ -34,7 +34,7 @@ if isempty(answer)
     return;
 end
 
-fw = gui.gui_waitbar;
+fw = gui.myWaitbar(FigureHandle);
 scenew = sce;
 
 c = 1;
@@ -148,22 +148,22 @@ try
     scenew.g = scenew.g(idx);
     scenew.X = scenew.X(idx, :);
 catch ME
-    gui.gui_waitbar(fw,true);
-    gui.myWarndlg(FigureHandle, ME.message,'');
+    gui.myWaitbar(FigureHandle, fw,true);
+    gui.myWarndlg(FigureHandle, ME.message, ME.identifier);
     return;
 end
 
 try
     scenew = scenew.qcfilterwhitelist(1000, 0.15, 15, 500, []);
 catch ME
-    gui.gui_waitbar(fw,true);
-    gui.myWarndlg(FigureHandle, ME.message,'');
+    gui.myWaitbar(FigureHandle, fw,true);
+    gui.myWarndlg(FigureHandle, ME.message, ME.identifier);
     return;
 end
 
-gui.gui_waitbar(fw);
+gui.myWaitbar(FigureHandle, fw);
 if scenew.NumCells == 0 || scenew.NumGenes==0
-    gui.myWarndlg(FigureHandle, 'No cells or genes left. The operation is cancelled','');
+    gui.myWarndlg(FigureHandle, 'No cells or genes left. The operation is cancelled');
     requirerefresh = false;
 else
     requirerefresh = true;

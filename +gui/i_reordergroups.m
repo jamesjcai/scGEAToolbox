@@ -24,7 +24,7 @@ if isempty(answer), return; end
             end
             if length(newidx) ~= length(cL)
                 noanswer = true;
-                gui.myWarndlg(parentfig, 'Please select all items.','','modal');
+                gui.myWarndlg(parentfig, 'Please select all items.');
                 return;
             end
             cx = c;

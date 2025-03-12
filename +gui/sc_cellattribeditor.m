@@ -1,5 +1,5 @@
-function [sce, needupdate] = sc_cellattribeditor(sce, addnew, FigureHandle)
-if nargin<3, FigureHandle = []; end
+function [sce, needupdate] = sc_cellattribeditor(sce, addnew, parentfig)
+if nargin<3, parentfig = []; end
 if nargin<2, addnew = false; end
 
     needupdate = false;
@@ -42,7 +42,7 @@ if ~addnew
     
     %fw = gui.gui_waitbar;
     
-    if ~strcmp('Yes', gui.myQuestdlg(FigureHandle, 'It may take a while to load values. Continue?')), return; end
+    if ~strcmp('Yes', gui.myQuestdlg(parentfig, 'It may take a while to load values. Continue?')), return; end
     x = inputdlg(sprintf('Attribute Name: %s\n%s',clabel, 'Attribute Values:'), ...
                       'Attribute Editor', [15 80], {char(string(thisc))});
     %gui.gui_waitbar(fw);
@@ -57,21 +57,21 @@ if isempty(x), return; end
 
 if addnew
     if isempty(x{1})
-        gui.myWarndlg(FigureHandle, 'Attribute Name cannot be empty.','');
+        gui.myWarndlg(parentfig, 'Attribute Name cannot be empty.');
         return; 
     end
     if isempty(x{2})
-        gui.myWarndlg(FigureHandle, 'Attribute Values cannot be empty.','');
+        gui.myWarndlg(parentfig, 'Attribute Values cannot be empty.');
         return; 
     end
 else
     if isempty(x{1})       % when add new - x{1} is the values
-        gui.myWarndlg(FigureHandle, 'Attribute Values cannot be empty.','');
+        gui.myWarndlg(parentfig, 'Attribute Values cannot be empty.');
         return;
     end
 end
 
-    answer = gui.myQuestdlg(FigureHandle, 'What is the data type of attribute values?', ...
+    answer = gui.myQuestdlg(parentfig, 'What is the data type of attribute values?', ...
 	    'Data Type', ...
 	    {'String','Numeric','Cancel'},'String');
     switch answer
@@ -96,13 +96,13 @@ end
 
     if addnew
         if size(newthisc,1)~=sce.NumCells
-           gui.myWarndlg(FigureHandle, ...
-               'Attribute length is not equal to the number of cells.','');
+           gui.myWarndlg(parentfig, ...
+               'Attribute length is not equal to the number of cells.');
            return;
         end
     else
         if ~isequal(size(newthisc), size(thisc))
-           gui.myWarndlg(FigureHandle, 'Attribute length changed.','');
+           gui.myWarndlg(parentfig, 'Attribute length changed.');
            return;
         end
     end
@@ -111,12 +111,12 @@ end
         clabel = matlab.lang.makeValidName(clabel);        
         existinglabels = sce.list_cell_attributes(1:2:end);
         if ismember(clabel, existinglabels)
-            gui.myWarndlg(FigureHandle, 'Cell Attribute Name Existing.','');
+            gui.myWarndlg(parentfig, 'Cell Attribute Name Existing.');
             return;
         end
         sce.list_cell_attributes = [sce.list_cell_attributes, ...
                                     {clabel, newthisc(:)}];
-        gui.myHelpdlg(FigureHandle, 'Cell Attribute Added.','');
+        gui.myHelpdlg(parentfig, 'Cell Attribute Added.');
         needupdate = true;
     else
         switch clabel
@@ -134,7 +134,7 @@ end
                 [y,idx]=ismember(clabel, sce.list_cell_attributes(1:2:end));
                 if y, sce.list_cell_attributes{idx+1} = newthisc; end
         end
-        gui.myHelpdlg(FigureHandle, 'Cell Attribute Changed.','');
+        gui.myHelpdlg(parentfig, 'Cell Attribute Changed.');
         needupdate = true;
     end    
 end

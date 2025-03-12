@@ -1,4 +1,5 @@
-function [hFig] = i_violinmatrix(X, g, c, cL, tgene, uselog, titletxt, parentfig)
+function [hFig] = i_violinmatrix(X, g, c, cL, tgene, uselog, ...
+    titletxt, parentfig)
 
 % see also: i_violinarray
 if nargin < 8, parentfig = []; end
@@ -23,7 +24,7 @@ cL = strrep(cL(:),'_','\_');
 xgroupdata = cL(c);
 
 hx=gui.myFigure;
-hFig=hx.FigureHandle;
+hFig=hx.FigHandle;
 
 
 for k = 1:M

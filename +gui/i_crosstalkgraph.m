@@ -8,12 +8,13 @@ function [hFig] = i_crosstalkgraph(OUT, k, sce)
     %    h=heatmap(m);
     %    h.XDisplayLabels=cL;
     %    h.YDisplayLabels=cL;
-    % pkg.heatmap(m, cL, cL,'%0.2f', 'TickAngle', 45, 'ShowAllTicks', true, 'TextColor', 'w');
+    % pkg.heatmap(m, cL, cL,'%0.2f', 'TickAngle', 45, ...
+    % 'ShowAllTicks', true, 'TextColor', 'w');
     if ~isempty(sce)
         [c, cL] = grp2idx(sce.c_cell_type_tx);
         
         hx=gui.myFigure;
-        hFig = hx.FigureHandle;
+        hFig = hx.FigHandle;
         ax1 = subplot(2, 2, 1);
         gui.i_gscatter3(sce.s(:, 1:2), c);
         title('Cell Types')

@@ -4,7 +4,7 @@ if isempty(embeddingtags)
     embeddingtags = fieldnames(sce.struct_cell_embeddings);
 end
     hx=gui.myFigure;
-    hFig=hx.FigureHandle;
+    hFig=hx.FigHandle;
     hFig.Position(3) = hFig.Position(3) * 1.8;
     axesv = cell(length(embeddingtags),1);
     for k=1:length(embeddingtags)

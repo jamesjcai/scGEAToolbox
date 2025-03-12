@@ -38,8 +38,8 @@ function callback_ShowGeneExprCompr(src, ~)
         end
 
 
-    fw=gui.gui_waitbar;
+    fw=gui.myWaitbar(FigureHandle);
     gui.sc_uitabgrpfig_expcomp(sce, glist, FigureHandle, [axx, bxx], thisc);
-    gui.gui_waitbar(fw);
+    gui.myWaitbar(FigureHandle, fw);
 
 end

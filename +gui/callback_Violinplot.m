@@ -44,10 +44,10 @@ function callback_Violinplot(src, ~)
                 [c, cL, noanswer] = gui.i_reordergroups(thisc, [], FigureHandle);
                 if noanswer, return; end
                 % [c, cL] = grp2idx(thisc);
-                fw = gui.gui_waitbar;
+                fw = gui.myWaitbar(FigureHandle);
                 gui.i_violinmatrix(full(Xt), sce.g, c, cL, glist, ...
                         false, '', FigureHandle);
-                gui.gui_waitbar(fw);
+                gui.myWaitbar(FigureHandle, fw);
 
                 return;
             end
@@ -74,10 +74,10 @@ function callback_Violinplot(src, ~)
                 if ~all(a)
                     thisyv = thisyv(a);
                     ylabelv = ylabelv(a);
-                    gui.myHelpdlg(FigureHandle, 'Only continuous variables of cell state will be shown.','');
+                    gui.myHelpdlg(FigureHandle, 'Only continuous variables of cell state will be shown.');
                 end                
             else
-                gui.myHelpdlg(FigureHandle, 'No valid cell state variables. Violinplot cannot be shown.','');
+                gui.myHelpdlg(FigureHandle, 'No valid cell state variables. Violinplot cannot be shown.');
             end
         otherwise
             return;

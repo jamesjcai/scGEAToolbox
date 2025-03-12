@@ -43,15 +43,15 @@ end
         X = sc_norm(sce.X);
         X = log1p(X);
         if useparallel
-            fw = gui.gui_waitbar;
+            fw = gui.myWaitbar(FigureHandle);
             [A] = sc_pcnetpar(X);
-            gui.gui_waitbar(fw);
+            gui.myWaitbar(FigureHandle, fw);
         else
             [A] = sc_pcnet(X, 3, false, false, true);
         end
     catch ME
         if useparallel
-            gui.gui_waitbar(fw, true);
+            gui.myWaitbar(FigureHandle, fw, true);
         end
         errordlg(ME.message);
         return;
@@ -88,10 +88,10 @@ end
                 return;
             else
                 filename = fullfile(path, file);
-                fw = gui.gui_waitbar;
+                fw = gui.myWaitbar(FigureHandle);
                 g = sce.g;
                 save(filename, 'A', 'g', '-v7.3');
-                gui.gui_waitbar(fw);
+                gui.myWaitbar(FigureHandle, fw);
             end
     end
 

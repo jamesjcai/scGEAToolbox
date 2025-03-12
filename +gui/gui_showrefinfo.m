@@ -1,7 +1,7 @@
-function [y, txt, T] = gui_showrefinfo(reftarget, FigureHandle)
+function [y, txt, T] = gui_showrefinfo(reftarget, parentfig)
 
 %see also: gui.gui_uishowrefinfo
-if nargin<2, FigureHandle = []; end
+if nargin<2, parentfig = []; end
 y=false;
 txt = [];
 pw1 = fileparts(mfilename('fullpath'));
@@ -18,7 +18,7 @@ end
 
 if ~isempty(txt)
     fprintf('%s\n%s\n', reftarget, txt);
-    answer = gui.myQuestdlg(FigureHandle, ...
+    answer = gui.myQuestdlg(parentfig, ...
          txt, reftarget, {'Continue','Cancel'}, 'Continue');
      switch answer
          case 'Continue'

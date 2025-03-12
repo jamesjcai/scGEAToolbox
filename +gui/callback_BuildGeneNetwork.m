@@ -17,9 +17,9 @@ function callback_BuildGeneNetwork(src, ~)
             
             x = Xt(i, :);
             
-            fw = gui.gui_waitbar;
+            fw = gui.myWaitbar(FigureHandle);
             A = sc_pcnet(x);
-            gui.gui_waitbar(fw);
+            gui.myWaitbar(FigureHandle, fw);
         case 'Chaterjee Correlation'
             [Xt] = gui.i_transformx(sce.X, true, 3, FigureHandle);
             if isempty(Xt), return; end
@@ -64,9 +64,9 @@ function callback_BuildGeneNetwork(src, ~)
                     return;
                 else
                     filename = fullfile(path, file);
-                    fw = gui.gui_waitbar;
+                    fw = gui.myWaitbar(FigureHandle);
                     save(filename, 'G');
-                    gui.gui_waitbar(fw);
+                    gui.myWaitbar(FigureHandle, fw);
                     gui.myHelpdlg(FigureHandle, 'File saved.');                    
                 end
             end

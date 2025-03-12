@@ -14,7 +14,7 @@ t = t(:);
         sce.X = sce.X(idx, :);
     end
 
-    % [Xt] = gui.i_transformx(sce.X, [], [], FigureHandle);
+    % [Xt] = gui.i_transformx(sce.X, [], [], parentfig);
     % if isempty(Xt), return; end
     X = sce.X;
     try
@@ -62,7 +62,7 @@ t = t(:);
     selectedg = sce.g(idxp);
     try
         hx=gui.myFigure;
-        hFig=hx.FigureHandle;
+        hFig=hx.FigHandle;
         hFig.Position(3) = hFig.Position(3) * 1.8;
         hx.show(parentfig);
         figure(hFig);

@@ -1,6 +1,6 @@
-function [continue_to_try, prepare_input_only] = i_memorychecked(ram_needed, FigureHandle)
+function [continue_to_try, prepare_input_only] = i_memorychecked(ram_needed, parentfig)
 
-if nargin < 2, FigureHandle = []; end
+if nargin < 2, parentfig = []; end
 if nargin < 1, ram_needed = 32; end
 
 continue_to_try = false;
@@ -8,12 +8,14 @@ prepare_input_only = false;
 
 [~, sys] = memory;
 totalMemoryGB = sys.PhysicalMemory.Total / (1024^3);
-s = sprintf('%d GB of memory is recommended to run this function. Detected total physical memory: %.2f GB.', ...
+s = sprintf(['%d GB of memory is recommended to run this function. ' ...
+    'Detected total physical memory: %.2f GB.'], ...
     ram_needed, totalMemoryGB);
 
 if totalMemoryGB < ram_needed * 0.95
-    answer = gui.myQuestdlg(FigureHandle, s, ...
-        '', {'Continue, but Only Prepare Input', 'Proceed Anyway', 'Cancel'}, ...
+    answer = gui.myQuestdlg(parentfig, s, ...
+        '', {'Continue, but Only Prepare Input', ...
+        'Proceed Anyway', 'Cancel'}, ...
         'Continue, but Only Prepare Input');
     switch answer
         case 'Continue, but Only Prepare Input'

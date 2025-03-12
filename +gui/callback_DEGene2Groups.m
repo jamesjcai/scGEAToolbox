@@ -38,15 +38,15 @@ function callback_DEGene2Groups(src, ~)
                 [ok] = gui.i_confirmscript('DE analysis (DESeq2)', ...
                     'R_DESeq2', 'r');
                 if ~ok, return; end
-                fw = gui.gui_waitbar;
+                fw = gui.myWaitbar(FigureHandle);
                 T = run.r_DESeq2(sce.X(:, i1), sce.X(:, i2), sce.g);
-                gui.gui_waitbar(fw);
+                gui.myWaitbar(FigureHandle, fw);
             case 'mast'
                 [ok] = gui.i_confirmscript('DE analysis (MAST)', 'R_MAST', 'r');
                 if ~ok, return; end
-                fw = gui.gui_waitbar;
+                fw = gui.myWaitbar(FigureHandle);
                 T = run.r_MAST(sce.X(:, i1), sce.X(:, i2), sce.g);
-                gui.gui_waitbar(fw);
+                gui.myWaitbar(FigureHandle, fw);
         end
 
     catch ME

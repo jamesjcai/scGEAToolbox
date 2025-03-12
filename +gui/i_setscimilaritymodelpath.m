@@ -1,6 +1,6 @@
-function [selectedDir] = i_setscimilaritymodelpath(~, ~, FigureHandle)
+function [selectedDir] = i_setscimilaritymodelpath(~, ~, parentfig)
 
-if nargin<3, FigureHandle = []; end
+if nargin<3, parentfig = []; end
 selectedDir = '';
 preftagname = 'scimilmodelpath';
 if ispref('scgeatoolbox', preftagname)
@@ -8,16 +8,16 @@ if ispref('scgeatoolbox', preftagname)
 end
 
 if isempty(selectedDir) || ~isfolder(selectedDir)
-    answer = gui.myQuestdlg(FigureHandle, 'Scimilarity model path has not been set up. Locate it?');
+    answer = gui.myQuestdlg(parentfig, 'Scimilarity model path has not been set up. Locate it?');
     if strcmp('Yes', answer)
         [done] = ix_setpath;
         if ~done, return; end
-        gui.myHelpdlg(FigureHandle, 'Scimilarity model path is set successfully.', '');
+        gui.myHelpdlg(parentfig, 'Scimilarity model path is set successfully.');
     else
         return;
     end
 else
-    answer = gui.myQuestdlg(FigureHandle, sprintf('%s', selectedDir), ...
+    answer = gui.myQuestdlg(parentfig, sprintf('%s', selectedDir), ...
         'Model Path', ...
         {'Use this', 'Use another', 'Cancel'}, 'Use this');
     switch answer
@@ -28,7 +28,7 @@ else
                 return;
             end
             done = true;
-            gui.myHelpdlg(FigureHandle, 'Scimilarity model path is set successfully.', '');
+            gui.myHelpdlg(parentfig, 'Scimilarity model path is set successfully.');
         case {'Cancel', ''}
             selectedDir = '';
             done = false;
@@ -39,7 +39,7 @@ else
 end
 
 if ~done && (isempty(selectedDir) || ~isfolder(selectedDir))
-    gui.myWarndlg(FigureHandle, 'SCimilarity model path is not set.', '');
+    gui.myWarndlg(parentfig, 'SCimilarity model path is not set.');
 end
 
 

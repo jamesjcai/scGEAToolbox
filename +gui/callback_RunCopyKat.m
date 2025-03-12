@@ -15,13 +15,13 @@ if isempty(wkdir), return; end
 
         [ndim] = gui.i_choose2d3d;
         if isempty(ndim), return; end
-        fw = gui.gui_waitbar;
+        fw = gui.myWaitbar(FigureHandle);
         try
             run.r_copykat(sce, wkdir);
         catch
-            gui.gui_waitbar(fw);
+            gui.myWaitbar(FigureHandle, fw);
             return;
         end
-        gui.gui_waitbar(fw);
+        gui.myWaitbar(FigureHandle, fw);
         guidata(FigureHandle, sce);
 end

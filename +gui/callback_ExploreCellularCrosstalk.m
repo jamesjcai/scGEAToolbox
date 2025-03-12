@@ -38,10 +38,10 @@ if ~gui.gui_showrefinfo('talklr [DOI:10.1101/2020.02.01.930602]', FigureHandle),
         load(dbfile, 'ligand', 'receptor', 'T');
 
 
-        fw = gui.gui_waitbar;
+        fw = gui.myWaitbar(FigureHandle);
         sce = sce.selectcells(selected);
         [OUT, ~] = run.ml_talklr(sce);
-        gui.gui_waitbar(fw);
+        gui.myWaitbar(FigureHandle, fw);
 
         n = length(OUT.ligandok);
         if n == 0
@@ -84,7 +84,7 @@ if ~gui.gui_showrefinfo('talklr [DOI:10.1101/2020.02.01.930602]', FigureHandle),
                     if y1 && y2
 
                         hx = gui.myFigure;
-                        hFig = hx.FigureHandle;
+                        hFig = hx.FigHandle;
                         hFig.Position(3) = hFig.Position(3) * 2.2;
 
                         %subplot(1, 2, 1)

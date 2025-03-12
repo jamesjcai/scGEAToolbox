@@ -33,7 +33,7 @@ if isempty(thisc2)
 end
 
 
-fw = gui.gui_waitbar;
+fw = gui.myWaitbar(FigureHandle);
 
 % sizesorted = false;
 labelsx='';
@@ -70,7 +70,7 @@ for k=1:2
 end
 
 hx.addCustomButton('off', @i_saveCrossTable, "floppy-disk-arrow-in.jpg", 'Save cross-table');
-gui.gui_waitbar(fw);
+gui.myWaitbar(FigureHandle, fw);
 hx.show(FigureHandle);
 
 

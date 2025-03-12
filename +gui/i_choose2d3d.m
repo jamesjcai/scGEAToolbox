@@ -1,8 +1,8 @@
-function [ndim] = i_choose2d3d(FigureHandle)
+function [ndim] = i_choose2d3d(parentfig)
 
-if nargin<1, FigureHandle = []; end
+if nargin<1, parentfig = []; end
 ndim = [];
-answer3 = gui.myQuestdlg(FigureHandle, '3D or 2D?', '', ...
+answer3 = gui.myQuestdlg(parentfig, '3D or 2D?', '', ...
     {'3D', '2D'}, '3D');
 switch answer3
     case '3D'

@@ -1,19 +1,19 @@
-function [FigureHandle, sce] = gui_getfigsce(src)
+function [parentfig, sce] = gui_getfigsce(src)
    if ~isprop(src, 'Parent') || ~isprop(src.Parent, 'Parent')
        error('Invalid source object: missing parent properties.');
    end
 
-    FigureHandle = src.Parent.Parent;
+    parentfig = src.Parent.Parent;
 
-    if isempty(FigureHandle)
+    if isempty(parentfig)
         error('Invalid parent figure.');
     end
     if nargout > 1
-        sce = guidata(FigureHandle);
+        sce = guidata(parentfig);
         if ~isa(sce, 'SingleCellExperiment')
             error('sce is not a SingleCellExperiment object.');
         end
     end
     if nargout > 2
-        isui = gui.i_isuifig(FigureHandle);
+        isui = gui.i_isuifig(parentfig);
     end

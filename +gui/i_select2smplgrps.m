@@ -96,7 +96,7 @@ end
          if ~strcmp(answer, 'Yes'), return; end
          [newidx1] = gui.i_selmultidlg(cLi, [], parentfig);
          % if length(newidx1) == length(cLi)
-         %     gui.myWarndlg(FigureHandle, 'Please select all group items.', '');
+         %     gui.myWarndlg(parentfig, 'Please select all group items.', '');
          %     return;
          % end
          cx = ci;

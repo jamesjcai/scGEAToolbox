@@ -16,7 +16,7 @@ if isempty(wkdir), return; end
 [i1, i2] = gui.i_select2smplgrps(sce, false, FigureHandle);
 if isscalar(i1) || isscalar(i2), return; end
 
-fw = gui.gui_waitbar;
+fw = gui.myWaitbar(FigureHandle);
 disp('Constructing networks (1/2) ...')
 X = sc_norm(sce.X);
 X = log1p(X);
@@ -33,7 +33,7 @@ disp('Manifold alignment...')
 disp('Differential regulation (DR) detection...')
 glist = sce.g;
 T = i_dr(aln0, aln1, glist);
-gui.gui_waitbar(fw);
+gui.myWaitbar(FigureHandle, fw);
 
 tstr = matlab.lang.makeValidName(string(datetime));
 b = 'sctenifoldnet_outs';

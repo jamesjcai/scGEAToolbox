@@ -1,15 +1,15 @@
 function [done] = i_setllmmodel(src, ~)
 
-[FigureHandle, ~] = gui.gui_getfigsce(src);
+[parentfig, ~] = gui.gui_getfigsce(src);
 done = false;
 preftagname = 'llmodelprovider';
 if ~ispref('scgeatoolbox', preftagname)
-    % answer = gui.myQuestdlg(FigureHandle, 'LLM model has not been set up. Set it up?');
+    % answer = gui.myQuestdlg(parentfig, 'LLM model has not been set up. Set it up?');
     % if ~strcmp(answer, 'Yes'), return; end
     % [done] = ix_setwdpath(pathdefult);
 else
     s = getpref('scgeatoolbox', preftagname);
-    answer1 = gui.myQuestdlg(FigureHandle, sprintf('%s', s), ...
+    answer1 = gui.myQuestdlg(parentfig, sprintf('%s', s), ...
         'LLM Model', ...
         {'Use this', 'Use another', 'Cancel'}, 'Use this');
     switch answer1
@@ -58,12 +58,14 @@ if ok
                     end
                 end
             else
-                gui.myHelpdlg(FigureHandle, 'Ollama is not running.','');
+                gui.myHelpdlg(parentfig, 'Ollama is not running.');
                 return;
             end
         otherwise
-            gui.myWarndlg(FigureHandle, sprintf('The function supporting %s API is under development.', ...
-                selectedProvider),'');
+            gui.myWarndlg(parentfig, ...
+                sprintf(['The function supporting %s API is ' ...
+                'under development.'], ...
+                selectedProvider));
             return;
     end
 else    
@@ -72,5 +74,6 @@ else
 end
 
 if done
-     gui.myHelpdlg(FigureHandle, "LLM provider and model are set successfully.", '');
+     gui.myHelpdlg(parentfig, "LLM provider and" + ...
+         " model are set successfully.");
 end

@@ -7,9 +7,12 @@ p = inputParser;
 addRequired(p, 'X', @isnumeric);
 addRequired(p, 'genelist', @isstring);
 addRequired(p, 's', @isnumeric);
-addOptional(p, 'species', "mouse", @(x) (isstring(x) | ischar(x)) & ismember(lower(string(x)), ["human", "mouse"]));
-addOptional(p, 'organ', "all", @(x) (isstring(x) | ischar(x)) & ismember(lower(string(x)), ["all", "heart", "immunesystem", "brain", "pancreas"]));
-addOptional(p, 'method', "alona", @(x) (isstring(x) | ischar(x)) & ismember(lower(string(x)), ["alona", "singler"]));
+addOptional(p, 'species', "mouse", @(x) (isstring(x) | ischar(x)) & ...
+    ismember(lower(string(x)), ["human", "mouse"]));
+addOptional(p, 'organ', "all", @(x) (isstring(x) | ischar(x)) & ...
+    ismember(lower(string(x)), ["all", "heart", "immunesystem", "brain", "pancreas"]));
+addOptional(p, 'method', "alona", @(x) (isstring(x) | ischar(x)) & ...
+    ismember(lower(string(x)), ["alona", "singler"]));
 parse(p, X, genelist, s, varargin{:});
 species = p.Results.species;
 organ = p.Results.organ;
@@ -27,7 +30,7 @@ titxt = sprintf('Cell Type Explorer\n[species: %s; method: %s]', ...
     species, method);
 
 hx=gui.myFigure;
-hFig=hx.FigureHandle;
+hFig=hx.FigHandle;
 
 hAx = axes('Parent', hFig);
 if size(s, 2) >= 3

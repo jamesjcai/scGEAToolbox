@@ -1,20 +1,21 @@
 function i_savemainfig(src, ~, tag)
     
-    [FigureHandle] = gui.gui_getfigsce(src);
+    [parentfig] = gui.gui_getfigsce(src);
     
-    axesHandles = findall(FigureHandle, 'Type', 'axes');
+    axesHandles = findall(parentfig, 'Type', 'axes');
     if isempty(axesHandles)    
-        gui.myHelpdlg(FigureHandle, 'No figures available in the current window. Unable to save figure.', '');
+        gui.myHelpdlg(parentfig, ...
+            'No figures available in the current window. Unable to save figure.');
         return;
     end
     if tag == 1
         filter = {'*.svg'};
         [filename, filepath] = uiputfile(filter);
         if ischar(filename)
-            if gui.i_isuifig(FigureHandle)
-                exportapp(FigureHandle, [filepath filename]);
+            if gui.i_isuifig(parentfig)
+                exportapp(parentfig, [filepath filename]);
             else
-                saveas(FigureHandle, [filepath, filename], 'svg');
+                saveas(parentfig, [filepath, filename], 'svg');
             end
         end
     elseif tag == 2
@@ -23,15 +24,15 @@ function i_savemainfig(src, ~, tag)
         [filename, filepath] = uiputfile(filter);
         if ischar(filename)
 
-            if gui.i_isuifig(FigureHandle)
-                exportapp(FigureHandle, [filepath filename]);
+            if gui.i_isuifig(parentfig)
+                exportapp(parentfig, [filepath filename]);
             else
-                exportgraphics(FigureHandle, [filepath, filename]);
+                exportgraphics(parentfig, [filepath, filename]);
             end
             
         end
     elseif tag == 3
-        gui.i_export2pptx({FigureHandle}, {''}, FigureHandle);
+        gui.i_export2pptx({parentfig}, {''}, parentfig);
     end
 end
 

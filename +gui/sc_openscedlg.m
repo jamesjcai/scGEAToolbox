@@ -1,5 +1,5 @@
-function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
-    if nargin<3, FigureHandle = []; end
+function [sce, filename] = sc_openscedlg(~, ~, parentfig)
+    if nargin<3, parentfig = []; end
     sce = [];
     filename = [];
     list = {'SCE Data File(s) (*.mat)...', ...
@@ -27,8 +27,8 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
     defaultindx = getpref('scgeatoolbox', preftagname, length(list));
 
 
-    if gui.i_isuifig(FigureHandle)
-        [indx, tf] = gui.myListdlg(FigureHandle, list, 'Select a source');
+    if gui.i_isuifig(parentfig)
+        [indx, tf] = gui.myListdlg(parentfig, list, 'Select a source');
     else
         [indx, tf] = listdlg('ListString', list, ...
             'SelectionMode', 'single', ...
@@ -40,7 +40,7 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
     if tf ~= 1, return; end
     ButtonName = list{indx};
     setpref('scgeatoolbox', preftagname, indx);
-    %         ButtonName = gui.myQuestdlg(FigureHandle, ('Select Input Data Type', ...
+    %         ButtonName = gui.myQuestdlg(parentfig, ('Select Input Data Type', ...
     %                               'SC_SCATTER', ...
     %                               'SCE Data .mat', ...
     %                               '10x Genomics .mtx', ...
@@ -50,7 +50,7 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
             try
                 [sce] = in_simulatedata;
             catch ME
-                gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
+                gui.myErrordlg(parentfig, ME.message, ME.identifier);
                 return;
             end
         case 'SCE Data File(s) (*.mat)...'
@@ -68,13 +68,13 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
                     load(scefile, 'sce');
                 catch ME
                     gui.gui_waitbar(fw, true);
-                    gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
+                    gui.myErrordlg(parentfig, ME.message, ME.identifier);
                     return;
                 end
                 gui.gui_waitbar(fw);
             else
                 if ~in_multifilesgo, return; end
-                answer = gui.myQuestdlg(FigureHandle, 'Which set operation method to merge data?', ...
+                answer = gui.myQuestdlg(parentfig, 'Which set operation method to merge data?', ...
                 'Merging method', ...
                     {'Intersect', 'Union'}, 'Intersect');
                 if ~ismember(answer, {'Union', 'Intersect'}), return; end
@@ -97,7 +97,7 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
                 catch ME
                     gui.gui_waitbar_adv(fw);
                     disp(ME.message);
-                    gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
+                    gui.myErrordlg(parentfig, ME.message, ME.identifier);
                     return;
                 end
                 gui.gui_waitbar_adv(fw);
@@ -107,7 +107,7 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
             try
                 [sce] = gui.i_readmtx;
             catch ME
-                gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
+                gui.myErrordlg(parentfig, ME.message, ME.identifier);
                 return;
             end
         case 'TXT/TSV/CSV File (*.txt)...'
@@ -125,12 +125,12 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
                 sce = sce.appendmetainfo(metainfo);
             catch ME
                 gui.gui_waitbar(fw, true);
-                gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
+                gui.myErrordlg(parentfig, ME.message, ME.identifier);
                 return;
             end
             if isempty(sce)
                 gui.gui_waitbar(fw, true);
-                gui.myErrordlg(FigureHandle, 'File Import Failure.');
+                gui.myErrordlg(parentfig, 'File Import Failure.');
                 return;
             else
                 gui.gui_waitbar(fw);
@@ -147,12 +147,12 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
                 [sce] = sc_readrdsfile(filename);
             catch ME
                 gui.gui_waitbar(fw, true);
-                gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
+                gui.myErrordlg(parentfig, ME.message, ME.identifier);
                 return;
             end
             if isempty(sce)
                 gui.gui_waitbar(fw, true);
-                gui.myErrordlg(FigureHandle, 'File Import Failure.');
+                gui.myErrordlg(parentfig, 'File Import Failure.');
                 return;
             else
                 gui.gui_waitbar(fw);
@@ -176,13 +176,13 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
                     gui.gui_waitbar(fw);
                 else
                     gui.gui_waitbar(fw, true);
-                    gui.myErrordlg(FigureHandle, 'File Import Failure.');
+                    gui.myErrordlg(parentfig, 'File Import Failure.');
                     return;
                 end
             catch ME
                 disp(ME.message);
                 gui.gui_waitbar(fw, true);
-                gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
+                gui.myErrordlg(parentfig, ME.message, ME.identifier);
                 return;
             end            
         case '10x Genomics H5 File(s) (*.h5)...'
@@ -193,7 +193,7 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
             if isequal(filenm, 0), return; end
             if iscell(filenm)
                 if ~in_multifilesgo, return; end
-                answer = gui.myQuestdlg(FigureHandle, 'Which set operation method to merge data?', ...
+                answer = gui.myQuestdlg(parentfig, 'Which set operation method to merge data?', ...
                     'Merging method', ...
                     {'Intersect', 'Union'}, 'Intersect');
                 if ~ismember(answer, {'Union', 'Intersect'}), return; end
@@ -224,7 +224,7 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
                     sce = sc_mergesces(insce, methodtag);
                 catch ME
                     gui.gui_waitbar_adv(fw);                    
-                    gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
+                    gui.myErrordlg(parentfig, ME.message, ME.identifier);
                     return;
                 end
                 gui.gui_waitbar_adv(fw);
@@ -243,7 +243,7 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
                             return;
                         end
                     catch ME
-                        gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
+                        gui.myErrordlg(parentfig, ME.message, ME.identifier);
                         return;
                     end
                 end
@@ -261,7 +261,7 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
                     return;
                 end
             catch ME
-                gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
+                gui.myErrordlg(parentfig, ME.message, ME.identifier);
                 return;
             end
         case '10x Genomics ''outs'' Folder...'
@@ -274,11 +274,11 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
                 gui.gui_waitbar(fw);
             catch ME
                 gui.gui_waitbar(fw, true);
-                gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
+                gui.myErrordlg(parentfig, ME.message, ME.identifier);
                 return;
             end
             if ~ftdone
-                gui.myErrordlg(FigureHandle, 'Input Error');
+                gui.myErrordlg(parentfig, 'Input Error');
                 return;
             end
             sce = SingleCellExperiment(X, g);
@@ -303,11 +303,11 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
                 gui.gui_waitbar(fw);
             catch ME
                 gui.gui_waitbar(fw, true);
-                gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
+                gui.myErrordlg(parentfig, ME.message, ME.identifier);
                 return;
             end
             if ~ftdone
-                gui.myErrordlg(FigureHandle, 'Input Error.');
+                gui.myErrordlg(parentfig, 'Input Error.');
                 return;
             end
             sce = SingleCellExperiment(X, g);
@@ -332,16 +332,16 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
             if strlength(acc) > 4 && ~isempty(regexp(acc, 'G.+', 'once'))
                 accv = unique(strsplit(acc, {',', ';', ' '}), 'stable');
                 if length(accv) > 1
-                    dmanswer = gui.myQuestdlg(FigureHandle, 'Download and merge data sets?', ...
+                    dmanswer = gui.myQuestdlg(parentfig, 'Download and merge data sets?', ...
                         '', {'Yes', 'Cancel'}, 'Yes');
                     if ~strcmp(dmanswer, 'Yes'), return; end
                     try
                         fw = gui.gui_waitbar;
-                        [sce] = pkg.pipeline_multisamplesmerge(accv, false, FigureHandle);
+                        [sce] = pkg.pipeline_multisamplesmerge(accv, false, parentfig);
                         gui.gui_waitbar(fw);
                     catch ME
                         gui.gui_waitbar(fw);
-                        gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
+                        gui.myErrordlg(parentfig, ME.message, ME.identifier);
                         return;
                     end
                 else                        
@@ -351,7 +351,7 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
                         gui.gui_waitbar(fw);
                     catch ME
                         gui.gui_waitbar(fw);
-                        gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
+                        gui.myErrordlg(parentfig, ME.message, ME.identifier);
                         return;
                     end
                 end
@@ -402,7 +402,7 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
             b = struct2cell(a);
             valididx = ismember(b(4, :), 'SingleCellExperiment');
             if ~valididx
-                gui.myHelpdlg(FigureHandle, 'No SCE in Workspace.', '');
+                gui.myHelpdlg(parentfig, 'No SCE in Workspace.');
                 return;
             end            
             a = a(valididx);
@@ -417,7 +417,7 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
                 if isscalar(indx)
                     sce = evalin('base', a(indx).name);
                 elseif length(indx) > 1
-                    answer = gui.myQuestdlg(FigureHandle, 'Which set operation method to merge genes?', ...
+                    answer = gui.myQuestdlg(parentfig, 'Which set operation method to merge genes?', ...
                         'Merging method', ...
                         {'Intersect', 'Union'}, 'Intersect');
                     if ~ismember(answer, {'Union', 'Intersect'}), return; end
@@ -436,7 +436,7 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
                     catch ME
                         gui.gui_waitbar(fw, true);
                         disp(ME.message);
-                        gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
+                        gui.myErrordlg(parentfig, ME.message, ME.identifier);
                         return;
                     end
                     gui.gui_waitbar(fw);
@@ -446,13 +446,13 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
             end
             %promotesave = false;
         case 'Load Example Data...'
-            % if gui.i_isuifig(FigureHandle)
-            %     answerstruced = uiconfirm(FigureHandle, 'Load processed or raw data?', '', ...
+            % if gui.i_isuifig(parentfig)
+            %     answerstruced = uiconfirm(parentfig, 'Load processed or raw data?', '', ...
             %         'Options', {'Processed', 'Raw', 'Cancel'}, ...
             %         'DefaultOption', 'Processed', ...
             %         'Icon', 'question');
             % else
-                answerstruced = gui.myQuestdlg(FigureHandle, 'Load processed or raw data?', ...
+                answerstruced = gui.myQuestdlg(parentfig, 'Load processed or raw data?', ...
                     '', {'Processed', 'Raw', 'Cancel'}, 'Processed');
             %end
             if ~(strcmp(answerstruced, 'Processed') || strcmp(answerstruced, 'Raw'))
@@ -464,7 +464,7 @@ function [sce, filename] = sc_openscedlg(~, ~, FigureHandle)
             %tic;
             file1 = fullfile(pw1, '..', 'example_data', 'new_example_sce.mat');
             if ~exist(file1, "file")
-                gui.myErrordlg(FigureHandle, "Example data file does not exist.");
+                gui.myErrordlg(parentfig, "Example data file does not exist.");
                 return;
             end
             load(file1, 'sce');
@@ -492,7 +492,7 @@ end
 
 
 function [y] = in_multifilesgo
-    [answer]=gui.myQuestdlg(FigureHandle, 'Multiple files selected. After reading each file, data will be merged. Continue?','');
+    [answer]=gui.myQuestdlg(parentfig, 'Multiple files selected. After reading each file, data will be merged. Continue?','');
     switch answer
         case 'Yes'
             y=true;
@@ -519,7 +519,7 @@ end
             assert((numgenes >= 1) && (numgenes <= 30000));
             assert((numcells >= 1) && (numcells <= 30000));
         catch
-            gui.myWarndlg(FigureHandle, 'Invalid parameter values.','');
+            gui.myWarndlg(parentfig, 'Invalid parameter values.');
             return;
         end        
         try
@@ -530,11 +530,11 @@ end
                 2*ones(sce.NumCells-round(sce.NumCells/2),1)]);
             %[c, cL] = grp2idx(sce.c);
             gui.gui_waitbar(fw);
-            % guidata(FigureHandle, sce);
+            % guidata(parentfig, sce);
             % in_RefreshAll(src, [], false, false);
         catch ME
             gui.gui_waitbar(fw,true);
-            gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
+            gui.myErrordlg(parentfig, ME.message, ME.identifier);
         end
     end
 

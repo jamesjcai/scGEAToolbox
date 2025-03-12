@@ -6,7 +6,7 @@ if nargin < 5, parentfig = []; end
 if nargin < 4 || isempty(csname), csname = "CellScore"; end
 
 hx=gui.myFigure;
-hFig = hx.FigureHandle;
+hFig = hx.FigHandle;
 
 gui.i_heatscatter(sce.s, cs);
 colorbar;
@@ -15,7 +15,8 @@ colorbar;
 
 zlabel('Score value')
 title(strrep(csname, '_', '\_'));
-hx.addCustomButton('off', @in_saveScoreTable, "floppy-disk-arrow-in.jpg", 'Save cell score/gene expression to table');
+hx.addCustomButton('off', @in_saveScoreTable, ...
+    "floppy-disk-arrow-in.jpg", 'Save cell score/gene expression to table');
 hx.addCustomButton('on', @in_geneheatmapx, 'greenarrowicon.gif', 'Heatmap');
 hx.addCustomButton('off', @in_genedotplot, 'greencircleicon.gif', 'Dot plot');
 hx.addCustomButton('on', @in_viewgenenames, 'HDF_point.gif', 'Show gene names');
@@ -47,9 +48,7 @@ hx.show(parentfig);
     function in_viewgenenames(~, ~)
         [passed] = i_checkposg;
         if ~passed, return; end
-        %         if isempty(posg)
-        %             gui.myHelpdlg(FigureHandle, 'The gene set is empty. This score may not be associated with any gene set.');
-        %         else
+
         idx = matches(sce.g, posg, 'IgnoreCase', true);
         gg = sce.g(idx);
         inputdlg(csname, ...
@@ -83,14 +82,16 @@ hx.show(parentfig);
         if any(idx)
             gui.i_dotplot(sce.X, sce.g, c, cL, posg(idx));
         else
-            gui.myHelpdlg(parentfig, 'No genes in this data set.','')
+            gui.myHelpdlg(parentfig, 'No genes in this data set.');
         end
     end
                 
     function [passed] = in_checkposg
         if isempty(posg)
             passed = false;
-            gui.myHelpdlg(parentfig, 'The gene set is empty. This score may not be associated with any gene set.','');
+            gui.myHelpdlg(parentfig, ...
+                ['The gene set is empty. This score may not' ...
+                ' be associated with any gene set.']);
         else
             passed = true;
         end

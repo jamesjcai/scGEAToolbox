@@ -18,7 +18,7 @@ switch answer
              disp('User canceled input.')
              return;
         end
-        fw = gui.gui_waitbar;
+        fw = gui.myWaitbar(FigureHandle);
         a = tempname;
         fid = fopen(a, 'w');
         fprintf(fid, '%s\n', string(userInput{1}));  % Write first input only (modify for multiple)
@@ -35,7 +35,7 @@ switch answer
         if isequal(fname, 0), return; end
         tabfile = fullfile(pathname, fname);
         warning off
-        fw = gui.gui_waitbar;
+        fw = gui.myWaitbar(FigureHandle);
         tab = readtable(tabfile,'FileType','text', ...
             'Delimiter','\t','ReadVariableNames',false);                
         warning on
@@ -45,5 +45,5 @@ end
 weights = ones(height(tab), 1);
 G = digraph(tab.Var1, tab.Var2, weights);
 gui.i_singlegraph(G, '', FigureHandle);
-gui.gui_waitbar(fw);
+gui.myWaitbar(FigureHandle, fw);
 end

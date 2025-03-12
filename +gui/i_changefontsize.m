@@ -22,9 +22,9 @@ function i_changefontsize(~, ~, hFig)
             end
         end
         if ~hasax
-            gui.myHelpdlg(hFig, 'No plots available in the current window. Unable to change the font size', '');
+            gui.myHelpdlg(hFig, 'No plots available in the current window. Unable to change the font size');
         end
     else
-        gui.myHelpdlg(hFig, 'No figures available in the current window. Unable to change the font size.', '');
+        gui.myHelpdlg(hFig, 'No figures available in the current window. Unable to change the font size.');
     end
 end

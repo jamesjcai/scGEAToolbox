@@ -62,7 +62,7 @@ switch enrichrtype
             else
                 run.web_Enrichr(ingenelist, numel(ingenelist));
             end
-        gui.gui_waitbar(fw, false, 'Check web browser & submit genes to Enrichr.');
+        gui.myWaitbar(FigureHandle, fw, false, 'Check web browser & submit genes to Enrichr.');
         return;   
     otherwise
         return;
@@ -92,7 +92,7 @@ end
     end
     
 
-    fw = gui.gui_waitbar;
+    fw = gui.myWaitbar(FigureHandle);
     Tlist = run.ml_Enrichr(ingenelist, backgroundlist, genesets,...
                            minugenes, pvaluecut);
 
@@ -103,7 +103,7 @@ end
         end
     end
 
-    gui.gui_waitbar(fw);
+    gui.myWaitbar(FigureHandle, fw);
     
     [~, ~] = gui.i_exporttable(T, true, 'Tenrichrres', ...
         sprintf('Enrichr_Results_%s', outfiletag),[],[],FigureHandle);

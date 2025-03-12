@@ -1,4 +1,5 @@
-function [hFig] = i_violinplot(y, thisc, ttxt, colorit, cLorder, posg, parentfig)
+function [hFig] = i_violinplot(y, thisc, ttxt, colorit, cLorder, ...
+    posg, parentfig)
 
 
 if nargin < 7, parentfig = []; end
@@ -9,7 +10,7 @@ if nargin < 3, ttxt = ''; end
 
 if gui.i_isuifig(parentfig), focus(parentfig); end
 hx=gui.myFigure;
-hFig=hx.FigureHandle;
+hFig=hx.FigHandle;
 
 
 isdescend = false;
@@ -170,7 +171,8 @@ hx.show(parentfig);
 
     function i_viewgenenames(~, ~)
         if isempty(posg)
-            gui.myHelpdlg(parentfig, 'The gene set is empty. This score may not be associated with any gene set.');
+            gui.myHelpdlg(parentfig, ['The gene set is empty. This score ' ...
+                'may not be associated with any gene set.']);
         else
             %idx=matches(sce.g,posg,'IgnoreCase',true);
             %gg=sce.g(idx);

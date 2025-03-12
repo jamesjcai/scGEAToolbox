@@ -19,7 +19,7 @@ function in_findAllMarkers(sce,FigureHandle)
     [thisc, ~] = gui.i_select1class(sce);
     if isempty(thisc), return; end
     if isscalar(unique(thisc))
-        gui.myWarndlg(FigureHandle, "All cells are in the same group.",'');
+        gui.myWarndlg(FigureHandle, "All cells are in the same group.");
         return;
     end    
     [T] = pkg.e_findallmarkers(sce.X, sce.g, thisc, [], [], [], true);
@@ -73,7 +73,7 @@ function in_MarkerGeneHeatmap(src, ~, sce)
     [thisc, ~] = gui.i_select1class(sce);
     if isempty(thisc), return; end
     if isscalar(unique(thisc))
-        gui.myWarndlg(FigureHandle, "All cells are in the same group.",'');
+        gui.myWarndlg(FigureHandle, "All cells are in the same group.");
         return;
     end
     % [c, cL, noanswer] = gui.i_reordergroups(thisc);
@@ -94,7 +94,7 @@ function in_MarkerGeneHeatmap(src, ~, sce)
             return;
     end
     
-    fw = gui.gui_waitbar;
+    fw = gui.myWaitbar(FigureHandle);
 
     % speciestag = gui.i_selectspecies(2, false, FigureHandle);
     % if isempty(speciestag)
@@ -120,7 +120,7 @@ function in_MarkerGeneHeatmap(src, ~, sce)
     try
         [markerlist] = sc_pickmarkers(sce.X, sce.g, c, 10, methodid);
     catch ME
-        gui.gui_waitbar(fw, true);
+        gui.myWaitbar(FigureHandle, fw, true);
         errordlg(ME.message);
         return;
     end
@@ -129,7 +129,7 @@ function in_MarkerGeneHeatmap(src, ~, sce)
     for k = 2:length(markerlist)
         glist = [glist; string(markerlist{k}(:))];
     end
-    gui.gui_waitbar(fw);
+    gui.myWaitbar(FigureHandle, fw);
     gui.i_heatmap(sce, glist, thisc, FigureHandle);    
 end
 

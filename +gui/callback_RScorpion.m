@@ -12,14 +12,14 @@ preftagname = 'externalwrkpath';
 if ~ok, return; end
 
 
-fw = gui.gui_waitbar;
+fw = gui.myWaitbar(FigureHandle);
 try
     T = run.r_SCORPION(sce.X,sce.g,wkdir,false);
 catch ME
-    gui.gui_waitbar(fw, true);
+    gui.myWaitbar(FigureHandle, fw, true);
     gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
     return;
 end
-gui.gui_waitbar(fw);
+gui.myWaitbar(FigureHandle, fw);
 end
 

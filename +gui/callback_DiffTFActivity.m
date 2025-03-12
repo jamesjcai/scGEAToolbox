@@ -23,7 +23,7 @@ end
 
 
 if methodid ~= 3
-    fw = gui.gui_waitbar;
+    fw = gui.myWaitbar(FigureHandle);
 end
 
 [cs, tflist, ~, numtargetgenes] = sc_tfactivity(sce.X, sce.g, [], species, methodid);
@@ -31,7 +31,7 @@ T = pkg.e_grptest(cs, thisc);
 T = [table(tflist), T, table(numtargetgenes)];
 
 if methodid ~= 3
-    gui.gui_waitbar(fw);
+    gui.myWaitbar(FigureHandle, fw);
 end
 
 upperg = upper(sce.g);

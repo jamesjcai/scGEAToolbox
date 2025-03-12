@@ -19,7 +19,7 @@ isAxesHandle = isa(s, 'matlab.graphics.axis.Axes'); %isgraphics(s, 'axes');
 if ~isAxesHandle && isempty(c), error('Empty handle.'); end
 
 hx = gui.myFigure;
-hFig = hx.FigureHandle;
+hFig = hx.FigHandle;
 
 if isAxesHandle
     hAx = copyobj(s, hFig);

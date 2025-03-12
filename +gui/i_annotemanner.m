@@ -1,11 +1,12 @@
-function [manuallyselect, bestonly] = i_annotemanner(FigureHandle)
+function [manuallyselect, bestonly] = i_annotemanner(parentfig)
 
-if nargin<1, FigureHandle = []; end
+if nargin<1, parentfig = []; end
 
 manuallyselect = false;
 bestonly = true;
 
-answer = gui.myQuestdlg(FigureHandle, 'Assign cell types to clusters automatically?', ...
+answer = gui.myQuestdlg(parentfig, ...
+    'Assign cell types to clusters automatically?', ...
     '', {'Yes, automatically', 'No, manually', ...
     'Cancel'}, 'Yes, automatically');
 switch answer

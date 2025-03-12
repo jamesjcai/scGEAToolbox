@@ -12,7 +12,7 @@ for k = 1:length(glist)
 
 
     hx=gui.myFigure;
-    hFig = hx.FigureHandle;
+    hFig = hx.FigHandle;
     ax1 = subplot(1, 2, 1);
     pkg.i_violinplot(y, thisc, colorit, grouporder);
     assignin('base', 'y', y);

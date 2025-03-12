@@ -6,7 +6,8 @@ p = inputParser;
 addRequired(p, 'X', @isnumeric);
 addRequired(p, 'genelist', @isstring);
 addRequired(p, 's', @isnumeric);
-addOptional(p, 'method', "splinefit", @(x) (isstring(x) | ischar(x)) & ismember(lower(string(x)), "splinefit"));
+addOptional(p, 'method', "splinefit", @(x) (isstring(x) | ischar(x)) ...
+    & ismember(lower(string(x)), "splinefit"));
 addOptional(p, 'dim', 1, @isnumeric);
 parse(p, X, genelist, s, varargin{:});
 %method=p.Results.method;
@@ -16,7 +17,7 @@ dim = p.Results.dim;
 %global psexplorer_timeid
 %psexplorer_timeid=1;
 hx=gui.myFigure;
-hFig=hx.FigureHandle;
+hFig=hx.FigHandle;
 hAx = axes('Parent', hFig);
 
 if size(s, 2) >= 3

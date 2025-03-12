@@ -40,7 +40,7 @@ switch answer
         %valididx=ismember(b(4,:),'double');
         %a=a(valididx);
         if isempty(b)
-            gui.myHelpdlg(FigureHandle, 'No variable in the WorkSpace.', '');
+            gui.myHelpdlg(FigureHandle, 'No variable in the WorkSpace.');
             return;
         end
         [indx, tf] = listdlg('PromptString', {'Select two networks:'}, ...
@@ -67,7 +67,7 @@ switch answer
             errordlg('Not a valid gene list.');
             return;
         end
-        fw = gui.gui_waitbar;
+        fw = gui.myWaitbar(FigureHandle);
         disp('Reading networks...')
         A0sym = 0.5 * (A0 + A0');
         A1sym = 0.5 * (A1 + A1');
@@ -76,7 +76,7 @@ switch answer
         [aln0, aln1] = i_ma(A0sym, A1sym);
         disp('Differential regulation (DR) detection...')
         T = i_dr(aln0, aln1, glist);
-        gui.gui_waitbar(fw);
+        gui.myWaitbar(FigureHandle, fw);
 
     case 'Construct de novo'
         [i1, i2] = gui.i_select2smplgrps(sce, false, FigureHandle);
@@ -92,7 +92,7 @@ switch answer
         answer123 = gui.myQuestdlg(FigureHandle, 'This analysis may take several hours. Continue?');
         if ~strcmpi(answer123, 'Yes'), return; end
 
-        fw = gui.gui_waitbar;
+        fw = gui.myWaitbar(FigureHandle);
         try
             fprintf('\n');
             % disp('[T]=ten.sctenifoldnet(X1,X2,g,''nsubsmpl'',10,''csubsmpl'',500,''savegrn'',true);')
@@ -100,11 +100,11 @@ switch answer
             [T] = ten.sctenifoldnet(sce.X(:, i1), sce.X(:, i2), sce.g, ...
                 'nsubsmpl', nsubsmpl, 'csubsmpl', csubsmpl, 'savegrn', savegrn);
         catch ME
-            gui.gui_waitbar(fw);
+            gui.myWaitbar(FigureHandle, fw);
             errordlg(ME.message);
             return;
         end
-        gui.gui_waitbar(fw);
+        gui.myWaitbar(FigureHandle, fw);
     otherwise
         return;
 end

@@ -11,7 +11,7 @@ function callback_MultiGroupingView(src, ~)
         %     [thisc1, clabel1, thisc2, clabel2] = gui.i_select2states_new(sce);
         %     if isempty(thisc1) || isempty(thisc2), return; end
         %         
-        %     fw=gui.gui_waitbar;    
+        %     fw=gui.myWaitbar(FigureHandle);    
         %     [c, cL] = grp2idx(thisc1);
         %     cx1.c = c;
         %     cx1.cL = strrep(cL, '_', '\_');
@@ -19,7 +19,7 @@ function callback_MultiGroupingView(src, ~)
         %     cx2.c = c;
         %     cx2.cL = strrep(cL, '_', '\_');
         %     gui.sc_multigroupings(sce, cx1, cx2, clabel1, clabel2, FigureHandle);
-        %     gui.gui_waitbar(fw);
+        %     gui.myWaitbar(FigureHandle, fw);
         % 
         
 
@@ -29,7 +29,7 @@ function callback_MultiGroupingView(src, ~)
             if isempty(thiscv) || isempty(clabelv), return; end
 
             hx=gui.myFigure;
-            hFig = hx.FigureHandle;
+            hFig = hx.FigHandle;
             hFig.Position(3) = hFig.Position(3) * 1.8;
             axesv = cell(length(thiscv),1);
             cmapv = cell(length(thiscv),1);
@@ -72,7 +72,7 @@ function callback_MultiGroupingView(src, ~)
             end
             listitems = listitems(valididx);
             if isempty(listitems)
-                gui.myWarndlg(FigureHandle, 'No embeding is available.','');
+                gui.myWarndlg(FigureHandle, 'No embeding is available.');
                 return;
             end
             n = length(listitems);

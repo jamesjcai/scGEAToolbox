@@ -124,12 +124,12 @@ bb = 'No, just show values (heatmap)';
                     [~, methodid] = gui.i_pickscoremethod;
                     if isempty(methodid), return; end
 
-                    fw = gui.gui_waitbar;
+                    fw = gui.myWaitbar(FigureHandle);
                     for k = 1:n
                         y{k} = gui.e_cellscore(sce, posg{k}, ...
                             methodid, false);
                     end
-                    gui.gui_waitbar(fw);
+                    gui.myWaitbar(FigureHandle, fw);
                     
 
                 case 'PanglaoDB Cell Type Markers'
@@ -204,13 +204,13 @@ bb = 'No, just show values (heatmap)';
                     y = cell(n,1); ttxt=cell(n,1);
                     [~, methodid] = gui.i_pickscoremethod;
 
-                    fw=gui.gui_waitbar;
+                    fw=gui.myWaitbar(FigureHandle);
                     for k = 1:n
                         [y{k}, ~, posg] = pkg.e_cellscores(sce.X, sce.g, ...
                             indx2(k), methodid, false);
                         ttxt{k} = T.ScoreType(indx2(k));
                     end
-                    gui.gui_waitbar(fw);
+                    gui.myWaitbar(FigureHandle, fw);
                     % case 'Other Cell Attribute...'
                     %     [y, clabel, ~, newpickclabel] = gui.i_select1state(sce, true);
                     %     if isempty(y)
@@ -248,12 +248,12 @@ bb = 'No, just show values (heatmap)';
                     %     methodid = 4;
                     % end
                     
-                    if methodid ~= 4, fw = gui.gui_waitbar; end
+                    if methodid ~= 4, fw = gui.myWaitbar(FigureHandle); end
                     try
                         [cs, tflist] = sc_tfactivity(sce.X, sce.g, [], ...
                             speciestag, methodid);
                     catch ME
-                        if methodid ~= 4, gui.gui_waitbar(fw,true); end
+                        if methodid ~= 4, gui.myWaitbar(FigureHandle, fw,true); end
                         errordlg(ME.message);
                         return;
                     end
@@ -263,7 +263,7 @@ bb = 'No, just show values (heatmap)';
                     [y] = cs(idx, :);
                     ttxt = listitems{indx2};
                     posg = [];
-                    if methodid ~= 4, gui.gui_waitbar(fw); end
+                    if methodid ~= 4, gui.myWaitbar(FigureHandle, fw); end
                     %         case 'TF Targets Expression Score 2'
                     %                 species=gui.i_selectspecies(2, false, FigureHandle);
                     %                 if isempty(species), return; end

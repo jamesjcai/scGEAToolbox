@@ -23,11 +23,11 @@ preftagname = 'externalwrkpath';
 if isempty(wkdir), return; end
 
 try
-    %fw = gui.gui_waitbar;
+    %fw = gui.myWaitbar(FigureHandle);
     [T] = run.py_GenKI(sce.X, sce.g, idx, wkdir);
-    %gui.gui_waitbar(fw);
+    %gui.myWaitbar(FigureHandle, fw);
 catch ME
-    %gui.gui_waitbar(fw);
+    %gui.myWaitbar(FigureHandle, fw);
     errordlg(ME.message);
     return;
 end

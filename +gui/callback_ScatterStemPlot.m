@@ -30,11 +30,11 @@ function callback_ScatterStemPlot(src, ~)
 
             % answer = gui.myQuestdlg(FigureHandle, 'Plot all in the same figure?','');
             % if strcmp(answer, 'Yes')                
-            %     fw = gui.gui_waitbar;                
+            %     fw = gui.myWaitbar(FigureHandle);                
             %     gui.i_violinmatrix(full(Xt), sce.g, c, cL, glist, ...
             %             false, '', FigureHandle);
             % 
-            %     gui.gui_waitbar(fw);
+            %     gui.myWaitbar(FigureHandle, fw);
             % 
             %     return;
             % end

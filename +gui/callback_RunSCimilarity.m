@@ -72,20 +72,20 @@ function [needupdatesce] = callback_RunSCimilarity(src, ~)
     
     if prepare_input_only
         try
-            fw = gui.gui_waitbar;
+            fw = gui.myWaitbar(FigureHandle);
             run.py_scimilarity(sce, modeldir, wkdir, target_celltypes, true, prepare_input_only);
-            gui.gui_waitbar(fw);
+            gui.myWaitbar(FigureHandle, fw);
             if strcmp(gui.myQuestdlg(FigureHandle, 'Input files prepared. Open the working folder?'),'Yes')
                 winopen(wkdir);
             end            
         catch ME
-            gui.gui_waitbar(fw, true);
+            gui.myWaitbar(FigureHandle, fw, true);
             errordlg(ME.message);
             return;
         end
         needupdatesce = false;        
     else    
-        fw = gui.gui_waitbar;
+        fw = gui.myWaitbar(FigureHandle);
         try
             [c] = run.py_scimilarity(sce, modeldir, wkdir, target_celltypes, true);
             assert(sce.NumCells==numel(c));
@@ -95,12 +95,12 @@ function [needupdatesce] = callback_RunSCimilarity(src, ~)
             end
             sce.c_cell_type_tx = c;
         catch ME
-            gui.gui_waitbar(fw, true);
+            gui.myWaitbar(FigureHandle, fw, true);
             errordlg(ME.message);
             return;
         end    
         guidata(FigureHandle, sce);
         needupdatesce = true;
-        gui.gui_waitbar(fw);
+        gui.myWaitbar(FigureHandle, fw);
     end
 end

@@ -1,5 +1,5 @@
-function [answer] = i_selvariabletype(y,FigureHandle)
-if nargin<2, FigureHandle = []; end
+function [answer] = i_selvariabletype(y,parentfig)
+if nargin<2, parentfig = []; end
 
 [c] = grp2idx(y);
 n = max(c);
@@ -8,7 +8,7 @@ if n < 20
 else
     deft = 'Numerical/Continuous';
 end
-answer = gui.myQuestdlg(FigureHandle, 'What is the variable type?', '', ...
+answer = gui.myQuestdlg(parentfig, 'What is the variable type?', '', ...
     {'Categorical/Discrete', ...
     'Numerical/Continuous', 'Unknown'}, deft);
 

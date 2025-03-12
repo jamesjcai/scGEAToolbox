@@ -134,7 +134,7 @@ if plotit
     %    figure;
     hx=gui.myFigure;
 
-    hFig = hx.FigureHandle;
+    hFig = hx.FigHandle;
     hFig.Position(3)=hFig.Position(3)*1.8;
     %hAx = axes('Parent', FigureHandle);
     hAx1 = subplot(2,2,[1 3]);

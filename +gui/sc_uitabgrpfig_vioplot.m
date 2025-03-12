@@ -18,7 +18,7 @@ import mlreportgen.ppt.*;
 % pth = fullfile(pw1, '..', 'resources', 'Misc', 'myTemplate.pptx');
 
 hx=gui.myFigure;
-hFig=hx.FigureHandle;
+hFig=hx.FigHandle;
 hFig.Position(3) = hFig.Position(3) * 1.8;
 
 %delete(findall(hFig, 'Tag', 'FigureToolBar'));
@@ -261,7 +261,7 @@ ccx = true;
         cLx_sorted = cLx(idxx);
         
         if isequal(cLx, cLx_sorted)
-           gui.myHelpdlg(parentfig, 'Groups has already been sorted.', '');
+           gui.myHelpdlg(parentfig, 'Groups has already been sorted.');
             %     a = zeros(max(cx), 1);
             %     for ks = 1:max(cx)
             %         a(ks) = max(y{idx}(cx == ks));

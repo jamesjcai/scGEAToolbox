@@ -100,7 +100,7 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
             end
 
             
-            fw = gui.gui_waitbar;
+            fw = gui.myWaitbar(FigureHandle);
 
             memerror = false;
             try
@@ -109,7 +109,7 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
             catch ME
                 if (strcmp(ME.identifier,'MATLAB:array:SizeLimitExceeded'))
                 if issparse(sce.X)
-                    gui.gui_waitbar(fw, true);
+                    gui.myWaitbar(FigureHandle, fw, true);
                     errordlg(ME.message);
                     % requirerefresh = false;
                     return;
@@ -143,7 +143,7 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
                     sce = sce.qcfilterwhitelist(libsize, mtratio, ...
                         min_cells_nonzero, numgenes, whitelist);
                 catch ME
-                    gui.gui_waitbar(fw, true);
+                    gui.myWaitbar(FigureHandle, fw, true);
                     errordlg(ME.message);
                     % requirerefresh = false;
                     return;
@@ -172,15 +172,15 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
             % Genes with few counts (fewer than the 15th percentile based on the distribution of the average gene-wise counts across all cells) were considered uninformative and removed.
             % According to the applied criteria for the quality control of cells and genes, the dataset was finally composed of 12,113 genes and 2,990 cells.
 
-            gui.gui_waitbar(fw);
+            gui.myWaitbar(FigureHandle, fw);
             %   [Xmajor,Xminor,gmajor,gminor]=pkg.e_makeshadowmat(sce.X,sce.g);
             %   [X1,g1]=pkg.e_shadowmatqc(Xmajor,Xminor,gmajor,gminor);        
 
         case 'Remove Empty Genes'
 
-            fw = gui.gui_waitbar;
+            fw = gui.myWaitbar(FigureHandle);
             sce = sce.selectkeepgenes(1, 1);
-            gui.gui_waitbar(fw);
+            gui.myWaitbar(FigureHandle, fw);
             
         case 'Remove Genes by Expression' % remove genes by expression
             answer = inputdlg('Expressed in less than % of cells (e.g., 0.05=5%) or # of cells (e.g., 10).', ...
@@ -189,9 +189,9 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
             if iscell(answer)
                 a = str2double(answer{1});
                 if a > 0 && a < intmax
-                    fw = gui.gui_waitbar;
+                    fw = gui.myWaitbar(FigureHandle);
                     sce = sce.selectkeepgenes(1, a);
-                    gui.gui_waitbar(fw);
+                    gui.myWaitbar(FigureHandle, fw);
                 end
             end
         case 'Remove Genes by Name or Naming Pattern' % remove selected genes
@@ -263,22 +263,22 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
                     if ~all(y), error('xxx'); end
                     if isempty(idx), return; end
                     if isscalar(idx) && idx == 0
-                        gui.myHelpdlg(FigureHandle, 'No gene selected.', '');
+                        gui.myHelpdlg(FigureHandle, 'No gene selected.');
                         return;
                     end
                     answer1 = gui.myQuestdlg(FigureHandle, 'Remove selected or unselected genes?', '', ...
                         {'Selected', 'Unselected'}, 'Selected');
                     if isempty(answer1), return; end
                     if strcmp(answer1, 'Selected')
-                        fw = gui.gui_waitbar;
+                        fw = gui.myWaitbar(FigureHandle);
                         sce.g(idx) = [];
                         sce.X(idx, :) = [];
-                        gui.gui_waitbar(fw);
+                        gui.myWaitbar(FigureHandle, fw);
                     elseif strcmp(answer1, 'Unselected')
-                        fw = gui.gui_waitbar;
+                        fw = gui.myWaitbar(FigureHandle);
                         sce.g = sce.g(idx);
                         sce.X = sce.X(idx, :);
-                        gui.gui_waitbar(fw);
+                        gui.myWaitbar(FigureHandle, fw);
                     else
                         return;
                     end
@@ -305,10 +305,10 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
                 answer = gui.myQuestdlg(FigureHandle, sprintf('Remove %d genes lacking approved symbols?', sum(idx)));
                 switch answer
                     case 'Yes'
-                        fw = gui.gui_waitbar;
+                        fw = gui.myWaitbar(FigureHandle);
                         sce.g(idx) = [];
                         sce.X(idx, :) = [];
-                        gui.gui_waitbar(fw);
+                        gui.myWaitbar(FigureHandle, fw);
                     otherwise
                         % requirerefresh = false;
                         return;
@@ -418,11 +418,11 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
             % requirerefresh = false;
             return;
             %         case 11
-            %             fw = gui.gui_waitbar;
+            %             fw = gui.myWaitbar(FigureHandle);
             %             [Xdecon,contamination]=run.decontX(sce);
             %             sce.X=Xdecon;
             %             guidata(FigureHandle,sce);
-            %             gui.gui_waitbar(fw);
+            %             gui.myWaitbar(FigureHandle, fw);
             %             figure;
             %             gui.i_stemscatter(sce.s,contamination);
             %             zlabel('Contamination rate')
@@ -465,17 +465,17 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
     newcn = sce.NumCells;
     newgn = sce.NumGenes;
     if newgn==0
-        gui.myHelpdlg(FigureHandle, "All genes are removed. Opertaion is cancelled.",'');
+        gui.myHelpdlg(FigureHandle, "All genes are removed. Opertaion is cancelled.");
         % requirerefresh = false;
         return;
     end
     if newcn==0
-        gui.myHelpdlg(FigureHandle, "All cells are removed. Opertaion is cancelled.",'');
+        gui.myHelpdlg(FigureHandle, "All cells are removed. Opertaion is cancelled.");
         % requirerefresh = false;
         return;
     end
     if oldcn-newcn==0 && oldgn-newgn==0
-        gui.myHelpdlg(FigureHandle, "No cells and genes are removed.",'');
+        gui.myHelpdlg(FigureHandle, "No cells and genes are removed.");
         % requirerefresh = false;
         return;
     end

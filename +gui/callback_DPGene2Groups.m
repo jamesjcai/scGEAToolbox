@@ -48,7 +48,7 @@ assignin("base", "setmatrx", setmatrx);
 assignin("base", "setnames", setnames);
 assignin("base", "setgenes", setgenes);
 
-fw = gui.gui_waitbar;
+fw = gui.myWaitbar(FigureHandle);
 
 [~,ix,iy]=intersect(upper(setgenes), ...
                     upper(sce.g)); %,'stable');
@@ -107,7 +107,7 @@ T(isnan(T.p_val)|isnan(T.avg_log2FC)|abs(T.avg_log2FC)<1,:)=[];
 T = sortrows(T, 'p_val_adj', 'ascend');
 T=T(T.p_val_adj<0.01 & T.gsetsize>=5,:);
 
-    gui.gui_waitbar(fw);
+    gui.myWaitbar(FigureHandle, fw);
 
 
     if height(T)==0

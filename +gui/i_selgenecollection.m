@@ -1,5 +1,5 @@
-function [indx1, species] = i_selgenecollection(FigureHandle)
-if nargin < 1, FigureHandle = []; end
+function [indx1, species] = i_selgenecollection(parentfig)
+if nargin < 1, parentfig = []; end
 %see also: i_selectcellscore
 
 %MSigDB Molecular Signatures
@@ -20,7 +20,7 @@ selitems={'MSigDB Molecular Signatures',...
     if tf1~=1, return; end
 
     if indx1==1
-        species = gui.i_selectspecies(2, false, FigureHandle);
+        species = gui.i_selectspecies(2, false, parentfig);
     else
         species='human';
     end

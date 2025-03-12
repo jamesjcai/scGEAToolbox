@@ -22,10 +22,10 @@ function callback_CompareGeneNetwork(src, ~)
             x1 = Xt(i, i1);
             x2 = Xt(i, i2);
             
-            fw = gui.gui_waitbar;
+            fw = gui.myWaitbar(FigureHandle);
             A1 = sc_pcnet(x1, 3, false, true, false);
             A2 = sc_pcnet(x2, 3, false, true, false);
-            gui.gui_waitbar(fw);
+            gui.myWaitbar(FigureHandle, fw);
         case 'Chaterjee Correlation'
             [Xt] = gui.i_transformx(sce.X, true, 3, FigureHandle);
             if isempty(Xt), return; end

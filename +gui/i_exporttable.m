@@ -1,7 +1,7 @@
 function [answer, filename] = i_exporttable(T, needwait, TName, ...
-    deffilename, outtype, sheetname, FigureHandle)
+    deffilename, outtype, sheetname, parentfig)
 
-if nargin < 7, FigureHandle = []; end
+if nargin < 7, parentfig = []; end
 if nargin < 6 || isempty(sheetname), sheetname = []; end
 if nargin < 5 || isempty(outtype), outtype = []; end
 if nargin < 4 || isempty(deffilename), deffilename = []; end
@@ -13,10 +13,10 @@ if ~isempty(outtype)
     answer = outtype;
 else
     if ~(ismcc || isdeployed)
-        answer = gui.myQuestdlg(FigureHandle, 'Export & save data to:', '', ...
+        answer = gui.myQuestdlg(parentfig, 'Export & save data to:', '', ...
             {'Workspace', 'Text file', 'Excel file'}, 'Workspace');
     else
-        answer = gui.myQuestdlg(FigureHandle, 'Export & save data to:', '', ...
+        answer = gui.myQuestdlg(parentfig, 'Export & save data to:', '', ...
             {'Text file', 'Excel file', 'MAT file'}, 'Text file');
     end
 end
@@ -52,9 +52,9 @@ switch answer
             end
             pause(1);
             % if needwait
-            %     gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s', filename), '');
+            %     gui.myHelpdlg(parentfig, sprintf('Result has been saved in %s', filename), '');
             % else
-                gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s', filename), '');
+                gui.myHelpdlg(parentfig, sprintf('Result has been saved in %s', filename));
 %            end
         end
     case 'Excel file'
@@ -87,8 +87,8 @@ switch answer
         end
         pause(1)
         if needwait
-            gui.myHelpdlg(FigureHandle, ...
-                sprintf('Result has been saved in %s', filename), '');
+            gui.myHelpdlg(parentfig, ...
+                sprintf('Result has been saved in %s', filename));
         end
     case 'MAT file'
         if ~isempty(deffilename)            

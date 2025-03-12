@@ -8,7 +8,7 @@ function callback_ShowGeneExpr(src, ~)
         if gui.i_isuifig(FigureHandle)
             uialert(FigureHandle, 'No genes is selected or found.', 'Information', 'Icon', 'info');
         else
-            gui.myHelpdlg(FigureHandle, 'No genes is selected or found.','');
+            gui.myHelpdlg(FigureHandle, 'No genes is selected or found.');
         end
         return;
     end
@@ -33,7 +33,7 @@ function callback_ShowGeneExpr(src, ~)
     
     switch answer
         case an1
-            fw = gui.gui_waitbar; 
+            fw = gui.myWaitbar(FigureHandle); 
             hx = gui.myFigure;
             tabgp = uitabgroup();
             nf = 1;
@@ -64,13 +64,13 @@ function callback_ShowGeneExpr(src, ~)
                 nexttile
                 sc_scattermarker(Xt, sce.g, sce.s, glist(k), 1, 5, false);                        
             end
-            gui.gui_waitbar(fw);
+            gui.myWaitbar(FigureHandle, fw);
             hx.show(FigureHandle);            
 
         % case an1    % same figure;
         %     answer2 = gui.myQuestdlg(FigureHandle, "Type of plot:","", "stem plot", "feature plot", "stem plot");
         %     if isempty(answer2), return; end
-        %     fw = gui.gui_waitbar; 
+        %     fw = gui.myWaitbar(FigureHandle); 
         %     hx = gui.myFigure;
         %     maxy = 0;
         %     if ~ispref('scgeatoolbox', 'prefcolormapname')
@@ -90,16 +90,16 @@ function callback_ShowGeneExpr(src, ~)
         %         end
         %         maxy = max([maxy, max(Xt(sce.g == glist(k)))]);
         %     end
-        %     gui.gui_waitbar(fw);
+        %     gui.myWaitbar(FigureHandle, fw);
         %     hx.show(FigureHandle);
         case an2
-            fw = gui.gui_waitbar;
+            fw = gui.myWaitbar(FigureHandle);
             y = cell(n,1);
             for k = 1:n
                 y{k} = Xt(sce.g == glist(k), :);
             end
             gui.sc_uitabgrpfig_expplot(y, glist, sce.s, FigureHandle, [axx, bxx]);
-            gui.gui_waitbar(fw);            
+            gui.myWaitbar(FigureHandle, fw);            
     end
 
  function in_xxx(~,~)

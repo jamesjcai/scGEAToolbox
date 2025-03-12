@@ -1,11 +1,11 @@
-function i_heatmap(sce, glist, thisc, FigureHandle)
+function i_heatmap(sce, glist, thisc, parentfig)
 
-if nargin<4, FigureHandle = []; end
+if nargin<4, parentfig = []; end
 
 [c, cL, noanswer] = gui.i_reordergroups(thisc);
 if noanswer, return; end
 [~, gidx] = ismember(glist, sce.g);
-[Xt] = gui.i_transformx(sce.X, true, 3, FigureHandle);
+[Xt] = gui.i_transformx(sce.X, true, 3, parentfig);
 if isempty(Xt), return; end
 
 Y = Xt(gidx, :);
@@ -34,7 +34,7 @@ end
 %     'ColorbarVisible',false)
 
 hx=gui.myFigure;
-hFig=hx.FigureHandle;
+hFig=hx.FigHandle;
 h = imagesc(Y);
 set(gca, 'XTick', a-b);
 set(gca, 'XTickLabel', strrep(cL, '_', '\_'));
@@ -60,7 +60,7 @@ hx.addCustomButton('on', @in_savetable, 'floppy-disk-arrow-in.jpg', 'Export data
 hx.addCustomButton('off', @in_changenorm, 'mw-pickaxe-mining.jpg', 'Change normalization method...');
 hx.addCustomButton('off', @i_dotplotx, 'icon-mat-blur-linear-10.gif', 'Dot plot...');
 
-hx.show(FigureHandle);        
+hx.show(parentfig);        
 fliped = false;
 
 MX = glist;
@@ -87,7 +87,7 @@ Z = zeros(length(glist), length(cL));
     function in_changenorm(~, ~)
         [methodid, dim] = gui.i_selnormmethod;
 
-        % [Xt] = gui.i_transformx(sce.X, true, 8, FigureHandle);
+        % [Xt] = gui.i_transformx(sce.X, true, 8, parentfig);
         % if isempty(Xt), return; end
         %  Yt = Xt(gidx, :);
         %  [~, cidx] = sort(c);
@@ -196,10 +196,10 @@ Z = zeros(length(glist), length(cL));
             end
             pause(1);
             if needwait
-                gui.myHelpdlg(FigureHandle,...
-                sprintf('Result has been saved in %s', filename), '');
+                gui.myHelpdlg(parentfig,...
+                sprintf('Result has been saved in %s', filename));
             else
-                gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s', filename), '')
+                gui.myHelpdlg(parentfig, sprintf('Result has been saved in %s', filename));
             end
         end
     end

@@ -23,7 +23,7 @@ w = 3;
 l = 1;
 
 hx=gui.myFigure;
-hFig = hx.FigureHandle;
+hFig = hx.FigHandle;
 set(0, 'CurrentFigure', hFig);
 
 tiledlayout(1, 2, 'TileSpacing', 'compact', ...

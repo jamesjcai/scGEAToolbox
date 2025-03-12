@@ -18,7 +18,8 @@ if isempty(wkdir), return; end
 [~, cL] = grp2idx(sce.c_batch_id);
 [j1, j2, ~, ~] = aaa(cL, sce.c_batch_id);
 if isempty(j1) || isempty(j2)
-    gui.myWarndlg(FigureHandle, 'All cells have the same BATCH_ID. Two samples are required.','')
+    gui.myWarndlg(FigureHandle, ['All cells have the same BATCH_ID. ' ...
+        'Two samples are required.']);
     return; 
 end
 sce1 = sce.selectcells(j1);
@@ -32,7 +33,8 @@ end
 [~, cL] = grp2idx(sce.c_cell_type_tx);
 [~, ~, celltype1, celltype2] = aaa(cL, sce.c_cell_type_tx);
 if isempty(celltype1) || isempty(celltype2) 
-    gui.myWarndlg(FigureHandle, 'All cells are the same type. Two different cell types are required.','')
+    gui.myWarndlg(FigureHandle, ['All cells are the same type. ' ...
+        'Two different cell types are required.']);
     return; 
 end
 
@@ -132,7 +134,7 @@ if ~isempty(T)
     end
 else
     if ~prepare_input_only
-        gui.myHelpdlg(FigureHandle, 'No ligand-receptor pairs are identified.', '');
+        gui.myHelpdlg(FigureHandle, 'No ligand-receptor pairs are identified.');
     else
         if strcmp(gui.myQuestdlg(FigureHandle, 'Input files are prepared successfully. Open working folder?',''), 'Yes')
             winopen(wkdir);

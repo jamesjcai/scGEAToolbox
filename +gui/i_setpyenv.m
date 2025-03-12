@@ -3,13 +3,14 @@ function [done] = i_setpyenv(src, ~)
 %see also: I_SETRENV
 [done] = false;
 if nargin<1
-    FigureHandle = [];
+    parentfig = [];
 else
-    [FigureHandle] = gui.gui_getfigsce(src);
+    [parentfig] = gui.gui_getfigsce(src);
 end
 x = pyenv;
 if x.Version == "" %strlength(x.Executable)==0
-    answer = gui.myQuestdlg(FigureHandle, 'Python environment has not been set up. Locate python.exe?');
+    answer = gui.myQuestdlg(parentfig, ['Python environment ' ...
+        'has not been set up. Locate python.exe?']);
     if strcmp('Yes', answer) 
         [done] = ix_setpyenv(x.Executable);
         if ~done
@@ -20,7 +21,7 @@ if x.Version == "" %strlength(x.Executable)==0
         return;
     end
 else
-    answer = gui.myQuestdlg(FigureHandle, sprintf('%s', x.Executable), ...
+    answer = gui.myQuestdlg(parentfig, sprintf('%s', x.Executable), ...
         'Python Executable', ...
         {'Use this', 'Use another', 'Cancel'}, 'Use this');
     switch answer
@@ -63,7 +64,7 @@ end
                 pyenv('Version', fullfile(path, file));
             catch ME
                 content = regexprep(ME.message, '<.*?>', '' ) ;
-                gui.myErrordlg(FigureHandle, content);
+                gui.myErrordlg(parentfig, content);
                 return;
             end
             done = true;

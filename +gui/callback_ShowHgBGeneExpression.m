@@ -24,7 +24,7 @@ if any(idx)
     ci = full(sum(sce.X(idx, :), 1));
 
     hx = gui.myFigure;
-    hFig = hx.FigureHandle;
+    hFig = hx.FigHandle;
 
     cm = uicontextmenu(hFig);
     m1 = uimenu(cm, 'Text', 'Save HgBGeneExpression...', "MenuSelectedFcn", {@i_saveM, ci});

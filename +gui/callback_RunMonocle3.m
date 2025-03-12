@@ -45,12 +45,12 @@ if ~any(ptsSelected)
         answer = gui.myQuestdlg(FigureHandle, 'Root cell(s) selected. Continue?','');
         if ~strcmp(answer, 'Yes'), return; end
     else
-        gui.myHelpdlg(FigureHandle, 'No root cell(s) are selected.','');
+        gui.myHelpdlg(FigureHandle, 'No root cell(s) are selected.');
         return;
     end
 end
 idx = find(ptsSelected);
-if isempty(idx), gui.myWarndlg(FigureHandle, 'Root cell(s) is missing.',''); return; end
+if isempty(idx), gui.myWarndlg(FigureHandle, 'Root cell(s) is missing.'); return; end
 
 % [ndim] = gui.i_choose2d3d;
 ndim = 2;
@@ -73,16 +73,16 @@ end
 %if ~ok, return; end
 
 sce = guidata(FigureHandle);
-fw = gui.gui_waitbar;
+fw = gui.myWaitbar(FigureHandle);
 
 try
     [t_mono3, s_mono3, ~, q_mono3] = run.r_monocle3(sce.X, idx, ndim, wrkdir, isdebug);
 catch ME
-    gui.gui_waitbar(fw, true);
+    gui.myWaitbar(FigureHandle, fw, true);
     errordlg(ME.message);
     return;
 end
-gui.gui_waitbar(fw);
+gui.myWaitbar(FigureHandle, fw);
 if isempty(t_mono3) || length(t_mono3) ~= sce.NumCells
     errordlg('MONOCLE3 running time error.');
     return;

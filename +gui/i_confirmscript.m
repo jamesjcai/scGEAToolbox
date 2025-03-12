@@ -1,6 +1,6 @@
-function [t] = i_confirmscript(qtxt, stxt, langtag, FigureHandle)
+function [t] = i_confirmscript(qtxt, stxt, langtag, parentfig)
 
-if nargin<4, FigureHandle = []; end
+if nargin<4, parentfig = []; end
 
 t = false;
 if nargin < 1, qtxt = 'Run pseudotime analysis (Monocle)?'; end
@@ -16,7 +16,7 @@ switch lower(langtag)
         error('Unknown language tag.');
 end
 
-answer = gui.myQuestdlg(FigureHandle, qtxt, '', ...
+answer = gui.myQuestdlg(parentfig, qtxt, '', ...
     {'Yes', 'Review Script', 'Cancel'}, 'Yes');
 switch answer
     case 'Cancel'
@@ -36,7 +36,7 @@ switch answer
         if isempty(a)
             return;
         else
-            answer2 = gui.myQuestdlg(FigureHandle, "Run script?", '');
+            answer2 = gui.myQuestdlg(parentfig, "Run script?", '');
             if isempty(answer2), return; end
             switch answer2
                 case 'Yes'

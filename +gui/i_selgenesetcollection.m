@@ -1,5 +1,5 @@
-function [selecteditem, speciesid] = i_selgenesetcollection(FigureHandle)
-if nargin<1, FigureHandle=[]; end
+function [selecteditem, speciesid] = i_selgenesetcollection(parentfig)
+if nargin<1, parentfig=[]; end
 
 speciesid = [];
 selecteditem = [];
@@ -25,5 +25,5 @@ selitems={'MSigDB Molecular Signatures',...
     selecteditem = selitems{selectedindx};
     if selectedindx == 5, return; end
     if selectedindx == 4, speciesid = 'human'; return; end
-    speciesid = gui.i_selectspecies(2, false, FigureHandle);
+    speciesid = gui.i_selectspecies(2, false, parentfig);
 end

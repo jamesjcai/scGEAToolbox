@@ -2,10 +2,11 @@ function [done] = i_setextwd(src, ~)
 %I_SETEXTWD - set externel workding directory
 
 %see also: I_SETPYENV, I_SETRENV 
-[FigureHandle, ~] = gui.gui_getfigsce(src);
+[parentfig, ~] = gui.gui_getfigsce(src);
 [done] = gui.i_setwrkdir('externalwrkpath');
 if done
-     gui.myHelpdlg(FigureHandle, "External program working directory is set successfully.", '');
+     gui.myHelpdlg(parentfig, "External program working " + ...
+         "directory is set successfully.");
 end
 
 
@@ -15,7 +16,7 @@ end
 preftagname = 'externalwrkpath';
 
 if ~ispref('scgeatoolbox', preftagname)
-    answer = gui.myQuestdlg(FigureHandle, 'External working directory has not been set up. Locate a folder?');
+    answer = gui.myQuestdlg(parentfig, 'External working directory has not been set up. Locate a folder?');
     if ~strcmp(answer, 'Yes'), return; end
     if ispc
         [~,b]=system("echo %username%");
@@ -27,7 +28,7 @@ if ~ispref('scgeatoolbox', preftagname)
     % setpref('scgeatoolbox','rexecutablepath',s);
 else
     s = getpref('scgeatoolbox', preftagname);
-    answer = gui.myQuestdlg(FigureHandle, sprintf('%s', s), ...
+    answer = gui.myQuestdlg(parentfig, sprintf('%s', s), ...
         'External Working Directory', ...
         'Use this', 'Use another', 'Cancel', 'Use this');
     switch answer
@@ -39,7 +40,7 @@ else
 end
 
 if done
-     gui.myHelpdlg(FigureHandle, "External working directory is set successfully.", '');
+     gui.myHelpdlg(parentfig, "External working directory is set successfully.");
 end
 
 

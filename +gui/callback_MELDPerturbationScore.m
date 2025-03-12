@@ -18,7 +18,7 @@ if ~gui.i_setpyenv
     return;
 end
 
-%fw=gui.gui_waitbar;
+%fw=gui.myWaitbar(FigureHandle);
 try
     id = sce.c_batch_id;
     if ~isnumeric(id)
@@ -27,16 +27,16 @@ try
     end    
     [score, T] = run.py_MELD(sce.X, id);
     if isempty(score) || size(score, 1) ~= size(sce.X, 2)
-        %gui.gui_waitbar(fw);
+        %gui.myWaitbar(FigureHandle, fw);
         errordlg("MELD Running Error");
         return;
     end
 catch ME
-    %gui.gui_waitbar(fw);
+    %gui.myWaitbar(FigureHandle, fw);
     errordlg(ME.message);
     rethrow(ME);
 end
-% gui.gui_waitbar(fw);
+% gui.myWaitbar(FigureHandle, fw);
 
 hx=gui.myFigure;
 gui.i_gscatter3(sce.s, score(:, 2));

@@ -22,7 +22,7 @@ else
 end
 
 hx=gui.myFigure;
-hFig=hx.FigureHandle;
+hFig=hx.FigHandle;
 
 hx.addCustomButton('off', {@i_savedata}, 'floppy-disk-arrow-in.jpg', 'Export data...');
 hx.addCustomButton('off', @i_showvalues, "heap_snapshot_large_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", 'Switch Values ON/OFF');

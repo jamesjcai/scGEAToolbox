@@ -61,16 +61,16 @@ switch sourcetag
                 end
                 s = s(2:end);
                 fprintf('>> sce=sc_mergesces({%s},''%s'',true);\n', s, methodtag);
-                fw = gui.gui_waitbar;
+                fw = gui.myWaitbar(FigureHandle);
                 sce = sc_mergesces(insce, methodtag, keepbatchid);
                 guidata(FigureHandle, sce);
                 requirerefresh = true;
             catch ME
-                gui.gui_waitbar(fw, true);
+                gui.myWaitbar(FigureHandle, fw, true);
                 errordlg(ME.message);
                 return;
             end
-            gui.gui_waitbar(fw);
+            gui.myWaitbar(FigureHandle, fw);
         else
             return;
         end
@@ -91,7 +91,7 @@ switch sourcetag
         if ~ismember(answer, {'Union', 'Intersect'}), return; end
         methodtag = lower(answer);
 
-        fw = gui.gui_waitbar;
+        fw = gui.myWaitbar(FigureHandle);
         try
             scelist = cell(length(fname));
             s = "";
@@ -108,10 +108,10 @@ switch sourcetag
             guidata(FigureHandle, sce);
             requirerefresh = true;
         catch ME
-            gui.gui_waitbar(fw, true);
+            gui.myWaitbar(FigureHandle, fw, true);
             errordlg(ME.message);
             return;
         end
-        gui.gui_waitbar(fw);
+        gui.myWaitbar(FigureHandle, fw);
 end
 end % end of function

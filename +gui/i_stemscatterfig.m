@@ -6,7 +6,7 @@ if nargin < 5, parentfig = []; end
 if nargin < 4 || isempty(csname), csname = "CellScore"; end
 
 hx = gui.myFigure;
-hFig = hx.FigureHandle;
+hFig = hx.FigHandle;
 gui.i_stemscatter(sce.s, cs);
 
 zlabel('Score value')
@@ -30,9 +30,7 @@ hx.show(parentfig);
         [passed] = i_checkposg;
         if ~passed, return; end
 
-        %         if isempty(posg)
-        %             gui.myHelpdlg(FigureHandle, 'The gene set is empty. This score may not be associated with any gene set.');
-        %         else
+
         idx = matches(sce.g, posg, 'IgnoreCase', true);
         gg = sce.g(idx);
         inputdlg(csname, ...
@@ -66,14 +64,15 @@ hx.show(parentfig);
         if any(idx)
             gui.i_dotplot(sce.X, sce.g, c, cL, posg(idx));
         else
-            gui.myHelpdlg(parentfig, 'No genes in this data set.','')
+            gui.myHelpdlg(parentfig, 'No genes in this data set.')
         end
     end
 
     function [passed] = i_checkposg
         if isempty(posg)
             passed = false;
-            gui.myHelpdlg(parentfig, 'The gene set is empty. This score may not be associated with any gene set.','');
+            gui.myHelpdlg(parentfig, ['The gene set is empty. This score ' ...
+                'may not be associated with any gene set.']);
         else
             passed = true;
         end

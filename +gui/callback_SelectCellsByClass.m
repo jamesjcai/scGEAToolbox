@@ -7,7 +7,7 @@ function callback_SelectCellsByClass(src, ~)
 if isempty(ptsSelected), return; end
 
 [ax, bx] = view(findall(FigureHandle,'type','axes'));
-fw = gui.gui_waitbar;
+fw = gui.myWaitbar(FigureHandle);
 try
     scex = selectcells(sce, ptsSelected);
     % scex.c=cLi(ci(idx));
@@ -15,9 +15,9 @@ try
     scgeatool(scex);
     view(ax, bx);
 catch ME
-    gui.gui_waitbar(fw, true);
+    gui.myWaitbar(FigureHandle, fw, true);
     errordlg(ME.message);
     return;
 end
-gui.gui_waitbar(fw);
+gui.myWaitbar(FigureHandle, fw);
 end

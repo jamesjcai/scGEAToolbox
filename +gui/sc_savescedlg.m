@@ -39,23 +39,6 @@ if nargin<2, parentfig = []; end
                 gui.gui_waitbar(fw);
                 OKPressed = true;
             end
-        % case 'TXT/TSV/CSV File (*.txt)...'
-        %     gui.myWarndlg(FigureHandle, 'Function is under development.');
-        %     return;
-        %     if ~isempty(a)
-        %         [file, path] = uiputfile({'*.txt'; '*.*'}, 'Save as', a);
-        %     else
-        %         [file, path] = uiputfile({'*.txt'; '*.*'}, 'Save as');
-        %     end
-        %     if isequal(file, 0) || isequal(path, 0)
-        %         return;
-        %     else
-        %         filename = fullfile(path, file);
-        %         fw = gui.gui_waitbar;
-        % 
-        %         gui.gui_waitbar(fw);
-        %         OKPressed = true;
-        %     end            
         case 'Seurat/Rds File (*.rds)...'
             answer = gui.myQuestdlg(parentfig, 'This function requires R. Continue?','');
             if ~strcmp(answer,'Yes'), return; end            

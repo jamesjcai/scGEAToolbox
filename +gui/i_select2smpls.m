@@ -52,14 +52,14 @@ end
 
 % [ci, cLi] = grp2idx(thisc);
 % 
-% [answer] = gui.myQuestdlg(FigureHandle, 'Manually order groups?', '', ...
+% [answer] = gui.myQuestdlg(parentfig, 'Manually order groups?', '', ...
 %     'Yes', 'No', 'Cancel', 'No');
 % if isempty(answer), return; end
 % switch answer
 %     case 'Yes'
 %         [newidx] = gui.i_selmultidlg(cLi, natsort(cLi));
 %         if length(newidx) ~= length(cLi)
-%             gui.myWarndlg(FigureHandle, 'Please select all group items.', '');
+%             gui.myWarndlg(parentfig, 'Please select all group items.', '');
 %             return;
 %         end
 %         cx = ci;

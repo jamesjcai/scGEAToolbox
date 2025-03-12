@@ -7,7 +7,7 @@ enrichrtype = [];
 outgenelist = [];
 outbackgroundlist = [];
 
-answer = gui.myQuestdlg(FigureHandle, questtxt);
+answer = gui.myQuestdlg(parentfig, questtxt);
 if ~strcmp(answer, 'Yes'), return; end
 
 [kgene, ybkgr, methd] = inputDialogOldVersion(parentfig);

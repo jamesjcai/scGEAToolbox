@@ -12,14 +12,14 @@ answer = gui.myQuestdlg(FigureHandle, 'Which HVG detecting method to use?', '', 
 
     switch answer
         case 'Brennecke et al. (2013) [PMID:24056876]'
-            fw = gui.gui_waitbar;
+            fw = gui.myWaitbar(FigureHandle);
             try
                 sc_hvg(sce.X, sce.g, true, true);
             catch ME
-                gui.gui_waitbar(fw, true);
+                gui.myWaitbar(FigureHandle, fw, true);
                 errordlg(ME.message,'','modal');
             end
-            gui.gui_waitbar(fw, true);
+            gui.myWaitbar(FigureHandle, fw, true);
         case 'Splinefit Method [PMID:31697351]'            
             try
                gui.sc_scatter3genes(sce.X, sce.g, true, true, FigureHandle);

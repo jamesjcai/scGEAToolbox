@@ -32,7 +32,7 @@ function callback_CompareGCLBtwCls(src, ~)
     
     t = zeros(N*n, 1);
     V = zeros(N*n, 1);
-    fw = gui.gui_waitbar;
+    fw = gui.myWaitbar(FigureHandle);
     
     for k = 1:n
         fprintf('Working on %s: %s ... %d of %d\n', clabel, cL{k}, k, n);
@@ -41,7 +41,7 @@ function callback_CompareGCLBtwCls(src, ~)
         t(idx, :) = k;
         V(idx, :) = v;
     end
-    gui.gui_waitbar(fw);
+    gui.myWaitbar(FigureHandle, fw);
     
     y = V;
     thisc = cL(t);

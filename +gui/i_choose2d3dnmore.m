@@ -1,8 +1,8 @@
-function [ndim] = i_choose2d3dnmore(FigureHandle)
+function [ndim] = i_choose2d3dnmore(parentfig)
 
-if nargin<1, FigureHandle = []; end
+if nargin<1, parentfig = []; end
 ndim = [];
-answer = gui.myQuestdlg(FigureHandle, '3D or 2D?', '', ...
+answer = gui.myQuestdlg(parentfig, '3D or 2D?', '', ...
     {'3D', '2D', 'Other...'}, '3D');
 
 

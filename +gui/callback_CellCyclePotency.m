@@ -41,10 +41,10 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
                 end
             end
             if needestimt
-                fw = gui.gui_waitbar;
+                fw = gui.myWaitbar(FigureHandle);
                 sce = sce.estimatecellcycle(true, 1);
                 needupdate = true;
-                gui.gui_waitbar(fw);
+                gui.myWaitbar(FigureHandle, fw);
                 guidata(FigureHandle, sce);
                 gui.myHelpdlg(FigureHandle, 'Cell cycle phase (c_cell_cycle_tx) added.');
             end
@@ -83,7 +83,7 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
             end
         end
         if needestimt
-            fw = gui.gui_waitbar;            
+            fw = gui.myWaitbar(FigureHandle);            
             switch attribtag
                 case 'cell_potency'
                     % sce = sce.estimatepotency(speciestag);
@@ -102,7 +102,7 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
                     error('Invalid attribtag');
             end
             if isempty(s)
-                gui.gui_waitbar(fw, true);
+                gui.myWaitbar(FigureHandle, fw, true);
                 errordlg(sprintf("%s runtime error.", attribtag),"")
                 return; 
             end
@@ -113,7 +113,7 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
                 sce.list_cell_attributes = [sce.list_cell_attributes, ...
                     {char(attribtag), s}];
             end
-            gui.gui_waitbar(fw);
+            gui.myWaitbar(FigureHandle, fw);
             guidata(FigureHandle, sce);
             needupdate = true;
             gui.myHelpdlg(FigureHandle, sprintf(['%s added. To see the result, ' ...

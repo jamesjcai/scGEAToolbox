@@ -71,7 +71,8 @@ switch answer
             return;
         end
         A0 = [];
-        gui.myHelpdlg(FigureHandle, "Network will be constructed. Now, select a KO gene (i.e., gene to be knocked out).", '');
+        gui.myHelpdlg(FigureHandle, "Network will be constructed. Now, " + ...
+            "select a KO gene (i.e., gene to be knocked out).");
     otherwise
         return;
 end
@@ -99,7 +100,7 @@ if ~strcmpi(answer, 'Yes'), return; end
 
 if isempty(A0)
     try
-        fw = gui.gui_waitbar;
+        fw = gui.myWaitbar(FigureHandle);
         parfor k=1:32
         end
         figure(FigureHandle);
@@ -107,15 +108,15 @@ if isempty(A0)
         [T, A0] = ten.sctenifoldknk(sce.X, sce.g, idx, ...
             'sorttable', true, 'nsubsmpl', 10, ...
             'savegrn', isfolder(wkdir));
-        gui.gui_waitbar(fw);
+        gui.myWaitbar(FigureHandle, fw);
     catch ME
-        gui.gui_waitbar(fw);
+        gui.myWaitbar(FigureHandle, fw);
         errordlg(ME.message);
         return;
     end
     isreconstructed = true;
 else
-    doit = false;
+    %doit = false;
     if nnz(A0(idx, :) ~= 0) == 0
         s = sprintf('KO gene (%s) has no link or too few links (n<50) with other genes.', ...
             sce.g(idx));
@@ -141,12 +142,12 @@ else
 
     if doit
         try
-            fw = gui.gui_waitbar;
+            fw = gui.myWaitbar(FigureHandle);
             disp('>> [T] = ten.i_knk(A0, targetgene, genelist, true);')
             [T] = ten.i_knk(A0, idx, sce.g, true);
-            gui.gui_waitbar(fw);
+            gui.myWaitbar(FigureHandle, fw);
         catch ME
-            gui.gui_waitbar(fw);
+            gui.myWaitbar(FigureHandle, fw);
             errordlg(ME.message);
             return;
         end

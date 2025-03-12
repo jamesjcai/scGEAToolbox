@@ -18,7 +18,7 @@ fw = gui.gui_waitbar;
 
 
 hx=gui.myFigure;
-hFig=hx.FigureHandle;
+hFig=hx.FigHandle;
 hFig.Position(3) = hFig.Position(3)*1.8;
 
 

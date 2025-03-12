@@ -1,8 +1,8 @@
-function [done] = i_setwrkdir(preftagname, FigureHandle)
+function [done] = i_setwrkdir(preftagname, parentfig)
 %I_SETWRKDIR - set workding directory
 %see also: I_SETPYENV, I_SETRENV 
 
-if nargin<2, FigureHandle = []; end
+if nargin<2, parentfig = []; end
 [done] = false;
 
 % preftagname = 'externalwrkpath';    i_setextwd
@@ -10,7 +10,8 @@ if nargin<2, FigureHandle = []; end
 if nargin < 1, preftagname = 'externalwrkpath'; end
 
 if ~ispref('scgeatoolbox', preftagname)
-    answer = gui.myQuestdlg(FigureHandle, 'Working directory has not been set up. Locate a folder?');
+    answer = gui.myQuestdlg(parentfig, ['Working directory has ' ...
+        'not been set up. Locate a folder?']);
     if ~strcmp(answer, 'Yes'), return; end
     if ispc
         [~,b]=system("echo %username%");
@@ -22,7 +23,7 @@ if ~ispref('scgeatoolbox', preftagname)
     [done] = ix_setwdpath(pathdefult);
 else
     s = getpref('scgeatoolbox', preftagname);
-    answer1 = gui.myQuestdlg(FigureHandle, sprintf('%s', s), ...
+    answer1 = gui.myQuestdlg(parentfig, sprintf('%s', s), ...
         'Working Root', ...
         {'Use this', 'Use another', 'Cancel'}, 'Use this');
     switch answer1
@@ -37,7 +38,7 @@ end
 
     function [done] = ix_setwdpath(deflt)
         done = false;
-        answer=gui.myQuestdlg(FigureHandle, 'Where to save working files?','',...
+        answer=gui.myQuestdlg(parentfig, 'Where to save working files?','',...
             {'Use Temporary Folder', ...
             'Select a Folder','Cancel'},'Use Temporary Folder');
         switch answer

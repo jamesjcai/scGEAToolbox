@@ -1,9 +1,9 @@
-function [methodid] = i_pickscatterstem(defaultmethod, FigureHandle)
-if nargin < 2, FigureHandle = []; end
+function [methodid] = i_pickscatterstem(defaultmethod, parentfig)
+if nargin < 2, parentfig = []; end
 if nargin < 1
     defaultmethod = 'Scatter+Stem';
 end
-methodx = gui.myQuestdlg(FigureHandle, 'Plot type:', '', {'Scatter', 'Stem', ...
+methodx = gui.myQuestdlg(parentfig, 'Plot type:', '', {'Scatter', 'Stem', ...
     'Scatter+Stem'}, defaultmethod);
 switch methodx
     case 'Scatter'

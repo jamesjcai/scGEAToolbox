@@ -23,7 +23,7 @@ n = matlab.lang.makeUniqueStrings([table2cell(G1.Nodes); table2cell(G2.Nodes)]);
 G = digraph(A, n);
 
 hx=gui.myFigure;
-hFig = hx.FigureHandle;
+hFig = hx.FigHandle;
 [~] = drawnetwork(G);
 hFig.Position(3) = hFig.Position(3) * 2.2;
 hx.show;

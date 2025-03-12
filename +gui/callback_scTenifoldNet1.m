@@ -45,16 +45,16 @@ answer = gui.myQuestdlg(FigureHandle, 'Construct gene regulatory network (GRN) f
     answer = gui.myQuestdlg(FigureHandle, 'This analysis may take several hours. Continue?');
     if ~strcmpi(answer, 'Yes'), return; end
     tmpmat = tempname;
-    fw = gui.gui_waitbar;
+    fw = gui.myWaitbar(FigureHandle);
     try
         disp('>> [A]=ten.sc_pcnetdenoised(sce.X,''savegrn'',false);');
         [A] = ten.sc_pcnetdenoised(sce.X, 'savegrn', false);
     catch ME
-        gui.gui_waitbar(fw);
+        gui.myWaitbar(FigureHandle, fw);
         errordlg(ME.message);
         return;
     end
-    gui.gui_waitbar(fw);
+    gui.myWaitbar(FigureHandle, fw);
     try
         g = sce.g;
         fprintf('Saving network (A) to %s.mat\n', tmpmat);

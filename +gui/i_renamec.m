@@ -1,5 +1,5 @@
-function [newclabel] = i_renamec(clabel, sce, newpickclabel, FigureHandle)
-if nargin < 4, FigureHandle = []; end
+function [newclabel] = i_renamec(clabel, sce, newpickclabel, parentfig)
+if nargin < 4, parentfig = []; end
 if nargin < 3, newpickclabel = ''; end
 
 if ~isempty(newpickclabel)
@@ -9,7 +9,7 @@ else
 end
 
 if strcmp(clabel, 'Workspace Variable...')
-    answerxx = gui.myQuestdlg(FigureHandle, 'Rename Workspace Variable?','');
+    answerxx = gui.myQuestdlg(parentfig, 'Rename Workspace Variable?','');
     if strcmp(answerxx, 'Yes')
         newclabelx = inputdlg('New name', ...
             'Rename', [1, 50], {newpickclabel});
@@ -22,8 +22,9 @@ if strcmp(clabel, 'Workspace Variable...')
     currentclabelx1 = matlab.lang.makeUniqueStrings(currentclabelx);
     newclabel = currentclabelx1(end);
     if ~isequal(currentclabelx1, currentclabelx)
-        gui.myHelpdlg(FigureHandle, sprintf('Name exisiting. New name is changed to %s.', ...
-            newclabel{1}), '');
+        gui.myHelpdlg(parentfig, sprintf(['Name exisiting. New name ' ...
+            'is changed to %s.'], ...
+            newclabel{1}));
     end
 end
 end

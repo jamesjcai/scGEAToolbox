@@ -44,11 +44,14 @@ end
 [idx] = gui.i_selmultidlg(cL, [], FigureHandle);
 if isempty(idx), return; end
 if numel(idx) < 2
-    gui.myWarndlg(FigureHandle, 'Need at least 2 cell groups to perform cell-cell interaction analysis.');
+    gui.myWarndlg(FigureHandle, ['Need at least 2 cell groups to ' ...
+        'perform cell-cell interaction analysis.']);
     return;
 end
 if numel(idx) ~= 2
-    gui.myWarndlg(FigureHandle, sprintf('Need only 2 cell groups to perform cell-cell interaction analysis. You selected %d.', ...
+    gui.myWarndlg(FigureHandle, ...
+        sprintf(['Need only 2 cell groups to perform cell-cell ' ...
+        'interaction analysis. You selected %d.'], ...
         numel(idx)));
     return;
 end
@@ -245,7 +248,7 @@ end
         %end
     else
         if ~prepare_input_only
-            gui.myHelpdlg(FigureHandle, 'No ligand-receptor pairs are identified.', '');
+            gui.myHelpdlg(FigureHandle, 'No ligand-receptor pairs are identified.');
         else
             if strcmp(gui.myQuestdlg(FigureHandle, 'Input files are prepared successfully. Open working folder?',''), 'Yes')
                 winopen(wkdir);

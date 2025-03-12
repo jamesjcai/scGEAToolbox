@@ -40,13 +40,12 @@ function i_Brush4MarkersLASSO(src, ~, sce, uselasso)
     
     
     if ~any(ptsSelected)
-        % gui.myWarndlg(FigureHandle, "No cells are brushed/selected.",'','modal');
         answer=gui.myQuestdlg(FigureHandle, 'No cells are brushed/selected. You can select cells by a grouping variable. Continue?','');
         if ~strcmp(answer,'Yes'), return; end
         [ptsSelected] = gui.i_select1classcells(sce, false);
         if isempty(ptsSelected), return; end
         if all(ptsSelected)
-            gui.myWarndlg(FigureHandle, "All cells are in the same group.",'');
+            gui.myWarndlg(FigureHandle, "All cells are in the same group.");
             return;
         end
     else
@@ -60,7 +59,7 @@ function i_Brush4MarkersLASSO(src, ~, sce, uselasso)
     if isempty(numfig), return; end
     
     
-    if uselasso, fw = gui.gui_waitbar; end
+    if uselasso, fw = gui.myWaitbar(FigureHandle); end
     y = double(ptsSelected);
     sce.c = 1 + ptsSelected;
     X = sce.X';
@@ -83,14 +82,14 @@ function i_Brush4MarkersLASSO(src, ~, sce, uselasso)
             idx = LRDETest(X, y, numfig);
         end
     catch ME
-        if uselasso, gui.gui_waitbar(fw, true); end
+        if uselasso, gui.myWaitbar(FigureHandle, fw, true); end
         errordlg(ME.message);
         rethrow(ME);
     end
     
     if ~any(idx)
-       if uselasso, gui.gui_waitbar(fw); end
-        gui.myWarndlg(FigureHandle, 'No marker found','')
+       if uselasso, gui.myWaitbar(FigureHandle, fw); end
+        gui.myWarndlg(FigureHandle, 'No marker found');
         return;
     end
     
@@ -113,7 +112,7 @@ function i_Brush4MarkersLASSO(src, ~, sce, uselasso)
     end
 
     gui.sc_uitabgrpfig_expplot(y, markerlist, sce.s, FigureHandle, [axx, bxx]);
-    if uselasso, gui.gui_waitbar(fw); end
+    if uselasso, gui.myWaitbar(FigureHandle, fw); end
 end
 
 function idx = LRDETest(X, y, k)

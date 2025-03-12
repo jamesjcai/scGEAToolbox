@@ -11,7 +11,7 @@ c2 = cx2.c;
 cL2 = cx2.cL;
 
 hx=gui.myFigure;
-hFig=hx.FigureHandle;
+hFig=hx.FigHandle;
 
 ax1 = subplot(1, 2, 1);
 h1 = gui.i_gscatter3(sce.s, c1, 1, 1);

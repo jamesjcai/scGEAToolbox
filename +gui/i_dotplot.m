@@ -88,7 +88,7 @@ txgene = [" "; tgene(:)];
 %hold on
 
 hx=gui.myFigure;
-hFig = hx.FigureHandle;
+hFig = hx.FigHandle;
 
 dotsz = DOTSIZE;
 sz(sz == 0) = eps;

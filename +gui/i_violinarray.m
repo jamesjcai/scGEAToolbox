@@ -20,7 +20,7 @@ xgroupdata = categorical(cL(c));
 
 
 hx=gui.myFigure;
-hFig=hx.FigureHandle;
+hFig=hx.FigHandle;
 
 for kx = 1:length(tgene)
     nexttile;

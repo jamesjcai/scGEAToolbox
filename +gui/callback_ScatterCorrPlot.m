@@ -9,7 +9,7 @@ function callback_ScatterCorrPlot(src, ~)
     [thisx, xlabelv] = gui.i_select1state(sce, false, false, false, true);
     if isempty(thisx), return; end
     if ~isnumeric(thisx)
-        gui.myWarndlg(FigureHandle, 'This function works with continuous varibles only.','');
+        gui.myWarndlg(FigureHandle, 'This function works with continuous varibles only.');
         return;
     end
 
@@ -20,7 +20,7 @@ function callback_ScatterCorrPlot(src, ~)
         case 'Gene Expression'
             [glist] = gui.i_selectngenes(sce, [], FigureHandle);
             if isempty(glist)
-                gui.myHelpdlg(FigureHandle, 'No gene selected.', '');
+                gui.myHelpdlg(FigureHandle, 'No gene selected.');
                 return;
             end
             [Xt] = gui.i_transformx(sce.X, [], [], FigureHandle);

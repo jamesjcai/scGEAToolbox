@@ -23,7 +23,7 @@ l = 1;
 
 
 hx = gui.myFigure;
-hFig = hx.FigureHandle;
+hFig = hx.FigHandle;
 h1 = axes(hFig);
 [p1] = drawnetwork(G1, h1);
 
@@ -58,7 +58,7 @@ oldG1 = [];
         plot(x, y,'k-');
         hold on
         if ~issymmetric(G1.adjacency)
-            customeMarker(x, y, h.FigureHandle);
+            customeMarker(x, y, h.FigHandle);
         end
         % scatter(p1.XData', p1.YData', 300, ...
         %     'MarkerEdgeColor','k', ...

@@ -1,6 +1,6 @@
-function i_export2pptx(F, glist, FigureHandle)
+function i_export2pptx(F, glist, parentfig)
 
-if nargin<3, FigureHandle = []; end
+if nargin<3, parentfig = []; end
 
 if nargin < 2, glist = {[]}; end
 
@@ -14,7 +14,7 @@ pth = fullfile(pw1, '..', 'resources', 'Misc', 'myTemplate.pptx');
 %dbfile1 = fullfile(pw1, '+run', 'external', 'stringdb', 'stringdb_human.mat');
 
 import mlreportgen.ppt.*;
-answer = gui.myQuestdlg(FigureHandle, 'Export to PowerPoint?');
+answer = gui.myQuestdlg(parentfig, 'Export to PowerPoint?');
 switch answer
     case 'Yes'
         if ~usejava('desktop')
@@ -50,7 +50,7 @@ switch answer
             pause(0.5);
             gui.gui_waitbar(fw, true);
             pause(0.5);
-            gui.myErrordlg(FigureHandle, ME.message);
+            gui.myErrordlg(parentfig, ME.message);
             return;
         end
         

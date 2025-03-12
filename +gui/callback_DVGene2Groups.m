@@ -63,12 +63,12 @@ lcolor2 = lcolors(2,:);
 
             switch answerx
                 case 'Brennecke et al. (2013) [PMID:24056876]'
-                        fw = gui.gui_waitbar;
+                        fw = gui.myWaitbar(FigureHandle);
 
                     T = gui.e_dvanalysis_brennecke(sce1, sce2, cL1, cL2);
                     methodtag='brennecke';
                 case 'Splinefit Method [PMID:31697351]'
-                        fw = gui.gui_waitbar;
+                        fw = gui.myWaitbar(FigureHandle);
 
                     [T, X1, X2, g, xyz1, xyz2,...
                         px1, py1, pz1,...
@@ -78,7 +78,7 @@ lcolor2 = lcolors(2,:);
                     return;
             end
     
-    gui.gui_waitbar(fw);
+    gui.myWaitbar(FigureHandle, fw);
 
     outfile = sprintf('%s_vs_%s_DV_%s_results', ...
         matlab.lang.makeValidName(string(cL1)), ...
@@ -91,7 +91,7 @@ in_ExportTable;
 if strcmp(answerx, 'Splinefit Method [PMID:31697351]')
     if strcmp(gui.myQuestdlg(FigureHandle, 'Explore DV expression profile of genes?'), 'Yes')
         hx = gui.myFigure;
-        hFig = hx.FigureHandle;
+        hFig = hx.FigHandle;
         hFig.Position(3) = hFig.Position(3)*1.8;
         
         
@@ -184,9 +184,9 @@ end
     end
 
     function in_viewTable(~, ~)
-        fw = gui.gui_waitbar;
-        gui.i_viewtable(T, hx.FigureHandle);
-        gui.gui_waitbar(fw);
+        fw = gui.myWaitbar(FigureHandle);
+        gui.i_viewtable(T, hx.FigHandle);
+        gui.myWaitbar(FigureHandle, fw);
     end
 
     function in_ExportTable(~, ~)

@@ -3,7 +3,7 @@ function i_twogenestemscatter(sce, g1, g2)
 if ismember(upper(g1), upper(sce.g)) && ismember(upper(g2), upper(sce.g))
 
     hx=gui.myFigure;
-    hFig=hx.FigureHandle;
+    hFig=hx.FigHandle;
 
 
 

@@ -1,4 +1,4 @@
-function [FigureHandle,hAx] = gui_createmainfigure(v1,useuifigure)
+function [parentfig,hAx] = gui_createmainfigure(v1,useuifigure)
     if nargin<2, useuifigure = false; end
 
     if ~isempty(v1)
@@ -9,11 +9,11 @@ function [FigureHandle,hAx] = gui_createmainfigure(v1,useuifigure)
 
     if useuifigure
         a=round(1.2*[560, 420]);
-        FigureHandle = uifigure('Name', figname, ...
+        parentfig = uifigure('Name', figname, ...
                 'position', [0, 0, a], ...
                 'visible', 'off');
-        %p = uipanel(FigureHandle,'Position',[0 0 a-5]);
-        hAx = uiaxes(FigureHandle,'Position',[65 50 a(1)-120 a(2)-60], ...
+        %p = uipanel(parentfig,'Position',[0 0 a-5]);
+        hAx = uiaxes(parentfig,'Position',[65 50 a(1)-120 a(2)-60], ...
             'Visible','off');
     else
         defaultPosition = get(groot, 'DefaultFigurePosition');
@@ -21,22 +21,22 @@ function [FigureHandle,hAx] = gui_createmainfigure(v1,useuifigure)
         defaultHeight = defaultPosition(4);
         
         if defaultWidth==560 && defaultHeight==420
-            FigureHandle = figure('Name', figname, ...
+            parentfig = figure('Name', figname, ...
                 'position', round(1.2*[0, 0, 560, 420]), ...
                 'visible', 'off', 'NumberTitle', 'off', ...
                 'DockControls','off','MenuBar','none','ToolBar','Figure');
         else
-            FigureHandle = figure('Name', figname, ...    
+            parentfig = figure('Name', figname, ...    
                 'visible', 'off', 'NumberTitle', 'off', ...
                 'DockControls','off','MenuBar','none','ToolBar','Figure');
         end
-        delete(findall(FigureHandle, 'Tag', 'FigureToolBar'));        
-        dt = datacursormode(FigureHandle);
+        delete(findall(parentfig, 'Tag', 'FigureToolBar'));        
+        dt = datacursormode(parentfig);
         dt.Enable = 'off';
         dt.UpdateFcn = {@i_myupdatefcnx};
-        hAx = axes('Parent', FigureHandle, 'Visible', 'off');
+        hAx = axes('Parent', parentfig, 'Visible', 'off');
     end
-    movegui(FigureHandle, 'center');
+    movegui(parentfig, 'center');
 
     function [txt] = i_myupdatefcnx(pdt, ~)
         % pos = event_obj.Position;

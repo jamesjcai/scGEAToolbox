@@ -1,8 +1,8 @@
 function [done, CellTypeList, i1, i2, cL1, cL2,...
           outdir] = i_batchmodeprep(sce, prefixtag, ...
-          wrkdir, FigureHandle)
+          wrkdir, parentfig)
 
-    if nargin<4, FigureHandle = []; end
+    if nargin<4, parentfig = []; end
     
     if nargin<3, wrkdir = []; end
     done = false;
@@ -14,22 +14,22 @@ function [done, CellTypeList, i1, i2, cL1, cL2,...
     % end
     
     [CellTypeSorted] = pkg.e_sortcatbysize(sce.c_cell_type_tx);
-    [CellTypeList] = in_selectcelltypes(CellTypeSorted, FigureHandle);
+    [CellTypeList] = in_selectcelltypes(CellTypeSorted, parentfig);
     if isempty(CellTypeList), return; end
     
-    [thisc, clabel] = in_select1class(sce, false, FigureHandle);
+    [thisc, clabel] = in_select1class(sce, false, parentfig);
     if isempty(thisc), return; end
     if strcmp(clabel,'Cell Type')
         helpdlg('Cannot select ''Cell Type'' as grouping varialbe.');
         return;
     end
     
-    % [i1, i2, cL1, cL2] = gui.i_select2smplgrps(sce, false, FigureHandle);
+    % [i1, i2, cL1, cL2] = gui.i_select2smplgrps(sce, false, parentfig);
     % if (isscalar(i1) && i1 ==0 ) || (isscalar(i2) && i2 == 0) || isempty(cL1) || isempty(cL2)
     %     return;
     % end
     
-    [i1, i2, cL1, cL2, done] = in_twogrpsencoding(thisc, FigureHandle);
+    [i1, i2, cL1, cL2, done] = in_twogrpsencoding(thisc, parentfig);
     if ~done, return; end
     if isempty(i1) || isempty(i2) || isempty(cL1) || isempty(cL2)
         return;
@@ -40,7 +40,7 @@ function [done, CellTypeList, i1, i2, cL1, cL2,...
     if ~isempty(wrkdir) && isfolder(wrkdir)
         outdir = wrkdir;
     else
-        answer=gui.myQuestdlg(FigureHandle, 'Select a folder to save the outupt Excel files. Continue?','');
+        answer=gui.myQuestdlg(parentfig, 'Select a folder to save the outupt Excel files. Continue?','');
         if ~strcmp(answer,'Yes'), return; end    
         outdir = uigetdir;
         if ~isfolder(outdir), return; end
@@ -59,9 +59,9 @@ function [done, CellTypeList, i1, i2, cL1, cL2,...
         end
     end
     if needoverwritten
-        answer=gui.myQuestdlg(FigureHandle, sprintf('Overwrite existing result file(s) in %s?', outdir),'');    
+        answer=gui.myQuestdlg(parentfig, sprintf('Overwrite existing result file(s) in %s?', outdir),'');    
     else
-        answer=gui.myQuestdlg(FigureHandle, sprintf('Result files will be save in %s. Continue?', outdir), '');
+        answer=gui.myQuestdlg(parentfig, sprintf('Result files will be save in %s. Continue?', outdir), '');
     end
     if ~strcmp(answer,'Yes'), return; end
     done = true;
@@ -69,7 +69,7 @@ function [done, CellTypeList, i1, i2, cL1, cL2,...
 end
 
 
-function [CellTypeList]=in_selectcelltypes(CellTypeSorted, FigureHandle)
+function [CellTypeList]=in_selectcelltypes(CellTypeSorted, parentfig)
     CellTypeList=[];
     %pause(1);
     %[idx] = gui.i_selmultidlg(CellTypeSorted, CellTypeSorted);
@@ -77,8 +77,8 @@ function [CellTypeList]=in_selectcelltypes(CellTypeSorted, FigureHandle)
     %if idx == 0, return; end
     %CellTypeList = CellTypeSorted(idx);
 
-    if gui.i_isuifig(FigureHandle)
-        [indx2, tf2] = gui.myListdlg(FigureHandle, CellTypeSorted, 'Select cell types');
+    if gui.i_isuifig(parentfig)
+        [indx2, tf2] = gui.myListdlg(parentfig, CellTypeSorted, 'Select cell types');
     else
         [indx2, tf2] = listdlg('PromptString', ...
         {'Select Cell Types:'}, ...
@@ -93,7 +93,7 @@ function [CellTypeList]=in_selectcelltypes(CellTypeSorted, FigureHandle)
 end
 
 
-    function [thisc, clabel] = in_select1class(sce, allowunique, FigureHandle)
+    function [thisc, clabel] = in_select1class(sce, allowunique, parentfig)
         if nargin < 2, allowunique = false; end
         thisc = [];
         clabel = '';
@@ -142,8 +142,8 @@ end
             listitems = [listitems, 'Workspace Variable...'];
         end
         
-        if gui.i_isuifig(FigureHandle)
-            [indx2, tf2] = gui.myListdlg(FigureHandle, listitems, ... 
+        if gui.i_isuifig(parentfig)
+            [indx2, tf2] = gui.myListdlg(parentfig, listitems, ... 
             'Select grouping variable:');
         else    
             [indx2, tf2] = listdlg('PromptString', ...
@@ -166,15 +166,15 @@ end
                 case 'Cell Cycle Phase' % cell cycle
                     thisc = sce.c_cell_cycle_tx;
                 case 'Workspace Variable...'
-                    thisc = i_pickvariable(FigureHandle);
+                    thisc = i_pickvariable(parentfig);
             end
         end
         
         function [c] = i_pickvariable
             c = [];
     
-            if gui.i_isuifig(FigureHandle)
-                [indx, tf] = gui.myListdlg(FigureHandle, b(1,:), ... 
+            if gui.i_isuifig(parentfig)
+                [indx, tf] = gui.myListdlg(parentfig, b(1,:), ... 
                 'Select grouping variable:');
             else        
                 [indx, tf] = listdlg('PromptString', {'Select variable:'}, ...
@@ -190,7 +190,7 @@ end
     end
 
 
-    function [i1, i2, cL1, cL2, done] = in_twogrpsencoding(thisc, FigureHandle)
+    function [i1, i2, cL1, cL2, done] = in_twogrpsencoding(thisc, parentfig)
         done = false;
         [ci, cLi] = grp2idx(thisc);
         listitems = natsort(string(cLi));
@@ -221,7 +221,7 @@ end
             % --------
             a=sprintf('%s vs. %s',cL1{1}, cL2{1});
             b=sprintf('%s vs. %s',cL2{1}, cL1{1});
-            answer = gui.myQuestdlg(FigureHandle, 'Which vs. which?','', {a, b}, a);
+            answer = gui.myQuestdlg(parentfig, 'Which vs. which?','', {a, b}, a);
             switch answer
                 case a
                 case b

@@ -39,11 +39,11 @@ end
                     return;
             end
             [ax, bx] = view(findall(FigureHandle,'type','axes'));
-            fw = gui.gui_waitbar;
+            fw = gui.myWaitbar(FigureHandle);
             scex = selectcells(sce, idx);
             scgeatool(scex);
             view(ax, bx);
-            gui.gui_waitbar(fw);
+            gui.myWaitbar(FigureHandle, fw);
 
         end
     end
@@ -83,11 +83,11 @@ end
             else
                 return;
             end
-            fw = gui.gui_waitbar;
+            fw = gui.myWaitbar(FigureHandle);
             scex = selectcells(sce, idx);
             scgeatool(scex);
             view(ax, bx);
-            gui.gui_waitbar(fw);
+            gui.myWaitbar(FigureHandle, fw);
         end
     end
 end

@@ -1,4 +1,5 @@
-function [isDoublet, doubletscore, methodtag, done] = callback_DoubletDetection(src, ~)
+function [isDoublet, doubletscore, methodtag, done] = ...
+callback_DoubletDetection(src, ~)
 
 done = false;
 isDoublet = [];
@@ -24,7 +25,7 @@ if ~gui.i_setpyenv, return; end
 % methodtag=gui.myQuestdlg(FigureHandle, 'Which method?','',...
 %     'scrublet','doubletdetection','scrublet');
 
-%fw=gui.gui_waitbar;
+%fw=gui.myWaitbar(FigureHandle);
 % try
 %     switch methodtag
 %         case 'scrublet'
@@ -37,16 +38,16 @@ try
     %         return;
     % end
     if isempty(isDoublet) || isempty(doubletscore)
-        %gui.gui_waitbar(fw);
+        %gui.myWaitbar(FigureHandle, fw);
         errordlg("Running Error.");
         return;
     end
 catch ME
-    %gui.gui_waitbar(fw);
+    %gui.myWaitbar(FigureHandle, fw);
     errordlg(ME.message);
     rethrow(ME);
 end
-%gui.gui_waitbar(fw);
+%gui.myWaitbar(FigureHandle, fw);
 guidata(FigureHandle, sce);
 done = true;
 end
