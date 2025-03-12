@@ -64,14 +64,14 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
             if ~iscell(filenm)
                 scefile = fullfile(pathname, filenm);
                 try
-                    fw = gui.gui_waitbar;
+                    fw = gui.myWaitbar(parentfig);
                     load(scefile, 'sce');
                 catch ME
-                    gui.gui_waitbar(fw, true);
+                    gui.myWaitbar(parentfig, fw, true);
                     gui.myErrordlg(parentfig, ME.message, ME.identifier);
                     return;
                 end
-                gui.gui_waitbar(fw);
+                gui.myWaitbar(parentfig, fw);
             else
                 if ~in_multifilesgo, return; end
                 answer = gui.myQuestdlg(parentfig, 'Which set operation method to merge data?', ...
@@ -117,23 +117,23 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                 'Pick a tsv/csv/txt format file');
             if isequal(fname, 0), return; end
             filename = fullfile(pathname, fname);
-            fw = gui.gui_waitbar;
+            fw = gui.myWaitbar(parentfig);
             try
                 [X, g] = sc_readtsvfile(filename);
                 sce = SingleCellExperiment(X, g);
                 metainfo = sprintf("Source: %s", filename);
                 sce = sce.appendmetainfo(metainfo);
             catch ME
-                gui.gui_waitbar(fw, true);
+                gui.myWaitbar(parentfig, fw, true);
                 gui.myErrordlg(parentfig, ME.message, ME.identifier);
                 return;
             end
             if isempty(sce)
-                gui.gui_waitbar(fw, true);
+                gui.myWaitbar(parentfig, fw, true);
                 gui.myErrordlg(parentfig, 'File Import Failure.');
                 return;
             else
-                gui.gui_waitbar(fw);
+                gui.myWaitbar(parentfig, fw);
             end
         case 'Seurat/Rds File (*.rds)...'
             [fname, pathname] = uigetfile( ...
@@ -142,20 +142,20 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                 'Pick a rds format file');
             if isequal(fname, 0), return; end
             filename = fullfile(pathname, fname);
-            fw = gui.gui_waitbar;
+            fw = gui.myWaitbar(parentfig);
             try
                 [sce] = sc_readrdsfile(filename);
             catch ME
-                gui.gui_waitbar(fw, true);
+                gui.myWaitbar(parentfig, fw, true);
                 gui.myErrordlg(parentfig, ME.message, ME.identifier);
                 return;
             end
             if isempty(sce)
-                gui.gui_waitbar(fw, true);
+                gui.myWaitbar(parentfig, fw, true);
                 gui.myErrordlg(parentfig, 'File Import Failure.');
                 return;
             else
-                gui.gui_waitbar(fw);
+                gui.myWaitbar(parentfig, fw);
             end
         case 'AnnData/H5ad File (*.h5ad)...'
 
@@ -165,7 +165,7 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                 'Pick a H5AD file');
             if isequal(filenm, 0), return; end
             filename = fullfile(pathname, filenm);
-            fw = gui.gui_waitbar;
+            fw = gui.myWaitbar(parentfig);
             try
                 [X, g, b, filename] = sc_readh5adfile(filename);
                 if ~isempty(X)
@@ -173,15 +173,15 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                     metainfo = sprintf("Source: %s", filename);
                     sce = sce.appendmetainfo(metainfo);
                     if ~isempty(b), sce.c_cell_id = b; end
-                    gui.gui_waitbar(fw);
+                    gui.myWaitbar(parentfig, fw);
                 else
-                    gui.gui_waitbar(fw, true);
+                    gui.myWaitbar(parentfig, fw, true);
                     gui.myErrordlg(parentfig, 'File Import Failure.');
                     return;
                 end
             catch ME
                 disp(ME.message);
-                gui.gui_waitbar(fw, true);
+                gui.myWaitbar(parentfig, fw, true);
                 gui.myErrordlg(parentfig, ME.message, ME.identifier);
                 return;
             end            
@@ -269,11 +269,11 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
             selpath = uigetdir;            
             if selpath == 0, return; end
             try
-                fw = gui.gui_waitbar;
+                fw = gui.myWaitbar(parentfig);
                 [X, g, celllist, ftdone] = sc_read10xdir(selpath);
-                gui.gui_waitbar(fw);
+                gui.myWaitbar(parentfig, fw);
             catch ME
-                gui.gui_waitbar(fw, true);
+                gui.myWaitbar(parentfig, fw, true);
                 gui.myErrordlg(parentfig, ME.message, ME.identifier);
                 return;
             end
@@ -298,11 +298,11 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
             selpath = uigetdir;
             if selpath == 0, return; end
             try
-                fw = gui.gui_waitbar;
+                fw = gui.myWaitbar(parentfig);
                 [X, g, celllist, ftdone] = sc_readparsebio(selpath);
-                gui.gui_waitbar(fw);
+                gui.myWaitbar(parentfig, fw);
             catch ME
-                gui.gui_waitbar(fw, true);
+                gui.myWaitbar(parentfig, fw, true);
                 gui.myErrordlg(parentfig, ME.message, ME.identifier);
                 return;
             end
@@ -336,21 +336,21 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                         '', {'Yes', 'Cancel'}, 'Yes');
                     if ~strcmp(dmanswer, 'Yes'), return; end
                     try
-                        fw = gui.gui_waitbar;
+                        fw = gui.myWaitbar(parentfig);
                         [sce] = pkg.pipeline_multisamplesmerge(accv, false, parentfig);
-                        gui.gui_waitbar(fw);
+                        gui.myWaitbar(parentfig, fw);
                     catch ME
-                        gui.gui_waitbar(fw);
+                        gui.myWaitbar(parentfig, fw);
                         gui.myErrordlg(parentfig, ME.message, ME.identifier);
                         return;
                     end
                 else                        
                     try
-                        fw = gui.gui_waitbar;
+                        fw = gui.myWaitbar(parentfig);
                         [sce] = sc_readgeoaccess(acc);
-                        gui.gui_waitbar(fw);
+                        gui.myWaitbar(parentfig, fw);
                     catch ME
-                        gui.gui_waitbar(fw);
+                        gui.myWaitbar(parentfig, fw);
                         gui.myErrordlg(parentfig, ME.message, ME.identifier);
                         return;
                     end
@@ -380,7 +380,7 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
             answer = inputdlg(prompt, dlgtitle, [1, 100], definput);
             if isempty(answer), return; end
             if ~isempty(answer{1})
-                fw = gui.gui_waitbar;
+                fw = gui.myWaitbar(parentfig);
                 files = websave(tempname, answer{1});
                 if iscell(files)
                     f = files{1};
@@ -395,7 +395,7 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                 sce = sce.appendmetainfo(metainfo);
                 if ~isempty(b), sce.c_cell_id = b; end
                 if ~isempty(c), sce.c_batch_id = c; end
-                gui.gui_waitbar(fw);
+                gui.myWaitbar(parentfig, fw);
             end
         case 'Import SCE Data from Workspace...'
             a = evalin('base', 'whos');
@@ -431,15 +431,15 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                         end
                         s = s(2:end);
                         fprintf('>> sce=sc_mergesces({%s},''%s'');\n', s, methodtag);
-                        fw = gui.gui_waitbar;
+                        fw = gui.myWaitbar(parentfig);
                         sce = sc_mergesces(insce, methodtag);
                     catch ME
-                        gui.gui_waitbar(fw, true);
+                        gui.myWaitbar(parentfig, fw, true);
                         disp(ME.message);
                         gui.myErrordlg(parentfig, ME.message, ME.identifier);
                         return;
                     end
-                    gui.gui_waitbar(fw);
+                    gui.myWaitbar(parentfig, fw);
                 end
             else
                 return;
@@ -523,17 +523,17 @@ end
             return;
         end        
         try
-            fw = gui.gui_waitbar;
+            fw = gui.myWaitbar(parentfig);
             [X] = sc_simudata(numgenes, numcells, 'lun');
             [sce] = SingleCellExperiment(X);
             sce.c_batch_id = string([ones(round(sce.NumCells/2),1);... 
                 2*ones(sce.NumCells-round(sce.NumCells/2),1)]);
             %[c, cL] = grp2idx(sce.c);
-            gui.gui_waitbar(fw);
+            gui.myWaitbar(parentfig, fw);
             % guidata(parentfig, sce);
             % in_RefreshAll(src, [], false, false);
         catch ME
-            gui.gui_waitbar(fw,true);
+            gui.myWaitbar(parentfig, fw,true);
             gui.myErrordlg(parentfig, ME.message, ME.identifier);
         end
     end

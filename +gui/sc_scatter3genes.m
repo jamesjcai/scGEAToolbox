@@ -1,4 +1,4 @@
-function [xyz, xyz1, gsorted]= sc_scatter3genes(X, g, dofit, showdata, ...
+function [xyz, xyz1, gsorted] = sc_scatter3genes(X, g, dofit, showdata, ...
     parentfig)
 %Scatter3 plot for genes
 
@@ -14,7 +14,7 @@ x = lgu;
 y = lgcv;
 z = dropr;
 
-fw = gui.gui_waitbar;
+fw = gui.myWaitbar(parentfig);
 
 
 hx=gui.myFigure;
@@ -129,7 +129,7 @@ ylabel(hAx2,'Expression Level');
 if showdata && ~isempty(dt)
     dt.UpdateFcn = {@in_myupdatefcn3, gsorted};
 end
-gui.gui_waitbar(fw);
+gui.myWaitbar(parentfig, fw);
 hx.show(parentfig);
 
 

@@ -34,9 +34,9 @@ if nargin<2, parentfig = []; end
                 return;
             else
                 filename = fullfile(path, file);
-                fw = gui.gui_waitbar;
+                fw = gui.myWaitbar(parentfig);
                 save(filename, 'sce', '-v7.3');
-                gui.gui_waitbar(fw);
+                gui.myWaitbar(parentfig, fw);
                 OKPressed = true;
             end
         case 'Seurat/Rds File (*.rds)...'
@@ -51,9 +51,9 @@ if nargin<2, parentfig = []; end
                 return;
             else
                 filename = fullfile(path, file);
-                fw = gui.gui_waitbar;
+                fw = gui.myWaitbar(parentfig);
                 sc_sce2rds(sce, filename);
-                gui.gui_waitbar(fw);
+                gui.myWaitbar(parentfig, fw);
                 fprintf("\nTo read file, in R:\n");
                 fprintf("library(Seurat)\n");
                 fprintf("A<-readRDS(""%s"")\n", file);

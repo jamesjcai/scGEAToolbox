@@ -19,8 +19,8 @@ else
     end
 end
 if needestimate
-    fw = gui.gui_waitbar;
+    fw = gui.myWaitbar(parentfig);
     sce = sce.estimatecellcycle(true, 1);
-    gui.gui_waitbar(fw);
+    gui.myWaitbar(parentfig, fw);
 end
 end

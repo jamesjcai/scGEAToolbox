@@ -70,9 +70,9 @@ switch answer
     case 'Select'
 
         if isa(sce, 'SingleCellExperiment')
-            %fw=gui.gui_waitbar;
+            %fw=gui.myWaitbar(parentfig);
             [gsorted] = gui.i_sortgenenames(sce, parentfig);
-            %gui.gui_waitbar(fw);
+            %gui.myWaitbar(parentfig, fw);
             if isempty(gsorted), return; end
         end
 

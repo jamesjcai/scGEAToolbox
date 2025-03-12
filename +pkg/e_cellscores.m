@@ -1,4 +1,5 @@
-function [score, T, posg] = e_cellscores(X, genelist, scoretypeid, methodid, showwaitbar)
+function [score, T, posg] = e_cellscores(X, genelist, ...
+    scoretypeid, methodid, showwaitbar)
 % Calcute predefined cell scores (marker list in cellscores.xlsx)
 %
 % see also: SC_CELLSCORE_UCELL, SC_CELLSCORE_ADMDL, SC_CELLCYCLESCORING

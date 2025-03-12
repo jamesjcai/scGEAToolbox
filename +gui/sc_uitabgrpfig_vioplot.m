@@ -64,7 +64,7 @@ hx.addCustomButton('off', @i_selectsamples, "edit.jpg", 'Select Samples');
 hx.addCustomButton('off', @i_sortbymean, "reorder.jpg", 'Sort Samples by Median');
 
 hx.show(parentfig);
-gui.gui_waitbar(fw);
+gui.myWaitbar(parentfig, fw);
 
 ccx = true;
 

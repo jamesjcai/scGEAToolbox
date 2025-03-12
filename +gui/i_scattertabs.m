@@ -10,7 +10,7 @@ tabnamelist = string(tabnamelist);
 %[~, cLorder]=grp2idx(thisx);
 xlabelv = strrep(xlabelv, '_', '\_');
 
-fw = gui.gui_waitbar;
+fw = gui.myWaitbar(parentfig);
 % isdescend = false;
 
 % thisx = strrep(string(thisx), '_', '\_');
@@ -81,7 +81,7 @@ if ~(ismcc || isdeployed)
     end
 end
 
-gui.gui_waitbar(fw);
+gui.myWaitbar(parentfig, fw);
 hx.show(parentfig);
 
      function in_curvefitter(~, ~)

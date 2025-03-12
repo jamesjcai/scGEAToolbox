@@ -39,7 +39,7 @@ listitems = {'(a): Library Size Normalization', ...
     'ListString', listitems, 'ListSize', [220, 300], ...
     'InitialValue', methodid);
 if tf == 1
-    fw = gui.gui_waitbar;
+    fw = gui.myWaitbar(parentfig);
     try
         switch indx
             case 1
@@ -61,10 +61,10 @@ if tf == 1
                 X = run.ml_MAGIC(X, true);
         end
     catch ME
-        gui.gui_waitbar(fw);
+        gui.myWaitbar(parentfig, fw);
         errordlg(ME.message)
         rethrow(ME)
     end
-    gui.gui_waitbar(fw);
+    gui.myWaitbar(parentfig, fw);
 end
 end

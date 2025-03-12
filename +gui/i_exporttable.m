@@ -99,9 +99,9 @@ switch answer
         end
         if isequal(file, 0) || isequal(path, 0), return; end
         filename = fullfile(path, file);
-        %fw=gui.gui_waitbar;
+        %fw=gui.myWaitbar(parentfig);
         save(filename, 'T');
-        %gui.gui_waitbar(fw);
+        %gui.myWaitbar(parentfig, fw);
     otherwise
         return;
 end

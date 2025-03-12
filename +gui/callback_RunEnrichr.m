@@ -55,7 +55,7 @@ switch enrichrtype
     case 'API-based'
         % do nothing here
     case 'Web-based'
-        fw = gui.gui_waitbar([], false, 'Sending genes to web browser...');
+        fw = gui.myWaitbar(FigureHandle, [], false, 'Sending genes to web browser...');
         % gui.i_enrichtest(genelist, backgroundlist, numel(genelist));
             if ~isempty(backgroundlist)
                 run.web_Enrichr_bkg(ingenelist, backgroundlist, numel(ingenelist));

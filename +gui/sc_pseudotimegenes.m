@@ -30,9 +30,9 @@ t = t(:);
         'Distance Correlation','Cancel'},'Spearman Correlation');
     switch answer
         case 'Spearman Correlation'
-            fw = gui.gui_waitbar;
+            fw = gui.myWaitbar(parentfig);
             r = corr(t, X.', 'type', 'spearman'); % Calculate linear correlation between gene expression profile and T
-            gui.gui_waitbar(fw);
+            gui.myWaitbar(parentfig, fw);
         case 'Distance Correlation'
             Xn = log1p(sc_norm(X));
             r = zeros(size(X,1),1);
@@ -46,11 +46,11 @@ t = t(:);
                 end
                 gui.gui_waitbar_adv(fw);
             else
-                fw = gui.gui_waitbar;
+                fw = gui.myWaitbar(parentfig);
                 for k=1:length(r)
                     r(k) = pkg.distcorr(Xn(k,:).', t(:)); % Calculate linear correlation between gene expression profile and T
                 end
-                gui.gui_waitbar(fw);
+                gui.myWaitbar(parentfig, fw);
             end
         case 'Cancel'
             return; 

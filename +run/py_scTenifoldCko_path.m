@@ -28,37 +28,6 @@ end
 
 if ~prepare_input_only
  x = pyenv;
-    %{
-    fw = gui.gui_waitbar([], [], 'Checking Python environment...');
-
-    x = pyenv;
-    try
-        pkg.i_add_conda_python_path;
-    catch
-    
-    end
-    
-    codefullpath = fullfile(codepth,'require.py');
-    %cmdlinestr = sprintf('"%s" "%s%srequire.py"', ...
-    %    x.Executable, codepth, filesep);
-    cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);
-    
-    disp(cmdlinestr)
-    [status, cmdout] = system(cmdlinestr, '-echo');
-    if status ~= 0
-        cd(oldpth);    
-        if isvalid(fw)
-            gui.gui_waitbar(fw, true);
-        end
-        %waitfor(errordlg(sprintf('%s',cmdout)));
-        error(cmdout);
-        %error('Python scTenifoldXct has not been installed properly.');
-    end
-
-    if isvalid(fw)
-        gui.gui_waitbar(fw, [], 'Checking Python environment is complete');
-    end
-    %}
 end
 
     

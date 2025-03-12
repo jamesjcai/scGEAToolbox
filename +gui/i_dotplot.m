@@ -161,11 +161,11 @@ hx.show(parentfig);
                     if isequal(file, 0) || isequal(path, 0)
                         return;
                     else
-                        fw = gui.gui_waitbar;
+                        fw = gui.myWaitbar(parentfig);
                         filename = fullfile(path, file);
                         writetable(T, filename, 'FileType', 'text');
                         OKPressed = true;
-                        gui.gui_waitbar(fw);
+                        gui.myWaitbar(parentfig, fw);
                     end
                 case 'Excel file'
 
@@ -173,11 +173,11 @@ hx.show(parentfig);
                     if isequal(file, 0) || isequal(path, 0)
                         return;
                     else
-                        fw = gui.gui_waitbar;
+                        fw = gui.myWaitbar(parentfig);
                         filename = fullfile(path, file);
                         writetable(T, filename, 'FileType', 'spreadsheet');
                         OKPressed = true;
-                        gui.gui_waitbar(fw);
+                        gui.myWaitbar(parentfig, fw);
                     end
             end
         end

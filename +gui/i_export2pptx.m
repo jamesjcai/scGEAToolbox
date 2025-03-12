@@ -25,7 +25,7 @@ switch answer
             makePPTCompilable();
             warndlg('This function may not work properly in standalone applications.', '');
         end
-        fw = gui.gui_waitbar;
+        fw = gui.myWaitbar(parentfig);
         N = length(F);
         images = cell(N, 1);
 
@@ -48,7 +48,7 @@ switch answer
             open(ppt);
         catch ME
             pause(0.5);
-            gui.gui_waitbar(fw, true);
+            gui.myWaitbar(parentfig, fw, true);
             pause(0.5);
             gui.myErrordlg(parentfig, ME.message);
             return;
@@ -78,7 +78,7 @@ switch answer
         for i = 1:len
             delete(images{i});
         end
-        gui.gui_waitbar(fw);
+        gui.myWaitbar(parentfig, fw);
         %try
            rptview(ppt);
         %catch ME

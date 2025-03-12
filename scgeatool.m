@@ -383,6 +383,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             end
         end
         [sce] = gui.sc_openscedlg([],[],FigureHandle);
+        figure(FigureHandle);
         if ~isempty(sce) && sce.NumCells > 0 && sce.NumGenes > 0
             guidata(FigureHandle, sce);
             c=[];

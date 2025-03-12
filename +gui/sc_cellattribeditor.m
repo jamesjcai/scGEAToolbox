@@ -40,12 +40,15 @@ if ~addnew
         return;
     end
     
-    %fw = gui.gui_waitbar;
+  
     
-    if ~strcmp('Yes', gui.myQuestdlg(parentfig, 'It may take a while to load values. Continue?')), return; end
+    if ~strcmp('Yes', gui.myQuestdlg(parentfig, ...
+            'It may take a while to load values. Continue?'))
+        return; 
+    end
     x = inputdlg(sprintf('Attribute Name: %s\n%s',clabel, 'Attribute Values:'), ...
                       'Attribute Editor', [15 80], {char(string(thisc))});
-    %gui.gui_waitbar(fw);
+  
 
 else  
     x = inputdlg({'Attribute Name','Attribute Values'},...

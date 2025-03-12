@@ -22,7 +22,7 @@ if nargin < 3 || isempty(methodid)
     if isempty(methodid), return; end
 end
 
-if showwaitbar, fw = gui.gui_waitbar; end
+if showwaitbar, fw = gui.myWaitbar(parentfig); end
 try
     if methodid == 1
         [cs] = sc_cellscore_ucell(sce.X, sce.g, posg);
@@ -30,11 +30,11 @@ try
         [cs] = sc_cellscore_admdl(sce.X, sce.g, posg);
     end
 catch ME
-    if showwaitbar, gui.gui_waitbar(fw, true); end
+    if showwaitbar, gui.myWaitbar(parentfig, fw, true); end
     errordlg(ME.message);
     return;
 end
-if showwaitbar, gui.gui_waitbar(fw); end
+if showwaitbar, gui.myWaitbar(parentfig, fw); end
 
 if showwaitbar
     posg = sort(posg);

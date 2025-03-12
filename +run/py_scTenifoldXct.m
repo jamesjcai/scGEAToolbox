@@ -43,13 +43,13 @@ if ~prepare_input_only
         cd(oldpth);
     
         if isvalid(fw)
-            gui.gui_waitbar(fw, true);
+            gui.myWaitbar(parentfig, fw, true);
         end
         gui.myErrordlg(parentfig, sprintf('%s',cmdout));
         % error(cmdout);
         % error('Python scTenifoldXct has not been installed properly.');
     end
-    if isvalid(fw), gui.gui_waitbar(fw, [], 'Checking Python environment is complete'); end
+    if isvalid(fw), gui.myWaitbar(parentfig, fw, [], 'Checking Python environment is complete'); end
 end
 
 tmpfilelist = {'X.mat', 'X.txt', 'g.txt', 'c.txt', 'output.txt', ...
@@ -117,7 +117,7 @@ if ~useexist
     A = ten.e_filtadjc(A1, 0.75, false);
     save('pcnet_Source.mat', 'A', '-v7.3');
     disp('pcnet_Source.mat saved.');
-    if isvalid(fw), gui.gui_waitbar(fw, [], 'Building pcnet\_Source is complete'); end
+    if isvalid(fw), gui.myWaitbar(parentfig, fw, [], 'Building pcnet\_Source is complete'); end
 end
 
 useexist = false;
@@ -146,7 +146,7 @@ if ~useexist
     A = ten.e_filtadjc(A2, 0.75, false);
     save('pcnet_Target.mat', 'A', '-v7.3');
     disp('pcnet_Target network saved.')
-    if isvalid(fw), gui.gui_waitbar(fw, [], 'Building pcnet\_Target is complete'); end
+    if isvalid(fw), gui.myWaitbar(parentfig, fw, [], 'Building pcnet\_Target is complete'); end
 end
 
 
@@ -173,9 +173,9 @@ end
 % https://www.mathworks.com/matlabcentral/answers/334076-why-does-externally-called-exe-using-the-system-command-freeze-on-the-third-call
 if isvalid(fw)
     if prepare_input_only
-        gui.gui_waitbar(fw, [], 'Input preparation is complete.');
+        gui.myWaitbar(parentfig, fw, [], 'Input preparation is complete.');
     else
-        gui.gui_waitbar(fw, [], 'Running scTenifoldXct.py is complete.');
+        gui.myWaitbar(parentfig, fw, [], 'Running scTenifoldXct.py is complete.');
     end
 end
 

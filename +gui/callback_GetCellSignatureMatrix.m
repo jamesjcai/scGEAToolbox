@@ -75,7 +75,6 @@ gui.i_exporttable(T, needwait,'Tcellsignmt','CellSignatTable', ...
 %assignin('base','labelx',listitems(indx2));
 
 labelx = listitems(indx2)';
-%gui.gui_waitbar(fw);
 % T=table(Y,'VariableNames', ...
 %     matlab.lang.makeValidName(listitems(indx2)));
 

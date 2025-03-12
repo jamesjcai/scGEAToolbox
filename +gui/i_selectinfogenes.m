@@ -17,7 +17,7 @@ definput = {'Yes', 'Yes', 'Yes', 'Yes'};
 answer = inputdlg(prompt, dlgtitle, dims, definput);
 if isempty(answer), return; end
 
-fw = gui.gui_waitbar;
+fw = gui.myWaitbar(parentfig);
 if strcmpi(answer{1},'Yes') || strcmpi(answer{1},'Y')
     sce = sce.rmmtgenes;
     disp('Mt-genes removed.');    
@@ -51,7 +51,7 @@ if strcmpi(answer{4},'Yes') || strcmpi(answer{4},'Y')
     a2 = length(sce.g);
     fprintf('%d genes without approved symbols are found and removed.\n',a1-a2);
 end
-gui.gui_waitbar(fw);
+gui.myWaitbar(parentfig, fw);
 
 % ---------------------------------
 

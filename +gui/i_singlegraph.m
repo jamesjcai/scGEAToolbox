@@ -46,13 +46,13 @@ oldidx = 0;
 oldG1 = [];
 
     function in_networkvis_curvy(~, ~)
-        fw=gui.gui_waitbar;
+        fw=gui.myWaitbar(parentfig);
         gui.i_networkvis(G1, [p1.XData' p1.YData'], true, p1.NodeFontSize, hFig);
-        gui.gui_waitbar(fw);
+        gui.myWaitbar(parentfig, fw);
     end
 
     function in_networkvis_linear(~, ~)
-        fw=gui.gui_waitbar;
+        fw=gui.myWaitbar(parentfig);
         h = gui.myFigure;        
         [x, y] = gplot(G1.adjacency, [p1.XData' p1.YData']);
         plot(x, y,'k-');
@@ -80,7 +80,7 @@ oldG1 = [];
         end
         set(gca, 'XTick', [], 'YTick', []);
         axis off
-        gui.gui_waitbar(fw);
+        gui.myWaitbar(parentfig, fw);
         h.show(hFig);
         set(gcf, 'Color', 'white');
     end

@@ -1,4 +1,5 @@
-function [celltypes] = py_scimilarity(sce, modeldir, wkdir, target_celltypes, isdebug, prepare_input_only)
+function [celltypes] = py_scimilarity(sce, modeldir, wkdir, ...
+    target_celltypes, isdebug, prepare_input_only)
 
 % cell_type = run.py_scimilarity(sce, 'Y:\jcai\models\model_v1.1', 'C:\Users\jcai\Downloads');
 

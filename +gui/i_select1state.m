@@ -108,9 +108,9 @@ if tf2 == 1
                 end
             end
             if needestimate
-                fw = gui.gui_waitbar;
+                fw = gui.myWaitbar(parentfig);
                 sce = sce.estimatecellcycle(true, 1);
-                gui.gui_waitbar(fw);
+                gui.myWaitbar(parentfig, fw);
             end
             %             [~, tx] = grp2idx(sce.c_cell_cycle_tx);
             %             ttxt = sprintf('%s|', string(tx));
