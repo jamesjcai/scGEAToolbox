@@ -47,7 +47,8 @@ lcolor2 = lcolors(2,:);
     sce2 = sce2.qcfilter;
 
     if sce1.NumCells < 10 || sce2.NumCells < 10 || sce1.NumGenes < 10 || sce2.NumGenes < 10
-        errordlg('Filtered SCE contains too few cells (n < 10) or genes (n < 10).','','modal');
+        gui.myErrordlg(FigureHandle, ['Filtered SCE contains too' ...
+            ' few cells (n < 10) or genes (n < 10).'],'','modal');
         return;
     end
 

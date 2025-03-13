@@ -73,7 +73,7 @@ switch sourcetag
                 requirerefresh = true;
             catch ME
                 gui.myWaitbar(FigureHandle, fw, true);
-                errordlg(ME.message);
+                gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
                 return;
             end
             gui.myWaitbar(FigureHandle, fw);
@@ -90,7 +90,7 @@ switch sourcetag
         figure(FigureHandle);
         if isequal(fname, 0), return; end
         if ~iscell(fname)
-            errordlg("This function needs at least two SCE data files.");
+            gui.myErrordlg(FigureHandle, "This function needs at least two SCE data files.");
             return;
         end
 
@@ -117,7 +117,7 @@ switch sourcetag
             requirerefresh = true;
         catch ME
             gui.myWaitbar(FigureHandle, fw, true);
-            errordlg(ME.message);
+            gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
             return;
         end
         gui.myWaitbar(FigureHandle, fw);

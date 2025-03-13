@@ -27,8 +27,7 @@ hx=gui.myFigure;
 hFig=hx.FigHandle;
 
 
-for k = 1:M
-    %gui.gui_waitbar_adv(fw, k / M);
+for k = 1:M    
     ydata = X(g == tgene(k), :);
     nexttile;   % subplot(M, 1, ct)
     pkg.violinplot(ydata.', xgroupdata, 'showdata', false, 'GroupOrder', cL);

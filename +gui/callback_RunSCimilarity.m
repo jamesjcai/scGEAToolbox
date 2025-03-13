@@ -80,7 +80,7 @@ function [needupdatesce] = callback_RunSCimilarity(src, ~)
             end            
         catch ME
             gui.myWaitbar(FigureHandle, fw, true);
-            errordlg(ME.message);
+            gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
             return;
         end
         needupdatesce = false;        
@@ -96,7 +96,7 @@ function [needupdatesce] = callback_RunSCimilarity(src, ~)
             sce.c_cell_type_tx = c;
         catch ME
             gui.myWaitbar(FigureHandle, fw, true);
-            errordlg(ME.message);
+            gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
             return;
         end    
         guidata(FigureHandle, sce);

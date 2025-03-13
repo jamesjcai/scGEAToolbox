@@ -50,20 +50,20 @@ Y = zeros(sce.NumCells, n);
 [~, methodid] = gui.i_pickscoremethod([]);
 if isempty(methodid), return; end
 
-fw = gui.gui_waitbar_adv;
+fw = gui.myWaitbar(FigureHandle);
 for k = 1:n
     a = listitems{indx2(k)};
     b = sprintf('Processing %s', a);
     if n ~= k
-        gui.gui_waitbar_adv(fw, k/n, b);
+        gui.myWaitbar(FigureHandle, fw, false, '', b, k/n);
     else
-        gui.gui_waitbar_adv(fw, (k - 1)/n, b);
+        gui.myWaitbar(FigureHandle, fw, false, '', b, (k - 1)/n);
     end
     [y] = pkg.e_cellscores(sce.X, sce.g, a, methodid, false);
     Y(:, k) = y(:);
 end
 
-gui.gui_waitbar_adv(fw);
+gui.myWaitbar(FigureHandle, fw);
 c_cellid=sce.c_cell_id;
 if ~isstring(c_cellid)
     c_cellid=string(c_cellid);

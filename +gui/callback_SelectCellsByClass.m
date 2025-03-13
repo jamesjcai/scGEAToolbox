@@ -16,7 +16,7 @@ try
     view(ax, bx);
 catch ME
     gui.myWaitbar(FigureHandle, fw, true);
-    errordlg(ME.message);
+    gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
     return;
 end
 gui.myWaitbar(FigureHandle, fw);

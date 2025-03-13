@@ -55,7 +55,7 @@ end
         try
             setpref('scgeatoolbox', preftagname, seltpath);
         catch ME
-            errordlg(ME.message);
+            gui.myErrordlg(parentfig, ME.message, ME.identifier);
             return;
         end
         done = true;

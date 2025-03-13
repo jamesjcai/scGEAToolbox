@@ -209,7 +209,7 @@ hx.show(parentfig);
             set(gca, 'XTickLabel', [{''}; tg(:); {''}])
             cL = tg;
         else
-            errordlg('Wrong input.');
+            gui.myErrordlg(parentfig, 'Wrong input.');
         end
     end
 

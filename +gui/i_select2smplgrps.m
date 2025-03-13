@@ -13,7 +13,7 @@ cL2 = [];
 if isa(sce, 'SingleCellExperiment')
     [thisc, ~] = gui.i_select1class(sce,[],[],[],parentfig);
     if isempty(thisc)
-        %errordlg('Undefined');
+        %gui.myErrordlg(parentfig, 'Undefined');
         return;
     end
 else % assume that sce input is thisc
@@ -35,7 +35,7 @@ end
 listitems = string(cLi);
 n = length(listitems);
 if n < 2
-    errordlg('Need at least two samples.');
+    gui.myErrordlg(parentfig, 'Need at least two samples.');
     return;
 end
 
@@ -65,7 +65,7 @@ end
 
         if tfx == 1
             if numel(indxx) ~= 2
-                errordlg('Please select 2 samples only');
+                gui.myErrordlg(parentfig, 'Please select 2 samples only');
                 return;
             end
             [y1, idx1] = ismember(listitems(indxx(1)), cLi);

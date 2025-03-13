@@ -5,7 +5,7 @@ import ten.*
 try
     ten.check_tensor_toolbox;
 catch ME
-    errordlg(ME.message);
+    gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
     return;
 end
 
@@ -16,14 +16,6 @@ if isempty(wkdir), return; end
 if isfolder(wkdir)
     cd(wkdir);
 end
-
-%     if exist('sctenifoldnet','file')~=2
-%         errordlg('scTenifoldNet is not installed.');
-%         disp('To install scTenifoldNet, type:')
-%         disp('unzip(''https://github.com/cailab-tamu/scTenifoldNet/archive/master.zip'');');
-%         disp('addpath(''./scTenifoldNet-master/MATLAB'');');
-%         return;
-%     end
 
 [FigureHandle, sce] = gui.gui_getfigsce(src);
 
@@ -51,7 +43,7 @@ answer = gui.myQuestdlg(FigureHandle, 'Construct gene regulatory network (GRN) f
         [A] = ten.sc_pcnetdenoised(sce.X, 'savegrn', false);
     catch ME
         gui.myWaitbar(FigureHandle, fw);
-        errordlg(ME.message);
+        gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
         return;
     end
     gui.myWaitbar(FigureHandle, fw);

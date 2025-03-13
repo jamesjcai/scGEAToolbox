@@ -33,7 +33,8 @@ function callback_DEGene2Groups(src, ~)
     try
         switch methodtag
             case 'ranksum'
-                T = sc_deg(sce.X(:, i1), sce.X(:, i2), sce.g, 1, true, FigureHandle);
+                T = sc_deg(sce.X(:, i1), sce.X(:, i2), sce.g, 1, ...
+                    true, FigureHandle);
             case 'deseq2'
                 [ok] = gui.i_confirmscript('DE analysis (DESeq2)', ...
                     'R_DESeq2', 'r');
@@ -50,7 +51,7 @@ function callback_DEGene2Groups(src, ~)
         end
 
     catch ME
-        errordlg(ME.message);
+        gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
         return;
     end   
     
@@ -114,7 +115,7 @@ function callback_DEGene2Groups(src, ~)
         matlab.lang.makeValidName(string(cL1)), matlab.lang.makeValidName(string(cL2)));
     if isatac, T.gene = "chr" + T.gene; end
 
-    [filetype, filesaved] = gui.i_exporttable(T, false, ...
+    [filetype, filesaved] = gui.i_exporttable(T, true, ...
         'Tdegenelist', outfile, [], "All_genes", FigureHandle);
 
     tf = 0;

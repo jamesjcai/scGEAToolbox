@@ -79,12 +79,12 @@ try
     [t_mono3, s_mono3, ~, q_mono3] = run.r_monocle3(sce.X, idx, ndim, wrkdir, isdebug);
 catch ME
     gui.myWaitbar(FigureHandle, fw, true);
-    errordlg(ME.message);
+    gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
     return;
 end
 gui.myWaitbar(FigureHandle, fw);
 if isempty(t_mono3) || length(t_mono3) ~= sce.NumCells
-    errordlg('MONOCLE3 running time error.');
+    gui.myErrordlg(FigureHandle, 'MONOCLE3 running time error.');
     return;
 end
 

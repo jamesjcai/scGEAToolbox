@@ -7,7 +7,7 @@ noanswer = true;
 [c, cL] = grp2idx(thisc);
 newidx = 1:numel(cL);
 if isscalar(cL)
-    %errordlg('Only one cell type or cluster.');
+    %gui.myErrordlg(parentfig, 'Only one cell type or cluster.');
     noanswer = false;
     return;
 end

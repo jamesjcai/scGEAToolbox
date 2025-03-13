@@ -142,7 +142,7 @@ try
     glist = T.genes(1:min([a, scenew.NumGenes]));
     [y, idx] = ismember(glist, scenew.g);
     if ~all(y)
-        errordlg('Runtime error.');
+        gui.myErrordlg(FigureHandle, 'Runtime error.');
         return;
     end
     scenew.g = scenew.g(idx);

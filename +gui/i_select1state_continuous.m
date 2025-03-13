@@ -107,7 +107,7 @@ if isempty(listitems), return; end
                     newpickclabel = 'ExternalVariable';
                 catch ME
                     thisc = [];
-                    errordlg(ME.message);
+                    gui.myErrordlg(parentfig, ME.message, ME.identifier);
                     return;
                 end
             otherwise % other properties

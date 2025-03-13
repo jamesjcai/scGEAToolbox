@@ -873,8 +873,8 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             return;
         end
 
-        fw = gui.gui_waitbar_adv;
-        gui.gui_waitbar_adv(fw,1/8,'Basic QC Filtering...');
+        fw = gui.myWaitbar(FigureHandle);
+        gui.myWaitbar(FigureHandle, fw, false, '','Basic QC Filtering...', 1/8);
         sce = sce.qcfilter;
 
         count = 1;
@@ -885,43 +885,44 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
 
         count = count + 1;
         if strcmpi(answer{count},'Yes') || strcmpi(answer{count},'Y')
-            gui.gui_waitbar_adv(fw,2/8, 'Embeding Cells Using UMAP...');
+            gui.myWaitbar(FigureHandle, fw, false, '', 'Embeding Cells Using UMAP...', 2/8);
             sce = sce.embedcells('umap3d', true, true, 3);
         end
         count = count + 1;
         if strcmpi(answer{count},'Yes') || strcmpi(answer{count},'Y')
-            gui.gui_waitbar_adv(fw,2/8, 'Embeding Cells Using PHATE...');
+            gui.myWaitbar(FigureHandle, fw, false, '', 'Embeding Cells Using PHATE...', 2/8);
             sce = sce.embedcells('phate3d', true, true, 3);
         end
-        gui.gui_waitbar_adv(fw,2/8, 'Embeding Cells Using tSNE...');
+        gui.myWaitbar(FigureHandle, fw, false, '', 'Embeding Cells Using tSNE...', 2/8);
         try
             sce = sce.embedcells('tsne3d', true, true, 3);
         catch ME
-            gui.gui_waitbar_adv(fw);
+            gui.myWaitbar(FigureHandle, fw);
             gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
             return;
         end
-        gui.gui_waitbar_adv(fw,3/8, 'Clustering Cells Using K-means...');
+        gui.myWaitbar(FigureHandle, fw, false, '', 'Clustering Cells Using K-means...', 3/8);
         
         sce = sce.clustercells([], [], true);
-        gui.gui_waitbar_adv(fw,4/8, 'Annotating Cell Types Using PanglaoDB...');
+        gui.myWaitbar(FigureHandle, fw, false, '', 'Annotating Cell Types Using PanglaoDB...', 4/8);
         sce = sce.assigncelltype(speciestag, false);
 
         count = count + 1;
         if strcmpi(answer{count},'Yes') || strcmpi(answer{count},'Y')
-            gui.gui_waitbar_adv(fw,5/8, 'Estimate Cell Cycles...');
+            gui.myWaitbar(FigureHandle, fw, false, '', 'Estimate Cell Cycles...', 5/8);
             sce = sce.estimatecellcycle;
         end
 
         count = count + 1;
         if strcmpi(answer{count},'Yes') || strcmpi(answer{count},'Y')
-            gui.gui_waitbar_adv(fw,6/8, 'Estimate Differentiation Potency of Cells...');
+            gui.myWaitbar(FigureHandle, fw, false, '', ...
+                'Estimate Differentiation Potency of Cells...', 6/8);
             sce = sce.estimatepotency(speciestag);
         end
-        gui.gui_waitbar_adv(fw,7/8);
+        gui.myWaitbar(FigureHandle, fw, false, '', '', 7/8);
         [c,cL] = grp2idx(sce.c_cell_type_tx);
         sce.c = c;
-        gui.gui_waitbar_adv(fw);
+        gui.myWaitbar(FigureHandle, fw);
         in_RefreshAll(src, [], true, false);
         ix_labelclusters(true);
         %setappdata(FigureHandle, 'cL', cL);
@@ -1445,7 +1446,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             
             [K, usehvgs] = gui.i_gethvgnum(sce);
             if isempty(K), return; end                
-            fw = gui.gui_waitbar_adv;
+            fw = gui.myWaitbar(FigureHandle);
             try
                 forced = true;
                 %if contains(methoddimtag, 'tsne'), disp('tSNE perplexity = 30'); end
@@ -1457,9 +1458,10 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                             upper(methodtag{k}));
                         continue;
                     else
-                        gui.gui_waitbar_adv(fw,(k-1)/length(methodtag), ...
+                        gui.myWaitbar(FigureHandle, fw, false, '', ...
                             sprintf('Embedding cells using %s', ...
-                            upper(methodtag{k})));
+                            upper(methodtag{k})), ...
+                            (k-1)/length(methodtag));
                     end
                     ndim = 2 + contains(methodtag{k},'3d');
                     sce = sce.embedcells(methodtag{k}, forced, ...
@@ -1468,13 +1470,13 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 % disp('Following the library-size normalization and log1p-transformation, we visualized similarity among cells by projecting them into a reduced dimensional space using t-distributed stochastic neighbor embedding (t-SNE)/uniform manifold approximation and projection (UMAP).')
                 
             catch ME
-                gui.gui_waitbar_adv(fw);
+                gui.myWaitbar(FigureHandle, fw);
                 gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
                 % rethrow(ME)
                 return;
             end
             if length(methodtag)>1, readytoshow = true; end
-            gui.gui_waitbar_adv(fw);
+            gui.myWaitbar(FigureHandle, fw);
 
         else
             return;
@@ -1514,11 +1516,11 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         dtp = findobj(h, 'Type', 'datatip');
         delete(dtp);
         cLdisp = cL;
-        if ~manuallyselect, fw = gui.gui_waitbar_adv; end
+        if ~manuallyselect, fw = gui.myWaitbar(FigureHandle); end
 
         for ix = 1:max(c)
             if ~manuallyselect
-                gui.gui_waitbar_adv(fw, ix/max(c));
+                gui.myWaitbar(FigureHandle, fw, false, '', '', ix/max(c));
             end
             ptsSelected = c == ix;
 
@@ -1576,7 +1578,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             end
             hold(hAx,'off');
         end
-        if ~manuallyselect, gui.gui_waitbar_adv(fw); end
+        if ~manuallyselect, gui.myWaitbar(FigureHandle, fw); end
         sce.c_cell_type_tx = string(cL(c));
         nx = length(unique(sce.c_cell_type_tx));
         if nx > 1

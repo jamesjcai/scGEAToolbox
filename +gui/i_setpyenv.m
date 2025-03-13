@@ -16,7 +16,7 @@ if x.Version == "" %strlength(x.Executable)==0
         if ~done
             return;
         end
-        waitfor(helpdlg('Python environment is set successfully.', ''));
+        waitfor(gui.myHelpdlg(parentfig, 'Python environment is set successfully.', ''));
     else
         return;
     end
@@ -32,7 +32,7 @@ else
                 return;
             end
             done = true;
-            waitfor(helpdlg('Python environment is set successfully.', ''));
+            waitfor(gui.myHelpdlg(parentfig, 'Python environment is set successfully.', ''));
         case {'Cancel', ''}
             return;
         otherwise
@@ -40,7 +40,8 @@ else
     end
 end
 if ~done
-    warndlg('Python environment is not set.', '');
+    gui.myWarndlg(parentfig, ...
+        'Python environment is not set.', '');
 end
 
 end

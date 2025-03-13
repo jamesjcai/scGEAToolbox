@@ -42,8 +42,7 @@ if ~(ismcc || isdeployed)
         if ~exist(fullfile(pw1, 'example_data/'), 'dir')
             try
                 unzip('https://github.com/jamesjcai/jamesjcai.github.io/raw/master/data/example_data.zip');
-            catch ME
-                warndlg(ME.message);
+            catch ME                
                 warning(ME.message);
             end
         end
@@ -55,7 +54,6 @@ if ~(ismcc || isdeployed)
             try
                 unzip('https://github.com/jamesjcai/jamesjcai.github.io/raw/master/data/resources.zip');
             catch ME
-                warndlg(ME.message);
                 warning(ME.message);
             end
         end
@@ -66,8 +64,7 @@ if ~(ismcc || isdeployed)
         if ~exist(fullfile(pw1, '+run', 'external/'), 'dir')
             try
                 a = unzip('https://github.com/jamesjcai/jamesjcai.github.io/raw/master/data/external.zip');
-            catch ME
-                warndlg(ME.message);
+            catch ME                
                 warning(ME.message);
             end
             
@@ -78,8 +75,7 @@ if ~(ismcc || isdeployed)
             
             try
                 movefile(fullfile(pw1, 'external/'), fullfile(pw1, '+run', 'external/'));
-            catch ME
-                warndlg(ME.message);
+            catch ME               
                 warning(ME.message);
             end
         end

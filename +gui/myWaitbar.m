@@ -1,9 +1,11 @@
-function [fw] = myWaitbar(parentfig, fw, witherror, mesg, newmesg)
+function [fw] = myWaitbar(parentfig, fw, witherror, mesg, newmesg, f)
 
-if nargin < 1, parentfig = []; end
+
+if nargin < 6, f = []; end
 if nargin < 5, newmesg = ''; end
 if nargin < 4 || isempty(mesg), mesg = 'Processing your data'; end
 if nargin < 3 || isempty(witherror), witherror = false; end
+if nargin < 1, parentfig = []; end
 
     if ~gui.i_isuifig(parentfig)
         if nargin < 2 || isempty(fw)
@@ -22,17 +24,21 @@ if nargin < 3 || isempty(witherror), witherror = false; end
             fw.Visible = "on";
             pause(.5)
             fprintf('Processing your data...');
-            waitbar(.618, fw, mesg);
+            fw = waitbar(0.618, fw, mesg);
             fprintf('... ');
             tic;
             return;
-        elseif isvalid(fw) && strcmp(fw.Tag, 'TMWWaitbar') && ~isempty(newmesg)
-            waitbar(.618, fw, newmesg);
+        elseif isvalid(fw) && strcmp(fw.Tag, 'TMWWaitbar') && ~isempty(newmesg) && isempty(f)
+            fw = waitbar(.618, fw, newmesg);
+        elseif isvalid(fw) && strcmp(fw.Tag, 'TMWWaitbar') && isempty(newmesg) && ~isempty(f)
+            fw = waitbar(f, fw);
+        elseif isvalid(fw) && strcmp(fw.Tag, 'TMWWaitbar') && ~isempty(newmesg) && ~isempty(f)
+            fw = waitbar(f, fw, newmesg);
         elseif isvalid(fw) && strcmp(fw.Tag, 'TMWWaitbar')
             if ~witherror
                 if nargin < 3 || isempty(mesg), mesg = 'Finishing'; end
                 toc;
-                waitbar(1, fw, mesg);
+                fw = waitbar(1, fw, mesg);
                 pause(1);
                 % fprintf('.......................done.\n');
             end
@@ -40,6 +46,7 @@ if nargin < 3 || isempty(witherror), witherror = false; end
         end
 
     else
+
         if nargin < 2 || isempty(fw)
             % hFig = gcf;
             %hFig = get(groot,'CurrentFigure');
@@ -53,9 +60,16 @@ if nargin < 3 || isempty(witherror), witherror = false; end
             tic;
             return;
         elseif isvalid(fw) && isa(fw, 'matlab.ui.dialog.ProgressDialog') && ...
-                ~isempty(newmesg)
+                ~isempty(newmesg) && isempty(f)
             fw.Value = 0.618;
             fw.Message = newmesg;
+        elseif isvalid(fw) && isa(fw, 'matlab.ui.dialog.ProgressDialog') && ...
+                isempty(newmesg) && ~isempty(f)
+            fw.Value = f;
+        elseif isvalid(fw) && isa(fw, 'matlab.ui.dialog.ProgressDialog') && ...
+                ~isempty(newmesg) && ~isempty(f)
+            fw.Message = newmesg;
+            fw.Value = f;
         elseif isvalid(fw) && isa(fw, 'matlab.ui.dialog.ProgressDialog')
             if ~witherror
                 if nargin < 3 || isempty(mesg), mesg = 'Finishing'; end
@@ -66,6 +80,7 @@ if nargin < 3 || isempty(witherror), witherror = false; end
                 % fprintf('.......................done.\n');
             end
             if isvalid(fw), close(fw); end
+        end
     end
-
 end
+

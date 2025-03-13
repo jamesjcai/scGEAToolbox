@@ -53,7 +53,7 @@ end
         if useparallel
             gui.myWaitbar(FigureHandle, fw, true);
         end
-        errordlg(ME.message);
+        gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
         return;
     end
 

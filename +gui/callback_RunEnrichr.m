@@ -87,7 +87,7 @@ end
         assert((minugenes > 0) && (minugenes < 100));
         assert((pvaluecut >= 0.0) && (pvaluecut <= 1.0));
     catch
-        errordlg('Invalid input.');
+        gui.myErrordlg(FigureHandle, 'Invalid input.');
         return;
     end
     

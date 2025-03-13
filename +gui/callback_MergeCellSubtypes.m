@@ -5,18 +5,20 @@ if nargin < 3, sourcetag = 1; end
 requirerefresh = false;
 s = "";
 
+[FigureHandle, sce] = gui.gui_getfigsce(src);
+
 switch sourcetag
     case 1
         a = evalin('base', 'whos');
         b = struct2cell(a);
         valididx = ismember(b(4, :), 'SingleCellExperiment');
         if sum(valididx) < 1
-            warndlg('No SCE variables in Workspace.', '');
+            gui.myWarndlg(FigureHandle,'No SCE variables in Workspace.');
             return;
         end
 end
 
-[FigureHandle, sce] = gui.gui_getfigsce(src);
+
 
 
 if ~allcell
@@ -43,13 +45,6 @@ end
 
 switch sourcetag
     case 1
-        % a=evalin('base','whos');
-        % b=struct2cell(a);
-        % valididx=ismember(b(4,:),'SingleCellExperiment');
-        % if sum(valididx)<1
-        %     warndlg('No SCE variables in Workspace.','');
-        %     return;
-        % end
         b = b(:, valididx);
         a = a(valididx);
 
@@ -65,7 +60,8 @@ switch sourcetag
         a = a(valididx);
 
         if isempty(a)
-            warndlg('No valid SCE variables in Workspace.', '');
+            gui.myWarndlg(FigureHandle, ...
+                'No valid SCE variables in Workspace.');
             return;
         end
 
@@ -83,7 +79,7 @@ switch sourcetag
         try
             insce = evalin('base', a(indx).name);
         catch ME
-            errordlg(ME.message);
+            gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
             return;
         end
     case 2
@@ -98,7 +94,7 @@ switch sourcetag
             x = load(scefile, 'sce');
             insce = x.sce;
         catch ME
-            errordlg(ME.message);
+            gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
             return;
         end
 end % end of sourcetag
@@ -111,7 +107,7 @@ try
     guidata(FigureHandle, sce);
     requirerefresh = true;
 catch ME
-    errordlg(ME.message);
+    gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
     return;
 end
 

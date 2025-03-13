@@ -18,7 +18,7 @@ if isempty(wkdir), return; end
 try
     run.py_datamapplot(sce, thisc, wkdir);
 catch ME
-    errordlg(ME.message);
+    gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
 end
 
 end

@@ -23,12 +23,12 @@ if ~done, return; end
 [runenrichr] = gui.myQuestdlg(FigureHandle, 'Run Enrichr with top 250 DV genes? Results will be saved in the output Excel files.','');
 if strcmp(runenrichr,'Cancel'), return; end
 
-fw = gui.gui_waitbar_adv;
+fw = gui.myWaitbar(FigureHandle);
 for k=1:length(CellTypeList)
    
-    gui.gui_waitbar_adv(fw, ...
-        (k-1)/length(CellTypeList), ...
-        sprintf('Processing %s ...', CellTypeList{k}));
+    gui.myWaitbar(FigureHandle, fw, false, '', ...
+        sprintf('Processing %s ...', CellTypeList{k}), ...
+        (k-1)/length(CellTypeList));
 
     idx = sce.c_cell_type_tx == CellTypeList{k};
 
@@ -133,7 +133,7 @@ for k=1:length(CellTypeList)
         % - end of enrichr
         
 end
-gui.gui_waitbar_adv(fw);
+gui.myWaitbar(FigureHandle, fw);
 
 answer=gui.myQuestdlg(FigureHandle, sprintf('Result files saved. Open the folder %s?', outdir), '');
 if strcmp(answer,'Yes'), winopen(outdir); end

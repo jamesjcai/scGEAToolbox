@@ -83,7 +83,7 @@ function [h] = i_scoreheatmap(Y, rowlabels, sce, parentfig)
             cL = tg;
             in_update;            
         else
-            errordlg('Wrong input.');
+            gui.myErrordlg(parentfig, 'Wrong input.');
         end
     end
 

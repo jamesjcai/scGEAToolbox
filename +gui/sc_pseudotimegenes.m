@@ -72,7 +72,7 @@ t = t(:);
         if exist('psf1', 'var') && ishandle(hFig)
             close(hFig);
         end
-        errordlg(ME.message,'','modal');
+        gui.myErrordlg(parentfig, ME.message,'','modal');
     end
 
 end

@@ -5,7 +5,9 @@ if nargin<3, parentfig = []; end
 if nargin < 2, glist = {[]}; end
 
 if ~license('test','matlab_report_gen') && ~isempty(which('mlreportgen.report.Report'))
-    warndlg('Unable to check out a Report Generator license. This function requires MATLAB Report Generator.', '');
+    gui.myWarndlg(parentfig, ['Unable to check out a Report ' ...
+        'Generator license. This function requires MATLAB ' ...
+        'Report Generator.']);
     return;
 end
 
@@ -18,12 +20,15 @@ answer = gui.myQuestdlg(parentfig, 'Export to PowerPoint?');
 switch answer
     case 'Yes'
         if ~usejava('desktop')
-           warndlg('This function is not supported in MATLAB Online and may not work properly in standalone applications.', '');
+           gui.myWarndlg(parentfig, ['This function is not supported in ' ...
+               'MATLAB Online and may not work properly in ' ...
+               'standalone applications.']);
            return;
         end        
         if ismcc || isdeployed
             makePPTCompilable();
-            warndlg('This function may not work properly in standalone applications.', '');
+            gui.myWarndlg(parentfig, ['This function may not work properly in ' ...
+                            'standalone applications.']);
         end
         fw = gui.myWaitbar(parentfig);
         N = length(F);
@@ -79,11 +84,9 @@ switch answer
             delete(images{i});
         end
         gui.myWaitbar(parentfig, fw);
-        %try
-           rptview(ppt);
-        %catch ME
-        %    warndlg(ME.message,'');
-        %end
+
+        rptview(ppt);
+
     otherwise
        
 end

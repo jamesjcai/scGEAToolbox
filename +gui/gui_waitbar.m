@@ -19,7 +19,7 @@ if nargin < 1 || isempty(f)
     f.Visible = "on";
     pause(.5)
     fprintf('Processing your data...');
-    waitbar(.618, f, mesg);
+    f = waitbar(.618, f, mesg);
     fprintf('... ');
     tic;
     return;

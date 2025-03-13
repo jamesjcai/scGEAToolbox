@@ -121,7 +121,7 @@ function in_MarkerGeneHeatmap(src, ~, sce)
         [markerlist] = sc_pickmarkers(sce.X, sce.g, c, 10, methodid);
     catch ME
         gui.myWaitbar(FigureHandle, fw, true);
-        errordlg(ME.message);
+        gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
         return;
     end
     

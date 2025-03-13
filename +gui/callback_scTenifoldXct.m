@@ -125,7 +125,7 @@ try
         end
     end
 catch ME
-    errordlg(ME.message);
+    gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
     return;
 end
 

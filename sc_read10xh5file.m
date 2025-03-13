@@ -23,16 +23,6 @@ if exist(filenm, 'file') ~= 2
     error('FileNotFound');
 end
 
-% h=h5info(filenm);
-% h5disp(filenm,'/matrix','min');
-% if strcmp(a.Groups(1).Datasets(2).Name,'data')
-
-%data=h5read(filenm,[h.Groups(1).Name,'/data']);
-%indices=h5read(filenm,[h.Groups(1).Name,'/indices']);
-%indptr=h5read(filenm,[h.Groups(1).Name,'/indptr']);
-%shape=h5read(filenm,[h.Groups(1).Name,'/shape']);
-%fw=gui.gui_waitbar_adv;
-
 grouptag = "/matrix/";
 try
     h = h5info(filenm);

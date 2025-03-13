@@ -33,13 +33,13 @@ function callback_CompareGeneNetwork(src, ~)
             x1 = Xt(i, i1);
             x2 = Xt(i, i2);
 
-            fw = gui.gui_waitbar_adv;
+            fw = gui.myWaitbar(FigureHandle);
             n1 = size(x1,1);
             A1 = zeros(n1);
             n2 = size(x2,1);
             A2 = zeros(n2);
             for k=1:n1
-                gui.gui_waitbar_adv(fw,k/n1);
+                gui.myWaitbar(FigureHandle, fw, false, '', '',k/n1);
                 for l=1:n1
                     if k~=l
                         A1(k,l) = pkg.e_xicor(x1(k,:),x1(l,:));
@@ -51,7 +51,7 @@ function callback_CompareGeneNetwork(src, ~)
                     end
                 end
             end
-            gui.gui_waitbar_adv(fw);
+            gui.myWaitbar(FigureHandle, fw);
         otherwise
             return;
     end
@@ -60,6 +60,6 @@ function callback_CompareGeneNetwork(src, ~)
     try
         sc_grnview2(A1, A2, glist, stitle, FigureHandle);
     catch ME
-        errordlg(ME.message);
+        gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
     end
 end

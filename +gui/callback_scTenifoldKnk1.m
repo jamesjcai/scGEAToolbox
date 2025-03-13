@@ -7,7 +7,7 @@ if ~gui.gui_showrefinfo('scTenifoldKnk [PMID:35510185]', ...
 try
     ten.check_tensor_toolbox;
 catch ME
-    errordlg(ME.message);
+    gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
     return;
 end
 
@@ -44,7 +44,7 @@ switch answer
             if ~strcmp(anw, 'Yes'), return; end
             [A0] = in_readA0fromfile(sce.NumGenes);
             if isempty(A0) || size(A0, 1) ~= sce.NumGenes || size(A0, 2) ~= sce.NumGenes
-                errordlg('Not a valid network.');
+                gui.myErrordlg(FigureHandle, 'Not a valid network.');
                 return;
             end
         else
@@ -66,7 +66,7 @@ switch answer
             end
             [m, n] = size(A0);
             if m ~= n || n ~= length(sce.g)
-                errordlg('Not a valid network.');
+                gui.myErrordlg(FigureHandle, 'Not a valid network.');
                 return;
             end
         end
@@ -74,7 +74,7 @@ switch answer
         try
             ten.check_tensor_toolbox;
         catch ME
-            errordlg(ME.message);
+            gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
             return;
         end
         A0 = [];
@@ -124,7 +124,7 @@ if isempty(A0)
         gui.myWaitbar(FigureHandle, fw);
     catch ME
         gui.myWaitbar(FigureHandle, fw);
-        errordlg(ME.message);
+        gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
         return;
     end
     isreconstructed = true;
@@ -161,7 +161,7 @@ else
             gui.myWaitbar(FigureHandle, fw);
         catch ME
             gui.myWaitbar(FigureHandle, fw);
-            errordlg(ME.message);
+            gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
             return;
         end
     end

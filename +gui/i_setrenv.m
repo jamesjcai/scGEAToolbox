@@ -24,23 +24,6 @@ if ismac
     return;
 end
 
-
-
-% Rpath=pkg.FindRpath;
-% if isempty(Rpath)
-%     warndlg('R is not installed.','');
-% else
-%     if iscell(Rpath)
-%         s=Rpath{1};
-%         for k=2:length(Rpath)
-%             s=sprintf('%s\n%s',s,Rpath{k});
-%         end
-%         s=sprintf('%s %s',s,' (default)');
-%     else
-%         s=Rpath;
-%     end
-
-%
 if ~ispref('scgeatoolbox', preftagname)
     answer = gui.myQuestdlg(parentfig, 'R environment has not been set up. Locate R executable Rscript.exe?');
     if ~strcmp(answer, 'Yes'), return; end
@@ -82,14 +65,14 @@ if done
         gui.myHelpdlg(parentfig, "R environment is set successfully.");
     else
         if ispc
-            errordlg("R environment is set with error.", '');
+            gui.myErrordlg(parentfig, "R environment is set with error.", '');
             done = false;
         else
             Rexec = fullfile(Rpath, 'R');
             if exist(Rexec, 'file')
-                helpdlg("R environment is set successfully.", '');
+                gui.myHelpdlg(parentfig, "R environment is set successfully.", '');
             else
-                errordlg("R environment is set with error.", '');
+                gui.myErrordlg(parentfig, "R environment is set with error.", '');
                 done = false;
             end
         end
@@ -115,7 +98,7 @@ end
         try
             setpref('scgeatoolbox', preftagname, fullfile(path));
         catch ME
-            errordlg(ME.message);
+            gui.myErrordlg(parentfig, ME.message, ME.identifier);
             return;
         end
         done = true;

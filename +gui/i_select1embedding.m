@@ -16,8 +16,6 @@ end
 listitems(1) = [];
 if isempty(listitems)
     listitems = [listitems, 'Compute tSNE embedding...'];
-    %helpdlg('No embedding is available.','');
-    %return;
 end
 
         if gui.i_isuifig(parentfig)

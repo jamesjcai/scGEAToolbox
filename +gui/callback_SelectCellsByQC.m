@@ -100,7 +100,7 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
                 assert((numgenes > 0) && (numgenes < intmax));
             catch
                 % requirerefresh = false;
-                errordlg('Invalid input(s).');
+                gui.myErrordlg(FigureHandle, 'Invalid input(s).');
                 return;
             end
 
@@ -115,7 +115,7 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
                 if (strcmp(ME.identifier,'MATLAB:array:SizeLimitExceeded'))
                 if issparse(sce.X)
                     gui.myWaitbar(FigureHandle, fw, true);
-                    errordlg(ME.message);
+                    gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
                     % requirerefresh = false;
                     return;
                 else
@@ -149,7 +149,7 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
                         min_cells_nonzero, numgenes, whitelist);
                 catch ME
                     gui.myWaitbar(FigureHandle, fw, true);
-                    errordlg(ME.message);
+                    gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
                     % requirerefresh = false;
                     return;
                 end

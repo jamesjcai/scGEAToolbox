@@ -1,23 +1,15 @@
 function callback_scTenifoldNet2(src, ~)
 
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 import ten.*
 import pkg.*
 try
     ten.check_tensor_toolbox;
 catch ME
-    errordlg(ME.message);
+    gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
     return;
 end
 
-%     if exist('sctenifoldnet','file')~=2
-%         errordlg('scTenifoldNet is not installed.');
-%         disp('To install scTenifoldNet, type:')
-%         disp('unzip(''https://github.com/cailab-tamu/scTenifoldNet/archive/master.zip'');');
-%         disp('addpath(''./scTenifoldNet-master/MATLAB'');');
-%         return;
-%     end
-
-[FigureHandle, sce] = gui.gui_getfigsce(src);
 if ~gui.gui_showrefinfo('scTenifoldNet [PMID:33336197]', FigureHandle), return; end
     
 
@@ -59,7 +51,7 @@ switch answer
         A0 = evalin('base', a(indx(1)).name);
         A1 = evalin('base', a(indx(2)).name);
         if ~isequal(size(A0), size(A1))
-            errordlg('Two networks should be in the same size.');
+            gui.myErrordlg(FigureHandle, 'Two networks should be in the same size.');
             return;
         end
 
@@ -75,7 +67,7 @@ switch answer
         if tf ~= 1, return; end
         glist = evalin('base', a(indx).name);
         if length(glist) ~= size(A0, 1)
-            errordlg('Not a valid gene list.');
+            gui.myErrordlg(FigureHandle, 'Not a valid gene list.');
             return;
         end
         fw = gui.myWaitbar(FigureHandle);
@@ -96,7 +88,7 @@ switch answer
         [nsubsmpl, csubsmpl, savegrn] = gui.i_tenifoldnetpara;
         if isempty(nsubsmpl) || isempty(csubsmpl) || isempty(savegrn), return; end
         if csubsmpl >= min([size(sce.X(:, i1), 2), size(sce.X(:, i2), 2)])
-            errordlg('csubsmpl should be smaller than sce.NumCells.');
+            gui.myErrordlg(FigureHandle, 'csubsmpl should be smaller than sce.NumCells.');
             return;
         end
 

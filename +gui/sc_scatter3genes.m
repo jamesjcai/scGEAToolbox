@@ -214,7 +214,7 @@ hx.show(parentfig);
     function ExportGeneNames(~, ~)
         ptsSelected = logical(h.BrushData.');
         if ~any(ptsSelected)
-            warndlg("No gene is selected.");
+            gui.myWarndlg(parentfig, "No gene is selected.");
             return;
         end
         fprintf('%d genes are selected.\n', sum(ptsSelected));
@@ -236,7 +236,7 @@ hx.show(parentfig);
     function EnrichrHVGs(~, ~)
         ptsSelected = logical(h.BrushData.');
         if ~any(ptsSelected)
-            warndlg("No gene is selected.");
+            gui.myWarndlg(parentfig, "No gene is selected.");
             return;
         end
         fprintf('%d genes are selected.\n', sum(ptsSelected));        

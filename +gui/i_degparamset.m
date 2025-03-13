@@ -30,7 +30,7 @@ else
         assert((minabsolfc >= 0) && (minabsolfc <= 100));
         assert((apvaluecut >= 0) && (apvaluecut <= 1));
     catch
-        errordlg('Invalid input.');
+        gui.myErrordlg(parentfig, 'Invalid input.');
         return;
     end
     answer = gui.myQuestdlg(parentfig, 'Sort DE genes by adjusted P-value or fold change?','',...

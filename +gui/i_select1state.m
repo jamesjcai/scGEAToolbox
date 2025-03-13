@@ -146,7 +146,7 @@ if tf2 == 1
                 newpickclabel = 'ExternalVariable';
             catch ME
                 thisc = [];
-                errordlg(ME.message);
+                gui.myErrordlg(parentfig, ME.message, ME.identifier);
                 return;
             end
         otherwise % other properties
@@ -214,12 +214,4 @@ end
     end
 
 
-        % if isempty(thisc)
-        %     errordlg('Undefined');
-        %     return;
-        % end
-        % if numel(unique(thisc))==1
-        %     warndlg("Cannot compare with an unique group");
-        %     return;
-        % end
-    end
+end

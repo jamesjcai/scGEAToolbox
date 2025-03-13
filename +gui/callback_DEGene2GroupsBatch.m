@@ -19,12 +19,12 @@ if strcmp(runenrichr,'Cancel'), return; end
 
 [paramset] = gui.i_degparamset;
 
-fw = gui.gui_waitbar_adv;
+fw = gui.myWaitbar(FigureHandle);
 for k=1:length(CellTypeList)
    
-    gui.gui_waitbar_adv(fw, ...
-        (k-1)/length(CellTypeList), ...
-        sprintf('Processing %s ...', CellTypeList{k}));
+    gui.myWaitbar(FigureHandle, fw, false, '', ...
+        sprintf('Processing %s ...', CellTypeList{k}), ...
+        (k-1)/length(CellTypeList));
 
     outfile = sprintf('%s_%s_vs_%s_%s.xlsx', ...
         prefixtag, ...
@@ -103,7 +103,7 @@ for k=1:length(CellTypeList)
 
     end
 end
-gui.gui_waitbar_adv(fw);
+gui.myWaitbar(FigureHandle, fw);
 
 answer=gui.myQuestdlg(FigureHandle, sprintf('Result files saved. Open the folder %s?', outdir), '');
 if strcmp(answer,'Yes'), winopen(outdir); end

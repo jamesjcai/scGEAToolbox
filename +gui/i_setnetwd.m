@@ -1,5 +1,9 @@
-function [done] = i_setnetwd(~, ~)
+function [done] = i_setnetwd(src, ~)
+
+[parentfig] = gui.gui_getfigsce(src);
 [done] = gui.i_setwrkdir('netanalywrkpath');
 if done
-     waitfor(helpdlg("Network analysis working directory is set successfully.", ''));
+     waitfor(gui.myHelpdlg(parentfig, ...
+         "Network analysis working directory is " + ...
+         "set successfully."));
 end

@@ -83,7 +83,7 @@ function i_Brush4MarkersLASSO(src, ~, sce, uselasso)
         end
     catch ME
         if uselasso, gui.myWaitbar(FigureHandle, fw, true); end
-        errordlg(ME.message);
+        gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
         rethrow(ME);
     end
     
@@ -118,11 +118,11 @@ end
 function idx = LRDETest(X, y, k)
     n = size(X, 1);
     p_val = zeros(n, 1);
-    fw = gui.gui_waitbar_adv;
+    fw = gui.myWaitbar(FigureHandle);
     % Calculate p-values for each row of data_use
     for x = 1:size(X, 1)
         if mod(x,5)==0
-            gui.gui_waitbar_adv(fw, x/n);
+            gui.myWaitbar(FigureHandle, fw, false, '', '', , x/n);
         end
         model_data = table(X(:,x), y(:), 'VariableNames', {'GENE', 'Group'});
         fmla = 'Group ~ GENE';
@@ -134,5 +134,5 @@ function idx = LRDETest(X, y, k)
         p_val(x) = chi2cdf(lrtest_stat, model1.NumPredictors - model2.NumPredictors, 'upper');
     end
     [~, idx] = mink(p_val, k);
-    gui.gui_waitbar_adv(fw);
+    gui.myWaitbar(FigureHandle, fw);
 end

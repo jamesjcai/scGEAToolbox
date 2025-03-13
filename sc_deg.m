@@ -1,4 +1,5 @@
-function [T, Tup, Tdn] = sc_deg(X, Y, genelist, methodid, guiwaitbar, FigureHandle)
+function [T, Tup, Tdn] = sc_deg(X, Y, genelist, methodid, ...
+    guiwaitbar, parentfig)
 %SC_DEG - DEG analysis using Mann–Whitney U test or t-test
 %
 % Inputs:
@@ -20,7 +21,7 @@ function [T, Tup, Tdn] = sc_deg(X, Y, genelist, methodid, guiwaitbar, FigureHand
         genelist string = string(1:size(X, 1))'  % List of genes (optional)
         methodid (1,1) double {mustBeMember(methodid, [1, 2])} = 1  % Method choice (1: Mann–Whitney, 2: t-test)
         guiwaitbar (1,1) logical = false  % Show waitbar (optional)
-        FigureHandle (1,1) matlab.ui.Figure = []
+        parentfig (1,1) matlab.ui.Figure = []
     end
     
     ng = size(X, 1);  % Number of genes
@@ -44,11 +45,19 @@ function [T, Tup, Tdn] = sc_deg(X, Y, genelist, methodid, guiwaitbar, FigureHand
     Y = Z(:, nx+1:end);
     
     % Initialize waitbar if requested
-    if guiwaitbar, fw = gui.gui_waitbar_adv; end
+    if guiwaitbar
+        fw = gui.myWaitbar(parentfig);
+    end
     
     % Loop through genes
     for k = 1:ng
-        if guiwaitbar, gui.gui_waitbar_adv(fw, k / ng); end
+        if guiwaitbar            
+            % gui.gui_waitbar_adv(fw, k / ng); 
+            % fw = waitbar(k / ng, fw);
+            fw = gui.myWaitbar(parentfig, fw, false, '','', k / ng);
+        end
+
+        
         
         x = X(k, :);
         y = Y(k, :);
@@ -82,7 +91,9 @@ function [T, Tup, Tdn] = sc_deg(X, Y, genelist, methodid, guiwaitbar, FigureHand
         [~, ~, ~, p_val_adj] = pkg.fdr_bh(p_val);
     end
     
-    if guiwaitbar, gui.gui_waitbar_adv(fw); end
+    if guiwaitbar
+        gui.myWaitbar(parentfig, fw); 
+    end
     gene = genelist(:);
     
     % Create results table
@@ -92,6 +103,6 @@ function [T, Tup, Tdn] = sc_deg(X, Y, genelist, methodid, guiwaitbar, FigureHand
     % Process up- and down-regulated genes if requested
     if nargout > 1
         [paramset] = gui.i_degparamset(true);
-        [Tup, Tdn] = pkg.e_processDETable(T, paramset, FigureHandle);
+        [Tup, Tdn] = pkg.e_processDETable(T, paramset, parentfig);
     end
 end

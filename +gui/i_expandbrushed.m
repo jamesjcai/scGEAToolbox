@@ -16,7 +16,7 @@ if ~isscalar(unique(c)) && isscalar(unique(c(ptsSelected)))
                 ptsSelected = c == uptsSelected;
                 updated = true;
             else
-                errordlg('More than one group of brushed cells');
+                gui.myErrordlg(parentfig, 'More than one group of brushed cells');
                 return;
             end
         case 'Brushed cells only'

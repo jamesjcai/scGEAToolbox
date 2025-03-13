@@ -59,7 +59,7 @@ end
 
 if tf1 ~= 1, return; end
 if pkg.isnetavl ~= 1
-    errordlg('This function requires internet access to retrieve information needed.');
+    gui.myErrordlg(parentfig, 'This function requires internet access to retrieve information needed.');
     return;
 end
 

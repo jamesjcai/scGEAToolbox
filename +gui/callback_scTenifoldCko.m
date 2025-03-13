@@ -11,7 +11,8 @@ end
 if ~gui.gui_showrefinfo('scTenifoldCko [Unpublished]', FigureHandle), return; end
 
 if ~(isscalar(unique(sce.c_batch_id)) && numel(unique(sce.c_cell_type_tx))==2)
-    errordlg(sprintf('This function requires data in one batch and has two cell types.\nisscalar(unique(sce.c_batch_id)) && numel(unique(sce.c_cell_type_tx))==2'),'');
+    gui.myErrordlg(FigureHandle, sprintf(['This function requires data in one batch and has' ...
+        ' two cell types.\nisscalar(unique(sce.c_batch_id)) && numel(unique(sce.c_cell_type_tx))==2']),'');
     return;
 end
 
@@ -149,7 +150,7 @@ switch Cko_approach
         [Tcell] = run.py_scTenifoldCko_gene(sce, celltype1, celltype2, targetg, ...
             targettype, wkdir, true, prepare_input_only);
     otherwise
-        errordlg('Invalid option.','');
+        gui.myErrordlg(FigureHandle, 'Invalid option.','');
         return;
 end
 

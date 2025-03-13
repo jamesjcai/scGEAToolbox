@@ -230,7 +230,7 @@ end
     function ExportGeneNames(~, ~)
         ptsSelected = logical(h.BrushData.');
         if ~any(ptsSelected)
-            warndlg("No gene is selected.");
+            warning("No gene is selected.");
             return;
         end
         fprintf('%d genes are selected.\n', sum(ptsSelected));
@@ -255,7 +255,7 @@ end
     function EnrichrHVGs(~, ~)
         ptsSelected = logical(h.BrushData.');
         if ~any(ptsSelected)
-            warndlg("No gene is selected.");
+            warning("No gene is selected.");
             return;
         end
         fprintf('%d genes are selected.\n', sum(ptsSelected));

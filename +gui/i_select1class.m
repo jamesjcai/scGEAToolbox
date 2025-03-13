@@ -135,7 +135,7 @@ end
         %    end
 end
     % if isempty(thisc)
-    %     errordlg('Undefined');
+    %     gui.myErrordlg(parentfig, 'Undefined');
     %     return;
     % end
     % if numel(unique(thisc))==1

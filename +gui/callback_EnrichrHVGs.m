@@ -17,14 +17,14 @@ answer = gui.myQuestdlg(FigureHandle, 'Which HVG detecting method to use?', '', 
                 sc_hvg(sce.X, sce.g, true, true);
             catch ME
                 gui.myWaitbar(FigureHandle, fw, true);
-                errordlg(ME.message,'','modal');
+                gui.myErrordlg(FigureHandle, ME.message);
             end
             gui.myWaitbar(FigureHandle, fw, true);
         case 'Splinefit Method [PMID:31697351]'            
             try
                gui.sc_scatter3genes(sce.X, sce.g, true, true, FigureHandle);
             catch ME
-               errordlg(ME.message,'','modal');
+               gui.myErrordlg(FigureHandle, ME.message);
             end            
         otherwise
             return;

@@ -103,7 +103,7 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
             end
             if isempty(s)
                 gui.myWaitbar(FigureHandle, fw, true);
-                errordlg(sprintf("%s runtime error.", attribtag),"")
+                gui.myErrordlg(FigureHandle, sprintf("%s runtime error.", attribtag),"")
                 return; 
             end
             [yesx, idx] = ismember(attribtag, sce.list_cell_attributes(1:2:end));

@@ -113,7 +113,7 @@ bb = 'No, just show values (heatmap)';
                     try
                         [posg, ctselected] = gui.i_selectMSigDBGeneSets(speciestag);
                     catch ME
-                        errordlg(ME.message);
+                        gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
                         return;
                     end
                     ttxt = ctselected;
@@ -254,7 +254,7 @@ bb = 'No, just show values (heatmap)';
                             speciestag, methodid);
                     catch ME
                         if methodid ~= 4, gui.myWaitbar(FigureHandle, fw,true); end
-                        errordlg(ME.message);
+                        gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
                         return;
                     end
                     idx = find(upper(tflist) == upper(string(listitems{indx2})));
@@ -276,7 +276,7 @@ bb = 'No, just show values (heatmap)';
                     return;
             end
             %catch ME
-            %    %errordlg(ME.message);
+            %    %gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
             %    return;
             %end
 

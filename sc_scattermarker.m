@@ -301,7 +301,7 @@ end
             z = abs(randn(300, 1));
         end
         if isempty(z)
-            warndlg('No expression');
+            warning('No expression');
             scatter(x, y, '.');
         else
             stem3(x, y, z, 'marker', 'none', 'color', 'm');

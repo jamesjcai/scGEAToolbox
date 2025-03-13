@@ -142,7 +142,7 @@ outdir = tempdir;
 Xt=log1p(sc_norm(sce.X));
 images = {};
 
- fw = gui.gui_waitbar_adv;
+ fw = gui.myWaitbar(FigureHandle);
  success=false;
 
  for kk=1:numel(idxneedplot)
@@ -163,10 +163,9 @@ images = {};
         % assignin("base","g",sce.g);
         % assignin("base","c",c);
         % assignin("base","cL",cL);
-        % assignin("base","posg",posg);
+        % assignin("base","posg",posg);       
         
-        % gui.gui_waitbar_adv(fw,(k-1)./height(T));
-        gui.gui_waitbar_adv(fw,(kk-1)./numel(idxneedplot));
+        gui.myWaitbar(FigureHandle, fw, false, '', '',(kk-1)./numel(idxneedplot));
         
     suc1=false;
     try
@@ -198,7 +197,7 @@ images = {};
 
     success = suc1 & suc2;
  end
- gui.gui_waitbar_adv(fw);
+ gui.myWaitbar(FigureHandle, fw);
  if ~success
      gui.myHelpdlg(FigureHandle, 'All figure files are not saved.');
      winopen(outdir);

@@ -25,7 +25,7 @@ end
 
     n = length(listitems);
     if n < 2
-        errordlg('Need at least two grouping variables (e.g., BATCH_ID, CLUSTER_ID, or CELL_TYPE_TXT)');
+        gui.myErrordlg(parentfig, 'Need at least two grouping variables (e.g., BATCH_ID, CLUSTER_ID, or CELL_TYPE_TXT)');
         return;
     end
 
@@ -47,7 +47,8 @@ end
             if allowsingle
                 [thisc1, clabel1] = i_getidx(indx2(1));
             else
-                warndlg('Please select 2 grouping variables.','');
+                gui.myWarndlg(parentfig, ...
+                    'Please select 2 grouping variables.','');
                 return;                
             end
         else
@@ -55,16 +56,6 @@ end
             [thisc2, clabel2] = i_getidx(indx2(2));
         end
     end
-
-    % if isempty(thisc)
-    %     errordlg('Undefined');
-    %     return;
-    % end
-    % if numel(unique(thisc))==1
-    %     warndlg("Cannot compare with an unique group");
-    %     return;
-    % end
-
 
     function [thisc, clabel] = i_getidx(indx)
         clabel = listitems{indx};

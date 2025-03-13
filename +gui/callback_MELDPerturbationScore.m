@@ -28,12 +28,12 @@ try
     [score, T] = run.py_MELD(sce.X, id);
     if isempty(score) || size(score, 1) ~= size(sce.X, 2)
         %gui.myWaitbar(FigureHandle, fw);
-        errordlg("MELD Running Error");
+        gui.myErrordlg(FigureHandle, "MELD Running Error");
         return;
     end
 catch ME
     %gui.myWaitbar(FigureHandle, fw);
-    errordlg(ME.message);
+    gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
     rethrow(ME);
 end
 % gui.myWaitbar(FigureHandle, fw);

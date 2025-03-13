@@ -31,7 +31,7 @@ try
     end
 catch ME
     if showwaitbar, gui.myWaitbar(parentfig, fw, true); end
-    errordlg(ME.message);
+    gui.myErrordlg(parentfig, ME.message, ME.identifier);
     return;
 end
 if showwaitbar, gui.myWaitbar(parentfig, fw); end

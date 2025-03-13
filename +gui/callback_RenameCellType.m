@@ -4,7 +4,7 @@ requirerefresh = false;
 [FigureHandle, sce] = gui.gui_getfigsce(src);
 
 if isempty(sce.c_cell_type_tx)
-    errordlg('sce.c_cell_type_tx undefined');
+    gui.myErrordlg(FigureHandle, 'sce.c_cell_type_tx undefined');
     return;
 end
 

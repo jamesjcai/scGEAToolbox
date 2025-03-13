@@ -66,7 +66,7 @@ if tf == 1
         end
     catch ME
         gui.myWaitbar(parentfig, fw);
-        errordlg(ME.message)
+        gui.myErrordlg(parentfig, ME.message)
         rethrow(ME)
     end
     gui.myWaitbar(parentfig, fw);

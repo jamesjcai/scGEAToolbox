@@ -24,7 +24,7 @@ try
     assert((nsubsmpl >= 10) && (nsubsmpl <= 50));
     assert((csubsmpl >= 200) && (nsubsmpl <= 5000));
 catch
-    errordlg('Invalid parameter value(s).');
+    gui.myErrordlg(parentfig, 'Invalid parameter value(s).');
     return;
 end
 

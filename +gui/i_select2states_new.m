@@ -41,9 +41,9 @@ end
 
     n = length(listitems);
     if n < 2
-        warndlg(['This function requires at least two ', ...
+       gui.myWarndlg(parentfig, ['This function requires at least two ', ...
                 'grouping variables (e.g., BATCH_ID, ', ...
-                'CLUSTER_ID, or CELL_TYPE_TXT).']);           
+                'CLUSTER_ID, or CELL_TYPE_TXT).']);
         return;
     end
 
@@ -60,7 +60,8 @@ end
     end
     if tf2 == 1
         if length(indx2) ~= 2
-            warndlg('Please select 2 grouping variables.');
+            gui.myWarndlg(parentfig, ...
+                'Please select 2 grouping variables.');
             return;
         end
         [thisc1, clabel1] = i_getidx(indx2(1));

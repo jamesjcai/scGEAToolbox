@@ -21,7 +21,7 @@ end
 
 [y, idx] = ismember(upper(glist), upper(sce.g));
 if ~all(y)
-    errordlg('Unspecific running error.');
+    gui.myErrordlg(FigureHandle, 'Unspecific running error.');
     return;
 end
 sce.g(idx) = renamedglist;

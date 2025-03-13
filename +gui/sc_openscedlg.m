@@ -332,8 +332,16 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
             if isempty(acc), return; end
             %acc = strtrim(deblank(acc{1}));
             %acc = strrep(acc,' ','');
-            acc = regexprep(acc{1},'[^a-zA-Z0-9,;]','');
+            acc = regexprep(acc{1},'[^a-zA-Z0-9,;\-]','');
             if isempty(acc) || ~strlength(acc) > 4, return; end
+            if contains(acc,'-')
+                accx = pkg.i_expandrange(acc);
+                if strcmp('Yes', gui.myQuestdlg(parentfig, sprintf('Expand accession number series to: %s?', accx)))
+                    acc = accx;
+                else
+                    acc = regexprep(acc,'[^a-zA-Z0-9,;]','');
+                end
+            end
             if strlength(acc) > 4 && ~isempty(regexp(acc, 'G.+', 'once'))
                 accv = unique(strsplit(acc, {',', ';', ' '}), 'stable');
                 if length(accv) > 1

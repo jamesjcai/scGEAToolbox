@@ -71,7 +71,7 @@ function callback_Dotplot(src, ~)
         try
             gui.i_dotplot(Xt, sce.g, c, cL, glist, true, 'Dotplot', FigureHandle);
         catch ME
-            errordlg(ME.message);
+            gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
         end
     % end
 end

@@ -41,7 +41,7 @@ switch selecteditem
         try
             [posg, ttxt] = gui.i_selectMSigDBGeneSet(stag);
         catch ME
-            errordlg(ME.message);
+            gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
             return;
         end
         if isempty(posg) || isempty(ttxt), return; end

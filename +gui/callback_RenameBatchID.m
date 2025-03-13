@@ -6,7 +6,7 @@ requirerefresh = false;
 
 if isempty(sce.c_batch_id)
     sce.c_batch_id = string(ones(sce.NumCells, 1));
-    %errordlg('sce.c_batch_id undefined');
+    %gui.myErrordlg(FigureHandle, 'sce.c_batch_id undefined');
     %return;
 end
 %answer = gui.myQuestdlg(FigureHandle, 'Rename batch ID?');

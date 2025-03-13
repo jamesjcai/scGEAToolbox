@@ -39,12 +39,12 @@ try
     % end
     if isempty(isDoublet) || isempty(doubletscore)
         %gui.myWaitbar(FigureHandle, fw);
-        errordlg("Running Error.");
+        gui.myErrordlg(FigureHandle, "Running Error.");
         return;
     end
 catch ME
     %gui.myWaitbar(FigureHandle, fw);
-    errordlg(ME.message);
+    gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
     rethrow(ME);
 end
 %gui.myWaitbar(FigureHandle, fw);

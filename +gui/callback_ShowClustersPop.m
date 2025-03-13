@@ -15,20 +15,14 @@ if max(c)==1
     return;
 end
 
-%    fw = gui.gui_waitbar_adv;
-    SCEV=cell(max(c),1);
 
+   SCEV=cell(max(c),1);
    try
         for k=1:max(c)
-            % gui.gui_waitbar_adv(fw, ...
-            %     (k-1)/max(c), ...
-            %     sprintf('Processing %s ...', cL{k}));
-            % SCEV{k}=sce.selectcells(c==k);
             SCEV{k} = c==k;
         end
     catch ME
-       % gui.gui_waitbar_adv(fw);
-        errordlg(ME.message);
+        gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
         return;
     end
 
@@ -40,7 +34,7 @@ end
     idxx = cmv;
     [cmx] = countmember(cmv, c);
 
-%gui.gui_waitbar_adv(fw);
+
 
 %answer = gui.myQuestdlg(FigureHandle, 'Sort by size of cell groups?');
 %if strcmpi(answer, 'Yes')
@@ -87,7 +81,7 @@ end
 hx.addCustomButton('off', @in_scgeatoolsce, "icon-mat-touch-app-10.gif", 'Extract and Work on Separate SCEs...');
 hx.show(FigureHandle);
 catch ME
-    errordlg(ME.message);
+    gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
 end
 
     function in_scgeatoolsce(~,~)
@@ -135,7 +129,7 @@ end
                 end
                 disp(['User selected: ', seltpath]);
                 if ~isfolder(seltpath)
-                    errordlg('Not a folder.');
+                    gui.myErrordlg(FigureHandle, 'Not a folder.');
                     return;
                 end
                

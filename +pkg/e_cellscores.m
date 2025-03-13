@@ -15,7 +15,8 @@ if nargin < 1, X = []; end
 pw1 = fileparts(mfilename('fullpath'));
 
 try
-    cellscoresfile = fullfile(pw1, '..', 'resources', 'CellScores', 'cellscores.xlsx');
+    cellscoresfile = fullfile(pw1, '..', 'resources', 'CellScores', ...
+        'cellscores.xlsx');
     T = readtable(cellscoresfile, 'Sheet', 'Sheet1', ...
         'ReadVariableNames', true);
 catch ME

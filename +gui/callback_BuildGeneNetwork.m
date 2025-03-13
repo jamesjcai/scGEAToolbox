@@ -26,18 +26,18 @@ function callback_BuildGeneNetwork(src, ~)
             
             x = Xt(i, :);
             
-            fw = gui.gui_waitbar_adv;
+            fw = gui.myWaitbar(FigureHandle);
             n = size(x,1);
             A = zeros(n);
             for k=1:n
-                gui.gui_waitbar_adv(fw,k/n);
+                gui.myWaitbar(FigureHandle, fw, false, '', '', k/n);
                 for l=1:n
                     if k~=l
                         A(k,l) = pkg.e_xicor(x(k,:),x(l,:));
                     end
                 end
             end
-            gui.gui_waitbar_adv(fw);
+            gui.myWaitbar(FigureHandle, fw);
         otherwise
             return;
     end
@@ -52,7 +52,7 @@ function callback_BuildGeneNetwork(src, ~)
         sc_grnview(A, glist, [], FigureHandle);
     catch ME
         cannotview = true;
-        errordlg(ME.message);
+        gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
     end
     if cannotview
         try
@@ -72,7 +72,7 @@ function callback_BuildGeneNetwork(src, ~)
                 end
             end
         catch ME
-            errordlg(ME.message);
+            gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
             cannotsave = true;
         end
     end

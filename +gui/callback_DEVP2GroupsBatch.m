@@ -15,12 +15,12 @@ function callback_DEVP2GroupsBatch(src, ~)
     [paramset] = gui.i_degparamset(true);
     
     % ------------------------------------------ DE
-    fw = gui.gui_waitbar_adv;
+    fw = gui.myWaitbar(FigureHandle);
     for k=1:length(CellTypeList)
        
-        gui.gui_waitbar_adv(fw, ...
-            (k-0.5)/length(CellTypeList), ...
-            sprintf('DE - Processing %s ...', CellTypeList{k}));
+        gui.myWaitbar(FigureHandle, fw, false, '', ...
+            sprintf('DE - Processing %s ...', CellTypeList{k}), ...
+            (k-0.5)/length(CellTypeList));
     
         outfile = sprintf('%s_DE_%s_vs_%s_%s.xlsx', ...
             prefixtag, ...
@@ -76,15 +76,15 @@ function callback_DEVP2GroupsBatch(src, ~)
         % end
         
     end
-    gui.gui_waitbar_adv(fw);
+    gui.myWaitbar(FigureHandle, fw);
    
     
     % ------------------------------------------ DV
-    fw = gui.gui_waitbar_adv;
+    fw = gui.myWaitbar(FigureHandle);
     for k=1:length(CellTypeList)
-        gui.gui_waitbar_adv(fw, ...
-            (k-0.5)/length(CellTypeList), ...
-            sprintf('DV - Processing %s ...', CellTypeList{k}));
+        gui.myWaitbar(FigureHandle, fw, false, '', ...
+            sprintf('DV - Processing %s ...', CellTypeList{k}), ...
+            (k-0.5)/length(CellTypeList));
         idx = sce.c_cell_type_tx == CellTypeList{k};
         sce1 = sce.selectcells(i1&idx);
         sce1 = sce1.qcfilter;
@@ -156,7 +156,7 @@ function callback_DEVP2GroupsBatch(src, ~)
             end
     
     end
-    gui.gui_waitbar_adv(fw);
+    gui.myWaitbar(FigureHandle, fw);
     
     % ----------------------------- DP
     ctag = {"H", "C2", "C5", "C6", "C7"}';
@@ -173,12 +173,12 @@ function callback_DEVP2GroupsBatch(src, ~)
                         sprintf('msigdb_%s.mat', ctag{c}));
         load(dbfile,'setmatrx','setnames','setgenes');
         
-        fw = gui.gui_waitbar_adv;
+        fw = gui.myWaitbar(FigureHandle);
         sceX = log1p(sc_norm(sce.X));
         for k=1:length(CellTypeList)
-            gui.gui_waitbar_adv(fw, ...
-                (k-0.5)/length(CellTypeList), ...
-                sprintf('DP - Processing %s ...', CellTypeList{k}));
+            gui.myWaitbar(FigureHandle, fw, false, '', ...
+                sprintf('DP - Processing %s ...', CellTypeList{k}), ...
+                (k-0.5)/length(CellTypeList));
         
             outfile = sprintf('%s_DP_%s_vs_%s_%s.xlsx', ...
                 prefixtag, ...
@@ -209,7 +209,7 @@ function callback_DEVP2GroupsBatch(src, ~)
                 warning(ME.message);
             end
         end
-        gui.gui_waitbar_adv(fw);
+        gui.myWaitbar(FigureHandle, fw);
     end
 
     Tnt = table(ctag, ccat);

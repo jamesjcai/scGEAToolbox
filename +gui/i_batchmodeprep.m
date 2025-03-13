@@ -9,7 +9,7 @@ function [done, CellTypeList, i1, i2, cL1, cL2,...
     CellTypeList = []; i1=[]; i2=[]; cL1=[]; cL2=[]; outdir=[];
     
     % if isscalar(unique(sce.c_cell_type_tx))
-    %     warndlg('Only one cell type or cell type is undetermined.','');
+    %     warning('Only one cell type or cell type is undetermined.','');
     %     return;
     % end
     
@@ -20,7 +20,7 @@ function [done, CellTypeList, i1, i2, cL1, cL2,...
     [thisc, clabel] = in_select1class(sce, false, parentfig);
     if isempty(thisc), return; end
     if strcmp(clabel,'Cell Type')
-        helpdlg('Cannot select ''Cell Type'' as grouping varialbe.');
+        gui.myHelpdlg(parentfig, ('Cannot select ''Cell Type'' as grouping varialbe.');
         return;
     end
     
@@ -196,7 +196,7 @@ end
         listitems = natsort(string(cLi));
         n = length(listitems);
         if n < 2
-            errordlg('Need at least two groups.');
+            gui.myErrordlg(parentfig, 'Need at least two groups.');
             return;
         end
         [indxx, tfx] = listdlg('PromptString', {'Select two groups:'}, ...
@@ -206,7 +206,7 @@ end
             'ListSize', [220, 300]);
         if tfx == 1
             if numel(indxx) ~= 2
-                errordlg('Please select 2 groups');
+                gui.myErrordlg(parentfig, 'Please select 2 groups');
                 return;
             end
             [y1, idx1] = ismember(listitems(indxx(1)), cLi);

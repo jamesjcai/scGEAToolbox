@@ -137,7 +137,7 @@ Z = zeros(length(glist), length(cL));
             set(gca, 'XTickLabel', tg(:))
             cL = tg;
         else
-            errordlg('Wrong input.');
+            gui.myErrordlg(parentfig, 'Wrong input.');
         end
     end    
 
@@ -230,7 +230,7 @@ Z = zeros(length(glist), length(cL));
         try
             gui.i_dotplot(sce.X, sce.g, c, cL, MX);
         catch ME
-            errordlg(ME.message);
+            gui.myErrordlg(parentfig, ME.message, ME.identifier);
         end
     end
     

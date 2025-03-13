@@ -17,7 +17,7 @@ function [requirerefresh] = callback_SubtypeAnnotation(src, ~)
     ctypes = unique(string(sce.c_cell_type_tx));
     [y] = ismember(upper(ctypes), upper(string(unique(T.CellType))));
     if ~any(y)
-        errordlg('No primary cell type available in your data is supported by cellsubtype.xlsx.');
+        gui.myErrordlg(FigureHandle, 'No primary cell type available in your data is supported by cellsubtype.xlsx.');
         return;
     end
     ctypelist = ctypes(y);

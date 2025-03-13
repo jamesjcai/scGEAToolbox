@@ -49,7 +49,7 @@ end
             values = {sce.c_cell_id, ci(:)};
             export2wsdlg(labels, vars, values);
         else
-            errordlg(['This function is not available for standalone application.' ...
+            gui.myErrordlg(FigureHandle, ['This function is not available for standalone application.' ...
                 ' Run scgeatool.m in MATLAB to use this function.']);                
         end            
     end

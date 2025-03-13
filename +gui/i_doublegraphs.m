@@ -99,7 +99,7 @@ axistrig = true;
             msgfig = export2wsdlg(labels, vars, values);
             waitfor(msgfig);
         else
-            errordlg('This function is not available for standalone application.');
+            gui.myErrordlg(parentfig, 'This function is not available for standalone application.');
         end
     end
 

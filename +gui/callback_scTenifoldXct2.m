@@ -95,7 +95,7 @@ end
 
 % ---- export result
 if ~prepare_input_only && ~iscomplete
-    errordlg('Running time error.', '');
+    gui.myErrordlg(FigureHandle, 'Running time error.');
 end
 
 if ~isempty(T)
@@ -162,7 +162,7 @@ function [i1, i2, cL1, cL2] = aaa(listitems, ci, FigureHandle)
        
     if tf == 1
         if numel(indx) ~= 2
-            errordlg('Please select 2 groups');
+            gui.myErrordlg(FigureHandle, 'Please select 2 groups');            
             return;
         end
         cL1 = listitems(indx(1));

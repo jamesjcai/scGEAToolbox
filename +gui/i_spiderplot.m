@@ -43,7 +43,7 @@ hx.show(parentfig);
 
 
 %catch ME
-%    errordlg(ME.message);
+%    gui.myErrordlg(parentfig, ME.message, ME.identifier);
 %end
 
 

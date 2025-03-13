@@ -52,13 +52,13 @@ answer = gui.myQuestdlg(FigureHandle, 'Using MATLAB engine for Python or Calling
 
                         if isempty(s) || isequal(sce.s, s)
                             % gui.myWaitbar(FigureHandle, fw);
-                            errordlg("Harmonypy Running Error");
+                            gui.myErrordlg(FigureHandle, "Harmonypy Running Error");
                             return;
                         end
                         sce.s = s;
                     % catch ME
                     %     %gui.myWaitbar(FigureHandle, fw,true);
-                    %     errordlg(ME.message);
+                    %     gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
                     %     %rethrow(ME);
                     %     return;
                     % end

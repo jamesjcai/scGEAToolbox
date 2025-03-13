@@ -1,4 +1,5 @@
 function i_resetrngseed(src, ~)
+
 [parentfig, ~] = gui.gui_getfigsce(src);
     answer = gui.myQuestdlg(parentfig, "Set random seed.","", ...
         {'Default Seed', 'Random Seed', 'Set Seed'}, 'Default Seed');
@@ -16,7 +17,7 @@ function i_resetrngseed(src, ~)
             seedValue = gui.i_inputnumk(seedValue, 0, 2^32, ...
                 "Random number seed, specified as a nonnegative integer less than 2^32");
             if isempty(seedValue) || isnan(seedValue)
-                errordlg('Please enter a valid numeric seed', 'Invalid Input');
+                gui.myErrordlg(parentfig, 'Please enter a valid numeric seed', 'Invalid Input');
             else
                 rng(seedValue);
                 gui.myHelpdlg(parentfig, sprintf('Random seed set to: %d', seedValue));

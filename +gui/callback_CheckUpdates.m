@@ -6,7 +6,7 @@ function callback_CheckUpdates(src, ~)
     try
         [majneedupdate, v_old, v_new] = pkg.i_majvercheck;
     catch ME
-        errordlg('Could not access server.');
+        gui.myErrordlg(FigureHandle, 'Could not access server.');
         return;
     end
     if majneedupdate
@@ -21,7 +21,8 @@ function callback_CheckUpdates(src, ~)
                 v_new, v_old));
             if strcmp(answer, 'Yes')
                 try
-                    gui.gui_waitbar_adv(fw,1/5,'Downloading...');
+                    fw = gui.myWaitbar(FigureHandle);
+                    gui.myWaitbar(FigureHandle, fw, false, '', 'Downloading...', 1/5);
                     instURL = 'https://api.github.com/repos/jamesjcai/scGEAToolbox/releases/latest';
                     %[~, instName] = fileparts(fileparts(fileparts(instURL)));
                     instRes = webread(instURL);
@@ -34,10 +35,10 @@ function callback_CheckUpdates(src, ~)
                     %toolboxURL = sprintf('https://github.com/jamesjcai/scGEAToolbox/releases/download/v%s/scGEAToolbox.mltbx', v2);
                     %tempZip = fullfile(tempdir, "ToolboxUpdate.mltbx");
                     websave(tempZip, toolboxURL);
-                    gui.gui_waitbar_adv(fw,2/5,'Installing...');
+                    gui.myWaitbar(FigureHandle, fw, false, '', 'Installing...', 2/5);
                     warning off
                     matlab.addons.install(tempZip);
-                    gui.gui_waitbar_adv(fw,3/5,'Post-install processing...');
+                    gui.myWaitbar(FigureHandle, fw, false, '', 'Post-install processing...', 3/5);
                     pause(2)
     
                     versionfile = fullfile(toolboxPath, 'VERSION.mat');
@@ -46,13 +47,13 @@ function callback_CheckUpdates(src, ~)
                     end
                     
                 catch ME
-                    errordlg(ME.message,'');
+                    gui.myErrordlg(FigureHandle, ME.message,'');
                     return;
                 end
                 warning on
-                gui.gui_waitbar_adv(fw,5/5,'Update complete!');
+                gui.myWaitbar(FigureHandle, fw, false, '', 'Update complete!', 5/5);
                 pause(3)
-                gui.gui_waitbar_adv(fw);
+                gui.myWaitbar(FigureHandle, fw);
                 if strcmp('Yes', gui.myQuestdlg(FigureHandle, 'Restart SCGEATOOL?'))
                     close(FigureHandle);
                     pause(1);
@@ -62,12 +63,12 @@ function callback_CheckUpdates(src, ~)
             %{
             toolboxPath = fileparts(fileparts(mfilename('fullpath')));
             if isempty(toolboxPath)
-                errordlg("Toolbox not found on MATLAB path!", "Update Error");
+                gui.myErrordlg(FigureHandle, "Toolbox not found on MATLAB path!", "Update Error");
                 return;
             end
 
             if isfile(fullfile(toolboxPath, 'DEVMODE.txt'))
-                errordlg("Upgrade is disabled in development mode.", "Update Blocked");
+                gui.myErrordlg(FigureHandle, "Upgrade is disabled in development mode.", "Update Blocked");
                 return;
             end
 

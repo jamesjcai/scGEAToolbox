@@ -35,12 +35,12 @@ if ~exist(featurestxtfile, 'file')
                 'Pick features.tsv file');
             figure(parentfig);
             if ~(fname2)
-                helpdlg('Action Cancelled.', '');
+                gui.myHelpdlg(parentfig, 'Action Cancelled.', '');
                 return;
             end
             featurestxtfile = fullfile(pathname2, fname2);
         otherwise
-            helpdlg('Action Cancelled.', '');
+            gui.myHelpdlg(parentfig, 'Action Cancelled.', '');
             return;
     end
 else
@@ -49,10 +49,10 @@ else
     switch answer
         case 'Yes'
         case 'No'
-            helpdlg('Action Cancelled.', '');
+            gui.myHelpdlg(parentfig, 'Action Cancelled.', '');
             return;
         otherwise
-            helpdlg('Action Cancelled.', '');
+            gui.myHelpdlg(parentfig, 'Action Cancelled.', '');
             return;
     end
 end
@@ -82,7 +82,7 @@ if ~exist(barcodestxtfile, 'file')
         otherwise
             %[X, g] = sc_readmtxfile(matrixmtxfile, featurestxtfile, [], 2);
             %sce = SingleCellExperiment(X, g);
-            helpdlg('Action Cancelled.', '');
+            gui.myHelpdlg(parentfig, 'Action Cancelled.', '');
             return;
     end
 
@@ -92,11 +92,11 @@ else
     switch answer
         case 'Yes'
         case 'No'
-            %helpdlg('Action Cancelled.','');
+            %gui.myHelpdlg(parentfig, ('Action Cancelled.','');
             %return;
             barcodestxtfile = [];
         otherwise
-            helpdlg('Action Cancelled.', '');
+            gui.myHelpdlg(parentfig, 'Action Cancelled.', '');
             return;
     end
 end

@@ -35,7 +35,7 @@ try
     %gui.myWaitbar(FigureHandle, fw);
 catch ME
     %gui.myWaitbar(FigureHandle, fw);
-    errordlg(ME.message);
+    gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
     return;
 end
 
