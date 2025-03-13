@@ -128,6 +128,7 @@ oldG1 = [];
                 uiwait(msgfig);
             case 'File'
                 [file, path] = uiputfile({'*.txt'; '*.*'}, 'Save as');
+                figure(parentfig);
                 if isequal(file, 0) || isequal(path, 0)
                     return;
                 else
@@ -211,9 +212,14 @@ oldG1 = [];
             '0.50', '0.55', '0.60', ...
             '0.65', '0.70', '0.75', '0.80', '0.85', ...
             '0.90', '0.95 (show 5% of edges)'};
-        [indx, tf] = listdlg('ListString', list, ...
-            'SelectionMode', 'single', ...
-            'ListSize', [220, 300]);
+       if gui.i_isuifig(parentfig)
+            [indx, tf] = gui.myListdlg(parentfig, list, ...
+                'Select a cutoff:'); % Using empty string for prompt
+       else
+            [indx, tf] = listdlg('ListString', list, ...
+                'SelectionMode', 'single', ...
+                'ListSize', [220, 300]);
+       end
         if tf
             if indx == 1
                 cutoff = 0;

@@ -32,6 +32,7 @@ switch answer
             {'*.txt', 'Network Files (*.txt)'; ...
             '*.*', 'All Files (*.*)'}, ...
             'Pick a Network Table File');
+        figure(FigureHandle);
         if isequal(fname, 0), return; end
         tabfile = fullfile(pathname, fname);
         warning off

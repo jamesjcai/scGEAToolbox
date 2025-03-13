@@ -16,7 +16,7 @@ if isempty(wkdir), return; end
 
 
 [~, cL] = grp2idx(sce.c_batch_id);
-[j1, j2, ~, ~] = aaa(cL, sce.c_batch_id);
+[j1, j2, ~, ~] = aaa(cL, sce.c_batch_id, FigureHandle);
 if isempty(j1) || isempty(j2)
     gui.myWarndlg(FigureHandle, ['All cells have the same BATCH_ID. ' ...
         'Two samples are required.']);
@@ -31,7 +31,7 @@ end
 
 
 [~, cL] = grp2idx(sce.c_cell_type_tx);
-[~, ~, celltype1, celltype2] = aaa(cL, sce.c_cell_type_tx);
+[~, ~, celltype1, celltype2] = aaa(cL, sce.c_cell_type_tx, FigureHandle);
 if isempty(celltype1) || isempty(celltype2) 
     gui.myWarndlg(FigureHandle, ['All cells are the same type. ' ...
         'Two different cell types are required.']);
@@ -144,15 +144,22 @@ end
 
 end
 
-function [i1, i2, cL1, cL2] = aaa(listitems, ci)
+function [i1, i2, cL1, cL2] = aaa(listitems, ci, FigureHandle)
     i1 = []; i2 = [];
     cL1 = []; cL2 = [];
     n = length(listitems);
     if n < 2, return; end
-    [indx, tf] = listdlg('PromptString', {'Select two groups:'}, ...
-        'SelectionMode', 'multiple', ...
-        'ListString', listitems, ...
-        'InitialValue', [n - 1, n], 'ListSize', [220, 300]);
+
+
+   if gui.i_isuifig(FigureHandle)
+        [indx, tf] = gui.myListdlg(FigureHandle, listitems, 'Select two groups:');
+   else
+        [indx, tf] = listdlg('PromptString', {'Select two groups:'}, ...
+            'SelectionMode', 'multiple', ...
+            'ListString', listitems, ...
+            'InitialValue', [n - 1, n], 'ListSize', [220, 300]);
+   end
+       
     if tf == 1
         if numel(indx) ~= 2
             errordlg('Please select 2 groups');

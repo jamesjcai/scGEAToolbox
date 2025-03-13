@@ -1,9 +1,11 @@
-function [thisc, clabel, listitems, newpickclabel] = i_select1state_continuous(sce, ...
-    nobaseline, nocustome, noattrib)
+function [thisc, clabel, listitems, newpickclabel] = ...
+        i_select1state_continuous(sce, ...
+            nobaseline, nocustome, noattrib, parentfig)
 
 if nargin < 2, nobaseline = false; end
 if nargin < 3, nocustome = false; end
 if nargin < 4, noattrib = false; end
+if nargin < 5, parentfig = []; end
 
 thisc = [];
 clabel = '';
@@ -54,10 +56,14 @@ if isempty(listitems), return; end
 
 % listitems={'Current Class (C)','Cluster ID','Batch ID',...
 %            'Cell Type','Cell Cycle Phase'};
-[indx2, tf2] = listdlg('PromptString', ...
-    {'Select state/grouping variable:'}, ...
-    'SelectionMode', 'single', 'ListString', listitems, ...
-    'ListSize', [220, 300]);
+            if gui.i_isuifig(parentfig)
+                [indx2, tf2] = gui.myListdlg(parentfig, listitems, 'Select state/grouping variable:');
+            else
+                [indx2, tf2] = listdlg('PromptString', ...
+                    {'Select state/grouping variable:'}, ...
+                    'SelectionMode', 'single', 'ListString', listitems, ...
+                    'ListSize', [220, 300]);
+            end
 
     if tf2 == 1
         clabel = listitems{indx2};
@@ -91,6 +97,7 @@ if isempty(listitems), return; end
                     {'*.txt', 'Variable Data Files (*.txt)'; ...
                     '*.*', 'All Files (*.*)'}, ...
                     'Pick a Variable Data File');
+
                 if isequal(fname, 0), return; end
                 txtfile = fullfile(pathname, fname);
                 try
@@ -130,8 +137,16 @@ if isempty(listitems), return; end
         %     if any(v)
         %valididx=ismember(b(4,:),'double');
         %a=a(valididx);
-        [indx, tf] = listdlg('PromptString', {'Select workspace variable:'}, ...
-            'liststring', b(1, :), 'SelectionMode', 'single', 'ListSize', [220, 300]);
+        
+        
+        if gui.i_isuifig(parentfig)
+            [indx, tf] = gui.myListdlg(parentfig, b(1, :), 'Select workspace variable:');
+        else
+            [indx, tf] = listdlg('PromptString', {'Select workspace variable:'}, ...
+                'liststring', b(1, :), 'SelectionMode', 'single', 'ListSize', [220, 300]);
+        end
+
+
         if tf == 1
             c = evalin('base', a(indx).name);
             x = a(indx).name;
@@ -144,8 +159,14 @@ if isempty(listitems), return; end
         x = '';
         T = sce.table_attributes;
         att = sce.table_attributes.Properties.VariableNames;
-        [indx, tf] = listdlg('PromptString', {'Select a SCE attribute variable:'}, ...
-            'liststring', att, 'SelectionMode', 'single', 'ListSize', [220, 300]);
+        
+        if gui.i_isuifig(parentfig)
+            [indx, tf] = gui.myListdlg(parentfig, att, 'Select a SCE attribute variable:');
+        else
+            [indx, tf] = listdlg('PromptString', {'Select a SCE attribute variable:'}, ...
+                'liststring', att, 'SelectionMode', 'single', 'ListSize', [220, 300]);
+        end
+
         if tf == 1
             x = string(att(indx));
             c = T.(x);

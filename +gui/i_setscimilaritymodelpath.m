@@ -1,6 +1,9 @@
-function [selectedDir] = i_setscimilaritymodelpath(~, ~, parentfig)
+function [selectedDir] = i_setscimilaritymodelpath(src, ~, parentfig)
 
 if nargin<3, parentfig = []; end
+if ~isempty(src)
+    [parentfig] = gui.gui_getfigsce(src);
+end
 selectedDir = '';
 preftagname = 'scimilmodelpath';
 if ispref('scgeatoolbox', preftagname)
@@ -22,31 +25,36 @@ else
         {'Use this', 'Use another', 'Cancel'}, 'Use this');
     switch answer
         case 'Use this'
-            done = true;
+            %done = true;
         case 'Use another'
             if ~ix_setpath
                 return;
             end
-            done = true;
-            gui.myHelpdlg(parentfig, 'Scimilarity model path is set successfully.');
+            %done = true;
+            gui.myHelpdlg(parentfig, ...
+                'Scimilarity model path is set successfully.');
+            return;
         case {'Cancel', ''}
             selectedDir = '';
-            done = false;
+            %done = false;
         otherwise
             selectedDir = '';
-            done = false;
+            %done = false;
     end
 end
 
-if ~done && (isempty(selectedDir) || ~isfolder(selectedDir))
-    gui.myWarndlg(parentfig, 'SCimilarity model path is not set.');
-end
+%if ~done && (isempty(selectedDir) || ~isfolder(selectedDir))
+%    gui.myWarndlg(parentfig, 'SCimilarity model path is not set.');
+%end
 
 
     function [y] = ix_setpath
         y = false;
         promptTitle = 'Select a folder that contains the model';
         selectedDir = uigetdir(pwd, promptTitle);
+        if isvalid(parentfig)
+            figure(parentfig);
+        end
         if selectedDir == 0
             fprintf('Folder selection canceled.\n');
             selectedDir = '';            

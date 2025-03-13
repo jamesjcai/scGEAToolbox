@@ -22,9 +22,16 @@ function [requirerefresh] = callback_SubtypeAnnotation(src, ~)
     end
     ctypelist = ctypes(y);
 
-        [indx2, tf2] = listdlg('PromptString', 'Select Cell Type(s):', ...
-            'SelectionMode', 'multiple', 'ListString', ...
-            cellstr(ctypelist), 'ListSize', [220, 300]);
+        if gui.i_isuifig(FigureHandle)
+            [indx2, tf2] = gui.myListdlg(FigureHandle, cellstr(ctypelist), ...
+                'Select Cell Type(s):');
+        else
+            [indx2, tf2] = listdlg('PromptString', 'Select Cell Type(s):', ...
+                'SelectionMode', 'multiple', 'ListString', ...
+                cellstr(ctypelist), 'ListSize', [220, 300]);
+        end
+
+
         if tf2 ~= 1, return; end
         
         celltypetarget_list = ctypelist(indx2);

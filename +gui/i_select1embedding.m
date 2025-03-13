@@ -1,4 +1,7 @@
-function [thiss, clabel, sce] = i_select1embedding(sce)
+function [thiss, clabel, sce] = i_select1embedding(sce, parentfig)
+
+if nargin<2, parentfig=[]; end
+
 thiss = [];
 clabel = '';
 
@@ -17,9 +20,13 @@ if isempty(listitems)
     %return;
 end
 
-[indx2, tf2] = listdlg('PromptString', ...
-    {'Select embedding:'}, ...
-    'SelectionMode', 'single', 'ListString', listitems, 'ListSize', [220, 300]);
+        if gui.i_isuifig(parentfig)
+            [indx2, tf2] = gui.myListdlg(parentfig, listitems, 'Select embedding:');
+        else
+            [indx2, tf2] = listdlg('PromptString', ...
+                {'Select embedding:'}, ...
+                'SelectionMode', 'single', 'ListString', listitems, 'ListSize', [220, 300]);
+        end
 if tf2 == 1
     clabel = listitems{indx2};
     switch clabel

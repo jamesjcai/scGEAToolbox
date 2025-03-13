@@ -14,9 +14,15 @@ sigtags = sigtags(strlength(sigtags) > 0);
 if ~isempty(sigtags)
     sigtags = [sigtags; "-------------------------"; ...
         "Select scores to make a customized score set..."];
-    [indx1, tf1] = listdlg('PromptString', 'Select a predefined score set', ...
-        'SelectionMode', 'single', 'ListString', ...
-        sigtags, 'ListSize', [260, 300]);
+
+    if gui.i_isuifig(FigureHandle)
+        [indx1, tf1] = gui.myListdlg(FigureHandle, sigtags, 'Select a predefined score set');
+    else
+        [indx1, tf1] = listdlg('PromptString', 'Select a predefined score set', ...
+            'SelectionMode', 'single', 'ListString', ...
+            sigtags, 'ListSize', [260, 300]);
+    end
+
     if tf1 ~= 1, return; end
     if contains(sigtags(indx1), '----'), return; end
 
@@ -27,10 +33,15 @@ if ~isempty(sigtags)
     end
 end
 listitems = natsort(T.ScoreType);
-[indx2, tf2] = listdlg('PromptString', 'Select Scores', ...
-    'SelectionMode', 'multiple', 'ListString', ...
-    listitems, 'ListSize', [260, 300], ...
-    'InitialValue', find(preselected));
+if gui.i_isuifig(FigureHandle)
+    [indx2, tf2] = gui.myListdlg(FigureHandle, listitems, 'Select Scores');
+else
+    [indx2, tf2] = listdlg('PromptString', 'Select Scores', ...
+        'SelectionMode', 'multiple', 'ListString', ...
+        listitems, 'ListSize', [260, 300], ...
+        'InitialValue', find(preselected));
+end
+
 if tf2 ~= 1, return; end
 
 n = length(indx2);

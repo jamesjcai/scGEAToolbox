@@ -55,8 +55,8 @@ end
         else
             [file, path] = uigetfile('python', 'Select Python Interpreter', deflt);
         end
+        figure(parentfig);
         if isequal(file, 0)
-            %disp('User selected Cancel');
             return;
         else
             disp(['User selected: ', fullfile(path, file)]);

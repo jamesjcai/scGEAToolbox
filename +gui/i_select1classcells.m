@@ -19,10 +19,15 @@ switch answer2
         return;
 end
 
-[indxx, tfx] = listdlg('PromptString', {'Select groups'}, ...
-    'SelectionMode', 'multiple', ...
-    'ListString', cLisorted, ...
-    'ListSize', [220, 300]);
+if gui.i_isuifig(parentfig)
+    [indxx, tfx] = gui.myListdlg(parentfig, cLisorted, 'Select groups');
+else
+    [indxx, tfx] = listdlg('PromptString', {'Select groups'}, ...
+        'SelectionMode', 'multiple', ...
+        'ListString', cLisorted, ...
+        'ListSize', [220, 300]);
+end
+
 if tfx == 1
     ptsSelected = ismember(string(thisc), cLisorted(indxx));
     %ptsSelected=ismember(ci,indxx);

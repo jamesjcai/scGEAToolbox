@@ -30,7 +30,6 @@ if isfolder(wkdir)
     cd(wkdir);
 end
 
-
 answer = gui.myQuestdlg(FigureHandle, 'Construct networks de novo or use existing networks in Workspace?', ...
     'Input Networks', {'Construct de novo', 'Use existing'}, 'Construct de novo');
 switch answer
@@ -43,10 +42,16 @@ switch answer
             gui.myHelpdlg(FigureHandle, 'No variable in the WorkSpace.');
             return;
         end
-        [indx, tf] = listdlg('PromptString', {'Select two networks:'}, ...
-            'liststring', b(1, :), ...
-            'SelectionMode', 'multiple', ...
-            'ListSize', [220, 300]);
+
+        if gui.i_isuifig(FigureHandle)
+            [indx, tf] = gui.myListdlg(FigureHandle, b(1,:), ...
+                'Select two networks:');
+        else        
+            [indx, tf] = listdlg('PromptString', {'Select two networks:'}, ...
+                'liststring', b(1, :), ...
+                'SelectionMode', 'multiple', ...
+                'ListSize', [220, 300]);
+        end
         if tf ~= 1, return; end
         if length(indx) ~= 2, gui.myWarndlg(FigureHandle, 'Need two networks.');
             return;
@@ -57,10 +62,16 @@ switch answer
             errordlg('Two networks should be in the same size.');
             return;
         end
-        [indx, tf] = listdlg('PromptString', {'Select the gene list:'}, ...
-            'liststring', b(1, :), ...
-            'SelectionMode', 'single', ...
-            'ListSize', [220, 300]);
+
+        if gui.i_isuifig(FigureHandle)
+            [indx, tf] = gui.myListdlg(FigureHandle, b(1,:), ...
+                'Select a gene list');
+        else        
+            [indx, tf] = listdlg('PromptString', {'Select a gene list:'}, ...
+                'liststring', b(1, :), ...
+                'SelectionMode', 'single', ...
+                'ListSize', [220, 300]);
+        end
         if tf ~= 1, return; end
         glist = evalin('base', a(indx).name);
         if length(glist) ~= size(A0, 1)
@@ -100,8 +111,8 @@ switch answer
             [T] = ten.sctenifoldnet(sce.X(:, i1), sce.X(:, i2), sce.g, ...
                 'nsubsmpl', nsubsmpl, 'csubsmpl', csubsmpl, 'savegrn', savegrn);
         catch ME
-            gui.myWaitbar(FigureHandle, fw);
-            errordlg(ME.message);
+            gui.myWaitbar(FigureHandle, fw, true);
+            gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
             return;
         end
         gui.myWaitbar(FigureHandle, fw);
@@ -143,3 +154,4 @@ if gseaok
     gui.i_exporttable(Tr, true, 'Tgseaoutput', 'GSEAResultTable');
 end
 end
+

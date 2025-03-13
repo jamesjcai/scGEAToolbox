@@ -38,10 +38,16 @@ switch sourcetag
 
         %sce=guidata(FigureHandle);
 
-        [indx, tf] = listdlg('PromptString', {'Select SCEs:'}, ...
-            'liststring', b(1, :), ...
-            'SelectionMode', 'multiple', ...
-            'ListSize', [220, 300]);
+        if gui.i_isuifig(FigureHandle)
+            [indx, tf] = gui.myListdlg(FigureHandle, b(1, :), 'Select SCEs:');
+        else
+            [indx, tf] = listdlg('PromptString', {'Select SCEs:'}, ...
+                'liststring', b(1, :), ...
+                'SelectionMode', 'multiple', ...
+                'ListSize', [220, 300]);
+        end
+
+
         if tf == 1
             if length(indx) < 2
                 gui.myWarndlg(FigureHandle, 'Need at least two selected SCEs.');
@@ -79,7 +85,9 @@ switch sourcetag
 
         [fname, pathname] = uigetfile({'*.mat', 'SCE Data Files (*.mat)'; ...
             '*.*', 'All Files (*.*)'}, ...
-            'Select SCE Data Files', 'MultiSelect', 'on');
+            'Select SCE Data Files', ...
+            'MultiSelect', 'on');
+        figure(FigureHandle);
         if isequal(fname, 0), return; end
         if ~iscell(fname)
             errordlg("This function needs at least two SCE data files.");

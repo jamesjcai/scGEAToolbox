@@ -1,5 +1,6 @@
-function [s] = i_pickembedvalues(sce, ndim)
+function [s] = i_pickembedvalues(sce, ndim, parentfig)
 if nargin<2, ndim=[]; end
+if nargin<3, parentfig=[]; end
 
 s = [];
 % slist = fieldnames(sce.struct_cell_embeddings);
@@ -20,9 +21,13 @@ if isempty(vslist)
     return; 
 end
 
-[indx, tf] = listdlg('PromptString', ...
-    {'Select an embedding S:'}, ...
-    'SelectionMode', 'single', 'ListString', ...
-    vslist, 'ListSize', [220, 300]);
+if gui.i_isuifig(parentfig)
+    [indx, tf] = gui.myListdlg(parentfig, vslist, 'Select an embedding S:');
+else
+    [indx, tf] = listdlg('PromptString', ...
+        {'Select an embedding S:'}, ...
+        'SelectionMode', 'single', 'ListString', ...
+        vslist, 'ListSize', [220, 300]);
+end
 if ~tf, return; end
 s = sce.struct_cell_embeddings.(vslist{indx});

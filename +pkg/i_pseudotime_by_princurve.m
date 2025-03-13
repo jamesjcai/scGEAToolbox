@@ -33,9 +33,11 @@ function [t, xyz1] = i_pseudotime_by_princurve(s, plotit)
     
     
     %tic;
+    warning off
     [yfinal, ~, I, ~] = mppc(y0, cut_indices0, s, mass, lambda1, lambda2, tol, rho, ...
         max_m, max_avg_turn, normalize_data, pause_bool, false);
     %toc;
+    warning on
     
     t = (I + randn(size(I)))';
     xyz1 = yfinal;

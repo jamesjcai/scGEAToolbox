@@ -89,7 +89,9 @@ switch sourcetag
     case 2
         [fname, pathname] = uigetfile({'*.mat', 'SCE Data File (*.mat)'; ...
             '*.*', 'All Files (*.*)'}, ...
-            'Select SCE Data File', 'MultiSelect', 'off');
+            'Select SCE Data File', ...
+            'MultiSelect', 'off');
+        figure(FigureHandle);
         if isequal(fname, 0), return; end
         try
             scefile = fullfile(pathname, fname);

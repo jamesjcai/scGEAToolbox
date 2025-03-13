@@ -1,7 +1,8 @@
 function callback_scTenifoldKnk1(src, ~)
 
 [FigureHandle] = gui.gui_getfigsce(src);
-if ~gui.gui_showrefinfo('scTenifoldKnk [PMID:35510185]', FigureHandle), return; end
+if ~gui.gui_showrefinfo('scTenifoldKnk [PMID:35510185]', ...
+        FigureHandle), return; end
 
 try
     ten.check_tensor_toolbox;
@@ -49,9 +50,15 @@ switch answer
         else
             %valididx=ismember(b(4,:),'double');
             a = a(valididx);
-            b = b(:, valididx);
+            b = b(:, valididx);            
+
+       if gui.i_isuifig(FigureHandle)
+            [indx, tf] = gui.myListdlg(FigureHandle, b(1, :), 'Select network variable:');
+        else
             [indx, tf] = listdlg('PromptString', {'Select network variable:'}, ...
                 'liststring', b(1, :), 'SelectionMode', 'single', 'ListSize', [220, 300]);
+        end            
+
             if tf == 1
                 A0 = evalin('base', a(indx).name);
             else
@@ -78,8 +85,14 @@ switch answer
 end
 gsorted = natsort(sce.g);
 if isempty(gsorted), return; end
-[indx2, tf] = listdlg('PromptString', {'Select a KO gene'}, ...
-    'SelectionMode', 'single', 'ListString', gsorted, 'ListSize', [220, 300]);
+
+   if gui.i_isuifig(FigureHandle)
+        [indx2, tf] = gui.myListdlg(FigureHandle, gsorted, 'Select a KO gene');
+    else
+        [indx2, tf] = listdlg('PromptString', {'Select a KO gene'}, ...
+            'SelectionMode', 'single', 'ListString', gsorted, 'ListSize', [220, 300]);
+    end
+
 if tf == 1
     [~, idx] = ismember(gsorted(indx2), sce.g);
 else
@@ -190,7 +203,8 @@ disp('===============================');
             {'*.mat', 'Saved GRN Files (*.mat)'; ...
             '*.*', 'All Files (*.*)'}, ...
             'Pick a GRN Data File');
-             if isequal(fname, 0), return; end
+        figure(FigureHandle);
+        if isequal(fname, 0), return; end
             filen = fullfile(pathname, fname);
             data = load(filen, 'A0');
 

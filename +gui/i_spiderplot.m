@@ -115,10 +115,16 @@ hx.show(parentfig);
 
 
     function i_editgrpnames(~, ~)
-        [indxx, tfx] = listdlg('PromptString', ...
-            {'Select group name'}, ...
-            'SelectionMode', 'single', ...
-            'ListString', string(cL), 'ListSize', [220, 300]);
+
+        if gui.i_isuifig(parentfig)
+            [indxx, tfx] = gui.myListdlg(parentfig, string(cL), 'Select group name');
+        else
+            [indxx, tfx] = listdlg('PromptString', ...
+                {'Select group name'}, ...
+                'SelectionMode', 'single', ...
+                'ListString', string(cL), 'ListSize', [220, 300]);
+        end
+
         if tfx == 1
             i = ismember(c, indxx);
             newctype = inputdlg('New cell type', 'Rename', [1, 50], cL(c(i)));

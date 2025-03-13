@@ -7,26 +7,7 @@ i1 = 0;
 i2 = 0;
 cL1 = [];
 cL2 = [];
-% internal function called by callback_DEGene2Groups
-% listitems={'Cluster ID','Batch ID',...
-%            'Cell Type','Cell Cycle Phase'};
-% [indx2,tf2] = listdlg('PromptString',...
-%     {'Select statistics','',''},...
-%      'SelectionMode','single','ListString',listitems);
-% if tf2==1
-%     switch indx2
-%         case 1 % cluster id
-%             thisc=sce.c_cluster_id;
-%         case 2 % batch id
-%             thisc=sce.c_batch_id;
-%         case 3 % cell type
-%             thisc=sce.c_cell_type_tx;
-%         case 4 % cell cycle
-%             thisc=sce.c_cell_cycle_tx;
-%     end
-% else
-%     return;
-% end
+
 
 
 if isa(sce, 'SingleCellExperiment')
@@ -72,10 +53,16 @@ end
  switch answer
      case 'Two Samples'
 
-        [indxx, tfx] = listdlg('PromptString', {'Select two samples:'}, ...
-            'SelectionMode', 'multiple', ...
-            'ListString', listitems, ...
-            'InitialValue', [n - 1, n], 'ListSize', [220, 300]);
+        if gui.i_isuifig(parentfig)
+            [indxx, tfx] = gui.myListdlg(parentfig, listitems, 'Select two samples:');
+        else
+            [indxx, tfx] = listdlg('PromptString', {'Select two samples:'}, ...
+                'SelectionMode', 'multiple', ...
+                'ListString', listitems, ...
+                'InitialValue', [n - 1, n], 'ListSize', [220, 300]);
+        end
+
+
         if tfx == 1
             if numel(indxx) ~= 2
                 errordlg('Please select 2 samples only');

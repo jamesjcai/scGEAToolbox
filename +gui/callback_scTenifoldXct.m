@@ -48,24 +48,7 @@ end
 i1 = idx(1);
 i2 = idx(2);
 
-%{
-[~,cL]=grp2idx(sce.c_cell_type_tx);
-if length(cL)<2, errordlg('Need at least 2 cell types.'); return; end
 
-[indxx,tf2] = listdlg('PromptString',...
-    {'Select two cell types:'},...
-    'SelectionMode','multiple','ListString',cL, 'ListSize', [220, 300]);
-if tf2==1
-    if numel(indxx)~=2
-        errordlg('Please select 2 cell types');
-        return;
-    end
-    i1=indxx(1);
-    i2=indxx(2);
-else
-    return;
-end
-%}
 
 
 a1 = sprintf('%s -> %s', cL{i1}, cL{i2});

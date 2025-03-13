@@ -59,7 +59,8 @@ function callback_BuildGeneNetwork(src, ~)
             G = pkg.i_makegraph(A, glist);
             if strcmp('Yes', gui.myQuestdlg(FigureHandle, 'Save network?'))
                 [file, path] = uiputfile({'*.mat'; '*.*'}, ...
-                    'Save as', 'network_file');                
+                    'Save as', 'network_file');     
+                figure(FigureHandle);
                 if isequal(file, 0) || isequal(path, 0)
                     return;
                 else

@@ -59,53 +59,6 @@ end
 x1 = idx(1);
 x2 = idx(2);
 
-%{
-[~,cL]=grp2idx(sce.c_cell_type_tx);
-if length(cL)<2, errordlg('Need at least 2 cell types.'); return; end
-
-[indxx,tf2] = listdlg('PromptString',...
-    {'Select two cell types:'},...
-    'SelectionMode','multiple','ListString',cL, 'ListSize', [220, 300]);
-if tf2==1
-    if numel(indxx)~=2
-        errordlg('Please select 2 cell types');
-        return;
-    end
-    x1=indxx(1);
-    x2=indxx(2);
-else
-    return;
-end
-%}
-
-
-%{
-twosided = false;
-answer = gui.myQuestdlg(FigureHandle, 'Select direction: Source (ligand) -> Target (receptor)', '', 'Both', celltype1, celltype2, 'Both');
-switch answer
-    case 'Both'
-        x1 = x1;
-        x2 = x2;
-        twosided = true;
-    case celltype1
-        x1 = x1;
-        x2 = x2;
-    case celltype2
-        x1 = x2;
-        x2 = x1;
-    otherwise
-        return;
-end
-
-idx=sce.c_cell_type_tx==cL{x1} | sce.c_cell_type_tx==cL{x2};
-sce=sce.selectcells(idx);
-
-sce.c_batch_id=sce.c_cell_type_tx;
-sce.c_batch_id(sce.c_cell_type_tx==cL{x1})="Source";
-sce.c_batch_id(sce.c_cell_type_tx==cL{x2})="Target";
-%}
-
-
 sce.c_batch_id = thisc;
 sce.c_batch_id(c == x1) = "Source";
 sce.c_batch_id(c == x2) = "Target";
@@ -143,8 +96,15 @@ switch Cko_approach
         sprintf('%s (%s) <- %s (%s)', celltype1, targetg(2), celltype2, targetg(1));...
         sprintf('%s (%s) <- %s (%s)', celltype1, targetg(1), celltype2, targetg(2))]);
         [width] = min([max(strlength(targetpath))*6, 500]);
-        [targetpathid, tf] = listdlg('PromptString', {'Select path(s) to block:'}, ...
-            'SelectionMode', 'multiple', 'ListString', targetpath, 'ListSize', [width, 300]);
+
+       if gui.i_isuifig(FigureHandle)
+            [targetpathid, tf] = gui.myListdlg(FigureHandle, targetpath, 'Select path(s) to block:');
+        else
+            [targetpathid, tf] = listdlg('PromptString', {'Select path(s) to block:'}, ...
+                'SelectionMode', 'multiple', 'ListString', ...
+                targetpath, 'ListSize', [width, 300]);
+        end
+
         if tf ~= 1, return; end
 
         % assignin("base","sce",sce)
@@ -159,8 +119,13 @@ switch Cko_approach
         
         % return;
     case 'Complete Gene Knockout'
-        [indx2, tf] = listdlg('PromptString', {'Select a KO gene'}, ...
-            'SelectionMode', 'single', 'ListString', gsorted, 'ListSize', [220, 300]);
+       if gui.i_isuifig(FigureHandle)
+            [indx2, tf] = gui.myListdlg(FigureHandle, gsorted, 'Select a KO gene');
+        else
+            [indx2, tf] = listdlg('PromptString', {'Select a KO gene'}, ...
+                'SelectionMode', 'single', 'ListString', ...
+                gsorted, 'ListSize', [220, 300]);
+        end
         if tf == 1
             [~, idx] = ismember(gsorted(indx2), sce.g);
         else

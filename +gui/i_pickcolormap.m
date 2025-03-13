@@ -1,4 +1,6 @@
-function i_pickcolormap(~, ~, ~, setzerocolor)
+function i_pickcolormap(~, ~, ~, setzerocolor, parentfig)
+
+if nargin < 5, parentfig = []; end
 if nargin < 4, setzerocolor = false; end
 if nargin < 3, c = []; end
 a = colormap;
@@ -14,8 +16,12 @@ else
         'summer', 'autumn', ...
         'winter', 'jet', 'gray', 'bone', 'pink', 'copper', 'lines'};
 end
-[indx, tf] = listdlg('ListString', list, 'SelectionMode', 'single', ...
-    'PromptString', 'Select a colormap:');
+if gui.i_isuifig(parentfig)
+    [indx, tf] = gui.myListdlg(parentfig, list, 'Select a colormap:');
+else
+    [indx, tf] = listdlg('ListString', list, 'SelectionMode', 'single', ...
+        'PromptString', 'Select a colormap:');
+end
 if tf == 1
     a = list{indx};
     if strcmp(a, 'autumn (default)')

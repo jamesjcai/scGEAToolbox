@@ -9,12 +9,16 @@ if nargin<2, parentfig = []; end
         'AnnData/H5ad File (*.h5ad)...', ...
         'Export SCE Data to Workspace...'};
  
-    [indx, tf] = listdlg('ListString', list, ...
-        'SelectionMode', 'single', ...
-        'PromptString', {'Select a destination:'}, ...
-        'ListSize', [220, 300], ...
-        'Name', 'Export Data', ...
-        'InitialValue', length(list));
+       if gui.i_isuifig(parentfig)
+            [indx, tf] = gui.myListdlg(parentfig, list, 'Select a destination:');
+        else
+            [indx, tf] = listdlg('ListString', list, ...
+                'SelectionMode', 'single', ...
+                'PromptString', {'Select a destination:'}, ...
+                'ListSize', [220, 300], ...
+                'Name', 'Export Data', ...
+                'InitialValue', length(list));
+        end
     if tf ~= 1, return; end
 
             a = sce.metadata(contains(sce.metadata, "Source:"));
@@ -30,6 +34,7 @@ if nargin<2, parentfig = []; end
             else
                 [file, path] = uiputfile({'*.mat'; '*.*'}, 'Save as');
             end
+            figure(parentfig);
             if isequal(file, 0) || isequal(path, 0)
                 return;
             else
@@ -47,6 +52,7 @@ if nargin<2, parentfig = []; end
             else
                 [file, path] = uiputfile({'*.rds'; '*.*'}, 'Save as');
             end
+            figure(parentfig);
             if isequal(file, 0) || isequal(path, 0)
                 return;
             else
@@ -67,6 +73,7 @@ if nargin<2, parentfig = []; end
             else
                 [file, path] = uiputfile({'*.h5ad'; '*.*'}, 'Save as');
             end
+            figure(parentfig);
             if isequal(file, 0) || isequal(path, 0)
                 return;
             else

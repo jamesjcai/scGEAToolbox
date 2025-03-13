@@ -136,6 +136,7 @@ if tf2 == 1
                 {'*.txt', 'Variable Data Files (*.txt)'; ...
                 '*.*', 'All Files (*.*)'}, ...
                 'Pick a Variable Data File');
+            figure(parentfig);
             if isequal(fname, 0), return; end
             txtfile = fullfile(pathname, fname);
             try
@@ -175,8 +176,14 @@ end
         %     if any(v)
         %valididx=ismember(b(4,:),'double');
         %a=a(valididx);
-        [indx, tf] = listdlg('PromptString', {'Select workspace variable:'}, ...
-            'liststring', b(1, :), 'SelectionMode', 'single', 'ListSize', [220, 300]);
+        
+        if gui.i_isuifig(parentfig)
+            [indx, tf] = gui.myListdlg(parentfig, b(1, :), 'Select workspace variable:');
+        else
+            [indx, tf] = listdlg('PromptString', {'Select workspace variable:'}, ...
+                'liststring', b(1, :), 'SelectionMode', 'single', 'ListSize', [220, 300]);
+        end
+
         if tf == 1
             c = evalin('base', a(indx).name);
             x = a(indx).name;
@@ -189,8 +196,14 @@ end
             x = '';
             T = sce.table_attributes;
             att = sce.table_attributes.Properties.VariableNames;
+            
+        if gui.i_isuifig(parentfig)
+            [indx, tf] = gui.myListdlg(parentfig, att, 'Select a SCE attribute variable:');
+        else
             [indx, tf] = listdlg('PromptString', {'Select a SCE attribute variable:'}, ...
                 'liststring', att, 'SelectionMode', 'single', 'ListSize', [220, 300]);
+        end
+
             if tf == 1
                 x = string(att(indx));
                 c = T.(x);

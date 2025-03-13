@@ -22,10 +22,18 @@ function callback_ShowGeneExprCompr(src, ~)
             [ci, cLi] = grp2idx(thisc);
             listitems = natsort(string(cLi));
             n = length(listitems);
-            [indxx, tfx] = listdlg('PromptString', {'Select two groups:'}, ...
+
+        if gui.i_isuifig(FigureHandle)
+            [indxx, tfx] = gui.myListdlg(FigureHandle, ...
+                listitems, 'Select two groups:');
+        else
+            [indxx, tfx] = listdlg('PromptString', ...
+                {'Select two groups:'}, ...
                 'SelectionMode', 'multiple', ...
                 'ListString', listitems, ...
                 'InitialValue', 1:n, 'ListSize', [220, 300]);
+        end
+
             if tfx == 1
                 [y1, idx1] = ismember(listitems(indxx), cLi);
                 assert(all(y1));

@@ -4,6 +4,7 @@ function e_goterms2graph(filename, varargin)
         [file, path] = uigetfile({'*.xlsx;*.xls', 'Excel Files (*.xlsx, *.xls)'; ...
                                   '*.*', 'All Files (*.*)'}, ...
                                   'Select an Excel File');
+        
         if isequal(file, 0)
             error('No file selected.'); % Handle cancel action
         end

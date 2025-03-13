@@ -1,5 +1,7 @@
-function [glist, setname, Col, ctag] = i_selectMSigDBGeneSets(species, colnoly)
+function [glist, setname, Col, ctag] = i_selectMSigDBGeneSets(species, ...
+    colnoly, parentfig)
 
+if nargin < 3 parentfig=[]; end
 if nargin < 1, species = 'human'; end
 if nargin < 2, colnoly = false; end
 
@@ -46,10 +48,14 @@ switch lower(species)
             'https://scgeatool.github.io/data/msigdb/m8.all.v2023.2.Mm.json'};
 end
 
-[indx1, tf1] = listdlg('PromptString', ...
-    {'Select MSigDB Collection:'}, ...
-    'SelectionMode', 'single', 'ListString', listitems, ...
-    'ListSize', [220, 300]);
+if gui.i_isuifig(parentfig)
+    [indx1, tf1] = gui.myListdlg(parentfig, listitems, 'Select MSigDB Collection:');
+else
+    [indx1, tf1] = listdlg('PromptString', ...
+        {'Select MSigDB Collection:'}, ...
+        'SelectionMode', 'single', 'ListString', listitems, ...
+        'ListSize', [220, 300]);
+end
 
 if tf1 ~= 1, return; end
 if pkg.isnetavl ~= 1

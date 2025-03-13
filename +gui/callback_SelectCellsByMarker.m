@@ -53,9 +53,13 @@ end
         [gsorted] = gui.i_sortgenenames(sce);
         if isempty(gsorted), return; end
 
-        [indx, tf] = listdlg('PromptString', {'Select a gene', '', ''}, ...
-            'SelectionMode', 'single', ...
-            'ListString', gsorted, 'ListSize', [220, 300]);
+       if gui.i_isuifig(FigureHandle)
+            [indx, tf] = gui.myListdlg(FigureHandle, gsorted, 'Select a gene');
+        else
+            [indx, tf] = listdlg('PromptString', {'Select a gene', '', ''}, ...
+                'SelectionMode', 'single', ...
+                'ListString', gsorted, 'ListSize', [220, 300]);
+        end        
         if tf == 1
             [ax, bx] = view(findall(FigureHandle,'type','axes'));
             tg = gsorted(indx);

@@ -1,7 +1,5 @@
 function callback_ShowClustersPop(src, ~)
 
-
-
 [FigureHandle, sce] = gui.gui_getfigsce(src);
 
 answer = gui.myQuestdlg(FigureHandle, 'Select a grouping variable and show cell groups in new figures individually?');
@@ -100,7 +98,7 @@ end
             case {'Cancel','No'}
                 return;
             case {'Yes','View SCEs'}
-                [idx] = in_selectcellgrps(cL(idxx));                
+                [idx] = in_selectcellgrps(cL(idxx), FigureHandle);
                 if isempty(idx), return; end
                 cL2=cL(idxx);
                 % currentColormap = colormap;
@@ -176,12 +174,19 @@ end
     end
 end
 
-function [idx] = in_selectcellgrps(grpv)
+function [idx] = in_selectcellgrps(grpv, FigureHandle)
     idx=[];
-    [indx2, tf2] = listdlg('PromptString', ...
-    {'Select Group(s):'}, ...
-    'SelectionMode', 'multiple', 'ListString', grpv, ...
-    'InitialValue', 1, 'ListSize', [220, 300]);
+
+       if gui.i_isuifig(FigureHandle)
+            [indx2, tf2] = gui.myListdlg(FigureHandle, grpv, 'Select Group(s):');
+        else
+            [indx2, tf2] = listdlg('PromptString', ...
+                {'Select Group(s):'}, ...
+                'SelectionMode', 'multiple', 'ListString', grpv, ...
+                'InitialValue', 1, 'ListSize', [220, 300]);
+       end
+
+
     if tf2 == 1
         idx = indx2;
     end

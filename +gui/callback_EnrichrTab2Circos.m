@@ -23,10 +23,14 @@ switch answer1
         end
         b = b(:, valididx);
         a = a(valididx);
-        [indx, tf] = listdlg('PromptString', {'Select Enrichr Result Table:'}, ...
-            'liststring', b(1, :), ...
-            'SelectionMode', 'single', ...
-            'ListSize', [220, 300]);
+        if gui.i_isuifig(FigureHandle)
+            [indx, tf] = gui.myListdlg(FigureHandle, b(1, :), 'Select Enrichr Result Table:');
+        else
+            [indx, tf] = listdlg('PromptString', {'Select Enrichr Result Table:'}, ...
+                'liststring', b(1, :), ...
+                'SelectionMode', 'single', ...
+                'ListSize', [220, 300]);
+        end
         if tf ~= 1, return; end
         tab = evalin('base', a(indx).name);
 
@@ -56,6 +60,7 @@ switch answer1
                     {'*.txt', 'Enrichr Table Files (*.txt)'; ...
                     '*.*', 'All Files (*.*)'}, ...
                     'Pick an Enrichr Table File');
+                figure(FigureHandle);
                 if isequal(fname, 0), return; end
                 tabfile = fullfile(pathname, fname);
                 warning off
@@ -73,36 +78,40 @@ end
 
     if all(ismember({'Term','Genes'}, tab.Properties.VariableNames))
         listitems = tab.Term;
-        [indx2, tf2] = listdlg('PromptString', ...
-        {'Select terms:'}, ...
-        'SelectionMode', 'multiple', ...
-        'ListString', listitems, 'ListSize', [260, 300]);
+
+
+        if gui.i_isuifig(FigureHandle)
+            [indx2, tf2] = gui.myListdlg(FigureHandle, listitems, 'Select terms:');
+        else
+            [indx2, tf2] = listdlg('PromptString', ...
+                {'Select terms:'}, ...
+                'SelectionMode', 'multiple', ...
+                'ListString', listitems, 'ListSize', [260, 300]);
+        end
+
+
         if tf2 ~= 1, return; end
         terms = tab.Term(indx2);
         genes = tab.Genes(indx2);
     elseif all(ismember({'TermName','OverlappingGenes'}, ...
             tab.Properties.VariableNames))
-        listitems = tab.TermName;    
-        [indx2, tf2] = listdlg('PromptString', ...
-        {'Select terms:'}, ...
-        'SelectionMode', 'multiple', ...
-        'ListString', listitems, 'ListSize', [260, 300]);
+        listitems = tab.TermName;
+
+        if gui.i_isuifig(FigureHandle)
+            [indx2, tf2] = gui.myListdlg(FigureHandle, listitems, 'Select terms:');
+        else
+            [indx2, tf2] = listdlg('PromptString', ...
+                {'Select terms:'}, ...
+                'SelectionMode', 'multiple', ...
+                'ListString', listitems, 'ListSize', [260, 300]);
+        end
+
         if tf2 ~= 1, return; end
         terms = tab.TermName(indx2);
         genes = tab.OverlappingGenes(indx2);
     else
         gui.myWarndlg(FigureHandle, 'Invalid input.');
         return;
-        %{
-        listitems = tab.(tab.Properties.VariableNames{1});
-        [indx2, tf2] = listdlg('PromptString', ...
-        {'Select terms:'}, ...
-        'SelectionMode', 'multiple', ...
-        'ListString', listitems, 'ListSize', [260, 300]);
-        if tf2 ~= 1, return; end
-        terms = tab.(tab.Properties.VariableNames{1})(indx2);
-        genes = tab.(tab.Properties.VariableNames{2})(indx2);
-        %}
     end
    
 % taking out all gene names

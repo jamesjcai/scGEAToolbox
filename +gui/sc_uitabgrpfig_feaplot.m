@@ -85,45 +85,7 @@ hx.show(parentfig);
         gui.i_exporttable(table(fealabels), true, ...
             'Tmarkerlist','MarkerListTable');    
     end
-
-    % function i_savemainfigx(~, ~)
-    %     [~, idx]=ismember(focalg, fealabels);
-    %     filter = {'*.jpg'; '*.png'; '*.tif'; '*.pdf'; '*.eps'};
-    %     [filename, filepath] = uiputfile(filter,'Save Feature Plot', ...
-    %         sprintf('FeaturePlot_%s', focalg));
-    %     if ischar(filename)
-    %         exportgraphics(ax{idx, 1}, [filepath, filename]);
-    %     end
-    % end
-    % 
-    % function i_savemainfig(~,~)
-    %     answer = gui.myQuestdlg(hFig, 'Export to PowerPoint?');
-    %     if ~strcmp(answer,'Yes'), return; end
-    % 
-    %     fw=gui.gui_waitbar_adv;
-    %         OUTppt = [tempname, '.pptx'];
-    %         ppt = Presentation(OUTppt, pth);
-    %         open(ppt);
-    %         images=cell(n,1);
-    %         warning off
-    %     for kx=1:n
-    %         gui.gui_waitbar_adv(fw,kx./n,"Processing "+fealabels(kx)+" ...");
-    %         images{kx} = [tempname, '.png'];
-    %         tabgp.SelectedTab=tab{kx};
-    %         saveas(tab{kx},images{kx});
-    %         slide3 = add(ppt, 'Small Title and Content');
-    %         replace(slide3, 'Title', fealabels(kx));
-    %         replace(slide3, 'Content', Picture(images{kx}));        
-    %     end
-    %         close(ppt);
-    %         rptview(ppt);      
-    %         gui.gui_waitbar_adv(fw);
-    % end
-
-    % function i_linksubplots(~,~)        
-    %     hlink = linkprop([ax{idx,1},ax{idx,2}],{'CameraPosition','CameraUpVector'});
-    % end
-
+    
     function displaySelection(~,event)
         t = event.NewValue;
         txt = t.Title;
@@ -137,18 +99,4 @@ hx.show(parentfig);
     end
 end
 
-% function i_PickColorMap(~, ~, c)
-%     list = {'parula', 'turbo', 'hsv', 'hot', 'cool', 'spring', ...
-%         'summer', 'autumn (default)', ...
-%         'winter', 'jet'};
-%     [indx, tf] = listdlg('ListString', list, 'SelectionMode', 'single', ...
-%         'PromptString', 'Select a colormap:', 'ListSize', [220, 300]);
-%     if tf == 1
-%         a = list{indx};
-%         if strcmp(a, 'autumn (default)')
-%             a = 'autumn';
-%         end
-%         gui.i_setautumncolor(c, a);
-%         setpref('scgeatoolbox', 'prefcolormapname', a);
-%     end
-% end
+

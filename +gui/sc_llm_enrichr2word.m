@@ -1,4 +1,6 @@
-function sc_llm_enrichr2word(selpath)
+function sc_llm_enrichr2word(selpath, parentfig)
+
+    if nargin<2, parentfig = []; end
 
     if nargin < 1, selpath = uigetdir; end     
     if isempty(selpath), return; end
@@ -10,11 +12,17 @@ function sc_llm_enrichr2word(selpath)
     fileNames2 = string({files(~[files.isdir]).name});
     
     listItems = [fileNames1'; fileNames2']; 
-    [selectedIndex, ok] = listdlg('PromptString', 'Select Excel Files:', ...
-                                  'SelectionMode', 'multiple', ...
-                                  'ListString', listItems, ...
-                                  'ListSize', [260 300], ...
-                                  'InitialValue', 1:numel(listItems));
+
+    if gui.i_isuifig(parentfig)
+        [selectedIndex, ok] = gui.myListdlg(parentfig, listItems, 'Select Excel Files:');
+    else
+        [selectedIndex, ok] = listdlg('PromptString', 'Select Excel Files:', ...
+                              'SelectionMode', 'multiple', ...
+                              'ListString', listItems, ...
+                              'ListSize', [260 300], ...
+                              'InitialValue', 1:numel(listItems));
+    end    
+    
     if ok
         selectedfiles = listItems(selectedIndex);
     else

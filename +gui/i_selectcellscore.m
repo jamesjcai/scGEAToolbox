@@ -1,5 +1,6 @@
-function [selecteditem] = i_selectcellscore
+function [selecteditem] = i_selectcellscore(parentfig)
 
+if nargin<1, parentfig=[]; end
 
 selecteditem = [];
 selitems = {'Select a Predefined Score...', ...
@@ -24,10 +25,15 @@ selitems = {'Select a Predefined Score...', ...
 % 'TF Activity Score [PMID:33135076]
 % 🐢 ',... 🐇
 
-[indx1, tf1] = listdlg('PromptString', ...
-    'Select cell score:', ...
-        'SelectionMode', 'single', 'ListString', selitems, ...
-        'ListSize', [220, 300]);
+if gui.i_isuifig(parentfig)
+    [indx1, tf1] = gui.myListdlg(parentfig, selitems, 'Select cell score:');
+else
+    [indx1, tf1] = listdlg('PromptString', ...
+        'Select cell score:', ...
+            'SelectionMode', 'single', 'ListString', selitems, ...
+            'ListSize', [220, 300]);
+end
+
     if tf1 ~= 1, return; end
 
     selecteditem = selitems{indx1};

@@ -4,8 +4,15 @@ function callback_VirtualKOGenKI(src, ~)
 
 gsorted = natsort(sce.g);
 if isempty(gsorted), return; end
-[indx2, tf] = listdlg('PromptString', {'Select a KO gene'}, ...
-    'SelectionMode', 'single', 'ListString', gsorted, 'ListSize', [220, 300]);
+
+if gui.i_isuifig(FigureHandle)
+    [indx2, tf] = gui.myListdlg(FigureHandle, gsorted, 'Select a KO gene');
+else
+    [indx2, tf] = listdlg('PromptString', {'Select a KO gene'}, ...
+        'SelectionMode', 'single', 'ListString', ...
+        gsorted, 'ListSize', [220, 300]);
+end
+
 if tf == 1
     [~, idx] = ismember(gsorted(indx2), sce.g);
 else

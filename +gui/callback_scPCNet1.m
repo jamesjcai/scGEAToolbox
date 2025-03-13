@@ -84,6 +84,7 @@ end
         case 'Yes'
             [file, path] = uiputfile({'*.mat'; '*.*'}, 'Save as', ...
                 'GeneRegulatoryNetwork');
+            figure(FigureHandle);
             if isequal(file, 0) || isequal(path, 0)
                 return;
             else

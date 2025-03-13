@@ -1,4 +1,6 @@
-function [thisc, clabel] = i_selectnstates_continous(sce)
+function [thisc, clabel] = i_selectnstates_continous(sce, parentfig)
+
+if nargin<2, parentfig=[]; end
 
 thisc = [];
 clabel = [];
@@ -47,11 +49,15 @@ i_additem(full(sum(sce.X > 0))', 'Number of Detected Genes');
         return;
     end
 
-    [indx2, tf2] = listdlg('PromptString', ...
-        {'Select cell state/grouping variable:'}, ...
-        'SelectionMode', 'multiple', ...
-        'ListString', listitems, ...
-        'InitialValue', 2:n, 'ListSize', [220, 300]);
+    if gui.i_isuifig(parentfig)
+        [indx2, tf2] = gui.myListdlg(parentfig, listitems, 'Select cell state/grouping variable:');
+    else
+        [indx2, tf2] = listdlg('PromptString', ...
+            {'Select cell state/grouping variable:'}, ...
+            'SelectionMode', 'multiple', ...
+            'ListString', listitems, ...
+            'InitialValue', 2:n, 'ListSize', [220, 300]);
+    end
 
     if tf2 == 1
         thisc=cell(length(indx2),1);

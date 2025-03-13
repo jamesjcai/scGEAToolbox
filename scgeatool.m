@@ -69,8 +69,7 @@ if ~isempty(s_in), sce.s = s_in; end
 [c, cL] = grp2idx(sce.c);
 
 
-[FigureHandle,hAx] = gui.gui_createmainfigure(v1,useuifig);
-% FigureHandle=uifigure; hAx=uiaxes(FigureHandle);
+[FigureHandle, hAx] = gui.gui_createmainfigure(v1, useuifig);
 
 if ~isempty(fx) && isvalid(fx), fxfun(fx,0.2); end
 [button1, button2] = gui.gui_createbuttons(FigureHandle, @in_sc_openscedlg);
@@ -133,7 +132,10 @@ pause(0.2);
 delete(fx);
 set(FigureHandle, 'visible', 'on');
 if gui.i_isuifig(FigureHandle), focus(FigureHandle); end
-uicontrol(button1);
+
+if ~gui.i_isuifig(FigureHandle)
+    uicontrol(button1);
+end
 
 if useuifig
     UI.Snackbar(FigureHandle,'Click Import Data or Press i to Start', ...
@@ -390,7 +392,9 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             in_RefreshAll([], [], false, false);
         else
             set(button1,'Enable','on');
-            uicontrol(button1);
+            if ~gui.i_isuifig(FigureHandle)
+                uicontrol(button1);
+            end
             if ~isempty(sce)
                 gui.myWarndlg(FigureHandle, 'Imported SCE contains no cells.');
             end
@@ -1079,7 +1083,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             ButtonName = gui.myQuestdlg(FigureHandle, 'Update Saved Embedding?', '');
             switch ButtonName
                 case 'Yes'
-                    [methodtag] = gui.i_pickembedmethod;
+                    [methodtag] = gui.i_pickembedmethod(FigureHandle);
                     if isempty(methodtag), return; end
                     [ndim] = gui.i_choose2d3d;
                     if isempty(ndim), return; end
@@ -1425,7 +1429,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             [sx] = gui.i_pickembedvalues(sce);
             if ~isempty(sx), sce.s = sx; end
         elseif strcmp(answer, 'No')
-            [methodtag] = gui.i_pickembedmethod;
+            [methodtag] = gui.i_pickembedmethod(FigureHandle);
             if isempty(methodtag), return; end
             %if isempty(ndim), [ndim] = gui.i_choose2d3dnmore; end
             %if isempty(ndim), return; end
@@ -1532,7 +1536,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
 
             if gui.i_isuifig(FigureHandle)
                 [indx, tf] = gui.myListdlg(FigureHandle, ctxt, 'Select cell type');
-            else                
+            else
                 [indx, tf] = listdlg('PromptString', {'Select cell type'}, ...
                     'SelectionMode', 'single', 'ListString', ctxt, 'ListSize', [220, 300]);
             end
@@ -1742,18 +1746,19 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
     end
 
     function in_ShowCellStates(src, ~)        
-        [thisc, clabel, ~, newpickclabel] = gui.i_select1state(sce);
+        [thisc, clabel, ~, newpickclabel] = gui.i_select1state(sce, ...
+            false, false, true, false, FigureHandle);
         if isempty(thisc), return; end
         if strcmp(clabel, 'Cell Cycle Phase') && ~all(strcmp(unique(thisc), "undetermined"))
             sce.c_cell_cycle_tx = thisc;
         end        
         if strcmp(clabel, 'Workspace Variable...')
-            clabel = gui.i_renamec(clabel, sce, newpickclabel);
+            clabel = gui.i_renamec(clabel, sce, newpickclabel, FigureHandle);
             sce.list_cell_attributes = [sce.list_cell_attributes, clabel];
             sce.list_cell_attributes = [sce.list_cell_attributes, thisc];
         end
 
-        switch gui.i_selvariabletype(thisc)
+        switch gui.i_selvariabletype(thisc, FigureHandle)
             case 'Categorical/Discrete'
                 [c, cL] = grp2idx(thisc);
                 sce.c = c;
@@ -1810,7 +1815,8 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         if ~gui.gui_showrefinfo('HVG Functional Analysis [PMID:31861624]', FigureHandle), return; end
         ptsSelected = logical(h.BrushData.');
         if any(ptsSelected)
-            [ptsSelected, letdoit] = gui.i_expandbrushed(ptsSelected, sce);
+            [ptsSelected, letdoit] = gui.i_expandbrushed(ptsSelected, ...
+                sce, FigureHandle);
             if ~letdoit, return; end
             if sum(ptsSelected) < 200                
                 if ~strcmp(gui.myQuestdlg(FigureHandle, sprintf('Too few cells (n = %d) selected, continue?', sum(ptsSelected))), 'Yes'), return; end
@@ -1830,7 +1836,8 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             gui.myWarndlg(FigureHandle, "No cells are selected.");
             return;
         end
-        [ptsSelected, letdoit] = gui.i_expandbrushed(ptsSelected, sce);
+        [ptsSelected, letdoit] = gui.i_expandbrushed(ptsSelected, ...
+            sce, FigureHandle);
         if ~letdoit, return; end
 
         answer = gui.myQuestdlg(FigureHandle, 'Delete selected or unselected cells?', '', ...
@@ -1854,7 +1861,8 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             gui.myWarndlg(FigureHandle, "No cells are selected.");
             return;
         end
-        [ptsSelected, letdoit] = gui.i_expandbrushed(ptsSelected, sce);
+        [ptsSelected, letdoit] = gui.i_expandbrushed(ptsSelected, ...
+            sce, FigureHandle);
         if ~letdoit, return; end
         
         switch lower(action)
@@ -1959,16 +1967,20 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                     end
                     if ~isempty(h.ZData), return; end
 
-                    answer2 = gui.myQuestdlg(FigureHandle, 'Draw trajectory curve or load saved curve and pseudotime?', ...
+                    answer2 = gui.myQuestdlg(FigureHandle, ...
+                        'Draw trajectory curve or load saved curve and pseudotime?', ...
                         '',{'Draw Curve', 'Load Saved', 'Cancel'}, 'Draw Curve');
 
                     switch answer2
                         case 'Load Saved'
-                            [file, path] = uigetfile('*.mat', 'Select a MAT-file to Load');
+                            [file, path] = uigetfile('*.mat', ...
+                                'Select a MAT-file to Load');
+                            figure(FigureHandle);
                             if isequal(file, 0)
                                 disp('User canceled the file selection.');
                                 return;
-                            end                            
+                            end
+                            
                             fullFileName = fullfile(path, file);
                             loadedData = load(fullFileName);
                             if isfield(loadedData, 't') && isfield(loadedData, 'xyz1') && isfield(loadedData, 'pseudotimemethod')
@@ -1983,8 +1995,22 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                         case 'Draw Curve'
                             % Collect points interactively
                             % [x, y] = ginput; % 
-                            if ~strcmp(gui.myQuestdlg(FigureHandle, 'Click on the figure to select points, press Enter to finish.'),'Yes'), return; end
+                            if ~strcmp(gui.myQuestdlg(FigureHandle, ...
+                                    ['Click on the figure to select points,' ...
+                                    ' press Enter to finish.']),'Yes')
+                                return; 
+                            end
                             x = []; y = [];
+
+%{
+% Create uifigure and axes
+fig = uifigure;
+ax = uiaxes(fig);
+plot(ax, rand(10,1), rand(10,1), 'o'); % Example plot
+% Set a callback for mouse clicks
+fig.WindowButtonDownFcn = @(src, event) disp(event.IntersectionPoint);
+%}
+
                             hold(hAx, 'on');
                             while true
                                 [xi, yi, button] = ginput(1);                        
@@ -1994,14 +2020,18 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                                 end
                                 x = [x; xi];
                                 y = [y; yi];                        
-                                plot(xi, yi, 'ro', 'MarkerSize', 8, ...
+                                plot(hAx, xi, yi, 'ro', 'MarkerSize', 8, ...
                                     'LineWidth', 2);
                             end
                             hold(hAx, 'off');
+
+
+
                             % Fit and plot the spline curve
                             splineCurve = cscvn([x'; y']);
                             [xyz1] = fnplt(splineCurve);  % Plot the spline curve in red
                             xyz1 = xyz1';
+                            
                             [t] = dsearchn(xyz1, sce.s);
                             t = (t + randn(size(t)))';
                             t = normalize(t, 'range');
@@ -2014,21 +2044,30 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             otherwise
                 return;
         end
-        hold(hAx, 'on');
-        if size(xyz1, 2) >= 3
-            f_traj = plot3(xyz1(:, 1), xyz1(:, 2), xyz1(:, 3), '-r', 'linewidth', 2);
-            t1 = text(xyz1(1, 1), xyz1(1, 2), xyz1(1, 3), 'Start', ...
+        hold(hAx, 'on');        
+
+        if size(xyz1, 2) >= 3            
+            % assignin('base','xyz1',xyz1)
+            if size(xyz1, 1) < 0.8*(sce.NumCells)
+                xyz1 = pkg.i_interp3d(xyz1, sce.NumCells);
+            end
+
+            f_traj = plot3(hAx, xyz1(:, 1), xyz1(:, 2), xyz1(:, 3), '-r', 'linewidth', 2);
+            t1 = text(hAx, xyz1(1, 1), xyz1(1, 2), xyz1(1, 3), 'Start', ...
                 'fontsize', 10, 'FontWeight', 'bold', 'BackgroundColor', 'w', 'EdgeColor', 'k');
-            t2 = text(xyz1(end, 1), xyz1(end, 2), xyz1(end, 3), 'End', ...
+            t2 = text(hAx, xyz1(end, 1), xyz1(end, 2), xyz1(end, 3), 'End', ...
                 'fontsize', 10, 'FontWeight', 'bold', 'BackgroundColor', 'w', 'EdgeColor', 'k');
         elseif size(xyz1, 2) == 2
-            f_traj = plot(xyz1(:, 1), xyz1(:, 2), '-r', 'linewidth', 2);
-            t1 = text(xyz1(1, 1), xyz1(1, 2), 'Start', ...
+            f_traj = plot(hAx, xyz1(:, 1), xyz1(:, 2), '-r', 'linewidth', 2);
+            t1 = text(hAx, xyz1(1, 1), xyz1(1, 2), 'Start', ...
                 'fontsize', 10, 'FontWeight', 'bold', 'BackgroundColor', 'w', 'EdgeColor', 'k');
-            t2 = text(xyz1(end, 1), xyz1(end, 2), 'End', ...
+            t2 = text(hAx, xyz1(end, 1), xyz1(end, 2), 'End', ...
                 'fontsize', 10, 'FontWeight', 'bold', 'BackgroundColor', 'w', 'EdgeColor', 'k');
         end
         hold(hAx, 'off');
+        drawnow;
+        pause(2);
+
         % pseudotimemethod
         if ~strcmp(answer, 'manual')
             switch gui.myQuestdlg(FigureHandle, 'Swap ''Start'' and ''End''?','')
@@ -2065,6 +2104,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 case 'Yes'
                     [file, path] = uiputfile('*.mat', 'Save as', ...
                         'pseudotime_manual_trajectory.mat');
+                    figure(FigureHandle);
                     if isequal(file, 0) || isequal(path, 0)
                         disp('User canceled the file selection.');
                         return;
@@ -2089,7 +2129,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
 
     function in_ClusterCellsS(src, ~)        
         if ~strcmp(gui.myQuestdlg(FigureHandle, 'Cluster cells using embedding S?',''), 'Yes'), return; end
-        [sx] = gui.i_pickembedvalues(sce);
+        [sx] = gui.i_pickembedvalues(sce,[],FigureHandle);
         if isempty(sx), return; end
 
         answer = gui.myQuestdlg(FigureHandle, 'Which method?', 'Select Algorithm', ...

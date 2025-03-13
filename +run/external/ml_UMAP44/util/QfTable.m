@@ -1,4 +1,4 @@
-    classdef QfTable < handle
+classdef QfTable < handle
 %   Class for Hi-D matching with merging of data subsets using QFmatch or
 %   F-measure or both.
 %

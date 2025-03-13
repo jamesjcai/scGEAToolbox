@@ -1,4 +1,5 @@
     function [button1, button2] = gui_createbuttons(parentfig, in_sc_openscedlg)
+
         fig_pos = get(parentfig, 'Position'); 
         fig_width = fig_pos(3);
         fig_height = fig_pos(4);
@@ -6,6 +7,16 @@
         btn_height = 25;
         btn_x = (fig_width - btn_width) / 2;
         btn_y = (fig_height - btn_height) / 1.618;
+
+
+    if gui.i_isuifig(parentfig)    
+        button1 = uibutton(parentfig,"Text",'Import Data...', ...
+            'ButtonPushedFcn', in_sc_openscedlg,...
+            'Position', [btn_x btn_y btn_width btn_height]);
+        button2 = uilabel(parentfig, 'FontSize', 12,...
+            'position', [btn_x btn_y+25 btn_width+50 btn_height],...
+            'Text','Ready to explore.');
+    else
         
         button1 = uicontrol('Parent', parentfig,...
             'Style', 'pushbutton',...

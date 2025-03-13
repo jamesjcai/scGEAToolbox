@@ -106,9 +106,9 @@ end
     else
         [file, path] = uigetfile('Rscript', 'Select R Interpreter', deflt);
     end
-    if isequal(file, 0)
-        %disp('User selected Cancel');
-        return;
+    figure(parentfig);
+    if isequal(file, 0) 
+        return; 
     else
         disp(['User selected: ', fullfile(path, file)]);
         % fullfile(path)

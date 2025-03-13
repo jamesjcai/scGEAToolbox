@@ -11,6 +11,7 @@ function i_savemainfig(src, ~, tag)
     if tag == 1
         filter = {'*.svg'};
         [filename, filepath] = uiputfile(filter);
+        figure(parentfig);
         if ischar(filename)
             if gui.i_isuifig(parentfig)
                 exportapp(parentfig, [filepath filename]);
@@ -22,6 +23,7 @@ function i_savemainfig(src, ~, tag)
         % axx=gca;
         filter = {'*.jpg'; '*.png'; '*.tif'; '*.pdf'; '*.eps'};
         [filename, filepath] = uiputfile(filter);
+        figure(parentfig);
         if ischar(filename)
 
             if gui.i_isuifig(parentfig)

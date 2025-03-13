@@ -92,40 +92,6 @@ hx.show(parentfig);
          end
      end
          
-    % function i_savemainfigx(~,~)
-    %     [~,idx]=ismember(focalg, tabnamelist);     
-    %     filter = {'*.jpg'; '*.png'; '*.tif'; '*.pdf'; '*.eps'};
-    %     [filename, filepath] = uiputfile(filter,'Save Violin Plot', ...
-    %         sprintf('ViolinPlot_%s',focalg));
-    %     if ischar(filename)
-    %         exportgraphics(ax0{idx}, [filepath, filename]);
-    %     end
-    % end
-    % 
-    % function i_savemainfig(~,~)
-    %     answer = gui.myQuestdlg(parentfig, 'Export to PowerPoint?');
-    %     if ~strcmp(answer,'Yes'), return; end
-    % 
-    %     fw=gui.gui_waitbar_adv;
-    %         OUTppt = [tempname, '.pptx'];
-    %         ppt = Presentation(OUTppt, pth);
-    %         open(ppt);
-    %         images=cell(n,1);
-    %         warning off
-    %     for kx=1:n
-    %         gui.gui_waitbar_adv(fw,kx./n,"Processing "+tabnamelist(kx)+" ...");
-    %         images{kx} = [tempname, '.png'];
-    %         tabgp.SelectedTab=tab{kx};
-    %         saveas(tab{kx},images{kx});
-    %         slide3 = add(ppt, 'Small Title and Content');
-    %         replace(slide3, 'Title', tabnamelist(kx));
-    %         replace(slide3, 'Content', Picture(images{kx}));        
-    %     end
-    %         close(ppt);
-    %         rptview(ppt);      
-    %         gui.gui_waitbar_adv(fw);
-    % end
-
     function displaySelection(~,event)
         t = event.NewValue;
         txt = t.Title;
@@ -303,74 +269,6 @@ hx.show(parentfig);
         tabgp.SelectedTab=tab{tabidx};
     end
         
-    % function i_testdataone(~,~)
-    %     [~,idx]=ismember(focalg, tabnamelist);
-    %     %delete(ax0{idx});
-    %     %ax0{idx} = axes('parent',tab{idx});
-    %     tabgp.SelectedTab=tab{idx};
-    %     a = ax0{idx};
-    %     thisy = y{idx};
-    %     %a = hFig.get("CurrentAxes");
-    %     if isempty(OldTitle{idx})
-    %         OldTitle{idx} = a.Title.String;
-    %         if size(thisy, 2) ~= length(thisc)
-    %             thisy = thisy.';
-    %         end
-    %         tbl = pkg.e_grptest(thisy, thisc);
-    %         %h1=gca;
-    %         %titre=string(h1.Title.String);
-    % 
-    %         %     a=sprintf('%s\n%s=%.2e; %s=%.2e', ...
-    %         %         strrep(string(ttxt),'_','\_'), ...
-    %         %         strrep(tbl.Properties.VariableNames{1},'_','\_'), ...
-    %         %         tbl.(tbl.Properties.VariableNames{1}), ...
-    %         %         strrep(tbl.Properties.VariableNames{2},'_','\_'), ...
-    %         %         tbl.(tbl.Properties.VariableNames{2}));
-    %         %     title(a);
-    %         if ~isempty(tbl) && istable(tbl)
-    %             b = sprintf('%s=%.2e; %s=%.2e', ...
-    %                 tbl.Properties.VariableNames{1}, ...
-    %                 tbl.(tbl.Properties.VariableNames{1}), ...
-    %                 tbl.Properties.VariableNames{2}, ...
-    %                 tbl.(tbl.Properties.VariableNames{2}));
-    % 
-    %             % b = sprintf('%s=%.2e; %s=%.2e', ...
-    %             %     strrep(tbl.Properties.VariableNames{1}, '_', '_'), ...
-    %             %     tbl.(tbl.Properties.VariableNames{1}), ...
-    %             %     strrep(tbl.Properties.VariableNames{2}, '_', '\_'), ...
-    %             %     tbl.(tbl.Properties.VariableNames{2}));
-    %         else
-    %             if length(unique(thisc)) == 2
-    %                 b='p_{ttest}=N.A.; p_{wilcoxon}=N.A.';
-    %             else
-    %                 b='p_{anova}=N.A.; p_{kruskalwallis}=N.A.';
-    %             end
-    %         end
-    % 
-    %         if iscell(OldTitle{idx})
-    %             newtitle = OldTitle{idx};
-    %         else
-    %             newtitle = OldTitle(idx);
-    %         end
-    %         newtitle{2} = b;
-    %         a.Title.String = newtitle;
-    %     else
-    %         a.Title.String = OldTitle{idx};
-    %         OldTitle{idx} = [];
-    %     end
-    % end
-
-    % function i_savedata(~, ~)
-    %     [~,idx]=ismember(focalg, tabnamelist);
-    %     thisy = y{idx};
-    % 
-    %     T = table(thisy(:), thisc(:));
-    %     T.Properties.VariableNames = {'ScoreLevel', 'GroupID'};
-    %     %T=sortrows(T,'ScoreLevel','descend');
-    %     %T=sortrows(T,'GroupID');
-    %     gui.i_exporttable(T, true, 'Tviolindata','ViolinPlotTable');
-    % end
-
     function in_savedata(~, ~)        
         T=table(thisx);
         T.Properties.VariableNames = matlab.lang.makeValidName({xlabelv});

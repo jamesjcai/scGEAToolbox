@@ -1,4 +1,6 @@
-function [glist, setname] = i_selectTFTargetSet(species)
+function [glist, setname] = ...
+    i_selectTFTargetSet(species, parentfig)
+if nargin < 2, parentfig=[]; end
 if nargin < 1, species = 'human'; end
 glist = [];
 setname = [];
@@ -20,10 +22,13 @@ T = T(T.mor > 0, :); % only consider positive regulation
 [~, gnlist] = grp2idx(T.target);
 [~, tflist] = grp2idx(T.tf);
 
-[indx1, tf1] = listdlg('PromptString', ...
-    {'Select TF gene:'}, ...
-    'SelectionMode', 'single', 'ListString', tflist, 'ListSize', [220, 300]);
-
+if gui.i_isuifig(parentfig)
+    [indx1, tf1] = gui.myListdlg(parentfig, tflist, 'Select TF gene:');
+else
+    [indx1, tf1] = listdlg('PromptString', ...
+        {'Select TF gene:'}, ...
+        'SelectionMode', 'single', 'ListString', tflist, 'ListSize', [220, 300]);
+end
 if tf1 ~= 1, return; end
 %indx1
 sum((t(indx1, :) ~= 0))

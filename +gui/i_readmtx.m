@@ -8,6 +8,7 @@ sce = [];
     {'*.mtx', 'MTX Format Files (*.mtx)'; ...
     '*.*', 'All Files (*.*)'}, ...
     'Pick a mtx format file');
+figure(parentfig);
 if isequal(fname, 0), return; end
 prefixstr = extractBefore(fname, max([strfind(fname, 'matrix'), 1]));
 matrixmtxfile = fullfile(pathname, fname);
@@ -32,6 +33,7 @@ if ~exist(featurestxtfile, 'file')
                 {'*.tsv', 'TSV Format Files (*.tsv)'; ...
                 '*.*', 'All Files (*.*)'}, ...
                 'Pick features.tsv file');
+            figure(parentfig);
             if ~(fname2)
                 helpdlg('Action Cancelled.', '');
                 return;
@@ -69,6 +71,7 @@ if ~exist(barcodestxtfile, 'file')
                 {'*.tsv', 'TSV Format Files (*.tsv)'; ...
                 '*.*', 'All Files (*.*)'}, ...
                 'Pick barcodes.tsv file');
+            figure(parentfig);
             if ~(fname2)
                 barcodestxtfile = [];
             else

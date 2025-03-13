@@ -74,6 +74,9 @@ end
         [indx2, tf2] = gui.myListdlg(parentfig, listitems, promptstr);
  else
 
+if gui.i_isuifig(parentfig)
+    [indx2, tf2] = gui.myListdlg(parentfig, listitems, promptstr);
+else     
     if y
         [indx2, tf2] = listdlg('PromptString', ...
             {promptstr}, ...
@@ -85,7 +88,9 @@ end
             'SelectionMode', 'single', 'ListString', listitems, ...
             'ListSize', [220 300], 'Name', ' ');
     end
- end
+end
+end
+
 if tf2 == 1
     clabel = listitems{indx2};
     switch clabel
@@ -118,8 +123,12 @@ end
         %     if any(v)
         %valididx=ismember(b(4,:),'double');
         %a=a(valididx);
-        [indx, tf] = listdlg('PromptString', {'Select variable:'}, ...
-            'liststring', b(1, :), 'SelectionMode', 'single');
+        if gui.i_isuifig(parentfig)
+            [indx, tf] = gui.myListdlg(parentfig, b(1, :), 'Select variable:');
+        else
+            [indx, tf] = listdlg('PromptString', {'Select variable:'}, ...
+                'liststring', b(1, :), 'SelectionMode', 'single');
+        end
         if tf == 1
             c = evalin('base', a(indx).name);
         end

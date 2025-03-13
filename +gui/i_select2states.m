@@ -1,4 +1,5 @@
-function [thisc1, clabel1, thisc2, clabel2] = i_select2states(sce)
+function [thisc1, clabel1, thisc2, clabel2] = i_select2states(sce, parentfig)
+if nargin<2, parentfig=[]; end
 
 thisc1 = [];
 clabel1 = '';
@@ -45,11 +46,17 @@ end
 
         % listitems={'Current Class (C)','Cluster ID','Batch ID',...
         %            'Cell Type','Cell Cycle Phase'};
-        [indx2, tf2] = listdlg('PromptString', ...
-            {'Select cell state/grouping variable:'}, ...
-            'SelectionMode', 'multiple', ...
-            'ListString', listitems, ...
-            'InitialValue', [n - 1, n], 'ListSize', [220, 300]);
+
+        if gui.i_isuifig(parentfig)
+            [indx2, tf2] = gui.myListdlg(parentfig, listitems, 'Select cell state/grouping variable:');
+        else
+            [indx2, tf2] = listdlg('PromptString', ...
+                {'Select cell state/grouping variable:'}, ...
+                'SelectionMode', 'multiple', ...
+                'ListString', listitems, ...
+                'InitialValue', [n - 1, n], 'ListSize', [220, 300]);
+        end        
+
         if tf2 == 1
             if length(indx2) ~= 2
                 warndlg('Please select 2 grouping variables.');

@@ -41,6 +41,7 @@ switch answer
         else
             [file, path] = uiputfile({'*.txt'; '*.*'}, 'Save as');
         end
+        figure(parentfig);
         if isequal(file, 0) || isequal(path, 0)
             return;
         else

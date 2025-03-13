@@ -60,6 +60,7 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                 '*.*', 'All Files (*.*)'}, ...
                 'Pick SCE Data File(s)','MultiSelect','on');
             % if ~(fname), return; end
+            figure(parentfig);
             if isequal(filenm, 0), return; end
             if ~iscell(filenm)
                 scefile = fullfile(pathname, filenm);
@@ -112,9 +113,11 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
             end
         case 'TXT/TSV/CSV File (*.txt)...'
             [fname, pathname] = uigetfile( ...
-                {'*.tsv;*.csv;*.txt', 'TSV/CSV Format Files (*.tsc, *.csv, *.txt)'; ...
+                {'*.tsv;*.csv;*.txt', ...
+                'TSV/CSV Format Files (*.tsc, *.csv, *.txt)'; ...
                 '*.*', 'All Files (*.*)'}, ...
                 'Pick a tsv/csv/txt format file');
+            figure(parentfig);
             if isequal(fname, 0), return; end
             filename = fullfile(pathname, fname);
             fw = gui.myWaitbar(parentfig);
@@ -140,6 +143,7 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                 {'*.rds', 'Seurat/Rds Format Files (*.rds)'; ...
                 '*.*', 'All Files (*.*)'}, ...
                 'Pick a rds format file');
+            figure(parentfig);
             if isequal(fname, 0), return; end
             filename = fullfile(pathname, fname);
             fw = gui.myWaitbar(parentfig);
@@ -158,11 +162,11 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                 gui.myWaitbar(parentfig, fw);
             end
         case 'AnnData/H5ad File (*.h5ad)...'
-
             [filenm, pathname] = uigetfile( ...
                 {'*.h5ad', 'H5AD Files (*.h5ad)'; ...
                 '*.*', 'All Files (*.*)'}, ...
                 'Pick a H5AD file');
+            figure(parentfig);
             if isequal(filenm, 0), return; end
             filename = fullfile(pathname, filenm);
             fw = gui.myWaitbar(parentfig);
@@ -191,6 +195,7 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                 '*.*', 'All Files (*.*)'}, ...
                 'Pick 10x Genomics H5 file(s)','MultiSelect','on');
             if isequal(filenm, 0), return; end
+            figure(parentfig);
             if iscell(filenm)
                 if ~in_multifilesgo, return; end
                 answer = gui.myQuestdlg(parentfig, 'Which set operation method to merge data?', ...
@@ -410,9 +415,13 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
             [b,idx]=natsort(b);
             a = a(idx);
 
-            [indx, tf] = listdlg('PromptString', {'Select SCE variable:'}, ...
-                'liststring', b, ...
-                'SelectionMode', 'multiple', 'ListSize', [220, 300]);
+            if gui.i_isuifig(parentfig)
+                [indx, tf] = gui.myListdlg(parentfig, b, 'Select SCE variable:');
+            else
+                [indx, tf] = listdlg('PromptString', {'Select SCE variable:'}, ...
+                    'liststring', b, ...
+                    'SelectionMode', 'multiple', 'ListSize', [220, 300]);
+            end
             if tf == 1
                 if isscalar(indx)
                     sce = evalin('base', a(indx).name);
