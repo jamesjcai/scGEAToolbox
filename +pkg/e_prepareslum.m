@@ -1,13 +1,16 @@
-function e_prepareslum(sce, FigureHandle)
+function e_prepareslum(sce, parentfig)
 
-if nargin<2, FigureHandle = []; end
+if nargin<2, parentfig = []; end
 
 if nargin<1, sce=[]; end
 
-answer=gui.myQuestdlg(FigureHandle, 'Select a folder to save the outupt files. Continue?');
+answer=gui.myQuestdlg(parentfig, 'Select a folder to save the outupt files. Continue?');
 if ~strcmp(answer,'Yes'), return; end
 
 outdir = uigetdir;
+if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure')
+    figure(parentfig);
+end
 if ~isfolder(outdir), return; end
 
 filesaved = fullfile(outdir, 'run_tsne.m');

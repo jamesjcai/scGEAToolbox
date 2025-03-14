@@ -17,7 +17,8 @@ if nargin<2, parentfig = []; end
     validmethodtag = fieldnames(sce.struct_cell_embeddings);
     assert(all(ismember(methodtag,validmethodtag)));
     if gui.i_isuifig(parentfig)
-        [indx2, tf2] = gui.myListdlg(parentfig, listitems, 'Select embedding methods:');
+        [indx2, tf2] = gui.myListdlg(parentfig, listitems, ...
+            'Select embedding methods:');
     else
         [indx2, tf2] = listdlg('PromptString', ...
             {'Select embedding methods:'}, ...

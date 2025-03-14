@@ -2,7 +2,9 @@ function sc_llm_enrichr2word(selpath, parentfig)
 
     if nargin<2, parentfig = []; end
 
-    if nargin < 1, selpath = uigetdir; end     
+    if nargin < 1
+        selpath = uigetdir;
+    end     
     if isempty(selpath), return; end
     if ~isfolder(selpath), return; end
 

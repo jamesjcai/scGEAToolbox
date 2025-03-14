@@ -122,7 +122,7 @@ function idx = LRDETest(X, y, k)
     % Calculate p-values for each row of data_use
     for x = 1:size(X, 1)
         if mod(x,5)==0
-            gui.myWaitbar(FigureHandle, fw, false, '', '', , x/n);
+            gui.myWaitbar(FigureHandle, fw, false, '', '', x/n);
         end
         model_data = table(X(:,x), y(:), 'VariableNames', {'GENE', 'Group'});
         fmla = 'Group ~ GENE';

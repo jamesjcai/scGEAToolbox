@@ -9,10 +9,10 @@ function callback_DEVP2GroupsBatch(src, ~)
     prefixtag = 'DEVP';
     [done, CellTypeList, i1, i2, cL1, cL2, ... 
         outdir] = gui.i_batchmodeprep(sce, prefixtag, ...
-        wrkdir, FigureHandle);
+                wrkdir, FigureHandle);
     if ~done, return; end
     
-    [paramset] = gui.i_degparamset(true);
+    [paramset] = gui.i_degparamset(true, FigureHandle);
     
     % ------------------------------------------ DE
     fw = gui.myWaitbar(FigureHandle);

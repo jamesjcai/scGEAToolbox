@@ -52,9 +52,10 @@ end
         y = false;
         promptTitle = 'Select a folder that contains the model';
         selectedDir = uigetdir(pwd, promptTitle);
-        if isvalid(parentfig)
+        if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure')
             figure(parentfig);
         end
+        
         if selectedDir == 0
             fprintf('Folder selection canceled.\n');
             selectedDir = '';            

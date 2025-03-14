@@ -33,7 +33,8 @@ end
 
     function in_writetable(Tmf1, filesaved, shtname)
         if ~isempty(Tmf1) && istable(Tmf1) && height(Tmf1) > 0
-            writetable(Tmf1, filesaved, "FileType", "spreadsheet", 'Sheet', shtname);
+            writetable(Tmf1, filesaved, "FileType", "spreadsheet", ...
+                'Sheet', shtname);
         end
     end
                 

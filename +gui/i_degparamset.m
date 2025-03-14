@@ -33,7 +33,8 @@ else
         gui.myErrordlg(parentfig, 'Invalid input.');
         return;
     end
-    answer = gui.myQuestdlg(parentfig, 'Sort DE genes by adjusted P-value or fold change?','',...
+    answer = gui.myQuestdlg(parentfig, ...
+        'Sort DE genes by adjusted P-value or fold change?','',...
         {'Adjusted P-value','Fold Change'}, defaultset{4});
     switch answer
         case 'Adjusted P-value'

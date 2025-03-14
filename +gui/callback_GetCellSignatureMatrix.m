@@ -16,7 +16,8 @@ if ~isempty(sigtags)
         "Select scores to make a customized score set..."];
 
     if gui.i_isuifig(FigureHandle)
-        [indx1, tf1] = gui.myListdlg(FigureHandle, sigtags, 'Select a predefined score set');
+        [indx1, tf1] = gui.myListdlg(FigureHandle, sigtags, ...
+            'Select a predefined score set');
     else
         [indx1, tf1] = listdlg('PromptString', 'Select a predefined score set', ...
             'SelectionMode', 'single', 'ListString', ...

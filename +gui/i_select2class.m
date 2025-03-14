@@ -33,7 +33,8 @@ end
     %            'Cell Type','Cell Cycle Phase'};
 
         if gui.i_isuifig(parentfig)
-            [indx2, tf2] = gui.myListdlg(parentfig, listitems, 'Select two grouping varibles:');
+            [indx2, tf2] = gui.myListdlg(parentfig, listitems, ...
+                'Select two grouping varibles:');
         else
             [indx2, tf2] = listdlg('PromptString', ...
                 {'Select two grouping varibles:'}, ...

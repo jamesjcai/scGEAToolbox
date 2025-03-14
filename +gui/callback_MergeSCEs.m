@@ -3,12 +3,14 @@ requirerefresh = false;
 s = "";
 [FigureHandle] = gui.gui_getfigsce(src);
 
-answer = gui.myQuestdlg(FigureHandle, 'Current SCE will be replaced. Continue?');
+answer = gui.myQuestdlg(FigureHandle, ...
+    'Current SCE will be replaced. Continue?');
 if ~strcmp(answer, 'Yes'), return; end
 
 
 keepbatchid=true;
-answer = gui.myQuestdlg(FigureHandle, 'Keep original batch IDs of cells in the input SCEs?','');
+answer = gui.myQuestdlg(FigureHandle, ['Keep original batch IDs of ' ...
+                'cells in the input SCEs?'],'');
 switch answer
     case 'Yes'
         keepbatchid=true;

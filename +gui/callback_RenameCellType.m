@@ -10,7 +10,8 @@ end
 
 removesubscript = false;
 if any(contains(sce.c_cell_type_tx, "_{"))
-    answer = gui.myQuestdlg(FigureHandle, 'Remove subscript of cell type names?', ...
+    answer = gui.myQuestdlg(FigureHandle, ...
+        'Remove subscript of cell type names?', ...
         '', {'Yes', 'No', 'Cancel'}, 'No');
     switch answer
         case 'Yes'

@@ -14,10 +14,12 @@ prefixtag = 'DE';
 if ~done, return; end
 
 %[runenrichr] = gui.i_enrichrprep;
-[runenrichr] = gui.myQuestdlg(FigureHandle, 'Run Enrichr with top 250 DE genes? Results will be saved in the output Excel files.','');
+[runenrichr] = gui.myQuestdlg(FigureHandle, ...
+    ['Run Enrichr with top 250 DE genes? Results will ' ...
+    'be saved in the output Excel files.'],'');
 if strcmp(runenrichr,'Cancel'), return; end
 
-[paramset] = gui.i_degparamset;
+[paramset] = gui.i_degparamset(false, FigureHandle);
 
 fw = gui.myWaitbar(FigureHandle);
 for k=1:length(CellTypeList)
@@ -31,7 +33,8 @@ for k=1:length(CellTypeList)
         matlab.lang.makeValidName(string(cL1)), ...
         matlab.lang.makeValidName(string(cL2)), ...
         matlab.lang.makeValidName(string(CellTypeList{k})));
-        filesaved = fullfile(outdir, outfile);
+    
+    filesaved = fullfile(outdir, outfile);
 
     idx = sce.c_cell_type_tx == CellTypeList{k};
     T = [];
@@ -73,34 +76,29 @@ for k=1:length(CellTypeList)
         % - start of enrichr
         if ~isempty(runenrichr) && strcmp(runenrichr, 'Yes')
             try
-                % [Tbp1, Tmf1]= run.r_enrichR(Tup.gene(1:min([250 height(Tup)])));
-                %[Tbp1, Tmf1] = run.py_GSEApy_enr(Tup.gene(1:min([250 height(Tup)])), ...
-                %    T.gene, tempdir);
+                gui.e_enrichrxlsx(Tup,Tdn,T,filesaved);
 
-                [Tlist1] = run.ml_Enrichr(Tup.gene(1:min([250 height(Tup)])), ...
-                            T.gene, ["GO_Biological_Process_2023", ...
-                                     "GO_Molecular_Function_2023"]);
-                Tbp1 = Tlist1{1};
-                Tmf1 = Tlist1{2};
-                in_writetable(Tbp1, filesaved, 'Up_250_GO_BP');
-                in_writetable(Tmf1, filesaved, 'Up_250_GO_MF');
-                % [Tbp2, Tmf2] = run.r_enrichR(Tdn.gene(1:min([250 height(Tdn)])));
-                % [Tbp2, Tmf2] = run.py_GSEApy_enr(Tdn.gene(1:min([250 height(Tdn)])), ...
-                %    T.gene, tempdir);
 
-                [Tlist2] = run.ml_Enrichr(Tdn.gene(1:min([250 height(Tdn)])), ...
-                            T.gene, ["GO_Biological_Process_2023", ...
-                                     "GO_Molecular_Function_2023"]);
-                Tbp2 = Tlist2{1};
-                Tmf2 = Tlist2{2};
-                in_writetable(Tbp2, filesaved, 'Dn_250_GO_BP');
-                in_writetable(Tmf2, filesaved, 'Dn_250_GO_MF');
+                % [Tlist1] = run.ml_Enrichr(Tup.gene(1:min([250 height(Tup)])), ...
+                %             T.gene, ["GO_Biological_Process_2023", ...
+                %                      "GO_Molecular_Function_2023"]);
+                % Tbp1 = Tlist1{1};
+                % Tmf1 = Tlist1{2};
+                % in_writetable(Tbp1, filesaved, 'Up_250_GO_BP');
+                % in_writetable(Tmf1, filesaved, 'Up_250_GO_MF');
+                % 
+                % [Tlist2] = run.ml_Enrichr(Tdn.gene(1:min([250 height(Tdn)])), ...
+                %             T.gene, ["GO_Biological_Process_2023", ...
+                %                      "GO_Molecular_Function_2023"]);
+                % Tbp2 = Tlist2{1};
+                % Tmf2 = Tlist2{2};
+                % in_writetable(Tbp2, filesaved, 'Dn_250_GO_BP');
+                % in_writetable(Tmf2, filesaved, 'Dn_250_GO_MF');
             catch ME
                 warning(ME.message);
             end
         end
         % - end of enrichr
-
     end
 end
 gui.myWaitbar(FigureHandle, fw);
@@ -108,11 +106,12 @@ gui.myWaitbar(FigureHandle, fw);
 answer=gui.myQuestdlg(FigureHandle, sprintf('Result files saved. Open the folder %s?', outdir), '');
 if strcmp(answer,'Yes'), winopen(outdir); end
 
-    function in_writetable(Tmf1, filesaved, shtname)
-        if ~isempty(Tmf1) && istable(Tmf1) && height(Tmf1) > 0
-            writetable(Tmf1, filesaved, "FileType", "spreadsheet", 'Sheet', shtname);
-        end
-    end
+    % function in_writetable(Tmf1, filesaved, shtname)
+    %     if ~isempty(Tmf1) && istable(Tmf1) && height(Tmf1) > 0
+    %         writetable(Tmf1, filesaved, "FileType", "spreadsheet", 'Sheet', shtname);
+    %     end
+    % end
+
 end   % end of function
 
 
@@ -164,3 +163,4 @@ function [T] = in_DETableProcess(T, cL1, cL2)
             end
         end
 end
+

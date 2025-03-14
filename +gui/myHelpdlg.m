@@ -1,15 +1,16 @@
-function h = myHelpdlg(parentFig, message, title)
+function [h] = myHelpdlg(parentfig, message, title)
     if nargin < 3, title = ''; end
     if nargin < 2, message = 'Message'; end
-    if nargin < 1, parentFig = []; end
-    h = [];
-    if isempty(parentFig) || ~gui.i_isuifig(parentFig)
+    if nargin < 1, parentfig = []; end
+    if nargout > 0, h = []; end
+    
+    if isempty(parentfig) || ~gui.i_isuifig(parentfig)
         % Traditional figure-based app
         % h = helpdlg(message, title);
         msgbox(message, title, 'help', 'modal');
     else
         % UIFigure-based app
         % disp('aaa UIFigure-based app')
-        uialert(parentFig, message, title, 'Icon', 'info');
+        uialert(parentfig, message, title, 'Icon', 'info');
     end
 end

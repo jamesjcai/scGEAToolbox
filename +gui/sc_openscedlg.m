@@ -271,7 +271,10 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
             end
         case '10x Genomics ''outs'' Folder...'
             disp('Open 10x Genomics outs folder...');
-            selpath = uigetdir;            
+            selpath = uigetdir;
+            if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure')
+                figure(parentfig);
+            end
             if selpath == 0, return; end
             try
                 fw = gui.myWaitbar(parentfig);
@@ -301,6 +304,9 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
             end
         case 'Parse Biosciences ''outs'' Folder...'
             selpath = uigetdir;
+            if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure')
+                figure(parentfig);
+            end            
             if selpath == 0, return; end
             try
                 fw = gui.myWaitbar(parentfig);

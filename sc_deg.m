@@ -102,7 +102,7 @@ function [T, Tup, Tdn] = sc_deg(X, Y, genelist, methodid, ...
 
     % Process up- and down-regulated genes if requested
     if nargout > 1
-        [paramset] = gui.i_degparamset(true);
+        [paramset] = gui.i_degparamset(true, parentfig);
         [Tup, Tdn] = pkg.e_processDETable(T, paramset, parentfig);
     end
 end

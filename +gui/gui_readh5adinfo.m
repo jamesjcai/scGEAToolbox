@@ -24,7 +24,8 @@ if ~isempty(xobs)
     switch gui.myQuestdlg(parentfig, 'Select Cell Type?')
         case 'Yes'
             if gui.i_isuifig(parentfig)
-                [indx, tf] = gui.myListdlg(parentfig, obsv, 'Select dataset of cell type:');
+                [indx, tf] = gui.myListdlg(parentfig, obsv, ...
+                    'Select dataset of cell type:');
             else
                 [indx, tf] = listdlg('PromptString', ...
                     {'Select dataset of cell type:'}, ...
@@ -39,10 +40,15 @@ if ~isempty(xobs)
 
     switch gui.myQuestdlg(parentfig, 'Select Batch ID?')
         case 'Yes'
+            if gui.i_isuifig(parentfig)
+                [indx, tf] = gui.myListdlg(parentfig, obsv, ...
+                    'Select dataset of batch id:');
+            else            
             [indx, tf] = listdlg('PromptString', ...
                 {'Select dataset of batch id:'}, ...
                 'SelectionMode', 'single', 'ListString', obsv, ...
                 'ListSize', [220 300]);
+            end
             if tf == 1                
                 sce.c_batch_id = h5read(filename, sprintf('/obs/%s', obsv(indx)));
             end

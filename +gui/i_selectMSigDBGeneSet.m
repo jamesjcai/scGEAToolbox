@@ -87,11 +87,15 @@ end
     %string(val.(a{idx}).geneSymbols);
 
     %%
+if gui.i_isuifig(parentfig)
+    [idx, tf] = gui.myListdlg(parentfig, listitems, 'Select gene set:');
+else    
     [idx, tf] = listdlg('PromptString', ...
         {'Select gene set:'}, ...
         'SelectionMode', 'single', ...
         'ListString', setnames, ...
         'ListSize', [260, 300]);
+end
     if tf == 1
         setname = setnames{idx};
         glist = string(Col.(setname).geneSymbols);

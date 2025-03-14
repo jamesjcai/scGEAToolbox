@@ -19,7 +19,8 @@ if isempty(listitems)
 end
 
         if gui.i_isuifig(parentfig)
-            [indx2, tf2] = gui.myListdlg(parentfig, listitems, 'Select embedding:');
+            [indx2, tf2] = gui.myListdlg(parentfig, listitems, ...
+                'Select embedding:');
         else
             [indx2, tf2] = listdlg('PromptString', ...
                 {'Select embedding:'}, ...

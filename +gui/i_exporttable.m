@@ -55,7 +55,8 @@ switch answer
             % if needwait
             %     gui.myHelpdlg(parentfig, sprintf('Result has been saved in %s', filename), '');
             % else
-                gui.myHelpdlg(parentfig, sprintf('Result has been saved in %s', filename));
+                waitfor(gui.myHelpdlg(parentfig, ...
+                    sprintf('Result has been saved in %s', filename)));
 %            end
         end
     case 'Excel file'
@@ -66,6 +67,7 @@ switch answer
             [file, path] = uiputfile({'*.xlsx'; '*.xls'; '*.*'}, ...
                 'Save as');
         end
+        figure(parentfig);
         if isequal(file, 0) || isequal(path, 0), return; end
 
         filename = fullfile(path, file);
@@ -88,8 +90,9 @@ switch answer
         end
         pause(1)
         if needwait
-            gui.myHelpdlg(parentfig, ...
-                sprintf('Result has been saved in %s', filename));
+            gui.myQuestdlg(parentfig, ...
+                sprintf('Result has been saved in %s', filename),'', ...
+                {'OK'},'OK');
         end
     case 'MAT file'
         if ~isempty(deffilename)            

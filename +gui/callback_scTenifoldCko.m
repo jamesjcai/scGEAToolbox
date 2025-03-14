@@ -99,7 +99,8 @@ switch Cko_approach
         [width] = min([max(strlength(targetpath))*6, 500]);
 
        if gui.i_isuifig(FigureHandle)
-            [targetpathid, tf] = gui.myListdlg(FigureHandle, targetpath, 'Select path(s) to block:');
+            [targetpathid, tf] = gui.myListdlg(FigureHandle, ...
+                targetpath, 'Select path(s) to block:');
         else
             [targetpathid, tf] = listdlg('PromptString', {'Select path(s) to block:'}, ...
                 'SelectionMode', 'multiple', 'ListString', ...

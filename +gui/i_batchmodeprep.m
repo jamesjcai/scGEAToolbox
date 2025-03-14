@@ -20,7 +20,7 @@ function [done, CellTypeList, i1, i2, cL1, cL2,...
     [thisc, clabel] = in_select1class(sce, false, parentfig);
     if isempty(thisc), return; end
     if strcmp(clabel,'Cell Type')
-        gui.myHelpdlg(parentfig, ('Cannot select ''Cell Type'' as grouping varialbe.');
+        gui.myHelpdlg(parentfig, ('Cannot select ''Cell Type'' as grouping varialbe.'));
         return;
     end
     
@@ -43,6 +43,9 @@ function [done, CellTypeList, i1, i2, cL1, cL2,...
         answer=gui.myQuestdlg(parentfig, 'Select a folder to save the outupt Excel files. Continue?','');
         if ~strcmp(answer,'Yes'), return; end    
         outdir = uigetdir;
+        if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure')
+            figure(parentfig);
+        end
         if ~isfolder(outdir), return; end
     end
     
@@ -199,11 +202,16 @@ end
             gui.myErrordlg(parentfig, 'Need at least two groups.');
             return;
         end
+
+    if gui.i_isuifig(parentfig)
+        [indxx, tfx] = gui.myListdlg(parentfig, listitems, 'Select two groups');
+    else        
         [indxx, tfx] = listdlg('PromptString', {'Select two groups:'}, ...
             'SelectionMode', 'multiple', ...
             'ListString', listitems, ...
             'InitialValue', [n - 1, n], ...
             'ListSize', [220, 300]);
+    end
         if tfx == 1
             if numel(indxx) ~= 2
                 gui.myErrordlg(parentfig, 'Please select 2 groups');

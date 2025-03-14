@@ -5,7 +5,7 @@ Tup=[];
 Tdn=[];
 if nargin < 2, paramset = []; end
 if isempty(paramset)
-    [paramset] = gui.i_degparamset;
+    [paramset] = gui.i_degparamset(false, parentfig);
 end
 if isempty(paramset)
    return;
@@ -52,9 +52,11 @@ a = T.(T.Properties.VariableNames{8}) - T.(T.Properties.VariableNames{7});
 % if isatac
 %     isok = T.p_val_adj <= 0.1;
 % else
-isok = abs(a) >= mindiffpct & abs(T.avg_log2FC) >= minabsolfc & T.p_val_adj <= apvaluecut;
+isok = abs(a) >= mindiffpct & abs(T.avg_log2FC) >= minabsolfc & ...
+       T.p_val_adj <= apvaluecut;
 
-fprintf('\nDE genes with > %.2f%% difference in expression percentages, abs(log2FC) >= %.2f, and adjusted P-value < %.3f are retained.\n', ...
+fprintf(['\nDE genes with > %.2f%% difference in expression percentages, ' ...
+    'abs(log2FC) >= %.2f, and adjusted P-value < %.3f are retained.\n'], ...
     mindiffpct*100,...
     minabsolfc, apvaluecut);
 

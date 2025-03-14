@@ -53,7 +53,8 @@ switch answer
             b = b(:, valididx);            
 
        if gui.i_isuifig(FigureHandle)
-            [indx, tf] = gui.myListdlg(FigureHandle, b(1, :), 'Select network variable:');
+            [indx, tf] = gui.myListdlg(FigureHandle, b(1, :), ...
+                'Select network variable:');
         else
             [indx, tf] = listdlg('PromptString', {'Select network variable:'}, ...
                 'liststring', b(1, :), 'SelectionMode', 'single', 'ListSize', [220, 300]);

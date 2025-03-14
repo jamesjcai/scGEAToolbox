@@ -12,7 +12,7 @@ function callback_DPGene2GroupsBatch(src, ~)
     
     [sce] = gui.i_selectinfogenes(sce, [], FigureHandle);
     [done, CellTypeList, i1, i2, cL1, cL2,... 
-        outdir] = gui.i_batchmodeprep(sce, prefixtag, wrkdir);
+        outdir] = gui.i_batchmodeprep(sce, prefixtag, wrkdir, FigureHandle);
     if ~done, return; end
     
     [indx1, species] = gui.i_selgenecollection(FigureHandle);

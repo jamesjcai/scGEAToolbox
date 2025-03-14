@@ -54,7 +54,8 @@ end
         if isempty(gsorted), return; end
 
        if gui.i_isuifig(FigureHandle)
-            [indx, tf] = gui.myListdlg(FigureHandle, gsorted, 'Select a gene');
+            [indx, tf] = gui.myListdlg(FigureHandle, gsorted, ...
+                'Select a gene');
         else
             [indx, tf] = listdlg('PromptString', {'Select a gene', '', ''}, ...
                 'SelectionMode', 'single', ...

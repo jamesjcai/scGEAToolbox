@@ -242,6 +242,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 in_addmenu(menus, 0, @gui.callback_CalculateGeneStats, 'Gene Expression (Statistics) Analysis...');
                 in_addmenu(menus, 0, @in_EnrichrHVGs, 'Gene Variability (HVG Function) Analysis...');
                 in_addmenu(menus, 0, @in_CompareCellScoreBtwCls, 'Gene Program (Cell Score) Analysis...');
+                in_addmenu(menus, 0, @gui.callback_SGSAnalysis, 'Stochastic Gene Silencing (SGS) Analysis [PMID:39828795]...');
                 in_addmenu(menus, 1, @gui.callback_DEGene2Groups, 'Differential Expression (DE) Analysis...','D');
                 in_addmenu(menus, 0, @gui.callback_DVGene2Groups, 'Differential Variability (DV) Analysis...','V');
                 in_addmenu(menus, 0, @gui.callback_DPGene2Groups, 'Differential Program (DP) Analysis...','P');

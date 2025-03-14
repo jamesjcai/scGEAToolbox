@@ -32,7 +32,8 @@ if isempty(listitems)
     return;
 end
         if gui.i_isuifig(parentfig)
-            [indx2, tf2] = gui.myListdlg(parentfig, listitems, 'Select clustering variable:');
+            [indx2, tf2] = gui.myListdlg(parentfig, listitems, ...
+                'Select clustering variable:');
         else
             [indx2, tf2] = listdlg('PromptString', ...
                 {'Select clustering variable:'}, ...

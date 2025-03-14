@@ -10,7 +10,9 @@ outbackgroundlist = [];
 answer = gui.myQuestdlg(parentfig, questtxt);
 if ~strcmp(answer, 'Yes'), return; end
 
-answer = gui.myQuestdlg(parentfig, sprintf('Input list contains %d genes. Run enrichment analysis with all genes?',... 
+answer = gui.myQuestdlg(parentfig, ...
+            sprintf(['Input list contains %d genes. ' ...
+            'Run enrichment analysis with all genes?'],... 
             numel(genelist)),'',...
             {'Yes, use all genes', 'No, pick top k genes',...
             'Cancel'}, 'Yes, use all genes');
@@ -25,14 +27,17 @@ else
 end
 
 if ~isempty(backgroundlist)
-    answer = gui.myQuestdlg(parentfig, 'Enrichr with background?','');
-    if strcmp(answer, 'Yes')
-        outbackgroundlist = backgroundlist;
-    elseif strcmp(answer, 'No')
-        outbackgroundlist = []; 
-    else
-        return;
-    end
+
+    outbackgroundlist = backgroundlist;
+
+    % answer = gui.myQuestdlg(parentfig, 'Enrichr with background?','');
+    % if strcmp(answer, 'Yes')
+    %     outbackgroundlist = backgroundlist;
+    % elseif strcmp(answer, 'No')
+    %     outbackgroundlist = []; 
+    % else
+    %     return;
+    % end
 end
 
 %enrichrtype = gui.myQuestdlg(parentfig, 'Select the type of Enrichr application.','', ...

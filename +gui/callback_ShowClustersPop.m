@@ -2,7 +2,8 @@ function callback_ShowClustersPop(src, ~)
 
 [FigureHandle, sce] = gui.gui_getfigsce(src);
 
-answer = gui.myQuestdlg(FigureHandle, 'Select a grouping variable and show cell groups in new figures individually?');
+answer = gui.myQuestdlg(FigureHandle, ['Select a grouping variable and ' ...
+    'show cell groups in new figures individually?']);
 if ~strcmp(answer, 'Yes'), return; end
 
 [thisc, ~] = gui.i_select1class(sce);
@@ -103,7 +104,8 @@ end
                 for ik=1:length(idx)
                     % scev = SCEV{idx(ik)};
                     scev = sce.selectcells(SCEV{idx(ik)});
-                    p=scgeatool(scev);
+                    p = scgeatool(scev,'useuifig', ...
+                        gui.i_isuifig(FigureHandle));
                     p.Name=matlab.lang.makeValidName(cL2{idx(ik)});
                     % p.Position([2])=p.Position([2])-s*30;
                     % p.Position([1])=p.Position([1])+s*30;
@@ -120,6 +122,10 @@ end
                 switch answer2
                     case 'Select a Folder'
                         [seltpath] = uigetdir(deflt);
+                        if isvalid(FigureHandle) && isa(FigureHandle, 'matlab.ui.Figure')
+                            figure(FigureHandle);
+                        end
+                        
                         if seltpath==0, return; end
                         if ~isfolder(seltpath), return; end
                     case 'Use Temporary Folder'
@@ -172,7 +178,8 @@ function [idx] = in_selectcellgrps(grpv, FigureHandle)
     idx=[];
 
        if gui.i_isuifig(FigureHandle)
-            [indx2, tf2] = gui.myListdlg(FigureHandle, grpv, 'Select Group(s):');
+            [indx2, tf2] = gui.myListdlg(FigureHandle, grpv, ...
+                'Select Group(s):');
         else
             [indx2, tf2] = listdlg('PromptString', ...
                 {'Select Group(s):'}, ...

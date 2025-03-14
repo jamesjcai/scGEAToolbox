@@ -50,7 +50,8 @@ i_additem(full(sum(sce.X > 0))', 'Number of Detected Genes');
     end
 
     if gui.i_isuifig(parentfig)
-        [indx2, tf2] = gui.myListdlg(parentfig, listitems, 'Select cell state/grouping variable:');
+        [indx2, tf2] = gui.myListdlg(parentfig, listitems, ...
+            'Select cell state/grouping variable:');
     else
         [indx2, tf2] = listdlg('PromptString', ...
             {'Select cell state/grouping variable:'}, ...

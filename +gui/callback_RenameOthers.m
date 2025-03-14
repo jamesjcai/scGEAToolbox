@@ -35,7 +35,8 @@ listitems = {'Gene name','Cluster ID'};
             [ci, cLi] = pkg.i_grp2idxsorted(sce.c_cluster_id);
             
            if gui.i_isuifig(FigureHandle)
-                [indxx, tfx] = gui.myListdlg(FigureHandle, string(cLi), 'Select cluster ID');
+                [indxx, tfx] = gui.myListdlg(FigureHandle, string(cLi), ...
+                    'Select cluster ID');
             else
                 [indxx, tfx] = listdlg('PromptString', ...
                     {'Select cluster ID'}, ...

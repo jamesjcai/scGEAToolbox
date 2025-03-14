@@ -6,7 +6,8 @@ if nargin < 4, minumgene = 5; end
 if nargin < 3
     genesets = ["GO_Biological_Process_2023", ...
                 "GO_Molecular_Function_2023", ...
-                "KEGG_2021_Human"]; 
+                "KEGG_2021_Human", ...
+                "Reactome_Pathways_2024"]; 
 end
 
 if nargin < 2, backgroundlist = []; end

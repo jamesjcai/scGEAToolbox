@@ -152,7 +152,8 @@ function [i1, i2, cL1, cL2] = aaa(listitems, ci, FigureHandle)
 
 
    if gui.i_isuifig(FigureHandle)
-        [indx, tf] = gui.myListdlg(FigureHandle, listitems, 'Select two groups:');
+        [indx, tf] = gui.myListdlg(FigureHandle, listitems, ...
+            'Select two groups:');
    else
         [indx, tf] = listdlg('PromptString', {'Select two groups:'}, ...
             'SelectionMode', 'multiple', ...

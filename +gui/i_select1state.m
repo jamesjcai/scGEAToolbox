@@ -198,7 +198,8 @@ end
             att = sce.table_attributes.Properties.VariableNames;
             
         if gui.i_isuifig(parentfig)
-            [indx, tf] = gui.myListdlg(parentfig, att, 'Select a SCE attribute variable:');
+            [indx, tf] = gui.myListdlg(parentfig, att, ...
+                'Select a SCE attribute variable:');
         else
             [indx, tf] = listdlg('PromptString', {'Select a SCE attribute variable:'}, ...
                 'liststring', att, 'SelectionMode', 'single', 'ListSize', [220, 300]);

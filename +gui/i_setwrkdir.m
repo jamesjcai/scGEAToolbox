@@ -44,6 +44,10 @@ end
         switch answer
             case 'Select a Folder'
                 [seltpath] = uigetdir(deflt);
+                if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure')
+                    figure(parentfig);
+                end
+                
                 if seltpath==0, return; end
                 if ~isfolder(seltpath), return; end
             case 'Use Temporary Folder'
