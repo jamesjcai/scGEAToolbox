@@ -125,6 +125,7 @@ end
 if ~isempty(sce) && sce.NumCells>0, hAx.Visible="on"; end
 
 createMenus(FigureHandle, 10);
+
 if ~isempty(fx) && isvalid(fx), fxfun(fx, 1.0); end
 pause(1);
 if ~isempty(fx) && isvalid(fx), set(fx, 'visible', 'off'); end
@@ -137,10 +138,10 @@ if ~gui.i_isuifig(FigureHandle)
     uicontrol(button1);
 end
 
-if useuifig
-    UI.Snackbar(FigureHandle,'Click Import Data or Press i to Start', ...
-        'type','normal','theme','success');
-end
+% if useuifig
+%     UI.Snackbar(FigureHandle,'Click Import Data or Press i to Start', ...
+%         'type','normal','theme','success');
+% end
 
 guidata(FigureHandle, sce);
 set(FigureHandle, 'CloseRequestFcn', @in_closeRequest);
