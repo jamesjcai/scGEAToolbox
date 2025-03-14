@@ -1,7 +1,7 @@
 function callback_Heatmap(src, ~)
 
 [FigureHandle, sce] = gui.gui_getfigsce(src);
-[thisc, ~] = gui.i_select1class(sce,[],[],[],FigureHandle););
+[thisc, ~] = gui.i_select1class(sce,[],[],[],FigureHandle);
 if isempty(thisc), return; end
 
 % [c, cL, noanswer] = gui.i_reordergroups(thisc);

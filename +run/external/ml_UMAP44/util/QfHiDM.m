@@ -2820,7 +2820,7 @@ classdef QfHiDM < handle
                     if isempty(sClr)
                         clr=Gui.HslColor(i,N);
                     else
-                        clr=str2double(sClr); %#ok<ST2NM> 
+                        clr=str2double(sClr);  
                         if any(clr>1)
                             clr=clr/256;
                         end
@@ -4342,7 +4342,7 @@ classdef QfHiDM < handle
                     if isempty(sClr)
                         clr=Gui.HslColor(i,N);
                     else
-                        clr=str2double(sClr); %#ok<ST2NM> 
+                        clr=str2double(sClr);  
                         if any(clr>1)
                             clr=clr/256;
                         end
@@ -4726,7 +4726,7 @@ classdef QfHiDM < handle
 
                 description = char(e.getDescription); % URL stri
                 et=char(e.getEventType);
-                idxs=str2double(description); %#ok<ST2NM> 
+                idxs=str2double(description);  
                 mouseEvent=e.getInputEvent;
                 
                 switch char(et)

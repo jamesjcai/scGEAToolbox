@@ -43,7 +43,8 @@ function callback_CloseAllOthers(src, ~)
             uialert(FigureHandle, 'All other figures have been closed.','','Icon','info');
         else
             disp('Either there is only one figure or the current figure is part of another application group. Nothing has been done.');
-                end
+         end
+         
     end
 end
 

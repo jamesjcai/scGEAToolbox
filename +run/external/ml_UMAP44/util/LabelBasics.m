@@ -332,7 +332,7 @@ classdef LabelBasics < handle
                         names{sig_idx}=name;
                         try
                             clrs(sig_idx,:)=str2double(...
-                                lblMap.get([key '.color']))/256; %#ok<ST2NM>
+                                lblMap.get([key '.color']))/256; 
                         catch 
                             clrs(sig_idx,:)=[.1 .1 .1];
                         end
@@ -686,7 +686,7 @@ classdef LabelBasics < handle
                     if isempty(clr)
                         clr=[.8 .8 .84];
                     elseif ischar(clr)
-                        clr=str2double(clr)/256; %#ok<ST2NM> 
+                        clr=str2double(clr)/256;  
                     end
                 end
                 clrs(end+1,:)=clr;
@@ -783,7 +783,7 @@ classdef LabelBasics < handle
             v=this.props.get(this.contextExcludeProperty);
             priorIds=[];
             if ~isempty(v)
-                priorIds=str2double(v); %#ok<ST2NM> 
+                priorIds=str2double(v);  
                 nPrior=length(priorIds);
                 for i=1:nPrior
                     priorId=priorIds(i);
@@ -876,7 +876,7 @@ classdef LabelBasics < handle
             if isempty(v)
                 return;
             end
-            deSelected=str2double(v); %#ok<ST2NM> 
+            deSelected=str2double(v);  
             N=length(deSelected);
             C=size(this.idPerEvent, 2);
             for i=1:N

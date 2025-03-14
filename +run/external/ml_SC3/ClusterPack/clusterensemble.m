@@ -44,7 +44,8 @@ if ~exist('cls', 'var')
         cls = [1, 1, 1, 2, 2, 3, 3; 2, 2, 2, 3, 3, 1, 1; 1, 1, 2, 2, 3, 3, 3; 1, 2, NaN, 1, 2, NaN, NaN];
         disp('clusterensemble-advice: type "help clusterensemble" for information about usage');
             disp(' ');
-        end
+end
+
 
         if size(cls, 2) > 1000
             workfcts = {'hgpa', 'mcla'};

@@ -30,7 +30,7 @@ else
         verbose='graphic';
     end
     if ischar(whichOnes)
-        whichOnes=str2double(whichOnes); %#ok<ST2NM> 
+        whichOnes=str2double(whichOnes);  
     end
     if ~isnumeric(whichOnes) || any(isnan(whichOnes)) || any(whichOnes<0) || any(whichOnes>N_EXAMPLES)
         error(['run_examples argument must be nothing or numbers from 1 to '...

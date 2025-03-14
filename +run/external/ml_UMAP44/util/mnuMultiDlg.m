@@ -572,8 +572,8 @@ conclude;
         for ii=0:checkBoxParentCount-1
             cb=checkBoxParent.getComponent(ii);
             if isequal(cb, lastPick)
-                for ii=ii+1:checkBoxParentCount-1
-                    cb=checkBoxParent.getComponent(ii);
+                for iix=ii+1:checkBoxParentCount-1
+                    cb=checkBoxParent.getComponent(iix);
                     if isequal(cb, curPick)
                         break;
                     end
@@ -581,8 +581,8 @@ conclude;
                 end
                 break;
             elseif isequal(cb, curPick)
-                for ii=ii+1:checkBoxParentCount-1
-                    cb=checkBoxParent.getComponent(ii);
+                for iix=ii+1:checkBoxParentCount-1
+                    cb=checkBoxParent.getComponent(iix);
                     if isequal(cb, lastPick)
                         break;
                     end

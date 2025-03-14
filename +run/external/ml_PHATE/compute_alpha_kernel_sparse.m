@@ -127,7 +127,9 @@ if length(idx_thresh) < N
             K = [K; K2(:)];
         end
 
-    end
+
+end
+
 
     % Build the kernel
     K = sparse(i, j, K);

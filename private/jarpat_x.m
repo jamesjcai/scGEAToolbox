@@ -38,7 +38,7 @@ S = 1 - S / max(S(:));
 conn = zeros(size(S, 1), 1); %Membership vector
 cent = zeros(size(S, 1), 1); %Indicator vector
 j = 0;
-while max(conn == 0)
+while any(conn == 0)
     j = j + 1;
     %disp(['Cal. of  the clusters ',num2str(j)])
     dumm = find(conn == 0);
@@ -46,7 +46,7 @@ while max(conn == 0)
     cent(start) = -1; % not tested yet
     conn(start) = j; % this was the center
 
-    while max(cent == -1)
+    while any(cent == -1)
         dumm = find(cent == -1);
         start = dumm(1); % The next untested center
         cent(start) = 1; % this was the center

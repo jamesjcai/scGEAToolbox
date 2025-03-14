@@ -2087,7 +2087,7 @@ classdef File
                 matrix=[];
             else
                 numbs=char(fread(fid)');
-                matrix=str2double(numbs); %#ok<ST2NM> 
+                matrix=str2double(numbs);  
                 fclose(fid);
             end
         end

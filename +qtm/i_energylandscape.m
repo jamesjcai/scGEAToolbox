@@ -1,5 +1,5 @@
 nchoosek(20, 3)
-X = zeros(35);
+% X = zeros(35);
 %%
 [X, Y] = meshgrid(1:30, 1:38);
 Z = reshape(randn(nchoosek(20, 3), 1), 38, 30);

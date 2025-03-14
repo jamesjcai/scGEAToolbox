@@ -46,7 +46,8 @@ end
 
 if exist('@tensor/tensor.m', 'file') ~= 2
     error('Need Tensor Toolbox for MATLAB (https://www.tensortoolbox.org/)');
-    end
+end
+
     if exist('sc_pcnetpar.m', 'file') ~= 2
         error('Need sc_pcnetpar.m in scGEAToolbox https://github.com/jamesjcai/scGEAToolbox');
     end

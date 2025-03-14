@@ -90,7 +90,9 @@ if ~isempty(varargin) > 0 % you set a parameter?
                     if N > 9
                         %     warning(['Default may be nicer for ' num2str(N) ' for clearer colors use: whitebg(''black''); ']);
                     end
-                end
+            end
+
+
                 qualFlag = 1;
             case {'sequential', 'seq'}
                 lineStyles = colorm(N);
@@ -114,8 +116,11 @@ if ~isempty(varargin) > 0 % you set a parameter?
                 colorblindFlag = 1;
             otherwise
                 warning(['parameter ''', varargin{1}, ''' not recognized']);
-            end
     end
+    
+
+end
+
     % *.95
     % predefine some colormaps
     set3 = colorBrew2mat({[141, 211, 199]; [255, 237, 111]; [190, 186, 218]; [251, 128, 114]; [128, 177, 211]; [253, 180, 98]; [179, 222, 105]; [188, 128, 189]; [217, 217, 217]; [204, 235, 197]; [252, 205, 229]; [255, 255, 179]}');

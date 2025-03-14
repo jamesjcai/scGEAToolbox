@@ -57,7 +57,8 @@ if (~strcmp(head1, 'matrix'))
     disp('This function only knows how to read MatrixMarket matrix files.');
         disp('  ');
         error('  ');
-    end
+end
+
 
     % Read through comments, ignoring them
 
@@ -82,7 +83,10 @@ if (~strcmp(head1, 'matrix'))
             if (count > 0 && count ~= 3)
                 error('Invalid size specification line.')
             end
+
         end
+
+
         rows = sizeinfo(1);
         cols = sizeinfo(2);
         entries = sizeinfo(3);
@@ -131,6 +135,7 @@ if (~strcmp(head1, 'matrix'))
 
         end
 
+
     elseif (strcmp(rep, 'array')) %  read matrix given in dense
         %  array (column major) format
 
@@ -166,6 +171,8 @@ if (~strcmp(head1, 'matrix'))
                 disp('   general')
                 error('Check symmetry specification in header.');
             end
+
+
             A = reshape(A, rows, cols);
         elseif (strcmp(field, 'complex')) % complx valued entries:
             tmpr = fscanf(mmfile, '%f', 1);
@@ -198,8 +205,10 @@ if (~strcmp(head1, 'matrix'))
             else % Unknown matrix type
                 disp('Matrix type:', field)
                 error('Invalid matrix type specification. Check header against MM documentation.');
-            end
         end
+
+    end
+    
 
         %
         % If symmetric, skew-symmetric or Hermitian, duplicate lower

@@ -401,8 +401,10 @@ assert(nnz(xfh) < 2, ...
                         '\nThe provided regular expression does not match the digit "0", which\n', ...
                         'may be acceptable (e.g. if literals, quantifiers, or lookarounds are used).', ...
                             '\nThe provided regular expression: "%s"'], rgx)
-                    end
                 end
+
+            end
+            
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%nsChkRgx
                     function arr = ns1s2c(arr)
                         % If scalar string then extract the character vector, otherwise data is unchanged.

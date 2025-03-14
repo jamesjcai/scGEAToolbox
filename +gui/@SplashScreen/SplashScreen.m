@@ -441,7 +441,7 @@ if ischar( str )
         end
     elseif all( ismember( str, '1234567890.,; []' ) )
         % Try the '[0 0 1]' thing first
-        col = str2double( str ); %#ok<ST2NM>
+        col = str2double( str ); 
         if numel(col) == 3
             % Conversion worked, so just check for silly values
             col(col<0) = 0;

@@ -32,14 +32,14 @@ function w = getIdfW(M, type)
     end
 end
 
-function M = l_norm(m, norm)
-    if strcmp(norm, 'l1')
-        norm_vec = 1 ./ sum(m, 2);
-    elseif strcmp(norm, 'l2')
-        norm_vec = 1 ./ sqrt(sum(m.^2, 2));
-    end
-    norm_vec(isinf(norm_vec)) = 0; % Handle infinite values
-    
-    % Apply normalization
-    M = m * diag(norm_vec); % Assuming sparse input
-end
+% function M = l_norm(m, norm)
+%     if strcmp(norm, 'l1')
+%         norm_vec = 1 ./ sum(m, 2);
+%     elseif strcmp(norm, 'l2')
+%         norm_vec = 1 ./ sqrt(sum(m.^2, 2));
+%     end
+%     norm_vec(isinf(norm_vec)) = 0; % Handle infinite values
+% 
+%     % Apply normalization
+%     M = m * diag(norm_vec); % Assuming sparse input
+% end

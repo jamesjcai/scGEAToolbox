@@ -1800,7 +1800,7 @@ function [handles,levels,parentIdx,listing] = findjobj(container,varargin) %#ok<
                     visible = visible && isempty(strfind(get(childNode,'Name'),'color="gray"'));
                     %if any(strcmp(childNode.getName,nodesToUnExpand))
                     %name = char(childNode.getName);
-                    if any(cellfun(@(s)~isempty(strmatch(s,char(childNode.getName))),nodesToUnExpand)) || ~visible
+                    if any(cellfun(@(s)~isempty(strcmp(s,char(childNode.getName))),nodesToUnExpand)) || ~visible
                         childPath = javax.swing.tree.TreePath(childNode.getPath);
                         childRow = tree.getRowForPath(childPath);
                         tree.collapseRow(childRow);

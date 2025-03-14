@@ -42,6 +42,8 @@ function [phi, lambda] = standardDiffusionMap(X, epsilon, t, n_components)
     phi = phi * diag(lambda.^t);
 end
 
+%{
+
 function [phi, lambda] = fokkerPlanckDiffusionMap(X, epsilon, dt, n_components)
     % Fokker-Planck Diffusion Map implementation
     % X: data matrix (n_samples x n_features)
@@ -95,6 +97,7 @@ function [phi, lambda] = fokkerPlanckDiffusionMap(X, epsilon, dt, n_components)
     phi = phi * diag(lambda.^(1/dt));
 end
 
+%}
 % Example usage:
 % X = randn(100, 3);  % Generate random 3D data
 % epsilon = 1;        % Kernel bandwidth

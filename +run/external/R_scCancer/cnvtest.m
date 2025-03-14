@@ -64,18 +64,18 @@ function cnvList = cnvtest(exprData, geneManifest, cellAnnotation, refData, spec
     cnvList.cellAnno = cellAnno;
 end
 
-
-function cnvList = rmGeneForCNV(cnvList, cutoff, minCell)
-    % Calculate the mean and sum for gene selection
-    geneMean = mean(cnvList.exprData, 2);
-    geneSum = sum(cnvList.exprData > 0, 2);
-
-    % Select genes based on criteria
-    genesSel = (geneMean >= cutoff) & (geneSum >= minCell);
-
-    % Filter expression data and chromosome info
-    cnvList.exprData = cnvList.exprData(genesSel, :);
-    cnvList.geneChr = cnvList.geneChr(genesSel, :);
-end
-
-
+% 
+% function cnvList = rmGeneForCNV(cnvList, cutoff, minCell)
+%     % Calculate the mean and sum for gene selection
+%     geneMean = mean(cnvList.exprData, 2);
+%     geneSum = sum(cnvList.exprData > 0, 2);
+% 
+%     % Select genes based on criteria
+%     genesSel = (geneMean >= cutoff) & (geneSum >= minCell);
+% 
+%     % Filter expression data and chromosome info
+%     cnvList.exprData = cnvList.exprData(genesSel, :);
+%     cnvList.geneChr = cnvList.geneChr(genesSel, :);
+% end
+% 
+% 

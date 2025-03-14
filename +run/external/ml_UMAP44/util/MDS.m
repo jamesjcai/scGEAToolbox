@@ -292,7 +292,7 @@ classdef MDS< handle
             if ~isempty(this.matchProps) && ~isempty(this.matchIdxs)
                 key=[num2str(this.matchIdxs(idx)) '.color'];
                 if this.matchProps.has(key)
-                    faceColor=str2double(this.matchProps.get(key)); %#ok<ST2NM> 
+                    faceColor=str2double(this.matchProps.get(key));  
                     this.matchColorCount=this.matchColorCount+1;
                 else
                     mx=max(this.matchIdxs);
@@ -963,7 +963,7 @@ classdef MDS< handle
                         mi=this.matchIdxs(i);
                         key=[num2str(mi) '.madUnits'];
                         if this.matchProps.has(key)
-                            madUnits=str2double(this.matchProps.get(key)); %#ok<ST2NM> 
+                            madUnits=str2double(this.matchProps.get(key));  
                             madUnits=madUnits(~isnan(madUnits));
                             if any(madUnits>3)
                                 idxSym=4;
@@ -1073,7 +1073,7 @@ classdef MDS< handle
                         if matching && ~isempty(this.matchIdxs)
                             key=[num2str(this.matchIdxs(i)) '.color'];
                             if this.matchProps.has(key)
-                                edgeC=str2double(this.matchProps.get(key)); %#ok<ST2NM> 
+                                edgeC=str2double(this.matchProps.get(key));  
                             end
                         end
                     end
@@ -1098,7 +1098,7 @@ classdef MDS< handle
                     end
                     key=this.getPositionKey(i);
                     if this.posProps.has(key)
-                        pos=str2double(this.posProps.get(key)); %#ok<ST2NM> 
+                        pos=str2double(this.posProps.get(key));  
                         tX=pos(1);
                         tY=pos(2);
                     else

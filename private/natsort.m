@@ -318,8 +318,10 @@ assert(nnz(xfh) < 2, ...
                         %ars(idn) = strcat(ars(idn),mxc); % slower than loop
                         for k = reshape(find(idn), 1, [])
                             ars{k}(1, end + 1) = mxc;
+                        end
+
                     end
-                end
+                    
                 %
                 idn(isnan(arn)) = ~any(ton); % NaN<num
                 %

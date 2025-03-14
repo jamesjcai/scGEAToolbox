@@ -107,7 +107,8 @@ function ButtonName = buttondlg(Question, Title, Btn1, Btn2, Btn3, Default)
 
 if nargin < 1
     error('Too few arguments for BUTTONDLG'); % <-- Modified
-        end
+end
+
 
         Interpreter = 'none';
         Question = dialogCellstrHelper(Question);
@@ -130,7 +131,8 @@ if nargin < 1
         %%%%%%%%%%%%%%%%%%%%
         if nargout > 1
             error('Wrong number of output arguments for BUTTONDLG'); % <-- Modified
-                end
+        end
+
                 if nargin == 1
                     Title = ' ';
                 end
@@ -206,7 +208,8 @@ if nargin < 1
                     otherwise
                         warning('Invalid string for Icon in BUTTONDLG.');
                             IconString = 'none';
-                        end % <-- Added End
+                end % <-- Added End
+                
 
                         %%%%%%%%%%%%%%%%%%%%%%%
                         %%% Create QuestFig %%%

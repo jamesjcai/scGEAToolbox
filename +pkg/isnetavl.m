@@ -152,7 +152,9 @@ if octave
                     else
                         v = v_dict{L, 2};
                     end
+
                 end
+
             elseif nargin == 4
                 % Undocumented shorthand syntax: skip the 'Octave' argument.
                 [test, v] = deal(Oct_flag, Oct_test);
@@ -164,7 +166,8 @@ if octave
                 % Convert 4.1 to 401.
                 v = 0.1 * v + 0.9 * fix(v);
                 v = round(100*v);
-            end
+    end
+
         else
             % Convert R notation to numeric and convert 9.1 to 901.
             if isnumeric(Rxxxxab)
@@ -180,7 +183,9 @@ if octave
                     v = v_dict{L, 2};
                 end
             end
-        end
+
+end
+
         switch test
             case '==', tf = v_num == v;
             case '<', tf = v_num < v;
@@ -208,7 +213,7 @@ if octave
                 str = urlread('http://google.com'); %#ok<NASGU,URLRD>
             end
             connected = 1;
-            timing = (now - then) * 24 * 3600 * 1000;
+            timing = (datetime('now') - then) * 24 * 3600 * 1000;
         catch
             connected = 0;
             timing = 0;

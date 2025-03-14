@@ -241,7 +241,7 @@ classdef SuhHeatMap < handle
                 
                 description = char(e.getDescription); % URL stri
                 et=char(e.getEventType);
-                idxs=str2double(description(2:end)); %#ok<ST2NM> 
+                idxs=str2double(description(2:end));  
                 mouseEvent=e.getInputEvent;
                 
                 switch char(et)

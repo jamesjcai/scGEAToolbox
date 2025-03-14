@@ -192,7 +192,7 @@ classdef BasicMap < Map
             end
             nums=props.get(name, defaultNumbers);
             if ~isempty(nums)
-                nums=str2double(nums); %#ok<ST2NM> 
+                nums=str2double(nums);  
             else
                 nums=[];
             end

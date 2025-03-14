@@ -69,12 +69,15 @@ function ButtonName = i_questdlgtimer(TimeOutValue, Question, Title, Btn1, Btn2,
 %%%%%%%%%%%%%%%%%%%%%%%%%
 if nargout > 1
     error('MATLAB:questdlg_timer:WrongNumberOutputs', 'Wrong number of output arguments for QUESTDLG_TIMER');
-        end
+end
+
 
         if nargin < 2
+            
 
             error('MATLAB:questdlg_timer:TooFewArguments', 'Too few arguments for QUESTDLG_TIMER');
-                end
+        end
+
 
                 if ~isa(TimeOutValue, 'numeric')
                     error('MATLAB:questdlg_timer:TimerValNotNumeric', 'Timer value has to be numeric')
@@ -444,6 +447,7 @@ set(IconAxes, ...
                 end
 
 end
+
 
 
             %--------------------------------------------------------------------------
