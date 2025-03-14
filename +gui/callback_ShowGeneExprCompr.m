@@ -8,7 +8,7 @@ function callback_ShowGeneExprCompr(src, ~)
     if isempty(glist), return; end
 
         allowunique = false;
-        [thisc] = gui.i_select1class(sce, allowunique);
+        [thisc] = gui.i_select1class(sce, allowunique,[],[],FigureHandle);
         if isempty(thisc), return; end
         if isscalar(unique(thisc))
             answer = gui.myQuestdlg(FigureHandle, "All cells are in the same group. No comparison will be made. Continue?", ...

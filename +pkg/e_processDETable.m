@@ -16,42 +16,8 @@ else
     sortbywhat = paramset{4};
 end
 
-%     mindiffpct = [];
-%     minabsolfc = [];
-%     apvaluecut = [];
-% else
-% end
-% 
-% if isempty(mindiffpct) || isempty(minabsolfc) || isempty(apvaluecut)
-%     % definput = {'0.05', '1.0', '0.01'};
-%     % prompt = {'Min. abs(diff(pct)):', ...
-%     %           'Min. abs(log2(FC)):', ...
-%     %           'Adjusted P-value cutoff:'};
-%     % dlgtitle = 'DE Result Filter';
-%     % dims = [1, 80];
-%     % answer = inputdlg(prompt, dlgtitle, dims, definput);
-%     % 
-%     % if isempty(answer), return; end
-%     % try
-%     %     mindiffpct = str2double(answer{1});
-%     %     minabsolfc = str2double(answer{2});
-%     %     apvaluecut = str2double(answer{3});
-%     %     assert((mindiffpct > 0) && (mindiffpct < 1));
-%     %     assert((minabsolfc >= 1) && (minabsolfc < 100));
-%     %     assert((apvaluecut >= 0.0) && (apvaluecut <= 1.0));
-%     % catch
-%     %     gui.myErrordlg(parentfig, 'Invalid input.');
-%     %     return;
-%     % end
-%     [paramset] = gui.i_degparamset;
-% end
-
-%a=T.pct_2-T.pct_1;
-
 a = T.(T.Properties.VariableNames{8}) - T.(T.Properties.VariableNames{7});
-% if isatac
-%     isok = T.p_val_adj <= 0.1;
-% else
+
 isok = abs(a) >= mindiffpct & abs(T.avg_log2FC) >= minabsolfc & ...
        T.p_val_adj <= apvaluecut;
 

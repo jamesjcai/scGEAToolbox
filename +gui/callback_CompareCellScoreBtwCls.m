@@ -32,7 +32,7 @@ bb = 'No, just show values (heatmap)';
                 thisc = ones(sce.NumCells, 1);
             else
                 allowunique = false;
-                [thisc] = gui.i_select1class(sce, allowunique);
+                [thisc] = gui.i_select1class(sce, allowunique,[],[],FigureHandle);
                 if isempty(thisc), return; end
                 if isscalar(unique(thisc))
                     answer = gui.myQuestdlg(FigureHandle, "All cells are in the same group. No comparison will be made. Continue?", ...

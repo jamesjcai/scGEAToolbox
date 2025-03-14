@@ -7,6 +7,8 @@ if nargin < 4 || isempty(mesg), mesg = 'Processing your data'; end
 if nargin < 3 || isempty(witherror), witherror = false; end
 if nargin < 1, parentfig = []; end
 
+
+
     if ~gui.i_isuifig(parentfig)
         if nargin < 2 || isempty(fw)
             % hFig = gcf;
@@ -29,10 +31,12 @@ if nargin < 1, parentfig = []; end
             tic;
             return;
         elseif isvalid(fw) && strcmp(fw.Tag, 'TMWWaitbar') && ~isempty(newmesg) && isempty(f)
+            newmesg = strrep(newmesg,'_','\_');
             fw = waitbar(.618, fw, newmesg);
         elseif isvalid(fw) && strcmp(fw.Tag, 'TMWWaitbar') && isempty(newmesg) && ~isempty(f)
             fw = waitbar(f, fw);
         elseif isvalid(fw) && strcmp(fw.Tag, 'TMWWaitbar') && ~isempty(newmesg) && ~isempty(f)
+            newmesg = strrep(newmesg,'_','\_');
             fw = waitbar(f, fw, newmesg);
         elseif isvalid(fw) && strcmp(fw.Tag, 'TMWWaitbar')
             if ~witherror

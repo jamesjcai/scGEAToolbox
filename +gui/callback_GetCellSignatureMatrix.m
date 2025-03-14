@@ -101,7 +101,7 @@ else
     return;
 end
 allowunique = false;
-[thisc] = gui.i_select1class(sce, allowunique);
+[thisc] = gui.i_select1class(sce, allowunique,[],[],FigureHandle););
 if isempty(thisc), return; end
 %[c,cL]=grp2idx(thisc);
 %assignin('base','thisc',thisc);

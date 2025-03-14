@@ -7,13 +7,6 @@ function callback_ScatterStemPlot(src, ~)
         [FigureHandle, sce] = gui.gui_getfigsce(src);
     end
     
-    %[thisc, ~] = gui.i_select1class(sce);
-    %if isempty(thisc), return; end
-    %[~, cLorder] = grp2idx(thisc);
-    %[newidx] = gui.i_selmultidlg(cLorder, cLorder, FigureHandle);
-    %if isempty(newidx), return; end
-    %picked = ismember(thisc, cLorder(newidx));
-    %if ~all(picked), thisc = thisc(picked); end
     
     answer = gui.myQuestdlg(FigureHandle, "Scatter-stem plot for gene expression or cell state variables?","", ...
         {'Gene Expression', 'Cell State'}, 'Gene Expression');

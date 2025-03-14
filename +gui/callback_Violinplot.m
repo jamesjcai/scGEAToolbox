@@ -7,7 +7,7 @@ function callback_Violinplot(src, ~)
         [FigureHandle, sce] = gui.gui_getfigsce(src);
     end
     
-    [thisc, ~] = gui.i_select1class(sce);
+    [thisc, ~] = gui.i_select1class(sce,[],[],[],FigureHandle);
     if isempty(thisc), return; end
 
 

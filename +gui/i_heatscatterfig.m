@@ -66,7 +66,7 @@ hx.show(parentfig);
         [passed] = i_checkposg;
         if ~passed, return; end
 
-        [thisc] = gui.i_select1class(sce);
+        [thisc] = gui.i_select1class(sce,[],[],[],parentfig);
         if ~isempty(thisc)
             gui.i_geneheatmap(sce, thisc, posg);
         end
@@ -75,7 +75,7 @@ hx.show(parentfig);
     function in_genedotplot(~, ~)
         [passed] = in_checkposg;
         if ~passed, return; end
-        [thisc] = gui.i_select1class(sce);
+        [thisc] = gui.i_select1class(sce,[],[],[],parentfig);
         if isempty(thisc), return; end
         [c, cL] = grp2idx(thisc);
         idx = matches(posg, sce.g, 'IgnoreCase', true);

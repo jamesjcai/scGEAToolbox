@@ -15,7 +15,7 @@ function callback_CalculateGeneStats(src, ~)
     % Grouping cells based on user input
     groupingConfirmed = gui.myQuestdlg(FigureHandle, 'Grouping cells? Select Yes to pick a grouping variable. Select No to include all cells.', 'Grouping');
     if strcmp(groupingConfirmed, 'Yes')
-        thisc = gui.i_select1class(sce);
+        thisc = gui.i_select1class(sce,[],[],[],FigureHandle);
         if isempty(thisc), return; end
         [c, cL] = grp2idx(thisc);
 

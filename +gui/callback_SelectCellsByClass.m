@@ -3,7 +3,7 @@ function callback_SelectCellsByClass(src, ~)
 [FigureHandle, sce] = gui.gui_getfigsce(src);
 
 
-[ptsSelected] = gui.i_select1classcells(sce, true);
+[ptsSelected] = gui.i_select1classcells(sce, true,[],[],FigureHandle);
 if isempty(ptsSelected), return; end
 
 [ax, bx] = view(findall(FigureHandle,'type','axes'));

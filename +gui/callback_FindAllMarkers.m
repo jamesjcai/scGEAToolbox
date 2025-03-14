@@ -16,7 +16,7 @@ end
 
 function in_findAllMarkers(sce,FigureHandle)
 
-    [thisc, ~] = gui.i_select1class(sce);
+    [thisc, ~] = gui.i_select1class(sce,[],[],[],FigureHandle);
     if isempty(thisc), return; end
     if isscalar(unique(thisc))
         gui.myWarndlg(FigureHandle, "All cells are in the same group.");
@@ -70,7 +70,7 @@ function in_MarkerGeneHeatmap(src, ~, sce)
         return;
     end
     
-    [thisc, ~] = gui.i_select1class(sce);
+    [thisc, ~] = gui.i_select1class(sce,[],[],[],FigureHandle);
     if isempty(thisc), return; end
     if isscalar(unique(thisc))
         gui.myWarndlg(FigureHandle, "All cells are in the same group.");

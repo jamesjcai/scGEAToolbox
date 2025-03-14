@@ -3,7 +3,7 @@ function [h] = i_scoreheatmap(Y, rowlabels, sce, parentfig)
 
     if nargin < 4, parentfig = []; end
     
-    [thisc, ~] = gui.i_select1class(sce);
+    [thisc, ~] = gui.i_select1class(sce,[],[],[],parentfig);
     if isempty(thisc), return; end
     [c, cL, noanswer] = gui.i_reordergroups(thisc, [], parentfig);
     if noanswer, return; end

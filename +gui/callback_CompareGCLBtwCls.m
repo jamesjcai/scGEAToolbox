@@ -12,7 +12,7 @@ function callback_CompareGCLBtwCls(src, ~)
     answer = gui.myQuestdlg(FigureHandle, 'This function compares GCL of genes to show differences between cell groups. Continue?', '');
     if ~strcmp(answer, 'Yes'), return; end
       
-    [thisc, clabel] = gui.i_select1class(sce);
+    [thisc, clabel] = gui.i_select1class(sce,[],[],[],FigureHandle);
     if isempty(thisc), return; end
             
     n = length(unique(thisc));

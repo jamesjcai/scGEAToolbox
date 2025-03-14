@@ -17,13 +17,14 @@ function answer = myQuestdlg(parentFig, message, title, options, defaultOption)
     % Output:
     % - answer: The option selected by the user.
 
-%    if nargin < 5
-%        defaultOption = options{1};
-%    end
+
     if nargin < 4
         options = {'Yes', 'No', 'Cancel'};
         defaultOption = options{1};
     end
+    if nargin < 5
+        defaultOption = options{1};
+    end    
     if nargin < 3, title = ''; end
     if nargin < 2, message = 'Selection'; end
     if nargin < 1, parentFig = []; end

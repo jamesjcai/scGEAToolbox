@@ -108,10 +108,7 @@ function callback_SGSAnalysis(src, ~)
         end
     catch ME
         warning(ME.message);
-    end
-
-
-    
+    end    
 
     outfile = sprintf('%s_vs_%s_SGS_results', ...
         matlab.lang.makeValidName(string(cL1)), ...
@@ -132,27 +129,34 @@ function callback_SGSAnalysis(src, ~)
         vars = {'Tup', 'Tdn'};
         values = {Tup, Tdn};
         [~, tf] = export2wsdlg(labels, vars, values);
+        figure(FigureHandle);
         if tf ~= 1, return; end
     end
 
     if ~isempty(filesaved)
         if strcmp(filetype, 'Excel file')
-                %answer = gui.myQuestdlg(FigureHandle, 'Save up- and down-regulated genes to seperate sheets?');
-                %if strcmp(answer, 'Yes')
-                [Tup, Tdn] = pkg.e_processDETable(T, paramset, FigureHandle);
-
-                
-
-                % strcmp(extractAfter(filesaved,strlength(filesaved)-4),'xlsx')
-                if ~isempty(Tup)
-                    writetable(Tup, filesaved, "FileType", "spreadsheet", 'Sheet', 'Up-regulated');
+                answer = gui.myQuestdlg(FigureHandle, ...
+                 'Save up- and down-regulated genes to seperate sheets?');
+                if strcmp(answer, 'Yes')
+                    [Tup, Tdn] = pkg.e_processDETable(T, paramset, FigureHandle);                
+    
+                    % strcmp(extractAfter(filesaved,strlength(filesaved)-4),'xlsx')
+                    if ~isempty(Tup)
+                        writetable(Tup, filesaved, "FileType", "spreadsheet", 'Sheet', 'Up-regulated');
+                    end
+                    if ~isempty(Tdn)
+                        writetable(Tdn, filesaved, "FileType", "spreadsheet", 'Sheet', 'Down-regulated');
+                    end
+    
+                    if ~isempty(Tup) || ~isempty(Tdn)
+                        gui.e_enrichrxlsx(Tup,Tdn,T,filesaved);
+                    end
+                    % gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s', filesaved));
+                    if strcmp('Yes', gui.myQuestdlg(FigureHandle, ...
+                        sprintf('Result has been saved in %s. Open folder?', filesaved)))
+                        winopen(fileparts(filesaved));
+                    end
                 end
-                if ~isempty(Tdn)
-                    writetable(Tdn, filesaved, "FileType", "spreadsheet", 'Sheet', 'Down-regulated');
-                end
-                
-                gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s', filesaved));
-
                 %writetable(Tup,fullfile(tempdir,sprintf('%s_up.xlsx',outfile)),'FileType','spreadsheet',);
                 %writetable(Tdn,fullfile(tempdir,sprintf('%s_up.xlsx',outfile)),'FileType','spreadsheet');
                 tf = 1;
@@ -171,12 +175,11 @@ function callback_SGSAnalysis(src, ~)
                 tf = 1;
             end
         end
+
     end
-
-    gui.e_enrichrxlsx(Tup,Tdn,T,filesaved);
+    % if tf ~= 1, return; end
     
-    if tf ~= 1, return; end
-
+    %{
     if ~isempty(Tup)
         [outgenelist, outbackgroundlist, enrichrtype] = ...
             gui.gui_prepenrichr(Tup.gene, sce.g,... 
@@ -200,5 +203,6 @@ function callback_SGSAnalysis(src, ~)
                 outbackgroundlist, "Down");
         end
     end
+    %}
     
 end

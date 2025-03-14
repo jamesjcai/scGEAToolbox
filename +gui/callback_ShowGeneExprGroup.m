@@ -4,7 +4,7 @@ function callback_ShowGeneExprGroup(src, ~)
     % [axx, bxx] = view(findall(FigureHandle,'type','axes'));    
 
     allowunique = false;
-    [thisc] = gui.i_select1class(sce, allowunique);
+    [thisc] = gui.i_select1class(sce, allowunique,[],[],FigureHandle);
     if isempty(thisc), return; end
 
     answer = gui.myQuestdlg(FigureHandle, "Select a dependent variable from gene expression or cell state?","", ...

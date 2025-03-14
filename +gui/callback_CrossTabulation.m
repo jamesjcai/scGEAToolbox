@@ -2,7 +2,7 @@ function callback_CrossTabulation(src, ~)
 
 [FigureHandle, sce] = gui.gui_getfigsce(src);
 
-[thisc1, clabel1, thisc2, clabel2] = gui.i_select2class(sce, true);
+[thisc1, clabel1, thisc2, clabel2] = gui.i_select2class(sce, true, FigureHandle);
 
 %[answer] = gui.myQuestdlg(FigureHandle, 'Manually order groups?', '');
 %if isempty(answer), return; end
@@ -10,14 +10,18 @@ function callback_CrossTabulation(src, ~)
 [~, cL1, noanswer] = gui.i_reordergroups(thisc1, [], FigureHandle);
 if noanswer, return; end
 thisc1 = categorical(thisc1, cL1);
- 
-[~, cL2, noanswer] = gui.i_reordergroups(thisc2, [], FigureHandle);
-if noanswer, return; end
-thisc2 = categorical(thisc2, cL2);
+
+if ~isempty(thisc2)
+    [~, cL2, noanswer] = gui.i_reordergroups(thisc2, [], FigureHandle);
+    if noanswer, return; end
+    thisc2 = categorical(thisc2, cL2);
+else
+    cL2 = [];
+end
 
 if isempty(thisc1), return; end
 if isempty(thisc2)
-    hx = gui.myFigure;
+    hx = gui.myFigure(FigureHandle);
     T = tabulate(thisc1);
     y = T(:,2);
     if iscell(y), y = cell2mat(y); end

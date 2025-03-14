@@ -15,15 +15,18 @@ function [T, Tup, Tdn] = sc_deg(X, Y, genelist, methodid, ...
 %
 % https://satijalab.org/seurat/v3.1/de_vignette.html
 
-    arguments
-        X (:,:) double           % Group 1 matrix (genes x cells)
-        Y (:,:) double           % Group 2 matrix (genes x cells)
-        genelist string = string(1:size(X, 1))'  % List of genes (optional)
-        methodid (1,1) double {mustBeMember(methodid, [1, 2])} = 1  % Method choice (1: Mann–Whitney, 2: t-test)
-        guiwaitbar (1,1) logical = false  % Show waitbar (optional)
-        parentfig (1,1) matlab.ui.Figure = []
-    end
+    % arguments
+    %     X (:,:) double           % Group 1 matrix (genes x cells)
+    %     Y (:,:) double           % Group 2 matrix (genes x cells)
+    %     genelist string = string(1:size(X, 1))'  % List of genes (optional)
+    %     methodid (1,1) double {mustBeMember(methodid, [1, 2])} = 1  % Method choice (1: Mann–Whitney, 2: t-test)
+    %     guiwaitbar (1,1) logical = false  % Show waitbar (optional)
+    % end
     
+
+    if nargin < 5, guiwaitbar = false; end
+    if nargin < 6, parentfig = []; end
+
     ng = size(X, 1);  % Number of genes
     assert(isequal(ng, size(Y, 1)), 'X and Y must have the same number of rows (genes)');
     

@@ -35,7 +35,8 @@ end
 
 
 
-[thisc, clabel] = gui.i_select1class(sce, false, 'Select grouping variable (cell type):', 'Cell Type');
+[thisc, clabel] = gui.i_select1class(sce, false, ...
+    'Select grouping variable (cell type):', 'Cell Type', FigureHandle);
 if isempty(thisc), return; end
 if ~strcmp(clabel, 'Cell Type')
     if ~strcmp(gui.myQuestdlg(FigureHandle, 'You selected grouping varible other than ''Cell Type''. Continue?'), 'Yes'), return; end

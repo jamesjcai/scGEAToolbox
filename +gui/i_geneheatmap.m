@@ -9,7 +9,7 @@ if nargin < 3
     end
 end
 if nargin < 2
-    [thisc, ~] = gui.i_select1class(sce);
+    [thisc, ~] = gui.i_select1class(sce,[],[],[],parentfig);
     if isempty(thisc), return; end
 end
 [c, cL, noanswer] = gui.i_reordergroups(thisc, [], parentfig);

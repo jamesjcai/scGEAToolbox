@@ -23,7 +23,8 @@ if ~prepare_input_only
     if ~gui.i_setpyenv, return; end
 end
 
-[thisc, clabel] = gui.i_select1class(sce, false, 'Select grouping variable (cell type):', 'Cell Type');
+[thisc, clabel] = gui.i_select1class(sce, false, ...
+    'Select grouping variable (cell type):', 'Cell Type', FigureHandle);
 if isempty(thisc), return; end
 
 if ~strcmp(clabel, 'Cell Type')

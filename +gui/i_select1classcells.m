@@ -2,7 +2,7 @@ function [ptsSelected] = i_select1classcells(sce, askunselect, parentfig)
 if nargin < 2, askunselect = true; end
 if nargin < 3, parentfig = []; end
 ptsSelected = [];
-[thisc, clabel] = gui.i_select1class(sce);
+[thisc, clabel] = gui.i_select1class(sce,[],[],[],parentfig);
 if isempty(thisc), return; end
 
 

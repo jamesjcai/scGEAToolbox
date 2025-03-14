@@ -6,7 +6,7 @@ answer = gui.myQuestdlg(FigureHandle, ['Select a grouping variable and ' ...
     'show cell groups in new figures individually?']);
 if ~strcmp(answer, 'Yes'), return; end
 
-[thisc, ~] = gui.i_select1class(sce);
+[thisc, ~] = gui.i_select1class(sce, true,'','',FigureHandle);
 if isempty(thisc), return; end
 [c, cL] = grp2idx(thisc);
 % [c, cL, noanswer] = gui.i_reordergroups(thisc);
@@ -54,7 +54,7 @@ try
 
 % -------------
 
-hx = gui.myFigure;
+hx = gui.myFigure(FigureHandle);
 
 tabgp = uitabgroup();
 for nf = 1:numfig

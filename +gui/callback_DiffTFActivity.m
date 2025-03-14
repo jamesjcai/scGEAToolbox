@@ -2,7 +2,7 @@ function callback_DiffTFActivity(src, ~)
 
 [FigureHandle, sce] = gui.gui_getfigsce(src);
 
-[thisc, clabel] = gui.i_select1class(sce, false);
+[thisc, clabel] = gui.i_select1class(sce, false,[],[],FigureHandle);
 if isempty(thisc), return; end
 species = gui.i_selectspecies(2, false, FigureHandle);
 if isempty(species), return; end

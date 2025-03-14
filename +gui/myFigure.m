@@ -11,35 +11,57 @@ classdef myFigure < handle
 
     methods
         % Constructor
-        function obj = myFigure()
-            obj.FigHandle = figure('Name', '', ...
-                'NumberTitle', 'on', 'Visible',"off", ...
-                "DockControls", "off", 'ToolBar', 'figure', ...
-                'Position', [1, 1, 560, 420]);
-            % obj.FigHandle = uifigure();
-            obj.tb = findall(obj.FigHandle, 'Type', 'uitoolbar');
-            if isempty(obj.tb)
+        function obj = myFigure(parentfig)
+            if nargin<1, parentfig = []; end
+            if gui.i_isuifig(parentfig)
+                disp('making a uifigure');
+                obj.FigHandle = uifigure('Name', '', ...
+                    'Visible',"off");
                 obj.tb = uitoolbar(obj.FigHandle);
+
+                pkg.i_addbutton2fig(obj.tb, 'on', [], [], '');  
+                obj.tbv{1} = pkg.i_addbutton2fig(obj.tb, 'on', @gui.i_invertcolor, 'INVERT.gif', 'Invert Colors');     
+                obj.tbv{2} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_linksubplots, "keyframes-minus.jpg", "Link Subplots");
+                obj.tbv{3} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_setboxon, 'border-out.jpg', 'Box ON/OFF'); 
+                obj.tbv{4} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_renametitle, "align-top-box.jpg", 'Add/Edit Title');
+                obj.tbv{5} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_pickcolor, false}, 'color-wheel.jpg', 'Pick a New Colormap...');
+                obj.tbv{6} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_changefontsize, 'text-size.jpg', 'Change Font Size');
+                obj.tbv{7} = pkg.i_addbutton2fig(obj.tb, 'on', {@gui.i_savemainfig, 3}, "presentation.jpg", 'Save Figure to PowerPoint File...');
+                obj.tbv{8} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_savemainfig, 2}, "jpg-format.jpg", 'Save Figure as Graphic File...');
+                obj.tbv{9} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_savemainfig, 1}, "svg-format.jpg", 'Save Figure as SVG File...');
+                obj.tbv{10} = gui.gui_3dcamera(obj.tb);
+                obj.tbv{11} = pkg.i_addbutton2fig(obj.tb, 'on', {@gui.i_resizewin, obj.FigHandle}, 'scale-frame-reduce.jpg', 'Resize Plot Window');
+                
+            else
+                obj.FigHandle = figure('Name', '', ...
+                    'NumberTitle', 'on', 'Visible',"off", ...
+                    "DockControls", "off", 'ToolBar', 'figure', ...
+                    'Position', [1, 1, 560, 420]);
+                % obj.FigHandle = uifigure();
+                obj.tb = findall(obj.FigHandle, 'Type', 'uitoolbar');
+                if isempty(obj.tb)
+                    obj.tb = uitoolbar(obj.FigHandle);
+                end
+
+                linkTool = findall(obj.FigHandle, 'Tag', 'DataManager.Linking');
+                if ~isempty(linkTool), delete(linkTool); end
+                linkTool = findall(obj.FigHandle, 'Tag', 'Standard.OpenInspector');
+                if ~isempty(linkTool), delete(linkTool); end
+    
+                % uipushtool(obj.tb, 'Separator', 'off');
+                pkg.i_addbutton2fig(obj.tb, 'on', [], [], '');  
+                obj.tbv{1} = pkg.i_addbutton2fig(obj.tb, 'on', @gui.i_invertcolor, 'INVERT.gif', 'Invert Colors');     
+                obj.tbv{2} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_linksubplots, "keyframes-minus.jpg", "Link Subplots");
+                obj.tbv{3} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_setboxon, 'border-out.jpg', 'Box ON/OFF'); 
+                obj.tbv{4} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_renametitle, "align-top-box.jpg", 'Add/Edit Title');
+                obj.tbv{5} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_pickcolor, false}, 'color-wheel.jpg', 'Pick a New Colormap...');
+                obj.tbv{6} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_changefontsize, 'text-size.jpg', 'Change Font Size');
+                obj.tbv{7} = pkg.i_addbutton2fig(obj.tb, 'on', {@gui.i_savemainfig, 3}, "presentation.jpg", 'Save Figure to PowerPoint File...');
+                obj.tbv{8} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_savemainfig, 2}, "jpg-format.jpg", 'Save Figure as Graphic File...');
+                obj.tbv{9} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_savemainfig, 1}, "svg-format.jpg", 'Save Figure as SVG File...');
+                obj.tbv{10} = gui.gui_3dcamera(obj.tb);
+                obj.tbv{11} = pkg.i_addbutton2fig(obj.tb, 'on', {@gui.i_resizewin, obj.FigHandle}, 'scale-frame-reduce.jpg', 'Resize Plot Window');
             end
-
-            linkTool = findall(obj.FigHandle, 'Tag', 'DataManager.Linking');
-            if ~isempty(linkTool), delete(linkTool); end
-            linkTool = findall(obj.FigHandle, 'Tag', 'Standard.OpenInspector');
-            if ~isempty(linkTool), delete(linkTool); end
-
-            % uipushtool(obj.tb, 'Separator', 'off');
-            pkg.i_addbutton2fig(obj.tb, 'on', [], [], '');  
-            obj.tbv{1} = pkg.i_addbutton2fig(obj.tb, 'on', @gui.i_invertcolor, 'INVERT.gif', 'Invert Colors');     
-            obj.tbv{2} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_linksubplots, "keyframes-minus.jpg", "Link Subplots");
-            obj.tbv{3} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_setboxon, 'border-out.jpg', 'Box ON/OFF'); 
-            obj.tbv{4} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_renametitle, "align-top-box.jpg", 'Add/Edit Title');
-            obj.tbv{5} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_pickcolor, false}, 'color-wheel.jpg', 'Pick a New Colormap...');
-            obj.tbv{6} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_changefontsize, 'text-size.jpg', 'Change Font Size');
-            obj.tbv{7} = pkg.i_addbutton2fig(obj.tb, 'on', {@gui.i_savemainfig, 3}, "presentation.jpg", 'Save Figure to PowerPoint File...');
-            obj.tbv{8} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_savemainfig, 2}, "jpg-format.jpg", 'Save Figure as Graphic File...');
-            obj.tbv{9} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_savemainfig, 1}, "svg-format.jpg", 'Save Figure as SVG File...');
-            obj.tbv{10} = gui.gui_3dcamera(obj.tb);
-            obj.tbv{11} = pkg.i_addbutton2fig(obj.tb, 'on', {@gui.i_resizewin, obj.FigHandle}, 'scale-frame-reduce.jpg', 'Resize Plot Window');
         end
 
         % function ptvkeep(obj, flag)
