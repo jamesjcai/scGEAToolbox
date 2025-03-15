@@ -46,22 +46,22 @@ for k=1:length(CellTypeList)
     end
 
     if ~isempty(T)
-        T = in_DETableProcess(T, cL1, cL2);
+        [T, Tnt] = pkg.in_DETableProcess(T, cL1, cL2);
 
-        Item = T.Properties.VariableNames';
-        Item = [Item; {'# of cells in sample 1';'# of cells in sample 2'}];
-        Description = {'gene name';'p-value';...
-            'log2 fold change between average expression';...
-            'absolute value of log2 fold change';...
-            'average expression in sample 1';...
-            'average expression in sample 2';...
-            'percentage of cells expressing the gene in sample 1';...
-            'percentage of cells expressing the gene in sample 2';...
-            'adjusted p-value'; 'test statistic'; ...
-             sprintf('%d',sum(i1&idx)); sprintf('%d',sum(i2&idx))};
-        %assignin('base','Item', Item);
-        %assignin('base','Description', Description);        
-        Tnt = table(Item, Description);
+        % Item = T.Properties.VariableNames';
+        % Item = [Item; {'# of cells in sample 1';'# of cells in sample 2'}];
+        % Description = {'gene name';'p-value';...
+        %     'log2 fold change between average expression';...
+        %     'absolute value of log2 fold change';...
+        %     'average expression in sample 1';...
+        %     'average expression in sample 2';...
+        %     'percentage of cells expressing the gene in sample 1';...
+        %     'percentage of cells expressing the gene in sample 2';...
+        %     'adjusted p-value'; 'test statistic'; ...
+        %      sprintf('%d',sum(i1&idx)); sprintf('%d',sum(i2&idx))};
+        % %assignin('base','Item', Item);
+        % %assignin('base','Description', Description);        
+        % Tnt = table(Item, Description);
         
         [Tup, Tdn] = pkg.e_processDETable(T, paramset, FigureHandle);
         try
@@ -78,22 +78,6 @@ for k=1:length(CellTypeList)
             try
                 gui.e_enrichrxlsx(Tup,Tdn,T,filesaved);
 
-
-                % [Tlist1] = run.ml_Enrichr(Tup.gene(1:min([250 height(Tup)])), ...
-                %             T.gene, ["GO_Biological_Process_2023", ...
-                %                      "GO_Molecular_Function_2023"]);
-                % Tbp1 = Tlist1{1};
-                % Tmf1 = Tlist1{2};
-                % in_writetable(Tbp1, filesaved, 'Up_250_GO_BP');
-                % in_writetable(Tmf1, filesaved, 'Up_250_GO_MF');
-                % 
-                % [Tlist2] = run.ml_Enrichr(Tdn.gene(1:min([250 height(Tdn)])), ...
-                %             T.gene, ["GO_Biological_Process_2023", ...
-                %                      "GO_Molecular_Function_2023"]);
-                % Tbp2 = Tlist2{1};
-                % Tmf2 = Tlist2{2};
-                % in_writetable(Tbp2, filesaved, 'Dn_250_GO_BP');
-                % in_writetable(Tmf2, filesaved, 'Dn_250_GO_MF');
             catch ME
                 warning(ME.message);
             end
@@ -116,51 +100,5 @@ end   % end of function
 
 
 
-function [T] = in_DETableProcess(T, cL1, cL2)
-    try
-        T = sortrows(T, 'p_val_adj', 'ascend');
-        T = sortrows(T, 'pct_1', 'ascend');
-        T = sortrows(T, 'pct_2', 'descend');
-        T = sortrows(T, 'avg_log2FC', 'ascend');
-    catch ME
-        warning(ME.message);
-    end
-    
-    try
-        if contains(T.Properties.VariableNames{5}, 'avg_1')
-            T.Properties.VariableNames{5} = sprintf('%s_%s', ...
-                T.Properties.VariableNames{5}, ...
-                matlab.lang.makeValidName(string(cL1)));
-        end
-    
-        if contains(T.Properties.VariableNames{6}, 'avg_2')
-            T.Properties.VariableNames{6} = sprintf('%s_%s', ...
-                T.Properties.VariableNames{6}, ...
-                matlab.lang.makeValidName(string(cL2)));
-        end
-    
-        if contains(T.Properties.VariableNames{7}, 'pct_1')
-            T.Properties.VariableNames{7} = sprintf('%s_%s', ...
-                T.Properties.VariableNames{7}, ...
-                matlab.lang.makeValidName(string(cL1)));
-        end
-    
-        if contains(T.Properties.VariableNames{8}, 'pct_2')
-            T.Properties.VariableNames{8} = sprintf('%s_%s', ...
-                T.Properties.VariableNames{8}, ...
-                matlab.lang.makeValidName(string(cL2)));
-        end
-    catch ME
-        warning(ME.message);
-    end
-        variables = T.Properties.VariableNames;
-        for k = 1:length(variables)
-            xx = T.(variables{k});
-            if isnumeric(xx) && any(isinf(xx))
-                xx(isinf(xx) & xx > 0) = 1e99;
-                xx(isinf(xx) & xx < 0) = -1e99;
-                T.(variables{k}) = xx;
-            end
-        end
-end
+
 

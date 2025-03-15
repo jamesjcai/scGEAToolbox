@@ -51,10 +51,10 @@ end
 
 
 tmpfilelist = {'input.txt', 'background.txt',...
-    'GO_Biological_Process_2023.Human.enrichr.reports.txt',...
-    'GO_Molecular_Function_2023.Human.enrichr.reports.txt',...
-    'GO_Biological_Process_2023.Human.enrichr.reports.png',...
-    'GO_Molecular_Function_2023.Human.enrichr.reports.png'};
+    'GO_Biological_Process_2025.Human.enrichr.reports.txt',...
+    'GO_Molecular_Function_2025.Human.enrichr.reports.txt',...
+    'GO_Biological_Process_2025.Human.enrichr.reports.png',...
+    'GO_Molecular_Function_2025.Human.enrichr.reports.png'};
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 
 usebktag = 1;
@@ -84,22 +84,22 @@ if status == 0 && showprogress && isvalid(fw)
     gui.gui_waitbar(fw, [], 'GSEApy Enrichr is complete');
 end
 warning off
-if exist('GO_Biological_Process_2023.Human.enrichr.reports.txt','file')
-    Tbp = readtable('GO_Biological_Process_2023.Human.enrichr.reports.txt');
+if exist('GO_Biological_Process_2025.Human.enrichr.reports.txt','file')
+    Tbp = readtable('GO_Biological_Process_2025.Human.enrichr.reports.txt');
     [Tbp] = in_trimT(Tbp);
 end
-if exist('GO_Molecular_Function_2023.Human.enrichr.reports.txt','file')
-    Tmf = readtable('GO_Molecular_Function_2023.Human.enrichr.reports.txt');
+if exist('GO_Molecular_Function_2025.Human.enrichr.reports.txt','file')
+    Tmf = readtable('GO_Molecular_Function_2025.Human.enrichr.reports.txt');
     [Tmf] = in_trimT(Tmf);
 end
 warning on
 
 if showbarplot
-    if exist('GO_Biological_Process_2023.Human.enrichr.reports.png','file')
-        figure; imshow(imread('GO_Biological_Process_2023.Human.enrichr.reports.png'))
+    if exist('GO_Biological_Process_2025.Human.enrichr.reports.png','file')
+        figure; imshow(imread('GO_Biological_Process_2025.Human.enrichr.reports.png'))
     end
-    if exist('GO_Molecular_Function_2023.Human.enrichr.reports.png','file')
-        figure; imshow(imread('GO_Molecular_Function_2023.Human.enrichr.reports.png'))
+    if exist('GO_Molecular_Function_2025.Human.enrichr.reports.png','file')
+        figure; imshow(imread('GO_Molecular_Function_2025.Human.enrichr.reports.png'))
     end
 end
 

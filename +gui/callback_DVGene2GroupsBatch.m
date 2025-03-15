@@ -44,6 +44,7 @@ for k=1:length(CellTypeList)
     end
     
     [T] = gui.e_dvanalysis_splinefit(sce1, sce2, cL1, cL2);
+
     outfile = sprintf('%s_%s_vs_%s_%s.xlsx', ...
         prefixtag,...
         matlab.lang.makeValidName(string(cL1)), ...
@@ -53,27 +54,31 @@ for k=1:length(CellTypeList)
          
         Tup = T(T.DiffSign > 0, :);
         Tdn = T(T.DiffSign < 0, :);
-
-        Item = T.Properties.VariableNames';
-        Item = [Item; {'# of cells in sample 1';'# of cells in sample 2'}];
         
-        Description = {'gene name';'log mean in sample 1';...
-            'log CV in sample 1'; 'dropout rate in sample 1';...
-            'distance to curve 1';'p-value of distance in sample 1';...
-            'FDR of distance in sample 1';'log mean in sample 2';...
-            'log CV in sample 2'; 'dropout rate in sample 2';...
-            'distance to curve 2'; 'p-value of distance in sample 2';...
-            'FDR of distance in sample 2'; 'Difference in distances';...
-            'Sign of difference';'p-value of DV test';...
-            sprintf('%d',sce1.NumCells); sprintf('%d',sce2.NumCells)};
-        if length(Item) == length(Description)
-            Tnt = table(Item, Description);
-        else
-            assignin("base","Item", Item);
-            assignin("base","Description", Description);
-            Tnt = table(Item);
-            warning('Variables must have the same number of rows.');
-        end
+        [T, Tnt] = pkg.in_DVTableProcess(T, cL1, cL2);
+
+        % Item = T.Properties.VariableNames';
+        % Item = [Item; {'# of cells in sample 1';'# of cells in sample 2'}];
+        % 
+        % Description = {'gene name';'log mean in sample 1';...
+        %     'log CV in sample 1'; 'dropout rate in sample 1';...
+        %     'distance to curve 1';'p-value of distance in sample 1';...
+        %     'FDR of distance in sample 1';'log mean in sample 2';...
+        %     'log CV in sample 2'; 'dropout rate in sample 2';...
+        %     'distance to curve 2'; 'p-value of distance in sample 2';...
+        %     'FDR of distance in sample 2'; 'Difference in distances';...
+        %     'Sign of difference';'p-value of DV test';...
+        %     sprintf('%d',sce1.NumCells); sprintf('%d',sce2.NumCells)};
+        % if length(Item) == length(Description)
+        %     Tnt = table(Item, Description);
+        % else
+        %     assignin("base","Item", Item);
+        %     assignin("base","Description", Description);
+        %     Tnt = table(Item);
+        %     warning('Variables must have the same number of rows.');
+        % end
+
+
 
         try
             writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All genes');
@@ -84,50 +89,11 @@ for k=1:length(CellTypeList)
             warning(ME.message);
         end
 
-        % if ~isempty(runenrichr) && runenrichr
-        %     try
-        %         % [Tbp1, Tmf1] = run.r_enrichR(Tup.gene(1:min([250 height(Tup)])));  
-        %         [Tbp1, Tmf1] = run.py_GSEApy_enr(Tup.gene(1:min([250 height(Tup)])), ...
-        %             T.gene, tempdir);
-        %         in_writetable(Tbp1, filesaved, 'Up_250_GO_BP');
-        %         in_writetable(Tmf1, filesaved, 'Up_250_GO_MF');
-        %         % [Tbp2, Tmf2] = run.r_enrichR(Tdn.gene(1:min([250 height(Tdn)])));                
-        %         [Tbp2, Tmf2] = run.py_GSEApy_enr(Tdn.gene(1:min([250 height(Tup)])), ...
-        %             T.gene, tempdir);                
-        %         in_writetable(Tbp2, filesaved, 'Dn_250_GO_BP');
-        %         in_writetable(Tmf2, filesaved, 'Dn_250_GO_MF');
-        %     catch ME
-        %         disp(ME.message);
-        %     end
-        % end
-
         % - start of enrichr
         if ~isempty(runenrichr) && strcmp(runenrichr, 'Yes')
             try
                 gui.e_enrichrxlsx(Tup,Tdn,T,filesaved);
 
-                % [Tbp1, Tmf1]= run.r_enrichR(Tup.gene(1:min([250 size(Tup, 1)])));
-                %[Tbp1, Tmf1] = run.py_GSEApy_enr(Tup.gene(1:min([250 size(Tup, 1)])), ...
-                %    T.gene, tempdir);
-
-                % [Tlist1] = run.ml_Enrichr(Tup.gene(1:min([250 height(Tup)])), ...
-                %             T.gene, ["GO_Biological_Process_2023", ...
-                %                      "GO_Molecular_Function_2023"]);
-                % Tbp1 = Tlist1{1};
-                % Tmf1 = Tlist1{2};
-                % in_writetable(Tbp1, filesaved, 'Up_250_GO_BP');
-                % in_writetable(Tmf1, filesaved, 'Up_250_GO_MF');
-                % % [Tbp2, Tmf2] = run.r_enrichR(Tdn.gene(1:min([250 height(Tdn)])));
-                % % [Tbp2, Tmf2] = run.py_GSEApy_enr(Tdn.gene(1:min([250 height(Tdn)])), ...
-                % %    T.gene, tempdir);
-                % 
-                % [Tlist2] = run.ml_Enrichr(Tdn.gene(1:min([250 height(Tdn)])), ...
-                %             T.gene, ["GO_Biological_Process_2023", ...
-                %                      "GO_Molecular_Function_2023"]);
-                % Tbp2 = Tlist2{1};
-                % Tmf2 = Tlist2{2};
-                % in_writetable(Tbp2, filesaved, 'Dn_250_GO_BP');
-                % in_writetable(Tmf2, filesaved, 'Dn_250_GO_MF');
             catch ME
                 warning(ME.message);
             end
@@ -139,11 +105,5 @@ gui.myWaitbar(FigureHandle, fw);
 
 answer=gui.myQuestdlg(FigureHandle, sprintf('Result files saved. Open the folder %s?', outdir), '');
 if strcmp(answer,'Yes'), winopen(outdir); end
-
-    % function in_writetable(Tmf1, filesaved, shtname)
-    %     if ~isempty(Tmf1) && istable(Tmf1) && height(Tmf1) > 0
-    %         writetable(Tmf1, filesaved, "FileType", "spreadsheet", 'Sheet', shtname);
-    %     end
-    % end
 
 end
