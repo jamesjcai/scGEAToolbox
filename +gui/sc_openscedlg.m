@@ -333,7 +333,7 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                 end
             end
         case 'GEO Accession Number(s)...'
-            acc = inputdlg({'Input Number(s) (e.g., GSM3308547,GSM3308548):'}, ...
+            acc = inputdlg({'Input Number(s) (e.g., GSM3308549-52):'}, ...
                 'GEO Accession', [1, 50], {'GSM7855468'});
             if isempty(acc), return; end
             %acc = strtrim(deblank(acc{1}));

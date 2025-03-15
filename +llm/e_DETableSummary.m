@@ -1,4 +1,4 @@
-function [done, outfile] = e_llmsummarizer(TbpUp, TmfUp, TbpDn, TmfDn, infotagstr)
+function [done, outfile] = e_DETableSummary(TbpUp, TmfUp, TbpDn, TmfDn, infotagstr)
     
     done = false;
     outfile = [];
@@ -10,7 +10,7 @@ function [done, outfile] = e_llmsummarizer(TbpUp, TmfUp, TbpDn, TmfDn, infotagst
     % (3) In MATLAB, install the Add-On, Large Language Models (LLMs) with MATLAB
     % (4) In SCGEATOOL, click menu Options -> Set LLM Provider & Model...
     % (5) In SCGEATOOL, click menu Analysis -> All (DE, DV, DP) Analysis in Cell Type Batch Mode...
-    % (6) In MATLAB Command Window, run gui.e_llmsummarizer(TbpUp, TmfUp, TbpDn, TmfDn, CellType)
+    % (6) In MATLAB Command Window, run llm.function
     
     if isempty(which('ollamaChat'))
         error('Needs the Add-On of Large Language Models (LLMs) with MATLAB');

@@ -135,7 +135,7 @@ end
 
 I need a MATLAB function to convert: 'GSM8122873-6' to 'GSM8122873,GSM8122874,GSM8122875,GSM8122876'
 
-% In matlab, write a function to convert 'GSM12323-6' to 'GSM12323,GSM12324,GSM12325,GSM12326'. The function should also can convert 'GSM12328-31' to 'GSM12328,GSM12329,GSM12330,GSM12331'
+% In MATLAB, write a function to convert 'GSM12323-6' to 'GSM12323,GSM12324,GSM12325,GSM12326'. The function should also can convert 'GSM12328-31' to 'GSM12328,GSM12329,GSM12330,GSM12331'
 
 
 %}

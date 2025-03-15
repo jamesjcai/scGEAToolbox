@@ -32,10 +32,13 @@ function sc_llm_enrichr2word(selpath, parentfig)
     end
     
     import mlreportgen.dom.*
-    fw = gui.gui_waitbar_adv;              
+    
+    fw = gui.myWaitbar;
+
     for k = 1:length(selectedfiles)
-        gui.gui_waitbar_adv(fw, (k-0.5)/length(selectedfiles), ...
-            sprintf('%s', selectedfiles(k)));
+        gui.myWaitbar(parentfig, fw, false, '', ...
+            sprintf('%s', selectedfiles(k)), ...
+            (k-0.5)/length(selectedfiles));
         infile = fullfile(selpath, selectedfiles(k));
         [TbpUp, TmfUp, TbpDn, TmfDn] = in_gettables(infile);
         % assignin("base","TbpUp",TbpUp);
@@ -43,7 +46,8 @@ function sc_llm_enrichr2word(selpath, parentfig)
         % assignin("base","TbpDn",TbpDn);
         % assignin("base","TmfDn",TmfDn);
         [~, wordfilename] = fileparts(selectedfiles(k));
-        [done, outfile] = gui.e_llmsummarizer(TbpUp, TmfUp, TbpDn, TmfDn, wordfilename);
+        [done, outfile] = llm.e_DETableSummary(TbpUp, TmfUp, TbpDn, ...
+            TmfDn, wordfilename);
 
 
         % files = dir(fullfile(selpath, '*_DP_*.xlsx'));
@@ -57,7 +61,7 @@ function sc_llm_enrichr2word(selpath, parentfig)
 
         if done, rptview(outfile, 'docx'); end
     end
-    gui.gui_waitbar_adv(fw);    
+    gui.myWaitbar(parentfig, fw);  
    
     function [TbpUp, TmfUp, TbpDn, TmfDn] = in_gettables(excelfile)
         TbpUp = [];

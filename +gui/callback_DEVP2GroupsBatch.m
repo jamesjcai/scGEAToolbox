@@ -70,7 +70,7 @@ function callback_DEVP2GroupsBatch(src, ~)
         end
         
         % try
-        %     [done] = gui.e_llmsummarizer(Tbp1,Tmf1,Tbp2,Tmf2, ...
+        %     [done] = llm.e_DETableSummarizer(Tbp1,Tmf1,Tbp2,Tmf2, ...
         %         sprintf('DE_%s', CellTypeList{k}));
         % catch
         % 
