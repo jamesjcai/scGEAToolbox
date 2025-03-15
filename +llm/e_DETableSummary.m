@@ -1,4 +1,5 @@
-function [done, outfile] = e_DETableSummary(TbpUp, TmfUp, TbpDn, TmfDn, infotagstr)
+function [done, outfile] = e_DETableSummary(TbpUp, TmfUp, ...
+                            TbpDn, TmfDn, infotagstr)
     
     done = false;
     outfile = [];
@@ -18,14 +19,8 @@ function [done, outfile] = e_DETableSummary(TbpUp, TmfUp, TbpDn, TmfDn, infotags
     % https://www.mathworks.com/matlabcentral/fileexchange/163796-large-language-models-llms-with-matlab/
     % Add-On “Large Language Models (LLMs) with MATLAB”.
     
-    if nargin<4
-        chars = ['A':'Z' 'a':'z' '0':'9']; % Alphanumeric character set
-        strLength = 10; % Define desired string length
-        randomStr = chars(randperm(numel(chars), strLength));    
-        infotagstr = randomStr; 
-    end
-    
-    
+    if nargin<4, infotagstr = pkg.i_randinfostr; end
+        
     wrkdir = getpref('scgeatoolbox', 'externalwrkpath');
     if isempty(wrkdir), return; end
         
@@ -41,7 +36,6 @@ function [done, outfile] = e_DETableSummary(TbpUp, TmfUp, TbpDn, TmfDn, infotags
         disp('Ollama is not running.');
         return;
     end
-    
     
     warning off
     s_up = ''; 

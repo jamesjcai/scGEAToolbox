@@ -342,7 +342,8 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
             if isempty(acc) || ~strlength(acc) > 4, return; end
             if contains(acc,'-')
                 accx = pkg.i_expandrange(acc);
-                if strcmp('Yes', gui.myQuestdlg(parentfig, sprintf('Expand accession number series to: %s?', accx)))
+                if strcmp('Yes', gui.myQuestdlg(parentfig, ...
+                        sprintf('Expand accession number series to: %s?', accx)))
                     acc = accx;
                 else
                     acc = regexprep(acc,'[^a-zA-Z0-9,;]','');
