@@ -30,7 +30,6 @@ hx.show(parentfig);
         [passed] = i_checkposg;
         if ~passed, return; end
 
-
         idx = matches(sce.g, posg, 'IgnoreCase', true);
         gg = sce.g(idx);
         inputdlg(csname, ...

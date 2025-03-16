@@ -1,7 +1,7 @@
 function [matchingFiles] = e_openallfiles(k1, k2)
 
 % if nargin<1, k1='parentfig'; k2='myErrordlg'; end
-if nargin<1, k1='parentfig'; k2='fw = gui.myWaitbar'; end
+if nargin<1, k1='parentfig'; k2='view'; end
 
 
 mfolder = fileparts(mfilename('fullpath'));

@@ -84,9 +84,7 @@ switch answer
             delete(images{i});
         end
         gui.myWaitbar(parentfig, fw);
-
         rptview(ppt);
-
     otherwise
        
 end

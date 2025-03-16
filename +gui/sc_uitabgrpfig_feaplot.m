@@ -1,5 +1,5 @@
 function sc_uitabgrpfig_feaplot(feays, fealabels, sce_s, ...
-    parentfig, methodid, cazcel)
+                parentfig, methodid, cazcel)
 
 if nargin < 6, cazcel = []; end
 if nargin < 5, methodid = 1; end
@@ -49,7 +49,7 @@ for k=1:n
                 scatter(sce_s(:,1), sce_s(:,2), 5, c, 'filled');
             end
             if ~isempty(cazcel)
-                view(ax{k,1}, cazcel(1), cazcel(2));
+                view(ax{k,1}, [cazcel(1), cazcel(2)]);
             end
         case 2            
             gui.i_stemscatter(sce_s, feays{k});

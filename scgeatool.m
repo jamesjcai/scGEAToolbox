@@ -1641,7 +1641,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         [h] = gui.i_gscatter3(sce.s, c, methodid, [], hAx);
         title(hAx, sce.title);
         subtitle(hAx, '[genes x cells]');
-        view(ax, bx);
+        view(hAx, [ax, bx]);
         ix_labelclusters(true);
         guidata(FigureHandle, sce);
     end
@@ -1690,7 +1690,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         [h] = gui.i_gscatter3(sce.s, c, methodid, [], hAx);
         title(hAx, sce.title);
         subtitle(hAx, '[genes x cells]');
-        view(ax, bx);
+        view(hAx, [ax, bx]);
         ix_labelclusters(true);
         guidata(FigureHandle, sce);
     end

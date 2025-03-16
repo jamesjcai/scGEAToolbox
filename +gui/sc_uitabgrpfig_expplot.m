@@ -56,7 +56,7 @@ for k=1:n
         scatter(s(:,1), s(:,2), 5, c, 'filled');
     end
     if ~isempty(cazcel)
-        view(ax{k,1},cazcel(1),cazcel(2));
+        view(ax{k,1}, [cazcel(1), cazcel(2)]);
     end
 
     ax{k,2} = subplot(1,2,2);
@@ -111,18 +111,6 @@ hx.addCustomButton('off', @in_savedata, "floppy-disk-arrow-in.jpg", 'Save Gene L
 %hx.addCustomButton('off', @in_savemainfigx, "File-Jpg--Streamline-Core-Gradient.png", 'Save Figure as Graphic File...');
 %hx.addCustomButton('off', @in_set3dview, "tool_ellipse.gif", 'Set 3D View...');
 hx.show(parentfig)
-
-    % function in_set3dview(~, ~)
-    %     [aa, bb] = view(ax{idx,2});
-    %     answer = gui.myQuestdlg(hFig, 'Apply current view (azimuth and elevation angles) to all tabs?','');
-    %     if strcmp(answer, 'Yes')
-    %         for kx = 1:length(glist)
-    %             if kx ~= idx
-    %                 view(ax{kx,2}, [aa, bb]);
-    %             end
-    %         end
-    %     end
-    % end
 
     function in_savedata(~,~)
         gui.i_exporttable(table(glist), true, ...

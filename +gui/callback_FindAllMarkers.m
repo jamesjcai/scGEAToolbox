@@ -61,8 +61,10 @@ function in_MarkerGeneHeatmap(src, ~, sce)
             sce = sce.qcfilter;
             fprintf('Size of filtered matrix: %d genes x %d cells\n', sce.NumGenes, sce.NumCells);
         else
-            gui.myHelpdlg(FigureHandle,...
-            "Not enough marker genes (n < 2000). Use all genes to search for markers.");
+            if ~strcmp('Yes', gui.myQuestdlg(FigureHandle,...
+                "Not enough marker genes (n < 2000). Use all genes to search for markers."))
+                return;
+            end
         end
     elseif strcmp(answer, 'No')
         disp('Consider all genes for marker gene search.');

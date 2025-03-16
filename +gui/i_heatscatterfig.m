@@ -29,22 +29,6 @@ hx.show(parentfig);
         % h1 = gui.i_stemscatter(sce.s, cs);
     end
 
-    % function i_viewscatter3(~, ~)
-    %     figure;
-    %     s = sce.s;
-    %     x = s(:, 1);
-    %     y = s(:, 2);
-    %     if size(s, 2) >= 3
-    %         z = s(:, 3);
-    %         is2d = false;
-    %     else
-    %         z = zeros(size(x));
-    %         is2d = true;
-    %     end
-    %     scatter3(x, y, z, 10, cs, 'filled');
-    %     if is2d, view(2); end
-    % end
-
     function in_viewgenenames(~, ~)
         [passed] = i_checkposg;
         if ~passed, return; end
