@@ -11,6 +11,9 @@ function [h] = myHelpdlg(parentfig, message, title)
     else
         % UIFigure-based app
         % disp('aaa UIFigure-based app')
-        uialert(parentfig, message, title, 'Icon', 'info');
+        % uialert(parentfig, message, title, 'Icon', 'info');
+        uiconfirm(parentfigx, message, title, ...
+            'Options', {'OK'}, 'defaultoption', 'OK', ...
+            'Icon', 'info');
     end
 end
