@@ -38,14 +38,13 @@ function [indx, tf] = myListdlg(parentFig, options, Title)
         indx = [];
     end
 
-
-%{
-Example usage:
-options = {'Apple', 'Banana', 'Cherry', 'Date'};
-selectedItems = gui.ui_listdlg(options, 'Select a Fruit');
-disp('Selected:');
-disp(selectedItems);
-%}
+    %{
+    Example usage:
+    options = {'Apple', 'Banana', 'Cherry', 'Date'};
+    selectedItems = gui.ui_listdlg(options, 'Select a Fruit');
+    disp('Selected:');
+    disp(selectedItems);
+    %}
 end
 
 

@@ -26,7 +26,6 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
     preftagname ='openscedlgindex';
     defaultindx = getpref('scgeatoolbox', preftagname, length(list));
 
-
     if gui.i_isuifig(parentfig)
         [indx, tf] = gui.myListdlg(parentfig, list, 'Select a source');
     else
