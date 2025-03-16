@@ -46,7 +46,7 @@ oldidx = 0;
 oldG1 = [];
 
     function in_networkvis_curvy(~, ~)
-        fw=gui.myWaitbar(parentfig);
+        fw = gui.myWaitbar(parentfig);
         gui.i_networkvis(G1, [p1.XData' p1.YData'], true, p1.NodeFontSize, hFig);
         gui.myWaitbar(parentfig, fw);
     end
@@ -128,7 +128,7 @@ oldG1 = [];
                 uiwait(msgfig);
             case 'File'
                 [file, path] = uiputfile({'*.txt'; '*.*'}, 'Save as');
-                figure(parentfig);
+                if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
                 if isequal(file, 0) || isequal(path, 0)
                     return;
                 else

@@ -129,7 +129,7 @@ function callback_SGSAnalysis(src, ~)
         vars = {'Tup', 'Tdn'};
         values = {Tup, Tdn};
         [~, tf] = export2wsdlg(labels, vars, values);
-        figure(FigureHandle);
+        if isvalid(FigureHandle) && isa(FigureHandle, 'matlab.ui.Figure'), figure(FigureHandle); end
         if tf ~= 1, return; end
     end
 

@@ -387,7 +387,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             end
         end
         [sce] = gui.sc_openscedlg([],[],FigureHandle);
-        figure(FigureHandle);
+        if isvalid(FigureHandle) && isa(FigureHandle, 'matlab.ui.Figure'), figure(FigureHandle); end
         if ~isempty(sce) && sce.NumCells > 0 && sce.NumGenes > 0
             guidata(FigureHandle, sce);
             c=[];
@@ -1226,7 +1226,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         %        if isvalid(button2), set(button2,'Visible','off'); end
         
         if ~gui.i_isuifig(FigureHandle)
-            figure(FigureHandle);
+            if isvalid(FigureHandle) && isa(FigureHandle, 'matlab.ui.Figure'), figure(FigureHandle); end
         end
         
         % [c,cL]=grp2idx(sce.c);
@@ -1275,7 +1275,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
 
         if bx == 90   % isempty(h.ZData)               % current 2D            
             if ~strcmp(gui.myQuestdlg(FigureHandle, 'Switch to 3D?',''), 'Yes'), return; end
-            figure(FigureHandle);
+            if isvalid(FigureHandle) && isa(FigureHandle, 'matlab.ui.Figure'), figure(FigureHandle); end
             if size(sce.s, 2) >= 3
                 h = gui.i_gscatter3(sce.s, c, methodid, [], hAx);
                 if ~isempty(ax) && ~isempty(bx) && ~any([ax, bx] == 0)
@@ -1979,7 +1979,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                         case 'Load Saved'
                             [file, path] = uigetfile('*.mat', ...
                                 'Select a MAT-file to Load');
-                            figure(FigureHandle);
+                            if isvalid(FigureHandle) && isa(FigureHandle, 'matlab.ui.Figure'), figure(FigureHandle); end
                             if isequal(file, 0)
                                 disp('User canceled the file selection.');
                                 return;
@@ -2108,7 +2108,7 @@ fig.WindowButtonDownFcn = @(src, event) disp(event.IntersectionPoint);
                 case 'Yes'
                     [file, path] = uiputfile('*.mat', 'Save as', ...
                         'pseudotime_manual_trajectory.mat');
-                    figure(FigureHandle);
+                    if isvalid(FigureHandle) && isa(FigureHandle, 'matlab.ui.Figure'), figure(FigureHandle); end
                     if isequal(file, 0) || isequal(path, 0)
                         disp('User canceled the file selection.');
                         return;

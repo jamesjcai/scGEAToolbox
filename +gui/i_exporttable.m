@@ -41,7 +41,7 @@ switch answer
         else
             [file, path] = uiputfile({'*.txt'; '*.*'}, 'Save as');
         end
-        figure(parentfig);
+        if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
         if isequal(file, 0) || isequal(path, 0)
             return;
         else
@@ -67,7 +67,7 @@ switch answer
             [file, path] = uiputfile({'*.xlsx'; '*.xls'; '*.*'}, ...
                 'Save as');
         end
-        figure(parentfig);
+        if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
         if isequal(file, 0) || isequal(path, 0), return; end
 
         filename = fullfile(path, file);
@@ -103,9 +103,7 @@ switch answer
         end
         if isequal(file, 0) || isequal(path, 0), return; end
         filename = fullfile(path, file);
-        %fw=gui.myWaitbar(parentfig);
         save(filename, 'T');
-        %gui.myWaitbar(parentfig, fw);
     otherwise
         return;
 end

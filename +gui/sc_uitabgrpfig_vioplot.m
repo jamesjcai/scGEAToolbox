@@ -7,7 +7,7 @@ tabnamelist = string(tabnamelist);
 [~, cLorder] = grp2idx(thisc);
 cLorder = strrep(cLorder, '_', '\_');
 
-fw = gui.gui_waitbar;
+fw = gui.myWaitbar(parentfig);
 isdescend = false;
 
 thisc = strrep(string(thisc), '_', '\_');

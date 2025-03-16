@@ -72,12 +72,10 @@ end
     % fclose(fid);
     % val = jsondecode(str);
 
-    %fw = gui.gui_waitbar;
     Col = webread(urllist{indx1});
     ctag = listitems{indx1};
     ctag = extractBefore(ctag, strfind(ctag,':'));
     setnames = fields(Col);
-    %gui.gui_waitbar(fw);
 
     if colnoly
         return;

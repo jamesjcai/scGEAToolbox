@@ -1,5 +1,5 @@
 function [T, Tup, Tdn] = sc_deg(X, Y, genelist, methodid, ...
-    guiwaitbar, parentfig)
+                                guiwaitbar, parentfig)
 %SC_DEG - DEG analysis using Mann–Whitney U test or t-test
 %
 % Inputs:
@@ -55,12 +55,8 @@ function [T, Tup, Tdn] = sc_deg(X, Y, genelist, methodid, ...
     % Loop through genes
     for k = 1:ng
         if guiwaitbar            
-            % gui.gui_waitbar_adv(fw, k / ng); 
-            % fw = waitbar(k / ng, fw);
-            fw = gui.myWaitbar(parentfig, fw, false, '','', k / ng);
+            gui.myWaitbar(parentfig, fw, false, '','', k / ng);
         end
-
-        
         
         x = X(k, :);
         y = Y(k, :);
@@ -101,7 +97,8 @@ function [T, Tup, Tdn] = sc_deg(X, Y, genelist, methodid, ...
     
     % Create results table
     abs_log2FC = abs(avg_log2FC);
-    T = table(gene, p_val, avg_log2FC, abs_log2FC, avg_1, avg_2, pct_1, pct_2, p_val_adj, stats);
+    T = table(gene, p_val, avg_log2FC, abs_log2FC, avg_1, ...
+                avg_2, pct_1, pct_2, p_val_adj, stats);
 
     % Process up- and down-regulated genes if requested
     if nargout > 1

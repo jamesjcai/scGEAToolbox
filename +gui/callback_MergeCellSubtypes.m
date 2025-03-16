@@ -87,7 +87,7 @@ switch sourcetag
             '*.*', 'All Files (*.*)'}, ...
             'Select SCE Data File', ...
             'MultiSelect', 'off');
-        figure(FigureHandle);
+        if isvalid(FigureHandle) && isa(FigureHandle, 'matlab.ui.Figure'), figure(FigureHandle); end
         if isequal(fname, 0), return; end
         try
             scefile = fullfile(pathname, fname);

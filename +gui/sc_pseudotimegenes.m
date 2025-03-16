@@ -38,13 +38,15 @@ t = t(:);
             r = zeros(size(X,1),1);
             n = length(r);
             if n > 100
-                fw = gui.gui_waitbar_adv;
-                gui.gui_waitbar_adv(fw,100/n);
+                fw = gui.myWaitbar(parentfig);
+                gui.myWaitbar(parentfig, fw, false, '', '', fw,100/n);
                 for k=1:length(r)
-                    if mod(k,100) == 0, gui.gui_waitbar_adv(fw,k/length(r)); end
+                    if mod(k,100) == 0
+                        gui.myWaitbar(parentfig, fw, false, '', '', k/length(r)); 
+                    end
                     r(k) = pkg.distcorr(Xn(k,:).', t(:)); % Calculate linear correlation between gene expression profile and T
                 end
-                gui.gui_waitbar_adv(fw);
+                gui.myWaitbar(parentfig, fw);
             else
                 fw = gui.myWaitbar(parentfig);
                 for k=1:length(r)

@@ -84,7 +84,7 @@ end
         case 'Yes'
             [file, path] = uiputfile({'*.mat'; '*.*'}, 'Save as', ...
                 'GeneRegulatoryNetwork');
-            figure(FigureHandle);
+            if isvalid(FigureHandle) && isa(FigureHandle, 'matlab.ui.Figure'), figure(FigureHandle); end
             if isequal(file, 0) || isequal(path, 0)
                 return;
             else

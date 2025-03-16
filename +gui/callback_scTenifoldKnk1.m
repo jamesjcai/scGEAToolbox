@@ -117,7 +117,7 @@ if isempty(A0)
         fw = gui.myWaitbar(FigureHandle);
         parfor k=1:32
         end
-        figure(FigureHandle);
+        if isvalid(FigureHandle) && isa(FigureHandle, 'matlab.ui.Figure'), figure(FigureHandle); end
  
         [T, A0] = ten.sctenifoldknk(sce.X, sce.g, idx, ...
             'sorttable', true, 'nsubsmpl', 10, ...
@@ -204,7 +204,7 @@ disp('===============================');
             {'*.mat', 'Saved GRN Files (*.mat)'; ...
             '*.*', 'All Files (*.*)'}, ...
             'Pick a GRN Data File');
-        figure(FigureHandle);
+        if isvalid(FigureHandle) && isa(FigureHandle, 'matlab.ui.Figure'), figure(FigureHandle); end
         if isequal(fname, 0), return; end
             filen = fullfile(pathname, fname);
             data = load(filen, 'A0');

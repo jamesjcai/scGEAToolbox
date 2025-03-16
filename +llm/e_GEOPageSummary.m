@@ -15,32 +15,18 @@ function [feedbk, extractedText] = e_GEOPageSummary(acc)
     end
     %}
 
-        % Remove script and style tags with their content
-        rawHtml = regexprep(rawHtml, '<script.*?</script>', '', 'ignorecase');
-        rawHtml = regexprep(rawHtml, '<style.*?</style>', '', 'ignorecase');
-        
-        % Remove HTML tags
-        htmlContent = regexprep(rawHtml, '<[^>]*>', ' ');
-        
-
-% Remove HTML tags using regular expressions
-text_content = regexprep(htmlContent, '<.*?>', '');
-
-% Remove extra whitespace (multiple spaces, tabs, newlines)
-text_content = regexprep(text_content, '\s+', ' ');
-
-% Decode HTML entities like &nbsp; &amp; etc.
-text_content = regexprep(text_content, '&nbsp;', ' ');
-text_content = regexprep(text_content, '&amp;', '&');
-text_content = regexprep(text_content, '&lt;', '<');
-text_content = regexprep(text_content, '&gt;', '>');
-text_content = regexprep(text_content, '&quot;', '"');
-
-% Trim leading/trailing whitespace
-extractedText = strtrim(text_content);
-
-
-
+    rawHtml = regexprep(rawHtml, '<script.*?</script>', '', 'ignorecase');
+    rawHtml = regexprep(rawHtml, '<style.*?</style>', '', 'ignorecase');
+    htmlContent = regexprep(rawHtml, '<[^>]*>', ' ');
+    text_content = regexprep(htmlContent, '<.*?>', '');
+    text_content = regexprep(text_content, '\s+', ' ');
+    text_content = regexprep(text_content, '&nbsp;', ' ');
+    text_content = regexprep(text_content, '&amp;', '&');
+    text_content = regexprep(text_content, '&lt;', '<');
+    text_content = regexprep(text_content, '&gt;', '>');
+    text_content = regexprep(text_content, '&quot;', '"');
+    % Trim leading/trailing whitespace
+    extractedText = strtrim(text_content);
 
     if isempty(which('ollamaChat'))
         error('Needs the Add-On of Large Language Models (LLMs) with MATLAB');
@@ -70,6 +56,7 @@ extractedText = strtrim(text_content);
         prompt2 = "Here is the text: " + extractedText;
         feedbk = generate(chat, prompt1 + prompt2);
         feedbk = regexprep(feedbk, '<think>.*?</think>', '');
+        feedbk = strtrim(feedbk);
     catch ME
         warning(ME.message);
     end

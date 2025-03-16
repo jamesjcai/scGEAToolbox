@@ -158,7 +158,7 @@ hx.show(parentfig);
                         'Save Data to Workspace');
                 case 'TXT/CSV file'
                     [file, path] = uiputfile({'*.csv'; '*.*'}, 'Save as');
-                    figure(parentfig);
+                    if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
                     if isequal(file, 0) || isequal(path, 0)
                         return;
                     else
@@ -171,7 +171,7 @@ hx.show(parentfig);
                 case 'Excel file'
 
                     [file, path] = uiputfile({'*.xlsx'; '*.*'}, 'Save as');
-                    figure(parentfig);
+                    if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
                     if isequal(file, 0) || isequal(path, 0)
                         return;
                     else

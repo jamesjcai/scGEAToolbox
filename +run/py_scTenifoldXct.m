@@ -22,8 +22,11 @@ else
 end
 
 
+
 if ~prepare_input_only
-    fw = gui.gui_waitbar([], [], 'Checking Python environment...');
+    fw = gui.myWaitbar(parentfig);
+    gui.myWaitbar(parentfig, fw, false, [], ...
+        'Checking Python environment...');
     
     x = pyenv;
     try
@@ -49,8 +52,9 @@ if ~prepare_input_only
         % error(cmdout);
         % error('Python scTenifoldXct has not been installed properly.');
     end
-    if isvalid(fw), gui.myWaitbar(parentfig, fw, [], 'Checking Python environment is complete'); end
+    if isvalid(fw), gui.myWaitbar(parentfig, fw, false, [], 'Checking Python environment is complete'); end
 end
+
 
 tmpfilelist = {'X.mat', 'X.txt', 'g.txt', 'c.txt', 'output.txt', ...
     'output1.txt', 'output2.txt', ...
@@ -110,14 +114,15 @@ if exist("pcnet_Source.mat", 'file')
     end
 end
 if ~useexist
-    fw = gui.gui_waitbar([], [], 'Step 1 of 3: Building pcnet\_Source network...');
+    fw = gui.myWaitbar(parentfig);
+    gui.myWaitbar(parentfig, fw, false, [], 'Step 1 of 3: Building pcnet\_Source network...');
     disp('Building pcnet_Source network...');
     A1 = sc_pcnetpar(sce.X(:, sce.c_cell_type_tx == celltype1));
     A1 = A1 ./ max(abs(A1(:)));
     A = ten.e_filtadjc(A1, 0.75, false);
     save('pcnet_Source.mat', 'A', '-v7.3');
     disp('pcnet_Source.mat saved.');
-    if isvalid(fw), gui.myWaitbar(parentfig, fw, [], 'Building pcnet\_Source is complete'); end
+    if isvalid(fw), gui.myWaitbar(parentfig, fw, false, [], 'Building pcnet\_Source is complete'); end
 end
 
 useexist = false;
@@ -139,14 +144,14 @@ if exist("pcnet_Target.mat", 'file')
     end
 end
 if ~useexist
-    fw = gui.gui_waitbar([], [], 'Step 2 of 3: Building pcnet\_Target network...');
+    gui.myWaitbar(parentfig, fw, false, [], 'Step 2 of 3: Building pcnet\_Target network...');
     disp('Building pcnet_Target network...')
     A2 = sc_pcnetpar(sce.X(:, sce.c_cell_type_tx == celltype2));
     A2 = A2 ./ max(abs(A2(:)));
     A = ten.e_filtadjc(A2, 0.75, false);
     save('pcnet_Target.mat', 'A', '-v7.3');
     disp('pcnet_Target network saved.')
-    if isvalid(fw), gui.myWaitbar(parentfig, fw, [], 'Building pcnet\_Target is complete'); end
+    if isvalid(fw), gui.myWaitbar(parentfig, fw, false, [], 'Building pcnet\_Target is complete'); end
 end
 
 
@@ -157,9 +162,9 @@ else
 end
 
 if ~prepare_input_only
-    fw = gui.gui_waitbar([], [], 'Step 3 of 3: Running scTenifoldXct.py...');
+    gui.myWaitbar(parentfig, fw, false, [], 'Step 3 of 3: Running scTenifoldXct.py...');
 else
-    fw = gui.gui_waitbar([], [], 'Step 3 of 3: Finishing input preparation...');
+    gui.myWaitbar(parentfig, fw, falese, [], 'Step 3 of 3: Finishing input preparation...');
 end
 
 codefullpath = fullfile(codepth,'script.py');
@@ -173,9 +178,9 @@ end
 % https://www.mathworks.com/matlabcentral/answers/334076-why-does-externally-called-exe-using-the-system-command-freeze-on-the-third-call
 if isvalid(fw)
     if prepare_input_only
-        gui.myWaitbar(parentfig, fw, [], 'Input preparation is complete.');
+        gui.myWaitbar(parentfig, fw, false, [], 'Input preparation is complete.');
     else
-        gui.myWaitbar(parentfig, fw, [], 'Running scTenifoldXct.py is complete.');
+        gui.myWaitbar(parentfig, fw, false, [], 'Running scTenifoldXct.py is complete.');
     end
 end
 
@@ -207,4 +212,8 @@ end
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 cd(oldpth);
+
+if isvalid(fw)
+    gui.myWaitbar(parentfig, fw);
+end
 end

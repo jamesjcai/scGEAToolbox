@@ -89,7 +89,7 @@ switch sourcetag
             '*.*', 'All Files (*.*)'}, ...
             'Select SCE Data Files', ...
             'MultiSelect', 'on');
-        figure(FigureHandle);
+        if isvalid(FigureHandle) && isa(FigureHandle, 'matlab.ui.Figure'), figure(FigureHandle); end
         if isequal(fname, 0), return; end
         if ~iscell(fname)
             gui.myErrordlg(FigureHandle, "This function needs at least two SCE data files.");

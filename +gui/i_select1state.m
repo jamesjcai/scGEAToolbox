@@ -136,7 +136,7 @@ if tf2 == 1
                 {'*.txt', 'Variable Data Files (*.txt)'; ...
                 '*.*', 'All Files (*.*)'}, ...
                 'Pick a Variable Data File');
-            figure(parentfig);
+            if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
             if isequal(fname, 0), return; end
             txtfile = fullfile(pathname, fname);
             try

@@ -33,7 +33,7 @@ function sc_llm_enrichr2word(selpath, parentfig)
     
     import mlreportgen.dom.*
     
-    fw = gui.myWaitbar;
+    fw = gui.myWaitbar(parentfig);
 
     for k = 1:length(selectedfiles)
         gui.myWaitbar(parentfig, fw, false, '', ...

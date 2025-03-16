@@ -34,7 +34,7 @@ if nargin<2, parentfig = []; end
             else
                 [file, path] = uiputfile({'*.mat'; '*.*'}, 'Save as');
             end
-            figure(parentfig);
+            if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
             if isequal(file, 0) || isequal(path, 0)
                 return;
             else
@@ -52,7 +52,7 @@ if nargin<2, parentfig = []; end
             else
                 [file, path] = uiputfile({'*.rds'; '*.*'}, 'Save as');
             end
-            figure(parentfig);
+            if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
             if isequal(file, 0) || isequal(path, 0)
                 return;
             else
@@ -73,7 +73,7 @@ if nargin<2, parentfig = []; end
             else
                 [file, path] = uiputfile({'*.h5ad'; '*.*'}, 'Save as');
             end
-            figure(parentfig);
+            if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
             if isequal(file, 0) || isequal(path, 0)
                 return;
             else

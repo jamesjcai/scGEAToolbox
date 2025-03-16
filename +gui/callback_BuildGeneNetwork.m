@@ -60,7 +60,7 @@ function callback_BuildGeneNetwork(src, ~)
             if strcmp('Yes', gui.myQuestdlg(FigureHandle, 'Save network?'))
                 [file, path] = uiputfile({'*.mat'; '*.*'}, ...
                     'Save as', 'network_file');     
-                figure(FigureHandle);
+                if isvalid(FigureHandle) && isa(FigureHandle, 'matlab.ui.Figure'), figure(FigureHandle); end
                 if isequal(file, 0) || isequal(path, 0)
                     return;
                 else

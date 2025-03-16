@@ -60,7 +60,7 @@ switch answer1
                     {'*.txt', 'Enrichr Table Files (*.txt)'; ...
                     '*.*', 'All Files (*.*)'}, ...
                     'Pick an Enrichr Table File');
-                figure(FigureHandle);
+                if isvalid(FigureHandle) && isa(FigureHandle, 'matlab.ui.Figure'), figure(FigureHandle); end
                 if isequal(fname, 0), return; end
                 tabfile = fullfile(pathname, fname);
                 warning off

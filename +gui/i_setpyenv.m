@@ -56,7 +56,7 @@ end
         else
             [file, path] = uigetfile('python', 'Select Python Interpreter', deflt);
         end
-        figure(parentfig);
+        if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
         if isequal(file, 0)
             return;
         else

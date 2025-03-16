@@ -60,7 +60,7 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                 '*.*', 'All Files (*.*)'}, ...
                 'Pick SCE Data File(s)','MultiSelect','on');
             % if ~(fname), return; end
-            figure(parentfig);
+            if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
             if isequal(filenm, 0), return; end
             if ~iscell(filenm)
                 scefile = fullfile(pathname, filenm);
@@ -80,14 +80,15 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                     {'Intersect', 'Union'}, 'Intersect');
                 if ~ismember(answer, {'Union', 'Intersect'}), return; end
                 methodtag = lower(answer);
-                fw = gui.gui_waitbar_adv;
+                fw = gui.myWaitbar(parentfig);
                 try
                     insce = cell(1, length(filenm));
                     for k = 1:length(filenm)
                         filename = fullfile(pathname, filenm{k});
                         if exist(filename,'file')
-                            gui.gui_waitbar_adv(fw,k./length(filenm), ...
-                                sprintf('Loading %s...', filenm{k}));
+                            gui.myWaitbar(parentfig, fw, false, '', ...
+                                sprintf('Loading %s...', filenm{k}), ...
+                                k./length(filenm));
                             load(filename, 'sce');
                             insce{k} = sce;
                             metainfo = sprintf("Source: %s", filename);
@@ -96,12 +97,12 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                     end
                         sce = sc_mergesces(insce, methodtag);
                 catch ME
-                    gui.gui_waitbar_adv(fw);
+                    gui.myWaitbar(parentfig, fw, true);
                     disp(ME.message);
                     gui.myErrordlg(parentfig, ME.message, ME.identifier);
                     return;
                 end
-                gui.gui_waitbar_adv(fw);
+                gui.myWaitbar(parentfig, fw);
             end
         case '10x Genomics MTX File (*.mtx)...'
             %'Matrix/MTX File (*.mtx)...'
@@ -117,7 +118,7 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                 'TSV/CSV Format Files (*.tsc, *.csv, *.txt)'; ...
                 '*.*', 'All Files (*.*)'}, ...
                 'Pick a tsv/csv/txt format file');
-            figure(parentfig);
+            if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
             if isequal(fname, 0), return; end
             filename = fullfile(pathname, fname);
             fw = gui.myWaitbar(parentfig);
@@ -143,7 +144,7 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                 {'*.rds', 'Seurat/Rds Format Files (*.rds)'; ...
                 '*.*', 'All Files (*.*)'}, ...
                 'Pick a rds format file');
-            figure(parentfig);
+            if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
             if isequal(fname, 0), return; end
             filename = fullfile(pathname, fname);
             fw = gui.myWaitbar(parentfig);
@@ -166,7 +167,7 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                 {'*.h5ad', 'H5AD Files (*.h5ad)'; ...
                 '*.*', 'All Files (*.*)'}, ...
                 'Pick a H5AD file');
-            figure(parentfig);
+            if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
             if isequal(filenm, 0), return; end
             filename = fullfile(pathname, filenm);
             fw = gui.myWaitbar(parentfig);
@@ -195,7 +196,7 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                 '*.*', 'All Files (*.*)'}, ...
                 'Pick 10x Genomics H5 file(s)','MultiSelect','on');
             if isequal(filenm, 0), return; end
-            figure(parentfig);
+            if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
             if iscell(filenm)
                 if ~in_multifilesgo, return; end
                 answer = gui.myQuestdlg(parentfig, 'Which set operation method to merge data?', ...
@@ -203,14 +204,15 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                     {'Intersect', 'Union'}, 'Intersect');
                 if ~ismember(answer, {'Union', 'Intersect'}), return; end
                 methodtag = lower(answer);
-                fw = gui.gui_waitbar_adv;
+                fw = gui.myWaitbar(parentfig);
                 try
                     insce = cell(1, length(filenm));
                     for k = 1:length(filenm)
                         filename = fullfile(pathname, filenm{k});
                         if exist(filename,'file')
-                            gui.gui_waitbar_adv(fw,k./length(filenm), ...
-                                sprintf('Reading %s...', filenm{k}));
+                            gui.myWaitbar(parentfig, fw, false, '', ...
+                                sprintf('Reading %s...', filenm{k}), ...
+                                k./length(filenm));
                             [X, g, b, c] = sc_read10xh5file(filename);
                             if ~isempty(X)
                                 insce{k} = SingleCellExperiment(X, g);
@@ -228,11 +230,11 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                     end                            
                     sce = sc_mergesces(insce, methodtag);
                 catch ME
-                    gui.gui_waitbar_adv(fw);                    
+                    gui.myWaitbar(parentfig, fw, true);
                     gui.myErrordlg(parentfig, ME.message, ME.identifier);
                     return;
                 end
-                gui.gui_waitbar_adv(fw);
+                gui.myWaitbar(parentfig, fw);
             else
                 filename = fullfile(pathname, filenm);
                 if exist(filename,'file')
