@@ -347,7 +347,8 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                         sprintf('Expand accession number series to: %s?', accx)))
                     acc = accx;
                 else
-                    acc = regexprep(acc,'[^a-zA-Z0-9,;]','');
+                    return;
+                    % acc = regexprep(acc,'[^a-zA-Z0-9,;]','');
                 end
             end
             if strlength(acc) > 4 && ~isempty(regexp(acc, 'G.+', 'once'))
