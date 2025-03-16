@@ -4,12 +4,7 @@ function callback_ShowGeneExpr(src, ~)
     [axx, bxx] = view(findall(FigureHandle,'type','axes'));
     [glist] = gui.i_selectngenes(sce, [], FigureHandle);
     if isempty(glist) 
-        
-        if gui.i_isuifig(FigureHandle)
-            uialert(FigureHandle, 'No genes is selected or found.', 'Information', 'Icon', 'info');
-        else
-            gui.myHelpdlg(FigureHandle, 'No genes is selected or found.');
-        end
+        gui.myHelpdlg(FigureHandle, 'No genes is selected or found.');
         return;
     end
 

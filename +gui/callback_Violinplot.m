@@ -27,7 +27,7 @@ function callback_Violinplot(src, ~)
             % if noanswer, return; end
             [glist] = gui.i_selectngenes(sce, [], FigureHandle);
             if isempty(glist)
-                gui.myHelpdlg(FigureHandle, 'No gene selected.', '');
+                gui.myHelpdlg(FigureHandle, 'No gene selected.');
                 return;
             end
 

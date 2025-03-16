@@ -16,7 +16,7 @@ if x.Version == "" %strlength(x.Executable)==0
         if ~done
             return;
         end
-        waitfor(gui.myHelpdlg(parentfig, 'Python environment is set successfully.', ''));
+        gui.myHelpdlg(parentfig, 'Python environment is set successfully.', '');
     else
         return;
     end
