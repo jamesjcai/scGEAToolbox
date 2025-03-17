@@ -1,18 +1,29 @@
 {
-"scgeatool": {
+"scgeatoolx": {
     "description": "Single-cell gene expression analysis tool GUI",
     "inputs": [
         {"name": "sce", "type": "SingleCellExperiment", "description": "Single-cell experiment object"},
         {"name": "c", "type": "vector", "default": "sce.c", "description": "Cluster assignments (optional)"},
         {"name": "s", "type": "vector", "default": "[]", "description": "Spatial coordinates (optional)"},
         {"name": "methodid", "type": "double", "dimensions": "scalar", "default": "1", "description": "Clustering method ID"},
-        {"name": "legacy", "type": "logical", "dimensions": "scalar", "default": "false", "description": "Use legacy mode"},
+        {"name": "legacy", "kind":"namevalue", "type":["logical","scalar"], "dimensions": "scalar", "default": "false", "description": "Use legacy mode"},
+        {"name": "useuifig", "kind":"namevalue", "type":["logical","scalar"], "dimensions": "scalar", "default": "false", "description": "Use uifigure mode"},
         {"name": "callinghandle", "type": "handle", "default": "[]", "description": "Calling figure handle (optional)"}
     ],
     "outputs": [
         {"name": "FigureHandle", "type": "handle", "description": "Main GUI figure handle"}
     ]
 },
+"scgeatool":
+{
+	"inputs":
+	[		
+        {"name": "sce", "type": "SingleCellExperiment", "description": "Single-cell experiment object"},
+        {"name": "methodid", "kind":"namevalue", "type": "double", "dimensions": "scalar", "default": "1", "description": "Clustering method ID"},
+        {"name": "legacy", "kind":"namevalue", "type":["logical","scalar"], "dimensions": "scalar", "default": "false", "description": "Use legacy mode"},
+        {"name":"useuifig", "kind":"namevalue", "type":["logical","scalar"], "default": "false"}
+	]
+},    
 "sc_cluster_s":
 {
 	"inputs":

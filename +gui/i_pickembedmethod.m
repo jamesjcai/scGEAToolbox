@@ -1,5 +1,5 @@
 function [methodtagsel] = i_pickembedmethod(parentfig)
-if nargin<2, parentfig = []; end
+if nargin<1, parentfig = []; end
 
     methodtagsel = [];
     
@@ -30,4 +30,5 @@ if nargin<2, parentfig = []; end
     if tf2 == 1
         methodtagsel = methodtag(indx2);     
     end
+    
 end

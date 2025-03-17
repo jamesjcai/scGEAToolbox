@@ -1436,7 +1436,8 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             if isempty(methodtag), return; end
             %if isempty(ndim), [ndim] = gui.i_choose2d3dnmore; end
             %if isempty(ndim), return; end
-            %methoddimtag = sprintf('%s%dd',methodtag, ndim);            
+            %methoddimtag = sprintf('%s%dd',methodtag, ndim); 
+
             switch gui.myQuestdlg(FigureHandle, 'Overwritten existing embeddings, if any?')
                 case 'Yes'
                     overwrittenold = true;
@@ -1446,7 +1447,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                     return;
             end
             
-            [K, usehvgs] = gui.i_gethvgnum(sce);
+            [K, usehvgs] = gui.i_gethvgnum(sce, FigureHandle);
             if isempty(K), return; end                
             fw = gui.myWaitbar(FigureHandle);
             try
