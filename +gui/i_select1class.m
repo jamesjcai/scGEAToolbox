@@ -70,10 +70,6 @@ if ~isempty(prefersel)
     [y, idx]=ismember(prefersel,listitems);
 end
 
- if gui.i_isuifig(parentfig)
-        [indx2, tf2] = gui.myListdlg(parentfig, listitems, promptstr);
- else
-
 if gui.i_isuifig(parentfig)
     [indx2, tf2] = gui.myListdlg(parentfig, listitems, promptstr);
 else     
@@ -89,7 +85,7 @@ else
             'ListSize', [220 300], 'Name', ' ');
     end
 end
-end
+
 
 if tf2 == 1
     clabel = listitems{indx2};

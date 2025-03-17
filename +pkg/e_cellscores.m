@@ -21,7 +21,8 @@ try
         'ReadVariableNames', true);
 catch ME
     disp(ME.message);
-    cellscoresfile = fullfile(pw1, '..', 'resources', 'CellScores', 'cellscores.txt');
+    cellscoresfile = fullfile(pw1, '..', 'resources', ...
+        'CellScores', 'cellscores.txt');
     T = readtable(cellscoresfile, 'Delimiter', '\t', ...
         'ReadVariableNames', true);
 end
