@@ -3,26 +3,8 @@ function [needupdatesce] = callback_RunSCimilarity(src, ~)
     needupdatesce = false;
     [y, prepare_input_only] = gui.i_memorychecked;
     if ~y, return; end
-
-    % [~, sys] = memory;
-    % totalMemoryGB = sys.PhysicalMemory.Total / (1024^3);
-    % fprintf('Total Physical Memory: %.2f GB\n', totalMemoryGB);
-    % if totalMemoryGB < 32
-    %     answer = gui.myQuestdlg(FigureHandle, '>=64 GB of memory is recommanded. The computer has less than 32 GB. Continue?', ...
-    %         '', 'Yes, still run', 'No, prepare input only', 'Cancel', 'Yes, still run');
-    %     switch answer
-    %         case 'Yes, still run'
-    %             prepare_input_only = false;
-    %         case 'No, prepare input only'
-    %             prepare_input_only = true;
-    %         case 'Cancel'
-    %             return;
-    %         otherwise
-    %             return;
-    %     end
-    % end
-    
-[FigureHandle, sce] = gui.gui_getfigsce(src);
+   
+    [FigureHandle, sce] = gui.gui_getfigsce(src);
 
     % https://genentech.github.io/scimilarity/notebooks/cell_annotation_tutorial.html
     % SCimilarity trained model. Download SCimilarity models. 

@@ -47,7 +47,7 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
     switch ButtonName
         case 'Simulate Data [PMID:27122128]...'
             try
-                [sce] = in_simulatedata;
+                [sce] = in_simulatedata(parentfig);
             catch ME
                 gui.myErrordlg(parentfig, ME.message, ME.identifier);
                 return;
@@ -539,7 +539,7 @@ function [y] = in_multifilesgo
 end
 
 
-    function [sce] = in_simulatedata
+    function [sce] = in_simulatedata(parentfig)
         sce=[];
         definput = {'3000', '5000'};
         prompt = {'Number of genes:', ...

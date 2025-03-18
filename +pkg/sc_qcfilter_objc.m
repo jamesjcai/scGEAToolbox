@@ -13,9 +13,7 @@ if sum(idx) > 0
     f_mtreads = lbsz_mt ./ lbsz;
     keptidx = f_mtreads < mtratio;
     if sum(~keptidx) > 0
-        memUsed
-        Xobj.data(:, ~keptidx) = [];
-        memUsed
+        Xobj.data(:, ~keptidx) = [];        
     end
 
 end
@@ -24,53 +22,56 @@ end
 oldsz = 0;
 newsz = 1;
 
-while ~isequal(oldsz, newsz)
-    oldsz = size(Xobj.data);
-    % [X,genelist]=sc_filterg(X,genelist);   % remove empty genes
-    [u] = sum(Xobj.data, 2);
-    idx = u < 1;
-    Xobj.data(idx, :) = [];
-    genelist = genelist(~idx);
-
-
-    % [X,keptidx]=sc_filterc(X);             % remove empty cells
-    lbsz = sum(Xobj.data, 1);
-    idx = lbsz < 1;
-    if ~isempty(idx), Xobj.data(:, idx) = []; end
-
-
-    %[X,genelist]=sc_selectg(X,genelist,min_cells_nonzero);
-    nc = sum(Xobj.data >= 1, 2);
-    if min_cells_nonzero < 1
-        idx = nc >= min_cells_nonzero * size(Xobj.data, 2);
-    else
-        idx = nc >= min_cells_nonzero;
+    while ~isequal(oldsz, newsz)
+        oldsz = size(Xobj.data);
+        % [X,genelist]=sc_filterg(X,genelist);   % remove empty genes
+        [u] = sum(Xobj.data, 2);
+        idx = u < 1;
+        Xobj.data(idx, :) = [];
+        genelist = genelist(~idx);
+    
+    
+        % [X,keptidx]=sc_filterc(X);             % remove empty cells
+        lbsz = sum(Xobj.data, 1);
+        idx = lbsz < 1;
+        if ~isempty(idx), Xobj.data(:, idx) = []; end
+    
+    
+        %[X,genelist]=sc_selectg(X,genelist,min_cells_nonzero);
+        nc = sum(Xobj.data >= 1, 2);
+        if min_cells_nonzero < 1
+            idx = nc >= min_cells_nonzero * size(Xobj.data, 2);
+        else
+            idx = nc >= min_cells_nonzero;
+        end
+        Xobj.data(~idx, :) = [];
+        genelist = genelist(idx);
+    
+    
+        %[X,genelist]=sc_rmdugenes(X,genelist);
+        %[X,keptidx]=sc_selectc(X,libszcutoff,gnnumcutoff);
+    
+        libsz = sum(Xobj.data, 1);
+        gnnum = sum(Xobj.data > 0, 1);
+    
+        if libszcutoff > 1.0
+            keptidx = (libsz >= libszcutoff) & (gnnum >= gnnumcutoff);
+        else
+            keptidx = (libsz >= quantile(libsz, libszcutoff)) & (gnnum >= gnnumcutoff);
+        end
+        Xobj.data(:, ~keptidx) = [];
+    
+        if ispc
+            usr = memory;
+            b = usr.MemUsedMATLAB / 1e6;
+        else
+            runtime = java.lang.Runtime.getRuntime();
+            totalMemory = runtime.totalMemory() / 1e6; % Convert to MB
+            freeMemory = runtime.freeMemory() / 1e6;   % Convert to MB
+            b = totalMemory - freeMemory;
+        end
+    
+        newsz = size(Xobj.data);
     end
-    Xobj.data(~idx, :) = [];
-    genelist = genelist(idx);
-
-
-    %[X,genelist]=sc_rmdugenes(X,genelist);
-    %[X,keptidx]=sc_selectc(X,libszcutoff,gnnumcutoff);
-
-    libsz = sum(Xobj.data, 1);
-    gnnum = sum(Xobj.data > 0, 1);
-
-    if libszcutoff > 1.0
-        keptidx = (libsz >= libszcutoff) & (gnnum >= gnnumcutoff);
-    else
-        keptidx = (libsz >= quantile(libsz, libszcutoff)) & (gnnum >= gnnumcutoff);
-    end
-    Xobj.data(:, ~keptidx) = [];
-    usr = memory;
-    b = usr.MemUsedMATLAB / 1e6;
-
-    newsz = size(Xobj.data);
-end
-end
-
-
-function y = memUsed
-usr = memory;
-y = usr.MemUsedMATLAB / 1e6;
+    
 end

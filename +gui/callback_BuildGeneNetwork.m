@@ -41,11 +41,7 @@ function callback_BuildGeneNetwork(src, ~)
         otherwise
             return;
     end
-%    [~, systemView] = memory;
-%    disp(systemView.PhysicalMemory.Available)
-%    bytesPerElement = 8;    % For double precision
-%    maxElements = systemView.PhysicalMemory.Available / bytesPerElement;
-%    maxSize = floor(sqrt(maxElements));  % If square matrix is needed
+
     cannotview = false;
     cannotsave = false;
     try
