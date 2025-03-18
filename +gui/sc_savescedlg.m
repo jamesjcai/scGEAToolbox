@@ -92,9 +92,14 @@ if nargin<2, parentfig = []; end
                 'Save SCE.S to variable named:'};
             vars = {'sce', 'X', 'g', 's'};
             values = {sce, sce.X, sce.g, sce.s};
-            [~, OKPressed] = export2wsdlg(labels, vars, values, ...
-                'Save Data to Workspace', ...
-                logical([1, 0, 0, 0]), {@smhelp});
+            if gui.i_isuifig(parentfig)
+                [~, OKPressed] = gui.myExport2wsdlg(labels, vars, values, ...
+                    'Save Data to Workspace', parentfig);
+            else
+                [~, OKPressed] = export2wsdlg(labels, vars, values, ...
+                    'Save Data to Workspace', ...
+                    logical([1, 0, 0, 0]), {@smhelp});
+            end
         otherwise
             return;
     end
