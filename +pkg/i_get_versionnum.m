@@ -1,17 +1,22 @@
-function [v1] = i_get_versionnum
+function [v1] = i_get_versionnum(nomat)
+
+if nargin<1, nomat = false; end
+
     v1 = '';
     mfolder = fileparts(mfilename('fullpath'));
     vfile = fullfile(mfolder, '..', 'VERSION.mat');
 
-    if exist(vfile, "file")
-        data = load(vfile, "v1");
-        if isfield(data, "v1") && ~isempty(data.v1)
-            v1 = data.v1;
-            return;
+    if ~nomat
+        if exist(vfile, "file")
+            data = load(vfile, "v1");
+            if isfield(data, "v1") && ~isempty(data.v1)
+                v1 = data.v1;
+                return;
+            end
         end
     end
 
-    tag_version = 'param.version';    
+    tag_version = 'param.version';
     xfilelocal = fullfile(mfolder,'..', 'scGEAToolbox.prj');
     if exist(xfilelocal, 'file')
         try            
@@ -29,7 +34,7 @@ function [v1] = i_get_versionnum
             warning(ME.identifier, 'Error reading project file: %s', ME.message);
         end
     end
-    if isempty(v1)    
+    if isempty(v1)
         xfilelocal = fullfile(mfolder,'..', 'info.xml');
         fid = fopen(xfilelocal, 'r');
         

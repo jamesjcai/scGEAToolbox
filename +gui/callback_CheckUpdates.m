@@ -1,16 +1,20 @@
 function callback_CheckUpdates(src, ~)    
 
     toolboxPath = fileparts(fileparts(mfilename('fullpath')));
+    %versionfile = fullfile(toolboxPath, 'VERSION.mat');
+    %if exist(versionfile,'file')
+    %    delete(versionfile);
+    %end
     [FigureHandle] = gui.gui_getfigsce(src);
     % Col = webread('https://api.github.com/repos/jamesjcai/scGEAToolbox')
     try
-        [majneedupdate, v_old, v_new] = pkg.i_majvercheck;
+        [majneedupdate, v_old, v_new] = pkg.i_majvercheck(true);
     catch ME
         gui.myErrordlg(FigureHandle, 'Could not access server.');
         return;
     end
     if majneedupdate
-        if ~pkg.e_runningasaddons
+        if ~pkg.e_runningasaddons || ismcc || isdeployed
             answer = gui.myQuestdlg(FigureHandle, sprintf('There is a new version of scGEAToolbox (%s vs. %s). Learn how to upgrade?', ...
                 v_new, v_old));
             if strcmp(answer, 'Yes')               

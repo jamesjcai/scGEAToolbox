@@ -10,7 +10,6 @@ if nargin<2, parentfig = []; end
 % T=[];
 % return;
 
-
 pw1 = fileparts(mfilename('fullpath'));
 fname = fullfile(pw1, '..','resources','Misc','refinfo.txt');
 fid=fopen(fname,'r');
