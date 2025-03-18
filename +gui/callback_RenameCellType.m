@@ -56,8 +56,14 @@ else
     end
     if tfx == 1
         i = ismember(ci, indxx);
-        newctype = inputdlg('New cell type', 'Rename', ...
-            [1, 50], cLi(ci(i)));
+        
+if gui.i_isuifig(FigureHandle)
+    newctype = gui.myInputdlg({'New cell type'}, 'Rename', {cLi(ci(i))}, FigureHandle);
+else
+    newctype = inputdlg('New cell type', 'Rename', [1, 50], cLi(ci(i)));
+end
+
+
         if ~isempty(newctype)
             cLi(ci(i)) = newctype;
             sce.c_cell_type_tx = string(cLi(ci));

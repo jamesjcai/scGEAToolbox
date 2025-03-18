@@ -31,8 +31,13 @@ switch answer
         %LF=char(10);
         CR = char(13); %  carriage return character equivalent to char(13) or sprintf('\r').
         ts = strrep(ts, [CR, newline], newline);
-        a = inputdlg('Review script and press OK to run it', ...
-            '', [15, 80], {ts});
+
+        if gui.i_isuifig(parentfig)
+            a = gui.myInputdlg({'Review script and press OK to run it'}, '', {ts}, parentfig);
+        else
+            a = inputdlg('Review script and press OK to run it', '', [15, 80], {ts});
+        end
+
         if isempty(a)
             return;
         else

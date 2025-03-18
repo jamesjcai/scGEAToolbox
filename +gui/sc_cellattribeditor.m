@@ -50,13 +50,23 @@ if ~addnew
             'It may take a while to load values. Continue?'))
         return; 
     end
-    x = inputdlg(sprintf('Attribute Name: %s\n%s',clabel, 'Attribute Values:'), ...
-                      'Attribute Editor', [15 80], {char(string(thisc))});
-  
+    if gui.i_isuifig(parentfig)
+        x = gui.myInputdlg({sprintf('Attribute Name: %s\n%s',clabel, 'Attribute Values:')}, ...
+                          'Attribute Editor', {char(string(thisc))}, parentfig);
+    else
+        x = inputdlg(sprintf('Attribute Name: %s\n%s',clabel, 'Attribute Values:'), ...
+                          'Attribute Editor', [15 80], {char(string(thisc))});
+    end
+
 
 else  
+if gui.i_isuifig(parentfig)
+    x = gui.myInputdlg({'Attribute Name','Attribute Values'},...
+                  'Attribute Editor', {''}, parentfig); % Assuming default is empty cell
+else
     x = inputdlg({'Attribute Name','Attribute Values'},...
                   'Attribute Editor', [1 80; 15 80]);
+end
     % {'new_attrib', char(string([1:sce.NumCells]'))});
 end
 

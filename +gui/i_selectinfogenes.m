@@ -14,7 +14,13 @@ dlgtitle = '';
 dims = [1, 80];
 
 definput = {'Yes', 'Yes', 'Yes', 'Yes'};
-answer = inputdlg(prompt, dlgtitle, dims, definput);
+
+if gui.i_isuifig(parentfig)
+    answer = gui.myInputdlg(prompt, dlgtitle, definput, parentfig);
+else
+    answer = inputdlg(prompt, dlgtitle, dims, definput);
+end
+
 if isempty(answer), return; end
 
 fw = gui.myWaitbar(parentfig);

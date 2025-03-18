@@ -334,8 +334,14 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                 end
             end
         case 'GEO Accession Number(s)...'
-            acc = inputdlg({'Input Number(s) (e.g., GSM3308549-52):'}, ...
-                'GEO Accession', [1, 50], {'GSM7855468'});
+            if gui.i_isuifig(parentfig)
+                acc = gui.myInputdlg({'Input Number(s) (e.g., GSM3308549-52):'}, ...
+                    'GEO Accession', {'GSM7855468'}, parentfig);
+            else
+                acc = inputdlg('Input Number(s) (e.g., GSM3308549-52):', ...
+                    'GEO Accession', [1, 50], 'GSM7855468');
+            end
+
             if isempty(acc), return; end
             %acc = strtrim(deblank(acc{1}));
             %acc = strrep(acc,' ','');
@@ -399,7 +405,12 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
             prompt = {'Enter link to .h5 file:'};
             dlgtitle = 'Input Download Links';
             definput = {'https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM4666nnn/GSM4666986/suppl/GSM4666986_BL41_filtered_feature_bc_matrix.h5'};
-            answer = inputdlg(prompt, dlgtitle, [1, 100], definput);
+            
+            if gui.i_isuifig(parentfig)
+                answer = gui.myInputdlg(prompt, dlgtitle, definput, parentfig);
+            else
+                answer = inputdlg(prompt, dlgtitle, [1, 100], definput);
+            end
             if isempty(answer), return; end
             if ~isempty(answer{1})
                 fw = gui.myWaitbar(parentfig);
@@ -534,8 +545,11 @@ end
         prompt = {'Number of genes:', ...
             'Number of cells:'};
         dlgtitle = 'Simulation Settings';
-        answer = inputdlg(prompt, dlgtitle, [1, 50], definput);
-
+        if gui.i_isuifig(parentfig)
+            answer = gui.myInputdlg(prompt, dlgtitle, definput, parentfig);
+        else
+            answer = inputdlg(prompt, dlgtitle, [1, 50], definput);
+        end
         if isempty(answer), return; end
         try
             numgenes = str2double(answer{1});

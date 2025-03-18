@@ -176,9 +176,11 @@ hx.show(parentfig);
         else
             %idx=matches(sce.g,posg,'IgnoreCase',true);
             %gg=sce.g(idx);
-            inputdlg(ttxt, ...
-                '', [15, 80], ...
-                {char(posg)});
+            if gui.i_isuifig(parentfig)
+                gui.myInputdlg({ttxt}, '', {char(posg)}, parentfig);
+            else
+                inputdlg(ttxt, '', [15, 80], {char(posg)});
+            end
         end
     end
 

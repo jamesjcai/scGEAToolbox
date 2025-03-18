@@ -91,8 +91,13 @@ end
          for k = 1:length(newidx1)
              ci(cx == newidx1(k)) = 1;
          end
-         newgrp1name = inputdlg('Input a name for group 1', '', ...
-            [1, 50], {'Group1'});
+
+if gui.i_isuifig(parentfig)
+    newgrp1name = gui.myInputdlg({'Input a name for group 1'}, '', {'Group1'}, parentfig);
+else
+    newgrp1name = inputdlg('Input a name for group 1', '', [1, 50], {'Group1'});
+end
+
             if ~isempty(newgrp1name)
                 cL1 = newgrp1name;
             else

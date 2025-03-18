@@ -32,9 +32,11 @@ hx.show(parentfig);
 
         idx = matches(sce.g, posg, 'IgnoreCase', true);
         gg = sce.g(idx);
-        inputdlg(csname, ...
-            '', [15, 80], ...
-            {char(gg)});
+        if gui.i_isuifig(parentfig)
+            answer = gui.myInputdlg({csname}, '', {char(gg)}, parentfig);
+        else
+            answer = inputdlg(csname, '', [15, 80], {char(gg)});
+        end
         %        end
     end
 

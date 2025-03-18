@@ -15,7 +15,16 @@ if ismac
     else
         s = '/Library/Frameworks/R.framework/Versions/4.4/Resources/bin/R';
     end
-    new_s = inputdlg('Path to R Executable (e.g., /Library/Frameworks/R.framework/Versions/4.4/Resources/bin/R)','Set up R Environment',[1 100],{s});
+    
+if gui.i_isuifig(parentfig)
+    new_s = gui.myInputdlg({'Path to R Executable (e.g., /Library/Frameworks/R.framework/Versions/4.4/Resources/bin/R)'}, ...
+                           'Set up R Environment', {s}, parentfig);
+else
+    new_s = inputdlg('Path to R Executable (e.g., /Library/Frameworks/R.framework/Versions/4.4/Resources/bin/R)', ...
+                     'Set up R Environment', [1 100], {s});
+end    
+
+
     if isempty(new_s), return; end
     if ~isempty(new_s{1}) && strlength(new_s{1})
         setpref('scgeatoolbox', preftagname, new_s{1});

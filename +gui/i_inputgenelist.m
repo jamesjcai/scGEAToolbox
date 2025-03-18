@@ -17,7 +17,11 @@ if gui.i_isuifig(parentfig)
     [answer] = gui.myInputwin(prompt, dlgtitle, {s}, parentfig);
 else
     disp('www')
-    [answer] = inputdlg(prompt, dlgtitle, [15, 80], {s});
+    if gui.i_isuifig(parentfig)
+        answer = gui.myInputdlg({prompt}, dlgtitle, {s}, parentfig);
+    else
+        answer = inputdlg(prompt, dlgtitle, [15, 80], {s});
+    end    
 end
 
 glist = [];

@@ -105,7 +105,13 @@ if ~exist("ttxt", "var"), ttxt = []; end
 
 posg = posg(:);
 if nargout < 1
-    inputdlg(ttxt, '', [15, 80], {char(posg(:))});
+
+    if gui.i_isuifig(FigureHandle)
+        inputdlg({ttxt}, '', {char(posg(:))}, FigureHandle);
+    else
+        inputdlg(ttxt, '', [15, 80], {char(posg(:))});
+    end
+
 end
 
 end

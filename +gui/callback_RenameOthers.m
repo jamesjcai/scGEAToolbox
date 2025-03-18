@@ -46,8 +46,14 @@ listitems = {'Gene name','Cluster ID'};
 
             if tfx == 1
                 i = ismember(ci, indxx);
-                newctype = inputdlg('New cluster ID name', 'Rename', ...
-                    [1, 50], cLi(ci(i)));
+                
+                if gui.i_isuifig(FigureHandle)
+                    newctype = gui.myInputdlg({'New cluster ID name'}, 'Rename', ...
+                        {cLi(ci(i))}, FigureHandle);
+                else
+                    newctype = inputdlg('New cluster ID name', 'Rename', [1, 50], cLi(ci(i)));
+                end
+
                 if ~isempty(newctype)
                     cLi(ci(i)) = newctype;
                     sce.c_cluster_id = string(cLi(ci));

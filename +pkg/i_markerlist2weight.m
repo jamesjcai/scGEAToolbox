@@ -33,8 +33,15 @@ if isempty(indata)
 end
 
 % indata=gui.i_getsctypemarkers;
-a = inputdlg(sprintf('Format:\nCell type name [TAB] Gene1,Gene2'), ...
-    'Markers Input', [15, 80], {char(indata)}, 'on');
+if gui.i_isuifig(FigureHandle)
+    a = gui.myInputdlg({sprintf('Format:\nCell type name [TAB] Gene1,Gene2')}, ...
+        'Markers Input', {char(indata)}, FigureHandle);
+else
+    a = inputdlg(sprintf('Format:\nCell type name [TAB] Gene1,Gene2'), ...
+        'Markers Input', [15, 80], {char(indata)}, 'on');
+end
+
+
 if isempty(a), return; end
 b = strtrim(string(a{1}));
 [c, d] = strtok(b, sprintf('\t'));

@@ -79,8 +79,14 @@ bb = 'No, just show values (heatmap)';
 
                 case 'Define a New Score...'
                     ttxt = 'Customized Score';
-                    newcstype = inputdlg('Name of the new cell score:', '', ...
-                            [1, 50], {ttxt});
+
+
+                    if gui.i_isuifig(FigureHandle)
+                        newcstype = gui.myInputdlg({'Name of the new cell score:'}, '', {ttxt}, FigureHandle);
+                    else
+                        newcstype = inputdlg('Name of the new cell score:', '', [1, 50], {ttxt});
+                    end
+
                     if isempty(newcstype), return; end
                     ttxt = newcstype;
                     [posg] = gui.i_selectngenes(sce.g, [], FigureHandle);

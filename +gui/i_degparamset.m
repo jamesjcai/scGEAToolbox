@@ -19,8 +19,13 @@ else
               'Adjusted P-value cutoff: e.g., 0.01 (default)'};
     dlgtitle = 'DE Result Filter';
     dims = [1, 80];
-    answer = inputdlg(prompt, dlgtitle, dims, definput);
-
+    
+    if gui.i_isuifig(parentfig)
+        answer = gui.myInputdlg(prompt, dlgtitle, definput, parentfig);
+    else
+        answer = inputdlg(prompt, dlgtitle, dims, definput);
+    end
+    
     if isempty(answer), return; end
     try
         mindiffpct = str2double(answer{1});

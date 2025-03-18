@@ -28,7 +28,13 @@ dlgtitle = '';
 dims = [1, 80];
 
 definput = {'Yes', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes', '0.075', num2str(min([sce.NumGenes,5000]))};
-answer = inputdlg(prompt, dlgtitle, dims, definput);
+
+
+if gui.i_isuifig(FigureHandle)
+    answer = gui.myInputdlg(prompt, dlgtitle, definput, FigureHandle);
+else
+    answer = inputdlg(prompt, dlgtitle, dims, definput);    
+end
 if isempty(answer)
     requirerefresh = false;
     return;

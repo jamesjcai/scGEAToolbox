@@ -11,8 +11,14 @@ end
 if strcmp(clabel, 'Workspace Variable...')
     answerxx = gui.myQuestdlg(parentfig, 'Rename Workspace Variable?','');
     if strcmp(answerxx, 'Yes')
-        newclabelx = inputdlg('New name', ...
-            'Rename', [1, 50], {newpickclabel});
+
+
+if gui.i_isuifig(parentfig)
+    newclabelx = gui.myInputdlg({'New name'}, 'Rename', {newpickclabel}, parentfig);
+else
+    newclabelx = inputdlg('New name', 'Rename', [1, 50], {newpickclabel});
+end
+
         if ~isempty(newclabelx) && ~isempty(newclabelx{1})
             newclabel = matlab.lang.makeValidName(newclabelx);
         end

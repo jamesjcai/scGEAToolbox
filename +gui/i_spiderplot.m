@@ -127,7 +127,11 @@ hx.show(parentfig);
 
         if tfx == 1
             i = ismember(c, indxx);
-            newctype = inputdlg('New cell type', 'Rename', [1, 50], cL(c(i)));
+            if gui.i_isuifig(parentfig)
+                newctype = gui.myInputdlg({'New cell type'}, 'Rename', {cL(c(i))}, parentfig);
+            else
+                newctype = inputdlg('New cell type', 'Rename', [1, 50], cL(c(i)));
+            end
             if ~isempty(newctype)
                 cL(c(i)) = newctype;
                 legend(cL, 'Location', 'best');

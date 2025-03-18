@@ -84,7 +84,13 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
                 'Min nonzero genes per cell (200 or 500):'};
             dlgtitle = 'QC Cutoffs';
             dims = [1, 80];
-            answer = inputdlg(prompt, dlgtitle, dims, definput);
+            
+            if gui.i_isuifig(FigureHandle)
+                answer = gui.myInputdlg(prompt, dlgtitle, definput, FigureHandle);
+            else
+                answer = inputdlg(prompt, dlgtitle, dims, definput);
+            end
+
             if isempty(answer)
                 % requirerefresh = false;
                 return;
