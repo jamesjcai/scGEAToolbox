@@ -1,4 +1,69 @@
-function [answer] = myInputdlg(prompt, dlgtitle, definput, parentfig)
+function [answer] = myInputwin(prompt, dlgtitle, definput, parentfig)
+
+
+hFig = uifigure("WindowStyle","modal",'Visible','off');
+hFig.Position(3)=0.75*hFig.Position(3);
+hFig.Position(4)=0.75*hFig.Position(4);
+dialogWidth = hFig.Position(3);
+dialogHeight = hFig.Position(4);
+
+% Compute center position relative to parentFig
+parentPos = parentfig.Position;
+dialogX = parentPos(1) + (parentPos(3) - dialogWidth) / 2;
+dialogY = parentPos(2) + (parentPos(4) - dialogHeight) / 2;
+hFig.Position(1)=dialogX;
+hFig.Position(2)=dialogY;
+
+
+g = uigridlayout(hFig,[3 3]);
+g.RowHeight = {'fit','2x','fit'};
+g.ColumnWidth = {'1x',75,75};
+
+lbl = uilabel(g,"Text",'Paste List:');
+lbl.Layout.Row = 1;
+lbl.Layout.Column = 1;
+
+txa = uitextarea(g);
+txa.Layout.Row = 2;
+txa.Layout.Column = [1 3];
+txa.Value = compose(definput);
+
+% txa.Position(4)=txa.Position(4)*2;
+if nargout>0
+    oktext = "OK";
+else
+    oktext = "Cancel";
+end
+
+btn = uibutton(g,"Text",oktext);
+btn.Layout.Row = 3;
+btn.Layout.Column = 2 + (nargout==0);
+btn.ButtonPushedFcn = @(src,event) textEntered(src,event,btn);
+%btn.Position(3) = 50;
+
+if nargout > 0
+    btn2 = uibutton(g,"Text","Cancel");
+    btn2.Layout.Row = 3;
+    btn2.Layout.Column = 3;
+    btn2.ButtonPushedFcn = @(src,event) textEntered(src,event,btn2);
+end
+
+% gui.i_movegui2parent(hFig, parentfig);
+hFig.Visible=true;
+uiwait(hFig);
+
+function textEntered(~,~,btn)
+    if strcmp(btn.Text,oktext)
+        y = true;
+        answer = arrayfun(@(f) f.Value, txa, 'UniformOutput', false);
+    else
+        y = false;
+        answer = {};
+    end
+    delete(hFig);
+end
+
+end
 
     % if nargin<1, parentfig = uifigure('Visible', 'off'); end
     % 
@@ -9,37 +74,10 @@ function [answer] = myInputdlg(prompt, dlgtitle, definput, parentfig)
     % % fieldsize = [1 45; 1 45]; % Not used in uifigure, but kept for consistency
     % definput = {'20', 'hsv'};
 
-    answer = openInputDialog(prompt, dlgtitle, definput, parentfig);
-    
-    % Display result
-    if ~isempty(answer)
-        disp('User Input:');
-        disp(answer);
-    else
-        disp('User cancelled the input dialog.');
-    end
-end
 
+    %{
 function answer = openInputDialog(prompt, dlgtitle, definput, parentfig)
 
-     dialogWidth = 350;
-     dialogHeight = 100 + 50 * numel(prompt); % Adjust height based on the number of inputs
-
-    % Compute center position relative to parentFig
-    parentPos = parentfig.Position;
-    dialogX = parentPos(1) + (parentPos(3) - dialogWidth) / 2;
-    dialogY = parentPos(2) + (parentPos(4) - dialogHeight) / 2;
-
-    % % Parent figure (invisible, to keep the UI elements modal)
-    % parentFig = uifigure('Visible', 'off');
-    % 
-    % % Dialog size
-
-    % 
-    % % Compute center position on screen
-    % screenSize = get(groot, 'ScreenSize');
-    % dialogX = (screenSize(3) - dialogWidth) / 2;
-    % dialogY = (screenSize(4) - dialogHeight) / 2;
 
     % Create modal dialog
     d = uifigure('Position', [dialogX, dialogY, dialogWidth, dialogHeight], ...
@@ -84,3 +122,4 @@ function onOKButton(d, fields)
     % Resume UI execution when OK is pressed
     uiresume(d);
 end
+    %}

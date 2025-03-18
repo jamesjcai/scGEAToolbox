@@ -870,7 +870,13 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         dlgtitle = '';
         dims = [1, 85];        
         definput = {'Yes', 'No', 'No', 'Yes', 'No'};
-        answer = inputdlg(prompt, dlgtitle, dims, definput);
+
+        if gui.i_isuifig(FigureHandle)
+            answer = gui.myInputdlg(prompt, dlgtitle, definput, FigureHandle);
+        else
+            answer = inputdlg(prompt, dlgtitle, dims, definput);
+        end
+
         if isempty(answer)
             return;
         end
@@ -1628,7 +1634,15 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             else
                 nname = 'New cell type';
             end
-            newctype = inputdlg('Enter new cell type name:', '', [1, 50], {nname});
+            
+            if gui.i_isuifig(FigureHandle)                
+                newctype = gui.myInputdlg({'Enter new cell type name:'}, ...
+                    '', {nname}, FigureHandle);
+            else
+                newctype = inputdlg('Enter new cell type name:', ...
+                    '', [1, 50], {nname});
+            end
+
             if isempty(newctype), return; end
             sce.c_cell_type_tx(ptsSelected) = string(newctype);
             [c, cL] = grp2idx(sce.c_cell_type_tx);

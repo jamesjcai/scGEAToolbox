@@ -4,7 +4,7 @@ function [y,txt,T] = gui_uishowrefinfo(reftarget, parentfig)
 
 
 if nargin<2, parentfig = []; end
-% gui.gui_showrefinfo(reftarget);
+% gui.gui_showrefinfo(reftarget, parentfig);
 % y = true;
 % txt = [];
 % T=[];

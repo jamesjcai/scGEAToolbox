@@ -1,4 +1,6 @@
-function [glist] = i_inputgenelist(glist0, allowspace)
+function [glist] = i_inputgenelist(glist0, allowspace, parentfig)
+
+if nargin < 3, parentfig = []; end
 if nargin < 2, allowspace = false; end
 if nargin < 1
     glist0 = ["Gene1"; "Gene2"; "Gene3"; ...
@@ -9,7 +11,15 @@ s = sprintf('%s\n', glist0);
 s = s(1:end-1);
 prompt = {'Paste List:'};
 dlgtitle = 'Input List';
-[answer] = inputdlg(prompt, dlgtitle, [15, 80], {s});
+
+if gui.i_isuifig(parentfig)
+    disp('xxx')
+    [answer] = gui.myInputwin(prompt, dlgtitle, {s}, parentfig);
+else
+    disp('www')
+    [answer] = inputdlg(prompt, dlgtitle, [15, 80], {s});
+end
+
 glist = [];
 if isempty(answer), return; end
 if iscell(answer)

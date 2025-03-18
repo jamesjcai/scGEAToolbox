@@ -40,10 +40,11 @@ switch answer
         rng("default");
         rng("shuffle");
         n = length(gsorted);
-        if isempty(predefinedlist)
-            tg = gui.i_inputgenelist(gsorted(randperm(n, min([20, length(gsorted)]))));
+        if isempty(predefinedlist)            
+            tg = gui.i_inputgenelist(gsorted(randperm(n, ...
+                min([20, length(gsorted)]))), false, parentfig);
         else
-            tg = gui.i_inputgenelist(predefinedlist);
+            tg = gui.i_inputgenelist(predefinedlist, false, parentfig);
         end
 
         if length(tg) >= 1
