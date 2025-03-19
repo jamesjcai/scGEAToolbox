@@ -18,7 +18,7 @@ function callback_CheckUpdates(src, ~)
             answer = gui.myQuestdlg(FigureHandle, sprintf('There is a new version of scGEAToolbox (%s vs. %s). Learn how to upgrade?', ...
                 v_new, v_old));
             if strcmp(answer, 'Yes')               
-                gui.gui_uishowrefinfo('Quick Installation', FigureHandle);
+                gui.gui_showrefinfo('Quick Installation', FigureHandle);
             end
         else
             answer = gui.myQuestdlg(FigureHandle, sprintf('There is a new version of scGEAToolbox (%s vs. %s). Upgrade?', ...

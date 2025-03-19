@@ -1,4 +1,6 @@
-function [indx, tf] = myListdlg(parentFig, options, Title)
+function [indx, tf] = myListdlg(parentFig, options, Title, prefersel)
+
+if nargin<4, prefersel = []; end
 
     parentPos = parentFig.Position;
     parentCenter = [parentPos(1) + parentPos(3)/2, parentPos(2) + parentPos(4)/2];
@@ -15,7 +17,8 @@ function [indx, tf] = myListdlg(parentFig, options, Title)
 
 
     % Create a listbox for selection
-    lb = uilistbox(d, 'Items', options, 'Position', [20 60 260 370], 'MultiSelect', 'on');
+    lb = uilistbox(d, 'Items', options, 'Position', [20 60 260 370], ...
+        'MultiSelect', 'on', 'Value', prefersel);
 
     % Create OK button
     btnOK = uibutton(d, 'Text', 'OK', 'Position', [60 20 80 30], ...

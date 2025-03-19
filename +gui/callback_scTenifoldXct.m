@@ -5,13 +5,11 @@ function callback_scTenifoldXct(src, ~)
 if ~gui.gui_showrefinfo('scTenifoldXct [PMID:36787742]', FigureHandle), return; end
 
 
-
 numglist = [1 3000 5000];
 memmlist = [16 32 64 128];
 neededmem = memmlist(sum(sce.NumGenes > numglist));
 [yesgohead, prepare_input_only] = gui.i_memorychecked(neededmem);
 if ~yesgohead, return; end
-
     
 extprogname = 'py_scTenifoldXct';
 preftagname = 'externalwrkpath';
@@ -28,14 +26,19 @@ end
 if isempty(thisc), return; end
 
 if ~strcmp(clabel, 'Cell Type')
-    if ~strcmp(gui.myQuestdlg(FigureHandle, 'You selected grouping varible other than ''Cell Type''. Continue?'), 'Yes'), return; end
+    if ~strcmp(gui.myQuestdlg(FigureHandle, ...
+            ['You selected grouping varible other than ''Cell Type''.' ...
+            ' Continue?']), 'Yes')
+        return;
+    end
 end
 
 [c, cL] = grp2idx(thisc);
 [idx] = gui.i_selmultidlg(cL, [], FigureHandle);
 if isempty(idx), return; end
 if numel(idx) < 2
-    gui.myWarndlg(FigureHandle, 'Need at least 2 cell groups to perform cell-cell interaction analysis.');
+    gui.myWarndlg(FigureHandle, ['Need at least 2 cell groups to ' ...
+        'perform cell-cell interaction analysis.']);
     return;
 end
 if numel(idx) ~= 2
@@ -49,15 +52,14 @@ end
 i1 = idx(1);
 i2 = idx(2);
 
-
-
-
 a1 = sprintf('%s -> %s', cL{i1}, cL{i2});
 a2 = sprintf('%s -> %s', cL{i2}, cL{i1});
 
 twosided = false;
-answer = gui.myQuestdlg(FigureHandle, 'Select direction: Source (ligand) -> Target (receptor)', '', ...
+answer = gui.myQuestdlg(FigureHandle, ['Select direction: ' ...
+    'Source (ligand) -> Target (receptor)'], '', ...
     {'Both', a1, a2}, 'Both');
+
 switch answer
     case 'Both'
         x1 = i1;
@@ -73,6 +75,11 @@ switch answer
         return;
 end
 
+if ~strcmp('Yes', gui.myQuestdlg(FigureHandle,'Continue?'))
+    return;
+end
+
+
 %{
 idx=sce.c_cell_type_tx==cL{x1} | sce.c_cell_type_tx==cL{x2};
 sce=sce.selectcells(idx);
@@ -81,7 +88,6 @@ sce.c_batch_id=sce.c_cell_type_tx;
 sce.c_batch_id(sce.c_cell_type_tx==cL{x1})="Source";
 sce.c_batch_id(sce.c_cell_type_tx==cL{x2})="Target";
 %}
-
 
 sce.c_batch_id = thisc;
 sce.c_batch_id(c == x1) = "Source";

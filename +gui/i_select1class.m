@@ -71,7 +71,7 @@ if ~isempty(prefersel)
 end
 
 if gui.i_isuifig(parentfig)
-    [indx2, tf2] = gui.myListdlg(parentfig, listitems, promptstr);
+    [indx2, tf2] = gui.myListdlg(parentfig, listitems, promptstr, prefersel);
 else     
     if y
         [indx2, tf2] = listdlg('PromptString', ...

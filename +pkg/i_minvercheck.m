@@ -25,7 +25,7 @@ try
                 {'Yes','Remind me later','Skip this update'},'Skip this update');
             switch answer
                 case 'Yes'
-                    gui.gui_uishowrefinfo('Quick Installation', parentfig);
+                    gui.gui_showrefinfo('Quick Installation', parentfig);
                     needupdate = true;
                     return;
                 case 'Remind me later'
