@@ -3,7 +3,7 @@ if nargin < 2, parentfig = []; end
 gsorted = [];
 answer2 = gui.myQuestdlg(parentfig, 'How to sort genes?', 'Sort Genes', ...
     {'Alphabetic', 'Average Expression'}, 'Alphabetic');
-
+if isempty(answer2), return; end
 switch answer2
     case 'Alphabetic'
         gsorted = natsort(sce.g);

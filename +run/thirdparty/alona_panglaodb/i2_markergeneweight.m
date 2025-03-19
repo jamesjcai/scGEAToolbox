@@ -1,6 +1,8 @@
 species = 'mm';
-T1 = readtable(sprintf('markerlist_%s_panglaodb.txt', species), 'ReadVariableNames', false, 'Delimiter', '\t');
-T2 = readtable(sprintf('markerlist_%s_custom.txt', species), 'ReadVariableNames', false, 'Delimiter', '\t');
+T1 = readtable(sprintf('markerlist_%s_panglaodb.txt', species), ...
+    'ReadVariableNames', false, 'Delimiter', '\t');
+T2 = readtable(sprintf('markerlist_%s_custom.txt', species), ...
+    'ReadVariableNames', false, 'Delimiter', '\t');
 % T3 and T4 downloaded from Enrichr
 % T3=readtable('Descartes_Cell_Types_and_Tissue_2021.txt','ReadVariableNames',false,'Delimiter','\t');
 %T4=readtable('CellMarker_Augmented_2021.txt','ReadVariableNames',false,'Delimiter','\t');
@@ -35,7 +37,7 @@ for k = 1:length(s)
     if strlength(a(end)) == 0
         a = a(1:end-1);
     end
-    S = [S, a];
+    S = [S, a]; %#ok
 end
 
 %%

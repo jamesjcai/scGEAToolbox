@@ -214,7 +214,7 @@ switch eg
             x(2*(i - 1)*n+1:2*i*n, :) = [x1; x2];
         end
 
-        x3 = [rand(n2, 2) * L, zeros(n2, d-2)];
+        %x3 = [rand(n2, 2) * L, zeros(n2, d-2)];
         x3 = [rand(n2, 2) * L, rand(n2, d-2) * L / 2 - L / 4];
         x(n1+1:n1+n2, :) = x3;
 

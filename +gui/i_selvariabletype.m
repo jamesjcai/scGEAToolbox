@@ -1,4 +1,4 @@
-function [answer] = i_selvariabletype(y,parentfig)
+function [answer] = i_selvariabletype(y, parentfig)
 if nargin<2, parentfig = []; end
 
 [c] = grp2idx(y);
@@ -11,7 +11,10 @@ end
 answer = gui.myQuestdlg(parentfig, 'What is the variable type?', '', ...
     {'Categorical/Discrete', ...
     'Numerical/Continuous', 'Unknown'}, deft);
-
+if isempty(answer)
+    answer = 'Unknown';
+    return; 
+end
 
 % n=max(c);
 % if n<40

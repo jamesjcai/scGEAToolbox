@@ -87,6 +87,7 @@ hx.show();
             answer = gui.myQuestdlg(parentfig, 'View expression of selected genes', ...
                 'Pseudotime Function', ...
                 'Yes', 'No', 'Yes');
+            if isempty(answer), return; end
             switch answer
                 case 'Yes'
                     r = corr(t, X', 'type', 'spearman'); % Calculate linear correlation between gene expression profile and T

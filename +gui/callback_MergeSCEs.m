@@ -5,6 +5,7 @@ s = "";
 
 answer = gui.myQuestdlg(FigureHandle, ...
     'Current SCE will be replaced. Continue?');
+if isempty(answer), return; end
 if ~strcmp(answer, 'Yes'), return; end
 
 

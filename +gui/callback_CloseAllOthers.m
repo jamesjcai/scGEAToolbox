@@ -14,7 +14,7 @@ function callback_CloseAllOthers(src, ~)
     if isCurrentInList && length(allFigures) > 1
         % Ask the user to confirm before closing other figures
         confirmation = gui.myQuestdlg(FigureHandle, 'Close all other figures?', 'Confirmation');
-        
+        if isempty(confirmation), return; end
         % If the user does not confirm, exit the function
         if ~strcmp(confirmation, 'Yes')
             return;

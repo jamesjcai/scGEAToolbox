@@ -80,7 +80,7 @@ function answer = openInputDialog(prompt, dlgtitle, definput, parentfig)
     end
 end
 
-function onOKButton(d, fields)
+function onOKButton(d, ~)
     % Resume UI execution when OK is pressed
     uiresume(d);
 end

@@ -18,6 +18,7 @@ prepare_input_only = false;
                 '', {'Continue, but Only Prepare Input', ...
                 'Proceed Anyway', 'Cancel'}, ...
                 'Continue, but Only Prepare Input');
+            if isempty(answer), return; end
             switch answer
                 case 'Continue, but Only Prepare Input'
                     continue_to_try = true;
@@ -40,6 +41,7 @@ prepare_input_only = false;
             '', {'Continue, but Only Prepare Input', ...
             'Proceed Anyway', 'Cancel'}, ...
             'Continue, but Only Prepare Input');
+        if isempty(answer), return; end
         switch answer
             case 'Continue, but Only Prepare Input'
                 continue_to_try = true;

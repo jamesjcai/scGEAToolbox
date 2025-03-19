@@ -17,8 +17,13 @@ if nargin<4, prefersel = []; end
 
 
     % Create a listbox for selection
-    lb = uilistbox(d, 'Items', options, 'Position', [20 60 260 370], ...
-        'MultiSelect', 'on', 'Value', prefersel);
+    if ~isempty(prefersel) && ismember(prefersel, options)
+        lb = uilistbox(d, 'Items', options, 'Position', [20 60 260 370], ...
+            'MultiSelect', 'on', 'Value', prefersel);
+    else
+        lb = uilistbox(d, 'Items', options, 'Position', [20 60 260 370], ...
+            'MultiSelect', 'on');
+    end
 
     % Create OK button
     btnOK = uibutton(d, 'Text', 'OK', 'Position', [60 20 80 30], ...

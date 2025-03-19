@@ -13,7 +13,7 @@ addOptional(p, 'cmethod', "snndpc", @(x) (isstring(x) | ischar(x)) & ismember(lo
 parse(p, X, genelist, s, varargin{:});
 k = p.Results.k;
 species = p.Results.species;
-organ = p.Results.organ;
+organ = p.Results.organ; %#ok
 tmethod = p.Results.tmethod;
 cmethod = p.Results.cmethod;
 % cmethod='snndpc';

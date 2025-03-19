@@ -1,8 +1,6 @@
 function [requirerefresh] = callback_SubtypeAnnotation(src, ~)
 
     requirerefresh = false;
-    % answer = gui.myQuestdlg(FigureHandle, 'This function assigns subtype name to selected cell type, continue?', '');
-    % if ~strcmp(answer, 'Yes'), return; end
 
     if isa(src, "SingleCellExperiment")
         sce = src;
@@ -38,6 +36,7 @@ function [requirerefresh] = callback_SubtypeAnnotation(src, ~)
 
         answer = gui.myQuestdlg(FigureHandle, 'How to label cell type with subtype','Choose format', ...
             {'Type_{Subtype}','Type (Subtype)','Subtype'},'Type_{Subtype}');
+        if isempty(answer), return; end
         switch answer
             case 'Type_{Subtype}'
                 formatid = 1;

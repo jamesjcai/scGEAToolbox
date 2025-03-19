@@ -59,7 +59,7 @@ twosided = false;
 answer = gui.myQuestdlg(FigureHandle, ['Select direction: ' ...
     'Source (ligand) -> Target (receptor)'], '', ...
     {'Both', a1, a2}, 'Both');
-
+if isempty(answer), return; end
 switch answer
     case 'Both'
         x1 = i1;

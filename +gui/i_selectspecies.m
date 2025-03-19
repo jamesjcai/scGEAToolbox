@@ -15,7 +15,8 @@ if nargin<3, parentfig = []; end
         answer = gui.myQuestdlg(parentfig, 'Which species?', ...
             'Select Species',{'Human', 'Mouse'}, preferredspecies);
     end
-    
+    speciestag = "";
+    if isempty(answer), return; end
     switch answer
         case 'Human'
             speciestag = "human";

@@ -1792,7 +1792,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 cbtogg = findall(FigureHandle, 'Tag', 'figToglColorbar');
                 set(cbtogg,'State','on');
             case {'Numerical/Continuous','Unknown'}
-                sce.c = thisc;                
+                sce.c = thisc;
                 switch gui.myQuestdlg(FigureHandle, 'Show scores in new figure?','', ...
                         {'Yes, new figure', 'No, current figure', 'Cancel'}, 'Yes, new figure')
                     case 'No, current figure'

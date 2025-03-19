@@ -3,8 +3,14 @@ if nargin < 2, parentfig = []; end
 if nargin < 1
     defaultmethod = 'Scatter+Stem';
 end
+
+methodid = [];
+
 methodx = gui.myQuestdlg(parentfig, 'Plot type:', '', {'Scatter', 'Stem', ...
     'Scatter+Stem'}, defaultmethod);
+
+if isempty(methodx), return; end
+
 switch methodx
     case 'Scatter'
         methodid = 2;

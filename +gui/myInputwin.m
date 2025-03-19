@@ -1,4 +1,4 @@
-function [answer] = myInputwin(prompt, dlgtitle, definput, parentfig)
+function [answer] = myInputwin(~, ~, definput, parentfig)
 
 
 hFig = uifigure("WindowStyle","modal",'Visible','off');

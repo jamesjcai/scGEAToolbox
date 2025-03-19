@@ -15,7 +15,7 @@ S = [];
 for k = 1:length(setnames)
     a = string(val.(setnames{k}).geneSymbols);
     fprintf(fid, '%s\t%s\n', setnames{k}, sprintf('%s,', a));
-    S = [S; a];
+    S = [S; a]; %#ok
 end
 fclose(fid);
 

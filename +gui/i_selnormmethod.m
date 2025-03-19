@@ -6,6 +6,7 @@ dim =[];
 if nargout > 1
     answer = gui.myQuestdlg(parentfig, 'Specify the dimension to operate on:', ...
         '', {'Row-wise', 'Column-wise'}, 'Row-wise');
+    if isempty(answer), return; end
     switch answer
         case 'Column-wise'
             dim = 1;

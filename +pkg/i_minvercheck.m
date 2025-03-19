@@ -23,6 +23,8 @@ try
 
             answer=gui.myQuestdlg(parentfig, 'A minor update is now available. Learn how to install it?','', ...
                 {'Yes','Remind me later','Skip this update'},'Skip this update');
+
+            if isempty(answer), return; end
             switch answer
                 case 'Yes'
                     gui.gui_showrefinfo('Quick Installation', parentfig);

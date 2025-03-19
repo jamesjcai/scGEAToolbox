@@ -2,7 +2,8 @@ function [matchingFiles] = e_openallfiles(k1, k2)
 
 % if nargin<1, k1='parentfig'; k2='myQuestdlg'; end
 % if nargin<1, k1='FigureHandle'; k2='inputdlg'; end
-if nargin<1, k1='isempty(answer'; k2='myQuestdlg'; end
+%if nargin<1, k1='isempty(answer'; k2='myQuestdlg'; end
+if nargin<1, k1='isempty'; k2='switch'; end
 
 
 mfolder = fileparts(mfilename('fullpath'));
@@ -28,7 +29,8 @@ for i = 1:length(files)
     try
         fileContent = fileread(filePath);        
         % Check if all keywords exist in the file
-        if all(cellfun(@(kw) contains(fileContent, kw), keywords))
+        % if all(cellfun(@(kw) contains(fileContent, kw), keywords))
+        if ~contains(fileContent, keywords{1}) && contains(fileContent, keywords{2})
             matchingFiles{end+1} = filePath; %#ok<AGROW>
         end
     catch

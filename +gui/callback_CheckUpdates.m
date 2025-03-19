@@ -8,11 +8,13 @@ function callback_CheckUpdates(src, ~)
     [FigureHandle] = gui.gui_getfigsce(src);
     % Col = webread('https://api.github.com/repos/jamesjcai/scGEAToolbox')
     try
-        [majneedupdate, v_old, v_new] = pkg.i_majvercheck(true);
+        [majneedupdate, v_old, v_new] = pkg.i_majvercheck;
     catch ME
-        gui.myErrordlg(FigureHandle, 'Could not access server.');
+        gui.myErrordlg(FigureHandle, ME.message, ME.identifier)
+        % 'Could not access server.'
         return;
     end
+
     if majneedupdate
         if ~pkg.e_runningasaddons || ismcc || isdeployed
             answer = gui.myQuestdlg(FigureHandle, sprintf('There is a new version of scGEAToolbox (%s vs. %s). Learn how to upgrade?', ...

@@ -36,7 +36,7 @@ for k = 1:length(s)
     if strlength(a(end)) == 0
         a = a(1:end-1);
     end
-    S = [S, a];
+    S = [S, a]; %#ok
 end
 
 %%

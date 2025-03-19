@@ -34,7 +34,9 @@ movegui(fx, 'center');
 fx.Position(1) = fx.Position(1) - 250;
 fy = fx.CurrentAxes;
 fy.Subtitle.String = '[genes x cells]';
-answer = gui.myQuestdlg(FigureHandle, 'scRNAseq data extracted. Continue?', '');
+answer = gui.myQuestdlg(FigureHandle, ...
+    'scRNAseq data extracted. Continue?', '');
+if isempty(answer), return; end
 if ~strcmp(answer, 'Yes'), return; end
 fy = scgeatool(scep);
 fy.Position(3:4) = 0.8 * fy.Position(3:4);

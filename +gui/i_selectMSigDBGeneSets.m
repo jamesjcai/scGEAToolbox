@@ -1,7 +1,7 @@
 function [glist, setname, Col, ctag] = i_selectMSigDBGeneSets(species, ...
     colnoly, parentfig)
 
-if nargin < 3 parentfig=[]; end
+if nargin < 3, parentfig = []; end
 if nargin < 1, species = 'human'; end
 if nargin < 2, colnoly = false; end
 

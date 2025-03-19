@@ -4,6 +4,7 @@ if nargin<1, parentfig = []; end
 ndim = [];
 answer3 = gui.myQuestdlg(parentfig, '3D or 2D?', '', ...
     {'3D', '2D'}, '3D');
+if isempty(answer3), return; end
 switch answer3
     case '3D'
         ndim = 3;

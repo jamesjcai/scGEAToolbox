@@ -26,6 +26,7 @@ else
     answer1 = gui.myQuestdlg(parentfig, sprintf('%s', s), ...
         'Working Root', ...
         {'Use this', 'Use another', 'Cancel'}, 'Use this');
+    if isempty(answer1), return; end
     switch answer1
         case 'Use this'
             done = true;
@@ -41,6 +42,7 @@ end
         answer=gui.myQuestdlg(parentfig, 'Where to save working files?','',...
             {'Use Temporary Folder', ...
             'Select a Folder','Cancel'},'Use Temporary Folder');
+        if isempty(answer), return; end
         switch answer
             case 'Select a Folder'
                 [seltpath] = uigetdir(deflt);

@@ -12,6 +12,7 @@ else
     answer1 = gui.myQuestdlg(parentfig, sprintf('%s', s), ...
         'LLM Model', ...
         {'Use this', 'Use another', 'Cancel'}, 'Use this');
+    if isempty(answer1), return; end
     switch answer1
         case 'Use this'
             done = true;

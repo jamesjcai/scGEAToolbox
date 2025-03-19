@@ -8,6 +8,7 @@ updated = false;
 if ~isscalar(unique(c)) && isscalar(unique(c(ptsSelected)))
     answer = gui.myQuestdlg(parentfig, sprintf('Select brushed cells only or expand to cell group?'), '', ...
         {'Brushed cells only', 'Expand to cell group'}, 'Brushed cells only');
+    if isempty(answer), return; end
     switch answer
         case 'Expand to cell group'
             uptsSelected = unique(c(ptsSelected));

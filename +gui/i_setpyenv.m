@@ -24,6 +24,7 @@ else
     answer = gui.myQuestdlg(parentfig, sprintf('%s', x.Executable), ...
         'Python Executable', ...
         {'Use this', 'Use another', 'Cancel'}, 'Use this');
+    if isempty(answer), return; end
     switch answer
         case 'Use this'
             done = true;
