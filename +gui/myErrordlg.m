@@ -5,6 +5,9 @@ function myErrordlg(parentFig, message, title)
     if isempty(parentFig) || ~gui.i_isuifig(parentFig)
         msgbox(message, title, 'error', 'modal');
     else
-        uialert(parentFig, message, title, 'Icon', 'error');
+        % uialert(parentFig, message, title, 'Icon', 'error');
+        uiconfirm(parentfig, message, title, ...
+            'Options', {'OK'}, 'defaultoption', 'OK', ...
+            'Icon', 'error');        
     end
 end
