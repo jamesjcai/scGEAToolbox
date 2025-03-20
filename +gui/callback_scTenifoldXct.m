@@ -1,193 +1,220 @@
-function callback_scTenifoldXct(src, ~)
+function [T] = py_scTenifoldXct(sce, celltype1, celltype2, twosided, ...
+                                wkdir, isdebug, ...
+                                prepare_input_only, parentfig)
 
-[FigureHandle, sce] = gui.gui_getfigsce(src);
+T = [];
+if nargin < 8, parentfig = []; end
+if nargin < 7, prepare_input_only = false; end
+if nargin < 6, isdebug = true; end
+if nargin < 5, wkdir = []; end
+if nargin < 4, twosided = true; end
+if nargin < 3, error('Usage: [T] = py_scTenifoldXct(sce, celltype1, celltype2)'); end
 
-if ~gui.gui_showrefinfo('scTenifoldXct [PMID:36787742]', FigureHandle), return; end
+oldpth = pwd();
+pw1 = fileparts(mfilename('fullpath'));
+codepth = fullfile(pw1, 'external', 'py_scTenifoldXct');
 
+if isempty(wkdir) || ~isfolder(wkdir)
+    cd(codepth);
+else
+    disp('Using working directory provided.');
+    cd(wkdir);
+end
 
-numglist = [1 3000 5000];
-memmlist = [16 32 64 128];
-neededmem = memmlist(sum(sce.NumGenes > numglist));
-[yesgohead, prepare_input_only] = gui.i_memorychecked(neededmem);
-if ~yesgohead, return; end
-    
-extprogname = 'py_scTenifoldXct';
-preftagname = 'externalwrkpath';
-[wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
-if isempty(wkdir), return; end
 
 
 if ~prepare_input_only
-    if ~gui.i_setpyenv, return; end
-end
-
-[thisc, clabel] = gui.i_select1class(sce, false, ...
-    'Select grouping variable (cell type):', 'Cell Type', FigureHandle);
-if isempty(thisc), return; end
-
-if ~strcmp(clabel, 'Cell Type')
-    if ~strcmp(gui.myQuestdlg(FigureHandle, ...
-            ['You selected grouping varible other than ''Cell Type''.' ...
-            ' Continue?']), 'Yes')
-        return;
-    end
-end
-
-[c, cL] = grp2idx(thisc);
-[idx] = gui.i_selmultidlg(cL, [], FigureHandle);
-if isempty(idx), return; end
-if numel(idx) < 2
-    gui.myWarndlg(FigureHandle, ['Need at least 2 cell groups to ' ...
-        'perform cell-cell interaction analysis.']);
-    return;
-end
-if numel(idx) ~= 2
-    gui.myWarndlg(FigureHandle, ...
-        sprintf(['Need only 2 cell groups to perform cell-cell ' ...
-        'interaction analysis. You selected %d.'], ...
-        numel(idx)));
-    return;
-end
-
-i1 = idx(1);
-i2 = idx(2);
-
-a1 = sprintf('%s -> %s', cL{i1}, cL{i2});
-a2 = sprintf('%s -> %s', cL{i2}, cL{i1});
-
-twosided = false;
-answer = gui.myQuestdlg(FigureHandle, ['Select direction: ' ...
-    'Source (ligand) -> Target (receptor)'], '', ...
-    {'Both', a1, a2}, 'Both');
-if isempty(answer), return; end
-switch answer
-    case 'Both'
-        x1 = i1;
-        x2 = i2;
-        twosided = true;
-    case a1
-        x1 = i1;
-        x2 = i2;
-    case a2
-        x1 = i2;
-        x2 = i1;
-    otherwise
-        return;
-end
-
-if ~strcmp('Yes', gui.myQuestdlg(FigureHandle,'Continue?'))
-    return;
-end
-
-
-%{
-idx=sce.c_cell_type_tx==cL{x1} | sce.c_cell_type_tx==cL{x2};
-sce=sce.selectcells(idx);
-
-sce.c_batch_id=sce.c_cell_type_tx;
-sce.c_batch_id(sce.c_cell_type_tx==cL{x1})="Source";
-sce.c_batch_id(sce.c_cell_type_tx==cL{x2})="Target";
-%}
-
-sce.c_batch_id = thisc;
-sce.c_batch_id(c == x1) = "Source";
-sce.c_batch_id(c == x2) = "Target";
-sce.c_cell_type_tx = string(cL(c));
-
-% idx=thisc==cL{x1} | thisc==cL{x2};
-idx = c == x1 | c == x2;
-sce = sce.selectcells(idx);
-
-
-%sce.c_batch_id(thisc==cL{x1})="Source";
-%sce.c_batch_id(thisc==cL{x2})="Target";
-T = [];
-try
-    if twosided
-        [Tcell] = run.py_scTenifoldXct(sce, cL{x1}, cL{x2}, true, ...
-            wkdir, true, prepare_input_only);
-        if ~isempty(Tcell)
-            [T1] = Tcell{1};
-            [T2] = Tcell{2};
-            if ~isempty(T1)
-                a = sprintf('%s -> %s', cL{x1}, cL{x2});
-                T1 = addvars(T1, repelem(a, height(T1), 1), 'Before', 1);
-                T1.Properties.VariableNames{'Var1'} = 'direction';
-            end
-            if ~isempty(T2)
-                a = sprintf('%s -> %s', cL{x2}, cL{x1});
-                T2 = addvars(T2, repelem(a, height(T2), 1), 'Before', 1);
-                T2.Properties.VariableNames{'Var1'} = 'direction';
-            end
-            T = [T1; T2];
-        end
-    else
-        [T] = run.py_scTenifoldXct(sce, cL{x1}, cL{x2}, false, wkdir, ...
-            true, prepare_input_only);
-        %T=readtable('output1.txt');
-        if ~isempty(T)
-            a = sprintf('%s -> %s', cL{x1}, cL{x2});
-            T = addvars(T, repelem(a, height(T), 1), 'Before', 1);
-            T.Properties.VariableNames{'Var1'} = 'direction';
-        end
-    end
-catch ME
-    gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
-    return;
-end
-
-if ~isempty(T)
-    mfolder = fileparts(mfilename('fullpath'));
-    load(fullfile(mfolder, '..', 'resources', 'Ligand_Receptor', ...
-         'Ligand_Receptor_more.mat'), 'ligand','receptor');
-    % knownpair = false(height(T), 1);
-    A = [string(T.ligand) string(T.receptor)];
-    B = [ligand receptor];
-    [knownpair]= ismember(A, B, 'rows');
-    assert(length(knownpair)==height(T));
-
-    T=[T, table(knownpair)];
-    %T(:,[4 5 6 7 11])=[];
+    fw = gui.myWaitbar(parentfig);
+    gui.myWaitbar(parentfig, fw, false, [], ...
+        'Checking Python environment...');
     
-    outfile = fullfile(wkdir,"outfile.csv");
+    x = pyenv;
+    try
+        pkg.i_add_conda_python_path;
+    catch
+    
+    end
+    
+    codefullpath = fullfile(codepth,'require.py');
+    %cmdlinestr = sprintf('"%s" "%s%srequire.py"', ...
+    %    x.Executable, codepth, filesep);
+    cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);
+    
+    disp(cmdlinestr)
+    [status, cmdout] = system(cmdlinestr, '-echo');
+    if status == 0
+        cd(oldpth);
+    
+        if isvalid(fw)
+            gui.myWaitbar(parentfig, fw, true);
+        end
+        gui.myErrordlg(parentfig, sprintf('%s',cmdout));
+        % error(cmdout);
+        error('Python scTenifoldXct has not been installed properly.');
+        return;
+    end
+    if isvalid(fw), gui.myWaitbar(parentfig, fw, false, [], 'Checking Python environment is complete'); end
+end
 
-    if isfile(outfile)
-        answerx = gui.myQuestdlg(FigureHandle, sprintf('Overwrite %s? Select No to save in a temporary file.', outfile));
-    else
-        answerx = 'Yes';
-    end
-    if isempty(wkdir) || ~isfolder(wkdir) || ~strcmp(answerx, 'Yes')
-        [a, b] = pkg.i_tempdirfile("sctendifoldxct");
-        writetable(T, b);
-   
-        answer = gui.myQuestdlg(FigureHandle, sprintf('Result has been saved in %s', b), ...
-            '', {'Export result...', 'Locate result file...'}, 'Export result...');
-        switch answer
-            case 'Locate result file...'
-                winopen(a);
-                pause(2)
-                if strcmp(gui.myQuestdlg(FigureHandle, 'Export result to other format?'), 'Yes')
-                    gui.i_exporttable(T, false, 'Ttenifldxct', 'TenifldXctTable');
-                end
-            case 'Export result...'
-                gui.i_exporttable(T, false, 'Ttenifldxct', 'TenifldXctTable');
-            otherwise
-                winopen(a);
-        end
-    else
-        writetable(T, outfile);
-        if strcmp(gui.myQuestdlg(FigureHandle, sprintf('Result has been saved in %s. Open the working folder?', outfile)), 'Yes')
-            winopen(wkdir);
-        end
-    end
+
+tmpfilelist = {'X.mat', 'X.txt', 'g.txt', 'c.txt', 'output.txt', ...
+    'output1.txt', 'output2.txt', ...
+    'gene_name_Source.tsv', 'gene_name_Target.tsv', ...
+    'pcnet_Source.npz', 'pcnet_Target.npz', ...
+    'A1.mat', 'A2.mat', 'pcnet_Source.mat', 'pcnet_Target.mat'};
+
+if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+
+% load(fullfile(pw1,'..','resources','Ligand_Receptor','Ligand_Receptor.mat'), ...
+%     'ligand','receptor');
+% validg=unique([ligand receptor]);
+% [y]=ismember(upper(sce.g),validg);
+% X=sce.X(y,:);
+% g=sce.g(y);
+% writematrix(sce.X,'X.txt');
+
+idx = sce.c_cell_type_tx == celltype1 | sce.c_cell_type_tx == celltype2;
+sce = sce.selectcells(idx);
+sce.c_batch_id = sce.c_cell_type_tx;
+sce.c_batch_id(sce.c_cell_type_tx == celltype1) = "Source";
+sce.c_batch_id(sce.c_cell_type_tx == celltype2) = "Target";
+% sce=sce.qcfilter;
+
+
+if issparse(sce.X)
+    X = single(full(sce.X)); 
 else
-    if ~prepare_input_only
-        gui.myHelpdlg(FigureHandle, 'No ligand-receptor pairs are identified.');
+    X = single(sce.X);
+end
+save('X.mat', '-v7.3', 'X', 'twosided');
+writematrix(sce.g, 'g.txt');
+writematrix(sce.c_batch_id, 'c.txt');
+disp('Input X g c written.');
+
+t = table(sce.g, sce.g, 'VariableNames', {' ', 'gene_name'});
+writetable(t, 'gene_name_Source.tsv', 'filetype', 'text', 'Delimiter', '\t');
+writetable(t, 'gene_name_Target.tsv', 'filetype', 'text', 'Delimiter', '\t');
+disp('Input gene_names written.');
+
+useexist = false;
+if exist("pcnet_Source.mat", 'file')
+    
+    answer = gui.i_questdlgtimer(10, ...
+        'pcnet_Source.mat existing. Use it?','', 'Yes, use pcnet_Source', ...
+        'No, reconstruct pcnet_Source', ...
+        'Cancel', 'Yes, use pcnet_Source');
+    switch answer
+        case 'Yes, use pcnet_Source'
+            useexist = true;
+        case 'No, reconstruct pcnet_Source'
+            useexist = false;
+        case 'Cancel'
+            return;
+        otherwise
+            return;
+    end
+end
+if ~useexist
+    fw = gui.myWaitbar(parentfig);
+    gui.myWaitbar(parentfig, fw, false, [], 'Step 1 of 3: Building pcnet_Source network...');
+    disp('Building pcnet_Source network...');
+    A1 = sc_pcnetpar(sce.X(:, sce.c_cell_type_tx == celltype1));
+    A1 = A1 ./ max(abs(A1(:)));
+    A = ten.e_filtadjc(A1, 0.75, false);
+    save('pcnet_Source.mat', 'A', '-v7.3');
+    disp('pcnet_Source.mat saved.');
+    if isvalid(fw), gui.myWaitbar(parentfig, fw, false, [], 'Building pcnet_Source is complete'); end
+end
+
+useexist = false;
+if exist("pcnet_Target.mat", 'file')
+    %answer = gui.myQuestdlg(parentfig, 'pcnet\_Target.mat existing. Use it?','',{'Yes, use pcnet_Target', 'No, reconstruct pcnet_Target', ...
+    %    'Cancel'}, 'Yes, use pcnet_Target')
+    answer = gui.i_questdlgtimer(10, ...
+        'pcnet\_Target.mat existing. Use it?','', 'Yes, use pcnet_Target', 'No, reconstruct pcnet_Target', ...
+        'Cancel', 'Yes, use pcnet_Target');
+    switch answer
+        case 'Yes, use pcnet_Target'
+            useexist = true;
+        case 'No, reconstruct pcnet_Target'
+            useexist = false;
+        case 'Cancel'
+            return;
+        otherwise
+            return;
+    end
+end
+if ~useexist
+    gui.myWaitbar(parentfig, fw, false, [], 'Step 2 of 3: Building pcnet_Target network...');
+    disp('Building pcnet_Target network...')
+    A2 = sc_pcnetpar(sce.X(:, sce.c_cell_type_tx == celltype2));
+    A2 = A2 ./ max(abs(A2(:)));
+    A = ten.e_filtadjc(A2, 0.75, false);
+    save('pcnet_Target.mat', 'A', '-v7.3');
+    disp('pcnet_Target network saved.')
+    if isvalid(fw), gui.myWaitbar(parentfig, fw, false, [], 'Building pcnet_Target is complete'); end
+end
+
+
+if twosided
+    twosidedtag = 1;
+else
+    twosidedtag = 0;
+end
+
+if ~prepare_input_only
+    gui.myWaitbar(parentfig, fw, false, [], 'Step 3 of 3: Running scTenifoldXct.py...');
+else
+    gui.myWaitbar(parentfig, fw, falese, [], 'Step 3 of 3: Finishing input preparation...');
+end
+
+codefullpath = fullfile(codepth,'script.py');
+pkg.i_addwd2script(codefullpath, wkdir, 'python');
+
+if ~prepare_input_only
+    cmdlinestr = sprintf('"%s" "%s" %d', x.Executable, codefullpath, twosidedtag);
+    disp(cmdlinestr)
+    [status] = system(cmdlinestr, '-echo');
+end
+% https://www.mathworks.com/matlabcentral/answers/334076-why-does-externally-called-exe-using-the-system-command-freeze-on-the-third-call
+if isvalid(fw)
+    if prepare_input_only
+        gui.myWaitbar(parentfig, fw, false, [], 'Input preparation is complete.');
     else
-        if strcmp(gui.myQuestdlg(FigureHandle, 'Input files are prepared successfully. Open working folder?'), 'Yes')
-            winopen(wkdir);
-        end
+        gui.myWaitbar(parentfig, fw, false, [], 'Running scTenifoldXct.py is complete.');
     end
 end
 
+% rt=java.lang.Runtime.getRuntime();
+% pr = rt.exec(cmdlinestr);
+% [status]=pr.waitFor();
+
+% if twosided
+%     if status==0 && exist('output1.txt','file') && exist('output2.txt','file')
+%         T1=readtable('output1.txt');
+%         T2=readtable('output2.txt');
+%         T={T1,T2};
+%     end
+% else
+if ~prepare_input_only
+    if status == 0 && exist('output1.txt', 'file')
+        T = readtable('output1.txt');
+        if twosided && exist('output2.txt', 'file')
+            T2 = readtable('output2.txt');
+            T = {T, T2};
+        end
+    else
+        if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+        cd(oldpth);
+        error('scTenifoldXct runtime error.');
+    end
+end
+%end
+
+if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+cd(oldpth);
+
+if isvalid(fw)
+    gui.myWaitbar(parentfig, fw);
+end
 end
