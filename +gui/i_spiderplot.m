@@ -128,7 +128,7 @@ hx.show(parentfig);
         if tfx == 1
             i = ismember(c, indxx);
             if gui.i_isuifig(parentfig)
-                newctype = gui.myInputdlg({'New cell type'}, 'Rename', {cL(c(i))}, parentfig);
+                newctype = gui.myInputdlg({'New cell type'}, 'Rename', cL(c(i)), parentfig);
             else
                 newctype = inputdlg('New cell type', 'Rename', [1, 50], cL(c(i)));
             end

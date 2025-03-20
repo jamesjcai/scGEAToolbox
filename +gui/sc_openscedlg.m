@@ -339,7 +339,7 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                     'GEO Accession', {'GSM7855468'}, parentfig);
             else
                 acc = inputdlg('Input Number(s) (e.g., GSM3308549-52):', ...
-                    'GEO Accession', [1, 50], 'GSM7855468');
+                    'GEO Accession', [1, 50], {'GSM7855468'});
             end
 
             if isempty(acc), return; end

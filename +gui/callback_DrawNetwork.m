@@ -14,9 +14,13 @@ switch answer
         %defaulttxt = sprintf('GeneA\tGeneB\nGeneA\tGeneC\nGeneA\tGeneD\nGeneB\tGeneD\n');
         
         if gui.i_isuifig(FigureHandle)
-            [userInput] = gui.myInputdlg({sprintf('Paste edge list\nFormat: Gene 1 [TAB] Gene 2')}, '', {defaulttxt}, FigureHandle);
+            [userInput] = gui.myInputdlg({sprintf(['Paste edge list\n' ...
+                'Format: Gene 1 [TAB] Gene 2'])}, '', ...
+                {defaulttxt}, FigureHandle);
         else
-            [userInput] = inputdlg(sprintf('Paste edge list\nFormat: Gene 1 [TAB] Gene 2'), '', [15, 80], {defaulttxt});
+            [userInput] = inputdlg(sprintf(['Paste edge list\n' ...
+                'Format: Gene 1 [TAB] Gene 2']), '', ...
+                [15, 80], {defaulttxt});
         end     
 
 

@@ -49,9 +49,10 @@ listitems = {'Gene name','Cluster ID'};
                 
                 if gui.i_isuifig(FigureHandle)
                     newctype = gui.myInputdlg({'New cluster ID name'}, 'Rename', ...
-                        {cLi(ci(i))}, FigureHandle);
+                        cLi(ci(i)), FigureHandle);
                 else
-                    newctype = inputdlg('New cluster ID name', 'Rename', [1, 50], cLi(ci(i)));
+                    newctype = inputdlg('New cluster ID name', 'Rename', ...
+                        [1, 50], cLi(ci(i)));
                 end
 
                 if ~isempty(newctype)

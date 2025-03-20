@@ -58,7 +58,8 @@ else
         i = ismember(ci, indxx);
         
 if gui.i_isuifig(FigureHandle)
-    newctype = gui.myInputdlg({'New cell type'}, 'Rename', {cLi(ci(i))}, FigureHandle);
+    newctype = gui.myInputdlg({'New cell type'}, 'Rename', ...
+        cLi(ci(i)), FigureHandle);
 else
     newctype = inputdlg('New cell type', 'Rename', [1, 50], cLi(ci(i)));
 end

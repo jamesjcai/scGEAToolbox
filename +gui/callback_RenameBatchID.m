@@ -39,7 +39,7 @@ if tfx == 1
 
     if gui.i_isuifig(FigureHandle) % Assuming FigureHandle is available
         newctype = gui.myInputdlg({'New batch ID name'}, 'Rename', ...
-            {cLi(ci(i))}, FigureHandle);
+            cLi(ci(i)), FigureHandle);
     else
         newctype = inputdlg('New batch ID name', 'Rename', [1, 50], cLi(ci(i)));
     end
