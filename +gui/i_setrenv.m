@@ -88,30 +88,28 @@ if done
     end
 end
 
-
-
     function [done] = ix_setrenv(deflt)
-    % selpath = uigetdir;
-    done = false;
-    if ispc
-        [file, path] = uigetfile('Rscript.exe', 'Select R Interpreter', deflt);
-    else
-        [file, path] = uigetfile('Rscript', 'Select R Interpreter', deflt);
-    end
-    if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
-    if isequal(file, 0) 
-        return; 
-    else
-        disp(['User selected: ', fullfile(path, file)]);
-        % fullfile(path)
-        try
-            setpref('scgeatoolbox', preftagname, fullfile(path));
-        catch ME
-            gui.myErrordlg(parentfig, ME.message, ME.identifier);
-            return;
+        % selpath = uigetdir;
+        done = false;
+        if ispc
+            [file, path] = uigetfile('Rscript.exe', 'Select R Interpreter', deflt);
+        else
+            [file, path] = uigetfile('Rscript', 'Select R Interpreter', deflt);
         end
-        done = true;
-    end
+        if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
+        if isequal(file, 0) 
+            return; 
+        else
+            disp(['User selected: ', fullfile(path, file)]);
+            % fullfile(path)
+            try
+                setpref('scgeatoolbox', preftagname, fullfile(path));
+            catch ME
+                gui.myErrordlg(parentfig, ME.message, ME.identifier);
+                return;
+            end
+            done = true;
+        end
     end
 
 end
