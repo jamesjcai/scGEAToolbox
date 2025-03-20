@@ -50,7 +50,8 @@ if ~prepare_input_only
         end
         gui.myErrordlg(parentfig, sprintf('%s',cmdout));
         % error(cmdout);
-        % error('Python scTenifoldXct has not been installed properly.');
+        error('Python scTenifoldXct has not been installed properly.');
+        return;
     end
     if isvalid(fw), gui.myWaitbar(parentfig, fw, false, [], 'Checking Python environment is complete'); end
 end
@@ -115,14 +116,14 @@ if exist("pcnet_Source.mat", 'file')
 end
 if ~useexist
     fw = gui.myWaitbar(parentfig);
-    gui.myWaitbar(parentfig, fw, false, [], 'Step 1 of 3: Building pcnet\_Source network...');
+    gui.myWaitbar(parentfig, fw, false, [], 'Step 1 of 3: Building pcnet_Source network...');
     disp('Building pcnet_Source network...');
     A1 = sc_pcnetpar(sce.X(:, sce.c_cell_type_tx == celltype1));
     A1 = A1 ./ max(abs(A1(:)));
     A = ten.e_filtadjc(A1, 0.75, false);
     save('pcnet_Source.mat', 'A', '-v7.3');
     disp('pcnet_Source.mat saved.');
-    if isvalid(fw), gui.myWaitbar(parentfig, fw, false, [], 'Building pcnet\_Source is complete'); end
+    if isvalid(fw), gui.myWaitbar(parentfig, fw, false, [], 'Building pcnet_Source is complete'); end
 end
 
 useexist = false;
@@ -144,14 +145,14 @@ if exist("pcnet_Target.mat", 'file')
     end
 end
 if ~useexist
-    gui.myWaitbar(parentfig, fw, false, [], 'Step 2 of 3: Building pcnet\_Target network...');
+    gui.myWaitbar(parentfig, fw, false, [], 'Step 2 of 3: Building pcnet_Target network...');
     disp('Building pcnet_Target network...')
     A2 = sc_pcnetpar(sce.X(:, sce.c_cell_type_tx == celltype2));
     A2 = A2 ./ max(abs(A2(:)));
     A = ten.e_filtadjc(A2, 0.75, false);
     save('pcnet_Target.mat', 'A', '-v7.3');
     disp('pcnet_Target network saved.')
-    if isvalid(fw), gui.myWaitbar(parentfig, fw, false, [], 'Building pcnet\_Target is complete'); end
+    if isvalid(fw), gui.myWaitbar(parentfig, fw, false, [], 'Building pcnet_Target is complete'); end
 end
 
 
