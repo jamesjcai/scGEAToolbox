@@ -45,7 +45,7 @@ if ~done
         'Python environment is not set.', '');
 end
 
-end
+
 
 
     function [done] = ix_setpyenv(deflt)
@@ -72,3 +72,5 @@ end
             done = true;
         end
     end
+
+end
