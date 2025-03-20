@@ -95,16 +95,15 @@ writetable(t, 'gene_name_Target.tsv', 'filetype', 'text', 'Delimiter', '\t');
 disp('Input gene_names written.');
 
 useexist = false;
-if exist("pcnet_Source.mat", 'file') && exist("pcnet_Target.mat", 'file')    
+if exist("pcnet_Source.mat", 'file')    
     answer = gui.i_questdlgtimer(10, ...
-        'pcnet_Source.mat and pcnet_Target.mat files existing. Use them?', ...
-         '', 'Yes', ...
-         'No', ...
-         'Cancel', 'No');
+        'pcnet_Source.mat existing. Use it?','', 'Yes, use pcnet_Source', ...
+        'No, reconstruct pcnet_Source', ...
+        'Cancel', 'No, reconstruct pcnet_Source');
     switch answer
-        case 'Yes'
+        case 'Yes, use pcnet_Source'
             useexist = true;
-        case 'No'
+        case 'No, reconstruct pcnet_Source'
             useexist = false;
         case 'Cancel'
             return;
@@ -124,6 +123,26 @@ if ~useexist
     disp('pcnet_Source.mat saved.');
     if isvalid(fw), gui.myWaitbar(parentfig, fw, false, [], 'Building pcnet_Source is complete'); end
 end
+
+useexist = false;
+if exist("pcnet_Target.mat", 'file')
+    %answer = gui.myQuestdlg(parentfig, 'pcnet\_Target.mat existing. Use it?','',{'Yes, use pcnet_Target', 'No, reconstruct pcnet_Target', ...
+    %    'Cancel'}, 'Yes, use pcnet_Target')
+    answer = gui.i_questdlgtimer(10, ...
+        'pcnet\_Target.mat existing. Use it?','', 'Yes, use pcnet_Target', 'No, reconstruct pcnet_Target', ...
+        'Cancel', 'No, reconstruct pcnet_Target');
+    switch answer
+        case 'Yes, use pcnet_Target'
+            useexist = true;
+        case 'No, reconstruct pcnet_Target'
+            useexist = false;
+        case 'Cancel'
+            return;
+        otherwise
+            return;
+    end
+end
+
 if ~useexist
     gui.myWaitbar(parentfig, fw, false, [], 'Step 2 of 3: Building pcnet_Target network...');
     disp('Building pcnet_Target network...')
@@ -134,6 +153,7 @@ if ~useexist
     disp('pcnet_Target network saved.')
     if isvalid(fw), gui.myWaitbar(parentfig, fw, false, [], 'Building pcnet_Target is complete'); end
 end
+
 
 if twosided
     twosidedtag = 1;

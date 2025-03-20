@@ -29,7 +29,7 @@ preftagname = 'externalwrkpath';
 if isempty(wkdir), return; end
 
 if ~prepare_input_only
-    if ~gui.i_setpyenv, return; end
+    if ~gui.i_setpyenv([],[],FigureHandle), return; end
 end
 
 

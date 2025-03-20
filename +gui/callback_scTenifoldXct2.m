@@ -63,7 +63,7 @@ switch answer
 end
 
 if ~prepare_input_only
-    if ~gui.i_setpyenv, return; end
+    if ~gui.i_setpyenv([],[],FigureHandle), return; end
 end
 
 [Tcell, iscomplete] = run.py_scTenifoldXct2(sce1, sce2, ct1, ct2, twosided, ...

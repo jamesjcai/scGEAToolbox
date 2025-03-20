@@ -1,4 +1,5 @@
-function ButtonName = i_questdlgtimer(TimeOutValue, Question, Title, Btn1, Btn2, Btn3, Default)
+function ButtonName = i_questdlgtimer(TimeOutValue, Question, Title, ...
+    Btn1, Btn2, Btn3, Default)
 %QUESTDLG_TIMER Question dialog box.
 %  ButtonName = QUESTDLG_TIMER(Time, Question) creates a dialog box that
 %  automatically wraps the cell array or string (vector or matrix)

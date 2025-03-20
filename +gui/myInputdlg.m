@@ -25,13 +25,13 @@ function answer = openInputDialog(prompt, dlgtitle, definput, parentfig)
      dialogWidth = 350;
      dialogHeight = 100 + 50 * numel(prompt); % Adjust height based on the number of inputs
 
-    % Compute center position relative to parentFig
+    % Compute center position relative to parentfig
     parentPos = parentfig.Position;
     dialogX = parentPos(1) + (parentPos(3) - dialogWidth) / 2;
     dialogY = parentPos(2) + (parentPos(4) - dialogHeight) / 2;
 
     % % Parent figure (invisible, to keep the UI elements modal)
-    % parentFig = uifigure('Visible', 'off');
+    % parentfig = uifigure('Visible', 'off');
     % 
     % % Dialog size
 

@@ -14,7 +14,7 @@ if numel(unique(sce.c_batch_id)) < 2
     return;
 end
 
-if ~gui.i_setpyenv
+if ~gui.i_setpyenv([],[],FigureHandle)
     return;
 end
 

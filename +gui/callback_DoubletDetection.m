@@ -17,7 +17,7 @@ extprogname = 'py_scrublet';
 preftagname = 'externalwrkpath';
 [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
 if isempty(wkdir), return; end
-if ~gui.i_setpyenv, return; end
+if ~gui.i_setpyenv([],[],FigureHandle), return; end
 
 
 % methodtag = 'scrublet';

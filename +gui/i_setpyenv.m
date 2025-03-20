@@ -1,12 +1,13 @@
-function [done] = i_setpyenv(src, ~)
+function [done] = i_setpyenv(src, ~, parentfig)
 % selpath = uigetdir;
 %see also: I_SETRENV
 [done] = false;
-if nargin<1
-    parentfig = [];
-else
+
+narginchk(2,3);
+if nargin < 3
     [parentfig] = gui.gui_getfigsce(src);
 end
+
 x = pyenv;
 if x.Version == "" %strlength(x.Executable)==0
     answer = gui.myQuestdlg(parentfig, ['Python environment ' ...

@@ -7,7 +7,7 @@ hFig.Position(4)=0.75*hFig.Position(4);
 dialogWidth = hFig.Position(3);
 dialogHeight = hFig.Position(4);
 
-% Compute center position relative to parentFig
+% Compute center position relative to parentfig
 parentPos = parentfig.Position;
 dialogX = parentPos(1) + (parentPos(3) - dialogWidth) / 2;
 dialogY = parentPos(2) + (parentPos(4) - dialogHeight) / 2;

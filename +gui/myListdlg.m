@@ -1,8 +1,8 @@
-function [indx, tf] = myListdlg(parentFig, options, Title, prefersel)
+function [indx, tf] = myListdlg(parentfig, options, Title, prefersel)
 
 if nargin<4, prefersel = []; end
 
-    parentPos = parentFig.Position;
+    parentPos = parentfig.Position;
     parentCenter = [parentPos(1) + parentPos(3)/2, parentPos(2) + parentPos(4)/2];
 
     % Dialog size
