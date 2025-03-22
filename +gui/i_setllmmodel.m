@@ -27,7 +27,8 @@ end
 listItems = {'Ollama', 'OpenAI', 'DeepSeek', 'xAI'};
 
 if gui.i_isuifig(parentfig)
-    [selectedIndex, ok] = gui.myListdlg(parentfig, listItems, 'Select a LLM provider:');
+    [selectedIndex, ok] = gui.myListdlg(parentfig, listItems, ...
+            'Select a LLM provider:', listItems(1));
 else
     [selectedIndex, ok] = listdlg('PromptString', 'Select a LLM provider:', ...
                           'SelectionMode', 'single', ...

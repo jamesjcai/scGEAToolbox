@@ -4,7 +4,7 @@ function [matchingFiles] = e_openallfiles(k1, k2)
 % if nargin<1, k1='FigureHandle'; k2='inputdlg'; end
 %if nargin<1, k1='isempty(answer'; k2='myQuestdlg'; end
 %if nargin<1, k1='isempty'; k2='switch'; end
-if nargin<1, k1='parentfig'; k2='parentFig'; end
+if nargin<1, k1='InitialValue'; k2='myListdlg'; end
 
 mfolder = fileparts(mfilename('fullpath'));
 % Define the search directory

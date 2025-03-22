@@ -449,12 +449,18 @@ end
 % ******************************************************************************
 function Out = fBase64_enc(In, doPad)
 % Encode numeric vector of UINT8 values to base64 string.
+Out = matlab.net.base64encode(In);
 
-B64 = org.apache.commons.codec.binary.Base64;
-Out = char(B64.encode(In)).';
+%B64 = org.apache.commons.codec.binary.Base64;
+%Out = char(B64.encode(In)).';
 if ~doPad
    Out(Out == '=') = [];
 end
+
+% Sample uint8 data
+%data = uint8([65, 66, 67, 68, 69, 70]); % Corresponds to ASCII 'ABCDEF'
+%encodedString = matlab.net.base64encode(data);
+%disp(encodedString);
 
 % Matlab method:
 % Pool = [65:90, 97:122, 48:57, 43, 47];  % [0:9, a:z, A:Z, +, /]

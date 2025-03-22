@@ -16,7 +16,8 @@ function sc_llm_enrichr2word(selpath, parentfig)
     listItems = [fileNames1'; fileNames2']; 
 
     if gui.i_isuifig(parentfig)
-        [selectedIndex, ok] = gui.myListdlg(parentfig, listItems, 'Select Excel Files:');
+        [selectedIndex, ok] = gui.myListdlg(parentfig, listItems, ...
+                'Select Excel Files:', listItems);
     else
         [selectedIndex, ok] = listdlg('PromptString', 'Select Excel Files:', ...
                               'SelectionMode', 'multiple', ...

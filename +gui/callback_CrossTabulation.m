@@ -20,18 +20,20 @@ else
 end
 
 if isempty(thisc1), return; end
-if isempty(thisc2)
+if isempty(thisc2) || isempty(cL2)
     hx = gui.myFigure(FigureHandle);
     T = tabulate(thisc1);
     y = T(:,2);
     if iscell(y), y = cell2mat(y); end
-    bar(y, 'FaceColor', "flat");    
-    colormap("turbo")
+    ax = hx.ax;
+    if isempty(ax), ax = gca; end
+    bar(ax, y, 'FaceColor', "flat");    
+    colormap(ax, "turbo")
     labelsx = string(T(:,1));
 
-    xticks(1:length(labelsx));
+    xticks(ax, 1:length(labelsx));
     labelsx1 = strrep(labelsx, '_', '\_');
-    xticklabels(labelsx1);
+    xticklabels(ax, labelsx1);
     hx.show(FigureHandle);
     return;
 end

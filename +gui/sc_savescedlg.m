@@ -10,7 +10,8 @@ if nargin<2, parentfig = []; end
         'Export SCE Data to Workspace...'};
  
        if gui.i_isuifig(parentfig)
-            [indx, tf] = gui.myListdlg(parentfig, list, 'Select a destination:');
+            [indx, tf] = gui.myListdlg(parentfig, list, ...
+                'Select a destination:', list(end));
         else
             [indx, tf] = listdlg('ListString', list, ...
                 'SelectionMode', 'single', ...

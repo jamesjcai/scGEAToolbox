@@ -1,0 +1,27 @@
+name: scanpy_env_311
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11.9
+  - ipykernel
+  - ipython
+  - ipywidgets
+  - pyqt
+  - qtpy
+  - sympy
+  - numpy=1.26
+  - leidenalg=0.10
+  - igraph=0.10
+  - numba=0.59
+  - pandas=2.2
+  - scipy
+  - scikit-learn
+  - statsmodels=0.14.2
+  - igraph=0.10
+  - leidenalg=0.10
+  - scanpy=1.10
+  - umap-learn
+  - tqdm
+  - matplotlib=3.9
+  - seaborn

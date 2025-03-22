@@ -27,7 +27,8 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
     defaultindx = getpref('scgeatoolbox', preftagname, length(list));
 
     if gui.i_isuifig(parentfig)
-        [indx, tf] = gui.myListdlg(parentfig, list, 'Select a source');
+        [indx, tf] = gui.myListdlg(parentfig, list, ...
+            'Select a source', list(defaultindx));
     else
         [indx, tf] = listdlg('ListString', list, ...
             'SelectionMode', 'single', ...

@@ -38,7 +38,7 @@ function callback_ScatterCorrPlot(src, ~)
            % %Plot pseudotime series
 
         case 'Cell State'
-            [thisyv, ylabelv] = gui.i_selectnstates(sce, true);
+            [thisyv, ylabelv] = gui.i_selectnstates(sce, true, [], FigureHandle);
             a = false(length(thisyv), 1);
             for k = 1:length(thisyv)
                 a(k) = isnumeric(thisyv{k});

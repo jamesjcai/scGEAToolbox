@@ -40,7 +40,7 @@ function callback_ScatterStemPlot(src, ~)
             ylabelv = glist;
 
         case 'Cell State'
-            [thisyv, ylabelv] = gui.i_selectnstates(sce, true);
+            [thisyv, ylabelv] = gui.i_selectnstates(sce, true, [], FigureHandle);
 
             a = false(length(thisyv), 1);
             for k = 1:length(thisyv)

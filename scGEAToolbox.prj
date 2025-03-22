@@ -7,7 +7,7 @@
     <param.summary>Single-cell Gene Expression Analysis Toolbox</param.summary>
     <param.description>scRNAseq data analysis toolbox</param.description>
     <param.screenshot>C:\Users\jcai\Pictures\Screenshots\Screenshot 2025-02-05 115308.png</param.screenshot>
-    <param.version>25.3.7</param.version>
+    <param.version>25.3.8</param.version>
     <param.output>${PROJECT_ROOT}\scGEAToolbox.mltbx</param.output>
     <param.products.name>
       <item>MATLAB</item>
@@ -69,7 +69,9 @@ DEVMODE.txt</param.exclude.filters>
     <param.exclude.pcodedmfiles>true</param.exclude.pcodedmfiles>
     <param.examples />
     <param.demosxml />
-    <param.apps />
+    <param.apps>
+      <file>${PROJECT_ROOT}\scgeatoolApp.mlappinstall</file>
+    </param.apps>
     <param.registered.apps />
     <param.docs>${PROJECT_ROOT}\info.xml</param.docs>
     <param.getting.started.guide>${PROJECT_ROOT}\doc\GettingStarted.mlx</param.getting.started.guide>
@@ -105,7 +107,6 @@ DEVMODE.txt</param.exclude.filters>
       <param.exclude.pcodedmfiles />
       <param.examples />
       <param.demosxml />
-      <param.apps />
       <param.registered.apps />
       <param.javaclasspath.excludes />
       <param.exported.on.package />
@@ -223,6 +224,7 @@ DEVMODE.txt</param.exclude.filters>
       <file>${PROJECT_ROOT}\sc_umap.m</file>
       <file>${PROJECT_ROOT}\sc_writefile.m</file>
       <file>${PROJECT_ROOT}\scgeatool.m</file>
+      <file>${PROJECT_ROOT}\scgeatoolApp.mlappinstall</file>
       <file>${PROJECT_ROOT}\tensor_toolbox</file>
     </fileset.rootfiles>
     <fileset.depfun.included />

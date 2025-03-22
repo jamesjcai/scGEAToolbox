@@ -25,7 +25,7 @@ function callback_MultiGroupingView(src, ~)
 
         case 'Multigrouping'
             if gui.i_isuifig(FigureHandle), focus(FigureHandle); end
-            [thiscv, clabelv] = gui.i_selectnstates(sce, false, [4, 5]);
+            [thiscv, clabelv] = gui.i_selectnstates(sce, false, [4, 5], FigureHandle);
             if isempty(thiscv) || isempty(clabelv), return; end
 
             hx=gui.myFigure;
@@ -79,7 +79,8 @@ function callback_MultiGroupingView(src, ~)
 
             if gui.i_isuifig(FigureHandle)
                 [indx2, tf2] = gui.myListdlg(FigureHandle, listitems, ...
-                    'Select embeddings:');
+                    'Select embeddings:', ...
+                    listitems);
             else            
                 [indx2, tf2] = listdlg('PromptString', ...
                     {'Select embeddings:'}, ...

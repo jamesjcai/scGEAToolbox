@@ -17,7 +17,7 @@ if nargin<4, prefersel = []; end
 
 
     % Create a listbox for selection
-    if ~isempty(prefersel) && ismember(prefersel, options)
+    if ~isempty(prefersel) && any(ismember(prefersel, options))
         lb = uilistbox(d, 'Items', options, 'Position', [20 60 260 370], ...
             'MultiSelect', 'on', 'Value', prefersel);
     else

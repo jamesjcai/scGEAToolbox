@@ -1,6 +1,7 @@
 classdef myFigure < handle
     properties
         FigHandle % Handle to the MATLAB figure        
+        ax
     end
     
     properties (Access = private)
@@ -13,13 +14,17 @@ classdef myFigure < handle
         % Constructor
         function obj = myFigure(parentfig)
             if nargin<1, parentfig = []; end
+
             if gui.i_isuifig(parentfig)
                 disp('making a uifigure');
                 obj.FigHandle = uifigure('Name', '', ...
                     'Visible',"off");
                 obj.tb = uitoolbar(obj.FigHandle);
+                obj.ax = uiaxes(obj.FigHandle);
+                obj.ax.Position = [50, 30, obj.FigHandle.Position(3)-100, ... 
+                    obj.FigHandle.Position(4)-60]; % Fill most of the figure
 
-                pkg.i_addbutton2fig(obj.tb, 'on', [], [], '');  
+                pkg.i_addbutton2fig(obj.tb, 'on', [], [], '');
                 obj.tbv{1} = pkg.i_addbutton2fig(obj.tb, 'on', @gui.i_invertcolor, 'INVERT.gif', 'Invert Colors');     
                 obj.tbv{2} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_linksubplots, "keyframes-minus.jpg", "Link Subplots");
                 obj.tbv{3} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_setboxon, 'border-out.jpg', 'Box ON/OFF'); 
@@ -30,8 +35,7 @@ classdef myFigure < handle
                 obj.tbv{8} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_savemainfig, 2}, "jpg-format.jpg", 'Save Figure as Graphic File...');
                 obj.tbv{9} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_savemainfig, 1}, "svg-format.jpg", 'Save Figure as SVG File...');
                 obj.tbv{10} = gui.gui_3dcamera(obj.tb);
-                obj.tbv{11} = pkg.i_addbutton2fig(obj.tb, 'on', {@gui.i_resizewin, obj.FigHandle}, 'scale-frame-reduce.jpg', 'Resize Plot Window');
-                
+                obj.tbv{11} = pkg.i_addbutton2fig(obj.tb, 'on', {@gui.i_resizewin, obj.FigHandle}, 'scale-frame-reduce.jpg', 'Resize Plot Window');                
             else
                 obj.FigHandle = figure('Name', '', ...
                     'NumberTitle', 'on', 'Visible',"off", ...
@@ -42,7 +46,6 @@ classdef myFigure < handle
                 if isempty(obj.tb)
                     obj.tb = uitoolbar(obj.FigHandle);
                 end
-
                 linkTool = findall(obj.FigHandle, 'Tag', 'DataManager.Linking');
                 if ~isempty(linkTool), delete(linkTool); end
                 linkTool = findall(obj.FigHandle, 'Tag', 'Standard.OpenInspector');
@@ -66,7 +69,7 @@ classdef myFigure < handle
 
         % function ptvkeep(obj, flag)
         %     delete(obj.tbv{~flag});
-        % end
+        % end        
 
         function ptvshow(obj, flag)
             set([obj.tbv{flag}],'Visible','on');
