@@ -19,7 +19,7 @@ function callback_CheckUpdates(src, ~)
         if ~pkg.e_runningasaddons || ismcc || isdeployed
             answer = gui.myQuestdlg(FigureHandle, sprintf('There is a new version of scGEAToolbox (%s vs. %s). Learn how to upgrade?', ...
                 v_new, v_old));
-            if strcmp(answer, 'Yes')               
+            if strcmp(answer, 'Yes')
                 gui.gui_showrefinfo('Quick Installation', FigureHandle);
             end
         else

@@ -113,7 +113,7 @@ function callback_DEGene2Groups(src, ~)
 
     outfile = sprintf('%s_vs_%s_DE_results', ...
         matlab.lang.makeValidName(string(cL1)), matlab.lang.makeValidName(string(cL2)));
-    if isatac, T.gene = "chr" + T.gene; end
+   % if isatac, T.gene = "chr" + T.gene; end
 
     [filetype, filesaved] = gui.i_exporttable(T, true, ...
         'Tdegenelist', outfile, [], "All_genes", FigureHandle);
