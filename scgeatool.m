@@ -1277,9 +1277,8 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
     end
 
     function in_Switch2D3D(src, ~)
-        [para] = gui.i_getoldsettings(src);
-        [ax, bx]=view(hAx);
-
+        [para] = gui.i_getoldsettings(hAx);
+        [ax, bx] = view(hAx);        
         if bx == 90   % isempty(h.ZData)               % current 2D            
             if ~strcmp(gui.myQuestdlg(FigureHandle, 'Switch to 3D?',''), 'Yes'), return; end
             if isvalid(FigureHandle) && isa(FigureHandle, 'matlab.ui.Figure'), figure(FigureHandle); end
@@ -1325,6 +1324,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                     {'Embed Cells to 2D', ...
                     'Project Current 3D Embedding to 2D','Cancel'},'Embed Cells to 2D');
             end
+
             switch answer
                 case 'Cancel'
                     return;
@@ -1344,13 +1344,15 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                         otherwise
                             return;
                     end
-                    h = gui.i_gscatter3(sx(:, 1:2), c, methodid, [], hAx);
+                    h = gui.i_gscatter3(sx(:, 1:2), c, ...
+                        methodid, [], hAx);
                     sce.s = sx(:, 1:2);
                     title(hAx, sce.title);
                     subtitle(hAx, '[genes x cells]');
                     h.Marker = para.oldMarker;
                     h.SizeData = para.oldSizeData;
                     colormap(hAx,para.oldColorMap);
+                    view(hAx, 2);
                     return;
                 case 'Pick existing 2D'
                     [sx] = gui.i_pickembedvalues(sce, 2);
@@ -1362,6 +1364,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             end
         end
         guidata(FigureHandle, sce);
+        
         in_RefreshAll(src, [], true, true);   % keepview, keepcolr
     end
 
