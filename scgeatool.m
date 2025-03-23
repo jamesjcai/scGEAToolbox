@@ -666,7 +666,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 case 'Yes'
                     gui.callback_RunDataMapPlot(src, []);
                 case 'No'
-                    [sx] = gui.i_pickembedvalues(sce, 2);
+                    [sx] = gui.i_pickembedvalues(sce, 2, FigureHandle);
                     if ~isempty(sx) && size(sx,1) == sce.NumCells
                         sce.s = sx;
                     else
@@ -1297,7 +1297,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                     ansx = gui.myQuestdlg(FigureHandle, 'Using existing 3D embedding? Select "No" to re-embed.');
                     switch ansx
                         case 'Yes'
-                            [sx] = gui.i_pickembedvalues(sce, 3);
+                            [sx] = gui.i_pickembedvalues(sce, 3, FigureHandle);
                             if ~isempty(sx) && size(sx,1) == sce.NumCells
                                 sce.s = sx;
                             else
@@ -1355,7 +1355,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                     view(hAx, 2);
                     return;
                 case 'Pick existing 2D'
-                    [sx] = gui.i_pickembedvalues(sce, 2);
+                    [sx] = gui.i_pickembedvalues(sce, 2, FigureHandle);
                     if ~isempty(sx) && size(sx,1) == sce.NumCells
                         sce.s = sx;
                     else                        
@@ -1439,7 +1439,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             answer = 'No';
         end
         if strcmp(answer, 'Yes')
-            [sx] = gui.i_pickembedvalues(sce);
+            [sx] = gui.i_pickembedvalues(sce,[],FigureHandle);
             if ~isempty(sx), sce.s = sx; end
         elseif strcmp(answer, 'No')
             [methodtag] = gui.i_pickembedmethod(FigureHandle);
