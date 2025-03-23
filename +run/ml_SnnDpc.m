@@ -8,7 +8,7 @@ if nargin < 3, knnK = 4; end
 if nargin < 2, cluK = 10; end
 
 pw1 = fileparts(mfilename('fullpath'));
-pth = fullfile(pw1, 'external', 'mt_SNNDPC');
+pth = fullfile(pw1, 'external', 'ml_SNNDPC');
 if ~(ismcc || isdeployed)
     addpath(pth);
 end

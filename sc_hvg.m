@@ -140,11 +140,12 @@ if plotit
     hAx1 = subplot(2,2,[1 3]);
     % tb = findall(hFig, 'Tag', 'FigureToolBar');
     hx.addCustomButton('off', @HighlightGenes, 'plotpicker-qqplot.gif', 'Highlight top HVGs');
-    hx.addCustomButton('off', @in_HighlightSelectedGenes, 'xplotpicker-qqplot.gif', 'Highlight selected genes');
-    hx.addCustomButton('off', @ExportGeneNames, 'floppy-disk-arrow-in.jpg', 'Export Selected HVG gene names...');
-    hx.addCustomButton('off', @ExportTable, 'xfloppy-disk-arrow-in.jpg', 'Export HVG Table...');
+    hx.addCustomButton('off', @in_HighlightSelectedGenes, 'curve-array.jpg', 'Highlight selected genes');
+    hx.addCustomButton('off', @ExportGeneNames, 'bookmark-book.jpg', 'Export Selected HVG gene names...');
+    hx.addCustomButton('off', @ExportTable, 'floppy-disk-arrow-in.jpg', 'Export HVG Table...');
     hx.addCustomButton('off', @EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Enrichment analysis...');
-    hx.addCustomButton('off', @ChangeAlphaValue, 'xplotpicker-andrewsplot.gif', 'Change MarkerFaceAlpha value');
+    hx.addCustomButton('off', @ChangeAlphaValue, 'Brightness-3--Streamline-Core.jpg', 'Change MarkerFaceAlpha value');
+    
     h = scatter(hAx1, log(u), log(cv2), 'filled', 'MarkerFaceAlpha', .1);
     hold on
     % scatter(log(u(top100idx)),log(cv2(top100idx)),'x');

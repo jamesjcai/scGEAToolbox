@@ -23,12 +23,12 @@ hFig.Position(3) = hFig.Position(3)*1.8;
 
 
 hx.addCustomButton('off', @in_HighlightTopHVGs, 'plotpicker-qqplot.gif', 'Highlight top HVGs');
-hx.addCustomButton('off', {@in_HighlightSelectedGenes,2}, 'xplotpicker-qqplot.gif', 'Highlight top HVGs');
-hx.addCustomButton('off', {@in_HighlightSelectedGenes,1}, 'xplotpicker-qqplot.gif', 'Highlight selected genes');
+hx.addCustomButton('off', {@in_HighlightSelectedGenes,2}, 'curve-array.jpg', 'Select HVG to show');
+hx.addCustomButton('off', {@in_HighlightSelectedGenes,1}, 'checklist_rtl_18dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'Highlight selected genes');
 hx.addCustomButton('on', @ExportTable, 'floppy-disk-arrow-in.jpg', 'Export HVG Table...');
-hx.addCustomButton('off', @ExportGeneNames, 'xfloppy-disk-arrow-in.jpg', 'Export selected HVG gene names...');
+hx.addCustomButton('off', @ExportGeneNames, 'bookmark-book.jpg', 'Export selected HVG gene names...');
 hx.addCustomButton('off', @EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Enrichment analysis...');
-hx.addCustomButton('off', @ChangeAlphaValue, 'xplotpicker-andrewsplot.gif', 'Change MarkerFaceAlpha value');
+hx.addCustomButton('off', @ChangeAlphaValue, 'Brightness-3--Streamline-Core.jpg', 'Change MarkerFaceAlpha value');
 
 if showdata
     %h=scatter3(hAx,x,y,z);  % 'filled','MarkerFaceAlpha',.5);
