@@ -20,13 +20,19 @@ There are four ways to install `scGEAToolbox`:
    - Click the **Add** button to install the toolbox.
 
 4. **Verify Installation**  
-   - In MATLAB, type the following command in the Command Window to check installed toolboxes:
+   In MATLAB, type the following command in the Command Window to check installed toolboxes:
      ```matlab
      ver
      ```
-   - Look for **scGEAToolbox** in the list.
+   Look for **scGEAToolbox** in the list.
 
-5. **Launch scGEAToolbox**  
+   Or by running
+   ```matlab
+   matlab.addons.installedAddons
+   ```
+   Ensure scGEAToolbox appears in the list and added to the MATLAB path.
+
+6. **Launch scGEAToolbox**  
    - To start using scGEAToolbox, enter:
      ```matlab
      scgeatool
