@@ -1,17 +1,17 @@
 import os
-os.chdir("D:\\GitHub\\memento_test")
+# os.chdir("D:\\GitHub\\memento_test")
 import scanpy as sc
 
 import memento
 import matplotlib.pyplot as plt
 import pandas as pd
 
-
-adata = sc.read_h5ad("GSM3308547_GSM3308548.h5ad")
+adata = sc.read_h5ad("input.h5ad")
 print(adata)
-adata.obs[['BatchID','CellType']].sample(5)
-adata.obs['BatchID'] = adata.obs['BatchID'].apply(lambda x: 0 if x == '14w' else 1)
-adata.obs[['BatchID','CellType']].sample(5)
+
+#adata.obs[['BatchID','CellType']].sample(5)
+#adata.obs['BatchID'] = adata.obs['BatchID'].apply(lambda x: 0 if x == '14w' else 1)
+#adata.obs[['BatchID','CellType']].sample(5)
 
 
 result_1d = memento.binary_test_1d(
@@ -21,11 +21,12 @@ result_1d = memento.binary_test_1d(
     num_cpus=12,
     num_boot=5000)
 
-plt.scatter(result_1d.de_coef, result_1d.dv_coef, s=1)
+# plt.scatter(result_1d.de_coef, result_1d.dv_coef, s=1)
+# result_1d.query('de_coef > 0').sort_values('de_pval').head(10)
+# result_1d.query('dv_coef > 0 & de_coef > 0').sort_values('dv_pval').head(10)
 
-result_1d.query('de_coef > 0').sort_values('de_pval').head(10)
-
-result_1d.query('dv_coef > 0 & de_coef > 0').sort_values('dv_pval').head(10)
+result_1d.query('de_coef > 0').sort_values('de_pval').to_csv('deoutput.txt', sep='\t', index=False)
+result_1d.query('dv_coef > 0 & de_coef > 0').sort_values('dv_pval').to_csv('dvoutput.txt', sep='\t', index=False)
 
 import itertools
 
@@ -39,4 +40,4 @@ result_2d = memento.binary_test_2d(
     num_cpus=12, 
     num_boot=5000)
 
-result_2d.sort_values('corr_pval').head(5)
+result_2d.sort_values('corr_pval').to_csv('corr_output.txt', sep='\t', index=False)

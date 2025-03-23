@@ -1,62 +1,44 @@
+import scanpy as sc
+
+import memento
+#import matplotlib.pyplot as plt
 import pandas as pd
-from scipy.sparse import csr_matrix
-import h5py
-import anndata
-import os.path
+
+adata = sc.read_h5ad("input.h5ad")
+#print(adata)
+
+#adata.obs[['BatchID','CellType']].sample(5)
+#adata.obs['BatchID'] = adata.obs['BatchID'].apply(lambda x: 0 if x == '14w' else 1)
+#adata.obs[['BatchID','CellType']].sample(5)
 
 
-f = h5py.File("X.mat",'r')
-counts = csr_matrix(f.get('X'))
-Xnorm = csr_matrix(f.get('Xnorm'))
-modeldir = f['modeldir'][()]
-modeldir = modeldir.tobytes().decode('utf-16')
-f.close()
+result_1d = memento.binary_test_1d(
+    adata=adata, 
+    capture_rate=0.07, 
+    treatment_col='BatchID', 
+    num_cpus=12,
+    num_boot=5000)
 
-adata = anndata.AnnData(X=Xnorm)
-adata.layers["counts"] = counts
-metadata = pd.read_csv("c.csv")
-with open("g.csv",'r') as f:
-          gene_names = f.read().splitlines()
-adata.obs = metadata
-adata.obs.index = adata.obs['CellID'].tolist()
-adata.var.index = gene_names
-print("Input data ready.")
+# plt.scatter(result_1d.de_coef, result_1d.dv_coef, s=1)
+# result_1d.query('de_coef > 0').sort_values('de_pval').head(10)
+# result_1d.query('dv_coef > 0 & de_coef > 0').sort_values('dv_pval').head(10)
 
-# import scanpy as sc
-from scimilarity.utils import lognorm_counts, align_dataset
-from scimilarity import CellAnnotation
+result_1d.query('de_coef > 0').sort_values('de_pval').to_csv('deoutput.txt', sep='\t', index=False)
+result_1d.query('dv_coef > 0 & de_coef > 0').sort_values('dv_pval').to_csv('dvoutput.txt', sep='\t', index=False)
 
-model_path = modeldir
-ca = CellAnnotation(model_path=model_path)
-print("Model read.")
+import itertools
 
-if os.path.exists("tg.csv"):    
-    with open("tg.csv",'r') as f:
-          target_celltypes = f.read().splitlines()
-    ca.safelist_celltypes(target_celltypes)
-    print("Constrained annotation.")
-else:
-    print("Unconstrained annotation.")
+gene_pairs = list(itertools.product(['IRF7'], adata.var.index.tolist()))
 
-#target_celltypes = [
-#    "glutamatergic neuron",
-#    "microglial cell",
-#    "radial glial cell",
-#    "neuron",
-#    "astrocyte",
-#    "glial cell",
-#    "progenitor cell",
-#    "oligodendrocyte"
-#]
-#ca.safelist_celltypes(target_celltypes)
-#print("Model constraining...done.")
+result_2d = memento.binary_test_2d(
+    adata=adata, 
+    gene_pairs=gene_pairs, 
+    capture_rate=0.07, 
+    treatment_col='BatchID', 
+    num_cpus=12, 
+    num_boot=5000)
 
-adata = align_dataset(adata, ca.gene_order)
-adata = lognorm_counts(adata)
-embeddings = ca.get_embeddings(adata.X)
-print("Get_embeddings...done.")
+result_2d.sort_values('corr_pval').to_csv('corr_output.txt', sep='\t', index=False)
 
-predictions = ca.get_predictions_knn(embeddings)
-print("Prediction...done.")
 
-predictions.to_csv("output.csv", index=True)
+# https://nbviewer.org/github/yelabucsf/scrna-parameter-estimation/blob/master/tutorials/binary_testing.ipynb

@@ -1,14 +1,13 @@
-function [succeeded] = py_writeh5ad(sce, fname, wkdir, isdebug)
+function [succeeded] = py_memento(wkdir, isdebug)
 
 succeeded = false;
-if nargin < 2, fname = tempname + ".h5ad"; end
-extprogname = 'py_writeh5ad';
-if nargin<3 || isempty(wkdir)
+extprogname = 'py_memento';
+if nargin<1 || isempty(wkdir)
     preftagname = 'externalwrkpath';
     [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname);
     if isempty(wkdir), return; end
 end
-if nargin < 4, isdebug = true; end
+if nargin < 2, isdebug = true; end
 
 oldpth = pwd();
 pw1 = fileparts(mfilename('fullpath'));
@@ -44,43 +43,29 @@ end
 %prgfoldername = 'py_writeh5ad';
 %[pyok, wrkpth, x] = run.pycommon(prgfoldername);
 %if ~pyok, return; end
+
 tmpfilelist = {'X.mat', 'g.csv', 'c.csv'};
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 
-if issparse(sce.X)
-    X = single(full(sce.X));         
-else
-    X = single(sce.X);
-end
-save('X.mat','-v7.3',"X");
-g = sce.g;
-writetable(table(g),'g.csv','WriteVariableNames',false);
-% barcode = sce.c_cell_id;
-sce.c_cell_id = matlab.lang.makeUniqueStrings(sce.c_cell_id);
-T = pkg.makeattributestable(sce);
-writetable(T,'c.csv');
-% disp('Files written.');
 
 if isvalid(fw)
     gui.gui_waitbar(fw, [], [], 'Checking Python environment is complete');
     pause(0.5);
-    gui.gui_waitbar(fw, [], [], 'Running py\_writeh5ad...');
+    gui.gui_waitbar(fw, [], [], 'Running py\_memento...');
 end
 
 codefullpath = fullfile(codepth,'script.py');
 pkg.i_addwd2script(codefullpath, wkdir, 'python');
 cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);
 disp(cmdlinestr)
-[status1] = system(cmdlinestr, '-echo');
-[status2] = movefile('output.h5ad',fname);
+[status] = system(cmdlinestr, '-echo');
 
-if status1 == 0 && status2 == 1 && isvalid(fw)
+if status == 0 && isvalid(fw)
     gui.gui_waitbar(fw, false, 'File is written.');
     succeeded = true;
 else
     gui.gui_waitbar(fw, true, 'File is failed to save.');
 end
 
-if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 cd(oldpth);
 end
