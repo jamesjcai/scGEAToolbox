@@ -271,8 +271,9 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 menus = uimenu(FigureHandle, 'Text', 'E&xternal');
                 in_addmenu(menus, 0, @gui.i_resetrngseed, 'Set Random Seed...');
                 in_addmenu(menus, 0, @gui.i_setextwd, 'Set Working Folder...');
-                in_addmenu(menus, 1, @gui.i_setscimilaritymodelpath, '🔢 - Set Scimilarity Model...');
-                in_addmenu(menus, 0, @gui.i_setllmmodel, '🤖 - Set Large Language Model...');
+                in_addmenu(menus, 1, @gui.i_setscimilaritymodelpath, '🔢 - Set Up Scimilarity Model...');
+                in_addmenu(menus, 0, @gui.i_setllmmodel, '🤖 - Set Up Large Language Model...');
+                in_addmenu(menus, 0, @gui.i_setqtmservice, '⚛ - Set Up Quantum Service API...');
                 in_addmenu(menus, 1, @gui.callback_RunEnrichr, '🌐 - Enrichr Analysis...')
                 in_addmenu(menus, 1, @gui.i_setrenv, 'Set Up R (ℝ) Environment');
                 in_addmenu(menus, 0, @gui.i_setpyenv, 'Set Up Python (🐍) Environment');
@@ -1195,16 +1196,17 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         end
         a=allchild(m_file);
         a(end).Enable='on';
-        a(end-1).Enable='on';        
-        a=allchild(m_extn);
-        a(end).Enable='on';
         a(end-1).Enable='on';
-        a(end-2).Enable='on';
-        a(end-3).Enable='on';
-        a(end-4).Enable='on';
-        a(end-5).Enable='on';
-        a(end-6).Enable='on';
-        %a=allchild(m_optn);
+        a=allchild(m_extn);
+        [a(end-7:end).Enable] = deal('on');        
+        % a(end-1).Enable='on';
+        % a(end-2).Enable='on';
+        % a(end-3).Enable='on';
+        % a(end-4).Enable='on';
+        % a(end-5).Enable='on';
+        % a(end-6).Enable='on';
+        % a(end-7).Enable='on';
+        % %a=allchild(m_optn);
         %a(end).Enable='on';
         %a(end-1).Enable='on';
         %a(end-2).Enable='on';

@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="2589472133" file="D:\GitHub\scGEAToolbox\app\scgeatoolApp.prj" location="D:\GitHub\scGEAToolbox\app" name="scgeatoolApp" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="2364518361" file="D:\GitHub\scGEAToolbox\app\scgeatoolApp.prj" location="D:\GitHub\scGEAToolbox\app" name="scgeatoolApp" target="target.mlapps" target-name="Package App">
     <param.appname>scgeatoolApp</param.appname>
     <param.authnamewatermark>James Cai</param.authnamewatermark>
     <param.email>jcai@tamu.edu</param.email>
@@ -13,7 +13,7 @@
     <param.summary />
     <param.description />
     <param.screenshot>D:\GitHub\scGEAToolbox\resources\Images\scgeatool.png</param.screenshot>
-    <param.version>25.3.8</param.version>
+    <param.version>25.3.9</param.version>
     <param.products.name>
       <item>MATLAB</item>
       <item>Curve Fitting Toolbox</item>

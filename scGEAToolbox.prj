@@ -7,7 +7,7 @@
     <param.summary>Single-cell Gene Expression Analysis Toolbox</param.summary>
     <param.description>scRNAseq data analysis toolbox</param.description>
     <param.screenshot>C:\Users\jcai\Pictures\Screenshots\Screenshot 2025-02-05 115308.png</param.screenshot>
-    <param.version>25.3.8</param.version>
+    <param.version>25.3.9</param.version>
     <param.output>${PROJECT_ROOT}\scGEAToolbox.mltbx</param.output>
     <param.products.name>
       <item>MATLAB</item>
@@ -136,6 +136,7 @@ DEVMODE.txt</param.exclude.filters>
       <file>${PROJECT_ROOT}\+run</file>
       <file>${PROJECT_ROOT}\+ten</file>
       <file>${PROJECT_ROOT}\@SingleCellExperiment</file>
+      <file>${PROJECT_ROOT}\app</file>
       <file>${PROJECT_ROOT}\cdgea.m</file>
       <file>${PROJECT_ROOT}\demo_Getting_Started.m</file>
       <file>${PROJECT_ROOT}\demo_script1.mlx</file>
