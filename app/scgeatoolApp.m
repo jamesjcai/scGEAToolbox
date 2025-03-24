@@ -23,6 +23,7 @@ else
 end
 if y0 && y1 && y2 && y3
     scgeatool
+    disp('scgeatool starts. Enjoy exploring!')
 end
 
 
