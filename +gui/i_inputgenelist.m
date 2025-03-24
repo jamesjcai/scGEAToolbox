@@ -13,7 +13,6 @@ prompt = {'Paste List:'};
 dlgtitle = 'Input List';
 
 if gui.i_isuifig(parentfig)
-    disp('xxx')
     [answer] = gui.myInputwin(prompt, dlgtitle, {s}, parentfig);
 else
     disp('www')

@@ -23,22 +23,22 @@ result_1d = memento.binary_test_1d(
 # result_1d.query('de_coef > 0').sort_values('de_pval').head(10)
 # result_1d.query('dv_coef > 0 & de_coef > 0').sort_values('dv_pval').head(10)
 
-result_1d.query('de_coef > 0').sort_values('de_pval').to_csv('deoutput.txt', sep='\t', index=False)
-result_1d.query('dv_coef > 0 & de_coef > 0').sort_values('dv_pval').to_csv('dvoutput.txt', sep='\t', index=False)
+result_1d.query('de_coef > 0').sort_values('de_pval').to_csv('output.csv', sep='\t', index=False)
 
-import itertools
+#result_1d.query('dv_coef > 0 & de_coef > 0').sort_values('dv_pval').to_csv('dvoutput.txt', sep='\t', index=False)
 
-gene_pairs = list(itertools.product(['IRF7'], adata.var.index.tolist()))
+#import itertools
+#gene_pairs = list(itertools.product(['IRF7'], adata.var.index.tolist()))
 
-result_2d = memento.binary_test_2d(
-    adata=adata, 
-    gene_pairs=gene_pairs, 
-    capture_rate=0.07, 
-    treatment_col='BatchID', 
-    num_cpus=12, 
-    num_boot=5000)
+#result_2d = memento.binary_test_2d(
+#    adata=adata, 
+#    gene_pairs=gene_pairs, 
+#    capture_rate=0.07, 
+#    treatment_col='BatchID', 
+#    num_cpus=12, 
+#    num_boot=5000)
 
-result_2d.sort_values('corr_pval').to_csv('corr_output.txt', sep='\t', index=False)
+#result_2d.sort_values('corr_pval').to_csv('corr_output.txt', sep='\t', index=False)
 
 
 # https://nbviewer.org/github/yelabucsf/scrna-parameter-estimation/blob/master/tutorials/binary_testing.ipynb

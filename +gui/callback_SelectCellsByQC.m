@@ -271,7 +271,7 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
                     [glist] = gui.i_selectngenes(sce, [], FigureHandle);
                     if isempty(glist), return; end
                     [y, idx] = ismember(upper(glist), upper(sce.g));
-                    if ~all(y), error('xxx'); end
+                    if ~all(y), error('Runtime error.'); end
                     if isempty(idx), return; end
                     if isscalar(idx) && idx == 0
                         gui.myHelpdlg(FigureHandle, 'No gene selected.');

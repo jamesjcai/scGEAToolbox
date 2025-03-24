@@ -280,7 +280,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 in_addmenu(menus, 0, @in_RunMonocle3, 'ℝ - Pseudotime Analysis (Monocle3) [PMID:28825705]...');
                 in_addmenu(menus, 0, {@in_CellCyclePotency, 5}, 'ℝ - Aneuploid/Diploid Analysis (copykat) [PMID:33462507]...');
                 in_addmenu(menus, 0, @in_DecontX, 'ℝ - Detect Ambient RNA Contamination (DecontX) [PMID:32138770]...');
-                % in_addmenu(menus, 1, @in_RunDataMapPlot, '🐍 - Run DataMapPlot (datamapplot)...');
+                in_addmenu(menus, 1, @in_RunDataMapPlot, '🐍 - Run DataMapPlot (datamapplot)...');
                 in_addmenu(menus, 0, @gui.callback_RunMemento, '🐍 - Memento DE/DV Analysis [PMID:39454576]...');
                 in_addmenu(menus, 0, @in_DoubletDetection, '🐍 - Detect Doublets (Scrublet) [PMID:30954476]...');
                 in_addmenu(menus, 0, @in_HarmonyPy, '🐍 - Batch Integration (Harmony) [PMID:31740819]...');
@@ -1297,13 +1297,14 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                     in_EmbeddingAgain(src, [], 3);
                 else
                     ansx = gui.myQuestdlg(FigureHandle, 'Using existing 3D embedding? Select "No" to re-embed.');
+                    if isempty(ansx), return; end
                     switch ansx
                         case 'Yes'
                             [sx] = gui.i_pickembedvalues(sce, 3, FigureHandle);
                             if ~isempty(sx) && size(sx,1) == sce.NumCells
                                 sce.s = sx;
+                                view(hAx, 3);
                             else
-                                warning('Running error.');
                                 return;
                             end
                         case 'No'
@@ -1326,7 +1327,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                     {'Embed Cells to 2D', ...
                     'Project Current 3D Embedding to 2D','Cancel'},'Embed Cells to 2D');
             end
-
+            if isempty(answer), return; end
             switch answer
                 case 'Cancel'
                     return;
@@ -1360,6 +1361,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                     [sx] = gui.i_pickembedvalues(sce, 2, FigureHandle);
                     if ~isempty(sx) && size(sx,1) == sce.NumCells
                         sce.s = sx;
+                        view(hAx, 2);
                     else                        
                         return;
                     end
@@ -1731,7 +1733,6 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             return;
         end
         if ~exist('speciestag', 'var') || isempty(speciestag)
-            % xxx
             speciestag = gui.i_selectspecies(2, false, FigureHandle);
         end
         if isempty(speciestag), return; end

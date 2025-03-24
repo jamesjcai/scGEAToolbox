@@ -39,10 +39,12 @@ function answer = myQuestdlg(parentfig, message, title, options, defaultOption)
             'Icon', 'question');
 
         if strcmp(answer, options{end})
-            if ~strcmp('Yes', gui.myQuestdlg(parentfig, ...
-                    sprintf('You selected %s. Continue?', answer)))
-                answer = [];
-            end
+            % if ~strcmp('Yes', gui.myQuestdlg(parentfig, ...
+            %         sprintf('You selected %s. Continue?', answer)))
+            %     answer = [];
+            % end
+            gui.myHelpdlg(parentfig, ...
+                sprintf('You selected ''%s''.', answer));
         end
     end
 end

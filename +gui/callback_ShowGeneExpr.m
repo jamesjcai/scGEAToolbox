@@ -4,7 +4,7 @@ function callback_ShowGeneExpr(src, ~)
     [axx, bxx] = view(findall(FigureHandle,'type','axes'));
     [glist] = gui.i_selectngenes(sce, [], FigureHandle);
     if isempty(glist) 
-        gui.myHelpdlg(FigureHandle, 'No genes is selected or found.');
+        % gui.myHelpdlg(FigureHandle, 'No genes is selected or found.');
         return;
     end
 
@@ -35,7 +35,7 @@ function callback_ShowGeneExpr(src, ~)
             tab{nf} = uitab(tabgp, 'Title', sprintf('Tab%d',nf));
             axes('parent', tab{nf});
             
-            hx.addCustomButton('off', @in_xxx, 'HDF_point.gif', 'Show gene names');
+            hx.addCustomButton('off', @in_showgenename, 'HDF_point.gif', 'Show gene names');
 
             if ~ispref('scgeatoolbox', 'prefcolormapname')
                 setpref('scgeatoolbox', 'prefcolormapname', 'autumn');
@@ -97,7 +97,7 @@ function callback_ShowGeneExpr(src, ~)
             gui.myWaitbar(FigureHandle, fw);            
     end
 
- function in_xxx(~,~)
+ function in_showgenename(~,~)
      % ancestor(ax1, 'figure')
      for l = 1:2
      ax = findall(tab{l}, 'Type', 'axes');
