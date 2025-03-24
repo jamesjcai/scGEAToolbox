@@ -42,7 +42,7 @@ function i_Brush4MarkersLASSO(src, ~, sce, uselasso)
     if ~any(ptsSelected)
         answer=gui.myQuestdlg(FigureHandle, 'No cells are brushed/selected. You can select cells by a grouping variable. Continue?','');
         if ~strcmp(answer,'Yes'), return; end
-        [ptsSelected] = gui.i_select1classcells(sce, false,[],[],FigureHandle);
+        [ptsSelected] = gui.i_select1classcells(sce, false, FigureHandle);
         if isempty(ptsSelected), return; end
         if all(ptsSelected)
             gui.myWarndlg(FigureHandle, "All cells are in the same group.");

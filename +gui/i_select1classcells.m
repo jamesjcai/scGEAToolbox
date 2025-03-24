@@ -5,8 +5,6 @@ ptsSelected = [];
 [thisc, clabel] = gui.i_select1class(sce,[],[],[],parentfig);
 if isempty(thisc), return; end
 
-
-
 answer2 = gui.myQuestdlg(parentfig, sprintf('How to sort members of ''%s''?',clabel), '', ...
     {'Alphabetic', 'Size (Descending Order)'}, 'Alphabetic');
 switch answer2
