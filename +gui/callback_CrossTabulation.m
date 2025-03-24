@@ -25,7 +25,7 @@ if isempty(thisc2) || isempty(cL2)
     T = tabulate(thisc1);
     y = T(:,2);
     if iscell(y), y = cell2mat(y); end
-    ax = hx.ax;
+    ax = hx.AxHandle;
     if isempty(ax), ax = gca; end
     bar(ax, y, 'FaceColor', "flat");    
     colormap(ax, "turbo")

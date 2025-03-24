@@ -47,7 +47,7 @@ function [T] = py_memento(wkdir, isdebug)
     pkg.i_addwd2script(codefullpath, wkdir, 'python');
     cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);
     disp(cmdlinestr)
-    [status] = system(cmdlinestr, '-echo');
+    [~] = system(cmdlinestr, '-echo');
     
     T = readtable(fullfile(wkdir, 'output.csv'),"FileType","text");
     cd(oldpth);

@@ -1,7 +1,7 @@
 classdef myFigure < handle
     properties
         FigHandle % Handle to the MATLAB figure        
-        ax
+        AxHandle
     end
     
     properties (Access = private)
@@ -20,8 +20,8 @@ classdef myFigure < handle
                 obj.FigHandle = uifigure('Name', '', ...
                     'Visible',"off");
                 obj.tb = uitoolbar(obj.FigHandle);
-                obj.ax = uiaxes(obj.FigHandle);
-                obj.ax.Position = [50, 30, obj.FigHandle.Position(3)-100, ... 
+                obj.AxHandle = uiaxes(obj.FigHandle);
+                obj.AxHandle.Position = [50, 30, obj.FigHandle.Position(3)-100, ... 
                     obj.FigHandle.Position(4)-60]; % Fill most of the figure
 
                 % pkg.i_addbutton2fig(obj.tb, 'on', [], [], '');
@@ -41,7 +41,7 @@ classdef myFigure < handle
                     'NumberTitle', 'on', 'Visible',"off", ...
                     "DockControls", "off", 'ToolBar', 'figure', ...
                     'Position', [1, 1, 560, 420]);
-                % obj.FigHandle = uifigure();
+                obj.AxHandle = axes(obj.FigHandle);                
                 obj.tb = findall(obj.FigHandle, 'Type', 'uitoolbar');
                 if isempty(obj.tb)
                     obj.tb = uitoolbar(obj.FigHandle);

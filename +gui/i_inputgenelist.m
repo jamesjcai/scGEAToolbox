@@ -15,7 +15,6 @@ dlgtitle = 'Input List';
 if gui.i_isuifig(parentfig)
     [answer] = gui.myInputwin(prompt, dlgtitle, {s}, parentfig);
 else
-    disp('www')
     if gui.i_isuifig(parentfig)
         answer = gui.myInputdlg({prompt}, dlgtitle, {s}, parentfig);
     else
