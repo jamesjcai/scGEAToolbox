@@ -15,7 +15,7 @@ else
     cd(wkdir);
 end
 
-fw = gui.gui_waitbar([], [], 'Checking Python environment...');
+% fw = gui.gui_waitbar([], [], 'Checking Python environment...');
 
 x = pyenv;
 try
@@ -33,9 +33,9 @@ disp(cmdlinestr)
 [status, cmdout] = system(cmdlinestr, '-echo');
 if status ~= 0
     cd(oldpth);
-    if isvalid(fw)
-        gui.gui_waitbar(fw, true);
-    end
+    %if isvalid(fw)
+    %    gui.gui_waitbar(fw, true);
+    %end
     error(cmdout);
 end
 
@@ -48,24 +48,26 @@ if issparse(s), s = full(s); end
 save('input.mat', '-v7.3', 's');
 disp('Input files written.');
 
-if isvalid(fw)
-    gui.gui_waitbar(fw, [], [], 'Checking Python environment is complete');
-    pause(0.5);
-    gui.gui_waitbar(fw, [], [], 'Running DataMapPlot...');
-end
+%if isvalid(fw)
+%    gui.gui_waitbar(fw, [], [], 'Checking Python environment is complete');
+%    pause(0.5);
+%    gui.gui_waitbar(fw, [], [], 'Running DataMapPlot...');
+%end
 % fw = gui.gui_waitbar([],[],'Running DataMapPlot...');
 codefullpath = fullfile(codepth,'script.py');
 
 pkg.i_addwd2script(codefullpath, wkdir, 'python');
 
-cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);
-disp(cmdlinestr)
-[status] = system(cmdlinestr, '-echo');
+%cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);
+% disp(cmdlinestr)
+% [status] = system(cmdlinestr, '-echo');
 
-if status == 0 && isvalid(fw)
-    gui.gui_waitbar(fw, [], 'DataMapPlot is complete');
-end
+%if status == 0 && isvalid(fw)
+%    gui.gui_waitbar(fw, [], 'DataMapPlot is complete');
+%end
 
-if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+% if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 cd(oldpth);
+
+
 end

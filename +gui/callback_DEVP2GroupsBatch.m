@@ -40,7 +40,7 @@ function callback_DEVP2GroupsBatch(src, ~)
         end
     
         if ~isempty(T)
-            [T, Tnt] = pkg.in_DETableProcess(T, cL1, cL2);
+            [T, Tnt] = pkg.in_DETableProcess(T, cL1, cL2, sum(i1&idx), sum(i2&idx));
             
             % Item = T.Properties.VariableNames';
             % Item = [Item; {'# of cells in sample 1';'# of cells in sample 2'}];

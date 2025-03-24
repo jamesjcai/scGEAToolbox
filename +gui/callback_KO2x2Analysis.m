@@ -39,7 +39,7 @@ function callback_KO2x2Analysis(src, ~)
                 sprintf('%s vs. %s', cL1, cL2), count/6);
             Tde = sc_deg(sce.X(:, c==k), sce.X(:, c==l), sce.g, 1, ...
                     false, FigureHandle);
-            in_processTde(Tde, cL1, cL2);
+            in_processTde(Tde, cL1, cL2, sum(c==k), sum(c==l));
 
             sce1 = sce.selectcells(c==k);
             sce1 = sce1.qcfilter;
