@@ -3,7 +3,7 @@ import subprocess
 # import pkg_resources
 import importlib.metadata
 
-required  = {'scanpy', 'h5py', 'anndata', 'memento'} 
+required  = {'scanpy', 'h5py', 'anndata', 'memento-de'} 
 # installed = {pkg.key for pkg in pkg_resources.working_set}
 installed = {distribution.metadata["Name"] for distribution in importlib.metadata.distributions()}
 missing   = required - installed
