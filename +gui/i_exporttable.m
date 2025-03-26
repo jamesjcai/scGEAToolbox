@@ -6,7 +6,7 @@ if nargin < 6 || isempty(sheetname), sheetname = []; end
 if nargin < 5 || isempty(outtype), outtype = []; end
 if nargin < 4 || isempty(deffilename), deffilename = []; end
 if nargin < 3 || isempty(TName), TName = 'T'; end
-if nargin < 2 || isempty(needwait), needwait = false; end
+if nargin < 2 || isempty(needwait), needwait = true; end
 filename = [];
 
 if ~isempty(outtype)
@@ -30,11 +30,21 @@ switch answer
         labels = {'Save to variable named:'};
         vars = {TName};
         values = {T};
-        if needwait
-            waitfor(export2wsdlg(labels, vars, values));
+
+        if gui.i_isuifig(parentfig)
+            gui.myExport2wsdlg(labels, vars, values, ...
+                'Save Data to Workspace', parentfig);
         else
-            export2wsdlg(labels, vars, values);
+            if needwait
+                %disp('needwait')
+                waitfor(export2wsdlg(labels, vars, values));
+            else
+                %disp('~needwait')
+                export2wsdlg(labels, vars, values);
+            end
         end
+
+
     case 'Text file'
         if ~isempty(deffilename)
             [file, path] = uiputfile({'*.txt'; '*.*'}, 'Save as', deffilename);

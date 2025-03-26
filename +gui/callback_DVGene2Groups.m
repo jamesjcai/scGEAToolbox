@@ -191,7 +191,7 @@ end
     end
 
     function in_ExportTable(~, ~)
-        [~, filesaved] = gui.i_exporttable(T, false, 'Tdvgenelist', ...
+        [~, filesaved] = gui.i_exporttable(T, true, 'Tdvgenelist', ...
                 outfile, [], "All_genes", FigureHandle);
         %if ~isempty(filesaved)
             %gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s',filesaved));
