@@ -1,4 +1,4 @@
-function [h1] = i_baredrplot(s, c, t, parentfig)
+function [h1] = i_baredrplot2(s, c, t, parentfig)
 
 if nargin < 4, parentfig = []; end
 if nargin < 3, t = 'tSNE'; end
@@ -18,37 +18,57 @@ if nargin < 2, c = []; end
 isAxesHandle = isa(s, 'matlab.graphics.axis.Axes'); %isgraphics(s, 'axes');
 if ~isAxesHandle && isempty(c), error('Empty handle.'); end
 
-%hx = gui.myFigure(parentfig);
-hx = gui.myFigure;
+hx = gui.myFigure(parentfig);
 hFig = hx.FigHandle;
 
-%if ~isempty(parentfig)
-%    hFig.Position = parentfig.Position;
-%end
-
+%hFig = figure;
 if isAxesHandle
-    hAx = copyobj(s, hFig);
+    disp('copied')    
+    assert(isequal(gca, hx.AxHandle))
+    assert(isequal(hFig.CurrentAxes, hx.AxHandle))
+
+    a = hFig.CurrentAxes;
+    hAx2 = copyobj(s, hFig);    
+    b = hFig.CurrentAxes;
+    assert(isequal(a, b))
+    assert(isequal(hFig.CurrentAxes, hx.AxHandle))
+    hAx = hx.AxHandle;
 else
-    hAx = axes('Parent', hFig, 'Visible', 'off');
-    h1 = gui.i_gscatter3(s, c, 1, 1, hAx);    
+    %hAx = axes('Parent', hFig, 'Visible', 'off');
+    hAx = hx.AxHandle;
+    if isempty(hAx), hAx = gca; end
+    h1 = gui.i_gscatter3(s, c, 1, 1, hAx);
 end
-grid(hAx, 'off');
-hold(hAx, 'on');
-set(hAx, 'XColor', 'none', 'YColor', 'none', 'ZColor', 'none');
+grid(hAx,'off');
+hold(hAx,'on');
+
+assert(isequal(hFig.CurrentAxes, hAx))
+
+ax = gca;
+assert(isequal(ax, hAx))
+
+
 
 % Get axis limits and figure position
-% ax = gca;
-ax=s;
-xLimits = s.XLim;
-yLimits = s.YLim;
-zLimits = s.ZLim;
-
-%assert(isequal(ax, hAx));
+ax = gca;
+%ax = hAx;
+% ax = hFig.CurrentAxes;
+xLimits = ax.XLim;
+yLimits = ax.YLim;
+zLimits = ax.ZLim;
+assert(isequal(ax, hAx));
 
 is3d1 = isprop(hAx, 'ZLim');
 h = get(hAx, 'Children');
 
-is3d2 = false;
+title(hAx2, '')
+subtitle(hAx2,'')
+set(hAx2, 'XColor', 'none', 'YColor', 'none', 'ZColor', 'none');
+grid(hAx2,"off");
+
+
+%assignin('base',"h",h);
+is3d2=false;
 if isscalar(h) 
     if isprop(h, 'ZData')  % ismember('ZData', properties(h))
         is3d2 = any(arrayfun(@(x) ~isempty(get(x, 'ZData')), h));
@@ -63,9 +83,10 @@ end
 is3d = is3d1 & is3d2;
 
 if is3d    % ======================================== 3D
+
     disp('3D')
-    hold(hAx, 'on');
     % view(hAx, 3);
+    hold on;
     % Turn off the default axis display
     %set(gca, 'Visible', 'off');
  
@@ -75,9 +96,9 @@ if is3d    % ======================================== 3D
     lc = zLimits(2)-c;
 
     % Draw custom arrows as axes using quiver3
-    quiver3(hAx, a, b, c, la/5, 0, 0, 'k', 'LineWidth', 1); % X-axis
-    quiver3(hAx, a, b, c, 0, lb/5, 0, 'k', 'LineWidth', 1); % Y-axis
-    quiver3(hAx, a, b, c, 0, 0, lc/5, 'k', 'LineWidth', 1); % Z-axis
+    quiver3(a, b, c, la/5, 0, 0, 'k', 'LineWidth', 1); % X-axis
+    quiver3(a, b, c, 0, lb/5, 0, 'k', 'LineWidth', 1); % Y-axis
+    quiver3(a, b, c, 0, 0, lc/5, 'k', 'LineWidth', 1); % Z-axis
 
     axis_length = 20;
 %    quiver3(0, 0, 0, axis_length, 0, 0, 'k', 'LineWidth', 1); % X-axis
@@ -88,12 +109,13 @@ if is3d    % ======================================== 3D
     txt3 = sprintf('%s\\_3', t);
     
     % Label each arrow for clarity
-    text(hAx, a+la/5, b, c, txt1);
-    text(hAx, a, b+lb/5, c, txt2);
-    text(hAx, a, b, c+lc/5, txt3);
-    hold(hAx, 'off');    
+    text(a+la/5, b, c, txt1);
+    text(a, b+lb/5, c, txt2);
+    text(a, b, c+lc/5, txt3);
+    hold off;
+    
+
 else          % ======================================== 2D
-    disp('2D')
     ax.Units = "pixels";
     r = ax.Position(3)/ax.Position(4);
     
@@ -105,13 +127,13 @@ else          % ======================================== 2D
     % yArrowPos = [0, 1]; % normalized from bottom to top of the axes
     
     % Draw x-axis arrow
-    annotation(hFig, 'arrow', ...
+    annotation('arrow', ...
         [axPos(1), axPos(1) + axPos(3)/7], ... % x positions
         [axPos(2), axPos(2)], ...            % y positions
         'Color', 'k', 'LineWidth', .5);
     
     % Draw y-axis arrow
-    annotation(hFig, 'arrow', ...
+    annotation('arrow', ...
         [axPos(1), axPos(1)], ...            % x positions
         [axPos(2), axPos(2) + r*(axPos(4)/7)], ... % y positions
         'Color', 'k', 'LineWidth', .5);
@@ -121,17 +143,17 @@ else          % ======================================== 2D
     txt2 = sprintf('%s\\_2', t);
     
     [~, b] = measureText(txt1);
-    text(hAx, xLimits(1), yLimits(1) - 2*b, txt1);
+    text(xLimits(1), yLimits(1) - 2*b, txt1);
     
     [~, b] = measureText(txt2);
-    text(hAx, xLimits(1)-3*b, yLimits(1), txt2,'Rotation',90);
-    title(hAx, '')
-    subtitle(hAx, '')
-    hold(hAx,'off');
+    text(xLimits(1)-3*b, yLimits(1), txt2,'Rotation',90);
+    %title(ax, '')
+    %subtitle(ax,'')
+    %hold(ax, 'off');
 end
-    xlim(hAx, xLimits);
-    ylim(hAx, yLimits);
 hx.show(parentfig);
+
+
 
  function [width, height] = measureText(txt, textOpts, axis)
     if(nargin < 3)

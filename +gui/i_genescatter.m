@@ -7,6 +7,7 @@ function i_genescatter(T, parentfig)
 
     hFig = hx.FigHandle;
     hAx = hx.AxHandle;
+    if isempty(hAx), hAx = gca; end
 
     hx.addCustomButton('off', @HighlightGenes, 'plotpicker-qqplot.gif', 'Highlight top HVGs');
     hx.addCustomButton('off', @in_HighlightSelectedGenes, 'curve-array.jpg', 'Highlight selected genes');

@@ -41,7 +41,7 @@ classdef myFigure < handle
                     'NumberTitle', 'on', 'Visible',"off", ...
                     "DockControls", "off", 'ToolBar', 'figure', ...
                     'Position', [1, 1, 560, 420]);
-                obj.AxHandle = axes(obj.FigHandle);                
+                % obj.AxHandle = axes(obj.FigHandle);
                 obj.tb = findall(obj.FigHandle, 'Type', 'uitoolbar');
                 if isempty(obj.tb)
                     obj.tb = uitoolbar(obj.FigHandle);
