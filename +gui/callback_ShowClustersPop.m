@@ -48,39 +48,40 @@ try
     h = findall(FigureHandle, 'type', 'scatter');
     if isempty(h.ZData), sces = sce.s(:, 1:2); end
 
-    [para] = gui.i_getoldsettings(src);
+    [para] = gui.i_getoldsettings(src, FigureHandle);
+
     totaln = max(c);
     numfig = ceil(totaln/9);
 
-% -------------
+    % -------------
 
-hx = gui.myFigure(FigureHandle);
-
-tabgp = uitabgroup();
-for nf = 1:numfig
-    tab{nf} = uitab(tabgp, 'Title', sprintf('Tab%d',nf));
-    axes('parent',tab{nf});
-    for k=1:9
-        kk = (nf - 1) * 9 + k;
-        if kk <= totaln
-        ax{nf,k} = subplot(3,3,k);
-        gui.i_gscatter3(sces, c, 3, cmv(idxx(kk)));
-        set(ax{nf, k}, 'XTick', []);
-        set(ax{nf, k}, 'YTick', []);
-        b = cL{idxx(kk)};
-        title(strrep(b, '_', "\_"));
-        a = sprintf('%d cells (%.2f%%)', ...
-            cmx(idxx(kk)), ...
-            100*cmx(idxx(kk))/length(c));
-        fprintf('%s in %s\n', a, b);
-        subtitle(a);
-        box on
+    hx = gui.myFigure(FigureHandle);
+    
+    tabgp = uitabgroup();
+    for nf = 1:numfig
+        tab{nf} = uitab(tabgp, 'Title', sprintf('Tab%d',nf));
+        axes('parent',tab{nf});
+        for k=1:9
+            kk = (nf - 1) * 9 + k;
+            if kk <= totaln
+                ax{nf, k} = subplot(3,3,k);
+                gui.i_gscatter3(sces, c, 3, cmv(idxx(kk)));
+                set(ax{nf, k}, 'XTick', []);
+                set(ax{nf, k}, 'YTick', []);
+                b = cL{idxx(kk)};
+                title(ax{nf, k}, strrep(b, '_', "\_"));
+                a = sprintf('%d cells (%.2f%%)', ...
+                    cmx(idxx(kk)), ...
+                    100*cmx(idxx(kk))/length(c));
+                fprintf('%s in %s\n', a, b);
+                subtitle(ax{nf, k}, a);
+                box(ax{nf, k}, 'on');
+            end
         end
+        colormap(para.oldColorMap);
     end
-    colormap(para.oldColorMap);
-end
-hx.addCustomButton('off', @in_scgeatoolsce, "icon-mat-touch-app-10.gif", 'Extract and Work on Separate SCEs...');
-hx.show(FigureHandle);
+    hx.addCustomButton('off', @in_scgeatoolsce, "icon-mat-touch-app-10.gif", 'Extract and Work on Separate SCEs...');
+    hx.show(FigureHandle);
 catch ME
     gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
 end

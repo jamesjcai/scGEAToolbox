@@ -95,7 +95,8 @@ if ~gui.gui_showrefinfo('talklr [DOI:10.1101/2020.02.01.930602]', FigureHandle),
 
                         %subplot(1, 2, 1)
                         nexttile
-                        sc_scattermarker(sce.X, sce.g, sce.s, sce.g(idx1), 1, [], false);
+                        sc_scattermarker(sce.X, sce.g, sce.s, ...
+                            sce.g(idx1), 1, [], false);
                         title(sce.g(idx1));
 
                         %subplot(1, 2, 2)

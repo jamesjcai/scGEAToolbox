@@ -117,15 +117,6 @@ subtitle(hAx2, titxt);
 xlabel(hAx2,'Cell Index');
 ylabel(hAx2,'Expression Level');
 
-% figure;
-% assignin("base","x1",x1);
-% stem(1:length(x1), x1, 'marker', 'none');
-% xlim([1 size(X,2)]);
-% title(hvg(1));
-% subtitle(titxt);
-% xlabel('Cell Index');
-% ylabel('Expression Level');
-
 if showdata && ~isempty(dt)
     dt.UpdateFcn = {@in_myupdatefcn3, gsorted};
 end

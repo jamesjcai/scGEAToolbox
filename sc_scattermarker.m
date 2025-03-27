@@ -43,6 +43,7 @@ end
 if nargin < 7, showcam = true; end
 if nargin < 6 || isempty(sz), sz = 5; end
 if nargin < 5, methodid = 1; end
+
 if iscell(targetg)
     for k = 1:length(targetg)
         figure;
@@ -76,10 +77,10 @@ elseif isStringScalar(targetg) || ischar(targetg)
                 % assignin("base","c",c)
                 gui.i_stemscatter([x, y], c);
                 h1 = gca;
-                grid on
-                title(targetg)
+                grid(h1, "on");
+                title(h1, targetg)
                 titxt = gui.i_getsubtitle(c);
-                subtitle(titxt);
+                subtitle(h1, titxt);
             case 2
                 if isempty(z)
                     scatter(x, y, sz, c, 'filled');
@@ -90,12 +91,12 @@ elseif isStringScalar(targetg) || ischar(targetg)
                 set(h1, 'XTickLabel', []);
                 set(h1, 'YTickLabel', []);
                 set(h1, 'ZTickLabel', []);
-                grid on
+                grid(h1, "on");
 
-                title(targetg)
+                title(h1, targetg)
 
                 titxt = gui.i_getsubtitle(c);
-                subtitle(titxt);
+                subtitle(h1, titxt);
                 
             case 3
 
@@ -108,6 +109,7 @@ elseif isStringScalar(targetg) || ischar(targetg)
                 hFig = gcf;
                 hFig.Position(3) = hFig.Position(3) * 2;
             case 5 % ============ 5
+             
                 if size(s, 2) >= 3
                     x = s(:, 1);
                     y = s(:, 2);
@@ -125,28 +127,28 @@ elseif isStringScalar(targetg) || ischar(targetg)
                 % c=log2(1+X(genelist==g,:));
 
                 h1 = subplot(1, 2, 1);
-                s1 = scatter3(x, y, z, sz, c, 'filled');
+                s1 = scatter3(h1, x, y, z, sz, c, 'filled');
                 set(h1, 'XTickLabel', []);
                 set(h1, 'YTickLabel', []);
                 set(h1, 'ZTickLabel', []);
-                grid on
+                grid(h1, 'on');
                 % h1.YDataSource='explorer2IDX';
-                title(targetg)
+                title(h1, targetg)
 
                 titxt = gui.i_getsubtitle(c);
-                subtitle(titxt);
+                subtitle(h1, titxt);
 
                 h2 = subplot(1, 2, 2);
-                s2 = stem3(x, y, c, 'marker', 'none', 'color', 'm');
-                hold on;
-                scatter3(x, y, zeros(size(y)), 5, c, 'filled');
+                s2 = stem3(h2, x, y, c, 'marker', 'none', 'color', 'm');
+                hold(h2, 'on');
+                scatter3(h2, x, y, zeros(size(y)), 5, c, 'filled');
                 %[ayy,byy]=view(h2);
                 % h2.YDataSource='explorer2IDX';
                 % hLD = linkdata('on');
                 set(h2, 'XTickLabel', []);
                 set(h2, 'YTickLabel', []);
                 %set(h2,'ZTickLabel',[]);
-                grid on
+                grid(h2, 'on');
 
                 if ~is2d
                     % evalin('base', 'h=findobj(gcf,''type'',''axes'');');
@@ -167,8 +169,9 @@ elseif isStringScalar(targetg) || ischar(targetg)
         gui.i_setautumncolor(c, a, true, any(c==0));
 
         ori_c = c;
-        title(targetg);
-        subtitle(titxt);
+
+%       title(targetg);
+%       subtitle(titxt);
 
         % subtitle(sprintf('(%s/%s = %.2f%% nonzero)', ...
         %                    num2bankScalar(sum(c > 0)), ...
@@ -233,7 +236,10 @@ end
         title(h2, targetg);
         subtitle(h2, titxt);
     end
+
 end
+
+
 
     function i_genecards(~, ~, g)
         web(sprintf('https://www.genecards.org/cgi-bin/carddisp.pl?gene=%s', g));
@@ -294,7 +300,7 @@ end
     %     end
     % end
 
-        function within_stemscatter(x, y, z)
+    function within_stemscatter(x, y, z)
         if nargin < 3
             x = randn(300, 1);
             y = randn(300, 1);
@@ -312,3 +318,4 @@ end
         % [caz,cel]=view;
         % view([-45,-45,300]);
     end
+        
