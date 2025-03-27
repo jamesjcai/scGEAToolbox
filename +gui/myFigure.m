@@ -16,7 +16,7 @@ classdef myFigure < handle
             if nargin<1, parentfig = []; end
 
             if gui.i_isuifig(parentfig)
-                disp('making a uifigure');
+                % disp('making a uifigure');
                 obj.FigHandle = uifigure('Name', '', ...
                     'Visible',"off");
                 obj.tb = uitoolbar(obj.FigHandle);

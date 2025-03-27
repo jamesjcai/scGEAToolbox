@@ -1,4 +1,4 @@
-function [h1] = i_baredrplot(s, c, t, parentfig)
+function i_baredrplot(ax, c, t, parentfig)
 
 if nargin < 4, parentfig = []; end
 if nargin < 3, t = 'tSNE'; end
@@ -15,11 +15,11 @@ if nargin < 2, c = []; end
 %     z = zeros(size(x));
 %     is2d = true;
 % end
-isAxesHandle = isa(s, 'matlab.graphics.axis.Axes'); %isgraphics(s, 'axes');
+isAxesHandle = isa(ax, 'matlab.graphics.axis.Axes'); %isgraphics(s, 'axes');
 if ~isAxesHandle && isempty(c), error('Empty handle.'); end
 
-%hx = gui.myFigure(parentfig);
-hx = gui.myFigure;
+hx = gui.myFigure(parentfig);
+% hx = gui.myFigure;
 hFig = hx.FigHandle;
 
 %if ~isempty(parentfig)
@@ -27,27 +27,37 @@ hFig = hx.FigHandle;
 %end
 
 if isAxesHandle
-    hAx = copyobj(s, hFig);
+    if gui.i_isuifig(hFig)
+        copyobj(ax.Children, hx.AxHandle);
+        hAx = hx.AxHandle;
+    else
+        hAx = copyobj(ax, hFig);
+    end
 else
-    hAx = axes('Parent', hFig, 'Visible', 'off');
-    h1 = gui.i_gscatter3(s, c, 1, 1, hAx);    
+    if gui.i_isuifig(hFig)
+        hAx = hx.AxHandle;
+    else
+        hAx = axes('Parent', hFig, 'Visible', 'off');
+    end
+    %h1 = gui.i_gscatter3(ax, c, 1, 1, hAx);  
 end
-grid(hAx, 'off');
-hold(hAx, 'on');
+
+
 set(hAx, 'XColor', 'none', 'YColor', 'none', 'ZColor', 'none');
+grid(hAx, 'off');
 
 % Get axis limits and figure position
 % ax = gca;
-ax=s;
-xLimits = s.XLim;
-yLimits = s.YLim;
-zLimits = s.ZLim;
+% ax = hAx;
+xLimits = hAx.XLim;
+yLimits = hAx.YLim;
+zLimits = hAx.ZLim;
 
-%assert(isequal(ax, hAx));
+%bx=gca;
+%assert(isequal(bx, hAx));
 
 is3d1 = isprop(hAx, 'ZLim');
 h = get(hAx, 'Children');
-
 is3d2 = false;
 if isscalar(h) 
     if isprop(h, 'ZData')  % ismember('ZData', properties(h))
@@ -62,10 +72,9 @@ else
 end
 is3d = is3d1 & is3d2;
 
+hold(hAx, 'on');
+
 if is3d    % ======================================== 3D
-    disp('3D')
-    hold(hAx, 'on');
-    % view(hAx, 3);
     % Turn off the default axis display
     %set(gca, 'Visible', 'off');
  
@@ -79,7 +88,7 @@ if is3d    % ======================================== 3D
     quiver3(hAx, a, b, c, 0, lb/5, 0, 'k', 'LineWidth', 1); % Y-axis
     quiver3(hAx, a, b, c, 0, 0, lc/5, 'k', 'LineWidth', 1); % Z-axis
 
-    axis_length = 20;
+%    axis_length = 20;
 %    quiver3(0, 0, 0, axis_length, 0, 0, 'k', 'LineWidth', 1); % X-axis
 %    quiver3(0, 0, 0, 0, axis_length, 0, 'k', 'LineWidth', 1); % Y-axis
 %    quiver3(0, 0, 0, 0, 0, axis_length, 'k', 'LineWidth', 1); % Z-axis
@@ -91,14 +100,14 @@ if is3d    % ======================================== 3D
     text(hAx, a+la/5, b, c, txt1);
     text(hAx, a, b+lb/5, c, txt2);
     text(hAx, a, b, c+lc/5, txt3);
-    hold(hAx, 'off');    
+    view(hAx, 3);
 else          % ======================================== 2D
-    disp('2D')
-    ax.Units = "pixels";
-    r = ax.Position(3)/ax.Position(4);
+    %disp('2D')
+    hAx.Units = "pixels";
+    r = hAx.Position(3)/hAx.Position(4);
     
-    ax.Units = "normalized";
-    axPos = ax.Position;
+    hAx.Units = "normalized";
+    axPos = hAx.Position;
     
     % Convert data limits to figure normalized units
     % xArrowPos = [0, 1]; % normalized from left to right of the axes
@@ -115,40 +124,48 @@ else          % ======================================== 2D
         [axPos(1), axPos(1)], ...            % x positions
         [axPos(2), axPos(2) + r*(axPos(4)/7)], ... % y positions
         'Color', 'k', 'LineWidth', .5);
-    %axis off
-    
+        
     txt1 = sprintf('%s\\_1', t);
     txt2 = sprintf('%s\\_2', t);
-    
-    [~, b] = measureText(txt1);
+
+    textOpts = struct();
+    textOpts.HorizontalAlignment = 'center';
+    textOpts.VerticalAlignment = 'middle';
+    textOpts.FontSize = 10;
+    textOpts.FontWeight = 'normal';
+
+    [~, b] = measureText(txt1, textOpts, hAx);
     text(hAx, xLimits(1), yLimits(1) - 2*b, txt1);
     
-    [~, b] = measureText(txt2);
+    [~, b] = measureText(txt2, textOpts, hAx);
     text(hAx, xLimits(1)-3*b, yLimits(1), txt2,'Rotation',90);
-    title(hAx, '')
-    subtitle(hAx, '')
-    hold(hAx,'off');
+    view(hAx, 2);
 end
-    xlim(hAx, xLimits);
-    ylim(hAx, yLimits);
+
+hold(hAx,'off');
+title(hAx, '')
+subtitle(hAx, '')
+xlim(hAx, xLimits);
+ylim(hAx, yLimits);
 hx.show(parentfig);
 
- function [width, height] = measureText(txt, textOpts, axis)
-    if(nargin < 3)
-       axis = gca(); 
-    end
-    if nargin < 2
-        textOpts = struct();
-        textOpts.HorizontalAlignment = 'center';
-        textOpts.VerticalAlignment = 'middle';
-        textOpts.FontSize = 10;
-        textOpts.FontWeight = 'normal';
-    end
-    hTest = text(axis, 0, 0, txt, textOpts);
+
+ function [width, height] = measureText(txt, textOpts, ax)
+    % if(nargin < 3)
+    %    ax = gca();
+    % end
+    % if nargin < 2
+    %     textOpts = struct();
+    %     textOpts.HorizontalAlignment = 'center';
+    %     textOpts.VerticalAlignment = 'middle';
+    %     textOpts.FontSize = 10;
+    %     textOpts.FontWeight = 'normal';
+    % end
+    hTest = text(ax, 0, 0, txt, textOpts);
     textExt = get(hTest, 'Extent');
     delete(hTest);
     height = textExt(4)/3;    %Height
     width = textExt(3)/3;     %Width
-end
+ end
 
 end

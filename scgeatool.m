@@ -427,7 +427,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         answer = gui.myQuestdlg(FigureHandle,'Select embedding method label.', ...
             '',{'tSNE','UMAP','PHATE'},'tSNE');
         if isempty(answer), return; end
-        a = colormap;
+        a = colormap(hAx);
         gui.i_baredrplot(hAx, [], answer, FigureHandle);
         colormap(hAx,a);
     end
@@ -1222,7 +1222,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         end
 
         if keepview || keepcolr
-            [para] = gui.i_getoldsettings(src);
+            [para] = gui.i_getoldsettings(src, FigureHandle);
         end
         if isempty(sce) || sce.NumCells==0
             if ~isempty(h) && isvalid(h)
@@ -1281,8 +1281,8 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
     end
 
     function in_Switch2D3D(src, ~)
-        [para] = gui.i_getoldsettings(hAx);
-        [ax, bx] = view(hAx);        
+        [para] = gui.i_getoldsettings(src, FigureHandle);
+        [ax, bx] = view(hAx); 
         if bx == 90   % isempty(h.ZData)               % current 2D            
             if ~strcmp(gui.myQuestdlg(FigureHandle, 'Switch to 3D?',''), 'Yes'), return; end
             if isvalid(FigureHandle) && isa(FigureHandle, 'matlab.ui.Figure'), figure(FigureHandle); end
