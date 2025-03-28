@@ -52,7 +52,7 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
                 'SC_QCFILTER (Enabling Whitelist Genes)'}
 
             if strcmp(listitems{indx},'SC_QCFILTER (Enabling Whitelist Genes)')
-                [whitelist]=gui.i_selectwhitelist(sce, FigureHandle);
+                [whitelist] = gui.i_selectwhitelist(sce, FigureHandle);
                 if isnumeric(whitelist)
                     if whitelist==0
                         % requirerefresh=false;

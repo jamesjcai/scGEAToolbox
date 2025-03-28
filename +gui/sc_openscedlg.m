@@ -336,10 +336,10 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
             end
         case 'GEO Accession Number(s)...'
             if gui.i_isuifig(parentfig)
-                acc = gui.myInputdlg({'Input Number(s) (e.g., GSM3308549-52):'}, ...
+                acc = gui.myInputdlg({'Input Accession Number(s) (e.g., GSM3308549-52):'}, ...
                     'GEO Accession', {'GSM7855468'}, parentfig);
             else
-                acc = inputdlg('Input Number(s) (e.g., GSM3308549-52):', ...
+                acc = inputdlg('Input Accession Number(s) (e.g., GSM3308549-52):', ...
                     'GEO Accession', [1, 50], {'GSM7855468'});
             end
 
@@ -378,6 +378,12 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                         fw = gui.myWaitbar(parentfig);
                         [sce] = sc_readgeoaccess(acc);
                         gui.myWaitbar(parentfig, fw);
+
+                        if isempty(sce)
+                            gui.myWarndlg(parentfig, 'Not downloaded.', ...
+                                'Try again later', true);
+                            return;
+                        end
                     catch ME
                         gui.myWaitbar(parentfig, fw);
                         gui.myErrordlg(parentfig, ME.message, ME.identifier);

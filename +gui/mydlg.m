@@ -6,9 +6,9 @@ function mydlg(tag, parentfig, message, title, modal)
     if nargin < 1, tag = 'info'; end    % info error warning
     if isempty(parentfig) || ~gui.i_isuifig(parentfig)
         if modal
-            msgbox(message, title, tag, 'modal');
+            waitfor(msgbox(message, title, tag, 'modal'));  % This will pause execution until the msgbox is closed 
         else
-            msgbox(message, title, tag);
+            msgbox(message, title, tag, 'modal');
         end            
     else
         if modal

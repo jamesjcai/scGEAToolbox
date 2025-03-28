@@ -69,6 +69,7 @@ elseif isscalar(c)
         disp("Found H5 file.");
         
         f1 = i_setupfile2(c1);
+        
         if isempty(f1), sce=[]; return; end
 
         if strcmpi(f1(end-2:end), '.gz')
