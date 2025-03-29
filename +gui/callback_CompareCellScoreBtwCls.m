@@ -219,18 +219,6 @@ bb = 'No, just show values (heatmap)';
                         ttxt{k} = T.ScoreType(indx2(k));
                     end
                     gui.myWaitbar(FigureHandle, fw);
-                    % case 'Other Cell Attribute...'
-                    %     [y, clabel, ~, newpickclabel] = gui.i_select1state(sce, true);
-                    %     if isempty(y)
-                    %         gui.myHelpdlg(FigureHandle, 'No cell attribute is available.');
-                    %         return;
-                    %     end
-                    %     if ~isempty(newpickclabel)
-                    %         ttxt = newpickclabel;
-                    %     else
-                    %         ttxt = clabel;
-                    %     end
-                    %     posg = [];
                 case {'TF Activity Score [PMID:33135076] 🐢', ...
                       'DoRothEA TF Targets'}
                     [T] = pkg.e_gettflist;

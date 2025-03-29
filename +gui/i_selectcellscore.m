@@ -10,7 +10,6 @@ selitems = {'Select a Predefined Score...', ...
     'PanglaoDB Cell Type Marker Score...', ...
     'TF Targets Expression Score...'};
 
-
 % selitems={'MSigDB Molecular Signatures',...
 %           'DoRothEA TF Targets Expression',...
 %         'Predefined Gene Collections'};
@@ -33,8 +32,6 @@ else
             'SelectionMode', 'single', 'ListString', selitems, ...
             'ListSize', [220, 300]);
 end
-
     if tf1 ~= 1, return; end
-
     selecteditem = selitems{indx1};
 end

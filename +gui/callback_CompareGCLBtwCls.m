@@ -46,6 +46,7 @@ function callback_CompareGCLBtwCls(src, ~)
     y = V;
     thisc = cL(t);
     ttxt = 'GCL';
-    gui.i_violinplot(y, thisc, ttxt);
+    gui.i_violinplot(y, thisc, ttxt, true, [], [], FigureHandle);
+
 
 end

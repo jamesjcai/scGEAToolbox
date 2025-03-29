@@ -35,7 +35,7 @@ function callback_ShowGeneExpr(src, ~)
             tab{nf} = uitab(tabgp, 'Title', sprintf('Tab%d',nf));
             axes('parent', tab{nf});
             
-            hx.addCustomButton('off', @in_showgenename, 'HDF_point.gif', 'Show gene names');
+            % hx.addCustomButton('off', @in_showgenename, 'HDF_point.gif', 'Show gene names');
 
             if ~ispref('scgeatoolbox', 'prefcolormapname')
                 setpref('scgeatoolbox', 'prefcolormapname', 'autumn');
@@ -97,18 +97,18 @@ function callback_ShowGeneExpr(src, ~)
             gui.myWaitbar(FigureHandle, fw);            
     end
 
- function in_showgenename(~,~)
-     % ancestor(ax1, 'figure')
-     for l = 1:2
-     ax = findall(tab{l}, 'Type', 'axes');
-     for kk = 1:length(ax)
-         % gui.i_export2pptx({ancestor(ax, 'figure')}, {''});
-         colorbar(ax(kk),"off");
-         box(ax(kk),"on");
-         grid(ax(kk),"off");
-         subtitle(ax(kk),'');
-     end
-     end
- end
+ % function in_showgenename(~,~)
+ %     % ancestor(ax1, 'figure')
+ %     for l = 1:2
+ %     ax = findall(tab{l}, 'Type', 'axes');
+ %         for kk = 1:length(ax)
+ %             % gui.i_export2pptx({ancestor(ax, 'figure')}, {''});
+ %             colorbar(ax(kk),"off");
+ %             box(ax(kk),"on");
+ %             grid(ax(kk),"off");
+ %             subtitle(ax(kk),'');
+ %         end
+ %     end
+ % end
 
 end

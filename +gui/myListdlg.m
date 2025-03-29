@@ -25,6 +25,8 @@ if nargin<4, prefersel = []; end
             'MultiSelect', 'on');
     end
 
+    d.KeyPressFcn = @(src, event) jumpToFirstMatch(lb, event);
+
     % Create OK button
     btnOK = uibutton(d, 'Text', 'OK', 'Position', [60 20 80 30], ...
         'ButtonPushedFcn', @(btn,event) uiresume(d));
@@ -56,6 +58,18 @@ if nargin<4, prefersel = []; end
     %}
 end
 
+
+function jumpToFirstMatch(lb, event)
+    % Jump to the first item starting with the pressed letter
+    key = event.Character;
+    if isempty(key) || ~ischar(key), return; end  % Ignore non-character keys
+    
+    options = lb.Items;
+    idx = find(startsWith(options, key, 'IgnoreCase', true), 1);
+    if ~isempty(idx)
+        lb.Value = options{idx};  % Select matched item
+    end
+end
 
 %{
     fig = uifigure('Name', 'My UI App', 'Position', [500, 300, 400, 250]);

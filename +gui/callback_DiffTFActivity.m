@@ -102,7 +102,9 @@ answer = gui.myQuestdlg(FigureHandle, 'Violin plot for top TFs with most variabl
                 F = cell(numfig, 1);
                 for k = 1:numfig
                     ttxt = T.tflist(k);
-                    f = gui.i_violinplot(cs(k, :), thisc, ttxt, true, cL);
+                    f = gui.i_violinplot(cs(k, :), thisc, ttxt, true, cL, ...
+                        [], FigureHandle);
+                    
                     %                     f = figure('visible','off');
                     %                     pkg.i_violinplot(cs(k,:),thisc,true,cL);
                     %                     title(T.tflist(k));

@@ -28,7 +28,7 @@ end
 
      
     function in_showcellstate(~, ~)
-        [thisc, clabel] = gui.i_select1state(sce);
+        [thisc, clabel] = gui.i_select1state(sce, false, false, true, false, parentfig);
         if isempty(thisc), return; end
         [c] = grp2idx(thisc);
         for kx = 1:length(axesv)

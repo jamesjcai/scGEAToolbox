@@ -109,14 +109,14 @@ if isempty(thisc), return; end
 %assignin('base','thisc',thisc);
 
 if n == 1
-    gui.i_violinplot(Y, thisc, labelx, true, [], []);
+    gui.i_violinplot(Y, thisc, labelx, true, [], [], FigureHandle);
     xlabel('Cell group');
     ylabel('Cellular score');
 elseif n == 2
-    gui.i_violinplot(Y(:, 1), thisc, labelx{1}, true, [], []);
+    gui.i_violinplot(Y(:, 1), thisc, labelx{1}, true, [], [], FigureHandle);
     xlabel('Cell group');
     ylabel('Cellular score');
-    gui.i_violinplot(Y(:, 2), thisc, labelx{2}, true, [], []);
+    gui.i_violinplot(Y(:, 2), thisc, labelx{2}, true, [], [], FigureHandle);
     xlabel('Cell group');
     ylabel('Cellular score');
 

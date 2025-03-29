@@ -186,7 +186,7 @@ images = {};
         % assignin("base","cL",cL);
         % assignin("base","posg",posg);
 
-        f2 = gui.i_violinplot(y, cL(c), ttxt, true, [], posg);
+        f2 = gui.i_violinplot(y, cL(c), ttxt, true, [], posg, FigureHandle);
         saveas(f2, filesaved2);
         images = [images, {filesaved2}];
         suc2 = true;
