@@ -1,13 +1,19 @@
-function [A, W] = sc_knngraph(s, k, plotit, methodid)
+function [A, W] = sc_knngraph(s, k, plotit, methodid, parentfig)
 %Generate KNN group network from cell embeddings
 %
 % input: S - cell embedding coordinates
 % output: A - sparse adjacency matrix
 %
-
+if nargin < 5, parentfig = []; end
 if nargin < 4, methodid = 1; end
 if nargin < 3, plotit = false; end
 if nargin < 2 || isempty(k), k = 4; end
+
+if isempty(parentfig)
+   ax = gca; 
+else
+   ax = findall(parentfig, 'Type', 'axes');
+end
 
 switch methodid
     case 1
@@ -26,8 +32,6 @@ switch methodid
 end
 
 if nargout > 0 || plotit
-
-
     N = size(s, 1);
     A = zeros(N, N);
     if nargout > 1
@@ -56,11 +60,11 @@ if plotit
             % if i~=Graph(j,i)
             if A(i, Graph(j, i)) > 0
                 if size(s, 2) >= 3
-                    line(s([i, Graph(j, i)], 1), ...
+                    line(ax, s([i, Graph(j, i)], 1), ...
                         s([i, Graph(j, i)], 2), ...
                         s([i, Graph(j, i)], 3), 'Color', 'red');
                 else
-                    line(s([i, Graph(j, i)], 1), ...
+                    line(ax, s([i, Graph(j, i)], 1), ...
                         s([i, Graph(j, i)], 2), 'Color', 'red');
                 end
             end

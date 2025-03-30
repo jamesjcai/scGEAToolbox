@@ -13,10 +13,10 @@ function [answer] = myInputdlg(prompt, dlgtitle, definput, parentfig)
     
     % Display result
     if ~isempty(answer)
-        disp('User Input:');
-        disp(answer);
+        %disp('User Input:');
+        %disp(answer);
     else
-        disp('User cancelled the input dialog.');
+        %disp('User cancelled the input dialog.');
     end
 end
 

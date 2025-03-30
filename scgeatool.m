@@ -1945,12 +1945,16 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
     end
 
     function in_DrawKNNNetwork(~, ~)
-        k = gui.i_inputnumk(4);
+        k = gui.i_inputnumk(4, [], [], [], FigureHandle);
         if isempty(k), return; end
+
         fw = gui.myWaitbar(FigureHandle);
-        set(0, 'CurrentFigure', FigureHandle);
-        figure('WindowStyle', 'modal');
-        sc_knngraph(sce.s, k, true);
+        % xxx
+        %set(0, 'CurrentFigure', FigureHandle);
+        %figure('WindowStyle', 'modal');
+        hx = gui.myFigure(FigureHandle);      
+        sc_knngraph(sce.s, k, true, 1, hx.FigHandle);
+        hx.show(FigureHandle);
         gui.myWaitbar(FigureHandle, fw);
     end
 

@@ -25,7 +25,7 @@ classdef myFigure < handle
                     obj.FigHandle.Position(4)-60]; % Fill most of the figure
 
                 % pkg.i_addbutton2fig(obj.tb, 'on', [], [], '');
-                obj.tbv{1} = pkg.i_addbutton2fig(obj.tb, 'on', @gui.i_invertcolor, 'INVERT.gif', 'Invert Colors');     
+                obj.tbv{1} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_invertcolor, 'INVERT.gif', 'Invert Colors');     
                 obj.tbv{2} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_linksubplots, "keyframes-minus.jpg", "Link Subplots");
                 obj.tbv{3} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_setboxon, 'border-out.jpg', 'Box ON/OFF'); 
                 obj.tbv{4} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_renametitle, "align-top-box.jpg", 'Add/Edit Title');
