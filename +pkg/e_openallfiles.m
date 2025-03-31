@@ -1,5 +1,6 @@
-function [matchingFiles] = e_openallfiles(k1, k2)
+function [matchingFiles] = e_openallfiles(k1, k2, bequiet)
 
+if nargin < 3, bequiet = true; end
 % if nargin<1, k1='parentfig'; k2='myQuestdlg'; end
 % if nargin<1, k1='FigureHandle'; k2='inputdlg'; end
 %if nargin<1, k1='isempty(answer'; k2='myQuestdlg'; end
@@ -45,14 +46,16 @@ matchingFiles = setdiff(matchingFiles, {[mfilename('fullpath') '.m']});
 
 % Display results
 if isempty(matchingFiles)
-    disp('No files found containing all keywords.');
+    %disp('No files found containing all keywords.');
 else
-    disp('Files containing all keywords:');
-    disp(matchingFiles);
+    %disp('Files containing all keywords:');
+    %disp(matchingFiles);
+    if ~bequiet
     if strcmp('Yes', questdlg('Open them?'))
         for k = 1:length(matchingFiles)
             edit(matchingFiles{k})
         end
+    end
     end
 end
 
