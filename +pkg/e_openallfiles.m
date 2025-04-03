@@ -31,7 +31,12 @@ for i = 1:length(files)
     
     % Read file content
     try
-        fileContent = fileread(filePath);        
+        % if strcmp(filePath, 'D:\GitHub\scGEAToolbox\+pkg\i_makestandalone.m')
+        %     disp('ok')
+        %     fileContent = fileread(filePath);
+        %     assignin("base","filecontent", fileContent);
+        % end
+        fileContent = fileread(filePath);
         % Check if all keywords exist in the file
         if all(cellfun(@(kw) contains(fileContent, kw), keywords))
         %if ~contains(fileContent, keywords{1}) && contains(fileContent, keywords{2})
@@ -46,7 +51,7 @@ matchingFiles = setdiff(matchingFiles, {[mfilename('fullpath') '.m']});
 
 % Display results
 if isempty(matchingFiles)
-    %disp('No files found containing all keywords.');
+    disp('No files found containing all keywords.');
 else
     %disp('Files containing all keywords:');
     %disp(matchingFiles);

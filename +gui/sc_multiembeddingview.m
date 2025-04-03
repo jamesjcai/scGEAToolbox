@@ -7,7 +7,7 @@ end
     hFig=hx.FigHandle;
     hFig.Position(3) = hFig.Position(3) * 1.8;
     axesv = cell(length(embeddingtags),1);
-    for k=1:length(embeddingtags)
+    for k = 1:length(embeddingtags)
         s = sce.struct_cell_embeddings.(embeddingtags{k});
         if size(s,2)>1 && size(s,1)==sce.NumCells
             axesv{k} = nexttile;
@@ -23,18 +23,26 @@ end
 
     hx.addCustomButton('off',  @in_showgeneexp, 'google-docs.jpg', 'Select a gene to show expression...');
     hx.addCustomButton('off',  @in_showcellstate, 'bookmark-book.jpg', 'Show cell state...');
-        
     hx.show(parentfig);
 
      
     function in_showcellstate(~, ~)
         [thisc, clabel] = gui.i_select1state(sce, false, false, true, false, parentfig);
         if isempty(thisc), return; end
-        [c] = grp2idx(thisc);
+        [c, cL] = grp2idx(thisc);
+        stxtyes = cL(c);
+        if isstring(stxtyes) || iscellstr(stxtyes)
+            stxtyes = strrep(stxtyes, "_", "\_");
+            stxtyes = strtrim(stxtyes);
+        end
+        row = dataTipTextRow('', stxtyes);
         for kx = 1:length(axesv)
            s = sce.struct_cell_embeddings.(embeddingtags{kx});
-           gui.i_gscatter3(s, c, 1, 1, axesv{kx});
-           title(axesv{kx}, string(embeddingtags{k})+" - "+string(clabel));
+           if ~isempty(s)
+               h = gui.i_gscatter3(s, c, 1, 1, axesv{kx});
+               title(axesv{kx}, string(embeddingtags{kx})+" - "+string(clabel));
+               h.DataTipTemplate.DataTipRows = row;
+           end
         end
     end
 

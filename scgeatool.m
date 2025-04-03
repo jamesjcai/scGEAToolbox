@@ -822,9 +822,12 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                     FigureHandle), return; end
             fw = gui.myWaitbar(FigureHandle);
             Xn = log1p(sc_norm(sce.X))';
-            [~, Xn] = pca(Xn, 'NumComponents', 300);
             gui.myWaitbar(FigureHandle, fw);
             try
+                if issparse(Xn)
+                    Xn = full(Xn);
+                end
+                [~, Xn] = pca(Xn, 'NumComponents', 300);
                 ids = run.py_geosketch(Xn, tn);
             catch ME
                 gui.myWaitbar(FigureHandle, fw, true);
@@ -2282,12 +2285,8 @@ fig.WindowButtonDownFcn = @(src, event) disp(event.IntersectionPoint);
         dtp = findobj(h, 'Type', 'datatip');
         % disp('...state...')
         if ~isempty(dtp) % switch from on to off
-            % dtp = findobj(h, 'Type', 'datatip');
             delete(dtp);
-
             if ~isempty(statetag), set(src, statetag, 'off'); end
-         %   if ~isempty(a), set(a, 'Checked', 'off'); end
-         %   if ~isempty(b), set(b, 'State', 'off'); end
         else
             [thisc, clabel] = gui.i_select1class(sce, true, ...
                 [], [], FigureHandle);

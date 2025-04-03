@@ -3,10 +3,13 @@ function e_mkqqplot(T)
 pd = makedist('Gamma', 'a', 0.5, 'b', 2);
 
 hx=gui.myFigure;
-
 hFig = hx.FigHandle;
-a = gca(hFig);
-qqplot(a, T.FC, pd);
+if gui.i_isuifig(hFig)
+    a = hx.AxHandle;
+else
+    a = gca;
+end
+h = qqplot(a, T.FC, pd);
 
 [~, idx] = sort(T.FC);
 dt = datacursormode;
@@ -16,10 +19,10 @@ hx.show();
 
 
 % h1=h(1);
-% h1.DataTipTemplate.DataTipRows = T.genelist(idx);
-% for k=1:5
-%     datatip(h1, 'DataIndex', idx(k));
-% end
+h.DataTipTemplate.DataTipRows = T.genelist(idx);
+for k=1:5
+     datatip(h, 'DataIndex', idx(k));
+end
 
     function i_savetable(~, ~)
         answer = gui.myQuestdlg(hFig, 'Export & save data to:', '', ...
