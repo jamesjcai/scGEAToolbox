@@ -51,7 +51,7 @@ matchingFiles = setdiff(matchingFiles, {[mfilename('fullpath') '.m']});
 
 % Display results
 if isempty(matchingFiles)
-    disp('No files found containing all keywords.');
+    % disp('No files found containing all keywords.');
 else
     %disp('Files containing all keywords:');
     %disp(matchingFiles);

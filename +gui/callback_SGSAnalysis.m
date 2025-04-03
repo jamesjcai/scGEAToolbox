@@ -120,7 +120,7 @@ function callback_SGSAnalysis(src, ~)
 
     paramset = {0.005, 0.1, 0.01, 'Adjusted P-value'};
 
-    tf = 0;
+    %tf = 0;
     if ~(ismcc || isdeployed) && strcmp(filetype, 'Workspace')
         [Tup, Tdn] = pkg.e_processDETable(T, paramset, FigureHandle);
         if isempty(Tup) && isempty(Tdn), return; end
@@ -159,7 +159,7 @@ function callback_SGSAnalysis(src, ~)
                 end
                 %writetable(Tup,fullfile(tempdir,sprintf('%s_up.xlsx',outfile)),'FileType','spreadsheet',);
                 %writetable(Tdn,fullfile(tempdir,sprintf('%s_up.xlsx',outfile)),'FileType','spreadsheet');
-                tf = 1;
+                %tf = 1;
             %end
         elseif strcmp(filetype, 'Text file')
             % strcmp(extractAfter(filesaved,strlength(filesaved)-3),'txt')
@@ -172,7 +172,7 @@ function callback_SGSAnalysis(src, ~)
                 if ~isempty(Tdn)
                     [~, ~] = gui.i_exporttable(Tdn, true, 'Tdn', 'Downregulated', 'Text file','', FigureHandle);
                 end
-                tf = 1;
+                %tf = 1;
             end
         end
 

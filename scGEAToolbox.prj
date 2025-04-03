@@ -7,7 +7,7 @@
     <param.summary>Single-cell Gene Expression Analysis Toolbox</param.summary>
     <param.description>scRNAseq data analysis toolbox</param.description>
     <param.screenshot>C:\Users\jcai\Pictures\Screenshots\Screenshot 2025-02-05 115308.png</param.screenshot>
-    <param.version>25.4.2</param.version>
+    <param.version>25.4.3</param.version>
     <param.output>${PROJECT_ROOT}\scGEAToolbox.mltbx</param.output>
     <param.products.name>
       <item>MATLAB</item>
@@ -139,11 +139,17 @@ DEVMODE.txt</param.exclude.filters>
       <file>${PROJECT_ROOT}\app</file>
       <file>${PROJECT_ROOT}\cdgea.m</file>
       <file>${PROJECT_ROOT}\demo_Getting_Started.m</file>
+      <file>${PROJECT_ROOT}\demo_script1.m</file>
       <file>${PROJECT_ROOT}\demo_script1.mlx</file>
+      <file>${PROJECT_ROOT}\demo_script2.m</file>
       <file>${PROJECT_ROOT}\demo_script2.mlx</file>
+      <file>${PROJECT_ROOT}\demo_script3.m</file>
       <file>${PROJECT_ROOT}\demo_script3.mlx</file>
+      <file>${PROJECT_ROOT}\demo_script4.m</file>
       <file>${PROJECT_ROOT}\demo_script4.mlx</file>
+      <file>${PROJECT_ROOT}\demo_script5.m</file>
       <file>${PROJECT_ROOT}\demo_script5.mlx</file>
+      <file>${PROJECT_ROOT}\demo_script6.m</file>
       <file>${PROJECT_ROOT}\demo_script6.mlx</file>
       <file>${PROJECT_ROOT}\doc</file>
       <file>${PROJECT_ROOT}\example_data</file>

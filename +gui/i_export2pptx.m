@@ -90,3 +90,43 @@ switch answer
 end
 
 end
+
+
+%{
+
+import mlreportgen.ppt.*
+
+pptFile = 'myPresentation.pptx';  % PowerPoint file name
+
+% Check if PowerPoint file exists, else create a new one
+if isfile(pptFile)
+    ppt = Presentation(pptFile); % Open existing PPTX
+else
+    ppt = Presentation(pptFile); % Create new PPTX
+end
+
+% Loop to create and add multiple figures
+for k = 1:3
+    % Create a figure (replace with your plotting code)
+    fig = figure;
+    plot(rand(10,1), 'LineWidth', 2);
+    title(['Vector Figure ' num2str(k)]);
+    
+    % Save figure as EMF (vector format)
+    emfFile = ['figure' num2str(k) '.emf'];
+    print(fig, emfFile, '-dmeta'); % Save as EMF
+    
+    % Add slide to PowerPoint
+    slide = add(ppt, 'Title and Content');
+    replace(slide, 'Title', ['Vector Figure ' num2str(k)]);
+    add(slide, Picture(emfFile));
+
+    % Close the figure
+    close(fig);
+end
+
+% Save and close the presentation
+close(ppt);
+
+disp('Figures added to PowerPoint successfully with EMF format.');
+%}

@@ -56,16 +56,16 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
             speciestag = gui.i_selectspecies(2, false, FigureHandle);
             if isempty(speciestag), return; end
             attribtag = "cell_potency";
-            y = in_aaa(attribtag);
+            in_aaa(attribtag);
         case 3
             attribtag = "stemness_index";
-            y =in_aaa(attribtag);
+            in_aaa(attribtag);
         case 4
             attribtag = 'dissocation_ratio';
-            y = in_aaa(attribtag);
+            in_aaa(attribtag);
         case 5
             attribtag = 'copykat_prediction';
-            y = in_aaa(attribtag);
+            in_aaa(attribtag);
     end
 
 
