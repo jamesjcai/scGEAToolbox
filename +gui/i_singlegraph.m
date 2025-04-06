@@ -1,4 +1,4 @@
-function i_singlegraph(G1, figname, parentfig)
+function p1 = i_singlegraph(G1, figname, parentfig)
 
 if nargin < 3, parentfig = []; end
 if nargin < 2, figname = ''; end

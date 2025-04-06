@@ -1,6 +1,6 @@
 function callback_DEGene2Groups(src, ~)
 
-    isatac = false;
+    % isatac = false;
     [FigureHandle, sce] = gui.gui_getfigsce(src);
     % if ~gui.gui_showrefinfo('DE Analysis', FigureHandle), return; end
 
@@ -69,7 +69,9 @@ function callback_DEGene2Groups(src, ~)
     % xline(0); xline(-1); xline(1);
     % yline(2);
     % colormap(gca,lines(2));
-    % mavolcanoplot(sce.X(:,i1),sce.X(:,i2),T.p_val_adj,'Labels',T.gene)
+    %sceX = sc_impute(sce.X);
+    %mavolcanoplot(sceX(:,i1),sceX(:,i2),T.p_val_adj,'Labels',T.gene)
+
     try
         T = sortrows(T, 'p_val_adj', 'ascend');
         T = sortrows(T, 'pct_1', 'ascend');
@@ -112,9 +114,12 @@ function callback_DEGene2Groups(src, ~)
     end
 
     outfile = sprintf('%s_vs_%s_DE_results', ...
-        matlab.lang.makeValidName(string(cL1)), matlab.lang.makeValidName(string(cL2)));
+        matlab.lang.makeValidName(string(cL1)), ...
+        matlab.lang.makeValidName(string(cL2)));
    % if isatac, T.gene = "chr" + T.gene; end
 
+
+       
     [filetype, filesaved] = gui.i_exporttable(T, true, ...
         'Tdegenelist', outfile, [], "All_genes", FigureHandle);
 
@@ -164,26 +169,128 @@ function callback_DEGene2Groups(src, ~)
     end
 
     if tf ~= 1, return; end
-    disp('To run enrichment analysis, type:');
-    disp('run.web_Enrichr(Tup.gene(1:250))');
-    disp('run.web_Enrichr(Tdn.gene(1:250))');
 
-    [outgenelist, outbackgroundlist, enrichrtype] = ...
-        gui.gui_prepenrichr(Tup.gene, sce.g,... 
-       'Run enrichment analysis with up-regulated DE genes?', FigureHandle);
+    if strcmp('Yes', gui.myQuestdlg(FigureHandle, 'Generate volcano plot?'))
+        f = e_volcano(T, Tup, Tdn, FigureHandle);
+        % gui.myHelpdlg(f, 'Click OK to continue.');
+    end
 
-    if ~isempty(outbackgroundlist)
-        gui.callback_RunEnrichr(src, [], outgenelist, enrichrtype, ...
-            outbackgroundlist, "Up");
+
+    function e_savetable(~, ~)      
+        [filetype, filesaved] = gui.i_exporttable(T, true, ...
+            'Tdegenelist', outfile, [], "All_genes", FigureHandle);
+        if ~isempty(filesaved)
+            if strcmp(filetype, 'Excel file')
+                %answer = gui.myQuestdlg(FigureHandle, 'Save up- and down-regulated genes to seperate sheets?');
+                %if strcmp(answer, 'Yes')
+                    [Tup, Tdn] = pkg.e_processDETable(T,[],FigureHandle);
+                    % strcmp(extractAfter(filesaved,strlength(filesaved)-4),'xlsx')
+                    if ~isempty(Tup)
+                        writetable(Tup, filesaved, "FileType", "spreadsheet", 'Sheet', 'Up-regulated');
+                    end
+                    if ~isempty(Tdn)
+                        writetable(Tdn, filesaved, "FileType", "spreadsheet", 'Sheet', 'Down-regulated');
+                    end
+                    gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s', filesaved));
+                    %writetable(Tup,fullfile(tempdir,sprintf('%s_up.xlsx',outfile)),'FileType','spreadsheet',);
+                    %writetable(Tdn,fullfile(tempdir,sprintf('%s_up.xlsx',outfile)),'FileType','spreadsheet');
+                    tf = 1;
+                %end
+            elseif strcmp(filetype, 'Text file')
+                % strcmp(extractAfter(filesaved,strlength(filesaved)-3),'txt')
+                answer = gui.myQuestdlg(FigureHandle, 'Save up- and down-regulated genes to seperate files?');
+                if strcmp(answer, 'Yes')
+                    [Tup, Tdn] = pkg.e_processDETable(T,[],FigureHandle);
+                    if ~isempty(Tup)
+                        [~, ~] = gui.i_exporttable(Tup, true, 'Tup', 'Upregulated', 'Text file','', FigureHandle);
+                    end
+                    if ~isempty(Tdn)
+                        [~, ~] = gui.i_exporttable(Tdn, true, 'Tdn', 'Downregulated', 'Text file','', FigureHandle);
+                    end
+                    tf = 1;
+                end
+            end
+        end
+    end
+
+    
+    function e_runenrichr(~, ~)
+        disp('To run enrichment analysis, type:');
+        disp('run.web_Enrichr(Tup.gene(1:250))');
+        disp('run.web_Enrichr(Tdn.gene(1:250))');
+    
+        [outgenelist, outbackgroundlist, enrichrtype] = ...
+            gui.gui_prepenrichr(Tup.gene, sce.g,... 
+           'Run enrichment analysis with up-regulated DE genes?', FigureHandle);
+    
+        if ~isempty(outbackgroundlist)
+            gui.callback_RunEnrichr(src, [], outgenelist, enrichrtype, ...
+                outbackgroundlist, "Up");
+        end
+        
+        [outgenelist, outbackgroundlist, enrichrtype] = ...
+            gui.gui_prepenrichr(Tdn.gene, sce.g,... 
+           'Run enrichment analysis with down-regulated DE genes?', FigureHandle);
+    
+        if ~isempty(outbackgroundlist)
+            gui.callback_RunEnrichr(src, [], outgenelist, enrichrtype, ...
+                outbackgroundlist, "Down");
+        end        
+    end
+
+
+
+function hFig = e_volcano(T, Tup, Tdn, parentfig)
+
+    T=T(~ismember(T.gene, [Tup.gene; Tdn.gene]),:);    
+    hx = gui.myFigure(parentfig);
+    hFig = hx.FigHandle;
+    ax = hx.AxHandle;
+    if isempty(ax), ax = gca; end
+
+    hx.addCustomButton('off', @e_runenrichr, 'www.jpg', 'Run enrichment analysis');
+    hx.addCustomButton('off', @e_savetable, 'floppy-disk-arrow-in.jpg', 'Export DE Gene Table...');
+    
+    hold(ax, "on");
+    e_v(Tdn, ax);
+    h = e_v(T, ax);
+    e_v(Tup, ax);
+    h.MarkerFaceColor=[.5 .5 .5];
+    h.MarkerEdgeColor=[.5 .5 .5];
+    title(ax, sprintf('%s vs. %s', ...
+        string(cL1), ...
+        string(cL2)));
+    ylabel(ax, '-log_{10}(Adj. P-value)')
+    xlabel(ax, 'log_{2}(FC)');
+    legend(ax, {sprintf('Down-regulated (%d)', height(Tdn)), ...
+        sprintf('Not Sig. (%d)', height(T)), ...
+        sprintf('Up-regulated (%d)', height(Tup))},'Location','bestoutside');
+    hx.show(parentfig);
+
+
+    function h = e_v(T, ax)
+        genelist = T.gene; 
+        pvals = T.p_val_adj;
+        fc = T.avg_log2FC;
+        h = ix_volcanoplot(fc, pvals, genelist, ax);
     end
     
-    [outgenelist, outbackgroundlist, enrichrtype] = ...
-        gui.gui_prepenrichr(Tdn.gene, sce.g,... 
-       'Run enrichment analysis with down-regulated DE genes?', FigureHandle);
-
-    if ~isempty(outbackgroundlist)
-        gui.callback_RunEnrichr(src, [], outgenelist, enrichrtype, ...
-            outbackgroundlist, "Down");
+    function h = ix_volcanoplot(fc, pvals, genelist, ax)
+        %Vocano plot
+        
+        pvals(pvals < 1e-100) = 1e-100;    
+        x = fc;
+        y = -log10(pvals);
+        % [~, idx] = maxk(abs(y), 5);
+        h = scatter(ax, x, y, 8, "filled");
+        % hold(ax,"on");
+        % scatter(x(idx),y(idx),'rx');
+        %for k = 1:length(idx)
+            %text(x(idx(k))+0.05, y(idx(k)), genelist(idx(k)));
+        %end    
+        h.DataTipTemplate.DataTipRows = dataTipTextRow('', genelist);
     end
-    
+
+end
+
 end
