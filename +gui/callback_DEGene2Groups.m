@@ -128,7 +128,6 @@ function callback_DEGene2Groups(src, ~)
         tempfilesaved = fullfile(wkdir, outfile+".csv");
         writetable(T, tempfilesaved);
     end
-
        
     [filetype, filesaved] = gui.i_exporttable(T, true, ...
         'Tdegenelist', outfile, [], "All_genes", FigureHandle);
@@ -163,15 +162,26 @@ function callback_DEGene2Groups(src, ~)
                 tf = 1;
             %end
         elseif strcmp(filetype, 'Text file')
+            [filePath, name, ext] = fileparts(filesaved);
             % strcmp(extractAfter(filesaved,strlength(filesaved)-3),'txt')
             answer = gui.myQuestdlg(FigureHandle, 'Save up- and down-regulated genes to seperate files?');
             if strcmp(answer, 'Yes')
                 [Tup, Tdn, paramset] = pkg.e_processDETable(T,[],FigureHandle);
                 if ~isempty(Tup)
-                    [~, ~] = gui.i_exporttable(Tup, true, 'Tup', 'Upregulated', 'Text file','', FigureHandle);
+                    namex = sprintf('%s_Upregulated', name);
+                    f = fullfile(filePath, [namex, ext]);
+                    if exist(f,"file"), f = 'Upregulated'; end
+                    
+                    [~, ~] = gui.i_exporttable(Tup, true, 'Tup', ...
+                        f, 'Text file','', FigureHandle);
                 end
                 if ~isempty(Tdn)
-                    [~, ~] = gui.i_exporttable(Tdn, true, 'Tdn', 'Downregulated', 'Text file','', FigureHandle);
+                    namex = sprintf('%s_Downregulated', name);
+                    f = fullfile(filePath, [namex, ext]);
+                    if exist(f,"file"), f = 'Downregulated'; end
+                                        
+                    [~, ~] = gui.i_exporttable(Tdn, true, 'Tdn', ...
+                        f, 'Text file','', FigureHandle);
                 end
                 tf = 1;
             end
@@ -200,52 +210,15 @@ function callback_DEGene2Groups(src, ~)
     end
 
     if strcmp('Yes', gui.myQuestdlg(FigureHandle, 'Generate volcano plot?'))
-        f = e_volcano(T, Tup, Tdn, FigureHandle);
-        % mindiffpct = paramset{1};
-        % minabsolfc = paramset{2};
-        % apvaluecut = paramset{3};
-
-        exportgraphics(f, fullfile(wkdir, outfile+".png"), 'Resolution', 300);
-        % gui.myHelpdlg(f, 'Click OK to continue.');
+        e_volcano(T, Tup, Tdn, FigureHandle);
+        % exportgraphics(f, fullfile(wkdir, outfile+".png"), 'Resolution', 300);
     end
 
-    function e_savetable(~, ~)      
+    function e_savetable(src, ~)
+        hFig = src.Parent.Parent;
         [filetype, filesaved] = gui.i_exporttable(T, true, ...
-            'Tdegenelist', outfile, [], "All_genes", FigureHandle);
-        if ~isempty(filesaved)
-            if strcmp(filetype, 'Excel file')
-                %answer = gui.myQuestdlg(FigureHandle, 'Save up- and down-regulated genes to seperate sheets?');
-                %if strcmp(answer, 'Yes')
-                    [Tup, Tdn, paramset] = pkg.e_processDETable(T,[],FigureHandle);
-                    % strcmp(extractAfter(filesaved,strlength(filesaved)-4),'xlsx')
-                    if ~isempty(Tup)
-                        writetable(Tup, filesaved, "FileType", "spreadsheet", 'Sheet', 'Up-regulated');
-                    end
-                    if ~isempty(Tdn)
-                        writetable(Tdn, filesaved, "FileType", "spreadsheet", 'Sheet', 'Down-regulated');
-                    end
-                    gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s', filesaved));
-                    %writetable(Tup,fullfile(tempdir,sprintf('%s_up.xlsx',outfile)),'FileType','spreadsheet',);
-                    %writetable(Tdn,fullfile(tempdir,sprintf('%s_up.xlsx',outfile)),'FileType','spreadsheet');
-                    tf = 1;
-                %end
-            elseif strcmp(filetype, 'Text file')
-                % strcmp(extractAfter(filesaved,strlength(filesaved)-3),'txt')
-                answer = gui.myQuestdlg(FigureHandle, 'Save up- and down-regulated genes to seperate files?');
-                if strcmp(answer, 'Yes')
-                    [Tup, Tdn, paramset] = pkg.e_processDETable(T,[],FigureHandle);
-                    if ~isempty(Tup)
-                        [~, ~] = gui.i_exporttable(Tup, true, 'Tup', 'Upregulated', 'Text file','', FigureHandle);
-                    end
-                    if ~isempty(Tdn)
-                        [~, ~] = gui.i_exporttable(Tdn, true, 'Tdn', 'Downregulated', 'Text file','', FigureHandle);
-                    end
-                    tf = 1;
-                end
-            end
-        end
+            'Tdegenelist', outfile, [], "All_genes", hFig);
     end
-
 
     function [T] = in_Tprocessing(T)
         try
@@ -280,32 +253,34 @@ function callback_DEGene2Groups(src, ~)
             warning(ME.message);
         end
     end
-
     
-    function e_runenrichr(~, ~)
+    function e_runenrichr(src, ~)
+        hFig = src.Parent.Parent;
         disp('To run enrichment analysis, type:');
         disp('run.web_Enrichr(Tup.gene(1:250))');
         disp('run.web_Enrichr(Tdn.gene(1:250))');
     
         [outgenelist, outbackgroundlist, enrichrtype] = ...
             gui.gui_prepenrichr(Tup.gene, sce.g,... 
-           'Run enrichment analysis with up-regulated DE genes?', FigureHandle);
+           'Run enrichment analysis with up-regulated DE genes?', ...
+           hFig);
     
         if ~isempty(outbackgroundlist)
-            gui.callback_RunEnrichr(src, [], outgenelist, enrichrtype, ...
+            gui.callback_RunEnrichr(src, [], outgenelist, ...
+                enrichrtype, ...
                 outbackgroundlist, "Up");
         end
         
         [outgenelist, outbackgroundlist, enrichrtype] = ...
             gui.gui_prepenrichr(Tdn.gene, sce.g,... 
-           'Run enrichment analysis with down-regulated DE genes?', FigureHandle);
+           'Run enrichment analysis with down-regulated DE genes?', ...
+           hFig);
     
         if ~isempty(outbackgroundlist)
             gui.callback_RunEnrichr(src, [], outgenelist, enrichrtype, ...
                 outbackgroundlist, "Down");
         end        
     end
-
 
     function hFig = e_volcano(T, Tup, Tdn, parentfig)    
         T=T(~ismember(T.gene, [Tup.gene; Tdn.gene]),:);    
@@ -332,7 +307,6 @@ function callback_DEGene2Groups(src, ~)
             sprintf('Not Sig. (%d)', height(T)), ...
             sprintf('Up-regulated (%d)', height(Tup))},'Location', ...
             'bestoutside');
-
         try
             mindiffpct = paramset{1};
             minabsolfc = paramset{2};
@@ -345,115 +319,30 @@ function callback_DEGene2Groups(src, ~)
                 'VerticalAlignment', 'top', ...
                 'FontSize', 10, ...
                 'BackgroundColor', 'w');
-            drawnow;
+            % drawnow;
             updateTextbox;
             hFig.AutoResizeChildren = 'off';
             hFig.SizeChangedFcn = @updateTextbox;
         catch ME
             disp(ME.message);
         end
-
-        %{
-        drawnow;
-        % figPos = hFig.Position;
-        lgd.Units = 'normalized';
-        legendPos = lgd.Position;
-        ax.Units = 'normalized';
-        axPos = ax.Position;     
-        
-        % Get the center of the legend in figure normalized units
-        legendCenterNorm = [legendPos(1) + legendPos(3)/2, ...
-                            legendPos(2)];
-        
-        % Convert figure normalized to axes normalized
-        axesNormX = (legendCenterNorm(1) - axPos(1)) / axPos(3);
-        axesNormY = (legendCenterNorm(2) - axPos(2)) / axPos(4);
-        
-        % Now map to data coordinates
-        xLimits = xlim(ax);
-        yLimits = ylim(ax);
-        
-        xData = xLimits(1) + axesNormX * (xLimits(2) - xLimits(1));
-        yData = yLimits(1) + axesNormY * (yLimits(2) - yLimits(1)) - 0.05 * range(yLimits);  % Below the legend
-        
-        % Add the text
-        text(ax, xData, yData, 'Text below legend', ...
-            'HorizontalAlignment', 'center', ...
-            'VerticalAlignment', 'top', ...
-            'FontSize', 10, ...
-            'BackgroundColor', 'w');
-        %}
-
-    %{
-        % Convert normalized legend position to data coordinates
-        % First get the axes position in normalized units
-        axPos = ax.Position;        
-        % Compute relative location of legend box within axes
-        relX = (legendPos(1) - axPos(1)) / axPos(3);
-        relY = (legendPos(2) - axPos(2)) / axPos(4);
-        
-        % Get axes X and Y limits
-        xLimits = xlim(ax);
-        yLimits = ylim(ax);
-        
-        % Calculate data coordinates from normalized units
-        xData = xLimits(1) + relX * (xLimits(2) - xLimits(1));
-        yData = yLimits(1) + relY * (yLimits(2) - yLimits(1)) -...
-                   0.05 * range(yLimits);  % Slightly below
-        
-        % Place a text object in data units so it moves with the legend
-
-        %}
-
-            %{
-            legendPosition = legendHandle.Position; % [left, bottom, width, height]            
-            % Step 3: Calculate the text box position
-            margin = 0.02; % Margin between legend and text box
-            textBoxPosition = [legendPosition(1), ...               % Same left as legend
-                               legendPosition(2) - margin - legendPosition(4), ... % Below legend
-                               legendPosition(3), ...               % Same width as legend
-                               legendPosition(4)];                  % Same height as legend
-            
-            % Step 4: Add the text box annotation
-            annotation('textbox', textBoxPosition, 'String', 'Additional Information', ...
-                       'HorizontalAlignment', 'center', 'VerticalAlignment', 'middle', ...
-                       'FitBoxToText', 'on');        
-            %}
-
-            hx.show(parentfig);
+        hx.show;
     
-        function updateTextbox(~,~)
-        
-            % Ensure graphics are updated
-            
-            % drawnow;
-        
-            % Get axes and legend positions
+        function updateTextbox(~, ~)
             ax.Units = 'normalized';
             axPos = ax.Position;
             lgd.Units = 'normalized';
-            lgdPos = lgd.Position;
-        
-            % Legend center in normalized figure units
+            lgdPos = lgd.Position;        
             legendCenterNorm = [lgdPos(1) + lgdPos(3)/2, ...
                                 lgdPos(2)];
-        
-            % Convert to axes normalized units
             axesNormX = (legendCenterNorm(1) - axPos(1)) / axPos(3);
             axesNormY = (legendCenterNorm(2) - axPos(2)) / axPos(4);
-        
-            % Convert to data units
             xLimits = xlim(ax);
-            yLimits = ylim(ax);
-        
+            yLimits = ylim(ax);        
             xData = xLimits(1) + axesNormX * (xLimits(2) - xLimits(1));            
             yData = yLimits(1) + axesNormY * (yLimits(2) - yLimits(1)) - 0.05 * range(yLimits);
-        
-            % Update text position
             txt.Position = [xData, yData, 0];
         end
-
-
 
         function h = e_v(T, ax)
             genelist = T.gene; 
