@@ -34,7 +34,8 @@ else
                 return;
             end
             done = true;
-            waitfor(gui.myHelpdlg(parentfig, 'Python environment is set successfully.', ''));
+            gui.myHelpdlg(parentfig, ...
+            'Python environment is set successfully.');
         case {'Cancel', ''}
             return;
         otherwise

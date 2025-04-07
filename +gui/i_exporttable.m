@@ -65,8 +65,8 @@ switch answer
             % if needwait
             %     gui.myHelpdlg(parentfig, sprintf('Result has been saved in %s', filename), '');
             % else
-                waitfor(gui.myHelpdlg(parentfig, ...
-                    sprintf('Result has been saved in %s', filename)));
+                gui.myHelpdlg(parentfig, ...
+                    sprintf('Result has been saved in %s', filename));
 %            end
         end
     case 'Excel file'

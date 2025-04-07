@@ -347,6 +347,7 @@ function callback_DEGene2Groups(src, ~)
                 'BackgroundColor', 'w');
             drawnow;
             updateTextbox;
+            hFig.AutoResizeChildren = 'off';
             hFig.SizeChangedFcn = @updateTextbox;
         catch ME
             disp(ME.message);
