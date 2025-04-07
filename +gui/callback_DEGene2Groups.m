@@ -1,12 +1,9 @@
 function callback_DEGene2Groups(src, ~)
-
-    % isatac = false;
+    
     [FigureHandle, sce] = gui.gui_getfigsce(src);
     % if ~gui.gui_showrefinfo('DE Analysis', FigureHandle), return; end
 
-    %[wkdir] = gui.i_getwrkdir;
-    %if isempty(wkdir), return; end
-    extprogname = 'scgeatool_DEAnalysis';
+    extprogname = 'SCGEATOOL_DEAnalysis';
     preftagname = 'externalwrkpath';
     [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
     if isempty(wkdir), return; end
@@ -15,9 +12,9 @@ function callback_DEGene2Groups(src, ~)
     if isscalar(i1) || isscalar(i2), return; end
     
     % --------
-    a=sprintf('%s vs. %s',cL1{1}, cL2{1});
-    b=sprintf('%s vs. %s',cL2{1}, cL1{1});
-    answer = gui.myQuestdlg(FigureHandle, 'Which vs. which?','',{a,b},a);
+    a = sprintf('%s vs. %s',cL1{1}, cL2{1});
+    b = sprintf('%s vs. %s',cL2{1}, cL1{1});
+    answer = gui.myQuestdlg(FigureHandle, 'Which vs. which?','',{a,b}, a);
     switch answer
         case a
         case b
@@ -28,8 +25,7 @@ function callback_DEGene2Groups(src, ~)
     end
     % ----------
     
-    methodtag = "ranksum";
-   
+    methodtag = "ranksum";   
     try
         switch methodtag
             case 'ranksum'
@@ -49,17 +45,15 @@ function callback_DEGene2Groups(src, ~)
                 T = run.r_MAST(sce.X(:, i1), sce.X(:, i2), sce.g);
                 gui.myWaitbar(FigureHandle, fw);
         end
-
     catch ME
         gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
         return;
-    end   
+    end
     
     % figure;
     % gui.i_volcanoplot(T);
     % title(sprintf('%s vs. %s', ...
     %     matlab.lang.makeValidName(string(cL1)),matlab.lang.makeValidName(string(cL2))));
-
     % T2=T;
     % T2.avg_log2FC(T.avg_log2FC>10)=10;
     % T2.avg_log2FC(T.avg_log2FC<-10)=-10;
@@ -72,6 +66,9 @@ function callback_DEGene2Groups(src, ~)
     %sceX = sc_impute(sce.X);
     %mavolcanoplot(sceX(:,i1),sceX(:,i2),T.p_val_adj,'Labels',T.gene)
 
+    [T] = in_Tprocessing(T);
+
+    %{
     try
         T = sortrows(T, 'p_val_adj', 'ascend');
         T = sortrows(T, 'pct_1', 'ascend');
@@ -112,12 +109,25 @@ function callback_DEGene2Groups(src, ~)
     catch ME
         warning(ME.message);
     end
+    % if isatac, T.gene = "chr" + T.gene; end
+    %}
 
-    outfile = sprintf('%s_vs_%s_DE_results', ...
-        matlab.lang.makeValidName(string(cL1)), ...
-        matlab.lang.makeValidName(string(cL2)));
-   % if isatac, T.gene = "chr" + T.gene; end
+    
+    outfile = matlab.lang.makeValidName(sprintf('%s_vs_%s_DE_results', ...
+        string(cL1), string(cL2)));
 
+
+    didit = false;
+    try
+        tempfilesaved = fullfile(wkdir, outfile+".xlsx");
+        writetable(T, tempfilesaved, "FileType", "spreadsheet", 'Sheet', 'All_genes');
+        didit = true;
+    catch
+    end
+    if ~didit
+        tempfilesaved = fullfile(wkdir, outfile+".csv");
+        writetable(T, tempfilesaved);
+    end
 
        
     [filetype, filesaved] = gui.i_exporttable(T, true, ...
@@ -125,7 +135,7 @@ function callback_DEGene2Groups(src, ~)
 
     tf = 0;
     if ~(ismcc || isdeployed) && strcmp(filetype, 'Workspace')
-        [Tup, Tdn] = pkg.e_processDETable(T, [], FigureHandle);
+        [Tup, Tdn, paramset] = pkg.e_processDETable(T, [], FigureHandle);
         if isempty(Tup) && isempty(Tdn), return; end
         labels = {'Save DE results (selected up-regulated) to variable named:', ...
             'Save DE results (selected down-regulated) to variable named:'};
@@ -139,7 +149,7 @@ function callback_DEGene2Groups(src, ~)
         if strcmp(filetype, 'Excel file')
             %answer = gui.myQuestdlg(FigureHandle, 'Save up- and down-regulated genes to seperate sheets?');
             %if strcmp(answer, 'Yes')
-                [Tup, Tdn] = pkg.e_processDETable(T,[],FigureHandle);
+                [Tup, Tdn, paramset] = pkg.e_processDETable(T,[],FigureHandle);
                 % strcmp(extractAfter(filesaved,strlength(filesaved)-4),'xlsx')
                 if ~isempty(Tup)
                     writetable(Tup, filesaved, "FileType", "spreadsheet", 'Sheet', 'Up-regulated');
@@ -156,7 +166,7 @@ function callback_DEGene2Groups(src, ~)
             % strcmp(extractAfter(filesaved,strlength(filesaved)-3),'txt')
             answer = gui.myQuestdlg(FigureHandle, 'Save up- and down-regulated genes to seperate files?');
             if strcmp(answer, 'Yes')
-                [Tup, Tdn] = pkg.e_processDETable(T,[],FigureHandle);
+                [Tup, Tdn, paramset] = pkg.e_processDETable(T,[],FigureHandle);
                 if ~isempty(Tup)
                     [~, ~] = gui.i_exporttable(Tup, true, 'Tup', 'Upregulated', 'Text file','', FigureHandle);
                 end
@@ -170,11 +180,34 @@ function callback_DEGene2Groups(src, ~)
 
     if tf ~= 1, return; end
 
-    if strcmp('Yes', gui.myQuestdlg(FigureHandle, 'Generate volcano plot?'))
-        f = e_volcano(T, Tup, Tdn, FigureHandle);
-        % gui.myHelpdlg(f, 'Click OK to continue.');
+
+    if contains(tempfilesaved, 'xlsx')
+        if ~isempty(Tup)
+            writetable(Tup, tempfilesaved, "FileType", "spreadsheet", 'Sheet', 'Up-regulated');
+        end
+        if ~isempty(Tdn)
+            writetable(Tdn, tempfilesaved, "FileType", "spreadsheet", 'Sheet', 'Down-regulated');
+        end    
+    else
+        if ~isempty(Tup)
+            filename = fullfile(wkdir, outfile+"_Upregulated.csv");
+            writetable(Tup, filename, 'WriteRowNames', true);            
+        end
+        if ~isempty(Tdn)
+            filename = fullfile(wkdir, outfile+"_Downregulated.csv");
+            writetable(Tdn, filename, 'WriteRowNames', true);
+        end
     end
 
+    if strcmp('Yes', gui.myQuestdlg(FigureHandle, 'Generate volcano plot?'))
+        f = e_volcano(T, Tup, Tdn, FigureHandle);
+        % mindiffpct = paramset{1};
+        % minabsolfc = paramset{2};
+        % apvaluecut = paramset{3};
+
+        exportgraphics(f, fullfile(wkdir, outfile+".png"), 'Resolution', 300);
+        % gui.myHelpdlg(f, 'Click OK to continue.');
+    end
 
     function e_savetable(~, ~)      
         [filetype, filesaved] = gui.i_exporttable(T, true, ...
@@ -183,7 +216,7 @@ function callback_DEGene2Groups(src, ~)
             if strcmp(filetype, 'Excel file')
                 %answer = gui.myQuestdlg(FigureHandle, 'Save up- and down-regulated genes to seperate sheets?');
                 %if strcmp(answer, 'Yes')
-                    [Tup, Tdn] = pkg.e_processDETable(T,[],FigureHandle);
+                    [Tup, Tdn, paramset] = pkg.e_processDETable(T,[],FigureHandle);
                     % strcmp(extractAfter(filesaved,strlength(filesaved)-4),'xlsx')
                     if ~isempty(Tup)
                         writetable(Tup, filesaved, "FileType", "spreadsheet", 'Sheet', 'Up-regulated');
@@ -200,7 +233,7 @@ function callback_DEGene2Groups(src, ~)
                 % strcmp(extractAfter(filesaved,strlength(filesaved)-3),'txt')
                 answer = gui.myQuestdlg(FigureHandle, 'Save up- and down-regulated genes to seperate files?');
                 if strcmp(answer, 'Yes')
-                    [Tup, Tdn] = pkg.e_processDETable(T,[],FigureHandle);
+                    [Tup, Tdn, paramset] = pkg.e_processDETable(T,[],FigureHandle);
                     if ~isempty(Tup)
                         [~, ~] = gui.i_exporttable(Tup, true, 'Tup', 'Upregulated', 'Text file','', FigureHandle);
                     end
@@ -210,6 +243,41 @@ function callback_DEGene2Groups(src, ~)
                     tf = 1;
                 end
             end
+        end
+    end
+
+
+    function [T] = in_Tprocessing(T)
+        try
+            T = sortrows(T, 'p_val_adj', 'ascend');
+            T = sortrows(T, 'pct_1', 'ascend');
+            T = sortrows(T, 'pct_2', 'descend');
+            T = sortrows(T, 'avg_log2FC', 'ascend');
+            if contains(T.Properties.VariableNames{5}, 'avg_1')
+                T.Properties.VariableNames{5} = sprintf('%s_%s', ...
+                    T.Properties.VariableNames{5}, ...
+                    matlab.lang.makeValidName(string(cL1)));
+            end
+    
+            if contains(T.Properties.VariableNames{6}, 'avg_2')
+                T.Properties.VariableNames{6} = sprintf('%s_%s', ...
+                    T.Properties.VariableNames{6}, ...
+                    matlab.lang.makeValidName(string(cL2)));
+            end
+    
+            if contains(T.Properties.VariableNames{7}, 'pct_1')
+                T.Properties.VariableNames{7} = sprintf('%s_%s', ...
+                    T.Properties.VariableNames{7}, ...
+                    matlab.lang.makeValidName(string(cL1)));
+            end
+    
+            if contains(T.Properties.VariableNames{8}, 'pct_2')
+                T.Properties.VariableNames{8} = sprintf('%s_%s', ...
+                    T.Properties.VariableNames{8}, ...
+                    matlab.lang.makeValidName(string(cL2)));
+            end
+        catch ME
+            warning(ME.message);
         end
     end
 
@@ -239,58 +307,178 @@ function callback_DEGene2Groups(src, ~)
     end
 
 
-
-function hFig = e_volcano(T, Tup, Tdn, parentfig)
-
-    T=T(~ismember(T.gene, [Tup.gene; Tdn.gene]),:);    
-    hx = gui.myFigure(parentfig);
-    hFig = hx.FigHandle;
-    ax = hx.AxHandle;
-    if isempty(ax), ax = gca; end
-
-    hx.addCustomButton('off', @e_runenrichr, 'www.jpg', 'Run enrichment analysis');
-    hx.addCustomButton('off', @e_savetable, 'floppy-disk-arrow-in.jpg', 'Export DE Gene Table...');
+    function hFig = e_volcano(T, Tup, Tdn, parentfig)    
+        T=T(~ismember(T.gene, [Tup.gene; Tdn.gene]),:);    
+        hx = gui.myFigure(parentfig);
+        hFig = hx.FigHandle;
+        ax = hx.AxHandle;
+        if isempty(ax), ax = gca; end
     
-    hold(ax, "on");
-    e_v(Tdn, ax);
-    h = e_v(T, ax);
-    e_v(Tup, ax);
-    h.MarkerFaceColor=[.5 .5 .5];
-    h.MarkerEdgeColor=[.5 .5 .5];
-    title(ax, sprintf('%s vs. %s', ...
-        string(cL1), ...
-        string(cL2)));
-    ylabel(ax, '-log_{10}(Adj. P-value)')
-    xlabel(ax, 'log_{2}(FC)');
-    legend(ax, {sprintf('Down-regulated (%d)', height(Tdn)), ...
-        sprintf('Not Sig. (%d)', height(T)), ...
-        sprintf('Up-regulated (%d)', height(Tup))},'Location','bestoutside');
-    hx.show(parentfig);
-
-
-    function h = e_v(T, ax)
-        genelist = T.gene; 
-        pvals = T.p_val_adj;
-        fc = T.avg_log2FC;
-        h = ix_volcanoplot(fc, pvals, genelist, ax);
-    end
-    
-    function h = ix_volcanoplot(fc, pvals, genelist, ax)
-        %Vocano plot
+        hx.addCustomButton('off', @e_runenrichr, 'www.jpg', 'Run enrichment analysis');
+        hx.addCustomButton('off', @e_savetable, 'floppy-disk-arrow-in.jpg', 'Export DE Gene Table...');
         
-        pvals(pvals < 1e-100) = 1e-100;    
-        x = fc;
-        y = -log10(pvals);
-        % [~, idx] = maxk(abs(y), 5);
-        h = scatter(ax, x, y, 8, "filled");
-        % hold(ax,"on");
-        % scatter(x(idx),y(idx),'rx');
-        %for k = 1:length(idx)
-            %text(x(idx(k))+0.05, y(idx(k)), genelist(idx(k)));
-        %end    
-        h.DataTipTemplate.DataTipRows = dataTipTextRow('', genelist);
+        hold(ax, "on");
+        e_v(Tdn, ax);
+        h = e_v(T, ax);
+        e_v(Tup, ax);
+        h.MarkerFaceColor=[.5 .5 .5];
+        h.MarkerEdgeColor=[.5 .5 .5];
+        title(ax, sprintf('%s vs. %s', ...
+            string(cL1), ...
+            string(cL2)));
+        ylabel(ax, '-log_{10}(Adj. P-value)')
+        xlabel(ax, 'log_{2}(FC)');
+        lgd = legend(ax, {sprintf('Down-regulated (%d)', height(Tdn)), ...
+            sprintf('Not Sig. (%d)', height(T)), ...
+            sprintf('Up-regulated (%d)', height(Tup))},'Location', ...
+            'bestoutside');
+
+        try
+            mindiffpct = paramset{1};
+            minabsolfc = paramset{2};
+            apvaluecut = paramset{3};
+    
+            Text_below_legend = sprintf('Dropout Diff. > %d%%\nLog2(FC) > %.2f\nAdj. P-Value < %g', ...
+                100*mindiffpct, minabsolfc, apvaluecut);
+            txt = text(ax, 0, 0, Text_below_legend, ...
+                'HorizontalAlignment', 'center', ...
+                'VerticalAlignment', 'top', ...
+                'FontSize', 10, ...
+                'BackgroundColor', 'w');
+            drawnow;
+            updateTextbox;
+            hFig.SizeChangedFcn = @updateTextbox;
+        catch ME
+            disp(ME.message);
+        end
+
+        %{
+        drawnow;
+        % figPos = hFig.Position;
+        lgd.Units = 'normalized';
+        legendPos = lgd.Position;
+        ax.Units = 'normalized';
+        axPos = ax.Position;     
+        
+        % Get the center of the legend in figure normalized units
+        legendCenterNorm = [legendPos(1) + legendPos(3)/2, ...
+                            legendPos(2)];
+        
+        % Convert figure normalized to axes normalized
+        axesNormX = (legendCenterNorm(1) - axPos(1)) / axPos(3);
+        axesNormY = (legendCenterNorm(2) - axPos(2)) / axPos(4);
+        
+        % Now map to data coordinates
+        xLimits = xlim(ax);
+        yLimits = ylim(ax);
+        
+        xData = xLimits(1) + axesNormX * (xLimits(2) - xLimits(1));
+        yData = yLimits(1) + axesNormY * (yLimits(2) - yLimits(1)) - 0.05 * range(yLimits);  % Below the legend
+        
+        % Add the text
+        text(ax, xData, yData, 'Text below legend', ...
+            'HorizontalAlignment', 'center', ...
+            'VerticalAlignment', 'top', ...
+            'FontSize', 10, ...
+            'BackgroundColor', 'w');
+        %}
+
+    %{
+        % Convert normalized legend position to data coordinates
+        % First get the axes position in normalized units
+        axPos = ax.Position;        
+        % Compute relative location of legend box within axes
+        relX = (legendPos(1) - axPos(1)) / axPos(3);
+        relY = (legendPos(2) - axPos(2)) / axPos(4);
+        
+        % Get axes X and Y limits
+        xLimits = xlim(ax);
+        yLimits = ylim(ax);
+        
+        % Calculate data coordinates from normalized units
+        xData = xLimits(1) + relX * (xLimits(2) - xLimits(1));
+        yData = yLimits(1) + relY * (yLimits(2) - yLimits(1)) -...
+                   0.05 * range(yLimits);  % Slightly below
+        
+        % Place a text object in data units so it moves with the legend
+
+        %}
+
+            %{
+            legendPosition = legendHandle.Position; % [left, bottom, width, height]            
+            % Step 3: Calculate the text box position
+            margin = 0.02; % Margin between legend and text box
+            textBoxPosition = [legendPosition(1), ...               % Same left as legend
+                               legendPosition(2) - margin - legendPosition(4), ... % Below legend
+                               legendPosition(3), ...               % Same width as legend
+                               legendPosition(4)];                  % Same height as legend
+            
+            % Step 4: Add the text box annotation
+            annotation('textbox', textBoxPosition, 'String', 'Additional Information', ...
+                       'HorizontalAlignment', 'center', 'VerticalAlignment', 'middle', ...
+                       'FitBoxToText', 'on');        
+            %}
+
+            hx.show(parentfig);
+    
+        function updateTextbox(~,~)
+        
+            % Ensure graphics are updated
+            
+            % drawnow;
+        
+            % Get axes and legend positions
+            ax.Units = 'normalized';
+            axPos = ax.Position;
+            lgd.Units = 'normalized';
+            lgdPos = lgd.Position;
+        
+            % Legend center in normalized figure units
+            legendCenterNorm = [lgdPos(1) + lgdPos(3)/2, ...
+                                lgdPos(2)];
+        
+            % Convert to axes normalized units
+            axesNormX = (legendCenterNorm(1) - axPos(1)) / axPos(3);
+            axesNormY = (legendCenterNorm(2) - axPos(2)) / axPos(4);
+        
+            % Convert to data units
+            xLimits = xlim(ax);
+            yLimits = ylim(ax);
+        
+            xData = xLimits(1) + axesNormX * (xLimits(2) - xLimits(1));            
+            yData = yLimits(1) + axesNormY * (yLimits(2) - yLimits(1)) - 0.05 * range(yLimits);
+        
+            % Update text position
+            txt.Position = [xData, yData, 0];
+        end
+
+
+
+        function h = e_v(T, ax)
+            genelist = T.gene; 
+            pvals = T.p_val_adj;
+            fc = T.avg_log2FC;
+            h = ix_volcanoplot(fc, pvals, genelist, ax);
+        end
+        
+        function h = ix_volcanoplot(fc, pvals, genelist, ax)
+            %Vocano plot            
+            pvals(pvals < 1e-100) = 1e-100;    
+            x = fc;
+            y = -log10(pvals);
+            % [~, idx] = maxk(abs(y), 5);
+            h = scatter(ax, x, y, 8, "filled");
+            % hold(ax,"on");
+            % scatter(x(idx),y(idx),'rx');
+            %for k = 1:length(idx)
+                %text(x(idx(k))+0.05, y(idx(k)), genelist(idx(k)));
+            %end
+            h.DataTipTemplate.DataTipRows = dataTipTextRow('', genelist);
+        end
     end
 
-end
+
+
+
 
 end
