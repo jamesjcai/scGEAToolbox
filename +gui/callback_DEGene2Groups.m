@@ -48,71 +48,10 @@ function callback_DEGene2Groups(src, ~)
     catch ME
         gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
         return;
-    end
-    
-    % figure;
-    % gui.i_volcanoplot(T);
-    % title(sprintf('%s vs. %s', ...
-    %     matlab.lang.makeValidName(string(cL1)),matlab.lang.makeValidName(string(cL2))));
-    % T2=T;
-    % T2.avg_log2FC(T.avg_log2FC>10)=10;
-    % T2.avg_log2FC(T.avg_log2FC<-10)=-10;
-    % T2.p_val_adj(T.p_val_adj<1e-50)=1e-50;
-    % idx=(T2.avg_log2FC>1 | T2.avg_log2FC<-1) & -log10(T2.p_val_adj)>2;
-    % scatter(T2.avg_log2FC,-log10(T2.p_val_adj),10,idx+1);
-    % xline(0); xline(-1); xline(1);
-    % yline(2);
-    % colormap(gca,lines(2));
-    %sceX = sc_impute(sce.X);
-    %mavolcanoplot(sceX(:,i1),sceX(:,i2),T.p_val_adj,'Labels',T.gene)
+    end   
 
     [T] = in_Tprocessing(T);
 
-    %{
-    try
-        T = sortrows(T, 'p_val_adj', 'ascend');
-        T = sortrows(T, 'pct_1', 'ascend');
-        T = sortrows(T, 'pct_2', 'descend');
-        T = sortrows(T, 'avg_log2FC', 'ascend');
-    catch ME
-        warning(ME.message);
-    end
-
-    try
-        % avg_1 = mean(X,2);
-        % avg_2 = mean(Y,2);
-        % pct_1 = sum(X>0,2)./size(X,2);
-        % pct_2 = sum(Y>0,2)./size(Y,2);
-        if contains(T.Properties.VariableNames{5}, 'avg_1')
-            T.Properties.VariableNames{5} = sprintf('%s_%s', ...
-                T.Properties.VariableNames{5}, ...
-                matlab.lang.makeValidName(string(cL1)));
-        end
-
-        if contains(T.Properties.VariableNames{6}, 'avg_2')
-            T.Properties.VariableNames{6} = sprintf('%s_%s', ...
-                T.Properties.VariableNames{6}, ...
-                matlab.lang.makeValidName(string(cL2)));
-        end
-
-        if contains(T.Properties.VariableNames{7}, 'pct_1')
-            T.Properties.VariableNames{7} = sprintf('%s_%s', ...
-                T.Properties.VariableNames{7}, ...
-                matlab.lang.makeValidName(string(cL1)));
-        end
-
-        if contains(T.Properties.VariableNames{8}, 'pct_2')
-            T.Properties.VariableNames{8} = sprintf('%s_%s', ...
-                T.Properties.VariableNames{8}, ...
-                matlab.lang.makeValidName(string(cL2)));
-        end
-    catch ME
-        warning(ME.message);
-    end
-    % if isatac, T.gene = "chr" + T.gene; end
-    %}
-
-    
     outfile = matlab.lang.makeValidName(sprintf('%s_vs_%s_DE_results', ...
         string(cL1), string(cL2)));
 
@@ -120,13 +59,18 @@ function callback_DEGene2Groups(src, ~)
     didit = false;
     try
         tempfilesaved = fullfile(wkdir, outfile+".xlsx");
-        writetable(T, tempfilesaved, "FileType", "spreadsheet", 'Sheet', 'All_genes');
+        writetable(i_replaceinf(T), tempfilesaved, "FileType", ...
+            "spreadsheet", 'Sheet', 'All_genes');
         didit = true;
     catch
+
     end
     if ~didit
-        tempfilesaved = fullfile(wkdir, outfile+".csv");
-        writetable(T, tempfilesaved);
+        try
+            tempfilesaved = fullfile(wkdir, outfile+".csv");
+            writetable(T, tempfilesaved);
+        catch
+        end
     end
        
     [filetype, filesaved] = gui.i_exporttable(T, true, ...
@@ -353,7 +297,9 @@ function callback_DEGene2Groups(src, ~)
         
         function h = ix_volcanoplot(fc, pvals, genelist, ax)
             %Vocano plot            
-            pvals(pvals < 1e-100) = 1e-100;    
+            pvals(pvals < 1e-100) = 1e-100;
+            fc(fc<-999) = -10;
+            fc(fc>999) = 10;
             x = fc;
             y = -log10(pvals);
             % [~, idx] = maxk(abs(y), 5);
@@ -364,7 +310,25 @@ function callback_DEGene2Groups(src, ~)
                 %text(x(idx(k))+0.05, y(idx(k)), genelist(idx(k)));
             %end
             h.DataTipTemplate.DataTipRows = dataTipTextRow('', genelist);
+            if any(abs(xlim(ax))>=10)
+                xlim(ax,[-10 10]);
+            end
         end
+    end
+
+
+    function i_replaceinf(T)
+        % Iterate over each variable in the table
+        for varIdx = 1:width(T)
+            % Check if the variable is numeric
+            if isnumeric(T{:, varIdx})
+                % Replace positive Inf with 1e99
+                T{T{:, varIdx} == Inf, varIdx} = 1e99;
+                % Replace negative Inf with -1e99
+                T{T{:, varIdx} == -Inf, varIdx} = -1e99;
+            end
+        end
+        
     end
 
 

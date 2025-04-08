@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="983876675" file="D:\GitHub\scGEAToolbox\app\scgeatoolApp.prj" location="D:\GitHub\scGEAToolbox\app" name="scgeatoolApp" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="2749892134" file="D:\GitHub\scGEAToolbox\app\scgeatoolApp.prj" location="D:\GitHub\scGEAToolbox\app" name="scgeatoolApp" target="target.mlapps" target-name="Package App">
     <param.appname>scgeatoolApp</param.appname>
     <param.authnamewatermark>James Cai</param.authnamewatermark>
     <param.email>jcai@tamu.edu</param.email>
@@ -10,10 +10,10 @@
       <file>${PROJECT_ROOT}\scgeatoolApp_resources\icon_24.png</file>
       <file>${PROJECT_ROOT}\scgeatoolApp_resources\icon_16.png</file>
     </param.icons>
-    <param.summary />
-    <param.description />
+    <param.summary>scGEAToolbox - a Matlab toolbox for single-cell RNA-seq data analyses</param.summary>
+    <param.description>Cai JJ. scGEAToolbox: a Matlab toolbox for single-cell RNA sequencing data analysis. Bioinformatics. 2019 Nov 7:btz830. doi: 10.1093/bioinformatics/btz830. Epub ahead of print. PMID: 31697351.</param.description>
     <param.screenshot>D:\GitHub\scGEAToolbox\resources\Images\scgeatool.png</param.screenshot>
-    <param.version>25.4.3</param.version>
+    <param.version>25.4.4</param.version>
     <param.products.name>
       <item>MATLAB</item>
       <item>Curve Fitting Toolbox</item>
@@ -39,8 +39,6 @@
       <param.authnamewatermark />
       <param.email />
       <param.company />
-      <param.summary />
-      <param.description />
       <param.platforms />
     </unset>
     <fileset.main>
