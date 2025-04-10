@@ -1,4 +1,5 @@
-function [methodtagsel] = i_pickembedmethod(parentfig)
+function [methodtagsel] = i_pickembedmethod(parentfig, allowmulti)
+if nargin<2, allowmulti = true; end
 if nargin<1, parentfig = []; end
 
     methodtagsel = [];
@@ -16,15 +17,22 @@ if nargin<1, parentfig = []; end
     sce = SingleCellExperiment;
     validmethodtag = fieldnames(sce.struct_cell_embeddings);
     assert(all(ismember(methodtag,validmethodtag)));
+
     if gui.i_isuifig(parentfig)
+
         [indx2, tf2] = gui.myListdlg(parentfig, listitems, ...
-            'Select embedding methods:');
+            'Select embedding methods:',[], allowmulti);
     else
-        [indx2, tf2] = listdlg('PromptString', ...
-            {'Select embedding methods:'}, ...
-            'SelectionMode', 'multiple', ...
-            'ListString', listitems, ...
-            'ListSize', [220, 300]);
+        if allowmulti
+            multitag = 'multiple';
+        else
+            multitag = 'single';
+        end
+            [indx2, tf2] = listdlg('PromptString', ...
+                {'Select embedding methods:'}, ...
+                'SelectionMode', multitag, ...
+                'ListString', listitems, ...
+                'ListSize', [220, 300]);
     end
 
     if tf2 == 1

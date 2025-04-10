@@ -1100,11 +1100,11 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             ButtonName = gui.myQuestdlg(FigureHandle, 'Update Saved Embedding?', '');
             switch ButtonName
                 case 'Yes'
-                    [methodtag] = gui.i_pickembedmethod(FigureHandle);
+                    [methodtag] = gui.i_pickembedmethod(FigureHandle, false);
                     if isempty(methodtag), return; end
                     [ndim] = gui.i_choose2d3d;
                     if isempty(ndim), return; end
-                    methoddimtag = sprintf('%s%dd',methodtag, ndim);
+                    methoddimtag = sprintf('%s%dd', methodtag{1}, ndim);
                     if ismember(methoddimtag, fieldnames(sce.struct_cell_embeddings))
                         sce.struct_cell_embeddings.(methodtag) = sce.s;
                     end
@@ -1452,7 +1452,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             [sx] = gui.i_pickembedvalues(sce,[],FigureHandle);
             if ~isempty(sx), sce.s = sx; end
         elseif strcmp(answer, 'No')
-            [methodtag] = gui.i_pickembedmethod(FigureHandle);
+            [methodtag] = gui.i_pickembedmethod(FigureHandle, true);
             if isempty(methodtag), return; end
             %if isempty(ndim), [ndim] = gui.i_choose2d3dnmore; end
             %if isempty(ndim), return; end

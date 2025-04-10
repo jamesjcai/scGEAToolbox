@@ -1,6 +1,7 @@
-function [indx, tf] = myListdlg(parentfig, options, Title, prefersel)
+function [indx, tf] = myListdlg(parentfig, options, Title, prefersel, allowmulti)
 
-if nargin<4, prefersel = []; end
+if nargin < 5, allowmulti = true; end
+if nargin < 4, prefersel = []; end
 
     parentPos = parentfig.Position;
     parentCenter = [parentPos(1) + parentPos(3)/2, parentPos(2) + parentPos(4)/2];
@@ -15,14 +16,19 @@ if nargin<4, prefersel = []; end
     d = uifigure('Name', Title, 'Position', dlgPos, ...
         'WindowStyle', 'modal');
 
+    if allowmulti
+        multitag = 'on';
+    else
+        multitag = 'off';
+    end
 
     % Create a listbox for selection
     if ~isempty(prefersel) && any(ismember(prefersel, options))
         lb = uilistbox(d, 'Items', options, 'Position', [20 60 260 370], ...
-            'MultiSelect', 'on', 'Value', prefersel);
+            'MultiSelect', multitag, 'Value', prefersel);
     else
         lb = uilistbox(d, 'Items', options, 'Position', [20 60 260 370], ...
-            'MultiSelect', 'on');
+            'MultiSelect', multitag);
     end
 
     d.KeyPressFcn = @(src, event) jumpToFirstMatch(lb, event);

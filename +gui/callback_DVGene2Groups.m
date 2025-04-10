@@ -57,29 +57,28 @@ lcolor2 = lcolors(2,:);
     % assignin('base', "cL1", cL1);
     % assignin('base', "cL2", cL2);
 
-            answerx = gui.myQuestdlg(FigureHandle, 'Which HVG detecting method to use?', '', ...
-                {'Splinefit Method [PMID:31697351]', ...
-                'Brennecke et al. (2013) [PMID:24056876]'}, ...
-                'Splinefit Method [PMID:31697351]');                
+    a = 'Splinefit Method [PMID:40113778]';
+    b = 'Brennecke et al. (2013) [PMID:24056876]';
+
+            answerx = gui.myQuestdlg(FigureHandle, ...
+                'Which HVG detecting method to use?', '', ...
+                {a, b}, a);
 
             switch answerx
-                case 'Brennecke et al. (2013) [PMID:24056876]'
-                        fw = gui.myWaitbar(FigureHandle);
-
-                    T = gui.e_dvanalysis_brennecke(sce1, sce2, cL1, cL2);
-                    methodtag='brennecke';
-                case 'Splinefit Method [PMID:31697351]'
-                        fw = gui.myWaitbar(FigureHandle);
-
-                    [T, X1, X2, g, xyz1, xyz2,...
+                case a
+                     fw = gui.myWaitbar(FigureHandle);
+                     [T, X1, X2, g, xyz1, xyz2,...
                         px1, py1, pz1,...
                         px2, py2, pz2] = gui.e_dvanalysis_splinefit(sce1, sce2, cL1, cL2);
                     methodtag='splinefit';
+                case b
+                    fw = gui.myWaitbar(FigureHandle);
+                    T = gui.e_dvanalysis_brennecke(sce1, sce2, cL1, cL2);
+                    methodtag='brennecke';
                 otherwise
                     return;
-            end
-    
-    gui.myWaitbar(FigureHandle, fw);
+            end    
+                    gui.myWaitbar(FigureHandle, fw);
 
     outfile = sprintf('%s_vs_%s_DV_%s_results', ...
         matlab.lang.makeValidName(string(cL1)), ...
@@ -89,7 +88,7 @@ lcolor2 = lcolors(2,:);
 pause(1);
 in_ExportTable;
 
-if strcmp(answerx, 'Splinefit Method [PMID:31697351]')
+if strcmp(answerx, a)
     if strcmp(gui.myQuestdlg(FigureHandle, 'Explore DV expression profile of genes?'), 'Yes')
         hx = gui.myFigure;
         hFig = hx.FigHandle;

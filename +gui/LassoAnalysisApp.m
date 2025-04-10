@@ -189,10 +189,10 @@ function LassoAnalysisApp(X, y, varNames, parentfig)
     % Run button
     runButton = uibutton(paramGrid);
     runButton.Text = 'Run LASSO Analysis';
-    % runButton.BackgroundColor=[.2 .2 .2];
-    % runButton.FontColor='w';
+    runButton.BackgroundColor=[.2 .2 .2];
+    runButton.FontColor='w';
     runButton.Layout.Row = 9;
-    runButton.Layout.Column = [1 2];
+    runButton.Layout.Column = 1;
     runButton.ButtonPushedFcn = @runLassoAnalysis;
     
     % Results Panel Components - Fix for tab group layout
@@ -249,28 +249,30 @@ function LassoAnalysisApp(X, y, varNames, parentfig)
     % Selected Variables Tab - NEW
     selectedVarsTab = uitab(resultsTabs);
     selectedVarsTab.Title = 'Selected Variables';
-    selectedVarsGrid = uigridlayout(selectedVarsTab, [2 1]);
-    selectedVarsGrid.RowHeight = {'1x', 22};
-    selectedVarsGrid.ColumnWidth = {'1x'};
+    selectedVarsGrid = uigridlayout(selectedVarsTab, [2 3]);
+    selectedVarsGrid.RowHeight = {'1x', 24};
+    selectedVarsGrid.ColumnWidth = {'1x','fit','1x'};
     
     selectedVarsTable = uitable(selectedVarsGrid);
     selectedVarsTable.Layout.Row = 1;
-    selectedVarsTable.Layout.Column = 1;
+    selectedVarsTable.Layout.Column = [1 3];
     selectedVarsTable.ColumnName = {'Rank', 'Variable', 'Coefficient'};
 
     saveSelectedVarsBtn = uibutton(selectedVarsGrid);
     saveSelectedVarsBtn.Text = 'Save Selected Variables';
+    saveSelectedVarsBtn.BackgroundColor=[.2 .2 .2];
+    saveSelectedVarsBtn.FontColor='w';    
     saveSelectedVarsBtn.Layout.Row = 2;
-    saveSelectedVarsBtn.Layout.Column = 1;
-    saveSelectedVarsBtn.ButtonPushedFcn = @saveModel;
+    saveSelectedVarsBtn.Layout.Column = 2;
+    saveSelectedVarsBtn.ButtonPushedFcn = @saveSelectedVars;
     
     
     % Save model tab
     saveModelTab = uitab(resultsTabs);
     saveModelTab.Title = 'Save Model';
-    saveModelGrid = uigridlayout(saveModelTab, [3 2]);
-    saveModelGrid.RowHeight = {30, 22, '1x'};
-    saveModelGrid.ColumnWidth = {'fit', '1x'};
+    saveModelGrid = uigridlayout(saveModelTab, [3 3]);
+    saveModelGrid.RowHeight = {30, 24, '1x'};
+    saveModelGrid.ColumnWidth = {'fit', 'fit', '1x'};
     
     % Save model controls
     modelNameLabel = uilabel(saveModelGrid);
@@ -281,12 +283,15 @@ function LassoAnalysisApp(X, y, varNames, parentfig)
     modelNameEdit = uieditfield(saveModelGrid, 'text');
     modelNameEdit.Value = 'LassoModel';
     modelNameEdit.Layout.Row = 1;
-    modelNameEdit.Layout.Column = 2;
+    modelNameEdit.Layout.Column = [2 3];
     
     saveModelBtn = uibutton(saveModelGrid);
     saveModelBtn.Text = 'Save Model';
+    saveModelBtn.BackgroundColor=[.2 .2 .2];
+    saveModelBtn.FontColor='w';    
+        
     saveModelBtn.Layout.Row = 2;
-    saveModelBtn.Layout.Column = [1 2];
+    saveModelBtn.Layout.Column = 2;
     saveModelBtn.ButtonPushedFcn = @saveModel;
     
     % Store application data
