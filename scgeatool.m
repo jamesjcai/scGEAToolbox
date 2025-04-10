@@ -240,7 +240,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 in_addmenu(menus, 1, @in_SingleClickSolution, 'Single Click Solution (from Raw Data to Annotation)...');
             case 6
                 menus = uimenu(FigureHandle, 'Text', '&Analyze');
-                in_addmenu(menus, 0, @gui.callback_CalculateGeneStats, 'Gene Expression (Statistics) Analysis...');
+                in_addmenu(menus, 0, @gui.callback_CalculateGeneStats, 'Gene Expression Statistics...');
                 in_addmenu(menus, 0, @in_EnrichrHVGs, 'Gene Variability (HVG Function) Analysis...');
                 in_addmenu(menus, 0, @in_CompareCellScoreBtwCls, 'Gene Program (Cell Score) Analysis...');
                 % in_addmenu(menus, 0, @gui.callback_SGSAnalysis, 'Stochastic Gene Silencing (SGS) Analysis [PMID:39828795]...');
@@ -251,6 +251,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 in_addmenu(menus, 0, @gui.callback_DVGene2GroupsBatch, 'DV Analysis in Cell Type Batch Mode...');
                 in_addmenu(menus, 0, @gui.callback_DPGene2GroupsBatch, 'DP Analysis in Cell Type Batch Mode...');
                 in_addmenu(menus, 1, @gui.callback_DEVP2GroupsBatch, 'All (DE, DV, DP) Analysis in Cell Type Batch Mode...');                
+                in_addmenu(menus, 1, @gui.callback_LASSO, 'Feature Selection (LASSO)...');
                 % in_addmenu(menus, 1, @gui.callback_RunEnrichr, 'Enrichr Analysis...');                
             case 7
                 menus = uimenu(FigureHandle, 'Text', '&Network');
