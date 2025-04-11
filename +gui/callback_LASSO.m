@@ -16,6 +16,8 @@ function callback_LASSO(src, ~)
     [Xt] = gui.i_transformx(sce.X, true, 3, FigureHandle);
     if isempty(Xt), return; end
     
+    gui.i_resetrngseed(src, [], false);
+
     gui.LassoAnalysisApp(Xt', thisx, sce.g);
 
 end

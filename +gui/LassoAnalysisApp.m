@@ -32,25 +32,24 @@ function LassoAnalysisApp(X, y, varNames, parentfig)
         error('Number of variable names must match number of predictor variables');
     end
     
+    fwx = gui.myWaitbar(parentfig);
     % Create the UI figure
     fig = uifigure('Name', 'LASSO Regression Analysis Tool', ...
         'Position', [0 0 600 600], 'Visible','off');
-
-            try
-               if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 
-                    [px_new] = gui.i_getchildpos(parentfig, fig);
-                    if ~isempty(px_new)
-                        movegui(fig, px_new);
-                    else
-                        movegui(fig, 'center');
-                    end
-                else
-                    movegui(fig, 'center');
-                end
-            catch
+    try
+       if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 
+            [px_new] = gui.i_getchildpos(parentfig, fig);
+            if ~isempty(px_new)
+                movegui(fig, px_new);
+            else
                 movegui(fig, 'center');
             end
-    
+        else
+            movegui(fig, 'center');
+        end
+    catch
+        movegui(fig, 'center');
+    end    
     
     % Create the main layout - now with just 2 panels (parameters and results)
     mainLayout = uigridlayout(fig, [2 1]);
@@ -307,6 +306,7 @@ function LassoAnalysisApp(X, y, varNames, parentfig)
     % Set app data
     fig.UserData = appData;
     drawnow;
+    gui.myWaitbar(parentfig, fwx);
     fig.Visible = 'on';
     
     % Callback Functions
@@ -497,7 +497,8 @@ function LassoAnalysisApp(X, y, varNames, parentfig)
         
         % Check if we have a model to save
         if ~isfield(appData, 'LassoModel') || isempty(appData.LassoModel)
-            uialert(fig, 'Please run the LASSO analysis first.', 'No Model', 'Icon', 'warning');
+            uialert(fig, 'Please run the LASSO analysis first.', ...
+                'No Model', 'Icon', 'warning');
             return;
         end
         
@@ -530,7 +531,8 @@ function LassoAnalysisApp(X, y, varNames, parentfig)
             %end
             
         catch ME
-            uialert(fig, ['Error saving model: ', ME.message], 'Save Error', 'Icon', 'error');
+            uialert(fig, ['Error saving model: ', ME.message], ...
+                'Save Error', 'Icon', 'error');
         end
     end
 
@@ -540,7 +542,8 @@ function LassoAnalysisApp(X, y, varNames, parentfig)
         
         % Check if we have a model to save
         if ~isfield(appData, 'LassoModel') || isempty(appData.LassoModel)
-            uialert(fig, 'Please run the LASSO analysis first.', 'No Model', 'Icon', 'warning');
+            uialert(fig, 'Please run the LASSO analysis first.', ...
+                'No Model', 'Icon', 'warning');
             return;
         end
         

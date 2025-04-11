@@ -1,4 +1,6 @@
-function i_resetrngseed(src, ~)
+function i_resetrngseed(src, ~, needconfirm)
+
+if nargin < 3, needconfirm = true; end
 
 [parentfig, ~] = gui.gui_getfigsce(src);
     answer = gui.myQuestdlg(parentfig, "Set random seed.","", ...
@@ -6,11 +8,15 @@ function i_resetrngseed(src, ~)
     switch answer
         case 'Default Seed'
             rng("default");
-            gui.myHelpdlg(parentfig, sprintf('Random seed set to default (%d).', 0));      
+            if needconfirm
+                gui.myHelpdlg(parentfig, 'Random seed set to default.');
+            end
         case 'Random Seed'
             rng('shuffle');
             seedValue = round(sum(100*datevec(datetime)));  % Generate a seed based on current time
-            gui.myHelpdlg(parentfig, sprintf('Random seed (shuffled) set to: %d', seedValue));
+            if needconfirm
+                gui.myHelpdlg(parentfig, sprintf('Random seed (shuffled) set to: %d', seedValue));
+            end
         case 'Set Seed'
             seedValue = sum(100*datevec(datetime));  % Generate a seed based on current time
             seedValue = sprintf('%.0f', seedValue);
@@ -20,7 +26,9 @@ function i_resetrngseed(src, ~)
                 gui.myErrordlg(parentfig, 'Please enter a valid numeric seed', 'Invalid Input');
             else
                 rng(seedValue);
-                gui.myHelpdlg(parentfig, sprintf('Random seed set to: %d', seedValue));
+                if needconfirm
+                    gui.myHelpdlg(parentfig, sprintf('Random seed set to: %d', seedValue));
+                end
             end
     end
 
