@@ -13,7 +13,12 @@ function LassoAnalysisApp(X, y, varNames, parentfig)
     
     % Input validation
     if nargin < 2
-        error('Both X (predictors) and y (response) must be provided');
+
+        rng default % For reproducibility
+        X = randn(100,5);
+        weights = [0;2;0;-3;0]; % Only two nonzero coefficients
+        y = X*weights + randn(100,1)*0.1; % Small added noise        
+        % error('Both X (predictors) and y (response) must be provided');
     end
     
     % Validate dimensions
@@ -24,7 +29,7 @@ function LassoAnalysisApp(X, y, varNames, parentfig)
     
     % Set variable names if not provided
     if nargin < 3 || isempty(varNames)
-        varNames = cell(1, n_vars);
+        varNames = cell(n_vars, 1);
         for i = 1:n_vars
             varNames{i} = sprintf('Var%d', i);
         end
@@ -415,7 +420,7 @@ function LassoAnalysisApp(X, y, varNames, parentfig)
                 % Sort by absolute coefficient value
                 [~, sortIdx] = sort(abs(tableData.Coefficient), 'descend');
                 tableData = tableData(sortIdx, :);
-                assignin('base',"tableData",tableData)
+                % assignin('base',"tableData",tableData)
                 tableData.Variable = cellstr(tableData.Variable);
                 coeffTable.Data = table2cell(tableData);
                 coeffTable.ColumnName = {'Variable', 'Coefficient'};
@@ -504,10 +509,10 @@ function LassoAnalysisApp(X, y, varNames, parentfig)
         
         try
             % Get the model name
-            modelName = modelNameEdit.Value;
-            if isempty(modelName)
-                modelName = 'SelectedGenes';
-            end
+            %modelName = modelNameEdit.Value;
+            %if isempty(modelName)
+                modelName = 'SelectedVars';
+            %end
             
             % Create a variable with the model name in the workspace
             model = appData.LassoModel;
@@ -515,7 +520,7 @@ function LassoAnalysisApp(X, y, varNames, parentfig)
             % Add selected variables to the model
             model.SelectedVariables = appData.SelectedVars;
             
-            assignin('base', "SelectedGenes", model.SelectedVariables);
+            assignin('base', "SelectedVars", model.SelectedVariables);
             
             % Optionally save to file
             %[file, path] = uiputfile({'*.mat', 'MATLAB Data File (*.mat)'}, ...
@@ -526,7 +531,7 @@ function LassoAnalysisApp(X, y, varNames, parentfig)
                 %uialert(fig, ['Model saved to workspace as "', modelName, '" and to file "', fullPath, '".'], ...
                 %    'Model Saved', 'Icon', 'success');
             %else
-                uialert(fig, ['Selected genes saved to workspace as "', modelName, '".'], ...
+                uialert(fig, ['Selected variables saved to workspace as "', modelName, '".'], ...
                     'Genes Saved', 'Icon', 'success');
             %end
             

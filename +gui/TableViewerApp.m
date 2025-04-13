@@ -4,7 +4,7 @@ if nargin<2, parentfig = []; end
 if nargin<1, T = []; end
     % Create a new figure window
     fig = uifigure('Name', 'Table Viewer', ...
-                   'Position', [0, 0, 900, 700]);    
+                   'Position', [0, 0, 600, 480]);
 
     try
        if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 
@@ -24,8 +24,10 @@ if nargin<1, T = []; end
     if isempty(T)
         % Create a table with sample data
         data = generateSampleData();
+        headers = {'Name', 'Age', 'Height (cm)', 'Weight (kg)', 'BMI'};
     else
         T = convertvars(T, @isstring, 'cellstr');
+        headers = T.Properties.VariableNames;
         data = table2cell(T);
     end
     
@@ -48,8 +50,7 @@ if nargin<1, T = []; end
     % Create the table in the middle panel
     uitTable = uitable(mainLayout);
     uitTable.Data = data;
-    uitTable.ColumnName = T.Properties.VariableNames;
-    %{'Name', 'Age', 'Height (cm)', 'Weight (kg)', 'BMI'};
+    uitTable.ColumnName = headers;    
     uitTable.ColumnEditable = true;
     uitTable.Layout.Row = 2;
     uitTable.Layout.Column = 1;
@@ -73,8 +74,7 @@ if nargin<1, T = []; end
     uibutton(topLayout, 'Text', 'Refresh Data', ...
              'ButtonPushedFcn', @(btn, event) refreshData(uitTable, rowCountLabel, sortByDropdown));
     
-
-    
+  
     % Create context menu for the table
     cm = uicontextmenu(fig);
     uitTable.ContextMenu = cm;
@@ -136,24 +136,24 @@ if nargin<1, T = []; end
     addlistener(uitTable, 'Data', 'PostSet', @(src, event) updateRowCount(rowCountLabel, uitTable));
 end
 
-% function data = generateSampleData()
-%     % Generate some sample data for the table
-%     names = {'John Smith', 'Mary Johnson', 'Robert Williams', 'Susan Brown', ...
-%              'Michael Davis', 'Patricia Miller', 'James Wilson', 'Linda Moore', ...
-%              'David Taylor', 'Jennifer Anderson', 'William Thomas', 'Elizabeth Jackson'};
-%     ages = randi([18, 65], length(names), 1);
-%     heights = randi([150, 190], length(names), 1);
-%     weights = randi([50, 100], length(names), 1);
-% 
-%     % Calculate BMI (weight in kg / (height in m)^2)
-%     bmi = weights ./ ((heights/100).^2);
-%     bmi = round(bmi * 10) / 10;  % Round to 1 decimal place
-% 
-%     % Combine all data into a table
-%     data = table(names', ages, heights, weights, bmi, ...
-%                 'VariableNames', {'Name', 'Age', 'Height', 'Weight', 'BMI'});
-%     data = table2cell(data);
-% end
+function data = generateSampleData()
+    % Generate some sample data for the table
+    names = {'John Smith', 'Mary Johnson', 'Robert Williams', 'Susan Brown', ...
+             'Michael Davis', 'Patricia Miller', 'James Wilson', 'Linda Moore', ...
+             'David Taylor', 'Jennifer Anderson', 'William Thomas', 'Elizabeth Jackson'};
+    ages = randi([18, 65], length(names), 1);
+    heights = randi([150, 190], length(names), 1);
+    weights = randi([50, 100], length(names), 1);
+
+    % Calculate BMI (weight in kg / (height in m)^2)
+    bmi = weights ./ ((heights/100).^2);
+    bmi = round(bmi * 10) / 10;  % Round to 1 decimal place
+
+    % Combine all data into a table
+    data = table(names', ages, heights, weights, bmi, ...
+                'VariableNames', {'Name', 'Age', 'Height', 'Weight', 'BMI'});
+    data = table2cell(data);
+end
 
 function exportToCSV(tableObj)
     % Function to export table data to a CSV file
