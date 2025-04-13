@@ -251,7 +251,9 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 in_addmenu(menus, 0, @gui.callback_DVGene2GroupsBatch, 'DV Analysis in Cell Type Batch Mode...');
                 in_addmenu(menus, 0, @gui.callback_DPGene2GroupsBatch, 'DP Analysis in Cell Type Batch Mode...');
                 in_addmenu(menus, 1, @gui.callback_DEVP2GroupsBatch, 'All (DE, DV, DP) Analysis in Cell Type Batch Mode...');                
-                in_addmenu(menus, 1, @gui.callback_LASSO, 'Feature Selection (LASSO)...');
+                in_addmenu(menus, 1, @gui.callback_LASSO, 'LASSO Feature Selection...');
+                in_addmenu(menus, 0, @gui.callback_QUBOFeatureSelection, '⚛ QUBO Feature Selection...');
+                
                 % in_addmenu(menus, 1, @gui.callback_RunEnrichr, 'Enrichr Analysis...');                
             case 7
                 menus = uimenu(FigureHandle, 'Text', '&Network');
@@ -274,7 +276,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 in_addmenu(menus, 0, @gui.i_setextwd, 'Set Working Folder...');
                 in_addmenu(menus, 1, @gui.i_setscimilaritymodelpath, '🔢 - Set Up Scimilarity Model...');
                 in_addmenu(menus, 0, @gui.i_setllmmodel, '🤖 - Set Up Large Language Model...');
-                in_addmenu(menus, 0, @gui.i_setqtmservice, '⚛ - Set Up Quantum Service API...');
+                in_addmenu(menus, 0, @gui.i_setqtmservice, '⚛ - Set Up Quantum Computing Support Package...');
                 in_addmenu(menus, 1, @gui.callback_RunEnrichr, '🌐 - Enrichr Analysis...')
                 in_addmenu(menus, 1, @gui.i_setrenv, 'Set Up R (ℝ) Environment');
                 in_addmenu(menus, 0, @gui.i_setpyenv, 'Set Up Python (🐍) Environment');

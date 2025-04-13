@@ -127,7 +127,10 @@ end
         '', {options{1}, options{2}}, options{1});
     switch answer
         case options{1}
-            gui.i_viewtable(T, FigureHandle);
+            % gui.i_viewtable(T, FigureHandle);
+            gui.TableViewerApp(T, FigureHandle);
+
+
         case options{2}
             if height(T) > 1
                 gui.callback_EnrichrTab2Circos(src, [], T);
@@ -144,8 +147,8 @@ end
         dsv = pkg.i_get_enrichr_libraries;
 
         enrichrlibraries = getpref('scgeatoolbox', 'enrichrlibraries', ...
-                                ["GO_Biological_Process_2025", ...
-                                    "GO_Molecular_Function_2025" ...
+                                   ["GO_Biological_Process_2025", ...
+                                    "GO_Molecular_Function_2025", ...
                                      "KEGG_2021_Human",...
                                      "Reactome_Pathways_2024"]);
 

@@ -186,6 +186,7 @@ end
     function in_viewTable(~, ~)
         fw = gui.myWaitbar(FigureHandle);
         gui.i_viewtable(T, hx.FigHandle);
+        % gui.TableViewerApp(T, hx.FigHandle);
         gui.myWaitbar(FigureHandle, fw);
     end
 

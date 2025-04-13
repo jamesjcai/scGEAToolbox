@@ -6,7 +6,7 @@ function callback_LASSO(src, ~)
     answer = gui.myQuestdlg(FigureHandle, 'Select a dependent variable y. Continue?','');
     if ~strcmp(answer,'Yes'), return; end
 
-    [thisx, xlabelv] = gui.i_select1state(sce, false, false, false, true, FigureHandle);
+    [thisx, ~] = gui.i_select1state(sce, false, false, false, true, FigureHandle);
     if isempty(thisx), return; end
     if ~isnumeric(thisx)
         gui.myWarndlg(FigureHandle, 'This function works with continuous varibles only.');

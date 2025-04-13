@@ -142,7 +142,7 @@ function [T] = in_response2T(response, gene_set_library, minumgene, pvaluecut)
         for k = 1:length(res)
             t = cell2table(res{k}', 'VariableNames', headertxt);
             s = sprintf("%s,", t.OverlappingGenes{1}{:});
-            t.OverlappingGenes{1} = extractBefore(s, strlength(s));
+            t.OverlappingGenes{1} = char(extractBefore(s, strlength(s)));
             T = [T; t];
         end
         Ta = table(repmat(gene_set_library, size(T,1), 1), ...
