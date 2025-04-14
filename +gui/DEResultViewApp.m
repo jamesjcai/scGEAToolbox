@@ -230,7 +230,7 @@ classdef DEResultViewApp < matlab.apps.AppBase
     % Callbacks
     methods (Access = private)
         
-        function pValueSliderChanged(app, event)
+        function pValueSliderChanged(app, ~)
             % Update the p-value threshold
             app.PValueThreshold = app.PValueSlider.Value;
             app.PValueEditField.Value = app.PValueThreshold;
@@ -240,7 +240,7 @@ classdef DEResultViewApp < matlab.apps.AppBase
             updateVolcanoPlot(app);
         end
         
-        function pValueEditFieldChanged(app, event)
+        function pValueEditFieldChanged(app, ~)
             % Update the p-value threshold
             app.PValueThreshold = app.PValueEditField.Value;
             app.PValueSlider.Value = app.PValueThreshold;
@@ -250,7 +250,7 @@ classdef DEResultViewApp < matlab.apps.AppBase
             updateVolcanoPlot(app);
         end
         
-        function fcSliderChanged(app, event)
+        function fcSliderChanged(app, ~)
             % Update the fold change threshold
             app.FCThreshold = app.FCSlider.Value;
             app.FCEditField.Value = app.FCThreshold;
@@ -260,7 +260,7 @@ classdef DEResultViewApp < matlab.apps.AppBase
             updateVolcanoPlot(app);
         end
         
-        function fcEditFieldChanged(app, event)
+        function fcEditFieldChanged(app, ~)
             % Update the fold change threshold
             app.FCThreshold = app.FCEditField.Value;
             app.FCSlider.Value = app.FCThreshold;
@@ -270,18 +270,18 @@ classdef DEResultViewApp < matlab.apps.AppBase
             updateVolcanoPlot(app);
         end
         
-        function applyButtonPushed(app, event)
+        function applyButtonPushed(app, ~)
             % Apply all threshold changes
             updateTables(app);
             updateVolcanoPlot(app);
         end
         
-        function exportFullTableButtonPushed(app, event)
+        function exportFullTableButtonPushed(app, ~)
             % Export the full DE results table
             exportTable(app, app.DEData, 'full_de_results.csv');
         end
         
-        function exportUpRegButtonPushed(app, event)
+        function exportUpRegButtonPushed(app, ~)
             % Export the up-regulated genes table
             upRegIndices = app.DEData.(app.LogFCColumn) >= app.FCThreshold & ...
                           app.DEData.(app.PValueColumn) <= app.PValueThreshold;
@@ -289,7 +289,7 @@ classdef DEResultViewApp < matlab.apps.AppBase
             exportTable(app, upRegData, 'up_regulated_genes.csv');
         end
         
-        function exportDownRegButtonPushed(app, event)
+        function exportDownRegButtonPushed(app, ~)
             % Export the down-regulated genes table
             downRegIndices = app.DEData.(app.LogFCColumn) <= -app.FCThreshold & ...
                             app.DEData.(app.PValueColumn) <= app.PValueThreshold;
@@ -297,7 +297,7 @@ classdef DEResultViewApp < matlab.apps.AppBase
             exportTable(app, downRegData, 'down_regulated_genes.csv');
         end
         
-        function saveVolcanoButtonPushed(app, event)
+        function saveVolcanoButtonPushed(app, ~)
             % Save the volcano plot
             saveVolcanoPlot(app);
         end

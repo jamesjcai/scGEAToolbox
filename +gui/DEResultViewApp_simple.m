@@ -1,4 +1,4 @@
-classdef DEResultViewApp < matlab.apps.AppBase
+classdef DEResultViewApp_simple < matlab.apps.AppBase
 
     % Properties that correspond to app components
     properties (Access = public)
@@ -133,7 +133,7 @@ classdef DEResultViewApp < matlab.apps.AppBase
     % Callbacks
     methods (Access = private)
         
-        function pValueSliderChanged(app, event)
+        function pValueSliderChanged(app, ~)
             % Update the p-value threshold
             app.PValueThreshold = app.PValueSlider.Value;
             app.PValueEditField.Value = app.PValueThreshold;
@@ -143,7 +143,7 @@ classdef DEResultViewApp < matlab.apps.AppBase
             updateVolcanoPlot(app);
         end
         
-        function pValueEditFieldChanged(app, event)
+        function pValueEditFieldChanged(app, ~)
             % Update the p-value threshold
             app.PValueThreshold = app.PValueEditField.Value;
             app.PValueSlider.Value = app.PValueThreshold;
@@ -153,7 +153,7 @@ classdef DEResultViewApp < matlab.apps.AppBase
             updateVolcanoPlot(app);
         end
         
-        function fcSliderChanged(app, event)
+        function fcSliderChanged(app, ~)
             % Update the fold change threshold
             app.FCThreshold = app.FCSlider.Value;
             app.FCEditField.Value = app.FCThreshold;
@@ -163,7 +163,7 @@ classdef DEResultViewApp < matlab.apps.AppBase
             updateVolcanoPlot(app);
         end
         
-        function fcEditFieldChanged(app, event)
+        function fcEditFieldChanged(app, ~)
             % Update the fold change threshold
             app.FCThreshold = app.FCEditField.Value;
             app.FCSlider.Value = app.FCThreshold;
@@ -173,7 +173,7 @@ classdef DEResultViewApp < matlab.apps.AppBase
             updateVolcanoPlot(app);
         end
         
-        function applyButtonPushed(app, event)
+        function applyButtonPushed(app, ~)
             % Apply all threshold changes
             updateTables(app);
             updateVolcanoPlot(app);
@@ -290,7 +290,7 @@ classdef DEResultViewApp < matlab.apps.AppBase
     % App initialization and construction
     methods (Access = public)
         
-        function app = DEResultViewApp(data)
+        function app = DEResultViewApp_simple(data)
             % Create the components
             createComponents(app);
             
