@@ -50,6 +50,7 @@ if ~addnew
             'It may take a while to load values. Continue?'))
         return; 
     end
+    tic;
     if gui.i_isuifig(parentfig)
         x = gui.myInputdlg({sprintf('Attribute Name: %s\n%s',clabel, 'Attribute Values:')}, ...
                           'Attribute Editor', {char(string(thisc))}, parentfig);
@@ -57,6 +58,7 @@ if ~addnew
         x = inputdlg(sprintf('Attribute Name: %s\n%s',clabel, 'Attribute Values:'), ...
                           'Attribute Editor', [15 80], {char(string(thisc))});
     end
+    toc;
 
 
 else  

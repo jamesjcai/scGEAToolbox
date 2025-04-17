@@ -50,9 +50,12 @@ function answer = openInputDialog(prompt, dlgtitle, definput, parentfig)
     fields = gobjects(numFields, 1);
     
     % Create UI elements
+    numFields
+    assignin('base',"definput",definput);
     for i = 1:numFields
         uilabel(d, 'Text', prompt{i}, ...
                    'Position', [20, dialogHeight - 40 - (i - 1) * 50, 310, 22]);
+        
         fields(i) = uieditfield(d, 'text', ...
                                 'Position', [20, dialogHeight - 65 - (i - 1) * 50, 310, 22], ...
                                 'Value', definput{i});
