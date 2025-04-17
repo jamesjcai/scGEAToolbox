@@ -1,7 +1,8 @@
-function [sce] = r_readSeuratRds(filename, wkdir)
+function [sce, metadata] = r_readSeuratRds(filename, wkdir)
 
 if nargin < 2, wkdir = tempdir; end
 sce = [];
+metadata = [];
 
 if nargin < 1, error('run.r_readSeuratRds(filename)'); end
 oldpth = pwd();
@@ -14,7 +15,8 @@ if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
 
 isdebug = false;
 tmpfilelist = {'inputrdsfile.txt', 'output.h5', ...
-    'g.csv', 'X.csv', 'umap.csv', 'barcodes.csv', 'annotation.csv'};
+    'g.csv', 'X.csv', 'umap.csv', 'barcodes.csv', ...
+    'annotation.csv', 'metadata.csv'};
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 
 
@@ -77,12 +79,12 @@ if exist('umap.csv', 'file')
     end
 end
 
-     if exist('batch.csv','file')
-         disp('Reading batchid from batch.csv');
-         t=readtable('batch.csv');
-         id=string(t.x);
-         if length(id) == sce.NumCells, sce.c_batch_id = id; end
-     end
+if exist('batch.csv','file')
+    disp('Reading batchid from batch.csv');
+    t=readtable('batch.csv');
+    id=string(t.x);
+    if length(id) == sce.NumCells, sce.c_batch_id = id; end
+end
 
 
 
@@ -105,6 +107,16 @@ if exist('celltype.csv', 'file')
     end    
 end
 
+if exist('metadata.csv', 'file')
+    try
+    disp('Reading metadata from metadata.csv');
+        t = readtable('metadata.csv', 'Delimiter', ',');
+        if sce.NumCells == height(t)
+            metadata = t;
+        end
+    catch
+    end
+end
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 cd(oldpth);

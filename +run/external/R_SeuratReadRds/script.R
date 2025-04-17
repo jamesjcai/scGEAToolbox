@@ -129,3 +129,14 @@ tryCatch(
         # Do this if an error is caught...
     }
 )
+
+tryCatch(
+    {
+        if (!is.null(A@meta.data)) {
+            write.csv(A@meta.data, file = 'metadata.csv')
+        }
+    },
+    error = function(e){ 
+        # Do this if an error is caught...
+    }
+)
