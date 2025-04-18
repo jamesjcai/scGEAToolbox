@@ -35,7 +35,7 @@ if ~addnew
             case 'Cell ID'
                 thisc = sce.c_cell_id;
             otherwise
-                [y,idx]=ismember(clabel, sce.list_cell_attributes(1:2:end));
+                [y,idx] = ismember(clabel, sce.list_cell_attributes(1:2:end));
                 if y
                     thisc = sce.list_cell_attributes{idx+1};
                 end
@@ -52,23 +52,38 @@ if ~addnew
     end
     tic;
     if gui.i_isuifig(parentfig)
-        x = gui.myInputdlg({sprintf('Attribute Name: %s\n%s',clabel, 'Attribute Values:')}, ...
-                          'Attribute Editor', {char(string(thisc))}, parentfig);
+        %        x = gui.myInputdlg({sprintf('Attribute Name: %s\n%s',clabel, 'Attribute Values:')}, ...
+        %                          'Attribute Editor', {char(string(thisc))}, parentfig);
+        
+        % assignin("base","thisc",thisc);
+        % assignin("base","clabel",clabel);
+
+        x = gui.myTextareadlg(parentfig, {'Attribute Name', 'Attribute Values'},...
+                      'Attribute Editor', {clabel, string(thisc)}, [false, true]);
+        % assignin("base","x",x);
+        if ~isempty(x)
+            x(1)=[];
+        end
     else
         x = inputdlg(sprintf('Attribute Name: %s\n%s',clabel, 'Attribute Values:'), ...
                           'Attribute Editor', [15 80], {char(string(thisc))});
+        
     end
     toc;
 
 
-else  
-if gui.i_isuifig(parentfig)
-    x = gui.myInputdlg({'Attribute Name','Attribute Values'},...
-                  'Attribute Editor', {''}, parentfig); % Assuming default is empty cell
-else
-    x = inputdlg({'Attribute Name','Attribute Values'},...
-                  'Attribute Editor', [1 80; 15 80]);
-end
+else    % add new
+
+    if gui.i_isuifig(parentfig)
+        % x = gui.myInputdlg({'Attribute Name','Attribute Values'},...
+        %              'Attribute Editor', {''}, parentfig); % Assuming default is empty cell
+        % x = gui.myTextareadlg(parentfig, '', 'Attribute Name'); % Assuming default is empty cell
+        x = gui.myTextareadlg(parentfig, {'Attribute Name','Attribute Values'},...
+                      'Attribute Editor', {'New_Attribute', ("Value_"+string(1:sce.NumCells))'});
+    else
+        x = inputdlg({'Attribute Name','Attribute Values'},...
+                      'Attribute Editor', [1 80; 15 80]);
+    end
     % {'new_attrib', char(string([1:sce.NumCells]'))});
 end
 
