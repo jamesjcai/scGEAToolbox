@@ -7,10 +7,7 @@ metadata = [];
 if nargin < 1, error('run.r_readSeuratRds(filename)'); end
 oldpth = pwd();
 [isok, msg, codepth] = commoncheck_R('R_SeuratReadRds');
-if ~isok, error(msg);
-    sce = [];
-    return;
-end
+if ~isok, error(msg), return; end
 if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
 
 isdebug = false;
@@ -30,7 +27,7 @@ pkg.RunRcode(codefullpath, Rpath);
 
 g = [];
 if exist('g.csv', 'file')
-    t = readtable('g.csv', 'Delimiter', ',');
+    t = readtable('g.csv', 'Delimiter', ',', 'VariableNamingRule', 'modify');
     if isa(t, 'table')
         g = string(t.x);
     end
@@ -62,7 +59,7 @@ sce = SingleCellExperiment(X, g);
 
 if exist('barcodes.csv', 'file')
     disp('Reading c_cell_id from barcodes.csv');
-    t = readtable('barcodes.csv', 'Delimiter', ',');
+    t = readtable('barcodes.csv', 'Delimiter', ',', 'VariableNamingRule', 'modify');
     if ~isempty(t) && ismember('x', t.Properties.VariableNames)
         id = string(t.x);
         if length(id) == sce.NumCells, sce.c_cell_id = id; end
@@ -71,7 +68,7 @@ end
 
 if exist('umap.csv', 'file')
     disp('Reading s from umap.csv');
-    t = readtable('umap.csv', 'Delimiter', ',');
+    t = readtable('umap.csv', 'Delimiter', ',', 'VariableNamingRule', 'modify');
     [y, idx] = ismember(string(t.Var1), sce.c_cell_id);
     if all(y)
         s = table2array(t(:, 2:end));
@@ -81,7 +78,7 @@ end
 
 if exist('batch.csv','file')
     disp('Reading batchid from batch.csv');
-    t=readtable('batch.csv');
+    t=readtable('batch.csv','VariableNamingRule', 'modify');
     id=string(t.x);
     if length(id) == sce.NumCells, sce.c_batch_id = id; end
 end
@@ -99,7 +96,7 @@ end
 % else
 if exist('celltype.csv', 'file')
     disp('Reading celltype from celltype.csv');
-    t = readtable('celltype.csv', 'Delimiter', ',');
+    t = readtable('celltype.csv', 'Delimiter', ',','VariableNamingRule', 'modify');
     if ~isempty(t) && ismember('x', t.Properties.VariableNames)
         if sce.NumCells == length(string(t.x))
             sce.c_cell_type_tx = string(t.x);
@@ -110,7 +107,8 @@ end
 if exist('metadata.csv', 'file')
     try
     disp('Reading metadata from metadata.csv');
-        t = readtable('metadata.csv', 'Delimiter', ',');
+        t = readtable('metadata.csv', 'Delimiter', ',', ...
+            'VariableNamingRule', 'modify');
         if sce.NumCells == height(t)
             metadata = t;
         end

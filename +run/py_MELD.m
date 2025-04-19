@@ -29,9 +29,8 @@ disp('Input file written.');
 [status] = run.pycommon2(x, wrkpth, prgfoldername);
 
 if status == 0 && exist('output.txt', 'file')
-    warning off
-    T = readtable('output.txt', "ReadVariableNames", true);
-    warning on
+    T = readtable('output.txt', "ReadVariableNames", true, ...
+        'VariableNamingRule', 'modify');
     sample_likelihoods = table2array(T);
 end
 

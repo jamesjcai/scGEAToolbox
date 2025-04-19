@@ -29,8 +29,7 @@ codefullpath = fullfile(codepath,'script.R');
 pkg.RunRcode(codefullpath, Rpath);
 
 if ~exist('output.csv', 'file'), return; end
-warning off
-T = readtable('output.csv');
+T = readtable('output.csv', 'VariableNamingRule', 'modify');
 
 
 % pct_2a=pct_2(T.Var1);
@@ -50,7 +49,6 @@ T = addvars(T, avg_1, 'After', 'abs_log2FC');
 
 T = sortrows(T, 'abs_log2FC', 'descend');
 T = sortrows(T, 'p_val_adj', 'ascend');
-warning on
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 cd(oldpth);
 end

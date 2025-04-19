@@ -58,9 +58,8 @@ switch answer1
                 fid = fopen(a, 'w');
                 fprintf(fid, '%s\n', string(userInput{1}));  % Write first input only (modify for multiple)
                 fclose(fid);
-                warning off
-                tab = readtable(a,"FileType","text",'Delimiter','\t');                
-                warning on
+                tab = readtable(a,"FileType","text",'Delimiter','\t', ...
+                    'VariableNamingRule', 'modify');              
             case 'Open File'
                 [fname, pathname] = uigetfile( ...
                     {'*.txt', 'Enrichr Table Files (*.txt)'; ...

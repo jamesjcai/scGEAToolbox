@@ -83,16 +83,16 @@ end
 if status == 0 && showprogress && isvalid(fw)
     gui.gui_waitbar(fw, [], 'GSEApy Enrichr is complete');
 end
-warning off
 if exist('GO_Biological_Process_2025.Human.enrichr.reports.txt','file')
-    Tbp = readtable('GO_Biological_Process_2025.Human.enrichr.reports.txt');
+    Tbp = readtable('GO_Biological_Process_2025.Human.enrichr.reports.txt', ...
+            'VariableNamingRule', 'modify');
     [Tbp] = in_trimT(Tbp);
 end
 if exist('GO_Molecular_Function_2025.Human.enrichr.reports.txt','file')
-    Tmf = readtable('GO_Molecular_Function_2025.Human.enrichr.reports.txt');
+    Tmf = readtable('GO_Molecular_Function_2025.Human.enrichr.reports.txt', ...
+        'VariableNamingRule', 'modify');
     [Tmf] = in_trimT(Tmf);
 end
-warning on
 
 if showbarplot
     if exist('GO_Biological_Process_2025.Human.enrichr.reports.png','file')

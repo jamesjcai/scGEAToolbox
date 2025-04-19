@@ -70,12 +70,11 @@ end
 if nargin < 2, genecolnum = 1; end
 if nargin < 3, verbose = true; end
 if verbose, fprintf('Reading %s ...... ', filename); end
-warning('off', 'MATLAB:table:ModifiedAndSavedVarnames');
-
-T = readtable(filename, 'filetype', 'text', 'HeaderLines', 1);
+% warning('off', 'MATLAB:table:ModifiedAndSavedVarnames');
+T = readtable(filename, 'filetype', 'text', 'HeaderLines', 1, ...
+    'VariableNamingRule', 'modify');
 % T=readtable(filename,'filetype','text');
-
-warning('on', 'MATLAB:table:ModifiedAndSavedVarnames');
+% warning('on', 'MATLAB:table:ModifiedAndSavedVarnames');
 X = table2array(T(:, (1 + genecolnum):end));
 genelist = string(table2array(T(:, 1:genecolnum)));
 if nargout > 2

@@ -87,11 +87,13 @@ X = X.';
 fprintf('done.\n');
 
 T1 = readtable(ftfname, 'ReadVariableNames', true, ...
-    'filetype', 'text', 'Delimiter', {'\t', ',', ' ', ';', '|'});
+    'filetype', 'text', 'Delimiter', {'\t', ',', ' ', ';', '|'}, ...
+    'VariableNamingRule', 'modify');
 genelist = string(T1.gene_name);
 
 T2 = readtable(bcfname, 'ReadVariableNames', true, ...
-    'filetype', 'text', 'Delimiter', {'\t', ',', ' ', ';', '|'});
+    'filetype', 'text', 'Delimiter', {'\t', ',', ' ', ';', '|'}, ...
+    'VariableNamingRule', 'modify');
 celllist = string(T2.bc_wells);
 ftdone = true;
 

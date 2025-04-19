@@ -21,9 +21,8 @@ function [needupdatesce] = callback_RunSCimilarity(src, ~)
             case 'Unconstrained'
                 target_celltypes = '';
             case 'Constrained'
-                warning off
-                T = readtable(label_ints_file, 'ReadVariableNames',true);
-                warning on
+                T = readtable(label_ints_file, 'ReadVariableNames',true, ...
+                    'VariableNamingRule', 'modify');
                 allcelltypes = natsort(string(T.x0));
                 %scimilmodelpath
                 %scimiltargetcel

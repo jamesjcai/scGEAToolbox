@@ -47,9 +47,11 @@ warning on
 switch lower(species)
     case 'human'
         Tw = readtable('markerweight_hs.txt');
-        T1 = readtable('markerlist_hs.txt', 'ReadVariableNames', false, 'Delimiter', '\t');
+        T1 = readtable('markerlist_hs.txt', 'ReadVariableNames', false, ...
+            'Delimiter', '\t');
         if exist('markerlist_hs_custom.txt', 'file')
-            T2 = readtable('markerlist_hs_custom.txt', 'ReadVariableNames', false, 'Delimiter', '\t');
+            T2 = readtable('markerlist_hs_custom.txt', ...
+                'ReadVariableNames', false, 'Delimiter', '\t');
         else
             T2 = [];
         end

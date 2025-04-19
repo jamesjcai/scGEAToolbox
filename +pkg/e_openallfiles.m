@@ -1,12 +1,12 @@
 function [matchingFiles] = e_openallfiles(k1, k2, bequiet)
 
-if nargin < 3, bequiet = true; end
+if nargin < 3, bequiet = false; end
 % if nargin<1, k1='parentfig'; k2='myQuestdlg'; end
 % if nargin<1, k1='FigureHandle'; k2='inputdlg'; end
 %if nargin<1, k1='isempty(answer'; k2='myQuestdlg'; end
 %if nargin<1, k1='isempty'; k2='switch'; end
 %if nargin<1, k1='InitialValue'; k2='myListdlg'; end
-if nargin<1, k1='parentfig'; k2='select'; end
+if nargin<1, k1='readtable'; k2='warn'; end
 
 
 

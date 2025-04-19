@@ -9,9 +9,8 @@ function [g] = i_get_lncrnagenes
         % websave(lncrnafile, 'https://www.genenames.org/cgi-bin/genegroup/download?id=1054&type=branch', options);
         % % t=readtable('a.txt','PreserveVariableNames',true);
     end
-    warning off
-    t = readtable(lncrnafile,'ReadVariableNames',false);
-    warning on
+    t = readtable(lncrnafile,'ReadVariableNames',false, ...
+        'VariableNamingRule', 'modify');
     g = string(t.Var1);
     % delete(fname);
 end

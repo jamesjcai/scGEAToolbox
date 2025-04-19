@@ -9,9 +9,8 @@ function [g] = i_get_ribosomalgenes
         websave(ribosomalfile, 'https://www.genenames.org/cgi-bin/genegroup/download?id=1054&type=branch', options);
         % t=readtable('a.txt','PreserveVariableNames',true);
     end
-    warning off
-    t = readtable(ribosomalfile, 'Range', 'A:B');
-    warning on
+    t = readtable(ribosomalfile, 'Range', 'A:B', ...
+        'VariableNamingRule', 'modify');
     g = string(t.ApprovedSymbol);
     % delete(fname);
 end
