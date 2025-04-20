@@ -288,7 +288,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 in_addmenu(menus, 1, @gui.callback_RunMemento, '🐍 - Memento DE/DV Analysis [PMID:39454576]...');
                 in_addmenu(menus, 0, @in_DoubletDetection, '🐍 - Detect Doublets (Scrublet) [PMID:30954476]...');
                 in_addmenu(menus, 0, @in_HarmonyPy, '🐍 - Batch Integration (Harmony) [PMID:31740819]...');
-                in_addmenu(menus, 0, @in_SCimilarity, '🐍 - Annotate Cell Types (Scimilarity) [PMID:39566551]...');
+                in_addmenu(menus, 0, @in_SCimilarity, '🐍 - Annotate Cell Types (Scimilarity 🔢) [PMID:39566551]...');
                 in_addmenu(menus, 0, {@in_SubsampleCells, 2}, '🐍 - Geometric Sketching (geosketch) [PMID:31176620]...');
                 in_addmenu(menus, 0, @gui.callback_MELDPerturbationScore, '🐍 - MELD Perturbation Score (MELD) [PMID:33558698]...');
                 
