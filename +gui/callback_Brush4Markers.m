@@ -113,26 +113,27 @@ function i_Brush4MarkersLASSO(src, ~, sce, uselasso)
 
     gui.sc_uitabgrpfig_expplot(y, markerlist, sce.s, FigureHandle, [axx, bxx]);
     if uselasso, gui.myWaitbar(FigureHandle, fw); end
-end
 
-function idx = LRDETest(X, y, k)
-    n = size(X, 1);
-    p_val = zeros(n, 1);
-    fw = gui.myWaitbar(FigureHandle);
-    % Calculate p-values for each row of data_use
-    for x = 1:size(X, 1)
-        if mod(x,5)==0
-            gui.myWaitbar(FigureHandle, fw, false, '', '', x/n);
+
+    function idx = LRDETest(X, y, k)
+        n = size(X, 1);
+        p_val = zeros(n, 1);
+        fw = gui.myWaitbar(FigureHandle);
+        % Calculate p-values for each row of data_use
+        for x = 1:size(X, 1)
+            if mod(x,5)==0
+                gui.myWaitbar(FigureHandle, fw, false, '', '', x/n);
+            end
+            model_data = table(X(:,x), y(:), 'VariableNames', {'GENE', 'Group'});
+            fmla = 'Group ~ GENE';
+            fmla2 = 'Group ~ 1';
+            % Fit models and compute likelihood ratio test
+            model1 = fitglm(model_data, fmla, 'Distribution', 'binomial');
+            model2 = fitglm(model_data, fmla2, 'Distribution', 'binomial');
+            lrtest_stat = 2 * (model1.LogLikelihood - model2.LogLikelihood);
+            p_val(x) = chi2cdf(lrtest_stat, model1.NumPredictors - model2.NumPredictors, 'upper');
         end
-        model_data = table(X(:,x), y(:), 'VariableNames', {'GENE', 'Group'});
-        fmla = 'Group ~ GENE';
-        fmla2 = 'Group ~ 1';
-        % Fit models and compute likelihood ratio test
-        model1 = fitglm(model_data, fmla, 'Distribution', 'binomial');
-        model2 = fitglm(model_data, fmla2, 'Distribution', 'binomial');
-        lrtest_stat = 2 * (model1.LogLikelihood - model2.LogLikelihood);
-        p_val(x) = chi2cdf(lrtest_stat, model1.NumPredictors - model2.NumPredictors, 'upper');
+        [~, idx] = mink(p_val, k);
+        gui.myWaitbar(FigureHandle, fw);
     end
-    [~, idx] = mink(p_val, k);
-    gui.myWaitbar(FigureHandle, fw);
 end
