@@ -1901,13 +1901,17 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         
         switch lower(action)
             case 'unbrushed'
-                if strcmp(gui.myQuestdlg(FigureHandle, 'Unbrushed/Unselected cells will be deleted. Continue?'),'Yes')
+                if strcmp(gui.myQuestdlg(FigureHandle, ...
+                        ['Unbrushed/Unselected cells will be deleted. ' ...
+                        'Continue?']),'Yes')
                     in_deletecells(src, ~ptsSelected);
                 else
                     return;
                 end
             case 'brushed'
-                if strcmp(gui.myQuestdlg(FigureHandle, 'Brushed/Selected cells will be deleted. Continue?'),'Yes')
+                if strcmp(gui.myQuestdlg(FigureHandle, ...
+                        ['Brushed/Selected cells will be deleted. ' ...
+                        'Continue?']),'Yes')
                     in_deletecells(src, ptsSelected);
                 else
                     return;
@@ -1932,9 +1936,13 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
 
     function in_scTenifoldNet(src, events, methodtag)
         if numel(unique(sce.c_cell_type_tx)) > 1
-            if ~strcmp(gui.myQuestdlg(FigureHandle, 'This analysis is cell type-specific; however, current SCE contains multiple cell types. Continue?',''),'Yes'), return; end
+            if ~strcmp(gui.myQuestdlg(FigureHandle, ...
+                    ['This analysis is cell type-specific; however, ' ...
+                    'current SCE contains multiple cell types. Continue?']),'Yes'), return; end
         end
-        switch gui.myQuestdlg(FigureHandle, 'Perform 10-fold bootstrapping of cells?','',{'Yes 🐢','No 🐇','Cancel'},'No 🐇')
+        switch gui.myQuestdlg(FigureHandle, ['Perform 10-fold ' ...
+                'bootstrapping of cells?'],'', ...
+                {'Yes 🐢','No 🐇','Cancel'},'No 🐇')
             case 'No 🐇'
                 if methodtag==1
                     gui.callback_scPCNet1(src, events);
@@ -1955,7 +1963,6 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         if isempty(k), return; end
 
         fw = gui.myWaitbar(FigureHandle);
-        % xxx
         %set(0, 'CurrentFigure', FigureHandle);
         %figure('WindowStyle', 'modal');
         hx = gui.myFigure(FigureHandle);      
@@ -1966,10 +1973,18 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
 
     function in_DrawTrajectory(src, ~)
         justload = false;
-        % gui.myWarndlg(FigureHandle, 'This function should not be applied to tSNE and UMAP embeddings, as they "encourage a representation of the data as disjoint clusters, which is less meaningful for modeling continuous developmental trajectories" [PMID:25664528].', '');
+        if ~strcmpi('Yes', gui.myQuestdlg(FigureHandle, ['This function is ' ...
+                'not intended for use with t-SNE or UMAP embeddings, since ' ...
+                'those methods tend to break up the data into separate ' ...
+                'clusters, which can hide the smooth transitions you''d ' ...
+                'expect in developmental trajectories. Use PHATE ' ...
+                'embedding instead. Continue?']))
+            return;
+        end
         if ~isempty(f_traj) && isvalid(f_traj) && isgraphics(f_traj, 'line')
             if strcmp({f_traj.Visible}, 'on')
-                switch gui.myQuestdlg(FigureHandle, 'Remove existing trajectory curve?','')
+                switch gui.myQuestdlg(FigureHandle, ...
+                        'Remove existing trajectory curve?','')
                     case 'Yes'
                         in_RefreshAll(src, [], true, true);  % keepview, keepcolr
                     case 'No'
@@ -1979,7 +1994,8 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             end
         end
         if license('test', 'curve_fitting_toolbox') && ~isempty(which('cscvn'))
-            answer = gui.myQuestdlg(FigureHandle, 'Which method?', '', {'splinefit', 'princurve', ...
+            answer = gui.myQuestdlg(FigureHandle, 'Which method?', '', ...
+                {'splinefit', 'princurve', ...
                 'manual'}, 'splinefit');
         else
             answer = gui.myQuestdlg(FigureHandle, 'Which method?', '', {'splinefit', 'princurve'}, ...
@@ -1996,7 +2012,9 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             case 'manual'
                 if license('test', 'curve_fitting_toolbox') && ~isempty(which('cscvn'))
                     if ~isempty(h.ZData)
-                        switch gui.myQuestdlg(FigureHandle, 'This function does not work for 3D embedding. Continue to switch to 2D?')
+                        switch gui.myQuestdlg(FigureHandle, ...
+                                ['This function does not work for 3D ' ...
+                                'embedding. Continue to switch to 2D?'])
                             case 'Yes'
                                 in_Switch2D3D(src,[]);
                             otherwise
@@ -2007,13 +2025,16 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
 
                     answer2 = gui.myQuestdlg(FigureHandle, ...
                         'Draw trajectory curve or load saved curve and pseudotime?', ...
-                        '',{'Draw Curve', 'Load Saved', 'Cancel'}, 'Draw Curve');
+                        '', {'Draw Curve', 'Load Saved', 'Cancel'}, 'Draw Curve');
 
                     switch answer2
                         case 'Load Saved'
                             [file, path] = uigetfile('*.mat', ...
                                 'Select a MAT-file to Load');
-                            if isvalid(FigureHandle) && isa(FigureHandle, 'matlab.ui.Figure'), figure(FigureHandle); end
+                            if isvalid(FigureHandle) && isa(FigureHandle, ...
+                                    'matlab.ui.Figure')
+                                figure(FigureHandle); 
+                            end
                             if isequal(file, 0)
                                 disp('User canceled the file selection.');
                                 return;
@@ -2040,14 +2061,14 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                             end
                             x = []; y = [];
 
-%{
-% Create uifigure and axes
-fig = uifigure;
-ax = uiaxes(fig);
-plot(ax, rand(10,1), rand(10,1), 'o'); % Example plot
-% Set a callback for mouse clicks
-fig.WindowButtonDownFcn = @(src, event) disp(event.IntersectionPoint);
-%}
+                            %{
+                            % Create uifigure and axes
+                            fig = uifigure;
+                            ax = uiaxes(fig);
+                            plot(ax, rand(10,1), rand(10,1), 'o'); % Example plot
+                            % Set a callback for mouse clicks
+                            fig.WindowButtonDownFcn = @(src, event) disp(event.IntersectionPoint);
+                            %}
 
                             hold(hAx, 'on');
                             while true
@@ -2062,8 +2083,6 @@ fig.WindowButtonDownFcn = @(src, event) disp(event.IntersectionPoint);
                                     'LineWidth', 2);
                             end
                             hold(hAx, 'off');
-
-
 
                             % Fit and plot the spline curve
                             splineCurve = cscvn([x'; y']);
