@@ -1,4 +1,4 @@
-function [done, outfile] = e_DETableSummary(TbpUpEnrichr, TmfUpEnrichr, ...
+function [done, outfile] = e_EnrichrTabSummary(TbpUpEnrichr, TmfUpEnrichr, ...
                             TbpDnEnrichr, TmfDnEnrichr, infotagstr)
     
     done = false;
@@ -13,9 +13,11 @@ function [done, outfile] = e_DETableSummary(TbpUpEnrichr, TmfUpEnrichr, ...
     % (5) In SCGEATOOL, click menu Analysis -> All (DE, DV, DP) Analysis in Cell Type Batch Mode...
     % (6) In MATLAB Command Window, run llm.function
     
-    if isempty(which('ollamaChat'))
-        error('Needs the Add-On of Large Language Models (LLMs) with MATLAB');
-    end
+    
+    %if isempty(which('ollamaChat'))
+    %    error('Needs the Add-On of Large Language Models (LLMs) with MATLAB');
+    %end
+
     % https://www.mathworks.com/matlabcentral/fileexchange/163796-large-language-models-llms-with-matlab/
     % Add-On “Large Language Models (LLMs) with MATLAB”.
     
@@ -23,7 +25,8 @@ function [done, outfile] = e_DETableSummary(TbpUpEnrichr, TmfUpEnrichr, ...
         
     wrkdir = getpref('scgeatoolbox', 'externalwrkpath');
     if isempty(wrkdir), return; end
-        
+    
+    %{
     preftagname = 'llmodelprovider';
     s = getpref('scgeatoolbox', preftagname);
     providermodel = strsplit(s,':');
@@ -36,6 +39,7 @@ function [done, outfile] = e_DETableSummary(TbpUpEnrichr, TmfUpEnrichr, ...
         disp('Ollama is not running.');
         return;
     end
+    %}
     
     warning off
     s_up = ''; 
@@ -78,16 +82,32 @@ function [done, outfile] = e_DETableSummary(TbpUpEnrichr, TmfUpEnrichr, ...
     
     if isempty(s_up) && isempty(s_dn), return; end
        
-    chat = ollamaChat(providermodel{2}, TimeOut = 1200);
+    % chat = ollamaChat(providermodel{2}, TimeOut = 1200);
     prompt1 = "You are a researcher working on gene function enrichment analysis try to find biological processes and molecular functions of a given gene sets. You are using Enrichr to do this. " + ...
         "Enrichr is a gene function enrichment analysis tool. You will be given the output of Enrichr analysis below, which contains a list of gene ontology (GO) terms and associated genes. The GO terms are a mix of enriched terms of biological processes and molecular functions. Please summarize the results in text. " + ...
         "Please provide an analysis of the output, highlighting key biological processes and molecular functions, along with their associated genes. " + ...
         "Please write an executive summary to report the results of your analysis. ";
     prompt2 = "Here is the output of Enrichr: " + s_up;
-    feedbk_up = generate(chat, prompt1 + prompt2);
+    % feedbk_up = generate(chat, prompt1 + prompt2);
+
+    response = llm.geminiGenerateContent(prompt1 + prompt2);
+    if response.StatusCode == "OK"
+        feedbk_up = response.Body.Data.candidates.content.parts.text;
+    else
+        feedbk_up = response.Body.Data.error;
+    end
+
     
     prompt2 = "Here is the output of Enrichr: " + s_dn;
-    feedbk_dn = generate(chat, prompt1 + prompt2);
+    % feedbk_dn = generate(chat, prompt1 + prompt2);
+
+    response = llm.geminiGenerateContent(prompt1 + prompt2);
+    if response.StatusCode == "OK"
+        feedbk_dn = response.Body.Data.candidates.content.parts.text;
+    else
+        feedbk_dn = response.Body.Data.error;
+    end
+    
     
     import mlreportgen.dom.*
     
@@ -100,6 +120,7 @@ function [done, outfile] = e_DETableSummary(TbpUpEnrichr, TmfUpEnrichr, ...
     append(doc, para);
     
     feedbk_up = regexprep(feedbk_up, '<think>.*?</think>', '');
+    feedbk_up
     para = Paragraph(feedbk_up);
     append(doc, para);
     

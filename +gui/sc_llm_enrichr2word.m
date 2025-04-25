@@ -1,5 +1,17 @@
 function sc_llm_enrichr2word(selpath, parentfig)
 
+
+    usegemini = false;
+    try    
+        preftagname = 'llmodelprovider';
+        s = getpref('scgeatoolbox', preftagname);
+        if contains(upper(s),'GEMINI')
+            usegemini = true;
+        end
+    catch
+    end
+
+
     if nargin<2, parentfig = []; end
 
     if nargin < 1
@@ -41,15 +53,24 @@ function sc_llm_enrichr2word(selpath, parentfig)
             sprintf('%s', selectedfiles(k)), ...
             (k-0.5)/length(selectedfiles));
         infile = fullfile(selpath, selectedfiles(k));
-        [TbpUp, TmfUp, TbpDn, TmfDn] = in_gettables(infile);
+        [TbpUpEnrichr, TmfUpEnrichr, ...
+            TbpDnEnrichr, TmfDnEnrichr] = in_gettables(infile);
         % assignin("base","TbpUp",TbpUp);
         % assignin("base","TmfUp",TmfUp);
         % assignin("base","TbpDn",TbpDn);
         % assignin("base","TmfDn",TmfDn);
-        [~, wordfilename] = fileparts(selectedfiles(k));
-        [done, outfile] = llm.e_DETableSummary(TbpUp, TmfUp, TbpDn, ...
-            TmfDn, wordfilename);
 
+        [~, wordfilename] = fileparts(selectedfiles(k));
+
+        if ~usegemini
+            [done, outfile] = llm.e_DETableSummary(TbpUpEnrichr, ...
+                TmfUpEnrichr, TbpDnEnrichr, ...
+                TmfDnEnrichr, wordfilename);
+        else
+            [done, outfile] = llm.e_EnrichrTabSummary(TbpUpEnrichr, ...
+                TmfUpEnrichr, TbpDnEnrichr, ...
+                TmfDnEnrichr, wordfilename);
+        end
 
         % files = dir(fullfile(selpath, '*_DP_*.xlsx'));
         % fileNames = string({files(~[files.isdir]).name});

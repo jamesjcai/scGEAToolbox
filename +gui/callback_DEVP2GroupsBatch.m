@@ -61,7 +61,7 @@ function callback_DEVP2GroupsBatch(src, ~)
             
             [Tup, Tdn] = pkg.e_processDETable(T, paramset, FigureHandle);
             try
-                gui.e_tupdn2xlsx(Tup,Tdn,T,filesaved);
+                gui.e_tupdn2xlsx(Tup, Tdn, T, filesaved);
                 writetable(Tnt, filesaved, "FileType", "spreadsheet", 'Sheet', 'Note');
                 gui.e_enrichrxlsx(Tup, Tdn, T, filesaved);
             catch ME
