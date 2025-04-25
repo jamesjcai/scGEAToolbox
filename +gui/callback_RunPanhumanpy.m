@@ -1,4 +1,4 @@
-function [needupdatesce] = callback_RunPanhumanpy(src, ~)
+function [needupdatesce, T] = callback_RunPanhumanpy(src, ~)
 
     needupdatesce = false;
     %[y, prepare_input_only] = gui.i_memorychecked;
@@ -69,7 +69,7 @@ function [needupdatesce] = callback_RunPanhumanpy(src, ~)
     else    
         fw = gui.myWaitbar(FigureHandle);
         try
-            [c] = run.py_panhumanpy(sce, wkdir, true);
+            [c, T] = run.py_panhumanpy(sce, wkdir, true);
             assert(sce.NumCells==numel(c));
             if ~(isscalar(unique(sce.c_cell_type_tx)) && unique(sce.c_cell_type_tx)=="undetermined")
                 sce.list_cell_attributes = [sce.list_cell_attributes, ...

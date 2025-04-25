@@ -1061,10 +1061,14 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         end
         if ~gui.gui_showrefinfo('Panhumanpy', ...
                 FigureHandle), return; end
-        if gui.callback_RunPanhumanpy(src, events)
+        [needupdate, T] = gui.callback_RunPanhumanpy(src, events);
+        if needupdate
             sce = guidata(FigureHandle);
             [c, cL] = grp2idx(sce.c_cell_type_tx);
-            in_RefreshAll(src, [], true, false);            
+            in_RefreshAll(src, [], true, false);
+            if strcmp('Yes', gui.myQuestdlg(FigureHandle,'View ouput table?'))
+                gui.TableViewerApp(T, FigureHandle);
+            end
         end        
     end
 

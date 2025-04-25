@@ -1,4 +1,4 @@
-function [celltypes] = py_panhumanpy(sce, wkdir, ...
+function [celltypes, T] = py_panhumanpy(sce, wkdir, ...
     isdebug, prepare_input_only)
 
 % cell_type = run.py_panhumanpy(sce, 'C:\Users\jcai\Downloads', true, true);
@@ -64,9 +64,9 @@ disp(cmdlinestr)
 if ~prepare_input_only
     [status] = system(cmdlinestr, '-echo');
     if status == 0 && exist('output.csv', 'file')
-        t = readtable('output.csv','ReadVariableNames', true, ...
+        T = readtable('output.csv','ReadVariableNames', true, ...
             'VariableNamingRule', 'modify');
-        celltypes = string(t.final_level_labels);
+        celltypes = string(T.final_level_labels);
     end
 else
     disp('Input files are prepared. To do the analysis, run script.py in the working folder.')
