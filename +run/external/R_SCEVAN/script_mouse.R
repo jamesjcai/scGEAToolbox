@@ -10,7 +10,7 @@ countMatrix <- as.matrix(X)
 rownames(countMatrix) <- g
 colnames(countMatrix) <- paste0("C", seq_len(ncol(countMatrix)))
 
-results <- pipelineCNA(countMatrix, SUBCLONES = FALSE, plotTree = FALSE, organism = "human")
+results <- pipelineCNA(countMatrix, SUBCLONES = FALSE, plotTree = FALSE, organism = "mouse")
 write.csv(results,'output.csv')
 
 #pipelineCNA(raw_count_mtx, par_cores = nproc, SUBCLONES = TRUE, plotTree = FALSE, organism = "mouse")

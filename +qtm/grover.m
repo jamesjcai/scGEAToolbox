@@ -7,7 +7,7 @@ H = 1 / sqrt(2) * [1 1; 1 -1];
 
 % prepare H^n
 Hn = 1;
-for j = 1:n,
+for j = 1:n
     Hn = kron(Hn, H);
 end
 

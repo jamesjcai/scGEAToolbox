@@ -9,21 +9,34 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
     
     switch typeid
         case 1
-            answer = gui.myQuestdlg(FigureHandle, 'This function assigns cell cycle phase to each cell, continue?', '');
+            answer = gui.myQuestdlg(FigureHandle, 'This function assigns cell cycle phase to each cell. Continue?');
         case 2
-            answer = gui.myQuestdlg(FigureHandle, 'This function assigns differentiation potency [PMID:33244588] to each cell, continue?', '');
+            answer = gui.myQuestdlg(FigureHandle, 'This function assigns differentiation potency [PMID:33244588] to each cell. Continue?');
         case 3
-            answer = gui.myQuestdlg(FigureHandle, 'This function calculates stemness index [PMID:29625051] for each cell, continue?', '');
+            answer = gui.myQuestdlg(FigureHandle, 'This function calculates stemness index [PMID:29625051] for each cell. Continue?');
         case 4
-            answer = gui.myQuestdlg(FigureHandle, 'This function calculates the expression ratio of dissociation-associated genes [PMID:34020534] for each cell, continue?', '');
+            answer = gui.myQuestdlg(FigureHandle, 'This function calculates the expression ratio of dissociation-associated genes [PMID:34020534] for each cell. Continue?');
         case 5
-            answer = gui.myQuestdlg(FigureHandle, 'This function predicts tumor (aneuploid) and normal (diploid) cells using copykat [PMID:33462507], continue?', '');
+            answer = gui.myQuestdlg(FigureHandle, 'This function predicts tumor (aneuploid) and normal (diploid) cells using copykat [PMID:33462507]. Continue?');
             extprogname = 'R_copykat';
+        case 6
+            answer = gui.myQuestdlg(FigureHandle, 'SCEVAN [PMID:36841879] is a fast variational algorithm for the deconvolution of the clonal substructure of tumors from single-cell RNA-seq data. Continue?');
+            extprogname = 'R_SCEVAN';
+    end
+    if ~strcmp(answer, 'Yes'), return; end
+
+    switch typeid
+        case {2, 6}
+            speciestag = gui.i_selectspecies(2, false, FigureHandle);
+            if isempty(speciestag), return; end
+    end
+
+    switch typeid
+        case {5, 6}
             preftagname = 'externalwrkpath';
             [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
             if isempty(wkdir), return; end
     end
-    if ~strcmp(answer, 'Yes'), return; end
 
 
     switch typeid
@@ -53,8 +66,6 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
             gui.myHelpdlg(FigureHandle, 'To see the result, use View -> Cell State (Ctrl + T). Then select "Cell Cycle Phase"');
             return;
         case 2
-            speciestag = gui.i_selectspecies(2, false, FigureHandle);
-            if isempty(speciestag), return; end
             attribtag = "cell_potency";
             in_aaa(attribtag);
         case 3
@@ -66,10 +77,13 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
         case 5
             attribtag = 'copykat_prediction';
             in_aaa(attribtag);
+        case 6
+            attribtag = 'scevan_prediction';
+            in_aaa(attribtag);
     end
 
 
-    function [s] = in_aaa(attribtag)        
+    function [s] = in_aaa(attribtag)  
         if ~ismember(attribtag, sce.list_cell_attributes(1:2:end))
             needestimt = true;
         else
@@ -98,6 +112,8 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
                     s = pkg.sc_dissratio(sce.X, sce.g, true);
                 case 'copykat_prediction'
                     s = run.r_copykat(sce, wkdir);
+                case 'scevan_prediction'
+                    s = run.r_SCEVAN(sce, wkdir, false, speciestag);
                 otherwise
                     error('Invalid attribtag');
             end
@@ -124,6 +140,8 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
                 'Cell State (Ctrl + T). Then select "%s"'], ...
                 attribtag));
         end
+
+        
     end
 
 end

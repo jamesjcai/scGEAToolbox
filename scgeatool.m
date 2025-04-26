@@ -283,6 +283,8 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 in_addmenu(menus, 1, @in_RunSeuratWorkflow, 'ℝ - Run Seurat Workflow (Seurat) [PMID:25867923]...');
                 in_addmenu(menus, 0, @in_RunMonocle3, 'ℝ - Pseudotime Analysis (Monocle3) [PMID:28825705]...');
                 in_addmenu(menus, 0, {@in_CellCyclePotency, 5}, 'ℝ - Aneuploid/Diploid Analysis (copykat) [PMID:33462507]...');
+                in_addmenu(menus, 0, {@in_CellCyclePotency, 6}, 'ℝ - Variational Aneuploidy Analysis (SCEVAN) [PMID:36841879]...');
+                
                 in_addmenu(menus, 0, @in_DecontX, 'ℝ - Detect Ambient RNA Contamination (DecontX) [PMID:32138770]...');
                 %in_addmenu(menus, 1, @in_RunDataMapPlot, '🐍 - Run DataMapPlot (datamapplot)...');
                 in_addmenu(menus, 1, @gui.callback_RunMemento, '🐍 - Memento DE/DV Analysis [PMID:39454576]...');
@@ -441,6 +443,18 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
            sce = guidata(FigureHandle);
         end
     end
+
+    % {@in_CellCyclePotency, 6}
+    % function in_SCEVAN(src, events)
+    %     extprogname = 'R_SCEVAN';
+    %     preftagname = 'externalwrkpath';
+    %     [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
+    %     if isempty(wkdir), return; end
+    %     fw = gui.myWaitbar(FigureHandle);
+    %     s = run.r_SCEVAN(sce, wkdir, false, 'human');
+    %     assignin("base","s",s);
+    %     gui.myWaitbar(FigureHandle,fw);
+    % end
 
     function in_CellCyclePotency(src, events, typeid)
         if gui.callback_CellCyclePotency(src, events, typeid)

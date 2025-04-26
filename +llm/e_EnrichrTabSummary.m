@@ -1,6 +1,10 @@
 function [done, outfile] = e_EnrichrTabSummary(TbpUpEnrichr, TmfUpEnrichr, ...
                             TbpDnEnrichr, TmfDnEnrichr, infotagstr)
     
+    if nargin<2, TmfUpEnrichr = []; end
+    if nargin<3, TbpDnEnrichr = []; end
+    if nargin<4, TmfDnEnrichr = []; end
+
     done = false;
     outfile = [];
     
@@ -21,7 +25,7 @@ function [done, outfile] = e_EnrichrTabSummary(TbpUpEnrichr, TmfUpEnrichr, ...
     % https://www.mathworks.com/matlabcentral/fileexchange/163796-large-language-models-llms-with-matlab/
     % Add-On “Large Language Models (LLMs) with MATLAB”.
     
-    if nargin<4, infotagstr = pkg.i_randinfostr; end
+    if nargin<5, infotagstr = pkg.i_randinfostr; end
         
     wrkdir = getpref('scgeatoolbox', 'externalwrkpath');
     if isempty(wrkdir), return; end
@@ -91,10 +95,12 @@ function [done, outfile] = e_EnrichrTabSummary(TbpUpEnrichr, TmfUpEnrichr, ...
     % feedbk_up = generate(chat, prompt1 + prompt2);
 
     response = llm.geminiGenerateContent(prompt1 + prompt2);
+
     if response.StatusCode == "OK"
         feedbk_up = response.Body.Data.candidates.content.parts.text;
     else
         feedbk_up = response.Body.Data.error;
+        return;
     end
 
     
@@ -119,8 +125,9 @@ function [done, outfile] = e_EnrichrTabSummary(TbpUpEnrichr, TmfUpEnrichr, ...
     para.Style = {Bold(true), FontSize('14pt'), Color('blue')};
     append(doc, para);
     
+    
     feedbk_up = regexprep(feedbk_up, '<think>.*?</think>', '');
-    feedbk_up
+    
     para = Paragraph(feedbk_up);
     append(doc, para);
     

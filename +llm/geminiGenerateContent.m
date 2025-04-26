@@ -33,15 +33,14 @@ function response = geminiGenerateContent(prompt, nvp)
             delete("imdata.png")
         end
     end
-    % endpoint = "https://generativelanguage.googleapis.com/v1beta/";
+    %https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=
+
     endpoint = "https://generativelanguage.googleapis.com/v1beta/";
-                %https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=
     method = "generateContent";
     
     import matlab.net.*
     import matlab.net.http.*  
     apikey = getenv("GEMINI_API_KEY");
-    % apikey = "";
     headers = HeaderField('Content-Type', 'application/json');
     request = RequestMessage('post', headers, query);
     response = send(request, URI(endpoint + ...
