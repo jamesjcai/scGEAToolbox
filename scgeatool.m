@@ -39,6 +39,7 @@ addRequired(p, 'sce', @(x) isa(x, 'SingleCellExperiment'));
 addOptional(p, 'c', sce.c, checkCS);
 addOptional(p, 's', [], checkCS);
 addOptional(p, 'methodid', 1, @isnumeric);
+addOptional(p, 'figname', []);
 addOptional(p, 'legacy', false, @islogical);
 addOptional(p, 'useuifig', false, @islogical);
 addOptional(p, 'callinghandle', []);
@@ -49,6 +50,7 @@ c_in = p.Results.c;
 s_in = p.Results.s;
 
 methodid = p.Results.methodid;
+figname = p.Results.figname;
 legacy = p.Results.legacy;
 useuifig = p.Results.useuifig; 
 
@@ -70,6 +72,10 @@ if ~isempty(s_in), sce.s = s_in; end
 
 
 [FigureHandle, hAx] = gui.gui_createmainfigure(v1, useuifig);
+
+if ~isempty(figname)
+    FigureHandle.Name = figname;
+end
 
 if ~isempty(fx) && isvalid(fx), fxfun(fx,0.2); end
 [button1, button2] = gui.gui_createbuttons(FigureHandle, @in_sc_openscedlg);
@@ -1759,7 +1765,6 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         guidata(FigureHandle, sce);
     end
 
-
     function in_Brush4Celltypes(~, ~)
         ptsSelected = logical(h.BrushData.');
         if ~any(ptsSelected)
@@ -1812,7 +1817,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         datatip(h, 'DataIndex', idx(k));
     end
 
-    function in_ShowCellStates(src, ~)        
+    function in_ShowCellStates(src, ~)
         [thisc, clabel, ~, newpickclabel] = gui.i_select1state(sce, ...
             false, false, true, false, FigureHandle);
         if isempty(thisc), return; end
@@ -1838,7 +1843,9 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                     strrep(cellstr(cL), '_', '\_'));
                 cb.Label.String = strrep(clabel, '_', '\_');
                 cbtogg = findall(FigureHandle, 'Tag', 'figToglColorbar');
-                set(cbtogg,'State','on');
+                set(cbtogg,'State','on');                
+                row = dataTipTextRow('', strrep(cellstr(cL(c)),'_','\_'));
+                h.DataTipTemplate.DataTipRows = row;
             case {'Numerical/Continuous','Unknown'}
                 sce.c = thisc;
                 switch gui.myQuestdlg(FigureHandle, 'Show scores in new figure?','', ...
@@ -2411,7 +2418,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 idx = find(c == ik);
                 siv = sce.s(idx, :);
                 si = median(siv, 1);
-                % si=geometric_median(siv');
+                % si = geometric_median(siv');
                 [kb] = dsearchn(siv, si);
                 % [~, k] = medoid(siv);  geometric_median
                 datatip(h, 'DataIndex', idx(kb));
@@ -2420,6 +2427,8 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             isdone = true;
         end
     end
+
+
 end
 
 
