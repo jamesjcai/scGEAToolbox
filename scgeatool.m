@@ -73,9 +73,6 @@ if ~isempty(s_in), sce.s = s_in; end
 
 [FigureHandle, hAx] = gui.gui_createmainfigure(v1, useuifig);
 
-if ~isempty(figname)
-    FigureHandle.Name = figname;
-end
 
 if ~isempty(fx) && isvalid(fx), fxfun(fx,0.2); end
 [button1, button2] = gui.gui_createbuttons(FigureHandle, @in_sc_openscedlg);
@@ -89,6 +86,10 @@ m_tool = createMenus(FigureHandle, 6);
 m_ntwk = createMenus(FigureHandle, 7);
 m_extn = createMenus(FigureHandle, 8);
 % m_optn = createMenus(FigureHandle, 9);
+if ~isempty(figname)
+    FigureHandle.Name = figname;
+    m_quts = createMenus(FigureHandle, 9);
+end
 
 if ~isempty(fx) && isvalid(fx), fxfun(fx, 0.4); end
 
@@ -303,6 +304,11 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 
                 % in_addmenu(menus, 1, @gui.callback_ExploreCellularCrosstalk, 'Talklr Intercellular Crosstalk [DOI:10.1101/2020.02.01.930602]...');
             case 9
+                menus = uimenu(FigureHandle, 'Text', '&Quantis');
+                in_addmenu(menus, 0, @gui.callback_Quantis, '💊 - Drug Resistance Prediction...');
+                %in_addmenu(menus, 0, @gui.i_setextwd, 'Set Working Folder...');
+
+                %in_addmenu(menus, 1, @gui.i_setllmmodel, 'Set LLM Provider && Model...');                
                 %menus = uimenu(FigureHandle, 'Text', '&Options');
                 %in_addmenu(menus, 0, @gui.i_resetrngseed, 'Set Random Seed...');
                 %in_addmenu(menus, 0, @gui.i_setextwd, 'Set Working Folder...');
@@ -1231,8 +1237,15 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             case 'off'
                 set(UserToolbarHandle,'Visible','off');
         end
-        menusv={m_file, m_edit, m_view, m_plot, m_anno, m_tool, m_ntwk,...
-            m_extn};
+
+        if isempty(figname)
+            menusv={m_file, m_edit, m_view, m_plot, m_anno, m_tool, m_ntwk,...
+                m_extn};
+        else
+            menusv={m_file, m_edit, m_view, m_plot, m_anno, m_tool, m_ntwk,...
+                m_extn, m_quts};
+        end        
+        
         for j=1:length(menusv)
             a=allchild(menusv{j});
             for k=1:length(a)
