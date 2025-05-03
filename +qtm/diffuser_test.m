@@ -1,4 +1,4 @@
-N = 4;
+N = 3;
 diffuserG = qtm.diffuser(N);
 plot(diffuserG)
 
