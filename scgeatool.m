@@ -416,22 +416,23 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             in_RefreshAll([], [], false, false);
 
             if ~isempty(filenm) && contains(filenm,'.h5ad')
-                hinfo = h5info(filenm);
-                idx = find(string({hinfo.Groups.Name})=="/obs");
-                if isempty(idx), return; end
-                dnames = extractfield(hinfo.Groups(idx).Datasets, 'Name');
-                if isempty(dnames), return; end
-                if strcmp('Yes', gui.myQuestdlg(FigureHandle, 'View /obs/Datasets?'))
-                   gui.i_h5adobs2tab(filenm, FigureHandle); 
+                try
+                    hinfo = h5info(filenm);
+                    idx = find(string({hinfo.Groups.Name})=="/obs");
+                    if isempty(idx), return; end
+                    dnames = extractfield(hinfo.Groups(idx).Datasets, 'Name');
+                    if isempty(dnames), return; end
+                    if strcmp('Yes', gui.myQuestdlg(FigureHandle, 'View /obs/Datasets?'))
+                       T = gui.i_h5adobs2tab(filenm, FigureHandle);
+                       if ~isempty(T)
+                           pkg.i_assignin(T, 'metadata');
+                           gui.TableViewerApp(T, FigureHandle);
+                       end
+                    end
+                catch ME
+                    gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
+                    return;                   
                 end
-                %hinfo = h5info(filenm);
-                %idx = find(string(extractfield(hinfo.Groups, 'Name'))=="/obs");
-                %if ~isempty(idx)
-                %    s = string(extractfield(hinfo.Groups(idx).Datasets, 'Name'));
-                %    % s = strrep(s, "/obs/", "");
-                %    b = pkg.e_guessh5field(filenm, {'/obs/'}, {s(2)})
-                %end
-                % xxx
             end
         else
             set(button1,'Enable','on');
@@ -519,7 +520,6 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             end
         end
     end
-
 
     function in_turnonuserguiding(~, ~)
         % setpref('scgeatoolbox','useronboardingtoolbar',true);

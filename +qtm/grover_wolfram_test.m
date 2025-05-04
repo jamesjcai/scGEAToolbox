@@ -9,7 +9,7 @@ gates1 = [hGate(1:n-1);
 cg = quantumCircuit(gates1);
 plot(cg)
 s = simulate(cg);
-[states,P] = querystates(s,[1 2])
+[states,P] = querystates(s,[1 2]);
 
 % ----------------------------
 
@@ -23,22 +23,22 @@ gates1 = [hGate(1:n-1);
 cg = quantumCircuit(gates1);
 plot(cg)
 s = simulate(cg);
-[states,P] = querystates(s,[1 2])
+[states,P] = querystates(s,[1 2]);
 
 %% ---------------------------------------
 
 N = 2;
 cg = diffuser1(N);
 figure; plot(cg); title(cg.Name);
-y = checkmatrix(cg, N)
+y = checkmatrix(cg, N);
 
 cg = diffuser2(N);
 figure; plot(cg); title(cg.Name);
-y = checkmatrix(cg, N)
+y = checkmatrix(cg, N);
 
 cg = diffuser3(N);
 figure; plot(cg); title(cg.Name);
-y = checkmatrix(cg, N)
+y = checkmatrix(cg, N);
 
 cg = diffuser4(N);
 figure; plot(cg); title(cg.Name);

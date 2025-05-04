@@ -149,7 +149,7 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
             filename = fullfile(pathname, fname);
             fw = gui.myWaitbar(parentfig);
             try
-                [sce] = sc_readrdsfile(filename);
+                [sce, metadata] = sc_readrdsfile(filename);
             catch ME
                 gui.myWaitbar(parentfig, fw, true);
                 gui.myErrordlg(parentfig, ME.message, ME.identifier);
@@ -161,6 +161,12 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                 return;
             else
                 gui.myWaitbar(parentfig, fw);
+                if ~isempty(metadata)
+                    pkg.i_assignin(metadata, 'metadata');
+                    if strcmp('Yes', gui.myQuestdlg(parentfig, 'View metadata?'))
+                        gui.TableViewerApp(metadata, parentfig);
+                    end
+                end                
             end
         case 'AnnData/H5ad File (*.h5ad)...'
             [filenm, pathname] = uigetfile( ...

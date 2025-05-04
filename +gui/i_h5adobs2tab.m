@@ -1,4 +1,6 @@
-function i_h5adobs2tab(filenm, parentfig)
+function [T] = i_h5adobs2tab(filenm, parentfig)
+if nargin < 2, parentfig = []; end
+T = [];
 
 hinfo = h5info(filenm);
 idx = find(string({hinfo.Groups.Name})=="/obs");
@@ -27,4 +29,4 @@ for k = 1:length(indx)
     T.(fieldnm) = h5read(filenm, ...
         ['/obs/' fieldnm]);
 end
-gui.TableViewerApp(T, parentfig);
+% gui.TableViewerApp(T, parentfig);
