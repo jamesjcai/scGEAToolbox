@@ -27,6 +27,13 @@ if exist(filenm, 'file') ~= 2, error('File Not Found.'); end
 hinfo = h5info(filenm);
 
 idx = find(strcmp(strtrim(string(char(hinfo.Groups.Name))), "/X"));
+
+
+%names = string(extractfield(hinfo.Groups, 'Name'));
+%idx = find(names == "/X");
+
+% idx = find(string({hinfo.Groups.Name})=="/X")
+
 %data=h5read(filenm,[hinfo.Groups(idx).Name,'/data']);
 %indices=h5read(filenm,[hinfo.Groups(idx).Name,'/indices']);
 %indptr=h5read(filenm,[hinfo.Groups(idx).Name,'/indptr']);

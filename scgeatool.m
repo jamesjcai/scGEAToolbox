@@ -408,12 +408,31 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 return;
             end
         end
-        [sce] = gui.sc_openscedlg([],[],FigureHandle);
+        [sce, filenm] = gui.sc_openscedlg([],[],FigureHandle);
         if isvalid(FigureHandle) && isa(FigureHandle, 'matlab.ui.Figure'), figure(FigureHandle); end
         if ~isempty(sce) && sce.NumCells > 0 && sce.NumGenes > 0
             guidata(FigureHandle, sce);
             c=[];
             in_RefreshAll([], [], false, false);
+
+            if ~isempty(filenm) && contains(filenm,'.h5ad')
+                hinfo = h5info(filenm);
+                idx = find(string({hinfo.Groups.Name})=="/obs");
+                if isempty(idx), return; end
+                dnames = extractfield(hinfo.Groups(idx).Datasets, 'Name');
+                if isempty(dnames), return; end
+                if strcmp('Yes', gui.myQuestdlg(FigureHandle, 'View /obs/Datasets?'))
+                   gui.i_h5adobs2tab(filenm, FigureHandle); 
+                end
+                %hinfo = h5info(filenm);
+                %idx = find(string(extractfield(hinfo.Groups, 'Name'))=="/obs");
+                %if ~isempty(idx)
+                %    s = string(extractfield(hinfo.Groups(idx).Datasets, 'Name'));
+                %    % s = strrep(s, "/obs/", "");
+                %    b = pkg.e_guessh5field(filenm, {'/obs/'}, {s(2)})
+                %end
+                % xxx
+            end
         else
             set(button1,'Enable','on');
             if ~gui.i_isuifig(FigureHandle)

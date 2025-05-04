@@ -1,4 +1,4 @@
-function [y] = e_guessh5field(filnm, prefx, varm, required)
+function [y] = e_guessh5field(filenm, prefx, varm, required)
 
 if nargin < 4, required = false; end
 
@@ -11,7 +11,7 @@ for l = 1:length(prefx)
     for k = 1:length(varm)
         try
             fieldnm = sprintf('%s%s', prefx(l), varm(k));
-            y = h5read(filnm, fieldnm);
+            y = h5read(filenm, fieldnm);
         catch
             continue;
         end
