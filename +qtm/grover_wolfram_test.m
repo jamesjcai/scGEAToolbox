@@ -1,6 +1,8 @@
 n = 3;
-gates1 = [hGate(1:n-1);
+gates1 = [hGate(1:n);
+         xGate(1:n-1);
          mcxGate(1:n-1, n, []);
+         xGate(1:n-1);
          hGate(1:n-1);
          xGate(1:n-1);
          czGate(2, 1);
@@ -8,9 +10,12 @@ gates1 = [hGate(1:n-1);
          hGate(1:n-1)];
 cg = quantumCircuit(gates1);
 plot(cg)
-s = simulate(cg);
-[states,P] = querystates(s,[1 2]);
+s = simulate(cg,"001");
+[states,P] = querystates(s,[1 2])
 
+
+return;
+% https://www.wolframcloud.com/obj/9ee1b464-b5f7-4f66-b429-c7eb08fd0c6f?src=CloudBasicCopiedContent#sidebar=basic-notebook-links
 % ----------------------------
 
 gates1 = [hGate(1:n-1);
