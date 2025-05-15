@@ -1,4 +1,4 @@
-function [s, t] = r_SCEVAN(sce, wkdir, SUBCLONES, species)
+function [s, t] = r_SCEVAN(sce, wkdir, ~, species)
 
 if nargin<3, SUBCLONES = false; end
 if nargin<4, species = 'human'; end

@@ -17,3 +17,10 @@ if (!requireNamespace("BiocManager", quietly = TRUE)){
 }
 BiocManager::install("rhdf5")
 }
+
+if (!requireNamespace("glmGamPoi", quietly = TRUE)){
+if (!requireNamespace("BiocManager", quietly = TRUE)){
+    install.packages("BiocManager", repo="http://cran.rstudio.com/")
+}
+BiocManager::install('glmGamPoi')
+}

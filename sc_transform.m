@@ -42,11 +42,6 @@ switch lower(p.Results.type)
 
     case 'normalization_sqrt'
         % https://twitter.com/hippopedoid/status/1337028817219620864?s=20
-    case 'sctransform'
-        % sctransform: Variance Stabilizing Transformations for Single Cell UMI Data
-        % Hafemeister & Satija 2019
-        % https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1874-1
-        [X] = run.r_SeuratSctransform(X);
     case 'csndm'
         [X] = run.mt_csndm_trans(X);
         %     case 'bigscale'
@@ -54,9 +49,15 @@ switch lower(p.Results.type)
         %         addpath(pth);
         %         % model=1. Log(x), then each row (gene) normalized between [-5:5]
         %         [X]=transform_bigscale(X);
-    case 'sct'
+    case {'sct', 'sctransform'}
         % sc_sct
+        % sctransform: Variance Stabilizing Transformations for Single Cell UMI Data
+        % Hafemeister & Satija 2019
+        % https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1874-1        
         [X] = run.r_SeuratSctransform(X, string(1:size(X, 1)));
+
+        % https://satijalab.org/seurat/archive/v4.3/sctransform_v2_vignette
+        
     case 'freemantukey'
         % https://github.com/flo-compbio/monet/blob/master/monet/util/expression.py
         % Applies the Freeman-Tukey transformation to stabilize variance."

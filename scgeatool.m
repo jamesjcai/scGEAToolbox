@@ -287,7 +287,8 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 in_addmenu(menus, 1, @gui.callback_RunEnrichr, '🌐 - Enrichr Analysis...')
                 in_addmenu(menus, 1, @gui.i_setrenv, 'Set Up R (ℝ) Environment');
                 in_addmenu(menus, 0, @gui.i_setpyenv, 'Set Up Python (🐍) Environment');
-                in_addmenu(menus, 1, @in_RunSeuratWorkflow, 'ℝ - Run Seurat Workflow (Seurat) [PMID:25867923]...');
+                in_addmenu(menus, 1, @in_RunSeuratWorkflow, 'ℝ - UMAP/tSNE Embedding Using Seurat [PMID:25867923]...');
+                in_addmenu(menus, 0, @in_RunSeuratSCTransform, 'ℝ - SCTransform v2 Regularization Using Seurat [PMID:35042561]...');
                 in_addmenu(menus, 0, @in_RunMonocle3, 'ℝ - Pseudotime Analysis (Monocle3) [PMID:28825705]...');
                 in_addmenu(menus, 0, {@in_CellCyclePotency, 5}, 'ℝ - Aneuploid/Diploid Analysis (copykat) [PMID:33462507]...');
                 in_addmenu(menus, 0, {@in_CellCyclePotency, 6}, 'ℝ - Variational Aneuploidy Analysis (SCEVAN) [PMID:36841879]...');
@@ -1042,6 +1043,13 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             in_RefreshAll(src, [], true, false);
         end
     end
+
+    function in_RunSeuratSCTransform(src, ~)
+        if gui.callback_RunSeuratSCTransform(src)
+            sce = guidata(FigureHandle);
+        end
+    end
+
 
     function in_RunSeuratWorkflow(src, ~)
         extprogname = 'R_Seurat';

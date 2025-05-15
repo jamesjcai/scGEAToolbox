@@ -1,7 +1,7 @@
 function [X] = r_SeuratSctransform(X, genelist, wkdir)
 
 if nargin < 3, wkdir = tempdir; end
-
+if nargin < 2, genelist = string(1:size(X, 1)); end
 isdebug = false;
 oldpth = pwd();
 [isok, msg, codepath] = commoncheck_R('R_SeuratSctransform');

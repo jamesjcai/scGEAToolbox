@@ -42,10 +42,12 @@ if exist('output.h5', 'file')
     s_tsne = h5read('output.h5', '/s_tsne');
     s_umap = h5read('output.h5', '/s_umap');
     c_ident = h5read('output.h5', '/c_ident');
+    %X = h5read('output.h5', '/X');
     [c, ~] = grp2idx(c_ident);
     sce.c_cluster_id = c;
     sce.struct_cell_clusterings.seurat = c_ident;
     sce.c = c;
+    %sce.X = X;
 
     if ~isfield(sce.struct_cell_embeddings,'umap3d')
         sce.struct_cell_embeddings = setfield(sce.struct_cell_embeddings, 'umap3d', []);

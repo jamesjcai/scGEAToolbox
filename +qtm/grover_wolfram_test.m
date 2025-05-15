@@ -11,7 +11,7 @@ gates1 = [hGate(1:n);
 cg = quantumCircuit(gates1);
 plot(cg)
 s = simulate(cg,"001");
-[states,P] = querystates(s,[1 2])
+[states,P] = querystates(s,[1 2]);
 
 
 return;

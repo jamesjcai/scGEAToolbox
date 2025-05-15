@@ -6,6 +6,7 @@ library(rhdf5)
 # setwd("U:\\GitHub\\scGEAToolbox\\+run\\external\\R_SeuratSctransform")       
 if (file.exists("input.mat")){
     sce.counts <- h5read(file = "input.mat", name = "/X")
+    sce.counts <- as(sce.counts, "dgCMatrix")
     genelist<-read.table('g.txt', sep = '\t', stringsAsFactors = FALSE)
     rownames(sce.counts) <- make.unique(unlist(genelist))
     colnames(sce.counts) <- paste0(colnames(sce.counts), 1:ncol(sce.counts))
@@ -23,7 +24,7 @@ if (file.exists("input.mat")){
 # https://satijalab.org/seurat/articles/sctransform_vignette.html
 # store mitochondrial percentage in object meta data
 sce <- PercentageFeatureSet(sce, pattern = "^MT-", col.name = "percent.mt")
-sce <- SCTransform(sce, vars.to.regress = "percent.mt", verbose = FALSE)
+sce <- SCTransform(sce, vars.to.regress = "percent.mt", verbose = FALSE, vst.flavor = "v2")
 
 #Apply sctransform normalization
 #Note that this single command replaces NormalizeData, ScaleData, and FindVariableFeatures.

@@ -1,5 +1,5 @@
 function callback_Quantis(src, ~)
-    [FigureHandle, sce] = gui.gui_getfigsce(src);
+    [FigureHandle, ~] = gui.gui_getfigsce(src);
 
 listitems = natsort(["Cisplatin","Carboplatin","Paclitaxel","Docetaxel","Doxorubicin","Cyclophosphamide","Methotrexate","5-Fluorouracil (5-FU)","Capecitabine","Gemcitabine","Vincristine","Etoposide","Imatinib","Trastuzumab","Bevacizumab","Rituximab","Pemetrexed","Nivolumab","Pembrolizumab","Tamoxifen"]);
 promptstr = "Select a drug:";

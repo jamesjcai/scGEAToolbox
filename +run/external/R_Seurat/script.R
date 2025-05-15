@@ -4,6 +4,7 @@ suppressMessages(library(rhdf5))
 
 
 cMatrix <- h5read(file = "input.mat", name = "/X")
+cMatrix <- as(cMatrix, "dgCMatrix")
 ndim <- h5read(file = "input.mat", name = "/ndim")
 
 g <- read.table('g.txt')
@@ -30,6 +31,7 @@ pbmc <- FindClusters(object = pbmc)
 s_tsne<-as.matrix(pbmc@reductions$tsne@cell.embeddings)
 s_umap<-as.matrix(pbmc@reductions$umap@cell.embeddings)
 c_ident<-as.matrix(as.numeric(pbmc@active.ident))
+#X<-as.matrix(pbmc@assays$SCT@counts)
 
 if (file.exists("output.h5")) {
   file.remove("output.h5")
@@ -38,3 +40,4 @@ if (file.exists("output.h5")) {
 h5write(s_tsne, "output.h5", "s_tsne")
 h5write(s_umap, "output.h5", "s_umap")
 h5write(c_ident, "output.h5", "c_ident")
+#h5write(as.matrix(X),"output.h5","X")
