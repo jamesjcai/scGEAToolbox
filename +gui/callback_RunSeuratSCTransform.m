@@ -2,15 +2,54 @@ function [needupdate] = callback_RunSeuratSCTransform(src,~)
     needupdate=false;
     [FigureHandle] = gui.gui_getfigsce(src);
 
+    answer2 = gui.myQuestdlg(FigureHandle, ...
+        'Perform SCTransform or load saved transformed X?', ...
+        '', {'Perform Transform', 'Load Saved', 'Cancel'}, 'Draw Curve');
+    switch answer2
+        case 'Perform Transform'
+            sce = guidata(FigureHandle);
+
+
+        case 'Load Saved'
+            [file, path] = uigetfile('*.mat', ...
+                'Select a MAT-file to Load');
+            if isvalid(FigureHandle) && isa(FigureHandle, ...
+                    'matlab.ui.Figure')
+                figure(FigureHandle); 
+            end
+            if isequal(file, 0)
+                disp('User canceled the file selection.');
+                return;
+            end
+            
+            fullFileName = fullfile(path, file);
+            loadedData = load(fullFileName);
+            if isfield(loadedData, 'X')
+                X = loadedData.X;
+            else
+                gui.myErrordlg(FigureHandle, 'Not a valid .mat file.','');
+                return;
+            end
+            sce = guidata(FigureHandle);
+            if strcmp('Yes', gui.myQuestdlg(FigureHandle,'Transformed X has been loaded. Use it to update SCE.X?'))
+               needupdate = true;
+               sce.X = X;
+               guidata(FigureHandle, sce);
+               gui.myHelpdlg(FigureHandle, 'SCE.X has been updated.');
+            end
+           return;            
+        otherwise
+           return;
+    end
+
     extprogname = 'R_SeuratSctransform';
     preftagname = 'externalwrkpath';
     [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
     if isempty(wkdir), return; end
-    [ok] = gui.i_confirmscript('Run Seurat sctransform to obtain normalized expression matrix?', ...
-        'R_SeuratSctransform','r');
-    if ~ok, return; end
+    %[ok] = gui.i_confirmscript('Run Seurat sctransform to obtain normalized expression matrix?', ...
+    %    'R_SeuratSctransform','r');
+    %if ~ok, return; end
 
-    sce = guidata(FigureHandle);
     fw = gui.myWaitbar(FigureHandle);
     try
         [X] = run.r_SeuratSctransform(sce.X, sce.g, wkdir);
@@ -23,8 +62,8 @@ function [needupdate] = callback_RunSeuratSCTransform(src,~)
 
     if ~isempty(X)
         if isequal(size(X), size(sce.X))
-            answer=questdlg('Update current SCE.X with transformed X or just export transformed X','', ...
-                'Update','Export','Update');
+            answer = gui.myQuestdlg(FigureHandle, 'Update current SCE.X with transformed X or save transformed X','', ...
+                {'Update','Save'}, 'Update');
             switch answer
                 case 'Update'
                    needupdate = true;
@@ -37,11 +76,24 @@ function [needupdate] = callback_RunSeuratSCTransform(src,~)
                     values = {X};
                     export2wsdlg(labels,vars,values,...
                             'Save Data to Workspace');
-                otherwise                    
+                case 'Save'
+                    [file, path] = uiputfile('*.mat', 'Save as', ...
+                        'sctransformed_X.mat');
+                    if isvalid(FigureHandle) && isa(FigureHandle, 'matlab.ui.Figure'), figure(FigureHandle); end
+                    if isequal(file, 0) || isequal(path, 0)
+                        disp('User canceled the file selection.');
+                        return;
+                    end                                                                        
+                    fullFileName = fullfile(path, file);
+                    save(fullFileName, 'X');
+                    disp(['Variables saved to ', fullFileName]);
+                    gui.myHelpdlg(FigureHandle, sprintf('Transformed X is saved in %s.', fullFileName));
+                otherwise
                     gui.myErrordlg(FigureHandle, 'Invalid selection.');
             end
         end
     else
         gui.myErrordlg(FigureHandle, "Seurat/sctransform runtime error.");
     end
+    
 end
