@@ -52,7 +52,11 @@ classdef myFigure < handle
                 if ~isempty(linkTool), delete(linkTool); end
     
                 % uipushtool(obj.tb, 'Separator', 'off');
-                pkg.i_addbutton2fig(obj.tb, 'on', [], [], '');  
+                % pkg.i_addbutton2fig(obj.tb, 'on', [], [], '');
+                % pkg.i_addbutton2fig(obj.tb, 0, [], [], "");
+                %in_addbuttonpush(0, 0, [], [], "");
+                %pkg.i_addbutton2fig(barhandle, sepTag, callbackFnc, imgFil, tooltipTxt);
+
                 obj.tbv{1} = pkg.i_addbutton2fig(obj.tb, 'on', @gui.i_invertcolor, 'INVERT.gif', 'Invert Colors');     
                 obj.tbv{2} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_linksubplots, "keyframes-minus.jpg", "Link Subplots");
                 obj.tbv{3} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_setboxon, obj.FigHandle}, 'border-out.jpg', 'Box ON/OFF'); 
@@ -64,6 +68,10 @@ classdef myFigure < handle
                 obj.tbv{9} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_savemainfig, 1}, "svg-format.jpg", 'Save Figure as SVG File...');
                 obj.tbv{10} = gui.gui_3dcamera(obj.tb);
                 obj.tbv{11} = pkg.i_addbutton2fig(obj.tb, 'on', {@gui.i_resizewin, obj.FigHandle}, 'scale-frame-reduce.jpg', 'Resize Plot Window');
+            end
+            [~, d] = version;
+            if datetime(d)>datetime('12/31/2024')
+                theme(obj.FigHandle, "light");
             end
         end
 

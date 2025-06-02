@@ -36,6 +36,11 @@ function [parentfig,hAx] = gui_createmainfigure(v1,useuifigure)
         dt.UpdateFcn = {@i_myupdatefcnx};
         hAx = axes('Parent', parentfig, 'Visible', 'off');
     end
+
+    [~, d] = version;
+    if datetime(d)>datetime('12/31/2024')
+        theme(parentfig, "light");
+    end
     movegui(parentfig, 'center');
 
     function [txt] = i_myupdatefcnx(pdt, ~)
