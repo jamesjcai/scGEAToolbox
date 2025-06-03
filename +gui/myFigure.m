@@ -69,10 +69,13 @@ classdef myFigure < handle
                 obj.tbv{10} = gui.gui_3dcamera(obj.tb);
                 obj.tbv{11} = pkg.i_addbutton2fig(obj.tb, 'on', {@gui.i_resizewin, obj.FigHandle}, 'scale-frame-reduce.jpg', 'Resize Plot Window');
             end
+            try
             %[~, d] = version;
             %if datetime(d)>datetime('12/31/2024')
                 theme(obj.FigHandle, "light");
             %end
+            catch
+            end
         end
 
         % function ptvkeep(obj, flag)
