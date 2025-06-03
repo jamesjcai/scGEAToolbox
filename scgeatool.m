@@ -409,8 +409,11 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 return;
             end
         end
-        [sce, filenm] = gui.sc_openscedlg([],[],FigureHandle);
+
+        [sce, filenm] = gui.sc_openscedlg([], [], FigureHandle);
+
         if isvalid(FigureHandle) && isa(FigureHandle, 'matlab.ui.Figure'), figure(FigureHandle); end
+
         if ~isempty(sce) && sce.NumCells > 0 && sce.NumGenes > 0
             guidata(FigureHandle, sce);
             c=[];
@@ -437,6 +440,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             end
         else
             set(button1,'Enable','on');
+            if isvalid(FigureHandle) && isa(FigureHandle, 'matlab.ui.Figure'), figure(FigureHandle); end
             if ~gui.i_isuifig(FigureHandle)
                 uicontrol(button1);
             end
