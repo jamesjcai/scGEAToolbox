@@ -19,8 +19,16 @@ if nargin < 2 || isempty(genelist)
     genelist = string(1:size(X, 1)); 
 end
 
-[lgu, dropr, lgcv, gsorted, Xsorted, ...
-    removedgidx, removedT] = sc_genestat(X, genelist, sortit, removenan);
+
+m = size(X, 2);
+if m < 10000
+    [lgu, dropr, lgcv, gsorted, Xsorted, ...
+        removedgidx, removedT] = sc_genestat(X, genelist, sortit, removenan);
+else
+    [lgu, dropr, lgcv, gsorted, Xsorted, ...
+        removedgidx, removedT] = pkg.sc_genestat_sparse_blocked(X, genelist, sortit, removenan);
+end
+
 
 if removenan && ~isempty(removedgidx)
     gsorted_completed = [gsorted; genelist(removedgidx)];

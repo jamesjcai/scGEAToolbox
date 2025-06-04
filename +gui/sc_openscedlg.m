@@ -47,6 +47,9 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
     %                               'SCE Data .mat', ...
     %                               '10x Genomics .mtx', ...
     %                               'TSV/CSV .txt', 'SCE Data .mat');
+
+    % figure(parentfig);
+
     switch ButtonName
         case 'Simulate Data [PMID:27122128]...'
             try
