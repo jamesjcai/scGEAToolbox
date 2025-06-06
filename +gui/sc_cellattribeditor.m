@@ -4,7 +4,8 @@ if nargin<2, addnew = false; end
 
     needupdate = false;
 
-if ~addnew    
+
+if ~addnew    % edit
     baselistitems = {'Cell Cycle Phase', ...
         'Cell Type', 'Cluster ID', ...
         'Batch ID', 'Cell ID'};
@@ -37,7 +38,7 @@ if ~addnew
             otherwise
                 [y,idx] = ismember(clabel, sce.list_cell_attributes(1:2:end));
                 if y
-                    thisc = sce.list_cell_attributes{idx+1};
+                    thisc = sce.list_cell_attributes{2*idx};
                 end
         end
     else
@@ -46,10 +47,10 @@ if ~addnew
     
   
     
-    if ~strcmp('Yes', gui.myQuestdlg(parentfig, ...
-            'It may take a while to load values. Continue?'))
-        return; 
-    end
+%    if ~strcmp('Yes', gui.myQuestdlg(parentfig, ...
+%            'It may take a while to load values. Continue?'))
+%        return; 
+%    end
     tic;
     if gui.i_isuifig(parentfig)
         %        x = gui.myInputdlg({sprintf('Attribute Name: %s\n%s',clabel, 'Attribute Values:')}, ...
@@ -112,16 +113,16 @@ end
         case 'String'
             if addnew
                 clabel = strtrim(x{1});
-                newthisc = strtrim(string(x{2}));
+                newthisc = strtrim(string(trimBottomEmpty(x{2})));
             else
-                newthisc = strtrim(string(x{1}));    % when add new - x{1} is the values
+                newthisc = strtrim(string(trimBottomEmpty(x{1})));    % when add new - x{1} is the values
             end
         case 'Numeric'
             if addnew
                 clabel = strtrim(x{1});
-                newthisc = str2double(string(x{2}));
+                newthisc = str2double(string(trimBottomEmpty(x{2})));
             else
-                newthisc = str2double(string(x{1}));   % when add new - x{1} is the values
+                newthisc = str2double(string(trimBottomEmpty(x{1})));   % when add new - x{1} is the values
             end
         case 'Cancel'
             return;
@@ -129,7 +130,7 @@ end
 
 
     if addnew
-        if size(newthisc,1)~=sce.NumCells
+        if size(newthisc,1) ~= sce.NumCells
            gui.myWarndlg(parentfig, ...
                'Attribute length is not equal to the number of cells.');
            return;
@@ -172,3 +173,40 @@ end
         needupdate = true;
     end    
 end
+
+
+
+
+function trimmed_text = trimBottomEmpty(input_text)
+    % TRIMBOTTOMEMPTY Trims whitespace from each line and removes empty lines from bottom
+    %
+    % SYNTAX:
+    %   trimmed_text = trimBottomEmpty(input_text)
+    %
+    % INPUT:
+    %   input_text - char array or string, can be multiline
+    %
+    % OUTPUT:
+    %   trimmed_text - char array with whitespace trimmed from each line
+    %                  and empty lines removed from bottom only
+    %
+    % EXAMPLE:
+    %   text = ['111'; '222'; '333'; '   '];
+    %   result = trimBottomEmpty(text);
+    
+    lines = cellstr(input_text);     % Convert to cell array
+    lines = strtrim(lines);          % Trim each line
+    
+    % Find the last non-empty line
+    last_non_empty = find(~cellfun('isempty', lines), 1, 'last');
+    
+    if ~isempty(last_non_empty)
+        lines = lines(1:last_non_empty);  % Keep only up to last non-empty line
+    else
+        lines = {};  % All lines were empty
+    end
+    
+    trimmed_text = char(lines);      % Convert back to char array
+end
+
+
