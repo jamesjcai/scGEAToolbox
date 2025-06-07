@@ -709,36 +709,36 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         gui.i_qcviolin(sce.X, sce.g, FigureHandle);
     end
 
-    function in_RunDataMapPlot(src, ~)
-        if ~pkg.i_checkpython
-            gui.myWarndlg(FigureHandle, 'Python is not installed.');
-            return;
-        end
-        ndim = 2;
-        [vslist] = gui.i_checkexistingembed(sce, ndim);
-        if isempty(h.ZData) && size(sce.s,2)==2 && length(vslist) <= 1
-            gui.callback_RunDataMapPlot(src, []);
-        elseif isempty(h.ZData) && size(sce.s,2)==2 && length(vslist) > 1            
-            switch gui.myQuestdlg(FigureHandle, 'Using current 2D embedding?')
-                case 'Yes'
-                    gui.callback_RunDataMapPlot(src, []);
-                case 'No'
-                    [sx] = gui.i_pickembedvalues(sce, 2, FigureHandle);
-                    if ~isempty(sx) && size(sx,1) == sce.NumCells
-                        sce.s = sx;
-                    else
-                        warning('Running error.');
-                        return;
-                    end
-                    guidata(FigureHandle, sce);
-                    gui.callback_RunDataMapPlot(src, []);
-                case 'Cancel'
-                    return;
-            end
-        elseif ~isempty(h.ZData)
-            if strcmp(gui.myQuestdlg(FigureHandle, 'This function requires 2D embedding. Continue?'), 'Yes'), in_Switch2D3D(src,[]); end
-        end
-    end
+    % function in_RunDataMapPlot(src, ~)
+    %     if ~pkg.i_checkpython
+    %         gui.myWarndlg(FigureHandle, 'Python is not installed.');
+    %         return;
+    %     end
+    %     ndim = 2;
+    %     [vslist] = gui.i_checkexistingembed(sce, ndim);
+    %     if isempty(h.ZData) && size(sce.s,2)==2 && length(vslist) <= 1
+    %         gui.callback_RunDataMapPlot(src, []);
+    %     elseif isempty(h.ZData) && size(sce.s,2)==2 && length(vslist) > 1            
+    %         switch gui.myQuestdlg(FigureHandle, 'Using current 2D embedding?')
+    %             case 'Yes'
+    %                 gui.callback_RunDataMapPlot(src, []);
+    %             case 'No'
+    %                 [sx] = gui.i_pickembedvalues(sce, 2, FigureHandle);
+    %                 if ~isempty(sx) && size(sx,1) == sce.NumCells
+    %                     sce.s = sx;
+    %                 else
+    %                     warning('Running error.');
+    %                     return;
+    %                 end
+    %                 guidata(FigureHandle, sce);
+    %                 gui.callback_RunDataMapPlot(src, []);
+    %             case 'Cancel'
+    %                 return;
+    %         end
+    %     elseif ~isempty(h.ZData)
+    %         if strcmp(gui.myQuestdlg(FigureHandle, 'This function requires 2D embedding. Continue?'), 'Yes'), in_Switch2D3D(src,[]); end
+    %     end
+    % end
 
     function in_SubtypeAnnotation(src, ~)
         [requirerefresh] = gui.callback_SubtypeAnnotation(src, []);
@@ -2022,7 +2022,9 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         if numel(unique(sce.c_cell_type_tx)) > 1
             if ~strcmp(gui.myQuestdlg(FigureHandle, ...
                     ['This analysis is cell type-specific; however, ' ...
-                    'current SCE contains multiple cell types. Continue?']),'Yes'), return; end
+                    'current SCE contains multiple cell types. Continue?']),'Yes')
+                return;
+            end
         end
         switch gui.myQuestdlg(FigureHandle, ['Perform 10-fold ' ...
                 'bootstrapping of cells?'],'', ...
