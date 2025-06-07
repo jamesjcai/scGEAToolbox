@@ -13,15 +13,15 @@ if nargin < 5 || isempty(methodid), methodid = 4; end
 if nargin < 4 || isempty(speciestag), speciestag = 'hs'; end
 % if nargin < 3 || isempty(Ttfgn) % tf-by-gene matrix T from database
 %     %folder=fileparts(mfilename('fullpath'));
-%     %wrkpth=fullfile(folder,'resources',filesep,'DoRothEA_TF_Target_DB',filesep);
+%     %wrkpth=fullfile(folder,'assets',filesep,'DoRothEA_TF_Target_DB',filesep);
 %     pw1 = fileparts(mfilename('fullpath'));
 %     switch lower(speciestag)
 %         case {'hs', 'human'}
 %             %fname=[wrkpth 'dorothea_hs.mat'];
-%             fname = fullfile(pw1, 'resources', 'DoRothEA_TF_Target_DB', 'dorothea_hs.mat');
+%             fname = fullfile(pw1, 'assets', 'DoRothEA_TF_Target_DB', 'dorothea_hs.mat');
 %         case {'mm', 'mouse'}
 %             %fname=[wrkpth 'dorothea_mm.mat'];
-%             fname = fullfile(pw1, 'resources', 'DoRothEA_TF_Target_DB', 'dorothea_mm.mat');
+%             fname = fullfile(pw1, 'assets', 'DoRothEA_TF_Target_DB', 'dorothea_mm.mat');
 %         otherwise
 %             error('TF database is not available for the species.');
 % 
@@ -35,9 +35,9 @@ if nargin < 4 || isempty(speciestag), speciestag = 'hs'; end
 if nargin < 3 || isempty(Ttfgn)
     pw1 = fileparts(mfilename('fullpath'));
     if strcmpi(speciestag, 'hs') || strcmpi(speciestag, 'human')
-        fname = fullfile(pw1, 'resources', 'DoRothEA_TF_Target_DB', 'dorothea_hs.mat');
+        fname = fullfile(pw1, 'assets', 'DoRothEA_TF_Target_DB', 'dorothea_hs.mat');
     elseif strcmpi(speciestag, 'mm') || strcmpi(speciestag, 'mouse')
-        fname = fullfile(pw1, 'resources', 'DoRothEA_TF_Target_DB', 'dorothea_mm.mat');
+        fname = fullfile(pw1, 'assets', 'DoRothEA_TF_Target_DB', 'dorothea_mm.mat');
     else
         error('TF database is not available for the species.');
     end

@@ -1,7 +1,7 @@
 function [g] = i_get_lncrnagenes
 
     pw1 = fileparts(mfilename('fullpath'));
-    lncrnafile = fullfile(pw1, '..','resources', 'HGNC', 'lncrna.txt');
+    lncrnafile = fullfile(pw1, '..','assets', 'HGNC', 'lncrna.txt');
     if ~exist(lncrnafile, 'file')
         % options = weboptions('Timeout', 21);
         % % fname=tempname;

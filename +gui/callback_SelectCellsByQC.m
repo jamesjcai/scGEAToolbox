@@ -309,7 +309,7 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
                 return;
             end
             load(fullfile(mfolder, ...
-                '../resources',  'Biomart', sprintf('Biomart_%s_genes.mat',speciestag)), 'T');
+                '../assets',  'Biomart', sprintf('Biomart_%s_genes.mat',speciestag)), 'T');
             ApprovedSymbol = string(T.GeneName);
             [idx] = ~ismember(upper(sce.g), upper(ApprovedSymbol));
             if any(idx)
@@ -339,7 +339,7 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
                 return;
             end
             load(fullfile(mfolder, ...
-                '../resources',  'Biomart', sprintf('Biomart_%s_genes.mat',speciestag)), 'T');
+                '..', 'assets',  'Biomart', sprintf('Biomart_%s_genes.mat',speciestag)), 'T');
             ApprovedSymbol = string(T.GeneName);
             sce = sce.rmmtgenes;
             sce = sce.rmhemoglobingenes;

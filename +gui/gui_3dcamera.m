@@ -17,7 +17,7 @@ pt = uipushtool(tb, 'Separator', 'on');
 
 try
     mfolder = fileparts(mfilename('fullpath')); 
-    [ptImage, map] = imread(fullfile(mfolder, '..', 'resources', 'Images', 'camera.jpg'));
+    [ptImage, map] = imread(fullfile(mfolder, '..', 'assets', 'Images', 'camera.jpg'));
     if ~isempty(map), ptImage = ind2rgb(ptImage, map); end
 catch
     ptImage = rand(16, 16, 3);

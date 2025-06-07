@@ -173,7 +173,7 @@ function callback_DEVP2GroupsBatch(src, ~)
     pw1 = fileparts(mfilename('fullpath'));
     
     for c = 1:length(ctag)
-        dbfile = fullfile(pw1, '..', 'resources', 'MSigDB', ...
+        dbfile = fullfile(pw1, '..', 'assets', 'MSigDB', ...
                         sprintf('msigdb_%s.mat', ctag{c}));
         load(dbfile,'setmatrx','setnames','setgenes');
         

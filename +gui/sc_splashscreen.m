@@ -23,7 +23,7 @@ if nargin<1
     mfolder = fileparts(mfilename('fullpath'));
     v1 = pkg.i_get_versionnum;
     pngfilename = 'splash.png';
-    splashpng = fullfile(mfolder, '..','resources', 'Images', pngfilename);
+    splashpng = fullfile(mfolder, '..','assets', 'Images', pngfilename);
     if ~isfile(splashpng)
         error('Splash image file not found: %s', splashpng);
     end    

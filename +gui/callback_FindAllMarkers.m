@@ -105,7 +105,7 @@ function in_MarkerGeneHeatmap(src, ~, sce)
     % end
     speciestag = "human";
     load(fullfile(mfolder, ...
-        '../resources', 'Biomart', sprintf('Biomart_%s_genes.mat',speciestag)), 'T');
+        '..', 'assets', 'Biomart', sprintf('Biomart_%s_genes.mat',speciestag)), 'T');
     ApprovedSymbol = string(T.GeneName);
     sce = sce.rmmtgenes;
     sce = sce.rmhemoglobingenes;

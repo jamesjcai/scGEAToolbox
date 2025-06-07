@@ -15,7 +15,7 @@ colorit = true;
 
 import mlreportgen.ppt.*;
 % pw1 = fileparts(mfilename('fullpath'));
-% pth = fullfile(pw1, '..', 'resources', 'Misc', 'myTemplate.pptx');
+% pth = fullfile(pw1, '..', 'assets', 'Misc', 'myTemplate.pptx');
 
 hx=gui.myFigure;
 hFig=hx.FigHandle;

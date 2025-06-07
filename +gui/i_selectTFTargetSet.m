@@ -11,7 +11,7 @@ switch lower(species)
     case {'mouse', 'mm'}
         f = 'dorothea_mm.mat';
 end
-pth = fullfile(pw1, '..', 'resources', 'DoRothEA_TF_Target_DB', f);
+pth = fullfile(pw1, '..', 'assets', 'DoRothEA_TF_Target_DB', f);
 fprintf('\nReading ... %s.\n', pth);
 load(pth, 'T');
 T = T(T.mor > 0, :); % only consider positive regulation

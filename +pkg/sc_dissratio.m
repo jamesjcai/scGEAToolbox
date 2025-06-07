@@ -4,7 +4,7 @@ function [r] = sc_dissratio(X, genelist, vebrose)
     
     r = nan(width(X), 1);
     pw1 = fileparts(mfilename('fullpath'));
-    dbfile1 = fullfile(pw1, '..', 'resources', 'scCancer', 'diss_genes.txt');
+    dbfile1 = fullfile(pw1, '..', 'assets', 'scCancer', 'diss_genes.txt');
     if ~exist(dbfile1, 'file'), error('Missing file diss_genes.txt.'); end
     T = readtable(dbfile1, 'FileType', 'text', 'ReadVariableNames', false);
     dissog = string(T.Var1);

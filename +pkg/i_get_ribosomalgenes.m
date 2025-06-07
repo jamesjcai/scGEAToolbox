@@ -1,7 +1,7 @@
 function [g] = i_get_ribosomalgenes
 
     pw1 = fileparts(mfilename('fullpath'));
-    ribosomalfile = fullfile(pw1, '..','resources', 'HGNC', 'ribosomal.txt');
+    ribosomalfile = fullfile(pw1, '..','assets', 'HGNC', 'ribosomal.txt');
     if ~exist(ribosomalfile, 'file')    
         options = weboptions('Timeout', 21);
         % fname=tempname;

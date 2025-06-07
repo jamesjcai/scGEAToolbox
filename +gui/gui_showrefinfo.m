@@ -5,7 +5,7 @@ if nargin<2, parentfig = []; end
 y=false;
 txt = [];
 pw1 = fileparts(mfilename('fullpath'));
-fname = fullfile(pw1, '..','resources','Misc','refinfo.txt');
+fname = fullfile(pw1, '..','assets','Misc','refinfo.txt');
 fid=fopen(fname,'r');
 T=textscan(fid,'%s%s','Delimiter','\t');
 fclose(fid);

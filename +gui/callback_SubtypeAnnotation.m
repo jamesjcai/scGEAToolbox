@@ -10,7 +10,7 @@ function [requirerefresh] = callback_SubtypeAnnotation(src, ~)
 
     pw1 = fileparts(mfilename('fullpath'));
 
-    pth2 = fullfile(pw1, '..', 'resources', 'PanglaoDB', 'cellsubtypes.xlsx');
+    pth2 = fullfile(pw1, '..', 'assets', 'PanglaoDB', 'cellsubtypes.xlsx');
     T = readtable(pth2);
     ctypes = unique(string(sce.c_cell_type_tx));
     [y] = ismember(upper(ctypes), upper(string(unique(T.CellType))));

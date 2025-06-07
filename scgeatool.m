@@ -55,9 +55,9 @@ legacy = p.Results.legacy;
 useuifig = p.Results.useuifig; 
 
 if legacy
-    ptImgFile = fullfile(mfolder, 'resources', 'Images', 'ptImgFile_legacy.mat');
+    ptImgFile = fullfile(mfolder, 'assets', 'Images', 'ptImgFile_legacy.mat');
 else
-    ptImgFile = fullfile(mfolder, 'resources', 'Images', 'ptImgFile.mat');
+    ptImgFile = fullfile(mfolder, 'assets', 'Images', 'ptImgFile.mat');
 end
 if exist(ptImgFile, 'file'), load(ptImgFile, 'ptImgCell'); end
 
@@ -354,7 +354,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         gui.gui_3dcamera(DeftToolbarHandle, '', false, FigureHandle);
         pt = uitoggletool(DeftToolbarHandle);
         try
-            load(fullfile(mfolder, 'resources', 'Images', 'colorbarcdata.mat'), 'CData');
+            load(fullfile(mfolder, 'assets', 'Images', 'colorbarcdata.mat'), 'CData');
             pt.CData = CData;
         catch
             pt.CData = rand(16, 16, 3);
@@ -647,7 +647,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
 
     function [ptImage] = in_getPtImage(imgFil)
         try
-            [ptImage, map] = imread(fullfile(mfolder, 'resources', 'Images', imgFil));
+            [ptImage, map] = imread(fullfile(mfolder, 'assets', 'Images', imgFil));
         catch
             try
                 [ptImage, map] = imread(fullfile(matlabroot,'toolbox', ...
@@ -826,7 +826,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 end
             case 'ligandreceptor'
                 fw = gui.myWaitbar(FigureHandle);
-                load(fullfile(mfolder, 'resources', 'Ligand_Receptor', ...
+                load(fullfile(mfolder, 'assets', 'Ligand_Receptor', ...
                      'Ligand_Receptor_more.mat'), 'ligand','receptor');
                 idx = ismember(upper(sce.g), unique([ligand; receptor]));
                 if ~any(idx)

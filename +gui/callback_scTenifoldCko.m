@@ -175,7 +175,7 @@ end
     
     if ~isempty(T)
         mfolder = fileparts(mfilename('fullpath'));
-        load(fullfile(mfolder, '..', 'resources', 'Ligand_Receptor', ...
+        load(fullfile(mfolder, '..', 'assets', 'Ligand_Receptor', ...
              'Ligand_Receptor_more.mat'), 'ligand','receptor');
         A = [string(T.ligand) string(T.receptor)];
         B = [ligand receptor];

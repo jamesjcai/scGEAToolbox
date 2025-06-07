@@ -8,10 +8,10 @@ function [T] = e_gettflist(speciesid)
     switch lower(speciesid)
         case {'hs', 'human'}
             %fname=[wrkpth 'dorothea_hs.mat'];
-            fname = fullfile(pw1, '..', 'resources', 'DoRothEA_TF_Target_DB', 'dorothea_hs.mat');
+            fname = fullfile(pw1, '..', 'assets', 'DoRothEA_TF_Target_DB', 'dorothea_hs.mat');
         case {'mm', 'mouse'}
             %fname=[wrkpth 'dorothea_mm.mat'];
-            fname = fullfile(pw1, '..', 'resources', 'DoRothEA_TF_Target_DB', 'dorothea_mm.mat');
+            fname = fullfile(pw1, '..', 'assets', 'DoRothEA_TF_Target_DB', 'dorothea_mm.mat');
         otherwise
             error('TF database is not available for the species.');
     end

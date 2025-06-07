@@ -12,7 +12,7 @@ if ~license('test','matlab_report_gen') && ~isempty(which('mlreportgen.report.Re
 end
 
 pw1 = fileparts(mfilename('fullpath'));
-pth = fullfile(pw1, '..', 'resources', 'Misc', 'myTemplate.pptx');
+pth = fullfile(pw1, '..', 'assets', 'Misc', 'myTemplate.pptx');
 %dbfile1 = fullfile(pw1, '+run', 'external', 'stringdb', 'stringdb_human.mat');
 
 import mlreportgen.ppt.*;

@@ -58,46 +58,46 @@ outdir = fullfile(pw1, '..', 'SCGEATOOL_StandaloneApplication');
 if ~exist(outdir, "dir"), mkdir(outdir); end
 
 %%
-c = dir('resources/Images/*.gif');
+c = dir('assets/Images/*.gif');
 d1 = strings(length(c), 1);
 for k = 1:length(c)
     d1(k) = string(fullfile(c(k).folder, c(k).name));
 end
-c = dir('resources/Images/*.png');
+c = dir('assets/Images/*.png');
 d2 = strings(length(c), 1);
 for k = 1:length(c)
     d2(k) = string(fullfile(c(k).folder, c(k).name));
 end
-c = dir('resources/Images/*.jpg');
+c = dir('assets/Images/*.jpg');
 d3 = strings(length(c), 1);
 for k = 1:length(c)
     d3(k) = string(fullfile(c(k).folder, c(k).name));
 end
-c = dir('resources/Images/*.mat');
+c = dir('assets/Images/*.mat');
 d4 = strings(length(c), 1);
 for k = 1:length(c)
     d4(k) = string(fullfile(c(k).folder, c(k).name));
 end
 d = [d1;d2;d3;d4];
-%    d=[d;fullfile(pw1, 'resources', 'STRING', 'stringdb_human.mat')];
-%    d=[d;fullfile(pw1, 'resources', 'STRING', 'stringdb_mouse.mat')];
+%    d=[d;fullfile(pw1, 'assets', 'STRING', 'stringdb_human.mat')];
+%    d=[d;fullfile(pw1, 'assets', 'STRING', 'stringdb_mouse.mat')];
 % d = [d; fullfile(pw1, '+run', 'external', 'ml_UMAP', 'umap.jar')];
-d = [d; fullfile(pw1, 'resources', 'Misc', 'refinfo.txt')];
-d = [d; fullfile(pw1, 'resources', 'TFome', 'tfome_tfgenes.mat')];
-d = [d; fullfile(pw1, 'resources', 'CellScores', 'cellcyclegenes.xlsx')];
-d = [d; fullfile(pw1, 'resources', 'CellScores', 'cellscores.xlsx')];
-d = [d; fullfile(pw1, 'resources', 'CellScores', 'cellscores.txt')];
-d = [d; fullfile(pw1, 'resources', 'ScTypeDB', 'ScTypeDB_full.xlsx')];
-d = [d; fullfile(pw1, 'resources', 'PanglaoDB', 'celltypes.xlsx')];
-%d = [d; fullfile(pw1, 'resources', 'Ligand_Receptor.mat')];
-%d = [d; fullfile(pw1, 'resources', 'Ligand_Receptor2.mat')];
-d = [d; fullfile(pw1, 'resources', 'Ligand_Receptor','Ligand_Receptor_more.mat')];
-d = [d; fullfile(pw1, 'resources', 'Misc', 'myTemplate.pptx')];
-d = [d; fullfile(pw1, 'resources', 'Misc', 'myTemplate2.pptx')];
-d = [d; fullfile(pw1, 'resources', 'Misc', 'value_template_pos.txt')];
-d = [d; fullfile(pw1, 'resources', 'Misc', 'value_template_std.txt')];
-d = [d; fullfile(pw1, 'resources', 'DoRothEA_TF_Target_DB', 'dorothea_hs.mat')];
-d = [d; fullfile(pw1, 'resources', 'DoRothEA_TF_Target_DB', 'dorothea_mm.mat')];
+d = [d; fullfile(pw1, 'assets', 'Misc', 'refinfo.txt')];
+d = [d; fullfile(pw1, 'assets', 'TFome', 'tfome_tfgenes.mat')];
+d = [d; fullfile(pw1, 'assets', 'CellScores', 'cellcyclegenes.xlsx')];
+d = [d; fullfile(pw1, 'assets', 'CellScores', 'cellscores.xlsx')];
+d = [d; fullfile(pw1, 'assets', 'CellScores', 'cellscores.txt')];
+d = [d; fullfile(pw1, 'assets', 'ScTypeDB', 'ScTypeDB_full.xlsx')];
+d = [d; fullfile(pw1, 'assets', 'PanglaoDB', 'celltypes.xlsx')];
+%d = [d; fullfile(pw1, 'assets', 'Ligand_Receptor.mat')];
+%d = [d; fullfile(pw1, 'assets', 'Ligand_Receptor2.mat')];
+d = [d; fullfile(pw1, 'assets', 'Ligand_Receptor','Ligand_Receptor_more.mat')];
+d = [d; fullfile(pw1, 'assets', 'Misc', 'myTemplate.pptx')];
+d = [d; fullfile(pw1, 'assets', 'Misc', 'myTemplate2.pptx')];
+d = [d; fullfile(pw1, 'assets', 'Misc', 'value_template_pos.txt')];
+d = [d; fullfile(pw1, 'assets', 'Misc', 'value_template_std.txt')];
+d = [d; fullfile(pw1, 'assets', 'DoRothEA_TF_Target_DB', 'dorothea_hs.mat')];
+d = [d; fullfile(pw1, 'assets', 'DoRothEA_TF_Target_DB', 'dorothea_mm.mat')];
 d = [d; fullfile(pw1, 'example_data', 'testXgs.mat')];
 d = [d; fullfile(pw1, 'example_data', 'new_example_sce.mat')];
 d = [d; fullfile(pw1, 'scGEAToolbox.prj')];
@@ -137,7 +137,7 @@ end
 
 %%
 
-copyfile('resources/Images/splash.png', fullfile(outdir,"splash.png"));
+copyfile('assets/Images/splash.png', fullfile(outdir,"splash.png"));
 cd(outdir);
 % if needcorrect
 %     a = readmatrix('requiredMCRProducts.txt');

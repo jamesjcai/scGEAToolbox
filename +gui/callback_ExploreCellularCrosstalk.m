@@ -34,7 +34,7 @@ if ~gui.gui_showrefinfo('talklr [DOI:10.1101/2020.02.01.930602]', FigureHandle),
 
 
         pw = fileparts(mfilename('fullpath'));
-        dbfile = fullfile(pw, '..', 'resources', 'Ligand_Receptor.mat');
+        dbfile = fullfile(pw, '..', 'assets', 'Ligand_Receptor.mat');
         load(dbfile, 'ligand', 'receptor', 'T');
 
 

@@ -2,7 +2,7 @@ function [txt] = i_getsctypemarkers(parentfig)
 if nargin < 1, parentfig = []; end
 txt = '';
 mfolder = fileparts(mfilename('fullpath'));
-infile = fullfile(mfolder, '..', 'resources', 'ScTypeDB', 'ScTypeDB_full.xlsx');
+infile = fullfile(mfolder, '..', 'assets', 'ScTypeDB', 'ScTypeDB_full.xlsx');
 if exist(infile, "file")
     T = readtable(infile);
 end

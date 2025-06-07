@@ -15,7 +15,7 @@ switch option
         pw1 = fileparts(mfilename('fullpath'));
         isloaded=false;
         try
-            dbfile = fullfile(pw1, '..', 'resources', 'MSigDB', ...
+            dbfile = fullfile(pw1, '..', 'assets', 'MSigDB', ...
                 sprintf('msigdb_%s.mat',ctag));
             load(dbfile,'setmatrx','setnames','setgenes');
             isloaded=true;
@@ -41,7 +41,7 @@ switch option
    
     case {'TF',2,'DoRothEA TF Targets'}
         pw1 = fileparts(mfilename('fullpath'));
-        fname = fullfile(pw1, '..','resources', 'DoRothEA_TF_Target_DB', 'dorothea_hs.mat');
+        fname = fullfile(pw1, '..','assets', 'DoRothEA_TF_Target_DB', 'dorothea_hs.mat');
         load(fname, 'T');
         Ttfgn = T(T.mor > 0, :);
         [gid, gnlist] = grp2idx(Ttfgn.target);

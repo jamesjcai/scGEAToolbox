@@ -7,7 +7,7 @@ function Rpath = FindRpath
 
 mfolder = fileparts(mfilename('fullpath'));
 rpathf = fullfile(mfolder, ...
-    '..', '..', 'resources', 'Rpath.txt');
+    '..', '..', 'assets', 'Rpath.txt');
 if exist(rpathf, 'file')
     fid = fopen(rpathf);
     Rpath = fgetl(fid);

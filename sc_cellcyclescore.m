@@ -3,7 +3,7 @@ function [ScoreV, T] = sc_cellcyclescore(X, g)
 
     % Define path to cell cycle gene list
     pw1 = fileparts(mfilename('fullpath'));
-    wrkpth = fullfile(pw1, 'resources', 'CellScores', 'cellcyclegenes.xlsx');
+    wrkpth = fullfile(pw1, 'assets', 'CellScores', 'cellcyclegenes.xlsx');
     
     % Read gene table from the file
     T = readtable(wrkpth, ...

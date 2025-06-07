@@ -33,7 +33,7 @@ end
 if ~(ismcc || isdeployed)
     % Check if required directories exist, else download them
     if ~exist(fullfile(pw1, 'example_data/'), 'dir') || ...
-       ~exist(fullfile(pw1, 'resources/'), 'dir') || ...
+       ~exist(fullfile(pw1, 'assets/'), 'dir') || ...
        ~exist(fullfile(pw1, '+run', 'external/'), 'dir')
    
         f = waitbar(0.33, 'Initializing SCGEATOOL on the first run...');
@@ -49,14 +49,14 @@ if ~(ismcc || isdeployed)
         
         waitbar(0.66, f, 'Initializing SCGEATOOL on the first run...');
         
-        % Download resources if missing
-        if ~exist(fullfile(pw1, 'resources/'), 'dir')
-            try
-                unzip('https://github.com/jamesjcai/jamesjcai.github.io/raw/master/data/resources.zip');
-            catch ME
-                warning(ME.message);
-            end
-        end
+        % Download assets if missing
+        % if ~exist(fullfile(pw1, 'assets/'), 'dir')
+        %     try
+        %         unzip('https://github.com/jamesjcai/jamesjcai.github.io/raw/master/data/assets.zip');
+        %     catch ME
+        %         warning(ME.message);
+        %     end
+        % end
         
         waitbar(0.85, f, 'Initializing SCGEATOOL on the first run...');
         

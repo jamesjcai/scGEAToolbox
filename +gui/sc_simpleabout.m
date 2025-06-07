@@ -6,7 +6,7 @@ function [hFig] = sc_simpleabout(parentfig, im2)
     mfolder = fileparts(mfilename('fullpath'));
     splashpng = 'splash.png';
     % splashpng = 'thumbnail_IMG_3621.jpg';
-    [im] = imread(fullfile(mfolder,'..','resources', 'Images', splashpng));
+    [im] = imread(fullfile(mfolder,'..','assets', 'Images', splashpng));
     if ~isempty(im2) && license('test','image_toolbox') && ~isempty(which('imfuse')) 
         im = imfuse(im, im2, 'blend');
     end

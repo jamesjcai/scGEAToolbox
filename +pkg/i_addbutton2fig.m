@@ -57,7 +57,7 @@ end
 %        pt = uipushtool(toolbarHdl, 'Separator', sepTag);
 
         if ischar(imgFil) || isstring(imgFil)
-            imgPath = fullfile(mfolder, '..', 'resources', 'Images', imgFil);
+            imgPath = fullfile(mfolder, '..', 'assets', 'Images', imgFil);
             if ~isfile(imgPath)
                 % warning('Image file "%s" not found. Using a random icon.', imgPath);
             end
