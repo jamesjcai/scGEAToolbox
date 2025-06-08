@@ -3,7 +3,7 @@ function [fw] = myWaitbar(parentfig, fw, witherror, mesg, newmesg, f)
 
 if nargin < 6, f = []; end
 if nargin < 5, newmesg = ''; end
-if nargin < 4 || isempty(mesg), mesg = 'Processing your data'; end
+if nargin < 4 || isempty(mesg), mesg = 'Processing your data...'; end
 if nargin < 3 || isempty(witherror), witherror = false; end
 if nargin < 1, parentfig = []; end
 
@@ -13,7 +13,7 @@ if nargin < 1, parentfig = []; end
         if nargin < 2 || isempty(fw)
             % hFig = gcf;
             hFig = get(groot,'CurrentFigure');
-            fw = waitbar(0, 'Please wait...','Visible','off', ...
+            fw = waitbar(0, 'Processing your data...','Visible','off', ...
                 'Units','pixels');
             try
                 if ~isempty(hFig) && strcmp(get(hFig,'type'),'figure')

@@ -193,10 +193,10 @@ end
     function in_ExportTable(~, ~)
         [~, filesaved] = gui.i_exporttable(T, true, 'Tdvgenelist', ...
                 outfile, [], "All_genes", FigureHandle);
-        %if ~isempty(filesaved)
+        if ~isempty(filesaved)
             %gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s',filesaved));
             fprintf('Result has been saved in %s\n', filesaved);
-        %end
+        end
     end
 
     function txt = in_myupdatefcn3(src, event_obj, g)

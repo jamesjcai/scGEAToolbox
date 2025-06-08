@@ -1,9 +1,9 @@
 function [f] = i_waitbar(f)
 if nargin < 1 || isempty(f)
-    f = waitbar(0, 'Please wait...');
+    f = waitbar(0, 'Processing your data...');
     pause(.5)
     fprintf('Processing your data...');
-    waitbar(.67, f, 'Processing your data');
+    waitbar(.67, f, 'Processing your data...');
     fprintf('... ');
     tic;
     return;
