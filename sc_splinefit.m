@@ -16,7 +16,7 @@ if nargin < 5, removenan = false; end
 if nargin < 4, plotit = false; end
 if nargin < 3, sortit = true; end
 if nargin < 2 || isempty(genelist)
-    genelist = string(1:size(X, 1)); 
+    genelist = string(1:size(X, 1));
 end
 
 
