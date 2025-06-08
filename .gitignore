@@ -9,12 +9,6 @@
 
 *_coder.txt
 
-thirdparty/GOrilla/input_page.html
-
-input_page.html
-SyncToy_*
-input_page.html
-
 +gui/scscatter.mlapp
 resources/STRING/stringdb_human.mat
 resources/STRING/stringdb_mouse.mat
@@ -42,7 +36,6 @@ scGEAToolbox.mltbx
 +run/external/R_scTenifoldKnk/WTKOnet.mat
 +run/external/R_scTenifoldNet/input1.rds
 +run/external/R_scTenifoldNet/input2.rds
-scgeatoolstandaloneApplication/
 +run/external/R_SeuratReadRds/inputrdsfile.txt
 +run/external/R_SeuratReadRds/X.csv
 +run/external/R_SeuratReadRds/g.csv
@@ -75,8 +68,6 @@ scgeatoolstandaloneApplication/
 +run/external/py_scTenifoldXct2/1/*
 +run/external/py_scTenifoldXct2/2/*
 +run/external/py_SERGIO/SERGIO/__pycache__/*
-
-TIMESTAMP
 +run/external/py_SERGIO/input.mat
 +run/external/py_SERGIO/output.mat
 +run/external/py_SERGIO/targets.txt
@@ -84,10 +75,9 @@ TIMESTAMP
 +run/external/py_SERGIO/output.mat
 +run/external/py_SERGIO/regs.txt
 +run/external/py_SERGIO/targets.txt
-resources/Images/Thumbs.db
+assets/Images/Thumbs.db
 +run/external/R_scplotter/Thumbs.db
 +run/external/py_scimilarity/test/input.h5ad
 +run/external/py_scimilarity/test/output.h5ad
 +run/external/py_scrublet/input.mat
 VERSION.mat
-DEVMODE.txt
