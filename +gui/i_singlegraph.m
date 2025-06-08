@@ -7,8 +7,8 @@ if nargin < 1
     G1.Nodes.Name = string((1:100)');
     G1.Edges.Weight = rand(size(G1.Edges, 1), 1) * 2;
 end
-import gui.*
-import ten.*
+% import gui.*
+% import ten.*
 
 %%
 
