@@ -30,64 +30,64 @@ else
 end
 
 % Only run the following if not compiled or deployed
-if ~(ismcc || isdeployed)
-    % Check if required directories exist, else download them
-    if ~exist(fullfile(pw1, 'example_data/'), 'dir') || ...
-       ~exist(fullfile(pw1, 'assets/'), 'dir') || ...
-       ~exist(fullfile(pw1, '+run', 'external/'), 'dir')
-   
-        f = waitbar(0.33, 'Initializing SCGEATOOL on the first run...');
-        
-        % Download example_data if missing
-        if ~exist(fullfile(pw1, 'example_data/'), 'dir')
-            try
-                unzip('https://github.com/jamesjcai/jamesjcai.github.io/raw/master/data/example_data.zip');
-            catch ME                
-                warning(ME.message);
-            end
-        end
-        
-        waitbar(0.66, f, 'Initializing SCGEATOOL on the first run...');
-        
-        % Download assets if missing
-        % if ~exist(fullfile(pw1, 'assets/'), 'dir')
-        %     try
-        %         unzip('https://github.com/jamesjcai/jamesjcai.github.io/raw/master/data/assets.zip');
-        %     catch ME
-        %         warning(ME.message);
-        %     end
-        % end
-        
-        waitbar(0.85, f, 'Initializing SCGEATOOL on the first run...');
-        
-        % Download external tools if missing
-        if ~exist(fullfile(pw1, '+run', 'external/'), 'dir')
-            try
-                a = unzip('https://github.com/jamesjcai/jamesjcai.github.io/raw/master/data/external.zip');
-            catch ME                
-                warning(ME.message);
-            end
-            
-            if ~iscell(a)
-                errordlg('SCGEATOOL could not download the supporting file.\nPlease check network connection and try again.');
-                return;
-            end
-            
-            try
-                movefile(fullfile(pw1, 'external/'), fullfile(pw1, '+run', 'external/'));
-            catch ME               
-                warning(ME.message);
-            end
-        end
-        
-        pause(0.5);
-        waitbar(1, f, 'Finishing');
-        pause(1);
-        
-        if isvalid(f)
-            close(f); % Close waitbar when finished
-        end
-    end
-end
+% if ~(ismcc || isdeployed)
+%     % Check if required directories exist, else download them
+%     if ~exist(fullfile(pw1, 'example_data/'), 'dir') || ...
+%        ~exist(fullfile(pw1, 'assets/'), 'dir') || ...
+%        ~exist(fullfile(pw1, '+run', 'external/'), 'dir')
+% 
+%         f = waitbar(0.33, 'Initializing SCGEATOOL on the first run...');
+% 
+%         % Download example_data if missing
+%         if ~exist(fullfile(pw1, 'example_data/'), 'dir')
+%             try
+%                 unzip('https://github.com/jamesjcai/jamesjcai.github.io/raw/master/data/example_data.zip');
+%             catch ME                
+%                 warning(ME.message);
+%             end
+%         end
+% 
+%         waitbar(0.66, f, 'Initializing SCGEATOOL on the first run...');
+% 
+%         % Download assets if missing
+%         % if ~exist(fullfile(pw1, 'assets/'), 'dir')
+%         %     try
+%         %         unzip('https://github.com/jamesjcai/jamesjcai.github.io/raw/master/data/assets.zip');
+%         %     catch ME
+%         %         warning(ME.message);
+%         %     end
+%         % end
+% 
+%         waitbar(0.85, f, 'Initializing SCGEATOOL on the first run...');
+% 
+%         % Download external tools if missing
+%         if ~exist(fullfile(pw1, '+run', 'external/'), 'dir')
+%             try
+%                 a = unzip('https://github.com/jamesjcai/jamesjcai.github.io/raw/master/data/external.zip');
+%             catch ME                
+%                 warning(ME.message);
+%             end
+% 
+%             if ~iscell(a)
+%                 errordlg('SCGEATOOL could not download the supporting file.\nPlease check network connection and try again.');
+%                 return;
+%             end
+% 
+%             try
+%                 movefile(fullfile(pw1, 'external/'), fullfile(pw1, '+run', 'external/'));
+%             catch ME               
+%                 warning(ME.message);
+%             end
+%         end
+% 
+%         pause(0.5);
+%         waitbar(1, f, 'Finishing');
+%         pause(1);
+% 
+%         if isvalid(f)
+%             close(f); % Close waitbar when finished
+%         end
+%     end
+% end
 
 end
