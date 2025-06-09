@@ -1,13 +1,13 @@
 <deployment-project plugin="plugin.toolbox" plugin-version="1.0">
-  <configuration build-checksum="469556556" file="D:\GitHub\scGEAToolbox\scGEAToolbox.prj" location="D:\GitHub\scGEAToolbox" name="scGEAToolbox" target="target.toolbox" target-name="Package Toolbox">
+  <configuration build-checksum="199100990" file="C:\Users\jcai\Documents\GitHub\scGEAToolbox\scGEAToolbox.prj" location="C:\Users\jcai\Documents\GitHub\scGEAToolbox" name="scGEAToolbox" target="target.toolbox" target-name="Package Toolbox">
     <param.appname>scGEAToolbox</param.appname>
     <param.authnamewatermark>James Cai</param.authnamewatermark>
     <param.email>jcai@tamu.edu</param.email>
     <param.company>Texas A&amp;M University</param.company>
     <param.summary>Single-cell Gene Expression Analysis Toolbox</param.summary>
     <param.description>Cai JJ. scGEAToolbox: a Matlab toolbox for single-cell RNA sequencing data analysis. Bioinformatics. 2019 Nov 7:btz830. doi: 10.1093/bioinformatics/btz830. PMID: 31697351.</param.description>
-    <param.screenshot>${PROJECT_ROOT}\resources\Images\scgeatool_25_1_4.png</param.screenshot>
-    <param.version>25.5.2</param.version>
+    <param.screenshot>${PROJECT_ROOT}\assets\Images\scgeatool.png</param.screenshot>
+    <param.version>25.6.0</param.version>
     <param.output>${PROJECT_ROOT}\scGEAToolbox.mltbx</param.output>
     <param.products.name>
       <item>MATLAB</item>
@@ -137,6 +137,7 @@ DEVMODE.txt</param.exclude.filters>
       <file>${PROJECT_ROOT}\+ten</file>
       <file>${PROJECT_ROOT}\@SingleCellExperiment</file>
       <file>${PROJECT_ROOT}\app</file>
+      <file>${PROJECT_ROOT}\assets</file>
       <file>${PROJECT_ROOT}\cdgea.m</file>
       <file>${PROJECT_ROOT}\demo_Getting_Started.m</file>
       <file>${PROJECT_ROOT}\demo_script1.m</file>
@@ -158,7 +159,6 @@ DEVMODE.txt</param.exclude.filters>
       <file>${PROJECT_ROOT}\online_landing.m</file>
       <file>${PROJECT_ROOT}\private</file>
       <file>${PROJECT_ROOT}\README.md</file>
-      <file>${PROJECT_ROOT}\resources</file>
       <file>${PROJECT_ROOT}\sc_cellcyclescore.m</file>
       <file>${PROJECT_ROOT}\sc_cellscore_admdl.m</file>
       <file>${PROJECT_ROOT}\sc_cellscore_ucell.m</file>
@@ -233,30 +233,25 @@ DEVMODE.txt</param.exclude.filters>
       <file>${PROJECT_ROOT}\scgeatool.m</file>
       <file>${PROJECT_ROOT}\scgeatoolApp.mlappinstall</file>
       <file>${PROJECT_ROOT}\tensor_toolbox</file>
+      <file>${PROJECT_ROOT}\toolbox.ignore</file>
     </fileset.rootfiles>
     <fileset.depfun.included />
     <fileset.depfun.excluded />
     <fileset.package />
     <build-deliverables>
-      <file location="${PROJECT_ROOT}" name="scGEAToolbox.mltbx" optional="false">D:\GitHub\scGEAToolbox\scGEAToolbox.mltbx</file>
+      <file location="${PROJECT_ROOT}" name="scGEAToolbox.mltbx" optional="false">C:\Users\jcai\Documents\GitHub\scGEAToolbox\scGEAToolbox.mltbx</file>
     </build-deliverables>
     <workflow />
     <matlab>
       <root>C:\Program Files\MATLAB\R2024b</root>
       <toolboxes>
         <toolbox name="matlabcoder" />
-        <toolbox name="gpucoder" />
         <toolbox name="neuralnetwork" />
       </toolboxes>
       <toolbox>
         <matlabcoder>
           <enabled>true</enabled>
         </matlabcoder>
-      </toolbox>
-      <toolbox>
-        <gpucoder>
-          <enabled>true</enabled>
-        </gpucoder>
       </toolbox>
       <toolbox>
         <neuralnetwork>
