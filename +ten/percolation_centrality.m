@@ -11,7 +11,7 @@ function perc_centrality = percolation_centrality(adj_matrix, percolation_prob)
     % Iterate over each node to calculate its percolation centrality
     for i = 1:n
         % Initialize a queue for BFS
-        queue = [i];
+        queue = i;
         visited = false(n, 1);
         visited(i) = true;
         
