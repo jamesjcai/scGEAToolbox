@@ -20,11 +20,11 @@ else
         wrkdir = '';
         return;
     else
-        if ~strcmp('Yes', gui.myQuestdlg(parentfig, ...
-                'Existing files in the working folder will be overwritten or deleted. Continue?'))
-            wrkdir = '';
-            return;          
-        end
+        %if ~strcmp('Yes', gui.myQuestdlg(parentfig, ...
+        %        'Existing files in the working folder will be overwritten or deleted. Continue?'))
+        %    wrkdir = '';
+        %    return;          
+        %end
     end
 end
    

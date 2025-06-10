@@ -73,7 +73,7 @@ function callback_DEGene2Groups(src, ~)
         end
     end
 
-    % gui.DEResultViewApp(T);       
+    % gui.DEResultViewApp(T);
     [filetype, filesaved] = gui.i_exporttable(T, true, ...
         'Tdegenelist', outfile, [], "All_genes", FigureHandle);
 
