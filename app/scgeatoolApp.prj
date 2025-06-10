@@ -12,7 +12,7 @@
     </param.icons>
     <param.summary>scGEAToolbox - a Matlab toolbox for single-cell RNA-seq data analyses</param.summary>
     <param.description>Cai JJ. scGEAToolbox: a Matlab toolbox for single-cell RNA sequencing data analysis. Bioinformatics. 2019 Nov 7:btz830. doi: 10.1093/bioinformatics/btz830. Epub ahead of print. PMID: 31697351.</param.description>
-    <param.screenshot />
+    <param.screenshot>${PROJECT_ROOT}\scgeatoolApp_resources\scgeatool.png</param.screenshot>
     <param.version>25.6.0</param.version>
     <param.products.name>
       <item>MATLAB</item>
@@ -39,7 +39,6 @@
       <param.authnamewatermark />
       <param.email />
       <param.company />
-      <param.screenshot />
       <param.platforms />
     </unset>
     <fileset.main>
