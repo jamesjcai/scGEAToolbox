@@ -92,8 +92,7 @@ if strcmp(answerx, a)
     if strcmp(gui.myQuestdlg(FigureHandle, 'Explore DV expression profile of genes?'), 'Yes')
         hx = gui.myFigure;
         hFig = hx.FigHandle;
-        hFig.Position(3) = hFig.Position(3)*1.8;
-        
+        hFig.Position(3) = hFig.Position(3)*1.8;        
         
         hx.addCustomButton( 'off', {@in_HighlightSelectedGenes, 1}, 'list.gif', 'Selet a gene to show expression profile');
         hx.addCustomButton( 'off', {@in_HighlightSelectedGenes, 2}, 'list2.gif', 'Selet a gene from sorted list');
