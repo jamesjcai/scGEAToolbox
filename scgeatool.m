@@ -1,8 +1,8 @@
 function varargout = scgeatool(sce, varargin)
 
-if usejava('jvm') && ~feature('ShowFigureWindows')
-    error('MATLAB is in a text mode. This function requires a GUI-mode.');
-end
+% if usejava('jvm') && ~feature('ShowFigureWindows')
+%     error('MATLAB is in a text mode. This function requires a GUI-mode.');
+% end
 if ~gui.i_installed('stats'), return; end
 
 persistent speciestag
