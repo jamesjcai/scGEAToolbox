@@ -10,7 +10,7 @@ function [needupdatesce] = callback_RunSCimilarity(src, ~)
     % SCimilarity trained model. Download SCimilarity models. 
     % Note, this is a large tarball - downloading and uncompressing can take a several minutes.
     
-    [modeldir] = gui.i_setscimilaritymodelpath;
+    [modeldir] = gui.i_setscimilaritymodelpath(src);
     if isempty(modeldir), return; end
 
     label_ints_file = fullfile(modeldir, 'label_ints.csv');
