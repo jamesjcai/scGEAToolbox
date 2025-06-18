@@ -1,4 +1,4 @@
-function web_Enrichr(genelist, genenum, bkglist)
+function web_Enrichr(genelist, genenum, bkglist, wkdir)
 % Run Enrichr
 %
 % see also: RUN.WEB_GORILLA, RUN.WEB_STRING
@@ -6,6 +6,7 @@ function web_Enrichr(genelist, genenum, bkglist)
 if nargin < 1, genelist = []; end
 if nargin < 2, genenum = 100; end
 if nargin < 3, bkglist = []; end
+if nargin < 4, wkdir = ''; end
 
 pw1 = fileparts(mfilename('fullpath'));
 pth = fullfile(pw1, 'external', 'web_Enrichr');
@@ -15,7 +16,15 @@ if ~isempty(bkglist)
 else
     infile = fullfile(pth, 'input_template.html');
 end
-outfile = fullfile(pth, 'input_page.html');
+
+[~, b]=fileparts(tempname);
+% fx = sprintf('input_page_%s.html', char(randi([97, 122], 1, 8)));
+fx = sprintf('input_page_%s.html', b);
+if ~isempty(wkdir)
+    outfile = fullfile(wkdir, fx);
+else    
+    outfile = fullfile(pth, fx);
+end
 
 fid = fopen(infile, 'r');
 a = textscan(fid, '%s', 'delimiter', '\n');
@@ -51,7 +60,7 @@ fprintf(fid, '</textarea>\n');
 fprintf(fid, '%s\n', a(idx+1:end));
 fclose(fid);
 pause(1)
-web(outfile, '-browser');
+web(outfile, '-new');
 pause(1)
 
 end

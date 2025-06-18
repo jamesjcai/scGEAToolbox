@@ -1,6 +1,7 @@
 function callback_RunEnrichr(src, ~, predefinedlist, enrichrtype, ...
-    backgroundlist, outfiletag)
+    backgroundlist, outfiletag, wkdir)
 
+if nargin < 7, wkdir = ''; end
 if nargin < 6, outfiletag = ""; end
 if nargin < 5
     askbackground = true;
@@ -62,14 +63,16 @@ if nargin < 3, predefinedlist = []; end
 switch enrichrtype 
     case 'API-based'
         % do nothing here
+
+
     case 'Web-based'
         fw = gui.myWaitbar(FigureHandle, [], false, ...
             'Sending genes to web browser...');
         % gui.i_enrichtest(genelist, backgroundlist, numel(genelist));
             if ~isempty(backgroundlist)
-                run.web_Enrichr_bkg(ingenelist, backgroundlist, numel(ingenelist));
+                run.web_Enrichr_bkg(ingenelist, backgroundlist, numel(ingenelist), wkdir);
             else
-                run.web_Enrichr(ingenelist, numel(ingenelist));
+                run.web_Enrichr(ingenelist, numel(ingenelist), '', wkdir);
             end
         gui.myWaitbar(FigureHandle, fw, false, ...
             'Check web browser & submit genes to Enrichr.');
@@ -129,7 +132,6 @@ end
         case options{1}
             % gui.i_viewtable(T, FigureHandle);
             gui.TableViewerApp(T, FigureHandle);
-
 
         case options{2}
             if height(T) > 1

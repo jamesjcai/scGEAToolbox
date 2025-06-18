@@ -159,8 +159,8 @@ function callback_DEGene2Groups(src, ~)
         % exportgraphics(f, fullfile(wkdir, outfile+".png"), 'Resolution', 300);
     end
 
-    function e_savetable(src, ~)
-        hFig = src.Parent.Parent;
+    function e_savetable(srcx, ~)
+        hFig = srcx.Parent.Parent;
         [filetype, filesaved] = gui.i_exporttable(T, true, ...
             'Tdegenelist', outfile, [], "All_genes", hFig);
     end
@@ -199,8 +199,8 @@ function callback_DEGene2Groups(src, ~)
         end
     end
     
-    function e_runenrichr(src, ~)
-        hFig = src.Parent.Parent;
+    function e_runenrichr(srcx, ~)
+        hFig = srcx.Parent.Parent;
         disp('To run enrichment analysis, type:');
         disp('run.web_Enrichr(Tup.gene(1:250))');
         disp('run.web_Enrichr(Tdn.gene(1:250))');
@@ -213,7 +213,7 @@ function callback_DEGene2Groups(src, ~)
         if ~isempty(outbackgroundlist)
             gui.callback_RunEnrichr(src, [], outgenelist, ...
                 enrichrtype, ...
-                outbackgroundlist, "Up");
+                outbackgroundlist, "Up", wkdir);
         end
         
         [outgenelist, outbackgroundlist, enrichrtype] = ...
@@ -223,7 +223,7 @@ function callback_DEGene2Groups(src, ~)
     
         if ~isempty(outbackgroundlist)
             gui.callback_RunEnrichr(src, [], outgenelist, enrichrtype, ...
-                outbackgroundlist, "Down");
+                outbackgroundlist, "Down", wkdir);
         end        
     end
 
