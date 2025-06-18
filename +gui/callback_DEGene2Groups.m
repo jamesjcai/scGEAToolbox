@@ -310,7 +310,12 @@ function callback_DEGene2Groups(src, ~)
             %for k = 1:length(idx)
                 %text(x(idx(k))+0.05, y(idx(k)), genelist(idx(k)));
             %end
-            h.DataTipTemplate.DataTipRows = dataTipTextRow('', genelist);
+
+            if isempty(genelist)
+                disp('Empty genelist.');
+            else
+                h.DataTipTemplate.DataTipRows = dataTipTextRow('', genelist);
+            end
             if any(abs(xlim(ax))>=10)
                 xlim(ax,[-10 10]);
             end
