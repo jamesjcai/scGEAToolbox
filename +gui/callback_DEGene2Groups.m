@@ -227,7 +227,9 @@ function callback_DEGene2Groups(src, ~)
         end        
     end
 
-    function hFig = e_volcano(T, Tup, Tdn, parentfig)    
+% ------- begining of volcano_plot
+
+    function hFig = e_volcano(T, Tup, Tdn, parentfig)
         T=T(~ismember(T.gene, [Tup.gene; Tdn.gene]),:);    
         hx = gui.myFigure(parentfig);
         hFig = hx.FigHandle;
@@ -241,6 +243,7 @@ function callback_DEGene2Groups(src, ~)
         e_v(Tdn, ax);
         h = e_v(T, ax);
         e_v(Tup, ax);
+
         h.MarkerFaceColor=[.5 .5 .5];
         h.MarkerEdgeColor=[.5 .5 .5];
         title(ax, sprintf('%s vs. %s', ...
@@ -271,6 +274,7 @@ function callback_DEGene2Groups(src, ~)
         catch ME
             disp(ME.message);
         end
+        hold(ax, "off");
         hx.show;
     
         function updateTextbox(~, ~)
@@ -322,6 +326,7 @@ function callback_DEGene2Groups(src, ~)
         end
     end
 
+% ------- end of volcano_plot
 
     function i_replaceinf(T)
         % Iterate over each variable in the table

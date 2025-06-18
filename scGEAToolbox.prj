@@ -7,7 +7,7 @@
     <param.summary>Single-cell Gene Expression Analysis Toolbox</param.summary>
     <param.description>Cai JJ. scGEAToolbox: a Matlab toolbox for single-cell RNA sequencing data analysis. Bioinformatics. 2019 Nov 7:btz830. doi: 10.1093/bioinformatics/btz830. PMID: 31697351.</param.description>
     <param.screenshot>${PROJECT_ROOT}\assets\Images\scgeatool.png</param.screenshot>
-    <param.version>25.6.0</param.version>
+    <param.version>25.6.1</param.version>
     <param.output>${PROJECT_ROOT}\scGEAToolbox.mltbx</param.output>
     <param.products.name>
       <item>MATLAB</item>
@@ -233,7 +233,6 @@ DEVMODE.txt</param.exclude.filters>
       <file>${PROJECT_ROOT}\scgeatool.m</file>
       <file>${PROJECT_ROOT}\scgeatoolApp.mlappinstall</file>
       <file>${PROJECT_ROOT}\tensor_toolbox</file>
-      <file>${PROJECT_ROOT}\toolbox.ignore</file>
     </fileset.rootfiles>
     <fileset.depfun.included />
     <fileset.depfun.excluded />
