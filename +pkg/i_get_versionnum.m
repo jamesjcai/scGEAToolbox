@@ -6,15 +6,15 @@ if nargin<1, nomat = false; end
     mfolder = fileparts(mfilename('fullpath'));
     vfile = fullfile(mfolder, '..', 'VERSION.mat');
 
-    if ~nomat
-        if exist(vfile, "file")
-            data = load(vfile, "v1");
-            if isfield(data, "v1") && ~isempty(data.v1)
-                v1 = data.v1;
-                return;
-            end
-        end
-    end
+    % if ~nomat
+    %     if exist(vfile, "file")
+    %         data = load(vfile, "v1");
+    %         if isfield(data, "v1") && ~isempty(data.v1)
+    %             v1 = data.v1;
+    %             return;
+    %         end
+    %     end
+    % end
 
     tag_version = 'param.version';
     xfilelocal = fullfile(mfolder,'..', 'scGEAToolbox.prj');
@@ -63,7 +63,7 @@ if nargin<1, nomat = false; end
         end
     end
     % Save to VERSION.mat if v1 is non-empty
-    if ~isempty(v1) && ~exist(vfile,"file")
-        save(vfile, 'v1'); 
-    end    
+   % if ~isempty(v1) && ~exist(vfile,"file")
+   %     save(vfile, 'v1'); 
+   % end
 end
