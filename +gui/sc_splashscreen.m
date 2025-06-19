@@ -20,10 +20,22 @@ import gui.*
 if nargin<3, showloading = true; end
 if nargin<2, r = 0.0; end
 if nargin<1
-    mfolder = fileparts(mfilename('fullpath'));
-    v1 = pkg.i_get_versionnum;
-    pngfilename = 'splash.png';
-    splashpng = fullfile(mfolder, '..','assets', 'Images', pngfilename);
+    v1 = pkg.i_get_versionnum;    
+    mfolder = fileparts(mfilename('fullpath'));    
+
+
+    %pngfilename = 'splash.png';
+    %splashpng = fullfile(mfolder, '..','assets', 'Images', pngfilename);
+
+    
+    splashdir = fullfile(mfolder, '..','assets', 'Images', 'splash_folder');
+    a = dir(splashdir);
+    idx = randi(length(a));
+    pngfilename = a(idx).name;
+    splashpng = fullfile(mfolder, '..','assets', 'Images','splash_folder', pngfilename);
+
+
+
     if ~isfile(splashpng)
         error('Splash image file not found: %s', splashpng);
     end    
