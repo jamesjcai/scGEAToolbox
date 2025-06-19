@@ -30,10 +30,9 @@ if nargin<1
     
     splashdir = fullfile(mfolder, '..','assets', 'Images', 'splash_folder');
     a = dir(splashdir);
-    idx = randi(length(a));
+    idx = 2+randi(length(a)-2);
     pngfilename = a(idx).name;
     splashpng = fullfile(mfolder, '..','assets', 'Images','splash_folder', pngfilename);
-
 
 
     if ~isfile(splashpng)
