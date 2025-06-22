@@ -326,7 +326,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 in_addmenu(menus, 0, {@(~, ~) web('https://matlab.mathworks.com/open/github/v1?repo=jamesjcai/scGEAToolbox&file=online_landing.m')}, 'Run SCGEATOOL in MATLAB Online...');
                 in_addmenu(menus, 0, @gui.callback_InstallApp, 'Install scgeatoolApp...');
                 in_addmenu(menus, 1, @gui.callback_CheckUpdates, 'Check for Updates...');
-                [~, ~, ~, im] = i_majvercheck([false false false true]);
+                [~, ~, ~, im] = pkg.i_majvercheck([false false false true]);
                 in_addmenu(menus, 1, {@(~, ~) gui.sc_simpleabout(FigureHandle, im)}, 'About SCGEATOOL');
         end
     end
