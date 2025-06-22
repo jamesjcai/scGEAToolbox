@@ -4,7 +4,7 @@ if nargin<2, parentfig = []; end
 if nargin<1, T = []; end
     % Create a new figure window
     fig = uifigure('Name', 'Table Viewer', ...
-                   'Position', [0, 0, 600, 480]);
+                   'Position', [0, 0, 900, 480]);
 
     try
        if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 

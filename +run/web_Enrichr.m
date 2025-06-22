@@ -60,7 +60,7 @@ fprintf(fid, '</textarea>\n');
 fprintf(fid, '%s\n', a(idx+1:end));
 fclose(fid);
 pause(1)
-web(outfile, '-new');
+web(outfile, '-browser');
 pause(1)
 
 end
