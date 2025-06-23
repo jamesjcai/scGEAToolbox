@@ -1,4 +1,4 @@
-function [OKPressed] = callback_SaveX(app, events)
+function [OKPressed] = callback_SaveX(app, ~)
     OKPressed = false;
 
     list = {'SCE Data File (*.mat)...', ...
@@ -10,7 +10,7 @@ function [OKPressed] = callback_SaveX(app, events)
     defaultindx = getpref('scgeatoolbox', preftagname, length(list));
 
     [indx, tf] = gui.myListdlg(app.UIFigure, list, ...
-        'Select a destination:', list(defaultindx));
+        'Select a destination', list(defaultindx));
     if tf ~= 1, return; end
             a = app.sce.metadata(contains(app.sce.metadata, "Source:"));
             if ~isempty(a), a = strtrim(strrep(a, "Source: ","")); end
