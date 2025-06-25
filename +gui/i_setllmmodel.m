@@ -1,6 +1,10 @@
 function [done] = i_setllmmodel(src, ~)
 
-[parentfig, ~] = gui.gui_getfigsce(src);
+    if isa(src, 'matlab.apps.AppBase')    
+        [parentfig, ~] = xui.gui_getfigsce(src);
+    else
+        [parentfig, ~] = gui.gui_getfigsce(src);
+    end
 done = false;
 preftagname = 'llapikeyenvfile';
 if ~ispref('scgeatoolbox', preftagname)
@@ -40,9 +44,13 @@ else
     if isempty(answer1), return; end
     switch answer1
         case 'Use this'
-            done = true;
+            % done = true;
+            fw = gui.myWaitbar(parentfig);
+            [done] = llm.i_checkllm(apikeyfile);
+            gui.myWaitbar(parentfig, fw);
+
             gui.myHelpdlg(parentfig, "LLM provider and" + ...
-             " model are set successfully.");            
+             " model are set successfully.");
             return;
         case 'Use another'
             % [done] = ix_setwdpath(s);
@@ -51,7 +59,7 @@ else
     end
 end
 
-listItems = {'Ollama', 'Gemini', 'OpenAI', 'DeepSeek', 'xAI'};
+listItems = {'Ollama', 'Gemini', 'TAMUAIChat', 'OpenAI', 'DeepSeek', 'xAI'};
 
 if gui.i_isuifig(parentfig)
     [selectedIndex, ok] = gui.myListdlg(parentfig, listItems, ...
@@ -135,6 +143,51 @@ switch selectedProvider
                 done = true;
             end
         end
+    case 'TAMUAIChat'
+        if ~exist(apikeyfile,"file")
+            gui.myErrordlg(parentfig,"llm_api_key.env is not a valid file.");
+        end
+        loadenv(apikeyfile,"FileType","env");
+        if ~isempty(getenv("TAMUAI_API_KEY"))        
+            % Show models available in json format
+            OPEN_WEBUI_API_ENDPOINT = "https://chat-api.preview.tamu.ai";
+            models_url = sprintf('%s/api/models', OPEN_WEBUI_API_ENDPOINT);
+            
+            % Set up options for webread
+            options = weboptions('HeaderFields', {'Authorization', sprintf('Bearer %s', getenv("TAMUAI_API_KEY"))});
+            
+            % Make the GET request
+            try
+                models_response = webread(models_url, options);
+                % Display models response as JSON
+                % assignin("base",'models_response',  models_response)
+                model_names = string({models_response.data.id});
+
+            catch ME
+                fprintf('Error fetching models: %s\n', ME.message);
+                return;
+            end
+
+            [y, idx]=ismember('protected.gpt-4.1', model_names);
+            if y
+                [idx, ok2] = listdlg('PromptString', 'Select a model:', ...
+                              'SelectionMode', 'single', ...
+                              'ListString', model_names, ...
+                              'ListSize', [220 300], 'InitialValue', idx);
+            else
+                [idx, ok2] = listdlg('PromptString', 'Select a model:', ...
+                              'SelectionMode', 'single', ...
+                              'ListString', model_names, ...
+                              'ListSize', [220 300]);
+            end
+            if ok2
+                selectedModel = model_names{idx};                        
+                setpref('scgeatoolbox', preftagname, ...
+                    selectedProvider+":"+selectedModel);
+                done = true;
+            end
+        end
+
     otherwise
         gui.myWarndlg(parentfig, ...
             sprintf(['The function supporting %s API is ' ...
@@ -144,7 +197,17 @@ switch selectedProvider
 end
 
 
-if done
+% if done
+%      gui.myHelpdlg(parentfig, "LLM provider and" + ...
+%          " model are set successfully.");
+% end
+
+    fw = gui.myWaitbar(parentfig);
+    [done2] = llm.i_checkllm(apikeyfile);
+    gui.myWaitbar(parentfig, fw);
+
+
+if done && done2
      gui.myHelpdlg(parentfig, "LLM provider and" + ...
          " model are set successfully.");
 end
