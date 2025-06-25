@@ -36,6 +36,7 @@ classdef myFigure < handle
                 obj.tbv{9} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_savemainfig, 1}, "svg-format.jpg", 'Save Figure as SVG File...');
                 obj.tbv{10} = gui.gui_3dcamera(obj.tb);
                 obj.tbv{11} = pkg.i_addbutton2fig(obj.tb, 'on', {@gui.i_resizewin, obj.FigHandle}, 'scale-frame-reduce.jpg', 'Resize Plot Window');                
+ 
             else
                 obj.FigHandle = figure('Name', '', ...
                     'NumberTitle', 'on', 'Visible',"off", ...

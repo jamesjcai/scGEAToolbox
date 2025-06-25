@@ -46,7 +46,8 @@ labelsx='';
 labelsy='';
 T=[];
 
-hx = gui.myFigure;
+% hx = gui.myFigure(FigureHandle);
+hx = gui.myFigure;  % keep using classical figure rather than using uifigure
 tab=cell(2,1);
 ax0=cell(2,1);
 ax=cell(2,2);
