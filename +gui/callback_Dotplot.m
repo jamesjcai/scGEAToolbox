@@ -1,5 +1,9 @@
 function callback_Dotplot(src, ~)
-    [FigureHandle, sce] = gui.gui_getfigsce(src);
+    if isa(src, 'matlab.apps.AppBase')    
+        [FigureHandle, sce] = xui.gui_getfigsce(src);
+    else
+        [FigureHandle, sce] = gui.gui_getfigsce(src);
+    end
     [thisc, ~] = gui.i_select1class(sce,[],[],[],FigureHandle);
     if isempty(thisc), return; end
     
