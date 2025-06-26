@@ -1778,7 +1778,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         end
 
         if gui.i_isuifig(FigureHandle)
-            [indx, tf] = gui.myListdlg(FigureHandle, c_members, 'Select target cluster');
+            [indx, tf] = gui.myListdlg(FigureHandle, string(c_members), 'Select target cluster');
         else
             [indx, tf] = listdlg('PromptString', ...
                 {'Select target cluster'}, 'SelectionMode', ...
