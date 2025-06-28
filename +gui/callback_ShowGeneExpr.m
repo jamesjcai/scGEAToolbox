@@ -1,6 +1,11 @@
 function callback_ShowGeneExpr(src, ~)
 
-    [FigureHandle, sce] = gui.gui_getfigsce(src);
+    % [FigureHandle, sce] = gui.gui_getfigsce(src);
+    if isa(src, 'matlab.apps.AppBase')    
+        [FigureHandle, sce] = xui.gui_getfigsce(src);
+    else
+        [FigureHandle, sce] = gui.gui_getfigsce(src);
+    end    
     [axx, bxx] = view(findall(FigureHandle,'type','axes'));
     [glist] = gui.i_selectngenes(sce, [], FigureHandle);
     if isempty(glist) 
@@ -30,7 +35,7 @@ function callback_ShowGeneExpr(src, ~)
         case an1
             fw = gui.myWaitbar(FigureHandle); 
             hx = gui.myFigure;
-            tabgp = uitabgroup();
+            tabgp = uitabgroup(hx.FigHandle);
             nf = 1;
             tab{nf} = uitab(tabgp, 'Title', sprintf('Tab%d',nf));
             axes('parent', tab{nf});

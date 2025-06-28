@@ -1,7 +1,10 @@
 function callback_MultiGroupingView(src, ~)
     
-    [FigureHandle, sce] = gui.gui_getfigsce(src);
-    
+    if isa(src, 'matlab.apps.AppBase')    
+        [FigureHandle, sce] = xui.gui_getfigsce(src);
+    else
+        [FigureHandle, sce] = gui.gui_getfigsce(src);
+    end    
     answer = gui.myQuestdlg(FigureHandle, 'Select type of multi-view:','', ...
         {'Multigrouping','Multiembedding'},'Multigrouping');
 

@@ -15,10 +15,10 @@ if nargin < 4, prefersel = []; end
     % Create a modal dialog
     d = uifigure('Name', Title, 'Position', dlgPos, ...
         'WindowStyle', 'modal');
-    try
-        theme(d,"light");
-    catch
-    end
+    % try
+    %     theme(d,"light");
+    % catch
+    % end
 
     if allowmulti
         multitag = 'on';

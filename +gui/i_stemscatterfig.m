@@ -5,12 +5,15 @@ function [hFig] = i_stemscatterfig(sce, cs, posg, csname, parentfig)
 if nargin < 5, parentfig = []; end
 if nargin < 4 || isempty(csname), csname = "CellScore"; end
 
-hx = gui.myFigure;
+hx = gui.myFigure(parentfig);
 hFig = hx.FigHandle;
-gui.i_stemscatter(sce.s, cs);
+ax = hx.AxHandle;
+if isempty(ax), ax = gca; end
 
-zlabel('Score value')
-title(strrep(csname, '_', '\_'));
+gui.i_stemscatter(sce.s, cs, ax);
+
+zlabel(ax, 'Score value');
+title(ax, strrep(csname, '_', '\_'));
 
 hx.addCustomButton('off', @i_saveCrossTable, "floppy-disk-arrow-in.jpg", 'Save cross-table');
 hx.addCustomButton('on', @in_geneheatmapx, 'greenarrowicon.gif', 'Heatmap');

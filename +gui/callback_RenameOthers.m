@@ -3,7 +3,11 @@ function [requirerefresh, renamedwhat] = callback_RenameOthers(src, ~)
 requirerefresh = false;
 renamedwhat = [];
 
-[FigureHandle, sce] = gui.gui_getfigsce(src);
+if isa(src, 'matlab.apps.AppBase')    
+    [FigureHandle, sce] = xui.gui_getfigsce(src);
+else
+    [FigureHandle, sce] = gui.gui_getfigsce(src);
+end
 
 listitems = {'Gene name','Cluster ID'};
     
@@ -60,7 +64,11 @@ listitems = {'Gene name','Cluster ID'};
                     sce.c_cluster_id = string(cLi(ci));
                     requirerefresh = true;                    
                     renamedwhat = listitems{indx2};
-                    guidata(FigureHandle, sce);
+                    if isa(src, 'matlab.apps.AppBase')
+                        src.sce = sce;
+                    else
+                        guidata(FigureHandle, sce);
+                    end
                 end
             end        
     end

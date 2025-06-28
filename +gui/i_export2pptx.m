@@ -64,7 +64,39 @@ switch answer
             if isvalid(F{k})
                 images{k} = [tempname, '.png'];
                 
-                saveas(F{k}, images{k});
+                %option 1
+                %saveas(F{k}, images{k});
+                
+                %option 2
+                %exportapp(F{k}, images{k});
+
+                %option 3
+                %
+                % set(F{k}, 'Color', 'white');
+                % tabGroups = findall(F{k}, 'Type', 'uitabgroup');
+                % for i = 1:length(tabGroups)
+                %     try
+                %         set(tabGroups(i), 'BackgroundColor', 'white');
+                %     catch
+                %         disp("error: set(tabGroups(i), 'BackgroundColor', 'white');");
+                %         try
+                %             set(tabGroups(i), 'ForegroundColor', 'white');
+                %         catch
+                %             disp("error: set(tabGroups(i), 'ForegroundColor', 'white');");
+                %         end
+                %     end
+                % end
+                % tabs = findall(F{k}, 'Type', 'uitab');
+                % for i = 1:length(tabs)
+                %     try
+                %         set(tabs(i), 'BackgroundColor', 'white');
+                %     catch
+                %     end
+                % end
+
+                frame = getframe(F{k});
+                imwrite(frame.cdata, images{k});
+                
                 %images{k} = [tempname,'.emf'];
                 %saveas(F{k},images{k},'meta');
 

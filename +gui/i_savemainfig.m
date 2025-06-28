@@ -1,12 +1,10 @@
 function i_savemainfig(src, ~, tag)
-    
-    
+       
     if isa(src, 'matlab.apps.AppBase')    
         [parentfig] = xui.gui_getfigsce(src);
-    else
-        
+    else        
         [parentfig] = gui.gui_getfigsce(src);
-    end    
+    end
     axesHandles = findall(parentfig, 'Type', 'axes');
     if isempty(axesHandles)    
         gui.myHelpdlg(parentfig, ...
@@ -31,11 +29,11 @@ function i_savemainfig(src, ~, tag)
         if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
         if ischar(filename)
 
-            if gui.i_isuifig(parentfig)
+            %if gui.i_isuifig(parentfig)
                 exportapp(parentfig, [filepath filename]);
-            else
-                exportgraphics(parentfig, [filepath, filename]);
-            end
+            %else
+            %    exportgraphics(parentfig, [filepath, filename]);
+            %end
             
         end
     elseif tag == 3

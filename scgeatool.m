@@ -1657,7 +1657,6 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 ctxt = Tct.C1_Cell_Type{1};
             end
 
-
             hold(hAx,'on');
 
             ctxtdisp = strrep(ctxt, '_', '\_');

@@ -11,7 +11,12 @@ function [needupdatesce] = callback_CompareCellScoreBtwCls(src, ~)
     - Displays a graph showing the calculated scores along with labels for each dataset.
 %}
 
-[FigureHandle, sce] = gui.gui_getfigsce(src);
+if isa(src, 'matlab.apps.AppBase')  
+    [FigureHandle, sce] = xui.gui_getfigsce(src);
+else
+    [FigureHandle, sce] = gui.gui_getfigsce(src);
+end
+
 needupdatesce = false;
 
 aa = 'Yes, compare scores (violinplot)';
@@ -318,10 +323,14 @@ bb = 'No, just show values (heatmap)';
                             {ttxt, y(:)}];
                     end
                     needupdatesce = true;
-                    guidata(FigureHandle, sce);
+                    if ~isa(src, 'matlab.apps.AppBase')
+                        guidata(FigureHandle, sce);
+                    end
                     gui.i_stemscatterfig(sce, y, posg, ttxt, FigureHandle);
                 end
             end
-            % guidata(FigureHandle, sce);
 
+            if needupdatesce && isa(src, 'matlab.apps.AppBase')
+               src.sce = sce;
+            end
 end
