@@ -39,11 +39,11 @@ function [parentfig,hAx] = gui_createmainfigure(v1,useuifigure)
 
     %[~, d] = version;
     %if datetime(d)>datetime('12/31/2024')
-    try
-        theme(parentfig, "light");
-    %end
-    catch
-    end
+    % try
+    %     theme(parentfig, "light");
+    % %end
+    % catch
+    % end
     movegui(parentfig, 'center');
 
     function [txt] = i_myupdatefcnx(pdt, ~)
