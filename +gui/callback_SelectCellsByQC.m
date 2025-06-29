@@ -499,6 +499,9 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
     end
     requirerefresh = true;
     guidata(FigureHandle, sce);
+    if isa(src, 'matlab.apps.AppBase')
+        src.sce = sce;
+    end
 end
 
 

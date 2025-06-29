@@ -1,1 +1,1 @@
-scgeatool([],'useuifig',true)
+scgeatoolApp
