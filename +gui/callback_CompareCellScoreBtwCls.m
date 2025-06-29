@@ -124,7 +124,7 @@ bb = 'No, just show values (heatmap)';
                     % speciestag = gui.i_selectspecies(2, true, FigureHandle);
                     % if isempty(speciestag), return; end
                     try
-                        [posg, ctselected] = gui.i_selectMSigDBGeneSets(speciestag);
+                        [posg, ctselected] = gui.i_selectMSigDBGeneSets(speciestag, false, FigureHandle);
                     catch ME
                         gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
                         return;
