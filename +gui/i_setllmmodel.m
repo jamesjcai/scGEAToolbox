@@ -1,10 +1,6 @@
 function [done] = i_setllmmodel(src, ~)
 
-    if isa(src, 'matlab.apps.AppBase')    
-        [parentfig, ~] = xui.gui_getfigsce(src);
-    else
-        [parentfig, ~] = gui.gui_getfigsce(src);
-    end
+[parentfig, ~] = gui.gui_getfigsce(src);
 done = false;
 preftagname = 'llapikeyenvfile';
 if ~ispref('scgeatoolbox', preftagname)

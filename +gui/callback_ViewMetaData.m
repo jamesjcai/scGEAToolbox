@@ -1,5 +1,6 @@
 function callback_ViewMetaData(src, ~)
 
+
 [FigureHandle, sce] = gui.gui_getfigsce(src);
 
 if gui.i_isuifig(FigureHandle)

@@ -1,10 +1,7 @@
 function i_savemainfig(src, ~, tag)
        
-    if isa(src, 'matlab.apps.AppBase')    
-        [parentfig] = xui.gui_getfigsce(src);
-    else        
-        [parentfig] = gui.gui_getfigsce(src);
-    end
+
+    [parentfig] = gui.gui_getfigsce(src);
     axesHandles = findall(parentfig, 'Type', 'axes');
     if isempty(axesHandles)    
         gui.myHelpdlg(parentfig, ...

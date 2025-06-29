@@ -2,11 +2,8 @@ function [requirerefresh] = callback_RenameBatchID(src, ~)
 
 requirerefresh = false;
 
-if isa(src, 'matlab.apps.AppBase')    
-    [FigureHandle, sce] = xui.gui_getfigsce(src);
-else
+
     [FigureHandle, sce] = gui.gui_getfigsce(src);
-end
 
 
 if isempty(sce.c_batch_id)

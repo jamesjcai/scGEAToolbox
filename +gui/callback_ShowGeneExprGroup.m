@@ -1,7 +1,8 @@
 function callback_ShowGeneExprGroup(src, ~)
 
-    [FigureHandle, sce] = gui.gui_getfigsce(src);
-    % [axx, bxx] = view(findall(FigureHandle,'type','axes'));    
+
+  [FigureHandle, sce] = gui.gui_getfigsce(src);
+% [axx, bxx] = view(findall(FigureHandle,'type','axes'));    
 
     allowunique = false;
     [thisc] = gui.i_select1class(sce, allowunique,[],[],FigureHandle);

@@ -3,11 +3,8 @@ function [requirerefresh, renamedwhat] = callback_RenameOthers(src, ~)
 requirerefresh = false;
 renamedwhat = [];
 
-if isa(src, 'matlab.apps.AppBase')    
-    [FigureHandle, sce] = xui.gui_getfigsce(src);
-else
+
     [FigureHandle, sce] = gui.gui_getfigsce(src);
-end
 
 listitems = {'Gene name','Cluster ID'};
     

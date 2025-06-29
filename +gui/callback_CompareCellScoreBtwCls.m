@@ -11,11 +11,7 @@ function [needupdatesce] = callback_CompareCellScoreBtwCls(src, ~)
     - Displays a graph showing the calculated scores along with labels for each dataset.
 %}
 
-if isa(src, 'matlab.apps.AppBase')  
-    [FigureHandle, sce] = xui.gui_getfigsce(src);
-else
-    [FigureHandle, sce] = gui.gui_getfigsce(src);
-end
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 
 needupdatesce = false;
 
@@ -135,7 +131,7 @@ bb = 'No, just show values (heatmap)';
 
                     n = length(posg);
                     y = cell(n,1);
-                    [~, methodid] = gui.i_pickscoremethod;
+                    [~, methodid] = gui.i_pickscoremethod([], FigureHandle);
                     if isempty(methodid), return; end
 
                     fw = gui.myWaitbar(FigureHandle);

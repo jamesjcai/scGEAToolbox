@@ -5,7 +5,9 @@ function callback_GetCellSignatureMatrix(src, ~)
 %         ' Continue?'],'');
 %     if ~strcmp(answer,'Yes'), return; end
 
-[FigureHandle, sce] = gui.gui_getfigsce(src);
+
+    [FigureHandle, sce] = gui.gui_getfigsce(src);
+
 preselected = [];
 
 [~, T] = pkg.e_cellscores([], [], 0);
@@ -50,7 +52,7 @@ if tf2 ~= 1, return; end
 n = length(indx2);
 Y = zeros(sce.NumCells, n);
 
-[~, methodid] = gui.i_pickscoremethod([]);
+[~, methodid] = gui.i_pickscoremethod([], FigureHandle);
 if isempty(methodid), return; end
 
 fw = gui.myWaitbar(FigureHandle);

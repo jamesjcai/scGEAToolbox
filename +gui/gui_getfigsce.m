@@ -1,4 +1,12 @@
 function [parentfig, sce, isui] = gui_getfigsce(src)
+
+if isa(src, 'matlab.apps.AppBase')  
+    parentfig = src.UIFigure;
+    sce = src.sce;
+    isui = true;
+
+else
+
    if ~isprop(src, 'Parent') || ~isprop(src.Parent, 'Parent')
        error('Invalid source object: missing parent properties.');
    end
@@ -17,3 +25,5 @@ function [parentfig, sce, isui] = gui_getfigsce(src)
     if nargout > 2
         isui = gui.i_isuifig(parentfig);
     end
+
+end

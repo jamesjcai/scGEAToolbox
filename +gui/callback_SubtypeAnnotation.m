@@ -4,6 +4,7 @@ function [requirerefresh] = callback_SubtypeAnnotation(src, ~)
 
     if isa(src, "SingleCellExperiment")
         sce = src;
+        FigureHandle = [];
     else
         [FigureHandle, sce] = gui.gui_getfigsce(src);
     end

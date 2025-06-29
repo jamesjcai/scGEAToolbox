@@ -1,6 +1,7 @@
 function callback_SGSAnalysis(src, ~)
 
-    [FigureHandle, sce] = gui.gui_getfigsce(src);
+
+        [FigureHandle, sce] = gui.gui_getfigsce(src);
     % if ~gui.gui_showrefinfo('SGS Analysis', FigureHandle), return; end
 
     extprogname = 'scgeatool_SGSAnalysis';

@@ -1,11 +1,8 @@
 function [requirerefresh] = callback_RenameCellType(src)
 requirerefresh = false;
 
-if isa(src, 'matlab.apps.AppBase')    
-    [FigureHandle, sce] = xui.gui_getfigsce(src);
-else
+
     [FigureHandle, sce] = gui.gui_getfigsce(src);
-end
 
 if isempty(sce.c_cell_type_tx)
     gui.myErrordlg(FigureHandle, 'sce.c_cell_type_tx undefined');

@@ -5,7 +5,7 @@ highlightindex = [];
 needremove = false;
 requirerefresh = false;
 
-[FigureHandle, sce] = xui.gui_getfigsce(app);
+[FigureHandle, sce] = gui.gui_getfigsce(app);
 
 
 % 'SC_QCFILTER (QC Preserves Lowly-expressed Cells/Genes)',...

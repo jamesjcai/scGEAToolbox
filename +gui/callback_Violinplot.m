@@ -3,8 +3,6 @@ function callback_Violinplot(src, ~)
     if isa(src,"SingleCellExperiment")
         sce = src;
         FigureHandle = [];
-    elseif isa(src, 'matlab.apps.AppBase')    
-        [FigureHandle, sce] = xui.gui_getfigsce(src);
     else
         [FigureHandle, sce] = gui.gui_getfigsce(src);
     end

@@ -1,10 +1,7 @@
 function callback_PickColorMap(src, ~, showzero)
 
-    if isa(src, 'matlab.apps.AppBase')    
-        [FigureHandle, sce] = xui.gui_getfigsce(src);
-    else
-        [FigureHandle, sce] = gui.gui_getfigsce(src);
-    end
+    [FigureHandle, sce] = gui.gui_getfigsce(src);
+
     if nargin < 3, showzero = false; end
     n = numel(unique(sce.c));
     % disp(sprintf('Using %d colors',n));

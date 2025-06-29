@@ -1,6 +1,7 @@
 function callback_ShowMtGeneExpression(src, ~)
 
-[FigureHandle, sce] = gui.gui_getfigsce(src);
+
+    [FigureHandle, sce] = gui.gui_getfigsce(src);
 
 idx = startsWith(sce.g, 'mt-', 'IgnoreCase', true);
 n = sum(idx);

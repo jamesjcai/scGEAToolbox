@@ -14,11 +14,7 @@ if nargin < 3, predefinedlist = []; end
 
 %    [FigureHandle, sce] = gui.gui_getfigsce(src);
 
-if isa(src, 'matlab.apps.AppBase')    
-    [FigureHandle, sce] = xui.gui_getfigsce(src);
-else
     [FigureHandle, sce] = gui.gui_getfigsce(src);
-end    
     gsorted = natsort(sce.g);
 
     rng("shuffle");

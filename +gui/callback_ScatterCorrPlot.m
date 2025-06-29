@@ -1,10 +1,7 @@
 function callback_ScatterCorrPlot(src, ~)
 
-    if isa(src, 'matlab.apps.AppBase')    
-        [FigureHandle, sce] = xui.gui_getfigsce(src);
-    else
+
         [FigureHandle, sce] = gui.gui_getfigsce(src);
-    end
 
     %[axx, bxx] = view(findall(FigureHandle,'type','axes'));
 

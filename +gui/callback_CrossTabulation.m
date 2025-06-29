@@ -1,10 +1,6 @@
 function callback_CrossTabulation(src, ~)
 
-if isa(src, 'matlab.apps.AppBase')    
-    [FigureHandle, sce] = xui.gui_getfigsce(src);
-else
-    [FigureHandle, sce] = gui.gui_getfigsce(src);
-end
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 
 [thisc1, clabel1, thisc2, clabel2] = gui.i_select2class(sce, true, FigureHandle);
 
