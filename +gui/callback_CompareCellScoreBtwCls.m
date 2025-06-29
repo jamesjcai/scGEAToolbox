@@ -52,17 +52,17 @@ bb = 'No, just show values (heatmap)';
                     listitems = natsort(string(cLi));
                     n = length(listitems);
 
-                if gui.i_isuifig(FigureHandle)
-                    [indxx, tfx] = gui.myListdlg(FigureHandle, listitems, ...
-                        'Select two groups:', ...
-                        listitems);
-                else                    
-                    [indxx, tfx] = listdlg('PromptString', {'Select two groups:'}, ...
-                        'SelectionMode', 'multiple', ...
-                        'ListString', listitems, ...
-                        'InitialValue', 1:n, ...
-                        'ListSize', [220 300]);
-                end
+                    if gui.i_isuifig(FigureHandle)
+                        [indxx, tfx] = gui.myListdlg(FigureHandle, listitems, ...
+                            'Select two groups:', ...
+                            listitems);
+                    else                    
+                        [indxx, tfx] = listdlg('PromptString', {'Select two groups:'}, ...
+                            'SelectionMode', 'multiple', ...
+                            'ListString', listitems, ...
+                            'InitialValue', 1:n, ...
+                            'ListSize', [220 300]);
+                    end
 
                     if tfx == 1
                         [y1, idx1] = ismember(listitems(indxx), cLi);
@@ -75,8 +75,9 @@ bb = 'No, just show values (heatmap)';
                     end
                 end
             end
-
-            [selecteditem, speciestag] = gui.i_selgenesetcollection;
+            pause(1);
+            
+            [selecteditem, speciestag] = gui.i_selgenesetcollection(FigureHandle);
             if isempty(selecteditem), return; end
             %try
 
