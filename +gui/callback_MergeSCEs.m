@@ -73,6 +73,9 @@ switch sourcetag
                 fw = gui.myWaitbar(FigureHandle);
                 sce = sc_mergesces(insce, methodtag, keepbatchid);
                 guidata(FigureHandle, sce);
+                if isa(src, 'matlab.apps.AppBase')
+                    src.sce = sce;
+                end
                 requirerefresh = true;
             catch ME
                 gui.myWaitbar(FigureHandle, fw, true);
@@ -117,6 +120,9 @@ switch sourcetag
             pause(1)
             sce = sc_mergesces(scelist, methodtag, keepbatchid);
             guidata(FigureHandle, sce);
+            if isa(src, 'matlab.apps.AppBase')
+                src.sce = sce;
+            end
             requirerefresh = true;
         catch ME
             gui.myWaitbar(FigureHandle, fw, true);
