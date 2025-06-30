@@ -4,7 +4,8 @@ function callback_ViewMetaData(src, ~)
 [FigureHandle, sce] = gui.gui_getfigsce(src);
 
 if gui.i_isuifig(FigureHandle)
-    a = gui.myInputdlg({'Data Info:'}, 'Metadata Viewer', {char(sce.metadata)}, FigureHandle);
+    % a = gui.myInputdlg({'Data Info:'}, 'Metadata Viewer', {char(sce.metadata)}, FigureHandle);
+    a = gui.myTextareadlg(FigureHandle, {'Data Info:'}, 'Metadata Viewer', {sce.metadata}, true);
 else
     a = inputdlg('Data Info:', 'Metadata Viewer', [15, 80], {char(sce.metadata)});
 end

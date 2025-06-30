@@ -56,7 +56,7 @@ try
 
     % -------------
 
-    hx = gui.myFigure(FigureHandle);
+    hx = gui.myFigure;
     
     tabgp = uitabgroup();
     for nf = 1:numfig
