@@ -1936,7 +1936,8 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 sce, FigureHandle);
             if ~letdoit, return; end
             if sum(ptsSelected) < 200                
-                if ~strcmp(gui.myQuestdlg(FigureHandle, sprintf('Too few cells (n = %d) selected, continue?', sum(ptsSelected))), 'Yes'), return; end
+                if ~strcmp(gui.myQuestdlg(FigureHandle, sprintf('Too few cells (n = %d) selected, continue?', ...
+                        sum(ptsSelected))), 'Yes'), return; end
             end
             scetmp = sce.removecells(~ptsSelected);
             scetmp = scetmp.qcfilter(1000, 0.15, 15);
