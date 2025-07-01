@@ -4,7 +4,12 @@ function [done] = i_setqtmservice(src, ~)
 done = false;
 
 installedPackages = matlabshared.supportpkg.getInstalled;
-isQuantumInstalled = any(strcmp({installedPackages.Name}, 'MATLAB Support Package for Quantum Computing'));
+
+if isempty(installedPackages)
+    isQuantumInstalled = false;
+else
+    isQuantumInstalled = any(strcmp({installedPackages.Name}, 'MATLAB Support Package for Quantum Computing'));
+end
 
 if isQuantumInstalled
     % disp('Quantum Computing Support Package is already installed.');
