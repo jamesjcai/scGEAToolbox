@@ -425,27 +425,10 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
             needremove = true;
         case 'QC Metrics in Violin Plots' % view QC metrics violin
             gui.i_qcviolin(sce.X, sce.g, FigureHandle);
-            % requirerefresh = false;
             return;
-            %         case 11
-            %             fw = gui.myWaitbar(FigureHandle);
-            %             [Xdecon,contamination]=run.decontX(sce);
-            %             sce.X=Xdecon;
-            %             guidata(FigureHandle,sce);
-            %             gui.myWaitbar(FigureHandle, fw);
-            %             figure;
-            %             gui.i_stemscatter(sce.s,contamination);
-            %             zlabel('Contamination rate')
-            %             title('Ambient RNA contamination')
-            %             pause(1)
-            %             gui.myHelpdlg(FigureHandle, 'Contamination removed.')
-            %             requirerefresh=false;
-            %             return;
         otherwise
-            % requirerefresh = false;
             return;
     end
-            
 
     %if ismember(indx,[7 8 9])
     %if ismember(listitems{idx},{'','',''})

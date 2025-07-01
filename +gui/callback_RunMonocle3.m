@@ -2,7 +2,7 @@ function [needupdatesce] = callback_RunMonocle3(src, ~)
 
 needupdatesce = false;
 extprogname = 'R_monocle3';
-[FigureHandle] = gui.gui_getfigsce(src);
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 
 [wrkdir] = gui.i_getwrkdir;
 if isempty(wrkdir)
@@ -72,9 +72,7 @@ end
 %    extprogname, 'r');
 %if ~ok, return; end
 
-sce = guidata(FigureHandle);
 fw = gui.myWaitbar(FigureHandle);
-
 try
     [t_mono3, s_mono3, ~, q_mono3] = run.r_monocle3(sce.X, idx, ndim, wrkdir, isdebug);
 catch ME

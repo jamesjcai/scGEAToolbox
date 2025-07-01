@@ -1,5 +1,6 @@
 function [sce, filename] = sc_openscedlg(~, ~, parentfig)
     if nargin<3, parentfig = []; end
+
     sce = [];
     filename = [];
 
@@ -28,6 +29,8 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
     preftagname ='openscedlgindex';
     defaultindx = getpref('scgeatoolbox', preftagname, length(list));
 
+    focus(parentfig);
+    pause(0.5);
     if gui.i_isuifig(parentfig)
         [indx, tf] = gui.myListdlg(parentfig, list, ...
             'Select a source', list(defaultindx));
@@ -586,10 +589,7 @@ end
             [sce] = SingleCellExperiment(X);
             sce.c_batch_id = string([ones(round(sce.NumCells/2),1);... 
                 2*ones(sce.NumCells-round(sce.NumCells/2),1)]);
-            %[c, cL] = grp2idx(sce.c);
             gui.myWaitbar(parentfig, fw);
-            % guidata(parentfig, sce);
-            % in_RefreshAll(src, [], false, false);
         catch ME
             gui.myWaitbar(parentfig, fw,true);
             gui.myErrordlg(parentfig, ME.message, ME.identifier);

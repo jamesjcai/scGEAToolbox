@@ -1,14 +1,12 @@
 function [needupdate] = callback_RunSeuratSCTransform(src,~)
     needupdate=false;
-    [FigureHandle] = gui.gui_getfigsce(src);
+    [FigureHandle, sce] = gui.gui_getfigsce(src);
 
     answer2 = gui.myQuestdlg(FigureHandle, ...
         'Perform SCTransform or load saved transformed X?', ...
         '', {'Perform Transform', 'Load Saved', 'Cancel'}, 'Draw Curve');
     switch answer2
         case 'Perform Transform'
-            sce = guidata(FigureHandle);
-
 
         case 'Load Saved'
             [file, path] = uigetfile('*.mat', ...
@@ -30,7 +28,6 @@ function [needupdate] = callback_RunSeuratSCTransform(src,~)
                 gui.myErrordlg(FigureHandle, 'Not a valid .mat file.','');
                 return;
             end
-            sce = guidata(FigureHandle);
             if strcmp('Yes', gui.myQuestdlg(FigureHandle,'Transformed X has been loaded. Use it to update SCE.X?'))
                needupdate = true;
                sce.X = X;
