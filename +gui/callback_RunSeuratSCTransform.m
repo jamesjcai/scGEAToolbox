@@ -34,7 +34,7 @@ function [needupdate] = callback_RunSeuratSCTransform(src,~)
             if strcmp('Yes', gui.myQuestdlg(FigureHandle,'Transformed X has been loaded. Use it to update SCE.X?'))
                needupdate = true;
                sce.X = X;
-               guidata(FigureHandle, sce);
+               gui.myGuidata(FigureHandle, sce, src);
                gui.myHelpdlg(FigureHandle, 'SCE.X has been updated.');
             end
            return;            
@@ -68,7 +68,7 @@ function [needupdate] = callback_RunSeuratSCTransform(src,~)
                 case 'Update'
                    needupdate = true;
                    sce.X = X;
-                   guidata(FigureHandle, sce);
+                   gui.myGuidata(FigureHandle, sce, src);
                    gui.myHelpdlg(FigureHandle, 'SCE.X has been updated.');
                 case 'Export'
                     labels = {'Save transformed X to variable named:'}; 

@@ -58,7 +58,7 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
                 sce = sce.estimatecellcycle(true, 1);
                 needupdate = true;
                 gui.myWaitbar(FigureHandle, fw);
-                guidata(FigureHandle, sce);
+                gui.myGuidata(FigureHandle, sce, src);
                 gui.myHelpdlg(FigureHandle, 'Cell cycle phase (c_cell_cycle_tx) added.');
             end
             % y = sce.c_cell_cycle_tx;
@@ -130,7 +130,7 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
                     {char(attribtag), s}];
             end
             gui.myWaitbar(FigureHandle, fw);
-            guidata(FigureHandle, sce);
+            gui.myGuidata(FigureHandle, sce, src);
             needupdate = true;
             gui.myHelpdlg(FigureHandle, sprintf(['%s added. To see the result, ' ...
                 'use View -> Cell State (Ctrl + T). Then select "%s"'], ...

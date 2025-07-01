@@ -17,7 +17,7 @@ if ~isempty(a)
         answer = gui.myQuestdlg(FigureHandle, 'Save metadata?', '');
         if strcmp(answer, 'Yes')
             sce.metadata = newmetadata;
-            guidata(FigureHandle, sce);
+            gui.myGuidata(FigureHandle, sce, src);
         end
     end
 end

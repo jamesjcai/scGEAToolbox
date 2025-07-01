@@ -53,9 +53,5 @@ if tfx == 1
         requirerefresh = true;
     end
 end
-if isa(src, 'matlab.apps.AppBase')
-    src.sce = sce;
-else
-    guidata(FigureHandle, sce);
-end
+gui.myGuidata(FigureHandle, sce, src);
 end

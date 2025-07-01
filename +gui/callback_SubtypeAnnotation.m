@@ -50,8 +50,6 @@ function [requirerefresh] = callback_SubtypeAnnotation(src, ~)
         for k = 1:length(celltypetarget_list)
             [sce] = sc_csubtypeanno(sce, celltypetarget_list(k), formatid);
         end
-        if ~isa(src, "SingleCellExperiment")
-            guidata(FigureHandle, sce);
-        end
+        gui.myGuidata(FigureHandle, sce, src);
         requirerefresh = true;
 end

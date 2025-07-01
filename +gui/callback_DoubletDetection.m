@@ -48,6 +48,6 @@ catch ME
     rethrow(ME);
 end
 %gui.myWaitbar(FigureHandle, fw);
-guidata(FigureHandle, sce);
+gui.myGuidata(FigureHandle, sce, src);
 done = true;
 end

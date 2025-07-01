@@ -320,9 +320,7 @@ bb = 'No, just show values (heatmap)';
                             {ttxt, y(:)}];
                     end
                     needupdatesce = true;
-                    if ~isa(src, 'matlab.apps.AppBase')
-                        guidata(FigureHandle, sce);
-                    end
+                    gui.myGuidata(FigureHandle, sce, src);
                     gui.i_stemscatterfig(sce, y, posg, ttxt, FigureHandle);
                 end
             end

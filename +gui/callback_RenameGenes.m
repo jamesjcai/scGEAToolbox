@@ -28,5 +28,5 @@ sce.g(idx) = renamedglist;
 requirerefresh = true;
 gui.myHelpdlg(FigureHandle, sprintf('Renamed %d genes.', length(glist)), '');
 
-guidata(FigureHandle, sce);
+gui.myGuidata(FigureHandle, sce, src);
 end

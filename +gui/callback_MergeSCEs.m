@@ -72,7 +72,7 @@ switch sourcetag
                 fprintf('>> sce=sc_mergesces({%s},''%s'',true);\n', s, methodtag);
                 fw = gui.myWaitbar(FigureHandle);
                 sce = sc_mergesces(insce, methodtag, keepbatchid);
-                guidata(FigureHandle, sce);
+                gui.myGuidata(FigureHandle, sce, src);
                 if isa(src, 'matlab.apps.AppBase')
                     src.sce = sce;
                 end
@@ -119,7 +119,7 @@ switch sourcetag
             s = s(2:end);
             pause(1)
             sce = sc_mergesces(scelist, methodtag, keepbatchid);
-            guidata(FigureHandle, sce);
+            gui.myGuidata(FigureHandle, sce, src);
             if isa(src, 'matlab.apps.AppBase')
                 src.sce = sce;
             end

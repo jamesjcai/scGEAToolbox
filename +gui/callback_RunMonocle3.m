@@ -114,7 +114,7 @@ else
     error('Invalid ndim. (Valid options: 2 or 3)');
 end
 
-guidata(FigureHandle, sce);
+gui.myGuidata(FigureHandle, sce, src);
 needupdatesce = true;
 
 gui.myHelpdlg(FigureHandle, 'Monocle3 pseudotime T and embedding S have been saved in SCE.');

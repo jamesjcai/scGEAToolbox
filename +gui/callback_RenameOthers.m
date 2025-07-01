@@ -61,11 +61,7 @@ listitems = {'Gene name','Cluster ID'};
                     sce.c_cluster_id = string(cLi(ci));
                     requirerefresh = true;                    
                     renamedwhat = listitems{indx2};
-                    if isa(src, 'matlab.apps.AppBase')
-                        src.sce = sce;
-                    else
-                        guidata(FigureHandle, sce);
-                    end
+                    gui.myGuidata(FigureHandle, sce, src);
                 end
             end        
     end
