@@ -68,8 +68,8 @@ classdef myFigure < handle
                 obj.tbv{7} = pkg.i_addbutton2fig(obj.tb, 'on', {@gui.i_savemainfig, 3}, "presentation.jpg", 'Save Figure to PowerPoint File...');
                 obj.tbv{8} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_savemainfig, 2}, "jpg-format.jpg", 'Save Figure as Graphic File...');
                 obj.tbv{9} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_savemainfig, 1}, "svg-format.jpg", 'Save Figure as SVG File...');
-                % obj.tbv{10} = gui.gui_3dcamera(obj.tb);
-                obj.tbv{10} = pkg.i_addbutton2fig(obj.tb, 'on', {@gui.i_resizewin, obj.FigHandle}, 'scale-frame-reduce.jpg', 'Resize Plot Window');
+                obj.tbv{10} = gui.gui_3dcamera(obj.tb);
+                obj.tbv{11} = pkg.i_addbutton2fig(obj.tb, 'on', {@gui.i_resizewin, obj.FigHandle}, 'scale-frame-reduce.jpg', 'Resize Plot Window');
             end
             try
             %[~, d] = version;
@@ -77,6 +77,7 @@ classdef myFigure < handle
                 % theme(obj.FigHandle, "light");
             %end
             catch
+                
             end
         end
 
