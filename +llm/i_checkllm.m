@@ -9,7 +9,7 @@ done2 = false;
             try
                 chat = ollamaChat(providermodel{2}, TimeOut = 1200);
                 prompt = "Why is the sky blue?";
-                feedbk = generate(chat, prompt)
+                feedbk = generate(chat, prompt);
                 done2 = true;
             catch ME
                 fprintf('Error in chat completion: %s\n', ME.message);
@@ -55,6 +55,7 @@ done2 = false;
             model = providermodel{2};
             % API endpoint
             url = ['https://generativelanguage.googleapis.com/v1beta/models/' model ':generateContent?key=' apiKey];
+            prompt = "Why is the sky blue?";
             requestBody = struct('contents', struct('parts', struct('text', prompt)));
             jsonBody = jsonencode(requestBody);
             % Set up the HTTP request
