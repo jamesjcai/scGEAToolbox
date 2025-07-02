@@ -34,8 +34,8 @@ classdef myFigure < handle
                 obj.tbv{7} = pkg.i_addbutton2fig(obj.tb, 'on', {@gui.i_savemainfig, 3}, "presentation.jpg", 'Save Figure to PowerPoint File...');
                 obj.tbv{8} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_savemainfig, 2}, "jpg-format.jpg", 'Save Figure as Graphic File...');
                 obj.tbv{9} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_savemainfig, 1}, "svg-format.jpg", 'Save Figure as SVG File...');
-                obj.tbv{10} = gui.gui_3dcamera(obj.tb);
-                obj.tbv{11} = pkg.i_addbutton2fig(obj.tb, 'on', {@gui.i_resizewin, obj.FigHandle}, 'scale-frame-reduce.jpg', 'Resize Plot Window');                
+                % obj.tbv{10} = gui.xui_3dcamera(obj.tb, '', false, obj.FigHandle, obj.AxHandle);
+                obj.tbv{10} = pkg.i_addbutton2fig(obj.tb, 'on', {@gui.i_resizewin, obj.FigHandle}, 'scale-frame-reduce.jpg', 'Resize Plot Window');                
  
             else
                 obj.FigHandle = figure('Name', '', ...
@@ -43,6 +43,7 @@ classdef myFigure < handle
                     "DockControls", "off", 'ToolBar', 'figure', ...
                     'Position', [1, 1, 560, 420]);
                 % obj.AxHandle = axes(obj.FigHandle);
+                obj.AxHandle = gca;
                 obj.tb = findall(obj.FigHandle, 'Type', 'uitoolbar');
                 if isempty(obj.tb)
                     obj.tb = uitoolbar(obj.FigHandle);
@@ -67,8 +68,8 @@ classdef myFigure < handle
                 obj.tbv{7} = pkg.i_addbutton2fig(obj.tb, 'on', {@gui.i_savemainfig, 3}, "presentation.jpg", 'Save Figure to PowerPoint File...');
                 obj.tbv{8} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_savemainfig, 2}, "jpg-format.jpg", 'Save Figure as Graphic File...');
                 obj.tbv{9} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_savemainfig, 1}, "svg-format.jpg", 'Save Figure as SVG File...');
-                obj.tbv{10} = gui.gui_3dcamera(obj.tb);
-                obj.tbv{11} = pkg.i_addbutton2fig(obj.tb, 'on', {@gui.i_resizewin, obj.FigHandle}, 'scale-frame-reduce.jpg', 'Resize Plot Window');
+                % obj.tbv{10} = gui.gui_3dcamera(obj.tb);
+                obj.tbv{10} = pkg.i_addbutton2fig(obj.tb, 'on', {@gui.i_resizewin, obj.FigHandle}, 'scale-frame-reduce.jpg', 'Resize Plot Window');
             end
             try
             %[~, d] = version;

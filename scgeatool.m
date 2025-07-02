@@ -397,7 +397,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         in_addbuttontoggle(2, 0, {@in_togglebtfun, @gui.callback_SaveX, "icon-mat-filter-5-10.gif", "floppy-disk.jpg", true, "Export & save data"});
     end
 
-    function in_sc_openscedlg(~, event)        
+    function in_sc_openscedlg(~, event)
         if strcmp(event.EventName,'KeyPress') && ~ismember(event.Key,{'return','space','i','I'}), return; end
         clickType = get(FigureHandle, 'SelectionType');
         if strcmp(clickType,'alt'), return; end
@@ -409,10 +409,17 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 return;
             end
         end
+        % if isvalid(FigureHandle) && isa(FigureHandle, 'matlab.ui.Figure'), figure(FigureHandle); end
+        % focus(FigureHandle);
+        % pause(0.5);
 
+        if gui.i_isuifig(FigureHandle)
+            movegui(FigureHandle, 'onscreen');
+        else
+            figure(FigureHandle)
+        end
         [sce, filenm] = gui.sc_openscedlg([], [], FigureHandle);
 
-        if isvalid(FigureHandle) && isa(FigureHandle, 'matlab.ui.Figure'), figure(FigureHandle); end
 
         if ~isempty(sce) && sce.NumCells > 0 && sce.NumGenes > 0
             guidata(FigureHandle, sce);

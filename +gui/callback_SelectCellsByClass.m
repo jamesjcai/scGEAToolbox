@@ -13,7 +13,7 @@ try
     scex = selectcells(sce, ptsSelected);
     % scex.c=cLi(ci(idx));
     scex.c = sce.c(ptsSelected);
-    scgeatool(scex);
+    scgeatoolApp(scex);
     view(ax, bx);
 catch ME
     gui.myWaitbar(FigureHandle, fw, true);

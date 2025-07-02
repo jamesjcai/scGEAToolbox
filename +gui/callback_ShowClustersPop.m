@@ -58,7 +58,7 @@ try
 
     hx = gui.myFigure;
     
-    tabgp = uitabgroup();
+    tabgp = uitabgroup(hx.FigHandle);
     for nf = 1:numfig
         tab{nf} = uitab(tabgp, 'Title', sprintf('Tab%d',nf));
         axes('parent',tab{nf});
@@ -79,7 +79,7 @@ try
                 box(ax{nf, k}, 'on');
             end
         end
-        colormap(para.oldColorMap);
+        colormap(hx.AxHandle, para.oldColorMap);
     end
     hx.addCustomButton('off', @in_scgeatoolsce, "icon-mat-touch-app-10.gif", 'Extract and Work on Separate SCEs...');
     hx.show(FigureHandle);

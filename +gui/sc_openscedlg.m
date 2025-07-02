@@ -29,12 +29,15 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
     preftagname ='openscedlgindex';
     defaultindx = getpref('scgeatoolbox', preftagname, length(list));
 
-    focus(parentfig);
-    pause(0.5);
     if gui.i_isuifig(parentfig)
+        % movegui(parentfig, 'onscreen');
+        focus(parentfig);
+        pause(0.5);
         [indx, tf] = gui.myListdlg(parentfig, list, ...
             'Select a source', list(defaultindx));
     else
+        figure(parentfig);
+        pause(0.5);
         [indx, tf] = listdlg('ListString', list, ...
             'SelectionMode', 'single', ...
             'PromptString', {'Select a source:'}, ...
