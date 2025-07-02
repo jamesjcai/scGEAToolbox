@@ -31,9 +31,9 @@ sce = SingleCellExperiment(X, g);
 
 pause % Press any key to continue...
 
-%% (4/4) Run SCGEATOOL with SCE
+%% (4/4) Run SCGEATOOL APP with SCE
 
-scgeatool(sce)
+scgeatoolApp(sce)
 
 %% End of DEMO_GETTING_STARTED
 echo off
