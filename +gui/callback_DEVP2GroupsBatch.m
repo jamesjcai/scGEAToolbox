@@ -77,11 +77,9 @@ function callback_DEVP2GroupsBatch(src, ~)
         % end
         
     end
-    gui.myWaitbar(FigureHandle, fw);
-   
-    
-    % ------------------------------------------ DV
-    fw = gui.myWaitbar(FigureHandle);
+%   gui.myWaitbar(FigureHandle, fw);    
+% ------------------------------------------ DV
+%   fw = gui.myWaitbar(FigureHandle);
     for k=1:length(CellTypeList)
         gui.myWaitbar(FigureHandle, fw, false, '', ...
             sprintf('DV - Processing %s ...', CellTypeList{k}), ...
@@ -158,9 +156,8 @@ function callback_DEVP2GroupsBatch(src, ~)
             catch ME
                 warning(ME.message);
             end
-    
     end
-    gui.myWaitbar(FigureHandle, fw);
+    % gui.myWaitbar(FigureHandle, fw);
     
     % ----------------------------- DP
     ctag = {"H", "C2", "C5", "C6", "C7"}';
@@ -177,7 +174,7 @@ function callback_DEVP2GroupsBatch(src, ~)
                         sprintf('msigdb_%s.mat', ctag{c}));
         load(dbfile,'setmatrx','setnames','setgenes');
         
-        fw = gui.myWaitbar(FigureHandle);
+%       fw = gui.myWaitbar(FigureHandle);
         sceX = log1p(sc_norm(sce.X));
         for k=1:length(CellTypeList)
             gui.myWaitbar(FigureHandle, fw, false, '', ...
@@ -213,11 +210,13 @@ function callback_DEVP2GroupsBatch(src, ~)
                 warning(ME.message);
             end
         end
-        gui.myWaitbar(FigureHandle, fw);
-    end
+        % gui.myWaitbar(FigureHandle, fw);
+    end    
 
     Tnt = table(ctag, ccat);
     writetable(Tnt, filesaved, "FileType", "spreadsheet", 'Sheet', 'Note');
+
+    gui.myWaitbar(FigureHandle, fw);
     
     answer = gui.myQuestdlg(FigureHandle, sprintf('Result files saved. Open the folder %s?', outdir), '');
     if strcmp(answer,'Yes'), winopen(outdir); end

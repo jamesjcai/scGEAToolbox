@@ -147,6 +147,7 @@ end
             listitems = [listitems, 'Workspace Variable...'];
         end
         
+        
         if gui.i_isuifig(parentfig)
             [indx2, tf2] = gui.myListdlg(parentfig, listitems, ... 
             'Select grouping variable:');

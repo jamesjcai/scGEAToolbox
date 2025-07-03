@@ -54,7 +54,8 @@ end
      case 'Two Samples'
 
         if gui.i_isuifig(parentfig)
-            [indxx, tfx] = gui.myListdlg(parentfig, listitems, 'Select two samples:');
+            [indxx, tfx] = gui.myListdlg(parentfig, listitems, ...
+                'Select two samples:', listitems([n-1, n]));
         else
             [indxx, tfx] = listdlg('PromptString', {'Select two samples:'}, ...
                 'SelectionMode', 'multiple', ...

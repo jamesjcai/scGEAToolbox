@@ -54,4 +54,10 @@ function callback_DPGene2GroupsBatch(src, ~)
     
     answer=gui.myQuestdlg(FigureHandle, sprintf('Result files saved. Open the folder %s?', outdir), '');
     if strcmp(answer,'Yes'), winopen(outdir); end
+
+    answer = gui.myQuestdlg(FigureHandle, 'Use LLM to generate enrichment analysis report?', '');
+    if strcmp(answer,'Yes')
+        gui.sc_llm_enrichr2word(outdir);
+    end
+    
 end

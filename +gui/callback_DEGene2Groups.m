@@ -326,7 +326,7 @@ function callback_DEGene2Groups(src, ~)
         end
     end
 
-% ------- end of volcano_plot
+    % ------- end of volcano_plot
 
     function i_replaceinf(T)
         % Iterate over each variable in the table
