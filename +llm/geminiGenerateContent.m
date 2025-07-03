@@ -34,12 +34,11 @@ function response = geminiGenerateContent(prompt, nvp)
         end
     end
     %https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=
-
     endpoint = "https://generativelanguage.googleapis.com/v1beta/";
     method = "generateContent";
     
     import matlab.net.*
-    import matlab.net.http.*  
+    import matlab.net.http.*
     apikey = getenv("GEMINI_API_KEY");
     headers = HeaderField('Content-Type', 'application/json');
     request = RequestMessage('post', headers, query);

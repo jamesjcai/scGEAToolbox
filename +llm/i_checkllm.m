@@ -1,16 +1,36 @@
-function [done2] = i_checkllm(apikeyfile)
-done2 = false;
+function [done] = i_checkllm(apikeyfile, provider, parentfig)
+done = false;
+
+if nargin<3, parentfig = []; end
+if nargin<2, provider = 'Gemini'; end
+if nargin<1, apikeyfile = []; end
+
+if isempty(apikeyfile)
+    preftagname = 'llapikeyenvfile';
+    if ~ispref('scgeatoolbox', preftagname)
+        if ~strcmp('Yes', gui.myQuestdlg(parentfig, 'Locate llm_api_key.env?')), return; end
+        [file, path] = uigetfile('llm_api_key.env', 'Select File');
+        if isequal(file, 0), return; end
+        apikeyfile = fullfile(path, file);
+        setpref('scgeatoolbox', preftagname, apikeyfile);
+        gui.myHelpdlg(parentfig, "llm_api_key.env is located successfully.");
+    else
+        apikeyfile = getpref('scgeatoolbox', preftagname);
+    end
+end
 
     preftagname = 'llmodelprovider';
     s = getpref('scgeatoolbox', preftagname);
     providermodel = strsplit(s,':');
-    switch providermodel{1}
+
+    provider = providermodel{1};
+    switch provider
         case 'Ollama'
             try
                 chat = ollamaChat(providermodel{2}, TimeOut = 1200);
                 prompt = "Why is the sky blue?";
                 feedbk = generate(chat, prompt);
-                done2 = true;
+                done = true;
             catch ME
                 fprintf('Error in chat completion: %s\n', ME.message);
             end
@@ -41,7 +61,7 @@ done2 = false;
                 % Display chat response as JSON
                 chat_json = jsonencode(chat_response);
                 fprintf('Chat completion response:\n%s\n', chat_json);
-                done2 = true;
+                done = true;
             catch ME
                 fprintf('Error in chat completion: %s\n', ME.message);
                 % Additional debug info
@@ -53,27 +73,16 @@ done2 = false;
             loadenv(apikeyfile,"FileType","env");
             apiKey = getenv("GEMINI_API_KEY");
             model = providermodel{2};
-            % API endpoint
-            url = ['https://generativelanguage.googleapis.com/v1beta/models/' model ':generateContent?key=' apiKey];
+
             prompt = "Why is the sky blue?";
-            requestBody = struct('contents', struct('parts', struct('text', prompt)));
-            jsonBody = jsonencode(requestBody);
-            % Set up the HTTP request
-            options = weboptions('ContentType', 'json', 'RequestMethod', 'post');
-            % Make the API call
             try
-                response = webwrite(url, jsonBody, options);
-                % Extract the actual response text
-                if isfield(response, 'candidates') && ~isempty(response.candidates) && ...
-                   isfield(response.candidates{1}, 'content') && ...
-                   isfield(response.candidates{1}.content, 'parts') && ...
-                   ~isempty(response.candidates{1}.content.parts)
-                    response = response.candidates{1}.content.parts{1}.text;
-                    fprintf('Chat completion response:\n%s\n', response);
-                    done2 = true;
+                response = llm.callGemini2(apiKey, prompt, model);
+                % response = llm.geminiGenerateContent(prompt);
+             catch ME
+                fprintf('Error in chat completion: %s\n', ME.message);
+                if contains(ME.message, '400')
+                    fprintf('This is likely a request format issue. Check the API documentation for the exact expected format.\n');
                 end
-            catch e
-                fprintf('Error calling Gemini API: %s\n', e.message);
-            end
+            end   
 
     end

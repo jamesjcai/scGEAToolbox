@@ -1,5 +1,13 @@
 function sc_llm_enrichr2word(selpath, parentfig)
 
+    if nargin<2, parentfig = []; end
+    if nargin < 1
+        selpath = uigetdir;
+    end     
+    if isempty(selpath), return; end
+    if selpath==0, return; end
+    if ~isfolder(selpath), return; end
+
 
     usegemini = false;
     try    
@@ -12,13 +20,6 @@ function sc_llm_enrichr2word(selpath, parentfig)
     end
 
 
-    if nargin<2, parentfig = []; end
-
-    if nargin < 1
-        selpath = uigetdir;
-    end     
-    if isempty(selpath), return; end
-    if ~isfolder(selpath), return; end
 
     files = dir(fullfile(selpath, '*_DE_*.xlsx'));
     fileNames1 = string({files(~[files.isdir]).name});
@@ -62,15 +63,15 @@ function sc_llm_enrichr2word(selpath, parentfig)
 
         [~, wordfilename] = fileparts(selectedfiles(k));
 
-        if ~usegemini
+        %if ~usegemini
             [done, outfile] = llm.e_DETableSummary(TbpUpEnrichr, ...
                 TmfUpEnrichr, TbpDnEnrichr, ...
                 TmfDnEnrichr, wordfilename);
-        else
-            [done, outfile] = llm.e_EnrichrTabSummary(TbpUpEnrichr, ...
-                TmfUpEnrichr, TbpDnEnrichr, ...
-                TmfDnEnrichr, wordfilename);
-        end
+        %else
+        %    [done, outfile] = llm.e_EnrichrTabSummary(TbpUpEnrichr, ...
+        %        TmfUpEnrichr, TbpDnEnrichr, ...
+        %        TmfDnEnrichr, wordfilename);
+        %end
 
         % files = dir(fullfile(selpath, '*_DP_*.xlsx'));
         % fileNames = string({files(~[files.isdir]).name});

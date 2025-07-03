@@ -111,7 +111,7 @@ switch selectedProvider
             gui.myErrordlg(parentfig,"llm_api_key.env is not a valid file.");
         end
         loadenv(apikeyfile,"FileType","env");
-        if ~isempty(getenv("GEMINI_API_KEY"))                
+        if ~isempty(getenv("GEMINI_API_KEY"))        
             url = sprintf('https://generativelanguage.googleapis.com/v1beta/models?key=%s', ...
                   getenv("GEMINI_API_KEY"));
             a = webread(url);
