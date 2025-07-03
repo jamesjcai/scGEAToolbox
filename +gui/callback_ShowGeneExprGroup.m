@@ -23,6 +23,8 @@ function callback_ShowGeneExprGroup(src, ~)
             a = getpref('scgeatoolbox', 'prefcolormapname', 'autumn');
             s = sce.s;
             [thisyv, ylabelv] = gui.i_selectnstates(sce, true, [], FigureHandle);
+            if isempty(thisyv) || isempty(ylabelv), return; end
+            
             y = thisyv{1};
             ylabelv = string(ylabelv);
 

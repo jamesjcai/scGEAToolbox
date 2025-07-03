@@ -15,6 +15,7 @@ classdef myFigure < handle
         function obj = myFigure(parentfig)
             if nargin<1, parentfig = []; end
 
+            parentfig = [];
             if gui.i_isuifig(parentfig)
                 disp('making a uifigure');
                 obj.FigHandle = uifigure('Name', '', ...

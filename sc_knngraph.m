@@ -10,7 +10,8 @@ if nargin < 3, plotit = false; end
 if nargin < 2 || isempty(k), k = 4; end
 
 if isempty(parentfig)
-   ax = gca; 
+   parentfig = figure;
+   ax = gca;
 else
    ax = findall(parentfig, 'Type', 'axes');
 end
@@ -53,8 +54,9 @@ if nargout > 0 || plotit
     A = sparse(A);
 end
 
-if plotit
-    hold on
+if ~plotit, return; end
+
+    hold(ax, "on");
     for i = 1:size(Graph, 2)
         for j = 1:size(Graph, 1)
             % if i~=Graph(j,i)
@@ -70,9 +72,7 @@ if plotit
             end
         end
     end
-    hold off
-end
-
+    hold(ax, "off");
 end
 
 % G=graph(W);

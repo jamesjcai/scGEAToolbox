@@ -1,7 +1,7 @@
 function i_savemainfig(src, ~, tag)
     [parentfig] = gui.gui_getfigsce(src);
     axesHandles = findall(parentfig, 'Type', 'axes');
-    if isempty(axesHandles)    
+    if isempty(axesHandles)
         gui.myHelpdlg(parentfig, ...
             'No figures available in the current window. Unable to save figure.');
         return;

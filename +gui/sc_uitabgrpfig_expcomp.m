@@ -11,7 +11,7 @@ if nargin < 3, parentfig = []; end
 if ismcc || isdeployed, makePPTCompilable(); end
 import mlreportgen.ppt.*;
 
-pw1 = fileparts(mfilename('fullpath'));
+%pw1 = fileparts(mfilename('fullpath'));
 %pth = fullfile(pw1, '..', 'assets', 'Misc', 'myTemplate.pptx');
 
 
@@ -99,7 +99,7 @@ tabgp.SelectionChangedFcn=@displaySelection;
 hx.addCustomButton('off',  @i_genecards, 'www.jpg', 'GeneCards...');
 %hx.addCustomButton('off', @i_RescaleExpr, 'IMG00074.GIF', 'Rescale expression level [log2(x+1)]');
 %hx.addCustomButton('off', @i_ResetExpr, 'plotpicker-geobubble2.gif', 'Reset expression level');
-hx.addCustomButton('off', @in_savedata, "powerpointx.gif", 'Save Gene List...');
+hx.addCustomButton('off', @in_savedata, "Save.gif", 'Save Gene List...');
 %hx.addCustomButton('off', @i_savemainfig, "powerpoint.gif", 'Save Figure to PowerPoint File...');
 %hx.addCustomButton('off', @i_savemainfigx, "xpowerpoint.gif", 'Save Figure as Graphic File...');
 

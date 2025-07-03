@@ -293,6 +293,7 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
                         return;
                     end
                 otherwise
+                    return;
             end
 
         case '(a) Remove Mt-Genes' % remove mt-genes

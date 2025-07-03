@@ -1,4 +1,4 @@
-function answer = myQuestdlg(parentfig, message, title, options, defaultOption)
+function answer = myQuestdlg_OLD(parentfig, message, title, options, defaultOption)
     % CUSTOMQUESTDLG Display a dialog box appropriate for the figure type.
     %
     % answer = CUSTOMQUESTDLG(parentfig, message, title, options, defaultOption)
@@ -24,7 +24,7 @@ function answer = myQuestdlg(parentfig, message, title, options, defaultOption)
     end
     if nargin < 5
         defaultOption = options{1};
-    end
+    end    
     if nargin < 3, title = ''; end
     if nargin < 2, message = 'Selection'; end
     if nargin < 1, parentfig = []; end
@@ -33,21 +33,18 @@ function answer = myQuestdlg(parentfig, message, title, options, defaultOption)
         answer = questdlg(message, title, options{:}, defaultOption);
     else
         % UIFigure-based app
-        if ~strcmp(options{end}, 'Cancel')
-            options{end+1} = 'Cancel';
-        end
         answer = uiconfirm(parentfig, message, title, ...
             'Options', options, ...
             'DefaultOption', find(strcmp(options, defaultOption)), ...
-            'Icon', 'question','CancelOption', length(options));
+            'Icon', 'question');
 
-        % if strcmp(answer, options{end})
-        %     % if ~strcmp('Yes', gui.myQuestdlg(parentfig, ...
-        %     %         sprintf('You selected %s. Continue?', answer)))
-        %     %     answer = [];
-        %     % end
-        %     gui.myHelpdlg(parentfig, ...
-        %         sprintf('You selected ''%s''.', answer));
-        % end
+        if strcmp(answer, options{end})
+            % if ~strcmp('Yes', gui.myQuestdlg(parentfig, ...
+            %         sprintf('You selected %s. Continue?', answer)))
+            %     answer = [];
+            % end
+            gui.myHelpdlg(parentfig, ...
+                sprintf('You selected ''%s''.', answer));
+        end
     end
 end
