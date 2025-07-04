@@ -9,16 +9,15 @@ function sc_llm_enrichr2word(selpath, parentfig)
     if ~isfolder(selpath), return; end
 
 
-    usegemini = false;
-    try    
-        preftagname = 'llmodelprovider';
-        s = getpref('scgeatoolbox', preftagname);
-        if contains(upper(s),'GEMINI')
-            usegemini = true;
-        end
-    catch
-    end
-
+    % usegemini = false;
+    % try    
+    %     preftagname = 'llmodelprovider';
+    %     s = getpref('scgeatoolbox', preftagname);
+    %     if contains(upper(s),'GEMINI')
+    %         usegemini = true;
+    %     end
+    % catch
+    % end
 
 
     files = dir(fullfile(selpath, '*_DE_*.xlsx'));
@@ -54,8 +53,11 @@ function sc_llm_enrichr2word(selpath, parentfig)
             sprintf('%s', selectedfiles(k)), ...
             (k-0.5)/length(selectedfiles));
         infile = fullfile(selpath, selectedfiles(k));
+        % [TbpUpEnrichr, TmfUpEnrichr, ...
+        %     TbpDnEnrichr, TmfDnEnrichr] = in_gettables(infile);
+
         [TbpUpEnrichr, TmfUpEnrichr, ...
-            TbpDnEnrichr, TmfDnEnrichr] = in_gettables(infile);
+            TbpDnEnrichr, TmfDnEnrichr] = pkg.in_XLSX2DETable(infile);
         % assignin("base","TbpUp",TbpUp);
         % assignin("base","TmfUp",TmfUp);
         % assignin("base","TbpDn",TbpDn);
@@ -66,7 +68,7 @@ function sc_llm_enrichr2word(selpath, parentfig)
         %if ~usegemini
             [done, outfile] = llm.e_DETableSummary(TbpUpEnrichr, ...
                 TmfUpEnrichr, TbpDnEnrichr, ...
-                TmfDnEnrichr, wordfilename);
+                TmfDnEnrichr, wordfilename, selpath);
         %else
         %    [done, outfile] = llm.e_EnrichrTabSummary(TbpUpEnrichr, ...
         %        TmfUpEnrichr, TbpDnEnrichr, ...
@@ -80,37 +82,35 @@ function sc_llm_enrichr2word(selpath, parentfig)
         % para = Paragraph("AI generated text");
         % append(doc, para);
         % close(doc);
-
-
         if done, rptview(outfile, 'docx'); end
     end
-    gui.myWaitbar(parentfig, fw);  
+    gui.myWaitbar(parentfig, fw);
    
-    function [TbpUp, TmfUp, TbpDn, TmfDn] = in_gettables(excelfile)
-        TbpUp = [];
-        TmfUp = [];
-        TbpDn = [];
-        TmfDn = [];
-        sheetList = sheetnames(excelfile);
-        
-        sheetToRead = 'Up_250_GO_BP';
-        if any(strcmp(sheetList, sheetToRead))
-            TbpUp = readtable(excelfile, 'Sheet', sheetToRead);
-        end
-
-        sheetToRead = 'Up_250_GO_MF';
-        if any(strcmp(sheetList, sheetToRead))
-            TmfUp = readtable(excelfile, 'Sheet', sheetToRead);
-        end
-
-        sheetToRead = 'Dn_250_GO_BP';
-        if any(strcmp(sheetList, sheetToRead))
-            TbpDn = readtable(excelfile, 'Sheet', sheetToRead);
-        end
-
-        sheetToRead = 'Dn_250_GO_MF';
-        if any(strcmp(sheetList, sheetToRead))
-            TmfDn = readtable(excelfile, 'Sheet', sheetToRead);
-        end        
-    end
+    % function [TbpUp, TmfUp, TbpDn, TmfDn] = in_gettables(excelfile)
+    %     TbpUp = [];
+    %     TmfUp = [];
+    %     TbpDn = [];
+    %     TmfDn = [];
+    %     sheetList = sheetnames(excelfile);
+    % 
+    %     sheetToRead = 'Up_250_GO_BP';
+    %     if any(strcmp(sheetList, sheetToRead))
+    %         TbpUp = readtable(excelfile, 'Sheet', sheetToRead);
+    %     end
+    % 
+    %     sheetToRead = 'Up_250_GO_MF';
+    %     if any(strcmp(sheetList, sheetToRead))
+    %         TmfUp = readtable(excelfile, 'Sheet', sheetToRead);
+    %     end
+    % 
+    %     sheetToRead = 'Dn_250_GO_BP';
+    %     if any(strcmp(sheetList, sheetToRead))
+    %         TbpDn = readtable(excelfile, 'Sheet', sheetToRead);
+    %     end
+    % 
+    %     sheetToRead = 'Dn_250_GO_MF';
+    %     if any(strcmp(sheetList, sheetToRead))
+    %         TmfDn = readtable(excelfile, 'Sheet', sheetToRead);
+    %     end        
+    % end
 end

@@ -123,7 +123,7 @@ function callback_SGSAnalysis(src, ~)
 
     %tf = 0;
     if ~(ismcc || isdeployed) && strcmp(filetype, 'Workspace')
-        [Tup, Tdn] = pkg.e_processDETable(T, paramset, FigureHandle);
+        [Tup, Tdn] = pkg.e_processdetable(T, paramset, FigureHandle);
         if isempty(Tup) && isempty(Tdn), return; end
         labels = {'Save DE results (selected up-regulated) to variable named:', ...
             'Save DE results (selected down-regulated) to variable named:'};
@@ -139,7 +139,7 @@ function callback_SGSAnalysis(src, ~)
                 answer = gui.myQuestdlg(FigureHandle, ...
                  'Save up- and down-regulated genes to seperate sheets?');
                 if strcmp(answer, 'Yes')
-                    [Tup, Tdn] = pkg.e_processDETable(T, paramset, FigureHandle);                
+                    [Tup, Tdn] = pkg.e_processdetable(T, paramset, FigureHandle);                
     
                     % strcmp(extractAfter(filesaved,strlength(filesaved)-4),'xlsx')
                     if ~isempty(Tup)
@@ -166,7 +166,7 @@ function callback_SGSAnalysis(src, ~)
             % strcmp(extractAfter(filesaved,strlength(filesaved)-3),'txt')
             answer = gui.myQuestdlg(FigureHandle, 'Save up- and down-regulated genes to seperate files?');
             if strcmp(answer, 'Yes')
-                [Tup, Tdn] = pkg.e_processDETable(T, paramset, FigureHandle);
+                [Tup, Tdn] = pkg.e_processdetable(T, paramset, FigureHandle);
                 if ~isempty(Tup)
                     [~, ~] = gui.i_exporttable(Tup, true, 'Tup', 'Upregulated', 'Text file','', FigureHandle);
                 end

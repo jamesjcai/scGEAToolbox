@@ -15,4 +15,4 @@ T = readtable('output.csv');
     minabsolfc = paramset{2};
     apvaluecut = paramset{3};
     sortbywhat = paramset{4};
-[Tup, Tdn] = pkg.e_processDETable(T,[],[]);
+[Tup, Tdn] = pkg.e_processdetable(T,[],[]);

@@ -1,5 +1,5 @@
 function [done, outfile] = e_DETableSummary(TbpUpEnrichr, TmfUpEnrichr, ...
-                            TbpDnEnrichr, TmfDnEnrichr, infotagstr)
+                            TbpDnEnrichr, TmfDnEnrichr, infotagstr, wrkdir)
     
     done = false;
     outfile = [];
@@ -21,9 +21,12 @@ function [done, outfile] = e_DETableSummary(TbpUpEnrichr, TmfUpEnrichr, ...
     % Add-On “Large Language Models (LLMs) with MATLAB”.
     
     if nargin<4, infotagstr = pkg.i_randinfostr; end
-        
-    wrkdir = getpref('scgeatoolbox', 'externalwrkpath');
-    if isempty(wrkdir), return; end
+    if nargin<5, wrkdir = []; end
+    
+    if ~isfolder(wrkdir)
+        wrkdir = getpref('scgeatoolbox', 'externalwrkpath');
+        if isempty(wrkdir), return; end
+    end
         
     preftagname = 'llmodelprovider';
     s = getpref('scgeatoolbox', preftagname);
@@ -129,9 +132,11 @@ function [done, outfile] = e_DETableSummary(TbpUpEnrichr, TmfUpEnrichr, ...
     titstr = sprintf('%s Down-regulation', infotagstr);
     i_todoc(doc, titstr, feedbk_dn);
     close(doc);
-    %rptview(outfile, 'docx');
     done = true;
 
+    % outfile2 = char("Res2_"+matlab.lang.makeValidName(infotagstr));
+    % pkg.formatStringToWord(feedbk_up, outfile2);
+    
 
     function i_todoc(doc, titstr, text)
         p = Paragraph(titstr);
@@ -146,7 +151,7 @@ function [done, outfile] = e_DETableSummary(TbpUpEnrichr, TmfUpEnrichr, ...
         for i = 1:length(lines)
             if ~isempty(strtrim(lines{i}))
                 p = mlreportgen.dom.Paragraph(lines{i});
-                append(doc, p)
+                append(doc, p);
             end
         end
     end

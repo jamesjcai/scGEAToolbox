@@ -1,4 +1,4 @@
-function [Tup, Tdn, paramset] = e_processDETable(T, paramset, parentfig)
+function [Tup, Tdn, paramset] = e_processdetable(T, paramset, parentfig)
 
 if nargin<3, parentfig = []; end
 Tup=[];

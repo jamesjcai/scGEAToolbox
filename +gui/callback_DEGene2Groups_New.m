@@ -1,4 +1,4 @@
-function callback_DEGene2Groups(src, ~)
+function callback_DEGene2Groups_New(src, ~)
     
     [FigureHandle, sce] = gui.gui_getfigsce(src);
     % if ~gui.gui_showrefinfo('DE Analysis', FigureHandle), return; end
@@ -7,7 +7,8 @@ function callback_DEGene2Groups(src, ~)
     preftagname = 'externalwrkpath';
     [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
     if isempty(wkdir), return; end
-    
+    outdir = wkdir;
+
     [i1, i2, cL1, cL2] = gui.i_select2smplgrps(sce, false, FigureHandle);
     if isscalar(i1) || isscalar(i2), return; end
     
@@ -50,15 +51,56 @@ function callback_DEGene2Groups(src, ~)
         return;
     end   
 
-    [T] = in_Tprocessing(T);
 
-    outfile = matlab.lang.makeValidName(sprintf('%s_vs_%s_DE_results', ...
-        string(cL1), string(cL2)));
+    [Tup, Tdn, paramset] = pkg.e_processdetable(T, [], FigureHandle);
 
+    fw = gui.myWaitbar(FigureHandle);
+    [T, Tnt] = pkg.in_DETableProcess(T, cL1, cL2, sum(i1), sum(i2));
+
+    outfile = sprintf('%s_vs_%s_DE_results.xlsx', ...
+        matlab.lang.makeValidName(string(cL1)), matlab.lang.makeValidName(string(cL2)));
+    filesaved = fullfile(outdir, outfile);
+    try
+        writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All_genes');
+        writetable(Tup, filesaved, "FileType", "spreadsheet", 'Sheet', 'Up-regulated');
+        writetable(Tdn, filesaved, "FileType", "spreadsheet", 'Sheet', 'Down-regulated');
+        writetable(Tnt, filesaved, "FileType", "spreadsheet", 'Sheet', 'Note');
+    catch ME
+        warning(ME.message);
+    end
+    try
+        gui.e_enrichrxlsx(Tup,Tdn,T,filesaved);
+    catch ME
+        warning(ME.message);
+    end
+    try
+        [TbpUpEnrichr, TmfUpEnrichr, ...
+                TbpDnEnrichr, TmfDnEnrichr] = pkg.in_XLSX2DETable(filesaved);
+        [~, wordfilename] = fileparts(filesaved);
     
+        llm.e_DETableSummary(TbpUpEnrichr, ...
+            TmfUpEnrichr, TbpDnEnrichr, ...
+            TmfDnEnrichr, wordfilename, outdir);
+    catch ME
+        warning(ME.message);
+    end
+    gui.myWaitbar(FigureHandle, fw);
+
+ 
+    answer=gui.myQuestdlg(FigureHandle, sprintf('Result files saved. Open the folder %s?', outdir), '');
+    if strcmp(answer,'Yes'), winopen(outdir); end
+
+
+    % answer = gui.myQuestdlg(FigureHandle, 'Use LLM to generate enrichment analysis report?', '');
+    % if strcmp(answer,'Yes')
+    %     gui.sc_llm_enrichr2word(outdir);
+    % end
+
+%{
+
     didit = false;
     try
-        tempfilesaved = fullfile(wkdir, outfile+".xlsx");
+        tempfilesaved = fullfile(outdir, outfile+".xlsx");
         writetable(i_replaceinf(T), tempfilesaved, "FileType", ...
             "spreadsheet", 'Sheet', 'All_genes');
         didit = true;
@@ -67,7 +109,7 @@ function callback_DEGene2Groups(src, ~)
     end
     if ~didit
         try
-            tempfilesaved = fullfile(wkdir, outfile+".csv");
+            tempfilesaved = fullfile(outdir, outfile+".csv");
             writetable(T, tempfilesaved);
         catch ME
             warning(ME.message);
@@ -146,26 +188,28 @@ function callback_DEGene2Groups(src, ~)
         end    
     else
         if ~isempty(Tup)
-            filename = fullfile(wkdir, outfile+"_Upregulated.csv");
+            filename = fullfile(outdir, outfile+"_Upregulated.csv");
             writetable(Tup, filename, 'WriteRowNames', true);            
         end
         if ~isempty(Tdn)
-            filename = fullfile(wkdir, outfile+"_Downregulated.csv");
+            filename = fullfile(outdir, outfile+"_Downregulated.csv");
             writetable(Tdn, filename, 'WriteRowNames', true);
         end
     end
+%}
 
     if strcmp('Yes', gui.myQuestdlg(FigureHandle, 'Generate volcano plot?'))
         e_volcano(T, Tup, Tdn, FigureHandle);
-        % exportgraphics(f, fullfile(wkdir, outfile+".png"), 'Resolution', 300);
+        % exportgraphics(f, fullfile(outdir, outfile+".png"), 'Resolution', 300);
     end
 
     function e_savetable(srcx, ~)
         hFig = srcx.Parent.Parent;
-        [filetype, filesaved] = gui.i_exporttable(T, true, ...
+        gui.i_exporttable(T, true, ...
             'Tdegenelist', outfile, [], "All_genes", hFig);
     end
 
+%{
     function [T] = in_Tprocessing(T)
         try
             T = sortrows(T, 'p_val_adj', 'ascend');
@@ -199,6 +243,7 @@ function callback_DEGene2Groups(src, ~)
             warning(ME.message);
         end
     end
+%}
     
     function e_runenrichr(srcx, ~)
         hFig = srcx.Parent.Parent;
@@ -214,7 +259,7 @@ function callback_DEGene2Groups(src, ~)
         if ~isempty(outbackgroundlist)
             gui.callback_RunEnrichr(src, [], outgenelist, ...
                 enrichrtype, ...
-                outbackgroundlist, "Up", wkdir);
+                outbackgroundlist, "Up", outdir);
         end
         
         [outgenelist, outbackgroundlist, enrichrtype] = ...
@@ -224,7 +269,7 @@ function callback_DEGene2Groups(src, ~)
     
         if ~isempty(outbackgroundlist)
             gui.callback_RunEnrichr(src, [], outgenelist, enrichrtype, ...
-                outbackgroundlist, "Down", wkdir);
+                outbackgroundlist, "Down", outdir);
         end        
     end
 

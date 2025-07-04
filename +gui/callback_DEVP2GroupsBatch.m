@@ -59,7 +59,7 @@ function callback_DEVP2GroupsBatch(src, ~)
             %     Tnt = table(Item);
             % end
             
-            [Tup, Tdn] = pkg.e_processDETable(T, paramset, FigureHandle);
+            [Tup, Tdn] = pkg.e_processdetable(T, paramset, FigureHandle);
             try
                 gui.e_tupdn2xlsx(Tup, Tdn, T, filesaved);
                 writetable(Tnt, filesaved, "FileType", "spreadsheet", 'Sheet', 'Note');
