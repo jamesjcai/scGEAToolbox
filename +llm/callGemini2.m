@@ -27,6 +27,8 @@ function res = callGemini2(apikey, prompt, model)
     import matlab.net.http.*
     headers = HeaderField('Content-Type', 'application/json');
     request = RequestMessage('post', headers, query);
+
+    fprintf('Sending request to Gemini API...\n');
     response = send(request, URI(endpoint + ...
         "models/" + model + ...
         ":" + method + ...
@@ -34,6 +36,7 @@ function res = callGemini2(apikey, prompt, model)
 
     if response.StatusCode == "OK"
         res = response.Body.Data.candidates.content.parts.text;
+        fprintf('Response received successfully.\n');
     else
         res = response.Body.Data.error;
     end

@@ -1,4 +1,5 @@
 function [done] = i_checkllm(apikeyfile, provider, parentfig)
+
 done = false;
 
 if nargin<3, parentfig = []; end
@@ -40,7 +41,6 @@ fprintf('Using LLM model: %s\n', model);
                 chat = ollamaChat(model, TimeOut = 1200);
                 prompt = "Why is the sky blue?";
                 feedbk = generate(chat, prompt);
-                done = true;
             catch ME
                 fprintf('Error in chat completion: %s\n', ME.message);
                 return;
@@ -76,12 +76,6 @@ fprintf('Using LLM model: %s\n', model);
                 
             catch ME
                 fprintf('Error in chat completion: %s\n', ME.message);
-
-                if contains(ME.message, '400')
-                    fprintf(['This is likely a request format issue. ' ...
-                        'Check the API documentation for the exact ' ...
-                        'expected format.\n']);
-                end
                 return;
             end
         case 'Gemini'
@@ -93,9 +87,6 @@ fprintf('Using LLM model: %s\n', model);
                 % response = llm.geminiGenerateContent(prompt);
              catch ME
                 fprintf('Error in chat completion: %s\n', ME.message);
-                if contains(ME.message, '400')
-                    fprintf('This is likely a request format issue. Check the API documentation for the exact expected format.\n');
-                end
                 return;
             end
             disp(response);

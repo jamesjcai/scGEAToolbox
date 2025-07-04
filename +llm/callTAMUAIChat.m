@@ -1,4 +1,4 @@
-function response = callTAMUAIChat(apiKey, prompt, model)
+function response = callTAMUAIChat(apikey, prompt, model)
     % CALLTAMUCHAT Call TAMU Chat API for text generation
     %
     % Syntax:
@@ -18,18 +18,18 @@ function response = callTAMUAIChat(apiKey, prompt, model)
     %   response = callTAMUChat(apiKey, "Why is the sky blue?");
     
     % Default model if not specified
-    if nargin < 3
-        model = 'protected.llama3.2';
-    end
+    if nargin < 3, model = 'protected.llama3.2'; end
+    if nargin < 1, apikey = []; end
+    if nargin < 2, prompt = 'Why is the sky blue?'; end
 
-    if isempty(apiKey)
+    if isempty(apikey)
         preftagname = 'llapikeyenvfile';
-        apiKey = getpref('scgeatoolbox', preftagname);
+        apikey = getpref('scgeatoolbox', preftagname);
     end
 
-    if ~isempty(apiKey) && exist(apiKey,"file")
-        loadenv(apiKey,"FileType","env");
-        apiKey = getenv("TAMUAI_API_KEY");
+    if ~isempty(apikey) && exist(apikey,"file")
+        loadenv(apikey,"FileType","env");
+        apikey = getenv("TAMUAI_API_KEY");
     end    
 
     
@@ -46,7 +46,7 @@ function response = callTAMUAIChat(apiKey, prompt, model)
     options = weboptions('MediaType', 'application/json', ...
                         'RequestMethod', 'POST', ...
                         'Timeout', 30, ...
-                        'HeaderFields', {'Authorization', sprintf('Bearer %s', apiKey)});
+                        'HeaderFields', {'Authorization', sprintf('Bearer %s', apikey)});
     
     % Make the API call
     try
