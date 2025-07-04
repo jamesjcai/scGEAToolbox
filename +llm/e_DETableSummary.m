@@ -147,12 +147,16 @@ function [done, outfile] = e_DETableSummary(TbpUpEnrichr, TmfUpEnrichr, ...
         catch ME
             disp(ME.message);
         end
-        lines = splitlines(text);
-        for i = 1:length(lines)
-            if ~isempty(strtrim(lines{i}))
-                p = mlreportgen.dom.Paragraph(lines{i});
-                append(doc, p);
+        try
+            lines = splitlines(text);
+            for i = 1:length(lines)
+                if ~isempty(strtrim(lines{i}))
+                    p = mlreportgen.dom.Paragraph(lines{i});
+                    append(doc, p);
+                end
             end
+        catch ME
+            disp(ME.message);
         end
     end
 

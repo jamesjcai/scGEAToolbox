@@ -52,20 +52,30 @@ function callback_DEGene2Groups_New(src, ~)
     end   
 
 
-
     outfile = sprintf('%s_vs_%s_DE_results.xlsx', ...
         matlab.lang.makeValidName(string(cL1)), ...
         matlab.lang.makeValidName(string(cL2)));
     filesaved = fullfile(outdir, outfile);
 
 
+    try    
+        writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All_genes');
+        gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s', filesaved));
+    catch
+    
+    end
+
+    if ~strcmp('Yes', gui.myQuestdlg(FigureHandle, 'Additional Analysis?'))
+        return;
+    end
+
     items = {'Set Parameter Set', 'Enrichr Analysis', ...
         'LLM Summarize', 'Generate Volcano Plot', 'Open Output Folder'};
     selected = gui.myChecklistdlg(FigureHandle, items, ...
         'Title', 'Select Analysis','DefaultSelection', [1 2 3 4 5]);
     if isempty(selected)
-        writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All_genes');
-        gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s', filesaved));
+        %writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All_genes');
+        %gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s', filesaved));
         return;
     end
 
@@ -74,7 +84,9 @@ function callback_DEGene2Groups_New(src, ~)
     if any(contains(selected, 'Set Parameter Set'))
         [paramset] = gui.i_degparamset(false, FigureHandle);
     else
-        paramset = [];
+        % paramset = [];
+        preftagname ='degtestparamset';
+        paramset = getpref('scgeatoolbox', preftagname, {0.05, 1.0, 0.01, 'Adjusted P-value'});
     end
 
     fw = gui.myWaitbar(FigureHandle);
@@ -94,6 +106,7 @@ function callback_DEGene2Groups_New(src, ~)
     
     % Perform additional analyses based on user selection
     if any(contains(selected, 'Enrichr Analysis'))
+        gui.myWaitbar(FigureHandle, fw, false, '', 'Enrichr Analysis...', 2/3);
         try
             gui.e_enrichrxlsx(Tup,Tdn,T,filesaved);
         catch ME
@@ -102,6 +115,7 @@ function callback_DEGene2Groups_New(src, ~)
     end
 
     if any(contains(selected, 'LLM Summarize'))
+        gui.myWaitbar(FigureHandle, fw, false, '', 'LLM Summarize...', 2/3);
         try
             [TbpUpEnrichr, TmfUpEnrichr, ...
                     TbpDnEnrichr, TmfDnEnrichr] = pkg.in_XLSX2DETable(filesaved);
@@ -116,6 +130,7 @@ function callback_DEGene2Groups_New(src, ~)
     end
 
     if any(contains(selected, 'Generate Volcano Plot'))
+        gui.myWaitbar(FigureHandle, fw, false, '', 'Generate Volcano Plot...', 2/3);
         try
             e_volcano(T, Tup, Tdn, FigureHandle);
         catch ME
@@ -123,7 +138,6 @@ function callback_DEGene2Groups_New(src, ~)
         end
     end
    
-
     gui.myWaitbar(FigureHandle, fw);
 
     if any(contains(selected, 'Open Output Folder'))
