@@ -75,7 +75,7 @@ for k=1:2
     in_plot2;
 end
 
-hx.addCustomButton('off', @i_saveCrossTable, "floppy-disk-arrow-in.jpg", 'Save cross-table');
+hx.addCustomButton('off', @in_callback_saveCrossTable, "floppy-disk-arrow-in.jpg", 'Save cross-table');
 gui.myWaitbar(FigureHandle, fw);
 hx.show(FigureHandle);
 
@@ -164,7 +164,7 @@ hx.show(FigureHandle);
         title(lgd, llabel);
     end        
 
-    function i_saveCrossTable(~, ~)
+    function in_callback_saveCrossTable(~, ~)
         gui.i_exporttable(T, false, 'Tcrosstabul','CrosstabulTable',[],[], FigureHandle);
     end
 end

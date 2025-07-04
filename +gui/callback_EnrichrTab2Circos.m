@@ -154,7 +154,7 @@ df1 = cell2table(df1,'VariableNames',allg);
 df1 = table2array(df1);
 
 hx = gui.myFigure;
-hx.addCustomButton('on', @in_savedata, 'floppy-disk-arrow-in.jpg', 'Export data...');
+hx.addCustomButton('on', @in_callback_savedata, 'floppy-disk-arrow-in.jpg', 'Export data...');
 
 CC = gui.chordChart(df1,'Arrow','off','rowName',terms,'colName',allg);
 CC = CC.draw();
@@ -172,7 +172,7 @@ hx.show(FigureHandle);
 
 
 sz = 10;
-    function in_savedata(~,~)
+    function in_callback_savedata(~,~)
         gui.i_exporttable(tab(indx2,:), true, ...
             'Tcircostabl','CircosTermTable',[],[], FigureHandle);
     end

@@ -1,4 +1,5 @@
-function [markerlist] = sc_pickmarkers(X, genelist, c, topn, methodid)
+function [markerlist] = sc_pickmarkers(X, genelist, c, ...
+    topn, methodid)
     if nargin < 5, methodid = 1; end
     if nargin < 4, topn = 10; end
     assert(isequal(grp2idx(c), c));

@@ -144,13 +144,13 @@ function callback_DEGene2Groups_New(src, ~)
         winopen(outdir);
     end
 
-    function e_savetable(srcx, ~)
+    function in_callback_savetable(srcx, ~)
         hFig = srcx.Parent.Parent;
         gui.i_exporttable(T, true, ...
             'Tdegenelist', outfile, [], "All_genes", hFig);
     end
    
-    function e_runenrichr(srcx, ~)
+    function in_callback_runenrichr(srcx, ~)
         hFig = srcx.Parent.Parent;
         disp('To run enrichment analysis, type:');
         disp('run.web_Enrichr(Tup.gene(1:250))');
@@ -187,8 +187,8 @@ function callback_DEGene2Groups_New(src, ~)
         ax = hx.AxHandle;
         if isempty(ax), ax = gca; end
     
-        hx.addCustomButton('off', @e_runenrichr, 'www.jpg', 'Run enrichment analysis');
-        hx.addCustomButton('off', @e_savetable, 'floppy-disk-arrow-in.jpg', 'Export DE Gene Table...');
+        hx.addCustomButton('off', @in_callback_runenrichr, 'www.jpg', 'Run enrichment analysis');
+        hx.addCustomButton('off', @in_callback_savetable, 'floppy-disk-arrow-in.jpg', 'Export DE Gene Table...');
         
         hold(ax, "on");
         e_v(Tdn, ax);

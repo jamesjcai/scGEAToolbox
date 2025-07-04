@@ -2,7 +2,7 @@ function i_heatmap(sce, glist, thisc, parentfig)
 
 if nargin<4, parentfig = []; end
 
-[c, cL, noanswer] = gui.i_reordergroups(thisc);
+[c, cL, noanswer] = gui.i_reordergroups(thisc, [], parentfig);
 if noanswer, return; end
 [~, gidx] = ismember(glist, sce.g);
 [Xt] = gui.i_transformx(sce.X, true, 3, parentfig);
@@ -12,7 +12,7 @@ Y = Xt(gidx, :);
 [~, cidx] = sort(c);
 Yori = Y(:, cidx);
 
-[methodid, dim] = gui.i_selnormmethod;
+[methodid, dim] = gui.i_selnormmethod(parentfig);
 if isempty(dim) || isempty(methodid), return; end
 [Y] = gui.i_norm4heatmap(Yori, dim, methodid);
 

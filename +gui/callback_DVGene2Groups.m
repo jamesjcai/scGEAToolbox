@@ -86,7 +86,7 @@ lcolor2 = lcolors(2,:);
         methodtag);
 
 pause(1);
-in_ExportTable;
+in_callback_ExportTable;
 
 if strcmp(answerx, a)
     if strcmp(gui.myQuestdlg(FigureHandle, 'Explore DV expression profile of genes?'), 'Yes')
@@ -94,15 +94,15 @@ if strcmp(answerx, a)
         hFig = hx.FigHandle;
         hFig.Position(3) = hFig.Position(3)*1.8;        
         
-        hx.addCustomButton( 'off', {@in_HighlightSelectedGenes, 1}, 'list.gif', 'Selet a gene to show expression profile');
-        hx.addCustomButton( 'off', {@in_HighlightSelectedGenes, 2}, 'list2.gif', 'Selet a gene from sorted list');
-        hx.addCustomButton( 'off', @in_viewTable, 'icon-fa-stack-exchange-10.gif', 'View DV gene table...');
-        hx.addCustomButton( 'on', @in_EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Select top n genes to perform web-based enrichment analysis...');
-        hx.addCustomButton( 'off', @in_Enrichr, 'plotpicker-andrewsplot.gif', 'Enrichr test...');
-        hx.addCustomButton( 'off', @in_genecards, 'www.jpg', 'GeneCards...');
-        hx.addCustomButton( 'off', @in_ExportTable, 'floppy-disk-arrow-in.jpg', 'Export HVG Table...');
-        hx.addCustomButton( 'on', @ChangeAlphaValue, 'plotpicker-rose.gif', 'Change MarkerFaceAlpha value');
-        hx.addCustomButton( 'off', @in_changeMarkerSize, 'icon-mat-text-fields-10.gif', 'ChangeFontSize');
+        hx.addCustomButton( 'off', {@in_callback_HighlightSelectedGenes, 1}, 'list.gif', 'Selet a gene to show expression profile');
+        hx.addCustomButton( 'off', {@in_callback_HighlightSelectedGenes, 2}, 'list2.gif', 'Selet a gene from sorted list');
+        hx.addCustomButton( 'off', @in_callback_viewTable, 'icon-fa-stack-exchange-10.gif', 'View DV gene table...');
+        hx.addCustomButton( 'on', @in_callback_EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Select top n genes to perform web-based enrichment analysis...');
+        hx.addCustomButton( 'off', @in_callback_Enrichr, 'plotpicker-andrewsplot.gif', 'Enrichr test...');
+        hx.addCustomButton( 'off', @in_callback_genecards, 'www.jpg', 'GeneCards...');
+        hx.addCustomButton( 'off', @in_callback_ExportTable, 'floppy-disk-arrow-in.jpg', 'Export HVG Table...');
+        hx.addCustomButton( 'on', @in_callback_ChangeAlphaValue, 'plotpicker-rose.gif', 'Change MarkerFaceAlpha value');
+        hx.addCustomButton( 'off', @in_callback_changeMarkerSize, 'icon-mat-text-fields-10.gif', 'ChangeFontSize');
         
         hAx0 = subplot(2,2,[1 3]);
         h1 = scatter3(hAx0, px1, py1, pz1, 'filled', 'MarkerFaceAlpha', .1);
@@ -158,7 +158,7 @@ if strcmp(answerx, a)
 end
 
 
-    function in_Enrichr(~, ~)
+    function in_callback_Enrichr(~, ~)
         answer = gui.myQuestdlg(hFig, 'Enrichr test with top DV genes. Continue?','');
         if ~strcmp(answer,'Yes'), return; end
         answer = gui.myQuestdlg(hFig, 'Select type of DV genes.','',...
@@ -182,14 +182,14 @@ end
                 
     end
 
-    function in_viewTable(~, ~)
+    function in_callback_viewTable(~, ~)
         fw = gui.myWaitbar(FigureHandle);
         gui.i_viewtable(T, hx.FigHandle);
         % gui.TableViewerApp(T, hx.FigHandle);
         gui.myWaitbar(FigureHandle, fw);
     end
 
-    function in_ExportTable(~, ~)
+    function in_callback_ExportTable(~, ~)
         [~, filesaved] = gui.i_exporttable(T, true, 'Tdvgenelist', ...
                 outfile, [], "All_genes", FigureHandle);
         if ~isempty(filesaved)
@@ -277,7 +277,7 @@ end
        if ~isempty(h5), delete(h5); end
     end
 
-    function in_HighlightSelectedGenes(~, ~, typeid)
+    function in_callback_HighlightSelectedGenes(~, ~, typeid)
        if nargin < 3, typeid = 1; end
 
        x_cleanfigspace(true);
@@ -346,7 +346,7 @@ end
 
     end
 
-    function in_EnrichrHVGs(~, ~)
+    function in_callback_EnrichrHVGs(~, ~)
         k = gui.i_inputnumk(200, 1, 2000, 'Select top n genes');
         if ~isempty(k)
             gsorted = T.(T.Properties.VariableNames{1});
@@ -356,11 +356,11 @@ end
         end
     end
 
-    function in_genecards(~, ~)
+    function in_callback_genecards(~, ~)
         web(sprintf('https://www.genecards.org/cgi-bin/carddisp.pl?gene=%s', g(idx)),'-new');
     end
 
-    function in_changeMarkerSize(~, ~)
+    function in_callback_changeMarkerSize(~, ~)
         % h1.Marker
         if h1.SizeData > 40
             h1.SizeData = 10;
@@ -371,7 +371,7 @@ end
         end
     end
 
-    function ChangeAlphaValue(~, ~)
+    function in_callback_ChangeAlphaValue(~, ~)
         if h1.MarkerFaceAlpha <= 0.05
             h1.MarkerFaceAlpha = 1;
             h2.MarkerFaceAlpha = 1; 

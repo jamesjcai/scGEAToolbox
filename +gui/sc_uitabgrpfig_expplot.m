@@ -97,19 +97,8 @@ for k=1:n
 end
   
 tabgp.SelectionChangedFcn=@displaySelection;
-
-% hx.addCustomButton('off', [], "IMG00107.GIF", " ");
-% hx.addCustomButton('off', @i_linksubplots, 'keyframes-minus.jpg', 'Link subplots');
 hx.addCustomButton('off',  @in_genecards, 'www.jpg', 'GeneCards...');
-%hx.addCustomButton('on', {@in_PickColorMap, c}, 'plotpicker-compass.gif', 'Pick new color map...');
-% hx.addCustomButton('off', @i_RescaleExpr, 'IMG00074.GIF', 'Rescale expression level [log2(x+1)]');
-% hx.addCustomButton('off', @i_ResetExpr, 'plotpicker-geobubble2.gif', 'Reset expression level');
-% hx.addCustomButton('off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-
 hx.addCustomButton('off', @in_savedata, "floppy-disk-arrow-in.jpg", 'Save Gene List...');
-%hx.addCustomButton('off', @in_savemainfig, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-%hx.addCustomButton('off', @in_savemainfigx, "File-Jpg--Streamline-Core-Gradient.png", 'Save Figure as Graphic File...');
-%hx.addCustomButton('off', @in_set3dview, "tool_ellipse.gif", 'Set 3D View...');
 hx.show(parentfig)
 
     function in_savedata(~,~)

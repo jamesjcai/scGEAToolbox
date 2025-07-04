@@ -81,21 +81,23 @@ try
         end
         colormap(hx.AxHandle, para.oldColorMap);
     end
-    hx.addCustomButton('off', @in_scgeatoolsce, "icon-mat-touch-app-10.gif", 'Extract and Work on Separate SCEs...');
+    hx.addCustomButton('off', @in_callback_scgeatoolsce, "icon-mat-touch-app-10.gif", 'Extract and Work on Separate SCEs...');
     hx.show(FigureHandle);
 catch ME
     gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
 end
 
-    function in_scgeatoolsce(~,~)
+    function in_callback_scgeatoolsce(src, ~)
+        parentfig = src.Parent.Parent;
+        figure(parentfig);
         %answer1 = gui.myQuestdlg(FigureHandle, 'Extract cells from different groups and view new SCEs, or save new SCEs?','',...
         %    'View SCEs','Save SCEs','Cancel','View SCEs');
-        answer1 = gui.myQuestdlg(FigureHandle, 'Extract cells and make new SCEs?','');
+        answer1 = gui.myQuestdlg([], 'Extract cells and make new SCEs?','');
         switch answer1
             case {'Cancel','No'}
                 return;
             case {'Yes','View SCEs'}
-                [idx] = in_selectcellgrps(cL(idxx), FigureHandle);
+                [idx] = in_selectcellgrps(cL(idxx), []);
                 if isempty(idx), return; end
                 cL2=cL(idxx);
                 % currentColormap = colormap;

@@ -1,5 +1,5 @@
 function callback_Brush4Markers(src, event)
-
+if nargin<2, event=[]; end
 
     [FigureHandle, sce] = gui.gui_getfigsce(src);
 
@@ -15,11 +15,11 @@ function callback_Brush4Markers(src, event)
         otherwise
             return;
     end
-    i_Brush4MarkersLASSO(src, event, sce, uselasso);
+    i_Brush4TopMarkers(src, event, sce, uselasso);
 end
 
 
-function i_Brush4MarkersLASSO(src, ~, sce, uselasso)
+function i_Brush4TopMarkers(src, ~, sce, uselasso)
     [FigureHandle] = gui.gui_getfigsce(src);
 
     if nargin < 3
