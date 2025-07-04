@@ -55,7 +55,10 @@ else
     end
 end
 
-listItems = {'Ollama', 'Gemini', 'TAMUAIChat', 'OpenAI', 'DeepSeek', 'xAI'};
+% listItems = {'Ollama', 'Gemini', 'TAMUAIChat', 'OpenAI', 'DeepSeek', 'xAI'};
+
+
+listItems = {'Ollama', 'Gemini', 'TAMUAIChat'};
 
 if gui.i_isuifig(parentfig)
     [selectedIndex, ok] = gui.myListdlg(parentfig, listItems, ...
@@ -192,16 +195,14 @@ switch selectedProvider
         return;
 end
 
-
 % if done
 %      gui.myHelpdlg(parentfig, "LLM provider and" + ...
 %          " model are set successfully.");
 % end
 
-    fw = gui.myWaitbar(parentfig);
-    [done2] = llm.i_checkllm(apikeyfile);
-    gui.myWaitbar(parentfig, fw);
-
+fw = gui.myWaitbar(parentfig);
+[done2] = llm.i_checkllm(apikeyfile);
+gui.myWaitbar(parentfig, fw);
 
 if done && done2
      gui.myHelpdlg(parentfig, "LLM provider and" + ...

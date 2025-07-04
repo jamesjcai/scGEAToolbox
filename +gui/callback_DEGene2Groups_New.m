@@ -52,14 +52,36 @@ function callback_DEGene2Groups_New(src, ~)
     end   
 
 
-    [Tup, Tdn, paramset] = pkg.e_processdetable(T, [], FigureHandle);
-
-    fw = gui.myWaitbar(FigureHandle);
-    [T, Tnt] = pkg.in_DETableProcess(T, cL1, cL2, sum(i1), sum(i2));
 
     outfile = sprintf('%s_vs_%s_DE_results.xlsx', ...
-        matlab.lang.makeValidName(string(cL1)), matlab.lang.makeValidName(string(cL2)));
+        matlab.lang.makeValidName(string(cL1)), ...
+        matlab.lang.makeValidName(string(cL2)));
     filesaved = fullfile(outdir, outfile);
+
+
+    items = {'Set Parameter Set', 'Enrichr Analysis', ...
+        'LLM Summarize', 'Generate Volcano Plot', 'Open Output Folder'};
+    selected = gui.myChecklistdlg(FigureHandle, items, ...
+        'Title', 'Select Analysis','DefaultSelection', [1 2 3 4 5]);
+    if isempty(selected)
+        writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All_genes');
+        gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s', filesaved));
+        return;
+    end
+
+
+    % Process the selected analyses
+    if any(contains(selected, 'Set Parameter Set'))
+        [paramset] = gui.i_degparamset(false, FigureHandle);
+    else
+        paramset = [];
+    end
+
+    fw = gui.myWaitbar(FigureHandle);
+
+    [Tup, Tdn, paramset] = pkg.e_processdetable(T, paramset, FigureHandle);
+    [T, Tnt] = pkg.in_DETableProcess(T, cL1, cL2, sum(i1), sum(i2));
+
     try
         writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All_genes');
         writetable(Tup, filesaved, "FileType", "spreadsheet", 'Sheet', 'Up-regulated');
@@ -68,139 +90,44 @@ function callback_DEGene2Groups_New(src, ~)
     catch ME
         warning(ME.message);
     end
-    try
-        gui.e_enrichrxlsx(Tup,Tdn,T,filesaved);
-    catch ME
-        warning(ME.message);
-    end
-    try
-        [TbpUpEnrichr, TmfUpEnrichr, ...
-                TbpDnEnrichr, TmfDnEnrichr] = pkg.in_XLSX2DETable(filesaved);
-        [~, wordfilename] = fileparts(filesaved);
+
     
-        llm.e_DETableSummary(TbpUpEnrichr, ...
-            TmfUpEnrichr, TbpDnEnrichr, ...
-            TmfDnEnrichr, wordfilename, outdir);
-    catch ME
-        warning(ME.message);
-    end
-    gui.myWaitbar(FigureHandle, fw);
-
- 
-    answer=gui.myQuestdlg(FigureHandle, sprintf('Result files saved. Open the folder %s?', outdir), '');
-    if strcmp(answer,'Yes'), winopen(outdir); end
-
-
-    % answer = gui.myQuestdlg(FigureHandle, 'Use LLM to generate enrichment analysis report?', '');
-    % if strcmp(answer,'Yes')
-    %     gui.sc_llm_enrichr2word(outdir);
-    % end
-
-%{
-
-    didit = false;
-    try
-        tempfilesaved = fullfile(outdir, outfile+".xlsx");
-        writetable(i_replaceinf(T), tempfilesaved, "FileType", ...
-            "spreadsheet", 'Sheet', 'All_genes');
-        didit = true;
-    catch ME
-        warning(ME.message);
-    end
-    if ~didit
+    % Perform additional analyses based on user selection
+    if any(contains(selected, 'Enrichr Analysis'))
         try
-            tempfilesaved = fullfile(outdir, outfile+".csv");
-            writetable(T, tempfilesaved);
+            gui.e_enrichrxlsx(Tup,Tdn,T,filesaved);
         catch ME
             warning(ME.message);
         end
     end
 
-    % gui.DEResultViewApp(T);
-    [filetype, filesaved] = gui.i_exporttable(T, true, ...
-        'Tdegenelist', outfile, [], "All_genes", FigureHandle);
-
-    tf = 0;
-    if ~(ismcc || isdeployed) && strcmp(filetype, 'Workspace')
-        [Tup, Tdn, paramset] = pkg.e_processdetable(T, [], FigureHandle);
-        if isempty(Tup) && isempty(Tdn), return; end
-        labels = {'Save DE results (selected up-regulated) to variable named:', ...
-            'Save DE results (selected down-regulated) to variable named:'};
-        vars = {'Tup', 'Tdn'};
-        values = {Tup, Tdn};
-        [~, tf] = export2wsdlg(labels, vars, values);
-        if tf ~= 1, return; end
-    end
-
-    if ~isempty(filesaved)
-        if strcmp(filetype, 'Excel file')
-            %answer = gui.myQuestdlg(FigureHandle, 'Save up- and down-regulated genes to seperate sheets?');
-            %if strcmp(answer, 'Yes')
-                [Tup, Tdn, paramset] = pkg.e_processdetable(T,[],FigureHandle);
-                % strcmp(extractAfter(filesaved,strlength(filesaved)-4),'xlsx')
-                if ~isempty(Tup)
-                    writetable(Tup, filesaved, "FileType", "spreadsheet", 'Sheet', 'Up-regulated');
-                end
-                if ~isempty(Tdn)
-                    writetable(Tdn, filesaved, "FileType", "spreadsheet", 'Sheet', 'Down-regulated');
-                end
-                gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s', filesaved));
-                %writetable(Tup,fullfile(tempdir,sprintf('%s_up.xlsx',outfile)),'FileType','spreadsheet',);
-                %writetable(Tdn,fullfile(tempdir,sprintf('%s_up.xlsx',outfile)),'FileType','spreadsheet');
-                tf = 1;
-            %end
-        elseif strcmp(filetype, 'Text file')
-            [filePath, name, ext] = fileparts(filesaved);
-            % strcmp(extractAfter(filesaved,strlength(filesaved)-3),'txt')
-            answer = gui.myQuestdlg(FigureHandle, 'Save up- and down-regulated genes to seperate files?');
-            if strcmp(answer, 'Yes')
-                [Tup, Tdn, paramset] = pkg.e_processdetable(T,[],FigureHandle);
-                if ~isempty(Tup)
-                    namex = sprintf('%s_Upregulated', name);
-                    f = fullfile(filePath, [namex, ext]);
-                    if exist(f,"file"), f = 'Upregulated'; end
-                    
-                    [~, ~] = gui.i_exporttable(Tup, true, 'Tup', ...
-                        f, 'Text file','', FigureHandle);
-                end
-                if ~isempty(Tdn)
-                    namex = sprintf('%s_Downregulated', name);
-                    f = fullfile(filePath, [namex, ext]);
-                    if exist(f,"file"), f = 'Downregulated'; end
-                                        
-                    [~, ~] = gui.i_exporttable(Tdn, true, 'Tdn', ...
-                        f, 'Text file','', FigureHandle);
-                end
-                tf = 1;
-            end
+    if any(contains(selected, 'LLM Summarize'))
+        try
+            [TbpUpEnrichr, TmfUpEnrichr, ...
+                    TbpDnEnrichr, TmfDnEnrichr] = pkg.in_XLSX2DETable(filesaved);
+            [~, wordfilename] = fileparts(filesaved);
+        
+            llm.e_DETableSummary(TbpUpEnrichr, ...
+                TmfUpEnrichr, TbpDnEnrichr, ...
+                TmfDnEnrichr, wordfilename, outdir);
+        catch ME
+            warning(ME.message);
         end
     end
 
-    if tf ~= 1, return; end
-
-
-    if contains(tempfilesaved, 'xlsx')
-        if ~isempty(Tup)
-            writetable(Tup, tempfilesaved, "FileType", "spreadsheet", 'Sheet', 'Up-regulated');
-        end
-        if ~isempty(Tdn)
-            writetable(Tdn, tempfilesaved, "FileType", "spreadsheet", 'Sheet', 'Down-regulated');
-        end    
-    else
-        if ~isempty(Tup)
-            filename = fullfile(outdir, outfile+"_Upregulated.csv");
-            writetable(Tup, filename, 'WriteRowNames', true);            
-        end
-        if ~isempty(Tdn)
-            filename = fullfile(outdir, outfile+"_Downregulated.csv");
-            writetable(Tdn, filename, 'WriteRowNames', true);
+    if any(contains(selected, 'Generate Volcano Plot'))
+        try
+            e_volcano(T, Tup, Tdn, FigureHandle);
+        catch ME
+            warning(ME.message);
         end
     end
-%}
+   
 
-    if strcmp('Yes', gui.myQuestdlg(FigureHandle, 'Generate volcano plot?'))
-        e_volcano(T, Tup, Tdn, FigureHandle);
-        % exportgraphics(f, fullfile(outdir, outfile+".png"), 'Resolution', 300);
+    gui.myWaitbar(FigureHandle, fw);
+
+    if any(contains(selected, 'Open Output Folder'))
+        winopen(outdir);
     end
 
     function e_savetable(srcx, ~)
@@ -208,43 +135,7 @@ function callback_DEGene2Groups_New(src, ~)
         gui.i_exporttable(T, true, ...
             'Tdegenelist', outfile, [], "All_genes", hFig);
     end
-
-%{
-    function [T] = in_Tprocessing(T)
-        try
-            T = sortrows(T, 'p_val_adj', 'ascend');
-            T = sortrows(T, 'pct_1', 'ascend');
-            T = sortrows(T, 'pct_2', 'descend');
-            T = sortrows(T, 'avg_log2FC', 'ascend');
-            if contains(T.Properties.VariableNames{5}, 'avg_1')
-                T.Properties.VariableNames{5} = sprintf('%s_%s', ...
-                    T.Properties.VariableNames{5}, ...
-                    matlab.lang.makeValidName(string(cL1)));
-            end
-    
-            if contains(T.Properties.VariableNames{6}, 'avg_2')
-                T.Properties.VariableNames{6} = sprintf('%s_%s', ...
-                    T.Properties.VariableNames{6}, ...
-                    matlab.lang.makeValidName(string(cL2)));
-            end
-    
-            if contains(T.Properties.VariableNames{7}, 'pct_1')
-                T.Properties.VariableNames{7} = sprintf('%s_%s', ...
-                    T.Properties.VariableNames{7}, ...
-                    matlab.lang.makeValidName(string(cL1)));
-            end
-    
-            if contains(T.Properties.VariableNames{8}, 'pct_2')
-                T.Properties.VariableNames{8} = sprintf('%s_%s', ...
-                    T.Properties.VariableNames{8}, ...
-                    matlab.lang.makeValidName(string(cL2)));
-            end
-        catch ME
-            warning(ME.message);
-        end
-    end
-%}
-    
+   
     function e_runenrichr(srcx, ~)
         hFig = srcx.Parent.Parent;
         disp('To run enrichment analysis, type:');
@@ -373,18 +264,18 @@ function callback_DEGene2Groups_New(src, ~)
 
     % ------- end of volcano_plot
 
-    function i_replaceinf(T)
-        % Iterate over each variable in the table
-        for varIdx = 1:width(T)
-            % Check if the variable is numeric
-            if isnumeric(T{:, varIdx})
-                % Replace positive Inf with 1e99
-                T{T{:, varIdx} == Inf, varIdx} = 1e99;
-                % Replace negative Inf with -1e99
-                T{T{:, varIdx} == -Inf, varIdx} = -1e99;
-            end
-        end
-        
-    end
+    % function i_replaceinf(T)
+    %     % Iterate over each variable in the table
+    %     for varIdx = 1:width(T)
+    %         % Check if the variable is numeric
+    %         if isnumeric(T{:, varIdx})
+    %             % Replace positive Inf with 1e99
+    %             T{T{:, varIdx} == Inf, varIdx} = 1e99;
+    %             % Replace negative Inf with -1e99
+    %             T{T{:, varIdx} == -Inf, varIdx} = -1e99;
+    %         end
+    %     end
+    % 
+    % end
 
 end

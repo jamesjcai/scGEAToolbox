@@ -2,7 +2,7 @@ function [done] = i_checkllm(apikeyfile, provider, parentfig)
 done = false;
 
 if nargin<3, parentfig = []; end
-if nargin<2, provider = 'Gemini'; end
+if nargin<2, provider = []; end
 if nargin<1, apikeyfile = []; end
 
 if isempty(apikeyfile)
@@ -18,32 +18,43 @@ if isempty(apikeyfile)
         apikeyfile = getpref('scgeatoolbox', preftagname);
     end
 end
+fprintf('Using apikeyfile %s\n', apikeyfile);
+
 
     preftagname = 'llmodelprovider';
     s = getpref('scgeatoolbox', preftagname);
     providermodel = strsplit(s,':');
 
-    provider = providermodel{1};
+    if isempty(provider)
+        provider = providermodel{1};
+    end
+
+fprintf('Using LLM provider: %s\n', provider);
+
+model = providermodel{2};
+fprintf('Using LLM model: %s\n', model);
+    
     switch provider
         case 'Ollama'
             try
-                chat = ollamaChat(providermodel{2}, TimeOut = 1200);
+                chat = ollamaChat(model, TimeOut = 1200);
                 prompt = "Why is the sky blue?";
                 feedbk = generate(chat, prompt);
                 done = true;
             catch ME
                 fprintf('Error in chat completion: %s\n', ME.message);
+                return;
             end
+            disp(feedbk);
         case 'TAMUAIChat'
-            % Test a chat completion to llama3.2 model
-            loadenv(apikeyfile,"FileType","env");
+            loadenv(apikeyfile, "FileType", "env");
             OPEN_WEBUI_API_ENDPOINT = "https://chat-api.preview.tamu.ai";
             OPEN_WEBUI_API_KEY = getenv("TAMUAI_API_KEY");
             chat_url = sprintf('%s/api/chat/completions', OPEN_WEBUI_API_ENDPOINT);
             
             % Create request body structure
             messages_cell = {struct('role', 'user', 'content', 'Why is the sky blue?')};
-            body_struct = struct('model', providermodel{2}, ...
+            body_struct = struct('model', model, ...
                                 'stream', false, ...
                                 'messages', {messages_cell});            
             % Debug: Display the request body structure
@@ -53,7 +64,8 @@ end
             % Set up options for webwrite (POST request)
             post_options = weboptions('MediaType', 'application/json', ...
                                      'RequestMethod', 'POST', ...
-                                     'HeaderFields', {'Authorization', sprintf('Bearer %s', OPEN_WEBUI_API_KEY)});
+                                     'HeaderFields', {'Authorization', ...
+                                     sprintf('Bearer %s', OPEN_WEBUI_API_KEY)});
             
             % Make the chat completion request
             try
@@ -61,19 +73,20 @@ end
                 % Display chat response as JSON
                 chat_json = jsonencode(chat_response);
                 fprintf('Chat completion response:\n%s\n', chat_json);
-                done = true;
+                
             catch ME
                 fprintf('Error in chat completion: %s\n', ME.message);
-                % Additional debug info
+
                 if contains(ME.message, '400')
-                    fprintf('This is likely a request format issue. Check the API documentation for the exact expected format.\n');
+                    fprintf(['This is likely a request format issue. ' ...
+                        'Check the API documentation for the exact ' ...
+                        'expected format.\n']);
                 end
-            end   
+                return;
+            end
         case 'Gemini'
             loadenv(apikeyfile,"FileType","env");
             apiKey = getenv("GEMINI_API_KEY");
-            model = providermodel{2};
-
             prompt = "Why is the sky blue?";
             try
                 response = llm.callGemini2(apiKey, prompt, model);
@@ -83,6 +96,9 @@ end
                 if contains(ME.message, '400')
                     fprintf('This is likely a request format issue. Check the API documentation for the exact expected format.\n');
                 end
-            end   
-
+                return;
+            end
+            disp(response);
     end
+done = true;
+end

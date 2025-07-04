@@ -1,29 +1,52 @@
-function response = callGemini2(apiKey, prompt, model)
+function res = callGemini2(apikey, prompt, model)
     % Default model if not specified
     if nargin < 3
-        model = 'gemini-2.0-flash';
+        model = "gemini-2.0-flash";
     end
-    
-    if isempty(apiKey)
+    if nargin < 1, apikey = []; end
+    if nargin < 2, prompt = 'Why is the sky blue?'; end
+        
+    if isempty(apikey)
         preftagname = 'llapikeyenvfile';
-        apiKey = getpref('scgeatoolbox', preftagname);
+        apikey = getpref('scgeatoolbox', preftagname);
     end
 
-    if ~isempty(apiKey) && exist(apiKey,"file")
-        loadenv(apiKey,"FileType","env");
-        apiKey = getenv("GEMINI_API_KEY");
+    if ~isempty(apikey) && exist(apikey,"file")
+        loadenv(apikey,"FileType","env");
+        apikey = getenv("GEMINI_API_KEY");
     end
+
+    query = struct("contents",[]);
+    query.contents = {struct("parts",[])};
+    query.contents{1}.parts{1} = {struct("text",prompt)};    
+
+    endpoint = "https://generativelanguage.googleapis.com/v1beta/";
+    method = "generateContent";
     
+    import matlab.net.*
+    import matlab.net.http.*
+    headers = HeaderField('Content-Type', 'application/json');
+    request = RequestMessage('post', headers, query);
+    response = send(request, URI(endpoint + ...
+        "models/" + model + ...
+        ":" + method + ...
+        "?key=" + apikey));
+
+    if response.StatusCode == "OK"
+        res = response.Body.Data.candidates.content.parts.text;
+    else
+        res = response.Body.Data.error;
+    end
+
+    %{
 
     endpoint = "https://generativelanguage.googleapis.com/v1beta/";
     method = "generateContent";
     
     import matlab.net.*
     import matlab.net.http.*  
-    apikey = getenv("GEMINI_API_KEY");
     headers = HeaderField('Content-Type', 'application/json');
     request = RequestMessage('post', headers, prompt);
-
 
     try
         response = send(request, URI(endpoint + ...
@@ -34,6 +57,9 @@ function response = callGemini2(apiKey, prompt, model)
         fprintf('Error calling Gemini API: %s\n', e.message);
         response = [];
     end
+    %}
+
+
 
 
     %{
