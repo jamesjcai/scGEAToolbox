@@ -30,7 +30,8 @@ values = {sceg, scep};
 
 % --------------------
 pause(2);
-fx = scgeatool(sceg);
+a = scgeatoolApp(sceg);
+fx = a.UIFigure;
 fx.Position(3:4) = 0.8 * fx.Position(3:4);
 movegui(fx, 'center');
 fx.Position(1) = fx.Position(1) - 250;
@@ -40,7 +41,8 @@ answer = gui.myQuestdlg(FigureHandle, ...
     'scRNAseq data extracted. Continue?', '');
 if isempty(answer), return; end
 if ~strcmp(answer, 'Yes'), return; end
-fy = scgeatool(scep);
+b = scgeatoolApp(scep);
+fy = b.UIFigure;
 fy.Position(3:4) = 0.8 * fy.Position(3:4);
 movegui(fy, 'center');
 fy.Position(1) = fy.Position(1) + 250;

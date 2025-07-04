@@ -106,9 +106,12 @@ end
                 for ik=1:length(idx)
                     % scev = SCEV{idx(ik)};
                     scev = sce.selectcells(SCEV{idx(ik)});
-                    p = scgeatool(scev,'useuifig', ...
-                        gui.i_isuifig(FigureHandle));
-                    p.Name=matlab.lang.makeValidName(cL2{idx(ik)});
+                    
+                    %p = scgeatool(scev,'useuifig', ...
+                    %    gui.i_isuifig(FigureHandle));
+                    %p.Name=matlab.lang.makeValidName(cL2{idx(ik)});
+
+                    scgeatoolApp(scev);
                     % p.Position([2])=p.Position([2])-s*30;
                     % p.Position([1])=p.Position([1])+s*30;
                     % p.Position([3 4])=p.Position([3 4])*0.8;

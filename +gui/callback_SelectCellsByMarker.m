@@ -41,8 +41,9 @@ end
             [ax, bx] = view(findall(FigureHandle,'type','axes'));
             fw = gui.myWaitbar(FigureHandle);
             scex = selectcells(sce, idx);
-            scgeatool(scex);
-            view(ax, bx);
+            a = scgeatoolApp(scex);
+            
+            view(a.UIAxes, [ax, bx]);
             gui.myWaitbar(FigureHandle, fw);
 
         end
@@ -81,7 +82,7 @@ end
                 scex.c_batch_id(idx1) = sprintf('%s+', tg);
                 scex.c_batch_id(idx2) = sprintf('%s-', tg);
                 scex.c = scex.c_batch_id;
-                scgeatool(scex);
+                scgeatoolApp(scex);
                 return;                
             elseif strcmp(answer, 'Cancel')
                 return;
@@ -90,8 +91,8 @@ end
             end
             fw = gui.myWaitbar(FigureHandle);
             scex = selectcells(sce, idx);
-            scgeatool(scex);
-            view(ax, bx);
+            a = scgeatoolApp(scex);
+            view(a.UIAxes, [ax, bx]);
             gui.myWaitbar(FigureHandle, fw);
         end
     end
