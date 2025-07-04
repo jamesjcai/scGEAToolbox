@@ -1,4 +1,6 @@
-function response = callTAMUAIChat(apikey, prompt, model)
+function [done, response] = callTAMUAIChat(apikey, prompt, model)
+    
+    done = false;
     % CALLTAMUCHAT Call TAMU Chat API for text generation
     %
     % Syntax:
@@ -65,6 +67,7 @@ function response = callTAMUAIChat(apikey, prompt, model)
             if isfield(choice, 'message') && isfield(choice.message, 'content')
                 response = choice.message.content;
                 fprintf('Response received successfully.\n');
+                done = true;
             else
                 fprintf('Unexpected choice structure in TAMU Chat API response\n');
                 fprintf('Choice structure:\n');

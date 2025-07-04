@@ -1,4 +1,5 @@
-function response = callGemini(apiKey, prompt, model)
+function [done] = callGemini(apiKey, prompt, model)
+    done = false;
     % Default model if not specified
     if nargin < 3, model = 'gemini-2.0-flash'; end
     if nargin < 1, apiKey = []; end
@@ -35,6 +36,7 @@ function response = callGemini(apiKey, prompt, model)
            ~isempty(response.candidates{1}.content.parts)
             response = response.candidates{1}.content.parts{1}.text;
         end
+        done = true;
     catch e
         fprintf('Error calling Gemini API: %s\n', e.message);
         response = [];

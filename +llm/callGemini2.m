@@ -1,4 +1,5 @@
-function res = callGemini2(apikey, prompt, model)
+function [done, res] = callGemini2(apikey, prompt, model)
+    done = false;
     % Default model if not specified
     if nargin < 3
         model = "gemini-2.0-flash";
@@ -37,9 +38,11 @@ function res = callGemini2(apikey, prompt, model)
     if response.StatusCode == "OK"
         res = response.Body.Data.candidates.content.parts.text;
         fprintf('Response received successfully.\n');
+        done = true;
     else
         res = response.Body.Data.error;
     end
+    % disp(res);
 
     %{
 
