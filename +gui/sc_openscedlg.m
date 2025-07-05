@@ -32,7 +32,6 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
     if gui.i_isuifig(parentfig)
         % movegui(parentfig, 'onscreen');
         focus(parentfig);
-        pause(0.5);
         [indx, tf] = gui.myListdlg(parentfig, list, ...
             'Select a source', list(defaultindx));
     else
@@ -456,12 +455,16 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
             end
         case 'Import SCE Data from Workspace...'
             a = evalin('base', 'whos');
+            if isempty(a)
+                gui.myHelpdlg(parentfig, 'No SCE in Workspace.');
+                return;                
+            end
             b = struct2cell(a);
-            valididx = ismember(b(4, :), 'SingleCellExperiment');
-            if ~valididx
+            valididx = ismember(b(4, :), 'SingleCellExperiment');            
+            if ~any(valididx)
                 gui.myHelpdlg(parentfig, 'No SCE in Workspace.');
                 return;
-            end            
+            end
             a = a(valididx);
             b = b(1, valididx);
             [b,idx]=natsort(b);

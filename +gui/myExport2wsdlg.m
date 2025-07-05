@@ -1,9 +1,12 @@
-function [d, tf] = myExport2wsdlg(labels, vars, vals, titleText, parentfig)
+function [d, tf] = myExport2wsdlg(labels, vars, vals, titleText, defs, parentfig)
     % Validate input arguments
     tf = 1;
-    narginchk(3, 5);
-    if nargin < 5
+    narginchk(3, 6);
+    if nargin < 6
         parentfig = [];
+    end
+    if nargin < 5 || isempty(defs)
+        defs = true(1, length(labels));
     end    
     if nargin < 4
         titleText = 'Export Variables to Workspace';
@@ -31,9 +34,9 @@ function [d, tf] = myExport2wsdlg(labels, vars, vals, titleText, parentfig)
     % Create a grid layout manager
     gl = uigridlayout(d, [numel(labels) + 1, 3]);
     gl.RowSpacing = 5;
-    gl.ColumnSpacing = 5;
+    gl.ColumnSpacing = 4;
     gl.Padding = [10, 10, 10, 10];
-    gl.ColumnWidth = {30, '1x', 100}; % Corrected property name
+    gl.ColumnWidth = {'1x', '1x', 100}; % Corrected property name
 
     % Initialize components
     checkboxes = gobjects(numel(labels), 1);
@@ -41,15 +44,18 @@ function [d, tf] = myExport2wsdlg(labels, vars, vals, titleText, parentfig)
 
     % Populate the grid with labels, checkboxes, and edit fields
     for i = 1:numel(labels)
-        checkboxes(i) = uicheckbox(gl, 'Value', true);
+        checkboxes(i) = uicheckbox(gl, 'Value', defs(i), "Text","");
         checkboxes(i).Layout.Row = i;
-        checkboxes(i).Layout.Column = 1;
+        checkboxes(i).Layout.Column = 4;
 
         lbl = uilabel(gl, 'Text', labels{i}, 'HorizontalAlignment', 'right');
         lbl.Layout.Row = i;
-        lbl.Layout.Column = 2;
+        lbl.Layout.Column = [1, 2];
 
-        editfields(i) = uieditfield(gl, 'text', 'Value', vars{i});
+        a = pkg.ai_suggetVarName(vars{i}, 'base');
+        
+
+        editfields(i) = uieditfield(gl, 'text', 'Value', a);
         editfields(i).Layout.Row = i;
         editfields(i).Layout.Column = 3;
     end

@@ -56,4 +56,3 @@ function callback_CalculateGeneStats(src, ~)
     % Export the results to a table
     gui.i_exporttable(T, true, 'GeneStatsTable',[],[],[], FigureHandle);    
 end
-
