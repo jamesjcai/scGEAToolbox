@@ -1,4 +1,6 @@
-function [h1] = i_heatscatter(s, c)
+function [h1] = i_heatscatter(s, c, ax)
+
+if nargin<3, ax=[]; end
 
 if size(s, 2) >= 3
     x = s(:, 1);
@@ -16,9 +18,21 @@ end
 sz = 5;
 
 if is2d
-    h1 = scatter(x, y, sz, c, 'filled');
+    if isempty(ax)
+        h1 = scatter(x, y, sz, c, 'filled');
+    else
+        h1 = scatter(ax, x, y, sz, c, 'filled');
+    end
 else
-    h1 = scatter3(x, y, z, sz, c, 'filled');
+    if isempty(ax)
+        h1 = scatter3(x, y, z, sz, c, 'filled');
+    else        
+        h1 = scatter3(ax, x, y, z, sz, c, 'filled');
+    end
 end
-grid on
+if isempty(ax)
+    grid on
+else
+    grid(ax, "on");
+end
 

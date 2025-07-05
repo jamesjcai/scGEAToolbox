@@ -8,13 +8,13 @@ if nargin < 4 || isempty(csname), csname = "CellScore"; end
 hx=gui.myFigure;
 hFig = hx.FigHandle;
 
-gui.i_heatscatter(sce.s, cs);
-colorbar;
+gui.i_heatscatter(sce.s, cs, hx.AxHandle);
+colorbar(hx.AxHandle);
 %cb.Label.String =  'Expression Level';
 
 
-zlabel('Score value')
-title(strrep(csname, '_', '\_'));
+zlabel(hx.AxHandle, 'Score value')
+title(hx.AxHandle, strrep(csname, '_', '\_'));
 hx.addCustomButton('off', @in_saveScoreTable, ...
     "floppy-disk-arrow-in.jpg", 'Save cell score/gene expression to table');
 hx.addCustomButton('on', @in_geneheatmapx, 'greenarrowicon.gif', 'Heatmap');
