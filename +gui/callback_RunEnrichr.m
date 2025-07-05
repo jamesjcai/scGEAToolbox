@@ -40,7 +40,8 @@ if nargin < 3, predefinedlist = []; end
         return;
     end
 
-    if askbackground
+
+    if askbackground && n > 100
         answer = gui.myQuestdlg(FigureHandle, 'Add background list?','');
         switch answer
             case 'Yes'
@@ -53,6 +54,8 @@ if nargin < 3, predefinedlist = []; end
             case 'Cancel'
                 return;
         end
+    else
+        backgroundlist = [];
     end
 
     if isempty(enrichrtype)
