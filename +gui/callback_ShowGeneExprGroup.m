@@ -8,7 +8,8 @@ function callback_ShowGeneExprGroup(src, ~)
     [thisc] = gui.i_select1class(sce, allowunique,[],[],FigureHandle);
     if isempty(thisc), return; end
 
-    answer = gui.myQuestdlg(FigureHandle, "Select a dependent variable from gene expression or cell state?","", ...
+    answer = gui.myQuestdlg(FigureHandle, ...
+        "Select a dependent variable from gene expression or cell state?","", ...
         {'Gene Expression', 'Cell State'},'Gene Expression');
 
     switch answer
@@ -28,7 +29,7 @@ function callback_ShowGeneExprGroup(src, ~)
             y = thisyv{1};
             ylabelv = string(ylabelv);
 
-            [c, cL, noanswer] = gui.i_reordergroups(thisc);
+            [c, cL, noanswer] = gui.i_reordergroups(thisc, [], FigureHandle);
             if noanswer, return; end
 
             hx = gui.myFigure;

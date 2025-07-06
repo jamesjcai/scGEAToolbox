@@ -83,7 +83,7 @@ function in_MarkerGeneHeatmap(sce, FigureHandle)
         gui.myWarndlg(FigureHandle, "All cells are in the same group.");
         return;
     end
-    % [c, cL, noanswer] = gui.i_reordergroups(thisc);
+    % [c, cL, noanswer] = gui.i_reordergroups(thisc, [], FigureHandle);
     % if noanswer, return; end
     
     [c] = grp2idx(thisc);

@@ -19,8 +19,6 @@ if nargin < 4, prefersel = []; end
 
     d = uifigure('Name', Title, 'Position', dlgPos, ...
         'WindowStyle', 'normal', 'Visible','off');
-    % pause(0.5);
-    
     
     if allowmulti
         multitag = 'on';
@@ -49,6 +47,9 @@ if nargin < 4, prefersel = []; end
     drawnow;
     d.Visible = 'on';
     d.WindowStyle = "modal";
+    % Set focus on the listbox for user interaction
+    lb.focus();
+    disp('myListdlg used.');
     % Wait for user response
     uiwait(d);
     

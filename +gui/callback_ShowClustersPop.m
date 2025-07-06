@@ -10,7 +10,7 @@ if ~strcmp(answer, 'Yes'), return; end
 [thisc, ~] = gui.i_select1class(sce, true,'','',FigureHandle);
 if isempty(thisc), return; end
 [c, cL] = grp2idx(thisc);
-% [c, cL, noanswer] = gui.i_reordergroups(thisc);
+% [c, cL, noanswer] = gui.i_reordergroups(thisc, [], FigureHandle);
 % if noanswer, return; end
 if max(c)==1
     gui.myHelpdlg(FigureHandle, sprintf('Only one type of cells: %s',cL{1}))

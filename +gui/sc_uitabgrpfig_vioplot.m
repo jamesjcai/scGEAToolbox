@@ -54,14 +54,14 @@ tabgp.SelectionChangedFcn = @displaySelection;
 
 hx.addCustomButton('off',  @i_genecards, 'www.jpg', 'GeneCards...');
 hx.addCustomButton('off', @i_showbarplot, "bar_chart_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", 'Switch to Bar Plot');
-hx.addCustomButton('on', @in_savedata, 'floppy-disk.jpg', 'Export summary data...');
-hx.addCustomButton('off', @i_savedata_alltab, 'floppy-disk-arrow-in.jpg', 'Export individual cell data... (new format)');
-hx.addCustomButton('on', @in_testdata, 'mw-pickaxe-mining.jpg', 'ANOVA/T-test...');
-hx.addCustomButton('off', @i_addsamplesize, "unjoin3d.jpg", 'Add Sample Size');
-hx.addCustomButton('off', @i_invertcolor, "align-top-box-solid.jpg", 'Switch BW/Color');
-hx.addCustomButton('off', @i_reordersamples, "rebase_edit_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", 'Reorder Samples');
-hx.addCustomButton('off', @i_selectsamples, "edit.jpg", 'Select Samples');
-hx.addCustomButton('off', @i_sortbymean, "reorder.jpg", 'Sort Samples by Median');
+hx.addCustomButton('on', @in_callback_savedata, 'floppy-disk.jpg', 'Export summary data...');
+hx.addCustomButton('off', @in_callback_savedata_alltab, 'floppy-disk-arrow-in.jpg', 'Export individual cell data... (new format)');
+hx.addCustomButton('on', @in_callback_testdata, 'mw-pickaxe-mining.jpg', 'ANOVA/T-test...');
+hx.addCustomButton('off', @in_callback_addsamplesize, "unjoin3d.jpg", 'Add Sample Size');
+hx.addCustomButton('off', @in_callback_invertcolor, "align-top-box-solid.jpg", 'Switch BW/Color');
+hx.addCustomButton('off', @in_callback_reordersamples, "rebase_edit_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", 'Reorder Samples');
+hx.addCustomButton('off', @in_callback_selectsamples, "edit.jpg", 'Select Samples');
+hx.addCustomButton('off', @in_callback_sortbymean, "reorder.jpg", 'Sort Samples by Median');
 
 hx.show(parentfig);
 gui.myWaitbar(parentfig, fw);
@@ -136,7 +136,7 @@ ccx = true;
         web(sprintf('https://www.genecards.org/cgi-bin/carddisp.pl?gene=%s', focalg),'-new');
     end
 
-    function i_updatealltab(idx)
+    function in_callback_updatealltab(idx)
         if nargin<1, idx = []; end
         for ks=1:n
             if ks~=idx
@@ -148,7 +148,7 @@ ccx = true;
         end        
     end
 
-    function i_invertcolor(~, ~)
+    function in_callback_invertcolor(~, ~)
         colorit = ~colorit;
         [~,idx]=ismember(focalg, tabnamelist);
         delete(ax0{idx});
@@ -160,11 +160,11 @@ ccx = true;
         if length(tab)>1
             answer = gui.myQuestdlg(parentfig, 'Apply to other tabs?','');
             if ~strcmp(answer,'Yes'), return; end
-            i_updatealltab(idx);
+            in_callback_updatealltab(idx);
         end
     end
 
-    function i_updatesamplesizelabel(idx)
+    function in_callback_updatesamplesizelabel(idx)
         if nargin<1, idx=[]; end
         for ks = 1:n
             if ks~=idx
@@ -184,7 +184,7 @@ ccx = true;
         end
     end
 
-    function i_addsamplesize(~, ~)
+    function in_callback_addsamplesize(~, ~)
         [~,idx]=ismember(focalg, tabnamelist);
         b = ax0{idx};
         b.FontName='Palatino';
@@ -201,11 +201,11 @@ ccx = true;
         if length(tab)>1
             answer = gui.myQuestdlg(parentfig, 'Apply to other tabs?','');
             if ~strcmp(answer,'Yes'), return; end
-            i_updatesamplesizelabel(idx);
+            in_callback_updatesamplesizelabel(idx);
         end
     end
 
-    function i_sortbymean(~, ~)
+    function in_callback_sortbymean(~, ~)
         [~,idx]=ismember(focalg, tabnamelist);       
         [cx, cLx] = grp2idx(thisc);
 
@@ -224,24 +224,6 @@ ccx = true;
         
         if isequal(cLx, cLx_sorted)
            gui.myHelpdlg(parentfig, 'Groups has already been sorted.');
-            %     a = zeros(max(cx), 1);
-            %     for ks = 1:max(cx)
-            %         a(ks) = max(y{idx}(cx == ks));
-            %     end
-            %     if isdescend
-            %         [~, idxx] = sort(a, 'ascend');
-            %         isdescend = false;
-            %     else
-            %         [~, idxx] = sort(a, 'descend');
-            %         isdescend = true;
-            %     end
-            %     cLx_sorted = cLx(idxx);
-            % 
-            % delete(ax0{idx});
-            % ax0{idx} = axes('parent',tab{idx});       
-            % cLorder = cLx_sorted;
-            % pkg.i_violinplot(y{idx}, thisc, colorit, cLorder);
-            % title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));
         else
             delete(ax0{idx});
             ax0{idx} = axes('parent',tab{idx});       
@@ -251,7 +233,7 @@ ccx = true;
         end
     end
 
-    function i_reordersamples(~, ~)
+    function in_callback_reordersamples(~, ~)
         [~, cLorderx, noanswer] = gui.i_reordergroups(thisc);
         if noanswer, return; end
         [~,idx] = ismember(focalg, tabnamelist);
@@ -264,11 +246,11 @@ ccx = true;
             answer = gui.myQuestdlg(parentfig, 'Apply to other tabs?','');
             if ~strcmp(answer,'Yes'), return; end
             cLorder = cLorderx;
-            i_updatealltab(idx);
+            in_callback_updatealltab(idx);
         end
     end
 
-    function i_selectsamples(~, ~)
+    function in_callback_selectsamples(~, ~)
         [~, cLorder] = grp2idx(thisc);
         [newidx] = gui.i_selmultidlg(cLorder, cLorder, hFig);
         if isempty(newidx), return; end
@@ -292,11 +274,11 @@ ccx = true;
             end
             thisc = thisc_picked;
             cLorder = cLorderx;
-            i_updatealltab(idx);
+            in_callback_updatealltab(idx);
         end
     end
 
-    function in_testdata(~, ~)
+    function in_callback_testdata(~, ~)
         for tabidx=1:n
             tabgp.SelectedTab=tab{tabidx};
             a = ax0{tabidx};
@@ -405,7 +387,7 @@ ccx = true;
      % end
 
 
-     function i_savedata_alltab(~, ~)
+    function in_callback_savedata_alltab(~, ~)
 %         [~,idx]=ismember(focalg, tabnamelist);
 %         thisy = y{idx};
      
@@ -426,7 +408,7 @@ ccx = true;
      end
  
 
-    function in_savedata(~, ~)
+    function in_callback_savedata(~, ~)
         [~, idxlabel]= grp2idx(thisc(:));
         T=table();
         for tabidx=1:n
@@ -442,4 +424,5 @@ ccx = true;
         T = rows2vars(T);
         gui.i_exporttable(T, true, 'Tviolindata','ViolinPlotTable');
     end
+
 end

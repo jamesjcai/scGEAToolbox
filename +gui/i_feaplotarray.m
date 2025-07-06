@@ -18,7 +18,7 @@ if max(grp2idx(thisc))>50
     if ~strcmp(answer, 'Yes'), return; end
 end
 
-[c, cL, noanswer] = gui.i_reordergroups(thisc);
+[c, cL, noanswer] = gui.i_reordergroups(thisc, [], parentfig);
 if noanswer, return; end
 
 cL = strrep(cL(:),'_','\_');
