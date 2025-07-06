@@ -63,7 +63,7 @@ function [y, txt, T] = gui_showrefinfo(reftarget, parentfig)
         % pause(0.5);
         drawnow;
         hFig.Visible=true;
-        % uiwait(hFig);
+        uiwait(hFig);
     
     else 
         answer = gui.myQuestdlg(parentfig, ...

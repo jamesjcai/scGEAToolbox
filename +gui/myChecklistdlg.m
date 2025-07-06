@@ -10,8 +10,10 @@ function selectedItems = myChecklistdlg(parentfig, items, varargin)
     %   sets default selected items by indices
     %
     % Example:
-    %   items = {'Option 1', 'Option 2', 'Option 3', 'Option 4'};
-    %   selected = gui.myChecklistdlg(items, 'Title', 'Select Options');
+    %{
+    items = {'Option 1', 'Option 2', 'Option 3', 'Option 4'};
+    selected = gui.myChecklistdlg([], items, 'Title', 'Select Options');
+    %}
     
     % Parse input arguments
     p = inputParser;

@@ -14,11 +14,11 @@ if nargin < 4, prefersel = []; end
 
     focus(parentfig);
     % Create a modal dialog
-%    d = uifigure('Name', Title, 'Position', dlgPos, ...
-%        'WindowStyle', 'modal');
+    %    d = uifigure('Name', Title, 'Position', dlgPos, ...
+    %        'WindowStyle', 'modal');
 
     d = uifigure('Name', Title, 'Position', dlgPos, ...
-        'WindowStyle', 'normal');
+        'WindowStyle', 'modal');
     pause(0.5);
     % d.WindowStyle = "modal";
     
