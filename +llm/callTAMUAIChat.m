@@ -33,7 +33,6 @@ function [done, response] = callTAMUAIChat(apikey, prompt, model)
         loadenv(apikey,"FileType","env");
         apikey = getenv("TAMUAI_API_KEY");
     end    
-
     
     % API endpoint
     url = 'https://chat-api.preview.tamu.ai/api/chat/completions';

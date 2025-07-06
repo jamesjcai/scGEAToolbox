@@ -224,6 +224,7 @@ methods
         %            definput = {'500','0.20','10'};
         %        case 'Strigent (keep less cells/genes)'
         %            definput = {'1000','0.15','15'};
+        [obj.X, obj.g] = sc_rmdugenes(obj.X, obj.g);
         [~, keptg, keptidxv] = sc_qcfilter(obj.X, obj.g, ...
             libsize, mtratio, ...
             min_cells_nonzero);
@@ -233,7 +234,6 @@ methods
         [y] = ismember(obj.g, keptg);
         obj.X = obj.X(y, :);
         obj.g = obj.g(y);
-        [obj.X, obj.g] = sc_rmdugenes(obj.X, obj.g);
     end
 
     function obj = selectgenes(obj, min_cellnum, nonzero_cutoff)

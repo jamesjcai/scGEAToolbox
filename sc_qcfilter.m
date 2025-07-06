@@ -34,7 +34,7 @@ while ~isequal(oldsz, newsz)
     [X, keptidx] = sc_filterc(X); % remove empty cells
     keptidxv{end+1} = keptidx;
     [X, genelist] = sc_selectg(X, genelist, min_cells_nonzero);
-    [X, genelist] = sc_rmdugenes(X, genelist);
+    % [X, genelist] = sc_rmdugenes(X, genelist);
     [X, keptidx] = sc_selectc(X, libszcutoff, gnnumcutoff);
     keptidxv{end+1} = keptidx;
     newsz = size(X);
