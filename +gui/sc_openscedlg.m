@@ -64,12 +64,14 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                 return;
             end
         case 'SCE Data File(s) (*.mat)...'
+            
             %promotesave = false;
             [filenm, pathname] = uigetfile( ...
                 {'*.mat', 'SCE Data Files (*.mat)'; ...
                 '*.*', 'All Files (*.*)'}, ...
                 'Pick SCE Data File(s)','MultiSelect','on');
             % if ~(fname), return; end
+            
             if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
             if isequal(filenm, 0), return; end
             if ~iscell(filenm)
