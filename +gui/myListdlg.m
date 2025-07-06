@@ -20,7 +20,7 @@ if nargin < 4, prefersel = []; end
     d = uifigure('Name', Title, 'Position', dlgPos, ...
         'WindowStyle', 'normal');
     pause(0.5);
-    d.WindowStyle = "modal";
+    % d.WindowStyle = "modal";
     
     if allowmulti
         multitag = 'on';
