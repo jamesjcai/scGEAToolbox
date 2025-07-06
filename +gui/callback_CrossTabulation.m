@@ -7,10 +7,13 @@ function callback_CrossTabulation(src, ~)
 %[answer] = gui.myQuestdlg(FigureHandle, 'Manually order groups?', '');
 %if isempty(answer), return; end
 
-[~, cL1, noanswer] = gui.i_reordergroups(thisc1, [], FigureHandle);
+[c, cL1, noanswer] = gui.i_reordergroups(thisc1, [], FigureHandle);
 if noanswer, return; end
-thisc1 = categorical(thisc1, cL1);
-
+if isnumeric(thisc1)
+    thisc1 = categorical(cL1(c), cL1);
+else
+    thisc1 = categorical(thisc1, cL1);
+end
 if ~isempty(thisc2)
     [~, cL2, noanswer] = gui.i_reordergroups(thisc2, [], FigureHandle);
     if noanswer, return; end
@@ -124,7 +127,6 @@ hx.show(FigureHandle);
         labelsy1 = strrep(labelsy, '_', '\_');
         lgd = legend(labelsy1, 'Location', 'bestoutside');
         title(lgd, llabel);
-
     end        
 
     function in_plot2
