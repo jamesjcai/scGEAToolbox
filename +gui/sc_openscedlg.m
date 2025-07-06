@@ -30,7 +30,6 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
     defaultindx = getpref('scgeatoolbox', preftagname, length(list));
 
     if gui.i_isuifig(parentfig)
-        % movegui(parentfig, 'onscreen');
         focus(parentfig);
         [indx, tf] = gui.myListdlg(parentfig, list, ...
             'Select a source', list(defaultindx));
@@ -56,23 +55,13 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
     % figure(parentfig);
 
     switch ButtonName
-        case 'Simulate Data [PMID:27122128]...'
-            try
-                [sce] = in_simulatedata(parentfig);
-            catch ME
-                gui.myErrordlg(parentfig, ME.message, ME.identifier);
-                return;
-            end
         case 'SCE Data File(s) (*.mat)...'
-            
-            %promotesave = false;
             [filenm, pathname] = uigetfile( ...
                 {'*.mat', 'SCE Data Files (*.mat)'; ...
                 '*.*', 'All Files (*.*)'}, ...
                 'Pick SCE Data File(s)','MultiSelect','on');
-            % if ~(fname), return; end
-            
-            if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
+            if isvalid(parentfig) && isa(parentfig, ...
+                    'matlab.ui.Figure'), figure(parentfig); end
             if isequal(filenm, 0), return; end
             if ~iscell(filenm)
                 scefile = fullfile(pathname, filenm);
@@ -87,8 +76,9 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                 gui.myWaitbar(parentfig, fw);
             else
                 if ~in_multifilesgo, return; end
-                answer = gui.myQuestdlg(parentfig, 'Which set operation method to merge data?', ...
-                'Merging method', ...
+                answer = gui.myQuestdlg(parentfig, ...
+                    'Which set operation method to merge data?', ...
+                    'Merging method', ...
                     {'Intersect', 'Union'}, 'Intersect');
                 if ~ismember(answer, {'Union', 'Intersect'}), return; end
                 methodtag = lower(answer);
@@ -117,7 +107,6 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                 gui.myWaitbar(parentfig, fw);
             end
         case '10x Genomics MTX File (*.mtx)...'
-            %'Matrix/MTX File (*.mtx)...'
             try
                 [sce] = gui.i_readmtx;
             catch ME
@@ -455,6 +444,13 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                 if ~isempty(c), sce.c_batch_id = c; end
                 gui.myWaitbar(parentfig, fw);
             end
+        case 'Simulate Data [PMID:27122128]...'
+            try
+                [sce] = in_simulatedata(parentfig);
+            catch ME
+                gui.myErrordlg(parentfig, ME.message, ME.identifier);
+                return;
+            end
         case 'Import SCE Data from Workspace...'
             a = evalin('base', 'whos');
             if isempty(a)
@@ -512,22 +508,12 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
             end
             %promotesave = false;
         case 'Load Example Data...'
-            % if gui.i_isuifig(parentfig)
-            %     answerstruced = uiconfirm(parentfig, 'Load processed or raw data?', '', ...
-            %         'Options', {'Processed', 'Raw', 'Cancel'}, ...
-            %         'DefaultOption', 'Processed', ...
-            %         'Icon', 'question');
-            % else
-                answerstruced = gui.myQuestdlg(parentfig, 'Load processed or raw data?', ...
+            answerstruced = gui.myQuestdlg(parentfig, 'Load processed or raw data?', ...
                     '', {'Processed', 'Raw', 'Cancel'}, 'Processed');
-            %end
             if ~(strcmp(answerstruced, 'Processed') || strcmp(answerstruced, 'Raw'))
                 return;
             end
-            %promotesave = false;
             pw1 = fileparts(mfilename('fullpath'));
-            %fprintf('Loading SCE Data File example_data/workshop_example.mat...');
-            %tic;
             file1 = fullfile(pw1, '..', 'example_data', 'new_example_sce.mat');
             if ~exist(file1, "file")
                 gui.myErrordlg(parentfig, "Example data file does not exist.");
@@ -542,10 +528,6 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                 sce.metadata = orisce.metadata;
                 clearvars orisce
             end
-            %fprintf('Done.\n');
-            %toc;
-        case '----------------------------------'
-            return;
         otherwise
             return;
     end

@@ -12,15 +12,15 @@ if nargin < 4, prefersel = []; end
     % Compute center position
     dlgPos = [parentCenter(1) - dlgSize(1)/2, parentCenter(2) - dlgSize(2)/2, dlgSize];
 
-    focus(parentfig);
+    % focus(parentfig);
     % Create a modal dialog
     %    d = uifigure('Name', Title, 'Position', dlgPos, ...
     %        'WindowStyle', 'modal');
 
     d = uifigure('Name', Title, 'Position', dlgPos, ...
-        'WindowStyle', 'modal');
-    pause(0.5);
-    % d.WindowStyle = "modal";
+        'WindowStyle', 'normal', 'Visible','off');
+    % pause(0.5);
+    
     
     if allowmulti
         multitag = 'on';
@@ -46,6 +46,9 @@ if nargin < 4, prefersel = []; end
     % Create Cancel button
     btnCancel = uibutton(d, 'Text', 'Cancel', 'Position', [160 20 80 30], ...
         'ButtonPushedFcn', @(btn,event) (close(d)));
+    drawnow;
+    d.Visible = 'on';
+    d.WindowStyle = "modal";
     % Wait for user response
     uiwait(d);
     
