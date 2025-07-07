@@ -77,7 +77,7 @@ function [answer, filename] = i_exporttable(T, needwait, TName, ...
                 [file, path] = uiputfile({'*.xlsx'; '*.xls'; '*.*'}, ...
                     'Save as');
             end
-            if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
+            % if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
             if isequal(file, 0) || isequal(path, 0), return; end
     
             filename = fullfile(path, file);
@@ -114,7 +114,7 @@ function [answer, filename] = i_exporttable(T, needwait, TName, ...
                     {'OK'},'OK');
             end
         case 'MAT file'
-            if ~isempty(deffilename)            
+            if ~isempty(deffilename)
                 [file, path] = uiputfile({'*.mat'; '*.*'}, ...
                     'Save as', deffilename);
             else        

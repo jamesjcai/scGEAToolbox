@@ -2,19 +2,19 @@ function callback_SelectCellsByClass(src, ~)
 
 [FigureHandle, sce] = gui.gui_getfigsce(src);
 
-
-
 [ptsSelected] = gui.i_select1classcells(sce, true, FigureHandle);
 if isempty(ptsSelected), return; end
 
-[ax, bx] = view(findall(FigureHandle,'type','axes'));
+parentax = findall(FigureHandle,'type','axes')
+
+[ax, bx] = view(parentax);
 fw = gui.myWaitbar(FigureHandle);
 try
     scex = selectcells(sce, ptsSelected);
     % scex.c=cLi(ci(idx));
     scex.c = sce.c(ptsSelected);
-    scgeatoolApp(scex);
-    view(ax, bx);
+    a = scgeatoolApp(scex);
+    view(a.UIAxes, [ax, bx]);
 catch ME
     gui.myWaitbar(FigureHandle, fw, true);
     gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
