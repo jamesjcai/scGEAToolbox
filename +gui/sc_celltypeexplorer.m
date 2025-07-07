@@ -44,7 +44,8 @@ hx.addCustomButton('off',  @MenuSelected1, 'tool_ellipse.gif', 'Click and then b
 
 
     function MenuSelected1(src, ~)
-        state = src.State;
+        
+        state = src.Enable;
         if strcmp(state, 'on')
             hBr.Enable = 'on';
             % tt.CData = ptImage; % zeros(16,16,3);
