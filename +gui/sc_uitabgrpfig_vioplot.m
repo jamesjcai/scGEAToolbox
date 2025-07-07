@@ -52,8 +52,8 @@ end
 tabgp.SelectionChangedFcn = @displaySelection;
 
 
-hx.addCustomButton('off',  @i_genecards, 'www.jpg', 'GeneCards...');
-hx.addCustomButton('off', @i_showbarplot, "bar_chart_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", 'Switch to Bar Plot');
+hx.addCustomButton('off',  @in_callback_genecards, 'www.jpg', 'GeneCards...');
+hx.addCustomButton('off', @in_callback_showbarplot, "bar_chart_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", 'Switch to Bar Plot');
 hx.addCustomButton('on', @in_callback_savedata, 'floppy-disk.jpg', 'Export summary data...');
 hx.addCustomButton('off', @in_callback_savedata_alltab, 'floppy-disk-arrow-in.jpg', 'Export individual cell data... (new format)');
 hx.addCustomButton('on', @in_callback_testdata, 'mw-pickaxe-mining.jpg', 'ANOVA/T-test...');
@@ -68,7 +68,7 @@ gui.myWaitbar(parentfig, fw);
 
 ccx = true;
 
-    function i_showbarplot(~,~)
+    function in_callback_showbarplot(~,~)
         [~, idx]=ismember(focalg, tabnamelist); 
         [cx, cLx] = grp2idx(thisc);
         a = zeros(max(cx), 1);
@@ -94,7 +94,7 @@ ccx = true;
         
         title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));
         if length(tab)>1
-            answer = gui.myQuestdlg(parentfig, 'Apply to other tabs?','');
+            answer = gui.myQuestdlg(hFig, 'Apply to other tabs?','');
             if ~strcmp(answer,'Yes'), return; end
             i_updatebarplot(idx);
         end
@@ -124,7 +124,7 @@ ccx = true;
         end    
     end
 
-    function displaySelection(~,event)
+    function displaySelection(~, event)
         t = event.NewValue;
         txt = t.Title;
         % disp("Viewing gene " + txt);
@@ -132,7 +132,7 @@ ccx = true;
         focalg = tabnamelist(idx);
     end
 
-    function i_genecards(~, ~)
+    function in_callback_genecards(~, ~)
         web(sprintf('https://www.genecards.org/cgi-bin/carddisp.pl?gene=%s', focalg),'-new');
     end
 
@@ -158,7 +158,7 @@ ccx = true;
         tabgp.SelectedTab=tab{idx};
         drawnow;
         if length(tab)>1
-            answer = gui.myQuestdlg(parentfig, 'Apply to other tabs?','');
+            answer = gui.myQuestdlg(hFig, 'Apply to other tabs?','');
             if ~strcmp(answer,'Yes'), return; end
             in_callback_updatealltab(idx);
         end
@@ -199,7 +199,7 @@ ccx = true;
             b.XTickLabel = cLorder;                
         end
         if length(tab)>1
-            answer = gui.myQuestdlg(parentfig, 'Apply to other tabs?','');
+            answer = gui.myQuestdlg(hFig, 'Apply to other tabs?','');
             if ~strcmp(answer,'Yes'), return; end
             in_callback_updatesamplesizelabel(idx);
         end
@@ -223,7 +223,7 @@ ccx = true;
         cLx_sorted = cLx(idxx);
         
         if isequal(cLx, cLx_sorted)
-           gui.myHelpdlg(parentfig, 'Groups has already been sorted.');
+           gui.myHelpdlg(hFig, 'Groups has already been sorted.');
         else
             delete(ax0{idx});
             ax0{idx} = axes('parent',tab{idx});       
@@ -243,7 +243,7 @@ ccx = true;
         title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));  
 
         if length(tab)>1
-            answer = gui.myQuestdlg(parentfig, 'Apply to other tabs?','');
+            answer = gui.myQuestdlg(hFig, 'Apply to other tabs?','');
             if ~strcmp(answer,'Yes'), return; end
             cLorder = cLorderx;
             in_callback_updatealltab(idx);
@@ -266,7 +266,7 @@ ccx = true;
         title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));
 
         if length(tab)>1        
-            answer = gui.myQuestdlg(parentfig, 'Apply to other tabs?','');
+            answer = gui.myQuestdlg(hFig, 'Apply to other tabs?','');
             if ~strcmp(answer,'Yes'), return; end
     
             for ks=1:n
