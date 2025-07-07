@@ -22,10 +22,10 @@ hFig=hx.FigHandle;
 hFig.Position(3) = hFig.Position(3)*1.8;
 
 
-hx.addCustomButton('off', @in_HighlightTopHVGs, 'plotpicker-qqplot.gif', 'Highlight top HVGs');
+hx.addCustomButton('off', @in_callback_HighlightTopHVGs, 'plotpicker-qqplot.gif', 'Highlight top HVGs');
 hx.addCustomButton('off', {@in_HighlightSelectedGenes,2}, 'curve-array.jpg', 'Select HVG to show');
 hx.addCustomButton('off', {@in_HighlightSelectedGenes,1}, 'checklist_rtl_18dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'Highlight selected genes');
-hx.addCustomButton('on', @ExportTable, 'floppy-disk-arrow-in.jpg', 'Export HVG Table...');
+hx.addCustomButton('on', @in_callback_ExportTable, 'floppy-disk-arrow-in.jpg', 'Export HVG Table...');
 hx.addCustomButton('off', @ExportGeneNames, 'bookmark-book.jpg', 'Export selected HVG gene names...');
 hx.addCustomButton('off', @EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Enrichment analysis...');
 hx.addCustomButton('off', @ChangeAlphaValue, 'Brightness-3--Streamline-Core.jpg', 'Change MarkerFaceAlpha value');
@@ -142,7 +142,7 @@ hx.show(parentfig);
         end
     end            
 
-    function in_HighlightTopHVGs(~, ~)
+    function in_callback_HighlightTopHVGs(~, ~)
         %h.MarkerIndices=idx20;
         idx = zeros(1, length(hvgidx));
         h.BrushData = idx;
@@ -155,7 +155,7 @@ hx.show(parentfig);
         %h2=scatter3(x(idx20),y(idx20),z(idx20),'rx');  % 'filled','MarkerFaceAlpha',.5);
     end
 
-    function ExportTable(~, ~)                
+    function in_callback_ExportTable(~, ~)                
         gui.i_exporttable(T, true, 'Tsplinefitg', 'SplinefitGTable');
     end
 

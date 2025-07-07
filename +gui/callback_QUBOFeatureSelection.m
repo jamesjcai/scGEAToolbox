@@ -26,7 +26,8 @@ function callback_QUBOFeatureSelection(src, ~)
         return;
     end
 
-    k = gui.i_inputnumk(20, 2, sce.NumGenes, 'Number of features (genes)', FigureHandle);
+    k = gui.i_inputnumk(20, 2, sce.NumGenes, ...
+        'Number of features (genes)', FigureHandle);
     if isempty(k), return; end
 
     [Xt] = gui.i_transformx(sce.X, true, 5, FigureHandle);

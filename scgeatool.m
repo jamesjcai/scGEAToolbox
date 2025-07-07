@@ -809,7 +809,8 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                     return;
                 end
             case 'hvg'
-                k = gui.i_inputnumk(2000, 1, sce.NumGenes, 'the number of HVGs');
+                k = gui.i_inputnumk(2000, 1, sce.NumGenes, ...
+                    'the number of HVGs', FigureHandle);
                 if isempty(k), return; end
                 answer = gui.myQuestdlg(FigureHandle, 'Which HVG detecting method to use?', '', ...
                     {'Splinefit Method [PMID:31697351]', ...
@@ -847,7 +848,10 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
 
         sce.g = sce.g(idx);
         sce.X = sce.X(idx, :);
-        gui.myWaitbar(FigureHandle, fw);
+        try
+            gui.myWaitbar(FigureHandle, fw);
+        catch
+        end
         guidata(FigureHandle, sce);
         in_RefreshAll(src, [], true, false);
     end
@@ -2351,7 +2355,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             defva = min([2, round(sce.NumCells/100, -2), round(sce.NumCells/20, -1)]);
             if defva == 0, defva = min([10, defv]); end
             defvb = max([round(sce.NumCells/20, -2), round(sce.NumCells/20, -1)]);
-            k = gui.i_inputnumk(defv, defva, defvb);
+            k = gui.i_inputnumk(defv, defva, defvb, [], FigureHandle);
             if isempty(k), return; end
             fw = gui.myWaitbar(FigureHandle);
             try

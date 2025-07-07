@@ -17,7 +17,7 @@ usehvgs=false;
             k = 2000;
         case 'Other...'
             k = gui.i_inputnumk(min([3000, sce.NumGenes]), ...
-                100, sce.NumGenes);
+                100, sce.NumGenes, [], parentfig);
             if isempty(k), return; end
             usehvgs = true;
         otherwise

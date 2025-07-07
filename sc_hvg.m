@@ -139,7 +139,7 @@ if plotit
     %hAx = axes('Parent', FigureHandle);
     hAx1 = subplot(2,2,[1 3]);
     % tb = findall(hFig, 'Tag', 'FigureToolBar');
-    hx.addCustomButton('off', @HighlightGenes, 'plotpicker-qqplot.gif', 'Highlight top HVGs');
+    hx.addCustomButton('off', @in_callback_HighlightGenes, 'plotpicker-qqplot.gif', 'Highlight top HVGs');
     hx.addCustomButton('off', @in_HighlightSelectedGenes, 'curve-array.jpg', 'Highlight selected genes');
     hx.addCustomButton('off', @ExportGeneNames, 'bookmark-book.jpg', 'Export Selected HVG gene names...');
     hx.addCustomButton('off', @ExportTable, 'floppy-disk-arrow-in.jpg', 'Export HVG Table...');
@@ -212,7 +212,7 @@ end
         end
     end
 
-    function HighlightGenes(~, ~)
+    function in_callback_HighlightGenes(~, ~)
         idx = zeros(1, length(hvgidx));
         h.BrushData = idx;
         k = gui.i_inputnumk(200, 1, 2000);

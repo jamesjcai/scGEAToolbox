@@ -21,13 +21,17 @@ if nargin < 3, needconfirm = true; end
             seedValue = sum(100*datevec(datetime));  % Generate a seed based on current time
             seedValue = sprintf('%.0f', seedValue);
             seedValue = gui.i_inputnumk(seedValue, 0, 2^32, ...
-                "Random number seed, specified as a nonnegative integer less than 2^32");
+                "Random number seed, specified as a " + ...
+                "nonnegative integer less than 2^32", parentfig);
             if isempty(seedValue) || isnan(seedValue)
-                gui.myErrordlg(parentfig, 'Please enter a valid numeric seed', 'Invalid Input');
+                gui.myErrordlg(parentfig, ['Please enter a valid ' ...
+                    'numeric seed'], 'Invalid Input');
             else
                 rng(seedValue);
                 if needconfirm
-                    gui.myHelpdlg(parentfig, sprintf('Random seed set to: %d', seedValue));
+                    gui.myHelpdlg(parentfig, ...
+                        sprintf('Random seed set to: %d', ...
+                        seedValue));
                 end
             end
     end

@@ -12,7 +12,8 @@ switch answer
     case '2D'
         ndim = 2;
     case 'Other...'
-        ndim = gui.i_inputnumk(20, 2, 100, 'Number of Dimensions');
+        ndim = gui.i_inputnumk(20, 2, 100, ...
+            'Number of Dimensions', parentfig);
     otherwise
         return;
 end

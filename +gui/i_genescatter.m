@@ -9,7 +9,7 @@ function i_genescatter(T, parentfig)
     hAx = hx.AxHandle;
     if isempty(hAx), hAx = gca; end
 
-    hx.addCustomButton('off', @HighlightGenes, 'plotpicker-qqplot.gif', 'Highlight top HVGs');
+    hx.addCustomButton('off', @in_callback_HighlightGenes, 'plotpicker-qqplot.gif', 'Highlight top HVGs');
     hx.addCustomButton('off', @in_HighlightSelectedGenes, 'curve-array.jpg', 'Highlight selected genes');
     hx.addCustomButton('off', @ExportGeneNames, 'bookmark-book.jpg', 'Export Selected HVG gene names...');
     hx.addCustomButton('off', @ExportTable, 'floppy-disk-arrow-in.jpg', 'Export HVG Table...');
@@ -49,7 +49,7 @@ function i_genescatter(T, parentfig)
         end
     end
 
-    function HighlightGenes(~, ~)
+    function in_callback_HighlightGenes(~, ~)
 
         Tx = T(T.dv_coef > 0 & T.de_coef > 0,:);
         [~, hvgidx] = sort(Tx.dv_pval);
