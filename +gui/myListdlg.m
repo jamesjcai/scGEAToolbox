@@ -49,7 +49,7 @@ if nargin < 4, prefersel = []; end
     d.WindowStyle = "modal";
     % Set focus on the listbox for user interaction
     lb.focus();
-    disp('myListdlg used.');
+    % disp('myListdlg used.');
     % Wait for user response
     uiwait(d);
     

@@ -97,11 +97,11 @@ function selectedItems = myChecklistdlg(parentfig, items, varargin)
     buttonPanel = uipanel(mainGrid, 'BorderType', 'none', ...
                          'BackgroundColor', fig.Color);
     buttonGrid = uigridlayout(buttonPanel, [1, 4]);
-    buttonGrid.ColumnWidth = {'1x', 'fit', 'fit', 'fit'};
+    buttonGrid.ColumnWidth = {'1x', '1x', '1x', '1x'};
     buttonGrid.ColumnSpacing = 10;
     
     % Spacer
-    uilabel(buttonGrid, 'Text', '');
+    % uilabel(buttonGrid, 'Text', 'ccc');
     
     % Select All button
     selectAllBtn = uibutton(buttonGrid, 'Text', 'Select All', ...
@@ -110,15 +110,17 @@ function selectedItems = myChecklistdlg(parentfig, items, varargin)
     % Clear All button
     clearAllBtn = uibutton(buttonGrid, 'Text', 'Clear All', ...
                           'ButtonPushedFcn', @clearAllCallback);
-    
+
+    % Cancel button
+    cancelBtn = uibutton(buttonGrid, 'Text', 'Cancel', ...
+                        'ButtonPushedFcn', @cancelCallback);
+
+
     % OK button
     okBtn = uibutton(buttonGrid, 'Text', 'OK', ...
                     'ButtonPushedFcn', @okCallback, ...
                     'FontWeight', 'bold');
     
-    % Cancel button
-    cancelBtn = uibutton(buttonGrid, 'Text', 'Cancel', ...
-                        'ButtonPushedFcn', @cancelCallback);
     
     % Wait for user interaction
     uiwait(fig);

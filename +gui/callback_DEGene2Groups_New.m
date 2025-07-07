@@ -72,7 +72,7 @@ function callback_DEGene2Groups_New(src, ~)
     items = {'Set Parameter Set', 'Enrichr Analysis', ...
         'LLM Summarize', 'Generate Volcano Plot', 'Open Output Folder'};
     selected = gui.myChecklistdlg(FigureHandle, items, ...
-        'Title', 'Select Analysis','DefaultSelection', [1 2 3 4 5]);
+        'Title', 'Select Items','DefaultSelection', [1 2 3 4 5]);
     if isempty(selected)
         %writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All_genes');
         %gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s', filesaved));
