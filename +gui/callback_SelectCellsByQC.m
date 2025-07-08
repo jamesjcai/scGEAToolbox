@@ -45,8 +45,22 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
         return;
     end
 
-    switch listitems{indx}
 
+    hasDuplicates = numel(unique(sce.g)) < numel(sce.g);
+    if hasDuplicates
+        if ~strcmp('Yes', ...
+                gui.myQuestdlg(FigureHandle, ...
+                ['SCE contains duplicate gene names. Duplicate genes ' ...
+                'will be removed; only the first occurrence of each ' ...
+                'duplicate gene will be retained. Continue?'], ...
+                'Duplicate Genes Detected'))
+            return;
+        else
+            [sce.X, sce.g] = sc_rmdugenes(sce.X, sce.g);            
+        end
+    end
+
+    switch listitems{indx}
         case {'SC_QCFILTER (Basic QC for Cells/Genes)',...
                 'SC_QCFILTER (Enabling Whitelist Genes)'}
 
