@@ -47,10 +47,6 @@ newsz = 1;
         Xobj.data(~idx, :) = [];
         genelist = genelist(idx);
     
-    
-        %[X,genelist]=sc_rmdugenes(X,genelist);
-        %[X,keptidx]=sc_selectc(X,libszcutoff,gnnumcutoff);
-    
         libsz = sum(Xobj.data, 1);
         gnnum = sum(Xobj.data > 0, 1);
     

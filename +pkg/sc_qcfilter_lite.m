@@ -47,10 +47,6 @@ while ~isequal(oldsz, newsz)
     X(~idx, :) = [];
     genelist = genelist(idx);
 
-
-    %[X,genelist]=sc_rmdugenes(X,genelist);
-    %[X,keptidx]=sc_selectc(X,libszcutoff,gnnumcutoff);
-
     libsz = sum(X, 1);
     gnnum = sum(X > 0, 1);
 
