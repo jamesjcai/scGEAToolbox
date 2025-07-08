@@ -112,8 +112,12 @@ end
                     %p = scgeatool(scev,'useuifig', ...
                     %    gui.i_isuifig(FigureHandle));
                     %p.Name=matlab.lang.makeValidName(cL2{idx(ik)});
-
-                    scgeatoolApp(scev);
+                    
+                    if isa(src, 'matlab.apps.AppBase')
+                        scgeatoolApp(scev);
+                    else
+                        scgeatool(scev);
+                    end
                     % p.Position([2])=p.Position([2])-s*30;
                     % p.Position([1])=p.Position([1])+s*30;
                     % p.Position([3 4])=p.Position([3 4])*0.8;

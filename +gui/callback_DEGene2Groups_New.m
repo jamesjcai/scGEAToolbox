@@ -55,15 +55,19 @@ function callback_DEGene2Groups_New(src, ~)
     outfile = sprintf('%s_vs_%s_DE_results.xlsx', ...
         matlab.lang.makeValidName(string(cL1)), ...
         matlab.lang.makeValidName(string(cL2)));
-    filesaved = fullfile(outdir, outfile);
 
+    % filesaved = fullfile(outdir, outfile);
+    try
 
-    try    
-        writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All_genes');
-        gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s', filesaved));
+        [~, filesaved] = gui.i_exporttable(T, true, ...
+            'Tdegenelist', outfile, 'Excel file', "All_genes", FigureHandle);        
+        %writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All_genes');
+        %gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s', filesaved));
     catch
-    
+        return;
     end
+    if ~isfile(filesaved), return; end
+
 
     if ~strcmp('Yes', gui.myQuestdlg(FigureHandle, 'Additional Analysis?'))
         return;

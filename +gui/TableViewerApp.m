@@ -114,10 +114,11 @@ if nargin<1, T = []; end
     
     % --- Second Row of Buttons ---
     exportWorkspaceBtn = uibutton(btnLayout, 'Text', 'Export to Workspace', ...
-                              'ButtonPushedFcn', @(btn,event) exportToWorkspace(uitTable));
+                              'ButtonPushedFcn', @(btn,event) exportToWorkspace(uitTable, fig));
     exportWorkspaceBtn.Layout.Row = 2;
     exportWorkspaceBtn.Layout.Column = 1;
     
+    %{
     printBtn = uibutton(btnLayout, 'Text', 'Print Table', ...
                    'ButtonPushedFcn', @(btn,event) printTable(uitTable));
     printBtn.Layout.Row = 2;
@@ -127,7 +128,7 @@ if nargin<1, T = []; end
                     'ButtonPushedFcn', @(btn,event) showStatistics(uitTable));
     statsBtn.Layout.Row = 2;
     statsBtn.Layout.Column = 3;
-    
+    %}
     
     % Update sort dropdown with column names
     updateSortDropdown(sortByDropdown, uitTable);
@@ -230,7 +231,15 @@ function exportToMAT(tableObj)
     uialert(tableObj.Parent.Parent, ['Table data saved to: ' fullFilePath], 'Export Successful', 'Icon', 'success');
 end
 
-function exportToWorkspace(tableObj)
+function exportToWorkspace(tableObj, fig)
+
+    outfiletag = "";
+    gui.i_exporttable(tableObj, true, 'Tenrichrres', ...
+            sprintf('Enrichr_Results_%s', outfiletag), [], [], fig);
+
+
+    %{
+
     % Function to export table data to the workspace
     
     % Create input dialog to get variable name
@@ -261,6 +270,7 @@ function exportToWorkspace(tableObj)
     
     % Display confirmation message
     uialert(tableObj.Parent.Parent, ['Table data exported to workspace variable: ' varName], 'Export Successful', 'Icon', 'success');
+    %}
 end
 
 function refreshData(tableObj, rowCountLabel, sortByDropdown)
@@ -302,7 +312,7 @@ function printTable(tableObj)
     
     % Show print preview
     printFig.Visible = 'on';
-    printpreview(printFig);
+    uiexportdlg(printFig);
 end
 
 function showStatistics(tableObj)

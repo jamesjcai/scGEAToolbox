@@ -52,9 +52,10 @@ function callback_DEGene2Groups(src, ~)
 
     [T] = in_Tprocessing(T);
 
-    outfile = matlab.lang.makeValidName(sprintf('%s_vs_%s_DE_results', ...
-        string(cL1), string(cL2)));
-
+    outfile = sprintf('%s_vs_%s_DE_results.xlsx', ...
+        matlab.lang.makeValidName(string(cL1)), ...
+        matlab.lang.makeValidName(string(cL2)));
+    
     
     didit = false;
     try

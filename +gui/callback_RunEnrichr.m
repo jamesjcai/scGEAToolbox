@@ -127,12 +127,14 @@ end
 
     gui.myWaitbar(FigureHandle, fw);
     
-    [~, ~] = gui.i_exporttable(T, true, 'Tenrichrres', ...
-        sprintf('Enrichr_Results_%s', outfiletag),[],[],FigureHandle);
+    %[~, ~] = gui.i_exporttable(T, true, 'Tenrichrres', ...
+    %    sprintf('Enrichr_Results_%s', outfiletag),[],[],FigureHandle);
 
     options = {'View Table', 'Circos Plot'};
-    answer = gui.myQuestdlg(FigureHandle, 'View Enrichr Result Table or Show the Table as a Circos Plot?', ...
-        '', {options{1}, options{2}}, options{1});
+    %answer = gui.myQuestdlg(FigureHandle, 'View Enrichr Result Table or Show the Table as a Circos Plot?', ...
+    %    '', {options{1}, options{2}}, options{1});
+
+    answer = options{1};
     switch answer
         case options{1}
             % gui.i_viewtable(T, FigureHandle);
