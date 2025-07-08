@@ -52,7 +52,7 @@ function callback_DEGene2Groups(src, ~)
 
     [T] = in_Tprocessing(T);
 
-    outfile = sprintf('%s_vs_%s_DE_results.xlsx', ...
+    outfile = sprintf("%s_vs_%s_DE_results.xlsx", ...
         matlab.lang.makeValidName(string(cL1)), ...
         matlab.lang.makeValidName(string(cL2)));
     
@@ -329,7 +329,7 @@ function callback_DEGene2Groups(src, ~)
 
     % ------- end of volcano_plot
 
-    function i_replaceinf(T)
+    function [T] = i_replaceinf(T)
         % Iterate over each variable in the table
         for varIdx = 1:width(T)
             % Check if the variable is numeric

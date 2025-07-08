@@ -52,7 +52,7 @@ function callback_DEGene2Groups_New(src, ~)
     end   
 
 
-    outfile = sprintf('%s_vs_%s_DE_results.xlsx', ...
+    outfile = sprintf("%s_vs_%s_DE_results.xlsx", ...
         matlab.lang.makeValidName(string(cL1)), ...
         matlab.lang.makeValidName(string(cL2)));
 
@@ -76,7 +76,7 @@ function callback_DEGene2Groups_New(src, ~)
     items = {'Set Parameter Set', 'Enrichr Analysis', ...
         'LLM Summarize', 'Generate Volcano Plot', 'Open Output Folder'};
     selected = gui.myChecklistdlg(FigureHandle, items, ...
-        'Title', 'Select Items','DefaultSelection', [1 2 3 4 5]);
+        'Title', 'Select Items','DefaultSelection', [2 4 5]);
     if isempty(selected)
         %writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All_genes');
         %gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s', filesaved));
@@ -133,20 +133,22 @@ function callback_DEGene2Groups_New(src, ~)
         end
     end
 
+    f = [];
     if any(contains(selected, 'Generate Volcano Plot'))
         gui.myWaitbar(FigureHandle, fw, false, '', 'Generate Volcano Plot...', 2/3);
         try
-            e_volcano(T, Tup, Tdn, FigureHandle);
+            f = e_volcano(T, Tup, Tdn, FigureHandle);
         catch ME
             warning(ME.message);
         end
-    end
-   
+    end   
     gui.myWaitbar(FigureHandle, fw);
 
-    if any(contains(selected, 'Open Output Folder'))
-        % winopen(outdir);
-        winopen(fileparts(filesaved));
+    if any(contains(selected, 'Open Output Folder'))        
+        if isempty(f), f = FigureHandle; end
+        if strcmp('Yes', gui.myQuestdlg(f,'Open Output Folder?'))
+            winopen(fileparts(filesaved));
+        end
     end
 
     function in_callback_savetable(srcx, ~)
