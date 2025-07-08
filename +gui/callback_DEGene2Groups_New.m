@@ -60,7 +60,7 @@ function callback_DEGene2Groups_New(src, ~)
     try
 
         [~, filesaved] = gui.i_exporttable(T, true, ...
-            'Tdegenelist', outfile, 'Excel file', "All_genes", FigureHandle);        
+            'Tdegenelist', outfile, 'Excel file', "All_raw", FigureHandle);        
         %writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All_genes');
         %gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s', filesaved));
     catch
@@ -99,7 +99,7 @@ function callback_DEGene2Groups_New(src, ~)
     [T, Tnt] = pkg.in_DETableProcess(T, cL1, cL2, sum(i1), sum(i2));
 
     try
-        writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All_genes');
+        writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All_processed');
         writetable(Tup, filesaved, "FileType", "spreadsheet", 'Sheet', 'Up-regulated');
         writetable(Tdn, filesaved, "FileType", "spreadsheet", 'Sheet', 'Down-regulated');
         writetable(Tnt, filesaved, "FileType", "spreadsheet", 'Sheet', 'Note');
@@ -145,7 +145,8 @@ function callback_DEGene2Groups_New(src, ~)
     gui.myWaitbar(FigureHandle, fw);
 
     if any(contains(selected, 'Open Output Folder'))
-        winopen(outdir);
+        % winopen(outdir);
+        winopen(fileparts(filesaved));
     end
 
     function in_callback_savetable(srcx, ~)
