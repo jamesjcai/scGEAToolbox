@@ -5,6 +5,21 @@ function varargout = scgeatool(sce, varargin)
 % end
 if ~gui.i_installed('stats'), return; end
 
+if nargin<1
+    answer1x = gui.myQuestdlg([],['Select Switch to explore the ' ...
+        ' new SCGEATOOL, ' ...
+        'or Keep to continue with the current version.'],...
+    'Try the New SCGEATOOL Preview?', {'Switch','Keep'});
+    switch answer1x
+        case 'Switch'
+            scgeatoolApp;
+            return;
+        case 'Keep'
+        otherwise
+            return;
+    end
+end
+
 persistent speciestag
 
 ptimgidx = 1;

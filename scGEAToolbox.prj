@@ -1,0 +1,278 @@
+<deployment-project plugin="plugin.toolbox" plugin-version="1.0">
+  <configuration build-checksum="199100990" file="C:\Users\jcai\Documents\GitHub\scGEAToolbox\scGEAToolbox.prj" location="C:\Users\jcai\Documents\GitHub\scGEAToolbox" name="scGEAToolbox" target="target.toolbox" target-name="Package Toolbox">
+    <param.appname>scGEAToolbox</param.appname>
+    <param.authnamewatermark>James Cai</param.authnamewatermark>
+    <param.email>jcai@tamu.edu</param.email>
+    <param.company>Texas A&amp;M University</param.company>
+    <param.summary>Single-cell Gene Expression Analysis Toolbox</param.summary>
+    <param.description>Cai JJ. scGEAToolbox: a Matlab toolbox for single-cell RNA sequencing data analysis. Bioinformatics. 2019 Nov 7:btz830. doi: 10.1093/bioinformatics/btz830. PMID: 31697351.</param.description>
+    <param.screenshot>${PROJECT_ROOT}\assets\Images\scgeatool.png</param.screenshot>
+    <param.version>25.7.0</param.version>
+    <param.output>${PROJECT_ROOT}\scGEAToolbox.mltbx</param.output>
+    <param.products.name>
+      <item>MATLAB</item>
+      <item>Curve Fitting Toolbox</item>
+      <item>MATLAB Report Generator</item>
+      <item>Statistics and Machine Learning Toolbox</item>
+    </param.products.name>
+    <param.products.id>
+      <item>1</item>
+      <item>60</item>
+      <item>44</item>
+      <item>19</item>
+    </param.products.id>
+    <param.products.version>
+      <item>24.2</item>
+      <item>24.2</item>
+      <item>24.2</item>
+      <item>24.2</item>
+    </param.products.version>
+    <param.platforms />
+    <param.guid>6597c9c8-34b6-4fe4-a150-99bf81bbb77f</param.guid>
+    <param.exclude.filters>% List files contained in your toolbox folder that you would like to exclude
+% from packaging.  Excludes should be listed relative to the toolbox folder.
+% Some examples of how to specify excludes are provided below:
+%
+% A single file in the toolbox folder:
+% .svn
+%
+% A single file in a subfolder of the toolbox folder:
+% example/.svn
+%
+% All files in a subfolder of the toolbox folder:
+% example/*
+%
+% All files of a certain name in all subfolders of the toolbox folder:
+% **/.svn
+%
+% All files matching a pattern in all subfolders of the toolbox folder:
+% **/*.bak
+%
+**/*.asv
+**/.git
+**/.github
+.git/*
+.github/*
+% **/example_data
+resources/STRING/stringdb_human.mat
+resources/STRING/stringdb_mouse.mat
+.gitignore
+**/.Rhistory
+**/html
+**/docs
+**/scgeatoolstandaloneApplication
+**/ui
+**/+qtm
+TIMESTAMP
+VERSION.mat
+DEVMODE.txt</param.exclude.filters>
+    <param.exclude.pcodedmfiles>true</param.exclude.pcodedmfiles>
+    <param.examples />
+    <param.demosxml />
+    <param.apps>
+      <file>${PROJECT_ROOT}\scgeatoolApp.mlappinstall</file>
+    </param.apps>
+    <param.registered.apps />
+    <param.docs>${PROJECT_ROOT}\info.xml</param.docs>
+    <param.getting.started.guide>${PROJECT_ROOT}\doc\GettingStarted.mlx</param.getting.started.guide>
+    <param.matlabpath.excludes>
+      <item>/+run/external/ml_PHATE</item>
+      <item>/+run/external/ml_UMAP44/util</item>
+      <item>/+run/external/ml_UMAP44</item>
+    </param.matlabpath.excludes>
+    <param.javaclasspath.excludes />
+    <param.exported.on.package>false</param.exported.on.package>
+    <param.required.addons />
+    <param.matlab.project.id />
+    <param.matlab.project.name />
+    <param.release.start />
+    <param.release.end />
+    <param.release.current.only>false</param.release.current.only>
+    <param.compatiblity.windows>true</param.compatiblity.windows>
+    <param.compatiblity.macos>true</param.compatiblity.macos>
+    <param.compatiblity.linux>true</param.compatiblity.linux>
+    <param.compatiblity.matlabonline>true</param.compatiblity.matlabonline>
+    <param.installation.map />
+    <param.additional.sw.names />
+    <param.additional.sw.licenses />
+    <param.additional.sw.win.url />
+    <param.additional.sw.mac.url />
+    <param.additional.sw.linux.url />
+    <unset>
+      <param.authnamewatermark />
+      <param.email />
+      <param.company />
+      <param.output />
+      <param.platforms />
+      <param.exclude.pcodedmfiles />
+      <param.examples />
+      <param.demosxml />
+      <param.registered.apps />
+      <param.javaclasspath.excludes />
+      <param.exported.on.package />
+      <param.required.addons />
+      <param.matlab.project.id />
+      <param.matlab.project.name />
+      <param.release.start />
+      <param.release.end />
+      <param.release.current.only />
+      <param.compatiblity.windows />
+      <param.compatiblity.macos />
+      <param.compatiblity.linux />
+      <param.compatiblity.matlabonline />
+      <param.additional.sw.names />
+      <param.additional.sw.licenses />
+      <param.additional.sw.win.url />
+      <param.additional.sw.mac.url />
+      <param.additional.sw.linux.url />
+    </unset>
+    <fileset.rootdir>
+      <file>${PROJECT_ROOT}</file>
+    </fileset.rootdir>
+    <fileset.rootfiles>
+      <file>${PROJECT_ROOT}\+gui</file>
+      <file>${PROJECT_ROOT}\+llm</file>
+      <file>${PROJECT_ROOT}\+pkg</file>
+      <file>${PROJECT_ROOT}\+run</file>
+      <file>${PROJECT_ROOT}\+ten</file>
+      <file>${PROJECT_ROOT}\@SingleCellExperiment</file>
+      <file>${PROJECT_ROOT}\app</file>
+      <file>${PROJECT_ROOT}\assets</file>
+      <file>${PROJECT_ROOT}\cdgea.m</file>
+      <file>${PROJECT_ROOT}\demo_Getting_Started.m</file>
+      <file>${PROJECT_ROOT}\demo_script1.m</file>
+      <file>${PROJECT_ROOT}\demo_script1.mlx</file>
+      <file>${PROJECT_ROOT}\demo_script2.m</file>
+      <file>${PROJECT_ROOT}\demo_script2.mlx</file>
+      <file>${PROJECT_ROOT}\demo_script3.m</file>
+      <file>${PROJECT_ROOT}\demo_script3.mlx</file>
+      <file>${PROJECT_ROOT}\demo_script4.m</file>
+      <file>${PROJECT_ROOT}\demo_script4.mlx</file>
+      <file>${PROJECT_ROOT}\demo_script5.m</file>
+      <file>${PROJECT_ROOT}\demo_script5.mlx</file>
+      <file>${PROJECT_ROOT}\demo_script6.m</file>
+      <file>${PROJECT_ROOT}\demo_script6.mlx</file>
+      <file>${PROJECT_ROOT}\doc</file>
+      <file>${PROJECT_ROOT}\example_data</file>
+      <file>${PROJECT_ROOT}\info.xml</file>
+      <file>${PROJECT_ROOT}\LICENSE</file>
+      <file>${PROJECT_ROOT}\online_landing.m</file>
+      <file>${PROJECT_ROOT}\private</file>
+      <file>${PROJECT_ROOT}\README.md</file>
+      <file>${PROJECT_ROOT}\sc_cellcyclescore.m</file>
+      <file>${PROJECT_ROOT}\sc_cellscore_admdl.m</file>
+      <file>${PROJECT_ROOT}\sc_cellscore_ucell.m</file>
+      <file>${PROJECT_ROOT}\sc_celltypeanno.m</file>
+      <file>${PROJECT_ROOT}\sc_cluster_s.m</file>
+      <file>${PROJECT_ROOT}\sc_cluster_x.m</file>
+      <file>${PROJECT_ROOT}\sc_csubtypeanno.m</file>
+      <file>${PROJECT_ROOT}\sc_deg.m</file>
+      <file>${PROJECT_ROOT}\sc_diffumap.m</file>
+      <file>${PROJECT_ROOT}\sc_distcorr.m</file>
+      <file>${PROJECT_ROOT}\sc_dpg.m</file>
+      <file>${PROJECT_ROOT}\sc_filterc.m</file>
+      <file>${PROJECT_ROOT}\sc_filterg.m</file>
+      <file>${PROJECT_ROOT}\sc_fullembed.m</file>
+      <file>${PROJECT_ROOT}\sc_genestat.m</file>
+      <file>${PROJECT_ROOT}\sc_genestats.m</file>
+      <file>${PROJECT_ROOT}\sc_grn.m</file>
+      <file>${PROJECT_ROOT}\sc_grnview.m</file>
+      <file>${PROJECT_ROOT}\sc_grnview2.m</file>
+      <file>${PROJECT_ROOT}\sc_hvg.m</file>
+      <file>${PROJECT_ROOT}\sc_ifft.m</file>
+      <file>${PROJECT_ROOT}\sc_ifft_dev.m</file>
+      <file>${PROJECT_ROOT}\sc_impute.m</file>
+      <file>${PROJECT_ROOT}\sc_knngraph.m</file>
+      <file>${PROJECT_ROOT}\sc_mergedata.m</file>
+      <file>${PROJECT_ROOT}\sc_mergesces.m</file>
+      <file>${PROJECT_ROOT}\sc_mtratio.m</file>
+      <file>${PROJECT_ROOT}\sc_multiembed.m</file>
+      <file>${PROJECT_ROOT}\sc_nnmf.m</file>
+      <file>${PROJECT_ROOT}\sc_norm.m</file>
+      <file>${PROJECT_ROOT}\sc_pcnet.m</file>
+      <file>${PROJECT_ROOT}\sc_pcnetbat.m</file>
+      <file>${PROJECT_ROOT}\sc_pcnetpar.m</file>
+      <file>${PROJECT_ROOT}\sc_phate.m</file>
+      <file>${PROJECT_ROOT}\sc_pickmarkers.m</file>
+      <file>${PROJECT_ROOT}\sc_potency.m</file>
+      <file>${PROJECT_ROOT}\sc_qcfilter.m</file>
+      <file>${PROJECT_ROOT}\sc_qcmetrics.m</file>
+      <file>${PROJECT_ROOT}\sc_read10xdir.m</file>
+      <file>${PROJECT_ROOT}\sc_read10xh5file.m</file>
+      <file>${PROJECT_ROOT}\sc_readfile.m</file>
+      <file>${PROJECT_ROOT}\sc_readgeoaccess.m</file>
+      <file>${PROJECT_ROOT}\sc_readh5adfile.m</file>
+      <file>${PROJECT_ROOT}\sc_readhdf5file.m</file>
+      <file>${PROJECT_ROOT}\sc_readloomfile.m</file>
+      <file>${PROJECT_ROOT}\sc_readmtxfile.m</file>
+      <file>${PROJECT_ROOT}\sc_readparsebio.m</file>
+      <file>${PROJECT_ROOT}\sc_readrdsfile.m</file>
+      <file>${PROJECT_ROOT}\sc_readtsvfile.m</file>
+      <file>${PROJECT_ROOT}\sc_rmdugenes.m</file>
+      <file>${PROJECT_ROOT}\sc_rmmtcells.m</file>
+      <file>${PROJECT_ROOT}\sc_rmmtgenes.m</file>
+      <file>${PROJECT_ROOT}\sc_scatter.m</file>
+      <file>${PROJECT_ROOT}\sc_scattermarker.m</file>
+      <file>${PROJECT_ROOT}\sc_sce2h5ad.m</file>
+      <file>${PROJECT_ROOT}\sc_sce2hdf5.m</file>
+      <file>${PROJECT_ROOT}\sc_sce2rds.m</file>
+      <file>${PROJECT_ROOT}\sc_selectc.m</file>
+      <file>${PROJECT_ROOT}\sc_selectg.m</file>
+      <file>${PROJECT_ROOT}\sc_simudata.m</file>
+      <file>${PROJECT_ROOT}\sc_snndpc.m</file>
+      <file>${PROJECT_ROOT}\sc_splinefit.m</file>
+      <file>${PROJECT_ROOT}\sc_splinefit2.m</file>
+      <file>${PROJECT_ROOT}\sc_stemness.m</file>
+      <file>${PROJECT_ROOT}\sc_tenifoldnet.m</file>
+      <file>${PROJECT_ROOT}\sc_tfactivity.m</file>
+      <file>${PROJECT_ROOT}\sc_trajectory.m</file>
+      <file>${PROJECT_ROOT}\sc_transform.m</file>
+      <file>${PROJECT_ROOT}\sc_tsne.m</file>
+      <file>${PROJECT_ROOT}\sc_umap.m</file>
+      <file>${PROJECT_ROOT}\sc_writefile.m</file>
+      <file>${PROJECT_ROOT}\scgeatool.m</file>
+      <file>${PROJECT_ROOT}\scgeatoolApp.mlapp</file>
+      <file>${PROJECT_ROOT}\scgeatoolApp.mlappinstall</file>
+      <file>${PROJECT_ROOT}\tensor_toolbox</file>
+    </fileset.rootfiles>
+    <fileset.depfun.included />
+    <fileset.depfun.excluded />
+    <fileset.package />
+    <build-deliverables>
+      <file location="${PROJECT_ROOT}" name="scGEAToolbox.mltbx" optional="false">C:\Users\jcai\Documents\GitHub\scGEAToolbox\scGEAToolbox.mltbx</file>
+    </build-deliverables>
+    <workflow />
+    <matlab>
+      <root>C:\Program Files\MATLAB\R2024b</root>
+      <toolboxes>
+        <toolbox name="matlabcoder" />
+        <toolbox name="neuralnetwork" />
+      </toolboxes>
+      <toolbox>
+        <matlabcoder>
+          <enabled>true</enabled>
+        </matlabcoder>
+      </toolbox>
+      <toolbox>
+        <neuralnetwork>
+          <enabled>true</enabled>
+        </neuralnetwork>
+      </toolbox>
+    </matlab>
+    <platform>
+      <unix>false</unix>
+      <mac>false</mac>
+      <windows>true</windows>
+      <win2k>false</win2k>
+      <winxp>false</winxp>
+      <vista>false</vista>
+      <linux>false</linux>
+      <solaris>false</solaris>
+      <osver>10.0</osver>
+      <os32>false</os32>
+      <os64>true</os64>
+      <arch>win64</arch>
+      <matlab>true</matlab>
+    </platform>
+  </configuration>
+</deployment-project>
