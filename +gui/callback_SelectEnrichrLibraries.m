@@ -13,6 +13,9 @@ function callback_SelectEnrichrLibraries(src, ~)
 
     function [genesets] = in_selDataSources
         genesets = [];
+        fw = gui.myWaitbar(FigureHandle);
+        try
+        
         dsv = pkg.i_get_enrichr_libraries;
 
         enrichrlibraries = getpref('scgeatoolbox', 'enrichrlibraries', ...
@@ -20,7 +23,11 @@ function callback_SelectEnrichrLibraries(src, ~)
                                     "GO_Molecular_Function_2025", ...
                                      "KEGG_2021_Human",...
                                      "Reactome_Pathways_2024"]);
-
+        catch ME
+            gui.myWaitbar(FigureHandle,fw,true);
+            rethrow(ME);
+        end
+        gui.myWaitbar(FigureHandle,fw);
         [idx1] = gui.i_selmultidlg(dsv, enrichrlibraries, FigureHandle);
         if isempty(idx1), return; end
         if idx1 == 0, return; end
