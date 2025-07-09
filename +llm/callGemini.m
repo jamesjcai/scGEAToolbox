@@ -1,4 +1,6 @@
 function [done] = callGemini(apiKey, prompt, model)
+
+    error('Try llm.callGemini2.');
     done = false;
     % Default model if not specified
     if nargin < 3, model = 'gemini-2.0-flash'; end

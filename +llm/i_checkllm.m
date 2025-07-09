@@ -34,12 +34,13 @@ fprintf('Using LLM provider: %s\n', provider);
 
 model = providermodel{2};
 fprintf('Using LLM model: %s\n', model);
+
+prompt = "Why is the sky blue?";
     
     switch provider
         case 'Ollama'
             try
-                chat = ollamaChat(model, TimeOut = 1200);
-                prompt = "Why is the sky blue?";
+                chat = ollamaChat(model, TimeOut = 1200);                
                 feedbk = generate(chat, prompt);
             catch ME
                 fprintf('Error in chat completion: %s\n', ME.message);
@@ -53,7 +54,7 @@ fprintf('Using LLM model: %s\n', model);
             chat_url = sprintf('%s/api/chat/completions', OPEN_WEBUI_API_ENDPOINT);
             
             % Create request body structure
-            messages_cell = {struct('role', 'user', 'content', 'Why is the sky blue?')};
+            messages_cell = {struct('role', 'user', 'content', prompt)};
             body_struct = struct('model', model, ...
                                 'stream', false, ...
                                 'messages', {messages_cell});            
@@ -80,8 +81,7 @@ fprintf('Using LLM model: %s\n', model);
             end
         case 'Gemini'
             loadenv(apikeyfile,"FileType","env");
-            apiKey = getenv("GEMINI_API_KEY");
-            prompt = "Why is the sky blue?";
+            apiKey = getenv("GEMINI_API_KEY");            
             try
                 response = llm.callGemini2(apiKey, prompt, model);
                 % response = llm.geminiGenerateContent(prompt);

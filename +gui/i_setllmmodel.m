@@ -28,36 +28,33 @@ else
 end
 
 preftagname = 'llmodelprovider';
-if ~ispref('scgeatoolbox', preftagname)
-    % answer = gui.myQuestdlg(parentfig, 'LLM model has not been set up. Set it up?');
-    % if ~strcmp(answer, 'Yes'), return; end
-    % [done] = ix_setwdpath(pathdefult);
-else
+if ispref('scgeatoolbox', preftagname)
     s = getpref('scgeatoolbox', preftagname);
     answer1 = gui.myQuestdlg(parentfig, sprintf('%s', s), ...
         'Selected LLM Model', ...
         {'Use this', 'Use another', 'Cancel'}, 'Use this');
     if isempty(answer1), return; end
     switch answer1
-        case 'Use this'
-            % done = true;
+        case 'Use this'            
             fw = gui.myWaitbar(parentfig);
             [done] = llm.i_checkllm(apikeyfile);
             gui.myWaitbar(parentfig, fw);
-
-            gui.myHelpdlg(parentfig, "LLM provider and" + ...
-             " model are set successfully.");
+            if done
+                gui.myHelpdlg(parentfig, "LLM provider and" + ...
+                 " model are set successfully.");
+            else
+                gui.myWarndlg(parentfig, "LLM provider and" + ...
+                 " model are not set successfully.");
+            end
             return;
         case 'Use another'
-            % [done] = ix_setwdpath(s);
+            
         otherwise
             return;
     end
 end
 
 % listItems = {'Ollama', 'Gemini', 'TAMUAIChat', 'OpenAI', 'DeepSeek', 'xAI'};
-
-
 listItems = {'Ollama', 'Gemini', 'TAMUAIChat'};
 
 if gui.i_isuifig(parentfig)
@@ -194,11 +191,6 @@ switch selectedProvider
             selectedProvider));
         return;
 end
-
-% if done
-%      gui.myHelpdlg(parentfig, "LLM provider and" + ...
-%          " model are set successfully.");
-% end
 
 fw = gui.myWaitbar(parentfig);
 [done2] = llm.i_checkllm(apikeyfile);
