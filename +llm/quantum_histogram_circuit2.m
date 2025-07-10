@@ -116,9 +116,9 @@ function circuit = recursive_state_preparation(circuit, amplitudes, qubits, cont
     % Apply rotation to the most significant qubit
     if abs(theta) > 1e-10
         if isempty(controls)
-            circuit = addGate(circuit, ryGate(theta), qubits(1));
+            circuit = addGate(circuit, ryGate(1, theta), qubits(1));
         else
-            circuit = addGate(circuit, ryGate(theta), qubits(1), controls);
+            circuit = addGate(circuit, ryGate(1, theta), qubits(1), controls);
         end
     end
     
