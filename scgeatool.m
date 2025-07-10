@@ -6,15 +6,29 @@ function varargout = scgeatool(sce, varargin)
 if ~gui.i_installed('stats'), return; end
 
 if nargin<1
-    answer1x = gui.myQuestdlg([],['Select Switch to explore the ' ...
-        ' new SCGEATOOL, ' ...
-        'or Keep to continue with the current version.'],...
-    'Try the New SCGEATOOL Preview?', {'Switch','Keep'});
-    switch answer1x
-        case 'Switch'
+    group = "SCGEATOOL";
+    pref = "Switch";
+
+    if ~ispref(group,pref) || (ispref(group,pref) && strcmp(getpref(group,pref), 'ask'))
+        quest = "Seletct Switch to explore the new (uifigure-based) SCGEATOOL, or Keep to continue with the current (figure-based) version.";
+        pbtns = ["Switch","Keep"];    
+        [answer1x,tf1x] = uigetpref(group,pref,'Try the New SCGEATOOL Preview?',quest,pbtns, ...
+            "ExtraOptions","Cancel",'DefaultButton',"Cancel");
+        if tf1x~=1, return; end
+    elseif ispref(group,pref) && ~strcmp(getpref(group,pref), 'ask')
+        [answer1x] = getpref(group, pref);
+    end
+    
+    % answer1x = gui.myQuestdlg([],['Select Switch to explore the ' ...
+    %     ' new SCGEATOOL, ' ...
+    %     'or Keep to continue with the current version.'],...
+    % 'Try the New SCGEATOOL Preview?', {'Switch','Keep'});
+    
+    switch lower(answer1x)
+        case 'switch'
             scgeatoolApp;
             return;
-        case 'Keep'
+        case 'keep'
         otherwise
             return;
     end
