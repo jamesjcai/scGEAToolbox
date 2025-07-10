@@ -1,6 +1,10 @@
-function [M] = e_cellscorecorrmat(X, g, gsets, methodid)
+function [M, C] = e_cellscorecorrmat(X, g, gsets, methodid, parentfig)
     
+    if nargin<4, methodid = 2; end
+    if nargin<5, parentfig = []; end
+
     % preftagname = 'llapikeyenvfile';
+    %{
     pw1 = fileparts(mfilename('fullpath'));    
     defaultscorefilename = 'cellscorecorrmat.xlsx';
     defaultscorefile = fullfile(pw1, '..', 'assets', 'CellScores', defaultscorefilename);
@@ -31,11 +35,11 @@ function [M] = e_cellscorecorrmat(X, g, gsets, methodid)
         scorefile = getpref('scgeatoolbox', preftagname);
     end
     %   [posg, ctselected] = gui.i_selectMSigDBGeneSets(speciestag, false, FigureHandle);
-
+    %}
 
 C = zeros(size(X, 2), length(gsets));
 
-for k = 1:length(gsets)
+for k = 1:length(gsets)    
     tgsPos = unique(strsplit(string(gsets{k}),','));
     if methodid == 1
         [cs] = sc_cellscore_ucell(X, g, tgsPos);
@@ -44,7 +48,7 @@ for k = 1:length(gsets)
     end
     C(:, k) = cs(:);
 end
-M = corr(C);
+M = corr(C,'Type','Spearman');
 
 % 
 % 

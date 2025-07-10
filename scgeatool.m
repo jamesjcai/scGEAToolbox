@@ -6,9 +6,8 @@ function varargout = scgeatool(sce, varargin)
 if ~gui.i_installed('stats'), return; end
 
 if nargin<1
-    group = "SCGEATOOL";
-    pref = "Switch";
-
+    group = "scgeatoolbox";
+    pref = "switch2uifigure";
     if ~ispref(group,pref) || (ispref(group,pref) && strcmp(getpref(group,pref), 'ask'))
         quest = "Seletct Switch to explore the new (uifigure-based) SCGEATOOL, or Keep to continue with the current (figure-based) version.";
         pbtns = ["Switch","Keep"];    
