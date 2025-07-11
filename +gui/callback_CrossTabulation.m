@@ -167,6 +167,14 @@ hx.show(FigureHandle);
     end        
 
     function in_callback_saveCrossTable(~, ~)
-        gui.i_exporttable(T, false, 'Tcrosstabul','CrosstabulTable',[],[], FigureHandle);
+        % assignin("base","T",T);
+        t = array2table(T);
+        try
+            t.Properties.VariableNames = labelsy;
+            t.Properties.RowNames = labelsx;
+        catch
+        end
+        gui.i_exporttable(t, true, 'Tcrosstabul', ...
+            'CrosstabulTable',[],[], hx.FigHandle);
     end
 end
