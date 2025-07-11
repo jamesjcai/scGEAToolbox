@@ -109,7 +109,13 @@ function callback_CellScoreCorrMatrix(src, ~)
                 case 'Cancel'
                     return;
                 case 'Use another'
-                    [file, path] = uigetfile(defaultscorefilename, 'Select File');
+                    % absolutePath = matlab.io.file.absolutePath(defaultscorefile);
+                    % absolutePath=fileparts(which(defaultscorefile));
+                    absolutePath = char(java.io.File(defaultscorefile).getCanonicalPath());
+                    %javaFile = java.io.File(defaultscorefile);
+                    %absolutePath = char(javaFile.getAbsolutePath());
+                    [file, path] = uigetfile(defaultscorefilename, ...
+                        'Select File', absolutePath);
                     if isequal(file, 0), return; end
                     scorefile = fullfile(path, file);
                     if isfile(scorefile)
