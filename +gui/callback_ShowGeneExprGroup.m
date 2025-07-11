@@ -32,7 +32,7 @@ function callback_ShowGeneExprGroup(src, ~)
             [c, cL, noanswer] = gui.i_reordergroups(thisc, [], FigureHandle);
             if noanswer, return; end
 
-            hx = gui.myFigure;
+            hx = gui.myFigure(FigureHandle);
             for ky = 1:length(cL)
                 cellidx = c==ky;
                 nexttile;

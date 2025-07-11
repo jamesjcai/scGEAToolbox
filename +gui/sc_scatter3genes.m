@@ -17,7 +17,7 @@ z = dropr;
 fw = gui.myWaitbar(parentfig);
 
 
-hx=gui.myFigure;
+hx=gui.myFigure(parentfig);
 hFig=hx.FigHandle;
 hFig.Position(3) = hFig.Position(3)*1.8;
 

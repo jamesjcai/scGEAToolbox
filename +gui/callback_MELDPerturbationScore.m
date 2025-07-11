@@ -38,9 +38,9 @@ catch ME
 end
 % gui.myWaitbar(FigureHandle, fw);
 
-hx=gui.myFigure;
-gui.i_gscatter3(sce.s, score(:, 2));
-colorbar
+hx = gui.myFigure(FigureHandle);
+gui.i_gscatter3(sce.s, score(:, 2), 1, 1, hx.AxHandle);
+colorbar(hx.AxHandle);
 hx.show(FigureHandle);
 
 if ~(ismcc || isdeployed)
@@ -49,7 +49,7 @@ if ~(ismcc || isdeployed)
     values = {score, T};
     export2wsdlg(labels, vars, values);
 else
-    gui.i_exporttable(T, false, 'MELDTable',[],[],[],FigureHandle);
+    gui.i_exporttable(T, false, 'MELDTable',[],[],[],hx.FigHandle);
 end
 
 end

@@ -44,7 +44,7 @@ function callback_ShowGeneExpr(src, ~)
         switch answer
             case an1
                 fw = gui.myWaitbar(FigureHandle); 
-                hx = gui.myFigure;
+                hx = gui.myFigure(FigureHandle);
                 tabgp = uitabgroup(hx.FigHandle);
                 nf = 1;
                 tab{nf} = uitab(tabgp, 'Title', sprintf('Tab%d',nf));
@@ -52,7 +52,7 @@ function callback_ShowGeneExpr(src, ~)
                 
                 % hx.addCustomButton('off', @in_showgenename, 'HDF_point.gif', 'Show gene names');
     
-                maxy = 0;            
+                maxy = 0;
                 for k = 1:n
                     nexttile
                     sc_scattermarker(Xt, sce.g, sce.s, glist(k), 2, 5, false);
@@ -60,12 +60,10 @@ function callback_ShowGeneExpr(src, ~)
                     gui.i_setautumncolor(c, a, true, any(c==0));
                     colorbar;
                     maxy = max([maxy, max(Xt(sce.g == glist(k)))]);
-                end
-    
+                end    
                 nf = 2;
                 tab{nf} = uitab(tabgp, 'Title', sprintf('Tab%d',nf));
-                axes('parent', tab{nf});
-                
+                axes('parent', tab{nf});                
                 for k = 1:n
                     nexttile
                     sc_scattermarker(Xt, sce.g, sce.s, glist(k), 1, 5, false);                        

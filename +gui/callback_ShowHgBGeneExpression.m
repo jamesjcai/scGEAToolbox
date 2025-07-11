@@ -24,17 +24,17 @@ if any(idx)
     ttxt = sprintf("%s+", sce.g(idx));
     ci = full(sum(sce.X(idx, :), 1));
 
-    hx = gui.myFigure;
+    hx = gui.myFigure(FigureHandle);
     hFig = hx.FigHandle;
 
     cm = uicontextmenu(hFig);
-    m1 = uimenu(cm, 'Text', 'Save HgBGeneExpression...', "MenuSelectedFcn", {@i_saveM, ci});
+    m1 = uimenu(cm, 'Text', 'Save HgBGeneExpression...', "MenuSelectedFcn", {@in_callback_saveM, ci});
     hFig.ContextMenu = cm;
 
     gui.i_stemscatter(sce.s, ci);
 
     title(ttxt);
-    hx.addCustomButton('off', {@i_saveM, ci}, 'floppy-disk-arrow-in.jpg', ...
+    hx.addCustomButton('off', {@in_callback_saveM, ci}, 'floppy-disk-arrow-in.jpg', ...
         'Save marker gene map...');
     hx.show(FigureHandle);    
 else
@@ -42,7 +42,7 @@ else
 end
 
 
-    function i_saveM(~, ~, ~)
+    function in_callback_saveM(~, ~, ~)
         if ~(ismcc || isdeployed)
             labels = {'Save C_CELL_ID to variable named:', ...
                 'Save HgBGeneExpression to variable named:'};
@@ -50,8 +50,8 @@ end
             values = {sce.c_cell_id, ci(:)};
             export2wsdlg(labels, vars, values);
         else
-            gui.myErrordlg(FigureHandle, ['This function is not available for standalone application.' ...
-                ' Run scgeatool.m in MATLAB to use this function.']);                
+            gui.myErrordlg(hx.FigHandle, ['This function is not available for standalone application.' ...
+                ' Run scgeatoolApp.m in MATLAB to use this function.']);                
         end            
     end
 end

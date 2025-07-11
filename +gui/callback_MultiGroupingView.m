@@ -28,7 +28,7 @@ function callback_MultiGroupingView(src, ~)
             [thiscv, clabelv] = gui.i_selectnstates(sce, false, [4, 5], FigureHandle);
             if isempty(thiscv) || isempty(clabelv), return; end
 
-            hx=gui.myFigure;
+            hx=gui.myFigure(FigureHandle);
             hFig = hx.FigHandle;
             hFig.Position(3) = hFig.Position(3) * 1.8;
             axesv = cell(length(thiscv),1);
@@ -42,7 +42,7 @@ function callback_MultiGroupingView(src, ~)
                 cmapv{k} = colormap;
             end
 
-            hx.addCustomButton('off', @in_showclustlabel, "label.jpg", "Show cluster labels");
+            hx.addCustomButton('off', @in_callback_showclustlabel, "label.jpg", "Show cluster labels");
             hx.show(FigureHandle);
 
             dt = datacursormode(hFig);
@@ -128,7 +128,7 @@ function callback_MultiGroupingView(src, ~)
         end
     end
 
-    function in_showclustlabel(~, ~)
+    function in_callback_showclustlabel(~, ~)
         hastip = false;
         for kx = 1:length(thiscv)
             dtp1 = findobj(hv{kx}, 'Type', 'datatip');

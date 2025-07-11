@@ -49,7 +49,7 @@ labelsx='';
 labelsy='';
 T=[];
 
-hx = gui.myFigure;
+hx = gui.myFigure(FigureHandle);
 tab=cell(2,1);
 ax0=cell(2,1);
 ax=cell(2,2);

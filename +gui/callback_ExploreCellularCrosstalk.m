@@ -88,7 +88,7 @@ if ~gui.gui_showrefinfo('talklr [DOI:10.1101/2020.02.01.930602]', FigureHandle),
                     [y2, idx2] = ismember(upper(OUT.receptorok(kk)), upper(sce.g));
                     if y1 && y2
 
-                        hx = gui.myFigure;
+                        hx = gui.myFigure(FigureHandle);
                         hFig = hx.FigHandle;
                         hFig.Position(3) = hFig.Position(3) * 2.2;
 

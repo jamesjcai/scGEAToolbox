@@ -153,7 +153,7 @@ df1 = reshape(df,[length(terms),length(allg)]);
 df1 = cell2table(df1,'VariableNames',allg);
 df1 = table2array(df1);
 
-hx = gui.myFigure;
+hx = gui.myFigure(FigureHandle);
 hx.addCustomButton('on', @in_callback_savedata, 'floppy-disk-arrow-in.jpg', 'Export data...');
 
 CC = gui.chordChart(df1,'Arrow','off','rowName',terms,'colName',allg);
@@ -170,11 +170,11 @@ end
 CC.setSquareT_Prop('FaceColor',[0,0,0])
 hx.show(FigureHandle);
 
-
 sz = 10;
+
     function in_callback_savedata(~,~)
         gui.i_exporttable(tab(indx2,:), true, ...
-            'Tcircostabl','CircosTermTable',[],[], FigureHandle);
+            'Tcircostabl','CircosTermTable',[],[], hx.FigHandle);
     end
 
     function in_resizefont(~, ~)

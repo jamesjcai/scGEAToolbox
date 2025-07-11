@@ -56,7 +56,7 @@ try
 
     % -------------
 
-    hx = gui.myFigure;
+    hx = gui.myFigure(FigureHandle);
     
     tabgp = uitabgroup(hx.FigHandle);
     for nf = 1:numfig
@@ -89,17 +89,20 @@ end
 
     function in_callback_scgeatoolsce(src, ~)
         parentfig = src.Parent.Parent;
-        figure(parentfig);
+        figure(parentfig);        
+        figure(hx.FigHandle);
+
         %answer1 = gui.myQuestdlg(FigureHandle, 'Extract cells from different groups and view new SCEs, or save new SCEs?','',...
         %    'View SCEs','Save SCEs','Cancel','View SCEs');
-        answer1 = gui.myQuestdlg([], 'Extract cells and make new SCEs?','');
+        
+        answer1 = gui.myQuestdlg(hx.FigHandle, 'Extract cells and make new SCEs?','');
         switch answer1
             case {'Cancel','No'}
                 return;
             case {'Yes','View SCEs'}
-                [idx] = in_selectcellgrps(cL(idxx), []);
+                [idx] = in_selectcellgrps(cL(idxx), hx.FigHandle);
                 if isempty(idx), return; end
-                cL2=cL(idxx);
+                cL2 = cL(idxx);
                 % currentColormap = colormap;
                 % figure(FigureHandle)
                 % colormap(currentColormap);
@@ -113,11 +116,13 @@ end
                     %    gui.i_isuifig(FigureHandle));
                     %p.Name=matlab.lang.makeValidName(cL2{idx(ik)});
                     
-                    if isa(src, 'matlab.apps.AppBase')
-                        scgeatoolApp(scev);
-                    else
-                        scgeatool(scev);
-                    end
+                    %if isa(src, 'matlab.apps.AppBase')
+                    
+                    scgeatoolApp(scev);
+
+                    %else
+                    %    scgeatool(scev);
+                    %end
                     % p.Position([2])=p.Position([2])-s*30;
                     % p.Position([1])=p.Position([1])+s*30;
                     % p.Position([3 4])=p.Position([3 4])*0.8;
@@ -128,13 +133,13 @@ end
                     hx.closeFigure;
                 end
            case 'Save SCEs'
-                answer2=gui.myQuestdlg(FigureHandle, 'Where to save files?','',{'Use Temporary Folder', ...
+                answer2=gui.myQuestdlg(hx.FigHandle, 'Where to save files?','',{'Use Temporary Folder', ...
                     'Select a Folder','Cancel'},'Use Temporary Folder');
                 switch answer2
                     case 'Select a Folder'
                         [seltpath] = uigetdir(deflt);
-                        if isvalid(FigureHandle) && isa(FigureHandle, 'matlab.ui.Figure')
-                            figure(FigureHandle);
+                        if isvalid(hx.FigHandle) && isa(hx.FigHandle, 'matlab.ui.Figure')
+                            figure(hx.FigHandle);
                         end
                         
                         if seltpath==0, return; end
@@ -146,7 +151,7 @@ end
                 end
                 disp(['User selected: ', seltpath]);
                 if ~isfolder(seltpath)
-                    gui.myErrordlg(FigureHandle, 'Not a folder.');
+                    gui.myErrordlg(hx.FigHandle, 'Not a folder.');
                     return;
                 end
                
@@ -165,10 +170,10 @@ end
                     outmatfile=fullfile(seltpath,outmatfile);
                     if ~exist(outmatfile,"file")
                         q=sprintf('Save file %s?',outmatfile);                        
-                        answerx=gui.myQuestdlg(FigureHandle, q,'');
+                        answerx=gui.myQuestdlg(hx.FigHandle, q,'');
                     else
                         q=sprintf('Overwrite file %s?',outmatfile);
-                        answerx=gui.myQuestdlg(FigureHandle, q,'');
+                        answerx=gui.myQuestdlg(hx.FigHandle, q,'');
                     end
                     switch answerx
                         case 'Yes'

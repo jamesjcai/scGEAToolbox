@@ -19,7 +19,6 @@ isAxesHandle = isa(ax, 'matlab.graphics.axis.Axes'); %isgraphics(s, 'axes');
 if ~isAxesHandle && isempty(c), error('Empty handle.'); end
 
 hx = gui.myFigure(parentfig);
-% hx = gui.myFigure;
 hFig = hx.FigHandle;
 
 %if ~isempty(parentfig)

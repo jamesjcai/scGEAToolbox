@@ -90,7 +90,7 @@ in_callback_ExportTable;
 
 if strcmp(answerx, a)
     if strcmp(gui.myQuestdlg(FigureHandle, 'Explore DV expression profile of genes?'), 'Yes')
-        hx = gui.myFigure;
+        hx = gui.myFigure(FigureHandle);
         hFig = hx.FigHandle;
         hFig.Position(3) = hFig.Position(3)*1.8;        
         
