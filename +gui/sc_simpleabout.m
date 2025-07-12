@@ -4,9 +4,17 @@ function [hFig] = sc_simpleabout(parentfig, im2)
     end
 
     mfolder = fileparts(mfilename('fullpath'));
-    splashpng = 'splash.png';
+
+    splashdir = fullfile(mfolder, '..','assets', 'Images', 'splash_folder');
+    a = dir(splashdir);
+    idx = 2+randi(length(a)-2);
+    pngfilename = a(idx).name;
+    splashpng = fullfile(mfolder, '..','assets', 'Images','splash_folder', pngfilename);
+
+    % splashpng = 'splash.png';
+    % fullfile(mfolder,'..','assets', 'Images', splashpng)
     % splashpng = 'thumbnail_IMG_3621.jpg';
-    [im] = imread(fullfile(mfolder,'..','assets', 'Images', splashpng));
+    [im] = imread(splashpng);
     if ~isempty(im2) && license('test','image_toolbox') && ~isempty(which('imfuse')) 
         im = imfuse(im, im2, 'blend');
     end
