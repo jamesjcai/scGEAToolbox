@@ -1,5 +1,12 @@
 function [parentfig, sce, isui] = gui_getfigsce(src)
 
+if nargin < 1 || isempty(src)
+    parentfig = [];
+    sce = SingleCellExperiment;
+    isui = false;
+    return;
+end
+
 if isa(src, 'matlab.apps.AppBase')  
     parentfig = src.UIFigure;
     sce = src.sce;

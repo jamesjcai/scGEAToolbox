@@ -1,5 +1,7 @@
 function [done] = i_setllmmodel(src, ~)
 
+if nargin<1, src = []; end
+
 [parentfig, ~] = gui.gui_getfigsce(src);
 done = false;
 preftagname = 'llapikeyenvfile';
@@ -24,6 +26,13 @@ else
             if isequal(file, 0), return; end
             apikeyfile = fullfile(path, file);
             setpref('scgeatoolbox', preftagname, apikeyfile);
+        case 'Learn api_key file'
+            disp('Remote Google Server Setup - obtain api-key following the instructions here: https://ai.google.dev/gemini-api/docs/api-key');
+            disp('Remote OpenAI Server Setup - obtain api-key following the instructions here: https://platform.openai.com/api-keys');
+            if strcmp('Yes', gui.myQuestdlg(parentfig, "View API key instructions online?"))
+                web('https://ai.google.dev/gemini-api/docs/api-key')
+                web('https://platform.openai.com/api-keys')
+            end
     end
 end
 
