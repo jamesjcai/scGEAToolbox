@@ -6,6 +6,13 @@ function [sce] = sc_readgeoaccess(acc)
 url = sprintf('https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=%s', acc);
 a = webread(url);
 b = strsplit(a, '\n');
+
+speciestag = '';
+try
+ speciestag = pkg.ai_extractHTMLText(b(1+find(contains(b, 'Organism'),1)));
+catch
+end
+
 c = string(b(contains(b, acc)))';
 c = c(contains(c, 'ftp'));
 
@@ -103,7 +110,8 @@ else
     sce = SingleCellExperiment(X, g);
 end
 
-metainfo = sprintf("Source: %s", acc);
+metainfo = sprintf("Source: %s\nOrganism: %s", acc, speciestag);
+
 sce = sce.appendmetainfo(metainfo);
 fprintf(['The data was downloaded from the National Center', ...
     ' for Biotechnology Information Gene Expression Omnibus (GEO) ', ...
