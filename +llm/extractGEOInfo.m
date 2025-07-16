@@ -40,7 +40,7 @@ function geoInfo = extractGEOInfo(url_or_accession)
         htmlContent = webread(url);
         
         % Extract plain text from HTML
-        plainText = extractHTMLText(htmlContent);
+        plainText = llm.extractplaintext(htmlContent);
         
         % Initialize output structure
         geoInfo = struct();
