@@ -7,13 +7,10 @@
 # Compiled MEX binaries (all platforms)
 # *.mex*
 
-*_coder.txt
-
+resources/
+resources/projects/
+toolbox1/
 +gui/scscatter.mlapp
-resources/STRING/stringdb_human.mat
-resources/STRING/stringdb_mouse.mat
-resources/Rpath.txt
-resources/Thumbs.db
 +run/external/R_MAST/input1.txt
 +run/external/R_MAST/input2.txt
 +run/external/R_MAST/output.csv
