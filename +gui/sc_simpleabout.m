@@ -5,6 +5,7 @@ function [hFig] = sc_simpleabout(parentfig, im2)
 
     mfolder = fileparts(mfilename('fullpath'));
 
+
     splashdir = fullfile(mfolder, '..','assets', 'Images', 'splash_folder');
     a = dir(splashdir);
     idx = 2+randi(length(a)-2);
@@ -20,6 +21,8 @@ function [hFig] = sc_simpleabout(parentfig, im2)
     end
     if nargin<1, parentfig=[]; end
 
+    
+    iconfile = fullfile(mfolder, '..','assets', 'Images', 'icon_16.png');
     hFig = figure('MenuBar','none','ToolBar','none', ...
         'Name','About','NumberTitle','off','Color','k', ...
         'Position',[0 0 400 300],'Visible','off', ...
@@ -27,7 +30,7 @@ function [hFig] = sc_simpleabout(parentfig, im2)
         'DockControls','off', ...
         'Resize','off', ...
         'WindowButtonDownFcn',@(src, ~) close(src),...
-        'WindowKeyPressFcn',@(src, ~) close(src));
+        'WindowKeyPressFcn',@(src, ~) close(src),'Icon', iconfile);
     
     fa = axes('Parent', hFig, 'Color','k', ...
         'XColor','k','YColor','k','Visible','off');

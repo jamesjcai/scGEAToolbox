@@ -22,7 +22,8 @@ function callback_CheckUpdates(src, ~)
                 '(%s vs. %s). Learn how to upgrade?'], ...
                 v_new, v_old));
             if strcmp(answer, 'Yes')
-                gui.gui_showrefinfo('Quick Installation', FigureHandle);
+                web('https://scgeatoolbox.readthedocs.io/en/latest/quick_installation.html');
+                % gui.gui_showrefinfo('Quick Installation', FigureHandle);
             end
         else
             answer = gui.myQuestdlg(FigureHandle, ...
