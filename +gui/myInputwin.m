@@ -1,6 +1,6 @@
 function [answer] = myInputwin(~, ~, definput, parentfig)
 
-
+answer = [];
 hFig = uifigure("WindowStyle","modal",'Visible','off');
 hFig.Position(3)=0.75*hFig.Position(3);
 hFig.Position(4)=0.75*hFig.Position(4);
