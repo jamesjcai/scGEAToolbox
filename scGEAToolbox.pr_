@@ -7,7 +7,7 @@
     <param.summary>Single-cell Gene Expression Analysis Toolbox</param.summary>
     <param.description>Cai JJ. scGEAToolbox: a Matlab toolbox for single-cell RNA sequencing data analysis. Bioinformatics. 2019 Nov 7:btz830. doi: 10.1093/bioinformatics/btz830. PMID: 31697351.</param.description>
     <param.screenshot>${PROJECT_ROOT}\assets\Images\scgeatool.png</param.screenshot>
-    <param.version>25.7.1</param.version>
+    <param.version>25.7.2</param.version>
     <param.output>${PROJECT_ROOT}\scGEAToolbox.mltbx</param.output>
     <param.products.name>
       <item>MATLAB</item>
@@ -69,9 +69,7 @@ DEVMODE.txt</param.exclude.filters>
     <param.exclude.pcodedmfiles>true</param.exclude.pcodedmfiles>
     <param.examples />
     <param.demosxml />
-    <param.apps>
-      <file>${PROJECT_ROOT}\scgeatoolApp.mlappinstall</file>
-    </param.apps>
+    <param.apps />
     <param.registered.apps />
     <param.docs>${PROJECT_ROOT}\info.xml</param.docs>
     <param.getting.started.guide>${PROJECT_ROOT}\doc\GettingStarted.mlx</param.getting.started.guide>
@@ -107,6 +105,7 @@ DEVMODE.txt</param.exclude.filters>
       <param.exclude.pcodedmfiles />
       <param.examples />
       <param.demosxml />
+      <param.apps />
       <param.registered.apps />
       <param.javaclasspath.excludes />
       <param.exported.on.package />
@@ -136,7 +135,6 @@ DEVMODE.txt</param.exclude.filters>
       <file>${PROJECT_ROOT}\+run</file>
       <file>${PROJECT_ROOT}\+ten</file>
       <file>${PROJECT_ROOT}\@SingleCellExperiment</file>
-      <file>${PROJECT_ROOT}\app</file>
       <file>${PROJECT_ROOT}\assets</file>
       <file>${PROJECT_ROOT}\cdgea.m</file>
       <file>${PROJECT_ROOT}\demo_Getting_Started.m</file>
@@ -232,11 +230,80 @@ DEVMODE.txt</param.exclude.filters>
       <file>${PROJECT_ROOT}\sc_writefile.m</file>
       <file>${PROJECT_ROOT}\scgeatool.m</file>
       <file>${PROJECT_ROOT}\scgeatoolApp.mlapp</file>
-      <file>${PROJECT_ROOT}\scgeatoolApp.mlappinstall</file>
       <file>${PROJECT_ROOT}\tensor_toolbox</file>
     </fileset.rootfiles>
     <fileset.depfun.included />
-    <fileset.depfun.excluded />
+    <fileset.depfun.excluded>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+gate\CompositeGate.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+gate\QuantumCircuitChart.p</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+gate\QuantumGate.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+gate\QuantumMeasurement.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+gate\QuantumState.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+gate\SimpleGate.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\+gates\CCX.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\+gates\CH.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\+gates\ControlledControlledQubitGate.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\+gates\ControlledQubitGate.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\+gates\CR1.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\+gates\CRX.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\+gates\CRY.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\+gates\CRZ.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\+gates\CX.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\+gates\CY.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\+gates\CZ.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\+gates\Gate.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\+gates\H.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\+gates\ID.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\+gates\Missing.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\+gates\OneQubitGate.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\+gates\R1.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\+gates\RX.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\+gates\RXX.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\+gates\RY.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\+gates\RYY.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\+gates\RZ.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\+gates\RZZ.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\+gates\S.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\+gates\SI.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\+gates\SWAP.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\+gates\T.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\+gates\TI.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\+gates\TwoQubitRotationGate.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\+gates\X.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\+gates\Y.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\+gates\Z.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\applyMatToDim.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\checkGates.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\checkName.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\checkQubitBlocks.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\checkQubitBlocksForPlot.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\formatQASMInstruction.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\getMaxQubit.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\krond.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\makeAngleString.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\makeUniqueName.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\+quantum\+internal\+gate\mustBeThreshold.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\@quantumCircuit\generateQASM.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\@quantumCircuit\getMatrix.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\@quantumCircuit\inv.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\@quantumCircuit\plot.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\@quantumCircuit\quantumCircuit.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\@quantumCircuit\run.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\@quantumCircuit\simulate.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\@quantumCircuit\unpack.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\compositeGate.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\crzGate.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\cxGate.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\hGate.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\rxGate.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\ryGate.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\rzGate.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\sGate.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\siGate.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\tGate.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\tiGate.m</file>
+      <file>C:\ProgramData\MATLAB\SupportPackages\R2024b\toolbox\matlab\quantum\gate\xGate.m</file>
+    </fileset.depfun.excluded>
     <fileset.package />
     <build-deliverables>
       <file location="${PROJECT_ROOT}" name="scGEAToolbox.mltbx" optional="false">C:\Users\jcai\Documents\GitHub\scGEAToolbox\scGEAToolbox.mltbx</file>
