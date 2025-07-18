@@ -8,6 +8,10 @@ function [A] = sc_pcnet(X, ncom, fastersvd, dozscore, guiwaitbar)
 % https://github.com/cran/dna/blob/master/src/rpcnet.c
 % https://rdrr.io/cran/dna/f/inst/doc/Introduction.pdf
 
+%opts = struct('UseParallel', 'auto');  % or "on"/"off"
+%A = sc_pcnet(X, opts);
+
+
 arguments
     X double
     ncom(1, 1) {mustBeNumeric} = 3
