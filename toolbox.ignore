@@ -30,3 +30,4 @@ resources
 **/.svn/**/*
 **/.buildtool/**/*
 **/*.asv
+docs
