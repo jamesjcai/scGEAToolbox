@@ -8,6 +8,7 @@
 # *.mex*
 
 scGEAToolbox.mltbx
+resources
 resources/
 resources/projects/
 toolbox1/
