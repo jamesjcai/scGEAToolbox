@@ -1,3 +1,54 @@
+function sce = sc_fullembed(sce)
+    % SC_FULLEMBED  Ensure all desired embeddings exist in single-cell object.
+    %
+    %   sce = sc_fullembed(sce) checks and renames legacy fields, then
+    %   computes missing 2D and 3D embeddings for TSNE, UMAP, PHATE, and METAVIZ.
+
+    % List of embedding methods and their dimensions
+    methods = {'tsne', 'umap', 'phate', 'metaviz'};
+    dims    = [2, 3];
+
+    % Fix legacy fields (e.g., tsne → tsne3d)
+    for i = 1:numel(methods)
+        m = methods{i};
+        fixLegacy(m, [m '3d']);
+    end
+
+    % Ensure all method/dimension combinations exist
+    for i = 1:numel(methods)
+        for d = dims
+            newf = sprintf('%s%dd', methods{i}, d);
+            embedIfMissing(newf, d);
+        end
+    end
+
+    % ---- Subfunctions ----
+    function fixLegacy(oldf, newf)
+        s = sce.struct_cell_embeddings;
+        if isfield(s, newf)
+            return; % Already has the new field
+        end
+        if isfield(s, oldf) && ~isempty(s.(oldf)) && size(s.(oldf), 2) == 3
+            s.(newf) = single(s.(oldf));  % rename 3D field
+        end
+        % Clean up empty or renamed old field
+        if isfield(s, oldf) && isempty(s.(oldf))
+            s = rmfield(s, oldf);
+        elseif isfield(s, oldf) && strcmp(oldf, newf) == false
+            s = rmfield(s, oldf);
+        end
+        sce.struct_cell_embeddings = s;
+    end
+
+    function embedIfMissing(fieldName, ndim)
+        s = sce.struct_cell_embeddings;
+        if ~isfield(s, fieldName) || isempty(s.(fieldName))
+            sce = sce.embedcells(fieldName, true, true, ndim);
+        end
+    end
+end
+
+%{
 function [sce]=sc_fullembed(sce)
 
 
@@ -40,3 +91,5 @@ in_embed('phate3d',3);
     end
 
 end
+
+%}
