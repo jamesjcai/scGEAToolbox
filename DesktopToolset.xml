@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<toolset id="user_apps_toolset" template="false">
+   <tool app_file_path="scgeatoolApp.mlapp" handler_class="com.mathworks.deployment.desktop.toolstrip.ToolboxToolSetExtensionHandler" id="6597c9c8-34b6-4fe4-a150-99bf81bbb77f:scgeatoolApp.mlapp" label="SCGEATOOL" quick_access_eligible="false" toolset_id="user_apps_toolset">
+      <callback>scgeatoolApp</callback>
+      <summary>Single-Cell Gene Expression Tool (scgeatool) App</summary>
+      <description>SCGEATOOL is a lightweight and blazing fast desktop application that provides interactive visualization functionality to analyze single-cell transcriptomic data. SCGEATOOL allows you to easily interrogate different views of your scRNA-seq data to quickly gain insights into the underlying biology.</description>
+      <icon filename="matlab_app_generic_icon_24"/>
+      <icon filename="matlab_app_generic_icon_16"/>
+      <parent_tool id="my_apps" toolset_id="apps_toolset"/>
+   </tool>
+</toolset>
