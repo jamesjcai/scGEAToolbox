@@ -28,7 +28,24 @@ else
     if isempty(answer), return; end
     switch answer
         case 'Use this'
-            done = true;
+            % done = true;
+            
+            lastwarn('');
+            try
+                pyenv('Version', x.Executable);
+            catch ME
+                content = regexprep(ME.message, '<.*?>', '' ) ;
+                gui.myErrordlg(parentfig, content);
+                return;
+            end
+
+            [msg] = lastwarn;
+            if ~isempty(msg)
+                gui.myWarndlg(parentfig, msg);
+            else
+                done = true;
+            end
+            
         case 'Use another'
             if ~ix_setpyenv(x.Executable)
                 return;
@@ -51,7 +68,7 @@ end
 
 
     function [done] = ix_setpyenv(deflt)
-    % selpath = uigetdir;
+        % selpath = uigetdir;
         done = false;
     
         if ispc
@@ -64,6 +81,7 @@ end
             return;
         else
             disp(['User selected: ', fullfile(path, file)]);
+            lastwarn('');
             try
                 pyenv('Version', fullfile(path, file));
             catch ME
@@ -71,7 +89,13 @@ end
                 gui.myErrordlg(parentfig, content);
                 return;
             end
-            done = true;
+
+            [msg] = lastwarn;
+            if ~isempty(msg)
+                gui.myWarndlg(parentfig, msg);
+            else
+                done = true;
+            end
         end
     end
 
