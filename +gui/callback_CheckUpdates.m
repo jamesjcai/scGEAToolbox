@@ -16,7 +16,8 @@ function callback_CheckUpdates(src, ~)
     end
 
     if majneedupdate
-        if ~pkg.e_runningasaddons || ismcc || isdeployed || isa(src, 'matlab.apps.AppBase')
+        if ~pkg.e_runningasaddons || ismcc || isdeployed 
+            % || isa(src, 'matlab.apps.AppBase')
             answer = gui.myQuestdlg(FigureHandle, ...
                 sprintf(['There is a new version of scGEAToolbox ' ...
                 '(%s vs. %s). Learn how to upgrade?'], ...
@@ -47,7 +48,7 @@ function callback_CheckUpdates(src, ~)
                     websave(tempZip, toolboxURL);
                     gui.myWaitbar(FigureHandle, fw, false, '', 'Installing...', 2/5);
                     warning off
-                    matlab.addons.install(tempZip);
+                    matlab.addons.install(tempZip, true, "overwrite");
                     gui.myWaitbar(FigureHandle, fw, false, '', 'Post-install processing...', 3/5);
                     pause(2)
     
