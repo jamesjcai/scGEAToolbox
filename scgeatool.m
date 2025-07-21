@@ -43,7 +43,7 @@ import gui.*
 
 fx = [];
 if nargin < 1
-    try
+    try 
         fxfun = @gui.sc_splashscreen;
         [fx, v1] = fxfun();
     catch

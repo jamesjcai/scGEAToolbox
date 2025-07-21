@@ -2,10 +2,17 @@ function [fx, v1] = sc_simplesplash(fx,r)
 
 % https://www.mathworks.com/matlabcentral/answers/92259-how-do-i-make-a-splash-screen-for-my-matlab-gui-application
     mfolder = fileparts(mfilename('fullpath'));
-    splashpng = 'splash.png';
+    % splashpng = 'splash.png';
+    splashdir = fullfile(mfolder, '..','assets', 'Images', 'splash_folder');
+    a = dir(splashdir);
+    idx = 2+randi(length(a)-2);
+    pngfilename = a(idx).name;
+    splashpng = fullfile(mfolder, '..','assets', 'Images','splash_folder', pngfilename);
    
-    [im] = imread(fullfile(mfolder, '..', 'assets', 'Images', splashpng));
-
+    if ~isfile(splashpng)
+        error('Splash image file not found: %s', splashpng);
+    end    
+    [im] = imread(splashpng);
     
 
 if nargin < 2, r = 0.1; end
