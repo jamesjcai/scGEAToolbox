@@ -26,7 +26,7 @@ hFig = hx.FigHandle;
 %end
 
 if isAxesHandle
-    if gui.i_isuifig(hFig)
+    if ~gui.i_isuifig(hFig)
         copyobj(ax.Children, hx.AxHandle);
         hAx = hx.AxHandle;
     else
