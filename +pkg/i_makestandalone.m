@@ -1,7 +1,7 @@
 %pw1=fileparts(mfilename('fullpath'));
 
 pw1 = cdgea;
-wrkpth = fullfile(pw1, 'tensor_toolbox');
+wrkpth = fullfile(pw1, 'external', 'tensor_toolbox');
 addpath(wrkpth);
 wrkpth = fullfile(pw1, '+run', 'external', 'ml_scGeneFit');
 addpath(wrkpth);
