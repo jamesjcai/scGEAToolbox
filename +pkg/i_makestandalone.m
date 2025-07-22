@@ -11,7 +11,7 @@ wrkpth = fullfile(pw1, 'external', 'ml_cbrewer');
 addpath(wrkpth);
 wrkpth = fullfile(pw1, 'external', 'ml_PHATE');
 addpath(wrkpth);
-wrkpth = fullfile(pw1, 'external', 'ml_UMAP44');
+wrkpth = fullfile(pw1, 'external', 'ml_umap45');
 addpath(wrkpth);
 wrkpth = fullfile(pw1, 'external', 'ml_SIMLR');
 addpath(wrkpth);

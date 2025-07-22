@@ -76,9 +76,9 @@ DEVMODE.txt</param.exclude.filters>
     <param.docs>${PROJECT_ROOT}\info.xml</param.docs>
     <param.getting.started.guide>${PROJECT_ROOT}\doc\GettingStarted.mlx</param.getting.started.guide>
     <param.matlabpath.excludes>
-      <item>/+run/external/ml_PHATE</item>
-      <item>/+run/external/ml_UMAP44/util</item>
-      <item>/+run/external/ml_UMAP44</item>
+      <item>/external/ml_PHATE</item>
+      <item>/external/ml_umap45/util</item>
+      <item>/external/ml_umap45</item>
     </param.matlabpath.excludes>
     <param.javaclasspath.excludes />
     <param.exported.on.package>false</param.exported.on.package>
