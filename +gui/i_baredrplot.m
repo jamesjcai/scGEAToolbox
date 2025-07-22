@@ -4,6 +4,14 @@ if nargin < 4, parentfig = []; end
 if nargin < 3, t = 'tSNE'; end
 if nargin < 2, c = []; end
 
+colortag = 'k';
+try
+    a=theme;
+    if strcmp('dark', a.BaseColorStyle)
+        colortag = [.5 .5 .5];
+    end
+catch
+end
 % if size(s, 2) >= 3
 %     x = s(:, 1);
 %     y = s(:, 2);
@@ -83,9 +91,9 @@ if is3d    % ======================================== 3D
     lc = zLimits(2)-c;
 
     % Draw custom arrows as axes using quiver3
-    quiver3(hAx, a, b, c, la/5, 0, 0, 'k', 'LineWidth', 1); % X-axis
-    quiver3(hAx, a, b, c, 0, lb/5, 0, 'k', 'LineWidth', 1); % Y-axis
-    quiver3(hAx, a, b, c, 0, 0, lc/5, 'k', 'LineWidth', 1); % Z-axis
+    quiver3(hAx, a, b, c, la/5, 0, 0, 'Color', colortag, 'LineWidth', 1); % X-axis
+    quiver3(hAx, a, b, c, 0, lb/5, 0, 'Color', colortag, 'LineWidth', 1); % Y-axis
+    quiver3(hAx, a, b, c, 0, 0, lc/5, 'Color', colortag, 'LineWidth', 1); % Z-axis
 
 %    axis_length = 20;
 %    quiver3(0, 0, 0, axis_length, 0, 0, 'k', 'LineWidth', 1); % X-axis
@@ -116,13 +124,13 @@ else          % ======================================== 2D
     annotation(hFig, 'arrow', ...
         [axPos(1), axPos(1) + axPos(3)/7], ... % x positions
         [axPos(2), axPos(2)], ...            % y positions
-        'Color', 'k', 'LineWidth', .5);
+        'Color', colortag, 'LineWidth', .5);
     
     % Draw y-axis arrow
     annotation(hFig, 'arrow', ...
         [axPos(1), axPos(1)], ...            % x positions
         [axPos(2), axPos(2) + r*(axPos(4)/7)], ... % y positions
-        'Color', 'k', 'LineWidth', .5);
+        'Color', colortag, 'LineWidth', .5);
         
     txt1 = sprintf('%s\\_1', t);
     txt2 = sprintf('%s\\_2', t);
