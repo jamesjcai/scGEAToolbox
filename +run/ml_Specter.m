@@ -4,10 +4,10 @@ if nargin < 2, k = 5; end
 
 if ~(ismcc || isdeployed)
     pw1 = fileparts(mfilename('fullpath'));
-    pth0 = fullfile(pw1, 'external', 'ml_Specter');
-    pth1 = fullfile(pw1, 'external', 'ml_Specter', 'dimred');
-    pth2 = fullfile(pw1, 'external', 'ml_Specter', 'LSC');
-    pth3 = fullfile(pw1, 'external', 'ml_Specter', 'utils');
+    pth0 = fullfile(pw1, '..', 'external', 'ml_Specter');
+    pth1 = fullfile(pw1, '..', 'external', 'ml_Specter', 'dimred');
+    pth2 = fullfile(pw1, '..', 'external', 'ml_Specter', 'LSC');
+    pth3 = fullfile(pw1, '..', 'external', 'ml_Specter', 'utils');
     addpath(pth0);
     addpath(pth1);
     addpath(pth2);

@@ -4,7 +4,7 @@ function [X, Y] = ml_HCP(X, Y)
 % doi: 10.1371/journal.pone.0068141
 
 pw1 = fileparts(mfilename('fullpath'));
-pth = fullfile(pw1, 'external', 'ml_HCP');
+pth = fullfile(pw1, '..', 'external', 'ml_HCP');
 if ~(ismcc || isdeployed), addpath(pth); end
 
 n1 = size(X, 2);

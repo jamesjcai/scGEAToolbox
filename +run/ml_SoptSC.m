@@ -33,11 +33,11 @@ k = p.Results.k;
 
 
 pw1 = fileparts(mfilename('fullpath'));
-pth = fullfile(pw1, 'external', 'ml_SoptSC');
+pth = fullfile(pw1, '..', 'external', 'ml_SoptSC');
 if ~(ismcc || isdeployed), addpath(pth); end
-pth = fullfile(pw1, 'external', 'ml_SoptSC', 'NNDSVD');
+pth = fullfile(pw1, '..', 'external', 'ml_SoptSC', 'NNDSVD');
 if ~(ismcc || isdeployed), addpath(pth); end
-pth = fullfile(pw1, 'external', 'ml_SoptSC', 'symnmf2');
+pth = fullfile(pw1, '..', 'external', 'ml_SoptSC', 'symnmf2');
 if ~(ismcc || isdeployed), addpath(pth); end
 
 

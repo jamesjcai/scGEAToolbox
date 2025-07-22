@@ -9,7 +9,7 @@ function [C] = ml_SinNLRR(X, k)
 % scatter(s(:,1),s(:,2),20,C,'filled')
 
 pw1 = fileparts(mfilename('fullpath'));
-pth = fullfile(pw1, 'external', 'ml_SinNLRR');
+pth = fullfile(pw1, '..', 'external', 'ml_SinNLRR');
 if ~(ismcc || isdeployed)
     addpath(pth);
 end

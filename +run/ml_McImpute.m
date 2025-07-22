@@ -3,7 +3,7 @@ function [X, M] = ml_McImpute(X, donorm)
 if nargin < 2, donorm = true; end
 
 pw1 = fileparts(mfilename('fullpath'));
-pth = fullfile(pw1, 'external', 'ml_McImpute');
+pth = fullfile(pw1, '..', 'external', 'ml_McImpute');
 if ~(ismcc || isdeployed), addpath(pth); end
 
 if ~donorm

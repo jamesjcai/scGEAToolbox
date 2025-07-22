@@ -34,7 +34,7 @@ Dis = 1 - corr(X, 'type', 'p');
 
 oldpath = pwd;
 pw1 = fileparts(mfilename('fullpath'));
-pth = fullfile(pw1, 'external', 'ml_SC3', 'ClusterPack');
+pth = fullfile(pw1, '..', 'external', 'ml_SC3', 'ClusterPack');
 if ~(ismcc || isdeployed), addpath(pth); end
 cd(pth);
 cls = [cls1; cls2; cls3];

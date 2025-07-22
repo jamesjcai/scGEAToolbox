@@ -7,9 +7,12 @@ function callback_PickColorMap(src, ~, showzero)
     % disp(sprintf('Using %d colors',n));
     n = max([n, 3]);
     folder = fileparts(mfilename('fullpath'));
-    a = strfind(folder, filesep);
-    folder = extractBefore(folder, a(end)+1);
-    wrkpth = fullfile(folder, 'external', 'ml_cbrewer');
+    %a = strfind(folder, filesep);
+    %folder = extractBefore(folder, a(end)+1);
+    wrkpth = fullfile(folder, '..', 'external', 'ml_cbrewer');
+
+    wrkpth
+
     if ~(ismcc || isdeployed)
         addpath(wrkpth);
     end

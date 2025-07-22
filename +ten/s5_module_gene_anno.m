@@ -51,7 +51,7 @@ writetable(Tres, 'res_v', 'filetype', 'spreadsheet');
 
 %%
 if ~(ismcc || isdeployed)
-    addpath('..\thirdparty\goanalysis');
+    addpath('..\external\goanalysis');
 end
 n = size(A0, 1);
 for k = 1:max(C)

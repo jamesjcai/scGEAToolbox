@@ -13,9 +13,9 @@ if nargin < 3, donorm = false; end
 if nargin < 4, plotit = false; end
 
 pw1 = fileparts(mfilename('fullpath'));
-pth = fullfile(pw1, 'external', 'ml_GENIE3');
+pth = fullfile(pw1, '..', 'external', 'ml_GENIE3');
 if ~(ismcc || isdeployed), addpath(pth); end
-pth = fullfile(pw1, 'external', 'ml_GENIE3', 'RT');
+pth = fullfile(pw1, '..', 'external', 'ml_GENIE3', 'RT');
 if ~(ismcc || isdeployed), addpath(pth); end
 
 if donorm

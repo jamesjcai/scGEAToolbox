@@ -15,11 +15,11 @@ function [C, s] = ml_SIMLR(X, k, donorm)
 % scatter(s(:,1),s(:,2),20,C,'filled')
 
 pw1 = fileparts(mfilename('fullpath'));
-pth = fullfile(pw1, 'external', 'ml_SIMLR');
+pth = fullfile(pw1, '..', 'external', 'ml_SIMLR');
 if ~(ismcc || isdeployed)
     addpath(pth);
 end
-pth = fullfile(pw1, 'external', 'ml_SIMLR', 'src');
+pth = fullfile(pw1, '..', 'external', 'ml_SIMLR', 'src');
 if ~(ismcc || isdeployed)
     addpath(pth);
 end
