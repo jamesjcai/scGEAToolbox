@@ -6,7 +6,6 @@ if exist(['@tensor', filesep, 'tensor.m'], 'file') ~= 2
             folder = fileparts(mfilename('fullpath'));
             %a=strfind(folder,filesep);
             %folder=extractBefore(folder,a(end)+1);
-            % pth=fullfile(folder,'+run','thirdparty','tensor_toolbox');
             pth = fullfile(folder, '..', 'external', 'tensor_toolbox');
             addpath(pth);
             disp(pth)

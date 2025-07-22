@@ -2,8 +2,6 @@
 % lk <- linKernel(MA, normalize = TRUE)
 % outCluster <- apcluster(s = lk[1:100,1:100])
 % save(outCluster, file = 'outCluster.RData')
-% addpath('C:\Users\jcai\Documents\GitHub\PCrTdMa\MATLAB\thirdparty\adapt_apV3');
-% rmpath('C:\Users\jcai\Documents\GitHub\PCrTdMa\MATLAB\thirdparty\AffinityPropagation');
 
 [~, i] = sort(vecnorm(aln0-aln1, 2, 2), 'descend');
 gx = upper(unique(genelist(i), 'stable'));

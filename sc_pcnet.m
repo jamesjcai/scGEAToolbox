@@ -28,12 +28,6 @@ end
 
 opts.maxit = 150;
 
-% if fastersvd
-%     pw1 = fileparts(mfilename('fullpath'));
-%     pth = fullfile(pw1, '+run', 'thirdparty', 'faster_svd', 'lmsvd');
-%     if ~(ismcc || isdeployed), addpath(pth); end
-% end
-
 % LogNormalize: Feature counts for each cell are divided by
 % the total counts for that cell and multiplied by the
 % scale.factor. This is then natural-log transformed using log1p.

@@ -4,8 +4,7 @@ function [C, eigenvals] = ml_diffuse(X, plotit)
 %  eigenvals  --- eigenvalues of Markov matrix
 if nargin < 2, plotit = false; end
 D = squareform(pdist(X', 'cosine'));
-% pw1=fileparts(which(mfilename));
-% addpath(fullfile(pw1,'thirdparty\DiffusionMap\'));
+
 [C, eigenvals] = i_diffuse(D, 0.05, 10);
 if plotit
     figure;

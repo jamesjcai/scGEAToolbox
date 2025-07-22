@@ -78,7 +78,7 @@ function [a] = in_formatsubtype(a, b, formatid)
 end
 
 function [primarymarkerstr] = in_getprimarymarkers(pw1, cell_type_target)
-    pth1 = fullfile(pw1, '+run', 'thirdparty', 'alona_panglaodb', 'marker_hs.mat');
+    pth1 = fullfile(pw1, 'external', 'alona_panglaodb', 'marker_hs.mat');
     load(pth1, 'Tm');
 
     if ~ismember(upper(cell_type_target), upper(string(Tm.Var1)))
@@ -200,29 +200,6 @@ end
         end
     end
 
-
-    function [primarymarkerstr] = in_getprimarymarkers(pw1, cell_type_target)
-        pth1 = fullfile(pw1, '+run', 'thirdparty', 'alona_panglaodb','marker_hs.mat');
-        load(pth1,'Tm');
-        if ~ismember(upper(cell_type_target), upper(string(Tm.Var1)))
-            error('Target cell type is not an available primary cell type.');
-        end
-        idx = upper(string(Tm.Var1)) == upper(cell_type_target);
-        primarymarkerstr = Tm.Var2{idx};
-        primarymarkerstr = strtrim(primarymarkerstr);
-        primarymarkerstr = erase(primarymarkerstr," ");
-        primarymarkerstr = strip(primarymarkerstr,'right',',');
-    end
-
-    function [Tm] = in_addprimarymarkers(Tm, pmarkerstr)
-        for k=1:size(Tm,1)
-            a = string(Tm.PositiveMarkers{k});
-            a = strtrim(a);
-            a = erase(a," ");
-            a = strip(a,'right',',');
-            Tm.PositiveMarkers{k} = char(string(a)+","+pmarkerstr);
-        end
-    end
 
 %}
 

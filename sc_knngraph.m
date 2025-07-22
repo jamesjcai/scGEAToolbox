@@ -22,7 +22,7 @@ switch methodid
         Graph = mIdx';
     case 2
         pw1 = fileparts(mfilename('fullpath'));
-        pth = fullfile(pw1, '+run', 'thirdparty', 'k-NN-code');
+        pth = fullfile(pw1, 'external', 'k-NN-code');
         if ~(ismcc || isdeployed), addpath(pth); end
         kneighbors = k; % number of neighbors in kNN
         S = s';

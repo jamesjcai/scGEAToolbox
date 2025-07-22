@@ -44,11 +44,6 @@ switch lower(p.Results.type)
         % https://twitter.com/hippopedoid/status/1337028817219620864?s=20
     case 'csndm'
         [X] = run.mt_csndm_trans(X);
-        %     case 'bigscale'
-        %         pth=fullfile(pw1,'thirdparty/bigSCale');
-        %         addpath(pth);
-        %         % model=1. Log(x), then each row (gene) normalized between [-5:5]
-        %         [X]=transform_bigscale(X);
     case {'sct', 'sctransform'}
         % sc_sct
         % sctransform: Variance Stabilizing Transformations for Single Cell UMI Data

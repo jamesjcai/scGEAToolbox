@@ -11,11 +11,6 @@ if nargin < 2, ncom = 3; end
 
 opts.maxit = 150;
 
-% if fastersvd
-%     pw1 = fileparts(mfilename('fullpath'));
-%     pth = fullfile(pw1, '+run', 'thirdparty', 'faster_svd', 'lmsvd');
-%     if ~(ismcc || isdeployed), addpath(pth); end
-% end
 
 % X is supposed to be LogNormalized, i.e., [X]=log1p(sc_norm(X));
 X = X';
