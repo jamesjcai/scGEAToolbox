@@ -25,7 +25,16 @@ end
 folder = fileparts(mfilename('fullpath'));
 a = strfind(folder, filesep);
 folder = extractBefore(folder, a(end)+1);
+
+
 codepth = fullfile(folder, externalfolder, rscriptdir);
+if ~exist(codepth,"dir")
+    codepth = fullfile(folder, '..', externalfolder, rscriptdir);
+end
+if ~exist(codepth,"dir")
+    error('CODEPTH is undefined.');
+end
+
 cd(codepth);
 % fprintf('CURRENTWDIR = "%s"\n', wrkpth);
 fprintf('SORCCODEDIR = "%s"\n', codepth);

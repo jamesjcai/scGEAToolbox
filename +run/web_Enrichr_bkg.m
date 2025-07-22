@@ -9,7 +9,7 @@ if nargin < 3, genenum = 200; end
 if nargin < 4, wkdir = ''; end
 
 pw1 = fileparts(mfilename('fullpath'));
-pth = fullfile(pw1, 'external', 'web_Enrichr');
+pth = fullfile(pw1, '..', 'external', 'web_Enrichr');
 
 if ~isempty(bkglist)
     infile = fullfile(pth, 'input_template_bkg.html');
