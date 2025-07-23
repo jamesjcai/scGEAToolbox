@@ -8,10 +8,13 @@ function [hFig] = sc_simpleabout(parentfig, im2)
 
     splashdir = fullfile(mfolder, '..','assets', 'Images', 'splash_folder');
     a = dir(splashdir);
+
     idx = 2+randi(length(a)-2);
     pngfilename = a(idx).name;
     splashpng = fullfile(mfolder, '..','assets', 'Images','splash_folder', pngfilename);
-
+    
+    if length(a)<=2, return; end
+    
     % splashpng = 'splash.png';
     % fullfile(mfolder,'..','assets', 'Images', splashpng)
     % splashpng = 'thumbnail_IMG_3621.jpg';
