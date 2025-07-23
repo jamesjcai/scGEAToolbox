@@ -11,9 +11,9 @@ if nargin < 2, ndim = 3; end
 
 pw1 = fileparts(mfilename('fullpath'));
 if ~(ismcc || isdeployed)
-    pth1 = fullfile(pw1, '..', 'external', 'ml_umap45');
+    pth1 = fullfile(pw1, '..', 'external', 'ml_UMAP44');
     addpath(pth1);
-    pth2 = fullfile(pw1, '..', 'external', 'ml_umap45', 'util');
+    pth2 = fullfile(pw1, '..', 'external', 'ml_UMAP44', 'util');
     addpath(pth2);
 
     %pth3 = fullfile(pw1, 'external', 'ml_UMAP44', 'umap.jar');

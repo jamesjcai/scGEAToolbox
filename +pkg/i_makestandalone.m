@@ -11,7 +11,7 @@ wrkpth = fullfile(pw1, 'external', 'ml_cbrewer');
 addpath(wrkpth);
 wrkpth = fullfile(pw1, 'external', 'ml_PHATE');
 addpath(wrkpth);
-wrkpth = fullfile(pw1, 'external', 'ml_umap45');
+wrkpth = fullfile(pw1, 'external', 'ml_UMAP44');
 addpath(wrkpth);
 wrkpth = fullfile(pw1, 'external', 'ml_SIMLR');
 addpath(wrkpth);
@@ -56,11 +56,18 @@ outdir = fullfile(pw1, '..', 'SCGEATOOL_StandaloneApplication');
 if ~exist(outdir, "dir"), mkdir(outdir); end
 
 %%
+c = dir('assets/Images/splash_folder/*.png');
+d0 = strings(length(c), 1);
+for k = 1:length(c)
+    d0(k) = string(fullfile(c(k).folder, c(k).name));
+end
+
 c = dir('assets/Images/*.gif');
 d1 = strings(length(c), 1);
 for k = 1:length(c)
     d1(k) = string(fullfile(c(k).folder, c(k).name));
 end
+
 c = dir('assets/Images/*.png');
 d2 = strings(length(c), 1);
 for k = 1:length(c)
@@ -76,7 +83,7 @@ d4 = strings(length(c), 1);
 for k = 1:length(c)
     d4(k) = string(fullfile(c(k).folder, c(k).name));
 end
-d = [d1;d2;d3;d4];
+d = [d0;d1;d2;d3;d4];
 %    d=[d;fullfile(pw1, 'assets', 'STRING', 'stringdb_human.mat')];
 %    d=[d;fullfile(pw1, 'assets', 'STRING', 'stringdb_mouse.mat')];
 % d = [d; fullfile(pw1, 'external', 'ml_UMAP', 'umap.jar')];
@@ -134,8 +141,9 @@ end
 % C:\Users\jcai\AppData\Local\Temp\jcai\mcrCache9.11\scgeat1\scgeatool\+run\external\R_SeuratSaveRds
 
 %%
+copyfile(d0, fullfile(outdir,"splash.png"));
 
-copyfile('assets/Images/splash.png', fullfile(outdir,"splash.png"));
+% copyfile('assets/Images/splash.png', fullfile(outdir,"splash.png"));
 cd(outdir);
 % if needcorrect
 %     a = readmatrix('requiredMCRProducts.txt');
