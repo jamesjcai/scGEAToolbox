@@ -1,4 +1,6 @@
-function [s] = ml_UMAP(X, ndim)
+function [s] = ml_UMAP(X, ndim, vnum)
+
+if nargin<3, vnum = 45; end
 
 %   addpath /Users/Stephen/umap
 %   addpath /Users/Stephen/util
@@ -9,14 +11,20 @@ function [s] = ml_UMAP(X, ndim)
 %if nargin<3, plotit=false; end
 if nargin < 2, ndim = 3; end
 
+% umapversion = 'ml_UMAP44';
+if vnum == 45
+    umapversion = 'ml_umap45';
+else
+    umapversion = 'ml_UMAP44';
+end
 pw1 = fileparts(mfilename('fullpath'));
 if ~(ismcc || isdeployed)
-    pth1 = fullfile(pw1, '..', 'external', 'ml_UMAP44');
+    pth1 = fullfile(pw1, '..', 'external', umapversion);
     addpath(pth1);
-    pth2 = fullfile(pw1, '..', 'external', 'ml_UMAP44', 'util');
+    pth2 = fullfile(pw1, '..', 'external', umapversion, 'util');
     addpath(pth2);
 
-    %pth3 = fullfile(pw1, 'external', 'ml_UMAP44', 'umap.jar');
+    %pth3 = fullfile(pw1, 'external', umapversion, 'umap.jar');
     %javaaddpath(pth3);
 end
 
