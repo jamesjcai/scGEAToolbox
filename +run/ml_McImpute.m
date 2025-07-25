@@ -6,6 +6,8 @@ pw1 = fileparts(mfilename('fullpath'));
 pth = fullfile(pw1, '..', 'external', 'ml_McImpute');
 if ~(ismcc || isdeployed), addpath(pth); end
 
+import mcimpute.*
+
 if ~donorm
     warning('Normalized X as input is recommended.');
 end

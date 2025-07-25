@@ -1,4 +1,5 @@
 function op = opRestriction(n, idx)
+
 % OPRESTRICTION Restriction operator
 %
 %    OPRESTRICTION(N,IDX) creates a restriction operator that
@@ -20,6 +21,7 @@ end
 op = @(x, mode) opRestriction_intrnl(n, idx, x, mode);
 
     function y = opRestriction_intrnl(n, idx, x, mode)
+    import mcimpute.*
         m = length(idx);
 
         checkDimensions(m, n, x, mode);
