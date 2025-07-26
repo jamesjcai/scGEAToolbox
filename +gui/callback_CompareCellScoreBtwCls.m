@@ -150,7 +150,7 @@ bb = 'No, just show values (heatmap)';
 
                     oldpth = pwd;
                     pw1 = fileparts(mfilename('fullpath'));
-                    pth = fullfile(pw1, '..', 'external', 'alona_panglaodb');
+                    pth = fullfile(pw1, '..', 'external', 'fun_alona_panglaodb');
                     cd(pth);
                     switch lower(speciestag)
                         case {'human', 'hs'}

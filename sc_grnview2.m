@@ -1,3 +1,4 @@
+%{
 function sc_grnview2(A1, A2, nodenames, figname, parentfig)
     % SC_GRNVIEW2  Display two gene regulatory networks side‑by‑side.
     %
@@ -10,7 +11,7 @@ function sc_grnview2(A1, A2, nodenames, figname, parentfig)
     addRequired(p, 'A1');
     addRequired(p, 'A2');
     addRequired(p, 'nodenames', @(x) isstring(x) || iscellstr(x));
-    addOptional(p, 'figname', '', @ischar);
+    addOptional(p, 'figname', '', @(x) isempty(x) || ischar || isstring(x));
     addOptional(p, 'parentfig', [], @(x) isempty(x) || isgraphics(x));
     parse(p, A1, A2, nodenames, figname, parentfig);
 
@@ -47,15 +48,14 @@ function sc_grnview2(A1, A2, nodenames, figname, parentfig)
     % Launch the dual-graph viewer GUI
     gui.i_doublegraphs(G1, G2, figname, parentfig);
 end
-
-%{
-function sc_grnview2(A1, A2, nodenames, figname, parentfig)
-%GRN network viewer (two networks)
-if nargin < 5, parentfig = []; end
-if nargin < 4, figname = ''; end
-if nargin < 3, error('USAGE: sc_grnview2(A1,A2,g)'); end
-G1 = pkg.i_makegraph(A1, nodenames);
-G2 = pkg.i_makegraph(A2, nodenames);
-gui.i_doublegraphs(G1, G2, figname, parentfig);
-end
 %}
+
+function sc_grnview2(A1, A2, nodenames, figname, parentfig)
+    %GRN network viewer (two networks)
+    if nargin < 5, parentfig = []; end
+    if nargin < 4, figname = ''; end
+    if nargin < 3, error('USAGE: sc_grnview2(A1,A2,g)'); end
+    G1 = pkg.i_makegraph(A1, nodenames);
+    G2 = pkg.i_makegraph(A2, nodenames);
+    gui.i_doublegraphs(G1, G2, figname, parentfig);
+end

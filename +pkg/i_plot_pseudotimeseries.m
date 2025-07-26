@@ -43,7 +43,7 @@ function i_plot_pseudotimeseries(X, genelist, t, genes)
     
     % Add locfit and predict paths
     pw1 = fileparts(mfilename('fullpath'));
-    locfit_paths = {fullfile(pw1, '..', 'external', 'locfit')};
+    locfit_paths = {fullfile(pw1, '..', 'external', 'fun_locfit')};
     
     for p = locfit_paths
         if ~(ismcc || isdeployed)

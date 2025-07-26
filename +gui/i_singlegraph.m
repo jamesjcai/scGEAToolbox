@@ -38,7 +38,7 @@ hx.addCustomButton('on',  @in_RefreshAll, "refresh.jpg", "Refresh View");
 hx.addCustomButton( 'on', @in_networkvis_linear, "linear.jpg", "Stright Network Vis");
 hx.addCustomButton( 'off', @in_networkvis_curvy, "curve-array.jpg", "Curvy Network Vis");
 
-title(h1,figname);
+title(h1, figname);
 hx.show(parentfig);
 % gui.gui_showrefinfo('Network Legend');
 

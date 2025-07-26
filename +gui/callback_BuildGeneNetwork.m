@@ -45,7 +45,7 @@ function callback_BuildGeneNetwork(src, ~)
     cannotview = false;
     cannotsave = false;
     try
-        sc_grnview(A, glist, [], FigureHandle);
+        sc_grnview(A, glist, '', FigureHandle);
     catch ME
         cannotview = true;
         gui.myErrordlg(FigureHandle, ME.message, ME.identifier);

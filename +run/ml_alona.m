@@ -36,9 +36,9 @@ oldpth = pwd;
 pw1 = fileparts(mfilename('fullpath'));
 
 if strcmpi(subtype, "all")
-    pth = fullfile(pw1, '..', 'external', 'alona_panglaodb');
+    pth = fullfile(pw1, '..', 'external', 'fun_alona_panglaodb');
 else
-    pth = fullfile(pw1,  '..', 'external', 'alona_subtypes');
+    pth = fullfile(pw1,  '..', 'external', 'fun_alona_subtypes');
 end
 cd(pth);
 if issparse(X)

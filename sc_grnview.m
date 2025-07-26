@@ -1,3 +1,4 @@
+%{
 function sc_grnview(A, nodenames, figname, parentfig)
     % SC_GRNVIEW  Display a gene regulatory network as a graph GUI.
     %
@@ -10,7 +11,7 @@ function sc_grnview(A, nodenames, figname, parentfig)
     p = inputParser;
     addRequired(p, 'A');
     addOptional(p, 'nodenames', "", @(x) isstring(x) || iscellstr(x) || isempty(x));
-    addOptional(p, 'figname', '', @ischar);
+    addOptional(p, 'figname', '', @(x) isempty(x) || ischar || isstring(x));
     addOptional(p, 'parentfig', [], @(x) isempty(x) || isgraphics(x));
     parse(p, A, nodenames, figname, parentfig);
 
@@ -40,8 +41,8 @@ function sc_grnview(A, nodenames, figname, parentfig)
     % Launch GUI viewer
     gui.i_singlegraph(G, figname, parentfig);
 end
+%}
 
-%{
 function sc_grnview(A, nodenames, figname, parentfig)
 if nargin < 4, parentfig = []; end
 if nargin < 3, figname = ''; end
@@ -60,4 +61,4 @@ if nargin < 3
 end
 gui.i_singlegraph(G, figname, parentfig);
 end
-%}
+

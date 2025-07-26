@@ -78,7 +78,7 @@ function [a] = in_formatsubtype(a, b, formatid)
 end
 
 function [primarymarkerstr] = in_getprimarymarkers(pw1, cell_type_target)
-    pth1 = fullfile(pw1, 'external', 'alona_panglaodb', 'marker_hs.mat');
+    pth1 = fullfile(pw1, 'external', 'fun_alona_panglaodb', 'marker_hs.mat');
     load(pth1, 'Tm');
 
     if ~ismember(upper(cell_type_target), upper(string(Tm.Var1)))

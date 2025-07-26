@@ -39,11 +39,11 @@ wrkpth = fullfile(pw1, 'external', 'ml_SNNDPC');
 addpath(wrkpth);
 wrkpth = fullfile(pw1, 'external', 'ml_SC3', 'ClusterPack');
 addpath(wrkpth);
-wrkpth = fullfile(pw1, 'external', 'locfit');
+wrkpth = fullfile(pw1, 'external', 'fun_locfit');
 addpath(wrkpth);
-wrkpth = fullfile(pw1, 'external', 'alona_panglaodb');
+wrkpth = fullfile(pw1, 'external', 'fun_alona_panglaodb');
 addpath(wrkpth);
-wrkpth = fullfile(pw1, 'external', 'alona_subtypes');
+wrkpth = fullfile(pw1, 'external', 'fun_alona_subtypes');
 addpath(wrkpth);
 
 
