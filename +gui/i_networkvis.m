@@ -11,14 +11,16 @@ textOpts.FontWeight = 'normal';
 
 
 hx = gui.myFigure(parentfig);
+ax = hx.AxHandle;
+
 %if ~curved
 %    gplot(G.adjacency, xy, '-k');
 %else
     curve_gplot(G.adjacency, xy, curved);
 %end
     
-    hold on
-    scatter(xy(:,1), xy(:,2), 100, ...
+    hold(ax,"on");
+    scatter(ax, xy(:,1), xy(:,2), 100, ...
         'MarkerEdgeColor','k', ...
         'MarkerFaceColor',[.8 .8 .8]);
 
@@ -32,11 +34,11 @@ hx = gui.myFigure(parentfig);
     %         'VerticalAlignment','middle','Margin',0.2);
     % end
     in_addtext([],[]);
-    set(gca, 'XTick', [], 'YTick', []);
-    axis off
+    set(ax, 'XTick', [], 'YTick', []);
+    axis(ax, "off");
     
     hx.show(parentfig);
-    set(gcf, 'Color', 'white')
+    % set(gcf, 'Color', 'white')
 
 
     function in_addtext(~, ~)
@@ -54,13 +56,13 @@ hx = gui.myFigure(parentfig);
         end
     end
 
-end
 
 
- function [width, height] = measureText(txt, textOpts, axis)
-    if(nargin < 3)
-       axis = gca(); 
-    end
+
+ function [width, height] = measureText(txt, textOpts)
+    % if(nargin < 3)
+    %    axis = gca(); 
+    % end
     if nargin < 2
         textOpts = struct();
         textOpts.HorizontalAlignment = 'center';
@@ -68,7 +70,7 @@ end
         textOpts.FontSize = 20;
         textOpts.FontWeight = 'normal';
     end
-    hTest = text(axis, 0, 0, txt, textOpts);
+    hTest = text(ax, 0, 0, txt, textOpts);
     textExt = get(hTest, 'Extent');
     delete(hTest);
     height = textExt(4)/3;    %Height
@@ -77,7 +79,7 @@ end
 
 
  function curve_gplot(sbeG, xy, curved)
- if nargin<3, curved = false; end
+    if nargin<3, curved = false; end
 
     [i, j] = find(sbeG);
     [~, p] = sort(max(i, j));
@@ -96,7 +98,7 @@ end
     
     
     M = zeros(1, 4);
-    hold on
+    hold(ax, "on");
     for k = 1:length(X) - 1
         if ~(isnan(X(k)) || isnan(X(k+1)))
             if curved
@@ -105,7 +107,7 @@ end
         
                 if ~ismember([p1, p2], M, 'rows')
                     [a, b] = quadraticcurveto(p1, p2);
-                    plot(a, b, '-', ...
+                    plot(ax, a, b, '-', ...
                         'color', [.6, .6, .6], 'linewidth', 1);
                     
                     M = [M; [p1, p2]];
@@ -113,13 +115,15 @@ end
                 end
             else
                 
-                plot([X(k),X(k+1)],[Y(k),Y(k+1)],'r:');
+                plot(ax, [X(k),X(k+1)],[Y(k),Y(k+1)],'r:');
             end
         end
     end
+ 
  end
 
-
+end 
+ 
  function [x, y] = quadraticcurveto(currentp, curvetop, controllp)
 
     %The quadraticCurveTo method creates a line from the path's current point to the specified point, via a controlpoint.
@@ -165,3 +169,4 @@ end
     x = A(1, :);
     y = A(2, :);
  end
+
