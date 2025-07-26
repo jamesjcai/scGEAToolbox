@@ -241,6 +241,7 @@ oldG1 = [];
             %[p2]=i_replotg(p2,G2,h2,cutoff);
         end
     end
+   
 
     function [p] = drawnetwork(G, h)
         %G.Edges.Weight = rand(length(G.Edges.Weight),1);
@@ -260,8 +261,10 @@ oldG1 = [];
         %       p.EdgeCData(G.Edges.Weight<0)=2;
 
         ix = ismember(string(upper(G.Nodes.Name)), tfgenes);
+        
+
         if any(ix)
-            cc = repmat([0, 0, 0], G.numnodes, 1);
+            cc = repmat(p.NodeLabelColor, G.numnodes, 1);
             cc(ix, :) = repmat([1, 0, 0], sum(ix), 1);
             p.NodeLabelColor = cc;
         end
