@@ -7,7 +7,7 @@
     <param.summary>Single-cell Gene Expression Analysis Toolbox</param.summary>
     <param.description>Cai JJ. scGEAToolbox: a Matlab toolbox for single-cell RNA sequencing data analysis. Bioinformatics. 2019 Nov 7:btz830. doi: 10.1093/bioinformatics/btz830. PMID: 31697351.</param.description>
     <param.screenshot>${PROJECT_ROOT}\assets\Images\scgeatool.png</param.screenshot>
-    <param.version>25.7.4</param.version>
+    <param.version>25.7.5</param.version>
     <param.output>${PROJECT_ROOT}\scGEAToolbox.mltbx</param.output>
     <param.products.name>
       <item>MATLAB</item>
@@ -80,7 +80,10 @@ DEVMODE.txt</param.exclude.filters>
       <item>/external/ml_umap45/util</item>
       <item>/external/ml_umap45</item>
     </param.matlabpath.excludes>
-    <param.javaclasspath.excludes />
+    <param.javaclasspath.excludes>
+      <item>/external/UNUSED/x_ml_UMAP44/util/suh.jar</item>
+      <item>/external/UNUSED/x_ml_UMAP44/util/transform.jar</item>
+    </param.javaclasspath.excludes>
     <param.exported.on.package>false</param.exported.on.package>
     <param.required.addons />
     <param.matlab.project.id />
@@ -108,7 +111,6 @@ DEVMODE.txt</param.exclude.filters>
       <param.examples />
       <param.demosxml />
       <param.apps />
-      <param.javaclasspath.excludes />
       <param.exported.on.package />
       <param.required.addons />
       <param.matlab.project.id />
@@ -232,6 +234,8 @@ DEVMODE.txt</param.exclude.filters>
       <file>${PROJECT_ROOT}\sc_umap.m</file>
       <file>${PROJECT_ROOT}\sc_writefile.m</file>
       <file>${PROJECT_ROOT}\scgeatool.m</file>
+      <file>${PROJECT_ROOT}\scgeatool_launch.m</file>
+      <file>${PROJECT_ROOT}\scgeatool_legacy.m</file>
       <file>${PROJECT_ROOT}\scgeatoolApp.mlapp</file>
     </fileset.rootfiles>
     <fileset.depfun.included />
