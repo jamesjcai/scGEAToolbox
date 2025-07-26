@@ -55,9 +55,12 @@ oldG1 = [];
     function in_networkvis_linear(~, ~)
         fw=gui.myWaitbar(parentfig);
         h = gui.myFigure;
+        bkcolor = gui.i_getthemebkgcolor(h.FigHandle);
+
+        ax = h.AxHandle;
         [x, y] = gplot(G1.adjacency, [p1.XData' p1.YData']);
-        plot(x, y,'k-');
-        hold on
+        plot(ax, x, y, '-', 'Color', 1-bkcolor);
+        hold(ax, "on");
         if ~issymmetric(G1.adjacency)
             customeMarker(x, y, h.FigHandle);
         end
@@ -68,20 +71,31 @@ oldG1 = [];
         textOpts.HorizontalAlignment = 'center';
         textOpts.VerticalAlignment = 'middle';
         textOpts.FontWeight = 'normal';
+
+
+         
         
         tz = cell(length(G1.Nodes.Name),1);
         for k = 1:length(G1.Nodes.Name)            
             [wx] = measureText(G1.Nodes.Name{k}, textOpts);
-            tz{k} = text(p1.XData(k)-floor(wx/2), p1.YData(k), ...
+            tz{k} = text(ax, p1.XData(k)-floor(wx/2), p1.YData(k), ...
+                G1.Nodes.Name{k},'FontSize',textOpts.FontSize,...
+                'Color',1-bkcolor,...
+                'FontWeight','normal', ...
+                'HorizontalAlignment','center', ...
+                'VerticalAlignment','middle');
+            %{
+            tz{k} = text(ax, p1.XData(k)-floor(wx/2), p1.YData(k), ...
                 G1.Nodes.Name{k},'FontSize',textOpts.FontSize,...
                 'Color','k',...
                 'BackgroundColor','w', ...
                 'FontWeight','normal', ...
                 'HorizontalAlignment','center', ...
-                'VerticalAlignment','middle');             
+                'VerticalAlignment','middle');
+            %}
         end
-        set(gca, 'XTick', [], 'YTick', []);
-        axis off
+        set(ax, 'XTick', [], 'YTick', []);
+        axis(ax, "off");
         gui.myWaitbar(parentfig, fw);
         h.show(hFig);
         % set(gcf, 'Color', 'white');
@@ -454,10 +468,14 @@ function [width, height] = measureText(txt, textOpts, axis)
 end
 
 function customeMarker(x, y, f)
-    [X,Y] = xy2XY(x,y);
+    [X,Y] = xy2XY(x, y);
     px = cell(length(x),1);
+
+    bkcolor = gui.i_getthemebkgcolor(f);
+
     for k=1:length(x)
-        p = patch(X(k,:), Y(k,:), 'k', 'EdgeColor', 'k', 'LineWidth', .1);
+        p = patch(X(k,:), Y(k,:), 1-bkcolor, ...
+            'EdgeColor', 1-bkcolor, 'LineWidth', .1);
         px{k} = p;
     end
     set(f, 'SizeChangedFcn', @(src,event) updatePatchSize(px, x, y));
