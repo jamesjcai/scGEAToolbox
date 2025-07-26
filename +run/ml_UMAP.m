@@ -24,7 +24,7 @@ if ~(ismcc || isdeployed)
     pth2 = fullfile(pw1, '..', 'external', umapversion, 'util');
     addpath(pth2);
 
-    %pth3 = fullfile(pw1, 'external', umapversion, 'umap.jar');
+    %pth3 = fullfile(pw1, '..', 'external', umapversion, 'umap.jar');
     %javaaddpath(pth3);
 end
 

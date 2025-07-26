@@ -12,7 +12,7 @@ if nargin < 4, isdebug = true; end
 
 oldpth = pwd();
 pw1 = fileparts(mfilename('fullpath'));
-codepth = fullfile(pw1, 'external', extprogname);
+codepth = fullfile(pw1, '..',  'external', extprogname);
 if isempty(wkdir) || ~isfolder(wkdir)
     cd(codepth);
 else
@@ -41,9 +41,6 @@ if status ~= 0
 end
 
 
-%prgfoldername = 'py_writeh5ad';
-%[pyok, wrkpth, x] = run.pycommon(prgfoldername);
-%if ~pyok, return; end
 tmpfilelist = {'X.mat', 'g.csv', 'c.csv'};
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 

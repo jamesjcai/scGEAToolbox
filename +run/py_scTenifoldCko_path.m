@@ -16,7 +16,7 @@ assert(numel(targetgid)==2)
 % -----------------
 oldpth = pwd();
 pw1 = fileparts(mfilename('fullpath'));
-codepth = fullfile(pw1, 'external', 'py_scTenifoldCko');
+codepth = fullfile(pw1, '..', 'external', 'py_scTenifoldCko');
 
 if isempty(wkdir) || ~isfolder(wkdir)
     wkdir=tempdir;

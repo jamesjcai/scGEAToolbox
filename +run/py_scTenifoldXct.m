@@ -12,7 +12,7 @@ if nargin < 3, error('Usage: [T] = py_scTenifoldXct(sce, celltype1, celltype2)')
 
 oldpth = pwd();
 pw1 = fileparts(mfilename('fullpath'));
-codepth = fullfile(pw1, 'external', 'py_scTenifoldXct');
+codepth = fullfile(pw1, '..', 'external', 'py_scTenifoldXct');
 
 if isempty(wkdir) || ~isfolder(wkdir)
     cd(codepth);

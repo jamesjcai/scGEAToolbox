@@ -18,7 +18,7 @@ end
 
     oldpth = pwd();
     pw1 = fileparts(mfilename('fullpath'));
-    codepth = fullfile(pw1, 'external', extprogname);
+    codepth = fullfile(pw1, '..', 'external', extprogname);
     if isempty(wkdir) || ~isfolder(wkdir)
         cd(codepth);
     else

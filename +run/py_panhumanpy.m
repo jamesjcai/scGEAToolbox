@@ -10,7 +10,7 @@ if nargin < 2, wkdir = tempdir; end
 
 oldpth = pwd();
 pw1 = fileparts(mfilename('fullpath'));
-codepth = fullfile(pw1, 'external', 'py_panhumanpy');
+codepth = fullfile(pw1, '..', 'external', 'py_panhumanpy');
 
 if isempty(wkdir) || ~isfolder(wkdir)
     cd(codepth);

@@ -7,7 +7,7 @@ ok = false;
 
 oldpth = pwd();
 pw1 = fileparts(mfilename('fullpath'));
-wrkpth = fullfile(pw1, 'external', prgwkdir);
+wrkpth = fullfile(pw1, '..',  'external', prgwkdir);
 cd(wrkpth);
 
 x = pyenv;

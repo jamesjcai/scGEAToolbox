@@ -12,7 +12,7 @@ end
 
 oldpth = pwd();
 pw1 = fileparts(mfilename('fullpath'));
-codepth = fullfile(pw1, 'external', 'py_harmonypy');
+codepth = fullfile(pw1, '..', 'external', 'py_harmonypy');
 
 if isempty(wkdir) || ~isfolder(wkdir)
     cd(codepth);
@@ -91,8 +91,6 @@ cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);
 disp(cmdlinestr)
 [status] = system(cmdlinestr, '-echo');
 
-
-% [status] = run.pycommon2(x, wrkpth, prgfoldername);
 
 if status == 0 && exist('output.mat', 'file')
     load("output.mat", "sout")

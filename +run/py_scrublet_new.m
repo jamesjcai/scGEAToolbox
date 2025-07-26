@@ -12,7 +12,7 @@ prgfoldername = 'py_scrublet';
 
 oldpth = pwd();
 pw1 = fileparts(mfilename('fullpath'));
-codepth = fullfile(pw1, 'external', prgfoldername);
+codepth = fullfile(pw1, '..',  'external', prgfoldername);
 
 if isempty(wkdir) || ~isfolder(wkdir)
     cd(codepth);
@@ -71,13 +71,6 @@ cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);
 disp(cmdlinestr)
 [status] = system(cmdlinestr, '-echo');
 
-
-
-% cmdlinestr=sprintf('"%s" "%s%sscript.py"', ...
-%     x.Executable,wrkpth,filesep);
-% disp(cmdlinestr)
-% [status]=system(cmdlinestr,'-echo');
-% [status] = run.pycommon2(x, wrkpth, prgfoldername);
 
 if status == 0 && exist('output.mat', 'file')
     load("output.mat", 'isDoublet', 'doubletscore')

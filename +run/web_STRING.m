@@ -5,7 +5,7 @@ function web_STRING(genelist, genenum, species)
 
 
 pw1 = fileparts(mfilename('fullpath'));
-pth = fullfile(pw1, 'external', 'web_STRING');
+pth = fullfile(pw1, '..', 'external', 'web_STRING');
 %infile=fullfile(pth,'input_template.html');
 
 if nargin < 1, genelist = []; end

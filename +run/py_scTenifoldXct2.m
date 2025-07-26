@@ -10,7 +10,7 @@ function [T, iscomplete] = py_scTenifoldXct2(sce1, sce2, celltype1, celltype2, .
    
     oldpth = pwd();
     pw1 = fileparts(mfilename('fullpath'));
-    codepth = fullfile(pw1, 'external', 'py_scTenifoldXct2');
+    codepth = fullfile(pw1, '..', 'external', 'py_scTenifoldXct2');
     
     if isempty(wkdir) || ~isfolder(wkdir)
         cd(codepth);

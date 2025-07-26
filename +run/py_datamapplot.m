@@ -6,7 +6,7 @@ if nargin < 2, thisc = sce.c_cell_type_tx; end
 
 oldpth = pwd();
 pw1 = fileparts(mfilename('fullpath'));
-codepth = fullfile(pw1, 'external', 'py_datamapplot');
+codepth = fullfile(pw1, '..', 'external', 'py_datamapplot');
 
 if isempty(wkdir) || ~isfolder(wkdir)
     cd(codepth);

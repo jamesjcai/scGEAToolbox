@@ -15,7 +15,7 @@ end
 
 oldpth = pwd();
 pw1 = fileparts(mfilename('fullpath'));
-codepth = fullfile(pw1, 'external', 'py_scimilarity');
+codepth = fullfile(pw1, '..', 'external', 'py_scimilarity');
 
 if isempty(wkdir) || ~isfolder(wkdir)
     cd(codepth);

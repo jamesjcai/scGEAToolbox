@@ -5,7 +5,7 @@ if nargin < 4, wkdir = []; end
 
 oldpth = pwd();
 pw1 = fileparts(mfilename('fullpath'));
-codepth = fullfile(pw1, 'external', 'py_GenKI');
+codepth = fullfile(pw1, '..', 'external', 'py_GenKI');
 
 if isempty(wkdir) || ~isfolder(wkdir)
     cd(codepth);
