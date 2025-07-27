@@ -12,8 +12,9 @@ if nargin < 3, scoretypeid = 0; end
 if nargin < 2, genelist = []; end
 if nargin < 1, X = []; end
 
-pw1 = fileparts(mfilename('fullpath'));
+score = [];
 
+pw1 = fileparts(mfilename('fullpath'));
 try
     cellscoresfile = fullfile(pw1, '..', 'assets', 'CellScores', ...
         'cellscores.xlsx');
@@ -34,13 +35,11 @@ if ischar(scoretypeid) || isstring(scoretypeid)
 elseif isnumeric(scoretypeid)
     idx = scoretypeid;
 end
-if isempty(idx)
-    score = [];
-    return;
-end
+
+if isempty(idx), return; end
+
 idx = idx(1);    % in case there is duplicate in the score name list
 if ~(idx <= height(T) && idx > 0 && idx == floor(idx))
-    score = [];
     return;
 end
 

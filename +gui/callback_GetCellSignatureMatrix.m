@@ -65,7 +65,9 @@ for k = 1:n
         gui.myWaitbar(FigureHandle, fw, false, '', b, (k - 1)/n);
     end
     [y] = pkg.e_cellscores(sce.X, sce.g, a, methodid, false);
-    Y(:, k) = y(:);
+    if ~isempty(y)
+        Y(:, k) = y(:);
+    end
 end
 
 gui.myWaitbar(FigureHandle, fw);
