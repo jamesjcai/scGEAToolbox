@@ -46,17 +46,24 @@ oldidx = 0;
 oldG1 = [];
 
     function in_networkvis_curvy(~, ~)
-        fw = gui.myWaitbar(parentfig);
+        fw = gui.myWaitbar(hFig);
         gui.i_networkvis(G1, [p1.XData' p1.YData'], true, ...
             p1.NodeFontSize, hFig);
-        gui.myWaitbar(parentfig, fw);
+        gui.myWaitbar(hFig, fw);
     end
 
-    function in_networkvis_linear(~, ~)
-        fw=gui.myWaitbar(parentfig);
+  function in_networkvis_linear(~, ~)
+        fw = gui.myWaitbar(hFig);
+        gui.i_networkvis(G1, [p1.XData' p1.YData'], false, ...
+            p1.NodeFontSize, hFig);
+        gui.myWaitbar(hFig, fw);
+  end
+
+    function in_networkvis_linear_old(~, ~)
+        fw=gui.myWaitbar(hFig);
+
         h = gui.myFigure;
         bkcolor = gui.i_getthemebkgcolor(h.FigHandle);
-
         ax = h.AxHandle;
         [x, y] = gplot(G1.adjacency, [p1.XData' p1.YData']);
         plot(ax, x, y, '-', 'Color', 1-bkcolor);
@@ -70,10 +77,7 @@ oldG1 = [];
         textOpts.FontSize = p1.NodeFontSize;
         textOpts.HorizontalAlignment = 'center';
         textOpts.VerticalAlignment = 'middle';
-        textOpts.FontWeight = 'normal';
-
-
-         
+        textOpts.FontWeight = 'normal';         
         
         tz = cell(length(G1.Nodes.Name),1);
         for k = 1:length(G1.Nodes.Name)            
@@ -84,20 +88,12 @@ oldG1 = [];
                 'FontWeight','normal', ...
                 'HorizontalAlignment','center', ...
                 'VerticalAlignment','middle');
-            %{
-            tz{k} = text(ax, p1.XData(k)-floor(wx/2), p1.YData(k), ...
-                G1.Nodes.Name{k},'FontSize',textOpts.FontSize,...
-                'Color','k',...
-                'BackgroundColor','w', ...
-                'FontWeight','normal', ...
-                'HorizontalAlignment','center', ...
-                'VerticalAlignment','middle');
-            %}
         end
         set(ax, 'XTick', [], 'YTick', []);
-        axis(ax, "off");
-        gui.myWaitbar(parentfig, fw);
+        axis(ax, "off");        
         h.show(hFig);
+        gui.myWaitbar(hFig, fw);
+        figure(h.FigHandle);
         % set(gcf, 'Color', 'white');
     end
 
@@ -121,10 +117,10 @@ oldG1 = [];
 
     function SaveAdj(~, ~)
         if ~(ismcc || isdeployed)
-            answer = gui.myQuestdlg(parentfig, 'Export & save network to:', '', ...
+            answer = gui.myQuestdlg(hFig, 'Export & save network to:', '', ...
                 {'Workspace', 'File'}, 'Workspace');
         else
-            if strcmp('Yes', gui.myQuestdlg(parentfig, 'Export & save network to file?'))
+            if strcmp('Yes', gui.myQuestdlg(hFig, 'Export & save network to file?'))
                 answer = 'File';
             else
                 return;
@@ -144,7 +140,7 @@ oldG1 = [];
                 uiwait(msgfig);
             case 'File'
                 [file, path] = uiputfile({'*.txt'; '*.*'}, 'Save as');
-                if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
+                % if isvalid(hFig) && isa(hFig, 'matlab.ui.Figure'), figure(hFig); end
                 if isequal(file, 0) || isequal(path, 0)
                     return;
                 else
@@ -228,8 +224,8 @@ oldG1 = [];
             '0.50', '0.55', '0.60', ...
             '0.65', '0.70', '0.75', '0.80', '0.85', ...
             '0.90', '0.95 (show 5% of edges)'};
-       if gui.i_isuifig(parentfig)
-            [indx, tf] = gui.myListdlg(parentfig, list, ...
+       if gui.i_isuifig(hFig)
+            [indx, tf] = gui.myListdlg(hFig, list, ...
                 'Select a cutoff:'); % Using empty string for prompt
        else
             [indx, tf] = listdlg('ListString', list, ...
@@ -244,7 +240,7 @@ oldG1 = [];
             else
                 cutoff = str2double(list(indx));
             end
-            answer = gui.myQuestdlg(parentfig, "Keep original network?","");
+            answer = gui.myQuestdlg(hFig, "Keep original network?","");
             switch answer
                 case 'Yes'
             [p1] = i_replotg(p1, G1, h1, cutoff);

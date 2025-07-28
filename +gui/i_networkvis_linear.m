@@ -1,7 +1,7 @@
-function i_networkvis(G, xy, curved, fontsize, parentfig)
+function i_networkvis_linear(G, xy, curved, fontsize, parentfig)
 
 if nargin < 5, parentfig = []; end
-if nargin < 3, curved = true; end
+if nargin < 3, curved = false; end
 if nargin < 4, fontsize = 15; end
 
 textOpts.FontSize = fontsize;
@@ -115,16 +115,17 @@ ax = hx.AxHandle;
                     M = [M; [p1, p2]];
                     M = [M; [p2, p1]];
                 end
-            else                
-                plot(ax, [X(k),X(k+1)],[Y(k),Y(k+1)],...
-                        'color', [.6, .6, .6], 'linewidth', 1);
+            else
+                
+                plot(ax, [X(k),X(k+1)],[Y(k),Y(k+1)], ...
+                    'color', [.6, .6, .6], 'linewidth', 1);
             end
         end
-    end 
+    end
  
  end
 
-end
+end 
  
  function [x, y] = quadraticcurveto(currentp, curvetop, controllp)
 

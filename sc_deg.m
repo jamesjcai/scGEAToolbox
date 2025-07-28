@@ -24,6 +24,7 @@ function [T, Tup, Tdn] = sc_deg(X, Y, genelist, methodid, ...
     % end
     
 
+    if nargin < 4, methodid = 1; end
     if nargin < 5, guiwaitbar = false; end
     if nargin < 6, parentfig = []; end
 
