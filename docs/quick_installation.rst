@@ -1,23 +1,22 @@
-Install via MATLAB Add-On (`.mltbx`) (Recommended)
+Install as a MATLAB Add-On (Recommended)  
 ==================================================
-1. **Download** `scGEAToolbox.mltbx` from:
+1. **Open the Add-On Explorer**
+   - In MATLAB, go to the **Home** tab.  
+   - Click on the **Add-Ons** icon to open the Add-On Explorer.
 
-   - 🔗 [`GitHub Releases <https://github.com/jamesjcai/scGEAToolbox/releases>`__]
+2. **Search for scGEAToolbox**
+   - In the search bar, type **"scGEAToolbox"** and press Enter.
 
-   - 🔗 [`MATLAB File Exchange <https://www.mathworks.com/matlabcentral/fileexchange/72917-scgeatoolbox-single-cell-gene-expression-analysis-toolbox>`__]
+3. **Select and Install**
+   - Find **"scGEAToolbox (single-cell Gene Expression Analysis Toolbox)"** in the results.  
+   - Click the **Add** button to install the toolbox.
 
-2. **Install** the toolbox:  
-   - **Double-click** `scGEAToolbox.mltbx`  
-   - MATLAB will open the **Add-On Manager**  
-   - Click **Install**  
-
-3. **Verify the installation** by running:  
-  
-.. code-block:: matlab
-  
-  matlab.addons.installedAddons
-  
-Ensure scGEAToolbox appears in the list.
+5. **Launch scGEAToolbox**  
+   - To start using scGEAToolbox, enter:
+     ```matlab
+     scgeatool
+     ```
+   - This will open the graphical user interface for single-cell transcriptomic data analysis.
 
 
 Quick Installation (For Developers)
@@ -27,14 +26,8 @@ Run the following code in `MATLAB`:
 
 .. code-block:: matlab
 
-  tic
-  disp('Installing scGEAToolbox...')
   unzip('https://github.com/jamesjcai/scGEAToolbox/archive/main.zip');
   addpath('./scGEAToolbox-main');  
-  toc
-  if exist('scgeatool.m','file')
-      disp('scGEAToolbox installed!')
-  end  
   savepath(fullfile(userpath,'pathdef.m')); 
   % savepath;
   

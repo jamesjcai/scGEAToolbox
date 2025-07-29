@@ -41,6 +41,11 @@ uicontrol(hFig,'style', 'pushbutton', 'Position', [220, 215, 100, 30], ...
 uicontrol(hFig,'style', 'pushbutton', 'Position', [220, 125, 100, 30], ...
     'String', 'Done', 'Callback', {@doneButtonPushed, genelist});
 
+uicontrol(hFig,'style', 'pushbutton', 'Position', [20, 390, 100, 20], ...
+    'string', 'Available Items:','Enable','inactive');
+
+uicontrol(hFig,'style', 'pushbutton', 'Position', [360, 390, 100, 20], ...
+    'string', 'Selected Items:','Enable','inactive');
 
 h_list1 = uicontrol(hFig,'style', 'list', 'max', length(genelist), ...
     'min', 1, 'Position', [20, 20, 170, 360], ...
@@ -61,7 +66,7 @@ uiwait();
             h_list1.String = setxor(genelist, h_list2.String, 'stable');
             set(h_list1, 'Value', 1);
         end
-end
+    end
 
    function plotButtonPushed2(~, ~, genelist)
         % https://www.mathworks.com/matlabcentral/answers/92064-why-do-i-receive-a-warning-when-i-repopulate-my-listbox-uicontrol-in-matlab
@@ -78,5 +83,5 @@ end
         uiresume();
         closereq();
     end
-end
 
+end
