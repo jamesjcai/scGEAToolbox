@@ -108,10 +108,14 @@ if ~isempty(fx) && isvalid(fx), fxfun(fx,0.2); end
 if isvalid(button3)
     group = "scgeatoolbox";
     pref = "switch2uifigure";
+    try
     if ~strcmp(getpref(group, pref), 'ask')
         set(button3,'Visible','on');
     else
         set(button3,'Visible','off');
+    end
+    catch
+        setpref(group, pref, 'ask');
     end
 end
 
