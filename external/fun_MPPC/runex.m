@@ -379,8 +379,10 @@ switch eg
             Y(:, :, i) = reshape(yfinal(i, :), 100, 100);
         end
         Y = uint8(Y);
-        implay(Y);
-
+        if ~(ismcc || isdeployed)
+            %#exclude implay
+            implay(Y);
+        end
 
 end
 

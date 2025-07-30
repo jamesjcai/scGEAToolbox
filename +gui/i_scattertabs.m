@@ -79,7 +79,10 @@ hx.show(parentfig);
          if ~(ismcc || isdeployed)
             [~,tabidx]=ismember(focalg, tabnamelist);            
             thisy = y{tabidx};
-            curveFitter(thisx(:), thisy(:));
+             if ~(ismcc || isdeployed)
+                %#exclude curveFitter
+                curveFitter(thisx(:), thisy(:));
+             end
          end
      end
          

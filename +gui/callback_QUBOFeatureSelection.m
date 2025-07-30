@@ -1,10 +1,14 @@
 function callback_QUBOFeatureSelection(src, ~)
 
     [FigureHandle, sce] = gui.gui_getfigsce(src);
-
-
-    installedPackages = matlabshared.supportpkg.getInstalled;
-    isQuantumInstalled = any(strcmp({installedPackages.Name}, 'MATLAB Support Package for Quantum Computing'));
+    
+    if ~(ismcc || isdeployed)
+        %#exclude matlabshared.supportpkg.getInstalled
+        installedPackages = matlabshared.supportpkg.getInstalled;
+        isQuantumInstalled = any(strcmp({installedPackages.Name}, 'MATLAB Support Package for Quantum Computing'));
+    else
+        isQuantumInstalled = false; % Default to false if not installed
+    end
     
     if ~isQuantumInstalled
         gui.myErrordlg(FigureHandle, 'Quantum Computing Support Package is not installed');

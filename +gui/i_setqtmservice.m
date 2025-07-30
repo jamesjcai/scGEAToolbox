@@ -3,7 +3,12 @@ function [done] = i_setqtmservice(src, ~)
 [parentfig, ~] = gui.gui_getfigsce(src);
 done = false;
 
-installedPackages = matlabshared.supportpkg.getInstalled;
+if ~(ismcc || isdeployed)
+    %#exclude matlabshared.supportpkg.getInstalled
+    installedPackages = matlabshared.supportpkg.getInstalled;
+else
+    installedPackages = [];
+end
 
 if isempty(installedPackages)
     isQuantumInstalled = false;

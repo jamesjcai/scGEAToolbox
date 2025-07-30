@@ -48,7 +48,10 @@ function callback_CheckUpdates(src, ~)
                     websave(tempZip, toolboxURL);
                     gui.myWaitbar(FigureHandle, fw, false, '', 'Installing...', 2/5);
                     warning off
-                    matlab.addons.install(tempZip, true, "overwrite");
+                    if ~(ismcc || isdeployed)
+                        %#exclude matlab.addons.install
+                        matlab.addons.install(tempZip, true, "overwrite");
+                    end
                     gui.myWaitbar(FigureHandle, fw, false, '', 'Post-install processing...', 3/5);
                     pause(2)
     
