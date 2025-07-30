@@ -5,7 +5,7 @@ function obj = assigncelltype(obj, speciesid, keepclusterid)
 if nargin < 3 || isempty(keepclusterid), keepclusterid = true; end
 if nargin < 2 || isempty(speciesid), speciesid = 'human'; end
 
-[c, cL] = grp2idx(obj.c_cluster_id);
+[c, cL] = findgroups(string(obj.c_cluster_id));
 organtag = "all";
 databasetag = "panglaodb";
 for ik = 1:max(c)
@@ -17,8 +17,8 @@ for ik = 1:max(c)
     if keepclusterid
         ctxt = sprintf('%s_{%d}', ctxt, ik);
     end
-    cL{ik} = ctxt;
+    cL(ik) = ctxt;
 end
-obj.c_cell_type_tx = string(cL(c));
+obj.c_cell_type_tx = cL(c);
 end
 
