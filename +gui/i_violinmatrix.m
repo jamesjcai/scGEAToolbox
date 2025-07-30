@@ -30,6 +30,7 @@ hFig=hx.FigHandle;
 for k = 1:M    
     ydata = X(g == tgene(k), :);
     nexttile;   % subplot(M, 1, ct)
+    if ~iscell(cL), cL = cellstr(cL); end
     pkg.violinplot(ydata.', xgroupdata, 'showdata', false, 'GroupOrder', cL);
     box on;
     title(tgene(k));    

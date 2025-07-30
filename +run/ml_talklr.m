@@ -52,7 +52,7 @@ function [M, OUT] = ii_talkr(X, g, c)
 %         X=X.X;
 %     end
 
-[cx, cL] = grp2idx(c);
+[cx, cL] = findgroups(string(c));
 n = numel(cL);
 
 pw = fileparts(mfilename('fullpath'));

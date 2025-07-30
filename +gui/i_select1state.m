@@ -112,9 +112,6 @@ if tf2 == 1
                 sce = sce.estimatecellcycle(true, 1);
                 gui.myWaitbar(parentfig, fw);
             end
-            %             [~, tx] = grp2idx(sce.c_cell_cycle_tx);
-            %             ttxt = sprintf('%s|', string(tx));
-            %             clabel = sprintf('%s (%s)',clabel,ttxt);
             thisc = sce.c_cell_cycle_tx;
         case '-------------------'
             thisc = [];

@@ -15,7 +15,7 @@ if isempty(wkdir), return; end
 
 
 
-[~, cL] = grp2idx(sce.c_batch_id);
+[~, cL] = findgroups(string(sce.c_batch_id));
 [j1, j2, ~, ~] = aaa(cL, sce.c_batch_id, FigureHandle);
 if isempty(j1) || isempty(j2)
     gui.myWarndlg(FigureHandle, ['All cells have the same BATCH_ID. ' ...
@@ -30,7 +30,7 @@ if sce1.NumCells < 50 || sce2.NumCells < 50
 end
 
 
-[~, cL] = grp2idx(sce.c_cell_type_tx);
+[~, cL] = findgroups(string(sce.c_cell_type_tx));
 [~, ~, celltype1, celltype2] = aaa(cL, sce.c_cell_type_tx, FigureHandle);
 if isempty(celltype1) || isempty(celltype2) 
     gui.myWarndlg(FigureHandle, ['All cells are the same type. ' ...

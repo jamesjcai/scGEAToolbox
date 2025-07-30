@@ -29,7 +29,7 @@ if needreorder
     [ci, cLi, noanswer] = gui.i_reordergroups(thisc, [], parentfig);
     if noanswer, return; end
 else
-    [ci, cLi] = grp2idx(thisc);
+    [ci, cLi] = findgroups(string(thisc));
 end
 
 listitems = string(cLi);
@@ -41,8 +41,6 @@ end
 
 
 
-
-% [ci, cLi] = grp2idx(thisc);
  if n == 2
      answer = 'Two Samples';
  elseif n > 2

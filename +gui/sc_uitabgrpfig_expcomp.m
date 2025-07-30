@@ -42,7 +42,7 @@ ax = cell(n,2);
 idx = 1;
 focalg = glist(idx);
 
-[c, cL] = grp2idx(thisc);
+[c, cL] = findgroups(string(thisc));
 sce1 = sce.selectcells(c == 1);
 sce2 = sce.selectcells(c == 2);
 

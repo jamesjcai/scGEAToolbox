@@ -198,8 +198,8 @@ end
 
     function [i1, i2, cL1, cL2, done] = in_twogrpsencoding(thisc, parentfig)
         done = false;
-        [ci, cLi] = grp2idx(thisc);
-        listitems = natsort(string(cLi));
+        [ci, cLi] = findgroups(string(thisc));
+        listitems = natsort(cLi);
         n = length(listitems);
         if n < 2
             gui.myErrordlg(parentfig, 'Need at least two groups.');

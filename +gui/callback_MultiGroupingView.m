@@ -6,22 +6,6 @@ function callback_MultiGroupingView(src, ~)
         {'Multigrouping','Multiembedding'},'Multigrouping');
 
     switch answer
-        % case 'Two-group'
-        % 
-        %     [thisc1, clabel1, thisc2, clabel2] = gui.i_select2states_new(sce);
-        %     if isempty(thisc1) || isempty(thisc2), return; end
-        %         
-        %     fw=gui.myWaitbar(FigureHandle);    
-        %     [c, cL] = grp2idx(thisc1);
-        %     cx1.c = c;
-        %     cx1.cL = strrep(cL, '_', '\_');
-        %     [c, cL] = grp2idx(thisc2);
-        %     cx2.c = c;
-        %     cx2.cL = strrep(cL, '_', '\_');
-        %     gui.sc_multigroupings(sce, cx1, cx2, clabel1, clabel2, FigureHandle);
-        %     gui.myWaitbar(FigureHandle, fw);
-        % 
-        
 
         case 'Multigrouping'
             if gui.i_isuifig(FigureHandle), focus(FigureHandle); end
@@ -118,7 +102,6 @@ function callback_MultiGroupingView(src, ~)
             if isequal(Targxet.Parent, axesv{kx})
                 idx = event_obj.DataIndex;
                 c1 = thiscv{kx};
-                %[~,cL1]=grp2idx(c1);                   
                 txt = c1(idx);
                 if isstring(txt) || ischar(txt)
                     txt = strrep(txt,'_','\_');
@@ -140,7 +123,7 @@ function callback_MultiGroupingView(src, ~)
         if hastip, return; end
 
         for kx = 1:length(thiscv)
-            [c1, cL1] = grp2idx(thiscv{kx});
+            [c1, cL1] = findgroups(string(thiscv{kx}));
             cL1 = strrep(cL1,'_','\_');
             if max(c1) < 50
                 hv{kx}.DataTipTemplate.DataTipRows = dataTipTextRow('', cL1(c1));

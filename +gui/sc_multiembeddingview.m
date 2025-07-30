@@ -29,7 +29,7 @@ end
     function in_showcellstate(~, ~)
         [thisc, clabel] = gui.i_select1state(sce, false, false, true, false, parentfig);
         if isempty(thisc), return; end
-        [c, cL] = grp2idx(thisc);
+        [c, cL] = findgroups(string(thisc));
         stxtyes = cL(c);
         if isstring(stxtyes) || iscellstr(stxtyes)
             stxtyes = strrep(stxtyes, "_", "\_");

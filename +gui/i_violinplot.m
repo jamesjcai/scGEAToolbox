@@ -4,7 +4,7 @@ function [hFig] = i_violinplot(y, thisc, ttxt, colorit, cLorder, ...
 
 if nargin < 7, parentfig = []; end
 if nargin < 6, posg = []; end
-if nargin < 5 || isempty(cLorder), [~, cLorder] = grp2idx(thisc); end
+if nargin < 5 || isempty(cLorder), [~, cLorder] = findgroups(string(thisc)); end
 if nargin < 4, colorit = true; end
 if nargin < 3, ttxt = ''; end
 
@@ -73,7 +73,7 @@ hx.show(parentfig);
     end
 
     function i_sortbymean(~, ~)
-        [cx, cLx] = grp2idx(thisc);
+        [cx, cLx] = findgroups(string(thisc));
         a = zeros(max(cx), 1);
         for k = 1:max(cx)
             a(k) = median(y(cx == k));
@@ -108,7 +108,7 @@ hx.show(parentfig);
 
 
     function i_selectsamples(~, ~)
-        [~,cL]=grp2idx(thisc);
+        [~,cL] = findgroups(string(thisc));
         [newidx] = gui.i_selmultidlg(cL, cLorder, parentfig);
         if isempty(newidx), return; end
         picked=ismember(thisc,cL(newidx));

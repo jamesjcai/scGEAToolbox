@@ -9,7 +9,7 @@ function [T] = e_findallmarkers(X, g, c, cL, logfc, minpct, showwaitbar, ...
     if nargin < 8, maxnummarkers = 100; end
     
     if isempty(cL)
-        [c, cL] = grp2idx(c);
+        [c, cL] = findgroups(string(c));
     end
     if issparse(X), X = full(X); end
     X = log1p(sc_norm(X));

@@ -97,11 +97,6 @@ end
                     [Xi, gi] = sc_selectg(Xi, genelist);
                     cx = run.r_singler(Xi, gi, species);
                     ctxt = unique(cx);
-                    %                     Tct=tabulate(cx);
-                    %                     %ii=grp2idx(ctxt);
-                    %                     %mxii=mode(ii,'all');
-                    %                     %ctxt=ctxt(unique(ii(mxii)));
-                    %                     ctxt=unique(cx(mode(grp2idx(cx),'all')==grp2idx(cx)));
             end
             [indx, tf] = listdlg('PromptString', {'Select cell type', ...
                 '', ''}, 'SelectionMode', 'single', ...

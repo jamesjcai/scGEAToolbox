@@ -1,6 +1,6 @@
 function [ci, cLi] = i_grp2idxsorted(s)
 
-[ci, cLi] = grp2idx(s);
+[ci, cLi] = findgroups(string(s));
 %---------
 [cLisorted, idx] = natsort(cLi);
 cisorted = ci;

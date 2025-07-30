@@ -9,7 +9,7 @@ x = s(:, 1);
 y = s(:, 2);
 
 if iscell(c) || isstring(c)
-    c = grp2idx(c);
+    c = findgroups(string(c));
 end
 kc = numel(unique(c));
 

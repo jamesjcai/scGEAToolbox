@@ -32,7 +32,7 @@ if ~strcmp(clabel, 'Cell Type')
     end
 end
 
-[c, cL] = grp2idx(thisc);
+[c, cL] = findgroups(string(thisc));
 [idx] = gui.i_selmultidlg(cL, [], FigureHandle);
 if isempty(idx), return; end
 if numel(idx) < 2

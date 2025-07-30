@@ -11,7 +11,7 @@ function [hFig] = i_crosstalkgraph(OUT, k, sce)
     % pkg.heatmap(m, cL, cL,'%0.2f', 'TickAngle', 45, ...
     % 'ShowAllTicks', true, 'TextColor', 'w');
     if ~isempty(sce)
-        [c, cL] = grp2idx(sce.c_cell_type_tx);
+        [c, cL] = findgroups(string(sce.c_cell_type_tx));
         
         hx=gui.myFigure;
         hFig = hx.FigHandle;

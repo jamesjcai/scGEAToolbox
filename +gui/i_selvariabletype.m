@@ -1,7 +1,7 @@
 function [answer] = i_selvariabletype(y, parentfig)
 if nargin<2, parentfig = []; end
 
-[c] = grp2idx(y);
+[c] = findgroups(y);
 n = max(c);
 if n < 20
     deft = 'Categorical/Discrete';

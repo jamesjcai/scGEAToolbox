@@ -3,7 +3,7 @@ function [hFig] = i_spiderplot(Y, thisc, labelx, sce, parentfig)
 if nargin < 5, parentfig = []; end
 if nargin < 4, sce = []; end
 
-[c, cL] = grp2idx(thisc);
+[c, cL] = findgroups(string(thisc));
 % P = grpstats(Y, c, 'mean');
 P = splitapply(@mean, Y, c)';
 n = size(P, 2);
@@ -44,13 +44,7 @@ spider_plot_R2019b(P, 'AxesLabels', labelx, ...
 cL = strrep(cL, '_', '\_');
 legend(cL, 'Location', 'best');
 if ~isempty(titlex), title(titlex); end
-
 hx.show(parentfig);
-
-
-%catch ME
-%    gui.myErrordlg(parentfig, ME.message, ME.identifier);
-%end
 
 
     function i_showvalues(~, ~)
@@ -74,46 +68,6 @@ hx.show(parentfig);
         if showlegend, legend(cL); end
         if ~isempty(titlex), title(titlex); end
     end
-
-    % function i_addsamplesize(~, ~)
-    %     % b=gca;
-    %     % if isempty(OldXTickLabel)
-    %     %     a=zeros(length(cLorder),1);
-    %     %
-    %     %     OldXTickLabel=b.XTickLabel;
-    %     %     for k=1:length(cLorder)
-    %     %         a(k)=sum(thisc==cLorder(k));
-    %     %         b.XTickLabel{k}=sprintf('%s\\newline(n=%d)', ...
-    %     %             b.XTickLabel{k},a(k));
-    %     %     end
-    %     % else
-    %     %     b.XTickLabel=OldXTickLabel;
-    %     %     OldXTickLabel=[];
-    %     % end
-    % end
-
-%    function i_sortbymean(~, ~)
-        % [cx,cLx]=grp2idx(thisc);
-        % a=zeros(max(cx),1);
-        % for k=1:max(cx)
-        %     a(k)=median(y(cx==k));
-        % end
-        % if isdescend
-        %     [~,idx]=sort(a,'ascend');
-        %     isdescend=false;
-        % else
-        %     [~,idx]=sort(a,'descend');
-        %     isdescend=true;
-        % end
-        % cLx_sorted=cLx(idx);
-        %
-        % %[~,cL,noanswer]=gui.i_reordergroups(thisc,cLx_sorted);
-        % %if noanswer, return; end
-        % cla
-        % cLorder=cLx_sorted;
-        % pkg.i_violinplot(y,thisc,colorit,cLorder);
-%end
-
 
     function i_reordersamples(~, ~)
         showlegend = ~showlegend;

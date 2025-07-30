@@ -44,8 +44,8 @@ switch option
         fname = fullfile(pw1, '..','assets', 'DoRothEA_TF_Target_DB', 'dorothea_hs.mat');
         load(fname, 'T');
         Ttfgn = T(T.mor > 0, :);
-        [gid, gnlist] = grp2idx(Ttfgn.target);
-        [tid, tflist] = grp2idx(Ttfgn.tf);
+        [gid, gnlist] = findgroups(string(Ttfgn.target));
+        [tid, tflist] = findgroups(string(Ttfgn.tf));
         t = zeros(max(tid), max(gid));
         t(sub2ind([max(tid), max(gid)], tid, gid)) = Ttfgn.mor;
         

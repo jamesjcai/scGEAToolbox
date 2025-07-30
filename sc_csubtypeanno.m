@@ -45,7 +45,7 @@ function [sce] = sc_csubtypeanno(sce, cell_type_target, formatid, speciestag)
     sce2 = sce2.embedcells('tsne3d', true, true, 3);
     sce2 = sce2.clustercells([], [], true);
 
-    [c, cL] = grp2idx(sce2.c_cluster_id);
+    [c, cL] = findgroups(string(sce2.c_cluster_id));
 
     for ik = 1:max(c)
         ptsSelected = c == ik;
@@ -169,7 +169,7 @@ function [sce] = sc_csubtypeanno(sce, cell_type_target, formatid, speciestag)
     sce2 = sce2.clustercells([], [], true);
 
 
-    [c, cL] = grp2idx(sce2.c_cluster_id);
+    [c, cL] = findgroups(string(sce2.c_cluster_id));
     for ik = 1:max(c)
         ptsSelected = c == ik;
         [Tct] = pkg.e_determinecelltype(sce2, ptsSelected, wvalu, ...

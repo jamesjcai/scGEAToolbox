@@ -70,8 +70,6 @@ end
             cLi(ci(i)) = newctype;
             sce.c_cell_type_tx = string(cLi(ci));
             requirerefresh = true;
-            %[c, cL] = grp2idx(sce.c_cell_type_tx);
-            %i_labelclusters(false);
         end
     end
 end

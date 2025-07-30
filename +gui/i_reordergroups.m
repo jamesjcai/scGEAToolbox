@@ -4,7 +4,7 @@ function [c, cL, noanswer, newidx] = i_reordergroups(thisc, preorderedcL, ...
 if nargin < 3, parentfig = []; end
 if nargin < 2, preorderedcL = []; end
 noanswer = true;
-[c, cL] = grp2idx(thisc);
+[c, cL] = findgroups(string(thisc));
 newidx = 1:numel(cL);
 if isscalar(cL)
     %gui.myErrordlg(parentfig, 'Only one cell type or cluster.');

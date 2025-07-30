@@ -17,7 +17,7 @@ opt.constraints_neighbors = 3;
 opt.hinge_scale = 7;
 
 [markers, proj_data] = scGeneFit_centers(X, {c}, num_markers, opt);
-[thisc, ~] = grp2idx(c);
+[thisc, ~] = findgroups(c);
 z = [];
 for kk = 1:max(thisc)
     z = [z, mean(proj_data(:, thisc == kk), 2)];

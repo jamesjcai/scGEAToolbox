@@ -21,8 +21,8 @@ function callback_ShowGeneExprCompr(src, ~)
                     return;
             end
         else    % length(unique(thisc)) ~= 1
-            [ci, cLi] = grp2idx(thisc);
-            listitems = natsort(string(cLi));
+            [ci, cLi] = findgroups(string(thisc));
+            listitems = natsort(cLi);
             n = length(listitems);
 
         if gui.i_isuifig(FigureHandle)

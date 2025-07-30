@@ -22,7 +22,7 @@ end
 try
     id = sce.c_batch_id;
     if ~isnumeric(id)
-        id = grp2idx(sce.c_batch_id);
+        id = findgroups(sce.c_batch_id);
         id = id(:);
     end    
     [score, T] = run.py_MELD(sce.X, id);

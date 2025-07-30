@@ -4,7 +4,7 @@ function [ptsSelected, updated] = ...
 if nargin < 3, parentfig = []; end
 updated = false;
 
-[c, ~] = grp2idx(sce.c);
+[c, ~] = findgroups(sce.c);
 if ~isscalar(unique(c)) && isscalar(unique(c(ptsSelected)))
     answer = gui.myQuestdlg(parentfig, sprintf('Select brushed cells only or expand to cell group?'), '', ...
         {'Brushed cells only', 'Expand to cell group'}, 'Brushed cells only');

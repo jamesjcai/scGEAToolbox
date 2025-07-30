@@ -6,30 +6,6 @@ function callback_Dotplot(src, ~)
     
     [c, cL, noanswer] = gui.i_reordergroups(thisc, [], FigureHandle);
     if noanswer, return; end
-    % [c, cL] = grp2idx(thisc);
-    % 
-    % [answer] = gui.myQuestdlg(FigureHandle, 'Manually order groups?', '', ...
-    %     'Yes', 'No', 'Cancel', 'No');
-    % if isempty(answer), return; end
-    % switch answer
-    %     case 'Yes'
-    %         [newidx] = gui.i_selmultidlg(cL, natsort(cL));
-    %         if length(newidx) ~= length(cL)
-    %             gui.myWarndlg(FigureHandle, 'Please select all group items.', '');
-    %             return;
-    %         end
-    %         cx = c;
-    %         for k = 1:length(newidx)
-    %             c(cx == newidx(k)) = k;
-    %         end
-    %         cL = cL(newidx);
-    %     case 'No'
-    % 
-    %     case 'Cancel'
-    %         return;
-    %     otherwise
-    %         return;
-    % end
     
     [glist] = gui.i_selectngenes(sce, [], FigureHandle);
     if isempty(glist)

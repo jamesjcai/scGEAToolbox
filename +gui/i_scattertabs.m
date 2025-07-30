@@ -7,7 +7,6 @@ function i_scattertabs(y, tabnamelist, thisx, xlabelv, parentfig)
 if nargin<4, parentfig = []; end
 tabnamelist = string(tabnamelist);
 
-%[~, cLorder]=grp2idx(thisx);
 xlabelv = strrep(xlabelv, '_', '\_');
 
 fw = gui.myWaitbar(parentfig);

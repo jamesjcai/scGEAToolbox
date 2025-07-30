@@ -15,6 +15,7 @@ if ~colorit
             'ShowData', false, 'ViolinColor', [1, 1, 1], ...
             'EdgeColor', [0, 0, 0]);
     else
+        if ~iscell(grouporder), grouporder = cellstr(grouporder); end
         violinplot(d, c, ...
             'ShowData', false, 'ViolinColor', [1, 1, 1], ...
             'EdgeColor', [0, 0, 0], 'GroupOrder', grouporder);
@@ -23,6 +24,7 @@ else
     if isempty(grouporder)
         violinplot(d, c, 'ShowData', false, 'EdgeColor', [0, 0, 0]);
     else
+        if ~iscell(grouporder), grouporder = cellstr(grouporder); end
         violinplot(d, c, 'ShowData', false, 'EdgeColor', [0, 0, 0], ...
             'GroupOrder', grouporder);
     end

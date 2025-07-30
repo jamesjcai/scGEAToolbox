@@ -1,5 +1,5 @@
 function [cL]=e_sortcatbysize(thisc)
-    [c, cL] = grp2idx(thisc);
+    [c, cL] = findgroups(string(thisc));
     cmv = 1:max(c);
     %idxx = cmv;
     [cmx] = countmember(cmv, c);

@@ -3,7 +3,7 @@ function [sce] = e_celltypes2allclust(sce, speciestag, mergec)
 if nargin < 3, mergec = true; end
 if nargin < 2, speciestag = 'mouse'; end
 
-[c, cL] = grp2idx(sce.c_cluster_id);
+[c, cL] = findgroups(string(sce.c_cluster_id));
 organtag = "all";
 databasetag = "panglaodb";
 cLdisp = cL;

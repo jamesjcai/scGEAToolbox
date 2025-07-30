@@ -86,7 +86,7 @@ function in_MarkerGeneHeatmap(sce, FigureHandle)
     % [c, cL, noanswer] = gui.i_reordergroups(thisc, [], FigureHandle);
     % if noanswer, return; end
     
-    [c] = grp2idx(thisc);
+    [c] = findgroups(thisc);
     answer = gui.myQuestdlg(FigureHandle, 'Generate marker gene heatmap', ...
         'Select Method', {'Method 1 (DE 🐇)', 'Method 2 (scGeneFit 🐢)', ...
         'Method 3 (LASSO 🐢🐢)'}, 'Method 1 (DE 🐇)');

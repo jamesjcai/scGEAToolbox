@@ -19,8 +19,8 @@ T = T(T.mor > 0, :); % only consider positive regulation
 [t] = crosstab(T.tf, T.target); % TF-by-target regulagory relationship matrix
 %size(t)
 %assignin('base','t1',t);
-[~, gnlist] = grp2idx(T.target);
-[~, tflist] = grp2idx(T.tf);
+[~, gnlist] = findgroups(string(T.target));
+[~, tflist] = findgroups(string(T.tf));
 
 if gui.i_isuifig(parentfig)
     [indx1, tf1] = gui.myListdlg(parentfig, tflist, 'Select TF gene:');

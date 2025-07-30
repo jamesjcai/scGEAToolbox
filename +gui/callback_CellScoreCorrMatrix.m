@@ -24,7 +24,7 @@ function callback_CellScoreCorrMatrix(src, ~)
         case 'Select Cells'
             [thisc, ~] = gui.i_select1class(sce,[],[],[],FigureHandle);
             if isempty(thisc), return; end
-            [~, cL] = grp2idx(thisc);
+            [~, cL] = findgroups(string(thisc));
             [idx] = gui.i_selmultidlg(cL, [], FigureHandle);
             if isempty(idx), return; end
 

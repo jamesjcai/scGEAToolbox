@@ -16,7 +16,7 @@ data = data(:, 1:end-1);
 
 %Load builtin dataset
 % data=load('fisheriris');
-% answer=grp2idx(categorical(data.species));
+% answer=findgroups(categorical(data.species));
 % data=data.meas;
 
 %Real-world datasets are of various formats, you need to write your own code.

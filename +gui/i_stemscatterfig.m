@@ -62,7 +62,7 @@ hx.show(parentfig);
         if ~passed, return; end
         [thisc] = gui.i_select1class(sce,[],[],[],hFig);
         if isempty(thisc), return; end
-        [c, cL] = grp2idx(thisc);
+        [c, cL] = findgroups(string(thisc));
         idx = matches(posg, sce.g, 'IgnoreCase', true);
         if any(idx)
             gui.i_dotplot(sce.X, sce.g, c, cL, posg(idx));

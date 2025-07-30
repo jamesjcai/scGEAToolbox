@@ -44,7 +44,7 @@ answer = gui.myQuestdlg(FigureHandle, 'Using MATLAB engine for Python or Calling
             
             id = sce.c_batch_id;
             if ~isnumeric(id)
-                id = grp2idx(sce.c_batch_id);
+                id = findgroups(sce.c_batch_id);
                 id = id(:);
             end
             [s] = run.py_harmonypy_new(sce.s, id, wkdir);

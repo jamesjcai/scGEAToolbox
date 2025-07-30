@@ -4,7 +4,7 @@ if ~iscell(y), y = {y}; end
 if nargin<4, parentfig = []; end
 tabnamelist = string(tabnamelist);
 
-[~, cLorder] = grp2idx(thisc);
+[~, cLorder] = findgroups(string(thisc));
 cLorder = strrep(cLorder, '_', '\_');
 
 fw = gui.myWaitbar(parentfig);
@@ -70,7 +70,7 @@ ccx = true;
 
     function in_callback_showbarplot(~,~)
         [~, idx]=ismember(focalg, tabnamelist); 
-        [cx, cLx] = grp2idx(thisc);
+        [cx, cLx] = findgroups(string(thisc));
         a = zeros(max(cx), 1);
         for ks = 1:max(cx)
             a(ks) = median(y{idx}(cx == ks));
@@ -103,7 +103,7 @@ ccx = true;
 
     function i_updatebarplot(idx)
         if nargin<1, idx=[]; end
-        [~, cLx] = grp2idx(thisc);
+        [~, cLx] = findgroups(string(thisc));
         for ks = 1:n
             if ks~=idx
                 delete(ax0{ks});
@@ -210,7 +210,7 @@ ccx = true;
 
     function in_callback_sortbymean(~, ~)
         [~,idx]=ismember(focalg, tabnamelist);       
-        [cx, cLx] = grp2idx(thisc);
+        [cx, cLx] = findgroups(string(thisc));
 
         a = zeros(max(cx), 1);
         for ks = 1:max(cx)
@@ -254,7 +254,7 @@ ccx = true;
     end
 
     function in_callback_selectsamples(~, ~)
-        [~, cLorder] = grp2idx(thisc);
+        [~, cLorder] = findgroups(string(thisc));
         [newidx] = gui.i_selmultidlg(cLorder, cLorder, hFig);
         if isempty(newidx), return; end
         picked=ismember(thisc, cLorder(newidx));
@@ -412,7 +412,7 @@ ccx = true;
  
 
     function in_callback_savedata(~, ~)
-        [~, idxlabel]= grp2idx(thisc(:));
+        [~, idxlabel]= findgroups(string(thisc(:)));
         T=table();
         for tabidx=1:n
             g = tabnamelist(tabidx);

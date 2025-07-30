@@ -33,7 +33,7 @@ for k=1:n
     c = feays{k};
     if issparse(c), c = full(c); end
     if ~isnumeric(c)
-        [c] = grp2idx(c);
+        [c] = findgroups(string(c));
     end
     tab{k} = uitab(tabgp, 'Title', sprintf('%s', fealabels(k)));
     

@@ -11,7 +11,7 @@ function callback_Violinplot(src, ~)
     if isempty(thisc), return; end
 
 
-    [~, cLorder] = grp2idx(thisc);
+    [~, cLorder] = findgroups(string(thisc));
     [newidx] = gui.i_selmultidlg(cLorder, cLorder, FigureHandle);
     if isempty(newidx), return; end
     picked = ismember(thisc, cLorder(newidx));
@@ -22,9 +22,6 @@ function callback_Violinplot(src, ~)
         {'Gene Expression', 'Cell State'},'Gene Expression');
     switch answer
         case 'Gene Expression'
-            % [c, cL] = grp2idx(thisc);
-            % [c, cL, noanswer] = gui.i_reordergroups(thisc);
-            % if noanswer, return; end
             [glist] = gui.i_selectngenes(sce, [], FigureHandle);
             if isempty(glist)
                 gui.myHelpdlg(FigureHandle, 'No gene selected.');
@@ -42,8 +39,7 @@ function callback_Violinplot(src, ~)
 
             if strcmp(answer, 'Yes')
                 [c, cL, noanswer] = gui.i_reordergroups(thisc, [], FigureHandle);
-                if noanswer, return; end
-                % [c, cL] = grp2idx(thisc);
+                if noanswer, return; end                
                 fw = gui.myWaitbar(FigureHandle);
                 gui.i_violinmatrix(full(Xt), sce.g, c, cL, glist, ...
                         false, '', FigureHandle);

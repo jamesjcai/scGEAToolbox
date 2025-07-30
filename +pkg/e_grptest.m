@@ -5,7 +5,7 @@ T = [];
 if length(unique(grp)) == 2
     p_ttest = zeros(size(y, 1), 1);
     p_wilcoxon = zeros(size(y, 1), 1); % Mann Whitney U Test (Wilcoxon Rank Sum Test)
-    id = grp2idx(grp);
+    id = findgroups(grp);
     for k = 1:size(y, 1)
         a = y(k, id == 1);
         b = y(k, id == 2);

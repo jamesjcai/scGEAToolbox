@@ -14,7 +14,7 @@ answer2 = gui.myQuestdlg(parentfig, sprintf('How to sort members of ''%s''?',cla
     {'Alphabetic', 'Size (Descending Order)'}, 'Alphabetic');
 switch answer2
     case 'Alphabetic'
-        [~, cLi] = grp2idx(thisc);
+        [~, cLi] = findgroups(string(thisc));
         [cLisorted] = natsort(string(cLi));
     case 'Size (Descending Order)'
         [cLisorted]=pkg.e_sortcatbysize(thisc);
