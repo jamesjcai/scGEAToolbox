@@ -3,9 +3,9 @@ scGEAToolbox - a Matlab toolbox for single-cell RNA-seq data analyses
 
 [![View scGEAToolbox on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/72917-scgeatoolbox-single-cell-gene-expression-analysis-toolbox)
 
-## 📌 Installation Guide
+## Installation Guide
 
-There are four ways to install `scGEAToolbox`:  
+There are three ways to install `scGEAToolbox`:  
 
 ### 🔹 Method 1: Install as a MATLAB Add-On (Recommended)  
 1. **Open the Add-On Explorer**
