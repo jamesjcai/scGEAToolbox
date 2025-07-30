@@ -17,7 +17,7 @@ function callback_CalculateGeneStats(src, ~)
     if strcmp(groupingConfirmed, 'Yes')
         thisc = gui.i_select1class(sce,[],[],[],FigureHandle);
         if isempty(thisc), return; end
-        [c, cL] = grp2idx(thisc);
+        [c, cL] = findgroups(string(thisc));
 
         newidx = gui.i_selmultidlg(cL, natsort(cL), FigureHandle);
         if isempty(newidx), return; end
@@ -32,7 +32,7 @@ function callback_CalculateGeneStats(src, ~)
         % Initialize the table with default statistics
         T = sc_genestats(Xt(:, c == 1), sce.g);
         for j = 2:4
-            T.Properties.VariableNames{j} = sprintf('%s_%s', T.Properties.VariableNames{j}, cL{1});
+            T.Properties.VariableNames{j} = sprintf('%s_%s', T.Properties.VariableNames{j}, cL(1));
         end
 
         % Calculate and merge gene stats for each group
@@ -40,7 +40,7 @@ function callback_CalculateGeneStats(src, ~)
             t = sc_genestats(Xt(:, c == k), sce.g);            
             for j = 2:4
                 t.Properties.VariableNames{j} = sprintf('%s_%s', ...
-                    t.Properties.VariableNames{j}, cL{k});
+                    t.Properties.VariableNames{j}, cL(k));
             end
 
             %size(T)
@@ -52,7 +52,10 @@ function callback_CalculateGeneStats(src, ~)
         % Calculate statistics for all cells if no grouping
         T = sc_genestats(Xt, sce.g);
     end
-    
+
+    % gui.i_viewtable(T, FigureHandle);
+    gui.TableViewerApp(T, FigureHandle);
+
     % Export the results to a table
-    gui.i_exporttable(T, true, 'GeneStatsTable',[],[],[], FigureHandle);    
+    % gui.i_exporttable(T, true, 'GeneStatsTable',[],[],[], FigureHandle);    
 end

@@ -139,7 +139,6 @@ end
         case options{1}
             % gui.i_viewtable(T, FigureHandle);
             gui.TableViewerApp(T, FigureHandle);
-
         case options{2}
             if height(T) > 1
                 gui.callback_EnrichrTab2Circos(src, [], T);

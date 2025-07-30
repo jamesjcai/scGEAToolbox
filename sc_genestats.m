@@ -74,7 +74,6 @@ cv = std(X, [], 2, 'omitnan') ./ u;
 
 T = table(g(:), u, cv, dropr);
 T.Properties.VariableNames = {'Gene', 'Mean', 'CV', 'Dropout_rate'};
-% gui.i_viewtable(T);
 %}
 
 
