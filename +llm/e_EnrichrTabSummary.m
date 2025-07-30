@@ -92,7 +92,7 @@ function [done, outfile] = e_EnrichrTabSummary(TbpUpEnrichr, TmfUpEnrichr, ...
         "Please provide an analysis of the output, highlighting key biological processes and molecular functions, along with their associated genes. " + ...
         "Please write an executive summary to report the results of your analysis. ";
     prompt2 = "Here is the output of Enrichr: " + s_up;
-    % feedbk_up = generate(chat, prompt1 + prompt2);
+    % feedbk_up = chat.generate(prompt1 + prompt2);
 
     response = llm.geminiGenerateContent(prompt1 + prompt2);
 
@@ -105,7 +105,7 @@ function [done, outfile] = e_EnrichrTabSummary(TbpUpEnrichr, TmfUpEnrichr, ...
 
     
     prompt2 = "Here is the output of Enrichr: " + s_dn;
-    % feedbk_dn = generate(chat, prompt1 + prompt2);
+    % feedbk_dn = chat.generate(prompt1 + prompt2);
 
     response = llm.geminiGenerateContent(prompt1 + prompt2);
     if response.StatusCode == "OK"

@@ -222,7 +222,7 @@ else
         Hinit = [];
     end
     if isfield(options, 'computeobj')
-        if ~isempty(options.computeobj) && (isnumeric(options.computeobj) || isboolean(options.computeobj))
+        if ~isempty(options.computeobj) && (isnumeric(options.computeobj))
             computeobj = options.computeobj;
         else
             error('options.computeobj must be boolean or a real number!');

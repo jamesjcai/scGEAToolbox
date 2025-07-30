@@ -473,7 +473,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                     hinfo = h5info(filenm);
                     idx = find(string({hinfo.Groups.Name})=="/obs");
                     if isempty(idx), return; end
-                    dnames = extractfield(hinfo.Groups(idx).Datasets, 'Name');
+                    dnames = pkg.i_extractfield(hinfo.Groups(idx).Datasets, 'Name');
                     if isempty(dnames), return; end
                     if strcmp('Yes', gui.myQuestdlg(FigureHandle, 'View /obs/Datasets?'))
                        T = gui.i_h5adobs2tab(filenm, FigureHandle);

@@ -41,7 +41,7 @@ prompt = "Why is the sky blue?";
         case 'Ollama'
             try
                 chat = ollamaChat(model, TimeOut = 1200);                
-                feedbk = generate(chat, prompt);
+                feedbk = chat.generate(prompt);
             catch ME
                 fprintf('Error in chat completion: %s\n', ME.message);
                 return;

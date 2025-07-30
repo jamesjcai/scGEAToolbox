@@ -29,7 +29,7 @@ hinfo = h5info(filenm);
 idx = find(strcmp(strtrim(string(char(hinfo.Groups.Name))), "/X"));
 
 
-%names = string(extractfield(hinfo.Groups, 'Name'));
+%names = string(pkg.i_extractfield(hinfo.Groups, 'Name'));
 %idx = find(names == "/X");
 
 % idx = find(string({hinfo.Groups.Name})=="/X")

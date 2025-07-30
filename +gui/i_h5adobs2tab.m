@@ -7,7 +7,7 @@ idx = find(string({hinfo.Groups.Name})=="/obs");
 if isempty(idx), return; end
 
 % dnames = {hinfo.Groups(idx).Datasets.Name}
-dnames = extractfield(hinfo.Groups(idx).Datasets, 'Name');
+dnames = pkg.i_extractfield(hinfo.Groups(idx).Datasets, 'Name');
 if isempty(dnames), return; end
 
 listitems = string(dnames);

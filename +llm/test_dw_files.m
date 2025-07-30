@@ -23,7 +23,7 @@ for i = 51:N
         try
             code = webread(file_url);
             prompt = "Review this MATLAB code for professional feedback: " + code;
-            feedbk = generate(chat, prompt);        
+            feedbk = chat.generate(prompt);
             fprintf(fid, '%s', feedbk);
         catch
             fprintf('Failed to read %s\n', filename);
@@ -37,7 +37,7 @@ gui.gui_waitbar_adv(fw);
 %{
 chat = ollamaChat("deepseek-r1", StreamFun=@printToken);
 prompt = "What is Model-Based Design?";
-generate(chat, prompt, MaxNumTokens=500);
+chat.generate(prompt, MaxNumTokens=500);
 function printToken(token)
     fprintf("%s",token);
 end

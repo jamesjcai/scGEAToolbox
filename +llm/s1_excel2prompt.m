@@ -22,7 +22,7 @@ prompt1 = "enrichr is a gene function enrichment analysis service. " + ...
     "of biological processes and molecular functions. Please write the " + ...
     "summary in paragraph(s). Do not use bullet points. ";
 prompt2 = "Here is the output of enrichr: " + s;
-feedbk = generate(chat, prompt1 + prompt2);
+feedbk = chat.generate(prompt1 + prompt2);
 
 import mlreportgen.dom.*
 doc = Document('test', 'docx');

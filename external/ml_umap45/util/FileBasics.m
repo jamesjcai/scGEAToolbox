@@ -187,11 +187,11 @@ classdef FileBasics<handle
                 forbidThese={forbidThese};
             end
             ok=true;
-            try
-                rootFldr=ctfroot;
-            catch 
-                rootFldr=[];
-            end
+            %try
+                rootFldr=[]; % ctfroot;
+            %catch 
+            %    rootFldr=[];
+            %end
             mapRemovable=TreeMapOfMany;
             mapNonRemovable=TreeMapOfMany;
             nToAdd=length(addThese);

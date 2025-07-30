@@ -92,10 +92,10 @@ function [done, outfile] = e_DETableSummary(TbpUpEnrichr, TmfUpEnrichr, ...
             end
             chat = ollamaChat(providermodel{2}, TimeOut = 1200);
             prompt2 = "Here is the output of Enrichr: " + s_up;
-            feedbk_up = generate(chat, prompt1 + prompt2);
+            feedbk_up = chat.generate(prompt1 + prompt2);
             
             prompt2 = "Here is the output of Enrichr: " + s_dn;
-            feedbk_dn = generate(chat, prompt1 + prompt2);
+            feedbk_dn = chat.generate(prompt1 + prompt2);
         case 'TAMUAIChat'
             prompt2 = "Here is the output of Enrichr: " + s_up;
             feedbk_up = llm.callTAMUAIChat([], prompt1 + prompt2, providermodel{2});

@@ -54,7 +54,7 @@ function [feedbk, extractedText] = e_GEOPageSummary(acc)
         chat = ollamaChat(providermodel{2}, TimeOut = 1200);
         prompt1 = "Please summerize the following text downloaded from the GEO database. ";
         prompt2 = "Here is the text: " + extractedText;
-        feedbk = generate(chat, prompt1 + prompt2);
+        feedbk = chat.generate(prompt1 + prompt2);
         feedbk = regexprep(feedbk, '<think>.*?</think>', '');
         feedbk = strtrim(feedbk);
     catch ME

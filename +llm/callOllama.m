@@ -15,7 +15,7 @@ done = false;
     fprintf('Sending request to Ollama Chat API...\n');
     try
         chat = ollamaChat(model, TimeOut = 1200);
-        res = generate(chat, prompt);
+        res = chat.generate(prompt);
         done = true;
     catch ME
         fprintf('Error in chat completion: %s\n', ME.message);
