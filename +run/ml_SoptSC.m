@@ -67,18 +67,4 @@ end
 [~, W, C, eigenvalues, H] = SoptSC_Main(k, X);
 C = C';
 
-%{
-sct=grpstats(s',C,@mean);
-figure;
-scatter3(s(:,1),s(:,2),s(:,3),20,C,'filled')
-hold on
-scatter3(sct(:,1),sct(:,2),sct(:,3),180,'r','filled')
-
-figure;
-gene_idxv = GC_htmp_DE(X,genelist,cluster_labs,10);
-
-figure; plot_marker(X,{'ACTB','SSR4','PPIB'},genelist,s);
-figure; boxplot_marker(X,genelist,{'ACTB','SSR4','PPIB'},C,6);
-%}
-
 end

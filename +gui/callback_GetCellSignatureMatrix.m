@@ -124,31 +124,7 @@ if isempty(thisc), return; end
         xlabel('Cell group');
         ylabel('Cellular score');
     
-    elseif n >= 3
-        %assignin('base','labelx',labelx);
-    
-        %{
-        P=grpstats(Y,c,'mean');
-        %assignin('base','P',P);
-    
-        if ~isempty(strfind(labelx{1},')'))
-            titlex=extractBefore(labelx{1},strfind(labelx{1},')')+1);
-            labelx=extractAfter(labelx,strfind(labelx{1},')')+1);
-        else
-            titlex='';
-        end
-    
-        axes_limits=[zeros(1,n); repmat(max(P(:)),1,n)];
-        figure;
-        spider_plot_R2019b(P,'AxesLabels',labelx, ...
-            'AxesPrecision',2,'AxesLimits',axes_limits);
-        cL=strrep(cL,'_','\_');
-        legend(cL);
-        if ~isempty(titlex)
-            title(titlex);
-        end
-        %}
-    
+    elseif n >= 3    
         gui.i_spiderplot(Y, thisc, labelx, sce);
     end
 end

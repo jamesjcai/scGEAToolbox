@@ -11,7 +11,8 @@ if ~isstring(c), c = string(c); end
 c = strrep(c, '_', ' ');
 [~, cL] = grp2idx(c);
 if isempty(sorted_c)
-    [~, sortidx] = sort(grpstats(d, c, @median), 'descend');
+    % [~, sortidx] = sort(grpstats(d, c, @median), 'descend');
+    [~, sortidx] = sort(splitapply(@median, d, c), 'descend');
     sorted_c = cL(sortidx);
 else
     sorted_c = strrep(sorted_c, '_', ' ');

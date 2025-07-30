@@ -9,7 +9,8 @@ function [h] = i_scoreheatmap(Y, rowlabels, sce, parentfig)
     if noanswer, return; end
 
 
-    szgn = grpstats(c, c, @numel);
+    % szgn = grpstats(c, c, @numel);
+    szgn = splitapply(@numel, c, c);    
     a = zeros(1, max(c));
     b = zeros(1, max(c));
     for k = 1:max(c)

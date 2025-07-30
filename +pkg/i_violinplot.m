@@ -1,11 +1,6 @@
 function i_violinplot(d, c, colorit, grouporder)
 import pkg.Violin
 import pkg.violinplot
-% if isstring(c)
-%     c=strrep(c,'_',' ');
-% end
-% [~,cL]=grp2idx(c);
-% [~,i]=sort(grpstats(d,c,@median),'descend');
 
 if ~isstring(c)
     c = string(c);

@@ -31,7 +31,8 @@ if do_geneculst
     Y = pdist(X);
     Z = linkage(Y);
     clu = cluster(Z, 'maxclust', n);
-    X = grpstats(X, clu, @(x) mean(x, 1));
+    % X = grpstats(X, clu, @(x) mean(x, 1));
+    X = splitapply(@(x) mean(x, 1), X', clu);
     % Xn=[];
     % for k=1:27
     %    Xn=[Xn;mean(X(idx==k,:),1)];
@@ -83,7 +84,8 @@ warning on
 
 gmfit = fitgmdist(X, clunum, 'CovarianceType', 'full');
 clusterid = cluster(gmfit, X);
-clucenter = grpstats(X, clusterid, @mean);
+% clucenter = grpstats(X, clusterid, @mean);
+clucenter = splitapply(@mean, X, clusterid);
 
 txtc = strings(size(clucenter, 1), 1);
 for k = 1:size(clucenter, 1)

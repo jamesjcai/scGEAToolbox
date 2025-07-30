@@ -24,8 +24,8 @@ end
 if issparse(X)
     X = full(X);
 end
-gene_mean = grpstats(X', c, @mean)';
-assert(isequal(grpstats(X', c, @mean)', gene_mean))
+% gene_mean = grpstats(X', c, @mean)';
+gene_mean = splitapply(@mean, X', c)';
 
 [~, gene_value_idx] = max(gene_mean, [], 2);
 

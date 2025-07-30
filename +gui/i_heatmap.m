@@ -16,7 +16,8 @@ Yori = Y(:, cidx);
 if isempty(dim) || isempty(methodid), return; end
 [Y] = gui.i_norm4heatmap(Yori, dim, methodid);
 
-szgn = grpstats(c, c, @numel);
+% szgn = grpstats(c, c, @numel);
+szgn = splitapply(@numel, c, c); 
 a = zeros(1, max(c));
 b = zeros(1, max(c));
 for kx = 1:max(c)

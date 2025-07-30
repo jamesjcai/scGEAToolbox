@@ -4,7 +4,8 @@ if nargin < 5, parentfig = []; end
 if nargin < 4, sce = []; end
 
 [c, cL] = grp2idx(thisc);
-P = grpstats(Y, c, 'mean');
+% P = grpstats(Y, c, 'mean');
+P = splitapply(@mean, Y, c)';
 n = size(P, 2);
 
 %         axes_limits=[repmat(min([0, min(P(:))]),1,n);...

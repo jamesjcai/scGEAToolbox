@@ -29,7 +29,8 @@ Y = Xt(gidx, :);
 Y = Y(:, cidx);
 [Y] = gui.i_norm4heatmap(Y);
 
-szgn = grpstats(c, c, @numel);
+% szgn = grpstats(c, c, @numel);
+szgn = splitapply(@numel, c, c);
 a = zeros(1, max(c));
 b = zeros(1, max(c));
 for k = 1:max(c)
