@@ -43,8 +43,8 @@ Yo=run.ml_MAGIC(Y);
 figure; imagesc([Xo(1:100,1:500) Yo(1:100,1:500)]); title('MAGIC Imputated'); colorbar; xline(500,'y-');
 %% Show HCP normalized data
 
-[Xm,Ym]=run.ml_HCP(X,Y);
-figure; imagesc([Xm(1:100,1:500) Ym(1:100,1:500)]); title('HCP Normalized'); colorbar; xline(500,'y-');
+%[Xm,Ym]=run.ml_HCP(X,Y);
+%figure; imagesc([Xm(1:100,1:500) Ym(1:100,1:500)]); title('HCP Normalized'); colorbar; xline(500,'y-');
 %% Show data with ComBat batch correction
 
 [Xn,Yn]=run.ml_ComBat(X,Y);

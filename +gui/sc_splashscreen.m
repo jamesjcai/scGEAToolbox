@@ -21,7 +21,7 @@ if nargin<3, showloading = true; end
 if nargin<2, r = 0.0; end
 if nargin<1
     v1 = pkg.i_get_versionnum;
-    mfolder = fileparts(mfilename('fullpath'));    
+    mfolder = fileparts(mfilename('fullpath')); 
 
 
     %pngfilename = 'splash.png';

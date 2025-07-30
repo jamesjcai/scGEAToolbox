@@ -1,7 +1,0 @@
-library(enrichR)
-genelist <- read.csv('input.txt', header = F)
-setEnrichrSite("Enrichr")
-dbs <- c("GO_Molecular_Function_2023", "GO_Biological_Process_2023")
-enriched <- enrichr(unlist(genelist), dbs)
-write.csv(enriched[["GO_Biological_Process_2023"]],'output1.txt')
-write.csv(enriched[["GO_Molecular_Function_2023"]],'output2.txt')

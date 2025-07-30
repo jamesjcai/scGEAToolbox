@@ -22,7 +22,7 @@ function [v1] = i_get_versionnum
         end
     end
     %}
-    xfilelocal = fullfile(mfolder,'..', 'info.xml');   
+    xfilelocal = fullfile(mfolder, '..', 'info.xml');   
     fid = fopen(xfilelocal, 'r');
     
     if fid == -1

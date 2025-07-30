@@ -2,7 +2,7 @@ function varargout = scgeatool_launch(varargin)
 % SCGEATOOL  Launch either original figure GUI or App Designer version
 %
 % Use:
-%   scgeatool            % launches App Designer by default
+%   scgeatool            % launches  App Designer by default
 %   scgeatool('-legacy') % launches older figure-based GUI
 %   scgeatool(..., 'foo', bar, ...) applies inputs to chosen version
 
@@ -12,10 +12,9 @@ function varargout = scgeatool_launch(varargin)
     if isLegacy
         % Remove the flag before calling legacy function
         args = varargin(~strcmpi(varargin, '-legacy'));
-        legacy_scgeatool(args{:});
+        f = scgeatool_legacy(args{:});
         if nargout > 0
-            warning('scgeatool:legacyNoOutput', ...
-                'Legacy GUI does not return outputs.');
+            varargout{1} = f;
         end
     else
         try

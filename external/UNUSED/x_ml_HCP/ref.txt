@@ -1,5 +1,0 @@
-HCP (Hidden Covariates with Prior)
-http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0068141
-Normalizing RNA-Sequencing Data by Modeling Hidden Covariates with Prior Knowledge
-
-HCP.R code is copied from Pipelines, scripts, and other useful files for CommonMind data analyses.
