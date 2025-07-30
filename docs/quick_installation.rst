@@ -19,8 +19,6 @@ Install as a MATLAB Add-On (Recommended)
 
         scgeatool
 
-   - This will open the graphical user interface for single-cell transcriptomic data analysis.
-
 Quick Installation (For Developers)
 ===================================
 
