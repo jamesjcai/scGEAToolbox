@@ -13,8 +13,8 @@ if ~gui.gui_showrefinfo('DP Analysis', FigureHandle), return; end
 if isscalar(i1) || isscalar(i2), return; end
 
 % --------
-a=sprintf('%s vs. %s',cL1{1}, cL2{1});
-b=sprintf('%s vs. %s',cL2{1}, cL1{1});
+a = sprintf('%s vs. %s',cL1{1}, cL2{1});
+b = sprintf('%s vs. %s',cL2{1}, cL1{1});
 answer = gui.myQuestdlg(FigureHandle, 'Which vs. which?','',{a,b},a);
 switch answer
     case a
@@ -115,9 +115,10 @@ T=T(T.p_val_adj<0.01 & T.gsetsize>=5,:);
         return;
     else
         outfile = sprintf('%s_vs_%s_DP_results', ...
-            matlab.lang.makeValidName(string(cL1)), matlab.lang.makeValidName(string(cL2)));
-        %filesaved = fullfile(outdir, outfile);
-        %writetable(T, filesaved, 'FileType', 'spreadsheet');
+            matlab.lang.makeValidName(string(cL1)), ...
+            matlab.lang.makeValidName(string(cL2)));
+        % filesaved = fullfile(outdir, outfile);
+        % writetable(T, filesaved, 'FileType', 'spreadsheet');
         [~, filesaved] = gui.i_exporttable(T, true, 'Tdpgenelist', outfile);
             % "Tcellattrib","CellAttribTable"
             % "Tviolindata","ViolinPlotTable"

@@ -48,7 +48,7 @@ for i = 1:max(c)
             ctxt = Tct.C1_Cell_Type{1};
         case 'singler'
             cx = run.r_singler(Xi, gi, species);
-            ctxt = unique(cx(mode(grp2idx(cx), 'all') == grp2idx(cx)));
+            ctxt = unique(cx(mode(findgroups(cx), 'all') == findgroups(cx)));
     end
     ctxt = strrep(ctxt, '_', '\_');
     if size(s, 2) >= 3

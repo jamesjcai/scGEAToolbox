@@ -61,8 +61,8 @@ function callback_DEGene2Groups_New(src, ~)
 
         [~, filesaved] = gui.i_exporttable(T, true, ...
             'Tdegenelist', outfile, 'Excel file', "All_raw", FigureHandle);        
-        %writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All_genes');
-        %gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s', filesaved));
+        % writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All_genes');
+        % gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s', filesaved));
     catch
         return;
     end
