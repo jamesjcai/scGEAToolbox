@@ -17,7 +17,7 @@ s = [];
 
 [vslist] = gui.i_checkexistingembed(sce, ndim);
 if isempty(vslist)
-gui.myWarndlg(parentfig, ['No embedding is available. Please embed cells ' ...
+    gui.myWarndlg(parentfig, ['No embedding is available. Please embed cells ' ...
         'using an embedding algorithm first.']);
     return; 
 end

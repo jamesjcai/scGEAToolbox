@@ -73,6 +73,7 @@ if exist('umap.csv', 'file')
     if all(y)
         s = table2array(t(:, 2:end));
         sce.s = s(idx, :);
+        sce.struct_cell_embeddings.umap2d = s;
     end
 end
 
