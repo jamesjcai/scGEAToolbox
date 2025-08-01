@@ -1,5 +1,16 @@
 function [t] = sc_trajectory(X, varargin)
-
+    % SC_TRAJECTORY Estimate pseudotime trajectories from single-cell data
+    %
+    % Usage:
+    %   t = sc_trajectory(X)
+    %   t = sc_trajectory(X, 'type', 'tscan', 'plotit', true);
+    %
+    % Supported methods:
+    %   - 'splinefit' (default)
+    %   - 'tscan'
+    %
+    % If plotit = true, trajectory is plotted.
+    
 p = inputParser;
 defaultType = 'splinefit';
 validTypes = {'splinefit', 'tscan'};

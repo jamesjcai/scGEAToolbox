@@ -1,6 +1,6 @@
-function [v1] = i_get_versionnum
+function [versionStr] = i_get_versionnum
 
-    v1 = '';
+    versionStr = '';
     mfolder = fileparts(mfilename('fullpath'));
     %{
     tag_version = 'param.version';
@@ -22,7 +22,10 @@ function [v1] = i_get_versionnum
         end
     end
     %}
-    xfilelocal = fullfile(mfolder, '..', 'info.xml');   
+    
+    %{
+    xfilelocal = fullfile(mfolder, '..', 'info.xml');
+    
     fid = fopen(xfilelocal, 'r');
     
     if fid == -1
@@ -48,5 +51,17 @@ function [v1] = i_get_versionnum
     catch ME
         warning(ME.identifier, 'Error reading file content: %s', ME.message);
     end
+    %}
 
+    xfilelocal = fullfile(mfolder, '..', 'doc', 'helptoc.xml');
+    txt = fileread(xfilelocal);    
+    % Look for version in lines containing "v25.7.7" or similar
+    tokens = regexp(txt, 'v?(\d+\.\d+\.\d+)', 'tokens');
+    
+    if ~isempty(tokens)
+        versionStr = tokens{1}{1};
+        % fprintf('Extracted version: %s\n', versionStr);
+    else
+        warning('Version string not found in the file.');
+    end
 end

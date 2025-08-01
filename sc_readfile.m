@@ -1,5 +1,17 @@
 function [X, genelist] = sc_readfile(filename, varargin)
-
+    % SC_READFILE  Load single‑cell expression data files
+    %
+    %   [X, genelist] = sc_readfile(filename)
+    %   [X, genelist] = sc_readfile(filename, 'type', 'h5');
+    %
+    %   Inputs:
+    %     filename — path to data file, or empty to prompt UI
+    %     'type'   — 'tsv' (default), 'mtx', or 'h5'
+    %
+    %   Outputs:
+    %     X        — expression matrix (genes × cells)
+    %     genelist — cell array or string vector of gene names
+    
 if nargin < 1
     [filename, pathname] = uigetfile( ...
         {'*.csv;*.tsv;*.tab;*.txt', ...

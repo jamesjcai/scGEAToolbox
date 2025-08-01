@@ -1,22 +1,18 @@
-<?xml version='1.0' encoding="utf-8"?>
-
+<?xml version="1.0" encoding="utf-8"?>
 <toc version="2.0">
-<!-- First tocitem specifies top level in Help browser Contents pane -->
-<!-- This can be a roadmap page, as shown below, or a content page -->
-    <tocitem target="mytoolbox_product_page.html">scGEAToolbox
-        <!-- Nest tocitems to create hierarchical entries in  Contents-->
-        <!-- To include icons, use the following syntax for tocitems: -->
-        <!-- <tocitem target="foo.html" image="HelpIcon.NAME"> -->
-        <!-- Title-of-Section </tocitem> -->
-        <!-- where NAME is one of the following (use capital letters): -->
-        <!-- FUNCTION, USER_GUIDE, EXAMPLES, BLOCK, GETTING_STARTED, -->
-        <!-- DEMOS, RELEASE_NOTES --> 
-        <!-- Icon images used for these entries are also stored in -->
-        <!-- matlabroot/toolbox/matlab/icons -->
-        <!-- A Getting Started Guide usually comes first -->
-        <tocitem target="https://scgeatoolbox.readthedocs.io/en/latest/getting_started.html" image="HelpIcon.GETTING_STARTED">
-            Getting Started with the scGEAToolbox
-        </tocitem>
-        <!-- User Guide comes next -->
+  <tocitem target="scgeatoolbox_product_page.html">
+    scGEAToolbox v25.7.7
+    <!-- tocitem target="GettingStarted.mlx" image="HelpIcon.GETTING_STARTED">
+      Getting Started
+    </tocitem -->
+    <tocitem target="https://scgeatoolbox.readthedocs.io/en/latest/getting_started.html" image="HelpIcon.GETTING_STARTED">
+      Getting Started with the scGEAToolbox
     </tocitem>
+    <!-- tocitem target="user_guide.html" image="HelpIcon.USER_GUIDE">
+      User Guide
+    </tocitem -->
+    <tocitem target="html/examples.html" image="HelpIcon.EXAMPLES">
+      Examples &amp; Tutorials
+    </tocitem>
+  </tocitem>
 </toc>

@@ -1,4 +1,5 @@
 function varargout = scgeatool(sce, varargin)
+%SCGEATOOL - Single-cell Gene Expression Analysis Toolbox Graphical User Interface.
 
 % if usejava('jvm') && ~feature('ShowFigureWindows')
 %     error('MATLAB is in a text mode. This function requires a GUI-mode.');

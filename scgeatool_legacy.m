@@ -1,4 +1,5 @@
 function varargout = scgeatool_legacy(sce, varargin)
+% SCGEATOOL - Launch original figure GUI
 
 % if usejava('jvm') && ~feature('ShowFigureWindows')
 %     error('MATLAB is in a text mode. This function requires a GUI-mode.');

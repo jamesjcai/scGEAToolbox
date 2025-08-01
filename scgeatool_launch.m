@@ -1,5 +1,5 @@
 function varargout = scgeatool_launch(varargin)
-% SCGEATOOL  Launch either original figure GUI or App Designer version
+% SCGEATOOL - Launch either original figure GUI or App Designer version
 %
 % Use:
 %   scgeatool            % launches  App Designer by default

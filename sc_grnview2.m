@@ -1,3 +1,20 @@
+function sc_grnview2(A1, A2, nodenames, figname, parentfig)
+    % SC_GRNVIEW2  Display two gene regulatory networks side‑by‑side.
+    %
+    %   sc_grnview2(A1, A2, nodenames) requires adjacency matrices or graph objects A1, A2 plus node names.
+    %   sc_grnview2(..., figname) sets a custom figure title.
+    %   sc_grnview2(..., figname, parentfig) embeds viewer in an existing figure.
+    
+    %GRN network viewer (two networks)
+    if nargin < 5, parentfig = []; end
+    if nargin < 4, figname = ''; end
+    if nargin < 3, error('USAGE: sc_grnview2(A1,A2,g)'); end
+    G1 = pkg.i_makegraph(A1, nodenames);
+    G2 = pkg.i_makegraph(A2, nodenames);
+    gui.i_doublegraphs(G1, G2, figname, parentfig);
+end
+
+
 %{
 function sc_grnview2(A1, A2, nodenames, figname, parentfig)
     % SC_GRNVIEW2  Display two gene regulatory networks side‑by‑side.
@@ -49,13 +66,3 @@ function sc_grnview2(A1, A2, nodenames, figname, parentfig)
     gui.i_doublegraphs(G1, G2, figname, parentfig);
 end
 %}
-
-function sc_grnview2(A1, A2, nodenames, figname, parentfig)
-    %GRN network viewer (two networks)
-    if nargin < 5, parentfig = []; end
-    if nargin < 4, figname = ''; end
-    if nargin < 3, error('USAGE: sc_grnview2(A1,A2,g)'); end
-    G1 = pkg.i_makegraph(A1, nodenames);
-    G2 = pkg.i_makegraph(A2, nodenames);
-    gui.i_doublegraphs(G1, G2, figname, parentfig);
-end

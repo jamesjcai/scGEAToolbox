@@ -1,4 +1,14 @@
 function [X] = sc_transform(X, varargin)
+    % SC_TRANSFORM Transformations for single-cell data
+    %
+    % Supports:
+    %   - PearsonResiduals
+    %   - kNNSmoothing
+    %   - SCTransform / SCT
+    %   - FreemanTukey
+    %   - csndm
+    %
+    % Example: X = sc_transform(X, 'type', 'PearsonResiduals');
 
 % https://www.biorxiv.org/content/10.1101/2021.06.24.449781v1.full
 % acosh transformation based on the delta method

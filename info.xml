@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <productinfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:noNamespaceSchemaLocation="optional">
-    <?xml-stylesheet type="text/xsl"href="optional"?>
-    <!-- info.xml file for the scGEAtoolbox toolbox -->
-   
-    <!-- Supply the following six elements in the order specified -->
-    <!-- (Required) Release of MATLAB. Not currently used but required -->
-    <!-- to parse the file -->
-    <matlabrelease>2025a</matlabrelease>
-    <!-- (Required) Title of toolbox. Appears in the Contents pane -->
-    <name>scGEAToolbox 25.7.6</name>
-    <!-- (Required) Label for the toolbox. pick one: -->
-    <!-- matlab, toolbox, simulink, blockset, links_targets  -->
-    <type>toolbox</type>
-    <!-- (Required) Icon file to display in the Start button. Not currently used -->
-    <!-- but required to parse the file -->
-    <icon/>
-    <!-- (Required if you supply help) Relative path to help (HTML) folder -->
-    <help_location>doc</help_location>
-    <!-- (Required if you supply help) Icon used in the Help browser TOC -->
-    <!-- Ignored in R2015a and later -->
-    <help_contents_icon/>
+  <?xml-stylesheet type="text/xsl" href="optional"?>
+  <!-- info.xml file for the scGEAToolbox toolbox -->
+
+  <!-- Supply the following six elements in the order specified -->
+  <!-- (Required) Release of MATLAB -->
+  <matlabrelease>2025a</matlabrelease>
+
+  <!-- (Required) Title of toolbox -->
+  <name>scGEAToolbox</name>
+
+  <!-- (Required) Label for the toolbox -->
+  <type>toolbox</type>
+
+  <!-- (Required) Icon file -->
+  <icon />
+
+  <!-- (Required if you supply help) Path to help folder -->
+  <help_location>doc</help_location>
+
+  <!-- (Required if you supply help) Help browser TOC icon – ignored R2015a+ -->
+  <help_contents_icon />
 </productinfo>

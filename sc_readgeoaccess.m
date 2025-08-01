@@ -1,5 +1,14 @@
 function [sce] = sc_readgeoaccess(acc)
-
+    % SC_READGEOACCESS  Download and parse GEO single-cell dataset by accession
+    %
+    %   sce = sc_readgeoaccess(acc)
+    %
+    %   Inputs:
+    %     acc – GEO accession string, e.g. 'GSEXXXXXX'
+    %
+    %   Outputs:
+    %     sce – SingleCellExperiment object with X, gene names, cell barcodes
+    
 % if length(strsplit(acc,{',',';',' '}))>1
 % end
 

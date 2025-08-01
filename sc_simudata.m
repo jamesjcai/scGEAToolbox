@@ -1,4 +1,20 @@
 function [X] = sc_simudata(numgenes, numcells, methodtype)
+    % SC_SIMUDATA  Simulate single-cell RNA‑seq count data
+    %
+    %   X = sc_simudata(numgenes, numcells, methodtype)
+    %
+    %   Inputs:
+    %     numgenes   – number of genes (default: 500)
+    %     numcells   – number of cells (default: 1000)
+    %     methodtype – 'simple' (default) or 'lun'
+    %
+    %   Output:
+    %     X – a numgenes × numcells simulated count matrix
+    %
+    % References:
+    %   • Simple NB sampling: Gamma-NB model (Splat/splatter)
+    %   • Lun method: pooling across cells (PMID: 27122128)
+
 
 % https://genomebiology.biomedcentral.com/articles/10.1186/s13059-017-1305-0
 if nargin < 1, numgenes = 500; end

@@ -1,4 +1,5 @@
 function [status] = sc_sce2hdf5(sce, filename)
+%Write SCE to HDF5 file
 
 % import h5py
 % f = h5py.File("file.h5ad", "r")

@@ -1,4 +1,18 @@
 function s = sc_stemness(X, g)
+    % SC_STEMNESS   Compute stemness score for single-cell data
+    %
+    %   s = sc_stemness(X, g)
+    %
+    %   Inputs:
+    %     X : genes × cells expression matrix (numeric, non-empty)
+    %     g : cell array of gene names (matching rows of X)
+    %
+    %   Output:
+    %     s : 1 × cells vector of normalized stemness scores (Spearman)
+    %
+    %   Uses a default stemness signature loaded from:
+    %     assets/scCancer/pcbc_stemsig.txt
+
     %arguments
     %    X double {mustBeNonempty}  % Ensure the gene expression matrix is a non-empty numeric array
     %end
