@@ -8,9 +8,29 @@ lbsz = full(sum(X, 1));
 lbsz_mt = full(sum(X(i, :), 1));
 cj = 100 * (lbsz_mt ./ lbsz);
 
+hx = gui.myFigure;
 
+%{
+fx = hx.FigHandle;
+% ax = hx.AxHandle;
+tiledlayout(fx, "horizontal");
 
-hx=gui.myFigure;
+ax1 = nexttile;
+violinplot(ax1, nftr);
+title(ax1, sprintf('nFeature\\_RNA\n(# of genes)'));
+box(ax1, "on");
+
+ax2 = nexttile;
+violinplot(ax2, lbsz);
+title(ax2, sprintf('nCount\\_RNA\n(# of reads)'));
+box(ax2, "on");
+
+ax3 = nexttile;
+violinplot(ax3, cj);
+title(ax3, sprintf('percent.mt\n(mitochondrial content)'));
+box(ax3, "on");
+%}
+
 % if ~isempty(parentfig)
 %     px_new = gui.i_getchildpos(parentfig, hFig);
 % else
@@ -33,3 +53,5 @@ title(sprintf('percent.mt\n(mitochondrial content)'));
 box on;
 
 hx.show(parentfig);
+
+end
