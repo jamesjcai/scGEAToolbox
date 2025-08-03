@@ -1,10 +1,23 @@
 function [score] = sc_cellscore_ucell(X, genelist, tgsPos, tgsNeg)
+%SC_CELLSCORE_UCELL   Cell-level gene signature scoring (UCell-style).
+%  score = SC_CELLSCORE_UCELL(X, genelist, tgsPos, tgsNeg, opts)
+%
+%  X         : G × C expression matrix (genes × cells).
+%  genelist  : G × 1 string/cell array of gene names.
+%  tgsPos    : positive marker genes (string array)
+%  tgsNeg    : negative marker genes (string array)
+%
+% Uses Mann–Whitney U normalization similar to UCell.
+%
+% see also: PKG.E_CELLSCORES, SC_CELLSCORE_ADMDL
+
 % Compute cell scores from a list of feature genes
 %
 % tgsPos - positive features (positive target marker genes)
 % tgsNeg - negative features (negative target marker genes)
-%
-% see also: PKG.E_CELLSCORES, SC_CELLSCORE_ADMDL
+%  opts.maxRank   : maximum rank threshold (default 1500)
+%  opts.method    : 1 for rank-based, 2 for normalized expression
+
 
 if nargin < 4 || isempty(tgsNeg)
     tgsNeg = ["IL2", "TNF"];
@@ -28,15 +41,19 @@ idx2 = matches(genelist, tgsNeg, 'IgnoreCase', true);
 
 n1 = sum(idx1);
 
-try
-    if issparse(X), X = full(X); end
-catch
-    warning('Keep using sparse X.');
+if issparse(X)
+    try
+        X = full(X);
+    catch
+        warning('Could not convert sparse matrix to full. Proceeding with sparse.');
+    end
 end
+
 
 methodid = 1;
 switch methodid
     case 1
+        % (UCELL-inspired Rank Method)
         % https://doi.org/10.1016/j.csbj.2021.06.043
         R = tiedrank(-X);
         R(R > 1500) = 1500 + 1;
@@ -44,6 +61,7 @@ switch methodid
         score = 1 - u / (n1 * 1500);
         score = score(:);
     case 2
+        % (Rank-Sum Based Scoring)
         X = sc_norm(X);
         disp('Library-size normalization...done.')
         X = log1p(X);

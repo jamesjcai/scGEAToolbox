@@ -1,15 +1,28 @@
 function [score] = sc_cellscore_admdl(X, genelist, tgsPos, tgsNeg, nbin, ctrl)
-    % Compute cell scores from a list of feature genes
+%SC_CELLSCORE_ADMDL   Cell-level gene signature scoring (Seurat/AddModuleScore).
+%  score = SC_CELLSCORE_ADMDL(X, genelist, tgsPos, tgsNeg, opts)
+%
+%  X         : G × C expression matrix (genes × cells).
+%  genelist  : G × 1 string/cell array of gene names.
+%  tgsPos    : positive marker genes (string array)
+%  tgsNeg    : negative marker genes (string array)
+%
+% ref: AddModuleScore - https://github.com/satijalab/seurat/blob/master/R/utilities.R
+% ref: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8271111/
+% disp("Seurat provides a computationally efficient gene signature scoring function,
+% named AddModuleScore, originally proposed by Tirosh et al. [5]. ")
+%
+% see also: PKG.E_CELLSCORES, SC_CELLSCORE_UCELL
+
+
+% Compute cell scores from a list of feature genes
     %
     % tgsPos - positive features (negative target marker genes)
     % tgsNeg - negative features (negative target marker genes)
     %
     % see also: PKG.E_CELLSCORES, SC_CELLSCORE_UCELL
     %
-    % ref: AddModuleScore - https://github.com/satijalab/seurat/blob/master/R/utilities.R
-    % ref: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8271111/
-    % disp("Seurat provides a computationally efficient gene signature scoring function,
-    % named AddModuleScore, originally proposed by Tirosh et al. [5]. ")
+
     
     % The score is the average expression of a set of genes subtracted with
     % the average expression of a reference set of genes. The reference set is randomly sampled from the gene_pool for each binned expression value.
