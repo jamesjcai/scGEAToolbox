@@ -284,6 +284,7 @@ function refreshData(tableObj, rowCountLabel, sortByDropdown)
     updateSortDropdown(sortByDropdown, tableObj);
 end
 
+%{
 function printTable(tableObj)
     % Function to print or preview the table
     
@@ -368,6 +369,7 @@ function showStatistics(tableObj)
     % Adjust column widths
     statsTable.ColumnWidth = {100};
 end
+%}
 
 function searchTable(searchField, tableObj)
     % Function to search the table

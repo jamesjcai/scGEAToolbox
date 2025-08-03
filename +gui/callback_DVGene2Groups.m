@@ -60,9 +60,10 @@ lcolor2 = lcolors(2,:);
     a = 'Splinefit Method [PMID:40113778]';
     b = 'Brennecke et al. (2013) [PMID:24056876]';
 
-            answerx = gui.myQuestdlg(FigureHandle, ...
-                'Which HVG detecting method to use?', '', ...
-                {a, b}, a);
+            % answerx = gui.myQuestdlg(FigureHandle, ...
+            %     'Which HVG detecting method to use?', '', ...
+            %     {a, b}, a);
+    answerx = a;        
 
             switch answerx
                 case a
@@ -86,7 +87,9 @@ lcolor2 = lcolors(2,:);
         methodtag);
 
 pause(1);
-in_callback_ExportTable;
+% in_callback_ExportTable;
+gui.TableViewerApp(T, FigureHandle);
+
 
 if strcmp(answerx, a)
     if strcmp(gui.myQuestdlg(FigureHandle, 'Explore DV expression profile of genes?'), 'Yes')
