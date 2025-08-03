@@ -1,6 +1,10 @@
 function callback_CellScoreCorrMatrix(src, ~)
 
+
+
     [FigureHandle, sce] = gui.gui_getfigsce(src);
+    if ~gui.gui_showrefinfo('Gene Program Correlation Matrix', FigureHandle), return; end
+
     [done, scorefile] = in_getscorfile;
     if ~done, return; end
 
