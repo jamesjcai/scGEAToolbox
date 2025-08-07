@@ -109,13 +109,16 @@ if twosided
     if ~isempty(Tcell)
         [T1] = Tcell{1};
         [T2] = Tcell{2};
-        if ~isempty(T1)
-            a = sprintf('%s -> %s', cL{x1}, cL{x2});
+        % assignin("base","T1",T1);
+        % assignin("base","T2",T2);
+        
+        if istable(T1)
+            a = sprintf("%s -> %s", cL{x1}, cL{x2});
             T1 = addvars(T1, repelem(a, height(T1), 1), 'Before', 1);
             T1.Properties.VariableNames{'Var1'} = 'direction';
         end
-        if ~isempty(T2)
-            a = sprintf('%s -> %s', cL{x2}, cL{x1});
+        if istable(T2)
+            a = sprintf("%s -> %s", cL{x2}, cL{x1});
             T2 = addvars(T2, repelem(a, height(T2), 1), 'Before', 1);
             T2.Properties.VariableNames{'Var1'} = 'direction';
         end
@@ -131,8 +134,8 @@ else
     end
 
     %T=readtable('output1.txt');
-    if ~isempty(T)
-        a = sprintf('%s -> %s', cL{x1}, cL{x2});
+    if istable(T)
+        a = sprintf("%s -> %s", cL{x1}, cL{x2});
         T = addvars(T, repelem(a, height(T), 1), 'Before', 1);
         T.Properties.VariableNames{'Var1'} = 'direction';
     end

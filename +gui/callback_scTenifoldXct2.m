@@ -16,7 +16,7 @@ if isempty(wkdir), return; end
 
 
 [~, cL] = findgroups(string(sce.c_batch_id));
-[j1, j2, ~, ~] = aaa(cL, sce.c_batch_id, FigureHandle);
+[j1, j2, ~, ~] = aaa(cL, string(sce.c_batch_id), FigureHandle);
 if isempty(j1) || isempty(j2)
     gui.myWarndlg(FigureHandle, ['All cells have the same BATCH_ID. ' ...
         'Two samples are required.']);
@@ -31,7 +31,7 @@ end
 
 
 [~, cL] = findgroups(string(sce.c_cell_type_tx));
-[~, ~, celltype1, celltype2] = aaa(cL, sce.c_cell_type_tx, FigureHandle);
+[~, ~, celltype1, celltype2] = aaa(cL, string(sce.c_cell_type_tx), FigureHandle);
 if isempty(celltype1) || isempty(celltype2) 
     gui.myWarndlg(FigureHandle, ['All cells are the same type. ' ...
         'Two different cell types are required.']);
@@ -73,13 +73,13 @@ T = [];
 if twosided && iscell(Tcell)
     [T1] = Tcell{1};
     [T2] = Tcell{2};
-    if ~isempty(T1)
-        a = sprintf('%s -> %s', celltype1, celltype2);
+    if istable(T1)
+        a = sprintf("%s -> %s", celltype1, celltype2);
         T1 = addvars(T1, repelem(a, height(T1), 1), 'Before', 1);
         T1.Properties.VariableNames{'Var1'} = 'direction';
     end
-    if ~isempty(T2)
-        a = sprintf('%s -> %s', celltype2, celltype1);
+    if istable(T2)
+        a = sprintf("%s -> %s", celltype2, celltype1);
         T2 = addvars(T2, repelem(a, height(T2), 1), 'Before', 1);
         T2.Properties.VariableNames{'Var1'} = 'direction';
     end
@@ -87,10 +87,10 @@ if twosided && iscell(Tcell)
 else
     if ~isempty(Tcell)
         T = Tcell; 
-        a = sprintf('%s -> %s', celltype1, celltype2);
+        a = sprintf("%s -> %s", celltype1, celltype2);
         T = addvars(T, repelem(a, height(T), 1), 'Before', 1);
         T.Properties.VariableNames{'Var1'} = 'direction';
-    end   
+    end
 end
 
 % ---- export result

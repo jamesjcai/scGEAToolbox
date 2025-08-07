@@ -9,7 +9,7 @@ function [T] = makeattributestable(sce)
         'CellType', 'CellCycle'});
     if ~isempty(sce.list_cell_attributes)        
         for k = 1:2:length(sce.list_cell_attributes)
-            T = addvars(T, sce.list_cell_attributes{k+1}, ...
+            T = addvars(T, string(sce.list_cell_attributes{k+1}), ...
                 'NewVariableNames', sce.list_cell_attributes{k});
         end
     end
