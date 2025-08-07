@@ -1,8 +1,10 @@
 function [T, iscomplete] = py_scTenifoldXct2(sce1, sce2, celltype1, celltype2, ...
-                           twosided, wkdir, isdebug, prepare_input_only)
+                           twosided, wkdir, isdebug, ...
+                           prepare_input_only, parentfig)
 
     T = [];
     iscomplete = false;
+    if nargin < 9, parentfig = []; end
     if nargin < 8, prepare_input_only = false; end
     if nargin < 7, isdebug = true; end
     if nargin < 6, wkdir = []; end
@@ -21,7 +23,9 @@ function [T, iscomplete] = py_scTenifoldXct2(sce1, sce2, celltype1, celltype2, .
     
 if ~prepare_input_only
 
-    fw = gui.gui_waitbar([], [], 'Checking Python environment...');
+    fw = gui.myWaitbar(parentfig);
+    gui.myWaitbar(parentfig, fw, false, [], ...
+        'Checking Python environment...');    
 
     x = pyenv;
     try
@@ -38,20 +42,24 @@ if ~prepare_input_only
     disp(cmdlinestr)
     [status, cmdout] = system(cmdlinestr, '-echo');
     if status ~= 0
-        cd(oldpth);
-    
-        if isvalid(fw)
-            gui.gui_waitbar(fw, true);
+        cd(oldpth);    
+        if isvalid(fw), gui.myWaitbar(parentfig, fw, true); end
+        % waitfor(errordlg(sprintf('%s',cmdout)));
+        % error(cmdout);
+        % error('Python scTenifoldXct has not been installed properly.');
+        a = sprintf("%s.", cmdout);
+        if strcmp('Yes', gui.myQuestdlg(parentfig, a+" Continue with script.py preparation?"))
+            prepare_input_only = true;
+        else
+            return;
         end
-        %waitfor(errordlg(sprintf('%s',cmdout)));
-        error(cmdout);
-        %error('Python scTenifoldXct has not been installed properly.');
+        
     end
-
     if isvalid(fw)
-        gui.gui_waitbar(fw, [], 'Checking Python environment is complete');
-    end
-    
+        gui.myWaitbar(parentfig, fw, false, [], 'Checking Python environment is complete');
+        pause(1);
+        close(fw);
+    end    
 end
 
     
@@ -75,31 +83,36 @@ end
     in_prepareX(sce1, 1);
     in_prepareX(sce2, 2);
 
-    fw = gui.gui_waitbar([], [], 'Step 2 of 4: Building S1 networks...');
+    fw = gui.myWaitbar(parentfig);
+    gui.myWaitbar(parentfig, fw, false, [], 'Step 2 of 4: Building S1 network...');
+    
+    % fw = gui.gui_waitbar([], [], 'Step 2 of 4: Building S1 networks...');
     try
         in_prepareA(sce1, 1);
     catch ME
         if isvalid(fw)
-            gui.gui_waitbar(fw, [], 'Building S1 networks is incomplete');
+            % gui.gui_waitbar(fw, [], 'Building S1 networks is incomplete');
+            gui.myWaitbar(parentfig, fw, true, [], 'Building S1 networks is incomplete');
         end
-        errordlg(ME.message);
+        gui.myErrordlg(parentfig, ME.message);
         return;
     end
-    gui.gui_waitbar(fw, [], 'Building S1 networks is complete');
+    % gui.gui_waitbar(fw, [], 'Building S1 networks is complete');
 
-    fw = gui.gui_waitbar([], [], 'Step 3 of 4: Building S2 networks...');
+    gui.myWaitbar(parentfig, fw, false, [], 'Step 3 of 4: Building S1 network...');
+    % fw = gui.gui_waitbar([], [], 'Step 3 of 4: Building S2 networks...');
     try
         in_prepareA(sce2, 2);
     catch ME
         if isvalid(fw)
-            gui.gui_waitbar(fw, [], 'Building S2 network is incomplete');
+            gui.myWaitbar(parentfig, fw, true, [], 'Building S2 networks is incomplete');
         end
-        errordlg(ME.message);
+        gui.myErrordlg(parentfig, ME.message);
         return;
     end
-    gui.gui_waitbar(fw, [], 'Building S2 network is complete');
-
-    fw = gui.gui_waitbar([], [], 'Step 4 of 4: Running scTenifoldXct.py...');
+    % gui.gui_waitbar(fw, [], 'Building S2 network is complete');
+    % fw = gui.gui_waitbar([], [], 'Step 4 of 4: Running scTenifoldXct.py...');
+    gui.myWaitbar(parentfig, fw, false, [], 'Step 4 of 4: Running scTenifoldXct.py...');
 
 codefullpath = fullfile(codepth,'script.py');
 pkg.i_addwd2script(codefullpath, wkdir, 'python');
@@ -119,9 +132,10 @@ if ~prepare_input_only
         % https://www.mathworks.com/matlabcentral/answers/334076-why-does-externally-called-exe-using-the-system-command-freeze-on-the-third-call
     catch ME
         if isvalid(fw)
-            gui.gui_waitbar(fw, [], 'Running scTenifoldXct.py is incomplete.');
+            gui.myWaitbar(parentfig, fw, true, [], 'Running scTenifoldXct.py is incomplete');
+            % gui.gui_waitbar(fw, [], 'Running scTenifoldXct.py is incomplete.');
         end
-        errordlg(ME.message);
+        gui.myErrordlg(parentfig, ME.message);
         return;
     end
 end
@@ -131,11 +145,17 @@ end
 
     if isvalid(fw)
         if prepare_input_only
-            gui.gui_waitbar(fw, [], 'Input preparation is complete.');
+            % gui.gui_waitbar(fw, [], 'Input preparation is complete.');
+            gui.myWaitbar(parentfig, fw, false, [], 'Input preparation is complete.');
         else
-            gui.gui_waitbar(fw, [], 'Running scTenifoldXct2.py is complete.');
+            % gui.gui_waitbar(fw, [], 'Running scTenifoldXct2.py is complete.');
+            gui.myWaitbar(parentfig, fw, false, [], 'Running scTenifoldXct2.py is complete.');
         end
     end    
+
+    if isvalid(fw)
+        gui.myWaitbar(parentfig, fw);
+    end
 
     if ~prepare_input_only
 
@@ -150,6 +170,7 @@ end
         if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
         cd(oldpth);
         error('scTenifoldXct2 runtime error.');
+        % gui.myErrordlg(parentfig, 'scTenifoldXct2 runtime error.');
     end
     end
 
@@ -159,6 +180,7 @@ end
     % end
     if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
     cd(oldpth);
+
 
 
 % --------------------------------------------------

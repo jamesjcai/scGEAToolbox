@@ -100,7 +100,7 @@ T = [];
 if twosided
     try
         [Tcell] = run.py_scTenifoldXct(sce, cL{x1}, cL{x2}, true, ...
-            wkdir, true, prepare_input_only);
+            wkdir, true, prepare_input_only, FigureHandle);
     catch ME
         gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
         return;
@@ -127,7 +127,7 @@ if twosided
 else
     try
         [T] = run.py_scTenifoldXct(sce, cL{x1}, cL{x2}, false, wkdir, ...
-            true, prepare_input_only);
+            true, prepare_input_only, FigureHandle);
      catch ME
         gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
         return;
