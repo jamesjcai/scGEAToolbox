@@ -45,8 +45,14 @@ if ~prepare_input_only
     if status ~= 0
         cd(oldpth);    
         if isvalid(fw), gui.myWaitbar(parentfig, fw, true); end
-        gui.myErrordlg(parentfig, sprintf('%s',cmdout));
-        error('Python scTenifoldXct has not been installed properly.');
+        % gui.myErrordlg(parentfig, sprintf('%s', cmdout));
+        a = sprintf("%s.", cmdout);
+        if strcmp('Yes', gui.myQuestdlg(parentfig, a+" Continue with script.py preparation?"))
+            prepare_input_only = true;
+        else
+            return;
+        end
+        % error('Python scTenifoldXct has not been installed properly.');
     end
     if isvalid(fw)
         gui.myWaitbar(parentfig, fw, false, [], 'Checking Python environment is complete');
@@ -144,7 +150,7 @@ end
 if ~prepare_input_only
     gui.myWaitbar(parentfig, fw, false, [], 'Step 3 of 3: Running scTenifoldXct.py...');
 else
-    gui.myWaitbar(parentfig, fw, falese, [], 'Step 3 of 3: Finishing input preparation...');
+    gui.myWaitbar(parentfig, fw, false, [], 'Step 3 of 3: Finishing input preparation...');
 end
 
 codefullpath = fullfile(codepth,'script.py');
