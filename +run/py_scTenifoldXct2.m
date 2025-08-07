@@ -58,7 +58,7 @@ if ~prepare_input_only
     if isvalid(fw)
         gui.myWaitbar(parentfig, fw, false, [], 'Checking Python environment is complete');
         pause(1);
-        close(fw);
+        gui.myWaitbar(parentfig, fw);
     end    
 end
 
@@ -84,7 +84,8 @@ end
     in_prepareX(sce2, 2);
 
     fw = gui.myWaitbar(parentfig);
-    gui.myWaitbar(parentfig, fw, false, [], 'Step 2 of 4: Building S1 network...');
+    gui.myWaitbar(parentfig, fw, false, [], ...
+        'Step 2 of 4: Building S1 network...', 0.5);
     
     % fw = gui.gui_waitbar([], [], 'Step 2 of 4: Building S1 networks...');
     try
@@ -99,7 +100,8 @@ end
     end
     % gui.gui_waitbar(fw, [], 'Building S1 networks is complete');
 
-    gui.myWaitbar(parentfig, fw, false, [], 'Step 3 of 4: Building S1 network...');
+    gui.myWaitbar(parentfig, fw, false, [], ...
+        'Step 3 of 4: Building S1 network...', 0.75);
     % fw = gui.gui_waitbar([], [], 'Step 3 of 4: Building S2 networks...');
     try
         in_prepareA(sce2, 2);
@@ -112,7 +114,8 @@ end
     end
     % gui.gui_waitbar(fw, [], 'Building S2 network is complete');
     % fw = gui.gui_waitbar([], [], 'Step 4 of 4: Running scTenifoldXct.py...');
-    gui.myWaitbar(parentfig, fw, false, [], 'Step 4 of 4: Running scTenifoldXct.py...');
+    gui.myWaitbar(parentfig, fw, false, [], ...
+        'Step 4 of 4: Running scTenifoldXct.py...', 0.9);
 
 codefullpath = fullfile(codepth,'script.py');
 pkg.i_addwd2script(codefullpath, wkdir, 'python');
