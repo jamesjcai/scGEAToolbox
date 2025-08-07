@@ -1,7 +1,10 @@
-function [pred] = r_copykat(sce, wkdir)
+function [pred] = r_copykat(sce, wkdir, speciesid)
 
 pred = [];
-if nargin < 2 
+if nargin < 3
+    speciesid = 'human';   % mouse
+end
+if nargin < 2
    wkdir = tempdir;
 end
 % PMID: 33462507
@@ -23,7 +26,14 @@ Rpath = getpref('scgeatoolbox', 'rexecutablepath',[]);
 if isempty(Rpath)
     error('R environment has not been set up.');
 end
-codefullpath = fullfile(codepath,'script.R');
+
+if string(lower(speciesid))=="human"
+    codefullpath = fullfile(codepath,'script_hg20.R');
+elseif string(lower(speciesid))=="mouse"
+    codefullpath = fullfile(codepath,'script_mm10.R');
+else
+    codefullpath = fullfile(codepath,'script.R');    
+end
 pkg.RunRcode(codefullpath, Rpath);
 pause(3);
 outfile = "test_copykat_prediction.txt";

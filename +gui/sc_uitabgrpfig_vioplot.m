@@ -418,10 +418,14 @@ ccx = true;
             g = tabnamelist(tabidx);
             thisy = y{tabidx};
             
-            % a1=grpstats(thisy, thisc(:), @mean);
-             a2=grpstats(thisy, thisc(:), @median);
+            a1=grpstats(thisy, thisc(:), @mean);
+            a2=grpstats(thisy, thisc(:), @median);
+            %{
+            assignin("base","thisy",thisy);
+            assignin("base","thisc",thisc);
             a1=splitapply(@mean, thisy, thisc(:));
             a2=splitapply(@median, thisy, thisc(:));
+            %}
             
             t = table(a1, a2);
             t.Properties.RowNames = idxlabel;

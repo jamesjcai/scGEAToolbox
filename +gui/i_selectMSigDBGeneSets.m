@@ -55,6 +55,7 @@ else
         {'Select MSigDB Collection:'}, ...
         'SelectionMode', 'single', 'ListString', listitems, ...
         'ListSize', [220, 300]);
+
 end
 
 if tf1 ~= 1, return; end
@@ -87,7 +88,7 @@ end
     %%
 
 if gui.i_isuifig(parentfig)
-    [idx, tf] = gui.myListdlg(parentfig, listitems, 'Select gene set:');
+    [idx, tf] = gui.myListdlg(parentfig, setnames, 'Select gene set:');
 else    
     [idx, tf] = listdlg('PromptString', ...
         {'Select gene set:'}, ...

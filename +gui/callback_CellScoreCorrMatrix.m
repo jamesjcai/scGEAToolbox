@@ -1,11 +1,10 @@
 function callback_CellScoreCorrMatrix(src, ~)
 
-
-
     [FigureHandle, sce] = gui.gui_getfigsce(src);
     if ~gui.gui_showrefinfo('Gene Program Correlation Matrix', FigureHandle), return; end
 
     [done, scorefile] = in_getscorfile;
+
     if ~done, return; end
 
     goodfile = false;
@@ -17,8 +16,13 @@ function callback_CellScoreCorrMatrix(src, ~)
         catch ME
             disp(ME.message);
         end
+    else
+        
     end
-    if ~goodfile, return; end
+    if ~goodfile
+        gui.myErrordlg(FigureHandle, 'Invalid Cell Score file.');
+        return;
+    end
     gsets = T.PositiveMarkers;
     
     answer = gui.myQuestdlg(FigureHandle, 'All cells, or select cells?', ...

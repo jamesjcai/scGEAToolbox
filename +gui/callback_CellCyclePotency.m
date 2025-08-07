@@ -111,7 +111,9 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
                 case 'dissocation_ratio'
                     s = pkg.sc_dissratio(sce.X, sce.g, true);
                 case 'copykat_prediction'
-                    s = run.r_copykat(sce, wkdir);
+                    speciesid = gui.i_selectspecies(2, false, FigureHandle);
+                    if isempty(speciesid), return; end
+                    s = run.r_copykat(sce, wkdir, speciesid);
                 case 'scevan_prediction'
                     s = run.r_SCEVAN(sce, wkdir, false, speciestag);
                 otherwise
