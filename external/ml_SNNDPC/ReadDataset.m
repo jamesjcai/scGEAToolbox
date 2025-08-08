@@ -4,7 +4,7 @@ function [data, answer, dist1] = ReadDataset()
 % answer=load(input('File name of ground truth? (with quotes)\n'));
 
 %Load synthetic dataset
-data = load("..\..\res\ClusteringDataset\Synthetic\ShapeSets\pathbased.txt");
+% data = load("..\..\res\ClusteringDataset\Synthetic\ShapeSets\pathbased.txt");
 answer = data(:, end);
 data = data(:, 1:end-1);
 % data=load("..\..\res\ClusteringDataset\Synthetic\DimSetsHigh\dim512.txt");
