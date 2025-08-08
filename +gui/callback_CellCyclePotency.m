@@ -83,7 +83,8 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
     end
 
 
-    function [s] = in_aaa(attribtag)  
+    function [s] = in_aaa(attribtag)
+        s = [];
         if ~ismember(attribtag, sce.list_cell_attributes(1:2:end))
             needestimt = true;
         else
@@ -112,7 +113,9 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
                     s = pkg.sc_dissratio(sce.X, sce.g, true);
                 case 'copykat_prediction'
                     speciesid = gui.i_selectspecies(2, false, FigureHandle);
-                    if isempty(speciesid), return; end
+                    if strlength(speciesid)==0 
+                        return; 
+                    end
                     s = run.r_copykat(sce, wkdir, speciesid);
                 case 'scevan_prediction'
                     s = run.r_SCEVAN(sce, wkdir, false, speciestag);
