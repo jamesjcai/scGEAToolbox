@@ -1,3 +1,20 @@
+%{
+x = pyenv;
+py_root = fileparts(x.Executable);
+items = {
+  fullfile(py_root, 'Library', 'mingw-w64', 'bin');
+  fullfile(py_root, 'Library', 'usr', 'bin');
+  fullfile(py_root, 'Library', 'bin');
+  fullfile(py_root, 'Scripts');
+};
+current = strsplit(getenv('PATH'), ';');
+ENV = unique([string(items); string(current)], 'stable');
+setenv('PATH', strjoin(ENV, ';'));
+
+
+%}
+
+
 x = pyenv;
 py_root_useFromMATLAB = fileparts(x.Executable);
 ENV = getenv('PATH');
@@ -12,6 +29,7 @@ ENV = [string(items_to_add_to_path(:)); string(ENV(:))];
 ENV = unique(ENV, 'stable');
 ENV = strjoin(ENV, ';');
 setenv('PATH', ENV);
+
 
 % module_to_load = 'gseapy';
 % python_module_to_use = py.importlib.import_module(module_to_load);

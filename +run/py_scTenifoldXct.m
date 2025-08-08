@@ -31,10 +31,11 @@ if ~prepare_input_only
     x = pyenv;
     try
         pkg.i_add_conda_python_path;
-    catch
-    
+        % pyenv('Version', x.Executable, 'ExecutionMode', 'OutOfProcess');
+    catch ME
+        warning(ME.message);
     end
-    
+
     codefullpath = fullfile(codepth,'require.py');
     %cmdlinestr = sprintf('"%s" "%s%srequire.py"', ...
     %    x.Executable, codepth, filesep);
