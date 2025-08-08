@@ -15,21 +15,20 @@ colorbar(hx.AxHandle);
 
 zlabel(hx.AxHandle, 'Score value')
 title(hx.AxHandle, strrep(csname, '_', '\_'));
-hx.addCustomButton('off', @in_saveScoreTable, ...
-    "floppy-disk-arrow-in.jpg", 'Save cell score/gene expression to table');
-hx.addCustomButton('on', @in_geneheatmapx, 'greenarrowicon.gif', 'Heatmap');
-hx.addCustomButton('off', @in_genedotplot, 'greencircleicon.gif', 'Dot plot');
-hx.addCustomButton('on', @in_viewgenenames, 'HDF_point.gif', 'Show gene names');
-hx.addCustomButton('on', @in_stemplot,'icon-mat-blur-on-10.gif','Show stem plot');
+hx.addCustomButton('off', @in_callback_saveScoreTable, "floppy-disk-arrow-in.jpg", 'Save cell score/gene expression to table');
+hx.addCustomButton('on', @in_callback_geneheatmapx, 'greenarrowicon.gif', 'Heatmap');
+hx.addCustomButton('off', @in_callback_genedotplot, 'greencircleicon.gif', 'Dot plot');
+hx.addCustomButton('on', @in_callback_viewgenenames, 'HDF_point.gif', 'Show gene names');
+hx.addCustomButton('on', @in_callback_stemplot,'icon-mat-blur-on-10.gif','Show stem plot');
 hx.show(parentfig);
 
-    function in_stemplot(~,~)
+    function in_callback_stemplot(~,~)
         gui.i_stemscatterfig(sce, cs, posg, csname);
         % delete(h1);
         % h1 = gui.i_stemscatter(sce.s, cs);
     end
 
-    function in_viewgenenames(~, ~)
+    function in_callback_viewgenenames(~, ~)
         [passed] = i_checkposg;
         if ~passed, return; end
 
@@ -44,12 +43,12 @@ hx.show(parentfig);
         %        end
     end
 
-    function in_saveScoreTable(~, ~)
+    function in_callback_saveScoreTable(~, ~)
         gui.i_exporttable(table(cs), false, ...
             char(matlab.lang.makeValidName(string(csname))));
     end
         
-    function in_geneheatmapx(~, ~)
+    function in_callback_geneheatmapx(~, ~)
         [passed] = i_checkposg;
         if ~passed, return; end
 
@@ -59,8 +58,8 @@ hx.show(parentfig);
         end
     end
             
-    function in_genedotplot(~, ~)
-        [passed] = in_checkposg;
+    function in_callback_genedotplot(~, ~)
+        [passed] = in_callback_checkposg;
         if ~passed, return; end
         [thisc] = gui.i_select1class(sce,[],[],[],parentfig);
         if isempty(thisc), return; end
@@ -73,7 +72,7 @@ hx.show(parentfig);
         end
     end
                 
-    function [passed] = in_checkposg
+    function [passed] = in_callback_checkposg
         if isempty(posg)
             passed = false;
             gui.myHelpdlg(parentfig, ...

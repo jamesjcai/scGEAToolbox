@@ -62,15 +62,15 @@ box on
 szc = cumsum(szgn);
 for k = 1:length(szc), xline(szc(k)+0.5, 'y-'); end
 
-hx.addCustomButton('on', @i_renamecat, 'guideicon.gif', 'Rename groups...');
-hx.addCustomButton('off', @i_resetcolor, 'plotpicker-geobubble2.gif', 'Reset color map');
-hx.addCustomButton('off', @i_flipxy, 'mat-wrap-text.jpg', 'Flip XY');
+hx.addCustomButton('on', @in_callback_renamecat, 'guideicon.gif', 'Rename groups...');
+hx.addCustomButton('off', @in_callback_resetcolor, 'plotpicker-geobubble2.gif', 'Reset color map');
+hx.addCustomButton('off', @in_callback_flipxy, 'mat-wrap-text.jpg', 'Flip XY');
 
 hx.show(parentfig);
 
 fliped = false;
 
-    function i_flipxy(~, ~)
+    function in_callback_flipxy(~, ~)
         %delete(h);
         fliped = ~fliped;
         if fliped
@@ -93,7 +93,7 @@ fliped = false;
         end
     end
 
-    function i_renamecat(~, ~)
+    function in_callback_renamecat(~, ~)
         tg = gui.i_inputgenelist(string(cL), true);
         if isempty(tg), return; end
         if length(tg) == length(cL)
@@ -105,7 +105,7 @@ fliped = false;
         end
     end
 
-    function i_resetcolor(~, ~)
+    function in_callback_resetcolor(~, ~)
         set(gca, 'FontSize', 10);
         colormap default
     end

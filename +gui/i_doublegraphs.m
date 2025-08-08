@@ -40,14 +40,14 @@ p2.XData = p1.XData;
 p2.YData = p1.YData;
 
 
-hx.addCustomButton('off', @ChangeFontSize, 'noun_font_size_591141.gif', 'Change Font Size of Nodes');
-hx.addCustomButton('off', @ChangeWeight, 'weight_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'Change Width of Edges');
-hx.addCustomButton('off', @ChangeLayout, 'group_work_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'Change Network Layout');
-hx.addCustomButton('off', @ChangeDirected, 'turn_sharp_right_17dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'Change to Undirected Network');
-hx.addCustomButton('off', @AnimateCutoff, 'movie.jpg', 'Animate Change and Select a Cutoff for Linked Edges');
-hx.addCustomButton('off', @ChangeCutoff, 'carpenter_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'Change Cutoff to Trim Network');
-hx.addCustomButton('off', @SaveAdj, 'floppy-disk-arrow-in.jpg', 'Export & Save Data');
-hx.addCustomButton('on',  @in_RefreshAll, "refresh.jpg", "Refresh View");
+hx.addCustomButton('off', @in_callback_ChangeFontSize, 'noun_font_size_591141.gif', 'Change Font Size of Nodes');
+hx.addCustomButton('off', @in_callback_ChangeWeight, 'weight_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'Change Width of Edges');
+hx.addCustomButton('off', @in_callback_ChangeLayout, 'group_work_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'Change Network Layout');
+hx.addCustomButton('off', @in_callback_ChangeDirected, 'turn_sharp_right_17dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'Change to Undirected Network');
+hx.addCustomButton('off', @in_callback_AnimateCutoff, 'movie.jpg', 'Animate Change and Select a Cutoff for Linked Edges');
+hx.addCustomButton('off', @in_callback_ChangeCutoff, 'carpenter_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'Change Cutoff to Trim Network');
+hx.addCustomButton('off', @in_callback_SaveAdj, 'floppy-disk-arrow-in.jpg', 'Export & Save Data');
+hx.addCustomButton('on',  @in_callback_RefreshAll, "refresh.jpg", "Refresh View");
 
 %if exist('suptitle.m', 'file')
 %    hFig.Position(3) = hFig.Position(3) * 1.8;
@@ -67,7 +67,7 @@ oldG2=[];
 axistrig = true;
 
 
-    function in_RefreshAll(~, ~)
+    function in_callback_RefreshAll(~, ~)
         if ~isempty(oldG1)
             G1 = oldG1;
         end
@@ -82,7 +82,7 @@ axistrig = true;
 
 
 
-    function SaveAdj(~, ~)
+    function in_callback_SaveAdj(~, ~)
         if ~(ismcc || isdeployed)
             labels = {'Save adjacency matrix A1 to variable named:', ...
                 'Save adjacency matrix A2 to variable named:', ...
@@ -123,7 +123,7 @@ axistrig = true;
     %     end
     % end
 
-    function ChangeFontSize(~, ~)
+    function in_callback_ChangeFontSize(~, ~)
         i_changefontsize(p1);
         i_changefontsize(p2);
         function i_changefontsize(p)
@@ -135,7 +135,7 @@ axistrig = true;
         end
     end
 
-    function ChangeWeight(~, ~)
+    function in_callback_ChangeWeight(~, ~)
         %a=3:10;
         %w=a(randi(length(a),1));
         w = w + 1;
@@ -150,7 +150,7 @@ axistrig = true;
     end
 
 
-    function ChangeLayout(~, ~)
+    function in_callback_ChangeLayout(~, ~)
         a = ["auto", "layered", "subspace", "force", "circle"];
         l = l + 1;
         if l > 5, l = 1; end
@@ -181,7 +181,7 @@ axistrig = true;
         p1.YData = p2.YData;
     end
 
-    function ChangeDirected(~, ~)
+    function in_callback_ChangeDirected(~, ~)
         a1 = h1.Title.String;
         a2 = h2.Title.String;
         [p1, G1] = i_changedirected(p1, G1, h1);
@@ -202,7 +202,7 @@ axistrig = true;
         end
     end
 
-    function ChangeCutoff(~, ~)
+    function in_callback_ChangeCutoff(~, ~)
         a1 = h1.Title.String;
         a2 = h2.Title.String;
         list = {'0.00 (show all edges)', ...
@@ -265,7 +265,7 @@ axistrig = true;
 
     end
 
-    function AnimateCutoff(~, ~)
+    function in_callback_AnimateCutoff(~, ~)
         listc = 0.05:0.05:0.95;
         % pkg.progressbar
         f = waitbar(0, 'Cutoff = 0.05', 'Name', 'Edge Pruning...', ...

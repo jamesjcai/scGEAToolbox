@@ -10,11 +10,11 @@ function i_genescatter(T, parentfig)
     if isempty(hAx), hAx = gca; end
 
     hx.addCustomButton('off', @in_callback_HighlightGenes, 'plotpicker-qqplot.gif', 'Highlight top HVGs');
-    hx.addCustomButton('off', @in_HighlightSelectedGenes, 'curve-array.jpg', 'Highlight selected genes');
-    hx.addCustomButton('off', @ExportGeneNames, 'bookmark-book.jpg', 'Export Selected HVG gene names...');
-    hx.addCustomButton('off', @ExportTable, 'floppy-disk-arrow-in.jpg', 'Export HVG Table...');
-    hx.addCustomButton('off', @EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Enrichment analysis...');
-    hx.addCustomButton('off', @ChangeAlphaValue, 'Brightness-3--Streamline-Core.jpg', 'Change MarkerFaceAlpha value');
+    hx.addCustomButton('off', @in_callback_HighlightSelectedGenes, 'curve-array.jpg', 'Highlight selected genes');
+    hx.addCustomButton('off', @in_callback_ExportGeneNames, 'bookmark-book.jpg', 'Export Selected HVG gene names...');
+    hx.addCustomButton('off', @in_callback_ExportTable, 'floppy-disk-arrow-in.jpg', 'Export HVG Table...');
+    hx.addCustomButton('off', @in_callback_EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Enrichment analysis...');
+    hx.addCustomButton('off', @in_callback_ChangeAlphaValue, 'Brightness-3--Streamline-Core.jpg', 'Change MarkerFaceAlpha value');
     
     h = scatter(hAx, T.de_coef, T.dv_coef, 'filled', 'MarkerFaceAlpha', .2);
     xlabel(hAx, 'DE Coefficient');
@@ -26,7 +26,7 @@ function i_genescatter(T, parentfig)
     end
     hx.show;
 
-    function ChangeAlphaValue(~, ~)
+    function in_callback_ChangeAlphaValue(~, ~)
         if h.MarkerFaceAlpha <= 0.05
             h.MarkerFaceAlpha = 1;
         else
@@ -34,7 +34,7 @@ function i_genescatter(T, parentfig)
         end
     end
 
-    function in_HighlightSelectedGenes(~,~)
+    function in_callback_HighlightSelectedGenes(~,~)
         [glist] = gui.i_selectngenes(SingleCellExperiment([], T.gene),...
             [], hFig);
         if ~isempty(glist)            
@@ -62,14 +62,14 @@ function i_genescatter(T, parentfig)
         h.BrushData = idx;
     end
 
-    function ExportTable(~, ~)
+    function in_callback_ExportTable(~, ~)
         gui.i_exporttable(T, true, 'Tmementores', 'MementoRsTable');
         % Tdegenelist 
         % 'Tviolindata','ViolinPlotTable'
         % 'Thvgreslist', 'HVGResultTable' 
     end
 
-    function ExportGeneNames(~, ~)
+    function in_callback_ExportGeneNames(~, ~)
         ptsSelected = logical(h.BrushData.');
         if ~any(ptsSelected)
             gui.myWarndlg(hFig, "No gene is selected.");
@@ -93,7 +93,7 @@ function i_genescatter(T, parentfig)
             'Save Data to Workspace');
     end
 
-    function EnrichrHVGs(~, ~)
+    function in_callback_EnrichrHVGs(~, ~)
         ptsSelected = logical(h.BrushData.');
         if ~any(ptsSelected)
             gui.myWarndlg(hFig,"No gene is selected.");

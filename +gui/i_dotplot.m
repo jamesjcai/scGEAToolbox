@@ -133,13 +133,13 @@ if ~isempty(ttxt)
     title(ttxt);
 end
 hx.addCustomButton('off', @i_renamecat, 'edit.jpg', 'Rename groups...');
-hx.addCustomButton('off', @i_savetable, 'floppy-disk-arrow-in.jpg', 'Export data...');
-hx.addCustomButton('off', @i_resetcolor, 'refresh_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'Reset Colormap');
+hx.addCustomButton('off', @in_callback_savetable, 'floppy-disk-arrow-in.jpg', 'Export data...');
+hx.addCustomButton('off', @in_callback_resetcolor, 'refresh_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'Reset Colormap');
 if nargout > 0, return; end
 hx.show(parentfig);
 
 
-    function i_savetable(~, ~)
+    function in_callback_savetable(~, ~)
         answer = gui.myQuestdlg(parentfig, 'Export & save data to:', '', ...
             {'Workspace', 'TXT/CSV file', 'Excel file'}, 'Workspace');
         if ~isempty(answer)
@@ -185,7 +185,7 @@ hx.show(parentfig);
         end
     end
 
-    function i_resizedot(~, ~)
+    function in_callback_resizedot(~, ~)
         dotsz = dotsz * 0.9;
         if dotsz < 0.2, dotsz = 1.0; end
         delete(afa);
@@ -213,10 +213,10 @@ hx.show(parentfig);
         end
     end
 
-    function i_resetcolor(~, ~)
+    function in_callback_resetcolor(~, ~)
         dotsz = DOTSIZE;
         set(gca, 'FontSize', 10);
-        i_resizedot;
+        in_callback_resizedot;
         colormap(flipud(summer));
     end
 

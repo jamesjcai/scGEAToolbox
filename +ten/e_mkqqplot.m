@@ -14,7 +14,7 @@ h = qqplot(a, T.FC, pd);
 [~, idx] = sort(T.FC);
 dt = datacursormode;
 dt.UpdateFcn = {@i_myupdatefcn1x, T.genelist(idx)};
-hx.addCustomButton('off', @i_savetable, 'floppy-disk-arrow-in.jpg', 'Export data...');
+hx.addCustomButton('off', @in_callback_savetable, 'floppy-disk-arrow-in.jpg', 'Export data...');
 hx.show();
 
 
@@ -24,7 +24,7 @@ for k=1:5
      datatip(h, 'DataIndex', idx(k));
 end
 
-    function i_savetable(~, ~)
+    function in_callback_savetable(~, ~)
         answer = gui.myQuestdlg(hFig, 'Export & save data to:', '', ...
             {'Workspace', 'TXT/CSV file', 'Excel file'}, 'Workspace');
         if ~isempty(answer)

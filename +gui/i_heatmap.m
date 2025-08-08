@@ -52,14 +52,14 @@ for kx = 1:length(szc)
 end
 
 
-hx.addCustomButton('off', @i_renamecat, 'edit.jpg', 'Rename groups...');
-hx.addCustomButton('off', @i_resetcolor, 'refresh_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'Reset color map');
-hx.addCustomButton('off', @i_flipxy, 'mat-wrap-text.jpg', 'Flip XY');
-hx.addCustomButton('on', @i_summarymap, 'HDF_object01.gif', 'Summary map...');
-hx.addCustomButton('off', @i_summarymapT, 'HDF_object02.gif', 'Summary map, transposed...');
-hx.addCustomButton('on', @in_savetable, 'floppy-disk-arrow-in.jpg', 'Export data...');
-hx.addCustomButton('off', @in_changenorm, 'mw-pickaxe-mining.jpg', 'Change normalization method...');
-hx.addCustomButton('off', @i_dotplotx, 'icon-mat-blur-linear-10.gif', 'Dot plot...');
+hx.addCustomButton('off', @in_callback_renamecat, 'edit.jpg', 'Rename groups...');
+hx.addCustomButton('off', @in_callback_resetcolor, 'refresh_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'Reset color map');
+hx.addCustomButton('off', @in_callback_flipxy, 'mat-wrap-text.jpg', 'Flip XY');
+hx.addCustomButton('on', @in_callback_summarymap, 'HDF_object01.gif', 'Summary map...');
+hx.addCustomButton('off', @in_callback_summarymapT, 'HDF_object02.gif', 'Summary map, transposed...');
+hx.addCustomButton('on', @in_callback_savetable, 'floppy-disk-arrow-in.jpg', 'Export data...');
+hx.addCustomButton('off', @in_callback_changenorm, 'mw-pickaxe-mining.jpg', 'Change normalization method...');
+hx.addCustomButton('off', @in_callback_dotplotx, 'icon-mat-blur-linear-10.gif', 'Dot plot...');
 
 hx.show(parentfig);        
 fliped = false;
@@ -85,7 +85,7 @@ Z = zeros(length(glist), length(cL));
 % h2.CellLabelColor='none';
 % h2.ColorLimits=[min(Z(:)), max(Z(:))];
 
-    function in_changenorm(~, ~)
+    function in_callback_changenorm(~, ~)
         [methodid, dim] = gui.i_selnormmethod;
 
         % [Xt] = gui.i_transformx(sce.X, true, 8, parentfig);
@@ -107,7 +107,7 @@ Z = zeros(length(glist), length(cL));
         box on        
     end
 
-    function i_flipxy(~, ~)
+    function in_callback_flipxy(~, ~)
         %delete(h);
         fliped = ~fliped;
         if fliped
@@ -130,7 +130,7 @@ Z = zeros(length(glist), length(cL));
         end
     end
 
-    function i_renamecat(~, ~)
+    function in_callback_renamecat(~, ~)
         tg = gui.i_inputgenelist(string(cL), true);
         if isempty(tg), return; end
         if length(tg) == length(cL)
@@ -142,12 +142,12 @@ Z = zeros(length(glist), length(cL));
         end
     end    
 
-    function i_resetcolor(~, ~)
+    function in_callback_resetcolor(~, ~)
         set(gca, 'FontSize', 10);
         colormap default
     end        
 
-    function i_summarymap(~, ~)
+    function in_callback_summarymap(~, ~)
         for ky = 1:length(cL)
             Z(:, ky) = mean(Y(:, c == ky), 2);
         end
@@ -162,13 +162,13 @@ Z = zeros(length(glist), length(cL));
         h.CellLabelColor = 'none';
         t = array2table(Z, 'VariableNames', cL, 'RowNames', MX);
         % writetable(t,'aaa.csv','WriteRowNames',true);
-        hx1.addCustomButton('off', {@i_exporttable, t}, 'floppy-disk-arrow-in.jpg', 'Save table...');
-        hx1.addCustomButton('off', @i_resetcolor, 'refresh_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'Reset color map');
+        hx1.addCustomButton('off', {@in_callback_exporttable, t}, 'floppy-disk-arrow-in.jpg', 'Save table...');
+        hx1.addCustomButton('off', @in_callback_resetcolor, 'refresh_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'Reset color map');
         % disp('https://software.broadinstitute.org/morpheus/')
         hx1.show(hFig);
     end
 
-    function in_savetable(~, ~)
+    function in_callback_savetable(~, ~)
         labels = {'Save Y to variable named:', ...
             'Save glist to variable named:', ...
             'Save cL to variable named:'};
@@ -178,7 +178,7 @@ Z = zeros(length(glist), length(cL));
             'Save Data to Workspace');
     end
 
-    function i_exporttable(~, ~, T, needwait, defname)
+    function in_callback_exporttable(~, ~, T, needwait, defname)
         if nargin < 5, defname = []; end
         if nargin < 4, needwait = false; end
         if ~isempty(defname)
@@ -204,7 +204,7 @@ Z = zeros(length(glist), length(cL));
         end
     end
 
-    function i_summarymapT(~, ~)
+    function in_callback_summarymapT(~, ~)
             for ky = 1:length(cL)
                 Z(:, ky) = mean(Y(:, c == ky), 2);
             end
@@ -221,13 +221,13 @@ Z = zeros(length(glist), length(cL));
         %         s = struct(h);
         %         s.XAxis.TickLabelRotation=45;
         % writetable(t,'aaa.csv','WriteRowNames',true);
-        hx2.addCustomButton('off', {@i_exporttable, t}, 'floppy-disk-arrow-in.jpg', 'Save table...');
+        hx2.addCustomButton('off', {@in_callback_exporttable, t}, 'floppy-disk-arrow-in.jpg', 'Save table...');
         hx2.addCustomButton('off', {@gui.i_pickcolormap, c}, 'color-wheel.jpg', 'Pick new color map...');
-        hx2.addCustomButton('off', @i_resetcolor, 'refresh_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'Reset color map');
+        hx2.addCustomButton('off', @in_callback_resetcolor, 'refresh_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'Reset color map');
         hx2.show(hFig);
     end
 
-    function i_dotplotx(~, ~)
+    function in_callback_dotplotx(~, ~)
         try
             gui.i_dotplot(sce.X, sce.g, c, cL, MX);
         catch ME
