@@ -20,6 +20,7 @@ For a quick exploratry data analysis using `scgeatool` function
 
   cdgea;
   load example_data\testXgs.mat
+  sce=SingleCellExperiment(X,g,s);
   scgeatool(X,g,s)
   
 where X is the expression matrix, g is the list of genes, and s is the coordinates of embedding.

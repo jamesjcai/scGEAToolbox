@@ -54,7 +54,7 @@ pause(3)
 % 
 
 sce = SingleCellExperiment(X, genelist, s_tsne);
-scgeatoolApp(sce);
+scgeatool(sce);
 %% 
 % 
 % 

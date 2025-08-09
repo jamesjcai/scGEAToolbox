@@ -33,7 +33,8 @@ Here is an example of raw data processing.
   [X, g] = sc_qcfilter(X, g);
   [X, g] = sc_selectg(X, g, 1, 0.05);
   [s] = sc_tsne(X);
-  scgeatool(X, g, s)
+  sce=SingleCellExperiment(X,g,s);
+  scgeatool(sce)
 
 t-SNE embedding of cells using highly varible genes (HVGs)
 ----------------------------------------------------------
@@ -42,7 +43,8 @@ t-SNE embedding of cells using highly varible genes (HVGs)
   
   [~, Xhvg] = sc_hvg(X, g);
   [s] = sc_tsne(Xhvg(1:2000, :));
-  scgeatool(X, g, s)
+  sce=SingleCellExperiment(X,g,s)
+  scgeatool(sce)
   
 An example pipeline for raw data processing
 -------------------------------------------

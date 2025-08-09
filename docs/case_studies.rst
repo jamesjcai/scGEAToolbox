@@ -45,7 +45,8 @@ We can then use the code below to import data into `MATLAB`.
 .. code-block:: matlab
 
   [X,g]=sc_readmtxfile('GSM3535276_AXLN1_matrix.mtx','GSM3535276_AXLN1_genes.tsv');
-  scgeatool(X,g)
+  sce=SingleCellExperiment(X,g);
+  scgeatool(sce)
 
 
 Process downloaded 10x Genomics data files
@@ -58,7 +59,8 @@ In a 10x Genomics data folder, there should be matrix.mtx and genes.tsv. Here is
   [X,g]=sc_qcfilter(X,g);
   [X,g]=sc_selectg(X,g,1,0.05);
   [s]=sc_tsne(X);
-  scgeatool(X,g,s)
+  sce=SingleCellExperiment(X,g,s);
+  scgeatool(sce)
 
 
 Download Drop-seq data files from GEO
@@ -94,7 +96,8 @@ We can then use the code below to import data into `MATLAB`.
   [X,g]=sc_qcfilter(X,g);
   [X,g]=sc_selectg(X,g,1,0.05);
   [s]=sc_tsne(X);
-  scgeatool(X,g,s)
+  sce=SingleCellExperiment(X,g,s);
+  scgeatool(sce)
 
 Import Seurat RData
 -------------------
