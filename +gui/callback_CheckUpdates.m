@@ -16,65 +16,68 @@ function callback_CheckUpdates(src, ~)
     end
 
     if majneedupdate
-        if ~pkg.e_runningasaddons || ismcc || isdeployed 
+        
+        % if ~pkg.e_runningasaddons || ismcc || isdeployed 
             % || isa(src, 'matlab.apps.AppBase')
-            answer = gui.myQuestdlg(FigureHandle, ...
-                sprintf(['There is a new version of scGEAToolbox ' ...
-                '(%s vs. %s). Learn how to upgrade?'], ...
-                v_new, v_old));
-            if strcmp(answer, 'Yes')
-                web('https://scgeatoolbox.readthedocs.io/en/latest/quick_installation.html');
-                % gui.gui_showrefinfo('Quick Installation', FigureHandle);
-            end
-        else
-            answer = gui.myQuestdlg(FigureHandle, ...
-                sprintf('There is a new version of scGEAToolbox (%s vs. %s). Upgrade?', ...
-                v_new, v_old));
-            if strcmp(answer, 'Yes')
-                try
-                    fw = gui.myWaitbar(FigureHandle);
-                    gui.myWaitbar(FigureHandle, fw, false, '', 'Downloading...', 1/5);
-                    instURL = 'https://api.github.com/repos/jamesjcai/scGEAToolbox/releases/latest';
-                    %[~, instName] = fileparts(fileparts(fileparts(instURL)));
-                    instRes = webread(instURL);
-                    % fprintf('Downloading %s %s\n', instName, instRes.name);
-                    % websave(instRes.assets.name, instRes.assets.browser_download_url);
-    
-                    toolboxURL = instRes.assets.browser_download_url;
-                    tempZip = fullfile(tempdir, instRes.assets.name);
-    
-                    %toolboxURL = sprintf('https://github.com/jamesjcai/scGEAToolbox/releases/download/v%s/scGEAToolbox.mltbx', v2);
-                    %tempZip = fullfile(tempdir, "ToolboxUpdate.mltbx");
-                    websave(tempZip, toolboxURL);
-                    gui.myWaitbar(FigureHandle, fw, false, '', 'Installing...', 2/5);
-                    warning off
-                    if ~(ismcc || isdeployed)
-                        %#exclude matlab.addons.install
-                        matlab.addons.install(tempZip, true, "overwrite");
-                    end
-                    gui.myWaitbar(FigureHandle, fw, false, '', 'Post-install processing...', 3/5);
-                    pause(2)
-    
-                    versionfile = fullfile(toolboxPath, 'VERSION.mat');
-                    if exist(versionfile,'file')
-                        delete(versionfile);
-                    end
-                    
-                catch ME
-                    gui.myErrordlg(FigureHandle, ME.message,'');
-                    return;
-                end
-                warning on
-                gui.myWaitbar(FigureHandle, fw, false, '', 'Update complete!', 5/5);
-                pause(3)
-                gui.myWaitbar(FigureHandle, fw);
-                if strcmp('Yes', gui.myQuestdlg(FigureHandle, 'Restart SCGEATOOL?'))
-                    close(FigureHandle);
-                    pause(1);
-                    run("scgeatool.m");
-                end
-            end
+
+        answer = gui.myQuestdlg(FigureHandle, ...
+            sprintf(['There is a new version of scGEAToolbox ' ...
+            '(%s vs. %s). Learn how to upgrade?'], ...
+            v_new, v_old));
+        if strcmp(answer, 'Yes')
+            web('https://scgeatoolbox.readthedocs.io/en/latest/quick_installation.html');
+            % gui.gui_showrefinfo('Quick Installation', FigureHandle);
         end
+
+        % else
+        %     answer = gui.myQuestdlg(FigureHandle, ...
+        %         sprintf('There is a new version of scGEAToolbox (%s vs. %s). Upgrade?', ...
+        %         v_new, v_old));
+        %     if strcmp(answer, 'Yes')
+        %         try
+        %             fw = gui.myWaitbar(FigureHandle);
+        %             gui.myWaitbar(FigureHandle, fw, false, '', 'Downloading...', 1/5);
+        %             instURL = 'https://api.github.com/repos/jamesjcai/scGEAToolbox/releases/latest';
+        %             %[~, instName] = fileparts(fileparts(fileparts(instURL)));
+        %             instRes = webread(instURL);
+        %             % fprintf('Downloading %s %s\n', instName, instRes.name);
+        %             % websave(instRes.assets.name, instRes.assets.browser_download_url);
+        % 
+        %             toolboxURL = instRes.assets.browser_download_url;
+        %             tempZip = fullfile(tempdir, instRes.assets.name);
+        % 
+        %             %toolboxURL = sprintf('https://github.com/jamesjcai/scGEAToolbox/releases/download/v%s/scGEAToolbox.mltbx', v2);
+        %             %tempZip = fullfile(tempdir, "ToolboxUpdate.mltbx");
+        %             websave(tempZip, toolboxURL);
+        %             gui.myWaitbar(FigureHandle, fw, false, '', 'Installing...', 2/5);
+        %             warning off
+        %             if ~(ismcc || isdeployed)
+        %                 %#exclude matlab.addons.install
+        %                 matlab.addons.install(tempZip, true, "overwrite");
+        %             end
+        %             gui.myWaitbar(FigureHandle, fw, false, '', 'Post-install processing...', 3/5);
+        %             pause(2)
+        % 
+        %             versionfile = fullfile(toolboxPath, 'VERSION.mat');
+        %             if exist(versionfile,'file')
+        %                 delete(versionfile);
+        %             end
+        % 
+        %         catch ME
+        %             gui.myErrordlg(FigureHandle, ME.message,'');
+        %             return;
+        %         end
+        %         warning on
+        %         gui.myWaitbar(FigureHandle, fw, false, '', 'Update complete!', 5/5);
+        %         pause(3)
+        %         gui.myWaitbar(FigureHandle, fw);
+        %         if strcmp('Yes', gui.myQuestdlg(FigureHandle, 'Restart SCGEATOOL?'))
+        %             close(FigureHandle);
+        %             pause(1);
+        %             run("scgeatool.m");
+        %         end
+        %     end
+        % end
     else
         gui.myHelpdlg(FigureHandle, sprintf('scGEAToolbox (%s) is up to date.', v_old));
         %answer=gui.myQuestdlg(FigureHandle, 'Check for minor updates?','');
