@@ -7,6 +7,8 @@ function [t, xyz1] = i_pseudotime_by_princurve(s, plotit)
     pth = fullfile(pw1,  '..', 'external', 'fun_MPPC');
     if ~(ismcc || isdeployed), addpath(pth); end
     
+    pth = fullfile(pw1,  '..', 'external', 'ml_umap45');
+    if ~(ismcc || isdeployed), addpath(pth); end
     
     n = size(s, 1);
     mass = 1 / n * ones(1, n);
