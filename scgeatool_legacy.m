@@ -1,5 +1,5 @@
 function varargout = scgeatool_legacy(sce, varargin)
-% SCGEATOOL - Launch original figure GUI
+%SCGEATOOL_LEGACY - Single-cell Gene Expression Analysis Toolbox Graphical User Interface.
 
 % if usejava('jvm') && ~feature('ShowFigureWindows')
 %     error('MATLAB is in a text mode. This function requires a GUI-mode.');
@@ -97,7 +97,7 @@ tmpcelltypev = cell(sce.NumCells, 1);
 
 if ~isempty(c_in), sce.c = c_in; end
 if ~isempty(s_in), sce.s = s_in; end
-[c, cL] = findgroups(string(sce.c));
+[c, cL] = grp2idx(sce.c);
 
 
 [FigureHandle, hAx] = gui.gui_createmainfigure(v1, useuifig);
@@ -561,11 +561,11 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                     case 'Yes'
                         sce.c = sce.list_cell_attributes{idx*2};
                         sce.s = sce.struct_cell_embeddings.('monocle2d');
-                        [c, cL] = findgroups(string(sce.c));
+                        [c, cL] = grp2idx(sce.c);
                         in_RefreshAll(src, [], true, false);
                     case 'Color cells only'
                         sce.c = sce.list_cell_attributes(idx*2);
-                        [c, cL] = findgroups(string(sce.c));
+                        [c, cL] = grp2idx(sce.c);
                         in_RefreshAll(src, [], true, false);
                     case 'Show embedding only'
                         sce.s = sce.struct_cell_embeddings.('monocle2d');
@@ -794,7 +794,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         [requirerefresh] = gui.callback_SubtypeAnnotation(src, []);
         if requirerefresh
             sce = guidata(FigureHandle);
-            [c, cL] = findgroups(string(sce.c_cell_type_tx));
+            [c, cL] = grp2idx(sce.c_cell_type_tx);
             in_RefreshAll(src, [], true, false);
             ix_labelclusters(true);
         end
@@ -817,7 +817,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         [requirerefresh] = gui.callback_MergeCellSubtypes(src, [], sourcetag, allcell);
         if requirerefresh
             sce = guidata(FigureHandle);
-            [c, cL] = findgroups(string(sce.c_cell_type_tx));
+            [c, cL] = grp2idx(sce.c_cell_type_tx);
             in_RefreshAll(src, [], true, false);
             ix_labelclusters(true);
         end
@@ -827,7 +827,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         [requirerefresh, s] = gui.callback_MergeSCEs(src, sourcetag);
         if requirerefresh && ~isempty(s)
             sce = guidata(FigureHandle);
-            [c, cL] = findgroups(string(sce.c_batch_id));
+            [c, cL] = grp2idx(sce.c_batch_id);
             sce.c = c;
             if sce.NumCells==0
                 gui.myWarndlg(FigureHandle, 'Merged SCE contains no cells.');
@@ -1043,7 +1043,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             sce = sce.estimatepotency(speciestag);
         end
         gui.myWaitbar(FigureHandle, fw, false, '', '', 7/8);
-        [c,cL] = findgroups(string(sce.c_cell_type_tx));
+        [c,cL] = grp2idx(sce.c_cell_type_tx);
         sce.c = c;
         gui.myWaitbar(FigureHandle, fw);
         in_RefreshAll(src, [], true, false);
@@ -1067,7 +1067,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         end
         if requirerefresh
             sce = guidata(FigureHandle);
-            [c, cL] = findgroups(string(sce.c));
+            [c, cL] = grp2idx(sce.c);
             in_RefreshAll(src, [], true, false);
             % newn = sce.NumCells;
             % newm = sce.NumGenes;
@@ -1075,7 +1075,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             %         oldn-newn, oldm-newm),'','Accept Changes', 'Undo Changes', 'Accept Changes');
             % if ~strcmp(answer, 'Accept Changes')
             %     sce = oldsce;
-            %     [c, cL] = findgroups(string(sce.c));
+            %     [c, cL] = grp2idx(sce.c);
             %     in_RefreshAll(src, [], true, false);
             %     guidata(FigureHandle, sce);
             % end
@@ -1123,7 +1123,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         fw = gui.myWaitbar(FigureHandle);
         try
             [sce] = run.r_seurat(sce, ndim, wkdir, true);
-            [c, cL] = findgroups(string(sce.c));
+            [c, cL] = grp2idx(sce.c);
         catch
             gui.myWaitbar(FigureHandle, fw);
             return;
@@ -1175,7 +1175,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         [needupdate, T] = gui.callback_RunPanhumanpy(src, events);
         if needupdate
             sce = guidata(FigureHandle);
-            [c, cL] = findgroups(string(sce.c_cell_type_tx));
+            [c, cL] = grp2idx(sce.c_cell_type_tx);
             in_RefreshAll(src, [], true, false);
             if strcmp('Yes', gui.myQuestdlg(FigureHandle,'View ouput table?'))
                 gui.TableViewerApp(T, FigureHandle);
@@ -1192,7 +1192,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 FigureHandle), return; end
         if gui.callback_RunSCimilarity(src, events)
             sce = guidata(FigureHandle);
-            [c, cL] = findgroups(string(sce.c_cell_type_tx));
+            [c, cL] = grp2idx(sce.c_cell_type_tx);
             in_RefreshAll(src, [], true, false);            
         end
     end
@@ -1207,13 +1207,13 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             gui.myWarndlg(FigureHandle, 'No batch effect (SCE.C_BATCH_ID is empty)');
             return;
         end
-        [c1] = findgroups(string(sce.c));
-        [c2] = findgroups(string(sce.c_batch_id));
+        [c1] = grp2idx(sce.c);
+        [c2] = grp2idx(sce.c_batch_id);
         if ~isequal(c1, c2)
             answer = gui.myQuestdlg(FigureHandle, 'Color cells by batch id (SCE.C_BATCH_ID)?', '');
             switch answer
                 case 'Yes'
-                    [c, cL] = findgroups(string(sce.c_batch_id));
+                    [c, cL] = grp2idx(sce.c_batch_id);
                     sce.c = c;
                     in_RefreshAll(src, [], true, false);
                 case 'No'
@@ -1226,7 +1226,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
 
         if gui.callback_Harmonypy(src)
             sce = guidata(FigureHandle);
-            [c, cL] = findgroups(string(sce.c));
+            [c, cL] = grp2idx(sce.c);
             in_RefreshAll(src, [], true, false);
 
             ButtonName = gui.myQuestdlg(FigureHandle, 'Update Saved Embedding?', '');
@@ -1271,7 +1271,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 % i_deletecells(isDoublet);
                 sce = sce.removecells(isDoublet);
                 guidata(FigureHandle, sce);
-                [c, cL] = findgroups(string(sce.c));
+                [c, cL] = grp2idx(sce.c);
                 in_RefreshAll(src, [], true, false);
                 gui.myHelpdlg(FigureHandle, 'Doublets deleted.');
             end
@@ -1285,7 +1285,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             gui.myHelpdlg(FigureHandle, "No sub-clusters are meraged.");
         else
             sce.c_cell_type_tx = newtx;
-            [c, cL] = findgroups(string(sce.c_cell_type_tx));
+            [c, cL] = grp2idx(sce.c_cell_type_tx);
             sce.c = c;
             in_RefreshAll(src, [], true, false);
             ix_labelclusters(true);
@@ -1383,10 +1383,10 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             if isvalid(FigureHandle) && isa(FigureHandle, 'matlab.ui.Figure'), figure(FigureHandle); end
         end
         
-        % [c,cL]=findgroups(string(sce.c));
+        % [c,cL]=grp2idx(sce.c);
         % was3d = ~isempty(h.ZData);        
 
-        if isempty(c), [c,cL] = findgroups(string(sce.c)); end
+        if isempty(c), [c,cL] = grp2idx(sce.c); end
         if size(sce.s, 2) >= 3
             if keepview, [ax, bx] = view(hAx); end
             h = gui.i_gscatter3(sce.s, c, methodid, [], hAx);
@@ -1560,11 +1560,11 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             sce = guidata(FigureHandle);
             switch answer
                 case 'Cell type'
-                    [c, cL] = findgroups(string(sce.c_cell_type_tx));
+                    [c, cL] = grp2idx(sce.c_cell_type_tx);
                 case 'Batch ID'
-                    [c, cL] = findgroups(string(sce.c_batch_id));
+                    [c, cL] = grp2idx(sce.c_batch_id);
                 case 'Cluster ID'
-                    [c, cL] = findgroups(string(sce.c_cluster_id));
+                    [c, cL] = grp2idx(sce.c_cluster_id);
                 otherwise
                     return;
             end
@@ -1797,10 +1797,10 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
 
             if isempty(newctype), return; end
             sce.c_cell_type_tx(ptsSelected) = string(newctype);
-            [c, cL] = findgroups(string(sce.c_cell_type_tx));
+            [c, cL] = grp2idx(sce.c_cell_type_tx);
         else
             c(ptsSelected) = max(c) + 1;
-            [c, cL] = findgroups(string(c));
+            [c, cL] = grp2idx(c);
             sce.c_cluster_id = c;
         end
         sce.c = c;
@@ -1846,10 +1846,10 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
 
         if iscelltype
             sce.c_cell_type_tx(ismember(sce.c_cell_type_tx, c_members)) = c_target;
-            [c, cL] = findgroups(string(sce.c_cell_type_tx));
+            [c, cL] = grp2idx(sce.c_cell_type_tx);
         else
             c(ismember(c, c_members)) = c_target;
-            [c, cL] = findgroups(string(c));
+            [c, cL] = grp2idx(c);
             sce.c = c;
             sce.c_cluster_id = c;
         end
@@ -1929,7 +1929,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
 
         switch gui.i_selvariabletype(thisc, FigureHandle)
             case 'Categorical/Discrete'
-                [c, cL] = findgroups(string(thisc));
+                [c, cL] = grp2idx(thisc);
                 sce.c = c;
                 in_RefreshAll(src, [], true, false);
                 target{1} = hAx;
@@ -1954,7 +1954,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                         if isnumeric(thisc)
                             set(target{2}, 'CData', thisc);
                         else
-                            [c, cL] = findgroups(string(thisc));
+                            [c, cL] = grp2idx(thisc);
                             set(target{2}, 'CData', c);
                         end
                         cb = colorbar(target{1});
@@ -2068,7 +2068,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         if needprogressbar
             gui.myWaitbar(FigureHandle, fw);
         end
-        [c, cL] = findgroups(string(sce.c));
+        [c, cL] = grp2idx(sce.c);
         in_RefreshAll(src, [], true, true);
     end
 
@@ -2411,7 +2411,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             end
             gui.myWaitbar(FigureHandle, fw);
         end
-        [c, cL] = findgroups(string(sce.c_cluster_id));
+        [c, cL] = grp2idx(sce.c_cluster_id);
         sce.c = c;
         in_RefreshAll(src, [], true, false);
         guidata(FigureHandle, sce);
@@ -2456,7 +2456,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 if ~isempty(statetag), set(src, statetag, 'off'); end
                 return;
             end
-            [c, cL] = findgroups(string(thisc));
+            [c, cL] = grp2idx(thisc);
             sce.c = c;
             in_RefreshAll(src, [], true, false);
             fprintf('Cells are colored by %s.\n', lower(clabel));
@@ -2498,7 +2498,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
             if notasking
                 stxtyes = cL(c);
             else
-                [~, cLx] = findgroups(string(c));
+                [~, cLx] = grp2idx(c);
                 if isequal(cL, cLx)
                     stxtyes = c;
                 else

@@ -1,1 +1,1 @@
-scgeatoolApp
+scgeatool

@@ -1,13 +1,13 @@
 % scGEAToolbox - Single-Cell Gene Expression Analysis Toolbox
-% Version 25.7.7 01-Aug-2025
+% Version 25.7.9 09-Aug-2025
 %
 % Functions
 %   cdgea                     - CDGEA - Change working directory to the scGEAToolbox folder
 %   demo_Getting_Started      - Learn to use SCGEATOOL - Single-cell Gene Expression Analysis Tool
 %   online_landing            - online_landing is a script.
 %   sc_cellcyclescore         - Score cell cycle phases
-%   sc_cellscore_admdl        - Compute cell scores from a list of feature genes
-%   sc_cellscore_ucell        - Compute cell scores from a list of feature genes
+%   sc_cellscore_admdl        - SC_CELLSCORE_ADMDL   Cell-level gene signature scoring (Seurat/AddModuleScore).
+%   sc_cellscore_ucell        - SC_CELLSCORE_UCELL   Cell-level gene signature scoring (UCell-style).
 %   sc_celltypeanno           - sc_celltypeanno is a function.
 %   sc_cluster_s              - sc_cluster_s - cluster cells using cell embeding s
 %   sc_cluster_x              - sc_cluster_x - cluster cells using UMI matrix X
@@ -76,6 +76,5 @@
 %   sc_tsne                   - tSNE embedding of cells
 %   sc_umap                   - UMAP embedding of cells
 %   sc_writefile              - sc_writefile is a function.
-%   scgeatool                 - SCGEATOOL - Single-cell Gene Expression Analysis Toolbox Graphical User Interface.
-%   scgeatool_launch          - SCGEATOOL - Launch either original figure GUI or App Designer version
-%   scgeatool_legacy          - SCGEATOOL - Launch original figure GUI
+%   scgeatool                 - SCGEATOOL - Launch either original figure GUI or App Designer version
+%   scgeatool_legacy          - SCGEATOOL_LEGACY - Single-cell Gene Expression Analysis Toolbox Graphical User Interface.
