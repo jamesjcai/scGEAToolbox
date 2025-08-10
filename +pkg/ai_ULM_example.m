@@ -131,3 +131,43 @@ else
 end
 c = [r g b]; 
 end
+
+%{
+Excellent question! The name "ULM" (Univariate Linear Model) refers to the **statistical framework** and **theoretical foundation** behind the method, not necessarily the computational implementation.
+
+## Why "Univariate Linear Model"?
+
+The name comes from the **statistical model** that the method is based on:
+
+```
+gene_expression[i] = β₀ + β₁ × activity + ε
+```
+
+Where:
+- Each target gene `i` has its own **univariate** linear relationship with the regulator activity
+- **Univariate** = one predictor variable (the regulator activity)
+- **Linear Model** = assumes linear relationship between activity and gene expression
+
+## The Statistical Theory:
+
+1. **Conceptual Model**: Each target gene's expression is modeled as a linear function of the regulator's activity
+2. **Parameter Estimation**: The method estimates the regulator activity that best explains the collective expression of target genes
+3. **Weighted Combination**: The final activity score is a weighted combination of target gene expressions, where weights represent the strength of regulation
+
+## Matrix Multiplication is Just the Implementation:
+
+The matrix multiplication `weightMatrix * expressionMatrix` is simply the **efficient computational implementation** of the statistical concept. It's equivalent to:
+
+- Fitting separate linear models for each target gene
+- Estimating the latent regulator activity
+- Combining evidence across all targets
+
+## Historical Context:
+
+The method was developed in the context of statistical inference for gene regulation, where:
+- **MLM** (Multivariate Linear Model) fits all targets simultaneously 
+- **ULM** fits each target separately (univariate)
+- The "linear model" framework provides statistical rigor and interpretability
+
+So while the computation simplifies to matrix multiplication, the name reflects the **statistical modeling approach** rather than the implementation details. It's similar to how "Principal Component Analysis" describes the statistical procedure, even though it's computed via eigenvalue decomposition or SVD.
+%}

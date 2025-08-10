@@ -1,4 +1,5 @@
-function [cs, tflist, gcommon, numtargetgenes] = sc_tfactivity(X, g, Ttfgn, speciestag, methodid)
+function [cs, tflist, gcommon, numtargetgenes] = sc_tfactivity(X, g, ...
+    Ttfgn, speciestag, methodid)
 % The activity level of a transcription factor (TF) in a given cell is the
 % extent to which it is exerting its regulatory potential on its target
 % genes.
@@ -73,10 +74,6 @@ end
         warning('Keep using sparse X.');
     end
 
-
-
-
-
     if methodid ~= 1 % method 1 UCell is rank-based, normalization is unnecessary
         [X] = sc_norm(X);
         [X] = log1p(X);
@@ -135,9 +132,6 @@ end
             % u = sum(idx1 .* R, 2) - (numtargetgenes .* (numtargetgenes - 1)) / 2;
             % cs = 1 - u ./ (numtargetgenes * maxRank);
             % cs(cs < 0) = 0;
-
-
-
 
         case 2 % matrix multiplication method
             cs = t * X;
