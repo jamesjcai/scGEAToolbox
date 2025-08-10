@@ -50,14 +50,13 @@ assignin("base", "setgenes", setgenes);
 
 fw = gui.myWaitbar(FigureHandle);
 
-[~,ix,iy]=intersect(upper(setgenes), ...
+[~, ix, iy]=intersect(upper(setgenes), ...
                     upper(sce.g)); %,'stable');
 setgenes=setgenes(ix);
 setmatrx=setmatrx(:,ix);      % s x g
 
 sceX = log1p(sc_norm(sce.X));
 X = sceX(iy,:);              % g x c
-
 
 sce.X = sce.X(iy,:);
 sce.g = sce.g(iy);
@@ -102,10 +101,11 @@ else
     [~, ~, ~, p_val_adj] = pkg.fdr_bh(p_val);
 end
 
-T=table(setnames, gsetsize, v1, v2, avg_log2FC, m1, n1, m2, n2, p_val, p_val_adj);
+T = table(setnames, gsetsize, v1, v2, avg_log2FC, m1, n1, ...
+    m2, n2, p_val, p_val_adj);
 T(isnan(T.p_val)|isnan(T.avg_log2FC)|abs(T.avg_log2FC)<1,:)=[];
 T = sortrows(T, 'p_val_adj', 'ascend');
-T=T(T.p_val_adj<0.01 & T.gsetsize>=5,:);
+T = T(T.p_val_adj<0.01 & T.gsetsize>=5,:);
 
     gui.myWaitbar(FigureHandle, fw);
 
