@@ -44,13 +44,14 @@ if ~prepare_input_only
     disp(cmdlinestr)
     [status, cmdout] = system(cmdlinestr, '-echo');
     if status ~= 0
-        cd(oldpth);    
+            
         if isvalid(fw), gui.myWaitbar(parentfig, fw, true); end
         % gui.myErrordlg(parentfig, sprintf('%s', cmdout));
         a = sprintf("%s.", cmdout);
         if strcmp('Yes', gui.myQuestdlg(parentfig, a+" Continue with script.py preparation?"))
             prepare_input_only = true;
         else
+            cd(oldpth);
             return;
         end
         % error('Python scTenifoldXct has not been installed properly.');

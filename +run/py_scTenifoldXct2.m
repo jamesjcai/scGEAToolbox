@@ -41,8 +41,7 @@ if ~prepare_input_only
     
     disp(cmdlinestr)
     [status, cmdout] = system(cmdlinestr, '-echo');
-    if status ~= 0
-        cd(oldpth);    
+    if status ~= 0            
         if isvalid(fw), gui.myWaitbar(parentfig, fw, true); end
         % waitfor(errordlg(sprintf('%s',cmdout)));
         % error(cmdout);
@@ -51,6 +50,7 @@ if ~prepare_input_only
         if strcmp('Yes', gui.myQuestdlg(parentfig, a+" Continue with script.py preparation?"))
             prepare_input_only = true;
         else
+            cd(oldpth);
             return;
         end
         
