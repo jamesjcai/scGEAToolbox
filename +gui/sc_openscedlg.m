@@ -75,7 +75,7 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                 end
                 gui.myWaitbar(parentfig, fw);
             else
-                if ~in_multifilesgo, return; end
+                if ~in_multifilesgo(parentfig), return; end
                 answer = gui.myQuestdlg(parentfig, ...
                     'Which set operation method to merge data?', ...
                     'Merging method', ...
@@ -205,7 +205,7 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
             if isequal(filenm, 0), return; end
             if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
             if iscell(filenm)
-                if ~in_multifilesgo, return; end
+                if ~in_multifilesgo(parentfig), return; end
                 answer = gui.myQuestdlg(parentfig, 'Which set operation method to merge data?', ...
                     'Merging method', ...
                     {'Intersect', 'Union'}, 'Intersect');
@@ -539,8 +539,9 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
 end
 
 
-function [y] = in_multifilesgo
-    [answer]=gui.myQuestdlg(parentfig, 'Multiple files selected. After reading each file, data will be merged. Continue?','');
+function [y] = in_multifilesgo(parentfig)
+    [answer]=gui.myQuestdlg(parentfig, ...
+        'Multiple files selected. After reading each file, data will be merged. Continue?','');
     switch answer
         case 'Yes'
             y=true;
