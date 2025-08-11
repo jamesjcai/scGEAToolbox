@@ -12,8 +12,23 @@ function callback_CalculateGeneStats(src, ~)
     Xt = gui.i_transformx(sce.X, [], [], FigureHandle);
     if isempty(Xt), return; end
 
+    if strcmp('Yes', gui.myQuestdlg(FigureHandle, "Select genes? Click No to include all genes."))
+        % sce.X = Xt;
+        [glist] = gui.i_selectngenes(sce, [], FigureHandle);
+        if isempty(glist) || all(strlength(glist) == 0), return; end
+        [y, idx]=ismember(glist, sce.g);
+        assignin("base","glist",glist);
+        assignin("base","g",sce.g);
+        if ~any(y), return; end        
+        sce.g = sce.g(idx);
+        % sce.X = sce.X(idx,:);
+        Xt = Xt(idx,:);
+    end
+
     % Grouping cells based on user input
-    groupingConfirmed = gui.myQuestdlg(FigureHandle, 'Grouping cells? Select Yes to pick a grouping variable. Select No to include all cells.', 'Grouping');
+    groupingConfirmed = gui.myQuestdlg(FigureHandle, ['Grouping cells? Select Yes to pick a grouping variable. ' ...
+        'Select No to include all cells.'], 'Grouping');
+    
     if strcmp(groupingConfirmed, 'Yes')
         thisc = gui.i_select1class(sce,[],[],[],FigureHandle);
         if isempty(thisc), return; end
@@ -54,7 +69,7 @@ function callback_CalculateGeneStats(src, ~)
     end
 
     % gui.i_viewtable(T, FigureHandle);
-    gui.TableViewerApp(T, FigureHandle);
+    gui.TableViewerApp(T, FigureHandle, "GeneStats");
 
     % Export the results to a table
     % gui.i_exporttable(T, true, 'GeneStatsTable',[],[],[], FigureHandle);    

@@ -1,5 +1,7 @@
-function TableViewerApp(T, parentfig)
+function TableViewerApp(T, parentfig, defname)
 
+
+if nargin<3, defname = []; end
 if nargin<2, parentfig = []; end
 if nargin<1, T = []; end
     % Create a new figure window
@@ -98,17 +100,17 @@ if nargin<1, T = []; end
     % --- First Row of Buttons ---
     % Create export buttons
     exportCSVBtn = uibutton(btnLayout, 'Text', 'Export to CSV', ...
-                        'ButtonPushedFcn', @(btn,event) exportToCSV(uitTable));
+                        'ButtonPushedFcn', @(btn,event) exportToCSV(uitTable, defname));
     exportCSVBtn.Layout.Row = 1;
     exportCSVBtn.Layout.Column = 1;
     
     exportExcelBtn = uibutton(btnLayout, 'Text', 'Export to Excel', ...
-                         'ButtonPushedFcn', @(btn,event) exportToExcel(uitTable));
+                         'ButtonPushedFcn', @(btn,event) exportToExcel(uitTable, defname));
     exportExcelBtn.Layout.Row = 1;
     exportExcelBtn.Layout.Column = 2;
     
     exportMATBtn = uibutton(btnLayout, 'Text', 'Export to MAT File', ...
-                         'ButtonPushedFcn', @(btn,event) exportToMAT(uitTable));
+                         'ButtonPushedFcn', @(btn,event) exportToMAT(uitTable, defname));
     exportMATBtn.Layout.Row = 1;
     exportMATBtn.Layout.Column = 3;
     
@@ -156,9 +158,9 @@ function data = generateSampleData()
     data = table2cell(data);
 end
 
-function exportToCSV(tableObj)
+function exportToCSV(tableObj, defname)
     % Function to export table data to a CSV file
-    [file, path] = uiputfile('*.csv', 'Save Table Data');
+    [file, path] = uiputfile('*.csv', 'Save Table Data', defname);
     if isequal(file, 0) || isequal(path, 0)
         % User canceled the dialog
         return;
@@ -181,9 +183,10 @@ function exportToCSV(tableObj)
     uialert(tableObj.Parent.Parent, ['Table data saved to: ' fullFilePath], 'Export Successful', 'Icon', 'success');
 end
 
-function exportToExcel(tableObj)
+function exportToExcel(tableObj, defname)
     % Function to export table data to an Excel file
-    [file, path] = uiputfile({'*.xlsx;*.xls', 'Excel Files (*.xlsx, *.xls)'}, 'Save Table Data');
+    [file, path] = uiputfile({'*.xlsx;*.xls', 'Excel Files (*.xlsx, *.xls)'}, ...
+        'Save Table Data', defname);
     if isequal(file, 0) || isequal(path, 0)
         % User canceled the dialog
         return;
@@ -206,9 +209,9 @@ function exportToExcel(tableObj)
     uialert(tableObj.Parent.Parent, ['Table data saved to: ' fullFilePath], 'Export Successful', 'Icon', 'success');
 end
 
-function exportToMAT(tableObj)
+function exportToMAT(tableObj, defname)
     % Function to export table data to a MAT file
-    [file, path] = uiputfile('*.mat', 'Save Table Data');
+    [file, path] = uiputfile('*.mat', 'Save Table Data', defname);
     if isequal(file, 0) || isequal(path, 0)
         % User canceled the dialog
         return;
@@ -234,7 +237,7 @@ end
 function exportToWorkspace(tableObj, fig)
 
     outfiletag = "";
-    gui.i_exporttable(tableObj, true, 'Tenrichrres', ...
+    gui.i_exporttable(tableObj, true, "T"+string(defname), ...
             sprintf('Enrichr_Results_%s', outfiletag), [], [], fig);
 
 
