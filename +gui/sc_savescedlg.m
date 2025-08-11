@@ -25,11 +25,13 @@ if nargin<2, parentfig = []; end
         end
     if tf ~= 1, return; end
 
-            a = sce.metadata(contains(sce.metadata, "Source:"));
-            if ~isempty(a), a = strtrim(strrep(a, "Source: ","")); end
-            if ~isempty(a), a = sprintf("%s_", a(:)); end
-            if ~isempty(a), a = extractBefore(a, strlength(a)); end
-            if ~isempty(a), a = matlab.lang.makeValidName(a); end
+    a = sce.metadata(contains(sce.metadata, "Source:"));
+    if ~isempty(a), a = strtrim(strrep(a, "Source: ","")); end
+    if ~isempty(a), a = strrep(a,sprintf("\nOrganism:"),""); end
+    if ~isempty(a), a = sprintf("%s_", a(:)); end
+    if ~isempty(a), a = extractBefore(a, strlength(a)); end
+    if ~isempty(a), a = matlab.lang.makeValidName(a); end
+
     ButtonName = list{indx};
     switch ButtonName
         case 'SCE Data File (*.mat)...'
