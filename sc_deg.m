@@ -43,16 +43,19 @@ function [T, Tup, Tdn] = sc_deg(X, Y, genelist, methodid, ...
     nx = size(X, 2);  % Number of cells in group X
     ny = size(Y, 2);  % Number of cells in group Y
     
-    % Normalize and log-transform the data
-    Z = log1p(sc_norm([X, Y]));
-    X = Z(:, 1:nx);
-    Y = Z(:, nx+1:end);
     
     % Initialize waitbar if requested
     if guiwaitbar
         fw = gui.myWaitbar(parentfig);
     end
+
     
+
+    % Normalize and log-transform the data
+    Z = log1p(sc_norm([X, Y]));
+    X = Z(:, 1:nx);
+    Y = Z(:, nx+1:end);
+
     % Loop through genes
     for k = 1:ng
         if guiwaitbar            

@@ -23,8 +23,8 @@ function callback_DEGene2Groups(src, ~)
         otherwise
             return;
     end
-    % ----------
-    
+    % ----------    
+
     methodtag = "ranksum";   
     try
         switch methodtag
@@ -248,9 +248,9 @@ function callback_DEGene2Groups(src, ~)
 
         h.MarkerFaceColor=[.5 .5 .5];
         h.MarkerEdgeColor=[.5 .5 .5];
-        title(ax, sprintf('%s vs. %s', ...
+        title(ax, strrep(sprintf('%s vs. %s', ...
             string(cL1), ...
-            string(cL2)));
+            string(cL2)),'_','\_'));
         ylabel(ax, '-log_{10}(Adj. P-value)')
         xlabel(ax, 'log_{2}(FC)');
         lgd = legend(ax, {sprintf('Down-regulated (%d)', height(Tdn)), ...
