@@ -34,7 +34,11 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
         [indx, tf] = gui.myListdlg(parentfig, list, ...
             'Select a source', list(defaultindx));
     else
-        figure(parentfig);
+        if isempty(parentfig)
+            figure;
+        else
+            figure(parentfig);
+        end
         pause(0.5);
         [indx, tf] = listdlg('ListString', list, ...
             'SelectionMode', 'single', ...
