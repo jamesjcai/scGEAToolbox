@@ -15,12 +15,34 @@ if nargin<3, methodid = 1; end
             case 2
                 X = X(first_idx, :);                
             case 3
+
+                nGenes = numel(first_idx);
+                nCells = size(X, 2);
+                
+                if issparse(X)
+                    % Extract nonzero elements
+                    [row, col, val] = find(X);
+                    % Map each original row index to its unique-gene index
+                    row = group_idx(row);
+                    % Sum duplicates directly into sparse matrix
+                    X = sparse(row, col, val, nGenes, nCells);
+                else
+                    % Dense case: loop over columns, group sum
+                    X_new = zeros(nGenes, nCells, class(X));
+                    for j = 1:nCells
+                        X_new(:, j) = accumarray(group_idx, X(:, j), [nGenes, 1]);
+                    end
+                    X = X_new;
+                end                 
+                % GPT5 solution!
+            case 4
                 tic;
                 X = splitapply(@(rows) sum(rows,1), X, group_idx);
                 toc;
-            case 4
+            case 5
                 tic;
-                X_new = zeros(length(first_idx), size(X, 2));
+                X_new = zeros(length(first_idx), size(X, 2), class(X));
+                % consider grplen = groupcounts(group_idx);
                 for i = 1:length(first_idx)
                     group_members = (group_idx == i);
                     if sum(group_members) == 1
@@ -29,11 +51,12 @@ if nargin<3, methodid = 1; end
                         X_new(i, :) = sum(X(group_members, :), 1);
                     end
                 end
+                if issparse(X), X_new = sparse(X_new); end
                 X = X_new;
-                toc;               
+                toc;
         end
         genelist = genelist_out;        % genelist(first_idx);        
-        warning('Duplicate gene names are removed. %d duplicate genes found.', num_duplicates);
+        % warning('Duplicate gene names are removed. %d duplicate genes found.', num_duplicates);
     end
 
 end
