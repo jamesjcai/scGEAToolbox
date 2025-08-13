@@ -1,15 +1,39 @@
-function [X, genelist] = sc_rmdugenes(X, genelist)
+function [X, genelist] = sc_rmdugenes(X, genelist, methodid)
+
+if nargin<3, methodid = 1; end
 
     % Remove genes with duplicate name - Optimized version
-    [~, first_idx] = unique(genelist, 'stable');
+    [genelist_out, first_idx, group_idx] = unique(genelist, 'stable');
 
-    if length(first_idx) == length(genelist)
+    num_duplicates = length(genelist) - length(first_idx);
+    if num_duplicates == 0
         return;
     else
-        num_duplicates = length(genelist) - length(first_idx);
+        switch methodid
+            case 1
+                genelist_out = matlab.lang.makeUniqueStrings(genelist);
+            case 2
+                X = X(first_idx, :);                
+            case 3
+                tic;
+                X = splitapply(@(rows) sum(rows,1), X, group_idx);
+                toc;
+            case 4
+                tic;
+                X_new = zeros(length(first_idx), size(X, 2));
+                for i = 1:length(first_idx)
+                    group_members = (group_idx == i);
+                    if sum(group_members) == 1
+                        X_new(i, :) = X(group_members, :);
+                    else
+                        X_new(i, :) = sum(X(group_members, :), 1);
+                    end
+                end
+                X = X_new;
+                toc;               
+        end
+        genelist = genelist_out;        % genelist(first_idx);        
         warning('Duplicate gene names are removed. %d duplicate genes found.', num_duplicates);
-        X = X(first_idx, :);
-        genelist = genelist(first_idx);
     end
 
 end
@@ -77,4 +101,49 @@ end
 X = X_new;
 genelist = genelist(first_idx);
 end
+%}
+
+%{
+
+function [X_out, genelist_out] = sc_rmdugenes(X, genelist)
+% SC_RMDUGENES  Remove duplicate gene names and sum their expression rows.
+% Uses splitapply when available (R2020b+), otherwise falls back to loop.
+%
+% Syntax:
+%   [X_out, genelist_out] = sc_rmdugenes(X, genelist)
+%
+% Inputs:
+%   X         - Numeric gene expression matrix (genes × cells)
+%   genelist  - Cell array of gene names (genes × 1)
+%
+% Outputs:
+%   X_out        - Matrix with duplicates summed
+%   genelist_out - Unique gene list in order of first appearance
+
+    arguments
+        X {mustBeNumeric, mustBeNonempty}
+        genelist {mustBeVector}
+    end
+
+    % Map each gene to its group index
+    [genelist_out, ~, ic] = unique(genelist, 'stable');
+
+    % Check if splitapply exists and supports matrix data
+    if exist('splitapply', 'file') == 2
+        try
+            % Modern vectorized approach
+            X_out = splitapply(@(rows) sum(rows, 1), X, ic);
+            return
+        catch
+            % If splitapply fails for older versions or data types, fall back
+        end
+    end
+
+    % Fallback loop (fast because it iterates over unique genes)
+    X_out = zeros(numel(genelist_out), size(X, 2), class(X));
+    for k = 1:numel(genelist_out)
+        X_out(k, :) = sum(X(ic == k, :), 1);
+    end
+end
+
 %}
