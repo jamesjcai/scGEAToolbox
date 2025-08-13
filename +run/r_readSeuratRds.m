@@ -41,7 +41,17 @@ if exist('output.h5', 'file')
     indices = pkg.e_guessh5field(filenm, {grouptag}, {'indices'}, true);
     indptr = pkg.e_guessh5field(filenm, {grouptag}, {'indptr'}, true);
     shape = pkg.e_guessh5field(filenm, {grouptag}, {'shape'}, true);
-    X = spalloc(shape(1), shape(2), length(data));    
+    
+    
+    
+    if ~isMATLABReleaseOlderThan('R2025a')
+        X = spalloc(shape(1), shape(2), length(data), 'single');
+    else
+        X = spalloc(shape(1), shape(2), length(data));
+    end
+
+    % X = spalloc(shape(1), shape(2), length(data));
+
     for k = 1:length(indptr) - 1
         i = indptr(k) + 1:indptr(k+1);
         y = indices(i) + 1;

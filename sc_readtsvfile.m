@@ -76,6 +76,10 @@ T = readtable(filename, 'filetype', 'text', 'HeaderLines', 1, ...
 % T=readtable(filename,'filetype','text');
 % warning('on', 'MATLAB:table:ModifiedAndSavedVarnames');
 X = table2array(T(:, (1 + genecolnum):end));
+X = sparse(X);
+if ~isMATLABReleaseOlderThan('R2025a')
+    X = single(X);
+end
 genelist = string(table2array(T(:, 1:genecolnum)));
 if nargout > 2
     % sampleid=string(T.Properties.VariableNames(1+genecolnum:end)');

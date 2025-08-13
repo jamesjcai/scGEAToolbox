@@ -583,6 +583,7 @@ end
         try
             fw = gui.myWaitbar(parentfig);
             [X] = sc_simudata(numgenes, numcells, 'lun');
+            X = pkg.e_uint2sparse(X);
             [sce] = SingleCellExperiment(X);
             sce.c_batch_id = string([ones(round(sce.NumCells/2),1);... 
                 2*ones(sce.NumCells-round(sce.NumCells/2),1)]);

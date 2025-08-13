@@ -1,6 +1,6 @@
 classdef SingleCellExperiment
     properties
-        X double % {mustBeNumeric, mustBeFinite, mustBeNonNan} % counts
+        X {mustBeNumeric, mustBeFinite, mustBeNonNan} % counts
         g string % genelist
         s double{mustBeNumeric, mustBeFinite} % cell embeddings
         c % current/active group/class id
@@ -35,6 +35,17 @@ methods
         if ~(size(s, 2) > 2)
             s = [s, zeros(size(X, 2), 1)];
         end
+        if ~issparse(X)
+            X = sparse(X);
+        end
+
+        % Convert to single sparse if supported (R2025a+)
+        if isMATLABReleaseOlderThan('R2025a')
+            warning("Single-precision sparse not supported. Keeping double precision.");
+        else
+            X = single(X); % Works in R2025a+
+        end
+            
         obj.X = X;
         obj.g = g;
         obj.s = s;

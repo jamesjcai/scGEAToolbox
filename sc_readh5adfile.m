@@ -117,11 +117,17 @@ if isempty(b), warning('Barcode is not assigned.'); end
 %         end
 % end
 
-X = spalloc(shape(2), shape(1), length(data));
+
+if ~isMATLABReleaseOlderThan('R2025a')
+    X = spalloc(shape(2), shape(1), length(data), 'single');
+else
+    X = spalloc(shape(2), shape(1), length(data));
+end
+
 for k = 1:length(indptr) - 1
-    i = indptr(k) + 1:indptr(k+1);
-    y = indices(i) + 1;
-    X(y, k) = data(i);
+    ix = indptr(k) + 1:indptr(k+1);
+    y = indices(ix) + 1;
+    X(y, k) = data(ix);
 end
 
 g = deblank(string(g));

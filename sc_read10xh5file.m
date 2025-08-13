@@ -74,7 +74,12 @@ if isempty(b), warning('B is not assigned.'); end
 % try
 %     X=zeros(shape(1),shape(2));
 % catch
-X = spalloc(shape(1), shape(2), length(data));
+if ~isMATLABReleaseOlderThan('R2025a')
+    X = spalloc(shape(1), shape(2), length(data), 'single');
+else
+    X = spalloc(shape(1), shape(2), length(data));
+end
+
 %end
 
 %c=0; olda=-1;
