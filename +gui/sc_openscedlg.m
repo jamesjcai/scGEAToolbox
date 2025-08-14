@@ -522,10 +522,14 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
             pw1 = fileparts(mfilename('fullpath'));
             file1 = fullfile(pw1, '..', 'example_data', 'new_example_sce.mat');
             if ~exist(file1, "file")
+                file1 = "https://github.com/jamesjcai/scGEAToolbox/raw/refs/heads/main/example_data/new_example_sce.mat";
+            end
+            try
+                load(file1, 'sce');
+            catch
                 gui.myErrordlg(parentfig, "Example data file does not exist.");
                 return;
             end
-            load(file1, 'sce');
             if strcmp(answerstruced, 'Raw')
                 orisce = sce;
                 sce = SingleCellExperiment(sce.X, sce.g);
