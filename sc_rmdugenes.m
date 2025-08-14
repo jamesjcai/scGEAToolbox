@@ -25,7 +25,11 @@ if nargin<3, methodid = 1; end
                     % Map each original row index to its unique-gene index
                     row = group_idx(row);
                     % Sum duplicates directly into sparse matrix
-                    X = sparse(row, col, val, nGenes, nCells);
+                    if isMATLABReleaseOlderThan('R2025a')
+                        X = sparse(row, col, val, nGenes, nCells);
+                    else
+                        X = single(sparse(row, col, val, nGenes, nCells)); % lower memory in R2025a+
+                    end                    
                 else
                     % Dense case: loop over columns, group sum
                     X_new = zeros(nGenes, nCells, class(X));

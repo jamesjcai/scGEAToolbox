@@ -1,5 +1,5 @@
 % scGEAToolbox - Single-Cell Gene Expression Analysis Toolbox
-% Version 25.8.0 12-Aug-2025
+% Version 25.8.1 13-Aug-2025
 %
 % Functions
 %   cdgea                     - CDGEA - Change working directory to the scGEAToolbox folder
@@ -54,7 +54,7 @@
 %   sc_readparsebio           - SC_READPARSEBIO  Read ParseBio matrix + feature + cell metadata
 %   sc_readrdsfile            - Read Seurat/RDS file
 %   sc_readtsvfile            - Read TSV/TXT file
-%   sc_rmdugenes              - Remove genes with duplicate name - Optimized version
+%   sc_rmdugenes              - sc_rmdugenes is a function.
 %   sc_rmmtcells              - Remove cells with high mtDNA ratio
 %   sc_rmmtgenes              - Remove mt-genes
 %   sc_scatter                - SC_SCATTER Single-cell Gene Expression Analysis Toolbox Graphical User Interface.
