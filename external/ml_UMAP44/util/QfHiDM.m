@@ -1634,7 +1634,7 @@ classdef QfHiDM < handle
         function ok=userWantsToAvoidMerges(this)
             ok=false;    
             try
-                ok=AvoidMerging.Adjust(this);
+               % ok=AvoidMerging.Adjust(this);
             catch ex
                 disp(ex);
             end

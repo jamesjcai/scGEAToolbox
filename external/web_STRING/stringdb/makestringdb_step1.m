@@ -1,3 +1,4 @@
+%{
 t = readtable('mart_export_mouse.txt');
 t(t.ProteinStableID == "", :) = [];
 mapObj = containers.Map(t.ProteinStableID, t.GeneName);
@@ -16,3 +17,4 @@ T.protein2 = values(mapObj, T.protein2);
 toc
 
 writetable(T, 'stringdb_mouse.txt');
+%}
