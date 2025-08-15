@@ -5,13 +5,18 @@ if nargin < 3, t = 'tSNE'; end
 if nargin < 2, c = []; end
 
 colortag = 'k';
-try
+% try
+
+if ~isMATLABReleaseOlderThan('R2025a')
     a=theme;
     if strcmp('dark', a.BaseColorStyle)
         colortag = [.5 .5 .5];
     end
-catch
 end
+
+% catch
+% end
+
 % if size(s, 2) >= 3
 %     x = s(:, 1);
 %     y = s(:, 2);
