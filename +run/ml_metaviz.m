@@ -11,12 +11,10 @@ if ~(ismcc || isdeployed)
     pth1 = fullfile(pw1, '..', 'external', 'ml_cbrewer');
     addpath(pth1);
     umapversion = 'ml_umap45';
-    % umapversion = 'ml_UMAP44';
-
     pth1 = fullfile(pw1, '..', 'external', umapversion);
     addpath(pth1);
-%    pth3 = fullfile(pw1, '..', 'external', 'ml_UMAP', 'umap.jar');
-%    javaaddpath(pth3);
+    % pth3 = fullfile(pw1, '..', 'external', 'ml_UMAP', 'umap.jar');
+    % javaaddpath(pth3);
 end
 
 nstep = 6 + 1;

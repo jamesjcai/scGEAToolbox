@@ -38,7 +38,7 @@ if nargin<3, methodid = 1; end
                     end
                     X = X_new;
                 end                 
-                % GPT5 solution!
+                % GPT5 solution! 100x faster
             case 4
                 tic;
                 X = splitapply(@(rows) sum(rows,1), X, group_idx);
@@ -47,12 +47,12 @@ if nargin<3, methodid = 1; end
                 tic;
                 X_new = zeros(length(first_idx), size(X, 2), class(X));
                 % consider grplen = groupcounts(group_idx);
-                for i = 1:length(first_idx)
-                    group_members = (group_idx == i);
+                for ix = 1:length(first_idx)
+                    group_members = (group_idx == ix);
                     if sum(group_members) == 1
-                        X_new(i, :) = X(group_members, :);
+                        X_new(ix, :) = X(group_members, :);
                     else
-                        X_new(i, :) = sum(X(group_members, :), 1);
+                        X_new(ix, :) = sum(X(group_members, :), 1);
                     end
                 end
                 if issparse(X), X_new = sparse(X_new); end
