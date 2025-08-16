@@ -30,6 +30,10 @@ if nargin<1
     
     splashdir = fullfile(mfolder, '..','assets', 'Images', 'splash_folder');
     a = dir(splashdir);
+
+    d = datetime('today');
+    seed = year(d) * 10000 + month(d) * 100 + day(d);
+    rng(seed);
     idx = 2+randi(length(a)-2);
     pngfilename = a(idx).name;
     splashpng = fullfile(mfolder, '..','assets', 'Images','splash_folder', pngfilename);

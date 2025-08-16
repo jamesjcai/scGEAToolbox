@@ -8,7 +8,9 @@ function [fx, v1] = sc_simplesplash(fx, r)
     a = dir(splashdir);
 
     if length(a)<=2, return; end
-
+    d = datetime('today');
+    seed = year(d) * 10000 + month(d) * 100 + day(d);
+    rng(seed);
     idx = 2+randi(length(a)-2);
     pngfilename = a(idx).name;
     splashpng = fullfile(mfolder, '..','assets', 'Images','splash_folder', pngfilename);
