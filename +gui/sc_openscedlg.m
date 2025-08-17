@@ -545,6 +545,7 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
         if isstring(sce.c_cell_id) || ischar(sce.c_cell_id) || iscellstr(sce.c_cell_id)
             sce.c_cell_id = matlab.lang.makeUniqueStrings(sce.c_cell_id);
         end
+        [~, sce] = gui.gui_rmdugenes(sce, parentfig);
     end
 end
 

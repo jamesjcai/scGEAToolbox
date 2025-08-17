@@ -9,11 +9,14 @@ if nargin<3, methodid = 1; end
     if num_duplicates == 0
         return;
     else
+        fprintf('Duplicate genes (n = %d) found.\n', num_duplicates);
         switch methodid
             case 1
                 genelist_out = matlab.lang.makeUniqueStrings(genelist);
+                disp('Duplicate genes are renamed by appending an underscore and a number to duplicates.')
             case 2
-                X = X(first_idx, :);                
+                X = X(first_idx, :);
+                disp('Duplicate genes are removed; only the first occurrence of duplicates are kept.')
             case 3
 
                 nGenes = numel(first_idx);
@@ -39,6 +42,7 @@ if nargin<3, methodid = 1; end
                     X = X_new;
                 end                 
                 % GPT5 solution! 100x faster
+                disp('Duplicate genes are collapsed/merged by summing their expression rows')
             case 4
                 tic;
                 X = splitapply(@(rows) sum(rows,1), X, group_idx);
