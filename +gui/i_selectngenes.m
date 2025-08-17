@@ -75,7 +75,7 @@ switch answer
             if isempty(gsorted), return; end
         end
 
-        [idx] = gui.i_selmultidlg(gsorted, predefinedlist, parentfig);
+        [idx] = gui.i_selmultidialog(gsorted, predefinedlist, parentfig);
         if isempty(idx), return; end
         if idx == 0, return; end
         %if length(idx)<2
