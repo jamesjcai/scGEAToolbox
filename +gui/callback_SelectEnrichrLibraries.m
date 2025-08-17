@@ -28,7 +28,7 @@ function callback_SelectEnrichrLibraries(src, ~)
             rethrow(ME);
         end
         gui.myWaitbar(FigureHandle,fw);
-        [idx1] = gui.i_selmultidlg(dsv, enrichrlibraries, FigureHandle);
+        [idx1] = gui.i_selmultidialog(dsv, enrichrlibraries, FigureHandle);
         if isempty(idx1), return; end
         if idx1 == 0, return; end
         genesets = dsv(idx1);

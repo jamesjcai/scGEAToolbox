@@ -134,7 +134,7 @@ answer=gui.myQuestdlg(FigureHandle, 'Select gene sets and plot results?','');
 if ~strcmp(answer,'Yes')
     return;
 else
-    [idxneedplot] = gui.i_selmultidlg(T.setnames, [], FigureHandle);
+    [idxneedplot] = gui.i_selmultidialog(T.setnames, [], FigureHandle);
 end
 if isempty(idxneedplot), return; end
 

@@ -45,7 +45,7 @@ if nargin < 3, predefinedlist = []; end
         answer = gui.myQuestdlg(FigureHandle, 'Add background list?','');
         switch answer
             case 'Yes'
-                [idx] = gui.i_selmultidlg(sce.g, sce.g, FigureHandle);
+                [idx] = gui.i_selmultidialog(sce.g, sce.g, FigureHandle);
                 if isempty(idx), return; end
                 if idx == 0, return; end
                 backgroundlist = sce.g(idx);
@@ -160,7 +160,7 @@ end
                                      "KEGG_2021_Human",...
                                      "Reactome_Pathways_2024"]);
 
-        [idx1] = gui.i_selmultidlg(dsv, enrichrlibraries, FigureHandle);
+        [idx1] = gui.i_selmultidialog(dsv, enrichrlibraries, FigureHandle);
         if isempty(idx1), return; end
         if idx1 == 0, return; end
         genesets = dsv(idx1);

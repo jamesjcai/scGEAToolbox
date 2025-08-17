@@ -9,7 +9,7 @@ val = jsondecode(str);
 
 
 a = fields(val);
-idx = gui.i_selmultidlg(a);
+idx = gui.i_selmultidialog(a);
 
 string(val.(a{idx}).geneSymbols)
 

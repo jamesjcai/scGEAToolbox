@@ -167,7 +167,7 @@ hx.show(parentfig);
         % plot(thisax, sortedx, y_fit(idxx), '-','LineWidth', 2);
         % hold(thisax,"off");
 
-        [idxx] = gui.i_selmultidlg(tabnamelist, tabnamelist, hFig);
+        [idxx] = gui.i_selmultidialog(tabnamelist, tabnamelist, hFig);
         if isempty(idxx), return; end
         if idxx == 0, return; end
         

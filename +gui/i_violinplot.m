@@ -109,7 +109,7 @@ hx.show(parentfig);
 
     function i_selectsamples(~, ~)
         [~,cL] = findgroups(string(thisc));
-        [newidx] = gui.i_selmultidlg(cL, cLorder, parentfig);
+        [newidx] = gui.i_selmultidialog(cL, cLorder, parentfig);
         if isempty(newidx), return; end
         picked=ismember(thisc,cL(newidx));
 %        [~, cLorder, noanswer] = gui.i_reordergroups(thisc, [], f);

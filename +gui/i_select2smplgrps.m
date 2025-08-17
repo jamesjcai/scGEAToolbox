@@ -80,7 +80,7 @@ end
      case 'Two Sample Groups'
          answer = gui.myQuestdlg(parentfig, 'Select samples in group 1?','');
          if ~strcmp(answer, 'Yes'), return; end
-         [newidx1] = gui.i_selmultidlg(cLi, [], parentfig);
+         [newidx1] = gui.i_selmultidialog(cLi, [], parentfig);
          % if length(newidx1) == length(cLi)
          %     gui.myWarndlg(parentfig, 'Please select all group items.', '');
          %     return;
@@ -105,7 +105,7 @@ end
 
          answer = gui.myQuestdlg(parentfig, 'Select samples in group 2?','');
          if ~strcmp(answer, 'Yes'), return; end
-         [newidx2] = gui.i_selmultidlg(cLi, [], parentfig);
+         [newidx2] = gui.i_selmultidialog(cLi, [], parentfig);
          for k = 1:length(newidx2)
              ci(cx == newidx2(k)) = 2;
          end

@@ -255,7 +255,7 @@ ccx = true;
 
     function in_callback_selectsamples(~, ~)
         [~, cLorder] = findgroups(string(thisc));
-        [newidx] = gui.i_selmultidlg(cLorder, cLorder, hFig);
+        [newidx] = gui.i_selmultidialog(cLorder, cLorder, hFig);
         if isempty(newidx), return; end
         picked=ismember(thisc, cLorder(newidx));
        

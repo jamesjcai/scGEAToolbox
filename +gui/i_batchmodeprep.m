@@ -75,7 +75,7 @@ end
 function [CellTypeList]=in_selectcelltypes(CellTypeSorted, parentfig)
     CellTypeList=[];
     %pause(1);
-    %[idx] = gui.i_selmultidlg(CellTypeSorted, CellTypeSorted);
+    %[idx] = gui.i_selmultidialog(CellTypeSorted, CellTypeSorted);
     %if isempty(idx), return; end
     %if idx == 0, return; end
     %CellTypeList = CellTypeSorted(idx);

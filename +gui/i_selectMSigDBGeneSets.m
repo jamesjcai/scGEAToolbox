@@ -82,7 +82,7 @@ end
         return;
     end
 
-    %idx=gui.i_selmultidlg(a);
+    %idx=gui.i_selmultidialog(a);
     %string(val.(a{idx}).geneSymbols);
 
     %%

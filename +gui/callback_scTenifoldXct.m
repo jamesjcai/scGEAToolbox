@@ -33,7 +33,7 @@ if ~strcmp(clabel, 'Cell Type')
 end
 
 [c, cL] = findgroups(string(thisc));
-[idx] = gui.i_selmultidlg(cL, [], FigureHandle);
+[idx] = gui.i_selmultidialog(cL, [], FigureHandle);
 if isempty(idx), return; end
 if numel(idx) < 2
     gui.myWarndlg(FigureHandle, ['Need at least 2 cell groups to ' ...

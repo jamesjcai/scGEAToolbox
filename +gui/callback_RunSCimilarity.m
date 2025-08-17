@@ -31,7 +31,7 @@ function [needupdatesce] = callback_RunSCimilarity(src, ~)
                 else
                     preselected_celltypes = '';
                 end
-                [idx] = gui.i_selmultidlg(allcelltypes, preselected_celltypes, FigureHandle);
+                [idx] = gui.i_selmultidialog(allcelltypes, preselected_celltypes, FigureHandle);
                 if isempty(idx), return; end
                 if idx == 0, return; end
                 target_celltypes = allcelltypes(idx);

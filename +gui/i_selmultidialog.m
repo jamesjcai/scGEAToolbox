@@ -16,7 +16,7 @@ items = arrayfun(@(x) sprintf('Item %d',x), 1:10, 'UniformOutput', false);
 pre = {'Item 3','Item 7'};
 
 idx = gui.i_selmultidialog(items, pre)
-idx2 = gui.i_selmultidlg(items, pre)
+idx2 = gui.i_selmultidialog(items, pre)
 
 %}
 

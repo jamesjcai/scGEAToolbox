@@ -18,9 +18,9 @@ if isempty(answer), return; end
     switch answer
         case 'Yes'
             if ~isempty(preorderedcL)
-                [newidx] = gui.i_selmultidlg(cL, preorderedcL, parentfig);
+                [newidx] = gui.i_selmultidialog(cL, preorderedcL, parentfig);
             else
-                [newidx] = gui.i_selmultidlg(cL, natsort(cL), parentfig);
+                [newidx] = gui.i_selmultidialog(cL, natsort(cL), parentfig);
             end
             if length(newidx) ~= length(cL)
                 noanswer = true;

@@ -12,7 +12,7 @@ function callback_Violinplot(src, ~)
 
 
     [~, cLorder] = findgroups(string(thisc));
-    [newidx] = gui.i_selmultidlg(cLorder, cLorder, FigureHandle);
+    [newidx] = gui.i_selmultidialog(cLorder, cLorder, FigureHandle);
     if isempty(newidx), return; end
     picked = ismember(thisc, cLorder(newidx));
     % cLorderx = cLorder(ismember(cLorder,cLorder(newidx)));

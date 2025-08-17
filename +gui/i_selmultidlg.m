@@ -1,5 +1,4 @@
 function [idx] = i_selmultidlg(genelist, predefinedlist, parentfig)
-%gui.i_selmultidlg
 % This function is called by gui.i_selectngenes
 idx = [];
 

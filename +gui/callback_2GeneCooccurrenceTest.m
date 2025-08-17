@@ -31,7 +31,7 @@ function callback_2GeneCooccurrenceTest(src, ~)
             [thisc, ~] = gui.i_select1class(sce,[],[],[],FigureHandle);
             if isempty(thisc), return; end
             [~, cL] = findgroups(string(thisc));
-            [idx] = gui.i_selmultidlg(cL, [], FigureHandle);
+            [idx] = gui.i_selmultidialog(cL, [], FigureHandle);
             if isempty(idx), return; end
             fw = gui.myWaitbar(FigureHandle);
             sce = sce.selectcells(ismember(thisc, cL(idx)));

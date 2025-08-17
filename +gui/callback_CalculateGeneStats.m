@@ -34,7 +34,7 @@ function callback_CalculateGeneStats(src, ~)
         if isempty(thisc), return; end
         [c, cL] = findgroups(string(thisc));
 
-        newidx = gui.i_selmultidlg(cL, natsort(cL), FigureHandle);
+        newidx = gui.i_selmultidialog(cL, natsort(cL), FigureHandle);
         if isempty(newidx), return; end
 
         cx = c;

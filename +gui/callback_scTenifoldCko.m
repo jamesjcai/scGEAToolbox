@@ -43,7 +43,7 @@ if ~strcmp(clabel, 'Cell Type')
 end
 
 [c, cL] = findgroups(string(thisc));
-[idx] = gui.i_selmultidlg(cL, [], FigureHandle);
+[idx] = gui.i_selmultidialog(cL, [], FigureHandle);
 if isempty(idx), return; end
 if numel(idx) < 2
     gui.myWarndlg(FigureHandle, ['Need at least 2 cell groups to ' ...
@@ -83,7 +83,7 @@ if ~ismember(Cko_approach, {'Block Ligand-Receptor','Complete Gene Knockout'}), 
 switch Cko_approach
     case 'Block Ligand-Receptor'
 
-        [idx2] = gui.i_selmultidlg(gsorted, [], FigureHandle);
+        [idx2] = gui.i_selmultidialog(gsorted, [], FigureHandle);
         if isempty(idx2), return; end
         if numel(idx2)==2
             [~, idx] = ismember(gsorted(idx2), sce.g);

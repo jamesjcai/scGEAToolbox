@@ -9,7 +9,7 @@ switch answer
         %            whitelist=0;
         %             [gsorted]=gui.i_sortgenenames(sce);
         %             if isempty(gsorted), return; end
-        %             [idx]=gui.i_selmultidlg(gsorted);
+        %             [idx]=gui.i_selmultidialog(gsorted);
         %             if isempty(idx), return; end
         %             if isscalar(idx) && idx==0, return; end
         % whitelist=gsorted(idx);
