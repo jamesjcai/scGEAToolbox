@@ -65,8 +65,9 @@ end
 
     % UI figure
     hFig = uifigure('Name','Item Selection', ...
-        'Position',[100 100 600 400],...
-        'CloseRequestFcn',@(src,evt)closeFcn(src));
+        'Position',[650 290 600 400],...
+        'CloseRequestFcn', @(src,evt)closeFcn(src),...
+        'Visible','off');
     gui.i_movegui2parent(hFig, parentfig);
 
 
@@ -108,6 +109,7 @@ end
     %     'ButtonPushedFcn',@(btn,event) uiresume(hFig));
     % 'ButtonPushedFcn',@(btn,evt)okFcn(fig,lb)
     % Wait for user
+    hFig.Visible = "on";
     uiwait(hFig);
 
     function okFcn(fig,lb)

@@ -3,8 +3,8 @@ function [requirerefresh, s] = callback_MergeSCEs(src, sourcetag)
     s = "";
     [FigureHandle] = gui.gui_getfigsce(src);
     
-    answer = gui.myQuestdlg(FigureHandle, ...
-        'Current SCE will be replaced. Continue?');
+    answer = gui.myQuestdlg(FigureHandle, 'Current SCE will be replaced. Continue?', ...
+        '',{'Yes', 'No', 'Cancel'},'Yes','warning');
     if isempty(answer), return; end
     if ~strcmp(answer, 'Yes'), return; end    
     

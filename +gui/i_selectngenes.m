@@ -69,7 +69,6 @@ switch answer
             return;
         end
     case 'Select'
-
         if isa(sce, 'SingleCellExperiment')
             [gsorted] = gui.i_sortgenenames(sce, parentfig);
             if isempty(gsorted), return; end

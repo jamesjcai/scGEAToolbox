@@ -41,7 +41,7 @@ methods
 
         % Convert to single sparse if supported (R2025a+)
         if isMATLABReleaseOlderThan('R2025a')
-            warning("Single-precision sparse not supported. Keeping double precision.");
+            % warning("Single-precision sparse not supported. Keeping double precision.");
         else
             X = single(X); % Works in R2025a+
         end

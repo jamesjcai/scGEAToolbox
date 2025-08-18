@@ -1,4 +1,5 @@
-function answer = myQuestdlg(parentfig, message, title, options, defaultOption)
+function answer = myQuestdlg(parentfig, message, title, ...
+                    options, defaultOption, icontag)
     % CUSTOMQUESTDLG Display a dialog box appropriate for the figure type.
     %
     % answer = CUSTOMQUESTDLG(parentfig, message, title, options, defaultOption)
@@ -17,12 +18,14 @@ function answer = myQuestdlg(parentfig, message, title, options, defaultOption)
     % Output:
     % - answer: The option selected by the user.
 
-
-    if nargin < 4
-        options = {'Yes', 'No', 'Cancel'};
-        defaultOption = options{1};
+    if nargin < 6
+        icontag = 'question'; % warning
     end
     if nargin < 5
+        defaultOption = options{1};
+    end    
+    if nargin < 4
+        options = {'Yes', 'No', 'Cancel'};
         defaultOption = options{1};
     end
     if nargin < 3, title = ''; end
@@ -30,16 +33,17 @@ function answer = myQuestdlg(parentfig, message, title, options, defaultOption)
     if nargin < 1, parentfig = []; end
     if isempty(parentfig) || ~gui.i_isuifig(parentfig)
         % Traditional figure-based app
-        answer = questdlg(message, title, options{:}, defaultOption);
-    else
+        answer = questdlg(message, title, options{:}, defaultOption);        
+    else        
         % UIFigure-based app
         if ~strcmp(options{end}, 'Cancel')
             options{end+1} = 'Cancel';
         end
+        
         answer = uiconfirm(parentfig, message, title, ...
             'Options', options, ...
             'DefaultOption', find(strcmp(options, defaultOption)), ...
-            'Icon', 'question','CancelOption', length(options));
+            'Icon', icontag, 'CancelOption', length(options));
 
         % if strcmp(answer, options{end})
         %     % if ~strcmp('Yes', gui.myQuestdlg(parentfig, ...

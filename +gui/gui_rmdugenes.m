@@ -12,7 +12,7 @@ function [needupdate, sce] = gui_rmdugenes(sce, parentfig)
         "expression rows\nCancel - Take no action");
     answer = gui.myQuestdlg(parentfig, messagetext, ...
         "Duplicate Genes Detected",{'Method 1', 'Method 2', ...
-        'Method 3'});
+        'Method 3'}, {'Method 1'}, 'warning');
     switch answer
         case 'Cancel'
             return;
