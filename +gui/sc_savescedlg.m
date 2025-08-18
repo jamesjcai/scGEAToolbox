@@ -32,6 +32,7 @@ if nargin<2, parentfig = []; end
     if ~isempty(a), a = extractBefore(a, strlength(a)); end
     if ~isempty(a), a = matlab.lang.makeValidName(a); end
 
+    setpref('scgeatoolbox', preftagname, indx);
     ButtonName = list{indx};
     switch ButtonName
         case 'SCE Data File (*.mat)...'

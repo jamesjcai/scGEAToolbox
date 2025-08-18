@@ -346,15 +346,20 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                 end
             end
         case 'GEO Accession Number(s)...'
+
+            preftagname1 ='previousgeoaccs';    
+            previousgeoaccs = getpref('scgeatoolbox', preftagname1, 'GSM7855468');
+            
             if gui.i_isuifig(parentfig)
-                acc = gui.myInputdlg({'Input Number(s) (e.g., GSM3308549-52):'}, ...
-                    'GEO Accession', {'GSM7855468'}, parentfig);
+                acc = gui.myInputdlg({'Input(s) (e.g., GSM7855468 or GSM3308549-52):'}, ...
+                    'GEO Accession', {previousgeoaccs}, parentfig);
             else
                 acc = inputdlg('Input Number(s) (e.g., GSM3308549-52):', ...
-                    'GEO Accession', [1, 50], {'GSM7855468'});
+                    'GEO Accession', [1, 50], {previousgeoaccs});
             end
 
             if isempty(acc), return; end
+            setpref('scgeatoolbox', preftagname1, acc{1});
             %acc = strtrim(deblank(acc{1}));
             %acc = strrep(acc,' ','');
             acc = regexprep(acc{1},'[^a-zA-Z0-9,;\-]','');
