@@ -34,7 +34,7 @@ answer = gui.myQuestdlg(FigureHandle, 'Construct gene regulatory network (GRN) f
             return;
     end
 
-    answer = gui.myQuestdlg(FigureHandle, 'This analysis may take several hours. Continue?');
+    answer = gui.myQuestdlg(FigureHandle, 'This analysis may take several hours. Continue?','',[],[],'error');
     if ~strcmpi(answer, 'Yes'), return; end
     tmpmat = tempname;
     fw = gui.myWaitbar(FigureHandle);

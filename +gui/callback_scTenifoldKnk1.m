@@ -139,7 +139,7 @@ else
     elseif nnz(A0(idx, :) ~= 0) < 50
         s = sprintf('KO gene (%s) has too few links (n=%d) with other genes. Continue?', ...
             sce.g(idx), nnz(A0(idx, :) ~= 0));
-        answer11 = gui.myQuestdlg(FigureHandle, s);
+        answer11 = gui.myQuestdlg(FigureHandle, s,'',[],[],'error');
         switch answer11
             case 'Yes'
                 doit = true;

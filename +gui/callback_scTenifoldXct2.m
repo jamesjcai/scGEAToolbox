@@ -26,7 +26,8 @@ sce1 = sce.selectcells(j1);
 sce2 = sce.selectcells(j2);
 
 if sce1.NumCells < 50 || sce2.NumCells < 50
-    if ~strcmp(gui.myQuestdlg(FigureHandle, 'One of samples contains too few cells (n < 50). Continue?'), 'Yes'), return; end
+    if ~strcmp(gui.myQuestdlg(FigureHandle, ...
+            'One of samples contains too few cells (n < 50). Continue?','',[], [], 'error'), 'Yes'), return; end
 end
 
 

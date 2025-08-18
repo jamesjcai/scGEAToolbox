@@ -92,7 +92,7 @@ switch answer
             return;
         end
 
-        answer123 = gui.myQuestdlg(FigureHandle, 'This analysis may take several hours. Continue?');
+        answer123 = gui.myQuestdlg(FigureHandle, 'This analysis may take several hours. Continue?','',[],[],'warning');
         if ~strcmpi(answer123, 'Yes'), return; end
 
         fw = gui.myWaitbar(FigureHandle);

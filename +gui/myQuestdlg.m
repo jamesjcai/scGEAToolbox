@@ -18,15 +18,15 @@ function answer = myQuestdlg(parentfig, message, title, ...
     % Output:
     % - answer: The option selected by the user.
 
-    if nargin < 6
+    if nargin < 6 || isempty(icontag)
         icontag = 'question'; % warning
     end
-    if nargin < 4
+    if nargin < 4 || isempty(options)
         options = {'Yes', 'No', 'Cancel'};
         defaultOption = options{1};
     end
 
-    if nargin < 5
+    if nargin < 5 || isempty(defaultOption)   % put this here afte argin<4
         defaultOption = options{1};
     end    
     

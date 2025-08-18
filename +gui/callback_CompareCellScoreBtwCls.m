@@ -37,7 +37,7 @@ bb = 'No, just show values (heatmap)';
                 if isempty(thisc), return; end
                 if isscalar(unique(thisc))
                     answer = gui.myQuestdlg(FigureHandle, "All cells are in the same group. No comparison will be made. Continue?", ...
-                        "", {'Yes', 'No', 'Cancel'}, 'No');
+                        "", {'Yes', 'No', 'Cancel'}, 'No', 'warning');
                     switch answer
                         case 'Yes'
                         otherwise

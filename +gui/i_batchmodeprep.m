@@ -62,7 +62,7 @@ function [done, CellTypeList, i1, i2, cL1, cL2,...
         end
     end
     if needoverwritten
-        answer=gui.myQuestdlg(parentfig, sprintf('Overwrite existing result file(s) in %s?', outdir),'');    
+        answer=gui.myQuestdlg(parentfig, sprintf('Overwrite existing result file(s) in %s?', outdir),'',[],[],'warning');
     else
         answer=gui.myQuestdlg(parentfig, sprintf('Result files will be save in %s. Continue?', outdir), '');
     end

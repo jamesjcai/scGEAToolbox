@@ -27,7 +27,7 @@ if isempty(thisc), return; end
 if ~strcmp(clabel, 'Cell Type')
     if ~strcmp(gui.myQuestdlg(FigureHandle, ...
             ['You selected grouping varible other than ''Cell Type''.' ...
-            ' Continue?']), 'Yes')
+            ' Continue?'],'',[],[],'warning'), 'Yes')
         return;
     end
 end
@@ -157,7 +157,7 @@ if ~isempty(T)
     outfile = fullfile(wkdir,"outfile.csv");
 
     if isfile(outfile)
-        answerx = gui.myQuestdlg(FigureHandle, sprintf('Overwrite %s? Select No to save in a temporary file.', outfile));
+        answerx = gui.myQuestdlg(FigureHandle, sprintf('Overwrite %s? Select No to save in a temporary file.', outfile),'',[],[],'warning');
     else
         answerx = 'Yes';
     end

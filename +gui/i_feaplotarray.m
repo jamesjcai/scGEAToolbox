@@ -11,7 +11,7 @@ g = sce.g;
 s = sce.s;
 
 if max(findgroups(thisc))>50
-    answer = gui.myQuestdlg(parentfig, 'Too many groups. Continue?','');
+    answer = gui.myQuestdlg(parentfig, 'Too many groups. Continue?','',[],[],'warning');
     if ~strcmp(answer, 'Yes'), return; end
 end
 

@@ -15,7 +15,7 @@ function callback_2GeneCooccurrenceTest(src, ~)
         g1 = glist(1);
         g2 = glist(2);        
         if ~strcmp('Yes', gui.myQuestdlg(FigureHandle, sprintf(['Only two ' ...
-            'selected genes, %s and %s, will be used for the analysis. Continue?'], g1, g2)))
+            'selected genes, %s and %s, will be used for the analysis. Continue?'], g1, g2),'',[],[],'warning'))
             return;
         end
     end
