@@ -9,6 +9,17 @@ function T = sc_genestats(X, g)
 %   T = sc_genestats(SingleCellExperiment) extracts data and gene names
 %   automatically.
 
+if nargin == 1
+        % --- Handle SingleCellExperiment input ---
+    if isa(X, 'SingleCellExperiment')
+        g = X.g;
+        X = X.X;
+    else
+        error('Invalid input(s).')
+    end
+
+else
+
     % --- Input parsing ---
     p = inputParser;
     addRequired(p, 'X', @(x) isnumeric(x) || issparse(x) || isa(x, 'SingleCellExperiment'));
@@ -18,11 +29,7 @@ function T = sc_genestats(X, g)
     X = p.Results.X;
     g = p.Results.g;
 
-    % --- Handle SingleCellExperiment input ---
-    if isa(X, 'SingleCellExperiment')
-        g = X.g;
-        X = X.X;
-    end
+end
 
     % --- Gene names default ---
     numGenes = size(X,1);

@@ -21,13 +21,15 @@ function answer = myQuestdlg(parentfig, message, title, ...
     if nargin < 6
         icontag = 'question'; % warning
     end
-    if nargin < 5
-        defaultOption = options{1};
-    end    
     if nargin < 4
         options = {'Yes', 'No', 'Cancel'};
         defaultOption = options{1};
     end
+
+    if nargin < 5
+        defaultOption = options{1};
+    end    
+    
     if nargin < 3, title = ''; end
     if nargin < 2, message = 'Selection'; end
     if nargin < 1, parentfig = []; end
