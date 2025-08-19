@@ -63,7 +63,7 @@ if nargin<1, T = []; end
 
     % Add search functionality
     uilabel(topLayout, 'Text', 'Search:');
-    searchField = uieditfield(topLayout, 'ValueChangedFcn', @(src, event) searchTable(src, uitTable));
+    searchField = uieditfield(topLayout, 'ValueChangedFcn', @(src, event) searchTable(src, uitTable, T));
     
     % Add row count label
     rowCountLabel = uilabel(topLayout, 'Text', sprintf('Rows: %d', size(data, 1)));
@@ -74,7 +74,7 @@ if nargin<1, T = []; end
     
     % Add refresh button in top panel
     uibutton(topLayout, 'Text', 'Refresh Data', ...
-             'ButtonPushedFcn', @(btn, event) refreshData(uitTable, rowCountLabel, sortByDropdown));
+             'ButtonPushedFcn', @(btn, event) refreshData(uitTable, rowCountLabel, sortByDropdown, T));
     
   
     % Create context menu for the table
@@ -235,11 +235,14 @@ function exportToMAT(tableObj, defname)
 end
 
 function exportToWorkspace(tableObj, fig)
-
-    outfiletag = "";
-    gui.i_exporttable(tableObj, true, "T"+string(defname), ...
-            sprintf('Enrichr_Results_%s', outfiletag), [], [], fig);
-
+    columnNames = tableObj.ColumnName;
+    data = tableObj.Data;
+    T = cell2table(data, 'VariableNames', strrep(columnNames, ' ', '_'));
+    labels = {'Save to variable named:'};
+    vars = {'T'};
+    values = {T};
+    gui.myExport2wsdlg(labels, vars, values, ...
+        'Save Data to Workspace', [], fig);
 
     %{
 
@@ -276,9 +279,10 @@ function exportToWorkspace(tableObj, fig)
     %}
 end
 
-function refreshData(tableObj, rowCountLabel, sortByDropdown)
+function refreshData(tableObj, rowCountLabel, sortByDropdown, T)
     % Function to refresh data with new random values
-    tableObj.Data = generateSampleData();
+    T = convertvars(T, @isstring, 'cellstr');        
+    tableObj.Data = table2cell(T);
     
     % Update row count
     updateRowCount(rowCountLabel, tableObj);
@@ -374,13 +378,16 @@ function showStatistics(tableObj)
 end
 %}
 
-function searchTable(searchField, tableObj)
+function searchTable(searchField, tableObj, T)
     % Function to search the table
     searchText = lower(searchField.Value);
     
     % If search text is empty, show all rows
     if isempty(searchText)
-        tableObj.Data = generateSampleData();
+
+        T = convertvars(T, @isstring, 'cellstr');        
+        tableObj.Data = table2cell(T);
+        % tableObj.Data = generateSampleData();
         return;
     end
     

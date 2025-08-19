@@ -110,8 +110,7 @@ if ~isempty(T)
     [knownpair]= ismember(A, B, 'rows');
     assert(length(knownpair)==height(T));
     T=[T, table(knownpair)];
-
-    % [a, b] = pkg.i_tempdirfile("sctendifoldxct");
+    
     b = matlab.lang.makeValidName(string(datetime));
     b = fullfile(wkdir, b+".txt");
     writetable(T, b);
@@ -123,7 +122,7 @@ if ~isempty(T)
         'Export result...');
     switch answer
         case 'Locate result file...'
-            winopen(a);
+            winopen(b);
             pause(2)
             if strcmp(gui.myQuestdlg(FigureHandle, 'Export result to other format?'), 'Yes')
                 gui.i_exporttable(T, false, 'Ttenifldxt2', 'TenifldXt2Table',[],[],FigureHandle);
@@ -131,7 +130,7 @@ if ~isempty(T)
         case 'Export result...'
             gui.i_exporttable(T, false, 'Ttenifldxt2', 'TenifldXt2Table',[],[],FigureHandle);
         otherwise
-            winopen(a);
+            winopen(b);
     end
 else
     if ~prepare_input_only
