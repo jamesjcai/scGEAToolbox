@@ -31,3 +31,4 @@ docs
 **/.svn/**/*
 **/.buildtool/**/*
 **/*.asv
+.git

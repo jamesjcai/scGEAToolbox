@@ -166,7 +166,32 @@ switch selectedProvider
                 models_response = webread(models_url, options);
                 % Display models response as JSON
                 % assignin("base",'models_response',  models_response)
-                model_names = string({models_response.data.id});
+
+                % model_names = string({models_response.data.id});
+
+                %{
+                    struct_array = [models_response.data{:}];  % Converts cell to struct array
+                    model_names = string({struct_array.id});   % Now you can use brace indexing 
+
+                %}
+
+                model_names = string(cellfun(@(s) s.id, models_response.data, 'UniformOutput', false));
+
+                %{
+                    model_names = cellfun(@(s) ...
+                        string(s.id), models_response.data, ...
+                        'UniformOutput', false);
+                    
+                    % Replace missing with empty string
+                    for k = 1:numel(model_names)
+                        if isempty(model_names{k})
+                            model_names{k} = "";
+                        end
+                    end
+                    
+                    model_names = string(model_names);
+
+                %}
 
             catch ME
                 fprintf('Error fetching models: %s\n', ME.message);
