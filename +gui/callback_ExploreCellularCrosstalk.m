@@ -1,11 +1,10 @@
 function callback_ExploreCellularCrosstalk(src, ~)
 
 [FigureHandle, sce] = gui.gui_getfigsce(src);
-
 if ~gui.gui_showrefinfo('talklr [DOI:10.1101/2020.02.01.930602]', FigureHandle), return; end
 
     answer = gui.myQuestdlg(FigureHandle, 'This function is based on an unpublished method [DOI:10.1101/2020.02.01.930602]. Continue?');
-        if ~strcmp(answer, 'Yes'), return; end
+    if ~strcmp(answer, 'Yes'), return; end
                 
         if isempty(sce.c_cell_type_tx) || numel(unique(sce.c_cell_type_tx)) < 2
             if ~isempty(sce.c_cluster_id) && numel(unique(sce.c_cluster_id)) > 1
@@ -31,15 +30,13 @@ if ~gui.gui_showrefinfo('talklr [DOI:10.1101/2020.02.01.930602]', FigureHandle),
         end
         selected = ismember(c, idx);
 
-
         pw = fileparts(mfilename('fullpath'));
-        dbfile = fullfile(pw, '..', 'assets', 'Ligand_Receptor.mat');
+        dbfile = fullfile(pw, '..', 'assets', 'Ligand_Receptor', 'Ligand_Receptor.mat');
         load(dbfile, 'ligand', 'receptor', 'T');
-
 
         fw = gui.myWaitbar(FigureHandle);
         sce = sce.selectcells(selected);
-        [OUT, ~] = run.ml_talklr(sce);
+        [OUT, T] = run.ml_talklr(sce);
         gui.myWaitbar(FigureHandle, fw);
 
         n = length(OUT.ligandok);
@@ -47,6 +44,10 @@ if ~gui.gui_showrefinfo('talklr [DOI:10.1101/2020.02.01.930602]', FigureHandle),
             gui.myWarndlg(FigureHandle, 'Not detected.');
         end
 
+        gui.TableViewerApp(T, FigureHandle, "TalklrRes");
+end
+
+%{        
         labels = {'Save OUT to variable named:'};
         vars = {'OUT'};
         values = {OUT};
@@ -138,6 +139,4 @@ if ~gui.gui_showrefinfo('talklr [DOI:10.1101/2020.02.01.930602]', FigureHandle),
                     return;
                 end
             end
-
-
-        end
+%}

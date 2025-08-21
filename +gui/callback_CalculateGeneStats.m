@@ -17,8 +17,8 @@ function callback_CalculateGeneStats(src, ~)
         [glist] = gui.i_selectngenes(sce, [], FigureHandle);
         if isempty(glist) || all(strlength(glist) == 0), return; end
         [y, idx]=ismember(glist, sce.g);
-        assignin("base","glist",glist);
-        assignin("base","g",sce.g);
+        %assignin("base","glist",glist);
+        %assignin("base","g",sce.g);
         if ~any(y), return; end        
         sce.g = sce.g(idx);
         % sce.X = sce.X(idx,:);

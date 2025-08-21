@@ -25,6 +25,19 @@ l = 1;
 hx = gui.myFigure(parentfig);
 hFig = hx.FigHandle;
 h1 = axes(hFig);
+
+if ~isMATLABReleaseOlderThan('R2025a')
+    try
+        switch parentfig.Theme.BaseColorStyle
+            case "light"
+                h1.ColorOrder = baseColors;
+            case "dark"
+                h1.ColorOrder = fliplightness(h1.ColorOrder);
+                disp('fliplightness applied.');
+        end
+    catch
+    end
+end
 [p1] = drawnetwork(G1, h1);
 
 hx.addCustomButton('off', @ChangeFontSize, 'noun_font_size_591141.gif', 'Change Font Size of Nodes');

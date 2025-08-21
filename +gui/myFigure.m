@@ -15,11 +15,19 @@ classdef myFigure < handle
         function obj = myFigure(parentfig)
             if nargin<1, parentfig = []; end
 
-            parentfig = [];
-            if gui.i_isuifig(parentfig)
+            if gui.i_isuifig([])
                 disp('making a uifigure');
                 obj.FigHandle = uifigure('Name', '', ...
                     'Visible',"off");
+
+                if ~isMATLABReleaseOlderThan('R2025a')
+                    parentfig.Theme.BaseColorStyle
+                    try
+                        theme(obj.FigHandle, parentfig.Theme.BaseColorStyle);
+                    catch
+                    end
+                end
+
                 obj.tb = uitoolbar(obj.FigHandle);
                 obj.AxHandle = uiaxes(obj.FigHandle);
                 obj.AxHandle.Position = [50, 30, obj.FigHandle.Position(3)-100, ... 
@@ -43,6 +51,14 @@ classdef myFigure < handle
                     'NumberTitle', 'on', 'Visible',"off", ...
                     "DockControls", "off", 'ToolBar', 'figure', ...
                     'Position', [1, 1, 560, 420]);
+
+                if ~isMATLABReleaseOlderThan('R2025a')                    
+                    try
+                        theme(obj.FigHandle, parentfig.Theme.BaseColorStyle);
+                    catch
+                    end
+                end
+
                 % obj.AxHandle = axes(obj.FigHandle);
                 obj.AxHandle = gca;
                 obj.tb = findall(obj.FigHandle, 'Type', 'uitoolbar');

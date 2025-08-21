@@ -24,6 +24,7 @@ end
 
 if isempty(thisc1), return; end
 if isempty(thisc2) || isempty(cL2)
+    
     hx = gui.myFigure(FigureHandle);
     T = tabulate(thisc1);
     y = T(:,2);
