@@ -155,7 +155,7 @@ switch selectedProvider
         loadenv(apikeyfile,"FileType","env");
         if ~isempty(getenv("TAMUAI_API_KEY"))        
             % Show models available in json format
-            OPEN_WEBUI_API_ENDPOINT = "https://chat-api.preview.tamu.ai";
+            OPEN_WEBUI_API_ENDPOINT = "https://chat-api.tamu.ai";
             models_url = sprintf('%s/api/models', OPEN_WEBUI_API_ENDPOINT);
             
             % Set up options for webread

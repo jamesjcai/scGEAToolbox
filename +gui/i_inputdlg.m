@@ -35,7 +35,7 @@ dimPanel = uipanel(fig, 'Position', [20 20 300 150], ...
 if iscell(definput)
     definput = definput{1};
 end
-edit = uieditfield(dimPanel, 'Position',[20 70 260 22], 'Value', definput);
+edit = uieditfield(dimPanel, 'Position', [20 70 260 22], 'Value', definput);
 
 btnOk = uibutton(dimPanel, 'Text','OK', ...
                  'Position',[60 20 80 30], ...
@@ -52,7 +52,9 @@ if ~isMATLABReleaseOlderThan('R2025a')
     end
 end
 
+
 fig.Visible = 'on';
+focus(edit);
 uiwait(fig);
 
 if isvalid(fig) % If the dialog was not closed by user

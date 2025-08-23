@@ -35,7 +35,7 @@ function [done, response] = callTAMUAIChat(apikey, prompt, model)
     end    
     
     % API endpoint
-    url = 'https://chat-api.preview.tamu.ai/api/chat/completions';
+    url = 'https://chat-api.tamu.ai/api/chat/completions';
     
     % Construct the request body
     messages_cell = {struct('role', 'user', 'content', prompt)};

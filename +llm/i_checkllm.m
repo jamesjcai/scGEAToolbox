@@ -49,7 +49,7 @@ prompt = "Why is the sky blue?";
             disp(feedbk);
         case 'TAMUAIChat'
             loadenv(apikeyfile, "FileType", "env");
-            OPEN_WEBUI_API_ENDPOINT = "https://chat-api.preview.tamu.ai";
+            OPEN_WEBUI_API_ENDPOINT = "https://chat-api.tamu.ai";
             OPEN_WEBUI_API_KEY = getenv("TAMUAI_API_KEY");
             chat_url = sprintf('%s/api/chat/completions', OPEN_WEBUI_API_ENDPOINT);
             

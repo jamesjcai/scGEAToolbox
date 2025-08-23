@@ -35,7 +35,7 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
             'Select a source', list(defaultindx));
     else
         if isempty(parentfig)
-            figure;
+            % figure;
         else
             figure(parentfig);
         end

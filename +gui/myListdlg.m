@@ -44,6 +44,13 @@ if nargin < 4, prefersel = []; end
     % Create Cancel button
     btnCancel = uibutton(d, 'Text', 'Cancel', 'Position', [160 20 80 30], ...
         'ButtonPushedFcn', @(btn,event) (close(d)));
+
+    if ~isMATLABReleaseOlderThan('R2025a')
+        try
+            theme(d, parentfig.Theme.BaseColorStyle);
+        catch
+        end
+    end
     drawnow;
     d.Visible = 'on';
     d.WindowStyle = "modal";

@@ -52,17 +52,17 @@ function answer = openInputDialog(prompt, dlgtitle, definput, parentfig)
     % Create UI elements
     % numFields
     % assignin('base',"definput",definput);
-    for i = 1:numFields
-        uilabel(d, 'Text', prompt{i}, ...
-                   'Position', [20, dialogHeight - 40 - (i - 1) * 50, 310, 22]);
+    for idx = 1:numFields
+        uilabel(d, 'Text', prompt{idx}, ...
+                   'Position', [20, dialogHeight - 40 - (idx - 1) * 50, 310, 22]);
         
-        a = definput{i};
+        a = definput{idx};
         if height(a)>1
             a=a(1,:);
         end
         
-        fields(i) = uieditfield(d, 'text', ...
-                                'Position', [20, dialogHeight - 65 - (i - 1) * 50, 310, 22], ...
+        fields(idx) = uieditfield(d, 'text', ...
+                                'Position', [20, dialogHeight - 65 - (idx - 1) * 50, 310, 22], ...
                                 'Value', a);
     end
 
@@ -76,6 +76,7 @@ function answer = openInputDialog(prompt, dlgtitle, definput, parentfig)
                          'Position', [190, 20, 60, 30], ...
                          'ButtonPushedFcn', @(btn, event) delete(d));
 
+    focus(fields(1));
     % Wait for user input
     uiwait(d);
     

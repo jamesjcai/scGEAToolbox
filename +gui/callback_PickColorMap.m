@@ -11,7 +11,7 @@ function callback_PickColorMap(src, ~, showzero)
     %folder = extractBefore(folder, a(end)+1);
     wrkpth = fullfile(folder, '..', 'external', 'ml_cbrewer');
 
-    wrkpth
+    
 
     if ~(ismcc || isdeployed)
         addpath(wrkpth);
@@ -48,7 +48,7 @@ function callback_PickColorMap(src, ~, showzero)
     
     indx = randi(length(co));
     colormap(FigureHandle, abs(co{indx}));
-    fprintf('Set colormap to %s.\n', cn{indx});
+    % fprintf('Set colormap to %s.\n', cn{indx});
     
     if showzero
         cm = colormap;
