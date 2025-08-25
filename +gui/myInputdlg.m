@@ -45,6 +45,13 @@ function answer = openInputDialog(prompt, dlgtitle, definput, parentfig)
     d = uifigure('Position', [dialogX, dialogY, dialogWidth, dialogHeight], ...
                  'Name', dlgtitle, 'WindowStyle', 'modal');
 
+    if ~isMATLABReleaseOlderThan('R2025a')
+        try
+            theme(d, parentfig.Theme.BaseColorStyle);
+        catch ME
+            disp(ME.message);
+        end
+    end    
     % Store user input
     numFields = numel(prompt);
     fields = gobjects(numFields, 1);

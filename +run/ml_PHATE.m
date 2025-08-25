@@ -46,7 +46,7 @@ data = data';
 data = sqrt(data);
 
 
-s = phate(data, 't', 20, 'ndim', ndim, 'k', 10);
+s = phate(data, 't', 20, 'ndim', ndim, 'k', 10, 'npca', min([100, size(X,2)]));
 %s = phate(data, 'ndim', ndim);
 
 %%

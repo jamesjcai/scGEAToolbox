@@ -1,4 +1,4 @@
-function [paramset] = i_degparamset(nogui,parentfig)
+function [paramset] = i_degparamset(nogui, parentfig)
 
 if nargin<2, parentfig = []; end
 
@@ -9,7 +9,7 @@ preftagname ='degtestparamset';
 defaultset = getpref('scgeatoolbox', preftagname, {0.05, 1.0, 0.01, 'Adjusted P-value'});
 
 if nogui
-    paramset = {0.05, 1.0, 0.01, 'Adjusted P-value'};    
+    paramset = {0.05, 1.0, 0.01, 'Adjusted P-value'};   
 else
     paramset = [];
     definput = {num2str(defaultset{1}), num2str(defaultset{2}), num2str(defaultset{3})};
@@ -51,6 +51,5 @@ else
             sortbywhat = [];
     end    
     paramset = {mindiffpct, minabsolfc, apvaluecut, sortbywhat};
+    setpref('scgeatoolbox', preftagname, paramset);
 end
-setpref('scgeatoolbox', preftagname, paramset);
-

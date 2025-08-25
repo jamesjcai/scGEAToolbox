@@ -89,12 +89,14 @@ end
 
     function in_callback_scgeatoolsce(src, ~)
         parentfig = src.Parent.Parent;
-        figure(parentfig);        
+        figure(parentfig);
         figure(hx.FigHandle);
 
         %answer1 = gui.myQuestdlg(FigureHandle, 'Extract cells from different groups and view new SCEs, or save new SCEs?','',...
         %    'View SCEs','Save SCEs','Cancel','View SCEs');
         
+        % hx.FigHandle.Theme
+
         answer1 = gui.myQuestdlg(hx.FigHandle, 'Extract cells and make new SCEs?','');
         switch answer1
             case {'Cancel','No'}

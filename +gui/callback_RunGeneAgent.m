@@ -41,21 +41,36 @@ if nargin < 3, predefinedlist = []; end
     ingenelist = extractBefore(ingenelist, strlength(ingenelist));
 
     try
-        out = run.ml_geneagent(ingenelist);
+        [~, retrieveurl] = run.ml_geneagent(ingenelist);        
     catch ME
         cd(olddir);
         gui.myWaitbar(FigureHandle, fw, true);
         gui.myErrordlg(FigureHandle, ME.message);
         return;
     end
-
-    % Process the output and generate the report
-    if isstruct(out)
-        aaa(out);
-    else
-        warning('Output is not a struct. Report generation skipped.');
-    end
     gui.myWaitbar(FigureHandle, fw);
+
+    if strcmp('Yes', gui.myQuestdlg(FigureHandle, "Wait analysis is complete and then generate report?"))
+        
+        selection = uiconfirm(app.UIFigure, ...
+            'Wait until the web application is done, click Continue to proceed.', ...
+            'Process Status', ...
+            'Options', {'Continue'}, ...
+            'DefaultOption', 1, ...
+            'Icon', 'info');
+        
+        % The code execution will pause here until user clicks Continue
+        if strcmp(selection, 'Continue')
+            options = weboptions('Timeout', 30);
+            out = webread(retrieveurl, options);
+            % Process the output and generate the report
+            if isstruct(out)
+                aaa(out);
+            else
+                warning('Output is not a struct. Report generation skipped.');
+            end
+        end
+    end
     cd(olddir);
 end
 
@@ -89,7 +104,7 @@ function aaa(s)
         
         % Create formatted paragraph
         p = Paragraph(txt);
-        p.Style = {FontFamily('Times New Roman'), FontSize('11pt'), 
+        p.Style = {FontFamily('Times New Roman'), FontSize('11pt'), ...
             OuterMargin('0.25in','0in','0in','12pt')};
         append(doc, p);
     end

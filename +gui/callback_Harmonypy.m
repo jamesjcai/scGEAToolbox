@@ -1,9 +1,7 @@
 function [done] = callback_Harmonypy(src, ~)
+
 done = false;
 
-%[ok] = gui.i_confirmscript('Run Batch Integration (Harmony)?', ...
-%    'py_harmonypy', 'python');
-%if ~ok, return; end
 
 [FigureHandle, sce] = gui.gui_getfigsce(src);
 if numel(unique(sce.c_batch_id)) < 2
@@ -47,8 +45,7 @@ answer = gui.myQuestdlg(FigureHandle, 'Using MATLAB engine for Python or Calling
                 id = findgroups(sce.c_batch_id);
                 id = id(:);
             end
-            [s] = run.py_harmonypy_new(sce.s, id, wkdir);
-            % [s] = run.py_harmonypy(sce.s, id);
+            [s] = run.py_harmonypy(sce.s, id, wkdir);            
 
             if isempty(s) || isequal(sce.s, s)
                 % gui.myWaitbar(FigureHandle, fw);

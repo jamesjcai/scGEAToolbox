@@ -2,6 +2,15 @@ function [answer] = myInputwin(~, ~, definput, parentfig)
 
 answer = [];
 hFig = uifigure("WindowStyle","modal",'Visible','off');
+
+if ~isMATLABReleaseOlderThan('R2025a')
+    try
+        theme(hFig, parentfig.Theme.BaseColorStyle);
+    catch ME
+        disp(ME.message);
+    end
+end
+
 hFig.Position(3)=0.75*hFig.Position(3);
 hFig.Position(4)=0.75*hFig.Position(4);
 dialogWidth = hFig.Position(3);

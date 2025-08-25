@@ -21,7 +21,7 @@ classdef myFigure < handle
                     'Visible',"off");
 
                 if ~isMATLABReleaseOlderThan('R2025a')
-                    parentfig.Theme.BaseColorStyle
+                    % parentfig.Theme.BaseColorStyle
                     try
                         theme(obj.FigHandle, parentfig.Theme.BaseColorStyle);
                     catch

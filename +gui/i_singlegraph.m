@@ -72,6 +72,7 @@ oldG1 = [];
         gui.myWaitbar(hFig, fw);
   end
 
+%{
     function in_networkvis_linear_old(~, ~)
         fw=gui.myWaitbar(hFig);
 
@@ -109,6 +110,8 @@ oldG1 = [];
         figure(h.FigHandle);
         % set(gcf, 'Color', 'white');
     end
+
+%}
 
     % function in_NetworkVis(~, ~)
     %     net = gui.networkvisualizer(G1.adjacency);

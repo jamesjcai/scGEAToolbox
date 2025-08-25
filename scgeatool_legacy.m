@@ -6,13 +6,14 @@ function varargout = scgeatool_legacy(sce, varargin)
 % end
 if ~gui.i_installed('stats'), return; end
 
+%{
 if nargin<1
     group = "scgeatoolbox";
     pref = "switch2uifigure";
     if ~ispref(group,pref) || (ispref(group,pref) && strcmp(getpref(group,pref), 'ask'))
         quest = "Seletct Switch to explore the new (uifigure-based) SCGEATOOL, or Keep to continue with the current (figure-based) version.";
         pbtns = ["Switch","Keep"];    
-        [answer1x,tf1x] = uigetpref(group,pref,'Try the New SCGEATOOL Preview?',quest,pbtns, ...
+        [answer1x,tf1x] = uigetpref(group,pref,'Try the New SCGEATOOL?',quest,pbtns, ...
             "ExtraOptions","Cancel",'DefaultButton',"Cancel");
         if tf1x~=1, return; end
     elseif ispref(group,pref) && ~strcmp(getpref(group,pref), 'ask')
@@ -33,6 +34,7 @@ if nargin<1
             return;
     end
 end
+%}
 
 persistent speciestag
 

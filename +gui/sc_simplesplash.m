@@ -48,24 +48,27 @@ if nargin < 1 || isempty(fx)
 
     % text(fa,0.75,0.2,'Loading...','Color','w');
     %plot(fa,[255 repmat(255, 1, r)],'-','LineWidth',5,'Color',[.7 .7 .7]);
-    hold on
+    hold(fa, "on");
     r=0.1;
     X=10:390;
     x=X(1:round(length(X)*r));
     y=290*ones(size(x));
     plot(fa,x,y,'-','LineWidth',4,'Color',[.7 .7 .7]);
-
+    box(fa,"off");
+    axis(fa,"off");
+    movegui(fx,'center');
+    drawnow;
+    pause(0.1);
     %ylim(fa,[0 1]);
     %xlim(fa,[1 10]);
-    movegui(fx,'center');
+    
     % set(fa,'Color','k','XColor','k','YColor','k');
     text(fa,20, 50,'SCGEATOOL','Color','w','FontSize',16);
-
     v1  = pkg.i_get_versionnum;
     text(fa,20, 80, v1, 'Color',[.7 .7 .7],'FontSize',12);
     text(fa,20, 270,'Loading...','Color',[.7 .7 .7],'FontSize',12);
     fx.Visible=true;
-    hold on
+    hold(fa,"on");
 else
     fa = findall(fx,'type','axes');    
     X=10:390;
@@ -73,6 +76,7 @@ else
     y=290*ones(size(x));
     plot(fa,x,y,'-','LineWidth',4,'Color',[.7 .7 .7]);
 end
+
 
 % for k = 3:10
 %     h = plot(fa, repmat(0.1, 1, k),'-','LineWidth',5,'Color',[.7 .7 .7]);    

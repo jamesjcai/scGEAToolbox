@@ -15,20 +15,20 @@ if nargin<3, parentfig = []; end
         answer = gui.myQuestdlg(parentfig, 'Which species?', ...
             'Select Species',{'Human', 'Mouse'}, preferredspecies);
     end
-    speciestag = "";
+    speciestag = '';
     if isempty(answer), return; end
     switch answer
         case 'Human'
-            speciestag = "human";
+            speciestag = 'human';
             setpref('scgeatoolbox', 'preferredspecies', 'Human');
         case 'Mouse'
-            speciestag = "mouse";
+            speciestag = 'mouse';
             setpref('scgeatoolbox', 'preferredspecies', 'Mouse');
         case 'Zebrafish'
-            speciestag = "zebrafish";
+            speciestag = 'zebrafish';
             setpref('scgeatoolbox', 'preferredspecies', 'Zebrafish');
         otherwise
-            speciestag = "";
+            speciestag = '';
     end
     
     if shorttag

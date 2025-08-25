@@ -3,7 +3,7 @@ function callback_DEGene2Groups_New(src, ~)
     [FigureHandle, sce] = gui.gui_getfigsce(src);
     % if ~gui.gui_showrefinfo('DE Analysis', FigureHandle), return; end
 
-    extprogname = 'SCGEATOOL_DEAnalysis';
+    extprogname = 'scgeatool_DEAnalysis';
     preftagname = 'externalwrkpath';
     [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
     if isempty(wkdir), return; end
@@ -56,24 +56,24 @@ function callback_DEGene2Groups_New(src, ~)
         matlab.lang.makeValidName(string(cL1)), ...
         matlab.lang.makeValidName(string(cL2)));
 
-    % filesaved = fullfile(outdir, outfile);
+    filesaved = fullfile(outdir, outfile);
     try
 
-        [~, filesaved] = gui.i_exporttable(T, true, ...
-            'Tdegenelist', outfile, 'Excel file', "All_raw", FigureHandle);        
-        % writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All_genes');
-        % gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s', filesaved));
+        %[~, filesaved] = gui.i_exporttable(T, true, ...
+        %    'Tdegenelist', outfile, 'Excel file', "All_raw", FigureHandle);        
+        writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All_genes');        
     catch
         return;
     end
     if ~isfile(filesaved), return; end
+    gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s', filesaved));
 
 
     if ~strcmp('Yes', gui.myQuestdlg(FigureHandle, 'Additional Analysis?'))
         return;
     end
 
-    items = {'Set Parameter Set', 'Enrichr Analysis', ...
+    items = {'Set Filter Parameters', 'Enrichr Analysis', ...
         'LLM Summarize', 'Generate Volcano Plot', 'Open Output Folder'};
     selected = gui.myChecklistdlg(FigureHandle, items, ...
         'Title', 'Select Items','DefaultSelection', [2 4 5]);
@@ -85,7 +85,7 @@ function callback_DEGene2Groups_New(src, ~)
 
 
     % Process the selected analyses
-    if any(contains(selected, 'Set Parameter Set'))
+    if any(contains(selected, 'Set Filter Parameters'))
         [paramset] = gui.i_degparamset(false, FigureHandle);
     else
         % paramset = [];

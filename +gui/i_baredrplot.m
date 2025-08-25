@@ -1,5 +1,7 @@
-function i_baredrplot(ax, c, t, parentfig)
+function [hAx] = i_baredrplot(ax, c, t, parentfig)
 
+
+hAx = [];
 if nargin < 4, parentfig = []; end
 if nargin < 3, t = 'tSNE'; end
 if nargin < 2, c = []; end
@@ -7,10 +9,12 @@ if nargin < 2, c = []; end
 colortag = 'k';
 % try
 
-if ~isMATLABReleaseOlderThan('R2025a')
-    a=theme;
-    if strcmp('dark', a.BaseColorStyle)
-        colortag = [.5 .5 .5];
+if ~isMATLABReleaseOlderThan('R2025a') && ~isempty(parentfig)
+    try
+        if strcmp('dark', parentfig.Theme.BaseColorStyle)
+            colortag = [.5 .5 .5];
+        end
+    catch
     end
 end
 

@@ -1,5 +1,6 @@
 function [y, txt, T] = gui_showrefinfo(reftarget, parentfig)
     %see also: gui.gui_uishowrefinfo
+    
     if nargin<2, parentfig = []; end
     
     y=false;
@@ -17,7 +18,7 @@ function [y, txt, T] = gui_showrefinfo(reftarget, parentfig)
     end
     
     if isempty(txt) , return; end
-    fprintf('%s\n%s\n', reftarget, txt);
+    % fprintf('%s\n%s\n', reftarget, txt);
     
     if gui.i_isuifig(parentfig)
     

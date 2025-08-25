@@ -29,6 +29,15 @@ gui.i_inputdlg('prompt', 'dlgtitle', 'definput', f)
         movegui(fig, 'center');
     end
 
+    if ~isMATLABReleaseOlderThan("R2025a")
+        try
+            % fig.Theme.BaseColorStyle = parentfig.Theme.BaseColorStyle;
+            theme(fig, parentfig.Theme.BaseColorStyle);
+        catch ME
+            disp(ME.message);
+        end
+    end
+
 dimPanel = uipanel(fig, 'Position', [20 20 300 150], ...
     'Title',prompt);
 

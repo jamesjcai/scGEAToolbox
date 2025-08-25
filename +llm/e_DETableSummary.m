@@ -90,18 +90,31 @@ function [done, outfile] = e_DETableSummary(TbpUpEnrichr, TmfUpEnrichr, ...
                 disp('Ollama is not running.');
                 return;
             end
+            %{
             chat = ollamaChat(providermodel{2}, TimeOut = 1200);
             prompt2 = "Here is the output of Enrichr: " + s_up;
             feedbk_up = chat.generate(prompt1 + prompt2);
             
             prompt2 = "Here is the output of Enrichr: " + s_dn;
             feedbk_dn = chat.generate(prompt1 + prompt2);
+            %}
+            prompt2 = "Here is the output of Enrichr: " + s_up;
+            [done1, feedbk_up] = llm.callOllama(prompt1 + prompt2, providermodel{2});
+            prompt2 = "Here is the output of Enrichr: " + s_dn;
+            [done2, feedbk_dn] = llm.callOllama(prompt1 + prompt2, providermodel{2});
+
         case 'TAMUAIChat'
             prompt2 = "Here is the output of Enrichr: " + s_up;
-            feedbk_up = llm.callTAMUAIChat([], prompt1 + prompt2, providermodel{2});
+            [done1, feedbk_up] = llm.callTAMUAIChat([], prompt1 + prompt2, providermodel{2});
             prompt2 = "Here is the output of Enrichr: " + s_dn;
-            feedbk_dn = llm.callTAMUAIChat([], prompt1 + prompt2, providermodel{2});
+            [done2, feedbk_dn] = llm.callTAMUAIChat([], prompt1 + prompt2, providermodel{2});
         case 'Gemini'
+            prompt2 = "Here is the output of Enrichr: " + s_up;
+            [done1, feedbk_up] = llm.callGemini([], prompt1 + prompt2, providermodel{2});
+            prompt2 = "Here is the output of Enrichr: " + s_dn;
+            [done2, feedbk_dn] = llm.callGemini([], prompt1 + prompt2, providermodel{2});
+            
+            %{
             prompt2 = "Here is the output of Enrichr: " + s_up;
             assignin("base","prompt1",prompt1);
             assignin("base","prompt2",prompt2);
@@ -118,8 +131,11 @@ function [done, outfile] = e_DETableSummary(TbpUpEnrichr, TmfUpEnrichr, ...
                 feedbk_dn = response.Body.Data.candidates.content.parts.text;
             else
                 feedbk_dn = response.Body.Data.error;
-            end      
+            end
+            %}
     end
+
+
     
     import mlreportgen.dom.*
     

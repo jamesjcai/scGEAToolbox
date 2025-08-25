@@ -51,6 +51,13 @@ function selectedItems = myChecklistdlg(parentfig, items, varargin)
                    'WindowStyle', 'modal', ...
                    'Resize', 'off');
     
+    if ~isMATLABReleaseOlderThan('R2025a')
+        try
+            theme(fig, parentfig.Theme.BaseColorStyle);
+        catch ME
+            disp(ME.message);
+        end
+    end    
     % Create main grid layout
     mainGrid = uigridlayout(fig, [4, 1]);
     mainGrid.RowHeight = {'fit', '1x', 'fit', 'fit'};

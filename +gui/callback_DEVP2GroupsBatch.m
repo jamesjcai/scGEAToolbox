@@ -12,7 +12,14 @@ function callback_DEVP2GroupsBatch(src, ~)
                 wrkdir, FigureHandle);
     if ~done, return; end
     
-    [paramset] = gui.i_degparamset(true, FigureHandle);
+    answer = gui.myQuestdlg(FigureHandle, "Set DE gene filter parameters?", ...
+        "DE Genes", {'Yes','No, use previous','Cancel'}, 'Yes');
+    if isempty(answer) || strcmp(answer, 'Cancel'), return; end
+    if strcmp(answer, 'Yes')
+        [paramset] = gui.i_degparamset(false, FigureHandle);
+    else
+        [paramset] = gui.i_degparamset(true, FigureHandle);
+    end
     
     % ------------------------------------------ DE
     fw = gui.myWaitbar(FigureHandle);
@@ -218,13 +225,30 @@ function callback_DEVP2GroupsBatch(src, ~)
 
     gui.myWaitbar(FigureHandle, fw);
     
-    answer = gui.myQuestdlg(FigureHandle, sprintf('Result files saved. Open the folder %s?', outdir), '');
-    if strcmp(answer,'Yes'), winopen(outdir); end
+    % answer = gui.myQuestdlg(FigureHandle, 'Use LLM to generate enrichment analysis report?', '');
+    % if strcmp(answer,'Yes')
+    %     gui.sc_llm_enrichr2word(outdir);
+    % end
+    % 
+    % answer = gui.myQuestdlg(FigureHandle, sprintf('Result files saved. Open the folder %s?', outdir), '');
+    % if strcmp(answer,'Yes'), winopen(outdir); end
 
-    answer = gui.myQuestdlg(FigureHandle, 'Use LLM to generate enrichment analysis report?', '');
-    if strcmp(answer,'Yes')
+    items = {'LLM Summarize', 'Open Output Folder'};
+    selected = gui.myChecklistdlg(FigureHandle, items, ...
+        'Title', 'Select Items','DefaultSelection', [1 2]);
+    if isempty(selected), return; end
+    
+    if any(contains(selected, 'LLM Summarize'))
+        %fw = gui.myWaitbar(FigureHandle, [], false, 'Use LLM to generate enrichment analysis report');        
         gui.sc_llm_enrichr2word(outdir);
+        %gui.myWaitbar(FigureHandle, fw);
     end
+
+    if any(contains(selected, 'Open Output Folder'))        
+        if strcmp('Yes', gui.myQuestdlg(FigureHandle,'Open Output Folder?'))            
+            winopen(outdir);
+        end
+    end    
 
 end
 

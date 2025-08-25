@@ -35,7 +35,7 @@ function answer = myQuestdlg(parentfig, message, title, ...
     if nargin < 1, parentfig = []; end
     if isempty(parentfig) || ~gui.i_isuifig(parentfig)
         % Traditional figure-based app
-        answer = questdlg(message, title, options{:}, defaultOption);        
+        answer = questdlg(message, title, options{:}, defaultOption);
     else        
         % UIFigure-based app
         if ~strcmp(options{end}, 'Cancel')

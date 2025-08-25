@@ -20,12 +20,46 @@ else
         wrkdir = '';
         return;
     else
+        deleteAllFiles(wrkdir);
         %if ~strcmp('Yes', gui.myQuestdlg(parentfig, ...
         %        'Existing files in the working folder will be overwritten or deleted. Continue?'))
         %    wrkdir = '';
         %    return;          
         %end
     end
-end
-   
+end   
 fprintf('CURRENTWDIR = "%s"\n', wrkdir);
+
+
+end
+
+
+function deleteAllFiles(wkdir)
+    % Check if directory exists
+    if ~isfolder(wkdir)
+        warning('Directory does not exist: %s', wkdir);
+        return;
+    end
+    
+    % Get all files in the directory (excluding subdirectories)
+    files = dir(fullfile(wkdir, '*'));
+    files = files(~[files.isdir]); % Remove directories from the list
+    
+    % Check if there are any files
+    if ~isempty(files)
+        fprintf('Found %d files in %s\n', length(files), wkdir);
+        
+        % Delete all files
+        for i = 1:length(files)
+            filePath = fullfile(wkdir, files(i).name);
+            try
+                delete(filePath);
+                fprintf('Deleted: %s\n', files(i).name);
+            catch ME
+                warning('Could not delete %s: %s', files(i).name, ME.message);
+            end
+        end
+    else
+        fprintf('No files found in %s\n', wkdir);
+    end
+end

@@ -1,13 +1,21 @@
-function [methodtagsel] = i_pickembedmethod(parentfig, allowmulti)
+function [methodtagsel] = i_pickembedmethod(parentfig, allowmulti, dim)
+
+if nargin<3, dim = 0; end
 if nargin<2, allowmulti = true; end
 if nargin<1, parentfig = []; end
 
     methodtagsel = [];
-    
-    listitems = {'tSNE 2D', 'tSNE 3D',...
-        'UMAP 2D', 'UMAP 3D',...
-        'PHATE 2D', 'PHATE 3D'};
-    
+
+    if dim==3
+        listitems = {'tSNE 3D', 'UMAP 3D', 'PHATE 3D'};
+    elseif dim==2
+        listitems = {'tSNE 2D', 'UMAP 2D', 'PHATE 2D'};
+    else 
+        listitems = {'tSNE 2D', 'tSNE 3D',...
+            'UMAP 2D', 'UMAP 3D',...
+            'PHATE 2D', 'PHATE 3D'};
+    end
+
     %'MetaViz [PMID:36774377] 2D 🐢',...
     %'MetaViz [PMID:36774377] 3D 🐢'};
     

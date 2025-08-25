@@ -10,7 +10,7 @@ switch method
         [U, S, ~] = svds(X', k);
         pc = X * U;
     case 'random'
-        disp 'PCA using random SVD'
+        disp 'PCA using random SVD'        
         [U, S, ~] = randPCA(X', k);
         pc = X * U;
         S = diag(S);

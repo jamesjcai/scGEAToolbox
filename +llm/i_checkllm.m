@@ -83,7 +83,7 @@ prompt = "Why is the sky blue?";
             loadenv(apikeyfile,"FileType","env");
             apiKey = getenv("GEMINI_API_KEY");            
             try
-                response = llm.callGemini2(apiKey, prompt, model);
+                response = llm.callGemini(apiKey, prompt, model);
                 % response = llm.geminiGenerateContent(prompt);
              catch ME
                 fprintf('Error in chat completion: %s\n', ME.message);
