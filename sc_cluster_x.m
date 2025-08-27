@@ -30,7 +30,7 @@ switch p.Results.type
     case 'soptsc'
         % Symmetric NMF for cell clustering
         % https://www.biorxiv.org/content/biorxiv/early/2019/01/01/168922.full.pdf
-        %disp('To specify k, use RUN_SOPTSC(X,''k'',k).');
+        % disp('To specify k, use RUN_SOPTSC(X,''k'',k).');
         [c] = run.ml_SoptSC(X, 'k', k, 'donorm', true);
     case 'sc3'
         %disp('To specify k, use SC_SC3(X,k).');

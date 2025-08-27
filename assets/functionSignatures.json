@@ -172,7 +172,7 @@
         {"name":"donorm", "kind":"namevalue", "type":["logical", "scalar"]}
 	]
 },
-"sc_stat":
+"sc_genestat":
 {
 	"inputs":
 	[		

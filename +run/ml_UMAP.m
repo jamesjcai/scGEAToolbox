@@ -59,7 +59,7 @@ else
 
     %if ~(ismcc || isdeployed)
     %    if verbose
-    [s]=run_umap_lite(data,'n_components',ndim);
+    %[s]=run_umap_lite(data,'n_components',ndim);
     %     else
     %         [s]=run_umap_lite(data,'n_components',ndim,'verbose','none');
     %     end

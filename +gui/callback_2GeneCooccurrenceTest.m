@@ -46,7 +46,10 @@ function callback_2GeneCooccurrenceTest(src, ~)
     % [chi2_stat, p_value, contingency_table, expected_freq] = pkg.ai_chi2binarytest(a,b);
     % Capture the printed output into a variable
     
-
+    try
+        pkg.ai_chi2binarytest
+    catch
+    end
    
     capturedText = evalc('pkg.ai_chi2binarytest(a,b);');
     

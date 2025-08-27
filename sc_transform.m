@@ -52,8 +52,8 @@ switch lower(p.Results.type)
 
     case 'normalization_sqrt'
         % https://twitter.com/hippopedoid/status/1337028817219620864?s=20
-    case 'csndm'
-        [X] = run.mt_csndm_trans(X);
+    % case 'csndm'
+    %     [X] = run.mt_csndm_trans(X);
     case {'sct', 'sctransform'}
         % sc_sct
         % sctransform: Variance Stabilizing Transformations for Single Cell UMI Data

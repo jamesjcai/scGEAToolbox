@@ -52,7 +52,7 @@ s = phate(data, 't', 20, 'ndim', ndim, 'k', 10, 'npca', min([100, size(X,2)]));
 %%
 if plotit
     if bygene
-        [lgu, dropr, lgcv] = sc_stat(X, [], false);
+        [lgu, dropr, lgcv] = sc_genestat(X, [], false);
         colorby = 'mean';
         switch colorby
             case 'mean'
