@@ -1,4 +1,5 @@
-function [pt, ptImage] = i_addbutton2fig(toolbarHdl, sepTag, callbackFnc, imgFil, tooltipTxt)
+function [pt, ptImage] = i_addbutton2fig(toolbarHdl, sepTag, callbackFnc, ...
+    imgFil, tooltipTxt)
 
 % i_addbutton2fig - Add a button to a figure toolbar
 %

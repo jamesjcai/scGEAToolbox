@@ -77,7 +77,7 @@ oldG1 = [];
         fw=gui.myWaitbar(hFig);
 
         h = gui.myFigure;
-        bkcolor = gui.i_getthemebkgcolor(h.FigHandle);
+        %bkcolor = gui.i_getthemebkgcolor(h.FigHandle);
         ax = h.AxHandle;
         [x, y] = gplot(G1.adjacency, [p1.XData' p1.YData']);
         plot(ax, x, y, '-', 'Color', 1-bkcolor);
@@ -479,11 +479,12 @@ function [width, height] = measureText(txt, textOpts, axis)
     width = textExt(3)/3;     %Width
 end
 
+%{
 function customeMarker(x, y, f)
     [X,Y] = xy2XY(x, y);
     px = cell(length(x),1);
 
-    bkcolor = gui.i_getthemebkgcolor(f);
+    %bkcolor = gui.i_getthemebkgcolor(f);
 
     for k=1:length(x)
         p = patch(X(k,:), Y(k,:), 1-bkcolor, ...
@@ -492,6 +493,7 @@ function customeMarker(x, y, f)
     end
     set(f, 'SizeChangedFcn', @(src,event) updatePatchSize(px, x, y));
 end
+%}
 
 function [X, Y] = xy2XY(x, y, dx, dy, markerSize)
     if nargin < 5, markerSize = 0.08; end

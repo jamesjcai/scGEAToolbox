@@ -10,8 +10,8 @@ textOpts.VerticalAlignment = 'middle';
 textOpts.FontWeight = 'normal';
 
 
-hx = gui.myFigure(parentfig);
-ax = hx.AxHandle;
+fx = gui.myFigure(parentfig);
+ax = fx.AxHandle;
 
 %if ~curved
 %    gplot(G.adjacency, xy, '-k');
@@ -36,9 +36,34 @@ ax = hx.AxHandle;
     in_addtext([],[]);
     set(ax, 'XTick', [], 'YTick', []);
     axis(ax, "off");
-    
-    hx.show(parentfig);
+    fx.addCustomButton('off', {@in_rotatetext, true}, "fillet3d.jpg", "Rotate Text");
+    fx.addCustomButton('off', {@in_rotatetext, false}, "rotation.gif", "Rotate Text");
+    fx.show(parentfig);
     % set(gcf, 'Color', 'white')
+    vangle = 0;
+
+
+    function in_rotatetext(~, ~, increase)
+        
+        textHandles = findall(gcf, 'Type', 'text'); % Find all text objects in the current figure
+        delete(textHandles); % Delete all found text objects   
+
+        % bkcolor = gui.i_getthemebkgcolor(gcf);
+        if increase
+            vangle=vangle+5;
+        else
+            vangle=vangle-5;
+        end
+        for k=1:length(G.Nodes.Name)
+            [wx] = measureText(G.Nodes.Name{k}, textOpts);
+            text(xy(k,1)-floor(wx/2), xy(k,2), ...
+                G.Nodes.Name{k},'FontSize',textOpts.FontSize,...
+                'FontWeight','normal', ...
+                'HorizontalAlignment','center', ...
+                'VerticalAlignment','middle','Margin',0.2, ...
+                "Rotation", vangle);
+        end
+    end
 
 
     function in_addtext(~, ~)

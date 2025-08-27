@@ -3,15 +3,17 @@ function isCoderAvailable = checkCoderLicense()
     try
         isCoderAvailable = license('test', 'MATLAB_Coder');
         if isCoderAvailable
-            fprintf('MATLAB Coder license is available.\n');
+            % fprintf('MATLAB Coder license is available.\n');
         else
-            fprintf('MATLAB Coder license is NOT available.\n');
+            % fprintf('MATLAB Coder license is NOT available.\n');
         end
     catch
         isCoderAvailable = false;
-        fprintf('Error checking MATLAB Coder license.\n');
+        % fprintf('Error checking MATLAB Coder license.\n');
     end
 end
+
+
 
 %% Method 2: Using ver function to check installed toolboxes
 function isCoderInstalled = checkCoderInstallation()

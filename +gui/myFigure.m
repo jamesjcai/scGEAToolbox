@@ -135,11 +135,11 @@ classdef myFigure < handle
             obj.FigHandle.Visible = true;
         end
         
-        function addCustomButton(obj, sepTag, callback, imgFil, buttonLabel)
+        function addCustomButton(obj, sepTag, callback, imgFil, tooltipTxt)
             if isempty(obj.tb2)
                 obj.tb2 = uitoolbar(obj.FigHandle);
             end
-            pkg.i_addbutton2fig(obj.tb2, sepTag, callback, imgFil, buttonLabel); 
+            pkg.i_addbutton2fig(obj.tb2, sepTag, callback, imgFil, tooltipTxt); 
         end
 
         function setTitle(obj, titleStr)

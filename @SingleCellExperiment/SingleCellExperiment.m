@@ -70,6 +70,30 @@ methods
         %obj.struct_clust = s_clust;
     end
 
+    function obj = set.s(obj, value)
+        % Ensure s is numeric (or you can relax this if needed)
+        % validateattributes(value, {'numeric'}, {}, mfilename, 's');
+        if size(value, 1) ~= numcells(obj)
+            error(['Number of rows in s (%d) must equal ', ...
+                   'number of columns in X (%d).'], ...
+                   size(value, 1), numcells(obj));
+        end
+        obj.s = value;
+    end
+
+    function obj = set.g(obj, value)
+        arguments
+            obj
+            value string
+        end
+        if numel(value) ~= size(obj.X, 1)
+            error(['Length of g (%d) must equal ', ...
+                   'number of rows in X (%d).'], ...
+                   numel(value), size(obj.X, 1));
+        end
+        obj.g = value;
+    end
+
     function m = get.NumCells(obj)
         m = size(obj.X, 2);
     end

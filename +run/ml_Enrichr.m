@@ -25,6 +25,8 @@ import matlab.net.http.RequestMessage
 import matlab.net.http.io.MultipartProvider
 import matlab.net.http.io.MultipartFormProvider
 
+if iscell(genesets), genesets = string(genesets); end
+
 n = length(genesets);
 output = cell(n, 1);
 
