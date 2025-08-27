@@ -12,7 +12,7 @@
 % rng(75584,'twister'); %%% for reproducibility
 
 
-load ../../example_data/example10xdata.mat
+% load ../../example_data/example10xdata.mat
 
 in_X = X';
 C = 5;

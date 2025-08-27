@@ -42,12 +42,15 @@ function callback_2GeneCooccurrenceTest(src, ~)
 
     a=0+sce.X(sce.g==g1,:)>0;
     b=0+sce.X(sce.g==g2,:)>0;
+    
     % [chi2_stat, p_value, contingency_table, expected_freq] = pkg.ai_chi2binarytest(a,b);
     % Capture the printed output into a variable
+    
+
+   
     capturedText = evalc('pkg.ai_chi2binarytest(a,b);');
     
     Xm = sc_impute(sce.X);
-
 
 
     gui.myWaitbar(FigureHandle, fw);
