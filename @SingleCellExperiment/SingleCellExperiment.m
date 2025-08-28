@@ -11,11 +11,17 @@ classdef SingleCellExperiment
         c_cell_id % barcode vector
         list_cell_attributes cell % e.g., attributes = {'size',[4,6,2]};
         list_gene_attributes cell % e.g., attributes = {'size',[4,6,2]};
-        metadata string
+        metadata string = string.empty
         struct_cell_embeddings = pkg.e_makeembedstruct;
         struct_cell_clusterings = pkg.e_makecluststruct;
         % struct_embed struct
         % struct_clust struct
+        % c_batch_id string = string.empty(0,1)  % Column vector of strings
+        % c_cell_id string = string.empty(0,1)   % Column vector of strings
+        % c_cluster_id double = double.empty(0,1) % Column vector of doubles
+        % c_batch_id string {mustBeNonmissing}
+        % c_cell_id string {mustBeNonmissing}
+        % metadata string = string.empty
     end
 
     properties (Dependent)
@@ -252,6 +258,12 @@ methods
     end
 
     function obj = qcfilter(obj, libsize, mtratio, min_cells_nonzero)
+        % arguments
+        %     obj SingleCellExperiment
+        %     options.libsize (1,1) double {mustBePositive} = 1000
+        %     options.mtratio (1,1) double {mustBeInRange(options.mtratio,0,1)} = 0.15
+        %     options.min_cells_nonzero (1,1) double {mustBeNonnegative} = 15
+        % end
         if nargin < 4 || isempty(min_cells_nonzero), min_cells_nonzero = 15; end
         if nargin < 3 || isempty(mtratio), mtratio = 0.15; end
         if nargin < 2 || isempty(libsize), libsize = 1000; end
