@@ -18,7 +18,7 @@ function [h] = i_scoreheatmap(Y, rowlabels, sce, parentfig)
         b(k) = round(sum(c == k)./2);
     end
     rowlabels = strrep(rowlabels, '_', '\_');
-    hx=gui.myFigure;    
+    hx=gui.myFigure(parentfig);    
     
     %{
     h = heatmap(Y,'YDisplayLabels', rowlabels, ...

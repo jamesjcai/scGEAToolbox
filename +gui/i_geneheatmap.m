@@ -47,7 +47,7 @@ end
 %     'GridVisible',false,'ColorScaling','scaled',...
 %     'ColorbarVisible',false)
 
-hx=gui.myFigure;
+hx=gui.myFigure(parentfig);
 h = imagesc(Y);
 % hFig.Colormap = repmat(linspace(0, 1, 25).', 1, 3);
 set(gca, 'XTick', a-b);

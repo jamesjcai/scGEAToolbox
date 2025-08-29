@@ -34,7 +34,7 @@ end
 %     'GridVisible',false,'ColorScaling','scaled',...
 %     'ColorbarVisible',false)
 
-hx=gui.myFigure;
+hx=gui.myFigure(parentfig);
 hFig=hx.FigHandle;
 h = imagesc(Y);
 set(gca, 'XTick', a-b);
@@ -152,7 +152,7 @@ Z = zeros(length(glist), length(cL));
             Z(:, ky) = mean(Y(:, c == ky), 2);
         end
         
-        hx1=gui.myFigure;
+        hx1=gui.myFigure(parentfig);
         h = heatmap(strrep(cL, '_', '\_'), MX, Z);
         h.Title = 'Marker Gene Heatmap';
         h.XLabel = 'Group';
@@ -209,7 +209,7 @@ Z = zeros(length(glist), length(cL));
                 Z(:, ky) = mean(Y(:, c == ky), 2);
             end
         
-        hx2=gui.myFigure;
+        hx2=gui.myFigure(parentfig);
         h = heatmap(MX, strrep(cL, '_', '\_'), Z.');
         h.Title = 'Marker Gene Heatmap';
         h.YLabel = 'Group';

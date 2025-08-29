@@ -3,6 +3,9 @@ function [X, genelist, celllist] = sc_readmtxfile(matrixmtxfile, featurestxtfile
 if nargin < 4, coln = 2; end
 if nargin < 2, featurestxtfile = []; end
 
+genelist = [];
+celllist = [];
+
 %[X,genelist,celllist]=sc_readmtxfile('matrix.mtx','features.tsv','barcodes.tsv')
 if exist(matrixmtxfile, 'file') ~= 2
     error(message('FileNotFound'));

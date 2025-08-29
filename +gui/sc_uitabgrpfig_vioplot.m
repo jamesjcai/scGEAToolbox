@@ -77,8 +77,12 @@ ccx = true;
         end
         delete(ax0{idx});
         ax0{idx} = axes('parent',tab{idx});
-        % mv = grpstats(y{idx},thisc,@mean);
-        mv = splitapply(@mean, y{idx}, thisc);
+        
+        assignin("base","y",y{idx});
+        assignin("base","thisc",thisc);
+
+        %mv = grpstats(y{idx},thisc,@mean);
+        mv = splitapply(@mean, y{idx}', cx);
         if ccx
             bar(mv,'w');            
         else
@@ -86,8 +90,8 @@ ccx = true;
         end
         ccx = ~ccx;
         hold on
-        sv = splitapply(@std, y{idx}, thisc)./sqrt(splitapply(@numel, y{idx}, thisc));
-        % sv = grpstats(y{idx}, thisc, @std)./sqrt(grpstats(y{idx}, thisc, @numel));
+        %sv = splitapply(@std, y{idx}', cx)./sqrt(splitapply(@numel, y{idx}', cx));
+        sv = grpstats(y{idx}, thisc, @std)./sqrt(grpstats(y{idx}, thisc, @numel));
         errorbar(1:length(mv), mv, zeros(size(sv)), sv, 'color', 'k' ,'linestyle','none');
         
         disp('Error bar shows the standard error of the mean (SEM), i.e., the standard deviation and dividing it by the square root of the sample size')
@@ -103,14 +107,14 @@ ccx = true;
 
     function i_updatebarplot(idx)
         if nargin<1, idx=[]; end
-        [~, cLx] = findgroups(string(thisc));
+        [cx, cLx] = findgroups(string(thisc));
         for ks = 1:n
             if ks~=idx
                 delete(ax0{ks});
                 ax0{ks} = axes('parent',tab{ks});
                 
-                % mv = grpstats(y{ks},thisc,@mean);
-                mv = splitapply(@mean, y{ks}, thisc);
+                mv = grpstats(y{ks},thisc,@mean);
+                % mv = splitapply(@mean, y{ks}, thisc);
                 if ~ccx
                     colc = 'w';            
                 else
@@ -118,8 +122,8 @@ ccx = true;
                 end
                 bar(ax0{ks}, mv, colc);
                 hold on
-                % sv = grpstats(y{ks}, thisc, @std)./sqrt(grpstats(y{ks}, thisc, @numel));
-                sv = splitapply(@std, y{ks}, thisc)./sqrt(splitapply(@numel, y{ks}, thisc));
+                sv = grpstats(y{ks}, thisc, @std)./sqrt(grpstats(y{ks}, thisc, @numel));
+                % sv = splitapply(@std, y{ks}, thisc)./sqrt(splitapply(@numel, y{ks}, thisc));
                 errorbar(ax0{ks}, 1:length(mv), mv, zeros(size(sv)), sv, 'color', 'k' ,'linestyle','none');
                 set(ax0{ks},'xticklabel',cLx);
                 title(ax0{ks}, strrep(tabnamelist(ks), '_', '\_'));  

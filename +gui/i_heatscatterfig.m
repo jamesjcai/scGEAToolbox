@@ -5,7 +5,7 @@ function [hFig] = i_heatscatterfig(sce, cs, posg, csname, parentfig)
 if nargin < 5, parentfig = []; end
 if nargin < 4 || isempty(csname), csname = "CellScore"; end
 
-hx=gui.myFigure;
+hx=gui.myFigure(parentfig);
 hFig = hx.FigHandle;
 
 gui.i_heatscatter(sce.s, cs, hx.AxHandle);

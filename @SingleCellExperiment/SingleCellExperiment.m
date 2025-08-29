@@ -1,4 +1,4 @@
-classdef SingleCellExperiment
+classdef SingleCellExperiment < handle & matlab.mixin.Copyable
     properties
         X {mustBeNumeric, mustBeFinite, mustBeNonNan} % counts
         g string % genelist
@@ -11,9 +11,11 @@ classdef SingleCellExperiment
         c_cell_id % barcode vector
         list_cell_attributes cell % e.g., attributes = {'size',[4,6,2]};
         list_gene_attributes cell % e.g., attributes = {'size',[4,6,2]};
-        metadata string = string.empty
+        metadata string
         struct_cell_embeddings = pkg.e_makeembedstruct;
         struct_cell_clusterings = pkg.e_makecluststruct;
+        % struct_embed struct
+        % struct_clust struct
         % struct_embed struct
         % struct_clust struct
         % c_batch_id string = string.empty(0,1)  % Column vector of strings
@@ -21,7 +23,7 @@ classdef SingleCellExperiment
         % c_cluster_id double = double.empty(0,1) % Column vector of doubles
         % c_batch_id string {mustBeNonmissing}
         % c_cell_id string {mustBeNonmissing}
-        % metadata string = string.empty
+        % metadata string = string.empty        
     end
 
     properties (Dependent)
@@ -76,7 +78,7 @@ methods
         %obj.struct_clust = s_clust;
     end
 
-    function obj = set.s(obj, value)
+    function set.s(obj, value)
         % Ensure s is numeric (or you can relax this if needed)
         % validateattributes(value, {'numeric'}, {}, mfilename, 's');
         if size(value, 1) ~= numcells(obj)
@@ -87,24 +89,40 @@ methods
         obj.s = value;
     end
 
-    function obj = set.g(obj, value)
+    % function obj = set.g(obj, value)
+    %     arguments
+    %         obj
+    %         value string
+    %     end
+    %     if numel(value) ~= size(obj.X, 1)
+    %         error(['Length of g (%d) must equal ', ...
+    %                'number of rows in X (%d).'], ...
+    %                numel(value), size(obj.X, 1));
+    %     end
+    %     obj.g = value;
+    % end
+
+
+    function set.g(obj, value)
         arguments
-            obj
-            value string
+            obj SingleCellExperiment
+            value string {mustBeNonmissing}
         end
-        if numel(value) ~= size(obj.X, 1)
-            error(['Length of g (%d) must equal ', ...
-                   'number of rows in X (%d).'], ...
-                   numel(value), size(obj.X, 1));
+        expectedLength = numgenes(obj);
+        actualLength = numel(value);
+        if actualLength ~= expectedLength
+            error('SingleCellExperiment:InvalidGeneList', ...
+                'Gene list length (%d) must match number of genes in expression matrix (%d)', ...
+                actualLength, expectedLength);
         end
         obj.g = value;
-    end
+    end    
 
     function m = get.NumCells(obj)
         m = size(obj.X, 2);
     end
 
-    function obj = set.NumCells(obj, ~)
+    function set.NumCells(obj, ~)
         fprintf('%s%d\n', 'NumCells is: ', obj.NumCells)
         error('You cannot set NumCells property');
     end
@@ -113,7 +131,7 @@ methods
         m = size(obj.X, 1);
     end
 
-    function obj = set.NumGenes(obj, ~)
+    function set.NumGenes(obj, ~)
         fprintf('%s%d\n', 'NumGenes is: ', obj.NumGenes)
         error('You cannot set NumGenes property');
     end
@@ -242,7 +260,7 @@ methods
         end
     end
 
-    function obj = set.c(obj, tmpc)
+    function set.c(obj, tmpc)
         if length(tmpc) ~= numcells(obj)
             error('length(c)~=numcells(sce)');
         else
@@ -263,7 +281,7 @@ methods
         %     options.libsize (1,1) double {mustBePositive} = 1000
         %     options.mtratio (1,1) double {mustBeInRange(options.mtratio,0,1)} = 0.15
         %     options.min_cells_nonzero (1,1) double {mustBeNonnegative} = 15
-        % end
+        % end        
         if nargin < 4 || isempty(min_cells_nonzero), min_cells_nonzero = 15; end
         if nargin < 3 || isempty(mtratio), mtratio = 0.15; end
         if nargin < 2 || isempty(libsize), libsize = 1000; end
@@ -385,7 +403,7 @@ methods
             catch ME
                 warning(ME.message);
             end
-    end    
+    end
 
     function obj = appendmetainfo(obj, infostr)
         if ~isstring(infostr)

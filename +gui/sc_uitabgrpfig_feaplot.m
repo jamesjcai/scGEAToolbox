@@ -14,7 +14,7 @@ pw1 = fileparts(mfilename('fullpath'));
 pth = fullfile(pw1, '..', 'assets', 'Misc', 'myTemplate.pptx');
 
 
-hx=gui.myFigure;
+hx = gui.myFigure(parentfig);
 hFig = hx.FigHandle;
 % hFig.Position(3) = hFig.Position(3) * 1.8;
 

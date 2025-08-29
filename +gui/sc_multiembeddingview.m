@@ -3,7 +3,7 @@ function sc_multiembeddingview(sce, embeddingtags, parentfig)
 if isempty(embeddingtags)
     embeddingtags = fieldnames(sce.struct_cell_embeddings);
 end
-    hx=gui.myFigure;
+    hx=gui.myFigure(parentfig);
     hFig=hx.FigHandle;
     hFig.Position(3) = hFig.Position(3) * 1.8;
     axesv = cell(length(embeddingtags),1);

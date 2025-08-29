@@ -23,7 +23,7 @@ cL = strrep(cL(:),'_','\_');
 % xgroupdata = categorical(cL(c));
 xgroupdata = cL(c);
 
-hx=gui.myFigure;
+hx=gui.myFigure(parentfig);
 hFig=hx.FigHandle;
 
 

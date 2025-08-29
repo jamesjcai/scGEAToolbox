@@ -8,7 +8,7 @@ lbsz = full(sum(X, 1));
 lbsz_mt = full(sum(X(i, :), 1));
 cj = 100 * (lbsz_mt ./ lbsz);
 
-hx = gui.myFigure;
+hx = gui.myFigure(parentfig);
 
 %{
 fx = hx.FigHandle;

@@ -22,7 +22,7 @@ else
     titlex = '';
 end
 
-hx=gui.myFigure;
+hx=gui.myFigure(parentfig);
 hFig=hx.FigHandle;
 
 hx.addCustomButton('off', {@i_savedata}, 'floppy-disk-arrow-in.jpg', 'Export data...');

@@ -20,16 +20,16 @@ function callback_ShowGeneExpr(src, ~)
     end
     a = getpref('scgeatoolbox', 'prefcolormapname');
 
-    if ~isMATLABReleaseOlderThan('R2025a')
-        for k = 1:n
-            figure;
-            sc_scattermarker(Xt, sce.g, sce.s, glist(k), 2, 5, false);
-            c = Xt(sce.g == glist(k), :);
-            ax = gca;
-            gui.i_setautumncolor(c, a, true, any(c==0), ax);
-            colorbar(ax);
-        end        
-    else
+    % if ~isMATLABReleaseOlderThan('R2025a')
+    %     for k = 1:n
+    %         figure;
+    %         sc_scattermarker(Xt, sce.g, sce.s, glist(k), 2, 5, false);
+    %         c = Xt(sce.g == glist(k), :);
+    %         ax = gca;
+    %         gui.i_setautumncolor(c, a, true, any(c==0), ax);
+    %         colorbar(ax);
+    %     end
+    % else
         an1 = 'Yes, same figure';
         an2 = 'No, different tabs';
         if n > 1
@@ -42,8 +42,9 @@ function callback_ShowGeneExpr(src, ~)
         end
         
         switch answer
-            case an1
+            case an1    % 'Yes, same figure';
                 fw = gui.myWaitbar(FigureHandle); 
+                
                 hx = gui.myFigure(FigureHandle);
                 tabgp = uitabgroup(hx.FigHandle);
                 nf = 1;
@@ -70,7 +71,7 @@ function callback_ShowGeneExpr(src, ~)
                 end
                 gui.myWaitbar(FigureHandle, fw);
                 hx.show(FigureHandle);
-            case an2
+            case an2    % 'No, different tabs';
                 fw = gui.myWaitbar(FigureHandle);
                 y = cell(n,1);
                 for k = 1:n
@@ -79,5 +80,5 @@ function callback_ShowGeneExpr(src, ~)
                 gui.sc_uitabgrpfig_expplot(y, glist, sce.s, FigureHandle, [axx, bxx]);
                 gui.myWaitbar(FigureHandle, fw);            
         end
-    end
+    % end
 end

@@ -237,9 +237,9 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
                     if strcmpi(answer3{c},'Yes') || strcmpi(answer3{c},'Y')
                         a1 = length(sce.g);
                         idx = contains(sce.g, 'orf') | contains(sce.g, '-AS') | contains(sce.g, '-as');
-                        if any(idx)
-                            sce.g(idx) = [];
+                        if any(idx)                            
                             sce.X(idx, :) = [];
+                            sce.g(idx) = [];
                         end
                         a2 = length(sce.g);
                         fprintf('%d genes with name contains ''orf'' or ''-AS'' are found and removed.\n',a1-a2);
@@ -249,9 +249,9 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
                     if strcmpi(answer3{c},'Yes') || strcmpi(answer3{c},'Y')
                         a1 = length(sce.g);
                         idx = startsWith(sce.g, 'LINC');
-                        if any(idx)
-                            sce.g(idx) = [];
+                        if any(idx)                            
                             sce.X(idx, :) = [];
+                            sce.g(idx) = [];
                         end
                         a2 = length(sce.g);
                         fprintf('%d genes with name starts with ''LINC'' are found and removed.\n',a1-a2);
@@ -261,9 +261,9 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
                     if strcmpi(answer3{c},'Yes') || strcmpi(answer3{c},'Y')
                         a1 = length(sce.g);
                         idx = find(~cellfun(@isempty, regexp(sce.g,"Gm[0-9][0-9][0-9]")));
-                        if any(idx)
-                            sce.g(idx) = [];
+                        if any(idx)                            
                             sce.X(idx, :) = [];
+                            sce.g(idx) = [];
                         end
                         a2 = length(sce.g);
                         fprintf('%d genes with name starts with ''Gm'' are found and removed.\n',a1-a2);
@@ -273,9 +273,9 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
                     if strcmpi(answer3{c},'Yes') || strcmpi(answer3{c},'Y')
                         a1 = length(sce.g);
                         idx = endsWith(sce.g, 'Rik');
-                        if any(idx)
-                            sce.g(idx) = [];
+                        if any(idx)                            
                             sce.X(idx, :) = [];
+                            sce.g(idx) = [];
                         end
                         a2 = length(sce.g);
                         fprintf('%d genes with name ends with ''Rik'' are found and removed.\n',a1-a2);
@@ -296,13 +296,13 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
                     if isempty(answer1), return; end
                     if strcmp(answer1, 'Selected')
                         fw = gui.myWaitbar(FigureHandle);
-                        sce.g(idx) = [];
                         sce.X(idx, :) = [];
+                        sce.g(idx) = [];
                         gui.myWaitbar(FigureHandle, fw);
                     elseif strcmp(answer1, 'Unselected')
-                        fw = gui.myWaitbar(FigureHandle);
-                        sce.g = sce.g(idx);
+                        fw = gui.myWaitbar(FigureHandle);                        
                         sce.X = sce.X(idx, :);
+                        sce.g = sce.g(idx);
                         gui.myWaitbar(FigureHandle, fw);
                     else
                         return;
@@ -332,8 +332,8 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
                 switch answer
                     case 'Yes'
                         fw = gui.myWaitbar(FigureHandle);
-                        sce.g(idx) = [];
                         sce.X(idx, :) = [];
+                        sce.g(idx) = [];                        
                         gui.myWaitbar(FigureHandle, fw);
                     otherwise
                         % requirerefresh = false;
@@ -360,9 +360,9 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
             sce = sce.rmhemoglobingenes;
             sce = sce.rmribosomalgenes;
             [idx] = ~ismember(upper(sce.g), upper(ApprovedSymbol));
-            if any(idx)
-                sce.g(idx) = [];
+            if any(idx)                
                 sce.X(idx, :) = [];
+                sce.g(idx) = [];
             end
         case '------------------------------------------------'
             % requirerefresh = false;

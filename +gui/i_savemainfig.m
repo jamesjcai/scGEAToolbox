@@ -11,8 +11,11 @@ function i_savemainfig(src, ~, tag)
         [filename, filepath] = uiputfile(filter);
         if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
         if ischar(filename)
-            if gui.i_isuifig(parentfig)
+            if gui.i_isuifig(parentfig) || ~isMATLABReleaseOlderThan('R2025a') 
                 exportapp(parentfig, [filepath filename]);
+                % axesHandles
+                % exportgraphics(axesHandles(1), ...
+                %     [filepath filename]);
             else
                 saveas(parentfig, [filepath, filename], 'pdf');
             end

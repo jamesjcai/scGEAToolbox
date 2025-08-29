@@ -9,9 +9,9 @@ t = t(:);
         T = sc_splinefit(sce.X, sce.g);
         glist = T.genes(1:min([K, sce.NumGenes]));
         [y, idx] = ismember(glist, sce.g);
-        if ~all(y), error('Runtime error.'); end
-        sce.g = sce.g(idx);
+        if ~all(y), error('Runtime error.'); end        
         sce.X = sce.X(idx, :);
+        sce.g = sce.g(idx);
     end
 
     % [Xt] = gui.i_transformx(sce.X, [], [], parentfig);
@@ -63,7 +63,7 @@ t = t(:);
     [~, idxp] = maxk(r, 10); 
     selectedg = sce.g(idxp);
     try
-        hx=gui.myFigure;
+        hx=gui.myFigure(parentfig);
         hFig=hx.FigHandle;
         hFig.Position(3) = hFig.Position(3) * 1.8;
         hx.show(parentfig);

@@ -41,13 +41,14 @@ if length(c) >= 3
     f1 = i_setupfile(c1);
     if isempty(f1), error('MTX file name not processed.'); end
 
-    c2 = c(contains(c, 'genes'));
-    if isempty(c2), c2 = c(contains(c, 'features')); end
+    
+    c2 = c( contains(c, 'genes', 'IgnoreCase', true) );
+    if isempty(c2), c2 = c( contains(c, 'features', 'IgnoreCase', true) ); end
     if isempty(c2), error('GENES/FEATURES file not found.'); end
     f2 = i_setupfile(c2);
     if isempty(f2), error('GENES/FEATURES file name not processed.'); end
-
-    c3 = c(contains(c, 'barcodes'));
+    
+    c3 = c( contains(c, 'barcodes', 'IgnoreCase', true) );
     f3 = [];
     if isempty(c3)
         warning('BARCODES file not found.');

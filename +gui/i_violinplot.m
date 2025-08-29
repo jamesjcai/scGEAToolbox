@@ -9,7 +9,7 @@ if nargin < 4, colorit = true; end
 if nargin < 3, ttxt = ''; end
 
 if gui.i_isuifig(parentfig), focus(parentfig); end
-hx=gui.myFigure;
+hx=gui.myFigure(parentfig);
 hFig=hx.FigHandle;
 
 

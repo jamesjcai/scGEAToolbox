@@ -117,9 +117,9 @@ function in_MarkerGeneHeatmap(sce, FigureHandle)
     sce = sce.rmribosomalgenes;
     sce = sce.rmlncrnagenes;
     [idx] = ~ismember(upper(sce.g), upper(ApprovedSymbol));
-    if any(idx)
-        sce.g(idx) = [];
+    if any(idx)        
         sce.X(idx, :) = [];
+        sce.g(idx) = [];
     end
     
     fprintf('Size of matrix used for search: %d genes x %d cells\n', ...

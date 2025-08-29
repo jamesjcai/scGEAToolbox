@@ -11,18 +11,18 @@ function callback_CalculateGeneStats(src, ~)
     % Retrieve single-cell experiment data
     Xt = gui.i_transformx(sce.X, [], [], FigureHandle);
     if isempty(Xt), return; end
+    gt = sce.g;
 
     if strcmp('Yes', gui.myQuestdlg(FigureHandle, "Select genes? Click No to include all genes."))
         % sce.X = Xt;
         [glist] = gui.i_selectngenes(sce, [], FigureHandle);
         if isempty(glist) || all(strlength(glist) == 0), return; end
-        [y, idx]=ismember(glist, sce.g);
+        [y, idx] = ismember(glist, sce.g);
         %assignin("base","glist",glist);
         %assignin("base","g",sce.g);
-        if ~any(y), return; end        
-        sce.g = sce.g(idx);
-        % sce.X = sce.X(idx,:);
+        if ~any(y), return; end
         Xt = Xt(idx,:);
+        gt = sce.g(idx);
     end
 
     % Grouping cells based on user input
@@ -45,14 +45,14 @@ function callback_CalculateGeneStats(src, ~)
         cL = cL(newidx);
         
         % Initialize the table with default statistics
-        T = sc_genestats(Xt(:, c == 1), sce.g);
+        T = sc_genestats(Xt(:, c == 1), gt);
         for j = 2:4
             T.Properties.VariableNames{j} = sprintf('%s_%s', T.Properties.VariableNames{j}, cL(1));
         end
 
         % Calculate and merge gene stats for each group
         for k = 2:length(cL)
-            t = sc_genestats(Xt(:, c == k), sce.g);            
+            t = sc_genestats(Xt(:, c == k), gt);            
             for j = 2:4
                 t.Properties.VariableNames{j} = sprintf('%s_%s', ...
                     t.Properties.VariableNames{j}, cL(k));
@@ -65,7 +65,7 @@ function callback_CalculateGeneStats(src, ~)
 
     else
         % Calculate statistics for all cells if no grouping
-        T = sc_genestats(Xt, sce.g);
+        T = sc_genestats(Xt, gt);
     end
 
     % gui.i_viewtable(T, FigureHandle);

@@ -11,12 +11,12 @@ if nargin < 4, parentfig = []; end
 if ismcc || isdeployed, makePPTCompilable(); end
 import mlreportgen.ppt.*;
 
-pw1 = fileparts(mfilename('fullpath'));
-%pth = fullfile(pw1, '..', 'assets', 'Misc', 'myTemplate.pptx');
+% pw1 = fileparts(mfilename('fullpath'));
+% pth = fullfile(pw1, '..', 'assets', 'Misc', 'myTemplate.pptx');
 
 
-hx=gui.myFigure;
-hFig=hx.FigHandle;
+hx = gui.myFigure(parentfig);
+hFig = hx.FigHandle;
 hFig.Position(3) = hFig.Position(3) * 1.8;
 
 n = length(glist);
@@ -51,22 +51,23 @@ for k=1:n
     ax0{k} = axes('parent',tab{k});
     ax{k,1} = subplot(1,2,1);
     if size(s,2)>2
-        scatter3(s(:,1), s(:,2), s(:,3), 5, c, 'filled');
+        scatter3(ax{k,1}, s(:,1), s(:,2), s(:,3), 5, c, 'filled');
     else
-        scatter(s(:,1), s(:,2), 5, c, 'filled');
+        scatter(ax{k,1}, s(:,1), s(:,2), 5, c, 'filled');
     end
     if ~isempty(cazcel)
         view(ax{k,1}, [cazcel(1), cazcel(2)]);
     end
-
-    ax{k,2} = subplot(1,2,2);
-        scatter(s(:,1), s(:,2), 5, c, 'filled');
-        stem3(s(:,1), s(:,2), c, 'marker', 'none', 'color', 'm');
-        hold on;
-        scatter3(s(:,1), s(:,2), zeros(size(s(:,2))), 5, c, 'filled');
-        
         title(ax{k,1}, glist(k));
         subtitle(ax{k,1}, gui.i_getsubtitle(c));
+
+
+    ax{k,2} = subplot(1,2,2);
+        scatter(ax{k,2}, s(:,1), s(:,2), 5, c, 'filled');
+        stem3(ax{k,2}, s(:,1), s(:,2), c, 'marker', 'none', 'color', 'm');
+        hold(ax{k,2}, "on");
+        scatter3(ax{k,2}, s(:,1), s(:,2), zeros(size(s(:,2))), 5, c, 'filled');
+        
         title(ax{k,2}, glist(k));
         subtitle(ax{k,2}, gui.i_getsubtitle(c));
 
@@ -93,7 +94,7 @@ for k=1:n
     %}
 
 
-    gui.i_setautumncolor(c, a, true, any(c==0));
+    gui.i_setautumncolor(c, a, true, any(c==0), ax{k,1});
 end
   
 tabgp.SelectionChangedFcn=@displaySelection;

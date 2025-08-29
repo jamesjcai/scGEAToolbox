@@ -1,5 +1,6 @@
-function [sce] = pipeline_multisamplesmerge(accv, guiwaitbar, FigureHandle)
+function [sce] = pipeline_multisamplesmerge(accv, guiwaitbar, speciestag, FigureHandle)
 if nargin < 2, guiwaitbar = true; end
+if nargin < 3, speciestag = ''; end
 % https://www.cell.com/cell/fulltext/S0092-8674(19)31178-X
 % DOI:https://doi.org/10.1016/j.cell.2019.10.028
 %{'T11-Apobec-7daytreated','T11-Apobec-Nottreated',...
@@ -41,14 +42,16 @@ end
 
 if guiwaitbar, gui.gui_waitbar_adv(fw); end
 
-answerstruced = gui.myQuestdlg(FigureHandle, 'Process merged SCE data (tSNE, clustering, and cell type annotation)?', ...
-    '', {'Yes', 'Skip'}, 'Yes');
-if strcmp(answerstruced, 'Yes')
+%answerstruced = gui.myQuestdlg(FigureHandle, 'Process merged SCE data (tSNE, clustering, and cell type annotation)?', ...
+%    '', {'Yes', 'Skip'}, 'Yes');
+% if strcmp(answerstruced, 'Yes')
     % [ndim] = gui.i_choose2d3d;
     ndim = 3;
     if ~isempty(ndim)        
         FigureHandle=[];
-        [speciestag] = gui.i_selectspecies(2, false, FigureHandle);
+        if isempty(speciestag)
+            [speciestag] = gui.i_selectspecies(2, false, FigureHandle);
+        end
         if ~isempty(speciestag)
             if isempty(ndim), return; end
             sce = sce.embedcells('tsne3d', true, true, ndim);
@@ -59,7 +62,7 @@ if strcmp(answerstruced, 'Yes')
             sce = sce.assigncelltype(speciestag, false);
         end
     end
-end
+%end
 end
 
     % 

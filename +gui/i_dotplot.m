@@ -87,7 +87,7 @@ txgene = [" "; tgene(:)];
 %scatter([-.5 .5],[-1 -1],[1 500],'k','filled');
 %hold on
 
-hx=gui.myFigure;
+hx=gui.myFigure(parentfig);
 hFig = hx.FigHandle;
 
 dotsz = DOTSIZE;

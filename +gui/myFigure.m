@@ -1,4 +1,8 @@
 classdef myFigure < handle
+    %MYFIGURE A wrapper class to create customized MATLAB figures with toolbar
+    %   Provides methods for showing, centering, enabling/disabling buttons,
+    %   and adding custom toolbar buttons.
+
     properties
         FigHandle % Handle to the MATLAB figure        
         AxHandle
@@ -6,8 +10,8 @@ classdef myFigure < handle
     
     properties (Access = private)
         tb
-        tb2
-        tbv = cell(11,1)
+        tb2        
+        tbv = cell(12, 1) % Toolbar button handles
     end
 
     methods
@@ -15,61 +19,65 @@ classdef myFigure < handle
         function obj = myFigure(parentfig)
             if nargin<1, parentfig = []; end
 
-            if gui.i_isuifig([])
-                disp('making a uifigure');
-                obj.FigHandle = uifigure('Name', '', ...
-                    'Visible',"off");
-
-                if ~isMATLABReleaseOlderThan('R2025a')
-                    % parentfig.Theme.BaseColorStyle
-                    try
-                        theme(obj.FigHandle, parentfig.Theme.BaseColorStyle);
-                    catch
-                    end
-                end
-
-                obj.tb = uitoolbar(obj.FigHandle);
-                obj.AxHandle = uiaxes(obj.FigHandle);
-                obj.AxHandle.Position = [50, 30, obj.FigHandle.Position(3)-100, ... 
-                    obj.FigHandle.Position(4)-60]; % Fill most of the figure
-
-                % pkg.i_addbutton2fig(obj.tb, 'on', [], [], '');
-                obj.tbv{1} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_invertcolor, 'INVERT.gif', 'Invert Colors');     
-                obj.tbv{2} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_linksubplots, "keyframes-minus.jpg", "Link Subplots");
-                obj.tbv{3} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_setboxon, obj.FigHandle}, 'border-out.jpg', 'Box ON/OFF'); 
-                obj.tbv{4} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_renametitle, "align-top-box.jpg", 'Add/Edit Title');
-                obj.tbv{5} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_pickcolor, false}, 'color-wheel.jpg', 'Pick a New Colormap...');
-                obj.tbv{6} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_changefontsize, 'text-size.jpg', 'Change Font Size');
-                obj.tbv{7} = pkg.i_addbutton2fig(obj.tb, 'on', {@gui.i_savemainfig, 3}, "presentation.jpg", 'Save Figure to PowerPoint File...');
-                obj.tbv{8} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_savemainfig, 2}, "jpg-format.jpg", 'Save Figure as Graphic File...');
-                obj.tbv{9} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_savemainfig, 1}, "svg-format.jpg", 'Save Figure as SVG File...');
-                % obj.tbv{10} = gui.xui_3dcamera(obj.tb, '', false, obj.FigHandle, obj.AxHandle);
-                obj.tbv{10} = pkg.i_addbutton2fig(obj.tb, 'on', {@gui.i_resizewin, obj.FigHandle}, 'scale-frame-reduce.jpg', 'Resize Plot Window');                
- 
-            else
+            % if gui.i_isuifig([])
+            %     disp('making a uifigure');
+            %     obj.FigHandle = uifigure('Name', '', ...
+            %         'Visible',"off");
+            % 
+            %     if ~isMATLABReleaseOlderThan('R2025a')
+            %         % parentfig.Theme.BaseColorStyle
+            %         try
+            %             theme(obj.FigHandle, parentfig.Theme.BaseColorStyle);
+            %         catch
+            %         end
+            %     end
+            % 
+            %     obj.tb = uitoolbar(obj.FigHandle);
+            %     obj.AxHandle = uiaxes(obj.FigHandle);
+            %     obj.AxHandle.Position = [50, 30, obj.FigHandle.Position(3)-100, ... 
+            %         obj.FigHandle.Position(4)-60]; % Fill most of the figure
+            % 
+            %     % pkg.i_addbutton2fig(obj.tb, 'on', [], [], '');
+            %     obj.tbv{1} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_invertcolor, 'INVERT.gif', 'Invert Colors');     
+            %     obj.tbv{2} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_linksubplots, "keyframes-minus.jpg", "Link Subplots");
+            %     obj.tbv{3} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_setboxon, obj.FigHandle}, 'border-out.jpg', 'Box ON/OFF'); 
+            %     obj.tbv{4} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_renametitle, "align-top-box.jpg", 'Add/Edit Title');
+            %     obj.tbv{5} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_pickcolor, false}, 'color-wheel.jpg', 'Pick a New Colormap...');
+            %     obj.tbv{6} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_changefontsize, 'text-size.jpg', 'Change Font Size');
+            %     obj.tbv{7} = pkg.i_addbutton2fig(obj.tb, 'on', {@gui.i_savemainfig, 3}, "presentation.jpg", 'Save Figure to PowerPoint File...');
+            %     obj.tbv{8} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_savemainfig, 2}, "jpg-format.jpg", 'Save Figure as Graphic File...');
+            %     obj.tbv{9} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_savemainfig, 1}, "svg-format.jpg", 'Save Figure as SVG File...');
+            %     % obj.tbv{10} = gui.xui_3dcamera(obj.tb, '', false, obj.FigHandle, obj.AxHandle);
+            %     obj.tbv{10} = pkg.i_addbutton2fig(obj.tb, 'on', {@gui.i_resizewin, obj.FigHandle}, 'scale-frame-reduce.jpg', 'Resize Plot Window');                
+            % 
+            % else
                 obj.FigHandle = figure('Name', '', ...
                     'NumberTitle', 'on', 'Visible',"off", ...
-                    "DockControls", "off", 'ToolBar', 'figure', ...
+                    'ToolBar','figure', ...
+                    'MenuBar','figure', ...
+                    'WindowStyle','normal', ...                    
                     'Position', [1, 1, 560, 420]);
 
-                if ~isMATLABReleaseOlderThan('R2025a')                    
+                % --- Apply theme if available ---
+                if ~isempty(parentfig) && isprop(parentfig,'Theme') ...
+                        && ~isMATLABReleaseOlderThan('R2025a')
                     try
                         theme(obj.FigHandle, parentfig.Theme.BaseColorStyle);
                     catch
+                        % Ignore if theme fails
                     end
-                end
+                end                
 
-                % obj.AxHandle = axes(obj.FigHandle);
-                obj.AxHandle = gca;
+                obj.AxHandle = axes('Parent', obj.FigHandle);
+                % obj.AxHandle = gca;
                 obj.tb = findall(obj.FigHandle, 'Type', 'uitoolbar');
                 if isempty(obj.tb)
                     obj.tb = uitoolbar(obj.FigHandle);
                 end
-                linkTool = findall(obj.FigHandle, 'Tag', 'DataManager.Linking');
-                if ~isempty(linkTool), delete(linkTool); end
-                linkTool = findall(obj.FigHandle, 'Tag', 'Standard.OpenInspector');
-                if ~isempty(linkTool), delete(linkTool); end
-    
+                % Remove undesirable default tools if present
+                delete(findall(obj.FigHandle, 'Tag', 'DataManager.Linking'));
+                delete(findall(obj.FigHandle, 'Tag', 'Standard.OpenInspector'));
+            
                 % uipushtool(obj.tb, 'Separator', 'off');
                 % pkg.i_addbutton2fig(obj.tb, 'on', [], [], '');
                 % pkg.i_addbutton2fig(obj.tb, 0, [], [], "");
@@ -87,20 +95,37 @@ classdef myFigure < handle
                 obj.tbv{9} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_savemainfig, 1}, "svg-format.jpg", 'Save Figure as SVG File...');
                 obj.tbv{10} = gui.gui_3dcamera(obj.tb);
                 obj.tbv{11} = pkg.i_addbutton2fig(obj.tb, 'on', {@gui.i_resizewin, obj.FigHandle}, 'scale-frame-reduce.jpg', 'Resize Plot Window');
-            end
-            try
-            %[~, d] = version;
-            %if datetime(d)>datetime('12/31/2024')
-                % theme(obj.FigHandle, "light");
-            %end
-            catch
-                
-            end
+                obj.tbv{12} = pkg.i_addbutton2fig(obj.tb, 'on', @obj.in_darkmode, 'demoIcon.gif', 'Light/Dark Mode');            
+                %end
+
+            % try
+            % %[~, d] = version;
+            % %if datetime(d)>datetime('12/31/2024')
+            %     % theme(obj.FigHandle, "light");
+            % %end
+            % catch
+            % 
+            % end
         end
 
         % function ptvkeep(obj, flag)
         %     delete(obj.tbv{~flag});
         % end        
+
+        function in_darkmode(obj, ~, ~)
+            if isprop(obj.FigHandle,'Theme') ...
+                    && ~isMATLABReleaseOlderThan('R2025a')
+                try
+                    if rand>0.5
+                        theme(obj.FigHandle, 'dark');
+                    else
+                        theme(obj.FigHandle, 'light');
+                    end
+                catch
+                    % Ignore if theme fails
+                end
+            end  
+        end
 
         function ptvshow(obj, flag)
             set([obj.tbv{flag}],'Visible','on');
@@ -110,7 +135,7 @@ classdef myFigure < handle
         function ptvenable(obj, flag)
             set([obj.tbv{flag}],'Enable','on');
             set([obj.tbv{~flag}],'Enable','off');
-        end        
+        end
 
         function centerto(obj, parentfig)
             try
@@ -147,7 +172,16 @@ classdef myFigure < handle
         end
         
         function closeFigure(obj)
-            close(obj.FigHandle);
+            if isvalid(obj.FigHandle)
+                close(obj.FigHandle);
+            end
         end
+
+        %% Destructor
+        function delete(obj)
+            if isvalid(obj.FigHandle)
+                close(obj.FigHandle);
+            end
+        end        
     end
 end
