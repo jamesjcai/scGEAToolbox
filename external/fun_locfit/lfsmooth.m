@@ -1,4 +1,4 @@
-function yhat = lfsmooth(varargin)
+function yhat = lfsmooth(x,varargin)
 %
 % a simple interface to locfit.
 % output is a vector of smoothed values, at each data point.

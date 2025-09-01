@@ -39,6 +39,11 @@ function callback_ScatterStemPlot(src, ~)
             end
             ylabelv = glist;
 
+            fw = gui.myWaitbar(FigureHandle);
+            % gui.sc_uitabgrpfig_expplot(thisyv, ylabelv, sce.s, FigureHandle);
+            gui.sc_uitabgrpfig_feaplot(thisyv, ylabelv, sce.s, FigureHandle, 2);   
+            gui.myWaitbar(FigureHandle, fw);
+            
         case 'Cell State'
             [thisyv, ylabelv] = gui.i_selectnstates(sce, true, [], FigureHandle);
 
@@ -53,10 +58,13 @@ function callback_ScatterStemPlot(src, ~)
                     gui.myHelpdlg(FigureHandle, 'Only continuous variables of cell state will be shown.');
                 end                
             else
-                gui.myHelpdlg(FigureHandle, 'No valid cell state variables. Violinplot cannot be shown.');
+                gui.myHelpdlg(FigureHandle, 'No valid cell state variables.');
+                return;
             end
+            gui.sc_uitabgrpfig_feaplot(thisyv, ylabelv, sce.s, FigureHandle, 2);    
+
         otherwise
             return;
     end
-    gui.sc_uitabgrpfig_feaplot(thisyv, ylabelv, sce.s, FigureHandle, 2);    
+
 end

@@ -10,8 +10,8 @@ if ~isstring(fealabels), fealabels = string(fealabels); end
 if ismcc || isdeployed, makePPTCompilable(); end
 import mlreportgen.ppt.*;
 
-pw1 = fileparts(mfilename('fullpath'));
-pth = fullfile(pw1, '..', 'assets', 'Misc', 'myTemplate.pptx');
+%pw1 = fileparts(mfilename('fullpath'));
+%pth = fullfile(pw1, '..', 'assets', 'Misc', 'myTemplate.pptx');
 
 
 hx = gui.myFigure(parentfig);
@@ -53,7 +53,8 @@ for k=1:n
             end
         case 2            
             gui.i_stemscatter(sce_s, feays{k});
-            zlabel(strrep(fealabels(k),'_','\_'));
+            % zlabel(strrep(fealabels(k),'_','\_'));
+            title(ax{k,1}, strrep(fealabels(k),'_','\_'));
     end
 
 

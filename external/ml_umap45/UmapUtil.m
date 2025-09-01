@@ -1294,7 +1294,7 @@ classdef UmapUtil < handle
                 addpath(pth);
             end
             if ~ismember(utilPath, existingPaths)
-                addpath(utilPath);
+%                addpath(utilPath);
             end
             pths=FileBasics.GetSiblingFolders(pth, ...
                 'util', 'epp', 'mlp', 'fcs', 'phate');
@@ -1307,7 +1307,7 @@ classdef UmapUtil < handle
                 utilPath=fullfile(pPth, 'util');
                 existingPaths = strsplit(path, pathsep);
                 if ~ismember(utilPath, existingPaths)
-                    addpath(utilPath);
+%                    addpath(utilPath);
                 end
                 if ~SuhScaler.HasJava
                     warning('No transform.jar found');

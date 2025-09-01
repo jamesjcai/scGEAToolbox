@@ -5,7 +5,7 @@ function callback_PickColorMap(src, ~, showzero)
     if nargin < 3, showzero = false; end
     n = numel(unique(sce.c));
     % disp(sprintf('Using %d colors',n));
-    n = max([n, 3]);
+    % n = max([n, 3]);
     folder = fileparts(mfilename('fullpath'));
     %a = strfind(folder, filesep);
     %folder = extractBefore(folder, a(end)+1);
@@ -16,7 +16,7 @@ function callback_PickColorMap(src, ~, showzero)
     if ~(ismcc || isdeployed)
         addpath(wrkpth);
     end
-    CT = cbrewer('seq', 'Blues', n);
+    CT = cbrewer('seq', 'Blues', max([n, 3]));
     
     cx = autumn(n);
     cx(1, :) = [.8, .8, .8];

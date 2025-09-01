@@ -6,6 +6,7 @@ function ok=CheckUmapFolder(curPath, fileName, doGrandParent)
 %   University License: BSD 3 clause
 
 ok=true;
+return;
 whereIsFile=fileparts(which(fileName));
 if nargin>2 && doGrandParent
     check1=fileparts(curPath);

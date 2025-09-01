@@ -4,7 +4,12 @@ function callback_RunGeneAgent(src, ~, predefinedlist)
 
 if nargin < 3, predefinedlist = []; end
 
+if ~isempty(predefinedlist)
+    [FigureHandle] = gui.gui_getfigsce(src);
+else
     [FigureHandle, sce] = gui.gui_getfigsce(src);
+end
+
 
     if ~pkg.i_license
         gui.myErrordlg(FigureHandle, ...
@@ -14,18 +19,19 @@ if nargin < 3, predefinedlist = []; end
         return;
     end
 
-    gsorted = natsort(sce.g);
 
     extprogname = 'geneagentwork';
     preftagname = 'externalwrkpath';
-    [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
+    [wkdir] = gui.gui_setprgmwkdir(extprogname, ...
+        preftagname, FigureHandle);
     if isempty(wkdir), return; end
     olddir = pwd;
     if isfolder(wkdir), cd(wkdir); end
     
-    rng("shuffle");
-    n = length(gsorted);
     if isempty(predefinedlist)
+        gsorted = natsort(sce.g);
+        rng("shuffle");
+        n = length(gsorted);
         if isempty(gsorted)
             ingenelist = gui.i_inputgenelist(sprintf("ERBB2\nERBB4\nFGFR2\nFGFR4\nHRAS\nKRAS"));
         else
@@ -35,6 +41,7 @@ if nargin < 3, predefinedlist = []; end
     else
         ingenelist = predefinedlist;
     end
+
     if isempty(ingenelist) || all(strlength(ingenelist) < 1), return; end
     fw = gui.myWaitbar(FigureHandle);
     ingenelist = sprintf("%s,", ingenelist);
@@ -52,31 +59,28 @@ if nargin < 3, predefinedlist = []; end
 
     if strcmp('Yes', gui.myQuestdlg(FigureHandle, "Wait analysis is complete and then generate report?"))
         
-        selection = uiconfirm(app.UIFigure, ...
-            'Wait until the web application is done, click Continue to proceed.', ...
-            'Process Status', ...
-            'Options', {'Continue'}, ...
-            'DefaultOption', 1, ...
-            'Icon', 'info');
+           gui.myHelpdlg(FigureHandle, ...
+            'Wait until the web application is done, click OK to proceed.', ...
+            'Process Status');
         
         % The code execution will pause here until user clicks Continue
-        if strcmp(selection, 'Continue')
+        % if strcmp(selection, 'Continue')
             options = weboptions('Timeout', 30);
             out = webread(retrieveurl, options);
             % Process the output and generate the report
             if isstruct(out)
-                aaa(out);
+                in_generateAIReport(out);
             else
                 warning('Output is not a struct. Report generation skipped.');
             end
-        end
+        % end
     end
     cd(olddir);
 end
 
 
 
-function aaa(s)
+function in_generateAIReport(s)
     str = formattedDisplayText(s);
     writelines(str, 'GeneAgent_Report.txt');
     % type 'struct_report.txt';    

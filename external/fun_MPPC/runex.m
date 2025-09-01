@@ -1,3 +1,5 @@
+
+%{
 function [x, mass, y0, cut_indices0, yfinal, cut_indices, I, iters] = runex(eg)
 %RUNEX examples for computing local minimizers of the (MPPC) functional
 %   Examples: (2,4,6,10 are examples from the paper)
@@ -387,3 +389,4 @@ switch eg
 end
 
 end
+%}

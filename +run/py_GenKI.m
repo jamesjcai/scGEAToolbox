@@ -1,4 +1,4 @@
-function [T] = py_GenKI(~, g, idx, wkdir, isdebug)
+function [T] = py_GenKI(X, g, idx, wkdir, isdebug)
 
 if nargin < 5, isdebug = true; end
 if nargin < 4, wkdir = []; end
@@ -80,10 +80,10 @@ try
     tmpfilelist = {'X.mat', 'g.txt', 'pcnet_Source.mat', ...
         'idx.mat', 'output.csv', fullfile('GRNs', 'pcNet_example.npz')};
     if ~isdebug, pkg.i_deletefiles(tmpfilelist); end    
-    if issparse(sce.X)
-        X = single(full(sce.X));         
+    if issparse(X)
+        X = single(full(X));
     else
-        X = single(sce.X);
+        X = single(X);
     end
     save('X.mat', '-v7.3', 'X');
     save('idx.mat', '-v7.3', 'idx');

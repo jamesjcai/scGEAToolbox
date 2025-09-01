@@ -1,3 +1,4 @@
+%{
 load ../../../example_data/new_example_sce.mat
 X = sce.X;
 if issparse(X)
@@ -22,3 +23,4 @@ pyrun("X = f['X'][()]");
 pyrun("f.close()");
 pyrun("scrub = scr.Scrublet(X)");
 pyrun("doubletscore, isDoublet = scrub.scrub_doublets()");
+%}

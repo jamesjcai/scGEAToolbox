@@ -123,6 +123,9 @@ classdef SuhRunUmap < handle
             
             beGraphic=strcmpi(args.verbose, 'graphic');
             curAxes=[];
+            beGraphic = false;
+            
+            %{
             if beGraphic
                 %init top level variables set by prepareGui
                 firstPlot=true;xLabel=[];yLabel=[];zLabel=[];
@@ -149,6 +152,8 @@ classdef SuhRunUmap < handle
                     return;
                 end
             end
+
+            %}
             
             %init top level variables set by prepareData
             hClusterLabels=[];

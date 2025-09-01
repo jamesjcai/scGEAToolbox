@@ -30,8 +30,9 @@ disp('Input file written.');
 
 [status] = run.pycommon2(x, wrkpth, prgfoldername);
 
-if status == 0 && exist('output.mat', 'file')
-    load("output.mat", "idx")
+outputfile='output.mat';
+if status == 0 && exist(outputfile, 'file')
+    load(outputfile, "idx")
     idx = idx + 1;
 end
 

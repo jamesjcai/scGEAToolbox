@@ -107,7 +107,7 @@ function demo_chi2_binary()
     var1 = binornd(1, 0.3, n, 1);  % 30% probability of 1
     var2 = binornd(1, 0.4, n, 1);  % 40% probability of 1, independent
     
-    [chi2_stat1, p_val1] = chi2_binary_test(var1, var2);
+    [chi2_stat1, p_val1] = pkg.ai_chi2_binary_test(var1, var2);
     
     % Example 2: Dependent variables
     fprintf('\n\nExample 2: Testing dependent variables\n');
@@ -117,7 +117,7 @@ function demo_chi2_binary()
     var2(var1 == 1) = binornd(1, 0.8, sum(var1), 1);  % Higher prob when var1=1
     var2(var1 == 0) = binornd(1, 0.2, sum(var1==0), 1);  % Lower prob when var1=0
     
-    [chi2_stat2, p_val2] = chi2_binary_test(var1, var2);
+    [chi2_stat2, p_val2] = pkg.ai_chi2_binary_test(var1, var2);
     
     fprintf('\n=== SUMMARY ===\n');
     fprintf('Example 1 (independent): chi2=%.4f, p=%.6f\n', chi2_stat1, p_val1);

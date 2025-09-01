@@ -1,3 +1,4 @@
+%{
 % https://github.com/weihuayi/numopde/blob/master/sparse.md
 X = [0 0 0 10; 21 0 33 0; 0 0 3 0; 12 1 0 4];
 X = sparse(X);
@@ -57,5 +58,4 @@ indices = row;
 data = nonzeros(X);
 
 end
-
-
+%}

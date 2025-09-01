@@ -1,3 +1,4 @@
+%{
 pyrun("from scimilarity import CellAnnotation")
 pyrun("ca = CellAnnotation(model_path=a)", a='D:\SCimilarity_models\model_v1.1');
 % Or pyrun("ca = CellAnnotation(model_path = 'y:\\jcai\\models\\model_v1.1')")
@@ -24,3 +25,4 @@ s = single(embeddings);
 %model = whisper.load_model("small")  # You can use "tiny", "small", or "large" based on your system
 %result = model.transcribe(audio_file)
 %text = result["text"]
+%}

@@ -30,13 +30,13 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
     defaultindx = getpref('scgeatoolbox', preftagname, length(list));
 
     if gui.i_isuifig(parentfig)
-        focus(parentfig);
+        figure(parentfig);
         [indx, tf] = gui.myListdlg(parentfig, list, ...
             'Select a source', list(defaultindx));
+
+        parentfig.WindowStyle = 'normal';
     else
-        if isempty(parentfig)
-            % figure;
-        else
+        if ~isempty(parentfig)
             figure(parentfig);
         end
         pause(0.5);

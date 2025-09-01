@@ -66,8 +66,8 @@ end
 X = pkg.e_uint2sparse(X);
 sce = SingleCellExperiment(X, g);
 
-
-if exist('barcodes.csv', 'file')
+barcodesfile = 'barcodes.csv';
+if exist(barcodesfile, 'file')
     disp('Reading c_cell_id from barcodes.csv');
     t = readtable('barcodes.csv', 'Delimiter', ',', 'VariableNamingRule', 'modify');
     if ~isempty(t) && ismember('x', t.Properties.VariableNames)
@@ -75,8 +75,8 @@ if exist('barcodes.csv', 'file')
         if length(id) == sce.NumCells, sce.c_cell_id = id; end
     end
 end
-
-if exist('umap.csv', 'file')
+umapfile = 'umap.csv';
+if exist(umapfile, 'file')
     disp('Reading s from umap.csv');
     t = readtable('umap.csv', 'Delimiter', ',', 'VariableNamingRule', 'modify');
     [y, idx] = ismember(string(t.Var1), sce.c_cell_id);
@@ -86,8 +86,8 @@ if exist('umap.csv', 'file')
         sce.struct_cell_embeddings.umap2d = s;
     end
 end
-
-if exist('batch.csv','file')
+batchfile = 'batch.csv';
+if exist(batchfile,'file')
     disp('Reading batchid from batch.csv');
     t=readtable('batch.csv','VariableNamingRule', 'modify');
     id=string(t.x);
@@ -105,7 +105,10 @@ end
 %         end
 %     end
 % else
-if exist('celltype.csv', 'file')
+
+% if isdeployed || ~isempty(which('celltype.csv'))
+celltypefile = 'celltype.csv';
+if exist(celltypefile, 'file')
     disp('Reading celltype from celltype.csv');
     t = readtable('celltype.csv', 'Delimiter', ',','VariableNamingRule', 'modify');
     if ~isempty(t) && ismember('x', t.Properties.VariableNames)
@@ -114,8 +117,8 @@ if exist('celltype.csv', 'file')
         end
     end    
 end
-
-if exist('metadata.csv', 'file')
+metadatafile = 'metadata.csv';
+if exist(metadatafile, 'file')
     try
     disp('Reading metadata from metadata.csv');
         t = readtable('metadata.csv', 'Delimiter', ',', ...

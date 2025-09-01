@@ -1,4 +1,5 @@
-function [indx, tf] = myListdlg(parentfig, options, Title, prefersel, allowmulti)
+function [indx, tf] = myListdlg(parentfig, options, Title, ...
+        prefersel, allowmulti)
 
 if nargin < 5, allowmulti = true; end
 if nargin < 4, prefersel = []; end
@@ -16,6 +17,9 @@ if nargin < 4, prefersel = []; end
     % Create a modal dialog
     %    d = uifigure('Name', Title, 'Position', dlgPos, ...
     %        'WindowStyle', 'modal');
+
+     parentfig.WindowStyle = 'alwaysontop';
+     %disp('alwaysontop')
 
     d = uifigure('Name', Title, 'Position', dlgPos, ...
         'WindowStyle', 'normal', 'Visible','off');
@@ -51,6 +55,9 @@ if nargin < 4, prefersel = []; end
         catch
         end
     end
+
+     parentfig.WindowStyle = 'normal';
+
     drawnow;
     d.Visible = 'on';
     d.WindowStyle = "modal";

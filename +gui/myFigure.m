@@ -64,7 +64,7 @@ classdef myFigure < handle
                     try
                         theme(obj.FigHandle, parentfig.Theme.BaseColorStyle);
                     catch
-                        % Ignore if theme fails
+                        % Ignore if theme fails 
                     end
                 end                
 
@@ -91,8 +91,8 @@ classdef myFigure < handle
                 obj.tbv{5} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_pickcolor, false}, 'color-wheel.jpg', 'Pick a New Colormap...');
                 obj.tbv{6} = pkg.i_addbutton2fig(obj.tb, 'off', @gui.i_changefontsize, 'text-size.jpg', 'Change Font Size');
                 obj.tbv{7} = pkg.i_addbutton2fig(obj.tb, 'on', {@gui.i_savemainfig, 3}, "presentation.jpg", 'Save Figure to PowerPoint File...');
-                obj.tbv{8} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_savemainfig, 2}, "jpg-format.jpg", 'Save Figure as Graphic File...');
-                obj.tbv{9} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_savemainfig, 1}, "svg-format.jpg", 'Save Figure as SVG File...');
+                obj.tbv{8} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_savemainfig, 2, obj.FigHandle, obj.AxHandle}, "jpg-format.jpg", 'Save Figure as Graphic File...');
+                obj.tbv{9} = pkg.i_addbutton2fig(obj.tb, 'off', {@gui.i_savemainfig, 1, obj.FigHandle, obj.AxHandle}, "svg-format.jpg", 'Save Figure as SVG File...');
                 obj.tbv{10} = gui.gui_3dcamera(obj.tb);
                 obj.tbv{11} = pkg.i_addbutton2fig(obj.tb, 'on', {@gui.i_resizewin, obj.FigHandle}, 'scale-frame-reduce.jpg', 'Resize Plot Window');
                 obj.tbv{12} = pkg.i_addbutton2fig(obj.tb, 'on', @obj.in_darkmode, 'demoIcon.gif', 'Light/Dark Mode');            
@@ -116,7 +116,7 @@ classdef myFigure < handle
             if isprop(obj.FigHandle,'Theme') ...
                     && ~isMATLABReleaseOlderThan('R2025a')
                 try
-                    if rand>0.5
+                    if strcmp('light', obj.FigHandle.Theme.BaseColorStyle)
                         theme(obj.FigHandle, 'dark');
                     else
                         theme(obj.FigHandle, 'light');

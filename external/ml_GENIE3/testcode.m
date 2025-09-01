@@ -1,3 +1,4 @@
+%{
 addpath('RT')
 load example_data.mat
 
@@ -18,3 +19,4 @@ ntrees = 50;
 VIM3 = GENIE3(data, input_idx, tree_method, K, ntrees);
 
 get_link_list(VIM)
+%}

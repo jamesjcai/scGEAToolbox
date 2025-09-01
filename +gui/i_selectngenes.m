@@ -16,6 +16,8 @@ elseif isstring(sce)
 end
 
 
+
+
 if ~isempty(predefinedlist)
     predefinedlist = gsorted(matches(gsorted, predefinedlist, ...
         'IgnoreCase', true));
@@ -37,7 +39,6 @@ switch answer
     case 'Cancel'
         return;
     case 'Paste'
-        rng("default");
         rng("shuffle");
         n = length(gsorted);
         if isempty(predefinedlist)            

@@ -35,7 +35,7 @@ function eigenvectors = spectral_layout(a_graph, dim, eigen_limit, round_limit)
         n_components = max(conncomp(graph(a_graph)));
 
         if n_components > 1
-              warning('The adjacency graph is not connected!');
+%              warning('The adjacency graph is not connected!');
         end
 
         degrees = full(sum(a_graph)');

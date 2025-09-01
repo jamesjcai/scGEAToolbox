@@ -25,8 +25,10 @@ if ~ismember(speciesid, [1, 2])
 end
 
 pw1 = fileparts(mfilename('fullpath'));
-dbfile1 = fullfile(pw1, '+run', 'external', 'web_STRING', 'stringdb', 'stringdb_human.mat');
-dbfile2 = fullfile(pw1, '+run', 'external', 'web_STRING', 'stringdb', 'stringdb_mouse.mat');
+
+
+dbfile1 = fullfile(pw1, 'assets', 'STRING', 'stringdb_human.mat');
+dbfile2 = fullfile(pw1, 'assets', 'STRING', 'stringdb_mouse.mat');
 
 if ~exist(dbfile1, 'file')
     if ~exist(fileparts(dbfile1), 'dir')
