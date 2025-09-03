@@ -37,25 +37,49 @@ end
 
 for kx = 1:length(tgene)
 
-    hx=gui.myFigure(parentfig);
-    %hx = figure;
-    for ky = 1:length(cL)
-        cellidx = c==ky;
-        nexttile;
-
-        % sc_scattermarker(Xt, sce.g, sce.s, glist(k), 1, 5, false);   
-
-        ydata = X(g == tgene(kx), cellidx);
+    if ~isMATLABReleaseOlderThan('R2025a')        
+        hx = figure;
+        for ky = 1:length(cL)
+            cellidx = c==ky;
+            nexttile;
     
-        if size(s,2)>2
-            scatter3(s(cellidx, 1), s(cellidx, 2), s(cellidx, 3), 5, ydata, 'filled');
-        else
-            scatter(s(cellidx, 1), s(cellidx, 2), 5, ydata, 'filled');
+            % sc_scattermarker(Xt, sce.g, sce.s, glist(k), 1, 5, false);   
+    
+            ydata = X(g == tgene(kx), cellidx);
+        
+            if size(s,2)>2
+                scatter3(s(cellidx, 1), s(cellidx, 2), s(cellidx, 3), 5, ydata, 'filled');
+            else
+                scatter(s(cellidx, 1), s(cellidx, 2), 5, ydata, 'filled');
+            end
+            gui.i_setautumncolor(ydata, a, true, any(ydata==0), [], hx);
+            clim([min(z) max(z)]);  % Adjust color axis to data range
+            title(cL{ky});
         end
-        gui.i_setautumncolor(ydata, a, true, any(ydata==0));
-        clim([min(z) max(z)]);  % Adjust color axis to data range
-        title(cL{ky});
+        sgtitle(tgene(kx));
+    else
+        hx=gui.myFigure(parentfig);
+        %hx = figure;
+        for ky = 1:length(cL)
+            cellidx = c==ky;
+            nexttile;
+    
+            % sc_scattermarker(Xt, sce.g, sce.s, glist(k), 1, 5, false);   
+    
+            ydata = X(g == tgene(kx), cellidx);
+        
+            if size(s,2)>2
+                scatter3(s(cellidx, 1), s(cellidx, 2), s(cellidx, 3), 5, ydata, 'filled');
+            else
+                scatter(s(cellidx, 1), s(cellidx, 2), 5, ydata, 'filled');
+            end
+            gui.i_setautumncolor(ydata, a, true, any(ydata==0));
+            clim([min(z) max(z)]);  % Adjust color axis to data range
+            title(cL{ky});
+        end
+        sgtitle(tgene(kx));
+        hx.show(parentfig);
     end
-    sgtitle(tgene(kx));
-    hx.show(parentfig);
+
+
 end

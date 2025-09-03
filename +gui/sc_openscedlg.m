@@ -34,7 +34,7 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
         [indx, tf] = gui.myListdlg(parentfig, list, ...
             'Select a source', list(defaultindx));
 
-        parentfig.WindowStyle = 'normal';
+        % parentfig.WindowStyle = 'normal';
     else
         if ~isempty(parentfig)
             figure(parentfig);

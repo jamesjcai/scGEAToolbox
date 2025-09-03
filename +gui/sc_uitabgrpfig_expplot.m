@@ -50,8 +50,8 @@ for k = 1:n
     
     % ax0{k} = axes('parent',tab{k});
 
-    ax{k,1} = subplot(1, 2, 1,'Parent', tab{k});
-    ax{k,1}.Tag = sprintf('axes_tab%d_left',k);
+    ax{k, 1} = subplot(1, 2, 1,'Parent', tab{k});
+    % ax{k,1}.Tag = sprintf('axes_tab%d_left',k);
 
     if size(s,2)>2
         scatter3(ax{k,1}, s(:,1), s(:,2), s(:,3), 5, c, 'filled');
@@ -69,8 +69,9 @@ for k = 1:n
     % ax{k,2} = subplot(1,2,2);
 
     ax{k,2} = subplot(1, 2, 2,'Parent', tab{k});
-    ax{k,2}.Tag = sprintf('axes_tab%d_right',k);   % 👈 assign unique Tag
+    % ax{k,2}.Tag = sprintf('axes_tab%d_right', k);   % 👈 assign unique Tag
     
+
         scatter(ax{k,2}, s(:,1), s(:,2), 5, c, 'filled');
         stem3(ax{k,2}, s(:,1), s(:,2), c, 'marker', 'none', 'color', 'm');
         hold(ax{k,2}, "on");
@@ -88,7 +89,7 @@ for k = 1:n
         % disp('rotate3d enabled');
         % Register callbacks
         % hRotate.ActionPreCallback  = @(src,evnt) startDrag(hFig, evnt, ax{k,2});
-        hRotate.ActionPostCallback = @(src,evnt) stopDrag(hFig, evnt, ax{k,2}.Tag);
+        
         %{
         ax = axes('Parent', tab{k});
         hold(ax, 'on');
@@ -112,7 +113,9 @@ for k = 1:n
         %}
     
 end
-
+trackedAxes = [ax{:,1}, ax{:,2}];   % only the right ones, or ax(:) if you want all
+hRotate.ActionPostCallback = @(src,evnt) stopDrag(evnt, trackedAxes);
+% hRotate.ActionPostCallback = @(src,evnt) stopDrag(hFig, evnt);
   
 tabgp.SelectionChangedFcn=@displaySelection;
 hx.addCustomButton('off',  @in_genecards, 'www.jpg', 'GeneCards...');
@@ -162,7 +165,6 @@ hx.show(parentfig)
         end
 
     end
-
     
     function in_savedata(~,~)
         gui.i_exporttable(table(glist), true, ...
@@ -200,25 +202,76 @@ hx.show(parentfig)
 
 %  copyobj(allchild(axOld(j)), axNew);
 
-    function stopDrag(hFig, evnt, targetTag)
-        if isfield(evnt,'Axes') && strcmp(evnt.Axes.Tag, targetTag)
-            disp(['Rotation stopped on ' targetTag]);
-    
-            %camPos = evnt.Axes.CameraPosition;
-            %fprintf('Camera (%.2f, %.2f, %.2f)\n', camPos);
-    
-            [az,el] = view(evnt.Axes);
-            %fprintf('View az = %.2f, el = %.2f\n', az, el);
-            % cleanup
-            hFig.WindowButtonMotionFcn = '';
-            figure(hFig);
-            if strcmp('Yes', gui.myQuestdlg(hFig, "Apply to all tabs?"))
-               for kx = 1:n
-                   view(ax{kx, 2}, [az, el]);
-               end
+
+    function stopDrag(evnt, trackedAxes)
+        thisAx = evnt.Axes;      % the axes that rotate3d thinks is active
+        idxa = find(cellfun(@(h) isequal(h,thisAx), num2cell(trackedAxes)));       
+
+        if ~isempty(idxa)
+            if idxa > n
+                tag = 'right';
+                idxa = idxa - n;
+            else
+                tag = 'left';                
             end
+            
+            % fprintf('Rotation stopped on subplot %s #%d\n', tag, idxa);
+
+            % trackedAxes(idxa).Tag
+            % camPos = trackedAxes(idxa).CameraPosition;
+            % [az,el] = view(trackedAxes(idxa));
+            % fprintf('Camera (%.2f, %.2f, %.2f), View(%.2f,%.2f)\n', camPos, az, el);
+            [yy, id]=ismember(tag, {'left','right'});
+            assert(yy);
+            [az, el] = view(ax{idxa, id});
+            figure(hFig);
+            if ~strcmp('Yes', gui.myQuestdlg(hFig, sprintf("Apply the same rotation to all tabs (%s plot)?", ...
+                    tag))), return; end
+               for kx = 1:n
+                   if kx == idxa, continue; end
+                   view(ax{kx, id}, [az, el]);
+               end
+        else
+            disp('Rotation stopped on unknown axes (not in tracked list)');
         end
     end
+
+
+
+    % function stopDrag_x(hFig, evnt)
+    % 
+    %     disp(evnt.Axes);           % see which axes handle MATLAB is giving you
+    %     disp(evnt.Axes.Parent);    % see the parent (tab?)
+    %     disp(evnt.Axes.Tag);       % check if tag survived        
+    % 
+    %     % axx = evnt.Axes;
+    %     % if isempty(axx.Tag)
+    %     %     disp('Rotation stopped on an axes without a Tag');
+    %     % else
+    %     %     disp(['Rotation stopped on ' axx.Tag]);
+    %     % end
+    % 
+    %     % if isfield(evnt,'Axes') && strcmp(evnt.Axes.Tag, targetTag)
+    %     % 
+    %     %     targetTag
+    %     % 
+    %     %     disp(['Rotation stopped on 2 ' targetTag]);
+    %     % 
+    %     %     %camPos = evnt.Axes.CameraPosition;
+    %     %     %fprintf('Camera (%.2f, %.2f, %.2f)\n', camPos);
+    %     % 
+    %     %     [az,el] = view(evnt.Axes);
+    %     %     %fprintf('View az = %.2f, el = %.2f\n', az, el);
+    %     %     % cleanup
+    %     %     hFig.WindowButtonMotionFcn = '';
+    %     %     figure(hFig);
+    %     %     if strcmp('Yes', gui.myQuestdlg(hFig, "Apply to all tabs?"))
+    %     %        for kx = 1:n
+    %     %            view(ax{kx, 2}, [az, el]);
+    %     %        end
+    %     %     end
+    %     % end
+    % end
     
     % function duringDrag(ax)
     %     % Runs only while dragging on the chosen axes

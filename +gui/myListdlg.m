@@ -18,7 +18,7 @@ if nargin < 4, prefersel = []; end
     %    d = uifigure('Name', Title, 'Position', dlgPos, ...
     %        'WindowStyle', 'modal');
 
-     parentfig.WindowStyle = 'alwaysontop';
+     % parentfig.WindowStyle = 'alwaysontop';
      %disp('alwaysontop')
 
     d = uifigure('Name', Title, 'Position', dlgPos, ...
@@ -56,7 +56,7 @@ if nargin < 4, prefersel = []; end
         end
     end
 
-     parentfig.WindowStyle = 'normal';
+     % parentfig.WindowStyle = 'normal';
 
     drawnow;
     d.Visible = 'on';
