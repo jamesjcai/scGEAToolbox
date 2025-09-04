@@ -1,6 +1,8 @@
 function callback_DPGene2Groups(src, ~)
 
-[FigureHandle, sce] = gui.gui_getfigsce(src);
+[FigureHandle, sce_ori] = gui.gui_getfigsce(src);
+sce = copy(sce_ori);
+
 if ~gui.gui_showrefinfo('DP Analysis', FigureHandle), return; end
 
     extprogname = 'scgeatool_DPAnalysis';
@@ -31,7 +33,7 @@ c=zeros(size(i1));
 c(i1)=1; c(i2)=2;
 cL=[cL1;cL2];
 if ~all(c>0)
-    sce = sce.selectcells(c>0);
+    sce = sce.selectcells(c>0); %#OK
     c = c(c>0);
     i1 = c==1;
     i2 = c==2;

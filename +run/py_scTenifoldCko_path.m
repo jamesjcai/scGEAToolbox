@@ -1,4 +1,4 @@
-function [T] = py_scTenifoldCko_path(sce, celltype1, celltype2, targetg, ...
+function [T] = py_scTenifoldCko_path(sce_ori, celltype1, celltype2, targetg, ...
                                 targetpathid, wkdir, ...
                                 isdebug, prepare_input_only)
 
@@ -7,12 +7,13 @@ if nargin < 8, prepare_input_only = false; end
 if nargin < 7, isdebug = true; end
 if nargin < 6, wkdir = []; end
 if nargin < 5 || isempty(targetpathid), targetpathid = [1 3]; end
-if nargin < 4 || isempty(targetg), targetg = sce.g(1); end
+if nargin < 4 || isempty(targetg), targetg = sce_ori.g(1); end
 if nargin < 3, error('Usage: [T] = py_scTenifoldCko_path(sce, celltype1, celltype2, ["ligandgene", "receptorgene"])'); end
 twosided = true;
-[~, targetgid]=ismember(targetg,sce.g);
+[~, targetgid]=ismember(targetg,sce_ori.g);
 assert(numel(targetgid)==2)
 
+sce = copy(sce_ori);
 % -----------------
 oldpth = pwd();
 pw1 = fileparts(mfilename('fullpath'));
@@ -126,7 +127,7 @@ end
                 mkdir(sprintf('%d', id));
             end
             idx = sce.c_cell_type_tx == celltype1 | sce.c_cell_type_tx == celltype2;
-            sce = sce.selectcells(idx);
+            sce = sce.selectcells(idx); %#OK
             sce.c_batch_id = sce.c_cell_type_tx;
             sce.c_batch_id(sce.c_cell_type_tx == celltype1) = "Source";
             sce.c_batch_id(sce.c_cell_type_tx == celltype2) = "Target";

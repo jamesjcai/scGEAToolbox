@@ -2,11 +2,12 @@ function callback_scTenifoldCko(src, ~)
 
 
 if isa(src, "SingleCellExperiment")
-    sce = src;
+    sce_ori = src;
     FigureHandle = [];
 else
-    [FigureHandle, sce] = gui.gui_getfigsce(src);
+    [FigureHandle, sce_ori] = gui.gui_getfigsce(src);
 end
+sce = copy(sce_ori);
 
 if ~gui.gui_showrefinfo('scTenifoldCko [Unpublished]', FigureHandle), return; end
 
@@ -68,7 +69,7 @@ sce.c_cell_type_tx = string(cL(c));
 
 % idx=thisc==cL{x1} | thisc==cL{x2};
 idx = c == x1 | c == x2;
-sce = sce.selectcells(idx);
+sce = sce.selectcells(idx);  %#OK
 celltype1 = cL{x1};
 celltype2 = cL{x2};
 

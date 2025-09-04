@@ -11,7 +11,8 @@ function [needupdatesce] = callback_CompareCellScoreBtwCls(src, ~)
     - Displays a graph showing the calculated scores along with labels for each dataset.
 %}
 
-[FigureHandle, sce] = gui.gui_getfigsce(src);
+[FigureHandle, sce_ori] = gui.gui_getfigsce(src);
+sce = copy(sce_ori);
 
 needupdatesce = false;
 
@@ -64,7 +65,7 @@ bb = 'No, just show values (heatmap)';
                         [y1, idx1] = ismember(listitems(indxx), cLi);
                         assert(all(y1));
                         idx2 = ismember(ci, idx1);
-                        sce = sce.selectcells(idx2);
+                        sce = sce.selectcells(idx2);  %#OK
                         thisc = thisc(idx2);
                     else
                         return;

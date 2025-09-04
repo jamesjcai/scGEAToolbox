@@ -10,7 +10,7 @@ parentax = findall(FigureHandle,'type','axes');
 [ax, bx] = view(parentax);
 fw = gui.myWaitbar(FigureHandle);
 try
-    scex = selectcells(sce, ptsSelected);
+    scex = copy(sce).selectcells(ptsSelected); %#OK
     % scex.c=cLi(ci(idx));
     scex.c = sce.c(ptsSelected);
     if isa(src, 'matlab.apps.AppBase')

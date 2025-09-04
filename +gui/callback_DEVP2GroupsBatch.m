@@ -1,6 +1,8 @@
 function callback_DEVP2GroupsBatch(src, ~)
 
-    [FigureHandle, sce] = gui.gui_getfigsce(src);
+    [FigureHandle, sce_ori] = gui.gui_getfigsce(src);
+    sce = copy(sce_ori);
+
     extprogname = 'scgeatool_DEVPAnalysis_Batch';
     preftagname = 'externalwrkpath';
     [wrkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
@@ -92,11 +94,13 @@ function callback_DEVP2GroupsBatch(src, ~)
             sprintf('DV - Processing %s ...', CellTypeList{k}), ...
             (k-0.5)/length(CellTypeList));
         idx = sce.c_cell_type_tx == CellTypeList{k};
-        sce1 = sce.selectcells(i1&idx);
-        sce1 = sce1.qcfilter;
+        sce1=copy(sce);
+        sce1 = sce1.selectcells(i1&idx); %#OK
+        sce1 = sce1.qcfilter; %#OK
     
-        sce2 = sce.selectcells(i2&idx);
-        sce2 = sce2.qcfilter;
+        sce2 = copy(sce);
+        sce2 = sce2.selectcells(i2&idx); %#OK
+        sce2 = sce2.qcfilter; %#OK
         
         notok = false;
         if sce1.NumCells < 10

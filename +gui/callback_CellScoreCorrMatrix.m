@@ -1,6 +1,8 @@
 function callback_CellScoreCorrMatrix(src, ~)
 
-    [FigureHandle, sce] = gui.gui_getfigsce(src);
+    [FigureHandle, sce_ori] = gui.gui_getfigsce(src);
+    sce = copy(sce_ori);
+
     if ~gui.gui_showrefinfo('Gene Program Correlation Matrix', FigureHandle), return; end
 
     [done, scorefile] = in_getscorfile;
@@ -36,7 +38,7 @@ function callback_CellScoreCorrMatrix(src, ~)
             [idx] = gui.i_selmultidialog(cL, [], FigureHandle);
             if isempty(idx), return; end
 
-            sce = sce.selectcells(ismember(thisc, cL(idx)));
+            sce = sce.selectcells(ismember(thisc, cL(idx))); %#OK
         otherwise
             return;
     end

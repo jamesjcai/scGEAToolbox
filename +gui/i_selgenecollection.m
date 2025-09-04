@@ -1,6 +1,6 @@
 function [indx1, species] = i_selgenecollection(parentfig)
 if nargin < 1, parentfig = []; end
-%see also: i_selectcellscore
+%see also: i_selectcellscore %#OK
 
 %MSigDB Molecular Signatures
 %PanglaoDB Cell Type Markers

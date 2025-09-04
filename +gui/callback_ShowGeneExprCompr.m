@@ -1,7 +1,5 @@
 function callback_ShowGeneExprCompr(src, ~)
 
-
-
     [FigureHandle, sce] = gui.gui_getfigsce(src);
 
     [axx, bxx] = view(findall(FigureHandle,'type','axes'));
@@ -41,7 +39,7 @@ function callback_ShowGeneExprCompr(src, ~)
                 [y1, idx1] = ismember(listitems(indxx), cLi);
                 assert(all(y1));
                 idx2 = ismember(ci, idx1);
-                sce = sce.selectcells(idx2);
+                sce1 = copy(sce).selectcells(idx2);  %#OK
                 thisc = thisc(idx2);
             else
                 return;
@@ -50,7 +48,7 @@ function callback_ShowGeneExprCompr(src, ~)
 
 
     fw=gui.myWaitbar(FigureHandle);
-    gui.sc_uitabgrpfig_expcomp(sce, glist, FigureHandle, [axx, bxx], thisc);
+    gui.sc_uitabgrpfig_expcomp(sce1, glist, FigureHandle, [axx, bxx], thisc);
     gui.myWaitbar(FigureHandle, fw);
 
 end

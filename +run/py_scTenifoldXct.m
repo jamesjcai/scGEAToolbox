@@ -1,4 +1,4 @@
-function [T] = py_scTenifoldXct(sce, celltype1, celltype2, twosided, ...
+function [T] = py_scTenifoldXct(sce_ori, celltype1, celltype2, twosided, ...
                                 wkdir, isdebug, ...
                                 prepare_input_only, parentfig)
 
@@ -9,6 +9,8 @@ if nargin < 6, isdebug = true; end
 if nargin < 5, wkdir = []; end
 if nargin < 4, twosided = true; end
 if nargin < 3, error('Usage: [T] = py_scTenifoldXct(sce, celltype1, celltype2)'); end
+
+sce = copy(sce_ori);
 
 oldpth = pwd();
 pw1 = fileparts(mfilename('fullpath'));
@@ -80,7 +82,7 @@ if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 % writematrix(sce.X,'X.txt');
 
 idx = sce.c_cell_type_tx == celltype1 | sce.c_cell_type_tx == celltype2;
-sce = sce.selectcells(idx);
+sce = sce.selectcells(idx);  %#OK
 sce.c_batch_id = sce.c_cell_type_tx;
 sce.c_batch_id(sce.c_cell_type_tx == celltype1) = "Source";
 sce.c_batch_id(sce.c_cell_type_tx == celltype2) = "Target";

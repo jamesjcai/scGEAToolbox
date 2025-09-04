@@ -1,4 +1,4 @@
-function [T] = py_scTenifoldCko_gene(sce, celltype1, celltype2, targetg, ...
+function [T] = py_scTenifoldCko_gene(sce_ori, celltype1, celltype2, targetg, ...
                                 targettype, wkdir, ...
                                 isdebug, prepare_input_only)
 
@@ -7,13 +7,14 @@ if nargin < 8, prepare_input_only = false; end
 if nargin < 7, isdebug = true; end
 if nargin < 6, wkdir = []; end
 if nargin < 5 || isempty(targettype), targettype=sprintf('%s+%s', celltype1, celltype2); end
-if nargin < 4 || isempty(targetg), targetg = sce.g(1); end
+if nargin < 4 || isempty(targetg), targetg = sce_ori.g(1); end
 if nargin < 3, error('Usage: [T] = py_scTenifoldCko(sce, celltype1, celltype2, targetg)'); end
 
 twosided = true;
 
-sce1 = sce;
-sce2 = sce;
+sce = copy(sce_ori);
+sce1 = copy(sce);
+sce2 = copy(sce);
 
 if targettype==sprintf('%s+%s', celltype1, celltype2)
     sce2.X(sce2.g==targetg, :)=0;
@@ -187,7 +188,7 @@ end
             mkdir(sprintf('%d', id));
         end
         idx = sce.c_cell_type_tx == celltype1 | sce.c_cell_type_tx == celltype2;
-        sce = sce.selectcells(idx);
+        sce = sce.selectcells(idx); %#OK
         sce.c_batch_id = sce.c_cell_type_tx;
         sce.c_batch_id(sce.c_cell_type_tx == celltype1) = "Source";
         sce.c_batch_id(sce.c_cell_type_tx == celltype2) = "Target";

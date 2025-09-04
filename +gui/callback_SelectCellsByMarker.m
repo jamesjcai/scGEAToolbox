@@ -40,7 +40,7 @@ end
             end
             [ax, bx] = view(findall(FigureHandle,'type','axes'));
             fw = gui.myWaitbar(FigureHandle);
-            scex = selectcells(sce, idx);
+            scex = copy(sce).selectcells(idx);  %#OK
 
             %if isa(src, 'matlab.apps.AppBase')
                 a = scgeatoolApp(scex);
@@ -95,7 +95,7 @@ end
                 return;
             end
             fw = gui.myWaitbar(FigureHandle);
-            scex = selectcells(sce, idx);
+            scex = copy(sce).selectcells(idx); %#OK
             a = scgeatoolApp(scex);
             view(a.UIAxes, [ax, bx]);
             gui.myWaitbar(FigureHandle, fw);

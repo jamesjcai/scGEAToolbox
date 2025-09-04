@@ -294,7 +294,7 @@ methods
             libsize, mtratio, ...
             min_cells_nonzero);
         for k = 1:length(keptidxv)
-            obj = selectcells(obj, keptidxv{k});
+            obj = selectcells(obj, keptidxv{k}); %#OK
         end
         [y] = ismember(obj.g, keptg);
         obj.X = obj.X(y, :);
@@ -340,6 +340,16 @@ methods
         catch ME
             warning(ME.message);
         end
+    end
+
+    function newobj = subsetcopy(obj, idx)
+        %SUBSETCOPY Return a copy of the object with only selected cells
+        %
+        % Usage:
+        %   sce1 = sce.subsetcopy(j1);
+        %
+        newobj = copy(obj);           % make a deep/shallow copy (depending on your class)
+        newobj.selectcells(idx);      % run selection on the copy
     end
 
     function obj = rmmtgenes(obj)
@@ -426,4 +436,7 @@ methods
     end
 end
 % https://www.mathworks.com/help/matlab/matlab_oop/example-representing-structured-data.html
+
+
+
 end

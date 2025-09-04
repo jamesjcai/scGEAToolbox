@@ -1,6 +1,8 @@
 function callback_2GeneCooccurrenceTest(src, ~)
 
-    [FigureHandle, sce] = gui.gui_getfigsce(src);   
+    [FigureHandle, sce_ori] = gui.gui_getfigsce(src);
+    sce = copy(sce_ori);
+
 
     [glist] = gui.i_selectngenes(sce, [], FigureHandle);
     if isempty(glist), return; end
@@ -34,7 +36,7 @@ function callback_2GeneCooccurrenceTest(src, ~)
             [idx] = gui.i_selmultidialog(cL, [], FigureHandle);
             if isempty(idx), return; end
             fw = gui.myWaitbar(FigureHandle);
-            sce = sce.selectcells(ismember(thisc, cL(idx)));
+            sce = sce.selectcells(ismember(thisc, cL(idx)));  %#OK
         otherwise
             return;
     end

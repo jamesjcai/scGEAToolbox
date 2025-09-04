@@ -947,7 +947,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
 
         end
         if ~isempty(ids)
-            sce = sce.selectcells(ids);
+            sce = sce.selectcells(ids); %#OK
             c = sce.c;
             in_RefreshAll(src, [], true, false);
             guidata(FigureHandle, sce);

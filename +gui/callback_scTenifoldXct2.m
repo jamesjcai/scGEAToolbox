@@ -1,6 +1,7 @@
 function callback_scTenifoldXct2(src, ~)
 
-[FigureHandle, sce] = gui.gui_getfigsce(src);
+[FigureHandle, sce_ori] = gui.gui_getfigsce(src);
+sce = copy(sce_ori);
 
 numglist = [1 3000 5000];
 memmlist = [16 32 64 128];
@@ -22,8 +23,10 @@ if isempty(j1) || isempty(j2)
         'Two samples are required.']);
     return; 
 end
-sce1 = sce.selectcells(j1);
-sce2 = sce.selectcells(j2);
+sce1 = copy(sce);
+sce1.selectcells(j1); %#OK
+sce2 = copy(sce);
+sce2.selectcells(j2); %#OK
 
 if sce1.NumCells < 50 || sce2.NumCells < 50
     if ~strcmp(gui.myQuestdlg(FigureHandle, ...

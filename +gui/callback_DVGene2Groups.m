@@ -4,7 +4,9 @@ lcolors = lines(2);
 lcolor1 = lcolors(1,:);
 lcolor2 = lcolors(2,:);
 
-[FigureHandle, sce] = gui.gui_getfigsce(src);
+[FigureHandle, sce_ori] = gui.gui_getfigsce(src);
+sce = copy(sce_ori);
+
     if ~gui.gui_showrefinfo('DV Analysis', FigureHandle), return; end
 
     extprogname = 'scgeatool_DVAnalysis';
@@ -33,18 +35,21 @@ lcolor2 = lcolors(2,:);
         cL2 = tmptxtc(2);
     end
     if ~all(c>0)
-        sce=sce.selectcells(c>0);
+        sce = sce.selectcells(c>0); %#OK
         c=c(c>0);
-        i1=c==1;
-        i2=c==2;
     end
+    i1=c==1;
+    i2=c==2;
     
+    sce1 = copy(sce);
+    sce1 = sce1.selectcells(i1); %#OK
+    sce1 = sce1.qcfilter; %#OK
     
-    sce1 = sce.selectcells(i1);
-    sce1 = sce1.qcfilter;
 
-    sce2 = sce.selectcells(i2);
-    sce2 = sce2.qcfilter;
+    sce2 = copy(sce);
+    sce2 = sce2.selectcells(i2); %#OK
+    sce2 = sce2.qcfilter; %#OK
+
 
     if sce1.NumCells < 10 || sce2.NumCells < 10 || sce1.NumGenes < 10 || sce2.NumGenes < 10
         gui.myErrordlg(FigureHandle, ['Filtered SCE contains too' ...

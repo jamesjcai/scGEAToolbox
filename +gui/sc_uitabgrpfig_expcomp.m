@@ -43,8 +43,10 @@ idx = 1;
 focalg = glist(idx);
 
 [c, cL] = findgroups(string(thisc));
-sce1 = sce.selectcells(c == 1);
-sce2 = sce.selectcells(c == 2);
+sce1=copy(sce);
+sce1 = sce1.selectcells(c == 1);  %#OK
+sce2=copy(sce);
+sce2 = sce2.selectcells(c == 2);  %#OK
 
 for k=1:n
     c1 = sce1.X(sce1.g == glist(k), :);

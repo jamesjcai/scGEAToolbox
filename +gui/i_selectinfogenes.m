@@ -51,9 +51,9 @@ if strcmpi(answer{4},'Yes') || strcmpi(answer{4},'Y')
     end
     ApprovedSymbol = string(T.GeneName);
     [idx0] = ismember(upper(sce.g), upper(ApprovedSymbol));
-    a1 = length(sce.g);
-    sce.g(~idx0) = [];
+    a1 = length(sce.g);    
     sce.X(~idx0, :) = [];
+    sce.g(~idx0) = [];
     a2 = length(sce.g);
     fprintf('%d genes without approved symbols are found and removed.\n',a1-a2);
 end

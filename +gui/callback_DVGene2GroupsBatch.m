@@ -1,6 +1,8 @@
 function callback_DVGene2GroupsBatch(src, ~)
 
-[FigureHandle, sce] = gui.gui_getfigsce(src);
+[FigureHandle, sce_ori] = gui.gui_getfigsce(src);
+sce = copy(sce_ori);
+
 if ~gui.gui_showrefinfo('DV in Batch Mode', FigureHandle), return; end
     
     extprogname = 'scgeatool_DVAnalysis_Batch';
@@ -32,11 +34,13 @@ for k=1:length(CellTypeList)
 
     idx = sce.c_cell_type_tx == CellTypeList{k};
 
-    sce1 = sce.selectcells(i1&idx);
-    sce1 = sce1.qcfilter;
+    sce1 = copy(sce);
+    sce1 = sce1.selectcells(i1&idx); %#OK
+    sce1 = sce1.qcfilter; %#OK
 
-    sce2 = sce.selectcells(i2&idx);
-    sce2 = sce2.qcfilter;
+    sce2 = copy(sce);
+    sce2 = sce2.selectcells(i2&idx); %#OK
+    sce2 = sce2.qcfilter; %#OK
 
     if sce1.NumCells < 10 || sce2.NumCells < 10 || sce1.NumGenes < 10 || sce2.NumGenes < 10
         warning('Filtered SCE contains too few cells (n < 10) or genes (n < 10).');

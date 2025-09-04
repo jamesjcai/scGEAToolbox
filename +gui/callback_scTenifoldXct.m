@@ -1,6 +1,7 @@
 function callback_scTenifoldXct(src, ~)
 
-[FigureHandle, sce] = gui.gui_getfigsce(src);
+[FigureHandle, sce_ori] = gui.gui_getfigsce(src);
+sce = copy(sce_ori);
 
 if ~gui.gui_showrefinfo('scTenifoldXct [PMID:36787742]', FigureHandle), return; end
 
@@ -76,7 +77,7 @@ end
 
 %{
 idx=sce.c_cell_type_tx==cL{x1} | sce.c_cell_type_tx==cL{x2};
-sce=sce.selectcells(idx);
+sce=sce.selectcells(idx); %#OK
 
 sce.c_batch_id=sce.c_cell_type_tx;
 sce.c_batch_id(sce.c_cell_type_tx==cL{x1})="Source";
@@ -90,7 +91,7 @@ sce.c_cell_type_tx = string(cL(c));
 
 % idx=thisc==cL{x1} | thisc==cL{x2};
 idx = c == x1 | c == x2;
-sce = sce.selectcells(idx);
+sce = sce.selectcells(idx); %#OK
 
 
 %sce.c_batch_id(thisc==cL{x1})="Source";

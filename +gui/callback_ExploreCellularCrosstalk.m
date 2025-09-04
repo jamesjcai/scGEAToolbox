@@ -1,6 +1,7 @@
 function callback_ExploreCellularCrosstalk(src, ~)
 
-[FigureHandle, sce] = gui.gui_getfigsce(src);
+[FigureHandle, sce_ori] = gui.gui_getfigsce(src);
+sce = copy(sce_ori);
 if ~gui.gui_showrefinfo('talklr [DOI:10.1101/2020.02.01.930602]', FigureHandle), return; end
 
     answer = gui.myQuestdlg(FigureHandle, 'This function is based on an unpublished method [DOI:10.1101/2020.02.01.930602]. Continue?');
@@ -35,7 +36,7 @@ if ~gui.gui_showrefinfo('talklr [DOI:10.1101/2020.02.01.930602]', FigureHandle),
         load(dbfile, 'ligand', 'receptor', 'T');
 
         fw = gui.myWaitbar(FigureHandle);
-        sce = sce.selectcells(selected);
+        sce = sce.selectcells(selected); %#OK
         [OUT, T] = run.ml_talklr(sce);
         gui.myWaitbar(FigureHandle, fw);
 
