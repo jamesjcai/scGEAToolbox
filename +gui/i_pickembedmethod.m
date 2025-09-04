@@ -8,19 +8,22 @@ if nargin<1, parentfig = []; end
 
     if dim==3
         listitems = {'tSNE 3D', 'UMAP 3D', 'PHATE 3D'};
+        methodtag = {'tsne3d', 'umap3d', 'phate3d'};
+
     elseif dim==2
         listitems = {'tSNE 2D', 'UMAP 2D', 'PHATE 2D'};
+        methodtag = {'tsne2d', 'umap2d', 'phate2d'};
     else 
         listitems = {'tSNE 2D', 'tSNE 3D',...
             'UMAP 2D', 'UMAP 3D',...
             'PHATE 2D', 'PHATE 3D'};
+        methodtag = {'tsne2d', 'tsne3d', 'umap2d', 'umap3d',...
+        'phate2d', 'phate3d', 'metaviz2d', 'metaviz3d'};
     end
 
     %'MetaViz [PMID:36774377] 2D 🐢',...
     %'MetaViz [PMID:36774377] 3D 🐢'};
     
-    methodtag = {'tsne2d', 'tsne3d', 'umap2d', 'umap3d',...
-        'phate2d', 'phate3d', 'metaviz2d', 'metaviz3d'};
     
     sce = SingleCellExperiment;
     validmethodtag = fieldnames(sce.struct_cell_embeddings);

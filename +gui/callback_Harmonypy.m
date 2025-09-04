@@ -45,7 +45,10 @@ answer = gui.myQuestdlg(FigureHandle, 'Using MATLAB engine for Python or Calling
                 id = findgroups(sce.c_batch_id);
                 id = id(:);
             end
-            [s] = run.py_harmonypy(sce.s, id, wkdir);            
+            
+            [s] = run.py_harmonypy(sce.s, id, wkdir);
+            % [s] = run.r_harmony(sce.s, id, wkdir);
+
 
             if isempty(s) || isequal(sce.s, s)
                 % gui.myWaitbar(FigureHandle, fw);
