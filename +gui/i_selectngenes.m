@@ -10,6 +10,8 @@ if nargin < 3, parentfig = []; end
 glist = [];
 if isa(sce, 'SingleCellExperiment')
     gsorted = natsort(sce.g);
+elseif isa(sce, 'SingleCellExperiment2')
+    gsorted = natsort(sce.geneAnn.names);
 elseif isstring(sce)
     genelist = sce;
     gsorted = natsort(genelist);
@@ -71,6 +73,9 @@ switch answer
         end
     case 'Select'
         if isa(sce, 'SingleCellExperiment')
+            [gsorted] = gui.i_sortgenenames(sce, parentfig);
+            if isempty(gsorted), return; end
+        elseif isa(sce, 'SingleCellExperiment2')
             [gsorted] = gui.i_sortgenenames(sce, parentfig);
             if isempty(gsorted), return; end
         end

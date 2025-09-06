@@ -20,7 +20,7 @@ function [done, response] = callTAMUAIChat(apikey, prompt, model)
     %   response = callTAMUChat(apiKey, "Why is the sky blue?");
     
     % Default model if not specified
-    if nargin < 3, model = 'protected.llama3.2'; end
+    if nargin < 3, model = 'protected.gpt-4.1'; end
     if nargin < 1, apikey = []; end
     if nargin < 2, prompt = 'Why is the sky blue?'; end
 

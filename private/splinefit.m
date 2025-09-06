@@ -114,7 +114,7 @@ if pieces < 20 * n / log(1.7*n)
 end
 
 % Solve
-if isempty(constr)
+if isempty(constr)    
     % Solve Min norm(u*A-y)
     u = lsqsolve(A, y, beta);
 else

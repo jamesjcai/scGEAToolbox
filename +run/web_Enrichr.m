@@ -8,23 +8,18 @@ if nargin < 2, genenum = 100; end
 if nargin < 3, bkglist = []; end
 if nargin < 4, wkdir = ''; end
 
-pw1 = fileparts(mfilename('fullpath'));
-pth = fullfile(pw1, '..', 'external', 'web_Enrichr');
+if isempty(wkdir), wkdir = tempdir; end
 
 if ~isempty(bkglist)
-    infile = fullfile(pth, 'input_template_bkg.html');
+    infile = fullfile(wkdir, 'input_template_bkg.html');
 else
-    infile = fullfile(pth, 'input_template.html');
+    infile = fullfile(wkdir, 'input_template.html');
 end
 
 [~, b]=fileparts(tempname);
 % fx = sprintf('input_page_%s.html', char(randi([97, 122], 1, 8)));
 fx = sprintf('input_page_%s.html', b);
-if ~isempty(wkdir)
-    outfile = fullfile(wkdir, fx);
-else    
-    outfile = fullfile(pth, fx);
-end
+outfile = fullfile(wkdir, fx);
 
 fid = fopen(infile, 'r');
 a = textscan(fid, '%s', 'delimiter', '\n');

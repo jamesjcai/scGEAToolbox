@@ -2,6 +2,8 @@ function callback_ShowGeneExpr(src, ~)
 
     [FigureHandle, sce] = gui.gui_getfigsce(src);
     
+    % sce2 = pkg.upgradeSCE(sce)
+
     [axx, bxx] = view(findall(FigureHandle,'type','axes'));
     [glist] = gui.i_selectngenes(sce, [], FigureHandle);
     if isempty(glist) 
