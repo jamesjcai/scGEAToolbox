@@ -1,4 +1,4 @@
-function [sce] = sc_readgeoaccess(acc)
+function [sce] = sc_readgeoaccess(acc, readspatialdata)
     % SC_READGEOACCESS  Download and parse GEO single-cell dataset by accession
     %
     %   sce = sc_readgeoaccess(acc)
@@ -11,6 +11,8 @@ function [sce] = sc_readgeoaccess(acc)
     
 % if length(strsplit(acc,{',',';',' '}))>1
 % end
+
+if nargin<2, readspatialdata = false; end
 
 url = sprintf('https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=%s', acc);
 a = webread(url);
@@ -32,8 +34,12 @@ if ~(isscalar(c) || length(c) >= 3)
 end
 
 barcodes = [];
+% assignin("base","c",c);
 
 if length(c) >= 3
+    if ~readspatialdata && any(contains(c, 'hires')) && any(contains(c, 'image'))
+        error('Spatial Transcriptome Data found. Matrix is ignored.')        
+    end
     %switch length(c)
     %    case 3
     c1 = c(contains(c, 'mtx'));
