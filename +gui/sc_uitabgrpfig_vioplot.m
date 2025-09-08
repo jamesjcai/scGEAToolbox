@@ -62,11 +62,22 @@ hx.addCustomButton('off', @in_callback_invertcolor, "align-top-box-solid.jpg", '
 hx.addCustomButton('off', @in_callback_reordersamples, "rebase_edit_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", 'Reorder Samples');
 hx.addCustomButton('off', @in_callback_selectsamples, "edit.jpg", 'Select Samples');
 hx.addCustomButton('off', @in_callback_sortbymean, "reorder.jpg", 'Sort Samples by Median');
+hx.addCustomButton('off', @in_mergetabs, 'Brightness-3--Streamline-Core.jpg', 'Show on the same figure...');
 
 hx.show(parentfig);
 gui.myWaitbar(parentfig, fw);
 
 ccx = true;
+
+
+    function in_mergetabs(~, ~)
+        figure;
+        for kx = 1:n
+            hAx2 = nexttile;
+            hAx1 = ax0{kx};
+            gui.i_cloneaxes(hAx1, hAx2);
+        end
+    end
 
     function in_callback_showbarplot(~,~)
         [~, idx]=ismember(focalg, tabnamelist); 
@@ -78,8 +89,8 @@ ccx = true;
         delete(ax0{idx});
         ax0{idx} = axes('parent',tab{idx});
         
-        assignin("base","y",y{idx});
-        assignin("base","thisc",thisc);
+        % assignin("base","y",y{idx});
+        % assignin("base","thisc",thisc);
 
         %mv = grpstats(y{idx},thisc,@mean);
         mv = splitapply(@mean, y{idx}', cx);

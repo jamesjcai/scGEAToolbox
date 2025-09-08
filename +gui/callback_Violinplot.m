@@ -9,9 +9,8 @@ function callback_Violinplot(src, ~)
     
     [thisc, ~] = gui.i_select1class(sce,[],[],[],FigureHandle);
     if isempty(thisc), return; end
-
-
-    [~, cLorder] = findgroups(string(thisc));
+    thisc = string(thisc);
+    [~, cLorder] = findgroups(thisc);    
     [newidx] = gui.i_selmultidialog(cLorder, cLorder, FigureHandle);
     if isempty(newidx), return; end
     picked = ismember(thisc, cLorder(newidx));
@@ -31,22 +30,24 @@ function callback_Violinplot(src, ~)
             [Xt] = gui.i_transformx(sce.X, true, 8, FigureHandle);
             if isempty(Xt), return; end
 
-            if isscalar(glist)
-                answer='No';
-            else
-                answer = gui.myQuestdlg(FigureHandle, 'Plot all in the same figure?','');
-            end
+            %if isscalar(glist)
+            % answer='No';
+            %else
+            %    answer = gui.myQuestdlg(FigureHandle, 'Plot all in the same figure?','');
+            %end
 
-            if strcmp(answer, 'Yes')
-                [c, cL, noanswer] = gui.i_reordergroups(thisc, [], FigureHandle);
-                if noanswer, return; end                
-                fw = gui.myWaitbar(FigureHandle);
-                gui.i_violinmatrix(full(Xt), sce.g, c, cL, glist, ...
-                        false, '', FigureHandle);
-                gui.myWaitbar(FigureHandle, fw);
-
-                return;
-            end
+            % if strcmp(answer, 'Yes')
+            %     [c, cL, noanswer] = gui.i_reordergroups(thisc, [], FigureHandle);
+            %     if noanswer, return; end                
+            %     fw = gui.myWaitbar(FigureHandle);
+            % 
+            %     gui.i_violinmatrix(full(Xt(:,picked)), sce.g, c, cL, glist, ...
+            %             false, '', FigureHandle);
+            % 
+            %     gui.myWaitbar(FigureHandle, fw);
+            % 
+            %     return;
+            % end
 
             n = length(glist);
             thisyv = cell(n,1);
@@ -78,5 +79,8 @@ function callback_Violinplot(src, ~)
         otherwise
             return;
     end
+    % assignin("base","ylabelv",ylabelv);
+    % assignin("base","thisyv",thisyv);
+    % assignin("base","thisc",thisc);
     gui.sc_uitabgrpfig_vioplot(thisyv, ylabelv, thisc, FigureHandle);
 end

@@ -152,6 +152,7 @@ methods
     obj = onestepraw2anno(obj, speciesid);
     obj = qcfilterwhitelist(obj, libszcutoff, mtratio, min_cells_nonzero, gnnumcutoff, whitelist)
     obj = sortcells(obj, idx);
+    exportToJsonl(obj, outfile, dataset_id, titleText)
    
     function obj = removecells(obj, idx)
         try
