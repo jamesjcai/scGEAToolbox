@@ -33,7 +33,7 @@ c=zeros(size(i1));
 c(i1)=1; c(i2)=2;
 cL=[cL1;cL2];
 if ~all(c>0)
-    sce = sce.selectcells(c>0); %#OK
+    sce = sce.selectcells(c>0); % OK
     c = c(c>0);
     i1 = c==1;
     i2 = c==2;

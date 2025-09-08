@@ -295,7 +295,7 @@ methods
             libsize, mtratio, ...
             min_cells_nonzero);
         for k = 1:length(keptidxv)
-            obj = selectcells(obj, keptidxv{k}); %#OK
+            obj = selectcells(obj, keptidxv{k}); % OK
         end
         [y] = ismember(obj.g, keptg);
         obj.X = obj.X(y, :);

@@ -36,7 +36,7 @@ function callback_2GeneCooccurrenceTest(src, ~)
             [idx] = gui.i_selmultidialog(cL, [], FigureHandle);
             if isempty(idx), return; end
             fw = gui.myWaitbar(FigureHandle);
-            sce = sce.selectcells(ismember(thisc, cL(idx)));  %#OK
+            sce = sce.selectcells(ismember(thisc, cL(idx)));  % OK
         otherwise
             return;
     end

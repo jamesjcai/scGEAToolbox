@@ -95,12 +95,12 @@ function callback_DEVP2GroupsBatch(src, ~)
             (k-0.5)/length(CellTypeList));
         idx = sce.c_cell_type_tx == CellTypeList{k};
         sce1=copy(sce);
-        sce1 = sce1.selectcells(i1&idx); %#OK
-        sce1 = sce1.qcfilter; %#OK
+        sce1 = sce1.selectcells(i1&idx); % OK
+        sce1 = sce1.qcfilter; % OK
     
         sce2 = copy(sce);
-        sce2 = sce2.selectcells(i2&idx); %#OK
-        sce2 = sce2.qcfilter; %#OK
+        sce2 = sce2.selectcells(i2&idx); % OK
+        sce2 = sce2.qcfilter; % OK
         
         notok = false;
         if sce1.NumCells < 10

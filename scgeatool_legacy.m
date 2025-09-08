@@ -947,7 +947,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
 
         end
         if ~isempty(ids)
-            sce = sce.selectcells(ids); %#OK
+            sce = sce.selectcells(ids); % OK
             c = sce.c;
             in_RefreshAll(src, [], true, false);
             guidata(FigureHandle, sce);
@@ -1352,7 +1352,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         % a(end-6).Enable='on';
         % a(end-7).Enable='on';
         % %a=allchild(m_optn);
-        %a(end).Enable='on';
+        %a(end).Enable='on';                                                                                
         %a(end-1).Enable='on';
         %a(end-2).Enable='on';
     end

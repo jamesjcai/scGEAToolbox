@@ -24,9 +24,9 @@ if isempty(j1) || isempty(j2)
     return; 
 end
 sce1 = copy(sce);
-sce1.selectcells(j1); %#OK
+sce1.selectcells(j1); % OK
 sce2 = copy(sce);
-sce2.selectcells(j2); %#OK
+sce2.selectcells(j2); % OK
 
 if sce1.NumCells < 50 || sce2.NumCells < 50
     if ~strcmp(gui.myQuestdlg(FigureHandle, ...

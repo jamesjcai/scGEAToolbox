@@ -35,20 +35,20 @@ sce = copy(sce_ori);
         cL2 = tmptxtc(2);
     end
     if ~all(c>0)
-        sce = sce.selectcells(c>0); %#OK
+        sce = sce.selectcells(c>0); % OK
         c=c(c>0);
     end
     i1=c==1;
     i2=c==2;
     
     sce1 = copy(sce);
-    sce1 = sce1.selectcells(i1); %#OK
-    sce1 = sce1.qcfilter; %#OK
+    sce1 = sce1.selectcells(i1); % OK
+    sce1 = sce1.qcfilter; % OK
     
 
     sce2 = copy(sce);
-    sce2 = sce2.selectcells(i2); %#OK
-    sce2 = sce2.qcfilter; %#OK
+    sce2 = sce2.selectcells(i2); % OK
+    sce2 = sce2.qcfilter; % OK
 
 
     if sce1.NumCells < 10 || sce2.NumCells < 10 || sce1.NumGenes < 10 || sce2.NumGenes < 10

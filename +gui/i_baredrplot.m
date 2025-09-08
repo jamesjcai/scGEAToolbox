@@ -47,11 +47,14 @@ if isAxesHandle
         copyobj(ax.Children, hx.AxHandle);
         hAx = hx.AxHandle;
     else
-        hAx = copyobj(ax, hFig);
+        hAx = copyobj(ax, hFig);   
     end
 else
     if gui.i_isuifig(hFig)
         hAx = hx.AxHandle;
+
+
+
     else
         hAx = axes('Parent', hFig, 'Visible', 'off');
     end
@@ -89,6 +92,22 @@ end
 is3d = is3d1 & is3d2;
 
 hold(hAx, 'on');
+
+assignin("base","ax",ax);
+
+dts = findall(ax, 'Type', 'datatip');
+hscatter = ax.Children(1);
+assignin("base","dts", dts);
+
+stxtyes=cell(length(hscatter.XData),1);
+
+for k = 1:numel(dts)
+    pos = dts(k).DataIndex;
+    stxtyes{pos} = dts(k).Content{1}; % Define the text for the data tip
+    newdt = datatip(hscatter,'DataIndex', pos);
+end
+row = dataTipTextRow('', stxtyes);
+h.DataTipTemplate.DataTipRows = row;
 
 if is3d    % ======================================== 3D
     % Turn off the default axis display

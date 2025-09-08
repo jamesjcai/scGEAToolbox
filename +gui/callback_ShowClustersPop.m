@@ -112,7 +112,7 @@ end
                 s=0;
                 for ik=1:length(idx)
                     % scev = SCEV{idx(ik)};
-                    scev = copy(sce).selectcells(SCEV{idx(ik)}); %#OK
+                    scev = copy(sce).selectcells(SCEV{idx(ik)}); % OK
                     
                     %p = scgeatool(scev,'useuifig', ...
                     %    gui.i_isuifig(FigureHandle));
@@ -164,7 +164,7 @@ end
                 if isempty(idx), return; end 
                 for ik=1:length(idx)
                     % scev=SCEV{idx(ik)};
-                    scev = copy(sce).selectcells(SCEV{idx(ik)}); %#OK
+                    scev = copy(sce).selectcells(SCEV{idx(ik)}); % OK
                     
                     scev=scev.qcfilter;
                     outmatfile=sprintf('%s.mat', ...

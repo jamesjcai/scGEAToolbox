@@ -38,7 +38,7 @@ function callback_CellScoreCorrMatrix(src, ~)
             [idx] = gui.i_selmultidialog(cL, [], FigureHandle);
             if isempty(idx), return; end
 
-            sce = sce.selectcells(ismember(thisc, cL(idx))); %#OK
+            sce = sce.selectcells(ismember(thisc, cL(idx))); % OK
         otherwise
             return;
     end

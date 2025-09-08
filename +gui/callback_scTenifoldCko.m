@@ -69,7 +69,7 @@ sce.c_cell_type_tx = string(cL(c));
 
 % idx=thisc==cL{x1} | thisc==cL{x2};
 idx = c == x1 | c == x2;
-sce = sce.selectcells(idx);  %#OK
+sce = sce.selectcells(idx);  % OK
 celltype1 = cL{x1};
 celltype2 = cL{x2};
 

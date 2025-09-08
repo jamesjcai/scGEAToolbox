@@ -23,7 +23,7 @@ end
     min_cells_nonzero, gnnumcutoff);
 
 for k = 1:length(keptidxv)
-    sce = selectcells(sce, keptidxv{k}); %#OK
+    sce = selectcells(sce, keptidxv{k}); % OK
 end
 
 [y] = ismember(sce.g, keptg);

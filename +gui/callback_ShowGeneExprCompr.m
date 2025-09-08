@@ -39,7 +39,7 @@ function callback_ShowGeneExprCompr(src, ~)
                 [y1, idx1] = ismember(listitems(indxx), cLi);
                 assert(all(y1));
                 idx2 = ismember(ci, idx1);
-                sce1 = copy(sce).selectcells(idx2);  %#OK
+                sce1 = copy(sce).selectcells(idx2);  % OK
                 thisc = thisc(idx2);
             else
                 return;

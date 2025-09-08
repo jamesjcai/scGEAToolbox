@@ -77,7 +77,7 @@ end
 
 %{
 idx=sce.c_cell_type_tx==cL{x1} | sce.c_cell_type_tx==cL{x2};
-sce=sce.selectcells(idx); %#OK
+sce=sce.selectcells(idx); % OK
 
 sce.c_batch_id=sce.c_cell_type_tx;
 sce.c_batch_id(sce.c_cell_type_tx==cL{x1})="Source";
@@ -91,7 +91,7 @@ sce.c_cell_type_tx = string(cL(c));
 
 % idx=thisc==cL{x1} | thisc==cL{x2};
 idx = c == x1 | c == x2;
-sce = sce.selectcells(idx); %#OK
+sce = sce.selectcells(idx); % OK
 
 
 %sce.c_batch_id(thisc==cL{x1})="Source";

@@ -42,7 +42,7 @@ function [sce] = sc_csubtypeanno(sce, cell_type_target, formatid, speciestag)
     markergenev = string(Tm.PositiveMarkers);
 
     sce2 = copy(sce);
-    sce2 = sce2.selectcells(selectedidx); %#OK
+    sce2 = sce2.selectcells(selectedidx); % OK
     sce2 = sce2.embedcells('tsne3d', true, true, 3);
     sce2 = sce2.clustercells([], [], true);
 
@@ -165,7 +165,7 @@ function [sce] = sc_csubtypeanno(sce, cell_type_target, formatid, speciestag)
     markergenev = string(Tm.PositiveMarkers);
 
 
-    sce2 = sce.selectcells(selectedidx); %#OK
+    sce2 = sce.selectcells(selectedidx); % OK
     sce2 = sce2.embedcells('tsne3d', true, true, 3);
     sce2 = sce2.clustercells([], [], true);
 

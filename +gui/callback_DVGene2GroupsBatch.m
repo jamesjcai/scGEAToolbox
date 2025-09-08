@@ -35,12 +35,12 @@ for k=1:length(CellTypeList)
     idx = sce.c_cell_type_tx == CellTypeList{k};
 
     sce1 = copy(sce);
-    sce1 = sce1.selectcells(i1&idx); %#OK
-    sce1 = sce1.qcfilter; %#OK
+    sce1 = sce1.selectcells(i1&idx); % OK
+    sce1 = sce1.qcfilter; % OK
 
     sce2 = copy(sce);
-    sce2 = sce2.selectcells(i2&idx); %#OK
-    sce2 = sce2.qcfilter; %#OK
+    sce2 = sce2.selectcells(i2&idx); % OK
+    sce2 = sce2.qcfilter; % OK
 
     if sce1.NumCells < 10 || sce2.NumCells < 10 || sce1.NumGenes < 10 || sce2.NumGenes < 10
         warning('Filtered SCE contains too few cells (n < 10) or genes (n < 10).');

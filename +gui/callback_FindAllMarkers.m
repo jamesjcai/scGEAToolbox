@@ -64,7 +64,7 @@ function in_MarkerGeneHeatmap(sce, FigureHandle)
             fprintf('Size of input matrix: %d genes x %d cells\n', sce.NumGenes, sce.NumCells);
             sce.X = sce.X(idx, :);
             sce.g = sce.g(idx);            
-            sce = sce.qcfilter; %#OK
+            sce = sce.qcfilter; % OK
             fprintf('Size of filtered matrix: %d genes x %d cells\n', sce.NumGenes, sce.NumCells);
         else
             if ~strcmp('Yes', gui.myQuestdlg(FigureHandle,...

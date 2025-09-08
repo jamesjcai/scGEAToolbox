@@ -36,7 +36,7 @@ if ~gui.gui_showrefinfo('talklr [DOI:10.1101/2020.02.01.930602]', FigureHandle),
         load(dbfile, 'ligand', 'receptor', 'T');
 
         fw = gui.myWaitbar(FigureHandle);
-        sce = sce.selectcells(selected); %#OK
+        sce = sce.selectcells(selected); % OK
         [OUT, T] = run.ml_talklr(sce);
         gui.myWaitbar(FigureHandle, fw);
 

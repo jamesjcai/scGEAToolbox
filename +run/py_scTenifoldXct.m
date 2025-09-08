@@ -82,7 +82,7 @@ if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 % writematrix(sce.X,'X.txt');
 
 idx = sce.c_cell_type_tx == celltype1 | sce.c_cell_type_tx == celltype2;
-sce = sce.selectcells(idx);  %#OK
+sce = sce.selectcells(idx);  % OK
 sce.c_batch_id = sce.c_cell_type_tx;
 sce.c_batch_id(sce.c_cell_type_tx == celltype1) = "Source";
 sce.c_batch_id(sce.c_cell_type_tx == celltype2) = "Target";
