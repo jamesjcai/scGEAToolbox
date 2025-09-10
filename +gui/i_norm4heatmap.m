@@ -25,6 +25,8 @@ if nargin < 2, dim = 2; end
 switch methodid
     case 1
         %Y = zscore(Y, 0, 2);   %         
+        %assignin("base","Y",Y);
+        %assignin("base","dim",dim);
         Y = normalize(Y, dim, 'zscore');
     case 2
         Y = normalize(Y, dim, 'zscore', 'robust');

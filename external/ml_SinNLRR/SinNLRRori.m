@@ -1,3 +1,5 @@
+function [grps] = SinNLRRori(X, k)
+
 % function [NMI,ARI,grps,similarity] = SinNLRR(path_data,path_label)
 %
 % in_X=load(path_data);
@@ -6,9 +8,7 @@
 % [X,] = FilterGenesZero(in_X);
 % [n,m]=size(X);
 % X = normalize(X');
-function [grps] = SinNLRRori(X, k)
-
-
+%
 % [n,m]=size(X);
 % X = normalize(X');
 %
@@ -40,5 +40,19 @@ for i = 1:15
         break;
     end
     %fprintf('%f\t%f\t%f\t%f\t%f\t%f\t%f\n',alpha,z_rate,min_neighbour,max_neighbour,mean(col_cov),missrate,misARI);
+end
+end
+
+
+function [localX, coverage] = localize(C)
+%C is the coefficient matrix
+%[tmp,ind] = sort(C,1,'descend');
+[~, n] = size(C);
+localX = C;
+coverage = zeros(1, n);
+for i = 1:n
+    thr = C(i, i) / 1.5;
+    localX(localX(:, i) < thr, i) = 0;
+    coverage(1, i) = mean(C(i, i)./localX(localX(:, i) > thr, i));
 end
 end

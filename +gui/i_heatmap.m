@@ -147,26 +147,6 @@ Z = zeros(length(glist), length(cL));
         colormap default
     end        
 
-    function in_callback_summarymap(~, ~)
-        for ky = 1:length(cL)
-            Z(:, ky) = mean(Y(:, c == ky), 2);
-        end
-        
-        hx1=gui.myFigure(parentfig);
-        h = heatmap(strrep(cL, '_', '\_'), MX, Z);
-        h.Title = 'Marker Gene Heatmap';
-        h.XLabel = 'Group';
-        h.YLabel = 'Marker Gene';
-        h.Colormap = parula;
-        h.GridVisible = 'off';
-        h.CellLabelColor = 'none';
-        t = array2table(Z, 'VariableNames', cL, 'RowNames', MX);
-        % writetable(t,'aaa.csv','WriteRowNames',true);
-        hx1.addCustomButton('off', {@in_callback_exporttable, t}, 'floppy-disk-arrow-in.jpg', 'Save table...');
-        hx1.addCustomButton('off', @in_callback_resetcolor, 'refresh_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'Reset color map');
-        % disp('https://software.broadinstitute.org/morpheus/')
-        hx1.show(hFig);
-    end
 
     function in_callback_savetable(~, ~)
         labels = {'Save Y to variable named:', ...
@@ -204,20 +184,52 @@ Z = zeros(length(glist), length(cL));
         end
     end
 
+
+    function in_callback_summarymap(~, ~)
+        for ky = 1:length(cL)
+            Z(:, ky) = mean(Y(:, c == ky), 2);
+        end
+        
+        hx1=gui.myFigure(parentfig);
+
+        [mx,idx]=unique(MX,'stable');
+        z = Z(idx,:);
+        h = heatmap(strrep(cL, '_', '\_'), mx, z);
+        h.Title = 'Marker Gene Heatmap';
+        h.XLabel = 'Group';
+        h.YLabel = 'Marker Gene';
+        h.Colormap = parula;
+        h.GridVisible = 'off';
+        h.CellLabelColor = 'none';
+        t = array2table(z, 'VariableNames', cL, 'RowNames', mx);
+        % writetable(t,'aaa.csv','WriteRowNames',true);
+        hx1.addCustomButton('off', {@in_callback_exporttable, t}, 'floppy-disk-arrow-in.jpg', 'Save table...');
+        hx1.addCustomButton('off', @in_callback_resetcolor, 'refresh_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'Reset color map');
+        % disp('https://software.broadinstitute.org/morpheus/')
+        hx1.show(hFig);
+    end
+
     function in_callback_summarymapT(~, ~)
             for ky = 1:length(cL)
                 Z(:, ky) = mean(Y(:, c == ky), 2);
             end
         
         hx2=gui.myFigure(parentfig);
-        h = heatmap(MX, strrep(cL, '_', '\_'), Z.');
+        % assignin("base","Z",Z);
+        % assignin("base","MX",MX);
+        % assignin("base","cL",cL);
+        % matlab.lang.makeUniqueStrings(MX)
+
+        [mx,idx]=unique(MX,'stable');
+        z = Z(idx,:);
+        h = heatmap(mx, strrep(cL, '_', '\_'), z.');
         h.Title = 'Marker Gene Heatmap';
         h.YLabel = 'Group';
         h.XLabel = 'Marker Gene';
         h.Colormap = parula;
         h.GridVisible = 'off';
         h.CellLabelColor = 'none';
-        t = array2table(Z.', 'VariableNames', MX, 'RowNames', cL);
+        t = array2table(z.', 'VariableNames', mx, 'RowNames', cL);
         %         s = struct(h);
         %         s.XAxis.TickLabelRotation=45;
         % writetable(t,'aaa.csv','WriteRowNames',true);

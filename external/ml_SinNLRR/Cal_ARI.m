@@ -10,10 +10,10 @@ function [AR, RI, MI, HI] = Cal_ARI(c1, c2)
 
 %(C) David Corney (2000)   		D.Corney@cs.ucl.ac.uk
 
-if nargin < 2 || min(size(c1)) > 1 || min(size(c2)) > 1
-    error('RandIndex: Requires two vector arguments')
-    return
-end
+% if nargin < 2 || min(size(c1)) > 1 || min(size(c2)) > 1
+%     error('RandIndex: Requires two vector arguments')
+%     return
+% end
 
 C = Contingency(c1, c2); %form contingency matrix
 
@@ -31,8 +31,8 @@ nc = (n * (n^2 + 1) - (n + 1) * nis - (n + 1) * njs + 2 * (nis * njs) / n) / (2 
 A = t1 + t2 - t3; %no. agreements
 D = -t2 + t3; %no. disagreements
 
-if t1 == nc
-    AR = 0; %avoid division by zero; if k=1, define Rand = 0
+    if t1 == nc
+        AR = 0; %avoid division by zero; if k=1, define Rand = 0
     else
         AR = (A - nc) / (t1 - nc); %adjusted Rand - Hubert & Arabie 1985
     end
@@ -40,3 +40,29 @@ if t1 == nc
     RI = A / t1; %Rand 1971		%Probability of agreement
     MI = D / t1; %Mirkin 1970	%p(disagreement)
     HI = (A - D) / t1; %Hubert 1977	%p(agree)-p(disagree)
+
+end
+
+
+function Cont = Contingency(Mem1, Mem2)
+%CONTINGENCY Form contigency matrix for two vectors
+% C=Contingency(Mem1,Mem2) returns contingency matrix for two
+% column vectors Mem1, Mem2. These define which cluster each entity
+% has been assigned to.
+%
+% See also RANDINDEX.
+%
+
+%(C) David Corney (2000)   		D.Corney@cs.ucl.ac.uk
+
+% if nargin < 2 || min(size(Mem1)) > 1 || min(size(Mem2)) > 1
+%     error('Contingency: Requires two vector arguments')
+%     return;
+% end
+
+Cont = zeros(max(Mem1), max(Mem2));
+
+for i = 1:length(Mem1)
+    Cont(Mem1(i), Mem2(i)) = Cont(Mem1(i), Mem2(i)) + 1;
+end
+end

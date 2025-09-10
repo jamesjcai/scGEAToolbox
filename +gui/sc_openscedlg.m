@@ -183,12 +183,14 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
             filename = fullfile(pathname, filenm);
             fw = gui.myWaitbar(parentfig);
             try
-                [X, g, b, filename] = sc_readh5adfile(filename);
+                [X, g, b, bid, cty, filename] = sc_readh5adfile(filename);
                 if ~isempty(X)
                     sce = SingleCellExperiment(X, g);
                     metainfo = sprintf("Source: %s", filename);
                     sce = sce.appendmetainfo(metainfo);
                     if ~isempty(b), sce.c_cell_id = b; end
+                    if ~isempty(bid), sce.c_batch_id = bid; end
+                    if ~isempty(cty), sce.c_cell_type_tx = string(cty); end
                     gui.myWaitbar(parentfig, fw);
                 else
                     gui.myWaitbar(parentfig, fw, true);
