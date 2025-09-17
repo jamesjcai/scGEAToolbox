@@ -61,11 +61,24 @@ if length(c) >= 3
     else
         f3 = i_setupfile(c3);
     end
-    if isempty(f2)
+    if isempty(f3)
         [X, g] = sc_readmtxfile(f1, f2);
     else
         [X, g, barcodes] = sc_readmtxfile(f1, f2, f3);
     end
+    if exist(f2,"file")
+        try
+            delete(f2);
+        catch
+        end
+    end
+    if exist(f3,"file")
+        try
+            delete(f3);
+        catch
+        end
+    end
+
 elseif isscalar(c)
     txtnotfound = false;
     c1 = c(contains(c, 'txt'));
@@ -85,23 +98,44 @@ elseif isscalar(c)
         if isempty(f1), error('TXT/CSV/TSV file name not processed.'); end
         [X, g] = sc_readtsvfile(f1);
     else
-        c1 = c(contains(c, 'h5'));
-        if isempty(c1)
-            error('File not found.');
-        end
-        disp("Found H5 file.");
-        
-        f1 = i_setupfile2(c1);
-        
-        if isempty(f1), sce=[]; return; end
+        c1 = c(contains(c, 'h5ad'));
+        if ~isempty(c1)
+            disp("Found H5AD file.");
 
-        if strcmpi(f1(end-2:end), '.gz')
-            files=gunzip(f1,tempdir);
-            [X, g, barcodes] = sc_read10xh5file(files{1});
-        elseif strcmpi(f1(end-2:end), '.h5')
-            [X, g, barcodes] = sc_read10xh5file(f1);
+            f1 = i_setupfile2(c1);
+            
+            if isempty(f1), sce=[]; return; end
+    
+            if strcmpi(f1(end-2:end), '.gz')
+                files=gunzip(f1,tempdir);
+                f1=files{1};
+                [X, g, barcodes] = sc_readh5adfile(f1);
+            elseif strcmpi(f1(end-2:end), '.h5ad')
+                [X, g, barcodes] = sc_readh5adfile(f1);
+            end
+
+
+        else
+            c1 = c(contains(c, 'h5'));
+            if isempty(c1)
+                error('File not found.');
+            end
+            disp("Found H5 file.");
+            
+            f1 = i_setupfile2(c1);
+            
+            if isempty(f1), sce=[]; return; end
+    
+            if strcmpi(f1(end-2:end), '.gz')
+                files=gunzip(f1,tempdir);
+                f1=files{1};
+                [X, g, barcodes] = sc_read10xh5file(f1);
+            elseif strcmpi(f1(end-2:end), '.h5')
+                [X, g, barcodes] = sc_read10xh5file(f1);
+            end
         end
     end
+
 end
 
 
@@ -138,6 +172,13 @@ fprintf(['The data was downloaded from the National Center', ...
     % end
     if ~isempty(barcodes)
         sce.c_cell_id = barcodes;
+    end
+
+    if exist(f1,"file")
+        try
+            delete(f1);
+        catch
+        end
     end
 end
 

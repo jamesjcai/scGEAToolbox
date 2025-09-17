@@ -112,10 +112,12 @@ tryCatch(
     {
         if (!is.null(A@meta.data$BatchID)) {
             write.csv(A@meta.data$BatchID, file = 'batch.csv')
+        }else if (!is.null(A@meta.data$orig.ident)) {
+          write.csv(A@meta.data$orig.ident, file = 'batch.csv')
         }
     },
     error = function(e){ 
-        # Do this if an error is caught...
+          # Do this if an error is caught...
     }
 )
 
@@ -129,6 +131,18 @@ tryCatch(
         # Do this if an error is caught...
     }
 )
+
+tryCatch(
+  {
+    if (!is.null(A@meta.data$celltype)) {
+      write.csv(A@meta.data$celltype, file = 'celltype.csv')
+    }
+  },
+  error = function(e){ 
+    # Do this if an error is caught...
+  }
+)
+
 
 tryCatch(
     {
