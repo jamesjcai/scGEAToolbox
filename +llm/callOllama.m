@@ -1,6 +1,7 @@
 function [done, res] = callOllama(prompt, model)
 
 done = false;
+res = [];
 
     if isempty(which('ollamaChat'))
         error('Needs the Add-On of Large Language Models (LLMs) with MATLAB');
@@ -10,7 +11,7 @@ done = false;
     % Add-On "Large Language Models (LLMs) with MATLAB".
 
     if nargin < 2, model = "llama3.2"; end
-    if nargin < 1, prompt = 'Why is the sky blue?'; end
+    if nargin < 1, prompt = 'What model are you?'; end
 
     fprintf('Sending request to Ollama Chat API...\n');
     try

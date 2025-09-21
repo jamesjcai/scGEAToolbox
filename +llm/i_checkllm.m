@@ -35,7 +35,7 @@ fprintf('Using LLM provider: %s\n', provider);
 model = providermodel{2};
 fprintf('Using LLM model: %s\n', model);
 
-prompt = "Why is the sky blue?";
+prompt = "What model are you?";
     
     switch provider
         case 'Ollama'
@@ -47,10 +47,26 @@ prompt = "Why is the sky blue?";
                 return;
             end
             disp(feedbk);
+        case 'OpenAI'        
+            loadenv(apikeyfile, "FileType", "env");
+            apikey = getenv("OPENAI_API_KEY");
+            if isempty(apikey), return; end
+            try
+                chat = openAIChat("APIKey",apikey, ...
+                    "ModelName", model, TimeOut = 1200);                
+                feedbk = chat.generate(prompt);
+            catch ME
+                fprintf('Error in chat completion: %s\n', ME.message);
+                return;
+            end
+            disp(feedbk);        
         case 'TAMUAIChat'
+
             loadenv(apikeyfile, "FileType", "env");
             OPEN_WEBUI_API_ENDPOINT = "https://chat-api.tamu.ai";
             OPEN_WEBUI_API_KEY = getenv("TAMUAI_API_KEY");
+
+            if isempty(OPEN_WEBUI_API_KEY), return; end
             chat_url = sprintf('%s/api/chat/completions', OPEN_WEBUI_API_ENDPOINT);
             
             % Create request body structure

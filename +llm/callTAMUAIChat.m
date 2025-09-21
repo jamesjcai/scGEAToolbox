@@ -22,7 +22,7 @@ function [done, response] = callTAMUAIChat(apikey, prompt, model)
     % Default model if not specified
     if nargin < 3, model = 'protected.gpt-4.1'; end
     if nargin < 1, apikey = []; end
-    if nargin < 2, prompt = 'Why is the sky blue?'; end
+    if nargin < 2, prompt = 'What model are you?'; end
 
     if isempty(apikey)
         preftagname = 'llapikeyenvfile';

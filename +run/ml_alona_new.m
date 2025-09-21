@@ -27,8 +27,11 @@ parse(p, X, genelist, clusterid, varargin{:});
 species = p.Results.species;
 bestonly = p.Results.bestonly;
 
-
-oldpth = pwd;
+if isdeployed
+    oldpth = ctfroot;  % or use the folder where the executable is launched
+else
+    oldpth = pwd;
+end
 pw1 = fileparts(mfilename('fullpath'));
 % pth = fullfile(pw1, '..', 'assets', 'celltypes.xlsx');
 pth = fullfile(cdgea, 'assets', 'PanglaoDB', 'celltypes.xlsx');

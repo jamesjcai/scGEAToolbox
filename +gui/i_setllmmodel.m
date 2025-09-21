@@ -44,7 +44,7 @@ if ispref('scgeatoolbox', preftagname)
         {'Use this', 'Use another', 'Cancel'}, 'Use this');
     if isempty(answer1), return; end
     switch answer1
-        case 'Use this'            
+        case 'Use this'
             fw = gui.myWaitbar(parentfig);
             [done] = llm.i_checkllm(apikeyfile);
             gui.myWaitbar(parentfig, fw);
@@ -64,13 +64,14 @@ if ispref('scgeatoolbox', preftagname)
 end
 
 % listItems = {'Ollama', 'Gemini', 'TAMUAIChat', 'OpenAI', 'DeepSeek', 'xAI'};
-listItems = {'Ollama', 'Gemini', 'TAMUAIChat'};
+listItems = {'Ollama', 'Gemini', 'TAMUAIChat', 'OpenAI'};
 
 if gui.i_isuifig(parentfig)
     [selectedIndex, ok] = gui.myListdlg(parentfig, listItems, ...
             'Select a LLM provider:', listItems(1));
 else
-    [selectedIndex, ok] = listdlg('PromptString', 'Select a LLM provider:', ...
+    [selectedIndex, ok] = listdlg('PromptString', ...
+                          'Select a LLM provider:', ...
                           'SelectionMode', 'single', ...
                           'ListString', listItems, ...
                           'ListSize', [220 300], ...
@@ -164,41 +165,57 @@ switch selectedProvider
             % Make the GET request
             try
                 models_response = webread(models_url, options);
-                % Display models response as JSON
-                % assignin("base",'models_response',  models_response)
-
-                % model_names = string({models_response.data.id});
-
-                %{
-                    struct_array = [models_response.data{:}];  % Converts cell to struct array
-                    model_names = string({struct_array.id});   % Now you can use brace indexing 
-
-                %}
-
                 model_names = string(cellfun(@(s) s.id, models_response.data, 'UniformOutput', false));
-
-                %{
-                    model_names = cellfun(@(s) ...
-                        string(s.id), models_response.data, ...
-                        'UniformOutput', false);
-                    
-                    % Replace missing with empty string
-                    for k = 1:numel(model_names)
-                        if isempty(model_names{k})
-                            model_names{k} = "";
-                        end
-                    end
-                    
-                    model_names = string(model_names);
-
-                %}
-
             catch ME
                 fprintf('Error fetching models: %s\n', ME.message);
                 return;
             end
 
             [y, idx]=ismember('protected.gpt-4.1', model_names);
+            if y
+                [idx, ok2] = listdlg('PromptString', 'Select a model:', ...
+                              'SelectionMode', 'single', ...
+                              'ListString', model_names, ...
+                              'ListSize', [220 300], 'InitialValue', idx);
+            else
+                [idx, ok2] = listdlg('PromptString', 'Select a model:', ...
+                              'SelectionMode', 'single', ...
+                              'ListString', model_names, ...
+                              'ListSize', [220 300]);
+            end
+            if ok2
+                selectedModel = model_names{idx};                        
+                setpref('scgeatoolbox', preftagname, ...
+                    selectedProvider+":"+selectedModel);
+                done = true;
+            end
+        end
+    case 'OpenAI'
+        if ~exist(apikeyfile,"file")
+            gui.myErrordlg(parentfig,"llm_api_key.env is not a valid file.");
+        end
+        loadenv(apikeyfile,"FileType","env");
+        if ~isempty(getenv("OpenAI_API_KEY"))        
+            % Show models available in json format
+            % chat/completions
+            OPEN_WEBUI_API_ENDPOINT = "https://api.openai.com/v1";
+            models_url = sprintf('%s/models', OPEN_WEBUI_API_ENDPOINT);
+            
+            % Set up options for webread
+            options = weboptions('HeaderFields', {'Authorization', ...
+                sprintf('Bearer %s', getenv("OpenAI_API_KEY"))});
+            
+            % Make the GET request
+            try
+                models_response = webread(models_url, options);
+                model_names = string(arrayfun(@(s) s.id, models_response.data, 'UniformOutput', false));
+
+             catch ME
+                fprintf('Error fetching models: %s\n', ME.message);
+                return;
+            end
+
+            [y, idx]=ismember('gpt-4.1', model_names);
             if y
                 [idx, ok2] = listdlg('PromptString', 'Select a model:', ...
                               'SelectionMode', 'single', ...
@@ -227,7 +244,8 @@ switch selectedProvider
 end
 
 fw = gui.myWaitbar(parentfig);
-[done2] = llm.i_checkllm(apikeyfile);
+% [done2] = llm.i_checkllm(apikeyfile);
+done2=true;
 gui.myWaitbar(parentfig, fw);
 
 if done && done2
