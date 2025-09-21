@@ -1,4 +1,4 @@
-function [X] = r_SeuratSctransform(X, genelist, wkdir)
+function [X,scale_X] = r_SeuratSctransform(X, genelist, wkdir)
 
 if nargin < 3, wkdir = tempdir; end
 if nargin < 2, genelist = string(1:size(X, 1)); end
@@ -10,7 +10,8 @@ if ~isok, error(msg);
 end
 if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
 
-tmpfilelist = {'input.mat', 'output.h5', 'input.txt', 'output.txt', 'g.txt'};
+tmpfilelist = {'input.mat', 'output.h5', 'input.txt', 'output.txt', ...
+    'g.txt', 'output_data.txt', 'output_scale_data.txt'};
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 lastwarn('')
 if issparse(X), X = full(X); end
@@ -34,9 +35,16 @@ pkg.i_addwd2script(codefullpath, wkdir, 'R');
 pkg.RunRcode(codefullpath, Rpath);
 
 if exist('output.h5', 'file')
-    X = h5read('output.h5', '/X');
-elseif exist('output.txt', 'file')
-    X = readmatrix('output.txt');
+    X = h5read('output.h5', '/data');
+elseif exist('output_data.txt', 'file')
+    X = readmatrix('output_data.txt');
+end
+if nargout>1
+    if exist('output.h5', 'file')
+        scale_X = h5read('output.h5', '/scale_data');
+    elseif exist('output_scale_data.txt', 'file')
+        scale_X = readmatrix('output_scale_data.txt');
+    end
 end
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 cd(oldpth);

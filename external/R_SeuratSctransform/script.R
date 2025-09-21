@@ -32,15 +32,25 @@ sce <- SCTransform(sce, vars.to.regress = "percent.mt", verbose = FALSE, vst.fla
 
 # sce <- SCTransform(sce)
 
-X<-as.matrix(sce@assays$SCT@counts)
+#counts<-as.matrix(sce@assays$SCT@counts)
+#data<-as.matrix(sce@assays$SCT@data)
+#scale_data<-as.matrix(sce@assays$SCT@scale.data)
+#Access normalized data: 
+data <- GetAssayData(sce, assay = "SCT", slot = "data")
+#Access Pearson residuals: 
+scale_data <- GetAssayData(sce, assay = "SCT", slot = "scale.data")
 
+#Access counts (may be empty): 
+#counts <- GetAssayData(sce, assay = "SCT", slot = "counts")
 
 tryCatch({
     if (file.exists("output.h5")) {
       file.remove("output.h5")
     }
-    h5write(as.matrix(X),"output.h5","X")
+    h5write(as.matrix(data),"output.h5","data")
+    h5write(as.matrix(scale_data),"output.h5","scale_data")
 },
 error = function(err){
-    write.table(X,file="output.txt",row.names=FALSE,col.names = FALSE) # drops the rownames
+    write.table(as.matrix(data),file="output_data.txt",row.names=FALSE,col.names = FALSE) # drops the rownames
+    write.table(as.matrix(scale_data),file="output_scale_data.txt",row.names=FALSE,col.names = FALSE) # drops the rownames
 })

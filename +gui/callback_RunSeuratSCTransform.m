@@ -49,7 +49,7 @@ function [needupdate] = callback_RunSeuratSCTransform(src,~)
 
     fw = gui.myWaitbar(FigureHandle);
     try
-        [X] = run.r_SeuratSctransform(sce.X, sce.g, wkdir);
+        [X, scale_X] = run.r_SeuratSctransform(sce.X, sce.g, wkdir);
     catch ME
         gui.myWaitbar(FigureHandle, fw);
         gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
@@ -69,8 +69,8 @@ function [needupdate] = callback_RunSeuratSCTransform(src,~)
                    gui.myHelpdlg(FigureHandle, 'SCE.X has been updated.');
                 case 'Export'
                     labels = {'Save transformed X to variable named:'}; 
-                    vars = {'X'};
-                    values = {X};
+                    vars = {'X','scale_X'};
+                    values = {X, scale_X};
                     export2wsdlg(labels,vars,values,...
                             'Save Data to Workspace');
                 case 'Save'
@@ -82,7 +82,7 @@ function [needupdate] = callback_RunSeuratSCTransform(src,~)
                         return;
                     end                                                                        
                     fullFileName = fullfile(path, file);
-                    save(fullFileName, 'X');
+                    save(fullFileName, 'X', 'scale_X');
                     disp(['Variables saved to ', fullFileName]);
                     gui.myHelpdlg(FigureHandle, sprintf('Transformed X is saved in %s.', fullFileName));
                 otherwise
