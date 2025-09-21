@@ -1,0 +1,312 @@
+classdef (Sealed) messageHistory   
+    %messageHistory - Create an object to manage and store messages in a conversation.
+    %   messages = messageHistory creates a messageHistory object.
+    %
+    %   messageHistory functions:
+    %       addSystemMessage         - Add system message.
+    %       addUserMessage           - Add user message.
+    %       addUserMessageWithImages - Add user message with images for
+    %                                  GPT-4 Turbo with Vision.
+    %       addToolMessage           - Add a tool message.
+    %       addResponseMessage       - Add a response message.
+    %       removeMessage            - Remove message from history.
+    %
+    %   messageHistory properties:
+    %       Messages                 - Messages in the conversation history.
+
+    % Copyright 2023-2025 The MathWorks, Inc.
+
+    properties(SetAccess=private)
+        %MESSAGES - Messages in the conversation history.
+        Messages = {}
+    end
+    
+    methods
+        function this = addSystemMessage(this, name, content)
+            %addSystemMessage   Add system message.
+            %
+            %   MESSAGES = addSystemMessage(MESSAGES, NAME, CONTENT) adds a system
+            %   message with the specified name and content. NAME and CONTENT
+            %   must be text scalars.
+            %
+            %   Example:
+            %   % Create messages object
+            %   messages = messageHistory;
+            %
+            %   % Add system messages to provide examples of the conversation
+            %   messages = addSystemMessage(messages, "example_user", "Hello, how are you?");
+            %   messages = addSystemMessage(messages, "example_assistant", "Olá, como vai?");
+            %   messages = addSystemMessage(messages, "example_user", "The sky is beautiful today");
+            %   messages = addSystemMessage(messages, "example_assistant", "O céu está lindo hoje.");
+
+            arguments
+                this (1,1) messageHistory 
+                name {llms.utils.mustBeNonzeroLengthTextScalar}
+                content {llms.utils.mustBeNonzeroLengthTextScalar}
+            end
+
+            newMessage = struct("role", "system", "name", string(name), "content", string(content));
+            this.Messages{end+1} = newMessage;
+        end
+
+        function this = addUserMessage(this, content)
+            %addUserMessage   Add user message.
+            %
+            %   MESSAGES = addUserMessage(MESSAGES, CONTENT) adds a user message
+            %   with the specified content to MESSAGES. CONTENT must be a text scalar.
+            %
+            %   Example:
+            %   % Create messages object
+            %   messages = messageHistory;
+            %
+            %   % Add user message
+            %   messages = addUserMessage(messages, "Where is Natick located?");
+
+            arguments
+                this (1,1) messageHistory
+                content {llms.utils.mustBeNonzeroLengthTextScalar}
+            end
+
+            newMessage = struct("role", "user", "content", string(content));
+            this.Messages{end+1} = newMessage;
+        end
+
+        function this = addUserMessageWithImages(this, content, images, nvp)
+            %addUserMessageWithImages   Add user message with images
+            %
+            %   MESSAGES = addUserMessageWithImages(MESSAGES, CONTENT, IMAGES) 
+            %   adds a user message with the specified content and images 
+            %   to MESSAGES. CONTENT must be a text scalar. IMAGES must be
+            %   a string array of image URLs or file paths. 
+            %
+            %   messages = addUserMessageWithImages(__,Detail="low");
+            %   specify how the model should process the images using
+            %   "Detail" parameter. The default is "auto".
+            %   - When set to "low", the model scales the image to 512x512 
+            %   - When set to "high", the model scales the image to 512x512
+            %   and also creates detailed 512x512 crops of the image
+            %   - When set to "auto", the models chooses which mode to use
+            %   depending on the input image. 
+            %
+            %   Example:
+            %
+            %   % Create a chat with GPT-4 Turbo with Vision
+            %   chat = openAIChat("You are an AI assistant.", ModelName="gpt-4-vision-preview"); 
+            %
+            %   % Create messages object
+            %   messages = messageHistory;
+            %
+            %   % Add user message with an image
+            %   content = "What is in this picture?"
+            %   images = "peppers.png"
+            %   messages = addUserMessageWithImages(messages, content, images);
+            %
+            %   % Generate a response
+            %   [text, response] = generate(chat, messages, MaxNumTokens=300);
+            
+            arguments
+                this (1,1) messageHistory
+                content {llms.utils.mustBeNonzeroLengthTextScalar}
+                images (1,:) {mustBeNonzeroLengthText}
+                nvp.Detail string {mustBeMember(nvp.Detail,["low","high","auto"])} = "auto"
+            end
+
+            newMessage = struct("role", "user", "content", string(content), ...
+                "images", images, "image_detail", nvp.Detail);
+            this.Messages{end+1} = newMessage;
+        end
+
+        function this = addToolMessage(this, id, name, content)
+            %addToolMessage   Add Tool message.
+            %
+            %   MESSAGES = addToolMessage(MESSAGES, ID, NAME, CONTENT)
+            %   adds a tool message with the specified id, name and content. 
+            %   ID, NAME and CONTENT must be text scalars.
+            %
+            %   Example:
+            %   % Create messages object
+            %   messages = messageHistory;
+            %
+            %   % Add function message, containing the result of 
+            %   % calling strcat("Hello", " World")
+            %   messages = addToolMessage(messages, "call_123", "strcat", "Hello World");
+
+            arguments
+                this (1,1) messageHistory
+                id {mustBeTextScalar}
+                name {llms.utils.mustBeNonzeroLengthTextScalar}
+                content {llms.utils.mustBeNonzeroLengthTextScalar}
+            end
+
+            newMessage = struct("tool_call_id", id, "role", "tool", ...
+                "name", string(name), "content", string(content));
+            this.Messages{end+1} = newMessage;
+        end
+       
+        function this = addResponseMessage(this, messageStruct)
+            %addResponseMessage   Add response message.
+            %
+            %   MESSAGES = addResponseMessage(MESSAGES, messageStruct) adds a response
+            %   message with the specified messageStruct. The input
+            %   messageStruct should be a struct with field 'role' and
+            %   value 'assistant' and with field 'content'. This response
+            %   can be obtained from calling the GENERATE function.
+            %
+            %   Example:
+            %
+            %   % Create a chat object
+            %   chat = openAIChat("You are a helpful AI Assistant.");
+            %
+            %   % Create messages object
+            %   messages = messageHistory;
+            %
+            %   % Add user message
+            %   messages = addUserMessage(messages, "What is the capital of England?");
+            %
+            %   % Generate a response
+            %   [text, response] = generate(chat, messages);
+            %
+            %   % Add response to history
+            %   messages = addResponseMessage(messages, response);
+
+            arguments
+                this (1,1) messageHistory
+                messageStruct (1,1) struct
+            end
+
+            if ~isfield(messageStruct, "role")||~isequal(messageStruct.role, "assistant")||~isfield(messageStruct, "content")
+                error("llms:mustBeAssistantCall",llms.utils.errorMessageCatalog.getMessage("llms:mustBeAssistantCall"));
+            end
+
+            % Assistant is asking for function call
+            if isfield(messageStruct, "tool_calls")
+                toolCalls = messageStruct.tool_calls;
+                validateAssistantWithToolCalls(toolCalls)
+                this = addAssistantMessage(this, messageStruct.content, toolCalls);
+            else
+                % Simple assistant response
+                validateRegularAssistant(messageStruct.content);
+                this = addAssistantMessage(this,messageStruct.content);
+            end
+        end
+
+        function this = removeMessage(this, idx)
+            %removeMessage   Remove message.
+            %
+            %   MESSAGES = removeMessage(MESSAGES, IDX) removes a message at the specified
+            %   index from MESSAGES. IDX must be a positive integer.
+            %
+            %   Example:
+            %
+            %   % Create messages object
+            %   messages = messageHistory;
+            %
+            %   % Add user messages
+            %   messages = addUserMessage(messages, "What is the capital of England?");
+            %   messages = addUserMessage(messages, "What is the capital of Italy?");
+            %
+            %   % Remove the first message
+            %   messages = removeMessage(messages,1);
+
+            arguments
+                this (1,1) messageHistory
+                idx (1,1) {mustBeNumeric,mustBeInteger,mustBePositive}
+            end
+            if isempty(this.Messages)
+                error("llms:removeFromEmptyHistory",llms.utils.errorMessageCatalog.getMessage("llms:removeFromEmptyHistory"));
+            end
+            if idx>numel(this.Messages)
+                error("llms:mustBeValidIndex",llms.utils.errorMessageCatalog.getMessage("llms:mustBeValidIndex", string(numel(this.Messages))));
+            end
+            this.Messages(idx) = [];
+        end
+    end
+
+    methods(Access=private)
+
+        function this = addAssistantMessage(this, content, toolCalls)
+            arguments
+                this (1,1) messageHistory
+                content string
+                toolCalls struct = []
+            end
+
+            if isempty(toolCalls)
+                % Default assistant response
+                 newMessage = struct("role", "assistant", "content", content);
+            else
+                % tool_calls message
+                toolsStruct = repmat(struct("id",[],"type",[],"function",[]),size(toolCalls));
+                for i = 1:numel(toolCalls)
+                    if isfield(toolCalls(i),"id")
+                        toolsStruct(i).id = toolCalls(i).id;
+                    end
+                    if isfield(toolCalls(i),"type")
+                        toolsStruct(i).type = toolCalls(i).type;
+                    end
+                    toolsStruct(i).function = struct( ...
+                        "name", toolCalls(i).function.name, ...
+                        "arguments", toolCalls(i).function.arguments);
+                end
+                if numel(toolsStruct) > 1
+                    newMessage = struct("role", "assistant", "content", content, "tool_calls", toolsStruct);
+                else
+                    newMessage = struct("role", "assistant", "content", content, "tool_calls", []);
+                    newMessage.tool_calls = {toolsStruct};
+                end
+            end
+            
+            if isempty(this.Messages)
+                this.Messages = {newMessage};
+            else
+                this.Messages{end+1} = newMessage;
+            end
+        end
+    end
+end
+
+function validateRegularAssistant(content)
+try
+    mustBeNonzeroLengthText(content)
+    mustBeTextScalar(content)
+catch ME
+    error("llms:mustBeAssistantWithContent",llms.utils.errorMessageCatalog.getMessage("llms:mustBeAssistantWithContent"))
+end
+end
+
+function validateAssistantWithToolCalls(toolCallStruct)
+if ~(isstruct(toolCallStruct) && isfield(toolCallStruct, "function"))
+    error("llms:mustBeAssistantWithIdAndFunction", ...
+        llms.utils.errorMessageCatalog.getMessage("llms:mustBeAssistantWithIdAndFunction"))
+else
+    functionCallStruct = [toolCallStruct.function];
+end
+
+if ~isfield(functionCallStruct, "name")||~isfield(functionCallStruct, "arguments")
+    error("llms:mustBeAssistantWithNameAndArguments", ...
+        llms.utils.errorMessageCatalog.getMessage("llms:mustBeAssistantWithNameAndArguments"))
+end
+
+try
+    for i = 1:numel(functionCallStruct)
+        mustBeNonzeroLengthText(functionCallStruct(i).name)
+        mustBeTextScalar(functionCallStruct(i).name)
+    end
+catch ME
+    error("llms:assistantMustHaveTextName", ...
+        llms.utils.errorMessageCatalog.getMessage("llms:assistantMustHaveTextName"))
+end
+
+try
+    for i = 1:numel(functionCallStruct)
+        if ~(isstruct(functionCallStruct(i).arguments) && ...
+            isscalar(functionCallStruct(i).arguments))
+            mustBeNonzeroLengthText(functionCallStruct(i).arguments)
+            mustBeTextScalar(functionCallStruct(i).arguments)
+        end
+    end
+catch ME
+    error("llms:assistantMustHaveTextOrStructArguments", ...
+        llms.utils.errorMessageCatalog.getMessage("llms:assistantMustHaveTextOrStructArguments"))
+end
+end
