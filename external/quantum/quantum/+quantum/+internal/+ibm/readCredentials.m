@@ -2,7 +2,7 @@ function [credentials, accountname] = readCredentials(fileName, accountName)
 % Internal use only. Returns struct of credentials from the JSON file. This
 % does not authenticate with the IBM Runtime service.
 
-% Copyright 2022-2024 The MathWorks, Inc.
+% Copyright 2022-2025 The MathWorks, Inc.
 
 % Read content of JSON file into struct
 content = fileread(fileName);
@@ -45,16 +45,10 @@ for c = creds
     credentials.(c) = string(values{tf});
 end
 
-if ~matches(credentials.channel, ["ibm_cloud", "ibm_quantum"])
+if credentials.channel~="ibm_cloud"
     error(message("quantum:QuantumDeviceIBM:InvalidChannel"))
-end
-
-if isequal(credentials.channel, "ibm_quantum")
-    % Validate hub/group/project format
-    inst = split(credentials.instance, "/");
-    if length(inst)~=3
-        error(message("quantum:QuantumDeviceIBM:InvalidQuantumInstance"))
-    end
+elseif ~contains(credentials.instance, "crn:v1:bluemix:public:quantum-computing")
+    error(message("quantum:QuantumDeviceIBM:InvalidCloudInstance"))
 end
 
 quantum.internal.ibm.showLegalDisclaimer()

@@ -44,7 +44,7 @@ classdef (Sealed) QuantumDeviceIBM < quantum.backend.QuantumDevice
     %
     %   See also quantum.backend.QuantumTaskIBM, quantumCircuit/run
 
-    %   Copyright 2022-2024 The MathWorks, Inc.
+    %   Copyright 2022-2025 The MathWorks, Inc.
     properties(GetAccess=public, SetAccess=private)
         %NAME - Name of the device
         %
@@ -251,13 +251,6 @@ classdef (Sealed) QuantumDeviceIBM < quantum.backend.QuantumDevice
             end
 
             taskInfo.params = runInfo;
-
-            if isequal(obj.Credentials.channel, "ibm_quantum")
-                inst = split(obj.Credentials.instance, "/");
-                taskInfo.hub = inst{1};
-                taskInfo.group = inst{2};
-                taskInfo.project = inst{3};
-            end
 
             if ~obj.UseSession
                 % Create task without session

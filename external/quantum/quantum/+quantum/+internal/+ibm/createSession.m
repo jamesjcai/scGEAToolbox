@@ -1,13 +1,9 @@
 function sessionID = createSession(credentials, sessionInfo)
 % Internal use only.
 
-% Copyright 2022-2024 The MathWorks, Inc.
+% Copyright 2022-2025 The MathWorks, Inc.
 
 [rootURL, authHeader] = quantum.internal.ibm.connectionInfo(credentials);
-
-if isequal(credentials.channel, "ibm_quantum")
-    sessionInfo.instance = credentials.instance;
-end
 
 method = matlab.net.http.RequestMethod.POST;
 request = matlab.net.http.RequestMessage(method, authHeader, sessionInfo);

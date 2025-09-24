@@ -80,6 +80,10 @@ function [done, outfile] = e_DETableSummary(TbpUpEnrichr, TmfUpEnrichr, ...
         "Please provide an analysis of the output, highlighting key biological processes and molecular functions, along with their associated genes. " + ...
         "Please write an executive summary to report the results of your analysis. ";
     
+    feedbk_up = [];
+    feedbk_dw = [];
+    done1 = false;
+    done2 = fales;
     switch providermodel{1}
         case 'Ollama'
             % assert(strcmp(providermodel{1}, 'Ollama'))
@@ -113,7 +117,13 @@ function [done, outfile] = e_DETableSummary(TbpUpEnrichr, TmfUpEnrichr, ...
             [done1, feedbk_up] = llm.callGemini([], prompt1 + prompt2, providermodel{2});
             prompt2 = "Here is the output of Enrichr: " + s_dn;
             [done2, feedbk_dn] = llm.callGemini([], prompt1 + prompt2, providermodel{2});
-            
+
+        case 'OpenAI'
+            prompt2 = "Here is the output of Enrichr: " + s_up;
+            [done1, feedbk_up] = llm.callOpenAIChat([], prompt1 + prompt2, providermodel{2});
+            prompt2 = "Here is the output of Enrichr: " + s_dn;
+            [done2, feedbk_dn] = llm.callOpenAIChat([], prompt1 + prompt2, providermodel{2});
+
             %{
             prompt2 = "Here is the output of Enrichr: " + s_up;
             assignin("base","prompt1",prompt1);
@@ -133,9 +143,14 @@ function [done, outfile] = e_DETableSummary(TbpUpEnrichr, TmfUpEnrichr, ...
                 feedbk_dn = response.Body.Data.error;
             end
             %}
+        otherwise
+            warning('Invalid LLM provider and/or model.');
+            return;
     end
 
 
+    if ~(done1 || done2), return; end
+    if isempty(feedbk_up) && isempty(feedbk_dn), return; end
     
     import mlreportgen.dom.*
     
