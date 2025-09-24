@@ -55,29 +55,37 @@ i_additem(full(sum(sce.X > 0))', 'Number of Detected Genes');
         return;
     end
 
+    n = length(listitems);
+    preftagname ='selectednstates';
+    defaultindx = getpref('scgeatoolbox', preftagname, [n-1, n]);    
+    if any(defaultindx > n) || any(defaultindx < 1), defaultindx = [n-1, n]; end
+    if isempty(initialsel)
+        initialsel = defaultindx;
+    end
+
        if gui.i_isuifig(parentfig)
-           if ~isempty(initialsel) 
+           %if ~isempty(initialsel) 
                [indx2, tf2] = gui.myListdlg(parentfig, listitems, ...
                     'Select cell state/grouping variable:', ...
                     listitems(initialsel));
-           else
-               [indx2, tf2] = gui.myListdlg(parentfig, listitems, ...
-                    'Select cell state/grouping variable:');
-           end
+           %else
+           %    [indx2, tf2] = gui.myListdlg(parentfig, listitems, ...
+           %         'Select cell state/grouping variable:');
+           %end
         else    
-            if ~isempty(initialsel)
+            %if ~isempty(initialsel)
                 [indx2, tf2] = listdlg('PromptString', ...
                     {'Select cell state/grouping variable:'}, ...
                     'SelectionMode', 'multiple', ...
                     'ListString', listitems, ...
                     'InitialValue', initialsel, 'ListSize', [220, 300]);
-            else
-                [indx2, tf2] = listdlg('PromptString', ...
-                    {'Select cell state/grouping variable:'}, ...
-                    'SelectionMode', 'multiple', ...
-                    'ListString', listitems, ...
-                    'ListSize', [220, 300]);
-            end
+            %else
+            %    [indx2, tf2] = listdlg('PromptString', ...
+            %        {'Select cell state/grouping variable:'}, ...
+            %        'SelectionMode', 'multiple', ...
+            %        'ListString', listitems, ...
+            %        'ListSize', [220, 300]);
+            %end
        end
 
     if tf2 == 1
@@ -86,6 +94,7 @@ i_additem(full(sum(sce.X > 0))', 'Number of Detected Genes');
         for k=1:length(indx2)
             [thisc{k}, clabel{k}] = i_getidx(indx2(k));
         end
+        setpref('scgeatoolbox', preftagname, indx2);
     end
 
     function [thisc, clabel] = i_getidx(indx)

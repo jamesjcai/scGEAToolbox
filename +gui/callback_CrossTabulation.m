@@ -2,7 +2,8 @@ function callback_CrossTabulation(src, ~)
 
 [FigureHandle, sce] = gui.gui_getfigsce(src);
 
-[thisc1, clabel1, thisc2, clabel2] = gui.i_select2class(sce, true, FigureHandle);
+% [thisc1, clabel1, thisc2, clabel2] = gui.i_select2class(sce, true, FigureHandle);
+[thisc1, clabel1, thisc2, clabel2] = gui.i_select2states_new(sce, true, FigureHandle);
 
 %[answer] = gui.myQuestdlg(FigureHandle, 'Manually order groups?', '');
 if isempty(thisc1), return; end
@@ -37,10 +38,12 @@ if isempty(thisc2) || isempty(cL2)
 
     xticks(ax, 1:length(labelsx));
     labelsx1 = strrep(labelsx, '_', '\_');
+
     xticklabels(ax, labelsx1);
     hx.show(FigureHandle);
     return;
 end
+
 
 
 fw = gui.myWaitbar(FigureHandle);
@@ -123,11 +126,11 @@ hx.show(FigureHandle);
         labelsx1 = strrep(labelsx, '_', '\_');
         xticklabels(labelsx1);       
         
-        xlabel(clabel)
+        xlabel(strrep(clabel, '_', '\_'))
         ylabel('# of cells')
         labelsy1 = strrep(labelsy, '_', '\_');
         lgd = legend(labelsy1, 'Location', 'bestoutside');
-        title(lgd, llabel);
+        title(lgd, strrep(llabel, '_', '\_'));
     end        
 
     function in_plot2
@@ -154,7 +157,7 @@ hx.show(FigureHandle);
         end
         catch
         end
-        xlabel(clabel)
+        xlabel(strrep(clabel, '_', '\_'))
         ylabel('% of cells')
         % title(clabel2);
         xticks(1:length(labelsx));
@@ -164,7 +167,7 @@ hx.show(FigureHandle);
         ylim([0, 1]);
         labelsy2 = strrep(labelsy, '_', '\_');
         lgd = legend(labelsy2, 'Location', 'bestoutside');
-        title(lgd, llabel);
+        title(lgd, strrep(llabel, '_', '\_'));
     end        
 
     function in_callback_saveCrossTable(~, ~)

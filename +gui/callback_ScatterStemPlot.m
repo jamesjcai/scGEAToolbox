@@ -45,7 +45,7 @@ function callback_ScatterStemPlot(src, ~)
             gui.myWaitbar(FigureHandle, fw);
             
         case 'Cell State'
-            [thisyv, ylabelv] = gui.i_selectnstates(sce, true, [], FigureHandle);
+            [thisyv, ylabelv] = gui.i_selectnstates(sce, true, [1], FigureHandle);
 
             a = false(length(thisyv), 1);
             for k = 1:length(thisyv)

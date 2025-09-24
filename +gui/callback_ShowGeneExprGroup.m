@@ -23,7 +23,7 @@ function callback_ShowGeneExprGroup(src, ~)
         case 'Cell State'
             a = getpref('scgeatoolbox', 'prefcolormapname', 'autumn');
             s = sce.s;
-            [thisyv, ylabelv] = gui.i_selectnstates(sce, true, [], FigureHandle);
+            [thisyv, ylabelv] = gui.i_selectnstates(sce, true, [1], FigureHandle);
             if isempty(thisyv) || isempty(ylabelv), return; end
             
             y = thisyv{1};

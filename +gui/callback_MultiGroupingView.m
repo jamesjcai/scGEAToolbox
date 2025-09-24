@@ -9,7 +9,11 @@ function callback_MultiGroupingView(src, ~)
 
         case 'Multigrouping'
             if gui.i_isuifig(FigureHandle), focus(FigureHandle); end
-            [thiscv, clabelv] = gui.i_selectnstates(sce, false, [4, 5], FigureHandle);
+
+            preftagname ='selectednstates';
+            defaultindx = getpref('scgeatoolbox', preftagname, [4, 5]);              
+            [thiscv, clabelv] = gui.i_selectnstates(sce, false, ...
+                defaultindx, FigureHandle);
             if isempty(thiscv) || isempty(clabelv), return; end
 
             hx=gui.myFigure(FigureHandle);
