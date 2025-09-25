@@ -1,13 +1,15 @@
 function callback_SelectEnrichrLibraries(src, ~)
 
     [FigureHandle] = gui.gui_getfigsce(src);
+    genesets = [];
     try
         [genesets] = in_selDataSources;
     catch ME
-        gui.myErrordlg(FigureHandle,'Runtime error');
+        gui.myErrordlg(FigureHandle, ...
+            sprintf('Runtime error: %s', ME.message));
     end
     if ~isempty(genesets)
-        gui.myHelpdlg(FigureHandle, 'Enrichr gene set libraries selected.');
+        gui.myHelpdlg(FigureHandle, 'Enrichr gene set libraries selected.');        
     end
 
 
@@ -28,11 +30,12 @@ function callback_SelectEnrichrLibraries(src, ~)
             rethrow(ME);
         end
         gui.myWaitbar(FigureHandle,fw);
+        if ~isstring(enrichrlibraries), enrichrlibraries = string(enrichrlibraries); end
         [idx1] = gui.i_selmultidialog(dsv, enrichrlibraries, FigureHandle);
         if isempty(idx1), return; end
         if idx1 == 0, return; end
         genesets = dsv(idx1);
-        setpref('scgeatoolbox', 'enrichrlibraries', genesets);    
+        setpref('scgeatoolbox', 'enrichrlibraries', genesets);
     end
 
 end

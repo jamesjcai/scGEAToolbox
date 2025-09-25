@@ -160,6 +160,8 @@ end
                                      "KEGG_2021_Human",...
                                      "Reactome_Pathways_2024"]);
 
+        if ~isstring(enrichrlibraries), enrichrlibraries = string(enrichrlibraries); end
+
         [idx1] = gui.i_selmultidialog(dsv, enrichrlibraries, FigureHandle);
         if isempty(idx1), return; end
         if idx1 == 0, return; end

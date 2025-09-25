@@ -58,8 +58,10 @@ function [T, Tup, Tdn] = sc_deg(X, Y, genelist, methodid, ...
 
     % Loop through genes
     for k = 1:ng
-        if guiwaitbar            
-            gui.myWaitbar(parentfig, fw, false, '','', k / ng);
+        if guiwaitbar
+            if k / ng > 0.618
+                gui.myWaitbar(parentfig, fw, false, '','', k / ng);
+            end
         end
         
         x = X(k, :);

@@ -66,10 +66,13 @@ function callback_DEGene2Groups_New(src, ~)
         return;
     end
     if ~isfile(filesaved), return; end
-    gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s', filesaved));
+    % gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s', filesaved));
 
-
-    if ~strcmp('Yes', gui.myQuestdlg(FigureHandle, 'Additional Analysis?'))
+    if ~strcmp('Yes', gui.myQuestdlg(FigureHandle, ...
+            sprintf('Result has been saved in %s. Additional Analysis?', filesaved)))        
+        if strcmp('Yes', gui.myQuestdlg(FigureHandle,'Open Output Folder?'))
+            winopen(fileparts(filesaved));
+        end
         return;
     end
 
@@ -143,6 +146,8 @@ function callback_DEGene2Groups_New(src, ~)
         end
     end   
     gui.myWaitbar(FigureHandle, fw);
+
+    pause(2);
 
     if any(contains(selected, 'Open Output Folder'))        
         if isempty(f), f = FigureHandle; end

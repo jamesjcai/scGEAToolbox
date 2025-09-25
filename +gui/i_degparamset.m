@@ -6,7 +6,8 @@ if nargin<1, nogui=false; end
 % preftagname ='scimilmodelpath'
 % preftagname ='openscedlgindex';
 preftagname ='degtestparamset';
-defaultset = getpref('scgeatoolbox', preftagname, {0.05, 1.0, 0.01, 'Adjusted P-value'});
+defaultset = getpref('scgeatoolbox', preftagname, ...
+    {0.05, 1.0, 0.01, 'Adjusted P-value'});
 
 if nogui
     paramset = {0.05, 1.0, 0.01, 'Adjusted P-value'};   
@@ -49,7 +50,7 @@ else
             % disp('DE genes are sorted by absolute fold change (FC).');
         otherwise
             sortbywhat = [];
-    end    
+    end
     paramset = {mindiffpct, minabsolfc, apvaluecut, sortbywhat};
     setpref('scgeatoolbox', preftagname, paramset);
 end
