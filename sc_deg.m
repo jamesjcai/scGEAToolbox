@@ -100,7 +100,7 @@ function [T, Tup, Tdn] = sc_deg(X, Y, genelist, methodid, ...
     
     % Create results table
 
-    avg_log2FC = log2(avg_1./avg_2);
+    avg_log2FC = log2(avg_1) - log2(avg_2);
     %avg_log2FC(avg_log2FC==Inf) = 1e99;
     %avg_log2FC(avg_log2FC==-Inf) = -1e99;
     abs_log2FC = abs(avg_log2FC);
