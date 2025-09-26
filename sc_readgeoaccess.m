@@ -1,4 +1,5 @@
-function [sce] = sc_readgeoaccess(acc, readspatialdata)
+function [sce] = sc_readgeoaccess(acc, readspatialdata, ...
+                                       readatacseqdata)
     % SC_READGEOACCESS  Download and parse GEO single-cell dataset by accession
     %
     %   sce = sc_readgeoaccess(acc)
@@ -12,15 +13,23 @@ function [sce] = sc_readgeoaccess(acc, readspatialdata)
 % if length(strsplit(acc,{',',';',' '}))>1
 % end
 
+if nargin<3, readatacseqdata = false; end
 if nargin<2, readspatialdata = false; end
 
-url = sprintf('https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=%s', acc);
-a = webread(url);
-b = strsplit(a, '\n');
+sce = [];
+
+try
+    url = sprintf('https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=%s', acc);
+    a = webread(url);
+    b = strsplit(a, '\n');
+catch ME
+    warning(ME.message);
+    return;
+end
 
 speciestag = '';
 try
- speciestag = pkg.ai_extractHTMLText(b(1+find(contains(b, 'Organism'),1)));
+speciestag = pkg.ai_extractHTMLText(b(1+find(contains(b, 'Organism'),1)));
 catch
 end
 
@@ -36,9 +45,17 @@ end
 barcodes = [];
 % assignin("base","c",c);
 
+if ~readatacseqdata && ...
+    any(contains(c, 'atac','IgnoreCase',true))
+    error('Imported data seems to contain scATAC-seq data. Only scRNA-seq data is supported by this read function.')
+end
+
+
 if length(c) >= 3
-    if ~readspatialdata && any(contains(c, 'hires')) && any(contains(c, 'image'))
-        error('Spatial Transcriptome Data found. Matrix is ignored.')        
+    if ~readspatialdata && ...
+        any(contains(c, 'hires','IgnoreCase',true)) && ...
+        any(contains(c, 'image','IgnoreCase',true))
+        error('Imported data detected as Spatial Transcriptome Data. The read function expects scRNA-seq data.')
     end
     %switch length(c)
     %    case 3
@@ -95,8 +112,13 @@ elseif isscalar(c)
     if ~txtnotfound
         disp("Found TXT/CSV/TSV file.");
         f1 = i_setupfile(c1);
-        if isempty(f1), error('TXT/CSV/TSV file name not processed.'); end
-        [X, g] = sc_readtsvfile(f1);
+        if isempty(f1), error('TXT/CSV/TSV file name not processed.'); end        
+            try
+                [X, g] = sc_readtsvfile(f1);
+            catch
+                if exist(f1,"file"), delete(f1); end
+                return;
+            end
     else
         c1 = c(contains(c, 'h5ad'));
         if ~isempty(c1)
@@ -172,7 +194,7 @@ fprintf(['The data was downloaded from the National Center', ...
     % end
     if ~isempty(barcodes)
         sce.c_cell_id = barcodes;
-    end
+    end    
 
     if exist(f1,"file")
         try
