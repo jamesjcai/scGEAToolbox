@@ -1,9 +1,10 @@
-function myHelpdlg(parentfig, message, title, modal)
+function [out] = myHelpdlg(parentfig, message, title, modal)
 
     if nargin < 4, modal = true; end
     if nargin < 3, title = ''; end
     if nargin < 2, message = 'Message'; end
     if nargin < 1, parentfig = []; end
+    if nargout > 0, out = []; end 
 
     if gui.i_isuifig(parentfig)
         tag = 'info'; 

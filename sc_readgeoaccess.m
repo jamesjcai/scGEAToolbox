@@ -135,8 +135,6 @@ elseif isscalar(c)
             elseif strcmpi(f1(end-2:end), '.h5ad')
                 [X, g, barcodes] = sc_readh5adfile(f1);
             end
-
-
         else
             c1 = c(contains(c, 'h5'));
             if isempty(c1)

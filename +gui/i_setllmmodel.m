@@ -6,12 +6,19 @@ if nargin<1, src = []; end
 done = false;
 preftagname = 'llapikeyenvfile';
 if ~ispref('scgeatoolbox', preftagname)
-    if ~strcmp('Yes', gui.myQuestdlg(parentfig, 'Locate llm_api_key.env?')), return; end
+    if ~strcmp('Yes', gui.myQuestdlg(parentfig, 'Locate LLM API key env file?')), return; end
     [file, path] = uigetfile('llm_api_key.env', 'Select File');
     if isequal(file, 0), return; end
     apikeyfile = fullfile(path, file);
-    setpref('scgeatoolbox', preftagname, apikeyfile);
-    gui.myHelpdlg(parentfig, "llm_api_key.env is located successfully.");
+    if isfile(apikeyfile)
+        setpref('scgeatoolbox', preftagname, apikeyfile);
+        if ~strcmp('Yes', gui.myQuestdlg(parentfig, "LLM API key env file is located successfully. Continue?"))
+            return;
+        end
+    else
+        gui.myHelpdlg(parentfig, "Invalid file.")
+        return;
+    end
 else
     apikeyfile = getpref('scgeatoolbox', preftagname);
     answer1 = gui.myQuestdlg(parentfig, sprintf('%s', apikeyfile), ...
@@ -78,9 +85,7 @@ else
                           'InitialValue', 1);
 end
 
-
 if ~ok, return; end
-
 
 selectedProvider = listItems{selectedIndex};
 switch selectedProvider
