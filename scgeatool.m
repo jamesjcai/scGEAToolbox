@@ -17,6 +17,7 @@ function varargout = scgeatool(varargin)
             varargout{1} = f;
         end
     else
+        if ~gui.i_installed('stats'), return; end
         try
             % Direct constructor call to App Designer app
             app = scgeatoolApp(varargin{:});

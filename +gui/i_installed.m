@@ -11,10 +11,10 @@ switch name
         gui.myWarndlg(parentfig, ['SCGEATOOL requires Statistics ' ...
             'and Machine Learning Toolbox.'], ...
             'Missing Dependencies');
-        if strcmp(gui.myQuestdlg(parentfig, 'Learn how to install Statistics and Machine Learning Toolbox?'),'Yes')
-            web('https://www.mathworks.com/help/matlab/matlab_env/get-add-ons.html');
-            web('https://www.mathworks.com/videos/add-on-explorer-106745.html');
-        end
+        % if strcmp(gui.myQuestdlg(parentfig, 'Learn how to install Statistics and Machine Learning Toolbox?'),'Yes')
+        %     web('https://www.mathworks.com/help/matlab/matlab_env/get-add-ons.html');
+        %     web('https://www.mathworks.com/videos/add-on-explorer-106745.html');
+        % end
     else
         y = true;
     end
