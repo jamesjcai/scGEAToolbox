@@ -1,6 +1,6 @@
 function callback_CheckUpdates(src, ~)    
 
-    toolboxPath = fileparts(fileparts(mfilename('fullpath')));
+    %toolboxPath = fileparts(fileparts(mfilename('fullpath')));
     %versionfile = fullfile(toolboxPath, 'VERSION.mat');
     %if exist(versionfile,'file')
     %    delete(versionfile);

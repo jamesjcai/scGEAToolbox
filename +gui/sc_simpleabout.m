@@ -1,8 +1,9 @@
 function [hFig] = sc_simpleabout(parentfig, im2)
-    if nargin < 2 || isempty(im2)
-        [~, ~, ~, im2] = pkg.i_majvercheck;
-    end
-
+    % if nargin < 2 || isempty(im2)
+    %     [~, ~, ~, im2] = pkg.i_majvercheck;
+    % end
+    
+    if nargin < 2, im2 = []; end
     mfolder = fileparts(mfilename('fullpath'));
 
 
@@ -21,9 +22,9 @@ function [hFig] = sc_simpleabout(parentfig, im2)
     % fullfile(mfolder,'..','assets', 'Images', splashpng)
     % splashpng = 'thumbnail_IMG_3621.jpg';
     [im] = imread(splashpng);
-    if ~isempty(im2) && license('test','image_toolbox') && ~isempty(which('imfuse')) 
-        im = imfuse(im, im2, 'blend');
-    end
+    %if ~isempty(im2) && license('test','image_toolbox') && ~isempty(which('imfuse')) 
+    %    im = imfuse(im, im2, 'blend');
+    %end
     if nargin<1, parentfig=[]; end
 
     

@@ -66,9 +66,10 @@ end
     %     end
     % end
     if nargout > 3 && needed(4)
-        try
-            im = webread('https://visit-counter.vercel.app/counter.png?page=https%3A%2F%2Fgithub.com%2Fjamesjcai%2FscGEAToolbox%2F&s=15&c=ffffff&bg=00000000&no=2&ff=digi&tb=&ta=');
-        catch
-        end
+        %try
+        %    im = webread('https://visit-counter.vercel.app/counter.png?page=https%3A%2F%2Fgithub.com%2Fjamesjcai%2FscGEAToolbox%2F&s=15&c=ffffff&bg=00000000&no=2&ff=digi&tb=&ta=');
+        %catch
+        %end
+        im = [];
     end
 end
