@@ -30,7 +30,7 @@ if ~keepbatchid || isscalar(unique(sce.c_batch_id))
 end
 if needappendix
     sce.c_batch_id = strcat(string(sce.c_batch_id), "_", string(c));
-    warning('A suffix is added to SCE.C_BATCH_ID to distinguish cells'' original batch IDs.');
+    disp('A suffix is added to SCE.C_BATCH_ID to distinguish cells'' original batch IDs.');
 end
 
 end

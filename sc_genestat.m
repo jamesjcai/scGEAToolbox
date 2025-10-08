@@ -19,6 +19,7 @@ function [lgu, dropr, lgcv, genes, X, removedIdx, removedT] = sc_genestat(X, gen
 %     removedIdx indices of removed genes (if any)
 %     removedT   table of removed gene stats (if any)
 
+%{
 % --- Parse inputs ---
 p = inputParser;
 addRequired(p, 'X', @(x) isnumeric(x) && ismatrix(x));
@@ -31,6 +32,14 @@ X = p.Results.X;
 genelist = p.Results.genelist;
 sortit = logical(p.Results.sortit);
 removeinf = logical(p.Results.removeinf);
+%}
+
+arguments
+    X {mustBeNumeric, mustBeNonempty}
+    genelist = []
+    sortit (1,1) logical = true
+    removeinf (1,1) logical = true
+end
 
 % --- Setup gene names ---
 nGenes = size(X, 1);
