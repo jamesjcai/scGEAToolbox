@@ -296,7 +296,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
                 in_addmenu(menus, 0, @in_EnrichrHVGs, 'Gene Variability (HVG Function) Analysis...');
                 in_addmenu(menus, 0, @in_CompareCellScoreBtwCls, 'Gene Program (Cell Score) Analysis...');
                 % in_addmenu(menus, 0, @gui.callback_SGSAnalysis, 'Stochastic Gene Silencing (SGS) Analysis [PMID:39828795]...');
-                in_addmenu(menus, 1, @gui.callback_DEGene2Groups, 'Differential Expression (DE) Analysis...','D');
+                in_addmenu(menus, 1, @gui.callback_DEGene2Groups_New, 'Differential Expression (DE) Analysis...','D');
                 in_addmenu(menus, 0, @gui.callback_DVGene2Groups, 'Differential Variability (DV) Analysis...','V');
                 in_addmenu(menus, 0, @gui.callback_DPGene2Groups, 'Differential Program (DP) Analysis...','P');
                 in_addmenu(menus, 1, @gui.callback_DEGene2GroupsBatch, 'DE Analysis in Cell Type Batch Mode...');
@@ -389,7 +389,7 @@ if ~exist(ptImgFile, 'file'), save(ptImgFile, 'ptImgCell'); end
         in_addbuttonpush(0, 0, [], [], "");
         in_addbuttonpush(0, 1, @in_CompareCellScoreBtwCls, "barcode_scanner_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Cell score analysis--obtaining gene signature score for each cell");
         in_addbuttonpush(0, 0, @gui.callback_GetCellSignatureMatrix, "hexagon_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Cell state analysis--obtaining multiple gene signature scores to reveal functional state of cells");
-        in_addbuttonpush(0, 1, @gui.callback_DEGene2Groups, "graphic_eq_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Differential expression (DE) analysis");
+        in_addbuttonpush(0, 1, @gui.callback_DEGene2Groups_New, "graphic_eq_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Differential expression (DE) analysis");
         in_addbuttonpush(0, 0, @gui.callback_DVGene2Groups, "edit_audio_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Differential variability (DV) analysis");
         in_addbuttonpush(0, 0, @gui.callback_DPGene2Groups, "data_exploration_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", "Differential program (DP) analysis");
         in_addbuttonpush(0, 0, [], [], "");
