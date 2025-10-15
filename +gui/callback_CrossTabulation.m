@@ -16,9 +16,14 @@ else
     thisc1 = categorical(thisc1, cL1);
 end
 if ~isempty(thisc2)
-    [~, cL2, noanswer] = gui.i_reordergroups(thisc2, [], FigureHandle);
+    [c2, cL2, noanswer] = gui.i_reordergroups(thisc2, [], FigureHandle);
     if noanswer, return; end
-    thisc2 = categorical(thisc2, cL2);
+    % thisc2 = categorical(thisc2, cL2);
+    if isnumeric(thisc2)
+        thisc2 = categorical(cL2(c2), cL2);
+    else
+        thisc2 = categorical(thisc2, cL2);
+    end    
 else
     cL2 = [];
 end
