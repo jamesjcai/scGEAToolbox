@@ -45,10 +45,9 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
         return;
     end
 
-
     hasDuplicates = numel(unique(sce.g)) < numel(sce.g);
     if hasDuplicates
-        [needupdate, sce] = gui.gui_rmdugenes(sce, FigureHandle);
+        [requirerefresh, sce] = gui.gui_rmdugenes(sce, FigureHandle);
         % if ~strcmp('Yes', ...
         %         gui.myQuestdlg(FigureHandle, ...
         %         ['SCE contains duplicate gene names. Duplicate genes ' ...
@@ -60,6 +59,9 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
         %     [sce.X, sce.g] = sc_rmdugenes(sce.X, sce.g);            
         % end
     end
+
+%    sceXori = sce.X;
+%    scegori = sce.g;
 
     switch listitems{indx}
         case {'SC_QCFILTER (Basic QC for Cells/Genes)',...
@@ -76,7 +78,6 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
             else
                 whitelist = [];
             end
-
 
             answer3 = gui.myQuestdlg(FigureHandle, 'Relaxed or Strigent?', ...
                 'Cutoff Settings',{'Relaxed (keep more cells/genes)', ...
@@ -489,13 +490,13 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
         return;
     end
     
-    answer = gui.myQuestdlg(FigureHandle, sprintf('%d genes will be removed; %d cells will be removed.\n[%d genes x %d cells] => [%d genes x %d cells]', ...
-            oldgn-newgn, oldcn-newcn, oldgn, oldcn, newgn, newcn),'', ...
-            {'Accept Changes', 'Cancel Changes'}, 'Accept Changes');
-    if ~strcmp(answer, 'Accept Changes')
-        % requirerefresh = false;
-        return;
-    end
+    % answer = gui.myQuestdlg(FigureHandle, sprintf('%d genes will be removed; %d cells will be removed.\n[%d genes x %d cells] => [%d genes x %d cells]', ...
+    %         oldgn-newgn, oldcn-newcn, oldgn, oldcn, newgn, newcn),'', ...
+    %         {'Accept Changes', 'Cancel Changes'}, 'Accept Changes');
+    % if ~strcmp(answer, 'Accept Changes')
+    %     % requirerefresh = false;
+    %     return;
+    % end
     requirerefresh = true;
     gui.myGuidata(FigureHandle, sce, src);
 end

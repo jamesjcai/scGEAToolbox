@@ -10,13 +10,16 @@ t = t(:);
         glist = T.genes(1:min([K, sce.NumGenes]));
         [y, idx] = ismember(glist, sce.g);
         if ~all(y), error('Runtime error.'); end        
-        sce.X = sce.X(idx, :);
-        sce.g = sce.g(idx);
+        sceX = sce.X(idx, :);
+        sceg = sce.g(idx);
+    else
+        sceX = sce.X;
+        sceg = sce.g;
     end
 
     % [Xt] = gui.i_transformx(sce.X, [], [], parentfig);
     % if isempty(Xt), return; end
-    X = sce.X;
+    X = sceX;
     try
         if issparse(X), X = full(X); end
     catch ME
@@ -61,7 +64,7 @@ t = t(:);
     end
 
     [~, idxp] = maxk(r, 10); 
-    selectedg = sce.g(idxp);
+    selectedg = sceg(idxp);
     try
         hx=gui.myFigure(parentfig);
         hFig=hx.FigHandle;
@@ -69,7 +72,7 @@ t = t(:);
         hx.show(parentfig);
         figure(hFig);
         pkg.i_plot_pseudotimeseries(log1p(X), ...
-            sce.g, t, selectedg);        
+            sceg, t, selectedg);        
     catch ME
         if exist('psf1', 'var') && ishandle(hFig)
             close(hFig);

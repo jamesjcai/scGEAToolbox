@@ -19,6 +19,12 @@ if nargin < 2 || isempty(genelist)
     genelist = string(1:size(X, 1));
 end
 
+idx = sum(X,2)==0;
+if any(idx)   
+   genelist(idx)=[];
+   X(idx,:)=[];
+   warning('Empty genes are removed.');
+end
 
 m = size(X, 2);
 if m < 10000
@@ -61,7 +67,9 @@ xyz = [lgu, lgcv, dropr];
 s = cumsum([0; sqrt(diff(lgu(:)).^2+diff(lgcv(:)).^2 ...
     +diff(dropr(:)).^2)]);
 
-warning('off','MATLAB:rankDeficientMatrix')    
+warning('off','MATLAB:rankDeficientMatrix')
+assignin("base","xyz",xyz)
+assignin("base","s",s)
 pp1 = splinefit(s, xyz.', 15, 0.75);
 xyz1 = ppval(pp1, s)';
 warning('on','MATLAB:rankDeficientMatrix')

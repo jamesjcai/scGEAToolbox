@@ -58,11 +58,12 @@ else
 end
 
     function in_askswitch(~, ~)
-        group = "scgeatoolbox";
-        pref = "switch2uifigure";
-        % strcmp(getpref(group,pref), 'ask')
-        setpref(group, pref, 'ask');
-        gui.myHelpdlg(parentfig,'You will be prompted to switch the next time you launch SCGEATOOL.');
+        scgeatool;
+        % group = "scgeatoolbox";
+        % pref = "switch2uifigure";
+        % % strcmp(getpref(group,pref), 'ask')
+        % setpref(group, pref, 'ask');
+        % gui.myHelpdlg(parentfig,'You will be prompted to switch the next time you launch SCGEATOOL.');
     end
 
 end

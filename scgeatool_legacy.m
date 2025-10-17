@@ -109,17 +109,17 @@ if ~isempty(fx) && isvalid(fx), fxfun(fx,0.2); end
 [button1, button2, button3] = gui.gui_createbuttons(FigureHandle, @in_sc_openscedlg);
 
 if isvalid(button3)
-    group = "scgeatoolbox";
-    pref = "switch2uifigure";
-    try
-    if ~strcmp(getpref(group, pref), 'ask')
+    % group = "scgeatoolbox";
+    % pref = "switch2uifigure";
+    % try
+    % if ~strcmp(getpref(group, pref), 'ask')
         set(button3,'Visible','on');
-    else
-        set(button3,'Visible','off');
-    end
-    catch
-        setpref(group, pref, 'ask');
-    end
+    % else
+    %     set(button3,'Visible','off');
+    % end
+    % catch
+    %     setpref(group, pref, 'ask');
+    % end
 end
 
 m_file = createMenus(FigureHandle, 1);
