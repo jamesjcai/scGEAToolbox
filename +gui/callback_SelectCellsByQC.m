@@ -48,20 +48,19 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
     hasDuplicates = numel(unique(sce.g)) < numel(sce.g);
     if hasDuplicates
         [requirerefresh, sce] = gui.gui_rmdugenes(sce, FigureHandle);
-        % if ~strcmp('Yes', ...
-        %         gui.myQuestdlg(FigureHandle, ...
-        %         ['SCE contains duplicate gene names. Duplicate genes ' ...
-        %         'will be removed; only the first occurrence of each ' ...
-        %         'duplicate gene will be retained. Continue?'], ...
-        %         'Duplicate Genes Detected'))
-        %     return;
-        % else
-        %     [sce.X, sce.g] = sc_rmdugenes(sce.X, sce.g);            
-        % end
     end
 
 %    sceXori = sce.X;
 %    scegori = sce.g;
+
+    if sce.NumCells*sce.NumGenes<4e8
+        sceori = copy(sce);
+        % disp('Ready for reversible.');
+    else
+        answer = gui.myQuestdlg(FigureHandle, 'You are about to change the SCE data. This cannot be undone.');
+        if ~strcmp(answer, 'Yes'), return; end        
+        sceori = [];
+    end
 
     switch listitems{indx}
         case {'SC_QCFILTER (Basic QC for Cells/Genes)',...
@@ -126,8 +125,7 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
             end
 
             
-            fw = gui.myWaitbar(FigureHandle);
-
+            fw = gui.myWaitbar(FigureHandle);            
             memerror = false;
             try
                 sce = sce.qcfilterwhitelist(libsize, mtratio, ...
@@ -474,14 +472,25 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
 
     newcn = sce.NumCells;
     newgn = sce.NumGenes;
+
     if newgn==0
-        gui.myHelpdlg(FigureHandle, "All genes are removed. Opertaion is cancelled.");
-        % requirerefresh = false;
+        if ~isempty(sceori)            
+            gui.myHelpdlg(FigureHandle, "All genes are removed. Opertaion is cancelled.");
+            % requirerefresh = false;
+            sce = sceori;
+        else
+            requirerefresh = true;
+        end
         return;
     end
     if newcn==0
-        gui.myHelpdlg(FigureHandle, "All cells are removed. Opertaion is cancelled.");
-        % requirerefresh = false;
+        if ~isempty(sceori)            
+            gui.myHelpdlg(FigureHandle, "All cells are removed. Opertaion is cancelled.");
+            % requirerefresh = false;
+            sce = sceori;
+        else
+            requirerefresh = true;
+        end
         return;
     end
     if oldcn-newcn==0 && oldgn-newgn==0
@@ -490,14 +499,19 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
         return;
     end
     
-    % answer = gui.myQuestdlg(FigureHandle, sprintf('%d genes will be removed; %d cells will be removed.\n[%d genes x %d cells] => [%d genes x %d cells]', ...
-    %         oldgn-newgn, oldcn-newcn, oldgn, oldcn, newgn, newcn),'', ...
-    %         {'Accept Changes', 'Cancel Changes'}, 'Accept Changes');
-    % if ~strcmp(answer, 'Accept Changes')
-    %     % requirerefresh = false;
-    %     return;
-    % end
-    requirerefresh = true;
+    if ~isempty(sceori)
+        answer = gui.myQuestdlg(FigureHandle, sprintf('%d genes will be removed; %d cells will be removed.\n[%d genes x %d cells] => [%d genes x %d cells]', ...
+                oldgn-newgn, oldcn-newcn, oldgn, oldcn, newgn, newcn),'', ...
+                {'Accept Changes', 'Cancel Changes'}, 'Accept Changes');
+        if ~strcmp(answer, 'Accept Changes')
+            % requirerefresh = false;
+            sce = sceori;
+        else
+            requirerefresh = true;
+        end
+    else
+        requirerefresh = true;
+    end    
     gui.myGuidata(FigureHandle, sce, src);
 end
 
