@@ -147,6 +147,10 @@ classdef (Sealed) ollamaChat < llms.internal.textGenerator & ...
             %       MaxNumTokens      - Maximum number of tokens in the generated response.
             %                           Default value is inf.
             %
+            %       Tools             - Array of openAIFunction objects representing
+            %                           custom functions to be used during chat completions.
+            %                           The default value is CHAT.Tools.
+            %
             %       Seed              - An integer value to use to obtain
             %                           reproducible responses
             %
@@ -159,9 +163,6 @@ classdef (Sealed) ollamaChat < llms.internal.textGenerator & ...
             %                           sense, the “creativity”) of outputs, lower
             %                           values reduce it. Setting Temperature=0 removes
             %                           randomness from the output altogether.
-            %
-            %       ToolChoice       - Function to execute. 'none', 'auto',
-            %                          or specify the function to call.
             %
             %       TopP              - Top probability mass value for controlling the
             %                           diversity of the output. Default value is CHAT.TopP;
@@ -218,8 +219,14 @@ classdef (Sealed) ollamaChat < llms.internal.textGenerator & ...
                 nvp.StreamFun           (1,1) {mustBeA(nvp.StreamFun,'function_handle')}
                 nvp.Endpoint            (1,1) string = this.Endpoint
                 nvp.MaxNumTokens        (1,1) {mustBeNumeric,mustBePositive} = inf
-                nvp.ToolChoice          {mustBeValidFunctionCall(this, nvp.ToolChoice)} = []
                 nvp.Seed                      {mustBeIntegerOrEmpty(nvp.Seed)} = []
+                nvp.Tools               (1,:) {mustBeA(nvp.Tools, "openAIFunction")}
+            end
+
+            if ~isfield(nvp, 'Tools')
+                functionsStruct = this.FunctionsStruct;
+            else
+                functionsStruct = functionAsStruct(nvp.Tools);
             end
 
             messages = convertCharsToStrings(messages);
@@ -233,8 +240,6 @@ classdef (Sealed) ollamaChat < llms.internal.textGenerator & ...
                 messagesStruct = horzcat(this.SystemPrompt, messagesStruct);
             end
 
-            toolChoice = convertToolChoice(this, nvp.ToolChoice);
-
             if isfield(nvp,"StreamFun")
                 streamFun = nvp.StreamFun;
             else
@@ -243,8 +248,8 @@ classdef (Sealed) ollamaChat < llms.internal.textGenerator & ...
 
             try
                 [text, message, response] = llms.internal.callOllamaChatAPI(...
-                    nvp.ModelName, messagesStruct, this.FunctionsStruct, ...
-                    Temperature=nvp.Temperature, ToolChoice=toolChoice, ...
+                    nvp.ModelName, messagesStruct, functionsStruct, ...
+                    Temperature=nvp.Temperature, ...
                     TopP=nvp.TopP, MinP=nvp.MinP, TopK=nvp.TopK,...
                     TailFreeSamplingZ=nvp.TailFreeSamplingZ,...
                     StopSequences=nvp.StopSequences, MaxNumTokens=nvp.MaxNumTokens, ...
@@ -295,7 +300,7 @@ classdef (Sealed) ollamaChat < llms.internal.textGenerator & ...
         end
     end
 
-    methods(Static)
+    methods (Static)
         function mdls = models
             %ollamaChat.models - return models available on Ollama server
             %   MDLS = ollamaChat.models returns a string vector MDLS
@@ -307,7 +312,17 @@ classdef (Sealed) ollamaChat < llms.internal.textGenerator & ...
             %   "phi".
             endpoint = "http://localhost:11434/api/tags";
             response = webread(endpoint);
-            mdls = string({response.models.name}).';
+            mdls = ollamaChat.extractModelNames(response.models);
+        end
+    end
+
+    methods (Static, Access=?tollamaChat)
+        function mdls = extractModelNames(models)
+            if isstruct(models)
+                mdls = string({models.name}).';
+            else
+                mdls = cellfun(@(md)string(md.name), models);
+            end
             baseMdls = unique(extractBefore(mdls,":latest"));
             % remove all those "mistral:latest", iff those are the only
             % model entries pointing at some model

@@ -173,8 +173,13 @@ classdef(Sealed) azureChat < llms.internal.textGenerator & ...
             %       MaxNumTokens     - Maximum number of tokens in the generated response.
             %                          Default value is inf.
             %
-            %       ToolChoice       - Function to execute. 'none', 'auto',
+            %       ToolChoice       - Function to execute. "none", "auto", "required",
             %                          or specify the function to call.
+            %                          The default value is "auto".
+            %
+            %       Tools            - Array of openAIFunction objects representing
+            %                          custom functions to be used during chat completions.
+            %                          The default value is CHAT.Tools.
             %
             %       Seed             - An integer value to use to obtain
             %                          reproducible responses
@@ -234,9 +239,20 @@ classdef(Sealed) azureChat < llms.internal.textGenerator & ...
                 nvp.StreamFun           (1,1) {mustBeA(nvp.StreamFun,'function_handle')}
                 nvp.NumCompletions      (1,1) {mustBeNumeric,mustBePositive, mustBeInteger} = 1
                 nvp.MaxNumTokens        (1,1) {mustBeNumeric,mustBePositive} = inf
-                nvp.ToolChoice          {mustBeValidFunctionCall(this, nvp.ToolChoice)} = []
+                nvp.ToolChoice          (1,:) {mustBeTextScalar} = "auto"
+                nvp.Tools               (1,:) {mustBeA(nvp.Tools, "openAIFunction")}
                 nvp.Seed                {mustBeIntegerOrEmpty(nvp.Seed)} = []
             end
+
+            if isfield(nvp, 'Tools')
+                [functionsStruct, functionNames] = functionAsStruct(nvp.Tools);
+            else
+                functionsStruct = this.FunctionsStruct;
+                functionNames = this.FunctionNames;
+            end
+
+            mustBeValidFunctionCall(this, nvp.ToolChoice, functionNames);
+            toolChoice = convertToolChoice(this, nvp.ToolChoice, functionNames);
 
             messages = convertCharsToStrings(messages);
             if isstring(messages) && isscalar(messages)
@@ -249,10 +265,6 @@ classdef(Sealed) azureChat < llms.internal.textGenerator & ...
                 messagesStruct = horzcat(this.SystemPrompt, messagesStruct);
             end
 
-            llms.azure.validateResponseFormat(nvp.ResponseFormat, this, messagesStruct);
-
-            toolChoice = convertToolChoice(this, nvp.ToolChoice);
-
             if isfield(nvp,"StreamFun")
                 streamFun = nvp.StreamFun;
             else
@@ -261,7 +273,7 @@ classdef(Sealed) azureChat < llms.internal.textGenerator & ...
 
             try
                 [text, message, response] = llms.internal.callAzureChatAPI(this.Endpoint, ...
-                    this.DeploymentID, messagesStruct, this.FunctionsStruct, ...
+                    this.DeploymentID, messagesStruct, functionsStruct, ...
                     ToolChoice=toolChoice, APIVersion = this.APIVersion, Temperature=nvp.Temperature, ...
                     TopP=nvp.TopP, NumCompletions=nvp.NumCompletions,...
                     StopSequences=nvp.StopSequences, MaxNumTokens=nvp.MaxNumTokens, ...
@@ -281,15 +293,7 @@ classdef(Sealed) azureChat < llms.internal.textGenerator & ...
             end
 
             if isfield(response.Body.Data,"error")
-                err = response.Body.Data.error.message;
-                if startsWith(err,"'json_schema' is not one of ['json_object', 'text']") || ...
-                    startsWith(replace(err,newline," "),...
-                        "Invalid parameter: 'response_format' of type 'json_schema' is not supported with this model.")
-                    error("llms:noStructuredOutputForAzureDeployment", ...
-                        llms.utils.errorMessageCatalog.getMessage( ...
-                            "llms:noStructuredOutputForAzureDeployment",this.DeploymentID));
-                end
-                error("llms:apiReturnedError",llms.utils.errorMessageCatalog.getMessage("llms:apiReturnedError",err));
+                error("llms:apiReturnedError",llms.utils.errorMessageCatalog.getMessage("llms:apiReturnedError",response.Body.Data.error.message));
             end
 
             if ~isempty(text)

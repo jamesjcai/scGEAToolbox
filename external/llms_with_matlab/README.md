@@ -40,19 +40,7 @@ The recommended way of using the add-on on an installed version of MATLAB is to 
 1. In MATLAB, go to the **Home** tab, and in the **Environment** section, click the **Add\-Ons** icon.
 2. In the Add\-On Explorer, search for "Large Language Models (LLMs) with MATLAB".
 3. Select **Install**.
-## Install by Cloning GitHub Repository
 
-Alternatively, to use the add-on on an installed version of MATLAB, you can clone the GitHub repository. In the MATLAB Command Window, run this command:
-
-```
->> !git clone https://github.com/matlab-deep-learning/llms-with-matlab.git
-```
-
-To run code from the add-on outside of the installation directory, if you install the add-on by cloning the GitHub repository, then you must add the path to the installation directory.
-
-```
->> addpath("path/to/llms-with-matlab")
-```
 # Get Started with External APIs
 
 For more information about how to connect to the different APIs from MATLAB, including installation requirements, see:
@@ -61,18 +49,25 @@ For more information about how to connect to the different APIs from MATLAB, inc
 - [Ollama](/doc/Ollama.md)
 
 # Examples
-
+### Getting Started
 - [Process Generated Text in Real Time by Using ChatGPT in Streaming Mode](/examples/ProcessGeneratedTextinRealTimebyUsingChatGPTinStreamingMode.md) 
 - [Process Generated Text in Real Time by Using Ollama in Streaming Mode](/examples/ProcessGeneratedTextInRealTimeByUsingOllamaInStreamingMode.md) 
 - [Summarize Large Documents Using ChatGPT and MATLAB](/examples/SummarizeLargeDocumentsUsingChatGPTandMATLAB.md) (requires Text Analytics Toolbox™)
 - [Create Simple ChatBot](/examples/CreateSimpleChatBot.md) (requires Text Analytics Toolbox)
 - [Create Simple Ollama ChatBot](/examples/CreateSimpleOllamaChatBot.md) (requires Text Analytics Toolbox)
+### Agentic Workflows
+- [Solve Simple Math Problem Using AI Agent](/examples/SolveSimpleMathProblemUsingAIAgent.md)
+- [Fit Polynomial to Data Using AI Agent](/examples/FitPolynomialToDataUsingAIAgentExample.md) (requires Curve Fitting Toolbox™)
+### Tool Calling
 - [Analyze Scientific Papers Using ChatGPT Function Calls](/examples/AnalyzeScientificPapersUsingFunctionCalls.md)
-- [Analyze Sentiment in Text Using ChatGPT and Structured Output](/examples/AnalyzeSentimentinTextUsingChatGPTwithStructuredOutput.md)
 - [Analyze Text Data Using Parallel Function Calls with ChatGPT](/examples/AnalyzeTextDataUsingParallelFunctionCallwithChatGPT.md)
 - [Analyze Text Data Using Parallel Function Calls with Ollama](/examples/AnalyzeTextDataUsingParallelFunctionCallwithOllama.md)
+### Structured Output
+- [Analyze Sentiment in Text Using ChatGPT and Structured Output](/examples/AnalyzeSentimentinTextUsingChatGPTwithStructuredOutput.md)
+### Retrieval-Augmented Generation (RAG)
 - [Retrieval-Augmented Generation Using ChatGPT and MATLAB](/examples/RetrievalAugmentedGenerationUsingChatGPTandMATLAB.md) (requires Text Analytics Toolbox)
 - [Retrieval-Augmented Generation Using Ollama and MATLAB](/examples/RetrievalAugmentedGenerationUsingOllamaAndMATLAB.md) (requires Text Analytics Toolbox)
+### Image Workflows
 - [Describe Images Using ChatGPT](/examples/DescribeImagesUsingChatGPT.md)
 - [Using DALL·E To Edit Images](/examples/UsingDALLEToEditImages.md)
 - [Using DALL·E To Generate Images](/examples/UsingDALLEToGenerateImages.md)
