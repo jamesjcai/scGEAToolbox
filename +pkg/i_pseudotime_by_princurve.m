@@ -33,7 +33,6 @@ function [t, xyz1] = i_pseudotime_by_princurve(s, plotit)
     normalize_data = 1;
     pause_bool = 0;
     
-    
     %tic;
     warning off
     [yfinal, ~, I, ~] = mppc(y0, cut_indices0, s, mass, lambda1, lambda2, tol, rho, ...
@@ -41,13 +40,13 @@ function [t, xyz1] = i_pseudotime_by_princurve(s, plotit)
     %toc;
     warning on
     
+    
     t = (I + randn(size(I)))';
     xyz1 = yfinal;
     t = normalize(t, 'range');
     
     if plotit
-        hold on
-        % plot3(xyz1(:,1),xyz1(:,2),xyz1(:,3),'.r','linewidth',2);
-        plot3(xyz1(1:end-1, 1), xyz1(1:end-1, 2), xyz1(1:end-1, 3), '-r', 'linewidth', 2);
+        %hold on
+        %plot3(xyz1(1:end-1, 1), xyz1(1:end-1, 2), xyz1(1:end-1, 3), '-r', 'linewidth', 2);
     end
 end

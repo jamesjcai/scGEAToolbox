@@ -14,7 +14,7 @@ add_points = zeros(k+m, d);
 rem = zeros(k, 1);
 num_rem = 0;
 num_add = 0;
-hold on;
+% hold on;
 for i = 1:k % loop through all existing singletons
     x_ind = ismember(I, singletons(i));
     n0 = sum(x_ind);
@@ -101,6 +101,8 @@ x_mean = zeros(m, d);
 del_fidel = zeros(m, 1);
 del_leng = zeros(m, 1);
 j = 1;
+
+
 for i = 1:m
     if isempty(cut_indices0) || i ~= cut_indices0(j)
         proj_mass(i) = sum(mass(I == i));
@@ -119,7 +121,7 @@ for i = 1:m
         j = min(j+1, length(cut_indices0));
     end
 end
-hold off;
+% hold off;
 
 add_ind_bool = add_indices ~= 0;
 add_indices = add_indices(add_ind_bool);

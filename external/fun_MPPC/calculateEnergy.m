@@ -6,7 +6,8 @@ if isempty(I)
 end
 I_partial = computeProjs(x, y, I, cut_indices);
 
-m = size(y(:, 1));
+% m = size(y(:, 1));
+m = size(y, 1);
 normv = sqrt(sum((y(2:m, :) - y(1:m-1, :)).^2, 2));
 normv(cut_indices) = 0;
 y_leng = sum(normv);

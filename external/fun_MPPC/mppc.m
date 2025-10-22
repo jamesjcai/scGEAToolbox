@@ -62,7 +62,7 @@ MAX_INNER_ITER = 500; %maximum number of inner ADMM iterations
 r = 3; %param for modifySpacing
     cut_freq = 10; %frequency with which to check topology
     respace_freq = 5; %frequency with which to check parametrization
-    % plotting = 0; %plot if and only if = 1
+    plotting = false; %plot if and only if = 1
 
     if isempty(tol), tol = 10^-3; end
     num_d = ceil(-log(tol)/log(10)); %number of decimals to display of energy
@@ -92,7 +92,7 @@ r = 3; %param for modifySpacing
         end
     end
     y = y0;
-    if plotting, plotADP(x, y0, cut_indices, [], [], 0, [0, .8, .8], '-'); end
+    %if plotting, plotADP(x, y0, cut_indices, [], [], 0, [0, .8, .8], '-'); end
 
     eo = 0; % initial boolean for respacing of even/odd points
     iter = 0;
@@ -107,10 +107,12 @@ r = 3; %param for modifySpacing
     m = length(y_new(:, 1));
     rgb_c = [0, .8, 0];
     ls = '-'; %color and linestyle of curve when plotting
-    if pause_bool, plotADP(x, y_new, cut_indices, [], [], 0, rgb_c, ls);
+    if pause_bool
+        %plotADP(x, y_new, cut_indices, [], [], 0, rgb_c, ls);
         pause;
     end
 
+    
     fprintf(['\n iter = %d       E = %8.', num2str(num_d), 'E      cont_E = %8.', ...
         num2str(num_d), 'E      k = %d     m = %d'], iter, energy, cont_energy, num_comps, m);
 
@@ -188,9 +190,10 @@ r = 3; %param for modifySpacing
             fprintf('    avg turn = %.2f', avg_turn);
         end
 
-        if plotting, plotADP(x, y_new, cut_indices, mass, I, 0, rgb_c, ls);
-            drawnow;
-        end
+        % if plotting
+        %     plotADP(x, y_new, cut_indices, mass, I, 0, rgb_c, ls);
+        %     drawnow;
+        % end
 
         if mod(iter+4, cut_freq) == 0 %check cutting
             if pause_bool, fprintf('\n press a key to cut edges'), pause; end
@@ -309,7 +312,7 @@ r = 3; %param for modifySpacing
         y_new = sqrt(x_var) * y_new + repmat(x_mean, m, 1);
     end
 
-    if plotting, plotADP(x, y_new, cut_indices, mass, I, 0, rgb_c, ls); end
+    %if plotting, plotADP(x, y_new, cut_indices, mass, I, 0, rgb_c, ls); end
 
     I = dsearchn(y_new, x)';
     fprintf('\n');
@@ -320,4 +323,5 @@ end
         r_pri = norm(y_new(2:end, :)-y_new(1:end-1, :)-z_new);
         z_diff = z_new - z;
         r_dual = rho * norm([z_diff(1, :); z_diff(1:end-1, :) - z_diff(2:end, :); z_diff(end, :)]);
-end
+    end
+

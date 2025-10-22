@@ -37,11 +37,13 @@ while k > 1 && length(y(:, 1)) < n
         energy_prev = energy;
     end
 end
+
 [I, y] = kmeans(x, [], 'Start', y);
 cut_indices = (1:length(y(:, 1)) - 1)';
 z = y(2:end, :) - y(1:end-1, :);
 b = zeros(size(z));
 [y, ~, ~, cut_indices] = checkSingletons(x, mass, I, y, z, b, cut_indices, lambda1, lambda2);
+
 energy = calculateEnergy(y, x, mass, lambda1, lambda2, [], cut_indices);
 
 end
