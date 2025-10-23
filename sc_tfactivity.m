@@ -63,7 +63,8 @@ end
 if ~iscellstr(g) && ~isstring(g)
     error('g must be a cell array of strings.');
 end
-if ~all(isfield(Ttfgn, {'tf', 'target', 'mor'}))
+% if ~all(isfield(Ttfgn.Properties.VariableNames, {'tf', 'target', 'mor'}))
+if ~all(contains({'tf', 'target', 'mor'}, Ttfgn.Properties.VariableNames))
     error('Ttfgn must contain the fields: tf, target, and mor.');
 end
 
@@ -140,8 +141,9 @@ end
             cs = pinv(t') * X;
             numtargetgenes = sum(t > 0, 2);
         case 4 % nnmf method
-            % ref: Bioinformatics, Volume 37, Issue 9, 1 May 2021, Pages 1234–1245,
-            % https://doi.org/10.1093/bioinformatics/btaa947
+            disp('ref: Bioinformatics, Volume 37, Issue 9, 1 May 2021, Pages 1234–1245,');
+            disp('https://doi.org/10.1093/bioinformatics/btaa947');
+            disp('PMID: 33135076 PMCID: PMC8189679 DOI: 10.1093/bioinformatics/btaa947');
             n = size(t, 1);
             v.WRfixed = n;
             v.W = t.';
@@ -169,6 +171,7 @@ function [W, H, bDsave] = NMF(V, R, Niter, beta, initialV)
     % Copyright (C) 2010 Romain Hennequin
 
     % https://github.com/romi1502/NMF-matlab
+    disp('NMF implementation: https://github.com/romi1502/NMF-matlab');
 
     verbose = false;
 
@@ -253,7 +256,7 @@ function [W, H, bDsave] = NMF(V, R, Niter, beta, initialV)
         Lambda = W * H + eps;
 
 
-        message = ['computing NMF. iteration : ', int2str(iter), '/', int2str(Niter)];
+        message = ['Computing NMF. iteration : ', int2str(iter), '/', int2str(Niter)];
         if verbose
             disp(message);
         end

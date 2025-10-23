@@ -18,6 +18,7 @@ needupdatesce = false;
 
 aa = 'Yes, compare scores (violinplot)';
 bb = 'No, just show values (heatmap)';
+
     answer2 = gui.myQuestdlg(FigureHandle, sprintf(['This function will calculates a score for each cell. After the scores are calculated, do you want to ', ...
                 'compare score values between different cell groups?']), '', ...
                 {bb, aa}, bb);
@@ -224,7 +225,7 @@ bb = 'No, just show values (heatmap)';
                     gui.myWaitbar(FigureHandle, fw);
                 case {'TF Activity Score [PMID:33135076] 🐢', ...
                       'DoRothEA TF Targets'}
-                    [T] = pkg.e_gettflist;
+                    [T] = pkg.e_gettflist(speciestag);
                     listitems = unique(T.tf);
                     if gui.i_isuifig(FigureHandle)
                         [indx2, tf2] = gui.myListdlg(FigureHandle, listitems, ...

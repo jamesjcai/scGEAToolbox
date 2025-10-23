@@ -14,9 +14,8 @@ function [T] = e_gettflist(speciesid)
             fname = fullfile(pw1, '..', 'assets', 'DoRothEA_TF_Target_DB', 'dorothea_mm.mat');
         otherwise
             error('TF database is not available for the species.');
-    end
-    
-    fprintf('\nReading ... %s.\n', fname);
+    end    
+    % fprintf('\nReading ... %s.\n', fname);
     load(fname, 'T');
     T = T(T.mor > 0, :);
 end
