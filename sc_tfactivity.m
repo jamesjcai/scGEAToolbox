@@ -89,18 +89,6 @@ end
     fprintf('Using the Dorothea dadtabase that contains %d TFs and %d targets.\n', ...
         size(t, 1), size(t, 2));
 
-    % size(t)
-    % assignin('base','t2',t);
-
-    %t2=zeros(max(tid),max(gid));
-    %for k=1:length(gid)
-    %    t2(tid(k),gid(k))=T.mor(k);
-    %end
-    %isequal(t,t2)
-    % T=T(T.mor>0,:);    % only consider positive regulation
-    %[t]=crosstab(T.tf,T.target);   % TF-by-target regulagory relationship
-    %matrix if only positive regulation
-
     [~, k, l] = intersect(upper(g), upper(gnlist));
     t = t(:, l); % tf-by-gene matrix
     X = X(k, :); % gene-by-cell matrix

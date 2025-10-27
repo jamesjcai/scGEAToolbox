@@ -511,7 +511,7 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
         end
     else
         requirerefresh = true;
-    end    
+    end
     gui.myGuidata(FigureHandle, sce, src);
 end
 

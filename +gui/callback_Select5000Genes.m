@@ -1,9 +1,11 @@
-function [requirerefresh, scenew] = callback_Select5000Genes(src)
+function [requirerefresh] = callback_Select5000Genes(src)
 
 requirerefresh = false;
-scenew = [];
 
 [FigureHandle, sce] = gui.gui_getfigsce(src);
+
+oldcn = sce.NumCells;
+oldgn = sce.NumGenes;
 
 if sce.NumGenes<=500
     gui.myWarndlg(FigureHandle, 'Number of cells is too small.');
@@ -40,68 +42,77 @@ if isempty(answer)
     return;
 end
 
+
+if sce.NumCells*sce.NumGenes<4e8
+    sceori = copy(sce);
+    % disp('Ready for reversible.');
+else
+    answer = gui.myQuestdlg(FigureHandle, 'You are about to change the SCE data. This cannot be undone.');
+    if ~strcmp(answer, 'Yes'), return; end        
+    sceori = [];
+end
+
 fw = gui.myWaitbar(FigureHandle);
-scenew = sce;
 
 c = 1;
 if strcmpi(answer{c},'Yes') || strcmpi(answer{c},'Y')
-    scenew = scenew.rmmtgenes;
+    sce = sce.rmmtgenes;
     disp('Mt-genes removed.');
     % requirerefresh = true;
 end
 
 c = c + 1;
 if strcmpi(answer{c},'Yes') || strcmpi(answer{c},'Y')
-    scenew = scenew.rmhemoglobingenes;
+    sce = sce.rmhemoglobingenes;
     disp('Hemoglobin genes removed.');
     % requirerefresh = true;
 end
 
 c = c + 1;
 if strcmpi(answer{c},'Yes') || strcmpi(answer{c},'Y')
-    a1 = length(scenew.g);
-    idx = contains(scenew.g, 'orf') | contains(scenew.g, '-AS') | contains(scenew.g, '-as');
-    scenew.g(idx) = [];
-    scenew.X(idx, :) = [];
-    a2 = length(scenew.g);
+    a1 = length(sce.g);
+    idx = contains(sce.g, 'orf') | contains(sce.g, '-AS') | contains(sce.g, '-as');
+    sce.g(idx) = [];
+    sce.X(idx, :) = [];
+    a2 = length(sce.g);
     fprintf('%d genes with name contains ''orf'' or ''-AS'' are found and removed.\n',a1-a2);
 end
 
 c = c + 1;
 if strcmpi(answer{c},'Yes') || strcmpi(answer{c},'Y')
-    a1 = length(scenew.g);
-    idx = startsWith(scenew.g, 'LINC');
-    scenew.g(idx) = [];
-    scenew.X(idx, :) = [];
-    a2 = length(scenew.g);
+    a1 = length(sce.g);
+    idx = startsWith(sce.g, 'LINC');
+    sce.g(idx) = [];
+    sce.X(idx, :) = [];
+    a2 = length(sce.g);
     fprintf('%d genes with name starts with ''LINC'' are found and removed.\n',a1-a2);
 end
 
 c = c + 1;
 if strcmpi(answer{c},'Yes') || strcmpi(answer{c},'Y')
-    scenew = scenew.rmribosomalgenes;
+    sce = sce.rmribosomalgenes;
     disp('Ribosomal genes removed.');
     % requirerefresh = true;
 end
 
 c = c + 1;
 if strcmpi(answer{c},'Yes') || strcmpi(answer{c},'Y')
-    a1 = length(scenew.g);
-    idx = find(~cellfun(@isempty, regexp(scenew.g,"Gm[0-9][0-9][0-9]")));
-    scenew.g(idx) = [];
-    scenew.X(idx, :) = [];
-    a2 = length(scenew.g);
+    a1 = length(sce.g);
+    idx = find(~cellfun(@isempty, regexp(sce.g,"Gm[0-9][0-9][0-9]")));
+    sce.g(idx) = [];
+    sce.X(idx, :) = [];
+    a2 = length(sce.g);
     fprintf('%d genes with name starts with ''Gm'' are found and removed.\n',a1-a2);
 end
 
 
 c = c + 1;
 if strcmpi(answer{c},'Yes') || strcmpi(answer{c},'Y')
-    a1 = length(scenew.g);
-    idx = endsWith(scenew.g, 'Rik');
-    scenew.g(idx) = [];
-    scenew.X(idx, :) = [];
-    a2 = length(scenew.g);
+    a1 = length(sce.g);
+    idx = endsWith(sce.g, 'Rik');
+    sce.g(idx) = [];
+    sce.X(idx, :) = [];
+    a2 = length(sce.g);
     fprintf('%d genes with name ends with ''Rik'' are found and removed.\n',a1-a2);
 end
 
@@ -119,11 +130,11 @@ if strcmpi(answer{c},'Yes') || strcmpi(answer{c},'Y')
                 '..', 'assets',  'Biomart', 'Biomart_mouse_genes.mat'), 'T');
     end
     ApprovedSymbol = string(T.GeneName);
-    [idx] = ismember(upper(scenew.g), upper(ApprovedSymbol));
-    a1 = length(scenew.g);
-    scenew.g(~idx) = [];
-    scenew.X(~idx, :) = [];
-    a2 = length(scenew.g);
+    [idx] = ismember(upper(sce.g), upper(ApprovedSymbol));
+    a1 = length(sce.g);    
+    sce.X(~idx, :) = [];
+    sce.g(~idx) = [];
+    a2 = length(sce.g);
     fprintf('%d genes without approved symbols are found and removed.\n',a1-a2);
     % requirerefresh = true;
 end
@@ -131,9 +142,9 @@ end
 try
     a = str2double(answer{end-1});
     if a > 0 && a < intmax
-        a1 = length(scenew.g);
-        scenew = scenew.selectkeepgenes(1, a);
-        a2 = length(scenew.g);
+        a1 = length(sce.g);
+        sce = sce.selectkeepgenes(1, a);
+        a2 = length(sce.g);
         fprintf('%d lowly expressed genes found and removed.\n',a1-a2);
         % requirerefresh = true;
     end
@@ -143,24 +154,24 @@ end
 
 try
     a = str2double(answer{end});
-    % T = sc_hvg(scenew.X, scenew.g);
-    T = sc_splinefit(scenew.X, scenew.g);
-    glist = T.genes(1:min([a, scenew.NumGenes]));
-    [y, idx] = ismember(glist, scenew.g);
+    % T = sc_hvg(sce.X, sce.g);
+    T = sc_splinefit(sce.X, sce.g);
+    glist = T.genes(1:min([a, sce.NumGenes]));
+    [y, idx] = ismember(glist, sce.g);
     if ~all(y)
         gui.myErrordlg(FigureHandle, 'Runtime error.');
         return;
-    end
-    scenew.g = scenew.g(idx);
-    scenew.X = scenew.X(idx, :);
-catch ME
-    gui.myWaitbar(FigureHandle, fw,true);
-    gui.myWarndlg(FigureHandle, ME.message, ME.identifier);
-    return;
-end
+    end    
+    sce.X = sce.X(idx, :);
+    sce.g = sce.g(idx);
+ catch ME
+     gui.myWaitbar(FigureHandle, fw,true);
+     gui.myWarndlg(FigureHandle, ME.message, ME.identifier);
+     return;
+ end
 
 try
-    scenew = scenew.qcfilterwhitelist(1000, 0.15, 15, 500, []);
+    sce = sce.qcfilterwhitelist(1000, 0.15, 15, 500, []);
 catch ME
     gui.myWaitbar(FigureHandle, fw,true);
     gui.myWarndlg(FigureHandle, ME.message, ME.identifier);
@@ -168,11 +179,48 @@ catch ME
 end
 
 gui.myWaitbar(FigureHandle, fw);
-if scenew.NumCells == 0 || scenew.NumGenes==0
-    gui.myWarndlg(FigureHandle, 'No cells or genes left. The operation is cancelled');
-    requirerefresh = false;
-else
-    requirerefresh = true;
-end
+
+newcn = sce.NumCells;
+newgn = sce.NumGenes;
+
+    if newgn==0
+        if ~isempty(sceori)            
+            gui.myHelpdlg(FigureHandle, "All genes are removed. Opertaion is cancelled.");
+            % requirerefresh = false;
+            sce = sceori;
+        else
+            requirerefresh = true;
+        end
+        return;
+    end
+    if newcn==0
+        if ~isempty(sceori)            
+            gui.myHelpdlg(FigureHandle, "All cells are removed. Opertaion is cancelled.");
+            % requirerefresh = false;
+            sce = sceori;
+        else
+            requirerefresh = true;
+        end
+        return;
+    end
+    if oldcn-newcn==0 && oldgn-newgn==0
+        gui.myHelpdlg(FigureHandle, "No cells and genes are removed.");
+        % requirerefresh = false;
+        return;
+    end
+    if ~isempty(sceori)
+        answer = gui.myQuestdlg(FigureHandle, sprintf('%d genes will be removed; %d cells will be removed.\n[%d genes x %d cells] => [%d genes x %d cells]', ...
+                oldgn-newgn, oldcn-newcn, oldgn, oldcn, newgn, newcn),'', ...
+                {'Accept Changes', 'Cancel Changes'}, 'Accept Changes');
+        if ~strcmp(answer, 'Accept Changes')
+            % requirerefresh = false;
+            sce = sceori;
+        else
+            requirerefresh = true;
+        end
+    else
+        requirerefresh = true;
+    end
+    gui.myGuidata(FigureHandle, sce, src);
 
 end
