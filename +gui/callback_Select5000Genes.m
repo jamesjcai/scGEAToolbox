@@ -71,9 +71,9 @@ end
 c = c + 1;
 if strcmpi(answer{c},'Yes') || strcmpi(answer{c},'Y')
     a1 = length(sce.g);
-    idx = contains(sce.g, 'orf') | contains(sce.g, '-AS') | contains(sce.g, '-as');
-    sce.g(idx) = [];
+    idx = contains(sce.g, 'orf') | contains(sce.g, '-AS') | contains(sce.g, '-as');    
     sce.X(idx, :) = [];
+    sce.g(idx) = [];
     a2 = length(sce.g);
     fprintf('%d genes with name contains ''orf'' or ''-AS'' are found and removed.\n',a1-a2);
 end
@@ -81,9 +81,9 @@ end
 c = c + 1;
 if strcmpi(answer{c},'Yes') || strcmpi(answer{c},'Y')
     a1 = length(sce.g);
-    idx = startsWith(sce.g, 'LINC');
-    sce.g(idx) = [];
+    idx = startsWith(sce.g, 'LINC');    
     sce.X(idx, :) = [];
+    sce.g(idx) = [];
     a2 = length(sce.g);
     fprintf('%d genes with name starts with ''LINC'' are found and removed.\n',a1-a2);
 end
@@ -99,8 +99,8 @@ c = c + 1;
 if strcmpi(answer{c},'Yes') || strcmpi(answer{c},'Y')
     a1 = length(sce.g);
     idx = find(~cellfun(@isempty, regexp(sce.g,"Gm[0-9][0-9][0-9]")));
-    sce.g(idx) = [];
     sce.X(idx, :) = [];
+    sce.g(idx) = [];    
     a2 = length(sce.g);
     fprintf('%d genes with name starts with ''Gm'' are found and removed.\n',a1-a2);
 end
@@ -109,9 +109,9 @@ end
 c = c + 1;
 if strcmpi(answer{c},'Yes') || strcmpi(answer{c},'Y')
     a1 = length(sce.g);
-    idx = endsWith(sce.g, 'Rik');
-    sce.g(idx) = [];
+    idx = endsWith(sce.g, 'Rik');    
     sce.X(idx, :) = [];
+    sce.g(idx) = [];
     a2 = length(sce.g);
     fprintf('%d genes with name ends with ''Rik'' are found and removed.\n',a1-a2);
 end
