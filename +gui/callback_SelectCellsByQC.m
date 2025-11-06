@@ -53,7 +53,7 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
 %    sceXori = sce.X;
 %    scegori = sce.g;
 
-    if sce.NumCells*sce.NumGenes<4e8
+    if sce.NumCells*sce.NumGenes < 4e8
         sceori = copy(sce);
         % disp('Ready for reversible.');
     else
@@ -476,8 +476,9 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
     if newgn==0
         if ~isempty(sceori)            
             gui.myHelpdlg(FigureHandle, "All genes are removed. Opertaion is cancelled.");
-            % requirerefresh = false;
-            sce = sceori;
+            sce = copy(sceori);
+            disp('Original SCE copied back 1.');
+            gui.myGuidata(FigureHandle, sce, src);
         else
             requirerefresh = true;
         end
@@ -486,8 +487,9 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
     if newcn==0
         if ~isempty(sceori)            
             gui.myHelpdlg(FigureHandle, "All cells are removed. Opertaion is cancelled.");
-            % requirerefresh = false;
-            sce = sceori;
+            sce = copy(sceori);
+            disp('Original SCE copied back 2.');
+            gui.myGuidata(FigureHandle, sce, src);
         else
             requirerefresh = true;
         end
@@ -495,7 +497,6 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
     end
     if oldcn-newcn==0 && oldgn-newgn==0
         gui.myHelpdlg(FigureHandle, "No cells and genes are removed.");
-        % requirerefresh = false;
         return;
     end
     
@@ -504,8 +505,9 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
                 oldgn-newgn, oldcn-newcn, oldgn, oldcn, newgn, newcn),'', ...
                 {'Accept Changes', 'Cancel Changes'}, 'Accept Changes');
         if ~strcmp(answer, 'Accept Changes')
-            % requirerefresh = false;
-            sce = sceori;
+            sce = copy(sceori);
+            disp('Original SCE copied back 3.');
+            gui.myGuidata(FigureHandle, sce, src);
         else
             requirerefresh = true;
         end
