@@ -83,7 +83,7 @@ function [done, outfile] = e_DETableSummary(TbpUpEnrichr, TmfUpEnrichr, ...
     feedbk_up = [];
     feedbk_dw = [];
     done1 = false;
-    done2 = fales;
+    done2 = false;
     switch providermodel{1}
         case 'Ollama'
             % assert(strcmp(providermodel{1}, 'Ollama'))
