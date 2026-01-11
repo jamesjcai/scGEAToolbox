@@ -57,7 +57,7 @@ classdef (Sealed) QuantumTaskIBM < quantum.backend.QuantumTask
     %
     %   See also quantum.backend.QuantumDeviceIBM, quantumCircuit/run
 
-    %   Copyright 2022-2024 The MathWorks, Inc.
+    %   Copyright 2022-2025 The MathWorks, Inc.
     properties (GetAccess=public, SetAccess=private)
         %TASKID - The identifier of the task
         %
@@ -192,10 +192,13 @@ classdef (Sealed) QuantumTaskIBM < quantum.backend.QuantumTask
             end
         end
 
-        function meas = fetchOutput(obj)
+        function out = fetchOutput(obj)
             %FETCHOUTPUT Retrieve result of the finished task
-            %   meas = FETCHOUTPUT(task) returns a QuantumMeasurement object
-            %   representing the output of the task.
+            %   out = FETCHOUTPUT(task) returns data representing the task
+            %   output. The quantumCircuit/run syntax determines the
+            %   output type. If the Observable name-value pair was specified,
+            %   out is a numeric vector, otherwise it's a QuantumMeasurement
+            %   object.
             %
             %   If task is not in status "finished", fetchOutput will error.
             %
@@ -216,44 +219,55 @@ classdef (Sealed) QuantumTaskIBM < quantum.backend.QuantumTask
                     if strcmpi(obj.TaskDetails.status, "Cancelled")
                         error(message("quantum:QuantumTaskIBM:OutputNotAvailableCancelled"))
                     end
-
-                    if ~strcmpi(obj.TaskDetails.program.id, "sampler")
-                        error(message("quantum:QuantumTaskIBM:InvalidResultType"))
-                    end
-
+                    
+                    % Struct scalar with a numC-by-1 results field
                     results = quantum.internal.ibm.getQuantumTaskResults(obj.Credentials, obj.TaskID);
+                    
+                    % Get first code that contains permutation comments
+                    pubs = obj.TaskDetails.params.pubs;
+                    qasm = string(pubs{1}{1});
 
-                    [meas, version, useErrorMitigation] = decodeGateResults(results, obj.TaskDetails);
-
-                    obj.ResultDetails = results;
-
-                    deviceName = string(obj.TaskDetails.backend);
-                    det = quantum.internal.ibm.getDevice(obj.Credentials, deviceName);
-
-                    if version==2 && useErrorMitigation && ~det.Configuration.simulator
-                        % Extract device qubits used to run circuit.
-                        try
-                            % Task object expects pubs to be a scalar cell
-                            % containing 1x3 cell {'OpenQASM 3.0; ...', [], numShots}
-                            pubs = obj.TaskDetails.params.pubs;
-                            qasm = string(pubs{1}{1});
-                            mapStr = extractBetween(qasm, "//Start finalMap", "//End finalMap");
-                            finalMap = str2num(erase(mapStr, "//")) + 1; %#ok<ST2NM>
-                        catch ME
-                            % Server format is different than expected
-                            error(message("quantum:QuantumTaskIBM:InvalidResultType"))
+                    progID = obj.TaskDetails.program.id;
+                    if strcmpi(progID, "estimator")
+                        % Struct array with size 1-by-numC
+                        S = [results.results.data];
+                        % Each evs field has numeric vector with size numO-by-1
+                        % Numeric matrix with size numO-by-numC
+                        out = [S.evs];
+                        
+                        if ~isscalar(out)
+                            % Reshape back to expected size
+                            perm = extractVectorFromComment(qasm, "perm");
+                            szOutIdxPerm = extractVectorFromComment(qasm, "szOutIdxPerm");
+                            out = quantum.internal.gate.undoRemoteImplicitExpansion(out, perm, szOutIdxPerm);
                         end
 
-                        % Get calibration matrices for these qubits
-                        allCals = quantum.internal.ibm.getDeviceCalibration(obj.Credentials, deviceName);
-                        cals = allCals(:,:,finalMap);
+                    elseif strcmpi(progID, "sampler")
+                        
+                        % QuantumMeasurement array with size numC-by-1
+                        [out, version, useErrorMitigation] = processSamplerResults(results, obj.TaskDetails);
 
-                        % Solve for mitigated probability
-                        states = meas.MeasuredStates;
-                        A = quantum.internal.gate.assignmentMatrix(states, cals);
-                        mprobs = A\meas.Probabilities;
-                        meas = quantum.gate.QuantumMeasurement(states, mprobs, "probs");
+                        if version==2 && useErrorMitigation
+                            % Save time with nested if-statement. Don't
+                            % getDevice details for no error mitigation
+                            deviceName = string(obj.TaskDetails.backend);
+                            det = quantum.internal.ibm.getDevice(obj.Credentials, deviceName);
+                            if ~det.Configuration.simulator
+                                out = errorMitigation(obj, out);
+                            end
+                        end
+                        
+                        if ~isscalar(out)
+                            % Reshape back to expected size
+                            szOut = extractVectorFromComment(qasm, "szOut");
+                            out = reshape(out, szOut);
+                        end
+                    else
+                        error(message("quantum:QuantumTaskIBM:InvalidResultType"))
                     end
+                    
+                    % All task details are stored internally
+                    obj.ResultDetails = results;
             end
         end
     end
@@ -275,6 +289,38 @@ classdef (Sealed) QuantumTaskIBM < quantum.backend.QuantumTask
                 % in a session
                 obj.SessionID = string(details.session_id);
             end
+        end
+
+        function outM = errorMitigation(obj, inM)
+
+            % Get calibration matrices for all qubits
+            deviceName = string(obj.TaskDetails.backend);
+            allCals = quantum.internal.ibm.getDeviceCalibration(obj.Credentials, deviceName);
+
+            pubs = obj.TaskDetails.params.pubs;
+            M = cell(size(inM));
+            for ii=1:numel(inM)
+                % Extract qubits used to run this circuit
+                try
+                    % Task object expects pubs to be a
+                    % cell array where each element is
+                    % a 1x3 cell {'OpenQASM 3.0; ...', [], numShots}
+                    qasm = string(pubs{ii}{1});
+                    finalMap = extractVectorFromComment(qasm, "finalMap")+1;
+                catch ME
+                    % Server format is different than expected
+                    error(message("quantum:QuantumTaskIBM:InvalidResultType"))
+                end
+
+                cals = allCals(:,:,finalMap);
+
+                % Solve for mitigated probability
+                states = inM(ii).MeasuredStates;
+                A = quantum.internal.gate.assignmentMatrix(states, cals);
+                mprobs = A\inM(ii).Probabilities;
+                M{ii} = quantum.gate.QuantumMeasurement(states, mprobs, "probs");
+            end
+            outM = reshape([M{:}], size(inM));
         end
     end
 
@@ -301,36 +347,54 @@ classdef (Sealed) QuantumTaskIBM < quantum.backend.QuantumTask
     end
 end
 
-function [meas, version, useErrorMitigation] = decodeGateResults(results, details)
-% Tasks may contain muliple results when created from another source. This
-% object represents 1 task so only return first result.
-resultIdx = 1;
-if ismember('quasi_dists', fieldnames(results))
-    % V1 Primitive returns error mitigated probabilities
+
+function vec = extractVectorFromComment(qasm, name)
+str = extractBetween(qasm, "//Start "+name, "//End "+name);
+vec = str2num(erase(str, "//")); %#ok<ST2NM>
+end
+
+function [meas, version, useErrorMitigation] = processSamplerResults(results, details)
+
+fields = fieldnames(results);
+
+if ismember('quasi_dists', fields)
+    % V1 Sampler Primitive returns error mitigated probabilities
     version = 1;
     useErrorMitigation = false;
 
-    data = results.quasi_dists(resultIdx);
-    states = reverse(string(erase(fields(data), "x")));
-    probs = cell2mat(struct2cell(data));
-    meas = quantum.gate.QuantumMeasurement(states, probs, "probs");
-elseif ismember('results', fieldnames(results))
-    % V2 Primitive returns raw bitstring samples
+    results = results.quasi_dits;
+    meas = cell(size(results));
+    for ii=1:numel(results)
+        data = results(ii);
+        states = reverse(string(erase(fields(data), "x")));
+        probs = cell2mat(struct2cell(data));
+        meas{ii} = quantum.gate.QuantumMeasurement(states, probs, "probs");
+    end
+elseif ismember('results',fields)
+    % V2 Sampler Primitive returns raw bitstring samples
     tags = jsondecode(details.tags{:});
     version = tags.version;
     useErrorMitigation = tags.useErrorMitigation;
 
-    data = results.results(resultIdx);
-    samplesHex = string(data.data.c.samples);
-    [statesHex, ~, ind] = unique(samplesHex);
-    counts = accumarray(ind, 1, size(statesHex));
-    numQubits = data.data.c.num_bits;
-    states = quantum.internal.ibm.hex2bin(statesHex, numQubits);
-    states = reverse(states);
-    meas = quantum.gate.QuantumMeasurement(states, counts);
+    results = results.results;
+    meas = cell(size(results));
+    for ii=1:numel(results)
+        data = results(ii);
+        samplesHex = string(data.data.c.samples);
+        [statesHex, ~, ind] = unique(samplesHex);
+        counts = accumarray(ind, 1, size(statesHex));
+        numQubits = data.data.c.num_bits;
+        states = quantum.internal.ibm.hex2bin(statesHex, numQubits);
+        states = reverse(states);
+        meas{ii} = quantum.gate.QuantumMeasurement(states, counts);
+    end
 else
+    % Tasks may be created from another source.
     error(message("quantum:QuantumTaskIBM:InvalidResultType"))
 end
+
+meas = reshape([meas{:}], size(results));
+
 end
 
 function statusMATLAB = mapIBMStatusToMATLABStatus(statusIBM)

@@ -3629,7 +3629,7 @@ classdef QfHiDM < handle
         end
 
         function [out, missing]=RemoveMissingColumns( ...
-                requiredColumnNames, dataColumnNames, dataColumnIdxs)
+                requiredColumnNames, dataColumnNames, ~)
             N=length(requiredColumnNames);
             missing={};
             out={};
@@ -3730,7 +3730,7 @@ classdef QfHiDM < handle
             end
         end
         
-        function QF=TreeData(qft, qf)
+        function QF=TreeData(qft, ~)
             qf=qft.qf;
             QF.tIds=qf.tIds;
             QF.numLeaves=qf.numLeaves;
@@ -4727,7 +4727,7 @@ classdef QfHiDM < handle
              end
 
              function hdr=doHdr(ids, mergeIds, names, szs, ...
-                     setName, showIds, overlapMatrix)
+                     setName, showIds, ~)
                  if nargin<7
                      overlapMatrix=[];
                  end
@@ -5046,11 +5046,11 @@ classdef QfHiDM < handle
                         try
                             if idxs(1)==0
                                 idx=getColIdx(idxs(2));
-                                QF.tNames{idx}
+                                QF.tNames{idx};
                                 feval(args.fnc, QF, true, idx)
                             elseif idxs(2)==0
                                 idx=getRowIdx(idxs(1));
-                                QF.sNames{idx}
+                                QF.sNames{idx};
                                 feval(args.fnc, QF, false, idx)
                             else
                                 idxs(1)=getRowIdx(idxs(1));

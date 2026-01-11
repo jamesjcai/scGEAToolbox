@@ -153,7 +153,8 @@ classdef (Sealed, ...
         % saved in 'versionSavedFrom' when an instance is serialized.
         %
         %   1.0 : original shipping version
-        version = 1.0;
+        %   2.0 : support array
+        version = 2.0;
     end
     methods (Hidden)
         function [types, ctrls, trgts, angles] = getProperties(obj)
@@ -161,6 +162,7 @@ classdef (Sealed, ...
         end
 
         function s = saveobj(c)
+            % This is valid for the array case but only sees a scalar instance.
             s = struct('NumQubits', c.NumQubits, ...
                 'Gates', c.Gates, ...
                 'Name', c.Name, ...
@@ -170,6 +172,7 @@ classdef (Sealed, ...
     end
     methods(Hidden, Static)
         function c = loadobj(s)
+            % This is valid for the array case but only sees a scalar instance.
             if quantumCircuit.version < s.minCompatibleVersion
                 id = 'quantum:quantumCircuit:IncompatibleVersion';
                 loadWarningString = getString(message('MATLAB:load:classError', ...

@@ -1,4 +1,4 @@
-classdef (Sealed) QuantumMeasurement < matlab.mixin.Scalar
+classdef (Sealed) QuantumMeasurement
     %QUANTUMMEASUREMENT Measurement of a quantum circuit
     %
     %   Running a quantumCircuit remotely on a quantum device results in a
@@ -39,7 +39,7 @@ classdef (Sealed) QuantumMeasurement < matlab.mixin.Scalar
     %   See also quantum.gate.QuantumState, quantumCircuit/run,
     %   quantum.gate.QuantumState/randsample, quantumCircuit/simulate
 
-    %   Copyright 2022-2023 The MathWorks, Inc.
+    %   Copyright 2022-2025 The MathWorks, Inc.
 
     properties(Dependent, GetAccess=public, SetAccess=private)
         %MEASUREDSTATES - String array of states that were measured.
@@ -178,11 +178,11 @@ classdef (Sealed) QuantumMeasurement < matlab.mixin.Scalar
             %   quantum.gate.QuantumState/querystates.
 
             arguments
-                obj {mustBeA(obj, 'quantum.gate.QuantumMeasurement')}
+                obj {mustBeScalarQuantumMeasurement(obj)}
                 qubits {mustBeQubits(qubits, obj)} = 1:obj.NumQubits
                 NameValueArgs.Threshold {quantum.internal.gate.mustBeThreshold(NameValueArgs.Threshold)} = defaultThreshold(obj)
             end
-
+            
             states = obj.MeasuredStatesChar;
             probs = obj.Probabilities;
 
@@ -246,6 +246,10 @@ classdef (Sealed) QuantumMeasurement < matlab.mixin.Scalar
             %   See also quantum.gate.QuantumMeasurement/querystates,
             %   quantum.gate.QuantumState/histogram.
 
+            if ~isscalar(obj)
+                error(message("quantum:QuantumMeasurement:mustBeScalar"))
+            end
+
             % Same NVPs as querystates
             [states, probs] = querystates(obj, varargin{:});
 
@@ -273,8 +277,8 @@ classdef (Sealed) QuantumMeasurement < matlab.mixin.Scalar
             %   p = probability(m, qubits) returns the probability of
             %   having all specified qubits being measured in state "1".
             %   This probability is based on a probability estimation of
-            %   the result in QuantumMeasurement m. Output p is a real scalar
-            %   number.
+            %   the result in QuantumMeasurement m. Output p is an array
+            %   with the same size as m with all elements between 0 and 1.
             %
             %   p = PROBABILITY(m, qubits, state) additionally specifies
             %   which state these qubits should be measured as. Input state
@@ -286,9 +290,20 @@ classdef (Sealed) QuantumMeasurement < matlab.mixin.Scalar
             %   See also quantum.gate.QuantumState/probability.
 
             arguments
-                obj {mustBeA(obj, 'quantum.gate.QuantumMeasurement')}
+                obj {mustBeA(obj,'quantum.gate.QuantumMeasurement')}
                 qubits {mustBeQubits(qubits, obj)}
                 state {mustBeBasisString} = '1'
+            end
+            
+            if ~isscalar(obj)
+                sz = size(obj);
+                % Use cell to handle datatypes
+                p = cell(sz);
+                for ii = 1:numel(obj)
+                    p{ii} = probability(obj(ii), qubits, state);
+                end
+                p = reshape([p{:}], sz);
+                return
             end
 
             state = char(state);
@@ -312,9 +327,9 @@ classdef (Sealed) QuantumMeasurement < matlab.mixin.Scalar
 
             if isempty(ind)
                 if isempty(probs)
-                    p = NaN;
+                    p = nan(1, 'like', probs);
                 else
-                    p = 0;
+                    p = zeros(1, 'like', probs);
                 end
             else
                 p = probs(ind);
@@ -337,10 +352,13 @@ classdef (Sealed) QuantumMeasurement < matlab.mixin.Scalar
         % saved in 'versionSavedFrom' when an instance is serialized.
         %
         %   1.0 : original shipping version
-        version = 2.0;
+        %   2.0 : add Probabilities property
+        %   3.0 : support array
+        version = 3.0;
     end
     methods (Hidden)
         function s = saveobj(m)
+            % This is valid for the array case but only sees a scalar instance.
             if any(isnan(m.Counts))
                 minCompatibleVersion = 2;
             else
@@ -355,6 +373,7 @@ classdef (Sealed) QuantumMeasurement < matlab.mixin.Scalar
     end
     methods(Hidden, Static)
         function m = loadobj(s)
+            % This is valid for the array case but only sees a scalar instance.
             if quantum.gate.QuantumMeasurement.version < s.minCompatibleVersion
                 id = 'quantum:QuantumMeasurement:IncompatibleVersion';
                 loadWarningString = getString(message('MATLAB:load:classError', ...
@@ -383,6 +402,12 @@ classdef (Sealed) QuantumMeasurement < matlab.mixin.Scalar
     end
 end
 
+function mustBeScalarQuantumMeasurement(obj)
+if ~isa(obj, 'quantum.gate.QuantumMeasurement') || ~isscalar(obj)
+    error(message("quantum:QuantumMeasurement:mustBeScalar"))
+end
+end
+
 function mustBeStringVectorOrCharMatrix(states)
 if ~(isstring(states) && isvector(states)) && ~(ischar(states) && ismatrix(states))
     error(message('quantum:QuantumMeasurement:invalidStates'))
@@ -398,10 +423,13 @@ if ~all(ismember(str, '01'))
 end
 end
 
-function mustBeQubits(qubits, sv)
-numQubits = sv.NumQubits;
-if ~isnumeric(qubits) || ~isvector(qubits) || ~isreal(qubits) || any(floor(qubits) ~= qubits) || ...
-        numel(unique(qubits)) ~= numel(qubits) || any(qubits < 1) || any(qubits > numQubits)
+function mustBeQubits(qubits, meas)
+smallestQubit = min([meas.NumQubits]);
+if ~isnumeric(qubits) || ~isvector(qubits) || ~isreal(qubits) || any(floor(qubits) ~= qubits, "all") || ...
+        numel(unique(qubits)) ~= numel(qubits) || any(qubits < 1, "all")
+    error(message("quantum:QuantumMeasurement:invalidQubits"));
+end
+if ~isempty(smallestQubit) && any(qubits > smallestQubit)
     error(message("quantum:QuantumMeasurement:invalidQubits"));
 end
 end

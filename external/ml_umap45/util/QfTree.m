@@ -834,7 +834,7 @@ classdef QfTree < handle
                 end
             end
             
-            function close(h,e)
+            function close(h,~)
                 wnd=Gui.WindowAncestor(h);
                 wnd.dispose;
             end
@@ -1102,7 +1102,7 @@ classdef QfTree < handle
             end
         end
         
-        function str=getSubsetSymbol(this, idx, big)
+        function str=getSubsetSymbol(this, idx, ~)
             c=get(this.plotHs(idx), 'MarkerFaceColor');
             str=['<font  ' Gui.HtmlHexColor(c)...
                 '>&#8903;</font>'];
@@ -1314,7 +1314,7 @@ classdef QfTree < handle
                             idx=I(i);
                             id=this.nodes{idx};
                             id=id{1};
-                            debug=this.leafNames{idx}
+                            debug=this.leafNames{idx};
                         
                             if selectedIds.contains(id)
                                 idxs(end+1)=idx;
@@ -1327,7 +1327,7 @@ classdef QfTree < handle
                     N=length(idxs);
                     for i=1:N
                         idx=idxs(i);
-                        debug=this.leafNames{idx}
+                        debug=this.leafNames{idx};
                         id=this.nodes{idx};
                         id=id{1};
                         img=this.getPngImg(id, [], .7, true);

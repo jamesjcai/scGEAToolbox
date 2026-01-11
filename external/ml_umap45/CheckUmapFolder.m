@@ -1,4 +1,4 @@
-function ok=CheckUmapFolder(curPath, fileName, doGrandParent)
+function ok=CheckUmapFolder(~, ~, ~)
 %   AUTHORSHIP
 %   Primary Developer: Stephen Meehan <swmeehan@stanford.edu>
 %   Math Lead & Secondary Developer: Connor Meehan <connor.gw.meehan@gmail.com>

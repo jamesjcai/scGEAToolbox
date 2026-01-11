@@ -46,7 +46,7 @@ classdef (Sealed) QuantumDeviceAWS < quantum.backend.QuantumDevice
     %
     %   See also quantum.backend.QuantumTaskAWS, quantumCircuit/run
 
-    %   Copyright 2022-2023 The MathWorks, Inc.
+    %   Copyright 2022-2025 The MathWorks, Inc.
 
     properties (GetAccess = public, SetAccess = private)
         %NAME - Name of the device
@@ -187,14 +187,14 @@ classdef (Sealed) QuantumDeviceAWS < quantum.backend.QuantumDevice
             % Get details about device and make sure its supported
             caps = getCapabilities(obj);
             if ~isfield(caps, 'action') || ...
-                ~matches("braket_ir_openqasm_program", fields(caps.action))
+                    ~matches("braket_ir_openqasm_program", fields(caps.action))
                 error(message("quantum:QuantumDeviceAWS:DeviceNotSupported"))
             end
 
             % Validate S3Path has the expected form
             if userSetS3Path
                 s3p = NameValueArgs.S3Path;
-                % Error if obviously invalid, then split S3Path into bucket and prefix 
+                % Error if obviously invalid, then split S3Path into bucket and prefix
                 if ~startsWith(s3p, "s3://amazon-braket-")
                     error(message("quantum:QuantumDeviceAWS:S3PathMustStartWith"))
                 end
@@ -204,7 +204,7 @@ classdef (Sealed) QuantumDeviceAWS < quantum.backend.QuantumDevice
                     error(message("quantum:QuantumDeviceAWS:S3PathMustSpecifyFolder"))
                 end
 
-                % Remove one trailing "/" or "\" 
+                % Remove one trailing "/" or "\"
                 if endsWith(s3p, ("/" | "\"))
                     s3p = erase(s3p, ("/" | "\")+lineBoundary("end"));
                 end
@@ -212,11 +212,11 @@ classdef (Sealed) QuantumDeviceAWS < quantum.backend.QuantumDevice
                 obj.S3Bucket = extractBetween(s3p, slashes(2)+1, slashes(3)-1);
                 obj.S3BucketPrefix = extractAfter(s3p, slashes(3));
             end
-                
+
             % Check the full S3Path exists. If not, check bucket and create
             % folder if its found, otherwise error/warn
             if ~isfolder(obj.S3Path)
-                    % Need slash here to recognise bucket as a folder
+                % Need slash here to recognise bucket as a folder
                 if ~isfolder("s3://"+obj.S3Bucket+"/")
                     if userSetS3Path
                         error(message('quantum:QuantumDeviceAWS:S3PathNotFound', obj.S3Path))
@@ -276,31 +276,32 @@ classdef (Sealed) QuantumDeviceAWS < quantum.backend.QuantumDevice
             AvailableGatesBraket = dictionary( ...
                 ["x","y","z","rx","ry","rz","h","swap","s","t","cy","cz","ccnot","cnot", "i", "si", "ti","cphaseshift", "phaseshift", "xx", "yy", "zz"], ...
                 ["x","y","z","rx","ry","rz","h","swap","s","t","cy","cz", "ccx","cx", "id", "si", "ti","cr1", "r1", "rxx", "ryy", "rzz"]);
-            
+
             % Filter the device gates to those available in MATLAB and map
-            % the MATLAB name to the AWS Braket name. 
-            available = isKey(AvailableGatesBraket, deviceGates);   
+            % the MATLAB name to the AWS Braket name.
+            available = isKey(AvailableGatesBraket, deviceGates);
             supportedBraket = string(deviceGates(available));
             gates = dictionary(AvailableGatesBraket(supportedBraket), supportedBraket);
         end
 
         function qasm = generateQASM(obj, circuit)
-            % Generate OpenQASM for the AWS device 
+            % Generate OpenQASM for the AWS device
             gates = obj.getSupportedGates();
             qasm = generateQASM(circuit, Unpack=true, SupportedGates=gates);
             qasm = erase(qasm, 'include "stdgates.inc";');
         end
 
-        function task = sendQASM(obj, qasm, numShots)
+        function task = sendQASM(obj, qasm, NameValueArgs)
             if ismissing(obj.Name)
                 error(message('quantum:QuantumDevice:MissingNotSupported'));
             end
 
             action.braketSchemaHeader = struct(name="braket.ir.openqasm.program", version="1");
+
             action.source = qasm;
             action = jsonencode(action);
 
-            task = send(obj, action, numShots);
+            task = send(obj, action, NameValueArgs.NumShots);
         end
 
         function task = sendCircuit(obj, circuit, NameValueArgs)
@@ -308,11 +309,46 @@ classdef (Sealed) QuantumDeviceAWS < quantum.backend.QuantumDevice
                 obj quantum.backend.QuantumDeviceAWS
                 circuit quantumCircuit
                 NameValueArgs.NumShots (1,1) {mustBeInteger, mustBePositive} = 100
+                NameValueArgs.Observable
             end
-            
-            qasm = obj.generateQASM(circuit);
 
-            task = obj.sendQASM(qasm, NameValueArgs.NumShots);
+            if ~isscalar(circuit)
+                % AWS only supports one circuit per task
+                error(message('quantum:QuantumDeviceAWS:invalidCircuit'))
+            end
+
+            qasm = generateQASM(obj, circuit);
+
+            if isfield(NameValueArgs, "Observable")
+                obs = NameValueArgs.Observable;
+                if ~(isa(obs, "observable") && isscalar(obs) && isscalar(obs.Paulis))
+                    % AWS only supports one observable per task
+                    error(message('quantum:QuantumDeviceAWS:invalidObservable'));
+                end
+                if circuit.NumQubits~=obs.NumQubits
+                    error(message("quantum:observable:observeIncorrectNumQubits"))
+                end
+                N = obs.NumQubits;
+                % Result types cannot be used with classical registers
+                qasm = erase(qasm, "bit["+N+"] c;");
+                % Remove measure because this implies samples of Z observable
+                qasm = erase(qasm, 'c = measure q;');
+                % Add observable weight as comment to be multiplied by
+                % task. Weights are not directly supported.
+                w = obs.Weights;
+                if isa(w, 'single')
+                    wStr = num2str(w, 9);
+                else
+                    wStr = num2str(w, 17);
+                end
+                wComment = newline+"//Start weight"+newline+"//"+wStr+newline+"//End weight";
+                qasm = insertAfter(qasm, 'OPENQASM 3.0;', wComment);
+                % Request expectation result type from the server
+                p = lower(char(obs.Paulis)') + "(q["+string(0:N-1).'+"])";
+                qasm = qasm + newline + "#pragma braket result expectation "+join(p, " @ ");
+            end
+
+            task = sendQASM(obj, qasm, NameValueArgs);
         end
 
         function s = saveobj(~)
@@ -349,8 +385,8 @@ classdef (Sealed) QuantumDeviceAWS < quantum.backend.QuantumDevice
         function task = send(device, action, numShots)
             % Use for both gate-based and annealing to send a quantum task
             taskARN = quantum.internal.aws.createQuantumTask(...
-              device.Region, device.DeviceARN, numShots, device.S3Bucket, ...
-              device.S3BucketPrefix, action);
+                device.Region, device.DeviceARN, numShots, device.S3Bucket, ...
+                device.S3BucketPrefix, action);
             task = quantum.backend.QuantumTaskAWS(taskARN);
         end
     end
@@ -359,7 +395,7 @@ end
 function mustBeAWSRegion(str)
 mustBeTextScalar(str)
 dashes = strfind(str,"-");
-if ~matches(str, regexpPattern('[a-zA-Z0-9-]+')) || length(dashes)<2 
+if ~matches(str, regexpPattern('[a-zA-Z0-9-]+')) || length(dashes)<2
     error(message('quantum:QuantumDeviceAWS:InvalidRegion'));
 end
 end

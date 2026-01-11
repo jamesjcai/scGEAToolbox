@@ -449,7 +449,7 @@ classdef ColorsEditor <handle
             this.syncCnt=this.syncCnt+1;
         end
 
-        function actionPerformed(this, H, event)
+        function actionPerformed(this, ~, event)
             if ~strcmp(event.type, 'changed')
                 return;
             end
@@ -845,7 +845,7 @@ classdef ColorsEditor <handle
             end
         end
         
-        function showHideDflts(this, h, e)
+        function showHideDflts(this, ~, ~)
             if ~this.queryChangedDflts
                 return;
             end
@@ -994,7 +994,7 @@ classdef ColorsEditor <handle
             end
         end
         
-        function pick(this, H, E)
+        function pick(this, ~, E)
             if this.updating 
                 return;
             end
@@ -1105,7 +1105,7 @@ classdef ColorsEditor <handle
             mrs=this.getModelRows(vrs);
         end
         
-        function editRgb(this, H, E)
+        function editRgb(this, ~, E)
             if this.updating
                 return;
             end
@@ -1140,9 +1140,9 @@ classdef ColorsEditor <handle
             this.setColor(color, mrs, vrs, c-1, false);
             this.updateBtnsAndDfltStatus(mrs, vrs);
             drawnow;
-            if length(vrs)==1
+            if isscalar(vrs)
                 vcs=J.getSelectedColumns;
-                if length(vcs)==1
+                if isscalar(vcs)
                     vScatter=J.convertColumnIndexToView(ColorsEditor.COL_SCATTER);
                     if vcs(1)==vScatter
                         J.changeSelection(vrs(1), vScatter, true, false);
@@ -1215,7 +1215,7 @@ classdef ColorsEditor <handle
             %    end
             %end
             %row=0;
-            this.names{mr}
+            this.names{mr};
         end
         
         function row=getModelRowChecked(this, name)
@@ -1316,7 +1316,7 @@ classdef ColorsEditor <handle
                     warning('Assuming "%s" [1 1 1] is white (not black?)', this.names{mr(1)});
                 end
             end
-            this.colors(mrs, :)/255
+            this.colors(mrs, :)/255;
             nRgb=length(rgbIdxs);
             nRows=length(mrs);
             for row=1:nRows
@@ -1346,7 +1346,7 @@ classdef ColorsEditor <handle
                     end
                 end
             end
-            this.colors(mrs, :)/255
+            this.colors(mrs, :)/255;
         end
         
         function [strColor, color]=getDflt(this, name)

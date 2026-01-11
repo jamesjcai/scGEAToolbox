@@ -1,5 +1,5 @@
 function [y_new, cut_indices, I, iter] = mppc(y0, cut_indices, x, mass, lambda1, lambda2, tol, rho0, ...
-    max_m, max_avg_turn, normalize_data, pause_bool, plotting)
+    max_m, max_avg_turn, normalize_data, pause_bool, ~)
 %MPPC the main function for the algorithm that finds local minimizers of
 %the MPPC functional, as introduced in
 % Kirov, S. & Slep?ev, D., Multiple Penalized Principal Curves: Analysis

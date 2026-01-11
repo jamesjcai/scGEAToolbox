@@ -1026,7 +1026,7 @@ end
                 Html.Remove(String.RemoveTex(dataSetName)), ...
                 String.Pluralize2('classifier', nClassifiers));
             html=doHtml;
-            [figBrowser, tp, btnForTip, btnSvg]=internalBrowser(html);
+            [figBrowser, tp, btnForTip, ~]=internalBrowser(html);
             %shift window down in size a tad to position as legend
             pos=Gui.GetOuterPixels(figBrowser);
             dim=tp.getPreferredSize;
@@ -1427,7 +1427,7 @@ end
                 end
             end
 
-            function nCell(x, row, col, sb)
+            function nCell(x, ~, col, sb)
                 if isnan(x)
                     sb.append('<td></td>');
                 else

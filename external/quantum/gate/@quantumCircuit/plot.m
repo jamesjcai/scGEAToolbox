@@ -41,7 +41,7 @@ function cp = plot(obj, varargin)
 %
 %   See also quantumCircuit, quantum.gate.CompositeGate/plot
 
-%   Copyright 2021-2023 The MathWorks, Inc.
+%   Copyright 2021-2025 The MathWorks, Inc.
 
 args = varargin;
 nameOffset = 1;
@@ -57,6 +57,9 @@ end
 
 if ~isa(obj, 'quantumCircuit')
     error(message('quantum:quantumCircuit:plotMustBeQuantumCircuit', nameOffset));
+end
+if ~isscalar(obj)
+    error(message('quantum:quantumCircuit:mustBeScalar'))
 end
 
 quantum.internal.gate.checkQubitBlocksForPlot(obj.NumQubits, args);

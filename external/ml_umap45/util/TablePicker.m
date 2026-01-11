@@ -495,7 +495,7 @@ classdef TablePicker <handle
                     this.ric, this.idIsNumeric, this.args.formats);
             end
             drawnow;
-            vrs
+            vrs;
             j.clearSelection;
             for s=1:s
                 j.changeSelection(vrs(s), 0, true, false);
@@ -739,7 +739,7 @@ classdef TablePicker <handle
             this.updatePickBtn('');
         end
         
-        function rowSelectionHeard(this, h, e)
+        function rowSelectionHeard(this, ~, ~)
             if this.updating
                 return;
             end
@@ -838,12 +838,12 @@ classdef TablePicker <handle
             end
         end
         
-        function cancel(this, h, e)
+        function cancel(this, ~, ~)
             this.cancelled=true;
             close(this.table.fig);
         end
         
-        function ok=pick(this, h, e)
+        function ok=pick(this, h, ~)
             ok=false;
             [this.pickedVrs, this.pickedMrs, this.pickedRowIds]=...
                 this.getSelectedRows;

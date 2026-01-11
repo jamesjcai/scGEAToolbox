@@ -1,4 +1,4 @@
-function [qasm, finalMap] = transpile(circuit, adj, basisMode)
+function [qasms, finalMaps] = transpile(circuits, adj, basisMode)
 %TRANSPILE  Internal use only.
 %
 %   [qasm, finalMap] = TRANSPILE(circuit, adj, basisMode) returns OpenQASM
@@ -15,7 +15,7 @@ function [qasm, finalMap] = transpile(circuit, adj, basisMode)
 %   5 - {ecr, rz, sx, x}
 %   6 - {cz, rz, sx, x}
 %
-% Copyright 2024 The MathWorks, Inc.
+% Copyright 2024-2025 The MathWorks, Inc.
 
 % References:
 % [1] Fei Hua, Meng Wang, Gushu Li, Bo Peng, Chenxu Liu, Muqing Zheng,
@@ -23,16 +23,16 @@ function [qasm, finalMap] = transpile(circuit, adj, basisMode)
 % "QASMTrans: A QASM based Quantum Transpiler Framework for NISQ Devices."
 % arXiv preprint arXiv:2308.07581 (2023)
 arguments
-    circuit (1,1) quantumCircuit
+    circuits quantumCircuit 
     adj
     basisMode (1,1) double
 end
 
-numCircuitQubits = circuit.NumQubits;
+numCircuitQubits = [circuits.NumQubits];
 
 % Check adjacency and remove self loops
 G = digraph(adj, 'omitselfloops');
-if numCircuitQubits > numnodes(G)
+if any(numCircuitQubits > numnodes(G))
     error(message("quantum:transpile:InvalidAdjacencySize"))
 end
 bins = conncomp(G, 'Type', 'weak');
@@ -42,32 +42,37 @@ if ~all(bins==1)
 end
 adj = logical(full(adjacency(G)));
 
-[types, ctrls, trgts, angles] = getProperties(circuit);
-
-initialMap = 0:numCircuitQubits-1;
-
-if ~isempty(types)
-
-    randStr = RandStream('dsfmt19937','Seed',0);
-    initialMapGuess = randperm(randStr, numCircuitQubits);
-
-    [instructions, finalMap] = quantum.internal.transpile.transpileMex( ...
-        types, ctrls, trgts, angles, numCircuitQubits, adj, basisMode, initialMapGuess);
-else
-    instructions = "";
-    finalMap = initialMap;
+L = numel(circuits);
+qasms = strings(size(circuits));
+finalMaps = cell(size(circuits));
+for ii = 1:L
+    N = numCircuitQubits(ii);
+    [types, ctrls, trgts, angles] = getProperties(circuits(ii));
+    initialMap = 0:N-1;
+    if ~isempty(types)
+    
+        randStr = RandStream('dsfmt19937','Seed',0);
+        initialMapGuess = randperm(randStr, N);
+    
+        [instructions, finalMap] = quantum.internal.transpile.transpileMex( ...
+            types, ctrls, trgts, angles, N, adj, basisMode, initialMapGuess);
+    else
+        instructions = "";
+        finalMap = initialMap;
+    end
+    
+    % Build the complete code
+    header = "OPENQASM 3.0;"+newline+...
+        'include "stdgates.inc";'+newline;
+    
+    creg = newline+sprintf("bit[%g] c;", N)+newline+newline;
+    
+    measurements = join("c["+initialMap+"] = measure $"+finalMap+";", newline);
+    
+    qasms(ii) = header+...
+        creg+...
+        instructions+...
+        measurements;
+    finalMaps{ii} = finalMap;
 end
-
-% Build the complete code
-header = "OPENQASM 3.0;"+newline+...
-    'include "stdgates.inc";'+newline;
-
-creg = newline+sprintf("bit[%g] c;", numCircuitQubits)+newline+newline;
-
-measurements = join("c["+initialMap+"] = measure $"+finalMap+";", newline);
-
-qasm = header+...
-    creg+...
-    instructions+...
-    measurements;
 end

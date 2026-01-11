@@ -1,4 +1,4 @@
-classdef (Sealed) QuantumState < matlab.mixin.Scalar
+classdef (Sealed) QuantumState
     %QUANTUMSTATE  State of a quantum circuit.
     %
     %   The quantumCircuit/simulate method returns a QuantumState object.
@@ -43,7 +43,7 @@ classdef (Sealed) QuantumState < matlab.mixin.Scalar
     %
     %   See also quantum.gate.QuantumMeasurement, quantumCircuit/simulate
 
-    %   Copyright 2021-2023 The MathWorks, Inc.
+    %   Copyright 2021-2025 The MathWorks, Inc.
 
     properties(Dependent)
         %BASISSTATES - String array of basis states
@@ -188,7 +188,7 @@ classdef (Sealed) QuantumState < matlab.mixin.Scalar
             %   See also quantum.gate.QuantumState/querystates
 
             arguments
-                sv {mustBeA(sv, 'quantum.gate.QuantumState')}
+                sv {mustBeScalarQuantumState(sv)}
                 NameValueArgs.Basis {mustBeBaseTypeAllowAuto} = 'auto'
                 NameValueArgs.Threshold {quantum.internal.gate.mustBeThreshold(NameValueArgs.Threshold)} = defaultThreshold(sv)
             end
@@ -256,7 +256,7 @@ classdef (Sealed) QuantumState < matlab.mixin.Scalar
             %   See also quantum.gate.QuantumState/histogram,
             %   quantum.gate.QuantumMeasurement/querystates.
             arguments
-                sv {mustBeA(sv, 'quantum.gate.QuantumState')}
+                sv {mustBeScalarQuantumState(sv)}
                 qubits {mustBeQubits(qubits, sv)} = 1:sv.NumQubits
                 NameValueArgs.Basis {mustBeBaseType} = 'Z'
                 NameValueArgs.Threshold {quantum.internal.gate.mustBeThreshold(NameValueArgs.Threshold)} = defaultThreshold(sv)
@@ -330,6 +330,10 @@ classdef (Sealed) QuantumState < matlab.mixin.Scalar
             %   See also quantum.gate.QuantumState/querystates,
             %   quantum.gate.QuantumMeasurement/histogram.
 
+            if ~isscalar(sv)
+                error(message("quantum:QuantumState:mustBeScalar"))
+            end
+
             % Same NVPs as querystates
             [k, p] = querystates(sv, varargin{:});
 
@@ -346,7 +350,8 @@ classdef (Sealed) QuantumState < matlab.mixin.Scalar
             %   p = probability(s, qubits) returns the probability of
             %   having all specified qubits being measured in state "1".
             %   This probability is based on the probability distribution
-            %   of the quantumState s. Output p is a scalar between 0 and 1.
+            %   of the QuantumState s. Output p is an array with the same
+            %   size as s with all elements between 0 and 1.
             %
             %   p = PROBABILITY(s, qubits, state) additionally specifies
             %   which state these qubits should be measured as. Input state
@@ -358,9 +363,20 @@ classdef (Sealed) QuantumState < matlab.mixin.Scalar
             %   See also quantum.gate.QuantumMeasurement/probability.
 
             arguments
-                sv {mustBeA(sv, 'quantum.gate.QuantumState')}
+                sv {mustBeA(sv,'quantum.gate.QuantumState')}
                 qubits {mustBeQubits(qubits, sv)}
                 state {mustBeBasisString} = '1'
+            end
+
+            if ~isscalar(sv)
+                sz = size(sv);
+                % Use cell to handle datatypes
+                p = cell(size(sv));
+                for ii = 1:numel(sv)
+                    p{ii} = probability(sv(ii), qubits, state);
+                end
+                p = reshape([p{:}], sz);
+                return
             end
 
             state = char(state);
@@ -393,7 +409,7 @@ classdef (Sealed) QuantumState < matlab.mixin.Scalar
             p = probs(ind);
         end
 
-        function counts = randsample(sv, numShots)
+        function meas = randsample(sv, numShots)
             %RANDSAMPLE Randomly sample the state
             %
             %   m = RANDSAMPLE(s, numShots) randomly samples the
@@ -408,10 +424,24 @@ classdef (Sealed) QuantumState < matlab.mixin.Scalar
             %   See also quantum.gate.QuantumMeasurement, rand, rng
 
             arguments
-                sv {mustBeA(sv, 'quantum.gate.QuantumState')}
+                sv {mustBeA(sv,'quantum.gate.QuantumState')}
                 numShots {mustBeScalarOrEmpty, mustBeInteger} = 100
             end
+            
 
+            if isempty(sv)
+                meas = quantum.gate.QuantumMeasurement.empty(size(sv));
+                return
+            elseif ~isscalar(sv)
+                sz = size(sv);
+                meas = cell(sz);
+                for ii = 1:numel(sv)
+                    meas{ii} = randsample(sv(ii), numShots);
+                end
+                meas = reshape([meas{:}], sz);
+                return
+            end
+            
             cumProbabilities = [0; cumsum(abs(sv.Amplitudes).^2)];
 
             samples = rand(numShots, 1);
@@ -431,7 +461,7 @@ classdef (Sealed) QuantumState < matlab.mixin.Scalar
                 states = char.empty(0, sv.NumQubits);
             end
 
-            counts = quantum.gate.QuantumMeasurement(states, count);
+            meas = quantum.gate.QuantumMeasurement(states, count);
         end
     end
 
@@ -450,10 +480,12 @@ classdef (Sealed) QuantumState < matlab.mixin.Scalar
         % saved in 'versionSavedFrom' when an instance is serialized.
         %
         %   1.0 : original shipping version
-        version = 1.0;
+        %   2.0 : support array
+        version = 2.0;
     end
     methods (Hidden)
         function s = saveobj(qs)
+            % This is valid for the array case but only sees a scalar instance.
             s = struct('Amplitudes', qs.Amplitudes, ...
                 'versionSavedFrom', quantum.gate.QuantumState.version, ...
                 'minCompatibleVersion', 1);
@@ -461,6 +493,7 @@ classdef (Sealed) QuantumState < matlab.mixin.Scalar
     end
     methods(Hidden, Static)
         function qs = loadobj(s)
+            % This is valid for the array case but only sees a scalar instance.
             if quantum.gate.QuantumState.version < s.minCompatibleVersion
                 id = 'quantum:QuantumState:IncompatibleVersion';
                 loadWarningString = getString(message('MATLAB:load:classError', ...
@@ -483,6 +516,12 @@ classdef (Sealed) QuantumState < matlab.mixin.Scalar
             end
         end
     end
+end
+
+function mustBeScalarQuantumState(obj)
+if ~isa(obj, 'quantum.gate.QuantumState') || ~isscalar(obj)
+    error(message("quantum:QuantumState:mustBeScalar"))
+end
 end
 
 function probs = reduceQubits(probs, numQubits, qubits)
@@ -605,9 +644,12 @@ end
 end
 
 function mustBeQubits(qubits, sv)
-numQubits = sv.NumQubits;
-if ~isnumeric(qubits) || ~isvector(qubits) || ~isreal(qubits) || any(floor(qubits) ~= qubits) || ...
-        numel(unique(qubits)) ~= numel(qubits) || any(qubits < 1) || any(qubits > numQubits)
+smallestQubit = min([sv.NumQubits]);
+if ~isnumeric(qubits) || ~isvector(qubits) || ~isreal(qubits) || any(floor(qubits) ~= qubits, "all") || ...
+        numel(unique(qubits)) ~= numel(qubits) || any(qubits < 1, "all")
+    error(message("quantum:QuantumState:invalidQubits"));
+end
+if ~isempty(smallestQubit) && any(qubits > smallestQubit, "all")
     error(message("quantum:QuantumState:invalidQubits"));
 end
 end

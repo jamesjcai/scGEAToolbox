@@ -80,7 +80,7 @@ function exportWhite(h, filename)
         catch
             return
         end
-        state(end+1).h = obj; %#ok<AGROW>
+        state(end+1).h = obj; 
         state(end).prop = propName;
         state(end).val = oldVal;
 

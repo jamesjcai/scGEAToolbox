@@ -624,7 +624,7 @@ classdef StringArray < handle
                     nf=StringArray.NotFound(d2, d1);
                     if isempty(nf)
                         sameButReordered=true;
-                    elseif length(nf)==1
+                    elseif isscalar(nf)
                         % is FMO?
                         if isempty(d1{nf}) || isempty(d2{nf})
                             d1_=d1;
@@ -862,7 +862,7 @@ classdef StringArray < handle
              idxs=[];
              N=length(sa);
              for i=1:N
-                 sa{i}
+                 sa{i};
                  if startsWith(fullString, sa{i})
                      idxs(end+1)=i;
                  end
@@ -873,7 +873,7 @@ classdef StringArray < handle
              idxs=[];
              N=length(sa);
              for i=1:N
-                 sa{i}
+                 sa{i};
                  if startsWith(sa{i}, fullString)
                      idxs(end+1)=i;
                  end

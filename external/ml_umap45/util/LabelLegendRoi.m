@@ -356,7 +356,7 @@ classdef LabelLegendRoi < handle
             end
             jm.show(h, 15, 15);
             
-            function use(cb, e)
+            function use(cb, ~)
                 this.useClusterBoundaries=cb.isSelected;
             end
            
@@ -591,7 +591,7 @@ classdef LabelLegendRoi < handle
                     @reAdjust);
             end
             
-            function reAdjust(h)
+            function reAdjust(~)
                 newLvl=this.setUstMlpConfidence();
                 if isempty(newLvl)
                     return;

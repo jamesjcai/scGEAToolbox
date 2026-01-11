@@ -43,7 +43,11 @@ function obj = unpack(obj,idx)
 %
 %   See also quantumCircuit, quantum.gate.CompositeGate
 
-%   Copyright 2021-2024 The MathWorks, Inc.
+%   Copyright 2021-2025 The MathWorks, Inc.
+
+if ~isscalar(obj)
+    error(message('quantum:quantumCircuit:mustBeScalar'))
+end
 
 gates = obj.Gates;
 

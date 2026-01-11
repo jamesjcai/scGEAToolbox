@@ -73,6 +73,10 @@ classdef observable
         function H = getMatrix(obj)
             % Returns sparse matrix
 
+            if ~isscalar(obj)
+                error(message("quantum:observable:mustBeScalar"))
+            end
+
             if ~isempty(obj.Matrix)
                 H = sparse(obj.Matrix);
                 return
@@ -127,10 +131,12 @@ classdef observable
         % saved in 'versionSavedFrom' when an instance is serialized.
         %
         %   1.0 : original shipping version
-        version = 1.0;
+        %   2.0 : support array
+        version = 2.0;
     end
     methods(Hidden)
         function s = saveobj(obs)
+            % This is valid for the array case but only sees a scalar instance.
             % Workaround to ensure proper loading for empty cases
             if isequal(obs.Paulis, "")
                 paulis = obs.Paulis;
@@ -145,18 +151,19 @@ classdef observable
 
         function tf = isequal(obs, other)
             % Overload so both constructors return equal objects when their
-            % visible properties match. 
+            % visible properties match.
             if ~isa(other, 'observable')
                 tf = false;
             else
                 tf = isequal(obs.NumQubits, other.NumQubits) && ...
-                     isequal(obs.Paulis, other.Paulis) && ...
-                     isequal(obs.Weights, other.Weights);
+                    isequal(obs.Paulis, other.Paulis) && ...
+                    isequal(obs.Weights, other.Weights);
             end
         end
     end
     methods(Hidden, Static)
         function obs = loadobj(s)
+            % This is valid for the array case but only sees a scalar instance.
             if observable.version < s.minCompatibleVersion
                 id = 'quantum:observable:IncompatibleVersion';
                 loadWarningString = getString(message('MATLAB:load:classError', ...
@@ -315,12 +322,12 @@ p = p(linIdx);
 end
 
 function h = fullMortonPermute(H, N)
-% Reshape input matrix to vector using the Morton (Z-order) pattern. 
+% Reshape input matrix to vector using the Morton (Z-order) pattern.
 h = ipermute(reshape(H, 2*ones(1, 2*N)), [1:2:2*N 2:2:2*N]);
 end
 
 function [linIdx, h] = sparseMortonPermute(H, N)
-% Reshape input matrix to vector using the Morton (Z-order) pattern. 
+% Reshape input matrix to vector using the Morton (Z-order) pattern.
 % Sparse implementation determines linear indices by interleaving bits of
 % the rows and columns.
 [ii, jj, h] = find(H);
@@ -331,7 +338,7 @@ linIdx = bin2dec(linBin)+1;
 end
 
 function H = sparseMortonInvPermute(linIdx, h, N)
-% Reshape input vector to matrix using the inverse Morton (Z-order) pattern.  
+% Reshape input vector to matrix using the inverse Morton (Z-order) pattern.
 llbin = dec2bin(linIdx-1, 2*N);
 rows = bin2dec(llbin(:, 2:2:end))+1;
 cols = bin2dec(llbin(:, 1:2:end))+1;

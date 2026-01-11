@@ -186,11 +186,11 @@ classdef ArgumentClinic < handle
                 FlowJoTree.Open(Gui.WindowAncestor(h));
             end
             
-            function seeLen(h,e)
+            function seeLen(~,~)
                 web('https://www.pnas.org/content/110/52/20848', '-browser');
             end
             
-            function resolve(h,e)
+            function resolve(~,e)
                 item=char(e.getActionCommand);
                 idx=StringArray.IndexOf(items, item);
                 if isempty(fnc)

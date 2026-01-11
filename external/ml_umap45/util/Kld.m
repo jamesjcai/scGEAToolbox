@@ -169,7 +169,7 @@ classdef Kld<handle
     end
     
     methods(Access=private)
-        function rowSelection(this, vrs, mrs)
+        function rowSelection(this, ~, mrs)
             N=length(mrs);
             this.selectedRows=mrs;
             if N==1
@@ -525,7 +525,7 @@ classdef Kld<handle
             floorIdxs4Data(floorIdxs4Data==M)=M-1;%this avoids going over grid boundary
         end
         
-        function [weights, floorIdxs4Data, delta]=Weight(data, M, mn,mx, hasOffScale, fg)
+        function [weights, floorIdxs4Data, delta]=Weight(data, M, mn,mx, hasOffScale, ~)
             [floorIdxs4Data, delta]=Kld.GetIdxs(data, M, mn, mx);
             [R, C]=size(data);
             data4Idxs=linspace(mn, mx, M);

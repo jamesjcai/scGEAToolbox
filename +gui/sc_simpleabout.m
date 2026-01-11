@@ -1,4 +1,4 @@
-function [hFig] = sc_simpleabout(parentfig, im2)
+function [hFig] = sc_simpleabout(parentfig, ~)
     % if nargin < 2 || isempty(im2)
     %     [~, ~, ~, im2] = pkg.i_majvercheck;
     % end

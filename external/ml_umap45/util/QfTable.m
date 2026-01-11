@@ -453,7 +453,7 @@
             end
             Gui.BlowWindow(tb_.jToolbar);
 
-            function ok=hearHighlighting(gate, on, rows)
+            function ok=hearHighlighting(gate, ~, ~)
                 if ~ishandle(this.fig)
                     ok=false;
                     return;
@@ -1119,7 +1119,7 @@
             all=find(s.keyCols==sIdx);
             if length(all)>1
                 val=s.mf(sIdx, all);
-                [mx, I]=sort(val);
+                [~, I]=sort(val);
                 sIdx2nd=all(I(2));
                 name2=this.qf.tNames{sIdx2nd};
                 if strcmp(name1, name2)

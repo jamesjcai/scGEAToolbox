@@ -78,7 +78,7 @@ classdef JavaProperties < handle
             end
         end
         
-        function priorValue=moveItem(this, name, item, direction)
+        function priorValue=moveItem(this, name, item, ~)
             [idx, N]=this.indexOf(name, item);
             if idx<1
                 priorValue=[];

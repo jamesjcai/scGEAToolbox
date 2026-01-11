@@ -715,7 +715,7 @@ classdef Plots < handle
             if this.is3D
                 Z=this.mdns(idx, 3);
                 Plots.ShowLegendTip(ax, event.Peer, X, Y, str, fsz, 0, Z);
-                [X Y Z]
+                [X Y Z];
             else
                 Plots.ShowLegendTip(ax, event.Peer, X, Y, str, fsz, 0);
             end
@@ -941,7 +941,7 @@ classdef Plots < handle
             X=log10(sizes);
             Y=f1s;
             ax=Gui.Axes(fig);
-            hold(ax, 'all');
+            hold(ax, 'on');
             hold(ax, 'on');
             Hs=zeros(1,N);
             for i=1:N
@@ -1080,7 +1080,7 @@ classdef Plots < handle
             end
             X=log10(sizes);
             Y=scores;
-            hold(ax, 'all');
+            hold(ax, 'on');
             hold(ax, 'on');
             scoreHs=zeros(1,N);
             if app.highDef

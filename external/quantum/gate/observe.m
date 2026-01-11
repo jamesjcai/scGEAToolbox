@@ -1,4 +1,4 @@
-function out = observe(state, obs, NameValueArgs)
+function expval = observe(state, obs, NameValueArgs)
 %OBSERVE Expected value of an observable
 %
 %   expval = OBSERVE(state) returns the expected value of measuring the
@@ -63,8 +63,8 @@ function out = observe(state, obs, NameValueArgs)
 % [2] Kohda, Masaya. et al. "Quantum expectation-value estimation by
 % computational basis sampling." Phys. Rev. Research (2022).
 arguments
-    state (1,1)
-    obs (1,1) observable = defaultObservable(state)
+    state
+    obs observable = defaultObservable(state)
     NameValueArgs.NumShots (1,1) {mustBeNumeric, mustBePositive} = Inf
     NameValueArgs.ProbabilityThreshold (1,1) {mustBeInRange(NameValueArgs.ProbabilityThreshold,0,1,'exclude-lower')} = 1;
 end
@@ -73,41 +73,57 @@ if isa(state, 'quantumCircuit')
     state = simulate(state);
 end
 
-numQubits = state.NumQubits;
-if numQubits~=obs.NumQubits
+% Determine output size
+[stateIdx, obsIdx, szOut] = quantum.internal.gate.setupLocalImplicitExpansion(size(state), size(obs));
+
+nS = [state.NumQubits];
+nO = [obs.NumQubits];
+n1 = nS(stateIdx);
+n2 = nO(obsIdx);
+if ~isequal(n1(:), n2(:))
     error(message("quantum:observable:observeIncorrectNumQubits"))
 end
 
-if ~obs.IsDiagonal && NameValueArgs.ProbabilityThreshold < 1
+if ~all([obs.IsDiagonal]) && NameValueArgs.ProbabilityThreshold < 1
     error(message("quantum:observable:observeInvalidProbabilityThreshold"))
 end
 
 isExact = isinf(NameValueArgs.NumShots) && NameValueArgs.ProbabilityThreshold==1;
 
-if isExact
-    % Performance heuristic based on number of qubits and Pauli strings.
-    K = length(obs.Paulis);
-    useFullHermitian = ( (numQubits<=8) || (2^numQubits/numQubits<=K) );
-    a = state.Amplitudes;
-    if useFullHermitian
-        H = getMatrix(obs);
-        % Ensure full output for empty case
-        out = full(a'*H*a);
+% Use cell to handle datatype casting
+expval = cell(szOut);
+L = prod(szOut);
+for ii = 1:L
+    o = obs(obsIdx(ii));
+    s = state(stateIdx(ii));
+    n = s.NumQubits;
+    if isExact
+        % Performance heuristic based on number of qubits and Pauli strings.
+        K = length(o.Paulis);
+        useFullHermitian = ( (n<=8) || (2^n/n<=K) );
+        a = s.Amplitudes;
+        if useFullHermitian
+            H = getMatrix(o);
+            % Ensure full output for empty case
+            out = full(a'*H*a);
+        else
+            % Map each Pauli to its matrix
+            pU = cat(3, [0 1; 1 0], [0 -1j; 1j 0], [1 0; 0 -1]);
+            X = applyPaulis(o, a, pU, 'XYZ');
+            out = o.Weights.'*squeeze(pagemtimes(a', X));
+        end
+        % Remove complex round-off
+        expval{ii} = real(out);
     else
-        % Map each Pauli to its matrix
-        pU = cat(3, [0 1; 1 0], [0 -1j; 1j 0], [1 0; 0 -1]);
-        X = applyPaulis(obs, a, pU, 'XYZ');
-        out = obs.Weights.'*squeeze(pagemtimes(a', X));
-    end
-    % Remove complex round-off
-    out = real(out);
-else
-    if obs.IsDiagonal
-        out = diagEstimate(obs, state, NameValueArgs);
-    else
-        out = nonDiagEstimate(obs, state, NameValueArgs);
+        if o.IsDiagonal
+            out = diagEstimate(o, s, NameValueArgs);
+        else
+            out = nonDiagEstimate(o, s, NameValueArgs);
+        end
+        expval{ii} = out;
     end
 end
+expval = reshape([expval{:}], szOut);
 end
 
 %% Helper Functions
@@ -186,8 +202,24 @@ end
 end
 
 function obs = defaultObservable(state)
+% Must be quantumCircuit or QuantumState
 if ~(isa(state, 'quantumCircuit') || isa(state, 'quantum.gate.QuantumState'))
     error(message("quantum:observable:observeInvalidInput"))
 end
-obs = observable(repmat('Z', [1 state.NumQubits]), 1);
+sz = size(state);
+N = [state.NumQubits];
+w = 1;
+if isempty(N)
+    obs = observable.empty(sz);
+elseif all(N(:) == N(1))
+    % All states use the same observable
+    obs = observable(repmat('Z', [1 N(1)]), w);
+else
+    % Create an observable for each state with Z on each of its qubits
+    obs = cell(sz);
+    for ii = 1:numel(state)
+        obs{ii} = observable(repmat('Z', [1 N(ii)]), w);
+    end
+    obs = reshape([obs{:}], sz);
+end
 end

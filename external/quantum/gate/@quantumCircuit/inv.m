@@ -17,7 +17,11 @@ function invobj = inv(obj)
 %   See also quantumCircuit, quantumCircuit/getMatrix,
 %   quantum.gate.SimpleGate/inv, quantum.gate.CompositeGate/inv
 
-%   Copyright 2021-2022 The MathWorks, Inc.
+%   Copyright 2021-2025 The MathWorks, Inc.
+
+if ~isscalar(obj)
+    error(message('quantum:quantumCircuit:mustBeScalar'))
+end
 
 cG = obj.Gates;
 cG = flip(cG);

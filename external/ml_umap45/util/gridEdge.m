@@ -59,7 +59,7 @@ if nargout>1 && ~FcsTreeGater.MEX_BORDER
     edgeBinIdxs=gce.edgeBins;
 end %xxx  [edgeMex,mxX,mxY]=mexSptx('cluster border', int32(density.M), int32(binIdxs), 'mins', density.mins, 'deltas', density.deltas);
 if ~isa(fgOrDensityObject, 'Density')
-    if length(clusterIds)==1
+    if isscalar(clusterIds)
         fgOrDensityObject.edgeX{clusterIds}=xx;
         fgOrDensityObject.edgeY{clusterIds}=yy;
     end

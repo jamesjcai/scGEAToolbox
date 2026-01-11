@@ -1,5 +1,5 @@
 function callback_RunEnrichr(src, ~, predefinedlist, enrichrtype, ...
-    backgroundlist, outfiletag, wkdir)
+    backgroundlist, ~, wkdir)
 
 if nargin < 7, wkdir = ''; end
 if nargin < 6, outfiletag = ""; end

@@ -1,4 +1,4 @@
-function [sce] = pipeline_multisamplesmerge(accv, guiwaitbar, speciestag, FigureHandle)
+function [sce] = pipeline_multisamplesmerge(accv, guiwaitbar, speciestag, ~)
 if nargin < 2, guiwaitbar = true; end
 if nargin < 3, speciestag = ''; end
 % https://www.cell.com/cell/fulltext/S0092-8674(19)31178-X

@@ -148,22 +148,40 @@ classdef (Sealed) QuantumDeviceIBM < quantum.backend.QuantumDevice
     end
 
     methods(Hidden)
-        function task = sendCircuit(obj, circuit, NameValueArgs)
+        function task = sendCircuit(obj, circuits, NameValueArgs)
             arguments
                 obj quantum.backend.QuantumDeviceIBM
-                circuit (1,1) quantumCircuit
+                circuits quantumCircuit
                 NameValueArgs.NumShots (1,1) {mustBeInteger, mustBePositive} = 100
                 % NOTE: OptimizationLevel was deprecated by IBM. It is no longer 
                 % sent to the server.
                 NameValueArgs.UseErrorMitigation (1,1) {mustBeA(NameValueArgs.UseErrorMitigation, 'logical')} = true
+                NameValueArgs.Observable
+            end
+            
+            [qasms, finalMaps] = transpileQASM(obj, circuits);
+
+            if isfield(NameValueArgs, "Observable")
+                obs = NameValueArgs.Observable;
+                if ~isa(obs, "observable")
+                    error(message('quantum:observable:invalidObservable'));
+                end
+                % Check expansion
+                nC = [circuits.NumQubits];
+                nO = [obs.NumQubits];
+                [cIdx,oIdx] = quantum.internal.gate.setupLocalImplicitExpansion(size(qasms), size(obs));
+                nC = nC(cIdx);
+                nO = nO(oIdx);
+                if ~isequal(nC(:), nO(:))
+                    error(message("quantum:observable:observeIncorrectNumQubits"))
+                end
+                NameValueArgs.FinalMaps = finalMaps;
             end
 
-            qasm = transpileQASM(obj, circuit);
-
-            task = sendQASM(obj, qasm, NameValueArgs);
+            task = sendQASM(obj, qasms, NameValueArgs);
         end
 
-        function qasm = transpileQASM(obj, circuit)
+        function [qasms, finalMaps] = transpileQASM(obj, circuits)
 
             details = fetchDetails(obj);
 
@@ -178,7 +196,9 @@ classdef (Sealed) QuantumDeviceIBM < quantum.backend.QuantumDevice
                 else
                     error(message("quantum:generateQASM:missingSupportedGates"))
                 end
-                qasm = quantum.internal.transpile.transpile(circuit, adj, mode);
+                % The map is not added as code comment here because error
+                % mitigation is only used for non-simulators.
+                [qasms, finalMaps] = quantum.internal.transpile.transpile(circuits, adj, mode);
                 return
             end
 
@@ -208,34 +228,45 @@ classdef (Sealed) QuantumDeviceIBM < quantum.backend.QuantumDevice
             G = digraph(supportedEdges(:, 1), supportedEdges(:, 2));
             adj = logical(full(adjacency(G)));
 
-            [qasm, finalMap] = quantum.internal.transpile.transpile(circuit, adj, mode);
+            [qasms, finalMaps] = quantum.internal.transpile.transpile(circuits, adj, mode);
 
             if mode==5
-                % Add empty ECR definition to pass server checks
+                % Add empty ECR definition to all qasm codes to pass server
+                % checks
                 ecrDef = newline+"gate ecr q0,q1 {}";
-                qasm = insertAfter(qasm, 'include "stdgates.inc";', ecrDef);
+                qasms = insertAfter(qasms, 'include "stdgates.inc";', ecrDef);
             end
 
-            % Add final map as code comment. This is parsed by the task
-            % when fetching results for error mitigation.
-            mapStr = join(string(finalMap), ',');
-            mapComment = newline+"//Start finalMap"+newline+...
-                "//"+mapStr+newline+...
-                "//End finalMap";
-            qasm = insertAfter(qasm, 'include "stdgates.inc";', mapComment);
+            L = numel(qasms);
+            for ii = 1:L
+                % Add each final map as code comment. This is parsed by the
+                % task when fetching results for error mitigation.
+                qasms(ii) = insertVectorCommentAfterHeader(qasms(ii), finalMaps{ii}, "finalMap");
+            end
         end
 
-        function task = sendQASM(obj, qasm, NameValueArgs)
+        function task = sendQASM(obj, qasms, NameValueArgs)
             if ismissing(obj.Name)
                 error(message('quantum:QuantumDevice:MissingNotSupported'));
             end
-
-            taskInfo.program_id = "sampler";
+            
             taskInfo.backend = obj.Name;
+            runInfo = struct;
+            
+            % The same NumShots is used for each circuit
+            if isfield(NameValueArgs, "Observable")
+                taskInfo.program_id = "estimator";
+                pubs = setupEstimatorPUB(qasms, NameValueArgs);
+                % NumShots is added outside the PUB.
+                runInfo.options.default_shots = NameValueArgs.NumShots;
+            else
+                taskInfo.program_id = "sampler";
+                % NumShots is added within the PUB
+                pubs = setupSamplerPUB(qasms, NameValueArgs);
+            end
 
-            % Each 1-by-3 cell represents one Primitive-Unified-Block job:
-            % {circuit, parameters, numShots}
-            runInfo.pubs = {{qasm, [], NameValueArgs.NumShots}};
+            runInfo.pubs = pubs;
+            
             runInfo.version = 2;
             runInfo.support_qiskit = false;
             
@@ -313,4 +344,83 @@ classdef (Sealed) QuantumDeviceIBM < quantum.backend.QuantumDevice
             task = quantum.backend.QuantumTaskIBM.createFromCredentials(taskID, obj.AccountName, obj.Credentials);
         end
     end
+end
+
+% The IBM Runtime interface accepts Primitive-Unified-Blocks (PUBs) that
+% contains circuits and additional info. Each 1-by-3 cell below represents
+% one PUB. The parameters are left empty because our circuits are 
+% non-symbolic.
+
+function pubs = setupSamplerPUB(qasms, NameValueArgs)
+% Sampler Interface PUB:
+% {circuit, parameters, numShots}
+
+szOut = size(qasms);
+
+% Add permutation for this group of circuits to the top code.
+% This is parsed by the task when fetching results to return the expected size.
+qasms(1) = insertVectorCommentAfterHeader(qasms(1), szOut, "szOut");
+
+d1 = numel(qasms);
+pubs = cell(d1,1);
+for ii = 1:d1
+    % This PUB contains 1 circuit
+    pubs{ii} = {qasms(ii), [], NameValueArgs.NumShots};
+end
+end
+
+
+function pubs = setupEstimatorPUB(qasms, NameValueArgs)
+% Estimator Interface PUB:
+% {circuit, observables, parameters}
+
+obs = NameValueArgs.Observable;
+finalMaps = NameValueArgs.FinalMaps;
+
+[oIdx, perm, szOutIdxPerm] = quantum.internal.gate.setupRemoteImplicitExpansion(size(qasms), size(obs));
+
+% Add permutations for this group of circuits/observables to the top code.
+% This is parsed by the task when fetching results to return the expected size.
+qasms(1) = insertVectorCommentAfterHeader(qasms(1), perm, "perm");
+qasms(1) = insertVectorCommentAfterHeader(qasms(1), szOutIdxPerm, "szOutIdxPerm");
+
+% Implicit expansion
+d1 = numel(qasms);
+d2 = size(oIdx,2);
+pubs = cell(d1,1);
+for ii=1:d1
+
+    S = cell(1,d2);
+    for jj=1:d2
+
+        o = obs(oIdx(ii,jj));
+        p = char(o.Paulis);
+        w = o.Weights;
+
+        % Permute with final map and reverse to match convention
+        map = finalMaps{ii}+1;
+        mp = repmat('I', [length(w) max(map)]);
+        mp(:, map) = fliplr(p);
+
+        % Build struct for JSON
+        s = struct;
+        for kk = 1:size(mp,1)
+            s.(mp(kk,:)) = w(kk);
+        end
+        S{jj} = s;
+    end
+        
+    % This PUB contains 1 circuit with the expanded observables
+    pubs{ii} = {qasms(ii), S, {}};
+end
+end
+
+
+function qasm = insertVectorCommentAfterHeader(qasm, vec, name)
+header = 'include "stdgates.inc";';
+str = join(string(vec), ',');
+comment = newline+"//Start "+name+newline+...
+    "//"+str+newline+...
+    "//End "+name;
+qasm = insertAfter(qasm, header, comment);
 end

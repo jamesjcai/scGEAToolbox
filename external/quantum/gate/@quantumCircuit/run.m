@@ -4,23 +4,31 @@ function task = run(circuit, device, options)
 %   task = RUN(circ,dev) runs the quantumCircuit circ remotely on a quantum
 %   device dev. Input dev must be a QuantumDeviceAWS or QuantumDeviceIBM
 %   object. The result is a QuantumTaskAWS or QuantumTaskIBM object, which
-%   can be used to monitor the task and retrieve its result.
+%   can be used to monitor the task and retrieve its result. Use fetchOutput
+%   to retrieve the result of the finished task as a QuantumMeasurement object.
+%   The size of the result matches the size of the input circ.
 %
-%   task = RUN(circ, dev, Name=Value) specifies additional options for
+%   task = RUN(circ,dev,Observable=o) returns a QuantumTaskAWS or QuantumTaskIBM
+%   object whose result contains the expectation value of measuring the
+%   quantumCircuit circ in the basis of the observable o. Use fetchOutput to
+%   retrieve the result of the finished task as a numeric vector. The size
+%   of the result is the expansion of the sizes of the inputs circ and o.
+%
+%   task = RUN(circ,dev,Name=Value) specifies additional options for
 %   running the quantumCircuit circ on the quantum device dev. The available
 %   options depend on the type of device:
 %
 %   QuantumDeviceAWS:
 %
-%   task = RUN(..., NumShots=n) runs the circuit n times remotely on
+%   task = RUN(...,NumShots=n) runs the circuit n times remotely on
 %   the quantum device. The default number is NumShots = 100.
 %
 %   QuantumDeviceIBM:
 %
-%   task = RUN(..., NumShots=n) runs the circuit n times remotely on
+%   task = RUN(...,NumShots=n) runs the circuit n times remotely on
 %   the quantum device. The default number is NumShots = 100.
 %
-%   task = RUN(..., UseErrorMitigation=tf) toggles error mitigation on the
+%   task = RUN(...,UseErrorMitigation=tf) toggles error mitigation on the
 %   measurement result. The default value of tf is true.
 %
 %   Example:
@@ -53,7 +61,7 @@ function task = run(circuit, device, options)
 %   quantum.backend.QuantumDeviceAWS, quantum.backend.QuantumTaskAWS,
 %   quantum.backend.QuantumDeviceIBM, quantum.backend.QuantumTaskIBM
 
-%   Copyright 2022-2024 The MathWorks, Inc.
+%   Copyright 2022-2025 The MathWorks, Inc.
 
 arguments
     circuit quantumCircuit

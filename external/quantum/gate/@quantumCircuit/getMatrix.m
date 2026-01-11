@@ -13,8 +13,11 @@ function M = getMatrix(obj)
 %   See also quantumCircuit, quantumCircuit/simulate,
 %   quantum.gate.SimpleGate/getMatrix, quantum.gate.CompositeGate/getMatrix
 
-%   Copyright 2021-2022 The MathWorks, Inc.
+%   Copyright 2021-2025 The MathWorks, Inc.
 
+if ~isscalar(obj)
+    error(message('quantum:quantumCircuit:mustBeScalar'))
+end
 if isinf(2^obj.NumQubits) % Can overflow, give useful error for that case.
     error(message('MATLAB:pmaxsize'));
 end

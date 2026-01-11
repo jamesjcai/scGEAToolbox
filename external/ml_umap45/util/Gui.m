@@ -118,7 +118,7 @@ classdef Gui
             % Pekka Kumpulainen 12.2.2008
             
             textopts = {};
-            if length(varargin{1})==1 && ...
+            if isscalar(varargin{1}) && ...
                     ishandle(varargin{1}) && ...
                     strcmpi(get(varargin{1},'Type'),'axes')
                 Ha = varargin{1};
@@ -216,7 +216,7 @@ classdef Gui
             % Pekka Kumpulainen 12.2.2008
             
             textopts = {};
-            if length(varargin{1})==1 && ...
+            if isscalar(varargin{1}) && ...
                     ishandle(varargin{1}) && ...
                     strcmpi(get(varargin{1},'Type'),'axes')
                 Ha = varargin{1};
@@ -1783,7 +1783,7 @@ classdef Gui
             btns.setOpaque(false);
             bp.add(btns, tipWhere);
             
-            function tipFlip(h, op)
+            function tipFlip(~, op)
                 Gui.TipDetail(BasicMap.Global, op)
                 if ~isempty(refresh)
                     feval(refresh);
@@ -3283,7 +3283,7 @@ classdef Gui
             [X,Y]=Gui.SwingOffset(pm, cmp);
             %fprintf('pm=%d/%d; X=%d, Y=%d]\n', pm(1), pm(2), X, Y);
             app=BasicMap.Global;
-            [pm X Y]
+            [pm X Y];
             if app.highDef
                 X=X*1.5;%app.toolBarFactor;
                 Y=Y*1.45;%app.toolBarFactor;
@@ -3459,7 +3459,7 @@ classdef Gui
             end
             function c=hex(c)
                 c=dec2hex(c);
-                if length(c)==1
+                if isscalar(c)
                     c=['0' c];
                 end
             end
@@ -3489,7 +3489,7 @@ classdef Gui
             end
             function c=hex(c)
                 c=dec2hex(c);
-                if length(c)==1
+                if isscalar(c)
                     c=['0' c];
                 end
             end
@@ -4427,7 +4427,7 @@ classdef Gui
         
         function [ok,key]=HeardTheCloseKey(eventData)
             ok=false;
-            if length(eventData.Modifier)==1
+            if isscalar(eventData.Modifier)
                 key=[eventData.Modifier{1} '-' eventData.Key ];
                 if strcmpi(eventData.Modifier{1},'command')
                     if eventData.Key=='w'
@@ -5595,7 +5595,7 @@ classdef Gui
             end
         end
         
-        function SetJavaVisible(jd, useGcf)
+        function SetJavaVisible(jd, ~)
             if isdeployed || ~ismac || 1==size(get(0, 'MonitorPositions'), 1)
                 jd.setVisible(true);
                 return;
@@ -7914,25 +7914,25 @@ classdef Gui
             Gui.ReLabelOkTo(jd);
             SuhWindow.Follow(jd, wnd, where);
 
-            function testApply(left, right, or, originalLeft, originalRight)
+            function testApply(left, right, ~, originalLeft, originalRight)
                 disp(left);
                 disp(right);
                 disp(originalLeft);
                 display(originalRight);
             end
 
-            function callApply(h, e)
+            function callApply(~, ~)
                 feval(applyFnc, StringArray.Cell(or.getLeftList),...
                     StringArray.Cell(or.getRightList), or);
             end
 
             function [originalLeft, originalRight]=testReset(...
-                    originalLeft, originalRight, or)
+                    originalLeft, originalRight, ~)
                 disp(originalLeft);
                 display(originalRight);
             end
 
-            function callReset(h, e)
+            function callReset(~, ~)
                 try
                     [newLeft, newRight]=feval(resetFnc, ...
                         leftList, rightList, or);

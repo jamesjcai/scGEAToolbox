@@ -1,4 +1,4 @@
-function [M, C] = e_cellscorecorrmat(X, g, gsets, methodid, parentfig)
+function [M, C] = e_cellscorecorrmat(X, g, gsets, methodid, ~)
     
     if nargin<4, methodid = 2; end
     if nargin<5, parentfig = []; end

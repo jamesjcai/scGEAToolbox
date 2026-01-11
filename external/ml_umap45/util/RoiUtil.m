@@ -635,7 +635,7 @@ classdef RoiUtil < handle
             end
             if this.newRoi
                 if strcmp(this.type, RoiUtil.POLYGON)
-                    [rows, onBorder]=inpolygon(XY{1}, XY{2},...
+                    [rows, ~]=inpolygon(XY{1}, XY{2},...
                         this.position(:,1), this.position(:,2));
                 else
                     rows=this.roi.inROI(XY{1}, XY{2});

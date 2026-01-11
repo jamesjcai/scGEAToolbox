@@ -12,12 +12,16 @@ function qasm = generateQASM(obj, NameValueArgs)
 %
 %   See also quantumCircuit, quantumCircuit/run
 
-%   Copyright 2021-2023 The MathWorks, Inc.
+%   Copyright 2021-2025 The MathWorks, Inc.
 
 arguments
     obj quantumCircuit
     NameValueArgs.Unpack {mustBeA(NameValueArgs.Unpack, 'logical')} = false
     NameValueArgs.SupportedGates {mustBeA(NameValueArgs.SupportedGates, 'dictionary')} 
+end
+
+if ~isscalar(obj)
+    error(message('quantum:quantumCircuit:mustBeScalar'))
 end
 
 if ~isfield(NameValueArgs, 'SupportedGates')

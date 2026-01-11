@@ -118,7 +118,7 @@ ccx = true;
 
     function i_updatebarplot(idx)
         if nargin<1, idx=[]; end
-        [cx, cLx] = findgroups(string(thisc));
+        [~, cLx] = findgroups(string(thisc));
         for ks = 1:n
             if ks~=idx
                 delete(ax0{ks});

@@ -1,4 +1,4 @@
-function [d, resized]=resizeJavaPrefs(app, J, H)
+function [d, resized]=resizeJavaPrefs(app, J, ~)
 %   AUTHORSHIP
 %   Primary Developer: Stephen Meehan <swmeehan@stanford.edu> 
 %   Math Lead & Secondary Developer:  Connor Meehan <connor.gw.meehan@gmail.com>
