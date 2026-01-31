@@ -1,4 +1,4 @@
-function idx = i_selmultidialog(items, preselected_items, parentfig)
+function [idx] = i_selmultidialog(items, preselected_items, parentfig)
     % selectionDialog creates a dialog for selecting multiple items.
     %
     % Usage:
@@ -36,6 +36,11 @@ arguments
     preselected_items {mustBeValidItemList} = []
     parentfig = []   % allow [] or matlab.ui.Figure    
 end
+
+    if length(items) > 1e4
+        idx = gui.i_shuttleselect2(items, preselected_items, parentfig);
+        return;
+    end
 
     if ~isempty(preselected_items)
         assert(all(ismember(preselected_items, items)));

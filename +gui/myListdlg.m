@@ -4,6 +4,11 @@ function [indx, tf] = myListdlg(parentfig, options, Title, ...
 if nargin < 5, allowmulti = true; end
 if nargin < 4, prefersel = []; end
 
+    if length(options) > 1e4
+        [indx, tf] = gui.myTabledlg(parentfig, options, Title, prefersel, allowmulti);
+        return; 
+    end
+
     parentPos = parentfig.Position;
     parentCenter = [parentPos(1) + parentPos(3)/2, parentPos(2) + parentPos(4)/2];
 
