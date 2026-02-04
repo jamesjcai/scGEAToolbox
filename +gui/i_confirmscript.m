@@ -25,7 +25,7 @@ switch answer
         t = true;
     case 'Review Script'
         folder = fileparts(mfilename('fullpath'));
-        scriptfile = fullfile(folder, '..', '+run', 'external', ...
+        scriptfile = fullfile(folder, '..', 'external', ...
             stxt, scriptfile);
         ts = fileread(scriptfile);
         %LF=char(10);

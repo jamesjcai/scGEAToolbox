@@ -38,7 +38,7 @@ arguments
 end
 
     if length(items) > 1e4
-        idx = gui.i_shuttleselect2(items, preselected_items, parentfig);
+        idx = gui.i_shuttleselect(items, preselected_items, parentfig);
         return;
     end
 

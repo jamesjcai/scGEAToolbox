@@ -63,6 +63,7 @@ function [y, txt, T] = gui_showrefinfo(reftarget, parentfig)
         % hFig.WindowStyle="modal";
         % pause(0.5);
         drawnow;
+        pause(0.2);
         hFig.Visible=true;
         uiwait(hFig);
     
@@ -84,4 +85,3 @@ function [y, txt, T] = gui_showrefinfo(reftarget, parentfig)
     end
     
 end
-
