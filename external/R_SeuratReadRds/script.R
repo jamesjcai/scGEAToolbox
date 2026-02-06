@@ -35,7 +35,8 @@ tryCatch(
 {
     #X=A@assays$RNA@counts
     #X=A@assays$RNA$counts
-    X<-GetAssayData(A, layer="counts")
+    #X<-GetAssayData(A, layer="counts")
+    X <- GetAssayData(JoinLayers(A), assay = DefaultAssay(A), layer = "counts")
 
 if (file.exists("output.h5")) {
   file.remove("output.h5")

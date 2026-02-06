@@ -190,20 +190,11 @@ hx.show(parentfig)
     %     end
     % end
     
-    % function stopDragold(hFig, evnt, targetAx)
-    %     %if isequal(evnt.Axes, targetAx)
-    %         disp('Rotation stopped on target axes');
-    %     %    hFig.WindowButtonMotionFcn = '';
-    %     %end
-    %     camPos = targetAx.CameraPosition;
-    %     fprintf('Camera (%.2f, %.2f, %.2f)\n', camPos);
-    %     [aa, bb]=view(targetAx);
-    % end
-
 %  copyobj(allchild(axOld(j)), axNew);
 
 
     function stopDrag(evnt, trackedAxes)
+        if n < 2, return; end
         thisAx = evnt.Axes;      % the axes that rotate3d thinks is active
         idxa = find(cellfun(@(h) isequal(h,thisAx), num2cell(trackedAxes)));       
 
@@ -235,44 +226,7 @@ hx.show(parentfig)
             disp('Rotation stopped on unknown axes (not in tracked list)');
         end
     end
-
-
-
-    % function stopDrag_x(hFig, evnt)
-    % 
-    %     disp(evnt.Axes);           % see which axes handle MATLAB is giving you
-    %     disp(evnt.Axes.Parent);    % see the parent (tab?)
-    %     disp(evnt.Axes.Tag);       % check if tag survived        
-    % 
-    %     % axx = evnt.Axes;
-    %     % if isempty(axx.Tag)
-    %     %     disp('Rotation stopped on an axes without a Tag');
-    %     % else
-    %     %     disp(['Rotation stopped on ' axx.Tag]);
-    %     % end
-    % 
-    %     % if isfield(evnt,'Axes') && strcmp(evnt.Axes.Tag, targetTag)
-    %     % 
-    %     %     targetTag
-    %     % 
-    %     %     disp(['Rotation stopped on 2 ' targetTag]);
-    %     % 
-    %     %     %camPos = evnt.Axes.CameraPosition;
-    %     %     %fprintf('Camera (%.2f, %.2f, %.2f)\n', camPos);
-    %     % 
-    %     %     [az,el] = view(evnt.Axes);
-    %     %     %fprintf('View az = %.2f, el = %.2f\n', az, el);
-    %     %     % cleanup
-    %     %     hFig.WindowButtonMotionFcn = '';
-    %     %     figure(hFig);
-    %     %     if strcmp('Yes', gui.myQuestdlg(hFig, "Apply to all tabs?"))
-    %     %        for kx = 1:n
-    %     %            view(ax{kx, 2}, [az, el]);
-    %     %        end
-    %     %     end
-    %     % end
-    % end
-    
+   
     % function duringDrag(ax)
     %     % Runs only while dragging on the chosen axes
     %     camPos = ax.CameraPosition;
