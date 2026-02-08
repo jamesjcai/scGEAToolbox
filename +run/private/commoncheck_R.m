@@ -36,8 +36,11 @@ if ~exist(codepth,"dir")
 end
 
 cd(codepth);
+
+codepth = pkg.i_normalizepath(codepth);
+
 % fprintf('CURRENTWDIR = "%s"\n', wrkpth);
-fprintf('SORCCODEDIR = "%s"\n', codepth);
+fprintf('R___CODEDIR = "%s"\n', codepth);
 [~, cmdout] = pkg.RunRcode('require.R', Rpath);
 if strfind(cmdout, 'there is no package') > 0
     msg = cmdout;

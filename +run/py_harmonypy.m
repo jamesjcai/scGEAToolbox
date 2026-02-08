@@ -13,6 +13,7 @@ end
 oldpth = pwd();
 pw1 = fileparts(mfilename('fullpath'));
 codepth = fullfile(pw1, '..', 'external', 'py_harmonypy');
+codepth = pkg.i_normalizepath(codepth);
 
 if isempty(wkdir) || ~isfolder(wkdir)
     cd(codepth);
@@ -30,7 +31,7 @@ catch
 
 end
 
-codefullpath = fullfile(codepth,'require.py');
+codefullpath = fullfile(codepth, 'require.py');
 %cmdlinestr = sprintf('"%s" "%s%srequire.py"', ...
 %    x.Executable, codepth, filesep);
 cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);

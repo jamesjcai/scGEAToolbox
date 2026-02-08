@@ -38,6 +38,8 @@ if ~prepare_input_only
         warning(ME.message);
     end
 
+    codepth = pkg.i_normalizepath(codepth);
+
     codefullpath = fullfile(codepth,'require.py');
     %cmdlinestr = sprintf('"%s" "%s%srequire.py"', ...
     %    x.Executable, codepth, filesep);

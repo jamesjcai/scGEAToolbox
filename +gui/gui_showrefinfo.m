@@ -20,6 +20,7 @@ function [y, txt, T] = gui_showrefinfo(reftarget, parentfig)
     if isempty(txt) , return; end
     % fprintf('%s\n%s\n', reftarget, txt);
     
+    %{
     if gui.i_isuifig(parentfig)
     
         hFig = uifigure("WindowStyle","modal",'Visible','off');
@@ -68,6 +69,7 @@ function [y, txt, T] = gui_showrefinfo(reftarget, parentfig)
         uiwait(hFig);
     
     else 
+        %}
         answer = gui.myQuestdlg(parentfig, ...
              txt, reftarget, {'Continue','Cancel'}, 'Continue');
          switch answer
@@ -75,7 +77,7 @@ function [y, txt, T] = gui_showrefinfo(reftarget, parentfig)
                  y = true;
              otherwise
          end    
-    end
+    %end
     
     function textEntered(~,~,btn)
         if strcmp(btn.Text,oktext)

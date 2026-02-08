@@ -33,6 +33,7 @@ end
 %if ~pyok
 %    error('GenKI (requires Python) has not been installed or set up correctly.')
 %end
+codepth = pkg.i_normalizepath(codepth);
 
 codefullpath = fullfile(codepth,'require.py');
 %cmdlinestr = sprintf('"%s" "%s%srequire.py"', ...

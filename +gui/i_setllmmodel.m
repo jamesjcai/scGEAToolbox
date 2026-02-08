@@ -23,7 +23,7 @@ else
     apikeyfile = getpref('scgeatoolbox', preftagname);
     answer1 = gui.myQuestdlg(parentfig, sprintf('%s', apikeyfile), ...
         'Selected API Key File', ...
-        {'Use this', 'Use another', 'Cancel'}, 'Use this');
+        {'Use this', 'Use another', '🌐Learn api_key file...'}, 'Use this');
     if isempty(answer1), return; end
     switch answer1
         case 'Cancel'
@@ -33,13 +33,16 @@ else
             if isequal(file, 0), return; end
             apikeyfile = fullfile(path, file);
             setpref('scgeatoolbox', preftagname, apikeyfile);
-        case 'Learn api_key file'
-            disp('Remote Google Server Setup - obtain api-key following the instructions here: https://ai.google.dev/gemini-api/docs/api-key');
-            disp('Remote OpenAI Server Setup - obtain api-key following the instructions here: https://platform.openai.com/api-keys');
-            if strcmp('Yes', gui.myQuestdlg(parentfig, "View API key instructions online?"))
-                web('https://ai.google.dev/gemini-api/docs/api-key')
-                web('https://platform.openai.com/api-keys')
-            end
+        case '🌐Learn api_key file...'
+            %disp('Remote Google Server Setup - obtain api-key following the instructions here: https://ai.google.dev/gemini-api/docs/api-key');
+            %disp('Remote OpenAI Server Setup - obtain api-key following the instructions here: https://platform.openai.com/api-keys');
+            %if strcmp('Yes', gui.myQuestdlg(parentfig, "View API key instructions online?"))
+            %    web('https://ai.google.dev/gemini-api/docs/api-key')
+            %    web('https://platform.openai.com/api-keys')
+            %end
+            pause(1)
+            web('https://github.com/jamesjcai/scGEAToolbox/blob/main/assets/Misc/.env.example')
+            return;
     end
 end
 

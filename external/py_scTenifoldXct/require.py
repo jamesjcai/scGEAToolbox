@@ -15,6 +15,7 @@ import importlib.metadata
 
 required  = {'numpy', 'pandas', 'scipy', 'h5py', 'scanpy'} 
 installed = {pkg.key for pkg in pkg_resources.working_set}
+
 missing   = required - installed
 
 if missing:

@@ -1,5 +1,50 @@
 import sys
 import subprocess
+import importlib
+
+# ------------------------------------------------------------------
+# Required packages
+# Mapping: import_name -> pip_name
+# (only needed when import name differs from pip name)
+# ------------------------------------------------------------------
+REQUIRED = {
+    "numpy": "numpy",
+    "pandas": "pandas",
+    "scipy": "scipy",
+    "h5py": "h5py",
+    "scanpy": "scanpy",
+    "anndata": "anndata",
+}
+
+# ------------------------------------------------------------------
+# Check which packages are missing (cannot be imported)
+# ------------------------------------------------------------------
+missing = []
+
+for import_name, pip_name in REQUIRED.items():
+    try:
+        importlib.import_module(import_name)
+    except ImportError:
+        missing.append(pip_name)
+
+# ------------------------------------------------------------------
+# Install missing packages via pip
+# ------------------------------------------------------------------
+if missing:
+    print(f"Installing missing packages: {sorted(missing)}")
+    try:
+        subprocess.check_call([sys.executable, "-m", "pip", "install", *sorted(missing)])
+    except subprocess.CalledProcessError as e:
+        print(f"❌ Failed to install some packages: {e}")
+else:
+    print("All required packages are already installed and importable.")
+
+
+
+
+'''
+import sys
+import subprocess
 import importlib.metadata
 
 # Required packages
@@ -22,3 +67,4 @@ if missing:
     except subprocess.CalledProcessError as e:
         print(f"❌ Failed to install some packages: {e}")
 
+'''

@@ -9,13 +9,13 @@ if ~gui.i_setpyenv([],[],FigureHandle)
 end
 v = pyrun("import torch; v = torch.__version__.split('+')[0]", "v");
 v = string(v);
-tf = isVersionInRange(v,"1.13","2.1");
+tf = isVersionInRange(v,"1.10","1.13");
 if ~tf
     % error('Unsupported PyTorch version: %s. Please use a version between 1.13 and 2.1.', v);    
     gui.myWarndlg(FigureHandle, ...
         sprintf('Unsupported PyTorch version: %s. Please use a version between 1.13 and 2.1.', v),...
         'Runtime Error', true);
-    retrun;
+    return;
 end
 
 

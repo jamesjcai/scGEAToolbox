@@ -33,6 +33,8 @@ try
 catch
 
 end
+codepth = pkg.i_normalizepath(codepth);
+
 
     if ~prepare_input_only
         codefullpath = fullfile(codepth,'require.py');

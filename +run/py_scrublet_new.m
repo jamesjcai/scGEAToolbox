@@ -29,6 +29,7 @@ try
 catch
 
 end
+codepth = pkg.i_normalizepath(codepth);
 
 codefullpath = fullfile(codepth,'require.py');
 %cmdlinestr = sprintf('"%s" "%s%srequire.py"', ...
