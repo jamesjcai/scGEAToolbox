@@ -4,7 +4,6 @@ function [output_h5] = py_cellbender(input_h5, wkdir, isdebug)
 output_h5 = [];
 prgfoldername = 'py_cellbender';
 
-
 if nargin<2 || isempty(wkdir)
     preftagname = 'externalwrkpath';
     [wkdir] = gui.gui_setprgmwkdir(prgfoldername, preftagname);
@@ -71,9 +70,7 @@ disp('Input file written.');
 %    pause(0.5);
 %    gui.gui_waitbar(fw, [], [], 'Running CellBender...');
 %end
-
 % fw = gui.gui_waitbar([],[],'Running Scrublet...');
-
 
 if canUseGPU
     codefullpath = fullfile(codepth,'script_gpu.py');
@@ -86,8 +83,8 @@ cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);
 disp(cmdlinestr)
 [status] = system(cmdlinestr, '-echo');
 
-if status == 0 && exist('output.h5', 'file')
-    output_h5 = fullfile(pwd, 'output.h5');
+if status == 0 && exist('output_filtered.h5', 'file')
+    output_h5 = fullfile(pwd, 'output_filtered.h5');    
 end
 
 %if status == 0 && isvalid(fw)

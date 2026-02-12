@@ -10,16 +10,22 @@ if nargin < 4, wkdir = ''; end
 
 if isempty(wkdir), wkdir = tempdir; end
 
+
+pw1 = fileparts(mfilename('fullpath'));
+pth = fullfile(pw1, '..', 'external', 'web_Enrichr');
+
 if ~isempty(bkglist)
-    infile = fullfile(wkdir, 'input_template_bkg.html');
+    infile = fullfile(pth, 'input_template_bkg.html');
 else
-    infile = fullfile(wkdir, 'input_template.html');
+    infile = fullfile(pth, 'input_template.html');
 end
 
 [~, b]=fileparts(tempname);
 % fx = sprintf('input_page_%s.html', char(randi([97, 122], 1, 8)));
 fx = sprintf('input_page_%s.html', b);
 outfile = fullfile(wkdir, fx);
+
+
 
 fid = fopen(infile, 'r');
 a = textscan(fid, '%s', 'delimiter', '\n');

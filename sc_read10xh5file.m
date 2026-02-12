@@ -24,12 +24,13 @@ if exist(filenm, 'file') ~= 2
 end
 
 grouptag = "/matrix/";
-try
+%try
     h = h5info(filenm);
-    grouptag = strcat(h.Groups(1).Name, "/");
-catch
-    warning('Failed to read HDF5 file info. Using default group tag.');
-end
+    % grouptag = strcat(h.Groups(1).Name, "/");
+    assert(any(contains(string({h.Groups.Name}), "/matrix")))
+%catch
+%    warning('Failed to read HDF5 file info. Using default group tag.');
+%end
 
 data = pkg.e_guessh5field(filenm, {grouptag}, {'data'}, true);
 indices = pkg.e_guessh5field(filenm, {grouptag}, {'indices'}, true);

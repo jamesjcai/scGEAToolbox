@@ -199,7 +199,7 @@ bb = 'No, just show values (heatmap)';
                     [y] = gui.e_cellscore(sce, posg);
                     
                 case 'Predefined Custom Gene Sets'
-                    if ~gui.gui_showrefinfo('Predefined Cell Score', FigureHandle), return; end
+                    % if ~gui.gui_showrefinfo('Predefined Cell Score', FigureHandle), return; end
                     [~, T] = pkg.e_cellscores(sce.X, sce.g, 0);
                     listitems = T.ScoreType;
                     if gui.i_isuifig(FigureHandle)
@@ -214,7 +214,7 @@ bb = 'No, just show values (heatmap)';
 
                     n = length(indx2);
                     y = cell(n,1); ttxt=cell(n,1);
-                    [~, methodid] = gui.i_pickscoremethod;
+                    [~, methodid] = gui.i_pickscoremethod([], FigureHandle);
 
                     fw=gui.myWaitbar(FigureHandle);
                     for k = 1:n

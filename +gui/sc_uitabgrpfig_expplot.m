@@ -113,6 +113,8 @@ for k = 1:n
         %}
     
 end
+dorotation = false;
+
 trackedAxes = [ax{:,1}, ax{:,2}];   % only the right ones, or ax(:) if you want all
 hRotate.ActionPostCallback = @(src,evnt) stopDrag(evnt, trackedAxes);
 % hRotate.ActionPostCallback = @(src,evnt) stopDrag(hFig, evnt);
@@ -122,8 +124,17 @@ hx.addCustomButton('off', @in_genecards, 'www.jpg', 'GeneCards...');
 hx.addCustomButton('off', @in_savedata, "floppy-disk-arrow-in.jpg", 'Save Gene List...');
 hx.addCustomButton('off', {@gui.callback_RunGeneAgent, glist}, "mw-microprocessor.jpg", 'Run GeneAgent...');
 hx.addCustomButton('off', @in_mergetabs, 'Brightness-3--Streamline-Core.jpg', 'Show on the same figure...');
-
+hx.addCustomButton('off', @in_colormap, 'www.jpg', 'Colormap...');
+hx.addCustomButton('off', @in_syncrotation, 'www.jpg', 'Synchronize rotation angle...');
 hx.show(parentfig)
+
+    function in_syncrotation(~, ~)
+        dorotation = ~dorotation;       
+    end
+
+    function in_colormap(~, ~)
+        gui.callback_PickColorMap(hFig, length(unique(c)), true, true);
+    end
 
     function in_mergetabs(~, ~)
         figure;
@@ -195,6 +206,7 @@ hx.show(parentfig)
 
     function stopDrag(evnt, trackedAxes)
         if n < 2, return; end
+        if ~dorotation, return; end
         thisAx = evnt.Axes;      % the axes that rotate3d thinks is active
         idxa = find(cellfun(@(h) isequal(h,thisAx), num2cell(trackedAxes)));       
 

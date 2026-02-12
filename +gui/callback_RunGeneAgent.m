@@ -57,7 +57,7 @@ end
     end
     gui.myWaitbar(FigureHandle, fw);
 
-    if strcmp('Yes', gui.myQuestdlg(FigureHandle, "Wait analysis is complete and then generate report?"))
+    if strcmp('Yes', gui.myQuestdlg(FigureHandle, "Wait until the analysis is complete, then generate the report."))
         
            gui.myHelpdlg(FigureHandle, ...
             'Wait until the web application is done, click OK to proceed.', ...

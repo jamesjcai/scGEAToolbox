@@ -16,6 +16,8 @@ else
     infile = fullfile(wkdir, 'input_template.html');
 end
 
+if exist(infile,"file"), error('Missing input_template html file.'); end
+
 [~, b]=fileparts(tempname);
 % fx = sprintf('input_page_%s.html', char(randi([97, 122], 1, 8)));
 fx = sprintf('input_page_%s.html', b);
