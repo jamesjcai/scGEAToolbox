@@ -11,6 +11,7 @@ answer = gui.myQuestdlg(FigureHandle, 'Load scType marker gene list?');
 indata = '';
 if strcmp(answer, 'Yes')
     indata = gui.i_getsctypemarkers(FigureHandle);
+    if isempty(indata), return; end
 end
 
 if isempty(indata)

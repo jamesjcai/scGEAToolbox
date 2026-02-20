@@ -39,7 +39,7 @@ gui.i_inputdlg('prompt', 'dlgtitle', 'definput', f)
     end
 
 dimPanel = uipanel(fig, 'Position', [20 20 300 150], ...
-    'Title',prompt);
+    'Title', prompt);
 
 if iscell(definput)
     definput = definput{1};
@@ -61,7 +61,8 @@ if ~isMATLABReleaseOlderThan('R2025a')
     end
 end
 
-
+drawnow;
+pause(0.7);
 fig.Visible = 'on';
 focus(edit);
 uiwait(fig);

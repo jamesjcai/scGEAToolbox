@@ -5,17 +5,18 @@ function callback_MultiGroupingView(src, ~)
     answer = gui.myQuestdlg(FigureHandle, 'Select type of multi-view:','', ...
         {'Multigrouping','Multiembedding'},'Multigrouping');
 
+    % figure(FigureHandle);
+    gui.i_bringtofront(FigureHandle);
     switch answer
-
         case 'Multigrouping'
-            if gui.i_isuifig(FigureHandle), focus(FigureHandle); end
-
             preftagname ='selectednstates';
             defaultindx = getpref('scgeatoolbox', preftagname, [4, 5]);              
             [thiscv, clabelv] = gui.i_selectnstates(sce, false, ...
                 defaultindx, FigureHandle);
             if isempty(thiscv) || isempty(clabelv), return; end
 
+
+            figure(FigureHandle);
             hx=gui.myFigure(FigureHandle);
             hFig = hx.FigHandle;
             hFig.Position(3) = hFig.Position(3) * 1.8;
@@ -48,7 +49,7 @@ function callback_MultiGroupingView(src, ~)
                colormap(axesv{k}, cmapv{k});
             end            
             
-        case 'Multiembedding'
+        case 'Multiembedding'            
             listitems = fieldnames(sce.struct_cell_embeddings);
             n = length(listitems);
             valididx = false(n,1);
@@ -78,10 +79,11 @@ function callback_MultiGroupingView(src, ~)
                     'ListSize', [220, 300]);
             end
             if tf2 == 1
+                figure(FigureHandle);
                 gui.sc_multiembeddingview(sce, listitems(indx2), FigureHandle);
             end
         otherwise
-
+            return;
     end
 
 

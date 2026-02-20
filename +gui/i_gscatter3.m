@@ -28,6 +28,12 @@ switch methodid
             if isempty(hAx)
                 h = scatter3(x, y, z, 10, c);
             else
+                % hAx
+                % assignin("base", "c", c);
+                % assignin("base", "x", x);
+                % assignin("base", "y", y);
+                % assignin("base", "z", z);
+                assert(numel(c)==numel(x));
                 h = scatter3(hAx, x, y, z, 10, c);
             end
         end

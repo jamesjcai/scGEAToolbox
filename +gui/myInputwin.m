@@ -58,6 +58,8 @@ if nargout > 0
 end
 
 % gui.i_movegui2parent(hFig, parentfig);
+drawnow;
+pause(0.7);
 hFig.Visible=true;
 uiwait(hFig);
 

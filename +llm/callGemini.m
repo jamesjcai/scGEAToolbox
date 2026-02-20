@@ -1,19 +1,20 @@
-function [done, res] = callGemini(apikey, prompt, model)
+function [done, res] = callGemini(apikeyfile, prompt, model)
     done = false;
     % Default model if not specified
     if nargin < 3
         model = "gemini-2.0-flash";
+        % model = "gemini-pro";
     end
-    if nargin < 1, apikey = []; end
+    if nargin < 1, apikeyfile = []; end
     if nargin < 2, prompt = 'Why is the sky blue?'; end
         
-    if isempty(apikey)
+    if isempty(apikeyfile)
         preftagname = 'llapikeyenvfile';
-        apikey = getpref('scgeatoolbox', preftagname);
+        apikeyfile = getpref('scgeatoolbox', preftagname);
     end
 
-    if ~isempty(apikey) && exist(apikey,"file")
-        loadenv(apikey,"FileType","env");
+    if ~isempty(apikeyfile) && exist(apikeyfile,"file")
+        loadenv(apikeyfile,"FileType","env");
         apikey = getenv("GEMINI_API_KEY");
     end
 
@@ -24,6 +25,8 @@ function [done, res] = callGemini(apikey, prompt, model)
     endpoint = "https://generativelanguage.googleapis.com/v1beta/";
     method = "generateContent";
     
+    % https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent
+
     import matlab.net.*
     import matlab.net.http.*
     headers = HeaderField('Content-Type', 'application/json');
@@ -39,13 +42,11 @@ function [done, res] = callGemini(apikey, prompt, model)
         res = response.Body.Data.candidates.content.parts.text;
         fprintf('Response received successfully.\n');
         done = true;
-    else
+    else        
         res = response.Body.Data.error;
-    end
-    % disp(res);
-
+        disp(res);
+    end   
     %{
-
     endpoint = "https://generativelanguage.googleapis.com/v1beta/";
     method = "generateContent";
     

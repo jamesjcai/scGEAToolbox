@@ -241,6 +241,7 @@ function exportToWorkspace(tableObj, fig)
     labels = {'Save to variable named:'};
     vars = {'T'};
     values = {T};
+    gui.i_bringtofront(fig);
     gui.myExport2wsdlg(labels, vars, values, ...
         'Save Data to Workspace', [], fig);
 

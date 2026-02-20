@@ -27,7 +27,7 @@ end
 
      
     function in_showcellstate(~, ~)
-        [thisc, clabel] = gui.i_select1state(sce, false, false, true, false, parentfig);
+        [thisc, clabel] = gui.i_select1state(sce, false, false, true, false, hFig);
         if isempty(thisc), return; end
         [c, cL] = findgroups(string(thisc));
         stxtyes = cL(c);
@@ -36,22 +36,24 @@ end
             stxtyes = strtrim(stxtyes);
         end
         row = dataTipTextRow('', stxtyes);
+        a = getpref('scgeatoolbox', 'prefcolormapname', 'autumn');
         for kx = 1:length(axesv)
            s = sce.struct_cell_embeddings.(embeddingtags{kx});
            if ~isempty(s)
                h = gui.i_gscatter3(s, c, 1, 1, axesv{kx});
                title(axesv{kx}, string(embeddingtags{kx})+" - "+string(clabel));
                h.DataTipTemplate.DataTipRows = row;
+               gui.i_setautumncolor(c, a, true, false, axesv{kx});
            end
         end
     end
 
     function in_showgeneexp(~, ~)
-        [gsorted] = gui.i_sortgenenames(sce);
+        [gsorted] = gui.i_sortgenenames(sce, hFig);
         if isempty(gsorted), return; end
-
-       if gui.i_isuifig(parentfig)
-            [indx, tf] = gui.myListdlg(parentfig, gsorted, 'Select a gene:');
+        figure(hFig);
+       if gui.i_isuifig(hFig)
+            [indx, tf] = gui.myListdlg(hFig, gsorted, 'Select a gene:');
         else
             [indx, tf] = listdlg('PromptString', 'Select a gene:', ...
                 'SelectionMode', 'single', 'ListString', ...
@@ -60,13 +62,13 @@ end
 
         if tf == 1
             c = full(sce.X(sce.g == gsorted(indx), :));
+            
             for kx = 1:length(axesv)
                s = sce.struct_cell_embeddings.(embeddingtags{kx});
                gui.i_gscatter3(s, c, 1, 1, axesv{kx});
-               title(axesv{kx}, string(embeddingtags{k})+" - "+string(gsorted(indx)));
+               title(axesv{kx}, string(embeddingtags{kx})+" - "+string(gsorted(indx)));
+               gui.i_setautumncolor(c, a, true, any(c==0), axesv{kx});
             end
-            a = getpref('scgeatoolbox', 'prefcolormapname', 'autumn');
-            gui.i_setautumncolor(c, a, true, any(c==0));
         end
     end
 

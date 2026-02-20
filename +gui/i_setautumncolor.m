@@ -18,7 +18,7 @@ if nargin < 3, rev = true; end
 if nargin < 2, cmapname = 'autumn'; end
 if isempty(ax), ax = gca; end
 
-isDark = false;
+% isDark = false;
 if isempty(parentfig)
     % Detect dark mode from figure background
     figBG = get(groot, 'DefaultFigureColor');

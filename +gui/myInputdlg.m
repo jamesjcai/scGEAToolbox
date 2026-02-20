@@ -9,18 +9,18 @@ function [answer] = myInputdlg(prompt, dlgtitle, definput, parentfig)
     % % fieldsize = [1 45; 1 45]; % Not used in uifigure, but kept for consistency
     % definput = {'20', 'hsv'};
 
-    answer = openInputDialog(prompt, dlgtitle, definput, parentfig);
-    
-    % Display result
-    if ~isempty(answer)
-        %disp('User Input:');
-        %disp(answer);
-    else
-        %disp('User cancelled the input dialog.');
-    end
-end
-
-function answer = openInputDialog(prompt, dlgtitle, definput, parentfig)
+%     answer = openInputDialog(prompt, dlgtitle, definput, parentfig);
+% 
+%     % Display result
+%     if ~isempty(answer)
+%         %disp('User Input:');
+%         %disp(answer);
+%     else
+%         %disp('User cancelled the input dialog.');
+%     end
+% end
+% 
+% function answer = openInputDialog(prompt, dlgtitle, definput, parentfig)
 
      dialogWidth = 350;
      dialogHeight = 100 + 50 * numel(prompt); % Adjust height based on the number of inputs
@@ -43,7 +43,7 @@ function answer = openInputDialog(prompt, dlgtitle, definput, parentfig)
 
     % Create modal dialog
     d = uifigure('Position', [dialogX, dialogY, dialogWidth, dialogHeight], ...
-                 'Name', dlgtitle, 'WindowStyle', 'modal');
+                 'Name', dlgtitle, 'WindowStyle', 'modal', 'Visible','off');
 
     if ~isMATLABReleaseOlderThan('R2025a')
         try
@@ -83,8 +83,10 @@ function answer = openInputDialog(prompt, dlgtitle, definput, parentfig)
                          'Position', [190, 20, 60, 30], ...
                          'ButtonPushedFcn', @(btn, event) delete(d));
 
-    focus(fields(1));
     % Wait for user input
+    drawnow;
+    d.Visible=true;
+    focus(fields(1));
     uiwait(d);
     
     % Retrieve data

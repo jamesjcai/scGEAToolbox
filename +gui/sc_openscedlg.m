@@ -47,6 +47,8 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
             'Name', 'Import Data', ...
             'InitialValue', defaultindx);
     end
+    
+    figure(parentfig);
     if tf ~= 1, return; end
     ButtonName = list{indx};
     setpref('scgeatoolbox', preftagname, indx);
@@ -55,8 +57,6 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
     %                               'SCE Data .mat', ...
     %                               '10x Genomics .mtx', ...
     %                               'TSV/CSV .txt', 'SCE Data .mat');
-
-    % figure(parentfig);
 
     switch ButtonName
         case 'SCE Data File(s) (*.mat)...'
@@ -352,6 +352,7 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
             preftagname1 ='previousgeoaccs';    
             previousgeoaccs = getpref('scgeatoolbox', preftagname1, 'GSM7855468');
             
+            figure(parentfig);
             if gui.i_isuifig(parentfig)
                 acc = gui.myInputdlg({'Input(s) (e.g., GSM7855468 or GSM3308549-52):'}, ...
                     'GEO Accession', {previousgeoaccs}, parentfig);
@@ -365,7 +366,10 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
             %acc = strtrim(deblank(acc{1}));
             %acc = strrep(acc,' ','');
             acc = regexprep(acc{1},'[^a-zA-Z0-9,;\-]','');
-            if isempty(acc) || ~strlength(acc) > 4, return; end            
+            if isempty(acc) || ~strlength(acc) > 4
+                gui.i_bringtofront(parentfig);
+                return; 
+            end            
             if contains(acc,'-')
                 accx = pkg.i_expandrange(acc);
                 if strcmp('Yes', gui.myQuestdlg(parentfig, ...
@@ -572,6 +576,8 @@ end
 
 
     function [sce] = in_simulatedata(parentfig)
+        %gui.i_bringtofront(parentfig);
+        %figure(parentfig);
         sce=[];
         definput = {'3000', '5000'};
         prompt = {'Number of genes:', ...

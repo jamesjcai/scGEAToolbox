@@ -43,7 +43,7 @@ if isempty(answer)
 end
 
 
-if sce.NumCells*sce.NumGenes<4e8
+if sce.NumCells*sce.NumGenes < 4e8
     sceori = copy(sce);
     % disp('Ready for reversible.');
 else
@@ -171,7 +171,11 @@ try
  end
 
 try
+    %assignin("base", "c_before", sce.c);
+    %assignin("base", "numcells_before", sce.numcells);
     sce = sce.qcfilterwhitelist(1000, 0.15, 15, 500, []);
+    %assignin("base", "c_after", sce.c);
+    %assignin("base", "numcells_after", sce.numcells);
 catch ME
     gui.myWaitbar(FigureHandle, fw,true);
     gui.myWarndlg(FigureHandle, ME.message, ME.identifier);
@@ -187,7 +191,8 @@ newgn = sce.NumGenes;
         if ~isempty(sceori)            
             gui.myHelpdlg(FigureHandle, "All genes are removed. Opertaion is cancelled.");
             % requirerefresh = false;
-            sce = sceori;
+            % sce = sceori;
+            sce = copy(sceori);
         else
             requirerefresh = true;
         end
@@ -197,7 +202,8 @@ newgn = sce.NumGenes;
         if ~isempty(sceori)            
             gui.myHelpdlg(FigureHandle, "All cells are removed. Opertaion is cancelled.");
             % requirerefresh = false;
-            sce = sceori;
+            % sce = sceori;
+            sce = copy(sceori);
         else
             requirerefresh = true;
         end
@@ -214,7 +220,8 @@ newgn = sce.NumGenes;
                 {'Accept Changes', 'Cancel Changes'}, 'Accept Changes');
         if ~strcmp(answer, 'Accept Changes')
             % requirerefresh = false;
-            sce = sceori;
+            % sce = sceori;
+            sce = copy(sceori);
         else
             requirerefresh = true;
         end

@@ -32,6 +32,7 @@ function [answer, filename] = i_exporttable(T, needwait, TName, ...
             values = {T};
     
             if gui.i_isuifig(parentfig)
+                gui.i_bringtofront(parentfig);
                 gui.myExport2wsdlg(labels, vars, values, ...
                     'Save Data to Workspace', [], parentfig);
             else

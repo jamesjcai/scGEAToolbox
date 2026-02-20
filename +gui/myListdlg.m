@@ -27,7 +27,7 @@ if nargin < 4, prefersel = []; end
      %disp('alwaysontop')
 
     d = uifigure('Name', Title, 'Position', dlgPos, ...
-        'WindowStyle', 'normal', 'Visible','off');
+        'WindowStyle', 'modal', 'Visible','on');
     
     if allowmulti
         multitag = 'on';
@@ -63,26 +63,32 @@ if nargin < 4, prefersel = []; end
 
      % parentfig.WindowStyle = 'normal';
 
-    drawnow;
-    d.Visible = 'on';
-    d.WindowStyle = "modal";
+    
+    %drawnow;
+    
+    %pause(0.7);
+    
+    %d.Visible = 'on';
+    
     % Set focus on the listbox for user interaction
-    lb.focus();
+    %
+    % lb.focus();
     % disp('myListdlg used.');
     % Wait for user response
+    %d.WindowStyle = "modal";
     uiwait(d);
     
     % Get selected items
     if isvalid(lb)
-        selection = lb.Value;
-        delete(d);
+        selection = lb.Value;        
         tf = 1;
         [~, indx]=ismember(selection, options);
     else
-        selection = {};
+        % selection = {};
         tf = 0;
         indx = [];
     end
+    delete(d);
 
     %{
     Example usage:

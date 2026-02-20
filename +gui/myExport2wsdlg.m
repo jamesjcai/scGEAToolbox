@@ -69,6 +69,8 @@ function [d, tf] = myExport2wsdlg(labels, vars, vals, titleText, defs, parentfig
     btnCancel.Layout.Row = numel(labels) + 1;
     btnCancel.Layout.Column = 3;
 
+    % Make the dialog visible
+    %d.Visible = 'on';
     % Wait for the dialog to close before returning
     uiwait(d);
 

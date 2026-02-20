@@ -12,13 +12,13 @@ function [done, res] = callOpenAIChat(prompt, model)
 
 
     preftagname = 'llapikeyenvfile';
-    apikey = getpref('scgeatoolbox', preftagname);
-    loadenv(apikey,"FileType","env");
+    apikeyfile = getpref('scgeatoolbox', preftagname);
+    loadenv(apikeyfile,"FileType","env");
     apikey = getenv("OPENAI_API_KEY");
     
     fprintf('Sending request to OpenAI Chat API...\n');
     try
-        chat = openAIChat("APIKey",apikey, ...
+        chat = openAIChat("APIKey", apikey, ...
             "ModelName", model,TimeOut = 1200);
         res = chat.generate(prompt);
         done = true;
