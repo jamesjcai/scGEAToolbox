@@ -20,7 +20,7 @@ if ~ispref('scgeatoolbox', preftagname)
     else
         pathdefult = '';
     end
-    [done] = ix_setwdpath(pathdefult);
+    [done] = ix_setwdpath(pathdefult, parentfig);
 else
     s = getpref('scgeatoolbox', preftagname);
     answer1 = gui.myQuestdlg(parentfig, sprintf('%s', s), ...
@@ -29,15 +29,14 @@ else
     if isempty(answer1), return; end
     switch answer1
         case 'Use this'
-            done = true;
+            [done] = true;
         case 'Use another'
-            [done] = ix_setwdpath(s);
+            [done] = ix_setwdpath(s, parentfig);
     end
 end
 
 
-
-    function [done] = ix_setwdpath(deflt)
+    function [done] = ix_setwdpath(deflt, parentfig)
         done = false;
         answer=gui.myQuestdlg(parentfig, 'Where to save working files?','',...
             {'Use Temporary Folder', ...

@@ -1,5 +1,7 @@
 function e_mkqqplot(T)
 
+
+% T = T(2:end,:);
 pd = makedist('Gamma', 'a', 0.5, 'b', 2);
 
 hx=gui.myFigure;
@@ -9,20 +11,33 @@ if gui.i_isuifig(hFig)
 else
     a = gca;
 end
-h = qqplot(a, T.FC, pd);
 
+
+h = qqplot(a, T.FC, pd);
 [~, idx] = sort(T.FC);
+sorted_g = T.genelist(idx);
+
 dt = datacursormode;
-dt.UpdateFcn = {@i_myupdatefcn1x, T.genelist(idx)};
+dt.UpdateFcn = {@i_myupdatefcn1x, sorted_g};
 hx.addCustomButton('off', @in_callback_savetable, 'floppy-disk-arrow-in.jpg', 'Export data...');
 hx.show();
 
+assignin("base","h",h)
 
-% h1=h(1);
-h.DataTipTemplate.DataTipRows = T.genelist(idx);
-for k=1:5
-     datatip(h, 'DataIndex', idx(k));
+
+ 
+h1=h(1);
+%h.DataTipTemplate.DataTipRows = T.genelist(idx);
+for k=0:5
+    %T.genelist{end-k}
+    %h1.XData(end-k)
+    %h1.YData(end-k)
+     % datatip(h, 'DataIndex', idx(k));
+     text(h1.XData(end-k), h1.YData(end-k), sorted_g{end-k}, 'Rotation', 45);
+     % annotation("textarrow", h1.XData(end-k), h1.YData(end-k),'String', "aa");
 end
+
+
 
     function in_callback_savetable(~, ~)
         answer = gui.myQuestdlg(hFig, 'Export & save data to:', '', ...
@@ -69,5 +84,9 @@ function txt = i_myupdatefcn1x(~, event_obj, g)
 % pos = event_obj.Position;
 idx = event_obj.DataIndex;
 % i_plotsiglegene(idx,g);
-txt = {g(idx)};
+if iscell(g(idx))
+    txt = g(idx);
+else
+    txt = {g(idx)};
+end
 end

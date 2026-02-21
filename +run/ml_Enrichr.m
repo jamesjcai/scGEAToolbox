@@ -79,6 +79,7 @@ else    % using background
     formData = MultipartFormProvider('background', strjoin(backgroundlist, newline));
     request = RequestMessage('post', [], formData);
     response = send(request, URI(base_url));
+    % assignin("base","response",response);
     background_id = response.Body.Data.backgroundid;
 
     for id = 1:n

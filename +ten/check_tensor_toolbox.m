@@ -5,6 +5,7 @@ if exist(['@tensor', filesep, 'tensor.m'], 'file') ~= 2
         try
             folder = fileparts(mfilename('fullpath'));
             pth = fullfile(folder, '..', 'external', 'tensor_toolbox');
+            pth = pkg.i_normalizepath(pth);
             addpath(pth);
             disp(pth)
         catch
