@@ -9,6 +9,7 @@ end
 if isempty(wkdir), wkdir = tempdir; end
 
 oldpth = pwd();
+cleanupObj = onCleanup(@() cd(oldpth));
 [isok, msg, codepth] = commoncheck_R('R_harmony');
 if ~isok, error(msg);
     return;
@@ -46,6 +47,5 @@ end
 
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-cd(oldpth);
 
 end

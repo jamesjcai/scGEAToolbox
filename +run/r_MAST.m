@@ -5,6 +5,7 @@ if nargin < 3, genelist = (1:size(X, 1))'; end
 T = [];
 isdebug = false;
 oldpth = pwd();
+cleanupObj = onCleanup(@() cd(oldpth));
 [isok, msg, codepath] = commoncheck_R('R_MAST');
 if ~isok, error(msg); end
 if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
@@ -50,5 +51,4 @@ T = addvars(T, avg_1, 'After', 'abs_log2FC');
 T = sortrows(T, 'abs_log2FC', 'descend');
 T = sortrows(T, 'p_val_adj', 'ascend');
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-cd(oldpth);
 end

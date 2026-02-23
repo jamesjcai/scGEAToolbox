@@ -32,3 +32,5 @@ docs
 **/.buildtool/**/*
 **/*.asv
 .git
+external
+external/**/*
