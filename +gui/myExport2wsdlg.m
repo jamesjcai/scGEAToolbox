@@ -52,7 +52,7 @@ function [d, tf] = myExport2wsdlg(labels, vars, vals, titleText, defs, parentfig
         lbl.Layout.Row = i;
         lbl.Layout.Column = [1, 2];
 
-        a = pkg.ai_suggetVarName(vars{i}, 'base');
+        a = pkg.ai_suggestVarName(vars{i}, 'base');
         
 
         editfields(i) = uieditfield(gl, 'text', 'Value', a);

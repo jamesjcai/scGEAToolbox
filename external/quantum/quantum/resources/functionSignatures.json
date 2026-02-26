@@ -1,0 +1,36 @@
+{
+    "quantum.backend.QuantumDeviceAWS":
+    {
+        "inputs":
+        [
+            {
+                "mutuallyExclusiveGroup":
+                [
+                    {"name":"deviceName", "kind":"required", "type":["char", "choices=quantum.internal.aws.devicesForTabCompletion()"]},
+                    {"name":"deviceARN", "kind":"required", "type":["char"]}
+                ]
+            },
+            {"name":"Region", "kind":"namevalue", "type":["char"]},
+            {"name":"S3Path", "kind":"namevalue", "type":["char"]}
+        ]
+    }
+    ,"quantum.backend.QuantumDeviceIBM":
+    {
+        "inputs":
+        [
+            {"name":"deviceName", "kind":"required", "type":["char"]},
+            {"name":"UseSession", "kind":"namevalue", "type":["logical"]},
+            {"name":"FileName", "kind":"namevalue", "type":["char"]},
+            {"name":"AccountName", "kind":"namevalue", "type":["char"]}
+        ]
+    }
+    ,"quantum.backend.QuantumTaskIBM":
+    {
+        "inputs":
+        [
+            {"name":"taskID", "kind":"required", "type":["char"]},
+            {"name":"FileName", "kind":"namevalue", "type":["char"]},
+            {"name":"AccountName", "kind":"namevalue", "type":["char"]}
+        ]
+    }
+}

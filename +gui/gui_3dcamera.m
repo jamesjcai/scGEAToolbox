@@ -163,7 +163,7 @@ if length(ViewZ) == 2 % only initial and final given
     ViewZ = [linspace(ViewZ(1, 1), ViewZ(end, 1)).', ...
         linspace(ViewZ(1, 2), ViewZ(end, 2)).'];
 end
-if isfield(OptionZ, 'Periodic') && OptionZ.Periodic == true
+if isfield(OptionZ, 'Periodic') && OptionZ.Periodic
     ViewZ = ViewZ(1:(end -1), :); %remove last sample
 end
 open(daObj);

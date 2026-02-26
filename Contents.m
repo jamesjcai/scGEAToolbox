@@ -1,5 +1,5 @@
 % scGEAToolbox - Single-Cell Gene Expression Analysis Toolbox
-% Version 26.1.6 21-Feb-2026
+% Version 26.1.7 25-Feb-2026
 %
 % Functions
 %   cdgea                     - CDGEA - Change working directory to the scGEAToolbox folder
@@ -19,6 +19,7 @@
 %   sc_grnview                - SC_GRNVIEW  Display a gene regulatory network as a graph GUI.
 %   sc_grnview2               - SC_GRNVIEW2  Display two gene regulatory networks side‑by‑side.
 %   sc_hvg                    - Identify HVGs
+%   sc_ifft                   - scGFT — Synthetic Cell Generation
 %   sc_impute                 - Imputation
 %   sc_knngraph               - Generate KNN group network from cell embeddings
 %   sc_mergedata              - sc_mergedata is a function.

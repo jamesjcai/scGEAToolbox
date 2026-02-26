@@ -99,7 +99,7 @@ classdef chordChart < handle
             else
             obj.Sep=1/40;
             % 获取其他数据
-            for i=1:2:(length(varargin)-1)
+            for i = 1:2:(numel(varargin) - 1)
                 tid=ismember(obj.arginList,varargin{i});
                 if any(tid)
                 obj.(obj.arginList{tid})=varargin{i+1};
@@ -383,10 +383,10 @@ classdef chordChart < handle
         % 标签文字距离设置
         function obj=setLabelRadius(obj,Radius)
             obj.LRadius=Radius;
-            for i=1:length(obj.meanThetaSetF)
+            for i = 1:numel(obj.meanThetaSetF)
                 set(obj.nameFHdl(i),'Position',[cos(obj.meanThetaSetF(i)),sin(obj.meanThetaSetF(i))].*obj.LRadius);
             end
-            for j=1:length(obj.meanThetaSetT)
+            for j = 1:numel(obj.meanThetaSetT)
                 set(obj.nameTHdl(j),'Position',[cos(obj.meanThetaSetT(j)),sin(obj.meanThetaSetT(j))].*obj.LRadius);
             end
         end
@@ -394,15 +394,15 @@ classdef chordChart < handle
         % 标签旋转状态设置
         function labelRotate(obj,Rotate)
             obj.LRotate=Rotate;
-            for i=1:length(obj.meanThetaSetF)
+            for i = 1:numel(obj.meanThetaSetF)
                 set(obj.nameFHdl(i),'Rotation',obj.rotationF(i),'HorizontalAlignment','center');
             end
-            for j=1:length(obj.meanThetaSetT)
+            for j = 1:numel(obj.meanThetaSetT)
                 set(obj.nameTHdl(j),'Rotation',obj.rotationT(j),'HorizontalAlignment','center');
             end
             if isequal(obj.LRotate,'on')
             textHdl=findobj(gca,'Tag','ChordLabel');
-            for i=1:length(textHdl)
+            for i = 1:numel(textHdl)
                 if textHdl(i).Rotation<-90
                     textHdl(i).Rotation=textHdl(i).Rotation+180;
                 end

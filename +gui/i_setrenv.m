@@ -37,7 +37,7 @@ if ~ispref('scgeatoolbox', preftagname)
     answer = gui.myQuestdlg(parentfig, 'R environment has not been set up. Locate R executable Rscript.exe?');
     if ~strcmp(answer, 'Yes'), return; end
     if ispc
-        rpathdefult = pkg.FindRpath;
+        rpathdefult = pkg.i_findrpath;
         if iscell(rpathdefult)
             rpathdefult = rpathdefult{1};
         end

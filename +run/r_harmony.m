@@ -9,6 +9,7 @@ end
 if isempty(wkdir), wkdir = tempdir; end
 
 oldpth = pwd();
+cleanupObj = onCleanup(@() cd(oldpth));
 [isok, msg, codepth] = commoncheck_R('R_harmony');
 if ~isok, error(msg);
     return;
@@ -37,7 +38,7 @@ end
 
 codefullpath = fullfile(codepth,'script.R');
 pkg.i_addwd2script(codefullpath, wkdir, 'R');
-pkg.RunRcode(codefullpath, Rpath);
+pkg.i_runrcode(codefullpath, Rpath);
 
 if exist('output.h5', 'file')
     % load("output.mat", "sout")
@@ -46,6 +47,6 @@ end
 
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-cd(oldpth);
+% cd(oldpth);
 
 end

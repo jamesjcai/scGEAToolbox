@@ -80,7 +80,7 @@ function [score] = i_calculate_score(X, genelist, tgs, directtag, nbin, ctrl)
     %rng default
     
     % Initial stats
-    cluster_lenght = size(X, 1);
+    cluster_length = size(X, 1);
     data_avg = mean(X, 2);
     [~, I] = sort(data_avg);
     
@@ -90,8 +90,9 @@ function [score] = i_calculate_score(X, genelist, tgs, directtag, nbin, ctrl)
     Xsorted = X(I, :);
     
     % Assigning bins by expression
-    assigned_bin = diag(zeros(cluster_lenght));
-    bin_size = cluster_lenght / nbin;
+    % assigned_bin = diag(zeros(cluster_length));
+    assigned_bin = zeros(cluster_length, 1);
+    bin_size = cluster_length / nbin;
     for i = 1:nbin
         bin_match = data_avg <= data_avg(round(bin_size*i));
         pos_avail = (assigned_bin == 0);

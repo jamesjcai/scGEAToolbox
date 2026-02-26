@@ -2,7 +2,7 @@ function [done, res] = callGemini(apikeyfile, prompt, model)
     done = false;
     % Default model if not specified
     if nargin < 3
-        model = "gemini-2.0-flash";
+        model = "gemini-2.5-flash";
         % model = "gemini-pro";
     end
     if nargin < 1, apikeyfile = []; end

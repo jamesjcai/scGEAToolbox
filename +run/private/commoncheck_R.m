@@ -16,7 +16,7 @@ else
     end    
 end
 
-%if isempty(pkg.FindRpath)
+%if isempty(pkg.i_findrpath)
 %   msg=('Rscript.exe is not found');
 %   return;
 %end
@@ -41,7 +41,7 @@ codepth = pkg.i_normalizepath(codepth);
 
 % fprintf('CURRENTWDIR = "%s"\n', wrkpth);
 fprintf('R___CODEDIR = "%s"\n', codepth);
-[~, cmdout] = pkg.RunRcode('require.R', Rpath);
+[~, cmdout] = pkg.i_runrcode('require.R', Rpath);
 if strfind(cmdout, 'there is no package') > 0
     msg = cmdout;
     return;

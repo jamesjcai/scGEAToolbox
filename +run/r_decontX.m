@@ -8,6 +8,7 @@ if nargin < 2, wkdir = tempdir; end
 if nargin < 3, isdebug = true; end
 
 oldpth = pwd();
+cleanupObj = onCleanup(@() cd(oldpth));
 [isok, msg, codepath] = commoncheck_R('R_decontX');
 
 if ~isok, error(msg); end
@@ -29,7 +30,7 @@ end
 
 codefullpath = fullfile(codepath,'script.R');
 pkg.i_addwd2script(codefullpath, wkdir, 'R');
-pkg.RunRcode(codefullpath, Rpath);
+pkg.i_runrcode(codefullpath, Rpath);
 
 outputfile1 = fullfile(wkdir,'output.h5');
 outputfile2 = fullfile(codepath,'output.h5');
@@ -37,7 +38,7 @@ outputfile2 = fullfile(codepath,'output.h5');
 if exist(outputfile1, 'file')
    outputfile = outputfile1;
 else
-    if exist(outputfile1, 'file')
+    if exist(outputfile2, 'file')
         outputfile = outputfile2;
     else
         error('output.h5 missing.');
@@ -48,5 +49,5 @@ end
     contamination = h5read(outputfile, '/contamination');
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-cd(oldpth);
+% cd(oldpth);
 end

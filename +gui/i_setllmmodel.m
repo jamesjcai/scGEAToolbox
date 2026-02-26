@@ -34,12 +34,6 @@ else
             apikeyfile = fullfile(path, file);
             setpref('scgeatoolbox', preftagname, apikeyfile);
         case '🌐Learn api_key file...'
-            %disp('Remote Google Server Setup - obtain api-key following the instructions here: https://ai.google.dev/gemini-api/docs/api-key');
-            %disp('Remote OpenAI Server Setup - obtain api-key following the instructions here: https://platform.openai.com/api-keys');
-            %if strcmp('Yes', gui.myQuestdlg(parentfig, "View API key instructions online?"))
-            %    web('https://ai.google.dev/gemini-api/docs/api-key')
-            %    web('https://platform.openai.com/api-keys')
-            %end
             pause(1)
             web('https://github.com/jamesjcai/scGEAToolbox/blob/main/assets/Misc/.env.example')
             return;
@@ -73,8 +67,8 @@ if ispref('scgeatoolbox', preftagname)
     end
 end
 
-% listItems = {'Ollama', 'Gemini', 'TAMUAIChat', 'OpenAI', 'DeepSeek', 'xAI'};
-listItems = {'Ollama', 'Gemini', 'TAMUAIChat', 'OpenAI'};
+listItems = {'Ollama', 'Gemini', 'TAMUAIChat', 'OpenAI', 'Anthropic', ...
+             'DeepSeek', 'xAI', 'Mistral', 'Cohere'};
 
 if gui.i_isuifig(parentfig)
     [selectedIndex, ok] = gui.myListdlg(parentfig, listItems, ...
@@ -135,9 +129,6 @@ switch selectedProvider
             url = sprintf('https://generativelanguage.googleapis.com/v1beta/models?key=%s', ...
                   getenv("GEMINI_API_KEY"));
             a = webread(url);
-            % assignin("base", "a", a);
-            % gui.myHelpdlg(parentfig, "GEMINI_API_KEY is load successfully.");
-            % model_names={'gemini-2.0-flash'};
             model_names = cellfun(@(x) x.name, a.models, 'UniformOutput', false);
             model_names = extractAfter(model_names, 7);
             [y, idx]=ismember('gemini-2.0-flash', model_names);
@@ -177,23 +168,25 @@ switch selectedProvider
         end
         loadenv(apikeyfile,"FileType","env");
         if ~isempty(getenv("TAMUAI_API_KEY"))        
-            % Show models available in json format
             OPEN_WEBUI_API_ENDPOINT = "https://chat-api.tamu.ai";
             models_url = sprintf('%s/api/models', OPEN_WEBUI_API_ENDPOINT);
             
-            % Set up options for webread
             options = weboptions('HeaderFields', {'Authorization', ...
                 sprintf('Bearer %s', getenv("TAMUAI_API_KEY"))}, ...
                 'ContentType', 'json', 'Timeout', 50);
+
+            fw = gui.myWaitbar(parentfig);
             
-            % Make the GET request
             try
                 models_response = webread(models_url, options);
                 model_names = string(cellfun(@(s) s.id, models_response.data, 'UniformOutput', false));
             catch ME
-                fprintf('Error fetching models: %s\n', ME.message);
+                gui.myWaitbar(parentfig, fw, true);
+                gui.myErrordlg(parentfig, ME.message, 'Error fetching models');
                 return;
             end
+
+            gui.myWaitbar(parentfig, fw);
 
             [y, idx]=ismember('protected.gpt-4.1', model_names);
             if y
@@ -232,22 +225,17 @@ switch selectedProvider
         end
         loadenv(apikeyfile,"FileType","env");
         if ~isempty(getenv("OpenAI_API_KEY"))        
-            % Show models available in json format
-            % chat/completions
             OPEN_WEBUI_API_ENDPOINT = "https://api.openai.com/v1";
             models_url = sprintf('%s/models', OPEN_WEBUI_API_ENDPOINT);
             
-            % Set up options for webread
             options = weboptions('HeaderFields', {'Authorization', ...
                 sprintf('Bearer %s', getenv("OpenAI_API_KEY"))}, ...
                 'ContentType', 'json',...
                 'Timeout', 30);
             
-            % Make the GET request
             try
                 models_response = webread(models_url, options);
                 model_names = string(arrayfun(@(s) s.id, models_response.data, 'UniformOutput', false));
-
              catch ME
                 fprintf('Error fetching models: %s\n', ME.message);
                 return;
@@ -283,6 +271,331 @@ switch selectedProvider
             else
                 return;
             end
+        end
+
+    case 'Anthropic'
+        % Anthropic Claude models via the official Messages API
+        % Requires ANTHROPIC_API_KEY to be set in the env file.
+        if ~exist(apikeyfile, "file")
+            gui.myErrordlg(parentfig, "llm_api_key.env is not a valid file.");
+            return;
+        end
+        loadenv(apikeyfile, "FileType", "env");
+        api_key = getenv("ANTHROPIC_API_KEY");
+        if isempty(api_key)
+            gui.myWarndlg(parentfig, ...
+                "ANTHROPIC_API_KEY not found in the env file. " + ...
+                "Please add it and try again.");
+            return;
+        end
+
+        % Fetch available models from the Anthropic API
+        models_url = 'https://api.anthropic.com/v1/models';
+        options = weboptions( ...
+            'HeaderFields', { ...
+                'x-api-key',         api_key; ...
+                'anthropic-version', '2023-06-01'}, ...
+            'ContentType', 'json', ...
+            'Timeout', 30);
+
+        fw = gui.myWaitbar(parentfig);
+        try
+            models_response = webread(models_url, options);
+            % Response shape: struct with field 'data', each element has 'id'
+            model_names = string(cellfun(@(s) s.id, ...
+                models_response.data, 'UniformOutput', false));
+        catch ME
+            gui.myWaitbar(parentfig, fw, true);
+            gui.myErrordlg(parentfig, ME.message, 'Error fetching Anthropic models');
+            return;
+        end
+        gui.myWaitbar(parentfig, fw);
+
+        % Pre-select claude-sonnet-4-6 as the recommended default if present
+        preferred_model = 'claude-sonnet-4-6';
+        [y, idx] = ismember(preferred_model, model_names);
+        if ~y
+            % Fall back to first model
+            idx = 1;
+            y   = ~isempty(model_names);
+        end
+
+        if y
+            if gui.i_isuifig(parentfig)
+                [idx, ok2] = gui.myListdlg(parentfig, model_names, ...
+                        'Select a Claude model:', model_names(idx));
+            else
+                [idx, ok2] = listdlg('PromptString', 'Select a Claude model:', ...
+                              'SelectionMode', 'single', ...
+                              'ListString', model_names, ...
+                              'ListSize', [300 300], ...
+                              'InitialValue', idx);
+            end
+        else
+            if gui.i_isuifig(parentfig)
+                [idx, ok2] = gui.myListdlg(parentfig, model_names, ...
+                        'Select a Claude model:');
+            else
+                [idx, ok2] = listdlg('PromptString', 'Select a Claude model:', ...
+                              'SelectionMode', 'single', ...
+                              'ListString', model_names, ...
+                              'ListSize', [300 300]);
+            end
+        end
+
+        if ok2
+            selectedModel = model_names{idx};
+            setpref('scgeatoolbox', preftagname, ...
+                selectedProvider + ":" + selectedModel);
+            done = true;
+        else
+            return;
+        end
+
+    case 'DeepSeek'
+        % DeepSeek — OpenAI-compatible API
+        % Requires DEEPSEEK_API_KEY in the env file.
+        if ~exist(apikeyfile, "file")
+            gui.myErrordlg(parentfig, "llm_api_key.env is not a valid file.");
+            return;
+        end
+        loadenv(apikeyfile, "FileType", "env");
+        api_key = getenv("DEEPSEEK_API_KEY");
+        if isempty(api_key)
+            gui.myWarndlg(parentfig, ...
+                "DEEPSEEK_API_KEY not found in the env file. " + ...
+                "Please add it and try again.");
+            return;
+        end
+        models_url = 'https://api.deepseek.com/v1/models';
+        options = weboptions('HeaderFields', {'Authorization', ...
+            sprintf('Bearer %s', api_key)}, ...
+            'ContentType', 'json', 'Timeout', 30);
+        fw = gui.myWaitbar(parentfig);
+        try
+            models_response = webread(models_url, options);
+            model_names = string(cellfun(@(s) s.id, ...
+                models_response.data, 'UniformOutput', false));
+        catch ME
+            gui.myWaitbar(parentfig, fw, true);
+            gui.myErrordlg(parentfig, ME.message, 'Error fetching DeepSeek models');
+            return;
+        end
+        gui.myWaitbar(parentfig, fw);
+        preferred_model = 'deepseek-chat';
+        [y, idx] = ismember(preferred_model, model_names);
+        if ~y, idx = 1; y = ~isempty(model_names); end
+        if y
+            if gui.i_isuifig(parentfig)
+                [idx, ok2] = gui.myListdlg(parentfig, model_names, ...
+                        'Select a DeepSeek model:', model_names(idx));
+            else
+                [idx, ok2] = listdlg('PromptString', 'Select a DeepSeek model:', ...
+                              'SelectionMode', 'single', 'ListString', model_names, ...
+                              'ListSize', [300 300], 'InitialValue', idx);
+            end
+        else
+            if gui.i_isuifig(parentfig)
+                [idx, ok2] = gui.myListdlg(parentfig, model_names, 'Select a DeepSeek model:');
+            else
+                [idx, ok2] = listdlg('PromptString', 'Select a DeepSeek model:', ...
+                              'SelectionMode', 'single', 'ListString', model_names, ...
+                              'ListSize', [300 300]);
+            end
+        end
+        if ok2
+            selectedModel = model_names{idx};
+            setpref('scgeatoolbox', preftagname, selectedProvider + ":" + selectedModel);
+            done = true;
+        else
+            return;
+        end
+
+    case 'xAI'
+        % xAI Grok — OpenAI-compatible API
+        % Requires XAI_API_KEY in the env file.
+        if ~exist(apikeyfile, "file")
+            gui.myErrordlg(parentfig, "llm_api_key.env is not a valid file.");
+            return;
+        end
+        loadenv(apikeyfile, "FileType", "env");
+        api_key = getenv("XAI_API_KEY");
+        if isempty(api_key)
+            gui.myWarndlg(parentfig, ...
+                "XAI_API_KEY not found in the env file. " + ...
+                "Please add it and try again.");
+            return;
+        end
+        models_url = 'https://api.x.ai/v1/models';
+        options = weboptions('HeaderFields', {'Authorization', ...
+            sprintf('Bearer %s', api_key)}, ...
+            'ContentType', 'json', 'Timeout', 30);
+        fw = gui.myWaitbar(parentfig);
+        try
+            models_response = webread(models_url, options);
+            model_names = string(cellfun(@(s) s.id, ...
+                models_response.data, 'UniformOutput', false));
+        catch ME
+            gui.myWaitbar(parentfig, fw, true);
+            gui.myErrordlg(parentfig, ME.message, 'Error fetching xAI models');
+            return;
+        end
+        gui.myWaitbar(parentfig, fw);
+        preferred_model = 'grok-3';
+        [y, idx] = ismember(preferred_model, model_names);
+        if ~y, idx = 1; y = ~isempty(model_names); end
+        if y
+            if gui.i_isuifig(parentfig)
+                [idx, ok2] = gui.myListdlg(parentfig, model_names, ...
+                        'Select an xAI model:', model_names(idx));
+            else
+                [idx, ok2] = listdlg('PromptString', 'Select an xAI model:', ...
+                              'SelectionMode', 'single', 'ListString', model_names, ...
+                              'ListSize', [300 300], 'InitialValue', idx);
+            end
+        else
+            if gui.i_isuifig(parentfig)
+                [idx, ok2] = gui.myListdlg(parentfig, model_names, 'Select an xAI model:');
+            else
+                [idx, ok2] = listdlg('PromptString', 'Select an xAI model:', ...
+                              'SelectionMode', 'single', 'ListString', model_names, ...
+                              'ListSize', [300 300]);
+            end
+        end
+        if ok2
+            selectedModel = model_names{idx};
+            setpref('scgeatoolbox', preftagname, selectedProvider + ":" + selectedModel);
+            done = true;
+        else
+            return;
+        end
+
+    case 'Mistral'
+        % Mistral AI — OpenAI-compatible API
+        % Requires MISTRAL_API_KEY in the env file.
+        if ~exist(apikeyfile, "file")
+            gui.myErrordlg(parentfig, "llm_api_key.env is not a valid file.");
+            return;
+        end
+        loadenv(apikeyfile, "FileType", "env");
+        api_key = getenv("MISTRAL_API_KEY");
+        if isempty(api_key)
+            gui.myWarndlg(parentfig, ...
+                "MISTRAL_API_KEY not found in the env file. " + ...
+                "Please add it and try again.");
+            return;
+        end
+        models_url = 'https://api.mistral.ai/v1/models';
+        options = weboptions('HeaderFields', {'Authorization', ...
+            sprintf('Bearer %s', api_key)}, ...
+            'ContentType', 'json', 'Timeout', 30);
+        fw = gui.myWaitbar(parentfig);
+        try
+            models_response = webread(models_url, options);
+            model_names = string(cellfun(@(s) s.id, ...
+                models_response.data, 'UniformOutput', false));
+            % Keep only chat-capable models (exclude embed/moderation models)
+            is_chat = cellfun(@(s) isfield(s,'capabilities') && ...
+                isfield(s.capabilities,'completion_chat') && ...
+                s.capabilities.completion_chat, models_response.data);
+            if any(is_chat)
+                model_names = model_names(is_chat);
+            end
+        catch ME
+            gui.myWaitbar(parentfig, fw, true);
+            gui.myErrordlg(parentfig, ME.message, 'Error fetching Mistral models');
+            return;
+        end
+        gui.myWaitbar(parentfig, fw);
+        preferred_model = 'mistral-large-latest';
+        [y, idx] = ismember(preferred_model, model_names);
+        if ~y, idx = 1; y = ~isempty(model_names); end
+        if y
+            if gui.i_isuifig(parentfig)
+                [idx, ok2] = gui.myListdlg(parentfig, model_names, ...
+                        'Select a Mistral model:', model_names(idx));
+            else
+                [idx, ok2] = listdlg('PromptString', 'Select a Mistral model:', ...
+                              'SelectionMode', 'single', 'ListString', model_names, ...
+                              'ListSize', [300 300], 'InitialValue', idx);
+            end
+        else
+            if gui.i_isuifig(parentfig)
+                [idx, ok2] = gui.myListdlg(parentfig, model_names, 'Select a Mistral model:');
+            else
+                [idx, ok2] = listdlg('PromptString', 'Select a Mistral model:', ...
+                              'SelectionMode', 'single', 'ListString', model_names, ...
+                              'ListSize', [300 300]);
+            end
+        end
+        if ok2
+            selectedModel = model_names{idx};
+            setpref('scgeatoolbox', preftagname, selectedProvider + ":" + selectedModel);
+            done = true;
+        else
+            return;
+        end
+
+    case 'Cohere'
+        % Cohere — native API (slightly different from OpenAI-compatible)
+        % Requires COHERE_API_KEY in the env file.
+        if ~exist(apikeyfile, "file")
+            gui.myErrordlg(parentfig, "llm_api_key.env is not a valid file.");
+            return;
+        end
+        loadenv(apikeyfile, "FileType", "env");
+        api_key = getenv("COHERE_API_KEY");
+        if isempty(api_key)
+            gui.myWarndlg(parentfig, ...
+                "COHERE_API_KEY not found in the env file. " + ...
+                "Please add it and try again.");
+            return;
+        end
+        % Use /v2/models?endpoint=chat to get only chat-capable models
+        models_url = 'https://api.cohere.com/v2/models?endpoint=chat&page_size=50';
+        options = weboptions('HeaderFields', { ...
+            'Authorization', sprintf('Bearer %s', api_key); ...
+            'X-Client-Name', 'scGEAToolbox'}, ...
+            'ContentType', 'json', 'Timeout', 30);
+        fw = gui.myWaitbar(parentfig);
+        try
+            models_response = webread(models_url, options);
+            % Cohere response: struct with field 'models', each has 'name'
+            model_names = string(cellfun(@(s) s.name, ...
+                models_response.models, 'UniformOutput', false));
+        catch ME
+            gui.myWaitbar(parentfig, fw, true);
+            gui.myErrordlg(parentfig, ME.message, 'Error fetching Cohere models');
+            return;
+        end
+        gui.myWaitbar(parentfig, fw);
+        preferred_model = 'command-r-plus';
+        [y, idx] = ismember(preferred_model, model_names);
+        if ~y, idx = 1; y = ~isempty(model_names); end
+        if y
+            if gui.i_isuifig(parentfig)
+                [idx, ok2] = gui.myListdlg(parentfig, model_names, ...
+                        'Select a Cohere model:', model_names(idx));
+            else
+                [idx, ok2] = listdlg('PromptString', 'Select a Cohere model:', ...
+                              'SelectionMode', 'single', 'ListString', model_names, ...
+                              'ListSize', [300 300], 'InitialValue', idx);
+            end
+        else
+            if gui.i_isuifig(parentfig)
+                [idx, ok2] = gui.myListdlg(parentfig, model_names, 'Select a Cohere model:');
+            else
+                [idx, ok2] = listdlg('PromptString', 'Select a Cohere model:', ...
+                              'SelectionMode', 'single', 'ListString', model_names, ...
+                              'ListSize', [300 300]);
+            end
+        end
+        if ok2
+            selectedModel = model_names{idx};
+            setpref('scgeatoolbox', preftagname, selectedProvider + ":" + selectedModel);
+            done = true;
+        else
+            return;
         end
 
     otherwise

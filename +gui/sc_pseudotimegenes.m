@@ -71,7 +71,7 @@ t = t(:);
         hFig.Position(3) = hFig.Position(3) * 1.8;
         hx.show(parentfig);
         figure(hFig);
-        pkg.i_plot_pseudotimeseries(log1p(X), ...
+        gui.i_plot_pseudotimeseries(log1p(X), ...
             sceg, t, selectedg);        
     catch ME
         if exist('psf1', 'var') && ishandle(hFig)

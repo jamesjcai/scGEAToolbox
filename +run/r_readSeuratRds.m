@@ -23,7 +23,7 @@ if isempty(Rpath)
     error('R environment has not been set up.');
 end
 codefullpath = fullfile(codepth,'script.R');
-pkg.RunRcode(codefullpath, Rpath);
+pkg.i_runrcode(codefullpath, Rpath);
 
 g = [];
 if exist('g.csv', 'file')

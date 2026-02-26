@@ -58,7 +58,7 @@ if isempty(Rpath)
     error('R environment has not been set up.');
 end
 codefullpath = fullfile(codepath,'script.R');
-pkg.RunRcode(codefullpath, Rpath);
+pkg.i_runrcode(codefullpath, Rpath);
 
 pause(1);
 if exist('output.txt', 'file')

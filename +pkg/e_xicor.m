@@ -177,7 +177,7 @@ else
     y_unique = unique(y);
     idx_tie = find(groupcounts(y)>1);
         
-    for i=1:length(idx_tie)
+    for i = 1:numel(idx_tie)
         tie_mask = (y == y_unique(idx_tie));                
         r(tie_mask) = max(r(tie_mask))*ones(1,sum(tie_mask));    
         l(tie_mask) = max(l(tie_mask))*ones(1,sum(tie_mask));

@@ -33,7 +33,7 @@ function [T] = r_DESeq2(X, Y, genelist, wkdir)
         error('R environment has not been set up.');
     end
     codefullpath = fullfile(codepth,'script.R');
-    pkg.RunRcode(codefullpath, Rpath);
+    pkg.i_runrcode(codefullpath, Rpath);
     
     if ~exist('output.csv', 'file'), return; end
     T = readtable('output.csv', 'TreatAsMissing', 'NA', ...

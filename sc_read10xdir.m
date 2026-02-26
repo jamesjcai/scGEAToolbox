@@ -110,6 +110,7 @@ else
     celllist = [];
 end
 fprintf('done.\n');
+%{
 if exist(zmmfname, 'file') && exist(mmfname, 'file')
     delete(mmfname);
 end
@@ -119,6 +120,7 @@ end
 if exist(zbcfname, 'file') && exist(bcfname, 'file')
     delete(bcfname);
 end
+%}
 end
 
 function [out, aff] = i_guessmtxfile(selpath)
@@ -129,7 +131,8 @@ for k = 1:length(a)
     if contains(a(k).name, 'matrix.mtx')
         out = a(k).name;
         aff = extractBefore(out, 'matrix.mtx');
-        continue;
+        % continue;
+        break;
     end
 end
 end

@@ -1,0 +1,117 @@
+{
+    "quantumCircuit":
+    {
+        "inputs":
+        [
+            {
+                "mutuallyExclusiveGroup":
+                [
+                    [
+                        {"name":"gates", "kind":"required", "type":["quantum.gate.QuantumGate"]},
+                        {"name":"numQubits", "kind":"ordered", "type":["integer", "scalar"]}
+                    ],
+                    {"name":"numQubits", "kind":"required", "type":["integer", "scalar"]}
+                ]
+            },
+            {"name":"Name", "kind":"namevalue", "type":["char"]}
+        ]
+    },
+    "quantumCircuit.plot":
+    {
+        "inputs":
+        [
+            {"name":"c", "kind":"required", "type":["quantumCircuit"]},
+            {"name":"QubitBlocks", "kind":"namevalue", "type":["integer", "vector"]},
+            {"name":"NumRows", "kind":"namevalue", "type":["integer", "scalar"]},
+            {"name":"QubitLabelLocation", "kind":"namevalue", "type":["char", "choices={'none', 'both', 'left', 'right'}"]}
+        ]
+    },
+    "quantum.gate.CompositeGate.plot":
+    {
+        "inputs":
+        [
+            {"name":"c", "kind":"required", "type":["quantum.gate.CompositeGate"]},
+            {"name":"QubitBlocks", "kind":"namevalue", "type":["integer", "vector"]},
+            {"name":"NumRows", "kind":"namevalue", "type":["integer", "scalar"]},
+            {"name":"QubitLabelLocation", "kind":"namevalue", "type":["char", "choices={'none', 'both', 'left', 'right'}"]}
+        ]
+    },
+    "quantumCircuit.generateQASM":
+    {
+        "inputs":
+        [
+            {"name":"c", "kind":"required", "type":["quantumCircuit"]}
+        ]
+    },
+    "quantumCircuit.run":
+    {
+        "inputs":
+        [
+            {"name":"c", "kind":"required", "type":["quantumCircuit"]},
+            {
+                "mutuallyExclusiveGroup":
+                [
+                    [
+                        {"name":"dev", "kind":"required", "type":["quantum.backend.QuantumDeviceAWS"]},
+                        {"name":"NumShots", "kind":"namevalue", "type":["scalar", "integer", ">=0"]}
+                    ],
+                    [
+                        {"name":"dev", "kind":"required", "type":["quantum.backend.QuantumDeviceIBM"]},
+                        {"name":"NumShots", "kind":"namevalue", "type":["scalar", "integer", ">=0"]},
+                        {"name":"UseErrorMitigation", "kind":"namevalue", "type":["scalar", "logical"]}
+                    ]
+                ]
+            }
+        ]
+    },
+    "quantumCircuit.unpack":
+    {
+        "inputs":
+        [
+            {"name":"c", "kind":"required", "type":["quantumCircuit"]},
+            {"name":"option", "kind":"ordered", "type":["char", "choices={'all', 'recursive'}"]}
+        ]
+    },
+    "quantumCircuit.unpack":
+    {
+        "inputs":
+        [
+            {"name":"c", "kind":"required", "type":["quantumCircuit"]},
+            {"name":"id", "kind":"ordered", "type":["integer", "scalar", ">=1"]}
+        ]
+    },
+    "quantum.gate.QuantumState.histogram":
+    {
+        "inputs":
+        [
+            {"name":"s", "kind":"required", "type":["quantum.gate.QuantumState"]},
+            {"name":"qubits", "kind":"ordered", "type":["integer", "vector", ">=1"]},
+            {"name":"Basis", "kind":"namevalue", "type":["char"]},
+            {"name":"Threshold", "kind":"namevalue", "type":["scalar", "numeric", ">=0"]}
+        ]
+    },
+    "compositeGate":
+    {
+        "inputs":
+        [
+            {
+                "mutuallyExclusiveGroup":
+                [
+                    {"name":"c", "kind":"required", "type":["quantumCircuit"]},
+                    {"name":"gates", "kind":"required", "type":["quantum.gate.QuantumGate"]}
+                ]
+            },
+            {"name":"targetQubits", "kind":"required", "type":["integer", "vector", ">=1"]},
+            {"name":"Name", "kind":"namevalue", "type":["char"]}
+        ]
+    },
+    "quantum.gate.QuantumMeasurement.histogram":
+    {
+        "inputs":
+        [
+            {"name":"s", "kind":"required", "type":["quantum.gate.QuantumMeasurement"]},
+            {"name":"qubits", "kind":"ordered", "type":["integer", "vector", ">=1"]},
+            {"name":"Threshold", "kind":"namevalue", "type":["scalar", "numeric", ">=0"]}
+        ]
+    }
+}

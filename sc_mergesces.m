@@ -1,12 +1,22 @@
-function [sce] = sc_mergesces(sces, method, keepbatchid)
-%Merges two SCE objects
-%Usage: [sce]=sc_mergesces({sce1,sce2},'intersect');
-%See also: SC_MERGEDATA
+function [sce] = sc_mergesces(sces, method, keepbatchid, forcenoappendix)
+% Merges two SCE objects
+% Usage: [sce]=sc_mergesces({sce1,sce2},'intersect');
+% See also: SC_MERGEDATA
 
-if nargin < 3, keepbatchid = true; end
-if nargin < 2 || isempty(method), method = 'intersect'; end
-validMethods = ["intersect", "union"];
+if nargin < 4, forcenoappendix = false; end
+if nargin < 3
+    keepbatchid = true;
+end
+
+if nargin < 2 || isempty(method)
+    method = "intersect";
+end
+
+method = string(method);                 % normalize type
+validMethods = ["intersect","union"];
 method = validatestring(method, validMethods);
+method = string(method);                 % convert back to string
+
 if ~iscell(sces), error('SCES is not a cell array.'); end
 if length(sces) < 2, error('At least two SCE required.'); end
 for k = 1:length(sces)
@@ -15,22 +25,24 @@ for k = 1:length(sces)
     end
 end
 
-needappendix=false;
+needappendix = false;
 sce = sces{1};
 c = ones(sce.NumCells, 1);
 for k = 2:length(sces)
     c = [c; k * ones(sces{k}.NumCells, 1)];
     [sce, hasidoverlapx] = i_merge2sces(sce, sces{k}, method);
     if hasidoverlapx
-        needappendix=true;
+        needappendix = true;
     end
 end
 if ~keepbatchid || isscalar(unique(sce.c_batch_id)) 
     sce.c_batch_id = c; 
 end
-if needappendix
-    sce.c_batch_id = strcat(string(sce.c_batch_id), "_", string(c));
-    disp('A suffix is added to SCE.C_BATCH_ID to distinguish cells'' original batch IDs.');
+if ~forcenoappendix
+    if needappendix
+        sce.c_batch_id = strcat(string(sce.c_batch_id), "_", string(c));
+        disp('A suffix is added to SCE.C_BATCH_ID to distinguish cells'' original batch IDs.');
+    end
 end
 
 end

@@ -34,7 +34,7 @@ elseif string(lower(speciesid))=="mouse"
 else
     codefullpath = fullfile(codepath,'script.R');    
 end
-pkg.RunRcode(codefullpath, Rpath);
+pkg.i_runrcode(codefullpath, Rpath);
 pause(3);
 outfile = "test_copykat_prediction.txt";
 if exist(outfile,'file')

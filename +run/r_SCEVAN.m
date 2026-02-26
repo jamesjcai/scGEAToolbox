@@ -30,7 +30,7 @@ if strcmpi(species, 'human')
 else
     codefullpath = fullfile(codepath,'script_mouse.R');
 end
-pkg.RunRcode(codefullpath, Rpath);
+pkg.i_runrcode(codefullpath, Rpath);
 pause(3);
 outfile = "output.csv";
 if exist(outfile,'file')

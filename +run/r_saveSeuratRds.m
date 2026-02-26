@@ -28,7 +28,7 @@ if isempty(Rpath)
     error('R environment has not been set up.');
 end
 codefullpath = fullfile(codepath,'script.R');
-pkg.RunRcode(codefullpath, Rpath);
+pkg.i_runrcode(codefullpath, Rpath);
 
 [status] = copyfile('output.Rds', filename, 'f');
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end

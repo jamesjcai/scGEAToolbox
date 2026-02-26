@@ -2,7 +2,7 @@ function s = sc_umap(X, ndim, donorm, dolog1p)
 %UMAP embedding of cells
 % s=sc_umap(X,3);
 
-%see also: SC_TSNT, SC_PHATE
+%see also: SC_TSNE, SC_PHATE
 % s_phate=run.PHATE(X,3,true);
 % s_umap=run.UMAP(X,3);
 

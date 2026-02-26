@@ -1,6 +1,6 @@
 function i_violinplot(d, c, colorit, grouporder)
-import pkg.Violin
-import pkg.violinplot
+import gui.Violin
+import gui.violinplot
 
 if ~isstring(c)
     c = string(c);

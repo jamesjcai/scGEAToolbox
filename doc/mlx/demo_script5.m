@@ -22,7 +22,7 @@ selectedg=genelist([idxp idxn]);
 % Plot expression profile of the 5 selected genes
 try
     figure;
-    pkg.i_plot_pseudotimeseries(log1p(X),genelist,t,selectedg)
+    gui.i_plot_pseudotimeseries(log1p(X),genelist,t,selectedg)
 catch
 end
 % % Nonlinear correlation  
@@ -36,7 +36,7 @@ end
 % [~,idxn]= mink(r,2);
 % selectedg=genelist([idxp; idxn]);
 % figure;
-% pkg.i_plot_pseudotimeseries(log1p(X),genelist,t,selectedg)
+% gui.i_plot_pseudotimeseries(log1p(X),genelist,t,selectedg)
 %% Trajectory analysis using TSCAN
 % Calculte pseudotime T
 
@@ -54,7 +54,7 @@ end
 % Plot expression profile of the 5 selected genes
 try
 figure;
-pkg.i_plot_pseudotimeseries(log1p(X),genelist,t,selectedg)
+gui.i_plot_pseudotimeseries(log1p(X),genelist,t,selectedg)
 catch ME
     disp(ME.message);
 end

@@ -183,12 +183,12 @@ elseif isStringScalar(targetg) || ischar(targetg)
         if showcam
             hFig = gcf;
             tb = uitoolbar(hFig);
-            pkg.i_addbutton2fig(tb, 'off', @gui.i_linksubplots, 'keyframes-minus.jpg', 'Link subplots');
-            pkg.i_addbutton2fig(tb, 'on', {@i_genecards, targetg}, 'www.jpg', 'GeneCards...');
-            pkg.i_addbutton2fig(tb, 'on', {@i_PickColorMap, c}, 'plotpicker-compass.gif', 'Pick new color map...');
-            pkg.i_addbutton2fig(tb, 'off', @i_RescaleExpr, 'IMG00074.GIF', 'Rescale expression level [log2(x+1)]');
-            pkg.i_addbutton2fig(tb, 'off', @i_ResetExpr, 'plotpicker-geobubble2.gif', 'Reset expression level');
-            pkg.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
+            gui.i_addbutton2fig(tb, 'off', @gui.i_linksubplots, 'keyframes-minus.jpg', 'Link subplots');
+            gui.i_addbutton2fig(tb, 'on', {@i_genecards, targetg}, 'www.jpg', 'GeneCards...');
+            gui.i_addbutton2fig(tb, 'on', {@i_PickColorMap, c}, 'plotpicker-compass.gif', 'Pick new color map...');
+            gui.i_addbutton2fig(tb, 'off', @i_RescaleExpr, 'IMG00074.GIF', 'Rescale expression level [log2(x+1)]');
+            gui.i_addbutton2fig(tb, 'off', @i_ResetExpr, 'plotpicker-geobubble2.gif', 'Reset expression level');
+            gui.i_addbutton2fig(tb, 'off', {@gui.i_savemainfig, 3}, "powerpoint.gif", 'Save Figure to PowerPoint File...');
         end
     else
         warning('%s no expression', targetg);

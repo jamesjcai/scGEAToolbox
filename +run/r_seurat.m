@@ -36,7 +36,7 @@ Rpath = getpref('scgeatoolbox', 'rexecutablepath');
 
 codefullpath = fullfile(codepath,'script.R');
 pkg.i_addwd2script(codefullpath, wkdir, 'R');
-pkg.RunRcode(codefullpath, Rpath);
+pkg.i_runrcode(codefullpath, Rpath);
 
 if exist('output.h5', 'file')
     s_tsne = h5read('output.h5', '/s_tsne');
