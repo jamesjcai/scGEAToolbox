@@ -1,7 +1,7 @@
 function obj = estimatepotency(obj, speciesid, forced)
 if nargin < 3, forced = false; end
 if nargin < 2, speciesid = []; end
-if forced || sum(strcmp('cell_potency', obj.list_cell_attributes)) == 0
+if forced || ~obj.hasCellAttribute('cell_potency')
     if isempty(speciesid)
         FigureHandle=[];
         speciesid = gui.i_selectspecies(2, false, FigureHandle);
@@ -18,8 +18,7 @@ if forced || sum(strcmp('cell_potency', obj.list_cell_attributes)) == 0
         end
     end
     r = sc_potency(obj.X, obj.g, speciesid);
-    obj.list_cell_attributes = [obj.list_cell_attributes, ...
-        {'cell_potency', r}];
+    obj.setCellAttribute('cell_potency', r);
     disp('cell_potency added to SCE.LIST_CELL_ATTRIBUTES.');
 else
     disp('cell_potency existed in SCE.LIST_CELL_ATTRIBUTES.');

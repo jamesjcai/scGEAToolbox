@@ -54,9 +54,13 @@ function callback_BuildGeneNetwork(src, ~)
         try
             G = pkg.i_makegraph(A, glist);
             if strcmp('Yes', gui.myQuestdlg(FigureHandle, 'Save network?'))
-                [file, path] = uiputfile({'*.mat'; '*.*'}, ...
-                    'Save as', 'network_file');     
-                if isvalid(FigureHandle) && isa(FigureHandle, 'matlab.ui.Figure'), figure(FigureHandle); end
+                if gui.i_isuifig(FigureHandle)
+                    [file, path] = uiputfile(FigureHandle, {'*.mat'; '*.*'}, ...
+                        'Save as', 'network_file');
+                else
+                    [file, path] = uiputfile({'*.mat'; '*.*'}, ...
+                        'Save as', 'network_file');
+                end
                 if isequal(file, 0) || isequal(path, 0)
                     return;
                 else

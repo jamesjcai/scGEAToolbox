@@ -1,32 +1,20 @@
 import os
-os.chdir("d:\\GitHub\\scGEAToolbox\\+run\\external\\py_scimilarity\\test")
-#import os
-#os.chdir("./")
-import pandas as pd 
-#import scanpy as sc 
+#import scanpy as sc
 #import scipy.io as spio
 #import numpy as np
-from scipy.sparse import csr_matrix
-import h5py
-import anndata
-
-
-
-
-# ==============================
-
 import scanpy as sc
 from matplotlib import pyplot as plt
-
-sc.set_figure_params(dpi=100)
-plt.rcParams["figure.figsize"] = [6, 4]
-
 import warnings
-
-warnings.filterwarnings("ignore")
-
 from scimilarity.utils import lognorm_counts, align_dataset
 from scimilarity import CellAnnotation
+
+os.chdir("d:\\GitHub\\scGEAToolbox\\+run\\external\\py_scimilarity\\test")
+#os.chdir("./")
+sc.set_figure_params(dpi=100)
+plt.rcParams["figure.figsize"] = [6, 4]
+warnings.filterwarnings("ignore")
+
+# ==============================
 
 # Instantiate the CellAnnotation object
 # Set model_path to the location of the uncompressed model

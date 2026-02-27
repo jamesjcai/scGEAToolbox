@@ -1,8 +1,8 @@
 function [indx, tf] = myListdlg(parentfig, options, Title, ...
         prefersel, allowmulti)
 
-if nargin < 5, allowmulti = true; end
-if nargin < 4, prefersel = []; end
+    if nargin < 5, allowmulti = true; end
+    if nargin < 4, prefersel = []; end
 
     if length(options) > 1e4
         [indx, tf] = gui.myTabledlg(parentfig, options, Title, prefersel, allowmulti);
@@ -63,13 +63,13 @@ if nargin < 4, prefersel = []; end
 
      % parentfig.WindowStyle = 'normal';
 
-    
+
     %drawnow;
-    
+
     %pause(0.7);
-    
+
     %d.Visible = 'on';
-    
+
     % Set focus on the listbox for user interaction
     %
     % lb.focus();
@@ -77,7 +77,11 @@ if nargin < 4, prefersel = []; end
     % Wait for user response
     %d.WindowStyle = "modal";
     uiwait(d);
-    
+
+    if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure')
+        figure(parentfig);
+    end
+
     % Get selected items
     if isvalid(lb)
         selection = lb.Value;        

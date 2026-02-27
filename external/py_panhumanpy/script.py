@@ -1,8 +1,6 @@
-import pandas as pd
 from scipy.sparse import csr_matrix
 import h5py
 import anndata as ad
-import os.path
 
 import panhumanpy as ph
 
@@ -33,4 +31,4 @@ azimuth = ph.AzimuthNN(adata)
 #                       eval_batch_size=25000)
 
 cell_metadata = azimuth.cells_meta
-cell_metadata.to_csv("output.csv", sep=",", index=True);
+cell_metadata.to_csv("output.csv", sep=",", index=True)

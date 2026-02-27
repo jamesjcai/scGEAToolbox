@@ -101,7 +101,7 @@ if nargin<2, parentfig = []; end
             values = {copy(sce), sce.X, sce.g, sce.s};
             
             if gui.i_isuifig(parentfig)
-                gui.i_bringtofront(parentfig);                
+                % gui.i_bringtofront(parentfig);                
                 [~, OKPressed] = gui.myExport2wsdlg(labels, vars, values, ...
                     'Save Data to Workspace', ...
                     [true, false, false, false], parentfig);

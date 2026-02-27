@@ -1,4 +1,5 @@
 library(celda)
+if (!exists("decontX", mode = "function")) library(decontX)
 library(rhdf5)
 
 # library(R.matlab)

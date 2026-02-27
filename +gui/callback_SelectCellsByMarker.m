@@ -82,8 +82,8 @@ end
                 idx1 = c > 0;
                 idx2 = c == 0;
 
-                scex = sce;
-                scex.list_cell_attributes = [sce.list_cell_attributes, {'old_batch_id', scex.c_batch_id}];
+                scex = copy(sce);
+                scex.setCellAttribute('old_batch_id', scex.c_batch_id);
                 scex.c_batch_id(idx1) = sprintf('%s+', tg);
                 scex.c_batch_id(idx2) = sprintf('%s-', tg);
                 scex.c = scex.c_batch_id;

@@ -93,11 +93,11 @@ is3d = is3d1 & is3d2;
 
 hold(hAx, 'on');
 
-assignin("base","ax",ax);
+% assignin("base","ax",ax);
 
 dts = findall(ax, 'Type', 'datatip');
 hscatter = ax.Children(1);
-assignin("base","dts", dts);
+% assignin("base","dts", dts);
 
 stxtyes=cell(length(hscatter.XData),1);
 

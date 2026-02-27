@@ -44,10 +44,10 @@ if not os.path.exists(csvFile):
     print(csvFile + ' does not exist')
     sys.exit(11)
 
-path=os.path.dirname(csvFile);
+path=os.path.dirname(csvFile)
 baseFile=os.path.basename(csvFile)
 file, ext = os.path.splitext(baseFile)
-usingZip=False;
+usingZip=False
 
 if ext.upper() == '.ZIP':
     import zipfile
@@ -97,10 +97,10 @@ if argv.useTemplate is not None:
 else:
     transforming = False
 
-import time
+import time  # noqa: E402
 t1_start = time.perf_counter()
 
-import pandas as pd
+import pandas as pd  # noqa: E402
 D=pd.read_csv(csvFile)
 rows, cols = D.shape
 print(file + '.csv contains ' + "{:,}".format(rows) +
@@ -144,7 +144,7 @@ rows, cols = dataSlice.shape
 strRows="{:,}".format(rows)
 strCols=str(cols)
 print('Computing UMAP for ' +strRows+ ' rows X ' + strCols + ' columns....')
-if argv.random_state == None:
+if argv.random_state is None:
     strRandom='None'
 else:
     strRandom=str(argv.random_state)
@@ -152,7 +152,7 @@ print('\tmetric='+argv.metric+', min_dist='+str(argv.min_dist)+
       ', n_neighbors='+str(argv.n_neighbors) +',\n\t output_dimensions='+
       str(argv.output_dimensions)+', random='+strRandom + '\n')
 
-import umap
+import umap  # noqa: E402
 if transforming:
     embedding = trans.transform(dataSlice)
 else:

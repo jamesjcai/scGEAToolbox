@@ -1,12 +1,7 @@
-import sys
-import scanpy as sc
 import scTenifoldXct as st
 from scTenifoldXct.dataLoader import build_adata
 import pandas as pd
-import numpy as np
 import h5py
-import scipy
-from scipy import sparse
 
 twosided = 1
 with h5py.File('X.mat', 'r') as f:

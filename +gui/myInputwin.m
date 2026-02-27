@@ -71,6 +71,7 @@ function textEntered(~,~,btn)
         y = false;
         answer = {};
     end
+    uiresume(hFig);
     delete(hFig);
 end
 

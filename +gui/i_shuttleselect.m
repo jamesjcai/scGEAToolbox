@@ -67,6 +67,7 @@ function [idx] = i_shuttleselect(items, preselected_items, parentfig)
     if isvalid(hFig)
         [~, idx] = ismember(selItems, items);
         idx = idx(:);
+        uiresume(hFig);
         delete(hFig);
     end
 

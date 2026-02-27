@@ -85,7 +85,7 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
 
     function [s] = in_aaa(attribtag)
         s = [];
-        if ~ismember(attribtag, sce.list_cell_attributes(1:2:end))
+        if ~sce.hasCellAttribute(attribtag)
             needestimt = true;
         else
             answer1 = gui.myQuestdlg(FigureHandle, sprintf('Use existing %s estimation or re-compute new estimation?', ...
@@ -127,13 +127,7 @@ function [needupdate] = callback_CellCyclePotency(src, ~, typeid)
                 gui.myErrordlg(FigureHandle, sprintf("%s runtime error.", attribtag),"")
                 return; 
             end
-            [yesx, idx] = ismember(attribtag, sce.list_cell_attributes(1:2:end));
-            if yesx
-                sce.list_cell_attributes{idx*2} = s;
-            else
-                sce.list_cell_attributes = [sce.list_cell_attributes, ...
-                    {char(attribtag), s}];
-            end
+            sce.setCellAttribute(attribtag, s);
             gui.myWaitbar(FigureHandle, fw);
             gui.myGuidata(FigureHandle, sce, src);
             needupdate = true;

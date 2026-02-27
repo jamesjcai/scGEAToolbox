@@ -55,7 +55,7 @@ h_list2 = uicontrol(hFig,'style', 'list', 'max', length(genelist), ...
     'string', predefinedlist);
 set(hFig, 'Visible', 'on')
 % drawnow();
-uiwait();
+uiwait(hFig);
 
     function plotButtonPushed(~, ~, genelist)
         if ~isempty(h_list1.String)

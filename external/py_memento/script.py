@@ -2,7 +2,6 @@ import scanpy as sc
 
 import memento
 #import matplotlib.pyplot as plt
-import pandas as pd
 
 adata = sc.read_h5ad("input.h5ad")
 #print(adata)

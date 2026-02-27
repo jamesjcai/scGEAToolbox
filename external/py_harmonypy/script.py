@@ -4,7 +4,6 @@
 #os.chdir(dname)
 
 import pandas as pd
-import numpy as np
 import harmonypy as hm
 import h5py
 from scipy.io import savemat

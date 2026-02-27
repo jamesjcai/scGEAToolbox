@@ -14,8 +14,8 @@ exp.rawdata <- countMatrix
 copykat.test <- copykat(rawmat=exp.rawdata, id.type="S", 
 ngene.chr=5, win.size=25, KS.cut=0.1, 
 sam.name="test", distance="euclidean", 
-norm.cell.names="",output.seg="FLASE", 
-plot.genes="FLASE", genome="hg20", n.cores=1)
+norm.cell.names="",output.seg=FALSE,
+plot.genes=FALSE, genome="hg20", n.cores=1)
 
 #pred.test <- data.frame(copykat.test$prediction)
 #pred1.test <- pred.test[which(pred.test$copykat.pred %in% c("aneuploid","diploid")),]  ##keep defined cells

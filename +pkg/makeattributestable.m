@@ -7,11 +7,10 @@ function [T] = makeattributestable(sce)
         sce.c_cell_cycle_tx, ...
         'VariableNames', {'CellID', 'BatchID', 'ClusterID', ...
         'CellType', 'CellCycle'});
-    if ~isempty(sce.list_cell_attributes)        
-        for k = 1:2:length(sce.list_cell_attributes)
-            T = addvars(T, string(sce.list_cell_attributes{k+1}), ...
-                'NewVariableNames', sce.list_cell_attributes{k});
-        end
+    names = sce.list_cell_attributes(1:2:end);
+    for k = 1:numel(names)
+        T = addvars(T, string(sce.list_cell_attributes{2*k}), ...
+            'NewVariableNames', names{k});
     end
     % obj.table_attributes = T;
     %disp('table_attributes made.');

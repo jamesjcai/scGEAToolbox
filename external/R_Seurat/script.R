@@ -20,7 +20,7 @@ pbmc <- RunPCA(object = pbmc)
 pbmc <- RunTSNE(object = pbmc, dims = 1:30, dim.embed = ndim[1])
 
 if (ndim[1] == 3) {
-    pbmc <- RunUMAP(object = pbmc, dims = 1:30, dn.components = 3L)
+    pbmc <- RunUMAP(object = pbmc, dims = 1:30, n.components = 3L)
 } else {
     pbmc <- RunUMAP(object = pbmc, dims = 1:30)
 }

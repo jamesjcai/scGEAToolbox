@@ -106,6 +106,8 @@ if tf2 == 1
         case 'Workspace Variable...'
             thisc = i_pickvariable;
     end
+else
+    figure(parentfig);
 end
 
 

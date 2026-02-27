@@ -36,9 +36,9 @@ sce <- SCTransform(sce, vars.to.regress = "percent.mt", verbose = FALSE, vst.fla
 #data<-as.matrix(sce@assays$SCT@data)
 #scale_data<-as.matrix(sce@assays$SCT@scale.data)
 #Access normalized data: 
-data <- GetAssayData(sce, assay = "SCT", slot = "data")
-#Access Pearson residuals: 
-scale_data <- GetAssayData(sce, assay = "SCT", slot = "scale.data")
+data <- GetAssayData(sce, assay = "SCT", layer = "data")
+#Access Pearson residuals:
+scale_data <- GetAssayData(sce, assay = "SCT", layer = "scale.data")
 
 #Access counts (may be empty): 
 #counts <- GetAssayData(sce, assay = "SCT", slot = "counts")

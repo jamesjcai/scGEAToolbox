@@ -28,8 +28,11 @@ function [d, tf] = myExport2wsdlg(labels, vars, vals, titleText, defs, parentfig
     %              'Name', titleText, 'WindowStyle', 'modal');
 
     % Create the dialog window
-    d = uifigure('Name', titleText, 'WindowStyle', 'modal');
+    d = uifigure('Name', titleText);  % , 'WindowStyle', 'modal');
     d.Position = [dialogX, dialogY, dialogWidth, dialogHeight];
+    
+    % gui.i_movegui2parent(d, parentfig);
+
 
     % Create a grid layout manager
     gl = uigridlayout(d, [numel(labels) + 1, 3]);
@@ -65,14 +68,19 @@ function [d, tf] = myExport2wsdlg(labels, vars, vals, titleText, defs, parentfig
     btnOK.Layout.Row = numel(labels) + 1;
     btnOK.Layout.Column = 2;
 
-    btnCancel = uibutton(gl, 'Text', 'Cancel', 'ButtonPushedFcn', @(~, ~) delete(d));
+    btnCancel = uibutton(gl, 'Text', 'Cancel', 'ButtonPushedFcn', @(~, ~) cancelFcn());
     btnCancel.Layout.Row = numel(labels) + 1;
     btnCancel.Layout.Column = 3;
 
     % Make the dialog visible
     %d.Visible = 'on';
     % Wait for the dialog to close before returning
+    % d.WindowStyle="modal";
     uiwait(d);
+
+    if ~isempty(parentfig) && isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure')
+        figure(parentfig);
+    end
 
     function onOK()
         % Export selected variables to the base workspace
@@ -87,6 +95,12 @@ function [d, tf] = myExport2wsdlg(labels, vars, vals, titleText, defs, parentfig
                 end
             end
         end
+        uiresume(d);
+        delete(d);
+    end
+
+    function cancelFcn()
+        uiresume(d);
         delete(d);
     end
 end

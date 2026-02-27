@@ -46,9 +46,9 @@ if isempty(setmatrx) || isempty(setnames) || isempty(setgenes)
     return;
 end
 
-assignin("base", "setmatrx", setmatrx);
-assignin("base", "setnames", setnames);
-assignin("base", "setgenes", setgenes);
+% assignin("base", "setmatrx", setmatrx);
+% assignin("base", "setnames", setnames);
+% assignin("base", "setgenes", setgenes);
 
 fw = gui.myWaitbar(FigureHandle);
 

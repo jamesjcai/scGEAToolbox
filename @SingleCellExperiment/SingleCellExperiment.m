@@ -153,6 +153,7 @@ methods
     obj = qcfilterwhitelist(obj, libszcutoff, mtratio, min_cells_nonzero, gnnumcutoff, whitelist)
     obj = sortcells(obj, idx);
     exportToJsonl(obj, outfile, dataset_id, titleText)
+    sce2 = toSCE2(obj)
    
     function obj = removecells(obj, idx)
         try
@@ -274,6 +275,74 @@ methods
         %            size(obj.X,1),size(obj.X,2));
         r = sprintf('%d x %d', ...
             size(obj.X, 1), size(obj.X, 2));
+    end
+
+    function tf = hasCellAttribute(obj, name)
+        % Returns true if a cell attribute with the given name exists.
+        tf = any(strcmp(name, obj.list_cell_attributes(1:2:end)));
+    end
+
+    function val = getCellAttribute(obj, name)
+        % Returns the value vector for a named cell attribute, or [] if absent.
+        idx = find(strcmp(name, obj.list_cell_attributes(1:2:end)), 1);
+        if isempty(idx)
+            val = [];
+        else
+            val = obj.list_cell_attributes{2*idx};
+        end
+    end
+
+    function setCellAttribute(obj, name, value)
+        % Add or update a named cell attribute.
+        % value must be a vector of length NumCells.
+        idx = find(strcmp(name, obj.list_cell_attributes(1:2:end)), 1);
+        if isempty(idx)
+            obj.list_cell_attributes = [obj.list_cell_attributes, {char(name), value}];
+        else
+            obj.list_cell_attributes{2*idx} = value;
+        end
+    end
+
+    function removeCellAttribute(obj, name)
+        % Remove a named cell attribute if it exists.
+        idx = find(strcmp(name, obj.list_cell_attributes(1:2:end)), 1);
+        if ~isempty(idx)
+            obj.list_cell_attributes([2*idx-1, 2*idx]) = [];
+        end
+    end
+
+    function tf = hasGeneAttribute(obj, name)
+        % Returns true if a gene attribute with the given name exists.
+        tf = any(strcmp(name, obj.list_gene_attributes(1:2:end)));
+    end
+
+    function val = getGeneAttribute(obj, name)
+        % Returns the value vector for a named gene attribute, or [] if absent.
+        idx = find(strcmp(name, obj.list_gene_attributes(1:2:end)), 1);
+        if isempty(idx)
+            val = [];
+        else
+            val = obj.list_gene_attributes{2*idx};
+        end
+    end
+
+    function setGeneAttribute(obj, name, value)
+        % Add or update a named gene attribute.
+        % value must be a vector of length NumGenes.
+        idx = find(strcmp(name, obj.list_gene_attributes(1:2:end)), 1);
+        if isempty(idx)
+            obj.list_gene_attributes = [obj.list_gene_attributes, {char(name), value}];
+        else
+            obj.list_gene_attributes{2*idx} = value;
+        end
+    end
+
+    function removeGeneAttribute(obj, name)
+        % Remove a named gene attribute if it exists.
+        idx = find(strcmp(name, obj.list_gene_attributes(1:2:end)), 1);
+        if ~isempty(idx)
+            obj.list_gene_attributes([2*idx-1, 2*idx]) = [];
+        end
     end
 
     function obj = qcfilter(obj, libsize, mtratio, min_cells_nonzero)

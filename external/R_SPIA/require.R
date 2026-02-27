@@ -1,6 +1,6 @@
 #setwd(getSrcDirectory()[1])
 
-if (!requireNamespace("DESeq2", quietly = TRUE)){
+if (!requireNamespace("SPIA", quietly = TRUE)){
 if (!requireNamespace("BiocManager", quietly = TRUE)){
     install.packages("BiocManager", repo="http://cran.rstudio.com/")
 }

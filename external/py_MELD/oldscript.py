@@ -1,13 +1,14 @@
 import os
+import scipy.io as spio
+import pandas as pd
+import meld
+
 abspath = os.path.abspath(__file__)
 dname = os.path.dirname(abspath)
 os.chdir(dname)
 # os.chdir("U:\\GitHub\\scGEAToolbox\\+run\\thirdparty\\MELD")
 # os.chdir("C:\\Users\\jcai.AUTH\\Documents\\GitHub\\scGEAToolbox\\+run\\thirdparty\\MELD")
 # https://www.blogforbrains.com/blog/2014/9/6/loading-matlab-mat-data-in-python
-import scipy.io as spio
-import pandas as pd
-import meld
 
 
 mat = spio.loadmat('input.mat', squeeze_me=True)

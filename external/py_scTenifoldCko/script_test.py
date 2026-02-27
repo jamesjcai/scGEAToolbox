@@ -1,21 +1,16 @@
 import os
+import scTenifoldXct as st
+from scTenifoldXct.dataLoader import build_adata
+import pandas as pd
+import h5py
+
 os.chdir("C:\\Users\\jcai\\Downloads\\scTenifoldCko_workingfolder")
 #import os
-import sys
 #abspath = os.path.abspath(__file__)
 #dname = os.path.dirname(abspath)
 # os.chdir(dname)
 # os.chdir("U:\\GitHub\\scGEAToolbox\\+run\\external\\py_scTenifoldXct")
 # os.chdir("d:\\GitHub\\scGEAToolbox\\+run\\external\\py_scTenifoldXct2")
-
-import scanpy as sc
-import scTenifoldXct as st
-from scTenifoldXct.dataLoader import build_adata
-import pandas as pd
-import numpy as np
-import h5py
-import scipy
-from scipy import sparse
 
 twosided = 1
 with h5py.File('X1.mat', 'r') as f:

@@ -9,11 +9,12 @@ function [needupdate] = callback_RunSeuratSCTransform(src,~)
         case 'Perform Transform'
 
         case 'Load Saved'
-            [file, path] = uigetfile('*.mat', ...
-                'Select a MAT-file to Load');
-            if isvalid(FigureHandle) && isa(FigureHandle, ...
-                    'matlab.ui.Figure')
-                figure(FigureHandle); 
+            if gui.i_isuifig(FigureHandle)
+                [file, path] = uigetfile(FigureHandle, '*.mat', ...
+                    'Select a MAT-file to Load');
+            else
+                [file, path] = uigetfile('*.mat', ...
+                    'Select a MAT-file to Load');
             end
             if isequal(file, 0)
                 disp('User canceled the file selection.');
@@ -74,9 +75,13 @@ function [needupdate] = callback_RunSeuratSCTransform(src,~)
                     export2wsdlg(labels,vars,values,...
                             'Save Data to Workspace');
                 case 'Save'
-                    [file, path] = uiputfile('*.mat', 'Save as', ...
-                        'sctransformed_X.mat');
-                    if isvalid(FigureHandle) && isa(FigureHandle, 'matlab.ui.Figure'), figure(FigureHandle); end
+                    if gui.i_isuifig(FigureHandle)
+                        [file, path] = uiputfile(FigureHandle, '*.mat', 'Save as', ...
+                            'sctransformed_X.mat');
+                    else
+                        [file, path] = uiputfile('*.mat', 'Save as', ...
+                            'sctransformed_X.mat');
+                    end
                     if isequal(file, 0) || isequal(path, 0)
                         disp('User canceled the file selection.');
                         return;

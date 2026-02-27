@@ -1,3 +1,4 @@
+# ruff: noqa: F401
 #   AUTHORSHIP
 #       Stephen Meehan <swmeehan@stanford.edu>
 #

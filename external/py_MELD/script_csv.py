@@ -1,13 +1,12 @@
 import os
+import pandas as pd
+import meld
+
 abspath = os.path.abspath(__file__)
 dname = os.path.dirname(abspath)
 os.chdir(dname)
 # os.chdir("U:\\GitHub\\scGEAToolbox\\+run\\thirdparty\\MELD")
 # os.chdir("C:\\Users\\jcai.AUTH\\Documents\\GitHub\\scGEAToolbox\\+run\\thirdparty\\MELD")
-
-
-import pandas as pd
-import meld
 
 data=pd.read_csv("input.txt",header=None).values
 sample_labels=pd.read_csv("batchid.txt",header=None).values

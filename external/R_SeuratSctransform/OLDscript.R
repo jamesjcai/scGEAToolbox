@@ -6,7 +6,7 @@ library(rhdf5)
 
 
 # setwd("U:\\GitHub\\scGEAToolbox\\+run\\external\\R_SeuratSctransform")
-setwd("C:\\Users\\jcai\\Documents\\GitHub\\scGEAToolbox\\+run\\external\\R_SeuratSctransform")       
+# setwd("C:\\Users\\jcai\\Documents\\GitHub\\scGEAToolbox\\+run\\external\\R_SeuratSctransform")
 if (file.exists("input.mat")){
     mat<-readMat("input.mat")
     pbmc.counts<-Matrix(mat$X)
@@ -37,7 +37,7 @@ if (file.exists("input.mat")){
 
 pbmc <- SCTransform(pbmc)
 
-X2<-as.matrix(pbmc@assays$SCT@counts)
+X2 <- as.matrix(GetAssayData(pbmc, assay = "SCT", layer = "counts"))
 
 library(rhdf5)
 

@@ -1,17 +1,10 @@
 import os
+import anndata as ad
+import sys
+
 abspath = os.path.abspath(__file__)
 dname = os.path.dirname(abspath)
 os.chdir(dname)
-
-import pandas as pd 
-import scanpy as sc 
-import scipy.io as spio
-
-import anndata as ad
-import numpy as np
-from scipy.sparse import csr_matrix
-
-import sys
 fname=str(sys.argv[1])
 
 

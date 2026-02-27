@@ -3,7 +3,9 @@ from scipy.sparse import csr_matrix
 import h5py
 import anndata
 import os.path
-
+# import scanpy as sc
+from scimilarity.utils import lognorm_counts, align_dataset
+from scimilarity import CellAnnotation
 
 f = h5py.File("X.mat",'r')
 counts = csr_matrix(f.get('X'))
@@ -21,10 +23,6 @@ adata.obs = metadata
 adata.obs.index = adata.obs['CellID'].tolist()
 adata.var.index = gene_names
 print("Input data ready.")
-
-# import scanpy as sc
-from scimilarity.utils import lognorm_counts, align_dataset
-from scimilarity import CellAnnotation
 
 model_path = modeldir
 ca = CellAnnotation(model_path=model_path)

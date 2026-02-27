@@ -72,8 +72,7 @@ function [needupdatesce, T] = callback_RunPanhumanpy(src, ~)
             [c, T] = run.py_panhumanpy(sce, wkdir, true);
             assert(sce.NumCells==numel(c));
             if ~(isscalar(unique(sce.c_cell_type_tx)) && unique(sce.c_cell_type_tx)=="undetermined")
-                sce.list_cell_attributes = [sce.list_cell_attributes, ...
-                    {'old_cell_type', sce.c_cell_type_tx}];
+                sce.setCellAttribute('old_cell_type', sce.c_cell_type_tx);
             end
             sce.c_cell_type_tx = c;
         catch ME

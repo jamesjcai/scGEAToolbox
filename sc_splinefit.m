@@ -68,8 +68,8 @@ s = cumsum([0; sqrt(diff(lgu(:)).^2+diff(lgcv(:)).^2 ...
     +diff(dropr(:)).^2)]);
 
 warning('off','MATLAB:rankDeficientMatrix')
-assignin("base","xyz",xyz)
-assignin("base","s",s)
+% assignin("base","xyz",xyz)
+% assignin("base","s",s)
 pp1 = splinefit(s, xyz.', 15, 0.75);
 xyz1 = ppval(pp1, s)';
 warning('on','MATLAB:rankDeficientMatrix')

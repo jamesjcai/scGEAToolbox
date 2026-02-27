@@ -7,12 +7,8 @@
 # os.chdir("C:\\Users\\jcai\\Documents\\GitHub\\scGEAToolbox\\+run\\external\\py_GenKI")
 
 
-import os
-import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 import scanpy as sc
-sc.settings.verbosity = 0
 import GenKI as gk
 from GenKI.preprocesing import build_adata
 from GenKI.dataLoader import DataLoader
@@ -21,6 +17,8 @@ from GenKI import utils
 import h5py
 import scipy as sp
 from scipy.sparse import csr_matrix
+
+sc.settings.verbosity = 0
 
 
 # from scipy.io import savemat

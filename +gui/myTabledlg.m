@@ -54,7 +54,11 @@ function [indx, tf] = myTabledlg(parentfig, options, Title, ...
     focus(ut); 
 
     uiwait(d);
-    
+
+    if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure')
+        figure(parentfig);
+    end
+
     % --- Process Results ---
     if isvalid(ut)
         % Selection property returns N-by-2 matrix [row, col]

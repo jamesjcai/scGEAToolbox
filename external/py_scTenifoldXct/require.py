@@ -1,3 +1,4 @@
+# ruff: noqa: F401
 try:
     import scTenifoldXct
     print('All essential imports are found')

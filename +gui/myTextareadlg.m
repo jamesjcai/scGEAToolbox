@@ -103,10 +103,14 @@ function [x] = myTextareadlg(parentfig, prompts, title, defaultvals, editable)
 
     % Make the dialog modal
     fig.WindowStyle = 'modal';
-    
+
     % Wait for user response
     uiwait(fig);
-    
+
+    if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure')
+        figure(parentfig);
+    end
+
     % Callback for OK button
     function onOK(fig)
         % Get values from input fields

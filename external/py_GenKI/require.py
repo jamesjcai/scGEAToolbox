@@ -1,3 +1,4 @@
+# ruff: noqa: F401
 try:
     import GenKI
     import os

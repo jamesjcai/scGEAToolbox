@@ -131,7 +131,11 @@ function selectedItems = myChecklistdlg(parentfig, items, varargin)
     
     % Wait for user interaction
     uiwait(fig);
-    
+
+    if ~isempty(parentfig) && isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure')
+        figure(parentfig);
+    end
+
     % Nested callback functions
     function updateSelectionCount()
         selectedCount = sum(cellfun(@(x) x.Value, checkboxes));
@@ -156,19 +160,21 @@ function selectedItems = myChecklistdlg(parentfig, items, varargin)
         % Get selected items
         selectedIndices = cellfun(@(x) x.Value, checkboxes);
         selectedItems = items(selectedIndices);
-        
+
         % Close dialog
         if isvalid(fig)
+            uiresume(fig);
             delete(fig);
         end
     end
-    
+
     function cancelCallback(~, ~)
         % Return empty selection
         selectedItems = {};
-        
+
         % Close dialog
         if isvalid(fig)
+            uiresume(fig);
             delete(fig);
         end
     end

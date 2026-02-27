@@ -1,17 +1,14 @@
 import os
-import sys
+from geosketch import gs
+import numpy as np
+import h5py
+from scipy.io import savemat
+
 abspath = os.path.abspath(__file__)
 dname = os.path.dirname(abspath)
 os.chdir(dname)
 # os.chdir("D:\\GitHub\\scGEAToolbox\\+run\\external\\py_geosketch")
 # os.chdir("C:\\Users\\jcai\\Documents\\GitHub\\scGEAToolbox\\+run\\external\\py_geosketch")
-
-from geosketch import gs
-import numpy as np
-import h5py
-from fbpca import pca
-import pandas as pd
-from scipy.io import savemat
 
 f = h5py.File('input.mat','r')
 

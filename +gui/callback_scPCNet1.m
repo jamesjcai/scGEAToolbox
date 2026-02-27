@@ -82,9 +82,13 @@ end
     answer = gui.myQuestdlg(FigureHandle, 'Save network A to MAT file?');
     switch answer
         case 'Yes'
-            [file, path] = uiputfile({'*.mat'; '*.*'}, 'Save as', ...
-                'GeneRegulatoryNetwork');
-            if isvalid(FigureHandle) && isa(FigureHandle, 'matlab.ui.Figure'), figure(FigureHandle); end
+            if gui.i_isuifig(FigureHandle)
+                [file, path] = uiputfile(FigureHandle, {'*.mat'; '*.*'}, ...
+                    'Save as', 'GeneRegulatoryNetwork');
+            else
+                [file, path] = uiputfile({'*.mat'; '*.*'}, 'Save as', ...
+                    'GeneRegulatoryNetwork');
+            end
             if isequal(file, 0) || isequal(path, 0)
                 return;
             else

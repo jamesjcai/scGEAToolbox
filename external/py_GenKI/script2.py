@@ -7,12 +7,9 @@
 # os.chdir("C:\\Users\\jcai\\Documents\\GitHub\\scGEAToolbox\\+run\\external\\py_GenKI")
 
 
-import os
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 import scanpy as sc
-sc.settings.verbosity = 0
 import GenKI as gk
 from GenKI.preprocesing import build_adata
 from GenKI.dataLoader import DataLoader
@@ -20,14 +17,15 @@ from GenKI.train import VGAE_trainer
 from GenKI import utils
 import h5py
 import scipy as sp
-from scipy.sparse import csr_matrix
+
+sc.settings.verbosity = 0
 
 
 def mat_to_npz(mat_path):
     f = h5py.File(mat_path, "r")
     # print(f.keys())
     mat = np.array(f.get(list(f.keys())[0]), dtype="float32")
-    sparse_mat = scipy.sparse.csc_matrix(mat)
+    sparse_mat = sp.sparse.csc_matrix(mat)
     return sparse_mat
 
 # from scipy.io import savemat

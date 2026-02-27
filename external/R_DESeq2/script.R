@@ -23,6 +23,6 @@ dds <- DESeqDataSetFromMatrix(countData=data.counts,
                               design=~clusters)
 
 dds <- DESeq(dds)
-res <- results(dds, contrast = c(1,2))
+res <- results(dds, contrast = c("clusters", "1", "2"))
 write.csv(res,"output.csv")
 

@@ -139,9 +139,10 @@ end
                     'Select a Folder','Cancel'},'Use Temporary Folder');
                 switch answer2
                     case 'Select a Folder'
-                        [seltpath] = uigetdir(deflt);
-                        if isvalid(hx.FigHandle) && isa(hx.FigHandle, 'matlab.ui.Figure')
-                            figure(hx.FigHandle);
+                        if gui.i_isuifig(hx.FigHandle)
+                            [seltpath] = uigetdir(hx.FigHandle);
+                        else
+                            [seltpath] = uigetdir();
                         end
                         
                         if seltpath==0, return; end

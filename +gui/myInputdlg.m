@@ -88,7 +88,11 @@ function [answer] = myInputdlg(prompt, dlgtitle, definput, parentfig)
     d.Visible=true;
     focus(fields(1));
     uiwait(d);
-    
+
+    if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure')
+        figure(parentfig);
+    end
+
     % Retrieve data
     if isvalid(d) % If the dialog was not closed by user
         answer = arrayfun(@(f) f.Value, fields, 'UniformOutput', false);

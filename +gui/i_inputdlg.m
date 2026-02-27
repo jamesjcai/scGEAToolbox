@@ -51,7 +51,7 @@ btnOk = uibutton(dimPanel, 'Text','OK', ...
                  'ButtonPushedFcn', @(~,~) uiresume(fig));
 btnCancel = uibutton(dimPanel, 'Text','Cancel', ...
                      'Position',[160 20 80 30], ...
-                     'ButtonPushedFcn', @(~,~) delete(fig));
+                     'ButtonPushedFcn', @(~,~) cancelFcn());
 % Show the dialog
 
 if ~isMATLABReleaseOlderThan('R2025a')
@@ -72,6 +72,12 @@ if isvalid(fig) % If the dialog was not closed by user
     delete(fig);
 else
     answer = {};
+end
+
+    function cancelFcn()
+        uiresume(fig);
+        delete(fig);
+    end
 end
 
 % if strcmp(fig.SelectionType,'normal')

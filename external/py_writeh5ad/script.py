@@ -1,12 +1,13 @@
 import os
-os.chdir("./")
-import pandas as pd 
-#import scanpy as sc 
+import pandas as pd
+#import scanpy as sc
 #import scipy.io as spio
 #import numpy as np
 from scipy.sparse import csr_matrix
 import h5py
 import anndata
+
+os.chdir("./")
 
 f = h5py.File("X.mat",'r')
 counts = csr_matrix(f.get('X'))

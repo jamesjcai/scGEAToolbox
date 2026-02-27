@@ -86,23 +86,9 @@ if isempty(t_mono3) || length(t_mono3) ~= sce.NumCells
     return;
 end
 
-[y, idx] = ismember({'monocle3_pseudotime'}, ...
-    sce.list_cell_attributes(1:2:end));
-if y
-    sce.list_cell_attributes{idx*2} = t_mono3;
-else
-    sce.list_cell_attributes = [sce.list_cell_attributes, ...
-        {'monocle3_pseudotime', t_mono3}];
-end
+sce.setCellAttribute('monocle3_pseudotime', t_mono3);
 
-[y, idx] = ismember({'monocle3_qvalue'}, ...
-    sce.list_gene_attributes(1:2:end));
-if y
-    sce.list_gene_attributes{idx*2} = q_mono3;
-else
-    sce.list_gene_attributes = [sce.list_gene_attributes, ...
-        {'monocle3_qvalue', q_mono3}];
-end
+sce.setCellAttribute('monocle3_qvalue', q_mono3);
 
 if ndim == 2
     sce.struct_cell_embeddings.('monocle2d') = s_mono3;

@@ -12,11 +12,11 @@ end
 ispeak = contains(sce.g, ':');
 isgene = ~ispeak;
 
-sceg = sce;
+sceg = copy(sce);
 sceg.g = sceg.g(isgene);
 sceg.X = sceg.X(isgene, :);
 
-scep = sce;
+scep = copy(sce);
 scep.g = scep.g(~isgene);
 scep.X = scep.X(~isgene, :);
 

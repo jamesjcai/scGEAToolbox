@@ -34,7 +34,7 @@ if USE_GPU:
     cmd.append("--cuda")
 
 # --- Execution ---
-print(f"Starting CellBender")
+print("Starting CellBender")
 if not os.path.exists(INPUT_H5):
     raise FileNotFoundError(f"Input file not found: {INPUT_H5}")
 
@@ -55,6 +55,6 @@ try:
     print(f"CellBender complete. Output: {output_h5}")
 
 except subprocess.CalledProcessError as e:
-    print(f"CellBender failed.")
+    print("CellBender failed.")
     print(f"STDOUT: {e.stdout}")
     print(f"STDERR: {e.stderr}")

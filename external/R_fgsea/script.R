@@ -3,7 +3,7 @@ MS <- read.csv('input.txt', row.names = 1)
 #Z <- MS$drdist^abs(BC$x[which.max(BC$y)])
 
 Z <- MS$drdist
-names(Z) <- MS$genelist
+names(Z) <- rownames(MS)
 
 library(fgsea)
 KEGG <- gmtPathways('https://amp.pharm.mssm.edu/Enrichr/geneSetLibrary?mode=text&libraryName=KEGG_2019_Human')

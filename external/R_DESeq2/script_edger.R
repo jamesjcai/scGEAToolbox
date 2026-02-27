@@ -1,5 +1,5 @@
 #setwd("E:\\GitHub\\scGEAToolbox\\+run\\external\\R_DESeq2")
-suppressMessages(library(DESeq2))
+suppressMessages(library(edgeR))
 suppressMessages(library(rhdf5))
 
 #mat<-readMat('input.mat')

@@ -124,8 +124,13 @@ function callback_CellScoreCorrMatrix(src, ~)
                     absolutePath = char(java.io.File(defaultscorefile).getCanonicalPath());
                     %javaFile = java.io.File(defaultscorefile);
                     %absolutePath = char(javaFile.getAbsolutePath());
-                    [file, path] = uigetfile(defaultscorefilename, ...
-                        'Select File', absolutePath);
+                    if gui.i_isuifig(FigureHandle)
+                        [file, path] = uigetfile(FigureHandle, defaultscorefilename, ...
+                            'Select File', absolutePath);
+                    else
+                        [file, path] = uigetfile(defaultscorefilename, ...
+                            'Select File', absolutePath);
+                    end
                     if isequal(file, 0), return; end
                     scorefile = fullfile(path, file);
                     if isfile(scorefile)

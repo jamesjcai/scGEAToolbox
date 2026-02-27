@@ -1,18 +1,15 @@
 import os
+import pandas as pd
+import meld
+import h5py
+
 abspath = os.path.abspath(__file__)
 dname = os.path.dirname(abspath)
 os.chdir(dname)
 # os.chdir("U:\\GitHub\\scGEAToolbox\\+run\\thirdparty\\MELD")
 # os.chdir("C:\\Users\\jcai.AUTH\\Documents\\GitHub\\scGEAToolbox\\+run\\thirdparty\\MELD")
 
-import pandas as pd
-import meld
-from scipy.io import savemat
-
 # https://stackoverflow.com/questions/874461/read-mat-files-in-python
-
-import numpy as np
-import h5py
 f = h5py.File('input.mat','r')
 data = f.get('/X')[()]
 # data = np.array(data) # For converting to a NumPy array
