@@ -73,6 +73,9 @@ function [answer] = myInputdlg(prompt, dlgtitle, definput, parentfig)
                                 'Value', a);
     end
 
+    % Use UserData to track whether OK was confirmed
+    d.UserData = false;
+
     % OK button
     okBtn = uibutton(d, 'Text', 'OK', ...
                      'Position', [100, 20, 60, 30], ...
@@ -81,7 +84,7 @@ function [answer] = myInputdlg(prompt, dlgtitle, definput, parentfig)
     % Cancel button
     cancelBtn = uibutton(d, 'Text', 'Cancel', ...
                          'Position', [190, 20, 60, 30], ...
-                         'ButtonPushedFcn', @(btn, event) delete(d));
+                         'ButtonPushedFcn', @(btn, event) uiresume(d));
 
     % Wait for user input
     drawnow;
@@ -94,15 +97,21 @@ function [answer] = myInputdlg(prompt, dlgtitle, definput, parentfig)
     end
 
     % Retrieve data
-    if isvalid(d) % If the dialog was not closed by user
+    if isvalid(d) && d.UserData
         answer = arrayfun(@(f) f.Value, fields, 'UniformOutput', false);
+        uiresume(d);
         delete(d);
     else
         answer = {};
+        if isvalid(d)
+            uiresume(d);
+            delete(d);
+        end
     end
 end
 
 function onOKButton(d, ~)
     % Resume UI execution when OK is pressed
+    d.UserData = true;
     uiresume(d);
 end

@@ -38,11 +38,14 @@ function [indx, tf] = myTabledlg(parentfig, options, Title, ...
     % Update KeyPress to work with table rows
     d.KeyPressFcn = @(src, event) jumpToFirstMatchTable(ut, options, event);
 
+    % Use UserData to track whether OK was confirmed
+    d.UserData = false;
+
     % Buttons
     btnOK = uibutton(d, 'Text', 'OK', 'Position', [60 20 80 30], ...
-        'ButtonPushedFcn', @(btn,event) uiresume(d));
+        'ButtonPushedFcn', @(btn,event) okCallback(d));
     btnCancel = uibutton(d, 'Text', 'Cancel', 'Position', [160 20 80 30], ...
-        'ButtonPushedFcn', @(btn,event) (close(d)));
+        'ButtonPushedFcn', @(btn,event) uiresume(d));
 
     if ~isMATLABReleaseOlderThan('R2025a')
         try theme(d, parentfig.Theme.BaseColorStyle); catch; end
@@ -51,7 +54,7 @@ function [indx, tf] = myTabledlg(parentfig, options, Title, ...
     drawnow;
     d.Visible = 'on';
     d.WindowStyle = "modal";
-    focus(ut); 
+    focus(ut);
 
     uiwait(d);
 
@@ -60,7 +63,7 @@ function [indx, tf] = myTabledlg(parentfig, options, Title, ...
     end
 
     % --- Process Results ---
-    if isvalid(ut)
+    if isvalid(d) && d.UserData
         % Selection property returns N-by-2 matrix [row, col]
         rows = ut.Selection(:, 1);
         if isempty(rows)
@@ -70,11 +73,21 @@ function [indx, tf] = myTabledlg(parentfig, options, Title, ...
             indx = unique(rows); % Ensure unique indices if user clicked weirdly
             tf = 1;
         end
+        uiresume(d);
         delete(d);
     else
         indx = [];
         tf = 0;
+        if isvalid(d)
+            uiresume(d);
+            delete(d);
+        end
     end
+end
+
+function okCallback(d)
+    d.UserData = true;
+    uiresume(d);
 end
 
 function jumpToFirstMatchTable(ut, options, event)

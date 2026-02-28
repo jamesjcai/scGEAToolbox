@@ -14,19 +14,8 @@ if ~gui.gui_showrefinfo('DP Analysis', FigureHandle), return; end
 [i1, i2, cL1, cL2] = gui.i_select2smplgrps(sce, false, FigureHandle);
 if isscalar(i1) || isscalar(i2), return; end
 
-% --------
-a = sprintf('%s vs. %s',cL1{1}, cL2{1});
-b = sprintf('%s vs. %s',cL2{1}, cL1{1});
-answer = gui.myQuestdlg(FigureHandle, 'Which vs. which?','',{a,b},a);
-switch answer
-    case a
-    case b
-        i3=i1; i1=i2; i2=i3;
-        cL3=cL1; cL1=cL2; cL2=cL3;
-    otherwise
-        return;
-end
-% ----------
+[i1, i2, cL1, cL2, cancelled] = gui.i_whichvswhich(FigureHandle, i1, i2, cL1, cL2);
+if cancelled, return; end
 
 
 c=zeros(size(i1));

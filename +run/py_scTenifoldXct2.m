@@ -9,7 +9,20 @@ function [T, iscomplete] = py_scTenifoldXct2(sce1, sce2, celltype1, celltype2, .
     if nargin < 7, isdebug = true; end
     if nargin < 6, wkdir = []; end
     if nargin < 5, twosided = true; end
-   
+
+    % ── Native MATLAB fast path (no Python required) ──────────────────────
+    if isempty(wkdir) && ~prepare_input_only
+        try
+            T = ten.sctenifoldxct2(sce1, sce2, celltype1, celltype2, twosided);
+            iscomplete = true;
+            return;
+        catch ME
+            warning('py_scTenifoldXct2:nativeFailed', ...
+                'Native MATLAB path failed (%s). Falling back to Python.', ME.message);
+        end
+    end
+    % ── Python fallback (original implementation) ─────────────────────────
+
     oldpth = pwd();
     pw1 = fileparts(mfilename('fullpath'));
     codepth = fullfile(pw1, '..', 'external', 'py_scTenifoldXct2');

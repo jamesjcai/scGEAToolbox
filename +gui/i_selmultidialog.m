@@ -130,9 +130,9 @@ end
     %[~, idx] = ismember(selItems, items);
     %idx = idx(:);
 
-    % Close the figure
+    % Close the figure (defensive cleanup in case it wasn't deleted by a callback)
     %delete(hFig);
-    if isvalid(hFig), delete(hFig); end
+    if isvalid(hFig), uiresume(hFig); delete(hFig); end
 end
 
 % --- Helper functions ---

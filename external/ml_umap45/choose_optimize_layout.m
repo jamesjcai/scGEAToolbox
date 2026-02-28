@@ -198,11 +198,14 @@ if strcmpi(method, 'C')
             single(epochs_per_sample), single(a), single(b), ...
             single(gamma), single(initial_alpha), ...
             int32(negative_sample_rate), verbose);
+        return;
     catch ex
         ex.getReport
         yelp;
+        method = 'MATLAB';
     end
-elseif strcmpi(method, 'MATLAB')
+end
+if strcmpi(method, 'MATLAB')
     if ~doingJoinedTransform
         embedding = optimize_layout(single(head_embedding), ...
             single(tail_embedding), int32(head), int32(tail), ...

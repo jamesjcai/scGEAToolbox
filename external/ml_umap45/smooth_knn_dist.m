@@ -121,5 +121,5 @@ end
         addParameter(p,'local_connectivity', 1);
         addParameter(p,'n_iter', 64);
         addParameter(p,'bandwidth', 1);
-        addParameter(p,'same_set','true');
+        addParameter(p,'same_set', true);
     end

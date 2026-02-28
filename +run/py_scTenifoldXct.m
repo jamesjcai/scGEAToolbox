@@ -10,6 +10,21 @@ if nargin < 5, wkdir = []; end
 if nargin < 4, twosided = true; end
 if nargin < 3, error('Usage: [T] = py_scTenifoldXct(sce, celltype1, celltype2)'); end
 
+% ── Native MATLAB fast path ───────────────────────────────────────────────
+% ten.sctenifoldxct is a pure-MATLAB spectral implementation that requires
+% no Python environment.  Use it when no wkdir is supplied and the caller
+% is not just preparing inputs for an existing Python workflow.
+if isempty(wkdir) && ~prepare_input_only
+    try
+        T = ten.sctenifoldxct(sce_ori, celltype1, celltype2, twosided);
+        return;
+    catch ME
+        warning('py_scTenifoldXct:nativeFailed', ...
+            'Native MATLAB path failed (%s). Falling back to Python.', ME.message);
+    end
+end
+% ── Python fallback (original implementation) ─────────────────────────────
+
 sce = copy(sce_ori);
 
 oldpth = pwd();

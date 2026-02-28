@@ -44,12 +44,20 @@ function result_data = general_sset_intersection(left, right, result_row, result
     left_data = nonzeros(left);
     right_data = nonzeros(right);
 
-    left_min = max(min(left_data)/2, 1e-8);
-    right_min = max(min(right_data)/2, 1e-8);
+    if isempty(left_data)
+        left_min = 1e-8;
+    else
+        left_min = max(min(left_data)/2, 1e-8);
+    end
+    if isempty(right_data)
+        right_min = 1e-8;
+    else
+        right_min = max(min(right_data)/2, 1e-8);
+    end
 
-    left_vals = full(sub2ind(size(left), result_row, result_col));
+    left_vals = full(left(sub2ind(size(left), result_row, result_col)));
     left_vals = left_vals + left_min*(left_vals == 0);
-    right_vals = full(sub2ind(size(right), result_row, result_col));
+    right_vals = full(right(sub2ind(size(right), result_row, result_col)));
     right_vals = right_vals + right_min*(right_vals == 0);
     
     change_val = left_vals > left_min | right_vals > right_min;

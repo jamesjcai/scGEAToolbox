@@ -69,6 +69,7 @@ uiwait(fig);
 
 if isvalid(fig) % If the dialog was not closed by user
     answer = {edit.Value};
+    uiresume(fig);
     delete(fig);
 else
     answer = {};

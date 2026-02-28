@@ -46,13 +46,16 @@ function [indx, tf] = myListdlg(parentfig, options, Title, ...
 
     d.KeyPressFcn = @(src, event) jumpToFirstMatch(lb, event);
 
+    % Use UserData to track whether OK was confirmed
+    d.UserData = false;
+
     % Create OK button
     btnOK = uibutton(d, 'Text', 'OK', 'Position', [60 20 80 30], ...
-        'ButtonPushedFcn', @(btn,event) uiresume(d));
+        'ButtonPushedFcn', @(btn,event) okCallback(d));
 
     % Create Cancel button
     btnCancel = uibutton(d, 'Text', 'Cancel', 'Position', [160 20 80 30], ...
-        'ButtonPushedFcn', @(btn,event) (close(d)));
+        'ButtonPushedFcn', @(btn,event) uiresume(d));
 
     if ~isMATLABReleaseOlderThan('R2025a')
         try
@@ -83,16 +86,20 @@ function [indx, tf] = myListdlg(parentfig, options, Title, ...
     end
 
     % Get selected items
-    if isvalid(lb)
-        selection = lb.Value;        
+    if isvalid(d) && d.UserData
+        selection = lb.Value;
         tf = 1;
-        [~, indx]=ismember(selection, options);
+        [~, indx] = ismember(selection, options);
+        uiresume(d);
+        delete(d);
     else
-        % selection = {};
         tf = 0;
         indx = [];
+        if isvalid(d)
+            uiresume(d);
+            delete(d);
+        end
     end
-    delete(d);
 
     %{
     Example usage:
@@ -103,6 +110,11 @@ function [indx, tf] = myListdlg(parentfig, options, Title, ...
     %}
 end
 
+
+function okCallback(d)
+    d.UserData = true;
+    uiresume(d);
+end
 
 function jumpToFirstMatch(lb, event)
     % Jump to the first item starting with the pressed letter

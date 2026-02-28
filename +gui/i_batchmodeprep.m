@@ -231,19 +231,8 @@ end
             cL2 = cLi(idx2);
             if isscalar(i1) || isscalar(i2), return; end
     
-            % --------
-            a=sprintf('%s vs. %s',cL1{1}, cL2{1});
-            b=sprintf('%s vs. %s',cL2{1}, cL1{1});
-            answer = gui.myQuestdlg(parentfig, 'Which vs. which?','', {a, b}, a);
-            switch answer
-                case a
-                case b
-                    i3=i1; i1=i2; i2=i3;
-                    cL3=cL1; cL1=cL2; cL2=cL3;
-                otherwise             
-                    return;
-            end
-            % ----------
+            [i1, i2, cL1, cL2, cancelled] = gui.i_whichvswhich(parentfig, i1, i2, cL1, cL2);
+            if cancelled, return; end
             done = true;
         else
             i1=[]; i2=[]; cL1=[]; cL2=[];
