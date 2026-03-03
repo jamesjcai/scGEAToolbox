@@ -122,7 +122,6 @@ annotation('textbox', [0.05 0.1 0.9 0.5], ...
 
     gui.i_movegui2parent(hFig, parentfig);
     hFig.Visible=true;
-    
 % for k = 3:10
 %     h = plot(fa, repmat(0.1, 1, k),'-','LineWidth',5,'Color',[.7 .7 .7]);    
 %     drawnow;

@@ -3,7 +3,7 @@ if nargin<2, event=[]; end
 
     [FigureHandle, sce] = gui.gui_getfigsce(src);
 
-    if ~gui.i_installed('stats'), return; end
+    if ~gui.i_installed('stats', FigureHandle), return; end
 
     switch gui.myQuestdlg(FigureHandle, 'Select method:','',...
             {'Lasso Regression','Logistic Regression 🐢 '}, ...

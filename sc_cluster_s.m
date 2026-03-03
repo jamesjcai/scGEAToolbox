@@ -31,7 +31,7 @@ switch p.Results.type
     case 'kmedoids'
         c_clustid = kmedoids(s, k);
     case 'dbscan'
-        warning('In development. Needs parameters');
+        error('sc_cluster_s:NotImplemented', 'DBSCAN clustering is not yet implemented.');
     case 'snndpc'
         c_clustid = sc_snndpc(s, k);
     case 'mbkmeans'

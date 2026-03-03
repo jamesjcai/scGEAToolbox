@@ -13,11 +13,11 @@ function [T] = e_findallmarkers(X, g, c, cL, logfc, minpct, showwaitbar, ...
     end
     if issparse(X), X = full(X); end
     X = log1p(sc_norm(X));
-    T = table();
     if showwaitbar
         fw = gui.gui_waitbar_adv;
     end
     mC = max(c);
+    Tcell = cell(mC, 1);
     for kc = 1:mC
         if showwaitbar
             if kc ~= mC
@@ -27,9 +27,9 @@ function [T] = e_findallmarkers(X, g, c, cL, logfc, minpct, showwaitbar, ...
             end
         end
         [t] = in_findmarkers(X(:, c == kc), X(:, c ~= kc), cL(kc));
-        t = t(1:min([maxnummarkers, size(t,1)]), :);
-        T = [T; t];
+        Tcell{kc} = t(1:min([maxnummarkers, size(t,1)]), :);
     end
+    T = vertcat(Tcell{:});
     [~, idx] = sort(T.p_val_adj);
     T = T(idx, :);
     [~, idx] = natsort(T.grp);

@@ -136,8 +136,6 @@ function callback_DEGene2Groups_New(src, ~)
     end   
     gui.myWaitbar(FigureHandle, fw);
 
-    pause(2);
-
     if any(contains(selected, 'Open Output Folder'))        
         if isempty(f), f = FigureHandle; end
         if strcmp('Yes', gui.myQuestdlg(f,'Open Output Folder?'))

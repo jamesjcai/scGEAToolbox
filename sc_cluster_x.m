@@ -40,8 +40,5 @@ switch p.Results.type
         [c] = run.ml_SinNLRR(X, k);
     case 'specter'
         [c] = run.ml_Specter(X, k);
-    case 'alona'
-        warning('In development.');
-        % [C]=sc_alona(X);
 end
 end

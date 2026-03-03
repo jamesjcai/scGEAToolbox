@@ -1,23 +1,30 @@
 function [a, fano, cv] = i_grpmean(x, c)
 
-n = numel(unique(c));
-a = zeros(size(x, 1), n);
-%atrim=zeros(size(x,1),n);
-fano = zeros(size(x, 1), n);
-cv = zeros(size(x, 1), n);
+ugroups = unique(c);
+n = numel(ugroups);
+ng = size(x, 1);
+a = zeros(ng, n);
+fano = zeros(ng, n);
+cv = zeros(ng, n);
+
+needvar = nargout > 1;
+needstd = nargout > 2;
+
 for k = 1:n
-    %    atrim(:,k)=full(trimmean(x(:,c==k),10,2));
-    a(:, k) = full(mean(x(:, c == k), 2));
-    fano(:, k) = full(var(x(:, c == k), 0, 2));
-    cv(:, k) = full(std(x(:, c == k), 0, 2));
+    xk = x(:, c == ugroups(k));
+    a(:, k) = full(mean(xk, 2));
+    if needvar
+        fano(:, k) = full(var(xk, 0, 2));
+    end
+    if needstd
+        cv(:, k) = full(std(xk, 0, 2));
+    end
 end
-if nargout > 1
+
+if needvar
     fano = fano ./ a;
 end
-if nargout > 2
+if needstd
     cv = cv ./ a;
 end
-%if nargout==1
-%    a=atrim;
-%end
 end

@@ -1,6 +1,6 @@
-function [r] = sc_dissratio(X, genelist, vebrose)
+function [r] = sc_dissratio(X, genelist, verbose)
 
-    if nargin < 3, vebrose = true; end
+    if nargin < 3, verbose = true; end
     
     r = nan(width(X), 1);
     pw1 = fileparts(mfilename('fullpath'));
@@ -12,14 +12,14 @@ function [r] = sc_dissratio(X, genelist, vebrose)
     idx = ismember(upper(genelist), upper(dissog));
     
     if sum(idx) > 0
-        if vebrose
+        if verbose
             fprintf('%d dissociation-associated genes found.\n', sum(idx));
         end
         lbsz = sum(X, 1);
         lbsz_mt = sum(X(idx, :), 1);
         r = transpose(lbsz_mt./lbsz);
     else
-        if vebrose
+        if verbose
             fprintf('No dissociation-associated genes found.\n');
         end
     end

@@ -19,21 +19,6 @@ function [lgu, dropr, lgcv, genes, X, removedIdx, removedT] = sc_genestat(X, gen
 %     removedIdx indices of removed genes (if any)
 %     removedT   table of removed gene stats (if any)
 
-%{
-% --- Parse inputs ---
-p = inputParser;
-addRequired(p, 'X', @(x) isnumeric(x) && ismatrix(x));
-addOptional(p, 'genelist', [], @(x) isempty(x) || isstring(x) || iscellstr(x));
-addOptional(p, 'sortit', true, @(x) islogical(x) || isnumeric(x));
-addOptional(p, 'removeinf', true, @(x) islogical(x) || isnumeric(x));
-parse(p, X, genelist, sortit, removeinf);
-
-X = p.Results.X;
-genelist = p.Results.genelist;
-sortit = logical(p.Results.sortit);
-removeinf = logical(p.Results.removeinf);
-%}
-
 arguments
     X {mustBeNumeric, mustBeNonempty}
     genelist = []
@@ -44,7 +29,7 @@ end
 % --- Setup gene names ---
 nGenes = size(X, 1);
 if isempty(genelist)
-    genelist = "Gene" + string((1:nGenes).');
+    genelist = pkg.i_defaultgenenames(nGenes);
 else
     if iscellstr(genelist)
         genelist = string(genelist);
@@ -89,61 +74,3 @@ if removeinf && any(mask)
     X(mask, :) = [];
 end
 end
-
-%{
-function [lgu, dropr, lgcv, genes, X, ...
-    removedgeneidx, removedT] = sc_genestat(X, genelist, ...
-    sortit, removeinf)
-
-if nargin < 4, removeinf = true; end
-if nargin < 3, sortit = true; end
-if nargin < 2 || isempty(genelist)
-    genelist = "Gene"+string(1:size(X,1)).'; 
-end
-genelist=genelist(:);
-
-geneidx = 1:length(genelist);
-dropr = 1 - sum(X > 0, 2) ./ size(X, 2);
-
-% m = X./sum(X);
-% lgm = log(std(m, [], 2, 'omitnan') ./ mean(m, 2, 'omitnan'));
-
-
-u = mean(X, 2, 'omitnan');
-cv = std(X, [], 2, 'omitnan') ./ u;
-lgu = log1p(u);
-lgcv = log1p(cv);
-genes = genelist;
-
-
-if sortit
-    [xyz, si] = sortrows([lgu, dropr, lgcv], [1, 3, 2]);
-    lgu = xyz(:, 1);
-    dropr = xyz(:, 2);
-    lgcv = xyz(:, 3);
-    genes = genelist(si); 
-    X=X(si,:);
-    geneidx = geneidx(si);
-end
-
-si = isnan(lgu) | isinf(lgu) | isnan(lgcv) | isinf(lgcv);
-
-if removeinf && any(si)
-    removedT = table(genes(si), lgu(si), lgcv(si), dropr(si), ...
-        zeros(sum(si),1), ...
-        ones(sum(si),1), ...
-        ones(sum(si),1),...
-        zeros(sum(si),1));
-    lgu(si) = [];
-    lgcv(si) = [];
-    dropr(si) = [];
-    genes(si) = [];
-    X(si, :) = [];
-    removedgeneidx = geneidx(si);    
-else
-    removedgeneidx = [];
-    removedT = [];
-end
-
-end
-%}

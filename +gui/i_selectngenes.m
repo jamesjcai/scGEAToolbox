@@ -18,8 +18,6 @@ elseif isstring(sce)
 end
 
 
-
-
 if ~isempty(predefinedlist)
     predefinedlist = gsorted(matches(gsorted, predefinedlist, ...
         'IgnoreCase', true));

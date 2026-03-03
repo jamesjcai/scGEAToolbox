@@ -33,7 +33,7 @@ if ~isMATLABReleaseOlderThan('R2025a')
                 h1.ColorOrder = baseColors;
             case "dark"
                 h1.ColorOrder = fliplightness(h1.ColorOrder);
-                disp('fliplightness applied.');
+                % disp('fliplightness applied.');
         end
     catch
     end
@@ -71,57 +71,6 @@ oldG1 = [];
             p1.NodeFontSize, hFig);
         gui.myWaitbar(hFig, fw);
   end
-
-%{
-    function in_networkvis_linear_old(~, ~)
-        fw=gui.myWaitbar(hFig);
-
-        h = gui.myFigure;
-        %bkcolor = gui.i_getthemebkgcolor(h.FigHandle);
-        ax = h.AxHandle;
-        [x, y] = gplot(G1.adjacency, [p1.XData' p1.YData']);
-        plot(ax, x, y, '-', 'Color', 1-bkcolor);
-        hold(ax, "on");
-        if ~issymmetric(G1.adjacency)
-            customeMarker(x, y, h.FigHandle);
-        end
-        % scatter(p1.XData', p1.YData', 300, ...
-        %     'MarkerEdgeColor','k', ...
-        %     'MarkerFaceColor',[.8 .8 .8]);
-        textOpts.FontSize = p1.NodeFontSize;
-        textOpts.HorizontalAlignment = 'center';
-        textOpts.VerticalAlignment = 'middle';
-        textOpts.FontWeight = 'normal';         
-        
-        tz = cell(length(G1.Nodes.Name),1);
-        for k = 1:length(G1.Nodes.Name)            
-            [wx] = measureText(G1.Nodes.Name{k}, textOpts);
-            tz{k} = text(ax, p1.XData(k)-floor(wx/2), p1.YData(k), ...
-                G1.Nodes.Name{k},'FontSize',textOpts.FontSize,...
-                'Color',1-bkcolor,...
-                'FontWeight','normal', ...
-                'HorizontalAlignment','center', ...
-                'VerticalAlignment','middle');
-        end
-        set(ax, 'XTick', [], 'YTick', []);
-        axis(ax, "off");        
-        h.show(hFig);
-        gui.myWaitbar(hFig, fw);
-        figure(h.FigHandle);
-        % set(gcf, 'Color', 'white');
-    end
-
-%}
-
-    % function in_NetworkVis(~, ~)
-    %     net = gui.networkvisualizer(G1.adjacency);
-    %     net.setNodeLabels(G1.Nodes.Name);
-    %     net.setNodeSizes('auto');
-    %     net.X = p1.XData';
-    %     net.Y = p1.YData';
-    %     figure;
-    %     plot(net);
-    % end
 
     function in_RefreshAll(~, ~)
         if ~isempty(oldG1)

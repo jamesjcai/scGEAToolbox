@@ -6,7 +6,6 @@ function [X] = sc_transform(X, varargin)
     %   - kNNSmoothing
     %   - SCTransform / SCT
     %   - FreemanTukey
-    %   - csndm
     %
     % Example: X = sc_transform(X, 'type', 'PearsonResiduals');
 
@@ -18,7 +17,7 @@ function [X] = sc_transform(X, varargin)
 p = inputParser;
 defaultType = 'PearsonResiduals';
 validTypes = {'PearsonResiduals', 'kNNSmoothing', 'SCTransform', ...
-    'FreemanTukey', 'csndm', 'SCT'};
+    'FreemanTukey', 'SCT'};
 checkType = @(x) any(validatestring(x, validTypes));
 
 addRequired(p, 'X', @isnumeric);
@@ -48,12 +47,6 @@ switch lower(p.Results.type)
         %
         X = knn_smooth(X, 5, 10);
 
-    case 'glmpca'
-
-    case 'normalization_sqrt'
-        % https://twitter.com/hippopedoid/status/1337028817219620864?s=20
-    % case 'csndm'
-    %     [X] = run.mt_csndm_trans(X);
     case {'sct', 'sctransform'}
         % sc_sct
         % sctransform: Variance Stabilizing Transformations for Single Cell UMI Data
@@ -102,21 +95,9 @@ function [mat_smooth] = knn_smooth(raw_mat, k, varargin)
 %default
 num_of_pc = 10;
 
-% only want 1 optional inputs at most
-numvarargs = length(varargin);
-if numvarargs > 1
-    error('Requires at most 1 optional inputs');
+if ~isempty(varargin)
+    num_of_pc = varargin{1};
 end
-
-% set defaults for optional inputs
-optargs = num_of_pc;
-
-% now put these defaults into the valuesToUse cell array,
-% and overwrite the ones specified in varargin.
-optargs = varargin;
-
-% Place optional args in memorable variable names
-[num_of_pc] = optargs{:};
 
 mat_smooth = raw_mat;
 num_of_steps = ceil(log2(k+1));
@@ -133,12 +114,11 @@ for s = 1:num_of_steps
     score = mat_trans' * V;
     disp_texp = ['preforming pca - done! ', num2str(s), '/', num2str(num_of_steps), ' times'];
     disp(disp_texp)
-    dist_matrix = squareform(pdist(score));
-    disp_texp = ['calculating distance matrix ', num2str(s), '/', num2str(num_of_steps), ' times'];
+    [knn_idx, ~] = knnsearch(score, score, 'K', k_step+1);
+    disp_texp = ['calculating knn ', num2str(s), '/', num2str(num_of_steps), ' times'];
     disp(disp_texp)
     for cell = 1:size(mat_smooth, 2)
-        [~, c_sort_cell_idx] = sort(dist_matrix(cell, :));
-        mat_smooth(:, cell) = sum(raw_mat(:, c_sort_cell_idx(1:k_step+1)), 2);
+        mat_smooth(:, cell) = sum(raw_mat(:, knn_idx(cell, :)), 2);
     end
 end
 

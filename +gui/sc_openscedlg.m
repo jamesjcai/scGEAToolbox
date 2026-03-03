@@ -32,7 +32,7 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
     if gui.i_isuifig(parentfig)
         figure(parentfig);
         [indx, tf] = gui.myListdlg(parentfig, list, ...
-            'Select a source', list(defaultindx));
+            'Select a source', list(defaultindx), false);
 
         % parentfig.WindowStyle = 'normal';
     else

@@ -1,7 +1,9 @@
 function [X, keptidx] = sc_filterc(X, cutoff, verbose)
-
-if nargin < 2, cutoff = 1; end
-if nargin < 3, verbose = false; end
+arguments
+    X {mustBeNumeric}
+    cutoff (1,1) double {mustBeNonnegative} = 1
+    verbose (1,1) logical = false
+end
 
 [s] = sum(X, 1);
 keptidx = s >= cutoff;

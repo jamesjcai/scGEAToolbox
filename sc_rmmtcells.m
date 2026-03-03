@@ -1,14 +1,14 @@
-function [X, keptidx] = sc_rmmtcells(X, genelist, mtratio, mtgenenamepat, vebrose)
+function [X, keptidx] = sc_rmmtcells(X, genelist, mtratio, mtgenenamepat, verbose)
 %Remove cells with high mtDNA ratio
 if nargin < 3, mtratio = 0.1; end
 if nargin < 4, mtgenenamepat = "mt-"; end
-if nargin < 5, vebrose = false; end
+if nargin < 5, verbose = false; end
 
 assert(size(X, 1) == length(genelist), ...
     sprintf('%s: size(X,1) is not equal to length(g).', upper(mfilename)))
 idx = startsWith(genelist, mtgenenamepat, 'IgnoreCase', true);
 if sum(idx) > 0
-    if vebrose
+    if verbose
         fprintf('%d mt-genes found.\n', sum(idx));
     end
     lbsz = sum(X, 1);
@@ -18,18 +18,18 @@ if sum(idx) > 0
     if sum(~keptidx) > 0
         X = X(:, keptidx);
         %X(:,~keptidx)=[];
-        if vebrose
+        if verbose
             fprintf('%d cells with mt-read ratio >=%f (or %f%%) are removed.\n', ...
                 sum(~keptidx), mtratio, mtratio*100);
         end
     else
-        if vebrose
+        if verbose
             fprintf('No cells with mt-read ratio >=%f (or %f%%) are removed.\n', ...
                 mtratio, mtratio*100);
         end
     end
 else
-    if vebrose
+    if verbose
         fprintf('No mt-genes found.\n');
         fprintf('No cells with mt-read ratio >=%f (or %f%%) are removed.\n', ...
             mtratio, mtratio*100);

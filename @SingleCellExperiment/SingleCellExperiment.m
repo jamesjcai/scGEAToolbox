@@ -14,16 +14,6 @@ classdef SingleCellExperiment < handle & matlab.mixin.Copyable
         metadata string
         struct_cell_embeddings = pkg.e_makeembedstruct;
         struct_cell_clusterings = pkg.e_makecluststruct;
-        % struct_embed struct
-        % struct_clust struct
-        % struct_embed struct
-        % struct_clust struct
-        % c_batch_id string = string.empty(0,1)  % Column vector of strings
-        % c_cell_id string = string.empty(0,1)   % Column vector of strings
-        % c_cluster_id double = double.empty(0,1) % Column vector of doubles
-        % c_batch_id string {mustBeNonmissing}
-        % c_cell_id string {mustBeNonmissing}
-        % metadata string = string.empty        
     end
 
     properties (Dependent)
@@ -64,18 +54,6 @@ methods
         obj.c_cell_cycle_tx = repmat("undetermined", size(X, 2), 1);
         obj.c_cell_type_tx = repmat("undetermined", size(X, 2), 1);
         obj.metadata = string(sprintf('Created: %s', datetime()));
-        % obj.struct_cell_embeddings=struct('tsne',[],'umap',[],'phate',[]);
-        %s_embed(1) = struct('id','tsne2d','name','tSNE (2D)','value',[]);
-        %s_embed(2) = struct('id','tsne3d','name','tSNE (3D)','value',[]);
-        %s_embed(3) = struct('id','umap2d','name','UMAP (2D)','value',[]);
-        %s_embed(4) = struct('id','umap3d','name','UMAP (3D)','value',[]);
-        %s_embed(5) = struct('id','phate2d','name','PHATE (2D)','value',[]);
-        %s_embed(6) = struct('id','phate3d','name','PHATE (3D)','value',[]);
-        %s_clust(1) = struct('id','kmeans','name','k-Means','value',[]);
-        %s_clust(2) = struct('id','snndpc','name','SNNDPC','value',[]);
-        %s_clust(3) = struct('id','sc3','name','SC3','value',[]);
-        %obj.struct_embed = s_embed;
-        %obj.struct_clust = s_clust;
     end
 
     function set.s(obj, value)
@@ -88,20 +66,6 @@ methods
         end
         obj.s = value;
     end
-
-    % function obj = set.g(obj, value)
-    %     arguments
-    %         obj
-    %         value string
-    %     end
-    %     if numel(value) ~= size(obj.X, 1)
-    %         error(['Length of g (%d) must equal ', ...
-    %                'number of rows in X (%d).'], ...
-    %                numel(value), size(obj.X, 1));
-    %     end
-    %     obj.g = value;
-    % end
-
 
     function set.g(obj, value)
         arguments
@@ -166,42 +130,9 @@ methods
                 obj.X(:, idx) = [];
             end
         end
-
         obj.s(idx, :) = [];
         obj.c(idx) = [];
-        if ~isempty(obj.c_cell_cycle_tx)
-            obj.c_cell_cycle_tx(idx) = [];
-        end
-        if ~isempty(obj.c_cell_type_tx)
-            obj.c_cell_type_tx(idx) = [];
-        end
-        if ~isempty(obj.c_cluster_id)
-            obj.c_cluster_id(idx) = [];
-        end
-        if ~isempty(obj.c_batch_id)
-            obj.c_batch_id(idx) = [];
-        end
-        if ~isempty(obj.c_cell_id)
-            obj.c_cell_id(idx) = [];
-        end
-        for k = 2:2:length(obj.list_cell_attributes)
-            obj.list_cell_attributes{k}(idx) = [];
-        end
-
-        a = fieldnames(obj.struct_cell_embeddings);
-        for k = 1:length(a)
-            if ~isempty(obj.struct_cell_embeddings.(a{k}))
-                obj.struct_cell_embeddings.(a{k})(idx, :) = [];
-            end
-        end
-
-        a = fieldnames(obj.struct_cell_clusterings);
-        for k = 1:length(a)
-            if ~isempty(obj.struct_cell_clusterings.(a{k}))
-                obj.struct_cell_clusterings.(a{k})(idx) = [];
-            end
-        end
-        % obj.NumCells=size(obj.X,2);
+        obj = i_applyCellIndex(obj, idx, 'delete');
     end
 
     function obj = selectcells(obj, idx)
@@ -224,41 +155,7 @@ methods
             end
             obj.s = obj.s(idx, :);
             obj.c = obj.c(idx);
-            if ~isempty(obj.c_cell_cycle_tx)
-                obj.c_cell_cycle_tx = obj.c_cell_cycle_tx(idx);
-            end
-            if ~isempty(obj.c_cell_type_tx)
-                obj.c_cell_type_tx = obj.c_cell_type_tx(idx);
-            end
-            if ~isempty(obj.c_cluster_id)
-                obj.c_cluster_id = obj.c_cluster_id(idx);
-            end
-            if ~isempty(obj.c_batch_id)
-                obj.c_batch_id = obj.c_batch_id(idx);
-            end
-            if ~isempty(obj.c_cell_id)
-                obj.c_cell_id = obj.c_cell_id(idx);
-            end
-            for k = 2:2:length(obj.list_cell_attributes)
-                obj.list_cell_attributes{k} = obj.list_cell_attributes{k}(idx);
-            end
-
-            a = fieldnames(obj.struct_cell_embeddings);
-            for k = 1:length(a)
-                if ~isempty(obj.struct_cell_embeddings.(a{k}))
-                    obj.struct_cell_embeddings.(a{k}) = ...
-                        obj.struct_cell_embeddings.(a{k})(idx, :);
-                end
-            end
-
-            a = fieldnames(obj.struct_cell_clusterings);
-            for k = 1:length(a)
-                if ~isempty(obj.struct_cell_clusterings.(a{k}))
-                    obj.struct_cell_clusterings.(a{k}) = ...
-                        obj.struct_cell_clusterings.(a{k})(idx);
-                end
-            end
-            % obj.NumCells=size(obj.X,2);
+            obj = i_applyCellIndex(obj, idx, 'select');
         end
     end
 
@@ -378,13 +275,7 @@ methods
             min_cellnum, nonzero_cutoff);
         obj.X = tmpX;
         obj.g = tmpg;
-        try
-        for k = 2:2:length(obj.list_gene_attributes)
-            obj.list_gene_attributes{k} = obj.list_gene_attributes{k}(idx);
-        end
-        catch ME
-            warning(ME.message);
-        end
+        obj = i_filterGeneAttributes(obj, idx);
     end
 
     function obj = selectkeepgenes(obj, min_countnum, min_cellnum)
@@ -403,13 +294,7 @@ methods
         idxkeep = idxkeep1 | idxkeep2;
         obj.X = obj.X(idxkeep, :);
         obj.g = obj.g(idxkeep);
-        try
-            for k = 2:2:length(obj.list_gene_attributes)
-                obj.list_gene_attributes{k} = obj.list_gene_attributes{k}(idxkeep);
-            end
-        catch ME
-            warning(ME.message);
-        end
+        obj = i_filterGeneAttributes(obj, idxkeep);
     end
 
     function newobj = subsetcopy(obj, idx)
@@ -427,13 +312,7 @@ methods
         if sum(idx) > 0
             obj.X = tmpX;
             obj.g = tmpg;
-            try
-                for k = 2:2:length(obj.list_gene_attributes)
-                    obj.list_gene_attributes{k}(idx) = [];
-                end
-            catch ME
-                warning(ME.message);
-            end
+            obj = i_filterGeneAttributes(obj, ~idx);
         end
     end
 
@@ -442,15 +321,8 @@ methods
         [idx] = ismember(upper(obj.g), glist);
         obj.X = obj.X(~idx, :);
         obj.g = obj.g(~idx);
-        fprintf('%d lncRNA genes found and removed.\n', ...
-            sum(idx));
-            try
-                for k = 2:2:length(obj.list_gene_attributes)
-                    obj.list_gene_attributes{k}(idx) = [];
-                end
-            catch ME
-                warning(ME.message);
-            end
+        fprintf('%d lncRNA genes found and removed.\n', sum(idx));
+        obj = i_filterGeneAttributes(obj, ~idx);
     end
 
     function obj = rmribosomalgenes(obj)
@@ -458,31 +330,17 @@ methods
         [idx] = ismember(upper(obj.g), ribog);
         obj.X = obj.X(~idx, :);
         obj.g = obj.g(~idx);
-        fprintf('%d ribosomal genes found and removed.\n', ...
-            sum(idx));
-            try
-                for k = 2:2:length(obj.list_gene_attributes)
-                    obj.list_gene_attributes{k}(idx) = [];
-                end
-            catch ME
-                warning(ME.message);
-            end
+        fprintf('%d ribosomal genes found and removed.\n', sum(idx));
+        obj = i_filterGeneAttributes(obj, ~idx);
     end
 
     function obj = rmhemoglobingenes(obj)
-        hemog = pkg.i_get_hemoglobingenes;        
+        hemog = pkg.i_get_hemoglobingenes;
         [idx] = ismember(obj.g, hemog);
         obj.X = obj.X(~idx, :);
         obj.g = obj.g(~idx);
-        fprintf('%d hemoglobin genes found and removed.\n', ...
-            sum(idx));
-            try
-                for k = 2:2:length(obj.list_gene_attributes)
-                    obj.list_gene_attributes{k}(idx) = [];
-                end
-            catch ME
-                warning(ME.message);
-            end
+        fprintf('%d hemoglobin genes found and removed.\n', sum(idx));
+        obj = i_filterGeneAttributes(obj, ~idx);
     end
 
     function obj = appendmetainfo(obj, infostr)
@@ -505,8 +363,93 @@ methods
         assert(~isempty(obj.c), 'SCE.C must be defined!');
     end
 end
+
+methods (Access = private)
+    function obj = i_filterGeneAttributes(obj, idx)
+        % Apply logical or subscript index to all gene attributes.
+        % idx: logical vector (true = keep) or subscript indices
+        try
+            for k = 2:2:length(obj.list_gene_attributes)
+                obj.list_gene_attributes{k} = obj.list_gene_attributes{k}(idx);
+            end
+        catch ME
+            warning(ME.message);
+        end
+    end
+
+    function obj = i_applyCellIndex(obj, idx, mode)
+        % Apply index to all cell-level attributes.
+        % mode: 'select' keeps idx rows, 'delete' removes idx rows
+        if nargin < 3, mode = 'select'; end
+
+        if strcmp(mode, 'select')
+            if ~isempty(obj.c_cell_cycle_tx)
+                obj.c_cell_cycle_tx = obj.c_cell_cycle_tx(idx);
+            end
+            if ~isempty(obj.c_cell_type_tx)
+                obj.c_cell_type_tx = obj.c_cell_type_tx(idx);
+            end
+            if ~isempty(obj.c_cluster_id)
+                obj.c_cluster_id = obj.c_cluster_id(idx);
+            end
+            if ~isempty(obj.c_batch_id)
+                obj.c_batch_id = obj.c_batch_id(idx);
+            end
+            if ~isempty(obj.c_cell_id)
+                obj.c_cell_id = obj.c_cell_id(idx);
+            end
+            for k = 2:2:length(obj.list_cell_attributes)
+                obj.list_cell_attributes{k} = obj.list_cell_attributes{k}(idx);
+            end
+            a = fieldnames(obj.struct_cell_embeddings);
+            for k = 1:length(a)
+                if ~isempty(obj.struct_cell_embeddings.(a{k}))
+                    obj.struct_cell_embeddings.(a{k}) = ...
+                        obj.struct_cell_embeddings.(a{k})(idx, :);
+                end
+            end
+            a = fieldnames(obj.struct_cell_clusterings);
+            for k = 1:length(a)
+                if ~isempty(obj.struct_cell_clusterings.(a{k}))
+                    obj.struct_cell_clusterings.(a{k}) = ...
+                        obj.struct_cell_clusterings.(a{k})(idx);
+                end
+            end
+        else  % delete mode
+            if ~isempty(obj.c_cell_cycle_tx)
+                obj.c_cell_cycle_tx(idx) = [];
+            end
+            if ~isempty(obj.c_cell_type_tx)
+                obj.c_cell_type_tx(idx) = [];
+            end
+            if ~isempty(obj.c_cluster_id)
+                obj.c_cluster_id(idx) = [];
+            end
+            if ~isempty(obj.c_batch_id)
+                obj.c_batch_id(idx) = [];
+            end
+            if ~isempty(obj.c_cell_id)
+                obj.c_cell_id(idx) = [];
+            end
+            for k = 2:2:length(obj.list_cell_attributes)
+                obj.list_cell_attributes{k}(idx) = [];
+            end
+            a = fieldnames(obj.struct_cell_embeddings);
+            for k = 1:length(a)
+                if ~isempty(obj.struct_cell_embeddings.(a{k}))
+                    obj.struct_cell_embeddings.(a{k})(idx, :) = [];
+                end
+            end
+            a = fieldnames(obj.struct_cell_clusterings);
+            for k = 1:length(a)
+                if ~isempty(obj.struct_cell_clusterings.(a{k}))
+                    obj.struct_cell_clusterings.(a{k})(idx) = [];
+                end
+            end
+        end
+    end
+end
+
 % https://www.mathworks.com/help/matlab/matlab_oop/example-representing-structured-data.html
-
-
 
 end

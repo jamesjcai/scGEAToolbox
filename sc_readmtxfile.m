@@ -36,7 +36,9 @@ elseif coln == 2
         if sum(strlength(genelist) == 0) > 0.85 * length(genelist)
             genelist = string(T.Var1);
         end
-    catch
+    catch ME
+        warning('sc_readmtxfile:Var2Fallback', ...
+            'Could not read Var2, falling back to Var1: %s', ME.message);
         genelist = string(T.Var1);
     end
 end

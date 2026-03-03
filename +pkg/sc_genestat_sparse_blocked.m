@@ -27,7 +27,7 @@ if nargin < 4, removeinf = true; end
 if nargin < 3, sortit = true; end
 [numGenes, numCells] = size(X);
 if nargin < 2 || isempty(genelist)
-    genelist = "Gene"+string(1:numGenes).';
+    genelist = pkg.i_defaultgenenames(numGenes);
 end
 genelist = genelist(:);
 if length(genelist) ~= numGenes

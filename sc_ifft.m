@@ -101,42 +101,6 @@ function raw_synth = convert_to_raw_counts(synth_norm, raw_orig, norm_orig, pare
 end
 
 
-%% Wrapper function for single-cell synthesis
-function [x_synth] = synthesize_single_cell(x_original, num_CCs)
-% Synthesize a single cell from one original cell profile
-% Simplified version for M=1 case
-
-    G = length(x_original);
-
-    % DFT
-    X = fft(x_original);
-    X_modified = X;
-
-    % Identify valid components for modification
-    if mod(G, 2) == 0
-        valid_k = 1:(G/2 - 1);
-    else
-        valid_k = 1:floor((G-1)/2);
-    end
-
-    % Select and modify components
-    num_to_mod = min(num_CCs, length(valid_k));
-    selected_k = valid_k(randperm(length(valid_k), num_to_mod));
-
-    for k = selected_k
-        % For M=1: A_k ~ N(2, 1)
-        A_k = 2 + randn();
-        X_modified(k + 1) = A_k * X_modified(k + 1);
-        conj_idx = G - k + 1;
-        X_modified(conj_idx) = A_k * X_modified(conj_idx);
-    end
-
-    % IFFT and ReLU
-    x_synth = real(ifft(X_modified));
-    x_synth = max(0, x_synth);
-end
-
-
 %{
 https://chatgpt.com/s/t_699b270e1f2081919a22b558d6bb6e47
 

@@ -13,30 +13,35 @@ function [T, Xsorted, gsorted] = sc_hvg(X, g, sortit, plotit, ...
 %
 % See also: SC_SPLINEFIT, SC_VEG
 
-if ~isnumeric(X) || ~ismatrix(X)
-    error('Input X must be a numeric matrix.');
+arguments
+    X {mustBeNumeric}
+    g = []
+    sortit (1,1) logical = true
+    plotit (1,1) logical = false
+    normit (1,1) logical = true
+    ignorehigh (1,1) logical = true
+    ignorelow (1,1) logical = true
 end
 
-if nargin < 2 || isempty(g)
-    % g = strcat("G", string(1:size(X, 1)))';
-    g = "G" + string((1:size(X, 1))');
+if ~ismatrix(X)
+    error('sc_hvg:InvalidInput', 'Input X must be a 2-D numeric matrix.');
 end
 
-if size(X, 1) ~= length(g)
-    error('The number of rows in X must match the length of g.');
+if isempty(g)
+    g = pkg.i_defaultgenenames(size(X, 1), "G");
+elseif iscellstr(g)
+    g = string(g);
 end
 
-if nargin < 3, sortit = true; end
-if nargin < 4, plotit = false; end
-if nargin < 5, normit = true; end
-if nargin < 6, ignorehigh = true; end
-if nargin < 7, ignorelow = true; end
+if size(X, 1) ~= numel(g)
+    error('sc_hvg:DimensionMismatch', ...
+        'Number of rows in X (%d) must match length of g (%d).', ...
+        size(X, 1), numel(g));
+end
 
 
 
-%if nargout > 1, 
-    Xori = X; 
-%end
+Xori = X;
 
 
 dropr = 1 - sum(X > 0, 2) ./ size(X, 2);
@@ -48,10 +53,6 @@ end
 u = mean(X, 2, 'omitnan');
 vx = var(X, 0, 2, 'omitnan');
 cv2 = vx ./ u.^2;
-
-if issparse(u), u = full(u); end
-if issparse(vx), vx = full(vx); end
-if issparse(cv2), cv2 = full(cv2); end
 
 xi = 1 ./ u;
 yi = cv2;
@@ -74,29 +75,17 @@ yi(removedidx1|removedidx2)=[];
 m = size(X, 2);
 df = m - 1;
 
-% b=glmfit(xi,yi,'gamma','link','identity');
-% cv2fit=glmval(b,1./u,'identity');    % OR cv2fit=b(2)./u+b(1);
-% if issparse(xi), xi=full(xi); end
-% if issparse(yi), yi=full(yi); end
 mdl = fitglm(xi, yi, 'linear', 'Distribution', 'gamma', 'link', 'identity');
 cv2fit = mdl.predict(1./u);
 b = mdl.Coefficients.Estimate;
 
 
-methodid = 1;
-switch methodid
-    case 1
-        % this code follows: https://github.com/tallulandrews/M3Drop/blob/master/R/Brennecke_implementation.R
-        % and pages 7-9 https://media.nature.com/original/nature-assets/nmeth/journal/v10/n11/extref/nmeth.2645-S2.pdf
-        minBiolDisp = 0.5.^2;
-        cv2th = b(1) + minBiolDisp + b(1) * minBiolDisp;
-        testDenom = (u * b(2) + u.^2 * cv2th) / (1 + cv2th / m);
-        fitratio = vx ./ testDenom;
-    case 2
-        % this code follows https://github.com/MarioniLab/MNN2017/blob/a202f960f165816f22dec3b62ce1c7549b3ba8c1/Pancreas/findHighlyVariableGenes.R
-        % cv2fit=b(2)./u+b(1);
-        fitratio = cv2 ./ cv2fit;
-end
+% this code follows: https://github.com/tallulandrews/M3Drop/blob/master/R/Brennecke_implementation.R
+% and pages 7-9 https://media.nature.com/original/nature-assets/nmeth/journal/v10/n11/extref/nmeth.2645-S2.pdf
+minBiolDisp = 0.5.^2;
+cv2th = b(1) + minBiolDisp + b(1) * minBiolDisp;
+testDenom = (u * b(2) + u.^2 * cv2th) / (1 + cv2th / m);
+fitratio = vx ./ testDenom;
 
 pval = chi2cdf(fitratio*df, df, 'upper');
 % OR 1-chi2cdf(fitratio*df,df);
@@ -110,23 +99,11 @@ T = table(g, u, cv2, residualcv2, dropr, fitratio, pval, fdr, removedidx1, remov
 
 T.Properties.VariableNames(1) = {'genes'};
 
-%i = ~isnan(cv2);
-%T = T(i, :);
-
 if sortit
     T.fitratio(T.dropr > (1 - 0.05)) = 0; % ignore genes with dropout rate > 0.95
-    % disp('NOTE: Genes with dropout rate > 0.95 are excluded.');
     [T, hvgidx] = sortrows(T, 'fitratio', 'descend');
-    %if nargout > 1
-        Xsorted = Xori(hvgidx, :);
-    %end
-    %if nargout > 2
-        gsorted = T.genes;
-    %end
-else
-    %if nargout > 1
-    %    error('SORTIT was not required.');
-    %end
+    Xsorted = Xori(hvgidx, :);
+    gsorted = T.genes;
 end
 % T=T(removedidx,:);
 if plotit

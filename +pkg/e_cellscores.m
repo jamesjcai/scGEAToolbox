@@ -64,7 +64,7 @@ switch answer
             [score] = sc_cellscore_admdl(X, genelist, tgsPos, tgsNeg);
         catch ME
             if showwaitbar, gui.gui_waitbar(fw, true); end
-            errordlg(ME.message);
+            gui.myErrordlg([], ME.message);
             return;
         end
         if showwaitbar, gui.gui_waitbar(fw); end
@@ -76,7 +76,7 @@ switch answer
             [score] = sc_cellscore_ucell(X, genelist, tgsPos);
         catch ME
             if showwaitbar, gui.gui_waitbar(fw, true); end
-            errordlg(ME.message);
+            gui.myErrordlg([], ME.message);
             return;
         end
         if showwaitbar, gui.gui_waitbar(fw); end

@@ -1,5 +1,5 @@
 % scGEAToolbox - Single-Cell Gene Expression Analysis Toolbox
-% Version 26.1.9 28-Feb-2026
+% Version 26.2.0 02-Mar-2026
 %
 % Functions
 %   cdgea                     - CDGEA - Change working directory to the scGEAToolbox folder
@@ -13,7 +13,7 @@
 %   sc_deg                    - SC_DEG - DEG analysis using Mann–Whitney U test or t-test
 %   sc_dpg                    - X = log1p(sc_norm(X));
 %   sc_filterc                - sc_filterc is a function.
-%   sc_filterg                - sc_filterg is a function.
+%   sc_filterg                - cutoff < 1:  interpreted as minimum non-zero fraction (dropout-rate mode)
 %   sc_genestat               - SC_GENESTAT  Compute per-gene statistics and optionally filter invalid values
 %   sc_genestats              - SC_GENESTATS  Compute per-gene statistics into a tidy table
 %   sc_grnview                - SC_GRNVIEW  Display a gene regulatory network as a graph GUI.
@@ -57,5 +57,5 @@
 %   sc_tsne                   - tSNE embedding of cells
 %   sc_umap                   - UMAP embedding of cells
 %   sc_writefile              - sc_writefile is a function.
-%   scgeatool                 - SCGEATOOL - Launch either original figure GUI or App Designer version
+%   scgeatool                 - SCGEATOOL - Launch App Designer GUI
 %   scgeatool_legacy          - SCGEATOOL_LEGACY - Single-cell Gene Expression Analysis Toolbox Graphical User Interface.

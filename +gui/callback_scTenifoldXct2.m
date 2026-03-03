@@ -45,7 +45,7 @@ if use_python
     numglist = [1 3000 5000];
     memmlist = [16 32 64 128];
     neededmem = memmlist(sum(sce.NumGenes > numglist));
-    [yesgohead, prepare_input_only] = gui.i_memorychecked(neededmem);
+    [yesgohead, prepare_input_only] = gui.i_memorychecked(neededmem, FigureHandle);
     if ~yesgohead, return; end
 
     extprogname = 'py_scTenifoldXct';

@@ -39,100 +39,73 @@ idx = find(strcmp(strtrim(string(char(hinfo.Groups.Name))), "/X"));
 %indptr=h5read(filenm,[hinfo.Groups(idx).Name,'/indptr']);
 
 data = pkg.e_guessh5field(filenm, {'/X/'}, {'data'}, true);
+shapeGroupIdx = idx;  % default: read shape from /X
 if isequal(data(1:5), round(data(1:5)))
     indices = pkg.e_guessh5field(filenm, {'/X/'}, {'indices'}, true);
     indptr = pkg.e_guessh5field(filenm, {'/X/'}, {'indptr'}, true);
 else
-    disp('/X has been transformed/normalized. Try to read /raw/X...');
+    warning('sc_readh5adfile:NormalizedX', ...
+        '/X appears transformed/normalized. Attempting to read /raw/X instead.');
     try
         data = pkg.e_guessh5field(filenm, {'/raw/X/'}, {'data'}, true);
         indices = pkg.e_guessh5field(filenm, {'/raw/X/'}, {'indices'}, true);
         indptr = pkg.e_guessh5field(filenm, {'/raw/X/'}, {'indptr'}, true);
-        disp('/raw/X is read.');
+        % Update shape group to /raw/X if it exists
+        rawIdx = find(strcmp(strtrim(string(char(hinfo.Groups.Name))), "/raw"));
+        if ~isempty(rawIdx)
+            rawSubNames = strtrim(string(char(hinfo.Groups(rawIdx).Groups.Name)));
+            rawXIdx = find(strcmp(rawSubNames, "/raw/X"));
+            if ~isempty(rawXIdx) && ~isempty(hinfo.Groups(rawIdx).Groups(rawXIdx).Attributes)
+                shapeGroupIdx = [];  % signal to use raw group below
+            end
+        end
     catch ME
-        disp(ME.message)
+        warning('sc_readh5adfile:RawXFailed', ...
+            '/raw/X could not be read (%s). Using normalized /X instead.', ME.message);
         indices = pkg.e_guessh5field(filenm, {'/X/'}, {'indices'}, true);
         indptr = pkg.e_guessh5field(filenm, {'/X/'}, {'indptr'}, true);
-        disp('Reading transformed/normalized /X instead.');
     end
 end
 
-
-% idx=find(strcmp(strtrim(string(char(hinfo.Groups.Name))),"/raw"));
-% data=h5read(filenm,[hinfo.Groups(idx).Groups(1).Name,'/data']);
-% indices=h5read(filenm,[hinfo.Groups(idx).Groups(1).Name,'/indices']);
-% indptr=h5read(filenm,[hinfo.Groups(idx).Groups(1).Name,'/indptr']);
-
-idx2 = find(strcmp(strtrim(string(char(hinfo.Groups(idx).Attributes.Name))), "shape"));
-if isempty(idx2)
-idx2 = find(strcmp(strtrim(string(char(hinfo.Groups(idx).Attributes.Name))), "h5sparse_shape"));
+if ~isempty(shapeGroupIdx)
+    grpAttrs = hinfo.Groups(shapeGroupIdx).Attributes;
+else
+    grpAttrs = hinfo.Groups(rawIdx).Groups(rawXIdx).Attributes;
 end
-shape = double(hinfo.Groups(idx).Attributes(idx2).Value);
+idx2 = find(strcmp(strtrim(string(char(grpAttrs.Name))), "shape"));
+if isempty(idx2)
+    idx2 = find(strcmp(strtrim(string(char(grpAttrs.Name))), "h5sparse_shape"));
+end
+shape = double(grpAttrs(idx2).Value);
 
 g = pkg.e_guessh5field(filenm, {'/var/'}, {'_index', 'gene_ids', ...
     'gene_name','symbol'}, false);
 
 if isempty(g) || isscalar(unique(strlength(g))) % suggesting ENSEMBLE ID
-    disp('Reading /var/feature_name/categories');
+    % Gene IDs look uniform-length (e.g. ENSEMBL); try feature_name for symbols
     gx = pkg.e_guessh5field(filenm, {'/raw/var/feature_name/', ...
         '/var/feature_name/'}, {'categories'}, false);
     if ~isempty(gx)
         g = gx;
     end
 end
-if isempty(g), warning('Genename is not assigned.'); end
-
-
-% idx=find(strcmp(strtrim(string(char(hinfo.Groups.Name))),"/var"));
-% try
-%     g=h5read(filenm,[hinfo.Groups(idx).Name,'/_index']);
-% catch
-%     try
-%         g=h5read(filenm,[hinfo.Groups(idx).Name,'/gene_ids']);
-%     catch
-%         try
-%             g=h5read(filenm,[hinfo.Groups(idx).Name,'/gene_name']);
-%         catch
-%             warning('GENELIST not found.');
-%         end
-%     end
-% end
+if isempty(g), warning('sc_readh5adfile:NoGenenames', 'Genename is not assigned.'); end
 
 b = pkg.e_guessh5field(filenm, {'/obs/'}, {'_index', 'barcodes','cell_id','CellID'});
 if isempty(b), warning('Barcode is not assigned.'); end
 
 try
-    % c = pkg.e_guessh5field(filenm, {'/obs/BatchID/'}, {'codes'});
-    % cL = pkg.e_guessh5field(filenm, {'/obs/BatchID/'}, {'categories'});
-    % batchid = cL(c+1);
     batchid = readObsColumn(filenm, 'BatchID');
-catch ME
-    disp(ME.message)
+catch
+    % BatchID is optional metadata; absence is not an error
 end
 
 try
-    % c = pkg.e_guessh5field(filenm, {'/obs/CellType/'}, {'codes'});
-    % cL = pkg.e_guessh5field(filenm, {'/obs/CellType/'}, {'categories'});
-    % celltype = cL(c+1);
     celltype = readObsColumn(filenm, 'CellType');
-catch ME
-    disp(ME.message)
+catch
+    % CellType is optional metadata; absence is not an error
 end
 
-% try
-%     barcodes=h5read(filenm,[hinfo.Groups.Groups(1).Name,'/barcodes']);
-% catch
-%         try
-%             barcodes=h5read(filenm,[hinfo.Groups(2).Name,'/index']);
-%             %barcodes=h5read(filenm,[hinfo.Groups(1).Name,'/barcodes']);
-%         catch
-%             try
-%                 barcodes=h5read(filenm,'/obs/_index');
-%             catch
-%                 warning('BARCODES not found.');
-%             end
-%         end
-% end
 
 
 if ~isMATLABReleaseOlderThan('R2025a')
@@ -149,28 +122,7 @@ end
 
 g = deblank(string(g));
 
-% genelist=strings(length(g),1);
-% for k=1:length(g)
-%     genelist(k)=string(g(k).data);
-% end
-% gui.gui_waitbar_adv(fw);
-
 end
-
-
-% a=h5read(filenm,'/obs/seurat_clusters')
-% a=h5read(filenm,'/var/_index')
-% a=h5read(filenm,'/obs/annotation')
-
-%{
-function i_tryread
-try
-    g=h5read(filenm,[hinfo.Groups(idx).Name,'/_index']);
-catch
-
-end
-end
-%}
 
 
 function values = readObsColumn(h5file, colname)
@@ -206,21 +158,16 @@ function values = readObsColumn(h5file, colname)
     try
         codes = h5read(h5file, codesPath);
         cats  = h5read(h5file, catsPath);
-        
+
         % Convert categories to string
-        if ischar(cats)
+        if ischar(cats) || iscellstr(cats)
             cats = string(cats);
-        elseif iscellstr(cats)
-            cats = string(cats);
-        elseif isstring(cats)
-            % ___
         end
-        
+
         % AnnData categorical codes are 0-based, MATLAB is 1-based
         values = categorical(codes + 1, 1:numel(cats), cats);
         return
     catch
-        %error('Column "%s" not found in %s\n(HDF5 error: %s)', ...
-        %      colname, h5file, ME.message);
+        values = string.empty;  % column not found in either format
     end
 end

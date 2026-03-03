@@ -18,6 +18,7 @@ switch answer
         manuallyselect = true;
         bestonly = false;
     otherwise
+        manuallyselect = [];
         return;
 end
 end

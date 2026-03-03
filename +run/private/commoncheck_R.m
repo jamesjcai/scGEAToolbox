@@ -7,7 +7,7 @@ msg = [];
 
 if ~ispref('scgeatoolbox', 'rexecutablepath')
     answer = gui.myQuestdlg(FigureHandle, 'Select R Interpreter?');
-    if strcmp(answer, 'Yes'), gui.i_setrenv; end
+    if strcmp(answer, 'Yes'), gui.i_setrenv(FigureHandle); end
     return;
 else
     Rpath = getpref('scgeatoolbox', 'rexecutablepath',[]);

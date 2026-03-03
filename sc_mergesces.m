@@ -27,14 +27,16 @@ end
 
 needappendix = false;
 sce = sces{1};
-c = ones(sce.NumCells, 1);
+ccell = cell(length(sces), 1);
+ccell{1} = ones(sce.NumCells, 1);
 for k = 2:length(sces)
-    c = [c; k * ones(sces{k}.NumCells, 1)];
+    ccell{k} = k * ones(sces{k}.NumCells, 1);
     [sce, hasidoverlapx] = i_merge2sces(sce, sces{k}, method);
     if hasidoverlapx
         needappendix = true;
     end
 end
+c = vertcat(ccell{:});
 if ~keepbatchid || isscalar(unique(sce.c_batch_id)) 
     sce.c_batch_id = c; 
 end
@@ -58,7 +60,9 @@ function [sce, hasidoverlap] = i_merge2sces(sce1, sce2, method)
     sce.c = [sce1.c; sce2.c];
     try
         sce.s = [sce1.s; sce2.s];
-    catch
+    catch ME
+        warning('sc_mergesces:EmbeddingMerge', ...
+            'Could not merge embeddings (%s). Using random s.', ME.message);
         sce.s = randn(size(X, 2), 3);
     end
     % sce.c_batch_id=c;
@@ -111,12 +115,13 @@ function [sce, hasidoverlap] = i_merge2sces(sce1, sce2, method)
                 end
             end
         end
-    catch
-        warning('SCE.LIST_CELL_ATTRIBUTES not merged.')
+    catch ME
+        warning('sc_mergesces:CellAttrMerge', ...
+            'SCE.LIST_CELL_ATTRIBUTES not merged: %s', ME.message);
     end
     
     try
-        a = fields(sce.struct_cell_clusterings);
+        a = fieldnames(sce.struct_cell_clusterings);
         for k = 1:length(a)
             c1 = sce1.struct_cell_clusterings.(a{k});
             c2 = sce2.struct_cell_clusterings.(a{k});
@@ -124,12 +129,13 @@ function [sce, hasidoverlap] = i_merge2sces(sce1, sce2, method)
                 sce.struct_cell_clusterings.(a{k}) = [c1; c2];
             end
         end
-    catch
-        warning('SCE.STRUCT_CELL_CLUSTERINGS not merged.')
+    catch ME
+        warning('sc_mergesces:ClusteringMerge', ...
+            'SCE.STRUCT_CELL_CLUSTERINGS not merged: %s', ME.message);
     end
     
     try
-        a = fields(sce.struct_cell_embeddings);
+        a = fieldnames(sce.struct_cell_embeddings);
         for k = 1:length(a)
             c1 = sce1.struct_cell_embeddings.(a{k});
             c2 = sce2.struct_cell_embeddings.(a{k});
@@ -137,8 +143,9 @@ function [sce, hasidoverlap] = i_merge2sces(sce1, sce2, method)
                 sce.struct_cell_embeddings.(a{k}) = [c1; c2];
             end
         end
-    catch
-        % warning('SCE.STRUCT_CELL_EMBEDDINGS not merged.')
+    catch ME
+        warning('sc_mergesces:EmbeddingStructMerge', ...
+            'SCE.STRUCT_CELL_EMBEDDINGS not merged: %s', ME.message);
     end
 
 end

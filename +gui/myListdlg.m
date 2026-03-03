@@ -1,6 +1,7 @@
 function [indx, tf] = myListdlg(parentfig, options, Title, ...
-        prefersel, allowmulti)
+        prefersel, allowmulti, allowresize)
 
+    if nargin < 6, allowresize = true; end
     if nargin < 5, allowmulti = true; end
     if nargin < 4, prefersel = []; end
 
@@ -27,8 +28,8 @@ function [indx, tf] = myListdlg(parentfig, options, Title, ...
      %disp('alwaysontop')
 
     d = uifigure('Name', Title, 'Position', dlgPos, ...
-        'WindowStyle', 'modal', 'Visible','on');
-    
+        'WindowStyle', 'modal', 'Visible','on', 'Resize', allowresize);
+
     if allowmulti
         multitag = 'on';
     else
@@ -62,6 +63,12 @@ function [indx, tf] = myListdlg(parentfig, options, Title, ...
             theme(d, parentfig.Theme.BaseColorStyle);
         catch
         end
+    end
+    
+    % d.UserData.LastState = "normal";
+    if ~allowresize
+        d.AutoResizeChildren = 'off';
+        d.SizeChangedFcn = @(src,~) enforceNormalState(src);
     end
 
      % parentfig.WindowStyle = 'normal';
@@ -110,6 +117,14 @@ function [indx, tf] = myListdlg(parentfig, options, Title, ...
     %}
 end
 
+function enforceNormalState(fig)
+disp('If user tries to minimize, restore immediately');
+
+    if fig.WindowState == "minimized"
+        drawnow limitrate
+        fig.WindowState = "normal";
+    end
+end
 
 function okCallback(d)
     d.UserData = true;
