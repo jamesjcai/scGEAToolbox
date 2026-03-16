@@ -18,7 +18,7 @@ OldTitle = [];
 % OldXTickLabel = [];
 cLorder = strrep(cLorder, '_', '\_');
 thisc = strrep(string(thisc), '_', '\_');
-pkg.i_violinplot(y, thisc, colorit, cLorder);
+pkg.i_bindviolinplot(y, thisc, colorit, cLorder);
 title(strrep(ttxt, '_', '\_'));
 %ylabel(selitems{indx1});
 
@@ -51,7 +51,7 @@ hx.show(parentfig);
         colorit = ~colorit;
         b = hFig.get("CurrentAxes");
         cla(b);
-        pkg.i_violinplot(y, thisc, colorit, cLorder);
+        pkg.i_bindviolinplot(y, thisc, colorit, cLorder);
     end
 
     function i_addsamplesize(~, ~)
@@ -92,7 +92,7 @@ hx.show(parentfig);
         b = hFig.get("CurrentAxes");
         cla(b);
         cLorder = cLx_sorted;
-        pkg.i_violinplot(y, thisc, colorit, cLorder);
+        pkg.i_bindviolinplot(y, thisc, colorit, cLorder);
     end
 
 
@@ -103,7 +103,7 @@ hx.show(parentfig);
         if noanswer, return; end
         b = hFig.get("CurrentAxes");
         cla(b);
-        pkg.i_violinplot(y, thisc, colorit, cLorder);
+        pkg.i_bindviolinplot(y, thisc, colorit, cLorder);
     end
 
 
@@ -121,7 +121,7 @@ hx.show(parentfig);
         cla(b);
         y=y(picked);
         thisc=thisc(picked);
-        pkg.i_violinplot(y, thisc, colorit, cLorder);
+        pkg.i_bindviolinplot(y, thisc, colorit, cLorder);
     end
 
 

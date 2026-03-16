@@ -107,7 +107,7 @@ end
 % sigma = sigma*mean(mean(dump));
 sigma = sigma * mean(max(dump'));
 % fprintf('%.2f\t',sigma);
-% dump = exp(-dump/(2*sigma^2)); TODO
+% dump = exp(-dump/(2*sigma^2)); % alt. Gaussian kernel
 dump = exp(-dump/(sigma));
 sumD = sum(dump, 2);
 Gsdx = bsxfun(@rdivide, dump, sumD);
@@ -121,7 +121,7 @@ feaSum = max(feaSum, 1e-12);
 Z = Z ./ feaSum(ones(size(Z, 1), 1), :);
 % toc;
 % tic;
-U = mySVD(Z, k+2); %TODO: use more than one eigenvectors, remove the first one too
+U = mySVD(Z, k+2); % request k+1 eigenvectors; first (trivial) removed below
 U(:, 1) = [];
 % toc;
 %U=U./repmat(sqrt(sum(U.^2,2)),1,k);

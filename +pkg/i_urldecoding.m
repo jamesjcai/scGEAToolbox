@@ -1,4 +1,4 @@
-function u = urldecoding(s)
+function u = i_urldecoding(s)
 if isstring(s), s = char(s); end
 u = '';
 k = 1;

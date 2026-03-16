@@ -597,7 +597,7 @@ classdef Gui
                 if found>0
                     idx=found-1;
                     jList.ensureIndexIsVisible(idx);
-                    if ~isempty(jList.getSelectedIndices==idx)
+                    if ~any(jList.getSelectedIndices==idx)
                         if multiSelect
                             jList.addSelectionInterval(idx, idx);
                         else
@@ -7966,3 +7966,4 @@ classdef Gui
         end
     end
 end
+

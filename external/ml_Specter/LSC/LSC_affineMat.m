@@ -117,7 +117,7 @@ end
 % sigma = sigma*mean(mean(dump));
 sigma = sigma * mean(max(dump'));
 % fprintf('%.2f\t',sigma);
-% dump = exp(-dump/(2*sigma^2)); TODO
+% dump = exp(-dump/(2*sigma^2)); % alt. Gaussian kernel
 dump = exp(-dump/(sigma));
 sumD = sum(dump, 2);
 Gsdx = bsxfun(@rdivide, dump, sumD);

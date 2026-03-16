@@ -6,6 +6,7 @@ end
 ok = false;
 
 oldpth = pwd();
+cleanupObj = onCleanup(@() cd(oldpth));
 pw1 = fileparts(mfilename('fullpath'));
 wrkpth = fullfile(pw1, '..',  'external', prgwkdir);
 cd(wrkpth);
@@ -26,7 +27,6 @@ cmdlinestr = sprintf('"%s" "%s%srequire.py"', ...
 disp(cmdlinestr)
 [status, cmdout] = system(cmdlinestr, '-echo');
 if status ~= 0
-    cd(oldpth);
     if isvalid(fw)
         gui.gui_waitbar(fw, [], 'Checking Python...error.');
     end

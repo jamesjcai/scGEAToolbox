@@ -572,8 +572,8 @@ conclude;
         for ii=0:checkBoxParentCount-1
             cb=checkBoxParent.getComponent(ii);
             if isequal(cb, lastPick)
-                for ii=ii+1:checkBoxParentCount-1
-                    cb=checkBoxParent.getComponent(ii);
+                for jj=ii+1:checkBoxParentCount-1
+                    cb=checkBoxParent.getComponent(jj);
                     if isequal(cb, curPick)
                         break;
                     end
@@ -581,8 +581,8 @@ conclude;
                 end
                 break;
             elseif isequal(cb, curPick)
-                for ii=ii+1:checkBoxParentCount-1
-                    cb=checkBoxParent.getComponent(ii);
+                for jj=ii+1:checkBoxParentCount-1
+                    cb=checkBoxParent.getComponent(jj);
                     if isequal(cb, lastPick)
                         break;
                     end
@@ -592,7 +592,6 @@ conclude;
             end
         end
     end
-
     function innerChbCb(h, e)
         modifiers=e.getModifiers;
         if ~isempty(sortGui)
@@ -630,3 +629,4 @@ conclude;
     end
 
 end
+

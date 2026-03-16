@@ -1,4 +1,4 @@
-function [c, counts, idx] = mbkmeans(x, k, c, counts)
+function [c, counts, idx] = ai_mbkmeans(x, k, c, counts)
 
 % [c1, counts1] = mbkmeans(subset1,numberofclusters);
 % [c2, counts2] = mbkmeans(subset2,numberofclusters, c1, counts1); %start clustering using previously created clusters
@@ -17,9 +17,9 @@ function [c, counts, idx] = mbkmeans(x, k, c, counts)
 
 [N, D] = size(x);
 if ~exist('c', 'var') || isempty(c)
-    c = x(1:min([k, N]), :) + bsxfun(@times, randn(min([k, N]), D)*0.001, std(x));
+    c = x(1:min([k, N]), :) + randn(min([k, N]), D) .* (std(x) * 0.001);
     if N < k
-        c(N+1:k, :) = bsxfun(@plus, mean(x), bsxfun(@times, randn(k-N, D), std(x)));
+        c(N+1:k, :) = mean(x) + randn(k-N, D) .* std(x);
     end
 end
 if ~exist('counts', 'var') || isempty(counts)

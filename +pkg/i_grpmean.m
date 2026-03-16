@@ -22,9 +22,9 @@ for k = 1:n
 end
 
 if needvar
-    fano = fano ./ a;
+    fano = fano ./ max(a, eps);
 end
 if needstd
-    cv = cv ./ a;
+    cv = cv ./ max(a, eps);
 end
 end

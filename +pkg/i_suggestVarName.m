@@ -1,4 +1,4 @@
-function newVarName = ai_suggestVarName(baseName, workspace)
+function newVarName = i_suggestVarName(baseName, workspace)
     % SUGGESTVARNAME Suggests a new variable name by appending numbers
     % if the base name already exists in the workspace
     %

@@ -124,7 +124,7 @@ end % main function
 
 %% ── LOCAL FUNCTIONS ──────────────────────────────────────────────────────
 
-function T = i_xct(X_s, X_t, g, A_s, A_t, lig_db, rec_db, n_dim, mu_, pval_t, verbose)
+function T = i_xct(X_s, ~, g, A_s, A_t, lig_db, rec_db, n_dim, mu_, pval_t, verbose)
 %I_XCT  Spectral manifold alignment for one direction (source → target).
 
 ng   = size(X_s, 1);   % number of genes (same for source and target)

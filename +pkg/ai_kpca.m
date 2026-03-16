@@ -1,7 +1,7 @@
-function [coeff, score, latent] = kpca(X, k, sgm, isds)
+function [coeff, score, latent] = ai_kpca(X, k, sgm, isds)
 
 % how to use coeff of kpca:
-% 	[coeff] = pkg.kpca(XTaining);
+% 	[coeff] = pkg.ai_kpca(XTaining);
 %   Ktest = constructKernel(XTest)
 %   Y = Ktest*coeff;
 %   Y is the embedding result of XTest.

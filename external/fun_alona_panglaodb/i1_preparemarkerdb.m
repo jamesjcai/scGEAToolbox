@@ -17,8 +17,9 @@ organ = "All";
 % organ="Thymus"
 
 i = organ == organlist;
-if isempty(i), error('No organ.'); end
-
+if ~strcmpi(organ, "All") && ~any(i)
+    error('No organ match found for "%s".', organ);
+end
 
 if strcmpi(organ, "All")
     disp('All organs.');
@@ -29,7 +30,6 @@ else % if strcmpi(organ,"Heart") && ~isempty(i)
     if ~exist(organv, 'dir'), mkdir(organv); end
     outfile = sprintf('%s/markerlist_%s_panglaodb.txt', organv, lower(sp));
 end
-
 
 a = string(unique(T.cellType));
 gt = string(T.cellType);

@@ -65,8 +65,7 @@ function selectedItems = myChecklistdlg(parentfig, items, varargin)
     mainGrid.RowSpacing = 15;
     
     % Add prompt label
-    promptLabel = uilabel(mainGrid, 'Text', p.Results.Prompt, ...
-                         'FontSize', 12, 'FontWeight', 'bold');
+    promptLabel = uilabel(mainGrid, 'Text', p.Results.Prompt);
     
     % Create scrollable panel for checklist
     scrollPanel = uipanel(mainGrid, 'BorderType', 'line', ...
@@ -82,8 +81,7 @@ function selectedItems = myChecklistdlg(parentfig, items, varargin)
     % Create checkboxes
     checkboxes = cell(numItems, 1);
     for i = 1:numItems
-        checkboxes{i} = uicheckbox(checkGrid, 'Text', items{i}, ...
-                                  'FontSize', 10);
+        checkboxes{i} = uicheckbox(checkGrid, 'Text', items{i});
         % Set default selection if specified
         if ismember(i, p.Results.DefaultSelection)
             checkboxes{i}.Value = true;
@@ -92,7 +90,7 @@ function selectedItems = myChecklistdlg(parentfig, items, varargin)
     
     % Create selection info label
     selectionInfo = uilabel(mainGrid, 'Text', 'Selected: 0 items', ...
-                           'FontSize', 10, 'FontColor', [0.5, 0.5, 0.5]);
+                           'FontColor', [0.5, 0.5, 0.5]);
     
     % Add callback to update selection count
     updateSelectionCount();

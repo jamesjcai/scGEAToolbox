@@ -67,14 +67,14 @@ end
 
 % ── Parse inputs ─────────────────────────────────────────────────────────
 p = inputParser;
-addOptional(p, 'twosided', true,  @islogical);
-addOptional(p, 'n_dim',    50,    @(x) isnumeric(x) && x > 0);
-addOptional(p, 'mu',       0.9,   @(x) isnumeric(x) && x > 0);
-addOptional(p, 'corr_thr', 0.3,   @(x) isnumeric(x) && x >= 0 && x <= 1);
-addOptional(p, 'n_steps',  1000,  @(x) isnumeric(x) && x > 0);
-addOptional(p, 'lr',       0.01,  @(x) isnumeric(x) && x > 0);
-addOptional(p, 'pval',     1.0,   @(x) isnumeric(x) && x >= 0);
-addOptional(p, 'verbose',  true,  @islogical);
+addParameter(p, 'twosided', true,  @islogical);
+addParameter(p, 'n_dim',    50,    @(x) isnumeric(x) && x > 0);
+addParameter(p, 'mu',       0.9,   @(x) isnumeric(x) && x > 0);
+addParameter(p, 'corr_thr', 0.3,   @(x) isnumeric(x) && x >= 0 && x <= 1);
+addParameter(p, 'n_steps',  1000,  @(x) isnumeric(x) && x > 0);
+addParameter(p, 'lr',       0.01,  @(x) isnumeric(x) && x > 0);
+addParameter(p, 'pval',     1.0,   @(x) isnumeric(x) && x >= 0);
+addParameter(p, 'verbose',  true,  @islogical);
 parse(p, varargin{:});
 
 twosided = p.Results.twosided;
@@ -94,12 +94,12 @@ ng = size(X_s, 1);
 if size(X_t, 1) ~= ng || numel(g) ~= ng
     error('xctmain_nn: X_s, X_t and g must all have the same number of rows.');
 end
-if ng > 3000
-    warning('xctmain_nn:largeGeneSet', ...
-        ['%d genes → L matrix will be %d × %d (%.0f MB single). ' ...
-         'Consider subsetting to top HVGs to reduce memory.'], ...
-        ng, 2*ng, 2*ng, (2*ng)^2*4/1e6);
-end
+% if ng > 3000
+%     warning('xctmain_nn:largeGeneSet', ...
+%         ['%d genes → L matrix will be %d × %d (%.0f MB single). ' ...
+%          'Consider subsetting to top HVGs to reduce memory.'], ...
+%         ng, 2*ng, 2*ng, (2*ng)^2*4/1e6);
+% end
 
 if verbose
     fprintf('[xctmain_nn] Source: %d genes × %d cells\n', ng, size(X_s,2));
@@ -288,16 +288,20 @@ function [loss, grads] = i_grad_fn(ps, pt, Xs_dl, Xt_dl, L_dl)
 %
 %   loss = trace(P' · L · P) / 3000
 %   where P = U·V'  (SVD Stiefel retraction of stacked net outputs).
-%   Gradients flow back through dlsvd to both network parameter structs.
+%   Gradients flow back through the polar factor iteration to both parameter structs.
 
 out_s   = i_net_fwd(Xs_dl, ps);   % ng_s × n_dim  (dlarray)
 out_t   = i_net_fwd(Xt_dl, pt);   % ng_t × n_dim  (dlarray)
 outputs = [out_s; out_t];          % (ng_s+ng_t) × n_dim
 
-% Stiefel retraction: P = U·V'  (economy SVD)
-% dlsvd supports automatic differentiation (R2022b+)
-[U, ~, V] = dlsvd(outputs, 'econ');
-P = U * V';                        % (ng_s+ng_t) × n_dim  (dlarray)
+% Stiefel retraction: P = polar factor of outputs (≡ U·V' from economy SVD)
+% Computed via Newton-Schulz iteration — uses only matrix multiply and scalar
+% ops, all of which dlarray supports for automatic differentiation.
+nrm = sqrt(sum(outputs .^ 2, 'all'));
+P = outputs ./ nrm;                % normalise so spectral norm < sqrt(3)
+for ns_iter = 1:10
+    P = 1.5 .* P - 0.5 .* (P * (P' * P));
+end                                % (ng_s+ng_t) × n_dim  (dlarray)
 
 % Laplacian loss  trace(P'·L·P)/3000  =  sum(P .* (L·P)) / 3000
 % L_dl is a constant dlarray — gradients accumulate only through P

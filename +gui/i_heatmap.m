@@ -176,7 +176,7 @@ Z = zeros(length(glist), length(cL));
             catch
                 writematrix(T, filename, 'Delimiter', '\t');
             end
-            pause(1);
+            drawnow;
             if needwait
                 gui.myHelpdlg(parentfig, ...
                     sprintf('Result has been saved in %s', filename));

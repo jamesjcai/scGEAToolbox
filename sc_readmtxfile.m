@@ -12,7 +12,7 @@ if exist(matrixmtxfile, 'file') ~= 2
 end
 %tic
 fprintf('Reading mtx file %s...', matrixmtxfile);
-X = pkg.mmread(matrixmtxfile);
+X = pkg.i_mmread(matrixmtxfile);
 X = pkg.e_uint2sparse(X);
 % try
 %     X=full(X);

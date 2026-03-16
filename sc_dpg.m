@@ -54,7 +54,7 @@ end
 if exist('mafdr.m', 'file')
     p_val_adj = mafdr(p_val, 'BHFDR', true);
 else
-    [~, ~, ~, p_val_adj] = pkg.fdr_bh(p_val);
+    [~, ~, ~, p_val_adj] = pkg.e_fdr_bh(p_val);
 end
 
 T=table(setnames, gsetsize, v1, v2, avg_log2FC, m1, n1, m2, n2, p_val, p_val_adj);

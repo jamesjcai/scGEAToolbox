@@ -1,4 +1,4 @@
-function [A, rows, cols, entries, rep, field, symm] = mmread(filename)
+function [A, rows, cols, entries, rep, field, symm] = i_mmread(filename)
 %
 % function  [A] = mmread(filename)
 %

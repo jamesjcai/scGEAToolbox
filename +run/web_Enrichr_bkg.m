@@ -10,13 +10,16 @@ if nargin < 4, wkdir = ''; end
 
 if isempty(wkdir), wkdir = tempdir; end
 
+pw1 = fileparts(mfilename('fullpath'));
+pth = fullfile(pw1, '..', 'external', 'web_Enrichr');
+
 if ~isempty(bkglist)
-    infile = fullfile(wkdir, 'input_template_bkg.html');
+    infile = fullfile(pth, 'input_template_bkg.html');
 else
-    infile = fullfile(wkdir, 'input_template.html');
+    infile = fullfile(pth, 'input_template.html');
 end
 
-if exist(infile,"file"), error('Missing input_template html file.'); end
+if ~exist(infile,"file"), error('Missing input_template html file.'); end
 
 [~, b]=fileparts(tempname);
 % fx = sprintf('input_page_%s.html', char(randi([97, 122], 1, 8)));
@@ -30,7 +33,6 @@ a = string(a{1});
 
 fid = fopen(outfile, 'w');
 idx = find(a == '<textarea name=list rows=10 id=text-area cols=63></textarea>');
-pause(1)
 fprintf(fid, '%s\n', a(1:idx-1));
 
 fprintf(fid, '<textarea name=list rows=10 id=text-area cols=63>');
@@ -58,7 +60,6 @@ b=a(idx+1:end);
 
 
 idx = find(b == '<textarea name=background rows=15 id=text-area cols=63></textarea>');
-pause(1)
 fprintf(fid, '%s\n', b(1:idx-1));
 
 fprintf(fid, '<textarea name=background rows=15 id=text-area cols=63>');
@@ -84,8 +85,6 @@ fprintf(fid, '</textarea>\n');
 
 fprintf(fid, '%s\n', b(idx+1:end));
 fclose(fid);
-pause(1)
 web(outfile, '-browser');
-pause(1)
 
 end

@@ -45,15 +45,15 @@ function callback_2GeneCooccurrenceTest(src, ~)
     a=0+sce.X(sce.g==g1,:)>0;
     b=0+sce.X(sce.g==g2,:)>0;
     
-    % [chi2_stat, p_value, contingency_table, expected_freq] = pkg.ai_chi2binarytest(a,b);
+    % [chi2_stat, p_value, contingency_table, expected_freq] = pkg.e_chi2binarytest(a,b);
     % Capture the printed output into a variable
     
     try
-        pkg.ai_chi2binarytest
+        pkg.e_chi2binarytest
     catch
     end
    
-    capturedText = evalc('pkg.ai_chi2binarytest(a,b);');
+    capturedText = evalc('pkg.e_chi2binarytest(a,b);');
     
     Xm = sc_impute(sce.X);
 

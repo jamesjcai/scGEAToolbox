@@ -66,7 +66,7 @@ codepth = pkg.i_normalizepath(codepth);
     % g = sce.g;
     % writetable(table(g),'g.csv','WriteVariableNames',false);
     % sce.c_cell_id = matlab.lang.makeUniqueStrings(sce.c_cell_id);
-    % T = pkg.makeattributestable(sce);
+    % T = pkg.i_makeattributestable(sce);
     % writetable(T,'c.csv');
 
 

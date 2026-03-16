@@ -42,7 +42,7 @@ OldTitle = cell(n,1);
 for k=1:n
     tab{k} = uitab(tabgp, 'Title', sprintf('%s',tabnamelist(k)));
     ax0{k} = axes('parent',tab{k});
-    pkg.i_violinplot(y{k}, thisc, true, cLorder);
+    pkg.i_bindviolinplot(y{k}, thisc, true, cLorder);
     title(ax0{k}, strrep(tabnamelist(k), '_', '\_'));
     % subtitle(ax0{k}, gui.i_getsubtitle(c));
     % gui.i_setautumncolor(c, a, true, any(c==0));
@@ -160,7 +160,7 @@ ccx = true;
             if ks~=idx
                 delete(ax0{ks});
                 ax0{ks} = axes('parent',tab{ks});
-                pkg.i_violinplot(y{ks}, thisc, colorit, cLorder);
+                pkg.i_bindviolinplot(y{ks}, thisc, colorit, cLorder);
                 title(ax0{ks}, strrep(tabnamelist(ks), '_', '\_'));           
             end
         end        
@@ -171,7 +171,7 @@ ccx = true;
         [~,idx]=ismember(focalg, tabnamelist);
         delete(ax0{idx});
         ax0{idx} = axes('parent',tab{idx});
-        pkg.i_violinplot(y{idx}, thisc, colorit, cLorder);
+        pkg.i_bindviolinplot(y{idx}, thisc, colorit, cLorder);
         title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));
         tabgp.SelectedTab=tab{idx};
         drawnow;
@@ -246,7 +246,7 @@ ccx = true;
             delete(ax0{idx});
             ax0{idx} = axes('parent',tab{idx});       
             cLorder = cLx_sorted;
-            pkg.i_violinplot(y{idx}, thisc, colorit, cLorder);
+            pkg.i_bindviolinplot(y{idx}, thisc, colorit, cLorder);
             title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));
         end
     end
@@ -257,7 +257,7 @@ ccx = true;
         [~,idx] = ismember(focalg, tabnamelist);
         delete(ax0{idx});
         ax0{idx} = axes('parent',tab{idx});
-        pkg.i_violinplot(y{idx}, thisc, colorit, cLorderx);
+        pkg.i_bindviolinplot(y{idx}, thisc, colorit, cLorderx);
         title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));  
 
         if length(tab)>1
@@ -280,7 +280,7 @@ ccx = true;
         ax0{idx} = axes('parent',tab{idx});
         y_picked = y{idx}(picked);
         thisc_picked = thisc(picked);
-        pkg.i_violinplot(y_picked, thisc_picked, colorit, cLorderx);
+        pkg.i_bindviolinplot(y_picked, thisc_picked, colorit, cLorderx);
         title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));
 
         if length(tab)>1        

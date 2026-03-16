@@ -55,6 +55,7 @@ answer = gui.myQuestdlg(FigureHandle, 'Using MATLAB engine for Python or Calling
                 gui.myErrordlg(FigureHandle, "Harmonypy Running Error");
                 return;
             end
+            assignin("base","s",s);
             sce.s = s;
         % catch ME
         %     %gui.myWaitbar(FigureHandle, fw,true);

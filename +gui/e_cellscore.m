@@ -24,11 +24,7 @@ end
 
 if showwaitbar, fw = gui.myWaitbar(parentfig); end
 try
-    if methodid == 1
-        [cs] = sc_cellscore_ucell(sce.X, sce.g, posg);
-    elseif methodid == 2
-        [cs] = sc_cellscore_admdl(sce.X, sce.g, posg);
-    end
+    [cs] = sc_cellscore(sce.X, sce.g, posg, [], methodid);
 catch ME
     if showwaitbar, gui.myWaitbar(parentfig, fw, true); end
     gui.myErrordlg(parentfig, ME.message, ME.identifier);

@@ -36,7 +36,10 @@ if plot_graph_option == 1 && dim == 2
     hold on
     for i = 1:size(Graph, 2)
         for j = 1:size(Graph, 1)
-            line(rr([i, Graph(j, i)], 1), rr([i, Graph(j, i)], 2))
+            nbr = Graph(j, i);
+            if nbr ~= i && nbr >= 1 && nbr <= N
+                line(rr([i, nbr], 1), rr([i, nbr], 2))
+            end
         end
     end
     plot(rr(:, 1), rr(:, 2), 'ro')
@@ -50,7 +53,10 @@ if plot_graph_option == 1 && dim == 3
     hold on
     for i = 1:size(Graph, 2)
         for j = 1:size(Graph, 1)
-            line(rr([i, Graph(j, i)], 1), rr([i, Graph(j, i)], 2), rr([i, Graph(j, i)], 3))
+            nbr = Graph(j, i);
+            if nbr ~= i && nbr >= 1 && nbr <= N
+                line(rr([i, nbr], 1), rr([i, nbr], 2), rr([i, nbr], 3))
+            end
         end
     end
     plot3(rr(:, 1), rr(:, 2), rr(:, 3), C{:})

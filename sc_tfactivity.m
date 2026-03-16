@@ -97,7 +97,7 @@ end
     if nargout > 2, gcommon = g(k); end
 
     switch methodid
-        case 1 % UCell method  see also: sc_cellscore_ucell
+        case 1 % UCell method  see also: sc_cellscore
 
             cs = zeros(size(t, 1), size(X, 2));
             R = tiedrank(-X);

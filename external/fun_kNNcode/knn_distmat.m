@@ -16,7 +16,6 @@ if K >= ND1
     error('First NN is point itself and hence discarded. Hence K < N, strictly')
 end
 
-
 if ND1 ~= ND2
     error('Distance matrix is not square!')
 end
@@ -25,17 +24,8 @@ if ~issymmetric(D) % ~= D.'
     error('Distance matrix is not symmetric')
 end
 
-%sorted_dist_mat = zeros(size(D));
-sorted_dist_mat = sort(D);
+% Exclude self-distances explicitly so duplicate zeros do not bias K-NN selection.
+Doff = reshape(D(~eye(ND1)), ND1 - 1, ND1);
+sorted_dist_mat = sort(Doff, 1);
 
-%~ First NN is point itself and discarded. K < N strictly
-
-%disp('ASSUMED THAT DISTANCE MATRIX IS SYMMETRIC')
-knnlength = 0;
-knnlength = sum(sum(sorted_dist_mat(2:K+1, :)));
-return
-%~ for i = 1 : ND1
-%~ for j = 1 : K
-%~ knnlength = knnlength + sorted_dist_mat(j+1,i);
-%~ end
-%~ end
+knnlength = sum(sum(sorted_dist_mat(1:K, :)));

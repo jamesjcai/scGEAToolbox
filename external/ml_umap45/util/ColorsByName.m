@@ -627,13 +627,14 @@ classdef ColorsByName <handle
             end
             if length(color0to1)~=3
                 color0to1=ColorsByName.DEFAULT_COLOR;
-                s=sprintf('Bad RGB form for "%s", converted [%s] to [%s]\n',...
-                    name, String.Num2Str(originalColor, ' '), ...
-                    String.Num2Str(color0to1, ' '));
                 if exist('warned', 'var')
-                    fprintf(s)
+                    fprintf('Bad RGB form for "%s", converted [%s] to [%s]\\n', ...
+                        name, String.Num2Str(originalColor, ' '), ...
+                        String.Num2Str(color0to1, ' '));
                 else
-                    warning(s);
+                    warning('Bad RGB form for "%s", converted [%s] to [%s]', ...
+                        name, String.Num2Str(originalColor, ' '), ...
+                        String.Num2Str(color0to1, ' '));
                 end
             end
             if nargout==4

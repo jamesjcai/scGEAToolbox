@@ -15,7 +15,7 @@ catch ME
     warning(ME.identifier, ...
         'Error in sc_rmmtcells: %s. Attempting alternative method.', ...
         ME.message);
-    Xobj = pkg.refwrap(X);
+    Xobj = pkg.i_refwrap(X);
     clear X
     [keptidx] = obj_rmmtcells(Xobj, genelist, mtratio);
     X = Xobj.data;
@@ -48,7 +48,7 @@ if nargin < 3, mtratio = 0.1; end
 if nargin < 4, mtgenenamepat = "mt-"; end
 if nargin < 5, verbose = false; end
 
-assert(isa(Xobj, 'pkg.refwrap'))
+assert(isa(Xobj, 'pkg.i_refwrap'))
 assert(size(Xobj.data, 1) == length(genelist))
 idx = startsWith(genelist, mtgenenamepat, 'IgnoreCase', true);
 if sum(idx) > 0

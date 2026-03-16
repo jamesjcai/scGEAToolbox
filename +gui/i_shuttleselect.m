@@ -88,7 +88,7 @@ function [idx] = i_shuttleselect(items, preselected_items, parentfig)
         updateCounters();
     end
 
-    function moveTable(src, dst, isAdding)
+    function moveTable(src, ~, isAdding)
         if isempty(src.Selection), return; end
         rows = unique(src.Selection(:, 1));
         names = src.Data.Items(rows);
@@ -102,7 +102,7 @@ function [idx] = i_shuttleselect(items, preselected_items, parentfig)
         refreshUI();
     end
 
-    function moveAllTable(src, dst, isAdding)
+    function moveAllTable(src, ~, isAdding)
         names = src.Data.Items; 
         if isempty(names), return; end
         if isAdding

@@ -1,4 +1,4 @@
-function plainText = ai_extractHTMLText(htmlInput)
+function plainText = i_extractHTMLText(htmlInput)
     % EXTRACTHTMLTEXT Extract plain text from HTML content
     %
     % SYNTAX:

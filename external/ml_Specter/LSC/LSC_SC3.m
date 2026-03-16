@@ -108,7 +108,7 @@ for i = 1:r
 end
 
 dump = sqrt(dump);
-dump = exp(-dump/maxD); %TODO
+dump = exp(-dump/maxD);
 sumD = sum(dump, 2);
 Gsdx = bsxfun(@rdivide, dump, sumD);
 Gidx = repmat((1:nSmp)', 1, r);

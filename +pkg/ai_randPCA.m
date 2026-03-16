@@ -1,4 +1,4 @@
-function [U, S, V] = randPCA(A, k, its, l)
+function [U, S, V] = ai_randPCA(A, k, its, l)
 
 %PCA  Low-rank approximation in SVD form.
 %

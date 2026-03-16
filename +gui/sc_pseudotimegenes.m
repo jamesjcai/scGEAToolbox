@@ -47,13 +47,13 @@ t = t(:);
                     if mod(k,100) == 0
                         gui.myWaitbar(parentfig, fw, false, '', '', k/length(r)); 
                     end
-                    r(k) = pkg.distcorr(Xn(k,:).', t(:)); % Calculate linear correlation between gene expression profile and T
+                    r(k) = pkg.e_distcorr(Xn(k,:).', t(:)); % Calculate linear correlation between gene expression profile and T
                 end
                 gui.myWaitbar(parentfig, fw);
             else
                 fw = gui.myWaitbar(parentfig);
                 for k=1:length(r)
-                    r(k) = pkg.distcorr(Xn(k,:).', t(:)); % Calculate linear correlation between gene expression profile and T
+                    r(k) = pkg.e_distcorr(Xn(k,:).', t(:)); % Calculate linear correlation between gene expression profile and T
                 end
                 gui.myWaitbar(parentfig, fw);
             end

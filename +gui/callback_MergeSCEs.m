@@ -117,7 +117,7 @@ function [requirerefresh, s] = callback_MergeSCEs(src, sourcetag)
                     s = sprintf('%s, %s', s, fname{k});
                 end
                 s = s(2:end);
-                pause(1)
+                drawnow;
                 sce = sc_mergesces(scelist, methodtag, keepbatchid);
                 gui.myGuidata(FigureHandle, sce, src);
                 if isa(src, 'matlab.apps.AppBase')

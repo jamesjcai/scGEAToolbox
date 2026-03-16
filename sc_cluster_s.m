@@ -35,7 +35,7 @@ switch p.Results.type
     case 'snndpc'
         c_clustid = sc_snndpc(s, k);
     case 'mbkmeans'
-        [~, ~, c_clustid] = pkg.mbkmeans(s, k);
+        [~, ~, c_clustid] = pkg.ai_mbkmeans(s, k);
 end
 
 if plotit

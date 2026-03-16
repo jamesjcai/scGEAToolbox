@@ -716,8 +716,10 @@ classdef StringArray < handle
                     end
                     if isnumeric(value)
                         v=[v '=' num2str(value)];
+                    elseif isstring(value) || ischar(value)
+                        v=[v '=' char(value)];
                     else
-                        v=[v '=' num2str(value)];
+                        v=[v '=' String.toString(value)];
                     end
                 end
                 if (i>1)
@@ -1206,3 +1208,4 @@ classdef StringArray < handle
         end
     end
 end
+

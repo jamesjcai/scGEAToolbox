@@ -1,4 +1,4 @@
-% fdr_bh() - Executes the Benjamini & Hochberg (1995) and the Benjamini &
+% e_fdr_bh() - Executes the Benjamini & Hochberg (1995) and the Benjamini &
 %            Yekutieli (2001) procedure for controlling the false discovery
 %            rate (FDR) of a family of hypothesis tests. FDR is the expected
 %            proportion of rejected hypotheses that are mistakenly rejected
@@ -128,7 +128,7 @@
 % 5/14/2013- D.H.J. Poot, Erasmus MC, improved run-time complexity
 % 10/2015- Now returns FCR adjusted confidence intervals
 
-function [h, crit_p, adj_ci_cvrg, adj_p] = fdr_bh(pvals, q, method, report)
+function [h, crit_p, adj_ci_cvrg, adj_p] = e_fdr_bh(pvals, q, method, report)
 
 if nargin < 1
     error('You need to provide a vector or matrix of p-values.');

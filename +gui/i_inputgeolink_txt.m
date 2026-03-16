@@ -17,7 +17,7 @@ if ~(ismcc || isdeployed)
     %#exclude urldecode
     answer1 = urldecode(answer{1});
 else
-    answer1 = pkg.urldecoding(answer{1});
+    answer1 = pkg.i_urldecoding(answer{1});
 end
 
 if ~isempty(answer1)

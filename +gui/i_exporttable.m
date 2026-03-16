@@ -62,7 +62,7 @@ function [answer, filename] = i_exporttable(T, needwait, TName, ...
                 catch
                     writematrix(T, filename, 'Delimiter', '\t');
                 end
-                pause(1);
+                drawnow;
                 % if needwait
                 %     gui.myHelpdlg(parentfig, sprintf('Result has been saved in %s', filename), '');
                 % else
@@ -108,7 +108,7 @@ function [answer, filename] = i_exporttable(T, needwait, TName, ...
                 writetable(T, filename, 'FileType', 'spreadsheet', ...
                     'WriteRowNames', true, 'Sheet', sheetname);
             end
-            pause(1)
+            drawnow;
             if needwait
                 gui.myQuestdlg(parentfig, ...
                     sprintf('Result has been saved in %s', filename),'', ...

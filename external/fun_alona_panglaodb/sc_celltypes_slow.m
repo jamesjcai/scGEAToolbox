@@ -3,20 +3,26 @@ function [T] = sc_celltypes_slow(X, genelist, clusterid)
 % https://academic.oup.com/database/article/doi/10.1093/database/baz046/5427041
 % REF: PanglaoDB: a web server for exploration of mouse and human single-cell RNA sequencing data
 
-oldpth = pwd;
-% pw1=fileparts(which(mfilename));
 pw1 = fileparts(mfilename('fullpath'));
-pth = fullfile(pw1, 'thirdparty/celltype_mat');
-cd(pth);
+pth = fullfile(pw1, 'thirdparty', 'celltype_mat');
+if ~isfolder(pth)
+    pth = pw1;
+end
 
 X = sc_norm(X, "type", "deseq");
 genelist = upper(genelist);
 
-Tw = readtable('markerweight.txt');
+markerweightfile = fullfile(pth, 'markerweight.txt');
+markerlistfile = fullfile(pth, 'markerlist.txt');
+if ~isfile(markerweightfile) || ~isfile(markerlistfile)
+    error('Required marker files not found: %s and %s', markerweightfile, markerlistfile);
+end
+
+Tw = readtable(markerweightfile);
 wvalu = Tw.Var2;
 wgene = string(Tw.Var1);
 
-Tm = readtable('markerlist.txt', 'ReadVariableNames', false);
+Tm = readtable(markerlistfile, 'ReadVariableNames', false);
 celltypev = string(Tm.Var1);
 markergenev = string(Tm.Var2);
 
@@ -52,4 +58,3 @@ end
 T = [T, array2table(S)];
 % [~,idx]=sort(sum(table2array(T(:,2:end)),2),'descend');
 T = T(idx, :);
-cd(oldpth);

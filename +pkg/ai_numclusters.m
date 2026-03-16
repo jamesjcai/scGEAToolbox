@@ -1,4 +1,4 @@
-function [optimk] = fun_num_clusters(X, varargin)
+function [optimk] = ai_numclusters(X, varargin)
 %Estimate number of clusters
 p = inputParser;
 defaultType = 'simlr';

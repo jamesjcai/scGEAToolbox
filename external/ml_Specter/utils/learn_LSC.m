@@ -38,15 +38,15 @@ end
 % fprintf('use random for selection of representatives\n');
 opts.mode = 'kmeans';
 opts.r = n_clusters;
-opts.kmMaxIter = 1000; %TODO 1000
+opts.kmMaxIter = 1000;
 if n < 10000
     % opts.p= max(min(round(m/2), 20*n_clusters), round(m/5)); %round(m/10);
     opts.p = min(20*n_clusters, round(m/5)); %round(m/10);
 else
     opts.p = min(40*n_clusters, round(m/5)); %round(m/10);
 end
-opts.maxIter = 1000; %TODO 3000
-opts.numRep = 5; %TODO 10
+opts.maxIter = 1000; % high-quality mode (mode==2) uses 3000
+opts.numRep = 5;     % high-quality mode (mode==2) uses 10
 opts.reduceRatio = 300;
 if isfield(params, 'mode') && params.mode == 0 && m > 6000
     % fprintf('set for single mode\n');

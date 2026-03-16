@@ -4,7 +4,7 @@ function varargout = scgeatool(varargin)
 % Use:
 %   scgeatool            % launches App Designer GUI
 
-    if ~gui.i_installed('stats'), return; end
+    if ~gui.i_installed('stats'), return; end    
     app = scgeatoolApp(varargin{:});
     if nargout > 0
         varargout{1} = app;

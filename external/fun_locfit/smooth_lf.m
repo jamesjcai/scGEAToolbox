@@ -5,6 +5,7 @@ function z = smooth_lf(x, y, varargin)
 %
 
 xev = x;
+k = length(varargin);
 if (k > 1)
     if (strcmp(varargin{1}, 'xev'))
         xev = varargin{2};

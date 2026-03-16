@@ -34,7 +34,7 @@ else
             apikeyfile = fullfile(path, file);
             setpref('scgeatoolbox', preftagname, apikeyfile);
         case '🌐Learn api_key file...'
-            pause(1)
+            drawnow;
             web('https://github.com/jamesjcai/scGEAToolbox/blob/main/assets/Misc/.env.example')
             return;
     end
@@ -93,10 +93,15 @@ switch selectedProvider
         catch
         end
         if strcmp(a, 'Ollama is running')
-            [a,str]=dos('Ollama list');
-            if a == 0
-            tokens = regexp(str, '([a-zA-Z0-9.-]+):latest', 'tokens');
-            model_names = cellfun(@(x) x{1}, tokens, 'UniformOutput', false);
+            a = webread('http://localhost:11434/api/tags');
+                %[a,str]=dos('Ollama list');
+                %if a == 0
+                %tokens = regexp(str, '([a-zA-Z0-9.-]+):latest', 'tokens');
+                %model_names = cellfun(@(x) x{1}, tokens, 'UniformOutput', false);
+
+
+           if size(a.models, 1) > 0
+               model_names = string(cellfun(@(m) m.name, a.models, 'UniformOutput', false));
             
            if gui.i_isuifig(parentfig)
                 [idx, ok2] = gui.myListdlg(parentfig, model_names, 'Select a model:');

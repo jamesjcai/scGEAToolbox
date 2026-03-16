@@ -98,10 +98,10 @@ for i = 1:M
         Hvec(i) = (dvec(i) / gamma) * (sol1(2) - log(beta_hat(round(dvec(i))-1, kneighbors))) * log2(exp(1)); % express in terms of bits
     else
         disp(['Beta(m = ', num2str(dvec(i)), ', k = ', num2str(kneighbors), ') not available for entropy estimation'])
-            Hvec(i) = -10;
-        end
-
-        d = mean(dvec);
-        H = mean(Hvec);
-
+        Hvec(i) = -10;
     end
+
+end
+
+d = mean(dvec);
+H = mean(Hvec);

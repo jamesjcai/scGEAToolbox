@@ -29,7 +29,7 @@ end
 
 speciestag = '';
 try
-speciestag = pkg.ai_extractHTMLText(b(1+find(contains(b, 'Organism'),1)));
+speciestag = pkg.i_extractHTMLText(b(1+find(contains(b, 'Organism'),1)));
 catch
 end
 
@@ -217,7 +217,7 @@ function f = i_setupfile(c)
             %#exclude urldecode
             x = urldecode(x);
         else
-            x = pkg.urldecoding(x);
+            x = pkg.i_urldecoding(x);
         end
         fprintf('Downloading %s\n', x)
         files = gunzip(x, tmpd);
@@ -245,7 +245,7 @@ function f = i_setupfile2(c)
             %#exclude urldecode
             x = urldecode(x);
         else
-            x = pkg.urldecoding(x);
+            x = pkg.i_urldecoding(x);
         end
         fprintf('Downloading %s\n', x)
         f = websave(tmpd, x);

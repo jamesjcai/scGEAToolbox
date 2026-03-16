@@ -2,7 +2,7 @@ function [score, T, posg] = e_cellscores(X, genelist, ...
     scoretypeid, methodid, showwaitbar)
 % Calcute predefined cell scores (marker list in cellscores.xlsx)
 %
-% see also: SC_CELLSCORE_UCELL, SC_CELLSCORE_ADMDL, SC_CELLCYCLESCORING
+% see also: SC_CELLSCORE, SC_CELLCYCLESCORE
 
 % scoretypeid
 
@@ -56,33 +56,18 @@ posg = sort(tgsPos);
 isexpressed = ismember(upper(posg), upper(genelist));
 if sum(isexpressed)<2, error('Too few expressed genes (n < 2).'); end
 
-answer = gui.i_pickscoremethod(methodid);
-switch answer
-    case 'AddModuleScore/Seurat'
-        if showwaitbar, fw = gui.gui_waitbar; end
-        try
-            [score] = sc_cellscore_admdl(X, genelist, tgsPos, tgsNeg);
-        catch ME
-            if showwaitbar, gui.gui_waitbar(fw, true); end
-            gui.myErrordlg([], ME.message);
-            return;
-        end
-        if showwaitbar, gui.gui_waitbar(fw); end
-    case 'UCell [PMID:34285779]'
-        %[cs]=run.UCell(sce.X,sce.g,posg);
+[~, methodid] = gui.i_pickscoremethod(methodid);
+if isempty(methodid), return; end
 
-        if showwaitbar, fw = gui.gui_waitbar([], [], scoretype); end
-        try
-            [score] = sc_cellscore_ucell(X, genelist, tgsPos);
-        catch ME
-            if showwaitbar, gui.gui_waitbar(fw, true); end
-            gui.myErrordlg([], ME.message);
-            return;
-        end
-        if showwaitbar, gui.gui_waitbar(fw); end
-    otherwise
-        return;
+if showwaitbar, fw = gui.gui_waitbar([], [], scoretype); end
+try
+    [score] = sc_cellscore(X, genelist, tgsPos, tgsNeg, methodid);
+catch ME
+    if showwaitbar, gui.gui_waitbar(fw, true); end
+    gui.myErrordlg([], ME.message);
+    return;
 end
+if showwaitbar, gui.gui_waitbar(fw); end
 
 
 fprintf('\n=============\n%s (%s)\n-------------\n', 'Genes', scoretype);

@@ -43,7 +43,12 @@ end
 N = length(S);
 t = tabulate(S);
 f = cell2mat(t(:, 3));
-w = 1 + sqrt((max(f) - f)/(max(f) - min(f)));
+frange = max(f) - min(f);
+if frange == 0
+    w = ones(size(f));
+else
+    w = 1 + sqrt((max(f) - f) / frange);
+end
 genelist = string(t(:, 1));
 
 fid = fopen(sprintf('markerweight_%s.txt', species), 'w');

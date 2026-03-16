@@ -40,7 +40,7 @@ if isscalar(i1) || isscalar(i2), return; end
     a = sprintf('output_%s', tstr);
     if ~exist(fullfile(wkdir, b), 'dir')
         mkdir(fullfile(wkdir, b));
-        pause(1);
+        drawnow;
     end
     f1 = fullfile(wkdir, b, a);
     save(f1, 'T', 'A0', 'A1', 'glist');

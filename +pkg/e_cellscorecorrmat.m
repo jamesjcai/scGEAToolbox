@@ -40,11 +40,7 @@ C = zeros(size(X, 2), length(gsets));
 
 for k = 1:length(gsets)    
     tgsPos = unique(strsplit(string(gsets{k}),','));
-    if methodid == 1
-        [cs] = sc_cellscore_ucell(X, g, tgsPos);
-    elseif methodid == 2
-        [cs] = sc_cellscore_admdl(X, g, tgsPos);
-    end
+    [cs] = sc_cellscore(X, g, tgsPos, [], methodid);
     C(:, k) = cs(:);
 end
 M = corr(C,'Type','Spearman');

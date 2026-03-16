@@ -73,8 +73,7 @@ bb = 'No, just show values (heatmap)';
                     end
                 end
             end
-            pause(1);
-            
+            drawnow;
             [selecteditem, speciestag] = gui.i_selgenesetcollection(FigureHandle);
             if isempty(selecteditem), return; end
             %try
@@ -309,7 +308,7 @@ bb = 'No, just show values (heatmap)';
                     % assignin("base",'k',k);                  
 
                     if length(y)>1
-                        pause(1);
+                        drawnow;
                         gui.i_scoreheatmap(cell2mat(y').', ttxt, sce, FigureHandle);
                     elseif isscalar(y)
                         gui.i_stemscatterfig(sce, y{1}, posg, ttxt{1}, FigureHandle);

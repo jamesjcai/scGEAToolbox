@@ -35,14 +35,13 @@ if ~exist(codepth,"dir")
     error('CODEPTH is undefined.');
 end
 
-cd(codepth);
 
 codepth = pkg.i_normalizepath(codepth);
 
 % fprintf('CURRENTWDIR = "%s"\n', wrkpth);
 fprintf('R___CODEDIR = "%s"\n', codepth);
-[~, cmdout] = pkg.i_runrcode('require.R', Rpath);
-if strfind(cmdout, 'there is no package') > 0
+[~, cmdout] = pkg.i_runrcode(fullfile(codepth, 'require.R'), Rpath);
+if ~isempty(strfind(cmdout, 'there is no package'))
     msg = cmdout;
     return;
 end

@@ -5,6 +5,7 @@ function [T] = r_DESeq2(X, Y, genelist, wkdir)
     T = [];
     isdebug = false;
     oldpth = pwd();
+    cleanupObj = onCleanup(@() cd(oldpth));
     [isok, msg, codepth] = commoncheck_R('R_DESeq2');
     if ~isok, error(msg); end
     if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
@@ -54,5 +55,4 @@ function [T] = r_DESeq2(X, Y, genelist, wkdir)
     T.Properties.VariableNames{'padj'} = 'p_val_adj';
     
     if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-    cd(oldpth);
 end

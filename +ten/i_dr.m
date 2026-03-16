@@ -10,7 +10,7 @@ pValues = chi2cdf(FC, 1, 'upper');
 if exist('mafdr.m', 'file')
     pAdjusted = mafdr(pValues, 'BHFDR', true);
 else
-    [~, ~, ~, pAdjusted] = pkg.fdr_bh(pValues);
+    [~, ~, ~, pAdjusted] = pkg.e_fdr_bh(pValues);
 end
 % if size(genelist,1)==1, genelist=genelist'; end
 genelist = genelist(:);

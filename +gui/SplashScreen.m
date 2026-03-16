@@ -494,7 +494,7 @@ elseif isa(str,'uint8')
 else
     error( 'UIExtras:interpretColor:BadColor', 'Could not interpret color %s', num2str( str ) );
 end
-end % iInterpretColor
+end
 
 function str = dequote(str)
 str(str=='''') = [];

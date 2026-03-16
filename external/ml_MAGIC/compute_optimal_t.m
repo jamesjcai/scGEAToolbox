@@ -20,6 +20,7 @@ if ~isempty(varargin)
 end
 
 data_prev = data;
+t_opt = [];
 if make_plot
     error_vec = nan(t_max, 1);
     for I = 1:t_max

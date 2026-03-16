@@ -6,11 +6,6 @@ if nargin < 4, isdebug = false; end
 oldpth = pwd();
 [isok, msg, codepath] = commoncheck_R('R_Seurat');
 if ~isok, error(msg); end
-
-if ~isok, error(msg);
-    sce = [];
-    return;
-end
 if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
 
 

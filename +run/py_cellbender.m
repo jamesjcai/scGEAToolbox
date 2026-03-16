@@ -72,9 +72,14 @@ disp('Input file written.');
 %end
 % fw = gui.gui_waitbar([],[],'Running Scrublet...');
 
+try
+    canUseGPU = gpuDeviceCount > 0;
+catch
+    canUseGPU = false;
+end
 if canUseGPU
     codefullpath = fullfile(codepth,'script_gpu.py');
-else    
+else
     codefullpath = fullfile(codepth,'script.py');
 end
 pkg.i_addwd2script(codefullpath, wkdir, 'python');

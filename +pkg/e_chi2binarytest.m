@@ -1,4 +1,4 @@
-function [chi2_stat, p_value, contingency_table, expected_freq] = ai_chi2binarytest(var1, var2, alpha)
+function [chi2_stat, p_value, contingency_table, expected_freq] = e_chi2binarytest(var1, var2, alpha)
 % CHI2_BINARY_TEST Performs chi-squared test of independence for two binary variables
 %
 % Inputs:

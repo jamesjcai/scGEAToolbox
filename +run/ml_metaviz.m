@@ -55,16 +55,16 @@ catch
 
 end
 
-%[y]=pkg.isomap(log(sc_norm(X)+1)');
+%[y]=pkg.ai_isomap(log(sc_norm(X)+1)');
 
 if showwaitbar, gui.gui_waitbar_adv(fw, 2/nstep, 'Meta Visualization - KPCA1...'); end
-S{end+1} = pkg.kpca(DS, ndim, 30, true);
+S{end+1} = pkg.ai_kpca(DS, ndim, 30, true);
 
 if showwaitbar, gui.gui_waitbar_adv(fw, 2/nstep, 'Meta Visualization - KPCA2...'); end
-S{end+1} = pkg.kpca(DS, ndim, 40, true);
+S{end+1} = pkg.ai_kpca(DS, ndim, 40, true);
 
 if showwaitbar, gui.gui_waitbar_adv(fw, 2/nstep, 'Meta Visualization - KPCA3...'); end
-S{end+1} = pkg.kpca(DS, ndim, 50, true);
+S{end+1} = pkg.ai_kpca(DS, ndim, 50, true);
 
 if showwaitbar, gui.gui_waitbar_adv(fw, 3/nstep, 'Meta Visualization - TSNE 1/3...'); end
 S{end+1} = tsne(data, Perplexity = 30, NumDimensions = ndim);

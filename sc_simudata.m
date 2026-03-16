@@ -36,7 +36,7 @@ switch lower(methodtype)
         % Generate random data from the gamma distribution
         rv = gamrnd(shape, scale, [numgenes, 1]);
         p = 0.1;
-        X = nbinrnd(rv, p, numgenes, numcells);
+        X = nbinrnd(repmat(rv, 1, numcells), p);
     case 'lun'
         % PMID:27122128
         % Pooling across cells to normalize single-cell RNA sequencing data with many zero counts

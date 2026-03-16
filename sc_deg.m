@@ -15,12 +15,15 @@ function [T, Tup, Tdn] = sc_deg(X, Y, genelist, methodid, ...
 %
 % https://satijalab.org/seurat/v3.1/de_vignette.html
 
-    if nargin < 4, methodid = 1; end
+    if nargin < 3 || isempty(genelist), genelist = string(1:size(X,1))'; end
+    if nargin < 4 || isempty(methodid), methodid = 1; end
     if nargin < 5, guiwaitbar = false; end
     if nargin < 6, parentfig = []; end
 
     ng = size(X, 1);
-    assert(isequal(ng, size(Y, 1)), 'X and Y must have the same number of rows (genes)');
+    assert(isequal(ng, size(Y, 1)), 'X and Y must have the same number of rows (genes).');
+    assert(ismember(methodid, [1 2]), 'methodid must be 1 (Mann-Whitney U) or 2 (t-test).');
+    assert(numel(genelist) == ng, 'genelist length must match number of rows in X (%d).', ng);
     
     p_val  = zeros(ng, 1);
     stats  = zeros(ng, 1);
@@ -80,7 +83,7 @@ function [T, Tup, Tdn] = sc_deg(X, Y, genelist, methodid, ...
     if exist('mafdr.m', 'file')
         p_val_adj = mafdr(p_val, 'BHFDR', true);
     else
-        [~, ~, ~, p_val_adj] = pkg.fdr_bh(p_val);
+        [~, ~, ~, p_val_adj] = pkg.e_fdr_bh(p_val);
     end
     
     if guiwaitbar

@@ -60,7 +60,7 @@ function [T] = e_findallmarkers(X, g, c, cL, logfc, minpct, showwaitbar, ...
         if exist('mafdr.m', 'file')
             p_val_adj = mafdr(p_val, 'BHFDR', true);
         else
-            [~, ~, ~, p_val_adj] = pkg.fdr_bh(p_val);
+            [~, ~, ~, p_val_adj] = pkg.e_fdr_bh(p_val);
         end
         grp = repmat(ctxt, ng, 1);
         t = table(grp, g, p_val, avg_log2FC, avg_1, avg_2, ...

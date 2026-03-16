@@ -1,4 +1,4 @@
-function [connected, timing] = isnetavl(use_HTML_test_only)
+function [connected, timing] = i_isnetavl(use_HTML_test_only)
 %Check for an internet connection by pinging Google
 %
 % Syntax:

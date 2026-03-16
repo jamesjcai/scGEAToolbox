@@ -44,17 +44,19 @@ if nargin < 7, showcam = true; end
 if nargin < 6 || isempty(sz), sz = 5; end
 if nargin < 5, methodid = 1; end
 
-if iscell(targetg)
-    for k = 1:length(targetg)
-        figure;
-        sc_scattermarker(X, genelist, s, targetg{k}, methodid, sz);
-    end
-elseif isstring(targetg) && ~isStringScalar(targetg)
+% Normalize targetg to string array for uniform handling
+if ischar(targetg)
+    targetg = string(targetg);
+elseif iscellstr(targetg)
+    targetg = string(targetg);
+end
+
+if ~isStringScalar(targetg)
     for k = 1:length(targetg)
         figure;
         sc_scattermarker(X, genelist, s, targetg(k), methodid, sz);
     end
-elseif isStringScalar(targetg) || ischar(targetg)
+elseif isStringScalar(targetg)
     if ismember(targetg, genelist)
         x = s(:, 1);
         y = s(:, 2);

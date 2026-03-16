@@ -392,7 +392,7 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                     if isempty(speciestag), return; end
                     try
                         fw = gui.myWaitbar(parentfig);
-                        [sce] = pkg.pipeline_multisamplesmerge(accv, false, speciestag, parentfig);
+                        [sce] = pkg.i_multisamplesmerge(accv, false, speciestag, parentfig);
                         gui.myWaitbar(parentfig, fw);
                     catch ME
                         gui.myWaitbar(parentfig, fw);

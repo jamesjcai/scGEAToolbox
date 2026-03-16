@@ -91,7 +91,7 @@ sce = copy(sce_ori);
         matlab.lang.makeValidName(string(cL2)), ...
         methodtag);
 
-pause(1);
+drawnow;
 % in_callback_ExportTable;
 gui.TableViewerApp(T, FigureHandle);
 

@@ -92,7 +92,7 @@ pval = chi2cdf(fitratio*df, df, 'upper');
 residualcv2 = log(fitratio); % log(cv2)-log(cv2fit);
 
 % fdr=mafdr(pval,'BHFDR',true);
-[~, ~, ~, fdr] = pkg.fdr_bh(pval);
+[~, ~, ~, fdr] = pkg.e_fdr_bh(pval);
 
 T = table(g, u, cv2, residualcv2, dropr, fitratio, pval, fdr, removedidx1, removedidx2);
 

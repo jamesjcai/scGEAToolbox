@@ -17,8 +17,8 @@ function [ScoreV, T] = sc_cellcyclescore(X, g)
     g2mgenes = g2mgenes(strlength(g2mgenes) > 0);
     
     % Calculate scores for S and G2M phases
-    score_S = sc_cellscore_admdl(X, g, sgenes);
-    score_G2M = sc_cellscore_admdl(X, g, g2mgenes);
+    score_S = sc_cellscore(X, g, sgenes, [], 2);
+    score_G2M = sc_cellscore(X, g, g2mgenes, [], 2);
     
     % Assign cell cycle phase based on scores
     if all(isnan(score_S)) || all(isnan(score_G2M))

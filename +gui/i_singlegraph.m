@@ -50,6 +50,7 @@ hx.addCustomButton('off', @SaveAdj, 'floppy-disk-arrow-in.jpg', 'Export & Save D
 hx.addCustomButton('on',  @in_RefreshAll, "refresh.jpg", "Refresh View");
 hx.addCustomButton( 'on', @in_networkvis_linear, "linear.jpg", "Stright Network Vis");
 hx.addCustomButton( 'off', @in_networkvis_curvy, "curve-array.jpg", "Curvy Network Vis");
+hx.addCustomButton('off', @SendToGephiLite, 'www.jpg', 'Open in Gephi Lite');
 
 title(h1, figname);
 hx.show(parentfig);
@@ -78,6 +79,30 @@ oldG1 = [];
         end
         [p1] = drawnetwork(G1, h1);
         title(h1,figname);
+    end
+
+    function SendToGephiLite(~, ~)
+        fw = gui.myWaitbar(hFig);
+        fname = pkg.m2gexf(G1);
+        gui.myWaitbar(hFig, fw);
+        [status, cmdout] = system(sprintf('curl -s -F "reqtype=fileupload" -F "fileToUpload=@%s" https://catbox.moe/user/api.php', fname));
+        if status ~= 0 || ~startsWith(strtrim(cmdout), 'http')
+            [status, cmdout] = system(sprintf('curl -s -F "file=@%s" https://0x0.st', fname));
+        end
+        if status == 0 && startsWith(strtrim(cmdout), 'http')
+            fileurl = strtrim(cmdout);
+            fullurl = sprintf('https://lite.gephi.org/v1.0.2/?file=%s', fileurl);
+            web(fullurl, '-browser');
+        else
+            web('https://lite.gephi.org/v1.0.2/', '-browser');
+            clipboard('copy', fname);
+            msg = sprintf('Could not upload file.\nGEXF file path copied to clipboard:\n%s\n\nDrag and drop the file into Gephi Lite.', fname);
+            if gui.i_isuifig(hFig)
+                uialert(hFig, msg, 'Gephi Lite', 'Icon', 'warning');
+            else
+                warndlg(msg, 'Gephi Lite');
+            end
+        end
     end
 
     function SaveAdj(~, ~)
@@ -287,7 +312,7 @@ oldG1 = [];
                 disp(ME.message);
             end
             %p2=i_replotg(p2,G2,h2,cutoff);
-            pause(1);
+            drawnow;
         end
         %close(f)
         delete(f)
@@ -311,35 +336,6 @@ oldG1 = [];
         % h=gca;
         title(a)
     end
-
-    %{
-    % Callback to initiate dragging
-    function startDragFcn(hObj, ~)
-        % Get data for the clicked point
-        fig = ancestor(hObj, 'figure');
-        set(fig, 'WindowButtonMotionFcn', {@draggingFcn, hObj});
-        set(fig, 'WindowButtonUpFcn', @stopDragFcn);
-    end
-    
-    % Function to drag the point
-    function draggingFcn(~, ~, hObj)
-        % Current cursor position in data coordinates
-        cp = get(gca, 'CurrentPoint');
-        % Update the y-data of the nearest point
-        yData = get(hObj, 'YData');
-        xData = get(hObj, 'XData');
-        [~, idx] = min(abs(xData - cp(1,1))); % Find closest x to mouse
-        yData(idx) = cp(1,2); % Update y value
-        set(hObj, 'YData', yData);
-    end
-    
-    % Function to stop dragging
-    function stopDragFcn(~, ~)
-        fig = gcbf;
-        set(fig, 'WindowButtonMotionFcn', '');
-        set(fig, 'WindowButtonUpFcn', '');
-    end
-    %}
 
     % Callback to initiate dragging
     function startDragFcn(hObj, ~)
@@ -410,23 +406,6 @@ function h = WattsStrogatz(N, K, beta)
         h = graph(s, t);
 end
 
-function [width, height] = measureText(txt, textOpts, axis)
-    if nargin < 3
-       axis = gca(); 
-    end
-    if nargin < 2
-        textOpts = struct();
-        textOpts.HorizontalAlignment = 'center';
-        textOpts.VerticalAlignment = 'middle';
-        textOpts.FontSize = 20;
-        textOpts.FontWeight = 'normal';
-    end
-    hTest = text(axis, 0, 0, txt, textOpts);
-    textExt = get(hTest, 'Extent');
-    delete(hTest);
-    height = textExt(4)/3;    %Height
-    width = textExt(3)/3;     %Width
-end
 
 %{
 function customeMarker(x, y, f)

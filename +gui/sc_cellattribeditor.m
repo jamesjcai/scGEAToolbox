@@ -51,7 +51,7 @@ if ~addnew    % edit
 %            'It may take a while to load values. Continue?'))
 %        return; 
 %    end
-    tic;
+    % tic;
     if gui.i_isuifig(parentfig)
         %        x = gui.myInputdlg({sprintf('Attribute Name: %s\n%s',clabel, 'Attribute Values:')}, ...
         %                          'Attribute Editor', {char(string(thisc))}, parentfig);
@@ -70,11 +70,19 @@ if ~addnew    % edit
                           'Attribute Editor', [15 80], {char(string(thisc))});
         
     end
-    toc;
-
+    % toc;
 
 else    % add new
 
+    if gui.i_isuifig(parentfig)
+        x = gui.myTextareadlg(parentfig, {'Attribute Name', 'Attribute Values'},...
+                      'Attribute Editor', {'New_Attribute', ("Value_"+string(1:sce.NumCells))'});
+    else
+        x = inputdlg({'Attribute Name', 'Attribute Values'},...
+                      'Attribute Editor', [1 80; 15 80]);
+    end
+
+    %{
     if gui.i_isuifig(parentfig)
         % x = gui.myInputdlg({'Attribute Name','Attribute Values'},...
         %              'Attribute Editor', {''}, parentfig); % Assuming default is empty cell
@@ -85,6 +93,7 @@ else    % add new
         x = inputdlg({'Attribute Name','Attribute Values'},...
                       'Attribute Editor', [1 80; 15 80]);
     end
+    %}
     % {'new_attrib', char(string([1:sce.NumCells]'))});
 end
 

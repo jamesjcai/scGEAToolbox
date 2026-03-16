@@ -55,7 +55,7 @@ function callback_CompareGeneNetwork(src, ~)
         otherwise
             return;
     end
-    pause(1)
+    drawnow;
     stitle = sprintf('%s vs. %s', cL1{1}, cL2{1});
     try
         sc_grnview2(A1, A2, glist, stitle, FigureHandle);

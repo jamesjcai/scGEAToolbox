@@ -4,6 +4,8 @@ switch lower(species)
         url = 'https://scgeatool.github.io/data/msigdb/c8.all.v2022.1.Hs.json';
     case {'mouse', 'mm'}
         url = 'https://scgeatool.github.io/data/msigdb/m8.all.v2022.1.Mm.json';
+    otherwise
+        error('Unsupported species: %s', species);
 end
 
 val = webread(url);
@@ -22,7 +24,12 @@ fclose(fid);
 N = length(S);
 t = tabulate(S);
 f = cell2mat(t(:, 3));
-w = 1 + sqrt((max(f) - f)/(max(f) - min(f)));
+frange = max(f) - min(f);
+if frange == 0
+    w = ones(size(f));
+else
+    w = 1 + sqrt((max(f) - f) / frange);
+end
 genelist = string(t(:, 1));
 
 fid = fopen(sprintf('markerweight_%s.txt', species), 'w');
@@ -31,6 +38,6 @@ for k = 1:length(genelist)
     fprintf(fid, '%f\n', w(k));
 end
 fclose(fid);
-Tm = readtable('markerlist_hs.txt', 'ReadVariableNames', false);
-Tw = readtable('markerweight_hs.txt', 'ReadVariableNames', false);
-save marker_hs Tm Tw
+Tm = readtable(sprintf('markerlist_%s.txt', species), 'ReadVariableNames', false);
+Tw = readtable(sprintf('markerweight_%s.txt', species), 'ReadVariableNames', false);
+save(sprintf('marker_%s', species), 'Tm', 'Tw');

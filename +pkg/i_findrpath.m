@@ -18,7 +18,7 @@ end
 if isunix
     [a, b] = system('which Rscript');
     if a == 0
-        Rpath = deblank(b);
+        Rpath = fileparts(deblank(b));
     else
         Rpath = '';
     end
